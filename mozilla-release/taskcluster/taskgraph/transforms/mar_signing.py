@@ -15,12 +15,22 @@ from taskgraph.util.scriptworker import (
     get_worker_type_for_scope,
     get_autograph_format_scope,
 )
-from taskgraph.util.partials import get_balrog_platform_name, get_partials_artifacts
+from taskgraph.util.partials import get_balrog_platform_name, get_partials_artifacts_from_params
 from taskgraph.util.taskcluster import get_artifact_prefix
 from taskgraph.util.treeherder import join_symbol
 
 import logging
 logger = logging.getLogger(__name__)
+
+SIGNING_FORMATS = {
+    'mar-signing-autograph-stage': {
+        'target.complete.mar': ['autograph_stage_mar384'],
+    },
+    'default': {
+        'target.complete.mar': ['autograph_hash_only_mar384'],
+        'target.bz2.complete.mar': ['mar'],
+    },
+}
 
 transforms = TransformSequence()
 
@@ -32,7 +42,7 @@ def generate_partials_artifacts(job, release_history, platform, locale=None):
     else:
         locale = 'en-US'
 
-    artifacts = get_partials_artifacts(release_history, platform, locale)
+    artifacts = get_partials_artifacts_from_params(release_history, platform, locale)
 
     upstream_artifacts = [{
         "taskId": {"task-reference": '<partials>'},
@@ -66,6 +76,7 @@ def generate_partials_artifacts(job, release_history, platform, locale=None):
     return upstream_artifacts
 
 
+<<<<<<< HEAD:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
 def generate_complete_artifacts(job):
     upstream_artifacts = []
     for artifact in job.release_artifacts:
@@ -81,6 +92,26 @@ def generate_complete_artifacts(job):
     return upstream_artifacts
 
 
+||||||| merged common ancestors
+=======
+def generate_complete_artifacts(job, kind):
+    upstream_artifacts = []
+    if kind not in SIGNING_FORMATS:
+        kind = 'default'
+    for artifact in job.release_artifacts:
+        basename = os.path.basename(artifact)
+        if basename in SIGNING_FORMATS[kind]:
+            upstream_artifacts.append({
+                "taskId": {"task-reference": '<{}>'.format(job.kind)},
+                "taskType": 'build',
+                "paths": [artifact],
+                "formats": SIGNING_FORMATS[kind][basename],
+            })
+
+    return upstream_artifacts
+
+
+>>>>>>> upstream-releases:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
 @transforms.add
 def make_task_description(config, jobs):
     for job in jobs:
@@ -88,14 +119,30 @@ def make_task_description(config, jobs):
         locale = dep_job.attributes.get('locale')
 
         treeherder = job.get('treeherder', {})
+<<<<<<< HEAD:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
         treeherder['symbol'] = join_symbol(
             job.get('treeherder-group', 'ms'),
             locale or 'N'
         )
+||||||| merged common ancestors
+        treeherder.setdefault('symbol', 'ps(N)')
+=======
+        treeherder.setdefault(
+            'symbol', join_symbol(job.get('treeherder-group', 'ms'), locale or 'N')
+        )
+>>>>>>> upstream-releases:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
 
+<<<<<<< HEAD:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
         dep_th_platform = dep_job.task.get('extra', {}).get(
             'treeherder', {}).get('machine', {}).get('platform', '')
         label = job.get('label', "{}-{}".format(config.kind, dep_job.label))
+||||||| merged common ancestors
+        dep_th_platform = dep_job.task.get('extra', {}).get(
+            'treeherder', {}).get('machine', {}).get('platform', '')
+        label = job.get('label', "partials-signing-{}".format(dep_job.label))
+=======
+        label = job.get('label', "{}-{}".format(config.kind, dep_job.label))
+>>>>>>> upstream-releases:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
         dep_th_platform = dep_job.task.get('extra', {}).get(
             'treeherder', {}).get('machine', {}).get('platform', '')
         treeherder.setdefault('platform',
@@ -103,8 +150,7 @@ def make_task_description(config, jobs):
         treeherder.setdefault('kind', 'build')
         treeherder.setdefault('tier', 1)
 
-        dependent_kind = str(dep_job.kind)
-        dependencies = {dependent_kind: dep_job.label}
+        dependencies = {dep_job.kind: dep_job.label}
         signing_dependencies = dep_job.dependencies
         # This is so we get the build task etc in our dependencies to
         # have better beetmover support.
@@ -120,22 +166,45 @@ def make_task_description(config, jobs):
             attributes['locale'] = locale
 
         balrog_platform = get_balrog_platform_name(dep_th_platform)
+<<<<<<< HEAD:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
         if config.kind == 'partials-signing':
             upstream_artifacts = generate_partials_artifacts(
                 dep_job, config.params['release_history'], balrog_platform, locale)
         else:
             upstream_artifacts = generate_complete_artifacts(dep_job)
+||||||| merged common ancestors
+        upstream_artifacts = generate_upstream_artifacts(
+            dep_job, config.params['release_history'], balrog_platform, locale)
+=======
+        if config.kind == 'partials-signing':
+            upstream_artifacts = generate_partials_artifacts(
+                dep_job, config.params['release_history'], balrog_platform, locale)
+        else:
+            upstream_artifacts = generate_complete_artifacts(dep_job, config.kind)
+>>>>>>> upstream-releases:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
 
         build_platform = dep_job.attributes.get('build_platform')
-        is_nightly = dep_job.attributes.get('nightly')
+        is_nightly = job.get(
+            'nightly',  # First check current job
+            dep_job.attributes.get(
+                'nightly',  # Then dep job for 'nightly'
+                dep_job.attributes.get('shippable')))  # lastly dep job for 'shippable'
         signing_cert_scope = get_signing_cert_scope_per_platform(
             build_platform, is_nightly, config
         )
         autograph_hash_format_scope = get_autograph_format_scope(config)
 
+<<<<<<< HEAD:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
         scopes = [signing_cert_scope, autograph_hash_format_scope]
         if any("mar" in upstream_details["formats"] for upstream_details in upstream_artifacts):
             scopes.append('project:releng:signing:format:mar')
+||||||| merged common ancestors
+        scopes = [signing_cert_scope, 'project:releng:signing:format:autograph_hash_only_mar384']
+        if any("mar" in upstream_details["formats"] for upstream_details in upstream_artifacts):
+            scopes.append('project:releng:signing:format:mar')
+=======
+        scopes = [signing_cert_scope]
+>>>>>>> upstream-releases:mozilla-release/taskcluster/taskgraph/transforms/mar_signing.py
 
         task = {
             'label': label,
@@ -148,7 +217,8 @@ def make_task_description(config, jobs):
             'dependencies': dependencies,
             'attributes': attributes,
             'scopes': scopes,
-            'run-on-projects': dep_job.attributes.get('run_on_projects'),
+            'run-on-projects': job.get('run-on-projects',
+                                       dep_job.attributes.get('run_on_projects')),
             'treeherder': treeherder,
         }
 

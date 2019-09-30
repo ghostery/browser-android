@@ -35,9 +35,20 @@ NS_INTERFACE_MAP_BEGIN(InputStreamLengthWrapper)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIInputStream)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<nsIInputStream>
 InputStreamLengthWrapper::MaybeWrap(
     already_AddRefed<nsIInputStream> aInputStream, int64_t aLength) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<nsIInputStream>
+InputStreamLengthWrapper::MaybeWrap(already_AddRefed<nsIInputStream> aInputStream,
+                                    int64_t aLength)
+{
+=======
+/* static */
+already_AddRefed<nsIInputStream> InputStreamLengthWrapper::MaybeWrap(
+    already_AddRefed<nsIInputStream> aInputStream, int64_t aLength) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIInputStream> inputStream = std::move(aInputStream);
   MOZ_ASSERT(inputStream);
 
@@ -256,15 +267,65 @@ InputStreamLengthWrapper::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 
 // nsIIPCSerializableInputStream
 
+<<<<<<< HEAD
 void InputStreamLengthWrapper::Serialize(
     mozilla::ipc::InputStreamParams& aParams,
     FileDescriptorArray& aFileDescriptors) {
+||||||| merged common ancestors
+void
+InputStreamLengthWrapper::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                    FileDescriptorArray& aFileDescriptors)
+{
+=======
+void InputStreamLengthWrapper::Serialize(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed,
+    mozilla::dom::ContentChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void InputStreamLengthWrapper::Serialize(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed,
+    mozilla::ipc::PBackgroundChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void InputStreamLengthWrapper::Serialize(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed,
+    mozilla::dom::ContentParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void InputStreamLengthWrapper::Serialize(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed,
+    mozilla::ipc::PBackgroundParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+template <typename M>
+void InputStreamLengthWrapper::SerializeInternal(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mInputStream);
   MOZ_ASSERT(mWeakIPCSerializableInputStream);
 
   InputStreamLengthWrapperParams params;
   InputStreamHelper::SerializeInputStream(mInputStream, params.stream(),
-                                          aFileDescriptors);
+                                          aFileDescriptors, aDelayedStart,
+                                          aMaxSize, aSizeUsed, aManager);
   params.length() = mLength;
   params.consumed() = mConsumed;
 
@@ -300,6 +361,7 @@ bool InputStreamLengthWrapper::Deserialize(
   return true;
 }
 
+<<<<<<< HEAD
 mozilla::Maybe<uint64_t> InputStreamLengthWrapper::ExpectedSerializedLength() {
   if (!mInputStream || !mWeakIPCSerializableInputStream) {
     return mozilla::Nothing();
@@ -308,6 +370,19 @@ mozilla::Maybe<uint64_t> InputStreamLengthWrapper::ExpectedSerializedLength() {
   return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
 }
 
+||||||| merged common ancestors
+mozilla::Maybe<uint64_t>
+InputStreamLengthWrapper::ExpectedSerializedLength()
+{
+  if (!mInputStream || !mWeakIPCSerializableInputStream) {
+    return mozilla::Nothing();
+  }
+
+  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
+}
+
+=======
+>>>>>>> upstream-releases
 // nsISeekableStream
 
 NS_IMETHODIMP

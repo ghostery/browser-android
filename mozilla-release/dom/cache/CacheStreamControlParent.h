@@ -22,10 +22,25 @@ namespace cache {
 class ReadStream;
 class StreamList;
 
+<<<<<<< HEAD
 class CacheStreamControlParent final : public PCacheStreamControlParent,
                                        public StreamControl,
                                        Manager::Listener {
  public:
+||||||| merged common ancestors
+class CacheStreamControlParent final : public PCacheStreamControlParent
+                                     , public StreamControl
+                                     , Manager::Listener
+{
+public:
+=======
+class CacheStreamControlParent final : public PCacheStreamControlParent,
+                                       public StreamControl,
+                                       Manager::Listener {
+  friend class PCacheStreamControlParent;
+
+ public:
+>>>>>>> upstream-releases
   CacheStreamControlParent();
   ~CacheStreamControlParent();
 
@@ -55,10 +70,18 @@ class CacheStreamControlParent final : public PCacheStreamControlParent,
   // PCacheStreamControlParent methods
   virtual void ActorDestroy(ActorDestroyReason aReason) override;
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvOpenStream(
       const nsID& aStreamId, OpenStreamResolver&& aResolve) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvOpenStream(const nsID& aStreamId, OpenStreamResolver&& aResolve) override;
+=======
+  mozilla::ipc::IPCResult RecvOpenStream(const nsID& aStreamId,
+                                         OpenStreamResolver&& aResolve);
+>>>>>>> upstream-releases
 
-  virtual mozilla::ipc::IPCResult RecvNoteClosed(const nsID& aId) override;
+  mozilla::ipc::IPCResult RecvNoteClosed(const nsID& aId);
 
   void NotifyClose(const nsID& aId);
   void NotifyCloseAll();

@@ -11,7 +11,7 @@
 #include "mozilla/dom/InspectorUtilsBinding.h"
 
 class nsAtom;
-class nsIDocument;
+class nsINode;
 class ComputedStyle;
 
 namespace mozilla {
@@ -32,14 +32,26 @@ namespace dom {
 /**
  * A collection of utility methods for use by devtools.
  */
+<<<<<<< HEAD
 class InspectorUtils {
  public:
   static void GetAllStyleSheets(GlobalObject& aGlobal, nsIDocument& aDocument,
+||||||| merged common ancestors
+class InspectorUtils
+{
+public:
+  static void GetAllStyleSheets(GlobalObject& aGlobal,
+                                nsIDocument& aDocument,
+=======
+class InspectorUtils {
+ public:
+  static void GetAllStyleSheets(GlobalObject& aGlobal, Document& aDocument,
+>>>>>>> upstream-releases
                                 bool aDocumentOnly,
                                 nsTArray<RefPtr<StyleSheet>>& aResult);
   static void GetCSSStyleRules(GlobalObject& aGlobal, Element& aElement,
                                const nsAString& aPseudo,
-                               nsTArray<RefPtr<css::Rule>>& aResult);
+                               nsTArray<RefPtr<BindingStyleRule>>& aResult);
 
   /**
    * Get the line number of a rule.
@@ -154,7 +166,14 @@ class InspectorUtils {
   // unknown types.
   static bool CssPropertySupportsType(GlobalObject& aGlobal,
                                       const nsAString& aProperty,
+<<<<<<< HEAD
                                       uint32_t aType, ErrorResult& aRv);
+||||||| merged common ancestors
+                                      uint32_t aType,
+                                      ErrorResult& aRv);
+=======
+                                      InspectorPropertyType, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   static bool IsIgnorableWhitespace(GlobalObject& aGlobalObject,
                                     CharacterData& aDataNode) {
@@ -236,6 +255,7 @@ class InspectorUtils {
    * @param DOMString aInput
    *        The new source string for the style sheet.
    */
+<<<<<<< HEAD
   static void ParseStyleSheet(GlobalObject& aGlobal, StyleSheet& aSheet,
                               const nsAString& aInput, ErrorResult& aRv);
 
@@ -244,6 +264,21 @@ class InspectorUtils {
    * This is similar to ensureElementIsVisible but for all ancestors.
    */
   static void ScrollElementIntoView(GlobalObject& aGlobal, Element& aElement);
+||||||| merged common ancestors
+  static void ParseStyleSheet(GlobalObject& aGlobal,
+                              StyleSheet& aSheet,
+                              const nsAString& aInput,
+                              ErrorResult& aRv);
+
+  /**
+   * Scroll an element completely into view, if possible.
+   * This is similar to ensureElementIsVisible but for all ancestors.
+   */
+  static void ScrollElementIntoView(GlobalObject& aGlobal, Element& aElement);
+=======
+  static void ParseStyleSheet(GlobalObject& aGlobal, StyleSheet& aSheet,
+                              const nsAString& aInput, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   /**
    * Check if the provided name can be custom element name.

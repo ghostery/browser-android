@@ -7,9 +7,9 @@
 #include "mozilla/RecursiveMutex.h"
 
 #ifdef XP_WIN
-#include <windows.h>
+#  include <windows.h>
 
-#define NativeHandle(m) (reinterpret_cast<CRITICAL_SECTION*>(&m))
+#  define NativeHandle(m) (reinterpret_cast<CRITICAL_SECTION*>(&m))
 #endif
 
 namespace mozilla {
@@ -28,16 +28,26 @@ RecursiveMutex::RecursiveMutex(
   // This number was adapted from NSPR.
   static const DWORD sLockSpinCount = 100;
 
-#if defined(RELEASE_OR_BETA)
+#  if defined(RELEASE_OR_BETA)
   // Vista and later automatically allocate and subsequently leak a debug info
   // object for each critical section that we allocate unless we tell the
   // system not to do that.
   DWORD flags = CRITICAL_SECTION_NO_DEBUG_INFO;
-#else
+#  else
   DWORD flags = 0;
+<<<<<<< HEAD
 #endif
   BOOL r =
       InitializeCriticalSectionEx(NativeHandle(mMutex), sLockSpinCount, flags);
+||||||| merged common ancestors
+#endif
+  BOOL r = InitializeCriticalSectionEx(NativeHandle(mMutex),
+                                       sLockSpinCount, flags);
+=======
+#  endif
+  BOOL r =
+      InitializeCriticalSectionEx(NativeHandle(mMutex), sLockSpinCount, flags);
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(r);
 #else
   pthread_mutexattr_t attr;

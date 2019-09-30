@@ -1,16 +1,17 @@
 <head>
   <title>NPNV*NPObject accessibility tests</title>
-  <script type="application/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
   <script type="application/javascript" src="plugin-utils.js"></script>
 
 <body onload="runTests()">
   <script class="testbody" type="application/javascript">
-  dump('lastScript\n');
+  dump("lastScript\n");
 
   SimpleTest.waitForExplicitFinish();
   setTestPluginEnabledState(SpecialPowers.Ci.nsIPluginTag.STATE_ENABLED);
 
   function runTests() {
+<<<<<<< HEAD
     ok(
       document.getElementById('plugin1').pluginFoundElement,
       "plugin1.pluginFoundElement (NPNVPluginElementNPObject) - " +
@@ -21,6 +22,21 @@
       "window.pluginFoundWindow (NPNVWindowNPObject) - " +
       window.pluginFoundWindow
     );
+||||||| merged common ancestors
+    ok(document.getElementById('plugin1').pluginFoundElement, "plugin1.pluginFoundElement (NPNVPluginElementNPObject)", document.getElementById('plugin1').pluginFoundElement);
+    ok(window.pluginFoundWindow, "window.pluginFoundWindow (NPNVWindowNPObject)", window.pluginFoundWindow);
+=======
+    ok(
+      document.getElementById("plugin1").pluginFoundElement,
+      "plugin1.pluginFoundElement (NPNVPluginElementNPObject) - " +
+      document.getElementById("plugin1").pluginFoundElement
+    );
+    ok(
+      window.pluginFoundWindow,
+      "window.pluginFoundWindow (NPNVWindowNPObject) - " +
+      window.pluginFoundWindow
+    );
+>>>>>>> upstream-releases
 
     SimpleTest.finish();
   }

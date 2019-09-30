@@ -64,9 +64,19 @@ class DataWriter {
 
   putLabel(label) {
     // Eliminate any trailing '.'s in the label (valid in text representation).
+<<<<<<< HEAD
     label = label.replace(/\.$/, "");
     let parts = label.split(".");
     parts.forEach((part) => {
+||||||| merged common ancestors
+    label = label.replace(/\.$/, '');
+    let parts = label.split('.');
+    parts.forEach((part) => {
+=======
+    label = label.replace(/\.$/, "");
+    let parts = label.split(".");
+    parts.forEach(part => {
+>>>>>>> upstream-releases
       this.putLengthString(part);
     });
     this.putValue(0);
@@ -74,7 +84,7 @@ class DataWriter {
 
   putLengthString(string) {
     if (string.length > 0xff) {
-        throw new Error("String too long.");
+      throw new Error("String too long.");
     }
     this.putValue(string.length);
     for (let i = 0; i < string.length; i++) {

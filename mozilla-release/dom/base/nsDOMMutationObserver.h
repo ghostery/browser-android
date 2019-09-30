@@ -24,7 +24,7 @@
 #include "mozilla/dom/Nullable.h"
 #include "mozilla/dom/MutationEventBinding.h"
 #include "mozilla/dom/MutationObserverBinding.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Animation.h"
 #include "nsIAnimationObserver.h"
 #include "nsGlobalWindow.h"
@@ -359,8 +359,14 @@ class nsMutationReceiver : public nsMutationReceiverBase {
                                           nsAtom* aAttribute) override {
     // We can reuse AttributeWillChange implementation.
     AttributeWillChange(aElement, aNameSpaceID, aAttribute,
+<<<<<<< HEAD
                         mozilla::dom::MutationEvent_Binding::MODIFICATION,
                         nullptr);
+||||||| merged common ancestors
+                        mozilla::dom::MutationEvent_Binding::MODIFICATION, nullptr);
+=======
+                        mozilla::dom::MutationEvent_Binding::MODIFICATION);
+>>>>>>> upstream-releases
   }
 
  protected:
@@ -468,7 +474,7 @@ class nsDOMMutationObserver final : public nsISupports, public nsWrapperCache {
 
   void TakeRecords(nsTArray<RefPtr<nsDOMMutationRecord>>& aRetVal);
 
-  void HandleMutation();
+  MOZ_CAN_RUN_SCRIPT void HandleMutation();
 
   void GetObservingInfo(
       nsTArray<mozilla::dom::Nullable<MutationObservingInfo>>& aResult,
@@ -515,6 +521,7 @@ class nsDOMMutationObserver final : public nsISupports, public nsWrapperCache {
   // static methods
   static void QueueMutationObserverMicroTask();
 
+  MOZ_CAN_RUN_SCRIPT
   static void HandleMutations(mozilla::AutoSlowOperation& aAso);
 
   static bool AllScheduledMutationObserversAreSuppressed() {
@@ -562,6 +569,7 @@ class nsDOMMutationObserver final : public nsISupports, public nsWrapperCache {
     return mOwner && nsGlobalWindowInner::Cast(mOwner)->IsInSyncOperation();
   }
 
+  MOZ_CAN_RUN_SCRIPT
   static void HandleMutationsInternal(mozilla::AutoSlowOperation& aAso);
 
   static void AddCurrentlyHandlingObserver(nsDOMMutationObserver* aObserver,
@@ -711,13 +719,32 @@ class nsAutoMutationBatch {
 class nsAutoAnimationMutationBatch {
   struct Entry;
 
+<<<<<<< HEAD
  public:
   explicit nsAutoAnimationMutationBatch(nsIDocument* aDocument) {
+||||||| merged common ancestors
+public:
+  explicit nsAutoAnimationMutationBatch(nsIDocument* aDocument)
+  {
+=======
+ public:
+  explicit nsAutoAnimationMutationBatch(mozilla::dom::Document* aDocument) {
+>>>>>>> upstream-releases
     Init(aDocument);
   }
 
+<<<<<<< HEAD
   void Init(nsIDocument* aDocument) {
     if (!aDocument || !aDocument->MayHaveDOMMutationObservers() ||
+||||||| merged common ancestors
+  void Init(nsIDocument* aDocument)
+  {
+    if (!aDocument ||
+        !aDocument->MayHaveDOMMutationObservers() ||
+=======
+  void Init(mozilla::dom::Document* aDocument) {
+    if (!aDocument || !aDocument->MayHaveDOMMutationObservers() ||
+>>>>>>> upstream-releases
         sCurrentBatch) {
       return;
     }

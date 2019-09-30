@@ -10,13 +10,11 @@
 #include "nsCycleCollectionParticipant.h"
 #include "nsTArray.h"
 #include "nsStubDocumentObserver.h"
-#include "nsITreeBoxObject.h"
 #include "nsITreeView.h"
 #include "nsITreeSelection.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/UniquePtr.h"
 
-class nsIDocument;
 class nsSelection;
 class nsTreeColumn;
 class Row;
@@ -24,10 +22,21 @@ class Row;
 namespace mozilla {
 namespace dom {
 class DataTransfer;
+class Document;
 class Element;
+<<<<<<< HEAD
 class TreeBoxObject;
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+class TreeBoxObject;
+} // namespace dom
+} // namespace mozilla
+=======
+class XULTreeElement;
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 nsresult NS_NewTreeContentView(nsITreeView** aResult);
 
@@ -74,6 +83,7 @@ class nsTreeContentView final : public nsITreeView,
                    mozilla::ErrorResult& aError);
   void GetCellValue(int32_t aRow, nsTreeColumn& aColumn, nsAString& aValue,
                     mozilla::ErrorResult& aError);
+<<<<<<< HEAD
   void GetCellText(int32_t aRow, nsTreeColumn& aColumn, nsAString& aText,
                    mozilla::ErrorResult& aError);
   void SetTree(mozilla::dom::TreeBoxObject* aTree,
@@ -94,6 +104,47 @@ class nsTreeContentView final : public nsITreeView,
                            nsTreeColumn& aColumn) {}
   Element* GetItemAtIndex(int32_t aRow, mozilla::ErrorResult& aError);
   int32_t GetIndexOfItem(Element* aItem);
+||||||| merged common ancestors
+    bool IsSelectable(int32_t aRow, nsTreeColumn& aColumn,
+                      mozilla::ErrorResult& aError);
+    void SetCellValue(int32_t aRow, nsTreeColumn& aColumn,
+                      const nsAString& aValue, mozilla::ErrorResult& aError);
+    void SetCellText(int32_t aRow, nsTreeColumn& aColumn,
+                      const nsAString& aText, mozilla::ErrorResult& aError);
+    void PerformAction(const nsAString& aAction)
+    {
+    }
+    void PerformActionOnRow(const nsAString& aAction, int32_t aRow)
+    {
+    }
+    void PerformActionOnCell(const nsAString& aAction, int32_t aRow,
+                             nsTreeColumn& aColumn)
+    {
+    }
+    Element* GetItemAtIndex(int32_t aRow, mozilla::ErrorResult& aError);
+    int32_t GetIndexOfItem(Element* aItem);
+=======
+  void GetCellText(int32_t aRow, nsTreeColumn& aColumn, nsAString& aText,
+                   mozilla::ErrorResult& aError);
+  void SetTree(mozilla::dom::XULTreeElement* aTree,
+               mozilla::ErrorResult& aError);
+  void ToggleOpenState(int32_t aRow, mozilla::ErrorResult& aError);
+  void CycleHeader(nsTreeColumn& aColumn, mozilla::ErrorResult& aError);
+  void SelectionChanged() {}
+  void CycleCell(int32_t aRow, nsTreeColumn& aColumn) {}
+  bool IsEditable(int32_t aRow, nsTreeColumn& aColumn,
+                  mozilla::ErrorResult& aError);
+  void SetCellValue(int32_t aRow, nsTreeColumn& aColumn,
+                    const nsAString& aValue, mozilla::ErrorResult& aError);
+  void SetCellText(int32_t aRow, nsTreeColumn& aColumn, const nsAString& aText,
+                   mozilla::ErrorResult& aError);
+  void PerformAction(const nsAString& aAction) {}
+  void PerformActionOnRow(const nsAString& aAction, int32_t aRow) {}
+  void PerformActionOnCell(const nsAString& aAction, int32_t aRow,
+                           nsTreeColumn& aColumn) {}
+  Element* GetItemAtIndex(int32_t aRow, mozilla::ErrorResult& aError);
+  int32_t GetIndexOfItem(Element* aItem);
+>>>>>>> upstream-releases
 
   NS_DECL_NSITREEVIEW
 
@@ -156,12 +207,27 @@ class nsTreeContentView final : public nsITreeView,
  private:
   bool IsValidRowIndex(int32_t aRowIndex);
 
+<<<<<<< HEAD
   nsCOMPtr<nsITreeBoxObject> mBoxObject;
   nsCOMPtr<nsITreeSelection> mSelection;
   nsCOMPtr<Element> mRoot;
   nsCOMPtr<nsIContent> mBody;
   nsIDocument* mDocument;  // WEAK
   nsTArray<mozilla::UniquePtr<Row>> mRows;
+||||||| merged common ancestors
+    nsCOMPtr<nsITreeBoxObject>          mBoxObject;
+    nsCOMPtr<nsITreeSelection>          mSelection;
+    nsCOMPtr<Element>                   mRoot;
+    nsCOMPtr<nsIContent>                mBody;
+    nsIDocument*                        mDocument;      // WEAK
+    nsTArray<mozilla::UniquePtr<Row>>   mRows;
+=======
+  RefPtr<mozilla::dom::XULTreeElement> mTree;
+  nsCOMPtr<nsITreeSelection> mSelection;
+  nsCOMPtr<nsIContent> mBody;
+  mozilla::dom::Document* mDocument;  // WEAK
+  nsTArray<mozilla::UniquePtr<Row>> mRows;
+>>>>>>> upstream-releases
 };
 
 #endif  // nsTreeContentView_h__

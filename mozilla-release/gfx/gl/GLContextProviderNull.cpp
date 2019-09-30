@@ -10,9 +10,21 @@ namespace gl {
 
 using namespace mozilla::widget;
 
+<<<<<<< HEAD
 already_AddRefed<GLContext> GLContextProviderNull::CreateForCompositorWidget(
     CompositorWidget* aCompositorWidget, bool aForceAccelerated) {
   return nullptr;
+||||||| merged common ancestors
+already_AddRefed<GLContext>
+GLContextProviderNull::CreateForCompositorWidget(CompositorWidget* aCompositorWidget, bool aForceAccelerated)
+{
+    return nullptr;
+=======
+already_AddRefed<GLContext> GLContextProviderNull::CreateForCompositorWidget(
+    CompositorWidget* aCompositorWidget, bool aWebRender,
+    bool aForceAccelerated) {
+  return nullptr;
+>>>>>>> upstream-releases
 }
 
 already_AddRefed<GLContext> GLContextProviderNull::CreateForWindow(

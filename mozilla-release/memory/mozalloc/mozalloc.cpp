@@ -7,6 +7,7 @@
 
 #include <stddef.h>  // for size_t
 
+<<<<<<< HEAD
 #if defined(MOZ_MEMORY)
 // mozalloc.cpp is part of the same library as mozmemory, thus MOZ_MEMORY_IMPL
 // is needed.
@@ -28,11 +29,39 @@
 
 MOZ_MEMORY_API char* strdup_impl(const char*);
 MOZ_MEMORY_API char* strndup_impl(const char*, size_t);
+||||||| merged common ancestors
+#if defined(MOZ_MEMORY)
+// mozalloc.cpp is part of the same library as mozmemory, thus MOZ_MEMORY_IMPL
+// is needed.
+#define MOZ_MEMORY_IMPL
+#include "mozmemory_wrap.h"
 
-#else
+#if defined(XP_DARWIN)
+#include <malloc/malloc.h> // for malloc_size
+#endif
+
+// See mozmemory_wrap.h for more details. This file is part of libmozglue, so
+// it needs to use _impl suffixes. However, with libmozglue growing, this is
+// becoming cumbersome, so we will likely use a malloc.h wrapper of some sort
+// and allow the use of the functions without a _impl suffix.
+#define MALLOC_DECL(name, return_type, ...) \
+  MOZ_MEMORY_API return_type name ## _impl(__VA_ARGS__);
+#define MALLOC_FUNCS MALLOC_FUNCS_MALLOC
+#include "malloc_decls.h"
+
+MOZ_MEMORY_API char *strdup_impl(const char *);
+MOZ_MEMORY_API char *strndup_impl(const char *, size_t);
+=======
+#if defined(MALLOC_H)
+#  include MALLOC_H  // for memalign, malloc_size, malloc_us
+#endif               // if defined(MALLOC_H)
+>>>>>>> upstream-releases
+
+#if !defined(MOZ_MEMORY)
 // When jemalloc is disabled, or when building the static runtime variant,
 // we need not to use the suffixes.
 
+<<<<<<< HEAD
 #if defined(MALLOC_H)
 #include MALLOC_H    // for memalign, malloc_size, malloc_us
 #endif               // if defined(MALLOC_H)
@@ -49,6 +78,38 @@ MOZ_MEMORY_API char* strndup_impl(const char*, size_t);
 #define malloc_usable_size_impl malloc_usable_size
 #define strdup_impl strdup
 #define strndup_impl strndup
+||||||| merged common ancestors
+#if defined(MALLOC_H)
+#  include MALLOC_H             // for memalign, malloc_size, malloc_us
+#endif // if defined(MALLOC_H)
+#include <stdlib.h>             // for malloc, free
+#if defined(XP_UNIX)
+#  include <unistd.h>
+#endif //if defined(XP_UNIX)
+
+#define malloc_impl malloc
+#define calloc_impl calloc
+#define realloc_impl realloc
+#define free_impl free
+#define memalign_impl memalign
+#define malloc_usable_size_impl malloc_usable_size
+#define strdup_impl strdup
+#define strndup_impl strndup
+=======
+#  include <stdlib.h>  // for malloc, free
+#  if defined(XP_UNIX)
+#    include <unistd.h>
+#  endif  // if defined(XP_UNIX)
+
+#  define malloc_impl malloc
+#  define calloc_impl calloc
+#  define realloc_impl realloc
+#  define free_impl free
+#  define memalign_impl memalign
+#  define malloc_usable_size_impl malloc_usable_size
+#  define strdup_impl strdup
+#  define strndup_impl strndup
+>>>>>>> upstream-releases
 
 #endif
 
@@ -64,6 +125,7 @@ MOZ_MEMORY_API char* strndup_impl(const char*, size_t);
 #include "mozilla/mozalloc.h"
 #include "mozilla/mozalloc_oom.h"  // for mozalloc_handle_oom
 
+<<<<<<< HEAD
 void* moz_xmalloc(size_t size) {
   void* ptr = malloc_impl(size);
   if (MOZ_UNLIKELY(!ptr && size)) {
@@ -71,6 +133,30 @@ void* moz_xmalloc(size_t size) {
     return moz_xmalloc(size);
   }
   return ptr;
+||||||| merged common ancestors
+void*
+moz_xmalloc(size_t size)
+{
+    void* ptr = malloc_impl(size);
+    if (MOZ_UNLIKELY(!ptr && size)) {
+        mozalloc_handle_oom(size);
+        return moz_xmalloc(size);
+    }
+    return ptr;
+=======
+#if defined(MOZ_MEMORY)
+MOZ_MEMORY_API char* strdup_impl(const char*);
+MOZ_MEMORY_API char* strndup_impl(const char*, size_t);
+#endif
+
+void* moz_xmalloc(size_t size) {
+  void* ptr = malloc_impl(size);
+  if (MOZ_UNLIKELY(!ptr && size)) {
+    mozalloc_handle_oom(size);
+    return moz_xmalloc(size);
+  }
+  return ptr;
+>>>>>>> upstream-releases
 }
 
 void* moz_xcalloc(size_t nmemb, size_t size) {
@@ -154,7 +240,7 @@ size_t moz_malloc_size_of(const void* ptr) {
 }
 
 #if defined(MOZ_MEMORY)
-#include "mozjemalloc_types.h"
+#  include "mozjemalloc_types.h"
 // mozmemory.h declares jemalloc_ptr_info(), but including that header in this
 // file is complicated. So we just redeclare it here instead, and include
 // mozjemalloc_types.h for jemalloc_ptr_info_t.

@@ -13,17 +13,45 @@ class mozSpellChecker;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 class RemoteSpellcheckEngineChild
     : public mozilla::PRemoteSpellcheckEngineChild {
  public:
   explicit RemoteSpellcheckEngineChild(mozSpellChecker *aOwner);
+||||||| merged common ancestors
+class RemoteSpellcheckEngineChild : public mozilla::PRemoteSpellcheckEngineChild
+{
+public:
+  explicit RemoteSpellcheckEngineChild(mozSpellChecker *aOwner);
+=======
+class RemoteSpellcheckEngineChild
+    : public mozilla::PRemoteSpellcheckEngineChild {
+ public:
+  explicit RemoteSpellcheckEngineChild(mozSpellChecker* aOwner);
+>>>>>>> upstream-releases
   virtual ~RemoteSpellcheckEngineChild();
 
   RefPtr<GenericPromise> SetCurrentDictionaryFromList(
+<<<<<<< HEAD
       const nsTArray<nsString> &aList);
+||||||| merged common ancestors
+                           const nsTArray<nsString>& aList);
+=======
+      const nsTArray<nsString>& aList);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   mozSpellChecker *mOwner;
+||||||| merged common ancestors
+private:
+  mozSpellChecker *mOwner;
+=======
+  RefPtr<CheckWordPromise> CheckWords(const nsTArray<nsString>& aWords);
+
+ private:
+  mozSpellChecker* mOwner;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

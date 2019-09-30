@@ -173,17 +173,39 @@ inline long double Abs<long double>(const long double aLongDouble) {
 
 }  // namespace mozilla
 
+<<<<<<< HEAD
 #if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_AMD64) || \
                           defined(_M_X64) || defined(_M_ARM64))
 #define MOZ_BITSCAN_WINDOWS
+||||||| merged common ancestors
+#if defined(_MSC_VER) && \
+    (defined(_M_IX86) || defined(_M_AMD64) || defined(_M_X64) || defined(_M_ARM64))
+#  define MOZ_BITSCAN_WINDOWS
+=======
+#if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_AMD64) || \
+                          defined(_M_X64) || defined(_M_ARM64))
+#  define MOZ_BITSCAN_WINDOWS
+>>>>>>> upstream-releases
 
 #include <intrin.h>
 #pragma intrinsic(_BitScanForward, _BitScanReverse)
 
+<<<<<<< HEAD
 #if defined(_M_AMD64) || defined(_M_X64) || defined(_M_ARM64)
 #define MOZ_BITSCAN_WINDOWS64
 #pragma intrinsic(_BitScanForward64, _BitScanReverse64)
 #endif
+||||||| merged common ancestors
+#  if defined(_M_AMD64) || defined(_M_X64) || defined(_M_ARM64)
+#    define MOZ_BITSCAN_WINDOWS64
+#   pragma intrinsic(_BitScanForward64, _BitScanReverse64)
+#  endif
+=======
+#  if defined(_M_AMD64) || defined(_M_X64) || defined(_M_ARM64)
+#    define MOZ_BITSCAN_WINDOWS64
+#    pragma intrinsic(_BitScanForward64, _BitScanReverse64)
+#  endif
+>>>>>>> upstream-releases
 
 #endif
 
@@ -215,34 +237,54 @@ inline uint_fast8_t CountPopulation64(uint64_t aValue) {
                       CountPopulation32(aValue >> 32));
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountLeadingZeroes64(uint64_t aValue) {
 #if defined(MOZ_BITSCAN_WINDOWS64)
+||||||| merged common ancestors
+inline uint_fast8_t
+CountLeadingZeroes64(uint64_t aValue)
+{
+#if defined(MOZ_BITSCAN_WINDOWS64)
+=======
+inline uint_fast8_t CountLeadingZeroes64(uint64_t aValue) {
+#  if defined(MOZ_BITSCAN_WINDOWS64)
+>>>>>>> upstream-releases
   unsigned long index;
   if (!_BitScanReverse64(&index, static_cast<unsigned __int64>(aValue)))
     return 64;
   return uint_fast8_t(63 - index);
-#else
+#  else
   uint32_t hi = uint32_t(aValue >> 32);
   if (hi != 0) {
     return CountLeadingZeroes32(hi);
   }
   return 32u + CountLeadingZeroes32(uint32_t(aValue));
-#endif
+#  endif
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
 #if defined(MOZ_BITSCAN_WINDOWS64)
+||||||| merged common ancestors
+inline uint_fast8_t
+CountTrailingZeroes64(uint64_t aValue)
+{
+#if defined(MOZ_BITSCAN_WINDOWS64)
+=======
+inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
+#  if defined(MOZ_BITSCAN_WINDOWS64)
+>>>>>>> upstream-releases
   unsigned long index;
   if (!_BitScanForward64(&index, static_cast<unsigned __int64>(aValue)))
     return 64;
   return uint_fast8_t(index);
-#else
+#  else
   uint32_t lo = uint32_t(aValue);
   if (lo != 0) {
     return CountTrailingZeroes32(lo);
   }
   return 32u + CountTrailingZeroes32(uint32_t(aValue >> 32));
-#endif
+#  endif
 }
 
 #ifdef MOZ_HAVE_BITSCAN64
@@ -251,6 +293,7 @@ inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
 
 #elif defined(__clang__) || defined(__GNUC__)
 
+<<<<<<< HEAD
 #if defined(__clang__)
 #if !__has_builtin(__builtin_ctz) || !__has_builtin(__builtin_clz)
 #error "A clang providing __builtin_c[lt]z is required to build"
@@ -261,26 +304,101 @@ inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
 
 inline uint_fast8_t CountLeadingZeroes32(uint32_t aValue) {
   return __builtin_clz(aValue);
+||||||| merged common ancestors
+#  if defined(__clang__)
+#    if !__has_builtin(__builtin_ctz) || !__has_builtin(__builtin_clz)
+#      error "A clang providing __builtin_c[lt]z is required to build"
+#    endif
+#  else
+     // gcc has had __builtin_clz and friends since 3.4: no need to check.
+#  endif
+
+inline uint_fast8_t
+CountLeadingZeroes32(uint32_t aValue)
+{
+  return __builtin_clz(aValue);
+=======
+#  if defined(__clang__)
+#    if !__has_builtin(__builtin_ctz) || !__has_builtin(__builtin_clz)
+#      error "A clang providing __builtin_c[lt]z is required to build"
+#    endif
+#  else
+// gcc has had __builtin_clz and friends since 3.4: no need to check.
+#  endif
+
+inline uint_fast8_t CountLeadingZeroes32(uint32_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_clz(aValue));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountTrailingZeroes32(uint32_t aValue) {
   return __builtin_ctz(aValue);
+||||||| merged common ancestors
+inline uint_fast8_t
+CountTrailingZeroes32(uint32_t aValue)
+{
+  return __builtin_ctz(aValue);
+=======
+inline uint_fast8_t CountTrailingZeroes32(uint32_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_ctz(aValue));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountPopulation32(uint32_t aValue) {
   return __builtin_popcount(aValue);
+||||||| merged common ancestors
+inline uint_fast8_t
+CountPopulation32(uint32_t aValue)
+{
+  return __builtin_popcount(aValue);
+=======
+inline uint_fast8_t CountPopulation32(uint32_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_popcount(aValue));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountPopulation64(uint64_t aValue) {
   return __builtin_popcountll(aValue);
+||||||| merged common ancestors
+inline uint_fast8_t
+CountPopulation64(uint64_t aValue)
+{
+  return __builtin_popcountll(aValue);
+=======
+inline uint_fast8_t CountPopulation64(uint64_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_popcountll(aValue));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountLeadingZeroes64(uint64_t aValue) {
   return __builtin_clzll(aValue);
+||||||| merged common ancestors
+inline uint_fast8_t
+CountLeadingZeroes64(uint64_t aValue)
+{
+  return __builtin_clzll(aValue);
+=======
+inline uint_fast8_t CountLeadingZeroes64(uint64_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_clzll(aValue));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
   return __builtin_ctzll(aValue);
+||||||| merged common ancestors
+inline uint_fast8_t
+CountTrailingZeroes64(uint64_t aValue)
+{
+  return __builtin_ctzll(aValue);
+=======
+inline uint_fast8_t CountTrailingZeroes64(uint64_t aValue) {
+  return static_cast<uint_fast8_t>(__builtin_ctzll(aValue));
+>>>>>>> upstream-releases
 }
 
 #else

@@ -1,4 +1,10 @@
+<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/eval-export-dflt-expr-cls-name-meth.js
 // |reftest| module
+||||||| merged common ancestors
+// |reftest| skip module -- dynamic-import is not supported
+=======
+// |reftest| skip-if(!xulRuntime.shell) module -- dynamic-import is not enabled unconditionally
+>>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/eval-export-dflt-expr-cls-name-meth.js
 // Copyright (C) 2018 Rick Waldron. All rights reserved.
 // Copyright (C) 2016 the V8 project authors. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.

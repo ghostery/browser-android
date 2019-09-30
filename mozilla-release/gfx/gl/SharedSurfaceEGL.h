@@ -11,8 +11,8 @@
 #include "SharedSurface.h"
 
 #ifdef MOZ_WIDGET_ANDROID
-#include "GeneratedJNIWrappers.h"
-#include "AndroidNativeWindow.h"
+#  include "GeneratedJNIWrappers.h"
+#  include "AndroidNativeWindow.h"
 #endif
 
 namespace mozilla {
@@ -37,11 +37,20 @@ class SharedSurface_EGLImage : public SharedSurface {
 
   static bool HasExtensions(GLLibraryEGL* egl, GLContext* gl);
 
+<<<<<<< HEAD
  protected:
   mutable Mutex mMutex;
   GLLibraryEGL* const mEGL;
   const GLFormats mFormats;
   GLuint mProdTex;
+||||||| merged common ancestors
+#ifdef MOZ_WIDGET_ANDROID
+=======
+ protected:
+  mutable Mutex mMutex;
+  const GLFormats mFormats;
+  GLuint mProdTex;
+>>>>>>> upstream-releases
 
  public:
   const EGLImage mImage;
@@ -49,13 +58,28 @@ class SharedSurface_EGLImage : public SharedSurface {
  protected:
   EGLSync mSync;
 
+<<<<<<< HEAD
   SharedSurface_EGLImage(GLContext* gl, GLLibraryEGL* egl,
                          const gfx::IntSize& size, bool hasAlpha,
                          const GLFormats& formats, GLuint prodTex,
                          EGLImage image);
+||||||| merged common ancestors
+        return (SharedSurface_SurfaceTexture*)surf;
+    }
+=======
+  SharedSurface_EGLImage(GLContext* gl, const gfx::IntSize& size, bool hasAlpha,
+                         const GLFormats& formats, GLuint prodTex,
+                         EGLImage image);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   EGLDisplay Display() const;
   void UpdateProdTexture(const MutexAutoLock& curAutoLock);
+||||||| merged common ancestors
+    java::GeckoSurface::Param JavaSurface() { return mSurface; }
+=======
+  void UpdateProdTexture(const MutexAutoLock& curAutoLock);
+>>>>>>> upstream-releases
 
  public:
   virtual ~SharedSurface_EGLImage();

@@ -14,8 +14,15 @@
  * overflow situations.
  ***/
 #ifndef SAFE_COMPARE_EVEN_WITH_WRAPPING
+<<<<<<< HEAD
 #define SAFE_COMPARE_EVEN_WITH_WRAPPING(A, B) \
   (((int)((long)A - (long)B) & 0xFFFFFFFF))
+||||||| merged common ancestors
+#define SAFE_COMPARE_EVEN_WITH_WRAPPING(A, B) (((int)((long)A - (long)B) & 0xFFFFFFFF))
+=======
+#  define SAFE_COMPARE_EVEN_WITH_WRAPPING(A, B) \
+    (((int)((long)A - (long)B) & 0xFFFFFFFF))
+>>>>>>> upstream-releases
 #endif
 
 class nsIdleServiceWin : public nsIdleService {

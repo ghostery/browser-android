@@ -4,18 +4,17 @@
 
 <!-- General panel -->
 
-<script type="application/javascript"
-        src="chrome://browser/content/preferences/in-content/main.js"/>
+<script src="chrome://browser/content/preferences/in-content/main.js"/>
 
 #ifdef MOZ_UPDATER
-  <script type="application/javascript" src="chrome://browser/content/aboutDialog-appUpdater.js"/>
+  <script src="chrome://browser/content/aboutDialog-appUpdater.js"/>
 #endif
 
-<script type="application/javascript"
-        src="chrome://mozapps/content/preferences/fontbuilder.js"/>
+<script src="chrome://mozapps/content/preferences/fontbuilder.js"/>
 
 <stringbundle id="bundlePreferences" src="chrome://browser/locale/preferences.properties"/>
 
+<html:template id="template-paneGeneral">
 <hbox id="generalCategory"
       class="subcategory"
       hidden="true"
@@ -27,6 +26,7 @@
 <groupbox id="startupGroup"
           data-category="paneGeneral"
           hidden="true">
+<<<<<<< HEAD
   <label><html:h2 data-l10n-id="startup-header"/></label>
 
 #ifdef MOZ_DEV_EDITION
@@ -42,6 +42,25 @@
     </hbox>
   </vbox>
 #endif
+||||||| merged common ancestors
+  <caption><label data-l10n-id="startup-header"/></caption>
+
+#ifdef MOZ_DEV_EDITION
+  <vbox id="separateProfileBox">
+    <checkbox id="separateProfileMode"
+              data-l10n-id="separate-profile-mode"/>
+    <hbox id="sync-dev-edition-root" lign="center" class="indent" hidden="true">
+      <label id="useFirefoxSync" data-l10n-id="use-firefox-sync"/>
+      <deck id="getStarted">
+        <label class="text-link" data-l10n-id="get-started-not-logged-in"/>
+        <label class="text-link" data-l10n-id="get-started-configured"/>
+      </deck>
+    </hbox>
+  </vbox>
+#endif
+=======
+  <label><html:h2 data-l10n-id="startup-header"/></label>
+>>>>>>> upstream-releases
 
   <vbox id="startupPageBox">
     <checkbox id="browserRestoreSession"
@@ -63,6 +82,7 @@
         <image class="face-sad"/>
         <label id="isNotDefaultLabel" flex="1" data-l10n-id="is-not-default"/>
         <button id="setDefaultButton"
+                is="highlightable-button"
                 class="accessory-button"
                 data-l10n-id="set-as-my-default-browser"
                 preference="pref.general.disable_button.default_browser"/>
@@ -110,6 +130,7 @@
             align="center" class="extension-controlled">
         <description control="disableContainersExtension" flex="1" />
         <button id="disableContainersExtension"
+                is="highlightable-button"
                 class="extension-controlled-button accessory-button"
                 data-l10n-id="disable-extension" />
       </hbox>
@@ -119,11 +140,12 @@
                   data-l10n-id="browser-containers-enabled"
                   preference="privacy.userContext.enabled"
                   onsyncfrompreference="return gMainPane.readBrowserContainersCheckbox();"/>
-        <label id="browserContainersLearnMore" class="learnMore text-link" data-l10n-id="browser-containers-learn-more"/>
+        <label id="browserContainersLearnMore" is="text-link" class="learnMore" data-l10n-id="browser-containers-learn-more"/>
         <spacer flex="1"/>
         <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
         <hbox>
           <button id="browserContainersSettings"
+                  is="highlightable-button"
                   class="accessory-button"
                   data-l10n-id="browser-containers-settings"
                   search-l10n-ids="containers-add-button.label,
@@ -187,6 +209,7 @@
         </menulist>
       </hbox>
     </hbox>
+<<<<<<< HEAD
 
     <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
     <hbox>
@@ -282,6 +305,107 @@
               "/>
     </hbox>
   </hbox>
+||||||| merged common ancestors
+  </vbox>
+=======
+
+    <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
+    <hbox>
+      <button id="advancedFonts"
+              is="highlightable-button"
+              class="accessory-button"
+              icon="select-font"
+              data-l10n-id="advanced-fonts"
+              search-l10n-ids="
+                fonts-window.title,
+                fonts-langgroup-header,
+                fonts-proportional-size,
+                fonts-proportional-header,
+                fonts-serif,
+                fonts-sans-serif,
+                fonts-monospace,
+                fonts-langgroup-arabic.label,
+                fonts-langgroup-armenian.label,
+                fonts-langgroup-bengali.label,
+                fonts-langgroup-simpl-chinese.label,
+                fonts-langgroup-trad-chinese-hk.label,
+                fonts-langgroup-trad-chinese.label,
+                fonts-langgroup-cyrillic.label,
+                fonts-langgroup-devanagari.label,
+                fonts-langgroup-ethiopic.label,
+                fonts-langgroup-georgian.label,
+                fonts-langgroup-el.label,
+                fonts-langgroup-gujarati.label,
+                fonts-langgroup-gurmukhi.label,
+                fonts-langgroup-japanese.label,
+                fonts-langgroup-hebrew.label,
+                fonts-langgroup-kannada.label,
+                fonts-langgroup-khmer.label,
+                fonts-langgroup-korean.label,
+                fonts-langgroup-latin.label,
+                fonts-langgroup-malayalam.label,
+                fonts-langgroup-math.label,
+                fonts-langgroup-odia.label,
+                fonts-langgroup-sinhala.label,
+                fonts-langgroup-tamil.label,
+                fonts-langgroup-telugu.label,
+                fonts-langgroup-thai.label,
+                fonts-langgroup-tibetan.label,
+                fonts-langgroup-canadian.label,
+                fonts-langgroup-other.label,
+                fonts-minsize,
+                fonts-minsize-none.label,
+                fonts-default-serif.label,
+                fonts-default-sans-serif.label,
+                fonts-allow-own.label,
+                fonts-languages-fallback-header,
+                fonts-languages-fallback-label,
+                fonts-languages-fallback-desc,
+                fonts-languages-fallback-name-auto.label,
+                fonts-languages-fallback-name-arabic.label,
+                fonts-languages-fallback-name-baltic.label,
+                fonts-languages-fallback-name-ceiso.label,
+                fonts-languages-fallback-name-cewindows.label,
+                fonts-languages-fallback-name-simplified.label,
+                fonts-languages-fallback-name-traditional.label,
+                fonts-languages-fallback-name-cyrillic.label,
+                fonts-languages-fallback-name-greek.label,
+                fonts-languages-fallback-name-hebrew.label,
+                fonts-languages-fallback-name-japanese.label,
+                fonts-languages-fallback-name-korean.label,
+                fonts-languages-fallback-name-thai.label,
+                fonts-languages-fallback-name-turkish.label,
+                fonts-languages-fallback-name-vietnamese.label,
+                fonts-languages-fallback-name-other.label,
+              " />
+    </hbox>
+  </hbox>
+  <hbox id="colorsSettings">
+    <spacer flex="1" />
+    <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
+    <hbox>
+      <button id="colors"
+              is="highlightable-button"
+              class="accessory-button"
+              icon="select-color"
+              data-l10n-id="colors-settings"
+              search-l10n-ids="
+                colors-page-override,
+                colors-page-override-option-always.label,
+                colors-page-override-option-auto.label,
+                colors-page-override-option-never.label,
+                colors-text-and-background,
+                colors-text-header,
+                colors-background,
+                colors-use-system,
+                colors-underline-links,
+                colors-links-header,
+                colors-unvisited-links,
+                colors-visited-links
+              "/>
+    </hbox>
+  </hbox>
+>>>>>>> upstream-releases
 </groupbox>
 
 <!-- Languages -->
@@ -295,6 +419,7 @@
         <menupopup/>
       </menulist>
       <button id="manageBrowserLanguagesButton"
+              is="highlightable-button"
               class="accessory-button"
               data-l10n-id="manage-browser-languages-button"
               oncommand="gMainPane.showBrowserLanguages({search: false})"/>
@@ -310,6 +435,7 @@
     <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
     <hbox>
       <button id="chooseLanguage"
+              is="highlightable-button"
               class="accessory-button"
               data-l10n-id="choose-button"
               search-l10n-ids="
@@ -339,6 +465,7 @@
       </hbox>
     </hbox>
     <button id="translateButton"
+            is="highlightable-button"
             class="accessory-button"
             data-l10n-id="translate-exceptions"/>
   </hbox>
@@ -368,10 +495,12 @@
       <radio id="saveTo"
              value="true"
              data-l10n-id="download-save-to"/>
-      <textbox id="downloadFolder" flex="1"
-               readonly="true"
-               aria-labelledby="saveTo"/>
+      <html:input id="downloadFolder"
+                  type="text"
+                  readonly="readonly"
+                  aria-labelledby="saveTo"/>
       <button id="chooseFolder"
+              is="highlightable-button"
               class="accessory-button"
               data-l10n-id="download-choose-folder"/>
     </hbox>
@@ -389,26 +518,26 @@
   <label><html:h2 data-l10n-id="applications-header"/></label>
   <description data-l10n-id="applications-description"/>
   <textbox id="filter" flex="1"
-           type="search"
+           is="search-textbox"
            data-l10n-id="applications-filter"
            aria-controls="handlersView"/>
 
+  <listheader equalsize="always">
+    <treecol id="typeColumn" data-l10n-id="applications-type-column" value="type"
+             persist="sortDirection"
+             flex="1" sortDirection="ascending"/>
+    <treecol id="actionColumn" data-l10n-id="applications-action-column" value="action"
+             persist="sortDirection"
+             flex="1"/>
+  </listheader>
   <richlistbox id="handlersView"
-               preference="pref.downloads.disable_button.edit_actions">
-    <listheader equalsize="always">
-        <treecol id="typeColumn" data-l10n-id="applications-type-column" value="type"
-                 persist="sortDirection"
-                 flex="1" sortDirection="ascending"/>
-        <treecol id="actionColumn" data-l10n-id="applications-action-column" value="action"
-                 persist="sortDirection"
-                 flex="1"/>
-    </listheader>
-  </richlistbox>
+               preference="pref.downloads.disable_button.edit_actions"/>
 </groupbox>
 
 
 <!-- DRM Content -->
 <groupbox id="drmGroup" data-category="paneGeneral" data-subcategory="drm" hidden="true">
+<<<<<<< HEAD
   <label><html:h2 data-l10n-id="drm-content-header"/></label>
   <grid id="contentGrid2">
     <columns>
@@ -425,6 +554,31 @@
       </row>
     </rows>
   </grid>
+||||||| merged common ancestors
+  <caption><label data-l10n-id="drm-content-header"/></caption>
+  <grid id="contentGrid2">
+    <columns>
+      <column flex="1"/>
+      <column/>
+    </columns>
+    <rows id="contentRows-2">
+      <row id="playDRMContentRow">
+        <hbox align="center">
+          <checkbox id="playDRMContent" preference="media.eme.enabled"
+                    class="tail-with-learn-more" data-l10n-id="play-drm-content" />
+          <label id="playDRMContentLink" class="learnMore text-link" data-l10n-id="play-drm-content-learn-more"/>
+        </hbox>
+      </row>
+    </rows>
+  </grid>
+=======
+  <label><html:h2 data-l10n-id="drm-content-header"/></label>
+  <hbox align="center">
+    <checkbox id="playDRMContent" preference="media.eme.enabled"
+              class="tail-with-learn-more" data-l10n-id="play-drm-content" />
+    <label id="playDRMContentLink" class="learnMore" data-l10n-id="play-drm-content-learn-more" is="text-link"/>
+  </hbox>
+>>>>>>> upstream-releases
 </groupbox>
 
 #ifdef HAVE_SHELL_SERVICE
@@ -457,6 +611,7 @@
     <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
     <vbox>
       <button id="showUpdateHistory"
+              is="highlightable-button"
               class="accessory-button"
               data-l10n-id="update-history"
               preference="app.update.disable_button.showUpdateHistory"
@@ -473,26 +628,51 @@
       <hbox id="checkForUpdates" align="start">
         <spacer flex="1"/>
         <button id="checkForUpdatesButton"
+<<<<<<< HEAD
                 data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+                label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+                is="highlightable-button"
+                data-l10n-id="update-checkForUpdatesButton"
+>>>>>>> upstream-releases
                 oncommand="gAppUpdater.checkForUpdates();"/>
       </hbox>
       <hbox id="downloadAndInstall" align="start">
         <spacer flex="1"/>
         <button id="downloadAndInstallButton"
+                is="highlightable-button"
                 oncommand="gAppUpdater.startDownload();"/>
                 <!-- label and accesskey will be filled by JS -->
       </hbox>
       <hbox id="apply" align="start">
         <spacer flex="1"/>
         <button id="updateButton"
+<<<<<<< HEAD
                 data-l10n-id="update-updateButton"
+||||||| merged common ancestors
+                label="&update.updateButton.label3;"
+                accesskey="&update.updateButton.accesskey;"
+=======
+                is="highlightable-button"
+                data-l10n-id="update-updateButton"
+>>>>>>> upstream-releases
                 oncommand="gAppUpdater.buttonRestartAfterDownload();"/>
       </hbox>
       <hbox id="checkingForUpdates" align="start">
         <image class="update-throbber"/>
         <label data-l10n-id="update-checkingForUpdates"></label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
       <hbox id="downloading" align="start" data-l10n-id="update-downloading">
@@ -508,49 +688,121 @@
           <html:a id="failedLink" target="_blank" class="learnMore text-link" data-l10n-name="failed-link-main"></html:a>
         </label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 oncommand="gAppUpdater.checkForUpdates();"/>
       </hbox>
       <hbox id="policyDisabled" align="start">
         <label data-l10n-id="update-adminDisabled"></label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
       <hbox id="noUpdatesFound" align="start">
         <image class="face-smile"/>
         <label data-l10n-id="update-noUpdatesFound"></label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 oncommand="gAppUpdater.checkForUpdates();"/>
       </hbox>
       <hbox id="otherInstanceHandlingUpdates" align="start">
         <label data-l10n-id="update-otherInstanceHandlingUpdates"></label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
       <hbox id="manualUpdate" align="start">
         <image class="face-sad"/>
+<<<<<<< HEAD
         <description flex="1" data-l10n-id="update-manual">
           <label id="manualLink" class="text-link" data-l10n-name="manual-link"/>
+||||||| merged common ancestors
+        <description flex="1">
+          <label>&update.manual.start;</label><label id="manualLink" class="text-link"/><label>&update.manual.end;</label>
+=======
+        <description flex="1" data-l10n-id="update-manual">
+          <label id="manualLink" data-l10n-name="manual-link" is="text-link"/>
+>>>>>>> upstream-releases
         </description>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
       <hbox id="unsupportedSystem" align="start">
+<<<<<<< HEAD
         <description flex="1" data-l10n-id="update-unsupported">
           <label id="unsupportedLink" class="learnMore text-link" data-l10n-name="unsupported-link"></label>
+||||||| merged common ancestors
+        <description flex="1">
+          <label>&update.unsupported.start;</label><label id="unsupportedLink" class="learnMore text-link">&update.unsupported.linkText;</label><label>&update.unsupported.end;</label>
+=======
+        <description flex="1" data-l10n-id="update-unsupported">
+          <label id="unsupportedLink" class="learnMore" data-l10n-name="unsupported-link" is="text-link"></label>
+>>>>>>> upstream-releases
         </description>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-checkForUpdatesButton"
+||||||| merged common ancestors
+        <button label="&update.checkForUpdatesButton.label;"
+                accesskey="&update.checkForUpdatesButton.accesskey;"
+=======
+        <button data-l10n-id="update-checkForUpdatesButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
       <hbox id="restarting" align="start">
         <image class="update-throbber"/><label data-l10n-id="update-restarting"></label>
         <spacer flex="1"/>
+<<<<<<< HEAD
         <button data-l10n-id="update-updateButton"
+||||||| merged common ancestors
+        <button label="&update.updateButton.label3;"
+                accesskey="&update.updateButton.accesskey;"
+=======
+        <button data-l10n-id="update-updateButton"
+                is="highlightable-button"
+>>>>>>> upstream-releases
                 disabled="true"/>
       </hbox>
     </deck>
@@ -559,6 +811,7 @@
 
 #ifdef MOZ_UPDATER
   <description id="updateAllowDescription" data-l10n-id="update-application-allow-description"></description>
+<<<<<<< HEAD
   <radiogroup id="updateRadioGroup">
     <radio id="autoDesktop"
            value="true"
@@ -567,6 +820,29 @@
            value="false"
            data-l10n-id="update-application-check-choose"/>
   </radiogroup>
+||||||| merged common ancestors
+  <radiogroup id="updateRadioGroup" preference="app.update.auto">
+    <radio id="autoDesktop"
+           value="true"
+           data-l10n-id="update-application-auto"/>
+    <radio value="false"
+           data-l10n-id="update-application-check-choose"/>
+  </radiogroup>
+=======
+  <vbox id="updateSettingsContainer">
+    <radiogroup id="updateRadioGroup">
+      <radio id="autoDesktop"
+             value="true"
+             data-l10n-id="update-application-auto"/>
+      <radio id="manualDesktop"
+             value="false"
+             data-l10n-id="update-application-check-choose"/>
+    </radiogroup>
+    <description id="updateSettingCrossUserWarning" hidden="true"
+                 data-l10n-id="update-application-warning-cross-user-setting">
+    </description>
+  </vbox>
+>>>>>>> upstream-releases
 #ifdef MOZ_MAINTENANCE_SERVICE
   <checkbox id="useService"
             data-l10n-id="update-application-use-service"
@@ -594,7 +870,7 @@
               class="tail-with-learn-more"
               data-l10n-id="performance-use-recommended-settings-checkbox"
               preference="browser.preferences.defaultPerformanceSettings.enabled"/>
-    <label id="performanceSettingsLearnMore" class="learnMore text-link" data-l10n-id="performance-settings-learn-more"/>
+    <label id="performanceSettingsLearnMore" class="learnMore" data-l10n-id="performance-settings-learn-more" is="text-link"/>
   </hbox>
   <description class="indent tip-caption" data-l10n-id="performance-use-recommended-settings-desc"/>
 
@@ -654,12 +930,19 @@
   <checkbox id="searchStartTyping"
             data-l10n-id="browsing-search-on-start-typing"
             preference="accessibility.typeaheadfind"/>
-  <hbox align="center" data-subcategory="cfr">
+  <hbox align="center" data-subcategory="cfraddons">
     <checkbox id="cfrRecommendations"
             class="tail-with-learn-more"
             data-l10n-id="browsing-cfr-recommendations"
-            preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr"/>
-    <label id="cfrLearnMore" class="learnMore text-link" data-l10n-id="browsing-cfr-recommendations-learn-more"/>
+            preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons"/>
+    <label id="cfrLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
+  </hbox>
+  <hbox align="center" data-subcategory="cfrfeatures">
+    <checkbox id="cfrRecommendations-features"
+            class="tail-with-learn-more"
+            data-l10n-id="browsing-cfr-features"
+            preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features"/>
+    <label id="cfrFeaturesLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
   </hbox>
 </groupbox>
 
@@ -678,7 +961,7 @@
     <hbox align="center" flex="1">
       <description id="connectionSettingsDescription" control="connectionSettings"/>
       <spacer width="5"/>
-      <label id="connectionSettingsLearnMore" class="learnMore text-link"
+      <label id="connectionSettingsLearnMore" class="learnMore" is="text-link"
         data-l10n-id="network-proxy-connection-learn-more">
       </label>
       <separator orient="vertical"/>
@@ -687,6 +970,7 @@
     <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
     <hbox>
       <button id="connectionSettings"
+              is="highlightable-button"
               class="accessory-button"
               icon="network"
               data-l10n-id="network-proxy-connection-settings"
@@ -711,10 +995,19 @@
                 connection-proxy-reload.label,
                 connection-proxy-autologin.label,
                 connection-proxy-socks-remote-dns.label,
+<<<<<<< HEAD
                 connection-dns-over-https,
                 connection-dns-over-https-url-custom,
                 connection-dns-over-https-url-default,
+||||||| merged common ancestors
+                connection-dns-over-https,
+                connection-dns-over-https-url
+=======
+                connection-dns-over-https.label,
+                connection-dns-over-https-url-custom.label,
+>>>>>>> upstream-releases
             " />
     </hbox>
   </hbox>
 </groupbox>
+</html:template>

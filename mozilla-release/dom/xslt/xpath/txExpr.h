@@ -15,7 +15,7 @@
 #include "nsAtom.h"
 
 #ifdef DEBUG
-#define TX_TO_STRING
+#  define TX_TO_STRING
 #endif
 
 /*
@@ -125,11 +125,21 @@ class Expr {
 };  //-- Expr
 
 #ifdef TX_TO_STRING
+<<<<<<< HEAD
 #define TX_DECL_TOSTRING void toString(nsAString& aDest) override;
 #define TX_DECL_APPENDNAME void appendName(nsAString& aDest) override;
+||||||| merged common ancestors
+#define TX_DECL_TOSTRING \
+    void toString(nsAString& aDest) override;
+#define TX_DECL_APPENDNAME \
+    void appendName(nsAString& aDest) override;
+=======
+#  define TX_DECL_TOSTRING void toString(nsAString& aDest) override;
+#  define TX_DECL_APPENDNAME void appendName(nsAString& aDest) override;
+>>>>>>> upstream-releases
 #else
-#define TX_DECL_TOSTRING
-#define TX_DECL_APPENDNAME
+#  define TX_DECL_TOSTRING
+#  define TX_DECL_APPENDNAME
 #endif
 
 #define TX_DECL_EXPR_BASE                                              \

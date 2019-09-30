@@ -17,7 +17,7 @@
 #include "mozilla/a11y/DocManager.h"
 #include "mozilla/EventStateManager.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 
 namespace mozilla {
 namespace a11y {
@@ -99,7 +99,19 @@ FocusManager::FocusDisposition FocusManager::IsInOrContainsFocus(
   return eNone;
 }
 
+<<<<<<< HEAD
 void FocusManager::NotifyOfDOMFocus(nsISupports* aTarget) {
+||||||| merged common ancestors
+void
+FocusManager::NotifyOfDOMFocus(nsISupports* aTarget)
+{
+=======
+bool FocusManager::WasLastFocused(const Accessible* aAccessible) const {
+  return mLastFocus == aAccessible;
+}
+
+void FocusManager::NotifyOfDOMFocus(nsISupports* aTarget) {
+>>>>>>> upstream-releases
 #ifdef A11Y_LOG
   if (logging::IsEnabled(logging::eFocus))
     logging::FocusNotificationTarget("DOM focus", "Target", aTarget);
@@ -134,8 +146,17 @@ void FocusManager::NotifyOfDOMBlur(nsISupports* aTarget) {
   // the case when no element within this DOM document will be focused.
   nsCOMPtr<nsINode> targetNode(do_QueryInterface(aTarget));
   if (targetNode && targetNode->OwnerDoc() == FocusedDOMDocument()) {
+<<<<<<< HEAD
     nsIDocument* DOMDoc = targetNode->OwnerDoc();
     DocAccessible* document = GetAccService()->GetDocAccessible(DOMDoc);
+||||||| merged common ancestors
+    nsIDocument* DOMDoc = targetNode->OwnerDoc();
+    DocAccessible* document =
+      GetAccService()->GetDocAccessible(DOMDoc);
+=======
+    dom::Document* DOMDoc = targetNode->OwnerDoc();
+    DocAccessible* document = GetAccService()->GetDocAccessible(DOMDoc);
+>>>>>>> upstream-releases
     if (document) {
       // Clear selection listener for previously focused element.
       if (targetNode->IsElement())
@@ -176,7 +197,7 @@ void FocusManager::ActiveItemChanged(Accessible* aItem, bool aCheckIfActive) {
     if (domfm) {
       nsIContent* focusedElm = domfm->GetFocusedElement();
       if (EventStateManager::IsRemoteTarget(focusedElm)) {
-        dom::TabParent* tab = dom::TabParent::GetFrom(focusedElm);
+        dom::BrowserParent* tab = dom::BrowserParent::GetFrom(focusedElm);
         if (tab) {
           a11y::DocAccessibleParent* dap = tab->GetTopLevelDocAccessible();
           if (dap) {
@@ -340,6 +361,7 @@ void FocusManager::ProcessFocusEvent(AccEvent* aEvent) {
   RefPtr<AccEvent> focusEvent = new AccEvent(nsIAccessibleEvent::EVENT_FOCUS,
                                              target, aEvent->FromUserInput());
   nsEventShell::FireEvent(focusEvent);
+  mLastFocus = target;
 
   // Fire scrolling_start event when the document receives the focus if it has
   // an anchor jump. If an accessible within the document receive the focus
@@ -376,7 +398,15 @@ nsINode* FocusManager::FocusedDOMNode() const {
   return focusedWnd ? focusedWnd->GetExtantDoc() : nullptr;
 }
 
+<<<<<<< HEAD
 nsIDocument* FocusManager::FocusedDOMDocument() const {
+||||||| merged common ancestors
+nsIDocument*
+FocusManager::FocusedDOMDocument() const
+{
+=======
+dom::Document* FocusManager::FocusedDOMDocument() const {
+>>>>>>> upstream-releases
   nsINode* focusedNode = FocusedDOMNode();
   return focusedNode ? focusedNode->OwnerDoc() : nullptr;
 }

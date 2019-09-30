@@ -17,6 +17,7 @@ createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "42");
 add_task(async function() {
   await promiseStartupManager();
 
+<<<<<<< HEAD
   await promiseInstallWebExtension({
     manifest: {
       name: "Test disabling hidden add-ons, non-hidden add-on case.",
@@ -25,10 +26,24 @@ add_task(async function() {
     },
   });
 
+||||||| merged common ancestors
+=======
+  await promiseInstallWebExtension({
+    manifest: {
+      name: "Test disabling hidden add-ons, non-hidden add-on case.",
+      version: "1.0",
+      applications: { gecko: { id: NORMAL_ID } },
+    },
+  });
+
+>>>>>>> upstream-releases
   let addon = await promiseAddonByID(NORMAL_ID);
   Assert.notEqual(addon, null);
   Assert.equal(addon.version, "1.0");
-  Assert.equal(addon.name, "Test disabling hidden add-ons, non-hidden add-on case.");
+  Assert.equal(
+    addon.name,
+    "Test disabling hidden add-ons, non-hidden add-on case."
+  );
   Assert.ok(addon.isCompatible);
   Assert.ok(!addon.appDisabled);
   Assert.ok(!addon.userDisabled);
@@ -40,7 +55,10 @@ add_task(async function() {
 
   Assert.notEqual(addon, null);
   Assert.equal(addon.version, "1.0");
-  Assert.equal(addon.name, "Test disabling hidden add-ons, non-hidden add-on case.");
+  Assert.equal(
+    addon.name,
+    "Test disabling hidden add-ons, non-hidden add-on case."
+  );
   Assert.ok(addon.isCompatible);
   Assert.ok(!addon.appDisabled);
   Assert.ok(addon.userDisabled);
@@ -54,6 +72,7 @@ add_task(async function() {
 
 // system add-ons can never be user disabled.
 add_task(async function() {
+<<<<<<< HEAD
   let xpi = createTempWebExtensionFile({
     manifest: {
       name: "Test disabling hidden add-ons, hidden system add-on case.",
@@ -63,13 +82,42 @@ add_task(async function() {
   });
   xpi.copyTo(distroDir, `${SYSTEM_ID}.xpi`);
   await overrideBuiltIns({ "system": [SYSTEM_ID] });
+||||||| merged common ancestors
+
+  await promiseWriteInstallRDFToXPI({
+    id: SYSTEM_ID,
+    version: "1.0",
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "1",
+      maxVersion: "1",
+    }],
+    name: "Test disabling hidden add-ons, hidden system add-on case.",
+  }, distroDir, SYSTEM_ID);
+
+  await overrideBuiltIns({ "system": [SYSTEM_ID] });
+=======
+  let xpi = createTempWebExtensionFile({
+    manifest: {
+      name: "Test disabling hidden add-ons, hidden system add-on case.",
+      version: "1.0",
+      applications: { gecko: { id: SYSTEM_ID } },
+    },
+  });
+  xpi.copyTo(distroDir, `${SYSTEM_ID}.xpi`);
+  await overrideBuiltIns({ system: [SYSTEM_ID] });
+>>>>>>> upstream-releases
 
   await promiseStartupManager();
 
   let addon = await promiseAddonByID(SYSTEM_ID);
   Assert.notEqual(addon, null);
   Assert.equal(addon.version, "1.0");
-  Assert.equal(addon.name, "Test disabling hidden add-ons, hidden system add-on case.");
+  Assert.equal(
+    addon.name,
+    "Test disabling hidden add-ons, hidden system add-on case."
+  );
   Assert.ok(addon.isCompatible);
   Assert.ok(!addon.appDisabled);
   Assert.ok(!addon.userDisabled);
@@ -77,9 +125,24 @@ add_task(async function() {
   Assert.equal(addon.type, "extension");
 
   // system add-ons cannot be disabled by the user.
+<<<<<<< HEAD
   await Assert.rejects(addon.disable(),
                        err => err.message == `Cannot disable system add-on ${SYSTEM_ID}`,
                        "disable() on a hidden add-on should fail");
+||||||| merged common ancestors
+  try {
+    await addon.disable();
+    do_throw("Expected addon.userDisabled on a hidden add-on to throw!");
+  } catch (e) {
+    Assert.equal(e.message, `Cannot disable system add-on ${SYSTEM_ID}`);
+  }
+=======
+  await Assert.rejects(
+    addon.disable(),
+    err => err.message == `Cannot disable system add-on ${SYSTEM_ID}`,
+    "disable() on a hidden add-on should fail"
+  );
+>>>>>>> upstream-releases
 
   Assert.ok(!addon.userDisabled);
   Assert.ok(addon.isActive);

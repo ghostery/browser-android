@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -14,3 +15,22 @@
   </script>
 </body>
 </html>
+||||||| merged common ancestors
+=======
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script src='/resources/testharness.js'></script>
+  <script src='/resources/testharnessreport.js'></script>
+</head>
+<body>
+  <script>
+    async_test(t => {
+      assert_false(document.featurePolicy.allowsFeature('geolocation'));
+      assert_true(document.featurePolicy.allowsFeature('camera'));
+      t.done();
+    }, "Origin-Policy-based Feature policy");
+  </script>
+</body>
+</html>
+>>>>>>> upstream-releases

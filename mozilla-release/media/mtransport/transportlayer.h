@@ -47,12 +47,18 @@ class TransportLayer : public sigslot::has_slots<> {
   nsresult Init();  // Called by Insert() to set up -- do not override
   virtual nsresult InitInternal() { return NS_OK; }  // Called by Init
 
+<<<<<<< HEAD
   void SetFlowId(const std::string &flow_id) { flow_id_ = flow_id; }
+||||||| merged common ancestors
+  void SetFlowId(const std::string& flow_id) {flow_id_ = flow_id;}
+=======
+  void SetFlowId(const std::string& flow_id) { flow_id_ = flow_id; }
+>>>>>>> upstream-releases
 
-  virtual void Chain(TransportLayer *downward);
+  virtual void Chain(TransportLayer* downward);
 
   // Downward interface
-  TransportLayer *downward() { return downward_; }
+  TransportLayer* downward() { return downward_; }
 
   // Get the state
   State state() const { return state_; }
@@ -72,17 +78,31 @@ class TransportLayer : public sigslot::has_slots<> {
   virtual const std::string id() const = 0;
 
   // The id of the flow
+<<<<<<< HEAD
   const std::string &flow_id() const { return flow_id_; }
+||||||| merged common ancestors
+  const std::string& flow_id() const {
+    return flow_id_;
+  }
+=======
+  const std::string& flow_id() const { return flow_id_; }
+>>>>>>> upstream-releases
 
  protected:
   virtual void WasInserted() {}
-  virtual void SetState(State state, const char *file, unsigned line);
+  virtual void SetState(State state, const char* file, unsigned line);
   // Check if we are on the right thread
   void CheckThread() const { MOZ_ASSERT(CheckThreadInt(), "Wrong thread"); }
 
   State state_;
   std::string flow_id_;
+<<<<<<< HEAD
   TransportLayer *downward_;  // The next layer in the stack
+||||||| merged common ancestors
+  TransportLayer *downward_; // The next layer in the stack
+=======
+  TransportLayer* downward_;  // The next layer in the stack
+>>>>>>> upstream-releases
   nsCOMPtr<nsIEventTarget> target_;
 
  private:

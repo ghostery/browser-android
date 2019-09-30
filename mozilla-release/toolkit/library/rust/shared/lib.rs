@@ -2,13 +2,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#![cfg_attr(feature = "oom_with_global_alloc",
-            feature(global_allocator, alloc, alloc_system, allocator_api))]
 #![cfg_attr(feature = "oom_with_hook", feature(alloc_error_hook))]
 
 #[cfg(feature="servo")]
 extern crate geckoservo;
 
+extern crate kvstore;
 extern crate mp4parse_capi;
 extern crate nsstring;
 extern crate nserror;
@@ -29,12 +28,27 @@ extern crate audioipc_client;
 #[cfg(feature = "cubeb-remoting")]
 extern crate audioipc_server;
 extern crate env_logger;
-extern crate u2fhid;
+extern crate authenticator;
+extern crate gkrust_utils;
 extern crate log;
+#[cfg(feature = "new_cert_storage")]
+extern crate cert_storage;
 extern crate cosec;
 extern crate rsdparsa_capi;
+#[cfg(feature = "new_xulstore")]
+extern crate xulstore;
 #[cfg(feature = "spidermonkey_rust")]
 extern crate jsrust_shared;
+#[cfg(feature = "bitsdownload")]
+extern crate bitsdownload;
+extern crate storage;
+#[cfg(feature = "moz_places")]
+extern crate bookmark_sync;
+extern crate shift_or_euc_c;
+
+extern crate arrayvec;
+
+extern crate audio_thread_priority;
 
 extern crate arrayvec;
 
@@ -155,6 +169,7 @@ pub extern "C" fn intentional_panic(message: *const c_char) {
     panic!("{}", unsafe { CStr::from_ptr(message) }.to_string_lossy());
 }
 
+<<<<<<< HEAD
 extern "C" {
     // We can't use MOZ_CrashOOL directly because it may be weakly linked
     // to libxul, and rust can't handle that.
@@ -173,8 +188,49 @@ fn str_truncate_valid(s: &str, mut mid: usize) -> &str {
         }
         mid -= 1;
     }
+||||||| merged common ancestors
+/// Contains the panic message, if set.
+static mut PANIC_REASON: Option<*const str> = None;
+
+/// Configure a panic hook to capture panic messages for crash reports.
+///
+/// We don't store this in `gMozCrashReason` because:
+/// a) Rust strings aren't null-terminated, so we'd have to allocate
+///    memory to get a null-terminated string
+/// b) The panic=abort handler is going to call `abort()` on non-Windows,
+///    which is `mozalloc_abort` for us, which will use `MOZ_CRASH` and
+///    overwrite `gMozCrashReason` with an unhelpful string.
+#[no_mangle]
+pub extern "C" fn install_rust_panic_hook() {
+    let default_hook = panic::take_hook();
+    panic::set_hook(Box::new(move |info| {
+        // Try to handle &str/String payloads, which should handle 99% of cases.
+        let payload = info.payload();
+        // We'll hold a raw *const str here, but it will be OK because
+        // Rust is going to abort the process before the payload could be
+        // deallocated.
+        if let Some(s) = payload.downcast_ref::<&str>() {
+            unsafe { PANIC_REASON = Some(*s as *const str); }
+        } else if let Some(s) = payload.downcast_ref::<String>() {
+            unsafe { PANIC_REASON = Some(s.as_str() as *const str); }
+        } else {
+            // Not the most helpful thing, but seems unlikely to happen
+            // in practice.
+            println!("Unhandled panic payload!");
+        }
+        // Fall through to the default hook so we still print the reason and
+        // backtrace to the console.
+        default_hook(info);
+    }));
+=======
+extern "C" {
+    // We can't use MOZ_Crash directly because it may be weakly linked
+    // to libxul, and rust can't handle that.
+    fn GeckoCrash(filename: *const c_char, line: c_int, reason: *const c_char) -> !;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /// Similar to ArrayString, but with terminating nul character.
 #[derive(Debug, PartialEq)]
 struct ArrayCString<A: Array<Item = u8>> {
@@ -233,9 +289,34 @@ fn panic_hook(info: &panic::PanicInfo) {
     unsafe {
         GeckoCrashOOL(filename.as_ptr() as *const c_char, line as c_int,
                       message.as_ptr() as *const c_char);
+||||||| merged common ancestors
+#[no_mangle]
+pub extern "C" fn get_rust_panic_reason(reason: *mut *const c_char, length: *mut usize) -> bool {
+    unsafe {
+        if let Some(s) = PANIC_REASON {
+            *reason = s as *const c_char;
+            *length = (*s).len();
+            true
+        } else {
+            false
+        }
+=======
+/// Truncate a string at the closest unicode character boundary
+/// ```
+/// assert_eq!(str_truncate_valid("éà", 3), "é");
+/// assert_eq!(str_truncate_valid("éà", 4), "éè");
+/// ```
+fn str_truncate_valid(s: &str, mut mid: usize) -> &str {
+    loop {
+        if let Some(res) = s.get(..mid) {
+            return res;
+        }
+        mid -= 1;
+>>>>>>> upstream-releases
     }
 }
 
+<<<<<<< HEAD
 /// Configure a panic hook to redirect rust panics to Gecko's MOZ_CrashOOL.
 #[no_mangle]
 pub extern "C" fn install_rust_panic_hook() {
@@ -257,46 +338,90 @@ mod global_alloc {
     use self::alloc_system::System;
 
     pub struct GeckoHeap;
+||||||| merged common ancestors
+// Wrap the rust system allocator to override the OOM handler, redirecting
+// to Gecko's, which interacts with the crash reporter.
+// This relies on unstable APIs that have not changed between 1.24 and 1.27.
+// In 1.27, the API changed, so we'll need to adapt to those changes before
+// we can ship with 1.27. As of writing, there might still be further changes
+// to those APIs before 1.27 is released, so we wait for those.
+#[cfg(feature = "oom_with_global_alloc")]
+mod global_alloc {
+    extern crate alloc;
+    extern crate alloc_system;
 
-    extern "C" {
-        fn GeckoHandleOOM(size: usize) -> !;
+    use self::alloc::allocator::{Alloc, AllocErr, Layout};
+    use self::alloc_system::System;
+
+    pub struct GeckoHeap;
+=======
+/// Similar to ArrayString, but with terminating nul character.
+#[derive(Debug, PartialEq)]
+struct ArrayCString<A: Array<Item = u8>> {
+    inner: ArrayString<A>,
+}
+>>>>>>> upstream-releases
+
+impl<S: AsRef<str>, A: Array<Item = u8>> From<S> for ArrayCString<A> {
+    /// Contrary to ArrayString::from, truncates at the closest unicode
+    /// character boundary.
+    /// ```
+    /// assert_eq!(ArrayCString::<[_; 4]>::from("éà"),
+    ///            ArrayCString::<[_; 4]>::from("é"));
+    /// assert_eq!(&*ArrayCString::<[_; 4]>::from("éà"), "é\0");
+    /// ```
+    fn from(s: S) -> Self {
+        let s = s.as_ref();
+        let len = cmp::min(s.len(), A::capacity() - 1);
+        let mut result = Self {
+            inner: ArrayString::from(str_truncate_valid(s, len)).unwrap(),
+        };
+        result.inner.push('\0');
+        result
     }
-
-    unsafe impl<'a> Alloc for &'a GeckoHeap {
-        unsafe fn alloc(&mut self, layout: Layout) -> Result<*mut u8, AllocErr> {
-            System.alloc(layout)
-        }
-
-        unsafe fn dealloc(&mut self, ptr: *mut u8, layout: Layout) {
-            System.dealloc(ptr, layout)
-        }
-
-        fn oom(&mut self, e: AllocErr) -> ! {
-            match e {
-                AllocErr::Exhausted { request } => unsafe { GeckoHandleOOM(request.size()) },
-                _ => System.oom(e),
-            }
-        }
-
-        unsafe fn realloc(
-            &mut self,
-            ptr: *mut u8,
-            layout: Layout,
-            new_layout: Layout,
-        ) -> Result<*mut u8, AllocErr> {
-            System.realloc(ptr, layout, new_layout)
-        }
-
-        unsafe fn alloc_zeroed(&mut self, layout: Layout) -> Result<*mut u8, AllocErr> {
-            System.alloc_zeroed(layout)
-        }
-    }
-
 }
 
-#[cfg(feature = "oom_with_global_alloc")]
-#[global_allocator]
-static HEAP: global_alloc::GeckoHeap = global_alloc::GeckoHeap;
+impl<A: Array<Item = u8>> Deref for ArrayCString<A> {
+    type Target = str;
+
+    fn deref(&self) -> &str {
+        self.inner.as_str()
+    }
+}
+
+fn panic_hook(info: &panic::PanicInfo) {
+    // Try to handle &str/String payloads, which should handle 99% of cases.
+    let payload = info.payload();
+    let message = if let Some(s) = payload.downcast_ref::<&str>() {
+        s
+    } else if let Some(s) = payload.downcast_ref::<String>() {
+        s.as_str()
+    } else {
+        // Not the most helpful thing, but seems unlikely to happen
+        // in practice.
+        "Unhandled rust panic payload!"
+    };
+    let (filename, line) = if let Some(loc) = info.location() {
+        (loc.file(), loc.line())
+    } else {
+        ("unknown.rs", 0)
+    };
+    // Copy the message and filename to the stack in order to safely add
+    // a terminating nul character (since rust strings don't come with one
+    // and GeckoCrash wants one).
+    let message = ArrayCString::<[_; 512]>::from(message);
+    let filename = ArrayCString::<[_; 512]>::from(filename);
+    unsafe {
+        GeckoCrash(filename.as_ptr() as *const c_char, line as c_int,
+                   message.as_ptr() as *const c_char);
+    }
+}
+
+/// Configure a panic hook to redirect rust panics to Gecko's MOZ_Crash.
+#[no_mangle]
+pub extern "C" fn install_rust_panic_hook() {
+    panic::set_hook(Box::new(panic_hook));
+}
 
 #[cfg(feature = "oom_with_hook")]
 mod oom_hook {
@@ -322,3 +447,84 @@ pub extern "C" fn install_rust_oom_hook() {
     #[cfg(feature = "oom_with_hook")]
     oom_hook::install();
 }
+
+#[cfg(feature = "moz_memory")]
+mod moz_memory {
+    use std::alloc::{GlobalAlloc, Layout};
+    use std::os::raw::c_void;
+
+    extern "C" {
+        fn malloc(size: usize) -> *mut c_void;
+
+        fn free(ptr: *mut c_void);
+
+        fn calloc(nmemb: usize, size: usize) -> *mut c_void;
+
+        fn realloc(ptr: *mut c_void, size: usize) -> *mut c_void;
+
+        #[cfg(windows)]
+        fn _aligned_malloc(size: usize, align: usize) -> *mut c_void;
+
+        #[cfg(not(windows))]
+        fn memalign(align: usize, size: usize) -> *mut c_void;
+    }
+
+    #[cfg(windows)]
+    unsafe fn memalign(align: usize, size: usize) -> *mut c_void {
+        _aligned_malloc(size, align)
+    }
+
+    pub struct GeckoAlloc;
+
+    #[inline(always)]
+    fn need_memalign(layout: Layout) -> bool {
+        // mozjemalloc guarantees a minimum alignment of 16 for all sizes, except
+        // for size classes below 16 (4 and 8).
+        layout.align() > layout.size() || layout.align() > 16
+    }
+
+    unsafe impl GlobalAlloc for GeckoAlloc {
+        unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+            if need_memalign(layout) {
+                memalign(layout.align(), layout.size()) as *mut u8
+            } else {
+                malloc(layout.size()) as *mut u8
+            }
+        }
+
+        unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
+            free(ptr as *mut c_void)
+        }
+
+        unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
+            if need_memalign(layout) {
+                let ptr = self.alloc(layout);
+                if !ptr.is_null() {
+                    std::ptr::write_bytes(ptr, 0, layout.size());
+                }
+                ptr
+            } else {
+                calloc(1, layout.size()) as *mut u8
+            }
+        }
+
+        unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+            let new_layout = Layout::from_size_align_unchecked(new_size, layout.align());
+            if need_memalign(new_layout) {
+                let new_ptr = self.alloc(new_layout);
+                if !new_ptr.is_null() {
+                    let size = std::cmp::min(layout.size(), new_size);
+                    std::ptr::copy_nonoverlapping(ptr, new_ptr, size);
+                    self.dealloc(ptr, layout);
+                }
+                new_ptr
+            } else {
+                realloc(ptr as *mut c_void, new_size) as *mut u8
+            }
+        }
+    }
+}
+
+#[cfg(feature = "moz_memory")]
+#[global_allocator]
+static A: moz_memory::GeckoAlloc = moz_memory::GeckoAlloc;

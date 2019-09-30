@@ -4,18 +4,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/dom/HTMLTrackElement.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/HTMLMediaElement.h"
+<<<<<<< HEAD
 #include "mozilla/dom/HTMLTrackElement.h"
 #ifdef XP_WIN
 // HTMLTrackElement.webidl defines ERROR, but so does windows.h:
 #undef ERROR
 #endif
+||||||| merged common ancestors
+#include "mozilla/dom/HTMLTrackElement.h"
+=======
+#include "WebVTTListener.h"
+#include "mozilla/LoadInfo.h"
+>>>>>>> upstream-releases
 #include "mozilla/dom/HTMLTrackElementBinding.h"
 #include "mozilla/dom/HTMLUnknownElement.h"
-#include "nsIContentPolicy.h"
-#include "mozilla/LoadInfo.h"
-#include "WebVTTListener.h"
 #include "nsAttrValueInlines.h"
 #include "nsCOMPtr.h"
 #include "nsContentPolicyUtils.h"
@@ -28,7 +33,7 @@
 #include "nsIChannelEventSink.h"
 #include "nsIContentPolicy.h"
 #include "nsIContentSecurityPolicy.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIHttpChannel.h"
 #include "nsIInterfaceRequestor.h"
 #include "nsILoadGroup.h"
@@ -42,8 +47,10 @@
 #include "nsThreadUtils.h"
 #include "nsVideoFrame.h"
 
-static mozilla::LazyLogModule gTrackElementLog("nsTrackElement");
-#define LOG(type, msg) MOZ_LOG(gTrackElementLog, type, msg)
+extern mozilla::LazyLogModule gTextTrackLog;
+#define LOG(msg, ...)                       \
+  MOZ_LOG(gTextTrackLog, LogLevel::Verbose, \
+          ("TextTrackElement=%p, " msg, this, ##__VA_ARGS__))
 
 // Replace the usual NS_IMPL_NS_NEW_HTML_ELEMENT(Track) so
 // we can return an UnknownElement instead when pref'd off.
@@ -102,7 +109,7 @@ class WindowDestroyObserver final : public nsIObserver {
       NS_ENSURE_SUCCESS(rv, rv);
       if (innerID == mInnerID) {
         if (mTrackElement) {
-          mTrackElement->NotifyShutdown();
+          mTrackElement->CancelChannelAndListener();
         }
         UnRegisterWindowDestroyObserver();
       }
@@ -136,7 +143,7 @@ HTMLTrackElement::~HTMLTrackElement() {
   if (mWindowDestroyObserver) {
     mWindowDestroyObserver->UnRegisterWindowDestroyObserver();
   }
-  NotifyShutdown();
+  CancelChannelAndListener();
 }
 
 NS_IMPL_ELEMENT_CLONE(HTMLTrackElement)
@@ -213,19 +220,29 @@ bool HTMLTrackElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
+||||||| merged common ancestors
+void
+HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError)
+{
+=======
+void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
+  LOG("Set src=%s", NS_ConvertUTF16toUTF8(aSrc).get());
+
+  nsAutoString src;
+  if (GetAttr(kNameSpaceID_None, nsGkAtoms::src, src) && src == aSrc) {
+    LOG("No need to reload for same src url");
+    return;
+  }
+
+>>>>>>> upstream-releases
   SetHTMLAttr(nsGkAtoms::src, aSrc, aError);
-  uint16_t oldReadyState = ReadyState();
   SetReadyState(TextTrackReadyState::NotLoaded);
   if (!mMediaParent) {
     return;
   }
-  if (mTrack && (oldReadyState != TextTrackReadyState::NotLoaded)) {
-    // Remove all the cues in MediaElement.
-    mMediaParent->RemoveTextTrack(mTrack);
-    // Recreate mTrack.
-    CreateTextTrack();
-  }
+
   // Stop WebVTTListener.
   mListener = nullptr;
   if (mChannel) {
@@ -233,38 +250,107 @@ void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
     mChannel = nullptr;
   }
 
-  DispatchLoadResource();
+  MaybeDispatchLoadResource();
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::DispatchLoadResource() {
+||||||| merged common ancestors
+void
+HTMLTrackElement::DispatchLoadResource()
+{
+=======
+void HTMLTrackElement::MaybeClearAllCues() {
+  // Empty track's cue list whenever the track element's `src` attribute set,
+  // changed, or removed,
+  // https://html.spec.whatwg.org/multipage/media.html#sourcing-out-of-band-text-tracks:attr-track-src
+  if (!mTrack) {
+    return;
+  }
+  mTrack->ClearAllCues();
+}
+
+// This function will run partial steps from `start-the-track-processing-model`
+// and finish the rest of steps in `LoadResource()` during the stable state.
+// https://html.spec.whatwg.org/multipage/media.html#start-the-track-processing-model
+void HTMLTrackElement::MaybeDispatchLoadResource() {
+  MOZ_ASSERT(mTrack, "Should have already created text track!");
+
+  // step2, if the text track's text track mode is not set to one of hidden or
+  // showing, then return.
+  if (mTrack->Mode() == TextTrackMode::Disabled) {
+    LOG("Do not load resource for disable track");
+    return;
+  }
+
+  // step3, if the text track's track element does not have a media element as a
+  // parent, return.
+  if (!mMediaParent) {
+    LOG("Do not load resource for track without media element");
+    return;
+  }
+
+  if (ReadyState() == TextTrackReadyState::Loaded) {
+    LOG("Has already loaded resource");
+    return;
+  }
+
+  // step5, await a stable state and run the rest of steps.
+>>>>>>> upstream-releases
   if (!mLoadResourceDispatched) {
+<<<<<<< HEAD
     RefPtr<Runnable> r =
         NewRunnableMethod("dom::HTMLTrackElement::LoadResource", this,
                           &HTMLTrackElement::LoadResource);
+||||||| merged common ancestors
+    RefPtr<Runnable> r =
+      NewRunnableMethod("dom::HTMLTrackElement::LoadResource",
+                        this,
+                        &HTMLTrackElement::LoadResource);
+=======
+    RefPtr<WebVTTListener> listener = new WebVTTListener(this);
+    RefPtr<Runnable> r = NewRunnableMethod<RefPtr<WebVTTListener>>(
+        "dom::HTMLTrackElement::LoadResource", this,
+        &HTMLTrackElement::LoadResource, std::move(listener));
+>>>>>>> upstream-releases
     nsContentUtils::RunInStableState(r.forget());
     mLoadResourceDispatched = true;
   }
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::LoadResource() {
+||||||| merged common ancestors
+void
+HTMLTrackElement::LoadResource()
+{
+=======
+void HTMLTrackElement::LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener) {
+  LOG("LoadResource");
+>>>>>>> upstream-releases
   mLoadResourceDispatched = false;
 
-  // Find our 'src' url
   nsAutoString src;
-  if (!GetAttr(kNameSpaceID_None, nsGkAtoms::src, src)) {
+  if (!GetAttr(kNameSpaceID_None, nsGkAtoms::src, src) || src.IsEmpty()) {
+    LOG("Fail to load because no src");
+    SetReadyState(TextTrackReadyState::FailedToLoad);
     return;
   }
 
   nsCOMPtr<nsIURI> uri;
   nsresult rv = NewURIFromString(src, getter_AddRefs(uri));
   NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
+<<<<<<< HEAD
   LOG(LogLevel::Info, ("%p Trying to load from src=%s", this,
                        NS_ConvertUTF16toUTF8(src).get()));
+||||||| merged common ancestors
+  LOG(LogLevel::Info, ("%p Trying to load from src=%s", this,
+      NS_ConvertUTF16toUTF8(src).get()));
+=======
+  LOG("Trying to load from src=%s", NS_ConvertUTF16toUTF8(src).get());
+>>>>>>> upstream-releases
 
-  if (mChannel) {
-    mChannel->Cancel(NS_BINDING_ABORTED);
-    mChannel = nullptr;
-  }
+  CancelChannelAndListener();
 
   // According to
   // https://www.w3.org/TR/html5/embedded-content-0.html#sourcing-out-of-band-text-tracks
@@ -273,7 +359,10 @@ void HTMLTrackElement::LoadResource() {
   // be the state of the parent media element's crossorigin content attribute.
   // Otherwise, let CORS mode be No CORS."
   //
-  CORSMode corsMode = mMediaParent ? mMediaParent->GetCORSMode() : CORS_NONE;
+  CORSMode corsMode =
+      mMediaParent ? AttrValueToCORSMode(
+                         mMediaParent->GetParsedAttr(nsGkAtoms::crossorigin))
+                   : CORS_NONE;
 
   // Determine the security flag based on corsMode.
   nsSecurityFlags secFlags;
@@ -292,6 +381,7 @@ void HTMLTrackElement::LoadResource() {
     }
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIChannel> channel;
   nsCOMPtr<nsILoadGroup> loadGroup = OwnerDoc()->GetDocumentLoadGroup();
   rv = NS_NewChannel(getter_AddRefs(channel), uri, static_cast<Element*>(this),
@@ -304,30 +394,93 @@ void HTMLTrackElement::LoadResource() {
   NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
 
   mListener = new WebVTTListener(this);
+||||||| merged common ancestors
+  nsCOMPtr<nsIChannel> channel;
+  nsCOMPtr<nsILoadGroup> loadGroup = OwnerDoc()->GetDocumentLoadGroup();
+  rv = NS_NewChannel(getter_AddRefs(channel),
+                     uri,
+                     static_cast<Element*>(this),
+                     secFlags,
+                     nsIContentPolicy::TYPE_INTERNAL_TRACK,
+                     nullptr, // PerformanceStorage
+                     loadGroup,
+                     nullptr,   // aCallbacks
+                     nsIRequest::LOAD_NORMAL | nsIChannel::LOAD_CLASSIFY_URI);
+
+  NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
+
+  mListener = new WebVTTListener(this);
+=======
+  mListener = std::move(aWebVTTListener);
+  // This will do 6. Set the text track readiness state to loading.
+>>>>>>> upstream-releases
   rv = mListener->LoadResource();
   NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
-  channel->SetNotificationCallbacks(mListener);
 
-  LOG(LogLevel::Debug, ("opening webvtt channel"));
-  rv = channel->AsyncOpen2(mListener);
-
-  if (NS_FAILED(rv)) {
-    SetReadyState(TextTrackReadyState::FailedToLoad);
+  Document* doc = OwnerDoc();
+  if (!doc) {
     return;
   }
 
-  mChannel = channel;
+  // 9. End the synchronous section, continuing the remaining steps in parallel.
+  nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
+      "dom::HTMLTrackElement::LoadResource",
+      [self = RefPtr<HTMLTrackElement>(this), this, uri, secFlags]() {
+        if (!mListener) {
+          // Shutdown got called, abort.
+          return;
+        }
+        nsCOMPtr<nsIChannel> channel;
+        nsCOMPtr<nsILoadGroup> loadGroup = OwnerDoc()->GetDocumentLoadGroup();
+        nsresult rv = NS_NewChannel(getter_AddRefs(channel), uri,
+                                    static_cast<Element*>(this), secFlags,
+                                    nsIContentPolicy::TYPE_INTERNAL_TRACK,
+                                    nullptr,  // PerformanceStorage
+                                    loadGroup);
+
+        if (NS_FAILED(rv)) {
+          LOG("create channel failed.");
+          SetReadyState(TextTrackReadyState::FailedToLoad);
+          return;
+        }
+
+        channel->SetNotificationCallbacks(mListener);
+
+        LOG("opening webvtt channel");
+        rv = channel->AsyncOpen(mListener);
+
+        if (NS_FAILED(rv)) {
+          SetReadyState(TextTrackReadyState::FailedToLoad);
+          return;
+        }
+        mChannel = channel;
+      });
+  doc->Dispatch(TaskCategory::Other, runnable.forget());
 }
 
+<<<<<<< HEAD
 nsresult HTMLTrackElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
                                       nsIContent* aBindingParent) {
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLTrackElement::BindToTree(nsIDocument* aDocument,
+                             nsIContent* aParent,
+                             nsIContent* aBindingParent)
+{
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument,
+                                                 aParent,
+                                                 aBindingParent);
+=======
+nsresult HTMLTrackElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  LOG(LogLevel::Debug, ("Track Element bound to tree."));
-  auto* parent = HTMLMediaElement::FromNodeOrNull(aParent);
+  LOG("Track Element bound to tree.");
+  auto* parent = HTMLMediaElement::FromNode(aParent);
   if (!parent) {
     return NS_OK;
   }
@@ -338,7 +491,7 @@ nsresult HTMLTrackElement::BindToTree(nsIDocument* aDocument,
 
     // TODO: separate notification for 'alternate' tracks?
     mMediaParent->NotifyAddedSource();
-    LOG(LogLevel::Debug, ("Track element sent notification to parent."));
+    LOG("Track element sent notification to parent.");
 
     // We may already have a TextTrack at this point if GetTrack() has already
     // been called. This happens, for instance, if script tries to get the
@@ -346,13 +499,21 @@ nsresult HTMLTrackElement::BindToTree(nsIDocument* aDocument,
     if (!mTrack) {
       CreateTextTrack();
     }
-    DispatchLoadResource();
+    MaybeDispatchLoadResource();
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+HTMLTrackElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void HTMLTrackElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   if (mMediaParent && aNullParent) {
     // mTrack can be null if HTMLTrackElement::LoadResource has never been
     // called.
@@ -363,7 +524,7 @@ void HTMLTrackElement::UnbindFromTree(bool aDeep, bool aNullParent) {
     mMediaParent = nullptr;
   }
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 }
 
 uint16_t HTMLTrackElement::ReadyState() const {
@@ -382,9 +543,11 @@ void HTMLTrackElement::SetReadyState(uint16_t aReadyState) {
   if (mTrack) {
     switch (aReadyState) {
       case TextTrackReadyState::Loaded:
+        LOG("dispatch 'load' event");
         DispatchTrackRunnable(NS_LITERAL_STRING("load"));
         break;
       case TextTrackReadyState::FailedToLoad:
+        LOG("dispatch 'error' event");
         DispatchTrackRunnable(NS_LITERAL_STRING("error"));
         break;
     }
@@ -392,8 +555,18 @@ void HTMLTrackElement::SetReadyState(uint16_t aReadyState) {
   }
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
   nsIDocument* doc = OwnerDoc();
+||||||| merged common ancestors
+void
+HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName)
+{
+  nsIDocument* doc = OwnerDoc();
+=======
+void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
+  Document* doc = OwnerDoc();
+>>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -403,8 +576,18 @@ void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
   doc->Dispatch(TaskCategory::Other, runnable.forget());
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
   nsIDocument* doc = OwnerDoc();
+||||||| merged common ancestors
+void
+HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName)
+{
+  nsIDocument* doc = OwnerDoc();
+=======
+void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
+  Document* doc = OwnerDoc();
+>>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -412,14 +595,59 @@ void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
                                        aName, CanBubble::eNo, Cancelable::eNo);
 }
 
+<<<<<<< HEAD
 void HTMLTrackElement::DropChannel() { mChannel = nullptr; }
 
 void HTMLTrackElement::NotifyShutdown() {
+||||||| merged common ancestors
+void
+HTMLTrackElement::DropChannel()
+{
+  mChannel = nullptr;
+}
+
+void
+HTMLTrackElement::NotifyShutdown()
+{
+=======
+void HTMLTrackElement::CancelChannelAndListener() {
+>>>>>>> upstream-releases
   if (mChannel) {
     mChannel->Cancel(NS_BINDING_ABORTED);
+    mChannel->SetNotificationCallbacks(nullptr);
+    mChannel = nullptr;
   }
-  mChannel = nullptr;
-  mListener = nullptr;
+
+  if (mListener) {
+    mListener->Cancel();
+    mListener = nullptr;
+  }
+}
+
+nsresult HTMLTrackElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
+                                        const nsAttrValue* aValue,
+                                        const nsAttrValue* aOldValue,
+                                        nsIPrincipal* aMaybeScriptedPrincipal,
+                                        bool aNotify) {
+  if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::src) {
+    MaybeClearAllCues();
+    // In spec, `start the track processing model` step10, while fetching is
+    // ongoing, if the track URL changes, then we have to set the `FailedToLoad`
+    // state.
+    // https://html.spec.whatwg.org/multipage/media.html#sourcing-out-of-band-text-tracks:text-track-failed-to-load-3
+    if (ReadyState() == TextTrackReadyState::Loading && aValue != aOldValue) {
+      SetReadyState(TextTrackReadyState::FailedToLoad);
+    }
+  }
+  return nsGenericHTMLElement::AfterSetAttr(
+      aNameSpaceID, aName, aValue, aOldValue, aMaybeScriptedPrincipal, aNotify);
+}
+
+void HTMLTrackElement::DispatchTestEvent(const nsAString& aName) {
+  if (!StaticPrefs::media_webvtt_testing_events()) {
+    return;
+  }
+  DispatchTrustedEvent(aName);
 }
 
 }  // namespace dom

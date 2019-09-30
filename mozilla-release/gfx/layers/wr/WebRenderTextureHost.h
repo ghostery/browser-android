@@ -28,60 +28,98 @@ class WebRenderTextureHost : public TextureHost {
                        wr::ExternalImageId& aExternalImageId);
   virtual ~WebRenderTextureHost();
 
-  virtual void DeallocateDeviceData() override {}
+  void DeallocateDeviceData() override {}
 
+<<<<<<< HEAD
   virtual void SetTextureSourceProvider(
       TextureSourceProvider* aProvider) override;
+||||||| merged common ancestors
+  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+=======
+  bool Lock() override;
+>>>>>>> upstream-releases
 
-  virtual bool Lock() override;
+  void Unlock() override;
 
-  virtual void Unlock() override;
+  void PrepareTextureSource(CompositableTextureSourceRef& aTexture) override;
+  bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
+  void UnbindTextureSource() override;
+  void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
 
-  virtual gfx::SurfaceFormat GetFormat() const override;
+  gfx::SurfaceFormat GetFormat() const override;
+
+  virtual void NotifyNotUsed() override;
 
   // Return the format used for reading the texture. Some hardware specific
   // textureHosts use their special data representation internally, but we could
   // treat these textureHost as the read-format when we read them.
   // Please check TextureHost::GetReadFormat().
+<<<<<<< HEAD
   virtual gfx::SurfaceFormat GetReadFormat() const override;
 
   virtual bool BindTextureSource(
       CompositableTextureSourceRef& aTexture) override;
+||||||| merged common ancestors
+  virtual gfx::SurfaceFormat GetReadFormat() const override;
 
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
+  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
+=======
+  gfx::SurfaceFormat GetReadFormat() const override;
+>>>>>>> upstream-releases
 
-  virtual YUVColorSpace GetYUVColorSpace() const override;
+  already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
 
-  virtual gfx::IntSize GetSize() const override;
+  gfx::YUVColorSpace GetYUVColorSpace() const override;
+
+  gfx::IntSize GetSize() const override;
 
 #ifdef MOZ_LAYERS_HAVE_LOG
-  virtual const char* Name() override { return "WebRenderTextureHost"; }
+  const char* Name() override { return "WebRenderTextureHost"; }
 #endif
 
+<<<<<<< HEAD
   virtual WebRenderTextureHost* AsWebRenderTextureHost() override {
     return this;
   }
+||||||| merged common ancestors
+  virtual WebRenderTextureHost* AsWebRenderTextureHost() override { return this; }
+=======
+  WebRenderTextureHost* AsWebRenderTextureHost() override { return this; }
+
+  virtual void PrepareForUse() override;
+>>>>>>> upstream-releases
 
   wr::ExternalImageId GetExternalImageKey() { return mExternalImageId; }
 
   int32_t GetRGBStride();
 
+<<<<<<< HEAD
   virtual bool HasIntermediateBuffer() const override;
 
   virtual uint32_t NumSubTextures() const override;
+||||||| merged common ancestors
+  virtual uint32_t NumSubTextures() const override;
+=======
+  bool HasIntermediateBuffer() const override;
 
-  virtual void PushResourceUpdates(wr::TransactionBuilder& aResources,
-                                   ResourceUpdateOp aOp,
-                                   const Range<wr::ImageKey>& aImageKeys,
-                                   const wr::ExternalImageId& aExtID) override;
+  uint32_t NumSubTextures() override;
 
-  virtual void PushDisplayItems(wr::DisplayListBuilder& aBuilder,
-                                const wr::LayoutRect& aBounds,
-                                const wr::LayoutRect& aClip,
-                                wr::ImageRendering aFilter,
-                                const Range<wr::ImageKey>& aImageKeys) override;
+  void PushResourceUpdates(wr::TransactionBuilder& aResources,
+                           ResourceUpdateOp aOp,
+                           const Range<wr::ImageKey>& aImageKeys,
+                           const wr::ExternalImageId& aExtID) override;
 
-  virtual bool SupportsWrNativeTexture() override;
+  void PushDisplayItems(wr::DisplayListBuilder& aBuilder,
+                        const wr::LayoutRect& aBounds,
+                        const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
+                        const Range<wr::ImageKey>& aImageKeys) override;
+>>>>>>> upstream-releases
+
+  bool SupportsWrNativeTexture() override;
+
+  bool NeedsYFlip() const override;
+
+  void MaybeNofityForUse(wr::TransactionBuilder& aTxn);
 
  protected:
   void CreateRenderTextureHost(const SurfaceDescriptor& aDesc,

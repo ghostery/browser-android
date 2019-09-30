@@ -19,7 +19,19 @@ class BlobImpl;
 class ContentChild;
 class ContentParent;
 
+<<<<<<< HEAD
 }  // namespace dom
+||||||| merged common ancestors
+} // namespace dom
+=======
+}  // namespace dom
+
+namespace net {
+
+class SocketProcessImpl;
+
+}  // namespace net
+>>>>>>> upstream-releases
 
 namespace ipc {
 
@@ -36,6 +48,10 @@ class PBackgroundChild;
 // create the actor if it doesn't exist yet. Thereafter (assuming success)
 // GetForCurrentThread() will return the same actor every time.
 //
+// GetOrCreateSocketActorForCurrentThread, which is like
+// GetOrCreateForCurrentThread, is used to get or create PBackground actor
+// between child process and socket process.
+//
 // CloseForCurrentThread() will close the current PBackground actor.  Subsequent
 // calls to GetForCurrentThread will return null.  CloseForCurrentThread() may
 // only be called exactly once for each thread-specific actor.  Currently it is
@@ -46,19 +62,52 @@ class PBackgroundChild;
 class BackgroundChild final {
   friend class mozilla::dom::ContentChild;
   friend class mozilla::dom::ContentParent;
+  friend class mozilla::net::SocketProcessImpl;
 
   typedef mozilla::ipc::Transport Transport;
 
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
  public:
   // See above.
   static PBackgroundChild* GetForCurrentThread();
 
+>>>>>>> upstream-releases
   // See above.
+<<<<<<< HEAD
+  static PBackgroundChild* GetForCurrentThread();
+||||||| merged common ancestors
+  static PBackgroundChild*
+  GetForCurrentThread();
+=======
   static PBackgroundChild* GetOrCreateForCurrentThread(
       nsIEventTarget* aMainEventTarget = nullptr);
+>>>>>>> upstream-releases
 
   // See above.
+<<<<<<< HEAD
+  static PBackgroundChild* GetOrCreateForCurrentThread(
+      nsIEventTarget* aMainEventTarget = nullptr);
+||||||| merged common ancestors
+  static PBackgroundChild*
+  GetOrCreateForCurrentThread();
+=======
   static void CloseForCurrentThread();
+>>>>>>> upstream-releases
+
+  // See above.
+<<<<<<< HEAD
+  static void CloseForCurrentThread();
+||||||| merged common ancestors
+  static void
+  CloseForCurrentThread();
+=======
+  static PBackgroundChild* GetOrCreateSocketActorForCurrentThread(
+      nsIEventTarget* aMainEventTarget = nullptr);
+>>>>>>> upstream-releases
 
  private:
   // Only called by ContentChild or ContentParent.

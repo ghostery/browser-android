@@ -11,9 +11,20 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /*static*/ WebGL1Context* WebGL1Context::Create() {
   return new WebGL1Context();
 }
+||||||| merged common ancestors
+/*static*/ WebGL1Context*
+WebGL1Context::Create()
+{
+    return new WebGL1Context();
+}
+=======
+/*static*/
+WebGL1Context* WebGL1Context::Create() { return new WebGL1Context(); }
+>>>>>>> upstream-releases
 
 WebGL1Context::WebGL1Context() : WebGLContext() {}
 

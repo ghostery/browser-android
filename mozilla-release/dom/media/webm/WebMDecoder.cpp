@@ -9,7 +9,7 @@
 #include "mozilla/Preferences.h"
 #include "mozilla/StaticPrefs.h"
 #ifdef MOZ_AV1
-#include "AOMDecoder.h"
+#  include "AOMDecoder.h"
 #endif
 #include "MediaContainerType.h"
 #include "PDMFactory.h"
@@ -17,8 +17,18 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
     const MediaContainerType& aType, MediaResult& aError) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+WebMDecoder::GetTracksInfo(const MediaContainerType& aType, MediaResult& aError)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
+    const MediaContainerType& aType, MediaResult& aError) {
+>>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   const bool isVideo = aType.Type() == MEDIAMIMETYPE("video/webm");
 
@@ -66,7 +76,7 @@ namespace mozilla {
       }
     }
 #ifdef MOZ_AV1
-    if (StaticPrefs::MediaAv1Enabled() && IsAV1CodecString(codec)) {
+    if (StaticPrefs::media_av1_enabled() && IsAV1CodecString(codec)) {
       tracks.AppendElement(
           CreateTrackInfoWithMIMETypeAndContainerTypeExtraParameters(
               NS_LITERAL_CSTRING("video/av1"), aType));
@@ -82,8 +92,18 @@ namespace mozilla {
 }
 
 /* static */
+<<<<<<< HEAD
 bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   if (!StaticPrefs::MediaWebMEnabled()) {
+||||||| merged common ancestors
+bool
+WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType)
+{
+  if (!StaticPrefs::MediaWebMEnabled()) {
+=======
+bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
+  if (!StaticPrefs::media_webm_enabled()) {
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -112,8 +132,18 @@ bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+WebMDecoder::GetTracksInfo(const MediaContainerType& aType)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
+    const MediaContainerType& aType) {
+>>>>>>> upstream-releases
   MediaResult rv = NS_OK;
   return GetTracksInfo(aType, rv);
 }

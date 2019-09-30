@@ -4,39 +4,41 @@
 
 #include "gfxSVGGlyphs.h"
 
+#include "mozilla/BasePrincipal.h"
+#include "mozilla/LoadInfo.h"
+#include "mozilla/NullPrincipal.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/SMILAnimationController.h"
 #include "mozilla/SVGContextPaint.h"
+#include "mozilla/dom/Document.h"
+#include "mozilla/dom/Element.h"
+#include "mozilla/dom/FontTableURIProtocolHandler.h"
+#include "mozilla/dom/ImageTracker.h"
+#include "mozilla/dom/SVGDocument.h"
 #include "nsError.h"
 #include "nsString.h"
-#include "nsIDocument.h"
 #include "nsICategoryManager.h"
 #include "nsIDocumentLoaderFactory.h"
 #include "nsIContentViewer.h"
 #include "nsIStreamListener.h"
 #include "nsServiceManagerUtils.h"
-#include "nsIPresShell.h"
 #include "nsNetUtil.h"
 #include "nsIInputStream.h"
 #include "nsStringStream.h"
 #include "nsStreamUtils.h"
 #include "nsIPrincipal.h"
-#include "mozilla/BasePrincipal.h"
-#include "mozilla/dom/Element.h"
-#include "mozilla/dom/FontTableURIProtocolHandler.h"
-#include "mozilla/dom/SVGDocument.h"
-#include "mozilla/LoadInfo.h"
-#include "mozilla/NullPrincipal.h"
 #include "nsSVGUtils.h"
 #include "nsContentUtils.h"
 #include "gfxFont.h"
-#include "nsSMILAnimationController.h"
 #include "gfxContext.h"
 #include "harfbuzz/hb.h"
-#include "mozilla/dom/ImageTracker.h"
+#include "zlib.h"
 
 #define SVG_CONTENT_TYPE NS_LITERAL_CSTRING("image/svg+xml")
 #define UTF8_CHARSET NS_LITERAL_CSTRING("utf-8")
 
 using namespace mozilla;
+<<<<<<< HEAD
 
 typedef mozilla::dom::Element Element;
 
@@ -58,6 +60,54 @@ gfxSVGGlyphs::gfxSVGGlyphs(hb_blob_t *aSVGTable, gfxFontEntry *aFontEntry)
             uint16_t(docIndex->mNumEntries) * sizeof(IndexEntry) <=
         length) {
       mDocIndex = docIndex;
+||||||| merged common ancestors
+
+typedef mozilla::dom::Element Element;
+
+/* static */ const mozilla::gfx::Color SimpleTextContextPaint::sZero;
+
+gfxSVGGlyphs::gfxSVGGlyphs(hb_blob_t *aSVGTable, gfxFontEntry *aFontEntry)
+    : mSVGData(aSVGTable)
+    , mFontEntry(aFontEntry)
+{
+    unsigned int length;
+    const char* svgData = hb_blob_get_data(mSVGData, &length);
+    mHeader = reinterpret_cast<const Header*>(svgData);
+    mDocIndex = nullptr;
+
+    if (sizeof(Header) <= length && uint16_t(mHeader->mVersion) == 0 &&
+        uint64_t(mHeader->mDocIndexOffset) + 2 <= length) {
+        const DocIndex* docIndex = reinterpret_cast<const DocIndex*>
+            (svgData + mHeader->mDocIndexOffset);
+        // Limit the number of documents to avoid overflow
+        if (uint64_t(mHeader->mDocIndexOffset) + 2 +
+                uint16_t(docIndex->mNumEntries) * sizeof(IndexEntry) <= length) {
+            mDocIndex = docIndex;
+        }
+=======
+using mozilla::dom::Document;
+using mozilla::dom::Element;
+
+/* static */
+const mozilla::gfx::Color SimpleTextContextPaint::sZero;
+
+gfxSVGGlyphs::gfxSVGGlyphs(hb_blob_t* aSVGTable, gfxFontEntry* aFontEntry)
+    : mSVGData(aSVGTable), mFontEntry(aFontEntry) {
+  unsigned int length;
+  const char* svgData = hb_blob_get_data(mSVGData, &length);
+  mHeader = reinterpret_cast<const Header*>(svgData);
+  mDocIndex = nullptr;
+
+  if (sizeof(Header) <= length && uint16_t(mHeader->mVersion) == 0 &&
+      uint64_t(mHeader->mDocIndexOffset) + 2 <= length) {
+    const DocIndex* docIndex =
+        reinterpret_cast<const DocIndex*>(svgData + mHeader->mDocIndexOffset);
+    // Limit the number of documents to avoid overflow
+    if (uint64_t(mHeader->mDocIndexOffset) + 2 +
+            uint16_t(docIndex->mNumEntries) * sizeof(IndexEntry) <=
+        length) {
+      mDocIndex = docIndex;
+>>>>>>> upstream-releases
     }
   }
 }
@@ -77,6 +127,7 @@ void gfxSVGGlyphs::DidRefresh() { mFontEntry->NotifyGlyphsChanged(); }
  *       (note that this is wrong if we have more than one intersection or two
  *        sets intersecting of size > 1 -- so... don't do that)
  */
+<<<<<<< HEAD
 /* static */ int gfxSVGGlyphs::CompareIndexEntries(const void *aKey,
                                                    const void *aEntry) {
   const uint32_t key = *(uint32_t *)aKey;
@@ -89,15 +140,61 @@ void gfxSVGGlyphs::DidRefresh() { mFontEntry->NotifyGlyphsChanged(); }
     return 1;
   }
   return 0;
+||||||| merged common ancestors
+/* static */ int
+gfxSVGGlyphs::CompareIndexEntries(const void *aKey, const void *aEntry)
+{
+    const uint32_t key = *(uint32_t*)aKey;
+    const IndexEntry *entry = (const IndexEntry*)aEntry;
+
+    if (key < uint16_t(entry->mStartGlyph)) {
+        return -1;
+    }
+    if (key > uint16_t(entry->mEndGlyph)) {
+        return 1;
+    }
+    return 0;
+=======
+/* static */
+int gfxSVGGlyphs::CompareIndexEntries(const void* aKey, const void* aEntry) {
+  const uint32_t key = *(uint32_t*)aKey;
+  const IndexEntry* entry = (const IndexEntry*)aEntry;
+
+  if (key < uint16_t(entry->mStartGlyph)) {
+    return -1;
+  }
+  if (key > uint16_t(entry->mEndGlyph)) {
+    return 1;
+  }
+  return 0;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 gfxSVGGlyphsDocument *gfxSVGGlyphs::FindOrCreateGlyphsDocument(
     uint32_t aGlyphId) {
   if (!mDocIndex) {
     // Invalid table
     return nullptr;
   }
+||||||| merged common ancestors
+gfxSVGGlyphsDocument *
+gfxSVGGlyphs::FindOrCreateGlyphsDocument(uint32_t aGlyphId)
+{
+    if (!mDocIndex) {
+        // Invalid table
+        return nullptr;
+    }
+=======
+gfxSVGGlyphsDocument* gfxSVGGlyphs::FindOrCreateGlyphsDocument(
+    uint32_t aGlyphId) {
+  if (!mDocIndex) {
+    // Invalid table
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   IndexEntry *entry = (IndexEntry *)bsearch(
       &aGlyphId, mDocIndex->mEntries, uint16_t(mDocIndex->mNumEntries),
       sizeof(IndexEntry), CompareIndexEntries);
@@ -106,7 +203,24 @@ gfxSVGGlyphsDocument *gfxSVGGlyphs::FindOrCreateGlyphsDocument(
   }
 
   gfxSVGGlyphsDocument *result = mGlyphDocs.Get(entry->mDocOffset);
+||||||| merged common ancestors
+    IndexEntry *entry = (IndexEntry*)bsearch(&aGlyphId, mDocIndex->mEntries,
+                                             uint16_t(mDocIndex->mNumEntries),
+                                             sizeof(IndexEntry),
+                                             CompareIndexEntries);
+    if (!entry) {
+        return nullptr;
+    }
+=======
+  IndexEntry* entry = (IndexEntry*)bsearch(
+      &aGlyphId, mDocIndex->mEntries, uint16_t(mDocIndex->mNumEntries),
+      sizeof(IndexEntry), CompareIndexEntries);
+  if (!entry) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!result) {
     unsigned int length;
     const uint8_t *data = (const uint8_t *)hb_blob_get_data(mSVGData, &length);
@@ -118,6 +232,33 @@ gfxSVGGlyphsDocument *gfxSVGGlyphs::FindOrCreateGlyphsDocument(
           data + mHeader->mDocIndexOffset + entry->mDocOffset,
           entry->mDocLength, this);
       mGlyphDocs.Put(entry->mDocOffset, result);
+||||||| merged common ancestors
+    gfxSVGGlyphsDocument *result = mGlyphDocs.Get(entry->mDocOffset);
+
+    if (!result) {
+        unsigned int length;
+        const uint8_t *data = (const uint8_t*)hb_blob_get_data(mSVGData, &length);
+        if (entry->mDocOffset > 0 &&
+            uint64_t(mHeader->mDocIndexOffset) + entry->mDocOffset + entry->mDocLength <= length) {
+            result = new gfxSVGGlyphsDocument(data + mHeader->mDocIndexOffset + entry->mDocOffset,
+                                              entry->mDocLength, this);
+            mGlyphDocs.Put(entry->mDocOffset, result);
+        }
+=======
+  gfxSVGGlyphsDocument* result = mGlyphDocs.Get(entry->mDocOffset);
+
+  if (!result) {
+    unsigned int length;
+    const uint8_t* data = (const uint8_t*)hb_blob_get_data(mSVGData, &length);
+    if (entry->mDocOffset > 0 && uint64_t(mHeader->mDocIndexOffset) +
+                                         entry->mDocOffset +
+                                         entry->mDocLength <=
+                                     length) {
+      result = new gfxSVGGlyphsDocument(
+          data + mHeader->mDocIndexOffset + entry->mDocOffset,
+          entry->mDocLength, this);
+      mGlyphDocs.Put(entry->mDocOffset, result);
+>>>>>>> upstream-releases
     }
   }
 
@@ -147,19 +288,41 @@ nsresult gfxSVGGlyphsDocument::SetupPresentation() {
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> presShell = viewer->GetPresShell();
   if (!presShell->DidInitialize()) {
     rv = presShell->Initialize();
+||||||| merged common ancestors
+    nsCOMPtr<nsIPresShell> presShell;
+    rv = viewer->GetPresShell(getter_AddRefs(presShell));
+=======
+  RefPtr<PresShell> presShell = viewer->GetPresShell();
+  if (!presShell->DidInitialize()) {
+    rv = presShell->Initialize();
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   mDocument->FlushPendingNotifications(FlushType::Layout);
 
+<<<<<<< HEAD
   if (mDocument->HasAnimationController()) {
     mDocument->GetAnimationController()->Resume(
         nsSMILTimeContainer::PAUSE_IMAGE);
   }
   mDocument->ImageTracker()->SetAnimatingState(true);
+||||||| merged common ancestors
+    if (mDocument->HasAnimationController()) {
+      mDocument->GetAnimationController()
+               ->Resume(nsSMILTimeContainer::PAUSE_IMAGE);
+    }
+    mDocument->ImageTracker()->SetAnimatingState(true);
+=======
+  if (mDocument->HasAnimationController()) {
+    mDocument->GetAnimationController()->Resume(SMILTimeContainer::PAUSE_IMAGE);
+  }
+  mDocument->ImageTracker()->SetAnimatingState(true);
+>>>>>>> upstream-releases
 
   mViewer = viewer;
   mPresShell = presShell;
@@ -175,11 +338,29 @@ void gfxSVGGlyphsDocument::DidRefresh() { mOwner->DidRefresh(); }
  * table
  * @param aElem The element to search from
  */
+<<<<<<< HEAD
 void gfxSVGGlyphsDocument::FindGlyphElements(Element *aElem) {
   for (nsIContent *child = aElem->GetLastChild(); child;
        child = child->GetPreviousSibling()) {
     if (!child->IsElement()) {
       continue;
+||||||| merged common ancestors
+void
+gfxSVGGlyphsDocument::FindGlyphElements(Element *aElem)
+{
+    for (nsIContent *child = aElem->GetLastChild(); child;
+            child = child->GetPreviousSibling()) {
+        if (!child->IsElement()) {
+            continue;
+        }
+        FindGlyphElements(child->AsElement());
+=======
+void gfxSVGGlyphsDocument::FindGlyphElements(Element* aElem) {
+  for (nsIContent* child = aElem->GetLastChild(); child;
+       child = child->GetPreviousSibling()) {
+    if (!child->IsElement()) {
+      continue;
+>>>>>>> upstream-releases
     }
     FindGlyphElements(child->AsElement());
   }
@@ -194,12 +375,32 @@ void gfxSVGGlyphsDocument::FindGlyphElements(Element *aElem) {
  * @param aGlyphId The glyph id
  * @return true iff rendering succeeded
  */
+<<<<<<< HEAD
 void gfxSVGGlyphs::RenderGlyph(gfxContext *aContext, uint32_t aGlyphId,
                                SVGContextPaint *aContextPaint) {
   gfxContextAutoSaveRestore aContextRestorer(aContext);
+||||||| merged common ancestors
+void
+gfxSVGGlyphs::RenderGlyph(gfxContext *aContext, uint32_t aGlyphId,
+                          SVGContextPaint* aContextPaint)
+{
+    gfxContextAutoSaveRestore aContextRestorer(aContext);
+=======
+void gfxSVGGlyphs::RenderGlyph(gfxContext* aContext, uint32_t aGlyphId,
+                               SVGContextPaint* aContextPaint) {
+  gfxContextAutoSaveRestore aContextRestorer(aContext);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Element *glyph = mGlyphIdMap.Get(aGlyphId);
   MOZ_ASSERT(glyph, "No glyph element. Should check with HasSVGGlyph() first!");
+||||||| merged common ancestors
+    Element* glyph = mGlyphIdMap.Get(aGlyphId);
+    MOZ_ASSERT(glyph, "No glyph element. Should check with HasSVGGlyph() first!");
+=======
+  Element* glyph = mGlyphIdMap.Get(aGlyphId);
+  MOZ_ASSERT(glyph, "No glyph element. Should check with HasSVGGlyph() first!");
+>>>>>>> upstream-releases
 
   AutoSetRestoreSVGContextPaint autoSetRestore(
       *aContextPaint, *glyph->OwnerDoc()->AsSVGDocument());
@@ -207,16 +408,33 @@ void gfxSVGGlyphs::RenderGlyph(gfxContext *aContext, uint32_t aGlyphId,
   nsSVGUtils::PaintSVGGlyph(glyph, aContext);
 }
 
+<<<<<<< HEAD
 bool gfxSVGGlyphs::GetGlyphExtents(uint32_t aGlyphId,
                                    const gfxMatrix &aSVGToAppSpace,
                                    gfxRect *aResult) {
   Element *glyph = mGlyphIdMap.Get(aGlyphId);
   NS_ASSERTION(glyph,
                "No glyph element. Should check with HasSVGGlyph() first!");
+||||||| merged common ancestors
+bool
+gfxSVGGlyphs::GetGlyphExtents(uint32_t aGlyphId, const gfxMatrix& aSVGToAppSpace,
+                              gfxRect *aResult)
+{
+    Element *glyph = mGlyphIdMap.Get(aGlyphId);
+    NS_ASSERTION(glyph, "No glyph element. Should check with HasSVGGlyph() first!");
+=======
+bool gfxSVGGlyphs::GetGlyphExtents(uint32_t aGlyphId,
+                                   const gfxMatrix& aSVGToAppSpace,
+                                   gfxRect* aResult) {
+  Element* glyph = mGlyphIdMap.Get(aGlyphId);
+  NS_ASSERTION(glyph,
+               "No glyph element. Should check with HasSVGGlyph() first!");
+>>>>>>> upstream-releases
 
   return nsSVGUtils::GetSVGGlyphExtents(glyph, aSVGToAppSpace, aResult);
 }
 
+<<<<<<< HEAD
 Element *gfxSVGGlyphs::GetGlyphElement(uint32_t aGlyphId) {
   Element *elem;
 
@@ -224,6 +442,27 @@ Element *gfxSVGGlyphs::GetGlyphElement(uint32_t aGlyphId) {
     elem = nullptr;
     if (gfxSVGGlyphsDocument *set = FindOrCreateGlyphsDocument(aGlyphId)) {
       elem = set->GetGlyphElement(aGlyphId);
+||||||| merged common ancestors
+Element *
+gfxSVGGlyphs::GetGlyphElement(uint32_t aGlyphId)
+{
+    Element *elem;
+
+    if (!mGlyphIdMap.Get(aGlyphId, &elem)) {
+        elem = nullptr;
+        if (gfxSVGGlyphsDocument *set = FindOrCreateGlyphsDocument(aGlyphId)) {
+            elem = set->GetGlyphElement(aGlyphId);
+        }
+        mGlyphIdMap.Put(aGlyphId, elem);
+=======
+Element* gfxSVGGlyphs::GetGlyphElement(uint32_t aGlyphId) {
+  Element* elem;
+
+  if (!mGlyphIdMap.Get(aGlyphId, &elem)) {
+    elem = nullptr;
+    if (gfxSVGGlyphsDocument* set = FindOrCreateGlyphsDocument(aGlyphId)) {
+      elem = set->GetGlyphElement(aGlyphId);
+>>>>>>> upstream-releases
     }
     mGlyphIdMap.Put(aGlyphId, elem);
   }
@@ -249,12 +488,23 @@ size_t gfxSVGGlyphs::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   return result;
 }
 
+<<<<<<< HEAD
 Element *gfxSVGGlyphsDocument::GetGlyphElement(uint32_t aGlyphId) {
   return mGlyphIdMap.Get(aGlyphId);
+||||||| merged common ancestors
+Element *
+gfxSVGGlyphsDocument::GetGlyphElement(uint32_t aGlyphId)
+{
+    return mGlyphIdMap.Get(aGlyphId);
+=======
+Element* gfxSVGGlyphsDocument::GetGlyphElement(uint32_t aGlyphId) {
+  return mGlyphIdMap.Get(aGlyphId);
+>>>>>>> upstream-releases
 }
 
-gfxSVGGlyphsDocument::gfxSVGGlyphsDocument(const uint8_t *aBuffer,
+gfxSVGGlyphsDocument::gfxSVGGlyphsDocument(const uint8_t* aBuffer,
                                            uint32_t aBufLen,
+<<<<<<< HEAD
                                            gfxSVGGlyphs *aSVGGlyphs)
     : mOwner(aSVGGlyphs) {
   ParseDocument(aBuffer, aBufLen);
@@ -276,6 +526,89 @@ gfxSVGGlyphsDocument::gfxSVGGlyphsDocument(const uint8_t *aBuffer,
   }
 
   FindGlyphElements(root);
+||||||| merged common ancestors
+                                           gfxSVGGlyphs *aSVGGlyphs)
+    : mOwner(aSVGGlyphs)
+{
+    ParseDocument(aBuffer, aBufLen);
+    if (!mDocument) {
+        NS_WARNING("Could not parse SVG glyphs document");
+        return;
+    }
+
+    Element *root = mDocument->GetRootElement();
+    if (!root) {
+        NS_WARNING("Could not parse SVG glyphs document");
+        return;
+    }
+
+    nsresult rv = SetupPresentation();
+    if (NS_FAILED(rv)) {
+        NS_WARNING("Couldn't setup presentation for SVG glyphs document");
+        return;
+    }
+
+    FindGlyphElements(root);
+=======
+                                           gfxSVGGlyphs* aSVGGlyphs)
+    : mOwner(aSVGGlyphs) {
+  if (aBufLen >= 14 && aBuffer[0] == 31 && aBuffer[1] == 139) {
+    // It's a gzip-compressed document; decompress it before parsing.
+    // The original length (modulo 2^32) is found in the last 4 bytes
+    // of the data, stored in little-endian format. We read it as
+    // individual bytes to avoid possible alignment issues.
+    // (Note that if the original length was >2^32, then origLen here
+    // will be incorrect; but then the inflate() call will not return
+    // Z_STREAM_END and we'll bail out safely.)
+    size_t origLen = (size_t(aBuffer[aBufLen - 1]) << 24) +
+                     (size_t(aBuffer[aBufLen - 2]) << 16) +
+                     (size_t(aBuffer[aBufLen - 3]) << 8) +
+                     size_t(aBuffer[aBufLen - 4]);
+    AutoTArray<uint8_t, 4096> outBuf;
+    if (outBuf.SetLength(origLen, mozilla::fallible)) {
+      z_stream s = {0};
+      s.next_in = const_cast<Byte*>(aBuffer);
+      s.avail_in = aBufLen;
+      s.next_out = outBuf.Elements();
+      s.avail_out = outBuf.Length();
+      // The magic number 16 here is the zlib flag to expect gzip format,
+      // see http://www.zlib.net/manual.html#Advanced
+      if (Z_OK == inflateInit2(&s, 16 + MAX_WBITS)) {
+        int result = inflate(&s, Z_FINISH);
+        if (Z_STREAM_END == result) {
+          MOZ_ASSERT(size_t(s.next_out - outBuf.Elements()) == origLen);
+          ParseDocument(outBuf.Elements(), outBuf.Length());
+        } else {
+          NS_WARNING("Failed to decompress SVG glyphs document");
+        }
+        inflateEnd(&s);
+      }
+    } else {
+      NS_WARNING("Failed to allocate memory for SVG glyphs document");
+    }
+  } else {
+    ParseDocument(aBuffer, aBufLen);
+  }
+
+  if (!mDocument) {
+    NS_WARNING("Could not parse SVG glyphs document");
+    return;
+  }
+
+  Element* root = mDocument->GetRootElement();
+  if (!root) {
+    NS_WARNING("Could not parse SVG glyphs document");
+    return;
+  }
+
+  nsresult rv = SetupPresentation();
+  if (NS_FAILED(rv)) {
+    NS_WARNING("Couldn't setup presentation for SVG glyphs document");
+    return;
+  }
+
+  FindGlyphElements(root);
+>>>>>>> upstream-releases
 }
 
 gfxSVGGlyphsDocument::~gfxSVGGlyphsDocument() {
@@ -291,6 +624,7 @@ gfxSVGGlyphsDocument::~gfxSVGGlyphsDocument() {
   }
 }
 
+<<<<<<< HEAD
 static nsresult CreateBufferedStream(const uint8_t *aBuffer, uint32_t aBufLen,
                                      nsCOMPtr<nsIInputStream> &aResult) {
   nsCOMPtr<nsIInputStream> stream;
@@ -303,6 +637,30 @@ static nsresult CreateBufferedStream(const uint8_t *aBuffer, uint32_t aBufLen,
   if (!NS_InputStreamIsBuffered(stream)) {
     rv = NS_NewBufferedInputStream(getter_AddRefs(aBufferedStream),
                                    stream.forget(), 4096);
+||||||| merged common ancestors
+static nsresult
+CreateBufferedStream(const uint8_t *aBuffer, uint32_t aBufLen,
+                     nsCOMPtr<nsIInputStream> &aResult)
+{
+    nsCOMPtr<nsIInputStream> stream;
+    nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
+                                        reinterpret_cast<const char *>(aBuffer),
+                                        aBufLen, NS_ASSIGNMENT_DEPEND);
+=======
+static nsresult CreateBufferedStream(const uint8_t* aBuffer, uint32_t aBufLen,
+                                     nsCOMPtr<nsIInputStream>& aResult) {
+  nsCOMPtr<nsIInputStream> stream;
+  nsresult rv = NS_NewByteInputStream(
+      getter_AddRefs(stream),
+      MakeSpan(reinterpret_cast<const char*>(aBuffer), aBufLen),
+      NS_ASSIGNMENT_DEPEND);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIInputStream> aBufferedStream;
+  if (!NS_InputStreamIsBuffered(stream)) {
+    rv = NS_NewBufferedInputStream(getter_AddRefs(aBufferedStream),
+                                   stream.forget(), 4096);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     stream = aBufferedStream;
   }
@@ -312,6 +670,7 @@ static nsresult CreateBufferedStream(const uint8_t *aBuffer, uint32_t aBufLen,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult gfxSVGGlyphsDocument::ParseDocument(const uint8_t *aBuffer,
                                              uint32_t aBufLen) {
   // Mostly pulled from nsDOMParser::ParseFromStream
@@ -373,20 +732,147 @@ nsresult gfxSVGGlyphsDocument::ParseDocument(const uint8_t *aBuffer,
   if (NS_SUCCEEDED(rv) && NS_SUCCEEDED(status)) {
     rv = listener->OnDataAvailable(channel, nullptr /* aContext */, stream, 0,
                                    aBufLen);
+||||||| merged common ancestors
+nsresult
+gfxSVGGlyphsDocument::ParseDocument(const uint8_t *aBuffer, uint32_t aBufLen)
+{
+    // Mostly pulled from nsDOMParser::ParseFromStream
+
+    nsCOMPtr<nsIInputStream> stream;
+    nsresult rv = CreateBufferedStream(aBuffer, aBufLen, stream);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIURI> uri;
+    mozilla::dom::FontTableURIProtocolHandler::GenerateURIString(mSVGGlyphsDocumentURI);
+
+    rv = NS_NewURI(getter_AddRefs(uri), mSVGGlyphsDocumentURI);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIPrincipal> principal = NullPrincipal::CreateWithoutOriginAttributes();
+
+    nsCOMPtr<nsIDocument> document;
+    rv = NS_NewDOMDocument(getter_AddRefs(document),
+                           EmptyString(),   // aNamespaceURI
+                           EmptyString(),   // aQualifiedName
+                           nullptr,          // aDoctype
+                           uri, uri, principal,
+                           false,           // aLoadedAsData
+                           nullptr,          // aEventObject
+                           DocumentFlavorSVG);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIChannel> channel;
+    rv = NS_NewInputStreamChannel(getter_AddRefs(channel),
+                                  uri,
+                                  nullptr, //aStream
+                                  principal,
+                                  nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL,
+                                  nsIContentPolicy::TYPE_OTHER,
+                                  SVG_CONTENT_TYPE,
+                                  UTF8_CHARSET);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Set this early because various decisions during page-load depend on it.
+    document->SetIsBeingUsedAsImage();
+    document->SetIsSVGGlyphsDocument();
+    document->SetReadyStateInternal(nsIDocument::READYSTATE_UNINITIALIZED);
+
+    nsCOMPtr<nsIStreamListener> listener;
+    rv = document->StartDocumentLoad("external-resource", channel,
+                                     nullptr,    // aLoadGroup
+                                     nullptr,    // aContainer
+                                     getter_AddRefs(listener),
+                                     true /* aReset */);
+    if (NS_FAILED(rv) || !listener) {
+        return NS_ERROR_FAILURE;
+    }
+
+    rv = listener->OnStartRequest(channel, nullptr /* aContext */);
+=======
+nsresult gfxSVGGlyphsDocument::ParseDocument(const uint8_t* aBuffer,
+                                             uint32_t aBufLen) {
+  // Mostly pulled from nsDOMParser::ParseFromStream
+
+  nsCOMPtr<nsIInputStream> stream;
+  nsresult rv = CreateBufferedStream(aBuffer, aBufLen, stream);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIURI> uri;
+  mozilla::dom::FontTableURIProtocolHandler::GenerateURIString(
+      mSVGGlyphsDocumentURI);
+
+  rv = NS_NewURI(getter_AddRefs(uri), mSVGGlyphsDocumentURI);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIPrincipal> principal =
+      NullPrincipal::CreateWithoutOriginAttributes();
+
+  RefPtr<Document> document;
+  rv = NS_NewDOMDocument(getter_AddRefs(document),
+                         EmptyString(),  // aNamespaceURI
+                         EmptyString(),  // aQualifiedName
+                         nullptr,        // aDoctype
+                         uri, uri, principal,
+                         false,    // aLoadedAsData
+                         nullptr,  // aEventObject
+                         DocumentFlavorSVG);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIChannel> channel;
+  rv = NS_NewInputStreamChannel(
+      getter_AddRefs(channel), uri,
+      nullptr,  // aStream
+      principal, nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL,
+      nsIContentPolicy::TYPE_OTHER, SVG_CONTENT_TYPE, UTF8_CHARSET);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Set this early because various decisions during page-load depend on it.
+  document->SetIsBeingUsedAsImage();
+  document->SetIsSVGGlyphsDocument();
+  document->SetReadyStateInternal(Document::READYSTATE_UNINITIALIZED);
+
+  nsCOMPtr<nsIStreamListener> listener;
+  rv = document->StartDocumentLoad("external-resource", channel,
+                                   nullptr,  // aLoadGroup
+                                   nullptr,  // aContainer
+                                   getter_AddRefs(listener), true /* aReset */);
+  if (NS_FAILED(rv) || !listener) {
+    return NS_ERROR_FAILURE;
+  }
+
+  rv = listener->OnStartRequest(channel);
+  if (NS_FAILED(rv)) {
+    channel->Cancel(rv);
+  }
+
+  nsresult status;
+  channel->GetStatus(&status);
+  if (NS_SUCCEEDED(rv) && NS_SUCCEEDED(status)) {
+    rv = listener->OnDataAvailable(channel, stream, 0, aBufLen);
+>>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       channel->Cancel(rv);
     }
     channel->GetStatus(&status);
   }
 
+<<<<<<< HEAD
   rv = listener->OnStopRequest(channel, nullptr /* aContext */, status);
   NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+||||||| merged common ancestors
+    rv = listener->OnStopRequest(channel, nullptr /* aContext */, status);
+    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+=======
+  rv = listener->OnStopRequest(channel, status);
+  NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+>>>>>>> upstream-releases
 
   document.swap(mDocument);
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void gfxSVGGlyphsDocument::InsertGlyphId(Element *aGlyphElement) {
   nsAutoString glyphIdStr;
   static const uint32_t glyphPrefixLength = 5;
@@ -403,6 +889,36 @@ void gfxSVGGlyphsDocument::InsertGlyphId(Element *aGlyphElement) {
     char16_t ch = glyphIdStr.CharAt(i);
     if (ch < '0' || ch > '9') {
       return;
+||||||| merged common ancestors
+void
+gfxSVGGlyphsDocument::InsertGlyphId(Element *aGlyphElement)
+{
+    nsAutoString glyphIdStr;
+    static const uint32_t glyphPrefixLength = 5;
+    // The maximum glyph ID is 65535 so the maximum length of the numeric part
+    // is 5.
+    if (!aGlyphElement->GetAttr(kNameSpaceID_None, nsGkAtoms::id, glyphIdStr) ||
+        !StringBeginsWith(glyphIdStr, NS_LITERAL_STRING("glyph")) ||
+        glyphIdStr.Length() > glyphPrefixLength + 5) {
+        return;
+=======
+void gfxSVGGlyphsDocument::InsertGlyphId(Element* aGlyphElement) {
+  nsAutoString glyphIdStr;
+  static const uint32_t glyphPrefixLength = 5;
+  // The maximum glyph ID is 65535 so the maximum length of the numeric part
+  // is 5.
+  if (!aGlyphElement->GetAttr(kNameSpaceID_None, nsGkAtoms::id, glyphIdStr) ||
+      !StringBeginsWith(glyphIdStr, NS_LITERAL_STRING("glyph")) ||
+      glyphIdStr.Length() > glyphPrefixLength + 5) {
+    return;
+  }
+
+  uint32_t id = 0;
+  for (uint32_t i = glyphPrefixLength; i < glyphIdStr.Length(); ++i) {
+    char16_t ch = glyphIdStr.CharAt(i);
+    if (ch < '0' || ch > '9') {
+      return;
+>>>>>>> upstream-releases
     }
     if (ch == '0' && i == glyphPrefixLength) {
       return;

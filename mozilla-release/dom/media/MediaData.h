@@ -4,22 +4,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #if !defined(MediaData_h)
-#define MediaData_h
+#  define MediaData_h
 
-#include "AudioConfig.h"
-#include "AudioSampleFormat.h"
-#include "ImageTypes.h"
-#include "SharedBuffer.h"
-#include "TimeUnits.h"
-#include "mozilla/CheckedInt.h"
-#include "mozilla/PodOperations.h"
-#include "mozilla/RefPtr.h"
-#include "mozilla/Span.h"
-#include "mozilla/UniquePtr.h"
-#include "mozilla/UniquePtrExtensions.h"
-#include "mozilla/gfx/Rect.h"
-#include "nsString.h"
-#include "nsTArray.h"
+#  include "AudioConfig.h"
+#  include "AudioSampleFormat.h"
+#  include "ImageTypes.h"
+#  include "SharedBuffer.h"
+#  include "TimeUnits.h"
+#  include "mozilla/CheckedInt.h"
+#  include "mozilla/Maybe.h"
+#  include "mozilla/PodOperations.h"
+#  include "mozilla/RefPtr.h"
+#  include "mozilla/Span.h"
+#  include "mozilla/UniquePtr.h"
+#  include "mozilla/UniquePtrExtensions.h"
+#  include "mozilla/gfx/Rect.h"
+#  include "nsString.h"
+#  include "nsTArray.h"
 
 namespace mozilla {
 
@@ -180,8 +181,17 @@ class AlignedBuffer {
   // Size in bytes of extra space allocated for padding.
   static size_t AlignmentPaddingSize() { return AlignmentOffset() * 2; }
 
+<<<<<<< HEAD
   void PopFront(size_t aSize) {
     MOZ_ASSERT(mLength >= aSize);
+||||||| merged common ancestors
+  void PopFront(size_t aSize)
+  {
+    MOZ_ASSERT(mLength >= aSize);
+=======
+  void PopFront(size_t aSize) {
+    MOZ_DIAGNOSTIC_ASSERT(mLength >= aSize, "Popping too many frames");
+>>>>>>> upstream-releases
     PodMove(mData, mData + aSize, mLength - aSize);
     mLength -= aSize;
   }
@@ -250,6 +260,7 @@ class MediaData {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(MediaData)
 
+<<<<<<< HEAD
   enum Type { AUDIO_DATA = 0, VIDEO_DATA, RAW_DATA, NULL_DATA };
 
   MediaData(Type aType, int64_t aOffset, const media::TimeUnit& aTimestamp,
@@ -260,6 +271,55 @@ class MediaData {
         mTimecode(aTimestamp),
         mDuration(aDuration),
         mFrames(aFrames),
+        mKeyframe(false) {}
+||||||| merged common ancestors
+  enum Type
+  {
+    AUDIO_DATA = 0,
+    VIDEO_DATA,
+    RAW_DATA,
+    NULL_DATA
+  };
+
+  MediaData(Type aType,
+            int64_t aOffset,
+            const media::TimeUnit& aTimestamp,
+            const media::TimeUnit& aDuration,
+            uint32_t aFrames)
+    : mType(aType)
+    , mOffset(aOffset)
+    , mTime(aTimestamp)
+    , mTimecode(aTimestamp)
+    , mDuration(aDuration)
+    , mFrames(aFrames)
+    , mKeyframe(false)
+  {
+  }
+=======
+  enum class Type { AUDIO_DATA = 0, VIDEO_DATA, RAW_DATA, NULL_DATA };
+  static const char* TypeToStr(Type aType) {
+    switch (aType) {
+      case Type::AUDIO_DATA:
+        return "AUDIO_DATA";
+      case Type::VIDEO_DATA:
+        return "VIDEO_DATA";
+      case Type::RAW_DATA:
+        return "RAW_DATA";
+      case Type::NULL_DATA:
+        return "NULL_DATA";
+      default:
+        MOZ_CRASH("bad value");
+    }
+  }
+>>>>>>> upstream-releases
+
+  MediaData(Type aType, int64_t aOffset, const media::TimeUnit& aTimestamp,
+            const media::TimeUnit& aDuration)
+      : mType(aType),
+        mOffset(aOffset),
+        mTime(aTimestamp),
+        mTimecode(aTimestamp),
+        mDuration(aDuration),
         mKeyframe(false) {}
 
   // Type of contained data.
@@ -278,16 +338,29 @@ class MediaData {
   // Duration of sample, in microseconds.
   media::TimeUnit mDuration;
 
-  // Amount of frames for contained data.
-  const uint32_t mFrames;
-
   bool mKeyframe;
 
   media::TimeUnit GetEndTime() const { return mTime + mDuration; }
 
+<<<<<<< HEAD
   bool AdjustForStartTime(int64_t aStartTime) {
     mTime = mTime - media::TimeUnit::FromMicroseconds(aStartTime);
     return !mTime.IsNegative();
+||||||| merged common ancestors
+  bool AdjustForStartTime(int64_t aStartTime)
+  {
+    mTime = mTime - media::TimeUnit::FromMicroseconds(aStartTime);
+    return !mTime.IsNegative();
+=======
+  // Return true if the adjusted time is valid. Caller should handle error when
+  // the result is invalid.
+  virtual bool AdjustForStartTime(const media::TimeUnit& aStartTime) {
+    mTime -= aStartTime;
+    if (mTime.IsNegative()) {
+      NS_WARNING("Negative start time after time-adjustment!");
+    }
+    return mTime.IsValid();
+>>>>>>> upstream-releases
   }
 
   template <typename ReturnType>
@@ -302,9 +375,25 @@ class MediaData {
     return static_cast<ReturnType*>(this);
   }
 
+<<<<<<< HEAD
  protected:
   MediaData(Type aType, uint32_t aFrames)
       : mType(aType), mOffset(0), mFrames(aFrames), mKeyframe(false) {}
+||||||| merged common ancestors
+protected:
+  MediaData(Type aType, uint32_t aFrames)
+    : mType(aType)
+    , mOffset(0)
+    , mFrames(aFrames)
+    , mKeyframe(false)
+  {
+  }
+
+  virtual ~MediaData() { }
+=======
+ protected:
+  explicit MediaData(Type aType) : mType(aType), mOffset(0), mKeyframe(false) {}
+>>>>>>> upstream-releases
 
   virtual ~MediaData() {}
 };
@@ -315,12 +404,21 @@ class NullData : public MediaData {
  public:
   NullData(int64_t aOffset, const media::TimeUnit& aTime,
            const media::TimeUnit& aDuration)
+<<<<<<< HEAD
       : MediaData(NULL_DATA, aOffset, aTime, aDuration, 0) {}
+||||||| merged common ancestors
+    : MediaData(NULL_DATA, aOffset, aTime, aDuration, 0)
+  {
+  }
+=======
+      : MediaData(Type::NULL_DATA, aOffset, aTime, aDuration) {}
+>>>>>>> upstream-releases
 
-  static const Type sType = NULL_DATA;
+  static const Type sType = Type::NULL_DATA;
 };
 
 // Holds chunk a decoded audio frames.
+<<<<<<< HEAD
 class AudioData : public MediaData {
  public:
   AudioData(int64_t aOffset, const media::TimeUnit& aTime,
@@ -332,10 +430,38 @@ class AudioData : public MediaData {
         mChannelMap(aChannelMap),
         mRate(aRate),
         mAudioData(std::move(aData)) {}
+||||||| merged common ancestors
+class AudioData : public MediaData
+{
+public:
 
-  static const Type sType = AUDIO_DATA;
+  AudioData(int64_t aOffset,
+            const media::TimeUnit& aTime,
+            const media::TimeUnit& aDuration,
+            uint32_t aFrames,
+            AlignedAudioBuffer&& aData,
+            uint32_t aChannels,
+            uint32_t aRate,
+            uint32_t aChannelMap = AudioConfig::ChannelLayout::UNKNOWN_MAP)
+    : MediaData(sType, aOffset, aTime, aDuration, aFrames)
+    , mChannels(aChannels)
+    , mChannelMap(aChannelMap)
+    , mRate(aRate)
+    , mAudioData(std::move(aData))
+  {
+  }
+=======
+class AudioData : public MediaData {
+ public:
+  AudioData(int64_t aOffset, const media::TimeUnit& aTime,
+            AlignedAudioBuffer&& aData, uint32_t aChannels, uint32_t aRate,
+            uint32_t aChannelMap = AudioConfig::ChannelLayout::UNKNOWN_MAP);
+>>>>>>> upstream-releases
+
+  static const Type sType = Type::AUDIO_DATA;
   static const char* sTypeName;
 
+<<<<<<< HEAD
   // Creates a new AudioData identical to aOther, but with a different
   // specified timestamp and duration. All data from aOther is copied
   // into the new AudioData but the audio data which is transferred.
@@ -343,6 +469,34 @@ class AudioData : public MediaData {
   static already_AddRefed<AudioData> TransferAndUpdateTimestampAndDuration(
       AudioData* aOther, const media::TimeUnit& aTimestamp,
       const media::TimeUnit& aDuration);
+||||||| merged common ancestors
+  // Creates a new AudioData identical to aOther, but with a different
+  // specified timestamp and duration. All data from aOther is copied
+  // into the new AudioData but the audio data which is transferred.
+  // After such call, the original aOther is unusable.
+  static already_AddRefed<AudioData>
+  TransferAndUpdateTimestampAndDuration(AudioData* aOther,
+                                        const media::TimeUnit& aTimestamp,
+                                        const media::TimeUnit& aDuration);
+=======
+  // Access the buffer as a Span.
+  Span<AudioDataValue> Data() const;
+
+  // Amount of frames for contained data.
+  uint32_t Frames() const { return mFrames; }
+
+  // Trim the audio buffer such that its apparent content fits within the aTrim
+  // interval. The actual data isn't removed from the buffer and a followup call
+  // to SetTrimWindow could restore the content. mDuration, mTime and mFrames
+  // will be adjusted accordingly.
+  // Warning: rounding may occurs, in which case the new start time of the audio
+  // sample may still be lesser than aTrim.mStart.
+  bool SetTrimWindow(const media::TimeInterval& aTrim);
+
+  // Get the internal audio buffer to be moved. After this call the original
+  // AudioData will be emptied and can't be used again.
+  AlignedAudioBuffer MoveableData();
+>>>>>>> upstream-releases
 
   size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
 
@@ -353,6 +507,10 @@ class AudioData : public MediaData {
   // the audiable data and silent data.
   bool IsAudible() const;
 
+  // Return true if the adjusted time is valid. Caller should handle error when
+  // the result is invalid.
+  bool AdjustForStartTime(const media::TimeUnit& aStartTime) override;
+
   const uint32_t mChannels;
   // The AudioConfig::ChannelLayout map. Channels are ordered as per SMPTE
   // definition. A value of UNKNOWN_MAP indicates unknown layout.
@@ -360,14 +518,33 @@ class AudioData : public MediaData {
   // channel map.
   const AudioConfig::ChannelLayout::ChannelMap mChannelMap;
   const uint32_t mRate;
+
   // At least one of mAudioBuffer/mAudioData must be non-null.
   // mChannels channels, each with mFrames frames
   RefPtr<SharedBuffer> mAudioBuffer;
-  // mFrames frames, each with mChannels values
-  AlignedAudioBuffer mAudioData;
 
  protected:
   ~AudioData() {}
+
+ private:
+  AudioDataValue* GetAdjustedData() const;
+  media::TimeUnit mOriginalTime;
+  // mFrames frames, each with mChannels values
+  AlignedAudioBuffer mAudioData;
+<<<<<<< HEAD
+
+ protected:
+  ~AudioData() {}
+||||||| merged common ancestors
+
+protected:
+  ~AudioData() { }
+=======
+  Maybe<media::TimeInterval> mTrimWindow;
+  // Amount of frames for contained data.
+  uint32_t mFrames;
+  size_t mDataOffset = 0;
+>>>>>>> upstream-releases
 };
 
 namespace layers {
@@ -383,11 +560,12 @@ class VideoData : public MediaData {
   typedef gfx::IntRect IntRect;
   typedef gfx::IntSize IntSize;
   typedef gfx::ColorDepth ColorDepth;
+  typedef gfx::YUVColorSpace YUVColorSpace;
   typedef layers::ImageContainer ImageContainer;
   typedef layers::Image Image;
   typedef layers::PlanarYCbCrImage PlanarYCbCrImage;
 
-  static const Type sType = VIDEO_DATA;
+  static const Type sType = Type::VIDEO_DATA;
   static const char* sTypeName;
 
   // YCbCr data obtained from decoding the video. The index's are:
@@ -490,13 +668,42 @@ class VideoData : public MediaData {
   media::TimeUnit mNextKeyFrameTime;
 };
 
+<<<<<<< HEAD
 class CryptoTrack {
  public:
   CryptoTrack() : mValid(false), mMode(0), mIVSize(0) {}
   bool mValid;
   int32_t mMode;
+||||||| merged common ancestors
+class CryptoTrack
+{
+public:
+  CryptoTrack() : mValid(false), mMode(0), mIVSize(0) { }
+  bool mValid;
+  int32_t mMode;
+=======
+enum class CryptoScheme : uint8_t {
+  None,
+  Cenc,
+  Cbcs,
+};
+
+class CryptoTrack {
+ public:
+  CryptoTrack()
+      : mCryptoScheme(CryptoScheme::None),
+        mIVSize(0),
+        mCryptByteBlock(0),
+        mSkipByteBlock(0) {}
+  CryptoScheme mCryptoScheme;
+>>>>>>> upstream-releases
   int32_t mIVSize;
   nsTArray<uint8_t> mKeyId;
+  uint8_t mCryptByteBlock;
+  uint8_t mSkipByteBlock;
+  nsTArray<uint8_t> mConstantIV;
+
+  bool IsEncrypted() const { return mCryptoScheme != CryptoScheme::None; }
 };
 
 class CryptoSample : public CryptoTrack {
@@ -594,6 +801,14 @@ class MediaRawData final : public MediaData {
   uint32_t mDiscardPadding = 0;
 
   RefPtr<TrackInfoSharedPtr> mTrackInfo;
+
+  // May contain the original start time and duration of the frames.
+  // mOriginalPresentationWindow.mStart would always be less or equal to mTime
+  // and mOriginalPresentationWindow.mEnd equal or greater to mTime + mDuration.
+  // This is used when the sample should get cropped so that its content will
+  // actually start on mTime and go for mDuration. If this interval is set, then
+  // the decoder should crop the content accordingly.
+  Maybe<media::TimeInterval> mOriginalPresentationWindow;
 
   // Return a deep copy or nullptr if out of memory.
   already_AddRefed<MediaRawData> Clone() const;

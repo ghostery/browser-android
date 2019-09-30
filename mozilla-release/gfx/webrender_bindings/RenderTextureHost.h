@@ -45,7 +45,17 @@ class RenderTextureHost {
     return nullptr;
   }
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  virtual void PrepareForUse() {}
+  virtual void NofityForUse() {}
+  virtual void NotifyNotUsed() {}
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~RenderTextureHost();
 
   bool IsFilterUpdateNecessary(wr::ImageRendering aRendering);

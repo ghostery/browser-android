@@ -6,10 +6,11 @@
 
 #include "shell/jsoptparse.h"
 
-#include <ctype.h>
 #include <stdarg.h>
 
 #include "jsutil.h"
+
+#include "util/Unicode.h"
 
 using namespace js;
 using namespace js::cli;
@@ -64,6 +65,7 @@ OptionParser::Result OptionParser::error(const char* fmt, ...) {
 }
 
 /* Quick and dirty paragraph printer. */
+<<<<<<< HEAD
 static void PrintParagraph(const char* text, unsigned startColno,
                            const unsigned limitColno, bool padFirstLine) {
   unsigned colno = startColno;
@@ -110,6 +112,91 @@ static void PrintParagraph(const char* text, unsigned startColno,
         it = limit;
         while (*it == ' ') {
           ++it;
+||||||| merged common ancestors
+static void
+PrintParagraph(const char* text, unsigned startColno, const unsigned limitColno, bool padFirstLine)
+{
+    unsigned colno = startColno;
+    unsigned indent = 0;
+    const char* it = text;
+
+    if (padFirstLine) {
+        printf("%*s", startColno, "");
+    }
+
+    /* Skip any leading spaces. */
+    while (*it != '\0' && isspace(*it)) {
+        ++it;
+    }
+
+    while (*it != '\0') {
+        MOZ_ASSERT(!isspace(*it) || *it == '\n');
+
+        /* Delimit the current token. */
+        const char* limit = it;
+        while (!isspace(*limit) && *limit != '\0') {
+            ++limit;
+        }
+
+        /*
+         * If the current token is longer than the available number of columns,
+         * then make a line break before printing the token.
+         */
+        size_t tokLen = limit - it;
+        if (tokLen + colno >= limitColno) {
+            printf("\n%*s%.*s", startColno + indent, "", int(tokLen), it);
+            colno = startColno + tokLen;
+        } else {
+            printf("%.*s", int(tokLen), it);
+            colno += tokLen;
+=======
+static void PrintParagraph(const char* text, unsigned startColno,
+                           const unsigned limitColno, bool padFirstLine) {
+  unsigned colno = startColno;
+  unsigned indent = 0;
+  const char* it = text;
+
+  if (padFirstLine) {
+    printf("%*s", startColno, "");
+  }
+
+  /* Skip any leading spaces. */
+  while (*it != '\0' && unicode::IsSpace(*it)) {
+    ++it;
+  }
+
+  while (*it != '\0') {
+    MOZ_ASSERT(!unicode::IsSpace(*it) || *it == '\n');
+
+    /* Delimit the current token. */
+    const char* limit = it;
+    while (!unicode::IsSpace(*limit) && *limit != '\0') {
+      ++limit;
+    }
+
+    /*
+     * If the current token is longer than the available number of columns,
+     * then make a line break before printing the token.
+     */
+    size_t tokLen = limit - it;
+    if (tokLen + colno >= limitColno) {
+      printf("\n%*s%.*s", startColno + indent, "", int(tokLen), it);
+      colno = startColno + tokLen;
+    } else {
+      printf("%.*s", int(tokLen), it);
+      colno += tokLen;
+    }
+
+    switch (*limit) {
+      case '\0':
+        return;
+      case ' ':
+        putchar(' ');
+        colno += 1;
+        it = limit;
+        while (*it == ' ') {
+          ++it;
+>>>>>>> upstream-releases
         }
         break;
       case '\n':
@@ -132,6 +219,30 @@ static void PrintParagraph(const char* text, unsigned startColno,
   }
 }
 
+<<<<<<< HEAD
+static const char* OptionFlagsToFormatInfo(char shortflag, bool isValued,
+                                           size_t* length) {
+  static const char* const fmt[4] = {"  -%c --%s ", "  --%s ", "  -%c --%s=%s ",
+                                     "  --%s=%s "};
+||||||| merged common ancestors
+static const char*
+OptionFlagsToFormatInfo(char shortflag, bool isValued, size_t* length)
+{
+    static const char * const fmt[4] = { "  -%c --%s ",
+                                         "  --%s ",
+                                         "  -%c --%s=%s ",
+                                         "  --%s=%s " };
+
+    /* How mny chars w/o longflag? */
+    size_t lengths[4] = { strlen(fmt[0]) - 3,
+                          strlen(fmt[1]) - 3,
+                          strlen(fmt[2]) - 5,
+                          strlen(fmt[3]) - 5 };
+    int index = isValued ? 2 : 0;
+    if (!shortflag) {
+        index++;
+    }
+=======
 static const char* OptionFlagsToFormatInfo(char shortflag, bool isValued,
                                            size_t* length) {
   static const char* const fmt[4] = {"  -%c --%s ", "  --%s ", "  -%c --%s=%s ",
@@ -144,9 +255,26 @@ static const char* OptionFlagsToFormatInfo(char shortflag, bool isValued,
   if (!shortflag) {
     index++;
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  /* How mny chars w/o longflag? */
+  size_t lengths[4] = {strlen(fmt[0]) - 3, strlen(fmt[1]) - 3,
+                       strlen(fmt[2]) - 5, strlen(fmt[3]) - 5};
+  int index = isValued ? 2 : 0;
+  if (!shortflag) {
+    index++;
+  }
 
   *length = lengths[index];
   return fmt[index];
+||||||| merged common ancestors
+    *length = lengths[index];
+    return fmt[index];
+=======
+  *length = lengths[index];
+  return fmt[index];
+>>>>>>> upstream-releases
 }
 
 OptionParser::Result OptionParser::printHelp(const char* progname) {
@@ -186,20 +314,62 @@ OptionParser::Result OptionParser::printHelp(const char* progname) {
       PrintParagraph(arg->help, lhsLen, helpWidth, false);
       putchar('\n');
     }
+<<<<<<< HEAD
+    putchar('\n');
+  }
+||||||| merged common ancestors
+=======
     putchar('\n');
   }
 
   if (!options.empty()) {
     printf("Options:\n");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!options.empty()) {
+    printf("Options:\n");
+||||||| merged common ancestors
+    if (!options.empty()) {
+        printf("Options:\n");
+=======
     /* Calculate sizes for column alignment. */
     size_t lhsLen = 0;
     for (Option* opt : options) {
       size_t longflagLen = strlen(opt->longflag);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    /* Calculate sizes for column alignment. */
+    size_t lhsLen = 0;
+    for (Option* opt : options) {
+      size_t longflagLen = strlen(opt->longflag);
+||||||| merged common ancestors
+        /* Calculate sizes for column alignment. */
+        size_t lhsLen = 0;
+        for (Option* opt : options) {
+            size_t longflagLen = strlen(opt->longflag);
+=======
       size_t fmtLen;
       OptionFlagsToFormatInfo(opt->shortflag, opt->isValued(), &fmtLen);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      size_t fmtLen;
+      OptionFlagsToFormatInfo(opt->shortflag, opt->isValued(), &fmtLen);
+||||||| merged common ancestors
+            size_t fmtLen;
+            OptionFlagsToFormatInfo(opt->shortflag, opt->isValued(), &fmtLen);
+=======
+      size_t len = fmtLen + longflagLen;
+      if (opt->isValued()) {
+        len += strlen(opt->asValued()->metavar);
+      }
+      lhsLen = Max(lhsLen, len);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       size_t len = fmtLen + longflagLen;
       if (opt->isValued()) {
         len += strlen(opt->asValued()->metavar);
@@ -219,7 +389,59 @@ OptionParser::Result OptionParser::printHelp(const char* progname) {
                          opt->asValued()->metavar);
         } else {
           chars = printf(fmt, opt->longflag, opt->asValued()->metavar);
+||||||| merged common ancestors
+            size_t len = fmtLen + longflagLen;
+            if (opt->isValued()) {
+                len += strlen(opt->asValued()->metavar);
+            }
+            lhsLen = Max(lhsLen, len);
         }
+
+        /* Print option help text. */
+        for (Option* opt : options) {
+            size_t fmtLen;
+            const char* fmt = OptionFlagsToFormatInfo(opt->shortflag, opt->isValued(), &fmtLen);
+            size_t chars;
+            if (opt->isValued()) {
+                if (opt->shortflag) {
+                    chars = printf(fmt, opt->shortflag, opt->longflag, opt->asValued()->metavar);
+                } else {
+                    chars = printf(fmt, opt->longflag, opt->asValued()->metavar);
+                }
+            } else {
+                if (opt->shortflag) {
+                    chars = printf(fmt, opt->shortflag, opt->longflag);
+                } else {
+                    chars = printf(fmt, opt->longflag);
+                }
+            }
+            for (; chars < lhsLen; ++chars) {
+                putchar(' ');
+            }
+            PrintParagraph(opt->help, lhsLen, helpWidth, false);
+            putchar('\n');
+=======
+    /* Print option help text. */
+    for (Option* opt : options) {
+      size_t fmtLen;
+      const char* fmt =
+          OptionFlagsToFormatInfo(opt->shortflag, opt->isValued(), &fmtLen);
+      size_t chars;
+      if (opt->isValued()) {
+        if (opt->shortflag) {
+          chars = printf(fmt, opt->shortflag, opt->longflag,
+                         opt->asValued()->metavar);
+        } else {
+          chars = printf(fmt, opt->longflag, opt->asValued()->metavar);
+        }
+      } else {
+        if (opt->shortflag) {
+          chars = printf(fmt, opt->shortflag, opt->longflag);
+        } else {
+          chars = printf(fmt, opt->longflag);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
       } else {
         if (opt->shortflag) {
           chars = printf(fmt, opt->shortflag, opt->longflag);
@@ -232,6 +454,15 @@ OptionParser::Result OptionParser::printHelp(const char* progname) {
       }
       PrintParagraph(opt->help, lhsLen, helpWidth, false);
       putchar('\n');
+||||||| merged common ancestors
+=======
+      }
+      for (; chars < lhsLen; ++chars) {
+        putchar(' ');
+      }
+      PrintParagraph(opt->help, lhsLen, helpWidth, false);
+      putchar('\n');
+>>>>>>> upstream-releases
     }
   }
 
@@ -281,6 +512,7 @@ OptionParser::Result OptionParser::handleOption(Option* opt, size_t argc,
       if (opt == &versionOption) {
         return printVersion();
       }
+<<<<<<< HEAD
       opt->asBoolOption()->value = true;
       return Okay;
     }
@@ -295,6 +527,57 @@ OptionParser::Result OptionParser::handleOption(Option* opt, size_t argc,
       }
       opt->asStringOption()->value = value;
       return Okay;
+||||||| merged common ancestors
+      case OptionKindInt:
+      {
+        char* value = nullptr;
+        if (Result r = extractValue(argc, argv, i, &value)) {
+            return r;
+        }
+        opt->asIntOption()->value = atoi(value);
+        return Okay;
+      }
+      case OptionKindMultiString:
+      {
+        char* value = nullptr;
+        if (Result r = extractValue(argc, argv, i, &value)) {
+            return r;
+        }
+        StringArg arg(value, *i);
+        return opt->asMultiStringOption()->strings.append(arg) ? Okay : Fail;
+      }
+      default:
+        MOZ_CRASH("unhandled option kind");
+    }
+}
+
+OptionParser::Result
+OptionParser::handleArg(size_t argc, char** argv, size_t* i, bool* optionsAllowed)
+{
+    if (nextArgument >= arguments.length()) {
+        return error("Too many arguments provided");
+    }
+
+    Option* arg = arguments[nextArgument];
+
+    if (arg->getTerminatesOptions()) {
+        *optionsAllowed = false;
+=======
+      opt->asBoolOption()->value = true;
+      return Okay;
+    }
+    /*
+     * Valued options are allowed to specify their values either via
+     * successive arguments or a single --longflag=value argument.
+     */
+    case OptionKindString: {
+      char* value = nullptr;
+      if (Result r = extractValue(argc, argv, i, &value)) {
+        return r;
+      }
+      opt->asStringOption()->value = value;
+      return Okay;
+>>>>>>> upstream-releases
     }
     case OptionKindInt: {
       char* value = nullptr;
@@ -372,11 +655,35 @@ OptionParser::Result OptionParser::parseArgs(int inputArgc, char** argv) {
             return error("Invalid long option: %s", arg);
           }
         }
+<<<<<<< HEAD
       } else {
         /* Short option */
         if (arg[2] != '\0') {
           return error("Short option followed by junk: %s", arg);
         }
+        opt = findOption(arg[1]);
+        if (!opt) {
+          return error("Invalid short option: %s", arg);
+||||||| merged common ancestors
+
+        if (r != Okay) {
+            return r;
+=======
+      } else {
+        /* Short option */
+        if (arg[2] != '\0') {
+          return error("Short option followed by junk: %s", arg);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+      }
+
+      r = handleOption(opt, argc, argv, &i, &optionsAllowed);
+    } else {
+      /* Argument. */
+      r = handleArg(argc, argv, &i, &optionsAllowed);
+||||||| merged common ancestors
+=======
         opt = findOption(arg[1]);
         if (!opt) {
           return error("Invalid short option: %s", arg);
@@ -387,6 +694,7 @@ OptionParser::Result OptionParser::parseArgs(int inputArgc, char** argv) {
     } else {
       /* Argument. */
       r = handleArg(argc, argv, &i, &optionsAllowed);
+>>>>>>> upstream-releases
     }
 
     if (r != Okay) {

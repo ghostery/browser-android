@@ -26,11 +26,22 @@
  * template instantiations wherever possible, mean that Parser exhibits much of
  * the same unholy template/inheritance complexity as token streams.
  *
- * == ParserBase → JS::AutoGCRooter, StrictModeGetter ==
+ * == ParserSharedBase → JS::AutoGCRooter ==
  *
- * ParserBase is the base parser class, shared by all parsers of all character
- * types and parse-handling behavior.  It stores everything character- and
- * handler-agnostic.
+ * ParserSharedBase is the base class for both regular JS and BinAST parser.
+ * This class contains common fields and methods between both parsers.
+ *
+ * Of particular note: making ParserSharedBase inherit JS::AutoGCRooter (rather
+ * than placing it under one of the more-derived parser classes) means that all
+ * parsers can be traced using the same AutoGCRooter mechanism: it's not
+ * necessary to have separate tracing functionality for syntax/full parsers or
+ * parsers of different character types.
+ *
+ * == ParserBase → ParserSharedBase, ErrorReportMixin ==
+ *
+ * ParserBase is the base class for regular JS parser, shared by all regular JS
+ * parsers of all character types and parse-handling behavior.  It stores
+ * everything character- and handler-agnostic.
  *
  * ParserBase's most important field is the parser's token stream's
  * |TokenStreamAnyChars| component, for all tokenizing aspects that are
@@ -39,12 +50,6 @@
  * live elsewhere in this hierarchy.  These separate locations are the reason
  * for the |AnyCharsAccess| template parameter to |TokenStreamChars| and
  * |TokenStreamSpecific|.
- *
- * Of particular note: making ParserBase inherit JS::AutoGCRooter (rather than
- * placing it under one of the more-derived parser classes) means that all
- * parsers can be traced using the same AutoGCRooter mechanism: it's not
- * necessary to have separate tracing functionality for syntax/full parsers or
- * parsers of different character types.
  *
  * == PerHandlerParser<ParseHandler> → ParserBase ==
  *
@@ -174,6 +179,7 @@
 
 #include "ds/Nestable.h"
 #include "frontend/BytecodeCompiler.h"
+#include "frontend/ErrorReporter.h"
 #include "frontend/FullParseHandler.h"
 #include "frontend/NameAnalysisTypes.h"
 #include "frontend/NameCollections.h"
@@ -182,17 +188,18 @@
 #include "frontend/SyntaxParseHandler.h"
 #include "frontend/TokenStream.h"
 
+#include "vm/ErrorReporting.h"
+
 namespace js {
 
 class ModuleObject;
 
 namespace frontend {
 
-class ParserBase;
-
 template <class ParseHandler, typename Unit>
 class GeneralParser;
 
+<<<<<<< HEAD
 class SourceParseContext : public ParseContext {
  public:
   template <typename ParseHandler, typename Unit>
@@ -201,6 +208,26 @@ class SourceParseContext : public ParseContext {
       : ParseContext(prs->context, prs->pc, sc, prs->tokenStream,
                      prs->usedNames, newDirectives,
                      mozilla::IsSame<ParseHandler, FullParseHandler>::value) {}
+||||||| merged common ancestors
+class SourceParseContext: public ParseContext
+{
+public:
+    template<typename ParseHandler, typename Unit>
+    SourceParseContext(GeneralParser<ParseHandler, Unit>* prs, SharedContext* sc,
+                       Directives* newDirectives)
+      : ParseContext(prs->context, prs->pc, sc, prs->tokenStream, prs->usedNames, newDirectives,
+                     mozilla::IsSame<ParseHandler, FullParseHandler>::value)
+    { }
+=======
+class SourceParseContext : public ParseContext {
+ public:
+  template <typename ParseHandler, typename Unit>
+  SourceParseContext(GeneralParser<ParseHandler, Unit>* prs, SharedContext* sc,
+                     Directives* newDirectives)
+      : ParseContext(prs->cx_, prs->pc_, sc, prs->tokenStream, prs->usedNames_,
+                     newDirectives,
+                     mozilla::IsSame<ParseHandler, FullParseHandler>::value) {}
+>>>>>>> upstream-releases
 };
 
 enum VarContext { HoistVars, DontHoistVars };
@@ -232,42 +259,143 @@ class AutoAwaitIsKeyword;
 template <class ParseHandler, typename Unit>
 class AutoInParametersOfAsyncFunction;
 
+<<<<<<< HEAD
 class MOZ_STACK_CLASS ParserBase : public StrictModeGetter,
                                    private JS::AutoGCRooter {
  private:
   ParserBase* thisForCtor() { return this; }
+||||||| merged common ancestors
+class MOZ_STACK_CLASS ParserBase
+  : public StrictModeGetter,
+    private JS::AutoGCRooter
+{
+  private:
+    ParserBase* thisForCtor() { return this; }
+=======
+class MOZ_STACK_CLASS ParserSharedBase : private JS::AutoGCRooter {
+ public:
+  enum class Kind { Parser, BinASTParser };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // This is needed to cast a parser to JS::AutoGCRooter.
   friend void js::frontend::TraceParser(JSTracer* trc,
                                         JS::AutoGCRooter* parser);
+||||||| merged common ancestors
+    // This is needed to cast a parser to JS::AutoGCRooter.
+    friend void js::frontend::TraceParser(JSTracer* trc, JS::AutoGCRooter* parser);
+=======
+  ParserSharedBase(JSContext* cx, LifoAlloc& alloc, UsedNameTracker& usedNames,
+                   ScriptSourceObject* sourceObject, Kind kind);
+  ~ParserSharedBase();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   JSContext* const context;
+||||||| merged common ancestors
+  public:
+    JSContext* const context;
+=======
+ public:
+  JSContext* const cx_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   LifoAlloc& alloc;
+||||||| merged common ancestors
+    LifoAlloc& alloc;
+=======
+  LifoAlloc& alloc_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   TokenStreamAnyChars anyChars;
   LifoAlloc::Mark tempPoolMark;
+||||||| merged common ancestors
+    TokenStreamAnyChars anyChars;
+    LifoAlloc::Mark tempPoolMark;
+=======
+  LifoAlloc::Mark tempPoolMark_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* list of parsed objects and BigInts for GC tracing */
   TraceListNode* traceListHead;
+||||||| merged common ancestors
+    /* list of parsed objects for GC tracing */
+    ObjectBox* traceListHead;
+=======
+  // list of parsed objects and BigInts for GC tracing
+  TraceListNode* traceListHead_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* innermost parse context (stack-allocated) */
   ParseContext* pc;
+||||||| merged common ancestors
+    /* innermost parse context (stack-allocated) */
+    ParseContext* pc;
+=======
+  // innermost parse context (stack-allocated)
+  ParseContext* pc_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // For tracking used names in this parsing session.
   UsedNameTracker& usedNames;
+||||||| merged common ancestors
+    // For tracking used names in this parsing session.
+    UsedNameTracker& usedNames;
+=======
+  // For tracking used names in this parsing session.
+  UsedNameTracker& usedNames_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ScriptSource* ss;
+||||||| merged common ancestors
+    ScriptSource*       ss;
+=======
+  RootedScriptSourceObject sourceObject_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedScriptSourceObject sourceObject;
+||||||| merged common ancestors
+    RootedScriptSourceObject sourceObject;
+=======
+  // Root atoms and objects allocated for the parsed tree.
+  AutoKeepAtoms keepAtoms_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* Root atoms and objects allocated for the parsed tree. */
   AutoKeepAtoms keepAtoms;
+||||||| merged common ancestors
+    /* Root atoms and objects allocated for the parsed tree. */
+    AutoKeepAtoms       keepAtoms;
+=======
+ private:
+  // This is needed to cast a parser to JS::AutoGCRooter.
+  friend void js::frontend::TraceParser(JSTracer* trc,
+                                        JS::AutoGCRooter* parser);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Perform constant-folding; must be true when interfacing with the emitter.
   const bool foldConstants : 1;
+||||||| merged common ancestors
+    /* Perform constant-folding; must be true when interfacing with the emitter. */
+    const bool          foldConstants:1;
+=======
+#if defined(JS_BUILD_BINAST)
+  friend void js::frontend::TraceBinASTParser(JSTracer* trc,
+                                              JS::AutoGCRooter* parser);
+#endif  // JS_BUILD_BINAST
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
 #if DEBUG
   /* Our fallible 'checkOptions' member function has been called. */
@@ -296,7 +424,50 @@ class MOZ_STACK_CLASS ParserBase : public StrictModeGetter,
   friend class AutoAwaitIsKeyword;
   template <class, typename>
   friend class AutoInParametersOfAsyncFunction;
+||||||| merged common ancestors
+  protected:
+#if DEBUG
+    /* Our fallible 'checkOptions' member function has been called. */
+    bool checkOptionsCalled:1;
+#endif
 
+    /* Unexpected end of input, i.e. Eof not at top-level. */
+    bool isUnexpectedEOF_:1;
+
+    /* AwaitHandling */ uint8_t awaitHandling_:2;
+
+    bool inParametersOfAsyncFunction_:1;
+
+    /* ParseGoal */ uint8_t parseGoal_:1;
+
+  public:
+    bool awaitIsKeyword() const {
+      return awaitHandling_ != AwaitIsName;
+    }
+
+    bool inParametersOfAsyncFunction() const {
+        return inParametersOfAsyncFunction_;
+    }
+
+    ParseGoal parseGoal() const {
+        return ParseGoal(parseGoal_);
+    }
+
+    template<class, typename> friend class AutoAwaitIsKeyword;
+    template<class, typename> friend class AutoInParametersOfAsyncFunction;
+
+    ParserBase(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
+               bool foldConstants, UsedNameTracker& usedNames,
+               ScriptSourceObject* sourceObject, ParseGoal parseGoal);
+    ~ParserBase();
+=======
+ private:
+  // Create a new traceable node and store it into the trace list.
+  template <typename BoxT, typename ArgT>
+  BoxT* newTraceListNode(ArgT* arg);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   ParserBase(JSContext* cx, LifoAlloc& alloc,
              const JS::ReadOnlyCompileOptions& options, bool foldConstants,
              UsedNameTracker& usedNames, ScriptSourceObject* sourceObject,
@@ -309,7 +480,25 @@ class MOZ_STACK_CLASS ParserBase : public StrictModeGetter,
 
   const char* getFilename() const { return anyChars.getFilename(); }
   TokenPos pos() const { return anyChars.currentToken().pos; }
+||||||| merged common ancestors
+    bool checkOptions();
 
+    void trace(JSTracer* trc);
+
+    const char* getFilename() const { return anyChars.getFilename(); }
+    TokenPos pos() const { return anyChars.currentToken().pos; }
+
+    // Determine whether |yield| is a valid name in the current context.
+    bool yieldExpressionsSupported() const {
+        return pc->isGenerator();
+    }
+=======
+ public:
+  // Create a new JSObject and store it into the trace list.
+  ObjectBox* newObjectBox(JSObject* obj);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Determine whether |yield| is a valid name in the current context.
   bool yieldExpressionsSupported() const { return pc->isGenerator(); }
 
@@ -379,6 +568,268 @@ class MOZ_STACK_CLASS ParserBase : public StrictModeGetter,
   mozilla::Maybe<VarScope::Data*> newVarScopeData(ParseContext::Scope& scope);
   mozilla::Maybe<LexicalScope::Data*> newLexicalScopeData(
       ParseContext::Scope& scope);
+||||||| merged common ancestors
+    virtual bool strictMode() override { return pc->sc()->strict(); }
+    bool setLocalStrictMode(bool strict) {
+        MOZ_ASSERT(anyChars.debugHasNoLookahead());
+        return pc->sc()->setLocalStrictMode(strict);
+    }
+
+    const JS::ReadOnlyCompileOptions& options() const {
+        return anyChars.options();
+    }
+
+    bool isUnexpectedEOF() const { return isUnexpectedEOF_; }
+
+    MOZ_MUST_USE bool warningNoOffset(unsigned errorNumber, ...);
+    void errorNoOffset(unsigned errorNumber, ...);
+
+    bool isValidStrictBinding(PropertyName* name);
+
+    bool hasValidSimpleStrictParameterNames();
+
+    /*
+     * Create a new function object given a name (which is optional if this is
+     * a function expression).
+     */
+    JSFunction* newFunction(HandleAtom atom, FunctionSyntaxKind kind,
+                            GeneratorKind generatorKind, FunctionAsyncKind asyncKind,
+                            HandleObject proto);
+
+    // A Parser::Mark is the extension of the LifoAlloc::Mark to the entire
+    // Parser's state. Note: clients must still take care that any ParseContext
+    // that points into released ParseNodes is destroyed.
+    class Mark
+    {
+        friend class ParserBase;
+        LifoAlloc::Mark mark;
+        ObjectBox* traceListHead;
+    };
+    Mark mark() const {
+        Mark m;
+        m.mark = alloc.mark();
+        m.traceListHead = traceListHead;
+        return m;
+    }
+    void release(Mark m) {
+        alloc.release(m.mark);
+        traceListHead = m.traceListHead;
+    }
+
+    ObjectBox* newObjectBox(JSObject* obj);
+
+    mozilla::Maybe<GlobalScope::Data*> newGlobalScopeData(ParseContext::Scope& scope);
+    mozilla::Maybe<ModuleScope::Data*> newModuleScopeData(ParseContext::Scope& scope);
+    mozilla::Maybe<EvalScope::Data*> newEvalScopeData(ParseContext::Scope& scope);
+    mozilla::Maybe<FunctionScope::Data*> newFunctionScopeData(ParseContext::Scope& scope,
+                                                              bool hasParameterExprs);
+    mozilla::Maybe<VarScope::Data*> newVarScopeData(ParseContext::Scope& scope);
+    mozilla::Maybe<LexicalScope::Data*> newLexicalScopeData(ParseContext::Scope& scope);
+
+  protected:
+    enum InvokedPrediction { PredictUninvoked = false, PredictInvoked = true };
+    enum ForInitLocation { InForInit, NotInForInit };
+
+    // While on a |let| Name token, examine |next| (which must already be
+    // gotten).  Indicate whether |next|, the next token already gotten with
+    // modifier TokenStream::None, continues a LexicalDeclaration.
+    bool nextTokenContinuesLetDeclaration(TokenKind next);
+=======
+  // Create a new BigInt and store it into the trace list.
+  BigIntBox* newBigIntBox(BigInt* val);
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ protected:
+  enum InvokedPrediction { PredictUninvoked = false, PredictInvoked = true };
+  enum ForInitLocation { InForInit, NotInForInit };
+||||||| merged common ancestors
+    bool noteUsedNameInternal(HandlePropertyName name);
+    bool hasUsedName(HandlePropertyName name);
+    bool hasUsedFunctionSpecialName(HandlePropertyName name);
+=======
+class MOZ_STACK_CLASS ParserBase : public ParserSharedBase,
+                                   public ErrorReportMixin {
+  using Base = ErrorReportMixin;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // While on a |let| Name token, examine |next| (which must already be
+  // gotten).  Indicate whether |next|, the next token already gotten with
+  // modifier TokenStream::None, continues a LexicalDeclaration.
+  bool nextTokenContinuesLetDeclaration(TokenKind next);
+||||||| merged common ancestors
+    bool checkAndMarkSuperScope();
+=======
+ public:
+  TokenStreamAnyChars anyChars;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool noteUsedNameInternal(HandlePropertyName name);
+  bool hasUsedName(HandlePropertyName name);
+  bool hasUsedFunctionSpecialName(HandlePropertyName name);
+||||||| merged common ancestors
+    bool declareDotGeneratorName();
+=======
+  ScriptSource* ss;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool checkAndMarkSuperScope();
+||||||| merged common ancestors
+    bool leaveInnerFunction(ParseContext* outerpc);
+=======
+  // Perform constant-folding; must be true when interfacing with the emitter.
+  const bool foldConstants_ : 1;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool declareDotGeneratorName();
+||||||| merged common ancestors
+    JSAtom* prefixAccessorName(PropertyType propType, HandleAtom propAtom);
+=======
+ protected:
+#if DEBUG
+  /* Our fallible 'checkOptions' member function has been called. */
+  bool checkOptionsCalled_ : 1;
+#endif
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool leaveInnerFunction(ParseContext* outerpc);
+||||||| merged common ancestors
+    MOZ_MUST_USE bool setSourceMapInfo();
+};
+=======
+  /* Unexpected end of input, i.e. Eof not at top-level. */
+  bool isUnexpectedEOF_ : 1;
+
+  /* AwaitHandling */ uint8_t awaitHandling_ : 2;
+
+  bool inParametersOfAsyncFunction_ : 1;
+
+  /* ParseGoal */ uint8_t parseGoal_ : 1;
+
+ public:
+  bool awaitIsKeyword() const { return awaitHandling_ != AwaitIsName; }
+
+  bool inParametersOfAsyncFunction() const {
+    return inParametersOfAsyncFunction_;
+  }
+
+  ParseGoal parseGoal() const { return ParseGoal(parseGoal_); }
+
+  template <class, typename>
+  friend class AutoAwaitIsKeyword;
+  template <class, typename>
+  friend class AutoInParametersOfAsyncFunction;
+
+  ParserBase(JSContext* cx, LifoAlloc& alloc,
+             const JS::ReadOnlyCompileOptions& options, bool foldConstants,
+             UsedNameTracker& usedNames, ScriptSourceObject* sourceObject,
+             ParseGoal parseGoal);
+  ~ParserBase();
+
+  bool checkOptions();
+
+  void trace(JSTracer* trc);
+
+  const char* getFilename() const { return anyChars.getFilename(); }
+  TokenPos pos() const { return anyChars.currentToken().pos; }
+
+  // Determine whether |yield| is a valid name in the current context.
+  bool yieldExpressionsSupported() const { return pc_->isGenerator(); }
+
+  bool setLocalStrictMode(bool strict) {
+    MOZ_ASSERT(anyChars.debugHasNoLookahead());
+    return pc_->sc()->setLocalStrictMode(strict);
+  }
+
+ public:
+  // Implement ErrorReportMixin.
+
+  JSContext* getContext() const override { return cx_; }
+
+  bool strictMode() const override { return pc_->sc()->strict(); }
+
+  const JS::ReadOnlyCompileOptions& options() const override {
+    return anyChars.options();
+  }
+
+  using Base::error;
+  using Base::errorAt;
+  using Base::errorNoOffset;
+  using Base::errorWithNotes;
+  using Base::errorWithNotesAt;
+  using Base::errorWithNotesNoOffset;
+  using Base::extraWarning;
+  using Base::extraWarningAt;
+  using Base::extraWarningNoOffset;
+  using Base::extraWarningWithNotes;
+  using Base::extraWarningWithNotesAt;
+  using Base::extraWarningWithNotesNoOffset;
+  using Base::strictModeError;
+  using Base::strictModeErrorAt;
+  using Base::strictModeErrorNoOffset;
+  using Base::strictModeErrorWithNotes;
+  using Base::strictModeErrorWithNotesAt;
+  using Base::strictModeErrorWithNotesNoOffset;
+  using Base::warning;
+  using Base::warningAt;
+  using Base::warningNoOffset;
+  using Base::warningWithNotes;
+  using Base::warningWithNotesAt;
+  using Base::warningWithNotesNoOffset;
+
+ public:
+  bool isUnexpectedEOF() const { return isUnexpectedEOF_; }
+
+  bool isValidStrictBinding(PropertyName* name);
+
+  bool hasValidSimpleStrictParameterNames();
+
+  /*
+   * Create a new function object given a name (which is optional if this is
+   * a function expression).
+   */
+  JSFunction* newFunction(HandleAtom atom, FunctionSyntaxKind kind,
+                          GeneratorKind generatorKind,
+                          FunctionAsyncKind asyncKind,
+                          HandleObject proto = nullptr);
+
+  // A Parser::Mark is the extension of the LifoAlloc::Mark to the entire
+  // Parser's state. Note: clients must still take care that any ParseContext
+  // that points into released ParseNodes is destroyed.
+  class Mark {
+    friend class ParserBase;
+    LifoAlloc::Mark mark;
+    TraceListNode* traceListHead;
+  };
+  Mark mark() const {
+    Mark m;
+    m.mark = alloc_.mark();
+    m.traceListHead = traceListHead_;
+    return m;
+  }
+  void release(Mark m) {
+    alloc_.release(m.mark);
+    traceListHead_ = m.traceListHead;
+  }
+
+ public:
+  mozilla::Maybe<GlobalScope::Data*> newGlobalScopeData(
+      ParseContext::Scope& scope);
+  mozilla::Maybe<ModuleScope::Data*> newModuleScopeData(
+      ParseContext::Scope& scope);
+  mozilla::Maybe<EvalScope::Data*> newEvalScopeData(ParseContext::Scope& scope);
+  mozilla::Maybe<FunctionScope::Data*> newFunctionScopeData(
+      ParseContext::Scope& scope, bool hasParameterExprs,
+      IsFieldInitializer isFieldInitializer);
+  mozilla::Maybe<VarScope::Data*> newVarScopeData(ParseContext::Scope& scope);
+  mozilla::Maybe<LexicalScope::Data*> newLexicalScopeData(
+      ParseContext::Scope& scope);
 
  protected:
   enum InvokedPrediction { PredictUninvoked = false, PredictInvoked = true };
@@ -386,39 +837,92 @@ class MOZ_STACK_CLASS ParserBase : public StrictModeGetter,
 
   // While on a |let| Name token, examine |next| (which must already be
   // gotten).  Indicate whether |next|, the next token already gotten with
-  // modifier TokenStream::None, continues a LexicalDeclaration.
+  // modifier TokenStream::SlashIsDiv, continues a LexicalDeclaration.
   bool nextTokenContinuesLetDeclaration(TokenKind next);
 
   bool noteUsedNameInternal(HandlePropertyName name);
-  bool hasUsedName(HandlePropertyName name);
-  bool hasUsedFunctionSpecialName(HandlePropertyName name);
 
   bool checkAndMarkSuperScope();
-
-  bool declareDotGeneratorName();
 
   bool leaveInnerFunction(ParseContext* outerpc);
 
   JSAtom* prefixAccessorName(PropertyType propType, HandleAtom propAtom);
 
   MOZ_MUST_USE bool setSourceMapInfo();
+
+  void setFunctionEndFromCurrentToken(FunctionBox* funbox) const;
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSAtom* prefixAccessorName(PropertyType propType, HandleAtom propAtom);
+
+  MOZ_MUST_USE bool setSourceMapInfo();
 };
 
+||||||| merged common ancestors
+inline
+ParseContext::Scope::Scope(ParserBase* parser)
+  : Nestable<Scope>(&parser->pc->innermostScope_),
+    declared_(parser->context->frontendCollectionPool()),
+    possibleAnnexBFunctionBoxes_(parser->context->frontendCollectionPool()),
+    id_(parser->usedNames.nextScopeId())
+{ }
+
+inline
+ParseContext::Scope::Scope(JSContext* cx, ParseContext* pc, UsedNameTracker& usedNames)
+  : Nestable<Scope>(&pc->innermostScope_),
+    declared_(cx->frontendCollectionPool()),
+    possibleAnnexBFunctionBoxes_(cx->frontendCollectionPool()),
+    id_(usedNames.nextScopeId())
+{ }
+
+inline
+ParseContext::VarScope::VarScope(ParserBase* parser)
+  : Scope(parser)
+{
+    useAsVarScope(parser->pc);
+}
+
+inline
+ParseContext::VarScope::VarScope(JSContext* cx, ParseContext* pc, UsedNameTracker& usedNames)
+  : Scope(cx, pc, usedNames)
+{
+    useAsVarScope(pc);
+}
+
+=======
+>>>>>>> upstream-releases
 enum FunctionCallBehavior {
   PermitAssignmentToFunctionCalls,
   ForbidAssignmentToFunctionCalls
 };
 
 template <class ParseHandler>
+<<<<<<< HEAD
 class MOZ_STACK_CLASS PerHandlerParser : public ParserBase {
  private:
   using Node = typename ParseHandler::Node;
+||||||| merged common ancestors
+class MOZ_STACK_CLASS PerHandlerParser
+  : public ParserBase
+{
+  private:
+    using Node = typename ParseHandler::Node;
+=======
+class MOZ_STACK_CLASS PerHandlerParser : public ParserBase {
+  using Base = ParserBase;
+
+ private:
+  using Node = typename ParseHandler::Node;
+>>>>>>> upstream-releases
 
 #define DECLARE_TYPE(typeName, longTypeName, asMethodName) \
   using longTypeName = typename ParseHandler::longTypeName;
   FOR_EACH_PARSENODE_SUBCLASS(DECLARE_TYPE)
 #undef DECLARE_TYPE
 
+<<<<<<< HEAD
  protected:
   /* State specific to the kind of parse being performed. */
   ParseHandler handler;
@@ -558,6 +1062,306 @@ class MOZ_STACK_CLASS PerHandlerParser : public ParserBase {
                               uint32_t toStringStart, Directives directives,
                               GeneratorKind generatorKind,
                               FunctionAsyncKind asyncKind);
+||||||| merged common ancestors
+  protected:
+    /* State specific to the kind of parse being performed. */
+    ParseHandler handler;
+
+    // When ParseHandler is FullParseHandler:
+    //
+    //   If non-null, this field holds the syntax parser used to attempt lazy
+    //   parsing of inner functions. If null, then lazy parsing is disabled.
+    //
+    // When ParseHandler is SyntaxParseHandler:
+    //
+    //   If non-null, this field must be a sentinel value signaling that the
+    //   syntax parse was aborted. If null, then lazy parsing was aborted due
+    //   to encountering unsupported language constructs.
+    //
+    // |internalSyntaxParser_| is really a |Parser<SyntaxParseHandler, Unit>*|
+    // where |Unit| varies per |Parser<ParseHandler, Unit>|.  But this
+    // template class doesn't know |Unit|, so we store a |void*| here and make
+    // |GeneralParser<ParseHandler, Unit>::getSyntaxParser| impose the real type.
+    void* internalSyntaxParser_;
+
+  private:
+    // NOTE: The argument ordering here is deliberately different from the
+    //       public constructor so that typos calling the public constructor
+    //       are less likely to select this overload.
+    PerHandlerParser(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
+                     bool foldConstants, UsedNameTracker& usedNames, LazyScript* lazyOuterFunction,
+                     ScriptSourceObject* sourceObject, ParseGoal parseGoal,
+                     void* internalSyntaxParser);
+
+  protected:
+    template<typename Unit>
+    PerHandlerParser(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
+                     bool foldConstants, UsedNameTracker& usedNames,
+                     GeneralParser<SyntaxParseHandler, Unit>* syntaxParser,
+                     LazyScript* lazyOuterFunction, ScriptSourceObject* sourceObject,
+                     ParseGoal parseGoal)
+      : PerHandlerParser(cx, alloc, options, foldConstants, usedNames, lazyOuterFunction,
+                         sourceObject, parseGoal,
+                         // JSOPTION_EXTRA_WARNINGS adds extra warnings not
+                         // generated when functions are parsed lazily.
+                         // ("use strict" doesn't inhibit lazy parsing.)
+                         static_cast<void*>(options.extraWarningsOption ? nullptr : syntaxParser))
+    {}
+
+    static typename ParseHandler::NullNode null() { return ParseHandler::null(); }
+
+    NameNodeType stringLiteral();
+
+    const char* nameIsArgumentsOrEval(Node node);
+
+    bool noteDestructuredPositionalFormalParameter(CodeNodeType funNode, Node destruct);
+
+    bool noteUsedName(HandlePropertyName name) {
+        // If the we are delazifying, the LazyScript already has all the
+        // closed-over info for bindings and there's no need to track used
+        // names.
+        if (handler.canSkipLazyClosedOverBindings()) {
+            return true;
+        }
+
+        return ParserBase::noteUsedNameInternal(name);
+    }
+
+    // Required on Scope exit.
+    bool propagateFreeNamesAndMarkClosedOverBindings(ParseContext::Scope& scope);
+
+    bool finishFunctionScopes(bool isStandaloneFunction);
+    LexicalScopeNodeType finishLexicalScope(ParseContext::Scope& scope, Node body);
+    bool finishFunction(bool isStandaloneFunction = false);
+
+    bool declareFunctionThis();
+    bool declareFunctionArgumentsObject();
+
+    inline NameNodeType newName(PropertyName* name);
+    inline NameNodeType newName(PropertyName* name, TokenPos pos);
+
+    NameNodeType newInternalDotName(HandlePropertyName name);
+    NameNodeType newThisName();
+    NameNodeType newDotGeneratorName();
+
+    NameNodeType identifierReference(Handle<PropertyName*> name);
+
+    Node noSubstitutionTaggedTemplate();
+
+    inline bool processExport(Node node);
+    inline bool processExportFrom(BinaryNodeType node);
+
+    // If ParseHandler is SyntaxParseHandler:
+    //   Do nothing.
+    // If ParseHandler is FullParseHandler:
+    //   Disable syntax parsing of all future inner functions during this
+    //   full-parse.
+    inline void disableSyntaxParser();
+
+    // If ParseHandler is SyntaxParseHandler:
+    //   Flag the current syntax parse as aborted due to unsupported language
+    //   constructs and return false.  Aborting the current syntax parse does
+    //   not disable attempts to syntax-parse future inner functions.
+    // If ParseHandler is FullParseHandler:
+    //    Disable syntax parsing of all future inner functions and return true.
+    inline bool abortIfSyntaxParser();
+
+    // If ParseHandler is SyntaxParseHandler:
+    //   Return whether the last syntax parse was aborted due to unsupported
+    //   language constructs.
+    // If ParseHandler is FullParseHandler:
+    //   Return false.
+    inline bool hadAbortedSyntaxParse();
+
+    // If ParseHandler is SyntaxParseHandler:
+    //   Clear whether the last syntax parse was aborted.
+    // If ParseHandler is FullParseHandler:
+    //   Do nothing.
+    inline void clearAbortedSyntaxParse();
+
+  public:
+    bool isValidSimpleAssignmentTarget(Node node,
+                                       FunctionCallBehavior behavior = ForbidAssignmentToFunctionCalls);
+
+    NameNodeType newPropertyName(PropertyName* key, const TokenPos& pos) {
+        return handler.newPropertyName(key, pos);
+    }
+
+    PropertyAccessType newPropertyAccess(Node expr, NameNodeType key) {
+        return handler.newPropertyAccess(expr, key);
+    }
+
+    FunctionBox* newFunctionBox(CodeNodeType funNode, JSFunction* fun, uint32_t toStringStart,
+                                Directives directives, GeneratorKind generatorKind,
+                                FunctionAsyncKind asyncKind);
+=======
+ protected:
+  /* State specific to the kind of parse being performed. */
+  ParseHandler handler_;
+
+  // When ParseHandler is FullParseHandler:
+  //
+  //   If non-null, this field holds the syntax parser used to attempt lazy
+  //   parsing of inner functions. If null, then lazy parsing is disabled.
+  //
+  // When ParseHandler is SyntaxParseHandler:
+  //
+  //   If non-null, this field must be a sentinel value signaling that the
+  //   syntax parse was aborted. If null, then lazy parsing was aborted due
+  //   to encountering unsupported language constructs.
+  //
+  // |internalSyntaxParser_| is really a |Parser<SyntaxParseHandler, Unit>*|
+  // where |Unit| varies per |Parser<ParseHandler, Unit>|.  But this
+  // template class doesn't know |Unit|, so we store a |void*| here and make
+  // |GeneralParser<ParseHandler, Unit>::getSyntaxParser| impose the real type.
+  void* internalSyntaxParser_;
+
+ private:
+  // NOTE: The argument ordering here is deliberately different from the
+  //       public constructor so that typos calling the public constructor
+  //       are less likely to select this overload.
+  PerHandlerParser(JSContext* cx, LifoAlloc& alloc,
+                   const JS::ReadOnlyCompileOptions& options,
+                   bool foldConstants, UsedNameTracker& usedNames,
+                   LazyScript* lazyOuterFunction,
+                   ScriptSourceObject* sourceObject, ParseGoal parseGoal,
+                   void* internalSyntaxParser);
+
+ protected:
+  template <typename Unit>
+  PerHandlerParser(JSContext* cx, LifoAlloc& alloc,
+                   const JS::ReadOnlyCompileOptions& options,
+                   bool foldConstants, UsedNameTracker& usedNames,
+                   GeneralParser<SyntaxParseHandler, Unit>* syntaxParser,
+                   LazyScript* lazyOuterFunction,
+                   ScriptSourceObject* sourceObject, ParseGoal parseGoal)
+      : PerHandlerParser(
+            cx, alloc, options, foldConstants, usedNames, lazyOuterFunction,
+            sourceObject, parseGoal,
+            // JSOPTION_EXTRA_WARNINGS adds extra warnings not
+            // generated when functions are parsed lazily.
+            // ("use strict" doesn't inhibit lazy parsing.)
+            static_cast<void*>(options.extraWarningsOption ? nullptr
+                                                           : syntaxParser)) {}
+
+  static typename ParseHandler::NullNode null() { return ParseHandler::null(); }
+
+  NameNodeType stringLiteral();
+
+  const char* nameIsArgumentsOrEval(Node node);
+
+  bool noteDestructuredPositionalFormalParameter(FunctionNodeType funNode,
+                                                 Node destruct);
+
+  bool noteUsedName(HandlePropertyName name) {
+    // If the we are delazifying, the LazyScript already has all the
+    // closed-over info for bindings and there's no need to track used
+    // names.
+    if (handler_.canSkipLazyClosedOverBindings()) {
+      return true;
+    }
+
+    return ParserBase::noteUsedNameInternal(name);
+  }
+
+  // Required on Scope exit.
+  bool propagateFreeNamesAndMarkClosedOverBindings(ParseContext::Scope& scope);
+
+  bool finishFunctionScopes(bool isStandaloneFunction);
+  LexicalScopeNodeType finishLexicalScope(ParseContext::Scope& scope,
+                                          Node body);
+  bool finishFunction(
+      bool isStandaloneFunction = false,
+      IsFieldInitializer isFieldInitializer = IsFieldInitializer::No);
+
+  inline NameNodeType newName(PropertyName* name);
+  inline NameNodeType newName(PropertyName* name, TokenPos pos);
+
+  NameNodeType newInternalDotName(HandlePropertyName name);
+  NameNodeType newThisName();
+  NameNodeType newDotGeneratorName();
+
+  NameNodeType identifierReference(Handle<PropertyName*> name);
+
+  Node noSubstitutionTaggedTemplate();
+
+  inline bool processExport(Node node);
+  inline bool processExportFrom(BinaryNodeType node);
+
+  // If ParseHandler is SyntaxParseHandler:
+  //   Do nothing.
+  // If ParseHandler is FullParseHandler:
+  //   Disable syntax parsing of all future inner functions during this
+  //   full-parse.
+  inline void disableSyntaxParser();
+
+  // If ParseHandler is SyntaxParseHandler:
+  //   Flag the current syntax parse as aborted due to unsupported language
+  //   constructs and return false.  Aborting the current syntax parse does
+  //   not disable attempts to syntax-parse future inner functions.
+  // If ParseHandler is FullParseHandler:
+  //    Disable syntax parsing of all future inner functions and return true.
+  inline bool abortIfSyntaxParser();
+
+  // If ParseHandler is SyntaxParseHandler:
+  //   Return whether the last syntax parse was aborted due to unsupported
+  //   language constructs.
+  // If ParseHandler is FullParseHandler:
+  //   Return false.
+  inline bool hadAbortedSyntaxParse();
+
+  // If ParseHandler is SyntaxParseHandler:
+  //   Clear whether the last syntax parse was aborted.
+  // If ParseHandler is FullParseHandler:
+  //   Do nothing.
+  inline void clearAbortedSyntaxParse();
+
+ public:
+  bool isValidSimpleAssignmentTarget(
+      Node node,
+      FunctionCallBehavior behavior = ForbidAssignmentToFunctionCalls);
+
+  NameNodeType newPropertyName(PropertyName* key, const TokenPos& pos) {
+    return handler_.newPropertyName(key, pos);
+  }
+
+  PropertyAccessType newPropertyAccess(Node expr, NameNodeType key) {
+    return handler_.newPropertyAccess(expr, key);
+  }
+
+  FunctionBox* newFunctionBox(FunctionNodeType funNode, JSFunction* fun,
+                              uint32_t toStringStart, Directives directives,
+                              GeneratorKind generatorKind,
+                              FunctionAsyncKind asyncKind);
+
+ public:
+  // ErrorReportMixin.
+
+  using Base::error;
+  using Base::errorAt;
+  using Base::errorNoOffset;
+  using Base::errorWithNotes;
+  using Base::errorWithNotesAt;
+  using Base::errorWithNotesNoOffset;
+  using Base::extraWarning;
+  using Base::extraWarningAt;
+  using Base::extraWarningNoOffset;
+  using Base::extraWarningWithNotes;
+  using Base::extraWarningWithNotesAt;
+  using Base::extraWarningWithNotesNoOffset;
+  using Base::strictModeError;
+  using Base::strictModeErrorAt;
+  using Base::strictModeErrorNoOffset;
+  using Base::strictModeErrorWithNotes;
+  using Base::strictModeErrorWithNotesAt;
+  using Base::strictModeErrorWithNotesNoOffset;
+  using Base::warning;
+  using Base::warningAt;
+  using Base::warningNoOffset;
+  using Base::warningWithNotes;
+  using Base::warningWithNotesAt;
+  using Base::warningWithNotesNoOffset;
+>>>>>>> upstream-releases
 };
 
 #define ABORTED_SYNTAX_PARSE_SENTINEL reinterpret_cast<void*>(0x1)
@@ -654,13 +1458,32 @@ class MOZ_STACK_CLASS GeneralParser : public PerHandlerParser<ParseHandler> {
   using Base::PredictInvoked;
   using Base::PredictUninvoked;
 
+<<<<<<< HEAD
   using Base::alloc;
   using Base::awaitIsKeyword;
   using Base::inParametersOfAsyncFunction;
   using Base::parseGoal;
+||||||| merged common ancestors
+    using Base::alloc;
+    using Base::awaitIsKeyword;
+    using Base::inParametersOfAsyncFunction;
+    using Base::parseGoal;
+=======
+  using Base::alloc_;
+  using Base::awaitIsKeyword;
+  using Base::inParametersOfAsyncFunction;
+  using Base::parseGoal;
+>>>>>>> upstream-releases
 #if DEBUG
+<<<<<<< HEAD
   using Base::checkOptionsCalled;
+||||||| merged common ancestors
+    using Base::checkOptionsCalled;
+=======
+  using Base::checkOptionsCalled_;
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
   using Base::finishFunctionScopes;
   using Base::finishLexicalScope;
   using Base::foldConstants;
@@ -779,6 +1602,340 @@ class MOZ_STACK_CLASS GeneralParser : public PerHandlerParser<ParseHandler> {
       // Error reporting fields.
       uint32_t offset_;
       unsigned errorNumber_;
+||||||| merged common ancestors
+    using Base::finishFunctionScopes;
+    using Base::finishLexicalScope;
+    using Base::foldConstants;
+    using Base::getFilename;
+    using Base::hasUsedFunctionSpecialName;
+    using Base::hasValidSimpleStrictParameterNames;
+    using Base::isUnexpectedEOF_;
+    using Base::keepAtoms;
+    using Base::nameIsArgumentsOrEval;
+    using Base::newFunction;
+    using Base::newFunctionBox;
+    using Base::newName;
+    using Base::null;
+    using Base::options;
+    using Base::pos;
+    using Base::propagateFreeNamesAndMarkClosedOverBindings;
+    using Base::setLocalStrictMode;
+    using Base::stringLiteral;
+    using Base::traceListHead;
+    using Base::yieldExpressionsSupported;
+
+    using Base::disableSyntaxParser;
+    using Base::abortIfSyntaxParser;
+    using Base::hadAbortedSyntaxParse;
+    using Base::clearAbortedSyntaxParse;
+
+  public:
+    using Base::anyChars;
+    using Base::context;
+    using Base::handler;
+    using Base::isValidSimpleAssignmentTarget;
+    using Base::pc;
+    using Base::usedNames;
+
+  private:
+    using Base::checkAndMarkSuperScope;
+    using Base::declareDotGeneratorName;
+    using Base::declareFunctionArgumentsObject;
+    using Base::declareFunctionThis;
+    using Base::finishFunction;
+    using Base::hasUsedName;
+    using Base::identifierReference;
+    using Base::leaveInnerFunction;
+    using Base::newDotGeneratorName;
+    using Base::newInternalDotName;
+    using Base::newThisName;
+    using Base::nextTokenContinuesLetDeclaration;
+    using Base::noSubstitutionTaggedTemplate;
+    using Base::noteDestructuredPositionalFormalParameter;
+    using Base::noteUsedName;
+    using Base::prefixAccessorName;
+    using Base::processExport;
+    using Base::processExportFrom;
+
+  private:
+    inline FinalParser* asFinalParser();
+    inline const FinalParser* asFinalParser() const;
+
+    /*
+     * A class for temporarily stashing errors while parsing continues.
+     *
+     * The ability to stash an error is useful for handling situations where we
+     * aren't able to verify that an error has occurred until later in the parse.
+     * For instance | ({x=1}) | is always parsed as an object literal with
+     * a SyntaxError, however, in the case where it is followed by '=>' we rewind
+     * and reparse it as a valid arrow function. Here a PossibleError would be
+     * set to 'pending' when the initial SyntaxError was encountered then 'resolved'
+     * just before rewinding the parser.
+     *
+     * There are currently two kinds of PossibleErrors: Expression and
+     * Destructuring errors. Expression errors are used to mark a possible
+     * syntax error when a grammar production is used in an expression context.
+     * For example in |{x = 1}|, we mark the CoverInitializedName |x = 1| as a
+     * possible expression error, because CoverInitializedName productions
+     * are disallowed when an actual ObjectLiteral is expected.
+     * Destructuring errors are used to record possible syntax errors in
+     * destructuring contexts. For example in |[...rest, ] = []|, we initially
+     * mark the trailing comma after the spread expression as a possible
+     * destructuring error, because the ArrayAssignmentPattern grammar
+     * production doesn't allow a trailing comma after the rest element.
+     *
+     * When using PossibleError one should set a pending error at the location
+     * where an error occurs. From that point, the error may be resolved
+     * (invalidated) or left until the PossibleError is checked.
+     *
+     * Ex:
+     *   PossibleError possibleError(*this);
+     *   possibleError.setPendingExpressionErrorAt(pos, JSMSG_BAD_PROP_ID);
+     *   // A JSMSG_BAD_PROP_ID ParseError is reported, returns false.
+     *   if (!possibleError.checkForExpressionError()) {
+     *       return false; // we reach this point with a pending exception
+     *   }
+     *
+     *   PossibleError possibleError(*this);
+     *   possibleError.setPendingExpressionErrorAt(pos, JSMSG_BAD_PROP_ID);
+     *   // Returns true, no error is reported.
+     *   if (!possibleError.checkForDestructuringError()) {
+     *       return false; // not reached, no pending exception
+     *   }
+     *
+     *   PossibleError possibleError(*this);
+     *   // Returns true, no error is reported.
+     *   if (!possibleError.checkForExpressionError()) {
+     *       return false; // not reached, no pending exception
+     *   }
+     */
+    class MOZ_STACK_CLASS PossibleError
+    {
+      private:
+        enum class ErrorKind { Expression, Destructuring, DestructuringWarning };
+
+        enum class ErrorState { None, Pending };
+
+        struct Error {
+            ErrorState state_ = ErrorState::None;
+
+            // Error reporting fields.
+            uint32_t offset_;
+            unsigned errorNumber_;
+        };
+
+        GeneralParser<ParseHandler, Unit>& parser_;
+        Error exprError_;
+        Error destructuringError_;
+        Error destructuringWarning_;
+
+        // Returns the error report.
+        Error& error(ErrorKind kind);
+
+        // Return true if an error is pending without reporting.
+        bool hasError(ErrorKind kind);
+
+        // Resolve any pending error.
+        void setResolved(ErrorKind kind);
+
+        // Set a pending error. Only a single error may be set per instance and
+        // error kind.
+        void setPending(ErrorKind kind, const TokenPos& pos, unsigned errorNumber);
+
+        // If there is a pending error, report it and return false, otherwise
+        // return true.
+        MOZ_MUST_USE bool checkForError(ErrorKind kind);
+
+        // If there is a pending warning, report it and return either false or
+        // true depending on the werror option, otherwise return true.
+        MOZ_MUST_USE bool checkForWarning(ErrorKind kind);
+
+        // Transfer an existing error to another instance.
+        void transferErrorTo(ErrorKind kind, PossibleError* other);
+
+      public:
+        explicit PossibleError(GeneralParser<ParseHandler, Unit>& parser);
+
+        // Return true if a pending destructuring error is present.
+        bool hasPendingDestructuringError();
+
+        // Set a pending destructuring error. Only a single error may be set
+        // per instance, i.e. subsequent calls to this method are ignored and
+        // won't overwrite the existing pending error.
+        void setPendingDestructuringErrorAt(const TokenPos& pos, unsigned errorNumber);
+
+        // Set a pending destructuring warning. Only a single warning may be
+        // set per instance, i.e. subsequent calls to this method are ignored
+        // and won't overwrite the existing pending warning.
+        void setPendingDestructuringWarningAt(const TokenPos& pos, unsigned errorNumber);
+
+        // Set a pending expression error. Only a single error may be set per
+        // instance, i.e. subsequent calls to this method are ignored and won't
+        // overwrite the existing pending error.
+        void setPendingExpressionErrorAt(const TokenPos& pos, unsigned errorNumber);
+
+        // If there is a pending destructuring error or warning, report it and
+        // return false, otherwise return true. Clears any pending expression
+        // error.
+        MOZ_MUST_USE bool checkForDestructuringErrorOrWarning();
+
+        // If there is a pending expression error, report it and return false,
+        // otherwise return true. Clears any pending destructuring error or
+        // warning.
+        MOZ_MUST_USE bool checkForExpressionError();
+
+        // Pass pending errors between possible error instances. This is useful
+        // for extending the lifetime of a pending error beyond the scope of
+        // the PossibleError where it was initially set (keeping in mind that
+        // PossibleError is a MOZ_STACK_CLASS).
+        void transferErrorsTo(PossibleError* other);
+=======
+  using Base::finishFunctionScopes;
+  using Base::finishLexicalScope;
+  using Base::foldConstants_;
+  using Base::getFilename;
+  using Base::hasValidSimpleStrictParameterNames;
+  using Base::isUnexpectedEOF_;
+  using Base::keepAtoms_;
+  using Base::nameIsArgumentsOrEval;
+  using Base::newFunction;
+  using Base::newFunctionBox;
+  using Base::newName;
+  using Base::null;
+  using Base::options;
+  using Base::pos;
+  using Base::propagateFreeNamesAndMarkClosedOverBindings;
+  using Base::setLocalStrictMode;
+  using Base::stringLiteral;
+  using Base::traceListHead_;
+  using Base::yieldExpressionsSupported;
+
+  using Base::abortIfSyntaxParser;
+  using Base::clearAbortedSyntaxParse;
+  using Base::disableSyntaxParser;
+  using Base::hadAbortedSyntaxParse;
+
+ public:
+  // Implement ErrorReportMixin.
+
+  MOZ_MUST_USE bool computeErrorMetadata(
+      ErrorMetadata* err, const ErrorReportMixin::ErrorOffset& offset) override;
+
+  using Base::error;
+  using Base::errorAt;
+  using Base::errorNoOffset;
+  using Base::errorWithNotes;
+  using Base::errorWithNotesAt;
+  using Base::errorWithNotesNoOffset;
+  using Base::extraWarning;
+  using Base::extraWarningAt;
+  using Base::extraWarningNoOffset;
+  using Base::extraWarningWithNotes;
+  using Base::extraWarningWithNotesAt;
+  using Base::extraWarningWithNotesNoOffset;
+  using Base::strictModeError;
+  using Base::strictModeErrorAt;
+  using Base::strictModeErrorNoOffset;
+  using Base::strictModeErrorWithNotes;
+  using Base::strictModeErrorWithNotesAt;
+  using Base::strictModeErrorWithNotesNoOffset;
+  using Base::warning;
+  using Base::warningAt;
+  using Base::warningNoOffset;
+  using Base::warningWithNotes;
+  using Base::warningWithNotesAt;
+  using Base::warningWithNotesNoOffset;
+
+ public:
+  using Base::anyChars;
+  using Base::cx_;
+  using Base::handler_;
+  using Base::isValidSimpleAssignmentTarget;
+  using Base::pc_;
+  using Base::usedNames_;
+
+ private:
+  using Base::checkAndMarkSuperScope;
+  using Base::finishFunction;
+  using Base::identifierReference;
+  using Base::leaveInnerFunction;
+  using Base::newDotGeneratorName;
+  using Base::newInternalDotName;
+  using Base::newThisName;
+  using Base::nextTokenContinuesLetDeclaration;
+  using Base::noSubstitutionTaggedTemplate;
+  using Base::noteDestructuredPositionalFormalParameter;
+  using Base::noteUsedName;
+  using Base::prefixAccessorName;
+  using Base::processExport;
+  using Base::processExportFrom;
+  using Base::setFunctionEndFromCurrentToken;
+
+ private:
+  inline FinalParser* asFinalParser();
+  inline const FinalParser* asFinalParser() const;
+
+  /*
+   * A class for temporarily stashing errors while parsing continues.
+   *
+   * The ability to stash an error is useful for handling situations where we
+   * aren't able to verify that an error has occurred until later in the parse.
+   * For instance | ({x=1}) | is always parsed as an object literal with
+   * a SyntaxError, however, in the case where it is followed by '=>' we rewind
+   * and reparse it as a valid arrow function. Here a PossibleError would be
+   * set to 'pending' when the initial SyntaxError was encountered then
+   * 'resolved' just before rewinding the parser.
+   *
+   * There are currently two kinds of PossibleErrors: Expression and
+   * Destructuring errors. Expression errors are used to mark a possible
+   * syntax error when a grammar production is used in an expression context.
+   * For example in |{x = 1}|, we mark the CoverInitializedName |x = 1| as a
+   * possible expression error, because CoverInitializedName productions
+   * are disallowed when an actual ObjectLiteral is expected.
+   * Destructuring errors are used to record possible syntax errors in
+   * destructuring contexts. For example in |[...rest, ] = []|, we initially
+   * mark the trailing comma after the spread expression as a possible
+   * destructuring error, because the ArrayAssignmentPattern grammar
+   * production doesn't allow a trailing comma after the rest element.
+   *
+   * When using PossibleError one should set a pending error at the location
+   * where an error occurs. From that point, the error may be resolved
+   * (invalidated) or left until the PossibleError is checked.
+   *
+   * Ex:
+   *   PossibleError possibleError(*this);
+   *   possibleError.setPendingExpressionErrorAt(pos, JSMSG_BAD_PROP_ID);
+   *   // A JSMSG_BAD_PROP_ID ParseError is reported, returns false.
+   *   if (!possibleError.checkForExpressionError()) {
+   *       return false; // we reach this point with a pending exception
+   *   }
+   *
+   *   PossibleError possibleError(*this);
+   *   possibleError.setPendingExpressionErrorAt(pos, JSMSG_BAD_PROP_ID);
+   *   // Returns true, no error is reported.
+   *   if (!possibleError.checkForDestructuringError()) {
+   *       return false; // not reached, no pending exception
+   *   }
+   *
+   *   PossibleError possibleError(*this);
+   *   // Returns true, no error is reported.
+   *   if (!possibleError.checkForExpressionError()) {
+   *       return false; // not reached, no pending exception
+   *   }
+   */
+  class MOZ_STACK_CLASS PossibleError {
+   private:
+    enum class ErrorKind { Expression, Destructuring, DestructuringWarning };
+
+    enum class ErrorState { None, Pending };
+
+    struct Error {
+      ErrorState state_ = ErrorState::None;
+
+      // Error reporting fields.
+      uint32_t offset_;
+      unsigned errorNumber_;
+>>>>>>> upstream-releases
     };
 
     GeneralParser<ParseHandler, Unit>& parser_;
@@ -799,6 +1956,17 @@ class MOZ_STACK_CLASS GeneralParser : public PerHandlerParser<ParseHandler> {
     // error kind.
     void setPending(ErrorKind kind, const TokenPos& pos, unsigned errorNumber);
 
+<<<<<<< HEAD
+    // If there is a pending error, report it and return false, otherwise
+    // return true.
+    MOZ_MUST_USE bool checkForError(ErrorKind kind);
+||||||| merged common ancestors
+  protected:
+    // Match the current token against the BindingIdentifier production with
+    // the given Yield parameter.  If there is no match, report a syntax
+    // error.
+    PropertyName* bindingIdentifier(YieldHandling yieldHandling);
+=======
     // If there is a pending error, report it and return false, otherwise
     // return true.
     MOZ_MUST_USE bool checkForError(ErrorKind kind);
@@ -806,33 +1974,618 @@ class MOZ_STACK_CLASS GeneralParser : public PerHandlerParser<ParseHandler> {
     // If there is a pending warning, report it and return either false or
     // true depending on the werror option, otherwise return true.
     MOZ_MUST_USE bool checkForWarning(ErrorKind kind);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // If there is a pending warning, report it and return either false or
+    // true depending on the werror option, otherwise return true.
+    MOZ_MUST_USE bool checkForWarning(ErrorKind kind);
+||||||| merged common ancestors
+    bool checkLabelOrIdentifierReference(PropertyName* ident, uint32_t offset,
+                                         YieldHandling yieldHandling,
+                                         TokenKind hint = TokenKind::Limit);
+=======
     // Transfer an existing error to another instance.
     void transferErrorTo(ErrorKind kind, PossibleError* other);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Transfer an existing error to another instance.
+    void transferErrorTo(ErrorKind kind, PossibleError* other);
+||||||| merged common ancestors
+    ListNodeType statementList(YieldHandling yieldHandling);
+=======
    public:
     explicit PossibleError(GeneralParser<ParseHandler, Unit>& parser);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+   public:
+    explicit PossibleError(GeneralParser<ParseHandler, Unit>& parser);
+||||||| merged common ancestors
+    MOZ_MUST_USE CodeNodeType
+    innerFunction(CodeNodeType funNode, ParseContext* outerpc, HandleFunction fun,
+                  uint32_t toStringStart, InHandling inHandling, YieldHandling yieldHandling,
+                  FunctionSyntaxKind kind, GeneratorKind generatorKind,
+                  FunctionAsyncKind asyncKind, bool tryAnnexB, Directives inheritedDirectives,
+                  Directives* newDirectives);
+=======
     // Return true if a pending destructuring error is present.
     bool hasPendingDestructuringError();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Return true if a pending destructuring error is present.
+    bool hasPendingDestructuringError();
+||||||| merged common ancestors
+    bool matchOrInsertSemicolon();
+=======
     // Set a pending destructuring error. Only a single error may be set
     // per instance, i.e. subsequent calls to this method are ignored and
     // won't overwrite the existing pending error.
     void setPendingDestructuringErrorAt(const TokenPos& pos,
                                         unsigned errorNumber);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Set a pending destructuring error. Only a single error may be set
+    // per instance, i.e. subsequent calls to this method are ignored and
+    // won't overwrite the existing pending error.
+    void setPendingDestructuringErrorAt(const TokenPos& pos,
+                                        unsigned errorNumber);
+||||||| merged common ancestors
+    bool noteDeclaredName(HandlePropertyName name, DeclarationKind kind, TokenPos pos);
+=======
     // Set a pending destructuring warning. Only a single warning may be
     // set per instance, i.e. subsequent calls to this method are ignored
     // and won't overwrite the existing pending warning.
     void setPendingDestructuringWarningAt(const TokenPos& pos,
                                           unsigned errorNumber);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Set a pending destructuring warning. Only a single warning may be
+    // set per instance, i.e. subsequent calls to this method are ignored
+    // and won't overwrite the existing pending warning.
+    void setPendingDestructuringWarningAt(const TokenPos& pos,
+                                          unsigned errorNumber);
+||||||| merged common ancestors
+  private:
+    inline bool asmJS(ListNodeType list);
+};
+=======
     // Set a pending expression error. Only a single error may be set per
     // instance, i.e. subsequent calls to this method are ignored and won't
     // overwrite the existing pending error.
     void setPendingExpressionErrorAt(const TokenPos& pos, unsigned errorNumber);
 
+    // If there is a pending destructuring error or warning, report it and
+    // return false, otherwise return true. Clears any pending expression
+    // error.
+    MOZ_MUST_USE bool checkForDestructuringErrorOrWarning();
+
+    // If there is a pending expression error, report it and return false,
+    // otherwise return true. Clears any pending destructuring error or
+    // warning.
+    MOZ_MUST_USE bool checkForExpressionError();
+
+    // Pass pending errors between possible error instances. This is useful
+    // for extending the lifetime of a pending error beyond the scope of
+    // the PossibleError where it was initially set (keeping in mind that
+    // PossibleError is a MOZ_STACK_CLASS).
+    void transferErrorsTo(PossibleError* other);
+  };
+
+ protected:
+  SyntaxParser* getSyntaxParser() const {
+    return reinterpret_cast<SyntaxParser*>(Base::internalSyntaxParser_);
+  }
+
+ public:
+  TokenStream tokenStream;
+
+ public:
+  GeneralParser(JSContext* cx, LifoAlloc& alloc,
+                const JS::ReadOnlyCompileOptions& options, const Unit* units,
+                size_t length, bool foldConstants, UsedNameTracker& usedNames,
+                SyntaxParser* syntaxParser, LazyScript* lazyOuterFunction,
+                ScriptSourceObject* sourceObject, ParseGoal parseGoal);
+
+  inline void setAwaitHandling(AwaitHandling awaitHandling);
+  inline void setInParametersOfAsyncFunction(bool inParameters);
+
+  /*
+   * Parse a top-level JS script.
+   */
+  ListNodeType parse();
+
+ private:
+  /*
+   * Gets the next token and checks if it matches to the given `condition`.
+   * If it matches, returns true.
+   * If it doesn't match, calls `errorReport` to report the error, and
+   * returns false.
+   * If other error happens, it returns false but `errorReport` may not be
+   * called and other error will be thrown in that case.
+   *
+   * In any case, the already gotten token is not ungotten.
+   *
+   * The signature of `condition` is [...](TokenKind actual) -> bool, and
+   * the signature of `errorReport` is [...](TokenKind actual).
+   */
+  template <typename ConditionT, typename ErrorReportT>
+  MOZ_MUST_USE bool mustMatchTokenInternal(ConditionT condition,
+                                           ErrorReportT errorReport);
+
+ public:
+  /*
+   * The following mustMatchToken variants follow the behavior and parameter
+   * types of mustMatchTokenInternal above.
+   *
+   * If modifier is omitted, `SlashIsDiv` is used.
+   * If TokenKind is passed instead of `condition`, it checks if the next
+   * token is the passed token.
+   * If error number is passed instead of `errorReport`, it reports an
+   * error with the passed errorNumber.
+   */
+  MOZ_MUST_USE bool mustMatchToken(TokenKind expected, JSErrNum errorNumber) {
+    return mustMatchTokenInternal(
+        [expected](TokenKind actual) { return actual == expected; },
+        [this, errorNumber](TokenKind) { this->error(errorNumber); });
+  }
+
+  template <typename ConditionT>
+  MOZ_MUST_USE bool mustMatchToken(ConditionT condition, JSErrNum errorNumber) {
+    return mustMatchTokenInternal(condition, [this, errorNumber](TokenKind) {
+      this->error(errorNumber);
+    });
+  }
+
+  template <typename ErrorReportT>
+  MOZ_MUST_USE bool mustMatchToken(TokenKind expected,
+                                   ErrorReportT errorReport) {
+    return mustMatchTokenInternal(
+        [expected](TokenKind actual) { return actual == expected; },
+        errorReport);
+  }
+
+ private:
+  NameNodeType noSubstitutionUntaggedTemplate();
+  ListNodeType templateLiteral(YieldHandling yieldHandling);
+  bool taggedTemplate(YieldHandling yieldHandling, ListNodeType tagArgsList,
+                      TokenKind tt);
+  bool appendToCallSiteObj(CallSiteNodeType callSiteObj);
+  bool addExprAndGetNextTemplStrToken(YieldHandling yieldHandling,
+                                      ListNodeType nodeList, TokenKind* ttp);
+
+  inline bool trySyntaxParseInnerFunction(
+      FunctionNodeType* funNode, HandleFunction fun, uint32_t toStringStart,
+      InHandling inHandling, YieldHandling yieldHandling,
+      FunctionSyntaxKind kind, GeneratorKind generatorKind,
+      FunctionAsyncKind asyncKind, bool tryAnnexB,
+      Directives inheritedDirectives, Directives* newDirectives);
+
+  inline bool skipLazyInnerFunction(FunctionNodeType funNode,
+                                    uint32_t toStringStart,
+                                    FunctionSyntaxKind kind, bool tryAnnexB);
+
+  void setFunctionStartAtCurrentToken(FunctionBox* funbox) const;
+
+ public:
+  /* Public entry points for parsing. */
+  Node statementListItem(YieldHandling yieldHandling,
+                         bool canHaveDirectives = false);
+
+  // Parse an inner function given an enclosing ParseContext and a
+  // FunctionBox for the inner function.
+  MOZ_MUST_USE FunctionNodeType innerFunctionForFunctionBox(
+      FunctionNodeType funNode, ParseContext* outerpc, FunctionBox* funbox,
+      InHandling inHandling, YieldHandling yieldHandling,
+      FunctionSyntaxKind kind, Directives* newDirectives);
+
+  // Parse a function's formal parameters and its body assuming its function
+  // ParseContext is already on the stack.
+  bool functionFormalParametersAndBody(
+      InHandling inHandling, YieldHandling yieldHandling,
+      FunctionNodeType* funNode, FunctionSyntaxKind kind,
+      const mozilla::Maybe<uint32_t>& parameterListEnd = mozilla::Nothing(),
+      bool isStandaloneFunction = false);
+
+ private:
+  /*
+   * JS parsers, from lowest to highest precedence.
+   *
+   * Each parser must be called during the dynamic scope of a ParseContext
+   * object, pointed to by this->pc_.
+   *
+   * Each returns a parse node tree or null on error.
+   */
+  FunctionNodeType functionStmt(
+      uint32_t toStringStart, YieldHandling yieldHandling,
+      DefaultHandling defaultHandling,
+      FunctionAsyncKind asyncKind = FunctionAsyncKind::SyncFunction);
+  FunctionNodeType functionExpr(uint32_t toStringStart,
+                                InvokedPrediction invoked,
+                                FunctionAsyncKind asyncKind);
+
+  Node statement(YieldHandling yieldHandling);
+  bool maybeParseDirective(ListNodeType list, Node pn, bool* cont);
+
+  LexicalScopeNodeType blockStatement(
+      YieldHandling yieldHandling,
+      unsigned errorNumber = JSMSG_CURLY_IN_COMPOUND);
+  BinaryNodeType doWhileStatement(YieldHandling yieldHandling);
+  BinaryNodeType whileStatement(YieldHandling yieldHandling);
+
+  Node forStatement(YieldHandling yieldHandling);
+  bool forHeadStart(YieldHandling yieldHandling, ParseNodeKind* forHeadKind,
+                    Node* forInitialPart,
+                    mozilla::Maybe<ParseContext::Scope>& forLetImpliedScope,
+                    Node* forInOrOfExpression);
+  Node expressionAfterForInOrOf(ParseNodeKind forHeadKind,
+                                YieldHandling yieldHandling);
+
+  SwitchStatementType switchStatement(YieldHandling yieldHandling);
+  ContinueStatementType continueStatement(YieldHandling yieldHandling);
+  BreakStatementType breakStatement(YieldHandling yieldHandling);
+  UnaryNodeType returnStatement(YieldHandling yieldHandling);
+  BinaryNodeType withStatement(YieldHandling yieldHandling);
+  UnaryNodeType throwStatement(YieldHandling yieldHandling);
+  TernaryNodeType tryStatement(YieldHandling yieldHandling);
+  LexicalScopeNodeType catchBlockStatement(
+      YieldHandling yieldHandling, ParseContext::Scope& catchParamScope);
+  DebuggerStatementType debuggerStatement();
+
+  ListNodeType variableStatement(YieldHandling yieldHandling);
+
+  LabeledStatementType labeledStatement(YieldHandling yieldHandling);
+  Node labeledItem(YieldHandling yieldHandling);
+
+  TernaryNodeType ifStatement(YieldHandling yieldHandling);
+  Node consequentOrAlternative(YieldHandling yieldHandling);
+
+  ListNodeType lexicalDeclaration(YieldHandling yieldHandling,
+                                  DeclarationKind kind);
+
+  inline BinaryNodeType importDeclaration();
+  Node importDeclarationOrImportExpr(YieldHandling yieldHandling);
+
+  BinaryNodeType exportFrom(uint32_t begin, Node specList);
+  BinaryNodeType exportBatch(uint32_t begin);
+  inline bool checkLocalExportNames(ListNodeType node);
+  Node exportClause(uint32_t begin);
+  UnaryNodeType exportFunctionDeclaration(
+      uint32_t begin, uint32_t toStringStart,
+      FunctionAsyncKind asyncKind = FunctionAsyncKind::SyncFunction);
+  UnaryNodeType exportVariableStatement(uint32_t begin);
+  UnaryNodeType exportClassDeclaration(uint32_t begin);
+  UnaryNodeType exportLexicalDeclaration(uint32_t begin, DeclarationKind kind);
+  BinaryNodeType exportDefaultFunctionDeclaration(
+      uint32_t begin, uint32_t toStringStart,
+      FunctionAsyncKind asyncKind = FunctionAsyncKind::SyncFunction);
+  BinaryNodeType exportDefaultClassDeclaration(uint32_t begin);
+  BinaryNodeType exportDefaultAssignExpr(uint32_t begin);
+  BinaryNodeType exportDefault(uint32_t begin);
+  Node exportDeclaration();
+
+  UnaryNodeType expressionStatement(
+      YieldHandling yieldHandling,
+      InvokedPrediction invoked = PredictUninvoked);
+
+  // Declaration parsing.  The main entrypoint is Parser::declarationList,
+  // with sub-functionality split out into the remaining methods.
+
+  // |blockScope| may be non-null only when |kind| corresponds to a lexical
+  // declaration (that is, PNK_LET or PNK_CONST).
+  //
+  // The for* parameters, for normal declarations, should be null/ignored.
+  // They should be non-null only when Parser::forHeadStart parses a
+  // declaration at the start of a for-loop head.
+  //
+  // In this case, on success |*forHeadKind| is PNK_FORHEAD, PNK_FORIN, or
+  // PNK_FOROF, corresponding to the three for-loop kinds.  The precise value
+  // indicates what was parsed.
+  //
+  // If parsing recognized a for(;;) loop, the next token is the ';' within
+  // the loop-head that separates the init/test parts.
+  //
+  // Otherwise, for for-in/of loops, the next token is the ')' ending the
+  // loop-head.  Additionally, the expression that the loop iterates over was
+  // parsed into |*forInOrOfExpression|.
+  ListNodeType declarationList(YieldHandling yieldHandling, ParseNodeKind kind,
+                               ParseNodeKind* forHeadKind = nullptr,
+                               Node* forInOrOfExpression = nullptr);
+
+  // The items in a declaration list are either patterns or names, with or
+  // without initializers.  These two methods parse a single pattern/name and
+  // any associated initializer -- and if parsing an |initialDeclaration|
+  // will, if parsing in a for-loop head (as specified by |forHeadKind| being
+  // non-null), consume additional tokens up to the closing ')' in a
+  // for-in/of loop head, returning the iterated expression in
+  // |*forInOrOfExpression|.  (An "initial declaration" is the first
+  // declaration in a declaration list: |a| but not |b| in |var a, b|, |{c}|
+  // but not |d| in |let {c} = 3, d|.)
+  Node declarationPattern(DeclarationKind declKind, TokenKind tt,
+                          bool initialDeclaration, YieldHandling yieldHandling,
+                          ParseNodeKind* forHeadKind,
+                          Node* forInOrOfExpression);
+  Node declarationName(DeclarationKind declKind, TokenKind tt,
+                       bool initialDeclaration, YieldHandling yieldHandling,
+                       ParseNodeKind* forHeadKind, Node* forInOrOfExpression);
+
+  // Having parsed a name (not found in a destructuring pattern) declared by
+  // a declaration, with the current token being the '=' separating the name
+  // from its initializer, parse and bind that initializer -- and possibly
+  // consume trailing in/of and subsequent expression, if so directed by
+  // |forHeadKind|.
+  AssignmentNodeType initializerInNameDeclaration(NameNodeType binding,
+                                                  DeclarationKind declKind,
+                                                  bool initialDeclaration,
+                                                  YieldHandling yieldHandling,
+                                                  ParseNodeKind* forHeadKind,
+                                                  Node* forInOrOfExpression);
+
+  Node expr(InHandling inHandling, YieldHandling yieldHandling,
+            TripledotHandling tripledotHandling,
+            PossibleError* possibleError = nullptr,
+            InvokedPrediction invoked = PredictUninvoked);
+  Node assignExpr(InHandling inHandling, YieldHandling yieldHandling,
+                  TripledotHandling tripledotHandling,
+                  PossibleError* possibleError = nullptr,
+                  InvokedPrediction invoked = PredictUninvoked);
+  Node assignExprWithoutYieldOrAwait(YieldHandling yieldHandling);
+  UnaryNodeType yieldExpression(InHandling inHandling);
+  Node condExpr(InHandling inHandling, YieldHandling yieldHandling,
+                TripledotHandling tripledotHandling,
+                PossibleError* possibleError,
+                InvokedPrediction invoked = PredictUninvoked);
+  Node orExpr(InHandling inHandling, YieldHandling yieldHandling,
+              TripledotHandling tripledotHandling, PossibleError* possibleError,
+              InvokedPrediction invoked = PredictUninvoked);
+  Node unaryExpr(YieldHandling yieldHandling,
+                 TripledotHandling tripledotHandling,
+                 PossibleError* possibleError = nullptr,
+                 InvokedPrediction invoked = PredictUninvoked);
+  Node memberExpr(YieldHandling yieldHandling,
+                  TripledotHandling tripledotHandling, TokenKind tt,
+                  bool allowCallSyntax = true,
+                  PossibleError* possibleError = nullptr,
+                  InvokedPrediction invoked = PredictUninvoked);
+  Node primaryExpr(YieldHandling yieldHandling,
+                   TripledotHandling tripledotHandling, TokenKind tt,
+                   PossibleError* possibleError,
+                   InvokedPrediction invoked = PredictUninvoked);
+  Node exprInParens(InHandling inHandling, YieldHandling yieldHandling,
+                    TripledotHandling tripledotHandling,
+                    PossibleError* possibleError = nullptr);
+
+  bool tryNewTarget(BinaryNodeType* newTarget);
+
+  BinaryNodeType importExpr(YieldHandling yieldHandling, bool allowCallSyntax);
+
+  FunctionNodeType methodDefinition(uint32_t toStringStart,
+                                    PropertyType propType, HandleAtom funName);
+
+  /*
+   * Additional JS parsers.
+   */
+  bool functionArguments(YieldHandling yieldHandling, FunctionSyntaxKind kind,
+                         FunctionNodeType funNode);
+
+  FunctionNodeType functionDefinition(
+      FunctionNodeType funNode, uint32_t toStringStart, InHandling inHandling,
+      YieldHandling yieldHandling, HandleAtom name, FunctionSyntaxKind kind,
+      GeneratorKind generatorKind, FunctionAsyncKind asyncKind,
+      bool tryAnnexB = false);
+
+  // Parse a function body.  Pass StatementListBody if the body is a list of
+  // statements; pass ExpressionBody if the body is a single expression.
+  enum FunctionBodyType { StatementListBody, ExpressionBody };
+  LexicalScopeNodeType functionBody(InHandling inHandling,
+                                    YieldHandling yieldHandling,
+                                    FunctionSyntaxKind kind,
+                                    FunctionBodyType type);
+
+  UnaryNodeType unaryOpExpr(YieldHandling yieldHandling, ParseNodeKind kind,
+                            uint32_t begin);
+
+  Node condition(InHandling inHandling, YieldHandling yieldHandling);
+
+  ListNodeType argumentList(YieldHandling yieldHandling, bool* isSpread,
+                            PossibleError* possibleError = nullptr);
+  Node destructuringDeclaration(DeclarationKind kind,
+                                YieldHandling yieldHandling, TokenKind tt);
+  Node destructuringDeclarationWithoutYieldOrAwait(DeclarationKind kind,
+                                                   YieldHandling yieldHandling,
+                                                   TokenKind tt);
+
+  inline bool checkExportedName(JSAtom* exportName);
+  inline bool checkExportedNamesForArrayBinding(ListNodeType array);
+  inline bool checkExportedNamesForObjectBinding(ListNodeType obj);
+  inline bool checkExportedNamesForDeclaration(Node node);
+  inline bool checkExportedNamesForDeclarationList(ListNodeType node);
+  inline bool checkExportedNameForFunction(FunctionNodeType funNode);
+  inline bool checkExportedNameForClass(ClassNodeType classNode);
+  inline bool checkExportedNameForClause(NameNodeType nameNode);
+
+  enum ClassContext { ClassStatement, ClassExpression };
+  ClassNodeType classDefinition(YieldHandling yieldHandling,
+                                ClassContext classContext,
+                                DefaultHandling defaultHandling);
+  MOZ_MUST_USE bool classMember(
+      YieldHandling yieldHandling, DefaultHandling defaultHandling,
+      const ParseContext::ClassStatement& classStmt,
+      HandlePropertyName className, uint32_t classStartOffset,
+      HasHeritage hasHeritage, size_t& numFieldsWithInitializers,
+      size_t& numFieldKeys, ListNodeType& classMembers, bool* done);
+  MOZ_MUST_USE bool finishClassConstructor(
+      const ParseContext::ClassStatement& classStmt,
+      HandlePropertyName className, HasHeritage hasHeritage,
+      uint32_t classStartOffset, uint32_t classEndOffset,
+      size_t numFieldsWithInitializers, ListNodeType& classMembers);
+
+  FunctionNodeType fieldInitializerOpt(YieldHandling yieldHandling,
+                                       HasHeritage hasHeritage, Node name,
+                                       HandleAtom atom, size_t& numFieldKeys);
+  FunctionNodeType synthesizeConstructor(HandleAtom className,
+                                         uint32_t classNameOffset,
+                                         HasHeritage hasHeritage);
+
+  bool checkBindingIdentifier(PropertyName* ident, uint32_t offset,
+                              YieldHandling yieldHandling,
+                              TokenKind hint = TokenKind::Limit);
+
+  PropertyName* labelOrIdentifierReference(YieldHandling yieldHandling);
+
+  PropertyName* labelIdentifier(YieldHandling yieldHandling) {
+    return labelOrIdentifierReference(yieldHandling);
+  }
+
+  PropertyName* identifierReference(YieldHandling yieldHandling) {
+    return labelOrIdentifierReference(yieldHandling);
+  }
+
+  bool matchLabel(YieldHandling yieldHandling,
+                  MutableHandle<PropertyName*> label);
+
+  // Indicate if the next token (tokenized with SlashIsRegExp) is |in| or |of|.
+  // If so, consume it.
+  bool matchInOrOf(bool* isForInp, bool* isForOfp);
+
+ private:
+  bool checkIncDecOperand(Node operand, uint32_t operandOffset);
+  bool checkStrictAssignment(Node lhs);
+
+  void reportMissingClosing(unsigned errorNumber, unsigned noteNumber,
+                            uint32_t openedPos);
+
+  void reportRedeclaration(HandlePropertyName name, DeclarationKind prevKind,
+                           TokenPos pos, uint32_t prevPos);
+  bool notePositionalFormalParameter(FunctionNodeType funNode,
+                                     HandlePropertyName name, uint32_t beginPos,
+                                     bool disallowDuplicateParams,
+                                     bool* duplicatedParam);
+
+  bool checkLexicalDeclarationDirectlyWithinBlock(ParseContext::Statement& stmt,
+                                                  DeclarationKind kind,
+                                                  TokenPos pos);
+
+  enum PropertyNameContext {
+    PropertyNameInLiteral,
+    PropertyNameInPattern,
+    PropertyNameInClass
+  };
+  Node propertyName(YieldHandling yieldHandling,
+                    PropertyNameContext propertyNameContext,
+                    const mozilla::Maybe<DeclarationKind>& maybeDecl,
+                    ListNodeType propList, MutableHandleAtom propAtom);
+  Node propertyOrMethodName(YieldHandling yieldHandling,
+                            PropertyNameContext propertyNameContext,
+                            const mozilla::Maybe<DeclarationKind>& maybeDecl,
+                            ListNodeType propList, PropertyType* propType,
+                            MutableHandleAtom propAtom);
+  UnaryNodeType computedPropertyName(
+      YieldHandling yieldHandling,
+      const mozilla::Maybe<DeclarationKind>& maybeDecl,
+      PropertyNameContext propertyNameContext, ListNodeType literal);
+  ListNodeType arrayInitializer(YieldHandling yieldHandling,
+                                PossibleError* possibleError);
+  inline RegExpLiteralType newRegExp();
+
+  ListNodeType objectLiteral(YieldHandling yieldHandling,
+                             PossibleError* possibleError);
+
+  BinaryNodeType bindingInitializer(Node lhs, DeclarationKind kind,
+                                    YieldHandling yieldHandling);
+  NameNodeType bindingIdentifier(DeclarationKind kind,
+                                 YieldHandling yieldHandling);
+  Node bindingIdentifierOrPattern(DeclarationKind kind,
+                                  YieldHandling yieldHandling, TokenKind tt);
+  ListNodeType objectBindingPattern(DeclarationKind kind,
+                                    YieldHandling yieldHandling);
+  ListNodeType arrayBindingPattern(DeclarationKind kind,
+                                   YieldHandling yieldHandling);
+
+  enum class TargetBehavior {
+    PermitAssignmentPattern,
+    ForbidAssignmentPattern
+  };
+  bool checkDestructuringAssignmentTarget(
+      Node expr, TokenPos exprPos, PossibleError* exprPossibleError,
+      PossibleError* possibleError,
+      TargetBehavior behavior = TargetBehavior::PermitAssignmentPattern);
+  void checkDestructuringAssignmentName(NameNodeType name, TokenPos namePos,
+                                        PossibleError* possibleError);
+  bool checkDestructuringAssignmentElement(Node expr, TokenPos exprPos,
+                                           PossibleError* exprPossibleError,
+                                           PossibleError* possibleError);
+
+  NumericLiteralType newNumber(const Token& tok) {
+    return handler_.newNumber(tok.number(), tok.decimalPoint(), tok.pos);
+  }
+
+  inline BigIntLiteralType newBigInt();
+
+ protected:
+  // Match the current token against the BindingIdentifier production with
+  // the given Yield parameter.  If there is no match, report a syntax
+  // error.
+  PropertyName* bindingIdentifier(YieldHandling yieldHandling);
+
+  bool checkLabelOrIdentifierReference(PropertyName* ident, uint32_t offset,
+                                       YieldHandling yieldHandling,
+                                       TokenKind hint = TokenKind::Limit);
+
+  ListNodeType statementList(YieldHandling yieldHandling);
+
+  MOZ_MUST_USE FunctionNodeType innerFunction(
+      FunctionNodeType funNode, ParseContext* outerpc, HandleFunction fun,
+      uint32_t toStringStart, InHandling inHandling,
+      YieldHandling yieldHandling, FunctionSyntaxKind kind,
+      GeneratorKind generatorKind, FunctionAsyncKind asyncKind, bool tryAnnexB,
+      Directives inheritedDirectives, Directives* newDirectives);
+
+  // Implements Automatic Semicolon Insertion.
+  //
+  // Use this to match `;` in contexts where ASI is allowed. Call this after
+  // ruling out all other possibilities except `;`, by peeking ahead if
+  // necessary.
+  //
+  // Unlike most optional Modifiers, this method's `modifier` argument defaults
+  // to SlashIsRegExp, since that's by far the most common case: usually an
+  // optional semicolon is at the end of a statement or declaration, and the
+  // next token could be a RegExp literal beginning a new ExpressionStatement.
+  bool matchOrInsertSemicolon(Modifier modifier = TokenStream::SlashIsRegExp);
+
+  bool noteDeclaredName(HandlePropertyName name, DeclarationKind kind,
+                        TokenPos pos);
+
+ private:
+  inline bool asmJS(ListNodeType list);
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Set a pending expression error. Only a single error may be set per
+    // instance, i.e. subsequent calls to this method are ignored and won't
+    // overwrite the existing pending error.
+    void setPendingExpressionErrorAt(const TokenPos& pos, unsigned errorNumber);
+||||||| merged common ancestors
+template <typename Unit>
+class MOZ_STACK_CLASS Parser<SyntaxParseHandler, Unit> final
+  : public GeneralParser<SyntaxParseHandler, Unit>
+{
+    using Base = GeneralParser<SyntaxParseHandler, Unit>;
+    using Node = SyntaxParseHandler::Node;
+=======
+template <typename Unit>
+class MOZ_STACK_CLASS Parser<SyntaxParseHandler, Unit> final
+    : public GeneralParser<SyntaxParseHandler, Unit> {
+  using Base = GeneralParser<SyntaxParseHandler, Unit>;
+  using Node = SyntaxParseHandler::Node;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // If there is a pending destructuring error or warning, report it and
     // return false, otherwise return true. Clears any pending expression
     // error.
@@ -1335,7 +3088,19 @@ class MOZ_STACK_CLASS GeneralParser : public PerHandlerParser<ParseHandler> {
 #ifdef ENABLE_BIGINT
   inline BigIntLiteralType newBigInt();
 #endif
+||||||| merged common ancestors
+#define DECLARE_TYPE(typeName, longTypeName, asMethodName) \
+    using longTypeName = SyntaxParseHandler::longTypeName;
+FOR_EACH_PARSENODE_SUBCLASS(DECLARE_TYPE)
+#undef DECLARE_TYPE
+=======
+#define DECLARE_TYPE(typeName, longTypeName, asMethodName) \
+  using longTypeName = SyntaxParseHandler::longTypeName;
+  FOR_EACH_PARSENODE_SUBCLASS(DECLARE_TYPE)
+#undef DECLARE_TYPE
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   // Match the current token against the BindingIdentifier production with
   // the given Yield parameter.  If there is no match, report a syntax
@@ -1482,6 +3247,243 @@ class MOZ_STACK_CLASS Parser<SyntaxParseHandler, Unit> final
   bool asmJS(ListNodeType list);
 
   // Functions present only in Parser<SyntaxParseHandler, Unit>.
+||||||| merged common ancestors
+    using SyntaxParser = Parser<SyntaxParseHandler, Unit>;
+
+    // Numerous Base::* functions have bodies like
+    //
+    //   return asFinalParser()->func(...);
+    //
+    // and must be able to call functions here.  Add a friendship relationship
+    // so functions here can be hidden when appropriate.
+    friend class GeneralParser<SyntaxParseHandler, Unit>;
+
+  public:
+    using Base::Base;
+
+    // Inherited types, listed here to have non-dependent names.
+    using typename Base::Modifier;
+    using typename Base::Position;
+    using typename Base::TokenStream;
+
+    // Inherited functions, listed here to have non-dependent names.
+
+  public:
+    using Base::anyChars;
+    using Base::clearAbortedSyntaxParse;
+    using Base::context;
+    using Base::hadAbortedSyntaxParse;
+    using Base::innerFunctionForFunctionBox;
+    using Base::tokenStream;
+
+  private:
+    using Base::alloc;
+#if DEBUG
+    using Base::checkOptionsCalled;
+#endif
+    using Base::error;
+    using Base::errorAt;
+    using Base::finishFunctionScopes;
+    using Base::functionFormalParametersAndBody;
+    using Base::handler;
+    using Base::innerFunction;
+    using Base::keepAtoms;
+    using Base::matchOrInsertSemicolon;
+    using Base::newFunctionBox;
+    using Base::newLexicalScopeData;
+    using Base::newModuleScopeData;
+    using Base::newName;
+    using Base::noteDeclaredName;
+    using Base::null;
+    using Base::options;
+    using Base::pc;
+    using Base::pos;
+    using Base::propagateFreeNamesAndMarkClosedOverBindings;
+    using Base::ss;
+    using Base::statementList;
+    using Base::stringLiteral;
+    using Base::usedNames;
+
+  private:
+    using Base::abortIfSyntaxParser;
+    using Base::disableSyntaxParser;
+
+  public:
+    // Functions with multiple overloads of different visibility.  We can't
+    // |using| the whole thing into existence because of the visibility
+    // distinction, so we instead must manually delegate the required overload.
+
+    PropertyName* bindingIdentifier(YieldHandling yieldHandling) {
+        return Base::bindingIdentifier(yieldHandling);
+    }
+
+    // Functions present in both Parser<ParseHandler, Unit> specializations.
+
+    inline void setAwaitHandling(AwaitHandling awaitHandling);
+    inline void setInParametersOfAsyncFunction(bool inParameters);
+
+    RegExpLiteralType newRegExp();
+
+    // Parse a module.
+    CodeNodeType moduleBody(ModuleSharedContext* modulesc);
+
+    inline BinaryNodeType importDeclaration();
+    inline bool checkLocalExportNames(ListNodeType node);
+    inline bool checkExportedName(JSAtom* exportName);
+    inline bool checkExportedNamesForArrayBinding(ListNodeType array);
+    inline bool checkExportedNamesForObjectBinding(ListNodeType obj);
+    inline bool checkExportedNamesForDeclaration(Node node);
+    inline bool checkExportedNamesForDeclarationList(ListNodeType node);
+    inline bool checkExportedNameForFunction(CodeNodeType funNode);
+    inline bool checkExportedNameForClass(ClassNodeType classNode);
+    inline bool checkExportedNameForClause(NameNodeType nameNode);
+
+    bool trySyntaxParseInnerFunction(CodeNodeType* funNode, HandleFunction fun,
+                                     uint32_t toStringStart,
+                                     InHandling inHandling, YieldHandling yieldHandling,
+                                     FunctionSyntaxKind kind, GeneratorKind generatorKind,
+                                     FunctionAsyncKind asyncKind, bool tryAnnexB,
+                                     Directives inheritedDirectives, Directives* newDirectives);
+
+    bool skipLazyInnerFunction(CodeNodeType funNode, uint32_t toStringStart,
+                               FunctionSyntaxKind kind, bool tryAnnexB);
+
+    bool asmJS(ListNodeType list);
+
+    // Functions present only in Parser<SyntaxParseHandler, Unit>.
+=======
+  using SyntaxParser = Parser<SyntaxParseHandler, Unit>;
+
+  // Numerous Base::* functions have bodies like
+  //
+  //   return asFinalParser()->func(...);
+  //
+  // and must be able to call functions here.  Add a friendship relationship
+  // so functions here can be hidden when appropriate.
+  friend class GeneralParser<SyntaxParseHandler, Unit>;
+
+ public:
+  using Base::Base;
+
+  // Inherited types, listed here to have non-dependent names.
+  using typename Base::Modifier;
+  using typename Base::Position;
+  using typename Base::TokenStream;
+
+  // Inherited functions, listed here to have non-dependent names.
+
+ public:
+  using Base::anyChars;
+  using Base::clearAbortedSyntaxParse;
+  using Base::cx_;
+  using Base::hadAbortedSyntaxParse;
+  using Base::innerFunctionForFunctionBox;
+  using Base::tokenStream;
+
+ public:
+  // ErrorReportMixin.
+
+  using Base::error;
+  using Base::errorAt;
+  using Base::errorNoOffset;
+  using Base::errorWithNotes;
+  using Base::errorWithNotesAt;
+  using Base::errorWithNotesNoOffset;
+  using Base::extraWarning;
+  using Base::extraWarningAt;
+  using Base::extraWarningNoOffset;
+  using Base::extraWarningWithNotes;
+  using Base::extraWarningWithNotesAt;
+  using Base::extraWarningWithNotesNoOffset;
+  using Base::strictModeError;
+  using Base::strictModeErrorAt;
+  using Base::strictModeErrorNoOffset;
+  using Base::strictModeErrorWithNotes;
+  using Base::strictModeErrorWithNotesAt;
+  using Base::strictModeErrorWithNotesNoOffset;
+  using Base::warning;
+  using Base::warningAt;
+  using Base::warningNoOffset;
+  using Base::warningWithNotes;
+  using Base::warningWithNotesAt;
+  using Base::warningWithNotesNoOffset;
+
+ private:
+  using Base::alloc_;
+#if DEBUG
+  using Base::checkOptionsCalled_;
+#endif
+  using Base::finishFunctionScopes;
+  using Base::functionFormalParametersAndBody;
+  using Base::handler_;
+  using Base::innerFunction;
+  using Base::keepAtoms_;
+  using Base::matchOrInsertSemicolon;
+  using Base::mustMatchToken;
+  using Base::newFunctionBox;
+  using Base::newLexicalScopeData;
+  using Base::newModuleScopeData;
+  using Base::newName;
+  using Base::noteDeclaredName;
+  using Base::null;
+  using Base::options;
+  using Base::pc_;
+  using Base::pos;
+  using Base::propagateFreeNamesAndMarkClosedOverBindings;
+  using Base::ss;
+  using Base::statementList;
+  using Base::stringLiteral;
+  using Base::usedNames_;
+
+ private:
+  using Base::abortIfSyntaxParser;
+  using Base::disableSyntaxParser;
+
+ public:
+  // Functions with multiple overloads of different visibility.  We can't
+  // |using| the whole thing into existence because of the visibility
+  // distinction, so we instead must manually delegate the required overload.
+
+  PropertyName* bindingIdentifier(YieldHandling yieldHandling) {
+    return Base::bindingIdentifier(yieldHandling);
+  }
+
+  // Functions present in both Parser<ParseHandler, Unit> specializations.
+
+  inline void setAwaitHandling(AwaitHandling awaitHandling);
+  inline void setInParametersOfAsyncFunction(bool inParameters);
+
+  RegExpLiteralType newRegExp();
+  BigIntLiteralType newBigInt();
+
+  // Parse a module.
+  ModuleNodeType moduleBody(ModuleSharedContext* modulesc);
+
+  inline BinaryNodeType importDeclaration();
+  inline bool checkLocalExportNames(ListNodeType node);
+  inline bool checkExportedName(JSAtom* exportName);
+  inline bool checkExportedNamesForArrayBinding(ListNodeType array);
+  inline bool checkExportedNamesForObjectBinding(ListNodeType obj);
+  inline bool checkExportedNamesForDeclaration(Node node);
+  inline bool checkExportedNamesForDeclarationList(ListNodeType node);
+  inline bool checkExportedNameForFunction(FunctionNodeType funNode);
+  inline bool checkExportedNameForClass(ClassNodeType classNode);
+  inline bool checkExportedNameForClause(NameNodeType nameNode);
+
+  bool trySyntaxParseInnerFunction(
+      FunctionNodeType* funNode, HandleFunction fun, uint32_t toStringStart,
+      InHandling inHandling, YieldHandling yieldHandling,
+      FunctionSyntaxKind kind, GeneratorKind generatorKind,
+      FunctionAsyncKind asyncKind, bool tryAnnexB,
+      Directives inheritedDirectives, Directives* newDirectives);
+
+  bool skipLazyInnerFunction(FunctionNodeType funNode, uint32_t toStringStart,
+                             FunctionSyntaxKind kind, bool tryAnnexB);
+
+  bool asmJS(ListNodeType list);
+
+  // Functions present only in Parser<SyntaxParseHandler, Unit>.
+>>>>>>> upstream-releases
 };
 
 template <typename Unit>
@@ -1495,6 +3497,7 @@ class MOZ_STACK_CLASS Parser<FullParseHandler, Unit> final
   FOR_EACH_PARSENODE_SUBCLASS(DECLARE_TYPE)
 #undef DECLARE_TYPE
 
+<<<<<<< HEAD
   using SyntaxParser = Parser<SyntaxParseHandler, Unit>;
 
   // Numerous Base::* functions have bodies like
@@ -1531,7 +3534,111 @@ class MOZ_STACK_CLASS Parser<FullParseHandler, Unit> final
  private:
   using Base::alloc;
   using Base::checkLabelOrIdentifierReference;
+||||||| merged common ancestors
+    using SyntaxParser = Parser<SyntaxParseHandler, Unit>;
+
+    // Numerous Base::* functions have bodies like
+    //
+    //   return asFinalParser()->func(...);
+    //
+    // and must be able to call functions here.  Add a friendship relationship
+    // so functions here can be hidden when appropriate.
+    friend class GeneralParser<FullParseHandler, Unit>;
+
+  public:
+    using Base::Base;
+
+    // Inherited types, listed here to have non-dependent names.
+    using typename Base::Modifier;
+    using typename Base::Position;
+    using typename Base::TokenStream;
+
+    // Inherited functions, listed here to have non-dependent names.
+
+  public:
+    using Base::anyChars;
+    using Base::clearAbortedSyntaxParse;
+    using Base::functionFormalParametersAndBody;
+    using Base::hadAbortedSyntaxParse;
+    using Base::handler;
+    using Base::newFunctionBox;
+    using Base::options;
+    using Base::pc;
+    using Base::pos;
+    using Base::ss;
+    using Base::tokenStream;
+
+  private:
+    using Base::alloc;
+    using Base::checkLabelOrIdentifierReference;
+=======
+  using SyntaxParser = Parser<SyntaxParseHandler, Unit>;
+
+  // Numerous Base::* functions have bodies like
+  //
+  //   return asFinalParser()->func(...);
+  //
+  // and must be able to call functions here.  Add a friendship relationship
+  // so functions here can be hidden when appropriate.
+  friend class GeneralParser<FullParseHandler, Unit>;
+
+ public:
+  using Base::Base;
+
+  // Inherited types, listed here to have non-dependent names.
+  using typename Base::Modifier;
+  using typename Base::Position;
+  using typename Base::TokenStream;
+
+  // Inherited functions, listed here to have non-dependent names.
+
+ public:
+  using Base::anyChars;
+  using Base::clearAbortedSyntaxParse;
+  using Base::functionFormalParametersAndBody;
+  using Base::hadAbortedSyntaxParse;
+  using Base::handler_;
+  using Base::newFunctionBox;
+  using Base::options;
+  using Base::pc_;
+  using Base::pos;
+  using Base::ss;
+  using Base::tokenStream;
+
+ public:
+  // ErrorReportMixin.
+
+  using Base::error;
+  using Base::errorAt;
+  using Base::errorNoOffset;
+  using Base::errorWithNotes;
+  using Base::errorWithNotesAt;
+  using Base::errorWithNotesNoOffset;
+  using Base::extraWarning;
+  using Base::extraWarningAt;
+  using Base::extraWarningNoOffset;
+  using Base::extraWarningWithNotes;
+  using Base::extraWarningWithNotesAt;
+  using Base::extraWarningWithNotesNoOffset;
+  using Base::strictModeError;
+  using Base::strictModeErrorAt;
+  using Base::strictModeErrorNoOffset;
+  using Base::strictModeErrorWithNotes;
+  using Base::strictModeErrorWithNotesAt;
+  using Base::strictModeErrorWithNotesNoOffset;
+  using Base::warning;
+  using Base::warningAt;
+  using Base::warningNoOffset;
+  using Base::warningWithNotes;
+  using Base::warningWithNotesAt;
+  using Base::warningWithNotesNoOffset;
+
+ private:
+  using Base::alloc_;
+  using Base::checkLabelOrIdentifierReference;
+>>>>>>> upstream-releases
 #if DEBUG
+<<<<<<< HEAD
   using Base::checkOptionsCalled;
 #endif
   using Base::context;
@@ -1582,7 +3689,13 @@ class MOZ_STACK_CLASS Parser<FullParseHandler, Unit> final
   RegExpLiteralType newRegExp();
 #ifdef ENABLE_BIGINT
   BigIntLiteralType newBigInt();
+||||||| merged common ancestors
+    using Base::checkOptionsCalled;
+=======
+  using Base::checkOptionsCalled_;
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
 
   // Parse a module.
   CodeNodeType moduleBody(ModuleSharedContext* modulesc);
@@ -1646,6 +3759,224 @@ class MOZ_STACK_CLASS Parser<FullParseHandler, Unit> final
   }
 
   bool asmJS(ListNodeType list);
+||||||| merged common ancestors
+    using Base::context;
+    using Base::error;
+    using Base::errorAt;
+    using Base::finishFunctionScopes;
+    using Base::finishLexicalScope;
+    using Base::innerFunction;
+    using Base::innerFunctionForFunctionBox;
+    using Base::keepAtoms;
+    using Base::matchOrInsertSemicolon;
+    using Base::newEvalScopeData;
+    using Base::newFunctionScopeData;
+    using Base::newGlobalScopeData;
+    using Base::newLexicalScopeData;
+    using Base::newModuleScopeData;
+    using Base::newName;
+    using Base::newVarScopeData;
+    using Base::noteDeclaredName;
+    using Base::null;
+    using Base::propagateFreeNamesAndMarkClosedOverBindings;
+    using Base::statementList;
+    using Base::stringLiteral;
+    using Base::usedNames;
+
+    using Base::abortIfSyntaxParser;
+    using Base::disableSyntaxParser;
+    using Base::getSyntaxParser;
+
+  public:
+    // Functions with multiple overloads of different visibility.  We can't
+    // |using| the whole thing into existence because of the visibility
+    // distinction, so we instead must manually delegate the required overload.
+
+    PropertyName* bindingIdentifier(YieldHandling yieldHandling) {
+        return Base::bindingIdentifier(yieldHandling);
+    }
+
+    // Functions present in both Parser<ParseHandler, Unit> specializations.
+
+    friend class AutoAwaitIsKeyword<SyntaxParseHandler, Unit>;
+    inline void setAwaitHandling(AwaitHandling awaitHandling);
+
+    friend class AutoInParametersOfAsyncFunction<SyntaxParseHandler, Unit>;
+    inline void setInParametersOfAsyncFunction(bool inParameters);
+
+    RegExpLiteralType newRegExp();
+
+    // Parse a module.
+    CodeNodeType moduleBody(ModuleSharedContext* modulesc);
+
+    BinaryNodeType importDeclaration();
+    bool checkLocalExportNames(ListNodeType node);
+    bool checkExportedName(JSAtom* exportName);
+    bool checkExportedNamesForArrayBinding(ListNodeType array);
+    bool checkExportedNamesForObjectBinding(ListNodeType obj);
+    bool checkExportedNamesForDeclaration(Node node);
+    bool checkExportedNamesForDeclarationList(ListNodeType node);
+    bool checkExportedNameForFunction(CodeNodeType funNode);
+    bool checkExportedNameForClass(ClassNodeType classNode);
+    inline bool checkExportedNameForClause(NameNodeType nameNode);
+
+    bool trySyntaxParseInnerFunction(CodeNodeType* funNode, HandleFunction fun,
+                                     uint32_t toStringStart,
+                                     InHandling inHandling, YieldHandling yieldHandling,
+                                     FunctionSyntaxKind kind, GeneratorKind generatorKind,
+                                     FunctionAsyncKind asyncKind, bool tryAnnexB,
+                                     Directives inheritedDirectives, Directives* newDirectives);
+
+    bool skipLazyInnerFunction(CodeNodeType funNode, uint32_t toStringStart,
+                               FunctionSyntaxKind kind, bool tryAnnexB);
+
+    // Functions present only in Parser<FullParseHandler, Unit>.
+
+    // Parse the body of an eval.
+    //
+    // Eval scripts are distinguished from global scripts in that in ES6, per
+    // 18.2.1.1 steps 9 and 10, all eval scripts are executed under a fresh
+    // lexical scope.
+    LexicalScopeNodeType evalBody(EvalSharedContext* evalsc);
+
+    // Parse a function, given only its arguments and body. Used for lazily
+    // parsed functions.
+    CodeNodeType standaloneLazyFunction(HandleFunction fun, uint32_t toStringStart, bool strict,
+                                        GeneratorKind generatorKind, FunctionAsyncKind asyncKind);
+
+    // Parse a function, used for the Function, GeneratorFunction, and
+    // AsyncFunction constructors.
+    CodeNodeType standaloneFunction(HandleFunction fun, HandleScope enclosingScope,
+                                    const mozilla::Maybe<uint32_t>& parameterListEnd,
+                                    GeneratorKind generatorKind, FunctionAsyncKind asyncKind,
+                                    Directives inheritedDirectives, Directives* newDirectives);
+
+    bool checkStatementsEOF();
+
+    // Parse the body of a global script.
+    ListNodeType globalBody(GlobalSharedContext* globalsc);
+
+    bool namedImportsOrNamespaceImport(TokenKind tt, ListNodeType importSpecSet);
+
+    PropertyName* importedBinding() {
+        return bindingIdentifier(YieldIsName);
+    }
+
+    bool checkLocalExportName(PropertyName* ident, uint32_t offset) {
+        return checkLabelOrIdentifierReference(ident, offset, YieldIsName);
+    }
+
+    bool asmJS(ListNodeType list);
+=======
+  using Base::cx_;
+  using Base::finishFunctionScopes;
+  using Base::finishLexicalScope;
+  using Base::innerFunction;
+  using Base::innerFunctionForFunctionBox;
+  using Base::keepAtoms_;
+  using Base::matchOrInsertSemicolon;
+  using Base::mustMatchToken;
+  using Base::newEvalScopeData;
+  using Base::newFunctionScopeData;
+  using Base::newGlobalScopeData;
+  using Base::newLexicalScopeData;
+  using Base::newModuleScopeData;
+  using Base::newName;
+  using Base::newVarScopeData;
+  using Base::noteDeclaredName;
+  using Base::null;
+  using Base::propagateFreeNamesAndMarkClosedOverBindings;
+  using Base::statementList;
+  using Base::stringLiteral;
+  using Base::usedNames_;
+
+  using Base::abortIfSyntaxParser;
+  using Base::disableSyntaxParser;
+  using Base::getSyntaxParser;
+
+ public:
+  // Functions with multiple overloads of different visibility.  We can't
+  // |using| the whole thing into existence because of the visibility
+  // distinction, so we instead must manually delegate the required overload.
+
+  PropertyName* bindingIdentifier(YieldHandling yieldHandling) {
+    return Base::bindingIdentifier(yieldHandling);
+  }
+
+  // Functions present in both Parser<ParseHandler, Unit> specializations.
+
+  friend class AutoAwaitIsKeyword<SyntaxParseHandler, Unit>;
+  inline void setAwaitHandling(AwaitHandling awaitHandling);
+
+  friend class AutoInParametersOfAsyncFunction<SyntaxParseHandler, Unit>;
+  inline void setInParametersOfAsyncFunction(bool inParameters);
+
+  RegExpLiteralType newRegExp();
+  BigIntLiteralType newBigInt();
+
+  // Parse a module.
+  ModuleNodeType moduleBody(ModuleSharedContext* modulesc);
+
+  BinaryNodeType importDeclaration();
+  bool checkLocalExportNames(ListNodeType node);
+  bool checkExportedName(JSAtom* exportName);
+  bool checkExportedNamesForArrayBinding(ListNodeType array);
+  bool checkExportedNamesForObjectBinding(ListNodeType obj);
+  bool checkExportedNamesForDeclaration(Node node);
+  bool checkExportedNamesForDeclarationList(ListNodeType node);
+  bool checkExportedNameForFunction(FunctionNodeType funNode);
+  bool checkExportedNameForClass(ClassNodeType classNode);
+  inline bool checkExportedNameForClause(NameNodeType nameNode);
+
+  bool trySyntaxParseInnerFunction(
+      FunctionNodeType* funNode, HandleFunction fun, uint32_t toStringStart,
+      InHandling inHandling, YieldHandling yieldHandling,
+      FunctionSyntaxKind kind, GeneratorKind generatorKind,
+      FunctionAsyncKind asyncKind, bool tryAnnexB,
+      Directives inheritedDirectives, Directives* newDirectives);
+
+  bool skipLazyInnerFunction(FunctionNodeType funNode, uint32_t toStringStart,
+                             FunctionSyntaxKind kind, bool tryAnnexB);
+
+  // Functions present only in Parser<FullParseHandler, Unit>.
+
+  // Parse the body of an eval.
+  //
+  // Eval scripts are distinguished from global scripts in that in ES6, per
+  // 18.2.1.1 steps 9 and 10, all eval scripts are executed under a fresh
+  // lexical scope.
+  LexicalScopeNodeType evalBody(EvalSharedContext* evalsc);
+
+  // Parse a function, given only its arguments and body. Used for lazily
+  // parsed functions.
+  FunctionNodeType standaloneLazyFunction(HandleFunction fun,
+                                          uint32_t toStringStart, bool strict,
+                                          GeneratorKind generatorKind,
+                                          FunctionAsyncKind asyncKind);
+
+  // Parse a function, used for the Function, GeneratorFunction, and
+  // AsyncFunction constructors.
+  FunctionNodeType standaloneFunction(
+      HandleFunction fun, HandleScope enclosingScope,
+      const mozilla::Maybe<uint32_t>& parameterListEnd,
+      GeneratorKind generatorKind, FunctionAsyncKind asyncKind,
+      Directives inheritedDirectives, Directives* newDirectives);
+
+  bool checkStatementsEOF();
+
+  // Parse the body of a global script.
+  ListNodeType globalBody(GlobalSharedContext* globalsc);
+
+  bool namedImportsOrNamespaceImport(TokenKind tt, ListNodeType importSpecSet);
+
+  PropertyName* importedBinding() { return bindingIdentifier(YieldIsName); }
+
+  bool checkLocalExportName(PropertyName* ident, uint32_t offset) {
+    return checkLabelOrIdentifierReference(ident, offset, YieldIsName);
+  }
+
+  bool asmJS(ListNodeType list);
+>>>>>>> upstream-releases
 };
 
 template <class Parser>
@@ -1742,6 +4073,7 @@ class MOZ_STACK_CLASS AutoInParametersOfAsyncFunction {
 };
 
 template <typename Scope>
+<<<<<<< HEAD
 extern typename Scope::Data* NewEmptyBindingData(JSContext* cx,
                                                  LifoAlloc& alloc,
                                                  uint32_t numBindings);
@@ -1770,6 +4102,58 @@ JSFunction* AllocNewFunction(JSContext* cx, HandleAtom atom,
                              FunctionAsyncKind asyncKind, HandleObject proto,
                              bool isSelfHosting = false,
                              bool inFunctionBox = false);
+||||||| merged common ancestors
+extern typename Scope::Data*
+NewEmptyBindingData(JSContext* cx, LifoAlloc& alloc, uint32_t numBindings);
+
+mozilla::Maybe<GlobalScope::Data*>
+NewGlobalScopeData(JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc, ParseContext* pc);
+mozilla::Maybe<EvalScope::Data*>
+NewEvalScopeData(JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc, ParseContext* pc);
+mozilla::Maybe<FunctionScope::Data*>
+NewFunctionScopeData(JSContext* context, ParseContext::Scope& scope, bool hasParameterExprs, LifoAlloc& alloc, ParseContext* pc);
+mozilla::Maybe<VarScope::Data*>
+NewVarScopeData(JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc, ParseContext* pc);
+mozilla::Maybe<LexicalScope::Data*>
+NewLexicalScopeData(JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc, ParseContext* pc);
+
+JSFunction*
+AllocNewFunction(JSContext* cx, HandleAtom atom, FunctionSyntaxKind kind, GeneratorKind generatorKind, FunctionAsyncKind asyncKind,
+                 HandleObject proto, bool isSelfHosting = false, bool inFunctionBox = false);
+
+// Returns true if the declaration is `var` or equivalent.
+bool
+DeclarationKindIsVar(DeclarationKind kind);
+=======
+extern typename Scope::Data* NewEmptyBindingData(JSContext* cx,
+                                                 LifoAlloc& alloc,
+                                                 uint32_t numBindings);
+
+mozilla::Maybe<GlobalScope::Data*> NewGlobalScopeData(
+    JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc,
+    ParseContext* pc);
+mozilla::Maybe<EvalScope::Data*> NewEvalScopeData(JSContext* context,
+                                                  ParseContext::Scope& scope,
+                                                  LifoAlloc& alloc,
+                                                  ParseContext* pc);
+mozilla::Maybe<FunctionScope::Data*> NewFunctionScopeData(
+    JSContext* context, ParseContext::Scope& scope, bool hasParameterExprs,
+    IsFieldInitializer isFieldInitializer, LifoAlloc& alloc, ParseContext* pc);
+mozilla::Maybe<VarScope::Data*> NewVarScopeData(JSContext* context,
+                                                ParseContext::Scope& scope,
+                                                LifoAlloc& alloc,
+                                                ParseContext* pc);
+mozilla::Maybe<LexicalScope::Data*> NewLexicalScopeData(
+    JSContext* context, ParseContext::Scope& scope, LifoAlloc& alloc,
+    ParseContext* pc);
+
+JSFunction* AllocNewFunction(JSContext* cx, HandleAtom atom,
+                             FunctionSyntaxKind kind,
+                             GeneratorKind generatorKind,
+                             FunctionAsyncKind asyncKind, HandleObject proto,
+                             bool isSelfHosting = false,
+                             bool inFunctionBox = false);
+>>>>>>> upstream-releases
 
 } /* namespace frontend */
 } /* namespace js */

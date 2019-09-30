@@ -9,13 +9,14 @@
 
 #include "nscore.h"
 #include "nsXPCOMCID.h"
+#include "mozilla/Attributes.h"
 
 #ifdef __cplusplus
-#define DECL_CLASS(c) class c
-#define DECL_STRUCT(c) struct c
+#  define DECL_CLASS(c) class c
+#  define DECL_STRUCT(c) struct c
 #else
-#define DECL_CLASS(c) typedef struct c c
-#define DECL_STRUCT(c) typedef struct c c
+#  define DECL_CLASS(c) typedef struct c c
+#  define DECL_STRUCT(c) typedef struct c c
 #endif
 
 DECL_CLASS(nsISupports);
@@ -34,7 +35,7 @@ extern bool gXPCOMThreadsShutDown;
 #endif
 
 #ifdef __cplusplus
-#include "nsStringFwd.h"
+#  include "nsStringFwd.h"
 namespace mozilla {
 struct Module;
 }  // namespace mozilla
@@ -73,8 +74,17 @@ struct Module;
  *         initialisation.
  */
 XPCOM_API(nsresult)
+<<<<<<< HEAD
 NS_InitXPCOM2(nsIServiceManager** aResult, nsIFile* aBinDirectory,
               nsIDirectoryServiceProvider* aAppFileLocationProvider);
+||||||| merged common ancestors
+NS_InitXPCOM2(nsIServiceManager** aResult,
+              nsIFile* aBinDirectory,
+              nsIDirectoryServiceProvider* aAppFileLocationProvider);
+=======
+NS_InitXPCOM(nsIServiceManager** aResult, nsIFile* aBinDirectory,
+             nsIDirectoryServiceProvider* aAppFileLocationProvider);
+>>>>>>> upstream-releases
 
 /**
  * Initialize only minimal components of XPCOM. This ensures nsThreadManager,
@@ -92,9 +102,22 @@ NS_InitMinimalXPCOM();
  *
  * @return NS_OK for success;
  *         other error codes indicate a failure during initialisation.
+ *
+ * MOZ_CAN_RUN_SCRIPT_BOUNDARY for now, but really it should maybe be
+ * MOZ_CAN_RUN_SCRIPT.
  */
+<<<<<<< HEAD
 XPCOM_API(nsresult) NS_ShutdownXPCOM(nsIServiceManager* aServMgr);
 
+||||||| merged common ancestors
+XPCOM_API(nsresult) NS_ShutdownXPCOM(nsIServiceManager* aServMgr);
+
+
+=======
+XPCOM_API(MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult)
+NS_ShutdownXPCOM(nsIServiceManager* aServMgr);
+
+>>>>>>> upstream-releases
 /**
  * Public Method to access to the service manager.
  *

@@ -79,12 +79,41 @@ void MacroAssembler::move32To64SignExtend(Register src, Register64 dest) {
 }
 
 // ===============================================================
+// Load instructions
+
+<<<<<<< HEAD
+void MacroAssembler::not32(Register reg) { ma_mvn(reg, reg); }
+||||||| merged common ancestors
+void
+MacroAssembler::not32(Register reg)
+{
+    ma_mvn(reg, reg);
+}
+=======
+void MacroAssembler::load32SignExtendToPtr(const Address& src, Register dest) {
+  load32(src, dest);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::and32(Register src, Register dest) {
+  ma_and(src, dest, SetCC);
+||||||| merged common ancestors
+void
+MacroAssembler::and32(Register src, Register dest)
+{
+    ma_and(src, dest, SetCC);
+=======
+void MacroAssembler::loadAbiReturnAddress(Register dest) { movePtr(lr, dest); }
+
+// ===============================================================
 // Logical instructions
 
 void MacroAssembler::not32(Register reg) { ma_mvn(reg, reg); }
 
 void MacroAssembler::and32(Register src, Register dest) {
   ma_and(src, dest, SetCC);
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::and32(Imm32 imm, Register dest) {
@@ -491,8 +520,45 @@ void MacroAssembler::neg64(Register64 reg) {
   as_rsc(reg.high, reg.high, Imm8(0));
 }
 
+<<<<<<< HEAD
 void MacroAssembler::negateDouble(FloatRegister reg) { ma_vneg(reg, reg); }
+||||||| merged common ancestors
+void
+MacroAssembler::negateDouble(FloatRegister reg)
+{
+    ma_vneg(reg, reg);
+}
+=======
+void MacroAssembler::negPtr(Register reg) { neg32(reg); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void MacroAssembler::negateFloat(FloatRegister reg) { ma_vneg_f32(reg, reg); }
+||||||| merged common ancestors
+void
+MacroAssembler::negateFloat(FloatRegister reg)
+{
+    ma_vneg_f32(reg, reg);
+}
+=======
+void MacroAssembler::negateDouble(FloatRegister reg) { ma_vneg(reg, reg); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest) {
+  if (src != dest) {
+    ma_vmov_f32(src, dest);
+  }
+  ma_vabs_f32(dest, dest);
+||||||| merged common ancestors
+void
+MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest)
+{
+    if (src != dest) {
+        ma_vmov_f32(src, dest);
+    }
+    ma_vabs_f32(dest, dest);
+=======
 void MacroAssembler::negateFloat(FloatRegister reg) { ma_vneg_f32(reg, reg); }
 
 void MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest) {
@@ -500,6 +566,7 @@ void MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest) {
     ma_vmov_f32(src, dest);
   }
   ma_vabs_f32(dest, dest);
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::absDouble(FloatRegister src, FloatRegister dest) {
@@ -1340,6 +1407,7 @@ void MacroAssembler::branchTruncateFloat32ToInt32(FloatRegister src,
   ma_b(fail, Assembler::Equal);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchDouble(DoubleCondition cond, FloatRegister lhs,
                                   FloatRegister rhs, Label* label) {
   compareDouble(lhs, rhs);
@@ -1358,8 +1426,40 @@ void MacroAssembler::branchDouble(DoubleCondition cond, FloatRegister lhs,
     ma_b(label, VFP_Equal);
     return;
   }
+||||||| merged common ancestors
+    if (cond == DoubleEqualOrUnordered) {
+        ma_b(label, VFP_Unordered);
+        ma_b(label, VFP_Equal);
+        return;
+    }
+=======
+void MacroAssembler::branchDouble(DoubleCondition cond, FloatRegister lhs,
+                                  FloatRegister rhs, Label* label) {
+  compareDouble(lhs, rhs);
+
+  if (cond == DoubleNotEqual) {
+    // Force the unordered cases not to jump.
+    Label unordered;
+    ma_b(&unordered, VFP_Unordered);
+    ma_b(label, VFP_NotEqualOrUnordered);
+    bind(&unordered);
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ma_b(label, ConditionFromDoubleCondition(cond));
+||||||| merged common ancestors
+    ma_b(label, ConditionFromDoubleCondition(cond));
+=======
+  if (cond == DoubleEqualOrUnordered) {
+    ma_b(label, VFP_Unordered);
+    ma_b(label, VFP_Equal);
+    return;
+  }
 
   ma_b(label, ConditionFromDoubleCondition(cond));
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::branchTruncateDoubleMaybeModUint32(FloatRegister src,
@@ -1694,6 +1794,78 @@ void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
   ma_b(label, c);
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, Register tag,
+                                    Label* label) {
+  branchTestNullImpl(cond, tag, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, Register tag, Label* label)
+{
+    branchTestNullImpl(cond, tag, label);
+=======
+void MacroAssembler::branchTestBigInt(Condition cond, Register tag,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, tag, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const Address& address,
+                                    Label* label) {
+  branchTestNullImpl(cond, address, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const Address& address, Label* label)
+{
+    branchTestNullImpl(cond, address, label);
+=======
+void MacroAssembler::branchTestBigInt(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, address, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
+                                    Label* label) {
+  branchTestNullImpl(cond, address, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address, Label* label)
+{
+    branchTestNullImpl(cond, address, label);
+=======
+void MacroAssembler::branchTestBigInt(Condition cond, const ValueOperand& value,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, value, label);
+}
+
+template <typename T>
+void MacroAssembler::branchTestBigIntImpl(Condition cond, const T& t,
+                                          Label* label) {
+  Condition c = testBigInt(cond, t);
+  ma_b(label, c);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
+                                    Label* label) {
+  branchTestNullImpl(cond, value, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value, Label* label)
+{
+    branchTestNullImpl(cond, value, label);
+=======
+void MacroAssembler::branchTestBigIntTruthy(bool truthy,
+                                            const ValueOperand& value,
+                                            Label* label) {
+  Condition c = testBigIntTruthy(truthy, value);
+  ma_b(label, c);
+}
+
 void MacroAssembler::branchTestNull(Condition cond, Register tag,
                                     Label* label) {
   branchTestNullImpl(cond, tag, label);
@@ -1712,6 +1884,7 @@ void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
 void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
                                     Label* label) {
   branchTestNullImpl(cond, value, label);
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1825,19 +1998,47 @@ void MacroAssembler::branchTestMagic(Condition cond, const Address& valaddr,
   bind(&notMagic);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
   MOZ_ASSERT(addr.base == pc, "Unsupported jump from any other addresses.");
   MOZ_ASSERT(
       addr.offset == 0,
       "NYI: offsets from pc should be shifted by the number of instructions.");
+||||||| merged common ancestors
+void
+MacroAssembler::branchToComputedAddress(const BaseIndex& addr)
+{
+    MOZ_ASSERT(addr.base == pc, "Unsupported jump from any other addresses.");
+    MOZ_ASSERT(addr.offset == 0, "NYI: offsets from pc should be shifted by the number of instructions.");
+=======
+void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
+  MOZ_ASSERT(
+      addr.offset == 0,
+      "NYI: offsets from pc should be shifted by the number of instructions.");
+>>>>>>> upstream-releases
 
   Register base = addr.base;
   uint32_t scale = Imm32::ShiftOf(addr.scale).value;
 
+<<<<<<< HEAD
   ma_ldr(DTRAddr(base, DtrRegImmShift(addr.index, LSL, scale)), pc);
   // When loading from pc, the pc is shifted to the next instruction, we
   // add one extra instruction to accomodate for this shifted offset.
   breakpoint();
+||||||| merged common ancestors
+    ma_ldr(DTRAddr(base, DtrRegImmShift(addr.index, LSL, scale)), pc);
+    // When loading from pc, the pc is shifted to the next instruction, we
+    // add one extra instruction to accomodate for this shifted offset.
+    breakpoint();
+=======
+  ma_ldr(DTRAddr(base, DtrRegImmShift(addr.index, LSL, scale)), pc);
+
+  if (base == pc) {
+    // When loading from pc, the pc is shifted to the next instruction, we
+    // add one extra instruction to accomodate for this shifted offset.
+    breakpoint();
+  }
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::cmp32Move32(Condition cond, Register lhs, Register rhs,
@@ -1861,6 +2062,7 @@ void MacroAssembler::cmp32Move32(Condition cond, Register lhs,
   cmp32Move32(cond, lhs, scratch, src, dest);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
                                    Imm32 mask, const Address& src,
                                    Register dest) {
@@ -1868,36 +2070,136 @@ void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
   test32(addr, mask);
   ScratchRegisterScope scratch(*this);
   ma_ldr(src, dest, scratch, Offset, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::test32LoadPtr(Condition cond, const Address& addr, Imm32 mask, const Address& src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+    test32(addr, mask);
+    ScratchRegisterScope scratch(*this);
+    ma_ldr(src, dest, scratch, Offset, cond);
+=======
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs,
+                                 const Address& rhs, const Address& src,
+                                 Register dest) {
+  // This is never used, but must be present to facilitate linking on arm.
+  MOZ_CRASH("No known use cases");
 }
 
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs, Register rhs,
+                                 const Address& src, Register dest) {
+  // This is never used, but must be present to facilitate linking on arm.
+  MOZ_CRASH("No known use cases");
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::test32MovePtr(Condition cond, const Address& addr,
                                    Imm32 mask, Register src, Register dest) {
   MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
   test32(addr, mask);
   ma_mov(src, dest, LeaveCC, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::test32MovePtr(Condition cond, const Address& addr, Imm32 mask, Register src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+    test32(addr, mask);
+    ma_mov(src, dest, LeaveCC, cond);
+=======
+void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
+                                   Imm32 mask, const Address& src,
+                                   Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+  test32(addr, mask);
+  ScratchRegisterScope scratch(*this);
+  ma_ldr(src, dest, scratch, Offset, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::spectreMovePtr(Condition cond, Register src,
                                     Register dest) {
   ma_mov(src, dest, LeaveCC, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::spectreMovePtr(Condition cond, Register src, Register dest)
+{
+    ma_mov(src, dest, LeaveCC, cond);
+=======
+void MacroAssembler::test32MovePtr(Condition cond, const Address& addr,
+                                   Imm32 mask, Register src, Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+  test32(addr, mask);
+  ma_mov(src, dest, LeaveCC, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::spectreZeroRegister(Condition cond, Register,
                                          Register dest) {
   ma_mov(Imm32(0), dest, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::spectreZeroRegister(Condition cond, Register, Register dest)
+{
+    ma_mov(Imm32(0), dest, cond);
+=======
+void MacroAssembler::spectreMovePtr(Condition cond, Register src,
+                                    Register dest) {
+  ma_mov(src, dest, LeaveCC, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::spectreBoundsCheck32(Register index, Register length,
                                           Register maybeScratch,
                                           Label* failure) {
   MOZ_ASSERT(length != maybeScratch);
   MOZ_ASSERT(index != maybeScratch);
+||||||| merged common ancestors
+void
+MacroAssembler::spectreBoundsCheck32(Register index, Register length, Register maybeScratch,
+                                     Label* failure)
+{
+    MOZ_ASSERT(length != maybeScratch);
+    MOZ_ASSERT(index != maybeScratch);
+=======
+void MacroAssembler::spectreZeroRegister(Condition cond, Register,
+                                         Register dest) {
+  ma_mov(Imm32(0), dest, cond);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  branch32(Assembler::BelowOrEqual, length, index, failure);
+||||||| merged common ancestors
+    branch32(Assembler::BelowOrEqual, length, index, failure);
+=======
+void MacroAssembler::spectreBoundsCheck32(Register index, Register length,
+                                          Register maybeScratch,
+                                          Label* failure) {
+  MOZ_ASSERT(length != maybeScratch);
+  MOZ_ASSERT(index != maybeScratch);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (JitOptions.spectreIndexMasking) {
+    ma_mov(Imm32(0), index, Assembler::BelowOrEqual);
+  }
+||||||| merged common ancestors
+    if (JitOptions.spectreIndexMasking) {
+        ma_mov(Imm32(0), index, Assembler::BelowOrEqual);
+    }
+=======
   branch32(Assembler::BelowOrEqual, length, index, failure);
 
   if (JitOptions.spectreIndexMasking) {
     ma_mov(Imm32(0), index, Assembler::BelowOrEqual);
   }
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::spectreBoundsCheck32(Register index, const Address& length,

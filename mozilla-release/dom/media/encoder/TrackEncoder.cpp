@@ -32,6 +32,7 @@ static const int VIDEO_INIT_FAILED_DURATION = 30;
 static const int DEFAULT_KEYFRAME_INTERVAL_MS = 1000;
 
 TrackEncoder::TrackEncoder(TrackRate aTrackRate)
+<<<<<<< HEAD
     : mEncodingComplete(false),
       mEosSetInEncoder(false),
       mInitialized(false),
@@ -44,6 +45,35 @@ TrackEncoder::TrackEncoder(TrackRate aTrackRate)
       mTrackRate(aTrackRate) {}
 
 bool TrackEncoder::IsInitialized() {
+||||||| merged common ancestors
+  : mEncodingComplete(false)
+  , mEosSetInEncoder(false)
+  , mInitialized(false)
+  , mEndOfStream(false)
+  , mCanceled(false)
+  , mCurrentTime(0)
+  , mInitCounter(0)
+  , mNotInitDuration(0)
+  , mSuspended(false)
+  , mTrackRate(aTrackRate)
+{
+}
+
+bool
+TrackEncoder::IsInitialized()
+{
+=======
+    : mEncodingComplete(false),
+      mEosSetInEncoder(false),
+      mInitialized(false),
+      mEndOfStream(false),
+      mCanceled(false),
+      mInitCounter(0),
+      mSuspended(false),
+      mTrackRate(aTrackRate) {}
+
+bool TrackEncoder::IsInitialized() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   return mInitialized;
 }
@@ -103,7 +133,15 @@ void TrackEncoder::SetWorkerThread(AbstractThread* aWorkerThread) {
   mWorkerThread = aWorkerThread;
 }
 
+<<<<<<< HEAD
 void AudioTrackEncoder::Suspend(TimeStamp) {
+||||||| merged common ancestors
+void
+AudioTrackEncoder::Suspend(TimeStamp)
+{
+=======
+void AudioTrackEncoder::Suspend() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   TRACK_LOG(LogLevel::Info, ("[AudioTrackEncoder %p]: Suspend(), was %s", this,
                              mSuspended ? "suspended" : "live"));
@@ -115,7 +153,15 @@ void AudioTrackEncoder::Suspend(TimeStamp) {
   mSuspended = true;
 }
 
+<<<<<<< HEAD
 void AudioTrackEncoder::Resume(TimeStamp) {
+||||||| merged common ancestors
+void
+AudioTrackEncoder::Resume(TimeStamp)
+{
+=======
+void AudioTrackEncoder::Resume() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   TRACK_LOG(LogLevel::Info, ("[AudioTrackEncoder %p]: Resume(), was %s", this,
                              mSuspended ? "suspended" : "live"));
@@ -129,6 +175,7 @@ void AudioTrackEncoder::Resume(TimeStamp) {
 
 void AudioTrackEncoder::AppendAudioSegment(AudioSegment&& aSegment) {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  AUTO_PROFILER_LABEL("AudioTrackEncoder::AppendAudioSegment", OTHER);
   TRACK_LOG(LogLevel::Verbose,
             ("[AudioTrackEncoder %p]: AppendAudioSegment() duration=%" PRIu64,
              this, aSegment.GetDuration()));
@@ -141,7 +188,15 @@ void AudioTrackEncoder::AppendAudioSegment(AudioSegment&& aSegment) {
     return;
   }
 
-  mIncomingBuffer.AppendFrom(&aSegment);
+  TryInit(mOutgoingBuffer, aSegment.GetDuration());
+
+  if (!mSuspended) {
+    mOutgoingBuffer.AppendFrom(&aSegment);
+  }
+
+  if (mInitialized && mOutgoingBuffer.GetDuration() >= GetPacketDuration()) {
+    OnDataAvailable();
+  }
 }
 
 void AudioTrackEncoder::TakeTrackData(AudioSegment& aSegment) {
@@ -216,20 +271,36 @@ void AudioTrackEncoder::TryInit(const AudioSegment& aSegment,
 
 void AudioTrackEncoder::Cancel() {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   TRACK_LOG(LogLevel::Info,
             ("[AudioTrackEncoder %p]: Cancel(), currentTime=%" PRIu64, this,
              mCurrentTime));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[AudioTrackEncoder %p]: Cancel(), currentTime=%" PRIu64,
+     this, mCurrentTime));
+=======
+  TRACK_LOG(LogLevel::Info, ("[AudioTrackEncoder %p]: Cancel()", this));
+>>>>>>> upstream-releases
   mCanceled = true;
-  mIncomingBuffer.Clear();
   mOutgoingBuffer.Clear();
 }
 
 void AudioTrackEncoder::NotifyEndOfStream() {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   TRACK_LOG(
       LogLevel::Info,
       ("[AudioTrackEncoder %p]: NotifyEndOfStream(), currentTime=%" PRIu64,
        this, mCurrentTime));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[AudioTrackEncoder %p]: NotifyEndOfStream(), currentTime=%" PRIu64,
+     this, mCurrentTime));
+=======
+  TRACK_LOG(LogLevel::Info,
+            ("[AudioTrackEncoder %p]: NotifyEndOfStream()", this));
+>>>>>>> upstream-releases
 
   if (!mCanceled && !mInitialized) {
     // If source audio track is completely silent till the end of encoding,
@@ -239,13 +310,12 @@ void AudioTrackEncoder::NotifyEndOfStream() {
 
   mEndOfStream = true;
 
-  mIncomingBuffer.Clear();
-
   if (mInitialized && !mCanceled) {
     OnDataAvailable();
   }
 }
 
+<<<<<<< HEAD
 void AudioTrackEncoder::SetStartOffset(StreamTime aStartOffset) {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   MOZ_ASSERT(mCurrentTime == 0);
@@ -317,6 +387,83 @@ void AudioTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
   mIncomingBuffer.ForgetUpTo(mCurrentTime);
 }
 
+||||||| merged common ancestors
+void
+AudioTrackEncoder::SetStartOffset(StreamTime aStartOffset)
+{
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  MOZ_ASSERT(mCurrentTime == 0);
+  TRACK_LOG(LogLevel::Info,
+    ("[AudioTrackEncoder %p]: SetStartOffset(), aStartOffset=%" PRIu64,
+     this, aStartOffset));
+  mIncomingBuffer.InsertNullDataAtStart(aStartOffset);
+  mCurrentTime = aStartOffset;
+}
+
+void
+AudioTrackEncoder::AdvanceBlockedInput(StreamTime aDuration)
+{
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  TRACK_LOG(LogLevel::Verbose,
+    ("[AudioTrackEncoder %p]: AdvanceBlockedInput(), aDuration=%" PRIu64,
+     this, aDuration));
+
+  // We call Init here so it can account for aDuration towards the Init timeout
+  TryInit(mOutgoingBuffer, aDuration);
+
+  mIncomingBuffer.InsertNullDataAtStart(aDuration);
+  mCurrentTime += aDuration;
+}
+
+void
+AudioTrackEncoder::AdvanceCurrentTime(StreamTime aDuration)
+{
+  AUTO_PROFILER_LABEL("AudioTrackEncoder::AdvanceCurrentTime", OTHER);
+
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+
+  if (mCanceled) {
+    return;
+  }
+
+  if (mEndOfStream) {
+    return;
+  }
+
+  TRACK_LOG(LogLevel::Verbose,
+    ("[AudioTrackEncoder %p]: AdvanceCurrentTime() %" PRIu64,
+     this, aDuration));
+
+  StreamTime currentTime = mCurrentTime + aDuration;
+
+  if (mSuspended) {
+    mCurrentTime = currentTime;
+    mIncomingBuffer.ForgetUpTo(mCurrentTime);
+    return;
+  }
+
+  if (currentTime <= mIncomingBuffer.GetDuration()) {
+    mOutgoingBuffer.AppendSlice(mIncomingBuffer, mCurrentTime, currentTime);
+
+    TryInit(mOutgoingBuffer, aDuration);
+    if (mInitialized && mOutgoingBuffer.GetDuration() >= GetPacketDuration()) {
+      OnDataAvailable();
+    }
+  } else {
+    NS_ASSERTION(false, "AudioTrackEncoder::AdvanceCurrentTime Not enough data");
+    TRACK_LOG(LogLevel::Error,
+      ("[AudioTrackEncoder %p]: AdvanceCurrentTime() Not enough data. "
+       "In incoming=%" PRIu64 ", aDuration=%" PRIu64 ", currentTime=%" PRIu64,
+       this, mIncomingBuffer.GetDuration(), aDuration, currentTime));
+    OnError();
+  }
+
+  mCurrentTime = currentTime;
+  mIncomingBuffer.ForgetUpTo(mCurrentTime);
+}
+
+=======
+>>>>>>> upstream-releases
 /*static*/
 void AudioTrackEncoder::InterleaveTrackData(AudioChunk& aChunk,
                                             int32_t aDuration,
@@ -366,6 +513,7 @@ void AudioTrackEncoder::DeInterleaveTrackData(AudioDataValue* aInput,
 size_t AudioTrackEncoder::SizeOfExcludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   return mIncomingBuffer.SizeOfExcludingThis(aMallocSizeOf) +
          mOutgoingBuffer.SizeOfExcludingThis(aMallocSizeOf);
 }
@@ -381,13 +529,67 @@ VideoTrackEncoder::VideoTrackEncoder(TrackRate aTrackRate,
       mVideoBitrate(0),
       mFrameDroppingMode(aFrameDroppingMode),
       mKeyFrameInterval(DEFAULT_KEYFRAME_INTERVAL_MS) {
+||||||| merged common ancestors
+  return mIncomingBuffer.SizeOfExcludingThis(aMallocSizeOf) +
+         mOutgoingBuffer.SizeOfExcludingThis(aMallocSizeOf);
+}
+
+VideoTrackEncoder::VideoTrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode)
+  : TrackEncoder(aTrackRate)
+  , mFrameWidth(0)
+  , mFrameHeight(0)
+  , mDisplayWidth(0)
+  , mDisplayHeight(0)
+  , mEncodedTicks(0)
+  , mVideoBitrate(0)
+  , mFrameDroppingMode(aFrameDroppingMode)
+  , mKeyFrameInterval(DEFAULT_KEYFRAME_INTERVAL_MS)
+{
+=======
+  return mOutgoingBuffer.SizeOfExcludingThis(aMallocSizeOf);
+}
+
+VideoTrackEncoder::VideoTrackEncoder(RefPtr<DriftCompensator> aDriftCompensator,
+                                     TrackRate aTrackRate,
+                                     FrameDroppingMode aFrameDroppingMode)
+    : TrackEncoder(aTrackRate),
+      mDriftCompensator(std::move(aDriftCompensator)),
+      mFrameWidth(0),
+      mFrameHeight(0),
+      mDisplayWidth(0),
+      mDisplayHeight(0),
+      mEncodedTicks(0),
+      mVideoBitrate(0),
+      mFrameDroppingMode(aFrameDroppingMode),
+      mKeyFrameInterval(DEFAULT_KEYFRAME_INTERVAL_MS),
+      mEnabled(true) {
+>>>>>>> upstream-releases
   mLastChunk.mDuration = 0;
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::Suspend(TimeStamp aTime) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::Suspend(TimeStamp aTime)
+{
+=======
+void VideoTrackEncoder::Suspend(const TimeStamp& aTime) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   TRACK_LOG(LogLevel::Info, ("[VideoTrackEncoder %p]: Suspend(), was %s", this,
                              mSuspended ? "suspended" : "live"));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[VideoTrackEncoder %p]: Suspend(), was %s",
+     this, mSuspended ? "suspended" : "live"));
+=======
+  TRACK_LOG(LogLevel::Info,
+            ("[VideoTrackEncoder %p]: Suspend() at %.3fs, was %s", this,
+             mStartTime.IsNull() ? 0.0 : (aTime - mStartTime).ToSeconds(),
+             mSuspended ? "suspended" : "live"));
+>>>>>>> upstream-releases
 
   if (mSuspended) {
     return;
@@ -397,21 +599,42 @@ void VideoTrackEncoder::Suspend(TimeStamp aTime) {
   mSuspendTime = aTime;
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::Resume(TimeStamp aTime) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::Resume(TimeStamp aTime)
+{
+=======
+void VideoTrackEncoder::Resume(const TimeStamp& aTime) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   TRACK_LOG(LogLevel::Info, ("[VideoTrackEncoder %p]: Resume(), was %s", this,
                              mSuspended ? "suspended" : "live"));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[VideoTrackEncoder %p]: Resume(), was %s",
+     this, mSuspended ? "suspended" : "live"));
+=======
+>>>>>>> upstream-releases
 
   if (!mSuspended) {
     return;
   }
 
+  TRACK_LOG(
+      LogLevel::Info,
+      ("[VideoTrackEncoder %p]: Resume() after %.3fs, was %s", this,
+       (aTime - mSuspendTime).ToSeconds(), mSuspended ? "suspended" : "live"));
+
   mSuspended = false;
 
   TimeDuration suspendDuration = aTime - mSuspendTime;
   if (!mLastChunk.mTimeStamp.IsNull()) {
-    VideoChunk* nextChunk = mIncomingBuffer.FindChunkContaining(mCurrentTime);
-    if (nextChunk && nextChunk->mTimeStamp < aTime) {
+    VideoChunk* nextChunk = mIncomingBuffer.FindChunkContaining(aTime);
+    MOZ_ASSERT_IF(nextChunk, nextChunk->mTimeStamp <= aTime);
+    if (nextChunk) {
       nextChunk->mTimeStamp = aTime;
     }
     mLastChunk.mTimeStamp += suspendDuration;
@@ -423,11 +646,80 @@ void VideoTrackEncoder::Resume(TimeStamp aTime) {
   mSuspendTime = TimeStamp();
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::AppendVideoSegment(VideoSegment&& aSegment) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::AppendVideoSegment(VideoSegment&& aSegment)
+{
+=======
+void VideoTrackEncoder::Disable(const TimeStamp& aTime) {
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  TRACK_LOG(LogLevel::Debug, ("[VideoTrackEncoder %p]: Disable()", this));
+
+  if (mStartTime.IsNull()) {
+    // We haven't started yet. No need to touch future frames.
+    mEnabled = false;
+    return;
+  }
+
+  // Advancing currentTime to process any frames in mIncomingBuffer between
+  // mCurrentTime and aTime.
+  AdvanceCurrentTime(aTime);
+  if (!mLastChunk.mTimeStamp.IsNull()) {
+    // Insert a black frame at t=aTime into mIncomingBuffer, to trigger the
+    // shift to black at the right moment.
+    VideoSegment tempSegment;
+    tempSegment.AppendFrom(&mIncomingBuffer);
+    mIncomingBuffer.AppendFrame(do_AddRef(mLastChunk.mFrame.GetImage()),
+                                mLastChunk.mFrame.GetIntrinsicSize(),
+                                mLastChunk.mFrame.GetPrincipalHandle(), true,
+                                aTime);
+    mIncomingBuffer.AppendFrom(&tempSegment);
+  }
+  mEnabled = false;
+}
+
+void VideoTrackEncoder::Enable(const TimeStamp& aTime) {
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  TRACK_LOG(LogLevel::Debug, ("[VideoTrackEncoder %p]: Enable()", this));
+
+  if (mStartTime.IsNull()) {
+    // We haven't started yet. No need to touch future frames.
+    mEnabled = true;
+    return;
+  }
+
+  // Advancing currentTime to process any frames in mIncomingBuffer between
+  // mCurrentTime and aTime.
+  AdvanceCurrentTime(aTime);
+  if (!mLastChunk.mTimeStamp.IsNull()) {
+    // Insert a real frame at t=aTime into mIncomingBuffer, to trigger the
+    // shift from black at the right moment.
+    VideoSegment tempSegment;
+    tempSegment.AppendFrom(&mIncomingBuffer);
+    mIncomingBuffer.AppendFrame(do_AddRef(mLastChunk.mFrame.GetImage()),
+                                mLastChunk.mFrame.GetIntrinsicSize(),
+                                mLastChunk.mFrame.GetPrincipalHandle(),
+                                mLastChunk.mFrame.GetForceBlack(), aTime);
+    mIncomingBuffer.AppendFrom(&tempSegment);
+  }
+  mEnabled = true;
+}
+
+void VideoTrackEncoder::AppendVideoSegment(VideoSegment&& aSegment) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   TRACK_LOG(LogLevel::Verbose,
+<<<<<<< HEAD
             ("[VideoTrackEncoder %p]: AppendVideoSegment() duration=%" PRIu64,
              this, aSegment.GetDuration()));
+||||||| merged common ancestors
+    ("[VideoTrackEncoder %p]: AppendVideoSegment() duration=%" PRIu64,
+     this, aSegment.GetDuration()));
+=======
+            ("[VideoTrackEncoder %p]: AppendVideoSegment()", this));
+>>>>>>> upstream-releases
 
   if (mCanceled) {
     return;
@@ -437,7 +729,28 @@ void VideoTrackEncoder::AppendVideoSegment(VideoSegment&& aSegment) {
     return;
   }
 
-  mIncomingBuffer.AppendFrom(&aSegment);
+  for (VideoSegment::ConstChunkIterator iter(aSegment); !iter.IsEnded();
+       iter.Next()) {
+    if (iter->IsNull()) {
+      // A null image was sent. This is a signal from the source that we should
+      // clear any images buffered in the future.
+      mIncomingBuffer.Clear();
+      continue;  // Don't append iter, as it is null.
+    }
+    if (VideoChunk* c = mIncomingBuffer.GetLastChunk()) {
+      if (iter->mTimeStamp < c->mTimeStamp) {
+        // Time went backwards. This can happen when a MediaDecoder seeks.
+        // We need to handle this by removing any frames buffered in the future
+        // and start over at iter->mTimeStamp.
+        mIncomingBuffer.Clear();
+      }
+    }
+    mIncomingBuffer.AppendFrame(do_AddRef(iter->mFrame.GetImage()),
+                                iter->mFrame.GetIntrinsicSize(),
+                                iter->mFrame.GetPrincipalHandle(),
+                                iter->mFrame.GetForceBlack(), iter->mTimeStamp);
+  }
+  aSegment.Clear();
 }
 
 void VideoTrackEncoder::TakeTrackData(VideoSegment& aSegment) {
@@ -451,8 +764,17 @@ void VideoTrackEncoder::TakeTrackData(VideoSegment& aSegment) {
   mOutgoingBuffer.Clear();
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::Init(const VideoSegment& aSegment,
                              StreamTime aDuration) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::Init(const VideoSegment& aSegment, StreamTime aDuration)
+{
+=======
+void VideoTrackEncoder::Init(const VideoSegment& aSegment,
+                             const TimeStamp& aTime) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
 
   if (mInitialized) {
@@ -488,8 +810,7 @@ void VideoTrackEncoder::Init(const VideoSegment& aSegment,
     break;
   }
 
-  mNotInitDuration += aDuration;
-  if ((mNotInitDuration / mTrackRate > VIDEO_INIT_FAILED_DURATION) &&
+  if (((aTime - mStartTime).ToSeconds() > VIDEO_INIT_FAILED_DURATION) &&
       mInitCounter > 1) {
     TRACK_LOG(LogLevel::Warning,
               ("[VideoTrackEncoder %p]: No successful init for %ds.", this,
@@ -503,9 +824,17 @@ void VideoTrackEncoder::Init(const VideoSegment& aSegment,
 
 void VideoTrackEncoder::Cancel() {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   TRACK_LOG(LogLevel::Info,
             ("[VideoTrackEncoder %p]: Cancel(), currentTime=%" PRIu64, this,
              mCurrentTime));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[VideoTrackEncoder %p]: Cancel(), currentTime=%" PRIu64,
+     this, mCurrentTime));
+=======
+  TRACK_LOG(LogLevel::Info, ("[VideoTrackEncoder %p]: Cancel()", this));
+>>>>>>> upstream-releases
   mCanceled = true;
   mIncomingBuffer.Clear();
   mOutgoingBuffer.Clear();
@@ -528,13 +857,23 @@ void VideoTrackEncoder::NotifyEndOfStream() {
   }
 
   mEndOfStream = true;
+<<<<<<< HEAD
   TRACK_LOG(
       LogLevel::Info,
       ("[VideoTrackEncoder %p]: NotifyEndOfStream(), currentTime=%" PRIu64,
        this, mCurrentTime));
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Info,
+    ("[VideoTrackEncoder %p]: NotifyEndOfStream(), currentTime=%" PRIu64,
+     this, mCurrentTime));
+=======
+  TRACK_LOG(LogLevel::Info,
+            ("[VideoTrackEncoder %p]: NotifyEndOfStream()", this));
+>>>>>>> upstream-releases
 
-  if (!mLastChunk.IsNull() && mLastChunk.mDuration > 0) {
+  if (!mLastChunk.IsNull()) {
     RefPtr<layers::Image> lastImage = mLastChunk.mFrame.GetImage();
+<<<<<<< HEAD
     TRACK_LOG(LogLevel::Debug,
               ("[VideoTrackEncoder]: Appending last video frame %p, "
                "duration=%.5f",
@@ -544,6 +883,41 @@ void VideoTrackEncoder::NotifyEndOfStream() {
         lastImage.forget(), mLastChunk.mDuration,
         mLastChunk.mFrame.GetIntrinsicSize(), PRINCIPAL_HANDLE_NONE,
         mLastChunk.mFrame.GetForceBlack(), mLastChunk.mTimeStamp);
+||||||| merged common ancestors
+    TRACK_LOG(LogLevel::Debug,
+              ("[VideoTrackEncoder]: Appending last video frame %p, "
+               "duration=%.5f", lastImage.get(),
+               FramesToTimeUnit(mLastChunk.mDuration, mTrackRate).ToSeconds()));
+    mOutgoingBuffer.AppendFrame(lastImage.forget(),
+                                mLastChunk.mDuration,
+                                mLastChunk.mFrame.GetIntrinsicSize(),
+                                PRINCIPAL_HANDLE_NONE,
+                                mLastChunk.mFrame.GetForceBlack(),
+                                mLastChunk.mTimeStamp);
+=======
+    const TimeStamp now = TimeStamp::Now();
+    TimeStamp currentTime = mSuspended ? mSuspendTime : mCurrentTime;
+    currentTime = mDriftCompensator->GetVideoTime(now, currentTime);
+    TimeDuration absoluteEndTime = currentTime - mStartTime;
+    CheckedInt64 duration =
+        UsecsToFrames(absoluteEndTime.ToMicroseconds(), mTrackRate) -
+        mEncodedTicks;
+    if (duration.isValid() && duration.value() > 0) {
+      mEncodedTicks += duration.value();
+      TRACK_LOG(LogLevel::Debug,
+                ("[VideoTrackEncoder %p]: Appending last video frame %p at pos "
+                 "%.3fs, "
+                 "track-end=%.3fs",
+                 this, lastImage.get(),
+                 (mLastChunk.mTimeStamp - mStartTime).ToSeconds(),
+                 absoluteEndTime.ToSeconds()));
+      mOutgoingBuffer.AppendFrame(
+          lastImage.forget(), mLastChunk.mFrame.GetIntrinsicSize(),
+          PRINCIPAL_HANDLE_NONE, mLastChunk.mFrame.GetForceBlack() || !mEnabled,
+          mLastChunk.mTimeStamp);
+      mOutgoingBuffer.ExtendLastFrameBy(duration.value());
+    }
+>>>>>>> upstream-releases
   }
 
   mIncomingBuffer.Clear();
@@ -554,16 +928,37 @@ void VideoTrackEncoder::NotifyEndOfStream() {
   }
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::SetStartOffset(StreamTime aStartOffset) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::SetStartOffset(StreamTime aStartOffset)
+{
+=======
+void VideoTrackEncoder::SetStartOffset(const TimeStamp& aStartOffset) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+<<<<<<< HEAD
   MOZ_ASSERT(mCurrentTime == 0);
   TRACK_LOG(LogLevel::Info,
             ("[VideoTrackEncoder %p]: SetStartOffset(), aStartOffset=%" PRIu64,
              this, aStartOffset));
   mIncomingBuffer.InsertNullDataAtStart(aStartOffset);
+||||||| merged common ancestors
+  MOZ_ASSERT(mCurrentTime == 0);
+  TRACK_LOG(LogLevel::Info,
+    ("[VideoTrackEncoder %p]: SetStartOffset(), aStartOffset=%" PRIu64,
+     this, aStartOffset));
+  mIncomingBuffer.InsertNullDataAtStart(aStartOffset);
+=======
+  MOZ_ASSERT(mCurrentTime.IsNull());
+  TRACK_LOG(LogLevel::Info, ("[VideoTrackEncoder %p]: SetStartOffset()", this));
+  mStartTime = aStartOffset;
+>>>>>>> upstream-releases
   mCurrentTime = aStartOffset;
 }
 
+<<<<<<< HEAD
 void VideoTrackEncoder::AdvanceBlockedInput(StreamTime aDuration) {
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
   TRACK_LOG(
@@ -579,9 +974,33 @@ void VideoTrackEncoder::AdvanceBlockedInput(StreamTime aDuration) {
 }
 
 void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
+||||||| merged common ancestors
+void
+VideoTrackEncoder::AdvanceBlockedInput(StreamTime aDuration)
+{
+  MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  TRACK_LOG(LogLevel::Verbose,
+    ("[VideoTrackEncoder %p]: AdvanceBlockedInput(), aDuration=%" PRIu64,
+     this, aDuration));
+
+  // We call Init here so it can account for aDuration towards the Init timeout
+  Init(mOutgoingBuffer, aDuration);
+
+  mIncomingBuffer.InsertNullDataAtStart(aDuration);
+  mCurrentTime += aDuration;
+}
+
+void
+VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration)
+{
+=======
+void VideoTrackEncoder::AdvanceCurrentTime(const TimeStamp& aTime) {
+>>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("VideoTrackEncoder::AdvanceCurrentTime", OTHER);
 
   MOZ_ASSERT(!mWorkerThread || mWorkerThread->IsCurrentThreadIn());
+  MOZ_ASSERT(!mStartTime.IsNull());
+  MOZ_ASSERT(!mCurrentTime.IsNull());
 
   if (mCanceled) {
     return;
@@ -591,19 +1010,39 @@ void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
     return;
   }
 
+<<<<<<< HEAD
   TRACK_LOG(LogLevel::Verbose,
             ("[VideoTrackEncoder %p]: AdvanceCurrentTime() %" PRIu64, this,
              aDuration));
 
   StreamTime currentTime = mCurrentTime + aDuration;
 
+||||||| merged common ancestors
+  TRACK_LOG(LogLevel::Verbose,
+    ("[VideoTrackEncoder %p]: AdvanceCurrentTime() %" PRIu64,
+     this, aDuration));
+
+  StreamTime currentTime = mCurrentTime + aDuration;
+
+=======
+>>>>>>> upstream-releases
   if (mSuspended) {
-    mCurrentTime = currentTime;
-    mIncomingBuffer.ForgetUpTo(mCurrentTime);
+    TRACK_LOG(
+        LogLevel::Verbose,
+        ("[VideoTrackEncoder %p]: AdvanceCurrentTime() suspended at %.3fs",
+         this, (mCurrentTime - mStartTime).ToSeconds()));
+    mCurrentTime = aTime;
+    mIncomingBuffer.ForgetUpToTime(mCurrentTime);
     return;
   }
 
+  TRACK_LOG(LogLevel::Verbose,
+            ("[VideoTrackEncoder %p]: AdvanceCurrentTime() to %.3fs", this,
+             (aTime - mStartTime).ToSeconds()));
+
+  // Grab frames within the currentTime range from the incoming buffer.
   VideoSegment tempSegment;
+<<<<<<< HEAD
   if (currentTime <= mIncomingBuffer.GetDuration()) {
     tempSegment.AppendSlice(mIncomingBuffer, mCurrentTime, currentTime);
   } else {
@@ -615,19 +1054,80 @@ void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
          "In incoming=%" PRIu64 ", aDuration=%" PRIu64 ", currentTime=%" PRIu64,
          this, mIncomingBuffer.GetDuration(), aDuration, currentTime));
     OnError();
+||||||| merged common ancestors
+  if (currentTime <= mIncomingBuffer.GetDuration()) {
+    tempSegment.AppendSlice(mIncomingBuffer, mCurrentTime, currentTime);
+  } else {
+    NS_ASSERTION(false, "VideoTrackEncoder::AdvanceCurrentTime Not enough data");
+    TRACK_LOG(LogLevel::Error,
+      ("[VideoTrackEncoder %p]: AdvanceCurrentTime() Not enough data. "
+       "In incoming=%" PRIu64 ", aDuration=%" PRIu64 ", currentTime=%" PRIu64,
+       this, mIncomingBuffer.GetDuration(), aDuration, currentTime));
+    OnError();
+=======
+  {
+    VideoChunk* previousChunk = &mLastChunk;
+    auto appendDupes = [&](const TimeStamp& aUpTo) {
+      while ((aUpTo - previousChunk->mTimeStamp).ToSeconds() > 1.0) {
+        // We encode at least one frame per second, even if there are none
+        // flowing.
+        previousChunk->mTimeStamp += TimeDuration::FromSeconds(1.0);
+        tempSegment.AppendFrame(
+            do_AddRef(previousChunk->mFrame.GetImage()),
+            previousChunk->mFrame.GetIntrinsicSize(),
+            previousChunk->mFrame.GetPrincipalHandle(),
+            previousChunk->mFrame.GetForceBlack() || !mEnabled,
+            previousChunk->mTimeStamp);
+        TRACK_LOG(
+            LogLevel::Verbose,
+            ("[VideoTrackEncoder %p]: Duplicating video frame (%p) at pos %.3f",
+             this, previousChunk->mFrame.GetImage(),
+             (previousChunk->mTimeStamp - mStartTime).ToSeconds()));
+      }
+    };
+    for (VideoSegment::ChunkIterator iter(mIncomingBuffer); !iter.IsEnded();
+         iter.Next()) {
+      MOZ_ASSERT(!iter->IsNull());
+      if (!previousChunk->IsNull() &&
+          iter->mTimeStamp <= previousChunk->mTimeStamp) {
+        // This frame starts earlier than previousChunk. Skip.
+        continue;
+      }
+      if (iter->mTimeStamp >= aTime) {
+        // This frame starts in the future. Stop.
+        break;
+      }
+      if (!previousChunk->IsNull()) {
+        appendDupes(iter->mTimeStamp);
+      }
+      tempSegment.AppendFrame(
+          do_AddRef(iter->mFrame.GetImage()), iter->mFrame.GetIntrinsicSize(),
+          iter->mFrame.GetPrincipalHandle(),
+          iter->mFrame.GetForceBlack() || !mEnabled, iter->mTimeStamp);
+      TRACK_LOG(LogLevel::Verbose,
+                ("[VideoTrackEncoder %p]: Taking video frame (%p) at pos %.3f",
+                 this, iter->mFrame.GetImage(),
+                 (iter->mTimeStamp - mStartTime).ToSeconds()));
+      previousChunk = &*iter;
+    }
+    if (!previousChunk->IsNull()) {
+      appendDupes(aTime);
+    }
+>>>>>>> upstream-releases
   }
+  mCurrentTime = aTime;
+  mIncomingBuffer.ForgetUpToTime(mCurrentTime);
 
-  mCurrentTime = currentTime;
-  mIncomingBuffer.ForgetUpTo(mCurrentTime);
-
+  // Convert tempSegment timestamps to durations and add chunks with known
+  // duration to mOutgoingBuffer.
+  const TimeStamp now = TimeStamp::Now();
   bool chunkAppended = false;
-
-  // Convert tempSegment timestamps to durations and add it to mOutgoingBuffer.
-  VideoSegment::ConstChunkIterator iter(tempSegment);
-  for (; !iter.IsEnded(); iter.Next()) {
+  for (VideoSegment::ConstChunkIterator iter(tempSegment); !iter.IsEnded();
+       iter.Next()) {
     VideoChunk chunk = *iter;
 
     if (mLastChunk.mTimeStamp.IsNull()) {
+<<<<<<< HEAD
       if (chunk.IsNull()) {
         // The start of this track is frameless. We need to track the time
         // it takes to get the first frame.
@@ -656,9 +1156,54 @@ void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
 
       mLastChunk.mTimeStamp -= diff.ToTimeDuration();
       mLastChunk.mDuration += nullDuration;
+||||||| merged common ancestors
+      if (chunk.IsNull()) {
+        // The start of this track is frameless. We need to track the time
+        // it takes to get the first frame.
+        mLastChunk.mDuration += chunk.mDuration;
+        continue;
+      }
+
+      // This is the first real chunk in the track. Use its timestamp as the
+      // starting point for this track.
+      MOZ_ASSERT(!chunk.mTimeStamp.IsNull());
+      const StreamTime nullDuration = mLastChunk.mDuration;
+      mLastChunk = chunk;
+      chunk.mDuration = 0;
+
+      TRACK_LOG(LogLevel::Verbose,
+                ("[VideoTrackEncoder]: Got first video chunk after %" PRId64 " ticks.",
+                 nullDuration));
+      // Adapt to the time before the first frame. This extends the first frame
+      // from [start, end] to [0, end], but it'll do for now.
+      auto diff = FramesToTimeUnit(nullDuration, mTrackRate);
+      if (!diff.IsValid()) {
+        NS_ERROR("null duration overflow");
+        return;
+      }
+
+      mLastChunk.mTimeStamp -= diff.ToTimeDuration();
+      mLastChunk.mDuration += nullDuration;
+=======
+      // This is the first real chunk in the track. Make it start at the
+      // beginning of the track.
+      MOZ_ASSERT(!iter->mTimeStamp.IsNull());
+
+      TRACK_LOG(
+          LogLevel::Verbose,
+          ("[VideoTrackEncoder %p]: Got the first video frame (%p) at pos %.3f "
+           "(moving it to beginning)",
+           this, iter->mFrame.GetImage(),
+           (iter->mTimeStamp - mStartTime).ToSeconds()));
+
+      mLastChunk = *iter;
+      mLastChunk.mTimeStamp = mStartTime;
+      continue;
+>>>>>>> upstream-releases
     }
 
     MOZ_ASSERT(!mLastChunk.IsNull());
+<<<<<<< HEAD
     if (mLastChunk.CanCombineWithFollowing(chunk) || chunk.IsNull()) {
       TRACK_LOG(LogLevel::Verbose,
                 ("[VideoTrackEncoder]: Got dupe or null chunk."));
@@ -690,25 +1235,75 @@ void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
         chunk.mFrame = mLastChunk.mFrame;
       }
     }
+||||||| merged common ancestors
+    if (mLastChunk.CanCombineWithFollowing(chunk) || chunk.IsNull()) {
+      TRACK_LOG(LogLevel::Verbose,
+                ("[VideoTrackEncoder]: Got dupe or null chunk."));
+      // This is the same frame as before (or null). We extend the last chunk
+      // with its duration.
+      mLastChunk.mDuration += chunk.mDuration;
 
-    if (mStartTime.IsNull()) {
-      mStartTime = mLastChunk.mTimeStamp;
+      if (mLastChunk.mDuration < mTrackRate) {
+        TRACK_LOG(LogLevel::Verbose,
+                  ("[VideoTrackEncoder]: Ignoring dupe/null chunk of duration %" PRId64,
+                   chunk.mDuration));
+        continue;
+      }
+
+      TRACK_LOG(LogLevel::Verbose,
+                ("[VideoTrackEncoder]: Chunk >1 second. duration=%" PRId64 ", "
+                 "trackRate=%" PRId32, mLastChunk.mDuration, mTrackRate));
+
+      // If we have gotten dupes for over a second, we force send one
+      // to the encoder to make sure there is some output.
+      chunk.mTimeStamp = mLastChunk.mTimeStamp + TimeDuration::FromSeconds(1);
+      chunk.mDuration = mLastChunk.mDuration - mTrackRate;
+      mLastChunk.mDuration = mTrackRate;
+
+      if (chunk.IsNull()) {
+        // Ensure that we don't pass null to the encoder by making mLastChunk
+        // null later on.
+        chunk.mFrame = mLastChunk.mFrame;
+      }
     }
+=======
+    MOZ_ASSERT(!chunk.IsNull());
+>>>>>>> upstream-releases
 
-    TimeDuration relativeTime = chunk.mTimeStamp - mStartTime;
-    RefPtr<layers::Image> lastImage = mLastChunk.mFrame.GetImage();
+    TimeDuration absoluteEndTime =
+        mDriftCompensator->GetVideoTime(now, chunk.mTimeStamp) - mStartTime;
     TRACK_LOG(LogLevel::Verbose,
+<<<<<<< HEAD
               ("[VideoTrackEncoder]: Appending video frame %p, at pos %.5fs",
                lastImage.get(), relativeTime.ToSeconds()));
     CheckedInt64 duration =
         UsecsToFrames(relativeTime.ToMicroseconds(), mTrackRate) -
         mEncodedTicks;
+||||||| merged common ancestors
+              ("[VideoTrackEncoder]: Appending video frame %p, at pos %.5fs",
+               lastImage.get(), relativeTime.ToSeconds()));
+    CheckedInt64 duration = UsecsToFrames(relativeTime.ToMicroseconds(),
+                                          mTrackRate)
+                            - mEncodedTicks;
+=======
+              ("[VideoTrackEncoder %p]: Appending video frame %p, at pos %.3fs "
+               "until %.3fs",
+               this, mLastChunk.mFrame.GetImage(),
+               (mDriftCompensator->GetVideoTime(now, mLastChunk.mTimeStamp) -
+                mStartTime)
+                   .ToSeconds(),
+               absoluteEndTime.ToSeconds()));
+    CheckedInt64 duration =
+        UsecsToFrames(absoluteEndTime.ToMicroseconds(), mTrackRate) -
+        mEncodedTicks;
+>>>>>>> upstream-releases
     if (!duration.isValid()) {
       NS_ERROR("Duration overflow");
       return;
     }
 
     if (duration.value() <= 0) {
+<<<<<<< HEAD
       // The timestamp for mLastChunk is newer than for chunk.
       // This means the durations reported from MediaStreamGraph for
       // mLastChunk were larger than the timestamp diff - and durations were
@@ -725,13 +1320,56 @@ void VideoTrackEncoder::AdvanceCurrentTime(StreamTime aDuration) {
           mLastChunk.mFrame.GetIntrinsicSize(), PRINCIPAL_HANDLE_NONE,
           mLastChunk.mFrame.GetForceBlack(), mLastChunk.mTimeStamp);
       chunkAppended = true;
+||||||| merged common ancestors
+      // The timestamp for mLastChunk is newer than for chunk.
+      // This means the durations reported from MediaStreamGraph for
+      // mLastChunk were larger than the timestamp diff - and durations were
+      // used to trigger the 1-second frame above. This could happen due to
+      // drift or underruns in the graph.
+      TRACK_LOG(LogLevel::Warning,
+                ("[VideoTrackEncoder]: Underrun detected. Diff=%" PRId64,
+                 duration.value()));
+      chunk.mTimeStamp = mLastChunk.mTimeStamp;
+    } else {
+      mEncodedTicks += duration.value();
+      mOutgoingBuffer.AppendFrame(lastImage.forget(),
+                                  duration.value(),
+                                  mLastChunk.mFrame.GetIntrinsicSize(),
+                                  PRINCIPAL_HANDLE_NONE,
+                                  mLastChunk.mFrame.GetForceBlack(),
+                                  mLastChunk.mTimeStamp);
+      chunkAppended = true;
+=======
+      // A frame either started before the last frame (can happen when
+      // multiple frames are added before SetStartOffset), or
+      // two frames were so close together that they ended up at the same
+      // position. We handle both cases by ignoring the previous frame.
+
+      TRACK_LOG(LogLevel::Verbose,
+                ("[VideoTrackEncoder %p]: Duration from frame %p to frame %p "
+                 "is %" PRId64 ". Ignoring %p",
+                 this, mLastChunk.mFrame.GetImage(), iter->mFrame.GetImage(),
+                 duration.value(), mLastChunk.mFrame.GetImage()));
+
+      TimeStamp t = mLastChunk.mTimeStamp;
+      mLastChunk = *iter;
+      mLastChunk.mTimeStamp = t;
+      continue;
+>>>>>>> upstream-releases
     }
 
+    mEncodedTicks += duration.value();
+    mOutgoingBuffer.AppendFrame(
+        do_AddRef(mLastChunk.mFrame.GetImage()),
+        mLastChunk.mFrame.GetIntrinsicSize(), PRINCIPAL_HANDLE_NONE,
+        mLastChunk.mFrame.GetForceBlack() || !mEnabled, mLastChunk.mTimeStamp);
+    mOutgoingBuffer.ExtendLastFrameBy(duration.value());
+    chunkAppended = true;
     mLastChunk = chunk;
   }
 
   if (chunkAppended) {
-    Init(mOutgoingBuffer, aDuration);
+    Init(mOutgoingBuffer, mCurrentTime);
     if (mInitialized) {
       OnDataAvailable();
     }

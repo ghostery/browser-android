@@ -196,7 +196,13 @@ root{
     CurrencyUnitPatterns{
         other{"{0} {1}"}
     }
+<<<<<<< HEAD
     Version{"2.1.44.91"}
+||||||| merged common ancestors
+    Version{"2.1.41.58"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
     currencySpacing{
         afterCurrency{
             currencyMatch{"[:^S:]"}

@@ -5,7 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "D3DMessageUtils.h"
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include "gfxWindowsPlatform.h"
+||||||| merged common ancestors
+# include "gfxWindowsPlatform.h"
+=======
+#  include "gfxWindowsPlatform.h"
+>>>>>>> upstream-releases
 #endif
 
 bool DxgiAdapterDesc::operator==(const DxgiAdapterDesc& aOther) const {

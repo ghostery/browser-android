@@ -18,11 +18,19 @@
 #include "nsToolkitCompsCID.h"
 
 #ifdef MOZ_PLACES
+<<<<<<< HEAD
 #include "nsIFaviconService.h"
 #endif  // MOZ_PLACES
+||||||| merged common ancestors
+#include "nsIFaviconService.h"
+#endif // MOZ_PLACES
+=======
+#  include "nsIFaviconService.h"
+#endif  // MOZ_PLACES
+>>>>>>> upstream-releases
 
 #ifdef XP_WIN
-#include <shellapi.h>
+#  include <shellapi.h>
 #endif
 
 using namespace mozilla;

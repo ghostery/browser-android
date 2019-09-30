@@ -6,20 +6,20 @@
 
 #include "Link.h"
 
+#include "mozilla/Components.h"
 #include "mozilla/EventStates.h"
 #include "mozilla/MemoryReporting.h"
 #include "mozilla/dom/Element.h"
 #if defined(MOZ_PLACES)
-#include "mozilla/places/History.h"
+#  include "mozilla/places/History.h"
 #else
-#include "mozilla/IHistory.h"
+#  include "mozilla/IHistory.h"
 #endif
 #include "nsIURL.h"
 #include "nsIURIMutator.h"
 #include "nsISizeOf.h"
 #include "nsIDocShell.h"
 #include "nsIPrefetchService.h"
-#include "nsCPrefetchService.h"
 #include "nsStyleLinkElement.h"
 
 #include "nsEscape.h"
@@ -39,6 +39,7 @@ namespace dom {
 using places::History;
 #endif
 
+<<<<<<< HEAD
 Link::Link(Element *aElement)
     : mElement(aElement),
       mLinkState(eLinkState_NotLink),
@@ -47,6 +48,26 @@ Link::Link(Element *aElement)
       mHasPendingLinkUpdate(false),
       mInDNSPrefetch(false),
       mHistory(true) {
+||||||| merged common ancestors
+Link::Link(Element *aElement)
+  : mElement(aElement)
+  , mLinkState(eLinkState_NotLink)
+  , mNeedsRegistration(false)
+  , mRegistered(false)
+  , mHasPendingLinkUpdate(false)
+  , mInDNSPrefetch(false)
+  , mHistory(true)
+{
+=======
+Link::Link(Element* aElement)
+    : mElement(aElement),
+      mLinkState(eLinkState_NotLink),
+      mNeedsRegistration(false),
+      mRegistered(false),
+      mHasPendingLinkUpdate(false),
+      mInDNSPrefetch(false),
+      mHistory(true) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mElement, "Must have an element");
 }
 
@@ -95,10 +116,24 @@ void Link::CancelDNSPrefetch(nsWrapperCache::FlagsType aDeferredFlag,
   }
 }
 
+<<<<<<< HEAD
 void Link::GetContentPolicyMimeTypeMedia(nsAttrValue &aAsAttr,
                                          nsContentPolicyType &aPolicyType,
                                          nsString &aMimeType,
                                          nsAString &aMedia) {
+||||||| merged common ancestors
+void
+Link::GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
+                                    nsContentPolicyType& aPolicyType,
+                                    nsString& aMimeType,
+                                    nsAString& aMedia)
+{
+=======
+void Link::GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
+                                         nsContentPolicyType& aPolicyType,
+                                         nsString& aMimeType,
+                                         nsAString& aMedia) {
+>>>>>>> upstream-releases
   nsAutoString as;
   mElement->GetAttr(kNameSpaceID_None, nsGkAtoms::as, as);
   Link::ParseAsValue(as, aAsAttr);
@@ -132,9 +167,18 @@ void Link::TryDNSPrefetchOrPreconnectOrPrefetchOrPreloadOrPrerender() {
 
   if ((linkTypes & nsStyleLinkElement::ePREFETCH) ||
       (linkTypes & nsStyleLinkElement::eNEXT) ||
+<<<<<<< HEAD
       (linkTypes & nsStyleLinkElement::ePRELOAD)) {
     nsCOMPtr<nsIPrefetchService> prefetchService(
         do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+||||||| merged common ancestors
+      (linkTypes & nsStyleLinkElement::ePRELOAD)){
+    nsCOMPtr<nsIPrefetchService> prefetchService(do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+=======
+      (linkTypes & nsStyleLinkElement::ePRELOAD)) {
+    nsCOMPtr<nsIPrefetchService> prefetchService(
+        components::Prefetch::Service());
+>>>>>>> upstream-releases
     if (prefetchService) {
       nsCOMPtr<nsIURI> uri(GetURI());
       if (uri) {
@@ -185,8 +229,18 @@ void Link::TryDNSPrefetchOrPreconnectOrPrefetchOrPreloadOrPrerender() {
   }
 }
 
+<<<<<<< HEAD
 void Link::UpdatePreload(nsAtom *aName, const nsAttrValue *aValue,
                          const nsAttrValue *aOldValue) {
+||||||| merged common ancestors
+void
+Link::UpdatePreload(nsAtom* aName, const nsAttrValue* aValue,
+                    const nsAttrValue* aOldValue)
+{
+=======
+void Link::UpdatePreload(nsAtom* aName, const nsAttrValue* aValue,
+                         const nsAttrValue* aOldValue) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mElement->IsInComposedDoc());
 
   if (!ElementHasHref()) {
@@ -209,8 +263,14 @@ void Link::UpdatePreload(nsAtom *aName, const nsAttrValue *aValue,
     return;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPrefetchService> prefetchService(
       do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+||||||| merged common ancestors
+  nsCOMPtr<nsIPrefetchService> prefetchService(do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+=======
+  nsCOMPtr<nsIPrefetchService> prefetchService(components::Prefetch::Service());
+>>>>>>> upstream-releases
   if (!prefetchService) {
     return;
   }
@@ -309,9 +369,19 @@ void Link::UpdatePreload(nsAtom *aName, const nsAttrValue *aValue,
   }
 }
 
+<<<<<<< HEAD
 void Link::CancelPrefetchOrPreload() {
   nsCOMPtr<nsIPrefetchService> prefetchService(
       do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+||||||| merged common ancestors
+void
+Link::CancelPrefetchOrPreload()
+{
+  nsCOMPtr<nsIPrefetchService> prefetchService(do_GetService(NS_PREFETCHSERVICE_CONTRACTID));
+=======
+void Link::CancelPrefetchOrPreload() {
+  nsCOMPtr<nsIPrefetchService> prefetchService(components::Prefetch::Service());
+>>>>>>> upstream-releases
   if (prefetchService) {
     nsCOMPtr<nsIURI> uri(GetURI());
     if (uri) {
@@ -342,9 +412,9 @@ void Link::SetLinkState(nsLinkState aState) {
 EventStates Link::LinkState() const {
   // We are a constant method, but we are just lazily doing things and have to
   // track that state.  Cast away that constness!
-  Link *self = const_cast<Link *>(this);
+  Link* self = const_cast<Link*>(this);
 
-  Element *element = self->mElement;
+  Element* element = self->mElement;
 
   // If we have not yet registered for notifications and need to,
   // due to our href changing, register now!
@@ -392,21 +462,37 @@ EventStates Link::LinkState() const {
   return EventStates();
 }
 
+<<<<<<< HEAD
 nsIURI *Link::GetURI() const {
+||||||| merged common ancestors
+nsIURI*
+Link::GetURI() const
+{
+=======
+nsIURI* Link::GetURI() const {
+>>>>>>> upstream-releases
   // If we have this URI cached, use it.
   if (mCachedURI) {
     return mCachedURI;
   }
 
   // Otherwise obtain it.
-  Link *self = const_cast<Link *>(this);
-  Element *element = self->mElement;
+  Link* self = const_cast<Link*>(this);
+  Element* element = self->mElement;
   mCachedURI = element->GetHrefURI();
 
   return mCachedURI;
 }
 
+<<<<<<< HEAD
 void Link::SetProtocol(const nsAString &aProtocol) {
+||||||| merged common ancestors
+void
+Link::SetProtocol(const nsAString &aProtocol)
+{
+=======
+void Link::SetProtocol(const nsAString& aProtocol) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -428,7 +514,15 @@ void Link::SetProtocol(const nsAString &aProtocol) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetPassword(const nsAString &aPassword) {
+||||||| merged common ancestors
+void
+Link::SetPassword(const nsAString &aPassword)
+{
+=======
+void Link::SetPassword(const nsAString& aPassword) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -443,7 +537,15 @@ void Link::SetPassword(const nsAString &aPassword) {
   }
 }
 
+<<<<<<< HEAD
 void Link::SetUsername(const nsAString &aUsername) {
+||||||| merged common ancestors
+void
+Link::SetUsername(const nsAString &aUsername)
+{
+=======
+void Link::SetUsername(const nsAString& aUsername) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -458,7 +560,15 @@ void Link::SetUsername(const nsAString &aUsername) {
   }
 }
 
+<<<<<<< HEAD
 void Link::SetHost(const nsAString &aHost) {
+||||||| merged common ancestors
+void
+Link::SetHost(const nsAString &aHost)
+{
+=======
+void Link::SetHost(const nsAString& aHost) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -473,7 +583,15 @@ void Link::SetHost(const nsAString &aHost) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetHostname(const nsAString &aHostname) {
+||||||| merged common ancestors
+void
+Link::SetHostname(const nsAString &aHostname)
+{
+=======
+void Link::SetHostname(const nsAString& aHostname) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -488,7 +606,15 @@ void Link::SetHostname(const nsAString &aHostname) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetPathname(const nsAString &aPathname) {
+||||||| merged common ancestors
+void
+Link::SetPathname(const nsAString &aPathname)
+{
+=======
+void Link::SetPathname(const nsAString& aPathname) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   nsCOMPtr<nsIURL> url(do_QueryInterface(uri));
   if (!url) {
@@ -505,7 +631,15 @@ void Link::SetPathname(const nsAString &aPathname) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetSearch(const nsAString &aSearch) {
+||||||| merged common ancestors
+void
+Link::SetSearch(const nsAString& aSearch)
+{
+=======
+void Link::SetSearch(const nsAString& aSearch) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   nsCOMPtr<nsIURL> url(do_QueryInterface(uri));
   if (!url) {
@@ -524,7 +658,15 @@ void Link::SetSearch(const nsAString &aSearch) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetPort(const nsAString &aPort) {
+||||||| merged common ancestors
+void
+Link::SetPort(const nsAString &aPort)
+{
+=======
+void Link::SetPort(const nsAString& aPort) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -550,7 +692,15 @@ void Link::SetPort(const nsAString &aPort) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::SetHash(const nsAString &aHash) {
+||||||| merged common ancestors
+void
+Link::SetHash(const nsAString &aHash)
+{
+=======
+void Link::SetHash(const nsAString& aHash) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     // Ignore failures to be compatible with NS4.
@@ -566,7 +716,15 @@ void Link::SetHash(const nsAString &aHash) {
   SetHrefAttribute(uri);
 }
 
+<<<<<<< HEAD
 void Link::GetOrigin(nsAString &aOrigin) {
+||||||| merged common ancestors
+void
+Link::GetOrigin(nsAString &aOrigin)
+{
+=======
+void Link::GetOrigin(nsAString& aOrigin) {
+>>>>>>> upstream-releases
   aOrigin.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -579,7 +737,15 @@ void Link::GetOrigin(nsAString &aOrigin) {
   aOrigin.Assign(origin);
 }
 
+<<<<<<< HEAD
 void Link::GetProtocol(nsAString &_protocol) {
+||||||| merged common ancestors
+void
+Link::GetProtocol(nsAString &_protocol)
+{
+=======
+void Link::GetProtocol(nsAString& _protocol) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri(GetURI());
   if (!uri) {
     _protocol.AssignLiteral("http");
@@ -591,7 +757,15 @@ void Link::GetProtocol(nsAString &_protocol) {
   _protocol.Append(char16_t(':'));
 }
 
+<<<<<<< HEAD
 void Link::GetUsername(nsAString &aUsername) {
+||||||| merged common ancestors
+void
+Link::GetUsername(nsAString& aUsername)
+{
+=======
+void Link::GetUsername(nsAString& aUsername) {
+>>>>>>> upstream-releases
   aUsername.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -604,7 +778,15 @@ void Link::GetUsername(nsAString &aUsername) {
   CopyASCIItoUTF16(username, aUsername);
 }
 
+<<<<<<< HEAD
 void Link::GetPassword(nsAString &aPassword) {
+||||||| merged common ancestors
+void
+Link::GetPassword(nsAString &aPassword)
+{
+=======
+void Link::GetPassword(nsAString& aPassword) {
+>>>>>>> upstream-releases
   aPassword.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -617,7 +799,15 @@ void Link::GetPassword(nsAString &aPassword) {
   CopyASCIItoUTF16(password, aPassword);
 }
 
+<<<<<<< HEAD
 void Link::GetHost(nsAString &_host) {
+||||||| merged common ancestors
+void
+Link::GetHost(nsAString &_host)
+{
+=======
+void Link::GetHost(nsAString& _host) {
+>>>>>>> upstream-releases
   _host.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -633,7 +823,15 @@ void Link::GetHost(nsAString &_host) {
   }
 }
 
+<<<<<<< HEAD
 void Link::GetHostname(nsAString &_hostname) {
+||||||| merged common ancestors
+void
+Link::GetHostname(nsAString &_hostname)
+{
+=======
+void Link::GetHostname(nsAString& _hostname) {
+>>>>>>> upstream-releases
   _hostname.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -645,7 +843,15 @@ void Link::GetHostname(nsAString &_hostname) {
   nsContentUtils::GetHostOrIPv6WithBrackets(uri, _hostname);
 }
 
+<<<<<<< HEAD
 void Link::GetPathname(nsAString &_pathname) {
+||||||| merged common ancestors
+void
+Link::GetPathname(nsAString &_pathname)
+{
+=======
+void Link::GetPathname(nsAString& _pathname) {
+>>>>>>> upstream-releases
   _pathname.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -663,7 +869,15 @@ void Link::GetPathname(nsAString &_pathname) {
   }
 }
 
+<<<<<<< HEAD
 void Link::GetSearch(nsAString &_search) {
+||||||| merged common ancestors
+void
+Link::GetSearch(nsAString &_search)
+{
+=======
+void Link::GetSearch(nsAString& _search) {
+>>>>>>> upstream-releases
   _search.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -682,7 +896,15 @@ void Link::GetSearch(nsAString &_search) {
   }
 }
 
+<<<<<<< HEAD
 void Link::GetPort(nsAString &_port) {
+||||||| merged common ancestors
+void
+Link::GetPort(nsAString &_port)
+{
+=======
+void Link::GetPort(nsAString& _port) {
+>>>>>>> upstream-releases
   _port.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -702,7 +924,15 @@ void Link::GetPort(nsAString &_port) {
   }
 }
 
+<<<<<<< HEAD
 void Link::GetHash(nsAString &_hash) {
+||||||| merged common ancestors
+void
+Link::GetHash(nsAString &_hash)
+{
+=======
+void Link::GetHash(nsAString& _hash) {
+>>>>>>> upstream-releases
   _hash.Truncate();
 
   nsCOMPtr<nsIURI> uri(GetURI());
@@ -734,7 +964,7 @@ void Link::ResetLinkState(bool aNotify, bool aHasHref) {
   // currently registered; in either case, we should remove ourself
   // from the doc and the history.
   if (!mNeedsRegistration && mLinkState != eLinkState_NotLink) {
-    nsIDocument *doc = mElement->GetComposedDoc();
+    Document* doc = mElement->GetComposedDoc();
     if (doc && (mRegistered || mLinkState == eLinkState_Visited)) {
       // Tell the document to forget about this link if we've registered
       // with it before.
@@ -797,7 +1027,15 @@ void Link::UnregisterFromHistory() {
   }
 }
 
+<<<<<<< HEAD
 void Link::SetHrefAttribute(nsIURI *aURI) {
+||||||| merged common ancestors
+void
+Link::SetHrefAttribute(nsIURI *aURI)
+{
+=======
+void Link::SetHrefAttribute(nsIURI* aURI) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aURI, "Null URI is illegal!");
 
   // if we change this code to not reserialize we need to do something smarter
@@ -809,7 +1047,15 @@ void Link::SetHrefAttribute(nsIURI *aURI) {
                           NS_ConvertUTF8toUTF16(href), true);
 }
 
+<<<<<<< HEAD
 size_t Link::SizeOfExcludingThis(mozilla::SizeOfState &aState) const {
+||||||| merged common ancestors
+size_t
+Link::SizeOfExcludingThis(mozilla::SizeOfState& aState) const
+{
+=======
+size_t Link::SizeOfExcludingThis(mozilla::SizeOfState& aState) const {
+>>>>>>> upstream-releases
   size_t n = 0;
 
   if (mCachedURI) {
@@ -826,6 +1072,7 @@ size_t Link::SizeOfExcludingThis(mozilla::SizeOfState &aState) const {
 }
 
 static const nsAttrValue::EnumTable kAsAttributeTable[] = {
+<<<<<<< HEAD
     {"", DESTINATION_INVALID},      {"audio", DESTINATION_AUDIO},
     {"font", DESTINATION_FONT},     {"image", DESTINATION_IMAGE},
     {"script", DESTINATION_SCRIPT}, {"style", DESTINATION_STYLE},
@@ -834,6 +1081,34 @@ static const nsAttrValue::EnumTable kAsAttributeTable[] = {
 
 /* static */ void Link::ParseAsValue(const nsAString &aValue,
                                      nsAttrValue &aResult) {
+||||||| merged common ancestors
+  { "",              DESTINATION_INVALID       },
+  { "audio",         DESTINATION_AUDIO         },
+  { "font",          DESTINATION_FONT          },
+  { "image",         DESTINATION_IMAGE         },
+  { "script",        DESTINATION_SCRIPT        },
+  { "style",         DESTINATION_STYLE         },
+  { "track",         DESTINATION_TRACK         },
+  { "video",         DESTINATION_VIDEO         },
+  { "fetch",         DESTINATION_FETCH         },
+  { nullptr,         0 }
+};
+
+
+/* static */ void
+Link::ParseAsValue(const nsAString& aValue,
+                   nsAttrValue& aResult)
+{
+=======
+    {"", DESTINATION_INVALID},      {"audio", DESTINATION_AUDIO},
+    {"font", DESTINATION_FONT},     {"image", DESTINATION_IMAGE},
+    {"script", DESTINATION_SCRIPT}, {"style", DESTINATION_STYLE},
+    {"track", DESTINATION_TRACK},   {"video", DESTINATION_VIDEO},
+    {"fetch", DESTINATION_FETCH},   {nullptr, 0}};
+
+/* static */
+void Link::ParseAsValue(const nsAString& aValue, nsAttrValue& aResult) {
+>>>>>>> upstream-releases
   DebugOnly<bool> success =
       aResult.ParseEnumValue(aValue, kAsAttributeTable, false,
                              // default value is a empty string
@@ -843,6 +1118,7 @@ static const nsAttrValue::EnumTable kAsAttributeTable[] = {
   MOZ_ASSERT(success);
 }
 
+<<<<<<< HEAD
 /* static */ nsContentPolicyType Link::AsValueToContentPolicy(
     const nsAttrValue &aValue) {
   switch (aValue.GetEnumValue()) {
@@ -864,6 +1140,52 @@ static const nsAttrValue::EnumTable kAsAttributeTable[] = {
       return nsIContentPolicy::TYPE_STYLESHEET;
     case DESTINATION_FETCH:
       return nsIContentPolicy::TYPE_OTHER;
+||||||| merged common ancestors
+/* static */ nsContentPolicyType
+Link::AsValueToContentPolicy(const nsAttrValue& aValue)
+{
+  switch(aValue.GetEnumValue()) {
+  case DESTINATION_INVALID:
+    return nsIContentPolicy::TYPE_INVALID;
+  case DESTINATION_AUDIO:
+    return nsIContentPolicy::TYPE_INTERNAL_AUDIO;
+  case DESTINATION_TRACK:
+    return nsIContentPolicy::TYPE_INTERNAL_TRACK;
+  case DESTINATION_VIDEO:
+    return nsIContentPolicy::TYPE_INTERNAL_VIDEO;
+  case DESTINATION_FONT:
+    return nsIContentPolicy::TYPE_FONT;
+  case DESTINATION_IMAGE:
+    return nsIContentPolicy::TYPE_IMAGE;
+  case DESTINATION_SCRIPT:
+    return nsIContentPolicy::TYPE_SCRIPT;
+  case DESTINATION_STYLE:
+    return nsIContentPolicy::TYPE_STYLESHEET;
+  case DESTINATION_FETCH:
+    return nsIContentPolicy::TYPE_OTHER;
+=======
+/* static */
+nsContentPolicyType Link::AsValueToContentPolicy(const nsAttrValue& aValue) {
+  switch (aValue.GetEnumValue()) {
+    case DESTINATION_INVALID:
+      return nsIContentPolicy::TYPE_INVALID;
+    case DESTINATION_AUDIO:
+      return nsIContentPolicy::TYPE_INTERNAL_AUDIO;
+    case DESTINATION_TRACK:
+      return nsIContentPolicy::TYPE_INTERNAL_TRACK;
+    case DESTINATION_VIDEO:
+      return nsIContentPolicy::TYPE_INTERNAL_VIDEO;
+    case DESTINATION_FONT:
+      return nsIContentPolicy::TYPE_FONT;
+    case DESTINATION_IMAGE:
+      return nsIContentPolicy::TYPE_IMAGE;
+    case DESTINATION_SCRIPT:
+      return nsIContentPolicy::TYPE_SCRIPT;
+    case DESTINATION_STYLE:
+      return nsIContentPolicy::TYPE_STYLESHEET;
+    case DESTINATION_FETCH:
+      return nsIContentPolicy::TYPE_OTHER;
+>>>>>>> upstream-releases
   }
   return nsIContentPolicy::TYPE_INVALID;
 }

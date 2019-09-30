@@ -53,7 +53,7 @@ HTMLWin32ObjectAccessible::HTMLWin32ObjectAccessible(void* aHwnd,
     : DummyAccessible(aDoc) {
   mHwnd = aHwnd;
   if (mHwnd) {
-#if defined(MOZ_CONTENT_SANDBOX)
+#if defined(MOZ_SANDBOX)
     if (XRE_IsContentProcess()) {
       DocAccessibleChild* ipcDoc = aDoc->IPCDoc();
       MOZ_ASSERT(ipcDoc);
@@ -80,8 +80,18 @@ HTMLWin32ObjectAccessible::HTMLWin32ObjectAccessible(void* aHwnd,
   }
 }
 
+<<<<<<< HEAD
 void HTMLWin32ObjectAccessible::GetNativeInterface(void** aNativeAccessible) {
 #if defined(MOZ_CONTENT_SANDBOX)
+||||||| merged common ancestors
+void
+HTMLWin32ObjectAccessible::GetNativeInterface(void** aNativeAccessible)
+{
+#if defined(MOZ_CONTENT_SANDBOX)
+=======
+void HTMLWin32ObjectAccessible::GetNativeInterface(void** aNativeAccessible) {
+#if defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
   if (XRE_IsContentProcess()) {
     RefPtr<IAccessible> addRefed = mCOMProxy.get();
     addRefed.forget(aNativeAccessible);

@@ -11,6 +11,7 @@
 #include "nsAutoRef.h"
 #include "nscore.h"
 #include "mozilla/Assertions.h"
+#include "mozilla/UniquePtr.h"
 
 // ----------------------------------------------------------------------------
 // Critical Section helper class
@@ -28,6 +29,7 @@ class AutoCriticalSection {
   LPCRITICAL_SECTION mSection;
 };
 
+<<<<<<< HEAD
 class ImpersonationScope {
  private:
   bool success;
@@ -44,7 +46,25 @@ class ImpersonationScope {
       RevertToSelf();
     }
   }
+||||||| merged common ancestors
+template<>
+class nsAutoRefTraits<HKEY>
+{
+public:
+  typedef HKEY RawRef;
+  static HKEY Void()
+  {
+    return nullptr;
+  }
+=======
+template <>
+class nsAutoRefTraits<HKEY> {
+ public:
+  typedef HKEY RawRef;
+  static HKEY Void() { return nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   ImpersonationScope(const ImpersonationScope&) = delete;
   ImpersonationScope& operator=(const ImpersonationScope&) = delete;
@@ -59,6 +79,12 @@ class nsAutoRefTraits<HKEY> {
   static HKEY Void() { return nullptr; }
 
   static void Release(RawRef aFD) {
+||||||| merged common ancestors
+  static void Release(RawRef aFD)
+  {
+=======
+  static void Release(RawRef aFD) {
+>>>>>>> upstream-releases
     if (aFD != Void()) {
       RegCloseKey(aFD);
     }
@@ -233,6 +259,7 @@ class nsAutoRefTraits<nsHPRINTER> {
   static void Release(RawRef hPrinter) { ::ClosePrinter(hPrinter); }
 };
 
+<<<<<<< HEAD
 template <>
 class nsAutoRefTraits<PSID> {
  public:
@@ -246,6 +273,10 @@ class nsAutoRefTraits<PSID> {
   }
 };
 
+||||||| merged common ancestors
+
+=======
+>>>>>>> upstream-releases
 typedef nsAutoRef<HKEY> nsAutoRegKey;
 typedef nsAutoRef<HDC> nsAutoHDC;
 typedef nsAutoRef<HBRUSH> nsAutoBrush;
@@ -320,6 +351,7 @@ struct LocalFreeDeleter {
   void operator()(void* aPtr) { ::LocalFree(aPtr); }
 };
 
+<<<<<<< HEAD
 // for UnqiuePtr<_PROC_THREAD_ATTRIBUTE_LIST, ProcThreadAttributeListDeleter>
 struct ProcThreadAttributeListDeleter {
   void operator()(void* aPtr) {
@@ -327,4 +359,15 @@ struct ProcThreadAttributeListDeleter {
         static_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(aPtr));
   }
 };
+||||||| merged common ancestors
+=======
+// for UniquePtr to store a PSID
+struct FreeSidDeleter {
+  void operator()(void* aPtr) { ::FreeSid(aPtr); }
+};
+// Unfortunately, although SID is a struct, PSID is a void*
+// This typedef will work for storing a PSID in a UniquePtr and should make
+// things a bit more readable.
+typedef mozilla::UniquePtr<void, FreeSidDeleter> UniqueSidPtr;
+>>>>>>> upstream-releases
 #endif

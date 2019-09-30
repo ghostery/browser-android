@@ -167,6 +167,7 @@ bool SkOpAngle::after(SkOpAngle* test) {
 //        SkASSERT(lrOpposite != trOpposite);
         return COMPARE_RESULT(10, lrOpposite);
     }
+<<<<<<< HEAD
     // If a pair couldn't be ordered, there's not enough information to determine the sort.
     // Refer to:  https://docs.google.com/drawings/d/1KV-8SJTedku9fj4K6fd1SB-8divuV_uivHVsSgwXICQ
     if (fUnorderable || lh->fUnorderable || rh->fUnorderable) {
@@ -203,6 +204,45 @@ bool SkOpAngle::after(SkOpAngle* test) {
             }
         }
     }
+||||||| merged common ancestors
+=======
+    // If a pair couldn't be ordered, there's not enough information to determine the sort.
+    // Refer to:  https://docs.google.com/drawings/d/1KV-8SJTedku9fj4K6fd1SB-8divuV_uivHVsSgwXICQ
+    if (fUnorderable || lh->fUnorderable || rh->fUnorderable) {
+        // limit to lines; should work with curves, but wait for a failing test to verify
+        if (!fPart.isCurve() && !lh->fPart.isCurve() && !rh->fPart.isCurve()) {
+            // see if original raw data is orderable
+            // if two share a point, check if third has both points in same half plane
+            int ltShare = lh->fOriginalCurvePart[0] == fOriginalCurvePart[0];
+            int lrShare = lh->fOriginalCurvePart[0] == rh->fOriginalCurvePart[0];
+            int trShare = fOriginalCurvePart[0] == rh->fOriginalCurvePart[0];
+            // if only one pair are the same, the third point touches neither of the pair
+            if (ltShare + lrShare + trShare == 1) {
+                if (lrShare) {
+                    int ltOOrder = lh->linesOnOriginalSide(this);
+                    int rtOOrder = rh->linesOnOriginalSide(this);
+                    if ((rtOOrder ^ ltOOrder) == 1) {
+                        return ltOOrder;
+                    }
+                } else if (trShare) {
+                    int tlOOrder = this->linesOnOriginalSide(lh);
+                    int rlOOrder = rh->linesOnOriginalSide(lh);
+                    if ((tlOOrder ^ rlOOrder) == 1) {
+                        return rlOOrder;
+                    }
+                } else {
+                    SkASSERT(ltShare);
+                    int trOOrder = rh->linesOnOriginalSide(this);
+                    int lrOOrder = lh->linesOnOriginalSide(rh);
+                    // result must be 0 and 1 or 1 and 0 to be valid
+                    if ((lrOOrder ^ trOOrder) == 1) {
+                        return trOOrder;
+                    }
+                }
+            }
+        }
+    }
+>>>>>>> upstream-releases
     if (lrOrder < 0) {
         if (ltOrder < 0) {
             return COMPARE_RESULT(11, trOrder);
@@ -212,18 +252,13 @@ bool SkOpAngle::after(SkOpAngle* test) {
     return COMPARE_RESULT(13, !lrOrder);
 }
 
-// given a line, see if the opposite curve's convex hull is all on one side
-// returns -1=not on one side    0=this CW of test   1=this CCW of test
-int SkOpAngle::allOnOneSide(const SkOpAngle* test) {
-    SkASSERT(!fPart.isCurve());
-    SkASSERT(test->fPart.isCurve());
-    SkDPoint origin = fPart.fCurve[0];
-    SkDVector line = fPart.fCurve[1] - origin;
+int SkOpAngle::lineOnOneSide(const SkDPoint& origin, const SkDVector& line, const SkOpAngle* test,
+        bool useOriginal) const {
     double crosses[3];
     SkPath::Verb testVerb = test->segment()->verb();
     int iMax = SkPathOpsVerbToPoints(testVerb);
 //    SkASSERT(origin == test.fCurveHalf[0]);
-    const SkDCurve& testCurve = test->fPart.fCurve;
+    const SkDCurve& testCurve = useOriginal ? test->fOriginalCurvePart : test->fPart.fCurve;
     for (int index = 1; index <= iMax; ++index) {
         double xy1 = line.fX * (testCurve[index].fY - origin.fY);
         double xy2 = line.fY * (testCurve[index].fX - origin.fX);
@@ -245,6 +280,52 @@ int SkOpAngle::allOnOneSide(const SkOpAngle* test) {
     }
     if (SkPath::kCubic_Verb == testVerb && crosses[2]) {
         return crosses[2] < 0;
+    }
+    return -2;
+}
+
+// given a line, see if the opposite curve's convex hull is all on one side
+// returns -1=not on one side    0=this CW of test   1=this CCW of test
+int SkOpAngle::lineOnOneSide(const SkOpAngle* test, bool useOriginal) {
+    SkASSERT(!fPart.isCurve());
+    SkASSERT(test->fPart.isCurve());
+    SkDPoint origin = fPart.fCurve[0];
+    SkDVector line = fPart.fCurve[1] - origin;
+    int result = this->lineOnOneSide(origin, line, test, useOriginal);
+    if (-2 == result) {
+        fUnorderable = true;
+        result = -1;
+    }
+    return result;
+}
+
+// experiment works only with lines for now
+int SkOpAngle::linesOnOriginalSide(const SkOpAngle* test) {
+    SkASSERT(!fPart.isCurve());
+    SkASSERT(!test->fPart.isCurve());
+    SkDPoint origin = fOriginalCurvePart[0];
+    SkDVector line = fOriginalCurvePart[1] - origin;
+    double dots[2];
+    double crosses[2];
+    const SkDCurve& testCurve = test->fOriginalCurvePart;
+    for (int index = 0; index < 2; ++index) {
+        SkDVector testLine = testCurve[index] - origin;
+        double xy1 = line.fX * testLine.fY;
+        double xy2 = line.fY * testLine.fX;
+        dots[index] = line.fX * testLine.fX + line.fY * testLine.fY;
+        crosses[index] = AlmostBequalUlps(xy1, xy2) ? 0 : xy1 - xy2;
+    }
+    if (crosses[0] * crosses[1] < 0) {
+        return -1;
+    }
+    if (crosses[0]) {
+        return crosses[0] < 0;
+    }
+    if (crosses[1]) {
+        return crosses[1] < 0;
+    }
+    if ((!dots[0] && dots[1] < 0) || (dots[0] < 0 && !dots[1])) {
+        return 2;  // 180 degrees apart
     }
     fUnorderable = true;
     return -1;
@@ -577,8 +658,33 @@ bool SkOpAngle::endsIntersect(SkOpAngle* rh) {
             maxY = SkTMax(maxY, curve[idx2].fY);
         }
         double maxWidth = SkTMax(maxX - minX, maxY - minY);
-        delta /= maxWidth;
-        if (delta > 1e-3 && (useIntersect ^= true)) {  // FIXME: move this magic number
+        delta = sk_ieee_double_divide(delta, maxWidth);
+        // FIXME: move these magic numbers
+        // This fixes skbug.com/8380
+        // Larger changes (like changing the constant in the next block) cause other
+        // tests to fail as documented in the bug.
+        // This could probably become a more general test: e.g., if translating the
+        // curve causes the cross product of any control point or end point to change
+        // sign with regard to the opposite curve's hull, treat the curves as parallel.
+
+        // Moreso, this points to the general fragility of this approach of assigning
+        // winding by sorting the angles of curves sharing a common point, as mentioned
+        // in the bug.
+        if (delta < 4e-3 && delta > 1e-3 && !useIntersect && fPart.isCurve()
+                && rh->fPart.isCurve() && fOriginalCurvePart[0] != fPart.fCurve.fLine[0]) {
+            // see if original curve is on one side of hull; translated is on the other
+            const SkDPoint& origin = rh->fOriginalCurvePart[0];
+            int count = SkPathOpsVerbToPoints(rh->segment()->verb());
+            const SkDVector line = rh->fOriginalCurvePart[count] - origin;
+            int originalSide = rh->lineOnOneSide(origin, line, this, true);
+            if (originalSide >= 0) {
+                int translatedSide = rh->lineOnOneSide(origin, line, this, false);
+                if (originalSide != translatedSide) {
+                    continue;
+                }
+            }
+        }
+        if (delta > 1e-3 && (useIntersect ^= true)) {
             sRayLonger = rayLonger;
             sCept = cept;
             sCeptT = smallTs[index];
@@ -637,9 +743,9 @@ bool SkOpAngle::endToSide(const SkOpAngle* rh, bool* inside) const {
         maxY = SkTMax(maxY, curve[idx2].fY);
     }
     double maxWidth = SkTMax(maxX - minX, maxY - minY);
-    endDist /= maxWidth;
-    if (endDist < 5e-12) {  // empirically found
-        return false;
+    endDist = sk_ieee_double_divide(endDist, maxWidth);
+    if (!(endDist >= 5e-12)) {  // empirically found
+        return false; // ! above catches NaN
     }
     const SkDPoint* endPt = &rayEnd[0];
     SkDPoint oppPt = iEnd.pt(closestEnd);
@@ -881,15 +987,23 @@ int SkOpAngle::orderable(SkOpAngle* rh) {
             SkASSERT(x_ry != rx_y); // indicates an undetected coincidence -- worth finding earlier
             return x_ry < rx_y ? 1 : 0;
         }
-        if ((result = this->allOnOneSide(rh)) >= 0) {
+        if ((result = this->lineOnOneSide(rh, false)) >= 0) {
             return result;
         }
         if (fUnorderable || approximately_zero(rh->fSide)) {
             goto unorderable;
         }
     } else if (!rh->fPart.isCurve()) {
+<<<<<<< HEAD
         if ((result = rh->allOnOneSide(this)) >= 0) {
             return result ? 0 : 1;
+||||||| merged common ancestors
+        if ((result = rh->allOnOneSide(this)) >= 0) {
+            return !result;
+=======
+        if ((result = rh->lineOnOneSide(this, false)) >= 0) {
+            return result ? 0 : 1;
+>>>>>>> upstream-releases
         }
         if (rh->fUnorderable || approximately_zero(fSide)) {
             goto unorderable;

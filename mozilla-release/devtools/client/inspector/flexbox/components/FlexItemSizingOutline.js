@@ -19,11 +19,26 @@ class FlexItemSizingOutline extends PureComponent {
   }
 
   renderBasisOutline(mainBaseSize) {
+<<<<<<< HEAD
     return (
       dom.div({
         className: "flex-outline-basis" + (!mainBaseSize ? " zero-basis" : ""),
       })
     );
+||||||| merged common ancestors
+    return (
+      dom.div({
+        className: "flex-outline-basis" + (!mainBaseSize ? " zero-basis" : ""),
+        style: {
+          color: colorUtils.setAlpha(this.props.color, 0.4),
+        },
+      })
+    );
+=======
+    return dom.div({
+      className: "flex-outline-basis" + (!mainBaseSize ? " zero-basis" : ""),
+    });
+>>>>>>> upstream-releases
   }
 
   renderDeltaOutline(mainDeltaSize) {
@@ -31,28 +46,79 @@ class FlexItemSizingOutline extends PureComponent {
       return null;
     }
 
+<<<<<<< HEAD
     return (
       dom.div({
         className: "flex-outline-delta",
       })
     );
+||||||| merged common ancestors
+    return (
+      dom.div({
+        className: "flex-outline-delta",
+        style: {
+          backgroundColor: colorUtils.setAlpha(this.props.color, 0.1)
+        }
+      })
+    );
+=======
+    return dom.div({
+      className: "flex-outline-delta",
+    });
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   renderFinalOutline(mainFinalSize, mainMaxSize, mainMinSize, isClamped) {
     return (
       dom.div({ className: "flex-outline-final" + (isClamped ? " clamped" : "") })
     );
+||||||| merged common ancestors
+  renderFinalOutline(mainFinalSize, mainMaxSize, mainMinSize, isClamped) {
+    return (
+      dom.div({
+        className: "flex-outline-final" + (isClamped ? " clamped" : "")
+      })
+    );
+=======
+  renderFinalOutline(isClamped) {
+    return dom.div({
+      className: "flex-outline-final" + (isClamped ? " clamped" : ""),
+    });
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   renderPoint(className, label = className) {
     return dom.div({ className: `flex-outline-point ${className}`, "data-label": label });
+||||||| merged common ancestors
+  renderPoint(name) {
+    return dom.div({ className: `flex-outline-point ${name}`, "data-label": name });
+=======
+  renderPoint(className, label = className) {
+    return dom.div({
+      key: className,
+      className: `flex-outline-point ${className}`,
+      "data-label": label,
+    });
+>>>>>>> upstream-releases
   }
 
   render() {
+    const { flexItemSizing } = this.props.flexItem;
     const {
+<<<<<<< HEAD
       flexItemSizing,
     } = this.props.flexItem;
     const {
+||||||| merged common ancestors
+      flexItemSizing,
+      properties,
+    } = this.props.flexItem;
+    const {
+=======
+      mainAxisDirection,
+>>>>>>> upstream-releases
       mainBaseSize,
       mainDeltaSize,
       mainMaxSize,
@@ -60,12 +126,22 @@ class FlexItemSizingOutline extends PureComponent {
       clampState,
     } = flexItemSizing;
 
+<<<<<<< HEAD
     const isRow = this.props.flexDirection.startsWith("row");
 
+||||||| merged common ancestors
+    const isRow = this.props.flexDirection.startsWith("row");
+    const dimension = isRow ? "width" : "height";
+
+=======
+>>>>>>> upstream-releases
     // Calculate the final size. This is base + delta, then clamped by min or max.
     let mainFinalSize = mainBaseSize + mainDeltaSize;
     mainFinalSize = Math.max(mainFinalSize, mainMinSize);
-    mainFinalSize = Math.min(mainFinalSize, mainMaxSize);
+    mainFinalSize =
+      mainMaxSize === null
+        ? mainFinalSize
+        : Math.min(mainFinalSize, mainMaxSize);
 
     // Just don't display anything if there isn't anything useful.
     if (!mainFinalSize && !mainBaseSize && !mainDeltaSize) {
@@ -108,6 +184,7 @@ class FlexItemSizingOutline extends PureComponent {
     // Sort all of the dimensions so we can create the grid track template correctly.
     sizes = sizes.sort((a, b) => a.size - b.size);
 
+<<<<<<< HEAD
     // In some cases, the delta-start may be negative (when an item wanted to shrink more
     // than the item's base size). As a negative value would break the grid track template
     // offset all values so they're all positive.
@@ -115,6 +192,23 @@ class FlexItemSizingOutline extends PureComponent {
     sizes = sizes.map(entry => ({ size: entry.size - offsetBy, name: entry.name }));
 
     let gridTemplateColumns = "[";
+||||||| merged common ancestors
+    let gridTemplateColumns = "[final-start basis-start";
+=======
+    // In some cases, the delta-start may be negative (when an item wanted to shrink more
+    // than the item's base size). As a negative value would break the grid track template
+    // offset all values so they're all positive.
+    const offsetBy = sizes.reduce(
+      (acc, curr) => (curr.size < acc ? curr.size : acc),
+      0
+    );
+    sizes = sizes.map(entry => ({
+      size: entry.size - offsetBy,
+      name: entry.name,
+    }));
+
+    let gridTemplateColumns = "[";
+>>>>>>> upstream-releases
     let accumulatedSize = 0;
     for (const { name, size } of sizes) {
       const breadth = Math.round(size - accumulatedSize);
@@ -128,6 +222,7 @@ class FlexItemSizingOutline extends PureComponent {
     }
     gridTemplateColumns += "]";
 
+<<<<<<< HEAD
     // Check the final and basis points to see if they are the same and if so, combine
     // them into a single rendered point.
     const renderedBaseAndFinalPoints = [];
@@ -148,7 +243,43 @@ class FlexItemSizingOutline extends PureComponent {
             style: {
               gridTemplateColumns,
             },
+||||||| merged common ancestors
+    return (
+      dom.div({ className: "flex-outline-container" },
+        dom.div(
+          {
+            className: "flex-outline" +
+                       (isRow ? " row" : " column") +
+                       (mainDeltaSize > 0 ? " growing" : " shrinking"),
+            style: {
+              color: this.props.color,
+              gridTemplateColumns
+            }
+=======
+    // Check the final and basis points to see if they are the same and if so, combine
+    // them into a single rendered point.
+    const renderedBaseAndFinalPoints = [];
+    if (mainFinalSize === mainBaseSize) {
+      renderedBaseAndFinalPoints.push(
+        this.renderPoint("basisfinal", "basis/final")
+      );
+    } else {
+      renderedBaseAndFinalPoints.push(this.renderPoint("basis"));
+      renderedBaseAndFinalPoints.push(this.renderPoint("final"));
+    }
+
+    return dom.div(
+      { className: "flex-outline-container" },
+      dom.div(
+        {
+          className:
+            `flex-outline ${mainAxisDirection}` +
+            (mainDeltaSize > 0 ? " growing" : " shrinking"),
+          style: {
+            gridTemplateColumns,
+>>>>>>> upstream-releases
           },
+<<<<<<< HEAD
           renderedBaseAndFinalPoints,
           showMin ? this.renderPoint("min") : null,
           showMax ? this.renderPoint("max") : null,
@@ -157,6 +288,25 @@ class FlexItemSizingOutline extends PureComponent {
           this.renderFinalOutline(mainFinalSize, mainMaxSize, mainMinSize,
                                   clampState !== "unclamped")
         )
+||||||| merged common ancestors
+          this.renderPoint("basis"),
+          this.renderPoint("final"),
+          showMin ? this.renderPoint("min") : null,
+          showMax ? this.renderPoint("max") : null,
+          this.renderBasisOutline(mainBaseSize),
+          this.renderDeltaOutline(mainDeltaSize),
+          this.renderFinalOutline(mainFinalSize, mainMaxSize, mainMinSize,
+                                  showMin || showMax)
+        )
+=======
+        },
+        renderedBaseAndFinalPoints,
+        showMin ? this.renderPoint("min") : null,
+        showMax ? this.renderPoint("max") : null,
+        this.renderBasisOutline(mainBaseSize),
+        this.renderDeltaOutline(mainDeltaSize),
+        this.renderFinalOutline(clampState !== "unclamped")
+>>>>>>> upstream-releases
       )
     );
   }

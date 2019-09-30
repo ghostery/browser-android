@@ -8,13 +8,27 @@ with Files('**'):
     BUG_COMPONENT = ('Core', 'Web Painting')
 
 EXPORTS.mozilla.layout += [
+<<<<<<< HEAD
     'RenderFrame.h',
+||||||| merged common ancestors
+    'RenderFrameChild.h',
+    'RenderFrameParent.h',
+=======
+    'RemoteLayerTreeOwner.h',
+>>>>>>> upstream-releases
     'VsyncChild.h',
     'VsyncParent.h',
 ]
 
 UNIFIED_SOURCES += [
+<<<<<<< HEAD
     'RenderFrame.cpp',
+||||||| merged common ancestors
+    'RenderFrameChild.cpp',
+    'RenderFrameParent.cpp',
+=======
+    'RemoteLayerTreeOwner.cpp',
+>>>>>>> upstream-releases
 ]
 
 SOURCES += [

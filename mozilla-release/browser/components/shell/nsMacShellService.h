@@ -6,15 +6,28 @@
 #ifndef nsmacshellservice_h____
 #define nsmacshellservice_h____
 
+#include "nsToolkitShellService.h"
 #include "nsIMacShellService.h"
 #include "nsIWebProgressListener.h"
 #include "nsIFile.h"
 #include "nsCOMPtr.h"
 
 class nsMacShellService : public nsIMacShellService,
+<<<<<<< HEAD
                           public nsIWebProgressListener {
  public:
   nsMacShellService(){};
+||||||| merged common ancestors
+                          public nsIWebProgressListener
+{
+public:
+  nsMacShellService() {};
+=======
+                          public nsToolkitShellService,
+                          public nsIWebProgressListener {
+ public:
+  nsMacShellService(){};
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSISHELLSERVICE

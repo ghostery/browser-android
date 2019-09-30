@@ -2,8 +2,35 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en_GB{
     %%Parent{"en_001"}
+<<<<<<< HEAD
     Version{"2.1.44.18"}
+||||||| merged common ancestors
+    Version{"2.1.38.73"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
     zoneStrings{
+        "America:St_Barthelemy"{
+            ec{"St Barthélemy"}
+        }
+        "America:St_Johns"{
+            ec{"St John’s"}
+        }
+        "America:St_Kitts"{
+            ec{"St Kitts"}
+        }
+        "America:St_Lucia"{
+            ec{"St Lucia"}
+        }
+        "America:St_Thomas"{
+            ec{"St Thomas"}
+        }
+        "America:St_Vincent"{
+            ec{"St Vincent"}
+        }
+        "Atlantic:St_Helena"{
+            ec{"St Helena"}
+        }
         "Europe:London"{
             sd{"BST"}
         }

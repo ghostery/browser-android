@@ -7,6 +7,7 @@
 #ifndef __GFXMESSAGEUTILS_H__
 #define __GFXMESSAGEUTILS_H__
 
+#include "mozilla/webrender/webrender_ffi.h"
 #include "FilterSupport.h"
 #include "ImageTypes.h"
 #include "RegionBuilder.h"
@@ -28,7 +29,13 @@
 #include <stdint.h>
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(disable : 4800)
+||||||| merged common ancestors
+#pragma warning( disable : 4800 )
+=======
+#  pragma warning(disable : 4800)
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -652,16 +659,44 @@ struct ParamTraits<mozilla::gfx::ColorDepth>
                                       mozilla::gfx::ColorDepth::UNKNOWN> {};
 
 template <>
+<<<<<<< HEAD
 struct ParamTraits<mozilla::StereoMode>
     : public ContiguousEnumSerializer<mozilla::StereoMode,
                                       mozilla::StereoMode::MONO,
                                       mozilla::StereoMode::MAX> {};
+||||||| merged common ancestors
+struct ParamTraits<mozilla::StereoMode>
+  : public ContiguousEnumSerializer<
+             mozilla::StereoMode,
+             mozilla::StereoMode::MONO,
+             mozilla::StereoMode::MAX>
+{};
+=======
+struct ParamTraits<mozilla::gfx::YUVColorSpace>
+    : public ContiguousEnumSerializer<
+          mozilla::gfx::YUVColorSpace, mozilla::gfx::YUVColorSpace::BT601,
+          mozilla::gfx::YUVColorSpace::_NUM_COLORSPACE> {};
+>>>>>>> upstream-releases
 
 template <>
+<<<<<<< HEAD
 struct ParamTraits<mozilla::YUVColorSpace>
     : public ContiguousEnumSerializer<mozilla::YUVColorSpace,
                                       mozilla::YUVColorSpace::BT601,
                                       mozilla::YUVColorSpace::UNKNOWN> {};
+||||||| merged common ancestors
+struct ParamTraits<mozilla::YUVColorSpace>
+  : public ContiguousEnumSerializer<
+             mozilla::YUVColorSpace,
+             mozilla::YUVColorSpace::BT601,
+             mozilla::YUVColorSpace::UNKNOWN>
+{};
+=======
+struct ParamTraits<mozilla::StereoMode>
+    : public ContiguousEnumSerializer<mozilla::StereoMode,
+                                      mozilla::StereoMode::MONO,
+                                      mozilla::StereoMode::MAX> {};
+>>>>>>> upstream-releases
 
 template <>
 struct ParamTraits<mozilla::gfx::ImplicitlyCopyableFloatArray>
@@ -1168,9 +1203,9 @@ struct ParamTraits<mozilla::Array<T, Length>> {
 template <>
 struct ParamTraits<mozilla::gfx::PaintFragment> {
   typedef mozilla::gfx::PaintFragment paramType;
-  static void Write(Message* aMsg, paramType& aParam) {
+  static void Write(Message* aMsg, paramType&& aParam) {
     WriteParam(aMsg, aParam.mSize);
-    WriteParam(aMsg, aParam.mRecording);
+    WriteParam(aMsg, std::move(aParam.mRecording));
     WriteParam(aMsg, aParam.mDependencies);
   }
 

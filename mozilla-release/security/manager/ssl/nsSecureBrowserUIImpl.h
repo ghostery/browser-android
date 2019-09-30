@@ -8,11 +8,40 @@
 
 #include "nsCOMPtr.h"
 #include "nsISecureBrowserUI.h"
+#include "nsITransportSecurityInfo.h"
 #include "nsIWebProgressListener.h"
 #include "nsWeakReference.h"
 
 class nsITransportSecurityInfo;
 class nsIChannel;
+
+<<<<<<< HEAD
+#define NS_SECURE_BROWSER_UI_CID                     \
+  {                                                  \
+    0xcc75499a, 0x1dd1, 0x11b2, {                    \
+      0x8a, 0x82, 0xca, 0x41, 0x0a, 0xc9, 0x07, 0xb8 \
+    }                                                \
+  }
+
+class nsSecureBrowserUIImpl : public nsISecureBrowserUI,
+                              public nsIWebProgressListener,
+                              public nsSupportsWeakReference {
+ public:
+||||||| merged common ancestors
+#define NS_SECURE_BROWSER_UI_CID \
+{ 0xcc75499a, 0x1dd1, 0x11b2, {0x8a, 0x82, 0xca, 0x41, 0x0a, 0xc9, 0x07, 0xb8}}
+
+class nsSecureBrowserUIImpl : public nsISecureBrowserUI
+                            , public nsIWebProgressListener
+                            , public nsSupportsWeakReference
+{
+public:
+=======
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
 
 #define NS_SECURE_BROWSER_UI_CID                     \
   {                                                  \
@@ -25,6 +54,7 @@ class nsSecureBrowserUIImpl : public nsISecureBrowserUI,
                               public nsIWebProgressListener,
                               public nsSupportsWeakReference {
  public:
+>>>>>>> upstream-releases
   nsSecureBrowserUIImpl();
 
   NS_DECL_ISUPPORTS
@@ -34,13 +64,25 @@ class nsSecureBrowserUIImpl : public nsISecureBrowserUI,
  protected:
   virtual ~nsSecureBrowserUIImpl(){};
 
+<<<<<<< HEAD
   // Do mixed content and tracking protection checks. May update mState.
   void CheckForBlockedContent();
+||||||| merged common ancestors
+  // Do mixed content and tracking protection checks. May update mState and mOldState.
+  void CheckForBlockedContent();
+=======
+  already_AddRefed<mozilla::dom::Document> PrepareForContentChecks();
+  // Do mixed content checks. May update mState.
+  void CheckForMixedContent();
+  // Do Content Blocking checks. May update mEvent.
+  void CheckForContentBlockingEvents();
+>>>>>>> upstream-releases
   // Given some information about a request from an OnLocationChange event,
   // update mState and mTopLevelSecurityInfo.
   nsresult UpdateStateAndSecurityInfo(nsIChannel* channel, nsIURI* uri);
 
   uint32_t mState;
+  uint32_t mEvent;
   nsWeakPtr mDocShell;
   nsWeakPtr mWebProgress;
   nsCOMPtr<nsITransportSecurityInfo> mTopLevelSecurityInfo;

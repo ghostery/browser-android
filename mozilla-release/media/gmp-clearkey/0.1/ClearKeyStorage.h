@@ -28,13 +28,27 @@
 #define IO_FAILED(x) ((x) != cdm::FileIOClient::Status::kSuccess)
 
 // Writes data to a file and fires the appropriate callback when complete.
+<<<<<<< HEAD
 void WriteData(cdm::Host_9* aHost, std::string& aRecordName,
+||||||| merged common ancestors
+void WriteData(cdm::Host_9* aHost,
+               std::string& aRecordName,
+=======
+void WriteData(cdm::Host_10* aHost, std::string& aRecordName,
+>>>>>>> upstream-releases
                const std::vector<uint8_t>& aData,
                std::function<void()>&& aOnSuccess,
                std::function<void()>&& aOnFailure);
 
 // Reads data from a file and fires the appropriate callback when complete.
+<<<<<<< HEAD
 void ReadData(cdm::Host_9* aHost, std::string& aRecordName,
+||||||| merged common ancestors
+void ReadData(cdm::Host_9* aHost,
+              std::string& aRecordName,
+=======
+void ReadData(cdm::Host_10* aHost, std::string& aRecordName,
+>>>>>>> upstream-releases
               std::function<void(const uint8_t*, uint32_t)>&& aOnSuccess,
               std::function<void()>&& aOnFailure);
 

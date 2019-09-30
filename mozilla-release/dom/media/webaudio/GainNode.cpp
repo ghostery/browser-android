@@ -107,14 +107,28 @@ class GainNodeEngine final : public AudioNodeEngine {
 };
 
 GainNode::GainNode(AudioContext* aContext)
+<<<<<<< HEAD
     : AudioNode(aContext, 2, ChannelCountMode::Max,
                 ChannelInterpretation::Speakers),
       mGain(new AudioParam(this, GainNodeEngine::GAIN, "gain", 1.0f)) {
+||||||| merged common ancestors
+  : AudioNode(aContext,
+              2,
+              ChannelCountMode::Max,
+              ChannelInterpretation::Speakers)
+  , mGain(new AudioParam(this, GainNodeEngine::GAIN, "gain", 1.0f))
+{
+=======
+    : AudioNode(aContext, 2, ChannelCountMode::Max,
+                ChannelInterpretation::Speakers) {
+  CreateAudioParam(mGain, GainNodeEngine::GAIN, "gain", 1.0f);
+>>>>>>> upstream-releases
   GainNodeEngine* engine = new GainNodeEngine(this, aContext->Destination());
   mStream = AudioNodeStream::Create(
       aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<GainNode> GainNode::Create(
     AudioContext& aAudioContext, const GainOptions& aOptions,
     ErrorResult& aRv) {
@@ -122,6 +136,22 @@ GainNode::GainNode(AudioContext* aContext)
     return nullptr;
   }
 
+||||||| merged common ancestors
+/* static */ already_AddRefed<GainNode>
+GainNode::Create(AudioContext& aAudioContext,
+                 const GainOptions& aOptions,
+                 ErrorResult& aRv)
+{
+  if (aAudioContext.CheckClosed(aRv)) {
+    return nullptr;
+  }
+
+=======
+/* static */
+already_AddRefed<GainNode> GainNode::Create(AudioContext& aAudioContext,
+                                            const GainOptions& aOptions,
+                                            ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<GainNode> audioNode = new GainNode(&aAudioContext);
 
   audioNode->Initialize(aOptions, aRv);

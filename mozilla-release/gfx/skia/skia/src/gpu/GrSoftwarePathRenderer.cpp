@@ -7,6 +7,7 @@
 
 #include "GrSoftwarePathRenderer.h"
 #include "GrAuditTrail.h"
+#include "GrCaps.h"
 #include "GrClip.h"
 #include "GrContextPriv.h"
 #include "GrDeferredProxyUploader.h"
@@ -14,6 +15,7 @@
 #include "GrOpFlushState.h"
 #include "GrOpList.h"
 #include "GrProxyProvider.h"
+#include "GrRecordingContextPriv.h"
 #include "GrSWMaskHelper.h"
 #include "GrShape.h"
 #include "GrSurfaceContextPriv.h"
@@ -22,7 +24,7 @@
 #include "SkTaskGroup.h"
 #include "SkTraceEvent.h"
 #include "ops/GrDrawOp.h"
-#include "ops/GrRectOpFactory.h"
+#include "ops/GrFillRectOp.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 GrPathRenderer::CanDrawPath
@@ -98,11 +100,26 @@ void GrSoftwarePathRenderer::DrawNonAARect(GrRenderTargetContext* renderTargetCo
                                            const SkMatrix& viewMatrix,
                                            const SkRect& rect,
                                            const SkMatrix& localMatrix) {
+<<<<<<< HEAD
     GrContext* context = renderTargetContext->surfPriv().getContext();
+||||||| merged common ancestors
+=======
+    auto context = renderTargetContext->surfPriv().getContext();
+>>>>>>> upstream-releases
     renderTargetContext->addDrawOp(clip,
+<<<<<<< HEAD
                                    GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
                                            context, std::move(paint), viewMatrix, localMatrix, rect,
                                            GrAAType::kNone, &userStencilSettings));
+||||||| merged common ancestors
+                                   GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
+                                           std::move(paint), viewMatrix, localMatrix, rect,
+                                           GrAAType::kNone, &userStencilSettings));
+=======
+                                   GrFillRectOp::MakeWithLocalMatrix(
+                                           context, std::move(paint), GrAAType::kNone, viewMatrix,
+                                           localMatrix, rect, &userStencilSettings));
+>>>>>>> upstream-releases
 }
 
 void GrSoftwarePathRenderer::DrawAroundInvPath(GrRenderTargetContext* renderTargetContext,
@@ -172,19 +189,31 @@ void GrSoftwarePathRenderer::DrawToTargetWithShapeMask(
                   dstRect, invert);
 }
 
-static sk_sp<GrTextureProxy> make_deferred_mask_texture_proxy(GrContext* context, SkBackingFit fit,
+static sk_sp<GrTextureProxy> make_deferred_mask_texture_proxy(GrRecordingContext* context,
+                                                              SkBackingFit fit,
                                                               int width, int height) {
-    GrProxyProvider* proxyProvider = context->contextPriv().proxyProvider();
+    GrProxyProvider* proxyProvider = context->priv().proxyProvider();
 
     GrSurfaceDesc desc;
     desc.fWidth = width;
     desc.fHeight = height;
     desc.fConfig = kAlpha_8_GrPixelConfig;
 
+    const GrBackendFormat format =
+            context->priv().caps()->getBackendFormatFromColorType(kAlpha_8_SkColorType);
+
     // MDB TODO: We're going to fill this proxy with an ASAP upload (which is out of order wrt to
     // ops), so it can't have any pending IO.
+<<<<<<< HEAD
     return proxyProvider->createProxy(desc, kTopLeft_GrSurfaceOrigin, fit, SkBudgeted::kYes,
                                       GrInternalSurfaceFlags::kNoPendingIO);
+||||||| merged common ancestors
+    return proxyProvider->createProxy(desc, fit, SkBudgeted::kYes,
+                                      GrResourceProvider::kNoPendingIO_Flag);
+=======
+    return proxyProvider->createProxy(format, desc, kTopLeft_GrSurfaceOrigin, fit, SkBudgeted::kYes,
+                                      GrInternalSurfaceFlags::kNoPendingIO);
+>>>>>>> upstream-releases
 }
 
 namespace {
@@ -328,7 +357,11 @@ bool GrSoftwarePathRenderer::onDrawPath(const DrawPathArgs& args) {
         SkBackingFit fit = useCache ? SkBackingFit::kExact : SkBackingFit::kApprox;
         GrAA aa = GrAAType::kCoverage == args.fAAType ? GrAA::kYes : GrAA::kNo;
 
-        SkTaskGroup* taskGroup = args.fContext->contextPriv().getTaskGroup();
+        SkTaskGroup* taskGroup = nullptr;
+        if (auto direct = args.fContext->priv().asDirectContext()) {
+            taskGroup = direct->priv().getTaskGroup();
+        }
+
         if (taskGroup) {
             proxy = make_deferred_mask_texture_proxy(args.fContext, fit,
                                                      boundsForMask->width(),
@@ -370,8 +403,15 @@ bool GrSoftwarePathRenderer::onDrawPath(const DrawPathArgs& args) {
         if (useCache) {
             SkASSERT(proxy->origin() == kTopLeft_GrSurfaceOrigin);
             fProxyProvider->assignUniqueKeyToProxy(maskKey, proxy.get());
+<<<<<<< HEAD
             args.fShape->addGenIDChangeListener(
                     sk_make_sp<PathInvalidator>(maskKey, args.fContext->uniqueID()));
+||||||| merged common ancestors
+            args.fShape->addGenIDChangeListener(new PathInvalidator(maskKey));
+=======
+            args.fShape->addGenIDChangeListener(
+                    sk_make_sp<PathInvalidator>(maskKey, args.fContext->priv().contextID()));
+>>>>>>> upstream-releases
         }
     }
     if (inverseFilled) {

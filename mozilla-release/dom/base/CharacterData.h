@@ -20,10 +20,7 @@
 #include "mozilla/dom/Element.h"
 #include "nsCycleCollectionParticipant.h"
 
-#include "nsISMILAttr.h"
 #include "mozilla/dom/ShadowRoot.h"
-
-class nsIDocument;
 
 namespace mozilla {
 namespace dom {
@@ -110,20 +107,53 @@ class CharacterData : public nsIContent {
   }
 
   // Implementation for nsIContent
+<<<<<<< HEAD
   nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                       nsIContent* aBindingParent) override;
+||||||| merged common ancestors
+  nsresult BindToTree(nsIDocument* aDocument,
+                      nsIContent* aParent,
+                      nsIContent* aBindingParent) override;
+=======
+  nsresult BindToTree(BindContext&, nsINode& aParent) override;
+>>>>>>> upstream-releases
 
-  void UnbindFromTree(bool aDeep = true, bool aNullParent = true) override;
+  void UnbindFromTree(bool aNullParent = true) override;
 
   already_AddRefed<nsINodeList> GetChildren(uint32_t aFilter) final {
     return nullptr;
   }
 
+<<<<<<< HEAD
   const nsTextFragment* GetText() override { return &mText; }
+||||||| merged common ancestors
+  const nsTextFragment* GetText() override
+  {
+    return &mText;
+  }
+=======
+  const nsTextFragment* GetText() override { return &mText; }
+  uint32_t TextLength() const final { return TextDataLength(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const nsTextFragment& TextFragment() const { return mText; }
 
   uint32_t TextLength() const final { return TextDataLength(); }
+||||||| merged common ancestors
+  const nsTextFragment& TextFragment() const
+  {
+    return mText;
+  }
+
+  uint32_t TextLength() const final
+  {
+    return TextDataLength();
+  }
+=======
+  const nsTextFragment& TextFragment() const { return mText; }
+  uint32_t TextDataLength() const { return mText.GetLength(); }
+>>>>>>> upstream-releases
 
   /**
    * Set the text to the given value. If aNotify is true then
@@ -200,16 +230,41 @@ class CharacterData : public nsIContent {
   void ReplaceData(uint32_t aOffset, uint32_t aCount, const nsAString& aData,
                    ErrorResult& rv);
 
+<<<<<<< HEAD
   uint32_t TextDataLength() const { return mText.GetLength(); }
 
+||||||| merged common ancestors
+  uint32_t TextDataLength() const
+  {
+    return mText.GetLength();
+  }
+
+=======
+>>>>>>> upstream-releases
   //----------------------------------------
 
 #ifdef DEBUG
   void ToCString(nsAString& aBuf, int32_t aOffset, int32_t aLen) const;
 #endif
 
+<<<<<<< HEAD
   NS_DECL_CYCLE_COLLECTION_SKIPPABLE_SCRIPT_HOLDER_CLASS_INHERITED(
       CharacterData, nsIContent)
+||||||| merged common ancestors
+  NS_DECL_CYCLE_COLLECTION_SKIPPABLE_SCRIPT_HOLDER_CLASS_INHERITED(CharacterData,
+                                                                   nsIContent)
+=======
+  NS_DECL_CYCLE_COLLECTION_SKIPPABLE_SCRIPT_HOLDER_CLASS_INHERITED(
+      CharacterData, nsIContent)
+
+  /**
+   * Compare two CharacterData nodes for text equality.
+   */
+  MOZ_MUST_USE
+  bool TextEquals(const CharacterData* aOther) const {
+    return mText.TextEquals(aOther->mText);
+  }
+>>>>>>> upstream-releases
 
  protected:
   virtual ~CharacterData();

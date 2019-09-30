@@ -41,6 +41,7 @@ void WebGL2Context::GetInternalformatParameter(JSContext* cx, GLenum target,
       sizedFormat = LOCAL_GL_RGBA8;
       break;
     default:
+<<<<<<< HEAD
       sizedFormat = internalformat;
       break;
   }
@@ -69,7 +70,57 @@ void WebGL2Context::GetInternalformatParameter(JSContext* cx, GLenum target,
                            LOCAL_GL_NUM_SAMPLE_COUNTS, 1, &sampleCount);
   if (sampleCount > 0) {
     samples = new GLint[sampleCount];
+||||||| merged common ancestors
+        sizedFormat = internalformat;
+        break;
+    }
+
+    // In RenderbufferStorage, we allow DEPTH_STENCIL. Therefore, it is accepted for
+    // internalformat as well. Please ignore the conformance test fail for DEPTH_STENCIL.
+
+    const auto usage = mFormatUsage->GetRBUsage(sizedFormat);
+    if (!usage) {
+        ErrorInvalidEnum("`internalformat` must be color-, depth-, or stencil-renderable, was: 0x%04x.",
+                         internalformat);
+        return;
+    }
+
+    if (pname != LOCAL_GL_SAMPLES) {
+        ErrorInvalidEnum("`pname` must be SAMPLES.");
+        return;
+    }
+
+    GLint* samples = nullptr;
+    GLint sampleCount = 0;
+=======
+      sizedFormat = internalformat;
+      break;
+  }
+
+  // In RenderbufferStorage, we allow DEPTH_STENCIL. Therefore, it is accepted
+  // for internalformat as well. Please ignore the conformance test fail for
+  // DEPTH_STENCIL.
+
+  const auto usage = mFormatUsage->GetRBUsage(sizedFormat);
+  if (!usage) {
+    ErrorInvalidEnum(
+        "`internalformat` must be color-, depth-, or stencil-renderable, was: "
+        "0x%04x.",
+        internalformat);
+    return;
+  }
+
+  if (pname != LOCAL_GL_SAMPLES) {
+    ErrorInvalidEnum("`pname` must be SAMPLES.");
+    return;
+  }
+  std::vector<GLint> samples;
+  const auto maxSamples = usage->MaxSamples(*gl);
+  if (maxSamples) {  // It might be force-set to 0 for validation reasons!
+    GLint sampleCount = 0;
+>>>>>>> upstream-releases
     gl->fGetInternalformativ(LOCAL_GL_RENDERBUFFER, internalformat,
+<<<<<<< HEAD
                              LOCAL_GL_SAMPLES, sampleCount, samples);
   }
 
@@ -77,8 +128,37 @@ void WebGL2Context::GetInternalformatParameter(JSContext* cx, GLenum target,
   if (!obj) {
     out_rv = NS_ERROR_OUT_OF_MEMORY;
   }
+||||||| merged common ancestors
+                             LOCAL_GL_NUM_SAMPLE_COUNTS, 1, &sampleCount);
+    if (sampleCount > 0) {
+        samples = new GLint[sampleCount];
+        gl->fGetInternalformativ(LOCAL_GL_RENDERBUFFER, internalformat, LOCAL_GL_SAMPLES,
+                                 sampleCount, samples);
+    }
 
+    JSObject* obj = dom::Int32Array::Create(cx, this, sampleCount, samples);
+    if (!obj) {
+        out_rv = NS_ERROR_OUT_OF_MEMORY;
+    }
+=======
+                             LOCAL_GL_NUM_SAMPLE_COUNTS, 1, &sampleCount);
+    samples.resize(uint32_t(sampleCount));
+    gl->fGetInternalformativ(LOCAL_GL_RENDERBUFFER, internalformat,
+                             LOCAL_GL_SAMPLES, samples.size(), samples.data());
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   delete[] samples;
+||||||| merged common ancestors
+    delete[] samples;
+=======
+  JSObject* obj =
+      dom::Int32Array::Create(cx, this, samples.size(), samples.data());
+  if (!obj) {
+    out_rv = NS_ERROR_OUT_OF_MEMORY;
+  }
+>>>>>>> upstream-releases
 
   retval.setObjectOrNull(obj);
 }

@@ -13,11 +13,17 @@
 #include "mozilla/WidgetUtils.h"
 
 #if defined(XP_MACOSX)
-#define MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS
+#  define MOZ_HAVE_PLATFORM_SPECIFIC_LAYER_BUFFERS
 #endif
 
 #if defined(MOZ_X11)
+<<<<<<< HEAD
 #include "mozilla/layers/ShadowLayerUtilsX11.h"
+||||||| merged common ancestors
+# include "mozilla/layers/ShadowLayerUtilsX11.h"
+=======
+#  include "mozilla/layers/ShadowLayerUtilsX11.h"
+>>>>>>> upstream-releases
 #else
 namespace mozilla {
 namespace layers {

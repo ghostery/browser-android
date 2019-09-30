@@ -23,11 +23,11 @@
 
 // Distinguish architectures for the telemetry key.
 #if defined(__i386__)
-#define SANDBOX_ARCH_NAME "x86"
+#  define SANDBOX_ARCH_NAME "x86"
 #elif defined(__x86_64__)
-#define SANDBOX_ARCH_NAME "amd64"
+#  define SANDBOX_ARCH_NAME "amd64"
 #else
-#error "unrecognized architecture"
+#  error "unrecognized architecture"
 #endif
 
 namespace mozilla {
@@ -74,7 +74,16 @@ SandboxReporter::~SandboxReporter() {
   close(mClientFd);
 }
 
+<<<<<<< HEAD
 /* static */ SandboxReporter* SandboxReporter::Singleton() {
+||||||| merged common ancestors
+/* static */ SandboxReporter*
+SandboxReporter::Singleton()
+{
+=======
+/* static */
+SandboxReporter* SandboxReporter::Singleton() {
+>>>>>>> upstream-releases
   static StaticMutex sMutex;
   StaticMutexAutoLock lock(sMutex);
 
@@ -123,6 +132,7 @@ static void SubmitToTelemetry(const SandboxReport& aReport) {
   // * "content:clock_gettime:4"  (bug 1334687)
 
   switch (aReport.mProcType) {
+<<<<<<< HEAD
     case SandboxReport::ProcType::CONTENT:
       key.AppendLiteral("content");
       break;
@@ -134,6 +144,34 @@ static void SubmitToTelemetry(const SandboxReport& aReport) {
       break;
     default:
       MOZ_ASSERT(false);
+||||||| merged common ancestors
+  case SandboxReport::ProcType::CONTENT:
+    key.AppendLiteral("content");
+    break;
+  case SandboxReport::ProcType::MEDIA_PLUGIN:
+    key.AppendLiteral("gmp");
+    break;
+  case SandboxReport::ProcType::FILE:
+    key.AppendLiteral("file");
+    break;
+  default:
+    MOZ_ASSERT(false);
+=======
+    case SandboxReport::ProcType::CONTENT:
+      key.AppendLiteral("content");
+      break;
+    case SandboxReport::ProcType::FILE:
+      key.AppendLiteral("file");
+      break;
+    case SandboxReport::ProcType::MEDIA_PLUGIN:
+      key.AppendLiteral("gmp");
+      break;
+    case SandboxReport::ProcType::RDD:
+      key.AppendLiteral("rdd");
+      break;
+    default:
+      MOZ_ASSERT(false);
+>>>>>>> upstream-releases
   }
   key.Append(':');
 

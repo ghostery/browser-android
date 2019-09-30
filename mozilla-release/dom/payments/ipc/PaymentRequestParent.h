@@ -14,7 +14,16 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class PaymentRequestParent final : public PPaymentRequestParent {
+||||||| merged common ancestors
+class PaymentRequestParent final : public PPaymentRequestParent
+{
+=======
+class PaymentRequestParent final : public PPaymentRequestParent {
+  friend class PPaymentRequestParent;
+
+>>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(PaymentRequestParent)
  public:
   PaymentRequestParent();
@@ -32,9 +41,19 @@ class PaymentRequestParent final : public PPaymentRequestParent {
                                const nsAString& aMethodName,
                                nsIMethodChangeDetails* aMethodDetails);
 
+<<<<<<< HEAD
  protected:
   mozilla::ipc::IPCResult RecvRequestPayment(
       const IPCPaymentActionRequest& aRequest) override;
+||||||| merged common ancestors
+protected:
+  mozilla::ipc::IPCResult
+  RecvRequestPayment(const IPCPaymentActionRequest& aRequest) override;
+=======
+ protected:
+  mozilla::ipc::IPCResult RecvRequestPayment(
+      const IPCPaymentActionRequest& aRequest);
+>>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult Recv__delete__() override;
 

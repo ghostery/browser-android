@@ -14,26 +14,47 @@ add_task(async function() {
   const { document: doc } = flexboxInspector;
 
   // Select a flex item in the row flexbox layout.
-  let onFlexItemOutlineRendered = waitForDOM(doc,
-    ".flex-outline-container .flex-outline");
+  let onFlexItemOutlineRendered = waitForDOM(
+    doc,
+    ".flex-outline-container .flex-outline"
+  );
   await selectNode(".container .item", inspector);
   let [flexOutline] = await onFlexItemOutlineRendered;
 
-  ok(flexOutline.classList.contains("row"), "The flex outline has the row class");
+  ok(
+    flexOutline.classList.contains("horizontal-lr"),
+    "The flex outline has the horizontal-lr class"
+  );
 
   // Check that the outline is wider than it is tall in the configuration.
   let bounds = flexOutline.getBoxQuads()[0].getBounds();
   ok(bounds.width > bounds.height, "The outline looks like a row");
 
   // Select a flex item in the column flexbox layout.
-  onFlexItemOutlineRendered = waitForDOM(doc,
-    ".flex-outline-container .flex-outline");
+  onFlexItemOutlineRendered = waitForDOM(
+    doc,
+    ".flex-outline-container .flex-outline"
+  );
   await selectNode(".container.column .item", inspector);
+<<<<<<< HEAD
   await waitUntil(() => {
     flexOutline = doc.querySelector(".flex-outline-container .flex-outline.column");
     return flexOutline;
   });
   ok(true, "The flex outline has the column class");
+||||||| merged common ancestors
+  ([flexOutline] = await onFlexItemOutlineRendered);
+
+  ok(flexOutline.classList.contains("column"), "The flex outline has the column class");
+=======
+  await waitUntil(() => {
+    flexOutline = doc.querySelector(
+      ".flex-outline-container .flex-outline.vertical-tb"
+    );
+    return flexOutline;
+  });
+  ok(true, "The flex outline has the vertical-tb class");
+>>>>>>> upstream-releases
 
   // Check that the outline is taller than it is wide in the configuration.
   bounds = flexOutline.getBoxQuads()[0].getBounds();

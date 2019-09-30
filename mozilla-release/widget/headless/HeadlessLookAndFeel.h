@@ -23,6 +23,7 @@ class HeadlessLookAndFeel : public nsXPLookAndFeel {
   HeadlessLookAndFeel();
   virtual ~HeadlessLookAndFeel();
 
+<<<<<<< HEAD
   virtual nsresult NativeGetColor(ColorID aID, nscolor &aResult) override;
   void NativeInit() final{};
   virtual nsresult GetIntImpl(IntID aID, int32_t &aResult) override;
@@ -30,6 +31,23 @@ class HeadlessLookAndFeel : public nsXPLookAndFeel {
   virtual bool GetFontImpl(FontID aID, nsString &aFontName,
                            gfxFontStyle &aFontStyle,
                            float aDevPixPerCSSPixel) override;
+||||||| merged common ancestors
+  virtual nsresult NativeGetColor(ColorID aID, nscolor &aResult) override;
+  void NativeInit() final {};
+  virtual nsresult GetIntImpl(IntID aID, int32_t &aResult) override;
+  virtual nsresult GetFloatImpl(FloatID aID, float &aResult) override;
+  virtual bool GetFontImpl(FontID aID,
+                           nsString& aFontName,
+                           gfxFontStyle& aFontStyle,
+                           float aDevPixPerCSSPixel) override;
+=======
+  virtual nsresult NativeGetColor(ColorID aID, nscolor& aResult) override;
+  void NativeInit() final{};
+  virtual nsresult GetIntImpl(IntID aID, int32_t& aResult) override;
+  virtual nsresult GetFloatImpl(FloatID aID, float& aResult) override;
+  virtual bool GetFontImpl(FontID aID, nsString& aFontName,
+                           gfxFontStyle& aFontStyle) override;
+>>>>>>> upstream-releases
 
   virtual void RefreshImpl() override;
   virtual char16_t GetPasswordCharacterImpl() override;

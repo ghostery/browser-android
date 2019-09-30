@@ -4,29 +4,47 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "nsCOMPtr.h"
 #include "nsTreeColFrame.h"
+
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/ErrorResult.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/XULTreeElement.h"
+#include "nsCOMPtr.h"
 #include "nsGkAtoms.h"
 #include "nsIContent.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsNameSpaceManager.h"
-#include "nsIBoxObject.h"
-#include "mozilla/ErrorResult.h"
-#include "mozilla/dom/TreeBoxObject.h"
 #include "nsTreeColumns.h"
 #include "nsDisplayList.h"
 #include "nsTreeBodyFrame.h"
 #include "nsXULElement.h"
 
+<<<<<<< HEAD
 using namespace mozilla;
 
+||||||| merged common ancestors
+=======
+using namespace mozilla;
+using namespace mozilla::dom;
+
+>>>>>>> upstream-releases
 //
 // NS_NewTreeColFrame
 //
 // Creates a new col frame
 //
+<<<<<<< HEAD
 nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsTreeColFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewTreeColFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTreeColFrame(aStyle);
+=======
+nsIFrame* NS_NewTreeColFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsTreeColFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTreeColFrame)
@@ -115,8 +133,16 @@ void nsTreeColFrame::BuildDisplayListForChildren(
 
   WrapListsInRedirector(aBuilder, set, aLists);
 
+<<<<<<< HEAD
   aLists.Content()->AppendToTop(
       MakeDisplayItem<nsDisplayXULTreeColSplitterTarget>(aBuilder, this));
+||||||| merged common ancestors
+  aLists.Content()->AppendToTop(
+    MakeDisplayItem<nsDisplayXULTreeColSplitterTarget>(aBuilder, this));
+=======
+  aLists.Content()->AppendNewToTop<nsDisplayXULTreeColSplitterTarget>(aBuilder,
+                                                                      this);
+>>>>>>> upstream-releases
 }
 
 nsresult nsTreeColFrame::AttributeChanged(int32_t aNameSpaceID,
@@ -139,17 +165,28 @@ void nsTreeColFrame::SetXULBounds(nsBoxLayoutState& aBoxLayoutState,
 
   nsBoxFrame::SetXULBounds(aBoxLayoutState, aRect, aRemoveOverflowArea);
   if (mRect.width != oldWidth) {
-    nsITreeBoxObject* treeBoxObject = GetTreeBoxObject();
-    if (treeBoxObject) {
-      treeBoxObject->Invalidate();
+    RefPtr<XULTreeElement> tree = GetTree();
+    if (tree) {
+      tree->Invalidate();
     }
   }
 }
 
+<<<<<<< HEAD
 nsITreeBoxObject* nsTreeColFrame::GetTreeBoxObject() {
   nsITreeBoxObject* result = nullptr;
 
+||||||| merged common ancestors
+nsITreeBoxObject*
+nsTreeColFrame::GetTreeBoxObject()
+{
+  nsITreeBoxObject* result = nullptr;
+
+=======
+XULTreeElement* nsTreeColFrame::GetTree() {
+>>>>>>> upstream-releases
   nsIContent* parent = mContent->GetParent();
+<<<<<<< HEAD
   if (parent) {
     nsIContent* grandParent = parent->GetParent();
     RefPtr<nsXULElement> treeElement =
@@ -163,8 +200,26 @@ nsITreeBoxObject* nsTreeColFrame::GetTreeBoxObject() {
     }
   }
   return result;
+||||||| merged common ancestors
+  if (parent) {
+    nsIContent* grandParent = parent->GetParent();
+    RefPtr<nsXULElement> treeElement =
+      nsXULElement::FromNodeOrNull(grandParent);
+    if (treeElement) {
+      nsCOMPtr<nsIBoxObject> boxObject =
+        treeElement->GetBoxObject(IgnoreErrors());
+
+      nsCOMPtr<nsITreeBoxObject> treeBoxObject = do_QueryInterface(boxObject);
+      result = treeBoxObject.get();
+    }
+  }
+  return result;
+=======
+  return parent ? XULTreeElement::FromNodeOrNull(parent->GetParent()) : nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void nsTreeColFrame::InvalidateColumns(bool aCanWalkFrameTree) {
   nsITreeBoxObject* treeBoxObject = GetTreeBoxObject();
   if (treeBoxObject) {
@@ -180,7 +235,50 @@ void nsTreeColFrame::InvalidateColumns(bool aCanWalkFrameTree) {
         columns = body->Columns();
       }
     }
+||||||| merged common ancestors
+void
+nsTreeColFrame::InvalidateColumns(bool aCanWalkFrameTree)
+{
+  nsITreeBoxObject* treeBoxObject = GetTreeBoxObject();
+  if (treeBoxObject) {
+    RefPtr<nsTreeColumns> columns;
 
-    if (columns) columns->InvalidateColumns();
+    if (aCanWalkFrameTree) {
+      treeBoxObject->GetColumns(getter_AddRefs(columns));
+    } else {
+      nsTreeBodyFrame* body = static_cast<mozilla::dom::TreeBoxObject*>
+        (treeBoxObject)->GetCachedTreeBodyFrame();
+      if (body) {
+        columns = body->Columns();
+      }
+    }
+=======
+void nsTreeColFrame::InvalidateColumns(bool aCanWalkFrameTree) {
+  RefPtr<XULTreeElement> tree = GetTree();
+  if (!tree) {
+    return;
   }
+
+  nsTreeBodyFrame* body = aCanWalkFrameTree
+                              ? tree->GetTreeBodyFrame(FlushType::None)
+                              : tree->GetCachedTreeBodyFrame();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (columns) columns->InvalidateColumns();
+||||||| merged common ancestors
+    if (columns)
+      columns->InvalidateColumns();
+=======
+  if (!body) {
+    return;
+>>>>>>> upstream-releases
+  }
+
+  RefPtr<nsTreeColumns> columns = body->Columns();
+  if (!columns) {
+    return;
+  }
+
+  columns->InvalidateColumns();
 }

@@ -2,6 +2,7 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
+<<<<<<< HEAD
 #ifdef XP_WIN
 #include <windows.h>
 #include <wintrust.h>
@@ -42,8 +43,59 @@ typedef WCHAR NS_tchar;
 
 #include "../common/updatehelper.h"
 #include "../common/certificatecheck.h"
+||||||| merged common ancestors
+#ifdef XP_WIN
+# include <windows.h>
+# include <wintrust.h>
+# include <tlhelp32.h>
+# include <softpub.h>
+# include <direct.h>
+# include <io.h>
+  typedef WCHAR NS_tchar;
+# define NS_main wmain
+# ifndef F_OK
+#   define F_OK 00
+# endif
+# ifndef W_OK
+#   define W_OK 02
+# endif
+# ifndef R_OK
+#   define R_OK 04
+# endif
+# if defined(_MSC_VER) && _MSC_VER < 1900
+#  define stat _stat
+# endif
+# define NS_T(str) L ## str
+# define NS_tsnprintf(dest, count, fmt, ...) \
+  { \
+    int _count = count - 1; \
+    _snwprintf(dest, _count, fmt, ##__VA_ARGS__); \
+    dest[_count] = L'\0'; \
+  }
+# define NS_taccess _waccess
+# define NS_tchdir _wchdir
+# define NS_tfopen _wfopen
+# define NS_tstrcmp wcscmp
+# define NS_ttoi _wtoi
+# define NS_tstat _wstat
+# define NS_tgetcwd _wgetcwd
+# define LOG_S "%S"
 
+#include "../common/updatehelper.h"
+#include "../common/certificatecheck.h"
+=======
+#include "updatedefines.h"
+>>>>>>> upstream-releases
+
+#ifdef XP_WIN
+#  include "commonupdatedir.h"
+#  include "updatehelper.h"
+#  include "certificatecheck.h"
+#  define NS_main wmain
+#  define NS_tgetcwd _wgetcwd
+#  define NS_ttoi _wtoi
 #else
+<<<<<<< HEAD
 #include <unistd.h>
 #define NS_main main
 typedef char NS_tchar;
@@ -58,14 +110,36 @@ typedef char NS_tchar;
 #define NS_tgetcwd getcwd
 #define NS_tfputs fputs
 #define LOG_S "%s"
+||||||| merged common ancestors
+# include <unistd.h>
+# define NS_main main
+  typedef char NS_tchar;
+# define NS_T(str) str
+# define NS_tsnprintf snprintf
+# define NS_taccess access
+# define NS_tchdir chdir
+# define NS_tfopen fopen
+# define NS_tstrcmp strcmp
+# define NS_ttoi atoi
+# define NS_tstat stat
+# define NS_tgetcwd getcwd
+# define NS_tfputs fputs
+# define LOG_S "%s"
+=======
+#  define NS_main main
+#  define NS_tgetcwd getcwd
+#  define NS_ttoi atoi
+>>>>>>> upstream-releases
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
+<<<<<<< HEAD
 #ifndef MAXPATHLEN
 #ifdef PATH_MAX
 #define MAXPATHLEN PATH_MAX
@@ -82,6 +156,29 @@ typedef char NS_tchar;
 
 static void WriteMsg(const NS_tchar *path, const char *status) {
   FILE *outFP = NS_tfopen(path, NS_T("wb"));
+||||||| merged common ancestors
+#ifndef MAXPATHLEN
+# ifdef PATH_MAX
+#  define MAXPATHLEN PATH_MAX
+# elif defined(MAX_PATH)
+#  define MAXPATHLEN MAX_PATH
+# elif defined(_MAX_PATH)
+#  define MAXPATHLEN _MAX_PATH
+# elif defined(CCHMAXPATH)
+#  define MAXPATHLEN CCHMAXPATH
+# else
+#  define MAXPATHLEN 1024
+# endif
+#endif
+
+static void
+WriteMsg(const NS_tchar *path, const char *status)
+{
+  FILE* outFP = NS_tfopen(path, NS_T("wb"));
+=======
+static void WriteMsg(const NS_tchar* path, const char* status) {
+  FILE* outFP = NS_tfopen(path, NS_T("wb"));
+>>>>>>> upstream-releases
   if (!outFP) {
     return;
   }
@@ -91,12 +188,26 @@ static void WriteMsg(const NS_tchar *path, const char *status) {
   outFP = nullptr;
 }
 
+<<<<<<< HEAD
 static bool CheckMsg(const NS_tchar *path, const char *expected) {
   if (NS_taccess(path, F_OK)) {
     return false;
   }
 
   FILE *inFP = NS_tfopen(path, NS_T("rb"));
+||||||| merged common ancestors
+static bool
+CheckMsg(const NS_tchar *path, const char *expected)
+{
+  if (NS_taccess(path, F_OK)) {
+    return false;
+  }
+
+  FILE *inFP = NS_tfopen(path, NS_T("rb"));
+=======
+static bool CheckMsg(const NS_tchar* path, const char* expected) {
+  FILE* inFP = NS_tfopen(path, NS_T("rb"));
+>>>>>>> upstream-releases
   if (!inFP) {
     return false;
   }
@@ -108,7 +219,13 @@ static bool CheckMsg(const NS_tchar *path, const char *expected) {
     return false;
   }
 
+<<<<<<< HEAD
   char *mbuf = (char *)malloc(ms.st_size + 1);
+||||||| merged common ancestors
+  char *mbuf = (char *) malloc(ms.st_size + 1);
+=======
+  char* mbuf = (char*)malloc(ms.st_size + 1);
+>>>>>>> upstream-releases
   if (!mbuf) {
     fclose(inFP);
     inFP = nullptr;
@@ -116,7 +233,7 @@ static bool CheckMsg(const NS_tchar *path, const char *expected) {
   }
 
   size_t r = ms.st_size;
-  char *rb = mbuf;
+  char* rb = mbuf;
   size_t c = fread(rb, sizeof(char), 50, inFP);
   r -= c;
   if (c == 0 && r) {
@@ -135,7 +252,14 @@ static bool CheckMsg(const NS_tchar *path, const char *expected) {
   return isMatch;
 }
 
+<<<<<<< HEAD
 int NS_main(int argc, NS_tchar **argv) {
+||||||| merged common ancestors
+int NS_main(int argc, NS_tchar **argv)
+{
+=======
+int NS_main(int argc, NS_tchar** argv) {
+>>>>>>> upstream-releases
   if (argc == 2) {
     if (!NS_tstrcmp(argv[1], NS_T("post-update-async")) ||
         !NS_tstrcmp(argv[1], NS_T("post-update-sync"))) {
@@ -145,19 +269,44 @@ int NS_main(int argc, NS_tchar **argv) {
         return 1;
       }
 #else
-      strcpy(exePath, argv[0]);
+      if (!NS_tvsnprintf(exePath, sizeof(exePath) / sizeof(exePath[0]),
+                         NS_T("%s"), argv[0])) {
+        return 1;
+      }
 #endif
       NS_tchar runFilePath[MAXPATHLEN];
+<<<<<<< HEAD
       NS_tsnprintf(runFilePath, sizeof(runFilePath) / sizeof(runFilePath[0]),
                    NS_T("%s.running"), exePath);
+||||||| merged common ancestors
+      NS_tsnprintf(runFilePath, sizeof(runFilePath)/sizeof(runFilePath[0]),
+                   NS_T("%s.running"), exePath);
+=======
+      if (!NS_tvsnprintf(runFilePath,
+                         sizeof(runFilePath) / sizeof(runFilePath[0]),
+                         NS_T("%s.running"), exePath)) {
+        return 1;
+      }
+>>>>>>> upstream-releases
 #ifdef XP_WIN
       if (!NS_taccess(runFilePath, F_OK)) {
         // This makes it possible to check if the post update process was
         // launched twice which happens when the service performs an update.
         NS_tchar runFilePathBak[MAXPATHLEN];
+<<<<<<< HEAD
         NS_tsnprintf(runFilePathBak,
                      sizeof(runFilePathBak) / sizeof(runFilePathBak[0]),
                      NS_T("%s.bak"), runFilePath);
+||||||| merged common ancestors
+        NS_tsnprintf(runFilePathBak, sizeof(runFilePathBak)/sizeof(runFilePathBak[0]),
+                     NS_T("%s.bak"), runFilePath);
+=======
+        if (!NS_tvsnprintf(runFilePathBak,
+                           sizeof(runFilePathBak) / sizeof(runFilePathBak[0]),
+                           NS_T("%s.bak"), runFilePath)) {
+          return 1;
+        }
+>>>>>>> upstream-releases
         MoveFileExW(runFilePath, runFilePathBak, MOVEFILE_REPLACE_EXISTING);
       }
 #endif
@@ -172,8 +321,19 @@ int NS_main(int argc, NS_tchar **argv) {
       }
 
       NS_tchar logFilePath[MAXPATHLEN];
+<<<<<<< HEAD
       NS_tsnprintf(logFilePath, sizeof(logFilePath) / sizeof(logFilePath[0]),
                    NS_T("%s.log"), exePath);
+||||||| merged common ancestors
+      NS_tsnprintf(logFilePath, sizeof(logFilePath)/sizeof(logFilePath[0]),
+                   NS_T("%s.log"), exePath);
+=======
+      if (!NS_tvsnprintf(logFilePath,
+                         sizeof(logFilePath) / sizeof(logFilePath[0]),
+                         NS_T("%s.log"), exePath)) {
+        return 1;
+      }
+>>>>>>> upstream-releases
       WriteMsg(logFilePath, "post-update");
       return 0;
     }
@@ -236,6 +396,7 @@ int NS_main(int argc, NS_tchar **argv) {
   if (!NS_tstrcmp(argv[1], NS_T("setup-symlink"))) {
 #ifdef XP_UNIX
     NS_tchar path[MAXPATHLEN];
+<<<<<<< HEAD
     NS_tsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
                  NS_T("/tmp"), argv[2]);
     mkdir(path, 0755);
@@ -245,17 +406,61 @@ int NS_main(int argc, NS_tchar **argv) {
     NS_tsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s/%s/%s"),
                  NS_T("/tmp"), argv[2], argv[3], argv[4]);
     FILE *file = NS_tfopen(path, NS_T("w"));
+||||||| merged common ancestors
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s"), NS_T("/tmp"), argv[2]);
+    mkdir(path, 0755);
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3]);
+    mkdir(path, 0755);
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3], argv[4]);
+    FILE * file = NS_tfopen(path, NS_T("w"));
+=======
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
+                       NS_T("/tmp"), argv[2])) {
+      return 1;
+    }
+    if (mkdir(path, 0755)) {
+      return 1;
+    }
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s/%s"),
+                       NS_T("/tmp"), argv[2], argv[3])) {
+      return 1;
+    }
+    if (mkdir(path, 0755)) {
+      return 1;
+    }
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]),
+                       NS_T("%s/%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3],
+                       argv[4])) {
+      return 1;
+    }
+    FILE* file = NS_tfopen(path, NS_T("w"));
+>>>>>>> upstream-releases
     if (file) {
-      NS_tfputs(NS_T("test"), file);
+      fputs(NS_T("test"), file);
       fclose(file);
     }
     if (symlink(path, argv[5]) != 0) {
       return 1;
     }
+<<<<<<< HEAD
     NS_tsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
                  NS_T("/tmp"), argv[2]);
+||||||| merged common ancestors
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s"), NS_T("/tmp"), argv[2]);
+=======
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
+                       NS_T("/tmp"), argv[2])) {
+      return 1;
+    }
+>>>>>>> upstream-releases
     if (argc > 6 && !NS_tstrcmp(argv[6], NS_T("change-perm"))) {
-      chmod(path, 0644);
+      if (chmod(path, 0644)) {
+        return 1;
+      }
     }
     return 0;
 #else
@@ -266,7 +471,12 @@ int NS_main(int argc, NS_tchar **argv) {
 
   if (!NS_tstrcmp(argv[1], NS_T("remove-symlink"))) {
 #ifdef XP_UNIX
+    // The following can be called at the start of a test in case these symlinks
+    // need to be removed if they already exist and at the end of a test to
+    // remove the symlinks created by the test so ignore file doesn't exist
+    // errors.
     NS_tchar path[MAXPATHLEN];
+<<<<<<< HEAD
     NS_tsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
                  NS_T("/tmp"), argv[2]);
     chmod(path, 0755);
@@ -279,6 +489,50 @@ int NS_main(int argc, NS_tchar **argv) {
     NS_tsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
                  NS_T("/tmp"), argv[2]);
     rmdir(path);
+||||||| merged common ancestors
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s"), NS_T("/tmp"), argv[2]);
+    chmod(path, 0755);
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3], argv[4]);
+    unlink(path);
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3]);
+    rmdir(path);
+    NS_tsnprintf(path, sizeof(path)/sizeof(path[0]),
+                 NS_T("%s/%s"), NS_T("/tmp"), argv[2]);
+    rmdir(path);
+=======
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
+                       NS_T("/tmp"), argv[2])) {
+      return 1;
+    }
+    if (chmod(path, 0755) && errno != ENOENT) {
+      return 1;
+    }
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]),
+                       NS_T("%s/%s/%s/%s"), NS_T("/tmp"), argv[2], argv[3],
+                       argv[4])) {
+      return 1;
+    }
+    if (unlink(path) && errno != ENOENT) {
+      return 1;
+    }
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s/%s"),
+                       NS_T("/tmp"), argv[2], argv[3])) {
+      return 1;
+    }
+    if (rmdir(path) && errno != ENOENT) {
+      return 1;
+    }
+    if (!NS_tvsnprintf(path, sizeof(path) / sizeof(path[0]), NS_T("%s/%s"),
+                       NS_T("/tmp"), argv[2])) {
+      return 1;
+    }
+    if (rmdir(path) && errno != ENOENT) {
+      return 1;
+    }
+>>>>>>> upstream-releases
     return 0;
 #else
     // Not implemented on non-Unix platforms
@@ -289,7 +543,9 @@ int NS_main(int argc, NS_tchar **argv) {
   if (!NS_tstrcmp(argv[1], NS_T("check-symlink"))) {
 #ifdef XP_UNIX
     struct stat ss;
-    lstat(argv[2], &ss);
+    if (lstat(argv[2], &ss)) {
+      return 1;
+    }
     return S_ISLNK(ss.st_mode) ? 0 : 1;
 #else
     // Not implemented on non-Unix platforms
@@ -343,8 +599,15 @@ int NS_main(int argc, NS_tchar **argv) {
 
   if (!NS_tstrcmp(argv[1], NS_T("launch-service"))) {
 #ifdef XP_WIN
+<<<<<<< HEAD
     DWORD ret =
         LaunchServiceSoftwareUpdateCommand(argc - 2, (LPCWSTR *)argv + 2);
+||||||| merged common ancestors
+    DWORD ret = LaunchServiceSoftwareUpdateCommand(argc - 2, (LPCWSTR *)argv + 2);
+=======
+    DWORD ret =
+        LaunchServiceSoftwareUpdateCommand(argc - 2, (LPCWSTR*)argv + 2);
+>>>>>>> upstream-releases
     if (ret != ERROR_SUCCESS) {
       // 192 is used to avoid reusing a possible return value from the call to
       // WaitForServiceStop
@@ -380,13 +643,37 @@ int NS_main(int argc, NS_tchar **argv) {
 
   // File in use test helper section
   if (!NS_tstrcmp(argv[4], NS_T("-s"))) {
-    NS_tchar *cwd = NS_tgetcwd(nullptr, 0);
+    // Note: glibc's getcwd() allocates the buffer dynamically using malloc(3)
+    // if buf (the 1st param) is NULL so free cwd when it is no longer needed.
+    NS_tchar* cwd = NS_tgetcwd(nullptr, 0);
     NS_tchar inFilePath[MAXPATHLEN];
+<<<<<<< HEAD
     NS_tsnprintf(inFilePath, sizeof(inFilePath) / sizeof(inFilePath[0]),
                  NS_T("%s/%s"), cwd, argv[2]);
+||||||| merged common ancestors
+    NS_tsnprintf(inFilePath, sizeof(inFilePath)/sizeof(inFilePath[0]),
+                 NS_T("%s/%s"), cwd, argv[2]);
+=======
+    if (!NS_tvsnprintf(inFilePath, sizeof(inFilePath) / sizeof(inFilePath[0]),
+                       NS_T("%s/%s"), cwd, argv[2])) {
+      return 1;
+    }
+>>>>>>> upstream-releases
     NS_tchar outFilePath[MAXPATHLEN];
+<<<<<<< HEAD
     NS_tsnprintf(outFilePath, sizeof(outFilePath) / sizeof(outFilePath[0]),
                  NS_T("%s/%s"), cwd, argv[3]);
+||||||| merged common ancestors
+    NS_tsnprintf(outFilePath, sizeof(outFilePath)/sizeof(outFilePath[0]),
+                 NS_T("%s/%s"), cwd, argv[3]);
+=======
+    if (!NS_tvsnprintf(outFilePath,
+                       sizeof(outFilePath) / sizeof(outFilePath[0]),
+                       NS_T("%s/%s"), cwd, argv[3])) {
+      return 1;
+    }
+    free(cwd);
+>>>>>>> upstream-releases
 
     int seconds = NS_ttoi(argv[5]);
 #ifdef XP_WIN
@@ -423,10 +710,30 @@ int NS_main(int argc, NS_tchar **argv) {
   {
     // Command line argument test helper section
     NS_tchar logFilePath[MAXPATHLEN];
+<<<<<<< HEAD
     NS_tsnprintf(logFilePath, sizeof(logFilePath) / sizeof(logFilePath[0]),
                  NS_T("%s"), argv[2]);
+||||||| merged common ancestors
+    NS_tsnprintf(logFilePath, sizeof(logFilePath)/sizeof(logFilePath[0]),
+                 NS_T("%s"), argv[2]);
+=======
+    if (!NS_tvsnprintf(logFilePath,
+                       sizeof(logFilePath) / sizeof(logFilePath[0]), NS_T("%s"),
+                       argv[2])) {
+      return 1;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     FILE *logFP = NS_tfopen(logFilePath, NS_T("wb"));
+||||||| merged common ancestors
+    FILE* logFP = NS_tfopen(logFilePath, NS_T("wb"));
+=======
+    FILE* logFP = NS_tfopen(logFilePath, NS_T("wb"));
+    if (!logFP) {
+      return 1;
+    }
+>>>>>>> upstream-releases
     for (int i = 1; i < argc; ++i) {
       fprintf(logFP, LOG_S "\n", argv[i]);
     }

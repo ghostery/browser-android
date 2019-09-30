@@ -23,13 +23,13 @@ namespace cache {
 using mozilla::Unused;
 using mozilla::ipc::AutoIPCStream;
 using mozilla::ipc::IPCStream;
-using mozilla::ipc::OptionalIPCStream;
 
 // ----------------------------------------------------------------------------
 
 // The inner stream class.  This is where all of the real work is done.  As
 // an invariant Inner::Close() must be called before ~Inner().  This is
 // guaranteed by our outer ReadStream class.
+<<<<<<< HEAD
 class ReadStream::Inner final : public ReadStream::Controllable {
  public:
   Inner(StreamControl* aControl, const nsID& aId, nsIInputStream* aStream);
@@ -41,6 +41,35 @@ class ReadStream::Inner final : public ReadStream::Controllable {
   void Serialize(CacheReadStream* aReadStreamOut,
                  nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
                  ErrorResult& aRv);
+||||||| merged common ancestors
+class ReadStream::Inner final : public ReadStream::Controllable
+{
+public:
+  Inner(StreamControl* aControl, const nsID& aId,
+        nsIInputStream* aStream);
+
+  void
+  Serialize(CacheReadStreamOrVoid* aReadStreamOut,
+            nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+            ErrorResult& aRv);
+
+  void
+  Serialize(CacheReadStream* aReadStreamOut,
+            nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+            ErrorResult& aRv);
+=======
+class ReadStream::Inner final : public ReadStream::Controllable {
+ public:
+  Inner(StreamControl* aControl, const nsID& aId, nsIInputStream* aStream);
+
+  void Serialize(Maybe<CacheReadStream>* aReadStreamOut,
+                 nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+                 ErrorResult& aRv);
+
+  void Serialize(CacheReadStream* aReadStreamOut,
+                 nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+                 ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   // ReadStream::Controllable methods
   virtual void CloseStream() override;
@@ -193,13 +222,25 @@ ReadStream::Inner::Inner(StreamControl* aControl, const nsID& aId,
   mControl->AddReadStream(this);
 }
 
+<<<<<<< HEAD
 void ReadStream::Inner::Serialize(
     CacheReadStreamOrVoid* aReadStreamOut,
     nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+ReadStream::Inner::Serialize(CacheReadStreamOrVoid* aReadStreamOut,
+                             nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+                             ErrorResult& aRv)
+{
+=======
+void ReadStream::Inner::Serialize(
+    Maybe<CacheReadStream>* aReadStreamOut,
+    nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mOwningEventTarget->IsOnCurrentThread());
   MOZ_DIAGNOSTIC_ASSERT(aReadStreamOut);
-  *aReadStreamOut = CacheReadStream();
-  Serialize(&aReadStreamOut->get_CacheReadStream(), aStreamCleanupList, aRv);
+  aReadStreamOut->emplace(CacheReadStream());
+  Serialize(&aReadStreamOut->ref(), aStreamCleanupList, aRv);
 }
 
 void ReadStream::Inner::Serialize(
@@ -223,10 +264,23 @@ void ReadStream::Inner::Serialize(
     mControl->SerializeStream(aReadStreamOut, mStream, aStreamCleanupList);
   }
 
+<<<<<<< HEAD
   MOZ_DIAGNOSTIC_ASSERT(aReadStreamOut->stream().type() ==
                             OptionalIPCStream::Tvoid_t ||
                         aReadStreamOut->stream().get_IPCStream().type() ==
                             IPCStream::TInputStreamParamsWithFds);
+||||||| merged common ancestors
+  MOZ_DIAGNOSTIC_ASSERT(aReadStreamOut->stream().type() == OptionalIPCStream::Tvoid_t ||
+                        aReadStreamOut->stream().get_IPCStream().type() ==
+                        IPCStream::TInputStreamParamsWithFds);
+=======
+  MOZ_DIAGNOSTIC_ASSERT(
+      aReadStreamOut->stream().isNothing() ||
+      (aReadStreamOut->stream().ref().stream().type() !=
+           mozilla::ipc::InputStreamParams::TIPCRemoteStreamParams &&
+       aReadStreamOut->stream().ref().stream().type() !=
+           mozilla::ipc::InputStreamParams::T__None));
+>>>>>>> upstream-releases
 
   // We're passing ownership across the IPC barrier with the control, so
   // do not signal that the stream is closed here.
@@ -500,13 +554,24 @@ void ReadStream::Inner::OpenStreamFailed() {
 NS_IMPL_ISUPPORTS(cache::ReadStream, nsIInputStream, ReadStream);
 
 // static
+<<<<<<< HEAD
 already_AddRefed<ReadStream> ReadStream::Create(
     const CacheReadStreamOrVoid& aReadStreamOrVoid) {
   if (aReadStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
+||||||| merged common ancestors
+already_AddRefed<ReadStream>
+ReadStream::Create(const CacheReadStreamOrVoid& aReadStreamOrVoid)
+{
+  if (aReadStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
+=======
+already_AddRefed<ReadStream> ReadStream::Create(
+    const Maybe<CacheReadStream>& aMaybeReadStream) {
+  if (aMaybeReadStream.isNothing()) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
-  return Create(aReadStreamOrVoid.get_CacheReadStream());
+  return Create(aMaybeReadStream.ref());
 }
 
 // static
@@ -519,10 +584,23 @@ already_AddRefed<ReadStream> ReadStream::Create(
     return nullptr;
   }
 
+<<<<<<< HEAD
   MOZ_DIAGNOSTIC_ASSERT(aReadStream.stream().type() ==
                             OptionalIPCStream::Tvoid_t ||
                         aReadStream.stream().get_IPCStream().type() ==
                             IPCStream::TInputStreamParamsWithFds);
+||||||| merged common ancestors
+  MOZ_DIAGNOSTIC_ASSERT(aReadStream.stream().type() == OptionalIPCStream::Tvoid_t ||
+                        aReadStream.stream().get_IPCStream().type() ==
+                        IPCStream::TInputStreamParamsWithFds);
+=======
+  MOZ_DIAGNOSTIC_ASSERT(
+      aReadStream.stream().isNothing() ||
+      (aReadStream.stream().ref().stream().type() !=
+           mozilla::ipc::InputStreamParams::TIPCRemoteStreamParams &&
+       aReadStream.stream().ref().stream().type() !=
+           mozilla::ipc::InputStreamParams::T__None));
+>>>>>>> upstream-releases
 
   // Control is guaranteed to survive this method as ActorDestroy() cannot
   // run on this thread until we complete.
@@ -564,9 +642,21 @@ already_AddRefed<ReadStream> ReadStream::Create(
   return ref.forget();
 }
 
+<<<<<<< HEAD
 void ReadStream::Serialize(
     CacheReadStreamOrVoid* aReadStreamOut,
     nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+ReadStream::Serialize(CacheReadStreamOrVoid* aReadStreamOut,
+                      nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList,
+                      ErrorResult& aRv)
+{
+=======
+void ReadStream::Serialize(
+    Maybe<CacheReadStream>* aReadStreamOut,
+    nsTArray<UniquePtr<AutoIPCStream>>& aStreamCleanupList, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   mInner->Serialize(aReadStreamOut, aStreamCleanupList, aRv);
 }
 

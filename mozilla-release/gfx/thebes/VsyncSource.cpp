@@ -26,8 +26,19 @@ void VsyncSource::RemoveCompositorVsyncDispatcher(
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
   // See also AddCompositorVsyncDispatcher().
+<<<<<<< HEAD
   GetGlobalDisplay().RemoveCompositorVsyncDispatcher(
       aCompositorVsyncDispatcher);
+||||||| merged common ancestors
+  GetGlobalDisplay().RemoveCompositorVsyncDispatcher(aCompositorVsyncDispatcher);
+=======
+  GetGlobalDisplay().RemoveCompositorVsyncDispatcher(
+      aCompositorVsyncDispatcher);
+}
+
+void VsyncSource::MoveListenersToNewSource(VsyncSource* aNewSource) {
+  GetGlobalDisplay().MoveListenersToNewSource(aNewSource->GetGlobalDisplay());
+>>>>>>> upstream-releases
 }
 
 RefPtr<RefreshTimerVsyncDispatcher>
@@ -55,9 +66,24 @@ void VsyncSource::Display::NotifyVsync(TimeStamp aVsyncTimestamp) {
   // Called on the vsync thread
   MutexAutoLock lock(mDispatcherLock);
 
+<<<<<<< HEAD
   mVsyncId = mVsyncId.Next();
   VsyncEvent event(mVsyncId, aVsyncTimestamp);
 
+||||||| merged common ancestors
+=======
+  // mRefreshTimerVsyncDispatcher might be null here if MoveListenersToNewSource
+  // was called concurrently with this function and won the race to acquire
+  // mDispatcherLock. In this case the new VsyncSource that is replacing this
+  // one will handle notifications from now on, so we can abort.
+  if (!mRefreshTimerVsyncDispatcher) {
+    return;
+  }
+
+  mVsyncId = mVsyncId.Next();
+  VsyncEvent event(mVsyncId, aVsyncTimestamp);
+
+>>>>>>> upstream-releases
   for (size_t i = 0; i < mCompositorVsyncDispatchers.Length(); i++) {
     mCompositorVsyncDispatchers[i]->NotifyVsync(event);
   }
@@ -96,7 +122,27 @@ void VsyncSource::Display::RemoveCompositorVsyncDispatcher(
   UpdateVsyncStatus();
 }
 
+<<<<<<< HEAD
 void VsyncSource::Display::NotifyRefreshTimerVsyncStatus(bool aEnable) {
+||||||| merged common ancestors
+void
+VsyncSource::Display::NotifyRefreshTimerVsyncStatus(bool aEnable)
+{
+=======
+void VsyncSource::Display::MoveListenersToNewSource(
+    VsyncSource::Display& aNewDisplay) {
+  MOZ_ASSERT(NS_IsMainThread());
+  MutexAutoLock lock(mDispatcherLock);
+  MutexAutoLock newLock(aNewDisplay.mDispatcherLock);
+  aNewDisplay.mCompositorVsyncDispatchers.AppendElements(
+      std::move(mCompositorVsyncDispatchers));
+
+  aNewDisplay.mRefreshTimerVsyncDispatcher = mRefreshTimerVsyncDispatcher;
+  mRefreshTimerVsyncDispatcher = nullptr;
+}
+
+void VsyncSource::Display::NotifyRefreshTimerVsyncStatus(bool aEnable) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   mRefreshTimerNeedsVsync = aEnable;
   UpdateVsyncStatus();

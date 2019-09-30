@@ -1,34 +1,26 @@
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 
 Services.prefs.setBoolPref("keyword.enabled", true);
+||||||| merged common ancestors
+var urifixup = Cc["@mozilla.org/docshell/urifixup;1"].
+               getService(Ci.nsIURIFixup);
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+
+Services.prefs.setBoolPref("keyword.enabled", true);
+=======
+const { AppConstants } = ChromeUtils.import(
+  "resource://gre/modules/AppConstants.jsm"
+);
+const { AddonTestUtils } = ChromeUtils.import(
+  "resource://testing-common/AddonTestUtils.jsm"
+);
+>>>>>>> upstream-releases
 
 const kSearchEngineID = "test_urifixup_search_engine";
 const kSearchEngineURL = "http://www.example.org/?search={searchTerms}";
-Services.search.addEngineWithDetails(kSearchEngineID, "", "", "", "get",
-                                     kSearchEngineURL);
-
-Services.io.getProtocolHandler("resource")
-        .QueryInterface(Ci.nsIResProtocolHandler)
-        .setSubstitution("search-plugins",
-                         Services.io.newURI("chrome://mozapps/locale/searchplugins/"));
-
-var oldDefaultEngine = Services.search.defaultEngine;
-Services.search.defaultEngine = Services.search.getEngineByName(kSearchEngineID);
-
-var selectedName = Services.search.defaultEngine.name;
-Assert.equal(selectedName, kSearchEngineID);
-
-registerCleanupFunction(function() {
-  if (oldDefaultEngine) {
-    Services.search.defaultEngine = oldDefaultEngine;
-  }
-  let engine = Services.search.getEngineByName(kSearchEngineID);
-  if (engine) {
-    Services.search.removeEngine(engine);
-  }
-  Services.prefs.clearUserPref("keyword.enabled");
-});
 
 var isWin = AppConstants.platform == "win";
 
@@ -40,8 +32,19 @@ var data = [
   },
   {
     // Unrecognized protocols should be changed.
+<<<<<<< HEAD
     wrong: "whatever://this/is/a/test.html",
     fixed: kSearchEngineURL.replace("{searchTerms}", encodeURIComponent("whatever://this/is/a/test.html")),
+||||||| merged common ancestors
+    wrong: 'whatever://this/is/a/test.html',
+    fixed: kSearchEngineURL.replace("{searchTerms}", encodeURIComponent('whatever://this/is/a/test.html')),
+=======
+    wrong: "whatever://this/is/a/test.html",
+    fixed: kSearchEngineURL.replace(
+      "{searchTerms}",
+      encodeURIComponent("whatever://this/is/a/test.html")
+    ),
+>>>>>>> upstream-releases
   },
 
   // The following tests check that when a user:password is present in the URL
@@ -72,29 +75,60 @@ var data = [
     fixed: "http://user:pass@example.com:8080/this/is/a/test.html",
   },
   {
+<<<<<<< HEAD
     wrong: "gobbledygook:user:pass@example.com:8080/this/is/a/test.html",
     fixed: "http://gobbledygook:user%3Apass@example.com:8080/this/is/a/test.html",
+||||||| merged common ancestors
+    wrong: 'gobbledygook:user:pass@example.com:8080/this/is/a/test.html',
+    fixed: 'http://gobbledygook:user%3Apass@example.com:8080/this/is/a/test.html',
+=======
+    wrong: "gobbledygook:user:pass@example.com:8080/this/is/a/test.html",
+    fixed:
+      "http://gobbledygook:user%3Apass@example.com:8080/this/is/a/test.html",
+>>>>>>> upstream-releases
   },
   {
     wrong: "user:@example.com:8080/this/is/a/test.html",
     fixed: "http://user@example.com:8080/this/is/a/test.html",
   },
   {
+<<<<<<< HEAD
     wrong: "//user:pass@example.com:8080/this/is/a/test.html",
     fixed: (isWin ? "http:" : "file://") + "//user:pass@example.com:8080/this/is/a/test.html",
+||||||| merged common ancestors
+    wrong: '//user:pass@example.com:8080/this/is/a/test.html',
+    fixed: (isWin ? "http:" : "file://") + '//user:pass@example.com:8080/this/is/a/test.html',
+=======
+    wrong: "//user:pass@example.com:8080/this/is/a/test.html",
+    fixed:
+      (isWin ? "http:" : "file://") +
+      "//user:pass@example.com:8080/this/is/a/test.html",
+>>>>>>> upstream-releases
   },
   {
     wrong: "://user:pass@example.com:8080/this/is/a/test.html",
     fixed: "http://user:pass@example.com:8080/this/is/a/test.html",
   },
   {
+<<<<<<< HEAD
     wrong: "whatever://this/is/a@b/test.html",
     fixed: kSearchEngineURL.replace("{searchTerms}", encodeURIComponent("whatever://this/is/a@b/test.html")),
+||||||| merged common ancestors
+    wrong: 'whatever://this/is/a@b/test.html',
+    fixed: kSearchEngineURL.replace("{searchTerms}", encodeURIComponent('whatever://this/is/a@b/test.html')),
+=======
+    wrong: "whatever://this/is/a@b/test.html",
+    fixed: kSearchEngineURL.replace(
+      "{searchTerms}",
+      encodeURIComponent("whatever://this/is/a@b/test.html")
+    ),
+>>>>>>> upstream-releases
   },
 ];
 
-var extProtocolSvc = Cc["@mozilla.org/uriloader/external-protocol-service;1"]
-                     .getService(Ci.nsIExternalProtocolService);
+var extProtocolSvc = Cc[
+  "@mozilla.org/uriloader/external-protocol-service;1"
+].getService(Ci.nsIExternalProtocolService);
 
 if (extProtocolSvc && extProtocolSvc.externalProtocolHandlerExists("mailto")) {
   data.push({
@@ -104,13 +138,71 @@ if (extProtocolSvc && extProtocolSvc.externalProtocolHandlerExists("mailto")) {
 }
 
 var len = data.length;
+
+AddonTestUtils.init(this);
+AddonTestUtils.overrideCertDB();
+AddonTestUtils.createAppInfo(
+  "xpcshell@tests.mozilla.org",
+  "XPCShell",
+  "1",
+  "42"
+);
+
+add_task(async function setup() {
+  await AddonTestUtils.promiseStartupManager();
+
+  Services.prefs.setBoolPref("keyword.enabled", true);
+  Services.io
+    .getProtocolHandler("resource")
+    .QueryInterface(Ci.nsIResProtocolHandler)
+    .setSubstitution(
+      "search-extensions",
+      Services.io.newURI("chrome://mozapps/locale/searchextensions/")
+    );
+
+  await Services.search.addEngineWithDetails(kSearchEngineID, {
+    method: "get",
+    template: kSearchEngineURL,
+  });
+
+  var oldCurrentEngine = await Services.search.getDefault();
+  await Services.search.setDefault(
+    Services.search.getEngineByName(kSearchEngineID)
+  );
+
+  var selectedName = (await Services.search.getDefault()).name;
+  Assert.equal(selectedName, kSearchEngineID);
+
+  registerCleanupFunction(async function() {
+    if (oldCurrentEngine) {
+      await Services.search.setDefault(oldCurrentEngine);
+    }
+    let engine = Services.search.getEngineByName(kSearchEngineID);
+    if (engine) {
+      await Services.search.removeEngine(engine);
+    }
+    Services.prefs.clearUserPref("keyword.enabled");
+  });
+});
+
 // Make sure we fix what needs fixing
 add_task(function test_fix_unknown_schemes() {
   for (let i = 0; i < len; ++i) {
     let item = data[i];
+<<<<<<< HEAD
     let result =
       Services.uriFixup.createFixupURI(item.wrong,
                               Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+||||||| merged common ancestors
+    let result =
+      urifixup.createFixupURI(item.wrong,
+                              urifixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+=======
+    let result = Services.uriFixup.createFixupURI(
+      item.wrong,
+      Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS
+    ).spec;
+>>>>>>> upstream-releases
     Assert.equal(result, item.fixed);
   }
 });

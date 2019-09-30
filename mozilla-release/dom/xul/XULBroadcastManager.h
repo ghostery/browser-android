@@ -16,10 +16,21 @@ namespace mozilla {
 namespace dom {
 
 class XULBroadcastManager final {
+<<<<<<< HEAD
  public:
   typedef mozilla::dom::Element Element;
 
   explicit XULBroadcastManager(nsIDocument* aDocument);
+||||||| merged common ancestors
+
+public:
+  typedef mozilla::dom::Element Element;
+
+  explicit XULBroadcastManager(nsIDocument* aDocument);
+=======
+ public:
+  explicit XULBroadcastManager(Document* aDocument);
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(XULBroadcastManager)
 
@@ -62,7 +73,7 @@ class XULBroadcastManager final {
 
   // This reference is nulled by the Document in it's destructor through
   // DropDocumentReference().
-  nsIDocument* MOZ_NON_OWNING_REF mDocument;
+  Document* MOZ_NON_OWNING_REF mDocument;
 
   /**
    * A map from a broadcaster element to a list of listener elements.

@@ -31,6 +31,7 @@ class TextEditor;
 enum class EditSubAction : int32_t;
 
 namespace dom {
+class Document;
 class Element;
 class Selection;
 }  // namespace dom
@@ -77,27 +78,65 @@ class HTMLEditRules : public TextEditRules {
   HTMLEditRules();
 
   // TextEditRules methods
+  MOZ_CAN_RUN_SCRIPT
   virtual nsresult Init(TextEditor* aTextEditor) override;
   virtual nsresult DetachEditor() override;
   virtual nsresult BeforeEdit(EditSubAction aEditSubAction,
                               nsIEditor::EDirection aDirection) override;
+  MOZ_CAN_RUN_SCRIPT
   virtual nsresult AfterEdit(EditSubAction aEditSubAction,
                              nsIEditor::EDirection aDirection) override;
+<<<<<<< HEAD
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult WillDoAction(EditSubActionInfo& aInfo, bool* aCancel,
+||||||| merged common ancestors
+  virtual nsresult WillDoAction(Selection* aSelection,
+                                EditSubActionInfo& aInfo,
+                                bool* aCancel,
+=======
+  // NOTE: Don't mark WillDoAction() nor DidDoAction() as MOZ_CAN_RUN_SCRIPT
+  //       because they are too generic and doing it makes a lot of public
+  //       editor methods marked as MOZ_CAN_RUN_SCRIPT too, but some of them
+  //       may not causes running script.  So, ideal fix must be that we make
+  //       each method callsed by this method public.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual nsresult WillDoAction(EditSubActionInfo& aInfo, bool* aCancel,
+>>>>>>> upstream-releases
                                 bool* aHandled) override;
+<<<<<<< HEAD
   virtual nsresult DidDoAction(EditSubActionInfo& aInfo,
+||||||| merged common ancestors
+  virtual nsresult DidDoAction(Selection* aSelection,
+                               EditSubActionInfo& aInfo,
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual nsresult DidDoAction(EditSubActionInfo& aInfo,
+>>>>>>> upstream-releases
                                nsresult aResult) override;
   virtual bool DocumentIsEmpty() override;
+<<<<<<< HEAD
+
+  /**
+   * DocumentModified() is called when editor content is changed.
+   */
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult DocumentModified();
+||||||| merged common ancestors
+  virtual nsresult DocumentModified() override;
+=======
+>>>>>>> upstream-releases
 
   /**
    * DocumentModified() is called when editor content is changed.
    */
   MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult DocumentModified();
 
+  MOZ_CAN_RUN_SCRIPT
   nsresult GetListState(bool* aMixed, bool* aOL, bool* aUL, bool* aDL);
+  MOZ_CAN_RUN_SCRIPT
   nsresult GetListItemState(bool* aMixed, bool* aLI, bool* aDT, bool* aDD);
+  MOZ_CAN_RUN_SCRIPT
   nsresult GetAlignment(bool* aMixed, nsIHTMLEditor::EAlignment* aAlign);
+  MOZ_CAN_RUN_SCRIPT
   nsresult GetParagraphState(bool* aMixed, nsAString& outFormat);
 
   /**
@@ -109,6 +148,7 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aNode               The node which may be inserted <br> elements.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult MakeSureElemStartsAndEndsOnCR(nsINode& aNode);
 
   void DidCreateNode(Element& aNewElement);
@@ -157,7 +197,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    *                            This can be nullptr.
    */
-  MOZ_MUST_USE nsresult WillInsert(bool* aCancel = nullptr);
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult WillInsert(bool* aCancel = nullptr);
 
   /**
    * Called before inserting text.
@@ -173,17 +213,31 @@ class HTMLEditRules : public TextEditRules {
    * @param aMaxLength          The maximum string length which the editor
    *                            allows to set.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillInsertText(EditSubAction aEditSubAction,
                                        bool* aCancel, bool* aHandled,
                                        const nsAString* inString,
                                        nsAString* outString,
                                        int32_t aMaxLength);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillInsertText(EditSubAction aEditSubAction, bool* aCancel, bool* aHandled,
+                 const nsAString* inString, nsAString* outString,
+                 int32_t aMaxLength);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillInsertText(EditSubAction aEditSubAction,
+                                       bool* aCancel, bool* aHandled,
+                                       const nsAString* inString,
+                                       nsAString* outString,
+                                       int32_t aMaxLength);
+>>>>>>> upstream-releases
 
   /**
    * WillLoadHTML() is called before loading enter document from source.
    * This removes bogus node if there is.
    */
-  MOZ_MUST_USE nsresult WillLoadHTML();
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult WillLoadHTML();
 
   /**
    * WillInsertParagraphSeparator() is called when insertParagraph command is
@@ -201,6 +255,7 @@ class HTMLEditRules : public TextEditRules {
    * If deleting the node fails (like if it's not editable), the caller should
    * proceed as usual, so don't return any errors.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult DeleteNodeIfCollapsedText(nsINode& aNode);
 
   /**
@@ -209,6 +264,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aInsertToBreak      The point where new <br> element will be
    *                            inserted before.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult InsertBRElement(const EditorDOMPoint& aInsertToBreak);
 
   /**
@@ -229,23 +285,35 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillDeleteSelection(
       nsIEditor::EDirection aAction, nsIEditor::EStripWrappers aStripWrappers,
       bool* aCancel, bool* aHandled);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillDeleteSelection(nsIEditor::EDirection aAction,
+                      nsIEditor::EStripWrappers aStripWrappers,
+                      bool* aCancel, bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillDeleteSelection(
+      nsIEditor::EDirection aAction, nsIEditor::EStripWrappers aStripWrappers,
+      bool* aCancel, bool* aHandled);
+>>>>>>> upstream-releases
 
   /**
    * Called after deleting selected content.
    * This method removes unnecessary empty nodes and/or inserts <br> if
    * necessary.
    */
-  MOZ_MUST_USE nsresult DidDeleteSelection();
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult DidDeleteSelection();
 
   /**
    * InsertBRIfNeeded() determines if a br is needed for current selection to
    * not be spastic.  If so, it inserts one.  Callers responsibility to only
    * call with collapsed selection.
    */
-  MOZ_MUST_USE nsresult InsertBRIfNeeded();
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult InsertBRIfNeeded();
 
   /**
    * CanContainParagraph() returns true if aElement can have a <p> element as
@@ -257,7 +325,14 @@ class HTMLEditRules : public TextEditRules {
    * Insert normal <br> element into aNode when aNode is a block and it has
    * no children.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult InsertBRIfNeeded(nsINode& aNode) {
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult InsertBRIfNeeded(nsINode& aNode)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult InsertBRIfNeeded(nsINode& aNode) {
+>>>>>>> upstream-releases
     return InsertBRIfNeededInternal(aNode, false);
   }
 
@@ -265,7 +340,14 @@ class HTMLEditRules : public TextEditRules {
    * Insert moz-<br> element (<br type="_moz">) into aNode when aNode is a
    * block and it has no children.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult InsertMozBRIfNeeded(nsINode& aNode) {
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult InsertMozBRIfNeeded(nsINode& aNode)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult InsertMozBRIfNeeded(nsINode& aNode) {
+>>>>>>> upstream-releases
     return InsertBRIfNeededInternal(aNode, true);
   }
 
@@ -279,8 +361,17 @@ class HTMLEditRules : public TextEditRules {
    *                        Otherwise, i.e., this should insert a normal <br>
    *                        element, false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult InsertBRIfNeededInternal(nsINode& aNode,
                                                  bool aInsertMozBR);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  InsertBRIfNeededInternal(nsINode& aNode, bool aInsertMozBR);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult InsertBRIfNeededInternal(nsINode& aNode,
+                                                 bool aInsertMozBR);
+>>>>>>> upstream-releases
 
   /**
    * GetGoodSelPointForNode() finds where at a node you would want to set the
@@ -313,6 +404,7 @@ class HTMLEditRules : public TextEditRules {
    *                    be joined or it's impossible to join them but it's not
    *                    unexpected case, this returns true with this.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE EditActionResult
   TryToJoinBlocksWithTransaction(nsIContent& aLeftNode, nsIContent& aRightNode);
 
@@ -325,10 +417,22 @@ class HTMLEditRules : public TextEditRules {
    * @return            Sets handled to true if this actually joins the nodes.
    *                    canceled is always false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE EditActionResult MoveBlock(Element& aLeftBlock,
                                           Element& aRightBlock,
                                           int32_t aLeftOffset,
                                           int32_t aRightOffset);
+||||||| merged common ancestors
+  MOZ_MUST_USE EditActionResult
+  MoveBlock(Element& aLeftBlock, Element& aRightBlock,
+            int32_t aLeftOffset, int32_t aRightOffset);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE EditActionResult MoveBlock(Element& aLeftBlock,
+                                          Element& aRightBlock,
+                                          int32_t aLeftOffset,
+                                          int32_t aRightOffset);
+>>>>>>> upstream-releases
 
   /**
    * MoveNodeSmart() moves aNode to (aDestElement, aInOutDestOffset).
@@ -339,9 +443,20 @@ class HTMLEditRules : public TextEditRules {
    *                                the nodes.
    *                                canceled is always false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE EditActionResult MoveNodeSmart(nsIContent& aNode,
                                               Element& aDestElement,
                                               int32_t* aInOutDestOffset);
+||||||| merged common ancestors
+  MOZ_MUST_USE EditActionResult
+  MoveNodeSmart(nsIContent& aNode, Element& aDestElement,
+                int32_t* aInOutDestOffset);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE EditActionResult MoveNodeSmart(nsIContent& aNode,
+                                              Element& aDestElement,
+                                              int32_t* aInOutDestOffset);
+>>>>>>> upstream-releases
 
   /**
    * MoveContents() moves the contents of aElement to (aDestElement,
@@ -352,9 +467,20 @@ class HTMLEditRules : public TextEditRules {
    *                                the nodes.
    *                                canceled is always false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE EditActionResult MoveContents(Element& aElement,
                                              Element& aDestElement,
                                              int32_t* aInOutDestOffset);
+||||||| merged common ancestors
+  MOZ_MUST_USE EditActionResult
+  MoveContents(Element& aElement, Element& aDestElement,
+               int32_t* aInOutDestOffset);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE EditActionResult MoveContents(Element& aElement,
+                                             Element& aDestElement,
+                                             int32_t* aInOutDestOffset);
+>>>>>>> upstream-releases
 
   /**
    * DeleteElementsExceptTableRelatedElements() removes elements except
@@ -367,17 +493,32 @@ class HTMLEditRules : public TextEditRules {
    *                            with its children.
    *
    */
-  MOZ_MUST_USE nsresult
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult
   DeleteElementsExceptTableRelatedElements(nsINode& aNode);
 
   /**
    * XXX Should document what this does.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillMakeList(const nsAString* aListType,
                                      bool aEntireList,
                                      const nsAString* aBulletType,
                                      bool* aCancel, bool* aHandled,
                                      const nsAString* aItemType = nullptr);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillMakeList(const nsAString* aListType, bool aEntireList,
+               const nsAString* aBulletType,
+               bool* aCancel, bool* aHandled,
+               const nsAString* aItemType = nullptr);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillMakeList(const nsAString* aListType,
+                                     bool aEntireList,
+                                     const nsAString* aBulletType,
+                                     bool* aCancel, bool* aHandled,
+                                     const nsAString* aItemType = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * Called before removing a list element.  This method actually removes
@@ -387,6 +528,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillRemoveList(bool* aCancel, bool* aHandled);
 
   /**
@@ -396,6 +538,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillIndent(bool* aCancel, bool* aHandled);
 
   /**
@@ -405,6 +548,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillCSSIndent(bool* aCancel, bool* aHandled);
 
   /**
@@ -414,6 +558,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillHTMLIndent(bool* aCancel, bool* aHandled);
 
   /**
@@ -423,6 +568,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillOutdent(bool* aCancel, bool* aHandled);
 
   /**
@@ -434,8 +580,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+<<<<<<< HEAD
   nsresult WillAlign(const nsAString& aAlignType, bool* aCancel,
                      bool* aHandled);
+||||||| merged common ancestors
+  nsresult WillAlign(const nsAString& aAlignType,
+                     bool* aCancel, bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  nsresult WillAlign(const nsAString& aAlignType, bool* aCancel,
+                     bool* aHandled);
+>>>>>>> upstream-releases
 
   /**
    * Called before changing absolute positioned element to static positioned.
@@ -446,8 +601,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillRemoveAbsolutePosition(bool* aCancel,
                                                    bool* aHandled);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillRemoveAbsolutePosition(bool* aCancel, bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillRemoveAbsolutePosition(bool* aCancel,
+                                                   bool* aHandled);
+>>>>>>> upstream-releases
 
   /**
    * Called before changing z-index.
@@ -459,8 +623,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillRelativeChangeZIndex(int32_t aChange, bool* aCancel,
                                                  bool* aHandled);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillRelativeChangeZIndex(int32_t aChange, bool* aCancel, bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillRelativeChangeZIndex(int32_t aChange, bool* aCancel,
+                                                 bool* aHandled);
+>>>>>>> upstream-releases
 
   /**
    * Called before creating aDefinitionListItemTag around Selection.  This
@@ -472,9 +645,20 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel                 Returns true if the operation is canceled.
    * @param aHandled                Returns true if the edit action is handled.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult WillMakeDefListItem(const nsAString* aBlockType,
                                             bool aEntireList, bool* aCancel,
                                             bool* aHandled);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  WillMakeDefListItem(const nsAString* aBlockType, bool aEntireList,
+                      bool* aCancel, bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult WillMakeDefListItem(const nsAString* aBlockType,
+                                            bool aEntireList, bool* aCancel,
+                                            bool* aHandled);
+>>>>>>> upstream-releases
 
   /**
    * WillMakeBasicBlock() called before changing block style around Selection.
@@ -484,6 +668,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillMakeBasicBlock(const nsAString& aBlockType,
                                            bool* aCancel, bool* aHandled);
 
@@ -500,6 +685,7 @@ class HTMLEditRules : public TextEditRules {
    *                            will be called.
    *                            Otherwise, ApplyBlockStyle() will be called.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult MakeBasicBlock(nsAtom& aBlockType);
 
   /**
@@ -507,7 +693,7 @@ class HTMLEditRules : public TextEditRules {
    * contents.  This method inserts moz-<br> element if start container of
    * Selection needs it.
    */
-  MOZ_MUST_USE nsresult DidMakeBasicBlock();
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult DidMakeBasicBlock();
 
   /**
    * Called before changing an element to absolute positioned.
@@ -518,6 +704,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aCancel             Returns true if the operation is canceled.
    * @param aHandled            Returns true if the edit action is handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult WillAbsolutePosition(bool* aCancel, bool* aHandled);
 
   /**
@@ -531,8 +718,18 @@ class HTMLEditRules : public TextEditRules {
    * @param aTargetElement      Returns target element which should be
    *                            changed to absolute positioned.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult PrepareToMakeElementAbsolutePosition(
       bool* aHandled, RefPtr<Element>* aTargetElement);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  PrepareToMakeElementAbsolutePosition(bool* aHandled,
+                                       RefPtr<Element>* aTargetElement);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult PrepareToMakeElementAbsolutePosition(
+      bool* aHandled, RefPtr<Element>* aTargetElement);
+>>>>>>> upstream-releases
 
   /**
    * Called if nobody handles the edit action to make an element absolute
@@ -541,6 +738,7 @@ class HTMLEditRules : public TextEditRules {
    * WillAbsolutePosition() to absolute positioned.
    * Therefore, this might cause destroying the HTML editor.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult DidAbsolutePosition();
 
   /**
@@ -551,8 +749,17 @@ class HTMLEditRules : public TextEditRules {
    *                            to aAlignType.
    * @param aAlignType          New value of align attribute of <div>.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult AlignInnerBlocks(nsINode& aNode,
                                          const nsAString& aAlignType);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  AlignInnerBlocks(nsINode& aNode, const nsAString& aAlignType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult AlignInnerBlocks(nsINode& aNode,
+                                         const nsAString& aAlignType);
+>>>>>>> upstream-releases
 
   /**
    * AlignBlockContents() sets align attribute of <div> element which is
@@ -565,8 +772,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aAlignType          New value of align attribute of <div> which
    *                            is only child of aNode.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult AlignBlockContents(nsINode& aNode,
                                            const nsAString& aAlignType);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  AlignBlockContents(nsINode& aNode, const nsAString& aAlignType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult AlignBlockContents(nsINode& aNode,
+                                           const nsAString& aAlignType);
+>>>>>>> upstream-releases
 
   /**
    * AlignContentsAtSelection() aligns contents around Selection to aAlignType.
@@ -579,7 +795,15 @@ class HTMLEditRules : public TextEditRules {
    * @param aAlignType          New align attribute value where the contents
    *                            should be aligned to.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult AlignContentsAtSelection(const nsAString& aAlignType);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  AlignContentsAtSelection(const nsAString& aAlignType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult AlignContentsAtSelection(const nsAString& aAlignType);
+>>>>>>> upstream-releases
 
   nsresult AppendInnerFormatNodes(nsTArray<OwningNonNull<nsINode>>& aArray,
                                   nsINode* aNode);
@@ -621,8 +845,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aOffset             Typically, Selection start offset in the
    *                            start container, where to be split.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult ReturnInHeader(Element& aHeader, nsINode& aNode,
                                        int32_t aOffset);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  ReturnInHeader(Element& aHeader, nsINode& aNode, int32_t aOffset);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult ReturnInHeader(Element& aHeader, nsINode& aNode,
+                                       int32_t aOffset);
+>>>>>>> upstream-releases
 
   /**
    * ReturnInParagraph() does the right thing for Enter key press or
@@ -635,6 +868,7 @@ class HTMLEditRules : public TextEditRules {
    *                        unexpected situation.  If this method tries to
    *                        split the paragraph, marked as handled.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE EditActionResult ReturnInParagraph(Element& aParentDivOrP);
 
   /**
@@ -649,10 +883,23 @@ class HTMLEditRules : public TextEditRules {
    *                            If this is not nullptr, the <br> node may be
    *                            removed.
    */
+<<<<<<< HEAD
   template <typename PT, typename CT>
   MOZ_MUST_USE nsresult SplitParagraph(
       Element& aParentDivOrP,
       const EditorDOMPointBase<PT, CT>& aStartOfRightNode, nsIContent* aBRNode);
+||||||| merged common ancestors
+  template<typename PT, typename CT>
+  MOZ_MUST_USE nsresult
+  SplitParagraph(Element& aParentDivOrP,
+                 const EditorDOMPointBase<PT, CT>& aStartOfRightNode,
+                 nsIContent* aBRNode);
+=======
+  template <typename PT, typename CT>
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult SplitParagraph(
+      Element& aParentDivOrP,
+      const EditorDOMPointBase<PT, CT>& aStartOfRightNode, nsIContent* aBRNode);
+>>>>>>> upstream-releases
 
   /**
    * ReturnInListItem() handles insertParagraph command (i.e., handling
@@ -664,15 +911,34 @@ class HTMLEditRules : public TextEditRules {
    * @param aOffset             Typically, Selection start offset in the
    *                            start container, where to insert a break.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult ReturnInListItem(Element& aListItem, nsINode& aNode,
                                          int32_t aOffset);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  ReturnInListItem(Element& aListItem, nsINode& aNode, int32_t aOffset);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult ReturnInListItem(Element& aListItem, nsINode& aNode,
+                                         int32_t aOffset);
+>>>>>>> upstream-releases
 
   /**
    * Called after handling edit action.  This may adjust Selection, remove
    * unnecessary empty nodes, create <br> elements if needed, etc.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult AfterEditInner(EditSubAction aEditSubAction,
                                        nsIEditor::EDirection aDirection);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  AfterEditInner(EditSubAction aEditSubAction,
+                 nsIEditor::EDirection aDirection);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult AfterEditInner(EditSubAction aEditSubAction,
+                                       nsIEditor::EDirection aDirection);
+>>>>>>> upstream-releases
 
   /**
    * IndentAroundSelectionWithCSS() indents around Selection with CSS.
@@ -680,6 +946,7 @@ class HTMLEditRules : public TextEditRules {
    * need to check if the editor is still available even if this returns
    * NS_OK.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult IndentAroundSelectionWithCSS();
 
   /**
@@ -688,6 +955,7 @@ class HTMLEditRules : public TextEditRules {
    * need to check if the editor is still available even if this returns
    * NS_OK.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult IndentAroundSelectionWithHTML();
 
   /**
@@ -703,6 +971,7 @@ class HTMLEditRules : public TextEditRules {
    *                            The middle content is middle content of last
    *                            outdented element.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE SplitRangeOffFromNodeResult OutdentAroundSelection();
 
   /**
@@ -722,6 +991,7 @@ class HTMLEditRules : public TextEditRules {
    *                                The middle content is nullptr since
    *                                removing it is the job of this method.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE SplitRangeOffFromNodeResult
   SplitRangeOffFromBlockAndRemoveMiddleContainer(Element& aBlockElement,
                                                  nsIContent& aStartOfRange,
@@ -736,9 +1006,21 @@ class HTMLEditRules : public TextEditRules {
    * @param aStartOfMiddleElement   Start node of middle block element.
    * @param aEndOfMiddleElement     End node of middle block element.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE SplitRangeOffFromNodeResult SplitRangeOffFromBlock(
       Element& aBlockElement, nsIContent& aStartOfMiddleElement,
       nsIContent& aEndOfMiddleElement);
+||||||| merged common ancestors
+  MOZ_MUST_USE SplitRangeOffFromNodeResult
+  SplitRangeOffFromBlock(Element& aBlockElement,
+                         nsIContent& aStartOfMiddleElement,
+                         nsIContent& aEndOfMiddleElement);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE SplitRangeOffFromNodeResult SplitRangeOffFromBlock(
+      Element& aBlockElement, nsIContent& aStartOfMiddleElement,
+      nsIContent& aEndOfMiddleElement);
+>>>>>>> upstream-releases
 
   /**
    * OutdentPartOfBlock() outdents the nodes between aStartOfOutdent and
@@ -763,6 +1045,7 @@ class HTMLEditRules : public TextEditRules {
    *                                if aIsBlockIndentedWithCSS is true.
    *                                Otherwise, nullptr.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE SplitRangeOffFromNodeResult
   OutdentPartOfBlock(Element& aBlockElement, nsIContent& aStartOfOutdent,
                      nsIContent& aEndOutdent, bool aIsBlockIndentedWithCSS);
@@ -773,9 +1056,20 @@ class HTMLEditRules : public TextEditRules {
    * need to check if the editor is still available even if this returns
    * NS_OK.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult MakeList(nsAtom& aListType, bool aEntireList,
                                  const nsAString* aBulletType, bool* aCancel,
                                  nsAtom& aItemType);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  MakeList(nsAtom& aListType, bool aEntireList, const nsAString* aBulletType,
+           bool* aCancel, nsAtom& aItemType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult MakeList(nsAtom& aListType, bool aEntireList,
+                                 const nsAString* aBulletType, bool* aCancel,
+                                 nsAtom& aItemType);
+>>>>>>> upstream-releases
 
   /**
    * ConvertListType() replaces child list items of aListElement with
@@ -791,9 +1085,19 @@ class HTMLEditRules : public TextEditRules {
    *                            New list element may be aListElement if its
    *                            tag name is same as aNewListTag.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE CreateElementResult ConvertListType(Element& aListElement,
                                                    nsAtom& aListType,
                                                    nsAtom& aItemType);
+||||||| merged common ancestors
+  MOZ_MUST_USE CreateElementResult
+  ConvertListType(Element& aListElement, nsAtom& aListType, nsAtom& aItemType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE CreateElementResult ConvertListType(Element& aListElement,
+                                                   nsAtom& aListType,
+                                                   nsAtom& aItemType);
+>>>>>>> upstream-releases
 
   /**
    * CreateStyleForInsertText() sets CSS properties which are stored in
@@ -801,7 +1105,8 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aDocument           The document of the editor.
    */
-  MOZ_MUST_USE nsresult CreateStyleForInsertText(nsIDocument& aDocument);
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult CreateStyleForInsertText(dom::Document& aDocument);
 
   /**
    * IsEmptyBlockElement() returns true if aElement is a block level element
@@ -833,9 +1138,22 @@ class HTMLEditRules : public TextEditRules {
    * @param aHandled            Returns true if this method removes an empty
    *                            block ancestor of aStartNode.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult MaybeDeleteTopMostEmptyAncestor(
       nsINode& aStartNode, Element& aEditingHostElement,
       nsIEditor::EDirection aAction, bool* aHandled);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  MaybeDeleteTopMostEmptyAncestor(nsINode& aStartNode,
+                                  Element& aEditingHostElement,
+                                  nsIEditor::EDirection aAction,
+                                  bool* aHandled);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult MaybeDeleteTopMostEmptyAncestor(
+      nsINode& aStartNode, Element& aEditingHostElement,
+      nsIEditor::EDirection aAction, bool* aHandled);
+>>>>>>> upstream-releases
 
   enum class BRLocation { beforeBlock, blockEnd };
   Element* CheckForInvisibleBR(Element& aBlock, BRLocation aWhere,
@@ -847,6 +1165,7 @@ class HTMLEditRules : public TextEditRules {
    * invisible <br> element for preventing delete action handler to keep
    * unexpected nodes.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult ExpandSelectionForDeletion();
 
   /**
@@ -855,6 +1174,7 @@ class HTMLEditRules : public TextEditRules {
    * non-editable point, they should be moved to nearest text node or something
    * where the other methods easier to handle edit action.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult NormalizeSelection();
 
   /**
@@ -886,10 +1206,24 @@ class HTMLEditRules : public TextEditRules {
    *     transaction.  We should rename this to making clearer what this does.
    */
   enum class TouchContent { no, yes };
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult GetNodesForOperation(
       nsTArray<RefPtr<nsRange>>& aArrayOfRanges,
       nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes,
       EditSubAction aEditSubAction, TouchContent aTouchContent);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  GetNodesForOperation(nsTArray<RefPtr<nsRange>>& aArrayOfRanges,
+                       nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes,
+                       EditSubAction aEditSubAction,
+                       TouchContent aTouchContent);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult GetNodesForOperation(
+      nsTArray<RefPtr<nsRange>>& aArrayOfRanges,
+      nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes,
+      EditSubAction aEditSubAction, TouchContent aTouchContent);
+>>>>>>> upstream-releases
 
   void GetChildNodesForOperation(
       nsINode& aNode, nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes);
@@ -898,6 +1232,7 @@ class HTMLEditRules : public TextEditRules {
    * GetNodesFromPoint() constructs a list of nodes from a point that will be
    * operated on.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult
   GetNodesFromPoint(const EditorDOMPoint& aPoint, EditSubAction aEditSubAction,
                     nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes,
@@ -907,18 +1242,29 @@ class HTMLEditRules : public TextEditRules {
    * GetNodesFromSelection() constructs a list of nodes from the selection that
    * will be operated on.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult
   GetNodesFromSelection(EditSubAction aEditSubAction,
                         nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes,
                         TouchContent aTouchContent);
 
   enum class EntireList { no, yes };
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult
   GetListActionNodes(nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes,
                      EntireList aEntireList, TouchContent aTouchContent);
   void GetDefinitionListItemTypes(Element* aElement, bool* aDT, bool* aDD);
+<<<<<<< HEAD
   nsresult GetParagraphFormatNodes(
       nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes);
+||||||| merged common ancestors
+  nsresult
+  GetParagraphFormatNodes(nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  nsresult GetParagraphFormatNodes(
+      nsTArray<OwningNonNull<nsINode>>& outArrayOfNodes);
+>>>>>>> upstream-releases
   void LookInsideDivBQandList(nsTArray<OwningNonNull<nsINode>>& aNodeArray);
 
   /**
@@ -931,6 +1277,7 @@ class HTMLEditRules : public TextEditRules {
    *                            Will be modified to split point if they're
    *                            split.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult BustUpInlinesAtRangeEndpoints(RangeItem& aRangeItem);
 
   /**
@@ -944,8 +1291,18 @@ class HTMLEditRules : public TextEditRules {
    *                            be set if <br> is at start edge of aNode) and
    *                            aNode itself.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult BustUpInlinesAtBRs(
       nsIContent& aNode, nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  BustUpInlinesAtBRs(nsIContent& aNode,
+                     nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult BustUpInlinesAtBRs(
+      nsIContent& aNode, nsTArray<OwningNonNull<nsINode>>& aOutArrayOfNodes);
+>>>>>>> upstream-releases
 
   /**
    * GetHiestInlineParent() returns the highest inline node parent between
@@ -970,6 +1327,7 @@ class HTMLEditRules : public TextEditRules {
    * If aNodeArray has a table related element, <li>, <blockquote> or <div>,
    * it will removed and its contents will be moved to where it was.
    */
+  MOZ_CAN_RUN_SCRIPT
   nsresult RemoveBlockStyle(nsTArray<OwningNonNull<nsINode>>& aNodeArray);
 
   /**
@@ -988,8 +1346,18 @@ class HTMLEditRules : public TextEditRules {
    * @param aNodeArray      Must be descendants of a node.
    * @param aBlockTag       The element name of new block elements.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult ApplyBlockStyle(
       nsTArray<OwningNonNull<nsINode>>& aNodeArray, nsAtom& aBlockTag);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  ApplyBlockStyle(nsTArray<OwningNonNull<nsINode>>& aNodeArray,
+                  nsAtom& aBlockTag);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult ApplyBlockStyle(
+      nsTArray<OwningNonNull<nsINode>>& aNodeArray, nsAtom& aBlockTag);
+>>>>>>> upstream-releases
 
   /**
    * MakeBlockquote() inserts at least one <blockquote> element and moves
@@ -1000,6 +1368,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aNodeArray          Nodes which will be moved into created
    *                            <blockquote> elements.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult
   MakeBlockquote(nsTArray<OwningNonNull<nsINode>>& aNodeArray);
 
@@ -1020,9 +1389,20 @@ class HTMLEditRules : public TextEditRules {
    * @return                            When succeeded, SplitPoint() returns
    *                                    the point to insert the element.
    */
+<<<<<<< HEAD
   template <typename PT, typename CT>
   MOZ_MUST_USE SplitNodeResult MaybeSplitAncestorsForInsertWithTransaction(
       nsAtom& aTag, const EditorDOMPointBase<PT, CT>& aStartOfDeepestRightNode);
+||||||| merged common ancestors
+  template<typename PT, typename CT>
+  MOZ_MUST_USE SplitNodeResult
+  MaybeSplitAncestorsForInsertWithTransaction(
+    nsAtom& aTag, const EditorDOMPointBase<PT, CT>& aStartOfDeepestRightNode);
+=======
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE SplitNodeResult
+  MaybeSplitAncestorsForInsertWithTransaction(
+      nsAtom& aTag, const EditorDOMPoint& aStartOfDeepestRightNode);
+>>>>>>> upstream-releases
 
   /**
    * JoinNearestEditableNodesWithTransaction() joins two editable nodes which
@@ -1045,9 +1425,21 @@ class HTMLEditRules : public TextEditRules {
    * @param aNewFirstChildOfRightNode
    *                    The point at the first child of aRightNode.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult JoinNearestEditableNodesWithTransaction(
       nsIContent& aLeftNode, nsIContent& aRightNode,
       EditorDOMPoint* aNewFirstChildOfRightNode);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  JoinNearestEditableNodesWithTransaction(
+    nsIContent& aLeftNode, nsIContent& aRightNode,
+    EditorDOMPoint* aNewFirstChildOfRightNode);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult JoinNearestEditableNodesWithTransaction(
+      nsIContent& aLeftNode, nsIContent& aRightNode,
+      EditorDOMPoint* aNewFirstChildOfRightNode);
+>>>>>>> upstream-releases
 
   Element* GetTopEnclosingMailCite(nsINode& aNode);
 
@@ -1066,8 +1458,17 @@ class HTMLEditRules : public TextEditRules {
    *                            removed (i.e., unwrapped contents of
    *                            aListItem).  Otherwise, false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult PopListItem(nsIContent& aListItem,
                                     bool* aOutOfList = nullptr);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  PopListItem(nsIContent& aListItem, bool* aOutOfList = nullptr);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult PopListItem(nsIContent& aListItem,
+                                    bool* aOutOfList = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * RemoveListStructure() destroys the list structure of aListElement.
@@ -1081,6 +1482,7 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aListElement        A <ul>, <ol> or <dl> element.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult RemoveListStructure(Element& aListElement);
 
   /**
@@ -1103,14 +1505,8 @@ class HTMLEditRules : public TextEditRules {
    * InsertBRElementToEmptyListItemsAndTableCellsInChangedRange() inserts
    * <br> element into empty list item or table cell elements.
    */
-  MOZ_MUST_USE nsresult
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult
   InsertBRElementToEmptyListItemsAndTableCellsInChangedRange();
-
-  /**
-   * AdjustWhitespace() may replace whitespaces with NBSP or something.
-   * See WSRunObject::AdjustWhitespace() for the detail.
-   */
-  MOZ_MUST_USE nsresult AdjustWhitespace();
 
   /**
    * PinSelectionToNewBlock() may collapse Selection around mNewNode if it's
@@ -1127,7 +1523,8 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aAction     Maybe used to look for a good point to put caret.
    */
-  MOZ_MUST_USE nsresult AdjustSelection(nsIEditor::EDirection aAction);
+  MOZ_CAN_RUN_SCRIPT MOZ_MUST_USE nsresult
+  AdjustSelection(nsIEditor::EDirection aAction);
 
   /**
    * FindNearEditableNode() tries to find an editable node near aPoint.
@@ -1164,6 +1561,7 @@ class HTMLEditRules : public TextEditRules {
    *     we haven't touched it.  Cannot we remove this method and make
    *     guarantee that empty nodes won't be created?
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult RemoveEmptyNodesInChangedRange();
 
   nsresult SelectionEndpointInNode(nsINode* aNode, bool* aResult);
@@ -1201,9 +1599,20 @@ class HTMLEditRules : public TextEditRules {
    * @param aDescendantsOnly    true if align information of aNode itself
    *                            shouldn't be removed.  Otherwise, false.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult RemoveAlignment(nsINode& aNode,
                                         const nsAString& aAlignType,
                                         bool aDescendantsOnly);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  RemoveAlignment(nsINode& aNode, const nsAString& aAlignType,
+                  bool aDescendantsOnly);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult RemoveAlignment(nsINode& aNode,
+                                        const nsAString& aAlignType,
+                                        bool aDescendantsOnly);
+>>>>>>> upstream-releases
 
   /**
    * MakeSureElemStartsOrEndsOnCR() inserts <br> element at start (end) of
@@ -1216,8 +1625,17 @@ class HTMLEditRules : public TextEditRules {
    * @param aStarts             true for trying to insert <br> to the start.
    *                            false for trying to insert <br> to the end.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult MakeSureElemStartsOrEndsOnCR(nsINode& aNode,
                                                      bool aStarts);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  MakeSureElemStartsOrEndsOnCR(nsINode& aNode, bool aStarts);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult MakeSureElemStartsOrEndsOnCR(nsINode& aNode,
+                                                     bool aStarts);
+>>>>>>> upstream-releases
 
   /**
    * AlignBlock() resets align attribute, text-align property, etc first.
@@ -1230,9 +1648,20 @@ class HTMLEditRules : public TextEditRules {
    *                            descendants or only descendants.
    */
   enum class ResetAlignOf { ElementAndDescendants, OnlyDescendants };
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult AlignBlock(Element& aElement,
                                    const nsAString& aAlignType,
                                    ResetAlignOf aResetAlignOf);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult
+  AlignBlock(Element& aElement, const nsAString& aAlignType,
+             ResetAlignOf aResetAlignOf);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult AlignBlock(Element& aElement,
+                                   const nsAString& aAlignType,
+                                   ResetAlignOf aResetAlignOf);
+>>>>>>> upstream-releases
 
   /**
    * IncreaseMarginToIndent() increases the margin of aElement.  See the
@@ -1241,7 +1670,15 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aElement            The element to be indented.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult IncreaseMarginToIndent(Element& aElement) {
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult IncreaseMarginToIndent(Element& aElement)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult IncreaseMarginToIndent(Element& aElement) {
+>>>>>>> upstream-releases
     return ChangeMarginStart(aElement, true);
   }
 
@@ -1252,7 +1689,15 @@ class HTMLEditRules : public TextEditRules {
    *
    * @param aElement            The element to be outdented.
    */
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult DecreaseMarginToOutdent(Element& aElement) {
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult DecreaseMarginToOutdent(Element& aElement)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT
+  MOZ_MUST_USE nsresult DecreaseMarginToOutdent(Element& aElement) {
+>>>>>>> upstream-releases
     return ChangeMarginStart(aElement, false);
   }
 
@@ -1266,6 +1711,7 @@ class HTMLEditRules : public TextEditRules {
    * @param aElement            The element to be indented or outdented.
    * @param aIncrease           true for indent, false for outdent.
    */
+  MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE nsresult ChangeMarginStart(Element& aElement, bool aIncrease);
 
   /**
@@ -1295,6 +1741,7 @@ class HTMLEditRules : public TextEditRules {
   bool mReturnInEmptyLIKillsList;
   bool mDidDeleteSelection;
   bool mDidRangedDelete;
+  bool mDidEmptyParentBlocksRemoved;
   bool mRestoreContentEditableCount;
   RefPtr<nsRange> mUtilRange;
   // Need to remember an int across willJoin/didJoin...

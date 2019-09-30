@@ -81,7 +81,18 @@ void MediaKeySession::SetSessionId(const nsAString& aSessionId) {
   mKeys->OnSessionIdReady(this);
 }
 
+<<<<<<< HEAD
 MediaKeySession::~MediaKeySession() {}
+||||||| merged common ancestors
+MediaKeySession::~MediaKeySession()
+{
+}
+=======
+MediaKeySession::~MediaKeySession() {
+  EME_LOG("MediaKeySession[%p,'%s'] dtor", this,
+          NS_ConvertUTF16toUTF8(mSessionId).get());
+}
+>>>>>>> upstream-releases
 
 MediaKeyError* MediaKeySession::GetError() const { return mMediaKeyError; }
 

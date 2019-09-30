@@ -117,13 +117,22 @@ const char kNrIceTransportTls[] = "tls";
 
 static bool initialized = false;
 
+<<<<<<< HEAD
 static int noop(void **obj) { return 0; }
 
 static nr_socket_factory_vtbl ctx_socket_factory_vtbl = {nr_socket_local_create,
                                                          noop};
 
+||||||| merged common ancestors
+=======
+static int noop(void** obj) { return 0; }
+
+static nr_socket_factory_vtbl ctx_socket_factory_vtbl = {nr_socket_local_create,
+                                                         noop};
+
+>>>>>>> upstream-releases
 // Implement NSPR-based crypto algorithms
-static int nr_crypto_nss_random_bytes(UCHAR *buf, size_t len) {
+static int nr_crypto_nss_random_bytes(UCHAR* buf, size_t len) {
   UniquePK11SlotInfo slot(PK11_GetInternalSlot());
   if (!slot) return R_INTERNAL;
 
@@ -133,14 +142,24 @@ static int nr_crypto_nss_random_bytes(UCHAR *buf, size_t len) {
   return 0;
 }
 
-static int nr_crypto_nss_hmac(UCHAR *key, size_t keyl, UCHAR *buf, size_t bufl,
-                              UCHAR *result) {
+static int nr_crypto_nss_hmac(UCHAR* key, size_t keyl, UCHAR* buf, size_t bufl,
+                              UCHAR* result) {
   CK_MECHANISM_TYPE mech = CKM_SHA_1_HMAC;
-  PK11SlotInfo *slot = nullptr;
+  PK11SlotInfo* slot = nullptr;
   MOZ_ASSERT(keyl > 0);
+<<<<<<< HEAD
   SECItem keyi = {siBuffer, key, static_cast<unsigned int>(keyl)};
   PK11SymKey *skey = nullptr;
   PK11Context *hmac_ctx = nullptr;
+||||||| merged common ancestors
+  SECItem keyi = { siBuffer, key, static_cast<unsigned int>(keyl)};
+  PK11SymKey *skey = nullptr;
+  PK11Context *hmac_ctx = nullptr;
+=======
+  SECItem keyi = {siBuffer, key, static_cast<unsigned int>(keyl)};
+  PK11SymKey* skey = nullptr;
+  PK11Context* hmac_ctx = nullptr;
+>>>>>>> upstream-releases
   SECStatus status;
   unsigned int hmac_len;
   SECItem param = {siBuffer, nullptr, 0};
@@ -177,11 +196,11 @@ abort:
   return err;
 }
 
-static int nr_crypto_nss_md5(UCHAR *buf, size_t bufl, UCHAR *result) {
+static int nr_crypto_nss_md5(UCHAR* buf, size_t bufl, UCHAR* result) {
   int err = R_INTERNAL;
   SECStatus rv;
 
-  const SECHashObject *ho = HASH_GetHashObject(HASH_AlgMD5);
+  const SECHashObject* ho = HASH_GetHashObject(HASH_AlgMD5);
   MOZ_ASSERT(ho);
   if (!ho) goto abort;
 
@@ -198,7 +217,7 @@ abort:
 static nr_ice_crypto_vtbl nr_ice_crypto_nss_vtbl = {
     nr_crypto_nss_random_bytes, nr_crypto_nss_hmac, nr_crypto_nss_md5};
 
-nsresult NrIceStunServer::ToNicerStunStruct(nr_ice_stun_server *server) const {
+nsresult NrIceStunServer::ToNicerStunStruct(nr_ice_stun_server* server) const {
   int r;
 
   memset(server, 0, sizeof(nr_ice_stun_server));
@@ -236,7 +255,14 @@ nsresult NrIceStunServer::ToNicerStunStruct(nr_ice_stun_server *server) const {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NrIceTurnServer::ToNicerTurnStruct(nr_ice_turn_server *server) const {
+||||||| merged common ancestors
+
+nsresult NrIceTurnServer::ToNicerTurnStruct(nr_ice_turn_server *server) const {
+=======
+nsresult NrIceTurnServer::ToNicerTurnStruct(nr_ice_turn_server* server) const {
+>>>>>>> upstream-releases
   memset(server, 0, sizeof(nr_ice_turn_server));
 
   nsresult rv = ToNicerStunStruct(&server->turn_server);
@@ -252,7 +278,14 @@ nsresult NrIceTurnServer::ToNicerTurnStruct(nr_ice_turn_server *server) const {
   // C++03 23.2.4, Paragraph 1 stipulates that the elements
   // in std::vector must be contiguous, and can therefore be
   // used as input to functions expecting C arrays.
+<<<<<<< HEAD
   int r = r_data_create(&server->password, const_cast<UCHAR *>(&password_[0]),
+||||||| merged common ancestors
+  int r = r_data_create(&server->password,
+                        const_cast<UCHAR *>(&password_[0]),
+=======
+  int r = r_data_create(&server->password, const_cast<UCHAR*>(&password_[0]),
+>>>>>>> upstream-releases
                         password_.size());
   if (r) {
     RFREE(server->username);
@@ -262,6 +295,7 @@ nsresult NrIceTurnServer::ToNicerTurnStruct(nr_ice_turn_server *server) const {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NrIceCtx::NrIceCtx(const std::string &name, Policy policy)
     : connection_state_(ICE_CTX_INIT),
       gathering_state_(ICE_CTX_GATHER_INIT),
@@ -277,11 +311,58 @@ NrIceCtx::NrIceCtx(const std::string &name, Policy policy)
       policy_(policy),
       nat_(nullptr),
       proxy_config_(nullptr) {}
+||||||| merged common ancestors
+NrIceCtx::NrIceCtx(const std::string& name, Policy policy)
+  : connection_state_(ICE_CTX_INIT),
+    gathering_state_(ICE_CTX_GATHER_INIT),
+    name_(name),
+    offerer_(false),
+    ice_controlling_set_(false),
+    streams_(),
+    ctx_(nullptr),
+    peer_(nullptr),
+    ice_handler_vtbl_(nullptr),
+    ice_handler_(nullptr),
+    trickle_(true),
+    policy_(policy),
+    nat_ (nullptr) {
+}
+=======
+NrIceCtx::NrIceCtx(const std::string& name, Policy policy)
+    : connection_state_(ICE_CTX_INIT),
+      gathering_state_(ICE_CTX_GATHER_INIT),
+      name_(name),
+      offerer_(false),
+      ice_controlling_set_(false),
+      streams_(),
+      ctx_(nullptr),
+      peer_(nullptr),
+      ice_handler_vtbl_(nullptr),
+      ice_handler_(nullptr),
+      trickle_(true),
+      policy_(policy),
+      nat_(nullptr),
+      proxy_config_(nullptr) {}
+>>>>>>> upstream-releases
 
 /* static */
+<<<<<<< HEAD
 RefPtr<NrIceCtx> NrIceCtx::Create(const std::string &name, bool allow_loopback,
                                   bool tcp_enabled, bool allow_link_local,
                                   Policy policy) {
+||||||| merged common ancestors
+RefPtr<NrIceCtx>
+NrIceCtx::Create(const std::string& name,
+                 bool allow_loopback,
+                 bool tcp_enabled,
+                 bool allow_link_local,
+                 Policy policy)
+{
+=======
+RefPtr<NrIceCtx> NrIceCtx::Create(const std::string& name, bool allow_loopback,
+                                  bool tcp_enabled, bool allow_link_local,
+                                  Policy policy) {
+>>>>>>> upstream-releases
   // InitializeGlobals only executes once
   NrIceCtx::InitializeGlobals(allow_loopback, tcp_enabled, allow_link_local);
 
@@ -294,9 +375,21 @@ RefPtr<NrIceCtx> NrIceCtx::Create(const std::string &name, bool allow_loopback,
   return ctx;
 }
 
+<<<<<<< HEAD
 RefPtr<NrIceMediaStream> NrIceCtx::CreateStream(const std::string &id,
                                                 const std::string &name,
                                                 int components) {
+||||||| merged common ancestors
+RefPtr<NrIceMediaStream>
+NrIceCtx::CreateStream(const std::string& id,
+                       const std::string& name,
+                       int components)
+{
+=======
+RefPtr<NrIceMediaStream> NrIceCtx::CreateStream(const std::string& id,
+                                                const std::string& name,
+                                                int components) {
+>>>>>>> upstream-releases
   if (streams_.count(id)) {
     MOZ_ASSERT(false);
     return nullptr;
@@ -308,7 +401,14 @@ RefPtr<NrIceMediaStream> NrIceCtx::CreateStream(const std::string &id,
   return stream;
 }
 
+<<<<<<< HEAD
 void NrIceCtx::DestroyStream(const std::string &id) {
+||||||| merged common ancestors
+void
+NrIceCtx::DestroyStream(const std::string& id) {
+=======
+void NrIceCtx::DestroyStream(const std::string& id) {
+>>>>>>> upstream-releases
   auto it = streams_.find(id);
   if (it != streams_.end()) {
     auto preexisting_stream = it->second;
@@ -318,23 +418,36 @@ void NrIceCtx::DestroyStream(const std::string &id) {
 }
 
 // Handler callbacks
+<<<<<<< HEAD
 int NrIceCtx::select_pair(void *obj, nr_ice_media_stream *stream,
                           int component_id, nr_ice_cand_pair **potentials,
                           int potential_ct) {
   MOZ_MTLOG(ML_DEBUG, "select pair called: potential_ct = " << potential_ct);
+||||||| merged common ancestors
+int NrIceCtx::select_pair(void *obj,nr_ice_media_stream *stream,
+                   int component_id, nr_ice_cand_pair **potentials,
+                   int potential_ct) {
+  MOZ_MTLOG(ML_DEBUG, "select pair called: potential_ct = "
+            << potential_ct);
+=======
+int NrIceCtx::select_pair(void* obj, nr_ice_media_stream* stream,
+                          int component_id, nr_ice_cand_pair** potentials,
+                          int potential_ct) {
+  MOZ_MTLOG(ML_DEBUG, "select pair called: potential_ct = " << potential_ct);
+>>>>>>> upstream-releases
   MOZ_ASSERT(stream->local_stream);
   MOZ_ASSERT(!stream->local_stream->obsolete);
 
   return 0;
 }
 
-int NrIceCtx::stream_ready(void *obj, nr_ice_media_stream *stream) {
+int NrIceCtx::stream_ready(void* obj, nr_ice_media_stream* stream) {
   MOZ_MTLOG(ML_DEBUG, "stream_ready called");
   MOZ_ASSERT(!stream->local_stream);
   MOZ_ASSERT(!stream->obsolete);
 
   // Get the ICE ctx.
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
 
   RefPtr<NrIceMediaStream> s = ctx->FindStream(stream);
 
@@ -346,13 +459,13 @@ int NrIceCtx::stream_ready(void *obj, nr_ice_media_stream *stream) {
   return 0;
 }
 
-int NrIceCtx::stream_failed(void *obj, nr_ice_media_stream *stream) {
+int NrIceCtx::stream_failed(void* obj, nr_ice_media_stream* stream) {
   MOZ_MTLOG(ML_DEBUG, "stream_failed called");
   MOZ_ASSERT(!stream->local_stream);
   MOZ_ASSERT(!stream->obsolete);
 
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
   RefPtr<NrIceMediaStream> s = ctx->FindStream(stream);
 
   // Streams which do not exist should never fail.
@@ -363,22 +476,22 @@ int NrIceCtx::stream_failed(void *obj, nr_ice_media_stream *stream) {
   return 0;
 }
 
-int NrIceCtx::ice_checking(void *obj, nr_ice_peer_ctx *pctx) {
+int NrIceCtx::ice_checking(void* obj, nr_ice_peer_ctx* pctx) {
   MOZ_MTLOG(ML_DEBUG, "ice_checking called");
 
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
 
   ctx->SetConnectionState(ICE_CTX_CHECKING);
 
   return 0;
 }
 
-int NrIceCtx::ice_connected(void *obj, nr_ice_peer_ctx *pctx) {
+int NrIceCtx::ice_connected(void* obj, nr_ice_peer_ctx* pctx) {
   MOZ_MTLOG(ML_DEBUG, "ice_connected called");
 
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
 
   // This is called even on failed contexts.
   if (ctx->connection_state() != ICE_CTX_FAILED) {
@@ -388,22 +501,22 @@ int NrIceCtx::ice_connected(void *obj, nr_ice_peer_ctx *pctx) {
   return 0;
 }
 
-int NrIceCtx::ice_disconnected(void *obj, nr_ice_peer_ctx *pctx) {
+int NrIceCtx::ice_disconnected(void* obj, nr_ice_peer_ctx* pctx) {
   MOZ_MTLOG(ML_DEBUG, "ice_disconnected called");
 
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
 
   ctx->SetConnectionState(ICE_CTX_DISCONNECTED);
 
   return 0;
 }
 
-int NrIceCtx::msg_recvd(void *obj, nr_ice_peer_ctx *pctx,
-                        nr_ice_media_stream *stream, int component_id,
-                        UCHAR *msg, int len) {
+int NrIceCtx::msg_recvd(void* obj, nr_ice_peer_ctx* pctx,
+                        nr_ice_media_stream* stream, int component_id,
+                        UCHAR* msg, int len) {
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(obj);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(obj);
   RefPtr<NrIceMediaStream> s = ctx->FindStream(stream);
 
   // Streams which do not exist should never have packets.
@@ -414,16 +527,32 @@ int NrIceCtx::msg_recvd(void *obj, nr_ice_peer_ctx *pctx,
   return 0;
 }
 
+<<<<<<< HEAD
 void NrIceCtx::trickle_cb(void *arg, nr_ice_ctx *ice_ctx,
                           nr_ice_media_stream *stream, int component_id,
                           nr_ice_candidate *candidate) {
+||||||| merged common ancestors
+void NrIceCtx::trickle_cb(void *arg, nr_ice_ctx *ice_ctx,
+                          nr_ice_media_stream *stream,
+                          int component_id,
+                          nr_ice_candidate *candidate) {
+=======
+void NrIceCtx::trickle_cb(void* arg, nr_ice_ctx* ice_ctx,
+                          nr_ice_media_stream* stream, int component_id,
+                          nr_ice_candidate* candidate) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!stream->obsolete);
   // Get the ICE ctx
-  NrIceCtx *ctx = static_cast<NrIceCtx *>(arg);
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(arg);
   RefPtr<NrIceMediaStream> s = ctx->FindStream(stream);
 
   if (!s) {
     // This stream has been removed because it is inactive
+    return;
+  }
+
+  if (!candidate) {
+    s->SignalCandidate(s, "", stream->ufrag);
     return;
   }
 
@@ -437,7 +566,7 @@ void NrIceCtx::trickle_cb(void *arg, nr_ice_ctx *ice_ctx,
   MOZ_MTLOG(ML_INFO, "NrIceCtx(" << ctx->name_ << "): trickling candidate "
                                  << candidate_str);
 
-  s->SignalCandidate(s, candidate_str);
+  s->SignalCandidate(s, candidate_str, stream->ufrag);
 }
 
 void NrIceCtx::InitializeGlobals(bool allow_loopback, bool tcp_enabled,
@@ -451,14 +580,14 @@ void NrIceCtx::InitializeGlobals(bool allow_loopback, bool tcp_enabled,
 
     // Set the priorites for candidate type preferences.
     // These numbers come from RFC 5245 S. 4.1.2.2
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_SRV_RFLX, 100);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_PEER_RFLX, 110);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_HOST, 126);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_RELAYED, 5);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_SRV_RFLX_TCP, 99);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_PEER_RFLX_TCP, 109);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_HOST_TCP, 125);
-    NR_reg_set_uchar((char *)NR_ICE_REG_PREF_TYPE_RELAYED_TCP, 0);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_SRV_RFLX, 100);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_PEER_RFLX, 110);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_HOST, 126);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_RELAYED, 5);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_SRV_RFLX_TCP, 99);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_PEER_RFLX_TCP, 109);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_HOST_TCP, 125);
+    NR_reg_set_uchar((char*)NR_ICE_REG_PREF_TYPE_RELAYED_TCP, 0);
 
     int32_t stun_client_maximum_transmits = 7;
     int32_t ice_trickle_grace_period = 5000;
@@ -486,30 +615,52 @@ void NrIceCtx::InitializeGlobals(bool allow_loopback, bool tcp_enabled,
       }
     }
 
-    NR_reg_set_uint4((char *)"stun.client.maximum_transmits",
+    NR_reg_set_uint4((char*)"stun.client.maximum_transmits",
                      stun_client_maximum_transmits);
-    NR_reg_set_uint4((char *)NR_ICE_REG_TRICKLE_GRACE_PERIOD,
+    NR_reg_set_uint4((char*)NR_ICE_REG_TRICKLE_GRACE_PERIOD,
                      ice_trickle_grace_period);
+<<<<<<< HEAD
     NR_reg_set_int4((char *)NR_ICE_REG_ICE_TCP_SO_SOCK_COUNT,
                     ice_tcp_so_sock_count);
     NR_reg_set_int4((char *)NR_ICE_REG_ICE_TCP_LISTEN_BACKLOG,
                     ice_tcp_listen_backlog);
+||||||| merged common ancestors
+    NR_reg_set_int4((char *)NR_ICE_REG_ICE_TCP_SO_SOCK_COUNT,
+                     ice_tcp_so_sock_count);
+    NR_reg_set_int4((char *)NR_ICE_REG_ICE_TCP_LISTEN_BACKLOG,
+                     ice_tcp_listen_backlog);
+=======
+    NR_reg_set_int4((char*)NR_ICE_REG_ICE_TCP_SO_SOCK_COUNT,
+                    ice_tcp_so_sock_count);
+    NR_reg_set_int4((char*)NR_ICE_REG_ICE_TCP_LISTEN_BACKLOG,
+                    ice_tcp_listen_backlog);
+>>>>>>> upstream-releases
 
-    NR_reg_set_char((char *)NR_ICE_REG_ICE_TCP_DISABLE, !tcp_enabled);
+    NR_reg_set_char((char*)NR_ICE_REG_ICE_TCP_DISABLE, !tcp_enabled);
 
     if (allow_loopback) {
-      NR_reg_set_char((char *)NR_STUN_REG_PREF_ALLOW_LOOPBACK_ADDRS, 1);
+      NR_reg_set_char((char*)NR_STUN_REG_PREF_ALLOW_LOOPBACK_ADDRS, 1);
     }
 
     if (allow_link_local) {
-      NR_reg_set_char((char *)NR_STUN_REG_PREF_ALLOW_LINK_LOCAL_ADDRS, 1);
+      NR_reg_set_char((char*)NR_STUN_REG_PREF_ALLOW_LINK_LOCAL_ADDRS, 1);
     }
     if (force_net_interface.Length() > 0) {
       // Stupid cast.... but needed
+<<<<<<< HEAD
       const nsCString &flat =
           PromiseFlatCString(static_cast<nsACString &>(force_net_interface));
       NR_reg_set_string((char *)NR_ICE_REG_PREF_FORCE_INTERFACE_NAME,
                         const_cast<char *>(flat.get()));
+||||||| merged common ancestors
+      const nsCString& flat = PromiseFlatCString(static_cast<nsACString&>(force_net_interface));
+      NR_reg_set_string((char *)NR_ICE_REG_PREF_FORCE_INTERFACE_NAME, const_cast<char*>(flat.get()));
+=======
+      const nsCString& flat =
+          PromiseFlatCString(static_cast<nsACString&>(force_net_interface));
+      NR_reg_set_string((char*)NR_ICE_REG_PREF_FORCE_INTERFACE_NAME,
+                        const_cast<char*>(flat.get()));
+>>>>>>> upstream-releases
     }
   }
 }
@@ -542,8 +693,18 @@ nsTArray<NrIceStunAddr> NrIceCtx::GetStunAddrs() {
   return addrs;
 }
 
+<<<<<<< HEAD
 void NrIceCtx::SetStunAddrs(const nsTArray<NrIceStunAddr> &addrs) {
   nr_local_addr *local_addrs;
+||||||| merged common ancestors
+void
+NrIceCtx::SetStunAddrs(const nsTArray<NrIceStunAddr>& addrs)
+{
+  nr_local_addr* local_addrs;
+=======
+void NrIceCtx::SetStunAddrs(const nsTArray<NrIceStunAddr>& addrs) {
+  nr_local_addr* local_addrs;
+>>>>>>> upstream-releases
   local_addrs = new nr_local_addr[addrs.Length()];
 
   for (size_t i = 0; i < addrs.Length(); ++i) {
@@ -571,13 +732,14 @@ bool NrIceCtx::Initialize() {
       break;
   }
 
-  r = nr_ice_ctx_create(const_cast<char *>(name_.c_str()), flags, &ctx_);
+  r = nr_ice_ctx_create(const_cast<char*>(name_.c_str()), flags, &ctx_);
 
   if (r) {
     MOZ_MTLOG(ML_ERROR, "Couldn't create ICE ctx for '" << name_ << "'");
     return false;
   }
 
+<<<<<<< HEAD
   // override default factory to capture optional proxy config when creating
   // sockets.
   nr_socket_factory *factory;
@@ -590,6 +752,22 @@ bool NrIceCtx::Initialize() {
   nr_ice_ctx_set_socket_factory(ctx_, factory);
 
   nr_interface_prioritizer *prioritizer = CreateInterfacePrioritizer();
+||||||| merged common ancestors
+  nr_interface_prioritizer *prioritizer = CreateInterfacePrioritizer();
+=======
+  // override default factory to capture optional proxy config when creating
+  // sockets.
+  nr_socket_factory* factory;
+  r = nr_socket_factory_create_int(this, &ctx_socket_factory_vtbl, &factory);
+
+  if (r) {
+    MOZ_MTLOG(LogLevel::Error, "Couldn't create ctx socket factory.");
+    return false;
+  }
+  nr_ice_ctx_set_socket_factory(ctx_, factory);
+
+  nr_interface_prioritizer* prioritizer = CreateInterfacePrioritizer();
+>>>>>>> upstream-releases
   if (!prioritizer) {
     MOZ_MTLOG(LogLevel::Error, "Couldn't create interface prioritizer.");
     return false;
@@ -663,7 +841,14 @@ bool NrIceCtx::Initialize() {
   // only have one peer ctx.
   std::string peer_name = name_ + ":default";
   r = nr_ice_peer_ctx_create(ctx_, ice_handler_,
+<<<<<<< HEAD
                              const_cast<char *>(peer_name.c_str()), &peer_);
+||||||| merged common ancestors
+                             const_cast<char *>(peer_name.c_str()),
+                             &peer_);
+=======
+                             const_cast<char*>(peer_name.c_str()), &peer_);
+>>>>>>> upstream-releases
   if (r) {
     MOZ_MTLOG(ML_ERROR, "Couldn't create ICE peer ctx for '" << name_ << "'");
     return false;
@@ -678,7 +863,7 @@ bool NrIceCtx::Initialize() {
 
 int NrIceCtx::SetNat(const RefPtr<TestNat> &aNat) {
   nat_ = aNat;
-  nr_socket_factory *fac;
+  nr_socket_factory* fac;
   int r = nat_->create_socket_factory(&fac);
   if (r) {
     return r;
@@ -690,8 +875,8 @@ int NrIceCtx::SetNat(const RefPtr<TestNat> &aNat) {
 // ONLY USE THIS FOR TESTING. Will cause totally unpredictable and possibly very
 // bad effects if ICE is still live.
 void NrIceCtx::internal_DeinitializeGlobal() {
-  NR_reg_del((char *)"stun");
-  NR_reg_del((char *)"ice");
+  NR_reg_del((char*)"stun");
+  NR_reg_del((char*)"ice");
   RLogConnector::DestroyInstance();
   nr_crypto_vtbl = nullptr;
   initialized = false;
@@ -701,8 +886,17 @@ void NrIceCtx::internal_SetTimerAccelarator(int divider) {
   ctx_->test_timer_divider = divider;
 }
 
+<<<<<<< HEAD
 void NrIceCtx::AccumulateStats(const NrIceStats &stats) {
   nr_accumulate_count(&(ctx_->stats.stun_retransmits), stats.stun_retransmits);
+||||||| merged common ancestors
+void NrIceCtx::AccumulateStats(const NrIceStats& stats) {
+  nr_accumulate_count(&(ctx_->stats.stun_retransmits),
+                      stats.stun_retransmits);
+=======
+void NrIceCtx::AccumulateStats(const NrIceStats& stats) {
+  nr_accumulate_count(&(ctx_->stats.stun_retransmits), stats.stun_retransmits);
+>>>>>>> upstream-releases
   nr_accumulate_count(&(ctx_->stats.turn_401s), stats.turn_401s);
   nr_accumulate_count(&(ctx_->stats.turn_403s), stats.turn_403s);
   nr_accumulate_count(&(ctx_->stats.turn_438s), stats.turn_438s);
@@ -711,8 +905,16 @@ void NrIceCtx::AccumulateStats(const NrIceStats &stats) {
 NrIceStats NrIceCtx::Destroy() {
   // designed to be called more than once so if stats are desired, this can be
   // called just prior to the destructor
+<<<<<<< HEAD
   MOZ_MTLOG(ML_DEBUG, "Destroying ICE ctx '" << name_ << "'");
   for (auto &idAndStream : streams_) {
+||||||| merged common ancestors
+  MOZ_MTLOG(ML_DEBUG, "Destroying ICE ctx '" << name_ <<"'");
+  for (auto& idAndStream : streams_) {
+=======
+  MOZ_MTLOG(ML_DEBUG, "Destroying ICE ctx '" << name_ << "'");
+  for (auto& idAndStream : streams_) {
+>>>>>>> upstream-releases
     idAndStream.second->Close();
   }
 
@@ -732,6 +934,7 @@ NrIceStats NrIceCtx::Destroy() {
       Telemetry::Accumulate(Telemetry::WEBRTC_ICE_OFFERER_ABORT_TIME,
                             time_delta.ToMilliseconds());
     } else {
+<<<<<<< HEAD
       Telemetry::Accumulate(Telemetry::WEBRTC_ICE_ANSWERER_ABORT_TIME,
                             time_delta.ToMilliseconds());
     }
@@ -752,9 +955,40 @@ NrIceStats NrIceCtx::Destroy() {
           rate_limit_bit_pattern);
     } else if (connection_state_ == ICE_CTX_CONNECTED ||
                connection_state_ == ICE_CTX_COMPLETED) {
+||||||| merged common ancestors
+=======
+      Telemetry::Accumulate(Telemetry::WEBRTC_ICE_ANSWERER_ABORT_TIME,
+                            time_delta.ToMilliseconds());
+    }
+
+    unsigned char rate_limit_bit_pattern = 0;
+    if (!mozilla::nr_socket_short_term_violation_time().IsNull() &&
+        mozilla::nr_socket_short_term_violation_time() >= ice_start_time_) {
+      rate_limit_bit_pattern |= 1;
+    }
+    if (!mozilla::nr_socket_long_term_violation_time().IsNull() &&
+        mozilla::nr_socket_long_term_violation_time() >= ice_start_time_) {
+      rate_limit_bit_pattern |= 2;
+    }
+
+    if (connection_state_ == ICE_CTX_FAILED) {
+>>>>>>> upstream-releases
+      Telemetry::Accumulate(
+<<<<<<< HEAD
+          Telemetry::WEBRTC_STUN_RATE_LIMIT_EXCEEDED_BY_TYPE_GIVEN_SUCCESS,
+          rate_limit_bit_pattern);
+||||||| merged common ancestors
+          Telemetry::WEBRTC_ICE_ANSWERER_ABORT_TIME,
+          time_delta.ToMilliseconds());
+=======
+          Telemetry::WEBRTC_STUN_RATE_LIMIT_EXCEEDED_BY_TYPE_GIVEN_FAILURE,
+          rate_limit_bit_pattern);
+    } else if (connection_state_ == ICE_CTX_CONNECTED ||
+               connection_state_ == ICE_CTX_COMPLETED) {
       Telemetry::Accumulate(
           Telemetry::WEBRTC_STUN_RATE_LIMIT_EXCEEDED_BY_TYPE_GIVEN_SUCCESS,
           rate_limit_bit_pattern);
+>>>>>>> upstream-releases
     }
   }
 
@@ -800,9 +1034,20 @@ nsresult NrIceCtx::SetPolicy(Policy policy) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NrIceCtx::SetStunServers(
     const std::vector<NrIceStunServer> &stun_servers) {
   if (stun_servers.empty()) return NS_OK;
+||||||| merged common ancestors
+nsresult NrIceCtx::SetStunServers(const std::vector<NrIceStunServer>&
+                                  stun_servers) {
+  if (stun_servers.empty())
+    return NS_OK;
+=======
+nsresult NrIceCtx::SetStunServers(
+    const std::vector<NrIceStunServer>& stun_servers) {
+  if (stun_servers.empty()) return NS_OK;
+>>>>>>> upstream-releases
 
   auto servers = MakeUnique<nr_ice_stun_server[]>(stun_servers.size());
 
@@ -825,9 +1070,20 @@ nsresult NrIceCtx::SetStunServers(
 
 // TODO(ekr@rtfm.com): This is just SetStunServers with s/Stun/Turn
 // Could we do a template or something?
+<<<<<<< HEAD
 nsresult NrIceCtx::SetTurnServers(
     const std::vector<NrIceTurnServer> &turn_servers) {
   if (turn_servers.empty()) return NS_OK;
+||||||| merged common ancestors
+nsresult NrIceCtx::SetTurnServers(const std::vector<NrIceTurnServer>&
+                                  turn_servers) {
+  if (turn_servers.empty())
+    return NS_OK;
+=======
+nsresult NrIceCtx::SetTurnServers(
+    const std::vector<NrIceTurnServer>& turn_servers) {
+  if (turn_servers.empty()) return NS_OK;
+>>>>>>> upstream-releases
 
   auto servers = MakeUnique<nr_ice_turn_server[]>(turn_servers.size());
 
@@ -850,7 +1106,7 @@ nsresult NrIceCtx::SetTurnServers(
   return NS_OK;
 }
 
-nsresult NrIceCtx::SetResolver(nr_resolver *resolver) {
+nsresult NrIceCtx::SetResolver(nr_resolver* resolver) {
   int r = nr_ice_ctx_set_resolver(ctx_, resolver);
 
   if (r) {
@@ -861,8 +1117,51 @@ nsresult NrIceCtx::SetResolver(nr_resolver *resolver) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NrIceCtx::SetProxyServer(NrSocketProxyConfig &&config) {
   proxy_config_.reset(new NrSocketProxyConfig(std::move(config)));
+||||||| merged common ancestors
+nsresult NrIceCtx::SetProxyServer(const NrIceProxyServer& proxy_server) {
+  int r,_status;
+  nr_proxy_tunnel_config *config = nullptr;
+  nr_socket_wrapper_factory *wrapper = nullptr;
+
+  if ((r = nr_proxy_tunnel_config_create(&config))) {
+    ABORT(r);
+  }
+
+  if ((r = nr_proxy_tunnel_config_set_proxy(config,
+                                            proxy_server.host().c_str(),
+                                            proxy_server.port()))) {
+    ABORT(r);
+  }
+
+  if ((r = nr_proxy_tunnel_config_set_resolver(config, ctx_->resolver))) {
+    ABORT(r);
+  }
+
+  if ((r = nr_socket_wrapper_factory_proxy_tunnel_create(config, &wrapper))) {
+    MOZ_MTLOG(LogLevel::Error, "Couldn't create proxy tunnel wrapper.");
+    ABORT(r);
+  }
+
+  // nr_ice_ctx will own the wrapper after this call
+  if ((r = nr_ice_ctx_set_turn_tcp_socket_wrapper(ctx_, wrapper))) {
+    MOZ_MTLOG(ML_ERROR, "Couldn't set proxy for '" << name_ << "': " << r);
+    ABORT(r);
+  }
+
+  _status = 0;
+abort:
+  nr_proxy_tunnel_config_destroy(&config);
+  if (_status) {
+    nr_socket_wrapper_factory_destroy(&wrapper);
+    return NS_ERROR_FAILURE;
+  }
+=======
+nsresult NrIceCtx::SetProxyServer(NrSocketProxyConfig&& config) {
+  proxy_config_.reset(new NrSocketProxyConfig(std::move(config)));
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -913,8 +1212,16 @@ nsresult NrIceCtx::StartGathering(bool default_route_only, bool proxy_only) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 RefPtr<NrIceMediaStream> NrIceCtx::FindStream(nr_ice_media_stream *stream) {
   for (auto &idAndStream : streams_) {
+||||||| merged common ancestors
+RefPtr<NrIceMediaStream> NrIceCtx::FindStream(nr_ice_media_stream *stream) {
+  for (auto& idAndStream : streams_) {
+=======
+RefPtr<NrIceMediaStream> NrIceCtx::FindStream(nr_ice_media_stream* stream) {
+  for (auto& idAndStream : streams_) {
+>>>>>>> upstream-releases
     if (idAndStream.second->HasStream(stream)) {
       return idAndStream.second;
     }
@@ -924,7 +1231,7 @@ RefPtr<NrIceMediaStream> NrIceCtx::FindStream(nr_ice_media_stream *stream) {
 }
 
 std::vector<std::string> NrIceCtx::GetGlobalAttributes() {
-  char **attrs = nullptr;
+  char** attrs = nullptr;
   int attrct;
   int r;
   std::vector<std::string> ret;
@@ -946,10 +1253,18 @@ std::vector<std::string> NrIceCtx::GetGlobalAttributes() {
 }
 
 nsresult NrIceCtx::ParseGlobalAttributes(std::vector<std::string> attrs) {
-  std::vector<char *> attrs_in;
+  std::vector<char*> attrs_in;
   attrs_in.reserve(attrs.size());
+<<<<<<< HEAD
   for (auto &attr : attrs) {
     attrs_in.push_back(const_cast<char *>(attr.c_str()));
+||||||| merged common ancestors
+  for (auto& attr : attrs) {
+    attrs_in.push_back(const_cast<char *>(attr.c_str()));
+=======
+  for (auto& attr : attrs) {
+    attrs_in.push_back(const_cast<char*>(attr.c_str()));
+>>>>>>> upstream-releases
   }
 
   int r = nr_ice_peer_ctx_parse_global_attributes(
@@ -1005,8 +1320,17 @@ nsresult NrIceCtx::StartChecks(bool offerer) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void NrIceCtx::gather_cb(NR_SOCKET s, int h, void *arg) {
   NrIceCtx *ctx = static_cast<NrIceCtx *>(arg);
+||||||| merged common ancestors
+
+void NrIceCtx::gather_cb(NR_SOCKET s, int h, void *arg) {
+  NrIceCtx *ctx = static_cast<NrIceCtx *>(arg);
+=======
+void NrIceCtx::gather_cb(NR_SOCKET s, int h, void* arg) {
+  NrIceCtx* ctx = static_cast<NrIceCtx*>(arg);
+>>>>>>> upstream-releases
 
   ctx->SetGatheringState(ICE_CTX_GATHER_COMPLETE);
 }
@@ -1023,8 +1347,20 @@ nsresult NrIceCtx::Finalize() {
 }
 
 void NrIceCtx::UpdateNetworkState(bool online) {
+<<<<<<< HEAD
   MOZ_MTLOG(ML_INFO, "NrIceCtx(" << name_ << "): updating network state to "
                                  << (online ? "online" : "offline"));
+||||||| merged common ancestors
+  MOZ_MTLOG(ML_INFO, "NrIceCtx(" << name_ << "): updating network state to " <<
+            (online ? "online" : "offline"));
+=======
+  MOZ_MTLOG(ML_INFO, "NrIceCtx(" << name_ << "): updating network state to "
+                                 << (online ? "online" : "offline"));
+  if (connection_state_ == ICE_CTX_CLOSED) {
+    return;
+  }
+
+>>>>>>> upstream-releases
   if (online) {
     nr_ice_peer_ctx_refresh_consent_all_streams(peer_);
   } else {
@@ -1103,6 +1439,7 @@ void NrIceCtx::SetGatheringState(GatheringState state) {
 }  // namespace mozilla
 
 // Reimplement nr_ice_compute_codeword to avoid copyright issues
+<<<<<<< HEAD
 void nr_ice_compute_codeword(char *buf, int len, char *codeword) {
   UINT4 c;
 
@@ -1123,12 +1460,38 @@ int nr_socket_local_create(void *obj, nr_transport_addr *addr,
   if (obj) {
     config = static_cast<NrIceCtx *>(obj)->GetProxyConfig();
   }
+||||||| merged common ancestors
+void nr_ice_compute_codeword(char *buf, int len,char *codeword) {
+    UINT4 c;
+=======
+void nr_ice_compute_codeword(char* buf, int len, char* codeword) {
+  UINT4 c;
 
+  r_crc32(buf, len, &c);
+
+  PL_Base64Encode(reinterpret_cast<char*>(&c), 3, codeword);
+  codeword[4] = 0;
+}
+
+int nr_socket_local_create(void* obj, nr_transport_addr* addr,
+                           nr_socket** sockp) {
+  using namespace mozilla;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   r = NrSocketBase::CreateSocket(addr, &sock, config);
   if (r) {
     ABORT(r);
   }
+||||||| merged common ancestors
+    r_crc32(buf,len,&c);
+=======
+  RefPtr<NrSocketBase> sock;
+  int r, _status;
+  shared_ptr<NrSocketProxyConfig> config = nullptr;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   r = nr_socket_create_int(static_cast<void *>(sock), sock->vtbl(), sockp);
   if (r) ABORT(r);
 
@@ -1143,4 +1506,32 @@ int nr_socket_local_create(void *obj, nr_transport_addr *addr,
 
 abort:
   return _status;
+||||||| merged common ancestors
+    PL_Base64Encode(reinterpret_cast<char*>(&c), 3, codeword);
+    codeword[4] = 0;
+=======
+  if (obj) {
+    config = static_cast<NrIceCtx*>(obj)->GetProxyConfig();
+  }
+
+  r = NrSocketBase::CreateSocket(addr, &sock, config);
+  if (r) {
+    ABORT(r);
+  }
+
+  r = nr_socket_create_int(static_cast<void*>(sock), sock->vtbl(), sockp);
+  if (r) ABORT(r);
+
+  _status = 0;
+
+  {
+    // We will release this reference in destroy(), not exactly the normal
+    // ownership model, but it is what it is.
+    NrSocketBase* dummy = sock.forget().take();
+    (void)dummy;
+  }
+
+abort:
+  return _status;
+>>>>>>> upstream-releases
 }

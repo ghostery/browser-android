@@ -58,8 +58,18 @@ void VerifyPrivateStorePath(T* target, const nsCString& aTableName,
   ASSERT_TRUE(privateStorePath == expectedPrivateStorePath);
 }
 
+<<<<<<< HEAD
 TEST(UrlClassifierPerProviderDirectory, LookupCache) {
   RunTestInNewThread([]() -> void {
+||||||| merged common ancestors
+TEST(UrlClassifierPerProviderDirectory, LookupCache)
+{
+  RunTestInNewThread([] () -> void {
+=======
+TEST(UrlClassifierPerProviderDirectory, LookupCache)
+{
+  RunTestInNewThread([]() -> void {
+>>>>>>> upstream-releases
     nsCOMPtr<nsIFile> rootDir;
     NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR, getter_AddRefs(rootDir));
 
@@ -91,8 +101,18 @@ TEST(UrlClassifierPerProviderDirectory, LookupCache) {
   });
 }
 
+<<<<<<< HEAD
 TEST(UrlClassifierPerProviderDirectory, HashStore) {
   RunTestInNewThread([]() -> void {
+||||||| merged common ancestors
+TEST(UrlClassifierPerProviderDirectory, HashStore)
+{
+  RunTestInNewThread([] () -> void {
+=======
+TEST(UrlClassifierPerProviderDirectory, HashStore)
+{
+  RunTestInNewThread([]() -> void {
+>>>>>>> upstream-releases
     nsCOMPtr<nsIFile> rootDir;
     NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR, getter_AddRefs(rootDir));
 

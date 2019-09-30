@@ -48,9 +48,20 @@ XPCWrappedNativeProto::~XPCWrappedNativeProto() {
   DeferredFinalize(mClassInfo.forget().take());
 }
 
+<<<<<<< HEAD
 bool XPCWrappedNativeProto::Init(nsIXPCScriptable* scriptable) {
   AutoJSContext cx;
   mScriptable = scriptable;
+||||||| merged common ancestors
+bool
+XPCWrappedNativeProto::Init(nsIXPCScriptable* scriptable)
+{
+    AutoJSContext cx;
+    mScriptable = scriptable;
+=======
+bool XPCWrappedNativeProto::Init(JSContext* cx, nsIXPCScriptable* scriptable) {
+  mScriptable = scriptable;
+>>>>>>> upstream-releases
 
   JS::RootedObject proto(cx, JS::GetRealmObjectPrototype(cx));
   mJSProtoObject = JS_NewObjectWithUniqueType(
@@ -74,15 +85,38 @@ void XPCWrappedNativeProto::JSProtoObjectFinalized(js::FreeOp* fop,
   MOZ_ASSERT(map->Find(mClassInfo) != this);
 #endif
 
+<<<<<<< HEAD
   GetRuntime()->GetDyingWrappedNativeProtoMap()->Add(this);
 
   mJSProtoObject.finalize(js::CastToJSFreeOp(fop)->runtime());
+||||||| merged common ancestors
+    GetRuntime()->GetDyingWrappedNativeProtoMap()->Add(this);
+
+    mJSProtoObject.finalize(js::CastToJSFreeOp(fop)->runtime());
+=======
+  GetRuntime()->GetDyingWrappedNativeProtoMap()->Add(this);
+  mJSProtoObject = nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void XPCWrappedNativeProto::JSProtoObjectMoved(JSObject* obj,
                                                const JSObject* old) {
   MOZ_ASSERT(mJSProtoObject == old);
   mJSProtoObject.init(obj);  // Update without triggering barriers.
+||||||| merged common ancestors
+void
+XPCWrappedNativeProto::JSProtoObjectMoved(JSObject* obj, const JSObject* old)
+{
+    MOZ_ASSERT(mJSProtoObject == old);
+    mJSProtoObject.init(obj); // Update without triggering barriers.
+=======
+void XPCWrappedNativeProto::JSProtoObjectMoved(JSObject* obj,
+                                               const JSObject* old) {
+  // Update without triggering barriers.
+  MOZ_ASSERT(mJSProtoObject == old);
+  mJSProtoObject.unbarrieredSet(obj);
+>>>>>>> upstream-releases
 }
 
 void XPCWrappedNativeProto::SystemIsBeingShutDown() {
@@ -97,6 +131,7 @@ void XPCWrappedNativeProto::SystemIsBeingShutDown() {
 }
 
 // static
+<<<<<<< HEAD
 XPCWrappedNativeProto* XPCWrappedNativeProto::GetNewOrUsed(
     XPCWrappedNativeScope* scope, nsIClassInfo* classInfo,
     nsIXPCScriptable* scriptable) {
@@ -110,7 +145,55 @@ XPCWrappedNativeProto* XPCWrappedNativeProto::GetNewOrUsed(
   map = scope->GetWrappedNativeProtoMap();
   proto = map->Find(classInfo);
   if (proto) {
+||||||| merged common ancestors
+XPCWrappedNativeProto*
+XPCWrappedNativeProto::GetNewOrUsed(XPCWrappedNativeScope* scope,
+                                    nsIClassInfo* classInfo,
+                                    nsIXPCScriptable* scriptable)
+{
+    AutoJSContext cx;
+    MOZ_ASSERT(scope, "bad param");
+    MOZ_ASSERT(classInfo, "bad param");
+
+    AutoMarkingWrappedNativeProtoPtr proto(cx);
+    ClassInfo2WrappedNativeProtoMap* map = nullptr;
+
+    map = scope->GetWrappedNativeProtoMap();
+    proto = map->Find(classInfo);
+    if (proto) {
+        return proto;
+    }
+
+    RefPtr<XPCNativeSet> set = XPCNativeSet::GetNewOrUsed(classInfo);
+    if (!set) {
+        return nullptr;
+    }
+
+    proto = new XPCWrappedNativeProto(scope, classInfo, set.forget());
+
+    if (!proto || !proto->Init(scriptable)) {
+        delete proto.get();
+        return nullptr;
+    }
+
+    map->Add(classInfo, proto);
+
+=======
+XPCWrappedNativeProto* XPCWrappedNativeProto::GetNewOrUsed(
+    JSContext* cx, XPCWrappedNativeScope* scope, nsIClassInfo* classInfo,
+    nsIXPCScriptable* scriptable) {
+  MOZ_ASSERT(scope, "bad param");
+  MOZ_ASSERT(classInfo, "bad param");
+
+  AutoMarkingWrappedNativeProtoPtr proto(cx);
+  ClassInfo2WrappedNativeProtoMap* map = nullptr;
+
+  map = scope->GetWrappedNativeProtoMap();
+  proto = map->Find(classInfo);
+  if (proto) {
+>>>>>>> upstream-releases
     return proto;
+<<<<<<< HEAD
   }
 
   RefPtr<XPCNativeSet> set = XPCNativeSet::GetNewOrUsed(classInfo);
@@ -128,6 +211,26 @@ XPCWrappedNativeProto* XPCWrappedNativeProto::GetNewOrUsed(
   map->Add(classInfo, proto);
 
   return proto;
+||||||| merged common ancestors
+=======
+  }
+
+  RefPtr<XPCNativeSet> set = XPCNativeSet::GetNewOrUsed(cx, classInfo);
+  if (!set) {
+    return nullptr;
+  }
+
+  proto = new XPCWrappedNativeProto(scope, classInfo, set.forget());
+
+  if (!proto || !proto->Init(cx, scriptable)) {
+    delete proto.get();
+    return nullptr;
+  }
+
+  map->Add(classInfo, proto);
+
+  return proto;
+>>>>>>> upstream-releases
 }
 
 void XPCWrappedNativeProto::DebugDump(int16_t depth) {

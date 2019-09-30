@@ -22,7 +22,7 @@ import taskgraph
 from taskgraph.generator import TaskGraphGenerator
 from taskgraph.parameters import (
     ParameterMismatch,
-    load_parameters_file,
+    parameters_loader,
 )
 from taskgraph.taskgraph import TaskGraph
 
@@ -31,8 +31,8 @@ build = MozbuildObject.from_environment(cwd=here)
 
 
 PARAMETER_MISMATCH = """
-ERROR - The parameters being used to generate tasks differ from those defined
-in your working copy:
+ERROR - The parameters being used to generate tasks differ from those expected
+by your working copy:
 
     {}
 
@@ -54,6 +54,7 @@ def invalidate(cache, root):
         os.remove(cache)
 
 
+<<<<<<< HEAD
 def generate_tasks(params, full, root):
     params = params or "project=mozilla-central"
 
@@ -62,7 +63,27 @@ def generate_tasks(params, full, root):
     if os.path.isdir(old_cache_dir):
         shutil.rmtree(old_cache_dir)
 
+||||||| merged common ancestors
+def filter_target_task(task):
+    return not any(re.search(pattern, task) for pattern in TARGET_TASK_FILTERS)
+
+
+def generate_tasks(params, full, root):
+    params = params or "project=mozilla-central"
+
+    # Try to delete the old taskgraph cache directory.
+    old_cache_dir = os.path.join(get_state_dir()[0], 'cache', 'taskgraph')
+    if os.path.isdir(old_cache_dir):
+        shutil.rmtree(old_cache_dir)
+
+=======
+def generate_tasks(params=None, full=False):
+    # TODO: Remove after January 1st, 2020.
+    # Try to delete the old taskgraph cache directories.
+    root = build.topsrcdir
+>>>>>>> upstream-releases
     root_hash = hashlib.sha256(os.path.abspath(root)).hexdigest()
+<<<<<<< HEAD
     cache_dir = os.path.join(get_state_dir()[0], 'cache', root_hash, 'taskgraph')
 
     # Cleanup old cache files
@@ -70,6 +91,21 @@ def generate_tasks(params, full, root):
         os.remove(path)
 
     attr = 'full_task_graph' if full else 'target_task_graph'
+||||||| merged common ancestors
+    cache_dir = os.path.join(get_state_dir()[0], 'cache', root_hash, 'taskgraph')
+    attr = 'full_task_set' if full else 'target_task_set'
+=======
+    old_cache_dirs = [
+        os.path.join(get_state_dir(), 'cache', 'taskgraph'),
+        os.path.join(get_state_dir(), 'cache', root_hash, 'taskgraph'),
+    ]
+    for cache_dir in old_cache_dirs:
+        if os.path.isdir(cache_dir):
+            shutil.rmtree(cache_dir)
+
+    cache_dir = os.path.join(get_state_dir(srcdir=True), 'cache', 'taskgraph')
+    attr = 'full_task_set' if full else 'target_task_set'
+>>>>>>> upstream-releases
     cache = os.path.join(cache_dir, attr)
 
     invalidate(cache, root)
@@ -81,22 +117,81 @@ def generate_tasks(params, full, root):
         os.makedirs(cache_dir)
 
     print("Task configuration changed, generating {}".format(attr.replace('_', ' ')))
-    try:
-        params = load_parameters_file(params, strict=False, overrides={'try_mode': 'try_select'})
-        params.check()
-    except ParameterMismatch as e:
-        print(PARAMETER_MISMATCH.format(e.args[0]))
-        sys.exit(1)
 
     taskgraph.fast = True
     cwd = os.getcwd()
-    os.chdir(build.topsrcdir)
+    os.chdir(root)
 
     root = os.path.join(root, 'taskcluster', 'ci')
+<<<<<<< HEAD
     tg = getattr(TaskGraphGenerator(root_dir=root, parameters=params), attr)
+||||||| merged common ancestors
+    tg = getattr(TaskGraphGenerator(root_dir=root, parameters=params), attr)
+    labels = [label for label in tg.graph.visit_postorder()]
+
+    if not full:
+        labels = filter(filter_target_task, labels)
+=======
+    params = parameters_loader(params, strict=False, overrides={'try_mode': 'try_select'})
+
+    # Cache both full_task_set and target_task_set regardless of whether or not
+    # --full was requested. Caching is cheap and can potentially save a lot of
+    # time.
+    generator = TaskGraphGenerator(root_dir=root, parameters=params)
+
+    def generate(attr):
+        try:
+            tg = getattr(generator, attr)
+        except ParameterMismatch as e:
+            print(PARAMETER_MISMATCH.format(e.args[0]))
+            sys.exit(1)
+
+        # write cache
+        with open(os.path.join(cache_dir, attr), 'w') as fh:
+            json.dump(tg.to_json(), fh)
+        return tg
+
+    tg_full = generate('full_task_set')
+    tg_target = generate('target_task_set')
+>>>>>>> upstream-releases
 
     os.chdir(cwd)
+    if full:
+        return tg_full
+    return tg_target
 
+
+def filter_tasks_by_paths(tasks, paths):
+    resolver = TestResolver.from_environment(cwd=here)
+    run_suites, run_tests = resolver.resolve_metadata(paths)
+    flavors = set([(t['flavor'], t.get('subsuite')) for t in run_tests])
+
+    task_regexes = set()
+    for flavor, subsuite in flavors:
+        _, suite = get_suite_definition(flavor, subsuite, strict=True)
+        if 'task_regex' not in suite:
+            print("warning: no tasks could be resolved from flavor '{}'{}".format(
+                    flavor, " and subsuite '{}'".format(subsuite) if subsuite else ""))
+            continue
+
+        task_regexes.update(suite['task_regex'])
+
+    def match_task(task):
+        return any(re.search(pattern, task) for pattern in task_regexes)
+
+    return filter(match_task, tasks)
+
+
+def resolve_tests_by_suite(paths):
+    resolver = TestResolver.from_environment(cwd=here)
+    _, run_tests = resolver.resolve_metadata(paths)
+
+    suite_to_tests = defaultdict(list)
+    for test in run_tests:
+        key, _ = get_suite_definition(test['flavor'], test.get('subsuite'), strict=True)
+        suite_to_tests[key].append(test['srcdir_relpath'])
+
+<<<<<<< HEAD
     with open(cache, 'w') as fh:
         json.dump(tg.to_json(), fh)
     return tg
@@ -136,3 +231,10 @@ def resolve_tests_by_suite(paths):
         suite_to_tests[key].append(test['srcdir_relpath'])
 
     return suite_to_tests
+||||||| merged common ancestors
+    with open(cache, 'w') as fh:
+        fh.write('\n'.join(labels))
+    return labels
+=======
+    return suite_to_tests
+>>>>>>> upstream-releases

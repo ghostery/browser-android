@@ -9,9 +9,22 @@
 namespace mozilla {
 namespace devtools {
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<FileDescriptorOutputStream>
 FileDescriptorOutputStream::Create(const ipc::FileDescriptor& fileDescriptor) {
   if (NS_WARN_IF(!fileDescriptor.IsValid())) return nullptr;
+||||||| merged common ancestors
+/* static */ already_AddRefed<FileDescriptorOutputStream>
+FileDescriptorOutputStream::Create(const ipc::FileDescriptor& fileDescriptor)
+{
+  if (NS_WARN_IF(!fileDescriptor.IsValid()))
+    return nullptr;
+=======
+/* static */
+already_AddRefed<FileDescriptorOutputStream> FileDescriptorOutputStream::Create(
+    const ipc::FileDescriptor& fileDescriptor) {
+  if (NS_WARN_IF(!fileDescriptor.IsValid())) return nullptr;
+>>>>>>> upstream-releases
 
   auto rawFD = fileDescriptor.ClonePlatformHandle();
   PRFileDesc* prfd = PR_ImportFile(PROsfd(rawFD.release()));

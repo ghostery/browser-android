@@ -7,7 +7,9 @@
 #include "nsUrlClassifierDBService.h"
 
 #include "mozilla/SyncRunnable.h"
+#include "Classifier.h"
 
+using namespace mozilla;
 using namespace mozilla::safebrowsing;
 using mozilla::NewRunnableMethod;
 
@@ -101,6 +103,7 @@ UrlClassifierDBServiceWorkerProxy::FinishStream() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 UrlClassifierDBServiceWorkerProxy::DoLocalLookupRunnable::Run() {
   mTarget->DoLocalLookup(mSpec, mTables, mResults);
   return NS_OK;
@@ -125,6 +128,37 @@ nsresult UrlClassifierDBServiceWorkerProxy::DoLocalLookup(
 
 NS_IMETHODIMP
 UrlClassifierDBServiceWorkerProxy::FinishUpdate() {
+||||||| merged common ancestors
+UrlClassifierDBServiceWorkerProxy::DoLocalLookupRunnable::Run()
+{
+  mTarget->DoLocalLookup(mSpec, mTables, mResults);
+  return NS_OK;
+}
+
+nsresult
+UrlClassifierDBServiceWorkerProxy::DoLocalLookup(const nsACString& spec,
+                                                 const nsACString& tables,
+                                                 LookupResultArray& results) const
+
+{
+  // Run synchronously on background thread. NS_DISPATCH_SYNC does *not* do
+  // what we want -- it continues processing events on the main thread loop
+  // before the Dispatch returns.
+  nsCOMPtr<nsIRunnable> r = new DoLocalLookupRunnable(mTarget, spec, tables, results);
+  nsIThread* t = nsUrlClassifierDBService::BackgroundThread();
+  if (!t)
+    return NS_ERROR_FAILURE;
+
+  mozilla::SyncRunnable::DispatchToThread(t, r);
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+UrlClassifierDBServiceWorkerProxy::FinishUpdate()
+{
+=======
+UrlClassifierDBServiceWorkerProxy::FinishUpdate() {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> r =
       NewRunnableMethod("nsUrlClassifierDBServiceWorker::FinishUpdate", mTarget,
                         &nsUrlClassifierDBServiceWorker::FinishUpdate);

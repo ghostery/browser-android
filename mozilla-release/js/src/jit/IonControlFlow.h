@@ -48,6 +48,7 @@ class CFGSpace {
   }
 };
 
+<<<<<<< HEAD
 class CFGBlock : public TempObject {
   size_t id_;
   jsbytecode* start;
@@ -88,6 +89,99 @@ class CFGBlock : public TempObject {
   }
   size_t id() const { return id_; }
   void setId(size_t id) { id_ = id; }
+||||||| merged common ancestors
+class CFGBlock : public TempObject
+{
+    size_t id_;
+    jsbytecode* start;
+    jsbytecode* stop;
+    CFGControlInstruction* end;
+    bool inWorkList;
+
+  public:
+    explicit CFGBlock(jsbytecode* start)
+      : id_(-1),
+        start(start),
+        stop(nullptr),
+        end(nullptr),
+        inWorkList(false)
+    {}
+
+    static CFGBlock* New(TempAllocator& alloc, jsbytecode* start) {
+        return new(alloc) CFGBlock(start);
+    }
+
+    void operator=(const CFGBlock&) = delete;
+
+    jsbytecode* startPc() const {
+        return start;
+    }
+    void setStartPc(jsbytecode* startPc) {
+        start = startPc;
+    }
+    jsbytecode* stopPc() const {
+        MOZ_ASSERT(stop);
+        return stop;
+    }
+    void setStopPc(jsbytecode* stopPc) {
+        stop = stopPc;
+    }
+    CFGControlInstruction* stopIns() const {
+        MOZ_ASSERT(end);
+        return end;
+    }
+    void setStopIns(CFGControlInstruction* stopIns) {
+        end = stopIns;
+    }
+    bool isInWorkList() const {
+        return inWorkList;
+    }
+    void setInWorklist() {
+        MOZ_ASSERT(!inWorkList);
+        inWorkList = true;
+    }
+    void clearInWorkList() {
+        MOZ_ASSERT(inWorkList);
+        inWorkList = false;
+    }
+    size_t id() const {
+        return id_;
+    }
+    void setId(size_t id) {
+        id_ = id;
+    }
+=======
+class CFGBlock : public TempObject {
+  size_t id_;
+  jsbytecode* start;
+  jsbytecode* stop;
+  CFGControlInstruction* end;
+
+ public:
+  explicit CFGBlock(jsbytecode* start)
+      : id_(-1), start(start), stop(nullptr), end(nullptr) {}
+
+  static CFGBlock* New(TempAllocator& alloc, jsbytecode* start) {
+    return new (alloc) CFGBlock(start);
+  }
+
+  void operator=(const CFGBlock&) = delete;
+
+  jsbytecode* startPc() const { return start; }
+  void setStartPc(jsbytecode* startPc) { start = startPc; }
+  jsbytecode* stopPc() const {
+    MOZ_ASSERT(stop);
+    return stop;
+  }
+  void setStopPc(jsbytecode* stopPc) { stop = stopPc; }
+  CFGControlInstruction* stopIns() const {
+    MOZ_ASSERT(end);
+    return end;
+  }
+  void setStopIns(CFGControlInstruction* stopIns) { end = stopIns; }
+  size_t id() const { return id_; }
+  void setId(size_t id) { id_ = id; }
+>>>>>>> upstream-releases
 };
 
 #define CFG_CONTROL_OPCODE_LIST(_) \
@@ -448,6 +542,7 @@ class CFGBackEdge : public CFGUnaryControlInstruction {
  * JMP block
  *
  */
+<<<<<<< HEAD
 class CFGLoopEntry : public CFGUnaryControlInstruction {
   bool canOsr_;
   bool isForIn_;
@@ -455,18 +550,88 @@ class CFGLoopEntry : public CFGUnaryControlInstruction {
   jsbytecode* loopStopPc_;
 
   CFGLoopEntry(CFGBlock* block, size_t stackPhiCount)
+||||||| merged common ancestors
+class CFGLoopEntry : public CFGUnaryControlInstruction
+{
+    bool canOsr_;
+    bool isForIn_;
+    size_t stackPhiCount_;
+    jsbytecode* loopStopPc_;
+
+    CFGLoopEntry(CFGBlock* block, size_t stackPhiCount)
+=======
+class CFGLoopEntry : public CFGUnaryControlInstruction {
+  bool canOsr_;
+  bool isForIn_;
+  bool isBrokenLoop_;
+  size_t stackPhiCount_;
+  jsbytecode* loopStopPc_;
+
+  CFGLoopEntry(CFGBlock* block, size_t stackPhiCount)
+>>>>>>> upstream-releases
       : CFGUnaryControlInstruction(block),
         canOsr_(false),
         isForIn_(false),
+        isBrokenLoop_(false),
         stackPhiCount_(stackPhiCount),
         loopStopPc_(nullptr) {}
 
+<<<<<<< HEAD
   CFGLoopEntry(CFGBlock* block, bool canOsr, bool isForIn, size_t stackPhiCount,
                jsbytecode* loopStopPc)
+||||||| merged common ancestors
+    CFGLoopEntry(CFGBlock* block, bool canOsr, bool isForIn, size_t stackPhiCount,
+                 jsbytecode* loopStopPc)
+=======
+  CFGLoopEntry(CFGBlock* block, bool canOsr, bool isForIn, bool isBrokenLoop,
+               size_t stackPhiCount, jsbytecode* loopStopPc)
+>>>>>>> upstream-releases
       : CFGUnaryControlInstruction(block),
         canOsr_(canOsr),
         isForIn_(isForIn),
+        isBrokenLoop_(isBrokenLoop),
         stackPhiCount_(stackPhiCount),
+<<<<<<< HEAD
+        loopStopPc_(loopStopPc) {}
+||||||| merged common ancestors
+        loopStopPc_(loopStopPc)
+    {}
+
+  public:
+    CFG_CONTROL_HEADER(LoopEntry);
+    TRIVIAL_CFG_NEW_WRAPPERS
+
+    static CFGLoopEntry* CopyWithNewTargets(TempAllocator& alloc, CFGLoopEntry* old,
+                                            CFGBlock* loopEntry)
+    {
+        return new(alloc) CFGLoopEntry(loopEntry, old->canOsr(), old->isForIn(),
+                                       old->stackPhiCount(), old->loopStopPc());
+    }
+
+    void setCanOsr() {
+        canOsr_ = true;
+    }
+
+    bool canOsr() const {
+        return canOsr_;
+    }
+
+    void setIsForIn() {
+        isForIn_ = true;
+    }
+    bool isForIn() const {
+        return isForIn_;
+    }
+
+    size_t stackPhiCount() const {
+        return stackPhiCount_;
+    }
+
+    jsbytecode* loopStopPc() const {
+        MOZ_ASSERT(loopStopPc_);
+        return loopStopPc_;
+    }
+=======
         loopStopPc_(loopStopPc) {}
 
  public:
@@ -477,35 +642,159 @@ class CFGLoopEntry : public CFGUnaryControlInstruction {
                                           CFGLoopEntry* old,
                                           CFGBlock* loopEntry) {
     return new (alloc) CFGLoopEntry(loopEntry, old->canOsr(), old->isForIn(),
-                                    old->stackPhiCount(), old->loopStopPc());
+                                    old->isBrokenLoop(), old->stackPhiCount(),
+                                    old->maybeLoopStopPc());
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  CFG_CONTROL_HEADER(LoopEntry);
+  TRIVIAL_CFG_NEW_WRAPPERS
+||||||| merged common ancestors
+    void setLoopStopPc(jsbytecode* loopStopPc) {
+        loopStopPc_ = loopStopPc;
+    }
+};
+
+typedef Vector<CFGBlock*, 4, JitAllocPolicy> CFGBlockVector;
+=======
   void setCanOsr() { canOsr_ = true; }
 
-  bool canOsr() const { return canOsr_; }
+  bool isBrokenLoop() const { return isBrokenLoop_; }
+  void setIsBrokenLoop() { isBrokenLoop_ = true; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static CFGLoopEntry* CopyWithNewTargets(TempAllocator& alloc,
+                                          CFGLoopEntry* old,
+                                          CFGBlock* loopEntry) {
+    return new (alloc) CFGLoopEntry(loopEntry, old->canOsr(), old->isForIn(),
+                                    old->stackPhiCount(), old->loopStopPc());
+  }
+||||||| merged common ancestors
+class ControlFlowGraph : public TempObject
+{
+    // A list of blocks in RPO, containing per block a pc-range and
+    // a control instruction.
+    Vector<CFGBlock, 4, JitAllocPolicy> blocks_;
+=======
+  bool canOsr() const { return canOsr_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void setCanOsr() { canOsr_ = true; }
+||||||| merged common ancestors
+    explicit ControlFlowGraph(TempAllocator& alloc)
+      : blocks_(alloc)
+    {}
+=======
   void setIsForIn() { isForIn_ = true; }
   bool isForIn() const { return isForIn_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool canOsr() const { return canOsr_; }
+||||||| merged common ancestors
+  public:
+    static ControlFlowGraph* New(TempAllocator& alloc) {
+        return new(alloc) ControlFlowGraph(alloc);
+    }
+=======
   size_t stackPhiCount() const { return stackPhiCount_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void setIsForIn() { isForIn_ = true; }
+  bool isForIn() const { return isForIn_; }
+||||||| merged common ancestors
+    ControlFlowGraph(const ControlFlowGraph&) = delete;
+    void operator=(const ControlFlowGraph&) = delete;
+=======
+  jsbytecode* maybeLoopStopPc() const { return loopStopPc_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  size_t stackPhiCount() const { return stackPhiCount_; }
+||||||| merged common ancestors
+    void dump(GenericPrinter& print, JSScript* script);
+    bool init(TempAllocator& alloc, const CFGBlockVector& blocks);
+=======
+  jsbytecode* loopStopPc() const {
+    MOZ_ASSERT(loopStopPc_);
+    return loopStopPc_;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   jsbytecode* loopStopPc() const {
     MOZ_ASSERT(loopStopPc_);
     return loopStopPc_;
   }
 
   void setLoopStopPc(jsbytecode* loopStopPc) { loopStopPc_ = loopStopPc; }
+||||||| merged common ancestors
+    const CFGBlock* block(size_t i) const {
+        return &blocks_[i];
+    }
+
+    size_t numBlocks() const {
+        return blocks_.length();
+    }
+=======
+  void setLoopStopPc(jsbytecode* loopStopPc) { loopStopPc_ = loopStopPc; }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
+typedef Vector<CFGBlock*, 4, JitAllocPolicy> CFGBlockVector;
+||||||| merged common ancestors
+class ControlFlowGenerator
+{
+    static int CmpSuccessors(const void* a, const void* b);
+
+    JSScript* script;
+    CFGBlock* current;
+    jsbytecode* pc;
+    GSNCache gsn;
+    TempAllocator& alloc_;
+    CFGBlockVector blocks_;
+=======
 typedef Vector<CFGBlock*, 4, JitAllocPolicy> CFGBlockVector;
 
 class ControlFlowGraph : public TempObject {
   // A list of blocks in RPO, containing per block a pc-range and
   // a control instruction.
   Vector<CFGBlock, 4, JitAllocPolicy> blocks_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+class ControlFlowGraph : public TempObject {
+  // A list of blocks in RPO, containing per block a pc-range and
+  // a control instruction.
+  Vector<CFGBlock, 4, JitAllocPolicy> blocks_;
+||||||| merged common ancestors
+  public:
+    ControlFlowGenerator(const ControlFlowGenerator&) = delete;
+    void operator=(const ControlFlowGenerator&) = delete;
+=======
   explicit ControlFlowGraph(TempAllocator& alloc) : blocks_(alloc) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  explicit ControlFlowGraph(TempAllocator& alloc) : blocks_(alloc) {}
+||||||| merged common ancestors
+    TempAllocator& alloc() {
+        return alloc_;
+    }
+=======
+ public:
+  static ControlFlowGraph* New(TempAllocator& alloc) {
+    return new (alloc) ControlFlowGraph(alloc);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  public:
   static ControlFlowGraph* New(TempAllocator& alloc) {
     return new (alloc) ControlFlowGraph(alloc);
@@ -513,6 +802,24 @@ class ControlFlowGraph : public TempObject {
 
   ControlFlowGraph(const ControlFlowGraph&) = delete;
   void operator=(const ControlFlowGraph&) = delete;
+||||||| merged common ancestors
+    enum class ControlStatus {
+        Error,
+        Abort,
+        Ended,        // There is no continuation/join point.
+        Joined,       // Created a join node.
+        Jumped,       // Parsing another branch at the same level.
+        None          // No control flow.
+    };
+
+    struct DeferredEdge : public TempObject
+    {
+        CFGBlock* block;
+        DeferredEdge* next;
+=======
+  ControlFlowGraph(const ControlFlowGraph&) = delete;
+  void operator=(const ControlFlowGraph&) = delete;
+>>>>>>> upstream-releases
 
   void dump(GenericPrinter& print, JSScript* script);
   bool init(TempAllocator& alloc, const CFGBlockVector& blocks);

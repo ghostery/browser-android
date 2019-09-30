@@ -93,6 +93,7 @@ void TextTrackCueList::RemoveCueAt(uint32_t aIndex) {
   }
 }
 
+<<<<<<< HEAD
 void TextTrackCueList::RemoveAll() { mList.Clear(); }
 
 void TextTrackCueList::GetArray(nsTArray<RefPtr<TextTrackCue>>& aCues) {
@@ -103,19 +104,49 @@ void TextTrackCueList::SetCuesInactive() {
   for (uint32_t i = 0; i < mList.Length(); ++i) {
     mList[i]->SetActive(false);
   }
+||||||| merged common ancestors
+void
+TextTrackCueList::RemoveAll()
+{
+  mList.Clear();
 }
 
+void
+TextTrackCueList::GetArray(nsTArray<RefPtr<TextTrackCue> >& aCues)
+{
+  aCues = nsTArray<RefPtr<TextTrackCue> >(mList);
+}
+
+
+void
+TextTrackCueList::SetCuesInactive()
+{
+  for(uint32_t i = 0; i < mList.Length(); ++i) {
+    mList[i]->SetActive(false);
+  }
+=======
+void TextTrackCueList::RemoveAll() { mList.Clear(); }
+
+void TextTrackCueList::GetArray(nsTArray<RefPtr<TextTrackCue>>& aCues) {
+  aCues = nsTArray<RefPtr<TextTrackCue>>(mList);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 already_AddRefed<TextTrackCueList> TextTrackCueList::GetCueListByTimeInterval(
     media::Interval<double>& aInterval) {
   RefPtr<TextTrackCueList> output = new TextTrackCueList(mParent);
+||||||| merged common ancestors
+already_AddRefed<TextTrackCueList>
+TextTrackCueList::GetCueListByTimeInterval(media::Interval<double>& aInterval)
+{
+  RefPtr<TextTrackCueList> output = new TextTrackCueList(mParent);
+=======
+void TextTrackCueList::SetCuesInactive() {
+>>>>>>> upstream-releases
   for (uint32_t i = 0; i < mList.Length(); ++i) {
-    TextTrackCue* cue = mList[i];
-    if (cue->StartTime() <= aInterval.mEnd &&
-        aInterval.mStart <= cue->EndTime()) {
-      output->AddCue(*cue);
-    }
+    mList[i]->SetActive(false);
   }
-  return output.forget();
 }
 
 void TextTrackCueList::NotifyCueUpdated(TextTrackCue* aCue) {

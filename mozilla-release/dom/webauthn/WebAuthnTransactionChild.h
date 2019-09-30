@@ -25,6 +25,7 @@ class WebAuthnTransactionChild final : public PWebAuthnTransactionChild {
   NS_INLINE_DECL_REFCOUNTING(WebAuthnTransactionChild);
   explicit WebAuthnTransactionChild(WebAuthnManagerBase* aManager);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvConfirmRegister(
       const uint64_t& aTransactionId,
       const WebAuthnMakeCredentialResult& aResult) override;
@@ -35,6 +36,38 @@ class WebAuthnTransactionChild final : public PWebAuthnTransactionChild {
 
   mozilla::ipc::IPCResult RecvAbort(const uint64_t& aTransactionId,
                                     const nsresult& aError) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvConfirmRegister(const uint64_t& aTransactionId,
+                      const WebAuthnMakeCredentialResult& aResult) override;
+
+  mozilla::ipc::IPCResult
+  RecvConfirmSign(const uint64_t& aTransactionId,
+                  const WebAuthnGetAssertionResult& aResult) override;
+
+  mozilla::ipc::IPCResult
+  RecvAbort(const uint64_t& aTransactionId, const nsresult& aError) override;
+=======
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until we can do MOZ_CAN_RUN_SCRIPT in
+  // IPDL-generated things.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  mozilla::ipc::IPCResult RecvConfirmRegister(
+      const uint64_t& aTransactionId,
+      const WebAuthnMakeCredentialResult& aResult);
+
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until we can do MOZ_CAN_RUN_SCRIPT in
+  // IPDL-generated things.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  mozilla::ipc::IPCResult RecvConfirmSign(
+      const uint64_t& aTransactionId,
+      const WebAuthnGetAssertionResult& aResult);
+
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until we can do MOZ_CAN_RUN_SCRIPT in
+  // IPDL-generated things.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  mozilla::ipc::IPCResult RecvAbort(const uint64_t& aTransactionId,
+                                    const nsresult& aError);
+>>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason why) override;
 

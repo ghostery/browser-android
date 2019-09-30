@@ -8,7 +8,13 @@
 #define jit_x86_shared_Architecture_x86_h
 
 #if !defined(JS_CODEGEN_X86) && !defined(JS_CODEGEN_X64)
+<<<<<<< HEAD
 #error "Unsupported architecture!"
+||||||| merged common ancestors
+# error "Unsupported architecture!"
+=======
+#  error "Unsupported architecture!"
+>>>>>>> upstream-releases
 #endif
 
 #include "mozilla/MathAlgorithms.h"
@@ -148,6 +154,7 @@ class Registers {
   static const SetType CallMask = (1 << X86Encoding::rax);
 
 #elif defined(JS_CODEGEN_X64)
+<<<<<<< HEAD
   static const SetType ArgRegMask =
 #if !defined(_WIN64)
       (1 << X86Encoding::rdi) | (1 << X86Encoding::rsi) |
@@ -171,6 +178,63 @@ class Registers {
 
   // Registers returned from a JS -> C call.
   static const SetType CallMask = (1 << X86Encoding::rax);
+||||||| merged common ancestors
+    static const SetType ArgRegMask =
+# if !defined(_WIN64)
+        (1 << X86Encoding::rdi) |
+        (1 << X86Encoding::rsi) |
+# endif
+        (1 << X86Encoding::rdx) |
+        (1 << X86Encoding::rcx) |
+        (1 << X86Encoding::r8) |
+        (1 << X86Encoding::r9);
+
+    static const SetType VolatileMask =
+        (1 << X86Encoding::rax) |
+        ArgRegMask |
+        (1 << X86Encoding::r10) |
+        (1 << X86Encoding::r11);
+
+    static const SetType WrapperMask = VolatileMask;
+
+    static const SetType SingleByteRegs = AllMask & ~(1 << X86Encoding::rsp);
+
+    static const SetType NonAllocatableMask =
+        (1 << X86Encoding::rsp) |
+        (1 << X86Encoding::r11);      // This is ScratchReg.
+
+    // Registers returned from a JS -> JS call.
+    static const SetType JSCallMask =
+        (1 << X86Encoding::rcx);
+
+    // Registers returned from a JS -> C call.
+    static const SetType CallMask =
+        (1 << X86Encoding::rax);
+=======
+  static const SetType ArgRegMask =
+#  if !defined(_WIN64)
+      (1 << X86Encoding::rdi) | (1 << X86Encoding::rsi) |
+#  endif
+      (1 << X86Encoding::rdx) | (1 << X86Encoding::rcx) |
+      (1 << X86Encoding::r8) | (1 << X86Encoding::r9);
+
+  static const SetType VolatileMask = (1 << X86Encoding::rax) | ArgRegMask |
+                                      (1 << X86Encoding::r10) |
+                                      (1 << X86Encoding::r11);
+
+  static const SetType WrapperMask = VolatileMask;
+
+  static const SetType SingleByteRegs = AllMask & ~(1 << X86Encoding::rsp);
+
+  static const SetType NonAllocatableMask =
+      (1 << X86Encoding::rsp) | (1 << X86Encoding::r11);  // This is ScratchReg.
+
+  // Registers returned from a JS -> JS call.
+  static const SetType JSCallMask = (1 << X86Encoding::rcx);
+
+  // Registers returned from a JS -> C call.
+  static const SetType CallMask = (1 << X86Encoding::rax);
+>>>>>>> upstream-releases
 
 #endif
 
@@ -330,6 +394,7 @@ struct FloatRegister {
 #elif defined(JS_CODEGEN_X64)
   static const size_t RegSize = 4;
 #endif
+<<<<<<< HEAD
   static const size_t RegMask = (1 << RegSize) - 1;
 
  public:
@@ -442,6 +507,226 @@ struct FloatRegister {
       const TypedRegisterSet<FloatRegister>& s);
   static uint32_t GetPushSizeInBytes(const TypedRegisterSet<FloatRegister>& s);
   uint32_t getRegisterDumpOffsetInBytes();
+||||||| merged common ancestors
+    static const size_t RegMask = (1 << RegSize) - 1;
+
+  public:
+    constexpr FloatRegister()
+        : reg_(Codes::Encoding(0)), type_(Codes::Single), isInvalid_(true)
+    { }
+    constexpr FloatRegister(uint32_t r, Codes::ContentType k)
+        : reg_(Codes::Encoding(r)), type_(k), isInvalid_(false)
+    { }
+    constexpr FloatRegister(Codes::Encoding r, Codes::ContentType k)
+        : reg_(r), type_(k), isInvalid_(false)
+    { }
+
+    static FloatRegister FromCode(uint32_t i) {
+        MOZ_ASSERT(i < Codes::Total);
+        return FloatRegister(i & RegMask, Codes::ContentType(i >> RegSize));
+    }
+
+    bool isSingle() const { MOZ_ASSERT(!isInvalid()); return type_ == Codes::Single; }
+    bool isDouble() const { MOZ_ASSERT(!isInvalid()); return type_ == Codes::Double; }
+    bool isSimd128() const { MOZ_ASSERT(!isInvalid()); return type_ == Codes::Simd128; }
+    bool isInvalid() const { return isInvalid_; }
+
+    FloatRegister asSingle() const { MOZ_ASSERT(!isInvalid()); return FloatRegister(reg_, Codes::Single); }
+    FloatRegister asDouble() const { MOZ_ASSERT(!isInvalid()); return FloatRegister(reg_, Codes::Double); }
+    FloatRegister asSimd128() const { MOZ_ASSERT(!isInvalid()); return FloatRegister(reg_, Codes::Simd128); }
+
+    uint32_t size() const {
+        MOZ_ASSERT(!isInvalid());
+        if (isSingle()) {
+            return sizeof(float);
+        }
+        if (isDouble()) {
+            return sizeof(double);
+        }
+        MOZ_ASSERT(isSimd128());
+        return 4 * sizeof(int32_t);
+    }
+
+    Code code() const {
+        MOZ_ASSERT(!isInvalid());
+        MOZ_ASSERT(uint32_t(reg_) < Codes::TotalPhys);
+        // :TODO: ARM is doing the same thing, but we should avoid this, except
+        // that the RegisterSets depends on this.
+        return Code(reg_ | (type_ << RegSize));
+    }
+    Encoding encoding() const {
+        MOZ_ASSERT(!isInvalid());
+        MOZ_ASSERT(uint32_t(reg_) < Codes::TotalPhys);
+        return reg_;
+    }
+    // defined in Assembler-x86-shared.cpp
+    const char* name() const;
+    bool volatile_() const {
+        return !!((SetType(1) << code()) & FloatRegisters::VolatileMask);
+    }
+    bool operator !=(FloatRegister other) const {
+        return other.reg_ != reg_ || other.type_ != type_;
+    }
+    bool operator ==(FloatRegister other) const {
+        return other.reg_ == reg_ && other.type_ == type_;
+    }
+    bool aliases(FloatRegister other) const {
+        return other.reg_ == reg_;
+    }
+    // Check if two floating point registers have the same type.
+    bool equiv(FloatRegister other) const {
+        return other.type_ == type_;
+    }
+
+    uint32_t numAliased() const {
+        return Codes::NumTypes;
+    }
+    uint32_t numAlignedAliased() const {
+        return numAliased();
+    }
+
+    FloatRegister aliased(uint32_t aliasIdx) const {
+        MOZ_ASSERT(aliasIdx < Codes::NumTypes);
+        return FloatRegister(reg_, Codes::ContentType((aliasIdx + type_) % Codes::NumTypes));
+    }
+    FloatRegister alignedAliased(uint32_t aliasIdx) const {
+        return aliased(aliasIdx);
+    }
+
+    SetType alignedOrDominatedAliasedSet() const {
+        return Codes::Spread << reg_;
+    }
+
+    static constexpr RegTypeName DefaultType = RegTypeName::Float64;
+
+    template <RegTypeName = DefaultType>
+    static SetType LiveAsIndexableSet(SetType s) {
+        return SetType(0);
+    }
+
+    template <RegTypeName Name = DefaultType>
+    static SetType AllocatableAsIndexableSet(SetType s) {
+        static_assert(Name != RegTypeName::Any, "Allocatable set are not iterable");
+        return LiveAsIndexableSet<Name>(s);
+    }
+
+    static TypedRegisterSet<FloatRegister> ReduceSetForPush(const TypedRegisterSet<FloatRegister>& s);
+    static uint32_t GetPushSizeInBytes(const TypedRegisterSet<FloatRegister>& s);
+    uint32_t getRegisterDumpOffsetInBytes();
+=======
+  static const size_t RegMask = (1 << RegSize) - 1;
+
+ public:
+  constexpr FloatRegister()
+      : reg_(Codes::Encoding(0)), type_(Codes::Single), isInvalid_(true) {}
+  constexpr FloatRegister(uint32_t r, Codes::ContentType k)
+      : reg_(Codes::Encoding(r)), type_(k), isInvalid_(false) {}
+  constexpr FloatRegister(Codes::Encoding r, Codes::ContentType k)
+      : reg_(r), type_(k), isInvalid_(false) {}
+
+  static FloatRegister FromCode(uint32_t i) {
+    MOZ_ASSERT(i < Codes::Total);
+    return FloatRegister(i & RegMask, Codes::ContentType(i >> RegSize));
+  }
+
+  bool isSingle() const {
+    MOZ_ASSERT(!isInvalid());
+    return type_ == Codes::Single;
+  }
+  bool isDouble() const {
+    MOZ_ASSERT(!isInvalid());
+    return type_ == Codes::Double;
+  }
+  bool isSimd128() const {
+    MOZ_ASSERT(!isInvalid());
+    return type_ == Codes::Simd128;
+  }
+  bool isInvalid() const { return isInvalid_; }
+
+  FloatRegister asSingle() const {
+    MOZ_ASSERT(!isInvalid());
+    return FloatRegister(reg_, Codes::Single);
+  }
+  FloatRegister asDouble() const {
+    MOZ_ASSERT(!isInvalid());
+    return FloatRegister(reg_, Codes::Double);
+  }
+  FloatRegister asSimd128() const {
+    MOZ_ASSERT(!isInvalid());
+    return FloatRegister(reg_, Codes::Simd128);
+  }
+
+  uint32_t size() const {
+    MOZ_ASSERT(!isInvalid());
+    if (isSingle()) {
+      return sizeof(float);
+    }
+    if (isDouble()) {
+      return sizeof(double);
+    }
+    MOZ_ASSERT(isSimd128());
+    return 4 * sizeof(int32_t);
+  }
+
+  Code code() const {
+    MOZ_ASSERT(!isInvalid());
+    MOZ_ASSERT(uint32_t(reg_) < Codes::TotalPhys);
+    // :TODO: ARM is doing the same thing, but we should avoid this, except
+    // that the RegisterSets depends on this.
+    return Code(reg_ | (type_ << RegSize));
+  }
+  Encoding encoding() const {
+    MOZ_ASSERT(!isInvalid());
+    MOZ_ASSERT(uint32_t(reg_) < Codes::TotalPhys);
+    return reg_;
+  }
+  // defined in Assembler-x86-shared.cpp
+  const char* name() const;
+  bool volatile_() const {
+    return !!((SetType(1) << code()) & FloatRegisters::VolatileMask);
+  }
+  bool operator!=(FloatRegister other) const {
+    return other.reg_ != reg_ || other.type_ != type_;
+  }
+  bool operator==(FloatRegister other) const {
+    return other.reg_ == reg_ && other.type_ == type_;
+  }
+  bool aliases(FloatRegister other) const { return other.reg_ == reg_; }
+  // Check if two floating point registers have the same type.
+  bool equiv(FloatRegister other) const { return other.type_ == type_; }
+
+  uint32_t numAliased() const { return Codes::NumTypes; }
+  uint32_t numAlignedAliased() const { return numAliased(); }
+
+  FloatRegister aliased(uint32_t aliasIdx) const {
+    MOZ_ASSERT(aliasIdx < Codes::NumTypes);
+    return FloatRegister(
+        reg_, Codes::ContentType((aliasIdx + type_) % Codes::NumTypes));
+  }
+  FloatRegister alignedAliased(uint32_t aliasIdx) const {
+    return aliased(aliasIdx);
+  }
+
+  SetType alignedOrDominatedAliasedSet() const { return Codes::Spread << reg_; }
+
+  static constexpr RegTypeName DefaultType = RegTypeName::Float64;
+
+  template <RegTypeName = DefaultType>
+  static SetType LiveAsIndexableSet(SetType s) {
+    return SetType(0);
+  }
+
+  template <RegTypeName Name = DefaultType>
+  static SetType AllocatableAsIndexableSet(SetType s) {
+    static_assert(Name != RegTypeName::Any, "Allocatable set are not iterable");
+    return LiveAsIndexableSet<Name>(s);
+  }
+
+  static TypedRegisterSet<FloatRegister> ReduceSetForPush(
+      const TypedRegisterSet<FloatRegister>& s);
+  static uint32_t GetPushSizeInBytes(const TypedRegisterSet<FloatRegister>& s);
+  uint32_t getRegisterDumpOffsetInBytes();
+>>>>>>> upstream-releases
 };
 
 template <>

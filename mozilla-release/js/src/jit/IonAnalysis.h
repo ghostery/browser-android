@@ -162,10 +162,22 @@ MDefinition* ConvertLinearSum(TempAllocator& alloc, MBasicBlock* block,
 MCompare* ConvertLinearInequality(TempAllocator& alloc, MBasicBlock* block,
                                   const LinearSum& sum);
 
+<<<<<<< HEAD
 MOZ_MUST_USE bool AnalyzeNewScriptDefiniteProperties(
     JSContext* cx, HandleFunction fun, ObjectGroup* group,
     HandlePlainObject baseobj,
     Vector<TypeNewScriptInitializer>* initializerList);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+AnalyzeNewScriptDefiniteProperties(JSContext* cx, HandleFunction fun,
+                                   ObjectGroup* group, HandlePlainObject baseobj,
+                                   Vector<TypeNewScriptInitializer>* initializerList);
+=======
+MOZ_MUST_USE bool AnalyzeNewScriptDefiniteProperties(
+    JSContext* cx, DPAConstraintInfo& constraintInfo, HandleFunction fun,
+    ObjectGroup* group, HandlePlainObject baseobj,
+    Vector<TypeNewScriptInitializer>* initializerList);
+>>>>>>> upstream-releases
 
 MOZ_MUST_USE bool AnalyzeArgumentsUsage(JSContext* cx, JSScript* script);
 

@@ -194,13 +194,35 @@ bool BuildClonedMessageData(M* aManager, StructuredCloneData& aData,
   return true;
 }
 
+<<<<<<< HEAD
 bool StructuredCloneData::BuildClonedMessageDataForParent(
     nsIContentParent* aParent, ClonedMessageData& aClonedData) {
+||||||| merged common ancestors
+bool
+StructuredCloneData::BuildClonedMessageDataForParent(
+  nsIContentParent* aParent,
+  ClonedMessageData& aClonedData)
+{
+=======
+bool StructuredCloneData::BuildClonedMessageDataForParent(
+    ContentParent* aParent, ClonedMessageData& aClonedData) {
+>>>>>>> upstream-releases
   return BuildClonedMessageData(aParent, *this, aClonedData);
 }
 
+<<<<<<< HEAD
 bool StructuredCloneData::BuildClonedMessageDataForChild(
     nsIContentChild* aChild, ClonedMessageData& aClonedData) {
+||||||| merged common ancestors
+bool
+StructuredCloneData::BuildClonedMessageDataForChild(
+  nsIContentChild* aChild,
+  ClonedMessageData& aClonedData)
+{
+=======
+bool StructuredCloneData::BuildClonedMessageDataForChild(
+    ContentChild* aChild, ClonedMessageData& aClonedData) {
+>>>>>>> upstream-releases
   return BuildClonedMessageData(aChild, *this, aClonedData);
 }
 

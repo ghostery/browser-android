@@ -287,7 +287,7 @@ class WritingMode {
     // and hypothetical) values.  But this is fine; we only need to
     // distinguish between vertical and horizontal in
     // PhysicalAxisForLogicalAxis.
-    int wm = mWritingMode & eOrientationMask;
+    const auto wm = static_cast<uint8_t>(mWritingMode & eOrientationMask);
     return PhysicalAxisForLogicalAxis(wm, aAxis);
   }
 
@@ -362,8 +362,9 @@ class WritingMode {
     if (IsBlock(aSide)) {
       static_assert(eOrientationMask == 0x01 && eBlockFlowMask == 0x04,
                     "unexpected mask values");
-      int wm = ((mWritingMode & eBlockFlowMask) >> 1) |
-               (mWritingMode & eOrientationMask);
+      const auto wm =
+          static_cast<uint8_t>(((mWritingMode & eBlockFlowMask) >> 1) |
+                               (mWritingMode & eOrientationMask));
       return PhysicalSideForBlockAxis(wm, GetEdge(aSide));
     }
 
@@ -1564,11 +1565,22 @@ class LogicalRect {
   nscoord X(WritingMode aWritingMode, nscoord aContainerWidth) const {
     CHECK_WRITING_MODE(aWritingMode);
     if (aWritingMode.IsVertical()) {
+<<<<<<< HEAD
       return aWritingMode.IsVerticalLR() ? mBStart : aContainerWidth - BEnd();
     } else {
       return aWritingMode.IsInlineReversed() ? aContainerWidth - IEnd()
                                              : mIStart;
+||||||| merged common ancestors
+      return aWritingMode.IsVerticalLR() ?
+             mBStart : aContainerWidth - BEnd();
+    } else {
+      return aWritingMode.IsInlineReversed() ?
+             aContainerWidth - IEnd() : mIStart;
+=======
+      return aWritingMode.IsVerticalLR() ? mBStart : aContainerWidth - BEnd();
+>>>>>>> upstream-releases
     }
+    return aWritingMode.IsInlineReversed() ? aContainerWidth - IEnd() : mIStart;
   }
 
   nscoord Y(WritingMode aWritingMode, nscoord aContainerHeight) const {
@@ -1576,9 +1588,8 @@ class LogicalRect {
     if (aWritingMode.IsVertical()) {
       return aWritingMode.IsInlineReversed() ? aContainerHeight - IEnd()
                                              : mIStart;
-    } else {
-      return mBStart;
     }
+    return mBStart;
   }
 
   nscoord Width(WritingMode aWritingMode) const {
@@ -1594,11 +1605,22 @@ class LogicalRect {
   nscoord XMost(WritingMode aWritingMode, nscoord aContainerWidth) const {
     CHECK_WRITING_MODE(aWritingMode);
     if (aWritingMode.IsVertical()) {
+<<<<<<< HEAD
       return aWritingMode.IsVerticalLR() ? BEnd() : aContainerWidth - mBStart;
     } else {
       return aWritingMode.IsInlineReversed() ? aContainerWidth - mIStart
                                              : IEnd();
+||||||| merged common ancestors
+      return aWritingMode.IsVerticalLR() ?
+             BEnd() : aContainerWidth - mBStart;
+    } else {
+      return aWritingMode.IsInlineReversed() ?
+             aContainerWidth - mIStart : IEnd();
+=======
+      return aWritingMode.IsVerticalLR() ? BEnd() : aContainerWidth - mBStart;
+>>>>>>> upstream-releases
     }
+    return aWritingMode.IsInlineReversed() ? aContainerWidth - mIStart : IEnd();
   }
 
   nscoord YMost(WritingMode aWritingMode, nscoord aContainerHeight) const {
@@ -1606,9 +1628,8 @@ class LogicalRect {
     if (aWritingMode.IsVertical()) {
       return aWritingMode.IsInlineReversed() ? aContainerHeight - mIStart
                                              : IEnd();
-    } else {
-      return mBStart;
     }
+    return BEnd();
   }
 
   bool IsEmpty() const { return mISize <= 0 || mBSize <= 0; }
@@ -1896,6 +1917,7 @@ class LogicalRect {
   nscoord mBSize;   // block-size
 };
 
+<<<<<<< HEAD
 }  // namespace mozilla
 
 // Definitions of inline methods for nsStyleSides, declared in nsStyleCoord.h
@@ -1933,27 +1955,114 @@ inline bool nsStyleSides::HasInlineAxisAuto(mozilla::WritingMode aWM) const {
 
 inline nsStyleCoord nsStyleSides::Get(mozilla::WritingMode aWM,
                                       mozilla::LogicalSide aSide) const {
+||||||| merged common ancestors
+} // namespace mozilla
+
+// Definitions of inline methods for nsStyleSides, declared in nsStyleCoord.h
+// but not defined there because they need WritingMode.
+inline nsStyleUnit nsStyleSides::GetUnit(mozilla::WritingMode aWM,
+                                         mozilla::LogicalSide aSide) const
+{
+  return GetUnit(aWM.PhysicalSide(aSide));
+}
+
+inline nsStyleUnit nsStyleSides::GetIStartUnit(mozilla::WritingMode aWM) const
+{
+  return GetUnit(aWM, mozilla::eLogicalSideIStart);
+}
+
+inline nsStyleUnit nsStyleSides::GetBStartUnit(mozilla::WritingMode aWM) const
+{
+  return GetUnit(aWM, mozilla::eLogicalSideBStart);
+}
+
+inline nsStyleUnit nsStyleSides::GetIEndUnit(mozilla::WritingMode aWM) const
+{
+  return GetUnit(aWM, mozilla::eLogicalSideIEnd);
+}
+
+inline nsStyleUnit nsStyleSides::GetBEndUnit(mozilla::WritingMode aWM) const
+{
+  return GetUnit(aWM, mozilla::eLogicalSideBEnd);
+}
+
+inline bool nsStyleSides::HasBlockAxisAuto(mozilla::WritingMode aWM) const
+{
+  return GetBStartUnit(aWM) == eStyleUnit_Auto ||
+         GetBEndUnit(aWM) == eStyleUnit_Auto;
+}
+
+inline bool nsStyleSides::HasInlineAxisAuto(mozilla::WritingMode aWM) const
+{
+  return GetIStartUnit(aWM) == eStyleUnit_Auto ||
+         GetIEndUnit(aWM) == eStyleUnit_Auto;
+}
+
+inline nsStyleCoord nsStyleSides::Get(mozilla::WritingMode aWM,
+                                      mozilla::LogicalSide aSide) const
+{
+=======
+template <typename T>
+const T& StyleRect<T>::Get(mozilla::WritingMode aWM,
+                           mozilla::LogicalSide aSide) const {
+>>>>>>> upstream-releases
   return Get(aWM.PhysicalSide(aSide));
 }
 
+<<<<<<< HEAD
 inline nsStyleCoord nsStyleSides::GetIStart(mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline nsStyleCoord nsStyleSides::GetIStart(mozilla::WritingMode aWM) const
+{
+=======
+template <typename T>
+const T& StyleRect<T>::GetIStart(mozilla::WritingMode aWM) const {
+>>>>>>> upstream-releases
   return Get(aWM, mozilla::eLogicalSideIStart);
 }
 
+<<<<<<< HEAD
 inline nsStyleCoord nsStyleSides::GetBStart(mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline nsStyleCoord nsStyleSides::GetBStart(mozilla::WritingMode aWM) const
+{
+=======
+template <typename T>
+const T& StyleRect<T>::GetBStart(mozilla::WritingMode aWM) const {
+>>>>>>> upstream-releases
   return Get(aWM, mozilla::eLogicalSideBStart);
 }
 
+<<<<<<< HEAD
 inline nsStyleCoord nsStyleSides::GetIEnd(mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline nsStyleCoord nsStyleSides::GetIEnd(mozilla::WritingMode aWM) const
+{
+=======
+template <typename T>
+const T& StyleRect<T>::GetIEnd(mozilla::WritingMode aWM) const {
+>>>>>>> upstream-releases
   return Get(aWM, mozilla::eLogicalSideIEnd);
 }
 
+<<<<<<< HEAD
 inline nsStyleCoord nsStyleSides::GetBEnd(mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline nsStyleCoord nsStyleSides::GetBEnd(mozilla::WritingMode aWM) const
+{
+=======
+template <typename T>
+const T& StyleRect<T>::GetBEnd(mozilla::WritingMode aWM) const {
+>>>>>>> upstream-releases
   return Get(aWM, mozilla::eLogicalSideBEnd);
 }
 
+}  // namespace mozilla
+
+
 // Definitions of inline methods for nsStylePosition, declared in
 // nsStyleStruct.h but not defined there because they need WritingMode.
+<<<<<<< HEAD
 inline nsStyleCoord& nsStylePosition::ISize(mozilla::WritingMode aWM) {
   return aWM.IsVertical() ? mHeight : mWidth;
 }
@@ -1975,37 +2084,134 @@ inline nsStyleCoord& nsStylePosition::MaxBSize(mozilla::WritingMode aWM) {
 
 inline const nsStyleCoord& nsStylePosition::ISize(
     mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline nsStyleCoord& nsStylePosition::ISize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mHeight : mWidth;
 }
-inline const nsStyleCoord& nsStylePosition::MinISize(
-    mozilla::WritingMode aWM) const {
+inline nsStyleCoord& nsStylePosition::MinISize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mMinHeight : mMinWidth;
 }
-inline const nsStyleCoord& nsStylePosition::MaxISize(
-    mozilla::WritingMode aWM) const {
+inline nsStyleCoord& nsStylePosition::MaxISize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mMaxHeight : mMaxWidth;
 }
-inline const nsStyleCoord& nsStylePosition::BSize(
-    mozilla::WritingMode aWM) const {
+inline nsStyleCoord& nsStylePosition::BSize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mWidth : mHeight;
 }
-inline const nsStyleCoord& nsStylePosition::MinBSize(
-    mozilla::WritingMode aWM) const {
+inline nsStyleCoord& nsStylePosition::MinBSize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mMinWidth : mMinHeight;
 }
-inline const nsStyleCoord& nsStylePosition::MaxBSize(
-    mozilla::WritingMode aWM) const {
+inline nsStyleCoord& nsStylePosition::MaxBSize(mozilla::WritingMode aWM)
+{
   return aWM.IsVertical() ? mMaxWidth : mMaxHeight;
 }
 
+inline const nsStyleCoord&
+nsStylePosition::ISize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleSize& nsStylePosition::ISize(WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mHeight : mWidth;
+}
+<<<<<<< HEAD
+inline const nsStyleCoord& nsStylePosition::MinISize(
+    mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline const nsStyleCoord&
+nsStylePosition::MinISize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleSize& nsStylePosition::MinISize(
+    WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mMinHeight : mMinWidth;
+}
+<<<<<<< HEAD
+inline const nsStyleCoord& nsStylePosition::MaxISize(
+    mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline const nsStyleCoord&
+nsStylePosition::MaxISize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleMaxSize& nsStylePosition::MaxISize(
+    WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mMaxHeight : mMaxWidth;
+}
+<<<<<<< HEAD
+inline const nsStyleCoord& nsStylePosition::BSize(
+    mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline const nsStyleCoord&
+nsStylePosition::BSize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleSize& nsStylePosition::BSize(WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mWidth : mHeight;
+}
+<<<<<<< HEAD
+inline const nsStyleCoord& nsStylePosition::MinBSize(
+    mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline const nsStyleCoord&
+nsStylePosition::MinBSize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleSize& nsStylePosition::MinBSize(
+    WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mMinWidth : mMinHeight;
+}
+<<<<<<< HEAD
+inline const nsStyleCoord& nsStylePosition::MaxBSize(
+    mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline const nsStyleCoord&
+nsStylePosition::MaxBSize(mozilla::WritingMode aWM) const
+{
+=======
+inline const mozilla::StyleMaxSize& nsStylePosition::MaxBSize(
+    WritingMode aWM) const {
+>>>>>>> upstream-releases
+  return aWM.IsVertical() ? mMaxWidth : mMaxHeight;
+}
+
+<<<<<<< HEAD
 inline bool nsStylePosition::ISizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
   const auto& iSize = aWM.IsVertical() ? mHeight : mWidth;
   return iSize.GetUnit() == eStyleUnit_Auto ||
          ISizeCoordDependsOnContainer(iSize);
+||||||| merged common ancestors
+inline bool
+nsStylePosition::ISizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+  const auto& iSize = aWM.IsVertical() ? mHeight : mWidth;
+  return iSize.GetUnit() == eStyleUnit_Auto ||
+         ISizeCoordDependsOnContainer(iSize);
+=======
+inline bool nsStylePosition::ISizeDependsOnContainer(WritingMode aWM) const {
+  const auto& iSize = ISize(aWM);
+  return iSize.IsAuto() || ISizeCoordDependsOnContainer(iSize);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 inline bool nsStylePosition::MinISizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline bool
+nsStylePosition::MinISizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+=======
+inline bool nsStylePosition::MinISizeDependsOnContainer(WritingMode aWM) const {
+>>>>>>> upstream-releases
   // NOTE: For a flex item, "min-inline-size:auto" is supposed to behave like
   // "min-content", which does depend on the container, so you might think we'd
   // need a special case for "flex item && min-inline-size:auto" here. However,
@@ -2016,8 +2222,16 @@ inline bool nsStylePosition::MinISizeDependsOnContainer(
   // special behavior for flex items' "min-inline-size:auto" values here.
   return ISizeCoordDependsOnContainer(MinISize(aWM));
 }
+<<<<<<< HEAD
 inline bool nsStylePosition::MaxISizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline bool
+nsStylePosition::MaxISizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+=======
+inline bool nsStylePosition::MaxISizeDependsOnContainer(WritingMode aWM) const {
+>>>>>>> upstream-releases
   // NOTE: The comment above MinISizeDependsOnContainer about flex items
   // applies here, too.
   return ISizeCoordDependsOnContainer(MaxISize(aWM));
@@ -2028,25 +2242,75 @@ inline bool nsStylePosition::MaxISizeDependsOnContainer(
 // for it, since it is the most common case.
 // FIXME: We should probably change the assumption to be the other way
 // around.
+<<<<<<< HEAD
 inline bool nsStylePosition::BSizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
   const auto& bSize = aWM.IsVertical() ? mWidth : mHeight;
   return bSize.IsAutoOrEnum() || BSizeCoordDependsOnContainer(bSize);
+||||||| merged common ancestors
+inline bool
+nsStylePosition::BSizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+  const auto& bSize = aWM.IsVertical() ? mWidth : mHeight;
+  return bSize.IsAutoOrEnum() || BSizeCoordDependsOnContainer(bSize);
+=======
+inline bool nsStylePosition::BSizeDependsOnContainer(WritingMode aWM) const {
+  const auto& bSize = BSize(aWM);
+  return bSize.BehavesLikeInitialValueOnBlockAxis() ||
+         BSizeCoordDependsOnContainer(bSize);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 inline bool nsStylePosition::MinBSizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline bool
+nsStylePosition::MinBSizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+=======
+inline bool nsStylePosition::MinBSizeDependsOnContainer(WritingMode aWM) const {
+>>>>>>> upstream-releases
   return BSizeCoordDependsOnContainer(MinBSize(aWM));
 }
+<<<<<<< HEAD
 inline bool nsStylePosition::MaxBSizeDependsOnContainer(
     mozilla::WritingMode aWM) const {
+||||||| merged common ancestors
+inline bool
+nsStylePosition::MaxBSizeDependsOnContainer(mozilla::WritingMode aWM) const
+{
+=======
+inline bool nsStylePosition::MaxBSizeDependsOnContainer(WritingMode aWM) const {
+>>>>>>> upstream-releases
   return BSizeCoordDependsOnContainer(MaxBSize(aWM));
 }
 
+<<<<<<< HEAD
 inline bool nsStyleMargin::HasBlockAxisAuto(mozilla::WritingMode aWM) const {
   return mMargin.HasBlockAxisAuto(aWM);
+||||||| merged common ancestors
+inline bool
+nsStyleMargin::HasBlockAxisAuto(mozilla::WritingMode aWM) const
+{
+  return mMargin.HasBlockAxisAuto(aWM);
+=======
+inline bool nsStyleMargin::HasBlockAxisAuto(mozilla::WritingMode aWM) const {
+  return mMargin.GetBStart(aWM).IsAuto() || mMargin.GetBEnd(aWM).IsAuto();
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 inline bool nsStyleMargin::HasInlineAxisAuto(mozilla::WritingMode aWM) const {
   return mMargin.HasInlineAxisAuto(aWM);
+||||||| merged common ancestors
+inline bool
+nsStyleMargin::HasInlineAxisAuto(mozilla::WritingMode aWM) const
+{
+  return mMargin.HasInlineAxisAuto(aWM);
+=======
+
+inline bool nsStyleMargin::HasInlineAxisAuto(mozilla::WritingMode aWM) const {
+  return mMargin.GetIStart(aWM).IsAuto() || mMargin.GetIEnd(aWM).IsAuto();
+>>>>>>> upstream-releases
 }
 
 #endif  // WritingModes_h_

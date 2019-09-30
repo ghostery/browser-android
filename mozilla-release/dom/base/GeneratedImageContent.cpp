@@ -8,7 +8,7 @@
 
 #include "nsContentCreatorFunctions.h"
 #include "nsGkAtoms.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsNodeInfoManager.h"
 #include "mozilla/dom/HTMLElementBinding.h"
 #include "mozilla/dom/NameSpaceConstants.h"
@@ -18,11 +18,29 @@ namespace dom {
 
 NS_IMPL_ELEMENT_CLONE(GeneratedImageContent);
 
+<<<<<<< HEAD
 already_AddRefed<GeneratedImageContent> GeneratedImageContent::Create(
     nsIDocument& aDocument, uint32_t aContentIndex) {
   RefPtr<dom::NodeInfo> nodeInfo = aDocument.NodeInfoManager()->GetNodeInfo(
       nsGkAtoms::mozgeneratedcontentimage, nullptr, kNameSpaceID_XHTML,
       nsINode::ELEMENT_NODE);
+||||||| merged common ancestors
+already_AddRefed<GeneratedImageContent>
+GeneratedImageContent::Create(nsIDocument& aDocument, uint32_t aContentIndex)
+{
+  RefPtr<dom::NodeInfo> nodeInfo =
+    aDocument.NodeInfoManager()->
+      GetNodeInfo(nsGkAtoms::mozgeneratedcontentimage,
+                  nullptr,
+                  kNameSpaceID_XHTML,
+                  nsINode::ELEMENT_NODE);
+=======
+already_AddRefed<GeneratedImageContent> GeneratedImageContent::Create(
+    Document& aDocument, uint32_t aContentIndex) {
+  RefPtr<dom::NodeInfo> nodeInfo = aDocument.NodeInfoManager()->GetNodeInfo(
+      nsGkAtoms::mozgeneratedcontentimage, nullptr, kNameSpaceID_XHTML,
+      nsINode::ELEMENT_NODE);
+>>>>>>> upstream-releases
 
   auto image = MakeRefPtr<GeneratedImageContent>(nodeInfo.forget());
   image->mIndex = aContentIndex;

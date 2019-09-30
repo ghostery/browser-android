@@ -14,9 +14,8 @@
 #include "nsFocusManager.h"
 #include "nsIControllers.h"
 #include "nsIDOMWindow.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsPresContext.h"
-#include "nsIPresShell.h"
 #include "nsIScriptGlobalObject.h"
 #include "nsPIDOMWindow.h"
 #include "nsPIWindowRoot.h"
@@ -37,8 +36,18 @@ static LazyLogModule gCommandLog("nsXULCommandDispatcher");
 
 ////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 nsXULCommandDispatcher::nsXULCommandDispatcher(nsIDocument* aDocument)
     : mDocument(aDocument), mUpdaters(nullptr), mLocked(false) {}
+||||||| merged common ancestors
+nsXULCommandDispatcher::nsXULCommandDispatcher(nsIDocument* aDocument)
+    : mDocument(aDocument), mUpdaters(nullptr), mLocked(false)
+{
+}
+=======
+nsXULCommandDispatcher::nsXULCommandDispatcher(Document* aDocument)
+    : mDocument(aDocument), mUpdaters(nullptr), mLocked(false) {}
+>>>>>>> upstream-releases
 
 nsXULCommandDispatcher::~nsXULCommandDispatcher() { Disconnect(); }
 
@@ -137,7 +146,7 @@ nsXULCommandDispatcher::GetFocusedWindow(mozIDOMWindowProxy** aWindow) {
 
   // Make sure the caller can access this window. The caller can access this
   // window iff it can access the document.
-  nsCOMPtr<nsIDocument> doc = window->GetDoc();
+  nsCOMPtr<Document> doc = window->GetDoc();
 
   // Note: If there is no document, then this window has been cleared and
   // there's nothing left to protect, so let the window pass through.

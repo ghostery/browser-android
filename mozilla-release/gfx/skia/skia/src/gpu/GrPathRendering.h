@@ -109,19 +109,41 @@ public:
 
     void stencilPath(const StencilPathArgs& args, const GrPath* path);
 
+<<<<<<< HEAD
     void drawPath(const GrPrimitiveProcessor& primProc,
                   const GrPipeline& pipeline,
                   const GrPipeline::FixedDynamicState&,
                   const GrStencilSettings& stencilPassSettings,  // Cover pass settings in pipeline.
+||||||| merged common ancestors
+    void drawPath(const GrPipeline& pipeline,
+                  const GrPrimitiveProcessor& primProc,
+                  const GrStencilSettings& stencilPassSettings, // Cover pass settings in pipeline.
+=======
+    void drawPath(GrRenderTarget*, GrSurfaceOrigin,
+                  const GrPrimitiveProcessor& primProc,
+                  const GrPipeline& pipeline,
+                  const GrPipeline::FixedDynamicState&,
+                  const GrStencilSettings& stencilPassSettings,  // Cover pass settings in pipeline.
+>>>>>>> upstream-releases
                   const GrPath* path);
 
 protected:
     GrPathRendering(GrGpu* gpu) : fGpu(gpu) { }
 
     virtual void onStencilPath(const StencilPathArgs&, const GrPath*) = 0;
+<<<<<<< HEAD
     virtual void onDrawPath(const GrPrimitiveProcessor&,
                             const GrPipeline&,
                             const GrPipeline::FixedDynamicState&,
+||||||| merged common ancestors
+    virtual void onDrawPath(const GrPipeline&,
+                            const GrPrimitiveProcessor&,
+=======
+    virtual void onDrawPath(GrRenderTarget*, GrSurfaceOrigin,
+                            const GrPrimitiveProcessor&,
+                            const GrPipeline&,
+                            const GrPipeline::FixedDynamicState&,
+>>>>>>> upstream-releases
                             const GrStencilSettings&,
                             const GrPath*) = 0;
 

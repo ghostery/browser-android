@@ -37,18 +37,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+=======
+const { AppConstants } = ChromeUtils.import(
+  "resource://gre/modules/AppConstants.jsm"
+);
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+const { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
+>>>>>>> upstream-releases
 
-XPCOMUtils.defineLazyServiceGetter(this, "aomStartup",
-                                   "@mozilla.org/addons/addon-manager-startup;1",
-                                   "amIAddonManagerStartup");
+XPCOMUtils.defineLazyServiceGetter(
+  this,
+  "aomStartup",
+  "@mozilla.org/addons/addon-manager-startup;1",
+  "amIAddonManagerStartup"
+);
 
-XPCOMUtils.defineLazyServiceGetter(this, "env",
-                                   "@mozilla.org/process/environment;1",
-                                   "nsIEnvironment");
+XPCOMUtils.defineLazyServiceGetter(
+  this,
+  "env",
+  "@mozilla.org/process/environment;1",
+  "nsIEnvironment"
+);
 
 async function talosStart() {
   // Tests are driven from pageloader.xul.  We need to be careful to open
@@ -60,7 +80,16 @@ async function talosStart() {
     defaultWin = await new Promise(resolve => {
       const listener = {
         onOpenWindow(win) {
+<<<<<<< HEAD
           if (win.docShell.domWindow.location.href == AppConstants.BROWSER_CHROME_URL) {
+||||||| merged common ancestors
+          if (win.docShell.domWindow.location.href == BROWSER_XUL) {
+=======
+          if (
+            win.docShell.domWindow.location.href ==
+            AppConstants.BROWSER_CHROME_URL
+          ) {
+>>>>>>> upstream-releases
             Services.wm.removeListener(listener);
             resolve(win);
           }
@@ -76,8 +105,13 @@ async function talosStart() {
 
   let args = {};
   args.wrappedJSObject = args;
-  let newWin = Services.ww.openWindow(null, chromeURL, "_blank",
-                                      "chrome,dialog=no,all", args);
+  let newWin = Services.ww.openWindow(
+    null,
+    chromeURL,
+    "_blank",
+    "chrome,dialog=no,all",
+    args
+  );
 
   await new Promise(resolve => {
     newWin.addEventListener("load", resolve);
@@ -88,7 +122,11 @@ async function talosStart() {
 /* globals ExtensionAPI */
 this.pageloader = class extends ExtensionAPI {
   onStartup() {
-    const manifestURI = Services.io.newURI("manifest.json", null, this.extension.rootURI);
+    const manifestURI = Services.io.newURI(
+      "manifest.json",
+      null,
+      this.extension.rootURI
+    );
     this.chromeHandle = aomStartup.registerChrome(manifestURI, [
       ["content", "pageloader", "chrome/"],
     ]);

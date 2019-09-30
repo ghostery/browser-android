@@ -67,16 +67,27 @@ class NrIceResolver {
   NrIceResolver();
 
   nsresult Init();
-  nr_resolver *AllocateResolver();
+  nr_resolver* AllocateResolver();
   void DestroyResolver();
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(NrIceResolver)
 
+<<<<<<< HEAD
   int resolve(nr_resolver_resource *resource,
               int (*cb)(void *cb_arg, nr_transport_addr *addr), void *cb_arg,
               void **handle);
+||||||| merged common ancestors
+  int resolve(nr_resolver_resource *resource,
+              int (*cb)(void *cb_arg, nr_transport_addr *addr),
+              void *cb_arg, void **handle);
+=======
+  int resolve(nr_resolver_resource* resource,
+              int (*cb)(void* cb_arg, nr_transport_addr* addr), void* cb_arg,
+              void** handle);
+>>>>>>> upstream-releases
 
  private:
   // Implementations of vtbl functions
+<<<<<<< HEAD
   static int destroy(void **objp);
   static int resolve(void *obj, nr_resolver_resource *resource,
                      int (*cb)(void *cb_arg, nr_transport_addr *addr),
@@ -85,7 +96,28 @@ class NrIceResolver {
   static int cancel(void *obj, void *handle);
 
   class PendingResolution : public nsIDNSListener {
+||||||| merged common ancestors
+  static int destroy(void **objp);
+  static int resolve(void *obj, nr_resolver_resource *resource,
+                     int (*cb)(void *cb_arg, nr_transport_addr *addr),
+                     void *cb_arg, void **handle);
+  static void resolve_cb(NR_SOCKET s, int how, void *cb_arg);
+  static int cancel(void *obj, void *handle);
+
+  class PendingResolution : public nsIDNSListener
+  {
+=======
+  static int destroy(void** objp);
+  static int resolve(void* obj, nr_resolver_resource* resource,
+                     int (*cb)(void* cb_arg, nr_transport_addr* addr),
+                     void* cb_arg, void** handle);
+  static void resolve_cb(NR_SOCKET s, int how, void* cb_arg);
+  static int cancel(void* obj, void* handle);
+
+  class PendingResolution : public nsIDNSListener {
+>>>>>>> upstream-releases
    public:
+<<<<<<< HEAD
     PendingResolution(nsIEventTarget *thread, uint16_t port, int transport,
                       int (*cb)(void *cb_arg, nr_transport_addr *addr),
                       void *cb_arg)
@@ -95,10 +127,43 @@ class NrIceResolver {
           cb_(cb),
           cb_arg_(cb_arg) {}
     NS_IMETHOD OnLookupComplete(nsICancelable *request, nsIDNSRecord *record,
+||||||| merged common ancestors
+    PendingResolution(nsIEventTarget *thread,
+                      uint16_t port,
+                      int transport,
+                      int (*cb)(void *cb_arg, nr_transport_addr *addr),
+                      void *cb_arg) :
+        thread_(thread),
+        port_(port),
+        transport_(transport),
+        cb_(cb), cb_arg_(cb_arg) {}
+    NS_IMETHOD OnLookupComplete(nsICancelable *request, nsIDNSRecord *record,
+=======
+    PendingResolution(nsIEventTarget* thread, uint16_t port, int transport,
+                      int (*cb)(void* cb_arg, nr_transport_addr* addr),
+                      void* cb_arg)
+        : thread_(thread),
+          port_(port),
+          transport_(transport),
+          cb_(cb),
+          cb_arg_(cb_arg) {}
+    NS_IMETHOD OnLookupComplete(nsICancelable* request, nsIDNSRecord* record,
+>>>>>>> upstream-releases
                                 nsresult status) override;
+<<<<<<< HEAD
     NS_IMETHOD OnLookupByTypeComplete(nsICancelable *request,
                                       nsIDNSByTypeRecord *res,
                                       nsresult status) override {
+||||||| merged common ancestors
+    NS_IMETHOD OnLookupByTypeComplete(nsICancelable *request,
+                                      nsIDNSByTypeRecord *res,
+                                      nsresult status) override
+    {
+=======
+    NS_IMETHOD OnLookupByTypeComplete(nsICancelable* request,
+                                      nsIDNSByTypeRecord* res,
+                                      nsresult status) override {
+>>>>>>> upstream-releases
       return NS_OK;
     }
     int cancel();
@@ -110,8 +175,8 @@ class NrIceResolver {
     nsCOMPtr<nsIEventTarget> thread_;
     uint16_t port_;
     int transport_;
-    int (*cb_)(void *cb_arg, nr_transport_addr *addr);
-    void *cb_arg_;
+    int (*cb_)(void* cb_arg, nr_transport_addr* addr);
+    void* cb_arg_;
   };
 
   nr_resolver_vtbl *vtbl_;

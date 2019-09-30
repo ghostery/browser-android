@@ -20,17 +20,26 @@
 //
 // Note that this class is slightly slower than the other AutoProfilerLabel,
 // and it lacks the macro wrappers. It also is effectively hardwired to use
-// js::ProfilingStackFrame::Category::OTHER as the category, because that's what
-// the callbacks provided by the profiler use. (Specifying the category in
-// this file would require #including ProfilingStack.h in mozglue, which we
+// JS::ProfilingCategory::OTHER as the category pair, because that's what
+// the callbacks provided by the profiler use. (Specifying the categories in
+// this file would require #including ProfilingCategory.h in mozglue, which we
 // don't want to do.)
-
-class ProfilingStack;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 typedef ProfilingStack* (*ProfilerLabelEnter)(const char*, const char*, void*);
 typedef void (*ProfilerLabelExit)(ProfilingStack*);
+||||||| merged common ancestors
+typedef ProfilingStack* (*ProfilerLabelEnter)(const char*, const char*, void*,
+                                           uint32_t);
+typedef void (*ProfilerLabelExit)(ProfilingStack*);
+=======
+// Enter should return a pointer that will be given to Exit.
+typedef void* (*ProfilerLabelEnter)(const char* aLabel,
+                                    const char* aDynamicString, void* aSp);
+typedef void (*ProfilerLabelExit)(void* EntryContext);
+>>>>>>> upstream-releases
 
 // Register callbacks that do the entry/exit work involving sProfilingStack.
 MFBT_API void RegisterProfilerLabelEnterExit(ProfilerLabelEnter aEnter,
@@ -48,7 +57,10 @@ class MOZ_RAII AutoProfilerLabel {
 
  private:
   MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  ProfilingStack* mProfilingStack;
+  void* mEntryContext;
+  // Number of RegisterProfilerLabelEnterExit calls, to avoid giving an entry
+  // context from one generation to the next.
+  uint32_t mGeneration;
 };
 
 #endif

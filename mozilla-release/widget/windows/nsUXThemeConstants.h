@@ -161,24 +161,36 @@
 
 // Constants only found in new (98+, 2K+, XP+, etc.) Windows.
 #ifdef DFCS_HOT
-#undef DFCS_HOT
+#  undef DFCS_HOT
 #endif
 #define DFCS_HOT 0x00001000
 
 #ifdef COLOR_MENUHILIGHT
-#undef COLOR_MENUHILIGHT
+#  undef COLOR_MENUHILIGHT
 #endif
 #define COLOR_MENUHILIGHT 29
 
 #ifdef SPI_GETFLATMENU
-#undef SPI_GETFLATMENU
+#  undef SPI_GETFLATMENU
 #endif
 #define SPI_GETFLATMENU 0x1022
 #ifndef SPI_GETMENUSHOWDELAY
+<<<<<<< HEAD
 #define SPI_GETMENUSHOWDELAY 106
 #endif  // SPI_GETMENUSHOWDELAY
 #ifndef WS_EX_LAYOUTRTL
 #define WS_EX_LAYOUTRTL 0x00400000L  // Right to left mirroring
+||||||| merged common ancestors
+#define SPI_GETMENUSHOWDELAY      106
+#endif //SPI_GETMENUSHOWDELAY
+#ifndef WS_EX_LAYOUTRTL 
+#define WS_EX_LAYOUTRTL         0x00400000L // Right to left mirroring
+=======
+#  define SPI_GETMENUSHOWDELAY 106
+#endif  // SPI_GETMENUSHOWDELAY
+#ifndef WS_EX_LAYOUTRTL
+#  define WS_EX_LAYOUTRTL 0x00400000L  // Right to left mirroring
+>>>>>>> upstream-releases
 #endif
 
 // Our extra constants for passing a little bit more info to the renderer.

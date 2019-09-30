@@ -1234,7 +1234,6 @@ lo{
         KRW{"₩"}
         KYD{"$"}
         KZT{"₸"}
-        LAK{"₭"}
         LBP{"L£"}
         LKR{"Rs"}
         LRD{"$"}
@@ -1773,5 +1772,11 @@ lo{
     CurrencyUnitPatterns{
         other{"{0} {1}"}
     }
+<<<<<<< HEAD
     Version{"2.1.43.50"}
+||||||| merged common ancestors
+    Version{"2.1.41.97"}
+=======
+    Version{"2.1.48.17"}
+>>>>>>> upstream-releases
 }

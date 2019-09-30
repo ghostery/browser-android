@@ -16,10 +16,27 @@
 using namespace mozilla::gfx;
 typedef mozilla::gfx::Polygon MozPolygon;
 
+<<<<<<< HEAD
 TEST(MozPolygon, TriangulateRectangle) {
   const MozPolygon p{
       Point4D(0.0f, 0.0f, 1.0f, 1.0f), Point4D(0.0f, 1.0f, 1.0f, 1.0f),
       Point4D(1.0f, 1.0f, 1.0f, 1.0f), Point4D(1.0f, 0.0f, 1.0f, 1.0f)};
+||||||| merged common ancestors
+TEST(MozPolygon, TriangulateRectangle)
+{
+  const MozPolygon p {
+    Point4D(0.0f, 0.0f, 1.0f, 1.0f),
+    Point4D(0.0f, 1.0f, 1.0f, 1.0f),
+    Point4D(1.0f, 1.0f, 1.0f, 1.0f),
+    Point4D(1.0f, 0.0f, 1.0f, 1.0f)
+  };
+=======
+TEST(MozPolygon, TriangulateRectangle)
+{
+  const MozPolygon p{
+      Point4D(0.0f, 0.0f, 1.0f, 1.0f), Point4D(0.0f, 1.0f, 1.0f, 1.0f),
+      Point4D(1.0f, 1.0f, 1.0f, 1.0f), Point4D(1.0f, 0.0f, 1.0f, 1.0f)};
+>>>>>>> upstream-releases
 
   const nsTArray<Triangle> triangles = p.ToTriangles();
   const nsTArray<Triangle> expected = {
@@ -29,11 +46,30 @@ TEST(MozPolygon, TriangulateRectangle) {
   AssertArrayEQ(triangles, expected);
 }
 
+<<<<<<< HEAD
 TEST(MozPolygon, TriangulatePentagon) {
   const MozPolygon p{
       Point4D(0.0f, 0.0f, 1.0f, 1.0f), Point4D(0.0f, 1.0f, 1.0f, 1.0f),
       Point4D(0.5f, 1.5f, 1.0f, 1.0f), Point4D(1.0f, 1.0f, 1.0f, 1.0f),
       Point4D(1.0f, 0.0f, 1.0f, 1.0f)};
+||||||| merged common ancestors
+TEST(MozPolygon, TriangulatePentagon)
+{
+  const MozPolygon p {
+    Point4D(0.0f, 0.0f, 1.0f, 1.0f),
+    Point4D(0.0f, 1.0f, 1.0f, 1.0f),
+    Point4D(0.5f, 1.5f, 1.0f, 1.0f),
+    Point4D(1.0f, 1.0f, 1.0f, 1.0f),
+    Point4D(1.0f, 0.0f, 1.0f, 1.0f)
+  };
+=======
+TEST(MozPolygon, TriangulatePentagon)
+{
+  const MozPolygon p{
+      Point4D(0.0f, 0.0f, 1.0f, 1.0f), Point4D(0.0f, 1.0f, 1.0f, 1.0f),
+      Point4D(0.5f, 1.5f, 1.0f, 1.0f), Point4D(1.0f, 1.0f, 1.0f, 1.0f),
+      Point4D(1.0f, 0.0f, 1.0f, 1.0f)};
+>>>>>>> upstream-releases
 
   const nsTArray<Triangle> triangles = p.ToTriangles();
   const nsTArray<Triangle> expected = {
@@ -44,16 +80,44 @@ TEST(MozPolygon, TriangulatePentagon) {
   AssertArrayEQ(triangles, expected);
 }
 
+<<<<<<< HEAD
 void TestClipRect(const MozPolygon& aPolygon, const MozPolygon& aExpected,
                   const Rect& aRect) {
+||||||| merged common ancestors
+void
+TestClipRect(const MozPolygon& aPolygon,
+             const MozPolygon& aExpected,
+             const Rect& aRect)
+{
+=======
+static void TestClipRect(const MozPolygon& aPolygon,
+                         const MozPolygon& aExpected, const Rect& aRect) {
+>>>>>>> upstream-releases
   const MozPolygon res = aPolygon.ClipPolygon(MozPolygon::FromRect(aRect));
   EXPECT_TRUE(res == aExpected);
 }
 
+<<<<<<< HEAD
 TEST(MozPolygon, ClipRectangle) {
   MozPolygon polygon{
       Point4D(0.0f, 0.0f, 0.0f, 1.0f), Point4D(0.0f, 1.0f, 0.0f, 1.0f),
       Point4D(1.0f, 1.0f, 0.0f, 1.0f), Point4D(1.0f, 0.0f, 0.0f, 1.0f)};
+||||||| merged common ancestors
+TEST(MozPolygon, ClipRectangle)
+{
+  MozPolygon polygon {
+    Point4D(0.0f, 0.0f, 0.0f, 1.0f),
+    Point4D(0.0f, 1.0f, 0.0f, 1.0f),
+    Point4D(1.0f, 1.0f, 0.0f, 1.0f),
+    Point4D(1.0f, 0.0f, 0.0f, 1.0f)
+  };
+=======
+TEST(MozPolygon, ClipRectangle)
+{
+  MozPolygon polygon{
+      Point4D(0.0f, 0.0f, 0.0f, 1.0f), Point4D(0.0f, 1.0f, 0.0f, 1.0f),
+      Point4D(1.0f, 1.0f, 0.0f, 1.0f), Point4D(1.0f, 0.0f, 0.0f, 1.0f)};
+>>>>>>> upstream-releases
   TestClipRect(polygon, polygon, Rect(0.0f, 0.0f, 1.0f, 1.0f));
 
   MozPolygon expected = MozPolygon{

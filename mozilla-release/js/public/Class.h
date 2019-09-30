@@ -418,9 +418,19 @@ typedef bool (*JSDeletePropertyOp)(JSContext* cx, JS::HandleObject obj,
  * object's property keys. If `enumerableOnly` is true, the callback should only
  * add enumerable properties.
  */
+<<<<<<< HEAD
 typedef bool (*JSNewEnumerateOp)(JSContext* cx, JS::HandleObject obj,
                                  JS::AutoIdVector& properties,
                                  bool enumerableOnly);
+||||||| merged common ancestors
+typedef bool
+(* JSNewEnumerateOp)(JSContext* cx, JS::HandleObject obj, JS::AutoIdVector& properties,
+                     bool enumerableOnly);
+=======
+typedef bool (*JSNewEnumerateOp)(JSContext* cx, JS::HandleObject obj,
+                                 JS::MutableHandleIdVector properties,
+                                 bool enumerableOnly);
+>>>>>>> upstream-releases
 
 /**
  * The old-style JSClass.enumerate op should define all lazy properties not
@@ -493,9 +503,19 @@ typedef bool (*JSHasInstanceOp)(JSContext* cx, JS::HandleObject obj,
  */
 typedef void (*JSTraceOp)(JSTracer* trc, JSObject* obj);
 
+<<<<<<< HEAD
 typedef JSObject* (*JSWeakmapKeyDelegateOp)(JSObject* obj);
 
 typedef size_t (*JSObjectMovedOp)(JSObject* obj, JSObject* old);
+||||||| merged common ancestors
+typedef JSObject*
+(* JSWeakmapKeyDelegateOp)(JSObject* obj);
+
+typedef size_t
+(* JSObjectMovedOp)(JSObject* obj, JSObject* old);
+=======
+typedef size_t (*JSObjectMovedOp)(JSObject* obj, JSObject* old);
+>>>>>>> upstream-releases
 
 /* js::Class operation signatures. */
 
@@ -686,6 +706,7 @@ struct MOZ_STATIC_CLASS ClassSpec {
   }
 };
 
+<<<<<<< HEAD
 struct MOZ_STATIC_CLASS ClassExtension {
   /**
    * If an object is used as a key in a weakmap, it may be desirable for the
@@ -719,6 +740,63 @@ struct MOZ_STATIC_CLASS ClassExtension {
    * This is used to compute the nursery promotion rate.
    */
   JSObjectMovedOp objectMovedOp;
+||||||| merged common ancestors
+struct MOZ_STATIC_CLASS ClassExtension
+{
+    /**
+     * If an object is used as a key in a weakmap, it may be desirable for the
+     * garbage collector to keep that object around longer than it otherwise
+     * would. A common case is when the key is a wrapper around an object in
+     * another compartment, and we want to avoid collecting the wrapper (and
+     * removing the weakmap entry) as long as the wrapped object is alive. In
+     * that case, the wrapped object is returned by the wrapper's
+     * weakmapKeyDelegateOp hook. As long as the wrapper is used as a weakmap
+     * key, it will not be collected (and remain in the weakmap) until the
+     * wrapped object is collected.
+     */
+    JSWeakmapKeyDelegateOp weakmapKeyDelegateOp;
+
+    /**
+     * Optional hook called when an object is moved by generational or
+     * compacting GC.
+     *
+     * There may exist weak pointers to an object that are not traced through
+     * when the normal trace APIs are used, for example objects in the wrapper
+     * cache. This hook allows these pointers to be updated.
+     *
+     * Note that this hook can be called before JS_NewObject() returns if a GC
+     * is triggered during construction of the object. This can happen for
+     * global objects for example.
+     *
+     * The function should return the difference between nursery bytes used and
+     * tenured bytes used, which may be nonzero e.g. if some nursery-allocated
+     * data beyond the actual GC thing is moved into malloced memory.
+     *
+     * This is used to compute the nursery promotion rate.
+     */
+    JSObjectMovedOp objectMovedOp;
+=======
+struct MOZ_STATIC_CLASS ClassExtension {
+  /**
+   * Optional hook called when an object is moved by generational or
+   * compacting GC.
+   *
+   * There may exist weak pointers to an object that are not traced through
+   * when the normal trace APIs are used, for example objects in the wrapper
+   * cache. This hook allows these pointers to be updated.
+   *
+   * Note that this hook can be called before JS_NewObject() returns if a GC
+   * is triggered during construction of the object. This can happen for
+   * global objects for example.
+   *
+   * The function should return the difference between nursery bytes used and
+   * tenured bytes used, which may be nonzero e.g. if some nursery-allocated
+   * data beyond the actual GC thing is moved into malloced memory.
+   *
+   * This is used to compute the nursery promotion rate.
+   */
+  JSObjectMovedOp objectMovedOp;
+>>>>>>> upstream-releases
 };
 
 #define JS_NULL_CLASS_SPEC nullptr
@@ -804,6 +882,7 @@ static const uintptr_t JSCLASS_RESERVED_SLOTS_SHIFT = 8;
 // ... and 16 above this field.
 static const uint32_t JSCLASS_RESERVED_SLOTS_WIDTH = 8;
 
+<<<<<<< HEAD
 static const uint32_t JSCLASS_RESERVED_SLOTS_MASK =
     JS_BITMASK(JSCLASS_RESERVED_SLOTS_WIDTH);
 
@@ -826,6 +905,48 @@ static const uint32_t JSCLASS_INTERNAL_FLAG3 =
 static const uint32_t JSCLASS_IS_PROXY = 1 << (JSCLASS_HIGH_FLAGS_SHIFT + 4);
 static const uint32_t JSCLASS_SKIP_NURSERY_FINALIZE =
     1 << (JSCLASS_HIGH_FLAGS_SHIFT + 5);
+||||||| merged common ancestors
+static const uint32_t JSCLASS_RESERVED_SLOTS_MASK = JS_BITMASK(JSCLASS_RESERVED_SLOTS_WIDTH);
+
+#define JSCLASS_HAS_RESERVED_SLOTS(n)   (((n) & JSCLASS_RESERVED_SLOTS_MASK)  \
+                                         << JSCLASS_RESERVED_SLOTS_SHIFT)
+#define JSCLASS_RESERVED_SLOTS(clasp)   (((clasp)->flags                      \
+                                          >> JSCLASS_RESERVED_SLOTS_SHIFT)    \
+                                         & JSCLASS_RESERVED_SLOTS_MASK)
+
+#define JSCLASS_HIGH_FLAGS_SHIFT        (JSCLASS_RESERVED_SLOTS_SHIFT +       \
+                                         JSCLASS_RESERVED_SLOTS_WIDTH)
+
+static const uint32_t JSCLASS_IS_ANONYMOUS =            1 << (JSCLASS_HIGH_FLAGS_SHIFT + 0);
+static const uint32_t JSCLASS_IS_GLOBAL =               1 << (JSCLASS_HIGH_FLAGS_SHIFT + 1);
+static const uint32_t JSCLASS_INTERNAL_FLAG2 =          1 << (JSCLASS_HIGH_FLAGS_SHIFT + 2);
+static const uint32_t JSCLASS_INTERNAL_FLAG3 =          1 << (JSCLASS_HIGH_FLAGS_SHIFT + 3);
+static const uint32_t JSCLASS_IS_PROXY =                1 << (JSCLASS_HIGH_FLAGS_SHIFT + 4);
+static const uint32_t JSCLASS_SKIP_NURSERY_FINALIZE =   1 << (JSCLASS_HIGH_FLAGS_SHIFT + 5);
+=======
+static const uint32_t JSCLASS_RESERVED_SLOTS_MASK =
+    JS_BITMASK(JSCLASS_RESERVED_SLOTS_WIDTH);
+
+#define JSCLASS_HAS_RESERVED_SLOTS(n) \
+  (((n)&JSCLASS_RESERVED_SLOTS_MASK) << JSCLASS_RESERVED_SLOTS_SHIFT)
+#define JSCLASS_RESERVED_SLOTS(clasp)                 \
+  (((clasp)->flags >> JSCLASS_RESERVED_SLOTS_SHIFT) & \
+   JSCLASS_RESERVED_SLOTS_MASK)
+
+#define JSCLASS_HIGH_FLAGS_SHIFT \
+  (JSCLASS_RESERVED_SLOTS_SHIFT + JSCLASS_RESERVED_SLOTS_WIDTH)
+
+static const uint32_t JSCLASS_INTERNAL_FLAG1 =
+    1 << (JSCLASS_HIGH_FLAGS_SHIFT + 0);
+static const uint32_t JSCLASS_IS_GLOBAL = 1 << (JSCLASS_HIGH_FLAGS_SHIFT + 1);
+static const uint32_t JSCLASS_INTERNAL_FLAG2 =
+    1 << (JSCLASS_HIGH_FLAGS_SHIFT + 2);
+static const uint32_t JSCLASS_INTERNAL_FLAG3 =
+    1 << (JSCLASS_HIGH_FLAGS_SHIFT + 3);
+static const uint32_t JSCLASS_IS_PROXY = 1 << (JSCLASS_HIGH_FLAGS_SHIFT + 4);
+static const uint32_t JSCLASS_SKIP_NURSERY_FINALIZE =
+    1 << (JSCLASS_HIGH_FLAGS_SHIFT + 5);
+>>>>>>> upstream-releases
 
 // Reserved for embeddings.
 static const uint32_t JSCLASS_USERBIT2 = 1 << (JSCLASS_HIGH_FLAGS_SHIFT + 6);
@@ -883,6 +1004,7 @@ static const uint32_t JSCLASS_CACHED_PROTO_MASK =
 
 namespace js {
 
+<<<<<<< HEAD
 struct MOZ_STATIC_CLASS Class {
   JS_CLASS_MEMBERS(js::ClassOps, FreeOp);
   const ClassSpec* spec;
@@ -986,6 +1108,200 @@ struct MOZ_STATIC_CLASS Class {
   JSFunToStringOp getOpsFunToString() const {
     return oOps ? oOps->funToString : nullptr;
   }
+||||||| merged common ancestors
+struct MOZ_STATIC_CLASS Class
+{
+    JS_CLASS_MEMBERS(js::ClassOps, FreeOp);
+    const ClassSpec* spec;
+    const ClassExtension* ext;
+    const ObjectOps* oOps;
+
+    /*
+     * Objects of this class aren't native objects. They don't have Shapes that
+     * describe their properties and layout. Classes using this flag must
+     * provide their own property behavior, either by being proxy classes (do
+     * this) or by overriding all the ObjectOps except getElements
+     * (don't do this).
+     */
+    static const uint32_t NON_NATIVE = JSCLASS_INTERNAL_FLAG2;
+
+    bool isNative() const {
+        return !(flags & NON_NATIVE);
+    }
+
+    bool hasPrivate() const {
+        return !!(flags & JSCLASS_HAS_PRIVATE);
+    }
+
+    bool emulatesUndefined() const {
+        return flags & JSCLASS_EMULATES_UNDEFINED;
+    }
+
+    bool isJSFunction() const {
+        return this == js::FunctionClassPtr;
+    }
+
+    bool nonProxyCallable() const {
+        MOZ_ASSERT(!isProxy());
+        return isJSFunction() || getCall();
+    }
+
+    bool isProxy() const {
+        return flags & JSCLASS_IS_PROXY;
+    }
+
+    bool isDOMClass() const {
+        return flags & JSCLASS_IS_DOMJSCLASS;
+    }
+
+    bool shouldDelayMetadataBuilder() const {
+        return flags & JSCLASS_DELAY_METADATA_BUILDER;
+    }
+
+    bool isWrappedNative() const {
+        return flags & JSCLASS_IS_WRAPPED_NATIVE;
+    }
+
+    static size_t offsetOfFlags() { return offsetof(Class, flags); }
+
+    bool specDefined()         const { return spec ? spec->defined()   : false; }
+    JSProtoKey specInheritanceProtoKey()
+                               const { return spec ? spec->inheritanceProtoKey() : JSProto_Null; }
+    bool specShouldDefineConstructor()
+                               const { return spec ? spec->shouldDefineConstructor() : true; }
+    ClassObjectCreationOp specCreateConstructorHook()
+                               const { return spec ? spec->createConstructor        : nullptr; }
+    ClassObjectCreationOp specCreatePrototypeHook()
+                               const { return spec ? spec->createPrototype          : nullptr; }
+    const JSFunctionSpec* specConstructorFunctions()
+                               const { return spec ? spec->constructorFunctions     : nullptr; }
+    const JSPropertySpec* specConstructorProperties()
+                               const { return spec ? spec->constructorProperties    : nullptr; }
+    const JSFunctionSpec* specPrototypeFunctions()
+                               const { return spec ? spec->prototypeFunctions       : nullptr; }
+    const JSPropertySpec* specPrototypeProperties()
+                               const { return spec ? spec->prototypeProperties      : nullptr; }
+    FinishClassInitOp specFinishInitHook()
+                               const { return spec ? spec->finishInit               : nullptr; }
+
+    JSWeakmapKeyDelegateOp extWeakmapKeyDelegateOp()
+                               const { return ext ? ext->weakmapKeyDelegateOp        : nullptr; }
+    JSObjectMovedOp extObjectMovedOp()
+                               const { return ext ? ext->objectMovedOp               : nullptr; }
+
+    LookupPropertyOp getOpsLookupProperty() const { return oOps ? oOps->lookupProperty : nullptr; }
+    DefinePropertyOp getOpsDefineProperty() const { return oOps ? oOps->defineProperty : nullptr; }
+    HasPropertyOp    getOpsHasProperty()    const { return oOps ? oOps->hasProperty    : nullptr; }
+    GetPropertyOp    getOpsGetProperty()    const { return oOps ? oOps->getProperty    : nullptr; }
+    SetPropertyOp    getOpsSetProperty()    const { return oOps ? oOps->setProperty    : nullptr; }
+    GetOwnPropertyOp getOpsGetOwnPropertyDescriptor()
+                                            const { return oOps ? oOps->getOwnPropertyDescriptor
+                                                                                     : nullptr; }
+    DeletePropertyOp getOpsDeleteProperty() const { return oOps ? oOps->deleteProperty : nullptr; }
+    GetElementsOp    getOpsGetElements()    const { return oOps ? oOps->getElements    : nullptr; }
+    JSFunToStringOp  getOpsFunToString()    const { return oOps ? oOps->funToString    : nullptr; }
+=======
+struct MOZ_STATIC_CLASS Class {
+  JS_CLASS_MEMBERS(js::ClassOps, FreeOp);
+  const ClassSpec* spec;
+  const ClassExtension* ext;
+  const ObjectOps* oOps;
+
+  /*
+   * Objects of this class aren't native objects. They don't have Shapes that
+   * describe their properties and layout. Classes using this flag must
+   * provide their own property behavior, either by being proxy classes (do
+   * this) or by overriding all the ObjectOps except getElements
+   * (don't do this).
+   */
+  static const uint32_t NON_NATIVE = JSCLASS_INTERNAL_FLAG2;
+
+  bool isNative() const { return !(flags & NON_NATIVE); }
+
+  bool hasPrivate() const { return !!(flags & JSCLASS_HAS_PRIVATE); }
+
+  bool emulatesUndefined() const { return flags & JSCLASS_EMULATES_UNDEFINED; }
+
+  bool isJSFunction() const { return this == js::FunctionClassPtr; }
+
+  bool nonProxyCallable() const {
+    MOZ_ASSERT(!isProxy());
+    return isJSFunction() || getCall();
+  }
+
+  bool isProxy() const { return flags & JSCLASS_IS_PROXY; }
+
+  bool isDOMClass() const { return flags & JSCLASS_IS_DOMJSCLASS; }
+
+  bool shouldDelayMetadataBuilder() const {
+    return flags & JSCLASS_DELAY_METADATA_BUILDER;
+  }
+
+  bool isWrappedNative() const { return flags & JSCLASS_IS_WRAPPED_NATIVE; }
+
+  static size_t offsetOfFlags() { return offsetof(Class, flags); }
+
+  bool specDefined() const { return spec ? spec->defined() : false; }
+  JSProtoKey specInheritanceProtoKey() const {
+    return spec ? spec->inheritanceProtoKey() : JSProto_Null;
+  }
+  bool specShouldDefineConstructor() const {
+    return spec ? spec->shouldDefineConstructor() : true;
+  }
+  ClassObjectCreationOp specCreateConstructorHook() const {
+    return spec ? spec->createConstructor : nullptr;
+  }
+  ClassObjectCreationOp specCreatePrototypeHook() const {
+    return spec ? spec->createPrototype : nullptr;
+  }
+  const JSFunctionSpec* specConstructorFunctions() const {
+    return spec ? spec->constructorFunctions : nullptr;
+  }
+  const JSPropertySpec* specConstructorProperties() const {
+    return spec ? spec->constructorProperties : nullptr;
+  }
+  const JSFunctionSpec* specPrototypeFunctions() const {
+    return spec ? spec->prototypeFunctions : nullptr;
+  }
+  const JSPropertySpec* specPrototypeProperties() const {
+    return spec ? spec->prototypeProperties : nullptr;
+  }
+  FinishClassInitOp specFinishInitHook() const {
+    return spec ? spec->finishInit : nullptr;
+  }
+
+  JSObjectMovedOp extObjectMovedOp() const {
+    return ext ? ext->objectMovedOp : nullptr;
+  }
+
+  LookupPropertyOp getOpsLookupProperty() const {
+    return oOps ? oOps->lookupProperty : nullptr;
+  }
+  DefinePropertyOp getOpsDefineProperty() const {
+    return oOps ? oOps->defineProperty : nullptr;
+  }
+  HasPropertyOp getOpsHasProperty() const {
+    return oOps ? oOps->hasProperty : nullptr;
+  }
+  GetPropertyOp getOpsGetProperty() const {
+    return oOps ? oOps->getProperty : nullptr;
+  }
+  SetPropertyOp getOpsSetProperty() const {
+    return oOps ? oOps->setProperty : nullptr;
+  }
+  GetOwnPropertyOp getOpsGetOwnPropertyDescriptor() const {
+    return oOps ? oOps->getOwnPropertyDescriptor : nullptr;
+  }
+  DeletePropertyOp getOpsDeleteProperty() const {
+    return oOps ? oOps->deleteProperty : nullptr;
+  }
+  GetElementsOp getOpsGetElements() const {
+    return oOps ? oOps->getElements : nullptr;
+  }
+  JSFunToStringOp getOpsFunToString() const {
+    return oOps ? oOps->funToString : nullptr;
+  }
+>>>>>>> upstream-releases
 };
 
 static_assert(offsetof(JSClassOps, addProperty) ==
@@ -1040,6 +1356,7 @@ static MOZ_ALWAYS_INLINE const Class* Valueify(const JSClass* c) {
  * value of objects.
  */
 enum class ESClass {
+<<<<<<< HEAD
   Object,
   Array,
   Number,
@@ -1062,6 +1379,51 @@ enum class ESClass {
 
   /** None of the above. */
   Other
+||||||| merged common ancestors
+    Object,
+    Array,
+    Number,
+    String,
+    Boolean,
+    RegExp,
+    ArrayBuffer,
+    SharedArrayBuffer,
+    Date,
+    Set,
+    Map,
+    Promise,
+    MapIterator,
+    SetIterator,
+    Arguments,
+    Error,
+#ifdef ENABLE_BIGINT
+    BigInt,
+#endif
+
+    /** None of the above. */
+    Other
+=======
+  Object,
+  Array,
+  Number,
+  String,
+  Boolean,
+  RegExp,
+  ArrayBuffer,
+  SharedArrayBuffer,
+  Date,
+  Set,
+  Map,
+  Promise,
+  MapIterator,
+  SetIterator,
+  Arguments,
+  Error,
+  BigInt,
+
+  /** None of the above. */
+  Other
+>>>>>>> upstream-releases
 };
 
 /* Fills |vp| with the unboxed value for boxed types, or undefined otherwise. */

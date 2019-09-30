@@ -17,7 +17,13 @@
 #include "ast/SkSLASTFloatLiteral.h"
 #include "ast/SkSLASTIndexSuffix.h"
 #include "ast/SkSLASTIntLiteral.h"
+<<<<<<< HEAD
 #include "ir/SkSLAppendStage.h"
+||||||| merged common ancestors
+=======
+#include "ast/SkSLASTNullLiteral.h"
+#include "ir/SkSLAppendStage.h"
+>>>>>>> upstream-releases
 #include "ir/SkSLBinaryExpression.h"
 #include "ir/SkSLBoolLiteral.h"
 #include "ir/SkSLBreakStatement.h"
@@ -40,6 +46,7 @@
 #include "ir/SkSLInterfaceBlock.h"
 #include "ir/SkSLIntLiteral.h"
 #include "ir/SkSLLayout.h"
+#include "ir/SkSLNullLiteral.h"
 #include "ir/SkSLPostfixExpression.h"
 #include "ir/SkSLPrefixExpression.h"
 #include "ir/SkSLReturnStatement.h"
@@ -123,13 +130,14 @@ void IRGenerator::popSymbolTable() {
 
 static void fill_caps(const SKSL_CAPS_CLASS& caps,
                       std::unordered_map<String, Program::Settings::Value>* capsMap) {
-#define CAP(name) capsMap->insert(std::make_pair(String(#name), \
-                                  Program::Settings::Value(caps.name())));
+#define CAP(name) \
+    capsMap->insert(std::make_pair(String(#name), Program::Settings::Value(caps.name())))
     CAP(fbFetchSupport);
     CAP(fbFetchNeedsCustomOutput);
     CAP(dropsTileOnZeroDivide);
     CAP(flatInterpolationSupport);
     CAP(noperspectiveInterpolationSupport);
+    CAP(sampleVariablesSupport);
     CAP(externalTextureSupport);
     CAP(imageLoadStoreSupport);
     CAP(mustEnableAdvBlendEqs);
@@ -188,6 +196,9 @@ std::unique_ptr<Statement> IRGenerator::convertStatement(const ASTStatement& sta
         case ASTStatement::kExpression_Kind: {
             std::unique_ptr<Statement> result =
                               this->convertExpressionStatement((ASTExpressionStatement&) statement);
+            if (!result) {
+                return nullptr;
+            }
             if (fRTAdjust && Program::kGeometry_Kind == fKind) {
                 SkASSERT(result->fKind == Statement::kExpression_Kind);
                 Expression& expr = *((ExpressionStatement&) *result).fExpression;
@@ -256,6 +267,11 @@ std::unique_ptr<VarDeclarations> IRGenerator::convertVarDeclarations(const ASTVa
     const Type* baseType = this->convertType(*decl.fType);
     if (!baseType) {
         return nullptr;
+    }
+    if (fKind != Program::kFragmentProcessor_Kind &&
+        (decl.fModifiers.fFlags & Modifiers::kIn_Flag) &&
+        baseType->kind() == Type::Kind::kMatrix_Kind) {
+        fErrors.error(decl.fOffset, "'in' variables may not have matrix type");
     }
     for (const auto& varDecl : decl.fVars) {
         if (decl.fModifiers.fLayout.fLocation == 0 && decl.fModifiers.fLayout.fIndex == 0 &&
@@ -684,6 +700,7 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         parameters.push_back(var);
     }
 
+<<<<<<< HEAD
     if (f.fName == "main") {
         if (fKind == Program::kPipelineStage_Kind) {
             bool valid = parameters.size() == 3 &&
@@ -704,6 +721,40 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         }
     }
 
+||||||| merged common ancestors
+=======
+    if (f.fName == "main") {
+        if (fKind == Program::kPipelineStage_Kind) {
+            bool valid;
+            switch (parameters.size()) {
+                case 3:
+                    valid = parameters[0]->fType == *fContext.fInt_Type &&
+                            parameters[0]->fModifiers.fFlags == 0 &&
+                            parameters[1]->fType == *fContext.fInt_Type &&
+                            parameters[1]->fModifiers.fFlags == 0 &&
+                            parameters[2]->fType == *fContext.fHalf4_Type &&
+                            parameters[2]->fModifiers.fFlags == (Modifiers::kIn_Flag |
+                                                                 Modifiers::kOut_Flag);
+                    break;
+                case 1:
+                    valid = parameters[0]->fType == *fContext.fHalf4_Type &&
+                            parameters[0]->fModifiers.fFlags == (Modifiers::kIn_Flag |
+                                                                 Modifiers::kOut_Flag);
+                    break;
+                default:
+                    valid = false;
+            }
+            if (!valid) {
+                fErrors.error(f.fOffset, "pipeline stage 'main' must be declared main(int, "
+                                         "int, inout half4) or main(inout half4)");
+                return;
+            }
+        } else if (parameters.size()) {
+            fErrors.error(f.fOffset, "shader 'main' must have zero parameters");
+        }
+    }
+
+>>>>>>> upstream-releases
     // find existing declaration
     const FunctionDeclaration* decl = nullptr;
     auto entry = (*fSymbolTable)[f.fName];
@@ -774,11 +825,25 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         decl->fDefined = true;
         std::shared_ptr<SymbolTable> old = fSymbolTable;
         AutoSymbolTable table(this);
+<<<<<<< HEAD
         if (f.fName == "main" && fKind == Program::kPipelineStage_Kind) {
             parameters[0]->fModifiers.fLayout.fBuiltin = SK_MAIN_X_BUILTIN;
             parameters[1]->fModifiers.fLayout.fBuiltin = SK_MAIN_Y_BUILTIN;
             parameters[2]->fModifiers.fLayout.fBuiltin = SK_OUTCOLOR_BUILTIN;
         }
+||||||| merged common ancestors
+=======
+        if (f.fName == "main" && fKind == Program::kPipelineStage_Kind) {
+            if (parameters.size() == 3) {
+                parameters[0]->fModifiers.fLayout.fBuiltin = SK_MAIN_X_BUILTIN;
+                parameters[1]->fModifiers.fLayout.fBuiltin = SK_MAIN_Y_BUILTIN;
+                parameters[2]->fModifiers.fLayout.fBuiltin = SK_OUTCOLOR_BUILTIN;
+            } else {
+                SkASSERT(parameters.size() == 1);
+                parameters[0]->fModifiers.fLayout.fBuiltin = SK_OUTCOLOR_BUILTIN;
+            }
+        }
+>>>>>>> upstream-releases
         for (size_t i = 0; i < parameters.size(); i++) {
             fSymbolTable->addWithoutOwnership(parameters[i]->fName, decl->fParameters[i]);
         }
@@ -817,8 +882,8 @@ std::unique_ptr<InterfaceBlock> IRGenerator::convertInterfaceBlock(const ASTInte
     bool foundRTAdjust = false;
     for (size_t i = 0; i < intf.fDeclarations.size(); i++) {
         std::unique_ptr<VarDeclarations> decl = this->convertVarDeclarations(
-                                                                         *intf.fDeclarations[i],
-                                                                         Variable::kGlobal_Storage);
+                                                                 *intf.fDeclarations[i],
+                                                                 Variable::kInterfaceBlock_Storage);
         if (!decl) {
             return nullptr;
         }
@@ -930,7 +995,7 @@ void IRGenerator::convertEnum(const ASTEnum& e) {
     std::vector<Variable*> variables;
     int64_t currentValue = 0;
     Layout layout;
-    ASTType enumType(e.fOffset, e.fTypeName, ASTType::kIdentifier_Kind, {});
+    ASTType enumType(e.fOffset, e.fTypeName, ASTType::kIdentifier_Kind, {}, false);
     const Type* type = this->convertType(enumType);
     Modifiers modifiers(layout, Modifiers::kConst_Flag);
     std::shared_ptr<SymbolTable> symbols(new SymbolTable(fSymbolTable, &fErrors));
@@ -962,6 +1027,19 @@ void IRGenerator::convertEnum(const ASTEnum& e) {
 const Type* IRGenerator::convertType(const ASTType& type) {
     const Symbol* result = (*fSymbolTable)[type.fName];
     if (result && result->fKind == Symbol::kType_Kind) {
+        if (type.fNullable) {
+            if (((Type&) *result) == *fContext.fFragmentProcessor_Type) {
+                if (type.fSizes.size()) {
+                    fErrors.error(type.fOffset, "type '" + type.fName + "' may not be used in "
+                                                "an array");
+                }
+                result = new Type(String(result->fName) + "?", Type::kNullable_Kind,
+                                  (const Type&) *result);
+                fSymbolTable->takeOwnership((Type*) result);
+            } else {
+                fErrors.error(type.fOffset, "type '" + type.fName + "' may not be nullable");
+            }
+        }
         for (int size : type.fSizes) {
             String name(result->fName);
             name += "[";
@@ -993,6 +1071,8 @@ std::unique_ptr<Expression> IRGenerator::convertExpression(const ASTExpression& 
                                                                 ((ASTFloatLiteral&) expr).fValue));
         case ASTExpression::kBinary_Kind:
             return this->convertBinaryExpression((ASTBinaryExpression&) expr);
+        case ASTExpression::kNull_Kind:
+            return std::unique_ptr<Expression>(new NullLiteral(fContext, expr.fOffset));
         case ASTExpression::kPrefix_Kind:
             return this->convertPrefixExpression((ASTPrefixExpression&) expr);
         case ASTExpression::kSuffix_Kind:
@@ -1096,10 +1176,33 @@ std::unique_ptr<Expression> IRGenerator::coerce(std::unique_ptr<Expression> expr
     if (type.kind() == Type::kScalar_Kind) {
         std::vector<std::unique_ptr<Expression>> args;
         args.push_back(std::move(expr));
+<<<<<<< HEAD
         ASTIdentifier id(-1, type.fName);
         std::unique_ptr<Expression> ctor = this->convertIdentifier(id);
         SkASSERT(ctor);
+||||||| merged common ancestors
+        ASTIdentifier id(-1, type.fName);
+        std::unique_ptr<Expression> ctor = this->convertIdentifier(id);
+        ASSERT(ctor);
+=======
+        std::unique_ptr<Expression> ctor;
+        if (type == *fContext.fFloatLiteral_Type) {
+            ctor = this->convertIdentifier(ASTIdentifier(-1, "float"));
+        } else if (type == *fContext.fIntLiteral_Type) {
+            ctor = this->convertIdentifier(ASTIdentifier(-1, "int"));
+        } else {
+            ctor = this->convertIdentifier(ASTIdentifier(-1, type.fName));
+        }
+        if (!ctor) {
+            printf("error, null identifier: %s\n", String(type.fName).c_str());
+        }
+        SkASSERT(ctor);
+>>>>>>> upstream-releases
         return this->call(-1, std::move(ctor), std::move(args));
+    }
+    if (expr->fKind == Expression::kNullLiteral_Kind) {
+        SkASSERT(type.kind() == Type::kNullable_Kind);
+        return std::unique_ptr<Expression>(new NullLiteral(expr->fOffset, type));
     }
     std::vector<std::unique_ptr<Expression>> args;
     args.push_back(std::move(expr));
@@ -1180,9 +1283,9 @@ static bool determine_binary_type(const Context& context,
                                           right.componentType(), outLeftType, outRightType,
                                           outResultType, false)) {
                     *outLeftType = &(*outResultType)->toCompound(context, left.columns(),
-                                                                 left.rows());;
+                                                                 left.rows());
                     *outRightType = &(*outResultType)->toCompound(context, right.columns(),
-                                                                  right.rows());;
+                                                                  right.rows());
                     int leftColumns = left.columns();
                     int leftRows = left.rows();
                     int rightColumns;
@@ -1400,8 +1503,7 @@ std::unique_ptr<Expression> IRGenerator::constantFold(const Expression& left,
             default:                return nullptr;
         }
     }
-    if (left.fType.kind() == Type::kVector_Kind &&
-        left.fType.componentType() == *fContext.fFloat_Type &&
+    if (left.fType.kind() == Type::kVector_Kind && left.fType.componentType().isFloat() &&
         left.fType == right.fType) {
         SkASSERT(left.fKind  == Expression::kConstructor_Kind);
         SkASSERT(right.fKind == Expression::kConstructor_Kind);
@@ -1413,7 +1515,7 @@ std::unique_ptr<Expression> IRGenerator::constantFold(const Expression& left,
                 args.emplace_back(new FloatLiteral(fContext, -1, value));              \
             }                                                                          \
             return std::unique_ptr<Expression>(new Constructor(-1, left.fType,         \
-                                                               std::move(args)));
+                                                               std::move(args)))
         switch (op) {
             case Token::EQEQ:
                 return std::unique_ptr<Expression>(new BoolLiteral(fContext, -1,
@@ -1476,8 +1578,8 @@ std::unique_ptr<Expression> IRGenerator::convertBinaryExpression(
                                !Compiler::IsAssignment(expression.fOperator))) {
         fErrors.error(expression.fOffset, String("type mismatch: '") +
                                           Compiler::OperatorName(expression.fOperator) +
-                                          "' cannot operate on '" + left->fType.fName +
-                                          "', '" + right->fType.fName + "'");
+                                          "' cannot operate on '" + left->fType.description() +
+                                          "', '" + right->fType.description() + "'");
         return nullptr;
     }
     if (Compiler::IsAssignment(expression.fOperator)) {
@@ -1523,8 +1625,8 @@ std::unique_ptr<Expression> IRGenerator::convertTernaryExpression(
     if (!determine_binary_type(fContext, Token::EQEQ, ifTrue->fType, ifFalse->fType, &trueType,
                                &falseType, &resultType, true) || trueType != falseType) {
         fErrors.error(expression.fOffset, "ternary operator result mismatch: '" +
-                                          ifTrue->fType.fName + "', '" +
-                                          ifFalse->fType.fName + "'");
+                                          ifTrue->fType.description() + "', '" +
+                                          ifFalse->fType.description() + "'");
         return nullptr;
     }
     ifTrue = this->coerce(std::move(ifTrue), *trueType);
@@ -1549,6 +1651,7 @@ std::unique_ptr<Expression> IRGenerator::convertTernaryExpression(
                                                              std::move(ifFalse)));
 }
 
+<<<<<<< HEAD
 // scales the texture coordinates by the texture size for sampling rectangle textures.
 // For float2coordinates, implements the transformation:
 //     texture(sampler, coord) -> texture(sampler, textureSize(sampler) * coord)
@@ -1580,6 +1683,40 @@ void IRGenerator::fixRectSampling(std::vector<std::unique_ptr<Expression>>& argu
                                             std::move(arguments[1]), type));
 }
 
+||||||| merged common ancestors
+// scales the texture coordinates by the texture size for sampling rectangle textures.
+// For float2coordinates, implements the transformation:
+//     texture(sampler, coord) -> texture(sampler, textureSize(sampler) * coord)
+// For float3coordinates, implements the transformation:
+//     texture(sampler, coord) -> texture(sampler, float3textureSize(sampler), 1.0) * coord))
+void IRGenerator::fixRectSampling(std::vector<std::unique_ptr<Expression>>& arguments) {
+    ASSERT(arguments.size() == 2);
+    ASSERT(arguments[0]->fType == *fContext.fSampler2DRect_Type);
+    ASSERT(arguments[0]->fKind == Expression::kVariableReference_Kind);
+    const Variable& sampler = ((VariableReference&) *arguments[0]).fVariable;
+    const Symbol* textureSizeSymbol = (*fSymbolTable)["textureSize"];
+    ASSERT(textureSizeSymbol->fKind == Symbol::kFunctionDeclaration_Kind);
+    const FunctionDeclaration& textureSize = (FunctionDeclaration&) *textureSizeSymbol;
+    std::vector<std::unique_ptr<Expression>> sizeArguments;
+    sizeArguments.emplace_back(new VariableReference(-1, sampler));
+    std::unique_ptr<Expression> float2ize = call(-1, textureSize, std::move(sizeArguments));
+    const Type& type = arguments[1]->fType;
+    std::unique_ptr<Expression> scale;
+    if (type == *fContext.fFloat2_Type) {
+        scale = std::move(float2ize);
+    } else {
+        ASSERT(type == *fContext.fFloat3_Type);
+        std::vector<std::unique_ptr<Expression>> float3rguments;
+        float3rguments.push_back(std::move(float2ize));
+        float3rguments.emplace_back(new FloatLiteral(fContext, -1, 1.0));
+        scale.reset(new Constructor(-1, *fContext.fFloat3_Type, std::move(float3rguments)));
+    }
+    arguments[1].reset(new BinaryExpression(-1, std::move(scale), Token::STAR,
+                                            std::move(arguments[1]), type));
+}
+
+=======
+>>>>>>> upstream-releases
 std::unique_ptr<Expression> IRGenerator::call(int offset,
                                               const FunctionDeclaration& function,
                                               std::vector<std::unique_ptr<Expression>> arguments) {
@@ -1619,10 +1756,6 @@ std::unique_ptr<Expression> IRGenerator::call(int offset,
                              VariableReference::kReadWrite_RefKind :
                              VariableReference::kPointer_RefKind);
         }
-    }
-    if (function.fBuiltin && function.fName == "texture" &&
-        arguments[0]->fType == *fContext.fSampler2DRect_Type) {
-        this->fixRectSampling(arguments);
     }
     return std::unique_ptr<FunctionCall>(new FunctionCall(offset, *returnType, function,
                                                           std::move(arguments)));
@@ -1837,18 +1970,14 @@ std::unique_ptr<Expression> IRGenerator::convertPrefixExpression(
     }
     switch (expression.fOperator) {
         case Token::PLUS:
-            if (!base->fType.isNumber() && base->fType.kind() != Type::kVector_Kind) {
+            if (!base->fType.isNumber() && base->fType.kind() != Type::kVector_Kind &&
+                base->fType != *fContext.fFloatLiteral_Type) {
                 fErrors.error(expression.fOffset,
                               "'+' cannot operate on '" + base->fType.description() + "'");
                 return nullptr;
             }
             return base;
         case Token::MINUS:
-            if (!base->fType.isNumber() && base->fType.kind() != Type::kVector_Kind) {
-                fErrors.error(expression.fOffset,
-                              "'-' cannot operate on '" + base->fType.description() + "'");
-                return nullptr;
-            }
             if (base->fKind == Expression::kIntLiteral_Kind) {
                 return std::unique_ptr<Expression>(new IntLiteral(fContext, base->fOffset,
                                                                   -((IntLiteral&) *base).fValue));
@@ -1857,6 +1986,11 @@ std::unique_ptr<Expression> IRGenerator::convertPrefixExpression(
                 double value = -((FloatLiteral&) *base).fValue;
                 return std::unique_ptr<Expression>(new FloatLiteral(fContext, base->fOffset,
                                                                     value));
+            }
+            if (!base->fType.isNumber() && base->fType.kind() != Type::kVector_Kind) {
+                fErrors.error(expression.fOffset,
+                              "'-' cannot operate on '" + base->fType.description() + "'");
+                return nullptr;
             }
             return std::unique_ptr<Expression>(new PrefixExpression(Token::MINUS, std::move(base)));
         case Token::PLUSPLUS:
@@ -1963,6 +2097,20 @@ std::unique_ptr<Expression> IRGenerator::convertSwizzle(std::unique_ptr<Expressi
     std::vector<int> swizzleComponents;
     for (size_t i = 0; i < fields.fLength; i++) {
         switch (fields[i]) {
+            case '0':
+                if (i != fields.fLength - 1) {
+                    fErrors.error(base->fOffset,
+                                  "only the last swizzle component can be a constant");
+                }
+                swizzleComponents.push_back(SKSL_SWIZZLE_0);
+                break;
+            case '1':
+                if (i != fields.fLength - 1) {
+                    fErrors.error(base->fOffset,
+                                  "only the last swizzle component can be a constant");
+                }
+                swizzleComponents.push_back(SKSL_SWIZZLE_1);
+                break;
             case 'x': // fall through
             case 'r': // fall through
             case 's':

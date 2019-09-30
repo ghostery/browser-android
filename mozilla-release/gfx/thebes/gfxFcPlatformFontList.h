@@ -23,8 +23,16 @@
 #include <cairo.h>
 #include <cairo-ft.h>
 
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX) && defined(XP_LINUX)
 #include "mozilla/SandboxBroker.h"
+||||||| merged common ancestors
+#if defined(MOZ_CONTENT_SANDBOX) && defined (XP_LINUX)
+#include "mozilla/SandboxBroker.h"
+=======
+#if defined(MOZ_SANDBOX) && defined(XP_LINUX)
+#  include "mozilla/SandboxBroker.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -54,9 +62,19 @@ class nsAutoRefTraits<FcConfig> : public nsPointerRefTraits<FcConfig> {
 // each cairo font created from that font entry contains a
 // FTUserFontDataRef with a refptr to that same FTUserFontData object.
 
+<<<<<<< HEAD
 class FTUserFontData {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(FTUserFontData)
+||||||| merged common ancestors
+class FTUserFontData {
+public:
+    NS_INLINE_DECL_THREADSAFE_REFCOUNTING(FTUserFontData)
+=======
+class FTUserFontData final {
+ public:
+  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(FTUserFontData)
+>>>>>>> upstream-releases
 
   explicit FTUserFontData(FT_Face aFace, const uint8_t* aData)
       : mFace(aFace), mFontData(aData) {}
@@ -248,8 +266,16 @@ class gfxFontconfigFont : public gfxFT2FontBase {
       gfxFloat aAdjustedSize, gfxFontEntry* aFontEntry,
       const gfxFontStyle* aFontStyle);
 
+<<<<<<< HEAD
   virtual FontType GetType() const override { return FONT_TYPE_FONTCONFIG; }
   virtual FcPattern* GetPattern() const { return mPattern; }
+||||||| merged common ancestors
+    virtual FontType GetType() const override { return FONT_TYPE_FONTCONFIG; }
+    virtual FcPattern *GetPattern() const { return mPattern; }
+=======
+  FontType GetType() const override { return FONT_TYPE_FONTCONFIG; }
+  virtual FcPattern* GetPattern() const { return mPattern; }
+>>>>>>> upstream-releases
 
   virtual already_AddRefed<mozilla::gfx::ScaledFont> GetScaledFont(
       DrawTarget* aTarget) override;
@@ -268,8 +294,17 @@ class gfxFcPlatformFontList : public gfxPlatformFontList {
     return static_cast<gfxFcPlatformFontList*>(sPlatformFontList);
   }
 
+<<<<<<< HEAD
   // initialize font lists
   virtual nsresult InitFontListForPlatform() override;
+||||||| merged common ancestors
+    // initialize font lists
+    virtual nsresult InitFontListForPlatform() override;
+=======
+  // initialize font lists
+  nsresult InitFontListForPlatform() override;
+  void InitSharedFontListForPlatform() override;
+>>>>>>> upstream-releases
 
   void GetFontList(nsAtom* aLangGroup, const nsACString& aGenericFamily,
                    nsTArray<nsString>& aListOfFonts) override;
@@ -277,37 +312,127 @@ class gfxFcPlatformFontList : public gfxPlatformFontList {
   void ReadSystemFontList(
       InfallibleTArray<mozilla::dom::SystemFontListEntry>* retValue);
 
+<<<<<<< HEAD
   gfxFontEntry* LookupLocalFont(const nsACString& aFontName,
                                 WeightRange aWeightForEntry,
                                 StretchRange aStretchForEntry,
                                 SlantStyleRange aStyleForEntry) override;
+||||||| merged common ancestors
+    gfxFontEntry*
+    LookupLocalFont(const nsACString& aFontName,
+                    WeightRange aWeightForEntry,
+                    StretchRange aStretchForEntry,
+                    SlantStyleRange aStyleForEntry) override;
+=======
+  gfxFontEntry* CreateFontEntry(
+      mozilla::fontlist::Face* aFace,
+      const mozilla::fontlist::Family* aFamily) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gfxFontEntry* MakePlatformFont(const nsACString& aFontName,
                                  WeightRange aWeightForEntry,
                                  StretchRange aStretchForEntry,
                                  SlantStyleRange aStyleForEntry,
                                  const uint8_t* aFontData,
                                  uint32_t aLength) override;
+||||||| merged common ancestors
+    gfxFontEntry*
+    MakePlatformFont(const nsACString& aFontName,
+                     WeightRange aWeightForEntry,
+                     StretchRange aStretchForEntry,
+                     SlantStyleRange aStyleForEntry,
+                     const uint8_t* aFontData,
+                     uint32_t aLength) override;
+=======
+  gfxFontEntry* LookupLocalFont(const nsACString& aFontName,
+                                WeightRange aWeightForEntry,
+                                StretchRange aStretchForEntry,
+                                SlantStyleRange aStyleForEntry) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool FindAndAddFamilies(const nsACString& aFamily,
                           nsTArray<FamilyAndGeneric>* aOutput,
                           FindFamiliesFlags aFlags,
                           gfxFontStyle* aStyle = nullptr,
                           gfxFloat aDevToCssSize = 1.0) override;
+||||||| merged common ancestors
+    bool FindAndAddFamilies(const nsACString& aFamily,
+                            nsTArray<FamilyAndGeneric>* aOutput,
+                            FindFamiliesFlags aFlags,
+                            gfxFontStyle* aStyle = nullptr,
+                            gfxFloat aDevToCssSize = 1.0) override;
+=======
+  gfxFontEntry* MakePlatformFont(const nsACString& aFontName,
+                                 WeightRange aWeightForEntry,
+                                 StretchRange aStretchForEntry,
+                                 SlantStyleRange aStyleForEntry,
+                                 const uint8_t* aFontData,
+                                 uint32_t aLength) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetStandardFamilyName(const nsCString& aFontName,
                              nsACString& aFamilyName) override;
+||||||| merged common ancestors
+    bool GetStandardFamilyName(const nsCString& aFontName,
+                               nsACString& aFamilyName) override;
+=======
+  bool FindAndAddFamilies(mozilla::StyleGenericFontFamily aGeneric,
+                          const nsACString& aFamily,
+                          nsTArray<FamilyAndGeneric>* aOutput,
+                          FindFamiliesFlags aFlags,
+                          gfxFontStyle* aStyle = nullptr,
+                          gfxFloat aDevToCssSize = 1.0) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   FcConfig* GetLastConfig() const { return mLastConfig; }
+||||||| merged common ancestors
+    FcConfig* GetLastConfig() const { return mLastConfig; }
+=======
+  bool GetStandardFamilyName(const nsCString& aFontName,
+                             nsACString& aFamilyName) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // override to use fontconfig lookup for generics
   void AddGenericFonts(mozilla::FontFamilyType aGenericType, nsAtom* aLanguage,
                        nsTArray<FamilyAndGeneric>& aFamilyList) override;
+||||||| merged common ancestors
+    // override to use fontconfig lookup for generics
+    void AddGenericFonts(mozilla::FontFamilyType aGenericType,
+                         nsAtom* aLanguage,
+                         nsTArray<FamilyAndGeneric>& aFamilyList) override;
+=======
+  FcConfig* GetLastConfig() const { return mLastConfig; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void ClearLangGroupPrefFonts() override;
+||||||| merged common ancestors
+    void ClearLangGroupPrefFonts() override;
+=======
+  // override to use fontconfig lookup for generics
+  void AddGenericFonts(mozilla::StyleGenericFontFamily, nsAtom* aLanguage,
+                       nsTArray<FamilyAndGeneric>& aFamilyList) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // clear out cached generic-lang ==> family-list mappings
+  void ClearGenericMappings() { mGenericMappings.Clear(); }
+||||||| merged common ancestors
+    // clear out cached generic-lang ==> family-list mappings
+    void ClearGenericMappings() {
+        mGenericMappings.Clear();
+    }
+=======
   void ClearLangGroupPrefFonts() override;
 
   // clear out cached generic-lang ==> family-list mappings
   void ClearGenericMappings() { mGenericMappings.Clear(); }
+>>>>>>> upstream-releases
 
   // map lang group ==> lang string
   // When aForFontEnumerationThread is true, this method will avoid using
@@ -321,8 +446,16 @@ class gfxFcPlatformFontList : public gfxPlatformFontList {
  protected:
   virtual ~gfxFcPlatformFontList();
 
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX) && defined(XP_LINUX)
   typedef mozilla::SandboxBroker::Policy SandboxPolicy;
+||||||| merged common ancestors
+#if defined(MOZ_CONTENT_SANDBOX) && defined(XP_LINUX)
+    typedef mozilla::SandboxBroker::Policy SandboxPolicy;
+=======
+#if defined(MOZ_SANDBOX) && defined(XP_LINUX)
+  typedef mozilla::SandboxBroker::Policy SandboxPolicy;
+>>>>>>> upstream-releases
 #else
   // Dummy type just so we can still have a SandboxPolicy* parameter.
   struct SandboxPolicy {};
@@ -349,8 +482,15 @@ class gfxFcPlatformFontList : public gfxPlatformFontList {
 
   static void CheckFontUpdates(nsITimer* aTimer, void* aThis);
 
+<<<<<<< HEAD
   virtual gfxFontFamily* GetDefaultFontForPlatform(
       const gfxFontStyle* aStyle) override;
+||||||| merged common ancestors
+    virtual gfxFontFamily*
+    GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
+=======
+  FontFamily GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
+>>>>>>> upstream-releases
 
   gfxFontFamily* CreateFontFamily(const nsACString& aName) const override;
 

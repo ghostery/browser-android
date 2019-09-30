@@ -1,22 +1,37 @@
 "use strict";
 
+<<<<<<< HEAD
 // This test tends to trigger a race in the fullscreen time telemetry,
 // where the fullscreen enter and fullscreen exit events (which use the
 // same histogram ID) overlap. That causes TelemetryStopwatch to log an
 // error.
 SimpleTest.ignoreAllUncaughtExceptions(true);
 
+||||||| merged common ancestors
+=======
+// This test tends to trigger a race in the fullscreen time telemetry,
+// where the fullscreen enter and fullscreen exit events (which use the
+// same histogram ID) overlap. That causes TelemetryStopwatch to log an
+// error.
+SimpleTest.ignoreAllUncaughtExceptions(true);
+
+/* eslint-disable mozilla/no-arbitrary-setTimeout */
+>>>>>>> upstream-releases
 function frameScript() {
   addMessageListener("Test:RequestFullscreen", () => {
     content.document.body.requestFullscreen();
   });
   content.document.addEventListener("fullscreenchange", () => {
-    sendAsyncMessage("Test:FullscreenChanged",
-                     !!content.document.fullscreenElement);
+    sendAsyncMessage(
+      "Test:FullscreenChanged",
+      !!content.document.fullscreenElement
+    );
   });
   addMessageListener("Test:QueryFullscreenState", () => {
-    sendAsyncMessage("Test:FullscreenState",
-                     !!content.document.fullscreenElement);
+    sendAsyncMessage(
+      "Test:FullscreenState",
+      !!content.document.fullscreenElement
+    );
   });
   function waitUntilActive() {
     if (docShell.isActive && content.document.hasFocus()) {
@@ -27,6 +42,7 @@ function frameScript() {
   }
   waitUntilActive();
 }
+/* eslint-enable mozilla/no-arbitrary-setTimeout */
 
 var gMessageManager;
 
@@ -51,7 +67,8 @@ const kPage = "http://example.org/browser/dom/html/test/dummy_page.html";
 add_task(async function() {
   await pushPrefs(
     ["full-screen-api.transition-duration.enter", "0 0"],
-    ["full-screen-api.transition-duration.leave", "0 0"]);
+    ["full-screen-api.transition-duration.leave", "0 0"]
+  );
 
   let tab = BrowserTestUtils.addTab(gBrowser, kPage);
   registerCleanupFunction(() => gBrowser.removeTab(tab));
@@ -61,7 +78,9 @@ add_task(async function() {
 
   gMessageManager = browser.messageManager;
   gMessageManager.loadFrameScript(
-    "data:,(" + frameScript.toString() + ")();", false);
+    "data:,(" + frameScript.toString() + ")();",
+    false
+  );
 
   // Wait for the document being activated, so that
   // fullscreen request won't be denied.
@@ -77,13 +96,20 @@ add_task(async function() {
   ok(state, "The content should have entered fullscreen");
   ok(document.fullscreenElement, "The chrome should also be in fullscreen");
   gMessageManager.addMessageListener(
-    "Test:FullscreenChanged", captureUnexpectedFullscreenChange);
+    "Test:FullscreenChanged",
+    captureUnexpectedFullscreenChange
+  );
 
   info("Open context menu");
   is(contextMenu.state, "closed", "Should not have opened context menu");
   let popupShownPromise = promiseWaitForEvent(window, "popupshown");
-  EventUtils.synthesizeMouse(browser, screen.width / 2, screen.height / 2,
-                             {type: "contextmenu", button: 2}, window);
+  EventUtils.synthesizeMouse(
+    browser,
+    screen.width / 2,
+    screen.height / 2,
+    { type: "contextmenu", button: 2 },
+    window
+  );
   await popupShownPromise;
   is(contextMenu.state, "open", "Should have opened context menu");
 
@@ -95,6 +121,7 @@ add_task(async function() {
 
   // Wait a small time to confirm that the first ESC key
   // does not exit fullscreen.
+  // eslint-disable-next-line mozilla/no-arbitrary-setTimeout
   await new Promise(resolve => setTimeout(resolve, 1000));
   gMessageManager.sendAsyncMessage("Test:QueryFullscreenState");
   state = await promiseOneMessage("Test:FullscreenState");
@@ -103,7 +130,9 @@ add_task(async function() {
 
   info("Send the second escape");
   gMessageManager.removeMessageListener(
-    "Test:FullscreenChanged", captureUnexpectedFullscreenChange);
+    "Test:FullscreenChanged",
+    captureUnexpectedFullscreenChange
+  );
   let fullscreenExitPromise = promiseOneMessage("Test:FullscreenChanged");
   EventUtils.synthesizeKey("KEY_Escape");
   state = await fullscreenExitPromise;

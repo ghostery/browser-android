@@ -1,16 +1,49 @@
 # Second-level build script.
 #
-# This script is run from lib/codegen/build.rs to generate Rust files.
+# This script is run from cranelift-codegen/build.rs to generate Rust files.
 
 from __future__ import absolute_import
 import argparse
 import isa
+<<<<<<< HEAD
 import gen_instr
 import gen_settings
+||||||| merged common ancestors
+import gen_types
+import gen_instr
+import gen_settings
+=======
+>>>>>>> upstream-releases
 import gen_build_deps
 import gen_encoding
+<<<<<<< HEAD
 import gen_legalizer
+||||||| merged common ancestors
+import gen_legalizer
+import gen_registers
+=======
+>>>>>>> upstream-releases
 import gen_binemit
+
+try:
+    from typing import List, Set  # noqa
+    from cdsl.isa import TargetISA  # noqa
+    from cdsl.instructions import InstructionGroup  # noqa
+except ImportError:
+    pass
+
+
+def number_all_instructions(isas):
+    # type: (List[TargetISA]) -> None
+    seen = set()  # type: Set[InstructionGroup]
+    num_inst = 1
+    for target_isa in isas:
+        for g in target_isa.instruction_groups:
+            if g not in seen:
+                for i in g.instructions:
+                    i.number = num_inst
+                    num_inst += 1
+                seen.add(g)
 
 
 def main():
@@ -23,11 +56,25 @@ def main():
     out_dir = args.out_dir
 
     isas = isa.all_isas()
+    number_all_instructions(isas)
 
+<<<<<<< HEAD
     gen_instr.generate(isas, out_dir)
     gen_settings.generate(isas, out_dir)
+||||||| merged common ancestors
+    gen_types.generate(out_dir)
+    gen_instr.generate(isas, out_dir)
+    gen_settings.generate(isas, out_dir)
+=======
+>>>>>>> upstream-releases
     gen_encoding.generate(isas, out_dir)
+<<<<<<< HEAD
     gen_legalizer.generate(isas, out_dir)
+||||||| merged common ancestors
+    gen_legalizer.generate(isas, out_dir)
+    gen_registers.generate(isas, out_dir)
+=======
+>>>>>>> upstream-releases
     gen_binemit.generate(isas, out_dir)
     gen_build_deps.generate()
 

@@ -50,12 +50,22 @@ HTMLFormElement* HTMLLabelElement::GetForm() const {
   return static_cast<HTMLFormElement*>(formControl->GetFormElement());
 }
 
+<<<<<<< HEAD
 void HTMLLabelElement::Focus(ErrorResult& aError) {
+||||||| merged common ancestors
+void
+HTMLLabelElement::Focus(ErrorResult& aError)
+{
+=======
+void HTMLLabelElement::Focus(const FocusOptions& aOptions,
+                             ErrorResult& aError) {
+>>>>>>> upstream-releases
   // retarget the focus method at the for content
   nsIFocusManager* fm = nsFocusManager::GetFocusManager();
   if (fm) {
     RefPtr<Element> elem = GetLabeledElement();
     if (elem) {
+<<<<<<< HEAD
       fm->SetFocus(elem, 0);
     }
   }
@@ -67,10 +77,27 @@ static bool InInteractiveHTMLContent(nsIContent* aContent, nsIContent* aStop) {
     if (content->IsElement() &&
         content->AsElement()->IsInteractiveHTMLContent(true)) {
       return true;
+||||||| merged common ancestors
+      fm->SetFocus(elem, 0);
     }
-    content = content->GetParent();
   }
-  return false;
+}
+
+static bool
+InInteractiveHTMLContent(nsIContent* aContent, nsIContent* aStop)
+{
+  nsIContent* content = aContent;
+  while (content && content != aStop) {
+    if (content->IsElement() &&
+        content->AsElement()->IsInteractiveHTMLContent(true)) {
+      return true;
+=======
+      fm->SetFocus(
+          elem, nsIFocusManager::FLAG_BYELEMENTFOCUS |
+                    nsFocusManager::FocusOptionsToFocusManagerFlags(aOptions));
+>>>>>>> upstream-releases
+    }
+  }
 }
 
 nsresult HTMLLabelElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
@@ -85,8 +112,9 @@ nsresult HTMLLabelElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
     return NS_OK;
   }
 
-  nsCOMPtr<nsIContent> target = do_QueryInterface(aVisitor.mEvent->mTarget);
-  if (InInteractiveHTMLContent(target, this)) {
+  nsCOMPtr<Element> target =
+      do_QueryInterface(aVisitor.mEvent->GetOriginalDOMEventTarget());
+  if (nsContentUtils::IsInInteractiveHTMLContent(target, this)) {
     return NS_OK;
   }
 
@@ -97,7 +125,7 @@ nsresult HTMLLabelElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
     mHandlingEvent = true;
     switch (aVisitor.mEvent->mMessage) {
       case eMouseDown:
-        if (mouseEvent->button == WidgetMouseEvent::eLeftButton) {
+        if (mouseEvent->mButton == MouseButton::eLeft) {
           // We reset the mouse-down point on every event because there is
           // no guarantee we will reach the eMouseClick code below.
           LayoutDeviceIntPoint* curPoint =
@@ -146,14 +174,33 @@ nsresult HTMLLabelElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
               // pass FLAG_BYMOUSE so that we get correct focus ring behavior,
               // but we don't want to pass FLAG_BYMOUSE if this click event was
               // caused by the user pressing an accesskey.
+<<<<<<< HEAD
               bool byMouse = (mouseEvent->inputSource !=
                               MouseEvent_Binding::MOZ_SOURCE_KEYBOARD);
               bool byTouch = (mouseEvent->inputSource ==
                               MouseEvent_Binding::MOZ_SOURCE_TOUCH);
+||||||| merged common ancestors
+              bool byMouse = (mouseEvent->inputSource != MouseEvent_Binding::MOZ_SOURCE_KEYBOARD);
+              bool byTouch = (mouseEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH);
+=======
+              bool byMouse = (mouseEvent->mInputSource !=
+                              MouseEvent_Binding::MOZ_SOURCE_KEYBOARD);
+              bool byTouch = (mouseEvent->mInputSource ==
+                              MouseEvent_Binding::MOZ_SOURCE_TOUCH);
+>>>>>>> upstream-releases
               fm->SetFocus(content,
                            nsIFocusManager::FLAG_BYMOVEFOCUS |
+<<<<<<< HEAD
                                (byMouse ? nsIFocusManager::FLAG_BYMOUSE : 0) |
                                (byTouch ? nsIFocusManager::FLAG_BYTOUCH : 0));
+||||||| merged common ancestors
+                           (byMouse ? nsIFocusManager::FLAG_BYMOUSE : 0) |
+                           (byTouch ? nsIFocusManager::FLAG_BYTOUCH : 0));
+=======
+                               nsIFocusManager::FLAG_BYELEMENTFOCUS |
+                               (byMouse ? nsIFocusManager::FLAG_BYMOUSE : 0) |
+                               (byTouch ? nsIFocusManager::FLAG_BYTOUCH : 0));
+>>>>>>> upstream-releases
             }
           }
           // Dispatch a new click event to |content|
@@ -167,8 +214,16 @@ nsresult HTMLLabelElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
           // will actually create a new event.
           EventFlags eventFlags;
           eventFlags.mMultipleActionsPrevented = true;
+<<<<<<< HEAD
           DispatchClickEvent(aVisitor.mPresContext, mouseEvent, content, false,
                              &eventFlags, &status);
+||||||| merged common ancestors
+          DispatchClickEvent(aVisitor.mPresContext, mouseEvent,
+                             content, false, &eventFlags, &status);
+=======
+          DispatchClickEvent(MOZ_KnownLive(aVisitor.mPresContext), mouseEvent,
+                             content, false, &eventFlags, &status);
+>>>>>>> upstream-releases
           // Do we care about the status this returned?  I don't think we do...
           // Don't run another <label> off of this click
           mouseEvent->mFlags.mMultipleActionsPrevented = true;
@@ -197,12 +252,30 @@ bool HTMLLabelElement::PerformAccesskey(bool aKeyCausesActivation,
     }
 
     // Click on it if the users prefs indicate to do so.
+<<<<<<< HEAD
     WidgetMouseEvent event(aIsTrustedEvent, eMouseClick, nullptr,
                            WidgetMouseEvent::eReal);
     event.inputSource = MouseEvent_Binding::MOZ_SOURCE_KEYBOARD;
+||||||| merged common ancestors
+    WidgetMouseEvent event(aIsTrustedEvent, eMouseClick,
+                           nullptr, WidgetMouseEvent::eReal);
+    event.inputSource = MouseEvent_Binding::MOZ_SOURCE_KEYBOARD;
+=======
+    WidgetMouseEvent event(aIsTrustedEvent, eMouseClick, nullptr,
+                           WidgetMouseEvent::eReal);
+    event.mInputSource = MouseEvent_Binding::MOZ_SOURCE_KEYBOARD;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     nsAutoPopupStatePusher popupStatePusher(aIsTrustedEvent ? openAllowed
                                                             : openAbused);
+||||||| merged common ancestors
+    nsAutoPopupStatePusher popupStatePusher(aIsTrustedEvent ?
+                                            openAllowed : openAbused);
+=======
+    AutoPopupStatePusher popupStatePusher(
+        aIsTrustedEvent ? PopupBlocker::openAllowed : PopupBlocker::openAbused);
+>>>>>>> upstream-releases
 
     EventDispatcher::Dispatch(static_cast<nsIContent*>(this), presContext,
                               &event);
@@ -226,7 +299,7 @@ nsGenericHTMLElement* HTMLLabelElement::GetLabeledElement() const {
 
   if (ShadowRoot* shadowRoot = GetContainingShadow()) {
     element = shadowRoot->GetElementById(elementId);
-  } else if (nsIDocument* doc = GetUncomposedDoc()) {
+  } else if (Document* doc = GetUncomposedDoc()) {
     element = doc->GetElementById(elementId);
   } else {
     element =

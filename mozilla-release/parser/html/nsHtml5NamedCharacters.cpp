@@ -73,14 +73,36 @@ static_assert(MOZ_ARRAY_LENGTH(ALL_NAMES) < 0x10000,
 
 const nsHtml5CharacterName nsHtml5NamedCharacters::NAMES[] = {
 #ifdef DEBUG
+<<<<<<< HEAD
 #define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE) \
   {NAME_##N##_START, LEN, N},
+||||||| merged common ancestors
+#define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE)                  \
+  { NAME_##N##_START, LEN, N },
+=======
+#  define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE) \
+    {NAME_##N##_START, LEN, N},
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE) \
   {                                                           \
       NAME_##N##_START,                                       \
       LEN,                                                    \
   },
+||||||| merged common ancestors
+#define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE)                  \
+  {                                                                            \
+    NAME_##N##_START,                                                          \
+    LEN,                                                                       \
+  },
+=======
+#  define NAMED_CHARACTER_REFERENCE(N, CHARS, LEN, FLAG, VALUE) \
+    {                                                           \
+        NAME_##N##_START,                                       \
+        LEN,                                                    \
+    },
+>>>>>>> upstream-releases
 #endif
 #include "nsHtml5NamedCharactersInclude.h"
 #undef NAMED_CHARACTER_REFERENCE

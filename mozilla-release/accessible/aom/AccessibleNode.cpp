@@ -62,12 +62,31 @@ AccessibleNode::AccessibleNode(nsINode* aNode)
 
 AccessibleNode::~AccessibleNode() {}
 
+<<<<<<< HEAD
 /* virtual */ JSObject* AccessibleNode::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+AccessibleNode::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* AccessibleNode::WrapObject(JSContext* aCx,
+                                     JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return AccessibleNode_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* virtual */ ParentObject AccessibleNode::GetParentObject() const {
+||||||| merged common ancestors
+/* virtual */ ParentObject
+AccessibleNode::GetParentObject() const
+{
+=======
+/* virtual */
+ParentObject AccessibleNode::GetParentObject() const {
+>>>>>>> upstream-releases
   return mDOMNode->GetParentObject();
 }
 

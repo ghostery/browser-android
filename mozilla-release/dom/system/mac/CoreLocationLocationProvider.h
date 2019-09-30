@@ -6,7 +6,15 @@
 
 #include "nsCOMPtr.h"
 #include "nsIGeolocationProvider.h"
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+
+=======
+#include "mozilla/Attributes.h"
+
+>>>>>>> upstream-releases
 /*
  * The CoreLocationObjects class contains the CoreLocation objects
  * we'll need.
@@ -30,6 +38,10 @@ class CoreLocationLocationProvider : public nsIGeolocationProvider {
   NS_DECL_NSIGEOLOCATIONPROVIDER
 
   CoreLocationLocationProvider();
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY because we can't mark Objective-C methods as
+  // MOZ_CAN_RUN_SCRIPT as far as I can tell, and this method is called from
+  // Objective-C.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void NotifyError(uint16_t aErrorCode);
   void Update(nsIDOMGeoPosition* aSomewhere);
   void CreateMLSFallbackProvider();

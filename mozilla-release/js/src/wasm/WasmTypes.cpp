@@ -18,6 +18,7 @@
 
 #include "wasm/WasmTypes.h"
 
+#include "js/Printf.h"
 #include "vm/ArrayBufferObject.h"
 #include "wasm/WasmBaselineCompile.h"
 #include "wasm/WasmInstance.h"
@@ -36,7 +37,13 @@ using mozilla::MakeEnumeratedRange;
 // We have only tested x64 with WASM_HUGE_MEMORY.
 
 #if defined(JS_CODEGEN_X64) && !defined(WASM_HUGE_MEMORY)
+<<<<<<< HEAD
 #error "Not an expected configuration"
+||||||| merged common ancestors
+#    error "Not an expected configuration"
+=======
+#  error "Not an expected configuration"
+>>>>>>> upstream-releases
 #endif
 
 // We have only tested WASM_HUGE_MEMORY on x64 and arm64.
@@ -61,6 +68,7 @@ static_assert(MaxMemoryAccessSize <= 64, "MaxMemoryAccessSize too high");
 static_assert((MaxMemoryAccessSize & (MaxMemoryAccessSize - 1)) == 0,
               "MaxMemoryAccessSize is not a power of two");
 
+<<<<<<< HEAD
 Val::Val(const LitVal& val) {
   type_ = val.type();
   switch (type_.code()) {
@@ -157,6 +165,271 @@ uint8_t* FuncType::serialize(uint8_t* cursor) const {
 
 namespace js {
 namespace wasm {
+||||||| merged common ancestors
+Val::Val(const LitVal& val)
+{
+    type_ = val.type();
+    switch (type_.code()) {
+      case ValType::I32: u.i32_ = val.i32(); return;
+      case ValType::F32: u.f32_ = val.f32(); return;
+      case ValType::I64: u.i64_ = val.i64(); return;
+      case ValType::F64: u.f64_ = val.f64(); return;
+      case ValType::Ref:
+      case ValType::AnyRef: u.ptr_ = val.ptr(); return;
+    }
+    MOZ_CRASH();
+}
+
+void
+Val::writePayload(uint8_t* dst) const
+{
+    switch (type_.code()) {
+      case ValType::I32:
+      case ValType::F32:
+        memcpy(dst, &u.i32_, sizeof(u.i32_));
+        return;
+      case ValType::I64:
+      case ValType::F64:
+        memcpy(dst, &u.i64_, sizeof(u.i64_));
+        return;
+      case ValType::Ref:
+      case ValType::AnyRef:
+        MOZ_ASSERT(*(JSObject**)dst == nullptr, "should be null so no need for a pre-barrier");
+        memcpy(dst, &u.ptr_, sizeof(JSObject*));
+        // Either the written location is in the global data section in the
+        // WasmInstanceObject, or the Cell of a WasmGlobalObject:
+        // - WasmInstanceObjects are always tenured and u.ptr_ may point to a
+        // nursery object, so we need a post-barrier since the global data of
+        // an instance is effectively a field of the WasmInstanceObject.
+        // - WasmGlobalObjects are always tenured, and they have a Cell field,
+        // so a post-barrier may be needed for the same reason as above.
+        if (u.ptr_) {
+            JSObject::writeBarrierPost((JSObject**)dst, nullptr, u.ptr_);
+        }
+        return;
+    }
+    MOZ_CRASH("unexpected Val type");
+}
+
+void
+Val::trace(JSTracer* trc)
+{
+    if (type_.isValid() && type_.isRefOrAnyRef() && u.ptr_) {
+        TraceManuallyBarrieredEdge(trc, &u.ptr_, "wasm ref/anyref global");
+    }
+}
+
+bool
+wasm::IsRoundingFunction(SymbolicAddress callee, jit::RoundingMode* mode)
+{
+    switch (callee) {
+      case SymbolicAddress::FloorD:
+      case SymbolicAddress::FloorF:
+        *mode = jit::RoundingMode::Down;
+        return true;
+      case SymbolicAddress::CeilD:
+      case SymbolicAddress::CeilF:
+        *mode = jit::RoundingMode::Up;
+        return true;
+      case SymbolicAddress::TruncD:
+      case SymbolicAddress::TruncF:
+        *mode = jit::RoundingMode::TowardsZero;
+        return true;
+      case SymbolicAddress::NearbyIntD:
+      case SymbolicAddress::NearbyIntF:
+        *mode = jit::RoundingMode::NearestTiesToEven;
+        return true;
+      default:
+        return false;
+    }
+}
+
+size_t
+FuncType::serializedSize() const
+{
+    return sizeof(ret_) +
+           SerializedPodVectorSize(args_);
+}
+
+uint8_t*
+FuncType::serialize(uint8_t* cursor) const
+{
+    cursor = WriteScalar<ExprType>(cursor, ret_);
+    cursor = SerializePodVector(cursor, args_);
+    return cursor;
+}
+
+namespace js { namespace wasm {
+=======
+Val::Val(const LitVal& val) {
+  type_ = val.type();
+  switch (type_.code()) {
+    case ValType::I32:
+      u.i32_ = val.i32();
+      return;
+    case ValType::F32:
+      u.f32_ = val.f32();
+      return;
+    case ValType::I64:
+      u.i64_ = val.i64();
+      return;
+    case ValType::F64:
+      u.f64_ = val.f64();
+      return;
+    case ValType::Ref:
+    case ValType::FuncRef:
+    case ValType::AnyRef:
+      u.ref_ = val.ref();
+      return;
+    case ValType::NullRef:
+      break;
+  }
+  MOZ_CRASH();
+}
+
+void Val::trace(JSTracer* trc) {
+  if (type_.isValid() && type_.isReference() && !u.ref_.isNull()) {
+    // TODO/AnyRef-boxing: With boxed immediates and strings, the write
+    // barrier is going to have to be more complicated.
+    ASSERT_ANYREF_IS_JSOBJECT;
+    TraceManuallyBarrieredEdge(trc, u.ref_.asJSObjectAddress(),
+                               "wasm reference-typed global");
+  }
+}
+
+void AnyRef::trace(JSTracer* trc) {
+  if (value_) {
+    TraceManuallyBarrieredEdge(trc, &value_, "wasm anyref referent");
+  }
+}
+
+class WasmValueBox : public NativeObject {
+  static const unsigned VALUE_SLOT = 0;
+
+ public:
+  static const unsigned RESERVED_SLOTS = 1;
+  static const Class class_;
+
+  static WasmValueBox* create(JSContext* cx, HandleValue val);
+  Value value() const { return getFixedSlot(VALUE_SLOT); }
+};
+
+const Class WasmValueBox::class_ = {"WasmValueBox",
+                                    JSCLASS_HAS_RESERVED_SLOTS(RESERVED_SLOTS)};
+
+WasmValueBox* WasmValueBox::create(JSContext* cx, HandleValue val) {
+  WasmValueBox* obj = (WasmValueBox*)NewObjectWithGivenProto(
+      cx, &WasmValueBox::class_, nullptr);
+  if (!obj) {
+    return nullptr;
+  }
+  obj->setFixedSlot(VALUE_SLOT, val);
+  return obj;
+}
+
+bool wasm::BoxAnyRef(JSContext* cx, HandleValue val, MutableHandleAnyRef addr) {
+  if (val.isNull()) {
+    addr.set(AnyRef::null());
+    return true;
+  }
+
+  if (val.isObject()) {
+    JSObject* obj = &val.toObject();
+    MOZ_ASSERT(!obj->is<WasmValueBox>());
+    MOZ_ASSERT(obj->compartment() == cx->compartment());
+    addr.set(AnyRef::fromJSObject(obj));
+    return true;
+  }
+
+  WasmValueBox* box = WasmValueBox::create(cx, val);
+  if (!box) return false;
+  addr.set(AnyRef::fromJSObject(box));
+  return true;
+}
+
+Value wasm::UnboxAnyRef(AnyRef val) {
+  // If UnboxAnyRef needs to allocate then we need a more complicated API, and
+  // we need to root the value in the callers, see comments in callExport().
+  JSObject* obj = val.asJSObject();
+  Value result;
+  if (obj == nullptr) {
+    result.setNull();
+  } else if (obj->is<WasmValueBox>()) {
+    result = obj->as<WasmValueBox>().value();
+  } else {
+    result.setObjectOrNull(obj);
+  }
+  return result;
+}
+
+bool js::IsBoxedWasmAnyRef(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  MOZ_ASSERT(args.length() == 1);
+  args.rval().setBoolean(args[0].isObject() &&
+                         args[0].toObject().is<WasmValueBox>());
+  return true;
+}
+
+bool js::IsBoxableWasmAnyRef(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  MOZ_ASSERT(args.length() == 1);
+  args.rval().setBoolean(!(args[0].isObject() || args[0].isNull()));
+  return true;
+}
+
+bool js::BoxWasmAnyRef(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  MOZ_ASSERT(args.length() == 1);
+  WasmValueBox* box = WasmValueBox::create(cx, args[0]);
+  if (!box) return false;
+  args.rval().setObject(*box);
+  return true;
+}
+
+bool js::UnboxBoxedWasmAnyRef(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  MOZ_ASSERT(args.length() == 1);
+  WasmValueBox* box = &args[0].toObject().as<WasmValueBox>();
+  args.rval().set(box->value());
+  return true;
+}
+
+bool wasm::IsRoundingFunction(SymbolicAddress callee, jit::RoundingMode* mode) {
+  switch (callee) {
+    case SymbolicAddress::FloorD:
+    case SymbolicAddress::FloorF:
+      *mode = jit::RoundingMode::Down;
+      return true;
+    case SymbolicAddress::CeilD:
+    case SymbolicAddress::CeilF:
+      *mode = jit::RoundingMode::Up;
+      return true;
+    case SymbolicAddress::TruncD:
+    case SymbolicAddress::TruncF:
+      *mode = jit::RoundingMode::TowardsZero;
+      return true;
+    case SymbolicAddress::NearbyIntD:
+    case SymbolicAddress::NearbyIntF:
+      *mode = jit::RoundingMode::NearestTiesToEven;
+      return true;
+    default:
+      return false;
+  }
+}
+
+size_t FuncType::serializedSize() const {
+  return sizeof(ret_) + SerializedPodVectorSize(args_);
+}
+
+uint8_t* FuncType::serialize(uint8_t* cursor) const {
+  cursor = WriteScalar<ExprType>(cursor, ret_);
+  cursor = SerializePodVector(cursor, args_);
+  return cursor;
+}
+
+namespace js {
+namespace wasm {
+>>>>>>> upstream-releases
 
 // ExprType is not POD while ReadScalar requires POD, so specialize.
 template <>
@@ -186,6 +459,7 @@ static const unsigned sTagBits = 1;
 static const unsigned sReturnBit = 1;
 static const unsigned sLengthBits = 4;
 static const unsigned sTypeBits = 3;
+<<<<<<< HEAD
 static const unsigned sMaxTypes =
     (sTotalBits - sTagBits - sReturnBit - sLengthBits) / sTypeBits;
 
@@ -230,6 +504,104 @@ static unsigned EncodeImmediateType(ValType vt) {
   if (numTypes > sMaxTypes) {
     return true;
   }
+||||||| merged common ancestors
+static const unsigned sMaxTypes = (sTotalBits - sTagBits - sReturnBit - sLengthBits) / sTypeBits;
+
+static bool
+IsImmediateType(ValType vt)
+{
+    switch (vt.code()) {
+      case ValType::I32:
+      case ValType::I64:
+      case ValType::F32:
+      case ValType::F64:
+      case ValType::AnyRef:
+        return true;
+      case ValType::Ref:
+        return false;
+    }
+    MOZ_CRASH("bad ValType");
+}
+
+static unsigned
+EncodeImmediateType(ValType vt)
+{
+    static_assert(4 < (1 << sTypeBits), "fits");
+    switch (vt.code()) {
+      case ValType::I32:
+        return 0;
+      case ValType::I64:
+        return 1;
+      case ValType::F32:
+        return 2;
+      case ValType::F64:
+        return 3;
+      case ValType::AnyRef:
+        return 4;
+      case ValType::Ref:
+        break;
+    }
+    MOZ_CRASH("bad ValType");
+}
+
+/* static */ bool
+FuncTypeIdDesc::isGlobal(const FuncType& funcType)
+{
+    unsigned numTypes = (funcType.ret() == ExprType::Void ? 0 : 1) +
+                        (funcType.args().length());
+    if (numTypes > sMaxTypes) {
+        return true;
+    }
+=======
+static const unsigned sMaxTypes =
+    (sTotalBits - sTagBits - sReturnBit - sLengthBits) / sTypeBits;
+
+static bool IsImmediateType(ValType vt) {
+  switch (vt.code()) {
+    case ValType::I32:
+    case ValType::I64:
+    case ValType::F32:
+    case ValType::F64:
+    case ValType::FuncRef:
+    case ValType::AnyRef:
+      return true;
+    case ValType::NullRef:
+    case ValType::Ref:
+      return false;
+  }
+  MOZ_CRASH("bad ValType");
+}
+
+static unsigned EncodeImmediateType(ValType vt) {
+  static_assert(4 < (1 << sTypeBits), "fits");
+  switch (vt.code()) {
+    case ValType::I32:
+      return 0;
+    case ValType::I64:
+      return 1;
+    case ValType::F32:
+      return 2;
+    case ValType::F64:
+      return 3;
+    case ValType::FuncRef:
+      return 4;
+    case ValType::AnyRef:
+      return 5;
+    case ValType::NullRef:
+    case ValType::Ref:
+      break;
+  }
+  MOZ_CRASH("bad ValType");
+}
+
+/* static */
+bool FuncTypeIdDesc::isGlobal(const FuncType& funcType) {
+  unsigned numTypes =
+      (funcType.ret() == ExprType::Void ? 0 : 1) + (funcType.args().length());
+  if (numTypes > sMaxTypes) {
+    return true;
+  }
+>>>>>>> upstream-releases
 
   if (funcType.ret() != ExprType::Void &&
       !IsImmediateType(NonVoidToValType(funcType.ret()))) {
@@ -245,10 +617,24 @@ static unsigned EncodeImmediateType(ValType vt) {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ FuncTypeIdDesc FuncTypeIdDesc::global(const FuncType& funcType,
                                                    uint32_t globalDataOffset) {
   MOZ_ASSERT(isGlobal(funcType));
   return FuncTypeIdDesc(FuncTypeIdDescKind::Global, globalDataOffset);
+||||||| merged common ancestors
+/* static */ FuncTypeIdDesc
+FuncTypeIdDesc::global(const FuncType& funcType, uint32_t globalDataOffset)
+{
+    MOZ_ASSERT(isGlobal(funcType));
+    return FuncTypeIdDesc(FuncTypeIdDescKind::Global, globalDataOffset);
+=======
+/* static */
+FuncTypeIdDesc FuncTypeIdDesc::global(const FuncType& funcType,
+                                      uint32_t globalDataOffset) {
+  MOZ_ASSERT(isGlobal(funcType));
+  return FuncTypeIdDesc(FuncTypeIdDescKind::Global, globalDataOffset);
+>>>>>>> upstream-releases
 }
 
 static ImmediateType LengthToBits(uint32_t length) {
@@ -257,10 +643,23 @@ static ImmediateType LengthToBits(uint32_t length) {
   return length;
 }
 
+<<<<<<< HEAD
 /* static */ FuncTypeIdDesc FuncTypeIdDesc::immediate(
     const FuncType& funcType) {
   ImmediateType immediate = ImmediateBit;
   uint32_t shift = sTagBits;
+||||||| merged common ancestors
+/* static */ FuncTypeIdDesc
+FuncTypeIdDesc::immediate(const FuncType& funcType)
+{
+    ImmediateType immediate = ImmediateBit;
+    uint32_t shift = sTagBits;
+=======
+/* static */
+FuncTypeIdDesc FuncTypeIdDesc::immediate(const FuncType& funcType) {
+  ImmediateType immediate = ImmediateBit;
+  uint32_t shift = sTagBits;
+>>>>>>> upstream-releases
 
   if (funcType.ret() != ExprType::Void) {
     immediate |= (1 << shift);
@@ -462,6 +861,7 @@ uint8_t* CustomSection::serialize(uint8_t* cursor) const {
   return cursor;
 }
 
+<<<<<<< HEAD
 const uint8_t* CustomSection::deserialize(const uint8_t* cursor) {
   cursor = DeserializePodVector(cursor, &name);
   if (!cursor) {
@@ -477,8 +877,41 @@ const uint8_t* CustomSection::deserialize(const uint8_t* cursor) {
   if (!payload) {
     return nullptr;
   }
+||||||| merged common ancestors
+    Bytes bytes;
+    cursor = DeserializePodVector(cursor, &bytes);
+    if (!cursor) {
+        return nullptr;
+    }
+    payload = js_new<ShareableBytes>(std::move(bytes));
+    if (!payload) {
+        return nullptr;
+    }
+=======
+const uint8_t* CustomSection::deserialize(const uint8_t* cursor) {
+  cursor = DeserializePodVector(cursor, &name);
+  if (!cursor) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return cursor;
+||||||| merged common ancestors
+    return cursor;
+=======
+  Bytes bytes;
+  cursor = DeserializePodVector(cursor, &bytes);
+  if (!cursor) {
+    return nullptr;
+  }
+  payload = js_new<ShareableBytes>(std::move(bytes));
+  if (!payload) {
+    return nullptr;
+  }
 
   return cursor;
+>>>>>>> upstream-releases
 }
 
 size_t CustomSection::sizeOfExcludingThis(MallocSizeOf mallocSizeOf) const {
@@ -515,14 +948,52 @@ uint32_t wasm::RoundUpToNextValidARMImmediate(uint32_t i) {
 
 #ifndef WASM_HUGE_MEMORY
 
+<<<<<<< HEAD
 bool wasm::IsValidBoundsCheckImmediate(uint32_t i) {
 #ifdef JS_CODEGEN_ARM
   return IsValidARMImmediate(i);
 #else
   return true;
 #endif
+||||||| merged common ancestors
+bool
+wasm::IsValidBoundsCheckImmediate(uint32_t i)
+{
+#ifdef JS_CODEGEN_ARM
+    return IsValidARMImmediate(i);
+#else
+    return true;
+#endif
+=======
+bool wasm::IsValidBoundsCheckImmediate(uint32_t i) {
+#  ifdef JS_CODEGEN_ARM
+  return IsValidARMImmediate(i);
+#  else
+  return true;
+#  endif
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+size_t wasm::ComputeMappedSize(uint32_t maxSize) {
+  MOZ_ASSERT(maxSize % PageSize == 0);
+||||||| merged common ancestors
+size_t
+wasm::ComputeMappedSize(uint32_t maxSize)
+{
+    MOZ_ASSERT(maxSize % PageSize == 0);
+
+    // It is the bounds-check limit, not the mapped size, that gets baked into
+    // code. Thus round up the maxSize to the next valid immediate value
+    // *before* adding in the guard page.
+
+# ifdef JS_CODEGEN_ARM
+    uint32_t boundsCheckLimit = RoundUpToNextValidARMImmediate(maxSize);
+# else
+    uint32_t boundsCheckLimit = maxSize;
+# endif
+    MOZ_ASSERT(IsValidBoundsCheckImmediate(boundsCheckLimit));
+=======
 size_t wasm::ComputeMappedSize(uint32_t maxSize) {
   MOZ_ASSERT(maxSize % PageSize == 0);
 
@@ -530,21 +1001,68 @@ size_t wasm::ComputeMappedSize(uint32_t maxSize) {
   // code. Thus round up the maxSize to the next valid immediate value
   // *before* adding in the guard page.
 
-#ifdef JS_CODEGEN_ARM
+#  ifdef JS_CODEGEN_ARM
   uint32_t boundsCheckLimit = RoundUpToNextValidARMImmediate(maxSize);
-#else
+#  else
   uint32_t boundsCheckLimit = maxSize;
-#endif
+#  endif
   MOZ_ASSERT(IsValidBoundsCheckImmediate(boundsCheckLimit));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // It is the bounds-check limit, not the mapped size, that gets baked into
+  // code. Thus round up the maxSize to the next valid immediate value
+  // *before* adding in the guard page.
+||||||| merged common ancestors
+    MOZ_ASSERT(boundsCheckLimit % gc::SystemPageSize() == 0);
+    MOZ_ASSERT(GuardSize % gc::SystemPageSize() == 0);
+    return boundsCheckLimit + GuardSize;
+}
+
+#endif  // WASM_HUGE_MEMORY
+=======
   MOZ_ASSERT(boundsCheckLimit % gc::SystemPageSize() == 0);
   MOZ_ASSERT(GuardSize % gc::SystemPageSize() == 0);
   return boundsCheckLimit + GuardSize;
 }
 
 #endif  // WASM_HUGE_MEMORY
+>>>>>>> upstream-releases
 
-/* static */ DebugFrame* DebugFrame::from(Frame* fp) {
+<<<<<<< HEAD
+#ifdef JS_CODEGEN_ARM
+  uint32_t boundsCheckLimit = RoundUpToNextValidARMImmediate(maxSize);
+#else
+  uint32_t boundsCheckLimit = maxSize;
+||||||| merged common ancestors
+/* static */ DebugFrame*
+DebugFrame::from(Frame* fp)
+{
+    MOZ_ASSERT(fp->tls->instance->code().metadata().debugEnabled);
+    auto* df = reinterpret_cast<DebugFrame*>((uint8_t*)fp - DebugFrame::offsetOfFrame());
+    MOZ_ASSERT(fp->instance() == df->instance());
+    return df;
+}
+
+void
+DebugFrame::alignmentStaticAsserts()
+{
+    // VS2017 doesn't consider offsetOfFrame() to be a constexpr, so we have
+    // to use offsetof directly. These asserts can't be at class-level
+    // because the type is incomplete.
+
+    static_assert(WasmStackAlignment >= Alignment,
+                  "Aligned by ABI before pushing DebugFrame");
+    static_assert((offsetof(DebugFrame, frame_) + sizeof(Frame)) % Alignment == 0,
+                  "Aligned after pushing DebugFrame");
+#ifdef JS_CODEGEN_ARM64
+    // This constraint may or may not be necessary.  If you hit this because
+    // you've changed the frame size then feel free to remove it, but be extra
+    // aware of possible problems.
+    static_assert(sizeof(DebugFrame) % 16 == 0, "ARM64 SP alignment");
+=======
+/* static */
+DebugFrame* DebugFrame::from(Frame* fp) {
   MOZ_ASSERT(fp->tls->instance->code().metadata().debugEnabled);
   auto* df =
       reinterpret_cast<DebugFrame*>((uint8_t*)fp - DebugFrame::offsetOfFrame());
@@ -566,13 +1084,165 @@ void DebugFrame::alignmentStaticAsserts() {
   // you've changed the frame size then feel free to remove it, but be extra
   // aware of possible problems.
   static_assert(sizeof(DebugFrame) % 16 == 0, "ARM64 SP alignment");
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
+  MOZ_ASSERT(IsValidBoundsCheckImmediate(boundsCheckLimit));
+||||||| merged common ancestors
+}
+
+GlobalObject*
+DebugFrame::global() const
+{
+    return &instance()->object()->global();
+}
+=======
 }
 
 GlobalObject* DebugFrame::global() const {
   return &instance()->object()->global();
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MOZ_ASSERT(boundsCheckLimit % gc::SystemPageSize() == 0);
+  MOZ_ASSERT(GuardSize % gc::SystemPageSize() == 0);
+  return boundsCheckLimit + GuardSize;
+||||||| merged common ancestors
+JSObject*
+DebugFrame::environmentChain() const
+{
+    return &global()->lexicalEnvironment();
+=======
+bool DebugFrame::hasGlobal(const GlobalObject* global) const {
+  return global == &instance()->objectUnbarriered()->global();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+#endif  // WASM_HUGE_MEMORY
+
+/* static */ DebugFrame* DebugFrame::from(Frame* fp) {
+  MOZ_ASSERT(fp->tls->instance->code().metadata().debugEnabled);
+  auto* df =
+      reinterpret_cast<DebugFrame*>((uint8_t*)fp - DebugFrame::offsetOfFrame());
+  MOZ_ASSERT(fp->instance() == df->instance());
+  return df;
+||||||| merged common ancestors
+bool
+DebugFrame::getLocal(uint32_t localIndex, MutableHandleValue vp)
+{
+    ValTypeVector locals;
+    size_t argsLength;
+    if (!instance()->debug().debugGetLocalTypes(funcIndex(), &locals, &argsLength)) {
+        return false;
+    }
+
+    BaseLocalIter iter(locals, argsLength, /* debugEnabled = */ true);
+    while (!iter.done() && iter.index() < localIndex) {
+        iter++;
+    }
+    MOZ_ALWAYS_TRUE(!iter.done());
+
+    uint8_t* frame = static_cast<uint8_t*>((void*)this) + offsetOfFrame();
+    void* dataPtr = frame - iter.frameOffset();
+    switch (iter.mirType()) {
+      case jit::MIRType::Int32:
+          vp.set(Int32Value(*static_cast<int32_t*>(dataPtr)));
+          break;
+      case jit::MIRType::Int64:
+          // Just display as a Number; it's ok if we lose some precision
+          vp.set(NumberValue((double)*static_cast<int64_t*>(dataPtr)));
+          break;
+      case jit::MIRType::Float32:
+          vp.set(NumberValue(JS::CanonicalizeNaN(*static_cast<float*>(dataPtr))));
+          break;
+      case jit::MIRType::Double:
+          vp.set(NumberValue(JS::CanonicalizeNaN(*static_cast<double*>(dataPtr))));
+          break;
+      case jit::MIRType::Pointer:
+          vp.set(ObjectOrNullValue(*(JSObject**)dataPtr));
+          break;
+      default:
+          MOZ_CRASH("local type");
+    }
+    return true;
+}
+
+void
+DebugFrame::updateReturnJSValue()
+{
+    hasCachedReturnJSValue_ = true;
+    ExprType returnType = instance()->debug().debugGetResultType(funcIndex());
+    switch (returnType.code()) {
+      case ExprType::Void:
+          cachedReturnJSValue_.setUndefined();
+          break;
+      case ExprType::I32:
+          cachedReturnJSValue_.setInt32(resultI32_);
+          break;
+      case ExprType::I64:
+          // Just display as a Number; it's ok if we lose some precision
+          cachedReturnJSValue_.setDouble((double)resultI64_);
+          break;
+      case ExprType::F32:
+          cachedReturnJSValue_.setDouble(JS::CanonicalizeNaN(resultF32_));
+          break;
+      case ExprType::F64:
+          cachedReturnJSValue_.setDouble(JS::CanonicalizeNaN(resultF64_));
+          break;
+      case ExprType::Ref:
+      case ExprType::AnyRef:
+          cachedReturnJSValue_ = ObjectOrNullValue(*(JSObject**)&resultRef_);
+          break;
+      default:
+          MOZ_CRASH("result type");
+    }
+}
+
+HandleValue
+DebugFrame::returnValue() const
+{
+    MOZ_ASSERT(hasCachedReturnJSValue_);
+    return HandleValue::fromMarkedLocation(&cachedReturnJSValue_);
+}
+
+void
+DebugFrame::clearReturnJSValue()
+{
+    hasCachedReturnJSValue_ = true;
+    cachedReturnJSValue_.setUndefined();
+}
+
+void
+DebugFrame::observe(JSContext* cx)
+{
+   if (!observing_) {
+       instance()->debug().adjustEnterAndLeaveFrameTrapsState(cx, /* enabled = */ true);
+       observing_ = true;
+   }
+}
+
+void
+DebugFrame::leave(JSContext* cx)
+{
+    if (observing_) {
+       instance()->debug().adjustEnterAndLeaveFrameTrapsState(cx, /* enabled = */ false);
+       observing_ = false;
+    }
+}
+
+bool
+TrapSiteVectorArray::empty() const
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        if (!(*this)[trap].empty()) {
+            return false;
+        }
+    }
+
+    return true;
+=======
 JSObject* DebugFrame::environmentChain() const {
   return &global()->lexicalEnvironment();
 }
@@ -607,7 +1277,7 @@ bool DebugFrame::getLocal(uint32_t localIndex, MutableHandleValue vp) {
     case jit::MIRType::Double:
       vp.set(NumberValue(JS::CanonicalizeNaN(*static_cast<double*>(dataPtr))));
       break;
-    case jit::MIRType::Pointer:
+    case jit::MIRType::RefOrNull:
       vp.set(ObjectOrNullValue(*(JSObject**)dataPtr));
       break;
     default:
@@ -637,8 +1307,11 @@ void DebugFrame::updateReturnJSValue() {
       cachedReturnJSValue_.setDouble(JS::CanonicalizeNaN(resultF64_));
       break;
     case ExprType::Ref:
+      cachedReturnJSValue_ = ObjectOrNullValue((JSObject*)resultRef_);
+      break;
+    case ExprType::FuncRef:
     case ExprType::AnyRef:
-      cachedReturnJSValue_ = ObjectOrNullValue(*(JSObject**)&resultRef_);
+      cachedReturnJSValue_ = UnboxAnyRef(resultAnyRef_);
       break;
     default:
       MOZ_CRASH("result type");
@@ -784,8 +1457,460 @@ CodeRange::CodeRange(Kind kind, uint32_t funcIndex, CallableOffsets offsets)
   u.func.lineOrBytecode_ = 0;
   u.func.beginToNormalEntry_ = 0;
   u.func.beginToTierEntry_ = 0;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void DebugFrame::alignmentStaticAsserts() {
+  // VS2017 doesn't consider offsetOfFrame() to be a constexpr, so we have
+  // to use offsetof directly. These asserts can't be at class-level
+  // because the type is incomplete.
+||||||| merged common ancestors
+void
+TrapSiteVectorArray::clear()
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        (*this)[trap].clear();
+    }
+}
+=======
+CodeRange::CodeRange(uint32_t funcIndex, JitExitOffsets offsets)
+    : begin_(offsets.begin),
+      ret_(offsets.ret),
+      end_(offsets.end),
+      kind_(ImportJitExit) {
+  MOZ_ASSERT(isImportJitExit());
+  MOZ_ASSERT(begin_ < ret_);
+  MOZ_ASSERT(ret_ < end_);
+  u.funcIndex_ = funcIndex;
+  u.jitExit.beginToUntrustedFPStart_ = offsets.untrustedFPStart - begin_;
+  u.jitExit.beginToUntrustedFPEnd_ = offsets.untrustedFPEnd - begin_;
+  MOZ_ASSERT(jitExitUntrustedFPStart() == offsets.untrustedFPStart);
+  MOZ_ASSERT(jitExitUntrustedFPEnd() == offsets.untrustedFPEnd);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static_assert(WasmStackAlignment >= Alignment,
+                "Aligned by ABI before pushing DebugFrame");
+  static_assert((offsetof(DebugFrame, frame_) + sizeof(Frame)) % Alignment == 0,
+                "Aligned after pushing DebugFrame");
+#ifdef JS_CODEGEN_ARM64
+  // This constraint may or may not be necessary.  If you hit this because
+  // you've changed the frame size then feel free to remove it, but be extra
+  // aware of possible problems.
+  static_assert(sizeof(DebugFrame) % 16 == 0, "ARM64 SP alignment");
+#endif
+||||||| merged common ancestors
+void
+TrapSiteVectorArray::swap(TrapSiteVectorArray& rhs)
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        (*this)[trap].swap(rhs[trap]);
+    }
+=======
+CodeRange::CodeRange(uint32_t funcIndex, uint32_t funcLineOrBytecode,
+                     FuncOffsets offsets)
+    : begin_(offsets.begin),
+      ret_(offsets.ret),
+      end_(offsets.end),
+      kind_(Function) {
+  MOZ_ASSERT(begin_ < ret_);
+  MOZ_ASSERT(ret_ < end_);
+  MOZ_ASSERT(offsets.normalEntry - begin_ <= UINT8_MAX);
+  MOZ_ASSERT(offsets.tierEntry - begin_ <= UINT8_MAX);
+  u.funcIndex_ = funcIndex;
+  u.func.lineOrBytecode_ = funcLineOrBytecode;
+  u.func.beginToNormalEntry_ = offsets.normalEntry - begin_;
+  u.func.beginToTierEntry_ = offsets.tierEntry - begin_;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+GlobalObject* DebugFrame::global() const {
+  return &instance()->object()->global();
+}
+||||||| merged common ancestors
+void
+TrapSiteVectorArray::podResizeToFit()
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        (*this)[trap].podResizeToFit();
+    }
+}
+=======
+const CodeRange* wasm::LookupInSorted(const CodeRangeVector& codeRanges,
+                                      CodeRange::OffsetInCode target) {
+  size_t lowerBound = 0;
+  size_t upperBound = codeRanges.length();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+JSObject* DebugFrame::environmentChain() const {
+  return &global()->lexicalEnvironment();
+}
+||||||| merged common ancestors
+size_t
+TrapSiteVectorArray::serializedSize() const
+{
+    size_t ret = 0;
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        ret += SerializedPodVectorSize((*this)[trap]);
+    }
+    return ret;
+}
+=======
+  size_t match;
+  if (!BinarySearch(codeRanges, lowerBound, upperBound, target, &match)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool DebugFrame::getLocal(uint32_t localIndex, MutableHandleValue vp) {
+  ValTypeVector locals;
+  size_t argsLength;
+  if (!instance()->debug().debugGetLocalTypes(funcIndex(), &locals,
+                                              &argsLength)) {
+    return false;
+  }
+
+  BaseLocalIter iter(locals, argsLength, /* debugEnabled = */ true);
+  while (!iter.done() && iter.index() < localIndex) {
+    iter++;
+  }
+  MOZ_ALWAYS_TRUE(!iter.done());
+
+  uint8_t* frame = static_cast<uint8_t*>((void*)this) + offsetOfFrame();
+  void* dataPtr = frame - iter.frameOffset();
+  switch (iter.mirType()) {
+    case jit::MIRType::Int32:
+      vp.set(Int32Value(*static_cast<int32_t*>(dataPtr)));
+      break;
+    case jit::MIRType::Int64:
+      // Just display as a Number; it's ok if we lose some precision
+      vp.set(NumberValue((double)*static_cast<int64_t*>(dataPtr)));
+      break;
+    case jit::MIRType::Float32:
+      vp.set(NumberValue(JS::CanonicalizeNaN(*static_cast<float*>(dataPtr))));
+      break;
+    case jit::MIRType::Double:
+      vp.set(NumberValue(JS::CanonicalizeNaN(*static_cast<double*>(dataPtr))));
+      break;
+    case jit::MIRType::Pointer:
+      vp.set(ObjectOrNullValue(*(JSObject**)dataPtr));
+      break;
+    default:
+      MOZ_CRASH("local type");
+  }
+  return true;
+}
+
+void DebugFrame::updateReturnJSValue() {
+  hasCachedReturnJSValue_ = true;
+  ExprType returnType = instance()->debug().debugGetResultType(funcIndex());
+  switch (returnType.code()) {
+    case ExprType::Void:
+      cachedReturnJSValue_.setUndefined();
+      break;
+    case ExprType::I32:
+      cachedReturnJSValue_.setInt32(resultI32_);
+      break;
+    case ExprType::I64:
+      // Just display as a Number; it's ok if we lose some precision
+      cachedReturnJSValue_.setDouble((double)resultI64_);
+      break;
+    case ExprType::F32:
+      cachedReturnJSValue_.setDouble(JS::CanonicalizeNaN(resultF32_));
+      break;
+    case ExprType::F64:
+      cachedReturnJSValue_.setDouble(JS::CanonicalizeNaN(resultF64_));
+      break;
+    case ExprType::Ref:
+    case ExprType::AnyRef:
+      cachedReturnJSValue_ = ObjectOrNullValue(*(JSObject**)&resultRef_);
+      break;
+    default:
+      MOZ_CRASH("result type");
+  }
+}
+
+HandleValue DebugFrame::returnValue() const {
+  MOZ_ASSERT(hasCachedReturnJSValue_);
+  return HandleValue::fromMarkedLocation(&cachedReturnJSValue_);
+}
+
+void DebugFrame::clearReturnJSValue() {
+  hasCachedReturnJSValue_ = true;
+  cachedReturnJSValue_.setUndefined();
+}
+
+void DebugFrame::observe(JSContext* cx) {
+  if (!observing_) {
+    instance()->debug().adjustEnterAndLeaveFrameTrapsState(
+        cx, /* enabled = */ true);
+    observing_ = true;
+  }
+}
+
+void DebugFrame::leave(JSContext* cx) {
+  if (observing_) {
+    instance()->debug().adjustEnterAndLeaveFrameTrapsState(
+        cx, /* enabled = */ false);
+    observing_ = false;
+  }
+}
+
+bool TrapSiteVectorArray::empty() const {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    if (!(*this)[trap].empty()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void TrapSiteVectorArray::clear() {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    (*this)[trap].clear();
+  }
+}
+
+void TrapSiteVectorArray::swap(TrapSiteVectorArray& rhs) {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    (*this)[trap].swap(rhs[trap]);
+  }
+}
+
+void TrapSiteVectorArray::podResizeToFit() {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    (*this)[trap].podResizeToFit();
+  }
+}
+
+size_t TrapSiteVectorArray::serializedSize() const {
+  size_t ret = 0;
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    ret += SerializedPodVectorSize((*this)[trap]);
+  }
+  return ret;
+}
+
+uint8_t* TrapSiteVectorArray::serialize(uint8_t* cursor) const {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    cursor = SerializePodVector(cursor, (*this)[trap]);
+  }
+  return cursor;
+||||||| merged common ancestors
+uint8_t*
+TrapSiteVectorArray::serialize(uint8_t* cursor) const
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        cursor = SerializePodVector(cursor, (*this)[trap]);
+    }
+    return cursor;
+=======
+  return &codeRanges[match];
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+const uint8_t* TrapSiteVectorArray::deserialize(const uint8_t* cursor) {
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    cursor = DeserializePodVector(cursor, &(*this)[trap]);
+    if (!cursor) {
+      return nullptr;
+    }
+  }
+  return cursor;
+}
+||||||| merged common ancestors
+const uint8_t*
+TrapSiteVectorArray::deserialize(const uint8_t* cursor)
+{
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        cursor = DeserializePodVector(cursor, &(*this)[trap]);
+        if (!cursor) {
+            return nullptr;
+        }
+    }
+    return cursor;
+}
+=======
+UniqueTlsData wasm::CreateTlsData(uint32_t globalDataLength) {
+  void* allocatedBase = js_calloc(TlsDataAlign + offsetof(TlsData, globalArea) +
+                                  globalDataLength);
+  if (!allocatedBase) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+size_t TrapSiteVectorArray::sizeOfExcludingThis(
+    MallocSizeOf mallocSizeOf) const {
+  size_t ret = 0;
+  for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+    ret += (*this)[trap].sizeOfExcludingThis(mallocSizeOf);
+  }
+  return ret;
+}
+||||||| merged common ancestors
+size_t
+TrapSiteVectorArray::sizeOfExcludingThis(MallocSizeOf mallocSizeOf) const
+{
+    size_t ret = 0;
+    for (Trap trap : MakeEnumeratedRange(Trap::Limit)) {
+        ret += (*this)[trap].sizeOfExcludingThis(mallocSizeOf);
+    }
+    return ret;
+}
+=======
+  auto* tlsData = reinterpret_cast<TlsData*>(
+      AlignBytes(uintptr_t(allocatedBase), TlsDataAlign));
+  tlsData->allocatedBase = allocatedBase;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+CodeRange::CodeRange(Kind kind, Offsets offsets)
+    : begin_(offsets.begin), ret_(0), end_(offsets.end), kind_(kind) {
+  MOZ_ASSERT(begin_ <= end_);
+  PodZero(&u);
+#ifdef DEBUG
+  switch (kind_) {
+    case FarJumpIsland:
+    case TrapExit:
+    case Throw:
+      break;
+    default:
+      MOZ_CRASH("should use more specific constructor");
+  }
+#endif
+||||||| merged common ancestors
+CodeRange::CodeRange(Kind kind, Offsets offsets)
+  : begin_(offsets.begin),
+    ret_(0),
+    end_(offsets.end),
+    kind_(kind)
+{
+    MOZ_ASSERT(begin_ <= end_);
+    PodZero(&u);
+#ifdef DEBUG
+    switch (kind_) {
+      case FarJumpIsland:
+      case TrapExit:
+      case Throw:
+        break;
+      default:
+        MOZ_CRASH("should use more specific constructor");
+    }
+#endif
+=======
+  return UniqueTlsData(tlsData);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+CodeRange::CodeRange(Kind kind, uint32_t funcIndex, Offsets offsets)
+    : begin_(offsets.begin), ret_(0), end_(offsets.end), kind_(kind) {
+  u.funcIndex_ = funcIndex;
+  u.func.lineOrBytecode_ = 0;
+  u.func.beginToNormalEntry_ = 0;
+  u.func.beginToTierEntry_ = 0;
+  MOZ_ASSERT(isEntry());
+  MOZ_ASSERT(begin_ <= end_);
+||||||| merged common ancestors
+CodeRange::CodeRange(Kind kind, uint32_t funcIndex, Offsets offsets)
+  : begin_(offsets.begin),
+    ret_(0),
+    end_(offsets.end),
+    kind_(kind)
+{
+    u.funcIndex_ = funcIndex;
+    u.func.lineOrBytecode_ = 0;
+    u.func.beginToNormalEntry_ = 0;
+    u.func.beginToTierEntry_ = 0;
+    MOZ_ASSERT(isEntry());
+    MOZ_ASSERT(begin_ <= end_);
+=======
+void TlsData::setInterrupt() {
+  interrupt = true;
+  stackLimit = UINTPTR_MAX;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+CodeRange::CodeRange(Kind kind, CallableOffsets offsets)
+    : begin_(offsets.begin), ret_(offsets.ret), end_(offsets.end), kind_(kind) {
+  MOZ_ASSERT(begin_ < ret_);
+  MOZ_ASSERT(ret_ < end_);
+  PodZero(&u);
+#ifdef DEBUG
+  switch (kind_) {
+    case DebugTrap:
+    case BuiltinThunk:
+      break;
+    default:
+      MOZ_CRASH("should use more specific constructor");
+  }
+#endif
+||||||| merged common ancestors
+CodeRange::CodeRange(Kind kind, CallableOffsets offsets)
+  : begin_(offsets.begin),
+    ret_(offsets.ret),
+    end_(offsets.end),
+    kind_(kind)
+{
+    MOZ_ASSERT(begin_ < ret_);
+    MOZ_ASSERT(ret_ < end_);
+    PodZero(&u);
+#ifdef DEBUG
+    switch (kind_) {
+      case DebugTrap:
+      case BuiltinThunk:
+        break;
+      default:
+        MOZ_CRASH("should use more specific constructor");
+    }
+#endif
+=======
+bool TlsData::isInterrupted() const {
+  return interrupt || stackLimit == UINTPTR_MAX;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+CodeRange::CodeRange(Kind kind, uint32_t funcIndex, CallableOffsets offsets)
+    : begin_(offsets.begin), ret_(offsets.ret), end_(offsets.end), kind_(kind) {
+  MOZ_ASSERT(isImportExit() && !isImportJitExit());
+  MOZ_ASSERT(begin_ < ret_);
+  MOZ_ASSERT(ret_ < end_);
+  u.funcIndex_ = funcIndex;
+  u.func.lineOrBytecode_ = 0;
+  u.func.beginToNormalEntry_ = 0;
+  u.func.beginToTierEntry_ = 0;
+||||||| merged common ancestors
+CodeRange::CodeRange(Kind kind, uint32_t funcIndex, CallableOffsets offsets)
+  : begin_(offsets.begin),
+    ret_(offsets.ret),
+    end_(offsets.end),
+    kind_(kind)
+{
+    MOZ_ASSERT(isImportExit() && !isImportJitExit());
+    MOZ_ASSERT(begin_ < ret_);
+    MOZ_ASSERT(ret_ < end_);
+    u.funcIndex_ = funcIndex;
+    u.func.lineOrBytecode_ = 0;
+    u.func.beginToNormalEntry_ = 0;
+    u.func.beginToTierEntry_ = 0;
+=======
+void TlsData::resetInterrupt(JSContext* cx) {
+  interrupt = false;
+  stackLimit = cx->stackLimitForJitCode(JS::StackForUntrustedScript);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 CodeRange::CodeRange(uint32_t funcIndex, JitExitOffsets offsets)
     : begin_(offsets.begin),
       ret_(offsets.ret),
@@ -856,4 +1981,128 @@ bool TlsData::isInterrupted() const {
 void TlsData::resetInterrupt(JSContext* cx) {
   interrupt = false;
   stackLimit = cx->stackLimitForJitCode(JS::StackForUntrustedScript);
+||||||| merged common ancestors
+CodeRange::CodeRange(uint32_t funcIndex, JitExitOffsets offsets)
+  : begin_(offsets.begin),
+    ret_(offsets.ret),
+    end_(offsets.end),
+    kind_(ImportJitExit)
+{
+    MOZ_ASSERT(isImportJitExit());
+    MOZ_ASSERT(begin_ < ret_);
+    MOZ_ASSERT(ret_ < end_);
+    u.funcIndex_ = funcIndex;
+    u.jitExit.beginToUntrustedFPStart_ = offsets.untrustedFPStart - begin_;
+    u.jitExit.beginToUntrustedFPEnd_ = offsets.untrustedFPEnd - begin_;
+    MOZ_ASSERT(jitExitUntrustedFPStart() == offsets.untrustedFPStart);
+    MOZ_ASSERT(jitExitUntrustedFPEnd() == offsets.untrustedFPEnd);
+}
+
+CodeRange::CodeRange(uint32_t funcIndex, uint32_t funcLineOrBytecode, FuncOffsets offsets)
+  : begin_(offsets.begin),
+    ret_(offsets.ret),
+    end_(offsets.end),
+    kind_(Function)
+{
+    MOZ_ASSERT(begin_ < ret_);
+    MOZ_ASSERT(ret_ < end_);
+    MOZ_ASSERT(offsets.normalEntry - begin_ <= UINT8_MAX);
+    MOZ_ASSERT(offsets.tierEntry - begin_ <= UINT8_MAX);
+    u.funcIndex_ = funcIndex;
+    u.func.lineOrBytecode_ = funcLineOrBytecode;
+    u.func.beginToNormalEntry_ = offsets.normalEntry - begin_;
+    u.func.beginToTierEntry_ = offsets.tierEntry - begin_;
+}
+
+const CodeRange*
+wasm::LookupInSorted(const CodeRangeVector& codeRanges, CodeRange::OffsetInCode target)
+{
+    size_t lowerBound = 0;
+    size_t upperBound = codeRanges.length();
+
+    size_t match;
+    if (!BinarySearch(codeRanges, lowerBound, upperBound, target, &match)) {
+        return nullptr;
+    }
+
+    return &codeRanges[match];
+}
+
+UniqueTlsData
+wasm::CreateTlsData(uint32_t globalDataLength)
+{
+    void* allocatedBase = js_calloc(TlsDataAlign + offsetof(TlsData, globalArea) + globalDataLength);
+    if (!allocatedBase) {
+        return nullptr;
+    }
+
+    auto* tlsData = reinterpret_cast<TlsData*>(AlignBytes(uintptr_t(allocatedBase), TlsDataAlign));
+    tlsData->allocatedBase = allocatedBase;
+
+    return UniqueTlsData(tlsData);
+}
+
+void
+TlsData::setInterrupt()
+{
+    interrupt = true;
+    stackLimit = UINTPTR_MAX;
+}
+
+bool
+TlsData::isInterrupted() const
+{
+    return interrupt || stackLimit == UINTPTR_MAX;
+}
+
+void
+TlsData::resetInterrupt(JSContext* cx)
+{
+    interrupt = false;
+    stackLimit = cx->stackLimitForJitCode(JS::StackForUntrustedScript);
+=======
+void wasm::Log(JSContext* cx, const char* fmt, ...) {
+  MOZ_ASSERT(!cx->isExceptionPending());
+
+  if (!cx->options().wasmVerbose()) {
+    return;
+  }
+
+  va_list args;
+  va_start(args, fmt);
+
+  if (UniqueChars chars = JS_vsmprintf(fmt, args)) {
+    JS_ReportErrorFlagsAndNumberASCII(cx, JSREPORT_WARNING, GetErrorMessage,
+                                      nullptr, JSMSG_WASM_VERBOSE, chars.get());
+    if (cx->isExceptionPending()) {
+      cx->clearPendingException();
+    }
+  }
+
+  va_end(args);
+}
+
+#ifdef WASM_CODEGEN_DEBUG
+bool wasm::IsCodegenDebugEnabled(DebugChannel channel) {
+  switch (channel) {
+    case DebugChannel::Function:
+      return JitOptions.enableWasmFuncCallSpew;
+    case DebugChannel::Import:
+      return JitOptions.enableWasmImportCallSpew;
+  }
+  return false;
+}
+#endif
+
+void wasm::DebugCodegen(DebugChannel channel, const char* fmt, ...) {
+#ifdef WASM_CODEGEN_DEBUG
+  if (!IsCodegenDebugEnabled(channel)) {
+    return;
+  }
+  va_list ap;
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+#endif
+>>>>>>> upstream-releases
 }

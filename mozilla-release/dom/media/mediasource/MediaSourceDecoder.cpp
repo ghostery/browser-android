@@ -235,11 +235,20 @@ void MediaSourceDecoder::SetMediaSourceDuration(double aDuration) {
   }
 }
 
+<<<<<<< HEAD
 void MediaSourceDecoder::GetMozDebugReaderData(nsACString& aString) {
   aString += NS_LITERAL_CSTRING("Container Type: MediaSource\n");
+||||||| merged common ancestors
+void
+MediaSourceDecoder::GetMozDebugReaderData(nsACString& aString)
+{
+  aString += NS_LITERAL_CSTRING("Container Type: MediaSource\n");
+=======
+void MediaSourceDecoder::GetDebugInfo(dom::MediaSourceDecoderDebugInfo& aInfo) {
+>>>>>>> upstream-releases
   if (mReader && mDemuxer) {
-    mReader->GetMozDebugReaderData(aString);
-    mDemuxer->GetMozDebugReaderData(aString);
+    mReader->GetDebugInfo(aInfo.mReader);
+    mDemuxer->GetDebugInfo(aInfo.mDemuxer);
   }
 }
 
@@ -288,12 +297,18 @@ bool MediaSourceDecoder::CanPlayThroughImpl() {
   if (duration <= currentPosition) {
     return true;
   }
-  // If we have data up to the mediasource's duration or 10s ahead, we can
+  // If we have data up to the mediasource's duration or 3s ahead, we can
   // assume that we can play without interruption.
   TimeIntervals buffered = GetBuffered();
   buffered.SetFuzz(MediaSourceDemuxer::EOS_FUZZ / 2);
   TimeUnit timeAhead =
+<<<<<<< HEAD
       std::min(duration, currentPosition + TimeUnit::FromSeconds(10));
+||||||| merged common ancestors
+    std::min(duration, currentPosition + TimeUnit::FromSeconds(10));
+=======
+      std::min(duration, currentPosition + TimeUnit::FromSeconds(3));
+>>>>>>> upstream-releases
   TimeInterval interval(currentPosition, timeAhead);
   return buffered.ContainsWithStrictEnd(ClampIntervalToEnd(interval));
 }
@@ -334,6 +349,11 @@ void MediaSourceDecoder::NotifyDataArrived() {
 already_AddRefed<nsIPrincipal> MediaSourceDecoder::GetCurrentPrincipal() {
   MOZ_ASSERT(NS_IsMainThread());
   return do_AddRef(mPrincipal);
+}
+
+bool MediaSourceDecoder::HadCrossOriginRedirects() {
+  MOZ_ASSERT(NS_IsMainThread());
+  return false;
 }
 
 #undef MSE_DEBUG

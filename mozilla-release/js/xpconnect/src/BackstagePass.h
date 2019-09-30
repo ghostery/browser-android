@@ -27,9 +27,22 @@ class BackstagePass : public nsIGlobalObject,
   NS_DECL_NSIXPCSCRIPTABLE
   NS_DECL_NSICLASSINFO
 
+<<<<<<< HEAD
+  virtual nsIPrincipal* GetPrincipal() override { return mPrincipal; }
+||||||| merged common ancestors
+  virtual nsIPrincipal* GetPrincipal() override {
+    return mPrincipal;
+  }
+=======
   virtual nsIPrincipal* GetPrincipal() override { return mPrincipal; }
 
-  virtual JSObject* GetGlobalJSObject() override;
+  virtual nsIPrincipal* GetEffectiveStoragePrincipal() override {
+    return mPrincipal;
+  }
+>>>>>>> upstream-releases
+
+  JSObject* GetGlobalJSObject() override;
+  JSObject* GetGlobalJSObjectPreserveColor() const override;
 
   void ForgetGlobalObject() { mWrapper = nullptr; }
 

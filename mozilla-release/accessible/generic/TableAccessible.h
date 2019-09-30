@@ -56,27 +56,58 @@ class TableAccessible {
 
   /**
    * Return the column index of the cell with the given index.
+   * This returns -1 if the column count is 0 or an invalid index is being
+   * passed in.
    */
+<<<<<<< HEAD
   virtual int32_t ColIndexAt(uint32_t aCellIdx) {
     return aCellIdx % ColCount();
   }
+||||||| merged common ancestors
+  virtual int32_t ColIndexAt(uint32_t aCellIdx)
+    { return aCellIdx % ColCount(); }
+=======
+  virtual int32_t ColIndexAt(uint32_t aCellIdx);
+>>>>>>> upstream-releases
 
   /**
    * Return the row index of the cell with the given index.
+   * This returns -1 if the column count is 0 or an invalid index is being
+   * passed in.
    */
+<<<<<<< HEAD
   virtual int32_t RowIndexAt(uint32_t aCellIdx) {
     return aCellIdx / ColCount();
   }
+||||||| merged common ancestors
+  virtual int32_t RowIndexAt(uint32_t aCellIdx)
+    { return aCellIdx / ColCount(); }
+=======
+  virtual int32_t RowIndexAt(uint32_t aCellIdx);
+>>>>>>> upstream-releases
 
   /**
    * Get the row and column indices for the cell at the given index.
+   * This returns -1 for both output parameters if the column count is 0 or an
+   * invalid index is being passed in.
    */
   virtual void RowAndColIndicesAt(uint32_t aCellIdx, int32_t* aRowIdx,
+<<<<<<< HEAD
                                   int32_t* aColIdx) {
     uint32_t colCount = ColCount();
     *aRowIdx = aCellIdx / colCount;
     *aColIdx = aCellIdx % colCount;
   }
+||||||| merged common ancestors
+                                  int32_t* aColIdx)
+    {
+      uint32_t colCount = ColCount();
+      *aRowIdx = aCellIdx / colCount;
+      *aColIdx = aCellIdx % colCount;
+    }
+=======
+                                  int32_t* aColIdx);
+>>>>>>> upstream-releases
 
   /**
    * Return the number of columns occupied by the cell at the given row and

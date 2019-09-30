@@ -75,12 +75,31 @@ already_AddRefed<gfx::SourceSurface> GLImage::GetAsSourceSurface() {
 SurfaceTextureImage::SurfaceTextureImage(AndroidSurfaceTextureHandle aHandle,
                                          const gfx::IntSize& aSize,
                                          bool aContinuous,
+<<<<<<< HEAD
                                          gl::OriginPos aOriginPos)
     : GLImage(ImageFormat::SURFACE_TEXTURE),
       mHandle(aHandle),
       mSize(aSize),
       mContinuous(aContinuous),
       mOriginPos(aOriginPos) {
+||||||| merged common ancestors
+                                         gl::OriginPos aOriginPos)
+ : GLImage(ImageFormat::SURFACE_TEXTURE),
+   mHandle(aHandle),
+   mSize(aSize),
+   mContinuous(aContinuous),
+   mOriginPos(aOriginPos)
+{
+=======
+                                         gl::OriginPos aOriginPos,
+                                         bool aHasAlpha /* = true */)
+    : GLImage(ImageFormat::SURFACE_TEXTURE),
+      mHandle(aHandle),
+      mSize(aSize),
+      mContinuous(aContinuous),
+      mOriginPos(aOriginPos),
+      mHasAlpha(aHasAlpha) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mHandle);
 }
 #endif

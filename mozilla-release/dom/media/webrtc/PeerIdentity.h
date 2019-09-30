@@ -30,8 +30,16 @@ class PeerIdentity final : public RefCounted<PeerIdentity> {
   MOZ_DECLARE_REFCOUNTED_TYPENAME(PeerIdentity)
 
   explicit PeerIdentity(const nsAString& aPeerIdentity)
+<<<<<<< HEAD
       : mPeerIdentity(aPeerIdentity) {}
   ~PeerIdentity() {}
+||||||| merged common ancestors
+    : mPeerIdentity(aPeerIdentity) {}
+  ~PeerIdentity() {}
+=======
+      : mPeerIdentity(aPeerIdentity) {}
+  ~PeerIdentity() = default;
+>>>>>>> upstream-releases
 
   bool Equals(const PeerIdentity& aOther) const;
   bool Equals(const nsAString& aOtherString) const;

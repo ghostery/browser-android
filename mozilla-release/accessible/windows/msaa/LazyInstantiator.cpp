@@ -11,7 +11,7 @@
 #include "mozilla/a11y/Compatibility.h"
 #include "mozilla/a11y/Platform.h"
 #include "mozilla/Assertions.h"
-#include "mozilla/mscom/MainThreadRuntime.h"
+#include "mozilla/mscom/ProcessRuntime.h"
 #include "mozilla/mscom/Registration.h"
 #include "mozilla/UniquePtr.h"
 #include "nsAccessibilityService.h"
@@ -25,8 +25,16 @@
 #include <oaidl.h>
 
 #if !defined(STATE_SYSTEM_NORMAL)
+<<<<<<< HEAD
 #define STATE_SYSTEM_NORMAL (0)
 #endif  // !defined(STATE_SYSTEM_NORMAL)
+||||||| merged common ancestors
+#define STATE_SYSTEM_NORMAL (0)
+#endif // !defined(STATE_SYSTEM_NORMAL)
+=======
+#  define STATE_SYSTEM_NORMAL (0)
+#endif  // !defined(STATE_SYSTEM_NORMAL)
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace a11y {
@@ -40,8 +48,16 @@ already_AddRefed<IAccessible> LazyInstantiator::GetRootAccessible(HWND aHwnd) {
   // To track this, we set the kLazyInstantiatorProp on the HWND with a pointer
   // to an existing instance. We only create a new LazyInstatiator if that prop
   // has not already been set.
+<<<<<<< HEAD
   LazyInstantiator *existingInstantiator = reinterpret_cast<LazyInstantiator *>(
       ::GetProp(aHwnd, kLazyInstantiatorProp));
+||||||| merged common ancestors
+  LazyInstantiator* existingInstantiator =
+    reinterpret_cast<LazyInstantiator*>(::GetProp(aHwnd, kLazyInstantiatorProp));
+=======
+  LazyInstantiator* existingInstantiator = reinterpret_cast<LazyInstantiator*>(
+      ::GetProp(aHwnd, kLazyInstantiatorProp));
+>>>>>>> upstream-releases
 
   RefPtr<IAccessible> result;
   if (existingInstantiator) {
@@ -80,8 +96,16 @@ already_AddRefed<IAccessible> LazyInstantiator::GetRootAccessible(HWND aHwnd) {
   // running). We can bypass LazyInstantiator by retrieving the internal
   // unknown (which is not wrapped by the LazyInstantiator) and then querying
   // that for IID_IAccessible.
+<<<<<<< HEAD
   a11y::RootAccessibleWrap *rootWrap =
       static_cast<a11y::RootAccessibleWrap *>(rootAcc);
+||||||| merged common ancestors
+  a11y::RootAccessibleWrap* rootWrap =
+    static_cast<a11y::RootAccessibleWrap*>(rootAcc);
+=======
+  a11y::RootAccessibleWrap* rootWrap =
+      static_cast<a11y::RootAccessibleWrap*>(rootAcc);
+>>>>>>> upstream-releases
   RefPtr<IUnknown> punk(rootWrap->GetInternalUnknown());
 
   MOZ_ASSERT(punk);
@@ -102,9 +126,21 @@ already_AddRefed<IAccessible> LazyInstantiator::GetRootAccessible(HWND aHwnd) {
  * QueryInterface passthrough.
  */
 /* static */
+<<<<<<< HEAD
 void LazyInstantiator::EnableBlindAggregation(HWND aHwnd) {
   LazyInstantiator *existingInstantiator = reinterpret_cast<LazyInstantiator *>(
       ::GetProp(aHwnd, kLazyInstantiatorProp));
+||||||| merged common ancestors
+void
+LazyInstantiator::EnableBlindAggregation(HWND aHwnd)
+{
+  LazyInstantiator* existingInstantiator =
+    reinterpret_cast<LazyInstantiator*>(::GetProp(aHwnd, kLazyInstantiatorProp));
+=======
+void LazyInstantiator::EnableBlindAggregation(HWND aHwnd) {
+  LazyInstantiator* existingInstantiator = reinterpret_cast<LazyInstantiator*>(
+      ::GetProp(aHwnd, kLazyInstantiatorProp));
+>>>>>>> upstream-releases
 
   if (!existingInstantiator) {
     return;
@@ -184,8 +220,17 @@ static const DllBlockInfo gBlockedInprocDlls[] = {
 /**
  * This is the blocklist for known "bad" remote clients that instantiate a11y.
  */
+<<<<<<< HEAD
 static const char *gBlockedRemoteClients[] = {
     "tbnotifier.exe"  // Ask.com Toolbar, bug 1453876
+||||||| merged common ancestors
+static const char* gBlockedRemoteClients[] = {
+  "tbnotifier.exe" // Ask.com Toolbar, bug 1453876
+=======
+static const char* gBlockedRemoteClients[] = {
+    "tbnotifier.exe",  // Ask.com Toolbar, bug 1453876
+    "flow.exe"         // Conexant Flow causes performance issues, bug 1569712
+>>>>>>> upstream-releases
 };
 
 /**
@@ -265,8 +310,18 @@ bool LazyInstantiator::ShouldInstantiate(const DWORD aClientTid) {
   return true;
 }
 
+<<<<<<< HEAD
 RootAccessibleWrap *LazyInstantiator::ResolveRootAccWrap() {
   Accessible *acc = widget::WinUtils::GetRootAccessibleForHWND(mHwnd);
+||||||| merged common ancestors
+RootAccessibleWrap*
+LazyInstantiator::ResolveRootAccWrap()
+{
+  Accessible* acc = widget::WinUtils::GetRootAccessibleForHWND(mHwnd);
+=======
+RootAccessibleWrap* LazyInstantiator::ResolveRootAccWrap() {
+  Accessible* acc = widget::WinUtils::GetRootAccessibleForHWND(mHwnd);
+>>>>>>> upstream-releases
   if (!acc || !acc->IsRoot()) {
     return nullptr;
   }
@@ -313,7 +368,7 @@ LazyInstantiator::MaybeResolveRoot() {
   }
 
   if (GetAccService() ||
-      ShouldInstantiate(mscom::MainThreadRuntime::GetClientThreadId())) {
+      ShouldInstantiate(mscom::ProcessRuntime::GetClientThreadId())) {
     mWeakRootAccWrap = ResolveRootAccWrap();
     if (!mWeakRootAccWrap) {
       return E_POINTER;
@@ -332,8 +387,16 @@ LazyInstantiator::MaybeResolveRoot() {
 
     // Now obtain mWeakAccessible which we use to forward our incoming calls
     // to the real accesssible.
+<<<<<<< HEAD
     HRESULT hr = mRealRootUnk->QueryInterface(IID_IAccessible,
                                               (void **)&mWeakAccessible);
+||||||| merged common ancestors
+    HRESULT hr = mRealRootUnk->QueryInterface(IID_IAccessible,
+                                              (void**) &mWeakAccessible);
+=======
+    HRESULT hr =
+        mRealRootUnk->QueryInterface(IID_IAccessible, (void**)&mWeakAccessible);
+>>>>>>> upstream-releases
     if (FAILED(hr)) {
       return hr;
     }
@@ -366,7 +429,14 @@ LazyInstantiator::MaybeResolveRoot() {
     return E_NOTIMPL;
   }
 
+<<<<<<< HEAD
   hr = mRealRootUnk->QueryInterface(IID_IAccessible, (void **)&mWeakAccessible);
+||||||| merged common ancestors
+  hr = mRealRootUnk->QueryInterface(IID_IAccessible,
+                                    (void**) &mWeakAccessible);
+=======
+  hr = mRealRootUnk->QueryInterface(IID_IAccessible, (void**)&mWeakAccessible);
+>>>>>>> upstream-releases
   if (FAILED(hr)) {
     return hr;
   }
@@ -460,9 +530,19 @@ LazyInstantiator::ResolveDispatch() {
   }
 
   // Now create the standard IDispatch for IAccessible
+<<<<<<< HEAD
   hr = ::CreateStdDispatch(static_cast<IAccessible *>(this),
                            static_cast<IAccessible *>(this), accTypeInfo,
                            getter_AddRefs(mStdDispatch));
+||||||| merged common ancestors
+  hr = ::CreateStdDispatch(static_cast<IAccessible*>(this),
+                           static_cast<IAccessible*>(this),
+                           accTypeInfo, getter_AddRefs(mStdDispatch));
+=======
+  hr = ::CreateStdDispatch(static_cast<IAccessible*>(this),
+                           static_cast<IAccessible*>(this), accTypeInfo,
+                           getter_AddRefs(mStdDispatch));
+>>>>>>> upstream-releases
   if (FAILED(hr)) {
     return hr;
   }
@@ -491,42 +571,90 @@ LazyInstantiator::ResolveDispatch() {
  */
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::GetTypeInfoCount(UINT *pctinfo) {
+||||||| merged common ancestors
+LazyInstantiator::GetTypeInfoCount(UINT* pctinfo)
+{
+=======
+LazyInstantiator::GetTypeInfoCount(UINT* pctinfo) {
+>>>>>>> upstream-releases
   RESOLVE_IDISPATCH;
   return mWeakDispatch->GetTypeInfoCount(pctinfo);
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo) {
+||||||| merged common ancestors
+LazyInstantiator::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo)
+{
+=======
+LazyInstantiator::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) {
+>>>>>>> upstream-releases
   RESOLVE_IDISPATCH;
   return mWeakDispatch->GetTypeInfo(iTInfo, lcid, ppTInfo);
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
                                 LCID lcid, DISPID *rgDispId) {
+||||||| merged common ancestors
+LazyInstantiator::GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
+                                LCID lcid, DISPID* rgDispId)
+{
+=======
+LazyInstantiator::GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames,
+                                LCID lcid, DISPID* rgDispId) {
+>>>>>>> upstream-releases
   RESOLVE_IDISPATCH;
   return mWeakDispatch->GetIDsOfNames(riid, rgszNames, cNames, lcid, rgDispId);
 }
 
 HRESULT
 LazyInstantiator::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid,
+<<<<<<< HEAD
                          WORD wFlags, DISPPARAMS *pDispParams,
                          VARIANT *pVarResult, EXCEPINFO *pExcepInfo,
                          UINT *puArgErr) {
+||||||| merged common ancestors
+                         WORD wFlags, DISPPARAMS* pDispParams,
+                         VARIANT* pVarResult, EXCEPINFO* pExcepInfo,
+                         UINT* puArgErr)
+{
+=======
+                         WORD wFlags, DISPPARAMS* pDispParams,
+                         VARIANT* pVarResult, EXCEPINFO* pExcepInfo,
+                         UINT* puArgErr) {
+>>>>>>> upstream-releases
   RESOLVE_IDISPATCH;
   return mWeakDispatch->Invoke(dispIdMember, riid, lcid, wFlags, pDispParams,
                                pVarResult, pExcepInfo, puArgErr);
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accParent(IDispatch **ppdispParent) {
+||||||| merged common ancestors
+LazyInstantiator::get_accParent(IDispatch **ppdispParent)
+{
+=======
+LazyInstantiator::get_accParent(IDispatch** ppdispParent) {
+>>>>>>> upstream-releases
   RESOLVE_ROOT;
   return mWeakAccessible->get_accParent(ppdispParent);
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accChildCount(long *pcountChildren) {
+||||||| merged common ancestors
+LazyInstantiator::get_accChildCount(long *pcountChildren)
+{
+=======
+LazyInstantiator::get_accChildCount(long* pcountChildren) {
+>>>>>>> upstream-releases
   if (!pcountChildren) {
     return E_INVALIDARG;
   }
@@ -536,7 +664,14 @@ LazyInstantiator::get_accChildCount(long *pcountChildren) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accChild(VARIANT varChild, IDispatch **ppdispChild) {
+||||||| merged common ancestors
+LazyInstantiator::get_accChild(VARIANT varChild, IDispatch **ppdispChild)
+{
+=======
+LazyInstantiator::get_accChild(VARIANT varChild, IDispatch** ppdispChild) {
+>>>>>>> upstream-releases
   if (!ppdispChild) {
     return E_INVALIDARG;
   }
@@ -546,7 +681,14 @@ LazyInstantiator::get_accChild(VARIANT varChild, IDispatch **ppdispChild) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accName(VARIANT varChild, BSTR *pszName) {
+||||||| merged common ancestors
+LazyInstantiator::get_accName(VARIANT varChild, BSTR *pszName)
+{
+=======
+LazyInstantiator::get_accName(VARIANT varChild, BSTR* pszName) {
+>>>>>>> upstream-releases
   if (!pszName) {
     return E_INVALIDARG;
   }
@@ -556,7 +698,14 @@ LazyInstantiator::get_accName(VARIANT varChild, BSTR *pszName) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accValue(VARIANT varChild, BSTR *pszValue) {
+||||||| merged common ancestors
+LazyInstantiator::get_accValue(VARIANT varChild, BSTR *pszValue)
+{
+=======
+LazyInstantiator::get_accValue(VARIANT varChild, BSTR* pszValue) {
+>>>>>>> upstream-releases
   if (!pszValue) {
     return E_INVALIDARG;
   }
@@ -566,7 +715,14 @@ LazyInstantiator::get_accValue(VARIANT varChild, BSTR *pszValue) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accDescription(VARIANT varChild, BSTR *pszDescription) {
+||||||| merged common ancestors
+LazyInstantiator::get_accDescription(VARIANT varChild, BSTR *pszDescription)
+{
+=======
+LazyInstantiator::get_accDescription(VARIANT varChild, BSTR* pszDescription) {
+>>>>>>> upstream-releases
   if (!pszDescription) {
     return E_INVALIDARG;
   }
@@ -576,7 +732,14 @@ LazyInstantiator::get_accDescription(VARIANT varChild, BSTR *pszDescription) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accRole(VARIANT varChild, VARIANT *pvarRole) {
+||||||| merged common ancestors
+LazyInstantiator::get_accRole(VARIANT varChild, VARIANT *pvarRole)
+{
+=======
+LazyInstantiator::get_accRole(VARIANT varChild, VARIANT* pvarRole) {
+>>>>>>> upstream-releases
   if (!pvarRole) {
     return E_INVALIDARG;
   }
@@ -586,7 +749,14 @@ LazyInstantiator::get_accRole(VARIANT varChild, VARIANT *pvarRole) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accState(VARIANT varChild, VARIANT *pvarState) {
+||||||| merged common ancestors
+LazyInstantiator::get_accState(VARIANT varChild, VARIANT *pvarState)
+{
+=======
+LazyInstantiator::get_accState(VARIANT varChild, VARIANT* pvarState) {
+>>>>>>> upstream-releases
   if (!pvarState) {
     return E_INVALIDARG;
   }
@@ -596,19 +766,42 @@ LazyInstantiator::get_accState(VARIANT varChild, VARIANT *pvarState) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accHelp(VARIANT varChild, BSTR *pszHelp) {
+||||||| merged common ancestors
+LazyInstantiator::get_accHelp(VARIANT varChild, BSTR *pszHelp)
+{
+=======
+LazyInstantiator::get_accHelp(VARIANT varChild, BSTR* pszHelp) {
+>>>>>>> upstream-releases
   return E_NOTIMPL;
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild,
                                    long *pidTopic) {
+||||||| merged common ancestors
+LazyInstantiator::get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild,
+                                   long *pidTopic)
+{
+=======
+LazyInstantiator::get_accHelpTopic(BSTR* pszHelpFile, VARIANT varChild,
+                                   long* pidTopic) {
+>>>>>>> upstream-releases
   return E_NOTIMPL;
 }
 
 HRESULT
 LazyInstantiator::get_accKeyboardShortcut(VARIANT varChild,
+<<<<<<< HEAD
                                           BSTR *pszKeyboardShortcut) {
+||||||| merged common ancestors
+                                          BSTR *pszKeyboardShortcut)
+{
+=======
+                                          BSTR* pszKeyboardShortcut) {
+>>>>>>> upstream-releases
   if (!pszKeyboardShortcut) {
     return E_INVALIDARG;
   }
@@ -619,7 +812,14 @@ LazyInstantiator::get_accKeyboardShortcut(VARIANT varChild,
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accFocus(VARIANT *pvarChild) {
+||||||| merged common ancestors
+LazyInstantiator::get_accFocus(VARIANT *pvarChild)
+{
+=======
+LazyInstantiator::get_accFocus(VARIANT* pvarChild) {
+>>>>>>> upstream-releases
   if (!pvarChild) {
     return E_INVALIDARG;
   }
@@ -629,7 +829,14 @@ LazyInstantiator::get_accFocus(VARIANT *pvarChild) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accSelection(VARIANT *pvarChildren) {
+||||||| merged common ancestors
+LazyInstantiator::get_accSelection(VARIANT *pvarChildren)
+{
+=======
+LazyInstantiator::get_accSelection(VARIANT* pvarChildren) {
+>>>>>>> upstream-releases
   if (!pvarChildren) {
     return E_INVALIDARG;
   }
@@ -639,8 +846,16 @@ LazyInstantiator::get_accSelection(VARIANT *pvarChildren) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::get_accDefaultAction(VARIANT varChild,
                                        BSTR *pszDefaultAction) {
+||||||| merged common ancestors
+LazyInstantiator::get_accDefaultAction(VARIANT varChild, BSTR *pszDefaultAction)
+{
+=======
+LazyInstantiator::get_accDefaultAction(VARIANT varChild,
+                                       BSTR* pszDefaultAction) {
+>>>>>>> upstream-releases
   if (!pszDefaultAction) {
     return E_INVALIDARG;
   }
@@ -656,8 +871,17 @@ LazyInstantiator::accSelect(long flagsSelect, VARIANT varChild) {
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::accLocation(long *pxLeft, long *pyTop, long *pcxWidth,
                               long *pcyHeight, VARIANT varChild) {
+||||||| merged common ancestors
+LazyInstantiator::accLocation(long *pxLeft, long *pyTop, long *pcxWidth,
+                              long *pcyHeight, VARIANT varChild)
+{
+=======
+LazyInstantiator::accLocation(long* pxLeft, long* pyTop, long* pcxWidth,
+                              long* pcyHeight, VARIANT varChild) {
+>>>>>>> upstream-releases
   RESOLVE_ROOT;
   return mWeakAccessible->accLocation(pxLeft, pyTop, pcxWidth, pcyHeight,
                                       varChild);
@@ -665,7 +889,14 @@ LazyInstantiator::accLocation(long *pxLeft, long *pyTop, long *pcxWidth,
 
 HRESULT
 LazyInstantiator::accNavigate(long navDir, VARIANT varStart,
+<<<<<<< HEAD
                               VARIANT *pvarEndUpAt) {
+||||||| merged common ancestors
+                              VARIANT *pvarEndUpAt)
+{
+=======
+                              VARIANT* pvarEndUpAt) {
+>>>>>>> upstream-releases
   if (!pvarEndUpAt) {
     return E_INVALIDARG;
   }
@@ -675,7 +906,14 @@ LazyInstantiator::accNavigate(long navDir, VARIANT varStart,
 }
 
 HRESULT
+<<<<<<< HEAD
 LazyInstantiator::accHitTest(long xLeft, long yTop, VARIANT *pvarChild) {
+||||||| merged common ancestors
+LazyInstantiator::accHitTest(long xLeft, long yTop, VARIANT *pvarChild)
+{
+=======
+LazyInstantiator::accHitTest(long xLeft, long yTop, VARIANT* pvarChild) {
+>>>>>>> upstream-releases
   if (!pvarChild) {
     return E_INVALIDARG;
   }
@@ -702,7 +940,14 @@ LazyInstantiator::put_accValue(VARIANT varChild, BSTR szValue) {
 
 HRESULT
 LazyInstantiator::QueryService(REFGUID aServiceId, REFIID aServiceIid,
+<<<<<<< HEAD
                                void **aOutInterface) {
+||||||| merged common ancestors
+                               void** aOutInterface)
+{
+=======
+                               void** aOutInterface) {
+>>>>>>> upstream-releases
   if (!aOutInterface) {
     return E_INVALIDARG;
   }

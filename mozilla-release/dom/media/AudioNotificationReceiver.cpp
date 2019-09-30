@@ -31,8 +31,18 @@ static StaticMutex sMutex;
 /*
  * AudioNotificationReceiver Implementation
  */
+<<<<<<< HEAD
 /* static */ void AudioNotificationReceiver::Register(
     DeviceChangeListener* aDeviceChangeListener) {
+||||||| merged common ancestors
+/* static */ void
+AudioNotificationReceiver::Register(DeviceChangeListener* aDeviceChangeListener)
+{
+=======
+/* static */
+void AudioNotificationReceiver::Register(
+    DeviceChangeListener* aDeviceChangeListener) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsContentProcess());
 
   StaticMutexAutoLock lock(sMutex);
@@ -45,8 +55,18 @@ static StaticMutex sMutex;
           aDeviceChangeListener);
 }
 
+<<<<<<< HEAD
 /* static */ void AudioNotificationReceiver::Unregister(
     DeviceChangeListener* aDeviceChangeListener) {
+||||||| merged common ancestors
+/* static */ void
+AudioNotificationReceiver::Unregister(DeviceChangeListener* aDeviceChangeListener)
+{
+=======
+/* static */
+void AudioNotificationReceiver::Unregister(
+    DeviceChangeListener* aDeviceChangeListener) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsContentProcess());
 
   StaticMutexAutoLock lock(sMutex);
@@ -62,7 +82,16 @@ static StaticMutex sMutex;
           aDeviceChangeListener);
 }
 
+<<<<<<< HEAD
 /* static */ void AudioNotificationReceiver::NotifyDefaultDeviceChanged() {
+||||||| merged common ancestors
+/* static */ void
+AudioNotificationReceiver::NotifyDefaultDeviceChanged()
+{
+=======
+/* static */
+void AudioNotificationReceiver::NotifyDefaultDeviceChanged() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsContentProcess());
 
   StaticMutexAutoLock lock(sMutex);

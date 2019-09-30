@@ -46,6 +46,7 @@ bool PrintTranslator::TranslateRecording(PRFileDescStream& aRecording) {
   int32_t eventType;
   ReadElement(aRecording, eventType);
   while (aRecording.good()) {
+<<<<<<< HEAD
     UniquePtr<RecordedEvent> recordedEvent(RecordedEvent::LoadEventFromStream(
         aRecording, static_cast<RecordedEvent::EventType>(eventType)));
 
@@ -55,6 +56,31 @@ bool PrintTranslator::TranslateRecording(PRFileDescStream& aRecording) {
     }
 
     if (!recordedEvent->PlayEvent(this)) {
+||||||| merged common ancestors
+    UniquePtr<RecordedEvent> recordedEvent(
+      RecordedEvent::LoadEventFromStream(aRecording,
+      static_cast<RecordedEvent::EventType>(eventType)));
+
+    // Make sure that the whole event was read from the stream successfully.
+    if (!aRecording.good() || !recordedEvent) {
+      return false;
+    }
+
+    if (!recordedEvent->PlayEvent(this)) {
+=======
+    bool success = RecordedEvent::DoWithEventFromStream(
+        aRecording, static_cast<RecordedEvent::EventType>(eventType),
+        [&](RecordedEvent* recordedEvent) -> bool {
+          // Make sure that the whole event was read from the stream.
+          if (!aRecording.good()) {
+            return false;
+          }
+
+          return recordedEvent->PlayEvent(this);
+        });
+
+    if (!success) {
+>>>>>>> upstream-releases
       return false;
     }
 

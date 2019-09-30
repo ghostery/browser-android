@@ -11,28 +11,51 @@ add_task(async function test_button_background_properties() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
+<<<<<<< HEAD
       "theme": {
         "images": {
           "theme_frame": "image1.png",
+||||||| merged common ancestors
+      "theme": {
+        "images": {
+          "headerURL": "image1.png",
+=======
+      theme: {
+        images: {
+          theme_frame: "image1.png",
+>>>>>>> upstream-releases
         },
+<<<<<<< HEAD
         "colors": {
           "frame": ACCENT_COLOR,
           "tab_background_text": TEXT_COLOR,
           "button_background_active": BUTTON_BACKGROUND_ACTIVE,
           "button_background_hover": BUTTON_BACKGROUND_HOVER,
+||||||| merged common ancestors
+        "colors": {
+          "accentcolor": ACCENT_COLOR,
+          "textcolor": TEXT_COLOR,
+          "button_background_active": BUTTON_BACKGROUND_ACTIVE,
+          "button_background_hover": BUTTON_BACKGROUND_HOVER,
+=======
+        colors: {
+          frame: ACCENT_COLOR,
+          tab_background_text: TEXT_COLOR,
+          button_background_active: BUTTON_BACKGROUND_ACTIVE,
+          button_background_hover: BUTTON_BACKGROUND_HOVER,
+>>>>>>> upstream-releases
         },
       },
     },
     files: {
       "image1.png": BACKGROUND,
     },
-
   });
 
   await extension.startup();
 
   let toolbarButton = document.querySelector("#home-button");
-  let toolbarButtonIcon = document.getAnonymousElementByAttribute(toolbarButton, "class", "toolbarbutton-icon");
+  let toolbarButtonIcon = toolbarButton.icon;
   let toolbarButtonIconCS = window.getComputedStyle(toolbarButtonIcon);
 
   InspectorUtils.addPseudoClassLock(toolbarButton, ":hover");

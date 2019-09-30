@@ -14,7 +14,13 @@
 
 #include <stdint.h>
 #ifndef XP_WIN
+<<<<<<< HEAD
 #include <pthread.h>
+||||||| merged common ancestors
+# include <pthread.h>
+=======
+#  include <pthread.h>
+>>>>>>> upstream-releases
 #endif
 
 #include "threading/LockGuard.h"

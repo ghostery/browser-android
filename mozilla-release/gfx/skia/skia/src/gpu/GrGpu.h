@@ -17,12 +17,13 @@
 #include "GrTypes.h"
 #include "GrXferProcessor.h"
 #include "SkPath.h"
+#include "SkSurface.h"
 #include "SkTArray.h"
 #include <map>
 
 class GrBackendRenderTarget;
 class GrBackendSemaphore;
-class GrBuffer;
+class GrGpuBuffer;
 class GrContext;
 struct GrContextOptions;
 class GrGLContext;
@@ -104,13 +105,14 @@ public:
     /**
      * Implements GrResourceProvider::wrapBackendTexture
      */
-    sk_sp<GrTexture> wrapBackendTexture(const GrBackendTexture&, GrWrapOwnership);
+    sk_sp<GrTexture> wrapBackendTexture(const GrBackendTexture&, GrWrapOwnership, GrWrapCacheable,
+                                        GrIOType);
 
     /**
      * Implements GrResourceProvider::wrapRenderableBackendTexture
      */
-    sk_sp<GrTexture> wrapRenderableBackendTexture(const GrBackendTexture&,
-                                                  int sampleCnt, GrWrapOwnership);
+    sk_sp<GrTexture> wrapRenderableBackendTexture(const GrBackendTexture&, int sampleCnt,
+                                                  GrWrapOwnership, GrWrapCacheable);
 
     /**
      * Implements GrResourceProvider::wrapBackendRenderTarget
@@ -124,6 +126,12 @@ public:
                                                            int sampleCnt);
 
     /**
+     * Implements GrResourceProvider::wrapVulkanSecondaryCBAsRenderTarget
+     */
+    sk_sp<GrRenderTarget> wrapVulkanSecondaryCBAsRenderTarget(const SkImageInfo&,
+                                                              const GrVkDrawableInfo&);
+
+    /**
      * Creates a buffer in GPU memory. For a client-side buffer use GrBuffer::CreateCPUBacked.
      *
      * @param size            size of buffer to create.
@@ -133,18 +141,134 @@ public:
      *
      * @return the buffer if successful, otherwise nullptr.
      */
-    GrBuffer* createBuffer(size_t size, GrBufferType intendedType, GrAccessPattern accessPattern,
-                           const void* data = nullptr);
+    sk_sp<GrGpuBuffer> createBuffer(size_t size, GrGpuBufferType intendedType,
+                                    GrAccessPattern accessPattern, const void* data = nullptr);
 
     /**
      * Resolves MSAA.
      */
     void resolveRenderTarget(GrRenderTarget*);
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+    /** Info struct returned by getReadPixelsInfo about performing intermediate draws before
+        reading pixels for performance or correctness. */
+    struct ReadPixelTempDrawInfo {
+        /**
+         * If the GrGpu is requesting that the caller do a draw to an intermediate surface then
+         * this is descriptor for the temp surface. The draw should always be a rect with dst
+         * 0,0,w,h.
+         */
+        GrSurfaceDesc   fTempSurfaceDesc;
+        /**
+         * Indicates whether there is a performance advantage to using an exact match texture
+         * (in terms of width and height) for the intermediate texture instead of approximate.
+         */
+        SkBackingFit    fTempSurfaceFit;
+        /**
+         * Swizzle to apply during the draw. This is used to compensate for either feature or
+         * performance limitations in the underlying 3D API.
+         */
+        GrSwizzle       fSwizzle;
+        /**
+         * The color type that should be used to read from the temp surface after the draw. This
+         * may be different than the original read color type in order to compensate for swizzling.
+         * The read data will effectively be in the original color type. The original gamma
+         * encoding is always used.
+         */
+        GrColorType     fReadColorType;
+    };
+
+    /** Describes why an intermediate draw must/should be performed before readPixels. */
+    enum DrawPreference {
+        /**
+         * On input means that the caller would proceed without draw if the GrGpu doesn't request
+         * one. On output means that the GrGpu is not requesting a draw.
+         */
+        kNoDraw_DrawPreference,
+        /**
+         * Means that the client would prefer a draw for performance of the readback but
+         * can satisfy a straight readPixels call on the inputs without an intermediate draw.
+         * getReadPixelsInfo will never set the draw preference to this value but may leave
+         * it set.
+         */
+        kCallerPrefersDraw_DrawPreference,
+        /**
+         * On output means that GrGpu would prefer a draw for performance of the readback but
+         * can satisfy a straight readPixels call on the inputs without an intermediate draw. The
+         * caller of getReadPixelsInfo should never specify this on intput.
+         */
+        kGpuPrefersDraw_DrawPreference,
+        /**
+         * On input means that the caller requires a draw to do a transformation and there is no
+         * CPU fallback. On output means that GrGpu can only satisfy the readPixels request if the
+         * intermediate draw is performed.
+         */
+        kRequireDraw_DrawPreference
+    };
+
+    /**
+     * Used to negotiate whether and how an intermediate draw should or must be performed before
+     * a readPixels call. If this returns false then GrGpu could not deduce an intermediate draw
+     * that would allow a successful readPixels call. The passed width, height, and rowBytes,
+     * must be non-zero and already reflect clipping to the src bounds.
+     */
+    bool getReadPixelsInfo(GrSurface*, GrSurfaceOrigin, int width, int height, size_t rowBytes,
+                           GrColorType, GrSRGBConversion, DrawPreference*, ReadPixelTempDrawInfo*);
+
+    /**
+     * Info struct returned by getWritePixelsInfo about performing an intermediate draw in order
+     * to write pixels to a GrSurface for either performance or correctness reasons.
+     */
+    struct WritePixelTempDrawInfo {
+        /**
+         * If the GrGpu is requesting that the caller upload to an intermediate surface and draw
+         * that to the dst then this is the descriptor for the intermediate surface. The caller
+         * should upload the pixels such that the upper left pixel of the upload rect is at 0,0 in
+         * the intermediate surface
+         */
+        GrSurfaceDesc   fTempSurfaceDesc;
+        /**
+         * Swizzle to apply during the draw. This is used to compensate for either feature or
+         * performance limitations in the underlying 3D API.
+         */
+        GrSwizzle       fSwizzle;
+        /**
+         * The color type that should be specified when uploading the *original* data to the temp
+         * surface before the draw. This may be different than the original src color type in
+         * order to compensate for swizzling that will occur when drawing. The original gamma
+         * encoding is always used.
+         */
+        GrColorType     fWriteColorType;
+    };
+
+=======
     /**
      * Uses the base of the texture to recompute the contents of the other levels.
      */
     bool regenerateMipMapLevels(GrTexture*);
+
+>>>>>>> upstream-releases
+    /**
+<<<<<<< HEAD
+     * Uses the base of the texture to recompute the contents of the other levels.
+||||||| merged common ancestors
+     * Used to negotiate whether and how an intermediate surface should be used to write pixels to
+     * a GrSurface. If this returns false then GrGpu could not deduce an intermediate draw
+     * that would allow a successful transfer of the src pixels to the dst. The passed width,
+     * height, and rowBytes, must be non-zero and already reflect clipping to the dst bounds.
+=======
+     * If the backend API has stateful texture bindings, this resets them back to defaults.
+>>>>>>> upstream-releases
+     */
+<<<<<<< HEAD
+    bool regenerateMipMapLevels(GrTexture*);
+||||||| merged common ancestors
+    bool getWritePixelsInfo(GrSurface*, GrSurfaceOrigin, int width, int height, GrColorType,
+                            GrSRGBConversion, DrawPreference*, WritePixelTempDrawInfo*);
+=======
+    void resetTextureBindings();
+>>>>>>> upstream-releases
 
     /**
      * Reads a rectangle of pixels from a render target. No sRGB/linear conversions are performed.
@@ -210,7 +334,7 @@ public:
      *                         means rows are tightly packed.
      */
     bool transferPixels(GrTexture* texture, int left, int top, int width, int height,
-                        GrColorType bufferColorType, GrBuffer* transferBuffer, size_t offset,
+                        GrColorType bufferColorType, GrGpuBuffer* transferBuffer, size_t offset,
                         size_t rowBytes);
 
     // After the client interacts directly with the 3D context state the GrGpu
@@ -239,10 +363,22 @@ public:
                      const SkIPoint& dstPoint,
                      bool canDiscardOutsideDstRect = false);
 
+<<<<<<< HEAD
     // Returns a GrGpuRTCommandBuffer which GrOpLists send draw commands to instead of directly
     // to the Gpu object.
     virtual GrGpuRTCommandBuffer* getCommandBuffer(
             GrRenderTarget*, GrSurfaceOrigin,
+||||||| merged common ancestors
+    // Creates a GrGpuRTCommandBuffer which GrOpLists send draw commands to instead of directly
+    // to the Gpu object.
+    virtual GrGpuRTCommandBuffer* createCommandBuffer(
+            GrRenderTarget*, GrSurfaceOrigin,
+=======
+    // Returns a GrGpuRTCommandBuffer which GrOpLists send draw commands to instead of directly
+    // to the Gpu object. The 'bounds' rect is the content rect of the destination.
+    virtual GrGpuRTCommandBuffer* getCommandBuffer(
+            GrRenderTarget*, GrSurfaceOrigin, const SkRect& bounds,
+>>>>>>> upstream-releases
             const GrGpuRTCommandBuffer::LoadAndStoreInfo&,
             const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo&) = 0;
 
@@ -254,7 +390,11 @@ public:
     // Provides a hook for post-flush actions (e.g. Vulkan command buffer submits). This will also
     // insert any numSemaphore semaphores on the gpu and set the backendSemaphores to match the
     // inserted semaphores.
-    GrSemaphoresSubmitted finishFlush(int numSemaphores, GrBackendSemaphore backendSemaphores[]);
+    GrSemaphoresSubmitted finishFlush(GrSurfaceProxy*, SkSurface::BackendSurfaceAccess access,
+                                      SkSurface::FlushFlags flags, int numSemaphores,
+                                      GrBackendSemaphore backendSemaphores[]);
+
+    virtual void submit(GrGpuCommandBuffer*) = 0;
 
     virtual void submit(GrGpuCommandBuffer*) = 0;
 
@@ -266,7 +406,7 @@ public:
     virtual sk_sp<GrSemaphore> wrapBackendSemaphore(const GrBackendSemaphore& semaphore,
                                                     GrResourceProvider::SemaphoreWrapType wrapType,
                                                     GrWrapOwnership ownership) = 0;
-    virtual void insertSemaphore(sk_sp<GrSemaphore> semaphore, bool flush = false) = 0;
+    virtual void insertSemaphore(sk_sp<GrSemaphore> semaphore) = 0;
     virtual void waitSemaphore(sk_sp<GrSemaphore> semaphore) = 0;
 
     /**
@@ -293,6 +433,7 @@ public:
             fStencilAttachmentCreates = 0;
             fNumDraws = 0;
             fNumFailedDraws = 0;
+            fNumFinishFlushes = 0;
         }
 
         int renderTargetBinds() const { return fRenderTargetBinds; }
@@ -308,10 +449,14 @@ public:
         void incStencilAttachmentCreates() { fStencilAttachmentCreates++; }
         void incNumDraws() { fNumDraws++; }
         void incNumFailedDraws() { ++fNumFailedDraws; }
+        void incNumFinishFlushes() { ++fNumFinishFlushes; }
+#if GR_TEST_UTILS
         void dump(SkString*);
         void dumpKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values);
+#endif
         int numDraws() const { return fNumDraws; }
         int numFailedDraws() const { return fNumFailedDraws; }
+        int numFinishFlushes() const { return fNumFinishFlushes; }
     private:
         int fRenderTargetBinds;
         int fShaderCompilations;
@@ -321,9 +466,13 @@ public:
         int fStencilAttachmentCreates;
         int fNumDraws;
         int fNumFailedDraws;
+        int fNumFinishFlushes;
 #else
+
+#if GR_TEST_UTILS
         void dump(SkString*) {}
         void dumpKeyValuePairs(SkTArray<SkString>*, SkTArray<double>*) {}
+#endif
         void incRenderTargetBinds() {}
         void incShaderCompilations() {}
         void incTextureCreates() {}
@@ -332,6 +481,7 @@ public:
         void incStencilAttachmentCreates() {}
         void incNumDraws() {}
         void incNumFailedDraws() {}
+        void incNumFinishFlushes() {}
 #endif
     };
 
@@ -405,7 +555,37 @@ public:
         }
     }
 
+<<<<<<< HEAD
 protected:
+||||||| merged common ancestors
+protected:
+    static void ElevateDrawPreference(GrGpu::DrawPreference* preference,
+                                      GrGpu::DrawPreference elevation) {
+        GR_STATIC_ASSERT(GrGpu::kCallerPrefersDraw_DrawPreference > GrGpu::kNoDraw_DrawPreference);
+        GR_STATIC_ASSERT(GrGpu::kGpuPrefersDraw_DrawPreference >
+                         GrGpu::kCallerPrefersDraw_DrawPreference);
+        GR_STATIC_ASSERT(GrGpu::kRequireDraw_DrawPreference >
+                         GrGpu::kGpuPrefersDraw_DrawPreference);
+        *preference = SkTMax(*preference, elevation);
+    }
+
+=======
+    /**
+     * Returns a key that represents the sampler that will be created for the passed in parameters.
+     * Currently this key is only used when we are building a vulkan pipeline with immutable
+     * samplers. In that case, we need our cache key to also contain this key.
+     *
+     * A return value of 0 indicates that the program/pipeline we are creating is not affected by
+     * the sampler.
+     */
+    virtual uint32_t getExtraSamplerKeyForProgram(const GrSamplerState&, const GrBackendFormat&) {
+        return 0;
+    }
+
+    virtual void storeVkPipelineCacheData() {}
+
+protected:
+>>>>>>> upstream-releases
     // Handles cases where a surface will be updated without a call to flushRenderTarget.
     void didWriteToSurface(GrSurface* surface, GrSurfaceOrigin origin, const SkIRect* bounds,
                            uint32_t mipLevels = 1) const;
@@ -422,6 +602,9 @@ private:
     // assumed 3D context state and dirty any state cache.
     virtual void onResetContext(uint32_t resetBits) = 0;
 
+    // Implementation of resetTextureBindings.
+    virtual void onResetTextureBindings() {}
+
     // Called before certain draws in order to guarantee coherent results from dst reads.
     virtual void xferBarrier(GrRenderTarget*, GrXferBarrierType) = 0;
 
@@ -431,16 +614,35 @@ private:
     virtual sk_sp<GrTexture> onCreateTexture(const GrSurfaceDesc&, SkBudgeted,
                                              const GrMipLevel texels[], int mipLevelCount) = 0;
 
-    virtual sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership) = 0;
-    virtual sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&,
-                                                            int sampleCnt,
-                                                            GrWrapOwnership) = 0;
+    virtual sk_sp<GrTexture> onWrapBackendTexture(const GrBackendTexture&, GrWrapOwnership,
+                                                  GrWrapCacheable, GrIOType) = 0;
+    virtual sk_sp<GrTexture> onWrapRenderableBackendTexture(const GrBackendTexture&, int sampleCnt,
+                                                            GrWrapOwnership, GrWrapCacheable) = 0;
     virtual sk_sp<GrRenderTarget> onWrapBackendRenderTarget(const GrBackendRenderTarget&) = 0;
     virtual sk_sp<GrRenderTarget> onWrapBackendTextureAsRenderTarget(const GrBackendTexture&,
                                                                      int sampleCnt) = 0;
-    virtual GrBuffer* onCreateBuffer(size_t size, GrBufferType intendedType, GrAccessPattern,
-                                     const void* data) = 0;
+    virtual sk_sp<GrRenderTarget> onWrapVulkanSecondaryCBAsRenderTarget(const SkImageInfo&,
+                                                                        const GrVkDrawableInfo&);
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+    virtual bool onIsACopyNeededForTextureParams(GrTextureProxy* proxy, const GrSamplerState&,
+                                                 GrTextureProducer::CopyParams*,
+                                                 SkScalar scaleAdjust[2]) const {
+        return false;
+    }
+
+    virtual bool onGetReadPixelsInfo(GrSurface*, GrSurfaceOrigin, int width, int height,
+                                     size_t rowBytes, GrColorType, DrawPreference*,
+                                     ReadPixelTempDrawInfo*) = 0;
+    virtual bool onGetWritePixelsInfo(GrSurface*, GrSurfaceOrigin, int width, int height,
+                                      GrColorType, DrawPreference*, WritePixelTempDrawInfo*) = 0;
+
+=======
+    virtual sk_sp<GrGpuBuffer> onCreateBuffer(size_t size, GrGpuBufferType intendedType,
+                                              GrAccessPattern, const void* data) = 0;
+
+>>>>>>> upstream-releases
     // overridden by backend-specific derived class to perform the surface read
     virtual bool onReadPixels(GrSurface*, int left, int top, int width, int height, GrColorType,
                               void* buffer, size_t rowBytes) = 0;
@@ -451,7 +653,7 @@ private:
 
     // overridden by backend-specific derived class to perform the texture transfer
     virtual bool onTransferPixels(GrTexture*, int left, int top, int width, int height,
-                                  GrColorType colorType, GrBuffer* transferBuffer, size_t offset,
+                                  GrColorType colorType, GrGpuBuffer* transferBuffer, size_t offset,
                                   size_t rowBytes) = 0;
 
     // overridden by backend-specific derived class to perform the resolve
@@ -466,7 +668,8 @@ private:
                                const SkIRect& srcRect, const SkIPoint& dstPoint,
                                bool canDiscardOutsideDstRect) = 0;
 
-    virtual void onFinishFlush(bool insertedSemaphores) = 0;
+    virtual void onFinishFlush(GrSurfaceProxy*, SkSurface::BackendSurfaceAccess access,
+                               SkSurface::FlushFlags flags, bool insertedSemaphores) = 0;
 
 #ifdef SK_ENABLE_DUMP_GPU
     virtual void onDumpJSON(SkJSONWriter*) const {}

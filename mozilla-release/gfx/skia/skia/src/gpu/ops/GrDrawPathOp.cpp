@@ -7,47 +7,64 @@
 
 #include "GrDrawPathOp.h"
 #include "GrAppliedClip.h"
+<<<<<<< HEAD
 #include "GrMemoryPool.h"
+||||||| merged common ancestors
+=======
+#include "GrMemoryPool.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
+>>>>>>> upstream-releases
 #include "GrRenderTargetContext.h"
 #include "GrRenderTargetPriv.h"
 #include "SkTemplates.h"
+
+static constexpr GrUserStencilSettings kCoverPass{
+        GrUserStencilSettings::StaticInit<
+                0x0000,
+                GrUserStencilTest::kNotEqual,
+                0xffff,
+                GrUserStencilOp::kZero,
+                GrUserStencilOp::kKeep,
+                0xffff>()
+};
 
 GrDrawPathOpBase::GrDrawPathOpBase(uint32_t classID, const SkMatrix& viewMatrix, GrPaint&& paint,
                                    GrPathRendering::FillType fill, GrAAType aaType)
         : INHERITED(classID)
         , fViewMatrix(viewMatrix)
-        , fInputColor(paint.getColor())
+        , fInputColor(paint.getColor4f())
         , fFillType(fill)
         , fAAType(aaType)
         , fProcessorSet(std::move(paint)) {}
 
+#ifdef SK_DEBUG
 SkString GrDrawPathOp::dumpInfo() const {
     SkString string;
     string.printf("PATH: 0x%p", fPath.get());
     string.append(INHERITED::dumpInfo());
     return string;
 }
+#endif
 
 GrPipeline::InitArgs GrDrawPathOpBase::pipelineInitArgs(const GrOpFlushState& state) {
-    static constexpr GrUserStencilSettings kCoverPass{
-            GrUserStencilSettings::StaticInit<
-                    0x0000,
-                    GrUserStencilTest::kNotEqual,
-                    0xffff,
-                    GrUserStencilOp::kZero,
-                    GrUserStencilOp::kKeep,
-                    0xffff>()
-    };
     GrPipeline::InitArgs args;
     if (GrAATypeIsHW(fAAType)) {
         args.fFlags |= GrPipeline::kHWAntialias_Flag;
     }
     args.fUserStencil = &kCoverPass;
-    args.fProxy = state.drawOpArgs().fProxy;
     args.fCaps = &state.caps();
     args.fResourceProvider = state.resourceProvider();
     args.fDstProxy = state.drawOpArgs().fDstProxy;
     return args;
+}
+
+const GrProcessorSet::Analysis& GrDrawPathOpBase::doProcessorAnalysis(
+        const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) {
+    fAnalysis = fProcessorSet.finalize(
+            fInputColor, GrProcessorAnalysisCoverage::kNone, clip, &kCoverPass, fsaaType, caps,
+            &fInputColor);
+    return fAnalysis;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -62,6 +79,7 @@ void init_stencil_pass_settings(const GrOpFlushState& flushState,
 
 //////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 std::unique_ptr<GrDrawOp> GrDrawPathOp::Make(GrContext* context,
                                              const SkMatrix& viewMatrix,
                                              GrPaint&& paint,
@@ -75,14 +93,40 @@ std::unique_ptr<GrDrawOp> GrDrawPathOp::Make(GrContext* context,
 void GrDrawPathOp::onExecute(GrOpFlushState* state) {
     GrAppliedClip appliedClip = state->detachAppliedClip();
     GrPipeline::FixedDynamicState fixedDynamicState(appliedClip.scissorState().rect());
+||||||| merged common ancestors
+void GrDrawPathOp::onExecute(GrOpFlushState* state) {
+=======
+std::unique_ptr<GrDrawOp> GrDrawPathOp::Make(GrRecordingContext* context,
+                                             const SkMatrix& viewMatrix,
+                                             GrPaint&& paint,
+                                             GrAAType aaType,
+                                             GrPath* path) {
+    GrOpMemoryPool* pool = context->priv().opMemoryPool();
+
+    return pool->allocate<GrDrawPathOp>(viewMatrix, std::move(paint), aaType, path);
+}
+
+void GrDrawPathOp::onExecute(GrOpFlushState* state, const SkRect& chainBounds) {
+    GrAppliedClip appliedClip = state->detachAppliedClip();
+    GrPipeline::FixedDynamicState fixedDynamicState(appliedClip.scissorState().rect());
+>>>>>>> upstream-releases
     GrPipeline pipeline(this->pipelineInitArgs(*state), this->detachProcessors(),
                         std::move(appliedClip));
     sk_sp<GrPathProcessor> pathProc(GrPathProcessor::Create(this->color(), this->viewMatrix()));
 
     GrStencilSettings stencil;
     init_stencil_pass_settings(*state, this->fillType(), &stencil);
+<<<<<<< HEAD
     state->gpu()->pathRendering()->drawPath(*pathProc, pipeline, fixedDynamicState, stencil,
                                             fPath.get());
+||||||| merged common ancestors
+    state->gpu()->pathRendering()->drawPath(pipeline, *pathProc, stencil, fPath.get());
+=======
+    state->gpu()->pathRendering()->drawPath(state->drawOpArgs().renderTarget(),
+                                            state->drawOpArgs().origin(),
+                                            *pathProc, pipeline, fixedDynamicState, stencil,
+                                            fPath.get());
+>>>>>>> upstream-releases
 }
 
 //////////////////////////////////////////////////////////////////////////////

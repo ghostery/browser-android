@@ -64,32 +64,55 @@ public:
  */
 class GrOnFlushResourceProvider {
 public:
+<<<<<<< HEAD
     explicit GrOnFlushResourceProvider(GrDrawingManager* drawingMgr) : fDrawingMgr(drawingMgr) {}
 
+||||||| merged common ancestors
+=======
+    explicit GrOnFlushResourceProvider(GrDrawingManager* drawingMgr) : fDrawingMgr(drawingMgr) {}
+
+#if 0
+>>>>>>> upstream-releases
     sk_sp<GrRenderTargetContext> makeRenderTargetContext(const GrSurfaceDesc&,
                                                          GrSurfaceOrigin,
                                                          sk_sp<SkColorSpace>,
                                                          const SkSurfaceProps*);
+#endif
 
     sk_sp<GrRenderTargetContext> makeRenderTargetContext(sk_sp<GrSurfaceProxy>,
                                                          sk_sp<SkColorSpace>,
                                                          const SkSurfaceProps*);
 
+<<<<<<< HEAD
     // Proxy unique key management. See GrProxyProvider.
     bool assignUniqueKeyToProxy(const GrUniqueKey&, GrTextureProxy*);
     void removeUniqueKeyFromProxy(const GrUniqueKey&, GrTextureProxy*);
     sk_sp<GrTextureProxy> findOrCreateProxyByUniqueKey(const GrUniqueKey&, GrSurfaceOrigin);
 
+||||||| merged common ancestors
+=======
+    // Proxy unique key management. See GrProxyProvider.h.
+    bool assignUniqueKeyToProxy(const GrUniqueKey&, GrTextureProxy*);
+    void removeUniqueKeyFromProxy(GrTextureProxy*);
+    void processInvalidUniqueKey(const GrUniqueKey&);
+    sk_sp<GrTextureProxy> findOrCreateProxyByUniqueKey(const GrUniqueKey&, GrSurfaceOrigin);
+
+>>>>>>> upstream-releases
     bool instatiateProxy(GrSurfaceProxy*);
 
     // Creates a GPU buffer with a "dynamic" access pattern.
-    sk_sp<GrBuffer> makeBuffer(GrBufferType, size_t, const void* data = nullptr);
+    sk_sp<GrGpuBuffer> makeBuffer(GrGpuBufferType, size_t, const void* data = nullptr);
 
     // Either finds and refs, or creates a static GPU buffer with the given data.
-    sk_sp<const GrBuffer> findOrMakeStaticBuffer(GrBufferType, size_t, const void* data,
-                                                 const GrUniqueKey&);
+    sk_sp<const GrGpuBuffer> findOrMakeStaticBuffer(GrGpuBufferType, size_t, const void* data,
+                                                    const GrUniqueKey&);
 
+<<<<<<< HEAD
     uint32_t contextUniqueID() const;
+||||||| merged common ancestors
+=======
+    uint32_t contextID() const;
+>>>>>>> upstream-releases
     const GrCaps* caps() const;
 
 private:

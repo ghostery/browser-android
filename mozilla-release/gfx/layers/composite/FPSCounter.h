@@ -54,8 +54,16 @@ const int kMaxFrames = 2400;
  * Use the HasNext(), GetNextTimeStamp() like an iterator to read the data,
  * backwards in time. This abstracts away the mechanics of reading the data.
  */
+<<<<<<< HEAD
 class FPSCounter {
  public:
+||||||| merged common ancestors
+class FPSCounter {
+public:
+=======
+class FPSCounter final {
+ public:
+>>>>>>> upstream-releases
   explicit FPSCounter(const char* aName);
   ~FPSCounter();
 

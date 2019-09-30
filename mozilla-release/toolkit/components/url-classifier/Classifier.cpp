@@ -15,6 +15,7 @@
 #include "nsNetCID.h"
 #include "nsPrintfCString.h"
 #include "nsThreadUtils.h"
+#include "mozilla/Components.h"
 #include "mozilla/EndianUtils.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/IntegerPrintfMacros.h"
@@ -23,8 +24,8 @@
 #include "mozilla/Base64.h"
 #include "mozilla/Unused.h"
 #include "mozilla/UniquePtr.h"
-#include "nsIUrlClassifierUtils.h"
 #include "nsUrlClassifierDBService.h"
+#include "nsUrlClassifierUtils.h"
 
 // MOZ_LOG=UrlClassifierDbService:5
 extern mozilla::LazyLogModule gUrlClassifierDbServiceLog;
@@ -190,7 +191,72 @@ nsresult Classifier::CreateStoreDirectory() {
     bool storeIsDir;
     rv = mRootStoreDirectory->IsDirectory(&storeIsDir);
     NS_ENSURE_SUCCESS(rv, rv);
+<<<<<<< HEAD
     if (!storeIsDir) return NS_ERROR_FILE_DESTINATION_NOT_DIR;
+||||||| merged common ancestors
+    if (!storeIsDir)
+      return NS_ERROR_FILE_DESTINATION_NOT_DIR;
+=======
+    if (!storeIsDir) return NS_ERROR_FILE_DESTINATION_NOT_DIR;
+  }
+
+  return NS_OK;
+}
+
+// Testing entries are created directly in LookupCache instead of
+// created via update(Bug 1531354). We can remove unused testing
+// files from profile.
+// TODO: See Bug 723153 to clear old safebrowsing store
+nsresult Classifier::ClearLegacyFiles() {
+  if (ShouldAbort()) {
+    return NS_OK;  // nothing to do, the classifier is done
+  }
+
+  nsTArray<nsLiteralCString> tables = {
+      NS_LITERAL_CSTRING("test-phish-simple"),
+      NS_LITERAL_CSTRING("test-malware-simple"),
+      NS_LITERAL_CSTRING("test-unwanted-simple"),
+      NS_LITERAL_CSTRING("test-harmful-simple"),
+      NS_LITERAL_CSTRING("test-track-simple"),
+      NS_LITERAL_CSTRING("test-trackwhite-simple"),
+      NS_LITERAL_CSTRING("test-block-simple"),
+  };
+
+  const auto fnFindAndRemove = [](nsIFile* aRootDirectory,
+                                  const nsACString& aFileName) {
+    nsCOMPtr<nsIFile> file;
+    nsresult rv = aRootDirectory->Clone(getter_AddRefs(file));
+    if (NS_FAILED(rv)) {
+      return false;
+    }
+
+    rv = file->AppendNative(aFileName);
+    if (NS_FAILED(rv)) {
+      return false;
+    }
+
+    bool exists;
+    rv = file->Exists(&exists);
+    if (NS_FAILED(rv) || !exists) {
+      return false;
+    }
+
+    rv = file->Remove(false);
+    if (NS_FAILED(rv)) {
+      return false;
+    }
+
+    return true;
+  };
+
+  for (const auto& table : tables) {
+    // Remove both .sbstore and .vlpse if .sbstore exists
+    if (fnFindAndRemove(mRootStoreDirectory,
+                        table + NS_LITERAL_CSTRING(".sbstore"))) {
+      fnFindAndRemove(mRootStoreDirectory,
+                      table + NS_LITERAL_CSTRING(".vlpset"));
+    }
+>>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -227,6 +293,9 @@ nsresult Classifier::Open(nsIFile& aCacheDirectory) {
   // Make sure the main store directory exists.
   rv = CreateStoreDirectory();
   NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = ClearLegacyFiles();
+  Unused << NS_WARN_IF(NS_FAILED(rv));
 
   // Build the list of know urlclassifier lists
   // XXX: Disk IO potentially on the main thread during startup
@@ -404,6 +473,7 @@ void Classifier::TableRequest(nsACString& aResult) {
   mIsTableRequestResultOutdated = false;
 }
 
+<<<<<<< HEAD
 nsresult Classifier::Check(const nsACString& aSpec, const nsACString& aTables,
                            LookupResultArray& aResults) {
   Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CL_CHECK_TIME> timer;
@@ -417,51 +487,87 @@ nsresult Classifier::Check(const nsACString& aSpec, const nsACString& aTables,
 
   nsTArray<nsCString> activeTables;
   SplitTables(aTables, activeTables);
+||||||| merged common ancestors
+nsresult
+Classifier::Check(const nsACString& aSpec,
+                  const nsACString& aTables,
+                  LookupResultArray& aResults)
+{
+  Telemetry::AutoTimer<Telemetry::URLCLASSIFIER_CL_CHECK_TIME> timer;
 
-  LookupCacheArray cacheArray;
-  for (uint32_t i = 0; i < activeTables.Length(); i++) {
-    LOG(("Checking table %s", activeTables[i].get()));
-    RefPtr<LookupCache> cache = GetLookupCache(activeTables[i]);
-    if (cache) {
-      cacheArray.AppendElement(cache);
-    } else {
-      return NS_ERROR_FAILURE;
+  // Get the set of fragments based on the url. This is necessary because we
+  // only look up at most 5 URLs per aSpec, even if aSpec has more than 5
+  // components.
+  nsTArray<nsCString> fragments;
+  nsresult rv = LookupCache::GetLookupFragments(aSpec, &fragments);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsTArray<nsCString> activeTables;
+  SplitTables(aTables, activeTables);
+=======
+nsresult Classifier::CheckURIFragments(
+    const nsTArray<nsCString>& aSpecFragments, const nsACString& aTable,
+    LookupResultArray& aResults) {
+  // A URL can form up to 30 different fragments
+  MOZ_ASSERT(aSpecFragments.Length() != 0);
+  MOZ_ASSERT(aSpecFragments.Length() <=
+             (MAX_HOST_COMPONENTS * (MAX_PATH_COMPONENTS + 2)));
+>>>>>>> upstream-releases
+
+  if (LOG_ENABLED()) {
+    uint32_t urlIdx = 0;
+    for (uint32_t i = 1; i < aSpecFragments.Length(); i++) {
+      if (aSpecFragments[urlIdx].Length() < aSpecFragments[i].Length()) {
+        urlIdx = i;
+      }
     }
+    LOG(("Checking table %s, URL is %s", aTable.BeginReading(),
+         aSpecFragments[urlIdx].get()));
+  }
+
+  RefPtr<LookupCache> cache = GetLookupCache(aTable);
+  if (NS_WARN_IF(!cache)) {
+    return NS_ERROR_FAILURE;
   }
 
   // Now check each lookup fragment against the entries in the DB.
-  for (uint32_t i = 0; i < fragments.Length(); i++) {
+  for (uint32_t i = 0; i < aSpecFragments.Length(); i++) {
     Completion lookupHash;
-    lookupHash.FromPlaintext(fragments[i]);
+    lookupHash.FromPlaintext(aSpecFragments[i]);
 
-    if (LOG_ENABLED()) {
-      nsAutoCString checking;
-      lookupHash.ToHexString(checking);
-      LOG(("Checking fragment %s, hash %s (%X)", fragments[i].get(),
-           checking.get(), lookupHash.ToUint32()));
-    }
+    bool has, confirmed;
+    uint32_t matchLength;
 
-    for (uint32_t i = 0; i < cacheArray.Length(); i++) {
-      RefPtr<LookupCache> cache = cacheArray[i];
-      bool has, confirmed;
-      uint32_t matchLength;
-
-      rv = cache->Has(lookupHash, &has, &matchLength, &confirmed);
-      NS_ENSURE_SUCCESS(rv, rv);
-
-      if (has) {
-        RefPtr<LookupResult> result = new LookupResult;
-        aResults.AppendElement(result);
-
+<<<<<<< HEAD
         LOG(("Found a result in %s: %s", cache->TableName().get(),
              confirmed ? "confirmed." : "Not confirmed."));
+||||||| merged common ancestors
+        LOG(("Found a result in %s: %s",
+             cache->TableName().get(),
+             confirmed ? "confirmed." : "Not confirmed."));
+=======
+    nsresult rv = cache->Has(lookupHash, &has, &matchLength, &confirmed);
+    NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
-        result->hash.complete = lookupHash;
-        result->mConfirmed = confirmed;
-        result->mTableName.Assign(cache->TableName());
-        result->mPartialHashLength = confirmed ? COMPLETE_SIZE : matchLength;
-        result->mProtocolV2 = LookupCache::Cast<LookupCacheV2>(cache);
+    if (has) {
+      RefPtr<LookupResult> result = new LookupResult;
+      aResults.AppendElement(result);
+
+      if (LOG_ENABLED()) {
+        nsAutoCString checking;
+        lookupHash.ToHexString(checking);
+        LOG(("Found a result in fragment %s, hash %s (%X)",
+             aSpecFragments[i].get(), checking.get(), lookupHash.ToUint32()));
+        LOG(("Result %s, match %d-bytes prefix",
+             confirmed ? "confirmed." : "Not confirmed.", matchLength));
       }
+
+      result->hash.complete = lookupHash;
+      result->mConfirmed = confirmed;
+      result->mTableName.Assign(cache->TableName());
+      result->mPartialHashLength = confirmed ? COMPLETE_SIZE : matchLength;
+      result->mProtocolV2 = LookupCache::Cast<LookupCacheV2>(cache);
     }
   }
 
@@ -735,8 +841,18 @@ nsresult Classifier::ApplyUpdatesBackground(TableUpdateArray& aUpdates,
     return NS_OK;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
       do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+||||||| merged common ancestors
+  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
+    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+=======
+  nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
+  if (NS_WARN_IF(!urlUtil)) {
+    return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   nsCString provider;
   // Assume all TableUpdate objects should have the same provider.
@@ -862,12 +978,16 @@ nsresult Classifier::RegenActiveTables() {
 
   mActiveTablesCache.Clear();
 
+  // Create
   nsTArray<nsCString> foundTables;
-  ScanStoreDir(mRootStoreDirectory, foundTables);
+  nsresult rv = ScanStoreDir(mRootStoreDirectory, foundTables);
+  Unused << NS_WARN_IF(NS_FAILED(rv));
 
-  for (uint32_t i = 0; i < foundTables.Length(); i++) {
-    nsCString table(foundTables[i]);
+  // We don't have test tables on disk, add Moz built-in entries here
+  rv = AddMozEntries(foundTables);
+  Unused << NS_WARN_IF(NS_FAILED(rv));
 
+  for (const auto& table : foundTables) {
     RefPtr<const LookupCache> lookupCache = GetLookupCache(table);
     if (!lookupCache) {
       LOG(("Inactive table (no cache): %s", table.get()));
@@ -879,27 +999,43 @@ nsresult Classifier::RegenActiveTables() {
       continue;
     }
 
-    if (LookupCache::Cast<const LookupCacheV4>(lookupCache)) {
-      LOG(("Active v4 table: %s", table.get()));
-    } else {
-      HashStore store(table, GetProvider(table), mRootStoreDirectory);
-
-      nsresult rv = store.Open();
-      if (NS_FAILED(rv)) {
-        continue;
-      }
-
-      const ChunkSet& adds = store.AddChunks();
-      const ChunkSet& subs = store.SubChunks();
-
-      if (adds.Length() == 0 && subs.Length() == 0) {
-        continue;
-      }
-
-      LOG(("Active v2 table: %s", store.TableName().get()));
-    }
+    LOG(("Active %s table: %s",
+         LookupCache::Cast<const LookupCacheV4>(lookupCache) ? "v4" : "v2",
+         table.get()));
 
     mActiveTablesCache.AppendElement(table);
+  }
+
+<<<<<<< HEAD
+      const ChunkSet& adds = store.AddChunks();
+      const ChunkSet& subs = store.SubChunks();
+||||||| merged common ancestors
+      const ChunkSet &adds = store.AddChunks();
+      const ChunkSet &subs = store.SubChunks();
+=======
+  return NS_OK;
+}
+>>>>>>> upstream-releases
+
+nsresult Classifier::AddMozEntries(nsTArray<nsCString>& aTables) {
+  nsTArray<nsLiteralCString> tables = {
+      NS_LITERAL_CSTRING("moztest-phish-simple"),
+      NS_LITERAL_CSTRING("moztest-malware-simple"),
+      NS_LITERAL_CSTRING("moztest-unwanted-simple"),
+      NS_LITERAL_CSTRING("moztest-harmful-simple"),
+      NS_LITERAL_CSTRING("moztest-track-simple"),
+      NS_LITERAL_CSTRING("moztest-trackwhite-simple"),
+      NS_LITERAL_CSTRING("moztest-block-simple"),
+  };
+
+  for (const auto& table : tables) {
+    RefPtr<LookupCache> c = GetLookupCache(table, false);
+    RefPtr<LookupCacheV2> lookupCache = LookupCache::Cast<LookupCacheV2>(c);
+    if (!lookupCache || lookupCache->IsPrimed()) {
+      continue;
+    }
+
+    aTables.AppendElement(table);
   }
 
   return NS_OK;
@@ -924,20 +1060,20 @@ nsresult Classifier::ScanStoreDir(nsIFile* aDirectory,
       continue;
     }
 
-    nsCString leafName;
+    nsAutoCString leafName;
     rv = file->GetNativeLeafName(leafName);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    // Both v2 and v4 contain .pset file
-    nsCString suffix(NS_LITERAL_CSTRING(".pset"));
-
-    int32_t dot = leafName.RFind(suffix);
-    if (dot != -1) {
-      leafName.Cut(dot, suffix.Length());
-      aTables.AppendElement(leafName);
+    // The extension of V2 and V4 prefix files is .vlpset
+    // We still check .pset here for legacy load.
+    if (StringEndsWith(leafName, NS_LITERAL_CSTRING(".vlpset"))) {
+      aTables.AppendElement(
+          Substring(leafName, 0, leafName.Length() - strlen(".vlpset")));
+    } else if (StringEndsWith(leafName, NS_LITERAL_CSTRING(".pset"))) {
+      aTables.AppendElement(
+          Substring(leafName, 0, leafName.Length() - strlen(".pset")));
     }
   }
-  NS_ENSURE_SUCCESS(rv, rv);
 
   return NS_OK;
 }
@@ -1172,9 +1308,23 @@ bool Classifier::CheckValidUpdate(TableUpdateArray& aUpdates,
   return true;
 }
 
+<<<<<<< HEAD
 nsCString Classifier::GetProvider(const nsACString& aTableName) {
   nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
       do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+||||||| merged common ancestors
+nsCString
+Classifier::GetProvider(const nsACString& aTableName)
+{
+  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
+    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+=======
+nsCString Classifier::GetProvider(const nsACString& aTableName) {
+  nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
+  if (NS_WARN_IF(!urlUtil)) {
+    return EmptyCString();
+  }
+>>>>>>> upstream-releases
 
   nsCString provider;
   nsresult rv = urlUtil->GetProvider(aTableName, provider);
@@ -1193,6 +1343,12 @@ nsresult Classifier::UpdateHashStore(TableUpdateArray& aUpdates,
 
   LOG(("Classifier::UpdateHashStore(%s)", PromiseFlatCString(aTable).get()));
 
+  // moztest- tables don't support update because they are directly created
+  // in LookupCache. To test updates, use tables begin with "test-" instead.
+  // Also, recommend using 'test-' tables while writing testcases because
+  // it is more like the real world scenario.
+  MOZ_ASSERT(!nsUrlClassifierUtils::IsMozTestTable(aTable));
+
   HashStore store(aTable, GetProvider(aTable), mUpdatingDirectory);
 
   if (!CheckValidUpdate(aUpdates, store.TableName())) {
@@ -1200,7 +1356,26 @@ nsresult Classifier::UpdateHashStore(TableUpdateArray& aUpdates,
   }
 
   nsresult rv = store.Open();
-  NS_ENSURE_SUCCESS(rv, rv);
+  if (rv == NS_ERROR_FILE_CORRUPTED) {
+    // This is where we remove the older version(3) of HashStore, we cannot
+    // remove it earlier because we need the 'Completions' in it before
+    // upgrading to new format. Remove this during update because we know that
+    // newer version of HashStore and PrefixSet will be written in the update
+    // process.
+    LOG(("HashStore is corrupted, remove on-disk data and continue to update"));
+
+    // store.Reset removes the on-disk file. We can still apply this update
+    // by merging recived update data to an empty HashStore.
+    rv = store.Reset();
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Open HashStore again, it should be an empty HashStore at this point.
+    rv = store.Open();
+    NS_ENSURE_SUCCESS(rv, rv);
+  } else if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+
   rv = store.BeginUpdate();
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1218,11 +1393,15 @@ nsresult Classifier::UpdateHashStore(TableUpdateArray& aUpdates,
   }
 
   FallibleTArray<uint32_t> AddPrefixHashes;
-  rv = lookupCacheV2->GetPrefixes(AddPrefixHashes);
+  FallibleTArray<nsCString> AddCompletesHashes;
+  rv = lookupCacheV2->GetPrefixes(AddPrefixHashes, AddCompletesHashes);
   NS_ENSURE_SUCCESS(rv, rv);
-  rv = store.AugmentAdds(AddPrefixHashes);
+
+  rv = store.AugmentAdds(AddPrefixHashes, AddCompletesHashes);
   NS_ENSURE_SUCCESS(rv, rv);
+
   AddPrefixHashes.Clear();
+  AddCompletesHashes.Clear();
 
   uint32_t applied = 0;
 
@@ -1274,9 +1453,6 @@ nsresult Classifier::UpdateHashStore(TableUpdateArray& aUpdates,
   rv = lookupCacheV2->Build(store.AddPrefixes(), store.AddCompletes());
   NS_ENSURE_SUCCESS(rv, NS_ERROR_UC_UPDATE_BUILD_PREFIX_FAILURE);
 
-#if defined(DEBUG)
-  lookupCacheV2->DumpCompletions();
-#endif
   rv = lookupCacheV2->WriteFile();
   NS_ENSURE_SUCCESS(rv, NS_ERROR_UC_UPDATE_FAIL_TO_WRITE_DISK);
 
@@ -1292,6 +1468,9 @@ nsresult Classifier::UpdateTableV4(TableUpdateArray& aUpdates,
   if (ShouldAbort()) {
     return NS_ERROR_UC_UPDATE_SHUTDOWNING;
   }
+
+  // moztest- tables don't support update, see comment in UpdateHashStore.
+  MOZ_ASSERT(!nsUrlClassifierUtils::IsMozTestTable(aTable));
 
   LOG(("Classifier::UpdateTableV4(%s)", PromiseFlatCString(aTable).get()));
 
@@ -1587,9 +1766,10 @@ nsresult Classifier::LoadMetadata(nsIFile* aDirectory, nsACString& aResult) {
       continue;
     }
 
-    nsCString state;
-    nsCString checksum;
-    rv = lookupCacheV4->LoadMetadata(state, checksum);
+    nsCString state, sha256;
+    rv = lookupCacheV4->LoadMetadata(state, sha256);
+    Telemetry::Accumulate(Telemetry::URLCLASSIFIER_VLPS_METADATA_CORRUPT,
+                          rv == NS_ERROR_FILE_CORRUPTED);
     if (NS_FAILED(rv)) {
       LOG(("Failed to get metadata for table %s", tableName.get()));
       continue;
@@ -1601,7 +1781,7 @@ nsresult Classifier::LoadMetadata(nsIFile* aDirectory, nsACString& aResult) {
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsAutoCString checksumBase64;
-    rv = Base64Encode(checksum, checksumBase64);
+    rv = Base64Encode(sha256, checksumBase64);
     NS_ENSURE_SUCCESS(rv, rv);
 
     LOG(("Appending state '%s' and checksum '%s' for table %s",

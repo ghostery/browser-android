@@ -13,13 +13,23 @@ const { TEXT_NODE } = require("devtools/shared/dom-node-constants");
  * Stylesheet used for highlighter styling of accessible objects in chrome. It
  * is consistent with the styling of an in-content accessible highlighter.
  */
-const ACCESSIBLE_BOUNDS_SHEET = "data:text/css;charset=utf-8," + encodeURIComponent(`
+const ACCESSIBLE_BOUNDS_SHEET =
+  "data:text/css;charset=utf-8," +
+  encodeURIComponent(`
   .highlighter-container {
     --highlighter-bubble-background-color: hsl(214, 13%, 24%);
     --highlighter-bubble-border-color: rgba(255, 255, 255, 0.2);
     --highlighter-bubble-arrow-size: 8px;
+<<<<<<< HEAD
 
     --grey-40: #b1b1b3;
+||||||| merged common ancestors
+=======
+
+    --grey-40: #b1b1b3;
+    --red-40: #ff3b6b;
+    --yellow-60: #d7b600;
+>>>>>>> upstream-releases
   }
 
   .accessible-bounds {
@@ -130,6 +140,11 @@ const ACCESSIBLE_BOUNDS_SHEET = "data:text/css;charset=utf-8," + encodeURICompon
   }
 
   .accessible-infobar-audit .accessible-contrast-ratio:not(:empty).AAA:after {
+<<<<<<< HEAD
+    content: "AAA\u2713";
+||||||| merged common ancestors
+    content: " AAA\u2713";
+=======
     content: "AAA\u2713";
   }
 
@@ -141,12 +156,66 @@ const ACCESSIBLE_BOUNDS_SHEET = "data:text/css;charset=utf-8," + encodeURICompon
   .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
     content: "-";
     margin-inline-start: 3px;
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
+  .accessible-infobar-audit .accessible-contrast-ratio-label,
+  .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
+    margin-inline-end: 3px;
+  }
+
+  .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
+    content: "-";
+    margin-inline-start: 3px;
   }
 
   .accessible-infobar-name:not(:empty) {
+||||||| merged common ancestors
+  .accessible-infobar-name:not(:empty),
+  .accessible-infobar-audit:not(:empty) {
+=======
+  .accessible-infobar-name:not(:empty) {
+>>>>>>> upstream-releases
     border-inline-start: 1px solid #5a6169;
     margin-inline-start: 6px;
     padding-inline-start: 6px;
+<<<<<<< HEAD
+||||||| merged common ancestors
+  }
+
+  .accessible-infobar-role {
+    color: #9CDCFE;
+=======
+  }
+
+  .accessible-infobar-audit .accessible-text-label:before {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    content: "";
+    margin-inline-end: 4px;
+    vertical-align: -2px;
+    background-image: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    -moz-context-properties: fill;
+    fill: currentColor;
+  }
+
+  .accessible-infobar-audit .accessible-text-label.fail:before {
+    background-image: url(chrome://devtools/skin/images/error-small.svg);
+    fill: var(--red-40);
+  }
+
+  .accessible-infobar-audit .accessible-text-label.WARNING:before {
+    background-image: url(chrome://devtools/skin/images/alert-small.svg);
+    fill: var(--yellow-60);
+  }
+
+  .accessible-infobar-audit .accessible-text-label.BEST_PRACTICES:before {
+    background-image: url(chrome://devtools/skin/images/info-small.svg);
+>>>>>>> upstream-releases
   }`);
 
 /**
@@ -188,7 +257,7 @@ class XULWindowAccessibleHighlighter {
     this.container = createNode(this.win, {
       parent: doc.body || doc.documentElement,
       attributes: {
-        "class": "highlighter-container",
+        class: "highlighter-container",
         "aria-hidden": "true",
       },
     });
@@ -196,7 +265,7 @@ class XULWindowAccessibleHighlighter {
     this.bounds = createNode(this.win, {
       parent: this.container,
       attributes: {
-        "class": "accessible-bounds",
+        class: "accessible-bounds",
       },
     });
 
@@ -243,10 +312,12 @@ class XULWindowAccessibleHighlighter {
    */
   show(node, options = {}) {
     const isSameNode = node === this.currentNode;
-    const hasBounds = options && typeof options.x == "number" &&
-                               typeof options.y == "number" &&
-                               typeof options.w == "number" &&
-                               typeof options.h == "number";
+    const hasBounds =
+      options &&
+      typeof options.x == "number" &&
+      typeof options.y == "number" &&
+      typeof options.w == "number" &&
+      typeof options.h == "number";
     if (!hasBounds || !this._isNodeValid(node) || isSameNode) {
       return false;
     }
@@ -338,10 +409,38 @@ class XULWindowAccessibleHighlighter {
   }
 
   /**
+   * Public API method to temporarily hide accessible bounds for things like
+   * color contrast calculation.
+   */
+  hideAccessibleBounds() {
+    if (this.container.hasAttribute("hidden")) {
+      return;
+    }
+
+    this._hideAccessibleBounds();
+    this._shouldRestoreBoundsVisibility = true;
+  }
+
+  /**
+   * Public API method to show accessible bounds in case they were temporarily
+   * hidden.
+   */
+  showAccessibleBounds() {
+    if (this._shouldRestoreBoundsVisibility) {
+      this._showAccessibleBounds();
+    }
+  }
+
+  /**
    * Show accessible bounds highlighter.
    */
   _showAccessibleBounds() {
+    this._shouldRestoreBoundsVisibility = null;
     if (this.container) {
+      if (!this.currentNode || !this.highlighterEnv.window) {
+        return;
+      }
+
       this.container.removeAttribute("hidden");
     }
   }
@@ -350,6 +449,7 @@ class XULWindowAccessibleHighlighter {
    * Hide accessible bounds highlighter.
    */
   _hideAccessibleBounds() {
+    this._shouldRestoreBoundsVisibility = null;
     if (this.container) {
       this.container.setAttribute("hidden", "true");
     }

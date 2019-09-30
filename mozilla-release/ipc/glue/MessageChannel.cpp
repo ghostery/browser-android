@@ -30,7 +30,7 @@
 #include <math.h>
 
 #ifdef MOZ_TASK_TRACER
-#include "GeckoTaskTracer.h"
+#  include "GeckoTaskTracer.h"
 using namespace mozilla::tasktracer;
 #endif
 
@@ -808,6 +808,7 @@ void MessageChannel::Clear() {
   }
 }
 
+<<<<<<< HEAD
 bool MessageChannel::Open(Transport* aTransport, MessageLoop* aIOLoop,
                           Side aSide) {
   MOZ_ASSERT(!mLink, "Open() called > once");
@@ -859,7 +860,91 @@ bool MessageChannel::Open(MessageChannel* aTargetChan,
     case UnknownSide:
       break;
   }
+||||||| merged common ancestors
+bool
+MessageChannel::Open(MessageChannel *aTargetChan, nsIEventTarget *aEventTarget, Side aSide)
+{
+    // Opens a connection to another thread in the same process.
 
+    //  This handshake proceeds as follows:
+    //  - Let A be the thread initiating the process (either child or parent)
+    //    and B be the other thread.
+    //  - A spawns thread for B, obtaining B's message loop
+    //  - A creates ProtocolChild and ProtocolParent instances.
+    //    Let PA be the one appropriate to A and PB the side for B.
+    //  - A invokes PA->Open(PB, ...):
+    //    - set state to mChannelOpening
+    //    - this will place a work item in B's worker loop (see next bullet)
+    //      and then spins until PB->mChannelState becomes mChannelConnected
+    //    - meanwhile, on PB's worker loop, the work item is removed and:
+    //      - invokes PB->SlaveOpen(PA, ...):
+    //        - sets its state and that of PA to Connected
+    MOZ_ASSERT(aTargetChan, "Need a target channel");
+    MOZ_ASSERT(ChannelClosed == mChannelState, "Not currently closed");
+
+    CommonThreadOpenInit(aTargetChan, aSide);
+
+    Side oppSide = UnknownSide;
+    switch(aSide) {
+      case ChildSide: oppSide = ParentSide; break;
+      case ParentSide: oppSide = ChildSide; break;
+      case UnknownSide: break;
+    }
+=======
+bool MessageChannel::Open(Transport* aTransport, MessageLoop* aIOLoop,
+                          Side aSide) {
+  MOZ_ASSERT(!mLink, "Open() called > once");
+
+  mMonitor = new RefCountedMonitor();
+  mWorkerLoop = MessageLoop::current();
+  mWorkerThread = GetCurrentVirtualThread();
+  mWorkerLoop->AddDestructionObserver(this);
+  mListener->OnIPCChannelOpened();
+
+  ProcessLink* link = new ProcessLink(this);
+  link->Open(aTransport, aIOLoop, aSide);  // :TODO: n.b.: sets mChild
+  mLink = link;
+  mIsCrossProcess = true;
+  ChannelCountReporter::Increment(mName);
+  return true;
+}
+
+bool MessageChannel::Open(MessageChannel* aTargetChan,
+                          nsIEventTarget* aEventTarget, Side aSide) {
+  // Opens a connection to another thread in the same process.
+
+  //  This handshake proceeds as follows:
+  //  - Let A be the thread initiating the process (either child or parent)
+  //    and B be the other thread.
+  //  - A spawns thread for B, obtaining B's message loop
+  //  - A creates ProtocolChild and ProtocolParent instances.
+  //    Let PA be the one appropriate to A and PB the side for B.
+  //  - A invokes PA->Open(PB, ...):
+  //    - set state to mChannelOpening
+  //    - this will place a work item in B's worker loop (see next bullet)
+  //      and then spins until PB->mChannelState becomes mChannelConnected
+  //    - meanwhile, on PB's worker loop, the work item is removed and:
+  //      - invokes PB->SlaveOpen(PA, ...):
+  //        - sets its state and that of PA to Connected
+  MOZ_ASSERT(aTargetChan, "Need a target channel");
+  MOZ_ASSERT(ChannelClosed == mChannelState, "Not currently closed");
+
+  CommonThreadOpenInit(aTargetChan, aSide);
+
+  Side oppSide = UnknownSide;
+  switch (aSide) {
+    case ChildSide:
+      oppSide = ParentSide;
+      break;
+    case ParentSide:
+      oppSide = ChildSide;
+      break;
+    case UnknownSide:
+      break;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   mMonitor = new RefCountedMonitor();
 
   MonitorAutoLock lock(*mMonitor);
@@ -919,6 +1004,69 @@ bool MessageChannel::OpenOnSameThread(MessageChannel* aTargetChan,
       break;
   }
   mIsSameThreadChannel = true;
+||||||| merged common ancestors
+    mMonitor = new RefCountedMonitor();
+=======
+  mMonitor = new RefCountedMonitor();
+
+  MonitorAutoLock lock(*mMonitor);
+  mChannelState = ChannelOpening;
+  MOZ_ALWAYS_SUCCEEDS(
+      aEventTarget->Dispatch(NewNonOwningRunnableMethod<MessageChannel*, Side>(
+          "ipc::MessageChannel::OnOpenAsSlave", aTargetChan,
+          &MessageChannel::OnOpenAsSlave, this, oppSide)));
+
+  while (ChannelOpening == mChannelState) mMonitor->Wait();
+  MOZ_RELEASE_ASSERT(ChannelConnected == mChannelState,
+                     "not connected when awoken");
+  return (ChannelConnected == mChannelState);
+}
+
+void MessageChannel::OnOpenAsSlave(MessageChannel* aTargetChan, Side aSide) {
+  // Invoked when the other side has begun the open.
+  MOZ_ASSERT(ChannelClosed == mChannelState, "Not currently closed");
+  MOZ_ASSERT(ChannelOpening == aTargetChan->mChannelState,
+             "Target channel not in the process of opening");
+
+  CommonThreadOpenInit(aTargetChan, aSide);
+  mMonitor = aTargetChan->mMonitor;
+
+  MonitorAutoLock lock(*mMonitor);
+  MOZ_RELEASE_ASSERT(ChannelOpening == aTargetChan->mChannelState,
+                     "Target channel not in the process of opening");
+  mChannelState = ChannelConnected;
+  aTargetChan->mChannelState = ChannelConnected;
+  aTargetChan->mMonitor->Notify();
+}
+
+void MessageChannel::CommonThreadOpenInit(MessageChannel* aTargetChan,
+                                          Side aSide) {
+  mWorkerLoop = MessageLoop::current();
+  mWorkerThread = GetCurrentVirtualThread();
+  mWorkerLoop->AddDestructionObserver(this);
+  mListener->OnIPCChannelOpened();
+
+  mLink = new ThreadLink(this, aTargetChan);
+  mSide = aSide;
+}
+
+bool MessageChannel::OpenOnSameThread(MessageChannel* aTargetChan,
+                                      mozilla::ipc::Side aSide) {
+  CommonThreadOpenInit(aTargetChan, aSide);
+
+  Side oppSide = UnknownSide;
+  switch (aSide) {
+    case ChildSide:
+      oppSide = ParentSide;
+      break;
+    case ParentSide:
+      oppSide = ChildSide;
+      break;
+    case UnknownSide:
+      break;
+  }
+  mIsSameThreadChannel = true;
+>>>>>>> upstream-releases
 
   // XXX(nika): Avoid setting up a monitor for same thread channels? We
   // shouldn't need it.
@@ -1143,11 +1291,28 @@ bool MessageChannel::MaybeInterceptSpecialIOMessage(const Message& aMsg) {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ bool MessageChannel::IsAlwaysDeferred(const Message& aMsg) {
   // If a message is not NESTED_INSIDE_CPOW and not sync, then we always defer
   // it.
   return aMsg.nested_level() != IPC::Message::NESTED_INSIDE_CPOW &&
          !aMsg.is_sync();
+||||||| merged common ancestors
+/* static */ bool
+MessageChannel::IsAlwaysDeferred(const Message& aMsg)
+{
+    // If a message is not NESTED_INSIDE_CPOW and not sync, then we always defer
+    // it.
+    return aMsg.nested_level() != IPC::Message::NESTED_INSIDE_CPOW &&
+           !aMsg.is_sync();
+=======
+/* static */
+bool MessageChannel::IsAlwaysDeferred(const Message& aMsg) {
+  // If a message is not NESTED_INSIDE_CPOW and not sync, then we always defer
+  // it.
+  return aMsg.nested_level() != IPC::Message::NESTED_INSIDE_CPOW &&
+         !aMsg.is_sync();
+>>>>>>> upstream-releases
 }
 
 bool MessageChannel::ShouldDeferMessage(const Message& aMsg) {
@@ -1680,6 +1845,15 @@ bool MessageChannel::Call(Message* aMsg, Message* aReply) {
     }
 #endif
 
+<<<<<<< HEAD
+    // Now might be the time to process a message deferred because of race
+    // resolution.
+    MaybeUndeferIncall();
+||||||| merged common ancestors
+        // Now might be the time to process a message deferred because of race
+        // resolution.
+        MaybeUndeferIncall();
+=======
     // Now might be the time to process a message deferred because of race
     // resolution.
     MaybeUndeferIncall();
@@ -1687,7 +1861,17 @@ bool MessageChannel::Call(Message* aMsg, Message* aReply) {
     // Wait for an event to occur.
     while (!InterruptEventOccurred()) {
       bool maybeTimedOut = !WaitForInterruptNotify();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Wait for an event to occur.
+    while (!InterruptEventOccurred()) {
+      bool maybeTimedOut = !WaitForInterruptNotify();
+||||||| merged common ancestors
+        // Wait for an event to occur.
+        while (!InterruptEventOccurred()) {
+            bool maybeTimedOut = !WaitForInterruptNotify();
+=======
       // We might have received a "subtly deferred" message in a nested
       // loop that it's now time to process.
       if (InterruptEventOccurred() ||
@@ -1695,13 +1879,89 @@ bool MessageChannel::Call(Message* aMsg, Message* aReply) {
            (!mDeferred.empty() || !mOutOfTurnReplies.empty()))) {
         break;
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // We might have received a "subtly deferred" message in a nested
+      // loop that it's now time to process.
+      if (InterruptEventOccurred() ||
+          (!maybeTimedOut &&
+           (!mDeferred.empty() || !mOutOfTurnReplies.empty()))) {
+        break;
+      }
+||||||| merged common ancestors
+            // We might have received a "subtly deferred" message in a nested
+            // loop that it's now time to process.
+            if (InterruptEventOccurred() ||
+                (!maybeTimedOut && (!mDeferred.empty() || !mOutOfTurnReplies.empty())))
+            {
+                break;
+            }
+=======
       if (maybeTimedOut && !ShouldContinueFromTimeout()) return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      if (maybeTimedOut && !ShouldContinueFromTimeout()) return false;
+    }
+||||||| merged common ancestors
+            if (maybeTimedOut && !ShouldContinueFromTimeout())
+                return false;
+        }
+=======
     Message recvd;
     MessageMap::iterator it;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    Message recvd;
+    MessageMap::iterator it;
+||||||| merged common ancestors
+        Message recvd;
+        MessageMap::iterator it;
+
+        if ((it = mOutOfTurnReplies.find(mInterruptStack.top().seqno()))
+            != mOutOfTurnReplies.end())
+        {
+            recvd = std::move(it->second);
+            mOutOfTurnReplies.erase(it);
+        } else if (!mPending.isEmpty()) {
+            RefPtr<MessageTask> task = mPending.popFirst();
+            recvd = std::move(task->Msg());
+            if (!IsAlwaysDeferred(recvd)) {
+                mMaybeDeferredPendingCount--;
+            }
+        } else {
+            // because of subtleties with nested event loops, it's possible
+            // that we got here and nothing happened.  or, we might have a
+            // deferred in-call that needs to be processed.  either way, we
+            // won't break the inner while loop again until something new
+            // happens.
+            continue;
+        }
+=======
+    if ((it = mOutOfTurnReplies.find(mInterruptStack.top().seqno())) !=
+        mOutOfTurnReplies.end()) {
+      recvd = std::move(it->second);
+      mOutOfTurnReplies.erase(it);
+    } else if (!mPending.isEmpty()) {
+      RefPtr<MessageTask> task = mPending.popFirst();
+      recvd = std::move(task->Msg());
+      if (!IsAlwaysDeferred(recvd)) {
+        mMaybeDeferredPendingCount--;
+      }
+    } else {
+      // because of subtleties with nested event loops, it's possible
+      // that we got here and nothing happened.  or, we might have a
+      // deferred in-call that needs to be processed.  either way, we
+      // won't break the inner while loop again until something new
+      // happens.
+      continue;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     if ((it = mOutOfTurnReplies.find(mInterruptStack.top().seqno())) !=
         mOutOfTurnReplies.end()) {
       recvd = std::move(it->second);
@@ -1735,6 +1995,32 @@ bool MessageChannel::Call(Message* aMsg, Message* aReply) {
     // call, or add it to the list of out-of-turn replies we've received.
     if (recvd.is_reply()) {
       IPC_ASSERT(!mInterruptStack.empty(), "invalid Interrupt stack");
+||||||| merged common ancestors
+        // If the message is not Interrupt, we can dispatch it as normal.
+        if (!recvd.is_interrupt()) {
+            DispatchMessage(std::move(recvd));
+            if (!Connected()) {
+                ReportConnectionError("MessageChannel::DispatchMessage");
+                return false;
+            }
+            continue;
+        }
+=======
+    // If the message is not Interrupt, we can dispatch it as normal.
+    if (!recvd.is_interrupt()) {
+      DispatchMessage(std::move(recvd));
+      if (!Connected()) {
+        ReportConnectionError("MessageChannel::DispatchMessage");
+        return false;
+      }
+      continue;
+    }
+
+    // If the message is an Interrupt reply, either process it as a reply to our
+    // call, or add it to the list of out-of-turn replies we've received.
+    if (recvd.is_reply()) {
+      IPC_ASSERT(!mInterruptStack.empty(), "invalid Interrupt stack");
+>>>>>>> upstream-releases
 
       // If this is not a reply the call we've initiated, add it to our
       // out-of-turn replies and keep polling for events.
@@ -1781,14 +2067,38 @@ bool MessageChannel::Call(Message* aMsg, Message* aReply) {
 #endif
       MonitorAutoUnlock unlock(*mMonitor);
 
+<<<<<<< HEAD
       CxxStackFrame frame(*this, IN_MESSAGE, &recvd);
       DispatchInterruptMessage(std::move(recvd), stackDepth);
+||||||| merged common ancestors
+            CxxStackFrame frame(*this, IN_MESSAGE, &recvd);
+            DispatchInterruptMessage(std::move(recvd), stackDepth);
+        }
+        if (!Connected()) {
+            ReportConnectionError("MessageChannel::DispatchInterruptMessage");
+            return false;
+        }
+=======
+      CxxStackFrame frame(*this, IN_MESSAGE, &recvd);
+      RefPtr<ActorLifecycleProxy> listenerProxy =
+          mListener->GetLifecycleProxy();
+      DispatchInterruptMessage(listenerProxy, std::move(recvd), stackDepth);
     }
+    if (!Connected()) {
+      ReportConnectionError("MessageChannel::DispatchInterruptMessage");
+      return false;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     if (!Connected()) {
       ReportConnectionError("MessageChannel::DispatchInterruptMessage");
       return false;
     }
   }
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
   return true;
 }
@@ -1891,7 +2201,7 @@ void MessageChannel::RunMessage(MessageTask& aTask) {
 
   // Check that we're going to run the first message that's valid to run.
 #if 0
-#ifdef DEBUG
+#  ifdef DEBUG
     nsCOMPtr<nsIEventTarget> messageTarget =
         mListener->GetMessageEventTarget(msg);
 
@@ -1908,7 +2218,7 @@ void MessageChannel::RunMessage(MessageTask& aTask) {
                    aTask.Msg().priority() != task->Msg().priority());
 
     }
-#endif
+#  endif
 #endif
 
   if (!mDeferred.empty()) {
@@ -1939,6 +2249,7 @@ void MessageChannel::RunMessage(MessageTask& aTask) {
 NS_IMPL_ISUPPORTS_INHERITED(MessageChannel::MessageTask, CancelableRunnable,
                             nsIRunnablePriority)
 
+<<<<<<< HEAD
 MessageChannel::MessageTask::MessageTask(MessageChannel* aChannel,
                                          Message&& aMessage)
     : CancelableRunnable(aMessage.name()),
@@ -1950,6 +2261,37 @@ nsresult MessageChannel::MessageTask::Run() {
   if (!mChannel) {
     return NS_OK;
   }
+||||||| merged common ancestors
+MessageChannel::MessageTask::MessageTask(MessageChannel* aChannel, Message&& aMessage)
+  : CancelableRunnable(aMessage.name())
+  , mChannel(aChannel)
+  , mMessage(std::move(aMessage))
+  , mScheduled(false)
+{
+}
+
+nsresult
+MessageChannel::MessageTask::Run()
+{
+    if (!mChannel) {
+        return NS_OK;
+    }
+
+    mChannel->AssertWorkerThread();
+    mChannel->mMonitor->AssertNotCurrentThreadOwns();
+=======
+MessageChannel::MessageTask::MessageTask(MessageChannel* aChannel,
+                                         Message&& aMessage)
+    : CancelableRunnable(aMessage.name()),
+      mChannel(aChannel),
+      mMessage(std::move(aMessage)),
+      mScheduled(false) {}
+
+nsresult MessageChannel::MessageTask::Run() {
+  if (!mChannel) {
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
   mChannel->AssertWorkerThread();
   mChannel->mMonitor->AssertNotCurrentThreadOwns();
@@ -2042,41 +2384,119 @@ MessageChannel::MessageTask::GetPriority(uint32_t* aPriority) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool MessageChannel::MessageTask::GetAffectedSchedulerGroups(
     SchedulerGroupSet& aGroups) {
   if (!mChannel) {
     return false;
   }
-
-  mChannel->AssertWorkerThread();
-  return mChannel->mListener->GetMessageSchedulerGroups(mMessage, aGroups);
-}
-
+||||||| merged common ancestors
+bool
+MessageChannel::MessageTask::GetAffectedSchedulerGroups(SchedulerGroupSet& aGroups)
+{
+    if (!mChannel) {
+        return false;
+    }
+=======
 void MessageChannel::DispatchMessage(Message&& aMsg) {
   AssertWorkerThread();
   mMonitor->AssertCurrentThreadOwns();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  mChannel->AssertWorkerThread();
+  return mChannel->mListener->GetMessageSchedulerGroups(mMessage, aGroups);
+}
+||||||| merged common ancestors
+    mChannel->AssertWorkerThread();
+    return mChannel->mListener->GetMessageSchedulerGroups(mMessage, aGroups);
+}
+=======
+  RefPtr<ActorLifecycleProxy> listenerProxy = mListener->GetLifecycleProxy();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MessageChannel::DispatchMessage(Message&& aMsg) {
+  AssertWorkerThread();
+  mMonitor->AssertCurrentThreadOwns();
+||||||| merged common ancestors
+void
+MessageChannel::DispatchMessage(Message &&aMsg)
+{
+    AssertWorkerThread();
+    mMonitor->AssertCurrentThreadOwns();
+=======
   Maybe<AutoNoJSAPI> nojsapi;
   if (ScriptSettingsInitialized() && NS_IsMainThread()) nojsapi.emplace();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Maybe<AutoNoJSAPI> nojsapi;
+  if (ScriptSettingsInitialized() && NS_IsMainThread()) nojsapi.emplace();
+||||||| merged common ancestors
+    Maybe<AutoNoJSAPI> nojsapi;
+    if (ScriptSettingsInitialized() && NS_IsMainThread())
+        nojsapi.emplace();
+=======
   nsAutoPtr<Message> reply;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  nsAutoPtr<Message> reply;
+||||||| merged common ancestors
+    nsAutoPtr<Message> reply;
+=======
   IPC_LOG("DispatchMessage: seqno=%d, xid=%d", aMsg.seqno(),
           aMsg.transaction_id());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  IPC_LOG("DispatchMessage: seqno=%d, xid=%d", aMsg.seqno(),
+          aMsg.transaction_id());
+||||||| merged common ancestors
+    IPC_LOG("DispatchMessage: seqno=%d, xid=%d", aMsg.seqno(), aMsg.transaction_id());
+=======
+  {
+    AutoEnterTransaction transaction(this, aMsg);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   {
     AutoEnterTransaction transaction(this, aMsg);
 
     int id = aMsg.transaction_id();
     MOZ_RELEASE_ASSERT(!aMsg.is_sync() || id == transaction.TransactionID());
+||||||| merged common ancestors
+    {
+        AutoEnterTransaction transaction(this, aMsg);
+
+        int id = aMsg.transaction_id();
+        MOZ_RELEASE_ASSERT(!aMsg.is_sync() || id == transaction.TransactionID());
+=======
+    int id = aMsg.transaction_id();
+    MOZ_RELEASE_ASSERT(!aMsg.is_sync() || id == transaction.TransactionID());
+>>>>>>> upstream-releases
 
     {
 #ifdef MOZ_TASK_TRACER
       Message::AutoTaskTracerRun tasktracerRun(aMsg);
 #endif
+<<<<<<< HEAD
+      MonitorAutoUnlock unlock(*mMonitor);
+      CxxStackFrame frame(*this, IN_MESSAGE, &aMsg);
+||||||| merged common ancestors
+            MonitorAutoUnlock unlock(*mMonitor);
+            CxxStackFrame frame(*this, IN_MESSAGE, &aMsg);
+
+            mListener->ArtificialSleep();
+=======
       MonitorAutoUnlock unlock(*mMonitor);
       CxxStackFrame frame(*this, IN_MESSAGE, &aMsg);
 
+      mListener->ArtificialSleep();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       mListener->ArtificialSleep();
 
       if (aMsg.is_sync())
@@ -2085,6 +2505,25 @@ void MessageChannel::DispatchMessage(Message&& aMsg) {
         DispatchInterruptMessage(std::move(aMsg), 0);
       else
         DispatchAsyncMessage(aMsg);
+||||||| merged common ancestors
+            if (aMsg.is_sync())
+                DispatchSyncMessage(aMsg, *getter_Transfers(reply));
+            else if (aMsg.is_interrupt())
+                DispatchInterruptMessage(std::move(aMsg), 0);
+            else
+                DispatchAsyncMessage(aMsg);
+
+            mListener->ArtificialSleep();
+        }
+=======
+      if (aMsg.is_sync()) {
+        DispatchSyncMessage(listenerProxy, aMsg, *getter_Transfers(reply));
+      } else if (aMsg.is_interrupt()) {
+        DispatchInterruptMessage(listenerProxy, std::move(aMsg), 0);
+      } else {
+        DispatchAsyncMessage(listenerProxy, aMsg);
+      }
+>>>>>>> upstream-releases
 
       mListener->ArtificialSleep();
     }
@@ -2104,9 +2543,21 @@ void MessageChannel::DispatchMessage(Message&& aMsg) {
   }
 }
 
+<<<<<<< HEAD
 void MessageChannel::DispatchSyncMessage(const Message& aMsg,
                                          Message*& aReply) {
   AssertWorkerThread();
+||||||| merged common ancestors
+void
+MessageChannel::DispatchSyncMessage(const Message& aMsg, Message*& aReply)
+{
+    AssertWorkerThread();
+=======
+void MessageChannel::DispatchSyncMessage(ActorLifecycleProxy* aProxy,
+                                         const Message& aMsg,
+                                         Message*& aReply) {
+  AssertWorkerThread();
+>>>>>>> upstream-releases
 
   mozilla::TimeStamp start = TimeStamp::Now();
 
@@ -2124,11 +2575,25 @@ void MessageChannel::DispatchSyncMessage(const Message& aMsg,
   MessageChannel*& blockingVar =
       mSide == ChildSide && NS_IsMainThread() ? gParentProcessBlocker : dummy;
 
+<<<<<<< HEAD
   Result rv;
   {
     AutoSetValue<MessageChannel*> blocked(blockingVar, this);
     rv = mListener->OnMessageReceived(aMsg, aReply);
   }
+||||||| merged common ancestors
+    Result rv;
+    {
+        AutoSetValue<MessageChannel*> blocked(blockingVar, this);
+        rv = mListener->OnMessageReceived(aMsg, aReply);
+    }
+=======
+  Result rv;
+  {
+    AutoSetValue<MessageChannel*> blocked(blockingVar, this);
+    rv = aProxy->Get()->OnMessageReceived(aMsg, aReply);
+  }
+>>>>>>> upstream-releases
 
   uint32_t latencyMs = round((TimeStamp::Now() - start).ToMilliseconds());
   if (latencyMs >= kMinTelemetrySyncIPCLatencyMs) {
@@ -2143,14 +2608,28 @@ void MessageChannel::DispatchSyncMessage(const Message& aMsg,
   aReply->set_transaction_id(aMsg.transaction_id());
 }
 
+<<<<<<< HEAD
 void MessageChannel::DispatchAsyncMessage(const Message& aMsg) {
   AssertWorkerThread();
   MOZ_RELEASE_ASSERT(!aMsg.is_interrupt() && !aMsg.is_sync());
+||||||| merged common ancestors
+void
+MessageChannel::DispatchAsyncMessage(const Message& aMsg)
+{
+    AssertWorkerThread();
+    MOZ_RELEASE_ASSERT(!aMsg.is_interrupt() && !aMsg.is_sync());
+=======
+void MessageChannel::DispatchAsyncMessage(ActorLifecycleProxy* aProxy,
+                                          const Message& aMsg) {
+  AssertWorkerThread();
+  MOZ_RELEASE_ASSERT(!aMsg.is_interrupt() && !aMsg.is_sync());
+>>>>>>> upstream-releases
 
   if (aMsg.routing_id() == MSG_ROUTING_NONE) {
     MOZ_CRASH("unhandled special message!");
   }
 
+<<<<<<< HEAD
   Result rv;
   {
     int nestedLevel = aMsg.nested_level();
@@ -2160,12 +2639,46 @@ void MessageChannel::DispatchAsyncMessage(const Message& aMsg) {
     rv = mListener->OnMessageReceived(aMsg);
   }
   MaybeHandleError(rv, aMsg, "DispatchAsyncMessage");
+||||||| merged common ancestors
+    Result rv;
+    {
+        int nestedLevel = aMsg.nested_level();
+        AutoSetValue<bool> async(mDispatchingAsyncMessage, true);
+        AutoSetValue<int> nestedLevelSet(mDispatchingAsyncMessageNestedLevel, nestedLevel);
+        rv = mListener->OnMessageReceived(aMsg);
+    }
+    MaybeHandleError(rv, aMsg, "DispatchAsyncMessage");
+=======
+  Result rv;
+  {
+    int nestedLevel = aMsg.nested_level();
+    AutoSetValue<bool> async(mDispatchingAsyncMessage, true);
+    AutoSetValue<int> nestedLevelSet(mDispatchingAsyncMessageNestedLevel,
+                                     nestedLevel);
+    rv = aProxy->Get()->OnMessageReceived(aMsg);
+  }
+  MaybeHandleError(rv, aMsg, "DispatchAsyncMessage");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MessageChannel::DispatchInterruptMessage(Message&& aMsg,
                                               size_t stackDepth) {
   AssertWorkerThread();
   mMonitor->AssertNotCurrentThreadOwns();
+||||||| merged common ancestors
+void
+MessageChannel::DispatchInterruptMessage(Message&& aMsg, size_t stackDepth)
+{
+    AssertWorkerThread();
+    mMonitor->AssertNotCurrentThreadOwns();
+=======
+void MessageChannel::DispatchInterruptMessage(ActorLifecycleProxy* aProxy,
+                                              Message&& aMsg,
+                                              size_t stackDepth) {
+  AssertWorkerThread();
+  mMonitor->AssertNotCurrentThreadOwns();
+>>>>>>> upstream-releases
 
   IPC_ASSERT(aMsg.is_interrupt() && !aMsg.is_reply(), "wrong message type");
 
@@ -2187,9 +2700,19 @@ void MessageChannel::DispatchInterruptMessage(Message&& aMsg,
 
   nsAutoPtr<Message> reply;
 
+<<<<<<< HEAD
   ++mRemoteStackDepthGuess;
   Result rv = mListener->OnCallReceived(aMsg, *getter_Transfers(reply));
   --mRemoteStackDepthGuess;
+||||||| merged common ancestors
+    ++mRemoteStackDepthGuess;
+    Result rv = mListener->OnCallReceived(aMsg, *getter_Transfers(reply));
+    --mRemoteStackDepthGuess;
+=======
+  ++mRemoteStackDepthGuess;
+  Result rv = aProxy->Get()->OnCallReceived(aMsg, *getter_Transfers(reply));
+  --mRemoteStackDepthGuess;
+>>>>>>> upstream-releases
 
   if (!MaybeHandleError(rv, aMsg, "DispatchInterruptMessage")) {
     reply = Message::ForInterruptDispatchError();
@@ -2328,6 +2851,7 @@ bool MessageChannel::WaitResponse(bool aWaitTimedOut) {
 }
 
 #ifndef OS_WIN
+<<<<<<< HEAD
 bool MessageChannel::WaitForSyncNotify(bool /* aHandleWindowsMessages */) {
 #ifdef DEBUG
   // WARNING: We don't release the lock here. We can't because the link thread
@@ -2337,6 +2861,29 @@ bool MessageChannel::WaitForSyncNotify(bool /* aHandleWindowsMessages */) {
     return false;
   }
 #endif
+||||||| merged common ancestors
+bool
+MessageChannel::WaitForSyncNotify(bool /* aHandleWindowsMessages */)
+{
+#ifdef DEBUG
+    // WARNING: We don't release the lock here. We can't because the link thread
+    // could signal at this time and we would miss it. Instead we require
+    // ArtificialTimeout() to be extremely simple.
+    if (mListener->ArtificialTimeout()) {
+        return false;
+    }
+#endif
+=======
+bool MessageChannel::WaitForSyncNotify(bool /* aHandleWindowsMessages */) {
+#  ifdef DEBUG
+  // WARNING: We don't release the lock here. We can't because the link thread
+  // could signal at this time and we would miss it. Instead we require
+  // ArtificialTimeout() to be extremely simple.
+  if (mListener->ArtificialTimeout()) {
+    return false;
+  }
+#  endif
+>>>>>>> upstream-releases
 
   MOZ_RELEASE_ASSERT(!mIsSameThreadChannel,
                      "Wait on same-thread channel will deadlock!");
@@ -2354,9 +2901,32 @@ bool MessageChannel::WaitForSyncNotify(bool /* aHandleWindowsMessages */) {
 bool MessageChannel::WaitForInterruptNotify() {
   return WaitForSyncNotify(true);
 }
+<<<<<<< HEAD
 
 void MessageChannel::NotifyWorkerThread() { mMonitor->Notify(); }
 #endif
+||||||| merged common ancestors
+#endif
+
+bool
+MessageChannel::ShouldContinueFromTimeout()
+{
+    AssertWorkerThread();
+    mMonitor->AssertCurrentThreadOwns();
+
+    bool cont;
+    {
+        MonitorAutoUnlock unlock(*mMonitor);
+        cont = mListener->ShouldContinueFromReplyTimeout();
+        mListener->ArtificialSleep();
+    }
+
+    static enum { UNKNOWN, NOT_DEBUGGING, DEBUGGING } sDebuggingChildren = UNKNOWN;
+=======
+
+void MessageChannel::NotifyWorkerThread() { mMonitor->Notify(); }
+#endif
+>>>>>>> upstream-releases
 
 bool MessageChannel::ShouldContinueFromTimeout() {
   AssertWorkerThread();
@@ -2406,6 +2976,75 @@ void MessageChannel::OnChannelConnected(int32_t peer_id) {
   }
 }
 
+<<<<<<< HEAD
+void MessageChannel::DispatchOnChannelConnected() {
+  AssertWorkerThread();
+  MOZ_RELEASE_ASSERT(mPeerPidSet);
+  mListener->OnChannelConnected(mPeerPid);
+}
+
+void MessageChannel::ReportMessageRouteError(const char* channelName) const {
+  PrintErrorMessage(mSide, channelName, "Need a route");
+  mListener->ProcessingError(MsgRouteError, "MsgRouteError");
+}
+
+void MessageChannel::ReportConnectionError(const char* aChannelName,
+                                           Message* aMsg) const {
+  AssertWorkerThread();
+  mMonitor->AssertCurrentThreadOwns();
+
+  const char* errorMsg = nullptr;
+  switch (mChannelState) {
+    case ChannelClosed:
+      errorMsg = "Closed channel: cannot send/recv";
+      break;
+    case ChannelOpening:
+      errorMsg = "Opening channel: not yet ready for send/recv";
+      break;
+    case ChannelTimeout:
+      errorMsg = "Channel timeout: cannot send/recv";
+      break;
+    case ChannelClosing:
+      errorMsg =
+          "Channel closing: too late to send/recv, messages will be lost";
+      break;
+    case ChannelError:
+      errorMsg = "Channel error: cannot send/recv";
+      break;
+||||||| merged common ancestors
+void
+MessageChannel::ReportConnectionError(const char* aChannelName, Message* aMsg) const
+{
+    AssertWorkerThread();
+    mMonitor->AssertCurrentThreadOwns();
+
+    const char* errorMsg = nullptr;
+    switch (mChannelState) {
+      case ChannelClosed:
+        errorMsg = "Closed channel: cannot send/recv";
+        break;
+      case ChannelOpening:
+        errorMsg = "Opening channel: not yet ready for send/recv";
+        break;
+      case ChannelTimeout:
+        errorMsg = "Channel timeout: cannot send/recv";
+        break;
+      case ChannelClosing:
+        errorMsg = "Channel closing: too late to send/recv, messages will be lost";
+        break;
+      case ChannelError:
+        errorMsg = "Channel error: cannot send/recv";
+        break;
+
+      default:
+        MOZ_CRASH("unreached");
+    }
+
+    if (aMsg) {
+        char reason[512];
+        SprintfLiteral(reason,"(msgtype=0x%X,name=%s) %s",
+                       aMsg->type(), aMsg->name(), errorMsg);
+=======
 void MessageChannel::DispatchOnChannelConnected() {
   AssertWorkerThread();
   MOZ_RELEASE_ASSERT(mPeerPidSet);
@@ -2444,12 +3083,41 @@ void MessageChannel::ReportConnectionError(const char* aChannelName,
     default:
       MOZ_CRASH("unreached");
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    default:
+      MOZ_CRASH("unreached");
+  }
+||||||| merged common ancestors
+        PrintErrorMessage(mSide, aChannelName, reason);
+    } else {
+        PrintErrorMessage(mSide, aChannelName, errorMsg);
+    }
+=======
   if (aMsg) {
     char reason[512];
     SprintfLiteral(reason, "(msgtype=0x%X,name=%s) %s", aMsg->type(),
                    aMsg->name(), errorMsg);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (aMsg) {
+    char reason[512];
+    SprintfLiteral(reason, "(msgtype=0x%X,name=%s) %s", aMsg->type(),
+                   aMsg->name(), errorMsg);
+||||||| merged common ancestors
+    MonitorAutoUnlock unlock(*mMonitor);
+    mListener->ProcessingError(MsgDropped, errorMsg);
+}
+=======
+    PrintErrorMessage(mSide, aChannelName, reason);
+  } else {
+    PrintErrorMessage(mSide, aChannelName, errorMsg);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     PrintErrorMessage(mSide, aChannelName, reason);
   } else {
     PrintErrorMessage(mSide, aChannelName, errorMsg);
@@ -2487,6 +3155,67 @@ bool MessageChannel::MaybeHandleError(Result code, const Message& aMsg,
           "Value error: message was deserialized, but contained an illegal "
           "value";
       break;
+||||||| merged common ancestors
+bool
+MessageChannel::MaybeHandleError(Result code, const Message& aMsg, const char* channelName)
+{
+    if (MsgProcessed == code)
+        return true;
+
+    const char* errorMsg = nullptr;
+    switch (code) {
+      case MsgNotKnown:
+        errorMsg = "Unknown message: not processed";
+        break;
+      case MsgNotAllowed:
+        errorMsg = "Message not allowed: cannot be sent/recvd in this state";
+        break;
+      case MsgPayloadError:
+        errorMsg = "Payload error: message could not be deserialized";
+        break;
+      case MsgProcessingError:
+        errorMsg = "Processing error: message was deserialized, but the handler returned false (indicating failure)";
+        break;
+      case MsgRouteError:
+        errorMsg = "Route error: message sent to unknown actor ID";
+        break;
+      case MsgValueError:
+        errorMsg = "Value error: message was deserialized, but contained an illegal value";
+        break;
+=======
+  MonitorAutoUnlock unlock(*mMonitor);
+  mListener->ProcessingError(MsgDropped, errorMsg);
+}
+
+bool MessageChannel::MaybeHandleError(Result code, const Message& aMsg,
+                                      const char* channelName) {
+  if (MsgProcessed == code) return true;
+
+  const char* errorMsg = nullptr;
+  switch (code) {
+    case MsgNotKnown:
+      errorMsg = "Unknown message: not processed";
+      break;
+    case MsgNotAllowed:
+      errorMsg = "Message not allowed: cannot be sent/recvd in this state";
+      break;
+    case MsgPayloadError:
+      errorMsg = "Payload error: message could not be deserialized";
+      break;
+    case MsgProcessingError:
+      errorMsg =
+          "Processing error: message was deserialized, but the handler "
+          "returned false (indicating failure)";
+      break;
+    case MsgRouteError:
+      errorMsg = "Route error: message sent to unknown actor ID";
+      break;
+    case MsgValueError:
+      errorMsg =
+          "Value error: message was deserialized, but contained an illegal "
+          "value";
+      break;
+>>>>>>> upstream-releases
 
     default:
       MOZ_CRASH("unknown Result code");
@@ -2696,11 +3425,24 @@ void MessageChannel::Close() {
       return;
     }
 
+<<<<<<< HEAD
     if (ChannelClosed == mChannelState) {
       // XXX be strict about this until there's a compelling reason
       // to relax
       MOZ_CRASH("Close() called on closed channel!");
     }
+||||||| merged common ancestors
+        if (ChannelClosed == mChannelState) {
+            // XXX be strict about this until there's a compelling reason
+            // to relax
+            MOZ_CRASH("Close() called on closed channel!");
+        }
+=======
+    if (ChannelClosed == mChannelState) {
+      // Slightly unexpected but harmless; ignore.  See bug 1554244.
+      return;
+    }
+>>>>>>> upstream-releases
 
     // Notify the other side that we're about to close our socket. If we've
     // already received a Goodbye from the other side (and our state is
@@ -2761,7 +3503,13 @@ void MessageChannel::DebugAbort(const char* file, int line, const char* cond,
     pending.popFirst();
   }
 
+<<<<<<< HEAD
   MOZ_CRASH_UNSAFE_OOL(why);
+||||||| merged common ancestors
+    MOZ_CRASH_UNSAFE_OOL(why);
+=======
+  MOZ_CRASH_UNSAFE(why);
+>>>>>>> upstream-releases
 }
 
 void MessageChannel::DumpInterruptStack(const char* const pfx) const {

@@ -55,11 +55,24 @@ namespace gc {
 template <JS::TraceKind kind>
 struct MapTraceKindToType {};
 
+<<<<<<< HEAD
 #define DEFINE_TRACE_KIND_MAP(name, type, _)       \
   template <>                                      \
   struct MapTraceKindToType<JS::TraceKind::name> { \
     using Type = type;                             \
   };
+||||||| merged common ancestors
+#define DEFINE_TRACE_KIND_MAP(name, type, _) \
+    template <> struct MapTraceKindToType<JS::TraceKind::name> { \
+        using Type = type; \
+    };
+=======
+#define DEFINE_TRACE_KIND_MAP(name, type, _, _1)   \
+  template <>                                      \
+  struct MapTraceKindToType<JS::TraceKind::name> { \
+    using Type = type;                             \
+  };
+>>>>>>> upstream-releases
 JS_FOR_EACH_TRACEKIND(DEFINE_TRACE_KIND_MAP);
 #undef DEFINE_TRACE_KIND_MAP
 
@@ -91,12 +104,23 @@ typename PtrBaseGCType<T>::type* ConvertToBase(T* thingp) {
 }
 
 // Internal methods to trace edges.
+<<<<<<< HEAD
 template <typename T>
 void TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name);
 template <typename T>
 void TraceWeakEdgeInternal(JSTracer* trc, T* thingp, const char* name);
 template <typename T>
 void TraceRangeInternal(JSTracer* trc, size_t len, T* vec, const char* name);
+||||||| merged common ancestors
+template <typename T> void TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name);
+template <typename T> void TraceWeakEdgeInternal(JSTracer* trc, T* thingp, const char* name);
+template <typename T> void TraceRangeInternal(JSTracer* trc, size_t len, T* vec, const char* name);
+=======
+template <typename T>
+void TraceEdgeInternal(JSTracer* trc, T* thingp, const char* name);
+template <typename T>
+void TraceRangeInternal(JSTracer* trc, size_t len, T* vec, const char* name);
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
 void AssertRootMarkingPhase(JSTracer* trc);
@@ -106,40 +130,102 @@ inline void AssertRootMarkingPhase(JSTracer* trc) {}
 
 }  // namespace gc
 
-// Trace through an edge in the live object graph on behalf of tracing. The
-// effect of tracing the edge depends on the JSTracer being used. For pointer
-// types, |*thingp| must not be null.
+// Trace through a strong edge in the live object graph on behalf of
+// tracing. The effect of tracing the edge depends on the JSTracer being
+// used. For pointer types, |*thingp| must not be null.
+//
+// Note that weak edges are handled separately. GC things with weak edges must
+// not trace those edges during marking tracing (which would keep the referent
+// alive) but instead arrange for the edge to be swept by calling
+// js::gc::IsAboutToBeFinalized during sweeping. For example, see the treatment
+// of the script_ edge in LazyScript::traceChildren and
+// js::gc::SweepLazyScripts.
+//
+// GC things that are weakly held in containers can use WeakMap or a container
+// wrapped in the WeakCache<> template to perform the appropriate sweeping.
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceEdge(JSTracer* trc, WriteBarrieredBase<T>* thingp,
                       const char* name) {
   gc::TraceEdgeInternal(
       trc, gc::ConvertToBase(thingp->unsafeUnbarrieredForTracing()), name);
+||||||| merged common ancestors
+inline void
+TraceEdge(JSTracer* trc, WriteBarrieredBase<T>* thingp, const char* name)
+{
+    gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp->unsafeUnbarrieredForTracing()), name);
+=======
+inline void TraceEdge(JSTracer* trc, WriteBarriered<T>* thingp,
+                      const char* name) {
+  gc::TraceEdgeInternal(
+      trc, gc::ConvertToBase(thingp->unsafeUnbarrieredForTracing()), name);
+>>>>>>> upstream-releases
 }
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceEdge(JSTracer* trc, ReadBarriered<T>* thingp,
                       const char* name) {
   gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp->unsafeGet()), name);
+||||||| merged common ancestors
+inline void
+TraceEdge(JSTracer* trc, ReadBarriered<T>* thingp, const char* name)
+{
+    gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp->unsafeGet()), name);
+=======
+inline void TraceEdge(JSTracer* trc, WeakHeapPtr<T>* thingp, const char* name) {
+  gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp->unsafeGet()), name);
+>>>>>>> upstream-releases
 }
 
 // Trace through a possibly-null edge in the live object graph on behalf of
 // tracing.
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceNullableEdge(JSTracer* trc, WriteBarrieredBase<T>* thingp,
                               const char* name) {
   if (InternalBarrierMethods<T>::isMarkable(thingp->get())) {
     TraceEdge(trc, thingp, name);
   }
+||||||| merged common ancestors
+inline void
+TraceNullableEdge(JSTracer* trc, WriteBarrieredBase<T>* thingp, const char* name)
+{
+    if (InternalBarrierMethods<T>::isMarkable(thingp->get())) {
+        TraceEdge(trc, thingp, name);
+    }
+=======
+inline void TraceNullableEdge(JSTracer* trc, WriteBarriered<T>* thingp,
+                              const char* name) {
+  if (InternalBarrierMethods<T>::isMarkable(thingp->get())) {
+    TraceEdge(trc, thingp, name);
+  }
+>>>>>>> upstream-releases
 }
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceNullableEdge(JSTracer* trc, ReadBarriered<T>* thingp,
                               const char* name) {
   if (InternalBarrierMethods<T>::isMarkable(thingp->unbarrieredGet())) {
     TraceEdge(trc, thingp, name);
   }
+||||||| merged common ancestors
+inline void
+TraceNullableEdge(JSTracer* trc, ReadBarriered<T>* thingp, const char* name)
+{
+    if (InternalBarrierMethods<T>::isMarkable(thingp->unbarrieredGet())) {
+        TraceEdge(trc, thingp, name);
+    }
+=======
+inline void TraceNullableEdge(JSTracer* trc, WeakHeapPtr<T>* thingp,
+                              const char* name) {
+  if (InternalBarrierMethods<T>::isMarkable(thingp->unbarrieredGet())) {
+    TraceEdge(trc, thingp, name);
+  }
+>>>>>>> upstream-releases
 }
 
 // Trace through a "root" edge. These edges are the initial edges in the object
@@ -153,9 +239,19 @@ inline void TraceRoot(JSTracer* trc, T* thingp, const char* name) {
 }
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceRoot(JSTracer* trc, ReadBarriered<T>* thingp,
                       const char* name) {
   TraceRoot(trc, thingp->unsafeGet(), name);
+||||||| merged common ancestors
+inline void
+TraceRoot(JSTracer* trc, ReadBarriered<T>* thingp, const char* name)
+{
+    TraceRoot(trc, thingp->unsafeGet(), name);
+=======
+inline void TraceRoot(JSTracer* trc, WeakHeapPtr<T>* thingp, const char* name) {
+  TraceRoot(trc, thingp->unsafeGet(), name);
+>>>>>>> upstream-releases
 }
 
 // Idential to TraceRoot, except that this variant will not crash if |*thingp|
@@ -170,9 +266,20 @@ inline void TraceNullableRoot(JSTracer* trc, T* thingp, const char* name) {
 }
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceNullableRoot(JSTracer* trc, ReadBarriered<T>* thingp,
                               const char* name) {
   TraceNullableRoot(trc, thingp->unsafeGet(), name);
+||||||| merged common ancestors
+inline void
+TraceNullableRoot(JSTracer* trc, ReadBarriered<T>* thingp, const char* name)
+{
+    TraceNullableRoot(trc, thingp->unsafeGet(), name);
+=======
+inline void TraceNullableRoot(JSTracer* trc, WeakHeapPtr<T>* thingp,
+                              const char* name) {
+  TraceNullableRoot(trc, thingp->unsafeGet(), name);
+>>>>>>> upstream-releases
 }
 
 // Like TraceEdge, but for edges that do not use one of the automatic barrier
@@ -180,6 +287,7 @@ inline void TraceNullableRoot(JSTracer* trc, ReadBarriered<T>* thingp,
 // separate from TraceEdge to make accidental use of such edges more obvious.
 
 template <typename T>
+<<<<<<< HEAD
 inline void TraceManuallyBarrieredEdge(JSTracer* trc, T* thingp,
                                        const char* name) {
   gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp), name);
@@ -193,15 +301,48 @@ template <typename T>
 inline void TraceWeakEdge(JSTracer* trc, WeakRef<T>* thingp, const char* name) {
   gc::TraceWeakEdgeInternal(
       trc, gc::ConvertToBase(thingp->unsafeUnbarrieredForTracing()), name);
+||||||| merged common ancestors
+inline void
+TraceManuallyBarrieredEdge(JSTracer* trc, T* thingp, const char* name)
+{
+    gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp), name);
+}
+
+// Visits a WeakRef, but does not trace its referents. If *thingp is not marked
+// at the end of marking, it is replaced by nullptr. This method records
+// thingp, so the edge location must not change after this function is called.
+
+template <typename T>
+inline void
+TraceWeakEdge(JSTracer* trc, WeakRef<T>* thingp, const char* name)
+{
+    gc::TraceWeakEdgeInternal(trc, gc::ConvertToBase(thingp->unsafeUnbarrieredForTracing()), name);
+=======
+inline void TraceManuallyBarrieredEdge(JSTracer* trc, T* thingp,
+                                       const char* name) {
+  gc::TraceEdgeInternal(trc, gc::ConvertToBase(thingp), name);
+>>>>>>> upstream-releases
 }
 
 // Trace all edges contained in the given array.
 
 template <typename T>
+<<<<<<< HEAD
 void TraceRange(JSTracer* trc, size_t len, WriteBarrieredBase<T>* vec,
                 const char* name) {
   gc::TraceRangeInternal(
       trc, len, gc::ConvertToBase(vec[0].unsafeUnbarrieredForTracing()), name);
+||||||| merged common ancestors
+void
+TraceRange(JSTracer* trc, size_t len, WriteBarrieredBase<T>* vec, const char* name)
+{
+    gc::TraceRangeInternal(trc, len, gc::ConvertToBase(vec[0].unsafeUnbarrieredForTracing()), name);
+=======
+void TraceRange(JSTracer* trc, size_t len, WriteBarriered<T>* vec,
+                const char* name) {
+  gc::TraceRangeInternal(
+      trc, len, gc::ConvertToBase(vec[0].unsafeUnbarrieredForTracing()), name);
+>>>>>>> upstream-releases
 }
 
 // Trace all root edges in the given array.
@@ -214,9 +355,19 @@ void TraceRootRange(JSTracer* trc, size_t len, T* vec, const char* name) {
 
 // Trace an edge that crosses compartment boundaries. If the compartment of the
 // destination thing is not being GC'd, then the edge will not be traced.
+<<<<<<< HEAD
 void TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src,
                                WriteBarrieredBase<Value>* dst,
                                const char* name);
+||||||| merged common ancestors
+void
+TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src, WriteBarrieredBase<Value>* dst,
+                          const char* name);
+=======
+template <typename T>
+void TraceCrossCompartmentEdge(JSTracer* trc, JSObject* src,
+                               WriteBarriered<T>* dst, const char* name);
+>>>>>>> upstream-releases
 
 // As above but with manual barriers.
 template <typename T>

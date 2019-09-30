@@ -41,16 +41,36 @@ ServiceWorkerManagerService::~ServiceWorkerManagerService() {
   sInstance = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ServiceWorkerManagerService>
 ServiceWorkerManagerService::Get() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ServiceWorkerManagerService>
+ServiceWorkerManagerService::Get()
+{
+=======
+/* static */
+already_AddRefed<ServiceWorkerManagerService>
+ServiceWorkerManagerService::Get() {
+>>>>>>> upstream-releases
   AssertIsOnBackgroundThread();
 
   RefPtr<ServiceWorkerManagerService> instance = sInstance;
   return instance.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ServiceWorkerManagerService>
 ServiceWorkerManagerService::GetOrCreate() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ServiceWorkerManagerService>
+ServiceWorkerManagerService::GetOrCreate()
+{
+=======
+/* static */
+already_AddRefed<ServiceWorkerManagerService>
+ServiceWorkerManagerService::GetOrCreate() {
+>>>>>>> upstream-releases
   AssertIsOnBackgroundThread();
 
   RefPtr<ServiceWorkerManagerService> instance = sInstance;

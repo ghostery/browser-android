@@ -7,8 +7,15 @@
 #ifndef mozilla_EffectCompositor_h
 #define mozilla_EffectCompositor_h
 
+<<<<<<< HEAD
 #include "mozilla/AnimationPerformanceWarning.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/AnimationPerformanceWarning.h"
+#include "mozilla/AnimationTarget.h"
+>>>>>>> upstream-releases
 #include "mozilla/EnumeratedArray.h"
+#include "mozilla/HashTable.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/OwningNonNull.h"
 #include "mozilla/PseudoElementHashEntry.h"
@@ -23,8 +30,8 @@ class nsCSSPropertyIDSet;
 class nsAtom;
 class nsIFrame;
 class nsPresContext;
+enum class DisplayItemType : uint8_t;
 struct RawServoAnimationValueMap;
-typedef RawServoAnimationValueMap* RawServoAnimationValueMapBorrowedMut;
 
 namespace mozilla {
 
@@ -38,7 +45,14 @@ struct NonOwningAnimationTarget;
 namespace dom {
 class Animation;
 class Element;
+<<<<<<< HEAD
 }  // namespace dom
+||||||| merged common ancestors
+}
+=======
+class KeyframeEffect;
+}  // namespace dom
+>>>>>>> upstream-releases
 
 class EffectCompositor {
  public:
@@ -87,15 +101,25 @@ class EffectCompositor {
   // (pseudo-)element at the specified cascade level needs to be updated.
   // The specified steps taken to update the animation rule depend on
   // |aRestyleType| whose values are described above.
+<<<<<<< HEAD
   void RequestRestyle(dom::Element* aElement, CSSPseudoElementType aPseudoType,
                       RestyleType aRestyleType, CascadeLevel aCascadeLevel);
+||||||| merged common ancestors
+  void RequestRestyle(dom::Element* aElement,
+                      CSSPseudoElementType aPseudoType,
+                      RestyleType aRestyleType,
+                      CascadeLevel aCascadeLevel);
+=======
+  void RequestRestyle(dom::Element* aElement, PseudoStyleType aPseudoType,
+                      RestyleType aRestyleType, CascadeLevel aCascadeLevel);
+>>>>>>> upstream-releases
 
   // Schedule an animation restyle. This is called automatically by
   // RequestRestyle when necessary. However, it is exposed here since we also
   // need to perform this step when triggering transitions *without* also
   // invalidating the animation style rule (which RequestRestyle would do).
   void PostRestyleForAnimation(dom::Element* aElement,
-                               CSSPseudoElementType aPseudoType,
+                               PseudoStyleType aPseudoType,
                                CascadeLevel aCascadeLevel);
 
   // Posts an animation restyle for any elements whose animation style rule
@@ -104,7 +128,8 @@ class EffectCompositor {
   void PostRestyleForThrottledAnimations();
 
   // Clear all pending restyle requests for the given (pseudo-) element (and its
-  // ::before and ::after elements if the given element is not pseudo).
+  // ::before, ::after and ::marker elements if the given element is not
+  // pseudo).
   void ClearRestyleRequestsFor(dom::Element* aElement);
 
   // Called when computed style on the specified (pseudo-) element might
@@ -113,28 +138,76 @@ class EffectCompositor {
   // can be re-resolved to computed values.
   void UpdateEffectProperties(const ComputedStyle* aStyle,
                               dom::Element* aElement,
-                              CSSPseudoElementType aPseudoType);
+                              PseudoStyleType aPseudoType);
+
+<<<<<<< HEAD
+  // Get animation rule for stylo. This is an equivalent of GetAnimationRule
+  // and will be called from servo side.
+  // The animation rule is stored in |RawServoAnimationValueMapBorrowed|.
+||||||| merged common ancestors
 
   // Get animation rule for stylo. This is an equivalent of GetAnimationRule
   // and will be called from servo side.
   // The animation rule is stored in |RawServoAnimationValueMapBorrowed|.
+=======
+  // Get the animation rule for the appropriate level of the cascade for
+  // a (pseudo-)element. Called from the Servo side.
+  //
+  // The animation rule is stored in |RawServoAnimationValueMap|.
+>>>>>>> upstream-releases
   // We need to be careful while doing any modification because it may cause
   // some thread-safe issues.
+<<<<<<< HEAD
   bool GetServoAnimationRule(
       const dom::Element* aElement, CSSPseudoElementType aPseudoType,
       CascadeLevel aCascadeLevel,
       RawServoAnimationValueMapBorrowedMut aAnimationValues);
+||||||| merged common ancestors
+  bool GetServoAnimationRule(
+    const dom::Element* aElement,
+    CSSPseudoElementType aPseudoType,
+    CascadeLevel aCascadeLevel,
+    RawServoAnimationValueMapBorrowedMut aAnimationValues);
+=======
+  bool GetServoAnimationRule(const dom::Element* aElement,
+                             PseudoStyleType aPseudoType,
+                             CascadeLevel aCascadeLevel,
+                             RawServoAnimationValueMap* aAnimationValues);
+>>>>>>> upstream-releases
 
+  // A variant on GetServoAnimationRule that composes all the effects for an
+  // element up to and including |aEffect|.
+  //
+  // Note that |aEffect| might not be in the EffectSet since we can use this for
+  // committing the computed style of a removed Animation.
+  bool ComposeServoAnimationRuleForEffect(
+      dom::KeyframeEffect& aEffect, CascadeLevel aCascadeLevel,
+      RawServoAnimationValueMap* aAnimationValues);
+
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
   bool HasPendingStyleUpdates() const;
 
+>>>>>>> upstream-releases
   static bool HasAnimationsForCompositor(const nsIFrame* aFrame,
-                                         nsCSSPropertyID aProperty);
+                                         DisplayItemType aType);
 
+<<<<<<< HEAD
   static nsTArray<RefPtr<dom::Animation>> GetAnimationsForCompositor(
       const nsIFrame* aFrame, nsCSSPropertyID aProperty);
+||||||| merged common ancestors
+  static nsTArray<RefPtr<dom::Animation>>
+  GetAnimationsForCompositor(const nsIFrame* aFrame,
+                             nsCSSPropertyID aProperty);
+=======
+  static nsTArray<RefPtr<dom::Animation>> GetAnimationsForCompositor(
+      const nsIFrame* aFrame, const nsCSSPropertyIDSet& aPropertySet);
+>>>>>>> upstream-releases
 
   static void ClearIsRunningOnCompositor(const nsIFrame* aFrame,
-                                         nsCSSPropertyID aProperty);
+                                         DisplayItemType aType);
 
   // Update animation cascade results for the specified (pseudo-)element
   // but only if we have marked the cascade as needing an update due a
@@ -143,8 +216,17 @@ class EffectCompositor {
   //
   // This method does NOT detect if other styles that apply above the
   // animation level of the cascade have changed.
+<<<<<<< HEAD
   static void MaybeUpdateCascadeResults(dom::Element* aElement,
                                         CSSPseudoElementType aPseudoType);
+||||||| merged common ancestors
+  static void
+  MaybeUpdateCascadeResults(dom::Element* aElement,
+                            CSSPseudoElementType aPseudoType);
+=======
+  static void MaybeUpdateCascadeResults(dom::Element* aElement,
+                                        PseudoStyleType aPseudoType);
+>>>>>>> upstream-releases
 
   // Update the mPropertiesWithImportantRules and
   // mPropertiesForAnimationsLevel members of the given EffectSet, and also
@@ -158,9 +240,20 @@ class EffectCompositor {
   // when we detect changes to the cascade on the Servo side we can't call
   // MarkCascadeNeedsUpdate during the traversal so instead we call this as part
   // of a follow-up sequential task.
+<<<<<<< HEAD
   static void UpdateCascadeResults(EffectSet& aEffectSet,
                                    dom::Element* aElement,
                                    CSSPseudoElementType aPseudoType);
+||||||| merged common ancestors
+  static void
+  UpdateCascadeResults(EffectSet& aEffectSet,
+                       dom::Element* aElement,
+                       CSSPseudoElementType aPseudoType);
+=======
+  static void UpdateCascadeResults(EffectSet& aEffectSet,
+                                   dom::Element* aElement,
+                                   PseudoStyleType aPseudoType);
+>>>>>>> upstream-releases
 
   // Helper to fetch the corresponding element and pseudo-type from a frame.
   //
@@ -168,17 +261,33 @@ class EffectCompositor {
   // element on which we store the animations (i.e. the EffectSet and/or
   // AnimationCollection), *not* the generated content.
   //
+  // For display:table content, which maintains a distinction between primary
+  // frame (table wrapper frame) and style frame (inner table frame), animations
+  // are stored on the content associated with the _style_ frame even though
+  // some (particularly transform-like animations) may be applied to the
+  // _primary_ frame. As a result, callers will typically want to pass the style
+  // frame to this function.
+  //
   // Returns an empty result when a suitable element cannot be found including
   // when the frame represents a pseudo-element on which we do not support
   // animations.
   static Maybe<NonOwningAnimationTarget> GetAnimationElementAndPseudoForFrame(
       const nsIFrame* aFrame);
 
-  // Associates a performance warning with effects on |aFrame| that animates
-  // |aProperty|.
+  // Associates a performance warning with effects on |aFrame| that animate
+  // properties in |aPropertySet|.
   static void SetPerformanceWarning(
+<<<<<<< HEAD
       const nsIFrame* aFrame, nsCSSPropertyID aProperty,
       const AnimationPerformanceWarning& aWarning);
+||||||| merged common ancestors
+    const nsIFrame* aFrame,
+    nsCSSPropertyID aProperty,
+    const AnimationPerformanceWarning& aWarning);
+=======
+      const nsIFrame* aFrame, const nsCSSPropertyIDSet& aPropertySet,
+      const AnimationPerformanceWarning& aWarning);
+>>>>>>> upstream-releases
 
   // Do a bunch of stuff that we should avoid doing during the parallel
   // traversal (e.g. changing member variables) for all elements that we expect
@@ -187,28 +296,49 @@ class EffectCompositor {
   // Returns true if there are elements needing a restyle for animation.
   bool PreTraverse(ServoTraversalFlags aFlags);
 
-  // Similar to the above but only for the (pseudo-)element.
-  bool PreTraverse(dom::Element* aElement, CSSPseudoElementType aPseudoType);
-
   // Similar to the above but for all elements in the subtree rooted
   // at aElement.
+<<<<<<< HEAD
   bool PreTraverseInSubtree(ServoTraversalFlags aFlags, dom::Element* aRoot);
+||||||| merged common ancestors
+  bool PreTraverseInSubtree(ServoTraversalFlags aFlags, dom::Element* aElement);
+=======
+  bool PreTraverseInSubtree(ServoTraversalFlags aFlags, dom::Element* aRoot);
+
+  // Record a (pseudo-)element that may have animations that can be removed.
+  void NoteElementForReducing(const NonOwningAnimationTarget& aTarget);
+
+  bool NeedsReducing() const { return !mElementsToReduce.empty(); }
+  void ReduceAnimations();
+>>>>>>> upstream-releases
 
   // Returns the target element for restyling.
   //
-  // If |aPseudoType| is ::after or ::before, returns the generated content
-  // element of which |aElement| is the parent. If |aPseudoType| is any other
-  // pseudo type (other thant CSSPseudoElementType::NotPseudo) returns nullptr.
+  // If |aPseudoType| is ::after, ::before or ::marker, returns the generated
+  // content element of which |aElement| is the parent. If |aPseudoType| is any
+  // other pseudo type (other than PseudoStyleType::NotPseudo) returns nullptr.
   // Otherwise, returns |aElement|.
   static dom::Element* GetElementToRestyle(dom::Element* aElement,
-                                           CSSPseudoElementType aPseudoType);
+                                           PseudoStyleType aPseudoType);
 
+<<<<<<< HEAD
   // Returns true if any type of compositor animations on |aFrame| allow
   // runnning on the compositor.
   // Sets the reason in |aWarning| if the result is false.
   static bool AllowCompositorAnimationsOnFrame(
       const nsIFrame* aFrame, const EffectSet& aEffects,
       AnimationPerformanceWarning::Type& aWarning /* out */);
+||||||| merged common ancestors
+private:
+  ~EffectCompositor() = default;
+=======
+  // Returns true if any type of compositor animations on |aFrame| allow
+  // runnning on the compositor.
+  // Sets the reason in |aWarning| if the result is false.
+  static bool AllowCompositorAnimationsOnFrame(
+      const nsIFrame* aFrame,
+      AnimationPerformanceWarning::Type& aWarning /* out */);
+>>>>>>> upstream-releases
 
  private:
   ~EffectCompositor() = default;
@@ -216,9 +346,20 @@ class EffectCompositor {
   // Get the properties in |aEffectSet| that we are able to animate on the
   // compositor but which are also specified at a higher level in the cascade
   // than the animations level.
+<<<<<<< HEAD
   static nsCSSPropertyIDSet GetOverriddenProperties(
       EffectSet& aEffectSet, dom::Element* aElement,
       CSSPseudoElementType aPseudoType);
+||||||| merged common ancestors
+  static nsCSSPropertyIDSet
+  GetOverriddenProperties(EffectSet& aEffectSet,
+                          dom::Element* aElement,
+                          CSSPseudoElementType aPseudoType);
+=======
+  static nsCSSPropertyIDSet GetOverriddenProperties(
+      EffectSet& aEffectSet, dom::Element* aElement,
+      PseudoStyleType aPseudoType);
+>>>>>>> upstream-releases
 
   static nsPresContext* GetPresContext(dom::Element* aElement);
 
@@ -234,6 +375,13 @@ class EffectCompositor {
       mElementsToRestyle;
 
   bool mIsInPreTraverse = false;
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+
+  HashSet<OwningAnimationTarget> mElementsToReduce;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

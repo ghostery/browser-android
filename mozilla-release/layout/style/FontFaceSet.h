@@ -107,7 +107,7 @@ class FontFaceSet final : public DOMEventTargetHelper,
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(FontFaceSet, DOMEventTargetHelper)
   NS_DECL_NSIDOMEVENTLISTENER
 
-  FontFaceSet(nsPIDOMWindowInner* aWindow, nsIDocument* aDocument);
+  FontFaceSet(nsPIDOMWindowInner* aWindow, dom::Document* aDocument);
 
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
@@ -169,7 +169,7 @@ class FontFaceSet final : public DOMEventTargetHelper,
 
   void CopyNonRuleFacesTo(FontFaceSet* aFontFaceSet) const;
 
-  nsIDocument* Document() const { return mDocument; }
+  dom::Document* Document() const { return mDocument; }
 
   // -- Web IDL --------------------------------------------------------------
 
@@ -192,13 +192,22 @@ class FontFaceSet final : public DOMEventTargetHelper,
   uint32_t Size();
   already_AddRefed<mozilla::dom::FontFaceSetIterator> Entries();
   already_AddRefed<mozilla::dom::FontFaceSetIterator> Values();
+  MOZ_CAN_RUN_SCRIPT
   void ForEach(JSContext* aCx, FontFaceSetForEachCallback& aCallback,
                JS::Handle<JS::Value> aThisArg, mozilla::ErrorResult& aRv);
 
   // For ServoStyleSet to know ahead of time whether a font is loadable.
   void CacheFontLoadability();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  void MarkUserFontSetDirty();
+
+ private:
+>>>>>>> upstream-releases
   ~FontFaceSet();
 
   /**
@@ -248,7 +257,7 @@ class FontFaceSet final : public DOMEventTargetHelper,
   // accordingly.
   struct FontFaceRecord {
     RefPtr<FontFace> mFontFace;
-    SheetType mSheetType;  // only relevant for mRuleFaces entries
+    Maybe<StyleOrigin> mOrigin;  // only relevant for mRuleFaces entries
 
     // When true, indicates that when finished loading, the FontFace should be
     // included in the subsequent loadingdone/loadingerror event fired at the
@@ -256,10 +265,21 @@ class FontFaceSet final : public DOMEventTargetHelper,
     bool mLoadEventShouldFire;
   };
 
+<<<<<<< HEAD
   static already_AddRefed<gfxUserFontEntry>
   FindOrCreateUserFontEntryFromFontFace(const nsACString& aFamilyName,
                                         FontFace* aFontFace,
                                         SheetType aSheetType);
+||||||| merged common ancestors
+  static already_AddRefed<gfxUserFontEntry> FindOrCreateUserFontEntryFromFontFace(
+                                                   const nsACString& aFamilyName,
+                                                   FontFace* aFontFace,
+                                                   SheetType aSheetType);
+=======
+  static already_AddRefed<gfxUserFontEntry>
+  FindOrCreateUserFontEntryFromFontFace(const nsACString& aFamilyName,
+                                        FontFace* aFontFace, StyleOrigin);
+>>>>>>> upstream-releases
 
   // search for @font-face rule that matches a userfont font entry
   RawServoFontFaceRule* FindRuleForUserFontEntry(
@@ -275,12 +295,26 @@ class FontFaceSet final : public DOMEventTargetHelper,
   void DispatchFontLoadViolations(nsTArray<nsCOMPtr<nsIRunnable>>& aViolations);
   nsresult SyncLoadFontData(gfxUserFontEntry* aFontToLoad,
                             const gfxFontFaceSrc* aFontFaceSrc,
+<<<<<<< HEAD
                             uint8_t*& aBuffer, uint32_t& aBufferLength);
   nsresult LogMessage(gfxUserFontEntry* aUserFontEntry, const char* aMessage,
                       uint32_t aFlags, nsresult aStatus);
   void MarkUserFontSetDirty();
+||||||| merged common ancestors
+                            uint8_t*& aBuffer,
+                            uint32_t& aBufferLength);
+  nsresult LogMessage(gfxUserFontEntry* aUserFontEntry,
+                      const char* aMessage,
+                      uint32_t aFlags,
+                      nsresult aStatus);
+  void MarkUserFontSetDirty();
+=======
+                            uint8_t*& aBuffer, uint32_t& aBufferLength);
+  nsresult LogMessage(gfxUserFontEntry* aUserFontEntry, const char* aMessage,
+                      uint32_t aFlags, nsresult aStatus);
+>>>>>>> upstream-releases
 
-  void InsertRuleFontFace(FontFace* aFontFace, SheetType aSheetType,
+  void InsertRuleFontFace(FontFace* aFontFace, StyleOrigin aOrigin,
                           nsTArray<FontFaceRecord>& aOldRecords,
                           bool& aFontSetModified);
   void InsertNonRuleFontFace(FontFace* aFontFace, bool& aFontSetModified);
@@ -316,7 +350,7 @@ class FontFaceSet final : public DOMEventTargetHelper,
   RefPtr<UserFontSet> mUserFontSet;
 
   // The document this is a FontFaceSet for.
-  nsCOMPtr<nsIDocument> mDocument;
+  RefPtr<dom::Document> mDocument;
 
   // The document's node principal, which is the principal font loads for
   // this FontFaceSet will generally use.  (This principal is not used for

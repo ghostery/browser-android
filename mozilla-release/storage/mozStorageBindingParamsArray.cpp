@@ -15,8 +15,20 @@ namespace storage {
 //// BindingParamsArray
 
 BindingParamsArray::BindingParamsArray(
+<<<<<<< HEAD
     StorageBaseStatementInternal *aOwningStatement)
     : mOwningStatement(aOwningStatement), mLocked(false) {}
+||||||| merged common ancestors
+  StorageBaseStatementInternal *aOwningStatement
+)
+: mOwningStatement(aOwningStatement)
+, mLocked(false)
+{
+}
+=======
+    StorageBaseStatementInternal* aOwningStatement)
+    : mOwningStatement(aOwningStatement), mLocked(false) {}
+>>>>>>> upstream-releases
 
 void BindingParamsArray::lock() {
   NS_ASSERTION(mLocked == false, "Array has already been locked!");
@@ -27,7 +39,15 @@ void BindingParamsArray::lock() {
   mOwningStatement = nullptr;
 }
 
+<<<<<<< HEAD
 const StorageBaseStatementInternal *BindingParamsArray::getOwner() const {
+||||||| merged common ancestors
+const StorageBaseStatementInternal *
+BindingParamsArray::getOwner() const
+{
+=======
+const StorageBaseStatementInternal* BindingParamsArray::getOwner() const {
+>>>>>>> upstream-releases
   return mOwningStatement;
 }
 
@@ -37,7 +57,14 @@ NS_IMPL_ISUPPORTS(BindingParamsArray, mozIStorageBindingParamsArray)
 //// mozIStorageBindingParamsArray
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BindingParamsArray::NewBindingParams(mozIStorageBindingParams **_params) {
+||||||| merged common ancestors
+BindingParamsArray::NewBindingParams(mozIStorageBindingParams **_params)
+{
+=======
+BindingParamsArray::NewBindingParams(mozIStorageBindingParams** _params) {
+>>>>>>> upstream-releases
   NS_ENSURE_FALSE(mLocked, NS_ERROR_UNEXPECTED);
 
   nsCOMPtr<mozIStorageBindingParams> params(
@@ -49,10 +76,17 @@ BindingParamsArray::NewBindingParams(mozIStorageBindingParams **_params) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BindingParamsArray::AddParams(mozIStorageBindingParams *aParameters) {
+||||||| merged common ancestors
+BindingParamsArray::AddParams(mozIStorageBindingParams *aParameters)
+{
+=======
+BindingParamsArray::AddParams(mozIStorageBindingParams* aParameters) {
+>>>>>>> upstream-releases
   NS_ENSURE_FALSE(mLocked, NS_ERROR_UNEXPECTED);
 
-  BindingParams *params = static_cast<BindingParams *>(aParameters);
+  BindingParams* params = static_cast<BindingParams*>(aParameters);
 
   // Check to make sure that this set of parameters was created with us.
   if (params->getOwner() != this) return NS_ERROR_UNEXPECTED;
@@ -66,7 +100,14 @@ BindingParamsArray::AddParams(mozIStorageBindingParams *aParameters) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BindingParamsArray::GetLength(uint32_t *_length) {
+||||||| merged common ancestors
+BindingParamsArray::GetLength(uint32_t *_length)
+{
+=======
+BindingParamsArray::GetLength(uint32_t* _length) {
+>>>>>>> upstream-releases
   *_length = length();
   return NS_OK;
 }

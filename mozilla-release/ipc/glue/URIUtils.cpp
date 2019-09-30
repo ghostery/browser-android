@@ -6,8 +6,6 @@
 
 #include "URIUtils.h"
 
-#include "nsIIPCSerializableURI.h"
-
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/dom/BlobURL.h"
@@ -42,26 +40,41 @@ void SerializeURI(nsIURI* aURI, URIParams& aParams) {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aURI);
 
-  nsCOMPtr<nsIIPCSerializableURI> serializable = do_QueryInterface(aURI);
-  if (!serializable) {
-    MOZ_CRASH("All IPDL URIs must be serializable!");
-  }
-
-  serializable->Serialize(aParams);
+  aURI->Serialize(aParams);
   if (aParams.type() == URIParams::T__None) {
     MOZ_CRASH("Serialize failed!");
   }
 }
 
+<<<<<<< HEAD
 void SerializeURI(nsIURI* aURI, OptionalURIParams& aParams) {
+||||||| merged common ancestors
+void
+SerializeURI(nsIURI* aURI,
+             OptionalURIParams& aParams)
+{
+=======
+void SerializeURI(nsIURI* aURI, Maybe<URIParams>& aParams) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aURI) {
     URIParams params;
     SerializeURI(aURI, params);
+<<<<<<< HEAD
     aParams = params;
   } else {
     aParams = mozilla::void_t();
+||||||| merged common ancestors
+    aParams = params;
+  }
+  else {
+    aParams = mozilla::void_t();
+=======
+    aParams = Some(std::move(params));
+  } else {
+    aParams = Nothing();
+>>>>>>> upstream-releases
   }
 }
 
@@ -123,21 +136,21 @@ already_AddRefed<nsIURI> DeserializeURI(const URIParams& aParams) {
   return uri.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsIURI> DeserializeURI(const OptionalURIParams& aParams) {
+||||||| merged common ancestors
+already_AddRefed<nsIURI>
+DeserializeURI(const OptionalURIParams& aParams)
+{
+=======
+already_AddRefed<nsIURI> DeserializeURI(const Maybe<URIParams>& aParams) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIURI> uri;
 
-  switch (aParams.type()) {
-    case OptionalURIParams::Tvoid_t:
-      break;
-
-    case OptionalURIParams::TURIParams:
-      uri = DeserializeURI(aParams.get_URIParams());
-      break;
-
-    default:
-      MOZ_CRASH("Unknown params!");
+  if (aParams.isSome()) {
+    uri = DeserializeURI(aParams.ref());
   }
 
   return uri.forget();

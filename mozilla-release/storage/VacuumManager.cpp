@@ -60,7 +60,14 @@ class BaseCallback : public mozIStorageStatementCallback {
 };
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BaseCallback::HandleError(mozIStorageError *aError) {
+||||||| merged common ancestors
+BaseCallback::HandleError(mozIStorageError *aError)
+{
+=======
+BaseCallback::HandleError(mozIStorageError* aError) {
+>>>>>>> upstream-releases
 #ifdef DEBUG
   int32_t result;
   nsresult rv = aError->GetResult(&result);
@@ -80,7 +87,14 @@ BaseCallback::HandleError(mozIStorageError *aError) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BaseCallback::HandleResult(mozIStorageResultSet *aResultSet) {
+||||||| merged common ancestors
+BaseCallback::HandleResult(mozIStorageResultSet *aResultSet)
+{
+=======
+BaseCallback::HandleResult(mozIStorageResultSet* aResultSet) {
+>>>>>>> upstream-releases
   // We could get results from PRAGMA statements, but we don't mind them.
   return NS_OK;
 }
@@ -100,7 +114,7 @@ class Vacuumer : public BaseCallback {
  public:
   NS_DECL_MOZISTORAGESTATEMENTCALLBACK
 
-  explicit Vacuumer(mozIStorageVacuumParticipant *aParticipant);
+  explicit Vacuumer(mozIStorageVacuumParticipant* aParticipant);
 
   bool execute();
   nsresult notifyCompletion(bool aSucceeded);
@@ -114,8 +128,18 @@ class Vacuumer : public BaseCallback {
 ////////////////////////////////////////////////////////////////////////////////
 //// Vacuumer implementation.
 
+<<<<<<< HEAD
 Vacuumer::Vacuumer(mozIStorageVacuumParticipant *aParticipant)
     : mParticipant(aParticipant) {}
+||||||| merged common ancestors
+Vacuumer::Vacuumer(mozIStorageVacuumParticipant *aParticipant)
+  : mParticipant(aParticipant)
+{
+}
+=======
+Vacuumer::Vacuumer(mozIStorageVacuumParticipant* aParticipant)
+    : mParticipant(aParticipant) {}
+>>>>>>> upstream-releases
 
 bool Vacuumer::execute() {
   MOZ_ASSERT(NS_IsMainThread(), "Must be running on the main thread!");
@@ -211,7 +235,14 @@ bool Vacuumer::execute() {
 //// mozIStorageStatementCallback
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Vacuumer::HandleError(mozIStorageError *aError) {
+||||||| merged common ancestors
+Vacuumer::HandleError(mozIStorageError *aError)
+{
+=======
+Vacuumer::HandleError(mozIStorageError* aError) {
+>>>>>>> upstream-releases
   int32_t result;
   nsresult rv;
   nsAutoCString message;
@@ -245,7 +276,14 @@ Vacuumer::HandleError(mozIStorageError *aError) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Vacuumer::HandleResult(mozIStorageResultSet *aResultSet) {
+||||||| merged common ancestors
+Vacuumer::HandleResult(mozIStorageResultSet *aResultSet)
+{
+=======
+Vacuumer::HandleResult(mozIStorageResultSet* aResultSet) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("Got a resultset from a vacuum?");
   return NS_OK;
 }
@@ -287,7 +325,14 @@ nsresult Vacuumer::notifyCompletion(bool aSucceeded) {
 
 NS_IMPL_ISUPPORTS(VacuumManager, nsIObserver)
 
+<<<<<<< HEAD
 VacuumManager *VacuumManager::gVacuumManager = nullptr;
+||||||| merged common ancestors
+VacuumManager *
+VacuumManager::gVacuumManager = nullptr;
+=======
+VacuumManager* VacuumManager::gVacuumManager = nullptr;
+>>>>>>> upstream-releases
 
 already_AddRefed<VacuumManager> VacuumManager::getSingleton() {
   // Don't allocate it in the child Process.
@@ -323,8 +368,18 @@ VacuumManager::~VacuumManager() {
 //// nsIObserver
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 VacuumManager::Observe(nsISupports *aSubject, const char *aTopic,
                        const char16_t *aData) {
+||||||| merged common ancestors
+VacuumManager::Observe(nsISupports *aSubject,
+                       const char *aTopic,
+                       const char16_t *aData)
+{
+=======
+VacuumManager::Observe(nsISupports* aSubject, const char* aTopic,
+                       const char16_t* aData) {
+>>>>>>> upstream-releases
   if (strcmp(aTopic, OBSERVER_TOPIC_IDLE_DAILY) == 0) {
     // Try to run vacuum on all registered entries.  Will stop at the first
     // successful one.

@@ -4,14 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/ArrayUtils.h"
-
 #include "mozilla/dom/SVGClipPathElement.h"
+
+#include "mozilla/ArrayUtils.h"
 #include "mozilla/dom/SVGClipPathElementBinding.h"
 #include "mozilla/dom/SVGUnitTypesBinding.h"
 #include "nsGkAtoms.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(ClipPath)
+NS_IMPL_NS_NEW_SVG_ELEMENT(ClipPath)
 
 namespace mozilla {
 namespace dom {
@@ -23,8 +23,21 @@ JSObject* SVGClipPathElement::WrapNode(JSContext* aCx,
   return SVGClipPathElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::EnumInfo SVGClipPathElement::sEnumInfo[1] = {
     {nsGkAtoms::clipPathUnits, sSVGUnitTypesMap, SVG_UNIT_TYPE_USERSPACEONUSE}};
+||||||| merged common ancestors
+nsSVGElement::EnumInfo SVGClipPathElement::sEnumInfo[1] =
+{
+  { nsGkAtoms::clipPathUnits,
+    sSVGUnitTypesMap,
+    SVG_UNIT_TYPE_USERSPACEONUSE
+  }
+};
+=======
+SVGElement::EnumInfo SVGClipPathElement::sEnumInfo[1] = {
+    {nsGkAtoms::clipPathUnits, sSVGUnitTypesMap, SVG_UNIT_TYPE_USERSPACEONUSE}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
@@ -33,12 +46,32 @@ SVGClipPathElement::SVGClipPathElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGClipPathElementBase(std::move(aNodeInfo)) {}
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedEnumeration> SVGClipPathElement::ClipPathUnits() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedEnumeration>
+SVGClipPathElement::ClipPathUnits()
+{
+=======
+already_AddRefed<DOMSVGAnimatedEnumeration>
+SVGClipPathElement::ClipPathUnits() {
+>>>>>>> upstream-releases
   return mEnumAttributes[CLIPPATHUNITS].ToDOMAnimatedEnum(this);
 }
 
+<<<<<<< HEAD
 nsSVGElement::EnumAttributesInfo SVGClipPathElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+||||||| merged common ancestors
+nsSVGElement::EnumAttributesInfo
+SVGClipPathElement::GetEnumInfo()
+{
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
+                            ArrayLength(sEnumInfo));
+=======
+SVGElement::EnumAttributesInfo SVGClipPathElement::GetEnumInfo() {
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+>>>>>>> upstream-releases
 }
 
 bool SVGClipPathElement::IsUnitsObjectBoundingBox() const {

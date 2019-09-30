@@ -29,13 +29,29 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
  protected:
   virtual ~BasicContainerLayer();
 
+<<<<<<< HEAD
  public:
   virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+||||||| merged common ancestors
+public:
+  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
+  {
+=======
+ public:
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+>>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ContainerLayer::SetVisibleRegion(aRegion);
   }
+<<<<<<< HEAD
   virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override {
+||||||| merged common ancestors
+  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override
+  {
+=======
+  bool InsertAfter(Layer* aChild, Layer* aAfter) override {
+>>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -43,7 +59,14 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
     return ContainerLayer::InsertAfter(aChild, aAfter);
   }
 
+<<<<<<< HEAD
   virtual bool RemoveChild(Layer* aChild) override {
+||||||| merged common ancestors
+  virtual bool RemoveChild(Layer* aChild) override
+  { 
+=======
+  bool RemoveChild(Layer* aChild) override {
+>>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -51,7 +74,14 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
     return ContainerLayer::RemoveChild(aChild);
   }
 
+<<<<<<< HEAD
   virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override {
+||||||| merged common ancestors
+  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override
+  {
+=======
+  bool RepositionChild(Layer* aChild, Layer* aAfter) override {
+>>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -59,8 +89,15 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
     return ContainerLayer::RepositionChild(aChild, aAfter);
   }
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override;
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override;
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override;
+>>>>>>> upstream-releases
 
   /**
    * Returns true when:
@@ -82,15 +119,14 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
     mSupportsComponentAlphaChildren = aSupports;
   }
 
-  virtual void Validate(LayerManager::DrawPaintedLayerCallback aCallback,
-                        void* aCallbackData,
-                        ReadbackProcessor* aReadback) override;
+  void Validate(LayerManager::DrawPaintedLayerCallback aCallback,
+                void* aCallbackData, ReadbackProcessor* aReadback) override;
 
   /**
    * We don't really have a hard restriction for max layer size, but we pick
    * 4096 to avoid excessive memory usage.
    */
-  virtual int32_t GetMaxLayerSize() override { return 4096; }
+  int32_t GetMaxLayerSize() override { return 4096; }
 
  protected:
   BasicLayerManager* BasicManager() {

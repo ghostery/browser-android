@@ -43,7 +43,15 @@ inline uint32_t Avg2(uint32_t a, uint32_t b) {
   return ((sum & mask) >> 1) + carry;
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::ScaleForSize(const IntSize &aSize) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::ScaleForSize(const IntSize &aSize)
+{
+=======
+void ImageHalfScaler::ScaleForSize(const IntSize& aSize) {
+>>>>>>> upstream-releases
   uint32_t horizontalDownscales = 0;
   uint32_t verticalDownscales = 0;
 
@@ -86,8 +94,16 @@ void ImageHalfScaler::ScaleForSize(const IntSize &aSize) {
 
   if (uintptr_t(mDataStorage) % 16) {
     // Our storage does not start at a 16-byte boundary. Make sure mData does!
+<<<<<<< HEAD
     mData = (uint8_t *)(uintptr_t(mDataStorage) +
                         (16 - (uintptr_t(mDataStorage) % 16)));
+||||||| merged common ancestors
+    mData = (uint8_t*)(uintptr_t(mDataStorage) +
+      (16 - (uintptr_t(mDataStorage) % 16)));
+=======
+    mData = (uint8_t*)(uintptr_t(mDataStorage) +
+                       (16 - (uintptr_t(mDataStorage) % 16)));
+>>>>>>> upstream-releases
   } else {
     mData = mDataStorage;
   }
@@ -101,8 +117,16 @@ void ImageHalfScaler::ScaleForSize(const IntSize &aSize) {
    */
   IntSize currentSampledSize = mOrigSize;
   uint32_t currentSampledStride = mOrigStride;
+<<<<<<< HEAD
   uint8_t *currentSampledData = mOrigData;
 
+||||||| merged common ancestors
+  uint8_t *currentSampledData = mOrigData;
+  
+=======
+  uint8_t* currentSampledData = mOrigData;
+
+>>>>>>> upstream-releases
   while (verticalDownscales && horizontalDownscales) {
     if (currentSampledSize.width % 2) {
       currentSampledSize.width -= 1;
@@ -151,9 +175,21 @@ void ImageHalfScaler::ScaleForSize(const IntSize &aSize) {
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImage2D(uint8_t *aSource, int32_t aSourceStride,
                                   const IntSize &aSourceSize, uint8_t *aDest,
                                   uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImage2D(uint8_t *aSource, int32_t aSourceStride,
+                             const IntSize &aSourceSize, uint8_t *aDest,
+                             uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImage2D(uint8_t* aSource, int32_t aSourceStride,
+                                  const IntSize& aSourceSize, uint8_t* aDest,
+                                  uint32_t aDestStride) {
+>>>>>>> upstream-releases
 #ifdef USE_SSE2
   if (Factory::HasSSE2()) {
     HalfImage2D_SSE2(aSource, aSourceStride, aSourceSize, aDest, aDestStride);
@@ -164,9 +200,21 @@ void ImageHalfScaler::HalfImage2D(uint8_t *aSource, int32_t aSourceStride,
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImageVertical(uint8_t *aSource, int32_t aSourceStride,
                                         const IntSize &aSourceSize,
                                         uint8_t *aDest, uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImageVertical(uint8_t *aSource, int32_t aSourceStride,
+                                   const IntSize &aSourceSize, uint8_t *aDest,
+                                   uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImageVertical(uint8_t* aSource, int32_t aSourceStride,
+                                        const IntSize& aSourceSize,
+                                        uint8_t* aDest, uint32_t aDestStride) {
+>>>>>>> upstream-releases
 #ifdef USE_SSE2
   if (Factory::HasSSE2()) {
     HalfImageVertical_SSE2(aSource, aSourceStride, aSourceSize, aDest,
@@ -179,11 +227,25 @@ void ImageHalfScaler::HalfImageVertical(uint8_t *aSource, int32_t aSourceStride,
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImageHorizontal(uint8_t *aSource,
                                           int32_t aSourceStride,
                                           const IntSize &aSourceSize,
                                           uint8_t *aDest,
                                           uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImageHorizontal(uint8_t *aSource, int32_t aSourceStride,
+                                     const IntSize &aSourceSize, uint8_t *aDest,
+                                     uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImageHorizontal(uint8_t* aSource,
+                                          int32_t aSourceStride,
+                                          const IntSize& aSourceSize,
+                                          uint8_t* aDest,
+                                          uint32_t aDestStride) {
+>>>>>>> upstream-releases
 #ifdef USE_SSE2
   if (Factory::HasSSE2()) {
     HalfImageHorizontal_SSE2(aSource, aSourceStride, aSourceSize, aDest,
@@ -196,14 +258,32 @@ void ImageHalfScaler::HalfImageHorizontal(uint8_t *aSource,
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImage2D_C(uint8_t *aSource, int32_t aSourceStride,
                                     const IntSize &aSourceSize, uint8_t *aDest,
                                     uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImage2D_C(uint8_t *aSource, int32_t aSourceStride,
+                               const IntSize &aSourceSize, uint8_t *aDest,
+                               uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImage2D_C(uint8_t* aSource, int32_t aSourceStride,
+                                    const IntSize& aSourceSize, uint8_t* aDest,
+                                    uint32_t aDestStride) {
+>>>>>>> upstream-releases
   for (int y = 0; y < aSourceSize.height; y += 2) {
+<<<<<<< HEAD
     uint32_t *storage = (uint32_t *)(aDest + (y / 2) * aDestStride);
+||||||| merged common ancestors
+    uint32_t *storage = (uint32_t*)(aDest + (y / 2) * aDestStride);
+=======
+    uint32_t* storage = (uint32_t*)(aDest + (y / 2) * aDestStride);
+>>>>>>> upstream-releases
     for (int x = 0; x < aSourceSize.width; x += 2) {
-      uint8_t *upperRow = aSource + (y * aSourceStride + x * 4);
-      uint8_t *lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
+      uint8_t* upperRow = aSource + (y * aSourceStride + x * 4);
+      uint8_t* lowerRow = aSource + ((y + 1) * aSourceStride + x * 4);
 
       *storage++ = Avg2x2(*(uint32_t *)upperRow, *((uint32_t *)upperRow + 1),
                           *(uint32_t *)lowerRow, *((uint32_t *)lowerRow + 1));
@@ -211,32 +291,85 @@ void ImageHalfScaler::HalfImage2D_C(uint8_t *aSource, int32_t aSourceStride,
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImageVertical_C(uint8_t *aSource,
                                           int32_t aSourceStride,
                                           const IntSize &aSourceSize,
                                           uint8_t *aDest,
                                           uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImageVertical_C(uint8_t *aSource, int32_t aSourceStride,
+                                     const IntSize &aSourceSize, uint8_t *aDest,
+                                     uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImageVertical_C(uint8_t* aSource,
+                                          int32_t aSourceStride,
+                                          const IntSize& aSourceSize,
+                                          uint8_t* aDest,
+                                          uint32_t aDestStride) {
+>>>>>>> upstream-releases
   for (int y = 0; y < aSourceSize.height; y += 2) {
+<<<<<<< HEAD
     uint32_t *storage = (uint32_t *)(aDest + (y / 2) * aDestStride);
+||||||| merged common ancestors
+    uint32_t *storage = (uint32_t*)(aDest + (y / 2) * aDestStride);
+=======
+    uint32_t* storage = (uint32_t*)(aDest + (y / 2) * aDestStride);
+>>>>>>> upstream-releases
     for (int x = 0; x < aSourceSize.width; x++) {
+<<<<<<< HEAD
       uint32_t *upperRow = (uint32_t *)(aSource + (y * aSourceStride + x * 4));
       uint32_t *lowerRow =
           (uint32_t *)(aSource + ((y + 1) * aSourceStride + x * 4));
+||||||| merged common ancestors
+      uint32_t *upperRow = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
+      uint32_t *lowerRow = (uint32_t*)(aSource + ((y + 1) * aSourceStride + x * 4));
+=======
+      uint32_t* upperRow = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
+      uint32_t* lowerRow =
+          (uint32_t*)(aSource + ((y + 1) * aSourceStride + x * 4));
+>>>>>>> upstream-releases
 
       *storage++ = Avg2(*upperRow, *lowerRow);
     }
   }
 }
 
+<<<<<<< HEAD
 void ImageHalfScaler::HalfImageHorizontal_C(uint8_t *aSource,
                                             int32_t aSourceStride,
                                             const IntSize &aSourceSize,
                                             uint8_t *aDest,
                                             uint32_t aDestStride) {
+||||||| merged common ancestors
+void
+ImageHalfScaler::HalfImageHorizontal_C(uint8_t *aSource, int32_t aSourceStride,
+                                       const IntSize &aSourceSize, uint8_t *aDest,
+                                       uint32_t aDestStride)
+{
+=======
+void ImageHalfScaler::HalfImageHorizontal_C(uint8_t* aSource,
+                                            int32_t aSourceStride,
+                                            const IntSize& aSourceSize,
+                                            uint8_t* aDest,
+                                            uint32_t aDestStride) {
+>>>>>>> upstream-releases
   for (int y = 0; y < aSourceSize.height; y++) {
+<<<<<<< HEAD
     uint32_t *storage = (uint32_t *)(aDest + y * aDestStride);
     for (int x = 0; x < aSourceSize.width; x += 2) {
       uint32_t *pixels = (uint32_t *)(aSource + (y * aSourceStride + x * 4));
+||||||| merged common ancestors
+    uint32_t *storage = (uint32_t*)(aDest + y * aDestStride);
+    for (int x = 0; x < aSourceSize.width;  x+= 2) {
+      uint32_t *pixels = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
+=======
+    uint32_t* storage = (uint32_t*)(aDest + y * aDestStride);
+    for (int x = 0; x < aSourceSize.width; x += 2) {
+      uint32_t* pixels = (uint32_t*)(aSource + (y * aSourceStride + x * 4));
+>>>>>>> upstream-releases
 
       *storage++ = Avg2(*pixels, *(pixels + 1));
     }

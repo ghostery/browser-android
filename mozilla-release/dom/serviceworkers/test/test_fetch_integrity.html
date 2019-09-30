@@ -3,7 +3,6 @@
 <head>
   <title> Test fetch.integrity on console report for serviceWorker and sharedWorker </title>
   <script src="/tests/SimpleTest/SimpleTest.js"></script>
-  <script src="/tests/SimpleTest/AddTask.js"></script>
   <script src="error_reporting_helpers.js"></script>
   <link rel="stylesheet" href="/tests/SimpleTest/test.css"/>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
@@ -17,6 +16,7 @@
 let security_localizer =
   stringBundleService.createBundle("chrome://global/locale/security/security.properties");
 
+<<<<<<< HEAD
 let consoleScript;
 let monitorCallbacks = [];
 
@@ -82,6 +82,74 @@ function waitForMessages() {
   });
 }
 
+||||||| merged common ancestors
+=======
+let consoleScript;
+let monitorCallbacks = [];
+
+function registerConsoleMonitor() {
+  return new Promise(resolve => {
+    var url = SimpleTest.getTestFileURL("console_monitor.js");
+    consoleScript = SpecialPowers.loadChromeScript(url);
+
+    consoleScript.addMessageListener("ready", resolve);
+    consoleScript.addMessageListener("monitor", function(msg) {
+      for (let i = 0; i < monitorCallbacks.length;) {
+         if (monitorCallbacks[i](msg)) {
+           ++i;
+         } else {
+           monitorCallbacks.splice(i, 1);
+         }
+      }
+    });
+    consoleScript.sendAsyncMessage("load", {});
+  });
+}
+
+function unregisterConsoleMonitor() {
+  return new Promise(resolve => {
+    consoleScript.addMessageListener("unloaded", () => {
+      consoleScript.destroy();
+      resolve();
+    });
+    consoleScript.sendAsyncMessage("unload", {});
+  });
+}
+
+function registerConsoleMonitorCallback(callback) {
+  monitorCallbacks.push(callback);
+}
+
+function waitForMessages() {
+  let messages = [];
+
+  // process repeated paired arguments of: msgId, args
+  for (let i = 0; i < arguments.length; i += 3) {
+    let msgId = arguments[i];
+    let args = arguments[i + 1];
+    messages.push(security_localizer.formatStringFromName(msgId, args));
+  }
+
+  return new Promise(resolve => {
+    registerConsoleMonitorCallback(msg => {
+      for (let i = 0; i < messages.length; ++i) {
+        if (messages[i] == msg.errorMessage) {
+          messages.splice(i, 1);
+          break;
+        }
+      }
+
+      if (messages.length == 0) {
+        resolve();
+        return false;
+      }
+
+      return true;
+    });
+  });
+}
+
+>>>>>>> upstream-releases
 function expect_security_console_message(/* msgId, args, ... */) {
   let expectations = [];
   // process repeated paired arguments of: msgId, args
@@ -90,7 +158,7 @@ function expect_security_console_message(/* msgId, args, ... */) {
     let args = arguments[i + 1];
     let filename = arguments[i + 2];
     expectations.push({
-      errorMessage: security_localizer.formatStringFromName(msgId, args, args.length),
+      errorMessage: security_localizer.formatStringFromName(msgId, args),
       sourceName: filename,
     });
   }

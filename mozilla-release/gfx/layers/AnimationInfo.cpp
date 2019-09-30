@@ -8,6 +8,7 @@
 #include "mozilla/LayerAnimationInfo.h"
 #include "mozilla/layers/WebRenderLayerManager.h"
 #include "mozilla/layers/AnimationHelper.h"
+#include "mozilla/layers/CompositorThread.h"
 #include "mozilla/dom/Animation.h"
 #include "nsIContent.h"
 #include "PuppetWidget.h"
@@ -25,7 +26,16 @@ void AnimationInfo::EnsureAnimationsId() {
   }
 }
 
+<<<<<<< HEAD
 Animation* AnimationInfo::AddAnimation() {
+||||||| merged common ancestors
+Animation*
+AnimationInfo::AddAnimation()
+{
+=======
+Animation* AnimationInfo::AddAnimation() {
+  MOZ_ASSERT(!CompositorThreadHolder::IsInCompositorThread());
+>>>>>>> upstream-releases
   // Here generates a new id when the first animation is added and
   // this id is used to represent the animations in this layer.
   EnsureAnimationsId();
@@ -39,7 +49,16 @@ Animation* AnimationInfo::AddAnimation() {
   return anim;
 }
 
+<<<<<<< HEAD
 Animation* AnimationInfo::AddAnimationForNextTransaction() {
+||||||| merged common ancestors
+Animation*
+AnimationInfo::AddAnimationForNextTransaction()
+{
+=======
+Animation* AnimationInfo::AddAnimationForNextTransaction() {
+  MOZ_ASSERT(!CompositorThreadHolder::IsInCompositorThread());
+>>>>>>> upstream-releases
   MOZ_ASSERT(mPendingAnimations,
              "should have called ClearAnimationsForNextTransaction first");
 
@@ -51,12 +70,12 @@ Animation* AnimationInfo::AddAnimationForNextTransaction() {
 void AnimationInfo::ClearAnimations() {
   mPendingAnimations = nullptr;
 
-  if (mAnimations.IsEmpty() && mAnimationData.IsEmpty()) {
+  if (mAnimations.IsEmpty() && mPropertyAnimationGroups.IsEmpty()) {
     return;
   }
 
   mAnimations.Clear();
-  mAnimationData.Clear();
+  mPropertyAnimationGroups.Clear();
 
   mMutated = true;
 }
@@ -70,13 +89,33 @@ void AnimationInfo::ClearAnimationsForNextTransaction() {
   mPendingAnimations->Clear();
 }
 
+<<<<<<< HEAD
 void AnimationInfo::SetCompositorAnimations(
     const CompositorAnimations& aCompositorAnimations) {
   mAnimations = aCompositorAnimations.animations();
+||||||| merged common ancestors
+void
+AnimationInfo::SetCompositorAnimations(const CompositorAnimations& aCompositorAnimations)
+{
+  mAnimations = aCompositorAnimations.animations();
+=======
+void AnimationInfo::SetCompositorAnimations(
+    const CompositorAnimations& aCompositorAnimations) {
+>>>>>>> upstream-releases
   mCompositorAnimationsId = aCompositorAnimations.id();
+<<<<<<< HEAD
   mAnimationData.Clear();
   AnimationHelper::SetAnimations(mAnimations, mAnimationData,
                                  mBaseAnimationStyle);
+||||||| merged common ancestors
+  mAnimationData.Clear();
+  AnimationHelper::SetAnimations(mAnimations,
+                                 mAnimationData,
+                                 mBaseAnimationStyle);
+=======
+  mPropertyAnimationGroups =
+      AnimationHelper::ExtractAnimations(aCompositorAnimations.animations());
+>>>>>>> upstream-releases
 }
 
 bool AnimationInfo::StartPendingAnimations(const TimeStamp& aReadyTime) {
@@ -87,23 +126,47 @@ bool AnimationInfo::StartPendingAnimations(const TimeStamp& aReadyTime) {
 
     // If the animation is doing an async update of its playback rate, then we
     // want to match whatever its current time would be at *aReadyTime*.
-    if (!std::isnan(anim.previousPlaybackRate()) &&
-        anim.startTime().type() == MaybeTimeDuration::TTimeDuration &&
+    if (!std::isnan(anim.previousPlaybackRate()) && anim.startTime().isSome() &&
         !anim.originTime().IsNull() && !anim.isNotPlaying()) {
       TimeDuration readyTime = aReadyTime - anim.originTime();
       anim.holdTime() = dom::Animation::CurrentTimeFromTimelineTime(
+<<<<<<< HEAD
           readyTime, anim.startTime().get_TimeDuration(),
           anim.previousPlaybackRate());
+||||||| merged common ancestors
+        readyTime,
+        anim.startTime().get_TimeDuration(),
+        anim.previousPlaybackRate());
+=======
+          readyTime, anim.startTime().ref(), anim.previousPlaybackRate());
+>>>>>>> upstream-releases
       // Make start time null so that we know to update it below.
-      anim.startTime() = null_t();
+      anim.startTime() = Nothing();
     }
 
     // If the animation is play-pending, resolve the start time.
+<<<<<<< HEAD
     if (anim.startTime().type() == MaybeTimeDuration::Tnull_t &&
         !anim.originTime().IsNull() && !anim.isNotPlaying()) {
+||||||| merged common ancestors
+    if (anim.startTime().type() == MaybeTimeDuration::Tnull_t &&
+        !anim.originTime().IsNull() &&
+        !anim.isNotPlaying()) {
+=======
+    if (anim.startTime().isNothing() && !anim.originTime().IsNull() &&
+        !anim.isNotPlaying()) {
+>>>>>>> upstream-releases
       TimeDuration readyTime = aReadyTime - anim.originTime();
+<<<<<<< HEAD
       anim.startTime() = dom::Animation::StartTimeFromTimelineTime(
           readyTime, anim.holdTime(), anim.playbackRate());
+||||||| merged common ancestors
+      anim.startTime() = dom::Animation::StartTimeFromTimelineTime(
+        readyTime, anim.holdTime(), anim.playbackRate());
+=======
+      anim.startTime() = Some(dom::Animation::StartTimeFromTimelineTime(
+          readyTime, anim.holdTime(), anim.playbackRate()));
+>>>>>>> upstream-releases
       updated = true;
     }
   }
@@ -127,17 +190,38 @@ bool AnimationInfo::ApplyPendingUpdatesForThisTransaction() {
   return false;
 }
 
+<<<<<<< HEAD
 bool AnimationInfo::HasTransformAnimation() const {
+||||||| merged common ancestors
+bool
+AnimationInfo::HasTransformAnimation() const
+{
+=======
+bool AnimationInfo::HasTransformAnimation() const {
+  const nsCSSPropertyIDSet& transformSet =
+      LayerAnimationInfo::GetCSSPropertiesFor(DisplayItemType::TYPE_TRANSFORM);
+>>>>>>> upstream-releases
   for (uint32_t i = 0; i < mAnimations.Length(); i++) {
-    if (mAnimations[i].property() == eCSSProperty_transform) {
+    if (transformSet.HasProperty(mAnimations[i].property())) {
       return true;
     }
   }
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ Maybe<uint64_t> AnimationInfo::GetGenerationFromFrame(
     nsIFrame* aFrame, DisplayItemType aDisplayItemKey) {
+||||||| merged common ancestors
+/* static */ Maybe<uint64_t>
+AnimationInfo::GetGenerationFromFrame(nsIFrame* aFrame,
+                                      DisplayItemType aDisplayItemKey)
+{
+=======
+/* static */
+Maybe<uint64_t> AnimationInfo::GetGenerationFromFrame(
+    nsIFrame* aFrame, DisplayItemType aDisplayItemKey) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aFrame->IsPrimaryFrame() ||
              nsLayoutUtils::IsFirstContinuationOrIBSplitSibling(aFrame));
 
@@ -163,6 +247,7 @@ bool AnimationInfo::HasTransformAnimation() const {
   return Nothing();
 }
 
+<<<<<<< HEAD
 /* static */ void AnimationInfo::EnumerateGenerationOnFrame(
     const nsIFrame* aFrame, const nsIContent* aContent,
     const CompositorAnimatableDisplayItemTypes& aDisplayItemTypes,
@@ -219,3 +304,70 @@ bool AnimationInfo::HasTransformAnimation() const {
 
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+/* static */
+void AnimationInfo::EnumerateGenerationOnFrame(
+    const nsIFrame* aFrame, const nsIContent* aContent,
+    const CompositorAnimatableDisplayItemTypes& aDisplayItemTypes,
+    const AnimationGenerationCallback& aCallback) {
+  if (XRE_IsContentProcess()) {
+    if (nsIWidget* widget = nsContentUtils::WidgetForContent(aContent)) {
+      // In case of child processes, we might not have yet created the layer
+      // manager.  That means there is no animation generation we have, thus
+      // we call the callback function with |Nothing()| for the generation.
+      //
+      // Note that we need to use nsContentUtils::WidgetForContent() instead of
+      // BrowserChild::GetFrom(aFrame->PresShell())->WebWidget() because in the
+      // case of child popup content PuppetWidget::mBrowserChild is the same as
+      // the parent's one, which means mBrowserChild->IsLayersConnected() check
+      // in PuppetWidget::GetLayerManager queries the parent state, it results
+      // the assertion in the function failure.
+      if (widget->GetOwningBrowserChild() &&
+          !static_cast<widget::PuppetWidget*>(widget)->HasLayerManager()) {
+        for (auto displayItem : LayerAnimationInfo::sDisplayItemTypes) {
+          aCallback(Nothing(), displayItem);
+        }
+        return;
+      }
+    }
+  }
+
+  RefPtr<LayerManager> layerManager =
+      nsContentUtils::LayerManagerForContent(aContent);
+
+  if (layerManager &&
+      layerManager->GetBackendType() == layers::LayersBackend::LAYERS_WR) {
+    // In case of continuation, nsDisplayItem uses its last continuation, so we
+    // have to use the last continuation frame here.
+    if (nsLayoutUtils::IsFirstContinuationOrIBSplitSibling(aFrame)) {
+      aFrame = nsLayoutUtils::LastContinuationOrIBSplitSibling(aFrame);
+    }
+
+    for (auto displayItem : LayerAnimationInfo::sDisplayItemTypes) {
+      // For transform animations, the animation is on the primary frame but
+      // |aFrame| is the style frame.
+      const nsIFrame* frameToQuery =
+          displayItem == DisplayItemType::TYPE_TRANSFORM
+              ? nsLayoutUtils::GetPrimaryFrameFromStyleFrame(aFrame)
+              : aFrame;
+      RefPtr<WebRenderAnimationData> animationData =
+          GetWebRenderUserData<WebRenderAnimationData>(frameToQuery,
+                                                       (uint32_t)displayItem);
+      Maybe<uint64_t> generation;
+      if (animationData) {
+        generation = animationData->GetAnimationInfo().GetAnimationGeneration();
+      }
+      aCallback(generation, displayItem);
+    }
+    return;
+  }
+
+  FrameLayerBuilder::EnumerateGenerationForDedicatedLayers(aFrame, aCallback);
+}
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases

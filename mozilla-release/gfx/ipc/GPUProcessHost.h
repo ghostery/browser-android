@@ -13,6 +13,11 @@
 #include "mozilla/ipc/ProtocolUtils.h"
 #include "mozilla/ipc/TaskFactory.h"
 
+namespace mozilla {
+namespace ipc {
+class SharedPreferenceSerializer;
+}
+}  // namespace mozilla
 class nsITimer;
 
 namespace mozilla {
@@ -43,9 +48,13 @@ class GPUProcessHost final : public mozilla::ipc::GeckoChildProcessHost {
     virtual void OnRemoteProcessDeviceReset(GPUProcessHost* aHost) {}
   };
 
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+>>>>>>> upstream-releases
   explicit GPUProcessHost(Listener* listener);
-  ~GPUProcessHost();
 
   // Launch the subprocess asynchronously. On failure, false is returned.
   // Otherwise, true is returned, and the OnProcessLaunchComplete listener
@@ -95,7 +104,15 @@ class GPUProcessHost final : public mozilla::ipc::GeckoChildProcessHost {
   // Used for tests and diagnostics
   void KillProcess();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+ private:
+  ~GPUProcessHost();
+
+>>>>>>> upstream-releases
   // Called on the main thread.
   void OnChannelConnectedTask();
   void OnChannelErrorTask();
@@ -111,7 +128,12 @@ class GPUProcessHost final : public mozilla::ipc::GeckoChildProcessHost {
 
   void DestroyProcess();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+>>>>>>> upstream-releases
   DISALLOW_COPY_AND_ASSIGN(GPUProcessHost);
 
   Listener* mListener;
@@ -122,6 +144,8 @@ class GPUProcessHost final : public mozilla::ipc::GeckoChildProcessHost {
 
   UniquePtr<GPUChild> mGPUChild;
   uint64_t mProcessToken;
+
+  UniquePtr<mozilla::ipc::SharedPreferenceSerializer> mPrefSerializer;
 
   bool mShutdownRequested;
   bool mChannelClosed;

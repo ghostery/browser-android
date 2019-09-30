@@ -74,9 +74,27 @@ bool ClientManagerParent::DeallocPClientNavigateOpParent(
   return true;
 }
 
+<<<<<<< HEAD
 PClientSourceParent* ClientManagerParent::AllocPClientSourceParent(
     const ClientSourceConstructorArgs& aArgs) {
   return new ClientSourceParent(aArgs);
+||||||| merged common ancestors
+PClientSourceParent*
+ClientManagerParent::AllocPClientSourceParent(const ClientSourceConstructorArgs& aArgs)
+{
+  return new ClientSourceParent(aArgs);
+=======
+PClientSourceParent* ClientManagerParent::AllocPClientSourceParent(
+    const ClientSourceConstructorArgs& aArgs) {
+  Maybe<ContentParentId> contentParentId;
+
+  uint64_t childID = BackgroundParent::GetChildID(Manager());
+  if (childID) {
+    contentParentId = Some(ContentParentId(childID));
+  }
+
+  return new ClientSourceParent(aArgs, contentParentId);
+>>>>>>> upstream-releases
 }
 
 bool ClientManagerParent::DeallocPClientSourceParent(

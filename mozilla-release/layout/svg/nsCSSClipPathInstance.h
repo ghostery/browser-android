@@ -7,10 +7,20 @@
 #ifndef __NS_CSSCLIPPATHINSTANCE_H__
 #define __NS_CSSCLIPPATHINSTANCE_H__
 
+<<<<<<< HEAD
 #include "gfxPoint.h"
 #include "nsStyleStruct.h"
 #include "nsRect.h"
+||||||| merged common ancestors
+#include "nsStyleStruct.h"
+#include "nsRect.h"
+=======
+#include "gfxMatrix.h"
+#include "gfxPoint.h"
+>>>>>>> upstream-releases
 #include "mozilla/gfx/2D.h"
+#include "nsRect.h"
+#include "nsStyleStruct.h"
 
 class nsIFrame;
 class gfxContext;
@@ -22,8 +32,18 @@ class nsCSSClipPathInstance {
   typedef mozilla::gfx::Path Path;
   typedef mozilla::gfx::Rect Rect;
 
+<<<<<<< HEAD
  public:
   static void ApplyBasicShapeOrPathClip(gfxContext& aContext, nsIFrame* aFrame);
+||||||| merged common ancestors
+public:
+  static void ApplyBasicShapeOrPathClip(gfxContext& aContext,
+                                        nsIFrame* aFrame);
+=======
+ public:
+  static void ApplyBasicShapeOrPathClip(gfxContext& aContext, nsIFrame* aFrame,
+                                        const gfxMatrix& aTransform);
+>>>>>>> upstream-releases
   // aPoint is in CSS pixels.
   static bool HitTestBasicShapeOrPathClip(nsIFrame* aFrame,
                                           const gfxPoint& aPoint);
@@ -33,10 +53,22 @@ class nsCSSClipPathInstance {
 
  private:
   explicit nsCSSClipPathInstance(nsIFrame* aFrame,
+<<<<<<< HEAD
                                  const StyleShapeSource aClipPathStyle)
       : mTargetFrame(aFrame), mClipPathStyle(aClipPathStyle) {}
+||||||| merged common ancestors
+                                 const StyleShapeSource aClipPathStyle)
+    : mTargetFrame(aFrame)
+    , mClipPathStyle(aClipPathStyle)
+  {
+  }
+=======
+                                 const StyleShapeSource& aClipPathStyle)
+      : mTargetFrame(aFrame), mClipPathStyle(aClipPathStyle) {}
+>>>>>>> upstream-releases
 
-  already_AddRefed<Path> CreateClipPath(DrawTarget* aDrawTarget);
+  already_AddRefed<Path> CreateClipPath(DrawTarget* aDrawTarget,
+                                        const gfxMatrix& aTransform);
 
   already_AddRefed<Path> CreateClipPathCircle(DrawTarget* aDrawTarget,
                                               const nsRect& aRefBox);

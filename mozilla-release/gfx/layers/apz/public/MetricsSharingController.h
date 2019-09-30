@@ -27,8 +27,16 @@ class MetricsSharingController {
   virtual bool StopSharingMetrics(ScrollableLayerGuid::ViewID aScrollId,
                                   uint32_t aApzcId) = 0;
 
+<<<<<<< HEAD
  protected:
   virtual ~MetricsSharingController() {}
+||||||| merged common ancestors
+protected:
+  virtual ~MetricsSharingController() {}
+=======
+ protected:
+  virtual ~MetricsSharingController() = default;
+>>>>>>> upstream-releases
 };
 
 }  // namespace layers

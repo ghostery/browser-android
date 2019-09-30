@@ -5,6 +5,7 @@
 #include "nsIPrefBranch.h"
 #include "nsComponentManager.h"
 #include "mozilla/ModuleUtils.h"
+#include "mozilla/GenericFactory.h"
 #include "../../base/nsPACMan.h"
 
 #define TEST_WPAD_DHCP_OPTION "http://pac/pac.dat"
@@ -56,6 +57,7 @@ nsTestDHCPClient::GetOption(uint8_t option, nsACString& _retval) {
 
 NS_IMPL_ISUPPORTS(nsTestDHCPClient, nsIDHCPClient)
 
+<<<<<<< HEAD
 #define NS_TESTDHCPCLIENTSERVICE_CID /* {FEBF1D69-4D7D-4891-9524-045AD18B5592} \
                                       */                                       \
   {                                                                            \
@@ -63,10 +65,24 @@ NS_IMPL_ISUPPORTS(nsTestDHCPClient, nsIDHCPClient)
       0x95, 0x24, 0x04, 0x5a, 0xd1, 0x8b, 0x55, 0x92                           \
     }                                                                          \
   }
+||||||| merged common ancestors
+#define NS_TESTDHCPCLIENTSERVICE_CID  /* {FEBF1D69-4D7D-4891-9524-045AD18B5592} */\
+    { 0xFEBF1D69, 0x4D7D, 0x4891, \
+         {0x95, 0x24, 0x04, 0x5a, 0xd1, 0x8b, 0x55, 0x92 } }
+=======
+#define NS_TESTDHCPCLIENTSERVICE_CID /* {FEBF1D69-4D7D-4891-9524-045AD18B5593} \
+                                      */                                       \
+  {                                                                            \
+    0xFEBF1D69, 0x4D7D, 0x4891, {                                              \
+      0x95, 0x24, 0x04, 0x5a, 0xd1, 0x8b, 0x55, 0x93                           \
+    }                                                                          \
+  }
+>>>>>>> upstream-releases
 
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsTestDHCPClient, Init)
 NS_DEFINE_NAMED_CID(NS_TESTDHCPCLIENTSERVICE_CID);
 
+<<<<<<< HEAD
 static const mozilla::Module::CIDEntry kSysDHCPClientCIDs[] = {
     {&kNS_TESTDHCPCLIENTSERVICE_CID, false, nullptr,
      nsTestDHCPClientConstructor},
@@ -77,7 +93,27 @@ static const mozilla::Module::ContractIDEntry kSysDHCPClientContracts[] = {
 
 static const mozilla::Module kSysDHCPClientModule = {
     mozilla::Module::kVersion, kSysDHCPClientCIDs, kSysDHCPClientContracts};
+||||||| merged common ancestors
+static const mozilla::Module::CIDEntry kSysDHCPClientCIDs[] = {
+  { &kNS_TESTDHCPCLIENTSERVICE_CID, false, nullptr, nsTestDHCPClientConstructor },
+  { nullptr }
+};
 
+static const mozilla::Module::ContractIDEntry kSysDHCPClientContracts[] = {
+  { NS_DHCPCLIENT_CONTRACTID, &kNS_TESTDHCPCLIENTSERVICE_CID },
+  { nullptr }
+};
+
+static const mozilla::Module kSysDHCPClientModule = {
+  mozilla::Module::kVersion,
+  kSysDHCPClientCIDs,
+  kSysDHCPClientContracts
+};
+=======
+void SetOptionResult(const char* result) { WPADOptionResult.Assign(result); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NSMODULE_DEFN(nsDHCPClientModule) = &kSysDHCPClientModule;
 
 void SetOptionResult(const char* result) { WPADOptionResult.Assign(result); }
@@ -85,6 +121,24 @@ void SetOptionResult(const char* result) { WPADOptionResult.Assign(result); }
 class ProcessPendingEventsAction final : public Runnable {
  public:
   ProcessPendingEventsAction() : Runnable("net::ProcessPendingEventsAction") {}
+||||||| merged common ancestors
+NSMODULE_DEFN(nsDHCPClientModule) = &kSysDHCPClientModule;
+
+void
+SetOptionResult(const char* result)
+{
+  WPADOptionResult.Assign(result);
+}
+
+class ProcessPendingEventsAction final : public Runnable
+{
+public:
+  ProcessPendingEventsAction() : Runnable("net::ProcessPendingEventsAction") { }
+=======
+class ProcessPendingEventsAction final : public Runnable {
+ public:
+  ProcessPendingEventsAction() : Runnable("net::ProcessPendingEventsAction") {}
+>>>>>>> upstream-releases
 
   NS_IMETHOD
   Run() override {
@@ -115,6 +169,7 @@ class TestPACMan : public ::testing::Test {
     NS_WARNING("End of pending events on main thread");
   }
 
+<<<<<<< HEAD
   // This method is used to ensure that all pending events on the main thread
   // and the Proxy thread are processsed.
   // It iterates over ProcessAllEvents because simply calling ProcessAllEvents
@@ -135,15 +190,93 @@ class TestPACMan : public ::testing::Test {
           nsComponentManagerImpl::gComponentManager->UnregisterFactory(
               kNS_TESTDHCPCLIENTSERVICE_CID, factoryEntry->mFactory);
       ASSERT_EQ(NS_OK, rv);
+||||||| merged common ancestors
+
+    // This method is used to ensure that all pending events on the main thread
+    // and the Proxy thread are processsed.
+    // It iterates over ProcessAllEvents because simply calling ProcessAllEvents once
+    // did not reliably process the events on both threads on all platforms.
+    void
+    ProcessAllEventsTenTimes(){
+      for (int i = 0; i < 10; i++) {
+        ProcessAllEvents();
+      }
     }
+
+    virtual void
+    SetUp()
+    {
+      ASSERT_EQ(NS_OK, GetNetworkProxyType(&originalNetworkProxyTypePref));
+      nsFactoryEntry* factoryEntry = nsComponentManagerImpl::gComponentManager
+          ->GetFactoryEntry(kNS_TESTDHCPCLIENTSERVICE_CID);
+      if (factoryEntry) {
+        nsresult rv = nsComponentManagerImpl::gComponentManager->UnregisterFactory(kNS_TESTDHCPCLIENTSERVICE_CID, factoryEntry->mFactory);
+        ASSERT_EQ(NS_OK, rv);
+      }
+      nsComponentManagerImpl::gComponentManager->RegisterModule(&kSysDHCPClientModule, nullptr);
+
+      mPACMan = new nsPACMan(nullptr);
+      mPACMan->SetWPADOverDHCPEnabled(true);
+      mPACMan->Init(nullptr);
+      ASSERT_EQ(NS_OK, SetNetworkProxyType(WPAD_PREF));
+
+=======
+  // This method is used to ensure that all pending events on the main thread
+  // and the Proxy thread are processsed.
+  // It iterates over ProcessAllEvents because simply calling ProcessAllEvents
+  // once did not reliably process the events on both threads on all platforms.
+  void ProcessAllEventsTenTimes() {
+    for (int i = 0; i < 10; i++) {
+      ProcessAllEvents();
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     nsComponentManagerImpl::gComponentManager->RegisterModule(
         &kSysDHCPClientModule);
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    mPACMan = new nsPACMan(nullptr);
+    mPACMan->SetWPADOverDHCPEnabled(true);
+    mPACMan->Init(nullptr);
+    ASSERT_EQ(NS_OK, SetNetworkProxyType(WPAD_PREF));
+  }
+||||||| merged common ancestors
+    virtual void
+    TearDown()
+    {
+
+      mPACMan->Shutdown();
+      if (originalNetworkProxyTypePref != GETTING_NETWORK_PROXY_TYPE_FAILED) {
+        ASSERT_EQ(NS_OK, SetNetworkProxyType(originalNetworkProxyTypePref));
+      }
+    }
+=======
+  virtual void SetUp() {
+    ASSERT_EQ(NS_OK, GetNetworkProxyType(&originalNetworkProxyTypePref));
+    nsCOMPtr<nsIFactory> factory;
+    nsresult rv = nsComponentManagerImpl::gComponentManager->GetClassObject(
+        kNS_TESTDHCPCLIENTSERVICE_CID, NS_GET_IID(nsIFactory),
+        getter_AddRefs(factory));
+    if (NS_SUCCEEDED(rv) && factory) {
+      rv = nsComponentManagerImpl::gComponentManager->UnregisterFactory(
+          kNS_TESTDHCPCLIENTSERVICE_CID, factory);
+      ASSERT_EQ(NS_OK, rv);
+    }
+    factory = new mozilla::GenericFactory(nsTestDHCPClientConstructor);
+    nsComponentManagerImpl::gComponentManager->RegisterFactory(
+        kNS_TESTDHCPCLIENTSERVICE_CID, "nsTestDHCPClient",
+        NS_DHCPCLIENT_CONTRACTID, factory);
 
     mPACMan = new nsPACMan(nullptr);
     mPACMan->SetWPADOverDHCPEnabled(true);
     mPACMan->Init(nullptr);
     ASSERT_EQ(NS_OK, SetNetworkProxyType(WPAD_PREF));
   }
+>>>>>>> upstream-releases
 
   virtual void TearDown() {
     mPACMan->Shutdown();

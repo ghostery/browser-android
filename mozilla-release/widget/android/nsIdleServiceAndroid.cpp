@@ -8,6 +8,16 @@
 #include "nsIdleServiceAndroid.h"
 #include "nsIServiceManager.h"
 
+<<<<<<< HEAD
 bool nsIdleServiceAndroid::PollIdleTime(uint32_t *aIdleTime) { return false; }
+||||||| merged common ancestors
+bool
+nsIdleServiceAndroid::PollIdleTime(uint32_t *aIdleTime)
+{
+    return false;
+}
+=======
+bool nsIdleServiceAndroid::PollIdleTime(uint32_t* aIdleTime) { return false; }
+>>>>>>> upstream-releases
 
 bool nsIdleServiceAndroid::UsePollMode() { return false; }

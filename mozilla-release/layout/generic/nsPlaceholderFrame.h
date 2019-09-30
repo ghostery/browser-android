@@ -39,8 +39,12 @@
 #include "nsFrame.h"
 #include "nsGkAtoms.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 class nsPlaceholderFrame;
-nsPlaceholderFrame* NS_NewPlaceholderFrame(nsIPresShell* aPresShell,
+nsPlaceholderFrame* NS_NewPlaceholderFrame(mozilla::PresShell* aPresShell,
                                            mozilla::ComputedStyle* aStyle,
                                            nsFrameState aTypeBits);
 
@@ -63,6 +67,7 @@ class nsPlaceholderFrame final : public nsFrame {
    * Create a new placeholder frame.  aTypeBit must be one of the
    * PLACEHOLDER_FOR_* constants above.
    */
+<<<<<<< HEAD
   friend nsPlaceholderFrame* NS_NewPlaceholderFrame(nsIPresShell* aPresShell,
                                                     ComputedStyle* aStyle,
                                                     nsFrameState aTypeBits);
@@ -77,6 +82,39 @@ class nsPlaceholderFrame final : public nsFrame {
             aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_ABSPOS) ||
             aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_FIXEDPOS),
         "Unexpected type bit");
+||||||| merged common ancestors
+  friend nsPlaceholderFrame* NS_NewPlaceholderFrame(nsIPresShell* aPresShell,
+                                                    ComputedStyle* aStyle,
+                                                    nsFrameState aTypeBits);
+
+  nsPlaceholderFrame(ComputedStyle* aStyle, nsFrameState aTypeBits)
+    : nsFrame(aStyle, kClassID)
+    , mOutOfFlowFrame(nullptr)
+  {
+    MOZ_ASSERT(aTypeBits == PLACEHOLDER_FOR_FLOAT ||
+               aTypeBits == PLACEHOLDER_FOR_ABSPOS ||
+               aTypeBits == PLACEHOLDER_FOR_FIXEDPOS ||
+               aTypeBits == PLACEHOLDER_FOR_POPUP ||
+               aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_ABSPOS) ||
+               aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_FIXEDPOS),
+               "Unexpected type bit");
+=======
+  friend nsPlaceholderFrame* NS_NewPlaceholderFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle,
+      nsFrameState aTypeBits);
+
+  nsPlaceholderFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                     nsFrameState aTypeBits)
+      : nsFrame(aStyle, aPresContext, kClassID), mOutOfFlowFrame(nullptr) {
+    MOZ_ASSERT(
+        aTypeBits == PLACEHOLDER_FOR_FLOAT ||
+            aTypeBits == PLACEHOLDER_FOR_ABSPOS ||
+            aTypeBits == PLACEHOLDER_FOR_FIXEDPOS ||
+            aTypeBits == PLACEHOLDER_FOR_POPUP ||
+            aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_ABSPOS) ||
+            aTypeBits == (PLACEHOLDER_FOR_TOPLAYER | PLACEHOLDER_FOR_FIXEDPOS),
+        "Unexpected type bit");
+>>>>>>> upstream-releases
     AddStateBits(aTypeBits);
   }
 

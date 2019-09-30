@@ -12,22 +12,42 @@
 using namespace mozilla;
 using namespace mozilla::gfx;
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Polygon)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Polygon)
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 JSObject *SVGPolygonElement::WrapNode(JSContext *aCx,
                                       JS::Handle<JSObject *> aGivenProto) {
+||||||| merged common ancestors
+JSObject*
+SVGPolygonElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+JSObject* SVGPolygonElement::WrapNode(JSContext* aCx,
+                                      JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return SVGPolygonElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 SVGPolygonElement::SVGPolygonElement(
     already_AddRefed<mozilla::dom::NodeInfo> &&aNodeInfo)
     : SVGPolygonElementBase(std::move(aNodeInfo)) {}
+||||||| merged common ancestors
+SVGPolygonElement::SVGPolygonElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+  : SVGPolygonElementBase(std::move(aNodeInfo))
+{
+}
+=======
+SVGPolygonElement::SVGPolygonElement(
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : SVGPolygonElementBase(std::move(aNodeInfo)) {}
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -37,29 +57,56 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGPolygonElement)
 //----------------------------------------------------------------------
 // SVGGeometryElement methods
 
+<<<<<<< HEAD
 void SVGPolygonElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks) {
+||||||| merged common ancestors
+void
+SVGPolygonElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks)
+{
+=======
+void SVGPolygonElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {
+>>>>>>> upstream-releases
   SVGPolyElement::GetMarkPoints(aMarks);
 
-  if (aMarks->IsEmpty() || aMarks->LastElement().type != nsSVGMark::eEnd) {
+  if (aMarks->IsEmpty() || aMarks->LastElement().type != SVGMark::eEnd) {
     return;
   }
 
-  nsSVGMark *endMark = &aMarks->LastElement();
-  nsSVGMark *startMark = &aMarks->ElementAt(0);
-  float angle = atan2(startMark->y - endMark->y, startMark->x - endMark->x);
+  SVGMark* endMark = &aMarks->LastElement();
+  SVGMark* startMark = &aMarks->ElementAt(0);
+  float angle =
+      std::atan2(startMark->y - endMark->y, startMark->x - endMark->x);
 
-  endMark->type = nsSVGMark::eMid;
+  endMark->type = SVGMark::eMid;
   endMark->angle = SVGContentUtils::AngleBisect(angle, endMark->angle);
   startMark->angle = SVGContentUtils::AngleBisect(angle, startMark->angle);
   // for a polygon (as opposed to a polyline) there's an implicit extra point
   // co-located with the start point that SVGPolyElement::GetMarkPoints
   // doesn't return
+<<<<<<< HEAD
   aMarks->AppendElement(
       nsSVGMark(startMark->x, startMark->y, startMark->angle, nsSVGMark::eEnd));
+||||||| merged common ancestors
+  aMarks->AppendElement(nsSVGMark(startMark->x, startMark->y, startMark->angle,
+                                  nsSVGMark::eEnd));
+=======
+  aMarks->AppendElement(
+      SVGMark(startMark->x, startMark->y, startMark->angle, SVGMark::eEnd));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 already_AddRefed<Path> SVGPolygonElement::BuildPath(PathBuilder *aBuilder) {
   const SVGPointList &points = mPoints.GetAnimValue();
+||||||| merged common ancestors
+already_AddRefed<Path>
+SVGPolygonElement::BuildPath(PathBuilder* aBuilder)
+{
+  const SVGPointList &points = mPoints.GetAnimValue();
+=======
+already_AddRefed<Path> SVGPolygonElement::BuildPath(PathBuilder* aBuilder) {
+  const SVGPointList& points = mPoints.GetAnimValue();
+>>>>>>> upstream-releases
 
   if (points.IsEmpty()) {
     return nullptr;

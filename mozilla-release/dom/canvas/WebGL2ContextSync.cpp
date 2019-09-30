@@ -48,6 +48,7 @@ void WebGL2Context::DeleteSync(WebGLSync* sync) {
   sync->RequestDelete();
 }
 
+<<<<<<< HEAD
 GLenum WebGL2Context::ClientWaitSync(const WebGLSync& sync, GLbitfield flags,
                                      GLuint64 timeout) {
   const FuncScope funcScope(*this, "clientWaitSync");
@@ -73,6 +74,47 @@ GLenum WebGL2Context::ClientWaitSync(const WebGLSync& sync, GLbitfield flags,
       GenerateWarning(
           "Sync object not yet queryable. Please wait for the event"
           " loop.");
+||||||| merged common ancestors
+GLenum
+WebGL2Context::ClientWaitSync(const WebGLSync& sync, GLbitfield flags, GLuint64 timeout)
+{
+    const FuncScope funcScope(*this, "clientWaitSync");
+    if (IsContextLost())
+        return LOCAL_GL_WAIT_FAILED;
+
+    if (!ValidateObject("sync", sync))
+        return LOCAL_GL_WAIT_FAILED;
+
+    if (flags != 0 && flags != LOCAL_GL_SYNC_FLUSH_COMMANDS_BIT) {
+        ErrorInvalidValue("`flags` must be SYNC_FLUSH_COMMANDS_BIT or 0.");
+        return LOCAL_GL_WAIT_FAILED;
+=======
+GLenum WebGL2Context::ClientWaitSync(const WebGLSync& sync, GLbitfield flags,
+                                     GLuint64 timeout) {
+  const FuncScope funcScope(*this, "clientWaitSync");
+  if (IsContextLost()) return LOCAL_GL_WAIT_FAILED;
+
+  if (!ValidateObject("sync", sync)) return LOCAL_GL_WAIT_FAILED;
+
+  if (flags != 0 && flags != LOCAL_GL_SYNC_FLUSH_COMMANDS_BIT) {
+    ErrorInvalidValue("`flags` must be SYNC_FLUSH_COMMANDS_BIT or 0.");
+    return LOCAL_GL_WAIT_FAILED;
+  }
+
+  if (timeout > kMaxClientWaitSyncTimeoutNS) {
+    ErrorInvalidOperation("`timeout` must not exceed %s nanoseconds.",
+                          "MAX_CLIENT_WAIT_TIMEOUT_WEBGL");
+    return LOCAL_GL_WAIT_FAILED;
+  }
+
+  const bool canBeAvailable =
+      (sync.mCanBeAvailable || StaticPrefs::webgl_allow_immediate_queries());
+  if (!canBeAvailable) {
+    if (timeout) {
+      GenerateWarning(
+          "Sync object not yet queryable. Please wait for the event"
+          " loop.");
+>>>>>>> upstream-releases
     }
     return LOCAL_GL_WAIT_FAILED;
   }
@@ -115,6 +157,7 @@ void WebGL2Context::GetSyncParameter(JSContext*, const WebGLSync& sync,
 
   if (!ValidateObject("sync", sync)) return;
 
+<<<<<<< HEAD
   ////
 
   const bool canBeAvailable =
@@ -126,6 +169,22 @@ void WebGL2Context::GetSyncParameter(JSContext*, const WebGLSync& sync,
 
   GLint result = 0;
   switch (pname) {
+||||||| merged common ancestors
+    GLint result = 0;
+    switch (pname) {
+=======
+  ////
+
+  const bool canBeAvailable =
+      (sync.mCanBeAvailable || StaticPrefs::webgl_allow_immediate_queries());
+  if (!canBeAvailable && pname == LOCAL_GL_SYNC_STATUS) {
+    retval.set(JS::Int32Value(LOCAL_GL_UNSIGNALED));
+    return;
+  }
+
+  GLint result = 0;
+  switch (pname) {
+>>>>>>> upstream-releases
     case LOCAL_GL_OBJECT_TYPE:
     case LOCAL_GL_SYNC_STATUS:
     case LOCAL_GL_SYNC_CONDITION:

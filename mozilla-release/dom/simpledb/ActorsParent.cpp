@@ -26,11 +26,19 @@
 #define DISABLE_ASSERTS_FOR_FUZZING 0
 
 #if DISABLE_ASSERTS_FOR_FUZZING
+<<<<<<< HEAD
 #define ASSERT_UNLESS_FUZZING(...) \
   do {                             \
   } while (0)
+||||||| merged common ancestors
+#define ASSERT_UNLESS_FUZZING(...) do { } while (0)
+=======
+#  define ASSERT_UNLESS_FUZZING(...) \
+    do {                             \
+    } while (0)
+>>>>>>> upstream-releases
 #else
-#define ASSERT_UNLESS_FUZZING(...) MOZ_ASSERT(false, __VA_ARGS__)
+#  define ASSERT_UNLESS_FUZZING(...) MOZ_ASSERT(false, __VA_ARGS__)
 #endif
 
 namespace mozilla {
@@ -440,10 +448,24 @@ class QuotaClient final : public mozilla::dom::quota::Client {
 
   Type GetType() override;
 
+<<<<<<< HEAD
   nsresult InitOrigin(PersistenceType aPersistenceType,
                       const nsACString& aGroup, const nsACString& aOrigin,
                       const AtomicBool& aCanceled,
                       UsageInfo* aUsageInfo) override;
+||||||| merged common ancestors
+  nsresult
+  InitOrigin(PersistenceType aPersistenceType,
+             const nsACString& aGroup,
+             const nsACString& aOrigin,
+             const AtomicBool& aCanceled,
+             UsageInfo* aUsageInfo) override;
+=======
+  nsresult InitOrigin(PersistenceType aPersistenceType,
+                      const nsACString& aGroup, const nsACString& aOrigin,
+                      const AtomicBool& aCanceled, UsageInfo* aUsageInfo,
+                      bool aForGetUsage) override;
+>>>>>>> upstream-releases
 
   nsresult GetUsageForOrigin(PersistenceType aPersistenceType,
                              const nsACString& aGroup,
@@ -493,6 +515,11 @@ PBackgroundSDBConnectionParent* AllocPBackgroundSDBConnectionParent(
   }
 
   if (NS_WARN_IF(aPrincipalInfo.type() == PrincipalInfo::TNullPrincipalInfo)) {
+    ASSERT_UNLESS_FUZZING();
+    return nullptr;
+  }
+
+  if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(aPrincipalInfo))) {
     ASSERT_UNLESS_FUZZING();
     return nullptr;
   }
@@ -1145,9 +1172,22 @@ nsresult OpenOp::DatabaseWork() {
   MOZ_ASSERT(quotaManager);
 
   nsCOMPtr<nsIFile> dbDirectory;
+<<<<<<< HEAD
   nsresult rv = quotaManager->EnsureOriginIsInitialized(
       PERSISTENCE_TYPE_DEFAULT, mSuffix, mGroup, mOrigin,
       /* aCreateIfNotExists */ true, getter_AddRefs(dbDirectory));
+||||||| merged common ancestors
+  nsresult rv =
+    quotaManager->EnsureOriginIsInitialized(PERSISTENCE_TYPE_DEFAULT,
+                                            mSuffix,
+                                            mGroup,
+                                            mOrigin,
+                                            getter_AddRefs(dbDirectory));
+=======
+  nsresult rv = quotaManager->EnsureOriginIsInitialized(
+      PERSISTENCE_TYPE_DEFAULT, mSuffix, mGroup, mOrigin,
+      getter_AddRefs(dbDirectory));
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -1601,11 +1641,27 @@ mozilla::dom::quota::Client::Type QuotaClient::GetType() {
   return QuotaClient::SDB;
 }
 
+<<<<<<< HEAD
 nsresult QuotaClient::InitOrigin(PersistenceType aPersistenceType,
                                  const nsACString& aGroup,
                                  const nsACString& aOrigin,
                                  const AtomicBool& aCanceled,
                                  UsageInfo* aUsageInfo) {
+||||||| merged common ancestors
+nsresult
+QuotaClient::InitOrigin(PersistenceType aPersistenceType,
+                        const nsACString& aGroup,
+                        const nsACString& aOrigin,
+                        const AtomicBool& aCanceled,
+                        UsageInfo* aUsageInfo)
+{
+=======
+nsresult QuotaClient::InitOrigin(PersistenceType aPersistenceType,
+                                 const nsACString& aGroup,
+                                 const nsACString& aOrigin,
+                                 const AtomicBool& aCanceled,
+                                 UsageInfo* aUsageInfo, bool aForGetUsage) {
+>>>>>>> upstream-releases
   AssertIsOnIOThread();
 
   if (!aUsageInfo) {

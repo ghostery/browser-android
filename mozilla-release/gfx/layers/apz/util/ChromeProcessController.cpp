@@ -8,6 +8,7 @@
 
 #include "MainThreadUtils.h"    // for NS_IsMainThread()
 #include "base/message_loop.h"  // for MessageLoop
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/layers/CompositorBridgeParent.h"
 #include "mozilla/layers/APZCCallbackHelper.h"
@@ -15,9 +16,8 @@
 #include "mozilla/layers/APZThreadUtils.h"
 #include "mozilla/layers/IAPZCTreeManager.h"
 #include "mozilla/layers/DoubleTapToZoom.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIInterfaceRequestorUtils.h"
-#include "nsIPresShell.h"
 #include "nsLayoutUtils.h"
 #include "nsView.h"
 
@@ -48,8 +48,29 @@ void ChromeProcessController::InitializeRoot() {
   APZCCallbackHelper::InitializeRootDisplayport(GetPresShell());
 }
 
+<<<<<<< HEAD
 void ChromeProcessController::RequestContentRepaint(
     const RepaintRequest& aRequest) {
+||||||| merged common ancestors
+void
+ChromeProcessController::RequestContentRepaint(const FrameMetrics& aFrameMetrics)
+{
+=======
+void ChromeProcessController::NotifyLayerTransforms(
+    const nsTArray<MatrixMessage>& aTransforms) {
+  if (MessageLoop::current() != mUILoop) {
+    mUILoop->PostTask(NewRunnableMethod<nsTArray<MatrixMessage>>(
+        "layers::ChromeProcessController::NotifyLayerTransforms", this,
+        &ChromeProcessController::NotifyLayerTransforms, aTransforms));
+    return;
+  }
+
+  APZCCallbackHelper::NotifyLayerTransforms(aTransforms);
+}
+
+void ChromeProcessController::RequestContentRepaint(
+    const RepaintRequest& aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsRepaintThread());
 
   if (aRequest.IsRootContent()) {
@@ -84,7 +105,15 @@ void ChromeProcessController::Destroy() {
   mAPZEventState = nullptr;
 }
 
+<<<<<<< HEAD
 nsIPresShell* ChromeProcessController::GetPresShell() const {
+||||||| merged common ancestors
+nsIPresShell*
+ChromeProcessController::GetPresShell() const
+{
+=======
+PresShell* ChromeProcessController::GetPresShell() const {
+>>>>>>> upstream-releases
   if (!mWidget) {
     return nullptr;
   }
@@ -94,22 +123,50 @@ nsIPresShell* ChromeProcessController::GetPresShell() const {
   return nullptr;
 }
 
+<<<<<<< HEAD
 nsIDocument* ChromeProcessController::GetRootDocument() const {
   if (nsIPresShell* presShell = GetPresShell()) {
+||||||| merged common ancestors
+nsIDocument*
+ChromeProcessController::GetRootDocument() const
+{
+  if (nsIPresShell* presShell = GetPresShell()) {
+=======
+dom::Document* ChromeProcessController::GetRootDocument() const {
+  if (PresShell* presShell = GetPresShell()) {
+>>>>>>> upstream-releases
     return presShell->GetDocument();
   }
   return nullptr;
 }
 
+<<<<<<< HEAD
 nsIDocument* ChromeProcessController::GetRootContentDocument(
     const ScrollableLayerGuid::ViewID& aScrollId) const {
+||||||| merged common ancestors
+nsIDocument*
+ChromeProcessController::GetRootContentDocument(const FrameMetrics::ViewID& aScrollId) const
+{
+=======
+dom::Document* ChromeProcessController::GetRootContentDocument(
+    const ScrollableLayerGuid::ViewID& aScrollId) const {
+>>>>>>> upstream-releases
   nsIContent* content = nsLayoutUtils::FindContentFor(aScrollId);
   if (!content) {
     return nullptr;
   }
+<<<<<<< HEAD
   nsIPresShell* presShell =
       APZCCallbackHelper::GetRootContentDocumentPresShellForContent(content);
   if (presShell) {
+||||||| merged common ancestors
+  nsIPresShell* presShell = APZCCallbackHelper::GetRootContentDocumentPresShellForContent(content);
+  if (presShell) {
+=======
+  if (PresShell* presShell =
+          APZCCallbackHelper::GetRootContentDocumentPresShellForContent(
+              content)) {
+>>>>>>> upstream-releases
     return presShell->GetDocument();
   }
   return nullptr;
@@ -120,7 +177,7 @@ void ChromeProcessController::HandleDoubleTap(
     const ScrollableLayerGuid& aGuid) {
   MOZ_ASSERT(MessageLoop::current() == mUILoop);
 
-  nsCOMPtr<nsIDocument> document = GetRootContentDocument(aGuid.mScrollId);
+  RefPtr<dom::Document> document = GetRootContentDocument(aGuid.mScrollId);
   if (!document.get()) {
     return;
   }
@@ -129,9 +186,17 @@ void ChromeProcessController::HandleDoubleTap(
   // Root Content Document. Unfortunately that frame does not know about the
   // resolution of the document and so we must remove it before calculating
   // the zoomToRect.
+<<<<<<< HEAD
   nsIPresShell* presShell = document->GetShell();
   const float resolution =
       presShell->ScaleToResolution() ? presShell->GetResolution() : 1.0f;
+||||||| merged common ancestors
+  nsIPresShell* presShell = document->GetShell();
+  const float resolution = presShell->ScaleToResolution() ? presShell->GetResolution () : 1.0f;
+=======
+  PresShell* presShell = document->GetPresShell();
+  const float resolution = presShell->GetResolution();
+>>>>>>> upstream-releases
   CSSPoint point(aPoint.x / resolution, aPoint.y / resolution);
   CSSRect zoomToRect = CalculateRectToZoomTo(document, point);
 
@@ -140,11 +205,28 @@ void ChromeProcessController::HandleDoubleTap(
   if (APZCCallbackHelper::GetOrCreateScrollIdentifiers(
           document->GetDocumentElement(), &presShellId, &viewId)) {
     APZThreadUtils::RunOnControllerThread(
+<<<<<<< HEAD
         NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
             "IAPZCTreeManager::ZoomToRect", mAPZCTreeManager,
             &IAPZCTreeManager::ZoomToRect,
             ScrollableLayerGuid(aGuid.mLayersId, presShellId, viewId),
             zoomToRect, ZoomToRectBehavior::DEFAULT_BEHAVIOR));
+||||||| merged common ancestors
+      NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
+        "IAPZCTreeManager::ZoomToRect",
+        mAPZCTreeManager,
+        &IAPZCTreeManager::ZoomToRect,
+        ScrollableLayerGuid(aGuid.mLayersId, presShellId, viewId),
+        zoomToRect,
+        ZoomToRectBehavior::DEFAULT_BEHAVIOR));
+=======
+        NewRunnableMethod<SLGuidAndRenderRoot, CSSRect, uint32_t>(
+            "IAPZCTreeManager::ZoomToRect", mAPZCTreeManager,
+            &IAPZCTreeManager::ZoomToRect,
+            SLGuidAndRenderRoot(aGuid.mLayersId, presShellId, viewId,
+                                wr::RenderRoot::Default),
+            zoomToRect, ZoomToRectBehavior::DEFAULT_BEHAVIOR));
+>>>>>>> upstream-releases
   }
 }
 
@@ -166,7 +248,7 @@ void ChromeProcessController::HandleTap(
     return;
   }
 
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
+  RefPtr<PresShell> presShell = GetPresShell();
   if (!presShell) {
     return;
   }
@@ -179,6 +261,7 @@ void ChromeProcessController::HandleTap(
       APZCCallbackHelper::ApplyCallbackTransform(aPoint / scale, aGuid);
 
   switch (aType) {
+<<<<<<< HEAD
     case TapType::eSingleTap:
       mAPZEventState->ProcessSingleTap(point, scale, aModifiers, aGuid, 1);
       break;
@@ -195,6 +278,45 @@ void ChromeProcessController::HandleTap(
     case TapType::eLongTapUp:
       mAPZEventState->ProcessLongTapUp(presShell, point, scale, aModifiers);
       break;
+||||||| merged common ancestors
+  case TapType::eSingleTap:
+    mAPZEventState->ProcessSingleTap(point, scale, aModifiers, aGuid, 1);
+    break;
+  case TapType::eDoubleTap:
+    HandleDoubleTap(point, aModifiers, aGuid);
+    break;
+  case TapType::eSecondTap:
+    mAPZEventState->ProcessSingleTap(point, scale, aModifiers, aGuid, 2);
+    break;
+  case TapType::eLongTap:
+    mAPZEventState->ProcessLongTap(presShell, point, scale, aModifiers, aGuid,
+        aInputBlockId);
+    break;
+  case TapType::eLongTapUp:
+    mAPZEventState->ProcessLongTapUp(presShell, point, scale, aModifiers);
+    break;
+=======
+    case TapType::eSingleTap:
+      mAPZEventState->ProcessSingleTap(point, scale, aModifiers, 1);
+      break;
+    case TapType::eDoubleTap:
+      HandleDoubleTap(point, aModifiers, aGuid);
+      break;
+    case TapType::eSecondTap:
+      mAPZEventState->ProcessSingleTap(point, scale, aModifiers, 2);
+      break;
+    case TapType::eLongTap: {
+      RefPtr<APZEventState> eventState(mAPZEventState);
+      eventState->ProcessLongTap(presShell, point, scale, aModifiers,
+                                 aInputBlockId);
+      break;
+    }
+    case TapType::eLongTapUp: {
+      RefPtr<APZEventState> eventState(mAPZEventState);
+      eventState->ProcessLongTapUp(presShell, point, scale, aModifiers);
+      break;
+    }
+>>>>>>> upstream-releases
   }
 }
 

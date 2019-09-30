@@ -10,12 +10,25 @@ include PBackgroundSharedTypes;
 
 include "mozilla/dom/quota/SerializationHelpers.h";
 
+using mozilla::OriginAttributesPattern
+  from "mozilla/OriginAttributes.h";
+
 using mozilla::dom::quota::PersistenceType
   from "mozilla/dom/quota/PersistenceType.h";
 
+<<<<<<< HEAD
 using mozilla::dom::quota::Client::Type
   from "mozilla/dom/quota/Client.h";
 
+||||||| merged common ancestors
+=======
+using mozilla::dom::quota::Client::Type
+  from "mozilla/dom/quota/Client.h";
+
+using mozilla::dom::ContentParentId
+  from "mozilla/dom/ipc/IdType.h";
+
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 namespace quota {
@@ -73,7 +86,7 @@ struct ResetOriginParams
 
 struct ClearDataParams
 {
-  nsString pattern;
+  OriginAttributesPattern pattern;
 };
 
 struct ClearAllParams
@@ -94,6 +107,10 @@ struct PersistParams
   PrincipalInfo principalInfo;
 };
 
+struct ListInitializedOriginsParams
+{
+};
+
 union RequestParams
 {
   InitParams;
@@ -106,6 +123,7 @@ union RequestParams
   ResetAllParams;
   PersistedParams;
   PersistParams;
+  ListInitializedOriginsParams;
 };
 
 protocol PQuota
@@ -125,6 +143,8 @@ parent:
   async StartIdleMaintenance();
 
   async StopIdleMaintenance();
+
+  async AbortOperationsForProcess(ContentParentId contentParentId);
 };
 
 } // namespace quota

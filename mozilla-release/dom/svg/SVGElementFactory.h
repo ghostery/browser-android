@@ -7,7 +7,13 @@
 #ifndef mozilla_dom_SVGElementFactory_h
 #define mozilla_dom_SVGElementFactory_h
 
+#include "nsError.h"
+#include "mozilla/AlreadyAddRefed.h"
+#include "mozilla/dom/FromParser.h"
+#include "mozilla/dom/NodeInfo.h"
+
 class nsAtom;
+class nsIContent;
 
 namespace mozilla {
 namespace dom {
@@ -19,9 +25,51 @@ class SVGElementFactory {
 };
 
 typedef nsresult (*SVGContentCreatorFunction)(
+<<<<<<< HEAD
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     mozilla::dom::FromParser aFromParser);
 
+}  // namespace dom
+}  // namespace mozilla
+
+#define SVG_TAG(_tag, _classname)                           \
+  nsresult NS_NewSVG##_classname##Element(                  \
+      nsIContent** aResult,                                 \
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, \
+      mozilla::dom::FromParser aFromParser);
+||||||| merged common ancestors
+  nsIContent** aResult,
+  already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+  mozilla::dom::FromParser aFromParser);
+
+} // namespace dom
+} // namespace mozilla
+
+#define SVG_TAG(_tag, _classname)                                              \
+  nsresult NS_NewSVG##_classname##Element(                                     \
+    nsIContent** aResult,                                                      \
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,                      \
+    mozilla::dom::FromParser aFromParser);
+=======
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+    mozilla::dom::FromParser aFromParser);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#define SVG_FROM_PARSER_TAG(_tag, _classname)               \
+  nsresult NS_NewSVG##_classname##Element(                  \
+      nsIContent** aResult,                                 \
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, \
+      mozilla::dom::FromParser aFromParser);
+#include "SVGTagList.h"
+||||||| merged common ancestors
+#define SVG_FROM_PARSER_TAG(_tag, _classname)                                  \
+  nsresult NS_NewSVG##_classname##Element(                                     \
+    nsIContent** aResult,                                                      \
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,                      \
+    mozilla::dom::FromParser aFromParser);
+#include "SVGTagList.h"
+=======
 }  // namespace dom
 }  // namespace mozilla
 
@@ -36,7 +84,8 @@ typedef nsresult (*SVGContentCreatorFunction)(
       nsIContent** aResult,                                 \
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo, \
       mozilla::dom::FromParser aFromParser);
-#include "SVGTagList.h"
+#include "mozilla/SVGTagList.h"
+>>>>>>> upstream-releases
 #undef SVG_TAG
 #undef SVG_FROM_PARSER_TAG
 

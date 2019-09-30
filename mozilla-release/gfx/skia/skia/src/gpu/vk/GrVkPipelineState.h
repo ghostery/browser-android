@@ -12,7 +12,14 @@
 #include "GrVkDescriptorSetManager.h"
 #include "GrVkPipelineStateDataManager.h"
 #include "glsl/GrGLSLProgramBuilder.h"
+<<<<<<< HEAD
 #include "vk/GrVkDefines.h"
+||||||| merged common ancestors
+
+#include "vk/GrVkDefines.h"
+=======
+#include "vk/GrVkTypes.h"
+>>>>>>> upstream-releases
 
 class GrPipeline;
 class GrStencilSettings;
@@ -36,6 +43,7 @@ class GrVkUniformBuffer;
  */
 class GrVkPipelineState : public SkRefCnt {
 public:
+<<<<<<< HEAD
     using UniformInfoArray = GrVkPipelineStateDataManager::UniformInfoArray;
     using UniformHandle = GrGLSLProgramDataManager::UniformHandle;
 
@@ -53,9 +61,37 @@ public:
             std::unique_ptr<GrGLSLXferProcessor> xferProcessor,
             std::unique_ptr<std::unique_ptr<GrGLSLFragmentProcessor>[]> fragmentProcessors,
             int fFragmentProcessorCnt);
+||||||| merged common ancestors
+    typedef GrGLSLProgramBuilder::BuiltinUniformHandles BuiltinUniformHandles;
 
     ~GrVkPipelineState();
+=======
+    using UniformInfoArray = GrVkPipelineStateDataManager::UniformInfoArray;
+    using UniformHandle = GrGLSLProgramDataManager::UniformHandle;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    ~GrVkPipelineState();
+||||||| merged common ancestors
+    GrVkPipeline* vkPipeline() const { return fPipeline; }
+=======
+    GrVkPipelineState(
+            GrVkGpu* gpu,
+            GrVkPipeline* pipeline,
+            VkPipelineLayout layout,
+            const GrVkDescriptorSetManager::Handle& samplerDSHandle,
+            const GrGLSLBuiltinUniformHandles& builtinUniformHandles,
+            const UniformInfoArray& uniforms,
+            uint32_t geometryUniformSize,
+            uint32_t fragmentUniformSize,
+            const UniformInfoArray& samplers,
+            std::unique_ptr<GrGLSLPrimitiveProcessor> geometryProcessor,
+            std::unique_ptr<GrGLSLXferProcessor> xferProcessor,
+            std::unique_ptr<std::unique_ptr<GrGLSLFragmentProcessor>[]> fragmentProcessors,
+            int fFragmentProcessorCnt);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     void setAndBindUniforms(GrVkGpu*, const GrPrimitiveProcessor&, const GrPipeline&,
                             GrVkCommandBuffer*);
     /**
@@ -65,13 +101,48 @@ public:
     void setAndBindTextures(GrVkGpu*, const GrPrimitiveProcessor&, const GrPipeline&,
                             const GrTextureProxy* const primitiveProcessorTextures[],
                             GrVkCommandBuffer*);
+||||||| merged common ancestors
+    void setData(GrVkGpu*, const GrPrimitiveProcessor&, const GrPipeline&);
+=======
+    ~GrVkPipelineState();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     void bindPipeline(const GrVkGpu* gpu, GrVkCommandBuffer* commandBuffer);
+||||||| merged common ancestors
+    void bind(const GrVkGpu* gpu, GrVkCommandBuffer* commandBuffer);
+=======
+    void setAndBindUniforms(GrVkGpu*, const GrRenderTarget*, GrSurfaceOrigin,
+                            const GrPrimitiveProcessor&, const GrPipeline&, GrVkCommandBuffer*);
+    /**
+     * This must be called after setAndBindUniforms() since that function invalidates texture
+     * bindings.
+     */
+    void setAndBindTextures(GrVkGpu*, const GrPrimitiveProcessor&, const GrPipeline&,
+                            const GrTextureProxy* const primitiveProcessorTextures[],
+                            GrVkCommandBuffer*);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    void addUniformResources(GrVkCommandBuffer&, GrVkSampler*[], GrVkTexture*[], int numTextures);
+||||||| merged common ancestors
+    void addUniformResources(GrVkCommandBuffer&);
+=======
+    void bindPipeline(const GrVkGpu* gpu, GrVkCommandBuffer* commandBuffer);
+>>>>>>> upstream-releases
 
     void addUniformResources(GrVkCommandBuffer&, GrVkSampler*[], GrVkTexture*[], int numTextures);
 
-    void freeGPUResources(const GrVkGpu* gpu);
+<<<<<<< HEAD
+||||||| merged common ancestors
+    // This releases resources that only a given instance of a GrVkPipelineState needs to hold onto
+    // and don't need to survive across new uses of the GrVkPipelineState.
+    void freeTempResources(const GrVkGpu* gpu);
 
+=======
+    void freeGPUResources(GrVkGpu* gpu);
+
+>>>>>>> upstream-releases
     void abandonGPUResources();
 
 private:
@@ -114,7 +185,7 @@ private:
     };
 
     // Helper for setData() that sets the view matrix and loads the render target height uniform
-    void setRenderTargetState(const GrRenderTargetProxy*);
+    void setRenderTargetState(const GrRenderTarget*, GrSurfaceOrigin);
 
     // GrVkResources
     GrVkPipeline* fPipeline;
@@ -134,6 +205,13 @@ private:
     const GrVkDescriptorSet* fSamplerDescriptorSet;
 
     const GrVkDescriptorSetManager::Handle fSamplerDSHandle;
+<<<<<<< HEAD
+||||||| merged common ancestors
+    const GrVkDescriptorSetManager::Handle fTexelBufferDSHandle;
+=======
+
+    SkSTArray<4, const GrVkSampler*>   fImmutableSamplers;
+>>>>>>> upstream-releases
 
     std::unique_ptr<GrVkUniformBuffer> fGeometryUniformBuffer;
     std::unique_ptr<GrVkUniformBuffer> fFragmentUniformBuffer;

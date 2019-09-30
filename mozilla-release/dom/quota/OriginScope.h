@@ -212,13 +212,55 @@ class OriginScope {
 
       explicit Matcher(const OriginScope& aThis) : mThis(aThis) {}
 
+<<<<<<< HEAD
       bool match(const Origin& aOther) { return mThis.MatchesOrigin(aOther); }
+||||||| merged common ancestors
+      bool
+      match(const Origin& aOther) {
+        return mThis.MatchesOrigin(aOther);
+      }
+=======
+      bool operator()(const Origin& aOther) {
+        return mThis.MatchesOrigin(aOther);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       bool match(const Prefix& aOther) { return mThis.MatchesPrefix(aOther); }
+||||||| merged common ancestors
+      bool
+      match(const Prefix& aOther) {
+        return mThis.MatchesPrefix(aOther);
+      }
+=======
+      bool operator()(const Prefix& aOther) {
+        return mThis.MatchesPrefix(aOther);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       bool match(const Pattern& aOther) { return mThis.MatchesPattern(aOther); }
+||||||| merged common ancestors
+      bool
+      match(const Pattern& aOther) {
+        return mThis.MatchesPattern(aOther);
+      }
+=======
+      bool operator()(const Pattern& aOther) {
+        return mThis.MatchesPattern(aOther);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       bool match(const Null& aOther) { return true; }
+||||||| merged common ancestors
+      bool
+      match(const Null& aOther) {
+        return true;
+      }
+=======
+      bool operator()(const Null& aOther) { return true; }
+>>>>>>> upstream-releases
     };
 
     return aOther.mData.match(Matcher(*this));
@@ -245,19 +287,47 @@ class OriginScope {
 
       explicit OriginMatcher(const Origin& aOther) : mOther(aOther) {}
 
+<<<<<<< HEAD
       bool match(const Origin& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Origin& aThis) {
+=======
+      bool operator()(const Origin& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetOrigin().Equals(mOther.GetOrigin());
       }
 
+<<<<<<< HEAD
       bool match(const Prefix& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Prefix& aThis) {
+=======
+      bool operator()(const Prefix& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetOriginNoSuffix().Equals(mOther.GetOriginNoSuffix());
       }
 
+<<<<<<< HEAD
       bool match(const Pattern& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Pattern& aThis) {
+=======
+      bool operator()(const Pattern& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetPattern().Matches(mOther.GetAttributes());
       }
 
+<<<<<<< HEAD
       bool match(const Null& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Null& aThis) {
+=======
+      bool operator()(const Null& aThis) {
+>>>>>>> upstream-releases
         // Null covers everything.
         return true;
       }
@@ -272,22 +342,50 @@ class OriginScope {
 
       explicit PrefixMatcher(const Prefix& aOther) : mOther(aOther) {}
 
+<<<<<<< HEAD
       bool match(const Origin& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Origin& aThis) {
+=======
+      bool operator()(const Origin& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetOriginNoSuffix().Equals(mOther.GetOriginNoSuffix());
       }
 
+<<<<<<< HEAD
       bool match(const Prefix& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Prefix& aThis) {
+=======
+      bool operator()(const Prefix& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetOriginNoSuffix().Equals(mOther.GetOriginNoSuffix());
       }
 
+<<<<<<< HEAD
       bool match(const Pattern& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Pattern& aThis) {
+=======
+      bool operator()(const Pattern& aThis) {
+>>>>>>> upstream-releases
         // The match will be always true here because any origin attributes
         // pattern overlaps any origin prefix (an origin prefix targets all
         // origin attributes).
         return true;
       }
 
+<<<<<<< HEAD
       bool match(const Null& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Null& aThis) {
+=======
+      bool operator()(const Null& aThis) {
+>>>>>>> upstream-releases
         // Null covers everything.
         return true;
       }
@@ -302,22 +400,50 @@ class OriginScope {
 
       explicit PatternMatcher(const Pattern& aOther) : mOther(aOther) {}
 
+<<<<<<< HEAD
       bool match(const Origin& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Origin& aThis) {
+=======
+      bool operator()(const Origin& aThis) {
+>>>>>>> upstream-releases
         return mOther.GetPattern().Matches(aThis.GetAttributes());
       }
 
+<<<<<<< HEAD
       bool match(const Prefix& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Prefix& aThis) {
+=======
+      bool operator()(const Prefix& aThis) {
+>>>>>>> upstream-releases
         // The match will be always true here because any origin attributes
         // pattern overlaps any origin prefix (an origin prefix targets all
         // origin attributes).
         return true;
       }
 
+<<<<<<< HEAD
       bool match(const Pattern& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Pattern& aThis) {
+=======
+      bool operator()(const Pattern& aThis) {
+>>>>>>> upstream-releases
         return aThis.GetPattern().Overlaps(mOther.GetPattern());
       }
 
+<<<<<<< HEAD
       bool match(const Null& aThis) {
+||||||| merged common ancestors
+      bool
+      match(const Null& aThis) {
+=======
+      bool operator()(const Null& aThis) {
+>>>>>>> upstream-releases
         // Null covers everything.
         return true;
       }

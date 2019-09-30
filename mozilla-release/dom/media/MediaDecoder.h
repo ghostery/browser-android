@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MediaDecoder_h_)
+<<<<<<< HEAD
 #define MediaDecoder_h_
 
 #include "BackgroundVideoDecodingPermissionObserver.h"
@@ -31,6 +32,61 @@
 #include "nsIObserver.h"
 #include "nsISupports.h"
 #include "nsITimer.h"
+||||||| merged common ancestors
+#define MediaDecoder_h_
+
+#include "BackgroundVideoDecodingPermissionObserver.h"
+#include "DecoderDoctorDiagnostics.h"
+#include "MediaContainerType.h"
+#include "MediaDecoderOwner.h"
+#include "MediaEventSource.h"
+#include "MediaMetadataManager.h"
+#include "MediaPromiseDefs.h"
+#include "MediaResource.h"
+#include "MediaStatistics.h"
+#include "MediaStreamGraph.h"
+#include "SeekTarget.h"
+#include "TimeUnits.h"
+#include "mozilla/Atomics.h"
+#include "mozilla/CDMProxy.h"
+#include "mozilla/MozPromise.h"
+#include "mozilla/ReentrantMonitor.h"
+#include "mozilla/StateMirroring.h"
+#include "mozilla/StateWatching.h"
+#include "nsAutoPtr.h"
+#include "nsCOMPtr.h"
+#include "nsIObserver.h"
+#include "nsISupports.h"
+#include "nsITimer.h"
+=======
+#  define MediaDecoder_h_
+
+#  include "BackgroundVideoDecodingPermissionObserver.h"
+#  include "DecoderDoctorDiagnostics.h"
+#  include "MediaContainerType.h"
+#  include "MediaDecoderOwner.h"
+#  include "MediaEventSource.h"
+#  include "MediaMetadataManager.h"
+#  include "MediaPromiseDefs.h"
+#  include "MediaResource.h"
+#  include "MediaStatistics.h"
+#  include "MediaStreamGraph.h"
+#  include "SeekTarget.h"
+#  include "TimeUnits.h"
+#  include "TrackID.h"
+#  include "mozilla/Atomics.h"
+#  include "mozilla/CDMProxy.h"
+#  include "mozilla/MozPromise.h"
+#  include "mozilla/ReentrantMonitor.h"
+#  include "mozilla/StateMirroring.h"
+#  include "mozilla/StateWatching.h"
+#  include "mozilla/dom/MediaDebugInfoBinding.h"
+#  include "nsAutoPtr.h"
+#  include "nsCOMPtr.h"
+#  include "nsIObserver.h"
+#  include "nsISupports.h"
+#  include "nsITimer.h"
+>>>>>>> upstream-releases
 
 class nsIPrincipal;
 
@@ -51,11 +107,24 @@ struct MediaPlaybackEvent;
 enum class Visibility : uint8_t;
 
 // GetCurrentTime is defined in winbase.h as zero argument macro forwarding to
+<<<<<<< HEAD
 // GetTickCount() and conflicts with MediaDecoder::GetCurrentTime
 // implementation.
 #ifdef GetCurrentTime
 #undef GetCurrentTime
 #endif
+||||||| merged common ancestors
+// GetTickCount() and conflicts with MediaDecoder::GetCurrentTime implementation.
+#ifdef GetCurrentTime
+#undef GetCurrentTime
+#endif
+=======
+// GetTickCount() and conflicts with MediaDecoder::GetCurrentTime
+// implementation.
+#  ifdef GetCurrentTime
+#    undef GetCurrentTime
+#  endif
+>>>>>>> upstream-releases
 
 struct MOZ_STACK_CLASS MediaDecoderInit {
   MediaDecoderOwner* const mOwner;
@@ -124,6 +193,10 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
 
   // Return the principal of the current URI being played or downloaded.
   virtual already_AddRefed<nsIPrincipal> GetCurrentPrincipal() = 0;
+
+  // Return true if the loading of this resource required cross-origin
+  // redirects.
+  virtual bool HadCrossOriginRedirects() = 0;
 
   // Return the time position in the video stream being
   // played measured in seconds.
@@ -308,6 +381,8 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
   // Returns true if the decoder can't participate in suspend-video-decoder.
   bool HasSuspendTaint() const;
 
+  void SetCloningVisually(bool aIsCloningVisually);
+
   void UpdateVideoDecodeMode();
 
   void SetIsBackgroundVideoDecodingAllowed(bool aAllowed);
@@ -368,9 +443,9 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
   static bool IsWaveEnabled();
   static bool IsWebMEnabled();
 
-#ifdef MOZ_WMF
+#  ifdef MOZ_WMF
   static bool IsWMFEnabled();
-#endif
+#  endif
 
   // Return the frame decode/paint related statistics.
   FrameStatistics& GetFrameStatistics() { return *mFrameStats; }
@@ -387,14 +462,9 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
 
   virtual MediaDecoderOwner::NextFrameStatus NextFrameBufferedStatus();
 
-  // Returns a string describing the state of the media player internal
-  // data. Used for debugging purposes.
-  virtual void GetMozDebugReaderData(nsACString& aString);
+  RefPtr<GenericPromise> RequestDebugInfo(dom::MediaDecoderDebugInfo& aInfo);
 
-  RefPtr<GenericPromise> DumpDebugInfo();
-
-  using DebugInfoPromise = MozPromise<nsCString, bool, true>;
-  RefPtr<DebugInfoPromise> RequestDebugInfo();
+  void GetDebugInfo(dom::MediaDecoderDebugInfo& aInfo);
 
  protected:
   virtual ~MediaDecoder();
@@ -466,9 +536,17 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
   // the next frame is available.
   // An arbitrary value of 250ms is used.
   static constexpr auto DEFAULT_NEXT_FRAME_AVAILABLE_BUFFERED =
+<<<<<<< HEAD
       media::TimeUnit::FromMicroseconds(250000);
 
   virtual nsCString GetDebugInfo();
+||||||| merged common ancestors
+    media::TimeUnit::FromMicroseconds(250000);
+
+  virtual nsCString GetDebugInfo();
+=======
+      media::TimeUnit::FromMicroseconds(250000);
+>>>>>>> upstream-releases
 
  private:
   // Called when the owner's activity changed.
@@ -561,6 +639,10 @@ class MediaDecoder : public DecoderDoctorLifeLogger<MediaDecoder> {
   // True if the decoder has a suspend taint - meaning suspend-video-decoder is
   // disabled.
   bool mHasSuspendTaint;
+
+  // True if the decoder is sending video to a secondary container, and should
+  // not suspend the decoder.
+  bool mIsCloningVisually;
 
   MediaDecoderOwner::NextFrameStatus mNextFrameStatus =
       MediaDecoderOwner::NEXT_FRAME_UNAVAILABLE;

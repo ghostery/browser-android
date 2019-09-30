@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Version of this schema
 schema: 1
 
@@ -21,3 +22,29 @@ origin:
   # update.sh will update this value
   release: "e5c3a1d8a68c412177f768908b1d54550cf9d510-dirty (2018-11-29 18:20:54 +0100)"
 
+||||||| merged common ancestors
+=======
+# Version of this schema
+schema: 1
+
+bugzilla:
+  # Bugzilla product and component for this directory and subdirectories
+  product: "Core"
+  component: "Audio/Video: cubeb"
+
+# The source from this directory was copied from the cubeb
+# git repository using the update.sh script.  The only changes
+# made were those applied by update.sh and the addition of
+# Makefile.in build files for the Mozilla build system.S
+
+origin:
+  name: "cubeb"
+  description: "Cross platform audio library"
+
+  url: "https://github.com/kinetiknz/cubeb"
+  license: "ISC"
+
+  # update.sh will update this value
+  release: "98a1c8e61c78d4e3b8839352617a1e2432717a42 (2019-06-20 13:30:20 -0700)"
+
+>>>>>>> upstream-releases

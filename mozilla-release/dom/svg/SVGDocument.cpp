@@ -17,7 +17,7 @@
 #include "nsString.h"
 #include "nsLiteralString.h"
 #include "mozilla/dom/Element.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "mozilla/StyleSheet.h"
 #include "mozilla/StyleSheetInlines.h"
 
@@ -48,7 +48,15 @@ nsresult SVGDocument::Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const {
 ////////////////////////////////////////////////////////////////////////
 // Exported creation functions
 
+<<<<<<< HEAD
 nsresult NS_NewSVGDocument(nsIDocument** aInstancePtrResult) {
+||||||| merged common ancestors
+nsresult
+NS_NewSVGDocument(nsIDocument** aInstancePtrResult)
+{
+=======
+nsresult NS_NewSVGDocument(Document** aInstancePtrResult) {
+>>>>>>> upstream-releases
   RefPtr<SVGDocument> doc = new SVGDocument();
 
   nsresult rv = doc->Init();

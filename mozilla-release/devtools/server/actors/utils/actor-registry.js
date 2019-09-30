@@ -4,7 +4,6 @@
 
 "use strict";
 
-var Services = require("Services");
 var { Ci } = require("chrome");
 var gRegisteredModules = Object.create(null);
 
@@ -53,20 +52,28 @@ const ActorRegistry = {
     }
 
     if (!options) {
-      throw new Error("ActorRegistry.registerModule requires an options argument");
+      throw new Error(
+        "ActorRegistry.registerModule requires an options argument"
+      );
     }
-    const {prefix, constructor, type} = options;
-    if (typeof (prefix) !== "string") {
-      throw new Error(`Lazy actor definition for '${id}' requires a string ` +
-                      `'prefix' option.`);
+    const { prefix, constructor, type } = options;
+    if (typeof prefix !== "string") {
+      throw new Error(
+        `Lazy actor definition for '${id}' requires a string ` +
+          `'prefix' option.`
+      );
     }
-    if (typeof (constructor) !== "string") {
-      throw new Error(`Lazy actor definition for '${id}' requires a string ` +
-                      `'constructor' option.`);
+    if (typeof constructor !== "string") {
+      throw new Error(
+        `Lazy actor definition for '${id}' requires a string ` +
+          `'constructor' option.`
+      );
     }
     if (!("global" in type) && !("target" in type)) {
-      throw new Error(`Lazy actor definition for '${id}' requires a dictionary ` +
-                      `'type' option whose attributes can be 'global' or 'target'.`);
+      throw new Error(
+        `Lazy actor definition for '${id}' requires a dictionary ` +
+          `'type' option whose attributes can be 'global' or 'target'.`
+      );
     }
     const name = prefix + "Actor";
     const mod = {
@@ -92,7 +99,9 @@ const ActorRegistry = {
   unregisterModule(id) {
     const mod = gRegisteredModules[id];
     if (!mod) {
-      throw new Error("Tried to unregister a module that was not previously registered.");
+      throw new Error(
+        "Tried to unregister a module that was not previously registered."
+      );
     }
 
     // Lazy actors
@@ -163,21 +172,6 @@ const ActorRegistry = {
       constructor: "InspectorActor",
       type: { target: true },
     });
-    this.registerModule("devtools/server/actors/canvas", {
-      prefix: "canvas",
-      constructor: "CanvasActor",
-      type: { target: true },
-    });
-    this.registerModule("devtools/server/actors/webgl", {
-      prefix: "webgl",
-      constructor: "WebGLActor",
-      type: { target: true },
-    });
-    this.registerModule("devtools/server/actors/webaudio", {
-      prefix: "webaudio",
-      constructor: "WebAudioActor",
-      type: { target: true },
-    });
     this.registerModule("devtools/server/actors/stylesheets", {
       prefix: "styleSheets",
       constructor: "StyleSheetsActor",
@@ -208,6 +202,7 @@ const ActorRegistry = {
       constructor: "CssPropertiesActor",
       type: { target: true },
     });
+<<<<<<< HEAD
     this.registerModule("devtools/server/actors/csscoverage", {
       prefix: "cssUsage",
       constructor: "CSSUsageActor",
@@ -215,6 +210,22 @@ const ActorRegistry = {
     });
     if ("nsIProfiler" in Ci &&
         !Services.prefs.getBoolPref("devtools.performance.new-panel-enabled", false)) {
+||||||| merged common ancestors
+    this.registerModule("devtools/server/actors/csscoverage", {
+      prefix: "cssUsage",
+      constructor: "CSSUsageActor",
+      type: { target: true },
+    });
+    this.registerModule("devtools/server/actors/timeline", {
+      prefix: "timeline",
+      constructor: "TimelineActor",
+      type: { target: true },
+    });
+    if ("nsIProfiler" in Ci &&
+        !Services.prefs.getBoolPref("devtools.performance.new-panel-enabled", false)) {
+=======
+    if ("nsIProfiler" in Ci) {
+>>>>>>> upstream-releases
       this.registerModule("devtools/server/actors/performance", {
         prefix: "performance",
         constructor: "PerformanceActor",
@@ -236,12 +247,31 @@ const ActorRegistry = {
       constructor: "EmulationActor",
       type: { target: true },
     });
+<<<<<<< HEAD
     this.registerModule("devtools/server/actors/addon/webextension-inspected-window", {
       prefix: "webExtensionInspectedWindow",
       constructor: "WebExtensionInspectedWindowActor",
       type: { target: true },
     });
     this.registerModule("devtools/server/actors/accessibility/accessibility", {
+||||||| merged common ancestors
+    this.registerModule("devtools/server/actors/addon/webextension-inspected-window", {
+      prefix: "webExtensionInspectedWindow",
+      constructor: "WebExtensionInspectedWindowActor",
+      type: { target: true },
+    });
+    this.registerModule("devtools/server/actors/accessibility", {
+=======
+    this.registerModule(
+      "devtools/server/actors/addon/webextension-inspected-window",
+      {
+        prefix: "webExtensionInspectedWindow",
+        constructor: "WebExtensionInspectedWindowActor",
+        type: { target: true },
+      }
+    );
+    this.registerModule("devtools/server/actors/accessibility/accessibility", {
+>>>>>>> upstream-releases
       prefix: "accessibility",
       constructor: "AccessibilityActor",
       type: { target: true },
@@ -251,11 +281,28 @@ const ActorRegistry = {
       constructor: "ScreenshotActor",
       type: { target: true },
     });
+<<<<<<< HEAD
     this.registerModule("devtools/server/actors/changes", {
       prefix: "changes",
       constructor: "ChangesActor",
       type: { target: true },
     });
+||||||| merged common ancestors
+=======
+    this.registerModule("devtools/server/actors/changes", {
+      prefix: "changes",
+      constructor: "ChangesActor",
+      type: { target: true },
+    });
+    this.registerModule(
+      "devtools/server/actors/network-monitor/websocket-actor",
+      {
+        prefix: "webSocket",
+        constructor: "WebSocketActor",
+        type: { target: true },
+      }
+    );
+>>>>>>> upstream-releases
   },
 
   /**
@@ -309,8 +356,10 @@ const ActorRegistry = {
       const actor = actorOrName;
       for (const factoryName in this.targetScopedActorFactories) {
         const handler = this.targetScopedActorFactories[factoryName];
-        if ((handler.options.constructorName == actor.name) ||
-            (handler.options.id == actor.id)) {
+        if (
+          handler.options.constructorName == actor.name ||
+          handler.options.id == actor.id
+        ) {
           name = factoryName;
           break;
         }
@@ -379,8 +428,10 @@ const ActorRegistry = {
       const actor = actorOrName;
       for (const factoryName in this.globalActorFactories) {
         const handler = this.globalActorFactories[factoryName];
-        if ((handler.options.constructorName == actor.name) ||
-            (handler.options.id == actor.id)) {
+        if (
+          handler.options.constructorName == actor.name ||
+          handler.options.id == actor.id
+        ) {
           name = factoryName;
           break;
         }

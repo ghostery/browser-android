@@ -55,70 +55,194 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(nsBrowserStatusFilter)
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::AddProgressListener(nsIWebProgressListener *aListener,
                                            uint32_t aNotifyMask) {
   mListener = aListener;
   return NS_OK;
+||||||| merged common ancestors
+nsBrowserStatusFilter::AddProgressListener(nsIWebProgressListener *aListener,
+                                           uint32_t aNotifyMask)
+{
+    mListener = aListener;
+    return NS_OK;
+=======
+nsBrowserStatusFilter::AddProgressListener(nsIWebProgressListener* aListener,
+                                           uint32_t aNotifyMask) {
+  mListener = aListener;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::RemoveProgressListener(
     nsIWebProgressListener *aListener) {
   if (aListener == mListener) mListener = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsBrowserStatusFilter::RemoveProgressListener(nsIWebProgressListener *aListener)
+{
+    if (aListener == mListener)
+        mListener = nullptr;
+    return NS_OK;
+=======
+nsBrowserStatusFilter::RemoveProgressListener(
+    nsIWebProgressListener* aListener) {
+  if (aListener == mListener) mListener = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetDOMWindow(mozIDOMWindowProxy **aResult) {
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindow");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetDOMWindow(mozIDOMWindowProxy **aResult)
+{
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindow");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetDOMWindow(mozIDOMWindowProxy** aResult) {
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindow");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetDOMWindowID(uint64_t *aResult) {
   *aResult = 0;
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindowID");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetDOMWindowID(uint64_t *aResult)
+{
+    *aResult = 0;
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindowID");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetDOMWindowID(uint64_t* aResult) {
+  *aResult = 0;
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetDOMWindowID");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetInnerDOMWindowID(uint64_t *aResult) {
   *aResult = 0;
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetInnerDOMWindowID");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetInnerDOMWindowID(uint64_t *aResult)
+{
+    *aResult = 0;
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetInnerDOMWindowID");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetInnerDOMWindowID(uint64_t* aResult) {
+  *aResult = 0;
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetInnerDOMWindowID");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetIsTopLevel(bool *aIsTopLevel) {
   *aIsTopLevel = false;
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsTopLevel");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetIsTopLevel(bool *aIsTopLevel)
+{
+    *aIsTopLevel = false;
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsTopLevel");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetIsTopLevel(bool* aIsTopLevel) {
+  *aIsTopLevel = false;
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsTopLevel");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetIsLoadingDocument(bool *aIsLoadingDocument) {
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsLoadingDocument");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetIsLoadingDocument(bool *aIsLoadingDocument)
+{
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsLoadingDocument");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetIsLoadingDocument(bool* aIsLoadingDocument) {
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetIsLoadingDocument");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetLoadType(uint32_t *aLoadType) {
   *aLoadType = 0;
   MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetLoadType");
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetLoadType(uint32_t *aLoadType)
+{
+    *aLoadType = 0;
+    MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetLoadType");
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+nsBrowserStatusFilter::GetLoadType(uint32_t* aLoadType) {
+  *aLoadType = 0;
+  MOZ_ASSERT_UNREACHABLE("nsBrowserStatusFilter::GetLoadType");
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::GetTarget(nsIEventTarget **aTarget) {
   nsCOMPtr<nsIEventTarget> target = mTarget;
   target.forget(aTarget);
   return NS_OK;
+||||||| merged common ancestors
+nsBrowserStatusFilter::GetTarget(nsIEventTarget** aTarget)
+{
+    nsCOMPtr<nsIEventTarget> target = mTarget;
+    target.forget(aTarget);
+    return NS_OK;
+=======
+nsBrowserStatusFilter::GetTarget(nsIEventTarget** aTarget) {
+  nsCOMPtr<nsIEventTarget> target = mTarget;
+  target.forget(aTarget);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::SetTarget(nsIEventTarget *aTarget) {
   mTarget = aTarget;
   return NS_OK;
+||||||| merged common ancestors
+nsBrowserStatusFilter::SetTarget(nsIEventTarget* aTarget)
+{
+    mTarget = aTarget;
+    return NS_OK;
+=======
+nsBrowserStatusFilter::SetTarget(nsIEventTarget* aTarget) {
+  mTarget = aTarget;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -126,6 +250,7 @@ nsBrowserStatusFilter::SetTarget(nsIEventTarget *aTarget) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::OnStateChange(nsIWebProgress *aWebProgress,
                                      nsIRequest *aRequest, uint32_t aStateFlags,
                                      nsresult aStatus) {
@@ -143,7 +268,64 @@ nsBrowserStatusFilter::OnStateChange(nsIWebProgress *aWebProgress,
         ResetMembers();
       }
       mIsLoadingDocument = true;
+||||||| merged common ancestors
+nsBrowserStatusFilter::OnStateChange(nsIWebProgress *aWebProgress,
+                                     nsIRequest *aRequest,
+                                     uint32_t aStateFlags,
+                                     nsresult aStatus)
+{
+    if (!mListener)
+        return NS_OK;
+
+    if (aStateFlags & STATE_START) {
+        // Reset members on beginning of document loading, but we don't want
+        // subframe document loading followed by the root document loading
+        // resets members accidentally, so for non-toplevel load we check if
+        // there hasn't been a document load started.
+        if (aStateFlags & STATE_IS_DOCUMENT) {
+            bool isTopLevel = false;
+            aWebProgress->GetIsTopLevel(&isTopLevel);
+            if (!mIsLoadingDocument || isTopLevel) {
+                ResetMembers();
+            }
+            mIsLoadingDocument = true;
+        }
+    } else if (aStateFlags & STATE_STOP) {
+        // Flush pending status / progress update during document loading.
+        if (mIsLoadingDocument) {
+            bool isLoadingDocument = true;
+            aWebProgress->GetIsLoadingDocument(&isLoadingDocument);
+            mIsLoadingDocument &= isLoadingDocument;
+
+            if (mTimer) {
+                mTimer->Cancel();
+                ProcessTimeout();
+            }
+        }
+    } else {
+        // No need to forward this state change.
+        return NS_OK;
+=======
+nsBrowserStatusFilter::OnStateChange(nsIWebProgress* aWebProgress,
+                                     nsIRequest* aRequest, uint32_t aStateFlags,
+                                     nsresult aStatus) {
+  if (!mListener) return NS_OK;
+
+  if (aStateFlags & STATE_START) {
+    // Reset members on beginning of document loading, but we don't want
+    // subframe document loading followed by the root document loading
+    // resets members accidentally, so for non-toplevel load we check if
+    // there hasn't been a document load started.
+    if (aStateFlags & STATE_IS_DOCUMENT) {
+      bool isTopLevel = false;
+      aWebProgress->GetIsTopLevel(&isTopLevel);
+      if (!mIsLoadingDocument || isTopLevel) {
+        ResetMembers();
+      }
+      mIsLoadingDocument = true;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   } else if (aStateFlags & STATE_STOP) {
     // Flush pending status / progress update during document loading.
     if (mIsLoadingDocument) {
@@ -155,10 +337,37 @@ nsBrowserStatusFilter::OnStateChange(nsIWebProgress *aWebProgress,
         mTimer->Cancel();
         ProcessTimeout();
       }
+||||||| merged common ancestors
+
+    // Only notify listener for STATE_IS_NETWORK.
+    if (aStateFlags & STATE_IS_NETWORK) {
+        return mListener->OnStateChange(aWebProgress, aRequest, aStateFlags,
+                                        aStatus);
+=======
+  } else if (aStateFlags & STATE_STOP) {
+    // Flush pending status / progress update during document loading.
+    if (mIsLoadingDocument) {
+      bool isLoadingDocument = true;
+      aWebProgress->GetIsLoadingDocument(&isLoadingDocument);
+      mIsLoadingDocument &= isLoadingDocument;
+
+      if (mTimer) {
+        mTimer->Cancel();
+        CallDelayedProgressListeners();
+
+        // CallDelayedProgressListeners() may trigger OnStatusChange and/or
+        // OnProgressChange handlers, which can run JS and may even call
+        // RemoveProgressListener.
+        if (!mListener) {
+          return NS_OK;
+        }
+      }
+>>>>>>> upstream-releases
     }
   } else {
     // No need to forward this state change.
     return NS_OK;
+<<<<<<< HEAD
   }
 
   // Only notify listener for STATE_IS_NETWORK.
@@ -168,11 +377,24 @@ nsBrowserStatusFilter::OnStateChange(nsIWebProgress *aWebProgress,
   }
 
   return NS_OK;
+||||||| merged common ancestors
+=======
+  }
+
+  // Only notify listener for STATE_IS_NETWORK or STATE_IS_REDIRECTED_DOCUMENT
+  if (aStateFlags & STATE_IS_NETWORK ||
+      aStateFlags & STATE_IS_REDIRECTED_DOCUMENT) {
+    return mListener->OnStateChange(aWebProgress, aRequest, aStateFlags,
+                                    aStatus);
+  }
+
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-nsBrowserStatusFilter::OnProgressChange(nsIWebProgress *aWebProgress,
-                                        nsIRequest *aRequest,
+nsBrowserStatusFilter::OnProgressChange(nsIWebProgress* aWebProgress,
+                                        nsIRequest* aRequest,
                                         int32_t aCurSelfProgress,
                                         int32_t aMaxSelfProgress,
                                         int32_t aCurTotalProgress,
@@ -199,15 +421,36 @@ nsBrowserStatusFilter::OnProgressChange(nsIWebProgress *aWebProgress,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::OnLocationChange(nsIWebProgress *aWebProgress,
                                         nsIRequest *aRequest, nsIURI *aLocation,
                                         uint32_t aFlags) {
   if (!mListener) return NS_OK;
 
   return mListener->OnLocationChange(aWebProgress, aRequest, aLocation, aFlags);
+||||||| merged common ancestors
+nsBrowserStatusFilter::OnLocationChange(nsIWebProgress *aWebProgress,
+                                        nsIRequest *aRequest,
+                                        nsIURI *aLocation,
+                                        uint32_t aFlags)
+{
+    if (!mListener)
+        return NS_OK;
+
+    return mListener->OnLocationChange(aWebProgress, aRequest, aLocation,
+                                       aFlags);
+=======
+nsBrowserStatusFilter::OnLocationChange(nsIWebProgress* aWebProgress,
+                                        nsIRequest* aRequest, nsIURI* aLocation,
+                                        uint32_t aFlags) {
+  if (!mListener) return NS_OK;
+
+  return mListener->OnLocationChange(aWebProgress, aRequest, aLocation, aFlags);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::OnStatusChange(nsIWebProgress *aWebProgress,
                                       nsIRequest *aRequest, nsresult aStatus,
                                       const char16_t *aMessage) {
@@ -220,6 +463,36 @@ nsBrowserStatusFilter::OnStatusChange(nsIWebProgress *aWebProgress,
     mStatusIsDirty = true;
     mStatusMsg = aMessage;
   }
+||||||| merged common ancestors
+nsBrowserStatusFilter::OnStatusChange(nsIWebProgress *aWebProgress,
+                                      nsIRequest *aRequest,
+                                      nsresult aStatus,
+                                      const char16_t *aMessage)
+{
+    if (!mListener)
+        return NS_OK;
+
+    //
+    // limit frequency of calls to OnStatusChange
+    //
+    if (mStatusIsDirty || !mCurrentStatusMsg.Equals(aMessage)) {
+        mStatusIsDirty = true;
+        mStatusMsg = aMessage;
+    }
+=======
+nsBrowserStatusFilter::OnStatusChange(nsIWebProgress* aWebProgress,
+                                      nsIRequest* aRequest, nsresult aStatus,
+                                      const char16_t* aMessage) {
+  if (!mListener) return NS_OK;
+
+  //
+  // limit frequency of calls to OnStatusChange
+  //
+  if (mStatusIsDirty || !mCurrentStatusMsg.Equals(aMessage)) {
+    mStatusIsDirty = true;
+    mStatusMsg = aMessage;
+  }
+>>>>>>> upstream-releases
 
   if (mDelayedStatus) return NS_OK;
 
@@ -230,23 +503,58 @@ nsBrowserStatusFilter::OnStatusChange(nsIWebProgress *aWebProgress,
 
   mDelayedStatus = true;
 
+<<<<<<< HEAD
+  return NS_OK;
+||||||| merged common ancestors
+    return NS_OK;
+=======
   return NS_OK;
 }
 
 NS_IMETHODIMP
+nsBrowserStatusFilter::OnSecurityChange(nsIWebProgress* aWebProgress,
+                                        nsIRequest* aRequest, uint32_t aState) {
+  if (!mListener) return NS_OK;
+
+  return mListener->OnSecurityChange(aWebProgress, aRequest, aState);
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::OnSecurityChange(nsIWebProgress *aWebProgress,
                                         nsIRequest *aRequest, uint32_t aState) {
   if (!mListener) return NS_OK;
 
   return mListener->OnSecurityChange(aWebProgress, aRequest, aState);
+||||||| merged common ancestors
+nsBrowserStatusFilter::OnSecurityChange(nsIWebProgress *aWebProgress,
+                                        nsIRequest *aRequest,
+                                        uint32_t aOldState,
+                                        uint32_t aState,
+                                        const nsAString& aContentBlockingLogJSON)
+{
+    if (!mListener)
+        return NS_OK;
+
+    return mListener->OnSecurityChange(aWebProgress, aRequest, aOldState,
+                                       aState, aContentBlockingLogJSON);
+=======
+nsBrowserStatusFilter::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
+                                              nsIRequest* aRequest,
+                                              uint32_t aEvent) {
+  if (!mListener) return NS_OK;
+
+  return mListener->OnContentBlockingEvent(aWebProgress, aRequest, aEvent);
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
 // nsBrowserStatusFilter::nsIWebProgressListener2
 //-----------------------------------------------------------------------------
 NS_IMETHODIMP
-nsBrowserStatusFilter::OnProgressChange64(nsIWebProgress *aWebProgress,
-                                          nsIRequest *aRequest,
+nsBrowserStatusFilter::OnProgressChange64(nsIWebProgress* aWebProgress,
+                                          nsIRequest* aRequest,
                                           int64_t aCurSelfProgress,
                                           int64_t aMaxSelfProgress,
                                           int64_t aCurTotalProgress,
@@ -258,6 +566,7 @@ nsBrowserStatusFilter::OnProgressChange64(nsIWebProgress *aWebProgress,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBrowserStatusFilter::OnRefreshAttempted(nsIWebProgress *aWebProgress,
                                           nsIURI *aUri, int32_t aDelay,
                                           bool aSameUri, bool *allowRefresh) {
@@ -266,6 +575,29 @@ nsBrowserStatusFilter::OnRefreshAttempted(nsIWebProgress *aWebProgress,
     *allowRefresh = true;
     return NS_OK;
   }
+||||||| merged common ancestors
+nsBrowserStatusFilter::OnRefreshAttempted(nsIWebProgress *aWebProgress,
+                                          nsIURI *aUri,
+                                          int32_t aDelay,
+                                          bool aSameUri,
+                                          bool *allowRefresh)
+{
+    nsCOMPtr<nsIWebProgressListener2> listener =
+        do_QueryInterface(mListener);
+    if (!listener) {
+        *allowRefresh = true;
+        return NS_OK;
+    }
+=======
+nsBrowserStatusFilter::OnRefreshAttempted(nsIWebProgress* aWebProgress,
+                                          nsIURI* aUri, int32_t aDelay,
+                                          bool aSameUri, bool* allowRefresh) {
+  nsCOMPtr<nsIWebProgressListener2> listener = do_QueryInterface(mListener);
+  if (!listener) {
+    *allowRefresh = true;
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
   return listener->OnRefreshAttempted(aWebProgress, aUri, aDelay, aSameUri,
                                       allowRefresh);
@@ -316,8 +648,18 @@ nsresult nsBrowserStatusFilter::StartDelayTimer() {
                                      mTarget);
 }
 
+<<<<<<< HEAD
 void nsBrowserStatusFilter::ProcessTimeout() {
   mTimer = nullptr;
+||||||| merged common ancestors
+void
+nsBrowserStatusFilter::ProcessTimeout()
+{
+    mTimer = nullptr;
+=======
+void nsBrowserStatusFilter::CallDelayedProgressListeners() {
+  mTimer = nullptr;
+>>>>>>> upstream-releases
 
   if (!mListener) return;
 
@@ -332,6 +674,7 @@ void nsBrowserStatusFilter::ProcessTimeout() {
   }
 }
 
+<<<<<<< HEAD
 void nsBrowserStatusFilter::TimeoutHandler(nsITimer *aTimer, void *aClosure) {
   nsBrowserStatusFilter *self =
       reinterpret_cast<nsBrowserStatusFilter *>(aClosure);
@@ -339,6 +682,30 @@ void nsBrowserStatusFilter::TimeoutHandler(nsITimer *aTimer, void *aClosure) {
     NS_ERROR("no self");
     return;
   }
+||||||| merged common ancestors
+void
+nsBrowserStatusFilter::TimeoutHandler(nsITimer *aTimer, void *aClosure)
+{
+    nsBrowserStatusFilter *self = reinterpret_cast<nsBrowserStatusFilter *>(aClosure);
+    if (!self) {
+        NS_ERROR("no self");
+        return;
+    }
+=======
+void nsBrowserStatusFilter::TimeoutHandler(nsITimer* aTimer, void* aClosure) {
+  nsBrowserStatusFilter* self =
+      reinterpret_cast<nsBrowserStatusFilter*>(aClosure);
+  if (!self) {
+    NS_ERROR("no self");
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   self->ProcessTimeout();
+||||||| merged common ancestors
+    self->ProcessTimeout();
+=======
+  self->CallDelayedProgressListeners();
+>>>>>>> upstream-releases
 }

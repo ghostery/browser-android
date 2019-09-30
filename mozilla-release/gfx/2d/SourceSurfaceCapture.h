@@ -23,9 +23,22 @@ class SourceSurfaceCapture : public SourceSurface {
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SourceSurfaceCapture, override)
 
   explicit SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner);
+<<<<<<< HEAD
   explicit SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
                                 LuminanceType aLuminanceType, float aOpacity);
   ~SourceSurfaceCapture();
+||||||| merged common ancestors
+  explicit SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
+                                LuminanceType aLuminanceType,
+                                float aOpacity);
+  ~SourceSurfaceCapture();
+=======
+  SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
+                       LuminanceType aLuminanceType, float aOpacity);
+  SourceSurfaceCapture(DrawTargetCaptureImpl* aOwner,
+                       SourceSurface* aSurfToOptimize);
+  virtual ~SourceSurfaceCapture();
+>>>>>>> upstream-releases
 
   SurfaceType GetType() const override { return SurfaceType::CAPTURE; }
   IntSize GetSize() const override { return mSize; }
@@ -62,6 +75,7 @@ class SourceSurfaceCapture : public SourceSurface {
   // isn't easily possible for nested surfaces.
   mutable Mutex mLock;
   RefPtr<SourceSurface> mResolved;
+  RefPtr<SourceSurface> mSurfToOptimize;
 };
 
 }  // namespace gfx

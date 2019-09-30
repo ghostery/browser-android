@@ -99,7 +99,8 @@ namespace TelemetryIPCAccumulator = mozilla::TelemetryIPCAccumulator;
 
 namespace {
 
-const uint32_t kEventCount = mozilla::Telemetry::EventID::EventCount;
+const uint32_t kEventCount =
+    static_cast<uint32_t>(mozilla::Telemetry::EventID::EventCount);
 // This is a special event id used to mark expired events, to make expiry checks
 // cheap at runtime.
 const uint32_t kExpiredEventId = std::numeric_limits<uint32_t>::max();
@@ -319,12 +320,22 @@ unsigned int GetDataset(const StaticMutexAutoLock& lock,
   }
 
   if (!gDynamicEventInfo) {
-    return nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN;
+    return nsITelemetry::DATASET_PRERELEASE_CHANNELS;
   }
 
+<<<<<<< HEAD
   return (*gDynamicEventInfo)[eventKey.id].recordOnRelease
              ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT
              : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN;
+||||||| merged common ancestors
+  return (*gDynamicEventInfo)[eventKey.id].recordOnRelease ?
+           nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT :
+           nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN;
+=======
+  return (*gDynamicEventInfo)[eventKey.id].recordOnRelease
+             ? nsITelemetry::DATASET_ALL_CHANNELS
+             : nsITelemetry::DATASET_PRERELEASE_CHANNELS;
+>>>>>>> upstream-releases
 }
 
 nsCString GetCategory(const StaticMutexAutoLock& lock,
@@ -585,7 +596,7 @@ nsresult SerializeEventsArray(const EventRecordArray& events, JSContext* cx,
     // [timestamp, category, method, object, value]
     // [timestamp, category, method, object, null, extra]
     // [timestamp, category, method, object, value, extra]
-    JS::AutoValueVector items(cx);
+    JS::RootedVector<JS::Value> items(cx);
 
     // Add timestamp.
     JS::Rooted<JS::Value> val(cx);
@@ -911,7 +922,7 @@ nsresult TelemetryEvent::RecordEvent(const nsACString& aCategory,
                           PromiseFlatCString(aCategory).get(),
                           PromiseFlatCString(aMethod).get(),
                           PromiseFlatCString(aObject).get());
-      return NS_ERROR_INVALID_ARG;
+      return NS_OK;
     }
     case RecordEventResult::InvalidExtraKey: {
       nsPrintfCString msg(R"(Invalid extra key for event ["%s", "%s", "%s"].)",
@@ -938,9 +949,77 @@ nsresult TelemetryEvent::RecordEvent(const nsACString& aCategory,
   }
 }
 
+<<<<<<< HEAD
 static bool GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj,
                                    const char* property,
                                    nsTArray<nsCString>* results) {
+||||||| merged common ancestors
+static bool
+GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj, const char* property,
+                       nsTArray<nsCString>* results)
+{
+=======
+void TelemetryEvent::RecordEventNative(
+    mozilla::Telemetry::EventID aId, const mozilla::Maybe<nsCString>& aValue,
+    const mozilla::Maybe<ExtraArray>& aExtra) {
+  // Truncate aValue if present and necessary.
+  mozilla::Maybe<nsCString> value;
+  if (aValue) {
+    nsCString valueStr = aValue.ref();
+    if (valueStr.Length() > kMaxValueByteLength) {
+      TruncateToByteLength(valueStr, kMaxValueByteLength);
+    }
+    value = mozilla::Some(valueStr);
+  }
+
+  // Truncate any over-long extra values.
+  ExtraArray extra;
+  if (aExtra) {
+    extra = aExtra.ref();
+    for (auto& item : extra) {
+      if (item.value.Length() > kMaxExtraValueByteLength) {
+        TruncateToByteLength(item.value, kMaxExtraValueByteLength);
+      }
+    }
+  }
+
+  const EventInfo& info = gEventInfo[static_cast<uint32_t>(aId)];
+  const nsCString category(info.common_info.category());
+  const nsCString method(info.method());
+  const nsCString object(info.object());
+  if (!XRE_IsParentProcess()) {
+    RecordEventResult res;
+    {
+      StaticMutexAutoLock lock(gTelemetryEventsMutex);
+      res = ::ShouldRecordChildEvent(lock, category, method, object);
+    }
+
+    if (res == RecordEventResult::Ok) {
+      TelemetryIPCAccumulator::RecordChildEvent(TimeStamp::NowLoRes(), category,
+                                                method, object, value, extra);
+    }
+  } else {
+    StaticMutexAutoLock lock(gTelemetryEventsMutex);
+
+    if (!gInitDone) {
+      return;
+    }
+
+    // Get the current time.
+    double timestamp = -1;
+    if (NS_WARN_IF(NS_FAILED(MsSinceProcessStart(&timestamp)))) {
+      return;
+    }
+
+    ::RecordEvent(lock, ProcessID::Parent, timestamp, category, method, object,
+                  value, extra);
+  }
+}
+
+static bool GetArrayPropertyValues(JSContext* cx, JS::HandleObject obj,
+                                   const char* property,
+                                   nsTArray<nsCString>* results) {
+>>>>>>> upstream-releases
   JS::RootedValue value(cx);
   if (!JS_GetProperty(cx, obj, property, &value)) {
     JS_ReportErrorASCII(cx, R"(Missing required property "%s" for event)",
@@ -1284,9 +1363,21 @@ void TelemetryEvent::SetEventRecordingEnabled(const nsACString& category,
   StaticMutexAutoLock locker(gTelemetryEventsMutex);
 
   if (!gCategoryNames.Contains(category)) {
+<<<<<<< HEAD
     LogToBrowserConsole(
         nsIScriptError::warningFlag,
         NS_LITERAL_STRING("Unkown category for SetEventRecordingEnabled."));
+||||||| merged common ancestors
+    LogToBrowserConsole(nsIScriptError::warningFlag,
+                        NS_LITERAL_STRING("Unkown category for SetEventRecordingEnabled."));
+=======
+    LogToBrowserConsole(
+        nsIScriptError::warningFlag,
+        NS_ConvertUTF8toUTF16(
+            NS_LITERAL_CSTRING(
+                "Unknown category for SetEventRecordingEnabled: ") +
+            category));
+>>>>>>> upstream-releases
     return;
   }
 

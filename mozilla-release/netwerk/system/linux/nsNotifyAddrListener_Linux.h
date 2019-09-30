@@ -21,6 +21,7 @@
 #include "nsThreadUtils.h"
 #include "nsCOMPtr.h"
 #include "mozilla/Atomics.h"
+#include "mozilla/Mutex.h"
 #include "mozilla/TimeStamp.h"
 #include "nsITimer.h"
 #include "nsClassHashtable.h"
@@ -30,6 +31,22 @@ class nsNotifyAddrListener : public nsINetworkLinkService,
                              public nsIObserver {
   virtual ~nsNotifyAddrListener();
 
+<<<<<<< HEAD
+ public:
+  NS_DECL_THREADSAFE_ISUPPORTS
+  NS_DECL_NSINETWORKLINKSERVICE
+  NS_DECL_NSIRUNNABLE
+  NS_DECL_NSIOBSERVER
+
+  nsNotifyAddrListener();
+  nsresult Init(void);
+||||||| merged common ancestors
+public:
+    NS_DECL_THREADSAFE_ISUPPORTS
+    NS_DECL_NSINETWORKLINKSERVICE
+    NS_DECL_NSIRUNNABLE
+    NS_DECL_NSIOBSERVER
+=======
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSINETWORKLINKSERVICE
@@ -47,24 +64,97 @@ class nsNotifyAddrListener : public nsINetworkLinkService,
         : mozilla::Runnable("nsNotifyAddrListener::ChangeEvent"),
           mService(aService),
           mEventID(aEventID) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ private:
+  class ChangeEvent : public mozilla::Runnable {
+   public:
+    NS_DECL_NSIRUNNABLE
+    ChangeEvent(nsINetworkLinkService* aService, const char* aEventID)
+        : mozilla::Runnable("nsNotifyAddrListener::ChangeEvent"),
+          mService(aService),
+          mEventID(aEventID) {}
+||||||| merged common ancestors
+    nsNotifyAddrListener();
+    nsresult Init(void);
+=======
    private:
     nsCOMPtr<nsINetworkLinkService> mService;
     const char* mEventID;
   };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+   private:
+    nsCOMPtr<nsINetworkLinkService> mService;
+    const char* mEventID;
+  };
+||||||| merged common ancestors
+private:
+    class ChangeEvent : public mozilla::Runnable {
+    public:
+        NS_DECL_NSIRUNNABLE
+        ChangeEvent(nsINetworkLinkService* aService, const char* aEventID)
+          : mozilla::Runnable("nsNotifyAddrListener::ChangeEvent")
+          , mService(aService)
+          , mEventID(aEventID)
+        {
+        }
+    private:
+        nsCOMPtr<nsINetworkLinkService> mService;
+        const char *mEventID;
+    };
+=======
   // Called when xpcom-shutdown-threads is received.
   nsresult Shutdown(void);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Called when xpcom-shutdown-threads is received.
+  nsresult Shutdown(void);
+||||||| merged common ancestors
+    // Called when xpcom-shutdown-threads is received.
+    nsresult Shutdown(void);
+=======
   // Called when a network change was detected
   nsresult NetworkChanged();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Called when a network change was detected
+  nsresult NetworkChanged();
+||||||| merged common ancestors
+    // Called when a network change was detected
+    nsresult NetworkChanged();
+=======
   // Sends the network event.
   nsresult SendEvent(const char* aEventID);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Sends the network event.
+  nsresult SendEvent(const char* aEventID);
+||||||| merged common ancestors
+    // Sends the network event.
+    nsresult SendEvent(const char *aEventID);
+=======
+  // Figure out the current "network identification"
+  void calculateNetworkId(void);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Figure out the current "network identification"
   void calculateNetworkId(void);
   nsCString mNetworkId;
+||||||| merged common ancestors
+    // Figure out the current "network identification"
+    void calculateNetworkId(void);
+    nsCString mNetworkId;
+=======
+  mozilla::Mutex mMutex;
+  nsCString mNetworkId;
+>>>>>>> upstream-releases
 
   // Checks if there's a network "link"
   void checkLink(void);

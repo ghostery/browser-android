@@ -69,11 +69,32 @@ class nsAtom {
   // rather than Hash() so we can use mozilla::BloomFilter<N, nsAtom>, because
   // BloomFilter requires elements to implement a function called hash().
   //
+<<<<<<< HEAD
   uint32_t hash() const { return mHash; }
 
   // This function returns true if ToLowercaseASCII would return the string
   // unchanged.
   bool IsAsciiLowercase() const { return mIsAsciiLowercase; }
+||||||| merged common ancestors
+  uint32_t hash() const
+  {
+    MOZ_ASSERT(!IsDynamicHTML5());
+    return mHash;
+  }
+=======
+  uint32_t hash() const { return mHash; }
+
+  // This function returns true if ToLowercaseASCII would return the string
+  // unchanged.
+  bool IsAsciiLowercase() const { return mIsAsciiLowercase; }
+
+  // This function returns true if this is the empty atom. This is exactly
+  // equivalent to `this == nsGkAtoms::_empty`, but it's a bit less foot-gunny,
+  // since we also have `nsGkAtoms::empty`.
+  //
+  // Defined in nsGkAtoms.h
+  inline bool IsEmpty() const;
+>>>>>>> upstream-releases
 
   // We can't use NS_INLINE_DECL_THREADSAFE_REFCOUNTING because the refcounting
   // of this type is special.
@@ -143,6 +164,19 @@ class nsDynamicAtom : public nsAtom {
  public:
   // We can't use NS_INLINE_DECL_THREADSAFE_REFCOUNTING because the refcounting
   // of this type is special.
+<<<<<<< HEAD
+  MozExternalRefCountType AddRef() {
+    MOZ_ASSERT(int32_t(mRefCnt) >= 0, "illegal refcnt");
+    nsrefcnt count = ++mRefCnt;
+    if (count == 1) {
+      gUnusedAtomCount--;
+    }
+    return count;
+  }
+||||||| merged common ancestors
+  MozExternalRefCountType AddRef();
+  MozExternalRefCountType Release();
+=======
   MozExternalRefCountType AddRef() {
     MOZ_ASSERT(int32_t(mRefCnt) >= 0, "illegal refcnt");
     nsrefcnt count = ++mRefCnt;
@@ -171,8 +205,36 @@ class nsDynamicAtom : public nsAtom {
 
     return count;
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MozExternalRefCountType Release() {
+#ifdef DEBUG
+    // We set a lower GC threshold for atoms in debug builds so that we exercise
+    // the GC machinery more often.
+    static const int32_t kAtomGCThreshold = 20;
+#else
+    static const int32_t kAtomGCThreshold = 10000;
+#endif
+
+    MOZ_ASSERT(int32_t(mRefCnt) > 0, "dup release");
+    nsrefcnt count = --mRefCnt;
+    if (count == 0) {
+      if (++gUnusedAtomCount >= kAtomGCThreshold) {
+        GCAtomTable();
+      }
+    }
+
+    return count;
+  }
 
   const char16_t* String() const {
+||||||| merged common ancestors
+  const char16_t* String() const
+  {
+=======
+  const char16_t* String() const {
+>>>>>>> upstream-releases
     return reinterpret_cast<const char16_t*>(this + 1);
   }
 

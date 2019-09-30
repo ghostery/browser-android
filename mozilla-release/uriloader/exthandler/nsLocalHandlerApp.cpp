@@ -15,7 +15,14 @@ NS_IMPL_ISUPPORTS(nsLocalHandlerApp, nsILocalHandlerApp, nsIHandlerApp)
 ////////////////////////////////////////////////////////////////////////////////
 //// nsIHandlerApp
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsLocalHandlerApp::GetName(nsAString &aName) {
+||||||| merged common ancestors
+NS_IMETHODIMP nsLocalHandlerApp::GetName(nsAString& aName)
+{
+=======
+NS_IMETHODIMP nsLocalHandlerApp::GetName(nsAString& aName) {
+>>>>>>> upstream-releases
   if (mName.IsEmpty() && mExecutable) {
     // Don't want to cache this, just in case someone resets the app
     // without changing the description....
@@ -27,28 +34,56 @@ NS_IMETHODIMP nsLocalHandlerApp::GetName(nsAString &aName) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsLocalHandlerApp::SetName(const nsAString &aName) {
+||||||| merged common ancestors
+NS_IMETHODIMP nsLocalHandlerApp::SetName(const nsAString & aName)
+{
+=======
+NS_IMETHODIMP nsLocalHandlerApp::SetName(const nsAString& aName) {
+>>>>>>> upstream-releases
   mName.Assign(aName);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::SetDetailedDescription(const nsAString &aDescription) {
+||||||| merged common ancestors
+nsLocalHandlerApp::SetDetailedDescription(const nsAString & aDescription)
+{
+=======
+nsLocalHandlerApp::SetDetailedDescription(const nsAString& aDescription) {
+>>>>>>> upstream-releases
   mDetailedDescription.Assign(aDescription);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::GetDetailedDescription(nsAString &aDescription) {
+||||||| merged common ancestors
+nsLocalHandlerApp::GetDetailedDescription(nsAString& aDescription)
+{
+=======
+nsLocalHandlerApp::GetDetailedDescription(nsAString& aDescription) {
+>>>>>>> upstream-releases
   aDescription.Assign(mDetailedDescription);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::Equals(nsIHandlerApp *aHandlerApp, bool *_retval) {
+||||||| merged common ancestors
+nsLocalHandlerApp::Equals(nsIHandlerApp *aHandlerApp, bool *_retval)
+{
+=======
+nsLocalHandlerApp::Equals(nsIHandlerApp* aHandlerApp, bool* _retval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aHandlerApp);
 
   *_retval = false;
@@ -89,22 +124,39 @@ nsLocalHandlerApp::Equals(nsIHandlerApp *aHandlerApp, bool *_retval) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::LaunchWithURI(nsIURI *aURI,
                                  nsIInterfaceRequestor *aWindowContext) {
+||||||| merged common ancestors
+nsLocalHandlerApp::LaunchWithURI(nsIURI *aURI,
+                                 nsIInterfaceRequestor *aWindowContext)
+{
+=======
+nsLocalHandlerApp::LaunchWithURI(nsIURI* aURI,
+                                 nsIInterfaceRequestor* aWindowContext) {
+>>>>>>> upstream-releases
   // pass the entire URI to the handler.
   nsAutoCString spec;
   aURI->GetAsciiSpec(spec);
   return LaunchWithIProcess(spec);
 }
 
+<<<<<<< HEAD
 nsresult nsLocalHandlerApp::LaunchWithIProcess(const nsCString &aArg) {
+||||||| merged common ancestors
+nsresult
+nsLocalHandlerApp::LaunchWithIProcess(const nsCString& aArg)
+{
+=======
+nsresult nsLocalHandlerApp::LaunchWithIProcess(const nsCString& aArg) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIProcess> process = do_CreateInstance(NS_PROCESS_CONTRACTID, &rv);
   if (NS_FAILED(rv)) return rv;
 
   if (NS_FAILED(rv = process->Init(mExecutable))) return rv;
 
-  const char *string = aArg.get();
+  const char* string = aArg.get();
 
   return process->Run(false, &string, 1);
 }
@@ -113,19 +165,40 @@ nsresult nsLocalHandlerApp::LaunchWithIProcess(const nsCString &aArg) {
 //// nsILocalHandlerApp
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::GetExecutable(nsIFile **aExecutable) {
+||||||| merged common ancestors
+nsLocalHandlerApp::GetExecutable(nsIFile **aExecutable)
+{
+=======
+nsLocalHandlerApp::GetExecutable(nsIFile** aExecutable) {
+>>>>>>> upstream-releases
   NS_IF_ADDREF(*aExecutable = mExecutable);
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::SetExecutable(nsIFile *aExecutable) {
+||||||| merged common ancestors
+nsLocalHandlerApp::SetExecutable(nsIFile *aExecutable)
+{
+=======
+nsLocalHandlerApp::SetExecutable(nsIFile* aExecutable) {
+>>>>>>> upstream-releases
   mExecutable = aExecutable;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::GetParameterCount(uint32_t *aParameterCount) {
+||||||| merged common ancestors
+nsLocalHandlerApp::GetParameterCount(uint32_t *aParameterCount)
+{
+=======
+nsLocalHandlerApp::GetParameterCount(uint32_t* aParameterCount) {
+>>>>>>> upstream-releases
   *aParameterCount = mParameters.Length();
   return NS_OK;
 }
@@ -137,21 +210,45 @@ nsLocalHandlerApp::ClearParameters() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::AppendParameter(const nsAString &aParam) {
+||||||| merged common ancestors
+nsLocalHandlerApp::AppendParameter(const nsAString & aParam)
+{
+=======
+nsLocalHandlerApp::AppendParameter(const nsAString& aParam) {
+>>>>>>> upstream-releases
   mParameters.AppendElement(aParam);
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::GetParameter(uint32_t parameterIndex, nsAString &_retval) {
   if (mParameters.Length() <= parameterIndex) return NS_ERROR_INVALID_ARG;
+||||||| merged common ancestors
+nsLocalHandlerApp::GetParameter(uint32_t parameterIndex, nsAString & _retval)
+{
+  if (mParameters.Length() <= parameterIndex)
+    return NS_ERROR_INVALID_ARG;
+=======
+nsLocalHandlerApp::GetParameter(uint32_t parameterIndex, nsAString& _retval) {
+  if (mParameters.Length() <= parameterIndex) return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
 
   _retval.Assign(mParameters[parameterIndex]);
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLocalHandlerApp::ParameterExists(const nsAString &aParam, bool *_retval) {
+||||||| merged common ancestors
+nsLocalHandlerApp::ParameterExists(const nsAString & aParam, bool *_retval)
+{
+=======
+nsLocalHandlerApp::ParameterExists(const nsAString& aParam, bool* _retval) {
+>>>>>>> upstream-releases
   *_retval = mParameters.Contains(aParam);
   return NS_OK;
 }

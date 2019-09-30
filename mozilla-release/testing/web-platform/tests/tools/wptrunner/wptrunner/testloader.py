@@ -1,14 +1,14 @@
 import hashlib
 import os
-import urlparse
+from six.moves.urllib.parse import urlsplit
 from abc import ABCMeta, abstractmethod
-from Queue import Empty
-from collections import defaultdict, OrderedDict, deque
+from six.moves.queue import Empty
+from collections import defaultdict, deque
 from multiprocessing import Queue
 
-import manifestinclude
-import manifestexpected
-import wpttest
+from . import manifestinclude
+from . import manifestexpected
+from . import wpttest
 from mozlog import structured
 
 manifest = None
@@ -68,285 +68,18 @@ class DirectoryHashChunker(TestChunker):
                 yield test_type, test_path, tests
 
 
-class EqualTimeChunker(TestChunker):
-    def _group_by_directory(self, manifest_items):
-        """Split the list of manifest items into a ordered dict that groups tests in
-        so that anything in the same subdirectory beyond a depth of 3 is in the same
-        group. So all tests in a/b/c, a/b/c/d and a/b/c/e will be grouped together
-        and separate to tests in a/b/f
-
-        Returns: tuple (ordered dict of {test_dir: PathData}, total estimated runtime)
-        """
-
-        class PathData(object):
-            def __init__(self, path):
-                self.path = path
-                self.time = 0
-                self.tests = []
-
-        by_dir = OrderedDict()
-        total_time = 0
-
-        for i, (test_type, test_path, tests) in enumerate(manifest_items):
-            test_dir = tuple(os.path.split(test_path)[0].split(os.path.sep)[:3])
-
-            if test_dir not in by_dir:
-                by_dir[test_dir] = PathData(test_dir)
-
-            data = by_dir[test_dir]
-            time = sum(test.default_timeout if test.timeout !=
-                       "long" else test.long_timeout for test in tests)
-            data.time += time
-            total_time += time
-            data.tests.append((test_type, test_path, tests))
-
-        return by_dir, total_time
-
-    def _maybe_remove(self, chunks, i, direction):
-        """Trial removing a chunk from one chunk to an adjacent one.
-
-        :param chunks: - the list of all chunks
-        :param i: - the chunk index in the list of chunks to try removing from
-        :param direction: either "next" if we are going to move from the end to
-                          the subsequent chunk, or "prev" if we are going to move
-                          from the start into the previous chunk.
-
-        :returns bool: Did a chunk get moved?"""
-        source_chunk = chunks[i]
-        if direction == "next":
-            target_chunk = chunks[i+1]
-            path_index = -1
-            move_func = lambda: target_chunk.appendleft(source_chunk.pop())
-        elif direction == "prev":
-            target_chunk = chunks[i-1]
-            path_index = 0
-            move_func = lambda: target_chunk.append(source_chunk.popleft())
-        else:
-            raise ValueError("Unexpected move direction %s" % direction)
-
-        return self._maybe_move(source_chunk, target_chunk, path_index, move_func)
-
-    def _maybe_add(self, chunks, i, direction):
-        """Trial adding a chunk from one chunk to an adjacent one.
-
-        :param chunks: - the list of all chunks
-        :param i: - the chunk index in the list of chunks to try adding to
-        :param direction: either "next" if we are going to remove from the
-                          the subsequent chunk, or "prev" if we are going to remove
-                          from the the previous chunk.
-
-        :returns bool: Did a chunk get moved?"""
-        target_chunk = chunks[i]
-        if direction == "next":
-            source_chunk = chunks[i+1]
-            path_index = 0
-            move_func = lambda: target_chunk.append(source_chunk.popleft())
-        elif direction == "prev":
-            source_chunk = chunks[i-1]
-            path_index = -1
-            move_func = lambda: target_chunk.appendleft(source_chunk.pop())
-        else:
-            raise ValueError("Unexpected move direction %s" % direction)
-
-        return self._maybe_move(source_chunk, target_chunk, path_index, move_func)
-
-    def _maybe_move(self, source_chunk, target_chunk, path_index, move_func):
-        """Move from one chunk to another, assess the change in badness,
-        and keep the move iff it decreases the badness score.
-
-        :param source_chunk: chunk to move from
-        :param target_chunk: chunk to move to
-        :param path_index: 0 if we are moving from the start or -1 if we are moving from the
-                           end
-        :param move_func: Function that actually moves between chunks"""
-        if len(source_chunk.paths) <= 1:
-            return False
-
-        move_time = source_chunk.paths[path_index].time
-
-        new_source_badness = self._badness(source_chunk.time - move_time)
-        new_target_badness = self._badness(target_chunk.time + move_time)
-
-        delta_badness = ((new_source_badness + new_target_badness) -
-                         (source_chunk.badness + target_chunk.badness))
-        if delta_badness < 0:
-            move_func()
-            return True
-
-        return False
-
-    def _badness(self, time):
-        """Metric of badness for a specific chunk
-
-        :param time: the time for a specific chunk"""
-        return (time - self.expected_time)**2
-
-    def _get_chunk(self, manifest_items):
-        by_dir, total_time = self._group_by_directory(manifest_items)
-
-        if len(by_dir) < self.total_chunks:
-            raise ValueError("Tried to split into %i chunks, but only %i subdirectories included" % (
-                self.total_chunks, len(by_dir)))
-
-        self.expected_time = float(total_time) / self.total_chunks
-
-        chunks = self._create_initial_chunks(by_dir)
-
-        while True:
-            # Move a test from one chunk to the next until doing so no longer
-            # reduces the badness
-            got_improvement = self._update_chunks(chunks)
-            if not got_improvement:
-                break
-
-        self.logger.debug(self.expected_time)
-        for i, chunk in chunks.iteritems():
-            self.logger.debug("%i: %i, %i" % (i + 1, chunk.time, chunk.badness))
-
-        assert self._all_tests(by_dir) == self._chunked_tests(chunks)
-
-        return self._get_tests(chunks)
-
-    @staticmethod
-    def _all_tests(by_dir):
-        """Return a set of all tests in the manifest from a grouping by directory"""
-        return set(x[0] for item in by_dir.itervalues()
-                   for x in item.tests)
-
-    @staticmethod
-    def _chunked_tests(chunks):
-        """Return a set of all tests in the manifest from the chunk list"""
-        return set(x[0] for chunk in chunks.itervalues()
-                   for path in chunk.paths
-                   for x in path.tests)
-
-
-    def _create_initial_chunks(self, by_dir):
-        """Create an initial unbalanced list of chunks.
-
-        :param by_dir: All tests in the manifest grouped by subdirectory
-        :returns list: A list of Chunk objects"""
-
-        class Chunk(object):
-            def __init__(self, paths, index):
-                """List of PathData objects that together form a single chunk of
-                tests"""
-                self.paths = deque(paths)
-                self.time = sum(item.time for item in paths)
-                self.index = index
-
-            def appendleft(self, path):
-                """Add a PathData object to the start of the chunk"""
-                self.paths.appendleft(path)
-                self.time += path.time
-
-            def append(self, path):
-                """Add a PathData object to the end of the chunk"""
-                self.paths.append(path)
-                self.time += path.time
-
-            def pop(self):
-                """Remove PathData object from the end of the chunk"""
-                assert len(self.paths) > 1
-                self.time -= self.paths[-1].time
-                return self.paths.pop()
-
-            def popleft(self):
-                """Remove PathData object from the start of the chunk"""
-                assert len(self.paths) > 1
-                self.time -= self.paths[0].time
-                return self.paths.popleft()
-
-            @property
-            def badness(self_):  # noqa: N805
-                """Badness metric for this chunk"""
-                return self._badness(self_.time)
-
-        initial_size = len(by_dir) / self.total_chunks
-        chunk_boundaries = [initial_size * i
-                            for i in xrange(self.total_chunks)] + [len(by_dir)]
-
-        chunks = OrderedDict()
-        for i, lower in enumerate(chunk_boundaries[:-1]):
-            upper = chunk_boundaries[i + 1]
-            paths = by_dir.values()[lower:upper]
-            chunks[i] = Chunk(paths, i)
-
-        assert self._all_tests(by_dir) == self._chunked_tests(chunks)
-
-        return chunks
-
-    def _update_chunks(self, chunks):
-        """Run a single iteration of the chunk update algorithm.
-
-        :param chunks: - List of chunks
-        """
-        #TODO: consider replacing this with a heap
-        sorted_chunks = sorted(chunks.values(), key=lambda x:-x.badness)
-        got_improvement = False
-        for chunk in sorted_chunks:
-            if chunk.time < self.expected_time:
-                f = self._maybe_add
-            else:
-                f = self._maybe_remove
-
-            if chunk.index == 0:
-                order = ["next"]
-            elif chunk.index == self.total_chunks - 1:
-                order = ["prev"]
-            else:
-                if chunk.time < self.expected_time:
-                    # First try to add a test from the neighboring chunk with the
-                    # greatest total time
-                    if chunks[chunk.index + 1].time > chunks[chunk.index - 1].time:
-                        order = ["next", "prev"]
-                    else:
-                        order = ["prev", "next"]
-                else:
-                    # First try to remove a test and add to the neighboring chunk with the
-                    # lowest total time
-                    if chunks[chunk.index + 1].time > chunks[chunk.index - 1].time:
-                        order = ["prev", "next"]
-                    else:
-                        order = ["next", "prev"]
-
-            for direction in order:
-                if f(chunks, chunk.index, direction):
-                    got_improvement = True
-                    break
-
-            if got_improvement:
-                break
-
-        return got_improvement
-
-    def _get_tests(self, chunks):
-        """Return the list of tests corresponding to the chunk number we are running.
-
-        :param chunks: List of chunks"""
-        tests = []
-        for path in chunks[self.chunk_number - 1].paths:
-            tests.extend(path.tests)
-
-        return tests
-
-    def __call__(self, manifest_iter):
-        manifest = list(manifest_iter)
-        tests = self._get_chunk(manifest)
-        for item in tests:
-            yield item
-
-
 class TestFilter(object):
-    def __init__(self, test_manifests, include=None, exclude=None, manifest_path=None):
-        if manifest_path is not None and include is None:
-            self.manifest = manifestinclude.get_manifest(manifest_path)
-        else:
+    def __init__(self, test_manifests, include=None, exclude=None, manifest_path=None, explicit=False):
+        if manifest_path is None or include or explicit:
             self.manifest = manifestinclude.IncludeManifest.create()
             self.manifest.set_defaults()
+        else:
+            self.manifest = manifestinclude.get_manifest(manifest_path)
+
+        if include or explicit:
+            self.manifest.set("skip", "true")
 
         if include:
-            self.manifest.set("skip", "true")
             for item in include:
                 self.manifest.add_include(test_manifests, item)
 
@@ -376,8 +109,15 @@ class TagFilter(object):
 
 
 class ManifestLoader(object):
+<<<<<<< HEAD
     def __init__(self, test_paths, force_manifest_update=False, manifest_download=False,
                  types=None, meta_filters=None):
+||||||| merged common ancestors
+    def __init__(self, test_paths, force_manifest_update=False, manifest_download=False, types=None, meta_filters=None):
+=======
+    def __init__(self, test_paths, force_manifest_update=False, manifest_download=False,
+                 types=None):
+>>>>>>> upstream-releases
         do_delayed_imports()
         self.test_paths = test_paths
         self.force_manifest_update = force_manifest_update
@@ -402,9 +142,54 @@ class ManifestLoader(object):
         cache_root = os.path.join(metadata_path, ".cache")
         if self.manifest_download:
             download_from_github(manifest_path, tests_path)
+<<<<<<< HEAD
         return manifest.load_and_update(tests_path, manifest_path, url_base,
                                         cache_root=cache_root, update=self.force_manifest_update,
                                         meta_filters=self.meta_filters)
+||||||| merged common ancestors
+
+        if not recreate:
+            try:
+                with open(manifest_path) as f:
+                    json_data = json.load(f)
+            except IOError:
+                self.logger.info("Unable to find test manifest")
+            except ValueError:
+                self.logger.info("Unable to parse test manifest")
+
+        if not json_data:
+            self.logger.info("Creating test manifest")
+            manifest_file = manifest.Manifest(url_base)
+        else:
+            try:
+                manifest_file = manifest.Manifest.from_json(tests_path, json_data)
+            except manifest.ManifestVersionMismatch:
+                manifest_file = manifest.Manifest(url_base)
+
+        manifest_update.update(tests_path, manifest_file, True)
+
+        manifest.write(manifest_file, manifest_path)
+
+    def load_manifest(self, tests_path, manifest_path, url_base="/", **kwargs):
+        if (not os.path.exists(manifest_path) or
+            self.force_manifest_update):
+            self.update_manifest(manifest_path, tests_path, url_base, download=self.manifest_download)
+        try:
+            manifest_file = manifest.load(tests_path, manifest_path, types=self.types, meta_filters=self.meta_filters)
+        except manifest.ManifestVersionMismatch:
+            manifest_file = manifest.Manifest(url_base)
+        if manifest_file.url_base != url_base:
+            self.logger.info("Updating url_base in manifest from %s to %s" % (manifest_file.url_base,
+                                                                              url_base))
+            manifest_file.url_base = url_base
+            manifest.write(manifest_file, manifest_path)
+
+        return manifest_file
+=======
+        return manifest.load_and_update(tests_path, manifest_path, url_base,
+                                        cache_root=cache_root, update=self.force_manifest_update,
+                                        types=self.types)
+>>>>>>> upstream-releases
 
 
 def iterfilter(filters, iter):
@@ -420,7 +205,6 @@ class TestLoader(object):
                  test_types,
                  run_info,
                  manifest_filters=None,
-                 meta_filters=None,
                  chunk_type="none",
                  total_chunks=1,
                  chunk_number=1,
@@ -431,7 +215,6 @@ class TestLoader(object):
         self.run_info = run_info
 
         self.manifest_filters = manifest_filters if manifest_filters is not None else []
-        self.meta_filters = meta_filters if meta_filters is not None else []
 
         self.manifests = test_manifests
         self.tests = None
@@ -445,9 +228,8 @@ class TestLoader(object):
 
         self.chunker = {"none": Unchunked,
                         "hash": HashChunker,
-                        "dir_hash": DirectoryHashChunker,
-                        "equal_time": EqualTimeChunker}[chunk_type](total_chunks,
-                                                                    chunk_number)
+                        "dir_hash": DirectoryHashChunker}[chunk_type](total_chunks,
+                                                                      chunk_number)
 
         self._test_ids = None
 
@@ -506,10 +288,27 @@ class TestLoader(object):
         for test_type, test_path, tests in manifest_items:
             manifest_file = manifests_by_url_base[iter(tests).next().url_base]
             metadata_path = self.manifests[manifest_file]["metadata_path"]
+<<<<<<< HEAD
 
             inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
             for test in tests:
                 yield test_path, test_type, self.get_test(manifest_file, test, inherit_metadata, test_metadata)
+||||||| merged common ancestors
+            inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
+
+            for test in iterfilter(self.meta_filters,
+                                   self.iter_wpttest(inherit_metadata, test_metadata, tests)):
+                yield test_path, test_type, test
+
+    def iter_wpttest(self, inherit_metadata, test_metadata, tests):
+        for manifest_test in tests:
+            yield self.get_test(manifest_test, inherit_metadata, test_metadata)
+=======
+
+            inherit_metadata, test_metadata = self.load_metadata(manifest_file, metadata_path, test_path)
+            for test in tests:
+                yield test_path, test_type, self.get_test(manifest_file, test, inherit_metadata, test_metadata)
+>>>>>>> upstream-releases
 
     def _load_tests(self):
         """Read in the tests from the manifest file and add them to a queue"""
@@ -548,9 +347,8 @@ class TestSource(object):
         self.current_metadata = None
 
     @abstractmethod
-    # noqa: N805
-    #@classmethod (doesn't compose with @abstractmethod)
-    def make_queue(cls, tests, **kwargs):
+    #@classmethod (doesn't compose with @abstractmethod in < 3.3)
+    def make_queue(cls, tests, **kwargs):  # noqa: N805
         pass
 
     @classmethod
@@ -618,7 +416,7 @@ class PathGroupedSource(GroupedSource):
         depth = kwargs.get("depth")
         if depth is True or depth == 0:
             depth = None
-        path = urlparse.urlsplit(test.url).path.split("/")[1:-1][:depth]
+        path = urlsplit(test.url).path.split("/")[1:-1][:depth]
         rv = path != state.get("prev_path")
         state["prev_path"] = path
         return rv

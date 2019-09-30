@@ -41,6 +41,10 @@ class HTMLInputElement;
  * nsTextEditorState is a class which is responsible for managing the state of
  * plaintext controls.  This currently includes the following HTML elements:
  *   <input type=text>
+ *   <input type=search>
+ *   <input type=url>
+ *   <input type=telephone>
+ *   <input type=email>
  *   <input type=password>
  *   <textarea>
  * and also XUL controls such as <textbox> which use one of these elements
@@ -136,12 +140,23 @@ class nsTextEditorState : public mozilla::SupportsWeakPtr<nsTextEditorState> {
  public:
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(nsTextEditorState)
   explicit nsTextEditorState(nsITextControlElement* aOwningElement);
+<<<<<<< HEAD
   static nsTextEditorState* Construct(nsITextControlElement* aOwningElement,
                                       nsTextEditorState** aReusedState);
   ~nsTextEditorState();
+||||||| merged common ancestors
+  static nsTextEditorState*
+  Construct(nsITextControlElement* aOwningElement,
+            nsTextEditorState** aReusedState);
+  ~nsTextEditorState();
+=======
+  static nsTextEditorState* Construct(nsITextControlElement* aOwningElement,
+                                      nsTextEditorState** aReusedState);
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY ~nsTextEditorState();
+>>>>>>> upstream-releases
 
   void Traverse(nsCycleCollectionTraversalCallback& cb);
-  void Unlink();
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY void Unlink();
 
   void PrepareForReuse() {
     Unlink();
@@ -163,24 +178,65 @@ class nsTextEditorState : public mozilla::SupportsWeakPtr<nsTextEditorState> {
 
   enum SetValueFlags {
     // The call is for internal processing.
+<<<<<<< HEAD
     eSetValue_Internal = 0,
+||||||| merged common ancestors
+    eSetValue_Internal              = 0,
+=======
+    eSetValue_Internal = 1 << 0,
+>>>>>>> upstream-releases
     // The value is changed by a call of setUserInput() from chrome.
+<<<<<<< HEAD
     eSetValue_BySetUserInput = 1 << 0,
+||||||| merged common ancestors
+    eSetValue_BySetUserInput        = 1 << 0,
+=======
+    eSetValue_BySetUserInput = 1 << 1,
+>>>>>>> upstream-releases
     // The value is changed by changing value attribute of the element or
     // something like setRangeText().
+<<<<<<< HEAD
     eSetValue_ByContent = 1 << 1,
+||||||| merged common ancestors
+    eSetValue_ByContent             = 1 << 1,
+=======
+    eSetValue_ByContent = 1 << 2,
+>>>>>>> upstream-releases
     // Whether the value change should be notified to the frame/contet nor not.
+<<<<<<< HEAD
     eSetValue_Notify = 1 << 2,
+||||||| merged common ancestors
+    eSetValue_Notify                = 1 << 2,
+=======
+    eSetValue_Notify = 1 << 3,
+>>>>>>> upstream-releases
     // Whether to move the cursor to end of the value (in the case when we have
     // cached selection offsets), in the case when the value has changed.  If
-    // this is not set, the cached selection offsets will simply be clamped to
-    // be within the length of the new value.  In either case, if the value has
+    // this is not set and
+    // eSetValue_MoveCursorToBeginSetSelectionDirectionForward
+    // is not set, the cached selection offsets will simply be clamped to
+    // be within the length of the new value. In either case, if the value has
     // not changed the cursor won't move.
-    eSetValue_MoveCursorToEndIfValueChanged = 1 << 3,
+    // TODO(mbrodesser): update comment and enumerator identifier to reflect
+    // that also the direction is set to forward.
+    eSetValue_MoveCursorToEndIfValueChanged = 1 << 4,
     // The value is changed for a XUL text control as opposed to for an HTML
     // text control.  Such value changes are different in that they preserve the
     // undo history.
+<<<<<<< HEAD
     eSetValue_ForXUL = 1 << 4,
+||||||| merged common ancestors
+    eSetValue_ForXUL                = 1 << 4,
+=======
+    eSetValue_ForXUL = 1 << 5,
+    // Whether it should be tried to move the cursor to the beginning of the
+    // text control and set the selection direction to "forward".
+    // TODO(mbrodesser): As soon as "none" is supported
+    // (https://bugzilla.mozilla.org/show_bug.cgi?id=1541454), it should be set
+    // to "none" and only fall back to "forward" if the platform doesn't support
+    // it.
+    eSetValue_MoveCursorToBeginSetSelectionDirectionForward = 1 << 6,
+>>>>>>> upstream-releases
   };
   MOZ_CAN_RUN_SCRIPT
   MOZ_MUST_USE bool SetValue(const nsAString& aValue,
@@ -362,8 +418,8 @@ class nsTextEditorState : public mozilla::SupportsWeakPtr<nsTextEditorState> {
 
   void ValueWasChanged(bool aNotify);
 
-  void DestroyEditor();
-  void Clear();
+  MOZ_CAN_RUN_SCRIPT void DestroyEditor();
+  MOZ_CAN_RUN_SCRIPT void Clear();
 
   nsresult InitializeRootNode();
 

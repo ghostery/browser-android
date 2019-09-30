@@ -53,10 +53,34 @@ void MacroAssembler::move32To64SignExtend(Register src, Register64 dest) {
   movslq(src, dest.reg);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::andPtr(Register src, Register dest) { andq(src, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::andPtr(Register src, Register dest)
+{
+    andq(src, dest);
+}
+=======
+// ===============================================================
+// Load instructions
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void MacroAssembler::andPtr(Imm32 imm, Register dest) { andq(imm, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::andPtr(Imm32 imm, Register dest)
+{
+    andq(imm, dest);
+}
+=======
+void MacroAssembler::load32SignExtendToPtr(const Address& src, Register dest) {
+  movslq(Operand(src), dest);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void MacroAssembler::and64(Imm64 imm, Register64 dest) {
   if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
     andq(Imm32(imm.value), dest.reg);
@@ -66,7 +90,23 @@ void MacroAssembler::and64(Imm64 imm, Register64 dest) {
     andq(scratch, dest.reg);
   }
 }
+||||||| merged common ancestors
+void
+MacroAssembler::and64(Imm64 imm, Register64 dest)
+{
+    if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+        andq(Imm32(imm.value), dest.reg);
+    } else {
+        ScratchRegisterScope scratch(*this);
+        movq(ImmWord(uintptr_t(imm.value)), scratch);
+        andq(scratch, dest.reg);
+    }
+}
+=======
+void MacroAssembler::andPtr(Register src, Register dest) { andq(src, dest); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void MacroAssembler::or64(Imm64 imm, Register64 dest) {
   if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
     orq(Imm32(imm.value), dest.reg);
@@ -76,7 +116,83 @@ void MacroAssembler::or64(Imm64 imm, Register64 dest) {
     orq(scratch, dest.reg);
   }
 }
+||||||| merged common ancestors
+void
+MacroAssembler::or64(Imm64 imm, Register64 dest)
+{
+    if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+        orq(Imm32(imm.value), dest.reg);
+    } else {
+        ScratchRegisterScope scratch(*this);
+        movq(ImmWord(uintptr_t(imm.value)), scratch);
+        orq(scratch, dest.reg);
+    }
+}
+=======
+void MacroAssembler::andPtr(Imm32 imm, Register dest) { andq(imm, dest); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void MacroAssembler::xor64(Imm64 imm, Register64 dest) {
+  if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+    xorq(Imm32(imm.value), dest.reg);
+  } else {
+    ScratchRegisterScope scratch(*this);
+    movq(ImmWord(uintptr_t(imm.value)), scratch);
+    xorq(scratch, dest.reg);
+  }
+||||||| merged common ancestors
+void
+MacroAssembler::xor64(Imm64 imm, Register64 dest)
+{
+    if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+        xorq(Imm32(imm.value), dest.reg);
+    } else {
+        ScratchRegisterScope scratch(*this);
+        movq(ImmWord(uintptr_t(imm.value)), scratch);
+        xorq(scratch, dest.reg);
+    }
+=======
+void MacroAssembler::and64(Imm64 imm, Register64 dest) {
+  if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+    andq(Imm32(imm.value), dest.reg);
+  } else {
+    ScratchRegisterScope scratch(*this);
+    movq(ImmWord(uintptr_t(imm.value)), scratch);
+    andq(scratch, dest.reg);
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::orPtr(Register src, Register dest) { orq(src, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::orPtr(Register src, Register dest)
+{
+    orq(src, dest);
+}
+=======
+void MacroAssembler::or64(Imm64 imm, Register64 dest) {
+  if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
+    orq(Imm32(imm.value), dest.reg);
+  } else {
+    ScratchRegisterScope scratch(*this);
+    movq(ImmWord(uintptr_t(imm.value)), scratch);
+    orq(scratch, dest.reg);
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::orPtr(Imm32 imm, Register dest) { orq(imm, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::orPtr(Imm32 imm, Register dest)
+{
+    orq(imm, dest);
+}
+=======
 void MacroAssembler::xor64(Imm64 imm, Register64 dest) {
   if (INT32_MIN <= int64_t(imm.value) && int64_t(imm.value) <= INT32_MAX) {
     xorq(Imm32(imm.value), dest.reg);
@@ -86,29 +202,94 @@ void MacroAssembler::xor64(Imm64 imm, Register64 dest) {
     xorq(scratch, dest.reg);
   }
 }
+>>>>>>> upstream-releases
 
-void MacroAssembler::orPtr(Register src, Register dest) { orq(src, dest); }
-
-void MacroAssembler::orPtr(Imm32 imm, Register dest) { orq(imm, dest); }
-
+<<<<<<< HEAD
 void MacroAssembler::and64(Register64 src, Register64 dest) {
   andq(src.reg, dest.reg);
 }
+||||||| merged common ancestors
+void
+MacroAssembler::and64(Register64 src, Register64 dest)
+{
+    andq(src.reg, dest.reg);
+}
+=======
+void MacroAssembler::orPtr(Register src, Register dest) { orq(src, dest); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void MacroAssembler::or64(Register64 src, Register64 dest) {
   orq(src.reg, dest.reg);
 }
+||||||| merged common ancestors
+void
+MacroAssembler::or64(Register64 src, Register64 dest)
+{
+    orq(src.reg, dest.reg);
+}
+=======
+void MacroAssembler::orPtr(Imm32 imm, Register dest) { orq(imm, dest); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void MacroAssembler::xor64(Register64 src, Register64 dest) {
+  xorq(src.reg, dest.reg);
+||||||| merged common ancestors
+void
+MacroAssembler::xor64(Register64 src, Register64 dest)
+{
+    xorq(src.reg, dest.reg);
+=======
+void MacroAssembler::and64(Register64 src, Register64 dest) {
+  andq(src.reg, dest.reg);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::xorPtr(Register src, Register dest) { xorq(src, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::xorPtr(Register src, Register dest)
+{
+    xorq(src, dest);
+}
+=======
+void MacroAssembler::or64(Register64 src, Register64 dest) {
+  orq(src.reg, dest.reg);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::xorPtr(Imm32 imm, Register dest) { xorq(imm, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::xorPtr(Imm32 imm, Register dest)
+{
+    xorq(imm, dest);
+}
+=======
 void MacroAssembler::xor64(Register64 src, Register64 dest) {
   xorq(src.reg, dest.reg);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void MacroAssembler::and64(const Operand& src, Register64 dest) {
+  andq(src, dest.reg);
+||||||| merged common ancestors
+void
+MacroAssembler::and64(const Operand& src, Register64 dest)
+{
+    andq(src, dest.reg);
+=======
 void MacroAssembler::xorPtr(Register src, Register dest) { xorq(src, dest); }
 
 void MacroAssembler::xorPtr(Imm32 imm, Register dest) { xorq(imm, dest); }
 
 void MacroAssembler::and64(const Operand& src, Register64 dest) {
   andq(src, dest.reg);
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::or64(const Operand& src, Register64 dest) {
@@ -255,7 +436,19 @@ void MacroAssembler::inc64(AbsoluteAddress dest) {
   }
 }
 
+<<<<<<< HEAD
 void MacroAssembler::neg64(Register64 reg) { negq(reg.reg); }
+||||||| merged common ancestors
+void
+MacroAssembler::neg64(Register64 reg)
+{
+    negq(reg.reg);
+}
+=======
+void MacroAssembler::neg64(Register64 reg) { negq(reg.reg); }
+
+void MacroAssembler::negPtr(Register reg) { negq(reg); }
+>>>>>>> upstream-releases
 
 // ===============================================================
 // Shift functions
@@ -536,6 +729,7 @@ void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
   }
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
                                ImmWord rhs, Label* label) {
   if (X86Encoding::IsAddressImmediate(lhs.addr)) {
@@ -543,6 +737,47 @@ void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
   } else {
     ScratchRegisterScope scratch(*this);
     mov(ImmPtr(lhs.addr), scratch);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs, Register rhs, Label* label)
+{
+    ScratchRegisterScope scratch(*this);
+    MOZ_ASSERT(rhs != scratch);
+    if (X86Encoding::IsAddressImmediate(lhs.addr)) {
+        branchPtrImpl(cond, Operand(lhs), rhs, label);
+    } else {
+        mov(ImmPtr(lhs.addr), scratch);
+        branchPtrImpl(cond, Operand(scratch, 0x0), rhs, label);
+    }
+}
+
+void
+MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs, ImmWord rhs, Label* label)
+{
+    if (X86Encoding::IsAddressImmediate(lhs.addr)) {
+        branchPtrImpl(cond, Operand(lhs), rhs, label);
+    } else {
+        ScratchRegisterScope scratch(*this);
+        mov(ImmPtr(lhs.addr), scratch);
+        branchPtrImpl(cond, Operand(scratch, 0x0), rhs, label);
+    }
+}
+
+void
+MacroAssembler::branchPtr(Condition cond, wasm::SymbolicAddress lhs, Register rhs, Label* label)
+{
+    ScratchRegisterScope scratch(*this);
+    MOZ_ASSERT(rhs != scratch);
+    mov(lhs, scratch);
+=======
+void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
+                               ImmWord rhs, Label* label) {
+  if (X86Encoding::IsAddressImmediate(lhs.addr)) {
+    branchPtrImpl(cond, Operand(lhs), rhs, label);
+  } else {
+    ScratchRegisterScope scratch(*this);
+    mov(ImmPtr(lhs.addr), scratch);
+>>>>>>> upstream-releases
     branchPtrImpl(cond, Operand(scratch, 0x0), rhs, label);
   }
 }
@@ -795,6 +1030,7 @@ void MacroAssemblerX64::unboxValue(const ValueOperand& src, AnyRegister dest,
     bind(&notInt32);
     unboxDouble(src, dest.fpu());
     bind(&end);
+<<<<<<< HEAD
   } else {
     unboxNonDouble(src, dest.gpr(), type);
   }
@@ -809,10 +1045,28 @@ void MacroAssemblerX64::loadInt32OrDouble(const T& src, FloatRegister dest) {
   bind(&notInt32);
   loadDouble(src, dest);
   bind(&end);
+||||||| merged common ancestors
+=======
+  } else {
+    unboxNonDouble(src, dest.gpr(), type);
+  }
+}
+
+template <typename T>
+void MacroAssemblerX64::loadInt32OrDouble(const T& src, FloatRegister dest) {
+  Label notInt32, end;
+  asMasm().branchTestInt32(Assembler::NotEqual, src, &notInt32);
+  convertInt32ToDouble(src, dest);
+  jump(&end);
+  bind(&notInt32);
+  unboxDouble(src, dest);
+  bind(&end);
+>>>>>>> upstream-releases
 }
 
 // If source is a double, load it into dest. If source is int32,
 // convert it to double. Else, branch to failure.
+<<<<<<< HEAD
 void MacroAssemblerX64::ensureDouble(const ValueOperand& source,
                                      FloatRegister dest, Label* failure) {
   Label isDouble, done;
@@ -836,5 +1090,57 @@ void MacroAssemblerX64::ensureDouble(const ValueOperand& source,
 
 }  // namespace jit
 }  // namespace js
+||||||| merged common ancestors
+void
+MacroAssemblerX64::ensureDouble(const ValueOperand& source, FloatRegister dest, Label* failure)
+{
+    Label isDouble, done;
+    {
+        ScratchTagScope tag(asMasm(), source);
+        splitTagForTest(source, tag);
+        asMasm().branchTestDouble(Assembler::Equal, tag, &isDouble);
+        asMasm().branchTestInt32(Assembler::NotEqual, tag, failure);
+    }
+
+    ScratchRegisterScope scratch(asMasm());
+    unboxInt32(source, scratch);
+    convertInt32ToDouble(scratch, dest);
+    jump(&done);
+
+    bind(&isDouble);
+    unboxDouble(source, dest);
+
+    bind(&done);
+}
+
+} // namespace jit
+} // namespace js
+=======
+void MacroAssemblerX64::ensureDouble(const ValueOperand& source,
+                                     FloatRegister dest, Label* failure) {
+  Label isDouble, done;
+  {
+    ScratchTagScope tag(asMasm(), source);
+    splitTagForTest(source, tag);
+    asMasm().branchTestDouble(Assembler::Equal, tag, &isDouble);
+    asMasm().branchTestInt32(Assembler::NotEqual, tag, failure);
+  }
+
+  {
+    ScratchRegisterScope scratch(asMasm());
+    unboxInt32(source, scratch);
+    convertInt32ToDouble(scratch, dest);
+  }
+  jump(&done);
+
+  bind(&isDouble);
+  unboxDouble(source, dest);
+
+  bind(&done);
+}
+
+}  // namespace jit
+}  // namespace js
+>>>>>>> upstream-releases
 
 #endif /* jit_x64_MacroAssembler_x64_inl_h */

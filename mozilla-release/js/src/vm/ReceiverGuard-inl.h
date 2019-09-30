@@ -11,12 +11,11 @@
 
 #include "builtin/TypedObject.h"
 #include "vm/JSObject.h"
-#include "vm/ShapedObject.h"
-#include "vm/UnboxedObject.h"
 
 namespace js {
 
 MOZ_ALWAYS_INLINE
+<<<<<<< HEAD
 ReceiverGuard::ReceiverGuard(JSObject* obj) : group(nullptr), shape(nullptr) {
   if (!obj->isNative()) {
     if (obj->is<UnboxedPlainObject>()) {
@@ -33,10 +32,38 @@ ReceiverGuard::ReceiverGuard(JSObject* obj) : group(nullptr), shape(nullptr) {
     }
   }
   shape = obj->as<ShapedObject>().shape();
+||||||| merged common ancestors
+ReceiverGuard::ReceiverGuard(JSObject* obj)
+  : group(nullptr), shape(nullptr)
+{
+    if (!obj->isNative()) {
+        if (obj->is<UnboxedPlainObject>()) {
+            group = obj->group();
+            if (UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando()) {
+                shape = expando->lastProperty();
+            }
+            return;
+        }
+        if (obj->is<TypedObject>()) {
+            group = obj->group();
+            return;
+        }
+    }
+    shape = obj->as<ShapedObject>().shape();
+=======
+ReceiverGuard::ReceiverGuard(JSObject* obj) : group_(nullptr), shape_(nullptr) {
+  if (obj->isNative() || IsProxy(obj)) {
+    shape_ = obj->shape();
+    return;
+  }
+  MOZ_ASSERT(obj->is<TypedObject>());
+  group_ = obj->group();
+>>>>>>> upstream-releases
 }
 
 MOZ_ALWAYS_INLINE
 ReceiverGuard::ReceiverGuard(ObjectGroup* group, Shape* shape)
+<<<<<<< HEAD
     : group(group), shape(shape) {
   if (group) {
     const Class* clasp = group->clasp();
@@ -46,8 +73,36 @@ ReceiverGuard::ReceiverGuard(ObjectGroup* group, Shape* shape)
       this->shape = nullptr;
     } else {
       this->group = nullptr;
+||||||| merged common ancestors
+  : group(group), shape(shape)
+{
+    if (group) {
+        const Class* clasp = group->clasp();
+        if (clasp == &UnboxedPlainObject::class_) {
+            // Keep both group and shape.
+        } else if (IsTypedObjectClass(clasp)) {
+            this->shape = nullptr;
+        } else {
+            this->group = nullptr;
+        }
+=======
+    : group_(group), shape_(shape) {
+  if (group_) {
+    const Class* clasp = group_->clasp();
+    if (IsTypedObjectClass(clasp)) {
+      this->shape_ = nullptr;
+    } else {
+      this->group_ = nullptr;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   }
+||||||| merged common ancestors
+=======
+  }
+  // Only one of group_ or shape_ may be active at a time.
+  MOZ_ASSERT_IF(group_ || shape_, !!group_ != !!shape_);
+>>>>>>> upstream-releases
 }
 
 }  // namespace js

@@ -78,6 +78,7 @@ IPCResult ServiceWorkerContainerParent::RecvGetRegistrations(
     return IPC_OK();
   }
 
+<<<<<<< HEAD
   mProxy->GetRegistrations(ClientInfo(aClientInfo))
       ->Then(GetCurrentThreadSerialEventTarget(), __func__,
              [aResolver](
@@ -91,6 +92,34 @@ IPCResult ServiceWorkerContainerParent::RecvGetRegistrations(
              [aResolver](const CopyableErrorResult& aResult) {
                aResolver(aResult);
              });
+||||||| merged common ancestors
+  mProxy->GetRegistrations(ClientInfo(aClientInfo))->Then(
+    GetCurrentThreadSerialEventTarget(), __func__,
+    [aResolver] (const nsTArray<ServiceWorkerRegistrationDescriptor>& aList) {
+      IPCServiceWorkerRegistrationDescriptorList ipcList;
+      for (auto& desc : aList) {
+        ipcList.values().AppendElement(desc.ToIPC());
+      }
+      aResolver(std::move(ipcList));
+    }, [aResolver] (const CopyableErrorResult& aResult) {
+      aResolver(aResult);
+    });
+=======
+  mProxy->GetRegistrations(ClientInfo(aClientInfo))
+      ->Then(
+          GetCurrentThreadSerialEventTarget(), __func__,
+          [aResolver](
+              const nsTArray<ServiceWorkerRegistrationDescriptor>& aList) {
+            IPCServiceWorkerRegistrationDescriptorList ipcList;
+            for (auto& desc : aList) {
+              ipcList.values().AppendElement(desc.ToIPC());
+            }
+            aResolver(std::move(ipcList));
+          },
+          [aResolver](const CopyableErrorResult& aResult) {
+            aResolver(aResult);
+          });
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }

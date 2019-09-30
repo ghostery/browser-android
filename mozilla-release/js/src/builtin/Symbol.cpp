@@ -6,7 +6,13 @@
 
 #include "builtin/Symbol.h"
 
+<<<<<<< HEAD
 #include "js/Symbol.h"
+||||||| merged common ancestors
+=======
+#include "js/Symbol.h"
+#include "js/PropertySpec.h"
+>>>>>>> upstream-releases
 #include "util/StringBuffer.h"
 #include "vm/SymbolType.h"
 

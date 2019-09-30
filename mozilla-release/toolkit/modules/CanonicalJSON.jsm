@@ -19,24 +19,52 @@ var CanonicalJSON = {
    * @usage
    *        CanonicalJSON.stringify(listOfRecords);
    **/
+<<<<<<< HEAD
   stringify: function stringify(source, jsescFn) {
     if (typeof jsescFn != "function") {
       const { jsesc } = ChromeUtils.import("resource://gre/modules/third_party/jsesc/jsesc.js", {});
       jsescFn = jsesc;
     }
+||||||| merged common ancestors
+  stringify: function stringify(source) {
+=======
+  stringify: function stringify(source, jsescFn) {
+    if (typeof jsescFn != "function") {
+      const { jsesc } = ChromeUtils.import(
+        "resource://gre/modules/third_party/jsesc/jsesc.js"
+      );
+      jsescFn = jsesc;
+    }
+>>>>>>> upstream-releases
     if (Array.isArray(source)) {
+<<<<<<< HEAD
       const jsonArray = source.map(x => typeof x === "undefined" ? null : x);
       return "[" + jsonArray.map(item => stringify(item, jsescFn)).join(",") + "]";
+||||||| merged common ancestors
+      const jsonArray = source.map(x => typeof x === "undefined" ? null : x);
+      return `[${jsonArray.map(stringify).join(",")}]`;
+=======
+      const jsonArray = source.map(x => (typeof x === "undefined" ? null : x));
+      return (
+        "[" + jsonArray.map(item => stringify(item, jsescFn)).join(",") + "]"
+      );
+>>>>>>> upstream-releases
     }
 
     if (typeof source === "number") {
       if (source === 0) {
-        return (Object.is(source, -0)) ? "-0" : "0";
+        return Object.is(source, -0) ? "-0" : "0";
       }
     }
 
     // Leverage jsesc library, mainly for unicode escaping.
+<<<<<<< HEAD
     const toJSON = (input) => jsescFn(input, {lowercaseHex: true, json: true});
+||||||| merged common ancestors
+    const toJSON = (input) => jsesc(input, {lowercaseHex: true, json: true});
+=======
+    const toJSON = input => jsescFn(input, { lowercaseHex: true, json: true });
+>>>>>>> upstream-releases
 
     if (typeof source !== "object" || source === null) {
       return toJSON(source);
@@ -45,6 +73,7 @@ var CanonicalJSON = {
     // Dealing with objects, ordering keys.
     const sortedKeys = Object.keys(source).sort();
     const lastIndex = sortedKeys.length - 1;
+<<<<<<< HEAD
     return sortedKeys.reduce((serial, key, index) => {
       const value = source[key];
       // JSON.stringify drops keys with an undefined value.
@@ -56,5 +85,34 @@ var CanonicalJSON = {
       const escapedKey = toJSON(key);
       return serial + escapedKey + ":" + stringify(jsonValue, jsescFn) + suffix;
     }, "{") + "}";
+||||||| merged common ancestors
+    return sortedKeys.reduce((serial, key, index) => {
+      const value = source[key];
+      // JSON.stringify drops keys with an undefined value.
+      if (typeof value === "undefined") {
+        return serial;
+      }
+      const jsonValue = value && value.toJSON ? value.toJSON() : value;
+      const suffix = index !== lastIndex ? "," : "";
+      const escapedKey = toJSON(key);
+      return serial + `${escapedKey}:${stringify(jsonValue)}${suffix}`;
+    }, "{") + "}";
+=======
+    return (
+      sortedKeys.reduce((serial, key, index) => {
+        const value = source[key];
+        // JSON.stringify drops keys with an undefined value.
+        if (typeof value === "undefined") {
+          return serial;
+        }
+        const jsonValue = value && value.toJSON ? value.toJSON() : value;
+        const suffix = index !== lastIndex ? "," : "";
+        const escapedKey = toJSON(key);
+        return (
+          serial + escapedKey + ":" + stringify(jsonValue, jsescFn) + suffix
+        );
+      }, "{") + "}"
+    );
+>>>>>>> upstream-releases
   },
 };

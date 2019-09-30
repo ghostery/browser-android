@@ -16,6 +16,7 @@
 
 #define LABEL_MAX_CHAR_WIDTH 48
 
+using std::ios;
 using std::string;
 using std::vector;
 
@@ -65,7 +66,61 @@ static void LoadSettings() {
   }
 }
 
+<<<<<<< HEAD
 void SaveSettings() {
+||||||| merged common ancestors
+void SaveSettings()
+{
+=======
+static string Escape(const string& str) {
+  string ret;
+  for (auto c : str) {
+    if (c == '\\') {
+      ret += "\\\\";
+    } else if (c == '\n') {
+      ret += "\\n";
+    } else if (c == '\t') {
+      ret += "\\t";
+    } else {
+      ret.push_back(c);
+    }
+  }
+
+  return ret;
+}
+
+static bool WriteStrings(ostream& out, const string& header,
+                         StringTable& strings, bool escape) {
+  out << "[" << header << "]" << std::endl;
+  for (const auto& iter : strings) {
+    out << iter.first << "=";
+    if (escape) {
+      out << Escape(iter.second);
+    } else {
+      out << iter.second;
+    }
+
+    out << std::endl;
+  }
+
+  return true;
+}
+
+static bool WriteStringsToFile(const string& path, const string& header,
+                               StringTable& strings, bool escape) {
+  ofstream* f = UIOpenWrite(path, ios::trunc);
+  bool success = false;
+  if (f->is_open()) {
+    success = WriteStrings(*f, header, strings, escape);
+    f->close();
+  }
+
+  delete f;
+  return success;
+}
+
+void SaveSettings() {
+>>>>>>> upstream-releases
   /*
    * NOTE! This code needs to stay in sync with the preference setting
    *       code in in nsExceptionHandler.cpp.
@@ -94,10 +149,17 @@ void SaveSettings() {
                      true);
 }
 
+<<<<<<< HEAD
 void SendReport() {
 #ifdef MOZ_ENABLE_GCONF
+||||||| merged common ancestors
+void SendReport()
+{
+#ifdef MOZ_ENABLE_GCONF
+=======
+void SendReport() {
+>>>>>>> upstream-releases
   LoadProxyinfo();
-#endif
 
   // spawn a thread to do the sending
   gSendThreadID = g_thread_create(SendThread, nullptr, TRUE, nullptr);
@@ -452,7 +514,14 @@ bool UIShowCrashUI(const StringTable& files, const StringTable& queryParameters,
   g_signal_connect(commentBuffer, "insert-text", G_CALLBACK(CommentInsert), 0);
 
   gtk_container_add(GTK_CONTAINER(scrolled), gCommentText);
+<<<<<<< HEAD
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText), GTK_WRAP_WORD);
+||||||| merged common ancestors
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText),
+                              GTK_WRAP_WORD);
+=======
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCommentText), GTK_WRAP_WORD_CHAR);
+>>>>>>> upstream-releases
   gtk_widget_set_size_request(GTK_WIDGET(gCommentText), -1, 100);
 
   if (gQueryParameters.find("URL") != gQueryParameters.end()) {

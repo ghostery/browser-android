@@ -149,6 +149,7 @@ void DynamicsCompressor::setEmphasisParameters(float gain, float anchorFreq,
       anchorFreq / (filterStageRatio * filterStageRatio * filterStageRatio));
 }
 
+<<<<<<< HEAD
 void DynamicsCompressor::process(const AudioBlock* sourceChunk,
                                  AudioBlock* destinationChunk,
                                  unsigned framesToProcess) {
@@ -182,7 +183,75 @@ void DynamicsCompressor::process(const AudioBlock* sourceChunk,
         m_sourceChannels[1] = m_sourceChannels[0];
 
       break;
+||||||| merged common ancestors
+void DynamicsCompressor::process(const AudioBlock* sourceChunk, AudioBlock* destinationChunk, unsigned framesToProcess)
+{
+    // Though numberOfChannels is retrived from destinationBus, we still name it numberOfChannels instead of numberOfDestinationChannels.
+    // It's because we internally match sourceChannels's size to destinationBus by channel up/down mix. Thus we need numberOfChannels
+    // to do the loop work for both m_sourceChannels and m_destinationChannels.
+
+    unsigned numberOfChannels = destinationChunk->ChannelCount();
+    unsigned numberOfSourceChannels = sourceChunk->ChannelCount();
+
+    MOZ_ASSERT(numberOfChannels == m_numberOfChannels && numberOfSourceChannels);
+
+    if (numberOfChannels != m_numberOfChannels || !numberOfSourceChannels) {
+        destinationChunk->SetNull(WEBAUDIO_BLOCK_SIZE);
+        return;
+    }
+
+    switch (numberOfChannels) {
+    case 2: // stereo
+        m_sourceChannels[0] = static_cast<const float*>(sourceChunk->mChannelData[0]);
+
+        if (numberOfSourceChannels > 1)
+            m_sourceChannels[1] = static_cast<const float*>(sourceChunk->mChannelData[1]);
+        else
+            // Simply duplicate mono channel input data to right channel for stereo processing.
+            m_sourceChannels[1] = m_sourceChannels[0];
+
+        break;
+=======
+void DynamicsCompressor::process(const AudioBlock* sourceChunk,
+                                 AudioBlock* destinationChunk,
+                                 unsigned framesToProcess) {
+  // Though numberOfChannels is retrived from destinationBus, we still name it
+  // numberOfChannels instead of numberOfDestinationChannels. It's because we
+  // internally match sourceChannels's size to destinationBus by channel up/down
+  // mix. Thus we need numberOfChannels to do the loop work for both
+  // m_sourceChannels and m_destinationChannels.
+
+  unsigned numberOfChannels = destinationChunk->ChannelCount();
+  unsigned numberOfSourceChannels = sourceChunk->ChannelCount();
+
+  MOZ_ASSERT(numberOfChannels == m_numberOfChannels && numberOfSourceChannels);
+
+  if (numberOfChannels != m_numberOfChannels || !numberOfSourceChannels) {
+    destinationChunk->SetNull(WEBAUDIO_BLOCK_SIZE);
+    return;
+  }
+
+  switch (numberOfChannels) {
+    case 2:  // stereo
+      m_sourceChannels[0] =
+          static_cast<const float*>(sourceChunk->mChannelData[0]);
+
+      if (numberOfSourceChannels > 1)
+        m_sourceChannels[1] =
+            static_cast<const float*>(sourceChunk->mChannelData[1]);
+      else
+        // Simply duplicate mono channel input data to right channel for stereo
+        // processing.
+        m_sourceChannels[1] = m_sourceChannels[0];
+
+      break;
+    case 1:
+      m_sourceChannels[0] =
+          static_cast<const float*>(sourceChunk->mChannelData[0]);
+      break;
+>>>>>>> upstream-releases
     default:
+<<<<<<< HEAD
       // FIXME : support other number of channels.
       NS_WARNING("Support other number of channels");
       destinationChunk->SetNull(WEBAUDIO_BLOCK_SIZE);
@@ -222,6 +291,49 @@ void DynamicsCompressor::process(const AudioBlock* sourceChunk,
       AudioBlockCopyChannelWithScale(m_sourceChannels[i], sourceChunk->mVolume,
                                      alignedSourceWithVolume);
       sourceData = alignedSourceWithVolume;
+||||||| merged common ancestors
+        // FIXME : support other number of channels.
+        NS_WARNING("Support other number of channels");
+        destinationChunk->SetNull(WEBAUDIO_BLOCK_SIZE);
+        return;
+=======
+      MOZ_CRASH("not supported.");
+  }
+
+  for (unsigned i = 0; i < numberOfChannels; ++i)
+    m_destinationChannels[i] = const_cast<float*>(
+        static_cast<const float*>(destinationChunk->mChannelData[i]));
+
+  float filterStageGain = parameterValue(ParamFilterStageGain);
+  float filterStageRatio = parameterValue(ParamFilterStageRatio);
+  float anchor = parameterValue(ParamFilterAnchor);
+
+  if (filterStageGain != m_lastFilterStageGain ||
+      filterStageRatio != m_lastFilterStageRatio || anchor != m_lastAnchor) {
+    m_lastFilterStageGain = filterStageGain;
+    m_lastFilterStageRatio = filterStageRatio;
+    m_lastAnchor = anchor;
+
+    setEmphasisParameters(filterStageGain, anchor, filterStageRatio);
+  }
+
+  float sourceWithVolume[WEBAUDIO_BLOCK_SIZE + 4];
+  float* alignedSourceWithVolume = ALIGNED16(sourceWithVolume);
+  ASSERT_ALIGNED16(alignedSourceWithVolume);
+
+  // Apply pre-emphasis filter.
+  // Note that the final three stages are computed in-place in the destination
+  // buffer.
+  for (unsigned i = 0; i < numberOfChannels; ++i) {
+    const float* sourceData;
+    if (sourceChunk->mVolume == 1.0f) {
+      // Fast path, the volume scale doesn't need to get taken into account
+      sourceData = m_sourceChannels[i];
+    } else {
+      AudioBlockCopyChannelWithScale(m_sourceChannels[i], sourceChunk->mVolume,
+                                     alignedSourceWithVolume);
+      sourceData = alignedSourceWithVolume;
+>>>>>>> upstream-releases
     }
 
     float* destinationData = m_destinationChannels[i];

@@ -54,6 +54,7 @@ typedef JS::ProfilingFrameIterator::RegisterState RegisterState;
 // If you want to handle every kind of frames (including JS jit frames), use
 // JitFrameIter.
 
+<<<<<<< HEAD
 class WasmFrameIter {
  public:
   enum class Unwind { True, False };
@@ -93,6 +94,94 @@ class WasmFrameIter {
   DebugFrame* debugFrame() const;
   jit::FrameType unwoundIonFrameType() const;
   uint8_t* unwoundIonCallerFP() const { return unwoundIonCallerFP_; }
+||||||| merged common ancestors
+class WasmFrameIter
+{
+  public:
+    enum class Unwind { True, False };
+    static constexpr uint32_t ColumnBit = 1u << 31;
+
+  private:
+    jit::JitActivation* activation_;
+    const Code* code_;
+    const CodeRange* codeRange_;
+    unsigned lineOrBytecode_;
+    Frame* fp_;
+    uint8_t* unwoundIonCallerFP_;
+    jit::FrameType unwoundIonFrameType_;
+    Unwind unwind_;
+    void** unwoundAddressOfReturnAddress_;
+
+    void popFrame();
+
+  public:
+    // See comment above this class definition.
+    explicit WasmFrameIter(jit::JitActivation* activation, Frame* fp = nullptr);
+    const jit::JitActivation* activation() const { return activation_; }
+    void setUnwind(Unwind unwind) { unwind_ = unwind; }
+    void operator++();
+    bool done() const;
+    const char* filename() const;
+    const char16_t* displayURL() const;
+    bool mutedErrors() const;
+    JSAtom* functionDisplayAtom() const;
+    unsigned lineOrBytecode() const;
+    uint32_t funcIndex() const;
+    unsigned computeLine(uint32_t* column) const;
+    const CodeRange* codeRange() const { return codeRange_; }
+    Instance* instance() const;
+    void** unwoundAddressOfReturnAddress() const;
+    bool debugEnabled() const;
+    DebugFrame* debugFrame() const;
+    jit::FrameType unwoundIonFrameType() const;
+    uint8_t* unwoundIonCallerFP() const { return unwoundIonCallerFP_; }
+=======
+class WasmFrameIter {
+ public:
+  enum class Unwind { True, False };
+  static constexpr uint32_t ColumnBit = 1u << 31;
+
+ private:
+  jit::JitActivation* activation_;
+  const Code* code_;
+  const CodeRange* codeRange_;
+  unsigned lineOrBytecode_;
+  Frame* fp_;
+  uint8_t* unwoundIonCallerFP_;
+  jit::FrameType unwoundIonFrameType_;
+  Unwind unwind_;
+  void** unwoundAddressOfReturnAddress_;
+  uint8_t* resumePCinCurrentFrame_;
+
+  void popFrame();
+
+ public:
+  // See comment above this class definition.
+  explicit WasmFrameIter(jit::JitActivation* activation, Frame* fp = nullptr);
+  const jit::JitActivation* activation() const { return activation_; }
+  void setUnwind(Unwind unwind) { unwind_ = unwind; }
+  void operator++();
+  bool done() const;
+  const char* filename() const;
+  const char16_t* displayURL() const;
+  bool mutedErrors() const;
+  JSAtom* functionDisplayAtom() const;
+  unsigned lineOrBytecode() const;
+  uint32_t funcIndex() const;
+  unsigned computeLine(uint32_t* column) const;
+  const CodeRange* codeRange() const { return codeRange_; }
+  Instance* instance() const;
+  void** unwoundAddressOfReturnAddress() const;
+  bool debugEnabled() const;
+  DebugFrame* debugFrame() const;
+  jit::FrameType unwoundIonFrameType() const;
+  uint8_t* unwoundIonCallerFP() const { return unwoundIonCallerFP_; }
+  Frame* frame() const { return fp_; }
+
+  // Returns the address of the next instruction that will execute in this
+  // frame, once control returns to this frame.
+  uint8_t* resumePCinCurrentFrame() const;
+>>>>>>> upstream-releases
 };
 
 enum class SymbolicAddress;

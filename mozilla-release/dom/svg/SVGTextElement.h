@@ -37,13 +37,35 @@ class SVGTextElement final : public SVGTextElementBase {
   virtual EnumAttributesInfo GetEnumInfo() override;
   virtual LengthAttributesInfo GetLengthInfo() override;
 
+<<<<<<< HEAD
   nsSVGEnum mEnumAttributes[1];
   virtual nsSVGEnum* EnumAttributes() override { return mEnumAttributes; }
+||||||| merged common ancestors
+  nsSVGEnum mEnumAttributes[1];
+  virtual nsSVGEnum* EnumAttributes() override
+    { return mEnumAttributes; }
+=======
+  SVGAnimatedEnumeration mEnumAttributes[1];
+  virtual SVGAnimatedEnumeration* EnumAttributes() override {
+    return mEnumAttributes;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsSVGLength2 mLengthAttributes[1];
   virtual nsSVGLength2* LengthAttributes() override {
     return mLengthAttributes;
   }
+||||||| merged common ancestors
+  nsSVGLength2 mLengthAttributes[1];
+  virtual nsSVGLength2* LengthAttributes() override
+    { return mLengthAttributes; }
+=======
+  SVGAnimatedLength mLengthAttributes[1];
+  virtual SVGAnimatedLength* LengthAttributes() override {
+    return mLengthAttributes;
+  }
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

@@ -16,13 +16,29 @@
 #include "ReadbackLayer.h"   // for ReadbackLayer
 #include "UnitTransforms.h"  // for ViewAs
 #include "gfxEnv.h"
+<<<<<<< HEAD
 #include "gfxPlatform.h"  // for gfxPlatform
 #include "gfxPrefs.h"
 #include "gfxUtils.h"  // for gfxUtils, etc
+||||||| merged common ancestors
+#include "gfxPlatform.h"                // for gfxPlatform
+#include "gfxPrefs.h"
+#include "gfxUtils.h"                   // for gfxUtils, etc
+=======
+#include "gfxPlatform.h"  // for gfxPlatform
+#include "gfxUtils.h"     // for gfxUtils, etc
+>>>>>>> upstream-releases
 #include "gfx2DGlue.h"
 #include "mozilla/DebugOnly.h"  // for DebugOnly
 #include "mozilla/IntegerPrintfMacros.h"
+<<<<<<< HEAD
 #include "mozilla/Telemetry.h"  // for Accumulate
+||||||| merged common ancestors
+#include "mozilla/Telemetry.h"          // for Accumulate
+=======
+#include "mozilla/StaticPrefs.h"
+#include "mozilla/Telemetry.h"  // for Accumulate
+>>>>>>> upstream-releases
 #include "mozilla/ToString.h"
 #include "mozilla/gfx/2D.h"        // for DrawTarget
 #include "mozilla/gfx/BaseSize.h"  // for BaseSize
@@ -55,9 +71,21 @@ uint8_t gLayerManagerLayerBuilder;
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 FILE* FILEOrDefault(FILE* aFile) { return aFile ? aFile : stderr; }
 
 typedef ScrollableLayerGuid::ViewID ViewID;
+||||||| merged common ancestors
+FILE*
+FILEOrDefault(FILE* aFile)
+{
+  return aFile ? aFile : stderr;
+}
+
+typedef FrameMetrics::ViewID ViewID;
+=======
+typedef ScrollableLayerGuid::ViewID ViewID;
+>>>>>>> upstream-releases
 
 using namespace mozilla::gfx;
 using namespace mozilla::Compression;
@@ -140,11 +168,30 @@ already_AddRefed<ImageContainer> LayerManager::CreateImageContainer(
   return container.forget();
 }
 
+<<<<<<< HEAD
 bool LayerManager::AreComponentAlphaLayersEnabled() {
   return gfxPrefs::ComponentAlphaEnabled();
+||||||| merged common ancestors
+bool
+LayerManager::AreComponentAlphaLayersEnabled()
+{
+  return gfxPrefs::ComponentAlphaEnabled();
+=======
+bool LayerManager::AreComponentAlphaLayersEnabled() {
+  return StaticPrefs::layers_componentalpha_enabled();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /*static*/ void LayerManager::LayerUserDataDestroy(void* data) {
+||||||| merged common ancestors
+/*static*/ void
+LayerManager::LayerUserDataDestroy(void* data)
+{
+=======
+/*static*/
+void LayerManager::LayerUserDataDestroy(void* data) {
+>>>>>>> upstream-releases
   delete static_cast<LayerUserData*>(data);
 }
 
@@ -152,6 +199,10 @@ UniquePtr<LayerUserData> LayerManager::RemoveUserData(void* aKey) {
   UniquePtr<LayerUserData> d(static_cast<LayerUserData*>(
       mUserData.Remove(static_cast<gfx::UserDataKey*>(aKey))));
   return d;
+}
+
+void LayerManager::PayloadPresented() {
+  RecordCompositionPayloadsPresented(mPayload);
 }
 
 //--------------------------------------------------
@@ -225,14 +276,33 @@ void Layer::ScrollMetadataChanged() {
   mApzcs.SetLength(GetScrollMetadataCount());
 }
 
+<<<<<<< HEAD
 void Layer::ApplyPendingUpdatesToSubtree() {
   ForEachNode<ForwardIterator>(this, [](Layer* layer) {
     layer->ApplyPendingUpdatesForThisTransaction();
   });
 
+||||||| merged common ancestors
+void
+Layer::ApplyPendingUpdatesToSubtree()
+{
+  ForEachNode<ForwardIterator>(
+      this,
+      [] (Layer *layer)
+      {
+        layer->ApplyPendingUpdatesForThisTransaction();
+      });
+
+=======
+std::unordered_set<ScrollableLayerGuid::ViewID>
+Layer::ApplyPendingUpdatesToSubtree() {
+  ForEachNode<ForwardIterator>(this, [](Layer* layer) {
+    layer->ApplyPendingUpdatesForThisTransaction();
+  });
+>>>>>>> upstream-releases
   // Once we're done recursing through the whole tree, clear the pending
   // updates from the manager.
-  Manager()->ClearPendingScrollInfoUpdate();
+  return Manager()->ClearPendingScrollInfoUpdate();
 }
 
 bool Layer::IsOpaqueForVisibility() {
@@ -594,8 +664,16 @@ void Layer::ApplyPendingUpdatesForThisTransaction() {
 
   for (size_t i = 0; i < mScrollMetadata.Length(); i++) {
     FrameMetrics& fm = mScrollMetadata[i].GetMetrics();
+<<<<<<< HEAD
     Maybe<ScrollUpdateInfo> update =
         Manager()->GetPendingScrollInfoUpdate(fm.GetScrollId());
+||||||| merged common ancestors
+    Maybe<ScrollUpdateInfo> update = Manager()->GetPendingScrollInfoUpdate(fm.GetScrollId());
+=======
+    ScrollableLayerGuid::ViewID scrollId = fm.GetScrollId();
+    Maybe<ScrollUpdateInfo> update =
+        Manager()->GetPendingScrollInfoUpdate(scrollId);
+>>>>>>> upstream-releases
     if (update) {
       fm.UpdatePendingScrollInfo(update.value());
       Mutated();
@@ -650,10 +728,22 @@ void Layer::ComputeEffectiveTransformForMaskLayers(
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Layer::ComputeEffectiveTransformForMaskLayer(
     Layer* aMaskLayer, const gfx::Matrix4x4& aTransformToSurface) {
   aMaskLayer->mEffectiveTransform = aTransformToSurface;
 
+||||||| merged common ancestors
+/* static */ void
+Layer::ComputeEffectiveTransformForMaskLayer(Layer* aMaskLayer, const gfx::Matrix4x4& aTransformToSurface)
+{
+  aMaskLayer->mEffectiveTransform = aTransformToSurface;
+
+=======
+/* static */
+void Layer::ComputeEffectiveTransformForMaskLayer(
+    Layer* aMaskLayer, const gfx::Matrix4x4& aTransformToSurface) {
+>>>>>>> upstream-releases
 #ifdef DEBUG
   bool maskIs2D = aMaskLayer->GetTransform().CanDraw2D();
   NS_ASSERTION(maskIs2D, "How did we end up with a 3D transform here?!");
@@ -661,8 +751,16 @@ void Layer::ComputeEffectiveTransformForMaskLayers(
   // The mask layer can have an async transform applied to it in some
   // situations, so be sure to use its GetLocalTransform() rather than
   // its GetTransform().
+<<<<<<< HEAD
   aMaskLayer->mEffectiveTransform =
       aMaskLayer->GetLocalTransform() * aMaskLayer->mEffectiveTransform;
+||||||| merged common ancestors
+  aMaskLayer->mEffectiveTransform = aMaskLayer->GetLocalTransform() *
+    aMaskLayer->mEffectiveTransform;
+=======
+  aMaskLayer->mEffectiveTransform = aMaskLayer->SnapTransformTranslation(
+      aMaskLayer->GetLocalTransform() * aTransformToSurface, nullptr);
+>>>>>>> upstream-releases
 }
 
 RenderTargetRect Layer::TransformRectToRenderTarget(const LayerIntRect& aRect) {
@@ -740,11 +838,25 @@ bool Layer::GetVisibleRegionRelativeToRootLayer(nsIntRegion& aResult,
   return true;
 }
 
+<<<<<<< HEAD
 InfallibleTArray<AnimData>& Layer::GetAnimationData() {
   return mAnimationInfo.GetAnimationData();
 }
 
 Maybe<ParentLayerIntRect> Layer::GetCombinedClipRect() const {
+||||||| merged common ancestors
+InfallibleTArray<AnimData>&
+Layer::GetAnimationData()
+{
+  return mAnimationInfo.GetAnimationData();
+}
+
+Maybe<ParentLayerIntRect>
+Layer::GetCombinedClipRect() const
+{
+=======
+Maybe<ParentLayerIntRect> Layer::GetCombinedClipRect() const {
+>>>>>>> upstream-releases
   Maybe<ParentLayerIntRect> clip = GetClipRect();
 
   clip = IntersectMaybeRects(clip, GetScrolledClipRect());
@@ -757,6 +869,7 @@ Maybe<ParentLayerIntRect> Layer::GetCombinedClipRect() const {
 }
 
 ContainerLayer::ContainerLayer(LayerManager* aManager, void* aImplData)
+<<<<<<< HEAD
     : Layer(aManager, aImplData),
       mFirstChild(nullptr),
       mLastChild(nullptr),
@@ -775,6 +888,50 @@ ContainerLayer::~ContainerLayer() {}
 
 bool ContainerLayer::InsertAfter(Layer* aChild, Layer* aAfter) {
   if (aChild->Manager() != Manager()) {
+||||||| merged common ancestors
+  : Layer(aManager, aImplData),
+    mFirstChild(nullptr),
+    mLastChild(nullptr),
+    mPreXScale(1.0f),
+    mPreYScale(1.0f),
+    mInheritedXScale(1.0f),
+    mInheritedYScale(1.0f),
+    mPresShellResolution(1.0f),
+    mScaleToResolution(false),
+    mUseIntermediateSurface(false),
+    mSupportsComponentAlphaChildren(false),
+    mMayHaveReadbackChild(false),
+    mChildrenChanged(false)
+{
+}
+
+ContainerLayer::~ContainerLayer()
+{
+}
+
+bool
+ContainerLayer::InsertAfter(Layer* aChild, Layer* aAfter)
+{
+  if(aChild->Manager() != Manager()) {
+=======
+    : Layer(aManager, aImplData),
+      mFirstChild(nullptr),
+      mLastChild(nullptr),
+      mPreXScale(1.0f),
+      mPreYScale(1.0f),
+      mInheritedXScale(1.0f),
+      mInheritedYScale(1.0f),
+      mPresShellResolution(1.0f),
+      mUseIntermediateSurface(false),
+      mSupportsComponentAlphaChildren(false),
+      mMayHaveReadbackChild(false),
+      mChildrenChanged(false) {}
+
+ContainerLayer::~ContainerLayer() {}
+
+bool ContainerLayer::InsertAfter(Layer* aChild, Layer* aAfter) {
+  if (aChild->Manager() != Manager()) {
+>>>>>>> upstream-releases
     NS_ERROR("Child has wrong manager");
     return false;
   }
@@ -943,10 +1100,23 @@ bool ContainerLayer::RepositionChild(Layer* aChild, Layer* aAfter) {
   return true;
 }
 
+<<<<<<< HEAD
 void ContainerLayer::FillSpecificAttributes(SpecificLayerAttributes& aAttrs) {
   aAttrs = ContainerLayerAttributes(mPreXScale, mPreYScale, mInheritedXScale,
                                     mInheritedYScale, mPresShellResolution,
                                     mScaleToResolution);
+||||||| merged common ancestors
+void
+ContainerLayer::FillSpecificAttributes(SpecificLayerAttributes& aAttrs)
+{
+  aAttrs = ContainerLayerAttributes(mPreXScale, mPreYScale,
+                                    mInheritedXScale, mInheritedYScale,
+                                    mPresShellResolution, mScaleToResolution);
+=======
+void ContainerLayer::FillSpecificAttributes(SpecificLayerAttributes& aAttrs) {
+  aAttrs = ContainerLayerAttributes(mPreXScale, mPreYScale, mInheritedXScale,
+                                    mInheritedYScale, mPresShellResolution);
+>>>>>>> upstream-releases
 }
 
 bool ContainerLayer::Creates3DContextWithExtendingChildren() {
@@ -971,8 +1141,19 @@ bool ContainerLayer::HasMultipleChildren() {
   uint32_t count = 0;
   for (Layer* child = GetFirstChild(); child; child = child->GetNextSibling()) {
     const Maybe<ParentLayerIntRect>& clipRect = child->GetLocalClipRect();
+<<<<<<< HEAD
     if (clipRect && clipRect->IsEmpty()) continue;
     if (child->GetLocalVisibleRegion().IsEmpty()) continue;
+||||||| merged common ancestors
+    if (clipRect && clipRect->IsEmpty())
+      continue;
+    if (child->GetLocalVisibleRegion().IsEmpty())
+      continue;
+=======
+    if (clipRect && clipRect->IsEmpty()) continue;
+    if (!child->Extend3DContext() && child->GetLocalVisibleRegion().IsEmpty())
+      continue;
+>>>>>>> upstream-releases
     ++count;
     if (count > 1) return true;
   }
@@ -1183,8 +1364,16 @@ void ContainerLayer::DefaultComputeEffectiveTransforms(
            * transform. See the calculations performed by CalculateScissorRect
            * above. Nor for a child with a mask layer.
            */
+<<<<<<< HEAD
           if (checkClipRect && (clipRect && !clipRect->IsEmpty() &&
                                 !child->GetLocalVisibleRegion().IsEmpty())) {
+||||||| merged common ancestors
+          if (checkClipRect && (clipRect && !clipRect->IsEmpty() && !child->GetLocalVisibleRegion().IsEmpty())) {
+=======
+          if (checkClipRect && (clipRect && !clipRect->IsEmpty() &&
+                                (child->Extend3DContext() ||
+                                 !child->GetLocalVisibleRegion().IsEmpty()))) {
+>>>>>>> upstream-releases
             useIntermediateSurface = true;
             break;
           }
@@ -1269,7 +1458,16 @@ void ContainerLayer::ComputeEffectiveTransformsForChildren(
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool ContainerLayer::HasOpaqueAncestorLayer(Layer* aLayer) {
+||||||| merged common ancestors
+/* static */ bool
+ContainerLayer::HasOpaqueAncestorLayer(Layer* aLayer)
+{
+=======
+/* static */
+bool ContainerLayer::HasOpaqueAncestorLayer(Layer* aLayer) {
+>>>>>>> upstream-releases
   for (Layer* l = aLayer->GetParent(); l; l = l->GetParent()) {
     if (l->GetContentFlags() & Layer::CONTENT_OPAQUE) return true;
   }
@@ -1696,6 +1894,11 @@ void Layer::PrintInfo(std::stringstream& aStream, const char* aPrefix) {
   if (Is3DContextLeaf()) {
     aStream << " [is3DContextLeaf]";
   }
+  if (Maybe<FrameMetrics::ViewID> viewId = IsAsyncZoomContainer()) {
+    aStream << nsPrintfCString(" [asyncZoomContainer scrollId=%" PRIu64 "]",
+                               *viewId)
+                   .get();
+  }
   if (IsScrollbarContainer()) {
     aStream << " [scrollbar]";
   }
@@ -1746,6 +1949,12 @@ void Layer::PrintInfo(std::stringstream& aStream, const char* aPrefix) {
       AppendToString(aStream, mScrollMetadata[i], "", "]");
     }
   }
+  // FIXME: On the compositor thread, we don't set mAnimationInfo::mAnimations,
+  // All animations are transformed by AnimationHelper::ExtractAnimations() into
+  // mAnimationInfo.mPropertyAnimationGroups, instead. So if we want to check
+  // if layer trees are properly synced up across processes, we should dump
+  // mAnimationInfo.mPropertyAnimationGroups for the compositor thread.
+  // (See AnimationInfo.h for more details.)
   if (!mAnimationInfo.GetAnimations().IsEmpty()) {
     aStream << nsPrintfCString(" [%d animations with id=%" PRIu64 " ]",
                                (int)mAnimationInfo.GetAnimations().Length(),
@@ -1953,6 +2162,7 @@ void ContainerLayer::PrintInfo(std::stringstream& aStream,
     aStream << " [usesTmpSurf]";
   }
   if (1.0 != mPreXScale || 1.0 != mPreYScale) {
+<<<<<<< HEAD
     aStream
         << nsPrintfCString(" [preScale=%g, %g]", mPreXScale, mPreYScale).get();
   }
@@ -1960,7 +2170,18 @@ void ContainerLayer::PrintInfo(std::stringstream& aStream,
     aStream << nsPrintfCString(" [presShellResolution=%g]",
                                mPresShellResolution)
                    .get();
+||||||| merged common ancestors
+    aStream << nsPrintfCString(" [preScale=%g, %g]", mPreXScale, mPreYScale).get();
   }
+  if (mScaleToResolution) {
+    aStream << nsPrintfCString(" [presShellResolution=%g]", mPresShellResolution).get();
+=======
+    aStream
+        << nsPrintfCString(" [preScale=%g, %g]", mPreXScale, mPreYScale).get();
+>>>>>>> upstream-releases
+  }
+  aStream << nsPrintfCString(" [presShellResolution=%g]", mPresShellResolution)
+                 .get();
 }
 
 void ContainerLayer::DumpPacket(layerscope::LayersPacket* aPacket,
@@ -2201,34 +2422,102 @@ void LayerManager::DumpPacket(layerscope::LayersPacket* aPacket) {
   layer->set_parentptr(0);
 }
 
+<<<<<<< HEAD
 /*static*/ bool LayerManager::IsLogEnabled() {
+||||||| merged common ancestors
+/*static*/ bool
+LayerManager::IsLogEnabled()
+{
+=======
+/*static*/
+bool LayerManager::IsLogEnabled() {
+>>>>>>> upstream-releases
   return MOZ_LOG_TEST(GetLog(), LogLevel::Debug);
 }
 
+<<<<<<< HEAD
 bool LayerManager::SetPendingScrollUpdateForNextTransaction(
     ScrollableLayerGuid::ViewID aScrollId,
     const ScrollUpdateInfo& aUpdateInfo) {
   Layer* withPendingTransform = DepthFirstSearch<ForwardIterator>(
       GetRoot(), [](Layer* aLayer) { return aLayer->HasPendingTransform(); });
+||||||| merged common ancestors
+bool
+LayerManager::SetPendingScrollUpdateForNextTransaction(FrameMetrics::ViewID aScrollId,
+                                                       const ScrollUpdateInfo& aUpdateInfo)
+{
+  Layer* withPendingTransform = DepthFirstSearch<ForwardIterator>(GetRoot(),
+      [](Layer* aLayer) {
+        return aLayer->HasPendingTransform();
+      });
+=======
+bool LayerManager::SetPendingScrollUpdateForNextTransaction(
+    ScrollableLayerGuid::ViewID aScrollId, const ScrollUpdateInfo& aUpdateInfo,
+    wr::RenderRoot aRenderRoot) {
+  Layer* withPendingTransform = DepthFirstSearch<ForwardIterator>(
+      GetRoot(), [](Layer* aLayer) { return aLayer->HasPendingTransform(); });
+>>>>>>> upstream-releases
   if (withPendingTransform) {
     return false;
   }
 
-  mPendingScrollUpdates[aScrollId] = aUpdateInfo;
+  // If this is called on a LayerManager that's not a WebRenderLayerManager,
+  // then we don't actually need the aRenderRoot information. We force it to
+  // RenderRoot::Default so that we can make assumptions in
+  // GetPendingScrollInfoUpdate.
+  wr::RenderRoot renderRoot = (GetBackendType() == LayersBackend::LAYERS_WR)
+                                  ? aRenderRoot
+                                  : wr::RenderRoot::Default;
+  mPendingScrollUpdates[renderRoot][aScrollId] = aUpdateInfo;
   return true;
 }
 
+<<<<<<< HEAD
 Maybe<ScrollUpdateInfo> LayerManager::GetPendingScrollInfoUpdate(
     ScrollableLayerGuid::ViewID aScrollId) {
   auto it = mPendingScrollUpdates.find(aScrollId);
   if (it != mPendingScrollUpdates.end()) {
+||||||| merged common ancestors
+Maybe<ScrollUpdateInfo>
+LayerManager::GetPendingScrollInfoUpdate(FrameMetrics::ViewID aScrollId)
+{
+  auto it = mPendingScrollUpdates.find(aScrollId);
+  if (it != mPendingScrollUpdates.end()) {
+=======
+Maybe<ScrollUpdateInfo> LayerManager::GetPendingScrollInfoUpdate(
+    ScrollableLayerGuid::ViewID aScrollId) {
+  // This never gets called for WebRenderLayerManager, so we assume that all
+  // pending scroll info updates are stored under the default RenderRoot.
+  MOZ_ASSERT(GetBackendType() != LayersBackend::LAYERS_WR);
+  auto it = mPendingScrollUpdates[wr::RenderRoot::Default].find(aScrollId);
+  if (it != mPendingScrollUpdates[wr::RenderRoot::Default].end()) {
+>>>>>>> upstream-releases
     return Some(it->second);
   }
   return Nothing();
 }
 
+<<<<<<< HEAD
 void LayerManager::ClearPendingScrollInfoUpdate() {
   mPendingScrollUpdates.clear();
+||||||| merged common ancestors
+void
+LayerManager::ClearPendingScrollInfoUpdate()
+{
+  mPendingScrollUpdates.clear();
+=======
+std::unordered_set<ScrollableLayerGuid::ViewID>
+LayerManager::ClearPendingScrollInfoUpdate() {
+  std::unordered_set<ScrollableLayerGuid::ViewID> scrollIds;
+  for (auto renderRoot : wr::kRenderRoots) {
+    auto& updates = mPendingScrollUpdates[renderRoot];
+    for (const auto& update : updates) {
+      scrollIds.insert(update.first);
+    }
+    updates.clear();
+  }
+  return scrollIds;
+>>>>>>> upstream-releases
 }
 
 void PrintInfo(std::stringstream& aStream, HostLayer* aLayerComposite) {
@@ -2243,10 +2532,21 @@ void PrintInfo(std::stringstream& aStream, HostLayer* aLayerComposite) {
     AppendToString(aStream, aLayerComposite->GetShadowBaseTransform(),
                    " [shadow-transform=", "]");
   }
+<<<<<<< HEAD
   if (!aLayerComposite->GetShadowVisibleRegion().IsEmpty()) {
     AppendToString(aStream,
                    aLayerComposite->GetShadowVisibleRegion().ToUnknownRegion(),
                    " [shadow-visible=", "]");
+||||||| merged common ancestors
+  if (!aLayerComposite->GetShadowVisibleRegion().IsEmpty()) {
+    AppendToString(aStream, aLayerComposite->GetShadowVisibleRegion().ToUnknownRegion(), " [shadow-visible=", "]");
+=======
+  if (!aLayerComposite->GetLayer()->Extend3DContext() &&
+      !aLayerComposite->GetShadowVisibleRegion().IsEmpty()) {
+    AppendToString(aStream,
+                   aLayerComposite->GetShadowVisibleRegion().ToUnknownRegion(),
+                   " [shadow-visible=", "]");
+>>>>>>> upstream-releases
   }
 }
 
@@ -2276,5 +2576,37 @@ IntRect ToOutsideIntRect(const gfxRect& aRect) {
   return IntRect::RoundOut(aRect.X(), aRect.Y(), aRect.Width(), aRect.Height());
 }
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+void RecordCompositionPayloadsPresented(
+    const nsTArray<CompositionPayload>& aPayloads) {
+  if (aPayloads.Length()) {
+    TimeStamp presented = TimeStamp::Now();
+    for (const CompositionPayload& payload : aPayloads) {
+#if MOZ_GECKO_PROFILER
+      if (profiler_is_active()) {
+        nsPrintfCString marker(
+            "Payload Presented, type: %d latency: %dms\n",
+            int32_t(payload.mType),
+            int32_t((presented - payload.mTimeStamp).ToMilliseconds()));
+        profiler_add_marker(marker.get(), JS::ProfilingCategoryPair::GRAPHICS);
+      }
+#endif
+
+      if (payload.mType == CompositionPayloadType::eKeyPress) {
+        Telemetry::AccumulateTimeDelta(
+            mozilla::Telemetry::KEYPRESS_PRESENT_LATENCY, payload.mTimeStamp,
+            presented);
+      }
+    }
+  }
+}
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases

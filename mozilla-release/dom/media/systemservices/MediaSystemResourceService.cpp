@@ -14,10 +14,26 @@ using namespace mozilla::layers;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ StaticRefPtr<MediaSystemResourceService>
     MediaSystemResourceService::sSingleton;
+||||||| merged common ancestors
+/* static */ StaticRefPtr<MediaSystemResourceService> MediaSystemResourceService::sSingleton;
+=======
+/* static */
+StaticRefPtr<MediaSystemResourceService> MediaSystemResourceService::sSingleton;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ MediaSystemResourceService* MediaSystemResourceService::Get() {
+||||||| merged common ancestors
+/* static */ MediaSystemResourceService*
+MediaSystemResourceService::Get()
+{
+=======
+/* static */
+MediaSystemResourceService* MediaSystemResourceService::Get() {
+>>>>>>> upstream-releases
   if (sSingleton) {
     return sSingleton;
   }
@@ -25,13 +41,31 @@ namespace mozilla {
   return sSingleton;
 }
 
+<<<<<<< HEAD
 /* static */ void MediaSystemResourceService::Init() {
+||||||| merged common ancestors
+/* static */ void
+MediaSystemResourceService::Init()
+{
+=======
+/* static */
+void MediaSystemResourceService::Init() {
+>>>>>>> upstream-releases
   if (!sSingleton) {
     sSingleton = new MediaSystemResourceService();
   }
 }
 
+<<<<<<< HEAD
 /* static */ void MediaSystemResourceService::Shutdown() {
+||||||| merged common ancestors
+/* static */ void
+MediaSystemResourceService::Shutdown()
+{
+=======
+/* static */
+void MediaSystemResourceService::Shutdown() {
+>>>>>>> upstream-releases
   if (sSingleton) {
     sSingleton->Destroy();
     sSingleton = nullptr;

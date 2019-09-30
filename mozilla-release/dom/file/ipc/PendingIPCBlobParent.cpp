@@ -37,12 +37,30 @@ PendingIPCBlobParent* PendingIPCBlobParent::Create(PBackgroundParent* aManager,
 PendingIPCBlobParent::PendingIPCBlobParent(BlobImpl* aBlobImpl)
     : mBlobImpl(aBlobImpl) {}
 
+<<<<<<< HEAD
 IPCResult PendingIPCBlobParent::Recv__delete__(
     const PendingIPCBlobData& aData) {
   if (aData.file().type() == PendingIPCFileUnion::Tvoid_t) {
+||||||| merged common ancestors
+IPCResult
+PendingIPCBlobParent::Recv__delete__(const PendingIPCBlobData& aData)
+{
+  if (aData.file().type() == PendingIPCFileUnion::Tvoid_t) {
+=======
+IPCResult PendingIPCBlobParent::Recv__delete__(
+    const PendingIPCBlobData& aData) {
+  if (aData.file().isNothing()) {
+>>>>>>> upstream-releases
     mBlobImpl->SetLazyData(VoidString(), aData.type(), aData.size(), INT64_MAX);
   } else {
+<<<<<<< HEAD
     const PendingIPCFileData& fileData = aData.file().get_PendingIPCFileData();
+||||||| merged common ancestors
+    const PendingIPCFileData& fileData =
+      aData.file().get_PendingIPCFileData();
+=======
+    const PendingIPCFileData& fileData = aData.file().ref();
+>>>>>>> upstream-releases
     mBlobImpl->SetLazyData(fileData.name(), aData.type(), aData.size(),
                            fileData.lastModified());
   }

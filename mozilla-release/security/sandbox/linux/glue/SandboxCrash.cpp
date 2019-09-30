@@ -71,8 +71,17 @@ static void SandboxLogJSStack(void) {
   }
 }
 
+<<<<<<< HEAD
 static void SandboxPrintStackFrame(uint32_t aFrameNumber, void *aPC, void *aSP,
                                    void *aClosure) {
+||||||| merged common ancestors
+static void SandboxPrintStackFrame(uint32_t aFrameNumber, void *aPC, void *aSP,
+                                   void *aClosure)
+{
+=======
+static void SandboxPrintStackFrame(uint32_t aFrameNumber, void* aPC, void* aSP,
+                                   void* aClosure) {
+>>>>>>> upstream-releases
   char buf[1024];
   MozCodeAddressDetails details;
 
@@ -93,7 +102,15 @@ static void SandboxLogCStack() {
   SANDBOX_LOG_ERROR("end of stack.");
 }
 
+<<<<<<< HEAD
 static void SandboxCrash(int nr, siginfo_t *info, void *void_context) {
+||||||| merged common ancestors
+static void
+SandboxCrash(int nr, siginfo_t *info, void *void_context)
+{
+=======
+static void SandboxCrash(int nr, siginfo_t* info, void* void_context) {
+>>>>>>> upstream-releases
   pid_t pid = getpid(), tid = syscall(__NR_gettid);
   bool dumped = CrashReporter::WriteMinidumpForSigInfo(nr, info, void_context);
 

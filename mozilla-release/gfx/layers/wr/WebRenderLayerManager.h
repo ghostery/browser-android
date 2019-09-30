@@ -11,14 +11,21 @@
 #include <unordered_map>
 #include <vector>
 
-#include "gfxPrefs.h"
 #include "Layers.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/MozPromise.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/layers/APZTestData.h"
 #include "mozilla/layers/FocusTarget.h"
+<<<<<<< HEAD
 #include "mozilla/layers/IpcResourceUpdateQueue.h"
 #include "mozilla/layers/SharedSurfacesChild.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/layers/IpcResourceUpdateQueue.h"
+#include "mozilla/layers/RenderRootStateManager.h"
+#include "mozilla/layers/SharedSurfacesChild.h"
+>>>>>>> upstream-releases
 #include "mozilla/layers/StackingContextHelper.h"
 #include "mozilla/layers/TransactionIdAllocator.h"
 #include "mozilla/layers/WebRenderCommandBuilder.h"
@@ -56,19 +63,28 @@ class WebRenderLayerManager final : public LayerManager {
   bool Initialize(PCompositorBridgeChild* aCBChild, wr::PipelineId aLayersId,
                   TextureFactoryIdentifier* aTextureFactoryIdentifier);
 
-  virtual void Destroy() override;
+  void Destroy() override;
 
   void DoDestroy(bool aIsSync);
 
  protected:
   virtual ~WebRenderLayerManager();
 
+<<<<<<< HEAD
  public:
   virtual KnowsCompositor* AsKnowsCompositor() override;
+||||||| merged common ancestors
+public:
+  virtual KnowsCompositor* AsKnowsCompositor() override;
+=======
+ public:
+  KnowsCompositor* AsKnowsCompositor() override;
+>>>>>>> upstream-releases
   WebRenderLayerManager* AsWebRenderLayerManager() override { return this; }
-  virtual CompositorBridgeChild* GetCompositorBridgeChild() override;
+  CompositorBridgeChild* GetCompositorBridgeChild() override;
 
   // WebRender can handle images larger than the max texture size via tiling.
+<<<<<<< HEAD
   virtual int32_t GetMaxTextureSize() const override { return INT32_MAX; }
 
   virtual bool BeginTransactionWithTarget(gfxContext* aTarget,
@@ -100,60 +116,160 @@ class WebRenderLayerManager final : public LayerManager {
   already_AddRefed<ContainerLayer> CreateContainerLayer() override {
     return nullptr;
   }
+||||||| merged common ancestors
+  virtual int32_t GetMaxTextureSize() const override { return INT32_MAX; }
+
+  virtual bool BeginTransactionWithTarget(gfxContext* aTarget) override;
+  virtual bool BeginTransaction() override;
+  virtual bool EndEmptyTransaction(EndTransactionFlags aFlags = END_DEFAULT) override;
+  void EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
+                                  nsDisplayListBuilder* aDisplayListBuilder,
+                                  const nsTArray<wr::WrFilterOp>& aFilters = nsTArray<wr::WrFilterOp>(),
+                                  WebRenderBackgroundData* aBackground = nullptr);
+  virtual void EndTransaction(DrawPaintedLayerCallback aCallback,
+                              void* aCallbackData,
+                              EndTransactionFlags aFlags = END_DEFAULT) override;
+
+  virtual LayersBackend GetBackendType() override { return LayersBackend::LAYERS_WR; }
+  virtual void GetBackendName(nsAString& name) override { name.AssignLiteral("WebRender"); }
+  virtual const char* Name() const override { return "WebRender"; }
+
+  virtual void SetRoot(Layer* aLayer) override;
+
+  already_AddRefed<PaintedLayer> CreatePaintedLayer() override { return nullptr; }
+  already_AddRefed<ContainerLayer> CreateContainerLayer() override { return nullptr; }
+=======
+  int32_t GetMaxTextureSize() const override { return INT32_MAX; }
+
+  bool BeginTransactionWithTarget(gfxContext* aTarget,
+                                  const nsCString& aURL) override;
+  bool BeginTransaction(const nsCString& aURL) override;
+  bool EndEmptyTransaction(EndTransactionFlags aFlags = END_DEFAULT) override;
+  void EndTransactionWithoutLayer(
+      nsDisplayList* aDisplayList, nsDisplayListBuilder* aDisplayListBuilder,
+      WrFiltersHolder&& aFilters = WrFiltersHolder(),
+      WebRenderBackgroundData* aBackground = nullptr);
+  void EndTransaction(DrawPaintedLayerCallback aCallback, void* aCallbackData,
+                      EndTransactionFlags aFlags = END_DEFAULT) override;
+
+  LayersBackend GetBackendType() override { return LayersBackend::LAYERS_WR; }
+  void GetBackendName(nsAString& name) override {
+    name.AssignLiteral("WebRender");
+  }
+  const char* Name() const override { return "WebRender"; }
+
+  void SetRoot(Layer* aLayer) override;
+
+  already_AddRefed<PaintedLayer> CreatePaintedLayer() override {
+    return nullptr;
+  }
+  already_AddRefed<ContainerLayer> CreateContainerLayer() override {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
   already_AddRefed<ImageLayer> CreateImageLayer() override { return nullptr; }
   already_AddRefed<ColorLayer> CreateColorLayer() override { return nullptr; }
   already_AddRefed<CanvasLayer> CreateCanvasLayer() override { return nullptr; }
 
-  virtual bool NeedsWidgetInvalidation() override { return false; }
+  bool NeedsWidgetInvalidation() override { return false; }
 
-  virtual void SetLayersObserverEpoch(LayersObserverEpoch aEpoch) override;
+  void SetLayersObserverEpoch(LayersObserverEpoch aEpoch) override;
 
-  virtual void DidComposite(TransactionId aTransactionId,
-                            const mozilla::TimeStamp& aCompositeStart,
-                            const mozilla::TimeStamp& aCompositeEnd) override;
+  void DidComposite(TransactionId aTransactionId,
+                    const mozilla::TimeStamp& aCompositeStart,
+                    const mozilla::TimeStamp& aCompositeEnd) override;
 
+<<<<<<< HEAD
   virtual void ClearCachedResources(Layer* aSubtree = nullptr) override;
   virtual void UpdateTextureFactoryIdentifier(
       const TextureFactoryIdentifier& aNewIdentifier) override;
   virtual TextureFactoryIdentifier GetTextureFactoryIdentifier() override;
+||||||| merged common ancestors
+  virtual void ClearCachedResources(Layer* aSubtree = nullptr) override;
+  virtual void UpdateTextureFactoryIdentifier(const TextureFactoryIdentifier& aNewIdentifier) override;
+  virtual TextureFactoryIdentifier GetTextureFactoryIdentifier() override;
+=======
+  void ClearCachedResources(Layer* aSubtree = nullptr) override;
+  void UpdateTextureFactoryIdentifier(
+      const TextureFactoryIdentifier& aNewIdentifier) override;
+  TextureFactoryIdentifier GetTextureFactoryIdentifier() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void SetTransactionIdAllocator(
       TransactionIdAllocator* aAllocator) override;
   virtual TransactionId GetLastTransactionId() override;
+||||||| merged common ancestors
+  virtual void SetTransactionIdAllocator(TransactionIdAllocator* aAllocator) override;
+  virtual TransactionId GetLastTransactionId() override;
+=======
+  void SetTransactionIdAllocator(TransactionIdAllocator* aAllocator) override;
+  TransactionId GetLastTransactionId() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void AddDidCompositeObserver(
       DidCompositeObserver* aObserver) override;
   virtual void RemoveDidCompositeObserver(
       DidCompositeObserver* aObserver) override;
+||||||| merged common ancestors
+  virtual void AddDidCompositeObserver(DidCompositeObserver* aObserver) override;
+  virtual void RemoveDidCompositeObserver(DidCompositeObserver* aObserver) override;
+=======
+  void AddDidCompositeObserver(DidCompositeObserver* aObserver) override;
+  void RemoveDidCompositeObserver(DidCompositeObserver* aObserver) override;
+>>>>>>> upstream-releases
 
-  virtual void FlushRendering() override;
-  virtual void WaitOnTransactionProcessed() override;
+  void FlushRendering() override;
+  void WaitOnTransactionProcessed() override;
 
-  virtual void SendInvalidRegion(const nsIntRegion& aRegion) override;
+  void SendInvalidRegion(const nsIntRegion& aRegion) override;
 
-  virtual void ScheduleComposite() override;
+  void ScheduleComposite() override;
 
+<<<<<<< HEAD
   virtual void SetNeedsComposite(bool aNeedsComposite) override {
+||||||| merged common ancestors
+  virtual void SetNeedsComposite(bool aNeedsComposite) override
+  {
+=======
+  void SetNeedsComposite(bool aNeedsComposite) override {
+>>>>>>> upstream-releases
     mNeedsComposite = aNeedsComposite;
   }
-  virtual bool NeedsComposite() const override { return mNeedsComposite; }
-  virtual void SetIsFirstPaint() override { mIsFirstPaint = true; }
-  virtual void SetFocusTarget(const FocusTarget& aFocusTarget) override;
+  bool NeedsComposite() const override { return mNeedsComposite; }
+  void SetIsFirstPaint() override { mIsFirstPaint = true; }
+  bool GetIsFirstPaint() const override { return mIsFirstPaint; }
+  void SetFocusTarget(const FocusTarget& aFocusTarget) override;
 
+<<<<<<< HEAD
   virtual already_AddRefed<PersistentBufferProvider>
   CreatePersistentBufferProvider(const gfx::IntSize& aSize,
                                  gfx::SurfaceFormat aFormat) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<PersistentBufferProvider>
+  CreatePersistentBufferProvider(const gfx::IntSize& aSize, gfx::SurfaceFormat aFormat) override;
+=======
+  already_AddRefed<PersistentBufferProvider> CreatePersistentBufferProvider(
+      const gfx::IntSize& aSize, gfx::SurfaceFormat aFormat) override;
+>>>>>>> upstream-releases
 
   bool AsyncPanZoomEnabled() const override;
 
   // adds an imagekey to a list of keys that will be discarded on the next
   // transaction or destruction
+<<<<<<< HEAD
   void AddImageKeyForDiscard(wr::ImageKey);
   void AddBlobImageKeyForDiscard(wr::BlobImageKey);
+||||||| merged common ancestors
+  void AddImageKeyForDiscard(wr::ImageKey);
+=======
+>>>>>>> upstream-releases
   void DiscardImages();
   void DiscardImagesInTransaction(wr::IpcResourceUpdateQueue& aResourceUpdates);
   void DiscardLocalImages();
 
+<<<<<<< HEAD
   wr::IpcResourceUpdateQueue& AsyncResourceUpdates();
   void FlushAsyncResourceUpdates();
 
@@ -169,6 +285,17 @@ class WebRenderLayerManager final : public LayerManager {
   void AddActiveCompositorAnimationId(uint64_t aId);
   void AddCompositorAnimationsIdForDiscard(uint64_t aId);
   void DiscardCompositorAnimations();
+||||||| merged common ancestors
+  // Methods to manage the compositor animation ids. Active animations are still
+  // going, and when they end we discard them and remove them from the active
+  // list.
+  void AddActiveCompositorAnimationId(uint64_t aId);
+  void AddCompositorAnimationsIdForDiscard(uint64_t aId);
+  void DiscardCompositorAnimations();
+=======
+  void ClearAsyncAnimations();
+  void WrReleasedImages(const nsTArray<wr::ExternalImageKeyPair>& aPairs);
+>>>>>>> upstream-releases
 
   WebRenderBridgeChild* WrBridge() const { return mWrChild; }
 
@@ -176,18 +303,45 @@ class WebRenderLayerManager final : public LayerManager {
   void LogTestDataForCurrentPaint(ScrollableLayerGuid::ViewID aScrollId,
                                   const std::string& aKey,
                                   const std::string& aValue) {
+<<<<<<< HEAD
     MOZ_ASSERT(gfxPrefs::APZTestLoggingEnabled(), "don't call me");
     mApzTestData.LogTestDataForPaint(mPaintSequenceNumber, aScrollId, aKey,
                                      aValue);
+||||||| merged common ancestors
+    MOZ_ASSERT(gfxPrefs::APZTestLoggingEnabled(), "don't call me");
+    mApzTestData.LogTestDataForPaint(mPaintSequenceNumber, aScrollId, aKey, aValue);
+=======
+    MOZ_ASSERT(StaticPrefs::apz_test_logging_enabled(), "don't call me");
+    mApzTestData.LogTestDataForPaint(mPaintSequenceNumber, aScrollId, aKey,
+                                     aValue);
   }
+  void LogAdditionalTestData(const std::string& aKey,
+                             const std::string& aValue) {
+    MOZ_ASSERT(StaticPrefs::apz_test_logging_enabled(), "don't call me");
+    mApzTestData.RecordAdditionalData(aKey, aValue);
+>>>>>>> upstream-releases
+  }
+
   // See equivalent function in ClientLayerManager
   const APZTestData& GetAPZTestData() const { return mApzTestData; }
 
   WebRenderCommandBuilder& CommandBuilder() { return mWebRenderCommandBuilder; }
+<<<<<<< HEAD
   WebRenderUserDataRefTable* GetWebRenderUserDataTable() {
     return mWebRenderCommandBuilder.GetWebRenderUserDataTable();
   }
   WebRenderScrollData& GetScrollData() { return mScrollData; }
+||||||| merged common ancestors
+  WebRenderUserDataRefTable* GetWebRenderUserDataTable() { return mWebRenderCommandBuilder.GetWebRenderUserDataTable(); }
+  WebRenderScrollData& GetScrollData() { return mScrollData; }
+=======
+  WebRenderUserDataRefTable* GetWebRenderUserDataTable() {
+    return mWebRenderCommandBuilder.GetWebRenderUserDataTable();
+  }
+  WebRenderScrollData& GetScrollData(wr::RenderRoot aRenderRoot) {
+    return mScrollDatas[aRenderRoot];
+  }
+>>>>>>> upstream-releases
 
   void WrUpdated();
   void WindowOverlayChanged() { mWindowOverlayChanged = true; }
@@ -199,7 +353,22 @@ class WebRenderLayerManager final : public LayerManager {
   void StopFrameTimeRecording(uint32_t aStartIndex,
                               nsTArray<float>& aFrameIntervals) override;
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  RenderRootStateManager* GetRenderRootStateManager(
+      wr::RenderRoot aRenderRoot) {
+    return &mStateManagers[aRenderRoot];
+  }
+
+  virtual void PayloadPresented() override;
+
+  void TakeCompositionPayloads(nsTArray<CompositionPayload>& aPayloads);
+
+ private:
+>>>>>>> upstream-releases
   /**
    * Take a snapshot of the parent context, and copy
    * it into mTarget.
@@ -208,6 +377,7 @@ class WebRenderLayerManager final : public LayerManager {
 
  private:
   nsIWidget* MOZ_NON_OWNING_REF mWidget;
+<<<<<<< HEAD
   nsTArray<wr::ImageKey> mImageKeysToDelete;
   nsTArray<wr::BlobImageKey> mBlobImageKeysToDelete;
 
@@ -217,6 +387,17 @@ class WebRenderLayerManager final : public LayerManager {
   // Compositor animation ids for animations that are done now and that we want
   // the compositor to discard information for.
   nsTArray<uint64_t> mDiscardedCompositorAnimationsIds;
+||||||| merged common ancestors
+  nsTArray<wr::ImageKey> mImageKeysToDelete;
+
+  // Set of compositor animation ids for which there are active animations (as
+  // of the last transaction) on the compositor side.
+  std::unordered_set<uint64_t> mActiveCompositorAnimationIds;
+  // Compositor animation ids for animations that are done now and that we want
+  // the compositor to discard information for.
+  nsTArray<uint64_t> mDiscardedCompositorAnimationsIds;
+=======
+>>>>>>> upstream-releases
 
   RefPtr<WebRenderBridgeChild> mWrChild;
 
@@ -227,7 +408,7 @@ class WebRenderLayerManager final : public LayerManager {
 
   // This holds the scroll data that we need to send to the compositor for
   // APZ to do it's job
-  WebRenderScrollData mScrollData;
+  wr::RenderRootArray<WebRenderScrollData> mScrollDatas;
 
   bool mWindowOverlayChanged;
   bool mNeedsComposite;
@@ -252,11 +433,18 @@ class WebRenderLayerManager final : public LayerManager {
   nsCString mURL;
   WebRenderCommandBuilder mWebRenderCommandBuilder;
 
+<<<<<<< HEAD
   size_t mLastDisplayListSize;
 
   Maybe<wr::IpcResourceUpdateQueue> mAsyncResourceUpdates;
   std::unordered_map<uint64_t, RefPtr<SharedSurfacesAnimation>>
       mAsyncAnimations;
+||||||| merged common ancestors
+  size_t mLastDisplayListSize;
+=======
+  wr::RenderRootArray<size_t> mLastDisplayListSizes;
+  wr::RenderRootArray<RenderRootStateManager> mStateManagers;
+>>>>>>> upstream-releases
 };
 
 }  // namespace layers

@@ -35,11 +35,28 @@ class CompositorOptions {
         mUseAdvancedLayers(false),
         mInitiallyPaused(false) {}
 
+<<<<<<< HEAD
   explicit CompositorOptions(bool aUseAPZ, bool aUseWebRender)
       : mUseAPZ(aUseAPZ),
         mUseWebRender(aUseWebRender),
         mUseAdvancedLayers(false),
         mInitiallyPaused(false) {}
+||||||| merged common ancestors
+  explicit CompositorOptions(bool aUseAPZ,
+                             bool aUseWebRender)
+    : mUseAPZ(aUseAPZ)
+    , mUseWebRender(aUseWebRender)
+    , mUseAdvancedLayers(false)
+    , mInitiallyPaused(false)
+  {
+  }
+=======
+  CompositorOptions(bool aUseAPZ, bool aUseWebRender)
+      : mUseAPZ(aUseAPZ),
+        mUseWebRender(aUseWebRender),
+        mUseAdvancedLayers(false),
+        mInitiallyPaused(false) {}
+>>>>>>> upstream-releases
 
   bool UseAPZ() const { return mUseAPZ; }
   bool UseWebRender() const { return mUseWebRender; }

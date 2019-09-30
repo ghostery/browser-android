@@ -46,17 +46,37 @@ void CSSFontFaceRuleDecl::GetCssText(nsAString& aCssText) {
   Servo_FontFaceRule_GetDeclCssText(mRawRule, &aCssText);
 }
 
+<<<<<<< HEAD
 void CSSFontFaceRuleDecl::SetCssText(const nsAString& aCssText,
                                      nsIPrincipal* aSubjectPrincipal,
                                      ErrorResult& aRv) {
   aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);  // bug 443978
+||||||| merged common ancestors
+void
+CSSFontFaceRuleDecl::SetCssText(const nsAString& aCssText,
+                                nsIPrincipal* aSubjectPrincipal,
+                                ErrorResult& aRv)
+{
+  aRv.Throw(NS_ERROR_NOT_IMPLEMENTED); // bug 443978
+=======
+void CSSFontFaceRuleDecl::SetCssText(const nsAString& aCssText,
+                                     nsIPrincipal* aSubjectPrincipal,
+                                     ErrorResult& aRv) {
+  if (ContainingRule()->IsReadOnly()) {
+    return;
+  }
+  aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);  // bug 443978
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 CSSFontFaceRuleDecl::GetPropertyValue(const nsAString& aPropName,
                                       nsAString& aResult) {
   aResult.Truncate();
-  GetPropertyValue(nsCSSProps::LookupFontDesc(aPropName), aResult);
+  nsCSSFontDesc descID = nsCSSProps::LookupFontDesc(aPropName);
+  if (descID != eCSSFontDesc_UNKNOWN) {
+    GetPropertyValue(descID, aResult);
+  }
   return NS_OK;
 }
 
@@ -66,6 +86,10 @@ CSSFontFaceRuleDecl::RemoveProperty(const nsAString& aPropName,
   nsCSSFontDesc descID = nsCSSProps::LookupFontDesc(aPropName);
   NS_ASSERTION(descID >= eCSSFontDesc_UNKNOWN && descID < eCSSFontDesc_COUNT,
                "LookupFontDesc returned value out of range");
+
+  if (ContainingRule()->IsReadOnly()) {
+    return NS_OK;
+  }
 
   aResult.Truncate();
   if (descID != eCSSFontDesc_UNKNOWN) {
@@ -89,7 +113,17 @@ CSSFontFaceRuleDecl::SetProperty(const nsAString& aPropName,
   // FIXME(heycam): If we are changing unicode-range, then a FontFace object
   // representing this rule must have its mUnicodeRange value invalidated.
 
+<<<<<<< HEAD
   return NS_ERROR_NOT_IMPLEMENTED;  // bug 443978
+||||||| merged common ancestors
+  return NS_ERROR_NOT_IMPLEMENTED; // bug 443978
+=======
+  if (ContainingRule()->IsReadOnly()) {
+    return NS_OK;
+  }
+
+  return NS_ERROR_NOT_IMPLEMENTED;  // bug 443978
+>>>>>>> upstream-releases
 }
 
 uint32_t CSSFontFaceRuleDecl::Length() {
@@ -113,8 +147,19 @@ nsINode* CSSFontFaceRuleDecl::GetParentObject() {
   return ContainingRule()->GetParentObject();
 }
 
+<<<<<<< HEAD
 JSObject* CSSFontFaceRuleDecl::WrapObject(JSContext* cx,
                                           JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+JSObject*
+CSSFontFaceRuleDecl::WrapObject(JSContext *cx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+JSObject* CSSFontFaceRuleDecl::WrapObject(JSContext* cx,
+                                          JS::Handle<JSObject*> aGivenProto) {
+  // If this changes to use a different type, remove the 'concrete'
+  // annotation from CSSStyleDeclaration.
+>>>>>>> upstream-releases
   return CSSStyleDeclaration_Binding::Wrap(cx, this, aGivenProto);
 }
 
@@ -182,12 +227,32 @@ void CSSFontFaceRule::GetCssText(nsAString& aCssText) const {
 
 nsICSSDeclaration* CSSFontFaceRule::Style() { return &mDecl; }
 
+<<<<<<< HEAD
 /* virtual */ size_t CSSFontFaceRule::SizeOfIncludingThis(
     MallocSizeOf aMallocSizeOf) const {
+||||||| merged common ancestors
+/* virtual */ size_t
+CSSFontFaceRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
+{
+=======
+/* virtual */
+size_t CSSFontFaceRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
+>>>>>>> upstream-releases
   return aMallocSizeOf(this);
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* CSSFontFaceRule::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+CSSFontFaceRule::WrapObject(JSContext* aCx,
+                            JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* CSSFontFaceRule::WrapObject(JSContext* aCx,
+                                      JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return CSSFontFaceRule_Binding::Wrap(aCx, this, aGivenProto);
 }

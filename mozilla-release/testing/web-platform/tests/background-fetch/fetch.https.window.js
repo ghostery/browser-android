@@ -1,5 +1,7 @@
+// META: script=/common/get-host-info.sub.js
 // META: script=/service-workers/service-worker/resources/test-helpers.sub.js
 // META: script=resources/utils.js
+
 'use strict';
 
 // Covers basic functionality provided by BackgroundFetchManager.fetch().
@@ -261,6 +263,7 @@ backgroundFetchTest(async (test, backgroundFetch) => {
   assert_equals(nullResponse, null);
 
 }, 'Fetches with mixed content should fail.');
+<<<<<<< HEAD
 
 backgroundFetchTest(async (test, backgroundFetch) => {
   const registrationId = 'matchexistingrequest';
@@ -300,3 +303,21 @@ backgroundFetchTest(async (test, backgroundFetch) => {
 
 }, 'Matching to a non-existing request should work');
 
+||||||| merged common ancestors
+=======
+
+backgroundFetchTest(async (test, backgroundFetch) => {
+  const filePath = '/background-fetch/resources/feature-name.txt';
+  const registration = await backgroundFetch.fetch(
+    uniqueId(),
+    `https://${get_host_info().REMOTE_HOST}${filePath}`);
+
+  const {type, eventRegistration, results} = await getMessageFromServiceWorker();
+  assert_equals(type, 'backgroundfetchfail');
+  assert_equals(results.length, 1);
+
+  assert_equals(results[0], null);
+  assert_equals(eventRegistration.id, registration.id);
+  assert_equals(eventRegistration.downloaded, 0);
+}, 'Responses failing CORS checks are not leaked');
+>>>>>>> upstream-releases

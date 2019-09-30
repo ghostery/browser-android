@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Test for positioners of absolute positioned elements</title>
-  <script type="application/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
-  <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
   <style>
   #target {
@@ -72,6 +72,7 @@ SimpleTest.waitForFocus(async function() {
       // XXX Perhaps, we need to add border-top-width here if you add new test to have thick border.
       const kPositionerY = -7;
 
+<<<<<<< HEAD
       let inputEventExpected = true;
       function onInput(aEvent) {
         if (!inputEventExpected) {
@@ -88,6 +89,31 @@ SimpleTest.waitForFocus(async function() {
 
       content.addEventListener("input", onInput);
 
+||||||| merged common ancestors
+=======
+      let inputEventExpected = true;
+      function onInput(aEvent) {
+        if (!inputEventExpected) {
+          ok(false, "\"input\" event shouldn't be fired after stopping resizing");
+          return;
+        }
+        ok(aEvent instanceof InputEvent,
+           '"input" event should be dispatched with InputEvent interface');
+        is(aEvent.cancelable, false,
+           '"input" event should be never cancelable');
+        is(aEvent.bubbles, true,
+           '"input" event should always bubble');
+        is(aEvent.inputType, "",
+           "inputType should be empty string when an element is moved");
+        is(aEvent.data, null,
+           "data should be null when an element is moved");
+        is(aEvent.dataTransfer, null,
+           "dataTransfer should be null when an element is moved");
+      }
+
+      content.addEventListener("input", onInput);
+
+>>>>>>> upstream-releases
       // Click on the positioner.
       synthesizeMouse(target, kPositionerX, kPositionerY, {type: "mousedown"});
       // Drag it delta pixels.

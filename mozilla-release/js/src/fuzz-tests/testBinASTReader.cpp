@@ -33,10 +33,69 @@ static int testBinASTReaderInit(int* argc, char*** argv) { return 0; }
 static int testBinASTReaderFuzz(const uint8_t* buf, size_t size) {
   using namespace js::frontend;
 
+<<<<<<< HEAD
   auto gcGuard = mozilla::MakeScopeExit([&] {
     JS::PrepareForFullGC(gCx);
     JS::NonIncrementalGC(gCx, GC_NORMAL, JS::gcreason::API);
   });
+||||||| merged common ancestors
+static int
+testBinASTReaderFuzz(const uint8_t* buf, size_t size) {
+    using namespace js::frontend;
+
+    auto gcGuard = mozilla::MakeScopeExit([&] {
+        JS::PrepareForFullGC(gCx);
+        JS::NonIncrementalGC(gCx, GC_NORMAL, JS::gcreason::API);
+    });
+
+    if (!size) return 0;
+
+    CompileOptions options(gCx);
+    options.setIntroductionType("fuzzing parse")
+       .setFileAndLine("<string>", 1);
+
+    js::Vector<uint8_t> binSource(gCx);
+    if (!binSource.append(buf, size)) {
+        ReportOutOfMemory(gCx);
+        return 0;
+    }
+
+    UsedNameTracker binUsedNames(gCx);
+
+    Directives directives(false);
+    GlobalSharedContext globalsc(gCx, ScopeKind::Global, directives, false);
+
+    RootedScriptSourceObject sourceObj(gCx, frontend::CreateScriptSourceObject(gCx, options,
+                                               mozilla::Nothing()));
+    if (!sourceObj) {
+        ReportOutOfMemory(gCx);
+        return 0;
+    }
+    BinASTParser<js::frontend::BinTokenReaderMultipart> reader(gCx, gCx->tempLifoAlloc(),
+                                                               binUsedNames, options, sourceObj);
+
+    // Will be deallocated once `reader` goes out of scope.
+    auto binParsed = reader.parse(&globalsc, binSource);
+    RootedValue binExn(gCx);
+    if (binParsed.isErr()) {
+        js::GetAndClearException(gCx, &binExn);
+        return 0;
+    }
+
+#if defined(DEBUG) // Dumping an AST is only defined in DEBUG builds
+    Sprinter binPrinter(gCx);
+    if (!binPrinter.init()) {
+        ReportOutOfMemory(gCx);
+        return 0;
+    }
+    DumpParseTree(binParsed.unwrap(), binPrinter);
+#endif // defined(DEBUG)
+=======
+  auto gcGuard = mozilla::MakeScopeExit([&] {
+    JS::PrepareForFullGC(gCx);
+    JS::NonIncrementalGC(gCx, GC_NORMAL, JS::GCReason::API);
+  });
+>>>>>>> upstream-releases
 
   if (!size) return 0;
 
@@ -47,6 +106,7 @@ static int testBinASTReaderFuzz(const uint8_t* buf, size_t size) {
   if (!binSource.append(buf, size)) {
     ReportOutOfMemory(gCx);
     return 0;
+<<<<<<< HEAD
   }
 
   UsedNameTracker binUsedNames(gCx);
@@ -82,6 +142,44 @@ static int testBinASTReaderFuzz(const uint8_t* buf, size_t size) {
 #endif  // defined(DEBUG)
 
   return 0;
+||||||| merged common ancestors
+=======
+  }
+
+  UsedNameTracker binUsedNames(gCx);
+
+  Directives directives(false);
+  GlobalSharedContext globalsc(gCx, ScopeKind::Global, directives, false);
+
+  RootedScriptSourceObject sourceObj(
+      gCx,
+      frontend::CreateScriptSourceObject(gCx, options, mozilla::Nothing()));
+  if (!sourceObj) {
+    ReportOutOfMemory(gCx);
+    return 0;
+  }
+  BinASTParser<js::frontend::BinASTTokenReaderMultipart> reader(
+      gCx, gCx->tempLifoAlloc(), binUsedNames, options, sourceObj);
+
+  // Will be deallocated once `reader` goes out of scope.
+  auto binParsed = reader.parse(&globalsc, binSource);
+  RootedValue binExn(gCx);
+  if (binParsed.isErr()) {
+    js::GetAndClearException(gCx, &binExn);
+    return 0;
+  }
+
+#if defined(DEBUG)  // Dumping an AST is only defined in DEBUG builds
+  Sprinter binPrinter(gCx);
+  if (!binPrinter.init()) {
+    ReportOutOfMemory(gCx);
+    return 0;
+  }
+  DumpParseTree(binParsed.unwrap(), binPrinter);
+#endif  // defined(DEBUG)
+
+  return 0;
+>>>>>>> upstream-releases
 }
 
 MOZ_FUZZING_INTERFACE_RAW(testBinASTReaderInit, testBinASTReaderFuzz, BinAST);

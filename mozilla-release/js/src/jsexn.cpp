@@ -24,7 +24,9 @@
 #include "gc/FreeOp.h"
 #include "gc/Marking.h"
 #include "js/CharacterEncoding.h"
+#include "js/PropertySpec.h"
 #include "js/UniquePtr.h"
+#include "js/Warnings.h"  // JS::{,Set}WarningReporter
 #include "js/Wrapper.h"
 #include "util/StringBuffer.h"
 #include "vm/ErrorObject.h"
@@ -224,6 +226,7 @@ bool CopyExtraData(JSContext* cx, uint8_t** cursor, JSErrorNotes::Note* copy,
   return true;
 }
 
+<<<<<<< HEAD
 template <typename T>
 static UniquePtr<T> CopyErrorHelper(JSContext* cx, T* report) {
   /*
@@ -284,6 +287,71 @@ static UniquePtr<T> CopyErrorHelper(JSContext* cx, T* report) {
   copy->errorNumber = report->errorNumber;
 
   return copy;
+||||||| merged common ancestors
+    return copy;
+=======
+template <typename T>
+static UniquePtr<T> CopyErrorHelper(JSContext* cx, T* report) {
+  /*
+   * We use a single malloc block to make a deep copy of JSErrorReport or
+   * JSErrorNotes::Note, except JSErrorNotes linked from JSErrorReport with
+   * the following layout:
+   *   JSErrorReport or JSErrorNotes::Note
+   *   char array with characters for message_
+   *   char array with characters for filename
+   *   char16_t array with characters for linebuf (only for JSErrorReport)
+   * Such layout together with the properties enforced by the following
+   * asserts does not need any extra alignment padding.
+   */
+  JS_STATIC_ASSERT(sizeof(T) % sizeof(const char*) == 0);
+  JS_STATIC_ASSERT(sizeof(const char*) % sizeof(char16_t) == 0);
+
+  size_t filenameSize = report->filename ? strlen(report->filename) + 1 : 0;
+  size_t messageSize = 0;
+  if (report->message()) {
+    messageSize = strlen(report->message().c_str()) + 1;
+  }
+
+  /*
+   * The mallocSize can not overflow since it represents the sum of the
+   * sizes of already allocated objects.
+   */
+  size_t mallocSize =
+      sizeof(T) + messageSize + filenameSize + ExtraMallocSize(report);
+  uint8_t* cursor = cx->pod_calloc<uint8_t>(mallocSize);
+  if (!cursor) {
+    return nullptr;
+  }
+
+  UniquePtr<T> copy(new (cursor) T());
+  cursor += sizeof(T);
+
+  if (report->message()) {
+    copy->initBorrowedMessage((const char*)cursor);
+    js_memcpy(cursor, report->message().c_str(), messageSize);
+    cursor += messageSize;
+  }
+
+  if (report->filename) {
+    copy->filename = (const char*)cursor;
+    js_memcpy(cursor, report->filename, filenameSize);
+    cursor += filenameSize;
+  }
+
+  if (!CopyExtraData(cx, &cursor, copy.get(), report)) {
+    return nullptr;
+  }
+
+  MOZ_ASSERT(cursor == (uint8_t*)copy.get() + mallocSize);
+
+  /* Copy non-pointer members. */
+  copy->sourceId = report->sourceId;
+  copy->lineno = report->lineno;
+  copy->column = report->column;
+  copy->errorNumber = report->errorNumber;
+
+  return copy;
+>>>>>>> upstream-releases
 }
 
 UniquePtr<JSErrorNotes::Note> js::CopyErrorNote(JSContext* cx,
@@ -362,13 +430,35 @@ JSErrorReport* js::ErrorFromException(JSContext* cx, HandleObject objArg) {
   return report;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS::ExceptionStackOrNull(HandleObject objArg) {
   JSObject* obj = CheckedUnwrap(objArg);
   if (!obj || !obj->is<ErrorObject>()) {
     return nullptr;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS::ExceptionStackOrNull(HandleObject objArg)
+{
+    JSObject* obj = CheckedUnwrap(objArg);
+    if (!obj || !obj->is<ErrorObject>()) {
+      return nullptr;
+    }
+=======
+JS_PUBLIC_API JSObject* JS::ExceptionStackOrNull(HandleObject objArg) {
+  ErrorObject* obj = objArg->maybeUnwrapIf<ErrorObject>();
+  if (!obj) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return obj->as<ErrorObject>().stack();
+||||||| merged common ancestors
+    return obj->as<ErrorObject>().stack();
+=======
+  return obj->stack();
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API uint64_t JS::ExceptionTimeWarpTarget(JS::HandleValue value) {
@@ -376,14 +466,33 @@ JS_PUBLIC_API uint64_t JS::ExceptionTimeWarpTarget(JS::HandleValue value) {
     return 0;
   }
 
+<<<<<<< HEAD
   JSObject* obj = CheckedUnwrap(&value.toObject());
   if (!obj || !obj->is<ErrorObject>()) {
     return 0;
   }
+||||||| merged common ancestors
+    JSObject* obj = CheckedUnwrap(&value.toObject());
+    if (!obj || !obj->is<ErrorObject>()) {
+        return 0;
+    }
+=======
+  ErrorObject* obj = value.toObject().maybeUnwrapIf<ErrorObject>();
+  if (!obj) {
+    return 0;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return obj->as<ErrorObject>().timeWarpTarget();
+||||||| merged common ancestors
+    return obj->as<ErrorObject>().timeWarpTarget();
+=======
+  return obj->timeWarpTarget();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool Error(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -404,7 +513,92 @@ bool Error(JSContext* cx, unsigned argc, Value* vp) {
 
   /* Find the scripted caller, but only ones we're allowed to know about. */
   NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+||||||| merged common ancestors
+bool
+Error(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
 
+    // ES6 19.5.1.1 mandates the .prototype lookup happens before the toString
+    RootedObject proto(cx);
+    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
+        return false;
+    }
+
+    /* Compute the error message, if any. */
+    RootedString message(cx, nullptr);
+    if (args.hasDefined(0)) {
+        message = ToString<CanGC>(cx, args[0]);
+        if (!message) {
+            return false;
+        }
+    }
+
+    /* Find the scripted caller, but only ones we're allowed to know about. */
+    NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+
+    /* Set the 'fileName' property. */
+    RootedString fileName(cx);
+    if (args.length() > 1) {
+        fileName = ToString<CanGC>(cx, args[1]);
+    } else {
+        fileName = cx->runtime()->emptyString;
+        if (!iter.done()) {
+            if (const char* cfilename = iter.filename()) {
+                fileName = JS_NewStringCopyZ(cx, cfilename);
+            }
+        }
+    }
+    if (!fileName) {
+        return false;
+    }
+
+    /* Set the 'lineNumber' property. */
+    uint32_t lineNumber, columnNumber = 0;
+    if (args.length() > 2) {
+        if (!ToUint32(cx, args[2], &lineNumber)) {
+            return false;
+        }
+    } else {
+        lineNumber = iter.done() ? 0 : iter.computeLine(&columnNumber);
+        columnNumber = FixupColumnForDisplay(columnNumber);
+    }
+
+    RootedObject stack(cx);
+    if (!CaptureStack(cx, &stack)) {
+        return false;
+    }
+=======
+bool Error(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  // ECMA ed. 3, 15.11.1 requires Error, etc., to construct even when
+  // called as functions, without operator new.  But as we do not give
+  // each constructor a distinct JSClass, we must get the exception type
+  // ourselves.
+  JSExnType exnType =
+      JSExnType(args.callee().as<JSFunction>().getExtendedSlot(0).toInt32());
+
+  JSProtoKey protoKey =
+      JSCLASS_CACHED_PROTO_KEY(&ErrorObject::classes[exnType]);
+
+  // ES6 19.5.1.1 mandates the .prototype lookup happens before the toString
+  RootedObject proto(cx);
+  if (!GetPrototypeFromBuiltinConstructor(cx, args, protoKey, &proto)) {
+    return false;
+  }
+
+  // Compute the error message, if any.
+  RootedString message(cx, nullptr);
+  if (args.hasDefined(0)) {
+    message = ToString<CanGC>(cx, args[0]);
+    if (!message) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   /* Set the 'fileName' property. */
   RootedString fileName(cx);
   if (args.length() > 1) {
@@ -455,11 +649,77 @@ bool Error(JSContext* cx, unsigned argc, Value* vp) {
 
   args.rval().setObject(*obj);
   return true;
+||||||| merged common ancestors
+    /*
+     * ECMA ed. 3, 15.11.1 requires Error, etc., to construct even when
+     * called as functions, without operator new.  But as we do not give
+     * each constructor a distinct JSClass, we must get the exception type
+     * ourselves.
+     */
+    JSExnType exnType = JSExnType(args.callee().as<JSFunction>().getExtendedSlot(0).toInt32());
+
+    RootedObject obj(cx, ErrorObject::create(cx, exnType, stack, fileName,
+                                             lineNumber, columnNumber, nullptr, message, proto));
+    if (!obj) {
+        return false;
+    }
+
+    args.rval().setObject(*obj);
+    return true;
+=======
+  // Find the scripted caller, but only ones we're allowed to know about.
+  NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+
+  RootedString fileName(cx);
+  uint32_t sourceId = 0;
+  if (args.length() > 1) {
+    fileName = ToString<CanGC>(cx, args[1]);
+  } else {
+    fileName = cx->runtime()->emptyString;
+    if (!iter.done()) {
+      if (const char* cfilename = iter.filename()) {
+        fileName = JS_NewStringCopyZ(cx, cfilename);
+      }
+      if (iter.hasScript()) {
+        sourceId = iter.script()->scriptSource()->id();
+      }
+    }
+  }
+  if (!fileName) {
+    return false;
+  }
+
+  uint32_t lineNumber, columnNumber = 0;
+  if (args.length() > 2) {
+    if (!ToUint32(cx, args[2], &lineNumber)) {
+      return false;
+    }
+  } else {
+    lineNumber = iter.done() ? 0 : iter.computeLine(&columnNumber);
+    columnNumber = FixupColumnForDisplay(columnNumber);
+  }
+
+  RootedObject stack(cx);
+  if (!CaptureStack(cx, &stack)) {
+    return false;
+  }
+
+  RootedObject obj(cx, ErrorObject::create(cx, exnType, stack, fileName,
+                                           sourceId, lineNumber, columnNumber,
+                                           nullptr, message, proto));
+  if (!obj) {
+    return false;
+  }
+
+  args.rval().setObject(*obj);
+  return true;
+>>>>>>> upstream-releases
 }
 
 /*
  * Return a string that may eval to something similar to the original object.
  */
+<<<<<<< HEAD
 static bool exn_toSource(JSContext* cx, unsigned argc, Value* vp) {
   if (!CheckRecursionLimit(cx)) {
     return false;
@@ -538,10 +798,186 @@ static bool exn_toSource(JSContext* cx, unsigned argc, Value* vp) {
   }
   args.rval().setString(str);
   return true;
+||||||| merged common ancestors
+static bool
+exn_toSource(JSContext* cx, unsigned argc, Value* vp)
+{
+    if (!CheckRecursionLimit(cx)) {
+        return false;
+    }
+    CallArgs args = CallArgsFromVp(argc, vp);
+
+    RootedObject obj(cx, ToObject(cx, args.thisv()));
+    if (!obj) {
+        return false;
+    }
+
+    RootedValue nameVal(cx);
+    RootedString name(cx);
+    if (!GetProperty(cx, obj, obj, cx->names().name, &nameVal) ||
+        !(name = ToString<CanGC>(cx, nameVal)))
+    {
+        return false;
+    }
+
+    RootedValue messageVal(cx);
+    RootedString message(cx);
+    if (!GetProperty(cx, obj, obj, cx->names().message, &messageVal) ||
+        !(message = ValueToSource(cx, messageVal)))
+    {
+        return false;
+    }
+
+    RootedValue filenameVal(cx);
+    RootedString filename(cx);
+    if (!GetProperty(cx, obj, obj, cx->names().fileName, &filenameVal) ||
+        !(filename = ValueToSource(cx, filenameVal)))
+    {
+        return false;
+    }
+
+    RootedValue linenoVal(cx);
+    uint32_t lineno;
+    if (!GetProperty(cx, obj, obj, cx->names().lineNumber, &linenoVal) ||
+        !ToUint32(cx, linenoVal, &lineno))
+    {
+        return false;
+    }
+
+    StringBuffer sb(cx);
+    if (!sb.append("(new ") || !sb.append(name) || !sb.append("(")) {
+        return false;
+    }
+
+    if (!sb.append(message)) {
+        return false;
+    }
+
+    if (!filename->empty()) {
+        if (!sb.append(", ") || !sb.append(filename)) {
+            return false;
+        }
+    }
+    if (lineno != 0) {
+        /* We have a line, but no filename, add empty string */
+        if (filename->empty() && !sb.append(", \"\"")) {
+                return false;
+        }
+
+        JSString* linenumber = ToString<CanGC>(cx, linenoVal);
+        if (!linenumber) {
+            return false;
+        }
+        if (!sb.append(", ") || !sb.append(linenumber)) {
+            return false;
+        }
+    }
+
+    if (!sb.append("))")) {
+        return false;
+    }
+
+    JSString* str = sb.finishString();
+    if (!str) {
+        return false;
+    }
+    args.rval().setString(str);
+    return true;
+=======
+static bool exn_toSource(JSContext* cx, unsigned argc, Value* vp) {
+  if (!CheckRecursionLimit(cx)) {
+    return false;
+  }
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  RootedObject obj(cx, ToObject(cx, args.thisv()));
+  if (!obj) {
+    return false;
+  }
+
+  RootedValue nameVal(cx);
+  RootedString name(cx);
+  if (!GetProperty(cx, obj, obj, cx->names().name, &nameVal) ||
+      !(name = ToString<CanGC>(cx, nameVal))) {
+    return false;
+  }
+
+  RootedValue messageVal(cx);
+  RootedString message(cx);
+  if (!GetProperty(cx, obj, obj, cx->names().message, &messageVal) ||
+      !(message = ValueToSource(cx, messageVal))) {
+    return false;
+  }
+
+  RootedValue filenameVal(cx);
+  RootedString filename(cx);
+  if (!GetProperty(cx, obj, obj, cx->names().fileName, &filenameVal) ||
+      !(filename = ValueToSource(cx, filenameVal))) {
+    return false;
+  }
+
+  RootedValue linenoVal(cx);
+  uint32_t lineno;
+  if (!GetProperty(cx, obj, obj, cx->names().lineNumber, &linenoVal) ||
+      !ToUint32(cx, linenoVal, &lineno)) {
+    return false;
+  }
+
+  JSStringBuilder sb(cx);
+  if (!sb.append("(new ") || !sb.append(name) || !sb.append("(")) {
+    return false;
+  }
+
+  if (!sb.append(message)) {
+    return false;
+  }
+
+  if (!filename->empty()) {
+    if (!sb.append(", ") || !sb.append(filename)) {
+      return false;
+    }
+  }
+  if (lineno != 0) {
+    /* We have a line, but no filename, add empty string */
+    if (filename->empty() && !sb.append(", \"\"")) {
+      return false;
+    }
+
+    JSString* linenumber = ToString<CanGC>(cx, linenoVal);
+    if (!linenumber) {
+      return false;
+    }
+    if (!sb.append(", ") || !sb.append(linenumber)) {
+      return false;
+    }
+  }
+
+  if (!sb.append("))")) {
+    return false;
+  }
+
+  JSString* str = sb.finishString();
+  if (!str) {
+    return false;
+  }
+  args.rval().setString(str);
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ JSObject* ErrorObject::createProto(JSContext* cx, JSProtoKey key) {
   JSExnType type = ExnTypeFromProtoKey(key);
+||||||| merged common ancestors
+/* static */ JSObject*
+ErrorObject::createProto(JSContext* cx, JSProtoKey key)
+{
+    JSExnType type = ExnTypeFromProtoKey(key);
+=======
+/* static */
+JSObject* ErrorObject::createProto(JSContext* cx, JSProtoKey key) {
+  JSExnType type = ExnTypeFromProtoKey(key);
+>>>>>>> upstream-releases
 
   if (type == JSEXN_ERR) {
     return GlobalObject::createBlankPrototype(
@@ -558,6 +994,7 @@ static bool exn_toSource(JSContext* cx, unsigned argc, Value* vp) {
       cx, &ErrorObject::protoClasses[type], protoProto);
 }
 
+<<<<<<< HEAD
 /* static */ JSObject* ErrorObject::createConstructor(JSContext* cx,
                                                       JSProtoKey key) {
   JSExnType type = ExnTypeFromProtoKey(key);
@@ -571,6 +1008,39 @@ static bool exn_toSource(JSContext* cx, unsigned argc, Value* vp) {
         cx, GlobalObject::getOrCreateErrorConstructor(cx, cx->global()));
     if (!proto) {
       return nullptr;
+||||||| merged common ancestors
+/* static */ JSObject*
+ErrorObject::createConstructor(JSContext* cx, JSProtoKey key)
+{
+    JSExnType type = ExnTypeFromProtoKey(key);
+    RootedObject ctor(cx);
+
+    if (type == JSEXN_ERR) {
+        ctor = GenericCreateConstructor<Error, 1, gc::AllocKind::FUNCTION_EXTENDED>(cx, key);
+    } else {
+        RootedFunction proto(cx, GlobalObject::getOrCreateErrorConstructor(cx, cx->global()));
+        if (!proto) {
+            return nullptr;
+        }
+
+        ctor = NewFunctionWithProto(cx, Error, 1, JSFunction::NATIVE_CTOR, nullptr,
+                                    ClassName(key, cx), proto, gc::AllocKind::FUNCTION_EXTENDED,
+                                    SingletonObject);
+=======
+/* static */
+JSObject* ErrorObject::createConstructor(JSContext* cx, JSProtoKey key) {
+  JSExnType type = ExnTypeFromProtoKey(key);
+  RootedObject ctor(cx);
+
+  if (type == JSEXN_ERR) {
+    ctor = GenericCreateConstructor<Error, 1, gc::AllocKind::FUNCTION_EXTENDED>(
+        cx, key);
+  } else {
+    RootedFunction proto(
+        cx, GlobalObject::getOrCreateErrorConstructor(cx, cx->global()));
+    if (!proto) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
     ctor = NewFunctionWithProto(
@@ -600,6 +1070,7 @@ JS_FRIEND_API JSFlatString* js::GetErrorTypeName(JSContext* cx,
   return ClassName(key, cx);
 }
 
+<<<<<<< HEAD
 void js::ErrorToException(JSContext* cx, JSErrorReport* reportp,
                           JSErrorCallback callback, void* userRef) {
   MOZ_ASSERT(reportp);
@@ -676,6 +1147,103 @@ void js::ErrorToException(JSContext* cx, JSErrorReport* reportp,
   // Flag the error report passed in to indicate an exception was raised.
   reportp->flags |= JSREPORT_EXCEPTION;
 }
+||||||| merged common ancestors
+static bool
+IsDuckTypedErrorObject(JSContext* cx, HandleObject exnObject, const char** filename_strp)
+{
+    /*
+     * This function is called from ErrorReport::init and so should not generate
+     * any new exceptions.
+     */
+    AutoClearPendingException acpe(cx);
+
+    bool found;
+    if (!JS_HasProperty(cx, exnObject, js_message_str, &found) || !found) {
+        return false;
+    }
+=======
+void js::ErrorToException(JSContext* cx, JSErrorReport* reportp,
+                          JSErrorCallback callback, void* userRef) {
+  MOZ_ASSERT(reportp);
+  MOZ_ASSERT(!JSREPORT_IS_WARNING(reportp->flags));
+
+  // We cannot throw a proper object inside the self-hosting realm, as we
+  // cannot construct the Error constructor without self-hosted code. Just
+  // print the error to stderr to help debugging.
+  if (cx->realm()->isSelfHostingRealm()) {
+    PrintError(cx, stderr, JS::ConstUTF8CharsZ(), reportp, true);
+    return;
+  }
+
+  // Find the exception index associated with this error.
+  JSErrNum errorNumber = static_cast<JSErrNum>(reportp->errorNumber);
+  if (!callback) {
+    callback = GetErrorMessage;
+  }
+  const JSErrorFormatString* errorString = callback(userRef, errorNumber);
+  JSExnType exnType =
+      errorString ? static_cast<JSExnType>(errorString->exnType) : JSEXN_ERR;
+  MOZ_ASSERT(exnType < JSEXN_LIMIT);
+  MOZ_ASSERT(exnType != JSEXN_NOTE);
+
+  if (exnType == JSEXN_WARN) {
+    // werror must be enabled, so we use JSEXN_ERR.
+    MOZ_ASSERT(cx->options().werror());
+    exnType = JSEXN_ERR;
+  }
+
+  // Prevent infinite recursion.
+  if (cx->generatingError) {
+    return;
+  }
+
+  cx->generatingError = true;
+  auto restore = mozilla::MakeScopeExit([cx] { cx->generatingError = false; });
+
+  // Create an exception object.
+  RootedString messageStr(cx, reportp->newMessageString(cx));
+  if (!messageStr) {
+    return;
+  }
+
+  RootedString fileName(cx, JS_NewStringCopyZ(cx, reportp->filename));
+  if (!fileName) {
+    return;
+  }
+
+  uint32_t sourceId = reportp->sourceId;
+  uint32_t lineNumber = reportp->lineno;
+  uint32_t columnNumber = reportp->column;
+
+  RootedObject stack(cx);
+  if (!CaptureStack(cx, &stack)) {
+    return;
+  }
+
+  UniquePtr<JSErrorReport> report = CopyErrorReport(cx, reportp);
+  if (!report) {
+    return;
+  }
+
+  ErrorObject* errObject =
+      ErrorObject::create(cx, exnType, stack, fileName, sourceId, lineNumber,
+                          columnNumber, std::move(report), messageStr);
+  if (!errObject) {
+    return;
+  }
+
+  // Throw it.
+  RootedValue errValue(cx, ObjectValue(*errObject));
+  RootedSavedFrame nstack(cx);
+  if (stack) {
+    nstack = &stack->as<SavedFrame>();
+  }
+  cx->setPendingException(errValue, nstack);
+
+  // Flag the error report passed in to indicate an exception was raised.
+  reportp->flags |= JSREPORT_EXCEPTION;
+}
+>>>>>>> upstream-releases
 
 static bool IsDuckTypedErrorObject(JSContext* cx, HandleObject exnObject,
                                    const char** filename_strp) {
@@ -751,6 +1319,7 @@ static JSString* ErrorReportToString(JSContext* cx, JSErrorReport* reportp) {
   return ConcatStrings<CanGC>(cx, str, message);
 }
 
+<<<<<<< HEAD
 ErrorReport::ErrorReport(JSContext* cx)
     : reportp(nullptr), str(cx), strChars(cx), exnObject(cx) {}
 
@@ -807,6 +1376,81 @@ bool ErrorReport::init(JSContext* cx, HandleValue exn,
       IsDuckTypedErrorObject(cx, exnObject, &filename_str)) {
     // Temporary value for pulling properties off of duck-typed objects.
     RootedValue val(cx);
+||||||| merged common ancestors
+bool
+ErrorReport::init(JSContext* cx, HandleValue exn,
+                  SniffingBehavior sniffingBehavior)
+{
+    MOZ_ASSERT(!cx->isExceptionPending());
+    MOZ_ASSERT(!reportp);
+
+    if (exn.isObject()) {
+        // Because ToString below could error and an exception object could become
+        // unrooted, we must root our exception object, if any.
+        exnObject = &exn.toObject();
+        reportp = ErrorFromException(cx, exnObject);
+
+        if (!reportp && sniffingBehavior == NoSideEffects) {
+            JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                      JSMSG_ERR_DURING_THROW);
+            return false;
+        }
+    }
+
+=======
+ErrorReport::ErrorReport(JSContext* cx)
+    : reportp(nullptr), str(cx), strChars(cx), exnObject(cx) {}
+
+ErrorReport::~ErrorReport() {}
+
+bool ErrorReport::init(JSContext* cx, HandleValue exn,
+                       SniffingBehavior sniffingBehavior) {
+  MOZ_ASSERT(!cx->isExceptionPending());
+  MOZ_ASSERT(!reportp);
+
+  if (exn.isObject()) {
+    // Because ToString below could error and an exception object could become
+    // unrooted, we must root our exception object, if any.
+    exnObject = &exn.toObject();
+    reportp = ErrorFromException(cx, exnObject);
+  }
+
+  // Be careful not to invoke ToString if we've already successfully extracted
+  // an error report, since the exception might be wrapped in a security
+  // wrapper, and ToString-ing it might throw.
+  if (reportp) {
+    str = ErrorReportToString(cx, reportp);
+  } else if (exn.isSymbol()) {
+    RootedValue strVal(cx);
+    if (js::SymbolDescriptiveString(cx, exn.toSymbol(), &strVal)) {
+      str = strVal.toString();
+    } else {
+      str = nullptr;
+    }
+  } else if (exnObject && sniffingBehavior == NoSideEffects) {
+    str = cx->names().Object;
+  } else {
+    str = ToString<CanGC>(cx, exn);
+  }
+
+  if (!str) {
+    cx->clearPendingException();
+  }
+
+  // If ErrorFromException didn't get us a JSErrorReport, then the object
+  // was not an ErrorObject, security-wrapped or otherwise. However, it might
+  // still quack like one. Give duck-typing a chance.  We start by looking for
+  // "filename" (all lowercase), since that's where DOMExceptions store their
+  // filename.  Then we check "fileName", which is where Errors store it.  We
+  // have to do it in that order, because DOMExceptions have Error.prototype
+  // on their proto chain, and hence also have a "fileName" property, but its
+  // value is "".
+  const char* filename_str = "filename";
+  if (!reportp && exnObject && sniffingBehavior == WithSideEffects &&
+      IsDuckTypedErrorObject(cx, exnObject, &filename_str)) {
+    // Temporary value for pulling properties off of duck-typed objects.
+    RootedValue val(cx);
+>>>>>>> upstream-releases
 
     RootedString name(cx);
     if (JS_GetProperty(cx, exnObject, js_name_str, &val) && val.isString()) {
@@ -854,6 +1498,7 @@ bool ErrorReport::init(JSContext* cx, HandleValue exn,
         filename = JS_EncodeStringToUTF8(cx, tmp);
       } else {
         cx->clearPendingException();
+<<<<<<< HEAD
       }
     } else {
       cx->clearPendingException();
@@ -926,7 +1571,151 @@ bool ErrorReport::init(JSContext* cx, HandleValue exn,
     /* Flag the error as an exception. */
     reportp->flags |= JSREPORT_EXCEPTION;
   }
+||||||| merged common ancestors
+    }
 
+    // If ErrorFromException didn't get us a JSErrorReport, then the object
+    // was not an ErrorObject, security-wrapped or otherwise. However, it might
+    // still quack like one. Give duck-typing a chance.  We start by looking for
+    // "filename" (all lowercase), since that's where DOMExceptions store their
+    // filename.  Then we check "fileName", which is where Errors store it.  We
+    // have to do it in that order, because DOMExceptions have Error.prototype
+    // on their proto chain, and hence also have a "fileName" property, but its
+    // value is "".
+    const char* filename_str = "filename";
+    if (!reportp && exnObject && IsDuckTypedErrorObject(cx, exnObject, &filename_str)) {
+        // Temporary value for pulling properties off of duck-typed objects.
+        RootedValue val(cx);
+
+        RootedString name(cx);
+        if (JS_GetProperty(cx, exnObject, js_name_str, &val) && val.isString()) {
+            name = val.toString();
+        } else {
+            cx->clearPendingException();
+        }
+
+        RootedString msg(cx);
+        if (JS_GetProperty(cx, exnObject, js_message_str, &val) && val.isString()) {
+            msg = val.toString();
+        } else {
+            cx->clearPendingException();
+        }
+
+        // If we have the right fields, override the ToString we performed on
+        // the exception object above with something built out of its quacks
+        // (i.e. as much of |NameQuack: MessageQuack| as we can make).
+        //
+        // It would be nice to use ErrorReportToString here, but we can't quite
+        // do it - mostly because we'd need to figure out what JSExnType |name|
+        // corresponds to, which may not be any JSExnType at all.
+        if (name && msg) {
+            RootedString colon(cx, JS_NewStringCopyZ(cx, ": "));
+            if (!colon) {
+                return false;
+            }
+            RootedString nameColon(cx, ConcatStrings<CanGC>(cx, name, colon));
+            if (!nameColon) {
+                return false;
+            }
+            str = ConcatStrings<CanGC>(cx, nameColon, msg);
+            if (!str) {
+                return false;
+            }
+        } else if (name) {
+            str = name;
+        } else if (msg) {
+            str = msg;
+        }
+
+        if (JS_GetProperty(cx, exnObject, filename_str, &val)) {
+            RootedString tmp(cx, ToString<CanGC>(cx, val));
+            if (tmp) {
+                filename = JS_EncodeStringToUTF8(cx, tmp);
+            } else {
+                cx->clearPendingException();
+            }
+        } else {
+            cx->clearPendingException();
+        }
+
+        uint32_t lineno;
+        if (!JS_GetProperty(cx, exnObject, js_lineNumber_str, &val) ||
+            !ToUint32(cx, val, &lineno))
+        {
+            cx->clearPendingException();
+            lineno = 0;
+        }
+
+        uint32_t column;
+        if (!JS_GetProperty(cx, exnObject, js_columnNumber_str, &val) ||
+            !ToUint32(cx, val, &column))
+        {
+            cx->clearPendingException();
+            column = 0;
+        }
+
+        reportp = &ownedReport;
+        new (reportp) JSErrorReport();
+        ownedReport.filename = filename.get();
+        ownedReport.lineno = lineno;
+        ownedReport.exnType = JSEXN_INTERNALERR;
+        ownedReport.column = column;
+        if (str) {
+            // Note that using |str| for |message_| here is kind of wrong,
+            // because |str| is supposed to be of the format
+            // |ErrorName: ErrorMessage|, and |message_| is supposed to
+            // correspond to |ErrorMessage|. But this is what we've
+            // historically done for duck-typed error objects.
+            //
+            // If only this stuff could get specced one day...
+            char* utf8;
+            if (str->ensureFlat(cx) &&
+                strChars.initTwoByte(cx, str) &&
+                (utf8 = JS::CharsToNewUTF8CharsZ(cx, strChars.twoByteRange()).c_str()))
+            {
+                ownedReport.initOwnedMessage(utf8);
+            } else {
+                cx->clearPendingException();
+                str = nullptr;
+            }
+        }
+    }
+
+    const char* utf8Message = nullptr;
+    if (str) {
+        toStringResultBytesStorage = JS_EncodeStringToUTF8(cx, str);
+        utf8Message = toStringResultBytesStorage.get();
+    }
+    if (!utf8Message) {
+        utf8Message = "unknown (can't convert to string)";
+    }
+
+    if (!reportp) {
+        // This is basically an inlined version of
+        //
+        //   JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr,
+        //                            JSMSG_UNCAUGHT_EXCEPTION, utf8Message);
+        //
+        // but without the reporting bits.  Instead it just puts all
+        // the stuff we care about in our ownedReport and message_.
+        if (!populateUncaughtExceptionReportUTF8(cx, utf8Message)) {
+            // Just give up.  We're out of memory or something; not much we can
+            // do here.
+            return false;
+        }
+    } else {
+        toStringResult_ = JS::ConstUTF8CharsZ(utf8Message, strlen(utf8Message));
+        /* Flag the error as an exception. */
+        reportp->flags |= JSREPORT_EXCEPTION;
+    }
+=======
+      }
+    } else {
+      cx->clearPendingException();
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return true;
 }
 
@@ -965,7 +1754,72 @@ bool ErrorReport::populateUncaughtExceptionReportUTF8VA(JSContext* cx,
   reportp = &ownedReport;
   return true;
 }
+||||||| merged common ancestors
+    return true;
+}
 
+bool
+ErrorReport::populateUncaughtExceptionReportUTF8(JSContext* cx, ...)
+{
+    va_list ap;
+    va_start(ap, cx);
+    bool ok = populateUncaughtExceptionReportUTF8VA(cx, ap);
+    va_end(ap);
+    return ok;
+}
+
+bool
+ErrorReport::populateUncaughtExceptionReportUTF8VA(JSContext* cx, va_list ap)
+{
+    new (&ownedReport) JSErrorReport();
+    ownedReport.flags = JSREPORT_ERROR;
+    ownedReport.errorNumber = JSMSG_UNCAUGHT_EXCEPTION;
+    // XXXbz this assumes the stack we have right now is still
+    // related to our exception object.  It would be better if we
+    // could accept a passed-in stack of some sort instead.
+    NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+    if (!iter.done()) {
+        ownedReport.filename = iter.filename();
+        uint32_t column;
+        ownedReport.lineno = iter.computeLine(&column);
+        ownedReport.column = FixupColumnForDisplay(column);
+        ownedReport.isMuted = iter.mutedErrors();
+    }
+
+    if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr,
+                                JSMSG_UNCAUGHT_EXCEPTION,
+                                nullptr, ArgumentsAreUTF8, &ownedReport, ap)) {
+        return false;
+    }
+
+    toStringResult_ = ownedReport.message();
+    reportp = &ownedReport;
+    return true;
+}
+=======
+    uint32_t lineno;
+    if (!JS_GetProperty(cx, exnObject, js_lineNumber_str, &val) ||
+        !ToUint32(cx, val, &lineno)) {
+      cx->clearPendingException();
+      lineno = 0;
+    }
+
+    uint32_t column;
+    if (!JS_GetProperty(cx, exnObject, js_columnNumber_str, &val) ||
+        !ToUint32(cx, val, &column)) {
+      cx->clearPendingException();
+      column = 0;
+    }
+
+    reportp = &ownedReport;
+    new (reportp) JSErrorReport();
+    ownedReport.filename = filename.get();
+    ownedReport.lineno = lineno;
+    ownedReport.exnType = JSEXN_INTERNALERR;
+    ownedReport.column = column;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JSObject* js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err) {
   UniquePtr<JSErrorReport> copyReport;
   if (JSErrorReport* errorReport = err->getErrorReport()) {
@@ -994,8 +1848,99 @@ JSObject* js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err) {
   // Create the Error object.
   return ErrorObject::create(cx, errorType, stack, fileName, lineNumber,
                              columnNumber, std::move(copyReport), message);
+||||||| merged common ancestors
+JSObject*
+js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err)
+{
+    UniquePtr<JSErrorReport> copyReport;
+    if (JSErrorReport* errorReport = err->getErrorReport()) {
+        copyReport = CopyErrorReport(cx, errorReport);
+        if (!copyReport) {
+            return nullptr;
+        }
+    }
+
+    RootedString message(cx, err->getMessage());
+    if (message && !cx->compartment()->wrap(cx, &message)) {
+        return nullptr;
+    }
+    RootedString fileName(cx, err->fileName(cx));
+    if (!cx->compartment()->wrap(cx, &fileName)) {
+        return nullptr;
+    }
+    RootedObject stack(cx, err->stack());
+    if (!cx->compartment()->wrap(cx, &stack)) {
+        return nullptr;
+    }
+    uint32_t lineNumber = err->lineNumber();
+    uint32_t columnNumber = err->columnNumber();
+    JSExnType errorType = err->type();
+
+    // Create the Error object.
+    return ErrorObject::create(cx, errorType, stack, fileName,
+                               lineNumber, columnNumber, std::move(copyReport), message);
+=======
+    if (str) {
+      // Note that using |str| for |message_| here is kind of wrong,
+      // because |str| is supposed to be of the format
+      // |ErrorName: ErrorMessage|, and |message_| is supposed to
+      // correspond to |ErrorMessage|. But this is what we've
+      // historically done for duck-typed error objects.
+      //
+      // If only this stuff could get specced one day...
+      char* utf8;
+      if (str->ensureFlat(cx) && strChars.initTwoByte(cx, str) &&
+          (utf8 =
+               JS::CharsToNewUTF8CharsZ(cx, strChars.twoByteRange()).c_str())) {
+        ownedReport.initOwnedMessage(utf8);
+      } else {
+        cx->clearPendingException();
+        str = nullptr;
+      }
+    }
+  }
+
+  const char* utf8Message = nullptr;
+  if (str) {
+    toStringResultBytesStorage = JS_EncodeStringToUTF8(cx, str);
+    utf8Message = toStringResultBytesStorage.get();
+  }
+  if (!utf8Message) {
+    utf8Message = "unknown (can't convert to string)";
+  }
+
+  if (!reportp) {
+    // This is basically an inlined version of
+    //
+    //   JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr,
+    //                            JSMSG_UNCAUGHT_EXCEPTION, utf8Message);
+    //
+    // but without the reporting bits.  Instead it just puts all
+    // the stuff we care about in our ownedReport and message_.
+    if (!populateUncaughtExceptionReportUTF8(cx, utf8Message)) {
+      // Just give up.  We're out of memory or something; not much we can
+      // do here.
+      return false;
+    }
+  } else {
+    toStringResult_ = JS::ConstUTF8CharsZ(utf8Message, strlen(utf8Message));
+    /* Flag the error as an exception. */
+    reportp->flags |= JSREPORT_EXCEPTION;
+  }
+
+  return true;
 }
 
+bool ErrorReport::populateUncaughtExceptionReportUTF8(JSContext* cx, ...) {
+  va_list ap;
+  va_start(ap, cx);
+  bool ok = populateUncaughtExceptionReportUTF8VA(cx, ap);
+  va_end(ap);
+  return ok;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::CreateError(JSContext* cx, JSExnType type,
                                    HandleObject stack, HandleString fileName,
                                    uint32_t lineNumber, uint32_t columnNumber,
@@ -1021,8 +1966,123 @@ JS_PUBLIC_API bool JS::CreateError(JSContext* cx, JSExnType type,
 
   rval.setObject(*obj);
   return true;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::CreateError(JSContext* cx, JSExnType type, HandleObject stack, HandleString fileName,
+                    uint32_t lineNumber, uint32_t columnNumber, JSErrorReport* report,
+                    HandleString message, MutableHandleValue rval)
+{
+    cx->check(stack, fileName, message);
+    AssertObjectIsSavedFrameOrWrapper(cx, stack);
+
+    js::UniquePtr<JSErrorReport> rep;
+    if (report) {
+        rep = CopyErrorReport(cx, report);
+        if (!rep) {
+            return false;
+        }
+    }
+
+    JSObject* obj = js::ErrorObject::create(cx, type, stack, fileName, lineNumber, columnNumber,
+                                            std::move(rep), message);
+    if (!obj) {
+        return false;
+    }
+
+    rval.setObject(*obj);
+    return true;
+=======
+bool ErrorReport::populateUncaughtExceptionReportUTF8VA(JSContext* cx,
+                                                        va_list ap) {
+  new (&ownedReport) JSErrorReport();
+  ownedReport.flags = JSREPORT_ERROR;
+  ownedReport.errorNumber = JSMSG_UNCAUGHT_EXCEPTION;
+  // XXXbz this assumes the stack we have right now is still
+  // related to our exception object.  It would be better if we
+  // could accept a passed-in stack of some sort instead.
+  NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+  if (!iter.done()) {
+    ownedReport.filename = iter.filename();
+    uint32_t column;
+    ownedReport.sourceId =
+        iter.hasScript() ? iter.script()->scriptSource()->id() : 0;
+    ownedReport.lineno = iter.computeLine(&column);
+    ownedReport.column = FixupColumnForDisplay(column);
+    ownedReport.isMuted = iter.mutedErrors();
+  }
+
+  if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr,
+                              JSMSG_UNCAUGHT_EXCEPTION, nullptr,
+                              ArgumentsAreUTF8, &ownedReport, ap)) {
+    return false;
+  }
+
+  toStringResult_ = ownedReport.message();
+  reportp = &ownedReport;
+  return true;
 }
 
+JSObject* js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err) {
+  UniquePtr<JSErrorReport> copyReport;
+  if (JSErrorReport* errorReport = err->getErrorReport()) {
+    copyReport = CopyErrorReport(cx, errorReport);
+    if (!copyReport) {
+      return nullptr;
+    }
+  }
+
+  RootedString message(cx, err->getMessage());
+  if (message && !cx->compartment()->wrap(cx, &message)) {
+    return nullptr;
+  }
+  RootedString fileName(cx, err->fileName(cx));
+  if (!cx->compartment()->wrap(cx, &fileName)) {
+    return nullptr;
+  }
+  RootedObject stack(cx, err->stack());
+  if (!cx->compartment()->wrap(cx, &stack)) {
+    return nullptr;
+  }
+  uint32_t sourceId = err->sourceId();
+  uint32_t lineNumber = err->lineNumber();
+  uint32_t columnNumber = err->columnNumber();
+  JSExnType errorType = err->type();
+
+  // Create the Error object.
+  return ErrorObject::create(cx, errorType, stack, fileName, sourceId,
+                             lineNumber, columnNumber, std::move(copyReport),
+                             message);
+}
+
+JS_PUBLIC_API bool JS::CreateError(JSContext* cx, JSExnType type,
+                                   HandleObject stack, HandleString fileName,
+                                   uint32_t lineNumber, uint32_t columnNumber,
+                                   JSErrorReport* report, HandleString message,
+                                   MutableHandleValue rval) {
+  cx->check(stack, fileName, message);
+  AssertObjectIsSavedFrameOrWrapper(cx, stack);
+
+  js::UniquePtr<JSErrorReport> rep;
+  if (report) {
+    rep = CopyErrorReport(cx, report);
+    if (!rep) {
+      return false;
+    }
+  }
+
+  JSObject* obj =
+      js::ErrorObject::create(cx, type, stack, fileName, 0, lineNumber,
+                              columnNumber, std::move(rep), message);
+  if (!obj) {
+    return false;
+  }
+
+  rval.setObject(*obj);
+  return true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 const char* js::ValueToSourceForError(JSContext* cx, HandleValue val,
                                       UniqueChars& bytes) {
   if (val.isUndefined()) {
@@ -1056,6 +2116,91 @@ const char* js::ValueToSourceForError(JSContext* cx, HandleValue val,
       s = "the typed array ";
     } else {
       s = "the object ";
+||||||| merged common ancestors
+const char*
+js::ValueToSourceForError(JSContext* cx, HandleValue val, UniqueChars& bytes)
+{
+    if (val.isUndefined()) {
+        return "undefined";
+    }
+
+    if (val.isNull()) {
+        return "null";
+    }
+
+    AutoClearPendingException acpe(cx);
+
+    RootedString str(cx, JS_ValueToSource(cx, val));
+    if (!str) {
+        return "<<error converting value to string>>";
+    }
+
+    StringBuffer sb(cx);
+    if (val.isObject()) {
+        RootedObject valObj(cx, val.toObjectOrNull());
+        ESClass cls;
+        if (!GetBuiltinClass(cx, valObj, &cls)) {
+            return "<<error determining class of value>>";
+        }
+        const char* s;
+        if (cls == ESClass::Array) {
+            s = "the array ";
+        } else if (cls == ESClass::ArrayBuffer) {
+            s = "the array buffer ";
+        } else if (JS_IsArrayBufferViewObject(valObj)) {
+            s = "the typed array ";
+        } else {
+            s = "the object ";
+        }
+        if (!sb.append(s, strlen(s))) {
+            return "<<error converting value to string>>";
+        }
+    } else if (val.isNumber()) {
+        if (!sb.append("the number ")) {
+            return "<<error converting value to string>>";
+        }
+    } else if (val.isString()) {
+        if (!sb.append("the string ")) {
+            return "<<error converting value to string>>";
+        }
+    } else {
+        MOZ_ASSERT(val.isBoolean() || val.isSymbol());
+        bytes = StringToNewUTF8CharsZ(cx, *str);
+        return bytes.get();
+=======
+const char* js::ValueToSourceForError(JSContext* cx, HandleValue val,
+                                      UniqueChars& bytes) {
+  if (val.isUndefined()) {
+    return "undefined";
+  }
+
+  if (val.isNull()) {
+    return "null";
+  }
+
+  AutoClearPendingException acpe(cx);
+
+  RootedString str(cx, JS_ValueToSource(cx, val));
+  if (!str) {
+    return "<<error converting value to string>>";
+  }
+
+  JSStringBuilder sb(cx);
+  if (val.isObject()) {
+    RootedObject valObj(cx, val.toObjectOrNull());
+    ESClass cls;
+    if (!GetBuiltinClass(cx, valObj, &cls)) {
+      return "<<error determining class of value>>";
+    }
+    const char* s;
+    if (cls == ESClass::Array) {
+      s = "the array ";
+    } else if (cls == ESClass::ArrayBuffer) {
+      s = "the array buffer ";
+    } else if (JS_IsArrayBufferViewObject(valObj)) {
+      s = "the typed array ";
+    } else {
+      s = "the object ";
     }
     if (!sb.append(s, strlen(s))) {
       return "<<error converting value to string>>";
@@ -1063,10 +2208,37 @@ const char* js::ValueToSourceForError(JSContext* cx, HandleValue val,
   } else if (val.isNumber()) {
     if (!sb.append("the number ")) {
       return "<<error converting value to string>>";
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    if (!sb.append(s, strlen(s))) {
+      return "<<error converting value to string>>";
+||||||| merged common ancestors
+    if (!sb.append(str)) {
+        return "<<error converting value to string>>";
+=======
+  } else if (val.isString()) {
+    if (!sb.append("the string ")) {
+      return "<<error converting value to string>>";
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  } else if (val.isNumber()) {
+    if (!sb.append("the number ")) {
+      return "<<error converting value to string>>";
     }
   } else if (val.isString()) {
     if (!sb.append("the string ")) {
       return "<<error converting value to string>>";
+||||||| merged common ancestors
+    str = sb.finishString();
+    if (!str) {
+        return "<<error converting value to string>>";
+=======
+  } else if (val.isBigInt()) {
+    if (!sb.append("the BigInt ")) {
+      return "<<error converting value to string>>";
+>>>>>>> upstream-releases
     }
   } else {
     MOZ_ASSERT(val.isBoolean() || val.isSymbol());

@@ -63,6 +63,7 @@ WebGLExtensionCompressedTextureASTC::WebGLExtensionCompressedTextureASTC(
 #undef FOO
 }
 
+<<<<<<< HEAD
 WebGLExtensionCompressedTextureASTC::~WebGLExtensionCompressedTextureASTC() {}
 
 void WebGLExtensionCompressedTextureASTC::GetSupportedProfiles(
@@ -76,11 +77,56 @@ void WebGLExtensionCompressedTextureASTC::GetSupportedProfiles(
 
   nsTArray<nsString>& arr = retval.SetValue();
   arr.AppendElement(NS_LITERAL_STRING("ldr"));
+||||||| merged common ancestors
+WebGLExtensionCompressedTextureASTC::~WebGLExtensionCompressedTextureASTC()
+{
+}
+=======
+WebGLExtensionCompressedTextureASTC::~WebGLExtensionCompressedTextureASTC() {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (mContext->gl->IsExtensionSupported(
+          gl::GLContext::KHR_texture_compression_astc_hdr)) {
+    arr.AppendElement(NS_LITERAL_STRING("hdr"));
+  }
+||||||| merged common ancestors
+void
+WebGLExtensionCompressedTextureASTC::GetSupportedProfiles(dom::Nullable< nsTArray<nsString> >& retval) const
+{
+    retval.SetNull();
+    if (mIsLost) {
+        mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                        "drawElementsInstancedANGLE");
+        return;
+    }
+
+    nsTArray<nsString>& arr = retval.SetValue();
+    arr.AppendElement(NS_LITERAL_STRING("ldr"));
+
+    if (mContext->gl->IsExtensionSupported(gl::GLContext::KHR_texture_compression_astc_hdr)) {
+        arr.AppendElement(NS_LITERAL_STRING("hdr"));
+    }
+=======
+void WebGLExtensionCompressedTextureASTC::GetSupportedProfiles(
+    dom::Nullable<nsTArray<nsString> >& retval) const {
+  retval.SetNull();
+  if (mIsLost) {
+    if (mContext) {
+      mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                      "drawElementsInstancedANGLE");
+    }
+    return;
+  }
+
+  nsTArray<nsString>& arr = retval.SetValue();
+  arr.AppendElement(NS_LITERAL_STRING("ldr"));
 
   if (mContext->gl->IsExtensionSupported(
           gl::GLContext::KHR_texture_compression_astc_hdr)) {
     arr.AppendElement(NS_LITERAL_STRING("hdr"));
   }
+>>>>>>> upstream-releases
 }
 
 bool WebGLExtensionCompressedTextureASTC::IsSupported(

@@ -14,7 +14,7 @@
 #include "vm/JSContext.h"
 
 #ifdef LIBFUZZER
-#include "FuzzerDefs.h"
+#  include "FuzzerDefs.h"
 #endif
 
 using namespace mozilla;
@@ -22,6 +22,7 @@ using namespace mozilla;
 JS::PersistentRootedObject gGlobal;
 JSContext* gCx = nullptr;
 
+<<<<<<< HEAD
 static const JSClass* getGlobalClass() {
   static const JSClassOps cOps = {nullptr,
                                   nullptr,
@@ -36,8 +37,30 @@ static const JSClass* getGlobalClass() {
                                   JS_GlobalObjectTraceHook};
   static const JSClass c = {"global", JSCLASS_GLOBAL_FLAGS, &cOps};
   return &c;
+||||||| merged common ancestors
+static const JSClass*
+getGlobalClass()
+{
+    static const JSClassOps cOps = {
+        nullptr, nullptr, nullptr, nullptr,
+        nullptr, nullptr, nullptr, nullptr,
+        nullptr, nullptr,
+        JS_GlobalObjectTraceHook
+    };
+    static const JSClass c = {
+        "global", JSCLASS_GLOBAL_FLAGS,
+        &cOps
+    };
+    return &c;
+=======
+static const JSClass* getGlobalClass() {
+  static const JSClass c = {"global", JSCLASS_GLOBAL_FLAGS,
+                            &JS::DefaultGlobalClassOps};
+  return &c;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static JSObject* jsfuzz_createGlobal(JSContext* cx, JSPrincipals* principals) {
   /* Create the global object. */
   JS::RootedObject newGlobal(cx);
@@ -61,6 +84,41 @@ static JSObject* jsfuzz_createGlobal(JSContext* cx, JSPrincipals* principals) {
   }
 
   return newGlobal;
+||||||| merged common ancestors
+static JSObject*
+jsfuzz_createGlobal(JSContext* cx, JSPrincipals* principals)
+{
+    /* Create the global object. */
+    JS::RootedObject newGlobal(cx);
+    JS::RealmOptions options;
+    options.creationOptions().setStreamsEnabled(true);
+    newGlobal = JS_NewGlobalObject(cx, getGlobalClass(), principals, JS::FireOnNewGlobalHook,
+                                   options);
+    if (!newGlobal) {
+        return nullptr;
+    }
+
+    JSAutoRealm ar(cx, newGlobal);
+
+    // Populate the global object with the standard globals like Object and
+    // Array.
+    if (!JS::InitRealmStandardClasses(cx)) {
+        return nullptr;
+    }
+
+    return newGlobal;
+=======
+static JSObject* jsfuzz_createGlobal(JSContext* cx, JSPrincipals* principals) {
+  /* Create the global object. */
+  JS::RealmOptions options;
+  options.creationOptions()
+      .setStreamsEnabled(true)
+      .setBigIntEnabled(true)
+      .setFieldsEnabled(false)
+      .setAwaitFixEnabled(true);
+  return JS_NewGlobalObject(cx, getGlobalClass(), principals,
+                            JS::FireOnNewGlobalHook, options);
+>>>>>>> upstream-releases
 }
 
 static bool jsfuzz_init(JSContext** cx, JS::PersistentRootedObject* global) {
@@ -93,6 +151,7 @@ static void jsfuzz_uninit(JSContext* cx) {
   }
 }
 
+<<<<<<< HEAD
 int main(int argc, char* argv[]) {
   if (!JS_Init()) {
     fprintf(stderr, "Error: Call to jsfuzz_init() failed\n");
@@ -129,6 +188,81 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "Fuzzing Interface: Error: No testing callback found\n");
     return 1;
   }
+||||||| merged common ancestors
+int
+main(int argc, char* argv[])
+{
+    if (!JS_Init()) {
+        fprintf(stderr, "Error: Call to jsfuzz_init() failed\n");
+        return 1;
+    }
+
+    if (!jsfuzz_init(&gCx, &gGlobal)) {
+        fprintf(stderr, "Error: Call to jsfuzz_init() failed\n");
+        return 1;
+    }
+
+    const char* fuzzerEnv = getenv("FUZZER");
+    if (!fuzzerEnv) {
+        fprintf(stderr, "Must specify fuzzing target in FUZZER environment variable\n");
+        return 1;
+    }
+
+    std::string moduleNameStr(getenv("FUZZER"));
+
+    FuzzerFunctions funcs = FuzzerRegistry::getInstance().getModuleFunctions(moduleNameStr);
+    FuzzerInitFunc initFunc = funcs.first;
+    FuzzerTestingFunc testingFunc = funcs.second;
+    if (initFunc) {
+        int ret = initFunc(&argc, &argv);
+        if (ret) {
+            fprintf(stderr, "Fuzzing Interface: Error: Initialize callback failed\n");
+            return ret;
+        }
+    }
+
+    if (!testingFunc) {
+        fprintf(stderr, "Fuzzing Interface: Error: No testing callback found\n");
+        return 1;
+    }
+=======
+int main(int argc, char* argv[]) {
+  if (!JS_Init()) {
+    fprintf(stderr, "Error: Call to jsfuzz_init() failed\n");
+    return 1;
+  }
+
+  if (!jsfuzz_init(&gCx, &gGlobal)) {
+    fprintf(stderr, "Error: Call to jsfuzz_init() failed\n");
+    return 1;
+  }
+
+  const char* fuzzerEnv = getenv("FUZZER");
+  if (!fuzzerEnv) {
+    fprintf(stderr,
+            "Must specify fuzzing target in FUZZER environment variable\n");
+    return 1;
+  }
+
+  std::string moduleNameStr(getenv("FUZZER"));
+
+  FuzzerFunctions funcs =
+      FuzzerRegistry::getInstance().getModuleFunctions(moduleNameStr);
+  FuzzerInitFunc initFunc = funcs.first;
+  FuzzerTestingFunc testingFunc = funcs.second;
+  if (initFunc) {
+    int ret = initFunc(&argc, &argv);
+    if (ret) {
+      fprintf(stderr, "Fuzzing Interface: Error: Initialize callback failed\n");
+      return ret;
+    }
+  }
+
+  if (!testingFunc) {
+    fprintf(stderr, "Fuzzing Interface: Error: No testing callback found\n");
+    return 1;
+  }
+>>>>>>> upstream-releases
 
 #ifdef LIBFUZZER
   fuzzer::FuzzerDriver(&argc, &argv, testingFunc);

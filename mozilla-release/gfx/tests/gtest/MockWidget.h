@@ -59,6 +59,7 @@ class MockWidget : public nsBaseWidget {
   virtual void Resize(double aX, double aY, double aWidth, double aHeight,
                       bool aRepaint) override {}
 
+<<<<<<< HEAD
   virtual void Enable(bool aState) override {}
   virtual bool IsEnabled() const override { return true; }
   virtual nsresult SetFocus(bool aRaise) override { return NS_OK; }
@@ -78,6 +79,40 @@ class MockWidget : public nsBaseWidget {
   virtual void SetInputContext(const InputContext& aContext,
                                const InputContextAction& aAction) override {}
   virtual InputContext GetInputContext() override { abort(); }
+||||||| merged common ancestors
+  virtual void            Enable(bool aState) override {}
+  virtual bool            IsEnabled() const override { return true; }
+  virtual nsresult        SetFocus(bool aRaise) override { return NS_OK; }
+  virtual nsresult        ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override { return NS_OK; }
+  virtual void            Invalidate(const LayoutDeviceIntRect& aRect) override {}
+  virtual nsresult        SetTitle(const nsAString& title) override { return NS_OK; }
+  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override { return LayoutDeviceIntPoint(0, 0); }
+  virtual nsresult        DispatchEvent(mozilla::WidgetGUIEvent* aEvent,
+                                        nsEventStatus& aStatus) override { return NS_OK; }
+  virtual void            SetInputContext(const InputContext& aContext,
+                                          const InputContextAction& aAction) override {}
+  virtual InputContext    GetInputContext() override { abort(); }
+=======
+  virtual void Enable(bool aState) override {}
+  virtual bool IsEnabled() const override { return true; }
+  virtual void SetFocus(Raise) override {}
+  virtual nsresult ConfigureChildren(
+      const nsTArray<Configuration>& aConfigurations) override {
+    return NS_OK;
+  }
+  virtual void Invalidate(const LayoutDeviceIntRect& aRect) override {}
+  virtual nsresult SetTitle(const nsAString& title) override { return NS_OK; }
+  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override {
+    return LayoutDeviceIntPoint(0, 0);
+  }
+  virtual nsresult DispatchEvent(mozilla::WidgetGUIEvent* aEvent,
+                                 nsEventStatus& aStatus) override {
+    return NS_OK;
+  }
+  virtual void SetInputContext(const InputContext& aContext,
+                               const InputContextAction& aAction) override {}
+  virtual InputContext GetInputContext() override { abort(); }
+>>>>>>> upstream-releases
 
  private:
   ~MockWidget() {}

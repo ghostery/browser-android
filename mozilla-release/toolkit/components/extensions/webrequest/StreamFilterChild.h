@@ -27,6 +27,7 @@ class StreamFilter;
 class StreamFilterChild final : public PStreamFilterChild,
                                 public StreamFilterBase {
   friend class StreamFilter;
+  friend class PStreamFilterChild;
 
  public:
   NS_INLINE_DECL_REFCOUNTING(StreamFilterChild)
@@ -87,18 +88,31 @@ class StreamFilterChild final : public PStreamFilterChild,
 
   void RecvInitialized(bool aSuccess);
 
+<<<<<<< HEAD
  protected:
   virtual IPCResult RecvStartRequest() override;
   virtual IPCResult RecvData(Data&& data) override;
   virtual IPCResult RecvStopRequest(const nsresult& aStatus) override;
   virtual IPCResult RecvError(const nsCString& aError) override;
+||||||| merged common ancestors
+  virtual IPCResult RecvStartRequest() override;
+  virtual IPCResult RecvData(Data&& data) override;
+  virtual IPCResult RecvStopRequest(const nsresult& aStatus) override;
+  virtual IPCResult RecvError(const nsCString& aError) override;
+=======
+ protected:
+  IPCResult RecvStartRequest();
+  IPCResult RecvData(Data&& data);
+  IPCResult RecvStopRequest(const nsresult& aStatus);
+  IPCResult RecvError(const nsCString& aError);
+>>>>>>> upstream-releases
 
-  virtual IPCResult RecvClosed() override;
-  virtual IPCResult RecvSuspended() override;
-  virtual IPCResult RecvResumed() override;
-  virtual IPCResult RecvFlushData() override;
+  IPCResult RecvClosed();
+  IPCResult RecvSuspended();
+  IPCResult RecvResumed();
+  IPCResult RecvFlushData();
 
-  virtual void DeallocPStreamFilterChild() override;
+  virtual void ActorDealloc() override;
 
   void SetStreamFilter(StreamFilter* aStreamFilter) {
     mStreamFilter = aStreamFilter;

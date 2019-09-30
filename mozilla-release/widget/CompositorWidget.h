@@ -68,7 +68,13 @@ class CompositorWidgetParent;
 // PCompositorWidgetChild.
 class CompositorWidgetChild;
 
+<<<<<<< HEAD
 #define MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
+||||||| merged common ancestors
+# define MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
+=======
+#  define MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING
+>>>>>>> upstream-releases
 #endif
 
 class WidgetRenderingContext {

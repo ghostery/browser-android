@@ -20,16 +20,17 @@ class nsIContent;
 class nsAtom;
 class nsITransformObserver;
 class nsNodeInfoManager;
-class nsIDocument;
 class nsINode;
 
 namespace mozilla {
 namespace dom {
+class Document;
 class DocumentFragment;
 }  // namespace dom
 }  // namespace mozilla
 
 class txTransformNotifier final : public nsIScriptLoaderObserver,
+<<<<<<< HEAD
                                   public nsICSSLoaderObserver {
  public:
   txTransformNotifier();
@@ -57,6 +58,65 @@ class txTransformNotifier final : public nsIScriptLoaderObserver,
   nsCOMArray<nsIScriptElement> mScriptElements;
   uint32_t mPendingStylesheetCount;
   bool mInTransform;
+||||||| merged common ancestors
+                                  public nsICSSLoaderObserver
+{
+public:
+    txTransformNotifier();
+
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSISCRIPTLOADEROBSERVER
+
+    // nsICSSLoaderObserver
+    NS_IMETHOD StyleSheetLoaded(mozilla::StyleSheet* aSheet,
+                                bool aWasAlternate,
+                                nsresult aStatus) override;
+
+    void Init(nsITransformObserver* aObserver);
+    nsresult AddScriptElement(nsIScriptElement* aElement);
+    void AddPendingStylesheet();
+    void OnTransformEnd(nsresult aResult = NS_OK);
+    void OnTransformStart();
+    nsresult SetOutputDocument(nsIDocument* aDocument);
+
+private:
+    ~txTransformNotifier();
+    void SignalTransformEnd(nsresult aResult = NS_OK);
+
+    nsCOMPtr<nsIDocument> mDocument;
+    nsCOMPtr<nsITransformObserver> mObserver;
+    nsCOMArray<nsIScriptElement> mScriptElements;
+    uint32_t mPendingStylesheetCount;
+    bool mInTransform;
+=======
+                                  public nsICSSLoaderObserver {
+ public:
+  txTransformNotifier();
+
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSISCRIPTLOADEROBSERVER
+
+  // nsICSSLoaderObserver
+  NS_IMETHOD StyleSheetLoaded(mozilla::StyleSheet* aSheet, bool aWasAlternate,
+                              nsresult aStatus) override;
+
+  void Init(nsITransformObserver* aObserver);
+  nsresult AddScriptElement(nsIScriptElement* aElement);
+  void AddPendingStylesheet();
+  void OnTransformEnd(nsresult aResult = NS_OK);
+  void OnTransformStart();
+  nsresult SetOutputDocument(mozilla::dom::Document* aDocument);
+
+ private:
+  ~txTransformNotifier();
+  void SignalTransformEnd(nsresult aResult = NS_OK);
+
+  nsCOMPtr<mozilla::dom::Document> mDocument;
+  nsCOMPtr<nsITransformObserver> mObserver;
+  nsCOMArray<nsIScriptElement> mScriptElements;
+  uint32_t mPendingStylesheetCount;
+  bool mInTransform;
+>>>>>>> upstream-releases
 };
 
 class txMozillaXMLOutput : public txAOutputXMLEventHandler {
@@ -71,9 +131,19 @@ class txMozillaXMLOutput : public txAOutputXMLEventHandler {
 
   nsresult closePrevious(bool aFlushText);
 
+<<<<<<< HEAD
   nsresult createResultDocument(const nsAString& aName, int32_t aNsID,
                                 nsIDocument* aSourceDocument,
                                 bool aLoadedAsData);
+||||||| merged common ancestors
+    nsresult createResultDocument(const nsAString& aName, int32_t aNsID,
+                                  nsIDocument* aSourceDocument,
+                                  bool aLoadedAsData);
+=======
+  nsresult createResultDocument(const nsAString& aName, int32_t aNsID,
+                                mozilla::dom::Document* aSourceDocument,
+                                bool aLoadedAsData);
+>>>>>>> upstream-releases
 
  private:
   nsresult createTxWrapper();
@@ -87,6 +157,7 @@ class txMozillaXMLOutput : public txAOutputXMLEventHandler {
   nsresult startElementInternal(nsAtom* aPrefix, nsAtom* aLocalName,
                                 int32_t aNsID);
 
+<<<<<<< HEAD
   nsCOMPtr<nsIDocument> mDocument;
   nsCOMPtr<nsINode> mCurrentNode;  // This is updated once an element is
                                    // 'closed' (i.e. once we're done
@@ -95,6 +166,25 @@ class txMozillaXMLOutput : public txAOutputXMLEventHandler {
                                    // kept in mOpenedElement
   nsCOMPtr<mozilla::dom::Element> mOpenedElement;
   RefPtr<nsNodeInfoManager> mNodeInfoManager;
+||||||| merged common ancestors
+    nsCOMPtr<nsIDocument> mDocument;
+    nsCOMPtr<nsINode> mCurrentNode;     // This is updated once an element is
+                                        // 'closed' (i.e. once we're done
+                                        // adding attributes to it).
+                                        // until then the opened element is
+                                        // kept in mOpenedElement
+    nsCOMPtr<mozilla::dom::Element> mOpenedElement;
+    RefPtr<nsNodeInfoManager> mNodeInfoManager;
+=======
+  RefPtr<mozilla::dom::Document> mDocument;
+  nsCOMPtr<nsINode> mCurrentNode;  // This is updated once an element is
+                                   // 'closed' (i.e. once we're done
+                                   // adding attributes to it).
+                                   // until then the opened element is
+                                   // kept in mOpenedElement
+  nsCOMPtr<mozilla::dom::Element> mOpenedElement;
+  RefPtr<nsNodeInfoManager> mNodeInfoManager;
+>>>>>>> upstream-releases
 
   nsCOMArray<nsINode> mCurrentNodeStack;
 

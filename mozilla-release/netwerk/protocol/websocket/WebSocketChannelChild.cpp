@@ -6,11 +6,11 @@
 
 #include "WebSocketLog.h"
 #include "base/compiler_specific.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/net/NeckoChild.h"
 #include "WebSocketChannelChild.h"
 #include "nsContentUtils.h"
-#include "nsITabChild.h"
+#include "nsIBrowserChild.h"
 #include "nsNetUtil.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
 #include "mozilla/ipc/URIUtils.h"
@@ -119,6 +119,7 @@ void WebSocketChannelChild::GetEffectiveURL(nsAString& aEffectiveURL) const {
 
 bool WebSocketChannelChild::IsEncrypted() const { return mEncrypted; }
 
+<<<<<<< HEAD
 class WrappedChannelEvent : public Runnable {
  public:
   explicit WrappedChannelEvent(ChannelEvent* aChannelEvent)
@@ -132,32 +133,103 @@ class WrappedChannelEvent : public Runnable {
 
  private:
   nsAutoPtr<ChannelEvent> mChannelEvent;
+||||||| merged common ancestors
+class WrappedChannelEvent : public Runnable
+{
+public:
+  explicit WrappedChannelEvent(ChannelEvent* aChannelEvent)
+    : Runnable("net::WrappedChannelEvent")
+    , mChannelEvent(aChannelEvent)
+  {
+    MOZ_RELEASE_ASSERT(aChannelEvent);
+  }
+  NS_IMETHOD Run() override
+  {
+    mChannelEvent->Run();
+    return NS_OK;
+  }
+private:
+  nsAutoPtr<ChannelEvent> mChannelEvent;
+=======
+class WebSocketEvent {
+ public:
+  WebSocketEvent() { MOZ_COUNT_CTOR(WebSocketEvent); }
+  virtual ~WebSocketEvent() { MOZ_COUNT_DTOR(WebSocketEvent); }
+  virtual void Run(WebSocketChannelChild* aChild) = 0;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 void WebSocketChannelChild::DispatchToTargetThread(
     ChannelEvent* aChannelEvent) {
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   MOZ_RELEASE_ASSERT(mTargetThread);
   MOZ_RELEASE_ASSERT(aChannelEvent);
+||||||| merged common ancestors
+void
+WebSocketChannelChild::DispatchToTargetThread(ChannelEvent *aChannelEvent)
+{
+  MOZ_RELEASE_ASSERT(NS_IsMainThread());
+  MOZ_RELEASE_ASSERT(mTargetThread);
+  MOZ_RELEASE_ASSERT(aChannelEvent);
+=======
+class WrappedWebSocketEvent : public Runnable {
+ public:
+  WrappedWebSocketEvent(WebSocketChannelChild* aChild,
+                        WebSocketEvent* aWebSocketEvent)
+      : Runnable("net::WrappedWebSocketEvent"),
+        mChild(aChild),
+        mWebSocketEvent(aWebSocketEvent) {
+    MOZ_RELEASE_ASSERT(aWebSocketEvent);
+  }
+  NS_IMETHOD Run() override {
+    mWebSocketEvent->Run(mChild);
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
-  mTargetThread->Dispatch(new WrappedChannelEvent(aChannelEvent),
-                          NS_DISPATCH_NORMAL);
-}
+ private:
+  RefPtr<WebSocketChannelChild> mChild;
+  nsAutoPtr<WebSocketEvent> mWebSocketEvent;
+};
 
+<<<<<<< HEAD
 class EventTargetDispatcher : public ChannelEvent {
  public:
   EventTargetDispatcher(ChannelEvent* aChannelEvent,
+||||||| merged common ancestors
+class EventTargetDispatcher : public ChannelEvent
+{
+public:
+  EventTargetDispatcher(ChannelEvent* aChannelEvent,
+=======
+class EventTargetDispatcher : public ChannelEvent {
+ public:
+  EventTargetDispatcher(WebSocketChannelChild* aChild,
+                        WebSocketEvent* aWebSocketEvent,
+>>>>>>> upstream-releases
                         nsIEventTarget* aEventTarget)
+<<<<<<< HEAD
       : mChannelEvent(aChannelEvent), mEventTarget(aEventTarget) {}
+||||||| merged common ancestors
+    : mChannelEvent(aChannelEvent)
+    , mEventTarget(aEventTarget)
+  {}
+=======
+      : mChild(aChild),
+        mWebSocketEvent(aWebSocketEvent),
+        mEventTarget(aEventTarget) {}
+>>>>>>> upstream-releases
 
   void Run() override {
     if (mEventTarget) {
-      mEventTarget->Dispatch(new WrappedChannelEvent(mChannelEvent.forget()),
-                             NS_DISPATCH_NORMAL);
+      mEventTarget->Dispatch(
+          new WrappedWebSocketEvent(mChild, mWebSocketEvent.forget()),
+          NS_DISPATCH_NORMAL);
       return;
     }
 
-    mChannelEvent->Run();
+    mWebSocketEvent->Run(mChild);
   }
 
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
@@ -168,13 +240,31 @@ class EventTargetDispatcher : public ChannelEvent {
     return target.forget();
   }
 
+<<<<<<< HEAD
  private:
   nsAutoPtr<ChannelEvent> mChannelEvent;
+||||||| merged common ancestors
+private:
+  nsAutoPtr<ChannelEvent> mChannelEvent;
+=======
+ private:
+  // The lifetime of the child is ensured by ChannelEventQueue.
+  WebSocketChannelChild* mChild;
+  nsAutoPtr<WebSocketEvent> mWebSocketEvent;
+>>>>>>> upstream-releases
   nsCOMPtr<nsIEventTarget> mEventTarget;
 };
 
+<<<<<<< HEAD
 class StartEvent : public ChannelEvent {
+||||||| merged common ancestors
+class StartEvent : public ChannelEvent
+{
+=======
+class StartEvent : public WebSocketEvent {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   StartEvent(WebSocketChannelChild* aChild, const nsCString& aProtocol,
              const nsCString& aExtensions, const nsString& aEffectiveURL,
              bool aEncrypted)
@@ -187,38 +277,114 @@ class StartEvent : public ChannelEvent {
   void Run() override {
     mChild->OnStart(mProtocol, mExtensions, mEffectiveURL, mEncrypted);
   }
+||||||| merged common ancestors
+  StartEvent(WebSocketChannelChild* aChild,
+             const nsCString& aProtocol,
+             const nsCString& aExtensions,
+             const nsString& aEffectiveURL,
+             bool aEncrypted)
+  : mChild(aChild)
+  , mProtocol(aProtocol)
+  , mExtensions(aExtensions)
+  , mEffectiveURL(aEffectiveURL)
+  , mEncrypted(aEncrypted)
+  {}
 
+  void Run() override
+  {
+    mChild->OnStart(mProtocol, mExtensions, mEffectiveURL, mEncrypted);
+  }
+=======
+  StartEvent(const nsCString& aProtocol, const nsCString& aExtensions,
+             const nsString& aEffectiveURL, bool aEncrypted,
+             uint64_t aHttpChannelId)
+      : mProtocol(aProtocol),
+        mExtensions(aExtensions),
+        mEffectiveURL(aEffectiveURL),
+        mEncrypted(aEncrypted),
+        mHttpChannelId(aHttpChannelId) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
     return do_AddRef(GetCurrentThreadEventTarget());
+||||||| merged common ancestors
+  already_AddRefed<nsIEventTarget> GetEventTarget() override
+  {
+    return do_AddRef(GetCurrentThreadEventTarget());
+=======
+  void Run(WebSocketChannelChild* aChild) override {
+    aChild->OnStart(mProtocol, mExtensions, mEffectiveURL, mEncrypted,
+                    mHttpChannelId);
+>>>>>>> upstream-releases
   }
 
  private:
-  RefPtr<WebSocketChannelChild> mChild;
   nsCString mProtocol;
   nsCString mExtensions;
   nsString mEffectiveURL;
   bool mEncrypted;
+  uint64_t mHttpChannelId;
 };
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnStart(
     const nsCString& aProtocol, const nsCString& aExtensions,
     const nsString& aEffectiveURL, const bool& aEncrypted) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new StartEvent(this, aProtocol, aExtensions, aEffectiveURL, aEncrypted),
       mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnStart(const nsCString& aProtocol,
+                                   const nsCString& aExtensions,
+                                   const nsString& aEffectiveURL,
+                                   const bool& aEncrypted)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new StartEvent(this, aProtocol, aExtensions,
+                                             aEffectiveURL, aEncrypted),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnStart(
+    const nsCString& aProtocol, const nsCString& aExtensions,
+    const nsString& aEffectiveURL, const bool& aEncrypted,
+    const uint64_t& aHttpChannelId) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this,
+      new StartEvent(aProtocol, aExtensions, aEffectiveURL, aEncrypted,
+                     aHttpChannelId),
+      mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 void WebSocketChannelChild::OnStart(const nsCString& aProtocol,
                                     const nsCString& aExtensions,
                                     const nsString& aEffectiveURL,
                                     const bool& aEncrypted) {
+||||||| merged common ancestors
+void
+WebSocketChannelChild::OnStart(const nsCString& aProtocol,
+                               const nsCString& aExtensions,
+                               const nsString& aEffectiveURL,
+                               const bool& aEncrypted)
+{
+=======
+void WebSocketChannelChild::OnStart(const nsCString& aProtocol,
+                                    const nsCString& aExtensions,
+                                    const nsString& aEffectiveURL,
+                                    const bool& aEncrypted,
+                                    const uint64_t& aHttpChannelId) {
+>>>>>>> upstream-releases
   LOG(("WebSocketChannelChild::RecvOnStart() %p\n", this));
   SetProtocol(aProtocol);
   mNegotiatedExtensions = aExtensions;
   mEffectiveURL = aEffectiveURL;
   mEncrypted = aEncrypted;
+  mHttpChannelId = aHttpChannelId;
 
   if (mListenerMT) {
     AutoEventEnqueuer ensureSerialDispatch(mEventQ);
@@ -232,26 +398,70 @@ void WebSocketChannelChild::OnStart(const nsCString& aProtocol,
   }
 }
 
+<<<<<<< HEAD
 class StopEvent : public ChannelEvent {
+||||||| merged common ancestors
+class StopEvent : public ChannelEvent
+{
+=======
+class StopEvent : public WebSocketEvent {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   StopEvent(WebSocketChannelChild* aChild, const nsresult& aStatusCode)
       : mChild(aChild), mStatusCode(aStatusCode) {}
 
   void Run() override { mChild->OnStop(mStatusCode); }
+||||||| merged common ancestors
+  StopEvent(WebSocketChannelChild* aChild,
+            const nsresult& aStatusCode)
+  : mChild(aChild)
+  , mStatusCode(aStatusCode)
+  {}
 
+  void Run() override
+  {
+    mChild->OnStop(mStatusCode);
+  }
+=======
+  explicit StopEvent(const nsresult& aStatusCode) : mStatusCode(aStatusCode) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
     return do_AddRef(GetCurrentThreadEventTarget());
+||||||| merged common ancestors
+  already_AddRefed<nsIEventTarget> GetEventTarget() override
+  {
+    return do_AddRef(GetCurrentThreadEventTarget());
+=======
+  void Run(WebSocketChannelChild* aChild) override {
+    aChild->OnStop(mStatusCode);
+>>>>>>> upstream-releases
   }
 
  private:
-  RefPtr<WebSocketChannelChild> mChild;
   nsresult mStatusCode;
 };
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnStop(
     const nsresult& aStatusCode) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new StopEvent(this, aStatusCode), mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnStop(const nsresult& aStatusCode)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new StopEvent(this, aStatusCode),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnStop(
+    const nsresult& aStatusCode) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this, new StopEvent(aStatusCode), mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -271,34 +481,81 @@ void WebSocketChannelChild::OnStop(const nsresult& aStatusCode) {
   }
 }
 
+<<<<<<< HEAD
 class MessageEvent : public ChannelEvent {
+||||||| merged common ancestors
+class MessageEvent : public ChannelEvent
+{
+=======
+class MessageEvent : public WebSocketEvent {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   MessageEvent(WebSocketChannelChild* aChild, const nsCString& aMessage,
                bool aBinary)
       : mChild(aChild), mMessage(aMessage), mBinary(aBinary) {}
 
   void Run() override {
+||||||| merged common ancestors
+  MessageEvent(WebSocketChannelChild* aChild,
+               const nsCString& aMessage,
+               bool aBinary)
+  : mChild(aChild)
+  , mMessage(aMessage)
+  , mBinary(aBinary)
+  {}
+
+  void Run() override
+  {
+=======
+  MessageEvent(const nsCString& aMessage, bool aBinary)
+      : mMessage(aMessage), mBinary(aBinary) {}
+
+  void Run(WebSocketChannelChild* aChild) override {
+>>>>>>> upstream-releases
     if (!mBinary) {
-      mChild->OnMessageAvailable(mMessage);
+      aChild->OnMessageAvailable(mMessage);
     } else {
-      mChild->OnBinaryMessageAvailable(mMessage);
+      aChild->OnBinaryMessageAvailable(mMessage);
     }
   }
 
+<<<<<<< HEAD
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
     return do_AddRef(GetCurrentThreadEventTarget());
   }
 
+||||||| merged common ancestors
+  already_AddRefed<nsIEventTarget> GetEventTarget() override
+  {
+    return do_AddRef(GetCurrentThreadEventTarget());
+  }
+
+=======
+>>>>>>> upstream-releases
  private:
-  RefPtr<WebSocketChannelChild> mChild;
   nsCString mMessage;
   bool mBinary;
 };
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnMessageAvailable(
     const nsCString& aMsg) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new MessageEvent(this, aMsg, false), mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnMessageAvailable(const nsCString& aMsg)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new MessageEvent(this, aMsg, false),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnMessageAvailable(
+    const nsCString& aMsg) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this, new MessageEvent(aMsg, false), mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -319,10 +576,24 @@ void WebSocketChannelChild::OnMessageAvailable(const nsCString& aMsg) {
   }
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnBinaryMessageAvailable(
     const nsCString& aMsg) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new MessageEvent(this, aMsg, true), mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnBinaryMessageAvailable(const nsCString& aMsg)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new MessageEvent(this, aMsg, true),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnBinaryMessageAvailable(
+    const nsCString& aMsg) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this, new MessageEvent(aMsg, true), mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -343,26 +614,70 @@ void WebSocketChannelChild::OnBinaryMessageAvailable(const nsCString& aMsg) {
   }
 }
 
+<<<<<<< HEAD
 class AcknowledgeEvent : public ChannelEvent {
+||||||| merged common ancestors
+class AcknowledgeEvent : public ChannelEvent
+{
+=======
+class AcknowledgeEvent : public WebSocketEvent {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   AcknowledgeEvent(WebSocketChannelChild* aChild, const uint32_t& aSize)
       : mChild(aChild), mSize(aSize) {}
 
   void Run() override { mChild->OnAcknowledge(mSize); }
+||||||| merged common ancestors
+  AcknowledgeEvent(WebSocketChannelChild* aChild,
+                   const uint32_t& aSize)
+  : mChild(aChild)
+  , mSize(aSize)
+  {}
 
+  void Run() override
+  {
+    mChild->OnAcknowledge(mSize);
+  }
+=======
+  explicit AcknowledgeEvent(const uint32_t& aSize) : mSize(aSize) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
     return do_AddRef(GetCurrentThreadEventTarget());
+||||||| merged common ancestors
+  already_AddRefed<nsIEventTarget> GetEventTarget() override
+  {
+    return do_AddRef(GetCurrentThreadEventTarget());
+=======
+  void Run(WebSocketChannelChild* aChild) override {
+    aChild->OnAcknowledge(mSize);
+>>>>>>> upstream-releases
   }
 
  private:
-  RefPtr<WebSocketChannelChild> mChild;
   uint32_t mSize;
 };
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnAcknowledge(
     const uint32_t& aSize) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new AcknowledgeEvent(this, aSize), mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnAcknowledge(const uint32_t& aSize)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new AcknowledgeEvent(this, aSize),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnAcknowledge(
+    const uint32_t& aSize) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this, new AcknowledgeEvent(aSize), mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -383,28 +698,76 @@ void WebSocketChannelChild::OnAcknowledge(const uint32_t& aSize) {
   }
 }
 
+<<<<<<< HEAD
 class ServerCloseEvent : public ChannelEvent {
+||||||| merged common ancestors
+class ServerCloseEvent : public ChannelEvent
+{
+=======
+class ServerCloseEvent : public WebSocketEvent {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   ServerCloseEvent(WebSocketChannelChild* aChild, const uint16_t aCode,
                    const nsCString& aReason)
       : mChild(aChild), mCode(aCode), mReason(aReason) {}
+||||||| merged common ancestors
+  ServerCloseEvent(WebSocketChannelChild* aChild,
+                   const uint16_t aCode,
+                   const nsCString &aReason)
+  : mChild(aChild)
+  , mCode(aCode)
+  , mReason(aReason)
+  {}
 
+  void Run() override
+  {
+    mChild->OnServerClose(mCode, mReason);
+  }
+=======
+  ServerCloseEvent(const uint16_t aCode, const nsCString& aReason)
+      : mCode(aCode), mReason(aReason) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void Run() override { mChild->OnServerClose(mCode, mReason); }
 
   already_AddRefed<nsIEventTarget> GetEventTarget() override {
     return do_AddRef(GetCurrentThreadEventTarget());
+||||||| merged common ancestors
+  already_AddRefed<nsIEventTarget> GetEventTarget() override
+  {
+    return do_AddRef(GetCurrentThreadEventTarget());
+=======
+  void Run(WebSocketChannelChild* aChild) override {
+    aChild->OnServerClose(mCode, mReason);
+>>>>>>> upstream-releases
   }
 
  private:
-  RefPtr<WebSocketChannelChild> mChild;
   uint16_t mCode;
   nsCString mReason;
 };
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnServerClose(
     const uint16_t& aCode, const nsCString& aReason) {
   mEventQ->RunOrEnqueue(new EventTargetDispatcher(
       new ServerCloseEvent(this, aCode, aReason), mTargetThread));
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+WebSocketChannelChild::RecvOnServerClose(const uint16_t& aCode,
+                                         const nsCString& aReason)
+{
+  mEventQ->RunOrEnqueue(
+    new EventTargetDispatcher(new ServerCloseEvent(this, aCode, aReason),
+                              mTargetThread));
+=======
+mozilla::ipc::IPCResult WebSocketChannelChild::RecvOnServerClose(
+    const uint16_t& aCode, const nsCString& aReason) {
+  mEventQ->RunOrEnqueue(new EventTargetDispatcher(
+      this, new ServerCloseEvent(aCode, aReason), mTargetThread));
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -443,14 +806,33 @@ WebSocketChannelChild::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
   MOZ_ASSERT(aListener && !mListenerMT,
              "Invalid state for WebSocketChannelChild::AsyncOpen");
 
+<<<<<<< HEAD
   mozilla::dom::TabChild* tabChild = nullptr;
   nsCOMPtr<nsITabChild> iTabChild;
   NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, NS_GET_IID(nsITabChild),
                                 getter_AddRefs(iTabChild));
   if (iTabChild) {
     tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
+||||||| merged common ancestors
+  mozilla::dom::TabChild* tabChild = nullptr;
+  nsCOMPtr<nsITabChild> iTabChild;
+  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
+                                NS_GET_IID(nsITabChild),
+                                getter_AddRefs(iTabChild));
+  if (iTabChild) {
+    tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
+=======
+  mozilla::dom::BrowserChild* browserChild = nullptr;
+  nsCOMPtr<nsIBrowserChild> iBrowserChild;
+  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
+                                NS_GET_IID(nsIBrowserChild),
+                                getter_AddRefs(iBrowserChild));
+  if (iBrowserChild) {
+    browserChild =
+        static_cast<mozilla::dom::BrowserChild*>(iBrowserChild.get());
+>>>>>>> upstream-releases
   }
-  if (MissingRequiredTabChild(tabChild, "websocket")) {
+  if (MissingRequiredBrowserChild(browserChild, "websocket")) {
     return NS_ERROR_ILLEGAL_VALUE;
   }
 
@@ -462,34 +844,40 @@ WebSocketChannelChild::AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
   // Corresponding release in DeallocPWebSocket
   AddIPDLReference();
 
-  OptionalURIParams uri;
-  OptionalLoadInfoArgs loadInfoArgs;
-  OptionalTransportProvider transportProvider;
+  Maybe<URIParams> uri;
+  Maybe<LoadInfoArgs> loadInfoArgs;
+  Maybe<PTransportProviderChild*> transportProvider;
 
   if (!mIsServerSide) {
-    uri = URIParams();
-    SerializeURI(aURI, uri.get_URIParams());
+    uri.emplace(URIParams());
+    SerializeURI(aURI, uri.ref());
     nsresult rv = LoadInfoToLoadInfoArgs(mLoadInfo, &loadInfoArgs);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    transportProvider = void_t();
+    transportProvider = Nothing();
   } else {
-    uri = void_t();
-    loadInfoArgs = void_t();
-
     MOZ_ASSERT(mServerTransportProvider);
     PTransportProviderChild* ipcChild;
     nsresult rv = mServerTransportProvider->GetIPCChild(&ipcChild);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    transportProvider = ipcChild;
+    transportProvider = Some(ipcChild);
   }
 
   // This must be called before sending constructor message.
   SetupNeckoTarget();
 
+<<<<<<< HEAD
   gNeckoChild->SendPWebSocketConstructor(
       this, tabChild, IPC::SerializedLoadContext(this), mSerial);
+||||||| merged common ancestors
+  gNeckoChild->SendPWebSocketConstructor(this, tabChild,
+                                         IPC::SerializedLoadContext(this),
+                                         mSerial);
+=======
+  gNeckoChild->SendPWebSocketConstructor(
+      this, browserChild, IPC::SerializedLoadContext(this), mSerial);
+>>>>>>> upstream-releases
   if (!SendAsyncOpen(uri, nsCString(aOrigin), aInnerWindowID, mProtocol,
                      mEncrypted, mPingInterval, mClientSetPingInterval,
                      mPingResponseTimeout, mClientSetPingTimeout, loadInfoArgs,

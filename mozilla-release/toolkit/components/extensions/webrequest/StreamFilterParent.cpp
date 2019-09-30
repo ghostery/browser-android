@@ -144,8 +144,18 @@ bool StreamFilterParent::Create(dom::ContentParent* aContentParent,
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ void StreamFilterParent::Attach(nsIChannel* aChannel,
                                              ParentEndpoint&& aEndpoint) {
+||||||| merged common ancestors
+/* static */ void
+StreamFilterParent::Attach(nsIChannel* aChannel, ParentEndpoint&& aEndpoint)
+{
+=======
+/* static */
+void StreamFilterParent::Attach(nsIChannel* aChannel,
+                                ParentEndpoint&& aEndpoint) {
+>>>>>>> upstream-releases
   auto self = MakeRefPtr<StreamFilterParent>();
 
   self->ActorThread()->Dispatch(
@@ -358,13 +368,22 @@ nsresult StreamFilterParent::Write(Data& aData) {
   AssertIsIOThread();
 
   nsCOMPtr<nsIInputStream> stream;
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
-                                      reinterpret_cast<char*>(aData.Elements()),
-                                      aData.Length());
+  nsresult rv = NS_NewByteInputStream(
+      getter_AddRefs(stream),
+      MakeSpan(reinterpret_cast<char*>(aData.Elements()), aData.Length()),
+      NS_ASSIGNMENT_DEPEND);
   NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
   rv = mOrigListener->OnDataAvailable(mChannel, mContext, stream, mOffset,
                                       aData.Length());
+||||||| merged common ancestors
+  rv = mOrigListener->OnDataAvailable(mChannel, mContext, stream,
+                                      mOffset, aData.Length());
+=======
+  rv =
+      mOrigListener->OnDataAvailable(mChannel, stream, mOffset, aData.Length());
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   mOffset += aData.Length();
@@ -449,11 +468,16 @@ StreamFilterParent::SetLoadFlags(nsLoadFlags aLoadFlags) {
  *****************************************************************************/
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 StreamFilterParent::OnStartRequest(nsIRequest* aRequest,
                                    nsISupports* aContext) {
+||||||| merged common ancestors
+StreamFilterParent::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
+{
+=======
+StreamFilterParent::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   AssertIsMainThread();
-
-  mContext = aContext;
 
   if (aRequest != mChannel) {
     mDisconnected = true;
@@ -474,7 +498,7 @@ StreamFilterParent::OnStartRequest(nsIRequest* aRequest,
     }
   }
 
-  nsresult rv = mOrigListener->OnStartRequest(aRequest, aContext);
+  nsresult rv = mOrigListener->OnStartRequest(aRequest);
 
   // Important: Do this only *after* running the next listener in the chain, so
   // that we get the final delivery target after any retargeting that it may do.
@@ -505,8 +529,17 @@ StreamFilterParent::OnStartRequest(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 StreamFilterParent::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
                                   nsresult aStatusCode) {
+||||||| merged common ancestors
+StreamFilterParent::OnStopRequest(nsIRequest* aRequest,
+                                  nsISupports* aContext,
+                                  nsresult aStatusCode)
+{
+=======
+StreamFilterParent::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
+>>>>>>> upstream-releases
   AssertIsMainThread();
 
   mReceivedStop = true;
@@ -528,7 +561,13 @@ nsresult StreamFilterParent::EmitStopRequest(nsresult aStatusCode) {
   MOZ_ASSERT(!mSentStop);
 
   mSentStop = true;
+<<<<<<< HEAD
   nsresult rv = mOrigListener->OnStopRequest(mChannel, mContext, aStatusCode);
+||||||| merged common ancestors
+  nsresult rv =  mOrigListener->OnStopRequest(mChannel, mContext, aStatusCode);
+=======
+  nsresult rv = mOrigListener->OnStopRequest(mChannel, aStatusCode);
+>>>>>>> upstream-releases
 
   if (mLoadGroup && !mDisconnected) {
     Unused << mLoadGroup->RemoveRequest(this, nullptr, aStatusCode);
@@ -550,7 +589,14 @@ void StreamFilterParent::DoSendData(Data&& aData) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 StreamFilterParent::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
+||||||| merged common ancestors
+StreamFilterParent::OnDataAvailable(nsIRequest* aRequest,
+                                    nsISupports* aContext,
+=======
+StreamFilterParent::OnDataAvailable(nsIRequest* aRequest,
+>>>>>>> upstream-releases
                                     nsIInputStream* aInputStream,
                                     uint64_t aOffset, uint32_t aCount) {
   AssertIsIOThread();
@@ -568,7 +614,7 @@ StreamFilterParent::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
     }
 
     mOffset += aCount;
-    return mOrigListener->OnDataAvailable(aRequest, aContext, aInputStream,
+    return mOrigListener->OnDataAvailable(aRequest, aInputStream,
                                           mOffset - aCount, aCount);
   }
 
@@ -701,7 +747,15 @@ void StreamFilterParent::ActorDestroy(ActorDestroyReason aWhy) {
   }
 }
 
+<<<<<<< HEAD
 void StreamFilterParent::DeallocPStreamFilterParent() {
+||||||| merged common ancestors
+void
+StreamFilterParent::DeallocPStreamFilterParent()
+{
+=======
+void StreamFilterParent::ActorDealloc() {
+>>>>>>> upstream-releases
   RefPtr<StreamFilterParent> self = dont_AddRef(this);
 }
 

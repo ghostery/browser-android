@@ -26,7 +26,8 @@ class Storage : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Storage)
 
-  Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal);
+  Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal,
+          nsIPrincipal* aStoragePrincipal);
 
   static bool StoragePrefIsEnabled();
 
@@ -42,7 +43,19 @@ class Storage : public nsISupports, public nsWrapperCache {
 
   virtual int64_t GetOriginQuotaUsage() const = 0;
 
+<<<<<<< HEAD
   nsIPrincipal* Principal() const { return mPrincipal; }
+||||||| merged common ancestors
+  nsIPrincipal*
+  Principal() const
+  {
+    return mPrincipal;
+  }
+=======
+  nsIPrincipal* Principal() const { return mPrincipal; }
+
+  nsIPrincipal* StoragePrincipal() const { return mStoragePrincipal; }
+>>>>>>> upstream-releases
 
   // WebIDL
   JSObject* WrapObject(JSContext* aCx,
@@ -90,6 +103,7 @@ class Storage : public nsISupports, public nsWrapperCache {
 
   bool IsSessionOnly() const { return mIsSessionOnly; }
 
+<<<<<<< HEAD
   //////////////////////////////////////////////////////////////////////////////
   // Testing Methods:
   //
@@ -114,6 +128,38 @@ class Storage : public nsISupports, public nsWrapperCache {
   // notification via StorageNotifierService (not observers like in the past),
   // while devtools does receive the notification via the observer service.
   //
+||||||| merged common ancestors
+=======
+  //////////////////////////////////////////////////////////////////////////////
+  // Testing Methods:
+  //
+  // These methods are exposed on the `Storage` WebIDL interface behind a
+  // preference for the benefit of automated-tests.  They are not exposed to
+  // content.  See `Storage.webidl` for more details.
+
+  virtual void Open(nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {}
+
+  virtual void Close(nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {}
+
+  virtual void BeginExplicitSnapshot(nsIPrincipal& aSubjectPrincipal,
+                                     ErrorResult& aRv) {}
+
+  virtual void EndExplicitSnapshot(nsIPrincipal& aSubjectPrincipal,
+                                   ErrorResult& aRv) {}
+
+  virtual bool GetHasActiveSnapshot(nsIPrincipal& aSubjectPrincipal,
+                                    ErrorResult& aRv) {
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  // Dispatch storage notification events on all impacted pages in the current
+  // process as well as for consumption by devtools.  Pages receive the
+  // notification via StorageNotifierService (not observers like in the past),
+  // while devtools does receive the notification via the observer service.
+  //
+>>>>>>> upstream-releases
   // aStorage can be null if this method is called by LocalStorageCacheChild.
   //
   // aImmediateDispatch is for use by child IPC code (LocalStorageCacheChild)
@@ -134,12 +180,6 @@ class Storage : public nsISupports, public nsWrapperCache {
   virtual ~Storage();
 
   // The method checks whether the caller can use a storage.
-  // CanUseStorage is called before any DOM initiated operation
-  // on a storage is about to happen and ensures that the storage's
-  // session-only flag is properly set according the current settings.
-  // It is an optimization since the privileges check and session only
-  // state determination are complex and share the code (comes hand in
-  // hand together).
   bool CanUseStorage(nsIPrincipal& aSubjectPrincipal);
 
   virtual void LastRelease() {}
@@ -147,6 +187,7 @@ class Storage : public nsISupports, public nsWrapperCache {
  private:
   nsCOMPtr<nsPIDOMWindowInner> mWindow;
   nsCOMPtr<nsIPrincipal> mPrincipal;
+  nsCOMPtr<nsIPrincipal> mStoragePrincipal;
 
   // Whether storage is set to persist data only per session, may change
   // dynamically and is set by CanUseStorage function that is called

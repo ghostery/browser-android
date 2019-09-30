@@ -40,6 +40,7 @@ BEGIN_TEST(testMutedErrors) {
   return true;
 }
 
+<<<<<<< HEAD
 bool eval(const char* asciiChars, bool mutedErrors,
           JS::MutableHandleValue rval) {
   size_t len = strlen(asciiChars);
@@ -64,6 +65,56 @@ bool eval(const char* asciiChars, bool mutedErrors,
   CHECK(srcBuf.init(cx, chars.get(), len, JS::SourceOwnership::Borrowed));
 
   return JS::Evaluate(cx, options, srcBuf, rval);
+||||||| merged common ancestors
+bool
+eval(const char* asciiChars, bool mutedErrors, JS::MutableHandleValue rval)
+{
+    size_t len = strlen(asciiChars);
+    mozilla::UniquePtr<char16_t[]> chars(new char16_t[len+1]);
+    for (size_t i = 0; i < len; ++i) {
+        chars[i] = asciiChars[i];
+    }
+    chars[len] = 0;
+
+    JS::RealmOptions globalOptions;
+    JS::RootedObject global(cx, JS_NewGlobalObject(cx, getGlobalClass(), nullptr,
+						   JS::FireOnNewGlobalHook, globalOptions));
+    CHECK(global);
+    JSAutoRealm ar(cx, global);
+    CHECK(JS::InitRealmStandardClasses(cx));
+
+
+    JS::CompileOptions options(cx);
+    options.setMutedErrors(mutedErrors)
+           .setFileAndLine("", 0);
+
+    JS::SourceBufferHolder srcBuf(chars.get(), len, JS::SourceBufferHolder::NoOwnership);
+    return JS::Evaluate(cx, options, srcBuf, rval);
+=======
+bool eval(const char* asciiChars, bool mutedErrors,
+          JS::MutableHandleValue rval) {
+  size_t len = strlen(asciiChars);
+  mozilla::UniquePtr<char16_t[]> chars(new char16_t[len + 1]);
+  for (size_t i = 0; i < len; ++i) {
+    chars[i] = asciiChars[i];
+  }
+  chars[len] = 0;
+
+  JS::RealmOptions globalOptions;
+  JS::RootedObject global(
+      cx, JS_NewGlobalObject(cx, getGlobalClass(), nullptr,
+                             JS::FireOnNewGlobalHook, globalOptions));
+  CHECK(global);
+  JSAutoRealm ar(cx, global);
+
+  JS::CompileOptions options(cx);
+  options.setMutedErrors(mutedErrors).setFileAndLine("", 0);
+
+  JS::SourceText<char16_t> srcBuf;
+  CHECK(srcBuf.init(cx, chars.get(), len, JS::SourceOwnership::Borrowed));
+
+  return JS::Evaluate(cx, options, srcBuf, rval);
+>>>>>>> upstream-releases
 }
 
 bool testOuter(const char* asciiChars) {

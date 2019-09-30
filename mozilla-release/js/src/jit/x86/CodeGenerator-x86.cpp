@@ -547,25 +547,134 @@ void CodeGenerator::visitTruncateFToInt32(LTruncateFToInt32* ins) {
   masm.bind(ool->rejoin());
 }
 
+<<<<<<< HEAD
+void CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool) {
+  LTruncateDToInt32* ins = ool->ins();
+  FloatRegister input = ToFloatRegister(ins->input());
+  Register output = ToRegister(ins->output());
+||||||| merged common ancestors
+void
+CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool)
+{
+    LTruncateDToInt32* ins = ool->ins();
+    FloatRegister input = ToFloatRegister(ins->input());
+    Register output = ToRegister(ins->output());
+
+    Label fail;
+=======
 void CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool) {
   LTruncateDToInt32* ins = ool->ins();
   FloatRegister input = ToFloatRegister(ins->input());
   Register output = ToRegister(ins->output());
 
   Label fail;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Label fail;
+||||||| merged common ancestors
+    if (Assembler::HasSSE3()) {
+        Label failPopDouble;
+        // Push double.
+        masm.subl(Imm32(sizeof(double)), esp);
+        masm.storeDouble(input, Operand(esp, 0));
+=======
   if (Assembler::HasSSE3()) {
     Label failPopDouble;
     // Push double.
     masm.subl(Imm32(sizeof(double)), esp);
     masm.storeDouble(input, Operand(esp, 0));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (Assembler::HasSSE3()) {
+    Label failPopDouble;
+    // Push double.
+    masm.subl(Imm32(sizeof(double)), esp);
+    masm.storeDouble(input, Operand(esp, 0));
+||||||| merged common ancestors
+        // Check exponent to avoid fp exceptions.
+        masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopDouble);
+=======
     // Check exponent to avoid fp exceptions.
     masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopDouble);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Check exponent to avoid fp exceptions.
+    masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopDouble);
+||||||| merged common ancestors
+        // Load double, perform 64-bit truncation.
+        masm.truncateDoubleToInt64(Address(esp, 0), Address(esp, 0), output);
+=======
     // Load double, perform 64-bit truncation.
     masm.truncateDoubleToInt64(Address(esp, 0), Address(esp, 0), output);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Load double, perform 64-bit truncation.
+    masm.truncateDoubleToInt64(Address(esp, 0), Address(esp, 0), output);
+||||||| merged common ancestors
+        // Load low word, pop double and jump back.
+        masm.load32(Address(esp, 0), output);
+        masm.addl(Imm32(sizeof(double)), esp);
+        masm.jump(ool->rejoin());
+
+        masm.bind(&failPopDouble);
+        masm.addl(Imm32(sizeof(double)), esp);
+        masm.jump(&fail);
+    } else {
+        FloatRegister temp = ToFloatRegister(ins->tempFloat());
+
+        // Try to convert doubles representing integers within 2^32 of a signed
+        // integer, by adding/subtracting 2^32 and then trying to convert to int32.
+        // This has to be an exact conversion, as otherwise the truncation works
+        // incorrectly on the modified value.
+        masm.zeroDouble(ScratchDoubleReg);
+        masm.vucomisd(ScratchDoubleReg, input);
+        masm.j(Assembler::Parity, &fail);
+
+        {
+            Label positive;
+            masm.j(Assembler::Above, &positive);
+
+            masm.loadConstantDouble(4294967296.0, temp);
+            Label skip;
+            masm.jmp(&skip);
+
+            masm.bind(&positive);
+            masm.loadConstantDouble(-4294967296.0, temp);
+            masm.bind(&skip);
+        }
+
+        masm.addDouble(input, temp);
+        masm.vcvttsd2si(temp, output);
+        masm.vcvtsi2sd(output, ScratchDoubleReg, ScratchDoubleReg);
+
+        masm.vucomisd(ScratchDoubleReg, temp);
+        masm.j(Assembler::Parity, &fail);
+        masm.j(Assembler::Equal, ool->rejoin());
+    }
+
+    masm.bind(&fail);
+    {
+        saveVolatile(output);
+
+        if (gen->compilingWasm()) {
+            masm.setupWasmABICall();
+            masm.passABIArg(input, MoveOp::DOUBLE);
+            masm.callWithABI(ins->mir()->bytecodeOffset(), wasm::SymbolicAddress::ToInt32);
+        } else {
+            masm.setupUnalignedABICall(output);
+            masm.passABIArg(input, MoveOp::DOUBLE);
+            masm.callWithABI(BitwiseCast<void*, int32_t(*)(double)>(JS::ToInt32), MoveOp::GENERAL,
+                             CheckUnsafeCallWithABI::DontCheckOther);
+        }
+        masm.storeCallInt32Result(output);
+
+        restoreVolatile(output);
+    }
+=======
     // Load low word, pop double and jump back.
     masm.load32(Address(esp, 0), output);
     masm.addl(Imm32(sizeof(double)), esp);
@@ -581,10 +690,58 @@ void CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool) {
     // integer, by adding/subtracting 2^32 and then trying to convert to int32.
     // This has to be an exact conversion, as otherwise the truncation works
     // incorrectly on the modified value.
+    {
+      ScratchDoubleScope fpscratch(masm);
+      masm.zeroDouble(fpscratch);
+      masm.vucomisd(fpscratch, input);
+      masm.j(Assembler::Parity, &fail);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Load low word, pop double and jump back.
+    masm.load32(Address(esp, 0), output);
+    masm.addl(Imm32(sizeof(double)), esp);
+    masm.jump(ool->rejoin());
+
+    masm.bind(&failPopDouble);
+    masm.addl(Imm32(sizeof(double)), esp);
+    masm.jump(&fail);
+  } else {
+    FloatRegister temp = ToFloatRegister(ins->tempFloat());
+||||||| merged common ancestors
+    masm.jump(ool->rejoin());
+}
+
+void
+CodeGeneratorX86::visitOutOfLineTruncateFloat32(OutOfLineTruncateFloat32* ool)
+{
+    LTruncateFToInt32* ins = ool->ins();
+    FloatRegister input = ToFloatRegister(ins->input());
+    Register output = ToRegister(ins->output());
+=======
+    {
+      Label positive;
+      masm.j(Assembler::Above, &positive);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Try to convert doubles representing integers within 2^32 of a signed
+    // integer, by adding/subtracting 2^32 and then trying to convert to int32.
+    // This has to be an exact conversion, as otherwise the truncation works
+    // incorrectly on the modified value.
     masm.zeroDouble(ScratchDoubleReg);
     masm.vucomisd(ScratchDoubleReg, input);
     masm.j(Assembler::Parity, &fail);
+||||||| merged common ancestors
+    Label fail;
+=======
+      masm.loadConstantDouble(4294967296.0, temp);
+      Label skip;
+      masm.jmp(&skip);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     {
       Label positive;
       masm.j(Assembler::Above, &positive);
@@ -592,17 +749,32 @@ void CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool) {
       masm.loadConstantDouble(4294967296.0, temp);
       Label skip;
       masm.jmp(&skip);
-
+||||||| merged common ancestors
+    if (Assembler::HasSSE3()) {
+        Label failPopFloat;
+=======
       masm.bind(&positive);
       masm.loadConstantDouble(-4294967296.0, temp);
       masm.bind(&skip);
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      masm.bind(&positive);
+      masm.loadConstantDouble(-4294967296.0, temp);
+      masm.bind(&skip);
+    }
+||||||| merged common ancestors
+        // Push float32, but subtracts 64 bits so that the value popped by fisttp fits
+        masm.subl(Imm32(sizeof(uint64_t)), esp);
+        masm.storeFloat32(input, Operand(esp, 0));
+=======
     masm.addDouble(input, temp);
     masm.vcvttsd2si(temp, output);
-    masm.vcvtsi2sd(output, ScratchDoubleReg, ScratchDoubleReg);
+    ScratchDoubleScope fpscratch(masm);
+    masm.vcvtsi2sd(output, fpscratch, fpscratch);
 
-    masm.vucomisd(ScratchDoubleReg, temp);
+    masm.vucomisd(fpscratch, temp);
     masm.j(Assembler::Parity, &fail);
     masm.j(Assembler::Equal, ool->rejoin());
   }
@@ -623,32 +795,207 @@ void CodeGeneratorX86::visitOutOfLineTruncate(OutOfLineTruncate* ool) {
                        MoveOp::GENERAL, CheckUnsafeCallWithABI::DontCheckOther);
     }
     masm.storeCallInt32Result(output);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    masm.addDouble(input, temp);
+    masm.vcvttsd2si(temp, output);
+    masm.vcvtsi2sd(output, ScratchDoubleReg, ScratchDoubleReg);
+||||||| merged common ancestors
+        // Check exponent to avoid fp exceptions.
+        masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopFloat);
+=======
     restoreVolatile(output);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    masm.vucomisd(ScratchDoubleReg, temp);
+    masm.j(Assembler::Parity, &fail);
+    masm.j(Assembler::Equal, ool->rejoin());
+  }
+||||||| merged common ancestors
+        // Load float, perform 32-bit truncation.
+        masm.truncateFloat32ToInt64(Address(esp, 0), Address(esp, 0), output);
+=======
   masm.jump(ool->rejoin());
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  masm.bind(&fail);
+  {
+    saveVolatile(output);
+||||||| merged common ancestors
+        // Load low word, pop 64bits and jump back.
+        masm.load32(Address(esp, 0), output);
+        masm.addl(Imm32(sizeof(uint64_t)), esp);
+        masm.jump(ool->rejoin());
+=======
 void CodeGeneratorX86::visitOutOfLineTruncateFloat32(
     OutOfLineTruncateFloat32* ool) {
   LTruncateFToInt32* ins = ool->ins();
   FloatRegister input = ToFloatRegister(ins->input());
   Register output = ToRegister(ins->output());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    if (gen->compilingWasm()) {
+      masm.setupWasmABICall();
+      masm.passABIArg(input, MoveOp::DOUBLE);
+      masm.callWithABI(ins->mir()->bytecodeOffset(),
+                       wasm::SymbolicAddress::ToInt32);
+    } else {
+      masm.setupUnalignedABICall(output);
+      masm.passABIArg(input, MoveOp::DOUBLE);
+      masm.callWithABI(BitwiseCast<void*, int32_t (*)(double)>(JS::ToInt32),
+                       MoveOp::GENERAL, CheckUnsafeCallWithABI::DontCheckOther);
+    }
+    masm.storeCallInt32Result(output);
+||||||| merged common ancestors
+        masm.bind(&failPopFloat);
+        masm.addl(Imm32(sizeof(uint64_t)), esp);
+        masm.jump(&fail);
+    } else {
+        FloatRegister temp = ToFloatRegister(ins->tempFloat());
+
+        // Try to convert float32 representing integers within 2^32 of a signed
+        // integer, by adding/subtracting 2^32 and then trying to convert to int32.
+        // This has to be an exact conversion, as otherwise the truncation works
+        // incorrectly on the modified value.
+        masm.zeroFloat32(ScratchFloat32Reg);
+        masm.vucomiss(ScratchFloat32Reg, input);
+        masm.j(Assembler::Parity, &fail);
+
+        {
+            Label positive;
+            masm.j(Assembler::Above, &positive);
+
+            masm.loadConstantFloat32(4294967296.f, temp);
+            Label skip;
+            masm.jmp(&skip);
+
+            masm.bind(&positive);
+            masm.loadConstantFloat32(-4294967296.f, temp);
+            masm.bind(&skip);
+        }
+
+        masm.addFloat32(input, temp);
+        masm.vcvttss2si(temp, output);
+        masm.vcvtsi2ss(output, ScratchFloat32Reg, ScratchFloat32Reg);
+
+        masm.vucomiss(ScratchFloat32Reg, temp);
+        masm.j(Assembler::Parity, &fail);
+        masm.j(Assembler::Equal, ool->rejoin());
+    }
+=======
   Label fail;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    restoreVolatile(output);
+  }
+||||||| merged common ancestors
+    masm.bind(&fail);
+    {
+        saveVolatile(output);
+=======
   if (Assembler::HasSSE3()) {
     Label failPopFloat;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  masm.jump(ool->rejoin());
+}
+||||||| merged common ancestors
+        masm.Push(input);
+=======
     // Push float32, but subtracts 64 bits so that the value popped by fisttp
     // fits
     masm.subl(Imm32(sizeof(uint64_t)), esp);
     masm.storeFloat32(input, Operand(esp, 0));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void CodeGeneratorX86::visitOutOfLineTruncateFloat32(
+    OutOfLineTruncateFloat32* ool) {
+  LTruncateFToInt32* ins = ool->ins();
+  FloatRegister input = ToFloatRegister(ins->input());
+  Register output = ToRegister(ins->output());
+||||||| merged common ancestors
+        if (gen->compilingWasm()) {
+            masm.setupWasmABICall();
+        } else {
+            masm.setupUnalignedABICall(output);
+        }
+=======
     // Check exponent to avoid fp exceptions.
     masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopFloat);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Label fail;
+||||||| merged common ancestors
+        masm.vcvtss2sd(input, input, input);
+        masm.passABIArg(input.asDouble(), MoveOp::DOUBLE);
+=======
+    // Load float, perform 32-bit truncation.
+    masm.truncateFloat32ToInt64(Address(esp, 0), Address(esp, 0), output);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (Assembler::HasSSE3()) {
+    Label failPopFloat;
+||||||| merged common ancestors
+        if (gen->compilingWasm()) {
+            masm.callWithABI(ins->mir()->bytecodeOffset(), wasm::SymbolicAddress::ToInt32);
+        } else {
+            masm.callWithABI(BitwiseCast<void*, int32_t(*)(double)>(JS::ToInt32), MoveOp::GENERAL,
+                             CheckUnsafeCallWithABI::DontCheckOther);
+        }
+=======
+    // Load low word, pop 64bits and jump back.
+    masm.load32(Address(esp, 0), output);
+    masm.addl(Imm32(sizeof(uint64_t)), esp);
+    masm.jump(ool->rejoin());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Push float32, but subtracts 64 bits so that the value popped by fisttp
+    // fits
+    masm.subl(Imm32(sizeof(uint64_t)), esp);
+    masm.storeFloat32(input, Operand(esp, 0));
+||||||| merged common ancestors
+        masm.storeCallInt32Result(output);
+        masm.Pop(input);
+=======
+    masm.bind(&failPopFloat);
+    masm.addl(Imm32(sizeof(uint64_t)), esp);
+    masm.jump(&fail);
+  } else {
+    FloatRegister temp = ToFloatRegister(ins->tempFloat());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Check exponent to avoid fp exceptions.
+    masm.branchDoubleNotInInt64Range(Address(esp, 0), output, &failPopFloat);
+||||||| merged common ancestors
+        restoreVolatile(output);
+    }
+=======
+    // Try to convert float32 representing integers within 2^32 of a signed
+    // integer, by adding/subtracting 2^32 and then trying to convert to int32.
+    // This has to be an exact conversion, as otherwise the truncation works
+    // incorrectly on the modified value.
+    {
+      ScratchFloat32Scope fpscratch(masm);
+      masm.zeroFloat32(fpscratch);
+      masm.vucomiss(fpscratch, input);
+      masm.j(Assembler::Parity, &fail);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // Load float, perform 32-bit truncation.
     masm.truncateFloat32ToInt64(Address(esp, 0), Address(esp, 0), output);
 
@@ -656,21 +1003,10 @@ void CodeGeneratorX86::visitOutOfLineTruncateFloat32(
     masm.load32(Address(esp, 0), output);
     masm.addl(Imm32(sizeof(uint64_t)), esp);
     masm.jump(ool->rejoin());
-
-    masm.bind(&failPopFloat);
-    masm.addl(Imm32(sizeof(uint64_t)), esp);
-    masm.jump(&fail);
-  } else {
-    FloatRegister temp = ToFloatRegister(ins->tempFloat());
-
-    // Try to convert float32 representing integers within 2^32 of a signed
-    // integer, by adding/subtracting 2^32 and then trying to convert to int32.
-    // This has to be an exact conversion, as otherwise the truncation works
-    // incorrectly on the modified value.
-    masm.zeroFloat32(ScratchFloat32Reg);
-    masm.vucomiss(ScratchFloat32Reg, input);
-    masm.j(Assembler::Parity, &fail);
-
+||||||| merged common ancestors
+    masm.jump(ool->rejoin());
+}
+=======
     {
       Label positive;
       masm.j(Assembler::Above, &positive);
@@ -678,12 +1014,97 @@ void CodeGeneratorX86::visitOutOfLineTruncateFloat32(
       masm.loadConstantFloat32(4294967296.f, temp);
       Label skip;
       masm.jmp(&skip);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    masm.bind(&failPopFloat);
+    masm.addl(Imm32(sizeof(uint64_t)), esp);
+    masm.jump(&fail);
+  } else {
+    FloatRegister temp = ToFloatRegister(ins->tempFloat());
+||||||| merged common ancestors
+void
+CodeGenerator::visitCompareI64(LCompareI64* lir)
+{
+    MCompare* mir = lir->mir();
+    MOZ_ASSERT(mir->compareType() == MCompare::Compare_Int64 ||
+               mir->compareType() == MCompare::Compare_UInt64);
+=======
       masm.bind(&positive);
       masm.loadConstantFloat32(-4294967296.f, temp);
       masm.bind(&skip);
     }
 
+    masm.addFloat32(input, temp);
+    masm.vcvttss2si(temp, output);
+    ScratchFloat32Scope fpscratch(masm);
+    masm.vcvtsi2ss(output, fpscratch, fpscratch);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Try to convert float32 representing integers within 2^32 of a signed
+    // integer, by adding/subtracting 2^32 and then trying to convert to int32.
+    // This has to be an exact conversion, as otherwise the truncation works
+    // incorrectly on the modified value.
+    masm.zeroFloat32(ScratchFloat32Reg);
+    masm.vucomiss(ScratchFloat32Reg, input);
+    masm.j(Assembler::Parity, &fail);
+||||||| merged common ancestors
+    const LInt64Allocation lhs = lir->getInt64Operand(LCompareI64::Lhs);
+    const LInt64Allocation rhs = lir->getInt64Operand(LCompareI64::Rhs);
+    Register64 lhsRegs = ToRegister64(lhs);
+    Register output = ToRegister(lir->output());
+=======
+    masm.vucomiss(fpscratch, temp);
+    masm.j(Assembler::Parity, &fail);
+    masm.j(Assembler::Equal, ool->rejoin());
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    {
+      Label positive;
+      masm.j(Assembler::Above, &positive);
+||||||| merged common ancestors
+    bool isSigned = mir->compareType() == MCompare::Compare_Int64;
+    Assembler::Condition condition = JSOpToCondition(lir->jsop(), isSigned);
+    Label done;
+=======
+  masm.bind(&fail);
+  {
+    saveVolatile(output);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      masm.loadConstantFloat32(4294967296.f, temp);
+      Label skip;
+      masm.jmp(&skip);
+||||||| merged common ancestors
+    masm.move32(Imm32(1), output);
+=======
+    masm.Push(input);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      masm.bind(&positive);
+      masm.loadConstantFloat32(-4294967296.f, temp);
+      masm.bind(&skip);
+||||||| merged common ancestors
+    if (IsConstant(rhs)) {
+        Imm64 imm = Imm64(ToInt64(rhs));
+        masm.branch64(condition, lhsRegs, imm, &done);
+    } else {
+        Register64 rhsRegs = ToRegister64(rhs);
+        masm.branch64(condition, lhsRegs, rhsRegs, &done);
+=======
+    if (gen->compilingWasm()) {
+      masm.setupWasmABICall();
+    } else {
+      masm.setupUnalignedABICall(output);
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     masm.addFloat32(input, temp);
     masm.vcvttss2si(temp, output);
     masm.vcvtsi2ss(output, ScratchFloat32Reg, ScratchFloat32Reg);
@@ -704,13 +1125,56 @@ void CodeGeneratorX86::visitOutOfLineTruncateFloat32(
     } else {
       masm.setupUnalignedABICall(output);
     }
+||||||| merged common ancestors
+    masm.xorl(output, output);
+    masm.bind(&done);
+}
 
+void
+CodeGenerator::visitCompareI64AndBranch(LCompareI64AndBranch* lir)
+{
+    MCompare* mir = lir->cmpMir();
+    MOZ_ASSERT(mir->compareType() == MCompare::Compare_Int64 ||
+               mir->compareType() == MCompare::Compare_UInt64);
+
+    const LInt64Allocation lhs = lir->getInt64Operand(LCompareI64::Lhs);
+    const LInt64Allocation rhs = lir->getInt64Operand(LCompareI64::Rhs);
+    Register64 lhsRegs = ToRegister64(lhs);
+
+    bool isSigned = mir->compareType() == MCompare::Compare_Int64;
+    Assembler::Condition condition = JSOpToCondition(lir->jsop(), isSigned);
+
+    Label* trueLabel = getJumpLabelForBranch(lir->ifTrue());
+    Label* falseLabel = getJumpLabelForBranch(lir->ifFalse());
+
+    if (isNextBlock(lir->ifFalse()->lir())) {
+        falseLabel = nullptr;
+    } else if (isNextBlock(lir->ifTrue()->lir())) {
+        condition = Assembler::InvertCondition(condition);
+        trueLabel = falseLabel;
+        falseLabel = nullptr;
+    }
+=======
+    masm.vcvtss2sd(input, input, input);
+    masm.passABIArg(input.asDouble(), MoveOp::DOUBLE);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     masm.vcvtss2sd(input, input, input);
     masm.passABIArg(input.asDouble(), MoveOp::DOUBLE);
 
     if (gen->compilingWasm()) {
       masm.callWithABI(ins->mir()->bytecodeOffset(),
                        wasm::SymbolicAddress::ToInt32);
+||||||| merged common ancestors
+    if (IsConstant(rhs)) {
+        Imm64 imm = Imm64(ToInt64(rhs));
+        masm.branch64(condition, lhsRegs, imm, trueLabel, falseLabel);
+=======
+    if (gen->compilingWasm()) {
+      masm.callWithABI(ins->mir()->bytecodeOffset(),
+                       wasm::SymbolicAddress::ToInt32);
+>>>>>>> upstream-releases
     } else {
       masm.callWithABI(BitwiseCast<void*, int32_t (*)(double)>(JS::ToInt32),
                        MoveOp::GENERAL, CheckUnsafeCallWithABI::DontCheckOther);

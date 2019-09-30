@@ -9,7 +9,16 @@
 namespace mozilla {
 namespace ipc {
 
+<<<<<<< HEAD
 void SetThisProcessName(const char *aString) { (void)aString; }
+||||||| merged common ancestors
+void SetThisProcessName(const char *aString)
+{
+  (void)aString;
+}
+=======
+void SetThisProcessName(const char* aString) { (void)aString; }
+>>>>>>> upstream-releases
 
 }  // namespace ipc
 }  // namespace mozilla

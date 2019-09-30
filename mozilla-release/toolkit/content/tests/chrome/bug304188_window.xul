@@ -17,8 +17,15 @@
 find-menu appears in editor element which has had makeEditable() called but designMode not set">
 
   <script type="application/javascript"><![CDATA[
+<<<<<<< HEAD
     ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
     ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+||||||| merged common ancestors
+    ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+=======
+    const {BrowserTestUtils} = ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
+    const {ContentTask} = ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+>>>>>>> upstream-releases
     ContentTask.setTestScope(window.opener.wrappedJSObject);
 
     var gFindBar = null;

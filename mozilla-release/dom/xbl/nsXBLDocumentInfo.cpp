@@ -7,7 +7,7 @@
 #include "mozilla/DebugOnly.h"
 
 #include "nsXBLDocumentInfo.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsXBLPrototypeBinding.h"
 #include "nsIScriptObjectPrincipal.h"
 #include "nsIScriptContext.h"
@@ -96,11 +96,26 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(nsXBLDocumentInfo)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(nsXBLDocumentInfo)
 
+<<<<<<< HEAD
 nsXBLDocumentInfo::nsXBLDocumentInfo(nsIDocument* aDocument)
     : mDocument(aDocument),
       mScriptAccess(true),
       mIsChrome(false),
       mFirstBinding(nullptr) {
+||||||| merged common ancestors
+nsXBLDocumentInfo::nsXBLDocumentInfo(nsIDocument* aDocument)
+  : mDocument(aDocument),
+    mScriptAccess(true),
+    mIsChrome(false),
+    mFirstBinding(nullptr)
+{
+=======
+nsXBLDocumentInfo::nsXBLDocumentInfo(Document* aDocument)
+    : mDocument(aDocument),
+      mScriptAccess(true),
+      mIsChrome(false),
+      mFirstBinding(nullptr) {
+>>>>>>> upstream-releases
   nsIURI* uri = aDocument->GetDocumentURI();
   if (IsChromeURI(uri)) {
     // Cache whether or not this chrome XBL can execute scripts.
@@ -172,9 +187,20 @@ void nsXBLDocumentInfo::RemovePrototypeBinding(const nsACString& aRef) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult nsXBLDocumentInfo::ReadPrototypeBindings(nsIURI* aURI,
                                                   nsXBLDocumentInfo** aDocInfo,
                                                   nsIDocument* aBoundDocument) {
+||||||| merged common ancestors
+nsresult
+nsXBLDocumentInfo::ReadPrototypeBindings(nsIURI* aURI, nsXBLDocumentInfo** aDocInfo,
+                                         nsIDocument* aBoundDocument)
+{
+=======
+nsresult nsXBLDocumentInfo::ReadPrototypeBindings(nsIURI* aURI,
+                                                  nsXBLDocumentInfo** aDocInfo,
+                                                  Document* aBoundDocument) {
+>>>>>>> upstream-releases
   *aDocInfo = nullptr;
 
   nsAutoCString spec(kXBLCachePrefix);
@@ -214,7 +240,7 @@ nsresult nsXBLDocumentInfo::ReadPrototypeBindings(nsIURI* aURI,
   nsContentUtils::GetSecurityManager()->GetSystemPrincipal(
       getter_AddRefs(principal));
 
-  nsCOMPtr<nsIDocument> doc;
+  nsCOMPtr<Document> doc;
   rv = NS_NewXBLDocument(getter_AddRefs(doc), aURI, nullptr, principal);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -285,6 +311,7 @@ void nsXBLDocumentInfo::SetFirstPrototypeBinding(
   mFirstBinding = aBinding;
 }
 
+<<<<<<< HEAD
 void nsXBLDocumentInfo::FlushSkinStylesheets() {
   if (mBindingTable) {
     for (auto iter = mBindingTable->Iter(); !iter.Done(); iter.Next()) {
@@ -293,6 +320,19 @@ void nsXBLDocumentInfo::FlushSkinStylesheets() {
   }
 }
 
+||||||| merged common ancestors
+void
+nsXBLDocumentInfo::FlushSkinStylesheets()
+{
+  if (mBindingTable) {
+    for (auto iter = mBindingTable->Iter(); !iter.Done(); iter.Next()) {
+      iter.UserData()->FlushSkinSheets();
+    }
+  }
+}
+
+=======
+>>>>>>> upstream-releases
 #ifdef DEBUG
 void AssertInCompilationScope() {
   AutoJSContext cx;

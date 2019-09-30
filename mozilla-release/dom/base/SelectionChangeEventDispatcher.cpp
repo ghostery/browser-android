@@ -11,9 +11,10 @@
 #include "SelectionChangeEventDispatcher.h"
 
 #include "mozilla/AsyncEventDispatcher.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsCOMPtr.h"
 #include "nsContentUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsFrameSelection.h"
 #include "nsRange.h"
 #include "mozilla/dom/Selection.h"
@@ -23,6 +24,7 @@ namespace mozilla {
 using namespace dom;
 
 SelectionChangeEventDispatcher::RawRangeData::RawRangeData(
+<<<<<<< HEAD
     const nsRange* aRange) {
   mozilla::ErrorResult rv;
   mStartContainer = aRange->GetStartContainer(rv);
@@ -33,8 +35,35 @@ SelectionChangeEventDispatcher::RawRangeData::RawRangeData(
   rv.SuppressException();
   mEndOffset = aRange->GetEndOffset(rv);
   rv.SuppressException();
+||||||| merged common ancestors
+                                                const nsRange* aRange)
+{
+  mozilla::ErrorResult rv;
+  mStartContainer = aRange->GetStartContainer(rv);
+  rv.SuppressException();
+  mEndContainer = aRange->GetEndContainer(rv);
+  rv.SuppressException();
+  mStartOffset = aRange->GetStartOffset(rv);
+  rv.SuppressException();
+  mEndOffset = aRange->GetEndOffset(rv);
+  rv.SuppressException();
+=======
+    const nsRange* aRange) {
+  if (aRange->IsPositioned()) {
+    mStartContainer = aRange->GetStartContainer();
+    mEndContainer = aRange->GetEndContainer();
+    mStartOffset = aRange->StartOffset();
+    mEndOffset = aRange->EndOffset();
+  } else {
+    mStartContainer = nullptr;
+    mEndContainer = nullptr;
+    mStartOffset = 0;
+    mEndOffset = 0;
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool SelectionChangeEventDispatcher::RawRangeData::Equals(
     const nsRange* aRange) {
   mozilla::ErrorResult rv;
@@ -47,6 +76,31 @@ bool SelectionChangeEventDispatcher::RawRangeData::Equals(
   eq = eq && mEndOffset == aRange->GetEndOffset(rv);
   rv.SuppressException();
   return eq;
+||||||| merged common ancestors
+bool
+SelectionChangeEventDispatcher::RawRangeData::Equals(const nsRange* aRange)
+{
+  mozilla::ErrorResult rv;
+  bool eq = mStartContainer == aRange->GetStartContainer(rv);
+  rv.SuppressException();
+  eq = eq && mEndContainer == aRange->GetEndContainer(rv);
+  rv.SuppressException();
+  eq = eq && mStartOffset == aRange->GetStartOffset(rv);
+  rv.SuppressException();
+  eq = eq && mEndOffset == aRange->GetEndOffset(rv);
+  rv.SuppressException();
+  return eq;
+=======
+bool SelectionChangeEventDispatcher::RawRangeData::Equals(
+    const nsRange* aRange) {
+  if (!aRange->IsPositioned()) {
+    return !mStartContainer;
+  }
+  return mStartContainer == aRange->GetStartContainer() &&
+         mEndContainer == aRange->GetEndContainer() &&
+         mStartOffset == aRange->StartOffset() &&
+         mEndOffset == aRange->EndOffset();
+>>>>>>> upstream-releases
 }
 
 inline void ImplCycleCollectionTraverse(
@@ -72,12 +126,26 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(SelectionChangeEventDispatcher, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(SelectionChangeEventDispatcher, Release)
 
+<<<<<<< HEAD
 void SelectionChangeEventDispatcher::OnSelectionChange(nsIDocument* aDoc,
                                                        Selection* aSel,
                                                        int16_t aReason) {
   nsIDocument* doc = aSel->GetParentObject();
+||||||| merged common ancestors
+void
+SelectionChangeEventDispatcher::OnSelectionChange(nsIDocument* aDoc,
+                                                  Selection* aSel,
+                                                  int16_t aReason)
+{
+  nsIDocument* doc = aSel->GetParentObject();
+=======
+void SelectionChangeEventDispatcher::OnSelectionChange(Document* aDoc,
+                                                       Selection* aSel,
+                                                       int16_t aReason) {
+  Document* doc = aSel->GetParentObject();
+>>>>>>> upstream-releases
   if (!(doc && nsContentUtils::IsSystemPrincipal(doc->NodePrincipal())) &&
-      !nsFrameSelection::sSelectionEventsEnabled) {
+      !StaticPrefs::dom_select_events_enabled()) {
     return;
   }
 

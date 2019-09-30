@@ -270,7 +270,34 @@ nsresult nsINIParser::DeleteSection(const char* aSection) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsINIParser::WriteToFile(nsIFile* aFile) {
+||||||| merged common ancestors
+nsresult
+nsINIParser::WriteToFile(nsIFile *aFile) {
+=======
+nsresult nsINIParser::RenameSection(const char* aSection,
+                                    const char* aNewName) {
+  if (!IsValidSection(aSection) || !IsValidSection(aNewName)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  if (mSections.Get(aNewName, nullptr)) {
+    return NS_ERROR_ILLEGAL_VALUE;
+  }
+
+  nsAutoPtr<INIValue> val;
+  if (mSections.Remove(aSection, &val)) {
+    mSections.Put(aNewName, val.forget());
+  } else {
+    return NS_ERROR_FAILURE;
+  }
+
+  return NS_OK;
+}
+
+nsresult nsINIParser::WriteToFile(nsIFile* aFile) {
+>>>>>>> upstream-releases
   nsCString buffer;
 
   for (auto iter = mSections.Iter(); !iter.Done(); iter.Next()) {

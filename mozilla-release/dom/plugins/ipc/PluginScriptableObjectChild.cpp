@@ -51,15 +51,35 @@ PluginScriptableObjectChild::HashIdentifier(const nsCString& aIdentifier) {
   return stored;
 }
 
+<<<<<<< HEAD
 /* static */ void PluginScriptableObjectChild::UnhashIdentifier(
     StoredIdentifier* aStored) {
+||||||| merged common ancestors
+/* static */ void
+PluginScriptableObjectChild::UnhashIdentifier(StoredIdentifier* aStored)
+{
+=======
+/* static */
+void PluginScriptableObjectChild::UnhashIdentifier(StoredIdentifier* aStored) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(sIdentifiers.Get(aStored->mIdentifier));
   sIdentifiers.Remove(aStored->mIdentifier);
 }
 
+<<<<<<< HEAD
 /* static */ void PluginScriptableObjectChild::ClearIdentifiers() {
   sIdentifiers.Clear();
 }
+||||||| merged common ancestors
+/* static */ void
+PluginScriptableObjectChild::ClearIdentifiers()
+{
+  sIdentifiers.Clear();
+}
+=======
+/* static */
+void PluginScriptableObjectChild::ClearIdentifiers() { sIdentifiers.Clear(); }
+>>>>>>> upstream-releases
 
 PluginScriptableObjectChild::StackIdentifier::StackIdentifier(
     const PluginIdentifier& aIdentifier)
@@ -1131,8 +1151,18 @@ void PluginScriptableObjectChild::UnregisterActor(NPObject* aObject) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ PluginScriptableObjectChild*
 PluginScriptableObjectChild::GetActorForNPObject(NPObject* aObject) {
+||||||| merged common ancestors
+/* static */ PluginScriptableObjectChild*
+PluginScriptableObjectChild::GetActorForNPObject(NPObject* aObject)
+{
+=======
+/* static */
+PluginScriptableObjectChild* PluginScriptableObjectChild::GetActorForNPObject(
+    NPObject* aObject) {
+>>>>>>> upstream-releases
   AssertPluginThread();
   MOZ_ASSERT(aObject, "Null pointer!");
 
@@ -1145,8 +1175,18 @@ PluginScriptableObjectChild::GetActorForNPObject(NPObject* aObject) {
   return d->actor;
 }
 
+<<<<<<< HEAD
 /* static */ void PluginScriptableObjectChild::RegisterObject(
     NPObject* aObject, PluginInstanceChild* aInstance) {
+||||||| merged common ancestors
+/* static */ void
+PluginScriptableObjectChild::RegisterObject(NPObject* aObject, PluginInstanceChild* aInstance)
+{
+=======
+/* static */
+void PluginScriptableObjectChild::RegisterObject(
+    NPObject* aObject, PluginInstanceChild* aInstance) {
+>>>>>>> upstream-releases
   AssertPluginThread();
 
   if (!sObjectMap) {
@@ -1158,8 +1198,17 @@ PluginScriptableObjectChild::GetActorForNPObject(NPObject* aObject) {
   d->instance = aInstance;
 }
 
+<<<<<<< HEAD
 /* static */ void PluginScriptableObjectChild::UnregisterObject(
     NPObject* aObject) {
+||||||| merged common ancestors
+/* static */ void
+PluginScriptableObjectChild::UnregisterObject(NPObject* aObject)
+{
+=======
+/* static */
+void PluginScriptableObjectChild::UnregisterObject(NPObject* aObject) {
+>>>>>>> upstream-releases
   AssertPluginThread();
 
   sObjectMap->RemoveEntry(aObject);
@@ -1170,8 +1219,18 @@ PluginScriptableObjectChild::GetActorForNPObject(NPObject* aObject) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ PluginInstanceChild*
 PluginScriptableObjectChild::GetInstanceForNPObject(NPObject* aObject) {
+||||||| merged common ancestors
+/* static */ PluginInstanceChild*
+PluginScriptableObjectChild::GetInstanceForNPObject(NPObject* aObject)
+{
+=======
+/* static */
+PluginInstanceChild* PluginScriptableObjectChild::GetInstanceForNPObject(
+    NPObject* aObject) {
+>>>>>>> upstream-releases
   AssertPluginThread();
   if (!sObjectMap) {
     // All PluginInstanceChilds have been destroyed
@@ -1185,8 +1244,18 @@ PluginScriptableObjectChild::GetInstanceForNPObject(NPObject* aObject) {
   return d->instance;
 }
 
+<<<<<<< HEAD
 /* static */ void PluginScriptableObjectChild::NotifyOfInstanceShutdown(
     PluginInstanceChild* aInstance) {
+||||||| merged common ancestors
+/* static */ void
+PluginScriptableObjectChild::NotifyOfInstanceShutdown(PluginInstanceChild* aInstance)
+{
+=======
+/* static */
+void PluginScriptableObjectChild::NotifyOfInstanceShutdown(
+    PluginInstanceChild* aInstance) {
+>>>>>>> upstream-releases
   AssertPluginThread();
   if (!sObjectMap) {
     return;

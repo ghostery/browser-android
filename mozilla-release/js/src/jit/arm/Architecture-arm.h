@@ -20,7 +20,7 @@
 // ABI target. The iOS toolchain doesn't define anything specific here,
 // but iOS always supports VFP.
 #if defined(__ARM_PCS_VFP) || defined(XP_IOS)
-#define JS_CODEGEN_ARM_HARDFP
+#  define JS_CODEGEN_ARM_HARDFP
 #endif
 
 namespace js {
@@ -164,6 +164,7 @@ class Registers {
 
 // Smallest integer type that can hold a register bitmask.
 typedef uint16_t PackedRegisterMask;
+<<<<<<< HEAD
 typedef uint16_t PackedRegisterMask;
 
 class FloatRegisters {
@@ -273,6 +274,224 @@ class FloatRegisters {
   static uint32_t ActualTotalPhys();
 
   /* clang-format off */
+||||||| merged common ancestors
+typedef uint16_t PackedRegisterMask;
+
+class FloatRegisters
+{
+  public:
+    enum FPRegisterID {
+        s0,
+        s1,
+        s2,
+        s3,
+        s4,
+        s5,
+        s6,
+        s7,
+        s8,
+        s9,
+        s10,
+        s11,
+        s12,
+        s13,
+        s14,
+        s15,
+        s16,
+        s17,
+        s18,
+        s19,
+        s20,
+        s21,
+        s22,
+        s23,
+        s24,
+        s25,
+        s26,
+        s27,
+        s28,
+        s29,
+        s30,
+        s31,
+        d0,
+        d1,
+        d2,
+        d3,
+        d4,
+        d5,
+        d6,
+        d7,
+        d8,
+        d9,
+        d10,
+        d11,
+        d12,
+        d13,
+        d14,
+        d15,
+        d16,
+        d17,
+        d18,
+        d19,
+        d20,
+        d21,
+        d22,
+        d23,
+        d24,
+        d25,
+        d26,
+        d27,
+        d28,
+        d29,
+        d30,
+        d31,
+        invalid_freg
+    };
+
+    typedef uint32_t Code;
+    typedef FPRegisterID Encoding;
+
+    // Content spilled during bailouts.
+    union RegisterContent {
+        double d;
+    };
+
+    static const char* GetDoubleName(Encoding code) {
+        static const char * const Names[] = { "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7",
+                                              "d8", "d9", "d10", "d11", "d12", "d13", "d14", "d15",
+                                              "d16", "d17", "d18", "d19", "d20", "d21", "d22", "d23",
+                                              "d24", "d25", "d26", "d27", "d28", "d29", "d30", "d31"};
+        return Names[code];
+    }
+    static const char* GetSingleName(Encoding code) {
+        static const char * const Names[] = { "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+                                              "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15",
+                                              "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23",
+                                              "s24", "s25", "s26", "s27", "s28", "s29", "s30", "s31"};
+        return Names[code];
+    }
+
+    static Code FromName(const char* name);
+
+    static const Encoding Invalid = invalid_freg;
+    static const uint32_t Total = 48;
+    static const uint32_t TotalDouble = 16;
+    static const uint32_t TotalSingle = 32;
+    static const uint32_t Allocatable = 45;
+    // There are only 32 places that we can put values.
+    static const uint32_t TotalPhys = 32;
+    static uint32_t ActualTotalPhys();
+
+=======
+
+class FloatRegisters {
+ public:
+  enum FPRegisterID {
+    s0,
+    s1,
+    s2,
+    s3,
+    s4,
+    s5,
+    s6,
+    s7,
+    s8,
+    s9,
+    s10,
+    s11,
+    s12,
+    s13,
+    s14,
+    s15,
+    s16,
+    s17,
+    s18,
+    s19,
+    s20,
+    s21,
+    s22,
+    s23,
+    s24,
+    s25,
+    s26,
+    s27,
+    s28,
+    s29,
+    s30,
+    s31,
+    d0,
+    d1,
+    d2,
+    d3,
+    d4,
+    d5,
+    d6,
+    d7,
+    d8,
+    d9,
+    d10,
+    d11,
+    d12,
+    d13,
+    d14,
+    d15,
+    d16,
+    d17,
+    d18,
+    d19,
+    d20,
+    d21,
+    d22,
+    d23,
+    d24,
+    d25,
+    d26,
+    d27,
+    d28,
+    d29,
+    d30,
+    d31,
+    invalid_freg
+  };
+
+  typedef uint32_t Code;
+  typedef FPRegisterID Encoding;
+
+  // Content spilled during bailouts.
+  union RegisterContent {
+    double d;
+  };
+
+  static const char* GetDoubleName(Encoding code) {
+    static const char* const Names[] = {
+        "d0",  "d1",  "d2",  "d3",  "d4",  "d5",  "d6",  "d7",
+        "d8",  "d9",  "d10", "d11", "d12", "d13", "d14", "d15",
+        "d16", "d17", "d18", "d19", "d20", "d21", "d22", "d23",
+        "d24", "d25", "d26", "d27", "d28", "d29", "d30", "d31"};
+    return Names[code];
+  }
+  static const char* GetSingleName(Encoding code) {
+    static const char* const Names[] = {
+        "s0",  "s1",  "s2",  "s3",  "s4",  "s5",  "s6",  "s7",
+        "s8",  "s9",  "s10", "s11", "s12", "s13", "s14", "s15",
+        "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23",
+        "s24", "s25", "s26", "s27", "s28", "s29", "s30", "s31"};
+    return Names[code];
+  }
+
+  static Code FromName(const char* name);
+
+  static const Encoding Invalid = invalid_freg;
+  static const uint32_t Total = 48;
+  static const uint32_t TotalDouble = 16;
+  static const uint32_t TotalSingle = 32;
+  static const uint32_t Allocatable = 45;
+  // There are only 32 places that we can put values.
+  static const uint32_t TotalPhys = 32;
+  static uint32_t ActualTotalPhys();
+
+  /* clang-format off */
+>>>>>>> upstream-releases
     // ARM float registers overlap in a way that for 1 double registers, in the
     // range d0-d15, we have 2 singles register in the range s0-s31. d16-d31
     // have no single register aliases.  The aliasing rule state that d{n}
@@ -450,6 +669,7 @@ class VFPRegister {
     if (kind == other.kind) {
       return code_ == other.code_;
     }
+<<<<<<< HEAD
     return doubleOverlay() == other.doubleOverlay();
   }
   static const int NumAliasedDoubles = 16;
@@ -466,6 +686,125 @@ class VFPRegister {
   VFPRegister aliased(uint32_t aliasIdx) {
     if (aliasIdx == 0) {
       return *this;
+||||||| merged common ancestors
+    const char* name() const {
+        if (isDouble()) {
+            return FloatRegisters::GetDoubleName(Encoding(code_));
+        }
+        return FloatRegisters::GetSingleName(Encoding(code_));
+    }
+    bool aliases(const VFPRegister& other) {
+        if (kind == other.kind) {
+            return code_ == other.code_;
+        }
+        return doubleOverlay() == other.doubleOverlay();
+    }
+    static const int NumAliasedDoubles = 16;
+    uint32_t numAliased() const {
+        if (isDouble()) {
+            if (code_ < NumAliasedDoubles) {
+                return 3;
+            }
+            return 1;
+        }
+        return 2;
+    }
+
+    VFPRegister aliased(uint32_t aliasIdx) {
+        if (aliasIdx == 0) {
+            return *this;
+        }
+        if (isDouble()) {
+            MOZ_ASSERT(code_ < NumAliasedDoubles);
+            MOZ_ASSERT(aliasIdx <= 2);
+            return singleOverlay(aliasIdx - 1);
+        }
+        MOZ_ASSERT(aliasIdx == 1);
+        return doubleOverlay(aliasIdx - 1);
+    }
+    uint32_t numAlignedAliased() const {
+        if (isDouble()) {
+            if (code_ < NumAliasedDoubles) {
+                return 2;
+            }
+            return 1;
+        }
+        // s1 has 0 other aligned aliases, 1 total.
+        // s0 has 1 other aligned aliase, 2 total.
+        return 2 - (code_ & 1);
+    }
+    // |   d0    |
+    // | s0 | s1 |
+    // If we've stored s0 and s1 in memory, we also want to say that d0 is
+    // stored there, but it is only stored at the location where it is aligned
+    // e.g. at s0, not s1.
+    VFPRegister alignedAliased(uint32_t aliasIdx) {
+        if (aliasIdx == 0) {
+            return *this;
+        }
+        MOZ_ASSERT(aliasIdx == 1);
+        if (isDouble()) {
+            MOZ_ASSERT(code_ < NumAliasedDoubles);
+            return singleOverlay(aliasIdx - 1);
+        }
+        MOZ_ASSERT((code_ & 1) == 0);
+        return doubleOverlay(aliasIdx - 1);
+    }
+
+    typedef FloatRegisters::SetType SetType;
+
+    // This function is used to ensure that Register set can take all Single
+    // registers, even if we are taking a mix of either double or single
+    // registers.
+    //
+    //   s0.alignedOrDominatedAliasedSet() == s0 | d0.
+    //   s1.alignedOrDominatedAliasedSet() == s1.
+    //   d0.alignedOrDominatedAliasedSet() == s0 | s1 | d0.
+    //
+    // This way the Allocatable register set does not have to do any arithmetics
+    // to know if a register is available or not, as we have the following
+    // relations:
+    //
+    //   d0.alignedOrDominatedAliasedSet() ==
+    //       s0.alignedOrDominatedAliasedSet() | s1.alignedOrDominatedAliasedSet()
+    //
+    //   s0.alignedOrDominatedAliasedSet() & s1.alignedOrDominatedAliasedSet() == 0
+    //
+    SetType alignedOrDominatedAliasedSet() const {
+        if (isSingle()) {
+            if (code_ % 2 != 0) {
+                return SetType(1) << code_;
+            }
+            return (SetType(1) << code_) | (SetType(1) << (32 + code_ / 2));
+        }
+
+        MOZ_ASSERT(isDouble());
+        return (SetType(0b11) << (code_ * 2)) | (SetType(1) << (32 + code_));
+    }
+
+    static constexpr RegTypeName DefaultType = RegTypeName::Float64;
+
+    template <RegTypeName = DefaultType>
+    static SetType LiveAsIndexableSet(SetType s) {
+        return SetType(0);
+=======
+    return doubleOverlay() == other.doubleOverlay();
+  }
+  static const int NumAliasedDoubles = 16;
+  uint32_t numAliased() const {
+    if (isDouble()) {
+      if (code_ < NumAliasedDoubles) {
+        return 3;
+      }
+      return 1;
+    }
+    return 2;
+  }
+
+  VFPRegister aliased(uint32_t aliasIdx) {
+    if (aliasIdx == 0) {
+      return *this;
+>>>>>>> upstream-releases
     }
     if (isDouble()) {
       MOZ_ASSERT(code_ < NumAliasedDoubles);
@@ -712,12 +1051,29 @@ uint32_t GetARMFlags();
 #ifdef JS_SIMULATOR_ARM
 bool UseHardFpABI();
 #else
+<<<<<<< HEAD
 static inline bool UseHardFpABI() {
 #if defined(JS_CODEGEN_ARM_HARDFP)
   return true;
 #else
   return false;
 #endif
+||||||| merged common ancestors
+static inline bool UseHardFpABI()
+{
+#if defined(JS_CODEGEN_ARM_HARDFP)
+    return true;
+#else
+    return false;
+#endif
+=======
+static inline bool UseHardFpABI() {
+#  if defined(JS_CODEGEN_ARM_HARDFP)
+  return true;
+#  else
+  return false;
+#  endif
+>>>>>>> upstream-releases
 }
 #endif
 

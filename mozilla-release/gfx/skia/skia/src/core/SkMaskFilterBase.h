@@ -17,10 +17,15 @@
 #include "SkStrokeRec.h"
 
 class GrClip;
-class GrContext;
 struct GrFPArgs;
 class GrFragmentProcessor;
+<<<<<<< HEAD
 class GrPaint;
+||||||| merged common ancestors
+=======
+class GrPaint;
+class GrRecordingContext;
+>>>>>>> upstream-releases
 class GrRenderTarget;
 class GrRenderTargetContext;
 class GrResourceProvider;
@@ -108,8 +113,16 @@ public:
      *  Try to directly render the mask filter into the target. Returns true if drawing was
      *  successful. If false is returned then paint is unmodified.
      */
+<<<<<<< HEAD
     virtual bool directFilterMaskGPU(GrContext*,
                                      GrRenderTargetContext*,
+||||||| merged common ancestors
+    virtual bool directFilterMaskGPU(GrContext*,
+                                     GrRenderTargetContext* renderTargetContext,
+=======
+    virtual bool directFilterMaskGPU(GrRecordingContext*,
+                                     GrRenderTargetContext*,
+>>>>>>> upstream-releases
                                      GrPaint&& paint,
                                      const GrClip&,
                                      const SkMatrix& viewMatrix,
@@ -122,7 +135,7 @@ public:
      * Implementations are free to get the GrContext from the src texture in order to create
      * additional textures and perform multiple passes.
      */
-    virtual sk_sp<GrTextureProxy> filterMaskGPU(GrContext*,
+    virtual sk_sp<GrTextureProxy> filterMaskGPU(GrRecordingContext*,
                                                 sk_sp<GrTextureProxy> srcProxy,
                                                 const SkMatrix& ctm,
                                                 const SkIRect& maskRect) const;

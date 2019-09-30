@@ -18,10 +18,12 @@
 #include "SkWriteBuffer.h"
 
 #if SK_SUPPORT_GPU
-#include "GrContext.h"
+#include "GrCaps.h"
 #include "GrFixedClip.h"
 #include "GrFragmentProcessor.h"
 #include "GrPaint.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
 #include "GrRenderTargetContext.h"
 #include "GrTexture.h"
 #include "GrTextureProxy.h"
@@ -460,16 +462,31 @@ sk_sp<SkSpecialImage> SkLightingImageFilterInternal::filterImageGPU(
                                                    const OutputProperties& outputProperties) const {
     SkASSERT(source->isTextureBacked());
 
-    GrContext* context = source->getContext();
+    auto context = source->getContext();
 
     sk_sp<GrTextureProxy> inputProxy(input->asTextureProxyRef(context));
     SkASSERT(inputProxy);
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
 
     sk_sp<GrRenderTargetContext> renderTargetContext(
         context->contextPriv().makeDeferredRenderTargetContext(
                                 SkBackingFit::kApprox, offsetBounds.width(), offsetBounds.height(),
                                 SkColorType2GrPixelConfig(outputProperties.colorType()),
+||||||| merged common ancestors
+    sk_sp<GrRenderTargetContext> renderTargetContext(context->makeDeferredRenderTargetContext(
+                                SkBackingFit::kApprox, offsetBounds.width(), offsetBounds.height(),
+                                GrRenderableConfigForColorSpace(outputProperties.colorSpace()),
+=======
+    SkColorType colorType = outputProperties.colorType();
+    GrBackendFormat format =
+            context->priv().caps()->getBackendFormatFromColorType(colorType);
+
+    sk_sp<GrRenderTargetContext> renderTargetContext(
+        context->priv().makeDeferredRenderTargetContext(
+                                format, SkBackingFit::kApprox, offsetBounds.width(),
+                                offsetBounds.height(), SkColorType2GrPixelConfig(colorType),
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
                                 sk_ref_sp(outputProperties.colorSpace())));
     if (!renderTargetContext) {
         return nullptr;
@@ -529,7 +546,13 @@ public:
                                      sk_sp<SkImageFilter>,
                                      const CropRect*);
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDiffuseLightingImageFilter)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDiffuseLightingImageFilter)
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SkScalar kd() const { return fKD; }
 
 protected:
@@ -550,6 +573,7 @@ protected:
 #endif
 
 private:
+    SK_FLATTENABLE_HOOKS(SkDiffuseLightingImageFilter)
     friend class SkLightingImageFilter;
     SkScalar fKD;
 
@@ -563,8 +587,15 @@ public:
                                      SkScalar ks, SkScalar shininess,
                                      sk_sp<SkImageFilter>, const CropRect*);
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSpecularLightingImageFilter)
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSpecularLightingImageFilter)
+
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/effects/imagefilters/SkLightingImageFilter.cpp
     SkScalar ks() const { return fKS; }
     SkScalar shininess() const { return fShininess; }
 
@@ -587,6 +618,8 @@ protected:
 #endif
 
 private:
+    SK_FLATTENABLE_HOOKS(SkSpecularLightingImageFilter)
+
     SkScalar fKS;
     SkScalar fShininess;
     friend class SkLightingImageFilter;
@@ -1674,8 +1707,8 @@ private:
 static GrTextureDomain create_domain(GrTextureProxy* proxy, const SkIRect* srcBounds,
                                      GrTextureDomain::Mode mode) {
     if (srcBounds) {
-        SkRect texelDomain = GrTextureDomain::MakeTexelDomainForMode(*srcBounds, mode);
-        return GrTextureDomain(proxy, texelDomain, mode);
+        SkRect texelDomain = GrTextureDomain::MakeTexelDomain(*srcBounds, mode);
+        return GrTextureDomain(proxy, texelDomain, mode, mode);
     } else {
         return GrTextureDomain::IgnoredDomain();
     }
@@ -1924,7 +1957,7 @@ void GrGLLightingEffect::onSetData(const GrGLSLProgramDataManager& pdman,
     pdman.set1f(fSurfaceScaleUni, lighting.surfaceScale());
     sk_sp<SkImageFilterLight> transformedLight(
             lighting.light()->transform(lighting.filterMatrix()));
-    fDomain.setData(pdman, lighting.domain(), proxy);
+    fDomain.setData(pdman, lighting.domain(), proxy, lighting.textureSampler(0).samplerState());
     fLight->setData(pdman, transformedLight.get());
 }
 
@@ -2041,7 +2074,7 @@ void GrGLSpecularLightingEffect::emitLightFunc(GrGLSLUniformHandler* uniformHand
     };
     SkString lightBody;
     lightBody.appendf("\thalf3 halfDir = half3(normalize(surfaceToLight + half3(0, 0, 1)));\n");
-    lightBody.appendf("\tfloat colorScale = %s * pow(dot(normal, halfDir), %s);\n",
+    lightBody.appendf("\thalf colorScale = half(%s * pow(dot(normal, halfDir), %s));\n",
                       ks, shininess);
     lightBody.appendf("\thalf3 color = lightColor * saturate(colorScale);\n");
     lightBody.appendf("\treturn half4(color, max(max(color.r, color.g), color.b));\n");
@@ -2190,7 +2223,7 @@ void GrGLSpotLight::emitLightColor(GrGLSLUniformHandler* uniformHandler,
 
 #endif
 
-SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_START(SkLightingImageFilter)
-    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkDiffuseLightingImageFilter)
-    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkSpecularLightingImageFilter)
-SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_END
+void SkLightingImageFilter::RegisterFlattenables() {
+    SK_REGISTER_FLATTENABLE(SkDiffuseLightingImageFilter);
+    SK_REGISTER_FLATTENABLE(SkSpecularLightingImageFilter);
+}

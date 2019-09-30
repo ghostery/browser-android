@@ -58,12 +58,27 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(nsXULPrototypeDocument)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mPrototypeWaiters)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(nsXULPrototypeDocument)
+<<<<<<< HEAD
   if (nsCCUncollectableMarker::InGeneration(cb, tmp->mCCGeneration)) {
     return NS_SUCCESS_INTERRUPTED_TRAVERSE;
   }
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRoot)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mNodeInfoManager)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPrototypeWaiters)
+||||||| merged common ancestors
+    if (nsCCUncollectableMarker::InGeneration(cb, tmp->mCCGeneration)) {
+        return NS_SUCCESS_INTERRUPTED_TRAVERSE;
+    }
+    NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRoot)
+    NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mNodeInfoManager)
+    NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPrototypeWaiters)
+=======
+  if (nsCCUncollectableMarker::InGeneration(cb, tmp->mCCGeneration)) {
+    return NS_SUCCESS_INTERRUPTED_TRAVERSE;
+  }
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRoot)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mNodeInfoManager)
+>>>>>>> upstream-releases
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsXULPrototypeDocument)
@@ -75,12 +90,34 @@ NS_IMPL_CYCLE_COLLECTING_ADDREF(nsXULPrototypeDocument)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(nsXULPrototypeDocument)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 NS_NewXULPrototypeDocument(nsXULPrototypeDocument** aResult) {
   *aResult = nullptr;
   RefPtr<nsXULPrototypeDocument> doc = new nsXULPrototypeDocument();
 
   nsresult rv = doc->Init();
   if (NS_FAILED(rv)) {
+||||||| merged common ancestors
+NS_NewXULPrototypeDocument(nsXULPrototypeDocument** aResult)
+{
+    *aResult = nullptr;
+    RefPtr<nsXULPrototypeDocument> doc =
+      new nsXULPrototypeDocument();
+
+    nsresult rv = doc->Init();
+    if (NS_FAILED(rv)) {
+        return rv;
+    }
+
+    doc.forget(aResult);
+=======
+NS_NewXULPrototypeDocument(nsXULPrototypeDocument** aResult) {
+  *aResult = nullptr;
+  RefPtr<nsXULPrototypeDocument> doc = new nsXULPrototypeDocument();
+
+  nsresult rv = doc->Init();
+  if (NS_FAILED(rv)) {
+>>>>>>> upstream-releases
     return rv;
   }
 
@@ -94,6 +131,7 @@ NS_NewXULPrototypeDocument(nsXULPrototypeDocument** aResult) {
 //
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXULPrototypeDocument::Read(nsIObjectInputStream* aStream) {
   nsCOMPtr<nsISupports> supports;
   nsresult rv = aStream->ReadObject(true, getter_AddRefs(supports));
@@ -126,6 +164,47 @@ nsXULPrototypeDocument::Read(nsIObjectInputStream* aStream) {
   RefPtr<nsAtom> prefix;
   for (i = 0; i < count; ++i) {
     rv = aStream->ReadString(namespaceURI);
+||||||| merged common ancestors
+nsXULPrototypeDocument::Read(nsIObjectInputStream* aStream)
+{
+    nsCOMPtr<nsISupports> supports;
+    nsresult rv = aStream->ReadObject(true, getter_AddRefs(supports));
+=======
+nsXULPrototypeDocument::Read(nsIObjectInputStream* aStream) {
+  nsCOMPtr<nsISupports> supports;
+  nsresult rv = aStream->ReadObject(true, getter_AddRefs(supports));
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  mURI = do_QueryInterface(supports);
+
+  // nsIPrincipal mNodeInfoManager->mPrincipal
+  nsAutoCString JSON;
+  rv = aStream->ReadCString(JSON);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  nsCOMPtr<nsIPrincipal> principal = mozilla::BasePrincipal::FromJSON(JSON);
+
+  // Better safe than sorry....
+  mNodeInfoManager->SetDocumentPrincipal(principal);
+
+  mRoot = new nsXULPrototypeElement();
+
+  // mozilla::dom::NodeInfo table
+  nsTArray<RefPtr<mozilla::dom::NodeInfo>> nodeInfos;
+
+  uint32_t count, i;
+  rv = aStream->Read32(&count);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  nsAutoString namespaceURI, prefixStr, localName;
+  bool prefixIsNull;
+  RefPtr<nsAtom> prefix;
+  for (i = 0; i < count; ++i) {
+    rv = aStream->ReadString(namespaceURI);
+>>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -232,6 +311,7 @@ static nsresult GetNodeInfos(nsXULPrototypeElement* aPrototype,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXULPrototypeDocument::Write(nsIObjectOutputStream* aStream) {
   nsresult rv;
 
@@ -243,6 +323,27 @@ nsXULPrototypeDocument::Write(nsIObjectOutputStream* aStream) {
   if (NS_FAILED(tmp)) {
     rv = tmp;
   }
+||||||| merged common ancestors
+nsXULPrototypeDocument::Write(nsIObjectOutputStream* aStream)
+{
+    nsresult rv;
+
+    rv = aStream->WriteCompoundObject(mURI, NS_GET_IID(nsIURI), true);
+=======
+nsXULPrototypeDocument::Write(nsIObjectOutputStream* aStream) {
+  nsresult rv;
+
+  rv = aStream->WriteCompoundObject(mURI, NS_GET_IID(nsIURI), true);
+
+  // nsIPrincipal mNodeInfoManager->mPrincipal
+  nsAutoCString JSON;
+  mozilla::BasePrincipal::Cast(mNodeInfoManager->DocumentPrincipal())
+      ->ToJSON(JSON);
+  nsresult tmp = aStream->WriteStringZ(JSON.get());
+  if (NS_FAILED(tmp)) {
+    rv = tmp;
+  }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   // XXX Worrisome if we're caching things without system principal.
@@ -376,17 +477,37 @@ nsNodeInfoManager* nsXULPrototypeDocument::GetNodeInfoManager() {
   return mNodeInfoManager;
 }
 
+<<<<<<< HEAD
 nsresult nsXULPrototypeDocument::AwaitLoadDone(XULDocument* aDocument,
                                                bool* aResult) {
   nsresult rv = NS_OK;
+||||||| merged common ancestors
+=======
+nsresult nsXULPrototypeDocument::AwaitLoadDone(Callback&& aCallback,
+                                               bool* aResult) {
+  nsresult rv = NS_OK;
+>>>>>>> upstream-releases
 
   *aResult = mLoaded;
 
+<<<<<<< HEAD
   if (!mLoaded) {
     rv = mPrototypeWaiters.AppendElement(aDocument)
              ? NS_OK
              : NS_ERROR_OUT_OF_MEMORY;  // addrefs
   }
+||||||| merged common ancestors
+    if (!mLoaded) {
+        rv = mPrototypeWaiters.AppendElement(aDocument)
+              ? NS_OK : NS_ERROR_OUT_OF_MEMORY; // addrefs
+    }
+=======
+  if (!mLoaded) {
+    rv = mPrototypeWaiters.AppendElement(std::move(aCallback))
+             ? NS_OK
+             : NS_ERROR_OUT_OF_MEMORY;  // addrefs
+  }
+>>>>>>> upstream-releases
 
   return rv;
 }
@@ -397,6 +518,7 @@ nsresult nsXULPrototypeDocument::NotifyLoadDone() {
   // prototype cache because the winner filled the cache with
   // the not-yet-loaded prototype object.
 
+<<<<<<< HEAD
   nsresult rv = NS_OK;
 
   mLoaded = true;
@@ -409,8 +531,44 @@ nsresult nsXULPrototypeDocument::NotifyLoadDone() {
     if (NS_FAILED(rv)) break;
   }
   mPrototypeWaiters.Clear();
+||||||| merged common ancestors
+nsresult
+nsXULPrototypeDocument::NotifyLoadDone()
+{
+    // Call back to each XUL document that raced to start the same
+    // prototype document load, lost the race, but hit the XUL
+    // prototype cache because the winner filled the cache with
+    // the not-yet-loaded prototype object.
 
+    nsresult rv = NS_OK;
+
+    mLoaded = true;
+
+    for (uint32_t i = mPrototypeWaiters.Length(); i > 0; ) {
+        --i;
+        // true means that OnPrototypeLoadDone will also
+        // call ResumeWalk().
+        rv = mPrototypeWaiters[i]->OnPrototypeLoadDone(true);
+        if (NS_FAILED(rv)) break;
+    }
+    mPrototypeWaiters.Clear();
+=======
+  mLoaded = true;
+
+  for (uint32_t i = mPrototypeWaiters.Length(); i > 0;) {
+    --i;
+    mPrototypeWaiters[i]();
+  }
+  mPrototypeWaiters.Clear();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return rv;
+||||||| merged common ancestors
+    return rv;
+=======
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 void nsXULPrototypeDocument::TraceProtos(JSTracer* aTrc) {

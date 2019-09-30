@@ -34,8 +34,16 @@ NS_IMPL_ISUPPORTS(DirectoryProvider, nsIDirectoryServiceProvider,
                   nsIDirectoryServiceProvider2)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 DirectoryProvider::GetFile(const char *aKey, bool *aPersist,
                            nsIFile **aResult) {
+||||||| merged common ancestors
+DirectoryProvider::GetFile(const char *aKey, bool *aPersist, nsIFile* *aResult)
+{
+=======
+DirectoryProvider::GetFile(const char* aKey, bool* aPersist,
+                           nsIFile** aResult) {
+>>>>>>> upstream-releases
   return NS_ERROR_FAILURE;
 }
 
@@ -56,8 +64,17 @@ DirectoryProvider::GetFile(const char *aKey, bool *aPersist,
 // "distribution.searchplugins.defaultLocale"
 // which specifies a default locale to use.
 
+<<<<<<< HEAD
 static void AppendDistroSearchDirs(nsIProperties *aDirSvc,
                                    nsCOMArray<nsIFile> &array) {
+||||||| merged common ancestors
+static void
+AppendDistroSearchDirs(nsIProperties* aDirSvc, nsCOMArray<nsIFile> &array)
+{
+=======
+static void AppendDistroSearchDirs(nsIProperties* aDirSvc,
+                                   nsCOMArray<nsIFile>& array) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIFile> searchPlugins;
   nsresult rv = aDirSvc->Get(XRE_APP_DISTRIBUTION_DIR, NS_GET_IID(nsIFile),
                              getter_AddRefs(searchPlugins));
@@ -118,7 +135,14 @@ static void AppendDistroSearchDirs(nsIProperties *aDirSvc,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 DirectoryProvider::GetFiles(const char *aKey, nsISimpleEnumerator **aResult) {
+||||||| merged common ancestors
+DirectoryProvider::GetFiles(const char *aKey, nsISimpleEnumerator* *aResult)
+{
+=======
+DirectoryProvider::GetFiles(const char* aKey, nsISimpleEnumerator** aResult) {
+>>>>>>> upstream-releases
   if (!strcmp(aKey, NS_APP_DISTRIBUTION_SEARCH_DIR_LIST)) {
     nsCOMPtr<nsIProperties> dirSvc(
         do_GetService(NS_DIRECTORY_SERVICE_CONTRACTID));
@@ -134,14 +158,31 @@ DirectoryProvider::GetFiles(const char *aKey, nsISimpleEnumerator **aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 DirectoryProvider::AppendingEnumerator::HasMoreElements(bool *aResult) {
+||||||| merged common ancestors
+DirectoryProvider::AppendingEnumerator::HasMoreElements(bool *aResult)
+{
+=======
+DirectoryProvider::AppendingEnumerator::HasMoreElements(bool* aResult) {
+>>>>>>> upstream-releases
   *aResult = mNext ? true : false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 DirectoryProvider::AppendingEnumerator::GetNext(nsISupports **aResult) {
   if (aResult) NS_ADDREF(*aResult = mNext);
+||||||| merged common ancestors
+DirectoryProvider::AppendingEnumerator::GetNext(nsISupports* *aResult)
+{
+  if (aResult)
+    NS_ADDREF(*aResult = mNext);
+=======
+DirectoryProvider::AppendingEnumerator::GetNext(nsISupports** aResult) {
+  if (aResult) NS_ADDREF(*aResult = mNext);
+>>>>>>> upstream-releases
 
   mNext = nullptr;
 
@@ -160,7 +201,13 @@ DirectoryProvider::AppendingEnumerator::GetNext(nsISupports **aResult) {
     nextbase->Clone(getter_AddRefs(mNext));
     if (!mNext) continue;
 
+<<<<<<< HEAD
     char const *const *i = mAppendList;
+||||||| merged common ancestors
+    char const *const * i = mAppendList;
+=======
+    char const* const* i = mAppendList;
+>>>>>>> upstream-releases
     while (*i) {
       mNext->AppendNative(nsDependentCString(*i));
       ++i;
@@ -176,9 +223,22 @@ DirectoryProvider::AppendingEnumerator::GetNext(nsISupports **aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 DirectoryProvider::AppendingEnumerator::AppendingEnumerator(
     nsISimpleEnumerator *aBase, char const *const *aAppendList)
     : mBase(aBase), mAppendList(aAppendList) {
+||||||| merged common ancestors
+DirectoryProvider::AppendingEnumerator::AppendingEnumerator
+    (nsISimpleEnumerator* aBase,
+     char const *const *aAppendList) :
+  mBase(aBase),
+  mAppendList(aAppendList)
+{
+=======
+DirectoryProvider::AppendingEnumerator::AppendingEnumerator(
+    nsISimpleEnumerator* aBase, char const* const* aAppendList)
+    : mBase(aBase), mAppendList(aAppendList) {
+>>>>>>> upstream-releases
   // Initialize mNext to begin.
   GetNext(nullptr);
 }

@@ -11,8 +11,19 @@ add_task(async function() {
 
   info("Check state of the animation inspector after fast mutations");
   await startFastMutations(tab);
+<<<<<<< HEAD
   ok(inspector.panelWin.document.getElementById("animation-container"),
     "Animation inspector should be live");
+||||||| merged common ancestors
+  ok(inspector.panelWin.document.getElementById("animation-container"),
+    "Animation inspector should be live");
+  await animationsFinished;
+=======
+  ok(
+    inspector.panelWin.document.getElementById("animation-container"),
+    "Animation inspector should be live"
+  );
+>>>>>>> upstream-releases
 });
 
 async function startFastMutations(tab) {

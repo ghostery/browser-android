@@ -372,6 +372,7 @@ SiteHPKPState::SiteHPKPState(const nsCString& aHost,
                              const OriginAttributes& aOriginAttributes,
                              PRTime aExpireTime, SecurityPropertyState aState,
                              bool aIncludeSubdomains,
+<<<<<<< HEAD
                              nsTArray<nsCString>& aSHA256keys)
     : mHostname(aHost),
       mOriginAttributes(aOriginAttributes),
@@ -379,6 +380,25 @@ SiteHPKPState::SiteHPKPState(const nsCString& aHost,
       mState(aState),
       mIncludeSubdomains(aIncludeSubdomains),
       mSHA256keys(aSHA256keys) {}
+||||||| merged common ancestors
+                             nsTArray<nsCString>& aSHA256keys)
+  : mHostname(aHost)
+  , mOriginAttributes(aOriginAttributes)
+  , mExpireTime(aExpireTime)
+  , mState(aState)
+  , mIncludeSubdomains(aIncludeSubdomains)
+  , mSHA256keys(aSHA256keys)
+{
+}
+=======
+                             const nsTArray<nsCString>& aSHA256keys)
+    : mHostname(aHost),
+      mOriginAttributes(aOriginAttributes),
+      mExpireTime(aExpireTime),
+      mState(aState),
+      mIncludeSubdomains(aIncludeSubdomains),
+      mSHA256keys(aSHA256keys) {}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 SiteHPKPState::GetHostname(nsACString& aHostname) {
@@ -488,22 +508,26 @@ nsresult nsSiteSecurityService::Init() {
   mSiteStateStorage =
       mozilla::DataStorage::Get(DataStorageClass::SiteSecurityServiceState);
   mPreloadStateStorage =
+<<<<<<< HEAD
       mozilla::DataStorage::Get(DataStorageClass::SecurityPreloadState);
   bool storageWillPersist = false;
   bool preloadStorageWillPersist = false;
   nsresult rv = mSiteStateStorage->Init(storageWillPersist);
+||||||| merged common ancestors
+    mozilla::DataStorage::Get(DataStorageClass::SecurityPreloadState);
+  bool storageWillPersist = false;
+  bool preloadStorageWillPersist = false;
+  nsresult rv = mSiteStateStorage->Init(storageWillPersist);
+=======
+      mozilla::DataStorage::Get(DataStorageClass::SecurityPreloadState);
+  nsresult rv = mSiteStateStorage->Init(nullptr);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
-  rv = mPreloadStateStorage->Init(preloadStorageWillPersist);
+  rv = mPreloadStateStorage->Init(nullptr);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
-  }
-  // This is not fatal. There are some cases where there won't be a
-  // profile directory (e.g. running xpcshell). There isn't the
-  // expectation that site information will be presisted in those cases.
-  if (!storageWillPersist || !preloadStorageWillPersist) {
-    NS_WARNING("site security information will not be persisted");
   }
 
   return NS_OK;
@@ -565,11 +589,12 @@ nsresult nsSiteSecurityService::SetHSTSState(
     SecurityPropertySource aSource, const OriginAttributes& aOriginAttributes) {
   nsAutoCString hostname(aHost);
   bool isPreload = (aSource == SourcePreload);
-  // If max-age is zero, that's an indication to immediately remove the
-  // security state, so here's a shortcut.
-  if (!maxage) {
-    return RemoveStateInternal(aType, hostname, flags, isPreload,
-                               aOriginAttributes);
+  // If max-age is zero, the host is no longer considered HSTS. If the host was
+  // preloaded, we store an entry indicating that this host is not HSTS, causing
+  // the preloaded information to be ignored.
+  if (maxage == 0) {
+    return MarkHostAsNotHSTS(aType, hostname, flags, isPreload,
+                             aOriginAttributes);
   }
 
   MOZ_ASSERT(
@@ -616,6 +641,7 @@ nsresult nsSiteSecurityService::SetHSTSState(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsSiteSecurityService::RemoveStateInternal(
     uint32_t aType, nsIURI* aURI, uint32_t aFlags,
     const OriginAttributes& aOriginAttributes) {
@@ -638,15 +664,64 @@ nsresult nsSiteSecurityService::RemoveStateInternal(
   NS_ENSURE_TRUE(aType == nsISiteSecurityService::HEADER_HSTS ||
                      aType == nsISiteSecurityService::HEADER_HPKP,
                  NS_ERROR_NOT_IMPLEMENTED);
+||||||| merged common ancestors
+nsresult
+nsSiteSecurityService::RemoveStateInternal(
+  uint32_t aType, nsIURI* aURI, uint32_t aFlags,
+  const OriginAttributes& aOriginAttributes)
+{
+  nsAutoCString hostname;
+  GetHost(aURI, hostname);
+  return RemoveStateInternal(aType, hostname, aFlags, false, aOriginAttributes);
+}
+
+nsresult
+nsSiteSecurityService::RemoveStateInternal(
+  uint32_t aType,
+  const nsAutoCString& aHost,
+  uint32_t aFlags, bool aIsPreload,
+  const OriginAttributes& aOriginAttributes)
+{
+   // Child processes are not allowed direct access to this.
+   if (!XRE_IsParentProcess()) {
+     MOZ_CRASH("Child process: no direct access to nsISiteSecurityService::RemoveStateInternal");
+   }
+
+  // Only HSTS is supported at the moment.
+  NS_ENSURE_TRUE(aType == nsISiteSecurityService::HEADER_HSTS ||
+                 aType == nsISiteSecurityService::HEADER_HPKP,
+                 NS_ERROR_NOT_IMPLEMENTED);
+=======
+// Helper function to mark a host as not HSTS. In the general case, we can just
+// remove the HSTS state. However, for preloaded entries, we have to store an
+// entry that indicates this host is not HSTS to prevent the implementation
+// using the preloaded information.
+nsresult nsSiteSecurityService::MarkHostAsNotHSTS(
+    uint32_t aType, const nsAutoCString& aHost, uint32_t aFlags,
+    bool aIsPreload, const OriginAttributes& aOriginAttributes) {
+  // This only applies to HSTS.
+  if (aType != nsISiteSecurityService::HEADER_HSTS) {
+    return NS_ERROR_INVALID_ARG;
+  }
+>>>>>>> upstream-releases
   if (aIsPreload && aOriginAttributes != OriginAttributes()) {
     return NS_ERROR_INVALID_ARG;
   }
 
   bool isPrivate = aFlags & nsISocketProvider::NO_PERMANENT_STORAGE;
   mozilla::DataStorageType storageType = isPrivate
+<<<<<<< HEAD
                                              ? mozilla::DataStorage_Private
                                              : mozilla::DataStorage_Persistent;
   // If this host is in the preload list, we have to store a knockout entry.
+||||||| merged common ancestors
+                                         ? mozilla::DataStorage_Private
+                                         : mozilla::DataStorage_Persistent;
+  // If this host is in the preload list, we have to store a knockout entry.
+=======
+                                             ? mozilla::DataStorage_Private
+                                             : mozilla::DataStorage_Persistent;
+>>>>>>> upstream-releases
   nsAutoCString storageKey;
   SetStorageKey(aHost, aType, aOriginAttributes, storageKey);
 
@@ -683,10 +758,31 @@ nsresult nsSiteSecurityService::RemoveStateInternal(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSiteSecurityService::RemoveState(uint32_t aType, nsIURI* aURI,
                                    uint32_t aFlags,
                                    JS::HandleValue aOriginAttributes,
                                    JSContext* aCx, uint8_t aArgc) {
+||||||| merged common ancestors
+nsSiteSecurityService::RemoveState(uint32_t aType, nsIURI* aURI,
+                                   uint32_t aFlags,
+                                   JS::HandleValue aOriginAttributes,
+                                   JSContext* aCx, uint8_t aArgc)
+{
+=======
+nsSiteSecurityService::ResetState(uint32_t aType, nsIURI* aURI, uint32_t aFlags,
+                                  JS::HandleValue aOriginAttributes,
+                                  JSContext* aCx, uint8_t aArgc) {
+  if (!XRE_IsParentProcess()) {
+    MOZ_CRASH(
+        "Child process: no direct access to "
+        "nsISiteSecurityService::ResetState");
+  }
+  if (!aURI) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+>>>>>>> upstream-releases
   OriginAttributes originAttributes;
   if (aArgc > 0) {
     // OriginAttributes were passed in.
@@ -695,10 +791,50 @@ nsSiteSecurityService::RemoveState(uint32_t aType, nsIURI* aURI,
       return NS_ERROR_INVALID_ARG;
     }
   }
-  return RemoveStateInternal(aType, aURI, aFlags, originAttributes);
+
+  return ResetStateInternal(aType, aURI, aFlags, originAttributes);
+}
+
+<<<<<<< HEAD
+static bool HostIsIPAddress(const nsCString& hostname) {
+||||||| merged common ancestors
+static bool
+HostIsIPAddress(const nsCString& hostname)
+{
+=======
+// Helper function to reset stored state of the given type for the host
+// identified by the given URI. If there is preloaded information for the host,
+// that information will be used for future queries. C.f. MarkHostAsNotHSTS,
+// which will store a knockout entry for preloaded HSTS hosts that have sent a
+// header with max-age=0 (meaning preloaded information will then not be used
+// for that host).
+nsresult nsSiteSecurityService::ResetStateInternal(
+    uint32_t aType, nsIURI* aURI, uint32_t aFlags,
+    const OriginAttributes& aOriginAttributes) {
+  if (!aURI) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  if (aType != nsISiteSecurityService::HEADER_HSTS &&
+      aType != nsISiteSecurityService::HEADER_HPKP) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  nsAutoCString hostname;
+  nsresult rv = GetHost(aURI, hostname);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  nsAutoCString storageKey;
+  SetStorageKey(hostname, aType, aOriginAttributes, storageKey);
+  bool isPrivate = aFlags & nsISocketProvider::NO_PERMANENT_STORAGE;
+  mozilla::DataStorageType storageType = isPrivate
+                                             ? mozilla::DataStorage_Private
+                                             : mozilla::DataStorage_Persistent;
+  mSiteStateStorage->Remove(storageKey, storageType);
+  return NS_OK;
 }
 
 static bool HostIsIPAddress(const nsCString& hostname) {
+>>>>>>> upstream-releases
   PRNetAddr hostAddr;
   PRErrorCode prv = PR_StringToNetAddr(hostname.get(), &hostAddr);
   return (prv == PR_SUCCESS);
@@ -1070,9 +1206,12 @@ nsresult nsSiteSecurityService::ProcessPKPHeader(
     return NS_ERROR_FAILURE;
   }
 
-  // if maxAge == 0 we must delete all state, for now no hole-punching
+  // If maxAge == 0, we remove dynamic HPKP state for this host. Due to
+  // architectural constraints, if this host was preloaded, any future lookups
+  // will use the preloaded state (i.e. we can't store a "this host is not HPKP"
+  // entry like we can for HSTS).
   if (maxAge == 0) {
-    return RemoveStateInternal(aType, aSourceURI, aFlags, aOriginAttributes);
+    return ResetStateInternal(aType, aSourceURI, aFlags, aOriginAttributes);
   }
 
   // clamp maxAge to the maximum set by pref
@@ -1625,8 +1764,17 @@ nsSiteSecurityService::GetKeyPinsForHostname(
 
 NS_IMETHODIMP
 nsSiteSecurityService::SetKeyPins(const nsACString& aHost,
+<<<<<<< HEAD
                                   bool aIncludeSubdomains, int64_t aExpires,
                                   uint32_t aPinCount, const char** aSha256Pins,
+||||||| merged common ancestors
+                                  bool aIncludeSubdomains,
+                                  int64_t aExpires, uint32_t aPinCount,
+                                  const char** aSha256Pins,
+=======
+                                  bool aIncludeSubdomains, int64_t aExpires,
+                                  const nsTArray<nsCString>& aSha256Pins,
+>>>>>>> upstream-releases
                                   bool aIsPreload,
                                   JS::HandleValue aOriginAttributes,
                                   JSContext* aCx, uint8_t aArgc,
@@ -1639,7 +1787,6 @@ nsSiteSecurityService::SetKeyPins(const nsACString& aHost,
   }
 
   NS_ENSURE_ARG_POINTER(aResult);
-  NS_ENSURE_ARG_POINTER(aSha256Pins);
   OriginAttributes originAttributes;
   if (aArgc > 1) {
     // OriginAttributes were passed in.
@@ -1654,24 +1801,35 @@ nsSiteSecurityService::SetKeyPins(const nsACString& aHost,
 
   SSSLOG(("Top of SetKeyPins"));
 
-  nsTArray<nsCString> sha256keys;
-  for (unsigned int i = 0; i < aPinCount; i++) {
-    nsAutoCString pin(aSha256Pins[i]);
+  for (auto& pin : aSha256Pins) {
     SSSLOG(("SetPins pin=%s\n", pin.get()));
     if (!stringIsBase64EncodingOf256bitValue(pin)) {
       return NS_ERROR_INVALID_ARG;
     }
-    sha256keys.AppendElement(pin);
   }
   // we always store data in permanent storage (ie no flags)
   const nsCString& flatHost = PromiseFlatCString(aHost);
   nsAutoCString host(
+<<<<<<< HEAD
       PublicKeyPinningService::CanonicalizeHostname(flatHost.get()));
   RefPtr<SiteHPKPState> dynamicEntry =
       new SiteHPKPState(host, originAttributes, aExpires, SecurityPropertySet,
                         aIncludeSubdomains, sha256keys);
   return SetHPKPState(host.get(), *dynamicEntry, 0, aIsPreload,
                       originAttributes);
+||||||| merged common ancestors
+    PublicKeyPinningService::CanonicalizeHostname(flatHost.get()));
+  RefPtr<SiteHPKPState> dynamicEntry = new SiteHPKPState(host, originAttributes,
+    aExpires, SecurityPropertySet, aIncludeSubdomains, sha256keys);
+  return SetHPKPState(host.get(), *dynamicEntry, 0, aIsPreload, originAttributes);
+=======
+      PublicKeyPinningService::CanonicalizeHostname(flatHost.get()));
+  RefPtr<SiteHPKPState> dynamicEntry =
+      new SiteHPKPState(host, originAttributes, aExpires, SecurityPropertySet,
+                        aIncludeSubdomains, aSha256Pins);
+  return SetHPKPState(host.get(), *dynamicEntry, 0, aIsPreload,
+                      originAttributes);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

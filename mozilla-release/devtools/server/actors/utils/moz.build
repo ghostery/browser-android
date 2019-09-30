@@ -8,19 +8,26 @@ DevToolsModules(
     'accessibility.js',
     'actor-registry-utils.js',
     'actor-registry.js',
-    'audionodes.json',
-    'automation-timeline.js',
     'breakpoint-actor-map.js',
+<<<<<<< HEAD
     'call-watcher.js',
     'closest-scripts.js',
+||||||| merged common ancestors
+    'call-watcher.js',
+=======
+>>>>>>> upstream-releases
     'css-grid-utils.js',
+<<<<<<< HEAD
     'dbg-source.js',
+||||||| merged common ancestors
+=======
+    'dbg-source.js',
+    'event-breakpoints.js',
+>>>>>>> upstream-releases
     'event-loop.js',
-    'function-call.js',
+    'inactive-property-helper.js',
     'make-debugger.js',
-    'map-uri-to-addon-id.js',
     'shapes-utils.js',
-    'source-actor-store.js',
     'stack.js',
     'TabSources.js',
     'track-change-emitter.js',

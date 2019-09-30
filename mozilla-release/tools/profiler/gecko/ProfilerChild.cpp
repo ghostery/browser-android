@@ -4,8 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "GeckoProfiler.h"
 #include "ProfilerChild.h"
+
+#include "GeckoProfiler.h"
+#include "platform.h"
+
 #include "nsThreadUtils.h"
 
 namespace mozilla {
@@ -24,11 +27,22 @@ mozilla::ipc::IPCResult ProfilerChild::RecvStart(
     filterArray.AppendElement(params.filters()[i].get());
   }
 
+<<<<<<< HEAD
   profiler_start(params.entries(), params.interval(), params.features(),
                  filterArray.Elements(), filterArray.Length(),
                  params.duration().type() == MaybeDuration::Tnull_t
                      ? mozilla::Nothing()
                      : mozilla::Some(params.duration().get_double()));
+||||||| merged common ancestors
+  profiler_start(params.entries(), params.interval(),
+                 params.features(),
+                 filterArray.Elements(),
+                 filterArray.Length());
+=======
+  profiler_start(PowerOfTwo32(params.entries()), params.interval(),
+                 params.features(), filterArray.Elements(),
+                 filterArray.Length(), params.duration());
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -40,12 +54,22 @@ mozilla::ipc::IPCResult ProfilerChild::RecvEnsureStarted(
     filterArray.AppendElement(params.filters()[i].get());
   }
 
+<<<<<<< HEAD
   profiler_ensure_started(params.entries(), params.interval(),
                           params.features(), filterArray.Elements(),
                           filterArray.Length(),
                           params.duration().type() == MaybeDuration::Tnull_t
                               ? mozilla::Nothing()
                               : mozilla::Some(params.duration().get_double()));
+||||||| merged common ancestors
+  profiler_ensure_started(params.entries(), params.interval(),
+                          params.features(),
+                          filterArray.Elements(), filterArray.Length());
+=======
+  profiler_ensure_started(PowerOfTwo32(params.entries()), params.interval(),
+                          params.features(), filterArray.Elements(),
+                          filterArray.Length(), params.duration());
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -65,12 +89,26 @@ mozilla::ipc::IPCResult ProfilerChild::RecvResume() {
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 static nsCString CollectProfileOrEmptyString(bool aIsShuttingDown) {
+||||||| merged common ancestors
+static nsCString
+CollectProfileOrEmptyString(bool aIsShuttingDown)
+{
+=======
+mozilla::ipc::IPCResult ProfilerChild::RecvClearAllPages() {
+  profiler_clear_all_pages();
+  return IPC_OK();
+}
+
+static nsCString CollectProfileOrEmptyString(bool aIsShuttingDown) {
+>>>>>>> upstream-releases
   nsCString profileCString;
   UniquePtr<char[]> profile =
       profiler_get_profile(/* aSinceTime */ 0, aIsShuttingDown);
   if (profile) {
-    profileCString = nsCString(profile.get(), strlen(profile.get()));
+    size_t len = strlen(profile.get());
+    profileCString.Adopt(profile.release(), len);
   } else {
     profileCString = EmptyCString();
   }

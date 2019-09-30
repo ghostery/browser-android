@@ -31,16 +31,29 @@ class ApplicationAccessibleWrap : public ApplicationAccessible,
 
   // IAccessibleApplication
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_appName(
+<<<<<<< HEAD
       /* [retval][out] */ BSTR *name);
+||||||| merged common ancestors
+            /* [retval][out] */ BSTR *name);
+=======
+      /* [retval][out] */ BSTR* name);
+>>>>>>> upstream-releases
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_appVersion(
-      /* [retval][out] */ BSTR *version);
+      /* [retval][out] */ BSTR* version);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_toolkitName(
-      /* [retval][out] */ BSTR *name);
+      /* [retval][out] */ BSTR* name);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_toolkitVersion(
+<<<<<<< HEAD
       /* [retval][out] */ BSTR *version);
+||||||| merged common ancestors
+          /* [retval][out] */ BSTR *version);
+
+=======
+      /* [retval][out] */ BSTR* version);
+>>>>>>> upstream-releases
 };
 
 }  // namespace a11y

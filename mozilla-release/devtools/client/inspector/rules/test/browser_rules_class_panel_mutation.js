@@ -8,7 +8,7 @@
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8,<div class='c1 c2'>");
-  const {inspector, view, testActor} = await openRuleView();
+  const { inspector, view, testActor } = await openRuleView();
 
   await selectNode("div", inspector);
 
@@ -22,8 +22,16 @@ add_task(async function() {
 
   info("Check that the panel still contains the right classes");
   checkClassPanelContent(view, [
+<<<<<<< HEAD
     {name: "c1", state: true},
     {name: "c2", state: true},
+||||||| merged common ancestors
+    {name: "c1", state: true},
+    {name: "c2", state: true}
+=======
+    { name: "c1", state: true },
+    { name: "c2", state: true },
+>>>>>>> upstream-releases
   ]);
 
   info("Trigger a class mutation on a different, unknown, node");
@@ -33,8 +41,16 @@ add_task(async function() {
 
   info("Check that the panel still contains the right classes");
   checkClassPanelContent(view, [
+<<<<<<< HEAD
     {name: "c1", state: true},
     {name: "c2", state: true},
+||||||| merged common ancestors
+    {name: "c1", state: true},
+    {name: "c2", state: true}
+=======
+    { name: "c1", state: true },
+    { name: "c2", state: true },
+>>>>>>> upstream-releases
   ]);
 
   info("Trigger a class mutation on the current node");
@@ -44,15 +60,31 @@ add_task(async function() {
 
   info("Check that the panel now contains the new classes");
   checkClassPanelContent(view, [
+<<<<<<< HEAD
     {name: "c3", state: true},
     {name: "c4", state: true},
+||||||| merged common ancestors
+    {name: "c3", state: true},
+    {name: "c4", state: true}
+=======
+    { name: "c3", state: true },
+    { name: "c4", state: true },
+>>>>>>> upstream-releases
   ]);
 
   info("Change the state of one of the new classes");
   await toggleClassPanelCheckBox(view, "c4");
   checkClassPanelContent(view, [
+<<<<<<< HEAD
     {name: "c3", state: true},
     {name: "c4", state: false},
+||||||| merged common ancestors
+    {name: "c3", state: true},
+    {name: "c4", state: false}
+=======
+    { name: "c3", state: true },
+    { name: "c4", state: false },
+>>>>>>> upstream-releases
   ]);
 
   info("Select another node");
@@ -63,12 +95,24 @@ add_task(async function() {
   await testActor.setAttribute("div", "class", "c5 c6 c7");
   await onMutation;
 
-  info("Go back to the previous node and check the content of the class panel." +
-       "Even if hidden, it should have refreshed when we changed the DOM");
+  info(
+    "Go back to the previous node and check the content of the class panel." +
+      "Even if hidden, it should have refreshed when we changed the DOM"
+  );
   await selectNode("div", inspector);
   checkClassPanelContent(view, [
+<<<<<<< HEAD
     {name: "c5", state: true},
     {name: "c6", state: true},
     {name: "c7", state: true},
+||||||| merged common ancestors
+    {name: "c5", state: true},
+    {name: "c6", state: true},
+    {name: "c7", state: true}
+=======
+    { name: "c5", state: true },
+    { name: "c6", state: true },
+    { name: "c7", state: true },
+>>>>>>> upstream-releases
   ]);
 });

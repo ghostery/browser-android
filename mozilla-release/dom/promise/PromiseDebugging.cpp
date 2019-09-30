@@ -69,11 +69,26 @@ class FlushRejections : public CancelableRunnable {
 
 /* static */ MOZ_THREAD_LOCAL(bool) FlushRejections::sDispatched;
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::GetState(
     GlobalObject& aGlobal, JS::Handle<JSObject*> aPromise,
     PromiseDebuggingStateHolder& aState, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::GetState(GlobalObject& aGlobal, JS::Handle<JSObject*> aPromise,
+                           PromiseDebuggingStateHolder& aState,
+                           ErrorResult& aRv)
+{
+=======
+/* static */
+void PromiseDebugging::GetState(GlobalObject& aGlobal,
+                                JS::Handle<JSObject*> aPromise,
+                                PromiseDebuggingStateHolder& aState,
+                                ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
-  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrap(aPromise));
+  // CheckedUnwrapStatic is fine, since we're looking for promises only.
+  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrapStatic(aPromise));
   if (!obj || !JS::IsPromiseObject(obj)) {
     aRv.ThrowTypeError<MSG_IS_NOT_PROMISE>(
         NS_LITERAL_STRING("Argument of PromiseDebugging.getState"));
@@ -94,12 +109,27 @@ class FlushRejections : public CancelableRunnable {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::GetPromiseID(GlobalObject& aGlobal,
                                                  JS::Handle<JSObject*> aPromise,
                                                  nsString& aID,
                                                  ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::GetPromiseID(GlobalObject& aGlobal,
+                               JS::Handle<JSObject*> aPromise,
+                               nsString& aID,
+                               ErrorResult& aRv)
+{
+=======
+/* static */
+void PromiseDebugging::GetPromiseID(GlobalObject& aGlobal,
+                                    JS::Handle<JSObject*> aPromise,
+                                    nsString& aID, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
-  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrap(aPromise));
+  // CheckedUnwrapStatic is fine, since we're looking for promises only.
+  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrapStatic(aPromise));
   if (!obj || !JS::IsPromiseObject(obj)) {
     aRv.ThrowTypeError<MSG_IS_NOT_PROMISE>(
         NS_LITERAL_STRING("Argument of PromiseDebugging.getState"));
@@ -110,11 +140,27 @@ class FlushRejections : public CancelableRunnable {
   aID.AppendInt(promiseID);
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::GetAllocationStack(
     GlobalObject& aGlobal, JS::Handle<JSObject*> aPromise,
     JS::MutableHandle<JSObject*> aStack, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::GetAllocationStack(GlobalObject& aGlobal,
+                                     JS::Handle<JSObject*> aPromise,
+                                     JS::MutableHandle<JSObject*> aStack,
+                                     ErrorResult& aRv)
+{
+=======
+/* static */
+void PromiseDebugging::GetAllocationStack(GlobalObject& aGlobal,
+                                          JS::Handle<JSObject*> aPromise,
+                                          JS::MutableHandle<JSObject*> aStack,
+                                          ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
-  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrap(aPromise));
+  // CheckedUnwrapStatic is fine, since we're looking for promises only.
+  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrapStatic(aPromise));
   if (!obj || !JS::IsPromiseObject(obj)) {
     aRv.ThrowTypeError<MSG_IS_NOT_PROMISE>(
         NS_LITERAL_STRING("Argument of PromiseDebugging.getAllocationStack"));
@@ -123,11 +169,27 @@ class FlushRejections : public CancelableRunnable {
   aStack.set(JS::GetPromiseAllocationSite(obj));
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::GetRejectionStack(
     GlobalObject& aGlobal, JS::Handle<JSObject*> aPromise,
     JS::MutableHandle<JSObject*> aStack, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::GetRejectionStack(GlobalObject& aGlobal,
+                                    JS::Handle<JSObject*> aPromise,
+                                    JS::MutableHandle<JSObject*> aStack,
+                                    ErrorResult& aRv)
+{
+=======
+/* static */
+void PromiseDebugging::GetRejectionStack(GlobalObject& aGlobal,
+                                         JS::Handle<JSObject*> aPromise,
+                                         JS::MutableHandle<JSObject*> aStack,
+                                         ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
-  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrap(aPromise));
+  // CheckedUnwrapStatic is fine, since we're looking for promises only.
+  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrapStatic(aPromise));
   if (!obj || !JS::IsPromiseObject(obj)) {
     aRv.ThrowTypeError<MSG_IS_NOT_PROMISE>(
         NS_LITERAL_STRING("Argument of PromiseDebugging.getRejectionStack"));
@@ -136,11 +198,27 @@ class FlushRejections : public CancelableRunnable {
   aStack.set(JS::GetPromiseResolutionSite(obj));
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::GetFullfillmentStack(
     GlobalObject& aGlobal, JS::Handle<JSObject*> aPromise,
     JS::MutableHandle<JSObject*> aStack, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::GetFullfillmentStack(GlobalObject& aGlobal,
+                                       JS::Handle<JSObject*> aPromise,
+                                       JS::MutableHandle<JSObject*> aStack,
+                                       ErrorResult& aRv)
+{
+=======
+/* static */
+void PromiseDebugging::GetFullfillmentStack(GlobalObject& aGlobal,
+                                            JS::Handle<JSObject*> aPromise,
+                                            JS::MutableHandle<JSObject*> aStack,
+                                            ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
-  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrap(aPromise));
+  // CheckedUnwrapStatic is fine, since we're looking for promises only.
+  JS::Rooted<JSObject*> obj(cx, js::CheckedUnwrapStatic(aPromise));
   if (!obj || !JS::IsPromiseObject(obj)) {
     aRv.ThrowTypeError<MSG_IS_NOT_PROMISE>(
         NS_LITERAL_STRING("Argument of PromiseDebugging.getFulfillmentStack"));
@@ -149,9 +227,26 @@ class FlushRejections : public CancelableRunnable {
   aStack.set(JS::GetPromiseResolutionSite(obj));
 }
 
+<<<<<<< HEAD
 /*static */ nsString PromiseDebugging::sIDPrefix;
+||||||| merged common ancestors
+/*static */ nsString
+PromiseDebugging::sIDPrefix;
+=======
+/*static */
+nsString PromiseDebugging::sIDPrefix;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::Init() {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::Init()
+{
+=======
+/* static */
+void PromiseDebugging::Init() {
+>>>>>>> upstream-releases
   FlushRejections::Init();
 
   // Generate a prefix for identifiers: "PromiseDebugging.$processid."
@@ -164,23 +259,65 @@ class FlushRejections : public CancelableRunnable {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::Shutdown() { sIDPrefix.SetIsVoid(true); }
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::Shutdown()
+{
+  sIDPrefix.SetIsVoid(true);
+}
+=======
+/* static */
+void PromiseDebugging::Shutdown() { sIDPrefix.SetIsVoid(true); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::FlushUncaughtRejections() {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::FlushUncaughtRejections()
+{
+=======
+/* static */
+void PromiseDebugging::FlushUncaughtRejections() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
   FlushRejections::FlushSync();
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::AddUncaughtRejectionObserver(
     GlobalObject&, UncaughtRejectionObserver& aObserver) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::AddUncaughtRejectionObserver(GlobalObject&,
+                                               UncaughtRejectionObserver& aObserver)
+{
+=======
+/* static */
+void PromiseDebugging::AddUncaughtRejectionObserver(
+    GlobalObject&, UncaughtRejectionObserver& aObserver) {
+>>>>>>> upstream-releases
   CycleCollectedJSContext* storage = CycleCollectedJSContext::Get();
   nsTArray<nsCOMPtr<nsISupports>>& observers =
       storage->mUncaughtRejectionObservers;
   observers.AppendElement(&aObserver);
 }
 
+<<<<<<< HEAD
 /* static */ bool PromiseDebugging::RemoveUncaughtRejectionObserver(
     GlobalObject&, UncaughtRejectionObserver& aObserver) {
+||||||| merged common ancestors
+/* static */ bool
+PromiseDebugging::RemoveUncaughtRejectionObserver(GlobalObject&,
+                                                  UncaughtRejectionObserver& aObserver)
+{
+=======
+/* static */
+bool PromiseDebugging::RemoveUncaughtRejectionObserver(
+    GlobalObject&, UncaughtRejectionObserver& aObserver) {
+>>>>>>> upstream-releases
   CycleCollectedJSContext* storage = CycleCollectedJSContext::Get();
   nsTArray<nsCOMPtr<nsISupports>>& observers =
       storage->mUncaughtRejectionObservers;
@@ -195,16 +332,34 @@ class FlushRejections : public CancelableRunnable {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::AddUncaughtRejection(
     JS::HandleObject aPromise) {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::AddUncaughtRejection(JS::HandleObject aPromise)
+{
+=======
+/* static */
+void PromiseDebugging::AddUncaughtRejection(JS::HandleObject aPromise) {
+>>>>>>> upstream-releases
   // This might OOM, but won't set a pending exception, so we'll just ignore it.
   if (CycleCollectedJSContext::Get()->mUncaughtRejections.append(aPromise)) {
     FlushRejections::DispatchNeeded();
   }
 }
 
+<<<<<<< HEAD
 /* void */ void PromiseDebugging::AddConsumedRejection(
     JS::HandleObject aPromise) {
+||||||| merged common ancestors
+/* void */ void
+PromiseDebugging::AddConsumedRejection(JS::HandleObject aPromise)
+{
+=======
+/* void */
+void PromiseDebugging::AddConsumedRejection(JS::HandleObject aPromise) {
+>>>>>>> upstream-releases
   // If the promise is in our list of uncaught rejections, we haven't yet
   // reported it as unhandled. In that case, just remove it from the list
   // and don't add it to the list of consumed rejections.
@@ -224,7 +379,16 @@ class FlushRejections : public CancelableRunnable {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void PromiseDebugging::FlushUncaughtRejectionsInternal() {
+||||||| merged common ancestors
+/* static */ void
+PromiseDebugging::FlushUncaughtRejectionsInternal()
+{
+=======
+/* static */
+void PromiseDebugging::FlushUncaughtRejectionsInternal() {
+>>>>>>> upstream-releases
   CycleCollectedJSContext* storage = CycleCollectedJSContext::Get();
 
   auto& uncaught = storage->mUncaughtRejections;

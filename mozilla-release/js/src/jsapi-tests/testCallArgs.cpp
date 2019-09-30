@@ -2,7 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "js/CompilationAndEvaluation.h"
+#include "mozilla/Utf8.h"  // mozilla::Utf8Unit
+
+#include "js/CompilationAndEvaluation.h"  // JS::EvaluateDontInflate
+#include "js/SourceText.h"                // JS::Source{Ownership,Text}
 #include "jsapi-tests/tests.h"
 
 static bool CustomNative(JSContext* cx, unsigned argc, JS::Value* vp) {
@@ -17,23 +20,76 @@ static bool CustomNative(JSContext* cx, unsigned argc, JS::Value* vp) {
   return true;
 }
 
+<<<<<<< HEAD
+BEGIN_TEST(testCallArgs_isConstructing_native) {
+  CHECK(JS_DefineFunction(cx, global, "customNative", CustomNative, 0, 0));
+||||||| merged common ancestors
+BEGIN_TEST(testCallArgs_isConstructing_native)
+{
+    CHECK(JS_DefineFunction(cx, global, "customNative", CustomNative, 0, 0));
+=======
 BEGIN_TEST(testCallArgs_isConstructing_native) {
   CHECK(JS_DefineFunction(cx, global, "customNative", CustomNative, 0, 0));
 
   JS::CompileOptions opts(cx);
   opts.setFileAndLine(__FILE__, __LINE__ + 4);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::CompileOptions opts(cx);
+  opts.setFileAndLine(__FILE__, __LINE__ + 4);
+||||||| merged common ancestors
+    JS::CompileOptions opts(cx);
+    opts.setFileAndLine(__FILE__, __LINE__ + 4);
+=======
+  JS::RootedValue result(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedValue result(cx);
   static const char code[] = "new customNative();";
   CHECK(!JS::EvaluateUtf8(cx, opts, code, strlen(code), &result));
+||||||| merged common ancestors
+    JS::RootedValue result(cx);
+    static const char code[] = "new customNative();";
+    CHECK(!JS::EvaluateUtf8(cx, opts, code, strlen(code), &result));
+=======
+  static const char code[] = "new customNative();";
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, code, strlen(code), JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   CHECK(JS_IsExceptionPending(cx));
   JS_ClearPendingException(cx);
+||||||| merged common ancestors
+    CHECK(JS_IsExceptionPending(cx));
+    JS_ClearPendingException(cx);
+=======
+  CHECK(!JS::EvaluateDontInflate(cx, opts, srcBuf, &result));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  EVAL("customNative();", &result);
+  CHECK(result.isUndefined());
+||||||| merged common ancestors
+    EVAL("customNative();", &result);
+    CHECK(result.isUndefined());
+=======
+  CHECK(JS_IsExceptionPending(cx));
+  JS_ClearPendingException(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return true;
+||||||| merged common ancestors
+    return true;
+=======
   EVAL("customNative();", &result);
   CHECK(result.isUndefined());
 
   return true;
+>>>>>>> upstream-releases
 }
 END_TEST(testCallArgs_isConstructing_native)
 

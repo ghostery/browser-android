@@ -11,6 +11,7 @@
 namespace mozilla {
 
 WebGLExtensionLoseContext::WebGLExtensionLoseContext(WebGLContext* webgl)
+<<<<<<< HEAD
     : WebGLExtensionBase(webgl) {}
 
 WebGLExtensionLoseContext::~WebGLExtensionLoseContext() {}
@@ -18,6 +19,41 @@ WebGLExtensionLoseContext::~WebGLExtensionLoseContext() {}
 void WebGLExtensionLoseContext::LoseContext() { mContext->LoseContext(); }
 
 void WebGLExtensionLoseContext::RestoreContext() { mContext->RestoreContext(); }
+||||||| merged common ancestors
+    : WebGLExtensionBase(webgl)
+{
+}
+
+WebGLExtensionLoseContext::~WebGLExtensionLoseContext()
+{
+}
+
+void
+WebGLExtensionLoseContext::LoseContext()
+{
+    mContext->LoseContext();
+}
+
+void
+WebGLExtensionLoseContext::RestoreContext()
+{
+    mContext->RestoreContext();
+}
+=======
+    : WebGLExtensionBase(webgl) {}
+
+WebGLExtensionLoseContext::~WebGLExtensionLoseContext() {}
+
+void WebGLExtensionLoseContext::LoseContext() {
+  if (!mContext) return;
+  mContext->LoseContext();
+}
+
+void WebGLExtensionLoseContext::RestoreContext() {
+  if (!mContext) return;
+  mContext->RestoreContext();
+}
+>>>>>>> upstream-releases
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionLoseContext, WEBGL_lose_context)
 

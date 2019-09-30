@@ -24,6 +24,7 @@ class LocalStorage final : public Storage, public nsSupportsWeakReference {
 
   StorageType Type() const override { return eLocalStorage; }
 
+<<<<<<< HEAD
   LocalStorageManager* GetManager() const { return mManager; }
 
   LocalStorageCache const* GetCache() const { return mCache; }
@@ -35,6 +36,43 @@ class LocalStorage final : public Storage, public nsSupportsWeakReference {
   LocalStorage(nsPIDOMWindowInner* aWindow, LocalStorageManager* aManager,
                LocalStorageCache* aCache, const nsAString& aDocumentURI,
                nsIPrincipal* aPrincipal, bool aIsPrivate);
+||||||| merged common ancestors
+  LocalStorageManager* GetManager() const
+  {
+    return mManager;
+  }
+
+  LocalStorageCache const* GetCache() const
+  {
+    return mCache;
+  }
+
+  const nsString&
+  DocumentURI() const
+  {
+    return mDocumentURI;
+  }
+
+  bool PrincipalEquals(nsIPrincipal* aPrincipal);
+
+  LocalStorage(nsPIDOMWindowInner* aWindow,
+               LocalStorageManager* aManager,
+               LocalStorageCache* aCache,
+               const nsAString& aDocumentURI,
+               nsIPrincipal* aPrincipal,
+               bool aIsPrivate);
+=======
+  LocalStorageManager* GetManager() const { return mManager; }
+
+  LocalStorageCache const* GetCache() const { return mCache; }
+
+  const nsString& DocumentURI() const { return mDocumentURI; }
+
+  LocalStorage(nsPIDOMWindowInner* aWindow, LocalStorageManager* aManager,
+               LocalStorageCache* aCache, const nsAString& aDocumentURI,
+               nsIPrincipal* aPrincipal, nsIPrincipal* aStoragePrincipal,
+               bool aIsPrivate);
+>>>>>>> upstream-releases
 
   bool IsForkOf(const Storage* aOther) const override;
 
@@ -74,10 +112,6 @@ class LocalStorage final : public Storage, public nsSupportsWeakReference {
   RefPtr<LocalStorageManager> mManager;
   RefPtr<LocalStorageCache> mCache;
   nsString mDocumentURI;
-
-  // Principal this Storage (i.e. localStorage or sessionStorage) has
-  // been created for
-  nsCOMPtr<nsIPrincipal> mPrincipal;
 
   // Whether this storage is running in private-browsing window.
   bool mIsPrivate : 1;

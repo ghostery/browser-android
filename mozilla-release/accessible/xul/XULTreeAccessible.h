@@ -6,9 +6,9 @@
 #ifndef mozilla_a11y_XULTreeAccessible_h__
 #define mozilla_a11y_XULTreeAccessible_h__
 
-#include "nsITreeBoxObject.h"
 #include "nsITreeView.h"
 #include "XULListboxAccessible.h"
+#include "mozilla/dom/XULTreeElement.h"
 
 class nsTreeBodyFrame;
 class nsTreeColumn;
@@ -114,7 +114,7 @@ class XULTreeAccessible : public AccessibleWrap {
   virtual already_AddRefed<Accessible> CreateTreeItemAccessible(
       int32_t aRow) const;
 
-  nsCOMPtr<nsITreeBoxObject> mTree;
+  RefPtr<dom::XULTreeElement> mTree;
   nsITreeView* mTreeView;
   mutable AccessibleHashtable mAccessibleCache;
 };
@@ -133,7 +133,7 @@ class XULTreeAccessible : public AccessibleWrap {
 class XULTreeItemAccessibleBase : public AccessibleWrap {
  public:
   XULTreeItemAccessibleBase(nsIContent* aContent, DocAccessible* aDoc,
-                            Accessible* aParent, nsITreeBoxObject* aTree,
+                            Accessible* aParent, dom::XULTreeElement* aTree,
                             nsITreeView* aTreeView, int32_t aRow);
 
   // nsISupports and cycle collection
@@ -144,6 +144,7 @@ class XULTreeItemAccessibleBase : public AccessibleWrap {
   // Accessible
   virtual void Shutdown() override;
   virtual nsRect BoundsInAppUnits() const override;
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsIntRect BoundsInCSSPixels() const override;
   virtual GroupPos GroupPosition() override;
   virtual uint64_t NativeState() const override;
@@ -190,7 +191,14 @@ class XULTreeItemAccessibleBase : public AccessibleWrap {
   enum { eAction_Click = 0, eAction_Expand = 1 };
 
   // Accessible
+<<<<<<< HEAD
   virtual void DispatchClickEvent(nsIContent* aContent,
+||||||| merged common ancestors
+  virtual void DispatchClickEvent(nsIContent *aContent,
+=======
+  MOZ_CAN_RUN_SCRIPT
+  virtual void DispatchClickEvent(nsIContent* aContent,
+>>>>>>> upstream-releases
                                   uint32_t aActionIndex) const override;
   virtual Accessible* GetSiblingAtOffset(
       int32_t aOffset, nsresult* aError = nullptr) const override;
@@ -207,7 +215,7 @@ class XULTreeItemAccessibleBase : public AccessibleWrap {
    */
   void GetCellName(nsTreeColumn* aColumn, nsAString& aName) const;
 
-  nsCOMPtr<nsITreeBoxObject> mTree;
+  RefPtr<dom::XULTreeElement> mTree;
   nsITreeView* mTreeView;
   int32_t mRow;
 };
@@ -221,7 +229,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(XULTreeItemAccessibleBase,
 class XULTreeItemAccessible : public XULTreeItemAccessibleBase {
  public:
   XULTreeItemAccessible(nsIContent* aContent, DocAccessible* aDoc,
-                        Accessible* aParent, nsITreeBoxObject* aTree,
+                        Accessible* aParent, dom::XULTreeElement* aTree,
                         nsITreeView* aTreeView, int32_t aRow);
 
   // nsISupports and cycle collection

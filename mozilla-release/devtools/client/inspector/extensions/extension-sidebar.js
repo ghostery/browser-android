@@ -4,11 +4,16 @@
 
 "use strict";
 
-const { createElement, createFactory } = require("devtools/client/shared/vendor/react");
+const {
+  createElement,
+  createFactory,
+} = require("devtools/client/shared/vendor/react");
 const EventEmitter = require("devtools/shared/event-emitter");
 const { Provider } = require("devtools/client/shared/vendor/react-redux");
 const ObjectClient = require("devtools/shared/client/object-client");
-const ExtensionSidebarComponent = createFactory(require("./components/ExtensionSidebar"));
+const ExtensionSidebarComponent = createFactory(
+  require("./components/ExtensionSidebar")
+);
 
 const {
   updateExtensionPage,
@@ -35,7 +40,7 @@ const {
  *        The title of the sidebar.
  */
 class ExtensionSidebar {
-  constructor(inspector, {id, title}) {
+  constructor(inspector, { id, title }) {
     EventEmitter.decorate(this);
     this.inspector = inspector;
     this.store = inspector.store;
@@ -50,33 +55,78 @@ class ExtensionSidebar {
    */
   get provider() {
     if (!this._provider) {
-      this._provider = createElement(Provider, {
-        store: this.store,
-        key: this.id,
-        title: this.title,
-      }, ExtensionSidebarComponent({
-        id: this.id,
-        onExtensionPageMount: (containerEl) => {
-          this.emit("extension-page-mount", containerEl);
+      this._provider = createElement(
+        Provider,
+        {
+          store: this.store,
+          key: this.id,
+          title: this.title,
         },
-        onExtensionPageUnmount: (containerEl) => {
-          this.emit("extension-page-unmount", containerEl);
-        },
-        serviceContainer: {
-          createObjectClient: (object) => {
-            return new ObjectClient(this.inspector.toolbox.target.client, object);
+        ExtensionSidebarComponent({
+          id: this.id,
+          onExtensionPageMount: containerEl => {
+            this.emit("extension-page-mount", containerEl);
           },
-          releaseActor: (actor) => {
-            if (!actor) {
-              return;
-            }
-            this.inspector.toolbox.target.client.release(actor);
+          onExtensionPageUnmount: containerEl => {
+            this.emit("extension-page-unmount", containerEl);
           },
+<<<<<<< HEAD
           highlightDomElement: async (grip, options = {}) => {
             const { highlighter } = this.inspector;
             const nodeFront = await this.inspector.walker.gripToNodeFront(grip);
             return highlighter.highlight(nodeFront, options);
+||||||| merged common ancestors
+          highlightDomElement: (grip, options = {}) => {
+            const { highlighterUtils } = this.inspector.toolbox;
+
+            if (!highlighterUtils) {
+              return null;
+            }
+
+            return highlighterUtils.highlightDomValueGrip(grip, options);
+=======
+          serviceContainer: {
+            createObjectClient: object => {
+              return new ObjectClient(
+                this.inspector.toolbox.target.client,
+                object
+              );
+            },
+            releaseActor: actor => {
+              if (!actor) {
+                return;
+              }
+              this.inspector.toolbox.target.client.release(actor);
+            },
+            highlightDomElement: async (grip, options = {}) => {
+              const { highlighter } = this.inspector;
+              const nodeFront = await this.inspector.walker.gripToNodeFront(
+                grip
+              );
+              return highlighter.highlight(nodeFront, options);
+            },
+            unHighlightDomElement: (forceHide = false) => {
+              const { highlighter } = this.inspector;
+              return highlighter.unhighlight(forceHide);
+            },
+            openNodeInInspector: async grip => {
+              const { walker } = this.inspector;
+              const front = await walker.gripToNodeFront(grip);
+              const onInspectorUpdated = this.inspector.once(
+                "inspector-updated"
+              );
+              const onNodeFrontSet = this.inspector.toolbox.selection.setNodeFront(
+                front,
+                {
+                  reason: "inspector-extension-sidebar",
+                }
+              );
+
+              return Promise.all([onNodeFrontSet, onInspectorUpdated]);
+            },
+>>>>>>> upstream-releases
           },
+<<<<<<< HEAD
           unHighlightDomElement: (forceHide = false) => {
             const { highlighter } = this.inspector;
             return highlighter.unhighlight(forceHide);
@@ -93,6 +143,37 @@ class ExtensionSidebar {
           },
         },
       }));
+||||||| merged common ancestors
+          unHighlightDomElement: (forceHide = false) => {
+            const { highlighterUtils } = this.inspector.toolbox;
+
+            if (!highlighterUtils) {
+              return null;
+            }
+
+            return highlighterUtils.unhighlight(forceHide);
+          },
+          openNodeInInspector: async (grip) => {
+            const { highlighterUtils } = this.inspector.toolbox;
+
+            if (!highlighterUtils) {
+              return null;
+            }
+
+            const front = await highlighterUtils.gripToNodeFront(grip);
+            const onInspectorUpdated = this.inspector.once("inspector-updated");
+            const onNodeFrontSet = this.inspector.toolbox.selection.setNodeFront(front, {
+              reason: "inspector-extension-sidebar"
+            });
+
+            return Promise.all([onNodeFrontSet, onInspectorUpdated]);
+          }
+        },
+      }));
+=======
+        })
+      );
+>>>>>>> upstream-releases
     }
 
     return this._provider;
@@ -108,7 +189,9 @@ class ExtensionSidebar {
    */
   destroy() {
     if (this.destroyed) {
-      throw new Error(`ExtensionSidebar instances cannot be destroyed more than once`);
+      throw new Error(
+        `ExtensionSidebar instances cannot be destroyed more than once`
+      );
     }
 
     // Remove the data related to this extension from the inspector store.
@@ -128,7 +211,9 @@ class ExtensionSidebar {
    */
   setObject(object) {
     if (this.removed) {
-      throw new Error("Unable to set an object preview on a removed ExtensionSidebar");
+      throw new Error(
+        "Unable to set an object preview on a removed ExtensionSidebar"
+      );
     }
 
     this.store.dispatch(updateObjectTreeView(this.id, object));
@@ -141,15 +226,21 @@ class ExtensionSidebar {
    */
   setObjectValueGrip(objectValueGrip, rootTitle) {
     if (this.removed) {
-      throw new Error("Unable to set an object preview on a removed ExtensionSidebar");
+      throw new Error(
+        "Unable to set an object preview on a removed ExtensionSidebar"
+      );
     }
 
-    this.store.dispatch(updateObjectValueGripView(this.id, objectValueGrip, rootTitle));
+    this.store.dispatch(
+      updateObjectValueGripView(this.id, objectValueGrip, rootTitle)
+    );
   }
 
   setExtensionPage(iframeURL) {
     if (this.removed) {
-      throw new Error("Unable to set an object preview on a removed ExtensionSidebar");
+      throw new Error(
+        "Unable to set an object preview on a removed ExtensionSidebar"
+      );
     }
 
     this.store.dispatch(updateExtensionPage(this.id, iframeURL));

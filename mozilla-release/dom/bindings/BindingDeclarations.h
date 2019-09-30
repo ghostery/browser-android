@@ -420,9 +420,20 @@ inline nsWrapperCache* GetWrapperCache(const SmartPtr<T>& aObject) {
   return GetWrapperCache(aObject.get());
 }
 
+<<<<<<< HEAD
 enum class ReflectionScope { Content, XBL, UAWidget };
+||||||| merged common ancestors
+enum class ReflectionScope {
+  Content,
+  XBL,
+  UAWidget
+};
+=======
+enum class ReflectionScope { Content, NAC, UAWidget };
+>>>>>>> upstream-releases
 
 struct MOZ_STACK_CLASS ParentObject {
+<<<<<<< HEAD
   template <class T>
   MOZ_IMPLICIT ParentObject(T* aObject)
       : mObject(aObject),
@@ -439,6 +450,44 @@ struct MOZ_STACK_CLASS ParentObject {
       : mObject(aObject),
         mWrapperCache(aCache),
         mReflectionScope(ReflectionScope::Content) {}
+||||||| merged common ancestors
+  template<class T>
+  MOZ_IMPLICIT ParentObject(T* aObject) :
+    mObject(aObject),
+    mWrapperCache(GetWrapperCache(aObject)),
+    mReflectionScope(ReflectionScope::Content)
+  {}
+
+  template<class T, template<typename> class SmartPtr>
+  MOZ_IMPLICIT ParentObject(const SmartPtr<T>& aObject) :
+    mObject(aObject.get()),
+    mWrapperCache(GetWrapperCache(aObject.get())),
+    mReflectionScope(ReflectionScope::Content)
+  {}
+
+  ParentObject(nsISupports* aObject, nsWrapperCache* aCache) :
+    mObject(aObject),
+    mWrapperCache(aCache),
+    mReflectionScope(ReflectionScope::Content)
+  {}
+=======
+  template <class T>
+  MOZ_IMPLICIT ParentObject(T* aObject)
+      : mObject(ToSupports(aObject)),
+        mWrapperCache(GetWrapperCache(aObject)),
+        mReflectionScope(ReflectionScope::Content) {}
+
+  template <class T, template <typename> class SmartPtr>
+  MOZ_IMPLICIT ParentObject(const SmartPtr<T>& aObject)
+      : mObject(aObject.get()),
+        mWrapperCache(GetWrapperCache(aObject.get())),
+        mReflectionScope(ReflectionScope::Content) {}
+
+  ParentObject(nsISupports* aObject, nsWrapperCache* aCache)
+      : mObject(aObject),
+        mWrapperCache(aCache),
+        mReflectionScope(ReflectionScope::Content) {}
+>>>>>>> upstream-releases
 
   // We don't want to make this an nsCOMPtr because of performance reasons, but
   // it's safe because ParentObject is a stack class.

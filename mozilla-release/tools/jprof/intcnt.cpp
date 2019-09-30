@@ -47,8 +47,16 @@ int IntCount::countAdd(int index, int increment) {
     }
 
     int i;
+<<<<<<< HEAD
     IntPair *tpair = new IntPair[numInts + 1];
     for (i = 0; i < divPoint; i++) {
+||||||| merged common ancestors
+    IntPair *tpair = new IntPair[numInts+1];
+    for(i=0; i<divPoint; i++) {
+=======
+    IntPair* tpair = new IntPair[numInts + 1];
+    for (i = 0; i < divPoint; i++) {
+>>>>>>> upstream-releases
       tpair[i] = iPair[i];
     }
     for (i = divPoint; i < numInts; i++) {

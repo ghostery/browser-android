@@ -110,11 +110,25 @@ TEST(UrlClassifierCaching, NotInCache) {
 
 // This testcase check the returned result of |Has| API if fullhash matches
 // a cache entry in positive cache.
+<<<<<<< HEAD
 TEST(UrlClassifierCaching, InPositiveCacheNotExpired) {
   TestCache<LookupCacheV2>(_Fragment("cache.notexpired.com/"), true, true,
                            true);
   TestCache<LookupCacheV4>(_Fragment("cache.notexpired.com/"), true, true,
                            true);
+||||||| merged common ancestors
+TEST(UrlClassifierCaching, InPositiveCacheNotExpired)
+{
+  TestCache<LookupCacheV2>(_Fragment("cache.notexpired.com/"), true, true, true);
+  TestCache<LookupCacheV4>(_Fragment("cache.notexpired.com/"), true, true, true);
+=======
+TEST(UrlClassifierCaching, InPositiveCacheNotExpired)
+{
+  TestCache<LookupCacheV2>(_Fragment("cache.notexpired.com/"), true, true,
+                           true);
+  TestCache<LookupCacheV4>(_Fragment("cache.notexpired.com/"), true, true,
+                           true);
+>>>>>>> upstream-releases
 }
 
 // This testcase check the returned result of |Has| API if fullhash matches
@@ -209,19 +223,49 @@ void TestInvalidateExpiredCacheEntry() {
   TestCache<T>(POS_CACHE_EXPIRED_URL, true, false, true, cache.get());
 }
 
+<<<<<<< HEAD
 TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV2) {
   TestInvalidateExpiredCacheEntry<LookupCacheV2>();
 }
+||||||| merged common ancestors
+TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV2)
+{
+  TestInvalidateExpiredCacheEntry<LookupCacheV2>();
+}
+=======
+TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV2)
+{ TestInvalidateExpiredCacheEntry<LookupCacheV2>(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV4) {
   TestInvalidateExpiredCacheEntry<LookupCacheV4>();
 }
+||||||| merged common ancestors
+TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV4)
+{
+  TestInvalidateExpiredCacheEntry<LookupCacheV4>();
+}
+=======
+TEST(UrlClassifierCaching, InvalidateExpiredCacheEntryV4)
+{ TestInvalidateExpiredCacheEntry<LookupCacheV4>(); }
+>>>>>>> upstream-releases
 
 // This testcase check if an cache entry whose negative cache time is expired
 // and it doesn't have any postive cache entries in it, it should be removed
 // from cache after calling |Has|.
+<<<<<<< HEAD
 TEST(UrlClassifierCaching, NegativeCacheExpireV2) {
   _PrefixArray array = {GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8)};
+||||||| merged common ancestors
+TEST(UrlClassifierCaching, NegativeCacheExpireV2)
+{
+  _PrefixArray array = { GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8) };
+=======
+TEST(UrlClassifierCaching, NegativeCacheExpireV2)
+{
+  _PrefixArray array = {GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8)};
+>>>>>>> upstream-releases
   RefPtr<LookupCacheV2> cache = SetupLookupCache<LookupCacheV2>(array);
 
   nsCOMPtr<nsICryptoHash> cryptoHash =
@@ -242,8 +286,18 @@ TEST(UrlClassifierCaching, NegativeCacheExpireV2) {
                            cache.get());
 }
 
+<<<<<<< HEAD
 TEST(UrlClassifierCaching, NegativeCacheExpireV4) {
   _PrefixArray array = {GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8)};
+||||||| merged common ancestors
+TEST(UrlClassifierCaching, NegativeCacheExpireV4)
+{
+  _PrefixArray array = { GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8) };
+=======
+TEST(UrlClassifierCaching, NegativeCacheExpireV4)
+{
+  _PrefixArray array = {GeneratePrefix(NEG_CACHE_EXPIRED_URL, 8)};
+>>>>>>> upstream-releases
   RefPtr<LookupCacheV4> cache = SetupLookupCache<LookupCacheV4>(array);
 
   FullHashResponseMap map;

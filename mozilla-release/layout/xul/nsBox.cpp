@@ -35,7 +35,7 @@ nsresult nsBox::BeginXULLayout(nsBoxLayoutState& aState) {
     // does this too).
     nsIFrame* box;
     for (box = GetChildXULBox(this); box; box = GetNextXULBox(box))
-      box->AddStateBits(NS_FRAME_IS_DIRTY);
+      box->MarkSubtreeDirty();
   }
 
   // Another copy-over from ReflowInput.
@@ -57,7 +57,16 @@ nsresult nsBox::EndXULLayout(nsBoxLayoutState& aState) {
 bool nsBox::gGotTheme = false;
 StaticRefPtr<nsITheme> nsBox::gTheme;
 
+<<<<<<< HEAD
 nsBox::nsBox(ClassID aID) : nsIFrame(aID) {
+||||||| merged common ancestors
+nsBox::nsBox(ClassID aID)
+  : nsIFrame(aID)
+{
+=======
+nsBox::nsBox(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID)
+    : nsIFrame(aStyle, aPresContext, aID) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsBox);
   if (!gGotTheme) {
     gTheme = do_GetNativeTheme();
@@ -73,7 +82,16 @@ nsBox::~nsBox() {
   MOZ_COUNT_DTOR(nsBox);
 }
 
+<<<<<<< HEAD
 /* static */ void nsBox::Shutdown() {
+||||||| merged common ancestors
+/* static */ void
+nsBox::Shutdown()
+{
+=======
+/* static */
+void nsBox::Shutdown() {
+>>>>>>> upstream-releases
   gGotTheme = false;
   gTheme = nullptr;
 }
@@ -241,7 +259,7 @@ nsSize nsBox::GetXULMinSizeForScrollArea(nsBoxLayoutState& aBoxLayoutState) {
 nsSize nsBox::GetXULMaxSize(nsBoxLayoutState& aState) {
   NS_ASSERTION(aState.GetRenderingContext(), "must have rendering context");
 
-  nsSize maxSize(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+  nsSize maxSize(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
   DISPLAY_MAX_SIZE(this, maxSize);
 
   if (IsXULCollapsed()) return maxSize;
@@ -305,10 +323,23 @@ nsresult nsIFrame::XULLayout(nsBoxLayoutState& aState) {
 
 bool nsBox::DoesClipChildren() {
   const nsStyleDisplay* display = StyleDisplay();
+<<<<<<< HEAD
   NS_ASSERTION((display->mOverflowY == NS_STYLE_OVERFLOW_CLIP) ==
                    (display->mOverflowX == NS_STYLE_OVERFLOW_CLIP),
                "If one overflow is clip, the other should be too");
   return display->mOverflowX == NS_STYLE_OVERFLOW_CLIP;
+||||||| merged common ancestors
+  NS_ASSERTION((display->mOverflowY == NS_STYLE_OVERFLOW_CLIP) ==
+               (display->mOverflowX == NS_STYLE_OVERFLOW_CLIP),
+               "If one overflow is clip, the other should be too");
+  return display->mOverflowX == NS_STYLE_OVERFLOW_CLIP;
+=======
+  NS_ASSERTION(
+      (display->mOverflowY == StyleOverflow::MozHiddenUnscrollable) ==
+          (display->mOverflowX == StyleOverflow::MozHiddenUnscrollable),
+      "If one overflow is -moz-hidden-unscrollable, the other should be too");
+  return display->mOverflowX == StyleOverflow::MozHiddenUnscrollable;
+>>>>>>> upstream-releases
 }
 
 nsresult nsBox::SyncLayout(nsBoxLayoutState& aState) {
@@ -373,6 +404,7 @@ nsresult nsIFrame::XULRedraw(nsBoxLayoutState& aState) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
                               bool& aHeightSet) {
   aWidthSet = false;
@@ -398,7 +430,26 @@ bool nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
       aWidthSet = true;
     }
   }
+||||||| merged common ancestors
+bool
+nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool &aWidthSet, bool &aHeightSet)
+{
+    aWidthSet = false;
+    aHeightSet = false;
 
+    // add in the css min, max, pref
+    const nsStylePosition* position = aBox->StylePosition();
+=======
+bool nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
+                              bool& aHeightSet) {
+  aWidthSet = false;
+  aHeightSet = false;
+
+  // add in the css min, max, pref
+  const nsStylePosition* position = aBox->StylePosition();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   const nsStyleCoord& height = position->mHeight;
   if (height.GetUnit() == eStyleUnit_Coord) {
     aSize.height = height.GetCoordValue();
@@ -410,6 +461,72 @@ bool nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
       if (aSize.height < 0) aSize.height = 0;
       aHeightSet = true;
     }
+  }
+||||||| merged common ancestors
+    // see if the width or height was specifically set
+    // XXX Handle eStyleUnit_Enumerated?
+    // (Handling the eStyleUnit_Enumerated types requires
+    // GetXULPrefSize/GetXULMinSize methods that don't consider
+    // (min-/max-/)(width/height) properties.)
+    const nsStyleCoord &width = position->mWidth;
+    if (width.GetUnit() == eStyleUnit_Coord) {
+        aSize.width = width.GetCoordValue();
+        aWidthSet = true;
+    } else if (width.IsCalcUnit()) {
+        if (!width.CalcHasPercent()) {
+            // pass 0 for percentage basis since we know there are no %s
+            aSize.width = width.ComputeComputedCalc(0);
+            if (aSize.width < 0)
+                aSize.width = 0;
+            aWidthSet = true;
+        }
+    }
+=======
+  // see if the width or height was specifically set
+  // XXX Handle eStyleUnit_Enumerated?
+  // (Handling the eStyleUnit_Enumerated types requires
+  // GetXULPrefSize/GetXULMinSize methods that don't consider
+  // (min-/max-/)(width/height) properties.)
+  const auto& width = position->mWidth;
+  if (width.ConvertsToLength()) {
+    aSize.width = std::max(0, width.ToLength());
+    aWidthSet = true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsIContent* content = aBox->GetContent();
+  // ignore 'height' and 'width' attributes if the actual element is not XUL
+  // For example, we might be magic XUL frames whose primary content is an HTML
+  // <select>
+  if (content && content->IsXULElement()) {
+    nsAutoString value;
+    nsresult error;
+
+    content->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::width, value);
+    if (!value.IsEmpty()) {
+      value.Trim("%");
+
+      aSize.width = nsPresContext::CSSPixelsToAppUnits(value.ToInteger(&error));
+      aWidthSet = true;
+||||||| merged common ancestors
+    const nsStyleCoord &height = position->mHeight;
+    if (height.GetUnit() == eStyleUnit_Coord) {
+        aSize.height = height.GetCoordValue();
+        aHeightSet = true;
+    } else if (height.IsCalcUnit()) {
+        if (!height.CalcHasPercent()) {
+            // pass 0 for percentage basis since we know there are no %s
+            aSize.height = height.ComputeComputedCalc(0);
+            if (aSize.height < 0)
+                aSize.height = 0;
+            aHeightSet = true;
+        }
+=======
+  const auto& height = position->mHeight;
+  if (height.ConvertsToLength()) {
+    aSize.height = std::max(0, height.ToLength());
+    aHeightSet = true;
   }
 
   nsIContent* content = aBox->GetContent();
@@ -426,6 +543,7 @@ bool nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
 
       aSize.width = nsPresContext::CSSPixelsToAppUnits(value.ToInteger(&error));
       aWidthSet = true;
+>>>>>>> upstream-releases
     }
 
     content->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::height, value);
@@ -497,6 +615,7 @@ bool nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox,
     }
   }
 
+<<<<<<< HEAD
   // add in the css min, max, pref
   const nsStylePosition* position = aBox->StylePosition();
 
@@ -510,7 +629,39 @@ bool nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox,
     if (!aWidthSet || (min > aSize.width && canOverride)) {
       aSize.width = min;
       aWidthSet = true;
+||||||| merged common ancestors
+    // add in the css min, max, pref
+    const nsStylePosition* position = aBox->StylePosition();
+
+    // same for min size. Unfortunately min size is always set to 0. So for now
+    // we will assume 0 (as a coord) means not set.
+    const nsStyleCoord &minWidth = position->mMinWidth;
+    if ((minWidth.GetUnit() == eStyleUnit_Coord &&
+         minWidth.GetCoordValue() != 0) ||
+        (minWidth.IsCalcUnit() && !minWidth.CalcHasPercent())) {
+        nscoord min = minWidth.ComputeCoordPercentCalc(0);
+        if (!aWidthSet || (min > aSize.width && canOverride)) {
+           aSize.width = min;
+           aWidthSet = true;
+        }
+    } else if (minWidth.GetUnit() == eStyleUnit_Percent) {
+        NS_ASSERTION(minWidth.GetPercentValue() == 0.0f,
+          "Non-zero percentage values not currently supported");
+        aSize.width = 0;
+        aWidthSet = true; // FIXME: should we really do this for
+                             // nonzero values?
+=======
+  // add in the css min, max, pref
+  const nsStylePosition* position = aBox->StylePosition();
+  const auto& minWidth = position->mMinWidth;
+  if (minWidth.ConvertsToLength()) {
+    nscoord min = minWidth.ToLength();
+    if (!aWidthSet || (min > aSize.width && canOverride)) {
+      aSize.width = min;
+      aWidthSet = true;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   } else if (minWidth.GetUnit() == eStyleUnit_Percent) {
     NS_ASSERTION(minWidth.GetPercentValue() == 0.0f,
                  "Non-zero percentage values not currently supported");
@@ -555,6 +706,71 @@ bool nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox,
       nscoord val = nsPresContext::CSSPixelsToAppUnits(value.ToInteger(&error));
       if (val > aSize.width) aSize.width = val;
       aWidthSet = true;
+||||||| merged common ancestors
+    // XXX Handle eStyleUnit_Enumerated?
+    // (Handling the eStyleUnit_Enumerated types requires
+    // GetXULPrefSize/GetXULMinSize methods that don't consider
+    // (min-/max-/)(width/height) properties.
+    // calc() with percentage is treated like '0' (unset)
+
+    const nsStyleCoord &minHeight = position->mMinHeight;
+    if ((minHeight.GetUnit() == eStyleUnit_Coord &&
+         minHeight.GetCoordValue() != 0) ||
+        (minHeight.IsCalcUnit() && !minHeight.CalcHasPercent())) {
+        nscoord min = minHeight.ComputeCoordPercentCalc(0);
+        if (!aHeightSet || (min > aSize.height && canOverride)) {
+           aSize.height = min;
+           aHeightSet = true;
+        }
+    } else if (minHeight.GetUnit() == eStyleUnit_Percent) {
+        NS_ASSERTION(position->mMinHeight.GetPercentValue() == 0.0f,
+          "Non-zero percentage values not currently supported");
+        aSize.height = 0;
+        aHeightSet = true; // FIXME: should we really do this for
+                              // nonzero values?
+=======
+  } else if (minWidth.ConvertsToPercentage()) {
+    NS_ASSERTION(minWidth.ToPercentage() == 0.0f,
+                 "Non-zero percentage values not currently supported");
+    aSize.width = 0;
+    aWidthSet = true;  // FIXME: should we really do this for
+                       // nonzero values?
+  }
+  // XXX Handle ExtremumLength?
+  // (Handling them  requires GetXULPrefSize/GetXULMinSize methods that don't
+  // consider (min-/max-/)(width/height) properties.
+  // calc() with percentage is treated like '0' (unset)
+
+  const auto& minHeight = position->mMinHeight;
+  if (minHeight.ConvertsToLength()) {
+    nscoord min = minHeight.ToLength();
+    if (!aHeightSet || (min > aSize.height && canOverride)) {
+      aSize.height = min;
+      aHeightSet = true;
+    }
+  } else if (minHeight.ConvertsToPercentage()) {
+    NS_ASSERTION(position->mMinHeight.ToPercentage() == 0.0f,
+                 "Non-zero percentage values not currently supported");
+    aSize.height = 0;
+    aHeightSet = true;  // FIXME: should we really do this for
+                        // nonzero values?
+  }
+  // calc() with percentage is treated like '0' (unset)
+
+  nsIContent* content = aBox->GetContent();
+  if (content && content->IsXULElement()) {
+    nsAutoString value;
+    nsresult error;
+
+    content->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::minwidth,
+                                  value);
+    if (!value.IsEmpty()) {
+      value.Trim("%");
+
+      nscoord val = nsPresContext::CSSPixelsToAppUnits(value.ToInteger(&error));
+      if (val > aSize.width) aSize.width = val;
+      aWidthSet = true;
+>>>>>>> upstream-releases
     }
 
     content->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::minheight,
@@ -580,6 +796,7 @@ bool nsIFrame::AddXULMaxSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
   // add in the css min, max, pref
   const nsStylePosition* position = aBox->StylePosition();
 
+<<<<<<< HEAD
   // and max
   // see if the width or height was specifically set
   // XXX Handle eStyleUnit_Enumerated?
@@ -592,13 +809,56 @@ bool nsIFrame::AddXULMaxSize(nsIFrame* aBox, nsSize& aSize, bool& aWidthSet,
     aWidthSet = true;
   }
   // percentages and calc() with percentages are treated like 'none'
+||||||| merged common ancestors
+    // and max
+    // see if the width or height was specifically set
+    // XXX Handle eStyleUnit_Enumerated?
+    // (Handling the eStyleUnit_Enumerated types requires
+    // GetXULPrefSize/GetXULMinSize methods that don't consider
+    // (min-/max-/)(width/height) properties.)
+    const nsStyleCoord maxWidth = position->mMaxWidth;
+    if (maxWidth.ConvertsToLength()) {
+        aSize.width = maxWidth.ComputeCoordPercentCalc(0);
+        aWidthSet = true;
+    }
+    // percentages and calc() with percentages are treated like 'none'
+=======
+  // and max
+  // see if the width or height was specifically set
+  // XXX Handle eStyleUnit_Enumerated?
+  // (Handling the eStyleUnit_Enumerated types requires
+  // GetXULPrefSize/GetXULMinSize methods that don't consider
+  // (min-/max-/)(width/height) properties.)
+  const auto& maxWidth = position->mMaxWidth;
+  if (maxWidth.ConvertsToLength()) {
+    aSize.width = maxWidth.ToLength();
+    aWidthSet = true;
+  }
+  // percentages and calc() with percentages are treated like 'none'
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const nsStyleCoord& maxHeight = position->mMaxHeight;
   if (maxHeight.ConvertsToLength()) {
     aSize.height = maxHeight.ComputeCoordPercentCalc(0);
     aHeightSet = true;
   }
   // percentages and calc() with percentages are treated like 'none'
+||||||| merged common ancestors
+    const nsStyleCoord &maxHeight = position->mMaxHeight;
+    if (maxHeight.ConvertsToLength()) {
+        aSize.height = maxHeight.ComputeCoordPercentCalc(0);
+        aHeightSet = true;
+    }
+    // percentages and calc() with percentages are treated like 'none'
+=======
+  const auto& maxHeight = position->mMaxHeight;
+  if (maxHeight.ConvertsToLength()) {
+    aSize.height = maxHeight.ToLength();
+    aHeightSet = true;
+  }
+  // percentages and calc() with percentages are treated like 'none'
+>>>>>>> upstream-releases
 
   nsIContent* content = aBox->GetContent();
   if (content && content->IsXULElement()) {
@@ -672,12 +932,30 @@ void nsBox::AddMargin(nsIFrame* aChild, nsSize& aSize) {
   AddMargin(aSize, margin);
 }
 
+<<<<<<< HEAD
 void nsBox::AddMargin(nsSize& aSize, const nsMargin& aMargin) {
   if (aSize.width != NS_INTRINSICSIZE)
+||||||| merged common ancestors
+void
+nsBox::AddMargin(nsSize& aSize, const nsMargin& aMargin)
+{
+  if (aSize.width != NS_INTRINSICSIZE)
+=======
+void nsBox::AddMargin(nsSize& aSize, const nsMargin& aMargin) {
+  if (aSize.width != NS_UNCONSTRAINEDSIZE)
+>>>>>>> upstream-releases
     aSize.width += aMargin.left + aMargin.right;
 
+<<<<<<< HEAD
   if (aSize.height != NS_INTRINSICSIZE)
     aSize.height += aMargin.top + aMargin.bottom;
+||||||| merged common ancestors
+  if (aSize.height != NS_INTRINSICSIZE)
+     aSize.height += aMargin.top + aMargin.bottom;
+=======
+  if (aSize.height != NS_UNCONSTRAINEDSIZE)
+    aSize.height += aMargin.top + aMargin.bottom;
+>>>>>>> upstream-releases
 }
 
 nscoord nsBox::BoundsCheck(nscoord aMin, nscoord aPref, nscoord aMax) {
@@ -701,21 +979,58 @@ nsSize nsBox::BoundsCheck(const nsSize& aMinSize, const nsSize& aPrefSize,
       BoundsCheck(aMinSize.height, aPrefSize.height, aMaxSize.height));
 }
 
+<<<<<<< HEAD
 /*static*/ nsIFrame* nsBox::GetChildXULBox(const nsIFrame* aFrame) {
+||||||| merged common ancestors
+/*static*/ nsIFrame*
+nsBox::GetChildXULBox(const nsIFrame* aFrame)
+{
+=======
+/*static*/
+nsIFrame* nsBox::GetChildXULBox(const nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   // box layout ends at box-wrapped frames, so don't allow these frames
   // to report child boxes.
   return aFrame->IsXULBoxFrame() ? aFrame->PrincipalChildList().FirstChild()
                                  : nullptr;
 }
 
+<<<<<<< HEAD
 /*static*/ nsIFrame* nsBox::GetNextXULBox(const nsIFrame* aFrame) {
   return aFrame->GetParent() && aFrame->GetParent()->IsXULBoxFrame()
              ? aFrame->GetNextSibling()
              : nullptr;
+||||||| merged common ancestors
+/*static*/ nsIFrame*
+nsBox::GetNextXULBox(const nsIFrame* aFrame)
+{
+  return aFrame->GetParent() &&
+    aFrame->GetParent()->IsXULBoxFrame() ? aFrame->GetNextSibling() : nullptr;
+=======
+/*static*/
+nsIFrame* nsBox::GetNextXULBox(const nsIFrame* aFrame) {
+  return aFrame->GetParent() && aFrame->GetParent()->IsXULBoxFrame()
+             ? aFrame->GetNextSibling()
+             : nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /*static*/ nsIFrame* nsBox::GetParentXULBox(const nsIFrame* aFrame) {
   return aFrame->GetParent() && aFrame->GetParent()->IsXULBoxFrame()
              ? aFrame->GetParent()
              : nullptr;
+||||||| merged common ancestors
+/*static*/ nsIFrame*
+nsBox::GetParentXULBox(const nsIFrame* aFrame)
+{
+  return aFrame->GetParent() &&
+    aFrame->GetParent()->IsXULBoxFrame() ? aFrame->GetParent() : nullptr;
+=======
+/*static*/
+nsIFrame* nsBox::GetParentXULBox(const nsIFrame* aFrame) {
+  return aFrame->GetParent() && aFrame->GetParent()->IsXULBoxFrame()
+             ? aFrame->GetParent()
+             : nullptr;
+>>>>>>> upstream-releases
 }

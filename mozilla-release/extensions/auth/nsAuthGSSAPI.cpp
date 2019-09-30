@@ -29,20 +29,33 @@
 #include "nsAuthGSSAPI.h"
 
 #ifdef XP_MACOSX
-#include <Kerberos/Kerberos.h>
+#  include <Kerberos/Kerberos.h>
 #endif
 
 #ifdef XP_MACOSX
+<<<<<<< HEAD
 typedef KLStatus (*KLCacheHasValidTickets_type)(KLPrincipal, KLKerberosVersion,
                                                 KLBoolean *, KLPrincipal *,
                                                 char **);
+||||||| merged common ancestors
+typedef KLStatus (*KLCacheHasValidTickets_type)(
+    KLPrincipal,
+    KLKerberosVersion,
+    KLBoolean *,
+    KLPrincipal *,
+    char **);
+=======
+typedef KLStatus (*KLCacheHasValidTickets_type)(KLPrincipal, KLKerberosVersion,
+                                                KLBoolean*, KLPrincipal*,
+                                                char**);
+>>>>>>> upstream-releases
 #endif
 
 #if defined(HAVE_RES_NINIT)
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/nameser.h>
-#include <resolv.h>
+#  include <sys/types.h>
+#  include <netinet/in.h>
+#  include <arpa/nameser.h>
+#  include <resolv.h>
 #endif
 
 using namespace mozilla;
@@ -53,14 +66,23 @@ using namespace mozilla;
 // by by a different name depending on the implementation of gss but always
 // has the same value
 
+<<<<<<< HEAD
 static gss_OID_desc gss_c_nt_hostbased_service = {
     10, (void *)"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x04"};
+||||||| merged common ancestors
+static gss_OID_desc gss_c_nt_hostbased_service =
+    { 10, (void *) "\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x04" };
+=======
+static gss_OID_desc gss_c_nt_hostbased_service = {
+    10, (void*)"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x04"};
+>>>>>>> upstream-releases
 
 static const char kNegotiateAuthGssLib[] = "network.negotiate-auth.gsslib";
 static const char kNegotiateAuthNativeImp[] =
     "network.negotiate-auth.using-native-gsslib";
 
 static struct GSSFunction {
+<<<<<<< HEAD
   const char *str;
   PRFuncPtr func;
 } gssFuncs[] = {{"gss_display_status", nullptr},
@@ -88,11 +110,77 @@ static PRLibrary *gssLibrary = nullptr;
 #define gss_release_name_ptr ((gss_release_name_type)*gssFuncs[7].func)
 #define gss_wrap_ptr ((gss_wrap_type)*gssFuncs[8].func)
 #define gss_unwrap_ptr ((gss_unwrap_type)*gssFuncs[9].func)
+||||||| merged common ancestors
+    const char *str;
+    PRFuncPtr func;
+} gssFuncs[] = {
+    { "gss_display_status", nullptr },
+    { "gss_init_sec_context", nullptr },
+    { "gss_indicate_mechs", nullptr },
+    { "gss_release_oid_set", nullptr },
+    { "gss_delete_sec_context", nullptr },
+    { "gss_import_name", nullptr },
+    { "gss_release_buffer", nullptr },
+    { "gss_release_name", nullptr },
+    { "gss_wrap", nullptr },
+    { "gss_unwrap", nullptr }
+};
+
+static bool      gssNativeImp = true;
+static PRLibrary* gssLibrary = nullptr;
+
+#define gss_display_status_ptr      ((gss_display_status_type)*gssFuncs[0].func)
+#define gss_init_sec_context_ptr    ((gss_init_sec_context_type)*gssFuncs[1].func)
+#define gss_indicate_mechs_ptr      ((gss_indicate_mechs_type)*gssFuncs[2].func)
+#define gss_release_oid_set_ptr     ((gss_release_oid_set_type)*gssFuncs[3].func)
+#define gss_delete_sec_context_ptr  ((gss_delete_sec_context_type)*gssFuncs[4].func)
+#define gss_import_name_ptr         ((gss_import_name_type)*gssFuncs[5].func)
+#define gss_release_buffer_ptr      ((gss_release_buffer_type)*gssFuncs[6].func)
+#define gss_release_name_ptr        ((gss_release_name_type)*gssFuncs[7].func)
+#define gss_wrap_ptr                ((gss_wrap_type)*gssFuncs[8].func)
+#define gss_unwrap_ptr              ((gss_unwrap_type)*gssFuncs[9].func)
+=======
+  const char* str;
+  PRFuncPtr func;
+} gssFuncs[] = {{"gss_display_status", nullptr},
+                {"gss_init_sec_context", nullptr},
+                {"gss_indicate_mechs", nullptr},
+                {"gss_release_oid_set", nullptr},
+                {"gss_delete_sec_context", nullptr},
+                {"gss_import_name", nullptr},
+                {"gss_release_buffer", nullptr},
+                {"gss_release_name", nullptr},
+                {"gss_wrap", nullptr},
+                {"gss_unwrap", nullptr}};
+
+static bool gssNativeImp = true;
+static PRLibrary* gssLibrary = nullptr;
+
+#define gss_display_status_ptr ((gss_display_status_type)*gssFuncs[0].func)
+#define gss_init_sec_context_ptr ((gss_init_sec_context_type)*gssFuncs[1].func)
+#define gss_indicate_mechs_ptr ((gss_indicate_mechs_type)*gssFuncs[2].func)
+#define gss_release_oid_set_ptr ((gss_release_oid_set_type)*gssFuncs[3].func)
+#define gss_delete_sec_context_ptr \
+  ((gss_delete_sec_context_type)*gssFuncs[4].func)
+#define gss_import_name_ptr ((gss_import_name_type)*gssFuncs[5].func)
+#define gss_release_buffer_ptr ((gss_release_buffer_type)*gssFuncs[6].func)
+#define gss_release_name_ptr ((gss_release_name_type)*gssFuncs[7].func)
+#define gss_wrap_ptr ((gss_wrap_type)*gssFuncs[8].func)
+#define gss_unwrap_ptr ((gss_unwrap_type)*gssFuncs[9].func)
+>>>>>>> upstream-releases
 
 #ifdef XP_MACOSX
 static PRFuncPtr KLCacheHasValidTicketsPtr;
+<<<<<<< HEAD
 #define KLCacheHasValidTickets_ptr \
   ((KLCacheHasValidTickets_type)*KLCacheHasValidTicketsPtr)
+||||||| merged common ancestors
+#define KLCacheHasValidTickets_ptr \
+        ((KLCacheHasValidTickets_type)*KLCacheHasValidTicketsPtr)
+=======
+#  define KLCacheHasValidTickets_ptr \
+    ((KLCacheHasValidTickets_type)*KLCacheHasValidTicketsPtr)
+>>>>>>> upstream-releases
 #endif
 
 static nsresult gssInit() {
@@ -106,7 +194,13 @@ static nsresult gssInit() {
 #endif
   gssNativeImp = Preferences::GetBool(kNegotiateAuthNativeImp);
 
+<<<<<<< HEAD
   PRLibrary *lib = nullptr;
+||||||| merged common ancestors
+    PRLibrary *lib = nullptr;
+=======
+  PRLibrary* lib = nullptr;
+>>>>>>> upstream-releases
 
   if (!libPath.IsEmpty()) {
     LOG(("Attempting to load user specified library [%s]\n", libPath.get()));
@@ -118,14 +212,29 @@ static nsresult gssInit() {
 #endif
   } else {
 #ifdef XP_WIN
+<<<<<<< HEAD
 #ifdef _WIN64
     NS_NAMED_LITERAL_STRING(kLibName, "gssapi64.dll");
 #else
     NS_NAMED_LITERAL_STRING(kLibName, "gssapi32.dll");
 #endif
+||||||| merged common ancestors
+        #ifdef _WIN64
+        NS_NAMED_LITERAL_STRING(kLibName, "gssapi64.dll");
+        #else
+        NS_NAMED_LITERAL_STRING(kLibName, "gssapi32.dll");
+        #endif
+=======
+#  ifdef _WIN64
+    NS_NAMED_LITERAL_STRING(kLibName, "gssapi64.dll");
+#  else
+    NS_NAMED_LITERAL_STRING(kLibName, "gssapi32.dll");
+#  endif
+>>>>>>> upstream-releases
 
     lib = LoadLibraryWithFlags(kLibName.get());
 #elif defined(__OpenBSD__)
+<<<<<<< HEAD
     /* OpenBSD doesn't register inter-library dependencies in basesystem
      * libs therefor we need to load all the libraries gssapi depends on,
      * in the correct order and with LD_GLOBAL for GSSAPI auth to work
@@ -142,9 +251,51 @@ static nsresult gssInit() {
       libSpec.value.pathname = verLibNames[i];
       lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_GLOBAL);
     }
+||||||| merged common ancestors
+        /* OpenBSD doesn't register inter-library dependencies in basesystem
+         * libs therefor we need to load all the libraries gssapi depends on,
+         * in the correct order and with LD_GLOBAL for GSSAPI auth to work
+         * fine.
+         */
+
+        const char *const verLibNames[] = {
+            "libasn1.so",
+            "libcrypto.so",
+            "libroken.so",
+            "libheimbase.so",
+            "libcom_err.so",
+            "libkrb5.so",
+            "libgssapi.so"
+        };
+
+        PRLibSpec libSpec;
+        for (size_t i = 0; i < ArrayLength(verLibNames); ++i) {
+            libSpec.type = PR_LibSpec_Pathname;
+            libSpec.value.pathname = verLibNames[i];
+            lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_GLOBAL);
+        }
+=======
+    /* OpenBSD doesn't register inter-library dependencies in basesystem
+     * libs therefor we need to load all the libraries gssapi depends on,
+     * in the correct order and with LD_GLOBAL for GSSAPI auth to work
+     * fine.
+     */
+
+    const char* const verLibNames[] = {
+        "libasn1.so",    "libcrypto.so", "libroken.so", "libheimbase.so",
+        "libcom_err.so", "libkrb5.so",   "libgssapi.so"};
+
+    PRLibSpec libSpec;
+    for (size_t i = 0; i < ArrayLength(verLibNames); ++i) {
+      libSpec.type = PR_LibSpec_Pathname;
+      libSpec.value.pathname = verLibNames[i];
+      lib = PR_LoadLibraryWithFlags(libSpec, PR_LD_GLOBAL);
+    }
+>>>>>>> upstream-releases
 
 #else
 
+<<<<<<< HEAD
     const char *const libNames[] = {"gss", "gssapi_krb5", "gssapi"};
 
     const char *const verLibNames[] = {
@@ -169,7 +320,65 @@ static nsresult gssInit() {
         lib = nullptr;
       }
     }
+||||||| merged common ancestors
+        const char *const libNames[] = {
+            "gss",
+            "gssapi_krb5",
+            "gssapi"
+        };
 
+        const char *const verLibNames[] = {
+            "libgssapi_krb5.so.2", /* MIT - FC, Suse10, Debian */
+            "libgssapi.so.4",      /* Heimdal - Suse10, MDK */
+            "libgssapi.so.1"       /* Heimdal - Suse9, CITI - FC, MDK, Suse10*/
+        };
+
+        for (size_t i = 0; i < ArrayLength(verLibNames) && !lib; ++i) {
+            lib = PR_LoadLibrary(verLibNames[i]);
+
+            /* The CITI libgssapi library calls exit() during
+             * initialization if it's not correctly configured. Try to
+             * ensure that we never use this library for our GSSAPI
+             * support, as its just a wrapper library, anyway.
+             * See Bugzilla #325433
+             */
+            if (lib &&
+                PR_FindFunctionSymbol(lib,
+                                      "internal_krb5_gss_initialize") &&
+                PR_FindFunctionSymbol(lib, "gssd_pname_to_uid")) {
+                LOG(("CITI libgssapi found, which calls exit(). Skipping\n"));
+                PR_UnloadLibrary(lib);
+                lib = nullptr;
+            }
+        }
+=======
+    const char* const libNames[] = {"gss", "gssapi_krb5", "gssapi"};
+
+    const char* const verLibNames[] = {
+        "libgssapi_krb5.so.2", /* MIT - FC, Suse10, Debian */
+        "libgssapi.so.4",      /* Heimdal - Suse10, MDK */
+        "libgssapi.so.1"       /* Heimdal - Suse9, CITI - FC, MDK, Suse10*/
+    };
+
+    for (size_t i = 0; i < ArrayLength(verLibNames) && !lib; ++i) {
+      lib = PR_LoadLibrary(verLibNames[i]);
+
+      /* The CITI libgssapi library calls exit() during
+       * initialization if it's not correctly configured. Try to
+       * ensure that we never use this library for our GSSAPI
+       * support, as its just a wrapper library, anyway.
+       * See Bugzilla #325433
+       */
+      if (lib && PR_FindFunctionSymbol(lib, "internal_krb5_gss_initialize") &&
+          PR_FindFunctionSymbol(lib, "gssd_pname_to_uid")) {
+        LOG(("CITI libgssapi found, which calls exit(). Skipping\n"));
+        PR_UnloadLibrary(lib);
+        lib = nullptr;
+      }
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     for (size_t i = 0; i < ArrayLength(libNames) && !lib; ++i) {
       char *libName = PR_GetLibraryName(nullptr, libNames[i]);
       if (libName) {
@@ -181,6 +390,35 @@ static nsresult gssInit() {
           LOG(("CITI libgssapi found, which calls exit(). Skipping\n"));
           PR_UnloadLibrary(lib);
           lib = nullptr;
+||||||| merged common ancestors
+        for (size_t i = 0; i < ArrayLength(libNames) && !lib; ++i) {
+            char *libName = PR_GetLibraryName(nullptr, libNames[i]);
+            if (libName) {
+                lib = PR_LoadLibrary(libName);
+                PR_FreeLibraryName(libName);
+
+                if (lib &&
+                    PR_FindFunctionSymbol(lib,
+                                          "internal_krb5_gss_initialize") &&
+                    PR_FindFunctionSymbol(lib, "gssd_pname_to_uid")) {
+                    LOG(("CITI libgssapi found, which calls exit(). Skipping\n"));
+                    PR_UnloadLibrary(lib);
+                    lib = nullptr;
+                }
+            }
+=======
+    for (size_t i = 0; i < ArrayLength(libNames) && !lib; ++i) {
+      char* libName = PR_GetLibraryName(nullptr, libNames[i]);
+      if (libName) {
+        lib = PR_LoadLibrary(libName);
+        PR_FreeLibraryName(libName);
+
+        if (lib && PR_FindFunctionSymbol(lib, "internal_krb5_gss_initialize") &&
+            PR_FindFunctionSymbol(lib, "gssd_pname_to_uid")) {
+          LOG(("CITI libgssapi found, which calls exit(). Skipping\n"));
+          PR_UnloadLibrary(lib);
+          lib = nullptr;
+>>>>>>> upstream-releases
         }
       }
     }
@@ -217,6 +455,7 @@ static nsresult gssInit() {
 
 // Generate proper GSSAPI error messages from the major and
 // minor status codes.
+<<<<<<< HEAD
 void LogGssError(OM_uint32 maj_stat, OM_uint32 min_stat, const char *prefix) {
   if (!MOZ_LOG_TEST(gNegotiateLog, LogLevel::Debug)) {
     return;
@@ -247,10 +486,85 @@ void LogGssError(OM_uint32 maj_stat, OM_uint32 min_stat, const char *prefix) {
   } while (!GSS_ERROR(ret) && msg_ctx != 0);
 
   LOG(("%s\n", errorStr.get()));
+||||||| merged common ancestors
+void
+LogGssError(OM_uint32 maj_stat, OM_uint32 min_stat, const char *prefix)
+{
+    if (!MOZ_LOG_TEST(gNegotiateLog, LogLevel::Debug)) {
+        return;
+    }
+
+    OM_uint32 new_stat;
+    OM_uint32 msg_ctx = 0;
+    gss_buffer_desc status1_string;
+    gss_buffer_desc status2_string;
+    OM_uint32 ret;
+    nsAutoCString errorStr;
+    errorStr.Assign(prefix);
+
+    if (!gssLibrary)
+        return;
+
+    errorStr += ": ";
+    do {
+        ret = gss_display_status_ptr(&new_stat,
+                                     maj_stat,
+                                     GSS_C_GSS_CODE,
+                                     GSS_C_NULL_OID,
+                                     &msg_ctx,
+                                     &status1_string);
+        errorStr.Append((const char *) status1_string.value, status1_string.length);
+        gss_release_buffer_ptr(&new_stat, &status1_string);
+
+        errorStr += '\n';
+        ret = gss_display_status_ptr(&new_stat,
+                                     min_stat,
+                                     GSS_C_MECH_CODE,
+                                     GSS_C_NULL_OID,
+                                     &msg_ctx,
+                                     &status2_string);
+        errorStr.Append((const char *) status2_string.value, status2_string.length);
+        errorStr += '\n';
+    } while (!GSS_ERROR(ret) && msg_ctx != 0);
+
+    LOG(("%s\n", errorStr.get()));
+=======
+void LogGssError(OM_uint32 maj_stat, OM_uint32 min_stat, const char* prefix) {
+  if (!MOZ_LOG_TEST(gNegotiateLog, LogLevel::Debug)) {
+    return;
+  }
+
+  OM_uint32 new_stat;
+  OM_uint32 msg_ctx = 0;
+  gss_buffer_desc status1_string;
+  gss_buffer_desc status2_string;
+  OM_uint32 ret;
+  nsAutoCString errorStr;
+  errorStr.Assign(prefix);
+
+  if (!gssLibrary) return;
+
+  errorStr += ": ";
+  do {
+    ret = gss_display_status_ptr(&new_stat, maj_stat, GSS_C_GSS_CODE,
+                                 GSS_C_NULL_OID, &msg_ctx, &status1_string);
+    errorStr.Append((const char*)status1_string.value, status1_string.length);
+    gss_release_buffer_ptr(&new_stat, &status1_string);
+
+    errorStr += '\n';
+    ret = gss_display_status_ptr(&new_stat, min_stat, GSS_C_MECH_CODE,
+                                 GSS_C_NULL_OID, &msg_ctx, &status2_string);
+    errorStr.Append((const char*)status2_string.value, status2_string.length);
+    errorStr += '\n';
+  } while (!GSS_ERROR(ret) && msg_ctx != 0);
+
+  LOG(("%s\n", errorStr.get()));
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsAuthGSSAPI::nsAuthGSSAPI(pType package) : mServiceFlags(REQ_DEFAULT) {
   OM_uint32 minstat;
   OM_uint32 majstat;
@@ -300,6 +614,114 @@ nsAuthGSSAPI::nsAuthGSSAPI(pType package) : mServiceFlags(REQ_DEFAULT) {
         mMechOID = &gss_spnego_mech_oid_desc;
         break;
       }
+||||||| merged common ancestors
+nsAuthGSSAPI::nsAuthGSSAPI(pType package)
+    : mServiceFlags(REQ_DEFAULT)
+{
+    OM_uint32 minstat;
+    OM_uint32 majstat;
+    gss_OID_set mech_set;
+    gss_OID item;
+
+    unsigned int i;
+    static gss_OID_desc gss_krb5_mech_oid_desc =
+        { 9, (void *) "\x2a\x86\x48\x86\xf7\x12\x01\x02\x02" };
+    static gss_OID_desc gss_spnego_mech_oid_desc =
+        { 6, (void *) "\x2b\x06\x01\x05\x05\x02" };
+
+    LOG(("entering nsAuthGSSAPI::nsAuthGSSAPI()\n"));
+
+    mComplete = false;
+
+    if (!gssLibrary && NS_FAILED(gssInit()))
+        return;
+
+    mCtx = GSS_C_NO_CONTEXT;
+    mMechOID = &gss_krb5_mech_oid_desc;
+
+    // if the type is kerberos we accept it as default
+    // and exit
+
+    if (package == PACKAGE_TYPE_KERBEROS)
+        return;
+
+    // Now, look at the list of supported mechanisms,
+    // if SPNEGO is found, then use it.
+    // Otherwise, set the desired mechanism to
+    // GSS_C_NO_OID and let the system try to use
+    // the default mechanism.
+    //
+    // Using Kerberos directly (instead of negotiating
+    // with SPNEGO) may work in some cases depending
+    // on how smart the server side is.
+
+    majstat = gss_indicate_mechs_ptr(&minstat, &mech_set);
+    if (GSS_ERROR(majstat))
+        return;
+
+    if (mech_set) {
+        for (i=0; i<mech_set->count; i++) {
+            item = &mech_set->elements[i];
+            if (item->length == gss_spnego_mech_oid_desc.length &&
+                !memcmp(item->elements, gss_spnego_mech_oid_desc.elements,
+                item->length)) {
+                // ok, we found it
+                mMechOID = &gss_spnego_mech_oid_desc;
+                break;
+            }
+        }
+        gss_release_oid_set_ptr(&minstat, &mech_set);
+=======
+nsAuthGSSAPI::nsAuthGSSAPI(pType package) : mServiceFlags(REQ_DEFAULT) {
+  OM_uint32 minstat;
+  OM_uint32 majstat;
+  gss_OID_set mech_set;
+  gss_OID item;
+
+  unsigned int i;
+  static gss_OID_desc gss_krb5_mech_oid_desc = {
+      9, (void*)"\x2a\x86\x48\x86\xf7\x12\x01\x02\x02"};
+  static gss_OID_desc gss_spnego_mech_oid_desc = {
+      6, (void*)"\x2b\x06\x01\x05\x05\x02"};
+
+  LOG(("entering nsAuthGSSAPI::nsAuthGSSAPI()\n"));
+
+  mComplete = false;
+
+  if (!gssLibrary && NS_FAILED(gssInit())) return;
+
+  mCtx = GSS_C_NO_CONTEXT;
+  mMechOID = &gss_krb5_mech_oid_desc;
+
+  // if the type is kerberos we accept it as default
+  // and exit
+
+  if (package == PACKAGE_TYPE_KERBEROS) return;
+
+  // Now, look at the list of supported mechanisms,
+  // if SPNEGO is found, then use it.
+  // Otherwise, set the desired mechanism to
+  // GSS_C_NO_OID and let the system try to use
+  // the default mechanism.
+  //
+  // Using Kerberos directly (instead of negotiating
+  // with SPNEGO) may work in some cases depending
+  // on how smart the server side is.
+
+  majstat = gss_indicate_mechs_ptr(&minstat, &mech_set);
+  if (GSS_ERROR(majstat)) return;
+
+  if (mech_set) {
+    for (i = 0; i < mech_set->count; i++) {
+      item = &mech_set->elements[i];
+      if (item->length == gss_spnego_mech_oid_desc.length &&
+          !memcmp(item->elements, gss_spnego_mech_oid_desc.elements,
+                  item->length)) {
+        // ok, we found it
+        mMechOID = &gss_spnego_mech_oid_desc;
+        break;
+      }
+>>>>>>> upstream-releases
     }
     gss_release_oid_set_ptr(&minstat, &mech_set);
   }
@@ -314,20 +736,84 @@ void nsAuthGSSAPI::Reset() {
   mComplete = false;
 }
 
+<<<<<<< HEAD
 /* static */ void nsAuthGSSAPI::Shutdown() {
   if (gssLibrary) {
     PR_UnloadLibrary(gssLibrary);
     gssLibrary = nullptr;
   }
+||||||| merged common ancestors
+/* static */ void
+nsAuthGSSAPI::Shutdown()
+{
+    if (gssLibrary) {
+        PR_UnloadLibrary(gssLibrary);
+        gssLibrary = nullptr;
+    }
+=======
+/* static */
+void nsAuthGSSAPI::Shutdown() {
+  if (gssLibrary) {
+    PR_UnloadLibrary(gssLibrary);
+    gssLibrary = nullptr;
+  }
+>>>>>>> upstream-releases
 }
 
 /* Limitations apply to this class's thread safety. See the header file */
 NS_IMPL_ISUPPORTS(nsAuthGSSAPI, nsIAuthModule)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAuthGSSAPI::Init(const char *serviceName, uint32_t serviceFlags,
                    const char16_t *domain, const char16_t *username,
                    const char16_t *password) {
+  // we don't expect to be passed any user credentials
+  NS_ASSERTION(!domain && !username && !password, "unexpected credentials");
+
+  // it's critial that the caller supply a service name to be used
+  NS_ENSURE_TRUE(serviceName && *serviceName, NS_ERROR_INVALID_ARG);
+
+  LOG(("entering nsAuthGSSAPI::Init()\n"));
+
+  if (!gssLibrary) return NS_ERROR_NOT_INITIALIZED;
+
+  mServiceName = serviceName;
+  mServiceFlags = serviceFlags;
+||||||| merged common ancestors
+nsAuthGSSAPI::Init(const char *serviceName,
+                   uint32_t    serviceFlags,
+                   const char16_t *domain,
+                   const char16_t *username,
+                   const char16_t *password)
+{
+    // we don't expect to be passed any user credentials
+    NS_ASSERTION(!domain && !username && !password, "unexpected credentials");
+
+    // it's critial that the caller supply a service name to be used
+    NS_ENSURE_TRUE(serviceName && *serviceName, NS_ERROR_INVALID_ARG);
+
+    LOG(("entering nsAuthGSSAPI::Init()\n"));
+
+    if (!gssLibrary)
+       return NS_ERROR_NOT_INITIALIZED;
+
+    mServiceName = serviceName;
+    mServiceFlags = serviceFlags;
+
+    static bool sTelemetrySent = false;
+    if (!sTelemetrySent) {
+        mozilla::Telemetry::Accumulate(
+            mozilla::Telemetry::NTLM_MODULE_USED_2,
+            serviceFlags & nsIAuthModule::REQ_PROXY_AUTH
+                ? NTLM_MODULE_KERBEROS_PROXY
+                : NTLM_MODULE_KERBEROS_DIRECT);
+        sTelemetrySent = true;
+    }
+=======
+nsAuthGSSAPI::Init(const char* serviceName, uint32_t serviceFlags,
+                   const char16_t* domain, const char16_t* username,
+                   const char16_t* password) {
   // we don't expect to be passed any user credentials
   NS_ASSERTION(!domain && !username && !password, "unexpected credentials");
 
@@ -349,11 +835,28 @@ nsAuthGSSAPI::Init(const char *serviceName, uint32_t serviceFlags,
                                        : NTLM_MODULE_KERBEROS_DIRECT);
     sTelemetrySent = true;
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static bool sTelemetrySent = false;
+  if (!sTelemetrySent) {
+    mozilla::Telemetry::Accumulate(mozilla::Telemetry::NTLM_MODULE_USED_2,
+                                   serviceFlags & nsIAuthModule::REQ_PROXY_AUTH
+                                       ? NTLM_MODULE_KERBEROS_PROXY
+                                       : NTLM_MODULE_KERBEROS_DIRECT);
+    sTelemetrySent = true;
+  }
 
   return NS_OK;
+||||||| merged common ancestors
+    return NS_OK;
+=======
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAuthGSSAPI::GetNextToken(const void *inToken, uint32_t inTokenLen,
                            void **outToken, uint32_t *outTokenLen) {
   OM_uint32 major_status, minor_status;
@@ -378,10 +881,69 @@ nsAuthGSSAPI::GetNextToken(const void *inToken, uint32_t inTokenLen,
 
   input_token.value = (void *)mServiceName.get();
   input_token.length = mServiceName.Length() + 1;
+||||||| merged common ancestors
+nsAuthGSSAPI::GetNextToken(const void *inToken,
+                           uint32_t    inTokenLen,
+                           void      **outToken,
+                           uint32_t   *outTokenLen)
+{
+    OM_uint32 major_status, minor_status;
+    OM_uint32 req_flags = 0;
+    gss_buffer_desc input_token = GSS_C_EMPTY_BUFFER;
+    gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
+    gss_buffer_t  in_token_ptr = GSS_C_NO_BUFFER;
+    gss_name_t server;
+    nsAutoCString userbuf;
+    nsresult rv;
+
+    LOG(("entering nsAuthGSSAPI::GetNextToken()\n"));
+
+    if (!gssLibrary)
+       return NS_ERROR_NOT_INITIALIZED;
+
+    // If they've called us again after we're complete, reset to start afresh.
+    if (mComplete)
+        Reset();
+
+    if (mServiceFlags & REQ_DELEGATE)
+        req_flags |= GSS_C_DELEG_FLAG;
+
+    if (mServiceFlags & REQ_MUTUAL_AUTH)
+        req_flags |= GSS_C_MUTUAL_FLAG;
+
+    input_token.value = (void *)mServiceName.get();
+    input_token.length = mServiceName.Length() + 1;
+=======
+nsAuthGSSAPI::GetNextToken(const void* inToken, uint32_t inTokenLen,
+                           void** outToken, uint32_t* outTokenLen) {
+  OM_uint32 major_status, minor_status;
+  OM_uint32 req_flags = 0;
+  gss_buffer_desc input_token = GSS_C_EMPTY_BUFFER;
+  gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
+  gss_buffer_t in_token_ptr = GSS_C_NO_BUFFER;
+  gss_name_t server;
+  nsAutoCString userbuf;
+  nsresult rv;
+
+  LOG(("entering nsAuthGSSAPI::GetNextToken()\n"));
+
+  if (!gssLibrary) return NS_ERROR_NOT_INITIALIZED;
+
+  // If they've called us again after we're complete, reset to start afresh.
+  if (mComplete) Reset();
+
+  if (mServiceFlags & REQ_DELEGATE) req_flags |= GSS_C_DELEG_FLAG;
+
+  if (mServiceFlags & REQ_MUTUAL_AUTH) req_flags |= GSS_C_MUTUAL_FLAG;
+
+  input_token.value = (void*)mServiceName.get();
+  input_token.length = mServiceName.Length() + 1;
+>>>>>>> upstream-releases
 
 #if defined(HAVE_RES_NINIT)
   res_ninit(&_res);
 #endif
+<<<<<<< HEAD
   major_status = gss_import_name_ptr(&minor_status, &input_token,
                                      &gss_c_nt_hostbased_service, &server);
   input_token.value = nullptr;
@@ -404,6 +966,56 @@ nsAuthGSSAPI::GetNextToken(const void *inToken, uint32_t inTokenLen,
     LOG(("Cannot restart authentication sequence!"));
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+    major_status = gss_import_name_ptr(&minor_status,
+                                   &input_token,
+                                   &gss_c_nt_hostbased_service,
+                                   &server);
+    input_token.value = nullptr;
+    input_token.length = 0;
+    if (GSS_ERROR(major_status)) {
+        LogGssError(major_status, minor_status, "gss_import_name() failed");
+        return NS_ERROR_FAILURE;
+    }
+
+    if (inToken) {
+        input_token.length = inTokenLen;
+        input_token.value = (void *) inToken;
+        in_token_ptr = &input_token;
+    }
+    else if (mCtx != GSS_C_NO_CONTEXT) {
+        // If there is no input token, then we are starting a new
+        // authentication sequence.  If we have already initialized our
+        // security context, then we're in trouble because it means that the
+        // first sequence failed.  We need to bail or else we might end up in
+        // an infinite loop.
+        LOG(("Cannot restart authentication sequence!"));
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+  major_status = gss_import_name_ptr(&minor_status, &input_token,
+                                     &gss_c_nt_hostbased_service, &server);
+  input_token.value = nullptr;
+  input_token.length = 0;
+  if (GSS_ERROR(major_status)) {
+    LogGssError(major_status, minor_status, "gss_import_name() failed");
+    return NS_ERROR_FAILURE;
+  }
+
+  if (inToken) {
+    input_token.length = inTokenLen;
+    input_token.value = (void*)inToken;
+    in_token_ptr = &input_token;
+  } else if (mCtx != GSS_C_NO_CONTEXT) {
+    // If there is no input token, then we are starting a new
+    // authentication sequence.  If we have already initialized our
+    // security context, then we're in trouble because it means that the
+    // first sequence failed.  We need to bail or else we might end up in
+    // an infinite loop.
+    LOG(("Cannot restart authentication sequence!"));
+    return NS_ERROR_UNEXPECTED;
+  }
+>>>>>>> upstream-releases
 
 #if defined(XP_MACOSX)
   // Suppress Kerberos prompts to get credentials.  See bug 240643.
@@ -468,15 +1080,36 @@ end:
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAuthGSSAPI::Unwrap(const void *inToken, uint32_t inTokenLen, void **outToken,
                      uint32_t *outTokenLen) {
   OM_uint32 major_status, minor_status;
+||||||| merged common ancestors
+nsAuthGSSAPI::Unwrap(const void *inToken,
+                     uint32_t    inTokenLen,
+                     void      **outToken,
+                     uint32_t   *outTokenLen)
+{
+    OM_uint32 major_status, minor_status;
+=======
+nsAuthGSSAPI::Unwrap(const void* inToken, uint32_t inTokenLen, void** outToken,
+                     uint32_t* outTokenLen) {
+  OM_uint32 major_status, minor_status;
+>>>>>>> upstream-releases
 
   gss_buffer_desc input_token;
   gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
 
+<<<<<<< HEAD
   input_token.value = (void *)inToken;
   input_token.length = inTokenLen;
+||||||| merged common ancestors
+    input_token.value = (void *) inToken;
+    input_token.length = inTokenLen;
+=======
+  input_token.value = (void*)inToken;
+  input_token.length = inTokenLen;
+>>>>>>> upstream-releases
 
   major_status = gss_unwrap_ptr(&minor_status, mCtx, &input_token,
                                 &output_token, nullptr, nullptr);
@@ -500,15 +1133,42 @@ nsAuthGSSAPI::Unwrap(const void *inToken, uint32_t inTokenLen, void **outToken,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAuthGSSAPI::Wrap(const void *inToken, uint32_t inTokenLen, bool confidential,
                    void **outToken, uint32_t *outTokenLen) {
   OM_uint32 major_status, minor_status;
+||||||| merged common ancestors
+nsAuthGSSAPI::Wrap(const void *inToken,
+                   uint32_t    inTokenLen,
+                   bool        confidential,
+                   void      **outToken,
+                   uint32_t   *outTokenLen)
+{
+    OM_uint32 major_status, minor_status;
+
+    gss_buffer_desc input_token;
+    gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
+
+    input_token.value = (void *) inToken;
+    input_token.length = inTokenLen;
+=======
+nsAuthGSSAPI::Wrap(const void* inToken, uint32_t inTokenLen, bool confidential,
+                   void** outToken, uint32_t* outTokenLen) {
+  OM_uint32 major_status, minor_status;
+>>>>>>> upstream-releases
 
   gss_buffer_desc input_token;
   gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
 
+<<<<<<< HEAD
   input_token.value = (void *)inToken;
   input_token.length = inTokenLen;
+||||||| merged common ancestors
+    *outTokenLen = output_token.length;
+=======
+  input_token.value = (void*)inToken;
+  input_token.length = inTokenLen;
+>>>>>>> upstream-releases
 
   major_status =
       gss_wrap_ptr(&minor_status, mCtx, confidential, GSS_C_QOP_DEFAULT,
@@ -521,11 +1181,28 @@ nsAuthGSSAPI::Wrap(const void *inToken, uint32_t inTokenLen, bool confidential,
     return NS_ERROR_FAILURE;
   }
 
+<<<<<<< HEAD
+  *outTokenLen = output_token.length;
+||||||| merged common ancestors
+    return NS_OK;
+}
+=======
   *outTokenLen = output_token.length;
 
+  /* it is not possible for output_token.length to be zero */
+  *outToken = moz_xmemdup(output_token.value, output_token.length);
+  gss_release_buffer_ptr(&minor_status, &output_token);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   /* it is not possible for output_token.length to be zero */
   *outToken = moz_xmemdup(output_token.value, output_token.length);
   gss_release_buffer_ptr(&minor_status, &output_token);
 
   return NS_OK;
 }
+||||||| merged common ancestors
+=======
+  return NS_OK;
+}
+>>>>>>> upstream-releases

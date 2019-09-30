@@ -14,10 +14,24 @@
 
 using namespace mozilla::a11y;
 
+<<<<<<< HEAD
 ia2AccessibleRelation::ia2AccessibleRelation(RelationType aType, Relation *aRel)
     : mType(aType) {
   Accessible *target = nullptr;
   while ((target = aRel->Next())) mTargets.AppendElement(target);
+||||||| merged common ancestors
+ia2AccessibleRelation::ia2AccessibleRelation(RelationType aType, Relation* aRel) :
+  mType(aType)
+{
+  Accessible* target = nullptr;
+  while ((target = aRel->Next()))
+    mTargets.AppendElement(target);
+=======
+ia2AccessibleRelation::ia2AccessibleRelation(RelationType aType, Relation* aRel)
+    : mType(aType) {
+  Accessible* target = nullptr;
+  while ((target = aRel->Next())) mTargets.AppendElement(target);
+>>>>>>> upstream-releases
 }
 
 // IUnknown
@@ -30,8 +44,18 @@ IMPL_IUNKNOWN_QUERY_TAIL
 // IAccessibleRelation
 
 STDMETHODIMP
+<<<<<<< HEAD
 ia2AccessibleRelation::get_relationType(BSTR *aRelationType) {
   if (!aRelationType) return E_INVALIDARG;
+||||||| merged common ancestors
+ia2AccessibleRelation::get_relationType(BSTR* aRelationType)
+{
+  if (!aRelationType)
+    return E_INVALIDARG;
+=======
+ia2AccessibleRelation::get_relationType(BSTR* aRelationType) {
+  if (!aRelationType) return E_INVALIDARG;
+>>>>>>> upstream-releases
 
   *aRelationType = nullptr;
 
@@ -48,39 +72,91 @@ ia2AccessibleRelation::get_relationType(BSTR *aRelationType) {
 }
 
 STDMETHODIMP
+<<<<<<< HEAD
 ia2AccessibleRelation::get_localizedRelationType(BSTR *aLocalizedRelationType) {
   if (!aLocalizedRelationType) return E_INVALIDARG;
+||||||| merged common ancestors
+ia2AccessibleRelation::get_localizedRelationType(BSTR *aLocalizedRelationType)
+{
+  if (!aLocalizedRelationType)
+    return E_INVALIDARG;
+=======
+ia2AccessibleRelation::get_localizedRelationType(BSTR* aLocalizedRelationType) {
+  if (!aLocalizedRelationType) return E_INVALIDARG;
+>>>>>>> upstream-releases
 
   *aLocalizedRelationType = nullptr;
   return E_NOTIMPL;
 }
 
 STDMETHODIMP
+<<<<<<< HEAD
 ia2AccessibleRelation::get_nTargets(long *aNTargets) {
   if (!aNTargets) return E_INVALIDARG;
+||||||| merged common ancestors
+ia2AccessibleRelation::get_nTargets(long *aNTargets)
+{
+ if (!aNTargets)
+   return E_INVALIDARG;
+=======
+ia2AccessibleRelation::get_nTargets(long* aNTargets) {
+  if (!aNTargets) return E_INVALIDARG;
+>>>>>>> upstream-releases
 
   *aNTargets = mTargets.Length();
   return S_OK;
 }
 
 STDMETHODIMP
+<<<<<<< HEAD
 ia2AccessibleRelation::get_target(long aTargetIndex, IUnknown **aTarget) {
   if (aTargetIndex < 0 || (uint32_t)aTargetIndex >= mTargets.Length() ||
       !aTarget)
+||||||| merged common ancestors
+ia2AccessibleRelation::get_target(long aTargetIndex, IUnknown **aTarget)
+{
+  if (aTargetIndex < 0 || (uint32_t)aTargetIndex >= mTargets.Length() || !aTarget)
+=======
+ia2AccessibleRelation::get_target(long aTargetIndex, IUnknown** aTarget) {
+  if (aTargetIndex < 0 || (uint32_t)aTargetIndex >= mTargets.Length() ||
+      !aTarget)
+>>>>>>> upstream-releases
     return E_INVALIDARG;
 
+<<<<<<< HEAD
   AccessibleWrap *target =
       static_cast<AccessibleWrap *>(mTargets[aTargetIndex].get());
   *aTarget = static_cast<IAccessible *>(target);
+||||||| merged common ancestors
+  AccessibleWrap* target =
+    static_cast<AccessibleWrap*>(mTargets[aTargetIndex].get());
+  *aTarget = static_cast<IAccessible*>(target);
+=======
+  AccessibleWrap* target =
+      static_cast<AccessibleWrap*>(mTargets[aTargetIndex].get());
+  *aTarget = static_cast<IAccessible*>(target);
+>>>>>>> upstream-releases
   (*aTarget)->AddRef();
 
   return S_OK;
 }
 
 STDMETHODIMP
+<<<<<<< HEAD
 ia2AccessibleRelation::get_targets(long aMaxTargets, IUnknown **aTargets,
                                    long *aNTargets) {
   if (!aNTargets || !aTargets) return E_INVALIDARG;
+||||||| merged common ancestors
+ia2AccessibleRelation::get_targets(long aMaxTargets, IUnknown **aTargets,
+                                   long *aNTargets)
+{
+  if (!aNTargets || !aTargets)
+    return E_INVALIDARG;
+=======
+ia2AccessibleRelation::get_targets(long aMaxTargets, IUnknown** aTargets,
+                                   long* aNTargets) {
+  if (!aNTargets || !aTargets) return E_INVALIDARG;
+>>>>>>> upstream-releases
 
   *aNTargets = 0;
   long maxTargets = mTargets.Length();

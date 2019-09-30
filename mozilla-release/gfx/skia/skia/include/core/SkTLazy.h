@@ -19,23 +19,16 @@
  */
 template <typename T> class SkTLazy {
 public:
-    SkTLazy() : fPtr(nullptr) {}
+    SkTLazy() = default;
+    explicit SkTLazy(const T* src) : fPtr(src ? new (&fStorage) T(*src) : nullptr) {}
+    SkTLazy(const SkTLazy& that) { *this = that; }
+    SkTLazy(SkTLazy&& that) { *this = std::move(that); }
 
-    explicit SkTLazy(const T* src)
-        : fPtr(src ? new (fStorage.get()) T(*src) : nullptr) {}
-
-    SkTLazy(const SkTLazy& that) : fPtr(nullptr) { *this = that; }
-    SkTLazy(SkTLazy&& that) : fPtr(nullptr) { *this = std::move(that); }
-
-    ~SkTLazy() {
-        if (this->isValid()) {
-            fPtr->~T();
-        }
-    }
+    ~SkTLazy() { this->reset(); }
 
     SkTLazy& operator=(const SkTLazy& that) {
         if (that.isValid()) {
-            this->set(*that.get());
+            this->set(*that);
         } else {
             this->reset();
         }
@@ -44,7 +37,7 @@ public:
 
     SkTLazy& operator=(SkTLazy&& that) {
         if (that.isValid()) {
-            this->set(std::move(*that.get()));
+            this->set(std::move(*that));
         } else {
             this->reset();
         }
@@ -58,10 +51,20 @@ public:
      *  instance is always returned.
      */
     template <typename... Args> T* init(Args&&... args) {
+<<<<<<< HEAD
         if (this->isValid()) {
             fPtr->~T();
         }
         fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(std::forward<Args>(args)...);
+||||||| merged common ancestors
+        if (this->isValid()) {
+            fPtr->~T();
+        }
+        fPtr = new (SkTCast<T*>(fStorage.get())) T(std::forward<Args>(args)...);
+=======
+        this->reset();
+        fPtr = new (&fStorage) T(std::forward<Args>(args)...);
+>>>>>>> upstream-releases
         return fPtr;
     }
 
@@ -75,7 +78,13 @@ public:
         if (this->isValid()) {
             *fPtr = src;
         } else {
+<<<<<<< HEAD
             fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(src);
+||||||| merged common ancestors
+            fPtr = new (SkTCast<T*>(fStorage.get())) T(src);
+=======
+            fPtr = new (&fStorage) T(src);
+>>>>>>> upstream-releases
         }
         return fPtr;
     }
@@ -84,7 +93,13 @@ public:
         if (this->isValid()) {
             *fPtr = std::move(src);
         } else {
+<<<<<<< HEAD
             fPtr = new (reinterpret_cast<T*>(fStorage.get())) T(std::move(src));
+||||||| merged common ancestors
+            fPtr = new (SkTCast<T*>(fStorage.get())) T(std::move(src));
+=======
+            fPtr = new (&fStorage) T(std::move(src));
+>>>>>>> upstream-releases
         }
         return fPtr;
     }
@@ -110,6 +125,8 @@ public:
      * knows that the object has been initialized.
      */
     T* get() const { SkASSERT(this->isValid()); return fPtr; }
+    T* operator->() const { return this->get(); }
+    T& operator*() const { return *this->get(); }
 
     /**
      * Like above but doesn't assert if object isn't initialized (in which case
@@ -118,8 +135,8 @@ public:
     T* getMaybeNull() const { return fPtr; }
 
 private:
-    SkAlignedSTStorage<1, T> fStorage;
-    T*                       fPtr; // nullptr or fStorage
+    typename std::aligned_storage<sizeof(T), alignof(T)>::type fStorage;
+    T*                                                         fPtr{nullptr}; // nullptr or fStorage
 };
 
 /**

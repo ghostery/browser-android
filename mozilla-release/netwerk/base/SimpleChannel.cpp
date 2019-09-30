@@ -21,6 +21,7 @@
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
 class SimpleChannel : public nsBaseChannel {
  public:
   explicit SimpleChannel(UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
@@ -38,6 +39,27 @@ class SimpleChannel : public nsBaseChannel {
   UniquePtr<SimpleChannelCallbacks> mCallbacks;
 };
 
+||||||| merged common ancestors
+class SimpleChannel : public nsBaseChannel
+{
+public:
+  explicit SimpleChannel(UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
+
+protected:
+  virtual ~SimpleChannel() = default;
+
+  virtual nsresult OpenContentStream(bool async, nsIInputStream **streamOut,
+                                     nsIChannel** channel) override;
+
+  virtual nsresult BeginAsyncRead(nsIStreamListener* listener,
+                                  nsIRequest** request) override;
+
+private:
+  UniquePtr<SimpleChannelCallbacks> mCallbacks;
+};
+
+=======
+>>>>>>> upstream-releases
 SimpleChannel::SimpleChannel(UniquePtr<SimpleChannelCallbacks>&& aCallbacks)
     : mCallbacks(std::move(aCallbacks)) {
   EnableSynthesizedProgressEvents(true);
@@ -72,6 +94,7 @@ nsresult SimpleChannel::BeginAsyncRead(nsIStreamListener* listener,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 class SimpleChannelChild final : public SimpleChannel,
                                  public nsIChildChannel,
                                  public PSimpleChannelChild {
@@ -92,11 +115,47 @@ class SimpleChannelChild final : public SimpleChannel,
   RefPtr<SimpleChannelChild> mIPDLRef;
 };
 
+||||||| merged common ancestors
+class SimpleChannelChild final : public SimpleChannel
+                               , public nsIChildChannel
+                               , public PSimpleChannelChild
+{
+public:
+  explicit SimpleChannelChild(UniquePtr<SimpleChannelCallbacks>&& aCallbacks);
+
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_NSICHILDCHANNEL
+
+protected:
+  virtual void ActorDestroy(ActorDestroyReason why) override;
+
+private:
+  virtual ~SimpleChannelChild() = default;
+
+  void AddIPDLReference();
+
+  RefPtr<SimpleChannelChild> mIPDLRef;
+};
+
+=======
+>>>>>>> upstream-releases
 NS_IMPL_ISUPPORTS_INHERITED(SimpleChannelChild, SimpleChannel, nsIChildChannel)
 
+<<<<<<< HEAD
 SimpleChannelChild::SimpleChannelChild(
     UniquePtr<SimpleChannelCallbacks>&& aCallbacks)
     : SimpleChannel(std::move(aCallbacks)), mIPDLRef(nullptr) {}
+||||||| merged common ancestors
+SimpleChannelChild::SimpleChannelChild(UniquePtr<SimpleChannelCallbacks>&& aCallbacks)
+  : SimpleChannel(std::move(aCallbacks))
+  , mIPDLRef(nullptr)
+{
+}
+=======
+SimpleChannelChild::SimpleChannelChild(
+    UniquePtr<SimpleChannelCallbacks>&& aCallbacks)
+    : SimpleChannel(std::move(aCallbacks)) {}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 SimpleChannelChild::ConnectParent(uint32_t aId) {
@@ -107,39 +166,45 @@ SimpleChannelChild::ConnectParent(uint32_t aId) {
     return NS_ERROR_FAILURE;
   }
 
-  if (!gNeckoChild->SendPSimpleChannelConstructor(this, aId)) {
+  // Reference freed in DeallocPSimpleChannelChild.
+  if (!gNeckoChild->SendPSimpleChannelConstructor(do_AddRef(this).take(),
+                                                  aId)) {
     return NS_ERROR_FAILURE;
   }
 
-  // IPC now has a ref to us.
-  mIPDLRef = this;
   return NS_OK;
 }
 
 NS_IMETHODIMP
 SimpleChannelChild::CompleteRedirectSetup(nsIStreamListener* aListener,
+<<<<<<< HEAD
                                           nsISupports* aContext) {
   if (mIPDLRef) {
+||||||| merged common ancestors
+                                          nsISupports* aContext)
+{
+  if (mIPDLRef) {
+=======
+                                          nsISupports* aContext) {
+  if (CanSend()) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
   }
 
   nsresult rv;
-  if (mLoadInfo && mLoadInfo->GetEnforceSecurity()) {
-    MOZ_ASSERT(!aContext, "aContext should be null!");
-    rv = AsyncOpen2(aListener);
-  } else {
-    rv = AsyncOpen(aListener, aContext);
-  }
+  MOZ_ASSERT(!aContext, "aContext should be null!");
+  rv = AsyncOpen(aListener);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
 
-  if (mIPDLRef) {
+  if (CanSend()) {
     Unused << Send__delete__(this);
   }
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SimpleChannelChild::ActorDestroy(ActorDestroyReason why) {
   MOZ_ASSERT(mIPDLRef);
   mIPDLRef = nullptr;
@@ -148,6 +213,23 @@ void SimpleChannelChild::ActorDestroy(ActorDestroyReason why) {
 already_AddRefed<nsIChannel> NS_NewSimpleChannelInternal(
     nsIURI* aURI, nsILoadInfo* aLoadInfo,
     UniquePtr<SimpleChannelCallbacks>&& aCallbacks) {
+||||||| merged common ancestors
+void
+SimpleChannelChild::ActorDestroy(ActorDestroyReason why)
+{
+  MOZ_ASSERT(mIPDLRef);
+  mIPDLRef = nullptr;
+}
+
+
+already_AddRefed<nsIChannel>
+NS_NewSimpleChannelInternal(nsIURI* aURI, nsILoadInfo* aLoadInfo, UniquePtr<SimpleChannelCallbacks>&& aCallbacks)
+{
+=======
+already_AddRefed<nsIChannel> NS_NewSimpleChannelInternal(
+    nsIURI* aURI, nsILoadInfo* aLoadInfo,
+    UniquePtr<SimpleChannelCallbacks>&& aCallbacks) {
+>>>>>>> upstream-releases
   RefPtr<SimpleChannel> chan;
   if (IsNeckoChild()) {
     chan = new SimpleChannelChild(std::move(aCallbacks));

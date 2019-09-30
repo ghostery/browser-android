@@ -6,7 +6,14 @@
 
 
 DevToolsModules(
+<<<<<<< HEAD
   'DebugTargetInfo.js',
+||||||| merged common ancestors
+=======
+  'DebugTargetErrorPage.css',
+  'DebugTargetErrorPage.js',
+  'DebugTargetInfo.js',
+>>>>>>> upstream-releases
   'MeatballMenu.js',
   'ToolboxController.js',
   'ToolboxTab.js',

@@ -9,11 +9,23 @@
 
 #include "Units.h"
 
+<<<<<<< HEAD
 class nsIDocument;
 template <class T>
 class nsCOMPtr;
+||||||| merged common ancestors
+class nsIDocument;
+template<class T> class nsCOMPtr;
+=======
+template <class T>
+class RefPtr;
+>>>>>>> upstream-releases
 
 namespace mozilla {
+namespace dom {
+class Document;
+}
+
 namespace layers {
 
 /**
@@ -22,8 +34,9 @@ namespace layers {
  * |aDocument| should be the root content document for the content that was
  * tapped.
  */
-CSSRect CalculateRectToZoomTo(const nsCOMPtr<nsIDocument>& aRootContentDocument,
-                              const CSSPoint& aPoint);
+CSSRect CalculateRectToZoomTo(
+    const RefPtr<mozilla::dom::Document>& aRootContentDocument,
+    const CSSPoint& aPoint);
 
 }  // namespace layers
 }  // namespace mozilla

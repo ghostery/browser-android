@@ -14,25 +14,56 @@ var srv = createServer();
 srv.start(-1);
 const PORT = srv.identity.primaryPort;
 
+<<<<<<< HEAD
 function run_test() {
   srv.registerPathHandler("/lots-of-leading-blank-lines",
                           lotsOfLeadingBlankLines);
   srv.registerPathHandler("/very-long-request-line",
                           veryLongRequestLine);
+||||||| merged common ancestors
+function run_test()
+{
+  srv.registerPathHandler("/lots-of-leading-blank-lines",
+                          lotsOfLeadingBlankLines);
+  srv.registerPathHandler("/very-long-request-line",
+                          veryLongRequestLine);
+=======
+function run_test() {
+  srv.registerPathHandler(
+    "/lots-of-leading-blank-lines",
+    lotsOfLeadingBlankLines
+  );
+  srv.registerPathHandler("/very-long-request-line", veryLongRequestLine);
+>>>>>>> upstream-releases
 
   runRawTests(tests, testComplete(srv));
 }
 
+<<<<<<< HEAD
 
 /** *************
+||||||| merged common ancestors
+
+/***************
+=======
+/** *************
+>>>>>>> upstream-releases
  * BEGIN TESTS *
  ***************/
 
 var test, gData, str;
 var tests = [];
 
+<<<<<<< HEAD
 
 function veryLongRequestLine(request, response) {
+||||||| merged common ancestors
+
+function veryLongRequestLine(request, response)
+{
+=======
+function veryLongRequestLine(request, response) {
+>>>>>>> upstream-releases
   writeDetails(request, response);
   response.setStatusLine(request.httpVersion, 200, "TEST PASSED");
 }
@@ -46,8 +77,9 @@ reallyLong = reallyLong + reallyLong + reallyLong + reallyLong; // 8192
 reallyLong = reallyLong + reallyLong + reallyLong + reallyLong; // 32768
 reallyLong = reallyLong + reallyLong + reallyLong + reallyLong; // 131072
 reallyLong = reallyLong + reallyLong + reallyLong + reallyLong; // 524288
-if (reallyLong.length !== 524288)
+if (reallyLong.length !== 524288) {
   throw new TypeError("generated length not as long as expected");
+<<<<<<< HEAD
 str = "GET /very-long-request-line?" + reallyLong + " HTTP/1.1\r\n" +
       "Host: localhost:" + PORT + "\r\n" +
       "\r\n";
@@ -56,6 +88,33 @@ for (let i = 0; i < str.length; i += 16384)
   gData.push(str.substr(i, 16384));
 
 function checkVeryLongRequestLine(data) {
+||||||| merged common ancestors
+str = "GET /very-long-request-line?" + reallyLong + " HTTP/1.1\r\n" +
+      "Host: localhost:" + PORT + "\r\n" +
+      "\r\n";
+data = [];
+for (var i = 0; i < str.length; i += 16384)
+  data.push(str.substr(i, 16384));
+
+function checkVeryLongRequestLine(data)
+{
+=======
+}
+str =
+  "GET /very-long-request-line?" +
+  reallyLong +
+  " HTTP/1.1\r\n" +
+  "Host: localhost:" +
+  PORT +
+  "\r\n" +
+  "\r\n";
+gData = [];
+for (let i = 0; i < str.length; i += 16384) {
+  gData.push(str.substr(i, 16384));
+}
+
+function checkVeryLongRequestLine(data) {
+>>>>>>> upstream-releases
   var iter = LineIterator(data);
 
   print("data length: " + data.length);
@@ -67,31 +126,45 @@ function checkVeryLongRequestLine(data) {
   skipHeaders(iter);
 
   // Okay, next line must be the data we expected to be written
-  var body =
-    [
-     "Method:  GET",
-     "Path:    /very-long-request-line",
-     "Query:   " + reallyLong,
-     "Version: 1.1",
-     "Scheme:  http",
-     "Host:    localhost",
-     "Port:    " + PORT,
-    ];
+  var body = [
+    "Method:  GET",
+    "Path:    /very-long-request-line",
+    "Query:   " + reallyLong,
+    "Version: 1.1",
+    "Scheme:  http",
+    "Host:    localhost",
+    "Port:    " + PORT,
+  ];
 
   expectLines(iter, body);
 }
 test = new RawTest("localhost", PORT, gData, checkVeryLongRequestLine);
 tests.push(test);
 
+<<<<<<< HEAD
 
 function lotsOfLeadingBlankLines(request, response) {
+||||||| merged common ancestors
+
+function lotsOfLeadingBlankLines(request, response)
+{
+=======
+function lotsOfLeadingBlankLines(request, response) {
+>>>>>>> upstream-releases
   writeDetails(request, response);
   response.setStatusLine(request.httpVersion, 200, "TEST PASSED");
 }
 
 var blankLines = "\r\n";
+<<<<<<< HEAD
 for (let i = 0; i < 14; i++)
+||||||| merged common ancestors
+for (var i = 0; i < 14; i++)
+=======
+for (let i = 0; i < 14; i++) {
+>>>>>>> upstream-releases
   blankLines += blankLines;
+<<<<<<< HEAD
 str = blankLines +
       "GET /lots-of-leading-blank-lines HTTP/1.1\r\n" +
       "Host: localhost:" + PORT + "\r\n" +
@@ -101,6 +174,33 @@ for (let i = 0; i < str.length; i += 100)
   gData.push(str.substr(i, 100));
 
 function checkLotsOfLeadingBlankLines(data) {
+||||||| merged common ancestors
+str = blankLines +
+      "GET /lots-of-leading-blank-lines HTTP/1.1\r\n" +
+      "Host: localhost:" + PORT + "\r\n" +
+      "\r\n";
+data = [];
+for (var i = 0; i < str.length; i += 100)
+  data.push(str.substr(i, 100));
+
+function checkLotsOfLeadingBlankLines(data)
+{
+=======
+}
+str =
+  blankLines +
+  "GET /lots-of-leading-blank-lines HTTP/1.1\r\n" +
+  "Host: localhost:" +
+  PORT +
+  "\r\n" +
+  "\r\n";
+gData = [];
+for (let i = 0; i < str.length; i += 100) {
+  gData.push(str.substr(i, 100));
+}
+
+function checkLotsOfLeadingBlankLines(data) {
+>>>>>>> upstream-releases
   var iter = LineIterator(data);
 
   // Status-Line
@@ -112,16 +212,15 @@ function checkLotsOfLeadingBlankLines(data) {
   skipHeaders(iter);
 
   // Okay, next line must be the data we expected to be written
-  var body =
-    [
-     "Method:  GET",
-     "Path:    /lots-of-leading-blank-lines",
-     "Query:   ",
-     "Version: 1.1",
-     "Scheme:  http",
-     "Host:    localhost",
-     "Port:    " + PORT,
-    ];
+  var body = [
+    "Method:  GET",
+    "Path:    /lots-of-leading-blank-lines",
+    "Query:   ",
+    "Version: 1.1",
+    "Scheme:  http",
+    "Host:    localhost",
+    "Port:    " + PORT,
+  ];
 
   expectLines(iter, body);
 }

@@ -22,6 +22,7 @@ MIRGenerator::MIRGenerator(CompileRealm* realm,
                            TempAllocator* alloc, MIRGraph* graph,
                            const CompileInfo* info,
                            const OptimizationInfo* optimizationInfo)
+<<<<<<< HEAD
     : realm(realm),
       runtime(realm ? realm->runtime() : nullptr),
       info_(info),
@@ -130,6 +131,212 @@ bool MIRGraph::removeSuccessorBlocks(MBasicBlock* start) {
   if (!start->hasLastIns()) {
     return true;
   }
+||||||| merged common ancestors
+  : realm(realm),
+    runtime(realm ? realm->runtime() : nullptr),
+    info_(info),
+    optimizationInfo_(optimizationInfo),
+    alloc_(alloc),
+    graph_(graph),
+    offThreadStatus_(Ok()),
+    abortedPreliminaryGroups_(*alloc_),
+    cancelBuild_(false),
+    wasmMaxStackArgBytes_(0),
+    needsOverrecursedCheck_(false),
+    needsStaticStackAlignment_(false),
+    modifiesFrameArguments_(false),
+    instrumentedProfiling_(false),
+    instrumentedProfilingIsCached_(false),
+    safeForMinorGC_(true),
+    stringsCanBeInNursery_(realm ? realm->zone()->canNurseryAllocateStrings() : false),
+    minWasmHeapLength_(0),
+    options(options),
+    gs_(alloc)
+{ }
+
+mozilla::GenericErrorResult<AbortReason>
+MIRGenerator::abort(AbortReason r)
+{
+    if (JitSpewEnabled(JitSpew_IonAbort)) {
+        switch (r) {
+          case AbortReason::Alloc:
+            JitSpew(JitSpew_IonAbort, "AbortReason::Alloc");
+            break;
+          case AbortReason::Inlining:
+            JitSpew(JitSpew_IonAbort, "AbortReason::Inlining");
+            break;
+          case AbortReason::PreliminaryObjects:
+            JitSpew(JitSpew_IonAbort, "AbortReason::PreliminaryObjects");
+            break;
+          case AbortReason::Disable:
+            JitSpew(JitSpew_IonAbort, "AbortReason::Disable");
+            break;
+          case AbortReason::Error:
+            JitSpew(JitSpew_IonAbort, "AbortReason::Error");
+            break;
+          case AbortReason::NoAbort:
+            MOZ_CRASH("Abort with AbortReason::NoAbort");
+            break;
+        }
+    }
+    return Err(std::move(r));
+}
+
+mozilla::GenericErrorResult<AbortReason>
+MIRGenerator::abortFmt(AbortReason r, const char* message, va_list ap)
+{
+    JitSpewVA(JitSpew_IonAbort, message, ap);
+    return Err(std::move(r));
+}
+
+mozilla::GenericErrorResult<AbortReason>
+MIRGenerator::abort(AbortReason r, const char* message, ...)
+{
+    va_list ap;
+    va_start(ap, message);
+    auto forward = abortFmt(r, message, ap);
+    va_end(ap);
+    return forward;
+}
+
+void
+MIRGenerator::addAbortedPreliminaryGroup(ObjectGroup* group)
+{
+    for (size_t i = 0; i < abortedPreliminaryGroups_.length(); i++) {
+        if (group == abortedPreliminaryGroups_[i]) {
+            return;
+        }
+    }
+    AutoEnterOOMUnsafeRegion oomUnsafe;
+    if (!abortedPreliminaryGroups_.append(group)) {
+        oomUnsafe.crash("addAbortedPreliminaryGroup");
+    }
+}
+
+void
+MIRGraph::addBlock(MBasicBlock* block)
+{
+    MOZ_ASSERT(block);
+    block->setId(blockIdGen_++);
+    blocks_.pushBack(block);
+    numBlocks_++;
+}
+
+void
+MIRGraph::insertBlockAfter(MBasicBlock* at, MBasicBlock* block)
+{
+    block->setId(blockIdGen_++);
+    blocks_.insertAfter(at, block);
+    numBlocks_++;
+}
+
+void
+MIRGraph::insertBlockBefore(MBasicBlock* at, MBasicBlock* block)
+{
+    block->setId(blockIdGen_++);
+    blocks_.insertBefore(at, block);
+    numBlocks_++;
+}
+=======
+    : realm(realm),
+      runtime(realm ? realm->runtime() : nullptr),
+      info_(info),
+      optimizationInfo_(optimizationInfo),
+      alloc_(alloc),
+      graph_(graph),
+      offThreadStatus_(Ok()),
+      abortedPreliminaryGroups_(*alloc_),
+      cancelBuild_(false),
+      wasmMaxStackArgBytes_(0),
+      needsOverrecursedCheck_(false),
+      needsStaticStackAlignment_(false),
+      modifiesFrameArguments_(false),
+      instrumentedProfiling_(false),
+      instrumentedProfilingIsCached_(false),
+      safeForMinorGC_(true),
+      stringsCanBeInNursery_(realm ? realm->zone()->canNurseryAllocateStrings()
+                                   : false),
+      minWasmHeapLength_(0),
+      options(options),
+      gs_(alloc) {}
+
+mozilla::GenericErrorResult<AbortReason> MIRGenerator::abort(AbortReason r) {
+  if (JitSpewEnabled(JitSpew_IonAbort)) {
+    switch (r) {
+      case AbortReason::Alloc:
+        JitSpew(JitSpew_IonAbort, "AbortReason::Alloc");
+        break;
+      case AbortReason::Inlining:
+        JitSpew(JitSpew_IonAbort, "AbortReason::Inlining");
+        break;
+      case AbortReason::PreliminaryObjects:
+        JitSpew(JitSpew_IonAbort, "AbortReason::PreliminaryObjects");
+        break;
+      case AbortReason::Disable:
+        JitSpew(JitSpew_IonAbort, "AbortReason::Disable");
+        break;
+      case AbortReason::Error:
+        JitSpew(JitSpew_IonAbort, "AbortReason::Error");
+        break;
+      case AbortReason::NoAbort:
+        MOZ_CRASH("Abort with AbortReason::NoAbort");
+        break;
+    }
+  }
+  return Err(std::move(r));
+}
+
+mozilla::GenericErrorResult<AbortReason> MIRGenerator::abortFmt(
+    AbortReason r, const char* message, va_list ap) {
+  JitSpewVA(JitSpew_IonAbort, message, ap);
+  return Err(std::move(r));
+}
+
+mozilla::GenericErrorResult<AbortReason> MIRGenerator::abort(
+    AbortReason r, const char* message, ...) {
+  va_list ap;
+  va_start(ap, message);
+  auto forward = abortFmt(r, message, ap);
+  va_end(ap);
+  return forward;
+}
+
+void MIRGenerator::addAbortedPreliminaryGroup(ObjectGroup* group) {
+  for (size_t i = 0; i < abortedPreliminaryGroups_.length(); i++) {
+    if (group == abortedPreliminaryGroups_[i]) {
+      return;
+    }
+  }
+  AutoEnterOOMUnsafeRegion oomUnsafe;
+  if (!abortedPreliminaryGroups_.append(group)) {
+    oomUnsafe.crash("addAbortedPreliminaryGroup");
+  }
+}
+
+void MIRGraph::addBlock(MBasicBlock* block) {
+  MOZ_ASSERT(block);
+  block->setId(blockIdGen_++);
+  blocks_.pushBack(block);
+  numBlocks_++;
+}
+
+void MIRGraph::insertBlockAfter(MBasicBlock* at, MBasicBlock* block) {
+  block->setId(blockIdGen_++);
+  blocks_.insertAfter(at, block);
+  numBlocks_++;
+}
+
+void MIRGraph::insertBlockBefore(MBasicBlock* at, MBasicBlock* block) {
+  block->setId(blockIdGen_++);
+  blocks_.insertBefore(at, block);
+  numBlocks_++;
+}
+
+bool MIRGraph::removeSuccessorBlocks(MBasicBlock* start) {
+  if (!start->hasLastIns()) {
+    return true;
+  }
+>>>>>>> upstream-releases
 
   start->mark();
 
@@ -447,6 +654,7 @@ MBasicBlock* MBasicBlock::New(MIRGraph& graph, const CompileInfo& info,
 
         phi->addInlineInput(predSlot);
 
+<<<<<<< HEAD
         // Add append Phis in the block.
         block->addPhi(phi);
         block->setSlot(i, phi);
@@ -493,6 +701,86 @@ MBasicBlock::MBasicBlock(MIRGraph& graph, const CompileInfo& info,
       ,
       lineno_(0u),
       columnIndex_(0u)
+||||||| merged common ancestors
+    return block;
+}
+
+MBasicBlock::MBasicBlock(MIRGraph& graph, const CompileInfo& info, BytecodeSite* site, Kind kind)
+  : unreachable_(false),
+    specialized_(false),
+    graph_(graph),
+    info_(info),
+    predecessors_(graph.alloc()),
+    stackPosition_(info_.firstStackSlot()),
+    id_(0),
+    domIndex_(0),
+    numDominated_(0),
+    pc_(site->pc()),
+    lir_(nullptr),
+    callerResumePoint_(nullptr),
+    entryResumePoint_(nullptr),
+    outerResumePoint_(nullptr),
+    successorWithPhis_(nullptr),
+    positionInPhiSuccessor_(0),
+    loopDepth_(0),
+    kind_(kind),
+    mark_(false),
+    immediatelyDominated_(graph.alloc()),
+    immediateDominator_(nullptr),
+    trackedSite_(site),
+    hitCount_(0),
+    hitState_(HitState::NotDefined)
+#if defined (JS_ION_PERF)
+    , lineno_(0u),
+    columnIndex_(0u)
+=======
+        // Add append Phis in the block.
+        block->addPhi(phi);
+        block->setSlot(i, phi);
+      }
+    } else {
+      block->copySlots(pred);
+    }
+
+    if (!block->predecessors_.append(pred)) {
+      return nullptr;
+    }
+  }
+
+  return block;
+}
+
+MBasicBlock::MBasicBlock(MIRGraph& graph, const CompileInfo& info,
+                         BytecodeSite* site, Kind kind)
+    : unreachable_(false),
+      specialized_(false),
+      graph_(graph),
+      info_(info),
+      predecessors_(graph.alloc()),
+      stackPosition_(info_.firstStackSlot()),
+      id_(0),
+      domIndex_(0),
+      numDominated_(0),
+      pc_(site->pc()),
+      lir_(nullptr),
+      callerResumePoint_(nullptr),
+      entryResumePoint_(nullptr),
+      outerResumePoint_(nullptr),
+      successorWithPhis_(nullptr),
+      positionInPhiSuccessor_(0),
+      loopDepth_(0),
+      kind_(kind),
+      mark_(false),
+      immediatelyDominated_(graph.alloc()),
+      immediateDominator_(nullptr),
+      trackedSite_(site),
+      hitCount_(0),
+      hitState_(HitState::NotDefined)
+#if defined(JS_ION_PERF) || defined(DEBUG)
+      ,
+      lineno_(0u),
+      columnIndex_(0u)
+>>>>>>> upstream-releases
 #endif
 {
 }

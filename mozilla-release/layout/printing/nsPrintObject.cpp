@@ -15,6 +15,7 @@
 #include "nsComponentManagerUtils.h"
 #include "nsIDocShellTreeItem.h"
 #include "nsIBaseWindow.h"
+<<<<<<< HEAD
 #include "nsIDocument.h"
 #include "nsDocShell.h"
 
@@ -23,10 +24,26 @@
 
 using mozilla::dom::BrowsingContext;
 using mozilla::dom::Element;
+||||||| merged common ancestors
+#include "nsIDocument.h"
+=======
+#include "nsDocShell.h"
+
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/BrowsingContext.h"
+#include "mozilla/dom/Document.h"
+#include "mozilla/dom/Element.h"
+
+using mozilla::PresShell;
+using mozilla::dom::BrowsingContext;
+using mozilla::dom::Document;
+using mozilla::dom::Element;
+>>>>>>> upstream-releases
 
 //---------------------------------------------------
 //-- nsPrintObject Class Impl
 //---------------------------------------------------
+<<<<<<< HEAD
 nsPrintObject::nsPrintObject()
     : mContent(nullptr),
       mFrameType(eFrame),
@@ -39,6 +56,26 @@ nsPrintObject::nsPrintObject()
       mDidCreateDocShell(false),
       mShrinkRatio(1.0),
       mZoomRatio(1.0) {
+||||||| merged common ancestors
+nsPrintObject::nsPrintObject() :
+  mContent(nullptr), mFrameType(eFrame), mParent(nullptr),
+  mHasBeenPrinted(false), mDontPrint(true), mPrintAsIs(false),
+  mInvisible(false), mPrintPreview(false), mDidCreateDocShell(false),
+  mShrinkRatio(1.0), mZoomRatio(1.0)
+{
+=======
+nsPrintObject::nsPrintObject()
+    : mContent(nullptr),
+      mFrameType(eFrame),
+      mParent(nullptr),
+      mHasBeenPrinted(false),
+      mDontPrint(true),
+      mPrintAsIs(false),
+      mInvisible(false),
+      mDidCreateDocShell(false),
+      mShrinkRatio(1.0),
+      mZoomRatio(1.0) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsPrintObject);
 }
 
@@ -57,15 +94,32 @@ nsPrintObject::~nsPrintObject() {
 }
 
 //------------------------------------------------------------------
+<<<<<<< HEAD
 nsresult nsPrintObject::Init(nsIDocShell* aDocShell, nsIDocument* aDoc,
                              bool aPrintPreview) {
+||||||| merged common ancestors
+nsresult
+nsPrintObject::Init(nsIDocShell* aDocShell, nsIDocument* aDoc,
+                    bool aPrintPreview)
+{
+=======
+nsresult nsPrintObject::InitAsRootObject(nsIDocShell* aDocShell, Document* aDoc,
+                                         bool aForPrintPreview) {
+  NS_ENSURE_STATE(aDocShell);
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(aDoc);
 
-  mPrintPreview = aPrintPreview;
-
-  if (mPrintPreview || mParent) {
+  if (aForPrintPreview) {
+    nsCOMPtr<nsIContentViewer> viewer;
+    aDocShell->GetContentViewer(getter_AddRefs(viewer));
+    if (viewer && viewer->GetDocument() && viewer->GetDocument()->IsShowing()) {
+      // We're about to discard this document, and it needs mIsShowing to be
+      // false to avoid triggering the assertion in its dtor.
+      viewer->GetDocument()->OnPageHide(false, nullptr);
+    }
     mDocShell = aDocShell;
   } else {
+<<<<<<< HEAD
     mTreeOwner = do_GetInterface(aDocShell);
 
     // Create a new BrowsingContext to create our DocShell in.
@@ -76,37 +130,65 @@ nsresult nsPrintObject::Init(nsIDocShell* aDocShell, nsIDocument* aDoc,
             ? BrowsingContext::Type::Content
             : BrowsingContext::Type::Chrome);
 
+||||||| merged common ancestors
+    mTreeOwner = do_GetInterface(aDocShell);
+=======
+    // When doing an actual print, we create a BrowsingContext/nsDocShell that
+    // is detached from any browser window or tab.
+
+    // Create a new BrowsingContext to create our DocShell in.
+    RefPtr<BrowsingContext> bc = BrowsingContext::Create(
+        /* aParent */ nullptr,
+        /* aOpener */ nullptr, EmptyString(),
+        aDocShell->ItemType() == nsIDocShellTreeItem::typeContent
+            ? BrowsingContext::Type::Content
+            : BrowsingContext::Type::Chrome);
+
+>>>>>>> upstream-releases
     // Create a container docshell for printing.
     mDocShell = nsDocShell::Create(bc);
     NS_ENSURE_TRUE(mDocShell, NS_ERROR_OUT_OF_MEMORY);
 
     mDidCreateDocShell = true;
+<<<<<<< HEAD
     MOZ_ASSERT(mDocShell->ItemType() == aDocShell->ItemType());
+||||||| merged common ancestors
+    mDocShell->SetItemType(aDocShell->ItemType());
+=======
+    MOZ_ASSERT(mDocShell->ItemType() == aDocShell->ItemType());
+
+    mTreeOwner = do_GetInterface(aDocShell);
+>>>>>>> upstream-releases
     mDocShell->SetTreeOwner(mTreeOwner);
-  }
-  NS_ENSURE_TRUE(mDocShell, NS_ERROR_FAILURE);
 
-  // Keep the document related to this docshell alive
-  nsCOMPtr<nsIDocument> dummy = do_GetInterface(mDocShell);
-  mozilla::Unused << dummy;
-
-  nsCOMPtr<nsIContentViewer> viewer;
-  mDocShell->GetContentViewer(getter_AddRefs(viewer));
-  NS_ENSURE_STATE(viewer);
-
-  if (mParent) {
-    nsCOMPtr<nsPIDOMWindowOuter> window = aDoc->GetWindow();
-    if (window) {
-      mContent = window->GetFrameElementInternal();
-    }
-    mDocument = aDoc;
-    return NS_OK;
+    // Make sure nsDocShell::EnsureContentViewer() is called:
+    mozilla::Unused << nsDocShell::Cast(mDocShell)->GetDocument();
   }
 
   mDocument = aDoc->CreateStaticClone(mDocShell);
   NS_ENSURE_STATE(mDocument);
 
+  nsCOMPtr<nsIContentViewer> viewer;
+  mDocShell->GetContentViewer(getter_AddRefs(viewer));
+  NS_ENSURE_STATE(viewer);
   viewer->SetDocument(mDocument);
+
+  return NS_OK;
+}
+
+nsresult nsPrintObject::InitAsNestedObject(nsIDocShell* aDocShell,
+                                           Document* aDoc,
+                                           nsPrintObject* aParent) {
+  NS_ENSURE_STATE(aDocShell);
+  NS_ENSURE_STATE(aDoc);
+
+  mParent = aParent;
+  mDocShell = aDocShell;
+  mDocument = aDoc;
+
+  nsCOMPtr<nsPIDOMWindowOuter> window = aDoc->GetWindow();
+  mContent = window->GetFrameElementInternal();
+
   return NS_OK;
 }
 
@@ -116,9 +198,9 @@ void nsPrintObject::DestroyPresentation() {
   if (mPresShell) {
     mPresShell->EndObservingDocument();
     nsAutoScriptBlocker scriptBlocker;
-    nsCOMPtr<nsIPresShell> shell = mPresShell;
+    RefPtr<PresShell> presShell = mPresShell;
     mPresShell = nullptr;
-    shell->Destroy();
+    presShell->Destroy();
   }
   mPresContext = nullptr;
   mViewManager = nullptr;

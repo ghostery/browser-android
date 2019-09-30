@@ -11,7 +11,7 @@
 #include "mozilla/dom/Exceptions.h"
 #include "nsContentUtils.h"
 #include "nsCOMPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIException.h"
 #include "nsMemory.h"
 #include "xpcprivate.h"
@@ -290,6 +290,31 @@ void Exception::GetMessageMoz(nsString& retval) {
 
 uint32_t Exception::Result() const { return (uint32_t)mResult; }
 
+<<<<<<< HEAD
+uint32_t Exception::LineNumber(JSContext* aCx) const {
+||||||| merged common ancestors
+uint32_t
+Exception::LineNumber(JSContext* aCx) const
+{
+=======
+uint32_t Exception::SourceId(JSContext* aCx) const {
+>>>>>>> upstream-releases
+  if (mLocation) {
+    return mLocation->GetSourceId(aCx);
+  }
+
+  return 0;
+}
+
+<<<<<<< HEAD
+uint32_t Exception::ColumnNumber() const { return 0; }
+||||||| merged common ancestors
+uint32_t
+Exception::ColumnNumber() const
+{
+  return 0;
+}
+=======
 uint32_t Exception::LineNumber(JSContext* aCx) const {
   if (mLocation) {
     return mLocation->GetLineNumber(aCx);
@@ -297,10 +322,19 @@ uint32_t Exception::LineNumber(JSContext* aCx) const {
 
   return 0;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+already_AddRefed<nsIStackFrame> Exception::GetLocation() const {
+||||||| merged common ancestors
+already_AddRefed<nsIStackFrame>
+Exception::GetLocation() const
+{
+=======
 uint32_t Exception::ColumnNumber() const { return 0; }
 
 already_AddRefed<nsIStackFrame> Exception::GetLocation() const {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIStackFrame> location = mLocation;
   return location.forget();
 }
@@ -376,7 +410,16 @@ JSObject* DOMException::WrapObject(JSContext* aCx,
   return DOMException_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMException> DOMException::Create(nsresult aRv) {
+||||||| merged common ancestors
+/* static */already_AddRefed<DOMException>
+DOMException::Create(nsresult aRv)
+{
+=======
+/* static */
+already_AddRefed<DOMException> DOMException::Create(nsresult aRv) {
+>>>>>>> upstream-releases
   nsCString name;
   nsCString message;
   uint16_t code;
@@ -385,8 +428,18 @@ JSObject* DOMException::WrapObject(JSContext* aCx,
   return inst.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMException> DOMException::Create(
     nsresult aRv, const nsACString& aMessage) {
+||||||| merged common ancestors
+/* static */already_AddRefed<DOMException>
+DOMException::Create(nsresult aRv, const nsACString& aMessage)
+{
+=======
+/* static */
+already_AddRefed<DOMException> DOMException::Create(
+    nsresult aRv, const nsACString& aMessage) {
+>>>>>>> upstream-releases
   nsCString name;
   nsCString message;
   uint16_t code;

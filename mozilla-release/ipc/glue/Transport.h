@@ -11,9 +11,21 @@
 #include "chrome/common/ipc_channel.h"
 
 #ifdef OS_POSIX
+<<<<<<< HEAD
 #include "mozilla/ipc/Transport_posix.h"
+||||||| merged common ancestors
+# include "mozilla/ipc/Transport_posix.h"
+=======
+#  include "mozilla/ipc/Transport_posix.h"
+>>>>>>> upstream-releases
 #elif OS_WIN
+<<<<<<< HEAD
 #include "mozilla/ipc/Transport_win.h"
+||||||| merged common ancestors
+# include "mozilla/ipc/Transport_win.h"
+=======
+#  include "mozilla/ipc/Transport_win.h"
+>>>>>>> upstream-releases
 #endif
 #include "mozilla/UniquePtr.h"
 

@@ -191,6 +191,7 @@ TLSServerSocket::SetRequestClientCertificate(uint32_t aMode) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TLSServerSocket::SetCipherSuites(uint16_t* aCipherSuites, uint32_t aLength) {
   // If AsyncListen was already called (and set mListener), it's too late to set
   // this.
@@ -216,6 +217,37 @@ TLSServerSocket::SetCipherSuites(uint16_t* aCipherSuites, uint32_t aLength) {
 
 NS_IMETHODIMP
 TLSServerSocket::SetVersionRange(uint16_t aMinVersion, uint16_t aMaxVersion) {
+||||||| merged common ancestors
+TLSServerSocket::SetCipherSuites(uint16_t* aCipherSuites, uint32_t aLength)
+{
+  // If AsyncListen was already called (and set mListener), it's too late to set
+  // this.
+  if (NS_WARN_IF(mListener)) {
+    return NS_ERROR_IN_PROGRESS;
+  }
+
+  for (uint16_t i = 0; i < SSL_NumImplementedCiphers; ++i) {
+    uint16_t cipher_id = SSL_ImplementedCiphers[i];
+    if (SSL_CipherPrefSet(mFD, cipher_id, false) != SECSuccess) {
+      return mozilla::psm::GetXPCOMFromNSSError(PR_GetError());
+    }
+  }
+
+  for (uint32_t i = 0; i < aLength; ++i) {
+    if (SSL_CipherPrefSet(mFD, aCipherSuites[i], true) != SECSuccess) {
+      return mozilla::psm::GetXPCOMFromNSSError(PR_GetError());
+    }
+  }
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+TLSServerSocket::SetVersionRange(uint16_t aMinVersion, uint16_t aMaxVersion)
+{
+=======
+TLSServerSocket::SetVersionRange(uint16_t aMinVersion, uint16_t aMaxVersion) {
+>>>>>>> upstream-releases
   // If AsyncListen was already called (and set mListener), it's too late to set
   // this.
   if (NS_WARN_IF(mListener)) {

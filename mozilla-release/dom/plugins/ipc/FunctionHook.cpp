@@ -4,14 +4,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/TextUtils.h"
+
 #include "FunctionHook.h"
 #include "FunctionBroker.h"
 #include "nsClassHashtable.h"
 #include "mozilla/ClearOnShutdown.h"
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include <shlobj.h>
 #include "PluginModuleChild.h"
+||||||| merged common ancestors
+#include <shlobj.h>
+#include "PluginModuleChild.h"
+#include "mozilla/WindowsVersion.h"
+=======
+#  include <shlobj.h>
+#  include "PluginModuleChild.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -65,8 +76,15 @@ WindowsDllInterceptor* FunctionHook::GetDllInterceptorFor(
     sDllInterceptorCache = new DllInterceptors();
   }
 
+<<<<<<< HEAD
   MOZ_ASSERT(NS_IsAscii(aModuleName),
              "Non-ASCII module names are not supported");
+||||||| merged common ancestors
+  MOZ_ASSERT(NS_IsAscii(aModuleName), "Non-ASCII module names are not supported");
+=======
+  MOZ_ASSERT(IsAsciiNullTerminated(aModuleName),
+             "Non-ASCII module names are not supported");
+>>>>>>> upstream-releases
   NS_ConvertASCIItoUTF16 moduleName(aModuleName);
 
   WindowsDllInterceptor* ret = sDllInterceptorCache->LookupOrAdd(moduleName);
@@ -295,7 +313,7 @@ void FunctionHook::HookProtectedMode() {
   sCreateFileAStub.Set(sKernel32Intercept, "CreateFileA", &CreateFileAHookFn);
 }
 
-#if defined(MOZ_SANDBOX)
+#  if defined(MOZ_SANDBOX)
 
 /* GetFileAttributesW */
 
@@ -330,7 +348,13 @@ DWORD WINAPI GetFileAttributesWHook(LPCWSTR aFilename) {
   return FILE_ATTRIBUTE_DIRECTORY;
 }
 
+<<<<<<< HEAD
 #endif  // defined(MOZ_SANDBOX)
+||||||| merged common ancestors
+#endif // defined(MOZ_SANDBOX)
+=======
+#  endif  // defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
 
 #endif  // defined(XP_WIN)
 
@@ -339,6 +363,7 @@ DWORD WINAPI GetFileAttributesWHook(LPCWSTR aFilename) {
 void FunctionHook::AddFunctionHooks(FunctionHookArray& aHooks) {
   // We transfer ownership of the FunctionHook objects to the array.
 #if defined(XP_WIN)
+<<<<<<< HEAD
   aHooks[ID_GetWindowInfo] = FUN_HOOK(new GetWindowInfoFH(
       "user32.dll", "GetWindowInfo", &GetWindowInfo, &GetWindowInfoHook));
   aHooks[ID_PrintDlgW] = FUN_HOOK(
@@ -349,6 +374,32 @@ void FunctionHook::AddFunctionHooks(FunctionHookArray& aHooks) {
                                &GetFileAttributesW, &GetFileAttributesWHook));
 #endif  // defined(MOZ_SANDBOX)
 #endif  // defined(XP_WIN)
+||||||| merged common ancestors
+  aHooks[ID_GetWindowInfo] =
+    FUN_HOOK(new GetWindowInfoFH("user32.dll", "GetWindowInfo",
+                                 &GetWindowInfo, &GetWindowInfoHook));
+  aHooks[ID_PrintDlgW] =
+    FUN_HOOK(new PrintDlgWFH("comdlg32.dll", "PrintDlgW", &PrintDlgW,
+                             PrintDlgWHook));
+#if defined(MOZ_SANDBOX)
+  aHooks[ID_GetFileAttributesW] =
+    FUN_HOOK(new GetFileAttributesWFH("kernel32.dll", "GetFileAttributesW",
+                                      &GetFileAttributesW,
+                                      &GetFileAttributesWHook));
+#endif // defined(MOZ_SANDBOX)
+#endif // defined(XP_WIN)
+=======
+  aHooks[ID_GetWindowInfo] = FUN_HOOK(new GetWindowInfoFH(
+      "user32.dll", "GetWindowInfo", &GetWindowInfo, &GetWindowInfoHook));
+  aHooks[ID_PrintDlgW] = FUN_HOOK(
+      new PrintDlgWFH("comdlg32.dll", "PrintDlgW", &PrintDlgW, PrintDlgWHook));
+#  if defined(MOZ_SANDBOX)
+  aHooks[ID_GetFileAttributesW] = FUN_HOOK(
+      new GetFileAttributesWFH("kernel32.dll", "GetFileAttributesW",
+                               &GetFileAttributesW, &GetFileAttributesWHook));
+#  endif  // defined(MOZ_SANDBOX)
+#endif    // defined(XP_WIN)
+>>>>>>> upstream-releases
 }
 
 #undef FUN_HOOK

@@ -12,7 +12,16 @@
 namespace mozilla {
 namespace a11y {
 
+<<<<<<< HEAD
 /* static */ uint32_t DocAccessibleChildBase::InterfacesFor(Accessible* aAcc) {
+||||||| merged common ancestors
+/* static */ uint32_t
+DocAccessibleChildBase::InterfacesFor(Accessible* aAcc)
+{
+=======
+/* static */
+uint32_t DocAccessibleChildBase::InterfacesFor(Accessible* aAcc) {
+>>>>>>> upstream-releases
   uint32_t interfaces = 0;
   if (aAcc->IsHyperText() && aAcc->AsHyperText()->IsTextRole())
     interfaces |= Interfaces::HYPERTEXT;
@@ -42,8 +51,19 @@ namespace a11y {
   return interfaces;
 }
 
+<<<<<<< HEAD
 /* static */ void DocAccessibleChildBase::SerializeTree(
     Accessible* aRoot, nsTArray<AccessibleData>& aTree) {
+||||||| merged common ancestors
+/* static */ void
+DocAccessibleChildBase::SerializeTree(Accessible* aRoot,
+                                      nsTArray<AccessibleData>& aTree)
+{
+=======
+/* static */
+void DocAccessibleChildBase::SerializeTree(Accessible* aRoot,
+                                           nsTArray<AccessibleData>& aTree) {
+>>>>>>> upstream-releases
   uint64_t id = reinterpret_cast<uint64_t>(aRoot->UniqueID());
 #if defined(XP_WIN)
   int32_t msaaId = AccessibleWrap::GetChildIDFor(aRoot);

@@ -63,10 +63,23 @@ JSObject* ServiceWorkerRegistration::WrapObject(
   return ServiceWorkerRegistration_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ServiceWorkerRegistration>
 ServiceWorkerRegistration::CreateForMainThread(
     nsPIDOMWindowInner* aWindow,
     const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ServiceWorkerRegistration>
+ServiceWorkerRegistration::CreateForMainThread(nsPIDOMWindowInner* aWindow,
+                                               const ServiceWorkerRegistrationDescriptor& aDescriptor)
+{
+=======
+/* static */
+already_AddRefed<ServiceWorkerRegistration>
+ServiceWorkerRegistration::CreateForMainThread(
+    nsPIDOMWindowInner* aWindow,
+    const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -84,10 +97,24 @@ ServiceWorkerRegistration::CreateForMainThread(
   return registration.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ServiceWorkerRegistration>
 ServiceWorkerRegistration::CreateForWorker(
     WorkerPrivate* aWorkerPrivate, nsIGlobalObject* aGlobal,
     const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ServiceWorkerRegistration>
+ServiceWorkerRegistration::CreateForWorker(WorkerPrivate* aWorkerPrivate,
+                                           nsIGlobalObject* aGlobal,
+                                           const ServiceWorkerRegistrationDescriptor& aDescriptor)
+{
+=======
+/* static */
+already_AddRefed<ServiceWorkerRegistration>
+ServiceWorkerRegistration::CreateForWorker(
+    WorkerPrivate* aWorkerPrivate, nsIGlobalObject* aGlobal,
+    const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+>>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(aWorkerPrivate);
   MOZ_DIAGNOSTIC_ASSERT(aGlobal);
   aWorkerPrivate->AssertIsOnWorkerThread();

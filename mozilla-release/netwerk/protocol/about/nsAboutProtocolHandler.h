@@ -17,6 +17,20 @@ class nsIURI;
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
+class nsAboutProtocolHandler : public nsIProtocolHandlerWithDynamicFlags,
+                               public nsIProtocolHandler,
+                               public nsSupportsWeakReference {
+ public:
+  NS_DECL_ISUPPORTS
+||||||| merged common ancestors
+class nsAboutProtocolHandler : public nsIProtocolHandlerWithDynamicFlags
+                             , public nsIProtocolHandler
+                             , public nsSupportsWeakReference
+{
+public:
+    NS_DECL_ISUPPORTS
+=======
 class nsAboutProtocolHandler : public nsIProtocolHandlerWithDynamicFlags,
                                public nsIProtocolHandler,
                                public nsSupportsWeakReference {
@@ -26,9 +40,31 @@ class nsAboutProtocolHandler : public nsIProtocolHandlerWithDynamicFlags,
   // nsIProtocolHandler methods:
   NS_DECL_NSIPROTOCOLHANDLER
   NS_DECL_NSIPROTOCOLHANDLERWITHDYNAMICFLAGS
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // nsIProtocolHandler methods:
+  NS_DECL_NSIPROTOCOLHANDLER
+  NS_DECL_NSIPROTOCOLHANDLERWITHDYNAMICFLAGS
+||||||| merged common ancestors
+    // nsIProtocolHandler methods:
+    NS_DECL_NSIPROTOCOLHANDLER
+    NS_DECL_NSIPROTOCOLHANDLERWITHDYNAMICFLAGS
+=======
   // nsAboutProtocolHandler methods:
   nsAboutProtocolHandler() = default;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // nsAboutProtocolHandler methods:
+  nsAboutProtocolHandler() = default;
+||||||| merged common ancestors
+    // nsAboutProtocolHandler methods:
+    nsAboutProtocolHandler() = default;
+=======
+  static nsresult CreateNewURI(const nsACString& aSpec, const char* aCharset,
+                               nsIURI* aBaseURI, nsIURI** result);
+>>>>>>> upstream-releases
 
  private:
   virtual ~nsAboutProtocolHandler() = default;
@@ -50,6 +86,7 @@ class nsSafeAboutProtocolHandler final : public nsIProtocolHandler,
 };
 
 // Class to allow us to propagate the base URI to about:blank correctly
+<<<<<<< HEAD
 class nsNestedAboutURI final : public nsSimpleNestedURI {
  private:
   nsNestedAboutURI(nsIURI* aInnerURI, nsIURI* aBaseURI)
@@ -117,6 +154,194 @@ class nsNestedAboutURI final : public nsSimpleNestedURI {
         NS_ADDREF(*aMutator = this);
       }
       return InitFromSpec(aSpec);
+||||||| merged common ancestors
+class nsNestedAboutURI final
+    : public nsSimpleNestedURI
+{
+private:
+    nsNestedAboutURI(nsIURI* aInnerURI, nsIURI* aBaseURI)
+        : nsSimpleNestedURI(aInnerURI)
+        , mBaseURI(aBaseURI)
+    {}
+    nsNestedAboutURI() : nsSimpleNestedURI() {}
+    virtual ~nsNestedAboutURI() = default;
+
+public:
+    // Override QI so we can QI to our CID as needed
+    NS_IMETHOD QueryInterface(REFNSIID aIID, void** aInstancePtr) override;
+
+    // Override StartClone(), the nsISerializable methods, and
+    // GetClassIDNoAlloc; this last is needed to make our nsISerializable impl
+    // work right.
+    virtual nsSimpleURI* StartClone(RefHandlingEnum aRefHandlingMode,
+                                    const nsACString& newRef) override;
+    NS_IMETHOD Mutate(nsIURIMutator * *_retval) override;
+
+    NS_IMETHOD Read(nsIObjectInputStream* aStream) override;
+    NS_IMETHOD Write(nsIObjectOutputStream* aStream) override;
+    NS_IMETHOD GetClassIDNoAlloc(nsCID *aClassIDNoAlloc) override;
+
+    nsIURI* GetBaseURI() const {
+        return mBaseURI;
+=======
+class nsNestedAboutURI final : public nsSimpleNestedURI {
+ private:
+  nsNestedAboutURI(nsIURI* aInnerURI, nsIURI* aBaseURI)
+      : nsSimpleNestedURI(aInnerURI), mBaseURI(aBaseURI) {}
+  nsNestedAboutURI() : nsSimpleNestedURI() {}
+  virtual ~nsNestedAboutURI() = default;
+
+ public:
+  // Override QI so we can QI to our CID as needed
+  NS_IMETHOD QueryInterface(REFNSIID aIID, void** aInstancePtr) override;
+
+  // Override StartClone(), the nsISerializable methods, and
+  // GetClassIDNoAlloc; this last is needed to make our nsISerializable impl
+  // work right.
+  virtual nsSimpleURI* StartClone(RefHandlingEnum aRefHandlingMode,
+                                  const nsACString& newRef) override;
+  NS_IMETHOD Mutate(nsIURIMutator** _retval) override;
+
+  NS_IMETHOD Read(nsIObjectInputStream* aStream) override;
+  NS_IMETHOD Write(nsIObjectOutputStream* aStream) override;
+  NS_IMETHOD GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) override;
+
+  nsIURI* GetBaseURI() const { return mBaseURI; }
+
+ protected:
+  nsCOMPtr<nsIURI> mBaseURI;
+  nsresult ReadPrivate(nsIObjectInputStream* stream);
+
+ public:
+  class Mutator final : public nsIURIMutator,
+                        public BaseURIMutator<nsNestedAboutURI>,
+                        public nsISerializable,
+                        public nsINestedAboutURIMutator {
+    NS_DECL_ISUPPORTS
+    NS_FORWARD_SAFE_NSIURISETTERS_RET(mURI)
+
+    explicit Mutator() = default;
+
+   private:
+    virtual ~Mutator() = default;
+
+    MOZ_MUST_USE NS_IMETHOD
+    Deserialize(const mozilla::ipc::URIParams& aParams) override {
+      return InitFromIPCParams(aParams);
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
+    MOZ_MUST_USE NS_IMETHOD InitWithBase(nsIURI* aInnerURI,
+                                         nsIURI* aBaseURI) override {
+      mURI = new nsNestedAboutURI(aInnerURI, aBaseURI);
+      return NS_OK;
+    }
+
+    void ResetMutable() {
+      if (mURI) {
+        mURI->mMutable = true;
+      }
+    }
+
+    friend class nsNestedAboutURI;
+  };
+
+  friend BaseURIMutator<nsNestedAboutURI>;
+||||||| merged common ancestors
+protected:
+    nsCOMPtr<nsIURI> mBaseURI;
+    nsresult ReadPrivate(nsIObjectInputStream *stream);
+
+public:
+    class Mutator final
+        : public nsIURIMutator
+        , public BaseURIMutator<nsNestedAboutURI>
+        , public nsISerializable
+        , public nsINestedAboutURIMutator
+    {
+        NS_DECL_ISUPPORTS
+        NS_FORWARD_SAFE_NSIURISETTERS_RET(mURI)
+
+        explicit Mutator() = default;
+    private:
+        virtual ~Mutator() = default;
+
+        MOZ_MUST_USE NS_IMETHOD
+        Deserialize(const mozilla::ipc::URIParams& aParams) override
+        {
+            return InitFromIPCParams(aParams);
+        }
+
+        NS_IMETHOD
+        Write(nsIObjectOutputStream *aOutputStream) override
+        {
+            return NS_ERROR_NOT_IMPLEMENTED;
+        }
+
+        MOZ_MUST_USE NS_IMETHOD
+        Read(nsIObjectInputStream* aStream) override
+        {
+            return InitFromInputStream(aStream);
+        }
+
+        MOZ_MUST_USE NS_IMETHOD
+        Finalize(nsIURI** aURI) override
+        {
+            mURI->mMutable = false;
+            mURI.forget(aURI);
+            return NS_OK;
+        }
+
+        MOZ_MUST_USE NS_IMETHOD
+        SetSpec(const nsACString& aSpec, nsIURIMutator** aMutator) override
+        {
+            if (aMutator) {
+                NS_ADDREF(*aMutator = this);
+            }
+            return InitFromSpec(aSpec);
+        }
+
+        MOZ_MUST_USE NS_IMETHOD
+        InitWithBase(nsIURI* aInnerURI, nsIURI* aBaseURI) override
+        {
+            mURI = new nsNestedAboutURI(aInnerURI, aBaseURI);
+            return NS_OK;
+        }
+
+        void ResetMutable()
+        {
+            if (mURI) {
+                mURI->mMutable = true;
+            }
+        }
+
+        friend class nsNestedAboutURI;
+    };
+
+    friend BaseURIMutator<nsNestedAboutURI>;
+=======
+    NS_IMETHOD
+    Write(nsIObjectOutputStream* aOutputStream) override {
+      return NS_ERROR_NOT_IMPLEMENTED;
+    }
+
+    MOZ_MUST_USE NS_IMETHOD Read(nsIObjectInputStream* aStream) override {
+      return InitFromInputStream(aStream);
+    }
+
+    MOZ_MUST_USE NS_IMETHOD Finalize(nsIURI** aURI) override {
+      mURI->mMutable = false;
+      mURI.forget(aURI);
+      return NS_OK;
+    }
+
+    MOZ_MUST_USE NS_IMETHOD SetSpec(const nsACString& aSpec,
+                                    nsIURIMutator** aMutator) override {
+      if (aMutator) {
+        NS_ADDREF(*aMutator = this);
+      }
+      return InitFromSpec(aSpec);
     }
 
     MOZ_MUST_USE NS_IMETHOD InitWithBase(nsIURI* aInnerURI,
@@ -135,6 +360,7 @@ class nsNestedAboutURI final : public nsSimpleNestedURI {
   };
 
   friend BaseURIMutator<nsNestedAboutURI>;
+>>>>>>> upstream-releases
 };
 
 }  // namespace net

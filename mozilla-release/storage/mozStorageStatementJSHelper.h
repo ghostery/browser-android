@@ -23,9 +23,19 @@ class StatementJSHelper : public nsIXPCScriptable {
   NS_DECL_ISUPPORTS
   NS_DECL_NSIXPCSCRIPTABLE
 
+<<<<<<< HEAD
  private:
   nsresult getRow(Statement *, JSContext *, JSObject *, JS::Value *);
   nsresult getParams(Statement *, JSContext *, JSObject *, JS::Value *);
+||||||| merged common ancestors
+private:
+  nsresult getRow(Statement *, JSContext *, JSObject *, JS::Value *);
+  nsresult getParams(Statement *, JSContext *, JSObject *, JS::Value *);
+=======
+ private:
+  nsresult getRow(Statement*, JSContext*, JSObject*, JS::Value*);
+  nsresult getParams(Statement*, JSContext*, JSObject*, JS::Value*);
+>>>>>>> upstream-releases
 };
 
 /**
@@ -38,7 +48,16 @@ class StatementParamsHolder final : public nsISupports {
  public:
   NS_DECL_ISUPPORTS
 
+<<<<<<< HEAD
   explicit StatementParamsHolder(StatementParams *aParams) : mParams(aParams) {}
+||||||| merged common ancestors
+  explicit StatementParamsHolder(StatementParams* aParams)
+    : mParams(aParams)
+  {
+  }
+=======
+  explicit StatementParamsHolder(StatementParams* aParams) : mParams(aParams) {}
+>>>>>>> upstream-releases
 
   StatementParams *Get() const {
     MOZ_ASSERT(mParams);
@@ -55,7 +74,16 @@ class StatementRowHolder final : public nsISupports {
  public:
   NS_DECL_ISUPPORTS
 
+<<<<<<< HEAD
   explicit StatementRowHolder(StatementRow *aRow) : mRow(aRow) {}
+||||||| merged common ancestors
+  explicit StatementRowHolder(StatementRow* aRow)
+    : mRow(aRow)
+  {
+  }
+=======
+  explicit StatementRowHolder(StatementRow* aRow) : mRow(aRow) {}
+>>>>>>> upstream-releases
 
   StatementRow *Get() const {
     MOZ_ASSERT(mRow);

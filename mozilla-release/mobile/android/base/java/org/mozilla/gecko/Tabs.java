@@ -100,7 +100,15 @@ public class Tabs implements BundleEventListener {
     // Used to indicate a new tab should be appended to the current tabs.
     public static final int NEW_LAST_INDEX = -1;
 
+<<<<<<< HEAD
     private static final AtomicInteger sTabId = new AtomicInteger(1);
+||||||| merged common ancestors
+    private static final AtomicInteger sTabId = new AtomicInteger(0);
+=======
+    // Bug 1410749: Desktop numbers tabs starting from 1, and various Webextension bits have
+    // inherited that assumption and treat 0 as an invalid tab.
+    private static final AtomicInteger sTabId = new AtomicInteger(1);
+>>>>>>> upstream-releases
     private volatile boolean mInitialTabsAdded;
 
     private Context mAppContext;
@@ -158,6 +166,7 @@ public class Tabs implements BundleEventListener {
             "Content:LocationChange",
             "Content:SubframeNavigation",
             "Content:SecurityChange",
+            "Content:ContentBlockingEvent",
             "Content:StateChange",
             "Content:LoadError",
             "Content:DOMContentLoaded",
@@ -349,12 +358,19 @@ public class Tabs implements BundleEventListener {
         // Pass a message to Gecko to update tab state in BrowserApp.
         final GeckoBundle data = new GeckoBundle(2);
         data.putInt("id", tab.getId());
+<<<<<<< HEAD
         if (oldTab != null && mTabs.containsKey(oldTab.getId())) {
             data.putInt("previousTabId", oldTab.getId());
         }
 
         final String appearance = tab.isPrivate() ? AppearanceManager.APPEARANCE_DARK : AppearanceManager.APPEARANCE_LIGHT;
         AppearanceManager.getInstance().change(appearance);
+||||||| merged common ancestors
+=======
+        if (oldTab != null && mTabs.containsKey(oldTab.getId())) {
+            data.putInt("previousTabId", oldTab.getId());
+        }
+>>>>>>> upstream-releases
         mEventDispatcher.dispatch("Tab:Selected", data);
         EventDispatcher.getInstance().dispatch("Tab:Selected", data);
         return tab;
@@ -629,6 +645,10 @@ public class Tabs implements BundleEventListener {
             tab.updatePageAction();
             notifyListeners(tab, TabEvents.SECURITY_CHANGE);
 
+        } else if ("Content:ContentBlockingEvent".equals(event)) {
+            tab.updateTracking(message.getString("tracking"));
+            notifyListeners(tab, TabEvents.TRACKING_CHANGE);
+
         } else if ("Content:StateChange".equals(event)) {
             final int state = message.getInt("state");
             if ((state & GeckoAppShell.WPL_STATE_IS_NETWORK) == 0) {
@@ -773,6 +793,7 @@ public class Tabs implements BundleEventListener {
         PAGE_SHOW,
         LINK_FEED,
         SECURITY_CHANGE,
+        TRACKING_CHANGE,
         DESKTOP_MODE_CHANGE,
         RECORDING_CHANGE,
         BOOKMARK_ADDED,
@@ -906,6 +927,27 @@ public class Tabs implements BundleEventListener {
         }
 
         return null;
+    }
+
+    /**
+     * Looks for the last open tab with the given URL and private state.
+     * @param url       the URL of the tab we're looking for
+     *
+     * @return last Tab with the given URL, or null if there is no such tab.
+     */
+    public Tab getLastTabForUrl(String url) {
+        if (url == null) {
+            return null;
+        }
+
+        Tab lastTab = null;
+        for (Tab tab : mOrder) {
+            if (url.equals(tab.getURL())) {
+                lastTab = tab;
+            }
+        }
+
+        return lastTab;
     }
 
     /**

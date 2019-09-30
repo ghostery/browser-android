@@ -11,7 +11,6 @@
 #include "AudioParam.h"
 #include "mozilla/dom/PannerNodeBinding.h"
 #include "ThreeDPoint.h"
-#include "mozilla/WeakPtr.h"
 #include <limits>
 #include <set>
 
@@ -22,18 +21,48 @@ class AudioContext;
 class AudioBufferSourceNode;
 struct PannerOptions;
 
+<<<<<<< HEAD
 class PannerNode final : public AudioNode, public SupportsWeakPtr<PannerNode> {
  public:
   static already_AddRefed<PannerNode> Create(AudioContext& aAudioContext,
                                              const PannerOptions& aOptions,
                                              ErrorResult& aRv);
+||||||| merged common ancestors
+class PannerNode final : public AudioNode,
+                         public SupportsWeakPtr<PannerNode>
+{
+public:
+  static already_AddRefed<PannerNode>
+  Create(AudioContext& aAudioContext, const PannerOptions& aOptions,
+         ErrorResult& aRv);
+=======
+class PannerNode final : public AudioNode {
+ public:
+  static already_AddRefed<PannerNode> Create(AudioContext& aAudioContext,
+                                             const PannerOptions& aOptions,
+                                             ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(PannerNode)
 
   static already_AddRefed<PannerNode> Constructor(const GlobalObject& aGlobal,
                                                   AudioContext& aAudioContext,
                                                   const PannerOptions& aOptions,
                                                   ErrorResult& aRv) {
+||||||| merged common ancestors
+  MOZ_DECLARE_WEAKREFERENCE_TYPENAME(PannerNode)
+
+  static already_AddRefed<PannerNode>
+  Constructor(const GlobalObject& aGlobal, AudioContext& aAudioContext,
+              const PannerOptions& aOptions, ErrorResult& aRv)
+  {
+=======
+  static already_AddRefed<PannerNode> Constructor(const GlobalObject& aGlobal,
+                                                  AudioContext& aAudioContext,
+                                                  const PannerOptions& aOptions,
+                                                  ErrorResult& aRv) {
+>>>>>>> upstream-releases
     return Create(aAudioContext, aOptions, aRv);
   }
 

@@ -12,13 +12,14 @@
 #include "AudioSegment.h"
 #include "SelfRef.h"
 #include "mozilla/Atomics.h"
+#include "mozilla/dom/AudioContext.h"
 #include "mozilla/SharedThreadPool.h"
 #include "mozilla/StaticPtr.h"
 
 #include <thread>
 
 #if defined(XP_WIN)
-#include "mozilla/audio/AudioNotificationReceiver.h"
+#  include "mozilla/audio/AudioNotificationReceiver.h"
 #endif
 
 struct cubeb_stream;
@@ -55,11 +56,16 @@ static const int SCHEDULE_SAFETY_MARGIN_MS = 10;
 static const int AUDIO_TARGET_MS =
     2 * MEDIA_GRAPH_TARGET_PERIOD_MS + SCHEDULE_SAFETY_MARGIN_MS;
 
+class MediaStream;
 class MediaStreamGraphImpl;
 
 class AudioCallbackDriver;
 class OfflineClockDriver;
 class SystemClockDriver;
+
+namespace dom {
+enum class AudioContextOperation;
+}
 
 /**
  * A driver is responsible for the scheduling of the processing, the thread
@@ -146,6 +152,7 @@ class GraphDriver {
   GraphDriver* PreviousDriver();
   void SetPreviousDriver(GraphDriver* aPreviousDriver);
 
+<<<<<<< HEAD
   /**
    * If we are running a real time graph, get the current time stamp to schedule
    * video frames. This has to be reimplemented by real time drivers.
@@ -153,6 +160,21 @@ class GraphDriver {
   virtual TimeStamp GetCurrentTimeStamp() { return mCurrentTimeStamp; }
 
   GraphTime IterationEnd() { return mIterationEnd; }
+||||||| merged common ancestors
+  /**
+   * If we are running a real time graph, get the current time stamp to schedule
+   * video frames. This has to be reimplemented by real time drivers.
+   */
+  virtual TimeStamp GetCurrentTimeStamp() {
+    return mCurrentTimeStamp;
+  }
+
+  GraphTime IterationEnd() {
+    return mIterationEnd;
+  }
+=======
+  GraphTime IterationEnd() { return mIterationEnd; }
+>>>>>>> upstream-releases
 
   virtual AudioCallbackDriver* AsAudioCallbackDriver() { return nullptr; }
 
@@ -180,18 +202,33 @@ class GraphDriver {
    */
   void EnsureNextIteration();
 
+<<<<<<< HEAD
   /**
    * Same thing, but not locked.
    */
   void EnsureNextIterationLocked();
 
   MediaStreamGraphImpl* GraphImpl() const { return mGraphImpl; }
+||||||| merged common ancestors
+  /**
+   * Same thing, but not locked.
+   */
+  void EnsureNextIterationLocked();
 
+  MediaStreamGraphImpl* GraphImpl() const {
+    return mGraphImpl;
+  }
+=======
+  MediaStreamGraphImpl* GraphImpl() const { return mGraphImpl; }
+>>>>>>> upstream-releases
+
+#ifdef DEBUG
+  // True if the current thread is driving the MSG.
+  bool OnGraphThread();
+#endif
   // True if the current thread is the GraphDriver's thread.
-  // This is the thread that drives the MSG.
   virtual bool OnThread() = 0;
   // GraphDriver's thread has started and the thread is running.
-  // This is the thread that drives the MSG.
   virtual bool ThreadRunning() = 0;
 
  protected:
@@ -208,10 +245,6 @@ class GraphDriver {
   // The MediaStreamGraphImpl associated with this driver.
   const RefPtr<MediaStreamGraphImpl> mGraphImpl;
 
-  // This is used on the main thread (during initialization), and the graph
-  // thread. No monitor needed because we know the graph thread does not run
-  // during the initialization.
-  TimeStamp mCurrentTimeStamp;
   // This is non-null only when this driver has recently switched from an other
   // driver, and has not cleaned it up yet (for example because the audio stream
   // is currently calling the callback during initialization).
@@ -251,6 +284,32 @@ class ThreadedDriver : public GraphDriver {
   friend class MediaStreamGraphInitThreadRunnable;
   uint32_t IterationDuration() override { return MEDIA_GRAPH_TARGET_PERIOD_MS; }
 
+<<<<<<< HEAD
+  bool OnThread() override {
+    return !mThread || mThread->EventTarget()->IsOnCurrentThread();
+  }
+||||||| merged common ancestors
+  bool OnThread() override
+  {
+    return !mThread || mThread->EventTarget()->IsOnCurrentThread();
+  }
+=======
+  nsIThread* Thread() { return mThread; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool ThreadRunning() override { return mThreadRunning; }
+  /*
+   * Return the TimeDuration to wait before the next rendering iteration.
+   */
+  virtual TimeDuration WaitInterval() = 0;
+||||||| merged common ancestors
+  bool ThreadRunning() override
+  {
+    return mThreadRunning;
+  }
+
+=======
   bool OnThread() override {
     return !mThread || mThread->EventTarget()->IsOnCurrentThread();
   }
@@ -260,6 +319,7 @@ class ThreadedDriver : public GraphDriver {
    * Return the TimeDuration to wait before the next rendering iteration.
    */
   virtual TimeDuration WaitInterval() = 0;
+>>>>>>> upstream-releases
   /* When the graph wakes up to do an iteration, implementations return the
    * range of time that will be processed.  This is called only once per
    * iteration; it may determine the interval from state in a previous
@@ -293,6 +353,7 @@ class SystemClockDriver : public ThreadedDriver {
   // Those are only modified (after initialization) on the graph thread. The
   // graph thread does not run during the initialization.
   TimeStamp mInitialTimeStamp;
+  TimeStamp mCurrentTimeStamp;
   TimeStamp mLastTimeStamp;
 
   // This is true if this SystemClockDriver runs the graph because we could not
@@ -310,23 +371,58 @@ class OfflineClockDriver : public ThreadedDriver {
   virtual ~OfflineClockDriver();
   TimeDuration WaitInterval() override;
   MediaTime GetIntervalForIteration() override;
+<<<<<<< HEAD
   TimeStamp GetCurrentTimeStamp() override;
   OfflineClockDriver* AsOfflineClockDriver() override { return this; }
+||||||| merged common ancestors
+  void WaitForNextIteration() override;
+  void WakeUp() override;
+  TimeStamp GetCurrentTimeStamp() override;
+  OfflineClockDriver* AsOfflineClockDriver() override {
+    return this;
+  }
+=======
+  OfflineClockDriver* AsOfflineClockDriver() override { return this; }
+>>>>>>> upstream-releases
 
  private:
   // Time, in GraphTime, for each iteration
   GraphTime mSlice;
 };
 
+<<<<<<< HEAD
 struct StreamAndPromiseForOperation {
   StreamAndPromiseForOperation(MediaStream* aStream, void* aPromise,
                                dom::AudioContextOperation aOperation);
+||||||| merged common ancestors
+struct StreamAndPromiseForOperation
+{
+  StreamAndPromiseForOperation(MediaStream* aStream,
+                               void* aPromise,
+                               dom::AudioContextOperation aOperation);
+=======
+struct StreamAndPromiseForOperation {
+  StreamAndPromiseForOperation(MediaStream* aStream, void* aPromise,
+                               dom::AudioContextOperation aOperation,
+                               dom::AudioContextOperationFlags aFlags);
+>>>>>>> upstream-releases
   RefPtr<MediaStream> mStream;
   void* mPromise;
   dom::AudioContextOperation mOperation;
+  dom::AudioContextOperationFlags mFlags;
 };
 
+<<<<<<< HEAD
 enum AsyncCubebOperation { INIT, SHUTDOWN };
+||||||| merged common ancestors
+enum AsyncCubebOperation {
+  INIT,
+  SHUTDOWN
+};
+=======
+enum class AsyncCubebOperation { INIT, REVIVE, SHUTDOWN };
+enum class AudioInputType { Unknown, Voice };
+>>>>>>> upstream-releases
 
 /**
  * This is a graph driver that is based on callback functions called by the
@@ -357,8 +453,16 @@ class AudioCallbackDriver : public GraphDriver,
 {
  public:
   /** If aInputChannelCount is zero, then this driver is output-only. */
+<<<<<<< HEAD
   AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl,
                       uint32_t aInputChannelCount);
+||||||| merged common ancestors
+  AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl, uint32_t aInputChannelCount);
+=======
+  AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl,
+                      uint32_t aInputChannelCount,
+                      AudioInputType aAudioInputType);
+>>>>>>> upstream-releases
   virtual ~AudioCallbackDriver();
 
   void Start() override;
@@ -404,15 +508,51 @@ class AudioCallbackDriver : public GraphDriver,
     return mOutputChannels;
   }
 
+<<<<<<< HEAD
   uint32_t InputChannelCount() { return mInputChannelCount; }
+||||||| merged common ancestors
+  uint32_t InputChannelCount()
+  {
+    return mInputChannelCount;
+  }
+=======
+  uint32_t InputChannelCount() { return mInputChannelCount; }
+
+  AudioInputType InputDevicePreference() {
+    if (mInputDevicePreference == CUBEB_DEVICE_PREF_VOICE) {
+      return AudioInputType::Voice;
+    }
+    return AudioInputType::Unknown;
+  }
+>>>>>>> upstream-releases
 
   /* Enqueue a promise that is going to be resolved when a specific operation
    * occurs on the cubeb stream. */
+<<<<<<< HEAD
   void EnqueueStreamAndPromiseForOperation(
       MediaStream* aStream, void* aPromise,
       dom::AudioContextOperation aOperation);
+||||||| merged common ancestors
+  void EnqueueStreamAndPromiseForOperation(MediaStream* aStream,
+                                         void* aPromise,
+                                         dom::AudioContextOperation aOperation);
+=======
+  void EnqueueStreamAndPromiseForOperation(
+      MediaStream* aStream, void* aPromise,
+      dom::AudioContextOperation aOperation,
+      dom::AudioContextOperationFlags aFlags);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool OnThread() override {
+||||||| merged common ancestors
+  bool OnThread() override
+  {
+=======
+  std::thread::id ThreadId() { return mAudioThreadId.load(); }
 
   bool OnThread() override {
+>>>>>>> upstream-releases
     return mAudioThreadId.load() == std::this_thread::get_id();
   }
 
@@ -504,12 +644,12 @@ class AudioCallbackDriver : public GraphDriver,
   const RefPtr<SharedThreadPool> mInitShutdownThread;
   /* This must be accessed with the graph monitor held. */
   AutoTArray<StreamAndPromiseForOperation, 1> mPromisesForOperation;
+  cubeb_device_pref mInputDevicePreference;
   /* This is used to signal adding the mixer callback on first run
    * of audio callback. This is atomic because it is touched from different
    * threads, the audio callback thread and the state change thread. However,
    * the order of the threads does not allow concurent access. */
   Atomic<bool> mAddedMixer;
-
   /* Contains the id of the audio thread for as long as the callback
    * is taking place, after that it is reseted to an invalid value. */
   std::atomic<std::thread::id> mAudioThreadId;

@@ -47,8 +47,18 @@ class ChildDNSRecord : public nsIDNSRecord {
 
 NS_IMPL_ISUPPORTS(ChildDNSRecord, nsIDNSRecord)
 
+<<<<<<< HEAD
 ChildDNSRecord::ChildDNSRecord(const DNSRecord &reply, uint16_t flags)
     : mCurrent(0), mFlags(flags) {
+||||||| merged common ancestors
+ChildDNSRecord::ChildDNSRecord(const DNSRecord& reply, uint16_t flags)
+  : mCurrent(0)
+  , mFlags(flags)
+{
+=======
+ChildDNSRecord::ChildDNSRecord(const DNSRecord& reply, uint16_t flags)
+    : mCurrent(0), mFlags(flags) {
+>>>>>>> upstream-releases
   mCanonicalName = reply.canonicalName();
 
   // A shame IPDL gives us no way to grab ownership of array: so copy it.
@@ -65,7 +75,14 @@ ChildDNSRecord::ChildDNSRecord(const DNSRecord &reply, uint16_t flags)
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::GetCanonicalName(nsACString &result) {
+||||||| merged common ancestors
+ChildDNSRecord::GetCanonicalName(nsACString &result)
+{
+=======
+ChildDNSRecord::GetCanonicalName(nsACString& result) {
+>>>>>>> upstream-releases
   if (!(mFlags & nsHostResolver::RES_CANON_NAME)) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -75,13 +92,27 @@ ChildDNSRecord::GetCanonicalName(nsACString &result) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::IsTRR(bool *retval) {
+||||||| merged common ancestors
+ChildDNSRecord::IsTRR(bool *retval)
+{
+=======
+ChildDNSRecord::IsTRR(bool* retval) {
+>>>>>>> upstream-releases
   *retval = false;
   return NS_ERROR_NOT_AVAILABLE;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::GetNextAddr(uint16_t port, NetAddr *addr) {
+||||||| merged common ancestors
+ChildDNSRecord::GetNextAddr(uint16_t port, NetAddr *addr)
+{
+=======
+ChildDNSRecord::GetNextAddr(uint16_t port, NetAddr* addr) {
+>>>>>>> upstream-releases
   if (mCurrent >= mLength) {
     return NS_ERROR_NOT_AVAILABLE;
   }
@@ -95,14 +126,28 @@ ChildDNSRecord::GetNextAddr(uint16_t port, NetAddr *addr) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::GetAddresses(nsTArray<NetAddr> &aAddressArray) {
+||||||| merged common ancestors
+ChildDNSRecord::GetAddresses(nsTArray<NetAddr> & aAddressArray)
+{
+=======
+ChildDNSRecord::GetAddresses(nsTArray<NetAddr>& aAddressArray) {
+>>>>>>> upstream-releases
   aAddressArray = mAddresses;
   return NS_OK;
 }
 
 // shamelessly copied from nsDNSRecord
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::GetScriptableNextAddr(uint16_t port, nsINetAddr **result) {
+||||||| merged common ancestors
+ChildDNSRecord::GetScriptableNextAddr(uint16_t port, nsINetAddr **result)
+{
+=======
+ChildDNSRecord::GetScriptableNextAddr(uint16_t port, nsINetAddr** result) {
+>>>>>>> upstream-releases
   NetAddr addr;
   nsresult rv = GetNextAddr(port, &addr);
   if (NS_FAILED(rv)) return rv;
@@ -114,7 +159,14 @@ ChildDNSRecord::GetScriptableNextAddr(uint16_t port, nsINetAddr **result) {
 
 // also copied from nsDNSRecord
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::GetNextAddrAsString(nsACString &result) {
+||||||| merged common ancestors
+ChildDNSRecord::GetNextAddrAsString(nsACString &result)
+{
+=======
+ChildDNSRecord::GetNextAddrAsString(nsACString& result) {
+>>>>>>> upstream-releases
   NetAddr addr;
   nsresult rv = GetNextAddr(0, &addr);
   if (NS_FAILED(rv)) {
@@ -131,7 +183,14 @@ ChildDNSRecord::GetNextAddrAsString(nsACString &result) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSRecord::HasMore(bool *result) {
+||||||| merged common ancestors
+ChildDNSRecord::HasMore(bool *result)
+{
+=======
+ChildDNSRecord::HasMore(bool* result) {
+>>>>>>> upstream-releases
   *result = mCurrent < mLength;
   return NS_OK;
 }
@@ -154,7 +213,7 @@ class ChildDNSByTypeRecord : public nsIDNSByTypeRecord {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIDNSBYTYPERECORD
 
-  explicit ChildDNSByTypeRecord(const nsTArray<nsCString> &reply);
+  explicit ChildDNSByTypeRecord(const nsTArray<nsCString>& reply);
 
  private:
   virtual ~ChildDNSByTypeRecord() = default;
@@ -164,18 +223,39 @@ class ChildDNSByTypeRecord : public nsIDNSByTypeRecord {
 
 NS_IMPL_ISUPPORTS(ChildDNSByTypeRecord, nsIDNSByTypeRecord)
 
+<<<<<<< HEAD
 ChildDNSByTypeRecord::ChildDNSByTypeRecord(const nsTArray<nsCString> &reply) {
+||||||| merged common ancestors
+ChildDNSByTypeRecord::ChildDNSByTypeRecord(const nsTArray<nsCString> &reply)
+{
+=======
+ChildDNSByTypeRecord::ChildDNSByTypeRecord(const nsTArray<nsCString>& reply) {
+>>>>>>> upstream-releases
   mRecords = reply;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSByTypeRecord::GetRecords(nsTArray<nsCString> &aRecords) {
+||||||| merged common ancestors
+ChildDNSByTypeRecord::GetRecords(nsTArray<nsCString> &aRecords)
+{
+=======
+ChildDNSByTypeRecord::GetRecords(nsTArray<nsCString>& aRecords) {
+>>>>>>> upstream-releases
   aRecords = mRecords;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ChildDNSByTypeRecord::GetRecordsAsOneString(nsACString &aRecords) {
+||||||| merged common ancestors
+ChildDNSByTypeRecord::GetRecordsAsOneString(nsACString &aRecords)
+{
+=======
+ChildDNSByTypeRecord::GetRecordsAsOneString(nsACString& aRecords) {
+>>>>>>> upstream-releases
   // deep copy
   for (uint32_t i = 0; i < mRecords.Length(); i++) {
     aRecords.Append(mRecords[i]);
@@ -187,6 +267,7 @@ ChildDNSByTypeRecord::GetRecordsAsOneString(nsACString &aRecords) {
 // CancelDNSRequestEvent
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 class CancelDNSRequestEvent : public Runnable {
  public:
   CancelDNSRequestEvent(DNSRequestChild *aDnsReq, nsresult aReason)
@@ -195,6 +276,28 @@ class CancelDNSRequestEvent : public Runnable {
         mReasonForCancel(aReason) {}
 
   NS_IMETHOD Run() override {
+||||||| merged common ancestors
+class CancelDNSRequestEvent : public Runnable
+{
+public:
+  CancelDNSRequestEvent(DNSRequestChild* aDnsReq, nsresult aReason)
+    : Runnable("net::CancelDNSRequestEvent")
+    , mDnsRequest(aDnsReq)
+    , mReasonForCancel(aReason)
+  {}
+
+  NS_IMETHOD Run() override
+  {
+=======
+class CancelDNSRequestEvent : public Runnable {
+ public:
+  CancelDNSRequestEvent(DNSRequestChild* aDnsReq, nsresult aReason)
+      : Runnable("net::CancelDNSRequestEvent"),
+        mDnsRequest(aDnsReq),
+        mReasonForCancel(aReason) {}
+
+  NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
     if (mDnsRequest->mIPCOpen) {
       // Send request to Parent process.
       mDnsRequest->SendCancelDNSRequest(mDnsRequest->mHost, mDnsRequest->mType,
@@ -213,6 +316,7 @@ class CancelDNSRequestEvent : public Runnable {
 // DNSRequestChild
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 DNSRequestChild::DNSRequestChild(const nsACString &aHost, const uint16_t &aType,
                                  const OriginAttributes &aOriginAttributes,
                                  const uint32_t &aFlags,
@@ -228,6 +332,44 @@ DNSRequestChild::DNSRequestChild(const nsACString &aHost, const uint16_t &aType,
       mIPCOpen(false) {}
 
 void DNSRequestChild::StartRequest() {
+||||||| merged common ancestors
+DNSRequestChild::DNSRequestChild(const nsACString &aHost,
+                                 const uint16_t &aType,
+                                 const OriginAttributes& aOriginAttributes,
+                                 const uint32_t &aFlags,
+                                 nsIDNSListener *aListener,
+                                 nsIEventTarget *target)
+  : mListener(aListener)
+  , mTarget(target)
+  , mResultStatus(NS_OK)
+  , mHost(aHost)
+  , mType(aType)
+  , mOriginAttributes(aOriginAttributes)
+  , mFlags(aFlags)
+  , mIPCOpen(false)
+{
+}
+
+void
+DNSRequestChild::StartRequest()
+{
+=======
+DNSRequestChild::DNSRequestChild(const nsACString& aHost, const uint16_t& aType,
+                                 const OriginAttributes& aOriginAttributes,
+                                 const uint32_t& aFlags,
+                                 nsIDNSListener* aListener,
+                                 nsIEventTarget* target)
+    : mListener(aListener),
+      mTarget(target),
+      mResultStatus(NS_OK),
+      mHost(aHost),
+      mType(aType),
+      mOriginAttributes(aOriginAttributes),
+      mFlags(aFlags),
+      mIPCOpen(false) {}
+
+void DNSRequestChild::StartRequest() {
+>>>>>>> upstream-releases
   // we can only do IPDL on the main thread
   if (!NS_IsMainThread()) {
     SystemGroup::Dispatch(
@@ -242,8 +384,16 @@ void DNSRequestChild::StartRequest() {
 
   gNeckoChild->SetEventTargetForActor(this, systemGroupEventTarget);
 
+<<<<<<< HEAD
   mozilla::dom::ContentChild *cc =
       static_cast<mozilla::dom::ContentChild *>(gNeckoChild->Manager());
+||||||| merged common ancestors
+  mozilla::dom::ContentChild* cc =
+    static_cast<mozilla::dom::ContentChild*>(gNeckoChild->Manager());
+=======
+  mozilla::dom::ContentChild* cc =
+      static_cast<mozilla::dom::ContentChild*>(gNeckoChild->Manager());
+>>>>>>> upstream-releases
   if (cc->IsShuttingDown()) {
     return;
   }
@@ -268,8 +418,17 @@ void DNSRequestChild::CallOnLookupByTypeComplete() {
   mListener->OnLookupByTypeComplete(this, mResultByTypeRecords, mResultStatus);
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult DNSRequestChild::RecvLookupCompleted(
     const DNSRequestResponse &reply) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+DNSRequestChild::RecvLookupCompleted(const DNSRequestResponse& reply)
+{
+=======
+mozilla::ipc::IPCResult DNSRequestChild::RecvLookupCompleted(
+    const DNSRequestResponse& reply) {
+>>>>>>> upstream-releases
   mIPCOpen = false;
   MOZ_ASSERT(mListener);
 

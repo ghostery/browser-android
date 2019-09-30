@@ -44,8 +44,8 @@ class FileDescriptor;
 
 namespace dom {
 
-class nsIContentParent;
-class nsIContentChild;
+class ContentParent;
+class ContentChild;
 class ChildProcessMessageManager;
 class ChromeMessageBroadcaster;
 class ClonedMessageData;
@@ -109,11 +109,19 @@ class MessageManagerCallback {
   virtual void DoGetRemoteType(nsAString& aRemoteType,
                                ErrorResult& aError) const;
 
+<<<<<<< HEAD
  protected:
   bool BuildClonedMessageDataForParent(nsIContentParent* aParent,
+||||||| merged common ancestors
+protected:
+  bool BuildClonedMessageDataForParent(nsIContentParent* aParent,
+=======
+ protected:
+  bool BuildClonedMessageDataForParent(ContentParent* aParent,
+>>>>>>> upstream-releases
                                        StructuredCloneData& aData,
                                        ClonedMessageData& aClonedData);
-  bool BuildClonedMessageDataForChild(nsIContentChild* aChild,
+  bool BuildClonedMessageDataForChild(ContentChild* aChild,
                                       StructuredCloneData& aData,
                                       ClonedMessageData& aClonedData);
 };
@@ -276,6 +284,10 @@ class nsFrameMessageManager : public nsIMessageSender {
       mozilla::dom::ChildProcessMessageManager* aManager) {
     sChildProcessManager = aManager;
   }
+
+  static bool GetParamsForMessage(JSContext* aCx, const JS::Value& aValue,
+                                  const JS::Value& aTransfer,
+                                  StructuredCloneData& aData);
 
   void SetInitialProcessData(JS::HandleValue aInitialData);
 

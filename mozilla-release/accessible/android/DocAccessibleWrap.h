@@ -10,11 +10,25 @@
 #include "nsITimer.h"
 
 namespace mozilla {
+
+class PresShell;
+
 namespace a11y {
 
+<<<<<<< HEAD
 class DocAccessibleWrap : public DocAccessible {
  public:
   DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class DocAccessibleWrap : public DocAccessible
+{
+public:
+  DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+=======
+class DocAccessibleWrap : public DocAccessible {
+ public:
+  DocAccessibleWrap(Document* aDocument, PresShell* aPresShell);
+>>>>>>> upstream-releases
   virtual ~DocAccessibleWrap();
 
   virtual nsresult HandleAccEvent(AccEvent* aEvent) override;
@@ -32,6 +46,8 @@ class DocAccessibleWrap : public DocAccessible {
 
   void CacheFocusPath(AccessibleWrap* aAccessible);
 
+  void CacheViewport();
+
   enum {
     eBatch_Viewport = 0,
     eBatch_FocusPath = 1,
@@ -46,9 +62,17 @@ class DocAccessibleWrap : public DocAccessible {
 
   virtual void DoInitialUpdate() override;
 
+<<<<<<< HEAD
  private:
   void CacheViewport();
 
+||||||| merged common ancestors
+private:
+  void CacheViewport();
+
+=======
+ private:
+>>>>>>> upstream-releases
   void UpdateFocusPathBounds();
 
   static void CacheViewportCallback(nsITimer* aTimer, void* aDocAccParam);

@@ -25,5 +25,11 @@ sah{
     CurrencyUnitPatterns{
         other{"{0} {1}"}
     }
+<<<<<<< HEAD
     Version{"2.1.43.94"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
 }

@@ -8,6 +8,7 @@
 
 #include "mozilla/BasicEvents.h"
 #include "mozilla/EventDispatcher.h"
+#include "mozilla/dom/DocumentInlines.h"
 #include "mozilla/dom/HTMLMenuElementBinding.h"
 #include "mozilla/dom/HTMLMenuItemElement.h"
 #include "nsIMenuBuilder.h"
@@ -41,8 +42,19 @@ HTMLMenuElement::~HTMLMenuElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLMenuElement)
 
+<<<<<<< HEAD
 void HTMLMenuElement::SendShowEvent() {
   nsCOMPtr<nsIDocument> document = GetComposedDoc();
+||||||| merged common ancestors
+
+void
+HTMLMenuElement::SendShowEvent()
+{
+  nsCOMPtr<nsIDocument> document = GetComposedDoc();
+=======
+void HTMLMenuElement::SendShowEvent() {
+  nsCOMPtr<Document> document = GetComposedDoc();
+>>>>>>> upstream-releases
   if (!document) {
     return;
   }
@@ -132,7 +144,7 @@ bool HTMLMenuElement::CanLoadIcon(nsIContent* aContent,
     return false;
   }
 
-  nsIDocument* doc = aContent->OwnerDoc();
+  Document* doc = aContent->OwnerDoc();
 
   nsCOMPtr<nsIURI> baseURI = aContent->GetBaseURI();
   nsCOMPtr<nsIURI> uri;

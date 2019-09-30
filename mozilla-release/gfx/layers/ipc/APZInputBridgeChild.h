@@ -24,10 +24,24 @@ class APZInputBridgeChild : public PAPZInputBridgeChild, public APZInputBridge {
                                   ScrollableLayerGuid* aOutTargetGuid,
                                   uint64_t* aOutInputBlockId) override;
 
+<<<<<<< HEAD
  protected:
   void ProcessUnhandledEvent(LayoutDeviceIntPoint* aRefPoint,
                              ScrollableLayerGuid* aOutTargetGuid,
                              uint64_t* aOutFocusSequenceNumber) override;
+||||||| merged common ancestors
+protected:
+  void ProcessUnhandledEvent(
+      LayoutDeviceIntPoint* aRefPoint,
+      ScrollableLayerGuid* aOutTargetGuid,
+      uint64_t* aOutFocusSequenceNumber) override;
+=======
+ protected:
+  void ProcessUnhandledEvent(LayoutDeviceIntPoint* aRefPoint,
+                             ScrollableLayerGuid* aOutTargetGuid,
+                             uint64_t* aOutFocusSequenceNumber,
+                             LayersId* aOutLayersId) override;
+>>>>>>> upstream-releases
 
   void UpdateWheelTransaction(LayoutDeviceIntPoint aRefPoint,
                               EventMessage aEventMessage) override;

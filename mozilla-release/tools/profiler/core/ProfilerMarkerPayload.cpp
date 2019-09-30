@@ -3,16 +3,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include <inttypes.h>
+#include "ProfilerMarkerPayload.h"
 
 #include "GeckoProfiler.h"
+#include "ProfileBufferEntry.h"
+#include "ProfileJSONWriter.h"
 #include "ProfilerBacktrace.h"
-#include "ProfilerMarkerPayload.h"
+
 #include "gfxASurface.h"
 #include "Layers.h"
-#include "mozilla/Sprintf.h"
 #include "mozilla/Maybe.h"
+<<<<<<< HEAD
 #include "mozilla/net/HttpBaseChannel.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/net/HttpBaseChannel.h"
+#include "mozilla/Sprintf.h"
+
+#include <inttypes.h>
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -66,10 +75,25 @@ void TracingMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
   }
 }
 
+<<<<<<< HEAD
 void IOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                     const TimeStamp& aProcessStartTime,
                                     UniqueStacks& aUniqueStacks) {
   StreamCommonProps("io", aWriter, aProcessStartTime, aUniqueStacks);
+||||||| merged common ancestors
+void
+IOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                               const TimeStamp& aProcessStartTime,
+                               UniqueStacks& aUniqueStacks)
+{
+  StreamCommonProps("io", aWriter, aProcessStartTime, aUniqueStacks);
+=======
+void FileIOMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                                        const TimeStamp& aProcessStartTime,
+                                        UniqueStacks& aUniqueStacks) {
+  StreamCommonProps("FileIO", aWriter, aProcessStartTime, aUniqueStacks);
+  aWriter.StringProperty("operation", mOperation.get());
+>>>>>>> upstream-releases
   aWriter.StringProperty("source", mSource);
   if (mFilename) {
     aWriter.StringProperty("filename", mFilename.get());
@@ -97,11 +121,41 @@ void UserTimingMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
   }
 }
 
+<<<<<<< HEAD
 void DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                           const TimeStamp& aProcessStartTime,
                                           UniqueStacks& aUniqueStacks) {
   TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime,
                                       aUniqueStacks);
+||||||| merged common ancestors
+void
+DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                                     const TimeStamp& aProcessStartTime,
+                                     UniqueStacks& aUniqueStacks)
+{
+  TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime, aUniqueStacks);
+=======
+void TextMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                                      const TimeStamp& aProcessStartTime,
+                                      UniqueStacks& aUniqueStacks) {
+  StreamCommonProps("Text", aWriter, aProcessStartTime, aUniqueStacks);
+  aWriter.StringProperty("name", mText.get());
+}
+
+void LogMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                                     const TimeStamp& aProcessStartTime,
+                                     UniqueStacks& aUniqueStacks) {
+  StreamCommonProps("Log", aWriter, aProcessStartTime, aUniqueStacks);
+  aWriter.StringProperty("name", mText.get());
+  aWriter.StringProperty("module", mModule.get());
+}
+
+void DOMEventMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
+                                          const TimeStamp& aProcessStartTime,
+                                          UniqueStacks& aUniqueStacks) {
+  TracingMarkerPayload::StreamPayload(aWriter, aProcessStartTime,
+                                      aUniqueStacks);
+>>>>>>> upstream-releases
 
   WriteTime(aWriter, aProcessStartTime, mTimeStamp, "timeStamp");
   aWriter.StringProperty("eventType", NS_ConvertUTF16toUTF8(mEventType).get());
@@ -138,6 +192,7 @@ static const char* GetNetworkState(NetworkLoadType aType) {
   return "";
 }
 
+<<<<<<< HEAD
 static const char* GetCacheState(
     mozilla::net::CacheDisposition aCacheDisposition) {
   switch (aCacheDisposition) {
@@ -157,6 +212,27 @@ static const char* GetCacheState(
   }
   return nullptr;
 }
+||||||| merged common ancestors
+=======
+static const char* GetCacheState(
+    mozilla::net::CacheDisposition aCacheDisposition) {
+  switch (aCacheDisposition) {
+    case mozilla::net::kCacheUnresolved:
+      return "Unresolved";
+    case mozilla::net::kCacheHit:
+      return "Hit";
+    case mozilla::net::kCacheHitViaReval:
+      return "HitViaReval";
+    case mozilla::net::kCacheMissedViaReval:
+      return "MissedViaReval";
+    case mozilla::net::kCacheMissed:
+      return "Missed";
+    case mozilla::net::kCacheUnknown:
+    default:
+      return nullptr;
+  }
+}
+>>>>>>> upstream-releases
 
 void NetworkMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
                                          const TimeStamp& aProcessStartTime,
@@ -276,4 +352,29 @@ void LongTaskMarkerPayload::StreamPayload(SpliceableJSONWriter& aWriter,
   StreamCommonProps("MainThreadLongTask", aWriter, aProcessStartTime,
                     aUniqueStacks);
   aWriter.StringProperty("category", "LongTask");
+}
+
+void JsAllocationMarkerPayload::StreamPayload(
+    SpliceableJSONWriter& aWriter, const TimeStamp& aProcessStartTime,
+    UniqueStacks& aUniqueStacks) {
+  StreamCommonProps("JS allocation", aWriter, aProcessStartTime, aUniqueStacks);
+
+  if (mClassName) {
+    aWriter.StringProperty("className", mClassName.get());
+  }
+  if (mScriptFilename) {
+    aWriter.StringProperty("scriptFilename", mScriptFilename.get());
+  }
+  if (mTypeName) {
+    aWriter.StringProperty("typeName",
+                           NS_ConvertUTF16toUTF8(mTypeName.get()).get());
+  }
+  if (mDescriptiveTypeName) {
+    aWriter.StringProperty(
+        "descriptiveTypeName",
+        NS_ConvertUTF16toUTF8(mDescriptiveTypeName.get()).get());
+  }
+  aWriter.StringProperty("coarseType", mCoarseType);
+  aWriter.IntProperty("size", mSize);
+  aWriter.BoolProperty("inNursery", mInNursery);
 }

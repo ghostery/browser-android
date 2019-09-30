@@ -10,7 +10,6 @@
 
 #include "SkColorSpaceXformer.h"
 #include "SkShaderBase.h"
-#include "SkPM4f.h"
 
 /** \class SkColorShader
     A Shader that represents a single color. In general, this effect can be
@@ -28,6 +27,7 @@ public:
     bool isOpaque() const override;
     bool isConstant() const override { return true; }
 
+<<<<<<< HEAD
     class ColorShaderContext : public Context {
     public:
         ColorShaderContext(const SkColorShader& shader, const ContextRec&);
@@ -44,18 +44,42 @@ public:
         typedef Context INHERITED;
     };
 
+||||||| merged common ancestors
+    class ColorShaderContext : public Context {
+    public:
+        ColorShaderContext(const SkColorShader& shader, const ContextRec&);
+
+        uint32_t getFlags() const override;
+        void shadeSpan(int x, int y, SkPMColor span[], int count) override;
+        void shadeSpan4f(int x, int y, SkPM4f[], int count) override;
+
+    private:
+        SkPM4f      fPM4f;
+        SkPMColor   fPMColor;
+        uint32_t    fFlags;
+
+        typedef Context INHERITED;
+    };
+
+=======
+>>>>>>> upstream-releases
     GradientType asAGradient(GradientInfo* info) const override;
 
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorShader)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorShader)
+=======
+private:
+    SK_FLATTENABLE_HOOKS(SkColorShader)
+>>>>>>> upstream-releases
 
-protected:
-    SkColorShader(SkReadBuffer&);
     void flatten(SkWriteBuffer&) const override;
-    Context* onMakeContext(const ContextRec&, SkArenaAlloc* storage) const override;
 
     bool onAsLuminanceColor(SkColor* lum) const override {
         *lum = fColor;
@@ -68,21 +92,17 @@ protected:
         return SkShader::MakeColorShader(xformer->apply(fColor));
     }
 
-private:
     SkColor fColor;
-
-    typedef SkShaderBase INHERITED;
 };
 
 class SkColor4Shader : public SkShaderBase {
 public:
     SkColor4Shader(const SkColor4f&, sk_sp<SkColorSpace>);
 
-    bool isOpaque() const override {
-        return SkColorGetA(fCachedByteColor) == 255;
-    }
+    bool isOpaque()   const override { return fColor.isOpaque(); }
     bool isConstant() const override { return true; }
 
+<<<<<<< HEAD
     class Color4Context : public Context {
     public:
         Color4Context(const SkColor4Shader& shader, const ContextRec&);
@@ -101,30 +121,47 @@ public:
 
     GradientType asAGradient(GradientInfo* info) const override;
 
+||||||| merged common ancestors
+    class Color4Context : public Context {
+    public:
+        Color4Context(const SkColor4Shader& shader, const ContextRec&);
+
+        uint32_t getFlags() const override;
+        void shadeSpan(int x, int y, SkPMColor span[], int count) override;
+        void shadeSpan4f(int x, int y, SkPM4f[], int count) override;
+
+    private:
+        SkPM4f      fPM4f;
+        SkPMColor   fPMColor;
+        uint32_t    fFlags;
+
+        typedef Context INHERITED;
+    };
+
+    GradientType asAGradient(GradientInfo* info) const override;
+
+=======
+>>>>>>> upstream-releases
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorShader)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorShader)
+=======
+private:
+    SK_FLATTENABLE_HOOKS(SkColor4Shader)
+>>>>>>> upstream-releases
 
-protected:
-    SkColor4Shader(SkReadBuffer&);
     void flatten(SkWriteBuffer&) const override;
-    Context* onMakeContext(const ContextRec&, SkArenaAlloc*) const override;
-    bool onAsLuminanceColor(SkColor* lum) const override {
-        *lum = fCachedByteColor;
-        return true;
-    }
     bool onAppendStages(const StageRec&) const override;
-
     sk_sp<SkShader> onMakeColorSpace(SkColorSpaceXformer* xformer) const override;
 
-private:
     sk_sp<SkColorSpace> fColorSpace;
-    const SkColor4f     fColor4;
-    const SkColor       fCachedByteColor;
-
-    typedef SkShaderBase INHERITED;
+    const SkColor4f     fColor;
 };
 
 #endif

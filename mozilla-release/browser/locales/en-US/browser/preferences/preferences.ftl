@@ -32,11 +32,7 @@ search-input-box =
            *[other] Find in Preferences
         }
 
-policies-notice =
-    { PLATFORM() ->
-        [windows] Your organization has disabled the ability to change some options.
-       *[other] Your organization has disabled the ability to change some preferences.
-    }
+managed-notice = Your browser is being managed by your organization.
 
 pane-general-title = General
 category-general =
@@ -54,10 +50,9 @@ pane-privacy-title = Privacy & Security
 category-privacy =
     .tooltiptext = { pane-privacy-title }
 
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox Account
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 
 help-button-label = { -brand-short-name } Support
 addons-button-label = Extensions & Themes
@@ -236,7 +231,7 @@ containers-remove-cancel-button = Don’t remove this Container
 
 language-and-appearance-header = Language and Appearance
 
-fonts-and-colors-header = Fonts & Colors
+fonts-and-colors-header = Fonts and Colors
 
 default-font = Default font
     .accesskey = D
@@ -355,6 +350,8 @@ update-application-manual =
     .label = Never check for updates (not recommended)
     .accesskey = N
 
+update-application-warning-cross-user-setting = This setting will apply to all Windows accounts and { -brand-short-name } profiles using this installation of { -brand-short-name }.
+
 update-application-use-service =
     .label = Use a background service to install updates
     .accesskey = b
@@ -363,12 +360,36 @@ update-enable-search-update =
     .label = Automatically update search engines
     .accesskey = e
 
+<<<<<<< HEAD
 update-pref-write-failure-title = Write Failure
 
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = Unable to save preference. Could not write to file: { $path }
 
+||||||| merged common ancestors
+=======
+update-setting-write-failure-title = Error saving Update preferences
+
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } encountered an error and didn’t save this change. Note that setting this update preference requires permission to write to the file below. You or a system administrator may be able resolve the error by granting the Users group full control to this file.
+
+    Could not write to file: { $path }
+
+update-in-progress-title = Update In Progress
+
+update-in-progress-message = Do you want { -brand-short-name } to continue with this update?
+
+update-in-progress-ok-button = &Discard
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = &Continue
+
+>>>>>>> upstream-releases
 ## General Section - Performance
 
 performance-title = Performance
@@ -423,6 +444,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = Recommend extensions as you browse
     .accesskey = R
+browsing-cfr-features =
+    .label = Recommend features as you browse
+    .accesskey = f
 
 browsing-cfr-recommendations-learn-more = Learn more
 
@@ -483,6 +507,53 @@ use-current-pages =
 choose-bookmark =
     .label = Use Bookmark…
     .accesskey = B
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox Home Content
+home-prefs-content-description = Choose what content you want on your Firefox Home screen.
+home-prefs-content-discovery-description = Content Discovery in Firefox Home allows you to discover high-quality, relevant articles from across the web.
+
+home-prefs-search-header =
+    .label = Web Search
+home-prefs-topsites-header =
+    .label = Top Sites
+home-prefs-topsites-description = The sites you visit most
+
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = Recommended by { $provider }
+home-prefs-recommended-by-description = Great content from around the web, personalized for you
+home-prefs-recommended-by-learn-more = How it works
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = Sponsored Stories
+
+home-prefs-highlights-header =
+    .label = Highlights
+home-prefs-highlights-description = A selection of sites that you’ve saved or visited
+home-prefs-highlights-option-visited-pages =
+    .label = Visited Pages
+home-prefs-highlights-options-bookmarks =
+    .label = Bookmarks
+home-prefs-highlights-option-most-recent-download =
+    .label = Most Recent Download
+home-prefs-highlights-option-saved-to-pocket =
+    .label = Pages Saved to { -pocket-brand-name }
+
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = Snippets
+home-prefs-snippets-description = Updates from { -vendor-short-name } and { -brand-product-name }
+home-prefs-sections-rows-option =
+    .label =
+        { $num ->
+            [one] { $num } row
+           *[other] { $num } rows
+        }
 
 ## Search Section
 
@@ -662,9 +733,11 @@ sync-device-name-save =
     .label = Save
     .accesskey = v
 
-sync-mobilepromo-single = Connect another device
+sync-connect-another-device = Connect another device
 
-sync-mobilepromo-multi = Manage devices
+sync-manage-devices = Manage devices
+
+sync-fxa-begin-pairing = Pair a device
 
 sync-tos-link = Terms of Service
 
@@ -676,13 +749,16 @@ privacy-header = Browser Privacy
 
 ## Privacy Section - Forms
 
-logins-header = Logins & Passwords
+logins-header = Logins and Passwords
 forms-ask-to-save-logins =
     .label = Ask to save logins and passwords for websites
     .accesskey = r
 forms-exceptions =
     .label = Exceptions…
     .accesskey = x
+forms-generate-passwords =
+    .label = Suggest and generate strong passwords
+    .accesskey = u
 forms-saved-logins =
     .label = Saved Logins…
     .accesskey = L
@@ -716,7 +792,7 @@ history-remember-option-never =
 history-remember-option-custom =
     .label = Use custom settings for history
 
-history-remember-description = { -brand-short-name } will remember your browsing, download, form and search history.
+history-remember-description = { -brand-short-name } will remember your browsing, download, form, and search history.
 history-dontremember-description = { -brand-short-name } will use the same settings as private browsing, and will not remember any history as you browse the Web.
 
 history-private-browsing-permanent =
@@ -752,13 +828,29 @@ sitedata-total-size-calculating = Calculating site data and cache size…
 # Variables:
 #   $value (Number) - Value of the unit (for example: 4.6, 500)
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
-sitedata-total-size = Your stored cookies, site data and cache are currently using { $value } { $unit } of disk space.
+sitedata-total-size = Your stored cookies, site data, and cache are currently using { $value } { $unit } of disk space.
 
 sitedata-learn-more = Learn more
 
+<<<<<<< HEAD
 sitedata-delete-on-close =
     .label = Delete cookies and site data when { -brand-short-name } is closed
     .accesskey = c
+||||||| merged common ancestors
+sitedata-keep-until = Keep until
+    .accesskey = u
+
+sitedata-keep-until-expire =
+    .label = They expire
+sitedata-keep-until-closed =
+    .label = { -brand-short-name } is closed
+=======
+sitedata-delete-on-close =
+    .label = Delete cookies and site data when { -brand-short-name } is closed
+    .accesskey = c
+
+sitedata-delete-on-close-private-browsing = In permanent private browsing mode, cookies and site data will always be cleared when { -brand-short-name } is closed.
+>>>>>>> upstream-releases
 
 sitedata-allow-cookies-option =
     .label = Accept cookies and site data
@@ -816,9 +908,16 @@ addressbar-suggestions-settings = Change preferences for search engine suggestio
 
 content-blocking-header = Content Blocking
 
+<<<<<<< HEAD
 content-blocking-description = Block third-party content that tracks you around the web. Control how much of your online activity gets stored and shared between websites.
+||||||| merged common ancestors
+content-blocking-desc = Block third-party content, like ads or code, that can slow your browsing and track you around the web. Customize your settings for the best balance of protection and performance.
+=======
+content-blocking-section-description = Protect your privacy while you browse. Block invisible content that tracks the sites you visit and profiles you. Blocking some of this content may make pages load faster.
+>>>>>>> upstream-releases
 
 content-blocking-learn-more = Learn more
+<<<<<<< HEAD
 
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
@@ -847,6 +946,69 @@ content-blocking-warning-desc = Blocking cookies and trackers can cause some web
 content-blocking-learn-how = Learn how
 
 content-blocking-trackers-label =
+||||||| merged common ancestors
+content-blocking-restore-defaults =
+  .label = Restore Defaults
+  .accesskey = R
+
+content-blocking-toggle-on =
+  .tooltiptext = Turn Off Content Blocking
+content-blocking-toggle-off =
+  .tooltiptext = Turn On Content Blocking
+
+content-blocking-toggle-label-on = ON
+  .accesskey = O
+content-blocking-toggle-label-off = OFF
+  .accesskey = O
+
+content-blocking-category-label = Choose what to block
+
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+  .label = Slow-Loading Trackers
+  .accesskey = S
+content-blocking-fastblock-new-description = Block just the trackers that keep pages from loading quickly.
+content-blocking-tracking-protection-trackers-label =
+=======
+
+# The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
+# "Standard" in this case is an adjective, meaning "default" or "normal".
+content-blocking-setting-standard =
+  .label = Standard
+  .accesskey = d
+content-blocking-setting-strict =
+  .label = Strict
+  .accesskey = r
+content-blocking-setting-custom =
+  .label = Custom
+  .accesskey = C
+
+content-blocking-standard-desc = Balanced for protection and performance. Allows some trackers so websites function properly.
+content-blocking-strict-description = Stronger protection, may cause some sites to break.
+content-blocking-custom-desc = Choose what to block.
+
+content-blocking-private-trackers = Known trackers only in Private Windows
+content-blocking-third-party-cookies = Third-party tracking cookies
+content-blocking-all-cookies = All cookies
+content-blocking-unvisited-cookies = Cookies from unvisited sites
+content-blocking-all-windows-trackers = Known trackers in all windows
+content-blocking-all-third-party-cookies = All third-party cookies
+content-blocking-cryptominers = Cryptominers
+content-blocking-fingerprinters = Fingerprinters
+
+content-blocking-warning-title = Heads up!
+content-blocking-warning-description = Blocking content can cause some websites to break. It’s easy to disable blocking for sites you trust.
+content-blocking-learn-how = Learn how
+
+content-blocking-reload-description = You will need to reload your tabs to apply these changes.
+content-blocking-reload-tabs-button =
+  .label = Reload All Tabs
+  .accesskey = R
+
+content-blocking-trackers-label =
+>>>>>>> upstream-releases
   .label = Trackers
   .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
@@ -860,11 +1022,75 @@ content-blocking-tracking-protection-change-block-list = Change block list
 content-blocking-cookies-label =
   .label = Cookies
   .accesskey = C
+<<<<<<< HEAD
+
+## Privacy Section - Tracking
+||||||| merged common ancestors
+content-blocking-reject-trackers-description = Block all third-party cookies or just those set by trackers.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Your settings in Cookies and Site Data are preventing changes to Third-Party Cookies settings.
+content-blocking-change-cookie-settings =
+  .label = Change Cookie Settings
+  .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+  .label = Trackers (recommended)
+  .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+  .label = Trackers
+  .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+  .label = All third-party cookies (may cause websites to break)
+  .accesskey = A
+
+## Privacy Section - Tracking
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+tracking-manage-exceptions =
+    .label = Manage Exceptions…
+||||||| merged common ancestors
+tracking-header = Tracking Protection
+
+tracking-desc = Tracking Protection blocks online trackers that collect your browsing data across multiple websites. <a data-l10n-name="learn-more">Learn more about Tracking Protection and your privacy</a>
+
+tracking-mode-label = Use Tracking Protection to block known trackers
+
+tracking-mode-always =
+    .label = Always
+    .accesskey = y
+tracking-mode-private =
+    .label = Only in private windows
+    .accesskey = l
+tracking-mode-never =
+    .label = Never
+    .accesskey = N
+
+tracking-exceptions =
+    .label = Exceptions…
+=======
+content-blocking-expand-section =
+  .tooltiptext = More information
+
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+  .label = Cryptominers
+  .accesskey = y
+
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+  .label = Fingerprinters
+  .accesskey = F
 
 ## Privacy Section - Tracking
 
 tracking-manage-exceptions =
     .label = Manage Exceptions…
+>>>>>>> upstream-releases
     .accesskey = x
 
 ## Privacy Section - Permissions
@@ -896,24 +1122,11 @@ permissions-notification-pause =
     .label = Pause notifications until { -brand-short-name } restarts
     .accesskey = n
 
-permissions-block-autoplay-media =
-    .label = Block websites from automatically playing media with sound
-    .accesskey = B
+permissions-autoplay = Autoplay
 
-permissions-block-autoplay-media-menu = For websites that autoplay sound
-
-permissions-block-autoplay-media-exceptions =
-    .label = Exceptions…
-    .accesskey = E
-
-autoplay-option-ask =
-    .label = Always Ask
-autoplay-option-allow =
-    .label = Allow Autoplay
-autoplay-option-dont =
-    .label = Don't Autoplay
-
-permissions-autoplay-link = Learn more
+permissions-autoplay-settings =
+    .label = Settings…
+    .accesskey = t
 
 permissions-block-popups =
     .label = Block pop-up windows
@@ -960,11 +1173,6 @@ addon-recommendations-link = Learn more
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = Data reporting is disabled for this build configuration
-
-collection-browser-errors =
-    .label = Allow { -brand-short-name } to send browser error reports (including error messages) to { -vendor-short-name }
-    .accesskey = b
-collection-browser-errors-link = Learn more
 
 collection-backlogged-crash-reports =
     .label = Allow { -brand-short-name } to send backlogged crash reports on your behalf

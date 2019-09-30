@@ -7,10 +7,10 @@
 #include "vm/TraceLoggingGraph.h"
 
 #ifdef XP_WIN
-#include <process.h>
-#define getpid _getpid
+#  include <process.h>
+#  define getpid _getpid
 #else
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 #include "mozilla/EndianUtils.h"
@@ -27,11 +27,25 @@
 #include "vm/TraceLogging.h"
 
 #ifndef DEFAULT_TRACE_LOG_DIR
+<<<<<<< HEAD
 #if defined(_WIN32)
 #define DEFAULT_TRACE_LOG_DIR "."
 #else
 #define DEFAULT_TRACE_LOG_DIR "/tmp/"
 #endif
+||||||| merged common ancestors
+# if defined(_WIN32)
+#  define DEFAULT_TRACE_LOG_DIR "."
+# else
+#  define DEFAULT_TRACE_LOG_DIR "/tmp/"
+# endif
+=======
+#  if defined(_WIN32)
+#    define DEFAULT_TRACE_LOG_DIR "."
+#  else
+#    define DEFAULT_TRACE_LOG_DIR "/tmp/"
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 using mozilla::MakeScopeExit;
@@ -41,10 +55,22 @@ TraceLoggerGraphState* traceLoggerGraphState = nullptr;
 
 // gcc and clang have these in symcat.h, but MSVC does not.
 #ifndef STRINGX
+<<<<<<< HEAD
 #define STRINGX(x) #x
+||||||| merged common ancestors
+# define STRINGX(x) #x
+=======
+#  define STRINGX(x) #  x
+>>>>>>> upstream-releases
 #endif
 #ifndef XSTRING
+<<<<<<< HEAD
 #define XSTRING(macro) STRINGX(macro)
+||||||| merged common ancestors
+# define XSTRING(macro) STRINGX(macro)
+=======
+#  define XSTRING(macro) STRINGX(macro)
+>>>>>>> upstream-releases
 #endif
 
 #define MAX_LOGGERS 999
@@ -322,6 +348,28 @@ TraceLoggerGraph::~TraceLoggerGraph() {
     while (stack.size() > 1) {
       stopEvent(0);
     }
+<<<<<<< HEAD
+    enabled = false;
+  }
+
+  if (!failed && !flush()) {
+    fprintf(stderr, "TraceLogging: Couldn't write the data to disk.\n");
+    enabled = false;
+    failed = true;
+  }
+
+  if (treeFile) {
+    fclose(treeFile);
+    treeFile = nullptr;
+  }
+
+  if (eventFile) {
+    fclose(eventFile);
+    eventFile = nullptr;
+  }
+}
+||||||| merged common ancestors
+=======
     enabled = false;
   }
 
@@ -344,11 +392,26 @@ TraceLoggerGraph::~TraceLoggerGraph() {
 
 bool TraceLoggerGraph::flush() {
   MOZ_ASSERT(!failed);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool TraceLoggerGraph::flush() {
+  MOZ_ASSERT(!failed);
 
   if (treeFile) {
     // Format data in big endian.
     for (size_t i = 0; i < tree.size(); i++) {
       entryToBigEndian(&tree[i]);
+||||||| merged common ancestors
+    if (treeFile) {
+        fclose(treeFile);
+        treeFile = nullptr;
+=======
+  if (treeFile) {
+    // Format data in big endian.
+    for (size_t i = 0; i < tree.size(); i++) {
+      entryToBigEndian(&tree[i]);
+>>>>>>> upstream-releases
     }
 
     int success = fseek(treeFile, 0, SEEK_END);
@@ -673,6 +736,7 @@ void TraceLoggerGraph::addTextId(uint32_t id, const char* text) {
   addTextId(id, text, line, column);
 }
 
+<<<<<<< HEAD
 void TraceLoggerGraph::addTextId(uint32_t id, const char* text,
                                  mozilla::Maybe<uint32_t>& line,
                                  mozilla::Maybe<uint32_t>& column) {
@@ -705,6 +769,75 @@ void TraceLoggerGraph::addTextId(uint32_t id, const char* text,
     failed = true;
   }
   str.reset();
+||||||| merged common ancestors
+void
+TraceLoggerGraph::addTextId(uint32_t id, const char* text,
+                            mozilla::Maybe<uint32_t>& line,
+                            mozilla::Maybe<uint32_t>& column)
+{
+    if (failed) {
+        return;
+    }
+
+    // Assume ids are given in order. Which is currently true.
+    MOZ_ASSERT(id == nextTextId_);
+    nextTextId_++;
+
+    if (id > 0) {
+        int written = fprintf(dictFile, ",\n");
+        if (written < 0) {
+            failed = true;
+            return;
+        }
+    }
+
+    js::UniqueChars str;
+    if (line && column) {
+        str = JS_smprintf("script %s:%u:%u", text, *line, *column);
+    } else if (line) {
+        str = JS_smprintf("script %s:%u", text, *line);
+    } else {
+        str = JS_smprintf("%s", text);
+    }
+
+    if (!js::FileEscapedString(dictFile, str.get(), strlen(str.get()), '"')) {
+        failed = true;
+    }
+    str.reset();
+=======
+void TraceLoggerGraph::addTextId(uint32_t id, const char* text,
+                                 mozilla::Maybe<uint32_t>& line,
+                                 mozilla::Maybe<uint32_t>& column) {
+  if (failed) {
+    return;
+  }
+
+  // Assume ids are given in order. Which is currently true.
+  MOZ_ASSERT(id == nextTextId_);
+  nextTextId_++;
+
+  if (id > 0) {
+    int written = fprintf(dictFile, ",\n");
+    if (written < 0) {
+      failed = true;
+      return;
+    }
+  }
+
+  js::UniqueChars str;
+  if (line && column) {
+    str = JS_smprintf("script %s:%u:%u", text, *line, *column);
+  } else if (line) {
+    str = JS_smprintf("script %s:%u", text, *line);
+  } else {
+    str = JS_smprintf("%s", text);
+  }
+
+  if (!js::FileEscapedString(dictFile, str.get(), strlen(str.get()), '"')) {
+    failed = true;
+  }
+  str.reset();
+>>>>>>> upstream-releases
 }
 
 size_t TraceLoggerGraph::sizeOfExcludingThis(

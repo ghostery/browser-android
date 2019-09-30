@@ -15,15 +15,36 @@
 #include "nsTableRowFrame.h"
 #include "nsTableCellFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <mtable> -- table or matrix
 //
 
+<<<<<<< HEAD
 class nsMathMLmtableWrapperFrame final : public nsTableWrapperFrame,
                                          public nsMathMLFrame {
  public:
   friend nsContainerFrame* NS_NewMathMLmtableOuterFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsMathMLmtableWrapperFrame final
+  : public nsTableWrapperFrame
+  , public nsMathMLFrame
+{
+public:
+  friend nsContainerFrame*
+  NS_NewMathMLmtableOuterFrame(nsIPresShell*   aPresShell,
+                               ComputedStyle* aStyle);
+=======
+class nsMathMLmtableWrapperFrame final : public nsTableWrapperFrame,
+                                         public nsMathMLFrame {
+ public:
+  friend nsContainerFrame* NS_NewMathMLmtableOuterFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmtableWrapperFrame)
@@ -41,9 +62,21 @@ class nsMathMLmtableWrapperFrame final : public nsTableWrapperFrame,
     return nsTableWrapperFrame::IsFrameOfType(aFlags & ~(nsIFrame::eMathML));
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmtableWrapperFrame(ComputedStyle* aStyle)
       : nsTableWrapperFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmtableWrapperFrame(ComputedStyle* aStyle)
+    : nsTableWrapperFrame(aStyle, kClassID)
+  {}
+=======
+ protected:
+  explicit nsMathMLmtableWrapperFrame(ComputedStyle* aStyle,
+                                      nsPresContext* aPresContext)
+      : nsTableWrapperFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual ~nsMathMLmtableWrapperFrame();
 
@@ -60,8 +93,17 @@ class nsMathMLmtableFrame final : public nsTableFrame {
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmtableFrame)
 
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewMathMLmtableFrame(nsIPresShell* aPresShell,
                                                    ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsContainerFrame*
+  NS_NewMathMLmtableFrame(nsIPresShell*   aPresShell,
+                          ComputedStyle* aStyle);
+=======
+  friend nsContainerFrame* NS_NewMathMLmtableFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   // Overloaded nsTableFrame methods
 
@@ -131,12 +173,30 @@ class nsMathMLmtableFrame final : public nsTableFrame {
   void SetUseCSSSpacing();
   bool GetUseCSSSpacing() { return mUseCSSSpacing; }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmtableFrame(ComputedStyle* aStyle)
       : nsTableFrame(aStyle, kClassID),
         mFrameSpacingX(0),
         mFrameSpacingY(0),
         mUseCSSSpacing(false) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmtableFrame(ComputedStyle* aStyle)
+    : nsTableFrame(aStyle, kClassID)
+    , mFrameSpacingX(0)
+    , mFrameSpacingY(0)
+    , mUseCSSSpacing(false)
+  {}
+=======
+ protected:
+  explicit nsMathMLmtableFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+      : nsTableFrame(aStyle, aPresContext, kClassID),
+        mFrameSpacingX(0),
+        mFrameSpacingY(0),
+        mUseCSSSpacing(false) {}
+>>>>>>> upstream-releases
 
   virtual ~nsMathMLmtableFrame();
 
@@ -154,8 +214,17 @@ class nsMathMLmtrFrame final : public nsTableRowFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmtrFrame)
 
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewMathMLmtrFrame(nsIPresShell* aPresShell,
                                                 ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsContainerFrame*
+  NS_NewMathMLmtrFrame(nsIPresShell*   aPresShell,
+                       ComputedStyle* aStyle);
+=======
+  friend nsContainerFrame* NS_NewMathMLmtrFrame(mozilla::PresShell* aPresShell,
+                                                ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   // overloaded nsTableRowFrame methods
 
@@ -192,9 +261,20 @@ class nsMathMLmtrFrame final : public nsTableRowFrame {
     }
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmtrFrame(ComputedStyle* aStyle)
       : nsTableRowFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmtrFrame(ComputedStyle* aStyle)
+    : nsTableRowFrame(aStyle, kClassID)
+  {}
+=======
+ protected:
+  explicit nsMathMLmtrFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsTableRowFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual ~nsMathMLmtrFrame();
 };  // class nsMathMLmtrFrame
@@ -205,9 +285,20 @@ class nsMathMLmtdFrame final : public nsTableCellFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmtdFrame)
 
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewMathMLmtdFrame(nsIPresShell* aPresShell,
                                                 ComputedStyle* aStyle,
                                                 nsTableFrame* aTableFrame);
+||||||| merged common ancestors
+  friend nsContainerFrame*
+  NS_NewMathMLmtdFrame(nsIPresShell*   aPresShell,
+                       ComputedStyle* aStyle,
+                       nsTableFrame*   aTableFrame);
+=======
+  friend nsContainerFrame* NS_NewMathMLmtdFrame(mozilla::PresShell* aPresShell,
+                                                ComputedStyle* aStyle,
+                                                nsTableFrame* aTableFrame);
+>>>>>>> upstream-releases
 
   // overloaded nsTableCellFrame methods
 
@@ -217,9 +308,19 @@ class nsMathMLmtdFrame final : public nsTableCellFrame {
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
                                     int32_t aModType) override;
 
+<<<<<<< HEAD
   virtual uint8_t GetVerticalAlign() const override;
   virtual nsresult ProcessBorders(nsTableFrame* aFrame,
                                   nsDisplayListBuilder* aBuilder,
+||||||| merged common ancestors
+  virtual uint8_t GetVerticalAlign() const override;
+  virtual nsresult ProcessBorders(nsTableFrame*           aFrame,
+                                  nsDisplayListBuilder*   aBuilder,
+=======
+  virtual mozilla::StyleVerticalAlignKeyword GetVerticalAlign() const override;
+  virtual nsresult ProcessBorders(nsTableFrame* aFrame,
+                                  nsDisplayListBuilder* aBuilder,
+>>>>>>> upstream-releases
                                   const nsDisplayListSet& aLists) override;
 
   virtual bool IsFrameOfType(uint32_t aFlags) const override {
@@ -239,10 +340,26 @@ class nsMathMLmtdFrame final : public nsTableCellFrame {
 
 // --------------
 
+<<<<<<< HEAD
 class nsMathMLmtdInnerFrame final : public nsBlockFrame, public nsMathMLFrame {
  public:
   friend nsContainerFrame* NS_NewMathMLmtdInnerFrame(nsIPresShell* aPresShell,
                                                      ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsMathMLmtdInnerFrame final
+  : public nsBlockFrame
+  , public nsMathMLFrame
+{
+public:
+  friend nsContainerFrame*
+  NS_NewMathMLmtdInnerFrame(nsIPresShell*   aPresShell,
+                            ComputedStyle* aStyle);
+=======
+class nsMathMLmtdInnerFrame final : public nsBlockFrame, public nsMathMLFrame {
+ public:
+  friend nsContainerFrame* NS_NewMathMLmtdInnerFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmtdInnerFrame)
@@ -274,8 +391,17 @@ class nsMathMLmtdInnerFrame final : public nsBlockFrame, public nsMathMLFrame {
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmtdInnerFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmtdInnerFrame(ComputedStyle* aStyle);
+=======
+ protected:
+  explicit nsMathMLmtdInnerFrame(ComputedStyle* aStyle,
+                                 nsPresContext* aPresContext);
+>>>>>>> upstream-releases
   virtual ~nsMathMLmtdInnerFrame() {}
 
   mozilla::UniquePtr<nsStyleText> mUniqueStyleText;

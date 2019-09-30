@@ -34,7 +34,7 @@ const TEST_URI = `
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-  const {inspector, view} = await openComputedView();
+  const { inspector, view } = await openComputedView();
   await selectNode("span", inspector);
 
   await testCopySome(view);
@@ -42,6 +42,7 @@ add_task(async function() {
 });
 
 async function testCopySome(view) {
+<<<<<<< HEAD
   const expectedPattern = "font-family: helvetica, sans-serif;[\\r\\n]+" +
                         "font-size: 16px;[\\r\\n]+" +
                         "font-variant-caps: small-caps;[\\r\\n]*";
@@ -50,13 +51,38 @@ async function testCopySome(view) {
     start: {prop: 1, offset: 0},
     end: {prop: 3, offset: 2},
   }, expectedPattern);
+||||||| merged common ancestors
+  const expectedPattern = "font-family: helvetica, sans-serif;[\\r\\n]+" +
+                        "font-size: 16px;[\\r\\n]+" +
+                        "font-variant-caps: small-caps;[\\r\\n]*";
+
+  await copySomeTextAndCheckClipboard(view, {
+    start: {prop: 1, offset: 0},
+    end: {prop: 3, offset: 2}
+  }, expectedPattern);
+=======
+  const expectedPattern =
+    "font-family: helvetica, sans-serif;[\\r\\n]+" +
+    "font-size: 16px;[\\r\\n]+" +
+    "font-variant-caps: small-caps;[\\r\\n]*";
+
+  await copySomeTextAndCheckClipboard(
+    view,
+    {
+      start: { prop: 1, offset: 0 },
+      end: { prop: 3, offset: 2 },
+    },
+    expectedPattern
+  );
+>>>>>>> upstream-releases
 }
 
 async function testCopyAll(view) {
-  const expectedPattern = "color: rgb\\(255, 255, 0\\);[\\r\\n]+" +
-                        "font-family: helvetica, sans-serif;[\\r\\n]+" +
-                        "font-size: 16px;[\\r\\n]+" +
-                        "font-variant-caps: small-caps;[\\r\\n]*";
+  const expectedPattern =
+    "color: rgb\\(255, 255, 0\\);[\\r\\n]+" +
+    "font-family: helvetica, sans-serif;[\\r\\n]+" +
+    "font-size: 16px;[\\r\\n]+" +
+    "font-variant-caps: small-caps;[\\r\\n]*";
 
   await copyAllAndCheckClipboard(view, expectedPattern);
 }

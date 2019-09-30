@@ -5,6 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsMathMLTokenFrame.h"
+
+#include "mozilla/PresShell.h"
 #include "nsPresContext.h"
 #include "nsContentUtils.h"
 #include "nsTextFrame.h"
@@ -12,9 +14,20 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewMathMLTokenFrame(nsIPresShell* aPresShell,
                                  ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLTokenFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMathMLTokenFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLTokenFrame(aStyle);
+=======
+nsIFrame* NS_NewMathMLTokenFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLTokenFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLTokenFrame)
@@ -142,9 +155,21 @@ void nsMathMLTokenFrame::Reflow(nsPresContext* aPresContext,
 // For token elements, mBoundingMetrics is computed at the ReflowToken
 // pass, it is not computed here because our children may be text frames
 // that do not implement the GetBoundingMetrics() interface.
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLTokenFrame::Place(DrawTarget* aDrawTarget,
                                                  bool aPlaceOrigin,
                                                  ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLTokenFrame::Place(DrawTarget*          aDrawTarget,
+                          bool                 aPlaceOrigin,
+                          ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLTokenFrame::Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
+                                   ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   mBoundingMetrics = nsBoundingMetrics();
   for (nsIFrame* childFrame : PrincipalChildList()) {
     ReflowOutput childSize(aDesiredSize.GetWritingMode());

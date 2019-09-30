@@ -49,19 +49,42 @@ nsBaseContentStream::Close() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBaseContentStream::Available(uint64_t *result) {
+||||||| merged common ancestors
+nsBaseContentStream::Available(uint64_t *result)
+{
+=======
+nsBaseContentStream::Available(uint64_t* result) {
+>>>>>>> upstream-releases
   *result = 0;
   return mStatus;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBaseContentStream::Read(char *buf, uint32_t count, uint32_t *result) {
+||||||| merged common ancestors
+nsBaseContentStream::Read(char *buf, uint32_t count, uint32_t *result)
+{
+=======
+nsBaseContentStream::Read(char* buf, uint32_t count, uint32_t* result) {
+>>>>>>> upstream-releases
   return ReadSegments(NS_CopySegmentToBuffer, buf, count, result);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBaseContentStream::ReadSegments(nsWriteSegmentFun fun, void *closure,
                                   uint32_t count, uint32_t *result) {
+||||||| merged common ancestors
+nsBaseContentStream::ReadSegments(nsWriteSegmentFun fun, void *closure,
+                                  uint32_t count, uint32_t *result)
+{
+=======
+nsBaseContentStream::ReadSegments(nsWriteSegmentFun fun, void* closure,
+                                  uint32_t count, uint32_t* result) {
+>>>>>>> upstream-releases
   *result = 0;
 
   if (mStatus == NS_BASE_STREAM_CLOSED) return NS_OK;
@@ -73,7 +96,14 @@ nsBaseContentStream::ReadSegments(nsWriteSegmentFun fun, void *closure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBaseContentStream::IsNonBlocking(bool *result) {
+||||||| merged common ancestors
+nsBaseContentStream::IsNonBlocking(bool *result)
+{
+=======
+nsBaseContentStream::IsNonBlocking(bool* result) {
+>>>>>>> upstream-releases
   *result = mNonBlocking;
   return NS_OK;
 }
@@ -93,9 +123,20 @@ nsBaseContentStream::CloseWithStatus(nsresult status) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBaseContentStream::AsyncWait(nsIInputStreamCallback *callback, uint32_t flags,
                                uint32_t requestedCount,
                                nsIEventTarget *target) {
+||||||| merged common ancestors
+nsBaseContentStream::AsyncWait(nsIInputStreamCallback *callback,
+                               uint32_t flags, uint32_t requestedCount,
+                               nsIEventTarget *target)
+{
+=======
+nsBaseContentStream::AsyncWait(nsIInputStreamCallback* callback, uint32_t flags,
+                               uint32_t requestedCount,
+                               nsIEventTarget* target) {
+>>>>>>> upstream-releases
   // Our _only_ consumer is nsInputStreamPump, so we simplify things here by
   // making assumptions about how we will be called.
   NS_ASSERTION(target, "unexpected parameter");

@@ -12,8 +12,17 @@ function mapRecordingOptions(type, options) {
   if (type === "profiler") {
     return {
       entries: options.bufferSize,
+<<<<<<< HEAD
       interval: options.sampleFrequency ? (1000 / options.sampleFrequency)
                                         : void 0,
+||||||| merged common ancestors
+      interval: options.sampleFrequency ? (1000 / (options.sampleFrequency * 1000))
+                                        : void 0,
+=======
+      interval: options.sampleFrequency
+        ? 1000 / options.sampleFrequency
+        : void 0,
+>>>>>>> upstream-releases
     };
   }
 
@@ -289,7 +298,7 @@ function allocationsWithSchema(data) {
  *               A profile with version 2.
  */
 function deflateProfile(profile) {
-  profile.threads = profile.threads.map((thread) => {
+  profile.threads = profile.threads.map(thread => {
     const uniqueStacks = new UniqueStacks();
     return deflateThread(thread, uniqueStacks);
   });
@@ -561,8 +570,9 @@ UniqueStacks.prototype.getOrAddFrameIndex = function(frame) {
   const implementationIndex = this.getOrAddStringIndex(frame.implementation);
 
   // Super dumb.
-  const hash = `${locationIndex} ${implementationIndex || ""} ` +
-             `${frame.line || ""} ${frame.category || ""}`;
+  const hash =
+    `${locationIndex} ${implementationIndex || ""} ` +
+    `${frame.line || ""} ${frame.category || ""}`;
 
   let index = frameHash[hash];
   if (index !== undefined) {

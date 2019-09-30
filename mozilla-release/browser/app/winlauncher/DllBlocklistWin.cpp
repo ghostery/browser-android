@@ -4,12 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#include "NativeNt.h"
 #include "nsWindowsDllInterceptor.h"
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/ImportDir.h"
+#include "mozilla/NativeNt.h"
 #include "mozilla/Types.h"
 #include "mozilla/WindowsDllBlocklist.h"
+<<<<<<< HEAD
 #include "mozilla/WinHeaderOnlyUtils.h"
 
 #define MOZ_LITERAL_UNICODE_STRING(s)                                        \
@@ -19,16 +21,40 @@
                                     the null terminator */                   \
         sizeof(s),               /* Pointer to the buffer */                 \
         const_cast<wchar_t*>(s)                                              \
+||||||| merged common ancestors
+
+#define MOZ_LITERAL_UNICODE_STRING(s) \
+  { \
+    /* Length of the string in bytes, less the null terminator */ \
+    sizeof(s) - sizeof(wchar_t), \
+    /* Length of the string in bytes, including the null terminator */ \
+    sizeof(s), \
+    /* Pointer to the buffer */ \
+    const_cast<wchar_t*>(s) \
+=======
+#include "mozilla/WinHeaderOnlyUtils.h"
+
+// clang-format off
+#define MOZ_LITERAL_UNICODE_STRING(s)                                        \
+  {                                                                          \
+    /* Length of the string in bytes, less the null terminator */            \
+    sizeof(s) - sizeof(wchar_t),                                             \
+    /* Length of the string in bytes, including the null terminator */       \
+    sizeof(s),                                                               \
+    /* Pointer to the buffer */                                              \
+    const_cast<wchar_t*>(s)                                                  \
+>>>>>>> upstream-releases
   }
+// clang-format on
 
 #define DLL_BLOCKLIST_ENTRY(name, ...) \
   {MOZ_LITERAL_UNICODE_STRING(L##name), __VA_ARGS__},
 #define DLL_BLOCKLIST_STRING_TYPE UNICODE_STRING
 
 #if defined(MOZ_LAUNCHER_PROCESS) || defined(NIGHTLY_BUILD)
-#include "mozilla/WindowsDllBlocklistDefs.h"
+#  include "mozilla/WindowsDllBlocklistDefs.h"
 #else
-#include "mozilla/WindowsDllBlocklistCommon.h"
+#  include "mozilla/WindowsDllBlocklistCommon.h"
 DLL_BLOCKLIST_DEFINITIONS_BEGIN
 DLL_BLOCKLIST_DEFINITIONS_END
 #endif
@@ -164,9 +190,18 @@ static bool CheckBlockInfo(const DllBlockInfo* aInfo, void* aBaseAddress,
                            uint64_t& aVersion) {
   aVersion = ALL_VERSIONS;
 
+<<<<<<< HEAD
   if (aInfo->flags &
       (DllBlockInfo::BLOCK_WIN8PLUS_ONLY | DllBlockInfo::BLOCK_WIN8_ONLY)) {
     RTL_OSVERSIONINFOW osv;
+||||||| merged common ancestors
+  if (aInfo->flags & (DllBlockInfo::BLOCK_WIN8PLUS_ONLY | DllBlockInfo::BLOCK_WIN8_ONLY)) {
+    RTL_OSVERSIONINFOW osv;
+=======
+  if (aInfo->flags &
+      (DllBlockInfo::BLOCK_WIN8PLUS_ONLY | DllBlockInfo::BLOCK_WIN8_ONLY)) {
+    RTL_OSVERSIONINFOW osv = {sizeof(osv)};
+>>>>>>> upstream-releases
     NTSTATUS ntStatus = ::RtlGetVersion(&osv);
     if (!NT_SUCCESS(ntStatus)) {
       // huh?
@@ -304,6 +339,7 @@ static NTSTATUS NTAPI patched_NtMapViewOfSection(
   return STATUS_ACCESS_DENIED;
 }
 
+<<<<<<< HEAD
 namespace mozilla {
 
 class MOZ_RAII AutoVirtualProtect final {
@@ -338,7 +374,49 @@ class MOZ_RAII AutoVirtualProtect final {
   AutoVirtualProtect(AutoVirtualProtect&&) = delete;
   AutoVirtualProtect& operator=(const AutoVirtualProtect&) = delete;
   AutoVirtualProtect& operator=(AutoVirtualProtect&&) = delete;
+||||||| merged common ancestors
+namespace mozilla {
 
+class MOZ_RAII AutoVirtualProtect final
+{
+public:
+  AutoVirtualProtect(void* aAddress, size_t aLength, DWORD aProtFlags,
+                     HANDLE aTargetProcess = nullptr)
+    : mAddress(aAddress)
+    , mLength(aLength)
+    , mTargetProcess(aTargetProcess)
+    , mPrevProt(0)
+  {
+    ::VirtualProtectEx(aTargetProcess, aAddress, aLength, aProtFlags,
+                       &mPrevProt);
+  }
+
+  ~AutoVirtualProtect()
+  {
+    if (!mPrevProt) {
+      return;
+    }
+
+    ::VirtualProtectEx(mTargetProcess, mAddress, mLength, mPrevProt,
+                       &mPrevProt);
+  }
+
+  explicit operator bool() const
+  {
+    return !!mPrevProt;
+  }
+
+  AutoVirtualProtect(const AutoVirtualProtect&) = delete;
+  AutoVirtualProtect(AutoVirtualProtect&&) = delete;
+  AutoVirtualProtect& operator=(const AutoVirtualProtect&) = delete;
+  AutoVirtualProtect& operator=(AutoVirtualProtect&&) = delete;
+=======
+#if defined(_MSC_VER)
+extern "C" IMAGE_DOS_HEADER __ImageBase;
+#endif
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   void* mAddress;
   size_t mLength;
@@ -346,8 +424,27 @@ class MOZ_RAII AutoVirtualProtect final {
   DWORD mPrevProt;
   WindowsError mError;
 };
+||||||| merged common ancestors
+private:
+  void*   mAddress;
+  size_t  mLength;
+  HANDLE  mTargetProcess;
+  DWORD   mPrevProt;
+};
+=======
+namespace mozilla {
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 LauncherVoidResult InitializeDllBlocklistOOP(HANDLE aChildProcess) {
+||||||| merged common ancestors
+bool
+InitializeDllBlocklistOOP(HANDLE aChildProcess)
+{
+=======
+LauncherVoidResult InitializeDllBlocklistOOP(const wchar_t* aFullImagePath,
+                                             HANDLE aChildProcess) {
+>>>>>>> upstream-releases
   mozilla::CrossProcessDllInterceptor intcpt(aChildProcess);
   intcpt.Init(L"ntdll.dll");
   bool ok = stub_NtMapViewOfSection.SetDetour(
@@ -366,32 +463,80 @@ LauncherVoidResult InitializeDllBlocklistOOP(HANDLE aChildProcess) {
   // linked into ntdll, so we obtain the IAT from our own executable and graft
   // it onto the child process's IAT, thus enabling the child process's hook to
   // safely make its ntdll calls.
+<<<<<<< HEAD
   mozilla::nt::PEHeaders ourExeImage(::GetModuleHandleW(nullptr));
   if (!ourExeImage) {
     return LAUNCHER_ERROR_FROM_WIN32(ERROR_BAD_EXE_FORMAT);
   }
+||||||| merged common ancestors
+  mozilla::nt::PEHeaders ourExeImage(::GetModuleHandleW(nullptr));
+  if (!ourExeImage) {
+    return false;
+  }
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   PIMAGE_IMPORT_DESCRIPTOR impDesc = ourExeImage.GetIATForModule("ntdll.dll");
   if (!impDesc) {
     return LAUNCHER_ERROR_FROM_WIN32(ERROR_INVALID_DATA);
   }
+||||||| merged common ancestors
+  PIMAGE_IMPORT_DESCRIPTOR impDesc = ourExeImage.GetIATForModule("ntdll.dll");
+  if (!impDesc) {
+    return false;
+  }
+=======
+  HMODULE ourModule;
+#if defined(_MSC_VER)
+  ourModule = reinterpret_cast<HMODULE>(&__ImageBase);
+#else
+  ourModule = ::GetModuleHandleW(nullptr);
+#endif  // defined(_MSC_VER)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // This is the pointer we need to write
   auto firstIatThunk =
       ourExeImage.template RVAToPtr<PIMAGE_THUNK_DATA>(impDesc->FirstThunk);
   if (!firstIatThunk) {
     return LAUNCHER_ERROR_FROM_WIN32(ERROR_INVALID_DATA);
+||||||| merged common ancestors
+  // This is the pointer we need to write
+  auto firstIatThunk = ourExeImage.template
+    RVAToPtr<PIMAGE_THUNK_DATA>(impDesc->FirstThunk);
+  if (!firstIatThunk) {
+    return false;
+=======
+  mozilla::nt::PEHeaders ourExeImage(ourModule);
+  if (!ourExeImage) {
+    return LAUNCHER_ERROR_FROM_WIN32(ERROR_BAD_EXE_FORMAT);
+>>>>>>> upstream-releases
   }
 
-  // Find the length by iterating through the table until we find a null entry
-  PIMAGE_THUNK_DATA curIatThunk = firstIatThunk;
-  while (mozilla::nt::PEHeaders::IsValid(curIatThunk)) {
-    ++curIatThunk;
+  // As part of our mitigation of binary tampering, copy our import directory
+  // from the original in our executable file.
+  LauncherVoidResult importDirRestored = RestoreImportDirectory(
+      aFullImagePath, ourExeImage, aChildProcess, ourModule);
+  if (importDirRestored.isErr()) {
+    return importDirRestored;
   }
 
+<<<<<<< HEAD
   ptrdiff_t iatLength =
       (curIatThunk - firstIatThunk) * sizeof(IMAGE_THUNK_DATA);
+||||||| merged common ancestors
+  ptrdiff_t iatLength = (curIatThunk - firstIatThunk) * sizeof(IMAGE_THUNK_DATA);
+=======
+  Maybe<nt::PEHeaders::IATThunks> ntdllThunks =
+      ourExeImage.GetIATThunksForModule("ntdll.dll");
+  if (!ntdllThunks) {
+    return LAUNCHER_ERROR_FROM_WIN32(ERROR_INVALID_DATA);
+  }
+>>>>>>> upstream-releases
 
+  PIMAGE_THUNK_DATA firstIatThunk = ntdllThunks.value().mFirstThunk;
+  SIZE_T iatLength = ntdllThunks.value().Length();
   SIZE_T bytesWritten;
 
   {  // Scope for prot
@@ -403,8 +548,16 @@ LauncherVoidResult InitializeDllBlocklistOOP(HANDLE aChildProcess) {
 
     ok = !!::WriteProcessMemory(aChildProcess, firstIatThunk, firstIatThunk,
                                 iatLength, &bytesWritten);
+<<<<<<< HEAD
     if (!ok) {
       return LAUNCHER_ERROR_FROM_LAST();
+||||||| merged common ancestors
+    if (!ok) {
+      return false;
+=======
+    if (!ok || bytesWritten != iatLength) {
+      return LAUNCHER_ERROR_FROM_LAST();
+>>>>>>> upstream-releases
     }
   }
 
@@ -412,11 +565,21 @@ LauncherVoidResult InitializeDllBlocklistOOP(HANDLE aChildProcess) {
   uint32_t newFlags = eDllBlocklistInitFlagWasBootstrapped;
   ok = !!::WriteProcessMemory(aChildProcess, &gBlocklistInitFlags, &newFlags,
                               sizeof(newFlags), &bytesWritten);
+<<<<<<< HEAD
   if (!ok) {
     return LAUNCHER_ERROR_FROM_LAST();
   }
 
   return Ok();
+||||||| merged common ancestors
+  return ok;
+=======
+  if (!ok || bytesWritten != sizeof(newFlags)) {
+    return LAUNCHER_ERROR_FROM_LAST();
+  }
+
+  return Ok();
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

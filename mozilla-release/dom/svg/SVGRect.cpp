@@ -5,7 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/SVGRect.h"
-#include "nsSVGElement.h"
+
+#include "mozilla/dom/SVGRectBinding.h"
+#include "mozilla/dom/SVGSVGElement.h"
+#include "SVGAnimatedViewBox.h"
+#include "nsWrapperCache.h"
 
 using namespace mozilla::gfx;
 
@@ -13,12 +17,24 @@ namespace mozilla {
 namespace dom {
 
 //----------------------------------------------------------------------
+<<<<<<< HEAD
 // implementation:
 
 SVGRect::SVGRect(nsIContent* aParent, float x, float y, float w, float h)
     : SVGIRect(), mParent(aParent), mX(x), mY(y), mWidth(w), mHeight(h) {}
 
 //----------------------------------------------------------------------
+||||||| merged common ancestors
+// implementation:
+
+SVGRect::SVGRect(nsIContent* aParent, float x, float y, float w, float h)
+  : SVGIRect(), mParent(aParent), mX(x), mY(y), mWidth(w), mHeight(h)
+{
+}
+
+//----------------------------------------------------------------------
+=======
+>>>>>>> upstream-releases
 // nsISupports methods:
 
 NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(SVGRect, mParent)
@@ -31,23 +47,173 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(SVGRect)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+//----------------------------------------------------------------------
+// implementation:
 
-////////////////////////////////////////////////////////////////////////
-// Exported creation functions:
+SVGRect::SVGRect(SVGSVGElement* aSVGElement)
+    : mVal(nullptr), mParent(aSVGElement), mType(CreatedValue) {
+  MOZ_ASSERT(mParent);
+  mRect = gfx::Rect(0, 0, 0, 0);
+}
 
+JSObject* SVGRect::WrapObject(JSContext* aCx,
+                              JS::Handle<JSObject*> aGivenProto) {
+  MOZ_ASSERT(mParent);
+  return SVGRect_Binding::Wrap(aCx, this, aGivenProto);
+}
+
+float SVGRect::X() {
+  switch (mType) {
+    case AnimValue:
+      static_cast<SVGElement*>(mParent->AsElement())->FlushAnimations();
+      return mVal->GetAnimValue().x;
+    case BaseValue:
+      return mVal->GetBaseValue().x;
+    default:
+      return mRect.x;
+  }
+}
+>>>>>>> upstream-releases
+
+float SVGRect::Y() {
+  switch (mType) {
+    case AnimValue:
+      static_cast<SVGElement*>(mParent->AsElement())->FlushAnimations();
+      return mVal->GetAnimValue().y;
+    case BaseValue:
+      return mVal->GetBaseValue().y;
+    default:
+      return mRect.y;
+  }
+}
+
+float SVGRect::Width() {
+  switch (mType) {
+    case AnimValue:
+      static_cast<SVGElement*>(mParent->AsElement())->FlushAnimations();
+      return mVal->GetAnimValue().width;
+    case BaseValue:
+      return mVal->GetBaseValue().width;
+    default:
+      return mRect.width;
+  }
+}
+
+<<<<<<< HEAD
 already_AddRefed<mozilla::dom::SVGRect> NS_NewSVGRect(nsIContent* aParent,
                                                       float aX, float aY,
                                                       float aWidth,
                                                       float aHeight) {
   RefPtr<mozilla::dom::SVGRect> rect =
       new mozilla::dom::SVGRect(aParent, aX, aY, aWidth, aHeight);
-
-  return rect.forget();
+||||||| merged common ancestors
+already_AddRefed<mozilla::dom::SVGRect>
+NS_NewSVGRect(nsIContent* aParent, float aX, float aY, float aWidth,
+              float aHeight)
+{
+  RefPtr<mozilla::dom::SVGRect> rect =
+    new mozilla::dom::SVGRect(aParent, aX, aY, aWidth, aHeight);
+=======
+float SVGRect::Height() {
+  switch (mType) {
+    case AnimValue:
+      static_cast<SVGElement*>(mParent->AsElement())->FlushAnimations();
+      return mVal->GetAnimValue().height;
+    case BaseValue:
+      return mVal->GetBaseValue().height;
+    default:
+      return mRect.height;
+  }
 }
 
+void SVGRect::SetX(float aX, ErrorResult& aRv) {
+  switch (mType) {
+    case AnimValue:
+      aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+      return;
+    case BaseValue: {
+      SVGViewBox rect = mVal->GetBaseValue();
+      rect.x = aX;
+      mVal->SetBaseValue(rect, static_cast<SVGElement*>(mParent->AsElement()));
+      return;
+    }
+    default:
+      mRect.x = aX;
+  }
+}
+
+void SVGRect::SetY(float aY, ErrorResult& aRv) {
+  switch (mType) {
+    case AnimValue:
+      aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+      return;
+    case BaseValue: {
+      SVGViewBox rect = mVal->GetBaseValue();
+      rect.y = aY;
+      mVal->SetBaseValue(rect, static_cast<SVGElement*>(mParent->AsElement()));
+      return;
+    }
+    default:
+      mRect.y = aY;
+  }
+}
+>>>>>>> upstream-releases
+
+void SVGRect::SetWidth(float aWidth, ErrorResult& aRv) {
+  switch (mType) {
+    case AnimValue:
+      aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+      return;
+    case BaseValue: {
+      SVGViewBox rect = mVal->GetBaseValue();
+      rect.width = aWidth;
+      mVal->SetBaseValue(rect, static_cast<SVGElement*>(mParent->AsElement()));
+      return;
+    }
+    default:
+      mRect.width = aWidth;
+  }
+}
+
+<<<<<<< HEAD
 already_AddRefed<mozilla::dom::SVGRect> NS_NewSVGRect(nsIContent* aParent,
                                                       const Rect& aRect) {
   return NS_NewSVGRect(aParent, aRect.x, aRect.y, aRect.width, aRect.height);
+||||||| merged common ancestors
+already_AddRefed<mozilla::dom::SVGRect>
+NS_NewSVGRect(nsIContent* aParent, const Rect& aRect)
+{
+  return NS_NewSVGRect(aParent, aRect.x, aRect.y,
+                       aRect.width, aRect.height);
+=======
+void SVGRect::SetHeight(float aHeight, ErrorResult& aRv) {
+  switch (mType) {
+    case AnimValue:
+      aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+      return;
+    case BaseValue: {
+      SVGViewBox rect = mVal->GetBaseValue();
+      rect.height = aHeight;
+      mVal->SetBaseValue(rect, static_cast<SVGElement*>(mParent->AsElement()));
+      return;
+    }
+    default:
+      mRect.height = aHeight;
+  }
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

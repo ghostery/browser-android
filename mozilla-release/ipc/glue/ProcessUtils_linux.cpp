@@ -14,7 +14,14 @@ namespace mozilla {
 
 namespace ipc {
 
+<<<<<<< HEAD
 void SetThisProcessName(const char *aName) {
+||||||| merged common ancestors
+void SetThisProcessName(const char *aName)
+{
+=======
+void SetThisProcessName(const char* aName) {
+>>>>>>> upstream-releases
   prctl(PR_SET_NAME, (unsigned long)aName, 0uL, 0uL, 0uL);
 }
 

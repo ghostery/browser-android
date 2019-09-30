@@ -41,7 +41,13 @@
 */
 
 #define APPSTARTUP_CATEGORY "app-startup"
+<<<<<<< HEAD
 #define APPSTARTUP_TOPIC "app-startup"
+||||||| merged common ancestors
+#define APPSTARTUP_TOPIC    "app-startup"
+
+=======
+>>>>>>> upstream-releases
 
 /*
  Please note that there's not a new interface in this file.

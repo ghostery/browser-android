@@ -10,17 +10,21 @@
 // Test that the markup view is correctly updated to show those items if the custom
 // element definition happens after opening the inspector.
 
-/* import-globals-from ../../../debugger/new/test/mochitest/helpers.js */
+/* import-globals-from ../../../debugger/test/mochitest/helpers.js */
 Services.scriptloader.loadSubScript(
-  "chrome://mochitests/content/browser/devtools/client/debugger/new/test/mochitest/helpers.js",
-  this);
+  "chrome://mochitests/content/browser/devtools/client/debugger/test/mochitest/helpers.js",
+  this
+);
 
-/* import-globals-from ../../../debugger/new/test/mochitest/helpers/context.js */
+/* import-globals-from ../../../debugger/test/mochitest/helpers/context.js */
 Services.scriptloader.loadSubScript(
-  "chrome://mochitests/content/browser/devtools/client/debugger/new/test/mochitest/helpers/context.js",
-  this);
+  "chrome://mochitests/content/browser/devtools/client/debugger/test/mochitest/helpers/context.js",
+  this
+);
 
-const TEST_URL = `data:text/html;charset=utf-8,` + encodeURIComponent(`
+const TEST_URL =
+  `data:text/html;charset=utf-8,` +
+  encodeURIComponent(`
 <test-component></test-component>
 <other-component>some-content</other-component>
 
@@ -48,7 +52,15 @@ const TEST_URL = `data:text/html;charset=utf-8,` + encodeURIComponent(`
 </script>`);
 
 add_task(async function() {
+<<<<<<< HEAD
   const {inspector, toolbox} = await openInspectorForURL(TEST_URL);
+||||||| merged common ancestors
+  await enableWebComponents();
+
+  const {inspector, toolbox} = await openInspectorForURL(TEST_URL);
+=======
+  const { inspector, toolbox } = await openInspectorForURL(TEST_URL);
+>>>>>>> upstream-releases
 
   // Test with an element to which we attach a shadow.
   await runTest(inspector, toolbox, "test-component", "attachTestComponent");
@@ -63,17 +75,32 @@ async function runTest(inspector, toolbox, selector, contentMethod) {
   await selectNode(selector, inspector);
   const testFront = await getNodeFront(selector, inspector);
   const testContainer = inspector.markup.getContainer(testFront);
+<<<<<<< HEAD
   let customBadge = testContainer.elt.querySelector(
     ".inspector-badge.interactive[data-custom]");
+||||||| merged common ancestors
+  let customBadge = testContainer.elt.querySelector(".markup-badge[data-custom]");
+=======
+  let customBadge = testContainer.elt.querySelector(
+    ".inspector-badge.interactive[data-custom]"
+  );
+>>>>>>> upstream-releases
 
   // Verify that the "custom" badge and menu item are hidden.
   ok(!customBadge, "[custom] badge is hidden");
   let menuItem = getMenuItem("node-menu-jumptodefinition", inspector);
-  ok(!menuItem, selector + ": The menu item was not found in the contextual menu");
+  ok(
+    !menuItem,
+    selector + ": The menu item was not found in the contextual menu"
+  );
 
-  info("Call the content method that should attach a custom element definition");
+  info(
+    "Call the content method that should attach a custom element definition"
+  );
   const mutated = waitForMutation(inspector, "customElementDefined");
-  ContentTask.spawn(gBrowser.selectedBrowser, { contentMethod }, function(args) {
+  ContentTask.spawn(gBrowser.selectedBrowser, { contentMethod }, function(
+    args
+  ) {
     content.wrappedJSObject[args.contentMethod]();
   });
   await mutated;
@@ -81,8 +108,16 @@ async function runTest(inspector, toolbox, selector, contentMethod) {
   // Test element should now have a custom element definition.
 
   // Check that the badge opens the debugger.
+<<<<<<< HEAD
   customBadge = testContainer.elt.querySelector(
     ".inspector-badge.interactive[data-custom]");
+||||||| merged common ancestors
+  customBadge = testContainer.elt.querySelector(".markup-badge[data-custom]");
+=======
+  customBadge = testContainer.elt.querySelector(
+    ".inspector-badge.interactive[data-custom]"
+  );
+>>>>>>> upstream-releases
   ok(customBadge, "[custom] badge is visible");
 
   info("Click on the `custom` badge and verify that the debugger opens.");
@@ -123,8 +158,4 @@ async function waitUntilDebuggerReady(debuggerContext) {
   // We have to wait until the debugger has fully loaded the source otherwise
   // we will get unhandled promise rejections.
   await waitForLoadedSource(debuggerContext, "data:");
-
-  // Have to wait until https://github.com/devtools-html/debugger.html/pull/6189
-  // is released to avoid unhandled promise rejections.
-  await waitForTime(1000);
 }

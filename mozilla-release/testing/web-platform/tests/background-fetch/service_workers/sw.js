@@ -8,10 +8,11 @@ async function getFetchResult(record) {
   return {
     url: response.url,
     status: response.status,
-    text: await response.text(),
+    text: await response.text().catch(() => 'error'),
   };
 }
 
+<<<<<<< HEAD
 function handleBackgroundFetchEvent(event) {
   let matchFunction = null;
   switch (event.registration.id) {
@@ -28,6 +29,34 @@ function handleBackgroundFetchEvent(event) {
       break;
   }
 
+||||||| merged common ancestors
+function handleBackgroundFetchUpdateEvent(event) {
+=======
+function handleBackgroundFetchEvent(event) {
+  let matchFunction = null;
+
+  switch (event.registration.id) {
+    case 'matchexistingrequest':
+      matchFunction = event.registration.match.bind(
+          event.registration, '/background-fetch/resources/feature-name.txt');
+      break;
+    case 'matchexistingrequesttwice':
+      matchFunction = (async () => {
+        const match1 = await event.registration.match('/background-fetch/resources/feature-name.txt');
+        const match2 = await event.registration.match('/background-fetch/resources/feature-name.txt');
+        return [match1, match2];
+    }).bind(event.registration);
+      break;
+    case 'matchmissingrequest':
+      matchFunction = event.registration.match.bind(
+          event.registration, '/background-fetch/resources/missing.txt');
+      break;
+    default:
+      matchFunction = event.registration.matchAll.bind(event.registration);
+      break;
+  }
+
+>>>>>>> upstream-releases
   event.waitUntil(
     matchFunction()
       // Format `match(All)?` function results.
@@ -38,8 +67,15 @@ function handleBackgroundFetchEvent(event) {
       })
       // Extract responses.
       .then(records =>
+<<<<<<< HEAD
             Promise.all(records.map(record => getFetchResult(record))))
       // Clone registration and send message.
+||||||| merged common ancestors
+            Promise.all(records.map(record => getFetchResult(record))))
+=======
+        Promise.all(records.map(record => getFetchResult(record))))
+      // Clone registration and send message.
+>>>>>>> upstream-releases
       .then(results => {
         const registrationCopy = cloneRegistration(event.registration);
         sendMessageToDocument(

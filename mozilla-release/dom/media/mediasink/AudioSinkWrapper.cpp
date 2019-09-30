@@ -4,15 +4,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "AudioSink.h"
 #include "AudioSinkWrapper.h"
-#include "nsPrintfCString.h"
+#include "AudioSink.h"
 #include "VideoUtils.h"
+#include "nsPrintfCString.h"
 
 namespace mozilla {
-namespace media {
+
+<<<<<<< HEAD
+AudioSinkWrapper::~AudioSinkWrapper() {}
+||||||| merged common ancestors
+AudioSinkWrapper::~AudioSinkWrapper()
+{
+}
+=======
+using media::TimeUnit;
 
 AudioSinkWrapper::~AudioSinkWrapper() {}
+>>>>>>> upstream-releases
 
 void AudioSinkWrapper::Shutdown() {
   AssertOwnerThread();
@@ -35,11 +44,19 @@ void AudioSinkWrapper::SetPlaybackParams(const PlaybackParams& aParams) {
   mParams = aParams;
 }
 
+<<<<<<< HEAD
 RefPtr<GenericPromise> AudioSinkWrapper::OnEnded(TrackType aType) {
+||||||| merged common ancestors
+RefPtr<GenericPromise>
+AudioSinkWrapper::OnEnded(TrackType aType)
+{
+=======
+RefPtr<MediaSink::EndedPromise> AudioSinkWrapper::OnEnded(TrackType aType) {
+>>>>>>> upstream-releases
   AssertOwnerThread();
   MOZ_ASSERT(mIsStarted, "Must be called after playback starts.");
   if (aType == TrackInfo::kAudioTrack) {
-    return mEndPromise;
+    return mEndedPromise;
   }
   return nullptr;
 }
@@ -166,6 +183,7 @@ nsresult AudioSinkWrapper::Start(const TimeUnit& aStartTime,
   nsresult rv = NS_OK;
   if (!mAudioEnded) {
     mAudioSink.reset(mCreator->Create());
+<<<<<<< HEAD
     rv = mAudioSink->Init(mParams, mEndPromise);
     mEndPromise
         ->Then(mOwnerThread.get(), __func__, this,
@@ -175,6 +193,25 @@ nsresult AudioSinkWrapper::Start(const TimeUnit& aStartTime,
     if (aInfo.HasAudio()) {
       mEndPromise = GenericPromise::CreateAndResolve(true, __func__);
     }
+||||||| merged common ancestors
+    rv = mAudioSink->Init(mParams, mEndPromise);
+
+    mEndPromise->Then(
+      mOwnerThread.get(), __func__, this,
+      &AudioSinkWrapper::OnAudioEnded,
+      &AudioSinkWrapper::OnAudioEnded
+    )->Track(mAudioSinkPromise);
+=======
+    rv = mAudioSink->Init(mParams, mEndedPromise);
+    mEndedPromise
+        ->Then(mOwnerThread.get(), __func__, this,
+               &AudioSinkWrapper::OnAudioEnded, &AudioSinkWrapper::OnAudioEnded)
+        ->Track(mAudioSinkEndedPromise);
+  } else {
+    if (aInfo.HasAudio()) {
+      mEndedPromise = MediaSink::EndedPromise::CreateAndResolve(true, __func__);
+    }
+>>>>>>> upstream-releases
   }
   return rv;
 }
@@ -194,10 +231,10 @@ void AudioSinkWrapper::Stop() {
   mAudioEnded = true;
 
   if (mAudioSink) {
-    mAudioSinkPromise.DisconnectIfExists();
+    mAudioSinkEndedPromise.DisconnectIfExists();
     mAudioSink->Shutdown();
     mAudioSink = nullptr;
-    mEndPromise = nullptr;
+    mEndedPromise = nullptr;
   }
 }
 
@@ -213,7 +250,7 @@ bool AudioSinkWrapper::IsPlaying() const {
 
 void AudioSinkWrapper::OnAudioEnded() {
   AssertOwnerThread();
-  mAudioSinkPromise.Complete();
+  mAudioSinkEndedPromise.Complete();
   mPlayDuration = GetPosition();
   if (!mPlayStartTime.IsNull()) {
     mPlayStartTime = TimeStamp::Now();
@@ -221,16 +258,43 @@ void AudioSinkWrapper::OnAudioEnded() {
   mAudioEnded = true;
 }
 
+<<<<<<< HEAD
 nsCString AudioSinkWrapper::GetDebugInfo() {
+||||||| merged common ancestors
+nsCString
+AudioSinkWrapper::GetDebugInfo()
+{
+=======
+void AudioSinkWrapper::GetDebugInfo(dom::MediaSinkDebugInfo& aInfo) {
+>>>>>>> upstream-releases
   AssertOwnerThread();
+<<<<<<< HEAD
   auto str = nsPrintfCString(
       "AudioSinkWrapper: IsStarted=%d IsPlaying=%d AudioEnded=%d", IsStarted(),
       IsPlaying(), mAudioEnded);
+||||||| merged common ancestors
+  auto str =
+    nsPrintfCString("AudioSinkWrapper: IsStarted=%d IsPlaying=%d AudioEnded=%d",
+                    IsStarted(),
+                    IsPlaying(),
+                    mAudioEnded);
+=======
+  aInfo.mAudioSinkWrapper.mIsPlaying = IsPlaying();
+  aInfo.mAudioSinkWrapper.mIsStarted = IsStarted();
+  aInfo.mAudioSinkWrapper.mAudioEnded = mAudioEnded;
+>>>>>>> upstream-releases
   if (mAudioSink) {
-    AppendStringIfNotEmpty(str, mAudioSink->GetDebugInfo());
+    mAudioSink->GetDebugInfo(aInfo);
   }
-  return std::move(str);
 }
 
+<<<<<<< HEAD
 }  // namespace media
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace media
+} // namespace mozilla
+
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases

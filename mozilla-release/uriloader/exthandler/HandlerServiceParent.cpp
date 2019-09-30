@@ -1,3 +1,4 @@
+#include "mozilla/ipc/ProtocolUtils.h"
 #include "mozilla/Logging.h"
 #include "HandlerServiceParent.h"
 #include "nsIHandlerService.h"
@@ -5,7 +6,7 @@
 #include "ContentHandlerService.h"
 #include "nsStringEnumerator.h"
 #ifdef MOZ_WIDGET_GTK
-#include "unix/nsGNOMERegistry.h"
+#  include "unix/nsGNOMERegistry.h"
 #endif
 
 using mozilla::dom::ContentHandlerService;
@@ -238,8 +239,49 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvFillHandlerInfo(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
     const HandlerInfo& aHandlerInfo, bool* exists) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+HandlerServiceParent::RecvExists(const HandlerInfo& aHandlerInfo,
+                                 bool* exists)
+{
+=======
+mozilla::ipc::IPCResult HandlerServiceParent::RecvGetMIMEInfoFromOS(
+    const nsCString& aMIMEType, const nsCString& aExtension, nsresult* aRv,
+    HandlerInfo* aHandlerInfoData, bool* aFound) {
+  *aFound = false;
+  if (aMIMEType.Length() > MAX_MIMETYPE_LENGTH ||
+      aExtension.Length() > MAX_EXT_LENGTH) {
+    *aRv = NS_OK;
+    return IPC_OK();
+  }
+
+  nsCOMPtr<nsIMIMEService> mimeService =
+      do_GetService(NS_MIMESERVICE_CONTRACTID, aRv);
+  if (NS_WARN_IF(NS_FAILED(*aRv))) {
+    return IPC_OK();
+  }
+
+  nsCOMPtr<nsIMIMEInfo> mimeInfo;
+  *aRv = mimeService->GetMIMEInfoFromOS(aMIMEType, aExtension, aFound,
+                                        getter_AddRefs(mimeInfo));
+  if (NS_WARN_IF(NS_FAILED(*aRv))) {
+    return IPC_OK();
+  }
+
+  if (mimeInfo) {
+    ContentHandlerService::nsIHandlerInfoToHandlerInfo(mimeInfo,
+                                                       aHandlerInfoData);
+  }
+
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
+    const HandlerInfo& aHandlerInfo, bool* exists) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIHandlerInfo> info(WrapHandlerInfo(aHandlerInfo));
   nsCOMPtr<nsIHandlerService> handlerSvc =
       do_GetService(NS_HANDLERSERVICE_CONTRACTID);
@@ -247,8 +289,22 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvExists(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocol(
     const nsCString& aProtocolScheme, bool* aHandlerExists) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+HandlerServiceParent::RecvExistsForProtocol(const nsCString& aProtocolScheme,
+                                            bool* aHandlerExists)
+{
+=======
+mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocolOS(
+    const nsCString& aProtocolScheme, bool* aHandlerExists) {
+  if (aProtocolScheme.Length() > MAX_SCHEME_LENGTH) {
+    *aHandlerExists = false;
+    return IPC_OK();
+  }
+>>>>>>> upstream-releases
 #ifdef MOZ_WIDGET_GTK
   // Check the GNOME registry for a protocol handler
   *aHandlerExists = nsGNOMERegistry::HandlerExists(aProtocolScheme.get());
@@ -258,12 +314,92 @@ mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocol(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult HandlerServiceParent::RecvGetTypeFromExtension(
     const nsCString& aFileExtension, nsCString* type) {
   nsCOMPtr<nsIHandlerService> handlerSvc =
       do_GetService(NS_HANDLERSERVICE_CONTRACTID);
   handlerSvc->GetTypeFromExtension(aFileExtension, *type);
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+HandlerServiceParent::RecvGetTypeFromExtension(const nsCString& aFileExtension,
+                                               nsCString* type)
+{
+  nsCOMPtr<nsIHandlerService> handlerSvc = do_GetService(NS_HANDLERSERVICE_CONTRACTID);
+  handlerSvc->GetTypeFromExtension(aFileExtension, *type);
+=======
+/*
+ * Check if a handler exists for the provided protocol. Check the datastore
+ * first and then fallback to checking the OS for a handler.
+ */
+mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocol(
+    const nsCString& aProtocolScheme, bool* aHandlerExists) {
+  if (aProtocolScheme.Length() > MAX_SCHEME_LENGTH) {
+    *aHandlerExists = false;
+    return IPC_OK();
+  }
+#if defined(XP_MACOSX)
+  // Check the datastore and fallback to an OS check.
+  // ExternalProcotolHandlerExists() does the fallback.
+  nsresult rv;
+  nsCOMPtr<nsIExternalProtocolService> protoSvc =
+      do_GetService(NS_EXTERNALPROTOCOLSERVICE_CONTRACTID, &rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    *aHandlerExists = false;
+    return IPC_OK();
+  }
+  rv = protoSvc->ExternalProtocolHandlerExists(aProtocolScheme.get(),
+                                               aHandlerExists);
+
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    *aHandlerExists = false;
+  }
+#else
+  MOZ_RELEASE_ASSERT(false, "No implementation on this platform.");
+  *aHandlerExists = false;
+#endif
+>>>>>>> upstream-releases
+  return IPC_OK();
+}
+
+<<<<<<< HEAD
+void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy) {}
+||||||| merged common ancestors
+void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy)
+{
+}
+=======
+mozilla::ipc::IPCResult HandlerServiceParent::RecvGetTypeFromExtension(
+    const nsCString& aFileExtension, nsCString* type) {
+  if (aFileExtension.Length() > MAX_EXT_LENGTH) {
+    return IPC_OK();
+  }
+
+  nsresult rv;
+  nsCOMPtr<nsIHandlerService> handlerSvc =
+      do_GetService(NS_HANDLERSERVICE_CONTRACTID, &rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return IPC_OK();
+  }
+
+  rv = handlerSvc->GetTypeFromExtension(aFileExtension, *type);
+  mozilla::Unused << NS_WARN_IF(NS_FAILED(rv));
+
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult HandlerServiceParent::RecvGetApplicationDescription(
+    const nsCString& aScheme, nsresult* aRv, nsString* aDescription) {
+  if (aScheme.Length() > MAX_SCHEME_LENGTH) {
+    *aRv = NS_ERROR_NOT_AVAILABLE;
+    return IPC_OK();
+  }
+  nsCOMPtr<nsIExternalProtocolService> protoSvc =
+      do_GetService(NS_EXTERNALPROTOCOLSERVICE_CONTRACTID);
+  NS_ASSERTION(protoSvc, "No Helper App Service!");
+  *aRv = protoSvc->GetApplicationDescription(aScheme, *aDescription);
   return IPC_OK();
 }
 
 void HandlerServiceParent::ActorDestroy(ActorDestroyReason aWhy) {}
+>>>>>>> upstream-releases

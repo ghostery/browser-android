@@ -18,7 +18,7 @@
 #include "nsWrapperCache.h"
 
 struct JSClass;
-class nsPIDOMWindowInner;
+class nsIGlobalObject;
 
 namespace mozilla {
 
@@ -91,6 +91,7 @@ class IDBObjectStore final : public nsISupports, public nsWrapperCache {
     bool Clone(JSContext* aCx);
   };
 
+<<<<<<< HEAD
   static already_AddRefed<IDBObjectStore> Create(IDBTransaction* aTransaction,
                                                  const ObjectStoreSpec& aSpec);
 
@@ -103,6 +104,62 @@ class IDBObjectStore final : public nsISupports, public nsWrapperCache {
       int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
       const nsCString& aLocale, StructuredCloneReadInfo& aCloneInfo,
       nsTArray<IndexUpdateInfo>& aUpdateInfoArray);
+||||||| merged common ancestors
+  static already_AddRefed<IDBObjectStore>
+  Create(IDBTransaction* aTransaction, const ObjectStoreSpec& aSpec);
+
+  static nsresult
+  AppendIndexUpdateInfo(int64_t aIndexID,
+                        const KeyPath& aKeyPath,
+                        bool aUnique,
+                        bool aMultiEntry,
+                        const nsCString& aLocale,
+                        JSContext* aCx,
+                        JS::Handle<JS::Value> aObject,
+                        nsTArray<IndexUpdateInfo>& aUpdateInfoArray);
+
+  static nsresult
+  DeserializeIndexValueToUpdateInfos(int64_t aIndexID,
+                                     const KeyPath& aKeyPath,
+                                     bool aUnique,
+                                     bool aMultiEntry,
+                                     const nsCString& aLocale,
+                                     StructuredCloneReadInfo& aCloneInfo,
+                                     nsTArray<IndexUpdateInfo>& aUpdateInfoArray);
+
+  static void
+  ClearCloneReadInfo(StructuredCloneReadInfo& aReadInfo);
+
+  static bool
+  DeserializeValue(JSContext* aCx,
+                   StructuredCloneReadInfo& aCloneReadInfo,
+                   JS::MutableHandle<JS::Value> aValue);
+
+  static nsresult
+  DeserializeUpgradeValueToFileIds(StructuredCloneReadInfo& aCloneReadInfo,
+                                   nsAString& aFileIds);
+
+  static const JSClass*
+  DummyPropClass()
+  {
+    return &sDummyPropJSClass;
+  }
+=======
+  static already_AddRefed<IDBObjectStore> Create(IDBTransaction* aTransaction,
+                                                 const ObjectStoreSpec& aSpec);
+
+  static void AppendIndexUpdateInfo(int64_t aIndexID, const KeyPath& aKeyPath,
+                                    bool aUnique, bool aMultiEntry,
+                                    const nsCString& aLocale, JSContext* aCx,
+                                    JS::Handle<JS::Value> aVal,
+                                    nsTArray<IndexUpdateInfo>& aUpdateInfoArray,
+                                    ErrorResult& aRv);
+
+  static void DeserializeIndexValueToUpdateInfos(
+      int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
+      const nsCString& aLocale, StructuredCloneReadInfo& aCloneReadInfo,
+      nsTArray<IndexUpdateInfo>& aUpdateInfoArray, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   static void ClearCloneReadInfo(StructuredCloneReadInfo& aReadInfo);
 
@@ -137,7 +194,14 @@ class IDBObjectStore final : public nsISupports, public nsWrapperCache {
 
   bool HasValidKeyPath() const;
 
+<<<<<<< HEAD
   nsPIDOMWindowInner* GetParentObject() const;
+||||||| merged common ancestors
+  nsPIDOMWindowInner*
+  GetParentObject() const;
+=======
+  nsIGlobalObject* GetParentObject() const;
+>>>>>>> upstream-releases
 
   void GetName(nsString& aName) const {
     AssertIsOnOwningThread();
@@ -287,6 +351,7 @@ class IDBObjectStore final : public nsISupports, public nsWrapperCache {
 
   ~IDBObjectStore();
 
+<<<<<<< HEAD
   nsresult GetAddInfo(JSContext* aCx, ValueWrapper& aValueWrapper,
                       JS::Handle<JS::Value> aKeyVal,
                       StructuredCloneWriteInfo& aCloneWriteInfo, Key& aKey,
@@ -317,6 +382,81 @@ class IDBObjectStore final : public nsISupports, public nsWrapperCache {
                                                   JS::Handle<JS::Value> aRange,
                                                   IDBCursorDirection aDirection,
                                                   ErrorResult& aRv);
+||||||| merged common ancestors
+  nsresult
+  GetAddInfo(JSContext* aCx,
+             ValueWrapper& aValueWrapper,
+             JS::Handle<JS::Value> aKeyVal,
+             StructuredCloneWriteInfo& aCloneWriteInfo,
+             Key& aKey,
+             nsTArray<IndexUpdateInfo>& aUpdateInfoArray);
+
+  already_AddRefed<IDBRequest>
+  AddOrPut(JSContext* aCx,
+           ValueWrapper& aValueWrapper,
+           JS::Handle<JS::Value> aKey,
+           bool aOverwrite,
+           bool aFromCursor,
+           ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest>
+  DeleteInternal(JSContext* aCx,
+                 JS::Handle<JS::Value> aKey,
+                 bool aFromCursor,
+                 ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest>
+  GetInternal(bool aKeyOnly,
+              JSContext* aCx,
+              JS::Handle<JS::Value> aKey,
+              ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest>
+  GetAllInternal(bool aKeysOnly,
+                 JSContext* aCx,
+                 JS::Handle<JS::Value> aKey,
+                 const Optional<uint32_t>& aLimit,
+                 ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest>
+  OpenCursorInternal(bool aKeysOnly,
+                     JSContext* aCx,
+                     JS::Handle<JS::Value> aRange,
+                     IDBCursorDirection aDirection,
+                     ErrorResult& aRv);
+=======
+  void GetAddInfo(JSContext* aCx, ValueWrapper& aValueWrapper,
+                  JS::Handle<JS::Value> aKeyVal,
+                  StructuredCloneWriteInfo& aCloneWriteInfo, Key& aKey,
+                  nsTArray<IndexUpdateInfo>& aUpdateInfoArray,
+                  ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest> AddOrPut(JSContext* aCx,
+                                        ValueWrapper& aValueWrapper,
+                                        JS::Handle<JS::Value> aKey,
+                                        bool aOverwrite, bool aFromCursor,
+                                        ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest> DeleteInternal(JSContext* aCx,
+                                              JS::Handle<JS::Value> aKey,
+                                              bool aFromCursor,
+                                              ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest> GetInternal(bool aKeyOnly, JSContext* aCx,
+                                           JS::Handle<JS::Value> aKey,
+                                           ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest> GetAllInternal(bool aKeysOnly, JSContext* aCx,
+                                              JS::Handle<JS::Value> aKey,
+                                              const Optional<uint32_t>& aLimit,
+                                              ErrorResult& aRv);
+
+  already_AddRefed<IDBRequest> OpenCursorInternal(bool aKeysOnly,
+                                                  JSContext* aCx,
+                                                  JS::Handle<JS::Value> aRange,
+                                                  IDBCursorDirection aDirection,
+                                                  ErrorResult& aRv);
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

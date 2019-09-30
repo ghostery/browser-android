@@ -23,6 +23,7 @@
 #include "mozilla/Telemetry.h"
 #include "mozilla/Unused.h"
 
+<<<<<<< HEAD
 #define kMinUnwrittenChanges 300
 #define kMinDumpInterval 20000  // in milliseconds
 #define kMaxBufSize 16384
@@ -30,6 +31,25 @@
 #define kUpdateIndexStartDelay 50000  // in milliseconds
 
 #define INDEX_NAME "index"
+||||||| merged common ancestors
+
+#define kMinUnwrittenChanges   300
+#define kMinDumpInterval       20000 // in milliseconds
+#define kMaxBufSize            16384
+#define kIndexVersion          0x00000005
+#define kUpdateIndexStartDelay 50000 // in milliseconds
+
+#define INDEX_NAME      "index"
+=======
+#define kMinUnwrittenChanges 300
+#define kMinDumpInterval 20000  // in milliseconds
+#define kMaxBufSize 16384
+#define kIndexVersion 0x00000008
+#define kUpdateIndexStartDelay 50000  // in milliseconds
+#define kTelemetryReportBytesLimit (2U * 1024U * 1024U * 1024U)  // 2GB
+
+#define INDEX_NAME "index"
+>>>>>>> upstream-releases
 #define TEMP_INDEX_NAME "index.tmp"
 #define JOURNAL_NAME "index.log"
 
@@ -38,9 +58,20 @@ namespace net {
 
 namespace {
 
+<<<<<<< HEAD
 class FrecencyComparator {
  public:
   bool Equals(CacheIndexRecord *a, CacheIndexRecord *b) const {
+||||||| merged common ancestors
+class FrecencyComparator
+{
+public:
+  bool Equals(CacheIndexRecord* a, CacheIndexRecord* b) const {
+=======
+class FrecencyComparator {
+ public:
+  bool Equals(CacheIndexRecord* a, CacheIndexRecord* b) const {
+>>>>>>> upstream-releases
     if (!a || !b) {
       return false;
     }
@@ -74,6 +105,7 @@ class FrecencyComparator {
  * This helper class is responsible for keeping CacheIndex::mIndexStats and
  * CacheIndex::mFrecencyArray up to date.
  */
+<<<<<<< HEAD
 class CacheIndexEntryAutoManage {
  public:
   CacheIndexEntryAutoManage(const SHA1Sum::Hash *aHash, CacheIndex *aIndex)
@@ -82,10 +114,31 @@ class CacheIndexEntryAutoManage {
         mOldFrecency(0),
         mDoNotSearchInIndex(false),
         mDoNotSearchInUpdates(false) {
+||||||| merged common ancestors
+class CacheIndexEntryAutoManage
+{
+public:
+  CacheIndexEntryAutoManage(const SHA1Sum::Hash *aHash, CacheIndex *aIndex)
+    : mIndex(aIndex)
+    , mOldRecord(nullptr)
+    , mOldFrecency(0)
+    , mDoNotSearchInIndex(false)
+    , mDoNotSearchInUpdates(false)
+  {
+=======
+class CacheIndexEntryAutoManage {
+ public:
+  CacheIndexEntryAutoManage(const SHA1Sum::Hash* aHash, CacheIndex* aIndex)
+      : mIndex(aIndex),
+        mOldRecord(nullptr),
+        mOldFrecency(0),
+        mDoNotSearchInIndex(false),
+        mDoNotSearchInUpdates(false) {
+>>>>>>> upstream-releases
     CacheIndex::sLock.AssertCurrentThreadOwns();
 
     mHash = aHash;
-    const CacheIndexEntry *entry = FindEntry();
+    const CacheIndexEntry* entry = FindEntry();
     mIndex->mIndexStats.BeforeChange(entry);
     if (entry && entry->IsInitialized() && !entry->IsRemoved()) {
       mOldRecord = entry->mRec;
@@ -96,7 +149,7 @@ class CacheIndexEntryAutoManage {
   ~CacheIndexEntryAutoManage() {
     CacheIndex::sLock.AssertCurrentThreadOwns();
 
-    const CacheIndexEntry *entry = FindEntry();
+    const CacheIndexEntry* entry = FindEntry();
     mIndex->mIndexStats.AfterChange(entry);
     if (!entry || !entry->IsInitialized() || entry->IsRemoved()) {
       entry = nullptr;
@@ -137,9 +190,20 @@ class CacheIndexEntryAutoManage {
   void DoNotSearchInIndex() { mDoNotSearchInIndex = true; }
   void DoNotSearchInUpdates() { mDoNotSearchInUpdates = true; }
 
+<<<<<<< HEAD
  private:
   const CacheIndexEntry *FindEntry() {
     const CacheIndexEntry *entry = nullptr;
+||||||| merged common ancestors
+private:
+  const CacheIndexEntry * FindEntry()
+  {
+    const CacheIndexEntry *entry = nullptr;
+=======
+ private:
+  const CacheIndexEntry* FindEntry() {
+    const CacheIndexEntry* entry = nullptr;
+>>>>>>> upstream-releases
 
     switch (mIndex->mState) {
       case CacheIndex::READING:
@@ -164,20 +228,42 @@ class CacheIndexEntryAutoManage {
     return entry;
   }
 
-  const SHA1Sum::Hash *mHash;
+  const SHA1Sum::Hash* mHash;
   RefPtr<CacheIndex> mIndex;
+<<<<<<< HEAD
   CacheIndexRecord *mOldRecord;
   uint32_t mOldFrecency;
   bool mDoNotSearchInIndex;
   bool mDoNotSearchInUpdates;
+||||||| merged common ancestors
+  CacheIndexRecord    *mOldRecord;
+  uint32_t             mOldFrecency;
+  bool                 mDoNotSearchInIndex;
+  bool                 mDoNotSearchInUpdates;
+=======
+  CacheIndexRecord* mOldRecord;
+  uint32_t mOldFrecency;
+  bool mDoNotSearchInIndex;
+  bool mDoNotSearchInUpdates;
+>>>>>>> upstream-releases
 };
 
 class FileOpenHelper final : public CacheFileIOListener {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
+<<<<<<< HEAD
   explicit FileOpenHelper(CacheIndex *aIndex)
       : mIndex(aIndex), mCanceled(false) {}
+||||||| merged common ancestors
+  explicit FileOpenHelper(CacheIndex* aIndex)
+    : mIndex(aIndex)
+    , mCanceled(false)
+  {}
+=======
+  explicit FileOpenHelper(CacheIndex* aIndex)
+      : mIndex(aIndex), mCanceled(false) {}
+>>>>>>> upstream-releases
 
   void Cancel() {
     CacheIndex::sLock.AssertCurrentThreadOwns();
@@ -187,27 +273,34 @@ class FileOpenHelper final : public CacheFileIOListener {
  private:
   virtual ~FileOpenHelper() = default;
 
-  NS_IMETHOD OnFileOpened(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
+  NS_IMETHOD OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) override;
+  NS_IMETHOD OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
                            nsresult aResult) override {
     MOZ_CRASH("FileOpenHelper::OnDataWritten should not be called!");
     return NS_ERROR_UNEXPECTED;
   }
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf,
+  NS_IMETHOD OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                         nsresult aResult) override {
     MOZ_CRASH("FileOpenHelper::OnDataRead should not be called!");
     return NS_ERROR_UNEXPECTED;
   }
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override {
+  NS_IMETHOD OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) override {
     MOZ_CRASH("FileOpenHelper::OnFileDoomed should not be called!");
     return NS_ERROR_UNEXPECTED;
   }
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override {
+  NS_IMETHOD OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) override {
     MOZ_CRASH("FileOpenHelper::OnEOFSet should not be called!");
     return NS_ERROR_UNEXPECTED;
   }
+<<<<<<< HEAD
   NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle,
                            nsresult aResult) override {
+||||||| merged common ancestors
+  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override {
+=======
+  NS_IMETHOD OnFileRenamed(CacheFileHandle* aHandle,
+                           nsresult aResult) override {
+>>>>>>> upstream-releases
     MOZ_CRASH("FileOpenHelper::OnFileRenamed should not be called!");
     return NS_ERROR_UNEXPECTED;
   }
@@ -216,8 +309,17 @@ class FileOpenHelper final : public CacheFileIOListener {
   bool mCanceled;
 };
 
+<<<<<<< HEAD
 NS_IMETHODIMP FileOpenHelper::OnFileOpened(CacheFileHandle *aHandle,
                                            nsresult aResult) {
+||||||| merged common ancestors
+NS_IMETHODIMP FileOpenHelper::OnFileOpened(CacheFileHandle *aHandle,
+                                           nsresult aResult)
+{
+=======
+NS_IMETHODIMP FileOpenHelper::OnFileOpened(CacheFileHandle* aHandle,
+                                           nsresult aResult) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(CacheIndex::sLock);
 
   if (mCanceled) {
@@ -247,6 +349,7 @@ NS_INTERFACE_MAP_BEGIN(CacheIndex)
 NS_INTERFACE_MAP_END
 
 CacheIndex::CacheIndex()
+<<<<<<< HEAD
     : mState(INITIAL),
       mShuttingDown(false),
       mIndexNeedsUpdate(false),
@@ -263,6 +366,43 @@ CacheIndex::CacheIndex()
       mRWPending(false),
       mJournalReadSuccessfully(false),
       mAsyncGetDiskConsumptionBlocked(false) {
+||||||| merged common ancestors
+  : mState(INITIAL)
+  , mShuttingDown(false)
+  , mIndexNeedsUpdate(false)
+  , mRemovingAll(false)
+  , mIndexOnDiskIsValid(false)
+  , mDontMarkIndexClean(false)
+  , mIndexTimeStamp(0)
+  , mUpdateEventPending(false)
+  , mSkipEntries(0)
+  , mProcessEntries(0)
+  , mRWBuf(nullptr)
+  , mRWBufSize(0)
+  , mRWBufPos(0)
+  , mRWPending(false)
+  , mJournalReadSuccessfully(false)
+  , mAsyncGetDiskConsumptionBlocked(false)
+{
+=======
+    : mState(INITIAL),
+      mShuttingDown(false),
+      mIndexNeedsUpdate(false),
+      mRemovingAll(false),
+      mIndexOnDiskIsValid(false),
+      mDontMarkIndexClean(false),
+      mIndexTimeStamp(0),
+      mUpdateEventPending(false),
+      mSkipEntries(0),
+      mProcessEntries(0),
+      mRWBuf(nullptr),
+      mRWBufSize(0),
+      mRWBufPos(0),
+      mRWPending(false),
+      mJournalReadSuccessfully(false),
+      mAsyncGetDiskConsumptionBlocked(false),
+      mTotalBytesWritten(0) {
+>>>>>>> upstream-releases
   sLock.AssertCurrentThreadOwns();
   LOG(("CacheIndex::CacheIndex [this=%p]", this));
   MOZ_ASSERT(!gInstance, "multiple CacheIndex instances!");
@@ -276,7 +416,15 @@ CacheIndex::~CacheIndex() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::Init(nsIFile *aCacheDirectory) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::Init(nsIFile *aCacheDirectory)
+{
+=======
+nsresult CacheIndex::Init(nsIFile* aCacheDirectory) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::Init()"));
 
   MOZ_ASSERT(NS_IsMainThread());
@@ -296,13 +444,24 @@ nsresult CacheIndex::Init(nsIFile *aCacheDirectory) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::InitInternal(nsIFile *aCacheDirectory) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::InitInternal(nsIFile *aCacheDirectory)
+{
+=======
+nsresult CacheIndex::InitInternal(nsIFile* aCacheDirectory) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   rv = aCacheDirectory->Clone(getter_AddRefs(mCacheDirectory));
   NS_ENSURE_SUCCESS(rv, rv);
 
   mStartTime = TimeStamp::NowLoRes();
+
+  mTotalBytesWritten = CacheObserver::CacheAmountWritten();
+  mTotalBytesWritten <<= 10;
 
   ReadIndexFromDisk();
 
@@ -421,11 +580,25 @@ nsresult CacheIndex::Shutdown() {
 
   bool sanitize = CacheObserver::ClearCacheOnShutdown();
 
+<<<<<<< HEAD
   LOG(
       ("CacheIndex::Shutdown() - [state=%d, indexOnDiskIsValid=%d, "
        "dontMarkIndexClean=%d, sanitize=%d]",
        index->mState, index->mIndexOnDiskIsValid, index->mDontMarkIndexClean,
        sanitize));
+||||||| merged common ancestors
+  LOG(("CacheIndex::Shutdown() - [state=%d, indexOnDiskIsValid=%d, "
+       "dontMarkIndexClean=%d, sanitize=%d]", index->mState,
+       index->mIndexOnDiskIsValid, index->mDontMarkIndexClean, sanitize));
+=======
+  CacheObserver::SetCacheAmountWritten(index->mTotalBytesWritten >> 10);
+
+  LOG(
+      ("CacheIndex::Shutdown() - [state=%d, indexOnDiskIsValid=%d, "
+       "dontMarkIndexClean=%d, sanitize=%d]",
+       index->mState, index->mIndexOnDiskIsValid, index->mDontMarkIndexClean,
+       sanitize));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(index->mShuttingDown);
 
@@ -470,7 +643,15 @@ nsresult CacheIndex::Shutdown() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::AddEntry(const SHA1Sum::Hash *aHash) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::AddEntry(const SHA1Sum::Hash *aHash)
+{
+=======
+nsresult CacheIndex::AddEntry(const SHA1Sum::Hash* aHash) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::AddEntry() [hash=%08x%08x%08x%08x%08x]", LOGSHA1(aHash)));
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
@@ -496,9 +677,9 @@ nsresult CacheIndex::AddEntry(const SHA1Sum::Hash *aHash) {
   {
     CacheIndexEntryAutoManage entryMng(aHash, index);
 
-    CacheIndexEntry *entry = index->mIndex.GetEntry(*aHash);
+    CacheIndexEntry* entry = index->mIndex.GetEntry(*aHash);
     bool entryRemoved = entry && entry->IsRemoved();
-    CacheIndexEntryUpdate *updated = nullptr;
+    CacheIndexEntryUpdate* updated = nullptr;
 
     if (index->mState == READY || index->mState == UPDATING ||
         index->mState == BUILDING) {
@@ -586,7 +767,15 @@ nsresult CacheIndex::AddEntry(const SHA1Sum::Hash *aHash) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::EnsureEntryExists(const SHA1Sum::Hash *aHash) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::EnsureEntryExists(const SHA1Sum::Hash *aHash)
+{
+=======
+nsresult CacheIndex::EnsureEntryExists(const SHA1Sum::Hash* aHash) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::EnsureEntryExists() [hash=%08x%08x%08x%08x%08x]",
        LOGSHA1(aHash)));
 
@@ -607,7 +796,7 @@ nsresult CacheIndex::EnsureEntryExists(const SHA1Sum::Hash *aHash) {
   {
     CacheIndexEntryAutoManage entryMng(aHash, index);
 
-    CacheIndexEntry *entry = index->mIndex.GetEntry(*aHash);
+    CacheIndexEntry* entry = index->mIndex.GetEntry(*aHash);
     bool entryRemoved = entry && entry->IsRemoved();
 
     if (index->mState == READY || index->mState == UPDATING ||
@@ -639,8 +828,16 @@ nsresult CacheIndex::EnsureEntryExists(const SHA1Sum::Hash *aHash) {
         entry->MarkDirty();
       }
       entry->MarkFresh();
+<<<<<<< HEAD
     } else {  // WRITING, READING
       CacheIndexEntryUpdate *updated = index->mPendingUpdates.GetEntry(*aHash);
+||||||| merged common ancestors
+    } else { // WRITING, READING
+      CacheIndexEntryUpdate *updated = index->mPendingUpdates.GetEntry(*aHash);
+=======
+    } else {  // WRITING, READING
+      CacheIndexEntryUpdate* updated = index->mPendingUpdates.GetEntry(*aHash);
+>>>>>>> upstream-releases
       bool updatedRemoved = updated && updated->IsRemoved();
 
       if (updatedRemoved || (!updated && entryRemoved && entry->IsFresh())) {
@@ -694,6 +891,7 @@ nsresult CacheIndex::EnsureEntryExists(const SHA1Sum::Hash *aHash) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::InitEntry(const SHA1Sum::Hash *aHash,
                                OriginAttrsHash aOriginAttrsHash,
                                bool aAnonymous, bool aPinned) {
@@ -701,6 +899,25 @@ nsresult CacheIndex::InitEntry(const SHA1Sum::Hash *aHash,
       ("CacheIndex::InitEntry() [hash=%08x%08x%08x%08x%08x, "
        "originAttrsHash=%" PRIx64 ", anonymous=%d, pinned=%d]",
        LOGSHA1(aHash), aOriginAttrsHash, aAnonymous, aPinned));
+||||||| merged common ancestors
+nsresult
+CacheIndex::InitEntry(const SHA1Sum::Hash *aHash,
+                      OriginAttrsHash      aOriginAttrsHash,
+                      bool                 aAnonymous,
+                      bool                 aPinned)
+{
+  LOG(("CacheIndex::InitEntry() [hash=%08x%08x%08x%08x%08x, "
+       "originAttrsHash=%" PRIx64 ", anonymous=%d, pinned=%d]", LOGSHA1(aHash),
+       aOriginAttrsHash, aAnonymous, aPinned));
+=======
+nsresult CacheIndex::InitEntry(const SHA1Sum::Hash* aHash,
+                               OriginAttrsHash aOriginAttrsHash,
+                               bool aAnonymous, bool aPinned) {
+  LOG(
+      ("CacheIndex::InitEntry() [hash=%08x%08x%08x%08x%08x, "
+       "originAttrsHash=%" PRIx64 ", anonymous=%d, pinned=%d]",
+       LOGSHA1(aHash), aOriginAttrsHash, aAnonymous, aPinned));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -719,8 +936,8 @@ nsresult CacheIndex::InitEntry(const SHA1Sum::Hash *aHash,
   {
     CacheIndexEntryAutoManage entryMng(aHash, index);
 
-    CacheIndexEntry *entry = index->mIndex.GetEntry(*aHash);
-    CacheIndexEntryUpdate *updated = nullptr;
+    CacheIndexEntry* entry = index->mIndex.GetEntry(*aHash);
+    CacheIndexEntryUpdate* updated = nullptr;
     bool reinitEntry = false;
 
     if (entry && entry->IsRemoved()) {
@@ -823,7 +1040,15 @@ nsresult CacheIndex::InitEntry(const SHA1Sum::Hash *aHash,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::RemoveEntry(const SHA1Sum::Hash *aHash) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::RemoveEntry(const SHA1Sum::Hash *aHash)
+{
+=======
+nsresult CacheIndex::RemoveEntry(const SHA1Sum::Hash* aHash) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::RemoveEntry() [hash=%08x%08x%08x%08x%08x]",
        LOGSHA1(aHash)));
 
@@ -844,7 +1069,7 @@ nsresult CacheIndex::RemoveEntry(const SHA1Sum::Hash *aHash) {
   {
     CacheIndexEntryAutoManage entryMng(aHash, index);
 
-    CacheIndexEntry *entry = index->mIndex.GetEntry(*aHash);
+    CacheIndexEntry* entry = index->mIndex.GetEntry(*aHash);
     bool entryRemoved = entry && entry->IsRemoved();
 
     if (index->mState == READY || index->mState == UPDATING ||
@@ -880,8 +1105,16 @@ nsresult CacheIndex::RemoveEntry(const SHA1Sum::Hash *aHash) {
           }
         }
       }
+<<<<<<< HEAD
     } else {  // WRITING, READING
       CacheIndexEntryUpdate *updated = index->mPendingUpdates.GetEntry(*aHash);
+||||||| merged common ancestors
+    } else { // WRITING, READING
+      CacheIndexEntryUpdate *updated = index->mPendingUpdates.GetEntry(*aHash);
+=======
+    } else {  // WRITING, READING
+      CacheIndexEntryUpdate* updated = index->mPendingUpdates.GetEntry(*aHash);
+>>>>>>> upstream-releases
       bool updatedRemoved = updated && updated->IsRemoved();
 
       if (updatedRemoved || (!updated && entryRemoved && entry->IsFresh())) {
@@ -920,6 +1153,7 @@ nsresult CacheIndex::RemoveEntry(const SHA1Sum::Hash *aHash) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
                                  const uint32_t *aFrecency,
                                  const uint32_t *aExpirationTime,
@@ -933,10 +1167,43 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
        "onStopTime=%s, size=%s]",
        LOGSHA1(aHash), aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
        aExpirationTime ? nsPrintfCString("%u", *aExpirationTime).get() : "",
+||||||| merged common ancestors
+nsresult
+CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
+                        const uint32_t      *aFrecency,
+                        const uint32_t      *aExpirationTime,
+                        const bool          *aHasAltData,
+                        const uint16_t      *aOnStartTime,
+                        const uint16_t      *aOnStopTime,
+                        const uint32_t      *aSize)
+{
+  LOG(("CacheIndex::UpdateEntry() [hash=%08x%08x%08x%08x%08x, "
+       "frecency=%s, expirationTime=%s, hasAltData=%s, onStartTime=%s, "
+       "onStopTime=%s, size=%s]", LOGSHA1(aHash),
+       aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
+       aExpirationTime ? nsPrintfCString("%u", *aExpirationTime).get() : "",
+=======
+nsresult CacheIndex::UpdateEntry(
+    const SHA1Sum::Hash* aHash, const uint32_t* aFrecency,
+    const bool* aHasAltData, const uint16_t* aOnStartTime,
+    const uint16_t* aOnStopTime, const uint8_t* aContentType,
+    const uint16_t* aBaseDomainAccessCount, const uint32_t aTelemetryReportID,
+    const uint32_t* aSize) {
+  LOG(
+      ("CacheIndex::UpdateEntry() [hash=%08x%08x%08x%08x%08x, "
+       "frecency=%s, hasAltData=%s, onStartTime=%s, onStopTime=%s, "
+       "contentType=%s, baseDomainAccessCount=%s, telemetryReportID=%u, "
+       "size=%s]",
+       LOGSHA1(aHash), aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
+>>>>>>> upstream-releases
        aHasAltData ? (*aHasAltData ? "true" : "false") : "",
        aOnStartTime ? nsPrintfCString("%u", *aOnStartTime).get() : "",
        aOnStopTime ? nsPrintfCString("%u", *aOnStopTime).get() : "",
-       aSize ? nsPrintfCString("%u", *aSize).get() : ""));
+       aContentType ? nsPrintfCString("%u", *aContentType).get() : "",
+       aBaseDomainAccessCount
+           ? nsPrintfCString("%u", *aBaseDomainAccessCount).get()
+           : "",
+       aTelemetryReportID, aSize ? nsPrintfCString("%u", *aSize).get() : ""));
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -955,7 +1222,20 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
   {
     CacheIndexEntryAutoManage entryMng(aHash, index);
 
-    CacheIndexEntry *entry = index->mIndex.GetEntry(*aHash);
+    CacheIndexEntry* entry = index->mIndex.GetEntry(*aHash);
+
+    uint16_t baseDomainAccessCount = 0;
+    if (aBaseDomainAccessCount) {
+      if (aTelemetryReportID != CacheObserver::TelemetryReportID()) {
+        // Telemetry report ID has changed and the value is no longer valid.
+        // Reset the count to 0.
+        LOG(
+            ("CacheIndex::UpdateEntry() - Telemetry report ID has changed, "
+             "setting baseDomainAccessCount to 0."));
+      } else {
+        baseDomainAccessCount = *aBaseDomainAccessCount;
+      }
+    }
 
     if (entry && entry->IsRemoved()) {
       entry = nullptr;
@@ -973,8 +1253,11 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
         return NS_ERROR_UNEXPECTED;
       }
 
-      if (!HasEntryChanged(entry, aFrecency, aExpirationTime, aHasAltData,
-                           aOnStartTime, aOnStopTime, aSize)) {
+      if (!HasEntryChanged(
+              entry, aFrecency, aHasAltData, aOnStartTime, aOnStopTime,
+              aContentType,
+              aBaseDomainAccessCount ? &baseDomainAccessCount : nullptr,
+              aSize)) {
         return NS_OK;
       }
 
@@ -984,10 +1267,6 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
 
       if (aFrecency) {
         entry->SetFrecency(*aFrecency);
-      }
-
-      if (aExpirationTime) {
-        entry->SetExpirationTime(*aExpirationTime);
       }
 
       if (aHasAltData) {
@@ -1002,11 +1281,19 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
         entry->SetOnStopTime(*aOnStopTime);
       }
 
+      if (aContentType) {
+        entry->SetContentType(*aContentType);
+      }
+
+      if (aBaseDomainAccessCount) {
+        entry->SetBaseDomainAccessCount(baseDomainAccessCount);
+      }
+
       if (aSize) {
         entry->SetFileSize(*aSize);
       }
     } else {
-      CacheIndexEntryUpdate *updated = index->mPendingUpdates.GetEntry(*aHash);
+      CacheIndexEntryUpdate* updated = index->mPendingUpdates.GetEntry(*aHash);
       DebugOnly<bool> removed = updated && updated->IsRemoved();
 
       MOZ_ASSERT(updated || !removed);
@@ -1036,10 +1323,6 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
         updated->SetFrecency(*aFrecency);
       }
 
-      if (aExpirationTime) {
-        updated->SetExpirationTime(*aExpirationTime);
-      }
-
       if (aHasAltData) {
         updated->SetHasAltData(*aHasAltData);
       }
@@ -1050,6 +1333,14 @@ nsresult CacheIndex::UpdateEntry(const SHA1Sum::Hash *aHash,
 
       if (aOnStopTime) {
         updated->SetOnStopTime(*aOnStopTime);
+      }
+
+      if (aContentType) {
+        updated->SetContentType(*aContentType);
+      }
+
+      if (aBaseDomainAccessCount) {
+        updated->SetBaseDomainAccessCount(baseDomainAccessCount);
       }
 
       if (aSize) {
@@ -1158,9 +1449,20 @@ nsresult CacheIndex::RemoveAll() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::HasEntry(
     const nsACString &aKey, EntryStatus *_retval,
     const std::function<void(const CacheIndexEntry *)> &aCB) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::HasEntry(const nsACString &aKey, EntryStatus *_retval,
+                     const std::function<void(const CacheIndexEntry*)> &aCB)
+{
+=======
+nsresult CacheIndex::HasEntry(
+    const nsACString& aKey, EntryStatus* _retval,
+    const std::function<void(const CacheIndexEntry*)>& aCB) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::HasEntry() [key=%s]", PromiseFlatCString(aKey).get()));
 
   SHA1Sum sum;
@@ -1172,9 +1474,20 @@ nsresult CacheIndex::HasEntry(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::HasEntry(
     const SHA1Sum::Hash &hash, EntryStatus *_retval,
     const std::function<void(const CacheIndexEntry *)> &aCB) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::HasEntry(const SHA1Sum::Hash &hash, EntryStatus *_retval,
+                     const std::function<void(const CacheIndexEntry*)> &aCB)
+{
+=======
+nsresult CacheIndex::HasEntry(
+    const SHA1Sum::Hash& hash, EntryStatus* _retval,
+    const std::function<void(const CacheIndexEntry*)>& aCB) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sLock);
 
   RefPtr<CacheIndex> index = gInstance;
@@ -1187,7 +1500,7 @@ nsresult CacheIndex::HasEntry(
     return NS_ERROR_NOT_AVAILABLE;
   }
 
-  const CacheIndexEntry *entry = nullptr;
+  const CacheIndexEntry* entry = nullptr;
 
   switch (index->mState) {
     case READING:
@@ -1232,8 +1545,17 @@ nsresult CacheIndex::HasEntry(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::GetEntryForEviction(bool aIgnoreEmptyEntries,
                                          SHA1Sum::Hash *aHash, uint32_t *aCnt) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetEntryForEviction(bool aIgnoreEmptyEntries, SHA1Sum::Hash *aHash, uint32_t *aCnt)
+{
+=======
+nsresult CacheIndex::GetEntryForEviction(bool aIgnoreEmptyEntries,
+                                         SHA1Sum::Hash* aHash, uint32_t* aCnt) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::GetEntryForEviction()"));
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
@@ -1249,14 +1571,14 @@ nsresult CacheIndex::GetEntryForEviction(bool aIgnoreEmptyEntries,
   }
 
   SHA1Sum::Hash hash;
-  CacheIndexRecord *foundRecord = nullptr;
+  CacheIndexRecord* foundRecord = nullptr;
   uint32_t skipped = 0;
 
   // find first non-forced valid and unpinned entry with the lowest frecency
   index->mFrecencyArray.SortIfNeeded();
 
   for (auto iter = index->mFrecencyArray.Iter(); !iter.Done(); iter.Next()) {
-    CacheIndexRecord *rec = iter.Get();
+    CacheIndexRecord* rec = iter.Get();
 
     memcpy(&hash, rec->mHash, sizeof(SHA1Sum::Hash));
 
@@ -1294,7 +1616,14 @@ nsresult CacheIndex::GetEntryForEviction(bool aIgnoreEmptyEntries,
 }
 
 // static
+<<<<<<< HEAD
 bool CacheIndex::IsForcedValidEntry(const SHA1Sum::Hash *aHash) {
+||||||| merged common ancestors
+bool CacheIndex::IsForcedValidEntry(const SHA1Sum::Hash *aHash)
+{
+=======
+bool CacheIndex::IsForcedValidEntry(const SHA1Sum::Hash* aHash) {
+>>>>>>> upstream-releases
   RefPtr<CacheFileHandle> handle;
 
   CacheFileIOManager::gInstance->mHandles.GetHandle(aHash,
@@ -1307,7 +1636,15 @@ bool CacheIndex::IsForcedValidEntry(const SHA1Sum::Hash *aHash) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::GetCacheSize(uint32_t *_retval) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetCacheSize(uint32_t *_retval)
+{
+=======
+nsresult CacheIndex::GetCacheSize(uint32_t* _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::GetCacheSize()"));
 
   StaticMutexAutoLock lock(sLock);
@@ -1326,7 +1663,15 @@ nsresult CacheIndex::GetCacheSize(uint32_t *_retval) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::GetEntryFileCount(uint32_t *_retval) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetEntryFileCount(uint32_t *_retval)
+{
+=======
+nsresult CacheIndex::GetEntryFileCount(uint32_t* _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::GetEntryFileCount()"));
 
   StaticMutexAutoLock lock(sLock);
@@ -1347,8 +1692,17 @@ nsresult CacheIndex::GetEntryFileCount(uint32_t *_retval) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize,
                                    uint32_t *aCount) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize, uint32_t *aCount)
+{
+=======
+nsresult CacheIndex::GetCacheStats(nsILoadContextInfo* aInfo, uint32_t* aSize,
+                                   uint32_t* aCount) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::GetCacheStats() [info=%p]", aInfo));
 
   StaticMutexAutoLock lock(sLock);
@@ -1367,7 +1721,7 @@ nsresult CacheIndex::GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize,
   *aCount = 0;
 
   for (auto iter = index->mFrecencyArray.Iter(); !iter.Done(); iter.Next()) {
-    CacheIndexRecord *record = iter.Get();
+    CacheIndexRecord* record = iter.Get();
     if (aInfo && !CacheIndexEntry::RecordMatchesLoadContextInfo(record, aInfo))
       continue;
 
@@ -1379,8 +1733,17 @@ nsresult CacheIndex::GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::AsyncGetDiskConsumption(
     nsICacheStorageConsumptionObserver *aObserver) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::AsyncGetDiskConsumption(nsICacheStorageConsumptionObserver* aObserver)
+{
+=======
+nsresult CacheIndex::AsyncGetDiskConsumption(
+    nsICacheStorageConsumptionObserver* aObserver) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::AsyncGetDiskConsumption()"));
 
   StaticMutexAutoLock lock(sLock);
@@ -1434,8 +1797,18 @@ nsresult CacheIndex::AsyncGetDiskConsumption(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::GetIterator(nsILoadContextInfo *aInfo, bool aAddNew,
                                  CacheIndexIterator **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetIterator(nsILoadContextInfo *aInfo, bool aAddNew,
+                        CacheIndexIterator **_retval)
+{
+=======
+nsresult CacheIndex::GetIterator(nsILoadContextInfo* aInfo, bool aAddNew,
+                                 CacheIndexIterator** _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::GetIterator() [info=%p, addNew=%d]", aInfo, aAddNew));
 
   StaticMutexAutoLock lock(sLock);
@@ -1469,7 +1842,15 @@ nsresult CacheIndex::GetIterator(nsILoadContextInfo *aInfo, bool aAddNew,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheIndex::IsUpToDate(bool *_retval) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::IsUpToDate(bool *_retval)
+{
+=======
+nsresult CacheIndex::IsUpToDate(bool* _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::IsUpToDate()"));
 
   StaticMutexAutoLock lock(sLock);
@@ -1511,9 +1892,21 @@ bool CacheIndex::IsIndexUsable() {
 }
 
 // static
+<<<<<<< HEAD
 bool CacheIndex::IsCollision(CacheIndexEntry *aEntry,
                              OriginAttrsHash aOriginAttrsHash,
                              bool aAnonymous) {
+||||||| merged common ancestors
+bool
+CacheIndex::IsCollision(CacheIndexEntry *aEntry,
+                        OriginAttrsHash  aOriginAttrsHash,
+                        bool             aAnonymous)
+{
+=======
+bool CacheIndex::IsCollision(CacheIndexEntry* aEntry,
+                             OriginAttrsHash aOriginAttrsHash,
+                             bool aAnonymous) {
+>>>>>>> upstream-releases
   if (!aEntry->IsInitialized()) {
     return false;
   }
@@ -1534,6 +1927,7 @@ bool CacheIndex::IsCollision(CacheIndexEntry *aEntry,
 }
 
 // static
+<<<<<<< HEAD
 bool CacheIndex::HasEntryChanged(CacheIndexEntry *aEntry,
                                  const uint32_t *aFrecency,
                                  const uint32_t *aExpirationTime,
@@ -1541,11 +1935,24 @@ bool CacheIndex::HasEntryChanged(CacheIndexEntry *aEntry,
                                  const uint16_t *aOnStartTime,
                                  const uint16_t *aOnStopTime,
                                  const uint32_t *aSize) {
+||||||| merged common ancestors
+bool
+CacheIndex::HasEntryChanged(CacheIndexEntry *aEntry,
+                            const uint32_t  *aFrecency,
+                            const uint32_t  *aExpirationTime,
+                            const bool      *aHasAltData,
+                            const uint16_t  *aOnStartTime,
+                            const uint16_t  *aOnStopTime,
+                            const uint32_t  *aSize)
+{
+=======
+bool CacheIndex::HasEntryChanged(
+    CacheIndexEntry* aEntry, const uint32_t* aFrecency, const bool* aHasAltData,
+    const uint16_t* aOnStartTime, const uint16_t* aOnStopTime,
+    const uint8_t* aContentType, const uint16_t* aBaseDomainAccessCount,
+    const uint32_t* aSize) {
+>>>>>>> upstream-releases
   if (aFrecency && *aFrecency != aEntry->GetFrecency()) {
-    return true;
-  }
-
-  if (aExpirationTime && *aExpirationTime != aEntry->GetExpirationTime()) {
     return true;
   }
 
@@ -1558,6 +1965,15 @@ bool CacheIndex::HasEntryChanged(CacheIndexEntry *aEntry,
   }
 
   if (aOnStopTime && *aOnStopTime != aEntry->GetOnStopTime()) {
+    return true;
+  }
+
+  if (aContentType && *aContentType != aEntry->GetContentType()) {
+    return true;
+  }
+
+  if (aBaseDomainAccessCount &&
+      *aBaseDomainAccessCount != aEntry->GetBaseDomainAccessCount()) {
     return true;
   }
 
@@ -1726,8 +2142,18 @@ void CacheIndex::WriteRecords() {
   bool hasMore = false;
 #endif
   for (auto iter = mIndex.Iter(); !iter.Done(); iter.Next()) {
+<<<<<<< HEAD
     CacheIndexEntry *entry = iter.Get();
     if (entry->IsRemoved() || !entry->IsInitialized() || entry->IsFileEmpty()) {
+||||||| merged common ancestors
+    CacheIndexEntry* entry = iter.Get();
+    if (entry->IsRemoved() ||
+        !entry->IsInitialized() ||
+        entry->IsFileEmpty()) {
+=======
+    CacheIndexEntry* entry = iter.Get();
+    if (entry->IsRemoved() || !entry->IsInitialized() || entry->IsFileEmpty()) {
+>>>>>>> upstream-releases
       continue;
     }
 
@@ -1763,7 +2189,7 @@ void CacheIndex::WriteRecords() {
     if (mRWBufPos + sizeof(CacheHash::Hash32_t) > mRWBufSize) {
       // realloc buffer to spare another write cycle
       mRWBufSize = mRWBufPos + sizeof(CacheHash::Hash32_t);
-      mRWBuf = static_cast<char *>(moz_xrealloc(mRWBuf, mRWBufSize));
+      mRWBuf = static_cast<char*>(moz_xrealloc(mRWBuf, mRWBufSize));
     }
 
     NetworkEndian::writeUint32(mRWBuf + mRWBufPos, mRWHash->GetHash());
@@ -1845,7 +2271,15 @@ void CacheIndex::FinishWrite(bool aSucceeded) {
   }
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::GetFile(const nsACString &aName, nsIFile **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::GetFile(const nsACString &aName, nsIFile **_retval)
+{
+=======
+nsresult CacheIndex::GetFile(const nsACString& aName, nsIFile** _retval) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIFile> file;
@@ -1859,7 +2293,15 @@ nsresult CacheIndex::GetFile(const nsACString &aName, nsIFile **_retval) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::RemoveFile(const nsACString &aName) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::RemoveFile(const nsACString &aName)
+{
+=======
+nsresult CacheIndex::RemoveFile(const nsACString& aName) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mState == SHUTDOWN);
 
   nsresult rv;
@@ -1899,30 +2341,66 @@ void CacheIndex::RemoveJournalAndTempFile() {
   RemoveFile(NS_LITERAL_CSTRING(JOURNAL_NAME));
 }
 
+<<<<<<< HEAD
 class WriteLogHelper {
  public:
   explicit WriteLogHelper(PRFileDesc *aFD)
       : mFD(aFD), mBufSize(kMaxBufSize), mBufPos(0) {
+||||||| merged common ancestors
+class WriteLogHelper
+{
+public:
+  explicit WriteLogHelper(PRFileDesc *aFD)
+    : mFD(aFD)
+    , mBufSize(kMaxBufSize)
+    , mBufPos(0)
+  {
+=======
+class WriteLogHelper {
+ public:
+  explicit WriteLogHelper(PRFileDesc* aFD)
+      : mFD(aFD), mBufSize(kMaxBufSize), mBufPos(0) {
+>>>>>>> upstream-releases
     mHash = new CacheHash();
-    mBuf = static_cast<char *>(moz_xmalloc(mBufSize));
+    mBuf = static_cast<char*>(moz_xmalloc(mBufSize));
   }
 
   ~WriteLogHelper() { free(mBuf); }
 
-  nsresult AddEntry(CacheIndexEntry *aEntry);
+  nsresult AddEntry(CacheIndexEntry* aEntry);
   nsresult Finish();
 
  private:
   nsresult FlushBuffer();
 
+<<<<<<< HEAD
   PRFileDesc *mFD;
   char *mBuf;
   uint32_t mBufSize;
   int32_t mBufPos;
+||||||| merged common ancestors
+  PRFileDesc       *mFD;
+  char             *mBuf;
+  uint32_t          mBufSize;
+  int32_t           mBufPos;
+=======
+  PRFileDesc* mFD;
+  char* mBuf;
+  uint32_t mBufSize;
+  int32_t mBufPos;
+>>>>>>> upstream-releases
   RefPtr<CacheHash> mHash;
 };
 
+<<<<<<< HEAD
 nsresult WriteLogHelper::AddEntry(CacheIndexEntry *aEntry) {
+||||||| merged common ancestors
+nsresult
+WriteLogHelper::AddEntry(CacheIndexEntry *aEntry)
+{
+=======
+nsresult WriteLogHelper::AddEntry(CacheIndexEntry* aEntry) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   if (mBufPos + sizeof(CacheIndexRecord) > mBufSize) {
@@ -1999,9 +2477,19 @@ nsresult CacheIndex::WriteLogToDisk() {
 
   mIndexStats.Log();
 
+<<<<<<< HEAD
   PRFileDesc *fd = nullptr;
   rv = logFile->OpenNSPRFileDesc(PR_RDWR | PR_CREATE_FILE | PR_TRUNCATE, 0600,
                                  &fd);
+||||||| merged common ancestors
+  PRFileDesc *fd = nullptr;
+  rv = logFile->OpenNSPRFileDesc(PR_RDWR | PR_CREATE_FILE | PR_TRUNCATE,
+                                 0600, &fd);
+=======
+  PRFileDesc* fd = nullptr;
+  rv = logFile->OpenNSPRFileDesc(PR_RDWR | PR_CREATE_FILE | PR_TRUNCATE, 0600,
+                                 &fd);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   WriteLogHelper wlh(fd);
@@ -2165,15 +2653,23 @@ void CacheIndex::ParseRecords() {
         mJournalHandle = nullptr;
       }
     } else {
+<<<<<<< HEAD
       uint32_t *isDirty =
           reinterpret_cast<uint32_t *>(moz_xmalloc(sizeof(uint32_t)));
+||||||| merged common ancestors
+      uint32_t * isDirty = reinterpret_cast<uint32_t *>(
+                             moz_xmalloc(sizeof(uint32_t)));
+=======
+      uint32_t* isDirty =
+          reinterpret_cast<uint32_t*>(moz_xmalloc(sizeof(uint32_t)));
+>>>>>>> upstream-releases
       NetworkEndian::writeUint32(isDirty, 1);
 
       // Mark index dirty. The buffer is freed by CacheFileIOManager when
       // nullptr is passed as the listener and the call doesn't fail
       // synchronously.
       rv = CacheFileIOManager::Write(mIndexHandle, 2 * sizeof(uint32_t),
-                                     reinterpret_cast<char *>(isDirty),
+                                     reinterpret_cast<char*>(isDirty),
                                      sizeof(uint32_t), true, false, nullptr);
       if (NS_FAILED(rv)) {
         // This is not fatal, just free the memory
@@ -2187,7 +2683,7 @@ void CacheIndex::ParseRecords() {
 
   while (pos + sizeof(CacheIndexRecord) <= mRWBufPos &&
          mSkipEntries != entryCnt) {
-    CacheIndexRecord *rec = reinterpret_cast<CacheIndexRecord *>(mRWBuf + pos);
+    CacheIndexRecord* rec = reinterpret_cast<CacheIndexRecord*>(mRWBuf + pos);
     CacheIndexEntry tmpEntry(&rec->mHash);
     tmpEntry.ReadFromBuf(mRWBuf + pos);
 
@@ -2205,7 +2701,7 @@ void CacheIndex::ParseRecords() {
 
     CacheIndexEntryAutoManage emng(tmpEntry.Hash(), this);
 
-    CacheIndexEntry *entry = mIndex.PutEntry(*tmpEntry.Hash());
+    CacheIndexEntry* entry = mIndex.PutEntry(*tmpEntry.Hash());
     *entry = tmpEntry;
 
     pos += sizeof(CacheIndexRecord);
@@ -2322,10 +2818,10 @@ void CacheIndex::ParseJournal() {
 
   while (pos + sizeof(CacheIndexRecord) <= mRWBufPos &&
          mSkipEntries != entryCnt) {
-    CacheIndexEntry tmpEntry(reinterpret_cast<SHA1Sum::Hash *>(mRWBuf + pos));
+    CacheIndexEntry tmpEntry(reinterpret_cast<SHA1Sum::Hash*>(mRWBuf + pos));
     tmpEntry.ReadFromBuf(mRWBuf + pos);
 
-    CacheIndexEntry *entry = mTmpJournal.PutEntry(*tmpEntry.Hash());
+    CacheIndexEntry* entry = mTmpJournal.PutEntry(*tmpEntry.Hash());
     *entry = tmpEntry;
 
     if (entry->IsDirty() || entry->IsFresh()) {
@@ -2526,7 +3022,15 @@ void CacheIndex::FinishRead(bool aSucceeded) {
 }
 
 // static
+<<<<<<< HEAD
 void CacheIndex::DelayedUpdate(nsITimer *aTimer, void *aClosure) {
+||||||| merged common ancestors
+void
+CacheIndex::DelayedUpdate(nsITimer *aTimer, void *aClosure)
+{
+=======
+void CacheIndex::DelayedUpdate(nsITimer* aTimer, void* aClosure) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::DelayedUpdate()"));
 
   StaticMutexAutoLock lock(sLock);
@@ -2626,25 +3130,50 @@ nsresult CacheIndex::SetupDirectoryEnumerator() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::InitEntryFromDiskData(CacheIndexEntry *aEntry,
                                            CacheFileMetadata *aMetaData,
                                            int64_t aFileSize) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::InitEntryFromDiskData(CacheIndexEntry *aEntry,
+                                  CacheFileMetadata *aMetaData,
+                                  int64_t aFileSize)
+{
+=======
+nsresult CacheIndex::InitEntryFromDiskData(CacheIndexEntry* aEntry,
+                                           CacheFileMetadata* aMetaData,
+                                           int64_t aFileSize) {
+  nsresult rv;
+
+>>>>>>> upstream-releases
   aEntry->InitNew();
   aEntry->MarkDirty();
   aEntry->MarkFresh();
 
   aEntry->Init(GetOriginAttrsHash(aMetaData->OriginAttributes()),
+<<<<<<< HEAD
                aMetaData->IsAnonymous(), aMetaData->Pinned());
 
   uint32_t expirationTime;
   aMetaData->GetExpirationTime(&expirationTime);
   aEntry->SetExpirationTime(expirationTime);
+||||||| merged common ancestors
+               aMetaData->IsAnonymous(),
+               aMetaData->Pinned());
+
+  uint32_t expirationTime;
+  aMetaData->GetExpirationTime(&expirationTime);
+  aEntry->SetExpirationTime(expirationTime);
+=======
+               aMetaData->IsAnonymous(), aMetaData->Pinned());
+>>>>>>> upstream-releases
 
   uint32_t frecency;
   aMetaData->GetFrecency(&frecency);
   aEntry->SetFrecency(frecency);
 
-  const char *altData = aMetaData->GetElement(CacheFileUtils::kAltDataKey);
+  const char* altData = aMetaData->GetElement(CacheFileUtils::kAltDataKey);
   bool hasAltData = altData ? true : false;
   if (hasAltData && NS_FAILED(CacheFileUtils::ParseAlternativeDataInfo(
                         altData, nullptr, nullptr))) {
@@ -2652,7 +3181,7 @@ nsresult CacheIndex::InitEntryFromDiskData(CacheIndexEntry *aEntry,
   }
   aEntry->SetHasAltData(hasAltData);
 
-  static auto toUint16 = [](const char *aUint16String) -> uint16_t {
+  static auto toUint16 = [](const char* aUint16String) -> uint16_t {
     if (!aUint16String) {
       return kIndexTimeNotAvailable;
     }
@@ -2667,8 +3196,38 @@ nsresult CacheIndex::InitEntryFromDiskData(CacheIndexEntry *aEntry,
   aEntry->SetOnStopTime(
       toUint16(aMetaData->GetElement("net-response-time-onstop")));
 
+<<<<<<< HEAD
   aEntry->SetFileSize(static_cast<uint32_t>(std::min(
       static_cast<int64_t>(PR_UINT32_MAX), (aFileSize + 0x3FF) >> 10)));
+||||||| merged common ancestors
+  aEntry->SetFileSize(static_cast<uint32_t>(
+                        std::min(static_cast<int64_t>(PR_UINT32_MAX),
+                                 (aFileSize + 0x3FF) >> 10)));
+=======
+  const char* contentTypeStr = aMetaData->GetElement("ctid");
+  uint8_t contentType = nsICacheEntry::CONTENT_TYPE_UNKNOWN;
+  if (contentTypeStr) {
+    int64_t n64 = nsDependentCString(contentTypeStr).ToInteger64(&rv);
+    if (NS_FAILED(rv) || n64 < nsICacheEntry::CONTENT_TYPE_UNKNOWN ||
+        n64 >= nsICacheEntry::CONTENT_TYPE_LAST) {
+      n64 = nsICacheEntry::CONTENT_TYPE_UNKNOWN;
+    }
+    contentType = n64;
+  }
+  aEntry->SetContentType(contentType);
+
+  uint32_t trID = CacheObserver::TelemetryReportID();
+  const char* siteIDInfo = aMetaData->GetElement("eTLD1Access");
+  uint16_t siteIDCount = 0;
+  if (siteIDInfo) {
+    CacheFileUtils::ParseBaseDomainAccessInfo(siteIDInfo, trID, nullptr,
+                                              nullptr, &siteIDCount);
+  }
+  aEntry->SetBaseDomainAccessCount(siteIDCount);
+
+  aEntry->SetFileSize(static_cast<uint32_t>(std::min(
+      static_cast<int64_t>(PR_UINT32_MAX), (aFileSize + 0x3FF) >> 10)));
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -2765,7 +3324,7 @@ void CacheIndex::BuildIndex() {
       continue;
     }
 
-    CacheIndexEntry *entry = mIndex.GetEntry(hash);
+    CacheIndexEntry* entry = mIndex.GetEntry(hash);
     if (entry && entry->IsRemoved()) {
       LOG(
           ("CacheIndex::BuildIndex() - Found file that should not exist. "
@@ -3008,7 +3567,7 @@ void CacheIndex::UpdateIndex() {
       continue;
     }
 
-    CacheIndexEntry *entry = mIndex.GetEntry(hash);
+    CacheIndexEntry* entry = mIndex.GetEntry(hash);
     if (entry && entry->IsRemoved()) {
       if (entry->IsFresh()) {
         LOG(
@@ -3205,7 +3764,15 @@ void CacheIndex::RemoveNonFreshEntries() {
 }
 
 // static
+<<<<<<< HEAD
 char const *CacheIndex::StateString(EState aState) {
+||||||| merged common ancestors
+char const *
+CacheIndex::StateString(EState aState)
+{
+=======
+char const* CacheIndex::StateString(EState aState) {
+>>>>>>> upstream-releases
   switch (aState) {
     case INITIAL:
       return "INITIAL";
@@ -3295,7 +3862,7 @@ void CacheIndex::AllocBuffer() {
       MOZ_ASSERT(false, "Unexpected state!");
   }
 
-  mRWBuf = static_cast<char *>(moz_xmalloc(mRWBufSize));
+  mRWBuf = static_cast<char*>(moz_xmalloc(mRWBufSize));
 }
 
 void CacheIndex::ReleaseBuffer() {
@@ -3313,11 +3880,25 @@ void CacheIndex::ReleaseBuffer() {
   mRWBufPos = 0;
 }
 
+<<<<<<< HEAD
 void CacheIndex::FrecencyArray::AppendRecord(CacheIndexRecord *aRecord) {
   LOG(
       ("CacheIndex::FrecencyArray::AppendRecord() [record=%p, hash=%08x%08x%08x"
        "%08x%08x]",
        aRecord, LOGSHA1(aRecord->mHash)));
+||||||| merged common ancestors
+void
+CacheIndex::FrecencyArray::AppendRecord(CacheIndexRecord *aRecord)
+{
+  LOG(("CacheIndex::FrecencyArray::AppendRecord() [record=%p, hash=%08x%08x%08x"
+       "%08x%08x]", aRecord, LOGSHA1(aRecord->mHash)));
+=======
+void CacheIndex::FrecencyArray::AppendRecord(CacheIndexRecord* aRecord) {
+  LOG(
+      ("CacheIndex::FrecencyArray::AppendRecord() [record=%p, hash=%08x%08x%08x"
+       "%08x%08x]",
+       aRecord, LOGSHA1(aRecord->mHash)));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(!mRecs.Contains(aRecord));
   mRecs.AppendElement(aRecord);
@@ -3329,7 +3910,15 @@ void CacheIndex::FrecencyArray::AppendRecord(CacheIndexRecord *aRecord) {
   }
 }
 
+<<<<<<< HEAD
 void CacheIndex::FrecencyArray::RemoveRecord(CacheIndexRecord *aRecord) {
+||||||| merged common ancestors
+void
+CacheIndex::FrecencyArray::RemoveRecord(CacheIndexRecord *aRecord)
+{
+=======
+void CacheIndex::FrecencyArray::RemoveRecord(CacheIndexRecord* aRecord) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::FrecencyArray::RemoveRecord() [record=%p]", aRecord));
 
   decltype(mRecs)::index_type idx;
@@ -3343,12 +3932,28 @@ void CacheIndex::FrecencyArray::RemoveRecord(CacheIndexRecord *aRecord) {
   SortIfNeeded();
 }
 
+<<<<<<< HEAD
 void CacheIndex::FrecencyArray::ReplaceRecord(CacheIndexRecord *aOldRecord,
                                               CacheIndexRecord *aNewRecord) {
   LOG(
       ("CacheIndex::FrecencyArray::ReplaceRecord() [oldRecord=%p, "
        "newRecord=%p]",
        aOldRecord, aNewRecord));
+||||||| merged common ancestors
+void
+CacheIndex::FrecencyArray::ReplaceRecord(CacheIndexRecord *aOldRecord,
+                                         CacheIndexRecord *aNewRecord)
+{
+  LOG(("CacheIndex::FrecencyArray::ReplaceRecord() [oldRecord=%p, "
+       "newRecord=%p]", aOldRecord, aNewRecord));
+=======
+void CacheIndex::FrecencyArray::ReplaceRecord(CacheIndexRecord* aOldRecord,
+                                              CacheIndexRecord* aNewRecord) {
+  LOG(
+      ("CacheIndex::FrecencyArray::ReplaceRecord() [oldRecord=%p, "
+       "newRecord=%p]",
+       aOldRecord, aNewRecord));
+>>>>>>> upstream-releases
 
   decltype(mRecs)::index_type idx;
   idx = mRecs.IndexOf(aOldRecord);
@@ -3387,7 +3992,15 @@ void CacheIndex::FrecencyArray::SortIfNeeded() {
   }
 }
 
+<<<<<<< HEAD
 void CacheIndex::AddRecordToIterators(CacheIndexRecord *aRecord) {
+||||||| merged common ancestors
+void
+CacheIndex::AddRecordToIterators(CacheIndexRecord *aRecord)
+{
+=======
+void CacheIndex::AddRecordToIterators(CacheIndexRecord* aRecord) {
+>>>>>>> upstream-releases
   sLock.AssertCurrentThreadOwns();
 
   for (uint32_t i = 0; i < mIterators.Length(); ++i) {
@@ -3398,7 +4011,15 @@ void CacheIndex::AddRecordToIterators(CacheIndexRecord *aRecord) {
   }
 }
 
+<<<<<<< HEAD
 void CacheIndex::RemoveRecordFromIterators(CacheIndexRecord *aRecord) {
+||||||| merged common ancestors
+void
+CacheIndex::RemoveRecordFromIterators(CacheIndexRecord *aRecord)
+{
+=======
+void CacheIndex::RemoveRecordFromIterators(CacheIndexRecord* aRecord) {
+>>>>>>> upstream-releases
   sLock.AssertCurrentThreadOwns();
 
   for (uint32_t i = 0; i < mIterators.Length(); ++i) {
@@ -3409,8 +4030,18 @@ void CacheIndex::RemoveRecordFromIterators(CacheIndexRecord *aRecord) {
   }
 }
 
+<<<<<<< HEAD
 void CacheIndex::ReplaceRecordInIterators(CacheIndexRecord *aOldRecord,
                                           CacheIndexRecord *aNewRecord) {
+||||||| merged common ancestors
+void
+CacheIndex::ReplaceRecordInIterators(CacheIndexRecord *aOldRecord,
+                                     CacheIndexRecord *aNewRecord)
+{
+=======
+void CacheIndex::ReplaceRecordInIterators(CacheIndexRecord* aOldRecord,
+                                          CacheIndexRecord* aNewRecord) {
+>>>>>>> upstream-releases
   sLock.AssertCurrentThreadOwns();
 
   for (uint32_t i = 0; i < mIterators.Length(); ++i) {
@@ -3452,6 +4083,7 @@ nsresult CacheIndex::Run() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnFileOpenedInternal(FileOpenHelper *aOpener,
                                           CacheFileHandle *aHandle,
                                           nsresult aResult) {
@@ -3459,6 +4091,22 @@ nsresult CacheIndex::OnFileOpenedInternal(FileOpenHelper *aOpener,
       ("CacheIndex::OnFileOpenedInternal() [opener=%p, handle=%p, "
        "result=0x%08" PRIx32 "]",
        aOpener, aHandle, static_cast<uint32_t>(aResult)));
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnFileOpenedInternal(FileOpenHelper *aOpener,
+                                 CacheFileHandle *aHandle, nsresult aResult)
+{
+  LOG(("CacheIndex::OnFileOpenedInternal() [opener=%p, handle=%p, "
+       "result=0x%08" PRIx32 "]", aOpener, aHandle, static_cast<uint32_t>(aResult)));
+=======
+nsresult CacheIndex::OnFileOpenedInternal(FileOpenHelper* aOpener,
+                                          CacheFileHandle* aHandle,
+                                          nsresult aResult) {
+  LOG(
+      ("CacheIndex::OnFileOpenedInternal() [opener=%p, handle=%p, "
+       "result=0x%08" PRIx32 "]",
+       aOpener, aHandle, static_cast<uint32_t>(aResult)));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -3560,15 +4208,37 @@ nsresult CacheIndex::OnFileOpenedInternal(FileOpenHelper *aOpener,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnFileOpened(CacheFileHandle *aHandle, nsresult aResult) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnFileOpened(CacheFileHandle *aHandle, nsresult aResult)
+{
+=======
+nsresult CacheIndex::OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheIndex::OnFileOpened should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
                                    nsresult aResult) {
   LOG(("CacheIndex::OnDataWritten() [handle=%p, result=0x%08" PRIx32 "]",
        aHandle, static_cast<uint32_t>(aResult)));
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
+                          nsresult aResult)
+{
+  LOG(("CacheIndex::OnDataWritten() [handle=%p, result=0x%08" PRIx32 "]", aHandle,
+       static_cast<uint32_t>(aResult)));
+=======
+nsresult CacheIndex::OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
+                                   nsresult aResult) {
+  LOG(("CacheIndex::OnDataWritten() [handle=%p, result=0x%08" PRIx32 "]",
+       aHandle, static_cast<uint32_t>(aResult)));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -3618,8 +4288,17 @@ nsresult CacheIndex::OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
                                 nsresult aResult) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnDataRead(CacheFileHandle *aHandle, char *aBuf, nsresult aResult)
+{
+=======
+nsresult CacheIndex::OnDataRead(CacheFileHandle* aHandle, char* aBuf,
+                                nsresult aResult) {
+>>>>>>> upstream-releases
   LOG(("CacheIndex::OnDataRead() [handle=%p, result=0x%08" PRIx32 "]", aHandle,
        static_cast<uint32_t>(aResult)));
 
@@ -3657,19 +4336,47 @@ nsresult CacheIndex::OnDataRead(CacheFileHandle *aHandle, char *aBuf,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult)
+{
+=======
+nsresult CacheIndex::OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheIndex::OnFileDoomed should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) {
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnEOFSet(CacheFileHandle *aHandle, nsresult aResult)
+{
+=======
+nsresult CacheIndex::OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheIndex::OnEOFSet should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheIndex::OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) {
   LOG(("CacheIndex::OnFileRenamed() [handle=%p, result=0x%08" PRIx32 "]",
        aHandle, static_cast<uint32_t>(aResult)));
+||||||| merged common ancestors
+nsresult
+CacheIndex::OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult)
+{
+  LOG(("CacheIndex::OnFileRenamed() [handle=%p, result=0x%08" PRIx32 "]", aHandle,
+       static_cast<uint32_t>(aResult)));
+=======
+nsresult CacheIndex::OnFileRenamed(CacheFileHandle* aHandle, nsresult aResult) {
+  LOG(("CacheIndex::OnFileRenamed() [handle=%p, result=0x%08" PRIx32 "]",
+       aHandle, static_cast<uint32_t>(aResult)));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -3782,9 +4489,20 @@ size_t CacheIndex::SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) {
 
 namespace {
 
+<<<<<<< HEAD
 class HashComparator {
  public:
   bool Equals(CacheIndexRecord *a, CacheIndexRecord *b) const {
+||||||| merged common ancestors
+class HashComparator
+{
+public:
+  bool Equals(CacheIndexRecord* a, CacheIndexRecord* b) const {
+=======
+class HashComparator {
+ public:
+  bool Equals(CacheIndexRecord* a, CacheIndexRecord* b) const {
+>>>>>>> upstream-releases
     return memcmp(&a->mHash, &b->mHash, sizeof(SHA1Sum::Hash)) == 0;
   }
   bool LessThan(CacheIndexRecord *a, CacheIndexRecord *b) const {
@@ -3792,10 +4510,23 @@ class HashComparator {
   }
 };
 
+<<<<<<< HEAD
 void ReportHashSizeMatch(const SHA1Sum::Hash *aHash1,
                          const SHA1Sum::Hash *aHash2) {
   const uint32_t *h1 = reinterpret_cast<const uint32_t *>(aHash1);
   const uint32_t *h2 = reinterpret_cast<const uint32_t *>(aHash2);
+||||||| merged common ancestors
+void
+ReportHashSizeMatch(const SHA1Sum::Hash *aHash1, const SHA1Sum::Hash *aHash2)
+{
+  const uint32_t *h1 = reinterpret_cast<const uint32_t *>(aHash1);
+  const uint32_t *h2 = reinterpret_cast<const uint32_t *>(aHash2);
+=======
+void ReportHashSizeMatch(const SHA1Sum::Hash* aHash1,
+                         const SHA1Sum::Hash* aHash2) {
+  const uint32_t* h1 = reinterpret_cast<const uint32_t*>(aHash1);
+  const uint32_t* h2 = reinterpret_cast<const uint32_t*>(aHash2);
+>>>>>>> upstream-releases
 
   for (uint32_t i = 0; i < 5; ++i) {
     if (h1[i] != h2[i]) {
@@ -3833,7 +4564,7 @@ void CacheIndex::ReportHashStats() {
     return;
   }
 
-  nsTArray<CacheIndexRecord *> records;
+  nsTArray<CacheIndexRecord*> records;
   for (auto iter = mFrecencyArray.Iter(); !iter.Done(); iter.Next()) {
     records.AppendElement(iter.Get());
   }
@@ -3848,13 +4579,170 @@ void CacheIndex::ReportHashStats() {
 }
 
 // static
+<<<<<<< HEAD
 void CacheIndex::OnAsyncEviction(bool aEvicting) {
+||||||| merged common ancestors
+void
+CacheIndex::OnAsyncEviction(bool aEvicting)
+{
+=======
+void CacheIndex::UpdateTotalBytesWritten(uint32_t aBytesWritten) {
+  StaticMutexAutoLock lock(sLock);
+
+>>>>>>> upstream-releases
   RefPtr<CacheIndex> index = gInstance;
   if (!index) {
     return;
   }
 
+  index->mTotalBytesWritten += aBytesWritten;
+
+  // Do telemetry report if enough data has been written and the index is
+  // in READY state. The data is available also in WRITING state, but we would
+  // need to deal with pending updates.
+  if (index->mTotalBytesWritten >= kTelemetryReportBytesLimit &&
+      index->mState == READY && !index->mIndexNeedsUpdate &&
+      !index->mShuttingDown) {
+    index->DoTelemetryReport();
+
+    index->mTotalBytesWritten = 0;
+    CacheObserver::SetCacheAmountWritten(0);
+    return;
+  }
+
+  uint64_t writtenKB = index->mTotalBytesWritten >> 10;
+  // Store number of written kilobytes to prefs after writing at least 10MB.
+  if ((writtenKB - CacheObserver::CacheAmountWritten()) > (10 * 1024)) {
+    CacheObserver::SetCacheAmountWritten(writtenKB);
+  }
+}
+
+void CacheIndex::DoTelemetryReport() {
+  static const nsLiteralCString
+      contentTypeNames[nsICacheEntry::CONTENT_TYPE_LAST] = {
+          NS_LITERAL_CSTRING("UNKNOWN"),    NS_LITERAL_CSTRING("OTHER"),
+          NS_LITERAL_CSTRING("JAVASCRIPT"), NS_LITERAL_CSTRING("IMAGE"),
+          NS_LITERAL_CSTRING("MEDIA"),      NS_LITERAL_CSTRING("STYLESHEET"),
+          NS_LITERAL_CSTRING("WASM")};
+
+  // size in kB of all entries
+  uint32_t size = 0;
+  // increase of size in kB that would be caused by first party isolation
+  uint32_t sizeInc = 0;
+  // count of all entries
+  uint32_t count = 0;
+  // increase of count that would be caused by first party isolation
+  uint32_t countInc = 0;
+
+  // the same stats as above split by content type
+  uint32_t sizeByType[nsICacheEntry::CONTENT_TYPE_LAST];
+  uint32_t sizeIncByType[nsICacheEntry::CONTENT_TYPE_LAST];
+  uint32_t countByType[nsICacheEntry::CONTENT_TYPE_LAST];
+  uint32_t countIncByType[nsICacheEntry::CONTENT_TYPE_LAST];
+
+  memset(&sizeByType, 0, sizeof(sizeByType));
+  memset(&sizeIncByType, 0, sizeof(sizeIncByType));
+  memset(&countByType, 0, sizeof(countByType));
+  memset(&countIncByType, 0, sizeof(countIncByType));
+
+  for (auto iter = mIndex.Iter(); !iter.Done(); iter.Next()) {
+    CacheIndexEntry* entry = iter.Get();
+    if (entry->IsRemoved() || !entry->IsInitialized() || entry->IsFileEmpty()) {
+      entry->SetBaseDomainAccessCount(0);
+      continue;
+    }
+
+    uint32_t entrySize = entry->GetFileSize();
+    uint32_t accessCnt = entry->GetBaseDomainAccessCount();
+    uint8_t contentType = entry->GetContentType();
+    entry->SetBaseDomainAccessCount(0);
+
+    ++count;
+    ++countByType[contentType];
+    size += entrySize;
+    sizeByType[contentType] += entrySize;
+
+    if (accessCnt > 1) {
+      countInc += accessCnt - 1;
+      countIncByType[contentType] += accessCnt - 1;
+      sizeInc += (accessCnt - 1) * entrySize;
+      sizeIncByType[contentType] += (accessCnt - 1) * entrySize;
+    }
+
+    Telemetry::Accumulate(
+        Telemetry::NETWORK_CACHE_ISOLATION_UNIQUE_SITE_ACCESS_COUNT,
+        contentTypeNames[contentType], accessCnt);
+  }
+
+  if (size > 0) {
+    Telemetry::Accumulate(Telemetry::NETWORK_CACHE_ISOLATION_SIZE_INCREASE,
+                          NS_LITERAL_CSTRING("ALL"),
+                          round(static_cast<double>(sizeInc) * 100.0 /
+                                static_cast<double>(size)));
+  }
+
+  if (count > 0) {
+    Telemetry::Accumulate(
+        Telemetry::NETWORK_CACHE_ISOLATION_ENTRY_COUNT_INCREASE,
+        NS_LITERAL_CSTRING("ALL"),
+        round(static_cast<double>(countInc) * 100.0 /
+              static_cast<double>(count)));
+  }
+
+  for (uint32_t i = 0; i < nsICacheEntry::CONTENT_TYPE_LAST; ++i) {
+    if (sizeByType[i] > 0) {
+      Telemetry::Accumulate(Telemetry::NETWORK_CACHE_ISOLATION_SIZE_INCREASE,
+                            contentTypeNames[i],
+                            round(static_cast<double>(sizeIncByType[i]) *
+                                  100.0 / static_cast<double>(sizeByType[i])));
+    }
+
+    if (countByType[i] > 0) {
+      Telemetry::Accumulate(
+          Telemetry::NETWORK_CACHE_ISOLATION_ENTRY_COUNT_INCREASE,
+          contentTypeNames[i],
+          round(static_cast<double>(countIncByType[i]) * 100.0 /
+                static_cast<double>(countByType[i])));
+    }
+
+    if (size > 0) {
+      Telemetry::Accumulate(Telemetry::NETWORK_CACHE_SIZE_SHARE,
+                            contentTypeNames[i],
+                            round(static_cast<double>(sizeByType[i]) * 100.0 /
+                                  static_cast<double>(size)));
+    }
+
+    if (count > 0) {
+      Telemetry::Accumulate(Telemetry::NETWORK_CACHE_ENTRY_COUNT_SHARE,
+                            contentTypeNames[i],
+                            round(static_cast<double>(countByType[i]) * 100.0 /
+                                  static_cast<double>(count)));
+    }
+  }
+
+  nsCString probeKey;
+  if (CacheObserver::SmartCacheSizeEnabled()) {
+    probeKey = NS_LITERAL_CSTRING("SMARTSIZE");
+  } else {
+    probeKey = NS_LITERAL_CSTRING("USERDEFINEDSIZE");
+  }
+  Telemetry::Accumulate(Telemetry::NETWORK_CACHE_ENTRY_COUNT, probeKey, count);
+  Telemetry::Accumulate(Telemetry::NETWORK_CACHE_SIZE, probeKey, size >> 10);
+
+  // Change telemetry report ID. This will invalidate eTLD+1 access data stored
+  // in all cache entries.
+  CacheObserver::SetTelemetryReportID(CacheObserver::TelemetryReportID() + 1);
+}
+
+// static
+void CacheIndex::OnAsyncEviction(bool aEvicting) {
   StaticMutexAutoLock lock(sLock);
+
+  RefPtr<CacheIndex> index = gInstance;
+  if (!index) {
+    return;
+  }
+
   index->mAsyncGetDiskConsumptionBlocked = aEvicting;
   if (!aEvicting) {
     index->NotifyAsyncGetDiskConsumptionCallbacks();

@@ -4,6 +4,7 @@
 
 "use strict";
 
+<<<<<<< HEAD
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
@@ -13,9 +14,57 @@ add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
   debuggee.eval(function stopMe(arg1) {
     debugger;
   }.toString());
+||||||| merged common ancestors
+async function run_test() {
+  try {
+    do_test_pending();
+    await run_test_with_server(DebuggerServer);
+    await run_test_with_server(WorkerDebuggerServer);
+  } finally {
+    do_test_finished();
+  }
+}
 
+async function run_test_with_server(server) {
+  initTestDebuggerServer(server);
+  const debuggee = addTestGlobal("test-grips", server);
+  debuggee.eval(`
+    function stopMe(arg1) {
+      debugger;
+    }
+  `);
+
+  const dbgClient = new DebuggerClient(server.connectPipe());
+  await dbgClient.connect();
+  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
+=======
+Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
+registerCleanupFunction(() => {
+  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
+});
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   await test_object_grip(debuggee, threadClient);
 }));
+||||||| merged common ancestors
+  await test_object_grip(debuggee, threadClient);
+
+  await dbgClient.close();
+}
+=======
+add_task(
+  threadClientTest(async ({ threadClient, debuggee, client }) => {
+    debuggee.eval(
+      function stopMe(arg1) {
+        debugger;
+      }.toString()
+    );
+
+    await test_object_grip(debuggee, threadClient);
+  })
+);
+>>>>>>> upstream-releases
 
 async function test_object_grip(debuggee, threadClient) {
   const code = `
@@ -25,14 +74,19 @@ async function test_object_grip(debuggee, threadClient) {
       },
     });
   `;
-  const objClient = await eval_and_resume(debuggee, threadClient, code, async frame => {
-    const arg1 = frame.arguments[0];
-    Assert.equal(arg1.class, "Object");
+  const objClient = await eval_and_resume(
+    debuggee,
+    threadClient,
+    code,
+    async frame => {
+      const arg1 = frame.arguments[0];
+      Assert.equal(arg1.class, "Object");
 
-    const obj = threadClient.pauseGrip(arg1);
-    await obj.threadGrip();
-    return obj;
-  });
+      const obj = threadClient.pauseGrip(arg1);
+      await obj.threadGrip();
+      return obj;
+    }
+  );
 
   // Ensure that we actually paused at the `debugger;` line.
   await Promise.all([
@@ -56,7 +110,7 @@ function eval_and_resume(debuggee, threadClient, code, callback) {
 
 function wait_for_pause(threadClient, callback = () => {}) {
   return new Promise((resolve, reject) => {
-    threadClient.addOneTimeListener("paused", function(event, packet) {
+    threadClient.once("paused", function(packet) {
       (async () => {
         try {
           return await callback(packet.frame);

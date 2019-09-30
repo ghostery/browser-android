@@ -64,6 +64,7 @@ ChannelMergerNode::ChannelMergerNode(AudioContext* aContext,
                                     aContext->Graph());
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ChannelMergerNode> ChannelMergerNode::Create(
     AudioContext& aAudioContext, const ChannelMergerOptions& aOptions,
     ErrorResult& aRv) {
@@ -71,6 +72,22 @@ ChannelMergerNode::ChannelMergerNode(AudioContext* aContext,
     return nullptr;
   }
 
+||||||| merged common ancestors
+/* static */ already_AddRefed<ChannelMergerNode>
+ChannelMergerNode::Create(AudioContext& aAudioContext,
+                          const ChannelMergerOptions& aOptions,
+                          ErrorResult& aRv)
+{
+  if (aAudioContext.CheckClosed(aRv)) {
+    return nullptr;
+  }
+
+=======
+/* static */
+already_AddRefed<ChannelMergerNode> ChannelMergerNode::Create(
+    AudioContext& aAudioContext, const ChannelMergerOptions& aOptions,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (aOptions.mNumberOfInputs == 0 ||
       aOptions.mNumberOfInputs > WebAudioUtils::MaxChannelCount) {
     aRv.Throw(NS_ERROR_DOM_INDEX_SIZE_ERR);

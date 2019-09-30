@@ -11,8 +11,16 @@
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/HTMLFormControlsCollectionBinding.h"
 #include "mozilla/dom/HTMLFormElement.h"
+<<<<<<< HEAD
 #include "nsGenericHTMLElement.h"  // nsGenericHTMLFormElement
 #include "nsIDocument.h"
+||||||| merged common ancestors
+#include "nsGenericHTMLElement.h" // nsGenericHTMLFormElement
+#include "nsIDocument.h"
+=======
+#include "nsGenericHTMLElement.h"  // nsGenericHTMLFormElement
+#include "mozilla/dom/Document.h"
+>>>>>>> upstream-releases
 #include "nsIFormControl.h"
 #include "RadioNodeList.h"
 #include "jsfriendapi.h"
@@ -20,8 +28,18 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ bool HTMLFormControlsCollection::ShouldBeInElements(
     nsIFormControl* aFormControl) {
+||||||| merged common ancestors
+/* static */ bool
+HTMLFormControlsCollection::ShouldBeInElements(nsIFormControl* aFormControl)
+{
+=======
+/* static */
+bool HTMLFormControlsCollection::ShouldBeInElements(
+    nsIFormControl* aFormControl) {
+>>>>>>> upstream-releases
   // For backwards compatibility (with 4.x and IE) we must not add
   // <input type=image> elements to the list of form controls in a
   // form.
@@ -105,7 +123,7 @@ void HTMLFormControlsCollection::Clear() {
 
 void HTMLFormControlsCollection::FlushPendingNotifications() {
   if (mForm) {
-    nsIDocument* doc = mForm->GetUncomposedDoc();
+    Document* doc = mForm->GetUncomposedDoc();
     if (doc) {
       doc->FlushPendingNotifications(FlushType::Content);
     }
@@ -261,12 +279,33 @@ Element* HTMLFormControlsCollection::GetElementAt(uint32_t aIndex) {
   return mElements.SafeElementAt(aIndex, nullptr);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsINode* HTMLFormControlsCollection::GetParentObject() {
   return mForm;
 }
+||||||| merged common ancestors
+/* virtual */ nsINode*
+HTMLFormControlsCollection::GetParentObject()
+{
+  return mForm;
+}
+=======
+/* virtual */
+nsINode* HTMLFormControlsCollection::GetParentObject() { return mForm; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* virtual */ Element* HTMLFormControlsCollection::GetFirstNamedElement(
     const nsAString& aName, bool& aFound) {
+||||||| merged common ancestors
+/* virtual */ Element*
+HTMLFormControlsCollection::GetFirstNamedElement(const nsAString& aName, bool& aFound)
+{
+=======
+/* virtual */
+Element* HTMLFormControlsCollection::GetFirstNamedElement(
+    const nsAString& aName, bool& aFound) {
+>>>>>>> upstream-releases
   Nullable<OwningRadioNodeListOrElement> maybeResult;
   NamedGetter(aName, aFound, maybeResult);
   if (!aFound) {
@@ -315,8 +354,18 @@ void HTMLFormControlsCollection::GetSupportedNames(nsTArray<nsString>& aNames) {
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* HTMLFormControlsCollection::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+HTMLFormControlsCollection::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* HTMLFormControlsCollection::WrapObject(
+    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return HTMLFormControlsCollection_Binding::Wrap(aCx, this, aGivenProto);
 }
 

@@ -7,14 +7,14 @@
 #ifndef MOZILLA_DOMSVGPATHSEGLIST_H__
 #define MOZILLA_DOMSVGPATHSEGLIST_H__
 
-#include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsDebug.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "nsTArray.h"
 #include "SVGPathData.h"  // IWYU pragma: keep
 #include "mozilla/Attributes.h"
 #include "mozilla/ErrorResult.h"
+#include "mozilla/RefPtr.h"
 
 namespace mozilla {
 
@@ -76,8 +76,18 @@ class DOMSVGPathSegList final : public nsISupports, public nsWrapperCache {
    * use the addresses of these members as the key for the hash table, and
    * clearly SVGPathData* and a SVGPathData** are not the same type.
    */
+<<<<<<< HEAD
   static already_AddRefed<DOMSVGPathSegList> GetDOMWrapper(
       void* aList, nsSVGElement* aElement, bool aIsAnimValList);
+||||||| merged common ancestors
+  static already_AddRefed<DOMSVGPathSegList>
+  GetDOMWrapper(void *aList,
+                nsSVGElement *aElement,
+                bool aIsAnimValList);
+=======
+  static already_AddRefed<DOMSVGPathSegList> GetDOMWrapper(
+      void* aList, dom::SVGElement* aElement, bool aIsAnimValList);
+>>>>>>> upstream-releases
 
   /**
    * This method returns the DOMSVGPathSegList wrapper for an internal
@@ -156,14 +166,34 @@ class DOMSVGPathSegList final : public nsISupports, public nsWrapperCache {
    * Only our static GetDOMWrapper() factory method may create objects of our
    * type.
    */
+<<<<<<< HEAD
   DOMSVGPathSegList(nsSVGElement* aElement, bool aIsAnimValList)
       : mElement(aElement), mIsAnimValList(aIsAnimValList) {
     InternalListWillChangeTo(InternalList());  // Sync mItems
+||||||| merged common ancestors
+  DOMSVGPathSegList(nsSVGElement *aElement, bool aIsAnimValList)
+    : mElement(aElement)
+    , mIsAnimValList(aIsAnimValList)
+  {
+    InternalListWillChangeTo(InternalList()); // Sync mItems
+=======
+  DOMSVGPathSegList(dom::SVGElement* aElement, bool aIsAnimValList)
+      : mElement(aElement), mIsAnimValList(aIsAnimValList) {
+    InternalListWillChangeTo(InternalList());  // Sync mItems
+>>>>>>> upstream-releases
   }
 
   ~DOMSVGPathSegList();
 
+<<<<<<< HEAD
   nsSVGElement* Element() const { return mElement.get(); }
+||||||| merged common ancestors
+  nsSVGElement* Element() const {
+    return mElement.get();
+  }
+=======
+  dom::SVGElement* Element() const { return mElement.get(); }
+>>>>>>> upstream-releases
 
   /// Used to determine if this list is the baseVal or animVal list.
   bool IsAnimValList() const { return mIsAnimValList; }
@@ -221,7 +251,7 @@ class DOMSVGPathSegList final : public nsISupports, public nsWrapperCache {
 
   // Strong ref to our element to keep it alive. We hold this not only for
   // ourself, but also for our DOMSVGPathSeg items too.
-  RefPtr<nsSVGElement> mElement;
+  RefPtr<dom::SVGElement> mElement;
 
   bool mIsAnimValList;
 };

@@ -51,8 +51,20 @@ enum class TilePaintFlags : uint8_t {
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(TilePaintFlags)
 
+<<<<<<< HEAD
 struct AcquiredBackBuffer {
   AcquiredBackBuffer(gfx::DrawTarget* aTarget, gfx::DrawTargetCapture* aCapture,
+||||||| merged common ancestors
+struct AcquiredBackBuffer
+{
+  AcquiredBackBuffer(gfx::DrawTarget* aTarget,
+                     gfx::DrawTargetCapture* aCapture,
+=======
+void ShutdownTileCache();
+
+struct AcquiredBackBuffer {
+  AcquiredBackBuffer(gfx::DrawTarget* aTarget, gfx::DrawTargetCapture* aCapture,
+>>>>>>> upstream-releases
                      gfx::DrawTarget* aBackBuffer,
                      const gfx::IntRect& aUpdatedRect,
                      AutoTArray<RefPtr<TextureClient>, 4>&& aTextureClients)
@@ -313,7 +325,7 @@ class SharedFrameMetricsHelper {
  * This buffer provides an implementation of ValidateTile using a
  * thebes callback and can support painting using a single paint buffer.
  * Whether a single paint buffer is used is controlled by
- * gfxPrefs::PerTileDrawing().
+ * StaticPrefs::PerTileDrawing().
  */
 class ClientTiledLayerBuffer {
  public:
@@ -386,12 +398,30 @@ class TiledContentClient : public CompositableClient {
  public:
   virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix);
 
+<<<<<<< HEAD
   virtual void Dump(
       std::stringstream& aStream, const char* aPrefix = "",
       bool aDumpHtml = false,
       TextureDumpMode aCompress = TextureDumpMode::Compress) override;
+||||||| merged common ancestors
+  virtual void Dump(std::stringstream& aStream,
+                    const char* aPrefix="",
+                    bool aDumpHtml=false,
+                    TextureDumpMode aCompress=TextureDumpMode::Compress) override;
+=======
+  void Dump(std::stringstream& aStream, const char* aPrefix = "",
+            bool aDumpHtml = false,
+            TextureDumpMode aCompress = TextureDumpMode::Compress) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual TextureInfo GetTextureInfo() const override {
+||||||| merged common ancestors
+  virtual TextureInfo GetTextureInfo() const override
+  {
+=======
+  TextureInfo GetTextureInfo() const override {
+>>>>>>> upstream-releases
     return TextureInfo(CompositableType::CONTENT_TILED);
   }
 

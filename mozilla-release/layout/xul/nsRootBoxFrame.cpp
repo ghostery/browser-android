@@ -7,7 +7,6 @@
 #include "nsHTMLParts.h"
 #include "nsStyleConsts.h"
 #include "nsGkAtoms.h"
-#include "nsIPresShell.h"
 #include "nsBoxFrame.h"
 #include "nsDisplayList.h"
 #include "nsStackLayout.h"
@@ -15,6 +14,7 @@
 #include "nsIContent.h"
 #include "nsFrameManager.h"
 #include "mozilla/BasicEvents.h"
+#include "mozilla/PresShell.h"
 
 using namespace mozilla;
 
@@ -23,11 +23,21 @@ using namespace mozilla;
 //#define DEBUG_REFLOW
 
 // static
+<<<<<<< HEAD
 nsIPopupContainer* nsIPopupContainer::GetPopupContainer(nsIPresShell* aShell) {
   if (!aShell) {
+||||||| merged common ancestors
+nsIPopupContainer*
+nsIPopupContainer::GetPopupContainer(nsIPresShell* aShell)
+{
+  if (!aShell) {
+=======
+nsIPopupContainer* nsIPopupContainer::GetPopupContainer(PresShell* aPresShell) {
+  if (!aPresShell) {
+>>>>>>> upstream-releases
     return nullptr;
   }
-  nsIFrame* rootFrame = aShell->GetRootFrame();
+  nsIFrame* rootFrame = aPresShell->GetRootFrame();
   if (!rootFrame) {
     return nullptr;
   }
@@ -49,12 +59,29 @@ nsIPopupContainer* nsIPopupContainer::GetPopupContainer(nsIPresShell* aShell) {
   return rootBox;
 }
 
+<<<<<<< HEAD
 class nsRootBoxFrame final : public nsBoxFrame, public nsIPopupContainer {
  public:
   friend nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell,
                                   ComputedStyle* aStyle);
 
   explicit nsRootBoxFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsRootBoxFrame final : public nsBoxFrame, public nsIPopupContainer
+{
+public:
+
+  friend nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+
+  explicit nsRootBoxFrame(ComputedStyle* aStyle);
+=======
+class nsRootBoxFrame final : public nsBoxFrame, public nsIPopupContainer {
+ public:
+  friend nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
+                                  ComputedStyle* aStyle);
+
+  explicit nsRootBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsRootBoxFrame)
@@ -99,17 +126,42 @@ class nsRootBoxFrame final : public nsBoxFrame, public nsIPopupContainer {
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewRootBoxFrame(nsIPresShell* aPresShell,
                                      ComputedStyle* aStyle) {
   return new (aPresShell) nsRootBoxFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewRootBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsRootBoxFrame(aStyle);
+=======
+nsContainerFrame* NS_NewRootBoxFrame(PresShell* aPresShell,
+                                     ComputedStyle* aStyle) {
+  return new (aPresShell) nsRootBoxFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRootBoxFrame)
 
+<<<<<<< HEAD
 nsRootBoxFrame::nsRootBoxFrame(ComputedStyle* aStyle)
     : nsBoxFrame(aStyle, kClassID, true),
       mPopupSetFrame(nullptr),
       mDefaultTooltip(nullptr) {
+||||||| merged common ancestors
+nsRootBoxFrame::nsRootBoxFrame(ComputedStyle* aStyle)
+  : nsBoxFrame(aStyle, kClassID, true)
+  , mPopupSetFrame(nullptr)
+  , mDefaultTooltip(nullptr)
+{
+=======
+nsRootBoxFrame::nsRootBoxFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+    : nsBoxFrame(aStyle, aPresContext, kClassID, true),
+      mPopupSetFrame(nullptr),
+      mDefaultTooltip(nullptr) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsBoxLayout> layout;
   NS_NewStackLayout(layout);
   SetXULLayoutManager(layout);

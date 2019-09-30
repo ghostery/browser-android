@@ -13,6 +13,7 @@
 #include "nsThreadUtils.h"
 #include "nsIOutputStream.h"
 #include "nsNetCID.h"
+#include "nsTArray.h"
 #include <algorithm>
 
 using namespace mozilla;
@@ -83,6 +84,7 @@ bool nsFtpControlConnection::IsAlive() {
   mSocket->IsAlive(&isAlive);
   return isAlive;
 }
+<<<<<<< HEAD
 nsresult nsFtpControlConnection::Connect(nsIProxyInfo* proxyInfo,
                                          nsITransportEventSink* eventSink) {
   if (mSocket) return NS_OK;
@@ -118,6 +120,87 @@ nsresult nsFtpControlConnection::Connect(nsIProxyInfo* proxyInfo,
   if (NS_SUCCEEDED(rv)) mSocketInput = do_QueryInterface(inStream);
 
   return rv;
+||||||| merged common ancestors
+nsresult
+nsFtpControlConnection::Connect(nsIProxyInfo* proxyInfo,
+                                nsITransportEventSink* eventSink)
+{
+    if (mSocket)
+        return NS_OK;
+
+    // build our own
+    nsresult rv;
+    nsCOMPtr<nsISocketTransportService> sts =
+            do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID, &rv);
+    if (NS_FAILED(rv))
+        return rv;
+
+    rv = sts->CreateTransport(nullptr, 0, mHost, mPort, proxyInfo,
+                              getter_AddRefs(mSocket)); // the command transport
+    if (NS_FAILED(rv))
+        return rv;
+
+    mSocket->SetQoSBits(gFtpHandler->GetControlQoSBits());
+
+    // proxy transport events back to current thread
+    if (eventSink)
+        mSocket->SetEventSink(eventSink, GetCurrentThreadEventTarget());
+
+    // open buffered, blocking output stream to socket.  so long as commands
+    // do not exceed 1024 bytes in length, the writing thread (the main thread)
+    // will not block.  this should be OK.
+    rv = mSocket->OpenOutputStream(nsITransport::OPEN_BLOCKING, 1024, 1,
+                                   getter_AddRefs(mSocketOutput));
+    if (NS_FAILED(rv))
+        return rv;
+
+    // open buffered, non-blocking/asynchronous input stream to socket.
+    nsCOMPtr<nsIInputStream> inStream;
+    rv = mSocket->OpenInputStream(0,
+                                  nsIOService::gDefaultSegmentSize,
+                                  nsIOService::gDefaultSegmentCount,
+                                  getter_AddRefs(inStream));
+    if (NS_SUCCEEDED(rv))
+        mSocketInput = do_QueryInterface(inStream);
+
+    return rv;
+=======
+nsresult nsFtpControlConnection::Connect(nsIProxyInfo* proxyInfo,
+                                         nsITransportEventSink* eventSink) {
+  if (mSocket) return NS_OK;
+
+  // build our own
+  nsresult rv;
+  nsCOMPtr<nsISocketTransportService> sts =
+      do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID, &rv);
+  if (NS_FAILED(rv)) return rv;
+
+  rv = sts->CreateTransport(nsTArray<nsCString>(), mHost, mPort, proxyInfo,
+                            getter_AddRefs(mSocket));  // the command transport
+  if (NS_FAILED(rv)) return rv;
+
+  mSocket->SetQoSBits(gFtpHandler->GetControlQoSBits());
+
+  // proxy transport events back to current thread
+  if (eventSink)
+    mSocket->SetEventSink(eventSink, GetCurrentThreadEventTarget());
+
+  // open buffered, blocking output stream to socket.  so long as commands
+  // do not exceed 1024 bytes in length, the writing thread (the main thread)
+  // will not block.  this should be OK.
+  rv = mSocket->OpenOutputStream(nsITransport::OPEN_BLOCKING, 1024, 1,
+                                 getter_AddRefs(mSocketOutput));
+  if (NS_FAILED(rv)) return rv;
+
+  // open buffered, non-blocking/asynchronous input stream to socket.
+  nsCOMPtr<nsIInputStream> inStream;
+  rv = mSocket->OpenInputStream(0, nsIOService::gDefaultSegmentSize,
+                                nsIOService::gDefaultSegmentCount,
+                                getter_AddRefs(inStream));
+  if (NS_SUCCEEDED(rv)) mSocketInput = do_QueryInterface(inStream);
+
+  return rv;
+>>>>>>> upstream-releases
 }
 
 nsresult nsFtpControlConnection::WaitData(

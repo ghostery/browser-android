@@ -19,10 +19,10 @@ class nsMenuBarX;
 class nsMenuX;
 class nsIWidget;
 class nsIContent;
-class nsIDocument;
 
 namespace mozilla {
 namespace dom {
+class Document;
 class Element;
 }
 }
@@ -111,6 +111,7 @@ class nsMenuBarX : public nsMenuGroupOwnerX, public nsChangeObserver {
   nsMenuObjectTypeX MenuObjectType() override { return eMenuBarObjectType; }
 
   // nsMenuBarX
+<<<<<<< HEAD
   nsresult Create(nsIWidget* aParent, mozilla::dom::Element* aElement);
   void SetParent(nsIWidget* aParent);
   uint32_t GetMenuCount();
@@ -137,6 +138,61 @@ class nsMenuBarX : public nsMenuGroupOwnerX, public nsChangeObserver {
   NSMenuItem* CreateNativeAppMenuItem(nsMenuX* inMenu, const nsAString& nodeID, SEL action, int tag,
                                       NativeMenuItemTarget* target);
   nsresult CreateApplicationMenu(nsMenuX* inMenu);
+||||||| merged common ancestors
+  nsresult          Create(nsIWidget* aParent, mozilla::dom::Element* aElement);
+  void              SetParent(nsIWidget* aParent);
+  uint32_t          GetMenuCount();
+  bool              MenuContainsAppMenu();
+  nsMenuX*          GetMenuAt(uint32_t aIndex);
+  nsMenuX*          GetXULHelpMenu();
+  void              SetSystemHelpMenu();
+  nsresult          Paint();
+  void              ForceUpdateNativeMenuAt(const nsAString& indexString);
+  void              ForceNativeMenuReload(); // used for testing
+  static char       GetLocalizedAccelKey(const char *shortcutID);
+  static void       ResetNativeApplicationMenu();
+  void              SetNeedsRebuild();
+  void              ApplicationMenuOpened();
+  bool              PerformKeyEquivalent(NSEvent* theEvent);
+
+protected:
+  void              ConstructNativeMenus();
+  void              ConstructFallbackNativeMenus();
+  nsresult          InsertMenuAtIndex(nsMenuX* aMenu, uint32_t aIndex);
+  void              RemoveMenuAtIndex(uint32_t aIndex);
+  void              HideItem(nsIDocument* inDoc, const nsAString & inID, nsIContent** outHiddenNode);
+  void              AquifyMenuBar();
+  NSMenuItem*       CreateNativeAppMenuItem(nsMenuX* inMenu, const nsAString& nodeID, SEL action,
+                                            int tag, NativeMenuItemTarget* target);
+  nsresult          CreateApplicationMenu(nsMenuX* inMenu);
+=======
+  nsresult Create(nsIWidget* aParent, mozilla::dom::Element* aElement);
+  void SetParent(nsIWidget* aParent);
+  uint32_t GetMenuCount();
+  bool MenuContainsAppMenu();
+  nsMenuX* GetMenuAt(uint32_t aIndex);
+  nsMenuX* GetXULHelpMenu();
+  void SetSystemHelpMenu();
+  nsresult Paint();
+  void ForceUpdateNativeMenuAt(const nsAString& indexString);
+  void ForceNativeMenuReload();  // used for testing
+  static char GetLocalizedAccelKey(const char* shortcutID);
+  static void ResetNativeApplicationMenu();
+  void SetNeedsRebuild();
+  void ApplicationMenuOpened();
+  bool PerformKeyEquivalent(NSEvent* theEvent);
+
+ protected:
+  void ConstructNativeMenus();
+  void ConstructFallbackNativeMenus();
+  nsresult InsertMenuAtIndex(nsMenuX* aMenu, uint32_t aIndex);
+  void RemoveMenuAtIndex(uint32_t aIndex);
+  void HideItem(mozilla::dom::Document* inDoc, const nsAString& inID, nsIContent** outHiddenNode);
+  void AquifyMenuBar();
+  NSMenuItem* CreateNativeAppMenuItem(nsMenuX* inMenu, const nsAString& nodeID, SEL action, int tag,
+                                      NativeMenuItemTarget* target);
+  nsresult CreateApplicationMenu(nsMenuX* inMenu);
+>>>>>>> upstream-releases
 
   nsTArray<mozilla::UniquePtr<nsMenuX>> mMenuArray;
   nsIWidget* mParentWindow;  // [weak]

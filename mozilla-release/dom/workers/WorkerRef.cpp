@@ -89,8 +89,8 @@ void WorkerRef::Notify() {
     return;
   }
 
-  std::function<void()> callback = mCallback;
-  mCallback = nullptr;
+  std::function<void()> callback = std::move(mCallback);
+  MOZ_ASSERT(!mCallback);
 
   callback();
 }
@@ -98,8 +98,19 @@ void WorkerRef::Notify() {
 // ----------------------------------------------------------------------------
 // WeakWorkerRef
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<WeakWorkerRef> WeakWorkerRef::Create(
     WorkerPrivate* aWorkerPrivate, const std::function<void()>& aCallback) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<WeakWorkerRef>
+WeakWorkerRef::Create(WorkerPrivate* aWorkerPrivate,
+                      const std::function<void()>& aCallback)
+{
+=======
+/* static */
+already_AddRefed<WeakWorkerRef> WeakWorkerRef::Create(
+    WorkerPrivate* aWorkerPrivate, std::function<void()>&& aCallback) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   aWorkerPrivate->AssertIsOnWorkerThread();
 
@@ -113,7 +124,7 @@ void WorkerRef::Notify() {
   }
 
   ref->mHolder = std::move(holder);
-  ref->mCallback = aCallback;
+  ref->mCallback = std::move(aCallback);
 
   return ref.forget();
 }
@@ -142,23 +153,63 @@ WorkerPrivate* WeakWorkerRef::GetUnsafePrivate() const {
 // ----------------------------------------------------------------------------
 // StrongWorkerRef
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<StrongWorkerRef> StrongWorkerRef::Create(
     WorkerPrivate* aWorkerPrivate, const char* aName,
     const std::function<void()>& aCallback) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<StrongWorkerRef>
+StrongWorkerRef::Create(WorkerPrivate* aWorkerPrivate,
+                        const char* aName,
+                        const std::function<void()>& aCallback)
+{
+=======
+/* static */
+already_AddRefed<StrongWorkerRef> StrongWorkerRef::Create(
+    WorkerPrivate* const aWorkerPrivate, const char* const aName,
+    std::function<void()>&& aCallback) {
+  if (RefPtr<StrongWorkerRef> ref =
+          CreateImpl(aWorkerPrivate, aName, Canceling)) {
+    ref->mCallback = std::move(aCallback);
+    return ref.forget();
+  }
+  return nullptr;
+}
+
+/* static */
+already_AddRefed<StrongWorkerRef> StrongWorkerRef::CreateForcibly(
+    WorkerPrivate* const aWorkerPrivate, const char* const aName) {
+  return CreateImpl(aWorkerPrivate, aName, Killing);
+}
+
+/* static */
+already_AddRefed<StrongWorkerRef> StrongWorkerRef::CreateImpl(
+    WorkerPrivate* const aWorkerPrivate, const char* const aName,
+    WorkerStatus const aFailStatus) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   MOZ_ASSERT(aName);
 
   RefPtr<StrongWorkerRef> ref = new StrongWorkerRef(aWorkerPrivate);
 
   // The worker is kept alive by this holder.
+<<<<<<< HEAD
   UniquePtr<Holder> holder(
       new Holder(aName, ref, WorkerHolder::PreventIdleShutdownStart));
   if (NS_WARN_IF(!holder->HoldWorker(aWorkerPrivate, Canceling))) {
+||||||| merged common ancestors
+  UniquePtr<Holder> holder(new Holder(aName, ref,
+                                      WorkerHolder::PreventIdleShutdownStart));
+  if (NS_WARN_IF(!holder->HoldWorker(aWorkerPrivate, Canceling))) {
+=======
+  UniquePtr<Holder> holder(
+      new Holder(aName, ref, WorkerHolder::PreventIdleShutdownStart));
+  if (NS_WARN_IF(!holder->HoldWorker(aWorkerPrivate, aFailStatus))) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
   ref->mHolder = std::move(holder);
-  ref->mCallback = aCallback;
 
   return ref.forget();
 }

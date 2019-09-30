@@ -56,16 +56,22 @@ class Predictor final : public nsINetworkPredictor,
 
   nsresult Init();
   void Shutdown();
+<<<<<<< HEAD
   static nsresult Create(nsISupports *outer, const nsIID &iid, void **result);
+||||||| merged common ancestors
+  static nsresult Create(nsISupports *outer, const nsIID& iid, void **result);
+=======
+  static nsresult Create(nsISupports* outer, const nsIID& iid, void** result);
+>>>>>>> upstream-releases
 
   // Used to update whether a particular URI was cacheable or not.
   // sourceURI and targetURI are the same as the arguments to Learn
   // and httpStatus is the status code we got while loading targetURI.
-  static void UpdateCacheability(nsIURI *sourceURI, nsIURI *targetURI,
+  static void UpdateCacheability(nsIURI* sourceURI, nsIURI* targetURI,
                                  uint32_t httpStatus,
-                                 nsHttpRequestHead &requestHead,
-                                 nsHttpResponseHead *reqponseHead,
-                                 nsILoadContextInfo *lci, bool isTracking);
+                                 nsHttpRequestHead& requestHead,
+                                 nsHttpResponseHead* reqponseHead,
+                                 nsILoadContextInfo* lci, bool isTracking);
 
  private:
   virtual ~Predictor();
@@ -94,12 +100,29 @@ class Predictor final : public nsINetworkPredictor,
     NS_DECL_THREADSAFE_ISUPPORTS
     NS_DECL_NSICACHEENTRYOPENCALLBACK
 
+<<<<<<< HEAD
     Action(bool fullUri, bool predict, Reason reason, nsIURI *targetURI,
            nsIURI *sourceURI, nsINetworkPredictorVerifier *verifier,
            Predictor *predictor);
     Action(bool fullUri, bool predict, Reason reason, nsIURI *targetURI,
            nsIURI *sourceURI, nsINetworkPredictorVerifier *verifier,
            Predictor *predictor, uint8_t stackCount);
+||||||| merged common ancestors
+    Action(bool fullUri, bool predict, Reason reason,
+           nsIURI *targetURI, nsIURI *sourceURI,
+           nsINetworkPredictorVerifier *verifier, Predictor *predictor);
+    Action(bool fullUri, bool predict, Reason reason,
+           nsIURI *targetURI, nsIURI *sourceURI,
+           nsINetworkPredictorVerifier *verifier, Predictor *predictor,
+           uint8_t stackCount);
+=======
+    Action(bool fullUri, bool predict, Reason reason, nsIURI* targetURI,
+           nsIURI* sourceURI, nsINetworkPredictorVerifier* verifier,
+           Predictor* predictor);
+    Action(bool fullUri, bool predict, Reason reason, nsIURI* targetURI,
+           nsIURI* sourceURI, nsINetworkPredictorVerifier* verifier,
+           Predictor* predictor, uint8_t stackCount);
+>>>>>>> upstream-releases
 
     static const bool IS_FULL_URI = true;
     static const bool IS_ORIGIN = false;
@@ -131,6 +154,7 @@ class Predictor final : public nsINetworkPredictor,
     NS_DECL_NSICACHEENTRYOPENCALLBACK
     NS_DECL_NSICACHEENTRYMETADATAVISITOR
 
+<<<<<<< HEAD
     CacheabilityAction(nsIURI *targetURI, uint32_t httpStatus,
                        const nsCString &method, bool isTracking, bool couldVary,
                        bool isNoStore, Predictor *predictor)
@@ -143,6 +167,34 @@ class Predictor final : public nsINetworkPredictor,
           mPredictor(predictor) {}
 
    private:
+||||||| merged common ancestors
+    CacheabilityAction(nsIURI *targetURI, uint32_t httpStatus,
+                       const nsCString &method, bool isTracking, bool couldVary,
+                       bool isNoStore, Predictor *predictor)
+      :mTargetURI(targetURI)
+      ,mHttpStatus(httpStatus)
+      ,mMethod(method)
+      ,mIsTracking(isTracking)
+      ,mCouldVary(couldVary)
+      ,mIsNoStore(isNoStore)
+      ,mPredictor(predictor)
+    { }
+
+  private:
+=======
+    CacheabilityAction(nsIURI* targetURI, uint32_t httpStatus,
+                       const nsCString& method, bool isTracking, bool couldVary,
+                       bool isNoStore, Predictor* predictor)
+        : mTargetURI(targetURI),
+          mHttpStatus(httpStatus),
+          mMethod(method),
+          mIsTracking(isTracking),
+          mCouldVary(couldVary),
+          mIsNoStore(isNoStore),
+          mPredictor(predictor) {}
+
+   private:
+>>>>>>> upstream-releases
     virtual ~CacheabilityAction() = default;
 
     nsCOMPtr<nsIURI> mTargetURI;
@@ -165,7 +217,7 @@ class Predictor final : public nsINetworkPredictor,
     NS_DECL_NSICACHEENTRYMETADATAVISITOR
     NS_DECL_NSICACHESTORAGEVISITOR
 
-    explicit Resetter(Predictor *predictor);
+    explicit Resetter(Predictor* predictor);
 
    private:
     virtual ~Resetter() = default;
@@ -184,15 +236,26 @@ class Predictor final : public nsINetworkPredictor,
     NS_DECL_ISUPPORTS
     NS_DECL_NSICACHEENTRYMETADATAVISITOR
 
+<<<<<<< HEAD
     explicit SpaceCleaner(Predictor *predictor)
         : mLRUStamp(0), mLRUKeyToDelete(nullptr), mPredictor(predictor) {}
+||||||| merged common ancestors
+    explicit SpaceCleaner(Predictor *predictor)
+      :mLRUStamp(0)
+      ,mLRUKeyToDelete(nullptr)
+      ,mPredictor(predictor)
+    { }
+=======
+    explicit SpaceCleaner(Predictor* predictor)
+        : mLRUStamp(0), mLRUKeyToDelete(nullptr), mPredictor(predictor) {}
+>>>>>>> upstream-releases
 
-    void Finalize(nsICacheEntry *entry);
+    void Finalize(nsICacheEntry* entry);
 
    private:
     virtual ~SpaceCleaner() = default;
     uint32_t mLRUStamp;
-    const char *mLRUKeyToDelete;
+    const char* mLRUKeyToDelete;
     nsTArray<nsCString> mLongKeysToDelete;
     RefPtr<Predictor> mPredictor;
   };
@@ -203,9 +266,22 @@ class Predictor final : public nsINetworkPredictor,
     NS_DECL_NSIREQUESTOBSERVER
     NS_DECL_NSISTREAMLISTENER
 
+<<<<<<< HEAD
     PrefetchListener(nsINetworkPredictorVerifier *verifier, nsIURI *uri,
                      Predictor *predictor)
         : mVerifier(verifier), mURI(uri), mPredictor(predictor) {}
+||||||| merged common ancestors
+    PrefetchListener(nsINetworkPredictorVerifier *verifier, nsIURI *uri,
+                     Predictor *predictor)
+      :mVerifier(verifier)
+      ,mURI(uri)
+      ,mPredictor(predictor)
+    { }
+=======
+    PrefetchListener(nsINetworkPredictorVerifier* verifier, nsIURI* uri,
+                     Predictor* predictor)
+        : mVerifier(verifier), mURI(uri), mPredictor(predictor) {}
+>>>>>>> upstream-releases
 
    private:
     virtual ~PrefetchListener() = default;
@@ -238,9 +314,9 @@ class Predictor final : public nsINetworkPredictor,
   //   * verifier - used for testing to verify the expected predictions happen
   //   * stackCount - used to ensure we don't recurse too far trying to find the
   //                  final redirection in a redirect chain
-  bool PredictInternal(PredictorPredictReason reason, nsICacheEntry *entry,
-                       bool isNew, bool fullUri, nsIURI *targetURI,
-                       nsINetworkPredictorVerifier *verifier,
+  bool PredictInternal(PredictorPredictReason reason, nsICacheEntry* entry,
+                       bool isNew, bool fullUri, nsIURI* targetURI,
+                       nsINetworkPredictorVerifier* verifier,
                        uint8_t stackCount);
 
   // Used when predicting because the user's mouse hovered over a link
@@ -248,22 +324,54 @@ class Predictor final : public nsINetworkPredictor,
   //   * sourceURI - the URI of the page on which the link appears
   //   * originAttributes - the originAttributes for this prediction
   //   * verifier - used for testing to verify the expected predictions happen
+<<<<<<< HEAD
   void PredictForLink(nsIURI *targetURI, nsIURI *sourceURI,
                       const OriginAttributes &originAttributes,
                       nsINetworkPredictorVerifier *verifier);
+||||||| merged common ancestors
+  void PredictForLink(nsIURI *targetURI,
+                      nsIURI *sourceURI,
+                      const OriginAttributes& originAttributes,
+                      nsINetworkPredictorVerifier *verifier);
+=======
+  void PredictForLink(nsIURI* targetURI, nsIURI* sourceURI,
+                      const OriginAttributes& originAttributes,
+                      nsINetworkPredictorVerifier* verifier);
+>>>>>>> upstream-releases
 
   // Used when predicting because a page is being loaded (which may include
   // being the target of a redirect). All arguments are the same as for
   // PredictInternal. Returns true if any predictions were queued up.
+<<<<<<< HEAD
   bool PredictForPageload(nsICacheEntry *entry, nsIURI *targetURI,
                           uint8_t stackCount, bool fullUri,
                           nsINetworkPredictorVerifier *verifier);
+||||||| merged common ancestors
+  bool PredictForPageload(nsICacheEntry *entry,
+                          nsIURI *targetURI,
+                          uint8_t stackCount,
+                          bool fullUri,
+                          nsINetworkPredictorVerifier *verifier);
+=======
+  bool PredictForPageload(nsICacheEntry* entry, nsIURI* targetURI,
+                          uint8_t stackCount, bool fullUri,
+                          nsINetworkPredictorVerifier* verifier);
+>>>>>>> upstream-releases
 
   // Used when predicting pages that will be used near browser startup. All
   // arguments are the same as for PredictInternal. Returns true if any
   // predictions were queued up.
+<<<<<<< HEAD
   bool PredictForStartup(nsICacheEntry *entry, bool fullUri,
                          nsINetworkPredictorVerifier *verifier);
+||||||| merged common ancestors
+  bool PredictForStartup(nsICacheEntry *entry,
+                         bool fullUri,
+                         nsINetworkPredictorVerifier *verifier);
+=======
+  bool PredictForStartup(nsICacheEntry* entry, bool fullUri,
+                         nsINetworkPredictorVerifier* verifier);
+>>>>>>> upstream-releases
 
   // Utilities related to prediction
 
@@ -275,8 +383,8 @@ class Predictor final : public nsINetworkPredictor,
   //   * key - metadata key that we will update on entry
   //   * hitCount - part of the metadata we need to preserve
   //   * lastHit - part of the metadata we need to preserve
-  void UpdateRollingLoadCount(nsICacheEntry *entry, const uint32_t flags,
-                              const char *key, const uint32_t hitCount,
+  void UpdateRollingLoadCount(nsICacheEntry* entry, const uint32_t flags,
+                              const char* key, const uint32_t hitCount,
                               const uint32_t lastHit);
 
   // Used to calculate how much to degrade our confidence for all resources
@@ -309,7 +417,7 @@ class Predictor final : public nsINetworkPredictor,
   //   * gloablDegradation - value calculated by CalculateGlobalDegradation for
   //                         this page
   //   * fullUri - whether we're predicting for a full URI or origin-only
-  void CalculatePredictions(nsICacheEntry *entry, nsIURI *referrer,
+  void CalculatePredictions(nsICacheEntry* entry, nsIURI* referrer,
                             uint32_t lastLoad, uint32_t loadCount,
                             int32_t globalDegradation, bool fullUri);
 
@@ -327,7 +435,7 @@ class Predictor final : public nsINetworkPredictor,
   //   * confidence - value calculated by CalculateConfidence for this resource
   //   * flags - the flags taken from the resource
   //   * uri - the ascii spec of the URI of the resource
-  void SetupPrediction(int32_t confidence, uint32_t flags, const nsCString &uri,
+  void SetupPrediction(int32_t confidence, uint32_t flags, const nsCString& uri,
                        PrefetchIgnoreReason reason);
 
   // Used to kick off a prefetch from RunPredictions if necessary
@@ -335,18 +443,38 @@ class Predictor final : public nsINetworkPredictor,
   //   * referrer - the URI of the referring page
   //   * originAttributes - the originAttributes of this prefetch
   //   * verifier - used for testing to ensure the expected prefetch happens
+<<<<<<< HEAD
   nsresult Prefetch(nsIURI *uri, nsIURI *referrer,
                     const OriginAttributes &originAttributes,
                     nsINetworkPredictorVerifier *verifier);
+||||||| merged common ancestors
+  nsresult Prefetch(nsIURI *uri, nsIURI *referrer,
+                    const OriginAttributes& originAttributes,
+                    nsINetworkPredictorVerifier *verifier);
+=======
+  nsresult Prefetch(nsIURI* uri, nsIURI* referrer,
+                    const OriginAttributes& originAttributes,
+                    nsINetworkPredictorVerifier* verifier);
+>>>>>>> upstream-releases
 
   // Used to actually perform any predictions set up via SetupPrediction.
   // Returns true if any predictions were performed.
   //   * referrer - the URI we are predicting from
   //   * originAttributs - the originAttributes we are predicting from
   //   * verifier - used for testing to ensure the expected predictions happen
+<<<<<<< HEAD
   bool RunPredictions(nsIURI *referrer,
                       const OriginAttributes &originAttributes,
                       nsINetworkPredictorVerifier *verifier);
+||||||| merged common ancestors
+  bool RunPredictions(nsIURI *referrer,
+                      const OriginAttributes& originAttributes,
+                      nsINetworkPredictorVerifier *verifier);
+=======
+  bool RunPredictions(nsIURI* referrer,
+                      const OriginAttributes& originAttributes,
+                      nsINetworkPredictorVerifier* verifier);
+>>>>>>> upstream-releases
 
   // Used to guess whether a page will redirect to another page or not. Returns
   // true if a redirection is likely.
@@ -357,9 +485,9 @@ class Predictor final : public nsINetworkPredictor,
   //                         this page
   //   * redirectURI - if this returns true, the URI that is likely to be
   //                   redirected to, otherwise null
-  bool WouldRedirect(nsICacheEntry *entry, uint32_t loadCount,
+  bool WouldRedirect(nsICacheEntry* entry, uint32_t loadCount,
                      uint32_t lastLoad, int32_t globalDegradation,
-                     nsIURI **redirectURI);
+                     nsIURI** redirectURI);
 
   // The guts of learning information
 
@@ -374,19 +502,19 @@ class Predictor final : public nsINetworkPredictor,
   //                 resource loaded by a page the user navigated to
   //   * sourceURI - the URI that caused targetURI to be loaded, usually the
   //                 page the user navigated to
-  void LearnInternal(PredictorLearnReason reason, nsICacheEntry *entry,
-                     bool isNew, bool fullUri, nsIURI *targetURI,
-                     nsIURI *sourceURI);
+  void LearnInternal(PredictorLearnReason reason, nsICacheEntry* entry,
+                     bool isNew, bool fullUri, nsIURI* targetURI,
+                     nsIURI* sourceURI);
 
   // Used when learning about a resource loaded by a page
   //   * entry - the cache entry with information that needs updating
   //   * targetURI - the URI of the resource that was loaded by the page
-  void LearnForSubresource(nsICacheEntry *entry, nsIURI *targetURI);
+  void LearnForSubresource(nsICacheEntry* entry, nsIURI* targetURI);
 
   // Used when learning about a redirect from one page to another
   //   * entry - the cache entry of the page that was redirected from
   //   * targetURI - the URI of the redirect target
-  void LearnForRedirect(nsICacheEntry *entry, nsIURI *targetURI);
+  void LearnForRedirect(nsICacheEntry* entry, nsIURI* targetURI);
 
   // Used to learn about pages loaded close to browser startup. This results in
   // LearnForStartup being called if we are, in fact, near browser startup
@@ -394,14 +522,22 @@ class Predictor final : public nsINetworkPredictor,
   //           browser startup)
   //   * fullUri - true if this is a full page uri, false if it's an origin
   //   * originAttributes - the originAttributes for this learning.
+<<<<<<< HEAD
   void MaybeLearnForStartup(nsIURI *uri, bool fullUri,
                             const OriginAttributes &originAttributes);
+||||||| merged common ancestors
+  void MaybeLearnForStartup(nsIURI *uri, bool fullUri,
+                            const OriginAttributes& originAttributes);
+=======
+  void MaybeLearnForStartup(nsIURI* uri, bool fullUri,
+                            const OriginAttributes& originAttributes);
+>>>>>>> upstream-releases
 
   // Used in conjunction with MaybeLearnForStartup to learn about pages loaded
   // close to browser startup
   //   * entry - the cache entry that stores the startup page list
   //   * targetURI - the URI of a page that was loaded near browser startup
-  void LearnForStartup(nsICacheEntry *entry, nsIURI *targetURI);
+  void LearnForStartup(nsICacheEntry* entry, nsIURI* targetURI);
 
   // Used to parse the data we store in cache metadata
   //   * key - the cache metadata key
@@ -410,16 +546,26 @@ class Predictor final : public nsINetworkPredictor,
   //   * hitCount - (out) the number of times this URI has been seen
   //   * lastHit - (out) timestamp of the last time this URI was seen
   //   * flags - (out) flags for this metadata entry
-  bool ParseMetaDataEntry(const char *key, const char *value, nsCString &uri,
-                          uint32_t &hitCount, uint32_t &lastHit,
-                          uint32_t &flags);
+  bool ParseMetaDataEntry(const char* key, const char* value, nsCString& uri,
+                          uint32_t& hitCount, uint32_t& lastHit,
+                          uint32_t& flags);
 
   // Used to update whether a particular URI was cacheable or not.
   // sourceURI and targetURI are the same as the arguments to Learn
   // and httpStatus is the status code we got while loading targetURI.
+<<<<<<< HEAD
   void UpdateCacheabilityInternal(nsIURI *sourceURI, nsIURI *targetURI,
                                   uint32_t httpStatus, const nsCString &method,
                                   const OriginAttributes &originAttributes,
+||||||| merged common ancestors
+  void UpdateCacheabilityInternal(nsIURI *sourceURI, nsIURI *targetURI,
+                                  uint32_t httpStatus, const nsCString &method,
+                                  const OriginAttributes& originAttributes,
+=======
+  void UpdateCacheabilityInternal(nsIURI* sourceURI, nsIURI* targetURI,
+                                  uint32_t httpStatus, const nsCString& method,
+                                  const OriginAttributes& originAttributes,
+>>>>>>> upstream-releases
                                   bool isTracking, bool couldVary,
                                   bool isNoStore);
 
@@ -453,7 +599,7 @@ class Predictor final : public nsINetworkPredictor,
   nsTArray<nsCOMPtr<nsIURI>> mPreconnects;
   nsTArray<nsCOMPtr<nsIURI>> mPreresolves;
 
-  static Predictor *sSelf;
+  static Predictor* sSelf;
 };
 
 }  // namespace net

@@ -41,7 +41,7 @@ class Toolbar extends PureComponent {
       onChangeUserAgent: PropTypes.func.isRequired,
       onExit: PropTypes.func.isRequired,
       onRemoveDeviceAssociation: PropTypes.func.isRequired,
-      onResizeViewport: PropTypes.func.isRequired,
+      doResizeViewport: PropTypes.func.isRequired,
       onRotateViewport: PropTypes.func.isRequired,
       onScreenshot: PropTypes.func.isRequired,
       onToggleLeftAlignment: PropTypes.func.isRequired,
@@ -88,7 +88,7 @@ class Toolbar extends PureComponent {
       onChangeTouchSimulation,
       onExit,
       onRemoveDeviceAssociation,
-      onResizeViewport,
+      doResizeViewport,
       onRotateViewport,
       onScreenshot,
       onToggleLeftAlignment,
@@ -99,17 +99,43 @@ class Toolbar extends PureComponent {
       screenshot,
       selectedDevice,
       selectedPixelRatio,
+      showUserAgentInput,
       touchSimulationEnabled,
       viewport,
     } = this.props;
 
     return (
       dom.header(
+<<<<<<< HEAD
         {
           id: "toolbar",
           className: leftAlignmentEnabled ? "left-aligned" : "",
         },
+||||||| merged common ancestors
+        { id: "toolbar" },
+        DeviceSelector({
+          devices,
+          onChangeDevice,
+          onResizeViewport,
+          onUpdateDeviceModal,
+          selectedDevice,
+          viewportId: viewport.id,
+        }),
+        leftAlignmentEnabled ?
+          dom.div({ className: "devtools-separator" })
+          :
+          null,
+=======
+        {
+          id: "toolbar",
+          className: [
+            leftAlignmentEnabled ? "left-aligned" : "",
+            showUserAgentInput ? "user-agent" : "",
+          ].join(" ").trim(),
+        },
+>>>>>>> upstream-releases
         dom.div(
+<<<<<<< HEAD
           { id: "toolbar-center-controls" },
           DeviceSelector({
             devices,
@@ -120,14 +146,33 @@ class Toolbar extends PureComponent {
             viewportId: viewport.id,
           }),
           dom.div({ className: "devtools-separator" }),
+||||||| merged common ancestors
+          {
+            id: "toolbar-center-controls",
+            className: leftAlignmentEnabled ? "left-aligned" : "",
+          },
+=======
+          { id: "toolbar-center-controls" },
+          DeviceSelector({
+            devices,
+            onChangeDevice,
+            doResizeViewport,
+            onUpdateDeviceModal,
+            selectedDevice,
+            viewportId: viewport.id,
+          }),
+          dom.div({ className: "devtools-separator" }),
+>>>>>>> upstream-releases
           ViewportDimension({
             onRemoveDeviceAssociation,
-            onResizeViewport,
+            doResizeViewport,
             viewport,
           }),
           dom.button({
             id: "rotate-button",
-            className: "devtools-button",
+            className: `devtools-button viewport-orientation-${
+              viewport.width > viewport.height ? "landscape" : "portrait"
+            }`,
             onClick: () => onRotateViewport(viewport.id),
             title: getStr("responsive.rotate"),
           }),
@@ -143,7 +188,6 @@ class Toolbar extends PureComponent {
           NetworkThrottlingMenu({
             networkThrottling,
             onChangeNetworkThrottling,
-            useTopLevelWindow: true,
           }),
           dom.div({ className: "devtools-separator" }),
           this.renderUserAgent(),

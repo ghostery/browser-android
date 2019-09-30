@@ -12,8 +12,16 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 already_AddRefed<ClientOpPromise> ClientOpenWindowInCurrentProcess(
     const ClientOpenWindowArgs &aArgs);
+||||||| merged common ancestors
+already_AddRefed<ClientOpPromise>
+ClientOpenWindowInCurrentProcess(const ClientOpenWindowArgs &aArgs);
+=======
+MOZ_MUST_USE RefPtr<ClientOpPromise> ClientOpenWindowInCurrentProcess(
+    const ClientOpenWindowArgs& aArgs);
+>>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

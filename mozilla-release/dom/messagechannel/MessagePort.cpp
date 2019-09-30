@@ -33,13 +33,12 @@
 #include "SharedMessagePortMessage.h"
 
 #include "nsIBFCacheEntry.h"
-#include "nsIDocument.h"
-#include "nsIPresShell.h"
+#include "mozilla/dom/Document.h"
 #include "nsISupportsPrimitives.h"
 #include "nsServiceManagerUtils.h"
 
 #ifdef XP_WIN
-#undef PostMessage
+#  undef PostMessage
 #endif
 
 namespace mozilla {
@@ -207,9 +206,22 @@ MessagePort::~MessagePort() {
   MOZ_ASSERT(!mWorkerRef);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MessagePort> MessagePort::Create(
     nsIGlobalObject* aGlobal, const nsID& aUUID, const nsID& aDestinationUUID,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MessagePort>
+MessagePort::Create(nsIGlobalObject* aGlobal, const nsID& aUUID,
+                    const nsID& aDestinationUUID, ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MessagePort> MessagePort::Create(nsIGlobalObject* aGlobal,
+                                                  const nsID& aUUID,
+                                                  const nsID& aDestinationUUID,
+                                                  ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   RefPtr<MessagePort> mp = new MessagePort(aGlobal, eStateUnshippedEntangled);
@@ -218,9 +230,22 @@ MessagePort::~MessagePort() {
   return mp.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MessagePort> MessagePort::Create(
     nsIGlobalObject* aGlobal, const MessagePortIdentifier& aIdentifier,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MessagePort>
+MessagePort::Create(nsIGlobalObject* aGlobal,
+                    const MessagePortIdentifier& aIdentifier,
+                    ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MessagePort> MessagePort::Create(
+    nsIGlobalObject* aGlobal, const MessagePortIdentifier& aIdentifier,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   RefPtr<MessagePort> mp = new MessagePort(aGlobal, eStateEntangling);
@@ -809,7 +834,7 @@ void MessagePort::RemoveDocFromBFCache() {
     return;
   }
 
-  nsIDocument* doc = window->GetExtantDoc();
+  Document* doc = window->GetExtantDoc();
   if (!doc) {
     return;
   }
@@ -822,8 +847,17 @@ void MessagePort::RemoveDocFromBFCache() {
   bfCacheEntry->RemoveFromBFCacheSync();
 }
 
+<<<<<<< HEAD
 /* static */ void MessagePort::ForceClose(
     const MessagePortIdentifier& aIdentifier) {
+||||||| merged common ancestors
+/* static */ void
+MessagePort::ForceClose(const MessagePortIdentifier& aIdentifier)
+{
+=======
+/* static */
+void MessagePort::ForceClose(const MessagePortIdentifier& aIdentifier) {
+>>>>>>> upstream-releases
   mozilla::ipc::PBackgroundChild* actorChild =
       mozilla::ipc::BackgroundChild::GetOrCreateForCurrentThread();
   if (NS_WARN_IF(!actorChild)) {

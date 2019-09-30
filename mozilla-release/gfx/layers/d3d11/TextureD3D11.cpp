@@ -6,21 +6,23 @@
 
 #include "TextureD3D11.h"
 #include "CompositorD3D11.h"
-#include "gfxContext.h"
 #include "Effects.h"
-#include "gfxWindowsPlatform.h"
-#include "gfx2DGlue.h"
-#include "gfxPrefs.h"
+#include "PaintThread.h"
 #include "ReadbackManagerD3D11.h"
+#include "gfx2DGlue.h"
+#include "gfxContext.h"
+#include "mozilla/StaticPrefs.h"
+#include "gfxWindowsPlatform.h"
+#include "MainThreadUtils.h"
 #include "mozilla/gfx/DataSurfaceHelpers.h"
 #include "mozilla/gfx/DeviceManagerDx.h"
-#include "mozilla/gfx/gfxVars.h"
 #include "mozilla/gfx/Logging.h"
+#include "mozilla/gfx/gfxVars.h"
 #include "mozilla/layers/CompositorBridgeChild.h"
+#include "mozilla/Telemetry.h"
 #include "mozilla/webrender/RenderD3D11TextureHostOGL.h"
 #include "mozilla/webrender/RenderThread.h"
 #include "mozilla/webrender/WebRenderAPI.h"
-#include "PaintThread.h"
 
 namespace mozilla {
 
@@ -254,6 +256,7 @@ static void UnlockD3DTexture(T* aTexture) {
   }
 }
 
+<<<<<<< HEAD
 DXGITextureData::DXGITextureData(gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
                                  bool aNeedsClear, bool aNeedsClearWhite,
                                  bool aIsForOutOfBandContent)
@@ -264,7 +267,22 @@ DXGITextureData::DXGITextureData(gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
       mHasSynchronization(false),
       mIsForOutOfBandContent(aIsForOutOfBandContent) {}
 
+||||||| merged common ancestors
+DXGITextureData::DXGITextureData(gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
+                                 bool aNeedsClear, bool aNeedsClearWhite,
+                                 bool aIsForOutOfBandContent)
+: mSize(aSize)
+, mFormat(aFormat)
+, mNeedsClear(aNeedsClear)
+, mNeedsClearWhite(aNeedsClearWhite)
+, mHasSynchronization(false)
+, mIsForOutOfBandContent(aIsForOutOfBandContent)
+{}
+
+=======
+>>>>>>> upstream-releases
 D3D11TextureData::D3D11TextureData(ID3D11Texture2D* aTexture,
+<<<<<<< HEAD
                                    gfx::IntSize aSize,
                                    gfx::SurfaceFormat aFormat, bool aNeedsClear,
                                    bool aNeedsClearWhite,
@@ -272,6 +290,25 @@ D3D11TextureData::D3D11TextureData(ID3D11Texture2D* aTexture,
     : DXGITextureData(aSize, aFormat, aNeedsClear, aNeedsClearWhite,
                       aIsForOutOfBandContent),
       mTexture(aTexture) {
+||||||| merged common ancestors
+                                   gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
+                                   bool aNeedsClear, bool aNeedsClearWhite,
+                                   bool aIsForOutOfBandContent)
+: DXGITextureData(aSize, aFormat, aNeedsClear, aNeedsClearWhite, aIsForOutOfBandContent)
+, mTexture(aTexture)
+{
+=======
+                                   gfx::IntSize aSize,
+                                   gfx::SurfaceFormat aFormat,
+                                   TextureAllocationFlags aFlags)
+    : mSize(aSize),
+      mFormat(aFormat),
+      mNeedsClear(aFlags & ALLOC_CLEAR_BUFFER),
+      mNeedsClearWhite(aFlags & ALLOC_CLEAR_BUFFER_WHITE),
+      mIsForOutOfBandContent(aFlags & ALLOC_FOR_OUT_OF_BAND_CONTENT),
+      mTexture(aTexture),
+      mAllocationFlags(aFlags) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aTexture);
   mHasSynchronization = HasKeyedMutex(aTexture);
 }
@@ -293,7 +330,8 @@ static void DestroyDrawTarget(RefPtr<DrawTarget>& aDT,
 
 D3D11TextureData::~D3D11TextureData() {
   if (mDrawTarget) {
-    if (PaintThread::Get() && gfxPrefs::Direct2DDestroyDTOnPaintThread()) {
+    if (PaintThread::Get() &&
+        StaticPrefs::gfx_direct2d_destroy_dt_on_paintthread()) {
       RefPtr<DrawTarget> dt = mDrawTarget;
       RefPtr<ID3D11Texture2D> tex = mTexture;
       RefPtr<Runnable> task = NS_NewRunnableFunction(
@@ -324,7 +362,15 @@ bool D3D11TextureData::Lock(OpenMode aMode) {
   return true;
 }
 
+<<<<<<< HEAD
 bool DXGITextureData::PrepareDrawTargetInLock(OpenMode aMode) {
+||||||| merged common ancestors
+bool
+DXGITextureData::PrepareDrawTargetInLock(OpenMode aMode)
+{
+=======
+bool D3D11TextureData::PrepareDrawTargetInLock(OpenMode aMode) {
+>>>>>>> upstream-releases
   // Make sure that successful write-lock means we will have a DrawTarget to
   // write into.
   if (!mDrawTarget &&
@@ -351,9 +397,26 @@ bool DXGITextureData::PrepareDrawTargetInLock(OpenMode aMode) {
   return true;
 }
 
+<<<<<<< HEAD
 void D3D11TextureData::Unlock() { UnlockD3DTexture(mTexture.get()); }
 
 void DXGITextureData::FillInfo(TextureData::Info& aInfo) const {
+||||||| merged common ancestors
+void
+D3D11TextureData::Unlock()
+{
+  UnlockD3DTexture(mTexture.get());
+}
+
+
+void
+DXGITextureData::FillInfo(TextureData::Info& aInfo) const
+{
+=======
+void D3D11TextureData::Unlock() { UnlockD3DTexture(mTexture.get()); }
+
+void D3D11TextureData::FillInfo(TextureData::Info& aInfo) const {
+>>>>>>> upstream-releases
   aInfo.size = mSize;
   aInfo.format = mFormat;
   aInfo.supportsMoz2D = true;
@@ -373,8 +436,17 @@ void D3D11TextureData::SyncWithObject(SyncObjectClient* aSyncObject) {
   sync->RegisterTexture(mTexture);
 }
 
+<<<<<<< HEAD
 bool DXGITextureData::SerializeSpecific(
     SurfaceDescriptorD3D10* const aOutDesc) {
+||||||| merged common ancestors
+bool
+DXGITextureData::SerializeSpecific(SurfaceDescriptorD3D10* const aOutDesc)
+{
+=======
+bool D3D11TextureData::SerializeSpecific(
+    SurfaceDescriptorD3D10* const aOutDesc) {
+>>>>>>> upstream-releases
   RefPtr<IDXGIResource> resource;
   GetDXGIResource((IDXGIResource**)getter_AddRefs(resource));
   if (!resource) {
@@ -387,12 +459,27 @@ bool DXGITextureData::SerializeSpecific(
     return false;
   }
 
+<<<<<<< HEAD
   *aOutDesc =
       SurfaceDescriptorD3D10((WindowsHandle)sharedHandle, mFormat, mSize);
+||||||| merged common ancestors
+  *aOutDesc = SurfaceDescriptorD3D10((WindowsHandle)sharedHandle, mFormat, mSize);
+=======
+  *aOutDesc = SurfaceDescriptorD3D10((WindowsHandle)sharedHandle, mFormat,
+                                     mSize, mYUVColorSpace);
+>>>>>>> upstream-releases
   return true;
 }
 
+<<<<<<< HEAD
 bool DXGITextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
+||||||| merged common ancestors
+bool
+DXGITextureData::Serialize(SurfaceDescriptor& aOutDescriptor)
+{
+=======
+bool D3D11TextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
+>>>>>>> upstream-releases
   SurfaceDescriptorD3D10 desc;
   if (!SerializeSpecific(&desc)) return false;
 
@@ -400,20 +487,53 @@ bool DXGITextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
   return true;
 }
 
+<<<<<<< HEAD
 void DXGITextureData::GetSubDescriptor(GPUVideoSubDescriptor* const aOutDesc) {
+||||||| merged common ancestors
+void
+DXGITextureData::GetSubDescriptor(GPUVideoSubDescriptor* const aOutDesc)
+{
+=======
+void D3D11TextureData::GetSubDescriptor(GPUVideoSubDescriptor* const aOutDesc) {
+>>>>>>> upstream-releases
   SurfaceDescriptorD3D10 ret;
   if (!SerializeSpecific(&ret)) return;
 
   *aOutDesc = std::move(ret);
 }
 
+<<<<<<< HEAD
 DXGITextureData* DXGITextureData::Create(IntSize aSize, SurfaceFormat aFormat,
                                          TextureAllocationFlags aFlags) {
+||||||| merged common ancestors
+DXGITextureData*
+DXGITextureData::Create(IntSize aSize, SurfaceFormat aFormat, TextureAllocationFlags aFlags)
+{
+=======
+D3D11TextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
+                                           TextureAllocationFlags aFlags,
+                                           ID3D11Device* aDevice) {
+  return Create(aSize, aFormat, nullptr, aFlags, aDevice);
+}
+
+D3D11TextureData* D3D11TextureData::Create(SourceSurface* aSurface,
+                                           TextureAllocationFlags aFlags,
+                                           ID3D11Device* aDevice) {
+  return Create(aSurface->GetSize(), aSurface->GetFormat(), aSurface, aFlags,
+                aDevice);
+}
+
+D3D11TextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
+                                           SourceSurface* aSurface,
+                                           TextureAllocationFlags aFlags,
+                                           ID3D11Device* aDevice) {
+>>>>>>> upstream-releases
   if (aFormat == SurfaceFormat::A8) {
     // Currently we don't support A8 surfaces. Fallback.
     return nullptr;
   }
 
+<<<<<<< HEAD
   return D3D11TextureData::Create(aSize, aFormat, aFlags);
 }
 
@@ -423,6 +543,20 @@ DXGITextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
                                           ID3D11Device* aDevice) {
   // Just grab any device. We never use the immediate context, so the devices
   // are fine to use from any thread.
+||||||| merged common ancestors
+  return D3D11TextureData::Create(aSize, aFormat, aFlags);
+}
+
+DXGITextureData*
+D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat, SourceSurface* aSurface,
+                         TextureAllocationFlags aFlags, ID3D11Device* aDevice)
+{
+  // Just grab any device. We never use the immediate context, so the devices are fine
+  // to use from any thread.
+=======
+  // Just grab any device. We never use the immediate context, so the devices
+  // are fine to use from any thread.
+>>>>>>> upstream-releases
   RefPtr<ID3D11Device> device = aDevice;
   if (!device) {
     device = DeviceManagerDx::Get()->GetContentDevice();
@@ -531,6 +665,7 @@ DXGITextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
     }
     UnlockD3DTexture(texture11.get());
   }
+<<<<<<< HEAD
   texture11->SetPrivateDataInterface(
       sD3D11TextureUsage,
       new TextureMemoryMeasurer(newDesc.Width * newDesc.Height * 4));
@@ -538,8 +673,22 @@ DXGITextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
                               aFlags & ALLOC_CLEAR_BUFFER,
                               aFlags & ALLOC_CLEAR_BUFFER_WHITE,
                               aFlags & ALLOC_FOR_OUT_OF_BAND_CONTENT);
+||||||| merged common ancestors
+  texture11->SetPrivateDataInterface(sD3D11TextureUsage,
+                                     new TextureMemoryMeasurer(newDesc.Width * newDesc.Height * 4));
+  return new D3D11TextureData(texture11, aSize, aFormat,
+                              aFlags & ALLOC_CLEAR_BUFFER,
+                              aFlags & ALLOC_CLEAR_BUFFER_WHITE,
+                              aFlags & ALLOC_FOR_OUT_OF_BAND_CONTENT);
+=======
+  texture11->SetPrivateDataInterface(
+      sD3D11TextureUsage,
+      new TextureMemoryMeasurer(newDesc.Width * newDesc.Height * 4));
+  return new D3D11TextureData(texture11, aSize, aFormat, aFlags);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 DXGITextureData* D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
                                           TextureAllocationFlags aFlags,
                                           ID3D11Device* aDevice) {
@@ -559,10 +708,38 @@ DXGITextureData* D3D11TextureData::Create(SourceSurface* aSurface,
 }
 
 void D3D11TextureData::Deallocate(LayersIPCChannel* aAllocator) {
+||||||| merged common ancestors
+DXGITextureData*
+D3D11TextureData::Create(IntSize aSize, SurfaceFormat aFormat,
+                         TextureAllocationFlags aFlags, ID3D11Device* aDevice)
+{
+  return D3D11TextureData::Create(aSize, aFormat, nullptr, aFlags, aDevice);
+}
+
+DXGITextureData*
+D3D11TextureData::Create(SourceSurface* aSurface,
+                         TextureAllocationFlags aFlags, ID3D11Device* aDevice)
+{
+  if (aSurface->GetFormat() == SurfaceFormat::A8) {
+    // Currently we don't support A8 surfaces. Fallback.
+    return nullptr;
+  }
+
+  return D3D11TextureData::Create(aSurface->GetSize(), aSurface->GetFormat(),
+                                  aSurface, aFlags, aDevice);
+}
+
+void
+D3D11TextureData::Deallocate(LayersIPCChannel* aAllocator)
+{
+=======
+void D3D11TextureData::Deallocate(LayersIPCChannel* aAllocator) {
+>>>>>>> upstream-releases
   mDrawTarget = nullptr;
   mTexture = nullptr;
 }
 
+<<<<<<< HEAD
 already_AddRefed<TextureClient> CreateD3D11TextureClientWithDevice(
     IntSize aSize, SurfaceFormat aFormat, TextureFlags aTextureFlags,
     TextureAllocationFlags aAllocFlags, ID3D11Device* aDevice,
@@ -578,11 +755,73 @@ already_AddRefed<TextureClient> CreateD3D11TextureClientWithDevice(
 TextureData* D3D11TextureData::CreateSimilar(
     LayersIPCChannel* aAllocator, LayersBackend aLayersBackend,
     TextureFlags aFlags, TextureAllocationFlags aAllocFlags) const {
+||||||| merged common ancestors
+already_AddRefed<TextureClient>
+CreateD3D11TextureClientWithDevice(IntSize aSize, SurfaceFormat aFormat,
+                                   TextureFlags aTextureFlags, TextureAllocationFlags aAllocFlags,
+                                   ID3D11Device* aDevice,
+                                   LayersIPCChannel* aAllocator)
+{
+  TextureData* data = D3D11TextureData::Create(aSize, aFormat, aAllocFlags, aDevice);
+  if (!data) {
+    return nullptr;
+  }
+  return MakeAndAddRef<TextureClient>(data, aTextureFlags, aAllocator);
+}
+
+TextureData*
+D3D11TextureData::CreateSimilar(LayersIPCChannel* aAllocator,
+                                LayersBackend aLayersBackend,
+                                TextureFlags aFlags,
+                                TextureAllocationFlags aAllocFlags) const
+{
+=======
+TextureData* D3D11TextureData::CreateSimilar(
+    LayersIPCChannel* aAllocator, LayersBackend aLayersBackend,
+    TextureFlags aFlags, TextureAllocationFlags aAllocFlags) const {
+>>>>>>> upstream-releases
   return D3D11TextureData::Create(mSize, mFormat, aAllocFlags);
 }
 
 void D3D11TextureData::GetDXGIResource(IDXGIResource** aOutResource) {
   mTexture->QueryInterface(aOutResource);
+}
+
+<<<<<<< HEAD
+DXGIYCbCrTextureData* DXGIYCbCrTextureData::Create(
+    IDirect3DTexture9* aTextureY, IDirect3DTexture9* aTextureCb,
+    IDirect3DTexture9* aTextureCr, HANDLE aHandleY, HANDLE aHandleCb,
+    HANDLE aHandleCr, const gfx::IntSize& aSize, const gfx::IntSize& aSizeY,
+    const gfx::IntSize& aSizeCbCr, gfx::ColorDepth aColorDepth,
+    YUVColorSpace aYUVColorSpace) {
+  if (!aHandleY || !aHandleCb || !aHandleCr || !aTextureY || !aTextureCb ||
+      !aTextureCr) {
+||||||| merged common ancestors
+DXGIYCbCrTextureData*
+DXGIYCbCrTextureData::Create(IDirect3DTexture9* aTextureY,
+                             IDirect3DTexture9* aTextureCb,
+                             IDirect3DTexture9* aTextureCr,
+                             HANDLE aHandleY,
+                             HANDLE aHandleCb,
+                             HANDLE aHandleCr,
+                             const gfx::IntSize& aSize,
+                             const gfx::IntSize& aSizeY,
+                             const gfx::IntSize& aSizeCbCr,
+                             gfx::ColorDepth aColorDepth,
+                             YUVColorSpace aYUVColorSpace)
+{
+  if (!aHandleY || !aHandleCb || !aHandleCr ||
+      !aTextureY || !aTextureCb || !aTextureCr) {
+=======
+TextureFlags D3D11TextureData::GetTextureFlags() const {
+  TextureFlags flags = TextureFlags::NO_FLAGS;
+  // With WebRender, resource open happens asynchronously on RenderThread.
+  // During opening the resource on host side, TextureClient needs to be alive.
+  // With WAIT_HOST_USAGE_END, keep TextureClient alive during host side usage.
+  if (gfx::gfxVars::UseWebRender()) {
+    flags |= TextureFlags::WAIT_HOST_USAGE_END;
+  }
+  return flags;
 }
 
 DXGIYCbCrTextureData* DXGIYCbCrTextureData::Create(
@@ -593,6 +832,7 @@ DXGIYCbCrTextureData* DXGIYCbCrTextureData::Create(
     YUVColorSpace aYUVColorSpace) {
   if (!aHandleY || !aHandleCb || !aHandleCr || !aTextureY || !aTextureCb ||
       !aTextureCr) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -713,9 +953,33 @@ void DXGIYCbCrTextureData::Deallocate(LayersIPCChannel*) {
   mD3D11Textures[2] = nullptr;
 }
 
+<<<<<<< HEAD
 already_AddRefed<TextureHost> CreateTextureHostD3D11(
     const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
     LayersBackend aBackend, TextureFlags aFlags) {
+||||||| merged common ancestors
+already_AddRefed<TextureHost>
+CreateTextureHostD3D11(const SurfaceDescriptor& aDesc,
+                       ISurfaceAllocator* aDeallocator,
+                       LayersBackend aBackend,
+                       TextureFlags aFlags)
+{
+=======
+TextureFlags DXGIYCbCrTextureData::GetTextureFlags() const {
+  TextureFlags flags = TextureFlags::DEALLOCATE_MAIN_THREAD;
+  // With WebRender, resource open happens asynchronously on RenderThread.
+  // During opening the resource on host side, TextureClient needs to be alive.
+  // With WAIT_HOST_USAGE_END, keep TextureClient alive during host side usage.
+  if (gfx::gfxVars::UseWebRender()) {
+    flags |= TextureFlags::WAIT_HOST_USAGE_END;
+  }
+  return flags;
+}
+
+already_AddRefed<TextureHost> CreateTextureHostD3D11(
+    const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
+    LayersBackend aBackend, TextureFlags aFlags) {
+>>>>>>> upstream-releases
   RefPtr<TextureHost> result;
   switch (aDesc.type()) {
     case SurfaceDescriptor::TSurfaceDescriptorD3D10: {
@@ -733,8 +997,20 @@ already_AddRefed<TextureHost> CreateTextureHostD3D11(
   return result.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<DrawTarget> D3D11TextureData::BorrowDrawTarget() {
   MOZ_ASSERT(NS_IsMainThread() || PaintThread::IsOnPaintThread());
+||||||| merged common ancestors
+
+already_AddRefed<DrawTarget>
+D3D11TextureData::BorrowDrawTarget()
+{
+  MOZ_ASSERT(NS_IsMainThread() || PaintThread::IsOnPaintThread());
+=======
+already_AddRefed<DrawTarget> D3D11TextureData::BorrowDrawTarget() {
+  MOZ_ASSERT(NS_IsMainThread() || PaintThread::IsOnPaintThread() ||
+             NS_IsInCanvasThread());
+>>>>>>> upstream-releases
 
   if (!mDrawTarget && mTexture) {
     // This may return a null DrawTarget
@@ -759,6 +1035,7 @@ bool D3D11TextureData::UpdateFromSurface(gfx::SourceSurface* aSurface) {
   return false;
 }
 
+<<<<<<< HEAD
 DXGITextureHostD3D11::DXGITextureHostD3D11(
     TextureFlags aFlags, const SurfaceDescriptorD3D10& aDescriptor)
     : TextureHost(aFlags),
@@ -766,6 +1043,26 @@ DXGITextureHostD3D11::DXGITextureHostD3D11(
       mHandle(aDescriptor.handle()),
       mFormat(aDescriptor.format()),
       mIsLocked(false) {}
+||||||| merged common ancestors
+DXGITextureHostD3D11::DXGITextureHostD3D11(TextureFlags aFlags,
+                                           const SurfaceDescriptorD3D10& aDescriptor)
+  : TextureHost(aFlags)
+  , mSize(aDescriptor.size())
+  , mHandle(aDescriptor.handle())
+  , mFormat(aDescriptor.format())
+  , mIsLocked(false)
+{
+}
+=======
+DXGITextureHostD3D11::DXGITextureHostD3D11(
+    TextureFlags aFlags, const SurfaceDescriptorD3D10& aDescriptor)
+    : TextureHost(aFlags),
+      mSize(aDescriptor.size()),
+      mHandle(aDescriptor.handle()),
+      mFormat(aDescriptor.format()),
+      mYUVColorSpace(aDescriptor.yUVColorSpace()),
+      mIsLocked(false) {}
+>>>>>>> upstream-releases
 
 bool DXGITextureHostD3D11::EnsureTexture() {
   RefPtr<ID3D11Device> device;
@@ -986,7 +1283,15 @@ void DXGITextureHostD3D11::CreateRenderTexture(
                                                  texture.forget());
 }
 
+<<<<<<< HEAD
 uint32_t DXGITextureHostD3D11::NumSubTextures() const {
+||||||| merged common ancestors
+uint32_t
+DXGITextureHostD3D11::NumSubTextures() const
+{
+=======
+uint32_t DXGITextureHostD3D11::NumSubTextures() {
+>>>>>>> upstream-releases
   switch (GetFormat()) {
     case gfx::SurfaceFormat::R8G8B8X8:
     case gfx::SurfaceFormat::R8G8B8A8:
@@ -1026,22 +1331,29 @@ void DXGITextureHostD3D11::PushResourceUpdates(
       MOZ_ASSERT(aImageKeys.length() == 1);
 
       wr::ImageDescriptor descriptor(mSize, GetFormat());
-      auto bufferType = wr::WrExternalImageBufferType::TextureExternalHandle;
-      (aResources.*method)(aImageKeys[0], descriptor, aExtID, bufferType, 0);
+      auto imageType =
+          wr::ExternalImageType::TextureHandle(wr::TextureTarget::External);
+      (aResources.*method)(aImageKeys[0], descriptor, aExtID, imageType, 0);
       break;
     }
+    case gfx::SurfaceFormat::P010:
+    case gfx::SurfaceFormat::P016:
     case gfx::SurfaceFormat::NV12: {
       MOZ_ASSERT(aImageKeys.length() == 2);
       MOZ_ASSERT(mSize.width % 2 == 0);
       MOZ_ASSERT(mSize.height % 2 == 0);
 
-      // For now, no software decoder can output 10/12 bits NV12 images
-      // So forcing A8 is okay.
-      wr::ImageDescriptor descriptor0(mSize, gfx::SurfaceFormat::A8);
-      wr::ImageDescriptor descriptor1(mSize / 2, gfx::SurfaceFormat::R8G8);
-      auto bufferType = wr::WrExternalImageBufferType::TextureExternalHandle;
-      (aResources.*method)(aImageKeys[0], descriptor0, aExtID, bufferType, 0);
-      (aResources.*method)(aImageKeys[1], descriptor1, aExtID, bufferType, 1);
+      wr::ImageDescriptor descriptor0(mSize, mFormat == gfx::SurfaceFormat::NV12
+                                                 ? gfx::SurfaceFormat::A8
+                                                 : gfx::SurfaceFormat::A16);
+      wr::ImageDescriptor descriptor1(mSize / 2,
+                                      mFormat == gfx::SurfaceFormat::NV12
+                                          ? gfx::SurfaceFormat::R8G8
+                                          : gfx::SurfaceFormat::R16G16);
+      auto imageType =
+          wr::ExternalImageType::TextureHandle(wr::TextureTarget::External);
+      (aResources.*method)(aImageKeys[0], descriptor0, aExtID, imageType, 0);
+      (aResources.*method)(aImageKeys[1], descriptor1, aExtID, imageType, 1);
       break;
     }
     default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
@@ -1058,6 +1370,7 @@ void DXGITextureHostD3D11::PushDisplayItems(
     case gfx::SurfaceFormat::B8G8R8A8:
     case gfx::SurfaceFormat::B8G8R8X8: {
       MOZ_ASSERT(aImageKeys.length() == 1);
+<<<<<<< HEAD
       aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
                          !(mFlags & TextureFlags::NON_PREMULTIPLIED));
       break;
@@ -1068,15 +1381,51 @@ void DXGITextureHostD3D11::PushDisplayItems(
                              wr::ColorDepth::Color8,
                              wr::ToWrYuvColorSpace(YUVColorSpace::BT601),
                              aFilter);
+||||||| merged common ancestors
+      aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0], !(mFlags & TextureFlags::NON_PREMULTIPLIED));
+      break;
+    }
+    case gfx::SurfaceFormat::NV12: {
+      MOZ_ASSERT(aImageKeys.length() == 2);
+      aBuilder.PushNV12Image(aBounds,
+                             aClip,
+                             true,
+                             aImageKeys[0],
+                             aImageKeys[1],
+                             wr::ColorDepth::Color8,
+                             wr::ToWrYuvColorSpace(YUVColorSpace::BT601),
+                             aFilter);
+=======
+      aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
+                         !(mFlags & TextureFlags::NON_PREMULTIPLIED));
+>>>>>>> upstream-releases
       break;
     }
     case gfx::SurfaceFormat::P010:
-    case gfx::SurfaceFormat::P016: {
+    case gfx::SurfaceFormat::P016:
+    case gfx::SurfaceFormat::NV12: {
       MOZ_ASSERT(aImageKeys.length() == 2);
+<<<<<<< HEAD
       aBuilder.PushNV12Image(aBounds, aClip, true, aImageKeys[0], aImageKeys[1],
                              wr::ColorDepth::Color16,
                              wr::ToWrYuvColorSpace(YUVColorSpace::BT601),
                              aFilter);
+||||||| merged common ancestors
+      aBuilder.PushNV12Image(aBounds,
+                             aClip,
+                             true,
+                             aImageKeys[0],
+                             aImageKeys[1],
+                             wr::ColorDepth::Color16,
+                             wr::ToWrYuvColorSpace(YUVColorSpace::BT601),
+                             aFilter);
+=======
+      aBuilder.PushNV12Image(aBounds, aClip, true, aImageKeys[0], aImageKeys[1],
+                             GetFormat() == gfx::SurfaceFormat::NV12
+                                 ? wr::ColorDepth::Color8
+                                 : wr::ColorDepth::Color16,
+                             wr::ToWrYuvColorSpace(mYUVColorSpace), aFilter);
+>>>>>>> upstream-releases
       break;
     }
     default: { MOZ_ASSERT_UNREACHABLE("unexpected to be called"); }
@@ -1241,7 +1590,15 @@ void DXGIYCbCrTextureHostD3D11::CreateRenderTexture(
                                                  texture.forget());
 }
 
+<<<<<<< HEAD
 uint32_t DXGIYCbCrTextureHostD3D11::NumSubTextures() const {
+||||||| merged common ancestors
+uint32_t
+DXGIYCbCrTextureHostD3D11::NumSubTextures() const
+{
+=======
+uint32_t DXGIYCbCrTextureHostD3D11::NumSubTextures() {
+>>>>>>> upstream-releases
   // ycbcr use 3 sub textures.
   return 3;
 }
@@ -1262,15 +1619,28 @@ void DXGIYCbCrTextureHostD3D11::PushResourceUpdates(
              (mSizeCbCr.height == mSize.height ||
               mSizeCbCr.height == (mSize.height + 1) >> 1));
 
+<<<<<<< HEAD
   auto method = aOp == TextureHost::ADD_IMAGE
                     ? &wr::TransactionBuilder::AddExternalImage
                     : &wr::TransactionBuilder::UpdateExternalImage;
   auto bufferType = wr::WrExternalImageBufferType::TextureExternalHandle;
+||||||| merged common ancestors
+  auto method = aOp == TextureHost::ADD_IMAGE ? &wr::TransactionBuilder::AddExternalImage
+                                              : &wr::TransactionBuilder::UpdateExternalImage;
+  auto bufferType = wr::WrExternalImageBufferType::TextureExternalHandle;
+=======
+  auto method = aOp == TextureHost::ADD_IMAGE
+                    ? &wr::TransactionBuilder::AddExternalImage
+                    : &wr::TransactionBuilder::UpdateExternalImage;
+  auto imageType =
+      wr::ExternalImageType::TextureHandle(wr::TextureTarget::External);
+>>>>>>> upstream-releases
 
   // y
   wr::ImageDescriptor descriptor0(mSize, gfx::SurfaceFormat::A8);
   // cb and cr
   wr::ImageDescriptor descriptor1(mSizeCbCr, gfx::SurfaceFormat::A8);
+<<<<<<< HEAD
   (aResources.*method)(aImageKeys[0], descriptor0, aExtID, bufferType, 0);
   (aResources.*method)(aImageKeys[1], descriptor1, aExtID, bufferType, 1);
   (aResources.*method)(aImageKeys[2], descriptor1, aExtID, bufferType, 2);
@@ -1280,6 +1650,30 @@ void DXGIYCbCrTextureHostD3D11::PushDisplayItems(
     wr::DisplayListBuilder& aBuilder, const wr::LayoutRect& aBounds,
     const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
     const Range<wr::ImageKey>& aImageKeys) {
+||||||| merged common ancestors
+  (aResources.*method)(aImageKeys[0], descriptor0, aExtID, bufferType, 0);
+  (aResources.*method)(aImageKeys[1], descriptor1, aExtID, bufferType, 1);
+  (aResources.*method)(aImageKeys[2], descriptor1, aExtID, bufferType, 2);
+}
+
+void
+DXGIYCbCrTextureHostD3D11::PushDisplayItems(wr::DisplayListBuilder& aBuilder,
+                                            const wr::LayoutRect& aBounds,
+                                            const wr::LayoutRect& aClip,
+                                            wr::ImageRendering aFilter,
+                                            const Range<wr::ImageKey>& aImageKeys)
+{
+=======
+  (aResources.*method)(aImageKeys[0], descriptor0, aExtID, imageType, 0);
+  (aResources.*method)(aImageKeys[1], descriptor1, aExtID, imageType, 1);
+  (aResources.*method)(aImageKeys[2], descriptor1, aExtID, imageType, 2);
+}
+
+void DXGIYCbCrTextureHostD3D11::PushDisplayItems(
+    wr::DisplayListBuilder& aBuilder, const wr::LayoutRect& aBounds,
+    const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
+    const Range<wr::ImageKey>& aImageKeys) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aImageKeys.length() == 3);
 
   aBuilder.PushYCbCrPlanarImage(aBounds, aClip, true, aImageKeys[0],
@@ -1612,10 +2006,24 @@ bool SyncObjectD3D11Host::Synchronize(bool aFallible) {
   return true;
 }
 
+<<<<<<< HEAD
 SyncObjectD3D11Client::SyncObjectD3D11Client(SyncHandle aSyncHandle,
                                              ID3D11Device* aDevice)
     : mSyncHandle(aSyncHandle), mSyncLock("SyncObjectD3D11") {
   if (!aDevice) {
+||||||| merged common ancestors
+SyncObjectD3D11Client::SyncObjectD3D11Client(SyncHandle aSyncHandle, ID3D11Device* aDevice)
+ : mSyncHandle(aSyncHandle)
+ , mSyncLock("SyncObjectD3D11")
+{
+  if (!aDevice) {
+=======
+SyncObjectD3D11Client::SyncObjectD3D11Client(SyncHandle aSyncHandle,
+                                             ID3D11Device* aDevice)
+    : mSyncHandle(aSyncHandle), mSyncLock("SyncObjectD3D11") {
+  if (!aDevice && !XRE_IsGPUProcess() &&
+      gfxPlatform::GetPlatform()->DevicesInitialized()) {
+>>>>>>> upstream-releases
     mDevice = DeviceManagerDx::Get()->GetContentDevice();
     return;
   }
@@ -1663,8 +2071,28 @@ void SyncObjectD3D11Client::RegisterTexture(ID3D11Texture2D* aTexture) {
   mSyncedTextures.push_back(aTexture);
 }
 
+<<<<<<< HEAD
 bool SyncObjectD3D11Client::IsSyncObjectValid() {
   RefPtr<ID3D11Device> dev = DeviceManagerDx::Get()->GetContentDevice();
+||||||| merged common ancestors
+bool
+SyncObjectD3D11Client::IsSyncObjectValid()
+{
+  RefPtr<ID3D11Device> dev = DeviceManagerDx::Get()->GetContentDevice();
+=======
+bool SyncObjectD3D11Client::IsSyncObjectValid() {
+  RefPtr<ID3D11Device> dev;
+  // There is a case that devices are not initialized yet with WebRender.
+  if (gfxPlatform::GetPlatform()->DevicesInitialized()) {
+    dev = DeviceManagerDx::Get()->GetContentDevice();
+  }
+
+  // Update mDevice if the ContentDevice initialization is detected.
+  if (!mDevice && dev && NS_IsMainThread() && gfxVars::UseWebRender()) {
+    mDevice = dev;
+  }
+
+>>>>>>> upstream-releases
   if (!dev || (NS_IsMainThread() && dev != mDevice)) {
     return false;
   }

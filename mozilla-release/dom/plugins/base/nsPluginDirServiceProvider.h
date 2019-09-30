@@ -8,8 +8,16 @@
 
 #include "nsIDirectoryService.h"
 
+<<<<<<< HEAD
 #if defined(XP_WIN)
 #include "nsCOMArray.h"
+||||||| merged common ancestors
+#if defined (XP_WIN)
+#include "nsCOMArray.h"
+=======
+#if defined(XP_WIN)
+#  include "nsCOMArray.h"
+>>>>>>> upstream-releases
 #endif
 
 class nsISimpleEnumerator;
@@ -26,11 +34,24 @@ class nsPluginDirServiceProvider : public nsIDirectoryServiceProvider {
   NS_DECL_NSIDIRECTORYSERVICEPROVIDER
 
 #ifdef XP_WIN
+<<<<<<< HEAD
   static nsresult GetPLIDDirectories(nsISimpleEnumerator **aEnumerator);
 
  private:
   static nsresult GetPLIDDirectoriesWithRootKey(uint32_t aKey,
                                                 nsCOMArray<nsIFile> &aDirs);
+||||||| merged common ancestors
+   static nsresult GetPLIDDirectories(nsISimpleEnumerator **aEnumerator);
+private:
+   static nsresult GetPLIDDirectoriesWithRootKey(uint32_t aKey,
+     nsCOMArray<nsIFile> &aDirs);
+=======
+  static nsresult GetPLIDDirectories(nsISimpleEnumerator** aEnumerator);
+
+ private:
+  static nsresult GetPLIDDirectoriesWithRootKey(uint32_t aKey,
+                                                nsCOMArray<nsIFile>& aDirs);
+>>>>>>> upstream-releases
 #endif
 
  protected:

@@ -7,6 +7,7 @@
 #include "DetailsFrame.h"
 
 #include "mozilla/Attributes.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/HTMLDetailsElement.h"
 #include "mozilla/dom/HTMLSummaryElement.h"
 #include "nsContentUtils.h"
@@ -23,15 +24,35 @@ NS_QUERYFRAME_HEAD(DetailsFrame)
   NS_QUERYFRAME_ENTRY(nsIAnonymousContentCreator)
 NS_QUERYFRAME_TAIL_INHERITING(nsBlockFrame)
 
+<<<<<<< HEAD
 nsBlockFrame* NS_NewDetailsFrame(nsIPresShell* aPresShell,
                                  ComputedStyle* aStyle) {
   return new (aPresShell) DetailsFrame(aStyle);
+||||||| merged common ancestors
+nsBlockFrame*
+NS_NewDetailsFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) DetailsFrame(aStyle);
+=======
+nsBlockFrame* NS_NewDetailsFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) DetailsFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 namespace mozilla {
 
+<<<<<<< HEAD
 DetailsFrame::DetailsFrame(ComputedStyle* aStyle)
     : nsBlockFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+DetailsFrame::DetailsFrame(ComputedStyle* aStyle)
+  : nsBlockFrame(aStyle, kClassID)
+{
+}
+=======
+DetailsFrame::DetailsFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+    : nsBlockFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
 DetailsFrame::~DetailsFrame() {}
 
@@ -49,9 +70,19 @@ void DetailsFrame::SetInitialChildList(ChildListID aListID,
 #ifdef DEBUG
 bool DetailsFrame::CheckValidMainSummary(const nsFrameList& aFrameList) const {
   for (nsIFrame* child : aFrameList) {
+    if (child->IsGeneratedContentFrame()) {
+      continue;
+    }
     HTMLSummaryElement* summary =
+<<<<<<< HEAD
         HTMLSummaryElement::FromNode(child->GetContent());
 
+||||||| merged common ancestors
+      HTMLSummaryElement::FromNode(child->GetContent());
+
+=======
+        HTMLSummaryElement::FromNode(child->GetContent());
+>>>>>>> upstream-releases
     if (child == aFrameList.FirstChild()) {
       if (summary && summary->IsMainSummary()) {
         return true;
@@ -114,18 +145,28 @@ void DetailsFrame::AppendAnonymousContentTo(nsTArray<nsIContent*>& aElements,
   }
 }
 
+<<<<<<< HEAD
 bool DetailsFrame::HasMainSummaryFrame(nsIFrame* aSummaryFrame) {
   const ChildListIDs flowLists(kPrincipalList | kOverflowList);
+||||||| merged common ancestors
+bool
+DetailsFrame::HasMainSummaryFrame(nsIFrame* aSummaryFrame)
+{
+  const ChildListIDs flowLists(kPrincipalList | kOverflowList);
+=======
+bool DetailsFrame::HasMainSummaryFrame(nsIFrame* aSummaryFrame) {
+  const ChildListIDs flowLists = {kPrincipalList, kOverflowList};
+>>>>>>> upstream-releases
   for (nsIFrame* frag = this; frag; frag = frag->GetNextInFlow()) {
     for (ChildListIterator lists(frag); !lists.IsDone(); lists.Next()) {
-      if (!flowLists.Contains(lists.CurrentID())) {
+      if (!flowLists.contains(lists.CurrentID())) {
         continue;
       }
       for (nsIFrame* child : lists.CurrentList()) {
         child = nsPlaceholderFrame::GetRealFrameFor(child);
         // We skip any non-primary frames such as a list-style-position:inside
         // bullet frame for the <details> itself.
-        if (child->IsPrimaryFrame()) {
+        if (!child->IsGeneratedContentFrame()) {
           return aSummaryFrame == child;
         }
       }

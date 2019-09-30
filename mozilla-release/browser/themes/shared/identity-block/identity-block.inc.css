@@ -16,6 +16,17 @@
   overflow: hidden;
 }
 
+#urlbar[pageproxystate="invalid"] > #identity-box > #blocked-permissions-container,
+#urlbar[pageproxystate="invalid"] > #identity-box > #notification-popup-box,
+#urlbar[pageproxystate="invalid"] > #identity-box > #identity-icon-labels {
+  display: none;
+}
+
+#urlbar[pageproxystate="invalid"] > #identity-box {
+  pointer-events: none;
+  -moz-user-focus: ignore;
+}
+
 #identity-box:hover:not(.no-hover):not([open=true]) {
   background-color: hsla(0,0%,70%,.2);
   fill-opacity: .8;
@@ -25,6 +36,12 @@
 #identity-box[open=true] {
   background-color: hsla(0,0%,70%,.3);
   fill-opacity: .8;
+}
+
+#identity-box:not(:active):-moz-focusring {
+  outline: var(--toolbarbutton-focus-outline);
+  outline-offset: -2px;
+  -moz-outline-radius: var(--toolbarbutton-border-radius);
 }
 
 #urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity > #identity-icon-labels {
@@ -223,9 +240,36 @@
 @keyframes tp-icon-animation {
   from {
     transform: translateX(0);
+<<<<<<< HEAD
   }
   100% {
     transform: translateX(-2816px);
+||||||| merged common ancestors
+    fill-opacity: 0.3;
+  }
+  30% {
+    fill: inherit;
+    fill-opacity: 0.3;
+  }
+  31% {
+    fill: var(--tracking-protection-shield-color);
+    fill-opacity: 1;
+  }
+  50% {
+    transform: translateX(-1232px);
+  }
+  65% {
+    fill: var(--tracking-protection-shield-color);
+    fill-opacity: 1;
+  }
+  to {
+    fill: inherit;
+    fill-opacity: inherit;
+=======
+  }
+  100% {
+    transform: translateX(-2816px);
+>>>>>>> upstream-releases
   }
 }
 
@@ -275,7 +319,7 @@
   visibility: visible;
 }
 
-#main-window[remotecontrol] #remote-control-icon {
+:root[remotecontrol] #remote-control-icon {
   list-style-image: url(chrome://browser/content/static-robot.png);
   visibility: visible;
   width: 16px;

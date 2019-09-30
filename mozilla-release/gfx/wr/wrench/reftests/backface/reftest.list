@@ -1,6 +1,17 @@
+<<<<<<< HEAD
 == backface-leaf.yaml backface-ref.yaml
 == backface-hidden.yaml backface-ref.yaml
 == backface-sc.yaml backface-ref.yaml
 == backface-picture.yaml backface-picture-ref.yaml
 == backface-double-flip.yaml blank.yaml
 == backface-both-sides.yaml backface-both-sides-ref.yaml
+||||||| merged common ancestors
+=======
+== backface-leaf.yaml backface-leaf-ref.yaml
+== backface-3d-leaf.yaml backface-ref.yaml
+== backface-hidden.yaml backface-ref.yaml
+== backface-sc.yaml backface-ref.yaml
+== backface-picture.yaml backface-picture-ref.yaml
+== backface-double-flip.yaml blank.yaml
+== backface-both-sides.yaml backface-both-sides-ref.yaml
+>>>>>>> upstream-releases

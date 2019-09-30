@@ -4,6 +4,7 @@
 
 //! Parsing of the stylesheet contents.
 
+<<<<<<< HEAD
 use crate::counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
 use crate::error_reporting::ContextualParseError;
 use crate::font_face::parse_font_face_block;
@@ -25,6 +26,32 @@ use crate::stylesheets::{NamespaceRule, PageRule, StyleRule, SupportsRule, Viewp
 use crate::values::computed::font::FamilyName;
 use crate::values::{CssUrl, CustomIdent, KeyframesName};
 use crate::{Namespace, Prefix};
+||||||| merged common ancestors
+use {Namespace, Prefix};
+use counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
+=======
+use crate::counter_style::{parse_counter_style_body, parse_counter_style_name_definition};
+use crate::error_reporting::ContextualParseError;
+use crate::font_face::parse_font_face_block;
+use crate::media_queries::MediaList;
+use crate::parser::{Parse, ParserContext};
+use crate::properties::parse_property_declaration_list;
+use crate::selector_parser::{SelectorImpl, SelectorParser};
+use crate::shared_lock::{Locked, SharedRwLock};
+use crate::str::starts_with_ignore_ascii_case;
+use crate::stylesheets::document_rule::DocumentCondition;
+use crate::stylesheets::font_feature_values_rule::parse_family_name_list;
+use crate::stylesheets::keyframes_rule::parse_keyframe_list;
+use crate::stylesheets::stylesheet::Namespaces;
+use crate::stylesheets::supports_rule::SupportsCondition;
+use crate::stylesheets::viewport_rule;
+use crate::stylesheets::{CorsMode, DocumentRule, FontFeatureValuesRule, KeyframesRule, MediaRule};
+use crate::stylesheets::{CssRule, CssRuleType, CssRules, RulesMutateError, StylesheetLoader};
+use crate::stylesheets::{NamespaceRule, PageRule, StyleRule, SupportsRule, ViewportRule};
+use crate::values::computed::font::FamilyName;
+use crate::values::{CssUrl, CustomIdent, KeyframesName};
+use crate::{Namespace, Prefix};
+>>>>>>> upstream-releases
 use cssparser::{AtRuleParser, AtRuleType, Parser, QualifiedRuleParser, RuleListParser};
 use cssparser::{BasicParseError, BasicParseErrorKind, CowRcStr, SourceLocation};
 use selectors::SelectorList;
@@ -44,7 +71,7 @@ pub struct TopLevelRuleParser<'a> {
     /// A reference to the lock we need to use to create rules.
     pub shared_lock: &'a SharedRwLock,
     /// A reference to a stylesheet loader if applicable, for `@import` rules.
-    pub loader: Option<&'a StylesheetLoader>,
+    pub loader: Option<&'a dyn StylesheetLoader>,
     /// The top-level parser context.
     ///
     /// This won't contain any namespaces, and only nested parsers created with
@@ -107,9 +134,10 @@ impl<'b> TopLevelRuleParser<'b> {
         // If there's anything that isn't a namespace rule (or import rule, but
         // we checked that already at the beginning), reject with a
         // StateError.
-        if new_state == State::Namespaces && ctx.rule_list[ctx.index..]
-            .iter()
-            .any(|r| !matches!(*r, CssRule::Namespace(..)))
+        if new_state == State::Namespaces &&
+            ctx.rule_list[ctx.index..]
+                .iter()
+                .any(|r| !matches!(*r, CssRule::Namespace(..)))
         {
             self.dom_error = Some(RulesMutateError::InvalidState);
             return false;
@@ -132,7 +160,7 @@ pub enum State {
     Body = 4,
 }
 
-#[derive(Clone, Debug, MallocSizeOf)]
+#[derive(Clone, Debug, MallocSizeOf, ToShmem)]
 /// Vendor prefix.
 pub enum VendorPrefix {
     /// -moz prefix.
@@ -188,8 +216,15 @@ impl<'a, 'i> AtRuleParser<'i> for TopLevelRuleParser<'a> {
                     return Err(input.new_custom_error(StyleParseErrorKind::UnexpectedImportRule))
                 }
 
+                // FIXME(emilio): We should always be able to have a loader
+                // around! See bug 1533783.
+                if self.loader.is_none() {
+                    error!("Saw @import rule, but no way to trigger the load");
+                    return Err(input.new_custom_error(StyleParseErrorKind::UnexpectedImportRule))
+                }
+
                 let url_string = input.expect_url_or_string()?.as_ref().to_owned();
-                let url = CssUrl::parse_from_string(url_string, &self.context);
+                let url = CssUrl::parse_from_string(url_string, &self.context, CorsMode::None);
 
                 let media = MediaList::parse(&self.context, input);
                 let media = Arc::new(self.shared_lock.wrap(media));
@@ -540,7 +575,7 @@ impl<'a, 'b, 'i> AtRuleParser<'i> for NestedRuleParser<'a, 'b> {
                     self.namespaces,
                 );
 
-                let declarations = parse_property_declaration_list(&context, input);
+                let declarations = parse_property_declaration_list(&context, input, None);
                 Ok(CssRule::Page(Arc::new(self.shared_lock.wrap(PageRule {
                     block: Arc::new(self.shared_lock.wrap(declarations)),
                     source_location,
@@ -588,7 +623,7 @@ impl<'a, 'b, 'i> QualifiedRuleParser<'i> for NestedRuleParser<'a, 'b> {
         let context =
             ParserContext::new_with_rule_type(self.context, CssRuleType::Style, self.namespaces);
 
-        let declarations = parse_property_declaration_list(&context, input);
+        let declarations = parse_property_declaration_list(&context, input, Some(&selectors));
         let block = Arc::new(self.shared_lock.wrap(declarations));
         Ok(CssRule::Style(Arc::new(self.shared_lock.wrap(StyleRule {
             selectors,

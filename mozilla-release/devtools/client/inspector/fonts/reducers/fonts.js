@@ -4,9 +4,7 @@
 
 "use strict";
 
-const {
-  UPDATE_FONTS,
-} = require("../actions/index");
+const { UPDATE_FONTS } = require("../actions/index");
 
 const INITIAL_FONT_DATA = {
   // All fonts on the current page.
@@ -14,11 +12,19 @@ const INITIAL_FONT_DATA = {
 };
 
 const reducers = {
+<<<<<<< HEAD
 
   [UPDATE_FONTS](_, { allFonts }) {
     return { allFonts };
-  },
+||||||| merged common ancestors
 
+  [UPDATE_FONTS](_, { fonts, otherFonts, allFonts }) {
+    return { fonts, otherFonts, allFonts };
+=======
+  [UPDATE_FONTS](_, { allFonts }) {
+    return { allFonts };
+>>>>>>> upstream-releases
+  },
 };
 
 module.exports = function(fontData = INITIAL_FONT_DATA, action) {

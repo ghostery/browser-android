@@ -10,14 +10,35 @@
 #include "mozilla/EventForwards.h"
 #include "nsBoxFrame.h"
 
+<<<<<<< HEAD
 class nsTitleBarFrame : public nsBoxFrame {
  public:
+||||||| merged common ancestors
+class nsTitleBarFrame : public nsBoxFrame
+{
+public:
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsTitleBarFrame : public nsBoxFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsTitleBarFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewTitleBarFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewTitleBarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewTitleBarFrame(mozilla::PresShell* aPresShell,
+                                       ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
-  explicit nsTitleBarFrame(ComputedStyle* aStyle, ClassID = kClassID);
+  explicit nsTitleBarFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                           ClassID = kClassID);
 
   virtual void BuildDisplayListForChildren(
       nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) override;
@@ -26,6 +47,7 @@ class nsTitleBarFrame : public nsBoxFrame {
                                mozilla::WidgetGUIEvent* aEvent,
                                nsEventStatus* aEventStatus) override;
 
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual void MouseClicked(mozilla::WidgetMouseEvent* aEvent);
 
   void UpdateMouseThrough() override {

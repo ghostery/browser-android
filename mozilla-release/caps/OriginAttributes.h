@@ -17,17 +17,35 @@ class OriginAttributes : public dom::OriginAttributesDictionary {
  public:
   OriginAttributes() {}
 
+<<<<<<< HEAD
   OriginAttributes(uint32_t aAppId, bool aInIsolatedMozBrowser) {
     mAppId = aAppId;
+||||||| merged common ancestors
+  OriginAttributes(uint32_t aAppId, bool aInIsolatedMozBrowser)
+  {
+    mAppId = aAppId;
+=======
+  explicit OriginAttributes(bool aInIsolatedMozBrowser) {
+>>>>>>> upstream-releases
     mInIsolatedMozBrowser = aInIsolatedMozBrowser;
   }
 
   explicit OriginAttributes(const OriginAttributesDictionary& aOther)
       : OriginAttributesDictionary(aOther) {}
 
+<<<<<<< HEAD
   void SetFirstPartyDomain(const bool aIsTopLevelDocument, nsIURI* aURI);
   void SetFirstPartyDomain(const bool aIsTopLevelDocument,
                            const nsACString& aDomain);
+||||||| merged common ancestors
+  void SetFirstPartyDomain(const bool aIsTopLevelDocument, nsIURI* aURI);
+  void SetFirstPartyDomain(const bool aIsTopLevelDocument, const nsACString& aDomain);
+=======
+  void SetFirstPartyDomain(const bool aIsTopLevelDocument, nsIURI* aURI,
+                           bool aForced = false);
+  void SetFirstPartyDomain(const bool aIsTopLevelDocument,
+                           const nsACString& aDomain);
+>>>>>>> upstream-releases
 
   enum {
     STRIP_FIRST_PARTY_DOMAIN = 0x01,
@@ -44,9 +62,19 @@ class OriginAttributes : public dom::OriginAttributesDictionary {
     }
   }
 
+<<<<<<< HEAD
   bool operator==(const OriginAttributes& aOther) const {
     return mAppId == aOther.mAppId &&
            mInIsolatedMozBrowser == aOther.mInIsolatedMozBrowser &&
+||||||| merged common ancestors
+  bool operator==(const OriginAttributes& aOther) const
+  {
+    return mAppId == aOther.mAppId &&
+           mInIsolatedMozBrowser == aOther.mInIsolatedMozBrowser &&
+=======
+  bool operator==(const OriginAttributes& aOther) const {
+    return mInIsolatedMozBrowser == aOther.mInIsolatedMozBrowser &&
+>>>>>>> upstream-releases
            mUserContextId == aOther.mUserContextId &&
            mPrivateBrowsingId == aOther.mPrivateBrowsingId &&
            mFirstPartyDomain == aOther.mFirstPartyDomain;
@@ -56,6 +84,7 @@ class OriginAttributes : public dom::OriginAttributesDictionary {
     return !(*this == aOther);
   }
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool EqualsIgnoringFPD(const OriginAttributes& aOther) const {
     return mAppId == aOther.mAppId &&
            mInIsolatedMozBrowser == aOther.mInIsolatedMozBrowser &&
@@ -63,6 +92,15 @@ class OriginAttributes : public dom::OriginAttributesDictionary {
            mPrivateBrowsingId == aOther.mPrivateBrowsingId;
   }
 
+||||||| merged common ancestors
+=======
+  MOZ_MUST_USE bool EqualsIgnoringFPD(const OriginAttributes& aOther) const {
+    return mInIsolatedMozBrowser == aOther.mInIsolatedMozBrowser &&
+           mUserContextId == aOther.mUserContextId &&
+           mPrivateBrowsingId == aOther.mPrivateBrowsingId;
+  }
+
+>>>>>>> upstream-releases
   // Serializes/Deserializes non-default values into the suffix format, i.e.
   // |!key1=value1&key2=value2|. If there are no non-default attributes, this
   // returns an empty string.
@@ -127,6 +165,7 @@ class OriginAttributesPattern : public dom::OriginAttributesPatternDictionary {
       : OriginAttributesPatternDictionary(aOther) {}
 
   // Performs a match of |aAttrs| against this pattern.
+<<<<<<< HEAD
   bool Matches(const OriginAttributes& aAttrs) const {
     if (mAppId.WasPassed() && mAppId.Value() != aAttrs.mAppId) {
       return false;
@@ -134,6 +173,19 @@ class OriginAttributesPattern : public dom::OriginAttributesPatternDictionary {
 
     if (mInIsolatedMozBrowser.WasPassed() &&
         mInIsolatedMozBrowser.Value() != aAttrs.mInIsolatedMozBrowser) {
+||||||| merged common ancestors
+  bool Matches(const OriginAttributes& aAttrs) const
+  {
+    if (mAppId.WasPassed() && mAppId.Value() != aAttrs.mAppId) {
+      return false;
+    }
+
+    if (mInIsolatedMozBrowser.WasPassed() && mInIsolatedMozBrowser.Value() != aAttrs.mInIsolatedMozBrowser) {
+=======
+  bool Matches(const OriginAttributes& aAttrs) const {
+    if (mInIsolatedMozBrowser.WasPassed() &&
+        mInIsolatedMozBrowser.Value() != aAttrs.mInIsolatedMozBrowser) {
+>>>>>>> upstream-releases
       return false;
     }
 
@@ -155,12 +207,24 @@ class OriginAttributesPattern : public dom::OriginAttributesPatternDictionary {
     return true;
   }
 
+<<<<<<< HEAD
   bool Overlaps(const OriginAttributesPattern& aOther) const {
     if (mAppId.WasPassed() && aOther.mAppId.WasPassed() &&
         mAppId.Value() != aOther.mAppId.Value()) {
       return false;
     }
 
+||||||| merged common ancestors
+  bool Overlaps(const OriginAttributesPattern& aOther) const
+  {
+    if (mAppId.WasPassed() && aOther.mAppId.WasPassed() &&
+        mAppId.Value() != aOther.mAppId.Value()) {
+      return false;
+    }
+
+=======
+  bool Overlaps(const OriginAttributesPattern& aOther) const {
+>>>>>>> upstream-releases
     if (mInIsolatedMozBrowser.WasPassed() &&
         aOther.mInIsolatedMozBrowser.WasPassed() &&
         mInIsolatedMozBrowser.Value() != aOther.mInIsolatedMozBrowser.Value()) {

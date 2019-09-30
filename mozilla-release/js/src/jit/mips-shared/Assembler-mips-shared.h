@@ -783,6 +783,7 @@ class AssemblerMIPSShared : public AssemblerShared {
 #ifdef JS_JITSPEW
         printer(nullptr),
 #endif
+<<<<<<< HEAD
         isFinished(false) {
   }
 
@@ -805,6 +806,55 @@ class AssemblerMIPSShared : public AssemblerShared {
   }
 
   void assertNoGCThings() const {
+||||||| merged common ancestors
+       isFinished(false)
+    { }
+
+    static Condition InvertCondition(Condition cond);
+    static DoubleCondition InvertCondition(DoubleCondition cond);
+
+    void writeRelocation(BufferOffset src) {
+        jumpRelocations_.writeUnsigned(src.getOffset());
+    }
+
+    // As opposed to x86/x64 version, the data relocation has to be executed
+    // before to recover the pointer, and not after.
+    void writeDataRelocation(ImmGCPtr ptr) {
+        if (ptr.value) {
+            if (gc::IsInsideNursery(ptr.value)) {
+                embedsNurseryPointers_ = true;
+            }
+            dataRelocations_.writeUnsigned(nextOffset().getOffset());
+        }
+    }
+
+    void assertNoGCThings() const {
+=======
+        isFinished(false) {
+  }
+
+  static Condition InvertCondition(Condition cond);
+  static DoubleCondition InvertCondition(DoubleCondition cond);
+
+  void writeRelocation(BufferOffset src) {
+    jumpRelocations_.writeUnsigned(src.getOffset());
+  }
+
+  // As opposed to x86/x64 version, the data relocation has to be executed
+  // before to recover the pointer, and not after.
+  void writeDataRelocation(ImmGCPtr ptr) {
+    // Raw GC pointer relocations and Value relocations both end up in
+    // TraceOneDataRelocation.
+    if (ptr.value) {
+      if (gc::IsInsideNursery(ptr.value)) {
+        embedsNurseryPointers_ = true;
+      }
+      dataRelocations_.writeUnsigned(nextOffset().getOffset());
+    }
+  }
+
+  void assertNoGCThings() const {
+>>>>>>> upstream-releases
 #ifdef DEBUG
     MOZ_ASSERT(dataRelocations_.length() == 0);
     for (auto& j : jumps_) {
@@ -813,8 +863,17 @@ class AssemblerMIPSShared : public AssemblerShared {
 #endif
   }
 
+<<<<<<< HEAD
  public:
   bool oom() const;
+||||||| merged common ancestors
+  public:
+    bool oom() const;
+=======
+ public:
+  void setUnlimitedBuffer() { m_buffer.setUnlimited(); }
+  bool oom() const;
+>>>>>>> upstream-releases
 
   void setPrinter(Sprinter* sp) {
 #ifdef JS_JITSPEW
@@ -1204,20 +1263,56 @@ class AssemblerMIPSShared : public AssemblerShared {
 
   static void PatchWrite_Imm32(CodeLocationLabel label, Imm32 imm);
 
+<<<<<<< HEAD
   static uint32_t AlignDoubleArg(uint32_t offset) {
     return (offset + 1U) & ~1U;
   }
 
   static uint8_t* NextInstruction(uint8_t* instruction,
                                   uint32_t* count = nullptr);
+||||||| merged common ancestors
+    static uint32_t AlignDoubleArg(uint32_t offset) {
+        return (offset + 1U) &~ 1U;
+    }
 
+    static uint8_t* NextInstruction(uint8_t* instruction, uint32_t* count = nullptr);
+=======
+  static uint32_t AlignDoubleArg(uint32_t offset) {
+    return (offset + 1U) & ~1U;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static void ToggleToJmp(CodeLocationLabel inst_);
   static void ToggleToCmp(CodeLocationLabel inst_);
+||||||| merged common ancestors
+    static void ToggleToJmp(CodeLocationLabel inst_);
+    static void ToggleToCmp(CodeLocationLabel inst_);
+=======
+  static uint8_t* NextInstruction(uint8_t* instruction,
+                                  uint32_t* count = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void UpdateLuiOriValue(Instruction* inst0, Instruction* inst1,
                                 uint32_t value);
+||||||| merged common ancestors
+    static void UpdateLuiOriValue(Instruction* inst0, Instruction* inst1, uint32_t value);
+=======
+  static void ToggleToJmp(CodeLocationLabel inst_);
+  static void ToggleToCmp(CodeLocationLabel inst_);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool bailed() { return m_buffer.bail(); }
+||||||| merged common ancestors
+    bool bailed() {
+        return m_buffer.bail();
+    }
+=======
+  static void UpdateLuiOriValue(Instruction* inst0, Instruction* inst1,
+                                uint32_t value);
+>>>>>>> upstream-releases
 
   void verifyHeapAccessDisassembly(uint32_t begin, uint32_t end,
                                    const Disassembler::HeapAccess& heapAccess) {

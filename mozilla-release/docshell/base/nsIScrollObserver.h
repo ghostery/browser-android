@@ -31,13 +31,25 @@ class nsIScrollObserver : public nsISupports {
    * Called when an async panning/zooming transform has started being applied
    * and passed the scroll offset
    */
+<<<<<<< HEAD
   virtual void AsyncPanZoomStarted(){};
+||||||| merged common ancestors
+  virtual void AsyncPanZoomStarted() {};
+=======
+  MOZ_CAN_RUN_SCRIPT virtual void AsyncPanZoomStarted(){};
+>>>>>>> upstream-releases
 
   /**
    * Called when an async panning/zooming transform is no longer applied
    * and passed the scroll offset
    */
+<<<<<<< HEAD
   virtual void AsyncPanZoomStopped(){};
+||||||| merged common ancestors
+  virtual void AsyncPanZoomStopped() {};
+=======
+  MOZ_CAN_RUN_SCRIPT virtual void AsyncPanZoomStopped(){};
+>>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIScrollObserver, NS_ISCROLLOBSERVER_IID)

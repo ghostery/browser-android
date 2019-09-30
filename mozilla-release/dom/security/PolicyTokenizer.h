@@ -43,17 +43,42 @@ class PolicyTokenizer {
 
   inline bool atEnd() { return mCurChar >= mEndChar; }
 
+<<<<<<< HEAD
   inline void skipWhiteSpace() {
     while (mCurChar < mEndChar && nsContentUtils::IsHTMLWhitespace(*mCurChar)) {
       mCurToken.Append(*mCurChar++);
+||||||| merged common ancestors
+    inline bool atEnd()
+    {
+      return mCurChar >= mEndChar;
+=======
+  inline void skipWhiteSpace() {
+    while (mCurChar < mEndChar && nsContentUtils::IsHTMLWhitespace(*mCurChar)) {
+      mCurChar++;
+>>>>>>> upstream-releases
     }
     mCurToken.Truncate();
   }
 
+<<<<<<< HEAD
   inline void skipWhiteSpaceAndSemicolon() {
     while (mCurChar < mEndChar &&
            (*mCurChar == ';' || nsContentUtils::IsHTMLWhitespace(*mCurChar))) {
       mCurToken.Append(*mCurChar++);
+||||||| merged common ancestors
+    inline void skipWhiteSpace()
+    {
+      while (mCurChar < mEndChar &&
+             nsContentUtils::IsHTMLWhitespace(*mCurChar)) {
+        mCurToken.Append(*mCurChar++);
+      }
+      mCurToken.Truncate();
+=======
+  inline void skipWhiteSpaceAndSemicolon() {
+    while (mCurChar < mEndChar &&
+           (*mCurChar == ';' || nsContentUtils::IsHTMLWhitespace(*mCurChar))) {
+      mCurChar++;
+>>>>>>> upstream-releases
     }
     mCurToken.Truncate();
   }

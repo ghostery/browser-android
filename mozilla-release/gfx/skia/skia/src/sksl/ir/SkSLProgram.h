@@ -13,6 +13,7 @@
 
 #include "SkSLBoolLiteral.h"
 #include "SkSLExpression.h"
+#include "SkSLFloatLiteral.h"
 #include "SkSLIntLiteral.h"
 #include "SkSLModifiers.h"
 #include "SkSLProgramElement.h"
@@ -42,10 +43,22 @@ struct Program {
             : fKind(kInt_Kind)
             , fValue(i) {}
 
+<<<<<<< HEAD
             Value(unsigned int i)
             : fKind(kInt_Kind)
             , fValue(i) {}
 
+||||||| merged common ancestors
+=======
+            Value(unsigned int i)
+            : fKind(kInt_Kind)
+            , fValue(i) {}
+
+            Value(float f)
+            : fKind(kFloat_Kind)
+            , fValue(f) {}
+
+>>>>>>> upstream-releases
             std::unique_ptr<Expression> literal(const Context& context, int offset) const {
                 switch (fKind) {
                     case Program::Settings::Value::kBool_Kind:
@@ -54,6 +67,10 @@ struct Program {
                                                                            fValue));
                     case Program::Settings::Value::kInt_Kind:
                         return std::unique_ptr<Expression>(new IntLiteral(context,
+                                                                          offset,
+                                                                          fValue));
+                    case Program::Settings::Value::kFloat_Kind:
+                        return std::unique_ptr<Expression>(new FloatLiteral(context,
                                                                           offset,
                                                                           fValue));
                     default:
@@ -65,6 +82,7 @@ struct Program {
             enum {
                 kBool_Kind,
                 kInt_Kind,
+                kFloat_Kind,
             } fKind;
 
             int fValue;
@@ -108,6 +126,30 @@ struct Program {
         }
 
         bool isEmpty() {
+<<<<<<< HEAD
+            return !fRTWidth && !fRTHeight && !fFlipY;
+        }
+    };
+
+    class iterator {
+    public:
+        ProgramElement& operator*() {
+            if (fIter1 != fEnd1) {
+                return **fIter1;
+            }
+            return **fIter2;
+        }
+
+        iterator& operator++() {
+            if (fIter1 != fEnd1) {
+                ++fIter1;
+                return *this;
+            }
+            ++fIter2;
+            return *this;
+||||||| merged common ancestors
+            return !fRTHeight && !fFlipY;
+=======
             return !fRTWidth && !fRTHeight && !fFlipY;
         }
     };
@@ -175,6 +217,55 @@ struct Program {
 
         bool operator==(const const_iterator& other) const {
             return fIter1 == other.fIter1 && fIter2 == other.fIter2;
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+
+        bool operator==(const iterator& other) const {
+            return fIter1 == other.fIter1 && fIter2 == other.fIter2;
+        }
+
+        bool operator!=(const iterator& other) const {
+            return !(*this == other);
+        }
+
+    private:
+        using inner = std::vector<std::unique_ptr<ProgramElement>>::iterator;
+
+        iterator(inner begin1, inner end1, inner begin2, inner end2)
+        : fIter1(begin1)
+        , fEnd1(end1)
+        , fIter2(begin2)
+        , fEnd2(end2) {}
+
+        inner fIter1;
+        inner fEnd1;
+        inner fIter2;
+        inner fEnd2;
+
+        friend struct Program;
+    };
+
+    class const_iterator {
+    public:
+        const ProgramElement& operator*() {
+            if (fIter1 != fEnd1) {
+                return **fIter1;
+            }
+            return **fIter2;
+        }
+
+        const_iterator& operator++() {
+            if (fIter1 != fEnd1) {
+                ++fIter1;
+                return *this;
+            }
+            ++fIter2;
+            return *this;
+        }
+
+        bool operator==(const const_iterator& other) const {
+            return fIter1 == other.fIter1 && fIter2 == other.fIter2;
         }
 
         bool operator!=(const const_iterator& other) const {
@@ -196,6 +287,29 @@ struct Program {
         inner fEnd2;
 
         friend struct Program;
+||||||| merged common ancestors
+=======
+
+        bool operator!=(const const_iterator& other) const {
+            return !(*this == other);
+        }
+
+    private:
+        using inner = std::vector<std::unique_ptr<ProgramElement>>::const_iterator;
+
+        const_iterator(inner begin1, inner end1, inner begin2, inner end2)
+        : fIter1(begin1)
+        , fEnd1(end1)
+        , fIter2(begin2)
+        , fEnd2(end2) {}
+
+        inner fIter1;
+        inner fEnd1;
+        inner fIter2;
+        inner fEnd2;
+
+        friend struct Program;
+>>>>>>> upstream-releases
     };
 
     enum Kind {

@@ -7,6 +7,7 @@
 #include "MainThreadUtils.h"
 #include "nsThreadUtils.h"
 #include "CompositorBridgeParent.h"
+#include "mozilla/layers/CanvasParent.h"
 #include "mozilla/layers/CompositorManagerParent.h"
 #include "mozilla/layers/ImageBridgeParent.h"
 #include "mozilla/media/MediaSystemResourceService.h"
@@ -23,17 +24,39 @@ namespace layers {
 static StaticRefPtr<CompositorThreadHolder> sCompositorThreadHolder;
 static bool sFinishedCompositorShutDown = false;
 
+<<<<<<< HEAD
 CompositorThreadHolder* GetCompositorThreadHolder() {
   return sCompositorThreadHolder;
 }
 
 base::Thread* CompositorThread() {
+||||||| merged common ancestors
+CompositorThreadHolder* GetCompositorThreadHolder()
+{
+  return sCompositorThreadHolder;
+}
+
+base::Thread*
+CompositorThread()
+{
+=======
+base::Thread* CompositorThread() {
+>>>>>>> upstream-releases
   return sCompositorThreadHolder
              ? sCompositorThreadHolder->GetCompositorThread()
              : nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ MessageLoop* CompositorThreadHolder::Loop() {
+||||||| merged common ancestors
+/* static */ MessageLoop*
+CompositorThreadHolder::Loop()
+{
+=======
+/* static */
+MessageLoop* CompositorThreadHolder::Loop() {
+>>>>>>> upstream-releases
   return CompositorThread() ? CompositorThread()->message_loop() : nullptr;
 }
 
@@ -53,8 +76,18 @@ CompositorThreadHolder::~CompositorThreadHolder() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void CompositorThreadHolder::DestroyCompositorThread(
     base::Thread* aCompositorThread) {
+||||||| merged common ancestors
+/* static */ void
+CompositorThreadHolder::DestroyCompositorThread(base::Thread* aCompositorThread)
+{
+=======
+/* static */
+void CompositorThreadHolder::DestroyCompositorThread(
+    base::Thread* aCompositorThread) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   MOZ_ASSERT(!sCompositorThreadHolder,
@@ -129,6 +162,7 @@ void CompositorThreadHolder::Shutdown() {
   gfx::ReleaseVRManagerParentSingleton();
   MediaSystemResourceService::Shutdown();
   CompositorManagerParent::Shutdown();
+  CanvasParent::Shutdown();
 
   sCompositorThreadHolder = nullptr;
 
@@ -139,7 +173,16 @@ void CompositorThreadHolder::Shutdown() {
   CompositorBridgeParent::FinishShutdown();
 }
 
+<<<<<<< HEAD
 /* static */ bool CompositorThreadHolder::IsInCompositorThread() {
+||||||| merged common ancestors
+/* static */ bool
+CompositorThreadHolder::IsInCompositorThread()
+{
+=======
+/* static */
+bool CompositorThreadHolder::IsInCompositorThread() {
+>>>>>>> upstream-releases
   return CompositorThread() &&
          CompositorThread()->thread_id() == PlatformThread::CurrentId();
 }

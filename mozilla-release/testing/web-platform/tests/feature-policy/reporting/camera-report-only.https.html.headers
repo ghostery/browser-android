@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: camera-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: camera 'none'
+>>>>>>> upstream-releases

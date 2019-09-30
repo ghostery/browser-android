@@ -73,14 +73,13 @@ class HTMLImageElement final : public nsGenericHTMLElement,
   bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                        int32_t* aTabIndex) override;
 
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent) override;
 
   virtual EventStates IntrinsicState() const override;
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) override;
+  virtual void NodeInfoChanged(Document* aOldDoc) override;
 
   nsresult CopyInnerTo(HTMLImageElement* aDest);
 
@@ -90,27 +89,79 @@ class HTMLImageElement final : public nsGenericHTMLElement,
   void SetIsMap(bool aIsMap, ErrorResult& aError) {
     SetHTMLBoolAttr(nsGkAtoms::ismap, aIsMap, aError);
   }
+<<<<<<< HEAD
   MOZ_CAN_RUN_SCRIPT uint32_t Width() {
     return GetWidthHeightForImage(mCurrentRequest).width;
   }
   void SetWidth(uint32_t aWidth, ErrorResult& aError) {
+||||||| merged common ancestors
+  MOZ_CAN_RUN_SCRIPT uint32_t Width()
+  {
+    return GetWidthHeightForImage(mCurrentRequest).width;
+  }
+  void SetWidth(uint32_t aWidth, ErrorResult& aError)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT uint32_t Width();
+  void SetWidth(uint32_t aWidth, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::width, aWidth, 0, aError);
   }
+<<<<<<< HEAD
   MOZ_CAN_RUN_SCRIPT uint32_t Height() {
     return GetWidthHeightForImage(mCurrentRequest).height;
   }
   void SetHeight(uint32_t aHeight, ErrorResult& aError) {
+||||||| merged common ancestors
+  MOZ_CAN_RUN_SCRIPT uint32_t Height()
+  {
+    return GetWidthHeightForImage(mCurrentRequest).height;
+  }
+  void SetHeight(uint32_t aHeight, ErrorResult& aError)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT uint32_t Height();
+  void SetHeight(uint32_t aHeight, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::height, aHeight, 0, aError);
   }
   uint32_t NaturalWidth();
   uint32_t NaturalHeight();
   bool Complete();
+<<<<<<< HEAD
   uint32_t Hspace() { return GetUnsignedIntAttr(nsGkAtoms::hspace, 0); }
   void SetHspace(uint32_t aHspace, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t Hspace()
+  {
+    return GetUnsignedIntAttr(nsGkAtoms::hspace, 0);
+  }
+  void SetHspace(uint32_t aHspace, ErrorResult& aError)
+  {
+=======
+  uint32_t Hspace() {
+    return GetDimensionAttrAsUnsignedInt(nsGkAtoms::hspace, 0);
+  }
+  void SetHspace(uint32_t aHspace, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::hspace, aHspace, 0, aError);
   }
+<<<<<<< HEAD
   uint32_t Vspace() { return GetUnsignedIntAttr(nsGkAtoms::vspace, 0); }
   void SetVspace(uint32_t aVspace, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t Vspace()
+  {
+    return GetUnsignedIntAttr(nsGkAtoms::vspace, 0);
+  }
+  void SetVspace(uint32_t aVspace, ErrorResult& aError)
+  {
+=======
+  uint32_t Vspace() {
+    return GetDimensionAttrAsUnsignedInt(nsGkAtoms::vspace, 0);
+  }
+  void SetVspace(uint32_t aVspace, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::vspace, aVspace, 0, aError);
   }
 
@@ -184,7 +235,17 @@ class HTMLImageElement final : public nsGenericHTMLElement,
   }
   void GetDecoding(nsAString& aValue);
 
+<<<<<<< HEAD
   net::ReferrerPolicy GetImageReferrerPolicy() override {
+||||||| merged common ancestors
+  net::ReferrerPolicy
+  GetImageReferrerPolicy() override
+  {
+=======
+  already_AddRefed<Promise> Decode(ErrorResult& aRv);
+
+  net::ReferrerPolicy GetImageReferrerPolicy() override {
+>>>>>>> upstream-releases
     return GetReferrerPolicyAsEnum();
   }
 
@@ -240,11 +301,29 @@ class HTMLImageElement final : public nsGenericHTMLElement,
    * no source.  This is distinct from a return of false which implies that
    * further <source> or <img> tags would be considered.
    */
+<<<<<<< HEAD
   static bool SelectSourceForTagWithAttrs(
       nsIDocument* aDocument, bool aIsSourceTag, const nsAString& aSrcAttr,
       const nsAString& aSrcsetAttr, const nsAString& aSizesAttr,
       const nsAString& aTypeAttr, const nsAString& aMediaAttr,
       nsAString& aResult);
+||||||| merged common ancestors
+  static bool
+    SelectSourceForTagWithAttrs(nsIDocument *aDocument,
+                                bool aIsSourceTag,
+                                const nsAString& aSrcAttr,
+                                const nsAString& aSrcsetAttr,
+                                const nsAString& aSizesAttr,
+                                const nsAString& aTypeAttr,
+                                const nsAString& aMediaAttr,
+                                nsAString& aResult);
+=======
+  static bool SelectSourceForTagWithAttrs(
+      Document* aDocument, bool aIsSourceTag, const nsAString& aSrcAttr,
+      const nsAString& aSrcsetAttr, const nsAString& aSizesAttr,
+      const nsAString& aTypeAttr, const nsAString& aMediaAttr,
+      nsAString& aResult);
+>>>>>>> upstream-releases
 
   /**
    * If this image's src pointers to an SVG document, flush the SVG document's

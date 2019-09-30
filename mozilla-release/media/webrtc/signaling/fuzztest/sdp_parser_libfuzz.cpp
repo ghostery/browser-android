@@ -17,10 +17,27 @@ using namespace mozilla;
 static mozilla::UniquePtr<Sdp> sdpPtr;
 static SipccSdpParser mParser;
 
+<<<<<<< HEAD
 int FuzzingInitSdpParser(int *argc, char ***argv) { return 0; }
+||||||| merged common ancestors
+int FuzzingInitSdpParser(int *argc, char ***argv) {
+  return 0;
+}
+=======
+int FuzzingInitSdpParser(int* argc, char*** argv) { return 0; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static int RunSdpParserFuzzing(const uint8_t *data, size_t size) {
   std::string message(reinterpret_cast<const char *>(data), size);
+||||||| merged common ancestors
+static int
+RunSdpParserFuzzing(const uint8_t* data, size_t size) {
+  std::string message(reinterpret_cast<const char*>(data), size);
+=======
+static int RunSdpParserFuzzing(const uint8_t* data, size_t size) {
+  std::string message(reinterpret_cast<const char*>(data), size);
+>>>>>>> upstream-releases
 
   sdpPtr = mParser.Parse(message);
 

@@ -7,13 +7,14 @@
 
 #include "gfxContext.h"
 #include "gfxUtils.h"
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/Helpers.h"
 #include "nsTableFrame.h"
 #include "nsTableColFrame.h"
 #include "nsTableRowFrame.h"
 #include "nsTableRowGroupFrame.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsStyleConsts.h"
 #include "nsPresContext.h"
 #include "nsCSSRendering.h"
@@ -22,7 +23,6 @@
 #include "nsAttrValueInlines.h"
 #include "nsHTMLParts.h"
 #include "nsGkAtoms.h"
-#include "nsIPresShell.h"
 #include "nsIServiceManager.h"
 #include "nsDisplayList.h"
 #include "nsLayoutUtils.h"
@@ -38,10 +38,25 @@ using namespace mozilla;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
 
+<<<<<<< HEAD
 class nsDisplayTableCellSelection final : public nsDisplayItem {
  public:
+||||||| merged common ancestors
+class nsDisplayTableCellSelection final : public nsDisplayItem {
+public:
+=======
+class nsDisplayTableCellSelection final : public nsPaintedDisplayItem {
+ public:
+>>>>>>> upstream-releases
   nsDisplayTableCellSelection(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame)
+<<<<<<< HEAD
       : nsDisplayItem(aBuilder, aFrame) {
+||||||| merged common ancestors
+    : nsDisplayItem(aBuilder, aFrame)
+  {
+=======
+      : nsPaintedDisplayItem(aBuilder, aFrame) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayTableCellSelection);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -56,6 +71,7 @@ class nsDisplayTableCellSelection final : public nsDisplayItem {
   }
   NS_DISPLAY_DECL_NAME("TableCellSelection", TYPE_TABLE_CELL_SELECTION)
 
+<<<<<<< HEAD
   bool CreateWebRenderCommands(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -64,6 +80,24 @@ class nsDisplayTableCellSelection final : public nsDisplayItem {
       nsDisplayListBuilder* aDisplayListBuilder) override {
     RefPtr<nsFrameSelection> frameSelection =
         mFrame->PresShell()->FrameSelection();
+||||||| merged common ancestors
+  bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                               mozilla::wr::IpcResourceUpdateQueue& aResources,
+                               const StackingContextHelper& aSc,
+                               mozilla::layers::WebRenderLayerManager* aManager,
+                               nsDisplayListBuilder* aDisplayListBuilder) override
+  {
+    RefPtr<nsFrameSelection> frameSelection = mFrame->PresShell()->FrameSelection();
+=======
+  bool CreateWebRenderCommands(
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const StackingContextHelper& aSc,
+      mozilla::layers::RenderRootStateManager* aManager,
+      nsDisplayListBuilder* aDisplayListBuilder) override {
+    RefPtr<nsFrameSelection> frameSelection =
+        mFrame->PresShell()->FrameSelection();
+>>>>>>> upstream-releases
     if (frameSelection->GetTableCellSelection()) {
       return false;
     }
@@ -73,9 +107,21 @@ class nsDisplayTableCellSelection final : public nsDisplayItem {
 };
 
 nsTableCellFrame::nsTableCellFrame(ComputedStyle* aStyle,
+<<<<<<< HEAD
                                    nsTableFrame* aTableFrame, ClassID aID)
     : nsContainerFrame(aStyle, aID),
       mDesiredSize(aTableFrame->GetWritingMode()) {
+||||||| merged common ancestors
+                                   nsTableFrame* aTableFrame,
+                                   ClassID aID)
+  : nsContainerFrame(aStyle, aID)
+  , mDesiredSize(aTableFrame->GetWritingMode())
+{
+=======
+                                   nsTableFrame* aTableFrame, ClassID aID)
+    : nsContainerFrame(aStyle, aTableFrame->PresContext(), aID),
+      mDesiredSize(aTableFrame->GetWritingMode()) {
+>>>>>>> upstream-releases
   mColIndex = 0;
   mPriorAvailISize = 0;
 
@@ -130,8 +176,16 @@ void nsTableCellFrame::NotifyPercentBSize(const ReflowInput& aReflowInput) {
   // XXXldb Given the now-stricter |NeedsToObserve|, many if not all of
   // these tests are probably unnecessary.
 
+<<<<<<< HEAD
   // Maybe the cell reflow state; we sure if we're inside the |if|.
   const ReflowInput* cellRI = aReflowInput.mCBReflowInput;
+||||||| merged common ancestors
+  // Maybe the cell reflow state; we sure if we're inside the |if|.
+  const ReflowInput *cellRI = aReflowInput.mCBReflowInput;
+=======
+  // Maybe the cell reflow input; we sure if we're inside the |if|.
+  const ReflowInput* cellRI = aReflowInput.mCBReflowInput;
+>>>>>>> upstream-releases
 
   if (cellRI && cellRI->mFrame == this &&
       (cellRI->ComputedBSize() == NS_UNCONSTRAINEDSIZE ||
@@ -199,19 +253,43 @@ nsresult nsTableCellFrame::AttributeChanged(int32_t aNameSpaceID,
   // BasicTableLayoutStrategy
   if (aNameSpaceID == kNameSpaceID_None && aAttribute == nsGkAtoms::nowrap &&
       PresContext()->CompatibilityMode() == eCompatibility_NavQuirks) {
+<<<<<<< HEAD
     PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                   NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+    PresShell()->
+      FrameNeedsReflow(this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
+=======
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                  NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
   }
 
   if (aAttribute == nsGkAtoms::rowspan || aAttribute == nsGkAtoms::colspan) {
+<<<<<<< HEAD
     nsLayoutUtils::PostRestyleEvent(mContent->AsElement(), nsRestyleHint(0),
+||||||| merged common ancestors
+    nsLayoutUtils::PostRestyleEvent(mContent->AsElement(),
+                                    nsRestyleHint(0),
+=======
+    nsLayoutUtils::PostRestyleEvent(mContent->AsElement(), RestyleHint{0},
+>>>>>>> upstream-releases
                                     nsChangeHint_UpdateTableCellSpans);
   }
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsTableCellFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsTableCellFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsTableCellFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -249,8 +327,19 @@ void nsTableCellFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
 
 void nsTableCellFrame::SetColIndex(int32_t aColIndex) { mColIndex = aColIndex; }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableCellFrame::GetUsedMargin() const {
   return nsMargin(0, 0, 0, 0);
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableCellFrame::GetUsedMargin() const
+{
+  return nsMargin(0,0,0,0);
+=======
+/* virtual */
+nsMargin nsTableCellFrame::GetUsedMargin() const {
+  return nsMargin(0, 0, 0, 0);
+>>>>>>> upstream-releases
 }
 
 // ASSURE DIFFERENT COLORS for selection
@@ -280,7 +369,13 @@ void nsTableCellFrame::DecorateForSelection(DrawTarget* aDrawTarget,
         bordercolor = NS_RGB(176, 176, 176);  // disabled color
       } else {
         bordercolor =
+<<<<<<< HEAD
             LookAndFeel::GetColor(LookAndFeel::eColorID_TextSelectBackground);
+||||||| merged common ancestors
+          LookAndFeel::GetColor(LookAndFeel::eColorID_TextSelectBackground);
+=======
+            LookAndFeel::GetColor(LookAndFeel::ColorID::TextSelectBackground);
+>>>>>>> upstream-releases
       }
       nscoord threePx = nsPresContext::CSSPixelsToAppUnits(3);
       if ((mRect.width > threePx) && (mRect.height > threePx)) {
@@ -347,8 +442,14 @@ nsresult nsTableCellFrame::ProcessBorders(nsTableFrame* aFrame,
 
   if (!GetContentEmpty() ||
       StyleTableBorder()->mEmptyCells == NS_STYLE_TABLE_EMPTY_CELLS_SHOW) {
+<<<<<<< HEAD
     aLists.BorderBackground()->AppendToTop(
         MakeDisplayItem<nsDisplayBorder>(aBuilder, this));
+||||||| merged common ancestors
+    aLists.BorderBackground()->AppendToTop(MakeDisplayItem<nsDisplayBorder>(aBuilder, this));
+=======
+    aLists.BorderBackground()->AppendNewToTop<nsDisplayBorder>(aBuilder, this);
+>>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -444,24 +545,52 @@ void nsTableCellFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   DO_GLOBAL_REFLOW_COUNT_DSP("nsTableCellFrame");
   if (ShouldPaintBordersAndBackgrounds()) {
     // display outset box-shadows if we need to.
-    bool hasBoxShadow = !!StyleEffects()->mBoxShadow;
+    bool hasBoxShadow = !StyleEffects()->mBoxShadow.IsEmpty();
     if (hasBoxShadow) {
+<<<<<<< HEAD
       aLists.BorderBackground()->AppendToTop(
           MakeDisplayItem<nsDisplayBoxShadowOuter>(aBuilder, this));
+||||||| merged common ancestors
+      aLists.BorderBackground()->AppendToTop(
+        MakeDisplayItem<nsDisplayBoxShadowOuter>(aBuilder, this));
+=======
+      aLists.BorderBackground()->AppendNewToTop<nsDisplayBoxShadowOuter>(
+          aBuilder, this);
+>>>>>>> upstream-releases
     }
+
+    nsRect bgRect = GetRectRelativeToSelf() + aBuilder->ToReferenceFrame(this);
 
     // display background if we need to.
     if (aBuilder->IsForEventDelivery() ||
         !StyleBackground()->IsTransparent(this) ||
         StyleDisplay()->HasAppearance()) {
+<<<<<<< HEAD
       nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
           aBuilder, this, GetRectRelativeToSelf(), aLists.BorderBackground());
+||||||| merged common ancestors
+      nsDisplayBackgroundImage::AppendBackgroundItemsToTop(aBuilder,
+          this,
+          GetRectRelativeToSelf(),
+          aLists.BorderBackground());
+=======
+      nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
+          aBuilder, this, bgRect, aLists.BorderBackground());
+>>>>>>> upstream-releases
     }
 
     // display inset box-shadows if we need to.
     if (hasBoxShadow) {
+<<<<<<< HEAD
       aLists.BorderBackground()->AppendToTop(
           MakeDisplayItem<nsDisplayBoxShadowInner>(aBuilder, this));
+||||||| merged common ancestors
+      aLists.BorderBackground()->AppendToTop(
+         MakeDisplayItem<nsDisplayBoxShadowInner>(aBuilder, this));
+=======
+      aLists.BorderBackground()->AppendNewToTop<nsDisplayBoxShadowInner>(
+          aBuilder, this);
+>>>>>>> upstream-releases
     }
 
     // display borders if we need to
@@ -469,18 +598,59 @@ void nsTableCellFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
 
     // and display the selection border if we need to
     if (IsSelected()) {
+<<<<<<< HEAD
       aLists.BorderBackground()->AppendToTop(
           MakeDisplayItem<nsDisplayTableCellSelection>(aBuilder, this));
+||||||| merged common ancestors
+      aLists.BorderBackground()->AppendToTop(
+        MakeDisplayItem<nsDisplayTableCellSelection>(aBuilder, this));
+=======
+      aLists.BorderBackground()->AppendNewToTop<nsDisplayTableCellSelection>(
+          aBuilder, this);
+    }
+
+    // This can be null if display list building initiated in the middle
+    // of the table, which can happen with background-clip:text and
+    // -moz-element.
+    nsDisplayTableBackgroundSet* backgrounds =
+        aBuilder->GetTableBackgroundSet();
+    if (backgrounds) {
+      // Compute bgRect relative to reference frame, but using the
+      // normal (without position:relative offsets) positions for the
+      // cell, row and row group.
+      bgRect = GetRectRelativeToSelf() + GetNormalPosition();
+
+      nsTableRowFrame* row = GetTableRowFrame();
+      bgRect += row->GetNormalPosition();
+
+      nsTableRowGroupFrame* rowGroup = row->GetTableRowGroupFrame();
+      bgRect += rowGroup->GetNormalPosition();
+
+      bgRect += backgrounds->TableToReferenceFrame();
+
+      // Create backgrounds items as needed for the column and column
+      // group that this cell occupies.
+      nsTableColFrame* col = backgrounds->GetColForIndex(ColIndex());
+      nsTableColGroupFrame* colGroup = col->GetTableColGroupFrame();
+
+      Maybe<nsDisplayListBuilder::AutoBuildingDisplayList> buildingForColGroup;
+      nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
+          aBuilder, colGroup, bgRect, backgrounds->ColGroupBackgrounds(), false,
+          nullptr, colGroup->GetRect() + backgrounds->TableToReferenceFrame(),
+          this, &buildingForColGroup);
+
+      Maybe<nsDisplayListBuilder::AutoBuildingDisplayList> buildingForCol;
+      nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
+          aBuilder, col, bgRect, backgrounds->ColBackgrounds(), false, nullptr,
+          col->GetRect() + colGroup->GetPosition() +
+              backgrounds->TableToReferenceFrame(),
+          this, &buildingForCol);
+>>>>>>> upstream-releases
     }
   }
 
   // the 'empty-cells' property has no effect on 'outline'
   DisplayOutline(aBuilder, aLists);
-
-  // Push a null 'current table item' so that descendant tables can't
-  // accidentally mess with our table
-  nsAutoPushCurrentTableItem pushTableItem;
-  pushTableItem.Push(aBuilder, nullptr);
 
   nsIFrame* kid = mFrames.FirstChild();
   NS_ASSERTION(kid && !kid->GetNextSibling(),
@@ -511,9 +681,20 @@ nsIFrame::LogicalSides nsTableCellFrame::GetLogicalSkipSides(
   return skip;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableCellFrame::GetBorderOverflow() {
   return nsMargin(0, 0, 0, 0);
 }
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableCellFrame::GetBorderOverflow()
+{
+  return nsMargin(0, 0, 0, 0);
+}
+=======
+/* virtual */
+nsMargin nsTableCellFrame::GetBorderOverflow() { return nsMargin(0, 0, 0, 0); }
+>>>>>>> upstream-releases
 
 // Align the cell's child frame within the cell
 
@@ -523,8 +704,6 @@ void nsTableCellFrame::BlockDirAlignChild(WritingMode aWM, nscoord aMaxAscent) {
 
   nscoord bStartInset = borderPadding.BStart(aWM);
   nscoord bEndInset = borderPadding.BEnd(aWM);
-
-  uint8_t verticalAlignFlags = GetVerticalAlign();
 
   nscoord bSize = BSize(aWM);
   nsIFrame* firstKid = mFrames.FirstChild();
@@ -537,28 +716,55 @@ void nsTableCellFrame::BlockDirAlignChild(WritingMode aWM, nscoord aMaxAscent) {
 
   // Vertically align the child
   nscoord kidBStart = 0;
+<<<<<<< HEAD
   switch (verticalAlignFlags) {
     case NS_STYLE_VERTICAL_ALIGN_BASELINE:
+||||||| merged common ancestors
+  switch (verticalAlignFlags)
+  {
+    case NS_STYLE_VERTICAL_ALIGN_BASELINE:
+=======
+  switch (GetVerticalAlign()) {
+    case StyleVerticalAlignKeyword::Baseline:
+>>>>>>> upstream-releases
       // Align the baselines of the child frame with the baselines of
       // other children in the same row which have 'vertical-align: baseline'
       kidBStart = bStartInset + aMaxAscent - GetCellBaseline();
       break;
 
-    case NS_STYLE_VERTICAL_ALIGN_TOP:
+    case StyleVerticalAlignKeyword::Top:
       // Align the top of the child frame with the top of the content area,
       kidBStart = bStartInset;
       break;
 
+<<<<<<< HEAD
     case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
       // Align the bottom of the child frame with the bottom of the content
       // area,
+||||||| merged common ancestors
+    case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
+      // Align the bottom of the child frame with the bottom of the content area,
+=======
+    case StyleVerticalAlignKeyword::Bottom:
+      // Align the bottom of the child frame with the bottom of the content
+      // area,
+>>>>>>> upstream-releases
       kidBStart = bSize - childBSize - bEndInset;
       break;
 
     default:
+<<<<<<< HEAD
     case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
       // Align the middle of the child frame with the middle of the content
       // area,
+||||||| merged common ancestors
+    case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
+      // Align the middle of the child frame with the middle of the content area,
+=======
+    case StyleVerticalAlignKeyword::Middle:
+      // Align the middle of the child frame with the middle of the content
+      // area,
+>>>>>>> upstream-releases
       kidBStart = (bSize - childBSize - bEndInset + bStartInset) / 2;
   }
   // If the content is larger than the cell bsize, align from bStartInset
@@ -604,6 +810,7 @@ bool nsTableCellFrame::ComputeCustomOverflow(nsOverflowAreas& aOverflowAreas) {
 
 // Per CSS 2.1, we map 'sub', 'super', 'text-top', 'text-bottom',
 // length, percentage, and calc() values to 'baseline'.
+<<<<<<< HEAD
 uint8_t nsTableCellFrame::GetVerticalAlign() const {
   const nsStyleCoord& verticalAlign = StyleDisplay()->mVerticalAlign;
   if (verticalAlign.GetUnit() == eStyleUnit_Enumerated) {
@@ -611,10 +818,29 @@ uint8_t nsTableCellFrame::GetVerticalAlign() const {
     if (value == NS_STYLE_VERTICAL_ALIGN_TOP ||
         value == NS_STYLE_VERTICAL_ALIGN_MIDDLE ||
         value == NS_STYLE_VERTICAL_ALIGN_BOTTOM) {
+||||||| merged common ancestors
+uint8_t
+nsTableCellFrame::GetVerticalAlign() const
+{
+  const nsStyleCoord& verticalAlign = StyleDisplay()->mVerticalAlign;
+  if (verticalAlign.GetUnit() == eStyleUnit_Enumerated) {
+    uint8_t value = verticalAlign.GetIntValue();
+    if (value == NS_STYLE_VERTICAL_ALIGN_TOP ||
+        value == NS_STYLE_VERTICAL_ALIGN_MIDDLE ||
+        value == NS_STYLE_VERTICAL_ALIGN_BOTTOM) {
+=======
+StyleVerticalAlignKeyword nsTableCellFrame::GetVerticalAlign() const {
+  const StyleVerticalAlign& verticalAlign = StyleDisplay()->mVerticalAlign;
+  if (verticalAlign.IsKeyword()) {
+    auto value = verticalAlign.AsKeyword();
+    if (value == StyleVerticalAlignKeyword::Top ||
+        value == StyleVerticalAlignKeyword::Middle ||
+        value == StyleVerticalAlignKeyword::Bottom) {
+>>>>>>> upstream-releases
       return value;
     }
   }
-  return NS_STYLE_VERTICAL_ALIGN_BASELINE;
+  return StyleVerticalAlignKeyword::Baseline;
 }
 
 bool nsTableCellFrame::CellHasVisibleContent(nscoord height,
@@ -644,16 +870,25 @@ nscoord nsTableCellFrame::GetCellBaseline() const {
   nsIFrame* inner = mFrames.FirstChild();
   nscoord borderPadding = GetUsedBorderAndPadding().top;
   nscoord result;
-  if (nsLayoutUtils::GetFirstLineBaseline(GetWritingMode(), inner, &result))
+  if (!StyleDisplay()->IsContainLayout() &&
+      nsLayoutUtils::GetFirstLineBaseline(GetWritingMode(), inner, &result)) {
     return result + borderPadding;
+<<<<<<< HEAD
   return inner->GetContentRectRelativeToSelf().YMost() + borderPadding;
+||||||| merged common ancestors
+  return inner->GetContentRectRelativeToSelf().YMost() +
+         borderPadding;
+=======
+  }
+  return inner->GetContentRectRelativeToSelf().YMost() + borderPadding;
+>>>>>>> upstream-releases
 }
 
 int32_t nsTableCellFrame::GetRowSpan() {
   int32_t rowSpan = 1;
 
   // Don't look at the content's rowspan if we're a pseudo cell
-  if (!Style()->GetPseudo()) {
+  if (!Style()->IsPseudoOrAnonBox()) {
     dom::Element* elem = mContent->AsElement();
     const nsAttrValue* attr = elem->GetParsedAttr(nsGkAtoms::rowspan);
     // Note that we don't need to check the tag name, because only table cells
@@ -670,7 +905,7 @@ int32_t nsTableCellFrame::GetColSpan() {
   int32_t colSpan = 1;
 
   // Don't look at the content's colspan if we're a pseudo cell
-  if (!Style()->GetPseudo()) {
+  if (!Style()->IsPseudoOrAnonBox()) {
     dom::Element* elem = mContent->AsElement();
     const nsAttrValue* attr = elem->GetParsedAttr(
         MOZ_UNLIKELY(elem->IsMathMLElement()) ? nsGkAtoms::columnspan_
@@ -685,8 +920,17 @@ int32_t nsTableCellFrame::GetColSpan() {
   return colSpan;
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsTableCellFrame::GetMinISize(
     gfxContext* aRenderingContext) {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsTableCellFrame::GetMinISize(gfxContext *aRenderingContext)
+{
+=======
+/* virtual */
+nscoord nsTableCellFrame::GetMinISize(gfxContext* aRenderingContext) {
+>>>>>>> upstream-releases
   nscoord result = 0;
   DISPLAY_MIN_INLINE_SIZE(this, result);
 
@@ -696,8 +940,17 @@ int32_t nsTableCellFrame::GetColSpan() {
   return result;
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsTableCellFrame::GetPrefISize(
     gfxContext* aRenderingContext) {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsTableCellFrame::GetPrefISize(gfxContext *aRenderingContext)
+{
+=======
+/* virtual */
+nscoord nsTableCellFrame::GetPrefISize(gfxContext* aRenderingContext) {
+>>>>>>> upstream-releases
   nscoord result = 0;
   DISPLAY_PREF_INLINE_SIZE(this, result);
 
@@ -721,8 +974,19 @@ nsTableCellFrame::IntrinsicISizeOffsets(nscoord aPercentageBasis) {
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define PROBABLY_TOO_LARGE 1000000
 static void DebugCheckChildSize(nsIFrame* aChild, ReflowOutput& aMet) {
+||||||| merged common ancestors
+#define PROBABLY_TOO_LARGE 1000000
+static
+void DebugCheckChildSize(nsIFrame*            aChild,
+                         ReflowOutput& aMet)
+{
+=======
+#  define PROBABLY_TOO_LARGE 1000000
+static void DebugCheckChildSize(nsIFrame* aChild, ReflowOutput& aMet) {
+>>>>>>> upstream-releases
   WritingMode wm = aMet.GetWritingMode();
   if ((aMet.ISize(wm) < 0) || (aMet.ISize(wm) > PROBABLY_TOO_LARGE)) {
     printf("WARNING: cell content %p has large inline size %d \n",
@@ -837,7 +1101,7 @@ void nsTableCellFrame::Reflow(nsPresContext* aPresContext,
     // will determine how far this is propagated to descendants.
     kidReflowInput.mPercentBSizeObserver = this;
   }
-  // Don't propagate special bsize reflow state to our kids
+  // Don't propagate special bsize reflow input to our kids
   kidReflowInput.mFlags.mSpecialBSizeReflow = false;
 
   if (aReflowInput.mFlags.mSpecialBSizeReflow ||
@@ -969,9 +1233,21 @@ nsTableCellFrame::GetCellIndexes(int32_t& aRowIndex, int32_t& aColIndex) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsTableCellFrame* NS_NewTableCellFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle,
                                        nsTableFrame* aTableFrame) {
+||||||| merged common ancestors
+nsTableCellFrame*
+NS_NewTableCellFrame(nsIPresShell*   aPresShell,
+                     ComputedStyle* aStyle,
+                     nsTableFrame* aTableFrame)
+{
+=======
+nsTableCellFrame* NS_NewTableCellFrame(PresShell* aPresShell,
+                                       ComputedStyle* aStyle,
+                                       nsTableFrame* aTableFrame) {
+>>>>>>> upstream-releases
   if (aTableFrame->IsBorderCollapse())
     return new (aPresShell) nsBCTableCellFrame(aStyle, aTableFrame);
   else
@@ -1008,7 +1284,16 @@ nsBCTableCellFrame::nsBCTableCellFrame(ComputedStyle* aStyle,
 
 nsBCTableCellFrame::~nsBCTableCellFrame() {}
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsBCTableCellFrame::GetUsedBorder() const {
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsBCTableCellFrame::GetUsedBorder() const
+{
+=======
+/* virtual */
+nsMargin nsBCTableCellFrame::GetUsedBorder() const {
+>>>>>>> upstream-releases
   WritingMode wm = GetWritingMode();
   return GetBorderWidth(wm).GetPhysicalMargin(wm);
 }
@@ -1056,7 +1341,16 @@ void nsBCTableCellFrame::SetBorderWidth(LogicalSide aSide, BCPixelSize aValue) {
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsBCTableCellFrame::GetBorderOverflow() {
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsBCTableCellFrame::GetBorderOverflow()
+{
+=======
+/* virtual */
+nsMargin nsBCTableCellFrame::GetBorderOverflow() {
+>>>>>>> upstream-releases
   WritingMode wm = GetWritingMode();
   int32_t d2a = PresContext()->AppUnitsPerDevPixel();
   LogicalMargin halfBorder(wm, BC_BORDER_START_HALF_COORD(d2a, mBStartBorder),

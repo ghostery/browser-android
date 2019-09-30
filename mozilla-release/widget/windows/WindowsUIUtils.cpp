@@ -18,17 +18,20 @@
 #include "nsAppShellCID.h"
 #include "nsIXULWindow.h"
 #include "mozilla/Services.h"
+#include "mozilla/WidgetUtils.h"
 #include "mozilla/WindowsVersion.h"
 #include "nsString.h"
 #include "nsIWidget.h"
+#include "nsIWindowMediator.h"
+#include "nsPIDOMWindow.h"
 
 /* mingw currently doesn't support windows.ui.viewmanagement.h, so we disable it
  * until it's fixed. */
 #ifndef __MINGW32__
 
-#include <windows.ui.viewmanagement.h>
+#  include <windows.ui.viewmanagement.h>
 
-#pragma comment(lib, "runtimeobject.lib")
+#  pragma comment(lib, "runtimeobject.lib")
 
 using namespace mozilla;
 using namespace ABI::Windows::UI;
@@ -40,7 +43,7 @@ using namespace ABI::Windows::ApplicationModel::DataTransfer;
 
 /* All of this is win10 stuff and we're compiling against win81 headers
  * for now, so we may need to do some legwork: */
-#if WINVER_MAXVER < 0x0A00
+#  if WINVER_MAXVER < 0x0A00
 namespace ABI {
 namespace Windows {
 namespace UI {
@@ -54,15 +57,27 @@ enum UserInteractionMode {
 }  // namespace Windows
 }  // namespace ABI
 
-#endif
+#  endif
 
+<<<<<<< HEAD
 #ifndef RuntimeClass_Windows_UI_ViewManagement_UIViewSettings
 #define RuntimeClass_Windows_UI_ViewManagement_UIViewSettings \
   L"Windows.UI.ViewManagement.UIViewSettings"
 #endif
+||||||| merged common ancestors
+#ifndef RuntimeClass_Windows_UI_ViewManagement_UIViewSettings
+#define RuntimeClass_Windows_UI_ViewManagement_UIViewSettings L"Windows.UI.ViewManagement.UIViewSettings"
+#endif
+=======
+#  ifndef RuntimeClass_Windows_UI_ViewManagement_UIViewSettings
+#    define RuntimeClass_Windows_UI_ViewManagement_UIViewSettings \
+      L"Windows.UI.ViewManagement.UIViewSettings"
+#  endif
+>>>>>>> upstream-releases
 
-#if WINVER_MAXVER < 0x0A00
+#  if WINVER_MAXVER < 0x0A00
 namespace ABI {
+<<<<<<< HEAD
 namespace Windows {
 namespace UI {
 namespace ViewManagement {
@@ -81,8 +96,46 @@ extern const __declspec(selectany) IID& IID_IUIViewSettings =
 }  // namespace Windows
 }  // namespace ABI
 #endif
+||||||| merged common ancestors
+  namespace Windows {
+    namespace UI {
+      namespace ViewManagement {
+        interface IUIViewSettings;
+        MIDL_INTERFACE("C63657F6-8850-470D-88F8-455E16EA2C26")
+          IUIViewSettings : public IInspectable
+          {
+            public:
+              virtual HRESULT STDMETHODCALLTYPE get_UserInteractionMode(UserInteractionMode *value) = 0;
+          };
 
-#ifndef IUIViewSettingsInterop
+        extern const __declspec(selectany) IID & IID_IUIViewSettings = __uuidof(IUIViewSettings);
+      }
+    }
+  }
+}
+#endif
+=======
+namespace Windows {
+namespace UI {
+namespace ViewManagement {
+interface IUIViewSettings;
+MIDL_INTERFACE("C63657F6-8850-470D-88F8-455E16EA2C26")
+IUIViewSettings : public IInspectable {
+ public:
+  virtual HRESULT STDMETHODCALLTYPE get_UserInteractionMode(
+      UserInteractionMode * value) = 0;
+};
+
+extern const __declspec(selectany) IID& IID_IUIViewSettings =
+    __uuidof(IUIViewSettings);
+}  // namespace ViewManagement
+}  // namespace UI
+}  // namespace Windows
+}  // namespace ABI
+#  endif
+>>>>>>> upstream-releases
+
+#  ifndef IUIViewSettingsInterop
 
 typedef interface IUIViewSettingsInterop IUIViewSettingsInterop;
 
@@ -92,10 +145,10 @@ IUIViewSettingsInterop : public IInspectable {
   virtual HRESULT STDMETHODCALLTYPE GetForWindow(HWND hwnd, REFIID riid,
                                                  void** ppv) = 0;
 };
-#endif
+#  endif
 
-#ifndef __IDataTransferManagerInterop_INTERFACE_DEFINED__
-#define __IDataTransferManagerInterop_INTERFACE_DEFINED__
+#  ifndef __IDataTransferManagerInterop_INTERFACE_DEFINED__
+#    define __IDataTransferManagerInterop_INTERFACE_DEFINED__
 
 typedef interface IDataTransferManagerInterop IDataTransferManagerInterop;
 
@@ -107,7 +160,7 @@ IDataTransferManagerInterop : public IUnknown {
   virtual HRESULT STDMETHODCALLTYPE ShowShareUIForWindow(HWND appWindow) = 0;
 };
 
-#endif
+#  endif
 
 #endif
 
@@ -136,27 +189,61 @@ WindowsUIUtils::UpdateTabletModeState() {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIAppShellService> appShell(
       do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
   nsCOMPtr<nsIXULWindow> hiddenWindow;
 
   nsresult rv = appShell->GetHiddenWindow(getter_AddRefs(hiddenWindow));
+||||||| merged common ancestors
+  nsCOMPtr<nsIAppShellService> appShell(do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
+  nsCOMPtr<nsIXULWindow> hiddenWindow;
+
+  nsresult rv = appShell->GetHiddenWindow(getter_AddRefs(hiddenWindow));
+=======
+  nsresult rv;
+  nsCOMPtr<nsIWindowMediator> winMediator(
+      do_GetService(NS_WINDOWMEDIATOR_CONTRACTID, &rv));
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return rv;
   }
 
-  nsCOMPtr<nsIDocShell> docShell;
-  rv = hiddenWindow->GetDocShell(getter_AddRefs(docShell));
-  if (NS_FAILED(rv) || !docShell) {
-    return rv;
+  nsCOMPtr<nsIWidget> widget;
+  nsCOMPtr<mozIDOMWindowProxy> navWin;
+
+  rv = winMediator->GetMostRecentWindow(u"navigator:browser",
+                                        getter_AddRefs(navWin));
+  if (NS_FAILED(rv) || !navWin) {
+    // Fall back to the hidden window
+    nsCOMPtr<nsIAppShellService> appShell(
+        do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
+
+    rv = appShell->GetHiddenDOMWindow(getter_AddRefs(navWin));
+    if (NS_FAILED(rv) || !navWin) {
+      return rv;
+    }
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIBaseWindow> baseWindow(do_QueryInterface(docShell));
 
   if (!baseWindow) return NS_ERROR_FAILURE;
 
   nsCOMPtr<nsIWidget> widget;
   baseWindow->GetMainWidget(getter_AddRefs(widget));
+||||||| merged common ancestors
+  nsCOMPtr<nsIBaseWindow> baseWindow(do_QueryInterface(docShell));
+
+  if (!baseWindow)
+    return NS_ERROR_FAILURE;
+
+  nsCOMPtr<nsIWidget> widget;
+  baseWindow->GetMainWidget(getter_AddRefs(widget));
+=======
+  nsPIDOMWindowOuter* win = nsPIDOMWindowOuter::From(navWin);
+  widget = widget::WidgetUtils::DOMWindowToWidget(win);
+>>>>>>> upstream-releases
 
   if (!widget) return NS_ERROR_FAILURE;
 

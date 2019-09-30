@@ -52,8 +52,18 @@ GMPVideoFrameFormat GMPVideoi420FrameImpl::GetFrameFormat() {
 
 void GMPVideoi420FrameImpl::Destroy() { delete this; }
 
+<<<<<<< HEAD
 /* static */ bool GMPVideoi420FrameImpl::CheckFrameData(
     const GMPVideoi420FrameData& aFrameData) {
+||||||| merged common ancestors
+/* static */ bool
+GMPVideoi420FrameImpl::CheckFrameData(const GMPVideoi420FrameData& aFrameData)
+{
+=======
+/* static */
+bool GMPVideoi420FrameImpl::CheckFrameData(
+    const GMPVideoi420FrameData& aFrameData) {
+>>>>>>> upstream-releases
   // We may be passed the "wrong" shmem (one smaller than the actual size).
   // This implies a bug or serious error on the child size.  Ignore this frame
   // if so. Note: Size() greater than expected is also an error, but with no

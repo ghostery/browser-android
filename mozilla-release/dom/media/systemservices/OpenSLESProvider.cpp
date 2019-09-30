@@ -39,7 +39,14 @@ OpenSLESProvider::~OpenSLESProvider() {
 }
 
 /* static */
+<<<<<<< HEAD
 OpenSLESProvider &OpenSLESProvider::getInstance() {
+||||||| merged common ancestors
+OpenSLESProvider& OpenSLESProvider::getInstance()
+{
+=======
+OpenSLESProvider& OpenSLESProvider::getInstance() {
+>>>>>>> upstream-releases
   // This doesn't need a Mutex in C++11 or GCC 4.3+, see N2660 and
   // https://gcc.gnu.org/projects/cxx0x.html
   static OpenSLESProvider instance;
@@ -47,15 +54,40 @@ OpenSLESProvider &OpenSLESProvider::getInstance() {
 }
 
 /* static */
+<<<<<<< HEAD
 SLresult OpenSLESProvider::Get(SLObjectItf *aObjectm, SLuint32 aOptionCount,
                                const SLEngineOption *aOptions) {
   OpenSLESProvider &provider = OpenSLESProvider::getInstance();
+||||||| merged common ancestors
+SLresult OpenSLESProvider::Get(SLObjectItf * aObjectm,
+                               SLuint32 aOptionCount,
+                               const SLEngineOption *aOptions)
+{
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+=======
+SLresult OpenSLESProvider::Get(SLObjectItf* aObjectm, SLuint32 aOptionCount,
+                               const SLEngineOption* aOptions) {
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+>>>>>>> upstream-releases
   return provider.GetEngine(aObjectm, aOptionCount, aOptions);
 }
 
+<<<<<<< HEAD
 SLresult OpenSLESProvider::GetEngine(SLObjectItf *aObjectm,
+||||||| merged common ancestors
+SLresult OpenSLESProvider::GetEngine(SLObjectItf * aObjectm,
+=======
+SLresult OpenSLESProvider::GetEngine(SLObjectItf* aObjectm,
+>>>>>>> upstream-releases
                                      SLuint32 aOptionCount,
+<<<<<<< HEAD
                                      const SLEngineOption *aOptions) {
+||||||| merged common ancestors
+                                     const SLEngineOption *aOptions)
+{
+=======
+                                     const SLEngineOption* aOptions) {
+>>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   LOG(("Getting OpenSLES engine"));
   // Bug 1042051: Validate options are the same
@@ -78,9 +110,22 @@ SLresult OpenSLESProvider::GetEngine(SLObjectItf *aObjectm,
   }
 }
 
+<<<<<<< HEAD
 SLresult OpenSLESProvider::ConstructEngine(SLObjectItf *aObjectm,
+||||||| merged common ancestors
+SLresult OpenSLESProvider::ConstructEngine(SLObjectItf * aObjectm,
+=======
+SLresult OpenSLESProvider::ConstructEngine(SLObjectItf* aObjectm,
+>>>>>>> upstream-releases
                                            SLuint32 aOptionCount,
+<<<<<<< HEAD
                                            const SLEngineOption *aOptions) {
+||||||| merged common ancestors
+                                           const SLEngineOption *aOptions)
+{
+=======
+                                           const SLEngineOption* aOptions) {
+>>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
 
   if (!mOpenSLESLib) {
@@ -91,9 +136,22 @@ SLresult OpenSLESProvider::ConstructEngine(SLObjectItf *aObjectm,
     }
   }
 
+<<<<<<< HEAD
   typedef SLresult (*slCreateEngine_t)(
       SLObjectItf *, SLuint32, const SLEngineOption *, SLuint32,
       const SLInterfaceID *, const SLboolean *);
+||||||| merged common ancestors
+  typedef SLresult (*slCreateEngine_t)(SLObjectItf *,
+                                       SLuint32,
+                                       const SLEngineOption *,
+                                       SLuint32,
+                                       const SLInterfaceID *,
+                                       const SLboolean *);
+=======
+  typedef SLresult (*slCreateEngine_t)(SLObjectItf*, SLuint32,
+                                       const SLEngineOption*, SLuint32,
+                                       const SLInterfaceID*, const SLboolean*);
+>>>>>>> upstream-releases
 
   slCreateEngine_t f_slCreateEngine =
       (slCreateEngine_t)dlsym(mOpenSLESLib, "slCreateEngine");
@@ -103,12 +161,28 @@ SLresult OpenSLESProvider::ConstructEngine(SLObjectItf *aObjectm,
 }
 
 /* static */
+<<<<<<< HEAD
 void OpenSLESProvider::Destroy(SLObjectItf *aObjectm) {
   OpenSLESProvider &provider = OpenSLESProvider::getInstance();
+||||||| merged common ancestors
+void OpenSLESProvider::Destroy(SLObjectItf * aObjectm)
+{
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+=======
+void OpenSLESProvider::Destroy(SLObjectItf* aObjectm) {
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+>>>>>>> upstream-releases
   provider.DestroyEngine(aObjectm);
 }
 
+<<<<<<< HEAD
 void OpenSLESProvider::DestroyEngine(SLObjectItf *aObjectm) {
+||||||| merged common ancestors
+void OpenSLESProvider::DestroyEngine(SLObjectItf * aObjectm)
+{
+=======
+void OpenSLESProvider::DestroyEngine(SLObjectItf* aObjectm) {
+>>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   NS_ASSERTION(mOpenSLESLib, "OpenSLES destroy called but library is not open");
 
@@ -129,8 +203,17 @@ void OpenSLESProvider::DestroyEngine(SLObjectItf *aObjectm) {
 }
 
 /* static */
+<<<<<<< HEAD
 SLresult OpenSLESProvider::Realize(SLObjectItf aObjectm) {
   OpenSLESProvider &provider = OpenSLESProvider::getInstance();
+||||||| merged common ancestors
+SLresult OpenSLESProvider::Realize(SLObjectItf aObjectm)
+{
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+=======
+SLresult OpenSLESProvider::Realize(SLObjectItf aObjectm) {
+  OpenSLESProvider& provider = OpenSLESProvider::getInstance();
+>>>>>>> upstream-releases
   return provider.RealizeEngine(aObjectm);
 }
 
@@ -159,12 +242,29 @@ SLresult OpenSLESProvider::RealizeEngine(SLObjectItf aObjectm) {
 }  // namespace mozilla
 
 extern "C" {
+<<<<<<< HEAD
 SLresult mozilla_get_sles_engine(SLObjectItf *aObjectm, SLuint32 aOptionCount,
                                  const SLEngineOption *aOptions) {
+||||||| merged common ancestors
+SLresult mozilla_get_sles_engine(SLObjectItf * aObjectm,
+                                 SLuint32 aOptionCount,
+                                 const SLEngineOption *aOptions)
+{
+=======
+SLresult mozilla_get_sles_engine(SLObjectItf* aObjectm, SLuint32 aOptionCount,
+                                 const SLEngineOption* aOptions) {
+>>>>>>> upstream-releases
   return mozilla::OpenSLESProvider::Get(aObjectm, aOptionCount, aOptions);
 }
 
+<<<<<<< HEAD
 void mozilla_destroy_sles_engine(SLObjectItf *aObjectm) {
+||||||| merged common ancestors
+void mozilla_destroy_sles_engine(SLObjectItf * aObjectm)
+{
+=======
+void mozilla_destroy_sles_engine(SLObjectItf* aObjectm) {
+>>>>>>> upstream-releases
   mozilla::OpenSLESProvider::Destroy(aObjectm);
 }
 

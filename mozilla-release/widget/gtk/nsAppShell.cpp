@@ -21,12 +21,15 @@
 #include "GeckoProfiler.h"
 #include "nsIPowerManagerService.h"
 #ifdef MOZ_ENABLE_DBUS
-#include "WakeLockListener.h"
+#  include "WakeLockListener.h"
 #endif
 #include "gfxPlatform.h"
 #include "ScreenHelperGTK.h"
 #include "HeadlessScreenHelper.h"
 #include "mozilla/widget/ScreenManager.h"
+#ifdef MOZ_WAYLAND
+#  include "nsWaylandDisplay.h"
+#endif
 
 using mozilla::LazyLogModule;
 using mozilla::Unused;
@@ -40,6 +43,7 @@ LazyLogModule gWidgetLog("Widget");
 LazyLogModule gWidgetFocusLog("WidgetFocus");
 LazyLogModule gWidgetDragLog("WidgetDrag");
 LazyLogModule gWidgetDrawLog("WidgetDraw");
+LazyLogModule gWidgetWaylandLog("WidgetWayland");
 
 static GPollFunc sPollFunc;
 
@@ -105,10 +109,25 @@ static void WrapGdkFrameClockDispose(GObject* object) {
 }
 #endif
 
+<<<<<<< HEAD
 /*static*/ gboolean nsAppShell::EventProcessorCallback(GIOChannel* source,
                                                        GIOCondition condition,
                                                        gpointer data) {
   nsAppShell* self = static_cast<nsAppShell*>(data);
+||||||| merged common ancestors
+/*static*/ gboolean
+nsAppShell::EventProcessorCallback(GIOChannel *source,
+                                   GIOCondition condition,
+                                   gpointer data)
+{
+    nsAppShell *self = static_cast<nsAppShell *>(data);
+=======
+/*static*/
+gboolean nsAppShell::EventProcessorCallback(GIOChannel* source,
+                                            GIOCondition condition,
+                                            gpointer data) {
+  nsAppShell* self = static_cast<nsAppShell*>(data);
+>>>>>>> upstream-releases
 
   unsigned char c;
   Unused << read(self->mPipeFDs[0], &c, 1);
@@ -177,6 +196,7 @@ nsresult nsAppShell::Init() {
   }
 
 #ifdef MOZ_WIDGET_GTK
+<<<<<<< HEAD
   if (!sReal_gtk_window_check_resize &&
       gtk_check_version(3, 8, 0) != nullptr) {  // GTK 3.0 to GTK 3.6.
     // GtkWindow is a static class and so will leak anyway but this ref
@@ -207,6 +227,70 @@ nsresult nsAppShell::Init() {
 
   // Workaround for bug 1209659 which is fixed by Gtk3.20
   if (gtk_check_version(3, 20, 0) != nullptr) unsetenv("GTK_CSD");
+||||||| merged common ancestors
+    if (!sReal_gtk_window_check_resize &&
+        gtk_check_version(3,8,0) != nullptr) { // GTK 3.0 to GTK 3.6.
+        // GtkWindow is a static class and so will leak anyway but this ref
+        // makes sure it isn't recreated.
+        gpointer gtk_plug_class = g_type_class_ref(GTK_TYPE_WINDOW);
+        auto check_resize = &GTK_CONTAINER_CLASS(gtk_plug_class)->check_resize;
+        sReal_gtk_window_check_resize = *check_resize;
+        *check_resize = wrap_gtk_window_check_resize;
+    }
+
+    if (!sPendingResumeQuark &&
+        gtk_check_version(3,14,7) != nullptr) { // GTK 3.0 to GTK 3.14.7.
+        // GTK 3.8 - 3.14 registered this type when creating the frame clock
+        // for the root window of the display when the display was opened.
+        GType gdkFrameClockIdleType = g_type_from_name("GdkFrameClockIdle");
+        if (gdkFrameClockIdleType) { // not in versions prior to 3.8
+            sPendingResumeQuark = g_quark_from_string("moz-resume-is-pending");
+            auto gdk_frame_clock_idle_class =
+                G_OBJECT_CLASS(g_type_class_peek_static(gdkFrameClockIdleType));
+            auto constructed = &gdk_frame_clock_idle_class->constructed;
+            sRealGdkFrameClockConstructed = *constructed;
+            *constructed = WrapGdkFrameClockConstructed;
+            auto dispose = &gdk_frame_clock_idle_class->dispose;
+            sRealGdkFrameClockDispose = *dispose;
+            *dispose = WrapGdkFrameClockDispose;
+        }
+    }
+
+    // Workaround for bug 1209659 which is fixed by Gtk3.20
+    if (gtk_check_version(3, 20, 0) != nullptr)
+        unsetenv("GTK_CSD");
+=======
+  if (!sReal_gtk_window_check_resize &&
+      gtk_check_version(3, 8, 0) != nullptr) {  // GTK 3.0 to GTK 3.6.
+    // GtkWindow is a static class and so will leak anyway but this ref
+    // makes sure it isn't recreated.
+    gpointer gtk_plug_class = g_type_class_ref(GTK_TYPE_WINDOW);
+    auto check_resize = &GTK_CONTAINER_CLASS(gtk_plug_class)->check_resize;
+    sReal_gtk_window_check_resize = *check_resize;
+    *check_resize = wrap_gtk_window_check_resize;
+  }
+
+  if (!sPendingResumeQuark &&
+      gtk_check_version(3, 14, 7) != nullptr) {  // GTK 3.0 to GTK 3.14.7.
+    // GTK 3.8 - 3.14 registered this type when creating the frame clock
+    // for the root window of the display when the display was opened.
+    GType gdkFrameClockIdleType = g_type_from_name("GdkFrameClockIdle");
+    if (gdkFrameClockIdleType) {  // not in versions prior to 3.8
+      sPendingResumeQuark = g_quark_from_string("moz-resume-is-pending");
+      auto gdk_frame_clock_idle_class =
+          G_OBJECT_CLASS(g_type_class_peek_static(gdkFrameClockIdleType));
+      auto constructed = &gdk_frame_clock_idle_class->constructed;
+      sRealGdkFrameClockConstructed = *constructed;
+      *constructed = WrapGdkFrameClockConstructed;
+      auto dispose = &gdk_frame_clock_idle_class->dispose;
+      sRealGdkFrameClockDispose = *dispose;
+      *dispose = WrapGdkFrameClockDispose;
+    }
+  }
+
+  // Workaround for bug 1209659 which is fixed by Gtk3.20
+  if (gtk_check_version(3, 20, 0) != nullptr) unsetenv("GTK_CSD");
+>>>>>>> upstream-releases
 #endif
 
   if (PR_GetEnv("MOZ_DEBUG_PAINTS")) gdk_window_set_debug_updates(TRUE);
@@ -264,6 +348,20 @@ void nsAppShell::ScheduleNativeEventCallback() {
   Unused << write(mPipeFDs[1], buf, 1);
 }
 
+<<<<<<< HEAD
 bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
   return g_main_context_iteration(nullptr, mayWait);
+||||||| merged common ancestors
+bool
+nsAppShell::ProcessNextNativeEvent(bool mayWait)
+{
+    return g_main_context_iteration(nullptr, mayWait);
+=======
+bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
+  bool ret = g_main_context_iteration(nullptr, mayWait);
+#ifdef MOZ_WAYLAND
+  WaylandDispatchDisplays();
+#endif
+  return ret;
+>>>>>>> upstream-releases
 }

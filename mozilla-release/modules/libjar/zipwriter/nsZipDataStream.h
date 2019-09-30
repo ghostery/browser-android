@@ -20,10 +20,24 @@ class nsZipDataStream final : public nsIStreamListener {
 
   nsZipDataStream() {}
 
+<<<<<<< HEAD
   nsresult Init(nsZipWriter *aWriter, nsIOutputStream *aStream,
                 nsZipHeader *aHeader, int32_t aCompression);
+||||||| merged common ancestors
+    nsresult Init(nsZipWriter *aWriter, nsIOutputStream *aStream,
+                  nsZipHeader *aHeader, int32_t aCompression);
+=======
+  nsresult Init(nsZipWriter* aWriter, nsIOutputStream* aStream,
+                nsZipHeader* aHeader, int32_t aCompression);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult ReadStream(nsIInputStream *aStream);
+||||||| merged common ancestors
+    nsresult ReadStream(nsIInputStream *aStream);
+=======
+  nsresult ReadStream(nsIInputStream* aStream);
+>>>>>>> upstream-releases
 
  private:
   ~nsZipDataStream() {}
@@ -33,9 +47,24 @@ class nsZipDataStream final : public nsIStreamListener {
   RefPtr<nsZipWriter> mWriter;
   RefPtr<nsZipHeader> mHeader;
 
+<<<<<<< HEAD
   nsresult CompleteEntry();
   nsresult ProcessData(nsIRequest *aRequest, nsISupports *aContext,
                        char *aBuffer, uint64_t aOffset, uint32_t aCount);
+||||||| merged common ancestors
+    nsCOMPtr<nsIStreamListener> mOutput;
+    nsCOMPtr<nsIOutputStream> mStream;
+    RefPtr<nsZipWriter> mWriter;
+    RefPtr<nsZipHeader> mHeader;
+
+    nsresult CompleteEntry();
+    nsresult ProcessData(nsIRequest *aRequest, nsISupports *aContext,
+                         char *aBuffer, uint64_t aOffset, uint32_t aCount);
+=======
+  nsresult CompleteEntry();
+  nsresult ProcessData(nsIRequest* aRequest, nsISupports* aContext,
+                       char* aBuffer, uint64_t aOffset, uint32_t aCount);
+>>>>>>> upstream-releases
 };
 
 #endif

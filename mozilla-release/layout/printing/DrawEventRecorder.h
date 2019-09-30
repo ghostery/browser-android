@@ -105,10 +105,30 @@ class PRFileDescStream final : public mozilla::gfx::EventStream {
     mGood = res >= 0 && (static_cast<size_t>(res) == aSize);
   }
 
+<<<<<<< HEAD
   bool good() { return mGood; }
+||||||| merged common ancestors
+  bool good() {
+    return mGood;
+  }
+=======
+  bool good() final { return mGood; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+  size_t AvailableBufferSpace() { return kBufferSize - mBufferPos; }
+||||||| merged common ancestors
+private:
+  size_t AvailableBufferSpace() {
+    return kBufferSize - mBufferPos;
+  }
+=======
+  void SetIsBad() final { mGood = false; }
 
  private:
   size_t AvailableBufferSpace() { return kBufferSize - mBufferPos; }
+>>>>>>> upstream-releases
 
   void WriteToBuffer(const char* aData, size_t aSize) {
     MOZ_ASSERT(aSize <= AvailableBufferSpace());

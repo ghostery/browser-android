@@ -656,6 +656,26 @@ int CALLBACK gfxGDIFontList::EnumFontFamExProc(ENUMLOGFONTEXW* lpelfe,
   return 1;
 }
 
+<<<<<<< HEAD
+gfxFontEntry* gfxGDIFontList::LookupLocalFont(const nsACString& aFontName,
+                                              WeightRange aWeightForEntry,
+                                              StretchRange aStretchForEntry,
+                                              SlantStyleRange aStyleForEntry) {
+  gfxFontEntry* lookup;
+||||||| merged common ancestors
+gfxFontEntry*
+gfxGDIFontList::LookupLocalFont(const nsACString& aFontName,
+                                WeightRange aWeightForEntry,
+                                StretchRange aStretchForEntry,
+                                SlantStyleRange aStyleForEntry)
+{
+    gfxFontEntry *lookup;
+
+    lookup = LookupInFaceNameLists(aFontName);
+    if (!lookup) {
+        return nullptr;
+    }
+=======
 gfxFontEntry* gfxGDIFontList::LookupLocalFont(const nsACString& aFontName,
                                               WeightRange aWeightForEntry,
                                               StretchRange aStretchForEntry,
@@ -666,9 +686,30 @@ gfxFontEntry* gfxGDIFontList::LookupLocalFont(const nsACString& aFontName,
   if (!lookup) {
     return nullptr;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  lookup = LookupInFaceNameLists(aFontName);
+  if (!lookup) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+    bool isCFF = false; // jtdfix -- need to determine this
+=======
   bool isCFF = false;  // jtdfix -- need to determine this
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool isCFF = false;  // jtdfix -- need to determine this
+||||||| merged common ancestors
+    // use the face name from the lookup font entry, which will be the localized
+    // face name which GDI mapping tables use (e.g. with the system locale set to
+    // Dutch, a fullname of 'Arial Bold' will find a font entry with the face name
+    // 'Arial Vet' which can be used as a key in GDI font lookups).
+    GDIFontEntry *fe = GDIFontEntry::CreateFontEntry(lookup->Name(),
+        gfxWindowsFontType(isCFF ? GFX_FONT_TYPE_PS_OPENTYPE : GFX_FONT_TYPE_TRUETYPE) /*type*/,
+        lookup->SlantStyle(), lookup->Weight(), aStretchForEntry, nullptr);
+=======
   // use the face name from the lookup font entry, which will be the localized
   // face name which GDI mapping tables use (e.g. with the system locale set to
   // Dutch, a fullname of 'Arial Bold' will find a font entry with the face name
@@ -678,17 +719,59 @@ gfxFontEntry* gfxGDIFontList::LookupLocalFont(const nsACString& aFontName,
       gfxWindowsFontType(isCFF ? GFX_FONT_TYPE_PS_OPENTYPE
                                : GFX_FONT_TYPE_TRUETYPE) /*type*/,
       lookup->SlantStyle(), lookup->Weight(), aStretchForEntry, nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // use the face name from the lookup font entry, which will be the localized
+  // face name which GDI mapping tables use (e.g. with the system locale set to
+  // Dutch, a fullname of 'Arial Bold' will find a font entry with the face name
+  // 'Arial Vet' which can be used as a key in GDI font lookups).
+  GDIFontEntry* fe = GDIFontEntry::CreateFontEntry(
+      lookup->Name(),
+      gfxWindowsFontType(isCFF ? GFX_FONT_TYPE_PS_OPENTYPE
+                               : GFX_FONT_TYPE_TRUETYPE) /*type*/,
+      lookup->SlantStyle(), lookup->Weight(), aStretchForEntry, nullptr);
+||||||| merged common ancestors
+    if (!fe)
+        return nullptr;
+=======
   if (!fe) return nullptr;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!fe) return nullptr;
+||||||| merged common ancestors
+    fe->mIsLocalUserFont = true;
+=======
   fe->mIsLocalUserFont = true;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  fe->mIsLocalUserFont = true;
+||||||| merged common ancestors
+    // make the new font entry match the userfont entry style characteristics
+    fe->mWeightRange = aWeightForEntry;
+    fe->mStyleRange = aStyleForEntry;
+    fe->mStretchRange = aStretchForEntry;
+=======
+  // make the new font entry match the userfont entry style characteristics
+  fe->mWeightRange = aWeightForEntry;
+  fe->mStyleRange = aStyleForEntry;
+  fe->mStretchRange = aStretchForEntry;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // make the new font entry match the userfont entry style characteristics
   fe->mWeightRange = aWeightForEntry;
   fe->mStyleRange = aStyleForEntry;
   fe->mStretchRange = aStretchForEntry;
 
   return fe;
+||||||| merged common ancestors
+    return fe;
+=======
+  return fe;
+>>>>>>> upstream-releases
 }
 
 // If aFontData contains only a MS/Symbol cmap subtable, not MS/Unicode,
@@ -820,6 +903,7 @@ gfxFontEntry* gfxGDIFontList::MakePlatformFont(const nsACString& aFontName,
   return fe;
 }
 
+<<<<<<< HEAD
 bool gfxGDIFontList::FindAndAddFamilies(const nsACString& aFamily,
                                         nsTArray<FamilyAndGeneric>* aOutput,
                                         FindFamiliesFlags aFlags,
@@ -838,11 +922,48 @@ bool gfxGDIFontList::FindAndAddFamilies(const nsACString& aFamily,
   if (mNonExistingFonts.Contains(keyName)) {
     return false;
   }
+||||||| merged common ancestors
+    if (mNonExistingFonts.Contains(keyName)) {
+        return false;
+    }
+=======
+bool gfxGDIFontList::FindAndAddFamilies(StyleGenericFontFamily aGeneric,
+                                        const nsACString& aFamily,
+                                        nsTArray<FamilyAndGeneric>* aOutput,
+                                        FindFamiliesFlags aFlags,
+                                        gfxFontStyle* aStyle,
+                                        gfxFloat aDevToCssSize) {
+  NS_ConvertUTF8toUTF16 key16(aFamily);
+  BuildKeyNameFromFontName(key16);
+  NS_ConvertUTF16toUTF8 keyName(key16);
 
+  gfxFontFamily* ff = mFontSubstitutes.GetWeak(keyName);
+  if (ff) {
+    aOutput->AppendElement(FamilyAndGeneric(ff, aGeneric));
+    return true;
+  }
+
+  if (mNonExistingFonts.Contains(keyName)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return gfxPlatformFontList::FindAndAddFamilies(aFamily, aOutput, aFlags,
                                                  aStyle, aDevToCssSize);
+||||||| merged common ancestors
+    return gfxPlatformFontList::FindAndAddFamilies(aFamily,
+                                                   aOutput,
+                                                   aFlags,
+                                                   aStyle,
+                                                   aDevToCssSize);
+=======
+  return gfxPlatformFontList::FindAndAddFamilies(aGeneric, aFamily, aOutput,
+                                                 aFlags, aStyle, aDevToCssSize);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 gfxFontFamily* gfxGDIFontList::GetDefaultFontForPlatform(
     const gfxFontStyle* aStyle) {
   gfxFontFamily* ff = nullptr;
@@ -856,6 +977,37 @@ gfxFontFamily* gfxGDIFontList::GetDefaultFontForPlatform(
     ff = FindFamily(NS_ConvertUTF16toUTF8(ncm.lfMessageFont.lfFaceName));
     if (ff) {
       return ff;
+||||||| merged common ancestors
+gfxFontFamily*
+gfxGDIFontList::GetDefaultFontForPlatform(const gfxFontStyle* aStyle)
+{
+    gfxFontFamily *ff = nullptr;
+
+    // this really shouldn't fail to find a font....
+    NONCLIENTMETRICSW ncm;
+    ncm.cbSize = sizeof(ncm);
+    BOOL status = ::SystemParametersInfoW(SPI_GETNONCLIENTMETRICS,
+                                          sizeof(ncm), &ncm, 0);
+    if (status) {
+        ff = FindFamily(NS_ConvertUTF16toUTF8(ncm.lfMessageFont.lfFaceName));
+        if (ff) {
+            return ff;
+        }
+=======
+FontFamily gfxGDIFontList::GetDefaultFontForPlatform(
+    const gfxFontStyle* aStyle) {
+  FontFamily ff;
+
+  // this really shouldn't fail to find a font....
+  NONCLIENTMETRICSW ncm;
+  ncm.cbSize = sizeof(ncm);
+  BOOL status =
+      ::SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+  if (status) {
+    ff = FindFamily(NS_ConvertUTF16toUTF8(ncm.lfMessageFont.lfFaceName));
+    if (!ff.IsNull()) {
+      return ff;
+>>>>>>> upstream-releases
     }
   }
 
@@ -894,7 +1046,14 @@ class GDIFontInfo : public FontInfoData {
   GDIFontInfo(bool aLoadOtherNames, bool aLoadFaceNames, bool aLoadCmaps)
       : FontInfoData(aLoadOtherNames, aLoadFaceNames, aLoadCmaps) {}
 
+<<<<<<< HEAD
   virtual ~GDIFontInfo() {}
+||||||| merged common ancestors
+    // loads font data for all members of a given family
+    virtual void LoadFontFamilyData(const nsACString& aFamilyName);
+=======
+  virtual ~GDIFontInfo() = default;
+>>>>>>> upstream-releases
 
   virtual void Load() {
     mHdc = GetDC(nullptr);
@@ -942,6 +1101,7 @@ int CALLBACK GDIFontInfo::EnumerateFontsForFamily(
   FontFaceData fontData;
   NS_ConvertUTF16toUTF8 fontName(lpelfe->elfFullName);
 
+<<<<<<< HEAD
   // callback called for each style-charset so return if style already seen
   if (fontName.Equals(famData->mPreviousFontName)) {
     return 1;
@@ -980,6 +1140,89 @@ int CALLBACK GDIFontInfo::EnumerateFontsForFamily(
             famData->mFamilyName, (const char*)(nameData.Elements()), nameSize,
             famData->mOtherFamilyNames, false);
       }
+||||||| merged common ancestors
+    // callback called for each style-charset so return if style already seen
+    if (fontName.Equals(famData->mPreviousFontName)) {
+        return 1;
+    }
+    famData->mPreviousFontName = fontName;
+    famData->mFontInfo.mLoadStats.fonts++;
+
+    // read name table info
+    bool nameDataLoaded = false;
+    if (famData->mFontInfo.mLoadFaceNames || famData->mFontInfo.mLoadOtherNames) {
+        uint32_t kNAME =
+            NativeEndian::swapToBigEndian(TRUETYPE_TAG('n','a','m','e'));
+        uint32_t nameSize;
+        AutoTArray<uint8_t, 1024> nameData;
+
+        nameSize = ::GetFontData(hdc, kNAME, 0, nullptr, 0);
+        if (nameSize != GDI_ERROR &&
+            nameSize > 0 &&
+            nameData.SetLength(nameSize, fallible)) {
+            ::GetFontData(hdc, kNAME, 0, nameData.Elements(), nameSize);
+
+            // face names
+            if (famData->mFontInfo.mLoadFaceNames) {
+                gfxFontUtils::ReadCanonicalName((const char*)(nameData.Elements()), nameSize,
+                                                gfxFontUtils::NAME_ID_FULL,
+                                                fontData.mFullName);
+                gfxFontUtils::ReadCanonicalName((const char*)(nameData.Elements()), nameSize,
+                                                gfxFontUtils::NAME_ID_POSTSCRIPT,
+                                                fontData.mPostscriptName);
+                nameDataLoaded = true;
+                famData->mFontInfo.mLoadStats.facenames++;
+            }
+
+            // other family names
+            if (famData->mFontInfo.mLoadOtherNames) {
+                gfxFontFamily::ReadOtherFamilyNamesForFace(famData->mFamilyName,
+                                                           (const char*)(nameData.Elements()),
+                                                           nameSize,
+                                                           famData->mOtherFamilyNames,
+                                                           false);
+            }
+        }
+=======
+  // callback called for each style-charset so return if style already seen
+  if (fontName.Equals(famData->mPreviousFontName)) {
+    return 1;
+  }
+  famData->mPreviousFontName = fontName;
+  famData->mFontInfo.mLoadStats.fonts++;
+
+  // read name table info
+  bool nameDataLoaded = false;
+  if (famData->mFontInfo.mLoadFaceNames || famData->mFontInfo.mLoadOtherNames) {
+    uint32_t kNAME =
+        NativeEndian::swapToBigEndian(TRUETYPE_TAG('n', 'a', 'm', 'e'));
+    uint32_t nameSize;
+    AutoTArray<uint8_t, 1024> nameData;
+
+    nameSize = ::GetFontData(hdc, kNAME, 0, nullptr, 0);
+    if (nameSize != GDI_ERROR && nameSize > 0 &&
+        nameData.SetLength(nameSize, fallible)) {
+      ::GetFontData(hdc, kNAME, 0, nameData.Elements(), nameSize);
+
+      // face names
+      if (famData->mFontInfo.mLoadFaceNames) {
+        gfxFontUtils::ReadCanonicalName((const char*)(nameData.Elements()),
+                                        nameSize, gfxFontUtils::NAME_ID_FULL,
+                                        fontData.mFullName);
+        gfxFontUtils::ReadCanonicalName(
+            (const char*)(nameData.Elements()), nameSize,
+            gfxFontUtils::NAME_ID_POSTSCRIPT, fontData.mPostscriptName);
+        nameDataLoaded = true;
+        famData->mFontInfo.mLoadStats.facenames++;
+      }
+
+      // other family names
+      if (famData->mFontInfo.mLoadOtherNames) {
+        gfxFontUtils::ReadOtherFamilyNamesForFace(
+            famData->mFamilyName, (const char*)(nameData.Elements()), nameSize,
+            famData->mOtherFamilyNames, false);
+      }
+>>>>>>> upstream-releases
     }
   }
 

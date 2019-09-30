@@ -17,9 +17,8 @@
 #include "nsPIDOMWindow.h"
 #include "nsIURI.h"
 #include "nsIDocShell.h"
-#include "nsIPresShell.h"
 #include "nsPresContext.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsISelectionController.h"
 #include "nsIFrame.h"
 #include "nsITextControlFrame.h"
@@ -33,6 +32,7 @@
 #include "nsError.h"
 #include "nsFocusManager.h"
 #include "nsRange.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Services.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/Selection.h"
@@ -41,10 +41,16 @@
 #include "nsGenericHTMLElement.h"
 
 #if DEBUG
-#include "nsIWebNavigation.h"
-#include "nsString.h"
+#  include "nsIWebNavigation.h"
+#  include "nsString.h"
 #endif
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+using mozilla::dom::Selection;
+=======
+using mozilla::dom::Document;
+>>>>>>> upstream-releases
 using mozilla::dom::Element;
 using mozilla::dom::Selection;
 
@@ -316,6 +322,7 @@ nsWebBrowserFind::SetMatchCase(bool aMatchCase) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static bool IsInNativeAnonymousSubtree(nsIContent* aContent) {
   while (aContent) {
     nsIContent* bindingParent = aContent->GetBindingParent();
@@ -332,11 +339,37 @@ static bool IsInNativeAnonymousSubtree(nsIContent* aContent) {
 void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
                                              nsRange* aRange) {
   nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
+||||||| merged common ancestors
+static bool
+IsInNativeAnonymousSubtree(nsIContent* aContent)
+{
+  while (aContent) {
+    nsIContent* bindingParent = aContent->GetBindingParent();
+    if (bindingParent == aContent) {
+      return true;
+    }
+
+    aContent = bindingParent;
+  }
+
+  return false;
+}
+
+void
+nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
+                                        nsRange* aRange)
+{
+  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
+=======
+void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
+                                             nsRange* aRange) {
+  RefPtr<Document> doc = aWindow->GetDoc();
+>>>>>>> upstream-releases
   if (!doc) {
     return;
   }
 
-  nsIPresShell* presShell = doc->GetShell();
+  PresShell* presShell = doc->GetPresShell();
   if (!presShell) {
     return;
   }
@@ -355,7 +388,7 @@ void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
   // <textarea> or text <input>, we need to get the outer frame
   nsITextControlFrame* tcFrame = nullptr;
   for (; content; content = content->GetParent()) {
-    if (!IsInNativeAnonymousSubtree(content)) {
+    if (!content->IsInNativeAnonymousSubtree()) {
       nsIFrame* f = content->GetPrimaryFrame();
       if (!f) {
         return;
@@ -370,7 +403,8 @@ void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
       selCon->GetSelection(nsISelectionController::SELECTION_NORMAL);
   if (selection) {
     selection->RemoveAllRanges(IgnoreErrors());
-    selection->AddRange(*aRange, IgnoreErrors());
+    selection->AddRangeAndSelectFramesAndNotifyListeners(*aRange,
+                                                         IgnoreErrors());
 
     nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
     if (fm) {
@@ -398,7 +432,15 @@ void nsWebBrowserFind::SetSelectionAndScroll(nsPIDOMWindowOuter* aWindow,
 }
 
 // Adapted from TextServicesDocument::GetDocumentContentRootNode
+<<<<<<< HEAD
 nsresult nsWebBrowserFind::GetRootNode(nsIDocument* aDoc, Element** aNode) {
+||||||| merged common ancestors
+nsresult
+nsWebBrowserFind::GetRootNode(nsIDocument* aDoc, Element** aNode)
+{
+=======
+nsresult nsWebBrowserFind::GetRootNode(Document* aDoc, Element** aNode) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aDoc);
   NS_ENSURE_ARG_POINTER(aNode);
   *aNode = 0;
@@ -417,10 +459,24 @@ nsresult nsWebBrowserFind::GetRootNode(nsIDocument* aDoc, Element** aNode) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
                                                   nsRange* aStartPt,
                                                   nsRange* aEndPt,
                                                   nsIDocument* aDoc) {
+||||||| merged common ancestors
+nsresult
+nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
+                                         nsRange* aStartPt,
+                                         nsRange* aEndPt,
+                                         nsIDocument* aDoc)
+{
+=======
+nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
+                                                  nsRange* aStartPt,
+                                                  nsRange* aEndPt,
+                                                  Document* aDoc) {
+>>>>>>> upstream-releases
   RefPtr<Element> bodyContent;
   nsresult rv = GetRootNode(aDoc, getter_AddRefs(bodyContent));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -449,10 +505,24 @@ nsresult nsWebBrowserFind::SetRangeAroundDocument(nsRange* aSearchRange,
 // Set the range to go from the end of the current selection to the end of the
 // document (forward), or beginning to beginning (reverse). or around the whole
 // document if there's no selection.
+<<<<<<< HEAD
 nsresult nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
                                            nsRange* aStartPt, nsRange* aEndPt,
                                            nsIDocument* aDoc, Selection* aSel,
                                            bool aWrap) {
+||||||| merged common ancestors
+nsresult
+nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
+                                  nsRange* aStartPt, nsRange* aEndPt,
+                                  nsIDocument* aDoc, Selection* aSel,
+                                  bool aWrap)
+{
+=======
+nsresult nsWebBrowserFind::GetSearchLimits(nsRange* aSearchRange,
+                                           nsRange* aStartPt, nsRange* aEndPt,
+                                           Document* aDoc, Selection* aSel,
+                                           bool aWrap) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aSel);
 
   // There is a selection.
@@ -650,7 +720,7 @@ nsresult nsWebBrowserFind::SearchInFrame(nsPIDOMWindowOuter* aWindow,
   // accessible from the frame where the Find is being run.
 
   // get a uri for the window
-  nsCOMPtr<nsIDocument> theDoc = aWindow->GetDoc();
+  RefPtr<Document> theDoc = aWindow->GetDoc();
   if (!theDoc) {
     return NS_ERROR_FAILURE;
   }
@@ -685,7 +755,7 @@ nsresult nsWebBrowserFind::SearchInFrame(nsPIDOMWindowOuter* aWindow,
   rv = GetSearchLimits(searchRange, startPt, endPt, theDoc, sel, aWrapping);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  rv = find->Find(mSearchString.get(), searchRange, startPt, endPt,
+  rv = find->Find(mSearchString, searchRange, startPt, endPt,
                   getter_AddRefs(foundRange));
 
   if (NS_SUCCEEDED(rv) && foundRange) {
@@ -712,14 +782,25 @@ nsresult nsWebBrowserFind::OnEndSearchFrame(nsPIDOMWindowOuter* aWindow) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 already_AddRefed<Selection> nsWebBrowserFind::GetFrameSelection(
     nsPIDOMWindowOuter* aWindow) {
   nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
+||||||| merged common ancestors
+already_AddRefed<Selection>
+nsWebBrowserFind::GetFrameSelection(nsPIDOMWindowOuter* aWindow)
+{
+  nsCOMPtr<nsIDocument> doc = aWindow->GetDoc();
+=======
+already_AddRefed<Selection> nsWebBrowserFind::GetFrameSelection(
+    nsPIDOMWindowOuter* aWindow) {
+  RefPtr<Document> doc = aWindow->GetDoc();
+>>>>>>> upstream-releases
   if (!doc) {
     return nullptr;
   }
 
-  nsIPresShell* presShell = doc->GetShell();
+  PresShell* presShell = doc->GetPresShell();
   if (!presShell) {
     return nullptr;
   }
@@ -746,8 +827,7 @@ already_AddRefed<Selection> nsWebBrowserFind::GetFrameSelection(
     }
   }
 
-  selCon = do_QueryInterface(presShell);
-  sel = selCon->GetSelection(nsISelectionController::SELECTION_NORMAL);
+  sel = presShell->GetSelection(nsISelectionController::SELECTION_NORMAL);
   return sel.forget();
 }
 
@@ -777,7 +857,7 @@ nsresult nsWebBrowserFind::OnFind(nsPIDOMWindowOuter* aFoundWindow) {
     // window should already be focused.
     RefPtr<Element> frameElement = aFoundWindow->GetFrameElementInternal();
     if (frameElement) {
-      fm->SetFocus(frameElement, 0);
+      fm->SetFocus(frameElement, nsIFocusManager::FLAG_BYELEMENTFOCUS);
     }
 
     mLastFocusedWindow = do_GetWeakReference(aFoundWindow);

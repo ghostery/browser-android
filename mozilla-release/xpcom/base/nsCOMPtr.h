@@ -40,20 +40,48 @@
  */
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 // Under VC++, we win by inlining StartAssignment.
 #define NSCAP_FEATURE_INLINE_STARTASSIGNMENT
+||||||| merged common ancestors
+  // Under VC++, we win by inlining StartAssignment.
+  #define NSCAP_FEATURE_INLINE_STARTASSIGNMENT
+=======
+// Under VC++, we win by inlining StartAssignment.
+#  define NSCAP_FEATURE_INLINE_STARTASSIGNMENT
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 // Also under VC++, at the highest warning level, we are overwhelmed with
 // warnings about (unused) inline functions being removed. This is to be
 // expected with templates, so we disable the warning.
 #pragma warning(disable : 4514)
+||||||| merged common ancestors
+  // Also under VC++, at the highest warning level, we are overwhelmed with
+  // warnings about (unused) inline functions being removed. This is to be
+  // expected with templates, so we disable the warning.
+  #pragma warning( disable: 4514 )
+=======
+// Also under VC++, at the highest warning level, we are overwhelmed with
+// warnings about (unused) inline functions being removed. This is to be
+// expected with templates, so we disable the warning.
+#  pragma warning(disable : 4514)
+>>>>>>> upstream-releases
 #endif
 
 #define NSCAP_FEATURE_USE_BASE
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define NSCAP_FEATURE_TEST_DONTQUERY_CASES
 #undef NSCAP_FEATURE_USE_BASE
+||||||| merged common ancestors
+  #define NSCAP_FEATURE_TEST_DONTQUERY_CASES
+  #undef NSCAP_FEATURE_USE_BASE
+=======
+#  define NSCAP_FEATURE_TEST_DONTQUERY_CASES
+#  undef NSCAP_FEATURE_USE_BASE
+>>>>>>> upstream-releases
 #endif
 
 #ifdef __GNUC__
@@ -63,13 +91,31 @@
 // this variable.  Fortunately, gcc versions < 3.3 do not do any
 // optimizations that break nsCOMPtr.
 
+<<<<<<< HEAD
 #define NS_MAY_ALIAS_PTR(t) t* __attribute__((__may_alias__))
+||||||| merged common ancestors
+  #define NS_MAY_ALIAS_PTR(t)    t*  __attribute__((__may_alias__))
+=======
+#  define NS_MAY_ALIAS_PTR(t) t* __attribute__((__may_alias__))
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define NS_MAY_ALIAS_PTR(t) t*
+||||||| merged common ancestors
+  #define NS_MAY_ALIAS_PTR(t)    t*
+=======
+#  define NS_MAY_ALIAS_PTR(t) t*
+>>>>>>> upstream-releases
 #endif
 
 #if defined(NSCAP_DISABLE_DEBUG_PTR_TYPES)
+<<<<<<< HEAD
 #define NSCAP_FEATURE_USE_BASE
+||||||| merged common ancestors
+  #define NSCAP_FEATURE_USE_BASE
+=======
+#  define NSCAP_FEATURE_USE_BASE
+>>>>>>> upstream-releases
 #endif
 
 /*
@@ -84,26 +130,64 @@
  */
 
 #ifndef NSCAP_ADDREF
+<<<<<<< HEAD
 #define NSCAP_ADDREF(this, ptr) (ptr)->AddRef()
+||||||| merged common ancestors
+  #define NSCAP_ADDREF(this, ptr)     (ptr)->AddRef()
+=======
+#  define NSCAP_ADDREF(this, ptr) (ptr)->AddRef()
+>>>>>>> upstream-releases
 #endif
 
 #ifndef NSCAP_RELEASE
+<<<<<<< HEAD
 #define NSCAP_RELEASE(this, ptr) (ptr)->Release()
+||||||| merged common ancestors
+  #define NSCAP_RELEASE(this, ptr)    (ptr)->Release()
+=======
+#  define NSCAP_RELEASE(this, ptr) (ptr)->Release()
+>>>>>>> upstream-releases
 #endif
 
 // Clients can define |NSCAP_LOG_ASSIGNMENT| to perform logging.
 #ifdef NSCAP_LOG_ASSIGNMENT
+<<<<<<< HEAD
 // Remember that |NSCAP_LOG_ASSIGNMENT| was defined by some client so that we
 // know to instantiate |~nsGetterAddRefs| in turn to note the external
 // assignment into the |nsCOMPtr|.
 #define NSCAP_LOG_EXTERNAL_ASSIGNMENT
+||||||| merged common ancestors
+  // Remember that |NSCAP_LOG_ASSIGNMENT| was defined by some client so that we
+  // know to instantiate |~nsGetterAddRefs| in turn to note the external
+  // assignment into the |nsCOMPtr|.
+  #define NSCAP_LOG_EXTERNAL_ASSIGNMENT
+=======
+// Remember that |NSCAP_LOG_ASSIGNMENT| was defined by some client so that we
+// know to instantiate |~nsGetterAddRefs| in turn to note the external
+// assignment into the |nsCOMPtr|.
+#  define NSCAP_LOG_EXTERNAL_ASSIGNMENT
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 // ...otherwise, just strip it out of the code
 #define NSCAP_LOG_ASSIGNMENT(this, ptr)
+||||||| merged common ancestors
+    // ...otherwise, just strip it out of the code
+  #define NSCAP_LOG_ASSIGNMENT(this, ptr)
+=======
+// ...otherwise, just strip it out of the code
+#  define NSCAP_LOG_ASSIGNMENT(this, ptr)
+>>>>>>> upstream-releases
 #endif
 
 #ifndef NSCAP_LOG_RELEASE
+<<<<<<< HEAD
 #define NSCAP_LOG_RELEASE(this, ptr)
+||||||| merged common ancestors
+  #define NSCAP_LOG_RELEASE(this, ptr)
+=======
+#  define NSCAP_LOG_RELEASE(this, ptr)
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -160,11 +244,27 @@ class MOZ_STACK_CLASS nsQueryInterfaceISupports {
 };
 
 #ifndef NSCAP_FEATURE_USE_BASE
+<<<<<<< HEAD
 template <typename T>
 class MOZ_STACK_CLASS nsQueryInterface final
     : public nsQueryInterfaceISupports {
  public:
   explicit nsQueryInterface(T* aRawPtr) : nsQueryInterfaceISupports(aRawPtr) {}
+||||||| merged common ancestors
+template<typename T>
+class MOZ_STACK_CLASS nsQueryInterface final : public nsQueryInterfaceISupports
+{
+public:
+  explicit
+  nsQueryInterface(T* aRawPtr) : nsQueryInterfaceISupports(aRawPtr) {}
+=======
+template <typename T>
+class MOZ_STACK_CLASS nsQueryInterface final
+    : public nsQueryInterfaceISupports {
+ public:
+  explicit nsQueryInterface(T* aRawPtr)
+      : nsQueryInterfaceISupports(ToSupports(aRawPtr)) {}
+>>>>>>> upstream-releases
 
   nsresult NS_FASTCALL operator()(const nsIID& aIID, void** aAnswer) const {
     return nsQueryInterfaceISupports::operator()(aIID, aAnswer);
@@ -185,17 +285,36 @@ class MOZ_STACK_CLASS nsQueryInterfaceISupportsWithError {
 };
 
 #ifndef NSCAP_FEATURE_USE_BASE
+<<<<<<< HEAD
 template <typename T>
 class MOZ_STACK_CLASS nsQueryInterfaceWithError final
     : public nsQueryInterfaceISupportsWithError {
  public:
   explicit nsQueryInterfaceWithError(T* aRawPtr, nsresult* aError)
       : nsQueryInterfaceISupportsWithError(aRawPtr, aError) {}
+||||||| merged common ancestors
+template<typename T>
+class MOZ_STACK_CLASS nsQueryInterfaceWithError final : public nsQueryInterfaceISupportsWithError
+{
+public:
+  explicit
+  nsQueryInterfaceWithError(T* aRawPtr, nsresult* aError)
+    : nsQueryInterfaceISupportsWithError(aRawPtr, aError)
+  {}
+=======
+template <typename T>
+class MOZ_STACK_CLASS nsQueryInterfaceWithError final
+    : public nsQueryInterfaceISupportsWithError {
+ public:
+  explicit nsQueryInterfaceWithError(T* aRawPtr, nsresult* aError)
+      : nsQueryInterfaceISupportsWithError(ToSupports(aRawPtr), aError) {}
+>>>>>>> upstream-releases
 
   nsresult NS_FASTCALL operator()(const nsIID& aIID, void** aAnswer) const {
     return nsQueryInterfaceISupportsWithError::operator()(aIID, aAnswer);
   }
 };
+<<<<<<< HEAD
 #endif  // #ifndef NSCAP_FEATURE_USE_BASE
 
 #ifdef NSCAP_FEATURE_USE_BASE
@@ -210,6 +329,27 @@ inline nsQueryInterfaceISupportsWithError do_QueryInterface(
 }
 
 #else
+||||||| merged common ancestors
+#endif // #ifndef NSCAP_FEATURE_USE_BASE
+
+#ifdef NSCAP_FEATURE_USE_BASE
+
+inline nsQueryInterfaceISupports
+do_QueryInterface(nsISupports* aRawPtr)
+{
+  return nsQueryInterfaceISupports(aRawPtr);
+}
+
+inline nsQueryInterfaceISupportsWithError
+do_QueryInterface(nsISupports* aRawPtr, nsresult* aError)
+{
+  return nsQueryInterfaceISupportsWithError(aRawPtr, aError);
+}
+
+#else
+=======
+#endif  // #ifndef NSCAP_FEATURE_USE_BASE
+>>>>>>> upstream-releases
 
 namespace mozilla {
 // PointedToType<> is needed so that do_QueryInterface() will work with a
@@ -220,6 +360,44 @@ using PointedToType =
     typename mozilla::RemovePointer<decltype(&*mozilla::DeclVal<T>())>::Type;
 }  // namespace mozilla
 
+<<<<<<< HEAD
+template <class T>
+inline nsQueryInterface<mozilla::PointedToType<T> > do_QueryInterface(T aPtr) {
+  return nsQueryInterface<mozilla::PointedToType<T> >(aPtr);
+||||||| merged common ancestors
+template<class T>
+inline nsQueryInterface<mozilla::PointedToType<T>>
+do_QueryInterface(T aPtr)
+{
+  return nsQueryInterface<mozilla::PointedToType<T>>(aPtr);
+=======
+#ifdef NSCAP_FEATURE_USE_BASE
+template <class T>
+inline nsQueryInterfaceISupports do_QueryInterface(T aPtr) {
+  return nsQueryInterfaceISupports(
+      ToSupports(static_cast<mozilla::PointedToType<T>*>(aPtr)));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+template <class T>
+inline nsQueryInterfaceWithError<mozilla::PointedToType<T> > do_QueryInterface(
+    T aRawPtr, nsresult* aError) {
+  return nsQueryInterfaceWithError<mozilla::PointedToType<T> >(aRawPtr, aError);
+||||||| merged common ancestors
+template<class T>
+inline nsQueryInterfaceWithError<mozilla::PointedToType<T>>
+do_QueryInterface(T aRawPtr, nsresult* aError)
+{
+  return nsQueryInterfaceWithError<mozilla::PointedToType<T>>(aRawPtr, aError);
+=======
+template <class T>
+inline nsQueryInterfaceISupportsWithError do_QueryInterface(T aPtr,
+                                                            nsresult* aError) {
+  return nsQueryInterfaceISupportsWithError(
+      ToSupports(static_cast<mozilla::PointedToType<T>*>(aPtr)), aError);
+}
+#else
 template <class T>
 inline nsQueryInterface<mozilla::PointedToType<T> > do_QueryInterface(T aPtr) {
   return nsQueryInterface<mozilla::PointedToType<T> >(aPtr);
@@ -229,11 +407,30 @@ template <class T>
 inline nsQueryInterfaceWithError<mozilla::PointedToType<T> > do_QueryInterface(
     T aRawPtr, nsresult* aError) {
   return nsQueryInterfaceWithError<mozilla::PointedToType<T> >(aRawPtr, aError);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+#endif  // ! #ifdef NSCAP_FEATURE_USE_BASE
+||||||| merged common ancestors
+#endif // ! #ifdef NSCAP_FEATURE_USE_BASE
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+template <class T>
+inline void do_QueryInterface(already_AddRefed<T>&) {
+||||||| merged common ancestors
+
+template<class T>
+inline void
+do_QueryInterface(already_AddRefed<T>&)
+{
+=======
 #endif  // ! #ifdef NSCAP_FEATURE_USE_BASE
 
 template <class T>
 inline void do_QueryInterface(already_AddRefed<T>&) {
+>>>>>>> upstream-releases
   // This signature exists solely to _stop_ you from doing the bad thing.
   // Saying |do_QueryInterface()| on a pointer that is not otherwise owned by
   // someone else is an automatic leak. See bug 8221.
@@ -380,13 +577,33 @@ class MOZ_IS_REFPTR nsCOMPtr final
     : private nsCOMPtr_base
 #endif
 {
-
-#ifdef NSCAP_FEATURE_USE_BASE
-#define NSCAP_CTOR_BASE(x) nsCOMPtr_base(x)
-#else
-#define NSCAP_CTOR_BASE(x) mRawPtr(x)
-
  private:
+#ifdef NSCAP_FEATURE_USE_BASE
+<<<<<<< HEAD
+#define NSCAP_CTOR_BASE(x) nsCOMPtr_base(x)
+||||||| merged common ancestors
+  #define NSCAP_CTOR_BASE(x) nsCOMPtr_base(x)
+=======
+#  define NSCAP_CTOR_BASE(x) nsCOMPtr_base(ToSupports(x))
+  void assign_assuming_AddRef(T* aNewPtr) {
+    nsCOMPtr_base::assign_assuming_AddRef(ToSupports(aNewPtr));
+  }
+>>>>>>> upstream-releases
+#else
+<<<<<<< HEAD
+#define NSCAP_CTOR_BASE(x) mRawPtr(x)
+||||||| merged common ancestors
+  #define NSCAP_CTOR_BASE(x) mRawPtr(x)
+=======
+#  define NSCAP_CTOR_BASE(x) mRawPtr(x)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
+>>>>>>> upstream-releases
   void assign_with_AddRef(nsISupports*);
   template <typename U>
   void assign_from_qi(const nsQueryInterface<U>, const nsIID&);
@@ -451,9 +668,21 @@ class MOZ_IS_REFPTR nsCOMPtr final
     }
   }
 
+<<<<<<< HEAD
 #define NSCAP_ASSERT_NO_QUERY_NEEDED() Assert_NoQueryNeeded();
+||||||| merged common ancestors
+  #define NSCAP_ASSERT_NO_QUERY_NEEDED() Assert_NoQueryNeeded();
+=======
+#  define NSCAP_ASSERT_NO_QUERY_NEEDED() Assert_NoQueryNeeded();
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define NSCAP_ASSERT_NO_QUERY_NEEDED()
+||||||| merged common ancestors
+  #define NSCAP_ASSERT_NO_QUERY_NEEDED()
+=======
+#  define NSCAP_ASSERT_NO_QUERY_NEEDED()
+>>>>>>> upstream-releases
 #endif
 
   // Constructors
@@ -634,8 +863,17 @@ class MOZ_IS_REFPTR nsCOMPtr final
 
   // Assignment operators
 
+<<<<<<< HEAD
   nsCOMPtr<T>& operator=(const nsCOMPtr<T>& aRhs) {
     assign_with_AddRef(aRhs.mRawPtr);
+||||||| merged common ancestors
+  nsCOMPtr<T>& operator=(const nsCOMPtr<T>& aRhs)
+  {
+    assign_with_AddRef(aRhs.mRawPtr);
+=======
+  nsCOMPtr<T>& operator=(const nsCOMPtr<T>& aRhs) {
+    assign_with_AddRef(ToSupports(aRhs.mRawPtr));
+>>>>>>> upstream-releases
     return *this;
   }
 
@@ -644,7 +882,7 @@ class MOZ_IS_REFPTR nsCOMPtr final
     // Make sure that U actually inherits from T
     static_assert(mozilla::IsBaseOf<T, U>::value,
                   "U should be a subclass of T");
-    assign_with_AddRef(static_cast<T*>(aRhs.get()));
+    assign_with_AddRef(ToSupports(static_cast<T*>(aRhs.get())));
     return *this;
   }
 
@@ -663,8 +901,17 @@ class MOZ_IS_REFPTR nsCOMPtr final
     return *this;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<T>& operator=(T* aRhs) {
     assign_with_AddRef(aRhs);
+||||||| merged common ancestors
+  nsCOMPtr<T>& operator=(T* aRhs)
+  {
+    assign_with_AddRef(aRhs);
+=======
+  nsCOMPtr<T>& operator=(T* aRhs) {
+    assign_with_AddRef(ToSupports(aRhs));
+>>>>>>> upstream-releases
     NSCAP_ASSERT_NO_QUERY_NEEDED();
     return *this;
   }
@@ -780,7 +1027,7 @@ class MOZ_IS_REFPTR nsCOMPtr final
   // Exchange ownership with |aRhs|; can save a pair of refcount operations.
   void swap(T*& aRhs) {
 #ifdef NSCAP_FEATURE_USE_BASE
-    nsISupports* temp = aRhs;
+    nsISupports* temp = ToSupports(aRhs);
 #else
     T* temp = aRhs;
 #endif
@@ -869,9 +1116,21 @@ class MOZ_IS_REFPTR nsCOMPtr final
  * pass around arbitrary interface pointers, without hassles, through
  * intermediary code that doesn't know the exact type.
  */
+<<<<<<< HEAD
 template <>
 class nsCOMPtr<nsISupports> : private nsCOMPtr_base {
  public:
+||||||| merged common ancestors
+template<>
+class nsCOMPtr<nsISupports>
+  : private nsCOMPtr_base
+{
+public:
+=======
+template <>
+class MOZ_IS_REFPTR nsCOMPtr<nsISupports> : private nsCOMPtr_base {
+ public:
+>>>>>>> upstream-releases
   typedef nsISupports element_type;
 
   // Constructors
@@ -1277,17 +1536,29 @@ class nsGetterAddRefs {
   explicit nsGetterAddRefs(nsCOMPtr<T>& aSmartPtr)
       : mTargetSmartPtr(aSmartPtr) {}
 
+<<<<<<< HEAD
 #if defined(NSCAP_FEATURE_TEST_DONTQUERY_CASES) || \
     defined(NSCAP_LOG_EXTERNAL_ASSIGNMENT)
   ~nsGetterAddRefs() {
 #ifdef NSCAP_LOG_EXTERNAL_ASSIGNMENT
+||||||| merged common ancestors
+#if defined(NSCAP_FEATURE_TEST_DONTQUERY_CASES) || defined(NSCAP_LOG_EXTERNAL_ASSIGNMENT)
+  ~nsGetterAddRefs()
+  {
+#ifdef NSCAP_LOG_EXTERNAL_ASSIGNMENT
+=======
+#if defined(NSCAP_FEATURE_TEST_DONTQUERY_CASES) || \
+    defined(NSCAP_LOG_EXTERNAL_ASSIGNMENT)
+  ~nsGetterAddRefs() {
+#  ifdef NSCAP_LOG_EXTERNAL_ASSIGNMENT
+>>>>>>> upstream-releases
     NSCAP_LOG_ASSIGNMENT(reinterpret_cast<void*>(address_of(mTargetSmartPtr)),
                          mTargetSmartPtr.get());
-#endif
+#  endif
 
-#ifdef NSCAP_FEATURE_TEST_DONTQUERY_CASES
+#  ifdef NSCAP_FEATURE_TEST_DONTQUERY_CASES
     mTargetSmartPtr.Assert_NoQueryNeeded();
-#endif
+#  endif
   }
 #endif
 
@@ -1471,4 +1742,17 @@ inline already_AddRefed<T> do_AddRef(const nsCOMPtr<T>& aObj) {
   return ref.forget();
 }
 
+<<<<<<< HEAD
 #endif  // !defined(nsCOMPtr_h___)
+||||||| merged common ancestors
+#endif // !defined(nsCOMPtr_h___)
+=======
+// MOZ_DBG support
+
+template <class T>
+std::ostream& operator<<(std::ostream& aOut, const nsCOMPtr<T>& aObj) {
+  return mozilla::DebugValue(aOut, aObj.get());
+}
+
+#endif  // !defined(nsCOMPtr_h___)
+>>>>>>> upstream-releases

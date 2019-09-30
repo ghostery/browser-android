@@ -7,7 +7,15 @@
 #ifndef mozilla_layers_CompositorController_h
 #define mozilla_layers_CompositorController_h
 
+<<<<<<< HEAD
 #include "nsISupportsImpl.h"  // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
+||||||| merged common ancestors
+#include "nsISupportsImpl.h" // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
+=======
+#include "nsISupportsImpl.h"  // for NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
+#include "mozilla/Maybe.h"
+#include "mozilla/webrender/WebRenderTypes.h"
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -16,12 +24,27 @@ class CompositorController {
  public:
   NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
 
-  virtual void ScheduleRenderOnCompositorThread() = 0;
+  /**
+   * Ask the compositor to schedule a new composite. If WebRender is enabled,
+   * and the provided render root set is non-empty, then only those render roots
+   * will be scheduled for a recomposite. Otherwise, all render roots will be
+   * scheduled.
+   */
+  virtual void ScheduleRenderOnCompositorThread(
+      const wr::RenderRootSet& aRenderRoots) = 0;
   virtual void ScheduleHideAllPluginWindows() = 0;
   virtual void ScheduleShowAllPluginWindows() = 0;
 
+<<<<<<< HEAD
  protected:
   virtual ~CompositorController() {}
+||||||| merged common ancestors
+protected:
+  virtual ~CompositorController() {}
+=======
+ protected:
+  virtual ~CompositorController() = default;
+>>>>>>> upstream-releases
 };
 
 }  // namespace layers

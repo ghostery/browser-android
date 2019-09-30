@@ -1,4 +1,11 @@
 spec: https://w3c.github.io/speech-api/
 suggested_reviewers:
+<<<<<<< HEAD
   - foolip
   - gshires
+||||||| merged common ancestors
+  - andrenatal
+  - gshires
+=======
+  - foolip
+>>>>>>> upstream-releases

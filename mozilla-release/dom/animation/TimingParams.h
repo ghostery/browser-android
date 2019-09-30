@@ -15,14 +15,25 @@
 #include "mozilla/StickyTimeDuration.h"
 #include "mozilla/TimeStamp.h"  // for TimeDuration
 
+<<<<<<< HEAD
 #include "mozilla/dom/AnimationEffectBinding.h"  // for FillMode
                                                  // and PlaybackDirection
 
 class nsIDocument;
+||||||| merged common ancestors
+#include "mozilla/dom/AnimationEffectBinding.h" // for FillMode
+                                                // and PlaybackDirection
+
+class nsIDocument;
+=======
+#include "mozilla/dom/AnimationEffectBinding.h"  // for FillMode
+                                                 // and PlaybackDirection
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
 namespace dom {
+class Document;
 class UnrestrictedDoubleOrKeyframeEffectOptions;
 class UnrestrictedDoubleOrKeyframeAnimationOptions;
 }  // namespace dom
@@ -55,17 +66,51 @@ struct TimingParams {
   }
 
   template <class OptionsType>
+<<<<<<< HEAD
   static TimingParams FromOptionsType(const OptionsType& aOptions,
                                       nsIDocument* aDocument, ErrorResult& aRv);
+||||||| merged common ancestors
+  static TimingParams FromOptionsType(
+    const OptionsType& aOptions,
+    nsIDocument* aDocument,
+    ErrorResult& aRv);
+=======
+  static TimingParams FromOptionsType(const OptionsType& aOptions,
+                                      dom::Document* aDocument,
+                                      ErrorResult& aRv);
+>>>>>>> upstream-releases
   static TimingParams FromOptionsUnion(
+<<<<<<< HEAD
       const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
       nsIDocument* aDocument, ErrorResult& aRv);
+||||||| merged common ancestors
+    const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
+    nsIDocument* aDocument, ErrorResult& aRv);
+=======
+      const dom::UnrestrictedDoubleOrKeyframeEffectOptions& aOptions,
+      dom::Document* aDocument, ErrorResult& aRv);
+>>>>>>> upstream-releases
   static TimingParams FromOptionsUnion(
+<<<<<<< HEAD
       const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
       nsIDocument* aDocument, ErrorResult& aRv);
   static TimingParams FromEffectTiming(const dom::EffectTiming& aEffectTiming,
                                        nsIDocument* aDocument,
                                        ErrorResult& aRv);
+||||||| merged common ancestors
+    const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
+    nsIDocument* aDocument, ErrorResult& aRv);
+  static TimingParams FromEffectTiming(
+    const dom::EffectTiming& aEffectTiming,
+    nsIDocument* aDocument,
+    ErrorResult& aRv);
+=======
+      const dom::UnrestrictedDoubleOrKeyframeAnimationOptions& aOptions,
+      dom::Document* aDocument, ErrorResult& aRv);
+  static TimingParams FromEffectTiming(const dom::EffectTiming& aEffectTiming,
+                                       dom::Document* aDocument,
+                                       ErrorResult& aRv);
+>>>>>>> upstream-releases
   // Returns a copy of |aSource| where each timing property in |aSource| that
   // is also specified in |aEffectTiming| is replaced with the value from
   // |aEffectTiming|.
@@ -73,9 +118,20 @@ struct TimingParams {
   // If any of the values in |aEffectTiming| are invalid, |aRv.Failed()| will be
   // true and an unmodified copy of |aSource| will be returned.
   static TimingParams MergeOptionalEffectTiming(
+<<<<<<< HEAD
       const TimingParams& aSource,
       const dom::OptionalEffectTiming& aEffectTiming, nsIDocument* aDocument,
       ErrorResult& aRv);
+||||||| merged common ancestors
+    const TimingParams& aSource,
+    const dom::OptionalEffectTiming& aEffectTiming,
+    nsIDocument* aDocument,
+    ErrorResult& aRv);
+=======
+      const TimingParams& aSource,
+      const dom::OptionalEffectTiming& aEffectTiming, dom::Document* aDocument,
+      ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   // Range-checks and validates an UnrestrictedDoubleOrString or
   // OwningUnrestrictedDoubleOrString object and converts to a
@@ -115,7 +171,7 @@ struct TimingParams {
   }
 
   static Maybe<ComputedTimingFunction> ParseEasing(const nsAString& aEasing,
-                                                   nsIDocument* aDocument,
+                                                   dom::Document* aDocument,
                                                    ErrorResult& aRv);
 
   static StickyTimeDuration CalcActiveDuration(

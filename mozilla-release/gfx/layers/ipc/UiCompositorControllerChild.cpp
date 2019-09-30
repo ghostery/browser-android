@@ -13,10 +13,11 @@
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/StaticPtr.h"
 #include "nsBaseWidget.h"
+#include "nsProxyRelease.h"
 #include "nsThreadUtils.h"
 
 #if defined(MOZ_WIDGET_ANDROID)
-#include "mozilla/widget/AndroidUiThread.h"
+#  include "mozilla/widget/AndroidUiThread.h"
 
 static RefPtr<nsThread> GetUiThread() { return mozilla::GetAndroidUiThread(); }
 #else
@@ -34,11 +35,25 @@ namespace mozilla {
 namespace layers {
 
 // public:
+<<<<<<< HEAD
 /* static */ RefPtr<UiCompositorControllerChild>
 UiCompositorControllerChild::CreateForSameProcess(
     const LayersId& aRootLayerTreeId) {
   RefPtr<UiCompositorControllerChild> child =
       new UiCompositorControllerChild(0);
+||||||| merged common ancestors
+/* static */ RefPtr<UiCompositorControllerChild>
+UiCompositorControllerChild::CreateForSameProcess(const LayersId& aRootLayerTreeId)
+{
+  RefPtr<UiCompositorControllerChild> child = new UiCompositorControllerChild(0);
+=======
+/* static */
+RefPtr<UiCompositorControllerChild>
+UiCompositorControllerChild::CreateForSameProcess(
+    const LayersId& aRootLayerTreeId) {
+  RefPtr<UiCompositorControllerChild> child =
+      new UiCompositorControllerChild(0);
+>>>>>>> upstream-releases
   child->mParent = new UiCompositorControllerParent(aRootLayerTreeId);
   GetUiThread()->Dispatch(
       NewRunnableMethod(
@@ -48,12 +63,28 @@ UiCompositorControllerChild::CreateForSameProcess(
   return child;
 }
 
+<<<<<<< HEAD
 /* static */ RefPtr<UiCompositorControllerChild>
 UiCompositorControllerChild::CreateForGPUProcess(
     const uint64_t& aProcessToken,
     Endpoint<PUiCompositorControllerChild>&& aEndpoint) {
   RefPtr<UiCompositorControllerChild> child =
       new UiCompositorControllerChild(aProcessToken);
+||||||| merged common ancestors
+/* static */ RefPtr<UiCompositorControllerChild>
+UiCompositorControllerChild::CreateForGPUProcess(const uint64_t& aProcessToken,
+                                                 Endpoint<PUiCompositorControllerChild>&& aEndpoint)
+{
+  RefPtr<UiCompositorControllerChild> child = new UiCompositorControllerChild(aProcessToken);
+=======
+/* static */
+RefPtr<UiCompositorControllerChild>
+UiCompositorControllerChild::CreateForGPUProcess(
+    const uint64_t& aProcessToken,
+    Endpoint<PUiCompositorControllerChild>&& aEndpoint) {
+  RefPtr<UiCompositorControllerChild> child =
+      new UiCompositorControllerChild(aProcessToken);
+>>>>>>> upstream-releases
 
   RefPtr<nsIRunnable> task =
       NewRunnableMethod<Endpoint<PUiCompositorControllerChild>&&>(
@@ -107,8 +138,21 @@ bool UiCompositorControllerChild::SetMaxToolbarHeight(const int32_t& aHeight) {
   return SendMaxToolbarHeight(aHeight);
 }
 
+<<<<<<< HEAD
 bool UiCompositorControllerChild::SetPinned(const bool& aPinned,
                                             const int32_t& aReason) {
+||||||| merged common ancestors
+bool
+UiCompositorControllerChild::SetPinned(const bool& aPinned, const int32_t& aReason)
+{
+=======
+bool UiCompositorControllerChild::SetFixedBottomOffset(int32_t aOffset) {
+  return SendFixedBottomOffset(aOffset);
+}
+
+bool UiCompositorControllerChild::SetPinned(const bool& aPinned,
+                                            const int32_t& aReason) {
+>>>>>>> upstream-releases
   if (!mIsOpen) {
     return false;
   }
@@ -164,7 +208,7 @@ bool UiCompositorControllerChild::ToolbarPixelsToCompositor(
     return false;
   }
 
-  return SendToolbarPixelsToCompositor(aMem, aSize);
+  return SendToolbarPixelsToCompositor(std::move(aMem), aSize);
 }
 
 void UiCompositorControllerChild::Destroy() {
@@ -174,6 +218,14 @@ void UiCompositorControllerChild::Destroy() {
                           &UiCompositorControllerChild::Destroy),
         nsIThread::DISPATCH_SYNC);
     return;
+  }
+
+  if (mWidget) {
+    // Dispatch mWidget to main thread to prevent it from being destructed by
+    // the ui thread.
+    RefPtr<nsIWidget> widget = mWidget.forget();
+    NS_ReleaseOnMainThreadSystemGroup("UiCompositorControllerChild::mWidget",
+                                      widget.forget());
   }
 
   if (mIsOpen) {
@@ -208,17 +260,39 @@ void UiCompositorControllerChild::ActorDestroy(ActorDestroyReason aWhy) {
   }
 }
 
+<<<<<<< HEAD
 void UiCompositorControllerChild::DeallocPUiCompositorControllerChild() {
+||||||| merged common ancestors
+void
+UiCompositorControllerChild::DeallocPUiCompositorControllerChild()
+{
+=======
+void UiCompositorControllerChild::ActorDealloc() {
+>>>>>>> upstream-releases
   if (mParent) {
     mParent = nullptr;
   }
   Release();
 }
 
+<<<<<<< HEAD
 void UiCompositorControllerChild::ProcessingError(Result aCode,
                                                   const char* aReason) {
   MOZ_RELEASE_ASSERT(aCode == MsgDropped,
                      "Processing error in UiCompositorControllerChild");
+||||||| merged common ancestors
+void
+UiCompositorControllerChild::ProcessingError(Result aCode, const char* aReason)
+{
+  MOZ_RELEASE_ASSERT(aCode == MsgDropped, "Processing error in UiCompositorControllerChild");
+=======
+void UiCompositorControllerChild::ProcessingError(Result aCode,
+                                                  const char* aReason) {
+  if (aCode != MsgDropped) {
+    gfxDevCrash(gfx::LogReason::ProcessingError)
+        << "Processing error in UiCompositorControllerChild: " << int(aCode);
+  }
+>>>>>>> upstream-releases
 }
 
 void UiCompositorControllerChild::HandleFatalError(const char* aMsg) const {

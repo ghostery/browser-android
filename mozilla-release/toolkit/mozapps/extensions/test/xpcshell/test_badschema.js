@@ -4,7 +4,7 @@
 
 // Checks that we rebuild something sensible from a database with a bad schema
 
-var testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
+var testserver = AddonTestUtils.createHttpServer({ hosts: ["example.com"] });
 
 // register files with server
 testserver.registerDirectory("/data/", do_get_file("data"));
@@ -168,8 +168,10 @@ const IDS = Object.keys(ADDONS);
 
 function promiseUpdates(addon) {
   return new Promise(resolve => {
-    addon.findUpdates({onUpdateFinished: resolve},
-                      AddonManager.UPDATE_WHEN_PERIODIC_UPDATE);
+    addon.findUpdates(
+      { onUpdateFinished: resolve },
+      AddonManager.UPDATE_WHEN_PERIODIC_UPDATE
+    );
   });
 }
 
@@ -177,8 +179,20 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "2", "2");
 
   for (let addon of Object.values(ADDONS)) {
+<<<<<<< HEAD
     let webext = createTempWebExtensionFile({manifest: addon.manifest});
     await AddonTestUtils.manuallyInstall(webext);
+||||||| merged common ancestors
+    if (addon["install.rdf"]) {
+      await promiseWriteInstallRDFForExtension(addon["install.rdf"], profileDir);
+    } else {
+      let webext = createTempWebExtensionFile({manifest: addon.manifest});
+      await AddonTestUtils.manuallyInstall(webext);
+    }
+=======
+    let webext = createTempWebExtensionFile({ manifest: addon.manifest });
+    await AddonTestUtils.manuallyInstall(webext);
+>>>>>>> upstream-releases
   }
 
   await promiseStartupManager();

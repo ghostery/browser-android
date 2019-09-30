@@ -3,16 +3,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "nsTableColGroupFrame.h"
+
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "nsTableColFrame.h"
 #include "nsTableFrame.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsStyleConsts.h"
 #include "nsPresContext.h"
 #include "nsHTMLParts.h"
 #include "nsGkAtoms.h"
 #include "nsCOMPtr.h"
 #include "nsCSSRendering.h"
-#include "nsIPresShell.h"
 
 using namespace mozilla;
 
@@ -114,6 +115,11 @@ void nsTableColGroupFrame::SetInitialChildList(ChildListID aListID,
   MOZ_ASSERT(mFrames.IsEmpty(),
              "unexpected second call to SetInitialChildList");
   MOZ_ASSERT(aListID == kPrincipalList, "unexpected child list");
+#ifdef DEBUG
+  for (nsIFrame* f : aChildList) {
+    MOZ_ASSERT(f->GetParent() == this, "Unexpected parent");
+  }
+#endif
   if (aChildList.IsEmpty()) {
     GetTableFrame()->AppendAnonymousColFrames(this, GetSpan(),
                                               eColAnonymousColGroup, false);
@@ -123,8 +129,18 @@ void nsTableColGroupFrame::SetInitialChildList(ChildListID aListID,
   mFrames.AppendFrames(this, aChildList);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsTableColGroupFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsTableColGroupFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsTableColGroupFrame::DidSetComputedStyle(
+    ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -222,8 +238,17 @@ void nsTableColGroupFrame::InsertColsReflow(int32_t aColIndex,
                                             const nsFrameList::Slice& aCols) {
   AddColsToTable(aColIndex, true, aCols);
 
+<<<<<<< HEAD
   PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
+||||||| merged common ancestors
+  PresShell()->FrameNeedsReflow(this,
+                                               nsIPresShell::eTreeChange,
+                                               NS_FRAME_HAS_DIRTY_CHILDREN);
+=======
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                NS_FRAME_HAS_DIRTY_CHILDREN);
+>>>>>>> upstream-releases
 }
 
 void nsTableColGroupFrame::RemoveChild(nsTableColFrame& aChild,
@@ -246,7 +271,7 @@ void nsTableColGroupFrame::RemoveChild(nsTableColFrame& aChild,
     }
   }
 
-  PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
 }
 
@@ -343,9 +368,26 @@ void nsTableColGroupFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
+<<<<<<< HEAD
 void nsTableColGroupFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                             const nsDisplayListSet& aLists) {
   nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
+||||||| merged common ancestors
+void
+nsTableColGroupFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                                       const nsDisplayListSet& aLists)
+{
+  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists);
+=======
+void nsTableColGroupFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
+                                            const nsDisplayListSet& aLists) {
+  // Per https://drafts.csswg.org/css-tables-3/#global-style-overrides:
+  // "All css properties of table-column and table-column-group boxes are
+  // ignored, except when explicitly specified by this specification."
+  // CSS outlines and box-shadows fall into this category, so we skip them
+  // on these boxes.
+  MOZ_ASSERT_UNREACHABLE("Colgroups don't paint themselves");
+>>>>>>> upstream-releases
 }
 
 nsTableColFrame* nsTableColGroupFrame::GetFirstColumn() {
@@ -399,9 +441,21 @@ void nsTableColGroupFrame::GetContinuousBCBorderWidth(WritingMode aWM,
 
 /* ----- global methods ----- */
 
+<<<<<<< HEAD
 nsTableColGroupFrame* NS_NewTableColGroupFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsTableColGroupFrame(aStyle);
+||||||| merged common ancestors
+nsTableColGroupFrame*
+NS_NewTableColGroupFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTableColGroupFrame(aStyle);
+=======
+nsTableColGroupFrame* NS_NewTableColGroupFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsTableColGroupFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableColGroupFrame)

@@ -34,15 +34,34 @@ class BasicColorLayer : public ColorLayer, public BasicImplData {
  protected:
   virtual ~BasicColorLayer() { MOZ_COUNT_DTOR(BasicColorLayer); }
 
+<<<<<<< HEAD
  public:
   virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+||||||| merged common ancestors
+public:
+  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
+  {
+=======
+ public:
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+>>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ColorLayer::SetVisibleRegion(aRegion);
   }
 
+<<<<<<< HEAD
   virtual void Paint(DrawTarget* aDT, const gfx::Point& aDeviceOffset,
                      Layer* aMaskLayer) override {
+||||||| merged common ancestors
+  virtual void Paint(DrawTarget* aDT,
+                     const gfx::Point& aDeviceOffset,
+                     Layer* aMaskLayer) override
+  {
+=======
+  void Paint(DrawTarget* aDT, const gfx::Point& aDeviceOffset,
+             Layer* aMaskLayer) override {
+>>>>>>> upstream-releases
     if (IsHidden()) {
       return;
     }

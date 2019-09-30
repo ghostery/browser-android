@@ -69,8 +69,20 @@ function hideAutocompletePopup(jsterm) {
 
 function setJsTermValueForCompletion(jsterm, value) {
   // setInputValue does not trigger the autocompletion;
+<<<<<<< HEAD
   // we need to call `fetchAutocompletionProperties` in order to display the popup.
   jsterm.setInputValue(value);
   jsterm.fetchAutocompletionProperties();
+||||||| merged common ancestors
+  // we need to call `updateAutocompletion` in order to display the popup. And since
+  // setInputValue sets lastInputValue and updateAutocompletion checks it to trigger
+  // the autocompletion request, we reset it.
+  jsterm.setInputValue(value);
+  jsterm.lastInputValue = null;
+  jsterm.updateAutocompletion();
+=======
+  // we need to call the `autocompleteUpdate` action in order to display the popup.
+  jsterm._setValue(value);
+  jsterm.props.autocompleteUpdate();
+>>>>>>> upstream-releases
 }
-

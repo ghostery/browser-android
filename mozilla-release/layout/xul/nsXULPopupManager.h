@@ -30,7 +30,7 @@
 
 // X.h defines KeyPress
 #ifdef KeyPress
-#undef KeyPress
+#  undef KeyPress
 #endif
 
 /**
@@ -58,6 +58,7 @@ class nsPIDOMWindowOuter;
 class nsRefreshDriver;
 
 namespace mozilla {
+class PresShell;
 namespace dom {
 class Event;
 class KeyboardEvent;
@@ -299,7 +300,7 @@ class nsXULMenuCommandEvent : public mozilla::Runnable {
                  "null menu supplied to nsXULMenuCommandEvent constructor");
   }
 
-  NS_IMETHOD Run() override;
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override;
 
   void SetCloseMenuMode(CloseMenuMode aCloseMenuMode) {
     mCloseMenuMode = aCloseMenuMode;
@@ -332,8 +333,17 @@ class nsXULPopupManager final : public nsIDOMEventListener,
   NS_DECL_NSIDOMEVENTLISTENER
 
   // nsIRollupListener
+<<<<<<< HEAD
   virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* pos,
                       nsIContent** aLastRolledUp) override;
+||||||| merged common ancestors
+  virtual bool Rollup(uint32_t aCount, bool aFlush,
+                      const nsIntPoint* pos, nsIContent** aLastRolledUp) override;
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* pos,
+                      nsIContent** aLastRolledUp) override;
+>>>>>>> upstream-releases
   virtual bool ShouldRollupOnMouseWheelEvent() override;
   virtual bool ShouldConsumeOnMouseWheelEvent() override;
   virtual bool ShouldRollupOnMouseActivate() override;
@@ -362,7 +372,7 @@ class nsXULPopupManager final : public nsIDOMEventListener,
   // This should be called when a window is moved or resized to adjust the
   // popups accordingly.
   void AdjustPopupsOnWindowChange(nsPIDOMWindowOuter* aWindow);
-  void AdjustPopupsOnWindowChange(nsIPresShell* aPresShell);
+  void AdjustPopupsOnWindowChange(mozilla::PresShell* aPresShell);
 
   // given a menu frame, find the prevous or next menu frame. If aPopup is
   // true then navigate a menupopup, from one item on the menu to the previous
@@ -561,11 +571,27 @@ class nsXULPopupManager final : public nsIDOMEventListener,
    * aDocument. aDocument must be non-null and be a document contained within
    * the same window hierarchy as the popup to retrieve.
    */
+<<<<<<< HEAD
   already_AddRefed<nsINode> GetLastTriggerPopupNode(nsIDocument* aDocument) {
+||||||| merged common ancestors
+  already_AddRefed<nsINode> GetLastTriggerPopupNode(nsIDocument* aDocument)
+  {
+=======
+  already_AddRefed<nsINode> GetLastTriggerPopupNode(
+      mozilla::dom::Document* aDocument) {
+>>>>>>> upstream-releases
     return GetLastTriggerNode(aDocument, false);
   }
 
+<<<<<<< HEAD
   already_AddRefed<nsINode> GetLastTriggerTooltipNode(nsIDocument* aDocument) {
+||||||| merged common ancestors
+  already_AddRefed<nsINode> GetLastTriggerTooltipNode(nsIDocument* aDocument)
+  {
+=======
+  already_AddRefed<nsINode> GetLastTriggerTooltipNode(
+      mozilla::dom::Document* aDocument) {
+>>>>>>> upstream-releases
     return GetLastTriggerNode(aDocument, true);
   }
 
@@ -670,8 +696,16 @@ class nsXULPopupManager final : public nsIDOMEventListener,
   ~nsXULPopupManager();
 
   // get the nsMenuPopupFrame, if any, for the given content node
+<<<<<<< HEAD
   nsMenuPopupFrame* GetPopupFrameForContent(nsIContent* aContent,
                                             bool aShouldFlush);
+||||||| merged common ancestors
+  nsMenuPopupFrame* GetPopupFrameForContent(nsIContent* aContent, bool aShouldFlush);
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  nsMenuPopupFrame* GetPopupFrameForContent(nsIContent* aContent,
+                                            bool aShouldFlush);
+>>>>>>> upstream-releases
 
   // return the topmost menu, skipping over invisible popups
   nsMenuChainItem* GetTopVisibleMenu();
@@ -727,9 +761,23 @@ class nsXULPopupManager final : public nsIDOMEventListener,
    * aDeselectMenu - true to unhighlight the menu when hiding it
    * aIsCancel - true if this popup is hiding due to being cancelled.
    */
+<<<<<<< HEAD
   void FirePopupHidingEvent(nsIContent* aPopup, nsIContent* aNextPopup,
                             nsIContent* aLastPopup, nsPresContext* aPresContext,
                             nsPopupType aPopupType, bool aDeselectMenu,
+||||||| merged common ancestors
+  void FirePopupHidingEvent(nsIContent* aPopup,
+                            nsIContent* aNextPopup,
+                            nsIContent* aLastPopup,
+                            nsPresContext *aPresContext,
+                            nsPopupType aPopupType,
+                            bool aDeselectMenu,
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  void FirePopupHidingEvent(nsIContent* aPopup, nsIContent* aNextPopup,
+                            nsIContent* aLastPopup, nsPresContext* aPresContext,
+                            nsPopupType aPopupType, bool aDeselectMenu,
+>>>>>>> upstream-releases
                             bool aIsCancel);
 
   /**
@@ -752,9 +800,17 @@ class nsXULPopupManager final : public nsIDOMEventListener,
                                        nsMenuPopupFrame* aFrame,
                                        nsNavigationDirection aDir);
 
+<<<<<<< HEAD
  protected:
   already_AddRefed<nsINode> GetLastTriggerNode(nsIDocument* aDocument,
                                                bool aIsTooltip);
+||||||| merged common ancestors
+  already_AddRefed<nsINode> GetLastTriggerNode(nsIDocument* aDocument, bool aIsTooltip);
+=======
+ protected:
+  already_AddRefed<nsINode> GetLastTriggerNode(
+      mozilla::dom::Document* aDocument, bool aIsTooltip);
+>>>>>>> upstream-releases
 
   /**
    * Set mouse capturing for the current popup. This traps mouse clicks that
@@ -779,7 +835,8 @@ class nsXULPopupManager final : public nsIDOMEventListener,
   /*
    * Returns true if the docshell for aDoc is aExpected or a child of aExpected.
    */
-  bool IsChildOfDocShell(nsIDocument* aDoc, nsIDocShellTreeItem* aExpected);
+  bool IsChildOfDocShell(mozilla::dom::Document* aDoc,
+                         nsIDocShellTreeItem* aExpected);
 
   // the document the key event listener is attached to
   nsCOMPtr<mozilla::dom::EventTarget> mKeyListener;

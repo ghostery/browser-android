@@ -13,7 +13,7 @@
 
 static PRDescIdentity sWinSockShutdownLayerIdentity;
 static PRIOMethods sWinSockShutdownLayerMethods;
-static PRIOMethods *sWinSockShutdownLayerMethodsPtr = nullptr;
+static PRIOMethods* sWinSockShutdownLayerMethodsPtr = nullptr;
 
 namespace mozilla {
 namespace net {
@@ -23,7 +23,16 @@ extern PRDescIdentity nsNamedPipeLayerIdentity;
 }  // namespace net
 }  // namespace mozilla
 
+<<<<<<< HEAD
 PRStatus WinSockClose(PRFileDesc *aFd) {
+||||||| merged common ancestors
+
+PRStatus
+WinSockClose(PRFileDesc *aFd)
+{
+=======
+PRStatus WinSockClose(PRFileDesc* aFd) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(aFd->identity == sWinSockShutdownLayerIdentity,
                      "Windows shutdown layer not on the top of the stack");
 
@@ -41,7 +50,14 @@ PRStatus WinSockClose(PRFileDesc *aFd) {
   }
 }
 
+<<<<<<< HEAD
 nsresult mozilla::net::AttachShutdownLayer(PRFileDesc *aFd) {
+||||||| merged common ancestors
+nsresult mozilla::net::AttachShutdownLayer(PRFileDesc *aFd)
+{
+=======
+nsresult mozilla::net::AttachShutdownLayer(PRFileDesc* aFd) {
+>>>>>>> upstream-releases
   if (!sWinSockShutdownLayerMethodsPtr) {
     sWinSockShutdownLayerIdentity =
         PR_GetUniqueIdentity("windows shutdown call layer");
@@ -57,8 +73,16 @@ nsresult mozilla::net::AttachShutdownLayer(PRFileDesc *aFd) {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   PRFileDesc *layer;
   PRStatus status;
+||||||| merged common ancestors
+  PRFileDesc * layer;
+  PRStatus     status;
+=======
+  PRFileDesc* layer;
+  PRStatus status;
+>>>>>>> upstream-releases
 
   layer = PR_CreateIOLayerStub(sWinSockShutdownLayerIdentity,
                                sWinSockShutdownLayerMethodsPtr);

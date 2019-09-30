@@ -2,7 +2,7 @@
 /* vim: set sts=2 sw=2 et tw=80: */
 "use strict";
 
-const {newURI} = Services.io;
+const { newURI } = Services.io;
 
 const server = createHttpServer();
 server.registerDirectory("/data/", do_get_file("data"));
@@ -22,33 +22,47 @@ add_task(async function test_WebExtensinonContentScript_url_matching() {
 
     excludeMatches: new MatchPatternSet(["*://bar.com/baz/quux"]),
 
-    includeGlobs: ["*flerg*", "*.com/bar", "*/quux"].map(glob => new MatchGlob(glob)),
+    includeGlobs: ["*flerg*", "*.com/bar", "*/quux"].map(
+      glob => new MatchGlob(glob)
+    ),
 
     excludeGlobs: ["*glorg*"].map(glob => new MatchGlob(glob)),
   });
 
-  ok(contentScript.matchesURI(newURI("http://foo.com/bar")),
-     "Simple matches include should match");
+  ok(
+    contentScript.matchesURI(newURI("http://foo.com/bar")),
+    "Simple matches include should match"
+  );
 
-  ok(contentScript.matchesURI(newURI("https://bar.com/baz/xflergx")),
-     "Simple matches include should match");
+  ok(
+    contentScript.matchesURI(newURI("https://bar.com/baz/xflergx")),
+    "Simple matches include should match"
+  );
 
-  ok(!contentScript.matchesURI(newURI("https://bar.com/baz/xx")),
-     "Failed includeGlobs match pattern should not match");
+  ok(
+    !contentScript.matchesURI(newURI("https://bar.com/baz/xx")),
+    "Failed includeGlobs match pattern should not match"
+  );
 
-  ok(!contentScript.matchesURI(newURI("https://bar.com/baz/quux")),
-     "Excluded match pattern should not match");
+  ok(
+    !contentScript.matchesURI(newURI("https://bar.com/baz/quux")),
+    "Excluded match pattern should not match"
+  );
 
-  ok(!contentScript.matchesURI(newURI("https://bar.com/baz/xflergxglorgx")),
-     "Excluded match glob should not match");
+  ok(
+    !contentScript.matchesURI(newURI("https://bar.com/baz/xflergxglorgx")),
+    "Excluded match glob should not match"
+  );
 });
 
-async function loadURL(url, {frameCount}) {
+async function loadURL(url, { frameCount }) {
   let windows = new Map();
   let requests = new Map();
 
   let resolveLoad;
-  let loadPromise = new Promise(resolve => { resolveLoad = resolve; });
+  let loadPromise = new Promise(resolve => {
+    resolveLoad = resolve;
+  });
 
   function requestObserver(request) {
     request.QueryInterface(Ci.nsIChannel);
@@ -57,27 +71,54 @@ async function loadURL(url, {frameCount}) {
     }
   }
   function loadObserver(window) {
+<<<<<<< HEAD
     window.addEventListener("load", function onLoad() {
       windows.set(window.location.href, window);
       if (windows.size == frameCount) {
         resolveLoad();
       }
     }, {once: true});
+||||||| merged common ancestors
+    windows.set(window.location.href, window);
+    if (windows.size == frameCount) {
+      resolveLoad();
+    }
+=======
+    window.addEventListener(
+      "load",
+      function onLoad() {
+        windows.set(window.location.href, window);
+        if (windows.size == frameCount) {
+          resolveLoad();
+        }
+      },
+      { once: true }
+    );
+>>>>>>> upstream-releases
   }
 
   Services.obs.addObserver(requestObserver, "http-on-examine-response");
   Services.obs.addObserver(loadObserver, "content-document-global-created");
 
   let webNav = Services.appShell.createWindowlessBrowser(false);
+<<<<<<< HEAD
   let systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
   webNav.loadURI(url, 0, null, null, null, systemPrincipal);
+||||||| merged common ancestors
+  webNav.loadURI(url, 0, null, null, null);
+=======
+  let loadURIOptions = {
+    triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+  };
+  webNav.loadURI(url, loadURIOptions);
+>>>>>>> upstream-releases
 
   await loadPromise;
 
   Services.obs.removeObserver(requestObserver, "http-on-examine-response");
   Services.obs.removeObserver(loadObserver, "content-document-global-created");
 
-  return {webNav, windows, requests};
+  return { webNav, windows, requests };
 }
 
 add_task(async function test_WebExtensinonContentScript_frame_matching() {
@@ -86,6 +127,11 @@ add_task(async function test_WebExtensinonContentScript_frame_matching() {
     // infra.
     return;
   }
+  Services.prefs.setBoolPref(
+    "security.turn_off_all_security_so_that_viruses_can_take_over_this_computer",
+    true
+  );
+  Services.prefs.setBoolPref("security.allow_unsafe_parent_loads", true);
 
   let baseURL = `http://localhost:${server.identity.primaryPort}/data`;
   let urls = {
@@ -95,7 +141,9 @@ add_task(async function test_WebExtensinonContentScript_frame_matching() {
     aboutBlank: "about:blank",
   };
 
-  let {webNav, windows, requests} = await loadURL(urls.topLevel, {frameCount: 4});
+  let { webNav, windows, requests } = await loadURL(urls.topLevel, {
+    frameCount: 4,
+  });
 
   let tests = [
     {
@@ -156,21 +204,28 @@ add_task(async function test_WebExtensinonContentScript_frame_matching() {
   ];
 
   for (let [i, test] of tests.entries()) {
-    let contentScript = new WebExtensionContentScript(policy, test.contentScript);
+    let contentScript = new WebExtensionContentScript(
+      policy,
+      test.contentScript
+    );
 
     for (let [frame, url] of Object.entries(urls)) {
       let should = test[frame] ? "should" : "should not";
 
-      equal(contentScript.matchesWindow(windows.get(url)),
-            test[frame],
-            `Script ${i} ${should} match the ${frame} frame`);
+      equal(
+        contentScript.matchesWindow(windows.get(url)),
+        test[frame],
+        `Script ${i} ${should} match the ${frame} frame`
+      );
 
       if (url.startsWith("http")) {
         let request = requests.get(url);
 
-        equal(contentScript.matchesLoadInfo(request.URI, request.loadInfo),
-              test[frame],
-              `Script ${i} ${should} match the request LoadInfo for ${frame} frame`);
+        equal(
+          contentScript.matchesLoadInfo(request.URI, request.loadInfo),
+          test[frame],
+          `Script ${i} ${should} match the request LoadInfo for ${frame} frame`
+        );
       }
     }
   }

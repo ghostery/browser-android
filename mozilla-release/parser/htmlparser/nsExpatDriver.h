@@ -30,6 +30,7 @@ class nsExpatDriver : public nsIDTD, public nsITokenizer {
 
   nsExpatDriver();
 
+<<<<<<< HEAD
   int HandleExternalEntityRef(const char16_t *aOpenEntityNames,
                               const char16_t *aBase, const char16_t *aSystemId,
                               const char16_t *aPublicId);
@@ -42,6 +43,41 @@ class nsExpatDriver : public nsIDTD, public nsITokenizer {
   nsresult HandleXMLDeclaration(const char16_t *aVersion,
                                 const char16_t *aEncoding, int32_t aStandalone);
   nsresult HandleDefault(const char16_t *aData, const uint32_t aLength);
+||||||| merged common ancestors
+  int HandleExternalEntityRef(const char16_t *aOpenEntityNames,
+                              const char16_t *aBase,
+                              const char16_t *aSystemId,
+                              const char16_t *aPublicId);
+  nsresult HandleStartElement(const char16_t *aName, const char16_t **aAtts);
+  nsresult HandleEndElement(const char16_t *aName);
+  nsresult HandleCharacterData(const char16_t *aCData, const uint32_t aLength);
+  nsresult HandleComment(const char16_t *aName);
+  nsresult HandleProcessingInstruction(const char16_t *aTarget,
+                                       const char16_t *aData);
+  nsresult HandleXMLDeclaration(const char16_t *aVersion,
+                                const char16_t *aEncoding,
+                                int32_t aStandalone);
+  nsresult HandleDefault(const char16_t *aData, const uint32_t aLength);
+=======
+  int HandleExternalEntityRef(const char16_t* aOpenEntityNames,
+                              const char16_t* aBase, const char16_t* aSystemId,
+                              const char16_t* aPublicId);
+  static void HandleStartElement(void* aUserData, const char16_t* aName,
+                                 const char16_t** aAtts);
+  static void HandleStartElementForSystemPrincipal(void* aUserData,
+                                                   const char16_t* aName,
+                                                   const char16_t** aAtts);
+  static void HandleEndElement(void* aUserData, const char16_t* aName);
+  static void HandleEndElementForSystemPrincipal(void* aUserData,
+                                                 const char16_t* aName);
+  nsresult HandleCharacterData(const char16_t* aCData, const uint32_t aLength);
+  nsresult HandleComment(const char16_t* aName);
+  nsresult HandleProcessingInstruction(const char16_t* aTarget,
+                                       const char16_t* aData);
+  nsresult HandleXMLDeclaration(const char16_t* aVersion,
+                                const char16_t* aEncoding, int32_t aStandalone);
+  nsresult HandleDefault(const char16_t* aData, const uint32_t aLength);
+>>>>>>> upstream-releases
   nsresult HandleStartCdataSection();
   nsresult HandleEndCdataSection();
   nsresult HandleStartDoctypeDecl(const char16_t *aDoctypeName,
@@ -74,8 +110,8 @@ class nsExpatDriver : public nsIDTD, public nsITokenizer {
    *                        doesn't include the PRUnichars that Expat stored in
    *                        its buffer but didn't parse yet.
    */
-  void ParseBuffer(const char16_t *aBuffer, uint32_t aLength, bool aIsFinal,
-                   uint32_t *aConsumed);
+  void ParseBuffer(const char16_t* aBuffer, uint32_t aLength, bool aIsFinal,
+                   uint32_t* aConsumed);
   nsresult HandleError();
 
   void MaybeStopParser(nsresult aState);
@@ -113,8 +149,16 @@ class nsExpatDriver : public nsIDTD, public nsITokenizer {
   nsCOMPtr<nsIContentSink> mOriginalSink;
   nsCOMPtr<nsIExpatSink> mSink;
 
+<<<<<<< HEAD
   const nsCatalogData *mCatalogData;  // weak
   nsString mURISpec;
+||||||| merged common ancestors
+  const nsCatalogData* mCatalogData; // weak
+  nsString         mURISpec;
+=======
+  const nsCatalogData* mCatalogData;  // weak
+  nsString mURISpec;
+>>>>>>> upstream-releases
 
   // Used for error reporting.
   uint64_t mInnerWindowID;

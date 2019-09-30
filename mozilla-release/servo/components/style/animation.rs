@@ -181,14 +181,6 @@ impl KeyframesAnimationState {
         self.current_direction = old_direction;
         self.started_at = new_started_at;
     }
-
-    #[inline]
-    fn is_paused(&self) -> bool {
-        match self.running_state {
-            KeyframesRunningState::Paused(..) => true,
-            KeyframesRunningState::Running => false,
-        }
-    }
 }
 
 impl fmt::Debug for KeyframesAnimationState {
@@ -242,15 +234,6 @@ impl Animation {
         match *self {
             Animation::Transition(ref node, _, _) => node,
             Animation::Keyframes(ref node, _, _, _) => node,
-        }
-    }
-
-    /// Whether this animation is paused. A transition can never be paused.
-    #[inline]
-    pub fn is_paused(&self) -> bool {
-        match *self {
-            Animation::Transition(..) => false,
-            Animation::Keyframes(_, _, _, ref state) => state.is_paused(),
         }
     }
 
@@ -363,6 +346,36 @@ impl PropertyAnimation {
             GenericTimingFunction::CubicBezier { x1, y1, x2, y2 } => {
                 Bezier::new(x1, y1, x2, y2).solve(time, epsilon)
             },
+<<<<<<< HEAD
+            GenericTimingFunction::Steps(steps, pos) => {
+                let mut current_step = (time * (steps as f64)).floor() as i32;
+
+                if pos == StepPosition::Start ||
+                    pos == StepPosition::JumpStart ||
+                    pos == StepPosition::JumpBoth
+                {
+                    current_step = current_step + 1;
+||||||| merged common ancestors
+            GenericTimingFunction::Steps(steps, StepPosition::Start) => {
+                (time * (steps as f64)).ceil() / (steps as f64)
+            },
+            GenericTimingFunction::Steps(steps, StepPosition::End) => {
+                (time * (steps as f64)).floor() / (steps as f64)
+            },
+            GenericTimingFunction::Frames(frames) => {
+                // https://drafts.csswg.org/css-timing/#frames-timing-functions
+                let mut out = (time * (frames as f64)).floor() / ((frames - 1) as f64);
+                if out > 1.0 {
+                    // FIXME: Basically, during the animation sampling process, the input progress
+                    // should be in the range of [0, 1]. However, |time| is not accurate enough
+                    // here, which means |time| could be larger than 1.0 in the last animation
+                    // frame. (It should be equal to 1.0 exactly.) This makes the output of frames
+                    // timing function jumps to the next frame/level.
+                    // However, this solution is still not correct because |time| is possible
+                    // outside the range of [0, 1] after introducing Web Animations. We should fix
+                    // this problem when implementing web animations.
+                    out = 1.0;
+=======
             GenericTimingFunction::Steps(steps, pos) => {
                 let mut current_step = (time * (steps as f64)).floor() as i32;
 
@@ -394,9 +407,40 @@ impl PropertyAnimation {
 
                 if time <= 1.0 && current_step > jumps {
                     current_step = jumps;
+>>>>>>> upstream-releases
+                }
+<<<<<<< HEAD
+
+                // FIXME: We should update current_step according to the "before flag".
+                // In order to get the before flag, we have to know the current animation phase
+                // and whether the iteration is reversed. For now, we skip this calculation.
+                // (i.e. Treat before_flag is unset,)
+                // https://drafts.csswg.org/css-easing/#step-timing-function-algo
+
+                if time >= 0.0 && current_step < 0 {
+                    current_step = 0;
+                }
+
+                let jumps = match pos {
+                    StepPosition::JumpBoth => steps + 1,
+                    StepPosition::JumpNone => steps - 1,
+                    StepPosition::JumpStart |
+                    StepPosition::JumpEnd |
+                    StepPosition::Start |
+                    StepPosition::End => steps,
+                };
+
+                if time <= 1.0 && current_step > jumps {
+                    current_step = jumps;
                 }
 
                 (current_step as f64) / (jumps as f64)
+||||||| merged common ancestors
+                out
+=======
+
+                (current_step as f64) / (jumps as f64)
+>>>>>>> upstream-releases
             },
             GenericTimingFunction::Keyword(keyword) => {
                 let (x1, x2, y1, y2) = keyword.to_bezier();
@@ -488,7 +532,7 @@ fn compute_style_for_animation_step<E>(
     step: &KeyframesStep,
     previous_style: &ComputedValues,
     style_from_cascade: &Arc<ComputedValues>,
-    font_metrics_provider: &FontMetricsProvider,
+    font_metrics_provider: &dyn FontMetricsProvider,
 ) -> Arc<ComputedValues>
 where
     E: TElement,
@@ -673,7 +717,7 @@ pub fn update_style_for_animation<E>(
     context: &SharedStyleContext,
     animation: &Animation,
     style: &mut Arc<ComputedValues>,
-    font_metrics_provider: &FontMetricsProvider,
+    font_metrics_provider: &dyn FontMetricsProvider,
 ) -> AnimationUpdate
 where
     E: TElement,

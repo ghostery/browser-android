@@ -1,20 +1,35 @@
 //! x86 ABI implementation.
 
 use super::registers::{FPR, GPR, RU};
-use abi::{legalize_args, ArgAction, ArgAssigner, ValueConversion};
-use cursor::{Cursor, CursorPosition, EncCursor};
-use ir;
-use ir::immediates::Imm64;
-use ir::stackslot::{StackOffset, StackSize};
-use ir::{
+use crate::abi::{legalize_args, ArgAction, ArgAssigner, ValueConversion};
+use crate::cursor::{Cursor, CursorPosition, EncCursor};
+use crate::ir;
+use crate::ir::immediates::Imm64;
+use crate::ir::stackslot::{StackOffset, StackSize};
+use crate::ir::{
     get_probestack_funcref, AbiParam, ArgumentExtension, ArgumentLoc, ArgumentPurpose, InstBuilder,
     ValueLoc,
 };
+<<<<<<< HEAD
 use isa::{CallConv, RegClass, RegUnit, TargetIsa};
 use regalloc::RegisterSet;
 use result::CodegenResult;
 use stack_layout::layout_stack;
 use std::i32;
+||||||| merged common ancestors
+use isa::{RegClass, RegUnit, TargetIsa};
+use regalloc::RegisterSet;
+use result::CodegenResult;
+use settings::CallConv;
+use stack_layout::layout_stack;
+use std::i32;
+=======
+use crate::isa::{CallConv, RegClass, RegUnit, TargetIsa};
+use crate::regalloc::RegisterSet;
+use crate::result::CodegenResult;
+use crate::stack_layout::layout_stack;
+use core::i32;
+>>>>>>> upstream-releases
 use target_lexicon::{PointerWidth, Triple};
 
 /// Argument registers for x86-64
@@ -98,7 +113,15 @@ impl ArgAssigner for Args {
                         RU::r14
                     } else {
                         RU::rsi
+<<<<<<< HEAD
                     } as RegUnit).into()
+||||||| merged common ancestors
+                    } as RegUnit)
+                        .into()
+=======
+                    } as RegUnit)
+                    .into();
+>>>>>>> upstream-releases
                 }
                 // This is SpiderMonkey's `WasmTableCallSigReg`.
                 ArgumentPurpose::SignatureId => return ArgumentLoc::Reg(RU::r10 as RegUnit).into(),
@@ -114,9 +137,18 @@ impl ArgAssigner for Args {
         }
 
         // Try to use an FPR.
-        if ty.is_float() && self.fpr_used < self.fpr_limit {
-            let reg = FPR.unit(self.fpr_used);
-            self.fpr_used += 1;
+        let fpr_offset = if self.call_conv == CallConv::WindowsFastcall {
+            // Float and general registers on windows share the same parameter index.
+            // The used register depends entirely on the parameter index: Even if XMM0
+            // is not used for the first parameter, it cannot be used for the second parameter.
+            debug_assert_eq!(self.fpr_limit, self.gpr.len());
+            &mut self.gpr_used
+        } else {
+            &mut self.fpr_used
+        };
+        if ty.is_float() && *fpr_offset < self.fpr_limit {
+            let reg = FPR.unit(*fpr_offset);
+            *fpr_offset += 1;
             return ArgumentLoc::Reg(reg).into();
         }
 
@@ -151,13 +183,14 @@ pub fn legalize_signature(sig: &mut ir::Signature, triple: &Triple, _current: bo
 
     legalize_args(&mut sig.params, &mut args);
 
-    let regs = if sig.call_conv == CallConv::WindowsFastcall {
-        &RET_GPRS_WIN_FASTCALL_X64[..]
+    let (regs, fpr_limit) = if sig.call_conv == CallConv::WindowsFastcall {
+        // windows-x64 calling convention only uses XMM0 or RAX for return values
+        (&RET_GPRS_WIN_FASTCALL_X64[..], 1)
     } else {
-        &RET_GPRS[..]
+        (&RET_GPRS[..], 2)
     };
 
-    let mut rets = Args::new(bits, regs, 2, sig.call_conv);
+    let mut rets = Args::new(bits, regs, fpr_limit, sig.call_conv);
     legalize_args(&mut sig.returns, &mut rets);
 }
 
@@ -188,7 +221,13 @@ pub fn allocatable_registers(_func: &ir::Function, triple: &Triple) -> RegisterS
 }
 
 /// Get the set of callee-saved registers.
+<<<<<<< HEAD
 fn callee_saved_gprs(isa: &TargetIsa, call_conv: CallConv) -> &'static [RU] {
+||||||| merged common ancestors
+fn callee_saved_gprs(isa: &TargetIsa) -> &'static [RU] {
+=======
+fn callee_saved_gprs(isa: &dyn TargetIsa, call_conv: CallConv) -> &'static [RU] {
+>>>>>>> upstream-releases
     match isa.triple().pointer_width().unwrap() {
         PointerWidth::U16 => panic!(),
         PointerWidth::U32 => &[RU::rbx, RU::rsi, RU::rdi],
@@ -216,7 +255,7 @@ fn callee_saved_gprs(isa: &TargetIsa, call_conv: CallConv) -> &'static [RU] {
 }
 
 /// Get the set of callee-saved registers that are used.
-fn callee_saved_gprs_used(isa: &TargetIsa, func: &ir::Function) -> RegisterSet {
+fn callee_saved_gprs_used(isa: &dyn TargetIsa, func: &ir::Function) -> RegisterSet {
     let mut all_callee_saved = RegisterSet::empty();
     for reg in callee_saved_gprs(isa, func.signature.call_conv) {
         all_callee_saved.free(GPR, *reg as RegUnit);
@@ -258,7 +297,7 @@ fn callee_saved_gprs_used(isa: &TargetIsa, func: &ir::Function) -> RegisterSet {
     used
 }
 
-pub fn prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+pub fn prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
     match func.signature.call_conv {
         // For now, just translate fast and cold as system_v.
         CallConv::Fast | CallConv::Cold | CallConv::SystemV => {
@@ -270,7 +309,13 @@ pub fn prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenRes
     }
 }
 
+<<<<<<< HEAD
 fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+||||||| merged common ancestors
+pub fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+=======
+fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
+>>>>>>> upstream-releases
     debug_assert!(
         !isa.flags().probestack_enabled(),
         "baldrdash does not expect cranelift to emit stack probes"
@@ -291,7 +336,13 @@ fn baldrdash_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> Code
 
 /// Implementation of the fastcall-based Win64 calling convention described at [1]
 /// [1] https://msdn.microsoft.com/en-us/library/ms235286.aspx
+<<<<<<< HEAD
 fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+||||||| merged common ancestors
+pub fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+=======
+fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
+>>>>>>> upstream-releases
     if isa.triple().pointer_width().unwrap() != PointerWidth::U64 {
         panic!("TODO: windows-fastcall: x86-32 not implemented yet");
     }
@@ -363,7 +414,13 @@ fn fastcall_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> Codeg
 }
 
 /// Insert a System V-compatible prologue and epilogue.
+<<<<<<< HEAD
 fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+||||||| merged common ancestors
+pub fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &TargetIsa) -> CodegenResult<()> {
+=======
+fn system_v_prologue_epilogue(func: &mut ir::Function, isa: &dyn TargetIsa) -> CodegenResult<()> {
+>>>>>>> upstream-releases
     // The original 32-bit x86 ELF ABI had a 4-byte aligned stack pointer, but
     // newer versions use a 16-byte aligned stack pointer.
     let stack_align = 16;
@@ -424,7 +481,7 @@ fn insert_common_prologue(
     stack_size: i64,
     reg_type: ir::types::Type,
     csrs: &RegisterSet,
-    isa: &TargetIsa,
+    isa: &dyn TargetIsa,
 ) {
     if stack_size > 0 {
         // Check if there is a special stack limit parameter. If so insert stack check.
@@ -510,7 +567,7 @@ fn insert_common_prologue(
 /// Insert a check that generates a trap if the stack pointer goes
 /// below a value in `stack_limit_arg`.
 fn insert_stack_check(pos: &mut EncCursor, stack_size: i64, stack_limit_arg: ir::Value) {
-    use ir::condcodes::IntCC;
+    use crate::ir::condcodes::IntCC;
 
     // Copy `stack_limit_arg` into a %rax and use it for calculating
     // a SP threshold.

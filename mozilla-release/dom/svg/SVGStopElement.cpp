@@ -7,7 +7,7 @@
 #include "mozilla/dom/SVGStopElement.h"
 #include "mozilla/dom/SVGStopElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Stop)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Stop)
 
 namespace mozilla {
 namespace dom {
@@ -17,8 +17,16 @@ JSObject* SVGStopElement::WrapNode(JSContext* aCx,
   return SVGStopElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::NumberInfo SVGStopElement::sNumberInfo = {nsGkAtoms::offset, 0,
                                                         true};
+||||||| merged common ancestors
+nsSVGElement::NumberInfo SVGStopElement::sNumberInfo =
+{ nsGkAtoms::offset, 0, true };
+=======
+SVGElement::NumberInfo SVGStopElement::sNumberInfo = {nsGkAtoms::offset, 0,
+                                                      true};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
@@ -34,14 +42,30 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGStopElement)
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGStopElement::Offset() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGStopElement::Offset()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGStopElement::Offset() {
+>>>>>>> upstream-releases
   return mOffset.ToDOMAnimatedNumber(this);
 }
 
 //----------------------------------------------------------------------
 // sSVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::NumberAttributesInfo SVGStopElement::GetNumberInfo() {
+||||||| merged common ancestors
+nsSVGElement::NumberAttributesInfo
+SVGStopElement::GetNumberInfo()
+{
+=======
+SVGElement::NumberAttributesInfo SVGStopElement::GetNumberInfo() {
+>>>>>>> upstream-releases
   return NumberAttributesInfo(&mOffset, &sNumberInfo, 1);
 }
 

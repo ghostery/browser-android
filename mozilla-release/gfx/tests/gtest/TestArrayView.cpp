@@ -11,9 +11,24 @@
 
 using namespace mozilla::gfx;
 
+<<<<<<< HEAD
 TEST(Gfx, ArrayView) {
   nsTArray<int> p = {5, 6};
   ArrayView<int> pv(p);
   ASSERT_EQ(pv[1], 6);
   ASSERT_EQ(*pv.Data(), 5);
+||||||| merged common ancestors
+TEST(Gfx, ArrayView) {
+    nsTArray<int> p = {5, 6};
+    ArrayView<int> pv(p);
+    ASSERT_EQ(pv[1], 6);
+    ASSERT_EQ(*pv.Data(), 5);
+=======
+TEST(Gfx, ArrayView)
+{
+  nsTArray<int> p = {5, 6};
+  ArrayView<int> pv(p);
+  ASSERT_EQ(pv[1], 6);
+  ASSERT_EQ(*pv.Data(), 5);
+>>>>>>> upstream-releases
 }

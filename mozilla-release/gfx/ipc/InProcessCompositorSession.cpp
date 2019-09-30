@@ -12,6 +12,7 @@
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 InProcessCompositorSession::InProcessCompositorSession(
     widget::CompositorWidget* aWidget, nsBaseWidget* baseWidget,
     CompositorBridgeChild* aChild, CompositorBridgeParent* aParent)
@@ -20,15 +21,54 @@ InProcessCompositorSession::InProcessCompositorSession(
       mWidget(baseWidget),
       mCompositorBridgeParent(aParent),
       mCompositorWidget(aWidget) {
+||||||| merged common ancestors
+InProcessCompositorSession::InProcessCompositorSession(widget::CompositorWidget* aWidget,
+                                                       nsBaseWidget* baseWidget,
+                                                       CompositorBridgeChild* aChild,
+                                                       CompositorBridgeParent* aParent)
+ : CompositorSession(aWidget->AsDelegate(), aChild, aParent->RootLayerTreeId()),
+   mWidget(baseWidget),
+   mCompositorBridgeParent(aParent),
+   mCompositorWidget(aWidget)
+{
+=======
+InProcessCompositorSession::InProcessCompositorSession(
+    nsBaseWidget* aWidget, widget::CompositorWidget* aCompositorWidget,
+    CompositorBridgeChild* aChild, CompositorBridgeParent* aParent)
+    : CompositorSession(aWidget, aCompositorWidget->AsDelegate(), aChild,
+                        aParent->RootLayerTreeId()),
+      mCompositorBridgeParent(aParent),
+      mCompositorWidget(aCompositorWidget) {
+>>>>>>> upstream-releases
   GPUProcessManager::Get()->RegisterInProcessSession(this);
 }
 
+<<<<<<< HEAD
 /* static */ RefPtr<InProcessCompositorSession>
 InProcessCompositorSession::Create(
     nsBaseWidget* aWidget, LayerManager* aLayerManager,
     const LayersId& aRootLayerTreeId, CSSToLayoutDeviceScale aScale,
     const CompositorOptions& aOptions, bool aUseExternalSurfaceSize,
     const gfx::IntSize& aSurfaceSize, uint32_t aNamespace) {
+||||||| merged common ancestors
+/* static */ RefPtr<InProcessCompositorSession>
+InProcessCompositorSession::Create(nsBaseWidget* aWidget,
+                                   LayerManager* aLayerManager,
+                                   const LayersId& aRootLayerTreeId,
+                                   CSSToLayoutDeviceScale aScale,
+                                   const CompositorOptions& aOptions,
+                                   bool aUseExternalSurfaceSize,
+                                   const gfx::IntSize& aSurfaceSize,
+                                   uint32_t aNamespace)
+{
+=======
+/* static */
+RefPtr<InProcessCompositorSession> InProcessCompositorSession::Create(
+    nsBaseWidget* aWidget, LayerManager* aLayerManager,
+    const LayersId& aRootLayerTreeId, CSSToLayoutDeviceScale aScale,
+    const CompositorOptions& aOptions, bool aUseExternalSurfaceSize,
+    const gfx::IntSize& aSurfaceSize, uint32_t aNamespace) {
+>>>>>>> upstream-releases
   CompositorWidgetInitData initData;
   aWidget->GetCompositorWidgetInitData(&initData);
 
@@ -45,7 +85,7 @@ InProcessCompositorSession::Create(
           aLayerManager, aNamespace);
   MOZ_ASSERT(child);
 
-  return new InProcessCompositorSession(widget, aWidget, child, parent);
+  return new InProcessCompositorSession(aWidget, widget, child, parent);
 }
 
 void InProcessCompositorSession::NotifySessionLost() {

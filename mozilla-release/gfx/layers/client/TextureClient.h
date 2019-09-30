@@ -42,7 +42,7 @@ namespace mozilla {
 // When defined, we track which pool the tile came from and test for
 // any inconsistencies.  This can be defined in release build as well.
 #ifdef DEBUG
-#define GFX_DEBUG_TRACK_CLIENTS_IN_POOL 1
+#  define GFX_DEBUG_TRACK_CLIENTS_IN_POOL 1
 #endif
 
 namespace layers {
@@ -117,8 +117,16 @@ class TextureReadbackSink {
    */
   virtual void ProcessReadback(gfx::DataSourceSurface* aSourceSurface) = 0;
 
+<<<<<<< HEAD
  protected:
   virtual ~TextureReadbackSink() {}
+||||||| merged common ancestors
+protected:
+  virtual ~TextureReadbackSink() {}
+=======
+ protected:
+  virtual ~TextureReadbackSink() = default;
+>>>>>>> upstream-releases
 };
 
 enum class BackendSelector { Content, Canvas };
@@ -181,8 +189,16 @@ class NonBlockingTextureReadLock;
 // texture anymore). The lock is dropped to make sure it is ReadUnlock()'ed only
 // once.
 class TextureReadLock {
+<<<<<<< HEAD
  protected:
   virtual ~TextureReadLock() {}
+||||||| merged common ancestors
+protected:
+  virtual ~TextureReadLock() {}
+=======
+ protected:
+  virtual ~TextureReadLock() = default;
+>>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(TextureReadLock)
@@ -217,9 +233,15 @@ class NonBlockingTextureReadLock : public TextureReadLock {
 
   static already_AddRefed<TextureReadLock> Create(LayersIPCChannel* aAllocator);
 
+<<<<<<< HEAD
   virtual NonBlockingTextureReadLock* AsNonBlockingLock() override {
     return this;
   }
+||||||| merged common ancestors
+  virtual NonBlockingTextureReadLock* AsNonBlockingLock() override { return this; }
+=======
+  NonBlockingTextureReadLock* AsNonBlockingLock() override { return this; }
+>>>>>>> upstream-releases
 };
 
 #ifdef XP_WIN
@@ -247,7 +269,14 @@ class TextureData {
           canConcurrentlyReadLock(true) {}
   };
 
-  TextureData() { MOZ_COUNT_CTOR(TextureData); }
+  static TextureData* Create(TextureForwarder* aAllocator,
+                             gfx::SurfaceFormat aFormat, gfx::IntSize aSize,
+                             LayersBackend aLayersBackend,
+                             int32_t aMaxTextureSize, BackendSelector aSelector,
+                             TextureFlags aTextureFlags,
+                             TextureAllocationFlags aAllocFlags);
+
+  static bool IsRemote(LayersBackend aLayersBackend, BackendSelector aSelector);
 
   virtual ~TextureData() { MOZ_COUNT_DTOR(TextureData); }
 
@@ -257,9 +286,21 @@ class TextureData {
 
   virtual void Unlock() = 0;
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget() {
     return nullptr;
   }
+||||||| merged common ancestors
+  virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget() { return nullptr; }
+=======
+  virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget() {
+    return nullptr;
+  }
+
+  virtual already_AddRefed<gfx::SourceSurface> BorrowSnapshot() {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   virtual bool BorrowMappedData(MappedTextureData&) { return false; }
 
@@ -302,6 +343,9 @@ class TextureData {
   virtual BufferTextureData* AsBufferTextureData() { return nullptr; }
 
   virtual GPUVideoTextureData* AsGPUVideoTextureData() { return nullptr; }
+
+ protected:
+  TextureData() { MOZ_COUNT_CTOR(TextureData); }
 };
 
 /**
@@ -327,10 +371,23 @@ class TextureData {
  * In order to send several different buffers to the compositor side, use
  * several TextureClients.
  */
+<<<<<<< HEAD
 class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
  public:
   explicit TextureClient(TextureData* aData, TextureFlags aFlags,
                          LayersIPCChannel* aAllocator);
+||||||| merged common ancestors
+class TextureClient
+  : public AtomicRefCountedWithFinalize<TextureClient>
+{
+public:
+  explicit TextureClient(TextureData* aData, TextureFlags aFlags, LayersIPCChannel* aAllocator);
+=======
+class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
+ public:
+  TextureClient(TextureData* aData, TextureFlags aFlags,
+                LayersIPCChannel* aAllocator);
+>>>>>>> upstream-releases
 
   virtual ~TextureClient();
 
@@ -349,11 +406,30 @@ class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
       TextureAllocationFlags aAllocFlags);
 
   // Creates and allocates a TextureClient supporting the YCbCr format.
+<<<<<<< HEAD
   static already_AddRefed<TextureClient> CreateForYCbCr(
       KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
       gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
       gfx::ColorDepth aColorDepth, YUVColorSpace aYUVColorSpace,
       TextureFlags aTextureFlags);
+||||||| merged common ancestors
+  static already_AddRefed<TextureClient>
+  CreateForYCbCr(KnowsCompositor* aAllocator,
+                 gfx::IntSize aYSize,
+                 uint32_t aYStride,
+                 gfx::IntSize aCbCrSize,
+                 uint32_t aCbCrStride,
+                 StereoMode aStereoMode,
+                 gfx::ColorDepth aColorDepth,
+                 YUVColorSpace aYUVColorSpace,
+                 TextureFlags aTextureFlags);
+=======
+  static already_AddRefed<TextureClient> CreateForYCbCr(
+      KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
+      gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
+      gfx::ColorDepth aColorDepth, gfx::YUVColorSpace aYUVColorSpace,
+      TextureFlags aTextureFlags);
+>>>>>>> upstream-releases
 
   // Creates and allocates a TextureClient (can be accessed through raw
   // pointers).
@@ -431,6 +507,8 @@ class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
    *
    */
   gfx::DrawTarget* BorrowDrawTarget();
+
+  already_AddRefed<gfx::SourceSurface> BorrowSnapshot();
 
   /**
    * Similar to BorrowDrawTarget but provides direct access to the texture's
@@ -542,7 +620,7 @@ class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
    * Should be called only once per TextureClient.
    * The TextureClient must not be locked when calling this method.
    */
-  bool InitIPDLActor(KnowsCompositor* aForwarder);
+  bool InitIPDLActor(KnowsCompositor* aKnowsCompositor);
 
   /**
    * Return a pointer to the IPDLActor.
@@ -598,7 +676,7 @@ class TextureClient : public AtomicRefCountedWithFinalize<TextureClient> {
   uint64_t GetSerial() const { return mSerial; }
   void GPUVideoDesc(SurfaceDescriptorGPUVideo* aOutDesc);
 
-  void CancelWaitForRecycle();
+  void CancelWaitForNotifyNotUsed();
 
   /**
    * Set last transaction id of CompositableForwarder.
@@ -874,9 +952,20 @@ class MOZ_RAII DualTextureClientAutoLock {
   RefPtr<TextureClient> mTextureOnWhite;
 };
 
+<<<<<<< HEAD
 class KeepAlive {
  public:
   virtual ~KeepAlive() {}
+||||||| merged common ancestors
+class KeepAlive
+{
+public:
+  virtual ~KeepAlive() {}
+=======
+class KeepAlive {
+ public:
+  virtual ~KeepAlive() = default;
+>>>>>>> upstream-releases
 };
 
 template <typename T>

@@ -154,10 +154,6 @@ nsresult nsObserverService::Create(nsISupports* aOuter, const nsIID& aIID,
 
   RefPtr<nsObserverService> os = new nsObserverService();
 
-  if (!os) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
   // The memory reporter can not be immediately registered here because
   // the nsMemoryReporterManager may attempt to get the nsObserverService
   // during initialization, causing a recursive GetService.
@@ -186,8 +182,10 @@ nsresult nsObserverService::FilterHttpOnTopics(const char* aTopic) {
   // Specifically allow http-on-opening-request and http-on-stop-request in the
   // child process; see bug 1269765.
   if (mozilla::net::IsNeckoChild() && !strncmp(aTopic, "http-on-", 8) &&
+      strcmp(aTopic, "http-on-failed-opening-request") &&
       strcmp(aTopic, "http-on-opening-request") &&
       strcmp(aTopic, "http-on-stop-request")) {
+<<<<<<< HEAD
     nsCOMPtr<nsIConsoleService> console(
         do_GetService(NS_CONSOLESERVICE_CONTRACTID));
     nsCOMPtr<nsIScriptError> error(
@@ -196,6 +194,24 @@ nsresult nsObserverService::FilterHttpOnTopics(const char* aTopic) {
                     "http-on-* observers only work in the parent process"),
                 EmptyString(), EmptyString(), 0, 0, nsIScriptError::warningFlag,
                 "chrome javascript", false /* from private window */);
+||||||| merged common ancestors
+    nsCOMPtr<nsIConsoleService> console(do_GetService(NS_CONSOLESERVICE_CONTRACTID));
+    nsCOMPtr<nsIScriptError> error(do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
+    error->Init(NS_LITERAL_STRING("http-on-* observers only work in the parent process"),
+                EmptyString(), EmptyString(), 0, 0,
+                nsIScriptError::warningFlag, "chrome javascript",
+                false /* from private window */);
+=======
+    nsCOMPtr<nsIConsoleService> console(
+        do_GetService(NS_CONSOLESERVICE_CONTRACTID));
+    nsCOMPtr<nsIScriptError> error(
+        do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
+    error->Init(NS_LITERAL_STRING(
+                    "http-on-* observers only work in the parent process"),
+                EmptyString(), EmptyString(), 0, 0, nsIScriptError::warningFlag,
+                "chrome javascript", false /* from private window */,
+                true /* from chrome context */);
+>>>>>>> upstream-releases
     console->LogMessage(error);
 
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -226,10 +242,28 @@ nsObserverService::AddObserver(nsIObserver* aObserver, const char* aTopic,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsObserverService::RemoveObserver(nsIObserver* aObserver, const char* aTopic) {
   LOG(("nsObserverService::RemoveObserver(%p: %s)", (void*)aObserver, aTopic));
 
   MOZ_TRY(EnsureValidCall());
+||||||| merged common ancestors
+nsObserverService::RemoveObserver(nsIObserver* aObserver, const char* aTopic)
+{
+  LOG(("nsObserverService::RemoveObserver(%p: %s)",
+       (void*)aObserver, aTopic));
+  NS_ENSURE_VALIDCALL
+=======
+nsObserverService::RemoveObserver(nsIObserver* aObserver, const char* aTopic) {
+  LOG(("nsObserverService::RemoveObserver(%p: %s)", (void*)aObserver, aTopic));
+
+  if (mShuttingDown) {
+    // The service is shutting down. Let's ignore this call.
+    return NS_OK;
+  }
+
+  MOZ_TRY(EnsureValidCall());
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!aObserver) || NS_WARN_IF(!aTopic)) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -278,8 +312,18 @@ NS_IMETHODIMP nsObserverService::NotifyObservers(nsISupports* aSubject,
 
   mozilla::TimeStamp start = TimeStamp::Now();
 
+<<<<<<< HEAD
   AUTO_PROFILER_LABEL_DYNAMIC_CSTR("nsObserverService::NotifyObservers", OTHER,
                                    aTopic);
+||||||| merged common ancestors
+  AUTO_PROFILER_LABEL_DYNAMIC_CSTR(
+    "nsObserverService::NotifyObservers", OTHER, aTopic);
+=======
+  AUTO_PROFILER_TEXT_MARKER_CAUSE("NotifyObservers", nsDependentCString(aTopic),
+                                  OTHER, profiler_get_backtrace());
+  AUTO_PROFILER_LABEL_DYNAMIC_CSTR("nsObserverService::NotifyObservers", OTHER,
+                                   aTopic);
+>>>>>>> upstream-releases
 
   nsObserverList* observerList = mObserverTopicTable.GetEntry(aTopic);
   if (observerList) {

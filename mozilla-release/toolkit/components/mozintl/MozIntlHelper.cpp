@@ -5,7 +5,9 @@
 
 #include "MozIntlHelper.h"
 #include "jsapi.h"
+#include "js/PropertySpec.h"
 #include "js/Wrapper.h"
+<<<<<<< HEAD
 #include "mozilla/ModuleUtils.h"
 
 #define MOZ_MOZINTLHELPER_CID                        \
@@ -14,6 +16,13 @@
       0x90, 0xe9, 0xb0, 0x6d, 0x34, 0x21, 0x9b, 0x68 \
     }                                                \
   }
+||||||| merged common ancestors
+#include "mozilla/ModuleUtils.h"
+
+#define MOZ_MOZINTLHELPER_CID \
+  { 0xb43c96be, 0x2b3a, 0x4dc4, { 0x90, 0xe9, 0xb0, 0x6d, 0x34, 0x21, 0x9b, 0x68 } }
+=======
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -29,7 +38,9 @@ static nsresult AddFunctions(JSContext* cx, JS::Handle<JS::Value> val,
     return NS_ERROR_INVALID_ARG;
   }
 
-  JS::Rooted<JSObject*> realIntlObj(cx, js::CheckedUnwrap(&val.toObject()));
+  // We might be adding functions to a Window.
+  JS::Rooted<JSObject*> realIntlObj(
+      cx, js::CheckedUnwrapDynamic(&val.toObject(), cx));
   if (!realIntlObj) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -68,7 +79,9 @@ MozIntlHelper::AddDateTimeFormatConstructor(JS::Handle<JS::Value> val,
     return NS_ERROR_INVALID_ARG;
   }
 
-  JS::Rooted<JSObject*> realIntlObj(cx, js::CheckedUnwrap(&val.toObject()));
+  // We might be adding this constructor to a Window
+  JS::Rooted<JSObject*> realIntlObj(
+      cx, js::CheckedUnwrapDynamic(&val.toObject(), cx));
   if (!realIntlObj) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -90,6 +103,7 @@ MozIntlHelper::AddGetLocaleInfo(JS::Handle<JS::Value> val, JSContext* cx) {
 
   return AddFunctions(cx, val, funcs);
 }
+<<<<<<< HEAD
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(MozIntlHelper)
 NS_DEFINE_NAMED_CID(MOZ_MOZINTLHELPER_CID);
@@ -110,3 +124,31 @@ static const mozilla::Module kMozIntlHelperModule = {mozilla::Module::kVersion,
                                                      nullptr};
 
 NSMODULE_DEFN(mozMozIntlHelperModule) = &kMozIntlHelperModule;
+||||||| merged common ancestors
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(MozIntlHelper)
+NS_DEFINE_NAMED_CID(MOZ_MOZINTLHELPER_CID);
+
+static const Module::CIDEntry kMozIntlHelperCIDs[] = {
+  { &kMOZ_MOZINTLHELPER_CID, false, nullptr, MozIntlHelperConstructor },
+  { nullptr }
+};
+
+static const mozilla::Module::ContractIDEntry kMozIntlHelperContracts[] = {
+  { "@mozilla.org/mozintlhelper;1", &kMOZ_MOZINTLHELPER_CID },
+  { nullptr }
+};
+
+static const mozilla::Module kMozIntlHelperModule = {
+  mozilla::Module::kVersion,
+  kMozIntlHelperCIDs,
+  kMozIntlHelperContracts,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};
+
+NSMODULE_DEFN(mozMozIntlHelperModule) = &kMozIntlHelperModule;
+=======
+>>>>>>> upstream-releases

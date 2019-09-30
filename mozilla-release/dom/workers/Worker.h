@@ -8,12 +8,13 @@
 #define mozilla_dom_Worker_h
 
 #include "mozilla/Attributes.h"
+#include "mozilla/dom/DebuggerNotificationBinding.h"
 #include "mozilla/DOMEventTargetHelper.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/WeakPtr.h"
 
 #ifdef XP_WIN
-#undef PostMessage
+#  undef PostMessage
 #endif
 
 namespace mozilla {
@@ -38,6 +39,30 @@ class Worker : public DOMEventTargetHelper, public SupportsWeakPtr<Worker> {
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
 
+<<<<<<< HEAD
+  void PostMessage(JSContext* aCx, JS::Handle<JS::Value> aMessage,
+                   const Sequence<JSObject*>& aTransferable, ErrorResult& aRv);
+||||||| merged common ancestors
+  void
+  PostMessage(JSContext* aCx, JS::Handle<JS::Value> aMessage,
+              const Sequence<JSObject*>& aTransferable,
+              ErrorResult& aRv);
+=======
+  Maybe<EventCallbackDebuggerNotificationType> GetDebuggerNotificationType()
+      const override {
+    return Some(EventCallbackDebuggerNotificationType::Worker);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void PostMessage(JSContext* aCx, JS::Handle<JS::Value> aMessage,
+                   const PostMessageOptions& aOptions, ErrorResult& aRv);
+
+  void Terminate();
+||||||| merged common ancestors
+  void
+  Terminate();
+=======
   void PostMessage(JSContext* aCx, JS::Handle<JS::Value> aMessage,
                    const Sequence<JSObject*>& aTransferable, ErrorResult& aRv);
 
@@ -45,6 +70,7 @@ class Worker : public DOMEventTargetHelper, public SupportsWeakPtr<Worker> {
                    const PostMessageOptions& aOptions, ErrorResult& aRv);
 
   void Terminate();
+>>>>>>> upstream-releases
 
   IMPL_EVENT_HANDLER(error)
   IMPL_EVENT_HANDLER(message)

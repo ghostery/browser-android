@@ -8,14 +8,16 @@
 #include "DOMSVGNumberList.h"
 #include "DOMSVGAnimatedNumberList.h"
 #include "SVGAnimatedNumberList.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "nsError.h"
 #include "nsContentUtils.h"  // for NS_ENSURE_FINITE
 #include "mozilla/dom/SVGNumberBinding.h"
+#include "mozilla/dom/SVGSVGElement.h"
 
 // See the architecture comment in DOMSVGAnimatedNumberList.h.
 
 namespace mozilla {
+namespace dom {
 
 // We could use NS_IMPL_CYCLE_COLLECTION(, except that in Unlink() we need to
 // clear our list's weak ref to us to be safe. (The other option would be to
@@ -97,6 +99,7 @@ DOMSVGNumber::DOMSVGNumber(DOMSVGNumberList* aList, uint8_t aAttrEnum,
 }
 
 DOMSVGNumber::DOMSVGNumber(nsISupports* aParent)
+<<<<<<< HEAD
     : mList(nullptr),
       mParent(aParent),
       mListIndex(0),
@@ -105,6 +108,37 @@ DOMSVGNumber::DOMSVGNumber(nsISupports* aParent)
       mValue(0.0f) {}
 
 float DOMSVGNumber::Value() {
+||||||| merged common ancestors
+  : mList(nullptr)
+  , mParent(aParent)
+  , mListIndex(0)
+  , mAttrEnum(0)
+  , mIsAnimValItem(false)
+  , mValue(0.0f)
+{
+}
+
+float
+DOMSVGNumber::Value()
+{
+=======
+    : mList(nullptr),
+      mParent(aParent),
+      mListIndex(0),
+      mAttrEnum(0),
+      mIsAnimValItem(false),
+      mValue(0.0f) {}
+
+DOMSVGNumber::DOMSVGNumber(SVGSVGElement* aParent)
+    : mList(nullptr),
+      mParent(ToSupports(aParent)),
+      mListIndex(0),
+      mAttrEnum(0),
+      mIsAnimValItem(false),
+      mValue(0.0f) {}
+
+float DOMSVGNumber::Value() {
+>>>>>>> upstream-releases
   if (mIsAnimValItem && HasOwner()) {
     Element()->FlushAnimations();  // May make HasOwner() == false
   }
@@ -165,9 +199,27 @@ bool DOMSVGNumber::IndexIsValid() {
 }
 #endif
 
+<<<<<<< HEAD
 JSObject* DOMSVGNumber::WrapObject(JSContext* aCx,
                                    JS::Handle<JSObject*> aGivenProto) {
   return dom::SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
+||||||| merged common ancestors
+JSObject*
+DOMSVGNumber::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+  return dom::SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
+=======
+JSObject* DOMSVGNumber::WrapObject(JSContext* aCx,
+                                   JS::Handle<JSObject*> aGivenProto) {
+  return SVGNumber_Binding::Wrap(aCx, this, aGivenProto);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

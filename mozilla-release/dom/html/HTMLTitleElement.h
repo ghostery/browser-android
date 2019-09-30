@@ -39,11 +39,17 @@ class HTMLTitleElement final : public nsGenericHTMLElement,
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument *aDocument, nsIContent *aParent,
+                              nsIContent *aBindingParent) override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+>>>>>>> upstream-releases
 
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
 
   virtual void DoneAddingChildren(bool aHaveNotified) override;
 

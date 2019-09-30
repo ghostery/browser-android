@@ -30,7 +30,7 @@ MouseEvent::MouseEvent(EventTarget* aOwner, nsPresContext* aPresContext,
     mEventIsInternal = true;
     mEvent->mTime = PR_Now();
     mEvent->mRefPoint = LayoutDeviceIntPoint(0, 0);
-    mouseEvent->inputSource = MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+    mouseEvent->mInputSource = MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
   }
 
   if (mouseEvent) {
@@ -60,9 +60,18 @@ void MouseEvent::InitMouseEvent(const nsAString& aType, bool aCanBubble,
     case eSimpleGestureEventClass: {
       WidgetMouseEventBase* mouseEventBase = mEvent->AsMouseEventBase();
       mouseEventBase->mRelatedTarget = aRelatedTarget;
+<<<<<<< HEAD
       mouseEventBase->button = aButton;
       mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey,
                                          aMetaKey);
+||||||| merged common ancestors
+      mouseEventBase->button = aButton;
+      mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey, aMetaKey);
+=======
+      mouseEventBase->mButton = aButton;
+      mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey,
+                                         aMetaKey);
+>>>>>>> upstream-releases
       mClientPoint.x = aClientX;
       mClientPoint.y = aClientY;
       mouseEventBase->mRefPoint.x = aScreenX;
@@ -113,7 +122,7 @@ void MouseEvent::InitMouseEvent(const nsAString& aType, bool aCanBubble,
 void MouseEvent::InitializeExtraMouseEventDictionaryMembers(
     const MouseEventInit& aParam) {
   InitModifiers(aParam);
-  mEvent->AsMouseEventBase()->buttons = aParam.mButtons;
+  mEvent->AsMouseEventBase()->mButtons = aParam.mButtons;
   mMovementPoint.x = aParam.mMovementX;
   mMovementPoint.y = aParam.mMovementY;
 }
@@ -151,8 +160,8 @@ void MouseEvent::InitNSMouseEvent(const nsAString& aType, bool aCanBubble,
                              aRelatedTarget);
 
   WidgetMouseEventBase* mouseEventBase = mEvent->AsMouseEventBase();
-  mouseEventBase->pressure = aPressure;
-  mouseEventBase->inputSource = aInputSource;
+  mouseEventBase->mPressure = aPressure;
+  mouseEventBase->mInputSource = aInputSource;
 }
 
 int16_t MouseEvent::Button() {
@@ -163,10 +172,10 @@ int16_t MouseEvent::Button() {
     case eDragEventClass:
     case ePointerEventClass:
     case eSimpleGestureEventClass:
-      return mEvent->AsMouseEventBase()->button;
+      return mEvent->AsMouseEventBase()->mButton;
     default:
-      NS_WARNING("Tried to get mouse button for non-mouse event!");
-      return WidgetMouseEvent::eLeftButton;
+      NS_WARNING("Tried to get mouse mButton for non-mouse event!");
+      return MouseButton::eLeft;
   }
 }
 
@@ -178,7 +187,7 @@ uint16_t MouseEvent::Buttons() {
     case eDragEventClass:
     case ePointerEventClass:
     case eSimpleGestureEventClass:
-      return mEvent->AsMouseEventBase()->buttons;
+      return mEvent->AsMouseEventBase()->mButtons;
     default:
       MOZ_CRASH("Tried to get mouse buttons for non-mouse event!");
   }
@@ -206,7 +215,7 @@ void MouseEvent::GetRegion(nsAString& aRegion) {
   SetDOMStringToNull(aRegion);
   WidgetMouseEventBase* mouseEventBase = mEvent->AsMouseEventBase();
   if (mouseEventBase) {
-    aRegion = mouseEventBase->region;
+    aRegion = mouseEventBase->mRegion;
   }
 }
 
@@ -242,7 +251,43 @@ int32_t MouseEvent::ScreenY(CallerType aCallerType) {
   return Event::GetScreenCoords(mPresContext, mEvent, mEvent->mRefPoint).y;
 }
 
+<<<<<<< HEAD
 int32_t MouseEvent::ClientX() {
+||||||| merged common ancestors
+int32_t
+MouseEvent::ClientX()
+{
+=======
+int32_t MouseEvent::PageX() const {
+  if (mEvent->mFlags.mIsPositionless) {
+    return 0;
+  }
+
+  if (mPrivateDataDuplicated) {
+    return mPagePoint.x;
+  }
+
+  return Event::GetPageCoords(mPresContext, mEvent, mEvent->mRefPoint,
+                              mClientPoint)
+      .x;
+}
+
+int32_t MouseEvent::PageY() const {
+  if (mEvent->mFlags.mIsPositionless) {
+    return 0;
+  }
+
+  if (mPrivateDataDuplicated) {
+    return mPagePoint.y;
+  }
+
+  return Event::GetPageCoords(mPresContext, mEvent, mEvent->mRefPoint,
+                              mClientPoint)
+      .y;
+}
+
+int32_t MouseEvent::ClientX() {
+>>>>>>> upstream-releases
   if (mEvent->mFlags.mIsPositionless) {
     return 0;
   }
@@ -288,16 +333,46 @@ bool MouseEvent::ShiftKey() { return mEvent->AsInputEvent()->IsShift(); }
 
 bool MouseEvent::MetaKey() { return mEvent->AsInputEvent()->IsMeta(); }
 
+<<<<<<< HEAD
 float MouseEvent::MozPressure() const {
   return mEvent->AsMouseEventBase()->pressure;
+||||||| merged common ancestors
+float
+MouseEvent::MozPressure() const
+{
+  return mEvent->AsMouseEventBase()->pressure;
+=======
+float MouseEvent::MozPressure() const {
+  return mEvent->AsMouseEventBase()->mPressure;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool MouseEvent::HitCluster() const {
   return mEvent->AsMouseEventBase()->hitCluster;
+||||||| merged common ancestors
+bool
+MouseEvent::HitCluster() const
+{
+  return mEvent->AsMouseEventBase()->hitCluster;
+=======
+bool MouseEvent::HitCluster() const {
+  return mEvent->AsMouseEventBase()->mHitCluster;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 uint16_t MouseEvent::MozInputSource() const {
   return mEvent->AsMouseEventBase()->inputSource;
+||||||| merged common ancestors
+uint16_t
+MouseEvent::MozInputSource() const
+{
+  return mEvent->AsMouseEventBase()->inputSource;
+=======
+uint16_t MouseEvent::MozInputSource() const {
+  return mEvent->AsMouseEventBase()->mInputSource;
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

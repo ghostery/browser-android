@@ -8,5 +8,11 @@ zh_Hant_MO{
             "澳門元",
         }
     }
+<<<<<<< HEAD
     Version{"2.1.43.65"}
+||||||| merged common ancestors
+    Version{"2.1.38.39"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
 }

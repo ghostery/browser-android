@@ -15,12 +15,29 @@ class SandboxBrokerPolicyFactory {
  public:
   SandboxBrokerPolicyFactory();
 
+<<<<<<< HEAD
 #ifdef MOZ_CONTENT_SANDBOX
   UniquePtr<SandboxBroker::Policy> GetContentPolicy(int aPid,
                                                     bool aFileProcess);
 #endif
+||||||| merged common ancestors
+#ifdef MOZ_CONTENT_SANDBOX
+  UniquePtr<SandboxBroker::Policy> GetContentPolicy(int aPid, bool aFileProcess);
+#endif
+=======
+  UniquePtr<SandboxBroker::Policy> GetContentPolicy(int aPid,
+                                                    bool aFileProcess);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
+  static UniquePtr<SandboxBroker::Policy> GetUtilityPolicy(int aPid);
 
  private:
+>>>>>>> upstream-releases
   UniquePtr<const SandboxBroker::Policy> mCommonContentPolicy;
   static void AddDynamicPathList(SandboxBroker::Policy* policy,
                                  const char* aPathListPref, int perms);

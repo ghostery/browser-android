@@ -48,6 +48,7 @@ class nsPrintSettings : public nsIPrintSettings {
   int32_t mPrintOptions;
 
   // scriptable data members
+<<<<<<< HEAD
   int16_t mPrintRange;
   int32_t mStartPageNum;  // only used for ePrintRange_SpecifiedRange
   int32_t mEndPageNum;
@@ -89,6 +90,88 @@ class nsPrintSettings : public nsIPrintSettings {
   int16_t mOutputFormat;
   bool mIsInitedFromPrinter;
   bool mIsInitedFromPrefs;
+||||||| merged common ancestors
+  int16_t       mPrintRange;
+  int32_t       mStartPageNum; // only used for ePrintRange_SpecifiedRange
+  int32_t       mEndPageNum;
+  double        mScaling;
+  bool          mPrintBGColors;  // print background colors
+  bool          mPrintBGImages;  // print background images
+
+  int16_t       mPrintFrameTypeUsage;
+  int16_t       mPrintFrameType;
+  int16_t       mHowToEnableFrameUI;
+  bool          mIsCancelled;
+  bool          mPrintSilent;
+  bool          mPrintPreview;
+  bool          mShrinkToFit;
+  bool          mShowPrintProgress;
+  int32_t       mPrintPageDelay;
+
+  nsString      mTitle;
+  nsString      mURL;
+  nsString      mPageNumberFormat;
+  nsString      mHeaderStrs[NUM_HEAD_FOOT];
+  nsString      mFooterStrs[NUM_HEAD_FOOT];
+
+  nsString      mPaperName;
+  int16_t       mPaperData;
+  double        mPaperWidth;
+  double        mPaperHeight;
+  int16_t       mPaperSizeUnit;
+
+  bool          mPrintReversed;
+  bool          mPrintInColor; // a false means grayscale
+  int32_t       mOrientation;  // see orientation consts
+  int32_t       mResolution;
+  int32_t       mDuplex;
+  int32_t       mNumCopies;
+  nsString      mPrinter;
+  bool          mPrintToFile;
+  nsString      mToFileName;
+  int16_t       mOutputFormat;
+  bool          mIsInitedFromPrinter;
+  bool          mIsInitedFromPrefs;
+=======
+  int16_t mPrintRange;
+  int32_t mStartPageNum;  // only used for ePrintRange_SpecifiedRange
+  int32_t mEndPageNum;
+  double mScaling;
+  bool mPrintBGColors;  // print background colors
+  bool mPrintBGImages;  // print background images
+
+  bool mIsCancelled;
+  bool mSaveOnCancel;
+  bool mPrintSilent;
+  bool mShrinkToFit;
+  bool mShowPrintProgress;
+  int32_t mPrintPageDelay;
+
+  nsString mTitle;
+  nsString mURL;
+  nsString mPageNumberFormat;
+  nsString mHeaderStrs[NUM_HEAD_FOOT];
+  nsString mFooterStrs[NUM_HEAD_FOOT];
+
+  nsString mPaperName;
+  int16_t mPaperData;
+  double mPaperWidth;
+  double mPaperHeight;
+  int16_t mPaperSizeUnit;
+
+  bool mPrintReversed;
+  bool mPrintInColor;    // a false means grayscale
+  int32_t mOrientation;  // see orientation consts
+  int32_t mResolution;
+  int32_t mDuplex;
+  int32_t mNumCopies;
+  nsString mPrinter;
+  bool mPrintToFile;
+  nsString mToFileName;
+  int16_t mOutputFormat;
+  bool mIsInitedFromPrinter;
+  bool mIsInitedFromPrefs;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsPrintSettings_h__ */

@@ -41,8 +41,46 @@ class nsBrowserElement {
   already_AddRefed<dom::Promise> GetCanGoBack(ErrorResult& aRv);
   already_AddRefed<dom::Promise> GetCanGoForward(ErrorResult& aRv);
 
+<<<<<<< HEAD
  protected:
   NS_IMETHOD_(already_AddRefed<nsFrameLoader>) GetFrameLoader() = 0;
+||||||| merged common ancestors
+  already_AddRefed<dom::DOMRequest> PurgeHistory(ErrorResult& aRv);
+
+  already_AddRefed<dom::DOMRequest>
+  GetScreenshot(uint32_t aWidth,
+                uint32_t aHeight,
+                const nsAString& aMimeType,
+                ErrorResult& aRv);
+
+  void Zoom(float aZoom, ErrorResult& aRv);
+
+  already_AddRefed<dom::DOMRequest> GetCanGoBack(ErrorResult& aRv);
+  already_AddRefed<dom::DOMRequest> GetCanGoForward(ErrorResult& aRv);
+  already_AddRefed<dom::DOMRequest> GetContentDimensions(ErrorResult& aRv);
+
+  void FindAll(const nsAString& aSearchString, dom::BrowserFindCaseSensitivity aCaseSensitivity,
+               ErrorResult& aRv);
+  void FindNext(dom::BrowserFindDirection aDirection, ErrorResult& aRv);
+  void ClearMatch(ErrorResult& aRv);
+
+  void AddNextPaintListener(dom::BrowserElementNextPaintEventCallback& listener,
+                            ErrorResult& aRv);
+  void RemoveNextPaintListener(dom::BrowserElementNextPaintEventCallback& listener,
+                               ErrorResult& aRv);
+
+  already_AddRefed<dom::DOMRequest> ExecuteScript(const nsAString& aScript,
+                                                  const dom::BrowserElementExecuteScriptOptions& aOptions,
+                                                  ErrorResult& aRv);
+
+  already_AddRefed<dom::DOMRequest> GetWebManifest(ErrorResult& aRv);
+
+protected:
+  NS_IMETHOD_(already_AddRefed<nsFrameLoader>) GetFrameLoader() = 0;
+=======
+ protected:
+  virtual already_AddRefed<nsFrameLoader> GetFrameLoader() = 0;
+>>>>>>> upstream-releases
 
   void InitBrowserElementAPI();
   void DestroyBrowserElementFrameScripts();

@@ -6,17 +6,17 @@
 
 // The linux glibc hides part of sigaction if _POSIX_SOURCE is defined
 #if defined(linux)
-#undef _POSIX_SOURCE
-#undef _SVID_SOURCE
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
+#  undef _POSIX_SOURCE
+#  undef _SVID_SOURCE
+#  ifndef _GNU_SOURCE
+#    define _GNU_SOURCE
+#  endif
 #endif
 
 #include <errno.h>
 #if defined(linux)
-#include <linux/rtc.h>
-#include <pthread.h>
+#  include <linux/rtc.h>
+#  include <pthread.h>
 #endif
 #include <unistd.h>
 #include <fcntl.h>
@@ -38,10 +38,10 @@
 #include <dlfcn.h>
 
 #ifdef NTO
-#include <sys/link.h>
+#  include <sys/link.h>
 extern r_debug _r_debug;
 #else
-#include <link.h>
+#  include <link.h>
 #endif
 
 #define USE_GLIBC_BACKTRACE 1
@@ -75,6 +75,7 @@ static void RegisterJprofShutdown() {
 }
 
 #if defined(i386) || defined(_i386) || defined(__x86_64__)
+<<<<<<< HEAD
 JPROF_STATIC void CrawlStack(malloc_log_entry *me, void *stack_top,
                              void *top_instr_ptr) {
 #if USE_GLIBC_BACKTRACE
@@ -95,41 +96,125 @@ JPROF_STATIC void CrawlStack(malloc_log_entry *me, void *stack_top,
     me->pcs[numpcs++] = (char *)array[i];
   }
   me->numpcs = numpcs;
+||||||| merged common ancestors
+JPROF_STATIC void CrawlStack(malloc_log_entry* me,
+                             void* stack_top, void* top_instr_ptr)
+{
+#if USE_GLIBC_BACKTRACE
+    // This probably works on more than x86!  But we need a way to get the
+    // top instruction pointer, which is kindof arch-specific
+    void *array[500];
+    int cnt, i;
+    u_long numpcs = 0;
 
-#else
+    // This is from glibc.  A more generic version might use
+    // libunwind and/or CaptureStackBackTrace() on Windows
+    cnt = backtrace(&array[0],sizeof(array)/sizeof(array[0]));
+
+    // StackHook->JprofLog->CrawlStack
+    // Then we have sigaction, which replaced top_instr_ptr
+    array[3] = top_instr_ptr;
+    for (i = 3; i < cnt; i++)
+    {
+        me->pcs[numpcs++] = (char *) array[i];
+    }
+    me->numpcs = numpcs;
+=======
+JPROF_STATIC void CrawlStack(malloc_log_entry* me, void* stack_top,
+                             void* top_instr_ptr) {
+#  if USE_GLIBC_BACKTRACE
+  // This probably works on more than x86!  But we need a way to get the
+  // top instruction pointer, which is kindof arch-specific
+  void* array[500];
+  int cnt, i;
+  u_long numpcs = 0;
+>>>>>>> upstream-releases
+
+  // This is from glibc.  A more generic version might use
+  // libunwind and/or CaptureStackBackTrace() on Windows
+  cnt = backtrace(&array[0], sizeof(array) / sizeof(array[0]));
+
+  // StackHook->JprofLog->CrawlStack
+  // Then we have sigaction, which replaced top_instr_ptr
+  array[3] = top_instr_ptr;
+  for (i = 3; i < cnt; i++) {
+    me->pcs[numpcs++] = (char*)array[i];
+  }
+  me->numpcs = numpcs;
+
+#  else
   // original code - this breaks on many platforms
+<<<<<<< HEAD
   void **bp;
 #if defined(__i386)
   __asm__("movl %%ebp, %0" : "=g"(bp));
 #elif defined(__x86_64__)
   __asm__("movq %%rbp, %0" : "=g"(bp));
 #else
+||||||| merged common ancestors
+  void **bp;
+#if defined(__i386)
+  __asm__( "movl %%ebp, %0" : "=g"(bp));
+#elif defined(__x86_64__)
+  __asm__( "movq %%rbp, %0" : "=g"(bp));
+#else
+=======
+  void** bp;
+#    if defined(__i386)
+  __asm__("movl %%ebp, %0" : "=g"(bp));
+#    elif defined(__x86_64__)
+  __asm__("movq %%rbp, %0" : "=g"(bp));
+#    else
+>>>>>>> upstream-releases
   // It would be nice if this worked uniformly, but at least on i386 and
   // x86_64, it stopped working with gcc 4.1, because it points to the
   // end of the saved registers instead of the start.
   bp = __builtin_frame_address(0);
-#endif
+#    endif
   u_long numpcs = 0;
   bool tracing = false;
 
+<<<<<<< HEAD
   me->pcs[numpcs++] = (char *)top_instr_ptr;
+||||||| merged common ancestors
+  me->pcs[numpcs++] = (char*) top_instr_ptr;
+=======
+  me->pcs[numpcs++] = (char*)top_instr_ptr;
+>>>>>>> upstream-releases
 
   while (numpcs < MAX_STACK_CRAWL) {
+<<<<<<< HEAD
     void **nextbp = (void **)*bp++;
     void *pc = *bp;
+||||||| merged common ancestors
+    void** nextbp = (void**) *bp++;
+    void* pc = *bp;
+=======
+    void** nextbp = (void**)*bp++;
+    void* pc = *bp;
+>>>>>>> upstream-releases
     if (nextbp < bp) {
       break;
     }
     if (tracing) {
       // Skip the signal handling.
+<<<<<<< HEAD
       me->pcs[numpcs++] = (char *)pc;
     } else if (pc == top_instr_ptr) {
+||||||| merged common ancestors
+      me->pcs[numpcs++] = (char*) pc;
+    }
+    else if (pc == top_instr_ptr) {
+=======
+      me->pcs[numpcs++] = (char*)pc;
+    } else if (pc == top_instr_ptr) {
+>>>>>>> upstream-releases
       tracing = true;
     }
     bp = nextbp;
   }
   me->numpcs = numpcs;
-#endif
+#  endif
 }
 #endif
 
@@ -142,11 +227,11 @@ static bool circular = false;
 #if defined(linux) || defined(NTO)
 static void DumpAddressMap() {
   // Turn off the timer so we don't get interrupts during shutdown
-#if defined(linux)
+#  if defined(linux)
   if (rtcHz) {
     enableRTCSignals(false);
   } else
-#endif
+#  endif
   {
     startSignalCounter(0);
   }
@@ -163,14 +248,28 @@ static void DumpAddressMap() {
     link_map *map = _r_debug.r_map;
     while (nullptr != map) {
       if (map->l_name && *map->l_name) {
+<<<<<<< HEAD
         mme.nameLen = strlen(map->l_name);
         mme.address = map->l_addr;
         write(mfd, &mme, sizeof(mme));
         write(mfd, map->l_name, mme.nameLen);
 #if 0
+||||||| merged common ancestors
+	mme.nameLen = strlen(map->l_name);
+	mme.address = map->l_addr;
+	write(mfd, &mme, sizeof(mme));
+	write(mfd, map->l_name, mme.nameLen);
+#if 0
+=======
+        mme.nameLen = strlen(map->l_name);
+        mme.address = map->l_addr;
+        write(mfd, &mme, sizeof(mme));
+        write(mfd, map->l_name, mme.nameLen);
+#  if 0
+>>>>>>> upstream-releases
 	write(1, map->l_name, mme.nameLen);
 	write(1, "\n", 1);
-#endif
+#  endif
       }
       map = map->l_next;
     }
@@ -203,13 +302,30 @@ static void EndProfilingHook(int signum) {
 // proper usage would be a template, including the function to find the
 // size of an entry, or include a size header explicitly to each entry.
 #if defined(linux)
+<<<<<<< HEAD
 #define DUMB_LOCK() pthread_mutex_lock(&mutex);
 #define DUMB_UNLOCK() pthread_mutex_unlock(&mutex);
+||||||| merged common ancestors
+#define DUMB_LOCK()   pthread_mutex_lock(&mutex);
+#define DUMB_UNLOCK() pthread_mutex_unlock(&mutex);
+=======
+#  define DUMB_LOCK() pthread_mutex_lock(&mutex);
+#  define DUMB_UNLOCK() pthread_mutex_unlock(&mutex);
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define DUMB_LOCK() FIXME()
 #define DUMB_UNLOCK() FIXME()
+||||||| merged common ancestors
+#define DUMB_LOCK()   FIXME()
+#define DUMB_UNLOCK() FIXME()
+=======
+#  define DUMB_LOCK() FIXME()
+#  define DUMB_UNLOCK() FIXME()
+>>>>>>> upstream-releases
 #endif
 
+<<<<<<< HEAD
 class DumbCircularBuffer {
  public:
   DumbCircularBuffer(size_t init_buffer_size) {
@@ -217,6 +333,25 @@ class DumbCircularBuffer {
     buffer_size = init_buffer_size;
     buffer = (unsigned char *)malloc(buffer_size);
     head = tail = buffer;
+||||||| merged common ancestors
+
+class DumbCircularBuffer
+{
+public:
+    DumbCircularBuffer(size_t init_buffer_size) {
+        used = 0;
+        buffer_size = init_buffer_size;
+        buffer = (unsigned char *) malloc(buffer_size);
+        head = tail = buffer;
+=======
+class DumbCircularBuffer {
+ public:
+  DumbCircularBuffer(size_t init_buffer_size) {
+    used = 0;
+    buffer_size = init_buffer_size;
+    buffer = (unsigned char*)malloc(buffer_size);
+    head = tail = buffer;
+>>>>>>> upstream-releases
 
 #if defined(linux)
     pthread_mutexattr_t mAttr;
@@ -261,10 +396,23 @@ class DumbCircularBuffer {
     DUMB_UNLOCK();
   }
 
+<<<<<<< HEAD
   bool insert(void *data, size_t size) {
     // can fail if not enough space in the entire buffer
     DUMB_LOCK();
     if (space_available() < size) return false;
+||||||| merged common ancestors
+    bool insert(void *data, size_t size) {
+        // can fail if not enough space in the entire buffer
+        DUMB_LOCK();
+        if (space_available() < size)
+            return false;
+=======
+  bool insert(void* data, size_t size) {
+    // can fail if not enough space in the entire buffer
+    DUMB_LOCK();
+    if (space_available() < size) return false;
+>>>>>>> upstream-releases
 
     size_t max_without_wrap = &buffer[buffer_size] - tail;
     size_t initial = size > max_without_wrap ? max_without_wrap : size;
@@ -272,17 +420,41 @@ class DumbCircularBuffer {
     fprintf(stderr, "insert(%d): max_without_wrap %d, size %d, initial %d\n",
             used, max_without_wrap, size, initial);
 #endif
+<<<<<<< HEAD
     memcpy(tail, data, initial);
     tail += initial;
     data = ((char *)data) + initial;
     size -= initial;
     if (size != 0) {
+||||||| merged common ancestors
+        memcpy(tail,data,initial);
+        tail += initial;
+        data = ((char *)data)+initial;
+        size -= initial;
+        if (size != 0) {
+=======
+    memcpy(tail, data, initial);
+    tail += initial;
+    data = ((char*)data) + initial;
+    size -= initial;
+    if (size != 0) {
+>>>>>>> upstream-releases
 #if DEBUG_CIRCULAR
       fprintf(stderr, "wrapping by %d bytes\n", size);
 #endif
+<<<<<<< HEAD
       memcpy(buffer, data, size);
       tail = &(((unsigned char *)buffer)[size]);
     }
+||||||| merged common ancestors
+            memcpy(buffer,data,size);
+            tail = &(((unsigned char *)buffer)[size]);
+        }
+=======
+      memcpy(buffer, data, size);
+      tail = &(((unsigned char*)buffer)[size]);
+    }
+>>>>>>> upstream-releases
 
     used++;
     DUMB_UNLOCK();
@@ -295,18 +467,34 @@ class DumbCircularBuffer {
 
   void unlock() { DUMB_UNLOCK(); }
 
+<<<<<<< HEAD
   // XXX These really shouldn't be public...
   unsigned char *head;
   unsigned char *tail;
   unsigned int used;
   unsigned char *buffer;
   size_t buffer_size;
+||||||| merged common ancestors
+    // XXX These really shouldn't be public...
+    unsigned char *head;
+    unsigned char *tail;
+    unsigned int used;
+    unsigned char *buffer;
+    size_t buffer_size;
+=======
+  // XXX These really shouldn't be public...
+  unsigned char* head;
+  unsigned char* tail;
+  unsigned int used;
+  unsigned char* buffer;
+  size_t buffer_size;
+>>>>>>> upstream-releases
 
  private:
   pthread_mutex_t mutex;
 };
 
-class DumbCircularBuffer *JprofBuffer;
+class DumbCircularBuffer* JprofBuffer;
 
 JPROF_STATIC void JprofBufferInit(size_t size) {
   JprofBuffer = new DumbCircularBuffer(size);
@@ -317,26 +505,68 @@ JPROF_STATIC void JprofBufferClear() {
   JprofBuffer->clear();
 }
 
+<<<<<<< HEAD
 JPROF_STATIC size_t JprofEntrySizeof(malloc_log_entry *me) {
   return offsetof(malloc_log_entry, pcs) + me->numpcs * sizeof(char *);
+||||||| merged common ancestors
+JPROF_STATIC size_t
+JprofEntrySizeof(malloc_log_entry *me)
+{
+    return offsetof(malloc_log_entry, pcs) + me->numpcs*sizeof(char*);
+=======
+JPROF_STATIC size_t JprofEntrySizeof(malloc_log_entry* me) {
+  return offsetof(malloc_log_entry, pcs) + me->numpcs * sizeof(char*);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JPROF_STATIC void JprofBufferAppend(malloc_log_entry *me) {
   size_t size = JprofEntrySizeof(me);
+||||||| merged common ancestors
+JPROF_STATIC void
+JprofBufferAppend(malloc_log_entry *me)
+{
+    size_t size = JprofEntrySizeof(me);
+=======
+JPROF_STATIC void JprofBufferAppend(malloc_log_entry* me) {
+  size_t size = JprofEntrySizeof(me);
+>>>>>>> upstream-releases
 
   do {
     while (JprofBuffer->space_available() < size && JprofBuffer->used > 0) {
 #if DEBUG_CIRCULAR
+<<<<<<< HEAD
       fprintf(
           stderr,
           "dropping entry: %d in use, %d free, need %d, size_to_free = %d\n",
           JprofBuffer->used, JprofBuffer->space_available(), size,
           JprofEntrySizeof((malloc_log_entry *)JprofBuffer->head));
+||||||| merged common ancestors
+            fprintf(stderr,"dropping entry: %d in use, %d free, need %d, size_to_free = %d\n",
+                    JprofBuffer->used,JprofBuffer->space_available(),size,JprofEntrySizeof((malloc_log_entry *) JprofBuffer->head));
+=======
+      fprintf(
+          stderr,
+          "dropping entry: %d in use, %d free, need %d, size_to_free = %d\n",
+          JprofBuffer->used, JprofBuffer->space_available(), size,
+          JprofEntrySizeof((malloc_log_entry*)JprofBuffer->head));
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
       JprofBuffer->drop(
           JprofEntrySizeof((malloc_log_entry *)JprofBuffer->head));
     }
     if (JprofBuffer->space_available() < size) return;
+||||||| merged common ancestors
+            JprofBuffer->drop(JprofEntrySizeof((malloc_log_entry *) JprofBuffer->head));
+        }
+        if (JprofBuffer->space_available() < size)
+            return;
+=======
+      JprofBuffer->drop(JprofEntrySizeof((malloc_log_entry*)JprofBuffer->head));
+    }
+    if (JprofBuffer->space_available() < size) return;
+>>>>>>> upstream-releases
 
   } while (!JprofBuffer->insert(me, size));
 }
@@ -364,7 +594,15 @@ JPROF_STATIC void JprofBufferDump() {
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 JPROF_STATIC void JprofLog(u_long aTime, void *stack_top, void *top_instr_ptr) {
+||||||| merged common ancestors
+JPROF_STATIC void
+JprofLog(u_long aTime, void* stack_top, void* top_instr_ptr)
+{
+=======
+JPROF_STATIC void JprofLog(u_long aTime, void* stack_top, void* top_instr_ptr) {
+>>>>>>> upstream-releases
   // Static is simply to make debugging tolerable
   static malloc_log_entry me;
 
@@ -415,12 +653,29 @@ static void startSignalCounter(unsigned long millisec) {
 static long timerMilliSec = 50;
 
 #if defined(linux)
+<<<<<<< HEAD
 static int setupRTCSignals(int hz, struct sigaction *sap) {
   /* global */ rtcFD = open("/dev/rtc", O_RDONLY);
   if (rtcFD < 0) {
     perror("JPROF_RTC setup: open(\"/dev/rtc\", O_RDONLY)");
     return 0;
   }
+||||||| merged common ancestors
+static int setupRTCSignals(int hz, struct sigaction *sap)
+{
+    /* global */ rtcFD = open("/dev/rtc", O_RDONLY);
+    if (rtcFD < 0) {
+        perror("JPROF_RTC setup: open(\"/dev/rtc\", O_RDONLY)");
+        return 0;
+    }
+=======
+static int setupRTCSignals(int hz, struct sigaction* sap) {
+  /* global */ rtcFD = open("/dev/rtc", O_RDONLY);
+  if (rtcFD < 0) {
+    perror("JPROF_RTC setup: open(\"/dev/rtc\", O_RDONLY)");
+    return 0;
+  }
+>>>>>>> upstream-releases
 
   if (sigaction(SIGIO, sap, nullptr) == -1) {
     perror("JPROF_RTC setup: sigaction(SIGIO)");
@@ -482,10 +737,26 @@ static int enableRTCSignals(bool enable) {
 }
 #endif
 
+<<<<<<< HEAD
 JPROF_STATIC void StackHook(int signum, siginfo_t *info, void *ucontext) {
   static struct timeval tFirst;
   static int first = 1;
   size_t millisec = 0;
+||||||| merged common ancestors
+JPROF_STATIC void StackHook(
+int signum,
+siginfo_t *info,
+void *ucontext)
+{
+    static struct timeval tFirst;
+    static int first=1;
+    size_t millisec = 0;
+=======
+JPROF_STATIC void StackHook(int signum, siginfo_t* info, void* ucontext) {
+  static struct timeval tFirst;
+  static int first = 1;
+  size_t millisec = 0;
+>>>>>>> upstream-releases
 
 #if defined(linux)
   if (rtcHz && pthread_self() != main_thread) {
@@ -520,16 +791,35 @@ JPROF_STATIC void StackHook(int signum, siginfo_t *info, void *ucontext) {
     }
   }
 
+<<<<<<< HEAD
   gregset_t &gregs = ((ucontext_t *)ucontext)->uc_mcontext.gregs;
+||||||| merged common ancestors
+    gregset_t &gregs = ((ucontext_t*)ucontext)->uc_mcontext.gregs;
+=======
+  gregset_t& gregs = ((ucontext_t*)ucontext)->uc_mcontext.gregs;
+>>>>>>> upstream-releases
 #ifdef __x86_64__
+<<<<<<< HEAD
   JprofLog(millisec, (void *)gregs[REG_RSP], (void *)gregs[REG_RIP]);
+||||||| merged common ancestors
+    JprofLog(millisec, (void*)gregs[REG_RSP], (void*)gregs[REG_RIP]);
+=======
+  JprofLog(millisec, (void*)gregs[REG_RSP], (void*)gregs[REG_RIP]);
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
   JprofLog(millisec, (void *)gregs[REG_ESP], (void *)gregs[REG_EIP]);
+||||||| merged common ancestors
+    JprofLog(millisec, (void*)gregs[REG_ESP], (void*)gregs[REG_EIP]);
+=======
+  JprofLog(millisec, (void*)gregs[REG_ESP], (void*)gregs[REG_EIP]);
+>>>>>>> upstream-releases
 #endif
 
   if (!rtcHz) startSignalCounter(timerMilliSec);
 }
 
+<<<<<<< HEAD
 NS_EXPORT_(void) setupProfilingStuff(void) {
   static int gFirstTime = 1;
   char filename[2048];  // XXX fix
@@ -606,7 +896,166 @@ NS_EXPORT_(void) setupProfilingStuff(void) {
 
       char *rtc = strstr(tst, "JP_RTC_HZ=");
       if (rtc) {
+||||||| merged common ancestors
+NS_EXPORT_(void) setupProfilingStuff(void)
+{
+    static int gFirstTime = 1;
+    char filename[2048]; // XXX fix
+
+    if(gFirstTime && !(gFirstTime=0)) {
+	int  startTimer = 1;
+	int  doNotStart = 1;
+	int  firstDelay = 0;
+        int  append = O_TRUNC;
+        char *tst  = getenv("JPROF_FLAGS");
+
+	/* Options from JPROF_FLAGS environment variable:
+	 *   JP_DEFER  -> Wait for a SIGPROF (or SIGALRM, if JP_REALTIME
+	 *               is set) from userland before starting
+	 *               to generate them internally
+	 *   JP_START  -> Install the signal handler
+	 *   JP_PERIOD -> Time between profiler ticks
+	 *   JP_FIRST  -> Extra delay before starting
+	 *   JP_REALTIME -> Take stack traces in intervals of real time
+	 *               rather than time used by the process (and the
+	 *               system for the process).  This is useful for
+	 *               finding time spent by the X server.
+         *   JP_APPEND -> Append to jprof-log rather than overwriting it.
+         *               This is somewhat risky since it depends on the
+         *               address map staying constant across multiple runs.
+         *   JP_FILENAME -> base filename to use when saving logs.  Note that
+         *               this does not affect the mapfile.
+         *   JP_CIRCULAR -> use a circular buffer of size N, write/clear on SIGUSR1
+         *
+         * JPROF_SLAVE is set if this is not the first process.
+	*/
+
+        circular = false;
+
+	if(tst) {
+	    if(strstr(tst, "JP_DEFER"))
+	    {
+		doNotStart = 0;
+		startTimer = 0;
+	    }
+	    if(strstr(tst, "JP_START")) doNotStart = 0;
+	    if(strstr(tst, "JP_REALTIME")) realTime = 1;
+	    if(strstr(tst, "JP_APPEND")) append = O_APPEND;
+
+	    char *delay = strstr(tst,"JP_PERIOD=");
+	    if(delay) {
+                double tmp = strtod(delay+strlen("JP_PERIOD="), nullptr);
+                if (tmp>=1e-3) {
+		    timerMilliSec = static_cast<unsigned long>(1000 * tmp);
+                } else {
+                    fprintf(stderr,
+                            "JP_PERIOD of %g less than 0.001 (1ms), using 1ms\n",
+                            tmp);
+                    timerMilliSec = 1;
+                }
+	    }
+
+	    char *circular_op = strstr(tst,"JP_CIRCULAR=");
+	    if(circular_op) {
+                size_t size = atol(circular_op+strlen("JP_CIRCULAR="));
+                if (size < 1000) {
+                    fprintf(stderr,
+                            "JP_CIRCULAR of %lu less than 1000, using 10000\n",
+                            (unsigned long) size);
+                    size = 10000;
+                }
+                JprofBufferInit(size);
+                fprintf(stderr,"JP_CIRCULAR buffer of %lu bytes\n", (unsigned long) size);
+                circular = true;
+	    }
+
+	    char *first = strstr(tst, "JP_FIRST=");
+	    if(first) {
+                firstDelay = atol(first+strlen("JP_FIRST="));
+	    }
+
+            char *rtc = strstr(tst, "JP_RTC_HZ=");
+            if (rtc) {
+=======
+NS_EXPORT_(void) setupProfilingStuff(void) {
+  static int gFirstTime = 1;
+  char filename[2048];  // XXX fix
+
+  if (gFirstTime && !(gFirstTime = 0)) {
+    int startTimer = 1;
+    int doNotStart = 1;
+    int firstDelay = 0;
+    int append = O_TRUNC;
+    char* tst = getenv("JPROF_FLAGS");
+
+    /* Options from JPROF_FLAGS environment variable:
+     *   JP_DEFER  -> Wait for a SIGPROF (or SIGALRM, if JP_REALTIME
+     *               is set) from userland before starting
+     *               to generate them internally
+     *   JP_START  -> Install the signal handler
+     *   JP_PERIOD -> Time between profiler ticks
+     *   JP_FIRST  -> Extra delay before starting
+     *   JP_REALTIME -> Take stack traces in intervals of real time
+     *               rather than time used by the process (and the
+     *               system for the process).  This is useful for
+     *               finding time spent by the X server.
+     *   JP_APPEND -> Append to jprof-log rather than overwriting it.
+     *               This is somewhat risky since it depends on the
+     *               address map staying constant across multiple runs.
+     *   JP_FILENAME -> base filename to use when saving logs.  Note that
+     *               this does not affect the mapfile.
+     *   JP_CIRCULAR -> use a circular buffer of size N, write/clear on SIGUSR1
+     *
+     * JPROF_SLAVE is set if this is not the first process.
+     */
+
+    circular = false;
+
+    if (tst) {
+      if (strstr(tst, "JP_DEFER")) {
+        doNotStart = 0;
+        startTimer = 0;
+      }
+      if (strstr(tst, "JP_START")) doNotStart = 0;
+      if (strstr(tst, "JP_REALTIME")) realTime = 1;
+      if (strstr(tst, "JP_APPEND")) append = O_APPEND;
+
+      char* delay = strstr(tst, "JP_PERIOD=");
+      if (delay) {
+        double tmp = strtod(delay + strlen("JP_PERIOD="), nullptr);
+        if (tmp >= 1e-3) {
+          timerMilliSec = static_cast<unsigned long>(1000 * tmp);
+        } else {
+          fprintf(stderr, "JP_PERIOD of %g less than 0.001 (1ms), using 1ms\n",
+                  tmp);
+          timerMilliSec = 1;
+        }
+      }
+
+      char* circular_op = strstr(tst, "JP_CIRCULAR=");
+      if (circular_op) {
+        size_t size = atol(circular_op + strlen("JP_CIRCULAR="));
+        if (size < 1000) {
+          fprintf(stderr, "JP_CIRCULAR of %lu less than 1000, using 10000\n",
+                  (unsigned long)size);
+          size = 10000;
+        }
+        JprofBufferInit(size);
+        fprintf(stderr, "JP_CIRCULAR buffer of %lu bytes\n",
+                (unsigned long)size);
+        circular = true;
+      }
+
+      char* first = strstr(tst, "JP_FIRST=");
+      if (first) {
+        firstDelay = atol(first + strlen("JP_FIRST="));
+      }
+
+      char* rtc = strstr(tst, "JP_RTC_HZ=");
+      if (rtc) {
+>>>>>>> upstream-releases
 #if defined(linux)
+<<<<<<< HEAD
         rtcHz = atol(rtc + strlen("JP_RTC_HZ="));
         timerMilliSec = 0; /* This makes JP_FIRST work right. */
         realTime = 1;      /* It's the _R_TC and all.  ;) */
@@ -620,6 +1069,34 @@ NS_EXPORT_(void) setupProfilingStuff(void) {
                   rtcHz);
           rtcHz = 2048;
         }
+||||||| merged common ancestors
+                rtcHz = atol(rtc+strlen("JP_RTC_HZ="));
+                timerMilliSec = 0; /* This makes JP_FIRST work right. */
+                realTime = 1; /* It's the _R_TC and all.  ;) */
+
+#define IS_POWER_OF_TWO(x) (((x) & ((x) - 1)) == 0)
+
+                if (!IS_POWER_OF_TWO(rtcHz) || rtcHz < 2) {
+                    fprintf(stderr, "JP_RTC_HZ must be power of two and >= 2, "
+                            "but %d was provided; using default of 2048\n",
+                            rtcHz);
+                    rtcHz = 2048;
+                }
+=======
+        rtcHz = atol(rtc + strlen("JP_RTC_HZ="));
+        timerMilliSec = 0; /* This makes JP_FIRST work right. */
+        realTime = 1;      /* It's the _R_TC and all.  ;) */
+
+#  define IS_POWER_OF_TWO(x) (((x) & ((x)-1)) == 0)
+
+        if (!IS_POWER_OF_TWO(rtcHz) || rtcHz < 2) {
+          fprintf(stderr,
+                  "JP_RTC_HZ must be power of two and >= 2, "
+                  "but %d was provided; using default of 2048\n",
+                  rtcHz);
+          rtcHz = 2048;
+        }
+>>>>>>> upstream-releases
 #else
         fputs(
             "JP_RTC_HZ found, but RTC profiling only supported on "
@@ -627,6 +1104,7 @@ NS_EXPORT_(void) setupProfilingStuff(void) {
             stderr);
 
 #endif
+<<<<<<< HEAD
       }
       const char *f = strstr(tst, "JP_FILENAME=");
       if (f)
@@ -671,6 +1149,99 @@ NS_EXPORT_(void) setupProfilingStuff(void) {
           action.sa_sigaction = StackHook;
           action.sa_mask = mset;
           action.sa_flags = SA_RESTART | SA_SIGINFO;
+||||||| merged common ancestors
+            }
+            const char *f = strstr(tst,"JP_FILENAME=");
+            if (f)
+                f = f + strlen("JP_FILENAME=");
+            else
+                f = M_LOGFILE;
+
+            char *is_slave = getenv("JPROF_SLAVE");
+            if (!is_slave)
+                setenv("JPROF_SLAVE","", 0);
+            gIsSlave = !!is_slave;
+
+            gFilenamePID = syscall(SYS_gettid); //gettid();
+            if (is_slave)
+                snprintf(filename,sizeof(filename),"%s-%d",f,gFilenamePID);
+            else
+                snprintf(filename,sizeof(filename),"%s",f);
+
+            // XXX FIX! inherit current capture state!
+	}
+
+	if(!doNotStart) {
+
+	    if(gLogFD<0) {
+		gLogFD = open(filename, O_CREAT | O_WRONLY | append, 0666);
+		if(gLogFD<0) {
+		    fprintf(stderr, "Unable to create " M_LOGFILE);
+		    perror(":");
+		} else {
+		    struct sigaction action;
+		    sigset_t mset;
+
+		    // Dump out the address map when we terminate
+		    RegisterJprofShutdown();
+
+		    main_thread = pthread_self();
+                    //fprintf(stderr,"jprof: main_thread = %u\n",
+                    //        (unsigned int)main_thread);
+
+                    // FIX!  probably should block these against each other
+                    // Very unlikely.
+		    sigemptyset(&mset);
+		    action.sa_handler = nullptr;
+		    action.sa_sigaction = StackHook;
+		    action.sa_mask  = mset;
+		    action.sa_flags = SA_RESTART | SA_SIGINFO;
+=======
+      }
+      const char* f = strstr(tst, "JP_FILENAME=");
+      if (f)
+        f = f + strlen("JP_FILENAME=");
+      else
+        f = M_LOGFILE;
+
+      char* is_slave = getenv("JPROF_SLAVE");
+      if (!is_slave) setenv("JPROF_SLAVE", "", 0);
+      gIsSlave = !!is_slave;
+
+      gFilenamePID = syscall(SYS_gettid);  // gettid();
+      if (is_slave)
+        snprintf(filename, sizeof(filename), "%s-%d", f, gFilenamePID);
+      else
+        snprintf(filename, sizeof(filename), "%s", f);
+
+      // XXX FIX! inherit current capture state!
+    }
+
+    if (!doNotStart) {
+      if (gLogFD < 0) {
+        gLogFD = open(filename, O_CREAT | O_WRONLY | append, 0666);
+        if (gLogFD < 0) {
+          fprintf(stderr, "Unable to create " M_LOGFILE);
+          perror(":");
+        } else {
+          struct sigaction action;
+          sigset_t mset;
+
+          // Dump out the address map when we terminate
+          RegisterJprofShutdown();
+
+          main_thread = pthread_self();
+          // fprintf(stderr,"jprof: main_thread = %u\n",
+          //        (unsigned int)main_thread);
+
+          // FIX!  probably should block these against each other
+          // Very unlikely.
+          sigemptyset(&mset);
+          action.sa_handler = nullptr;
+          action.sa_sigaction = StackHook;
+          action.sa_mask = mset;
+          action.sa_flags = SA_RESTART | SA_SIGINFO;
+>>>>>>> upstream-releases
 #if defined(linux)
           if (rtcHz) {
             if (!setupRTCSignals(rtcHz, &action)) {

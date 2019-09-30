@@ -8,6 +8,7 @@
 #define mozilla_dom_SVGSwitchElement_h
 
 #include "mozilla/dom/SVGGraphicsElement.h"
+#include "nsCOMPtr.h"
 
 class nsSVGSwitchFrame;
 
@@ -21,6 +22,7 @@ typedef SVGGraphicsElement SVGSwitchElementBase;
 
 class SVGSwitchElement final : public SVGSwitchElementBase {
   friend class ::nsSVGSwitchFrame;
+<<<<<<< HEAD
 
  protected:
   friend nsresult(::NS_NewSVGSwitchElement(
@@ -34,6 +36,32 @@ class SVGSwitchElement final : public SVGSwitchElementBase {
 
  public:
   nsIContent* GetActiveChild() const { return mActiveChild; }
+||||||| merged common ancestors
+protected:
+  friend nsresult (::NS_NewSVGSwitchElement(nsIContent **aResult,
+                                            already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGSwitchElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGSwitchElement();
+  virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
+
+public:
+  nsIContent * GetActiveChild() const
+  { return mActiveChild; }
+=======
+
+ protected:
+  friend nsresult(::NS_NewSVGSwitchElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGSwitchElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGSwitchElement() = default;
+  virtual JSObject* WrapNode(JSContext* aCx,
+                             JS::Handle<JSObject*> aGivenProto) override;
+
+ public:
+  nsIContent* GetActiveChild() const { return mActiveChild; }
+>>>>>>> upstream-releases
   void MaybeInvalidate();
 
   // interfaces:

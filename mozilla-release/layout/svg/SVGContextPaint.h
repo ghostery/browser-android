@@ -21,7 +21,7 @@
 #include "ImgDrawResult.h"
 
 class gfxContext;
-class nsIDocument;
+
 class nsSVGPaintServerFrame;
 
 namespace mozilla {
@@ -62,6 +62,7 @@ class SVGContextPaint : public RefCounted<SVGContextPaint> {
  public:
   MOZ_DECLARE_REFCOUNTED_TYPENAME(SVGContextPaint)
 
+<<<<<<< HEAD
   virtual ~SVGContextPaint() {}
 
   virtual already_AddRefed<gfxPattern> GetFillPattern(
@@ -70,6 +71,29 @@ class SVGContextPaint : public RefCounted<SVGContextPaint> {
   virtual already_AddRefed<gfxPattern> GetStrokePattern(
       const DrawTarget* aDrawTarget, float aOpacity, const gfxMatrix& aCTM,
       imgDrawingParams& aImgParams) = 0;
+||||||| merged common ancestors
+  virtual ~SVGContextPaint() {}
+
+  virtual already_AddRefed<gfxPattern>
+  GetFillPattern(const DrawTarget* aDrawTarget,
+                 float aOpacity,
+                 const gfxMatrix& aCTM,
+                 imgDrawingParams& aImgParams) = 0;
+  virtual already_AddRefed<gfxPattern>
+  GetStrokePattern(const DrawTarget* aDrawTarget,
+                   float aOpacity,
+                   const gfxMatrix& aCTM,
+                   imgDrawingParams& aImgParams) = 0;
+=======
+  virtual ~SVGContextPaint() = default;
+
+  virtual already_AddRefed<gfxPattern> GetFillPattern(
+      const DrawTarget* aDrawTarget, float aOpacity, const gfxMatrix& aCTM,
+      imgDrawingParams& aImgParams) = 0;
+  virtual already_AddRefed<gfxPattern> GetStrokePattern(
+      const DrawTarget* aDrawTarget, float aOpacity, const gfxMatrix& aCTM,
+      imgDrawingParams& aImgParams) = 0;
+>>>>>>> upstream-releases
   virtual float GetFillOpacity() const = 0;
   virtual float GetStrokeOpacity() const = 0;
 
@@ -165,27 +189,65 @@ struct SVGContextPaintImpl : public SVGContextPaint {
   float GetStrokeOpacity() const override { return mStrokeOpacity; }
 
   struct Paint {
+<<<<<<< HEAD
     Paint() : mPaintDefinition{}, mPaintType(eStyleSVGPaintType_None) {}
+||||||| merged common ancestors
+    Paint()
+      : mPaintDefinition{}
+      , mPaintType(eStyleSVGPaintType_None)
+    {}
+=======
+    enum class Tag : uint8_t {
+      None,
+      Color,
+      PaintServer,
+      ContextFill,
+      ContextStroke,
+    };
+
+    Paint() : mPaintDefinition{}, mPaintType(Tag::None) {}
+>>>>>>> upstream-releases
 
     void SetPaintServer(nsIFrame* aFrame, const gfxMatrix& aContextMatrix,
                         nsSVGPaintServerFrame* aPaintServerFrame) {
-      mPaintType = eStyleSVGPaintType_Server;
+      mPaintType = Tag::PaintServer;
       mPaintDefinition.mPaintServerFrame = aPaintServerFrame;
       mFrame = aFrame;
       mContextMatrix = aContextMatrix;
     }
 
+<<<<<<< HEAD
     void SetColor(const nscolor& aColor) {
       mPaintType = eStyleSVGPaintType_Color;
+||||||| merged common ancestors
+    void SetColor(const nscolor &aColor) {
+      mPaintType = eStyleSVGPaintType_Color;
+=======
+    void SetColor(const nscolor& aColor) {
+      mPaintType = Tag::Color;
+>>>>>>> upstream-releases
       mPaintDefinition.mColor = aColor;
     }
 
+<<<<<<< HEAD
     void SetContextPaint(SVGContextPaint* aContextPaint,
                          nsStyleSVGPaintType aPaintType) {
       NS_ASSERTION(aPaintType == eStyleSVGPaintType_ContextFill ||
                        aPaintType == eStyleSVGPaintType_ContextStroke,
                    "Invalid context paint type");
       mPaintType = aPaintType;
+||||||| merged common ancestors
+    void SetContextPaint(SVGContextPaint* aContextPaint,
+                         nsStyleSVGPaintType aPaintType) {
+      NS_ASSERTION(aPaintType == eStyleSVGPaintType_ContextFill ||
+                   aPaintType == eStyleSVGPaintType_ContextStroke,
+                   "Invalid context paint type");
+      mPaintType = aPaintType;
+=======
+    void SetContextPaint(SVGContextPaint* aContextPaint, Tag aTag) {
+      MOZ_ASSERT(aTag == Tag::ContextFill || aTag == Tag::ContextStroke);
+      mPaintType = aTag;
+>>>>>>> upstream-releases
       mPaintDefinition.mContextPaint = aContextPaint;
     }
 
@@ -199,16 +261,30 @@ struct SVGContextPaintImpl : public SVGContextPaint {
     MOZ_INIT_OUTSIDE_CTOR nsIFrame* mFrame;
     // CTM defining the user space for the pattern we will use.
     gfxMatrix mContextMatrix;
-    nsStyleSVGPaintType mPaintType;
+    Tag mPaintType;
 
     // Device-space-to-pattern-space
     gfxMatrix mPatternMatrix;
     nsRefPtrHashtable<nsFloatHashKey, gfxPattern> mPatternCache;
 
+<<<<<<< HEAD
     already_AddRefed<gfxPattern> GetPattern(
         const DrawTarget* aDrawTarget, float aOpacity,
         nsStyleSVGPaint nsStyleSVG::*aFillOrStroke, const gfxMatrix& aCTM,
         imgDrawingParams& aImgParams);
+||||||| merged common ancestors
+    already_AddRefed<gfxPattern>
+    GetPattern(const DrawTarget* aDrawTarget,
+               float aOpacity,
+               nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
+               const gfxMatrix& aCTM,
+               imgDrawingParams& aImgParams);
+=======
+    already_AddRefed<gfxPattern> GetPattern(
+        const DrawTarget* aDrawTarget, float aOpacity,
+        StyleSVGPaint nsStyleSVG::*aFillOrStroke, const gfxMatrix& aCTM,
+        imgDrawingParams& aImgParams);
+>>>>>>> upstream-releases
   };
 
   Paint mFillPaint;

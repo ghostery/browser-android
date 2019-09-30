@@ -88,9 +88,19 @@ class UploadLastDir final : public nsIObserver, public nsSupportsWeakReference {
    * @param aFilePicker   the file picker to open
    * @param aFpCallback   the callback object to be run when the file is shown.
    */
+<<<<<<< HEAD
   nsresult FetchDirectoryAndDisplayPicker(
       nsIDocument* aDoc, nsIFilePicker* aFilePicker,
       nsIFilePickerShownCallback* aFpCallback);
+||||||| merged common ancestors
+  nsresult FetchDirectoryAndDisplayPicker(nsIDocument* aDoc,
+                                          nsIFilePicker* aFilePicker,
+                                          nsIFilePickerShownCallback* aFpCallback);
+=======
+  nsresult FetchDirectoryAndDisplayPicker(
+      Document* aDoc, nsIFilePicker* aFilePicker,
+      nsIFilePickerShownCallback* aFpCallback);
+>>>>>>> upstream-releases
 
   /**
    * Store the last used directory for this location using the
@@ -98,7 +108,7 @@ class UploadLastDir final : public nsIObserver, public nsSupportsWeakReference {
    * @param aURI URI of the current page
    * @param aDir Parent directory of the file(s)/directory chosen by the user
    */
-  nsresult StoreLastUsedDirectory(nsIDocument* aDoc, nsIFile* aDir);
+  nsresult StoreLastUsedDirectory(Document* aDoc, nsIFile* aDir);
 
   class ContentPrefCallback final : public nsIContentPrefCallback2 {
     virtual ~ContentPrefCallback() {}
@@ -144,7 +154,8 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   virtual int32_t TabIndexDefault() override;
   using nsGenericHTMLElement::Focus;
   virtual void Blur(ErrorResult& aError) override;
-  virtual void Focus(ErrorResult& aError) override;
+  virtual void Focus(const FocusOptions& aOptions,
+                     ErrorResult& aError) override;
 
   // nsINode
 #if !defined(ANDROID) && !defined(XP_MACOSX)
@@ -199,10 +210,8 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   MOZ_CAN_RUN_SCRIPT
   void SetValueOfRangeForUserEvent(Decimal aValue);
 
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
 
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual void DoneCreatingElement() override;
@@ -244,8 +253,14 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   NS_IMETHOD_(bool) GetPlaceholderVisibility() override;
   NS_IMETHOD_(bool) GetPreviewVisibility() override;
   NS_IMETHOD_(void) InitializeKeyboardEventListeners() override;
+<<<<<<< HEAD
   NS_IMETHOD_(void)
   OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
+||||||| merged common ancestors
+  NS_IMETHOD_(void) OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
+=======
+  NS_IMETHOD_(void) OnValueChanged(bool aNotify, ValueChangeKind) override;
+>>>>>>> upstream-releases
   virtual void GetValueFromSetRangeText(nsAString& aValue) override;
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult SetValueFromSetRangeText(const nsAString& aValue) override;
@@ -345,7 +360,22 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   // Update all our validity states and then update our element state
   // as needed.  aNotify controls whether the element state update
   // needs to notify.
+<<<<<<< HEAD
   void UpdateAllValidityStates(bool aNotify);
+||||||| merged common ancestors
+  void     UpdateAllValidityStates(bool aNotify);
+=======
+  void UpdateAllValidityStates(bool aNotify);
+  MOZ_CAN_RUN_SCRIPT
+  void MaybeUpdateAllValidityStates(bool aNotify) {
+    // If you need to add new type which supports validationMessage, you should
+    // add test cases into test_MozEditableElement_setUserInput.html.
+    if (mType == NS_FORM_INPUT_EMAIL) {
+      UpdateAllValidityStates(aNotify);
+    }
+  }
+
+>>>>>>> upstream-releases
   // Update all our validity states without updating element state.
   // This should be called instead of UpdateAllValidityStates any time
   // we're guaranteed that element state will be updated anyway.
@@ -405,7 +435,9 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   void UpdateValidityUIBits(bool aIsFocused);
 
   /**
-   * Fires change event if mFocusedValue and current value held are unequal.
+   * Fires change event if mFocusedValue and current value held are unequal and
+   * if a change event may be fired on bluring.
+   * Sets mFocusedValue to value, if a change event is fired.
    */
   void FireChangeEventIfNeeded();
 
@@ -746,6 +778,7 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * know the current state of the picker or to update the input box on changes.
    */
   void GetDateTimeInputBoxValue(DateTimeValue& aValue);
+<<<<<<< HEAD
 
   /*
    * This locates the inner datetimebox UA Widget element and only the
@@ -760,6 +793,17 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * implementation.
    */
   Element* GetDateTimeBoxElement();
+||||||| merged common ancestors
+  void UpdateDateTimeInputBox(const DateTimeValue& aValue);
+  void SetDateTimePickerState(bool aOpen);
+=======
+
+  /*
+   * This allows chrome JavaScript to dispatch event to the inner datetimebox
+   * anonymous or UA Widget element.
+   */
+  Element* GetDateTimeBoxElement();
+>>>>>>> upstream-releases
 
   /*
    * The following functions are called from datetime input box XBL to control
@@ -853,7 +897,18 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * that @required attribute applies and the attribute is set; in contrast,
    * Required() returns true whenever @required attribute is set.
    */
+<<<<<<< HEAD
   bool IsRequired() const { return State().HasState(NS_EVENT_STATE_REQUIRED); }
+||||||| merged common ancestors
+  bool IsRequired() const
+  {
+    return State().HasState(NS_EVENT_STATE_REQUIRED);
+  }
+=======
+  bool IsRequired() const { return State().HasState(NS_EVENT_STATE_REQUIRED); }
+
+  bool HasBeenTypePassword() { return mHasBeenTypePassword; }
+>>>>>>> upstream-releases
 
  protected:
   virtual ~HTMLInputElement();
@@ -1012,7 +1067,7 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * MaybeSubmitForm looks for a submit input or a single text control
    * and submits the form if either is present.
    */
-  nsresult MaybeSubmitForm(nsPresContext* aPresContext);
+  MOZ_CAN_RUN_SCRIPT nsresult MaybeSubmitForm(nsPresContext* aPresContext);
 
   /**
    * Update mFileList with the currently selected file.
@@ -1464,7 +1519,8 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * when the element is either changed through a script, focused or dispatches
    * a change event. This is to ensure correct future change event firing.
    * NB: This is ONLY applicable where the element is a text control. ie,
-   * where type= "text", "email", "search", "tel", "url" or "password".
+   * where type= "date", "time", "text", "email", "search", "tel", "url" or
+   * "password".
    */
   nsString mFocusedValue;
 
@@ -1538,6 +1594,7 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
 
   nsContentUtils::AutocompleteAttrState mAutocompleteAttrState;
   nsContentUtils::AutocompleteAttrState mAutocompleteInfoState;
+<<<<<<< HEAD
   bool mDisabledChanged : 1;
   bool mValueChanged : 1;
   bool mLastValueChangeWasInteractive : 1;
@@ -1564,6 +1621,62 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
  private:
   static void ImageInputMapAttributesIntoRule(
       const nsMappedAttributes* aAttributes, MappedDeclarations&);
+||||||| merged common ancestors
+  bool                     mDisabledChanged     : 1;
+  bool                     mValueChanged        : 1;
+  bool                     mLastValueChangeWasInteractive : 1;
+  bool                     mCheckedChanged      : 1;
+  bool                     mChecked             : 1;
+  bool                     mHandlingSelectEvent : 1;
+  bool                     mShouldInitChecked   : 1;
+  bool                     mDoneCreating        : 1;
+  bool                     mInInternalActivate  : 1;
+  bool                     mCheckedIsToggled    : 1;
+  bool                     mIndeterminate       : 1;
+  bool                     mInhibitRestoration  : 1;
+  bool                     mCanShowValidUI      : 1;
+  bool                     mCanShowInvalidUI    : 1;
+  bool                     mHasRange            : 1;
+  bool                     mIsDraggingRange     : 1;
+  bool                     mNumberControlSpinnerIsSpinning : 1;
+  bool                     mNumberControlSpinnerSpinsUp : 1;
+  bool                     mPickerRunning : 1;
+  bool                     mSelectionCached : 1;
+  bool                     mIsPreviewEnabled : 1;
+  bool                     mHasPatternAttribute : 1;
+
+private:
+  static void ImageInputMapAttributesIntoRule(const nsMappedAttributes* aAttributes,
+                                              MappedDeclarations&);
+=======
+  bool mDisabledChanged : 1;
+  bool mValueChanged : 1;
+  bool mLastValueChangeWasInteractive : 1;
+  bool mCheckedChanged : 1;
+  bool mChecked : 1;
+  bool mHandlingSelectEvent : 1;
+  bool mShouldInitChecked : 1;
+  bool mDoneCreating : 1;
+  bool mInInternalActivate : 1;
+  bool mCheckedIsToggled : 1;
+  bool mIndeterminate : 1;
+  bool mInhibitRestoration : 1;
+  bool mCanShowValidUI : 1;
+  bool mCanShowInvalidUI : 1;
+  bool mHasRange : 1;
+  bool mIsDraggingRange : 1;
+  bool mNumberControlSpinnerIsSpinning : 1;
+  bool mNumberControlSpinnerSpinsUp : 1;
+  bool mPickerRunning : 1;
+  bool mSelectionCached : 1;
+  bool mIsPreviewEnabled : 1;
+  bool mHasBeenTypePassword : 1;
+  bool mHasPatternAttribute : 1;
+
+ private:
+  static void ImageInputMapAttributesIntoRule(
+      const nsMappedAttributes* aAttributes, MappedDeclarations&);
+>>>>>>> upstream-releases
 
   /**
    * Returns true if this input's type will fire a DOM "change" event when it
@@ -1587,6 +1700,7 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   }
 
   /**
+<<<<<<< HEAD
    * Checks if aDateTimeInputType should be supported based on
    * "dom.forms.datetime", and "dom.experimental_forms".
    */
@@ -1595,7 +1709,22 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
   /**
    * Checks preference "dom.webkitBlink.filesystem.enabled" to determine if
    * webkitEntries should be supported.
+||||||| merged common ancestors
+   * Checks if aDateTimeInputType should be supported based on "dom.forms.datetime",
+   * and "dom.experimental_forms".
    */
+  static bool
+  IsDateTimeTypeSupported(uint8_t aDateTimeInputType);
+
+  /**
+   * Checks preference "dom.webkitBlink.filesystem.enabled" to determine if
+   * webkitEntries should be supported.
+=======
+   * Checks if aDateTimeInputType should be supported based on
+   * "dom.forms.datetime", and "dom.experimental_forms".
+>>>>>>> upstream-releases
+   */
+<<<<<<< HEAD
   static bool IsWebkitFileSystemEnabled();
 
   /**
@@ -1603,11 +1732,25 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * entries API should be supported.
    */
   static bool IsDirPickerEnabled();
+||||||| merged common ancestors
+  static bool
+  IsWebkitFileSystemEnabled();
+
+  /**
+   * Checks preference "dom.input.dirpicker" to determine if file and directory
+   * entries API should be supported.
+   */
+  static bool
+  IsDirPickerEnabled();
+=======
+  static bool IsDateTimeTypeSupported(uint8_t aDateTimeInputType);
+>>>>>>> upstream-releases
 
   /**
    * Checks preference "dom.experimental_forms" to determine if experimental
    * implementation of input element should be enabled.
    */
+<<<<<<< HEAD
   static bool IsExperimentalFormsEnabled();
 
   /**
@@ -1615,6 +1758,19 @@ class HTMLInputElement final : public nsGenericHTMLFormElementWithState,
    * should be supported.
    */
   static bool IsInputDateTimeEnabled();
+||||||| merged common ancestors
+  static bool
+  IsExperimentalFormsEnabled();
+
+  /**
+   * Checks preference "dom.forms.datetime" to determine if input date and time
+   * should be supported.
+   */
+  static bool
+  IsInputDateTimeEnabled();
+=======
+  static bool IsExperimentalFormsEnabled();
+>>>>>>> upstream-releases
 
   /**
    * Checks preference "dom.forms.datetime.others" to determine if input week,

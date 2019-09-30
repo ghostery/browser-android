@@ -1,7 +1,7 @@
 /* Any copyright is dedicated to the Public Domain.
    http://creativecommons.org/publicdomain/zero/1.0/ */
 
-const INT_MAX = 0x7FFFFFFF;
+const INT_MAX = 0x7fffffff;
 
 ChromeUtils.import("resource://gre/modules/Services.jsm", this);
 ChromeUtils.import("resource://gre/modules/TelemetryUtils.jsm", this);
@@ -68,6 +68,7 @@ function check_histogram(histogram_type, name, min, max, bucket_count) {
 }
 
 // This MUST be the very first test of this file.
+<<<<<<< HEAD
 add_task({
   skip_if: () => gIsAndroid,
 },
@@ -87,6 +88,56 @@ function test_instantiate() {
   // Clear the histogram, so we don't void the assumptions from the other tests.
   h.clear();
 });
+||||||| merged common ancestors
+add_task({
+  skip_if: () => gIsAndroid,
+},
+function test_instantiate() {
+  const ID = "TELEMETRY_TEST_COUNT";
+  let h = Telemetry.getHistogramById(ID);
+
+  // Instantiate the subsession histogram through |add| and make sure they match.
+  // This MUST be the first use of "TELEMETRY_TEST_COUNT" in this file, otherwise
+  // |add| will not instantiate the histogram.
+  h.add(1);
+  let snapshot = h.snapshot();
+  let subsession = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                false /* clear */).parent;
+  Assert.ok(ID in subsession);
+  Assert.equal(snapshot.sum, subsession[ID].sum,
+               "Histogram and subsession histogram sum must match.");
+  // Clear the histogram, so we don't void the assumptions from the other tests.
+  h.clear();
+});
+=======
+add_task(
+  {
+    skip_if: () => gIsAndroid,
+  },
+  function test_instantiate() {
+    const ID = "TELEMETRY_TEST_COUNT";
+    let h = Telemetry.getHistogramById(ID);
+
+    // Instantiate the subsession histogram through |add| and make sure they match.
+    // This MUST be the first use of "TELEMETRY_TEST_COUNT" in this file, otherwise
+    // |add| will not instantiate the histogram.
+    h.add(1);
+    let snapshot = h.snapshot();
+    let subsession = Telemetry.getSnapshotForHistograms(
+      "main",
+      false /* clear */
+    ).parent;
+    Assert.ok(ID in subsession);
+    Assert.equal(
+      snapshot.sum,
+      subsession[ID].sum,
+      "Histogram and subsession histogram sum must match."
+    );
+    // Clear the histogram, so we don't void the assumptions from the other tests.
+    h.clear();
+  }
+);
+>>>>>>> upstream-releases
 
 add_task(async function test_parameterChecks() {
   let kinds = [Telemetry.HISTOGRAM_EXPONENTIAL, Telemetry.HISTOGRAM_LINEAR];
@@ -112,7 +163,11 @@ add_task(async function test_parameterCounts() {
     let h = Telemetry.getHistogramById(id);
     h.clear();
     h.add();
-    Assert.equal(h.snapshot().sum, 0, "Calling add() without a value should only log an error.");
+    Assert.equal(
+      h.snapshot().sum,
+      0,
+      "Calling add() without a value should only log an error."
+    );
     h.clear();
   }
 });
@@ -129,7 +184,17 @@ add_task(async function test_parameterCountsKeyed() {
     let h = Telemetry.getKeyedHistogramById(id);
     h.clear();
     h.add("key");
+<<<<<<< HEAD
     Assert.deepEqual(h.snapshot(), {}, "Calling add('key') without a value should only log an error.");
+||||||| merged common ancestors
+    Assert.equal(h.snapshot("key").sum, 0, "Calling add('key') without a value should only log an error.");
+=======
+    Assert.deepEqual(
+      h.snapshot(),
+      {},
+      "Calling add('key') without a value should only log an error."
+    );
+>>>>>>> upstream-releases
     h.clear();
   }
 });
@@ -138,7 +203,15 @@ add_task(async function test_noSerialization() {
   // Instantiate the storage for this histogram and make sure it doesn't
   // get reflected into JS, as it has no interesting data in it.
   Telemetry.getHistogramById("NEWTAB_PAGE_PINNED_SITES_COUNT");
+<<<<<<< HEAD
   let histograms = Telemetry.getSnapshotForHistograms("main", false /* clear */).parent;
+||||||| merged common ancestors
+  let histograms = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                false /* clear */).parent;
+=======
+  let histograms = Telemetry.getSnapshotForHistograms("main", false /* clear */)
+    .parent;
+>>>>>>> upstream-releases
   Assert.equal(false, "NEWTAB_PAGE_PINNED_SITES_COUNT" in histograms);
 });
 
@@ -156,7 +229,13 @@ add_task(async function test_boolean_histogram() {
   var s = h.snapshot();
   Assert.equal(s.histogram_type, Telemetry.HISTOGRAM_BOOLEAN);
   // last bucket should always be 0 since .add parameters are normalized to either 0 or 1
+<<<<<<< HEAD
   Assert.deepEqual(s.values, {0: 2, 1: 3, 2: 0});
+||||||| merged common ancestors
+  Assert.equal(s.counts[2], 0);
+=======
+  Assert.deepEqual(s.values, { 0: 2, 1: 3, 2: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s.sum, 3);
 });
 
@@ -168,19 +247,37 @@ add_task(async function test_flag_histogram() {
   // Should already have a 0 counted.
   var v = h.snapshot().values;
   var s = h.snapshot().sum;
+<<<<<<< HEAD
   Assert.deepEqual(v, {0: 1, 1: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(c), uneval([1, 0, 0]));
+=======
+  Assert.deepEqual(v, { 0: 1, 1: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s, 0);
   // Should switch counts.
   h.add(1);
   var v2 = h.snapshot().values;
   var s2 = h.snapshot().sum;
+<<<<<<< HEAD
   Assert.deepEqual(v2, {0: 0, 1: 1, 2: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(c2), uneval([0, 1, 0]));
+=======
+  Assert.deepEqual(v2, { 0: 0, 1: 1, 2: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s2, 1);
   // Should only switch counts once.
   h.add(1);
   var v3 = h.snapshot().values;
   var s3 = h.snapshot().sum;
+<<<<<<< HEAD
   Assert.deepEqual(v3, {0: 0, 1: 1, 2: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(c3), uneval([0, 1, 0]));
+=======
+  Assert.deepEqual(v3, { 0: 0, 1: 1, 2: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s3, 1);
   Assert.equal(h.snapshot().histogram_type, Telemetry.HISTOGRAM_FLAG);
 });
@@ -193,11 +290,23 @@ add_task(async function test_count_histogram() {
   Assert.equal(s.sum, 0);
   h.add();
   s = h.snapshot();
+<<<<<<< HEAD
   Assert.deepEqual(s.values, {0: 1, 1: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(s.counts), uneval([1, 0, 0]));
+=======
+  Assert.deepEqual(s.values, { 0: 1, 1: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s.sum, 1);
   h.add();
   s = h.snapshot();
+<<<<<<< HEAD
   Assert.deepEqual(s.values, {0: 2, 1: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(s.counts), uneval([2, 0, 0]));
+=======
+  Assert.deepEqual(s.values, { 0: 2, 1: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s.sum, 2);
 });
 
@@ -214,11 +323,27 @@ add_task(async function test_categorical_histogram() {
 
   let snapshot = h1.snapshot();
   Assert.equal(snapshot.sum, 6);
+<<<<<<< HEAD
   Assert.deepEqual(snapshot.range, [1, 50]);
   Assert.deepEqual(snapshot.values, {0: 3, 1: 2, 2: 2, 3: 0});
+||||||| merged common ancestors
+  Assert.deepEqual(snapshot.ranges, expectedRanges);
+  Assert.deepEqual(snapshot.counts.slice(0, 4), [3, 2, 2, 0]);
+=======
+  Assert.deepEqual(snapshot.range, [1, 50]);
+  Assert.deepEqual(snapshot.values, { 0: 3, 1: 2, 2: 2, 3: 0 });
+>>>>>>> upstream-releases
 
   let h2 = Telemetry.getHistogramById("TELEMETRY_TEST_CATEGORICAL_OPTOUT");
-  for (let v of ["CommonLabel", "CommonLabel", "Label4", "Label5", "Label6", 0, 1]) {
+  for (let v of [
+    "CommonLabel",
+    "CommonLabel",
+    "Label4",
+    "Label5",
+    "Label6",
+    0,
+    1,
+  ]) {
     h2.add(v);
   }
   for (let s of ["", "Label3", "1234"]) {
@@ -229,8 +354,16 @@ add_task(async function test_categorical_histogram() {
 
   snapshot = h2.snapshot();
   Assert.equal(snapshot.sum, 7);
+<<<<<<< HEAD
   Assert.deepEqual(snapshot.range, [1, 50]);
   Assert.deepEqual(snapshot.values, {0: 3, 1: 2, 2: 1, 3: 1, 4: 0});
+||||||| merged common ancestors
+  Assert.deepEqual(snapshot.ranges, expectedRanges);
+  Assert.deepEqual(snapshot.counts.slice(0, 5), [3, 2, 1, 1, 0]);
+=======
+  Assert.deepEqual(snapshot.range, [1, 50]);
+  Assert.deepEqual(snapshot.values, { 0: 3, 1: 2, 2: 1, 3: 1, 4: 0 });
+>>>>>>> upstream-releases
 
   // This histogram overrides the default of 50 values to 70.
   let h3 = Telemetry.getHistogramById("TELEMETRY_TEST_CATEGORICAL_NVALUES");
@@ -240,8 +373,17 @@ add_task(async function test_categorical_histogram() {
 
   snapshot = h3.snapshot();
   Assert.equal(snapshot.sum, 3);
+<<<<<<< HEAD
   Assert.deepEqual(snapshot.range, [1, 70]);
   Assert.deepEqual(snapshot.values, {0: 1, 1: 1, 2: 1, 3: 0});
+||||||| merged common ancestors
+  Assert.equal(snapshot.ranges.length, expectedRanges.length);
+  Assert.deepEqual(snapshot.ranges, expectedRanges);
+  Assert.deepEqual(snapshot.counts.slice(0, 4), [1, 1, 1, 0]);
+=======
+  Assert.deepEqual(snapshot.range, [1, 70]);
+  Assert.deepEqual(snapshot.values, { 0: 1, 1: 1, 2: 1, 3: 0 });
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_add_error_behaviour() {
@@ -260,16 +402,27 @@ add_task(async function test_add_error_behaviour() {
 
   // Check that |add| doesn't throw for plain histograms.
   for (let hist of PLAIN_HISTOGRAMS_TO_TEST) {
-    const returnValue = Telemetry.getHistogramById(hist).add("unexpected-value");
-    Assert.strictEqual(returnValue, undefined,
-                       "Adding to an histogram must return 'undefined'.");
+    const returnValue = Telemetry.getHistogramById(hist).add(
+      "unexpected-value"
+    );
+    Assert.strictEqual(
+      returnValue,
+      undefined,
+      "Adding to an histogram must return 'undefined'."
+    );
   }
 
   // And for keyed histograms.
   for (let hist of KEYED_HISTOGRAMS_TO_TEST) {
-    const returnValue = Telemetry.getKeyedHistogramById(hist).add("some-key", "unexpected-value");
-    Assert.strictEqual(returnValue, undefined,
-                       "Adding to a keyed histogram must return 'undefined'.");
+    const returnValue = Telemetry.getKeyedHistogramById(hist).add(
+      "some-key",
+      "unexpected-value"
+    );
+    Assert.strictEqual(
+      returnValue,
+      undefined,
+      "Adding to a keyed histogram must return 'undefined'."
+    );
   }
 });
 
@@ -288,8 +441,11 @@ add_task(async function test_API_return_values() {
   ];
 
   for (let returnValue of RETURN_VALUES) {
-    Assert.strictEqual(returnValue, undefined,
-                       "The function must return undefined");
+    Assert.strictEqual(
+      returnValue,
+      undefined,
+      "The function must return undefined"
+    );
   }
 });
 
@@ -297,9 +453,7 @@ add_task(async function test_getHistogramById() {
   try {
     Telemetry.getHistogramById("nonexistent");
     do_throw("This can't happen");
-  } catch (e) {
-
-  }
+  } catch (e) {}
   var h = Telemetry.getHistogramById("CYCLE_COLLECTOR");
   var s = h.snapshot();
   Assert.equal(s.histogram_type, Telemetry.HISTOGRAM_EXPONENTIAL);
@@ -308,7 +462,7 @@ add_task(async function test_getHistogramById() {
 
 add_task(async function test_getSlowSQL() {
   var slow = Telemetry.slowSQL;
-  Assert.ok(("mainThread" in slow) && ("otherThreads" in slow));
+  Assert.ok("mainThread" in slow && "otherThreads" in slow);
 });
 
 add_task(async function test_getWebrtc() {
@@ -345,43 +499,61 @@ add_task(async function test_histogramRecording() {
   // Check that only base histograms are recorded.
   Telemetry.canRecordBase = true;
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "Histogram value should have incremented by 1 due to recording.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "Histogram value should have incremented by 1 due to recording."
+  );
 
   // Extended histograms should not be recorded.
   h = Telemetry.getHistogramById("TELEMETRY_TEST_RELEASE_OPTIN");
   orig = h.snapshot();
   h.add(1);
-  Assert.equal(orig.sum, h.snapshot().sum,
-               "Histograms should be equal after recording.");
+  Assert.equal(
+    orig.sum,
+    h.snapshot().sum,
+    "Histograms should be equal after recording."
+  );
 
   // Runtime created histograms should not be recorded.
   h = Telemetry.getHistogramById("TELEMETRY_TEST_BOOLEAN");
   orig = h.snapshot();
   h.add(1);
-  Assert.equal(orig.sum, h.snapshot().sum,
-               "Histograms should be equal after recording.");
+  Assert.equal(
+    orig.sum,
+    h.snapshot().sum,
+    "Histograms should be equal after recording."
+  );
 
   // Check that extended histograms are recorded when required.
   Telemetry.canRecordExtended = true;
 
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "Runtime histogram value should have incremented by 1 due to recording.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "Runtime histogram value should have incremented by 1 due to recording."
+  );
 
   h = Telemetry.getHistogramById("TELEMETRY_TEST_RELEASE_OPTIN");
   orig = h.snapshot();
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "Histogram value should have incremented by 1 due to recording.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "Histogram value should have incremented by 1 due to recording."
+  );
 
   // Check that base histograms are still being recorded.
   h = Telemetry.getHistogramById("TELEMETRY_TEST_RELEASE_OPTOUT");
   h.clear();
   orig = h.snapshot();
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "Histogram value should have incremented by 1 due to recording.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "Histogram value should have incremented by 1 due to recording."
+  );
 });
 
 add_task(async function test_expired_histogram() {
@@ -391,16 +563,36 @@ add_task(async function test_expired_histogram() {
   dummy.add(1);
 
   for (let process of ["main", "content", "gpu", "extension"]) {
+<<<<<<< HEAD
     let histograms = Telemetry.getSnapshotForHistograms("main",
                                                   false /* clear */);
+||||||| merged common ancestors
+    let histograms = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                  false /* clear */);
+=======
+    let histograms = Telemetry.getSnapshotForHistograms(
+      "main",
+      false /* clear */
+    );
+>>>>>>> upstream-releases
     if (!(process in histograms)) {
       info("Nothing present for process " + process);
       continue;
     }
     Assert.equal(histograms[process].__expired__, undefined);
   }
+<<<<<<< HEAD
   let parentHgrams = Telemetry.getSnapshotForHistograms("main",
                                                   false /* clear */).parent;
+||||||| merged common ancestors
+  let parentHgrams = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                  false /* clear */).parent;
+=======
+  let parentHgrams = Telemetry.getSnapshotForHistograms(
+    "main",
+    false /* clear */
+  ).parent;
+>>>>>>> upstream-releases
   Assert.equal(parentHgrams[test_expired_id], undefined);
 });
 
@@ -409,14 +601,26 @@ add_task(async function test_keyed_expired_histogram() {
   var dummy = Telemetry.getKeyedHistogramById(test_expired_id);
   dummy.add("someKey", 1);
 
+<<<<<<< HEAD
   const histograms = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */);
+||||||| merged common ancestors
+  const histograms = Telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                       false /* clear */);
+=======
+  const histograms = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  );
+>>>>>>> upstream-releases
   for (let process of ["parent", "content", "gpu", "extension"]) {
     if (!(process in histograms)) {
       info("Nothing present for process " + process);
       continue;
     }
-    Assert.ok(!(test_expired_id in histograms[process]),
-              "The expired keyed histogram must not be reported");
+    Assert.ok(
+      !(test_expired_id in histograms[process]),
+      "The expired keyed histogram must not be reported"
+    );
   }
 });
 
@@ -425,7 +629,11 @@ add_task(async function test_keyed_histogram() {
 
   let threw = false;
   try {
-    Telemetry.getKeyedHistogramById("test::unknown histogram", "never", Telemetry.HISTOGRAM_BOOLEAN);
+    Telemetry.getKeyedHistogramById(
+      "test::unknown histogram",
+      "never",
+      Telemetry.HISTOGRAM_BOOLEAN
+    );
   } catch (e) {
     // This should throw as it is an unknown ID
     threw = true;
@@ -438,13 +646,30 @@ add_task(async function test_keyed_boolean_histogram() {
   let KEYS = numberRange(0, 2).map(i => "key" + (i + 1));
   KEYS.push("漢語");
   let histogramBase = {
+<<<<<<< HEAD
     "range": [1, 2],
     "bucket_count": 3,
     "histogram_type": 2,
     "sum": 1,
     "values": {0: 0, 1: 1, 2: 0},
+||||||| merged common ancestors
+    "min": 1,
+    "max": 2,
+    "histogram_type": 2,
+    "sum": 1,
+    "ranges": [0, 1, 2],
+    "counts": [0, 1, 0],
+=======
+    range: [1, 2],
+    bucket_count: 3,
+    histogram_type: 2,
+    sum: 1,
+    values: { 0: 0, 1: 1, 2: 0 },
+>>>>>>> upstream-releases
   };
-  let testHistograms = numberRange(0, 3).map(i => JSON.parse(JSON.stringify(histogramBase)));
+  let testHistograms = numberRange(0, 3).map(i =>
+    JSON.parse(JSON.stringify(histogramBase))
+  );
   let testKeys = [];
   let testSnapShot = {};
 
@@ -468,11 +693,27 @@ add_task(async function test_keyed_boolean_histogram() {
   testKeys.push(key);
   testSnapShot[key] = testHistograms[2];
   testSnapShot[key].sum = 0;
+<<<<<<< HEAD
   testSnapShot[key].values = {0: 1, 1: 0};
+||||||| merged common ancestors
+  testSnapShot[key].counts = [1, 0, 0];
+=======
+  testSnapShot[key].values = { 0: 1, 1: 0 };
+>>>>>>> upstream-releases
   Assert.deepEqual(h.keys().sort(), testKeys);
   Assert.deepEqual(h.snapshot(), testSnapShot);
 
+<<<<<<< HEAD
   let parentHgrams = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */).parent;
+||||||| merged common ancestors
+  let parentHgrams = Telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                       false /* clear */).parent;
+=======
+  let parentHgrams = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  ).parent;
+>>>>>>> upstream-releases
   Assert.deepEqual(parentHgrams[KEYED_ID], testSnapShot);
 
   h.clear();
@@ -484,13 +725,30 @@ add_task(async function test_keyed_count_histogram() {
   const KEYED_ID = "TELEMETRY_TEST_KEYED_COUNT";
   const KEYS = numberRange(0, 5).map(i => "key" + (i + 1));
   let histogramBase = {
+<<<<<<< HEAD
     "range": [1, 2],
     "bucket_count": 3,
     "histogram_type": 4,
     "sum": 0,
     "values": {0: 1, 1: 0},
+||||||| merged common ancestors
+    "min": 1,
+    "max": 2,
+    "histogram_type": 4,
+    "sum": 0,
+    "ranges": [0, 1, 2],
+    "counts": [1, 0, 0],
+=======
+    range: [1, 2],
+    bucket_count: 3,
+    histogram_type: 4,
+    sum: 0,
+    values: { 0: 1, 1: 0 },
+>>>>>>> upstream-releases
   };
-  let testHistograms = numberRange(0, 5).map(i => JSON.parse(JSON.stringify(histogramBase)));
+  let testHistograms = numberRange(0, 5).map(i =>
+    JSON.parse(JSON.stringify(histogramBase))
+  );
   let testKeys = [];
   let testSnapShot = {};
 
@@ -527,7 +785,17 @@ add_task(async function test_keyed_count_histogram() {
   Assert.deepEqual(h.keys().sort(), testKeys);
   Assert.deepEqual(h.snapshot(), testSnapShot);
 
+<<<<<<< HEAD
   let parentHgrams = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */).parent;
+||||||| merged common ancestors
+  let parentHgrams = Telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                       false /* clear */).parent;
+=======
+  let parentHgrams = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  ).parent;
+>>>>>>> upstream-releases
   Assert.deepEqual(parentHgrams[KEYED_ID], testSnapShot);
 
   // Test clearing categorical histogram.
@@ -569,8 +837,16 @@ add_task(async function test_keyed_categorical_histogram() {
   for (let k of KEYS) {
     Assert.ok(k in snapshot);
     Assert.equal(snapshot[k].sum, 6);
+<<<<<<< HEAD
     Assert.deepEqual(snapshot[k].range, [1, 50]);
     Assert.deepEqual(snapshot[k].values, {0: 3, 1: 2, 2: 2, 3: 0});
+||||||| merged common ancestors
+    Assert.deepEqual(snapshot[k].ranges, expectedRanges);
+    Assert.deepEqual(snapshot[k].counts.slice(0, 4), [3, 2, 2, 0]);
+=======
+    Assert.deepEqual(snapshot[k].range, [1, 50]);
+    Assert.deepEqual(snapshot[k].values, { 0: 3, 1: 2, 2: 2, 3: 0 });
+>>>>>>> upstream-releases
   }
 });
 
@@ -583,17 +859,42 @@ add_task(async function test_keyed_flag_histogram() {
 
   let testSnapshot = {};
   testSnapshot[KEY] = {
+<<<<<<< HEAD
     "range": [1, 2],
     "bucket_count": 3,
     "histogram_type": 3,
     "sum": 1,
     "values": {0: 0, 1: 1, 2: 0},
+||||||| merged common ancestors
+    "min": 1,
+    "max": 2,
+    "histogram_type": 3,
+    "sum": 1,
+    "ranges": [0, 1, 2],
+    "counts": [0, 1, 0],
+=======
+    range: [1, 2],
+    bucket_count: 3,
+    histogram_type: 3,
+    sum: 1,
+    values: { 0: 0, 1: 1, 2: 0 },
+>>>>>>> upstream-releases
   };
 
   Assert.deepEqual(h.keys().sort(), [KEY]);
   Assert.deepEqual(h.snapshot(), testSnapshot);
 
+<<<<<<< HEAD
   let parentHgrams = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */).parent;
+||||||| merged common ancestors
+  let parentHgrams = Telemetry.snapshotKeyedHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                       false /* clear */).parent;
+=======
+  let parentHgrams = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  ).parent;
+>>>>>>> upstream-releases
   Assert.deepEqual(parentHgrams[KEYED_ID], testSnapshot);
 
   h.clear();
@@ -607,7 +908,9 @@ add_task(async function test_keyed_histogram_recording() {
   Telemetry.canRecordExtended = false;
 
   const TEST_KEY = "record_foo";
-  let h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT");
+  let h = Telemetry.getKeyedHistogramById(
+    "TELEMETRY_TEST_KEYED_RELEASE_OPTOUT"
+  );
   h.clear();
   h.add(TEST_KEY, 1);
   Assert.ok(!(TEST_KEY in h.snapshot()));
@@ -615,28 +918,71 @@ add_task(async function test_keyed_histogram_recording() {
   // Check that only base histograms are recorded.
   Telemetry.canRecordBase = true;
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
                "The keyed histogram should record the correct value.");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+               "The keyed histogram should record the correct value.");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "The keyed histogram should record the correct value."
+  );
+>>>>>>> upstream-releases
 
   // Extended set keyed histograms should not be recorded.
   h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTIN");
   h.clear();
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.ok(!(TEST_KEY in h.snapshot()),
                "The keyed histograms should not record any data.");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 0,
+               "The keyed histograms should not record any data.");
+=======
+  Assert.ok(
+    !(TEST_KEY in h.snapshot()),
+    "The keyed histograms should not record any data."
+  );
+>>>>>>> upstream-releases
 
   // Check that extended histograms are recorded when required.
   Telemetry.canRecordExtended = true;
 
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
                   "The runtime keyed histogram should record the correct value.");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+                  "The runtime keyed histogram should record the correct value.");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "The runtime keyed histogram should record the correct value."
+  );
+>>>>>>> upstream-releases
 
   h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTIN");
   h.clear();
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
                "The keyed histogram should record the correct value.");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+               "The keyed histogram should record the correct value.");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "The keyed histogram should record the correct value."
+  );
+>>>>>>> upstream-releases
 
   // Check that base histograms are still being recorded.
   h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT");
@@ -654,44 +1000,68 @@ add_task(async function test_histogram_recording_enabled() {
   var orig = h.snapshot();
 
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-              "add should record by default.");
+  Assert.equal(orig.sum + 1, h.snapshot().sum, "add should record by default.");
 
   // Check that when recording is disabled - add is ignored
   Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_COUNT", false);
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-              "When recording is disabled add should not record.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "When recording is disabled add should not record."
+  );
 
   // Check that we're back to normal after recording is enabled
   Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_COUNT", true);
   h.add(1);
-  Assert.equal(orig.sum + 2, h.snapshot().sum,
-               "When recording is re-enabled add should record.");
+  Assert.equal(
+    orig.sum + 2,
+    h.snapshot().sum,
+    "When recording is re-enabled add should record."
+  );
 
   // Check that we're correctly accumulating values other than 1.
   h.clear();
   h.add(3);
-  Assert.equal(3, h.snapshot().sum, "Recording counts greater than 1 should work.");
+  Assert.equal(
+    3,
+    h.snapshot().sum,
+    "Recording counts greater than 1 should work."
+  );
 
   // Check that a histogram with recording disabled by default behaves correctly
   h = Telemetry.getHistogramById("TELEMETRY_TEST_COUNT_INIT_NO_RECORD");
   orig = h.snapshot();
 
   h.add(1);
-  Assert.equal(orig.sum, h.snapshot().sum,
-               "When recording is disabled by default, add should not record by default.");
+  Assert.equal(
+    orig.sum,
+    h.snapshot().sum,
+    "When recording is disabled by default, add should not record by default."
+  );
 
-  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_COUNT_INIT_NO_RECORD", true);
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_COUNT_INIT_NO_RECORD",
+    true
+  );
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "When recording is enabled add should record.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "When recording is enabled add should record."
+  );
 
   // Restore to disabled
-  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_COUNT_INIT_NO_RECORD", false);
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_COUNT_INIT_NO_RECORD",
+    false
+  );
   h.add(1);
-  Assert.equal(orig.sum + 1, h.snapshot().sum,
-               "When recording is disabled add should not record.");
+  Assert.equal(
+    orig.sum + 1,
+    h.snapshot().sum,
+    "When recording is disabled add should not record."
+  );
 });
 
 add_task(async function test_keyed_histogram_recording_enabled() {
@@ -700,42 +1070,135 @@ add_task(async function test_keyed_histogram_recording_enabled() {
 
   // Check RecordingEnabled for keyed histograms which are recording by default
   const TEST_KEY = "record_foo";
-  let h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT");
+  let h = Telemetry.getKeyedHistogramById(
+    "TELEMETRY_TEST_KEYED_RELEASE_OPTOUT"
+  );
 
   h.clear();
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
     "Keyed histogram add should record by default");
 
   Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT", false);
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+    "Keyed histogram add should record by default");
+
+  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT", false);
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "Keyed histogram add should record by default"
+  );
+
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_KEYED_RELEASE_OPTOUT",
+    false
+  );
+>>>>>>> upstream-releases
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
     "Keyed histogram add should not record when recording is disabled");
 
   Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT", true);
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+    "Keyed histogram add should not record when recording is disabled");
+
+  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT", true);
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "Keyed histogram add should not record when recording is disabled"
+  );
+
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_KEYED_RELEASE_OPTOUT",
+    true
+  );
+>>>>>>> upstream-releases
   h.clear();
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
     "Keyed histogram add should record when recording is re-enabled");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+    "Keyed histogram add should record when recording is re-enabled");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "Keyed histogram add should record when recording is re-enabled"
+  );
+>>>>>>> upstream-releases
 
   // Check that a histogram with recording disabled by default behaves correctly
-  h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD");
+  h = Telemetry.getKeyedHistogramById(
+    "TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD"
+  );
   h.clear();
 
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.ok(!(TEST_KEY in h.snapshot()),
     "Keyed histogram add should not record by default for histograms which don't record by default");
 
   Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD", true);
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 0,
+    "Keyed histogram add should not record by default for histograms which don't record by default");
+
+  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD", true);
+=======
+  Assert.ok(
+    !(TEST_KEY in h.snapshot()),
+    "Keyed histogram add should not record by default for histograms which don't record by default"
+  );
+
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD",
+    true
+  );
+>>>>>>> upstream-releases
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
     "Keyed histogram add should record when recording is enabled");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+    "Keyed histogram add should record when recording is enabled");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "Keyed histogram add should record when recording is enabled"
+  );
+>>>>>>> upstream-releases
 
   // Restore to disabled
-  Telemetry.setHistogramRecordingEnabled("TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD", false);
+  Telemetry.setHistogramRecordingEnabled(
+    "TELEMETRY_TEST_KEYED_COUNT_INIT_NO_RECORD",
+    false
+  );
   h.add(TEST_KEY, 1);
+<<<<<<< HEAD
   Assert.equal(h.snapshot()[TEST_KEY].sum, 1,
     "Keyed histogram add should not record when recording is disabled");
+||||||| merged common ancestors
+  Assert.equal(h.snapshot(TEST_KEY).sum, 1,
+    "Keyed histogram add should not record when recording is disabled");
+=======
+  Assert.equal(
+    h.snapshot()[TEST_KEY].sum,
+    1,
+    "Keyed histogram add should not record when recording is disabled"
+  );
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_histogramSnapshots() {
@@ -743,14 +1206,25 @@ add_task(async function test_histogramSnapshots() {
   keyed.add("a", 1);
 
   // Check that keyed histograms are not returned
+<<<<<<< HEAD
   let parentHgrams = Telemetry.getSnapshotForHistograms("main",
                                                   false /* clear */).parent;
+||||||| merged common ancestors
+  let parentHgrams = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                  false /* clear */).parent;
+=======
+  let parentHgrams = Telemetry.getSnapshotForHistograms(
+    "main",
+    false /* clear */
+  ).parent;
+>>>>>>> upstream-releases
   Assert.ok(!("TELEMETRY_TEST_KEYED_COUNT" in parentHgrams));
 });
 
 add_task(async function test_datasets() {
   // Check that datasets work as expected.
 
+<<<<<<< HEAD
   const currentRecordExtended = Telemetry.canRecordExtended;
 
   // Clear everything out
@@ -764,10 +1238,45 @@ add_task(async function test_datasets() {
   Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_FLAG").add("a", 1);
   Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTIN").add("a", 1);
   Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT").add("a", 1);
+||||||| merged common ancestors
+  const RELEASE_CHANNEL_OPTOUT = Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTOUT;
+  const RELEASE_CHANNEL_OPTIN  = Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN;
+=======
+  const currentRecordExtended = Telemetry.canRecordExtended;
+
+  // Clear everything out
+  Telemetry.getSnapshotForHistograms("main", true /* clear */);
+  Telemetry.getSnapshotForKeyedHistograms("main", true /* clear */);
+
+  // Empty histograms are filtered. Let's record what we check below.
+  Telemetry.getHistogramById("TELEMETRY_TEST_RELEASE_OPTIN").add(1);
+  Telemetry.getHistogramById("TELEMETRY_TEST_RELEASE_OPTOUT").add(1);
+  // Keyed flag histograms are skipped if empty, let's add data
+  Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_FLAG").add("a", 1);
+  Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTIN").add(
+    "a",
+    1
+  );
+  Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT").add(
+    "a",
+    1
+  );
+>>>>>>> upstream-releases
 
   // Check that registeredHistogram works properly
+<<<<<<< HEAD
   Telemetry.canRecordExtended = true;
   let registered = Telemetry.getSnapshotForHistograms("main", false /* clear */);
+||||||| merged common ancestors
+  let registered = Telemetry.snapshotHistograms(RELEASE_CHANNEL_OPTIN,
+                                                false /* clear */);
+=======
+  Telemetry.canRecordExtended = true;
+  let registered = Telemetry.getSnapshotForHistograms(
+    "main",
+    false /* clear */
+  );
+>>>>>>> upstream-releases
   registered = new Set(Object.keys(registered.parent));
   Assert.ok(registered.has("TELEMETRY_TEST_FLAG"));
   Assert.ok(registered.has("TELEMETRY_TEST_RELEASE_OPTIN"));
@@ -780,13 +1289,35 @@ add_task(async function test_datasets() {
   Assert.ok(registered.has("TELEMETRY_TEST_RELEASE_OPTOUT"));
 
   // Check that registeredKeyedHistograms works properly
+<<<<<<< HEAD
   Telemetry.canRecordExtended = true;
   registered = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */);
+||||||| merged common ancestors
+  registered = Telemetry.snapshotKeyedHistograms(RELEASE_CHANNEL_OPTIN,
+                                                 false /* clear */);
+=======
+  Telemetry.canRecordExtended = true;
+  registered = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  );
+>>>>>>> upstream-releases
   registered = new Set(Object.keys(registered.parent));
   Assert.ok(registered.has("TELEMETRY_TEST_KEYED_FLAG"));
   Assert.ok(registered.has("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT"));
+<<<<<<< HEAD
   Telemetry.canRecordExtended = false;
   registered = Telemetry.getSnapshotForKeyedHistograms("main", false /* clear */);
+||||||| merged common ancestors
+  registered = Telemetry.snapshotKeyedHistograms(RELEASE_CHANNEL_OPTOUT,
+                                                 false /* clear */);
+=======
+  Telemetry.canRecordExtended = false;
+  registered = Telemetry.getSnapshotForKeyedHistograms(
+    "main",
+    false /* clear */
+  );
+>>>>>>> upstream-releases
   registered = new Set(Object.keys(registered.parent));
   Assert.ok(!registered.has("TELEMETRY_TEST_KEYED_FLAG"));
   Assert.ok(registered.has("TELEMETRY_TEST_KEYED_RELEASE_OPTOUT"));
@@ -809,22 +1340,56 @@ add_task(async function test_keyed_keys() {
   Assert.equal(Object.keys(snap).length, 2, "Only 2 keys must be recorded.");
   Assert.ok("testkey" in snap, "'testkey' must be recorded.");
   Assert.ok("thirdKey" in snap, "'thirdKey' must be recorded.");
+<<<<<<< HEAD
   Assert.deepEqual(snap.testkey.values, {0: 0, 1: 1, 2: 0},
                    "'testkey' must contain the correct value.");
   Assert.deepEqual(snap.thirdKey.values, {0: 1, 1: 0},
                    "'thirdKey' must contain the correct value.");
+||||||| merged common ancestors
+  Assert.deepEqual(snap.testkey.counts, [0, 1, 0],
+                   "'testkey' must contain the correct value.");
+  Assert.deepEqual(snap.thirdKey.counts, [1, 0, 0],
+                   "'thirdKey' must contain the correct value.");
+=======
+  Assert.deepEqual(
+    snap.testkey.values,
+    { 0: 0, 1: 1, 2: 0 },
+    "'testkey' must contain the correct value."
+  );
+  Assert.deepEqual(
+    snap.thirdKey.values,
+    { 0: 1, 1: 0 },
+    "'thirdKey' must contain the correct value."
+  );
+>>>>>>> upstream-releases
 
   // Keys that are not allowed must not be recorded.
   Assert.ok(!("not-allowed" in snap), "'not-allowed' must not be recorded.");
 
   // Check that these failures were correctly tracked.
+<<<<<<< HEAD
   const parentScalars = Telemetry.getSnapshotForKeyedScalars("main", false).parent;
+||||||| merged common ancestors
+  const parentScalars =
+    Telemetry.snapshotKeyedScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false).parent;
+=======
+  const parentScalars = Telemetry.getSnapshotForKeyedScalars("main", false)
+    .parent;
+>>>>>>> upstream-releases
   const scalarName = "telemetry.accumulate_unknown_histogram_keys";
-  Assert.ok(scalarName in parentScalars, "Accumulation to unallowed keys must be reported.");
-  Assert.ok("TELEMETRY_TEST_KEYED_KEYS" in parentScalars[scalarName],
-            "Accumulation to unallowed keys must be recorded with the correct key.");
-  Assert.equal(parentScalars[scalarName].TELEMETRY_TEST_KEYED_KEYS, 1,
-               "Accumulation to unallowed keys must report the correct value.");
+  Assert.ok(
+    scalarName in parentScalars,
+    "Accumulation to unallowed keys must be reported."
+  );
+  Assert.ok(
+    "TELEMETRY_TEST_KEYED_KEYS" in parentScalars[scalarName],
+    "Accumulation to unallowed keys must be recorded with the correct key."
+  );
+  Assert.equal(
+    parentScalars[scalarName].TELEMETRY_TEST_KEYED_KEYS,
+    1,
+    "Accumulation to unallowed keys must report the correct value."
+  );
 });
 
 add_task(async function test_count_multiple_samples() {
@@ -846,7 +1411,13 @@ add_task(async function test_count_multiple_samples() {
 
   h.add(valid);
   let s2 = h.snapshot();
+<<<<<<< HEAD
   Assert.deepEqual(s2.values, {0: 4, 1: 0});
+||||||| merged common ancestors
+  Assert.equal(uneval(s2.counts), uneval([4, 0, 0]));
+=======
+  Assert.deepEqual(s2.values, { 0: 4, 1: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s2.sum, 5);
 });
 
@@ -866,7 +1437,13 @@ add_task(async function test_categorical_multiple_samples() {
   h.add(valid);
   let snapshot = h.snapshot();
   Assert.equal(snapshot.sum, 6);
+<<<<<<< HEAD
   Assert.deepEqual(snapshot.values, {0: 3, 1: 2, 2: 2, 3: 0});
+||||||| merged common ancestors
+  Assert.deepEqual(snapshot.counts.slice(0, 4), [3, 2, 2, 0]);
+=======
+  Assert.deepEqual(snapshot.values, { 0: 3, 1: 2, 2: 2, 3: 0 });
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_boolean_multiple_samples() {
@@ -885,7 +1462,13 @@ add_task(async function test_boolean_multiple_samples() {
 
   h.add(valid);
   let s = h.snapshot();
+<<<<<<< HEAD
   Assert.deepEqual(s.values, {0: 2, 1: 3, 2: 0});
+||||||| merged common ancestors
+  Assert.deepEqual(s.counts, [2, 3, 0]);
+=======
+  Assert.deepEqual(s.values, { 0: 2, 1: 3, 2: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s.sum, 3);
 });
 
@@ -900,10 +1483,22 @@ add_task(async function test_linear_multiple_samples() {
 
   // At least one invalid paramater, so no accumulations.
   // Valid values in front of invalid.
+<<<<<<< HEAD
    h.add(valid.concat(invalid));
    let s1 = h.snapshot();
    Assert.equal(s1.sum, 0);
    Assert.deepEqual({}, s1.values);
+||||||| merged common ancestors
+   h.add(valid.concat(invalid));
+   let s1 = h.snapshot();
+   Assert.equal(s1.sum, 0);
+   Assert.equal(s1.counts.reduce((acc, cur) => acc + cur), 0);
+=======
+  h.add(valid.concat(invalid));
+  let s1 = h.snapshot();
+  Assert.equal(s1.sum, 0);
+  Assert.deepEqual({}, s1.values);
+>>>>>>> upstream-releases
 
   h.add(valid);
   let s2 = h.snapshot();
@@ -951,8 +1546,16 @@ add_task(async function test_keyed_count_multiple_samples() {
   Assert.ok(!(key in s1));
 
   h.add(key, valid);
+<<<<<<< HEAD
   let s2 = h.snapshot()[key];
   Assert.deepEqual(s2.values, {0: 4, 1: 0});
+||||||| merged common ancestors
+  let s2 = h.snapshot(key);
+  Assert.equal(uneval(s2.counts), uneval([4, 0, 0]));
+=======
+  let s2 = h.snapshot()[key];
+  Assert.deepEqual(s2.values, { 0: 4, 1: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s2.sum, 5);
 });
 
@@ -990,8 +1593,16 @@ add_task(async function test_keyed_boolean_multiple_samples() {
   Assert.ok(!(key in s1));
 
   h.add(key, valid);
+<<<<<<< HEAD
   let s = h.snapshot()[key];
   Assert.deepEqual(s.values, {0: 2, 1: 3, 2: 0});
+||||||| merged common ancestors
+  let s = h.snapshot(key);
+  Assert.deepEqual(s.counts, [2, 3, 0]);
+=======
+  let s = h.snapshot()[key];
+  Assert.deepEqual(s.values, { 0: 2, 1: 3, 2: 0 });
+>>>>>>> upstream-releases
   Assert.equal(s.sum, 3);
 });
 
@@ -1007,23 +1618,42 @@ add_task(async function test_keyed_linear_multiple_samples() {
 
   // At least one invalid paramater, so no accumulations.
   // Valid values in front of invalid.
+<<<<<<< HEAD
    h.add(key, valid.concat(invalid));
    let s1 = h.snapshot();
    Assert.ok(!(key in s1));
+||||||| merged common ancestors
+   h.add(key, valid.concat(invalid));
+   let s1 = h.snapshot(key);
+   Assert.equal(s1.sum, 0);
+   Assert.equal(s1.counts.reduce((acc, cur) => acc + cur), 0);
+=======
+  h.add(key, valid.concat(invalid));
+  let s1 = h.snapshot();
+  Assert.ok(!(key in s1));
+>>>>>>> upstream-releases
 
   h.add(key, valid);
   let s2 = h.snapshot()[key];
   // Values >= INT32_MAX are accumulated as INT32_MAX - 1
   Assert.equal(s2.sum, valid.reduce((acc, cur) => acc + cur) - 3);
+<<<<<<< HEAD
   Assert.deepEqual(s2.range, [1, 250000]);
   Assert.deepEqual(s2.values, {0: 1, 1: 3, 250000: 3});
+||||||| merged common ancestors
+  Assert.equal(s2.counts[9], 3);
+  Assert.deepEqual(s2.counts.slice(0, 3), [1, 3, 0]);
+=======
+  Assert.deepEqual(s2.range, [1, 250000]);
+  Assert.deepEqual(s2.values, { 0: 1, 1: 3, 250000: 3 });
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_non_array_non_string_obj() {
   let invalid_obj = {
-    "prop1": "someValue",
-    "prop2": "someOtherValue",
-    };
+    prop1: "someValue",
+    prop2: "someOtherValue",
+  };
   let key = "someString";
 
   let h = Telemetry.getKeyedHistogramById("TELEMETRY_TEST_KEYED_LINEAR");
@@ -1033,6 +1663,7 @@ add_task(async function test_non_array_non_string_obj() {
   Assert.equal(h.keys().length, 0);
 });
 
+<<<<<<< HEAD
 add_task({
   skip_if: () => gIsAndroid,
 },
@@ -1138,6 +1769,253 @@ async function test_clearHistogramsOnSnapshot() {
                                               false /* clear */).parent;
   Assert.ok(!(COUNT in snapshot));
 });
+||||||| merged common ancestors
+add_task({
+  skip_if: () => gIsAndroid,
+},
+async function test_productSpecificHistograms() {
+  const DEFAULT_PRODUCTS_HISTOGRAM = "TELEMETRY_TEST_DEFAULT_PRODUCTS";
+  const DESKTOP_ONLY_HISTOGRAM = "TELEMETRY_TEST_DESKTOP_ONLY";
+  const MULTIPRODUCT_HISTOGRAM = "TELEMETRY_TEST_MULTIPRODUCT";
+  const MOBILE_ONLY_HISTOGRAM = "TELEMETRY_TEST_MOBILE_ONLY";
+
+  var default_histo = Telemetry.getHistogramById(DEFAULT_PRODUCTS_HISTOGRAM);
+  var desktop_histo = Telemetry.getHistogramById(DESKTOP_ONLY_HISTOGRAM);
+  var multiproduct_histo = Telemetry.getHistogramById(MULTIPRODUCT_HISTOGRAM);
+  var mobile_histo = Telemetry.getHistogramById(MOBILE_ONLY_HISTOGRAM);
+  default_histo.clear();
+  desktop_histo.clear();
+  multiproduct_histo.clear();
+  mobile_histo.clear();
+
+  default_histo.add(42);
+  desktop_histo.add(42);
+  multiproduct_histo.add(42);
+  mobile_histo.add(42);
+
+  let histograms = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                false /* clear */).parent;
+
+  Assert.ok(DEFAULT_PRODUCTS_HISTOGRAM in histograms, "Should have recorded default products histogram");
+  Assert.ok(DESKTOP_ONLY_HISTOGRAM in histograms, "Should have recorded desktop-only histogram");
+  Assert.ok(MULTIPRODUCT_HISTOGRAM in histograms, "Should have recorded multiproduct histogram");
+
+  Assert.ok(!(MOBILE_ONLY_HISTOGRAM in histograms), "Should not have recorded mobile-only histogram");
+});
+
+add_task({
+  skip_if: () => !gIsAndroid,
+},
+async function test_mobileSpecificHistograms() {
+  const DEFAULT_PRODUCTS_HISTOGRAM = "TELEMETRY_TEST_DEFAULT_PRODUCTS";
+  const DESKTOP_ONLY_HISTOGRAM = "TELEMETRY_TEST_DESKTOP_ONLY";
+  const MULTIPRODUCT_HISTOGRAM = "TELEMETRY_TEST_MULTIPRODUCT";
+  const MOBILE_ONLY_HISTOGRAM = "TELEMETRY_TEST_MOBILE_ONLY";
+
+  var default_histo = Telemetry.getHistogramById(DEFAULT_PRODUCTS_HISTOGRAM);
+  var desktop_histo = Telemetry.getHistogramById(DESKTOP_ONLY_HISTOGRAM);
+  var multiproduct_histo = Telemetry.getHistogramById(MULTIPRODUCT_HISTOGRAM);
+  var mobile_histo = Telemetry.getHistogramById(MOBILE_ONLY_HISTOGRAM);
+  default_histo.clear();
+  desktop_histo.clear();
+  multiproduct_histo.clear();
+  mobile_histo.clear();
+
+  default_histo.add(1);
+  desktop_histo.add(1);
+  multiproduct_histo.add(1);
+  mobile_histo.add(1);
+
+  let histograms = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                false /* clear */).parent;
+
+  Assert.ok(DEFAULT_PRODUCTS_HISTOGRAM in histograms, "Should have recorded default products histogram");
+  Assert.ok(MOBILE_ONLY_HISTOGRAM in histograms, "Should have recorded mobile-only histogram");
+  Assert.ok(MULTIPRODUCT_HISTOGRAM in histograms, "Should have recorded multiproduct histogram");
+
+  Assert.ok(!(DESKTOP_ONLY_HISTOGRAM in histograms), "Should not have recorded desktop-only histogram");
+});
+
+add_task({
+  skip_if: () => gIsAndroid,
+},
+async function test_clearHistogramsOnSnapshot() {
+  const COUNT = "TELEMETRY_TEST_COUNT";
+  let h = Telemetry.getHistogramById(COUNT);
+  h.clear();
+  let snapshot;
+
+  // The first snapshot should be empty, nothing recorded.
+  snapshot = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                              false /* clear */).parent;
+  Assert.ok(!(COUNT in snapshot));
+
+  // After recording into a histogram, the data should be in the snapshot. Don't delete it.
+  h.add(1);
+
+  Assert.equal(h.snapshot().sum, 1);
+  snapshot = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                              false /* clear */).parent;
+  Assert.ok(COUNT in snapshot);
+  Assert.equal(snapshot[COUNT].sum, 1);
+
+  // After recording into a histogram again, the data should be updated and in the snapshot.
+  // Clean up after.
+  h.add(41);
+
+  Assert.equal(h.snapshot().sum, 42);
+  snapshot = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                              true /* clear */).parent;
+  Assert.ok(COUNT in snapshot);
+  Assert.equal(snapshot[COUNT].sum, 42);
+
+  // Finally, no data should be in the snapshot.
+  Assert.equal(h.snapshot().sum, 0);
+  snapshot = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                              false /* clear */).parent;
+  Assert.ok(!(COUNT in snapshot));
+});
+=======
+add_task(
+  {
+    skip_if: () => gIsAndroid,
+  },
+  async function test_productSpecificHistograms() {
+    const DEFAULT_PRODUCTS_HISTOGRAM = "TELEMETRY_TEST_DEFAULT_PRODUCTS";
+    const DESKTOP_ONLY_HISTOGRAM = "TELEMETRY_TEST_DESKTOP_ONLY";
+    const MULTIPRODUCT_HISTOGRAM = "TELEMETRY_TEST_MULTIPRODUCT";
+    const MOBILE_ONLY_HISTOGRAM = "TELEMETRY_TEST_MOBILE_ONLY";
+
+    var default_histo = Telemetry.getHistogramById(DEFAULT_PRODUCTS_HISTOGRAM);
+    var desktop_histo = Telemetry.getHistogramById(DESKTOP_ONLY_HISTOGRAM);
+    var multiproduct_histo = Telemetry.getHistogramById(MULTIPRODUCT_HISTOGRAM);
+    var mobile_histo = Telemetry.getHistogramById(MOBILE_ONLY_HISTOGRAM);
+    default_histo.clear();
+    desktop_histo.clear();
+    multiproduct_histo.clear();
+    mobile_histo.clear();
+
+    default_histo.add(42);
+    desktop_histo.add(42);
+    multiproduct_histo.add(42);
+    mobile_histo.add(42);
+
+    let histograms = Telemetry.getSnapshotForHistograms(
+      "main",
+      false /* clear */
+    ).parent;
+
+    Assert.ok(
+      DEFAULT_PRODUCTS_HISTOGRAM in histograms,
+      "Should have recorded default products histogram"
+    );
+    Assert.ok(
+      DESKTOP_ONLY_HISTOGRAM in histograms,
+      "Should have recorded desktop-only histogram"
+    );
+    Assert.ok(
+      MULTIPRODUCT_HISTOGRAM in histograms,
+      "Should have recorded multiproduct histogram"
+    );
+
+    Assert.ok(
+      !(MOBILE_ONLY_HISTOGRAM in histograms),
+      "Should not have recorded mobile-only histogram"
+    );
+  }
+);
+
+add_task(
+  {
+    skip_if: () => !gIsAndroid,
+  },
+  async function test_mobileSpecificHistograms() {
+    const DEFAULT_PRODUCTS_HISTOGRAM = "TELEMETRY_TEST_DEFAULT_PRODUCTS";
+    const DESKTOP_ONLY_HISTOGRAM = "TELEMETRY_TEST_DESKTOP_ONLY";
+    const MULTIPRODUCT_HISTOGRAM = "TELEMETRY_TEST_MULTIPRODUCT";
+    const MOBILE_ONLY_HISTOGRAM = "TELEMETRY_TEST_MOBILE_ONLY";
+
+    var default_histo = Telemetry.getHistogramById(DEFAULT_PRODUCTS_HISTOGRAM);
+    var desktop_histo = Telemetry.getHistogramById(DESKTOP_ONLY_HISTOGRAM);
+    var multiproduct_histo = Telemetry.getHistogramById(MULTIPRODUCT_HISTOGRAM);
+    var mobile_histo = Telemetry.getHistogramById(MOBILE_ONLY_HISTOGRAM);
+    default_histo.clear();
+    desktop_histo.clear();
+    multiproduct_histo.clear();
+    mobile_histo.clear();
+
+    default_histo.add(1);
+    desktop_histo.add(1);
+    multiproduct_histo.add(1);
+    mobile_histo.add(1);
+
+    let histograms = Telemetry.getSnapshotForHistograms(
+      "main",
+      false /* clear */
+    ).parent;
+
+    Assert.ok(
+      DEFAULT_PRODUCTS_HISTOGRAM in histograms,
+      "Should have recorded default products histogram"
+    );
+    Assert.ok(
+      MOBILE_ONLY_HISTOGRAM in histograms,
+      "Should have recorded mobile-only histogram"
+    );
+    Assert.ok(
+      MULTIPRODUCT_HISTOGRAM in histograms,
+      "Should have recorded multiproduct histogram"
+    );
+
+    Assert.ok(
+      !(DESKTOP_ONLY_HISTOGRAM in histograms),
+      "Should not have recorded desktop-only histogram"
+    );
+  }
+);
+
+add_task(
+  {
+    skip_if: () => gIsAndroid,
+  },
+  async function test_clearHistogramsOnSnapshot() {
+    const COUNT = "TELEMETRY_TEST_COUNT";
+    let h = Telemetry.getHistogramById(COUNT);
+    h.clear();
+    let snapshot;
+
+    // The first snapshot should be empty, nothing recorded.
+    snapshot = Telemetry.getSnapshotForHistograms("main", false /* clear */)
+      .parent;
+    Assert.ok(!(COUNT in snapshot));
+
+    // After recording into a histogram, the data should be in the snapshot. Don't delete it.
+    h.add(1);
+
+    Assert.equal(h.snapshot().sum, 1);
+    snapshot = Telemetry.getSnapshotForHistograms("main", false /* clear */)
+      .parent;
+    Assert.ok(COUNT in snapshot);
+    Assert.equal(snapshot[COUNT].sum, 1);
+
+    // After recording into a histogram again, the data should be updated and in the snapshot.
+    // Clean up after.
+    h.add(41);
+
+    Assert.equal(h.snapshot().sum, 42);
+    snapshot = Telemetry.getSnapshotForHistograms("main", true /* clear */)
+      .parent;
+    Assert.ok(COUNT in snapshot);
+    Assert.equal(snapshot[COUNT].sum, 42);
+
+    // Finally, no data should be in the snapshot.
+    Assert.equal(h.snapshot().sum, 0);
+    snapshot = Telemetry.getSnapshotForHistograms("main", false /* clear */)
+      .parent;
+    Assert.ok(!(COUNT in snapshot));
+  }
+);
+>>>>>>> upstream-releases
 
 add_task(async function test_valid_os_smoketest() {
   let nonExistingProbe;
@@ -1165,18 +2043,36 @@ add_task(async function test_valid_os_smoketest() {
       return;
   }
 
-  Assert.throws(() => Telemetry.getHistogramById(nonExistingProbe),
+  Assert.throws(
+    () => Telemetry.getHistogramById(nonExistingProbe),
     /NS_ERROR_FAILURE/,
-    `Should throw on ${nonExistingProbe} probe that's not available on ${AppConstants.platform}`);
+    `Should throw on ${nonExistingProbe} probe that's not available on ${
+      AppConstants.platform
+    }`
+  );
 
   let h = Telemetry.getHistogramById(existingProbe);
   h.clear();
   h.add(1);
+<<<<<<< HEAD
   let snapshot = Telemetry.getSnapshotForHistograms("main",
                                               false /* clear */).parent;
   Assert.ok(existingProbe in snapshot, `${existingProbe} should be recorded on ${AppConstants.platform}`);
+||||||| merged common ancestors
+  let snapshot = Telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                              false /* clear */).parent;
+  Assert.ok(existingProbe in snapshot, `${existingProbe} should be recorded on ${AppConstants.platform}`);
+=======
+  let snapshot = Telemetry.getSnapshotForHistograms("main", false /* clear */)
+    .parent;
+  Assert.ok(
+    existingProbe in snapshot,
+    `${existingProbe} should be recorded on ${AppConstants.platform}`
+  );
+>>>>>>> upstream-releases
   Assert.equal(snapshot[existingProbe].sum, 1);
 });
+<<<<<<< HEAD
 
 add_task(async function test_multistore_individual_histogram() {
   Telemetry.canRecordExtended = true;
@@ -1603,3 +2499,604 @@ add_task(async function test_multistore_keyed_individual_snapshot() {
   Assert.deepEqual(undefined, hist.snapshot({store: "main"}));
   Assert.deepEqual({}, hist.snapshot({store: "sync"}));
 });
+||||||| merged common ancestors
+=======
+
+add_task(async function test_multistore_individual_histogram() {
+  Telemetry.canRecordExtended = true;
+
+  let id;
+  let hist;
+  let snapshot;
+
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  snapshot = hist.snapshot();
+  Assert.equal(0, snapshot.sum, `Histogram ${id} should be empty.`);
+  hist.add(1);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    1,
+    snapshot.sum,
+    `Histogram ${id} should have recorded one value.`
+  );
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.equal(0, snapshot.sum, `Histogram ${id} should be cleared.`);
+
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  hist = Telemetry.getHistogramById(id);
+  snapshot = hist.snapshot();
+  Assert.equal(0, snapshot.sum, `Histogram ${id} should be empty.`);
+  hist.add(1);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    1,
+    snapshot.sum,
+    `Histogram ${id} should have recorded one value.`
+  );
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.equal(0, snapshot.sum, `Histogram ${id} should be cleared.`);
+
+  // When sync only, then the snapshot will be empty on the main store
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+  hist.add(1);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  hist = Telemetry.getKeyedHistogramById(id);
+  snapshot = hist.snapshot();
+  Assert.deepEqual({}, snapshot, `Histogram ${id} should be empty.`);
+  hist.add("key-a", 1);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    1,
+    snapshot["key-a"].sum,
+    `Histogram ${id} should have recorded one value.`
+  );
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.deepEqual({}, snapshot, `Histogram ${id} should be cleared.`);
+
+  // When sync only, then the snapshot will be empty on the main store
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  hist = Telemetry.getKeyedHistogramById(id);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+  hist.add("key-a", 1);
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.equal(
+    undefined,
+    snapshot,
+    `Histogram ${id} should not be in the 'main' storage`
+  );
+});
+
+add_task(async function test_multistore_main_snapshot() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForHistograms("main", true);
+  Telemetry.getSnapshotForKeyedHistograms("main", true);
+
+  let id;
+  let hist;
+  let snapshot;
+
+  // Plain histograms
+
+  // Fill with data
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  // Getting snapshot and NOT clearing (using default values for optional parameters)
+  snapshot = Telemetry.getSnapshotForHistograms().parent;
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  // Data should still be in, getting snapshot and clearing
+  snapshot = Telemetry.getSnapshotForHistograms("main", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  // Should be empty after clearing
+  snapshot = Telemetry.getSnapshotForHistograms("main", /* clear */ false)
+    .parent;
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  // Keyed histograms
+
+  // Fill with data
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-a", 1);
+
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-b", 1);
+
+  // Getting snapshot and NOT clearing (using default values for optional parameters)
+  snapshot = Telemetry.getSnapshotForKeyedHistograms().parent;
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  // Data should still be in, getting snapshot and clearing
+  snapshot = Telemetry.getSnapshotForKeyedHistograms("main", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  // Should be empty after clearing
+  snapshot = Telemetry.getSnapshotForKeyedHistograms("main", /* clear */ false)
+    .parent;
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+});
+
+add_task(async function test_multistore_argument_handling() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForHistograms("main", true);
+  Telemetry.getSnapshotForHistograms("sync", true);
+  Telemetry.getSnapshotForKeyedHistograms("main", true);
+  Telemetry.getSnapshotForKeyedHistograms("sync", true);
+
+  let id;
+  let hist;
+  let snapshot;
+
+  // Plain Histograms
+
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(37);
+
+  // No argument
+  snapshot = hist.snapshot();
+  Assert.equal(37, snapshot.sum, `${id} should be in a default store snapshot`);
+
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.equal(0, snapshot.sum, `${id} should be cleared in the default store`);
+
+  snapshot = hist.snapshot({ store: "sync" });
+  Assert.equal(
+    37,
+    snapshot.sum,
+    `${id} should not have been cleared in the sync store`
+  );
+
+  Assert.throws(
+    () => hist.snapshot(2, "or", "more", "arguments"),
+    /one argument/,
+    "snapshot should check argument count"
+  );
+  Assert.throws(
+    () => hist.snapshot(2),
+    /object argument/,
+    "snapshot should check argument type"
+  );
+  Assert.throws(
+    () => hist.snapshot({}),
+    /property/,
+    "snapshot should check for object property"
+  );
+  Assert.throws(
+    () => hist.snapshot({ store: 1 }),
+    /string/,
+    "snapshot should check object property's type"
+  );
+
+  Assert.throws(
+    () => hist.clear(2, "or", "more", "arguments"),
+    /one argument/,
+    "clear should check argument count"
+  );
+  Assert.throws(
+    () => hist.clear(2),
+    /object argument/,
+    "clear should check argument type"
+  );
+  Assert.throws(
+    () => hist.clear({}),
+    /property/,
+    "clear should check for object property"
+  );
+  Assert.throws(
+    () => hist.clear({ store: 1 }),
+    /string/,
+    "clear should check object property's type"
+  );
+
+  // Keyed Histogram
+
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-1", 37);
+
+  // No argument
+  snapshot = hist.snapshot();
+  Assert.equal(
+    37,
+    snapshot["key-1"].sum,
+    `${id} should be in a default store snapshot`
+  );
+
+  hist.clear();
+  snapshot = hist.snapshot();
+  Assert.ok(
+    !("key-1" in snapshot),
+    `${id} should be cleared in the default store`
+  );
+
+  snapshot = hist.snapshot({ store: "sync" });
+  Assert.equal(
+    37,
+    snapshot["key-1"].sum,
+    `${id} should not have been cleared in the sync store`
+  );
+
+  Assert.throws(
+    () => hist.snapshot(2, "or", "more", "arguments"),
+    /one argument/,
+    "snapshot should check argument count"
+  );
+  Assert.throws(
+    () => hist.snapshot(2),
+    /object argument/,
+    "snapshot should check argument type"
+  );
+  Assert.throws(
+    () => hist.snapshot({}),
+    /property/,
+    "snapshot should check for object property"
+  );
+  Assert.throws(
+    () => hist.snapshot({ store: 1 }),
+    /string/,
+    "snapshot should check object property's type"
+  );
+
+  Assert.throws(
+    () => hist.clear(2, "or", "more", "arguments"),
+    /one argument/,
+    "clear should check argument count"
+  );
+  Assert.throws(
+    () => hist.clear(2),
+    /object argument/,
+    "clear should check argument type"
+  );
+  Assert.throws(
+    () => hist.clear({}),
+    /property/,
+    "clear should check for object property"
+  );
+  Assert.throws(
+    () => hist.clear({ store: 1 }),
+    /string/,
+    "clear should check object property's type"
+  );
+});
+
+add_task(async function test_multistore_sync_snapshot() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForHistograms("main", true);
+  Telemetry.getSnapshotForHistograms("sync", true);
+
+  let id;
+  let hist;
+  let snapshot;
+
+  // Plain histograms
+
+  // Fill with data
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  hist = Telemetry.getHistogramById(id);
+  hist.add(1);
+
+  // Getting snapshot and clearing
+  snapshot = Telemetry.getSnapshotForHistograms("main", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  snapshot = Telemetry.getSnapshotForHistograms("sync", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a sync store snapshot`);
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a sync store snapshot`);
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  Assert.ok(id in snapshot, `${id} should be in a sync store snapshot`);
+});
+
+add_task(async function test_multistore_keyed_sync_snapshot() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForKeyedHistograms("main", true);
+  Telemetry.getSnapshotForKeyedHistograms("sync", true);
+
+  let id;
+  let hist;
+  let snapshot;
+
+  // Plain histograms
+
+  // Fill with data
+  id = "TELEMETRY_TEST_KEYED_LINEAR";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-1", 1);
+
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-1", 1);
+
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  hist = Telemetry.getKeyedHistogramById(id);
+  hist.add("key-1", 1);
+
+  // Getting snapshot and clearing
+  snapshot = Telemetry.getSnapshotForKeyedHistograms("main", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_KEYED_LINEAR";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a main store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  Assert.ok(!(id in snapshot), `${id} should not be in a main store snapshot`);
+
+  snapshot = Telemetry.getSnapshotForKeyedHistograms("sync", /* clear */ true)
+    .parent;
+  id = "TELEMETRY_TEST_KEYED_LINEAR";
+  Assert.ok(!(id in snapshot), `${id} should not be in a sync store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  Assert.ok(id in snapshot, `${id} should be in a sync store snapshot`);
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  Assert.ok(id in snapshot, `${id} should be in a sync store snapshot`);
+});
+
+add_task(async function test_multistore_plain_individual_snapshot() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForHistograms("main", true);
+  Telemetry.getSnapshotForHistograms("sync", true);
+
+  let id;
+  let hist;
+
+  id = "TELEMETRY_TEST_MAIN_ONLY";
+  hist = Telemetry.getHistogramById(id);
+
+  hist.add(37);
+  Assert.deepEqual(37, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "sync" }));
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual(0, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "sync" }));
+
+  id = "TELEMETRY_TEST_MULTIPLE_STORES";
+  hist = Telemetry.getHistogramById(id);
+
+  hist.add(37);
+  Assert.deepEqual(37, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" }).sum);
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual(0, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" }).sum);
+
+  hist.add(3);
+  Assert.deepEqual(3, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(40, hist.snapshot({ store: "sync" }).sum);
+
+  hist.clear({ store: "sync" });
+  Assert.deepEqual(3, hist.snapshot({ store: "main" }).sum);
+  Assert.deepEqual(0, hist.snapshot({ store: "sync" }).sum);
+
+  id = "TELEMETRY_TEST_SYNC_ONLY";
+  hist = Telemetry.getHistogramById(id);
+
+  hist.add(37);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" }).sum);
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" }).sum);
+
+  hist.add(3);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(40, hist.snapshot({ store: "sync" }).sum);
+
+  hist.clear({ store: "sync" });
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(0, hist.snapshot({ store: "sync" }).sum);
+});
+
+add_task(async function test_multistore_keyed_individual_snapshot() {
+  Telemetry.canRecordExtended = true;
+  // Clear histograms
+  Telemetry.getSnapshotForKeyedHistograms("main", true);
+  Telemetry.getSnapshotForKeyedHistograms("sync", true);
+
+  let id;
+  let hist;
+
+  id = "TELEMETRY_TEST_KEYED_LINEAR";
+  hist = Telemetry.getKeyedHistogramById(id);
+
+  hist.add("key-1", 37);
+  Assert.deepEqual(37, hist.snapshot({ store: "main" })["key-1"].sum);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "sync" }));
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual({}, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(undefined, hist.snapshot({ store: "sync" }));
+
+  hist.add("key-1", 4);
+  hist.clear({ store: "sync" });
+  Assert.deepEqual(4, hist.snapshot({ store: "main" })["key-1"].sum);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "sync" }));
+
+  id = "TELEMETRY_TEST_KEYED_MULTIPLE_STORES";
+  hist = Telemetry.getKeyedHistogramById(id);
+
+  hist.add("key-1", 37);
+  Assert.deepEqual(37, hist.snapshot({ store: "main" })["key-1"].sum);
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual({}, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.add("key-1", 3);
+  Assert.deepEqual(3, hist.snapshot({ store: "main" })["key-1"].sum);
+  Assert.deepEqual(40, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.clear({ store: "sync" });
+  Assert.deepEqual(3, hist.snapshot({ store: "main" })["key-1"].sum);
+  Assert.deepEqual({}, hist.snapshot({ store: "sync" }));
+
+  id = "TELEMETRY_TEST_KEYED_SYNC_ONLY";
+  hist = Telemetry.getKeyedHistogramById(id);
+
+  hist.add("key-1", 37);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.clear({ store: "main" });
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(37, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.add("key-1", 3);
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual(40, hist.snapshot({ store: "sync" })["key-1"].sum);
+
+  hist.clear({ store: "sync" });
+  Assert.deepEqual(undefined, hist.snapshot({ store: "main" }));
+  Assert.deepEqual({}, hist.snapshot({ store: "sync" }));
+});
+
+add_task(async function test_can_record_in_process_regression_bug_1530361() {
+  Telemetry.getSnapshotForHistograms("main", true);
+
+  // The socket and gpu processes should not have any histograms.
+  // Flag and count histograms have defaults, so if we're accidentally recording them
+  // in these processes they'd show up even immediately after being cleared.
+  let snapshot = Telemetry.getSnapshotForHistograms("main", true);
+
+  Assert.deepEqual(
+    snapshot.gpu,
+    {},
+    "No histograms should have been recorded for the gpu process"
+  );
+  Assert.deepEqual(
+    snapshot.socket,
+    {},
+    "No histograms should have been recorded for the socket process"
+  );
+});
+
+add_task(function test_knows_its_name() {
+  let h;
+
+  // Plain histograms
+  const histNames = [
+    "TELEMETRY_TEST_FLAG",
+    "TELEMETRY_TEST_COUNT",
+    "TELEMETRY_TEST_CATEGORICAL",
+    "TELEMETRY_TEST_EXPIRED",
+  ];
+
+  for (let name of histNames) {
+    h = Telemetry.getHistogramById(name);
+    Assert.equal(name, h.name());
+  }
+
+  // Keyed histograms
+  const keyedHistNames = [
+    "TELEMETRY_TEST_KEYED_EXPONENTIAL",
+    "TELEMETRY_TEST_KEYED_BOOLEAN",
+    "TELEMETRY_TEST_EXPIRED_KEYED",
+  ];
+
+  for (let name of keyedHistNames) {
+    h = Telemetry.getKeyedHistogramById(name);
+    Assert.equal(name, h.name());
+  }
+});
+>>>>>>> upstream-releases

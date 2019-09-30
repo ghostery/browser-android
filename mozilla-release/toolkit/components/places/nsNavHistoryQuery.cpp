@@ -878,6 +878,7 @@ NS_IMETHODIMP nsNavHistoryQuery::SetTagsAreNot(bool aTagsAreNot) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsNavHistoryQuery::GetParents(uint32_t* aGuidCount,
                                             char*** aGuids) {
   uint32_t count = mParents.Length();
@@ -891,6 +892,25 @@ NS_IMETHODIMP nsNavHistoryQuery::GetParents(uint32_t* aGuidCount,
   }
   *aGuidCount = count;
   *aGuids = guids;
+||||||| merged common ancestors
+NS_IMETHODIMP nsNavHistoryQuery::GetParents(uint32_t *aGuidCount,
+                                            char ***aGuids)
+{
+  uint32_t count = mParents.Length();
+  char **guids = nullptr;
+  if (count > 0) {
+    guids = static_cast<char**>(moz_xmalloc(count * sizeof(char*)));
+
+    for (uint32_t i = 0; i < count; ++i) {
+      guids[i] = ToNewCString(mParents[i]);
+    }
+  }
+  *aGuidCount = count;
+  *aGuids = guids;
+=======
+NS_IMETHODIMP nsNavHistoryQuery::GetParents(nsTArray<nsCString>& aGuids) {
+  aGuids = mParents;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -899,18 +919,25 @@ NS_IMETHODIMP nsNavHistoryQuery::GetParentCount(uint32_t* aGuidCount) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsNavHistoryQuery::SetParents(const char** aGuids,
                                             uint32_t aGuidCount) {
+||||||| merged common ancestors
+NS_IMETHODIMP nsNavHistoryQuery::SetParents(const char** aGuids,
+                                            uint32_t aGuidCount)
+{
+=======
+NS_IMETHODIMP nsNavHistoryQuery::SetParents(const nsTArray<nsCString>& aGuids) {
+>>>>>>> upstream-releases
   mParents.Clear();
-  for (size_t i = 0; i < aGuidCount; i++) {
-    if (!mParents.AppendElement(aGuids[i])) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
+  if (!mParents.Assign(aGuids, fallible)) {
+    return NS_ERROR_OUT_OF_MEMORY;
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsNavHistoryQuery::GetTransitions(uint32_t* aCount,
                                                 uint32_t** aTransitions) {
   uint32_t count = mTransitions.Length();
@@ -924,6 +951,26 @@ NS_IMETHODIMP nsNavHistoryQuery::GetTransitions(uint32_t* aCount,
   }
   *aCount = count;
   *aTransitions = transitions;
+||||||| merged common ancestors
+NS_IMETHODIMP nsNavHistoryQuery::GetTransitions(uint32_t* aCount,
+                                                uint32_t** aTransitions)
+{
+  uint32_t count = mTransitions.Length();
+  uint32_t* transitions = nullptr;
+  if (count > 0) {
+    transitions = reinterpret_cast<uint32_t*>
+                  (moz_xmalloc(count * sizeof(uint32_t)));
+    for (uint32_t i = 0; i < count; ++i) {
+      transitions[i] = mTransitions[i];
+    }
+  }
+  *aCount = count;
+  *aTransitions = transitions;
+=======
+NS_IMETHODIMP nsNavHistoryQuery::GetTransitions(
+    nsTArray<uint32_t>& aTransitions) {
+  aTransitions = mTransitions;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -932,12 +979,24 @@ NS_IMETHODIMP nsNavHistoryQuery::GetTransitionCount(uint32_t* aCount) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsNavHistoryQuery::SetTransitions(const uint32_t* aTransitions,
                                                 uint32_t aCount) {
   if (!mTransitions.ReplaceElementsAt(0, mTransitions.Length(), aTransitions,
                                       aCount))
+||||||| merged common ancestors
+NS_IMETHODIMP nsNavHistoryQuery::SetTransitions(const uint32_t* aTransitions,
+                                                uint32_t aCount)
+{
+  if (!mTransitions.ReplaceElementsAt(0, mTransitions.Length(), aTransitions,
+                                      aCount))
+=======
+NS_IMETHODIMP nsNavHistoryQuery::SetTransitions(
+    const nsTArray<uint32_t>& aTransitions) {
+  if (!mTransitions.Assign(aTransitions, fallible)) {
+>>>>>>> upstream-releases
     return NS_ERROR_OUT_OF_MEMORY;
-
+  }
   return NS_OK;
 }
 

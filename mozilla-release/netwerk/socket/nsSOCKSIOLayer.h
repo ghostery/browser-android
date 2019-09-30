@@ -11,11 +11,29 @@
 #include "nscore.h"
 #include "nsIProxyInfo.h"
 
+<<<<<<< HEAD
 nsresult nsSOCKSIOLayerAddToSocket(int32_t family, const char *host,
                                    int32_t port, nsIProxyInfo *proxyInfo,
                                    int32_t socksVersion, uint32_t flags,
                                    uint32_t tlsFlags, PRFileDesc *fd,
                                    nsISupports **info);
+||||||| merged common ancestors
+nsresult nsSOCKSIOLayerAddToSocket(int32_t       family,
+                                   const char   *host,
+                                   int32_t       port,
+                                   nsIProxyInfo *proxyInfo,
+                                   int32_t       socksVersion,
+                                   uint32_t      flags,
+                                   uint32_t      tlsFlags,
+                                   PRFileDesc   *fd,
+                                   nsISupports **info);
+=======
+nsresult nsSOCKSIOLayerAddToSocket(int32_t family, const char* host,
+                                   int32_t port, nsIProxyInfo* proxyInfo,
+                                   int32_t socksVersion, uint32_t flags,
+                                   uint32_t tlsFlags, PRFileDesc* fd,
+                                   nsISupports** info);
+>>>>>>> upstream-releases
 
 bool IsHostLocalTarget(const nsACString &aHost);
 

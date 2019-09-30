@@ -10,14 +10,13 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/dom/XMLDocument.h"
 
-class nsSVGElement;
-
 namespace mozilla {
 
 class SVGContextPaint;
 
 namespace dom {
 
+class SVGElement;
 class SVGForeignObjectElement;
 
 class SVGDocument final : public XMLDocument {
@@ -39,12 +38,32 @@ class SVGDocument final : public XMLDocument {
   const SVGContextPaint* mCurrentContextPaint = nullptr;
 };
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
 
 inline mozilla::dom::SVGDocument* nsIDocument::AsSVGDocument() {
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+
+inline mozilla::dom::SVGDocument*
+nsIDocument::AsSVGDocument()
+{
+=======
+inline SVGDocument* Document::AsSVGDocument() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsSVGDocument());
-  return static_cast<mozilla::dom::SVGDocument*>(this);
+  return static_cast<SVGDocument*>(this);
 }
 
+<<<<<<< HEAD
 #endif  // mozilla_dom_SVGDocument_h
+||||||| merged common ancestors
+#endif // mozilla_dom_SVGDocument_h
+=======
+}  // namespace dom
+}  // namespace mozilla
+
+#endif  // mozilla_dom_SVGDocument_h
+>>>>>>> upstream-releases

@@ -4,12 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/dom/Element.h"
 #include "mozilla/dom/SVGStyleElement.h"
-#include "nsContentUtils.h"
-#include "mozilla/dom/SVGStyleElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Style)
+#include "mozilla/dom/Element.h"
+#include "mozilla/dom/SVGStyleElementBinding.h"
+#include "nsCOMPtr.h"
+#include "nsContentUtils.h"
+
+NS_IMPL_NS_NEW_SVG_ELEMENT(Style)
 
 namespace mozilla {
 namespace dom {
@@ -48,8 +50,16 @@ SVGStyleElement::SVGStyleElement(
   AddMutationObserver(this);
 }
 
+<<<<<<< HEAD
 SVGStyleElement::~SVGStyleElement() {}
 
+||||||| merged common ancestors
+SVGStyleElement::~SVGStyleElement()
+{
+}
+
+=======
+>>>>>>> upstream-releases
 //----------------------------------------------------------------------
 // nsINode methods
 
@@ -58,11 +68,23 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGStyleElement)
 //----------------------------------------------------------------------
 // nsIContent methods
 
+<<<<<<< HEAD
 nsresult SVGStyleElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
   nsresult rv =
       SVGStyleElementBase::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+SVGStyleElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+  nsresult rv = SVGStyleElementBase::BindToTree(aDocument, aParent,
+                                                aBindingParent);
+=======
+nsresult SVGStyleElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = SVGStyleElementBase::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   void (SVGStyleElement::*update)() =
@@ -73,10 +95,20 @@ nsresult SVGStyleElement::BindToTree(nsIDocument* aDocument,
   return rv;
 }
 
+<<<<<<< HEAD
 void SVGStyleElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
+||||||| merged common ancestors
+void
+SVGStyleElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
+=======
+void SVGStyleElement::UnbindFromTree(bool aNullParent) {
+  nsCOMPtr<Document> oldDoc = GetUncomposedDoc();
+>>>>>>> upstream-releases
   ShadowRoot* oldShadow = GetContainingShadow();
-  SVGStyleElementBase::UnbindFromTree(aDeep, aNullParent);
+  SVGStyleElementBase::UnbindFromTree(aNullParent);
   Unused << UpdateStyleSheetInternal(oldDoc, oldShadow);
 }
 
@@ -183,6 +215,7 @@ Maybe<nsStyleLinkElement::SheetInfo> SVGStyleElement::GetStyleSheetInfo() {
   nsAutoString media;
   GetTitleAndMediaForElement(*this, title, media);
 
+<<<<<<< HEAD
   return Some(SheetInfo{
       *OwnerDoc(),
       this,
@@ -198,6 +231,40 @@ Maybe<nsStyleLinkElement::SheetInfo> SVGStyleElement::GetStyleSheetInfo() {
       media,
       HasAlternateRel::No,
       IsInline::Yes,
+||||||| merged common ancestors
+  return Some(SheetInfo {
+    *OwnerDoc(),
+    this,
+    nullptr,
+    // FIXME(bug 1459822): Why doesn't this need a principal, but
+    // HTMLStyleElement does?
+    nullptr,
+    net::ReferrerPolicy::RP_Unset,
+    // FIXME(bug 1459822): Why does this need a crossorigin attribute, but
+    // HTMLStyleElement doesn't?
+    AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin)),
+    title,
+    media,
+    HasAlternateRel::No,
+    IsInline::Yes,
+=======
+  return Some(SheetInfo{
+      *OwnerDoc(),
+      this,
+      nullptr,
+      // FIXME(bug 1459822): Why doesn't this need a principal, but
+      // HTMLStyleElement does?
+      nullptr,
+      net::ReferrerPolicy::RP_Unset,
+      // FIXME(bug 1459822): Why does this need a crossorigin attribute, but
+      // HTMLStyleElement doesn't?
+      AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin)),
+      title,
+      media,
+      HasAlternateRel::No,
+      IsInline::Yes,
+      IsExplicitlyEnabled::No,
+>>>>>>> upstream-releases
   });
 }
 

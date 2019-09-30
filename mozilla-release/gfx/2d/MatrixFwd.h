@@ -24,12 +24,19 @@ typedef BaseMatrix<Double> MatrixDouble;
 
 struct UnknownUnits;
 
+<<<<<<< HEAD
 template <class SourceUnits, class TargetUnits>
+||||||| merged common ancestors
+template<class SourceUnits, class TargetUnits>
+=======
+template <class SourceUnits, class TargetUnits, class T = Float>
+>>>>>>> upstream-releases
 class Matrix4x4Typed;
 template <class SourceUnits, class TargetUnits>
 class Matrix4x4TypedFlagged;
 
 typedef Matrix4x4Typed<UnknownUnits, UnknownUnits> Matrix4x4;
+typedef Matrix4x4Typed<UnknownUnits, UnknownUnits, double> Matrix4x4Double;
 typedef Matrix4x4TypedFlagged<UnknownUnits, UnknownUnits> Matrix4x4Flagged;
 
 }  // namespace gfx

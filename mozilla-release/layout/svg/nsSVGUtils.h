@@ -31,14 +31,10 @@
 class gfxContext;
 class nsFrameList;
 class nsIContent;
-class nsIDocument;
+
 class nsIFrame;
 class nsPresContext;
-class nsStyleSVGPaint;
 class nsSVGDisplayContainerFrame;
-class nsSVGElement;
-class nsSVGEnum;
-class nsSVGLength2;
 class nsSVGOuterSVGFrame;
 class nsTextFrame;
 
@@ -46,11 +42,14 @@ struct nsStyleSVG;
 struct nsRect;
 
 namespace mozilla {
+class SVGAnimatedEnumeration;
+class SVGAnimatedLength;
 class SVGContextPaint;
 struct SVGContextPaintImpl;
 class SVGGeometryFrame;
 namespace dom {
 class Element;
+class SVGElement;
 class UserSpaceMetrics;
 }  // namespace dom
 namespace gfx {
@@ -154,11 +153,13 @@ class MOZ_RAII SVGAutoRenderState {
 class nsSVGUtils {
  public:
   typedef mozilla::dom::Element Element;
+  typedef mozilla::dom::SVGElement SVGElement;
   typedef mozilla::gfx::AntialiasMode AntialiasMode;
   typedef mozilla::gfx::DrawTarget DrawTarget;
   typedef mozilla::gfx::FillRule FillRule;
   typedef mozilla::gfx::GeneralPattern GeneralPattern;
   typedef mozilla::gfx::Size Size;
+  typedef mozilla::SVGAnimatedLength SVGAnimatedLength;
   typedef mozilla::SVGContextPaint SVGContextPaint;
   typedef mozilla::SVGContextPaintImpl SVGContextPaintImpl;
   typedef mozilla::SVGGeometryFrame SVGGeometryFrame;
@@ -173,8 +174,16 @@ class nsSVGUtils {
    * frame's pre-filter visual overflow rect. If the frame is not currently
    * being filtered, this function simply returns aUnfilteredRect.
    */
+<<<<<<< HEAD
   static nsRect GetPostFilterVisualOverflowRect(nsIFrame* aFrame,
                                                 const nsRect& aUnfilteredRect);
+||||||| merged common ancestors
+  static nsRect GetPostFilterVisualOverflowRect(nsIFrame *aFrame,
+                                                const nsRect &aUnfilteredRect);
+=======
+  static nsRect GetPostFilterVisualOverflowRect(nsIFrame* aFrame,
+                                                const nsRect& aPreFilterRect);
+>>>>>>> upstream-releases
 
   /**
    * Schedules an update of the frame's bounds (which will in turn invalidate
@@ -224,17 +233,41 @@ class nsSVGUtils {
      Input: rect - bounding box
             length - length to be converted
   */
+<<<<<<< HEAD
   static float ObjectSpace(const gfxRect& aRect, const nsSVGLength2* aLength);
+||||||| merged common ancestors
+  static float ObjectSpace(const gfxRect &aRect, const nsSVGLength2 *aLength);
+=======
+  static float ObjectSpace(const gfxRect& aRect,
+                           const SVGAnimatedLength* aLength);
+>>>>>>> upstream-releases
 
   /* Computes the input length in terms of user space coordinates.
      Input: content - object to be used for determining user space
      Input: length - length to be converted
   */
+<<<<<<< HEAD
   static float UserSpace(nsSVGElement* aSVGElement,
                          const nsSVGLength2* aLength);
   static float UserSpace(nsIFrame* aFrame, const nsSVGLength2* aLength);
+||||||| merged common ancestors
+  static float UserSpace(nsSVGElement *aSVGElement,
+                         const nsSVGLength2 *aLength);
+  static float UserSpace(nsIFrame *aFrame, const nsSVGLength2 *aLength);
+=======
+  static float UserSpace(SVGElement* aSVGElement,
+                         const SVGAnimatedLength* aLength);
+  static float UserSpace(nsIFrame* aNonSVGContext,
+                         const SVGAnimatedLength* aLength);
+>>>>>>> upstream-releases
   static float UserSpace(const mozilla::dom::UserSpaceMetrics& aMetrics,
+<<<<<<< HEAD
                          const nsSVGLength2* aLength);
+||||||| merged common ancestors
+                         const nsSVGLength2 *aLength);
+=======
+                         const SVGAnimatedLength* aLength);
+>>>>>>> upstream-releases
 
   /* Find the outermost SVG frame of the passed frame */
   static nsSVGOuterSVGFrame* GetOuterSVGFrame(nsIFrame* aFrame);
@@ -272,17 +305,6 @@ class nsSVGUtils {
    * For regular frames, we just return an identity matrix.
    */
   static gfxMatrix GetCanvasTM(nsIFrame* aFrame);
-
-  /**
-   * Returns the transform from aFrame's user space to canvas space. Only call
-   * with SVG frames. This is like GetCanvasTM, except that it only includes
-   * the transforms from aFrame's user space (i.e. the coordinate context
-   * established by its 'transform' attribute, or else the coordinate context
-   * that its _parent_ establishes for its children) to outer-<svg> device
-   * space. Specifically, it does not include any other transforms introduced
-   * by the frame such as x/y offsets and viewBox attributes.
-   */
-  static gfxMatrix GetUserToCanvasTM(nsIFrame* aFrame);
 
   /**
    * Notify the descendants of aFrame of a change to one of their ancestors
@@ -343,9 +365,20 @@ class nsSVGUtils {
    *
    * @param aFlags One or more of the BBoxFlags values defined below.
    */
+<<<<<<< HEAD
   static gfxMatrix AdjustMatrixForUnits(const gfxMatrix& aMatrix,
                                         nsSVGEnum* aUnits, nsIFrame* aFrame,
                                         uint32_t aFlags);
+||||||| merged common ancestors
+  static gfxMatrix AdjustMatrixForUnits(const gfxMatrix &aMatrix,
+                                        nsSVGEnum *aUnits,
+                                        nsIFrame *aFrame,
+                                        uint32_t aFlags);
+=======
+  static gfxMatrix AdjustMatrixForUnits(const gfxMatrix& aMatrix,
+                                        mozilla::SVGAnimatedEnumeration* aUnits,
+                                        nsIFrame* aFrame, uint32_t aFlags);
+>>>>>>> upstream-releases
 
   enum BBoxFlags {
     eBBoxIncludeFill = 1 << 0,
@@ -412,21 +445,41 @@ class nsSVGUtils {
 
   /**
    * Convert a userSpaceOnUse/objectBoundingBoxUnits rectangle that's specified
-   * using four nsSVGLength2 values into a user unit rectangle in user space.
+   * using four SVGAnimatedLength values into a user unit rectangle in user
+   * space.
    *
-   * @param aXYWH pointer to 4 consecutive nsSVGLength2 objects containing
+   * @param aXYWH pointer to 4 consecutive SVGAnimatedLength objects containing
    * the x, y, width and height values in that order
    * @param aBBox the bounding box of the object the rect is relative to;
    * may be null if aUnits is not SVG_UNIT_TYPE_OBJECTBOUNDINGBOX
    * @param aFrame the object in which to interpret user-space units;
    * may be null if aUnits is SVG_UNIT_TYPE_OBJECTBOUNDINGBOX
    */
+<<<<<<< HEAD
   static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2* aXYWH,
                                  const gfxRect& aBBox, nsIFrame* aFrame);
+||||||| merged common ancestors
+  static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2 *aXYWH,
+                                 const gfxRect& aBBox, nsIFrame *aFrame);
+=======
+  static gfxRect GetRelativeRect(uint16_t aUnits,
+                                 const SVGAnimatedLength* aXYWH,
+                                 const gfxRect& aBBox, nsIFrame* aFrame);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static gfxRect GetRelativeRect(
       uint16_t aUnits, const nsSVGLength2* aXYWH, const gfxRect& aBBox,
       const mozilla::dom::UserSpaceMetrics& aMetrics);
+||||||| merged common ancestors
+  static gfxRect GetRelativeRect(uint16_t aUnits, const nsSVGLength2 *aXYWH,
+                                 const gfxRect& aBBox,
+                                 const mozilla::dom::UserSpaceMetrics& aMetrics);
+=======
+  static gfxRect GetRelativeRect(
+      uint16_t aUnits, const SVGAnimatedLength* aXYWH, const gfxRect& aBBox,
+      const mozilla::dom::UserSpaceMetrics& aMetrics);
+>>>>>>> upstream-releases
 
   /**
    * Find the first frame, starting with aStartFrame and going up its
@@ -479,9 +532,18 @@ class nsSVGUtils {
         std::max(double(INT32_MIN), std::min(double(INT32_MAX), aVal)));
   }
 
+<<<<<<< HEAD
   static nscolor GetFallbackOrPaintColor(
       mozilla::ComputedStyle* aComputedStyle,
       nsStyleSVGPaint nsStyleSVG::*aFillOrStroke);
+||||||| merged common ancestors
+  static nscolor GetFallbackOrPaintColor(mozilla::ComputedStyle *aComputedStyle,
+                                         nsStyleSVGPaint nsStyleSVG::*aFillOrStroke);
+=======
+  static nscolor GetFallbackOrPaintColor(
+      const mozilla::ComputedStyle&,
+      mozilla::StyleSVGPaint nsStyleSVG::*aFillOrStroke);
+>>>>>>> upstream-releases
 
   static void MakeFillPatternFor(nsIFrame* aFrame, gfxContext* aContext,
                                  GeneralPattern* aOutPattern,
@@ -600,6 +662,15 @@ class nsSVGUtils {
     // Returns true if the frame is an SVGTextFrame or one of its descendants.
     return aFrame->GetStateBits() & NS_FRAME_IS_SVG_TEXT;
   }
+
+  /**
+   * It is a replacement of
+   * SVGElement::PrependLocalTransformsTo(eUserSpaceToParent).
+   * If no CSS transform is involved, they should behave exactly the same;
+   * if there are CSS transforms, this one will take them into account
+   * while SVGElement::PrependLocalTransformsTo won't.
+   */
+  static gfxMatrix GetTransformMatrixInUserSpace(const nsIFrame* aFrame);
 };
 
 #endif

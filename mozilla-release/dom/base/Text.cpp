@@ -27,7 +27,7 @@ already_AddRefed<Text> Text::SplitText(uint32_t aOffset, ErrorResult& aRv) {
     return nullptr;
   }
 
-  nsIDocument* document = GetComposedDoc();
+  Document* document = GetComposedDoc();
   mozAutoDocUpdate updateBatch(document, true);
 
   // Use Clone for creating the new node so that the new node is of same class
@@ -120,10 +120,25 @@ void Text::GetWholeText(nsAString& aWholeText, ErrorResult& aRv) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Text> Text::Constructor(
     const GlobalObject& aGlobal, const nsAString& aData, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> window =
       do_QueryInterface(aGlobal.GetAsSupports());
+||||||| merged common ancestors
+/* static */ already_AddRefed<Text>
+Text::Constructor(const GlobalObject& aGlobal,
+                  const nsAString& aData, ErrorResult& aRv)
+{
+  nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aGlobal.GetAsSupports());
+=======
+/* static */
+already_AddRefed<Text> Text::Constructor(const GlobalObject& aGlobal,
+                                         const nsAString& aData,
+                                         ErrorResult& aRv) {
+  nsCOMPtr<nsPIDOMWindowInner> window =
+      do_QueryInterface(aGlobal.GetAsSupports());
+>>>>>>> upstream-releases
   if (!window || !window->GetDoc()) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;

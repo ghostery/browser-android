@@ -14,12 +14,32 @@
 #include <imgIContainer.h>
 
 class nsWindowGfx {
+<<<<<<< HEAD
  public:
   enum IconSizeType { kSmallIcon, kRegularIcon };
   static mozilla::gfx::IntSize GetIconMetrics(IconSizeType aSizeType);
   static nsresult CreateIcon(imgIContainer* aContainer, bool aIsCursor,
                              uint32_t aHotspotX, uint32_t aHotspotY,
                              mozilla::gfx::IntSize aScaledSize, HICON* aIcon);
+||||||| merged common ancestors
+public:
+  enum IconSizeType {
+    kSmallIcon,
+    kRegularIcon
+  };
+  static mozilla::gfx::IntSize GetIconMetrics(IconSizeType aSizeType);
+  static nsresult CreateIcon(imgIContainer *aContainer, bool aIsCursor,
+                             uint32_t aHotspotX, uint32_t aHotspotY,
+                             mozilla::gfx::IntSize aScaledSize, HICON *aIcon);
+=======
+ public:
+  enum IconSizeType { kSmallIcon, kRegularIcon };
+  static mozilla::LayoutDeviceIntSize GetIconMetrics(IconSizeType aSizeType);
+  static nsresult CreateIcon(imgIContainer* aContainer, bool aIsCursor,
+                             mozilla::LayoutDeviceIntPoint aHotspot,
+                             mozilla::LayoutDeviceIntSize aScaledSize,
+                             HICON* aIcon);
+>>>>>>> upstream-releases
 
  private:
   /**

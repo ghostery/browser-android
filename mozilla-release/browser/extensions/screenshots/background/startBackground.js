@@ -1,4 +1,4 @@
-/* globals browser, main, communication */
+/* globals browser, main, communication, manifest */
 /* This file handles:
      clicks on the WebExtension page action
      browser.contextMenus.onClicked
@@ -40,8 +40,16 @@ this.startBackground = (function() {
   browser.contextMenus.create({
     id: "create-screenshot",
     title: browser.i18n.getMessage("contextMenuLabel"),
+<<<<<<< HEAD
     contexts: ["page"],
     documentUrlPatterns: ["<all_urls>", "about:reader*"],
+||||||| merged common ancestors
+    contexts: ["page"],
+    documentUrlPatterns: ["<all_urls>"],
+=======
+    contexts: ["page", "selection"],
+    documentUrlPatterns: ["<all_urls>", "about:reader*"],
+>>>>>>> upstream-releases
   });
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -52,7 +60,21 @@ this.startBackground = (function() {
     });
   });
 
-  browser.experiments.screenshots.initLibraryButton();
+  browser.commands.onCommand.addListener((cmd) => {
+    if (cmd !== "take-screenshot") {
+      return;
+    }
+    loadIfNecessary().then(() => {
+      browser.tabs.query({currentWindow: true, active: true}).then((tabs) => {
+        const activeTab = tabs[0];
+        main.onCommand(activeTab);
+      }).catch((error) => {
+        throw error;
+      });
+    }).catch((error) => {
+      console.error("Error toggling Screenshots via keyboard shortcut: ", error);
+    });
+  });
 
   browser.runtime.onMessage.addListener((req, sender, sendResponse) => {
     loadIfNecessary().then(() => {

@@ -30,14 +30,24 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=618176
     function start() {
       messageManager.addMessageListener("test", recvTest);
       messageManager.loadFrameScript(FRAME_SCRIPT, true);
+<<<<<<< HEAD
       let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
       setTimeout(function () {
         document.getElementById("browser").loadURI(TEST_PAGE, {triggeringPrincipal});
       }, 0);
+||||||| merged common ancestors
+      setTimeout(function () { document.getElementById("browser").loadURI(TEST_PAGE); }, 0);
+=======
+      const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
+      let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
+      setTimeout(function () {
+        document.getElementById("browser").loadURI(TEST_PAGE, {triggeringPrincipal});
+      }, 0);
+>>>>>>> upstream-releases
     }
 
     function finish() {
-      opener.setTimeout("done()", 0);
+      opener.setTimeout(function() { this.done(); }, 0);
       window.close();
     }
 

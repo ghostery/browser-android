@@ -8,6 +8,7 @@
  * exceptions, but not normal ones.
  */
 
+<<<<<<< HEAD
 add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
   await threadClient.pauseOnExceptions(true, false);
   await executeOnNextTickAndWaitForPause(() => evaluateTestCode(debuggee), client);
@@ -24,6 +25,62 @@ add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
 }));
 
 function evaluateTestCode(debuggee) {
+||||||| merged common ancestors
+var gDebuggee;
+var gClient;
+
+function run_test() {
+  do_test_pending();
+  run_test_with_server(DebuggerServer, function() {
+    run_test_with_server(WorkerDebuggerServer, do_test_finished);
+  });
+}
+
+function run_test_with_server(server, callback) {
+  initTestDebuggerServer(server);
+  gDebuggee = addTestGlobal("test-pausing", server);
+  gClient = new DebuggerClient(server.connectPipe());
+  gClient.connect(test_pause_frame);
+}
+
+async function test_pause_frame() {
+  const [,, threadClient] = await attachTestTabAndResume(gClient, "test-pausing");
+
+  await threadClient.pauseOnExceptions(true, false);
+  await executeOnNextTickAndWaitForPause(evaluateTestCode, gClient);
+
+  await resume(threadClient);
+  const paused = await waitForPause(gClient);
+  Assert.equal(paused.why.type, "exception");
+  equal(paused.frame.where.line, 12, "paused at throw");
+
+  await resume(threadClient);
+  finishClient(gClient);
+}
+
+function evaluateTestCode() {
+=======
+add_task(
+  threadClientTest(
+    async ({ threadClient, debuggee }) => {
+      await threadClient.pauseOnExceptions(true, false);
+      const paused = await executeOnNextTickAndWaitForPause(
+        () => evaluateTestCode(debuggee),
+        threadClient
+      );
+      equal(paused.frame.where.line, 6, "paused at throw");
+
+      await resume(threadClient);
+    },
+    {
+      // Bug 1508289, exception tests fails in worker scope
+      doNotRunWorker: true,
+    }
+  )
+);
+
+function evaluateTestCode(debuggee) {
+>>>>>>> upstream-releases
   /* eslint-disable */
   Cu.evalInSandbox(`                    // 1
     function QueryInterface() {         // 2

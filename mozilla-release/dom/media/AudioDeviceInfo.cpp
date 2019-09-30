@@ -57,11 +57,42 @@ AudioDeviceInfo::AudioDeviceInfo(
              "Wrong default format");
 }
 
+<<<<<<< HEAD
 AudioDeviceID AudioDeviceInfo::DeviceID() const { return mDeviceId; }
 const nsString& AudioDeviceInfo::Name() const { return mName; }
 uint32_t AudioDeviceInfo::MaxChannels() const { return mMaxChannels; }
 uint32_t AudioDeviceInfo::Type() const { return mType; }
 uint32_t AudioDeviceInfo::State() const { return mState; }
+||||||| merged common ancestors
+AudioDeviceID
+AudioDeviceInfo::DeviceID() const
+{
+  return mDeviceId;
+}
+const nsString& AudioDeviceInfo::Name() const
+{
+  return mName;
+}
+uint32_t AudioDeviceInfo::MaxChannels() const
+{
+  return mMaxChannels;
+}
+uint32_t AudioDeviceInfo::Type() const
+{
+  return mType;
+}
+uint32_t AudioDeviceInfo::State() const
+{
+  return mState;
+}
+=======
+AudioDeviceID AudioDeviceInfo::DeviceID() const { return mDeviceId; }
+const nsString& AudioDeviceInfo::Name() const { return mName; }
+uint32_t AudioDeviceInfo::MaxChannels() const { return mMaxChannels; }
+uint32_t AudioDeviceInfo::Type() const { return mType; }
+uint32_t AudioDeviceInfo::State() const { return mState; }
+const nsString& AudioDeviceInfo::GroupID() const { return mGroupId; }
+>>>>>>> upstream-releases
 
 bool AudioDeviceInfo::Preferred() const { return mPreferred; }
 

@@ -18,12 +18,12 @@
 #include "nsIDOMWindowUtils.h"
 #include "nsIDocShell.h"
 #include "nsIHttpChannel.h"
-#include "nsIPresShell.h"
 #include "nsIURI.h"
 #include "nsPIDOMWindow.h"
 #include "nsPresContext.h"
 
 #include "mozilla/Preferences.h"
+#include "mozilla/PresShell.h"
 
 namespace mozilla {
 
@@ -147,6 +147,7 @@ class ThumbnailHelper final
       return nullptr;
     }
 
+<<<<<<< HEAD
     nsCOMPtr<nsIPresShell> presShell = presContext->PresShell();
     RefPtr<gfxContext> context = gfxContext::CreateOrNull(dt);
     MOZ_ASSERT(context);  // checked the draw target above
@@ -167,6 +168,34 @@ class ThumbnailHelper final
     if (NS_FAILED(presShell->RenderDocument(drawRect, renderDocFlags, bgColor,
                                             context))) {
       return nullptr;
+||||||| merged common ancestors
+public:
+    static void Init()
+    {
+        java::ThumbnailHelper::Natives<ThumbnailHelper>::Init();
+=======
+    RefPtr<PresShell> presShell = presContext->PresShell();
+    RefPtr<gfxContext> context = gfxContext::CreateOrNull(dt);
+    MOZ_ASSERT(context);  // checked the draw target above
+
+    context->SetMatrix(context->CurrentMatrix().PreScale(
+        aZoomFactor * float(aThumbWidth) / aPageRect.width,
+        aZoomFactor * float(aThumbHeight) / aPageRect.height));
+
+    const nsRect drawRect(nsPresContext::CSSPixelsToAppUnits(aPageRect.x),
+                          nsPresContext::CSSPixelsToAppUnits(aPageRect.y),
+                          nsPresContext::CSSPixelsToAppUnits(aPageRect.width),
+                          nsPresContext::CSSPixelsToAppUnits(aPageRect.height));
+    const RenderDocumentFlags renderDocFlags =
+        RenderDocumentFlags::IgnoreViewportScrolling |
+        RenderDocumentFlags::DocumentRelative |
+        RenderDocumentFlags::DrawWindowNotFlushing;
+    const nscolor bgColor = NS_RGB(255, 255, 255);
+
+    if (NS_FAILED(presShell->RenderDocument(drawRect, renderDocFlags, bgColor,
+                                            context))) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
     if (is24bit) {

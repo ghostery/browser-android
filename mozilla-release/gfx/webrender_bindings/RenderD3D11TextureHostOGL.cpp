@@ -61,15 +61,28 @@ bool RenderDXGITextureHostOGL::EnsureLockable(wr::ImageRendering aRendering) {
     return true;
   }
 
-  auto* egl = gl::GLLibraryEGL::Get();
+  const auto& gle = gl::GLContextEGL::Cast(mGL);
+  const auto& egl = gle->mEgl;
 
   // We use EGLStream to get the converted gl handle from d3d texture. The
   // NV_stream_consumer_gltexture_yuv and ANGLE_stream_producer_d3d_texture
   // could support nv12 and rgb d3d texture format.
+<<<<<<< HEAD
   if (!egl->IsExtensionSupported(
           gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
       !egl->IsExtensionSupported(
           gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
+||||||| merged common ancestors
+  if (!egl->IsExtensionSupported(gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
+      !egl->IsExtensionSupported(gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
+=======
+  if (!egl->IsExtensionSupported(
+          gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
+      !egl->IsExtensionSupported(
+          gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
+    gfxCriticalNote
+        << "RenderDXGITextureHostOGL egl extensions are not suppored";
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -84,15 +97,34 @@ bool RenderDXGITextureHostOGL::EnsureLockable(wr::ImageRendering aRendering) {
   // There's a chance this might fail if we end up on d3d9 angle for some
   // reason.
   if (!device) {
+    gfxCriticalNote << "RenderDXGITextureHostOGL device is not available";
     return false;
   }
 
   // Get the D3D11 texture from shared handle.
+<<<<<<< HEAD
   if (FAILED(device->OpenSharedResource(
           (HANDLE)mHandle, __uuidof(ID3D11Texture2D),
           (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture)))) {
     NS_WARNING(
         "RenderDXGITextureHostOGL::Lock(): Failed to open shared texture");
+||||||| merged common ancestors
+  if (FAILED(device->OpenSharedResource((HANDLE)mHandle,
+                                        __uuidof(ID3D11Texture2D),
+                                        (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture)))) {
+    NS_WARNING("RenderDXGITextureHostOGL::Lock(): Failed to open shared texture");
+=======
+  HRESULT hr = device->OpenSharedResource(
+      (HANDLE)mHandle, __uuidof(ID3D11Texture2D),
+      (void**)(ID3D11Texture2D**)getter_AddRefs(mTexture));
+  if (FAILED(hr)) {
+    NS_WARNING(
+        "RenderDXGITextureHostOGL::EnsureLockable(): Failed to open shared "
+        "texture");
+    gfxCriticalNote
+        << "RenderDXGITextureHostOGL Failed to open shared texture, hr="
+        << gfx::hexa(hr);
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -215,7 +247,8 @@ void RenderDXGITextureHostOGL::DeleteTextureHandle() {
     mTextureHandle[i] = 0;
   }
 
-  auto* egl = gl::GLLibraryEGL::Get();
+  const auto& gle = gl::GLContextEGL::Cast(mGL);
+  const auto& egl = gle->mEgl;
   if (mSurface) {
     egl->fDestroySurface(egl->Display(), mSurface);
     mSurface = 0;
@@ -292,16 +325,32 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
     return true;
   }
 
-  auto* egl = gl::GLLibraryEGL::Get();
+  const auto& gle = gl::GLContextEGL::Cast(mGL);
+  const auto& egl = gle->mEgl;
 
   // The eglCreatePbufferFromClientBuffer doesn't support R8 format, so we
   // use EGLStream to get the converted gl handle from d3d R8 texture.
 
+<<<<<<< HEAD
   if (!egl->IsExtensionSupported(
           gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
       !egl->IsExtensionSupported(
           gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
     return false;
+||||||| merged common ancestors
+  if (!egl->IsExtensionSupported(gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
+      !egl->IsExtensionSupported(gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture))
+  {
+      return false;
+=======
+  if (!egl->IsExtensionSupported(
+          gl::GLLibraryEGL::NV_stream_consumer_gltexture_yuv) ||
+      !egl->IsExtensionSupported(
+          gl::GLLibraryEGL::ANGLE_stream_producer_d3d_texture)) {
+    gfxCriticalNote
+        << "RenderDXGIYCbCrTextureHostOGL egl extensions are not suppored";
+    return false;
+>>>>>>> upstream-releases
   }
 
   // Fetch the D3D11 device.
@@ -315,17 +364,37 @@ bool RenderDXGIYCbCrTextureHostOGL::EnsureLockable(
   // There's a chance this might fail if we end up on d3d9 angle for some
   // reason.
   if (!device) {
+    gfxCriticalNote << "RenderDXGIYCbCrTextureHostOGL device is not available";
     return false;
   }
 
   for (int i = 0; i < 3; ++i) {
     // Get the R8 D3D11 texture from shared handle.
+<<<<<<< HEAD
     if (FAILED(device->OpenSharedResource(
             (HANDLE)mHandles[i], __uuidof(ID3D11Texture2D),
             (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i])))) {
       NS_WARNING(
           "RenderDXGIYCbCrTextureHostOGL::Lock(): Failed to open shared "
           "texture");
+||||||| merged common ancestors
+    if (FAILED(device->OpenSharedResource((HANDLE)mHandles[i],
+                                          __uuidof(ID3D11Texture2D),
+                                          (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i])))) {
+      NS_WARNING("RenderDXGIYCbCrTextureHostOGL::Lock(): Failed to open shared texture");
+=======
+    HRESULT hr = device->OpenSharedResource(
+        (HANDLE)mHandles[i], __uuidof(ID3D11Texture2D),
+        (void**)(ID3D11Texture2D**)getter_AddRefs(mTextures[i]));
+    if (FAILED(hr)) {
+      NS_WARNING(
+          "RenderDXGIYCbCrTextureHostOGL::EnsureLockable(): Failed to open "
+          "shared "
+          "texture");
+      gfxCriticalNote
+          << "RenderDXGIYCbCrTextureHostOGL Failed to open shared texture, hr="
+          << gfx::hexa(hr);
+>>>>>>> upstream-releases
       return false;
     }
   }
@@ -438,12 +507,13 @@ void RenderDXGIYCbCrTextureHostOGL::DeleteTextureHandle() {
   if (mGL && mGL->MakeCurrent()) {
     mGL->fDeleteTextures(3, mTextureHandles);
   }
+  const auto& gle = gl::GLContextEGL::Cast(mGL);
+  const auto& egl = gle->mEgl;
   for (int i = 0; i < 3; ++i) {
     mTextureHandles[i] = 0;
     mTextures[i] = nullptr;
     mKeyedMutexs[i] = nullptr;
 
-    auto* egl = gl::GLLibraryEGL::Get();
     if (mSurfaces[i]) {
       egl->fDestroySurface(egl->Display(), mSurfaces[i]);
       mSurfaces[i] = 0;

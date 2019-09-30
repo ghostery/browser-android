@@ -38,7 +38,7 @@ class nsVideoFrame final : public nsContainerFrame,
   typedef mozilla::layers::LayerManager LayerManager;
   typedef mozilla::ContainerLayerParameters ContainerLayerParameters;
 
-  explicit nsVideoFrame(ComputedStyle* aStyle);
+  explicit nsVideoFrame(ComputedStyle*, nsPresContext*);
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsVideoFrame)
@@ -54,6 +54,7 @@ class nsVideoFrame final : public nsContainerFrame,
       const Maybe<OnNonvisible>& aNonvisibleAction = Nothing()) override;
 
   /* get the size of the video's display */
+<<<<<<< HEAD
   nsSize GetVideoIntrinsicSize(gfxContext* aRenderingContext);
   nsSize GetIntrinsicRatio() override;
   mozilla::LogicalSize ComputeSize(
@@ -67,10 +68,51 @@ class nsVideoFrame final : public nsContainerFrame,
                    PostDestroyData& aPostDestroyData) override;
 
   void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+||||||| merged common ancestors
+  nsSize GetVideoIntrinsicSize(gfxContext *aRenderingContext);
+  nsSize GetIntrinsicRatio() override;
+  mozilla::LogicalSize
+  ComputeSize(gfxContext *aRenderingContext,
+              mozilla::WritingMode aWritingMode,
+              const mozilla::LogicalSize& aCBSize,
+              nscoord aAvailableISize,
+              const mozilla::LogicalSize& aMargin,
+              const mozilla::LogicalSize& aBorder,
+              const mozilla::LogicalSize& aPadding,
+              ComputeSizeFlags aFlags) override;
+  nscoord GetMinISize(gfxContext *aRenderingContext) override;
+  nscoord GetPrefISize(gfxContext *aRenderingContext) override;
+  void DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) override;
+
+  void Reflow(nsPresContext*     aPresContext,
+              ReflowOutput&      aDesiredSize,
+=======
+  nsSize GetVideoIntrinsicSize(gfxContext* aRenderingContext);
+  mozilla::AspectRatio GetIntrinsicRatio() override;
+  mozilla::LogicalSize ComputeSize(
+      gfxContext* aRenderingContext, mozilla::WritingMode aWritingMode,
+      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
+      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
+      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
+  nscoord GetMinISize(gfxContext* aRenderingContext) override;
+  nscoord GetPrefISize(gfxContext* aRenderingContext) override;
+  void DestroyFrom(nsIFrame* aDestructRoot,
+                   PostDestroyData& aPostDestroyData) override;
+
+  void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+>>>>>>> upstream-releases
               const ReflowInput& aReflowInput,
+<<<<<<< HEAD
               nsReflowStatus& aStatus) override;
 
   bool IsLeafDynamic() const override;
+||||||| merged common ancestors
+              nsReflowStatus&    aStatus) override;
+
+  bool IsLeafDynamic() const override;
+=======
+              nsReflowStatus& aStatus) override;
+>>>>>>> upstream-releases
 
 #ifdef ACCESSIBILITY
   mozilla::a11y::AccType AccessibleType() override;
@@ -122,9 +164,6 @@ class nsVideoFrame final : public nsContainerFrame,
   void UpdateTextTrack();
 
   virtual ~nsVideoFrame();
-
-  // Anonymous child which is bound via XBL to the video controls.
-  RefPtr<mozilla::dom::Element> mVideoControls;
 
   // Anonymous child which is the image element of the poster frame.
   RefPtr<mozilla::dom::Element> mPosterImage;

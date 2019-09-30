@@ -10,6 +10,7 @@
 #include "nsIFile.h"
 #include "nsNativeCharsetUtils.h"
 
+<<<<<<< HEAD
 nsresult net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result) {
   nsresult rv;
   nsAutoCString nativePath, ePath;
@@ -43,11 +44,94 @@ nsresult net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result) {
   escPath.ReplaceSubstring(";", "%3b");
   result = escPath;
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result)
+{
+    nsresult rv;
+    nsAutoCString nativePath, ePath;
+    nsAutoString path;
+
+    rv = aFile->GetNativePath(nativePath);
+    if (NS_FAILED(rv)) return rv;
+
+    // Convert to unicode and back to check correct conversion to native charset
+    NS_CopyNativeToUnicode(nativePath, path);
+    NS_CopyUnicodeToNative(path, ePath);
+
+    // Use UTF8 version if conversion was successful
+    if (nativePath == ePath)
+        CopyUTF16toUTF8(path, ePath);
+    else
+        ePath = nativePath;
+
+    nsAutoCString escPath;
+    NS_NAMED_LITERAL_CSTRING(prefix, "file://");
+
+    // Escape the path with the directory mask
+    if (NS_EscapeURL(ePath.get(), -1, esc_Directory+esc_Forced, escPath))
+        escPath.Insert(prefix, 0);
+    else
+        escPath.Assign(prefix + ePath);
+
+    // esc_Directory does not escape the semicolons, so if a filename
+    // contains semicolons we need to manually escape them.
+    // This replacement should be removed in bug #473280
+    escPath.ReplaceSubstring(";", "%3b");
+    result = escPath;
+    return NS_OK;
+=======
+nsresult net_GetURLSpecFromActualFile(nsIFile* aFile, nsACString& result) {
+  nsresult rv;
+  nsAutoCString nativePath, ePath;
+  nsAutoString path;
+
+  rv = aFile->GetNativePath(nativePath);
+  if (NS_FAILED(rv)) return rv;
+
+  // Convert to unicode and back to check correct conversion to native charset
+  NS_CopyNativeToUnicode(nativePath, path);
+  NS_CopyUnicodeToNative(path, ePath);
+
+  // Use UTF8 version if conversion was successful
+  if (nativePath == ePath)
+    CopyUTF16toUTF8(path, ePath);
+  else
+    ePath = nativePath;
+
+  nsAutoCString escPath;
+  NS_NAMED_LITERAL_CSTRING(prefix, "file://");
+
+  // Escape the path with the directory mask
+  if (NS_EscapeURL(ePath.get(), -1, esc_Directory + esc_Forced, escPath))
+    escPath.Insert(prefix, 0);
+  else
+    escPath.Assign(prefix + ePath);
+
+  // esc_Directory does not escape the semicolons, so if a filename
+  // contains semicolons we need to manually escape them.
+  // This replacement should be removed in bug #473280
+  escPath.ReplaceSubstring(";", "%3b");
+  result = escPath;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsresult net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result) {
   // NOTE: See also the implementation in nsURLHelperOSX.cpp,
   // which is based on this.
+||||||| merged common ancestors
+nsresult
+net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result)
+{
+    // NOTE: See also the implementation in nsURLHelperOSX.cpp,
+    // which is based on this.
+=======
+nsresult net_GetFileFromURLSpec(const nsACString& aURL, nsIFile** result) {
+  // NOTE: See also the implementation in nsURLHelperOSX.cpp,
+  // which is based on this.
+>>>>>>> upstream-releases
 
   nsresult rv;
 

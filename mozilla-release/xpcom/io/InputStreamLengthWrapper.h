@@ -59,7 +59,20 @@ class InputStreamLengthWrapper final : public nsIAsyncInputStream,
  private:
   ~InputStreamLengthWrapper();
 
+<<<<<<< HEAD
   void SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
+||||||| merged common ancestors
+  void
+  SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
+=======
+  template <typename M>
+  void SerializeInternal(mozilla::ipc::InputStreamParams& aParams,
+                         FileDescriptorArray& aFileDescriptors,
+                         bool aDelayedStart, uint32_t aMaxSize,
+                         uint32_t* aSizeUsed, M* aManager);
+
+  void SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> mInputStream;
 

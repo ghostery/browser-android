@@ -8,9 +8,21 @@
 #define jit_mips_shared_MacroAssembler_mips_shared_h
 
 #if defined(JS_CODEGEN_MIPS32)
+<<<<<<< HEAD
 #include "jit/mips32/Assembler-mips32.h"
+||||||| merged common ancestors
+# include "jit/mips32/Assembler-mips32.h"
+=======
+#  include "jit/mips32/Assembler-mips32.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS64)
+<<<<<<< HEAD
 #include "jit/mips64/Assembler-mips64.h"
+||||||| merged common ancestors
+# include "jit/mips64/Assembler-mips64.h"
+=======
+#  include "jit/mips64/Assembler-mips64.h"
+>>>>>>> upstream-releases
 #endif
 
 #include "jit/AtomicOp.h"

@@ -30,8 +30,16 @@ class RenderSharedSurfaceTextureHost final : public RenderTextureHost {
                            wr::ImageRendering aRendering) override;
   void Unlock() override;
 
+<<<<<<< HEAD
  private:
   ~RenderSharedSurfaceTextureHost() override;
+||||||| merged common ancestors
+private:
+  ~RenderSharedSurfaceTextureHost() override;
+=======
+ private:
+  virtual ~RenderSharedSurfaceTextureHost();
+>>>>>>> upstream-releases
 
   RefPtr<gfx::SourceSurfaceSharedDataWrapper> mSurface;
   gfx::DataSourceSurface::MappedSurface mMap;

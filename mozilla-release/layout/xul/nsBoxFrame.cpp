@@ -48,6 +48,7 @@
 #include "mozilla/dom/Touch.h"
 #include "mozilla/Move.h"
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "nsPlaceholderFrame.h"
 #include "nsPresContext.h"
 #include "nsCOMPtr.h"
@@ -57,7 +58,6 @@
 #include "nsHTMLParts.h"
 #include "nsViewManager.h"
 #include "nsView.h"
-#include "nsIPresShell.h"
 #include "nsCSSRendering.h"
 #include "nsIServiceManager.h"
 #include "nsBoxLayout.h"
@@ -69,6 +69,7 @@
 #include "nsITheme.h"
 #include "nsTransform2D.h"
 #include "mozilla/EventStateManager.h"
+#include "mozilla/gfx/gfxVars.h"
 #include "nsDisplayList.h"
 #include "mozilla/Preferences.h"
 #include "nsStyleConsts.h"
@@ -85,14 +86,38 @@ using namespace mozilla;
 using namespace mozilla::dom;
 using namespace mozilla::gfx;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle,
                          bool aIsRoot, nsBoxLayout* aLayoutManager) {
   return new (aPresShell)
       nsBoxFrame(aStyle, nsBoxFrame::kClassID, aIsRoot, aLayoutManager);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle, bool aIsRoot, nsBoxLayout* aLayoutManager)
+{
+  return new (aPresShell) nsBoxFrame(aStyle, nsBoxFrame::kClassID,
+                                     aIsRoot, aLayoutManager);
+=======
+nsIFrame* NS_NewBoxFrame(PresShell* aPresShell, ComputedStyle* aStyle,
+                         bool aIsRoot, nsBoxLayout* aLayoutManager) {
+  return new (aPresShell)
+      nsBoxFrame(aStyle, aPresShell->GetPresContext(), nsBoxFrame::kClassID,
+                 aIsRoot, aLayoutManager);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsBoxFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsBoxFrame(aStyle);
+=======
+nsIFrame* NS_NewBoxFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsBoxFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsBoxFrame)
@@ -103,9 +128,24 @@ NS_QUERYFRAME_HEAD(nsBoxFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 #endif
 
+<<<<<<< HEAD
 nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle, ClassID aID, bool aIsRoot,
                        nsBoxLayout* aLayoutManager)
     : nsContainerFrame(aStyle, aID), mFlex(0), mAscent(0) {
+||||||| merged common ancestors
+nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle,
+                       ClassID aID,
+                       bool aIsRoot,
+                       nsBoxLayout* aLayoutManager)
+  : nsContainerFrame(aStyle, aID)
+  , mFlex(0)
+  , mAscent(0)
+{
+=======
+nsBoxFrame::nsBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                       ClassID aID, bool aIsRoot, nsBoxLayout* aLayoutManager)
+    : nsContainerFrame(aStyle, aPresContext, aID), mFlex(0), mAscent(0) {
+>>>>>>> upstream-releases
   AddStateBits(NS_STATE_IS_HORIZONTAL | NS_STATE_AUTO_STRETCH);
 
   if (aIsRoot) AddStateBits(NS_STATE_IS_ROOT);
@@ -137,8 +177,17 @@ void nsBoxFrame::SetInitialChildList(ChildListID aListID,
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsBoxFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsBoxFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsBoxFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   // The values that CacheAttributes() computes depend on our style,
@@ -491,6 +540,9 @@ void nsBoxFrame::DidReflow(nsPresContext* aPresContext,
       mState & (NS_FRAME_IS_DIRTY | NS_FRAME_HAS_DIRTY_CHILDREN);
   nsFrame::DidReflow(aPresContext, aReflowInput);
   AddStateBits(preserveBits);
+  if (preserveBits & NS_FRAME_IS_DIRTY) {
+    this->MarkSubtreeDirty();
+  }
 }
 
 bool nsBoxFrame::HonorPrintBackgroundSettings() {
@@ -510,7 +562,16 @@ static void printSize(char* aDesc, nscoord aSize) {
 }
 #endif
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsBoxFrame::GetMinISize(gfxContext* aRenderingContext) {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsBoxFrame::GetMinISize(gfxContext *aRenderingContext)
+{
+=======
+/* virtual */
+nscoord nsBoxFrame::GetMinISize(gfxContext* aRenderingContext) {
+>>>>>>> upstream-releases
   nscoord result;
   DISPLAY_MIN_INLINE_SIZE(this, result);
 
@@ -518,7 +579,7 @@ static void printSize(char* aDesc, nscoord aSize) {
   nsSize minSize = GetXULMinSize(state);
 
   // GetXULMinSize returns border-box width, and we want to return content
-  // width.  Since Reflow uses the reflow state's border and padding, we
+  // width.  Since Reflow uses the reflow input's border and padding, we
   // actually just want to subtract what GetXULMinSize added, which is the
   // result of GetXULBorderAndPadding.
   nsMargin bp;
@@ -530,7 +591,16 @@ static void printSize(char* aDesc, nscoord aSize) {
   return result;
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsBoxFrame::GetPrefISize(gfxContext* aRenderingContext) {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsBoxFrame::GetPrefISize(gfxContext *aRenderingContext)
+{
+=======
+/* virtual */
+nscoord nsBoxFrame::GetPrefISize(gfxContext* aRenderingContext) {
+>>>>>>> upstream-releases
   nscoord result;
   DISPLAY_PREF_INLINE_SIZE(this, result);
 
@@ -538,7 +608,7 @@ static void printSize(char* aDesc, nscoord aSize) {
   nsSize prefSize = GetXULPrefSize(state);
 
   // GetXULPrefSize returns border-box width, and we want to return content
-  // width.  Since Reflow uses the reflow state's border and padding, we
+  // width.  Since Reflow uses the reflow input's border and padding, we
   // actually just want to subtract what GetXULPrefSize added, which is the
   // result of GetXULBorderAndPadding.
   nsMargin bp;
@@ -592,9 +662,9 @@ void nsBoxFrame::Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
   LogicalSize prefSize(wm);
 
   // if we are told to layout intrinsic then get our preferred size.
-  NS_ASSERTION(computedSize.ISize(wm) != NS_INTRINSICSIZE,
+  NS_ASSERTION(computedSize.ISize(wm) != NS_UNCONSTRAINEDSIZE,
                "computed inline size should always be computed");
-  if (computedSize.BSize(wm) == NS_INTRINSICSIZE) {
+  if (computedSize.BSize(wm) == NS_UNCONSTRAINEDSIZE) {
     nsSize physicalPrefSize = GetXULPrefSize(state);
     nsSize minSize = GetXULMinSize(state);
     nsSize maxSize = GetXULMaxSize(state);
@@ -606,7 +676,7 @@ void nsBoxFrame::Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
   // get our desiredSize
   computedSize.ISize(wm) += m.IStart(wm) + m.IEnd(wm);
 
-  if (aReflowInput.ComputedBSize() == NS_INTRINSICSIZE) {
+  if (aReflowInput.ComputedBSize() == NS_UNCONSTRAINEDSIZE) {
     computedSize.BSize(wm) = prefSize.BSize(wm);
     // prefSize is border-box but min/max constraints are content-box.
     nscoord blockDirBorderPadding =
@@ -743,7 +813,7 @@ nsSize nsBoxFrame::GetXULMaxSize(nsBoxLayoutState& aBoxLayoutState) {
   NS_ASSERTION(aBoxLayoutState.GetRenderingContext(),
                "must have rendering context");
 
-  nsSize size(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+  nsSize size(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
   DISPLAY_MAX_SIZE(this, size);
   if (!DoesNeedRecalc(mMaxSize)) {
     size = mMaxSize;
@@ -840,7 +910,16 @@ void nsBoxFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsContainerFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsBoxFrame::MarkIntrinsicISizesDirty() {
+||||||| merged common ancestors
+/* virtual */ void
+nsBoxFrame::MarkIntrinsicISizesDirty()
+{
+=======
+/* virtual */
+void nsBoxFrame::MarkIntrinsicISizesDirty() {
+>>>>>>> upstream-releases
   SizeNeedsRecalc(mPrefSize);
   SizeNeedsRecalc(mMinSize);
   SizeNeedsRecalc(mMaxSize);
@@ -852,8 +931,7 @@ void nsBoxFrame::DestroyFrom(nsIFrame* aDestructRoot,
     mLayoutManager->IntrinsicISizesDirty(this, state);
   }
 
-  // Don't call base class method, since everything it does is within an
-  // IsXULBoxWrapped check.
+  nsContainerFrame::MarkIntrinsicISizesDirty();
 }
 
 void nsBoxFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
@@ -872,7 +950,7 @@ void nsBoxFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
   aOldFrame->Destroy();
 
   // mark us dirty and generate a reflow command
-  PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
 }
 
@@ -890,6 +968,13 @@ void nsBoxFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   const nsFrameList::Slice& newFrames =
       mFrames.InsertFrames(this, aPrevFrame, aFrameList);
 
+<<<<<<< HEAD
+  // notify the layout manager
+  if (mLayoutManager)
+    mLayoutManager->ChildrenInserted(this, state, aPrevFrame, newFrames);
+||||||| merged common ancestors
+   nsBoxLayoutState state(PresContext());
+=======
   // notify the layout manager
   if (mLayoutManager)
     mLayoutManager->ChildrenInserted(this, state, aPrevFrame, newFrames);
@@ -900,13 +985,52 @@ void nsBoxFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   // just lose.
   CheckBoxOrder();
 
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                NS_FRAME_HAS_DIRTY_CHILDREN);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Make sure to check box order _after_ notifying the layout
+  // manager; otherwise the slice we give the layout manager will
+  // just be bogus.  If the layout manager cares about the order, we
+  // just lose.
+  CheckBoxOrder();
+||||||| merged common ancestors
+   // append the new frames
+   const nsFrameList::Slice& newFrames = mFrames.AppendFrames(this, aFrameList);
+=======
+void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
+  MOZ_ASSERT(aListID == kPrincipalList, "We don't support out-of-flow kids");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
 }
+||||||| merged common ancestors
+   // notify the layout manager
+   if (mLayoutManager)
+     mLayoutManager->ChildrenAppended(this, state, newFrames);
+=======
+  nsBoxLayoutState state(PresContext());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
   MOZ_ASSERT(aListID == kPrincipalList, "We don't support out-of-flow kids");
+||||||| merged common ancestors
+   // Make sure to check box order _after_ notifying the layout
+   // manager; otherwise the slice we give the layout manager will
+   // just be bogus.  If the layout manager cares about the order, we
+   // just lose.
+   CheckBoxOrder();
+=======
+  // append the new frames
+  const nsFrameList::Slice& newFrames = mFrames.AppendFrames(this, aFrameList);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsBoxLayoutState state(PresContext());
 
   // append the new frames
@@ -926,9 +1050,40 @@ void nsBoxFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
     PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
   }
+||||||| merged common ancestors
+   // XXXbz why is this NS_FRAME_FIRST_REFLOW check here?
+   if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
+     PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+                                   NS_FRAME_HAS_DIRTY_CHILDREN);
+   }
+=======
+  // notify the layout manager
+  if (mLayoutManager) mLayoutManager->ChildrenAppended(this, state, newFrames);
+
+  // Make sure to check box order _after_ notifying the layout
+  // manager; otherwise the slice we give the layout manager will
+  // just be bogus.  If the layout manager cares about the order, we
+  // just lose.
+  CheckBoxOrder();
+
+  // XXXbz why is this NS_FRAME_FIRST_REFLOW check here?
+  if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                  NS_FRAME_HAS_DIRTY_CHILDREN);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* virtual */ nsContainerFrame* nsBoxFrame::GetContentInsertionFrame() {
+||||||| merged common ancestors
+/* virtual */ nsContainerFrame*
+nsBoxFrame::GetContentInsertionFrame()
+{
+=======
+/* virtual */
+nsContainerFrame* nsBoxFrame::GetContentInsertionFrame() {
+>>>>>>> upstream-releases
   if (GetStateBits() & NS_STATE_BOX_WRAPS_KIDS_IN_BLOCK)
     return PrincipalChildList().FirstChild()->GetContentInsertionFrame();
   return nsContainerFrame::GetContentInsertionFrame();
@@ -1005,7 +1160,7 @@ nsresult nsBoxFrame::AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
       UpdateMouseThrough();
     }
 
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eStyleChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::StyleChange,
                                   NS_FRAME_IS_DIRTY);
   } else if (aAttribute == nsGkAtoms::ordinal) {
     nsIFrame* parent = GetParentXULBox(this);
@@ -1018,7 +1173,7 @@ nsresult nsBoxFrame::AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
         StyleDisplay()->mDisplay != mozilla::StyleDisplay::MozPopup) {
       parent->XULRelayoutChildAtOrdinal(this);
       // XXXldb Should this instead be a tree change on the child or parent?
-      PresShell()->FrameNeedsReflow(parent, nsIPresShell::eStyleChange,
+      PresShell()->FrameNeedsReflow(parent, IntrinsicDirty::StyleChange,
                                     NS_FRAME_IS_DIRTY);
     }
   }
@@ -1030,7 +1185,7 @@ nsresult nsBoxFrame::AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
              mContent->IsXULElement(nsGkAtoms::tree)) {
     // Reflow ourselves and all our children if "rows" changes, since
     // nsTreeBodyFrame's layout reads this from its parent (this frame).
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eStyleChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::StyleChange,
                                   NS_FRAME_IS_DIRTY);
   }
 
@@ -1040,6 +1195,13 @@ nsresult nsBoxFrame::AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
 void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                   const nsDisplayListSet& aLists) {
   bool forceLayer = false;
+  // We check the renderroot attribute here in nsBoxFrame for lack of a better
+  // place. This roughly mirrors the pre-existing "layer" attribute. In the
+  // long term we may want to add a specific element in which we can wrap
+  // alternate renderroot content, but we're electing to not go down that
+  // rabbit hole today.
+  wr::RenderRoot renderRoot =
+      gfxUtils::GetRenderRootForFrame(this).valueOr(wr::RenderRoot::Default);
 
   if (GetContent()->IsXULElement()) {
     // forcelayer is only supported on XUL elements with box layout
@@ -1057,12 +1219,14 @@ void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   }
 
   nsDisplayListCollection tempLists(aBuilder);
-  const nsDisplayListSet& destination = forceLayer ? tempLists : aLists;
+  const nsDisplayListSet& destination =
+      (forceLayer || renderRoot != wr::RenderRoot::Default) ? tempLists
+                                                            : aLists;
 
   DisplayBorderBackgroundOutline(aBuilder, destination);
 
   Maybe<nsDisplayListBuilder::AutoContainerASRTracker> contASRTracker;
-  if (forceLayer) {
+  if (forceLayer || renderRoot != wr::RenderRoot::Default) {
     contASRTracker.emplace(aBuilder);
   }
 
@@ -1071,7 +1235,7 @@ void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // see if we have to draw a selection frame around this container
   DisplaySelectionOverlay(aBuilder, destination.Content());
 
-  if (forceLayer) {
+  if (forceLayer || renderRoot != wr::RenderRoot::Default) {
     // This is a bit of a hack. Collect up all descendant display items
     // and merge them into a single Content() list. This can cause us
     // to violate CSS stacking order, but forceLayer is a magic
@@ -1083,15 +1247,34 @@ void nsBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     masterList.AppendToTop(tempLists.Content());
     masterList.AppendToTop(tempLists.PositionedDescendants());
     masterList.AppendToTop(tempLists.Outlines());
-
     const ActiveScrolledRoot* ownLayerASR = contASRTracker->GetContainerASR();
-
     DisplayListClipState::AutoSaveRestore ownLayerClipState(aBuilder);
 
+<<<<<<< HEAD
     // Wrap the list to make it its own layer
     aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayOwnLayer>(
         aBuilder, this, &masterList, ownLayerASR, nsDisplayOwnLayerFlags::eNone,
         mozilla::layers::ScrollbarData{}, true, true));
+||||||| merged common ancestors
+    // Wrap the list to make it its own layer
+    aLists.Content()->AppendToTop(
+      MakeDisplayItem<nsDisplayOwnLayer>(aBuilder, this, &masterList, ownLayerASR,
+                                         nsDisplayOwnLayerFlags::eNone,
+                                         mozilla::layers::ScrollbarData{}, true, true));
+=======
+    if (forceLayer) {
+      MOZ_ASSERT(renderRoot == wr::RenderRoot::Default);
+      // Wrap the list to make it its own layer
+      aLists.Content()->AppendNewToTop<nsDisplayOwnLayer>(
+          aBuilder, this, &masterList, ownLayerASR,
+          nsDisplayOwnLayerFlags::None, mozilla::layers::ScrollbarData{}, true,
+          true);
+    } else {
+      MOZ_ASSERT(!XRE_IsContentProcess());
+      aLists.Content()->AppendNewToTop<nsDisplayRenderRoot>(
+          aBuilder, this, &masterList, ownLayerASR, renderRoot);
+    }
+>>>>>>> upstream-releases
   }
 }
 

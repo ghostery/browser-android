@@ -25,29 +25,39 @@
 #include "pathsub.h"
 
 #ifdef HAVE_GETOPT_H
-#include <getopt.h>
+#  include <getopt.h>
 #endif
 
 #ifdef SUNOS4
-#include "sunos4.h"
+#  include "sunos4.h"
 #endif
 
 #ifdef NEXTSTEP
-#include <bsd/libc.h>
+#  include <bsd/libc.h>
 #endif
 
 #ifdef __QNX__
-#include <unix.h>
+#  include <unix.h>
 #endif
 
 #ifdef NEED_S_ISLNK
+<<<<<<< HEAD
 #if !defined(S_ISLNK) && defined(S_IFLNK)
 #define S_ISLNK(a) (((a)&S_IFMT) == S_IFLNK)
 #endif
+||||||| merged common ancestors
+#if !defined(S_ISLNK) && defined(S_IFLNK)
+#define S_ISLNK(a)	(((a) & S_IFMT) == S_IFLNK)
+#endif
+=======
+#  if !defined(S_ISLNK) && defined(S_IFLNK)
+#    define S_ISLNK(a) (((a)&S_IFMT) == S_IFLNK)
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 #ifndef _DIRECTORY_SEPARATOR
-#define _DIRECTORY_SEPARATOR "/"
+#  define _DIRECTORY_SEPARATOR "/"
 #endif /* _DIRECTORY_SEPARATOR */
 
 #ifdef NEED_FCHMOD_PROTO
@@ -62,6 +72,7 @@ static void usage(void) {
   exit(2);
 }
 
+<<<<<<< HEAD
 static int mkdirs(char *path, mode_t mode) {
   char *cp;
   struct stat sb;
@@ -80,6 +91,50 @@ static int mkdirs(char *path, mode_t mode) {
     if ((lstat(path, &sb) < 0 || !S_ISDIR(sb.st_mode)) &&
         mkdirs(path, mode) < 0) {
       return -1;
+||||||| merged common ancestors
+static int
+mkdirs(char *path, mode_t mode)
+{
+    char *cp;
+    struct stat sb;
+    int res;
+    int l;
+
+    /* strip trailing "/." */
+    l = strlen(path);
+    if(l > 1 && path[l - 1] == '.' && path[l - 2] == '/')
+        path[l - 2] = 0;
+
+    while (*path == '/' && path[1] == '/')
+	path++;
+    for (cp = strrchr(path, '/'); cp && cp != path && *(cp - 1) == '/'; cp--);
+    if (cp && cp != path) {
+	*cp = '\0';
+	if ((lstat(path, &sb) < 0 || !S_ISDIR(sb.st_mode)) &&
+	    mkdirs(path, mode) < 0) {
+	    return -1;
+	}
+	*cp = '/';
+=======
+static int mkdirs(char* path, mode_t mode) {
+  char* cp;
+  struct stat sb;
+  int res;
+  int l;
+
+  /* strip trailing "/." */
+  l = strlen(path);
+  if (l > 1 && path[l - 1] == '.' && path[l - 2] == '/') path[l - 2] = 0;
+
+  while (*path == '/' && path[1] == '/') path++;
+  for (cp = strrchr(path, '/'); cp && cp != path && *(cp - 1) == '/'; cp--)
+    ;
+  if (cp && cp != path) {
+    *cp = '\0';
+    if ((lstat(path, &sb) < 0 || !S_ISDIR(sb.st_mode)) &&
+        mkdirs(path, mode) < 0) {
+      return -1;
+>>>>>>> upstream-releases
     }
     *cp = '/';
   }
@@ -91,6 +146,7 @@ static int mkdirs(char *path, mode_t mode) {
     return res;
 }
 
+<<<<<<< HEAD
 static uid_t touid(char *owner) {
   struct passwd *pw;
   uid_t uid;
@@ -101,8 +157,36 @@ static uid_t touid(char *owner) {
   uid = strtol(owner, &cp, 0);
   if (uid == 0 && cp == owner) fail("cannot find uid for %s", owner);
   return uid;
+||||||| merged common ancestors
+static uid_t
+touid(char *owner)
+{
+    struct passwd *pw;
+    uid_t uid;
+    char *cp;
+
+    pw = getpwnam(owner);
+    if (pw)
+	return pw->pw_uid;
+    uid = strtol(owner, &cp, 0);
+    if (uid == 0 && cp == owner)
+	fail("cannot find uid for %s", owner);
+    return uid;
+=======
+static uid_t touid(char* owner) {
+  struct passwd* pw;
+  uid_t uid;
+  char* cp;
+
+  pw = getpwnam(owner);
+  if (pw) return pw->pw_uid;
+  uid = strtol(owner, &cp, 0);
+  if (uid == 0 && cp == owner) fail("cannot find uid for %s", owner);
+  return uid;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static gid_t togid(char *group) {
   struct group *gr;
   gid_t gid;
@@ -113,10 +197,47 @@ static gid_t togid(char *group) {
   gid = strtol(group, &cp, 0);
   if (gid == 0 && cp == group) fail("cannot find gid for %s", group);
   return gid;
+||||||| merged common ancestors
+static gid_t
+togid(char *group)
+{
+    struct group *gr;
+    gid_t gid;
+    char *cp;
+
+    gr = getgrnam(group);
+    if (gr)
+	return gr->gr_gid;
+    gid = strtol(group, &cp, 0);
+    if (gid == 0 && cp == group)
+	fail("cannot find gid for %s", group);
+    return gid;
+=======
+static gid_t togid(char* group) {
+  struct group* gr;
+  gid_t gid;
+  char* cp;
+
+  gr = getgrnam(group);
+  if (gr) return gr->gr_gid;
+  gid = strtol(group, &cp, 0);
+  if (gid == 0 && cp == group) fail("cannot find gid for %s", group);
+  return gid;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static void copyfile(char *name, char *toname, mode_t mode, char *group,
                      char *owner, int dotimes, uid_t uid, gid_t gid) {
+||||||| merged common ancestors
+static void
+copyfile( char *name, char *toname, mode_t mode, char *group, char *owner,
+          int dotimes, uid_t uid, gid_t gid )
+{
+=======
+static void copyfile(char* name, char* toname, mode_t mode, char* group,
+                     char* owner, int dotimes, uid_t uid, gid_t gid) {
+>>>>>>> upstream-releases
   int fromfd, tofd = -1, cc, wc, exists;
   char buf[BUFSIZ], *bp;
   struct stat sb, tosb;
@@ -157,11 +278,11 @@ static void copyfile(char *name, char *toname, mode_t mode, char *group,
     utb.modtime = sb.st_mtime;
     if (utime(toname, &utb) < 0) fail("cannot set times of %s", toname);
   }
-#ifdef HAVE_FCHMOD
+#  ifdef HAVE_FCHMOD
   if (fchmod(tofd, mode) < 0)
-#else
+#  else
   if (chmod(toname, mode) < 0)
-#endif
+#  endif
     fail("cannot change mode of %s", toname);
 #endif
   if ((owner || group) && fchown(tofd, uid, gid) < 0)
@@ -181,10 +302,24 @@ static void copyfile(char *name, char *toname, mode_t mode, char *group,
 #endif
 }
 
+<<<<<<< HEAD
 static void copydir(char *from, char *to, mode_t mode, char *group, char *owner,
                     int dotimes, uid_t uid, gid_t gid) {
   DIR *dir;
   struct dirent *ep;
+||||||| merged common ancestors
+static void
+copydir( char *from, char *to, mode_t mode, char *group, char *owner,
+         int dotimes, uid_t uid, gid_t gid)
+{
+  DIR *dir;
+  struct dirent *ep;
+=======
+static void copydir(char* from, char* to, mode_t mode, char* group, char* owner,
+                    int dotimes, uid_t uid, gid_t gid) {
+  DIR* dir;
+  struct dirent* ep;
+>>>>>>> upstream-releases
   struct stat sb;
   char *base, *destdir, *direntry, *destentry;
 
@@ -226,6 +361,7 @@ static void copydir(char *from, char *to, mode_t mode, char *group, char *owner,
   closedir(dir);
 }
 
+<<<<<<< HEAD
 int main(int argc, char **argv) {
   int onlydir, dodir, dolink, dorelsymlink, dotimes, opt, len, lplen, tdlen,
       bnlen, exists;
@@ -274,6 +410,107 @@ int main(int argc, char **argv) {
         break;
       default:
         usage();
+||||||| merged common ancestors
+int
+main(int argc, char **argv)
+{
+    int onlydir, dodir, dolink, dorelsymlink, dotimes, opt, len, lplen, tdlen, bnlen, exists;
+    mode_t mode = 0755;
+    char *linkprefix, *owner, *group, *cp, *cwd, *todir, *toname, *name, *base, *linkname, buf[BUFSIZ];
+    uid_t uid;
+    gid_t gid;
+    struct stat sb, tosb, fromsb;
+
+    program = argv[0];
+    cwd = linkname = linkprefix = owner = group = 0;
+    onlydir = dodir = dolink = dorelsymlink = dotimes = lplen = 0;
+
+    while ((opt = getopt(argc, argv, "C:DdlL:Rm:o:g:t")) != EOF) {
+	switch (opt) {
+	  case 'C':
+	    cwd = optarg;
+	    break;
+	  case 'D':
+	    onlydir = 1;
+	    break;
+	  case 'd':
+	    dodir = 1;
+	    break;
+	  case 'L':
+	    linkprefix = optarg;
+	    lplen = strlen(linkprefix);
+	    dolink = 1;
+	    break;
+	  case 'R':
+	    dolink = dorelsymlink = 1;
+	    break;
+	  case 'm':
+	    mode = strtoul(optarg, &cp, 8);
+	    if (mode == 0 && cp == optarg)
+		usage();
+	    break;
+	  case 'o':
+	    owner = optarg;
+	    break;
+	  case 'g':
+	    group = optarg;
+	    break;
+	  case 't':
+	    dotimes = 1;
+	    break;
+	  default:
+	    usage();
+	}
+=======
+int main(int argc, char** argv) {
+  int onlydir, dodir, dolink, dorelsymlink, dotimes, opt, len, lplen, tdlen,
+      bnlen, exists;
+  mode_t mode = 0755;
+  char *linkprefix, *owner, *group, *cp, *cwd, *todir, *toname, *name, *base,
+      *linkname, buf[BUFSIZ];
+  uid_t uid;
+  gid_t gid;
+  struct stat sb, tosb, fromsb;
+
+  program = argv[0];
+  cwd = linkname = linkprefix = owner = group = 0;
+  onlydir = dodir = dolink = dorelsymlink = dotimes = lplen = 0;
+
+  while ((opt = getopt(argc, argv, "C:DdlL:Rm:o:g:t")) != EOF) {
+    switch (opt) {
+      case 'C':
+        cwd = optarg;
+        break;
+      case 'D':
+        onlydir = 1;
+        break;
+      case 'd':
+        dodir = 1;
+        break;
+      case 'L':
+        linkprefix = optarg;
+        lplen = strlen(linkprefix);
+        dolink = 1;
+        break;
+      case 'R':
+        dolink = dorelsymlink = 1;
+        break;
+      case 'm':
+        mode = strtoul(optarg, &cp, 8);
+        if (mode == 0 && cp == optarg) usage();
+        break;
+      case 'o':
+        owner = optarg;
+        break;
+      case 'g':
+        group = optarg;
+        break;
+      case 't':
+        dotimes = 1;
+        break;
+      default:
+        usage();
+>>>>>>> upstream-releases
     }
   }
 
@@ -290,12 +527,28 @@ int main(int argc, char **argv) {
 
   if (!cwd) {
 #ifndef NEEDS_GETCWD
+<<<<<<< HEAD
 #ifndef GETCWD_CANT_MALLOC
     cwd = getcwd(0, PATH_MAX);
 #else
     cwd = malloc(PATH_MAX + 1);
     cwd = getcwd(cwd, PATH_MAX);
 #endif
+||||||| merged common ancestors
+#ifndef GETCWD_CANT_MALLOC
+	cwd = getcwd(0, PATH_MAX);
+#else
+	cwd = malloc(PATH_MAX + 1);
+	cwd = getcwd(cwd, PATH_MAX);
+#endif
+=======
+#  ifndef GETCWD_CANT_MALLOC
+    cwd = getcwd(0, PATH_MAX);
+#  else
+    cwd = malloc(PATH_MAX + 1);
+    cwd = getcwd(cwd, PATH_MAX);
+#  endif
+>>>>>>> upstream-releases
 #else
     cwd = malloc(PATH_MAX + 1);
     cwd = getwd(cwd);
@@ -304,12 +557,28 @@ int main(int argc, char **argv) {
 
   xchdir(todir);
 #ifndef NEEDS_GETCWD
+<<<<<<< HEAD
 #ifndef GETCWD_CANT_MALLOC
   todir = getcwd(0, PATH_MAX);
 #else
   todir = malloc(PATH_MAX + 1);
   todir = getcwd(todir, PATH_MAX);
 #endif
+||||||| merged common ancestors
+#ifndef GETCWD_CANT_MALLOC
+    todir = getcwd(0, PATH_MAX);
+#else
+    todir = malloc(PATH_MAX + 1);
+    todir = getcwd(todir, PATH_MAX);
+#endif
+=======
+#  ifndef GETCWD_CANT_MALLOC
+  todir = getcwd(0, PATH_MAX);
+#  else
+  todir = malloc(PATH_MAX + 1);
+  todir = getcwd(todir, PATH_MAX);
+#  endif
+>>>>>>> upstream-releases
 #else
   todir = malloc(PATH_MAX + 1);
   todir = getwd(todir);

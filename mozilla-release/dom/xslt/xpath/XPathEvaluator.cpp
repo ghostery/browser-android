@@ -14,7 +14,7 @@
 #include "txExprParser.h"
 #include "nsError.h"
 #include "txURIUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsDOMString.h"
 #include "nsNameSpaceManager.h"
 #include "nsContentUtils.h"
@@ -55,11 +55,22 @@ class XPathEvaluatorParseContext : public txIParseContext {
   bool mIsCaseSensitive;
 };
 
+<<<<<<< HEAD
 XPathEvaluator::XPathEvaluator(nsIDocument* aDocument)
     : mDocument(do_GetWeakReference(aDocument)) {}
+||||||| merged common ancestors
+XPathEvaluator::XPathEvaluator(nsIDocument* aDocument)
+    : mDocument(do_GetWeakReference(aDocument))
+{
+}
+=======
+XPathEvaluator::XPathEvaluator(Document* aDocument)
+    : mDocument(do_GetWeakReference(aDocument)) {}
+>>>>>>> upstream-releases
 
 XPathEvaluator::~XPathEvaluator() {}
 
+<<<<<<< HEAD
 XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
                                                   XPathNSResolver* aResolver,
                                                   ErrorResult& aRv) {
@@ -67,8 +78,27 @@ XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
   XPathEvaluatorParseContext pContext(aResolver,
                                       !(doc && doc->IsHTMLDocument()));
   return CreateExpression(aExpression, &pContext, doc, aRv);
+||||||| merged common ancestors
+XPathExpression*
+XPathEvaluator::CreateExpression(const nsAString& aExpression,
+                                 XPathNSResolver* aResolver, ErrorResult& aRv)
+{
+    nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+    XPathEvaluatorParseContext pContext(aResolver,
+                                        !(doc && doc->IsHTMLDocument()));
+    return CreateExpression(aExpression, &pContext, doc, aRv);
+=======
+XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
+                                                  XPathNSResolver* aResolver,
+                                                  ErrorResult& aRv) {
+  nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+  XPathEvaluatorParseContext pContext(aResolver,
+                                      !(doc && doc->IsHTMLDocument()));
+  return CreateExpression(aExpression, &pContext, doc, aRv);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
                                                   nsINode* aResolver,
                                                   ErrorResult& aRv) {
@@ -76,8 +106,27 @@ XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
   XPathEvaluatorParseContext pContext(aResolver,
                                       !(doc && doc->IsHTMLDocument()));
   return CreateExpression(aExpression, &pContext, doc, aRv);
+||||||| merged common ancestors
+XPathExpression*
+XPathEvaluator::CreateExpression(const nsAString& aExpression,
+                                 nsINode* aResolver, ErrorResult& aRv)
+{
+    nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+    XPathEvaluatorParseContext pContext(aResolver,
+                                        !(doc && doc->IsHTMLDocument()));
+    return CreateExpression(aExpression, &pContext, doc, aRv);
+=======
+XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
+                                                  nsINode* aResolver,
+                                                  ErrorResult& aRv) {
+  nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+  XPathEvaluatorParseContext pContext(aResolver,
+                                      !(doc && doc->IsHTMLDocument()));
+  return CreateExpression(aExpression, &pContext, doc, aRv);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
                                                   txIParseContext* aContext,
                                                   nsIDocument* aDocument,
@@ -93,6 +142,32 @@ XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
     if (!aRv.ErrorCodeIs(NS_ERROR_DOM_NAMESPACE_ERR)) {
       aRv.SuppressException();
       aRv.Throw(NS_ERROR_DOM_INVALID_EXPRESSION_ERR);
+||||||| merged common ancestors
+XPathExpression*
+XPathEvaluator::CreateExpression(const nsAString & aExpression,
+                                 txIParseContext* aContext,
+                                 nsIDocument* aDocument,
+                                 ErrorResult& aRv)
+{
+    if (!mRecycler) {
+        mRecycler = new txResultRecycler;
+=======
+XPathExpression* XPathEvaluator::CreateExpression(const nsAString& aExpression,
+                                                  txIParseContext* aContext,
+                                                  Document* aDocument,
+                                                  ErrorResult& aRv) {
+  if (!mRecycler) {
+    mRecycler = new txResultRecycler;
+  }
+
+  nsAutoPtr<Expr> expression;
+  aRv = txExprParser::createExpr(PromiseFlatString(aExpression), aContext,
+                                 getter_Transfers(expression));
+  if (aRv.Failed()) {
+    if (!aRv.ErrorCodeIs(NS_ERROR_DOM_NAMESPACE_ERR)) {
+      aRv.SuppressException();
+      aRv.Throw(NS_ERROR_DOM_INVALID_EXPRESSION_ERR);
+>>>>>>> upstream-releases
     }
 
     return nullptr;
@@ -107,9 +182,22 @@ bool XPathEvaluator::WrapObject(JSContext* aCx,
   return dom::XPathEvaluator_Binding::Wrap(aCx, this, aGivenProto, aReflector);
 }
 
+<<<<<<< HEAD
 /* static */ XPathEvaluator* XPathEvaluator::Constructor(
     const GlobalObject& aGlobal, ErrorResult& rv) {
   return new XPathEvaluator(nullptr);
+||||||| merged common ancestors
+/* static */ XPathEvaluator*
+XPathEvaluator::Constructor(const GlobalObject& aGlobal,
+                            ErrorResult& rv)
+{
+    return new XPathEvaluator(nullptr);
+=======
+/* static */
+XPathEvaluator* XPathEvaluator::Constructor(const GlobalObject& aGlobal,
+                                            ErrorResult& rv) {
+  return new XPathEvaluator(nullptr);
+>>>>>>> upstream-releases
 }
 
 already_AddRefed<XPathResult> XPathEvaluator::Evaluate(

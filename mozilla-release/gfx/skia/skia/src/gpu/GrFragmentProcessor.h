@@ -9,8 +9,13 @@
 #define GrFragmentProcessor_DEFINED
 
 #include "GrProcessor.h"
+<<<<<<< HEAD
 #include "GrProxyRef.h"
 #include "SkPM4f.h"
+||||||| merged common ancestors
+=======
+#include "GrProxyRef.h"
+>>>>>>> upstream-releases
 
 class GrCoordTransform;
 class GrGLSLFragmentProcessor;
@@ -261,8 +266,21 @@ protected:
      * This assumes that the subclass output color will be a modulation of the input color with a
      * value read from a texture of the passed config and that the texture contains premultiplied
      * color or alpha values that are in range.
+     *
+     * Since there are multiple ways in which a sampler may have its coordinates clamped or wrapped,
+     * callers must determine on their own if the sampling uses a decal strategy in any way, in
+     * which case the texture may become transparent regardless of the pixel config.
      */
-    static OptimizationFlags ModulateByConfigOptimizationFlags(GrPixelConfig config) {
+    static OptimizationFlags ModulateForSamplerOptFlags(GrPixelConfig config, bool samplingDecal) {
+        if (samplingDecal) {
+            return kCompatibleWithCoverageAsAlpha_OptimizationFlag;
+        } else {
+            return ModulateForClampedSamplerOptFlags(config);
+        }
+    }
+
+    // As above, but callers should somehow ensure or assert their sampler still uses clamping
+    static OptimizationFlags ModulateForClampedSamplerOptFlags(GrPixelConfig config) {
         if (GrPixelConfigIsOpaque(config)) {
             return kCompatibleWithCoverageAsAlpha_OptimizationFlag |
                    kPreservesOpaqueInput_OptimizationFlag;
@@ -377,9 +395,89 @@ private:
 
     SkSTArray<1, std::unique_ptr<GrFragmentProcessor>, true> fChildProcessors;
 
+<<<<<<< HEAD
     typedef GrProcessor INHERITED;
 };
 
+/**
+ * Used to represent a texture that is required by a GrFragmentProcessor. It holds a GrTextureProxy
+ * along with an associated GrSamplerState. TextureSamplers don't perform any coord manipulation to
+ * account for texture origin.
+ */
+class GrFragmentProcessor::TextureSampler {
+public:
+    TextureSampler() = default;
+
+    /**
+     * This copy constructor is used by GrFragmentProcessor::clone() implementations. The copy
+     * always takes a new ref on the texture proxy as the new fragment processor will not yet be
+     * in pending execution state.
+     */
+    explicit TextureSampler(const TextureSampler& that)
+            : fProxyRef(sk_ref_sp(that.fProxyRef.get()), that.fProxyRef.ioType())
+            , fSamplerState(that.fSamplerState) {}
+
+    TextureSampler(sk_sp<GrTextureProxy>, const GrSamplerState&);
+
+    explicit TextureSampler(sk_sp<GrTextureProxy>,
+                            GrSamplerState::Filter = GrSamplerState::Filter::kNearest,
+                            GrSamplerState::WrapMode wrapXAndY = GrSamplerState::WrapMode::kClamp);
+
+    TextureSampler& operator=(const TextureSampler&) = delete;
+
+    void reset(sk_sp<GrTextureProxy>, const GrSamplerState&);
+    void reset(sk_sp<GrTextureProxy>,
+               GrSamplerState::Filter = GrSamplerState::Filter::kNearest,
+               GrSamplerState::WrapMode wrapXAndY = GrSamplerState::WrapMode::kClamp);
+
+    bool operator==(const TextureSampler& that) const {
+        return this->proxy()->underlyingUniqueID() == that.proxy()->underlyingUniqueID() &&
+               fSamplerState == that.fSamplerState;
+    }
+
+    bool operator!=(const TextureSampler& other) const { return !(*this == other); }
+
+    // 'instantiate' should only ever be called at flush time.
+    bool instantiate(GrResourceProvider* resourceProvider) const {
+        return SkToBool(fProxyRef.get()->instantiate(resourceProvider));
+    }
+
+    // 'peekTexture' should only ever be called after a successful 'instantiate' call
+    GrTexture* peekTexture() const {
+        SkASSERT(fProxyRef.get()->peekTexture());
+        return fProxyRef.get()->peekTexture();
+    }
+
+    GrTextureProxy* proxy() const { return fProxyRef.get(); }
+    const GrSamplerState& samplerState() const { return fSamplerState; }
+
+    bool isInitialized() const { return SkToBool(fProxyRef.get()); }
+    /**
+     * For internal use by GrFragmentProcessor.
+     */
+    const GrTextureProxyRef* proxyRef() const { return &fProxyRef; }
+
+private:
+    GrTextureProxyRef fProxyRef;
+    GrSamplerState fSamplerState;
+||||||| merged common ancestors
+    typedef GrResourceIOProcessor INHERITED;
+=======
+    typedef GrProcessor INHERITED;
+>>>>>>> upstream-releases
+};
+
+<<<<<<< HEAD
+//////////////////////////////////////////////////////////////////////////////
+
+const GrFragmentProcessor::TextureSampler& GrFragmentProcessor::IthTextureSampler(int i) {
+    SK_ABORT("Illegal texture sampler index");
+    static const TextureSampler kBogus;
+    return kBogus;
+}
+
+||||||| merged common ancestors
+=======
 /**
  * Used to represent a texture that is required by a GrFragmentProcessor. It holds a GrTextureProxy
  * along with an associated GrSamplerState. TextureSamplers don't perform any coord manipulation to
@@ -451,6 +549,7 @@ const GrFragmentProcessor::TextureSampler& GrFragmentProcessor::IthTextureSample
     return kBogus;
 }
 
+>>>>>>> upstream-releases
 GR_MAKE_BITFIELD_OPS(GrFragmentProcessor::OptimizationFlags)
 
 #endif

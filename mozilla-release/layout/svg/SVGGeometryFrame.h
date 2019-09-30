@@ -28,34 +28,77 @@ class gfxContext;
 class nsDisplaySVGGeometry;
 class nsAtom;
 class nsIFrame;
-class nsIPresShell;
 class nsSVGMarkerFrame;
 
 struct nsRect;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGGeometryFrame(nsIPresShell* aPresShell,
                                  mozilla::ComputedStyle* aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGGeometryFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+nsIFrame* NS_NewSVGGeometryFrame(mozilla::PresShell* aPresShell,
+                                 mozilla::ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
 class SVGGeometryFrame : public nsFrame, public nsSVGDisplayableFrame {
   typedef mozilla::gfx::DrawTarget DrawTarget;
 
+<<<<<<< HEAD
   friend nsIFrame* ::NS_NewSVGGeometryFrame(nsIPresShell* aPresShell,
                                             ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame*
+  ::NS_NewSVGGeometryFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* ::NS_NewSVGGeometryFrame(mozilla::PresShell* aPresShell,
+                                            ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   friend class ::nsDisplaySVGGeometry;
 
+<<<<<<< HEAD
  protected:
   SVGGeometryFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
       : nsFrame(aStyle, aID) {
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_MAY_BE_TRANSFORMED);
+||||||| merged common ancestors
+protected:
+  SVGGeometryFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
+    : nsFrame(aStyle, aID)
+  {
+     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_MAY_BE_TRANSFORMED);
+=======
+ protected:
+  SVGGeometryFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                   nsIFrame::ClassID aID = kClassID)
+      : nsFrame(aStyle, aPresContext, aID) {
+    AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_MAY_BE_TRANSFORMED);
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   explicit SVGGeometryFrame(ComputedStyle* aStyle)
       : SVGGeometryFrame(aStyle, kClassID) {}
 
  public:
+||||||| merged common ancestors
+  explicit SVGGeometryFrame(ComputedStyle* aStyle)
+    : SVGGeometryFrame(aStyle, kClassID)
+  {}
+
+public:
+=======
+ public:
+>>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(SVGGeometryFrame)
 
@@ -122,7 +165,7 @@ class SVGGeometryFrame : public nsFrame, public nsSVGDisplayableFrame {
    * @param aMatrix The transform that must be multiplied onto aContext to
    *   establish this frame's SVG user space.
    */
-  void PaintMarkers(gfxContext& aContext, const gfxMatrix& aMatrix,
+  void PaintMarkers(gfxContext& aContext, const gfxMatrix& aTransform,
                     imgDrawingParams& aImgParams);
 };
 }  // namespace mozilla

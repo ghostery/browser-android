@@ -18,10 +18,10 @@
 class gfxPattern;
 class nsAtom;
 class nsIContent;
-class nsIPresShell;
 
 namespace mozilla {
-class nsSVGAnimatedTransformList;
+class PresShell;
+class SVGAnimatedTransformList;
 
 namespace dom {
 class SVGLinearGradientElement;
@@ -32,18 +32,44 @@ class SVGRadialGradientElement;
 class nsSVGGradientFrame : public nsSVGPaintServerFrame {
   typedef mozilla::gfx::ExtendMode ExtendMode;
 
+<<<<<<< HEAD
  protected:
   nsSVGGradientFrame(ComputedStyle* aStyle, ClassID aID);
+||||||| merged common ancestors
+protected:
+  nsSVGGradientFrame(ComputedStyle* aStyle, ClassID aID);
+=======
+ protected:
+  nsSVGGradientFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                     ClassID aID);
+>>>>>>> upstream-releases
 
  public:
   NS_DECL_ABSTRACT_FRAME(nsSVGGradientFrame)
 
   // nsSVGPaintServerFrame methods:
+<<<<<<< HEAD
   virtual already_AddRefed<gfxPattern> GetPaintServerPattern(
       nsIFrame* aSource, const DrawTarget* aDrawTarget,
       const gfxMatrix& aContextMatrix,
       nsStyleSVGPaint nsStyleSVG::*aFillOrStroke, float aOpacity,
       imgDrawingParams& aImgParams, const gfxRect* aOverrideBounds) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<gfxPattern>
+    GetPaintServerPattern(nsIFrame *aSource,
+                          const DrawTarget* aDrawTarget,
+                          const gfxMatrix& aContextMatrix,
+                          nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
+                          float aOpacity,
+                          imgDrawingParams& aImgParams,
+                          const gfxRect* aOverrideBounds) override;
+=======
+  virtual already_AddRefed<gfxPattern> GetPaintServerPattern(
+      nsIFrame* aSource, const DrawTarget* aDrawTarget,
+      const gfxMatrix& aContextMatrix,
+      mozilla::StyleSVGPaint nsStyleSVG::*aFillOrStroke, float aGraphicOpacity,
+      imgDrawingParams& aImgParams, const gfxRect* aOverrideBounds) override;
+>>>>>>> upstream-releases
 
   // nsIFrame interface:
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
@@ -65,8 +91,16 @@ class nsSVGGradientFrame : public nsSVGPaintServerFrame {
   // Optionally get a stop frame (returns stop index/count)
   void GetStopFrames(nsTArray<nsIFrame*>* aStopFrames);
 
+<<<<<<< HEAD
   const mozilla::nsSVGAnimatedTransformList* GetGradientTransformList(
       nsIContent* aDefault);
+||||||| merged common ancestors
+  const mozilla::nsSVGAnimatedTransformList* GetGradientTransformList(
+    nsIContent* aDefault);
+=======
+  const mozilla::SVGAnimatedTransformList* GetGradientTransformList(
+      nsIContent* aDefault);
+>>>>>>> upstream-releases
   // Will be singular for gradientUnits="objectBoundingBox" with an empty bbox.
   gfxMatrix GetGradientTransform(nsIFrame* aSource,
                                  const gfxRect* aOverrideBounds);
@@ -107,15 +141,43 @@ class nsSVGGradientFrame : public nsSVGPaintServerFrame {
 // Linear Gradients
 // -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 class nsSVGLinearGradientFrame final : public nsSVGGradientFrame {
   friend nsIFrame* NS_NewSVGLinearGradientFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+class nsSVGLinearGradientFrame final : public nsSVGGradientFrame
+{
+  friend nsIFrame* NS_NewSVGLinearGradientFrame(nsIPresShell* aPresShell,
+=======
+class nsSVGLinearGradientFrame final : public nsSVGGradientFrame {
+  friend nsIFrame* NS_NewSVGLinearGradientFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                                 ComputedStyle* aStyle);
+<<<<<<< HEAD
 
  protected:
   explicit nsSVGLinearGradientFrame(ComputedStyle* aStyle)
       : nsSVGGradientFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsSVGLinearGradientFrame(ComputedStyle* aStyle)
+    : nsSVGGradientFrame(aStyle, kClassID)
+  {}
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit nsSVGLinearGradientFrame(ComputedStyle* aStyle,
+                                    nsPresContext* aPresContext)
+      : nsSVGGradientFrame(aStyle, aPresContext, kClassID) {}
 
  public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGLinearGradientFrame)
 
   // nsIFrame interface:
@@ -146,15 +208,43 @@ class nsSVGLinearGradientFrame final : public nsSVGGradientFrame {
 // Radial Gradients
 // -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 class nsSVGRadialGradientFrame final : public nsSVGGradientFrame {
   friend nsIFrame* NS_NewSVGRadialGradientFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+class nsSVGRadialGradientFrame final : public nsSVGGradientFrame
+{
+  friend nsIFrame* NS_NewSVGRadialGradientFrame(nsIPresShell* aPresShell,
+=======
+class nsSVGRadialGradientFrame final : public nsSVGGradientFrame {
+  friend nsIFrame* NS_NewSVGRadialGradientFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                                 ComputedStyle* aStyle);
+<<<<<<< HEAD
 
  protected:
   explicit nsSVGRadialGradientFrame(ComputedStyle* aStyle)
       : nsSVGGradientFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsSVGRadialGradientFrame(ComputedStyle* aStyle)
+    : nsSVGGradientFrame(aStyle, kClassID)
+  {}
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit nsSVGRadialGradientFrame(ComputedStyle* aStyle,
+                                    nsPresContext* aPresContext)
+      : nsSVGGradientFrame(aStyle, aPresContext, kClassID) {}
 
  public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGRadialGradientFrame)
 
   // nsIFrame interface:

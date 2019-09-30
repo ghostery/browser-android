@@ -11,12 +11,25 @@
 #include "nsIPermissionManager.h"
 #include "PermissionObserver.h"
 #include "PermissionUtils.h"
+#include "nsPermission.h"
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PermissionStatus> PermissionStatus::Create(
     nsPIDOMWindowInner* aWindow, PermissionName aName, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PermissionStatus>
+PermissionStatus::Create(nsPIDOMWindowInner* aWindow,
+                         PermissionName aName,
+                         ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<PermissionStatus> PermissionStatus::Create(
+    nsPIDOMWindowInner* aWindow, PermissionName aName, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<PermissionStatus> status = new PermissionStatus(aWindow, aName);
   aRv = status->Init();
   if (NS_WARN_IF(aRv.Failed())) {
@@ -89,14 +102,20 @@ already_AddRefed<nsIPrincipal> PermissionStatus::GetPrincipal() const {
     return nullptr;
   }
 
-  nsIDocument* doc = window->GetExtantDoc();
+  Document* doc = window->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     return nullptr;
   }
 
   nsCOMPtr<nsIPrincipal> principal =
+<<<<<<< HEAD
       mozilla::BasePrincipal::Cast(doc->NodePrincipal())
           ->CloneStrippingUserContextIdAndFirstPartyDomain();
+||||||| merged common ancestors
+    mozilla::BasePrincipal::Cast(doc->NodePrincipal())->CloneStrippingUserContextIdAndFirstPartyDomain();
+=======
+      nsPermission::ClonePrincipalForPermission(doc->NodePrincipal());
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(principal, nullptr);
 
   return principal.forget();

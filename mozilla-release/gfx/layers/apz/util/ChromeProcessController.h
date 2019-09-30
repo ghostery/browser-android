@@ -10,15 +10,18 @@
 #include "mozilla/layers/GeckoContentController.h"
 #include "nsCOMPtr.h"
 #include "mozilla/RefPtr.h"
+#include "mozilla/layers/MatrixMessage.h"
 
 class nsIDOMWindowUtils;
-class nsIDocument;
-class nsIPresShell;
-class nsIWidget;
 
+class nsIWidget;
 class MessageLoop;
 
 namespace mozilla {
+class PresShell;
+namespace dom {
+class Document;
+}
 
 namespace layers {
 
@@ -39,21 +42,50 @@ class ChromeProcessController : public mozilla::layers::GeckoContentController {
   typedef mozilla::layers::FrameMetrics FrameMetrics;
   typedef mozilla::layers::ScrollableLayerGuid ScrollableLayerGuid;
 
+<<<<<<< HEAD
  public:
   explicit ChromeProcessController(nsIWidget* aWidget,
                                    APZEventState* aAPZEventState,
                                    IAPZCTreeManager* aAPZCTreeManager);
   ~ChromeProcessController();
   virtual void Destroy() override;
+||||||| merged common ancestors
+public:
+  explicit ChromeProcessController(nsIWidget* aWidget, APZEventState* aAPZEventState, IAPZCTreeManager* aAPZCTreeManager);
+  ~ChromeProcessController();
+  virtual void Destroy() override;
+=======
+ public:
+  explicit ChromeProcessController(nsIWidget* aWidget,
+                                   APZEventState* aAPZEventState,
+                                   IAPZCTreeManager* aAPZCTreeManager);
+  virtual ~ChromeProcessController();
+  void Destroy() override;
+>>>>>>> upstream-releases
 
   // GeckoContentController interface
+<<<<<<< HEAD
   virtual void RequestContentRepaint(const RepaintRequest& aRequest) override;
   virtual void PostDelayedTask(already_AddRefed<Runnable> aTask,
                                int aDelayMs) override;
   virtual bool IsRepaintThread() override;
   virtual void DispatchToRepaintThread(
       already_AddRefed<Runnable> aTask) override;
+||||||| merged common ancestors
+  virtual void RequestContentRepaint(const FrameMetrics& aFrameMetrics) override;
+  virtual void PostDelayedTask(already_AddRefed<Runnable> aTask, int aDelayMs) override;
+  virtual bool IsRepaintThread() override;
+  virtual void DispatchToRepaintThread(already_AddRefed<Runnable> aTask) override;
+=======
+  void NotifyLayerTransforms(
+      const nsTArray<MatrixMessage>& aTransforms) override;
+  void RequestContentRepaint(const RepaintRequest& aRequest) override;
+  void PostDelayedTask(already_AddRefed<Runnable> aTask, int aDelayMs) override;
+  bool IsRepaintThread() override;
+  void DispatchToRepaintThread(already_AddRefed<Runnable> aTask) override;
+>>>>>>> upstream-releases
   MOZ_CAN_RUN_SCRIPT
+<<<<<<< HEAD
   virtual void HandleTap(TapType aType,
                          const mozilla::LayoutDevicePoint& aPoint,
                          Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
@@ -78,16 +110,71 @@ class ChromeProcessController : public mozilla::layers::GeckoContentController {
   virtual void CancelAutoscroll(const ScrollableLayerGuid& aGuid) override;
 
  private:
+||||||| merged common ancestors
+  virtual void HandleTap(TapType aType,
+                         const mozilla::LayoutDevicePoint& aPoint,
+                         Modifiers aModifiers,
+                         const ScrollableLayerGuid& aGuid,
+                         uint64_t aInputBlockId) override;
+  virtual void NotifyPinchGesture(PinchGestureInput::PinchGestureType aType,
+                                  const ScrollableLayerGuid& aGuid,
+                                  LayoutDeviceCoord aSpanChange,
+                                  Modifiers aModifiers) override;
+  virtual void NotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
+                                    APZStateChange aChange,
+                                    int aArg) override;
+  virtual void NotifyMozMouseScrollEvent(const FrameMetrics::ViewID& aScrollId,
+                                         const nsString& aEvent) override;
+  virtual void NotifyFlushComplete() override;
+  virtual void NotifyAsyncScrollbarDragRejected(const FrameMetrics::ViewID& aScrollId) override;
+  virtual void NotifyAsyncAutoscrollRejected(const FrameMetrics::ViewID& aScrollId) override;
+  virtual void CancelAutoscroll(const ScrollableLayerGuid& aGuid) override;
+private:
+=======
+  void HandleTap(TapType aType, const mozilla::LayoutDevicePoint& aPoint,
+                 Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
+                 uint64_t aInputBlockId) override;
+  void NotifyPinchGesture(PinchGestureInput::PinchGestureType aType,
+                          const ScrollableLayerGuid& aGuid,
+                          LayoutDeviceCoord aSpanChange,
+                          Modifiers aModifiers) override;
+  void NotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
+                            APZStateChange aChange, int aArg) override;
+  void NotifyMozMouseScrollEvent(const ScrollableLayerGuid::ViewID& aScrollId,
+                                 const nsString& aEvent) override;
+  void NotifyFlushComplete() override;
+  void NotifyAsyncScrollbarDragInitiated(
+      uint64_t aDragBlockId, const ScrollableLayerGuid::ViewID& aScrollId,
+      ScrollDirection aDirection) override;
+  void NotifyAsyncScrollbarDragRejected(
+      const ScrollableLayerGuid::ViewID& aScrollId) override;
+  void NotifyAsyncAutoscrollRejected(
+      const ScrollableLayerGuid::ViewID& aScrollId) override;
+  void CancelAutoscroll(const ScrollableLayerGuid& aGuid) override;
+
+ private:
+>>>>>>> upstream-releases
   nsCOMPtr<nsIWidget> mWidget;
   RefPtr<APZEventState> mAPZEventState;
   RefPtr<IAPZCTreeManager> mAPZCTreeManager;
   MessageLoop* mUILoop;
 
   void InitializeRoot();
+<<<<<<< HEAD
   nsIPresShell* GetPresShell() const;
   nsIDocument* GetRootDocument() const;
   nsIDocument* GetRootContentDocument(
       const ScrollableLayerGuid::ViewID& aScrollId) const;
+||||||| merged common ancestors
+  nsIPresShell* GetPresShell() const;
+  nsIDocument* GetRootDocument() const;
+  nsIDocument* GetRootContentDocument(const FrameMetrics::ViewID& aScrollId) const;
+=======
+  PresShell* GetPresShell() const;
+  dom::Document* GetRootDocument() const;
+  dom::Document* GetRootContentDocument(
+      const ScrollableLayerGuid::ViewID& aScrollId) const;
+>>>>>>> upstream-releases
   void HandleDoubleTap(const mozilla::CSSPoint& aPoint, Modifiers aModifiers,
                        const ScrollableLayerGuid& aGuid);
 };

@@ -352,6 +352,7 @@ void SkPathWriter::assemble() {
 #endif
         do {
             const SkPath& contour = fPartials[rIndex];
+<<<<<<< HEAD
             if (!first) {
                 SkPoint prior, next;
                 SkAssertResult(fPathPtr->getLastPt(&prior));
@@ -368,6 +369,27 @@ void SkPathWriter::assemble() {
                     SkDebugf("");
                 }
             }
+||||||| merged common ancestors
+=======
+            if (!first) {
+                SkPoint prior, next;
+                if (!fPathPtr->getLastPt(&prior)) {
+                    return;
+                }
+                if (forward) {
+                    next = contour.getPoint(0);
+                } else {
+                    SkAssertResult(contour.getLastPt(&next));
+                }
+                if (prior != next) {
+                    /* TODO: if there is a gap between open path written so far and path to come,
+                       connect by following segments from one to the other, rather than introducing
+                       a diagonal to connect the two.
+                     */
+                    SkDebugf("");
+                }
+            }
+>>>>>>> upstream-releases
             if (forward) {
                 fPathPtr->addPath(contour,
                         first ? SkPath::kAppend_AddPathMode : SkPath::kExtend_AddPathMode);

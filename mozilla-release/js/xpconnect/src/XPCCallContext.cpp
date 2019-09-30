@@ -19,6 +19,7 @@ static inline bool IsTearoffClass(const js::Class* clazz) {
   return clazz == &XPC_WN_Tearoff_JSClass;
 }
 
+<<<<<<< HEAD
 XPCCallContext::XPCCallContext(
     JSContext* cx, HandleObject obj /* = nullptr               */,
     HandleObject funobj /* = nullptr               */,
@@ -91,6 +92,110 @@ XPCCallContext::XPCCallContext(
 
   CHECK_STATE(HAVE_OBJECT);
 }
+||||||| merged common ancestors
+XPCCallContext::XPCCallContext(JSContext* cx,
+                               HandleObject obj    /* = nullptr               */,
+                               HandleObject funobj /* = nullptr               */,
+                               HandleId name       /* = JSID_VOID             */,
+                               unsigned argc       /* = NO_ARGS               */,
+                               Value* argv         /* = nullptr               */,
+                               Value* rval         /* = nullptr               */)
+    :   mState(INIT_FAILED),
+        mXPC(nsXPConnect::XPConnect()),
+        mXPCJSContext(nullptr),
+        mJSContext(cx),
+        mWrapper(nullptr),
+        mTearOff(nullptr),
+        mMember(nullptr),
+        mName(cx),
+        mStaticMemberIsLocal(false),
+        mArgc(0),
+        mArgv(nullptr),
+        mRetVal(nullptr)
+{
+    MOZ_ASSERT(cx);
+    MOZ_ASSERT(cx == nsContentUtils::GetCurrentJSContext());
+
+    if (!mXPC) {
+        return;
+    }
+
+    mXPCJSContext = XPCJSContext::Get();
+=======
+XPCCallContext::XPCCallContext(
+    JSContext* cx, HandleObject obj /* = nullptr               */,
+    HandleObject funobj /* = nullptr               */,
+    HandleId name /* = JSID_VOID             */,
+    unsigned argc /* = NO_ARGS               */, Value* argv /* = nullptr */,
+    Value* rval /* = nullptr               */)
+    : mState(INIT_FAILED),
+      mXPC(nsXPConnect::XPConnect()),
+      mXPCJSContext(nullptr),
+      mJSContext(cx),
+      mWrapper(nullptr),
+      mTearOff(nullptr),
+      mMember(nullptr),
+      mName(cx),
+      mStaticMemberIsLocal(false),
+      mArgc(0),
+      mArgv(nullptr),
+      mRetVal(nullptr) {
+  MOZ_ASSERT(cx);
+  MOZ_ASSERT(cx == nsContentUtils::GetCurrentJSContext());
+
+  if (!mXPC) {
+    return;
+  }
+
+  mXPCJSContext = XPCJSContext::Get();
+
+  // hook into call context chain.
+  mPrevCallContext = mXPCJSContext->SetCallContext(this);
+
+  mState = HAVE_CONTEXT;
+
+  if (!obj) {
+    return;
+  }
+
+  mMethodIndex = 0xDEAD;
+
+  mState = HAVE_OBJECT;
+
+  mTearOff = nullptr;
+
+  JSObject* unwrapped =
+      js::CheckedUnwrapDynamic(obj, cx, /* stopAtWindowProxy = */ false);
+  if (!unwrapped) {
+    JS_ReportErrorASCII(mJSContext,
+                        "Permission denied to call method on |this|");
+    mState = INIT_FAILED;
+    return;
+  }
+  const js::Class* clasp = js::GetObjectClass(unwrapped);
+  if (IS_WN_CLASS(clasp)) {
+    mWrapper = XPCWrappedNative::Get(unwrapped);
+  } else if (IsTearoffClass(clasp)) {
+    mTearOff = (XPCWrappedNativeTearOff*)js::GetObjectPrivate(unwrapped);
+    mWrapper = XPCWrappedNative::Get(
+        &js::GetReservedSlot(unwrapped, XPC_WN_TEAROFF_FLAT_OBJECT_SLOT)
+             .toObject());
+  }
+  if (mWrapper && !mTearOff) {
+    mScriptable = mWrapper->GetScriptable();
+  }
+
+  if (!JSID_IS_VOID(name)) {
+    SetName(name);
+  }
+
+  if (argc != NO_ARGS) {
+    SetArgsAndResultPtr(argc, argv, rval);
+  }
+
+  CHECK_STATE(HAVE_OBJECT);
+}
+>>>>>>> upstream-releases
 
 void XPCCallContext::SetName(jsid name) {
   CHECK_STATE(HAVE_OBJECT);
@@ -177,11 +282,26 @@ nsresult XPCCallContext::CanCallNow() {
     return NS_ERROR_UNEXPECTED;
   }
 
+<<<<<<< HEAD
   if (!mTearOff) {
     mTearOff = mWrapper->FindTearOff(mInterface, false, &rv);
     if (!mTearOff || mTearOff->GetInterface() != mInterface) {
       mTearOff = nullptr;
       return NS_FAILED(rv) ? rv : NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+    if (!mTearOff) {
+        mTearOff = mWrapper->FindTearOff(mInterface, false, &rv);
+        if (!mTearOff || mTearOff->GetInterface() != mInterface) {
+            mTearOff = nullptr;
+            return NS_FAILED(rv) ? rv : NS_ERROR_UNEXPECTED;
+        }
+=======
+  if (!mTearOff) {
+    mTearOff = mWrapper->FindTearOff(mJSContext, mInterface, false, &rv);
+    if (!mTearOff || mTearOff->GetInterface() != mInterface) {
+      mTearOff = nullptr;
+      return NS_FAILED(rv) ? rv : NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
     }
   }
 

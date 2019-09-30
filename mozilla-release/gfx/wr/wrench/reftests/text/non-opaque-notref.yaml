@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 root:
   items:
@@ -8,3 +9,16 @@ root:
       size: 100
       color: [0, 0, 0]
       font: "VeraBd.ttf"
+||||||| merged common ancestors
+=======
+---
+root:
+  items:
+    -
+      bounds: [0, 0, 500, 500]
+      glyphs: [55]
+      offsets: [200, 200]
+      size: 100
+      color: [0, 0, 0]
+      font: "VeraBd.ttf"
+>>>>>>> upstream-releases

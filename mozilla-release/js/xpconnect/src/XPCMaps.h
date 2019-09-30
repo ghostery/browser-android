@@ -157,6 +157,7 @@ class Native2WrappedNativeMap {
 
 /*************************/
 
+<<<<<<< HEAD
 class IID2WrappedJSClassMap {
  public:
   struct Entry : public PLDHashEntryHdr {
@@ -198,7 +199,62 @@ class IID2WrappedJSClassMap {
 #ifdef DEBUG
   PLDHashTable::Iterator Iter() { return mTable.Iter(); }
 #endif
+||||||| merged common ancestors
+class IID2WrappedJSClassMap
+{
+public:
+    struct Entry : public PLDHashEntryHdr
+    {
+        const nsIID*         key;
+        nsXPCWrappedJSClass* value;
 
+        static const struct PLDHashTableOps sOps;
+    };
+
+    static IID2WrappedJSClassMap* newMap(int length);
+
+    inline nsXPCWrappedJSClass* Find(REFNSIID iid) const
+    {
+        auto entry = static_cast<Entry*>(mTable.Search(&iid));
+        return entry ? entry->value : nullptr;
+    }
+
+    inline nsXPCWrappedJSClass* Add(nsXPCWrappedJSClass* clazz)
+    {
+        MOZ_ASSERT(clazz,"bad param");
+        const nsIID* iid = &clazz->GetIID();
+        auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
+        if (!entry) {
+            return nullptr;
+        }
+        if (entry->key) {
+            return entry->value;
+        }
+        entry->key = iid;
+        entry->value = clazz;
+        return clazz;
+    }
+
+    inline void Remove(nsXPCWrappedJSClass* clazz)
+    {
+        MOZ_ASSERT(clazz,"bad param");
+        mTable.Remove(&clazz->GetIID());
+    }
+
+    inline uint32_t Count() { return mTable.EntryCount(); }
+
+#ifdef DEBUG
+    PLDHashTable::Iterator Iter() { return mTable.Iter(); }
+#endif
+=======
+class IID2NativeInterfaceMap {
+ public:
+  struct Entry : public PLDHashEntryHdr {
+    const nsIID* key;
+    XPCNativeInterface* value;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   IID2WrappedJSClassMap();  // no implementation
   explicit IID2WrappedJSClassMap(int size);
@@ -206,15 +262,42 @@ class IID2WrappedJSClassMap {
  private:
   PLDHashTable mTable;
 };
+||||||| merged common ancestors
+private:
+    IID2WrappedJSClassMap();    // no implementation
+    explicit IID2WrappedJSClassMap(int size);
+private:
+    PLDHashTable mTable;
+};
+=======
+    static const struct PLDHashTableOps sOps;
+  };
+>>>>>>> upstream-releases
 
-/*************************/
+  static IID2NativeInterfaceMap* newMap(int length);
 
+<<<<<<< HEAD
 class IID2NativeInterfaceMap {
  public:
   struct Entry : public PLDHashEntryHdr {
     const nsIID* key;
     XPCNativeInterface* value;
+||||||| merged common ancestors
+class IID2NativeInterfaceMap
+{
+public:
+    struct Entry : public PLDHashEntryHdr
+    {
+        const nsIID*        key;
+        XPCNativeInterface* value;
+=======
+  inline XPCNativeInterface* Find(REFNSIID iid) const {
+    auto entry = static_cast<Entry*>(mTable.Search(&iid));
+    return entry ? entry->value : nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     static const struct PLDHashTableOps sOps;
   };
 
@@ -231,7 +314,45 @@ class IID2NativeInterfaceMap {
     auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
     if (!entry) {
       return nullptr;
+||||||| merged common ancestors
+        static const struct PLDHashTableOps sOps;
+    };
+
+    static IID2NativeInterfaceMap* newMap(int length);
+
+    inline XPCNativeInterface* Find(REFNSIID iid) const
+    {
+        auto entry = static_cast<Entry*>(mTable.Search(&iid));
+        return entry ? entry->value : nullptr;
     }
+
+    inline XPCNativeInterface* Add(XPCNativeInterface* iface)
+    {
+        MOZ_ASSERT(iface,"bad param");
+        const nsIID* iid = iface->GetIID();
+        auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
+        if (!entry) {
+            return nullptr;
+        }
+        if (entry->key) {
+            return entry->value;
+        }
+        entry->key = iid;
+        entry->value = iface;
+        return iface;
+=======
+  inline XPCNativeInterface* Add(XPCNativeInterface* iface) {
+    MOZ_ASSERT(iface, "bad param");
+    const nsIID* iid = iface->GetIID();
+    auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
+    if (!entry) {
+      return nullptr;
+    }
+    if (entry->key) {
+      return entry->value;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     if (entry->key) {
       return entry->value;
     }
@@ -244,6 +365,24 @@ class IID2NativeInterfaceMap {
     MOZ_ASSERT(iface, "bad param");
     mTable.Remove(iface->GetIID());
   }
+||||||| merged common ancestors
+
+    inline void Remove(XPCNativeInterface* iface)
+    {
+        MOZ_ASSERT(iface,"bad param");
+        mTable.Remove(iface->GetIID());
+    }
+=======
+    entry->key = iid;
+    entry->value = iface;
+    return iface;
+  }
+
+  inline void Remove(XPCNativeInterface* iface) {
+    MOZ_ASSERT(iface, "bad param");
+    mTable.Remove(iface->GetIID());
+  }
+>>>>>>> upstream-releases
 
   inline uint32_t Count() { return mTable.EntryCount(); }
 
@@ -442,6 +581,19 @@ class XPCWrappedNativeProtoMap {
 
   static XPCWrappedNativeProtoMap* newMap(int length);
 
+<<<<<<< HEAD
+  inline XPCWrappedNativeProto* Add(XPCWrappedNativeProto* proto) {
+    MOZ_ASSERT(proto, "bad param");
+    auto entry =
+        static_cast<PLDHashEntryStub*>(mTable.Add(proto, mozilla::fallible));
+    if (!entry) {
+      return nullptr;
+||||||| merged common ancestors
+    inline void Remove(XPCWrappedNativeProto* proto)
+    {
+        MOZ_ASSERT(proto,"bad param");
+        mTable.Remove(proto);
+=======
   inline XPCWrappedNativeProto* Add(XPCWrappedNativeProto* proto) {
     MOZ_ASSERT(proto, "bad param");
     auto entry =
@@ -449,6 +601,11 @@ class XPCWrappedNativeProtoMap {
     if (!entry) {
       return nullptr;
     }
+    if (entry->key) {
+      return (XPCWrappedNativeProto*)entry->key;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     if (entry->key) {
       return (XPCWrappedNativeProto*)entry->key;
     }
@@ -462,7 +619,44 @@ class XPCWrappedNativeProtoMap {
   }
 
   inline uint32_t Count() { return mTable.EntryCount(); }
+||||||| merged common ancestors
+=======
+    entry->key = proto;
+    return proto;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  PLDHashTable::Iterator Iter() { return mTable.Iter(); }
+||||||| merged common ancestors
+    inline uint32_t Count() { return mTable.EntryCount(); }
+=======
+  inline void Remove(XPCWrappedNativeProto* proto) {
+    MOZ_ASSERT(proto, "bad param");
+    mTable.Remove(proto);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+  XPCWrappedNativeProtoMap();  // no implementation
+  explicit XPCWrappedNativeProtoMap(int size);
+||||||| merged common ancestors
+    PLDHashTable::Iterator Iter() { return mTable.Iter(); }
+=======
+  inline uint32_t Count() { return mTable.EntryCount(); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+  PLDHashTable mTable;
+||||||| merged common ancestors
+private:
+    XPCWrappedNativeProtoMap();    // no implementation
+    explicit XPCWrappedNativeProtoMap(int size);
+private:
+    PLDHashTable mTable;
+=======
   PLDHashTable::Iterator Iter() { return mTable.Iter(); }
 
  private:
@@ -471,6 +665,7 @@ class XPCWrappedNativeProtoMap {
 
  private:
   PLDHashTable mTable;
+>>>>>>> upstream-releases
 };
 
 /***************************************************************************/
@@ -493,19 +688,50 @@ class JSObject2JSObjectMap {
     return nullptr;
   }
 
+<<<<<<< HEAD
   /* Note: If the entry already exists, return the old value. */
   inline JSObject* Add(JSContext* cx, JSObject* key, JSObject* value) {
     MOZ_ASSERT(key, "bad param");
     Map::AddPtr p = mTable.lookupForAdd(key);
     if (p) {
       return p->value();
+||||||| merged common ancestors
+    /* Note: If the entry already exists, return the old value. */
+    inline JSObject* Add(JSContext* cx, JSObject* key, JSObject* value) {
+        MOZ_ASSERT(key,"bad param");
+        Map::AddPtr p = mTable.lookupForAdd(key);
+        if (p) {
+            return p->value();
+        }
+        if (!mTable.add(p, key, value)) {
+            return nullptr;
+        }
+        MOZ_ASSERT(xpc::RealmPrivate::Get(key)->scope->mWaiverWrapperMap == this);
+        return value;
+=======
+  /* Note: If the entry already exists, return the old value. */
+  inline JSObject* Add(JSContext* cx, JSObject* key, JSObject* value) {
+    MOZ_ASSERT(key, "bad param");
+    Map::AddPtr p = mTable.lookupForAdd(key);
+    if (p) {
+      JSObject* oldValue = p->value();
+      p->value() = value;
+      return oldValue;
+>>>>>>> upstream-releases
     }
     if (!mTable.add(p, key, value)) {
       return nullptr;
     }
+<<<<<<< HEAD
     MOZ_ASSERT(xpc::RealmPrivate::Get(key)->scope->mWaiverWrapperMap == this);
     return value;
   }
+||||||| merged common ancestors
+=======
+    MOZ_ASSERT(xpc::ObjectScope(key)->mWaiverWrapperMap == this);
+    return value;
+  }
+>>>>>>> upstream-releases
 
   inline void Remove(JSObject* key) {
     MOZ_ASSERT(key, "bad param");

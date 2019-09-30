@@ -19,6 +19,7 @@
 #include "SourceBuffer.h"
 #include "StreamingLexer.h"
 #include "SurfaceFlags.h"
+#include "qcms.h"
 
 namespace mozilla {
 
@@ -272,6 +273,7 @@ class Decoder {
   }
 
   /**
+<<<<<<< HEAD
    * Should blend the current frame with the previous frames to produce a
    * complete frame instead of a partial frame for animated images.
    */
@@ -280,6 +282,18 @@ class Decoder {
   }
 
   /**
+||||||| merged common ancestors
+   * Should blend the current frame with the previous frames to produce a
+   * complete frame instead of a partial frame for animated images.
+   */
+  bool ShouldBlendAnimation() const
+  {
+    return bool(mDecoderFlags & DecoderFlags::BLEND_ANIMATION);
+  }
+
+  /**
+=======
+>>>>>>> upstream-releases
    * @return the number of complete animation frames which have been decoded so
    * far, if it has changed since the last call to TakeCompleteFrameCount();
    * otherwise, returns Nothing().
@@ -418,14 +432,38 @@ class Decoder {
    * For use during decoding only. Allows the BlendAnimationFilter to get the
    * frame it should be pulling the previous frame data from.
    */
+<<<<<<< HEAD
   const RawAccessFrameRef& GetRestoreFrameRef() const {
     MOZ_ASSERT(ShouldBlendAnimation());
     return mRestoreFrame;
   }
+||||||| merged common ancestors
+  const RawAccessFrameRef& GetRestoreFrameRef() const
+  {
+    MOZ_ASSERT(ShouldBlendAnimation());
+    return mRestoreFrame;
+  }
+=======
+  const RawAccessFrameRef& GetRestoreFrameRef() const { return mRestoreFrame; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const gfx::IntRect& GetRestoreDirtyRect() const {
     MOZ_ASSERT(ShouldBlendAnimation());
     return mRestoreDirtyRect;
+||||||| merged common ancestors
+  const gfx::IntRect& GetRestoreDirtyRect() const
+  {
+    MOZ_ASSERT(ShouldBlendAnimation());
+    return mRestoreDirtyRect;
+=======
+  const gfx::IntRect& GetRestoreDirtyRect() const { return mRestoreDirtyRect; }
+
+  const gfx::IntRect& GetRecycleRect() const { return mRecycleRect; }
+
+  const gfx::IntRect& GetFirstFrameRefreshArea() const {
+    return mFirstFrameRefreshArea;
+>>>>>>> upstream-releases
   }
 
   const gfx::IntRect& GetRecycleRect() const {
@@ -542,12 +580,18 @@ class Decoder {
 
   /**
    * Allocates a new frame, making it our current frame if successful.
-   *
-   * If a non-paletted frame is desired, pass 0 for aPaletteDepth.
    */
   nsresult AllocateFrame(const gfx::IntSize& aOutputSize,
+<<<<<<< HEAD
                          const gfx::IntRect& aFrameRect,
                          gfx::SurfaceFormat aFormat, uint8_t aPaletteDepth = 0,
+||||||| merged common ancestors
+                         const gfx::IntRect& aFrameRect,
+                         gfx::SurfaceFormat aFormat,
+                         uint8_t aPaletteDepth = 0,
+=======
+                         gfx::SurfaceFormat aFormat,
+>>>>>>> upstream-releases
                          const Maybe<AnimationParams>& aAnimParams = Nothing());
 
  private:
@@ -571,19 +615,37 @@ class Decoder {
     return mInFrame ? mFrameCount - 1 : mFrameCount;
   }
 
+<<<<<<< HEAD
   RawAccessFrameRef AllocateFrameInternal(
       const gfx::IntSize& aOutputSize, const gfx::IntRect& aFrameRect,
       gfx::SurfaceFormat aFormat, uint8_t aPaletteDepth,
       const Maybe<AnimationParams>& aAnimParams,
       RawAccessFrameRef&& aPreviousFrame);
+||||||| merged common ancestors
+  RawAccessFrameRef AllocateFrameInternal(const gfx::IntSize& aOutputSize,
+                                          const gfx::IntRect& aFrameRect,
+                                          gfx::SurfaceFormat aFormat,
+                                          uint8_t aPaletteDepth,
+                                          const Maybe<AnimationParams>& aAnimParams,
+                                          RawAccessFrameRef&& aPreviousFrame);
+=======
+  RawAccessFrameRef AllocateFrameInternal(
+      const gfx::IntSize& aOutputSize, gfx::SurfaceFormat aFormat,
+      const Maybe<AnimationParams>& aAnimParams,
+      RawAccessFrameRef&& aPreviousFrame);
+>>>>>>> upstream-releases
 
  protected:
   Maybe<Downscaler> mDownscaler;
 
-  uint8_t* mImageData;  // Pointer to image data in either Cairo or 8bit format
+  /// Color management profile from the ICCP chunk in the image.
+  qcms_profile* mInProfile;
+
+  /// Color management transform to apply to image data.
+  qcms_transform* mTransform;
+
+  uint8_t* mImageData;  // Pointer to image data in BGRA/X
   uint32_t mImageDataLength;
-  uint32_t* mColormap;  // Current colormap to be used in Cairo format
-  uint32_t mColormapSize;
 
  private:
   RefPtr<RasterImage> mImage;

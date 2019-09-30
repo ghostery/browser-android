@@ -11,7 +11,14 @@
 #include "GrContext.h"
 #include "GrContextPriv.h"
 #include "GrGpu.h"
+<<<<<<< HEAD
 #include "GrMemoryPool.h"
+||||||| merged common ancestors
+=======
+#include "GrMemoryPool.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
+>>>>>>> upstream-releases
 #include "GrResourceAllocator.h"
 #include "GrTextureProxy.h"
 #include "SkStringUtils.h"
@@ -23,6 +30,7 @@ GrTextureOpList::GrTextureOpList(GrResourceProvider* resourceProvider,
                                  sk_sp<GrOpMemoryPool> opMemoryPool,
                                  GrTextureProxy* proxy,
                                  GrAuditTrail* auditTrail)
+<<<<<<< HEAD
         : INHERITED(resourceProvider, std::move(opMemoryPool), proxy, auditTrail) {
     SkASSERT(fOpMemoryPool);
 }
@@ -40,6 +48,28 @@ void GrTextureOpList::deleteOps() {
     }
     fRecordedOps.reset();
     fOpMemoryPool = nullptr;
+||||||| merged common ancestors
+    : INHERITED(resourceProvider, proxy, auditTrail) {
+=======
+        : INHERITED(resourceProvider, std::move(opMemoryPool), proxy, auditTrail) {
+    SkASSERT(fOpMemoryPool);
+    SkASSERT(!proxy->readOnly());
+}
+
+void GrTextureOpList::deleteOp(int index) {
+    SkASSERT(index >= 0 && index < fRecordedOps.count());
+    fOpMemoryPool->release(std::move(fRecordedOps[index]));
+}
+
+void GrTextureOpList::deleteOps() {
+    for (int i = 0; i < fRecordedOps.count(); ++i) {
+        if (fRecordedOps[i]) {
+            fOpMemoryPool->release(std::move(fRecordedOps[i]));
+        }
+    }
+    fRecordedOps.reset();
+    fOpMemoryPool = nullptr;
+>>>>>>> upstream-releases
 }
 
 GrTextureOpList::~GrTextureOpList() {
@@ -116,7 +146,7 @@ bool GrTextureOpList::onExecute(GrOpFlushState* flushState) {
             GrXferProcessor::DstProxy()
         };
         flushState->setOpArgs(&opArgs);
-        fRecordedOps[i]->execute(flushState);
+        fRecordedOps[i]->execute(flushState, fRecordedOps[i].get()->bounds());
         flushState->setOpArgs(nullptr);
     }
 
@@ -135,7 +165,13 @@ void GrTextureOpList::endFlush() {
 
 // This closely parallels GrRenderTargetOpList::copySurface but renderTargetOpList
 // stores extra data with the op
+<<<<<<< HEAD
 bool GrTextureOpList::copySurface(GrContext* context,
+||||||| merged common ancestors
+bool GrTextureOpList::copySurface(const GrCaps& caps,
+=======
+bool GrTextureOpList::copySurface(GrRecordingContext* context,
+>>>>>>> upstream-releases
                                   GrSurfaceProxy* dst,
                                   GrSurfaceProxy* src,
                                   const SkIRect& srcRect,
@@ -147,9 +183,18 @@ bool GrTextureOpList::copySurface(GrContext* context,
         return false;
     }
 
+<<<<<<< HEAD
     const GrCaps* caps = context->contextPriv().caps();
     auto addDependency = [ caps, this ] (GrSurfaceProxy* p) {
         this->addDependency(p, *caps);
+||||||| merged common ancestors
+    auto addDependency = [ &caps, this ] (GrSurfaceProxy* p) {
+        this->addDependency(p, caps);
+=======
+    const GrCaps* caps = context->priv().caps();
+    auto addDependency = [ caps, this ] (GrSurfaceProxy* p) {
+        this->addDependency(p, *caps);
+>>>>>>> upstream-releases
     };
     op->visitProxies(addDependency);
 
@@ -197,7 +242,7 @@ void GrTextureOpList::gatherProxyIntervals(GrResourceAllocator* alloc) const {
     for (int i = 0; i < fRecordedOps.count(); ++i) {
         const GrOp* op = fRecordedOps[i].get(); // only diff from the GrRenderTargetOpList version
         if (op) {
-            op->visitProxies(gather);
+            op->visitProxies(gather, GrOp::VisitorType::kAllocatorGather);
         }
 
         // Even though the op may have been moved we still need to increment the op count to
@@ -219,7 +264,6 @@ void GrTextureOpList::recordOp(std::unique_ptr<GrOp> op) {
         op->bounds().fLeft, op->bounds().fRight,
         op->bounds().fTop, op->bounds().fBottom);
     GrOP_INFO(SkTabString(op->dumpInfo(), 1).c_str());
-    GR_AUDIT_TRAIL_OP_RESULT_NEW(fAuditTrail, op.get());
 
     fRecordedOps.emplace_back(std::move(op));
 }

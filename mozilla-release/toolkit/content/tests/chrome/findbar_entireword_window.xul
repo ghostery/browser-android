@@ -14,14 +14,19 @@
         onload="onLoad();"
         title="findbar test - entire words only">
 
-  <script type="application/javascript"
-          src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
-  <script type="application/javascript"
-          src="chrome://mochikit/content/tests/SimpleTest/ChromeUtils.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/ChromeUtils.js"/>
 
   <script type="application/javascript"><![CDATA[
+<<<<<<< HEAD
     ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
     ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+||||||| merged common ancestors
+    ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+=======
+    const {BrowserTestUtils} = ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
+    const {ContentTask} = ChromeUtils.import("resource://testing-common/ContentTask.jsm");
+>>>>>>> upstream-releases
     ContentTask.setTestScope(window.opener.wrappedJSObject);
 
     var gFindBar = null;
@@ -154,7 +159,7 @@
         let event = document.createEvent("KeyboardEvent");
         event.initKeyEvent("keypress", true, true, null, false, false,
                            false, false, 0, str.charCodeAt(i));
-        gFindBar._findField.inputField.dispatchEvent(event);
+        gFindBar._findField.dispatchEvent(event);
         if (waitForResult) {
           await promise;
         }
@@ -252,7 +257,7 @@
       });
 
       ok(!gFindBar.hidden, "testQuickfind: failed to open findbar");
-      ok(document.commandDispatcher.focusedElement == gFindBar._findField.inputField,
+      ok(document.commandDispatcher.focusedElement == gFindBar._findField,
         "testQuickfind: find field is not focused");
       ok(!gFindBar.getElement("entire-word-status").hidden,
         "testQuickfind: entire word mode status text should be visible");

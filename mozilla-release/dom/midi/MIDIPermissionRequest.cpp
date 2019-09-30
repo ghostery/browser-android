@@ -27,12 +27,27 @@ NS_IMPL_RELEASE_INHERITED(MIDIPermissionRequest, ContentPermissionRequestBase)
 MIDIPermissionRequest::MIDIPermissionRequest(nsPIDOMWindowInner* aWindow,
                                              Promise* aPromise,
                                              const MIDIOptions& aOptions)
+<<<<<<< HEAD
     : ContentPermissionRequestBase(
           aWindow->GetDoc()->NodePrincipal(), true, aWindow,
           NS_LITERAL_CSTRING(""),  // We check prefs in a custom way here
           NS_LITERAL_CSTRING("midi")),
       mPromise(aPromise),
       mNeedsSysex(aOptions.mSysex) {
+||||||| merged common ancestors
+: mWindow(aWindow),
+  mPromise(aPromise),
+  mNeedsSysex(aOptions.mSysex),
+  mRequester(new nsContentPermissionRequester(mWindow))
+{
+=======
+    : ContentPermissionRequestBase(
+          aWindow->GetDoc()->NodePrincipal(), aWindow,
+          NS_LITERAL_CSTRING(""),  // We check prefs in a custom way here
+          NS_LITERAL_CSTRING("midi")),
+      mPromise(aPromise),
+      mNeedsSysex(aOptions.mSysex) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
   MOZ_ASSERT(aPromise, "aPromise should not be null!");
   MOZ_ASSERT(aWindow->GetDoc());
@@ -80,7 +95,8 @@ MIDIPermissionRequest::Run() {
   }
 
   // If we already have sysex perms, allow.
-  if (nsContentUtils::IsExactSitePermAllow(mPrincipal, "midi-sysex")) {
+  if (nsContentUtils::IsExactSitePermAllow(mPrincipal,
+                                           NS_LITERAL_CSTRING("midi-sysex"))) {
     Allow(JS::UndefinedHandleValue);
     return NS_OK;
   }

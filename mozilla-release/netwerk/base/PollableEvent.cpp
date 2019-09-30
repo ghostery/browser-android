@@ -15,10 +15,10 @@
 #include "prnetdb.h"
 
 #ifdef XP_WIN
-#include "ShutdownLayer.h"
+#  include "ShutdownLayer.h"
 #else
-#include <fcntl.h>
-#define USEPIPE 1
+#  include <fcntl.h>
+#  define USEPIPE 1
 #endif
 
 namespace mozilla {
@@ -26,8 +26,16 @@ namespace net {
 
 #ifndef USEPIPE
 static PRDescIdentity sPollableEventLayerIdentity;
+<<<<<<< HEAD
 static PRIOMethods sPollableEventLayerMethods;
 static PRIOMethods *sPollableEventLayerMethodsPtr = nullptr;
+||||||| merged common ancestors
+static PRIOMethods    sPollableEventLayerMethods;
+static PRIOMethods   *sPollableEventLayerMethodsPtr = nullptr;
+=======
+static PRIOMethods sPollableEventLayerMethods;
+static PRIOMethods* sPollableEventLayerMethodsPtr = nullptr;
+>>>>>>> upstream-releases
 
 static void LazyInitSocket() {
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
@@ -39,7 +47,14 @@ static void LazyInitSocket() {
   sPollableEventLayerMethodsPtr = &sPollableEventLayerMethods;
 }
 
+<<<<<<< HEAD
 static bool NewTCPSocketPair(PRFileDesc *fd[], bool aSetRecvBuff) {
+||||||| merged common ancestors
+static bool NewTCPSocketPair(PRFileDesc *fd[], bool aSetRecvBuff)
+{
+=======
+static bool NewTCPSocketPair(PRFileDesc* fd[], bool aSetRecvBuff) {
+>>>>>>> upstream-releases
   // this is a replacement for PR_NewTCPSocketPair that manually
   // sets the recv buffer to 64K. A windows bug (1248358)
   // can result in using an incompatible rwin and window
@@ -48,9 +63,9 @@ static bool NewTCPSocketPair(PRFileDesc *fd[], bool aSetRecvBuff) {
   SOCKET_LOG(("NewTCPSocketPair %s a recv buffer tuning\n",
               aSetRecvBuff ? "with" : "without"));
 
-  PRFileDesc *listener = nullptr;
-  PRFileDesc *writer = nullptr;
-  PRFileDesc *reader = nullptr;
+  PRFileDesc* listener = nullptr;
+  PRFileDesc* writer = nullptr;
+  PRFileDesc* reader = nullptr;
   PRSocketOptionData recvBufferOpt;
   recvBufferOpt.option = PR_SockOpt_RecvBufferSize;
   recvBufferOpt.value.recv_buffer_size = 65535;
@@ -166,7 +181,7 @@ PollableEvent::PollableEvent()
   }
 #else
   SOCKET_LOG(("PollableEvent() using socket pair\n"));
-  PRFileDesc *fd[2];
+  PRFileDesc* fd[2];
   LazyInitSocket();
 
   // Try with a increased recv buffer first (bug 1248358).
@@ -198,10 +213,22 @@ PollableEvent::PollableEvent()
 
   if (mReadFD && mWriteFD) {
     // compatibility with LSPs such as McAfee that assume a NSPR
+<<<<<<< HEAD
     // layer for read ala the nspr Pollable Event - Bug 698882. This layer is a
     // nop.
     PRFileDesc *topLayer = PR_CreateIOLayerStub(sPollableEventLayerIdentity,
                                                 sPollableEventLayerMethodsPtr);
+||||||| merged common ancestors
+    // layer for read ala the nspr Pollable Event - Bug 698882. This layer is a nop.
+    PRFileDesc *topLayer =
+      PR_CreateIOLayerStub(sPollableEventLayerIdentity,
+                           sPollableEventLayerMethodsPtr);
+=======
+    // layer for read ala the nspr Pollable Event - Bug 698882. This layer is a
+    // nop.
+    PRFileDesc* topLayer = PR_CreateIOLayerStub(sPollableEventLayerIdentity,
+                                                sPollableEventLayerMethodsPtr);
+>>>>>>> upstream-releases
     if (topLayer) {
       if (PR_PushIOLayer(fd[0], PR_TOP_IO_LAYER, topLayer) == PR_FAILURE) {
         topLayer->dtor(topLayer);
@@ -376,7 +403,15 @@ void PollableEvent::AdjustFirstSignalTimestamp() {
   }
 }
 
+<<<<<<< HEAD
 bool PollableEvent::IsSignallingAlive(TimeDuration const &timeout) {
+||||||| merged common ancestors
+bool
+PollableEvent::IsSignallingAlive(TimeDuration const& timeout)
+{
+=======
+bool PollableEvent::IsSignallingAlive(TimeDuration const& timeout) {
+>>>>>>> upstream-releases
   if (mWriteFailed) {
     return false;
   }

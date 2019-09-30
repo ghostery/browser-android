@@ -21,11 +21,23 @@ template <typename T>
 struct InternalGCPointerPolicy : public JS::GCPointerPolicy<T> {
   using Type = typename mozilla::RemovePointer<T>::Type;
 
+<<<<<<< HEAD
 #define IS_BASE_OF_OR(_1, BaseType, _2) \
   mozilla::IsBaseOf<BaseType, Type>::value ||
   static_assert(
       JS_FOR_EACH_TRACEKIND(IS_BASE_OF_OR) false,
       "InternalGCPointerPolicy must only be used for GC thing pointers");
+||||||| merged common ancestors
+#define IS_BASE_OF_OR(_1, BaseType, _2) mozilla::IsBaseOf<BaseType, Type>::value ||
+    static_assert(JS_FOR_EACH_TRACEKIND(IS_BASE_OF_OR) false,
+                  "InternalGCPointerPolicy must only be used for GC thing pointers");
+=======
+#define IS_BASE_OF_OR(_1, BaseType, _2, _3) \
+  mozilla::IsBaseOf<BaseType, Type>::value ||
+  static_assert(
+      JS_FOR_EACH_TRACEKIND(IS_BASE_OF_OR) false,
+      "InternalGCPointerPolicy must only be used for GC thing pointers");
+>>>>>>> upstream-releases
 #undef IS_BASE_OF_OR
 
   static void preBarrier(T v) {
@@ -62,6 +74,7 @@ template <typename T>
 struct GCPolicy<T* const> : public js::InternalGCPointerPolicy<T* const> {};
 
 template <typename T>
+<<<<<<< HEAD
 struct GCPolicy<js::HeapPtr<T>> {
   static void trace(JSTracer* trc, js::HeapPtr<T>* thingp, const char* name) {
     js::TraceEdge(trc, thingp, name);
@@ -69,9 +82,28 @@ struct GCPolicy<js::HeapPtr<T>> {
   static bool needsSweep(js::HeapPtr<T>* thingp) {
     return js::gc::IsAboutToBeFinalized(thingp);
   }
+||||||| merged common ancestors
+struct GCPolicy<js::HeapPtr<T>>
+{
+    static void trace(JSTracer* trc, js::HeapPtr<T>* thingp, const char* name) {
+        js::TraceEdge(trc, thingp, name);
+    }
+    static bool needsSweep(js::HeapPtr<T>* thingp) {
+        return js::gc::IsAboutToBeFinalized(thingp);
+    }
+=======
+struct GCPolicy<js::HeapPtr<T>> {
+  static void trace(JSTracer* trc, js::HeapPtr<T>* thingp, const char* name) {
+    js::TraceNullableEdge(trc, thingp, name);
+  }
+  static bool needsSweep(js::HeapPtr<T>* thingp) {
+    return js::gc::IsAboutToBeFinalized(thingp);
+  }
+>>>>>>> upstream-releases
 };
 
 template <typename T>
+<<<<<<< HEAD
 struct GCPolicy<js::ReadBarriered<T>> {
   static void trace(JSTracer* trc, js::ReadBarriered<T>* thingp,
                     const char* name) {
@@ -80,6 +112,25 @@ struct GCPolicy<js::ReadBarriered<T>> {
   static bool needsSweep(js::ReadBarriered<T>* thingp) {
     return js::gc::IsAboutToBeFinalized(thingp);
   }
+||||||| merged common ancestors
+struct GCPolicy<js::ReadBarriered<T>>
+{
+    static void trace(JSTracer* trc, js::ReadBarriered<T>* thingp, const char* name) {
+        js::TraceEdge(trc, thingp, name);
+    }
+    static bool needsSweep(js::ReadBarriered<T>* thingp) {
+        return js::gc::IsAboutToBeFinalized(thingp);
+    }
+=======
+struct GCPolicy<js::WeakHeapPtr<T>> {
+  static void trace(JSTracer* trc, js::WeakHeapPtr<T>* thingp,
+                    const char* name) {
+    js::TraceEdge(trc, thingp, name);
+  }
+  static bool needsSweep(js::WeakHeapPtr<T>* thingp) {
+    return js::gc::IsAboutToBeFinalized(thingp);
+  }
+>>>>>>> upstream-releases
 };
 
 }  // namespace JS

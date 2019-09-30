@@ -115,10 +115,21 @@ void ProcessThreadImpl::PostTask(std::unique_ptr<rtc::QueuedTask> task) {
   wake_up_->Set();
 }
 
+<<<<<<< HEAD
 void ProcessThreadImpl::RegisterModule(Module* module,
                                        const rtc::Location& from) {
   // RTC_DCHECK(thread_checker_.CalledOnValidThread());  Not really needed
   RTC_DCHECK(module) << from.ToString();
+||||||| merged common ancestors
+void ProcessThreadImpl::RegisterModule(Module* module) {
+  // RTC_DCHECK(thread_checker_.CalledOnValidThread());  Not really needed
+  RTC_DCHECK(module);
+=======
+void ProcessThreadImpl::RegisterModule(Module* module,
+                                       const rtc::Location& from) {
+  RTC_DCHECK(thread_checker_.CalledOnValidThread());
+  RTC_DCHECK(module) << from.ToString();
+>>>>>>> upstream-releases
 
 #if RTC_DCHECK_IS_ON
   {

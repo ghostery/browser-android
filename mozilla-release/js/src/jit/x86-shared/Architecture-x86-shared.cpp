@@ -6,7 +6,13 @@
 
 #include "jit/x86-shared/Architecture-x86-shared.h"
 #if !defined(JS_CODEGEN_X86) && !defined(JS_CODEGEN_X64)
+<<<<<<< HEAD
 #error "Wrong architecture. Only x86 and x64 should build this file!"
+||||||| merged common ancestors
+# error "Wrong architecture. Only x86 and x64 should build this file!"
+=======
+#  error "Wrong architecture. Only x86 and x64 should build this file!"
+>>>>>>> upstream-releases
 #endif
 
 #include "jit/RegisterSets.h"
@@ -15,15 +21,39 @@ const char* js::jit::FloatRegister::name() const {
   static const char* const names[] = {
 
 #ifdef JS_CODEGEN_X64
+<<<<<<< HEAD
 #define FLOAT_REGS_(TYPE)                                                   \
   "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, "%xmm4" TYPE,     \
       "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE, "%xmm8" TYPE, "%xmm9" TYPE, \
       "%xmm10" TYPE, "%xmm11" TYPE, "%xmm12" TYPE, "%xmm13" TYPE,           \
       "%xmm14" TYPE, "%xmm15" TYPE
+||||||| merged common ancestors
+#define FLOAT_REGS_(TYPE) \
+        "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, \
+        "%xmm4" TYPE, "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE, \
+        "%xmm8" TYPE, "%xmm9" TYPE, "%xmm10" TYPE, "%xmm11" TYPE, \
+        "%xmm12" TYPE, "%xmm13" TYPE, "%xmm14" TYPE, "%xmm15" TYPE
+=======
+#  define FLOAT_REGS_(TYPE)                                                   \
+    "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, "%xmm4" TYPE,     \
+        "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE, "%xmm8" TYPE, "%xmm9" TYPE, \
+        "%xmm10" TYPE, "%xmm11" TYPE, "%xmm12" TYPE, "%xmm13" TYPE,           \
+        "%xmm14" TYPE, "%xmm15" TYPE
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define FLOAT_REGS_(TYPE)                                               \
   "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, "%xmm4" TYPE, \
       "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE
+||||||| merged common ancestors
+#define FLOAT_REGS_(TYPE) \
+        "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, \
+        "%xmm4" TYPE, "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE
+=======
+#  define FLOAT_REGS_(TYPE)                                               \
+    "%xmm0" TYPE, "%xmm1" TYPE, "%xmm2" TYPE, "%xmm3" TYPE, "%xmm4" TYPE, \
+        "%xmm5" TYPE, "%xmm6" TYPE, "%xmm7" TYPE
+>>>>>>> upstream-releases
 #endif
 
       // These should be enumerated in the same order as in

@@ -8,7 +8,13 @@
 
 <script>
 
+<<<<<<< HEAD
 var db, t = async_test(document.title),
+||||||| merged common ancestors
+var db, t = async_test(document.title, {timeout: 10000}),
+=======
+var db, t = async_test(),
+>>>>>>> upstream-releases
     keys = { txn: [], txn2: [] },
     open_rq = createdb(t)
 

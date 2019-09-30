@@ -3,12 +3,22 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 browser.jar:
-        content/browser/search/search.xml                           (content/search.xml)
+        content/browser/search/autocomplete-popup.js                (content/autocomplete-popup.js)
         content/browser/search/searchbar.js                         (content/searchbar.js)
+<<<<<<< HEAD
         content/browser/search/search-one-offs.js                   (content/search-one-offs.js)
         content/browser/search/searchReset.xhtml                    (content/searchReset.xhtml)
         content/browser/search/searchReset.js                       (content/searchReset.js)
 
+||||||| merged common ancestors
+        content/browser/search/searchReset.xhtml                    (content/searchReset.xhtml)
+        content/browser/search/searchReset.js                       (content/searchReset.js)
+
+=======
+        content/browser/search/search-one-offs.js                   (content/search-one-offs.js)
+        search-extensions/                                          (extensions/**)
+>>>>>>> upstream-releases
         searchplugins/                                              (searchplugins/**)
 
-% resource search-plugins %searchplugins/
+% resource search-plugins %searchplugins/ contentaccessible=yes
+% resource search-extensions %search-extensions/ contentaccessible=yes

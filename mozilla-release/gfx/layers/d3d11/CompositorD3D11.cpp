@@ -13,6 +13,7 @@
 #include "mozilla/gfx/D3D11Checks.h"
 #include "mozilla/gfx/DeviceManagerDx.h"
 #include "mozilla/gfx/GPUParent.h"
+#include "mozilla/gfx/Swizzle.h"
 #include "mozilla/layers/ImageHost.h"
 #include "mozilla/layers/ContentHost.h"
 #include "mozilla/layers/Diagnostics.h"
@@ -20,7 +21,6 @@
 #include "mozilla/layers/Effects.h"
 #include "mozilla/layers/HelpersD3D11.h"
 #include "nsWindowsHelpers.h"
-#include "gfxPrefs.h"
 #include "gfxConfig.h"
 #include "gfxCrashReporterUtils.h"
 #include "gfxUtils.h"
@@ -28,6 +28,7 @@
 #include "mozilla/widget/WinCompositorWidget.h"
 
 #include "mozilla/EnumeratedArray.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
 #include "BlendShaderConstants.h"
 
@@ -45,6 +46,7 @@ namespace layers {
 
 bool CanUsePartialPresents(ID3D11Device* aDevice);
 
+<<<<<<< HEAD
 const FLOAT sBlendFactor[] = {0, 0, 0, 0};
 
 CompositorD3D11::CompositorD3D11(CompositorBridgeParent* aParent,
@@ -58,19 +60,127 @@ CompositorD3D11::CompositorD3D11(CompositorBridgeParent* aParent,
       mVerifyBuffersFailed(false),
       mUseMutexOnPresent(false) {
   mUseMutexOnPresent = gfxPrefs::UseMutexOnPresent();
+||||||| merged common ancestors
+const FLOAT sBlendFactor[] = { 0, 0, 0, 0 };
+
+CompositorD3D11::CompositorD3D11(CompositorBridgeParent* aParent, widget::CompositorWidget* aWidget)
+  : Compositor(aWidget, aParent)
+  , mAttachments(nullptr)
+  , mHwnd(nullptr)
+  , mDisableSequenceForNextFrame(false)
+  , mAllowPartialPresents(false)
+  , mIsDoubleBuffered(false)
+  , mVerifyBuffersFailed(false)
+  , mUseMutexOnPresent(false)
+{
+  mUseMutexOnPresent = gfxPrefs::UseMutexOnPresent();
+=======
+const FLOAT sBlendFactor[] = {0, 0, 0, 0};
+
+class AsyncReadbackBufferD3D11 final : public AsyncReadbackBuffer {
+ public:
+  AsyncReadbackBufferD3D11(ID3D11DeviceContext* aContext,
+                           ID3D11Texture2D* aTexture, const IntSize& aSize);
+
+  bool MapAndCopyInto(DataSourceSurface* aSurface,
+                      const IntSize& aReadSize) const override;
+
+  ID3D11Texture2D* GetTexture() { return mTexture; }
+
+ private:
+  RefPtr<ID3D11DeviceContext> mContext;
+  RefPtr<ID3D11Texture2D> mTexture;
+};
+
+AsyncReadbackBufferD3D11::AsyncReadbackBufferD3D11(
+    ID3D11DeviceContext* aContext, ID3D11Texture2D* aTexture,
+    const IntSize& aSize)
+    : AsyncReadbackBuffer(aSize), mContext(aContext), mTexture(aTexture) {}
+
+bool AsyncReadbackBufferD3D11::MapAndCopyInto(DataSourceSurface* aSurface,
+                                              const IntSize& aReadSize) const {
+  D3D11_MAPPED_SUBRESOURCE map;
+  HRESULT hr = mContext->Map(mTexture, 0, D3D11_MAP_READ, 0, &map);
+
+  if (FAILED(hr)) {
+    return false;
+  }
+
+  RefPtr<DataSourceSurface> sourceSurface =
+      Factory::CreateWrappingDataSourceSurface(static_cast<uint8_t*>(map.pData),
+                                               map.RowPitch, mSize,
+                                               SurfaceFormat::B8G8R8A8);
+
+  bool result;
+  {
+    DataSourceSurface::ScopedMap sourceMap(sourceSurface,
+                                           DataSourceSurface::READ);
+    DataSourceSurface::ScopedMap destMap(aSurface, DataSourceSurface::WRITE);
+
+    result = SwizzleData(sourceMap.GetData(), sourceMap.GetStride(),
+                         SurfaceFormat::B8G8R8A8, destMap.GetData(),
+                         destMap.GetStride(), aSurface->GetFormat(), aReadSize);
+  }
+
+  mContext->Unmap(mTexture, 0);
+
+  return result;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+CompositorD3D11::~CompositorD3D11() {}
+||||||| merged common ancestors
+CompositorD3D11::~CompositorD3D11()
+{
+}
+=======
+CompositorD3D11::CompositorD3D11(CompositorBridgeParent* aParent,
+                                 widget::CompositorWidget* aWidget)
+    : Compositor(aWidget, aParent),
+      mWindowRTCopy(nullptr),
+      mAttachments(nullptr),
+      mHwnd(nullptr),
+      mDisableSequenceForNextFrame(false),
+      mAllowPartialPresents(false),
+      mIsDoubleBuffered(false),
+      mVerifyBuffersFailed(false),
+      mUseMutexOnPresent(false) {
+  mUseMutexOnPresent = StaticPrefs::gfx_use_mutex_on_present();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+template <typename VertexType>
+void CompositorD3D11::SetVertexBuffer(ID3D11Buffer* aBuffer) {
+||||||| merged common ancestors
+template<typename VertexType>
+void
+CompositorD3D11::SetVertexBuffer(ID3D11Buffer* aBuffer)
+{
+=======
 CompositorD3D11::~CompositorD3D11() {}
 
 template <typename VertexType>
 void CompositorD3D11::SetVertexBuffer(ID3D11Buffer* aBuffer) {
+>>>>>>> upstream-releases
   UINT size = sizeof(VertexType);
   UINT offset = 0;
   mContext->IASetVertexBuffers(0, 1, &aBuffer, &size, &offset);
 }
 
+<<<<<<< HEAD
 bool CompositorD3D11::SupportsLayerGeometry() const {
   return gfxPrefs::D3D11LayerGeometry();
+||||||| merged common ancestors
+bool
+CompositorD3D11::SupportsLayerGeometry() const
+{
+  return gfxPrefs::D3D11LayerGeometry();
+=======
+bool CompositorD3D11::SupportsLayerGeometry() const {
+  return StaticPrefs::layers_geometry_d3d11_enabled();
+>>>>>>> upstream-releases
 }
 
 bool CompositorD3D11::UpdateDynamicVertexBuffer(
@@ -149,8 +259,15 @@ bool CompositorD3D11::Initialize(nsCString* const out_failureReason) {
         (IDXGIFactory2**)getter_AddRefs(dxgiFactory2));
 
 #if (_WIN32_WINDOWS_MAXVER >= 0x0A00)
+<<<<<<< HEAD
     if (gfxPrefs::Direct3D11UseDoubleBuffering() && SUCCEEDED(hr) &&
         dxgiFactory2 && IsWindows10OrGreater()) {
+||||||| merged common ancestors
+    if (gfxPrefs::Direct3D11UseDoubleBuffering() && SUCCEEDED(hr) && dxgiFactory2 && IsWindows10OrGreater()) {
+=======
+    if (gfxVars::UseDoubleBufferingWithCompositor() && SUCCEEDED(hr) &&
+        dxgiFactory2) {
+>>>>>>> upstream-releases
       // DXGI_SCALING_NONE is not available on Windows 7 with Platform Update.
       // This looks awful for things like the awesome bar and browser window
       // resizing so we don't use a flip buffer chain here. When using
@@ -174,6 +291,7 @@ bool CompositorD3D11::Initialize(nsCString* const out_failureReason) {
       swapDesc.Flags = 0;
 
       /**
+<<<<<<< HEAD
        * Create a swap chain, this swap chain will contain the backbuffer for
        * the window we draw to. The front buffer is the full screen front
        * buffer.
@@ -184,13 +302,49 @@ bool CompositorD3D11::Initialize(nsCString* const out_failureReason) {
       if (Failed(hr, "create swap chain")) {
         *out_failureReason = "FEATURE_FAILURE_D3D11_SWAP_CHAIN";
         return false;
-      }
+||||||| merged common ancestors
+      * Create a swap chain, this swap chain will contain the backbuffer for
+      * the window we draw to. The front buffer is the full screen front
+      * buffer.
+      */
+      hr = dxgiFactory2->CreateSwapChainForHwnd(mDevice, mHwnd, &swapDesc, nullptr, nullptr, getter_AddRefs(swapChain));
+      if (Failed(hr, "create swap chain")) {
+        *out_failureReason = "FEATURE_FAILURE_D3D11_SWAP_CHAIN";
+        return false;
+=======
+       * Create a swap chain, this swap chain will contain the backbuffer for
+       * the window we draw to. The front buffer is the full screen front
+       * buffer.
+       */
+      hr = dxgiFactory2->CreateSwapChainForHwnd(mDevice, mHwnd, &swapDesc,
+                                                nullptr, nullptr,
+                                                getter_AddRefs(swapChain));
+      if (SUCCEEDED(hr)) {
+        DXGI_RGBA color = {1.0f, 1.0f, 1.0f, 1.0f};
+        swapChain->SetBackgroundColor(&color);
 
+        mSwapChain = swapChain;
+>>>>>>> upstream-releases
+      }
+    }
+
+<<<<<<< HEAD
       DXGI_RGBA color = {1.0f, 1.0f, 1.0f, 1.0f};
       swapChain->SetBackgroundColor(&color);
 
       mSwapChain = swapChain;
     } else
+||||||| merged common ancestors
+      DXGI_RGBA color = { 1.0f, 1.0f, 1.0f, 1.0f };
+      swapChain->SetBackgroundColor(&color);
+
+      mSwapChain = swapChain;
+    } else
+=======
+    // In some configurations double buffering may have failed with an
+    // ACCESS_DENIED error.
+    if (!mSwapChain)
+>>>>>>> upstream-releases
 #endif
     {
       DXGI_SWAP_CHAIN_DESC swapDesc;
@@ -237,11 +391,21 @@ bool CompositorD3D11::Initialize(nsCString* const out_failureReason) {
   return true;
 }
 
+<<<<<<< HEAD
 bool CanUsePartialPresents(ID3D11Device* aDevice) {
   if (gfxPrefs::PartialPresent() > 0) {
+||||||| merged common ancestors
+bool
+CanUsePartialPresents(ID3D11Device* aDevice)
+{
+  if (gfxPrefs::PartialPresent() > 0) {
+=======
+bool CanUsePartialPresents(ID3D11Device* aDevice) {
+  if (StaticPrefs::gfx_partialpresent_force() > 0) {
+>>>>>>> upstream-releases
     return true;
   }
-  if (gfxPrefs::PartialPresent() < 0) {
+  if (StaticPrefs::gfx_partialpresent_force() < 0) {
     return false;
   }
   if (DeviceManagerDx::Get()->IsWARP()) {
@@ -301,9 +465,18 @@ already_AddRefed<CompositingRenderTarget> CompositorD3D11::CreateRenderTarget(
     return nullptr;
   }
 
+<<<<<<< HEAD
   CD3D11_TEXTURE2D_DESC desc(
       DXGI_FORMAT_B8G8R8A8_UNORM, aRect.Width(), aRect.Height(), 1, 1,
       D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+||||||| merged common ancestors
+  CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_B8G8R8A8_UNORM, aRect.Width(), aRect.Height(), 1, 1,
+                             D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+=======
+  CD3D11_TEXTURE2D_DESC desc(
+      DXGI_FORMAT_B8G8R8A8_UNORM, aRect.width, aRect.height, 1, 1,
+      D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+>>>>>>> upstream-releases
 
   RefPtr<ID3D11Texture2D> texture;
   HRESULT hr =
@@ -397,11 +570,139 @@ CompositorD3D11::CreateRenderTargetFromSource(
   return rt.forget();
 }
 
+<<<<<<< HEAD
 bool CompositorD3D11::CopyBackdrop(const gfx::IntRect& aRect,
                                    RefPtr<ID3D11Texture2D>* aOutTexture,
                                    RefPtr<ID3D11ShaderResourceView>* aOutView) {
   RefPtr<ID3D11Texture2D> texture =
       CreateTexture(aRect, mCurrentRT, aRect.TopLeft());
+||||||| merged common ancestors
+bool
+CompositorD3D11::CopyBackdrop(const gfx::IntRect& aRect,
+                              RefPtr<ID3D11Texture2D>* aOutTexture,
+                              RefPtr<ID3D11ShaderResourceView>* aOutView)
+{
+  RefPtr<ID3D11Texture2D> texture = CreateTexture(aRect, mCurrentRT, aRect.TopLeft());
+=======
+bool CompositorD3D11::ShouldAllowFrameRecording() const {
+#ifdef MOZ_GECKO_PROFILER
+  return mAllowFrameRecording ||
+         profiler_feature_active(ProfilerFeature::Screenshots);
+#else
+  return mAllowFrameRecording;
+#endif
+}
+
+already_AddRefed<CompositingRenderTarget>
+CompositorD3D11::GetWindowRenderTarget() const {
+  if (!ShouldAllowFrameRecording()) {
+    return nullptr;
+  }
+
+  if (!mDefaultRT) {
+    return nullptr;
+  }
+
+  const IntSize size = mDefaultRT->GetSize();
+
+  RefPtr<ID3D11Texture2D> rtTexture;
+
+  if (!mWindowRTCopy || mWindowRTCopy->GetSize() != size) {
+    /*
+     * The compositor screenshots infrastructure is going to scale down the
+     * render target returned by this method. However, mDefaultRT does not
+     * contain a texture created wth the D3D11_BIND_SHADER_RESOURCE flag, so if
+     * we were to simply return mDefaultRT then scaling would fail.
+     */
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_B8G8R8A8_UNORM, size.width,
+                               size.height, 1, 1, D3D11_BIND_SHADER_RESOURCE);
+
+    HRESULT hr =
+        mDevice->CreateTexture2D(&desc, nullptr, getter_AddRefs(rtTexture));
+    if (FAILED(hr)) {
+      return nullptr;
+    }
+
+    mWindowRTCopy = MakeRefPtr<CompositingRenderTargetD3D11>(
+        rtTexture, IntPoint(0, 0), DXGI_FORMAT_B8G8R8A8_UNORM);
+    mWindowRTCopy->SetSize(size);
+  } else {
+    rtTexture = mWindowRTCopy->GetD3D11Texture();
+  }
+
+  const RefPtr<ID3D11Texture2D> sourceTexture = mDefaultRT->GetD3D11Texture();
+  mContext->CopyResource(rtTexture, sourceTexture);
+
+  return RefPtr<CompositingRenderTarget>(
+             static_cast<CompositingRenderTarget*>(mWindowRTCopy))
+      .forget();
+}
+
+bool CompositorD3D11::ReadbackRenderTarget(CompositingRenderTarget* aSource,
+                                           AsyncReadbackBuffer* aDest) {
+  RefPtr<CompositingRenderTargetD3D11> srcTexture =
+      static_cast<CompositingRenderTargetD3D11*>(aSource);
+  RefPtr<AsyncReadbackBufferD3D11> destBuffer =
+      static_cast<AsyncReadbackBufferD3D11*>(aDest);
+
+  mContext->CopyResource(destBuffer->GetTexture(),
+                         srcTexture->GetD3D11Texture());
+
+  return true;
+}
+
+already_AddRefed<AsyncReadbackBuffer>
+CompositorD3D11::CreateAsyncReadbackBuffer(const gfx::IntSize& aSize) {
+  RefPtr<ID3D11Texture2D> texture;
+
+  CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_B8G8R8A8_UNORM, aSize.width,
+                             aSize.height, 1, 1, 0, D3D11_USAGE_STAGING,
+                             D3D11_CPU_ACCESS_READ);
+
+  HRESULT hr =
+      mDevice->CreateTexture2D(&desc, nullptr, getter_AddRefs(texture));
+
+  if (FAILED(hr)) {
+    HandleError(hr);
+    return nullptr;
+  }
+
+  return MakeAndAddRef<AsyncReadbackBufferD3D11>(mContext, texture, aSize);
+}
+
+bool CompositorD3D11::BlitRenderTarget(CompositingRenderTarget* aSource,
+                                       const gfx::IntSize& aSourceSize,
+                                       const gfx::IntSize& aDestSize) {
+  RefPtr<CompositingRenderTargetD3D11> source =
+      static_cast<CompositingRenderTargetD3D11*>(aSource);
+
+  RefPtr<TexturedEffect> texturedEffect = CreateTexturedEffect(
+      SurfaceFormat::B8G8R8A8, source, SamplingFilter::LINEAR, true);
+  texturedEffect->mTextureCoords =
+      Rect(0, 0, Float(aSourceSize.width) / Float(source->GetSize().width),
+           Float(aSourceSize.height) / Float(source->GetSize().height));
+
+  EffectChain effect;
+  effect.mPrimaryEffect = texturedEffect;
+
+  const Float scaleX = Float(aDestSize.width) / Float(aSourceSize.width);
+  const Float scaleY = Float(aDestSize.height) / (aSourceSize.height);
+  const Matrix4x4 transform = Matrix4x4::Scaling(scaleX, scaleY, 1.0f);
+
+  const Rect sourceRect(0, 0, aSourceSize.width, aSourceSize.height);
+
+  DrawQuad(sourceRect, IntRect(0, 0, aDestSize.width, aDestSize.height), effect,
+           1.0f, transform, sourceRect);
+
+  return true;
+}
+
+bool CompositorD3D11::CopyBackdrop(const gfx::IntRect& aRect,
+                                   RefPtr<ID3D11Texture2D>* aOutTexture,
+                                   RefPtr<ID3D11ShaderResourceView>* aOutView) {
+  RefPtr<ID3D11Texture2D> texture =
+      CreateTexture(aRect, mCurrentRT, aRect.TopLeft());
+>>>>>>> upstream-releases
   if (!texture) {
     return false;
   }
@@ -554,6 +855,7 @@ void CompositorD3D11::DrawQuad(const gfx::Rect& aRect,
                                const EffectChain& aEffectChain,
                                gfx::Float aOpacity,
                                const gfx::Matrix4x4& aTransform,
+<<<<<<< HEAD
                                const gfx::Rect& aVisibleRect) {
   DrawGeometry(aRect, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
                aVisibleRect);
@@ -566,9 +868,36 @@ void CompositorD3D11::DrawTriangles(
     const gfx::Rect& aVisibleRect) {
   DrawGeometry(aTriangles, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
                aVisibleRect);
+||||||| merged common ancestors
+                               const gfx::Rect& aVisibleRect)
+{
+  DrawGeometry(aTriangles, aRect, aClipRect, aEffectChain,
+               aOpacity, aTransform, aVisibleRect);
+=======
+                               const gfx::Rect& aVisibleRect) {
+  DrawGeometry(aRect, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
+               aVisibleRect);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void CompositorD3D11::PrepareDynamicVertexBuffer() {
+||||||| merged common ancestors
+void
+CompositorD3D11::PrepareDynamicVertexBuffer()
+{
+=======
+void CompositorD3D11::DrawTriangles(
+    const nsTArray<gfx::TexturedTriangle>& aTriangles, const gfx::Rect& aRect,
+    const gfx::IntRect& aClipRect, const EffectChain& aEffectChain,
+    gfx::Float aOpacity, const gfx::Matrix4x4& aTransform,
+    const gfx::Rect& aVisibleRect) {
+  DrawGeometry(aTriangles, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
+               aVisibleRect);
 }
 
 void CompositorD3D11::PrepareDynamicVertexBuffer() {
+>>>>>>> upstream-releases
   mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   mContext->IASetInputLayout(mAttachments->mDynamicInputLayout);
   SetVertexBuffer<TexturedVertex>(mAttachments->mDynamicVertexBuffer);
@@ -790,14 +1119,28 @@ void CompositorD3D11::DrawGeometry(const Geometry& aGeometry,
       }
 
       SetSamplerForSamplingFilter(texturedEffect->mSamplingFilter);
+<<<<<<< HEAD
     } break;
     case EffectTypes::NV12: {
       TexturedEffect* texturedEffect =
           static_cast<TexturedEffect*>(aEffectChain.mPrimaryEffect.get());
+||||||| merged common ancestors
+    }
+    break;
+  case EffectTypes::NV12:
+    {
+      TexturedEffect* texturedEffect =
+        static_cast<TexturedEffect*>(aEffectChain.mPrimaryEffect.get());
+=======
+    } break;
+    case EffectTypes::NV12: {
+      EffectNV12* effectNV12 =
+          static_cast<EffectNV12*>(aEffectChain.mPrimaryEffect.get());
+>>>>>>> upstream-releases
 
-      pTexCoordRect = &texturedEffect->mTextureCoords;
+      pTexCoordRect = &effectNV12->mTextureCoords;
 
-      TextureSourceD3D11* source = texturedEffect->mTexture->AsSourceD3D11();
+      TextureSourceD3D11* source = effectNV12->mTexture->AsSourceD3D11();
       if (!source) {
         NS_WARNING("Missing texture source!");
         return;
@@ -833,6 +1176,7 @@ void CompositorD3D11::DrawGeometry(const Geometry& aGeometry,
       ID3D11ShaderResourceView* views[] = {srViewY, srViewCbCr};
       mContext->PSSetShaderResources(TexSlot::Y, 2, views);
 
+<<<<<<< HEAD
       const float* yuvToRgb =
           gfxUtils::YuvToRgbMatrix4x3RowMajor(YUVColorSpace::BT601);
       memcpy(&mPSConstants.yuvColorMatrix, yuvToRgb,
@@ -840,10 +1184,35 @@ void CompositorD3D11::DrawGeometry(const Geometry& aGeometry,
       // TOTO: need to handle color depth properly. this assumes data is always
       // 8 or 16 bits.
       mPSConstants.vCoefficient[0] = 1.0;
+||||||| merged common ancestors
+      const float* yuvToRgb = gfxUtils::YuvToRgbMatrix4x3RowMajor(YUVColorSpace::BT601);
+      memcpy(&mPSConstants.yuvColorMatrix, yuvToRgb, sizeof(mPSConstants.yuvColorMatrix));
+      // TOTO: need to handle color depth properly. this assumes data is always
+      // 8 or 16 bits.
+      mPSConstants.vCoefficient[0] = 1.0;
+=======
+      const float* yuvToRgb =
+          gfxUtils::YuvToRgbMatrix4x3RowMajor(effectNV12->mYUVColorSpace);
+      memcpy(&mPSConstants.yuvColorMatrix, yuvToRgb,
+             sizeof(mPSConstants.yuvColorMatrix));
+      mPSConstants.vCoefficient[0] =
+          RescalingFactorForColorDepth(effectNV12->mColorDepth);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       SetSamplerForSamplingFilter(texturedEffect->mSamplingFilter);
     } break;
     case EffectTypes::YCBCR: {
+||||||| merged common ancestors
+      SetSamplerForSamplingFilter(texturedEffect->mSamplingFilter);
+    }
+    break;
+  case EffectTypes::YCBCR: {
+=======
+      SetSamplerForSamplingFilter(effectNV12->mSamplingFilter);
+    } break;
+    case EffectTypes::YCBCR: {
+>>>>>>> upstream-releases
       EffectYCbCr* ycbcrEffect =
           static_cast<EffectYCbCr*>(aEffectChain.mPrimaryEffect.get());
 
@@ -883,9 +1252,21 @@ void CompositorD3D11::DrawGeometry(const Geometry& aGeometry,
           sourceY->GetShaderResourceView(), sourceCb->GetShaderResourceView(),
           sourceCr->GetShaderResourceView()};
       mContext->PSSetShaderResources(TexSlot::Y, 3, srViews);
+<<<<<<< HEAD
     } break;
     case EffectTypes::COMPONENT_ALPHA: {
       MOZ_ASSERT(gfxPrefs::ComponentAlphaEnabled());
+||||||| merged common ancestors
+    }
+    break;
+  case EffectTypes::COMPONENT_ALPHA:
+    {
+      MOZ_ASSERT(gfxPrefs::ComponentAlphaEnabled());
+=======
+    } break;
+    case EffectTypes::COMPONENT_ALPHA: {
+      MOZ_ASSERT(StaticPrefs::layers_componentalpha_enabled());
+>>>>>>> upstream-releases
       MOZ_ASSERT(mAttachments->mComponentBlendState);
       EffectComponentAlpha* effectComponentAlpha =
           static_cast<EffectComponentAlpha*>(aEffectChain.mPrimaryEffect.get());
@@ -1037,7 +1418,7 @@ void CompositorD3D11::BeginFrame(const nsIntRegion& aInvalidRegion,
     }
   }
 
-  if (gfxPrefs::LayersDrawFPS()) {
+  if (StaticPrefs::layers_acceleration_draw_fps()) {
     uint32_t pixelsPerFrame = 0;
     for (auto iter = mBackBufferInvalid.RectIter(); !iter.Done(); iter.Next()) {
       pixelsPerFrame += iter.Get().Width() * iter.Get().Height();
@@ -1047,9 +1428,31 @@ void CompositorD3D11::BeginFrame(const nsIntRegion& aInvalidRegion,
   }
 }
 
+<<<<<<< HEAD
+void CompositorD3D11::NormalDrawingDone() { mDiagnostics->End(); }
+||||||| merged common ancestors
+void
+CompositorD3D11::NormalDrawingDone()
+{
+  mDiagnostics->End();
+}
+=======
 void CompositorD3D11::NormalDrawingDone() { mDiagnostics->End(); }
 
 void CompositorD3D11::EndFrame() {
+  if (!profiler_feature_active(ProfilerFeature::Screenshots) && mWindowRTCopy) {
+    mWindowRTCopy = nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void CompositorD3D11::EndFrame() {
+||||||| merged common ancestors
+void
+CompositorD3D11::EndFrame()
+{
+=======
+>>>>>>> upstream-releases
   if (!mDefaultRT) {
     Compositor::EndFrame();
     return;
@@ -1078,7 +1481,7 @@ void CompositorD3D11::EndFrame() {
 
   if (oldSize == mSize) {
     Present();
-    if (gfxPrefs::CompositorClearState()) {
+    if (StaticPrefs::gfx_compositor_clearstate()) {
       mContext->ClearState();
     }
   } else {
@@ -1088,7 +1491,7 @@ void CompositorD3D11::EndFrame() {
   // Block until the previous frame's work has been completed.
   if (mQuery) {
     BOOL result;
-    WaitForGPUQuery(mDevice, mContext, mQuery, &result);
+    WaitForFrameGPUQuery(mDevice, mContext, mQuery, &result);
   }
   // Store the query for this frame so we can flush it next time.
   mQuery = query;
@@ -1248,9 +1651,29 @@ void CompositorD3D11::PrepareViewport(const gfx::IntSize& aSize,
          sizeof(mVSConstants.projection));
 }
 
+<<<<<<< HEAD
+void CompositorD3D11::EnsureSize() { mSize = mWidget->GetClientSize(); }
+||||||| merged common ancestors
+void
+CompositorD3D11::EnsureSize()
+{
+  mSize = mWidget->GetClientSize();
+}
+=======
 void CompositorD3D11::EnsureSize() { mSize = mWidget->GetClientSize(); }
 
 bool CompositorD3D11::VerifyBufferSize() {
+  mWidget->AsWindows()->UpdateCompositorWndSizeIfNecessary();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool CompositorD3D11::VerifyBufferSize() {
+||||||| merged common ancestors
+bool
+CompositorD3D11::VerifyBufferSize()
+{
+=======
+>>>>>>> upstream-releases
   DXGI_SWAP_CHAIN_DESC swapDesc;
   HRESULT hr;
 
@@ -1281,6 +1704,7 @@ bool CompositorD3D11::VerifyBufferSize() {
     if (mCurrentRT == mDefaultRT) {
       mCurrentRT = nullptr;
     }
+
     MOZ_ASSERT(mDefaultRT->hasOneRef());
     mDefaultRT = nullptr;
 

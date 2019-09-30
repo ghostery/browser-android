@@ -9,15 +9,7 @@
 #include <stdio.h>
 #include <mozilla/Assertions.h>
 
-/* GLIBCXX_3.4.8  is from gcc 4.1.1 (111691)
-   GLIBCXX_3.4.9  is from gcc 4.2.0 (111690)
-   GLIBCXX_3.4.10 is from gcc 4.3.0 (126287)
-   GLIBCXX_3.4.11 is from gcc 4.4.0 (133006)
-   GLIBCXX_3.4.12 is from gcc 4.4.1 (147138)
-   GLIBCXX_3.4.13 is from gcc 4.4.2 (151127)
-   GLIBCXX_3.4.14 is from gcc 4.5.0 (151126)
-   GLIBCXX_3.4.15 is from gcc 4.6.0 (160071)
-   GLIBCXX_3.4.16 is from gcc 4.6.1 (172240)
+/* GLIBCXX_3.4.16 is from gcc 4.6.1 (172240)
    GLIBCXX_3.4.17 is from gcc 4.7.0 (174383)
    GLIBCXX_3.4.18 is from gcc 4.8.0 (190787)
    GLIBCXX_3.4.19 is from gcc 4.8.1 (199309)
@@ -26,8 +18,8 @@
    GLIBCXX_3.4.22 is from gcc 6.0 (222482)
 
 This file adds the necessary compatibility tricks to avoid symbols with
-version GLIBCXX_3.4.16 and bigger, keeping binary compatibility with
-libstdc++ 4.6.1.
+version GLIBCXX_3.4.17 and bigger, keeping binary compatibility with
+libstdc++ 4.7.
 
 WARNING: all symbols from this file must be defined weak when they
 overlap with libstdc++.
@@ -38,6 +30,7 @@ overlap with libstdc++.
 #if MOZ_LIBSTDCXX_VERSION >= GLIBCXX_VERSION(3, 4, 18)
 // Implementation of utility functions for the prime rehash policy used in
 // unordered_map and unordered_set.
+<<<<<<< HEAD
 #include <unordered_map>
 #include <tr1/unordered_map>
 namespace std {
@@ -57,6 +50,52 @@ __detail::_Prime_rehash_policy::_M_need_rehash(size_t __n_bkt, size_t __n_elt,
   pair<bool, size_t> ret = policy._M_need_rehash(__n_bkt, __n_elt, __n_ins);
   _M_next_resize = policy._M_next_resize;
   return ret;
+||||||| merged common ancestors
+#include <unordered_map>
+#include <tr1/unordered_map>
+namespace std
+{
+  size_t __attribute__((weak))
+  __detail::_Prime_rehash_policy::_M_next_bkt(size_t __n) const
+  {
+    tr1::__detail::_Prime_rehash_policy policy(_M_max_load_factor);
+    size_t ret = policy._M_next_bkt(__n);
+    _M_next_resize = policy._M_next_resize;
+    return ret;
+  }
+
+  pair<bool, size_t> __attribute__((weak))
+  __detail::_Prime_rehash_policy::_M_need_rehash(size_t __n_bkt,
+                                                 size_t __n_elt,
+                                                 size_t __n_ins) const
+  {
+    tr1::__detail::_Prime_rehash_policy policy(_M_max_load_factor);
+    policy._M_next_resize = _M_next_resize;
+    pair<bool, size_t> ret = policy._M_need_rehash(__n_bkt, __n_elt, __n_ins);
+    _M_next_resize = policy._M_next_resize;
+    return ret;
+  }
+=======
+#  include <unordered_map>
+#  include <tr1/unordered_map>
+namespace std {
+size_t __attribute__((weak))
+__detail::_Prime_rehash_policy::_M_next_bkt(size_t __n) const {
+  tr1::__detail::_Prime_rehash_policy policy(_M_max_load_factor);
+  size_t ret = policy._M_next_bkt(__n);
+  _M_next_resize = policy._M_next_resize;
+  return ret;
+}
+
+pair<bool, size_t> __attribute__((weak))
+__detail::_Prime_rehash_policy::_M_need_rehash(size_t __n_bkt, size_t __n_elt,
+                                               size_t __n_ins) const {
+  tr1::__detail::_Prime_rehash_policy policy(_M_max_load_factor);
+  policy._M_next_resize = _M_next_resize;
+  pair<bool, size_t> ret = policy._M_need_rehash(__n_bkt, __n_elt, __n_ins);
+  _M_next_resize = policy._M_next_resize;
+  return ret;
+>>>>>>> upstream-releases
 }
 }  // namespace std
 #endif
@@ -103,10 +142,11 @@ __attribute__((weak)) runtime_error::runtime_error(char const* s)
 
 #if MOZ_LIBSTDCXX_VERSION >= GLIBCXX_VERSION(3, 4, 21)
 /* Expose the definitions for the old ABI, allowing us to call its functions */
-#define _GLIBCXX_THREAD_ABI_COMPAT 1
-#include <thread>
+#  define _GLIBCXX_THREAD_ABI_COMPAT 1
+#  include <thread>
 
 namespace std {
+<<<<<<< HEAD
 /* The old ABI has a thread::_M_start_thread(shared_ptr<_Impl_base>),
  * while the new has thread::_M_start_thread(unique_ptr<_State>, void(*)()).
  * There is an intermediate ABI at version 3.4.21, with
@@ -136,13 +176,97 @@ __attribute__((weak)) void thread::_M_start_thread(unique_ptr<_State> aState,
                                                    void (*)()) {
   auto impl = std::make_shared<StateWrapper>(std::move(aState));
   _M_start_thread(std::move(impl));
+||||||| merged common ancestors
+  /* The old ABI has a thread::_M_start_thread(shared_ptr<_Impl_base>),
+   * while the new has thread::_M_start_thread(unique_ptr<_State>, void(*)()).
+   * There is an intermediate ABI at version 3.4.21, with
+   * thread::_M_start_thread(shared_ptr<_Impl_base>, void(*)()).
+   * The void(*)() parameter is only there to keep a reference to pthread_create
+   * on the caller side, and is unused in the implementation
+   * We're creating an entry point for the new and intermediate ABIs, and make
+   * them call the old ABI. */
+
+  __attribute__((weak))
+  void thread::_M_start_thread(shared_ptr<_Impl_base> impl, void (*)())
+  {
+    _M_start_thread(std::move(impl));
+  }
+
+#if MOZ_LIBSTDCXX_VERSION >= GLIBCXX_VERSION(3, 4, 22)
+  /* We need a _Impl_base-derived class wrapping a _State to call the old ABI
+   * from what we got by diverting the new API */
+  struct StateWrapper: public thread::_Impl_base {
+    unique_ptr<thread::_State> mState;
+
+    StateWrapper(unique_ptr<thread::_State> aState)
+    : mState(std::move(aState))
+    { }
+
+    void _M_run() override
+    {
+      mState->_M_run();
+    }
+  };
+
+  __attribute__((weak))
+  void thread::_M_start_thread(unique_ptr<_State> aState, void (*)())
+  {
+    auto impl = std::make_shared<StateWrapper>(std::move(aState));
+    _M_start_thread(std::move(impl));
+  }
+
+  /* For some reason this is a symbol exported by new versions of libstdc++,
+   * even though the destructor is default there too */
+  __attribute__((weak)) thread::_State::~_State() = default;
+#endif
+=======
+/* The old ABI has a thread::_M_start_thread(shared_ptr<_Impl_base>),
+ * while the new has thread::_M_start_thread(unique_ptr<_State>, void(*)()).
+ * There is an intermediate ABI at version 3.4.21, with
+ * thread::_M_start_thread(shared_ptr<_Impl_base>, void(*)()).
+ * The void(*)() parameter is only there to keep a reference to pthread_create
+ * on the caller side, and is unused in the implementation
+ * We're creating an entry point for the new and intermediate ABIs, and make
+ * them call the old ABI. */
+
+__attribute__((weak)) void thread::_M_start_thread(shared_ptr<_Impl_base> impl,
+                                                   void (*)()) {
+  _M_start_thread(std::move(impl));
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 
 /* For some reason this is a symbol exported by new versions of libstdc++,
  * even though the destructor is default there too */
 __attribute__((weak)) thread::_State::~_State() = default;
 #endif
 }  // namespace std
+||||||| merged common ancestors
+=======
+
+#  if MOZ_LIBSTDCXX_VERSION >= GLIBCXX_VERSION(3, 4, 22)
+/* We need a _Impl_base-derived class wrapping a _State to call the old ABI
+ * from what we got by diverting the new API */
+struct StateWrapper : public thread::_Impl_base {
+  unique_ptr<thread::_State> mState;
+
+  StateWrapper(unique_ptr<thread::_State> aState) : mState(std::move(aState)) {}
+
+  void _M_run() override { mState->_M_run(); }
+};
+
+__attribute__((weak)) void thread::_M_start_thread(unique_ptr<_State> aState,
+                                                   void (*)()) {
+  auto impl = std::make_shared<StateWrapper>(std::move(aState));
+  _M_start_thread(std::move(impl));
+}
+
+/* For some reason this is a symbol exported by new versions of libstdc++,
+ * even though the destructor is default there too */
+__attribute__((weak)) thread::_State::~_State() = default;
+#  endif
+}  // namespace std
+>>>>>>> upstream-releases
 #endif
 
 #if MOZ_LIBSTDCXX_VERSION >= GLIBCXX_VERSION(3, 4, 21)

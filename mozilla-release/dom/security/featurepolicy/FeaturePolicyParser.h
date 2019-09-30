@@ -9,21 +9,34 @@
 
 #include "nsString.h"
 
-class nsIDocument;
 class nsIPrincipal;
 
 namespace mozilla {
 namespace dom {
 
+class Document;
 class Feature;
 
 class FeaturePolicyParser final {
  public:
   // aSelfOrigin must not be null. if aSrcOrigin is null, the parsing will not
   // support 'src' as valid allow directive value.
+<<<<<<< HEAD
   static bool ParseString(const nsAString& aPolicy, nsIDocument* aDocument,
                           nsIPrincipal* aSelfOrigin, nsIPrincipal* aSrcOrigin,
                           nsTArray<Feature>& aParsedFeatures);
+||||||| merged common ancestors
+  static bool
+  ParseString(const nsAString& aPolicy,
+              nsIDocument* aDocument,
+              nsIPrincipal* aSelfOrigin,
+              nsIPrincipal* aSrcOrigin,
+              nsTArray<Feature>& aParsedFeatures);
+=======
+  static bool ParseString(const nsAString& aPolicy, Document* aDocument,
+                          nsIPrincipal* aSelfOrigin, nsIPrincipal* aSrcOrigin,
+                          nsTArray<Feature>& aParsedFeatures);
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

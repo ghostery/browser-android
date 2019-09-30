@@ -12,11 +12,20 @@
 #include "nsCOMPtr.h"
 #include "nsIDOMEventListener.h"
 #include "nsIObserver.h"
+<<<<<<< HEAD
 
 class nsIDocument;
 class nsIPresShell;
+||||||| merged common ancestors
+#include "nsWeakPtr.h"
+
+class nsIDocument;
+class nsIPresShell;
+=======
+>>>>>>> upstream-releases
 
 namespace mozilla {
+class PresShell;
 namespace dom {
 class EventTarget;
 }  // namespace dom
@@ -34,17 +43,34 @@ class ZoomConstraintsClient final : public nsIDOMEventListener,
  private:
   ~ZoomConstraintsClient();
 
+<<<<<<< HEAD
  public:
   void Init(nsIPresShell* aPresShell, nsIDocument* aDocument);
+||||||| merged common ancestors
+public:
+  void Init(nsIPresShell* aPresShell, nsIDocument *aDocument);
+=======
+ public:
+  void Init(mozilla::PresShell* aPresShell, mozilla::dom::Document* aDocument);
+>>>>>>> upstream-releases
   void Destroy();
   void ScreenSizeChanged();
 
  private:
   void RefreshZoomConstraints();
 
+<<<<<<< HEAD
   nsCOMPtr<nsIDocument> mDocument;
   // raw ref since the presShell owns this
   nsIPresShell* MOZ_NON_OWNING_REF mPresShell;
+||||||| merged common ancestors
+  nsCOMPtr<nsIDocument> mDocument;
+  nsIPresShell* MOZ_NON_OWNING_REF mPresShell; // raw ref since the presShell owns this
+=======
+  RefPtr<mozilla::dom::Document> mDocument;
+  // raw ref since the presShell owns this
+  mozilla::PresShell* MOZ_NON_OWNING_REF mPresShell;
+>>>>>>> upstream-releases
   nsCOMPtr<mozilla::dom::EventTarget> mEventTarget;
   mozilla::Maybe<mozilla::layers::ScrollableLayerGuid> mGuid;
 };

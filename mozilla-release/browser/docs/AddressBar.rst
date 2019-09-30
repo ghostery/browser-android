@@ -34,47 +34,70 @@ The *Address Bar* is implemented as a *Model-View-Controller* (MVC) system. One 
 the scopes of this architecture is to allow easy replacement of its components,
 for easier experimentation.
 
-Each search is represented by a unique object, the *QueryContext*. This object,
-created by the *View*, describes the search and is passed through all of the
-components, along the way it gets augmented with additional information.
-The *QueryContext* is passed to the *Controller*, and finally to the *Model*.
-The model appends matches to a property of *QueryContext* in chunks, it sorts
-them through a *Muxer* and then notifies the *Controller*.
+Each search is represented by a unique object, the *UrlbarQueryContext*. This
+object, created by the *View*, describes the search and is passed through all of
+the components, along the way it gets augmented with additional information.
+The *UrlbarQueryContext* is passed to the *Controller*, and finally to the
+*Model*.  The model appends results to a property of *UrlbarQueryContext* in
+chunks, it sorts them through a *Muxer* and then notifies the *Controller*.
 
 See the specific components below, for additional details about each one's tasks
 and responsibilities.
 
 
-The QueryContext
-================
+The UrlbarQueryContext
+======================
 
-The *QueryContext* object describes a single instance of a search.
+The *UrlbarQueryContext* object describes a single instance of a search.
 It is augmented as it progresses through the system, with various information:
 
 .. highlight:: JavaScript
 .. code::
 
-  QueryContext {
-    searchString; // {string} The user typed string.
-    lastKey; // {string} The last key pressed by the user. This can affect the
-             // behavior, for example by not autofilling again when the user
-             // hit backspace.
-    maxResults; // {integer} The maximum number of results requested. The Model
-                // may actually return more results than expected, so that the
-                // View and the Controller can do additional filtering.
+  UrlbarQueryContext {
+    allowAutofill; // {boolean} If true, providers are allowed to return
+                   // autofill results.  Even if true, it's up to providers
+                   // whether to include autofill results, but when false, no
+                   // provider should include them.
     isPrivate; // {boolean} Whether the search started in a private context.
+    maxResults; // {integer} The maximum number of results requested. It is
+                // possible to request more results than the shown ones, and
+                // do additional filtering at the View level.
+    searchString; // {string} The user typed string.
     userContextId; // {integer} The user context ID (containers feature).
 
+<<<<<<< HEAD
     // Optional properties.
     muxer; // Name of a registered muxer. Muxers can be registered through the
            // UrlbarProvidersManager
 
+||||||| merged common ancestors
+=======
+    // Optional properties.
+    muxer; // {string} Name of a registered muxer. Muxers can be registered
+           // through the UrlbarProvidersManager.
+    providers; // {array} List of registered provider names. Providers can be
+               // registered through the UrlbarProvidersManager.
+    sources; // {array} If provided is the list of sources, as defined by
+             // RESULT_SOURCE.*, that can be returned by the model.
+
+>>>>>>> upstream-releases
     // Properties added by the Model.
+    preselected; // {boolean} whether the first result should be preselected.
+    results; // {array} list of UrlbarResult objects.
     tokens; // {array} tokens extracted from the searchString, each token is an
+<<<<<<< HEAD
             // object in the form {type, value}.
     results; // {array} list of UrlbarMatch objects.
     preselected; // {boolean} whether the first match should be preselected.
     autofill; // {boolean} whether the first match is an autofill match.
+||||||| merged common ancestors
+            // object in the form {type, value}.
+=======
+            // object in the form {type, value, lowerCaseValue}.
+    acceptableSources; // {array} list of UrlbarUtils.RESULT_SOURCE that the
+                       // model will accept for this context.
+>>>>>>> upstream-releases
   }
 
 
@@ -92,10 +115,21 @@ startup and can register/unregister providers on the fly.
 It can manage multiple concurrent queries, and tracks them internally as
 separate *Query* objects.
 
+<<<<<<< HEAD
 The *Controller* starts and stops queries through the *UrlbarProvidersManager*.
 It's possible to wait for the promise returned by *startQuery* to know when no
 more matches will be returned, it is not mandatory though.
 Queries can be canceled.
+||||||| merged common ancestors
+The *Controller* starts and stops queries through the *ProvidersManager*. It's
+possible to wait for the promise returned by *startQuery* to know when no more
+matches will be returned, it is not mandatory though. Queries can be canceled.
+=======
+The *Controller* starts and stops queries through the *UrlbarProvidersManager*.
+It's possible to wait for the promise returned by *startQuery* to know when no
+more results will be returned, it is not mandatory though.
+Queries can be canceled.
+>>>>>>> upstream-releases
 
 .. note::
 
@@ -105,7 +139,7 @@ Queries can be canceled.
 
 The *searchString* gets tokenized by the `UrlbarTokenizer <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarTokenizer.jsm>`_
 component into tokens, some of these tokens have a special meaning and can be
-used by the user to restrict the search to specific type of matches (See the
+used by the user to restrict the search to specific result type (See the
 *UrlbarTokenizer::TYPE* enum).
 
 .. caution::
@@ -130,7 +164,7 @@ used by the user to restrict the search to specific type of matches (See the
 UrlbarProvider
 --------------
 
-A provider is specialized into searching and returning matches from different
+A provider is specialized into searching and returning results from different
 information sources. Internal providers are usually implemented in separate
 *jsm* modules with a *UrlbarProvider* name prefix. External providers can be
 registered as *Objects* through the *UrlbarProvidersManager*.
@@ -140,7 +174,7 @@ implementation details may vary deeply among different providers.
 .. important::
 
   Providers are singleton, and must track concurrent searches internally, for
-  example mapping them by QueryContext.
+  example mapping them by UrlbarQueryContext.
 
 .. note::
 
@@ -150,6 +184,7 @@ implementation details may vary deeply among different providers.
 .. highlight:: JavaScript
 .. code::
 
+<<<<<<< HEAD
   UrlbarProvider {
     name; // {string} A simple name to track the provider.
     type; // {integer} One of UrlbarUtils.PROVIDER_TYPE.
@@ -161,20 +196,101 @@ implementation details may vary deeply among different providers.
     async startQuery(QueryContext, AddCallback);
     // Any cleaning/resetting task should happen here.
     cancelQuery(QueryContext);
+||||||| merged common ancestors
+  UrlbarProvider {
+    name; // {string} A simple name to track the provider.
+    type; // {integer} One of UrlbarUtils.PROVIDER_TYPE.
+    // The returned promise should be resolved when the provider is done
+    // searching AND returning matches.
+    // Each new UrlbarMatch should be passed to the AddCallback function.
+    async startQuery(QueryContext, AddCallback);
+    // Any cleaning/resetting task should happen here.
+    cancelQuery(QueryContext);
+=======
+  class UrlbarProvider {
+    /**
+     * Unique name for the provider, used by the context to filter on providers.
+     * Not using a unique name will cause the newest registration to win.
+     * @abstract
+     */
+    get name() {
+      return "UrlbarProviderBase";
+    }
+    /**
+     * The type of the provider, must be one of UrlbarUtils.PROVIDER_TYPE.
+     * @abstract
+     */
+    get type() {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+    /**
+     * Whether this provider should be invoked for the given context.
+     * If this method returns false, the providers manager won't start a query
+     * with this provider, to save on resources.
+     * @param {UrlbarQueryContext} queryContext The query context object
+     * @returns {boolean} Whether this provider should be invoked for the search.
+     * @abstract
+     */
+    isActive(queryContext) {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+    /**
+     * Whether this provider wants to restrict results to just itself.
+     * Other providers won't be invoked, unless this provider doesn't
+     * support the current query.
+     * @param {UrlbarQueryContext} queryContext The query context object
+     * @returns {boolean} Whether this provider wants to restrict results.
+     * @abstract
+     */
+    isRestricting(queryContext) {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+    /**
+     * Starts querying.
+     * @param {UrlbarQueryContext} queryContext The query context object
+     * @param {function} addCallback Callback invoked by the provider to add a new
+     *        result. A UrlbarResult should be passed to it.
+     * @note Extended classes should return a Promise resolved when the provider
+     *       is done searching AND returning results.
+     * @abstract
+     */
+    startQuery(queryContext, addCallback) {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+    /**
+     * Cancels a running query,
+     * @param {UrlbarQueryContext} queryContext The query context object to cancel
+     *        query for.
+     * @abstract
+     */
+    cancelQuery(queryContext) {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+>>>>>>> upstream-releases
   }
 
 UrlbarMuxer
 -----------
 
+<<<<<<< HEAD
 The *Muxer* is responsible for sorting matches based on their importance and
 additional rules that depend on the QueryContext. The muxer to use is indicated
 by the QueryContext.muxer property.
+||||||| merged common ancestors
+The *Muxer* is responsible for sorting matches based on their importance and
+additional rules that depend on the QueryContext.
+=======
+The *Muxer* is responsible for sorting results based on their importance and
+additional rules that depend on the UrlbarQueryContext. The muxer to use is
+indicated by the UrlbarQueryContext.muxer property.
+>>>>>>> upstream-releases
 
-.. caution
+.. caution::
 
   The Muxer is a replaceable component, as such what is described here is a
   reference for the default View, but may not be valid for other implementations.
 
+<<<<<<< HEAD
 .. highlight:: JavaScript
 .. code:
 
@@ -183,6 +299,31 @@ by the QueryContext.muxer property.
     // Invoked by the ProvidersManager to sort matches.
     sort(queryContext);
   }
+||||||| merged common ancestors
+*Content to be written*
+=======
+.. highlight:: JavaScript
+.. code::
+
+  class UrlbarMuxer {
+    /**
+     * Unique name for the muxer, used by the context to sort results.
+     * Not using a unique name will cause the newest registration to win.
+     * @abstract
+     */
+    get name() {
+      return "UrlbarMuxerBase";
+    }
+    /**
+     * Sorts UrlbarQueryContext results in-place.
+     * @param {UrlbarQueryContext} queryContext the context to sort results for.
+     * @abstract
+     */
+    sort(queryContext) {
+      throw new Error("Trying to access the base class, must be overridden");
+    }
+  }
+>>>>>>> upstream-releases
 
 
 The Controller
@@ -198,19 +339,19 @@ View (e.g. showing/hiding a panel). It is also responsible for reporting Telemet
   Each *View* has a different *Controller* instance.
 
 .. highlight:: JavaScript
-.. code:
+.. code::
 
   UrlbarController {
-    async startQuery(QueryContext);
+    async startQuery(queryContext);
     cancelQuery(queryContext);
-    // Invoked by the ProvidersManager when matches are available.
+    // Invoked by the ProvidersManager when results are available.
     receiveResults(queryContext);
-    // Used by the View to listen for matches.
+    // Used by the View to listen for results.
     addQueryListener(listener);
     removeQueryListener(listener);
-    // Used to indicate the View context changed, as such any cached information
-    // should be reset.
-    tabContextChanged();
+    // Used to indicate the View context changed, so that cached information
+    // about the latest search is no more relevant and can be dropped.
+    viewContextChanged();
   }
 
 
@@ -226,7 +367,7 @@ user and handling their input.
   reference for the default View, but may not be valid for other implementations.
 
 `UrlbarInput.jsm <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarInput.jsm>`_
-----------------
+-------------------------------------------------------------------------------------------------------------
 
 Implements an input box *View*, owns an *UrlbarView*.
 
@@ -243,8 +384,8 @@ Implements an input box *View*, owns an *UrlbarView*.
     // Manage view visibility.
     closePopup();
     openResults();
-    // Converts an internal URI (e.g. a wyciwyg URI) into one which we can
-    // expose to the user.
+    // Converts an internal URI (e.g. a URI with a username or password) into
+    // one which we can expose to the user.
     makeURIReadable(uri);
     // Handles an event which would cause a url or text to be opened.
     handleCommand();
@@ -277,7 +418,7 @@ Implements an input box *View*, owns an *UrlbarView*.
   }
 
 `UrlbarView.jsm <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarView.jsm>`_
----------------
+-----------------------------------------------------------------------------------------------------------
 
 Represents the base *View* implementation, communicates with the *Controller*.
 
@@ -290,30 +431,44 @@ Represents the base *View* implementation, communicates with the *Controller*.
     close();
     // Invoked when the query starts.
     onQueryStarted(queryContext);
-    // Invoked when new matches are available.
+    // Invoked when new results are available.
     onQueryResults(queryContext);
+<<<<<<< HEAD
     // Invoked when the query has been canceled.
     onQueryCancelled(queryContext);
     // Invoked when the query is done.
     onQueryFinished(queryContext);
+||||||| merged common ancestors
+=======
+    // Invoked when the query has been canceled.
+    onQueryCancelled(queryContext);
+    // Invoked when the query is done. This is invoked in any case, even if the
+    // query was canceled earlier.
+    onQueryFinished(queryContext);
+    // Invoked when the view context changed, so that cached information about
+    // the latest search is no more relevant and can be dropped.
+    onViewContextChanged();
+>>>>>>> upstream-releases
   }
 
-UrlbarMatch
-===========
 
-An `UrlbarMatch <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarMatch.jsm>`_
-instance represents a single match (search result) with a match type, that
+UrlbarResult
+============
+
+An `UrlbarResult <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarResult.jsm>`_
+instance represents a single search result with a result type, that
 identifies specific kind of results.
 Each kind has its own properties, that the *View* may support, and a few common
-properties, supported by all of the matches.
+properties, supported by all of the results.
 
 .. note::
 
-  Match types are also enumerated by *UrlbarUtils.MATCH_TYPE*.
+  Result types are also enumerated by *UrlbarUtils.RESULT_TYPE*.
 
 .. highlight:: JavaScript
 .. code::
 
+<<<<<<< HEAD
   UrlbarMatch {
     constructor(matchType, payload);
 
@@ -322,8 +477,32 @@ properties, supported by all of the matches.
     title: {string} A title that may be used as a label for this match.
     icon: {string} Url of an icon for this match.
     payload: {object} Object containing properties for the specific MATCH_TYPE.
+||||||| merged common ancestors
+  UrlbarMatch {
+    constructor(matchType, payload);
+
+    // Common properties:
+    url: {string} The url pointed by this match.
+    title: {string} A title that may be used as a label for this match.
+=======
+  UrlbarResult {
+    constructor(resultType, payload);
+
+    type: {integer} One of UrlbarUtils.RESULT_TYPE.
+    source: {integer} One of UrlbarUtils.RESULT_SOURCE.
+    title: {string} A title that may be used as a label for this result.
+    icon: {string} Url of an icon for this result.
+    payload: {object} Object containing properties for the specific RESULT_TYPE.
+    autofill: {object} An object describing the text that should be
+              autofilled in the input when the result is selected, if any.
+    autofill.value: {string} The autofill value.
+    autofill.selectionStart: {integer} The first index in the autofill
+                             selection.
+    autofill.selectionEnd: {integer} The last index in the autofill selection.
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
 The following MATCH_TYPEs are supported:
 
 .. highlight:: JavaScript
@@ -341,6 +520,27 @@ The following MATCH_TYPEs are supported:
     OMNIBOX: 5,
     // Payload: { icon, url, device, title }
     REMOTE_TAB: 6,
+||||||| merged common ancestors
+=======
+The following RESULT_TYPEs are supported:
+
+.. highlight:: JavaScript
+.. code::
+
+    // Payload: { icon, url, userContextId }
+    TAB_SWITCH: 1,
+    // Payload: { icon, suggestion, keyword, query, keywordOffer }
+    SEARCH: 2,
+    // Payload: { icon, url, title, tags }
+    URL: 3,
+    // Payload: { icon, url, keyword, postData }
+    KEYWORD: 4,
+    // Payload: { icon, keyword, title, content }
+    OMNIBOX: 5,
+    // Payload: { icon, url, device, title }
+    REMOTE_TAB: 6,
+
+>>>>>>> upstream-releases
 
 Shared Modules
 ==============
@@ -348,7 +548,7 @@ Shared Modules
 Various modules provide shared utilities to the other components:
 
 `UrlbarPrefs.jsm <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarPrefs.jsm>`_
-----------------
+-------------------------------------------------------------------------------------------------------------
 
 Implements a Map-like storage or urlbar related preferences. The values are kept
 up-to-date.
@@ -365,7 +565,7 @@ up-to-date.
   Newly added preferences should always be properly documented in UrlbarPrefs.
 
 `UrlbarUtils.jsm <https://dxr.mozilla.org/mozilla-central/source/browser/components/urlbar/UrlbarUtils.jsm>`_
-----------------
+-------------------------------------------------------------------------------------------------------------
 
 Includes shared utils and constants shared across all the components.
 

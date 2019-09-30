@@ -47,43 +47,96 @@ class StatementClassInfo : public nsIClassInfo {
   NS_DECL_ISUPPORTS_INHERITED
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetInterfaces(uint32_t *_count, nsIID ***_array) override {
     return NS_CI_INTERFACE_GETTER_NAME(Statement)(_count, _array);
+||||||| merged common ancestors
+  GetInterfaces(uint32_t *_count, nsIID ***_array) override
+  {
+    return NS_CI_INTERFACE_GETTER_NAME(Statement)(_count, _array);
+=======
+  GetInterfaces(nsTArray<nsIID>& _array) override {
+    return NS_CI_INTERFACE_GETTER_NAME(Statement)(_array);
+>>>>>>> upstream-releases
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetScriptableHelper(nsIXPCScriptable **_helper) override {
+||||||| merged common ancestors
+  GetScriptableHelper(nsIXPCScriptable **_helper) override
+  {
+=======
+  GetScriptableHelper(nsIXPCScriptable** _helper) override {
+>>>>>>> upstream-releases
     static StatementJSHelper sJSHelper;
     *_helper = &sJSHelper;
     return NS_OK;
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetContractID(nsACString &aContractID) override {
+||||||| merged common ancestors
+  GetContractID(nsACString& aContractID) override
+  {
+=======
+  GetContractID(nsACString& aContractID) override {
+>>>>>>> upstream-releases
     aContractID.SetIsVoid(true);
     return NS_OK;
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetClassDescription(nsACString &aDesc) override {
+||||||| merged common ancestors
+  GetClassDescription(nsACString& aDesc) override
+  {
+=======
+  GetClassDescription(nsACString& aDesc) override {
+>>>>>>> upstream-releases
     aDesc.SetIsVoid(true);
     return NS_OK;
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetClassID(nsCID **_id) override {
+||||||| merged common ancestors
+  GetClassID(nsCID **_id) override
+  {
+=======
+  GetClassID(nsCID** _id) override {
+>>>>>>> upstream-releases
     *_id = nullptr;
     return NS_OK;
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetFlags(uint32_t *_flags) override {
+||||||| merged common ancestors
+  GetFlags(uint32_t *_flags) override
+  {
+=======
+  GetFlags(uint32_t* _flags) override {
+>>>>>>> upstream-releases
     *_flags = 0;
     return NS_OK;
   }
 
   NS_IMETHOD
+<<<<<<< HEAD
   GetClassIDNoAlloc(nsCID *_cid) override { return NS_ERROR_NOT_AVAILABLE; }
+||||||| merged common ancestors
+  GetClassIDNoAlloc(nsCID *_cid) override
+  {
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+=======
+  GetClassIDNoAlloc(nsCID* _cid) override { return NS_ERROR_NOT_AVAILABLE; }
+>>>>>>> upstream-releases
 };
 
 NS_IMETHODIMP_(MozExternalRefCountType) StatementClassInfo::AddRef() {
@@ -100,6 +153,7 @@ static StatementClassInfo sStatementClassInfo;
 //// Statement
 
 Statement::Statement()
+<<<<<<< HEAD
     : StorageBaseStatementInternal(),
       mDBStatement(nullptr),
       mParamCount(0),
@@ -110,6 +164,33 @@ Statement::Statement()
 nsresult Statement::initialize(Connection *aDBConnection,
                                sqlite3 *aNativeConnection,
                                const nsACString &aSQLStatement) {
+||||||| merged common ancestors
+: StorageBaseStatementInternal()
+, mDBStatement(nullptr)
+, mParamCount(0)
+, mResultColumnCount(0)
+, mColumnNames()
+, mExecuting(false)
+{
+}
+
+nsresult
+Statement::initialize(Connection *aDBConnection,
+                      sqlite3 *aNativeConnection,
+                      const nsACString &aSQLStatement)
+{
+=======
+    : StorageBaseStatementInternal(),
+      mDBStatement(nullptr),
+      mParamCount(0),
+      mResultColumnCount(0),
+      mColumnNames(),
+      mExecuting(false) {}
+
+nsresult Statement::initialize(Connection* aDBConnection,
+                               sqlite3* aNativeConnection,
+                               const nsACString& aSQLStatement) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDBConnection, "No database connection given!");
   MOZ_ASSERT(aDBConnection->isConnectionReadyOnThisThread(),
              "Database connection should be valid");
@@ -139,8 +220,16 @@ nsresult Statement::initialize(Connection *aDBConnection,
 
   nsCString *columnNames = mColumnNames.AppendElements(mResultColumnCount);
   for (uint32_t i = 0; i < mResultColumnCount; i++) {
+<<<<<<< HEAD
     const char *name = ::sqlite3_column_name(mDBStatement, i);
     columnNames[i].Assign(name);
+||||||| merged common ancestors
+      const char *name = ::sqlite3_column_name(mDBStatement, i);
+      columnNames[i].Assign(name);
+=======
+    const char* name = ::sqlite3_column_name(mDBStatement, i);
+    columnNames[i].Assign(name);
+>>>>>>> upstream-releases
   }
 
 #ifdef DEBUG
@@ -182,7 +271,15 @@ nsresult Statement::initialize(Connection *aDBConnection,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 mozIStorageBindingParams *Statement::getParams() {
+||||||| merged common ancestors
+mozIStorageBindingParams *
+Statement::getParams()
+{
+=======
+mozIStorageBindingParams* Statement::getParams() {
+>>>>>>> upstream-releases
   nsresult rv;
 
   // If we do not have an array object yet, make it.
@@ -191,7 +288,7 @@ mozIStorageBindingParams *Statement::getParams() {
     rv = NewBindingParamsArray(getter_AddRefs(array));
     NS_ENSURE_SUCCESS(rv, nullptr);
 
-    mParamsArray = static_cast<BindingParamsArray *>(array.get());
+    mParamsArray = static_cast<BindingParamsArray*>(array.get());
   }
 
   // If there isn't already any rows added, we'll have to add one to use.
@@ -230,17 +327,46 @@ NS_INTERFACE_MAP_BEGIN(Statement)
   NS_INTERFACE_MAP_ENTRY(mozIStorageValueArray)
   NS_INTERFACE_MAP_ENTRY(mozilla::storage::StorageBaseStatementInternal)
   if (aIID.Equals(NS_GET_IID(nsIClassInfo))) {
+<<<<<<< HEAD
     foundInterface = static_cast<nsIClassInfo *>(&sStatementClassInfo);
   } else
     NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageStatement)
+||||||| merged common ancestors
+    foundInterface = static_cast<nsIClassInfo *>(&sStatementClassInfo);
+  }
+  else
+  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageStatement)
+=======
+    foundInterface = static_cast<nsIClassInfo*>(&sStatementClassInfo);
+  } else
+    NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, mozIStorageStatement)
+>>>>>>> upstream-releases
 NS_INTERFACE_MAP_END
 
 ////////////////////////////////////////////////////////////////////////////////
 //// StorageBaseStatementInternal
 
+<<<<<<< HEAD
 Connection *Statement::getOwner() { return mDBConnection; }
+||||||| merged common ancestors
+Connection *
+Statement::getOwner()
+{
+  return mDBConnection;
+}
+=======
+Connection* Statement::getOwner() { return mDBConnection; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 int Statement::getAsyncStatement(sqlite3_stmt **_stmt) {
+||||||| merged common ancestors
+int
+Statement::getAsyncStatement(sqlite3_stmt **_stmt)
+{
+=======
+int Statement::getAsyncStatement(sqlite3_stmt** _stmt) {
+>>>>>>> upstream-releases
   // If we have no statement, we shouldn't be calling this method!
   NS_ASSERTION(mDBStatement != nullptr, "We have no statement to clone!");
 
@@ -262,10 +388,21 @@ int Statement::getAsyncStatement(sqlite3_stmt **_stmt) {
   return SQLITE_OK;
 }
 
+<<<<<<< HEAD
 nsresult Statement::getAsynchronousStatementData(StatementData &_data) {
   if (!mDBStatement) return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+nsresult
+Statement::getAsynchronousStatementData(StatementData &_data)
+{
+  if (!mDBStatement)
+    return NS_ERROR_UNEXPECTED;
+=======
+nsresult Statement::getAsynchronousStatementData(StatementData& _data) {
+  if (!mDBStatement) return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 
-  sqlite3_stmt *stmt;
+  sqlite3_stmt* stmt;
   int rc = getAsyncStatement(&stmt);
   if (rc != SQLITE_OK) return convertResultCode(rc);
 
@@ -274,8 +411,17 @@ nsresult Statement::getAsynchronousStatementData(StatementData &_data) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 already_AddRefed<mozIStorageBindingParams> Statement::newBindingParams(
     mozIStorageBindingParamsArray *aOwner) {
+||||||| merged common ancestors
+already_AddRefed<mozIStorageBindingParams>
+Statement::newBindingParams(mozIStorageBindingParamsArray *aOwner)
+{
+=======
+already_AddRefed<mozIStorageBindingParams> Statement::newBindingParams(
+    mozIStorageBindingParamsArray* aOwner) {
+>>>>>>> upstream-releases
   nsCOMPtr<mozIStorageBindingParams> params = new BindingParams(aOwner, this);
   return params.forget();
 }
@@ -287,7 +433,14 @@ already_AddRefed<mozIStorageBindingParams> Statement::newBindingParams(
 MIXIN_IMPL_STORAGEBASESTATEMENTINTERNAL(Statement, (void)0;)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::Clone(mozIStorageStatement **_statement) {
+||||||| merged common ancestors
+Statement::Clone(mozIStorageStatement **_statement)
+{
+=======
+Statement::Clone(mozIStorageStatement** _statement) {
+>>>>>>> upstream-releases
   RefPtr<Statement> statement(new Statement());
   NS_ENSURE_TRUE(statement, NS_ERROR_OUT_OF_MEMORY);
 
@@ -365,20 +518,49 @@ nsresult Statement::internalFinalize(bool aDestructing) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetParameterCount(uint32_t *_parameterCount) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetParameterCount(uint32_t *_parameterCount)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetParameterCount(uint32_t* _parameterCount) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   *_parameterCount = mParamCount;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetParameterName(uint32_t aParamIndex, nsACString &_name) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetParameterName(uint32_t aParamIndex,
+                            nsACString &_name)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetParameterName(uint32_t aParamIndex, nsACString& _name) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
   ENSURE_INDEX_VALUE(aParamIndex, mParamCount);
 
+<<<<<<< HEAD
   const char *name =
       ::sqlite3_bind_parameter_name(mDBStatement, aParamIndex + 1);
+||||||| merged common ancestors
+  const char *name = ::sqlite3_bind_parameter_name(mDBStatement,
+                                                   aParamIndex + 1);
+=======
+  const char* name =
+      ::sqlite3_bind_parameter_name(mDBStatement, aParamIndex + 1);
+>>>>>>> upstream-releases
   if (name == nullptr) {
     // this thing had no name, so fake one
     nsAutoCString fakeName(":");
@@ -392,8 +574,19 @@ Statement::GetParameterName(uint32_t aParamIndex, nsACString &_name) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetParameterIndex(const nsACString &aName, uint32_t *_index) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetParameterIndex(const nsACString &aName,
+                             uint32_t *_index)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetParameterIndex(const nsACString& aName, uint32_t* _index) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   // We do not accept any forms of names other than ":name", but we need to add
   // the colon for SQLite.
@@ -409,27 +602,59 @@ Statement::GetParameterIndex(const nsACString &aName, uint32_t *_index) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetColumnCount(uint32_t *_columnCount) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetColumnCount(uint32_t *_columnCount)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetColumnCount(uint32_t* _columnCount) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   *_columnCount = mResultColumnCount;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetColumnName(uint32_t aColumnIndex, nsACString &_name) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetColumnName(uint32_t aColumnIndex,
+                         nsACString &_name)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetColumnName(uint32_t aColumnIndex, nsACString& _name) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
   ENSURE_INDEX_VALUE(aColumnIndex, mResultColumnCount);
 
-  const char *cname = ::sqlite3_column_name(mDBStatement, aColumnIndex);
+  const char* cname = ::sqlite3_column_name(mDBStatement, aColumnIndex);
   _name.Assign(nsDependentCString(cname));
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetColumnIndex(const nsACString &aName, uint32_t *_index) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetColumnIndex(const nsACString &aName,
+                          uint32_t *_index)
+{
+  if (!mDBStatement)
+      return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetColumnIndex(const nsACString& aName, uint32_t* _index) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   // Surprisingly enough, SQLite doesn't provide an API for this.  We have to
   // determine it ourselves sadly.
@@ -464,13 +689,29 @@ Statement::Reset() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::BindParameters(mozIStorageBindingParamsArray *aParameters) {
+||||||| merged common ancestors
+Statement::BindParameters(mozIStorageBindingParamsArray *aParameters)
+{
+=======
+Statement::BindParameters(mozIStorageBindingParamsArray* aParameters) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aParameters);
 
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
 
+<<<<<<< HEAD
   BindingParamsArray *array = static_cast<BindingParamsArray *>(aParameters);
   if (array->getOwner() != this) return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+  BindingParamsArray *array = static_cast<BindingParamsArray *>(aParameters);
+  if (array->getOwner() != this)
+    return NS_ERROR_UNEXPECTED;
+=======
+  BindingParamsArray* array = static_cast<BindingParamsArray*>(aParameters);
+  if (array->getOwner() != this) return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 
   if (array->length() == 0) return NS_ERROR_UNEXPECTED;
 
@@ -492,7 +733,14 @@ Statement::Execute() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::ExecuteStep(bool *_moreResults) {
+||||||| merged common ancestors
+Statement::ExecuteStep(bool *_moreResults)
+{
+=======
+Statement::ExecuteStep(bool* _moreResults) {
+>>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("Statement::ExecuteStep", OTHER);
 
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
@@ -549,7 +797,14 @@ Statement::ExecuteStep(bool *_moreResults) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetState(int32_t *_state) {
+||||||| merged common ancestors
+Statement::GetState(int32_t *_state)
+{
+=======
+Statement::GetState(int32_t* _state) {
+>>>>>>> upstream-releases
   if (!mDBStatement)
     *_state = MOZ_STORAGE_STATEMENT_INVALID;
   else if (mExecuting)
@@ -564,14 +819,32 @@ Statement::GetState(int32_t *_state) {
 //// mozIStorageValueArray (now part of mozIStorageStatement too)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetNumEntries(uint32_t *_length) {
+||||||| merged common ancestors
+Statement::GetNumEntries(uint32_t *_length)
+{
+=======
+Statement::GetNumEntries(uint32_t* _length) {
+>>>>>>> upstream-releases
   *_length = mResultColumnCount;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetTypeOfIndex(uint32_t aIndex, int32_t *_type) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetTypeOfIndex(uint32_t aIndex,
+                          int32_t *_type)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetTypeOfIndex(uint32_t aIndex, int32_t* _type) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
 
@@ -602,8 +875,19 @@ Statement::GetTypeOfIndex(uint32_t aIndex, int32_t *_type) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetInt32(uint32_t aIndex, int32_t *_value) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetInt32(uint32_t aIndex,
+                    int32_t *_value)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetInt32(uint32_t aIndex, int32_t* _value) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
 
@@ -614,8 +898,19 @@ Statement::GetInt32(uint32_t aIndex, int32_t *_value) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetInt64(uint32_t aIndex, int64_t *_value) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetInt64(uint32_t aIndex,
+                    int64_t *_value)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetInt64(uint32_t aIndex, int64_t* _value) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
 
@@ -627,8 +922,19 @@ Statement::GetInt64(uint32_t aIndex, int64_t *_value) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetDouble(uint32_t aIndex, double *_value) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetDouble(uint32_t aIndex,
+                     double *_value)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetDouble(uint32_t aIndex, double* _value) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
 
@@ -640,7 +946,15 @@ Statement::GetDouble(uint32_t aIndex, double *_value) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetUTF8String(uint32_t aIndex, nsACString &_value) {
+||||||| merged common ancestors
+Statement::GetUTF8String(uint32_t aIndex,
+                         nsACString &_value)
+{
+=======
+Statement::GetUTF8String(uint32_t aIndex, nsACString& _value) {
+>>>>>>> upstream-releases
   // Get type of Index will check aIndex for us, so we don't have to.
   int32_t type;
   nsresult rv = GetTypeOfIndex(aIndex, &type);
@@ -649,16 +963,36 @@ Statement::GetUTF8String(uint32_t aIndex, nsACString &_value) {
     // NULL columns should have IsVoid set to distinguish them from the empty
     // string.
     _value.SetIsVoid(true);
+<<<<<<< HEAD
   } else {
     const char *value = reinterpret_cast<const char *>(
         ::sqlite3_column_text(mDBStatement, aIndex));
+||||||| merged common ancestors
+  }
+  else {
+    const char *value =
+      reinterpret_cast<const char *>(::sqlite3_column_text(mDBStatement,
+                                                           aIndex));
+=======
+  } else {
+    const char* value = reinterpret_cast<const char*>(
+        ::sqlite3_column_text(mDBStatement, aIndex));
+>>>>>>> upstream-releases
     _value.Assign(value, ::sqlite3_column_bytes(mDBStatement, aIndex));
   }
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetString(uint32_t aIndex, nsAString &_value) {
+||||||| merged common ancestors
+Statement::GetString(uint32_t aIndex,
+                     nsAString &_value)
+{
+=======
+Statement::GetString(uint32_t aIndex, nsAString& _value) {
+>>>>>>> upstream-releases
   // Get type of Index will check aIndex for us, so we don't have to.
   int32_t type;
   nsresult rv = GetTypeOfIndex(aIndex, &type);
@@ -668,73 +1002,224 @@ Statement::GetString(uint32_t aIndex, nsAString &_value) {
     // string.
     _value.SetIsVoid(true);
   } else {
+<<<<<<< HEAD
     const char16_t *value = static_cast<const char16_t *>(
         ::sqlite3_column_text16(mDBStatement, aIndex));
     _value.Assign(value, ::sqlite3_column_bytes16(mDBStatement, aIndex) / 2);
+||||||| merged common ancestors
+    const char16_t *value =
+      static_cast<const char16_t *>(::sqlite3_column_text16(mDBStatement,
+                                                             aIndex));
+    _value.Assign(value, ::sqlite3_column_bytes16(mDBStatement, aIndex) / 2);
+=======
+    const char16_t* value = static_cast<const char16_t*>(
+        ::sqlite3_column_text16(mDBStatement, aIndex));
+    _value.Assign(value, ::sqlite3_column_bytes16(mDBStatement, aIndex) /
+                             sizeof(char16_t));
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetBlob(uint32_t aIndex, uint32_t *_size, uint8_t **_blob) {
   if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+Statement::GetBlob(uint32_t aIndex,
+                   uint32_t *_size,
+                   uint8_t **_blob)
+{
+  if (!mDBStatement)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+Statement::GetVariant(uint32_t aIndex, nsIVariant** _value) {
+  if (!mDBStatement) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
+
+  if (!mExecuting) {
+    return NS_ERROR_UNEXPECTED;
+  }
+
+  nsCOMPtr<nsIVariant> variant;
+  int type = ::sqlite3_column_type(mDBStatement, aIndex);
+  switch (type) {
+    case SQLITE_INTEGER:
+      variant =
+          new IntegerVariant(::sqlite3_column_int64(mDBStatement, aIndex));
+      break;
+    case SQLITE_FLOAT:
+      variant = new FloatVariant(::sqlite3_column_double(mDBStatement, aIndex));
+      break;
+    case SQLITE_TEXT: {
+      const char16_t* value = static_cast<const char16_t*>(
+          ::sqlite3_column_text16(mDBStatement, aIndex));
+      nsDependentString str(
+          value,
+          ::sqlite3_column_bytes16(mDBStatement, aIndex) / sizeof(char16_t));
+      variant = new TextVariant(str);
+      break;
+    }
+    case SQLITE_NULL:
+      variant = new NullVariant();
+      break;
+    case SQLITE_BLOB: {
+      int size = ::sqlite3_column_bytes(mDBStatement, aIndex);
+      const void* data = ::sqlite3_column_blob(mDBStatement, aIndex);
+      variant = new BlobVariant(std::pair<const void*, int>(data, size));
+      break;
+    }
+  }
+  NS_ENSURE_TRUE(variant, NS_ERROR_UNEXPECTED);
+
+  variant.forget(_value);
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+Statement::GetBlob(uint32_t aIndex, uint32_t* _size, uint8_t** _blob) {
+  if (!mDBStatement) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   ENSURE_INDEX_VALUE(aIndex, mResultColumnCount);
 
   if (!mExecuting) return NS_ERROR_UNEXPECTED;
 
   int size = ::sqlite3_column_bytes(mDBStatement, aIndex);
-  void *blob = nullptr;
+  void* blob = nullptr;
   if (size) {
     blob = moz_xmemdup(::sqlite3_column_blob(mDBStatement, aIndex), size);
   }
 
-  *_blob = static_cast<uint8_t *>(blob);
+  *_blob = static_cast<uint8_t*>(blob);
   *_size = size;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetBlobAsString(uint32_t aIndex, nsAString &aValue) {
+||||||| merged common ancestors
+Statement::GetBlobAsString(uint32_t aIndex, nsAString& aValue)
+{
+=======
+Statement::GetBlobAsString(uint32_t aIndex, nsAString& aValue) {
+>>>>>>> upstream-releases
   return DoGetBlobAsString(this, aIndex, aValue);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetBlobAsUTF8String(uint32_t aIndex, nsACString &aValue) {
+||||||| merged common ancestors
+Statement::GetBlobAsUTF8String(uint32_t aIndex, nsACString& aValue)
+{
+=======
+Statement::GetBlobAsUTF8String(uint32_t aIndex, nsACString& aValue) {
+>>>>>>> upstream-releases
   return DoGetBlobAsString(this, aIndex, aValue);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetSharedUTF8String(uint32_t aIndex, uint32_t *_length,
                                const char **_value) {
   if (_length) *_length = ::sqlite3_column_bytes(mDBStatement, aIndex);
 
   *_value = reinterpret_cast<const char *>(
       ::sqlite3_column_text(mDBStatement, aIndex));
+||||||| merged common ancestors
+Statement::GetSharedUTF8String(uint32_t aIndex,
+                               uint32_t *_length,
+                               const char **_value)
+{
+  if (_length)
+    *_length = ::sqlite3_column_bytes(mDBStatement, aIndex);
+
+  *_value = reinterpret_cast<const char *>(::sqlite3_column_text(mDBStatement,
+                                                                 aIndex));
+=======
+Statement::GetSharedUTF8String(uint32_t aIndex, uint32_t* _byteLength,
+                               const char** _value) {
+  *_value = reinterpret_cast<const char*>(
+      ::sqlite3_column_text(mDBStatement, aIndex));
+  if (_byteLength) {
+    *_byteLength = ::sqlite3_column_bytes(mDBStatement, aIndex);
+  }
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetSharedString(uint32_t aIndex, uint32_t *_length,
                            const char16_t **_value) {
   if (_length) *_length = ::sqlite3_column_bytes16(mDBStatement, aIndex);
 
   *_value = static_cast<const char16_t *>(
       ::sqlite3_column_text16(mDBStatement, aIndex));
+||||||| merged common ancestors
+Statement::GetSharedString(uint32_t aIndex,
+                           uint32_t *_length,
+                           const char16_t **_value)
+{
+  if (_length)
+    *_length = ::sqlite3_column_bytes16(mDBStatement, aIndex);
+
+  *_value = static_cast<const char16_t *>(::sqlite3_column_text16(mDBStatement,
+                                                                   aIndex));
+=======
+Statement::GetSharedString(uint32_t aIndex, uint32_t* _byteLength,
+                           const char16_t** _value) {
+  *_value = static_cast<const char16_t*>(
+      ::sqlite3_column_text16(mDBStatement, aIndex));
+  if (_byteLength) {
+    *_byteLength = ::sqlite3_column_bytes16(mDBStatement, aIndex);
+  }
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetSharedBlob(uint32_t aIndex, uint32_t *_size,
                          const uint8_t **_blob) {
   *_size = ::sqlite3_column_bytes(mDBStatement, aIndex);
   *_blob =
       static_cast<const uint8_t *>(::sqlite3_column_blob(mDBStatement, aIndex));
+||||||| merged common ancestors
+Statement::GetSharedBlob(uint32_t aIndex,
+                         uint32_t *_size,
+                         const uint8_t **_blob)
+{
+  *_size = ::sqlite3_column_bytes(mDBStatement, aIndex);
+  *_blob = static_cast<const uint8_t *>(::sqlite3_column_blob(mDBStatement,
+                                                              aIndex));
+=======
+Statement::GetSharedBlob(uint32_t aIndex, uint32_t* _byteLength,
+                         const uint8_t** _blob) {
+  *_blob =
+      static_cast<const uint8_t*>(::sqlite3_column_blob(mDBStatement, aIndex));
+  if (_byteLength) {
+    *_byteLength = ::sqlite3_column_bytes(mDBStatement, aIndex);
+  }
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Statement::GetIsNull(uint32_t aIndex, bool *_isNull) {
+||||||| merged common ancestors
+Statement::GetIsNull(uint32_t aIndex,
+                     bool *_isNull)
+{
+=======
+Statement::GetIsNull(uint32_t aIndex, bool* _isNull) {
+>>>>>>> upstream-releases
   // Get type of Index will check aIndex for us, so we don't have to.
   int32_t type;
   nsresult rv = GetTypeOfIndex(aIndex, &type);

@@ -31,7 +31,14 @@ class nsBlockOnBackgroundThreadEvent : public Runnable {
   }
 };
 
+<<<<<<< HEAD
 nsDeleteDir *nsDeleteDir::gInstance = nullptr;
+||||||| merged common ancestors
+
+nsDeleteDir * nsDeleteDir::gInstance = nullptr;
+=======
+nsDeleteDir* nsDeleteDir::gInstance = nullptr;
+>>>>>>> upstream-releases
 
 nsDeleteDir::nsDeleteDir()
     : mLock("nsDeleteDir.mLock"),
@@ -69,8 +76,16 @@ nsresult nsDeleteDir::Shutdown(bool finishDeleting) {
       nsCOMPtr<nsITimer> timer = gInstance->mTimers[i - 1];
       gInstance->mTimers.RemoveObjectAt(i - 1);
 
+<<<<<<< HEAD
       nsCOMArray<nsIFile> *arg;
       timer->GetClosure((reinterpret_cast<void **>(&arg)));
+||||||| merged common ancestors
+      nsCOMArray<nsIFile> *arg;
+      timer->GetClosure((reinterpret_cast<void**>(&arg)));
+=======
+      nsCOMArray<nsIFile>* arg;
+      timer->GetClosure((reinterpret_cast<void**>(&arg)));
+>>>>>>> upstream-releases
       timer->Cancel();
 
       if (finishDeleting) dirsToRemove.AppendObjects(*arg);
@@ -133,7 +148,15 @@ void nsDeleteDir::DestroyThread() {
   mThread = nullptr;
 }
 
+<<<<<<< HEAD
 void nsDeleteDir::TimerCallback(nsITimer *aTimer, void *arg) {
+||||||| merged common ancestors
+void
+nsDeleteDir::TimerCallback(nsITimer *aTimer, void *arg)
+{
+=======
+void nsDeleteDir::TimerCallback(nsITimer* aTimer, void* arg) {
+>>>>>>> upstream-releases
   Telemetry::AutoTimer<Telemetry::NETWORK_DISK_CACHE_DELETEDIR> timer;
   {
     MutexAutoLock lock(gInstance->mLock);
@@ -148,7 +171,7 @@ void nsDeleteDir::TimerCallback(nsITimer *aTimer, void *arg) {
   }
 
   nsAutoPtr<nsCOMArray<nsIFile> > dirList;
-  dirList = static_cast<nsCOMArray<nsIFile> *>(arg);
+  dirList = static_cast<nsCOMArray<nsIFile>*>(arg);
 
   bool shuttingDown = false;
 
@@ -169,8 +192,17 @@ void nsDeleteDir::TimerCallback(nsITimer *aTimer, void *arg) {
   }
 }
 
+<<<<<<< HEAD
 nsresult nsDeleteDir::DeleteDir(nsIFile *dirIn, bool moveToTrash,
                                 uint32_t delay) {
+||||||| merged common ancestors
+nsresult
+nsDeleteDir::DeleteDir(nsIFile *dirIn, bool moveToTrash, uint32_t delay)
+{
+=======
+nsresult nsDeleteDir::DeleteDir(nsIFile* dirIn, bool moveToTrash,
+                                uint32_t delay) {
+>>>>>>> upstream-releases
   Telemetry::AutoTimer<Telemetry::NETWORK_DISK_CACHE_TRASHRENAME> timer;
 
   if (!gInstance) return NS_ERROR_NOT_INITIALIZED;
@@ -237,7 +269,15 @@ nsresult nsDeleteDir::DeleteDir(nsIFile *dirIn, bool moveToTrash,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsDeleteDir::GetTrashDir(nsIFile *target, nsCOMPtr<nsIFile> *result) {
+||||||| merged common ancestors
+nsresult
+nsDeleteDir::GetTrashDir(nsIFile *target, nsCOMPtr<nsIFile> *result)
+{
+=======
+nsresult nsDeleteDir::GetTrashDir(nsIFile* target, nsCOMPtr<nsIFile>* result) {
+>>>>>>> upstream-releases
   nsresult rv;
 #if defined(MOZ_WIDGET_ANDROID)
   // Try to use the app cache folder for cache trash on Android
@@ -266,8 +306,19 @@ nsresult nsDeleteDir::GetTrashDir(nsIFile *target, nsCOMPtr<nsIFile> *result) {
   return (*result)->SetNativeLeafName(leaf);
 }
 
+<<<<<<< HEAD
 nsresult nsDeleteDir::RemoveOldTrashes(nsIFile *cacheDir) {
   if (!gInstance) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsresult
+nsDeleteDir::RemoveOldTrashes(nsIFile *cacheDir)
+{
+  if (!gInstance)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsresult nsDeleteDir::RemoveOldTrashes(nsIFile* cacheDir) {
+  if (!gInstance) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -316,7 +367,15 @@ nsresult nsDeleteDir::RemoveOldTrashes(nsIFile *cacheDir) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsDeleteDir::PostTimer(void *arg, uint32_t delay) {
+||||||| merged common ancestors
+nsresult
+nsDeleteDir::PostTimer(void *arg, uint32_t delay)
+{
+=======
+nsresult nsDeleteDir::PostTimer(void* arg, uint32_t delay) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   MutexAutoLock lock(mLock);
@@ -334,7 +393,15 @@ nsresult nsDeleteDir::PostTimer(void *arg, uint32_t delay) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsDeleteDir::RemoveDir(nsIFile *file, bool *stopDeleting) {
+||||||| merged common ancestors
+nsresult
+nsDeleteDir::RemoveDir(nsIFile *file, bool *stopDeleting)
+{
+=======
+nsresult nsDeleteDir::RemoveDir(nsIFile* file, bool* stopDeleting) {
+>>>>>>> upstream-releases
   nsresult rv;
   bool isLink;
 

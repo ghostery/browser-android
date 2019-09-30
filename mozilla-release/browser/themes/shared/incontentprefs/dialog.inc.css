@@ -7,8 +7,8 @@
 window,
 dialog {
   -moz-appearance: none;
-  background-color: #fbfbfb;
-  color: #424e5a;
+  background-color: var(--in-content-page-background);
+  color: var(--in-content-page-color);
   margin: 0;
   padding: 0;
 }
@@ -17,15 +17,37 @@ dialog {
   -moz-box-flex: 1;
 }
 
+<<<<<<< HEAD
 .contentPane,
 dialog > .dialog-content-box {
   /* This allows the focus ring to display fully when scrolling is enabled. */
   padding: 4px;
+||||||| merged common ancestors
+tabpanels {
+  font-size: 1em;
+=======
+.contentPane {
+  /* This allows the focus ring to display fully when scrolling is enabled.
+    Note: dialog.js CE have a matching style for dialog-content-box */
+  padding: 4px;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 .contentPane.doScroll,
 dialog.doScroll > .dialog-content-box {
   overflow-y: auto;
+||||||| merged common ancestors
+tabs,
+label,
+description,
+#useDocumentColors {
+  margin-right: 4px;
+  margin-left: 4px;
+=======
+.contentPane.doScroll {
+  overflow-y: auto;
+>>>>>>> upstream-releases
 }
 
 tree:not(#rejectsTree) {

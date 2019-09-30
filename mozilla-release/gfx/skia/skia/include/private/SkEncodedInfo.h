@@ -129,12 +129,18 @@ public:
                 SkASSERT(8 == bitsPerComponent);
                 break;
             case kRGBA_Color:
-                SkASSERT(kOpaque_Alpha != alpha);
                 SkASSERT(bitsPerComponent >= 8);
                 break;
             case kBGRA_Color:
             case kYUVA_Color:
-                SkASSERT(kOpaque_Alpha != alpha);
+                SkASSERT(8 == bitsPerComponent);
+                break;
+            case kXAlpha_Color:
+                SkASSERT(kUnpremul_Alpha == alpha);
+                SkASSERT(8 == bitsPerComponent);
+                break;
+            case k565_Color:
+                SkASSERT(kOpaque_Alpha == alpha);
                 SkASSERT(8 == bitsPerComponent);
                 break;
             case kXAlpha_Color:
@@ -212,9 +218,29 @@ public:
         }
     }
 
+<<<<<<< HEAD
+    SkEncodedInfo(const SkEncodedInfo& orig) = delete;
+    SkEncodedInfo& operator=(const SkEncodedInfo&) = delete;
+||||||| merged common ancestors
+private:
+=======
     SkEncodedInfo(const SkEncodedInfo& orig) = delete;
     SkEncodedInfo& operator=(const SkEncodedInfo&) = delete;
 
+    SkEncodedInfo(SkEncodedInfo&& orig) = default;
+    SkEncodedInfo& operator=(SkEncodedInfo&&) = default;
+
+    // Explicit copy method, to avoid accidental copying.
+    SkEncodedInfo copy() const {
+        auto copy = SkEncodedInfo::Make(fWidth, fHeight, fColor, fAlpha, fBitsPerComponent);
+        if (fProfile) {
+            copy.fProfile.reset(new ICCProfile(*fProfile.get()));
+        }
+        return copy;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     SkEncodedInfo(SkEncodedInfo&& orig) = default;
     SkEncodedInfo& operator=(SkEncodedInfo&&) = default;
 
@@ -233,6 +259,17 @@ private:
         : fWidth(width)
         , fHeight(height)
         , fColor(color)
+||||||| merged common ancestors
+    SkEncodedInfo(Color color, Alpha alpha, uint8_t bitsPerComponent)
+        : fColor(color)
+=======
+private:
+    SkEncodedInfo(int width, int height, Color color, Alpha alpha,
+            uint8_t bitsPerComponent, std::unique_ptr<ICCProfile> profile)
+        : fWidth(width)
+        , fHeight(height)
+        , fColor(color)
+>>>>>>> upstream-releases
         , fAlpha(alpha)
         , fBitsPerComponent(bitsPerComponent)
         , fProfile(std::move(profile))

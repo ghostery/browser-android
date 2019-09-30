@@ -11,6 +11,8 @@
 #include "mozilla/Likely.h"
 #include "mozilla/MathAlgorithms.h"
 #include "mozilla/IntegerRange.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/PresShellInlines.h"
 #include "mozilla/WritingModes.h"
 
 #include "gfxContext.h"
@@ -35,7 +37,6 @@
 #include "nsCSSRendering.h"
 #include "nsGkAtoms.h"
 #include "nsCSSAnonBoxes.h"
-#include "nsIPresShell.h"
 #include "nsIScriptError.h"
 #include "nsFrameManager.h"
 #include "nsError.h"
@@ -49,9 +50,8 @@
 #include "nsStyleChangeList.h"
 #include <algorithm>
 
-#include "gfxPrefs.h"
 #include "mozilla/layers/StackingContextHelper.h"
-#include "mozilla/layers/WebRenderLayerManager.h"
+#include "mozilla/layers/RenderRootStateManager.h"
 
 using namespace mozilla;
 using namespace mozilla::image;
@@ -69,7 +69,14 @@ using mozilla::gfx::ToDeviceColor;
 namespace mozilla {
 
 struct TableReflowInput {
+<<<<<<< HEAD
   // the real reflow state
+||||||| merged common ancestors
+
+  // the real reflow state
+=======
+  // the real reflow input
+>>>>>>> upstream-releases
   const ReflowInput& reflowInput;
 
   // The table's available size (in reflowInput's writing mode)
@@ -141,7 +148,7 @@ ComputedStyle* nsTableFrame::GetParentComputedStyle(
   // must return whatever our parent would normally have returned.
 
   MOZ_ASSERT(GetParent(), "table constructed without table wrapper");
-  if (!mContent->GetParent() && !Style()->GetPseudo()) {
+  if (!mContent->GetParent() && !Style()->IsPseudoOrAnonBox()) {
     // We're the root.  We have no ComputedStyle parent.
     *aProviderFrame = nullptr;
     return nullptr;
@@ -150,10 +157,24 @@ ComputedStyle* nsTableFrame::GetParentComputedStyle(
   return GetParent()->DoGetParentComputedStyle(aProviderFrame);
 }
 
+<<<<<<< HEAD
 nsTableFrame::nsTableFrame(ComputedStyle* aStyle, ClassID aID)
     : nsContainerFrame(aStyle, aID),
       mCellMap(nullptr),
       mTableLayoutStrategy(nullptr) {
+||||||| merged common ancestors
+nsTableFrame::nsTableFrame(ComputedStyle* aStyle, ClassID aID)
+  : nsContainerFrame(aStyle, aID)
+  , mCellMap(nullptr)
+  , mTableLayoutStrategy(nullptr)
+{
+=======
+nsTableFrame::nsTableFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                           ClassID aID)
+    : nsContainerFrame(aStyle, aPresContext, aID),
+      mCellMap(nullptr),
+      mTableLayoutStrategy(nullptr) {
+>>>>>>> upstream-releases
   memset(&mBits, 0, sizeof(mBits));
 }
 
@@ -169,8 +190,15 @@ void nsTableFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
 
   // see if border collapse is on, if so set it
   const nsStyleTableBorder* tableStyle = StyleTableBorder();
+<<<<<<< HEAD
   bool borderCollapse =
       (NS_STYLE_BORDER_COLLAPSE == tableStyle->mBorderCollapse);
+||||||| merged common ancestors
+  bool borderCollapse = (NS_STYLE_BORDER_COLLAPSE == tableStyle->mBorderCollapse);
+=======
+  bool borderCollapse =
+      (StyleBorderCollapse::Collapse == tableStyle->mBorderCollapse);
+>>>>>>> upstream-releases
   SetBorderCollapse(borderCollapse);
   if (borderCollapse) {
     SetNeedToCalcHasBCBorders(true);
@@ -238,7 +266,16 @@ bool nsTableFrame::PageBreakAfter(nsIFrame* aSourceFrame,
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ void nsTableFrame::RegisterPositionedTablePart(nsIFrame* aFrame) {
+||||||| merged common ancestors
+/* static */ void
+nsTableFrame::RegisterPositionedTablePart(nsIFrame* aFrame)
+{
+=======
+/* static */
+void nsTableFrame::RegisterPositionedTablePart(nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   // Supporting relative positioning for table parts other than table cells has
   // the potential to break sites that apply 'position: relative' to those
   // parts, expecting nothing to happen. We warn at the console to make tracking
@@ -273,8 +310,19 @@ bool nsTableFrame::PageBreakAfter(nsIFrame* aSourceFrame,
   positionedParts->AppendElement(aFrame);
 }
 
+<<<<<<< HEAD
 /* static */ void nsTableFrame::UnregisterPositionedTablePart(
     nsIFrame* aFrame, nsIFrame* aDestructRoot) {
+||||||| merged common ancestors
+/* static */ void
+nsTableFrame::UnregisterPositionedTablePart(nsIFrame* aFrame,
+                                            nsIFrame* aDestructRoot)
+{
+=======
+/* static */
+void nsTableFrame::UnregisterPositionedTablePart(nsIFrame* aFrame,
+                                                 nsIFrame* aDestructRoot) {
+>>>>>>> upstream-releases
   // Retrieve the table frame, and check if we hit aDestructRoot on the way.
   bool didPassThrough;
   nsTableFrame* tableFrame =
@@ -311,6 +359,11 @@ void nsTableFrame::SetInitialChildList(ChildListID aListID,
 
   MOZ_ASSERT(mFrames.IsEmpty() && mColGroups.IsEmpty(),
              "unexpected second call to SetInitialChildList");
+#ifdef DEBUG
+  for (nsIFrame* f : aChildList) {
+    MOZ_ASSERT(f->GetParent() == this, "Unexpected parent");
+  }
+#endif
 
   // XXXbz the below code is an icky cesspit that's only needed in its current
   // form for two reasons:
@@ -357,8 +410,16 @@ void nsTableFrame::RowOrColSpanChanged(nsTableCellFrame* aCellFrame) {
 
       // XXX Should this use eStyleChange?  It currently doesn't need
       // to, but it might given more optimization.
+<<<<<<< HEAD
       PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                     NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+      PresShell()->
+        FrameNeedsReflow(this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
+=======
+      PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                    NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
     }
   }
 }
@@ -399,13 +460,33 @@ int32_t nsTableFrame::GetIndexOfLastRealCol() {
   return -1;
 }
 
+<<<<<<< HEAD
 nsTableColFrame* nsTableFrame::GetColFrame(int32_t aColIndex) const {
   NS_ASSERTION(!GetPrevInFlow(), "GetColFrame called on next in flow");
+||||||| merged common ancestors
+nsTableColFrame*
+nsTableFrame::GetColFrame(int32_t aColIndex) const
+{
+  NS_ASSERTION(!GetPrevInFlow(), "GetColFrame called on next in flow");
+=======
+nsTableColFrame* nsTableFrame::GetColFrame(int32_t aColIndex) const {
+  MOZ_ASSERT(!GetPrevInFlow(), "GetColFrame called on next in flow");
+>>>>>>> upstream-releases
   int32_t numCols = mColFrames.Length();
   if ((aColIndex >= 0) && (aColIndex < numCols)) {
+    MOZ_ASSERT(mColFrames.ElementAt(aColIndex));
     return mColFrames.ElementAt(aColIndex);
+<<<<<<< HEAD
   } else {
     NS_ERROR("invalid col index");
+||||||| merged common ancestors
+  }
+  else {
+    NS_ERROR("invalid col index");
+=======
+  } else {
+    MOZ_ASSERT_UNREACHABLE("invalid col index");
+>>>>>>> upstream-releases
     return nullptr;
   }
 }
@@ -636,14 +717,34 @@ nsTableCellMap* nsTableFrame::GetCellMap() const {
 nsTableColGroupFrame* nsTableFrame::CreateSyntheticColGroupFrame() {
   nsIContent* colGroupContent = GetContent();
   nsPresContext* presContext = PresContext();
+<<<<<<< HEAD
   nsIPresShell* shell = presContext->PresShell();
+||||||| merged common ancestors
+  nsIPresShell *shell = presContext->PresShell();
+=======
+  mozilla::PresShell* presShell = presContext->PresShell();
+>>>>>>> upstream-releases
 
   RefPtr<ComputedStyle> colGroupStyle;
+<<<<<<< HEAD
   colGroupStyle = shell->StyleSet()->ResolveNonInheritingAnonymousBoxStyle(
       nsCSSAnonBoxes::tableColGroup());
+||||||| merged common ancestors
+  colGroupStyle = shell->StyleSet()->
+    ResolveNonInheritingAnonymousBoxStyle(nsCSSAnonBoxes::tableColGroup());
+=======
+  colGroupStyle = presShell->StyleSet()->ResolveNonInheritingAnonymousBoxStyle(
+      PseudoStyleType::tableColGroup);
+>>>>>>> upstream-releases
   // Create a col group frame
   nsTableColGroupFrame* newFrame =
+<<<<<<< HEAD
       NS_NewTableColGroupFrame(shell, colGroupStyle);
+||||||| merged common ancestors
+    NS_NewTableColGroupFrame(shell, colGroupStyle);
+=======
+      NS_NewTableColGroupFrame(presShell, colGroupStyle);
+>>>>>>> upstream-releases
   newFrame->SetIsSynthetic();
   newFrame->Init(colGroupContent, this, nullptr);
   return newFrame;
@@ -680,7 +781,13 @@ void nsTableFrame::AppendAnonymousColFrames(
   MOZ_ASSERT(aColType != eColAnonymousCol, "Shouldn't happen");
   MOZ_ASSERT(aNumColsToAdd > 0, "We should be adding _something_.");
 
+<<<<<<< HEAD
   nsIPresShell* shell = PresShell();
+||||||| merged common ancestors
+  nsIPresShell *shell = PresShell();
+=======
+  mozilla::PresShell* presShell = PresShell();
+>>>>>>> upstream-releases
 
   // Get the last col frame
   nsFrameList newColFrames;
@@ -692,15 +799,32 @@ void nsTableFrame::AppendAnonymousColFrames(
     // all anonymous cols that we create here use a pseudo ComputedStyle of the
     // col group
     nsIContent* iContent = aColGroupFrame->GetContent();
+<<<<<<< HEAD
     RefPtr<ComputedStyle> computedStyle =
         shell->StyleSet()->ResolveNonInheritingAnonymousBoxStyle(
             nsCSSAnonBoxes::tableCol());
+||||||| merged common ancestors
+    RefPtr<ComputedStyle> computedStyle = shell->StyleSet()->
+      ResolveNonInheritingAnonymousBoxStyle(nsCSSAnonBoxes::tableCol());
+=======
+    RefPtr<ComputedStyle> computedStyle =
+        presShell->StyleSet()->ResolveNonInheritingAnonymousBoxStyle(
+            PseudoStyleType::tableCol);
+>>>>>>> upstream-releases
     // ASSERTION to check for bug 54454 sneaking back in...
     NS_ASSERTION(iContent, "null content in CreateAnonymousColFrames");
 
     // create the new col frame
+<<<<<<< HEAD
     nsIFrame* colFrame = NS_NewTableColFrame(shell, computedStyle);
     ((nsTableColFrame*)colFrame)->SetColType(aColType);
+||||||| merged common ancestors
+    nsIFrame* colFrame = NS_NewTableColFrame(shell, computedStyle);
+    ((nsTableColFrame *) colFrame)->SetColType(aColType);
+=======
+    nsIFrame* colFrame = NS_NewTableColFrame(presShell, computedStyle);
+    ((nsTableColFrame*)colFrame)->SetColType(aColType);
+>>>>>>> upstream-releases
     colFrame->Init(iContent, aColGroupFrame, nullptr);
 
     newColFrames.AppendFrame(nullptr, colFrame);
@@ -1169,10 +1293,24 @@ class nsDisplayTableBorderCollapse final : public nsDisplayTableItem {
 #endif
 
   void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
+<<<<<<< HEAD
   bool CreateWebRenderCommands(
       wr::DisplayListBuilder& aBuilder, wr::IpcResourceUpdateQueue& aResources,
       const StackingContextHelper& aSc, layers::WebRenderLayerManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
+||||||| merged common ancestors
+  bool CreateWebRenderCommands(wr::DisplayListBuilder& aBuilder,
+                               wr::IpcResourceUpdateQueue& aResources,
+                               const StackingContextHelper& aSc,
+                               layers::WebRenderLayerManager* aManager,
+                               nsDisplayListBuilder* aDisplayListBuilder) override;
+=======
+  bool CreateWebRenderCommands(
+      wr::DisplayListBuilder& aBuilder, wr::IpcResourceUpdateQueue& aResources,
+      const StackingContextHelper& aSc,
+      layers::RenderRootStateManager* aManager,
+      nsDisplayListBuilder* aDisplayListBuilder) override;
+>>>>>>> upstream-releases
   NS_DISPLAY_DECL_NAME("TableBorderCollapse", TYPE_TABLE_BORDER_COLLAPSE)
 };
 
@@ -1190,6 +1328,7 @@ void nsDisplayTableBorderCollapse::Paint(nsDisplayListBuilder* aBuilder,
   drawTarget->SetTransform(
       drawTarget->GetTransform().PreTranslate(ToPoint(devPixelOffset)));
 
+<<<<<<< HEAD
   static_cast<nsTableFrame*>(mFrame)->PaintBCBorders(*drawTarget,
                                                      GetPaintRect() - pt);
 }
@@ -1202,8 +1341,30 @@ bool nsDisplayTableBorderCollapse::CreateWebRenderCommands(
   static_cast<nsTableFrame*>(mFrame)->CreateWebRenderCommandsForBCBorders(
       aBuilder, aSc, GetPaintRect(), ToReferenceFrame());
   return true;
+||||||| merged common ancestors
+  static_cast<nsTableFrame*>(mFrame)->PaintBCBorders(*drawTarget, GetPaintRect() - pt);
 }
 
+bool
+nsDisplayTableBorderCollapse::CreateWebRenderCommands(wr::DisplayListBuilder& aBuilder,
+                                                      wr::IpcResourceUpdateQueue& aResources,
+                                                      const StackingContextHelper& aSc,
+                                                      mozilla::layers::WebRenderLayerManager* aManager,
+                                                      nsDisplayListBuilder* aDisplayListBuilder)
+{
+  static_cast<nsTableFrame*>(mFrame)->
+    CreateWebRenderCommandsForBCBorders(aBuilder,
+                                        aSc,
+                                        GetPaintRect(),
+                                        ToReferenceFrame());
+  return true;
+=======
+  static_cast<nsTableFrame*>(mFrame)->PaintBCBorders(*drawTarget,
+                                                     GetPaintRect() - pt);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 /* static */ void nsTableFrame::GenericTraversal(
     nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
     const nsDisplayListSet& aLists) {
@@ -1301,6 +1462,120 @@ static void PaintRowGroupBackgroundByColIdx(nsTableRowGroupFrame* aRowGroup,
           aFrame->GetRectRelativeToSelf(), cell);
     }
   }
+||||||| merged common ancestors
+/* static */ void
+nsTableFrame::GenericTraversal(nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
+                               const nsDisplayListSet& aLists)
+{
+  // This is similar to what nsContainerFrame::BuildDisplayListForNonBlockChildren
+  // does, except that we allow the children's background and borders to go
+  // in our BorderBackground list. This doesn't really affect background
+  // painting --- the children won't actually draw their own backgrounds
+  // because the nsTableFrame already drew them, unless a child has its own
+  // stacking context, in which case the child won't use its passed-in
+  // BorderBackground list anyway. It does affect cell borders though; this
+  // lets us get cell borders into the nsTableFrame's BorderBackground list.
+  for (nsIFrame* kid : aFrame->GetChildList(kColGroupList)) {
+    aFrame->BuildDisplayListForChild(aBuilder, kid, aLists);
+  }
+
+  for (nsIFrame* kid : aFrame->PrincipalChildList()) {
+    aFrame->BuildDisplayListForChild(aBuilder, kid, aLists);
+  }
+}
+
+static void
+PaintRowBackground(nsTableRowFrame* aRow,
+                   nsIFrame* aFrame,
+                   nsDisplayListBuilder* aBuilder,
+                   const nsDisplayListSet& aLists,
+                   const nsPoint& aOffset = nsPoint())
+{
+  // Compute background rect by iterating all cell frame.
+  for (nsTableCellFrame* cell = aRow->GetFirstCell(); cell; cell = cell->GetNextCell()) {
+    if (!cell->ShouldPaintBackground(aBuilder)) {
+      continue;
+    }
+
+    auto cellRect = cell->GetRectRelativeToSelf() + cell->GetNormalPosition() + aOffset;
+    if (!aBuilder->GetDirtyRect().Intersects(cellRect)) {
+      continue;
+    }
+    nsDisplayBackgroundImage::AppendBackgroundItemsToTop(aBuilder, aFrame, cellRect,
+                                                         aLists.BorderBackground(),
+                                                         true, nullptr,
+                                                         aFrame->GetRectRelativeToSelf(),
+                                                         cell);
+  }
+}
+
+static void
+PaintRowGroupBackground(nsTableRowGroupFrame* aRowGroup,
+                        nsIFrame* aFrame,
+                        nsDisplayListBuilder* aBuilder,
+                        const nsDisplayListSet& aLists)
+{
+  for (nsTableRowFrame* row = aRowGroup->GetFirstRow(); row; row = row->GetNextRow()) {
+    if (!aBuilder->GetDirtyRect().Intersects(nsRect(row->GetNormalPosition(),
+                                                    row->GetSize()))) {
+      continue;
+    }
+    PaintRowBackground(row, aFrame, aBuilder, aLists, row->GetNormalPosition());
+  }
+}
+
+static void
+PaintRowGroupBackgroundByColIdx(nsTableRowGroupFrame* aRowGroup,
+                                nsIFrame* aFrame,
+                                nsDisplayListBuilder* aBuilder,
+                                const nsDisplayListSet& aLists,
+                                const nsTArray<uint32_t>& aColIdx,
+                                const nsPoint& aOffset)
+{
+  MOZ_DIAGNOSTIC_ASSERT(!aColIdx.IsEmpty(),
+                        "Must be painting backgrounds for something");
+
+  for (nsTableRowFrame* row = aRowGroup->GetFirstRow(); row; row = row->GetNextRow()) {
+    auto rowPos = row->GetNormalPosition() + aOffset;
+    if (!aBuilder->GetDirtyRect().Intersects(nsRect(rowPos, row->GetSize()))) {
+      continue;
+    }
+    for (nsTableCellFrame* cell = row->GetFirstCell(); cell; cell = cell->GetNextCell()) {
+      uint32_t curColIdx = cell->ColIndex();
+      if (!aColIdx.ContainsSorted(curColIdx)) {
+        if (curColIdx > aColIdx.LastElement()) {
+          // We can just stop looking at this row.
+          break;
+        }
+        continue;
+      }
+
+      if (!cell->ShouldPaintBackground(aBuilder)) {
+        continue;
+      }
+
+      auto cellPos = cell->GetNormalPosition() + rowPos;
+      auto cellRect = nsRect(cellPos, cell->GetSize());
+      if (!aBuilder->GetDirtyRect().Intersects(cellRect)) {
+        continue;
+      }
+      nsDisplayBackgroundImage::AppendBackgroundItemsToTop(aBuilder, aFrame, cellRect,
+                                                           aLists.BorderBackground(),
+                                                           false, nullptr,
+                                                           aFrame->GetRectRelativeToSelf(),
+                                                           cell);
+    }
+  }
+=======
+bool nsDisplayTableBorderCollapse::CreateWebRenderCommands(
+    wr::DisplayListBuilder& aBuilder, wr::IpcResourceUpdateQueue& aResources,
+    const StackingContextHelper& aSc,
+    mozilla::layers::RenderRootStateManager* aManager,
+    nsDisplayListBuilder* aDisplayListBuilder) {
+  static_cast<nsTableFrame*>(mFrame)->CreateWebRenderCommandsForBCBorders(
+      aBuilder, aSc, GetPaintRect(), ToReferenceFrame());
+  return true;
+>>>>>>> upstream-releases
 }
 
 static inline bool FrameHasBorder(nsIFrame* f) {
@@ -1372,6 +1647,7 @@ void nsTableFrame::CalcHasBCBorders() {
   SetHasBCBorders(false);
 }
 
+<<<<<<< HEAD
 /* static */ void nsTableFrame::DisplayGenericTablePart(
     nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
     const nsDisplayListSet& aLists,
@@ -1444,7 +1720,86 @@ void nsTableFrame::CalcHasBCBorders() {
     nsTableColFrame* col = static_cast<nsTableColFrame*>(aFrame);
     AutoTArray<uint32_t, 1> colIdx;
     colIdx.AppendElement(col->GetColIndex());
+||||||| merged common ancestors
+/* static */ void
+nsTableFrame::DisplayGenericTablePart(nsDisplayListBuilder* aBuilder,
+                                      nsFrame* aFrame,
+                                      const nsDisplayListSet& aLists,
+                                      DisplayGenericTablePartTraversal aTraversal)
+{
+  bool isVisible = aFrame->IsVisibleForPainting(aBuilder);
+  bool isTable = aFrame->IsTableFrame();
 
+  // Note that we UpdateForFrameBackground() even if we're not visible, unless
+  // we're a table frame, because our backgrounds may paint anyway if the _cell_
+  // is visible.
+  if (isVisible || !isTable) {
+    nsDisplayTableItem* currentItem = aBuilder->GetCurrentTableItem();
+    // currentItem may be null, when none of the table parts have a
+    // background or border
+    if (currentItem) {
+      currentItem->UpdateForFrameBackground(aFrame);
+    }
+  }
+
+  if (isVisible) {
+    // XXXbz should box-shadow for rows/rowgroups/columns/colgroups get painted
+    // just because we're visible?  Or should it depend on the cell visibility
+    // when we're not the whole table?
+
+    // Paint the outset box-shadows for the table frames
+    if (aFrame->StyleEffects()->mBoxShadow) {
+      aLists.BorderBackground()->AppendToTop(
+        MakeDisplayItem<nsDisplayBoxShadowOuter>(aBuilder, aFrame));
+    }
+  }
+
+  // Background visibility for rows, rowgroups, columns, colgroups depends on
+  // the visibility of the _cell_, not of the row/col(group).
+  if (aFrame->IsTableRowGroupFrame()) {
+    nsTableRowGroupFrame* rowGroup = static_cast<nsTableRowGroupFrame*>(aFrame);
+    PaintRowGroupBackground(rowGroup, aFrame, aBuilder, aLists);
+  } else if (aFrame->IsTableRowFrame()) {
+    nsTableRowFrame* row = static_cast<nsTableRowFrame*>(aFrame);
+    PaintRowBackground(row, aFrame, aBuilder, aLists);
+  } else if (aFrame->IsTableColGroupFrame()) {
+    // Compute background rect by iterating all cell frame.
+    nsTableColGroupFrame* colGroup = static_cast<nsTableColGroupFrame*>(aFrame);
+    // Collecting column index.
+    AutoTArray<uint32_t, 1> colIdx;
+    for (nsTableColFrame* col = colGroup->GetFirstColumn(); col; col = col->GetNextCol()) {
+      MOZ_ASSERT(colIdx.IsEmpty() ||
+                 static_cast<uint32_t>(col->GetColIndex()) > colIdx.LastElement());
+      colIdx.AppendElement(col->GetColIndex());
+    }
+
+    if (!colIdx.IsEmpty()) {
+      // We have some actual cells that live inside this rowgroup.
+      nsTableFrame* table = colGroup->GetTableFrame();
+      RowGroupArray rowGroups;
+      table->OrderRowGroups(rowGroups);
+      for (nsTableRowGroupFrame* rowGroup : rowGroups) {
+        auto offset = rowGroup->GetNormalPosition() - colGroup->GetNormalPosition();
+        if (!aBuilder->GetDirtyRect().Intersects(nsRect(offset, rowGroup->GetSize()))) {
+          continue;
+        }
+        PaintRowGroupBackgroundByColIdx(rowGroup, aFrame, aBuilder, aLists, colIdx, offset);
+      }
+    }
+  } else if (aFrame->IsTableColFrame()) {
+    // Compute background rect by iterating all cell frame.
+    nsTableColFrame* col = static_cast<nsTableColFrame*>(aFrame);
+    AutoTArray<uint32_t, 1> colIdx;
+    colIdx.AppendElement(col->GetColIndex());
+=======
+// table paint code is concerned primarily with borders and bg color
+// SEC: TODO: adjust the rect for captions
+void nsTableFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
+                                    const nsDisplayListSet& aLists) {
+  DO_GLOBAL_REFLOW_COUNT_DSP_COLOR("nsTableFrame", NS_RGB(255, 128, 255));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     nsTableFrame* table = col->GetTableFrame();
     RowGroupArray rowGroups;
     table->OrderRowGroups(rowGroups);
@@ -1463,23 +1818,66 @@ void nsTableFrame::CalcHasBCBorders() {
         aBuilder, aFrame, aFrame->GetRectRelativeToSelf(),
         aLists.BorderBackground());
   }
+||||||| merged common ancestors
+    nsTableFrame* table = col->GetTableFrame();
+    RowGroupArray rowGroups;
+    table->OrderRowGroups(rowGroups);
+    for (nsTableRowGroupFrame* rowGroup : rowGroups) {
+      auto offset = rowGroup->GetNormalPosition() -
+                    col->GetNormalPosition() -
+                    col->GetTableColGroupFrame()->GetNormalPosition();
+      if (!aBuilder->GetDirtyRect().Intersects(nsRect(offset, rowGroup->GetSize()))) {
+        continue;
+      }
+      PaintRowGroupBackgroundByColIdx(rowGroup, aFrame, aBuilder, aLists, colIdx, offset);
+    }
+  } else if (isVisible) {
+    nsDisplayBackgroundImage::AppendBackgroundItemsToTop(aBuilder, aFrame,
+                                                         aFrame->GetRectRelativeToSelf(),
+                                                         aLists.BorderBackground());
+  }
+=======
+  DisplayBorderBackgroundOutline(aBuilder, aLists);
+>>>>>>> upstream-releases
 
-  if (isVisible) {
-    // XXXbz should box-shadow for rows/rowgroups/columns/colgroups get painted
-    // just because we're visible?  Or should it depend on the cell visibility
-    // when we're not the whole table?
+  nsDisplayTableBackgroundSet tableBGs(aBuilder, this);
+  nsDisplayListCollection lists(aBuilder);
 
+<<<<<<< HEAD
     // Paint the inset box-shadows for the table frames
     if (aFrame->StyleEffects()->mBoxShadow) {
       aLists.BorderBackground()->AppendToTop(
           MakeDisplayItem<nsDisplayBoxShadowInner>(aBuilder, aFrame));
+||||||| merged common ancestors
+    // Paint the inset box-shadows for the table frames
+    if (aFrame->StyleEffects()->mBoxShadow) {
+      aLists.BorderBackground()->AppendToTop(
+        MakeDisplayItem<nsDisplayBoxShadowInner>(aBuilder, aFrame));
+=======
+  // This is similar to what
+  // nsContainerFrame::BuildDisplayListForNonBlockChildren does, except that we
+  // allow the children's background and borders to go in our BorderBackground
+  // list. This doesn't really affect background painting --- the children won't
+  // actually draw their own backgrounds because the nsTableFrame already drew
+  // them, unless a child has its own stacking context, in which case the child
+  // won't use its passed-in BorderBackground list anyway. It does affect cell
+  // borders though; this lets us get cell borders into the nsTableFrame's
+  // BorderBackground list.
+  for (nsIFrame* colGroup : FirstContinuation()->GetChildList(kColGroupList)) {
+    for (nsIFrame* col : colGroup->PrincipalChildList()) {
+      tableBGs.AddColumn((nsTableColFrame*)col);
+>>>>>>> upstream-releases
     }
   }
 
-  aFrame->DisplayOutline(aBuilder, aLists);
+  for (nsIFrame* kid : PrincipalChildList()) {
+    BuildDisplayListForChild(aBuilder, kid, lists);
+  }
 
-  aTraversal(aBuilder, aFrame, aLists);
+  tableBGs.MoveTo(aLists);
+  lists.MoveTo(aLists);
 
+<<<<<<< HEAD
   if (isVisible) {
     if (isTable) {
       nsTableFrame* table = static_cast<nsTableFrame*>(aFrame);
@@ -1495,11 +1893,42 @@ void nsTableFrame::CalcHasBCBorders() {
           aLists.BorderBackground()->AppendToTop(
               MakeDisplayItem<nsDisplayBorder>(aBuilder, table));
         }
+||||||| merged common ancestors
+  if (isVisible) {
+    if (isTable) {
+      nsTableFrame* table = static_cast<nsTableFrame*>(aFrame);
+      // In the collapsed border model, overlay all collapsed borders.
+      if (table->IsBorderCollapse()) {
+        if (table->HasBCBorders()) {
+          aLists.BorderBackground()->AppendToTop(
+            MakeDisplayItem<nsDisplayTableBorderCollapse>(aBuilder, table));
+        }
+      } else {
+        const nsStyleBorder* borderStyle = aFrame->StyleBorder();
+        if (borderStyle->HasBorder()) {
+          aLists.BorderBackground()->AppendToTop(
+            MakeDisplayItem<nsDisplayBorder>(aBuilder, table));
+        }
+=======
+  if (IsVisibleForPainting()) {
+    // In the collapsed border model, overlay all collapsed borders.
+    if (IsBorderCollapse()) {
+      if (HasBCBorders()) {
+        aLists.BorderBackground()->AppendNewToTop<nsDisplayTableBorderCollapse>(
+            aBuilder, this);
+      }
+    } else {
+      const nsStyleBorder* borderStyle = StyleBorder();
+      if (borderStyle->HasBorder()) {
+        aLists.BorderBackground()->AppendNewToTop<nsDisplayBorder>(aBuilder,
+                                                                   this);
+>>>>>>> upstream-releases
       }
     }
   }
 }
 
+<<<<<<< HEAD
 // table paint code is concerned primarily with borders and bg color
 // SEC: TODO: adjust the rect for captions
 void nsTableFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
@@ -1511,6 +1940,25 @@ void nsTableFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
 
 nsMargin nsTableFrame::GetDeflationForBackground(
     nsPresContext* aPresContext) const {
+||||||| merged common ancestors
+// table paint code is concerned primarily with borders and bg color
+// SEC: TODO: adjust the rect for captions
+void
+nsTableFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                               const nsDisplayListSet& aLists)
+{
+  DO_GLOBAL_REFLOW_COUNT_DSP_COLOR("nsTableFrame", NS_RGB(255,128,255));
+
+  DisplayGenericTablePart(aBuilder, this, aLists);
+}
+
+nsMargin
+nsTableFrame::GetDeflationForBackground(nsPresContext* aPresContext) const
+{
+=======
+nsMargin nsTableFrame::GetDeflationForBackground(
+    nsPresContext* aPresContext) const {
+>>>>>>> upstream-releases
   if (eCompatibility_NavQuirks != aPresContext->CompatibilityMode() ||
       !IsBorderCollapse())
     return nsMargin(0, 0, 0, 0);
@@ -1625,7 +2073,16 @@ void nsTableFrame::ProcessRowInserted(nscoord aNewBSize) {
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsTableFrame::MarkIntrinsicISizesDirty() {
+||||||| merged common ancestors
+/* virtual */ void
+nsTableFrame::MarkIntrinsicISizesDirty()
+{
+=======
+/* virtual */
+void nsTableFrame::MarkIntrinsicISizesDirty() {
+>>>>>>> upstream-releases
   nsITableLayoutStrategy* tls = LayoutStrategy();
   if (MOZ_UNLIKELY(!tls)) {
     // This is a FrameNeedsReflow() from nsBlockFrame::RemoveFrame()
@@ -1643,17 +2100,41 @@ void nsTableFrame::ProcessRowInserted(nscoord aNewBSize) {
   nsContainerFrame::MarkIntrinsicISizesDirty();
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsTableFrame::GetMinISize(gfxContext* aRenderingContext) {
   if (NeedToCalcBCBorders()) CalcBCBorders();
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsTableFrame::GetMinISize(gfxContext *aRenderingContext)
+{
+  if (NeedToCalcBCBorders())
+    CalcBCBorders();
+=======
+/* virtual */
+nscoord nsTableFrame::GetMinISize(gfxContext* aRenderingContext) {
+  if (NeedToCalcBCBorders()) CalcBCBorders();
+>>>>>>> upstream-releases
 
   ReflowColGroups(aRenderingContext);
 
   return LayoutStrategy()->GetMinISize(aRenderingContext);
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsTableFrame::GetPrefISize(
     gfxContext* aRenderingContext) {
   if (NeedToCalcBCBorders()) CalcBCBorders();
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsTableFrame::GetPrefISize(gfxContext *aRenderingContext)
+{
+  if (NeedToCalcBCBorders())
+    CalcBCBorders();
+=======
+/* virtual */
+nscoord nsTableFrame::GetPrefISize(gfxContext* aRenderingContext) {
+  if (NeedToCalcBCBorders()) CalcBCBorders();
+>>>>>>> upstream-releases
 
   ReflowColGroups(aRenderingContext);
 
@@ -1759,15 +2240,27 @@ bool nsTableFrame::AncestorsHaveStyleBSize(
     LayoutFrameType frameType = rs->mFrame->Type();
     if (IsTableCell(frameType) || (LayoutFrameType::TableRow == frameType) ||
         (LayoutFrameType::TableRowGroup == frameType)) {
+<<<<<<< HEAD
       const nsStyleCoord& bsize = rs->mStylePosition->BSize(wm);
       // calc() with percentages treated like 'auto' on internal table elements
       if (bsize.GetUnit() != eStyleUnit_Auto &&
           (!bsize.IsCalcUnit() || !bsize.HasPercent())) {
+||||||| merged common ancestors
+      const nsStyleCoord &bsize = rs->mStylePosition->BSize(wm);
+      // calc() with percentages treated like 'auto' on internal table elements
+      if (bsize.GetUnit() != eStyleUnit_Auto &&
+          (!bsize.IsCalcUnit() || !bsize.HasPercent())) {
+=======
+      const auto& bsize = rs->mStylePosition->BSize(wm);
+      // calc() with both lengths and percentages treated like 'auto' on
+      // internal table elements
+      if (!bsize.IsAuto() && !bsize.HasLengthAndPercentage()) {
+>>>>>>> upstream-releases
         return true;
       }
     } else if (LayoutFrameType::Table == frameType) {
       // we reached the containing table, so always return
-      return rs->mStylePosition->BSize(wm).GetUnit() != eStyleUnit_Auto;
+      return !rs->mStylePosition->BSize(wm).IsAuto();
     }
   }
   return false;
@@ -1784,11 +2277,23 @@ void nsTableFrame::CheckRequestSpecialBSizeReflow(
                "unexpected frame type");
   WritingMode wm = aReflowInput.GetWritingMode();
   if (!aReflowInput.mFrame->GetPrevInFlow() &&  // 1st in flow
+<<<<<<< HEAD
       (NS_UNCONSTRAINEDSIZE ==
            aReflowInput.ComputedBSize() ||  // no computed bsize
        0 == aReflowInput.ComputedBSize()) &&
       eStyleUnit_Percent ==
           aReflowInput.mStylePosition->BSize(wm).GetUnit() &&  // pct bsize
+||||||| merged common ancestors
+      (NS_UNCONSTRAINEDSIZE == aReflowInput.ComputedBSize() ||  // no computed bsize
+       0                    == aReflowInput.ComputedBSize()) &&
+      eStyleUnit_Percent == aReflowInput.mStylePosition->BSize(wm).GetUnit() && // pct bsize
+=======
+      (NS_UNCONSTRAINEDSIZE ==
+           aReflowInput.ComputedBSize() ||  // no computed bsize
+       0 == aReflowInput.ComputedBSize()) &&
+      aReflowInput.mStylePosition->BSize(wm)
+          .ConvertsToPercentage() &&  // pct bsize
+>>>>>>> upstream-releases
       nsTableFrame::AncestorsHaveStyleBSize(*aReflowInput.mParentReflowInput)) {
     nsTableFrame::RequestSpecialBSizeReflow(aReflowInput);
   }
@@ -1839,6 +2344,7 @@ void nsTableFrame::RequestSpecialBSizeReflow(const ReflowInput& aReflowInput) {
  * cannot split until after the pass 2 reflow. The mechanics of the special
  * bsize reflow (variety a) are as follows:
  *
+<<<<<<< HEAD
  * 1) Each table related frame (table, row group, row, cell) implements
  *    NeedsSpecialReflow() to indicate that it should get the reflow. It does
  *    this when it has a percent bsize but no computed bsize by calling
@@ -1848,11 +2354,56 @@ void nsTableFrame::RequestSpecialBSizeReflow(const ReflowInput& aReflowInput) {
  *    SetNeedToInitiateSpecialReflow() on it. For percent bsize frames inside
  *    cells, during DidReflow(), the cell's NotifyPercentBSize() is called
  *    (the cell is the reflow state's mPercentBSizeObserver in this case).
+||||||| merged common ancestors
+ * 1) Each table related frame (table, row group, row, cell) implements NeedsSpecialReflow()
+ *    to indicate that it should get the reflow. It does this when it has a percent bsize but
+ *    no computed bsize by calling CheckRequestSpecialBSizeReflow(). This method calls
+ *    RequestSpecialBSizeReflow() which calls SetNeedSpecialReflow() on its ancestors until
+ *    it reaches the containing table and calls SetNeedToInitiateSpecialReflow() on it. For
+ *    percent bsize frames inside cells, during DidReflow(), the cell's NotifyPercentBSize()
+ *    is called (the cell is the reflow state's mPercentBSizeObserver in this case).
+=======
+ * 1) Each table related frame (table, row group, row, cell) implements
+ *    NeedsSpecialReflow() to indicate that it should get the reflow. It does
+ *    this when it has a percent bsize but no computed bsize by calling
+ *    CheckRequestSpecialBSizeReflow(). This method calls
+ *    RequestSpecialBSizeReflow() which calls SetNeedSpecialReflow() on its
+ *    ancestors until it reaches the containing table and calls
+ *    SetNeedToInitiateSpecialReflow() on it. For percent bsize frames inside
+ *    cells, during DidReflow(), the cell's NotifyPercentBSize() is called
+ *    (the cell is the reflow input's mPercentBSizeObserver in this case).
+>>>>>>> upstream-releases
  *    NotifyPercentBSize() calls RequestSpecialBSizeReflow().
  *
+<<<<<<< HEAD
+ * XXX (jfkthame) This comment appears to be out of date; it refers to
+ * methods/flags that are no longer present in the code.
+||||||| merged common ancestors
+ * XXX (jfkthame) This comment appears to be out of date; it refers to methods/flags
+ *                that are no longer present in the code.
+ * 2) After the pass 2 reflow, if the table's NeedToInitiateSpecialReflow(true) was called, it
+ *    will do the special bsize reflow, setting the reflow state's mFlags.mSpecialBSizeReflow
+ *    to true and mSpecialHeightInitiator to itself. It won't do this if IsPrematureSpecialHeightReflow()
+ *    returns true because in that case another special bsize reflow will be coming along with the
+ *    containing table as the mSpecialHeightInitiator. It is only relevant to do the reflow when
+ *    the mSpecialHeightInitiator is the containing table, because if it is a remote ancestor, then
+ *    appropriate bsizes will not be known.
+=======
  * XXX (jfkthame) This comment appears to be out of date; it refers to
  * methods/flags that are no longer present in the code.
  *
+ * 2) After the pass 2 reflow, if the table's NeedToInitiateSpecialReflow(true)
+ *    was called, it will do the special bsize reflow, setting the reflow
+ *    input's mFlags.mSpecialBSizeReflow to true and mSpecialHeightInitiator to
+ *    itself. It won't do this if IsPrematureSpecialHeightReflow() returns true
+ *    because in that case another special bsize reflow will be coming along
+ *    with the containing table as the mSpecialHeightInitiator. It is only
+ *    relevant to do the reflow when the mSpecialHeightInitiator is the
+ *    containing table, because if it is a remote ancestor, then appropriate
+ *    bsizes will not be known.
+>>>>>>> upstream-releases
+ *
+<<<<<<< HEAD
  * 2) After the pass 2 reflow, if the table's NeedToInitiateSpecialReflow(true)
  *    was called, it will do the special bsize reflow, setting the reflow
  *    state's mFlags.mSpecialBSizeReflow to true and mSpecialHeightInitiator to
@@ -1862,13 +2413,40 @@ void nsTableFrame::RequestSpecialBSizeReflow(const ReflowInput& aReflowInput) {
  *    relevant to do the reflow when the mSpecialHeightInitiator is the
  *    containing table, because if it is a remote ancestor, then appropriate
  *    bsizes will not be known.
- *
+||||||| merged common ancestors
+ * 3) Since the bsizes of the table, row groups, rows, and cells was determined during the pass 2
+ *    reflow, they return their last desired sizes during the special bsize reflow. The reflow only
+ *    permits percent bsize frames inside the cells to resize based on the cells bsize and that bsize
+ *    was determined during the pass 2 reflow.
+=======
  * 3) Since the bsizes of the table, row groups, rows, and cells was determined
  *    during the pass 2 reflow, they return their last desired sizes during the
  *    special bsize reflow. The reflow only permits percent bsize frames inside
  *    the cells to resize based on the cells bsize and that bsize was
  *    determined during the pass 2 reflow.
+>>>>>>> upstream-releases
  *
+<<<<<<< HEAD
+ * 3) Since the bsizes of the table, row groups, rows, and cells was determined
+ *    during the pass 2 reflow, they return their last desired sizes during the
+ *    special bsize reflow. The reflow only permits percent bsize frames inside
+ *    the cells to resize based on the cells bsize and that bsize was
+ *    determined during the pass 2 reflow.
+||||||| merged common ancestors
+ * So, in the case of deeply nested tables, all of the tables that were told to initiate a special
+ * reflow will do so, but if a table is already in a special reflow, it won't inititate the reflow
+ * until the current initiator is its containing table. Since these reflows are only received by
+ * frames that need them and they don't cause any rebalancing of tables, the extra overhead is minimal.
+=======
+ * So, in the case of deeply nested tables, all of the tables that were told to
+ * initiate a special reflow will do so, but if a table is already in a special
+ * reflow, it won't inititate the reflow until the current initiator is its
+ * containing table. Since these reflows are only received by frames that need
+ * them and they don't cause any rebalancing of tables, the extra overhead is
+ * minimal.
+>>>>>>> upstream-releases
+ *
+<<<<<<< HEAD
  * So, in the case of deeply nested tables, all of the tables that were told to
  * initiate a special reflow will do so, but if a table is already in a special
  * reflow, it won't inititate the reflow until the current initiator is its
@@ -1879,6 +2457,14 @@ void nsTableFrame::RequestSpecialBSizeReflow(const ReflowInput& aReflowInput) {
  * The type of special reflow that occurs during printing (variety b) follows
  * the same mechanism except that all frames will receive the reflow even if
  * they don't really need them.
+||||||| merged common ancestors
+ * The type of special reflow that occurs during printing (variety b) follows the same mechanism except
+ * that all frames will receive the reflow even if they don't really need them.
+=======
+ * The type of special reflow that occurs during printing (variety b) follows
+ * the same mechanism except that all frames will receive the reflow even if
+ * they don't really need them.
+>>>>>>> upstream-releases
  *
  * Open issues with the special bsize reflow:
  *
@@ -2021,7 +2607,7 @@ void nsTableFrame::Reflow(nsPresContext* aPresContext,
 
     // XXXldb Are all these conditions correct?
     if (needToInitiateSpecialReflow && aStatus.IsComplete()) {
-      // XXXldb Do we need to set the IsBResize flag on any reflow states?
+      // XXXldb Do we need to set the IsBResize flag on any reflow inputs?
 
       ReflowInput& mutable_rs = const_cast<ReflowInput&>(aReflowInput);
 
@@ -2128,16 +2714,24 @@ void nsTableFrame::FixupPositionedTableParts(nsPresContext* aPresContext,
     desiredSize.mOverflowAreas =
         positionedPart->GetOverflowAreasRelativeToSelf();
 
-    // Construct a dummy reflow state and reflow status.
-    // XXX(seth): Note that the dummy reflow state doesn't have a correct
-    // chain of parent reflow states. It also doesn't necessarily have a
+    // Construct a dummy reflow input and reflow status.
+    // XXX(seth): Note that the dummy reflow input doesn't have a correct
+    // chain of parent reflow inputs. It also doesn't necessarily have a
     // correct containing block.
     WritingMode wm = positionedPart->GetWritingMode();
     LogicalSize availSize(wm, size);
     availSize.BSize(wm) = NS_UNCONSTRAINEDSIZE;
     ReflowInput reflowInput(aPresContext, positionedPart,
+<<<<<<< HEAD
                             aReflowInput.mRenderingContext, availSize,
                             ReflowInput::DUMMY_PARENT_REFLOW_STATE);
+||||||| merged common ancestors
+                                  aReflowInput.mRenderingContext, availSize,
+                                  ReflowInput::DUMMY_PARENT_REFLOW_STATE);
+=======
+                            aReflowInput.mRenderingContext, availSize,
+                            ReflowInput::DUMMY_PARENT_REFLOW_INPUT);
+>>>>>>> upstream-releases
     nsReflowStatus reflowStatus;
 
     // Reflow absolutely-positioned descendants of the positioned part.
@@ -2348,8 +2942,17 @@ nscoord nsTableFrame::GetCollapsedISize(const WritingMode aWM,
   return iSize;
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsTableFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsTableFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsTableFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -2428,7 +3031,7 @@ void nsTableFrame::AppendFrames(ChildListID aListID, nsFrameList& aFrameList) {
   printf("=== TableFrame::AppendFrames\n");
   Dump(true, true, true);
 #endif
-  PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
   SetGeometryDirty();
 }
@@ -2597,7 +3200,7 @@ void nsTableFrame::HomogenousInsertFrames(ChildListID aListID,
     return;
   }
 
-  PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+  PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                 NS_FRAME_HAS_DIRTY_CHILDREN);
   SetGeometryDirty();
 #ifdef DEBUG_TABLE_CELLMAP
@@ -2677,12 +3280,31 @@ void nsTableFrame::DoRemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
   }
 }
 
+<<<<<<< HEAD
 void nsTableFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
   NS_ASSERTION(
       aListID == kColGroupList || mozilla::StyleDisplay::TableColumnGroup !=
                                       aOldFrame->StyleDisplay()->mDisplay,
       "Wrong list name; use kColGroupList iff colgroup");
   nsIPresShell* shell = PresShell();
+||||||| merged common ancestors
+void
+nsTableFrame::RemoveFrame(ChildListID     aListID,
+                          nsIFrame*       aOldFrame)
+{
+  NS_ASSERTION(aListID == kColGroupList ||
+               mozilla::StyleDisplay::TableColumnGroup !=
+                 aOldFrame->StyleDisplay()->mDisplay,
+               "Wrong list name; use kColGroupList iff colgroup");
+  nsIPresShell* shell = PresShell();
+=======
+void nsTableFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
+  NS_ASSERTION(
+      aListID == kColGroupList || mozilla::StyleDisplay::TableColumnGroup !=
+                                      aOldFrame->StyleDisplay()->mDisplay,
+      "Wrong list name; use kColGroupList iff colgroup");
+  mozilla::PresShell* presShell = PresShell();
+>>>>>>> upstream-releases
   nsTableFrame* lastParent = nullptr;
   while (aOldFrame) {
     nsIFrame* oldFrameNextContinuation = aOldFrame->GetNextContinuation();
@@ -2699,8 +3321,8 @@ void nsTableFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
         parent->SetFullBCDamageArea();
       }
       parent->SetGeometryDirty();
-      shell->FrameNeedsReflow(parent, nsIPresShell::eTreeChange,
-                              NS_FRAME_HAS_DIRTY_CHILDREN);
+      presShell->FrameNeedsReflow(parent, IntrinsicDirty::TreeChange,
+                                  NS_FRAME_HAS_DIRTY_CHILDREN);
       lastParent = parent;
     }
   }
@@ -2710,20 +3332,53 @@ void nsTableFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
 #endif
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableFrame::GetUsedBorder() const {
   if (!IsBorderCollapse()) return nsContainerFrame::GetUsedBorder();
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableFrame::GetUsedBorder() const
+{
+  if (!IsBorderCollapse())
+    return nsContainerFrame::GetUsedBorder();
+=======
+/* virtual */
+nsMargin nsTableFrame::GetUsedBorder() const {
+  if (!IsBorderCollapse()) return nsContainerFrame::GetUsedBorder();
+>>>>>>> upstream-releases
 
   WritingMode wm = GetWritingMode();
   return GetIncludedOuterBCBorder(wm).GetPhysicalMargin(wm);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableFrame::GetUsedPadding() const {
   if (!IsBorderCollapse()) return nsContainerFrame::GetUsedPadding();
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableFrame::GetUsedPadding() const
+{
+  if (!IsBorderCollapse())
+    return nsContainerFrame::GetUsedPadding();
+=======
+/* virtual */
+nsMargin nsTableFrame::GetUsedPadding() const {
+  if (!IsBorderCollapse()) return nsContainerFrame::GetUsedPadding();
+>>>>>>> upstream-releases
 
   return nsMargin(0, 0, 0, 0);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableFrame::GetUsedMargin() const {
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableFrame::GetUsedMargin() const
+{
+=======
+/* virtual */
+nsMargin nsTableFrame::GetUsedMargin() const {
+>>>>>>> upstream-releases
   // The margin is inherited to the table wrapper frame via
   // the ::-moz-table-wrapper rule in ua.css.
   return nsMargin(0, 0, 0, 0);
@@ -2790,10 +3445,24 @@ LogicalMargin nsTableFrame::GetExcludedOuterBCBorder(
   return GetOuterBCBorder(aWM) - GetIncludedOuterBCBorder(aWM);
 }
 
+<<<<<<< HEAD
 static LogicalMargin GetSeparateModelBorderPadding(
     const WritingMode aWM, const ReflowInput* aReflowInput,
     ComputedStyle* aComputedStyle) {
   // XXXbz Either we _do_ have a reflow state and then we can use its
+||||||| merged common ancestors
+static LogicalMargin
+GetSeparateModelBorderPadding(const WritingMode aWM,
+                              const ReflowInput* aReflowInput,
+                              ComputedStyle* aComputedStyle)
+{
+  // XXXbz Either we _do_ have a reflow state and then we can use its
+=======
+static LogicalMargin GetSeparateModelBorderPadding(
+    const WritingMode aWM, const ReflowInput* aReflowInput,
+    ComputedStyle* aComputedStyle) {
+  // XXXbz Either we _do_ have a reflow input and then we can use its
+>>>>>>> upstream-releases
   // mComputedBorderPadding or we don't and then we get the padding
   // wrong!
   const nsStyleBorder* border = aComputedStyle->StyleBorder();
@@ -2824,7 +3493,7 @@ void nsTableFrame::InitChildReflowInput(ReflowInput& aReflowInput) {
     collapseBorder = border.GetPhysicalMargin(wm);
     pCollapseBorder = &collapseBorder;
   }
-  aReflowInput.Init(presContext, nullptr, pCollapseBorder, &padding);
+  aReflowInput.Init(presContext, Nothing(), pCollapseBorder, &padding);
 
   NS_ASSERTION(!mBits.mResizedColumns ||
                    !aReflowInput.mParentReflowInput->mFlags.mSpecialBSizeReflow,
@@ -2834,7 +3503,7 @@ void nsTableFrame::InitChildReflowInput(ReflowInput& aReflowInput) {
   }
 }
 
-// Position and size aKidFrame and update our reflow state. The origin of
+// Position and size aKidFrame and update our reflow input. The origin of
 // aKidRect is relative to the upper-left origin of our frame
 void nsTableFrame::PlaceChild(TableReflowInput& aReflowInput,
                               nsIFrame* aKidFrame, nsPoint aKidPosition,
@@ -2975,8 +3644,18 @@ nsresult nsTableFrame::SetupHeaderFooterChild(
   // XXX check for containerSize.* == NS_UNCONSTRAINEDSIZE
 
   availSize.BSize(wm) = NS_UNCONSTRAINEDSIZE;
+<<<<<<< HEAD
   ReflowInput kidReflowInput(presContext, aReflowInput.reflowInput, aFrame,
                              availSize, nullptr, ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+  ReflowInput kidReflowInput(presContext, aReflowInput.reflowInput,
+                                   aFrame, availSize, nullptr,
+                                   ReflowInput::CALLER_WILL_INIT);
+=======
+  ReflowInput kidReflowInput(presContext, aReflowInput.reflowInput, aFrame,
+                             availSize, Nothing(),
+                             ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
   InitChildReflowInput(kidReflowInput);
   kidReflowInput.mFlags.mIsTopOfPage = true;
   ReflowOutput desiredSize(aReflowInput.reflowInput);
@@ -3003,9 +3682,21 @@ void nsTableFrame::PlaceRepeatedFooter(TableReflowInput& aReflowInput,
   // XXX check for containerSize.* == NS_UNCONSTRAINEDSIZE
 
   kidAvailSize.BSize(wm) = aFooterHeight;
+<<<<<<< HEAD
   ReflowInput footerReflowInput(presContext, aReflowInput.reflowInput, aTfoot,
                                 kidAvailSize, nullptr,
                                 ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+  ReflowInput footerReflowInput(presContext,
+                                      aReflowInput.reflowInput,
+                                      aTfoot, kidAvailSize,
+                                      nullptr,
+                                      ReflowInput::CALLER_WILL_INIT);
+=======
+  ReflowInput footerReflowInput(presContext, aReflowInput.reflowInput, aTfoot,
+                                kidAvailSize, Nothing(),
+                                ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
   InitChildReflowInput(footerReflowInput);
   aReflowInput.bCoord += GetRowSpacing(GetRowCount());
 
@@ -3152,8 +3843,18 @@ void nsTableFrame::ReflowChildren(TableReflowInput& aReflowInput,
 
       // Reflow the child into the available space
       ReflowInput kidReflowInput(presContext, aReflowInput.reflowInput,
+<<<<<<< HEAD
                                  kidFrame, kidAvailSize, nullptr,
                                  ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+                                       kidFrame,
+                                       kidAvailSize,
+                                       nullptr,
+                                       ReflowInput::CALLER_WILL_INIT);
+=======
+                                 kidFrame, kidAvailSize, Nothing(),
+                                 ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
       InitChildReflowInput(kidReflowInput);
 
       // If this isn't the first row group, and the previous row group has a
@@ -3349,9 +4050,20 @@ void nsTableFrame::ReflowColGroups(gfxContext* aRenderingContext) {
     nsPresContext* presContext = PresContext();
     for (nsIFrame* kidFrame : mColGroups) {
       if (NS_SUBTREE_DIRTY(kidFrame)) {
+<<<<<<< HEAD
         // The column groups don't care about dimensions or reflow states.
         ReflowInput kidReflowInput(presContext, kidFrame, aRenderingContext,
                                    LogicalSize(kidFrame->GetWritingMode()));
+||||||| merged common ancestors
+        // The column groups don't care about dimensions or reflow states.
+        ReflowInput
+          kidReflowInput(presContext, kidFrame, aRenderingContext,
+                         LogicalSize(kidFrame->GetWritingMode()));
+=======
+        // The column groups don't care about dimensions or reflow inputs.
+        ReflowInput kidReflowInput(presContext, kidFrame, aRenderingContext,
+                                   LogicalSize(kidFrame->GetWritingMode()));
+>>>>>>> upstream-releases
         nsReflowStatus cgStatus;
         ReflowChild(kidFrame, presContext, kidMet, kidReflowInput, 0, 0, 0,
                     cgStatus);
@@ -3800,18 +4512,46 @@ nscoord nsTableFrame::GetRowSpacing(int32_t aStartRowIndex,
   return GetRowSpacing() * (aEndRowIndex - aStartRowIndex);
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsTableFrame::GetLogicalBaseline(WritingMode aWM) const {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsTableFrame::GetLogicalBaseline(WritingMode aWM) const
+{
+=======
+/* virtual */
+nscoord nsTableFrame::GetLogicalBaseline(WritingMode aWM) const {
+>>>>>>> upstream-releases
   nscoord baseline;
+<<<<<<< HEAD
   if (!GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst,
                                  &baseline)) {
+||||||| merged common ancestors
+  if (!GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst, &baseline)) {
+=======
+  if (!GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::First, &baseline)) {
+>>>>>>> upstream-releases
     baseline = BSize(aWM);
   }
   return baseline;
 }
 
+<<<<<<< HEAD
 /* virtual */ bool nsTableFrame::GetNaturalBaselineBOffset(
     WritingMode aWM, BaselineSharingGroup aBaselineGroup,
     nscoord* aBaseline) const {
+||||||| merged common ancestors
+/* virtual */ bool
+nsTableFrame::GetNaturalBaselineBOffset(WritingMode aWM,
+                                        BaselineSharingGroup aBaselineGroup,
+                                        nscoord*             aBaseline) const
+{
+=======
+/* virtual */
+bool nsTableFrame::GetNaturalBaselineBOffset(
+    WritingMode aWM, BaselineSharingGroup aBaselineGroup,
+    nscoord* aBaseline) const {
+>>>>>>> upstream-releases
   RowGroupArray orderedRowGroups;
   OrderRowGroups(orderedRowGroups);
   // XXX not sure if this should be the size of the containing block instead.
@@ -3824,7 +4564,7 @@ nscoord nsTableFrame::GetRowSpacing(int32_t aStartRowIndex,
         LogicalRect(aWM, aRow->GetNormalRect(), containerSize).BStart(aWM);
     return rgBStart + rowBStart + aRow->GetRowBaseline(aWM);
   };
-  if (aBaselineGroup == BaselineSharingGroup::eFirst) {
+  if (aBaselineGroup == BaselineSharingGroup::First) {
     for (uint32_t rgIndex = 0; rgIndex < orderedRowGroups.Length(); rgIndex++) {
       nsTableRowGroupFrame* rgFrame = orderedRowGroups[rgIndex];
       nsTableRowFrame* row = rgFrame->GetFirstRow();
@@ -3848,9 +4588,19 @@ nscoord nsTableFrame::GetRowSpacing(int32_t aStartRowIndex,
 
 /* ----- global methods ----- */
 
+<<<<<<< HEAD
 nsTableFrame* NS_NewTableFrame(nsIPresShell* aPresShell,
                                ComputedStyle* aStyle) {
   return new (aPresShell) nsTableFrame(aStyle);
+||||||| merged common ancestors
+nsTableFrame*
+NS_NewTableFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTableFrame(aStyle);
+=======
+nsTableFrame* NS_NewTableFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsTableFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableFrame)
@@ -3891,17 +4641,30 @@ nsTableFrame* nsTableFrame::GetTableFramePassingThrough(
   return tableFrame;
 }
 
+<<<<<<< HEAD
 bool nsTableFrame::IsAutoBSize(WritingMode aWM) {
   const nsStyleCoord& bsize = StylePosition()->BSize(aWM);
+||||||| merged common ancestors
+bool
+nsTableFrame::IsAutoBSize(WritingMode aWM)
+{
+  const nsStyleCoord &bsize = StylePosition()->BSize(aWM);
+=======
+bool nsTableFrame::IsAutoBSize(WritingMode aWM) {
+  const auto& bsize = StylePosition()->BSize(aWM);
+  if (bsize.IsAuto()) {
+    return true;
+  }
+>>>>>>> upstream-releases
   // Don't consider calc() here like this quirk for percent.
-  return bsize.GetUnit() == eStyleUnit_Auto ||
-         (bsize.GetUnit() == eStyleUnit_Percent &&
-          bsize.GetPercentValue() <= 0.0f);
+  // FIXME(emilio): calc() causing this behavior change seems odd.
+  return bsize.HasPercent() && !bsize.AsLengthPercentage().was_calc &&
+         bsize.ToPercentage() <= 0.0f;
 }
 
 nscoord nsTableFrame::CalcBorderBoxBSize(const ReflowInput& aReflowInput) {
   nscoord bSize = aReflowInput.ComputedBSize();
-  if (NS_AUTOHEIGHT != bSize) {
+  if (NS_UNCONSTRAINEDSIZE != bSize) {
     WritingMode wm = aReflowInput.GetWritingMode();
     LogicalMargin borderPadding = GetChildAreaOffset(wm, &aReflowInput);
     bSize += borderPadding.BStartEnd(wm);
@@ -3914,13 +4677,25 @@ nscoord nsTableFrame::CalcBorderBoxBSize(const ReflowInput& aReflowInput) {
 bool nsTableFrame::IsAutoLayout() {
   if (StyleTable()->mLayoutStrategy == NS_STYLE_TABLE_LAYOUT_AUTO) return true;
   // a fixed-layout inline-table must have a inline size
-  // and tables with inline size set to '-moz-max-content' must be
+  // and tables with inline size set to 'max-content' must be
   // auto-layout (at least as long as
   // FixedTableLayoutStrategy::GetPrefISize returns nscoord_MAX)
+<<<<<<< HEAD
   const nsStyleCoord& iSize = StylePosition()->ISize(GetWritingMode());
   return (iSize.GetUnit() == eStyleUnit_Auto) ||
          (iSize.GetUnit() == eStyleUnit_Enumerated &&
           iSize.GetIntValue() == NS_STYLE_WIDTH_MAX_CONTENT);
+||||||| merged common ancestors
+  const nsStyleCoord &iSize = StylePosition()->ISize(GetWritingMode());
+  return (iSize.GetUnit() == eStyleUnit_Auto) ||
+         (iSize.GetUnit() == eStyleUnit_Enumerated &&
+          iSize.GetIntValue() == NS_STYLE_WIDTH_MAX_CONTENT);
+=======
+  const auto& iSize = StylePosition()->ISize(GetWritingMode());
+  return iSize.IsAuto() ||
+         (iSize.IsExtremumLength() &&
+          iSize.AsExtremumLength() == StyleExtremumLength::MaxContent);
+>>>>>>> upstream-releases
 }
 
 #ifdef DEBUG_FRAME_DUMP
@@ -4069,6 +4844,7 @@ bool nsTableFrame::ColumnHasCellSpacingBefore(int32_t aColIndex) const {
  *******************************************************************************/
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define VerifyNonNegativeDamageRect(r)                       \
   NS_ASSERTION((r).StartCol() >= 0, "negative col index");   \
   NS_ASSERTION((r).StartRow() >= 0, "negative row index");   \
@@ -4080,6 +4856,31 @@ bool nsTableFrame::ColumnHasCellSpacingBefore(int32_t aColIndex) const {
                "cols damage extends outside table"); \
   NS_ASSERTION((r).EndRow() <= GetRowCount(),        \
                "rows damage extends outside table");
+||||||| merged common ancestors
+#define VerifyNonNegativeDamageRect(r)                                  \
+  NS_ASSERTION((r).StartCol() >= 0, "negative col index");              \
+  NS_ASSERTION((r).StartRow() >= 0, "negative row index");              \
+  NS_ASSERTION((r).ColCount() >= 0, "negative cols damage");            \
+  NS_ASSERTION((r).RowCount() >= 0, "negative rows damage");
+#define VerifyDamageRect(r)                                             \
+  VerifyNonNegativeDamageRect(r);                                       \
+  NS_ASSERTION((r).EndCol() <= GetColCount(),                           \
+               "cols damage extends outside table");                    \
+  NS_ASSERTION((r).EndRow() <= GetRowCount(),                           \
+               "rows damage extends outside table");
+=======
+#  define VerifyNonNegativeDamageRect(r)                       \
+    NS_ASSERTION((r).StartCol() >= 0, "negative col index");   \
+    NS_ASSERTION((r).StartRow() >= 0, "negative row index");   \
+    NS_ASSERTION((r).ColCount() >= 0, "negative cols damage"); \
+    NS_ASSERTION((r).RowCount() >= 0, "negative rows damage");
+#  define VerifyDamageRect(r)                          \
+    VerifyNonNegativeDamageRect(r);                    \
+    NS_ASSERTION((r).EndCol() <= GetColCount(),        \
+                 "cols damage extends outside table"); \
+    NS_ASSERTION((r).EndRow() <= GetRowCount(),        \
+                 "rows damage extends outside table");
+>>>>>>> upstream-releases
 #endif
 
 void nsTableFrame::AddBCDamageArea(const TableArea& aValue) {
@@ -4239,11 +5040,26 @@ struct BCMapCellInfo {
   int32_t GetCellEndColIndex() const;
 
   // storage of table information
+<<<<<<< HEAD
   nsTableFrame* mTableFrame;
   int32_t mNumTableRows;
   int32_t mNumTableCols;
   BCPropertyData* mTableBCData;
   WritingMode mTableWM;
+||||||| merged common ancestors
+  nsTableFrame*         mTableFrame;
+  int32_t               mNumTableRows;
+  int32_t               mNumTableCols;
+  BCPropertyData*       mTableBCData;
+  WritingMode           mTableWM;
+=======
+  nsTableFrame* mTableFrame;
+  nsTableFrame* mTableFirstInFlow;
+  int32_t mNumTableRows;
+  int32_t mNumTableCols;
+  BCPropertyData* mTableBCData;
+  WritingMode mTableWM;
+>>>>>>> upstream-releases
 
   // a cell can only belong to one rowgroup
   nsTableRowGroupFrame* mRowGroup;
@@ -4281,6 +5097,7 @@ struct BCMapCellInfo {
 };
 
 BCMapCellInfo::BCMapCellInfo(nsTableFrame* aTableFrame)
+<<<<<<< HEAD
     : mTableFrame(aTableFrame),
       mNumTableRows(aTableFrame->GetRowCount()),
       mNumTableCols(aTableFrame->GetColCount()),
@@ -4289,6 +5106,27 @@ BCMapCellInfo::BCMapCellInfo(nsTableFrame* aTableFrame)
       mCurrentRowFrame(nullptr),
       mCurrentColGroupFrame(nullptr),
       mCurrentColFrame(nullptr) {
+||||||| merged common ancestors
+  : mTableFrame(aTableFrame)
+  , mNumTableRows(aTableFrame->GetRowCount())
+  , mNumTableCols(aTableFrame->GetColCount())
+  , mTableBCData(mTableFrame->GetProperty(TableBCProperty()))
+  , mTableWM(aTableFrame->Style())
+  , mCurrentRowFrame(nullptr)
+  , mCurrentColGroupFrame(nullptr)
+  , mCurrentColFrame(nullptr)
+{
+=======
+    : mTableFrame(aTableFrame),
+      mTableFirstInFlow(static_cast<nsTableFrame*>(aTableFrame->FirstInFlow())),
+      mNumTableRows(aTableFrame->GetRowCount()),
+      mNumTableCols(aTableFrame->GetColCount()),
+      mTableBCData(mTableFrame->GetProperty(TableBCProperty())),
+      mTableWM(aTableFrame->Style()),
+      mCurrentRowFrame(nullptr),
+      mCurrentColGroupFrame(nullptr),
+      mCurrentColFrame(nullptr) {
+>>>>>>> upstream-releases
   ResetCellInfo();
 }
 
@@ -4454,14 +5292,30 @@ void BCMapCellInfo::SetInfo(nsTableRowFrame* aNewRow, int32_t aColIndex,
   mRgAtStart = rgStart == rowIndex;
   mRgAtEnd = rgEnd == rowIndex + mRowSpan - 1;
 
+<<<<<<< HEAD
   // col frame info
   mStartCol = mTableFrame->GetColFrame(aColIndex);
+||||||| merged common ancestors
+   // col frame info
+  mStartCol = mTableFrame->GetColFrame(aColIndex);
+=======
+  // col frame info
+  mStartCol = mTableFirstInFlow->GetColFrame(aColIndex);
+>>>>>>> upstream-releases
   if (!mStartCol) ABORT0();
 
   mEndCol = mStartCol;
   if (mColSpan > 1) {
+<<<<<<< HEAD
     nsTableColFrame* colFrame =
         mTableFrame->GetColFrame(aColIndex + mColSpan - 1);
+||||||| merged common ancestors
+    nsTableColFrame* colFrame = mTableFrame->GetColFrame(aColIndex +
+                                                         mColSpan -1);
+=======
+    nsTableColFrame* colFrame =
+        mTableFirstInFlow->GetColFrame(aColIndex + mColSpan - 1);
+>>>>>>> upstream-releases
     if (!colFrame) ABORT0();
     mEndCol = colFrame;
   }
@@ -4755,9 +5609,18 @@ bool nsTableFrame::BCRecalcNeeded(ComputedStyle* aOldComputedStyle,
   // and hence possibly completely bogus for GetStyle* purposes.
   // We use PeekStyleData instead.
 
+<<<<<<< HEAD
   const nsStyleBorder* oldStyleData = aOldComputedStyle->PeekStyleBorder();
   if (!oldStyleData) return false;
 
+||||||| merged common ancestors
+  const nsStyleBorder* oldStyleData = aOldComputedStyle->PeekStyleBorder();
+  if (!oldStyleData)
+    return false;
+
+=======
+  const nsStyleBorder* oldStyleData = aOldComputedStyle->StyleBorder();
+>>>>>>> upstream-releases
   const nsStyleBorder* newStyleData = aNewComputedStyle->StyleBorder();
   nsChangeHint change = newStyleData->CalcDifference(*oldStyleData);
   if (!change) return false;
@@ -5467,6 +6330,7 @@ void BCMapCellInfo::SetTableBEndBorderWidth(BCPixelSize aWidth) {
       std::max(mTableBCData->mBEndBorderWidth, aWidth);
 }
 
+<<<<<<< HEAD
 void BCMapCellInfo::SetColumn(int32_t aColX) {
   mCurrentColFrame = mTableFrame->GetColFrame(aColX);
   if (!mCurrentColFrame) {
@@ -5474,6 +6338,22 @@ void BCMapCellInfo::SetColumn(int32_t aColX) {
   }
   mCurrentColGroupFrame =
       static_cast<nsTableColGroupFrame*>(mCurrentColFrame->GetParent());
+||||||| merged common ancestors
+void
+BCMapCellInfo::SetColumn(int32_t aColX)
+{
+  mCurrentColFrame = mTableFrame->GetColFrame(aColX);
+  if (!mCurrentColFrame) {
+    NS_ERROR("null mCurrentColFrame");
+  }
+  mCurrentColGroupFrame = static_cast<nsTableColGroupFrame*>
+                            (mCurrentColFrame->GetParent());
+=======
+void BCMapCellInfo::SetColumn(int32_t aColX) {
+  mCurrentColFrame = mTableFirstInFlow->GetColFrame(aColX);
+  mCurrentColGroupFrame =
+      static_cast<nsTableColGroupFrame*>(mCurrentColFrame->GetParent());
+>>>>>>> upstream-releases
   if (!mCurrentColGroupFrame) {
     NS_ERROR("null mCurrentColGroupFrame");
   }
@@ -5557,13 +6437,57 @@ BCCellBorder BCMapCellInfo::GetBStartInternalBorder() {
    border edge on the top of the cell. There are n=colspan top and bottom border
    edges per cell and n=rowspan left and right border edges per cell.
 
+<<<<<<< HEAD
    1) On the top edge of the table, store the top-left corner, unless on the
       left edge of the table. Never store the top-right corner, since it will
       get stored as a right-top corner.
 
    2) On the left edge of the table, store the left-top corner. Never store the
       left-bottom corner, since it will get stored as a bottom-left corner.
+||||||| merged common ancestors
+   1) On the top edge of the table, store the top-left corner, unless on the left edge of the table.
+      Never store the top-right corner, since it will get stored as a right-top corner.
+   2) On the left edge of the table, store the left-top corner. Never store the left-bottom corner,
+      since it will get stored as a bottom-left corner.
+   3) Store the right-top corner if (a) it is the top right corner of the table or (b) it is not on
+      the top edge of the table. Never store the right-bottom corner since it will get stored as a
+      bottom-right corner.
+   4) Store the bottom-right corner, if it is the bottom right corner of the table. Never store it
+      otherwise, since it will get stored as either a right-top corner by a cell below or
+      a bottom-left corner from a cell to the right.
+   5) Store the bottom-left corner, if (a) on the bottom edge of the table or (b) if the left edge hits
+      the top side of a colspan in its interior. Never store the corner otherwise, since it will
+      get stored as a right-top corner by a cell from below.
 
+   XXX the BC-RTL hack - The correct fix would be a rewrite as described in bug 203686.
+   In order to draw borders in rtl conditions somehow correct, the existing structure which relies
+   heavily on the assumption that the next cell sibling will be on the right side, has been modified.
+   We flip the border during painting and during style lookup. Look for tableIsLTR for places where
+   the flipping is done.
+ */
+=======
+   1) On the top edge of the table, store the top-left corner, unless on the
+      left edge of the table. Never store the top-right corner, since it will
+      get stored as a right-top corner.
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+   3) Store the right-top corner if (a) it is the top right corner of the table
+      or (b) it is not on the top edge of the table. Never store the
+      right-bottom corner since it will get stored as a bottom-right corner.
+||||||| merged common ancestors
+=======
+   2) On the left edge of the table, store the left-top corner. Never store the
+      left-bottom corner, since it will get stored as a bottom-left corner.
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+   4) Store the bottom-right corner, if it is the bottom right corner of the
+      table. Never store it otherwise, since it will get stored as either a
+      right-top corner by a cell below or a bottom-left corner from a cell to
+      the right.
+||||||| merged common ancestors
+=======
    3) Store the right-top corner if (a) it is the top right corner of the table
       or (b) it is not on the top edge of the table. Never store the
       right-bottom corner since it will get stored as a bottom-right corner.
@@ -5585,10 +6509,35 @@ BCCellBorder BCMapCellInfo::GetBStartInternalBorder() {
    during painting and during style lookup. Look for tableIsLTR for places where
    the flipping is done.
  */
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+   5) Store the bottom-left corner, if (a) on the bottom edge of the table or
+      (b) if the left edge hits the top side of a colspan in its interior.
+      Never store the corner otherwise, since it will get stored as a right-top
+      corner by a cell from below.
+
+   XXX the BC-RTL hack - The correct fix would be a rewrite as described in bug
+   203686. In order to draw borders in rtl conditions somehow correct, the
+   existing structure which relies heavily on the assumption that the next cell
+   sibling will be on the right side, has been modified. We flip the border
+   during painting and during style lookup. Look for tableIsLTR for places where
+   the flipping is done.
+ */
 
 // Calc the dominant border at every cell edge and corner within the current
 // damage area
 void nsTableFrame::CalcBCBorders() {
+||||||| merged common ancestors
+// Calc the dominant border at every cell edge and corner within the current damage area
+void
+nsTableFrame::CalcBCBorders()
+{
+=======
+// Calc the dominant border at every cell edge and corner within the current
+// damage area
+void nsTableFrame::CalcBCBorders() {
+>>>>>>> upstream-releases
   NS_ASSERTION(IsBorderCollapse(),
                "calling CalcBCBorders on separated-border table");
   nsTableCellMap* tableCellMap = GetCellMap();
@@ -6182,26 +7131,45 @@ struct BCCreateWebRenderCommandsData {
 
 struct BCPaintBorderAction {
   explicit BCPaintBorderAction(DrawTarget& aDrawTarget)
+<<<<<<< HEAD
       : mMode(Mode::PAINT), mPaintData(aDrawTarget) {}
+||||||| merged common ancestors
+    : mMode(Mode::PAINT)
+    , mPaintData(aDrawTarget)
+  {
+  }
+=======
+      : mMode(Mode::Paint), mPaintData(aDrawTarget) {}
+>>>>>>> upstream-releases
 
   BCPaintBorderAction(wr::DisplayListBuilder& aBuilder,
                       const layers::StackingContextHelper& aSc,
                       const nsPoint& aOffsetToReferenceFrame)
+<<<<<<< HEAD
       : mMode(Mode::CREATE_WEBRENDER_COMMANDS),
         mCreateWebRenderCommandsData(aBuilder, aSc, aOffsetToReferenceFrame) {}
+||||||| merged common ancestors
+    : mMode(Mode::CREATE_WEBRENDER_COMMANDS)
+    , mCreateWebRenderCommandsData(aBuilder, aSc, aOffsetToReferenceFrame)
+  {
+  }
+=======
+      : mMode(Mode::CreateWebRenderCommands),
+        mCreateWebRenderCommandsData(aBuilder, aSc, aOffsetToReferenceFrame) {}
+>>>>>>> upstream-releases
 
   ~BCPaintBorderAction() {
     // mCreateWebRenderCommandsData is in a union which means the destructor
     // wouldn't be called when BCPaintBorderAction get destroyed. So call the
     // destructor here explicitly.
-    if (mMode == Mode::CREATE_WEBRENDER_COMMANDS) {
+    if (mMode == Mode::CreateWebRenderCommands) {
       mCreateWebRenderCommandsData.~BCCreateWebRenderCommandsData();
     }
   }
 
   enum class Mode {
-    PAINT,
-    CREATE_WEBRENDER_COMMANDS,
+    Paint,
+    CreateWebRenderCommands,
   };
 
   Mode mMode;
@@ -7467,15 +8435,30 @@ void BCPaintBorderIterator::AccumulateOrDoActionInlineDirSegment(
     if (mInlineSeg.mLength > 0) {
       mInlineSeg.GetIEndCorner(*this, iStartSegISize);
       if (mInlineSeg.mWidth > 0) {
-        if (aAction.mMode == BCPaintBorderAction::Mode::PAINT) {
+        if (aAction.mMode == BCPaintBorderAction::Mode::Paint) {
           mInlineSeg.Paint(*this, aAction.mPaintData.mDrawTarget);
         } else {
+<<<<<<< HEAD
           MOZ_ASSERT(aAction.mMode ==
                      BCPaintBorderAction::Mode::CREATE_WEBRENDER_COMMANDS);
           mInlineSeg.CreateWebRenderCommands(
               *this, aAction.mCreateWebRenderCommandsData.mBuilder,
               aAction.mCreateWebRenderCommandsData.mSc,
               aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+||||||| merged common ancestors
+          MOZ_ASSERT(aAction.mMode == BCPaintBorderAction::Mode::CREATE_WEBRENDER_COMMANDS);
+          mInlineSeg.CreateWebRenderCommands(*this,
+                                             aAction.mCreateWebRenderCommandsData.mBuilder,
+                                             aAction.mCreateWebRenderCommandsData.mSc,
+                                             aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+=======
+          MOZ_ASSERT(aAction.mMode ==
+                     BCPaintBorderAction::Mode::CreateWebRenderCommands);
+          mInlineSeg.CreateWebRenderCommands(
+              *this, aAction.mCreateWebRenderCommandsData.mBuilder,
+              aAction.mCreateWebRenderCommandsData.mSc,
+              aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+>>>>>>> upstream-releases
         }
       }
       mInlineSeg.AdvanceOffsetI();
@@ -7518,10 +8501,20 @@ void BCPaintBorderIterator::AccumulateOrDoActionBlockDirSegment(
     if (blockDirSeg.mLength > 0) {
       blockDirSeg.GetBEndCorner(*this, inlineSegBSize);
       if (blockDirSeg.mWidth > 0) {
+<<<<<<< HEAD
         if (aAction.mMode == BCPaintBorderAction::Mode::PAINT) {
           blockDirSeg.Paint(*this, aAction.mPaintData.mDrawTarget,
                             inlineSegBSize);
+||||||| merged common ancestors
+        if (aAction.mMode == BCPaintBorderAction::Mode::PAINT) {
+          blockDirSeg.Paint(*this, aAction.mPaintData.mDrawTarget, inlineSegBSize);
+=======
+        if (aAction.mMode == BCPaintBorderAction::Mode::Paint) {
+          blockDirSeg.Paint(*this, aAction.mPaintData.mDrawTarget,
+                            inlineSegBSize);
+>>>>>>> upstream-releases
         } else {
+<<<<<<< HEAD
           MOZ_ASSERT(aAction.mMode ==
                      BCPaintBorderAction::Mode::CREATE_WEBRENDER_COMMANDS);
           blockDirSeg.CreateWebRenderCommands(
@@ -7529,6 +8522,22 @@ void BCPaintBorderIterator::AccumulateOrDoActionBlockDirSegment(
               aAction.mCreateWebRenderCommandsData.mBuilder,
               aAction.mCreateWebRenderCommandsData.mSc,
               aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+||||||| merged common ancestors
+          MOZ_ASSERT(aAction.mMode == BCPaintBorderAction::Mode::CREATE_WEBRENDER_COMMANDS);
+          blockDirSeg.CreateWebRenderCommands(*this,
+                                              inlineSegBSize,
+                                              aAction.mCreateWebRenderCommandsData.mBuilder,
+                                              aAction.mCreateWebRenderCommandsData.mSc,
+                                              aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+=======
+          MOZ_ASSERT(aAction.mMode ==
+                     BCPaintBorderAction::Mode::CreateWebRenderCommands);
+          blockDirSeg.CreateWebRenderCommands(
+              *this, inlineSegBSize,
+              aAction.mCreateWebRenderCommandsData.mBuilder,
+              aAction.mCreateWebRenderCommandsData.mSc,
+              aAction.mCreateWebRenderCommandsData.mOffsetToReferenceFrame);
+>>>>>>> upstream-releases
         }
       }
       blockDirSeg.AdvanceOffsetB();
@@ -7665,22 +8674,57 @@ void nsTableFrame::InvalidateTableFrame(nsIFrame* aFrame,
 void nsTableFrame::AppendDirectlyOwnedAnonBoxes(
     nsTArray<OwnedAnonBox>& aResult) {
   nsIFrame* wrapper = GetParent();
+<<<<<<< HEAD
   MOZ_ASSERT(wrapper->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper(),
+||||||| merged common ancestors
+  MOZ_ASSERT(wrapper->Style()->GetPseudo() ==
+               nsCSSAnonBoxes::tableWrapper(),
+=======
+  MOZ_ASSERT(wrapper->Style()->GetPseudoType() == PseudoStyleType::tableWrapper,
+>>>>>>> upstream-releases
              "What happened to our parent?");
   aResult.AppendElement(
       OwnedAnonBox(wrapper, &UpdateStyleOfOwnedAnonBoxesForTableWrapper));
 }
 
+<<<<<<< HEAD
 /* static */ void nsTableFrame::UpdateStyleOfOwnedAnonBoxesForTableWrapper(
     nsIFrame* aOwningFrame, nsIFrame* aWrapperFrame,
     ServoRestyleState& aRestyleState) {
   MOZ_ASSERT(
       aWrapperFrame->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper(),
       "What happened to our parent?");
+||||||| merged common ancestors
+/* static */ void
+nsTableFrame::UpdateStyleOfOwnedAnonBoxesForTableWrapper(
+  nsIFrame* aOwningFrame,
+  nsIFrame* aWrapperFrame,
+  ServoRestyleState& aRestyleState)
+{
+  MOZ_ASSERT(aWrapperFrame->Style()->GetPseudo() ==
+               nsCSSAnonBoxes::tableWrapper(),
+             "What happened to our parent?");
+=======
+/* static */
+void nsTableFrame::UpdateStyleOfOwnedAnonBoxesForTableWrapper(
+    nsIFrame* aOwningFrame, nsIFrame* aWrapperFrame,
+    ServoRestyleState& aRestyleState) {
+  MOZ_ASSERT(
+      aWrapperFrame->Style()->GetPseudoType() == PseudoStyleType::tableWrapper,
+      "What happened to our parent?");
+>>>>>>> upstream-releases
 
   RefPtr<ComputedStyle> newStyle =
+<<<<<<< HEAD
       aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(
           nsCSSAnonBoxes::tableWrapper(), aOwningFrame->Style());
+||||||| merged common ancestors
+    aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(
+      nsCSSAnonBoxes::tableWrapper(), aOwningFrame->Style());
+=======
+      aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(
+          PseudoStyleType::tableWrapper, aOwningFrame->Style());
+>>>>>>> upstream-releases
 
   // Figure out whether we have an actual change.  It's important that we do
   // this, even though all the wrapper's changes are due to properties it
@@ -7697,6 +8741,7 @@ void nsTableFrame::AppendDirectlyOwnedAnonBoxes(
   // compared to the owner frame.
   uint32_t equalStructs;  // Not used, actually.
   nsChangeHint wrapperHint =
+<<<<<<< HEAD
       aWrapperFrame->Style()->CalcStyleDifference(newStyle, &equalStructs);
 
   // CalcStyleDifference will handle caching structs on the new ComputedStyle,
@@ -7705,6 +8750,18 @@ void nsTableFrame::AppendDirectlyOwnedAnonBoxes(
              "if we can get in here from style worker threads, then we need "
              "a ResolveSameStructsAs call to ensure structs are cached on "
              "aNewComputedStyle");
+||||||| merged common ancestors
+    aWrapperFrame->Style()->CalcStyleDifference(newStyle, &equalStructs);
+
+  // CalcStyleDifference will handle caching structs on the new ComputedStyle,
+  // but only if we're not on a style worker thread.
+  MOZ_ASSERT(!ServoStyleSet::IsInServoTraversal(),
+             "if we can get in here from style worker threads, then we need "
+             "a ResolveSameStructsAs call to ensure structs are cached on "
+             "aNewComputedStyle");
+=======
+      aWrapperFrame->Style()->CalcStyleDifference(*newStyle, &equalStructs);
+>>>>>>> upstream-releases
 
   if (wrapperHint) {
     aRestyleState.ChangeList().AppendChange(

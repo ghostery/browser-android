@@ -233,9 +233,27 @@ RefPtr<MediaDataDecoder::DecodePromise> VorbisDataDecoder::ProcessDecode(
     AudioSampleBuffer data(std::move(buffer));
     data = mAudioConverter->Process(std::move(data));
 
+<<<<<<< HEAD
     results.AppendElement(
         new AudioData(aOffset, time, duration, frames, data.Forget(), channels,
                       rate, mAudioConverter->OutputConfig().Layout().Map()));
+||||||| merged common ancestors
+    results.AppendElement(
+      new AudioData(aOffset,
+                    time,
+                    duration,
+                    frames,
+                    data.Forget(),
+                    channels,
+                    rate,
+                    mAudioConverter->OutputConfig().Layout().Map()));
+=======
+    RefPtr<AudioData> audio =
+        new AudioData(aOffset, time, data.Forget(), channels, rate,
+                      mAudioConverter->OutputConfig().Layout().Map());
+    MOZ_DIAGNOSTIC_ASSERT(duration == audio->mDuration, "must be equal");
+    results.AppendElement(std::move(audio));
+>>>>>>> upstream-releases
     mFrames += frames;
     err = vorbis_synthesis_read(&mVorbisDsp, frames);
     if (err) {
@@ -273,8 +291,18 @@ bool VorbisDataDecoder::IsVorbis(const nsACString& aMimeType) {
   return aMimeType.EqualsLiteral("audio/vorbis");
 }
 
+<<<<<<< HEAD
 /* static */ const AudioConfig::Channel* VorbisDataDecoder::VorbisLayout(
     uint32_t aChannels) {
+||||||| merged common ancestors
+/* static */ const AudioConfig::Channel*
+VorbisDataDecoder::VorbisLayout(uint32_t aChannels)
+{
+=======
+/* static */
+const AudioConfig::Channel* VorbisDataDecoder::VorbisLayout(
+    uint32_t aChannels) {
+>>>>>>> upstream-releases
   // From https://www.xiph.org/vorbis/doc/Vorbis_I_spec.html
   // Section 4.3.9.
   typedef AudioConfig::Channel Channel;

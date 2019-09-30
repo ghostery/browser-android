@@ -11,7 +11,7 @@
 #include "mozilla/dom/ClientBinding.h"
 #include "mozilla/dom/ClientsBinding.h"
 #include "mozilla/dom/DocumentBinding.h"
-#include "nsContentUtils.h"
+#include "mozilla/StorageAccess.h"
 
 namespace IPC {
 template <>
@@ -32,6 +32,7 @@ struct ParamTraits<mozilla::dom::VisibilityState>
           mozilla::dom::VisibilityState, mozilla::dom::VisibilityState::Hidden,
           mozilla::dom::VisibilityState::EndGuard_> {};
 
+<<<<<<< HEAD
 template <>
 struct ParamTraits<nsContentUtils::StorageAccess>
     : public ContiguousEnumSerializer<
@@ -39,5 +40,22 @@ struct ParamTraits<nsContentUtils::StorageAccess>
           nsContentUtils::StorageAccess::ePartitionedOrDeny,
           nsContentUtils::StorageAccess::eNumValues> {};
 }  // namespace IPC
+||||||| merged common ancestors
+  template<>
+  struct ParamTraits<nsContentUtils::StorageAccess> :
+    public ContiguousEnumSerializer<nsContentUtils::StorageAccess,
+                                    nsContentUtils::StorageAccess::eDeny,
+                                    nsContentUtils::StorageAccess::eNumValues>
+  {};
+} // namespace IPC
+=======
+template <>
+struct ParamTraits<mozilla::StorageAccess>
+    : public ContiguousEnumSerializer<
+          mozilla::StorageAccess,
+          mozilla::StorageAccess::ePartitionForeignOrDeny,
+          mozilla::StorageAccess::eNumValues> {};
+}  // namespace IPC
+>>>>>>> upstream-releases
 
 #endif  // _mozilla_dom_ClientIPCUtils_h

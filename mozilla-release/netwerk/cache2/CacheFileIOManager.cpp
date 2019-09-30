@@ -34,11 +34,11 @@
 
 // include files for ftruncate (or equivalent)
 #if defined(XP_UNIX)
-#include <unistd.h>
+#  include <unistd.h>
 #elif defined(XP_WIN)
-#include <windows.h>
-#undef CreateFile
-#undef CREATE_NEW
+#  include <windows.h>
+#  undef CreateFile
+#  undef CREATE_NEW
 #else
 // XXX add necessary include file for ftruncate (or equivalent)
 #endif
@@ -109,6 +109,7 @@ NS_INTERFACE_MAP_BEGIN(CacheFileHandle)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 CacheFileHandle::CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority,
                                  PinningStatus aPinning)
     : mHash(aHash),
@@ -124,6 +125,39 @@ CacheFileHandle::CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority,
       mPinning(aPinning),
       mFileSize(-1),
       mFD(nullptr) {
+||||||| merged common ancestors
+CacheFileHandle::CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority, PinningStatus aPinning)
+  : mHash(aHash)
+  , mIsDoomed(false)
+  , mClosed(false)
+  , mPriority(aPriority)
+  , mSpecialFile(false)
+  , mInvalid(false)
+  , mFileExists(false)
+  , mDoomWhenFoundPinned(false)
+  , mDoomWhenFoundNonPinned(false)
+  , mKilled(false)
+  , mPinning(aPinning)
+  , mFileSize(-1)
+  , mFD(nullptr)
+{
+=======
+CacheFileHandle::CacheFileHandle(const SHA1Sum::Hash* aHash, bool aPriority,
+                                 PinningStatus aPinning)
+    : mHash(aHash),
+      mIsDoomed(false),
+      mClosed(false),
+      mPriority(aPriority),
+      mSpecialFile(false),
+      mInvalid(false),
+      mFileExists(false),
+      mDoomWhenFoundPinned(false),
+      mDoomWhenFoundNonPinned(false),
+      mKilled(false),
+      mPinning(aPinning),
+      mFileSize(-1),
+      mFD(nullptr) {
+>>>>>>> upstream-releases
   // If we initialize mDoomed in the initialization list, that initialization is
   // not guaranteeded to be atomic.  Whereas this assignment here is guaranteed
   // to be atomic.  TSan will see this (atomic) assignment and be satisfied
@@ -134,6 +168,7 @@ CacheFileHandle::CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority,
       this, LOGSHA1(aHash)));
 }
 
+<<<<<<< HEAD
 CacheFileHandle::CacheFileHandle(const nsACString &aKey, bool aPriority,
                                  PinningStatus aPinning)
     : mHash(nullptr),
@@ -150,6 +185,41 @@ CacheFileHandle::CacheFileHandle(const nsACString &aKey, bool aPriority,
       mFileSize(-1),
       mFD(nullptr),
       mKey(aKey) {
+||||||| merged common ancestors
+CacheFileHandle::CacheFileHandle(const nsACString &aKey, bool aPriority, PinningStatus aPinning)
+  : mHash(nullptr)
+  , mIsDoomed(false)
+  , mClosed(false)
+  , mPriority(aPriority)
+  , mSpecialFile(true)
+  , mInvalid(false)
+  , mFileExists(false)
+  , mDoomWhenFoundPinned(false)
+  , mDoomWhenFoundNonPinned(false)
+  , mKilled(false)
+  , mPinning(aPinning)
+  , mFileSize(-1)
+  , mFD(nullptr)
+  , mKey(aKey)
+{
+=======
+CacheFileHandle::CacheFileHandle(const nsACString& aKey, bool aPriority,
+                                 PinningStatus aPinning)
+    : mHash(nullptr),
+      mIsDoomed(false),
+      mClosed(false),
+      mPriority(aPriority),
+      mSpecialFile(true),
+      mInvalid(false),
+      mFileExists(false),
+      mDoomWhenFoundPinned(false),
+      mDoomWhenFoundNonPinned(false),
+      mKilled(false),
+      mPinning(aPinning),
+      mFileSize(-1),
+      mFD(nullptr),
+      mKey(aKey) {
+>>>>>>> upstream-releases
   // See comment above about the initialization of mIsDoomed.
   mIsDoomed = false;
   LOG(("CacheFileHandle::CacheFileHandle() [this=%p, key=%s]", this,
@@ -262,13 +332,29 @@ size_t CacheFileHandle::SizeOfIncludingThis(
  *  CacheFileHandles::HandleHashKey
  *****************************************************************************/
 
+<<<<<<< HEAD
 void CacheFileHandles::HandleHashKey::AddHandle(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+void
+CacheFileHandles::HandleHashKey::AddHandle(CacheFileHandle* aHandle)
+{
+=======
+void CacheFileHandles::HandleHashKey::AddHandle(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
 
   mHandles.InsertElementAt(0, aHandle);
 }
 
+<<<<<<< HEAD
 void CacheFileHandles::HandleHashKey::RemoveHandle(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+void
+CacheFileHandles::HandleHashKey::RemoveHandle(CacheFileHandle* aHandle)
+{
+=======
+void CacheFileHandles::HandleHashKey::RemoveHandle(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
 
   DebugOnly<bool> found;
@@ -288,8 +374,17 @@ CacheFileHandles::HandleHashKey::GetNewestHandle() {
   return handle.forget();
 }
 
+<<<<<<< HEAD
 void CacheFileHandles::HandleHashKey::GetHandles(
     nsTArray<RefPtr<CacheFileHandle> > &aResult) {
+||||||| merged common ancestors
+void
+CacheFileHandles::HandleHashKey::GetHandles(nsTArray<RefPtr<CacheFileHandle> > &aResult)
+{
+=======
+void CacheFileHandles::HandleHashKey::GetHandles(
+    nsTArray<RefPtr<CacheFileHandle> >& aResult) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
 
   for (uint32_t i = 0; i < mHandles.Length(); ++i) {
@@ -336,8 +431,18 @@ CacheFileHandles::~CacheFileHandles() {
   MOZ_COUNT_DTOR(CacheFileHandles);
 }
 
+<<<<<<< HEAD
 nsresult CacheFileHandles::GetHandle(const SHA1Sum::Hash *aHash,
                                      CacheFileHandle **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileHandles::GetHandle(const SHA1Sum::Hash *aHash,
+                            CacheFileHandle **_retval)
+{
+=======
+nsresult CacheFileHandles::GetHandle(const SHA1Sum::Hash* aHash,
+                                     CacheFileHandle** _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   MOZ_ASSERT(aHash);
 
@@ -347,7 +452,7 @@ nsresult CacheFileHandles::GetHandle(const SHA1Sum::Hash *aHash,
 #endif
 
   // find hash entry for key
-  HandleHashKey *entry = mTable.GetEntry(*aHash);
+  HandleHashKey* entry = mTable.GetEntry(*aHash);
   if (!entry) {
     LOG(
         ("CacheFileHandles::GetHandle() hash=%08x%08x%08x%08x%08x "
@@ -387,9 +492,22 @@ nsresult CacheFileHandles::GetHandle(const SHA1Sum::Hash *aHash,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileHandles::NewHandle(const SHA1Sum::Hash *aHash, bool aPriority,
                                      CacheFileHandle::PinningStatus aPinning,
                                      CacheFileHandle **_retval) {
+||||||| merged common ancestors
+
+nsresult
+CacheFileHandles::NewHandle(const SHA1Sum::Hash *aHash,
+                            bool aPriority, CacheFileHandle::PinningStatus aPinning,
+                            CacheFileHandle **_retval)
+{
+=======
+nsresult CacheFileHandles::NewHandle(const SHA1Sum::Hash* aHash, bool aPriority,
+                                     CacheFileHandle::PinningStatus aPinning,
+                                     CacheFileHandle** _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   MOZ_ASSERT(aHash);
 
@@ -399,7 +517,7 @@ nsresult CacheFileHandles::NewHandle(const SHA1Sum::Hash *aHash, bool aPriority,
 #endif
 
   // find hash entry for key
-  HandleHashKey *entry = mTable.PutEntry(*aHash);
+  HandleHashKey* entry = mTable.PutEntry(*aHash);
 
 #ifdef DEBUG_HANDLES
   Log(entry);
@@ -422,7 +540,15 @@ nsresult CacheFileHandles::NewHandle(const SHA1Sum::Hash *aHash, bool aPriority,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void CacheFileHandles::RemoveHandle(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+void
+CacheFileHandles::RemoveHandle(CacheFileHandle *aHandle)
+{
+=======
+void CacheFileHandles::RemoveHandle(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   MOZ_ASSERT(aHandle);
 
@@ -437,7 +563,7 @@ void CacheFileHandles::RemoveHandle(CacheFileHandle *aHandle) {
 #endif
 
   // find hash entry for key
-  HandleHashKey *entry = mTable.GetEntry(*aHandle->Hash());
+  HandleHashKey* entry = mTable.GetEntry(*aHandle->Hash());
   if (!entry) {
     MOZ_ASSERT(CacheFileIOManager::IsShutdown(),
                "Should find entry when removing a handle before shutdown");
@@ -468,16 +594,35 @@ void CacheFileHandles::RemoveHandle(CacheFileHandle *aHandle) {
   }
 }
 
+<<<<<<< HEAD
 void CacheFileHandles::GetAllHandles(
     nsTArray<RefPtr<CacheFileHandle> > *_retval) {
+||||||| merged common ancestors
+void
+CacheFileHandles::GetAllHandles(nsTArray<RefPtr<CacheFileHandle> > *_retval)
+{
+=======
+void CacheFileHandles::GetAllHandles(
+    nsTArray<RefPtr<CacheFileHandle> >* _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   for (auto iter = mTable.Iter(); !iter.Done(); iter.Next()) {
     iter.Get()->GetHandles(*_retval);
   }
 }
 
+<<<<<<< HEAD
 void CacheFileHandles::GetActiveHandles(
     nsTArray<RefPtr<CacheFileHandle> > *_retval) {
+||||||| merged common ancestors
+void
+CacheFileHandles::GetActiveHandles(
+  nsTArray<RefPtr<CacheFileHandle> > *_retval)
+{
+=======
+void CacheFileHandles::GetActiveHandles(
+    nsTArray<RefPtr<CacheFileHandle> >* _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   for (auto iter = mTable.Iter(); !iter.Done(); iter.Next()) {
     RefPtr<CacheFileHandle> handle = iter.Get()->GetNewestHandle();
@@ -497,14 +642,22 @@ void CacheFileHandles::ClearAll() {
 uint32_t CacheFileHandles::HandleCount() { return mTable.Count(); }
 
 #ifdef DEBUG_HANDLES
+<<<<<<< HEAD
 void CacheFileHandles::Log(CacheFileHandlesEntry *entry) {
+||||||| merged common ancestors
+void
+CacheFileHandles::Log(CacheFileHandlesEntry *entry)
+{
+=======
+void CacheFileHandles::Log(CacheFileHandlesEntry* entry) {
+>>>>>>> upstream-releases
   LOG(("CacheFileHandles::Log() BEGIN [entry=%p]", entry));
 
   nsTArray<RefPtr<CacheFileHandle> > array;
   aEntry->GetHandles(array);
 
   for (uint32_t i = 0; i < array.Length(); ++i) {
-    CacheFileHandle *handle = array[i];
+    CacheFileHandle* handle = array[i];
     handle->Log();
   }
 
@@ -577,12 +730,26 @@ class IOPerfReportEvent {
   explicit IOPerfReportEvent(CacheFileUtils::CachePerfStats::EDataType aType)
       : mType(aType), mEventCounter(0) {}
 
+<<<<<<< HEAD
   void Start(CacheIOThread *aIOThread) {
+||||||| merged common ancestors
+  void Start(CacheIOThread *aIOThread)
+  {
+=======
+  void Start(CacheIOThread* aIOThread) {
+>>>>>>> upstream-releases
     mStartTime = TimeStamp::Now();
     mEventCounter = aIOThread->EventCounter();
   }
 
+<<<<<<< HEAD
   void Report(CacheIOThread *aIOThread) {
+||||||| merged common ancestors
+  void Report(CacheIOThread *aIOThread)
+  {
+=======
+  void Report(CacheIOThread* aIOThread) {
+>>>>>>> upstream-releases
     if (mStartTime.IsNull()) {
       return;
     }
@@ -606,6 +773,7 @@ class IOPerfReportEvent {
   uint32_t mEventCounter;
 };
 
+<<<<<<< HEAD
 class OpenFileEvent : public Runnable, public IOPerfReportEvent {
  public:
   OpenFileEvent(const nsACString &aKey, uint32_t aFlags,
@@ -615,6 +783,29 @@ class OpenFileEvent : public Runnable, public IOPerfReportEvent {
         mFlags(aFlags),
         mCallback(aCallback),
         mKey(aKey) {
+||||||| merged common ancestors
+class OpenFileEvent : public Runnable
+                    , public IOPerfReportEvent {
+public:
+  OpenFileEvent(const nsACString &aKey, uint32_t aFlags,
+                CacheFileIOListener *aCallback)
+    : Runnable("net::OpenFileEvent")
+    , IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_OPEN)
+    , mFlags(aFlags)
+    , mCallback(aCallback)
+    , mKey(aKey)
+  {
+=======
+class OpenFileEvent : public Runnable, public IOPerfReportEvent {
+ public:
+  OpenFileEvent(const nsACString& aKey, uint32_t aFlags,
+                CacheFileIOListener* aCallback)
+      : Runnable("net::OpenFileEvent"),
+        IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_OPEN),
+        mFlags(aFlags),
+        mCallback(aCallback),
+        mKey(aKey) {
+>>>>>>> upstream-releases
     mIOMan = CacheFileIOManager::gInstance;
     if (!(mFlags & CacheFileIOManager::SPECIAL_FILE)) {
       Start(mIOMan->mIOThread);
@@ -668,6 +859,7 @@ class OpenFileEvent : public Runnable, public IOPerfReportEvent {
   nsCString mKey;
 };
 
+<<<<<<< HEAD
 class ReadEvent : public Runnable, public IOPerfReportEvent {
  public:
   ReadEvent(CacheFileHandle *aHandle, int64_t aOffset, char *aBuf,
@@ -679,6 +871,33 @@ class ReadEvent : public Runnable, public IOPerfReportEvent {
         mBuf(aBuf),
         mCount(aCount),
         mCallback(aCallback) {
+||||||| merged common ancestors
+class ReadEvent : public Runnable
+                , public IOPerfReportEvent {
+public:
+  ReadEvent(CacheFileHandle *aHandle, int64_t aOffset, char *aBuf,
+            int32_t aCount, CacheFileIOListener *aCallback)
+    : Runnable("net::ReadEvent")
+    , IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_READ)
+    , mHandle(aHandle)
+    , mOffset(aOffset)
+    , mBuf(aBuf)
+    , mCount(aCount)
+    , mCallback(aCallback)
+  {
+=======
+class ReadEvent : public Runnable, public IOPerfReportEvent {
+ public:
+  ReadEvent(CacheFileHandle* aHandle, int64_t aOffset, char* aBuf,
+            int32_t aCount, CacheFileIOListener* aCallback)
+      : Runnable("net::ReadEvent"),
+        IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_READ),
+        mHandle(aHandle),
+        mOffset(aOffset),
+        mBuf(aBuf),
+        mCount(aCount),
+        mCallback(aCallback) {
+>>>>>>> upstream-releases
     if (!mHandle->IsSpecialFile()) {
       Start(CacheFileIOManager::gInstance->mIOThread);
     }
@@ -705,18 +924,44 @@ class ReadEvent : public Runnable, public IOPerfReportEvent {
     return NS_OK;
   }
 
+<<<<<<< HEAD
  protected:
   RefPtr<CacheFileHandle> mHandle;
   int64_t mOffset;
   char *mBuf;
   int32_t mCount;
+||||||| merged common ancestors
+protected:
+  RefPtr<CacheFileHandle>       mHandle;
+  int64_t                       mOffset;
+  char                         *mBuf;
+  int32_t                       mCount;
+=======
+ protected:
+  RefPtr<CacheFileHandle> mHandle;
+  int64_t mOffset;
+  char* mBuf;
+  int32_t mCount;
+>>>>>>> upstream-releases
   nsCOMPtr<CacheFileIOListener> mCallback;
 };
 
+<<<<<<< HEAD
 class WriteEvent : public Runnable, public IOPerfReportEvent {
  public:
   WriteEvent(CacheFileHandle *aHandle, int64_t aOffset, const char *aBuf,
+||||||| merged common ancestors
+class WriteEvent : public Runnable
+                 , public IOPerfReportEvent {
+public:
+  WriteEvent(CacheFileHandle *aHandle, int64_t aOffset, const char *aBuf,
+=======
+class WriteEvent : public Runnable, public IOPerfReportEvent {
+ public:
+  WriteEvent(CacheFileHandle* aHandle, int64_t aOffset, const char* aBuf,
+>>>>>>> upstream-releases
              int32_t aCount, bool aValidate, bool aTruncate,
+<<<<<<< HEAD
              CacheFileIOListener *aCallback)
       : Runnable("net::WriteEvent"),
         IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_WRITE),
@@ -727,6 +972,30 @@ class WriteEvent : public Runnable, public IOPerfReportEvent {
         mValidate(aValidate),
         mTruncate(aTruncate),
         mCallback(aCallback) {
+||||||| merged common ancestors
+             CacheFileIOListener *aCallback)
+    : Runnable("net::WriteEvent")
+    , IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_WRITE)
+    , mHandle(aHandle)
+    , mOffset(aOffset)
+    , mBuf(aBuf)
+    , mCount(aCount)
+    , mValidate(aValidate)
+    , mTruncate(aTruncate)
+    , mCallback(aCallback)
+  {
+=======
+             CacheFileIOListener* aCallback)
+      : Runnable("net::WriteEvent"),
+        IOPerfReportEvent(CacheFileUtils::CachePerfStats::IO_WRITE),
+        mHandle(aHandle),
+        mOffset(aOffset),
+        mBuf(aBuf),
+        mCount(aCount),
+        mValidate(aValidate),
+        mTruncate(aTruncate),
+        mCallback(aCallback) {
+>>>>>>> upstream-releases
     if (!mHandle->IsSpecialFile()) {
       Start(CacheFileIOManager::gInstance->mIOThread);
     }
@@ -735,7 +1004,7 @@ class WriteEvent : public Runnable, public IOPerfReportEvent {
  protected:
   ~WriteEvent() {
     if (!mCallback && mBuf) {
-      free(const_cast<char *>(mBuf));
+      free(const_cast<char*>(mBuf));
     }
   }
 
@@ -765,13 +1034,14 @@ class WriteEvent : public Runnable, public IOPerfReportEvent {
     if (mCallback) {
       mCallback->OnDataWritten(mHandle, mBuf, rv);
     } else {
-      free(const_cast<char *>(mBuf));
+      free(const_cast<char*>(mBuf));
       mBuf = nullptr;
     }
 
     return NS_OK;
   }
 
+<<<<<<< HEAD
  protected:
   RefPtr<CacheFileHandle> mHandle;
   int64_t mOffset;
@@ -779,15 +1049,48 @@ class WriteEvent : public Runnable, public IOPerfReportEvent {
   int32_t mCount;
   bool mValidate : 1;
   bool mTruncate : 1;
+||||||| merged common ancestors
+protected:
+  RefPtr<CacheFileHandle>       mHandle;
+  int64_t                       mOffset;
+  const char                   *mBuf;
+  int32_t                       mCount;
+  bool                          mValidate : 1;
+  bool                          mTruncate : 1;
+=======
+ protected:
+  RefPtr<CacheFileHandle> mHandle;
+  int64_t mOffset;
+  const char* mBuf;
+  int32_t mCount;
+  bool mValidate : 1;
+  bool mTruncate : 1;
+>>>>>>> upstream-releases
   nsCOMPtr<CacheFileIOListener> mCallback;
 };
 
 class DoomFileEvent : public Runnable {
+<<<<<<< HEAD
  public:
   DoomFileEvent(CacheFileHandle *aHandle, CacheFileIOListener *aCallback)
       : Runnable("net::DoomFileEvent"),
         mCallback(aCallback),
         mHandle(aHandle) {}
+||||||| merged common ancestors
+public:
+  DoomFileEvent(CacheFileHandle* aHandle, CacheFileIOListener* aCallback)
+    : Runnable("net::DoomFileEvent")
+    , mCallback(aCallback)
+    , mHandle(aHandle)
+  {
+  }
+=======
+ public:
+  DoomFileEvent(CacheFileHandle* aHandle, CacheFileIOListener* aCallback)
+      : Runnable("net::DoomFileEvent"),
+        mCallback(aCallback),
+        mHandle(aHandle) {}
+>>>>>>> upstream-releases
 
  protected:
   ~DoomFileEvent() = default;
@@ -816,9 +1119,21 @@ class DoomFileEvent : public Runnable {
 };
 
 class DoomFileByKeyEvent : public Runnable {
+<<<<<<< HEAD
  public:
   DoomFileByKeyEvent(const nsACString &aKey, CacheFileIOListener *aCallback)
       : Runnable("net::DoomFileByKeyEvent"), mCallback(aCallback) {
+||||||| merged common ancestors
+public:
+  DoomFileByKeyEvent(const nsACString& aKey, CacheFileIOListener* aCallback)
+    : Runnable("net::DoomFileByKeyEvent")
+    , mCallback(aCallback)
+  {
+=======
+ public:
+  DoomFileByKeyEvent(const nsACString& aKey, CacheFileIOListener* aCallback)
+      : Runnable("net::DoomFileByKeyEvent"), mCallback(aCallback) {
+>>>>>>> upstream-releases
     SHA1Sum sum;
     sum.update(aKey.BeginReading(), aKey.Length());
     sum.finish(mHash);
@@ -854,9 +1169,22 @@ class DoomFileByKeyEvent : public Runnable {
 };
 
 class ReleaseNSPRHandleEvent : public Runnable {
+<<<<<<< HEAD
  public:
   explicit ReleaseNSPRHandleEvent(CacheFileHandle *aHandle)
       : Runnable("net::ReleaseNSPRHandleEvent"), mHandle(aHandle) {}
+||||||| merged common ancestors
+public:
+  explicit ReleaseNSPRHandleEvent(CacheFileHandle* aHandle)
+    : Runnable("net::ReleaseNSPRHandleEvent")
+    , mHandle(aHandle)
+  {
+  }
+=======
+ public:
+  explicit ReleaseNSPRHandleEvent(CacheFileHandle* aHandle)
+      : Runnable("net::ReleaseNSPRHandleEvent"), mHandle(aHandle) {}
+>>>>>>> upstream-releases
 
  protected:
   ~ReleaseNSPRHandleEvent() = default;
@@ -875,6 +1203,7 @@ class ReleaseNSPRHandleEvent : public Runnable {
 };
 
 class TruncateSeekSetEOFEvent : public Runnable {
+<<<<<<< HEAD
  public:
   TruncateSeekSetEOFEvent(CacheFileHandle *aHandle, int64_t aTruncatePos,
                           int64_t aEOFPos, CacheFileIOListener *aCallback)
@@ -885,6 +1214,33 @@ class TruncateSeekSetEOFEvent : public Runnable {
         mCallback(aCallback) {}
 
  protected:
+||||||| merged common ancestors
+public:
+  TruncateSeekSetEOFEvent(CacheFileHandle* aHandle,
+                          int64_t aTruncatePos,
+                          int64_t aEOFPos,
+                          CacheFileIOListener* aCallback)
+    : Runnable("net::TruncateSeekSetEOFEvent")
+    , mHandle(aHandle)
+    , mTruncatePos(aTruncatePos)
+    , mEOFPos(aEOFPos)
+    , mCallback(aCallback)
+  {
+  }
+
+protected:
+=======
+ public:
+  TruncateSeekSetEOFEvent(CacheFileHandle* aHandle, int64_t aTruncatePos,
+                          int64_t aEOFPos, CacheFileIOListener* aCallback)
+      : Runnable("net::TruncateSeekSetEOFEvent"),
+        mHandle(aHandle),
+        mTruncatePos(aTruncatePos),
+        mEOFPos(aEOFPos),
+        mCallback(aCallback) {}
+
+ protected:
+>>>>>>> upstream-releases
   ~TruncateSeekSetEOFEvent() = default;
 
  public:
@@ -913,6 +1269,7 @@ class TruncateSeekSetEOFEvent : public Runnable {
 };
 
 class RenameFileEvent : public Runnable {
+<<<<<<< HEAD
  public:
   RenameFileEvent(CacheFileHandle *aHandle, const nsACString &aNewName,
                   CacheFileIOListener *aCallback)
@@ -922,6 +1279,30 @@ class RenameFileEvent : public Runnable {
         mCallback(aCallback) {}
 
  protected:
+||||||| merged common ancestors
+public:
+  RenameFileEvent(CacheFileHandle* aHandle,
+                  const nsACString& aNewName,
+                  CacheFileIOListener* aCallback)
+    : Runnable("net::RenameFileEvent")
+    , mHandle(aHandle)
+    , mNewName(aNewName)
+    , mCallback(aCallback)
+  {
+  }
+
+protected:
+=======
+ public:
+  RenameFileEvent(CacheFileHandle* aHandle, const nsACString& aNewName,
+                  CacheFileIOListener* aCallback)
+      : Runnable("net::RenameFileEvent"),
+        mHandle(aHandle),
+        mNewName(aNewName),
+        mCallback(aCallback) {}
+
+ protected:
+>>>>>>> upstream-releases
   ~RenameFileEvent() = default;
 
  public:
@@ -948,9 +1329,20 @@ class RenameFileEvent : public Runnable {
 };
 
 class InitIndexEntryEvent : public Runnable {
+<<<<<<< HEAD
  public:
   InitIndexEntryEvent(CacheFileHandle *aHandle,
                       OriginAttrsHash aOriginAttrsHash, bool aAnonymous,
+||||||| merged common ancestors
+public:
+  InitIndexEntryEvent(CacheFileHandle* aHandle,
+                      OriginAttrsHash aOriginAttrsHash,
+                      bool aAnonymous,
+=======
+ public:
+  InitIndexEntryEvent(CacheFileHandle* aHandle,
+                      OriginAttrsHash aOriginAttrsHash, bool aAnonymous,
+>>>>>>> upstream-releases
                       bool aPinning)
       : Runnable("net::InitIndexEntryEvent"),
         mHandle(aHandle),
@@ -971,12 +1363,12 @@ class InitIndexEntryEvent : public Runnable {
                           mPinning);
 
     // We cannot set the filesize before we init the entry. If we're opening
-    // an existing entry file, frecency and expiration time will be set after
-    // parsing the entry file, but we must set the filesize here since nobody is
-    // going to set it if there is no write to the file.
+    // an existing entry file, frecency will be set after parsing the entry
+    // file, but we must set the filesize here since nobody is going to set it
+    // if there is no write to the file.
     uint32_t sizeInK = mHandle->FileSizeInK();
     CacheIndex::UpdateEntry(mHandle->Hash(), nullptr, nullptr, nullptr, nullptr,
-                            nullptr, &sizeInK);
+                            nullptr, nullptr, 0, &sizeInK);
 
     return NS_OK;
   }
@@ -989,6 +1381,7 @@ class InitIndexEntryEvent : public Runnable {
 };
 
 class UpdateIndexEntryEvent : public Runnable {
+<<<<<<< HEAD
  public:
   UpdateIndexEntryEvent(CacheFileHandle *aHandle, const uint32_t *aFrecency,
                         const uint32_t *aExpirationTime,
@@ -1006,13 +1399,54 @@ class UpdateIndexEntryEvent : public Runnable {
         mHasAltData(false),
         mOnStartTime(0),
         mOnStopTime(0) {
+||||||| merged common ancestors
+public:
+  UpdateIndexEntryEvent(CacheFileHandle* aHandle,
+                        const uint32_t* aFrecency,
+                        const uint32_t* aExpirationTime,
+                        const bool* aHasAltData,
+                        const uint16_t* aOnStartTime,
+                        const uint16_t* aOnStopTime)
+    : Runnable("net::UpdateIndexEntryEvent")
+    , mHandle(aHandle)
+    , mHasFrecency(false)
+    , mHasExpirationTime(false)
+    , mHasHasAltData(false)
+    , mHasOnStartTime(false)
+    , mHasOnStopTime(false)
+    , mFrecency(0)
+    , mExpirationTime(0)
+    , mHasAltData(false)
+    , mOnStartTime(0)
+    , mOnStopTime(0)
+  {
+=======
+ public:
+  UpdateIndexEntryEvent(CacheFileHandle* aHandle, const uint32_t* aFrecency,
+                        const bool* aHasAltData, const uint16_t* aOnStartTime,
+                        const uint16_t* aOnStopTime,
+                        const uint8_t* aContentType,
+                        const uint16_t* aBaseDomainAccessCount,
+                        const uint32_t aTelemetryReportID)
+      : Runnable("net::UpdateIndexEntryEvent"),
+        mHandle(aHandle),
+        mHasFrecency(false),
+        mHasHasAltData(false),
+        mHasOnStartTime(false),
+        mHasOnStopTime(false),
+        mHasContentType(false),
+        mHasBaseDomainAccessCount(false),
+        mFrecency(0),
+        mHasAltData(false),
+        mOnStartTime(0),
+        mOnStopTime(0),
+        mContentType(nsICacheEntry::CONTENT_TYPE_UNKNOWN),
+        mBaseDomainAccessCount(0),
+        mTelemetryReportID(aTelemetryReportID) {
+>>>>>>> upstream-releases
     if (aFrecency) {
       mHasFrecency = true;
       mFrecency = *aFrecency;
-    }
-    if (aExpirationTime) {
-      mHasExpirationTime = true;
-      mExpirationTime = *aExpirationTime;
     }
     if (aHasAltData) {
       mHasHasAltData = true;
@@ -1026,6 +1460,14 @@ class UpdateIndexEntryEvent : public Runnable {
       mHasOnStopTime = true;
       mOnStopTime = *aOnStopTime;
     }
+    if (aContentType) {
+      mHasContentType = true;
+      mContentType = *aContentType;
+    }
+    if (aBaseDomainAccessCount) {
+      mHasBaseDomainAccessCount = true;
+      mBaseDomainAccessCount = *aBaseDomainAccessCount;
+    }
   }
 
  protected:
@@ -1037,18 +1479,38 @@ class UpdateIndexEntryEvent : public Runnable {
       return NS_OK;
     }
 
+<<<<<<< HEAD
     CacheIndex::UpdateEntry(mHandle->Hash(),
                             mHasFrecency ? &mFrecency : nullptr,
                             mHasExpirationTime ? &mExpirationTime : nullptr,
                             mHasHasAltData ? &mHasAltData : nullptr,
                             mHasOnStartTime ? &mOnStartTime : nullptr,
                             mHasOnStopTime ? &mOnStopTime : nullptr, nullptr);
+||||||| merged common ancestors
+    CacheIndex::UpdateEntry(mHandle->Hash(),
+                            mHasFrecency ? &mFrecency : nullptr,
+                            mHasExpirationTime ? &mExpirationTime : nullptr,
+                            mHasHasAltData ? &mHasAltData : nullptr,
+                            mHasOnStartTime ? &mOnStartTime : nullptr,
+                            mHasOnStopTime ? &mOnStopTime : nullptr,
+                            nullptr);
+=======
+    CacheIndex::UpdateEntry(
+        mHandle->Hash(), mHasFrecency ? &mFrecency : nullptr,
+        mHasHasAltData ? &mHasAltData : nullptr,
+        mHasOnStartTime ? &mOnStartTime : nullptr,
+        mHasOnStopTime ? &mOnStopTime : nullptr,
+        mHasContentType ? &mContentType : nullptr,
+        mHasBaseDomainAccessCount ? &mBaseDomainAccessCount : nullptr,
+        mTelemetryReportID, nullptr);
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
  protected:
   RefPtr<CacheFileHandle> mHandle;
 
+<<<<<<< HEAD
   bool mHasFrecency;
   bool mHasExpirationTime;
   bool mHasHasAltData;
@@ -1060,6 +1522,28 @@ class UpdateIndexEntryEvent : public Runnable {
   bool mHasAltData;
   uint16_t mOnStartTime;
   uint16_t mOnStopTime;
+||||||| merged common ancestors
+  uint32_t                  mFrecency;
+  uint32_t                  mExpirationTime;
+  bool                      mHasAltData;
+  uint16_t                  mOnStartTime;
+  uint16_t                  mOnStopTime;
+=======
+  bool mHasFrecency;
+  bool mHasHasAltData;
+  bool mHasOnStartTime;
+  bool mHasOnStopTime;
+  bool mHasContentType;
+  bool mHasBaseDomainAccessCount;
+
+  uint32_t mFrecency;
+  bool mHasAltData;
+  uint16_t mOnStartTime;
+  uint16_t mOnStopTime;
+  uint8_t mContentType;
+  uint16_t mBaseDomainAccessCount;
+  uint32_t mTelemetryReportID;
+>>>>>>> upstream-releases
 };
 
 class MetadataWriteScheduleEvent : public Runnable {
@@ -1069,7 +1553,14 @@ class MetadataWriteScheduleEvent : public Runnable {
   RefPtr<CacheFile> mFile;
   RefPtr<CacheFileIOManager> mIOMan;
 
+<<<<<<< HEAD
   MetadataWriteScheduleEvent(CacheFileIOManager *aManager, CacheFile *aFile,
+||||||| merged common ancestors
+  MetadataWriteScheduleEvent(CacheFileIOManager* aManager,
+                             CacheFile* aFile,
+=======
+  MetadataWriteScheduleEvent(CacheFileIOManager* aManager, CacheFile* aFile,
+>>>>>>> upstream-releases
                              EMode aMode)
       : Runnable("net::MetadataWriteScheduleEvent"),
         mMode(aMode),
@@ -1211,8 +1702,16 @@ nsresult CacheFileIOManager::ShutdownInternal() {
   mHandles.GetAllHandles(&handles);
   handles.AppendElements(mSpecialHandles);
 
+<<<<<<< HEAD
   for (uint32_t i = 0; i < handles.Length(); i++) {
     CacheFileHandle *h = handles[i];
+||||||| merged common ancestors
+  for (uint32_t i=0 ; i<handles.Length() ; i++) {
+    CacheFileHandle *h = handles[i];
+=======
+  for (uint32_t i = 0; i < handles.Length(); i++) {
+    CacheFileHandle* h = handles[i];
+>>>>>>> upstream-releases
     h->mClosed = true;
 
     h->Log();
@@ -1397,7 +1896,15 @@ bool CacheFileIOManager::IsShutdown() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::ScheduleMetadataWrite(CacheFile *aFile) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::ScheduleMetadataWrite(CacheFile * aFile)
+{
+=======
+nsresult CacheFileIOManager::ScheduleMetadataWrite(CacheFile* aFile) {
+>>>>>>> upstream-releases
   RefPtr<CacheFileIOManager> ioMan = gInstance;
   NS_ENSURE_TRUE(ioMan, NS_ERROR_NOT_INITIALIZED);
 
@@ -1410,7 +1917,15 @@ nsresult CacheFileIOManager::ScheduleMetadataWrite(CacheFile *aFile) {
   return target->Dispatch(event, nsIEventTarget::DISPATCH_NORMAL);
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::ScheduleMetadataWriteInternal(CacheFile *aFile) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::ScheduleMetadataWriteInternal(CacheFile * aFile)
+{
+=======
+nsresult CacheFileIOManager::ScheduleMetadataWriteInternal(CacheFile* aFile) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsOnIOThreadOrCeased());
 
   nsresult rv;
@@ -1432,7 +1947,15 @@ nsresult CacheFileIOManager::ScheduleMetadataWriteInternal(CacheFile *aFile) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::UnscheduleMetadataWrite(CacheFile *aFile) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::UnscheduleMetadataWrite(CacheFile * aFile)
+{
+=======
+nsresult CacheFileIOManager::UnscheduleMetadataWrite(CacheFile* aFile) {
+>>>>>>> upstream-releases
   RefPtr<CacheFileIOManager> ioMan = gInstance;
   NS_ENSURE_TRUE(ioMan, NS_ERROR_NOT_INITIALIZED);
 
@@ -1445,7 +1968,15 @@ nsresult CacheFileIOManager::UnscheduleMetadataWrite(CacheFile *aFile) {
   return target->Dispatch(event, nsIEventTarget::DISPATCH_NORMAL);
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::UnscheduleMetadataWriteInternal(CacheFile *aFile) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::UnscheduleMetadataWriteInternal(CacheFile * aFile)
+{
+=======
+nsresult CacheFileIOManager::UnscheduleMetadataWriteInternal(CacheFile* aFile) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsOnIOThreadOrCeased());
 
   mScheduledMetadataWrites.RemoveElement(aFile);
@@ -1476,7 +2007,13 @@ nsresult CacheFileIOManager::ShutdownMetadataWriteSchedulingInternal() {
   nsTArray<RefPtr<CacheFile> > files;
   files.SwapElements(mScheduledMetadataWrites);
   for (uint32_t i = 0; i < files.Length(); ++i) {
+<<<<<<< HEAD
     CacheFile *file = files[i];
+||||||| merged common ancestors
+    CacheFile * file = files[i];
+=======
+    CacheFile* file = files[i];
+>>>>>>> upstream-releases
     file->WriteMetadataIfNeeded();
   }
 
@@ -1489,7 +2026,14 @@ nsresult CacheFileIOManager::ShutdownMetadataWriteSchedulingInternal() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileIOManager::Notify(nsITimer *aTimer) {
+||||||| merged common ancestors
+CacheFileIOManager::Notify(nsITimer * aTimer)
+{
+=======
+CacheFileIOManager::Notify(nsITimer* aTimer) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsOnIOThreadOrCeased());
   MOZ_ASSERT(mMetadataWritesTimer == aTimer);
 
@@ -1498,7 +2042,13 @@ CacheFileIOManager::Notify(nsITimer *aTimer) {
   nsTArray<RefPtr<CacheFile> > files;
   files.SwapElements(mScheduledMetadataWrites);
   for (uint32_t i = 0; i < files.Length(); ++i) {
+<<<<<<< HEAD
     CacheFile *file = files[i];
+||||||| merged common ancestors
+    CacheFile * file = files[i];
+=======
+    CacheFile* file = files[i];
+>>>>>>> upstream-releases
     file->WriteMetadataIfNeeded();
   }
 
@@ -1506,14 +2056,31 @@ CacheFileIOManager::Notify(nsITimer *aTimer) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileIOManager::GetName(nsACString &aName) {
+||||||| merged common ancestors
+CacheFileIOManager::GetName(nsACString& aName)
+{
+=======
+CacheFileIOManager::GetName(nsACString& aName) {
+>>>>>>> upstream-releases
   aName.AssignLiteral("CacheFileIOManager");
   return NS_OK;
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::OpenFile(const nsACString &aKey, uint32_t aFlags,
                                       CacheFileIOListener *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::OpenFile(const nsACString &aKey,
+                             uint32_t aFlags, CacheFileIOListener *aCallback)
+{
+=======
+nsresult CacheFileIOManager::OpenFile(const nsACString& aKey, uint32_t aFlags,
+                                      CacheFileIOListener* aCallback) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::OpenFile() [key=%s, flags=%d, listener=%p]",
        PromiseFlatCString(aKey).get(), aFlags, aCallback));
 
@@ -1533,6 +2100,7 @@ nsresult CacheFileIOManager::OpenFile(const nsACString &aKey, uint32_t aFlags,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::OpenFileInternal(const SHA1Sum::Hash *aHash,
                                               const nsACString &aKey,
                                               uint32_t aFlags,
@@ -1541,6 +2109,26 @@ nsresult CacheFileIOManager::OpenFileInternal(const SHA1Sum::Hash *aHash,
       ("CacheFileIOManager::OpenFileInternal() [hash=%08x%08x%08x%08x%08x, "
        "key=%s, flags=%d]",
        LOGSHA1(aHash), PromiseFlatCString(aKey).get(), aFlags));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::OpenFileInternal(const SHA1Sum::Hash *aHash,
+                                     const nsACString &aKey,
+                                     uint32_t aFlags,
+                                     CacheFileHandle **_retval)
+{
+  LOG(("CacheFileIOManager::OpenFileInternal() [hash=%08x%08x%08x%08x%08x, "
+       "key=%s, flags=%d]", LOGSHA1(aHash), PromiseFlatCString(aKey).get(),
+       aFlags));
+=======
+nsresult CacheFileIOManager::OpenFileInternal(const SHA1Sum::Hash* aHash,
+                                              const nsACString& aKey,
+                                              uint32_t aFlags,
+                                              CacheFileHandle** _retval) {
+  LOG(
+      ("CacheFileIOManager::OpenFileInternal() [hash=%08x%08x%08x%08x%08x, "
+       "key=%s, flags=%d]",
+       LOGSHA1(aHash), PromiseFlatCString(aKey).get(), aFlags));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
@@ -1669,8 +2257,19 @@ nsresult CacheFileIOManager::OpenFileInternal(const SHA1Sum::Hash *aHash,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::OpenSpecialFileInternal(
     const nsACString &aKey, uint32_t aFlags, CacheFileHandle **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::OpenSpecialFileInternal(const nsACString &aKey,
+                                            uint32_t aFlags,
+                                            CacheFileHandle **_retval)
+{
+=======
+nsresult CacheFileIOManager::OpenSpecialFileInternal(
+    const nsACString& aKey, uint32_t aFlags, CacheFileHandle** _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::OpenSpecialFileInternal() [key=%s, flags=%d]",
        PromiseFlatCString(aKey).get(), aFlags));
 
@@ -1763,7 +2362,15 @@ nsresult CacheFileIOManager::OpenSpecialFileInternal(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::CloseHandleInternal(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::CloseHandleInternal(CacheFileHandle *aHandle)
+{
+=======
+nsresult CacheFileIOManager::CloseHandleInternal(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   LOG(("CacheFileIOManager::CloseHandleInternal() [handle=%p]", aHandle));
@@ -1814,9 +2421,21 @@ nsresult CacheFileIOManager::CloseHandleInternal(CacheFileHandle *aHandle) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::Read(CacheFileHandle *aHandle, int64_t aOffset,
                                   char *aBuf, int32_t aCount,
                                   CacheFileIOListener *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::Read(CacheFileHandle *aHandle, int64_t aOffset,
+                         char *aBuf, int32_t aCount,
+                         CacheFileIOListener *aCallback)
+{
+=======
+nsresult CacheFileIOManager::Read(CacheFileHandle* aHandle, int64_t aOffset,
+                                  char* aBuf, int32_t aCount,
+                                  CacheFileIOListener* aCallback) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::Read() [handle=%p, offset=%" PRId64 ", count=%d, "
        "listener=%p]",
        aHandle, aOffset, aCount, aCallback));
@@ -1843,11 +2462,25 @@ nsresult CacheFileIOManager::Read(CacheFileHandle *aHandle, int64_t aOffset,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::ReadInternal(CacheFileHandle *aHandle,
                                           int64_t aOffset, char *aBuf,
                                           int32_t aCount) {
   LOG(("CacheFileIOManager::ReadInternal() [handle=%p, offset=%" PRId64
        ", count=%d]",
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::ReadInternal(CacheFileHandle *aHandle, int64_t aOffset,
+                                 char *aBuf, int32_t aCount)
+{
+  LOG(("CacheFileIOManager::ReadInternal() [handle=%p, offset=%" PRId64 ", count=%d]",
+=======
+nsresult CacheFileIOManager::ReadInternal(CacheFileHandle* aHandle,
+                                          int64_t aOffset, char* aBuf,
+                                          int32_t aCount) {
+  LOG(("CacheFileIOManager::ReadInternal() [handle=%p, offset=%" PRId64
+       ", count=%d]",
+>>>>>>> upstream-releases
        aHandle, aOffset, aCount));
 
   nsresult rv;
@@ -1891,10 +2524,23 @@ nsresult CacheFileIOManager::ReadInternal(CacheFileHandle *aHandle,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::Write(CacheFileHandle *aHandle, int64_t aOffset,
                                    const char *aBuf, int32_t aCount,
                                    bool aValidate, bool aTruncate,
                                    CacheFileIOListener *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::Write(CacheFileHandle *aHandle, int64_t aOffset,
+                          const char *aBuf, int32_t aCount, bool aValidate,
+                          bool aTruncate, CacheFileIOListener *aCallback)
+{
+=======
+nsresult CacheFileIOManager::Write(CacheFileHandle* aHandle, int64_t aOffset,
+                                   const char* aBuf, int32_t aCount,
+                                   bool aValidate, bool aTruncate,
+                                   CacheFileIOListener* aCallback) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::Write() [handle=%p, offset=%" PRId64 ", count=%d, "
        "validate=%d, truncate=%d, listener=%p]",
        aHandle, aOffset, aCount, aValidate, aTruncate, aCallback));
@@ -1906,7 +2552,7 @@ nsresult CacheFileIOManager::Write(CacheFileHandle *aHandle, int64_t aOffset,
     if (!aCallback) {
       // When no callback is provided, CacheFileIOManager is responsible for
       // releasing the buffer. We must release it even in case of failure.
-      free(const_cast<char *>(aBuf));
+      free(const_cast<char*>(aBuf));
     }
     return NS_ERROR_NOT_INITIALIZED;
   }
@@ -1921,7 +2567,15 @@ nsresult CacheFileIOManager::Write(CacheFileHandle *aHandle, int64_t aOffset,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static nsresult TruncFile(PRFileDesc *aFD, int64_t aEOF) {
+||||||| merged common ancestors
+static nsresult
+TruncFile(PRFileDesc *aFD, int64_t aEOF)
+{
+=======
+static nsresult TruncFile(PRFileDesc* aFD, int64_t aEOF) {
+>>>>>>> upstream-releases
 #if defined(XP_UNIX)
   if (ftruncate(PR_FileDesc2NativeHandle(aFD), aEOF) != 0) {
     NS_ERROR("ftruncate failed");
@@ -1944,6 +2598,7 @@ static nsresult TruncFile(PRFileDesc *aFD, int64_t aEOF) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle,
                                            int64_t aOffset, const char *aBuf,
                                            int32_t aCount, bool aValidate,
@@ -1952,6 +2607,25 @@ nsresult CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle,
        ", count=%d, "
        "validate=%d, truncate=%d]",
        aHandle, aOffset, aCount, aValidate, aTruncate));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle, int64_t aOffset,
+                                  const char *aBuf, int32_t aCount,
+                                  bool aValidate, bool aTruncate)
+{
+  LOG(("CacheFileIOManager::WriteInternal() [handle=%p, offset=%" PRId64 ", count=%d, "
+       "validate=%d, truncate=%d]", aHandle, aOffset, aCount, aValidate,
+       aTruncate));
+=======
+nsresult CacheFileIOManager::WriteInternal(CacheFileHandle* aHandle,
+                                           int64_t aOffset, const char* aBuf,
+                                           int32_t aCount, bool aValidate,
+                                           bool aTruncate) {
+  LOG(("CacheFileIOManager::WriteInternal() [handle=%p, offset=%" PRId64
+       ", count=%d, "
+       "validate=%d, truncate=%d]",
+       aHandle, aOffset, aCount, aValidate, aTruncate));
+>>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -2010,12 +2684,23 @@ nsresult CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle,
            "failed! [rv=0x%08" PRIx32 "]",
            static_cast<uint32_t>(rv)));
     } else {
+      freeSpace >>= 10;  // bytes to kilobytes
       uint32_t limit = CacheObserver::DiskFreeSpaceHardLimit();
       if (freeSpace - aOffset - aCount + aHandle->mFileSize < limit) {
+<<<<<<< HEAD
         LOG(
             ("CacheFileIOManager::WriteInternal() - Low free space, refusing "
              "to write! [freeSpace=%" PRId64 ", limit=%u]",
              freeSpace, limit));
+||||||| merged common ancestors
+        LOG(("CacheFileIOManager::WriteInternal() - Low free space, refusing "
+             "to write! [freeSpace=%" PRId64 ", limit=%u]", freeSpace, limit));
+=======
+        LOG(
+            ("CacheFileIOManager::WriteInternal() - Low free space, refusing "
+             "to write! [freeSpace=%" PRId64 "kB, limit=%ukB]",
+             freeSpace, limit));
+>>>>>>> upstream-releases
         return NS_ERROR_FILE_DISK_FULL;
       }
     }
@@ -2051,12 +2736,14 @@ nsresult CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle,
     if (oldSizeInK != newSizeInK && !aHandle->IsDoomed() &&
         !aHandle->IsSpecialFile()) {
       CacheIndex::UpdateEntry(aHandle->Hash(), nullptr, nullptr, nullptr,
-                              nullptr, nullptr, &newSizeInK);
+                              nullptr, nullptr, nullptr, 0, &newSizeInK);
 
       if (oldSizeInK < newSizeInK) {
         EvictIfOverLimitInternal();
       }
     }
+
+    CacheIndex::UpdateTotalBytesWritten(bytesWritten);
   }
 
   if (bytesWritten != aCount) {
@@ -2072,10 +2759,24 @@ nsresult CacheFileIOManager::WriteInternal(CacheFileHandle *aHandle,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::DoomFile(CacheFileHandle *aHandle,
                                       CacheFileIOListener *aCallback) {
   LOG(("CacheFileIOManager::DoomFile() [handle=%p, listener=%p]", aHandle,
        aCallback));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::DoomFile(CacheFileHandle *aHandle,
+                             CacheFileIOListener *aCallback)
+{
+  LOG(("CacheFileIOManager::DoomFile() [handle=%p, listener=%p]",
+       aHandle, aCallback));
+=======
+nsresult CacheFileIOManager::DoomFile(CacheFileHandle* aHandle,
+                                      CacheFileIOListener* aCallback) {
+  LOG(("CacheFileIOManager::DoomFile() [handle=%p, listener=%p]", aHandle,
+       aCallback));
+>>>>>>> upstream-releases
 
   nsresult rv;
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -2093,8 +2794,18 @@ nsresult CacheFileIOManager::DoomFile(CacheFileHandle *aHandle,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::DoomFileInternal(
     CacheFileHandle *aHandle, PinningDoomRestriction aPinningDoomRestriction) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::DoomFileInternal(CacheFileHandle *aHandle,
+                                     PinningDoomRestriction aPinningDoomRestriction)
+{
+=======
+nsresult CacheFileIOManager::DoomFileInternal(
+    CacheFileHandle* aHandle, PinningDoomRestriction aPinningDoomRestriction) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::DoomFileInternal() [handle=%p]", aHandle));
   aHandle->Log();
 
@@ -2193,8 +2904,18 @@ nsresult CacheFileIOManager::DoomFileInternal(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::DoomFileByKey(const nsACString &aKey,
                                            CacheFileIOListener *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::DoomFileByKey(const nsACString &aKey,
+                                  CacheFileIOListener *aCallback)
+{
+=======
+nsresult CacheFileIOManager::DoomFileByKey(const nsACString& aKey,
+                                           CacheFileIOListener* aCallback) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::DoomFileByKey() [key=%s, listener=%p]",
        PromiseFlatCString(aKey).get(), aCallback));
 
@@ -2212,10 +2933,23 @@ nsresult CacheFileIOManager::DoomFileByKey(const nsACString &aKey,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::DoomFileByKeyInternal(const SHA1Sum::Hash *aHash) {
   LOG((
       "CacheFileIOManager::DoomFileByKeyInternal() [hash=%08x%08x%08x%08x%08x]",
       LOGSHA1(aHash)));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::DoomFileByKeyInternal(const SHA1Sum::Hash *aHash)
+{
+  LOG(("CacheFileIOManager::DoomFileByKeyInternal() [hash=%08x%08x%08x%08x%08x]"
+       , LOGSHA1(aHash)));
+=======
+nsresult CacheFileIOManager::DoomFileByKeyInternal(const SHA1Sum::Hash* aHash) {
+  LOG((
+      "CacheFileIOManager::DoomFileByKeyInternal() [hash=%08x%08x%08x%08x%08x]",
+      LOGSHA1(aHash)));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
 
@@ -2272,7 +3006,15 @@ nsresult CacheFileIOManager::DoomFileByKeyInternal(const SHA1Sum::Hash *aHash) {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::ReleaseNSPRHandle(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::ReleaseNSPRHandle(CacheFileHandle *aHandle)
+{
+=======
+nsresult CacheFileIOManager::ReleaseNSPRHandle(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::ReleaseNSPRHandle() [handle=%p]", aHandle));
 
   nsresult rv;
@@ -2291,11 +3033,25 @@ nsresult CacheFileIOManager::ReleaseNSPRHandle(CacheFileHandle *aHandle) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::MaybeReleaseNSPRHandleInternal(
     CacheFileHandle *aHandle, bool aIgnoreShutdownLag) {
   LOG(
       ("CacheFileIOManager::MaybeReleaseNSPRHandleInternal() [handle=%p, "
        "ignore shutdown=%d]",
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::MaybeReleaseNSPRHandleInternal(CacheFileHandle *aHandle,
+                                                   bool aIgnoreShutdownLag)
+{
+  LOG(("CacheFileIOManager::MaybeReleaseNSPRHandleInternal() [handle=%p, ignore shutdown=%d]",
+=======
+nsresult CacheFileIOManager::MaybeReleaseNSPRHandleInternal(
+    CacheFileHandle* aHandle, bool aIgnoreShutdownLag) {
+  LOG(
+      ("CacheFileIOManager::MaybeReleaseNSPRHandleInternal() [handle=%p, "
+       "ignore shutdown=%d]",
+>>>>>>> upstream-releases
        aHandle, aIgnoreShutdownLag));
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
@@ -2306,7 +3062,7 @@ nsresult CacheFileIOManager::MaybeReleaseNSPRHandleInternal(
     MOZ_ASSERT(found);
   }
 
-  PRFileDesc *fd = aHandle->mFD;
+  PRFileDesc* fd = aHandle->mFD;
   aHandle->mFD = nullptr;
 
   // Leak invalid (w/o metadata) and doomed handles immediately after shutdown.
@@ -2351,6 +3107,7 @@ nsresult CacheFileIOManager::MaybeReleaseNSPRHandleInternal(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::TruncateSeekSetEOF(
     CacheFileHandle *aHandle, int64_t aTruncatePos, int64_t aEOFPos,
     CacheFileIOListener *aCallback) {
@@ -2359,6 +3116,24 @@ nsresult CacheFileIOManager::TruncateSeekSetEOF(
        "truncatePos=%" PRId64 ", "
        "EOFPos=%" PRId64 ", listener=%p]",
        aHandle, aTruncatePos, aEOFPos, aCallback));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::TruncateSeekSetEOF(CacheFileHandle *aHandle,
+                                       int64_t aTruncatePos, int64_t aEOFPos,
+                                       CacheFileIOListener *aCallback)
+{
+  LOG(("CacheFileIOManager::TruncateSeekSetEOF() [handle=%p, truncatePos=%" PRId64 ", "
+       "EOFPos=%" PRId64 ", listener=%p]", aHandle, aTruncatePos, aEOFPos, aCallback));
+=======
+nsresult CacheFileIOManager::TruncateSeekSetEOF(
+    CacheFileHandle* aHandle, int64_t aTruncatePos, int64_t aEOFPos,
+    CacheFileIOListener* aCallback) {
+  LOG(
+      ("CacheFileIOManager::TruncateSeekSetEOF() [handle=%p, "
+       "truncatePos=%" PRId64 ", "
+       "EOFPos=%" PRId64 ", listener=%p]",
+       aHandle, aTruncatePos, aEOFPos, aCallback));
+>>>>>>> upstream-releases
 
   nsresult rv;
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -2378,7 +3153,14 @@ nsresult CacheFileIOManager::TruncateSeekSetEOF(
 }
 
 // static
+<<<<<<< HEAD
 void CacheFileIOManager::GetCacheDirectory(nsIFile **result) {
+||||||| merged common ancestors
+void CacheFileIOManager::GetCacheDirectory(nsIFile** result)
+{
+=======
+void CacheFileIOManager::GetCacheDirectory(nsIFile** result) {
+>>>>>>> upstream-releases
   *result = nullptr;
 
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -2392,7 +3174,14 @@ void CacheFileIOManager::GetCacheDirectory(nsIFile **result) {
 #if defined(MOZ_WIDGET_ANDROID)
 
 // static
+<<<<<<< HEAD
 void CacheFileIOManager::GetProfilelessCacheDirectory(nsIFile **result) {
+||||||| merged common ancestors
+void CacheFileIOManager::GetProfilelessCacheDirectory(nsIFile** result)
+{
+=======
+void CacheFileIOManager::GetProfilelessCacheDirectory(nsIFile** result) {
+>>>>>>> upstream-releases
   *result = nullptr;
 
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -2406,9 +3195,20 @@ void CacheFileIOManager::GetProfilelessCacheDirectory(nsIFile **result) {
 #endif
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::GetEntryInfo(
     const SHA1Sum::Hash *aHash,
     CacheStorageService::EntryInfoCallback *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::GetEntryInfo(const SHA1Sum::Hash *aHash,
+                                 CacheStorageService::EntryInfoCallback *aCallback)
+{
+=======
+nsresult CacheFileIOManager::GetEntryInfo(
+    const SHA1Sum::Hash* aHash,
+    CacheStorageService::EntryInfoCallback* aCallback) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThread());
 
   nsresult rv;
@@ -2490,12 +3290,29 @@ nsresult CacheFileIOManager::GetEntryInfo(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::TruncateSeekSetEOFInternal(
     CacheFileHandle *aHandle, int64_t aTruncatePos, int64_t aEOFPos) {
   LOG(
       ("CacheFileIOManager::TruncateSeekSetEOFInternal() [handle=%p, "
        "truncatePos=%" PRId64 ", EOFPos=%" PRId64 "]",
        aHandle, aTruncatePos, aEOFPos));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::TruncateSeekSetEOFInternal(CacheFileHandle *aHandle,
+                                               int64_t aTruncatePos,
+                                               int64_t aEOFPos)
+{
+  LOG(("CacheFileIOManager::TruncateSeekSetEOFInternal() [handle=%p, "
+       "truncatePos=%" PRId64 ", EOFPos=%" PRId64 "]", aHandle, aTruncatePos, aEOFPos));
+=======
+nsresult CacheFileIOManager::TruncateSeekSetEOFInternal(
+    CacheFileHandle* aHandle, int64_t aTruncatePos, int64_t aEOFPos) {
+  LOG(
+      ("CacheFileIOManager::TruncateSeekSetEOFInternal() [handle=%p, "
+       "truncatePos=%" PRId64 ", EOFPos=%" PRId64 "]",
+       aHandle, aTruncatePos, aEOFPos));
+>>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -2547,12 +3364,24 @@ nsresult CacheFileIOManager::TruncateSeekSetEOFInternal(
            "GetDiskSpaceAvailable() failed! [rv=0x%08" PRIx32 "]",
            static_cast<uint32_t>(rv)));
     } else {
+      freeSpace >>= 10;  // bytes to kilobytes
       uint32_t limit = CacheObserver::DiskFreeSpaceHardLimit();
       if (freeSpace - aEOFPos + aHandle->mFileSize < limit) {
+<<<<<<< HEAD
         LOG(
             ("CacheFileIOManager::TruncateSeekSetEOFInternal() - Low free space"
              ", refusing to write! [freeSpace=%" PRId64 ", limit=%u]",
              freeSpace, limit));
+||||||| merged common ancestors
+        LOG(("CacheFileIOManager::TruncateSeekSetEOFInternal() - Low free space"
+             ", refusing to write! [freeSpace=%" PRId64 ", limit=%u]", freeSpace,
+             limit));
+=======
+        LOG(
+            ("CacheFileIOManager::TruncateSeekSetEOFInternal() - Low free space"
+             ", refusing to write! [freeSpace=%" PRId64 "kB, limit=%ukB]",
+             freeSpace, limit));
+>>>>>>> upstream-releases
         return NS_ERROR_FILE_DISK_FULL;
       }
     }
@@ -2576,7 +3405,7 @@ nsresult CacheFileIOManager::TruncateSeekSetEOFInternal(
   if (oldSizeInK != newSizeInK && !aHandle->IsDoomed() &&
       !aHandle->IsSpecialFile()) {
     CacheIndex::UpdateEntry(aHandle->Hash(), nullptr, nullptr, nullptr, nullptr,
-                            nullptr, &newSizeInK);
+                            nullptr, nullptr, 0, &newSizeInK);
 
     if (oldSizeInK < newSizeInK) {
       EvictIfOverLimitInternal();
@@ -2587,9 +3416,21 @@ nsresult CacheFileIOManager::TruncateSeekSetEOFInternal(
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::RenameFile(CacheFileHandle *aHandle,
                                         const nsACString &aNewName,
                                         CacheFileIOListener *aCallback) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::RenameFile(CacheFileHandle *aHandle,
+                               const nsACString &aNewName,
+                               CacheFileIOListener *aCallback)
+{
+=======
+nsresult CacheFileIOManager::RenameFile(CacheFileHandle* aHandle,
+                                        const nsACString& aNewName,
+                                        CacheFileIOListener* aCallback) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::RenameFile() [handle=%p, newName=%s, listener=%p]",
        aHandle, PromiseFlatCString(aNewName).get(), aCallback));
 
@@ -2614,8 +3455,18 @@ nsresult CacheFileIOManager::RenameFile(CacheFileHandle *aHandle,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::RenameFileInternal(CacheFileHandle *aHandle,
                                                 const nsACString &aNewName) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::RenameFileInternal(CacheFileHandle *aHandle,
+                                       const nsACString &aNewName)
+{
+=======
+nsresult CacheFileIOManager::RenameFileInternal(CacheFileHandle* aHandle,
+                                                const nsACString& aNewName) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::RenameFileInternal() [handle=%p, newName=%s]",
        aHandle, PromiseFlatCString(aNewName).get()));
 
@@ -2727,6 +3578,7 @@ nsresult CacheFileIOManager::EvictIfOverLimitInternal() {
          "GetDiskSpaceAvailable() failed! [rv=0x%08" PRIx32 "]",
          static_cast<uint32_t>(rv)));
   } else {
+    freeSpace >>= 10;  // bytes to kilobytes
     UpdateSmartCacheSize(freeSpace);
   }
 
@@ -2734,7 +3586,7 @@ nsresult CacheFileIOManager::EvictIfOverLimitInternal() {
   rv = CacheIndex::GetCacheSize(&cacheUsage);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  uint32_t cacheLimit = CacheObserver::DiskCacheCapacity() >> 10;
+  uint32_t cacheLimit = CacheObserver::DiskCacheCapacity();
   uint32_t freeSpaceLimit = CacheObserver::DiskFreeSpaceSoftLimit();
 
   if (cacheUsage <= cacheLimit &&
@@ -2742,14 +3594,31 @@ nsresult CacheFileIOManager::EvictIfOverLimitInternal() {
     LOG(
         ("CacheFileIOManager::EvictIfOverLimitInternal() - Cache size and free "
          "space in limits. [cacheSize=%ukB, cacheSizeLimit=%ukB, "
+<<<<<<< HEAD
          "freeSpace=%" PRId64 ", freeSpaceLimit=%u]",
          cacheUsage, cacheLimit, freeSpace, freeSpaceLimit));
+||||||| merged common ancestors
+         "freeSpace=%" PRId64 ", freeSpaceLimit=%u]", cacheUsage, cacheLimit,
+         freeSpace, freeSpaceLimit));
+=======
+         "freeSpace=%" PRId64 "kB, freeSpaceLimit=%ukB]",
+         cacheUsage, cacheLimit, freeSpace, freeSpaceLimit));
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
+<<<<<<< HEAD
   LOG(
       ("CacheFileIOManager::EvictIfOverLimitInternal() - Cache size exceeded "
        "limit. Starting overlimit eviction. [cacheSize=%u, limit=%u]",
+||||||| merged common ancestors
+  LOG(("CacheFileIOManager::EvictIfOverLimitInternal() - Cache size exceeded "
+       "limit. Starting overlimit eviction. [cacheSize=%u, limit=%u]",
+=======
+  LOG(
+      ("CacheFileIOManager::EvictIfOverLimitInternal() - Cache size exceeded "
+       "limit. Starting overlimit eviction. [cacheSize=%ukB, limit=%ukB]",
+>>>>>>> upstream-releases
        cacheUsage, cacheLimit));
 
   nsCOMPtr<nsIRunnable> ev;
@@ -2791,6 +3660,7 @@ nsresult CacheFileIOManager::OverLimitEvictionInternal() {
            "GetDiskSpaceAvailable() failed! [rv=0x%08" PRIx32 "]",
            static_cast<uint32_t>(rv)));
     } else {
+      freeSpace >>= 10;  // bytes to kilobytes
       UpdateSmartCacheSize(freeSpace);
     }
 
@@ -2798,14 +3668,24 @@ nsresult CacheFileIOManager::OverLimitEvictionInternal() {
     rv = CacheIndex::GetCacheSize(&cacheUsage);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    uint32_t cacheLimit = CacheObserver::DiskCacheCapacity() >> 10;
+    uint32_t cacheLimit = CacheObserver::DiskCacheCapacity();
     uint32_t freeSpaceLimit = CacheObserver::DiskFreeSpaceSoftLimit();
 
     if (cacheUsage > cacheLimit) {
+<<<<<<< HEAD
       LOG(
           ("CacheFileIOManager::OverLimitEvictionInternal() - Cache size over "
            "limit. [cacheSize=%u, limit=%u]",
            cacheUsage, cacheLimit));
+||||||| merged common ancestors
+      LOG(("CacheFileIOManager::OverLimitEvictionInternal() - Cache size over "
+           "limit. [cacheSize=%u, limit=%u]", cacheUsage, cacheLimit));
+=======
+      LOG(
+          ("CacheFileIOManager::OverLimitEvictionInternal() - Cache size over "
+           "limit. [cacheSize=%ukB, limit=%ukB]",
+           cacheUsage, cacheLimit));
+>>>>>>> upstream-releases
 
       // We allow cache size to go over the specified limit. Eviction should
       // keep the size within the limit in a long run, but in case the eviction
@@ -2822,16 +3702,35 @@ nsresult CacheFileIOManager::OverLimitEvictionInternal() {
         mCacheSizeOnHardLimit = false;
       }
     } else if (freeSpace != 1 && freeSpace < freeSpaceLimit) {
+<<<<<<< HEAD
       LOG(
           ("CacheFileIOManager::OverLimitEvictionInternal() - Free space under "
            "limit. [freeSpace=%" PRId64 ", freeSpaceLimit=%u]",
            freeSpace, freeSpaceLimit));
+||||||| merged common ancestors
+      LOG(("CacheFileIOManager::OverLimitEvictionInternal() - Free space under "
+           "limit. [freeSpace=%" PRId64 ", freeSpaceLimit=%u]", freeSpace,
+           freeSpaceLimit));
+=======
+      LOG(
+          ("CacheFileIOManager::OverLimitEvictionInternal() - Free space under "
+           "limit. [freeSpace=%" PRId64 "kB, freeSpaceLimit=%ukB]",
+           freeSpace, freeSpaceLimit));
+>>>>>>> upstream-releases
     } else {
       LOG(
           ("CacheFileIOManager::OverLimitEvictionInternal() - Cache size and "
            "free space in limits. [cacheSize=%ukB, cacheSizeLimit=%ukB, "
+<<<<<<< HEAD
            "freeSpace=%" PRId64 ", freeSpaceLimit=%u]",
            cacheUsage, cacheLimit, freeSpace, freeSpaceLimit));
+||||||| merged common ancestors
+           "freeSpace=%" PRId64 ", freeSpaceLimit=%u]", cacheUsage, cacheLimit,
+           freeSpace, freeSpaceLimit));
+=======
+           "freeSpace=%" PRId64 "kB, freeSpaceLimit=%ukB]",
+           cacheUsage, cacheLimit, freeSpace, freeSpaceLimit));
+>>>>>>> upstream-releases
 
       mCacheSizeOnHardLimit = false;
       return NS_OK;
@@ -2887,9 +3786,8 @@ nsresult CacheFileIOManager::OverLimitEvictionInternal() {
       // Move the entry at the end of both lists to make sure we won't end up
       // failing on one entry forever.
       uint32_t frecency = 0;
-      uint32_t expTime = nsICacheEntry::NO_EXPIRATION_TIME;
-      rv = CacheIndex::UpdateEntry(&hash, &frecency, &expTime, nullptr, nullptr,
-                                   nullptr, nullptr);
+      rv = CacheIndex::UpdateEntry(&hash, &frecency, nullptr, nullptr, nullptr,
+                                   nullptr, nullptr, 0, nullptr);
       NS_ENSURE_SUCCESS(rv, rv);
 
       consecutiveFailures++;
@@ -3023,9 +3921,21 @@ nsresult CacheFileIOManager::EvictAllInternal() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::EvictByContext(
     nsILoadContextInfo *aLoadContextInfo, bool aPinned,
     const nsAString &aOrigin) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::EvictByContext(nsILoadContextInfo *aLoadContextInfo,
+                                   bool aPinned,
+                                   const nsAString& aOrigin)
+{
+=======
+nsresult CacheFileIOManager::EvictByContext(
+    nsILoadContextInfo* aLoadContextInfo, bool aPinned,
+    const nsAString& aOrigin) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::EvictByContext() [loadContextInfo=%p]",
        aLoadContextInfo));
 
@@ -3050,6 +3960,7 @@ nsresult CacheFileIOManager::EvictByContext(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::EvictByContextInternal(
     nsILoadContextInfo *aLoadContextInfo, bool aPinned,
     const nsAString &aOrigin) {
@@ -3057,6 +3968,23 @@ nsresult CacheFileIOManager::EvictByContextInternal(
       ("CacheFileIOManager::EvictByContextInternal() [loadContextInfo=%p, "
        "pinned=%d]",
        aLoadContextInfo, aPinned));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
+                                           bool aPinned,
+                                           const nsAString& aOrigin)
+{
+  LOG(("CacheFileIOManager::EvictByContextInternal() [loadContextInfo=%p, pinned=%d]",
+      aLoadContextInfo, aPinned));
+=======
+nsresult CacheFileIOManager::EvictByContextInternal(
+    nsILoadContextInfo* aLoadContextInfo, bool aPinned,
+    const nsAString& aOrigin) {
+  LOG(
+      ("CacheFileIOManager::EvictByContextInternal() [loadContextInfo=%p, "
+       "pinned=%d]",
+       aLoadContextInfo, aPinned));
+>>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -3206,7 +4134,15 @@ nsresult CacheFileIOManager::CacheIndexStateChangedInternal() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::TrashDirectory(nsIFile *aFile) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::TrashDirectory(nsIFile *aFile)
+{
+=======
+nsresult CacheFileIOManager::TrashDirectory(nsIFile* aFile) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::TrashDirectory() [file=%s]",
        aFile->HumanReadablePath().get()));
 
@@ -3289,7 +4225,15 @@ nsresult CacheFileIOManager::TrashDirectory(nsIFile *aFile) {
 }
 
 // static
+<<<<<<< HEAD
 void CacheFileIOManager::OnTrashTimer(nsITimer *aTimer, void *aClosure) {
+||||||| merged common ancestors
+void
+CacheFileIOManager::OnTrashTimer(nsITimer *aTimer, void *aClosure)
+{
+=======
+void CacheFileIOManager::OnTrashTimer(nsITimer* aTimer, void* aClosure) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::OnTrashTimer() [timer=%p, closure=%p]", aTimer,
        aClosure));
 
@@ -3512,6 +4456,7 @@ nsresult CacheFileIOManager::FindTrashDirToRemove() {
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::InitIndexEntry(CacheFileHandle *aHandle,
                                             OriginAttrsHash aOriginAttrsHash,
                                             bool aAnonymous, bool aPinning) {
@@ -3520,6 +4465,26 @@ nsresult CacheFileIOManager::InitIndexEntry(CacheFileHandle *aHandle,
        "originAttrsHash=%" PRIx64 ", "
        "anonymous=%d, pinning=%d]",
        aHandle, aOriginAttrsHash, aAnonymous, aPinning));
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::InitIndexEntry(CacheFileHandle *aHandle,
+                                   OriginAttrsHash  aOriginAttrsHash,
+                                   bool             aAnonymous,
+                                   bool             aPinning)
+{
+  LOG(("CacheFileIOManager::InitIndexEntry() [handle=%p, originAttrsHash=%" PRIx64 ", "
+       "anonymous=%d, pinning=%d]", aHandle, aOriginAttrsHash, aAnonymous,
+       aPinning));
+=======
+nsresult CacheFileIOManager::InitIndexEntry(CacheFileHandle* aHandle,
+                                            OriginAttrsHash aOriginAttrsHash,
+                                            bool aAnonymous, bool aPinning) {
+  LOG(
+      ("CacheFileIOManager::InitIndexEntry() [handle=%p, "
+       "originAttrsHash=%" PRIx64 ", "
+       "anonymous=%d, pinning=%d]",
+       aHandle, aOriginAttrsHash, aAnonymous, aPinning));
+>>>>>>> upstream-releases
 
   nsresult rv;
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -3543,6 +4508,7 @@ nsresult CacheFileIOManager::InitIndexEntry(CacheFileHandle *aHandle,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::UpdateIndexEntry(CacheFileHandle *aHandle,
                                               const uint32_t *aFrecency,
                                               const uint32_t *aExpirationTime,
@@ -3554,9 +4520,39 @@ nsresult CacheFileIOManager::UpdateIndexEntry(CacheFileHandle *aHandle,
        "expirationTime=%s, hasAltData=%s, onStartTime=%s, onStopTime=%s]",
        aHandle, aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
        aExpirationTime ? nsPrintfCString("%u", *aExpirationTime).get() : "",
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::UpdateIndexEntry(CacheFileHandle *aHandle,
+                                     const uint32_t  *aFrecency,
+                                     const uint32_t  *aExpirationTime,
+                                     const bool      *aHasAltData,
+                                     const uint16_t  *aOnStartTime,
+                                     const uint16_t  *aOnStopTime)
+{
+  LOG(("CacheFileIOManager::UpdateIndexEntry() [handle=%p, frecency=%s, "
+       "expirationTime=%s, hasAltData=%s, onStartTime=%s, onStopTime=%s]", aHandle,
+       aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
+       aExpirationTime ? nsPrintfCString("%u", *aExpirationTime).get() : "",
+=======
+nsresult CacheFileIOManager::UpdateIndexEntry(
+    CacheFileHandle* aHandle, const uint32_t* aFrecency,
+    const bool* aHasAltData, const uint16_t* aOnStartTime,
+    const uint16_t* aOnStopTime, const uint8_t* aContentType,
+    const uint16_t* aBaseDomainAccessCount, const uint32_t aTelemetryReportID) {
+  LOG(
+      ("CacheFileIOManager::UpdateIndexEntry() [handle=%p, frecency=%s, "
+       "hasAltData=%s, onStartTime=%s, onStopTime=%s, contentType=%s, "
+       "baseDomainAccessCount=%s, telemetryReportID=%u]",
+       aHandle, aFrecency ? nsPrintfCString("%u", *aFrecency).get() : "",
+>>>>>>> upstream-releases
        aHasAltData ? (*aHasAltData ? "true" : "false") : "",
        aOnStartTime ? nsPrintfCString("%u", *aOnStartTime).get() : "",
-       aOnStopTime ? nsPrintfCString("%u", *aOnStopTime).get() : ""));
+       aOnStopTime ? nsPrintfCString("%u", *aOnStopTime).get() : "",
+       aContentType ? nsPrintfCString("%u", *aContentType).get() : "",
+       aBaseDomainAccessCount
+           ? nsPrintfCString("%u", *aBaseDomainAccessCount).get()
+           : "",
+       aTelemetryReportID));
 
   nsresult rv;
   RefPtr<CacheFileIOManager> ioMan = gInstance;
@@ -3569,9 +4565,19 @@ nsresult CacheFileIOManager::UpdateIndexEntry(CacheFileHandle *aHandle,
     return NS_ERROR_UNEXPECTED;
   }
 
+<<<<<<< HEAD
   RefPtr<UpdateIndexEntryEvent> ev =
       new UpdateIndexEntryEvent(aHandle, aFrecency, aExpirationTime,
                                 aHasAltData, aOnStartTime, aOnStopTime);
+||||||| merged common ancestors
+  RefPtr<UpdateIndexEntryEvent> ev =
+    new UpdateIndexEntryEvent(aHandle, aFrecency, aExpirationTime, aHasAltData,
+                              aOnStartTime, aOnStopTime);
+=======
+  RefPtr<UpdateIndexEntryEvent> ev = new UpdateIndexEntryEvent(
+      aHandle, aFrecency, aHasAltData, aOnStartTime, aOnStopTime, aContentType,
+      aBaseDomainAccessCount, aTelemetryReportID);
+>>>>>>> upstream-releases
   rv = ioMan->mIOThread->Dispatch(ev, aHandle->mPriority
                                           ? CacheIOThread::WRITE_PRIORITY
                                           : CacheIOThread::WRITE);
@@ -3580,7 +4586,15 @@ nsresult CacheFileIOManager::UpdateIndexEntry(CacheFileHandle *aHandle,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::CreateFile(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::CreateFile(CacheFileHandle *aHandle)
+{
+=======
+nsresult CacheFileIOManager::CreateFile(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!aHandle->mFD);
   MOZ_ASSERT(aHandle->mFile);
 
@@ -3608,8 +4622,17 @@ nsresult CacheFileIOManager::CreateFile(CacheFileHandle *aHandle) {
 }
 
 // static
+<<<<<<< HEAD
 void CacheFileIOManager::HashToStr(const SHA1Sum::Hash *aHash,
                                    nsACString &_retval) {
+||||||| merged common ancestors
+void
+CacheFileIOManager::HashToStr(const SHA1Sum::Hash *aHash, nsACString &_retval)
+{
+=======
+void CacheFileIOManager::HashToStr(const SHA1Sum::Hash* aHash,
+                                   nsACString& _retval) {
+>>>>>>> upstream-releases
   _retval.Truncate();
   const char hexChars[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -3620,9 +4643,20 @@ void CacheFileIOManager::HashToStr(const SHA1Sum::Hash *aHash,
 }
 
 // static
+<<<<<<< HEAD
 nsresult CacheFileIOManager::StrToHash(const nsACString &aHash,
                                        SHA1Sum::Hash *_retval) {
   if (aHash.Length() != 2 * sizeof(SHA1Sum::Hash)) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::StrToHash(const nsACString &aHash, SHA1Sum::Hash *_retval)
+{
+  if (aHash.Length() != 2*sizeof(SHA1Sum::Hash)) {
+=======
+nsresult CacheFileIOManager::StrToHash(const nsACString& aHash,
+                                       SHA1Sum::Hash* _retval) {
+  if (aHash.Length() != 2 * sizeof(SHA1Sum::Hash)) {
+>>>>>>> upstream-releases
     return NS_ERROR_INVALID_ARG;
   }
 
@@ -3639,18 +4673,41 @@ nsresult CacheFileIOManager::StrToHash(const nsACString &aHash,
       return NS_ERROR_INVALID_ARG;
     }
 
+<<<<<<< HEAD
     if (i % 2 == 0) {
       (reinterpret_cast<uint8_t *>(_retval))[i / 2] = value << 4;
+||||||| merged common ancestors
+    if (i%2 == 0) {
+      (reinterpret_cast<uint8_t *>(_retval))[i/2] = value << 4;
+=======
+    if (i % 2 == 0) {
+      (reinterpret_cast<uint8_t*>(_retval))[i / 2] = value << 4;
+>>>>>>> upstream-releases
     } else {
+<<<<<<< HEAD
       (reinterpret_cast<uint8_t *>(_retval))[i / 2] += value;
+||||||| merged common ancestors
+      (reinterpret_cast<uint8_t *>(_retval))[i/2] += value;
+=======
+      (reinterpret_cast<uint8_t*>(_retval))[i / 2] += value;
+>>>>>>> upstream-releases
     }
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::GetFile(const SHA1Sum::Hash *aHash,
                                      nsIFile **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::GetFile(const SHA1Sum::Hash *aHash, nsIFile **_retval)
+{
+=======
+nsresult CacheFileIOManager::GetFile(const SHA1Sum::Hash* aHash,
+                                     nsIFile** _retval) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> file;
   rv = mCacheDirectory->Clone(getter_AddRefs(file));
@@ -3669,8 +4726,17 @@ nsresult CacheFileIOManager::GetFile(const SHA1Sum::Hash *aHash,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::GetSpecialFile(const nsACString &aKey,
                                             nsIFile **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::GetSpecialFile(const nsACString &aKey, nsIFile **_retval)
+{
+=======
+nsresult CacheFileIOManager::GetSpecialFile(const nsACString& aKey,
+                                            nsIFile** _retval) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> file;
   rv = mCacheDirectory->Clone(getter_AddRefs(file));
@@ -3683,7 +4749,15 @@ nsresult CacheFileIOManager::GetSpecialFile(const nsACString &aKey,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::GetDoomedFile(nsIFile **_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::GetDoomedFile(nsIFile **_retval)
+{
+=======
+nsresult CacheFileIOManager::GetDoomedFile(nsIFile** _retval) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> file;
   rv = mCacheDirectory->Clone(getter_AddRefs(file));
@@ -3723,7 +4797,15 @@ nsresult CacheFileIOManager::GetDoomedFile(nsIFile **_retval) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::IsEmptyDirectory(nsIFile *aFile, bool *_retval) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::IsEmptyDirectory(nsIFile *aFile, bool *_retval)
+{
+=======
+nsresult CacheFileIOManager::IsEmptyDirectory(nsIFile* aFile, bool* _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mIOThread->IsCurrentThread());
 
   nsresult rv;
@@ -3740,8 +4822,18 @@ nsresult CacheFileIOManager::IsEmptyDirectory(nsIFile *aFile, bool *_retval) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::CheckAndCreateDir(nsIFile *aFile, const char *aDir,
                                                bool aEnsureEmptyDir) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::CheckAndCreateDir(nsIFile *aFile, const char *aDir,
+                                      bool aEnsureEmptyDir)
+{
+=======
+nsresult CacheFileIOManager::CheckAndCreateDir(nsIFile* aFile, const char* aDir,
+                                               bool aEnsureEmptyDir) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIFile> file;
@@ -3885,8 +4977,17 @@ nsresult CacheFileIOManager::CreateCacheTree() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::OpenNSPRHandle(CacheFileHandle *aHandle,
                                             bool aCreate) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::OpenNSPRHandle(CacheFileHandle *aHandle, bool aCreate)
+{
+=======
+nsresult CacheFileIOManager::OpenNSPRHandle(CacheFileHandle* aHandle,
+                                            bool aCreate) {
+>>>>>>> upstream-releases
   LOG(("CacheFileIOManager::OpenNSPRHandle BEGIN, handle=%p", aHandle));
 
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
@@ -3978,7 +5079,15 @@ nsresult CacheFileIOManager::OpenNSPRHandle(CacheFileHandle *aHandle,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void CacheFileIOManager::NSPRHandleUsed(CacheFileHandle *aHandle) {
+||||||| merged common ancestors
+void
+CacheFileIOManager::NSPRHandleUsed(CacheFileHandle *aHandle)
+{
+=======
+void CacheFileIOManager::NSPRHandleUsed(CacheFileHandle* aHandle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
   MOZ_ASSERT(aHandle->mFD);
 
@@ -3989,7 +5098,15 @@ void CacheFileIOManager::NSPRHandleUsed(CacheFileHandle *aHandle) {
   mHandlesByLastUsed.AppendElement(aHandle);
 }
 
+<<<<<<< HEAD
 nsresult CacheFileIOManager::SyncRemoveDir(nsIFile *aFile, const char *aDir) {
+||||||| merged common ancestors
+nsresult
+CacheFileIOManager::SyncRemoveDir(nsIFile *aFile, const char *aDir)
+{
+=======
+nsresult CacheFileIOManager::SyncRemoveDir(nsIFile* aFile, const char* aDir) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> file;
 
@@ -4064,7 +5181,15 @@ void CacheFileIOManager::SyncRemoveAllCacheFiles() {
 
 // Returns default ("smart") size (in KB) of cache, given available disk space
 // (also in KB)
+<<<<<<< HEAD
 static uint32_t SmartCacheSize(const uint32_t availKB) {
+||||||| merged common ancestors
+static uint32_t
+SmartCacheSize(const uint32_t availKB)
+{
+=======
+static uint32_t SmartCacheSize(const int64_t availKB) {
+>>>>>>> upstream-releases
   uint32_t maxSize;
 
   if (CacheObserver::ClearCacheOnShutdown()) {
@@ -4145,15 +5270,22 @@ nsresult CacheFileIOManager::UpdateSmartCacheSize(int64_t aFreeSpace) {
 
   mLastSmartSizeTime = TimeStamp::NowLoRes();
 
+<<<<<<< HEAD
   uint32_t smartSize =
       SmartCacheSize(static_cast<uint32_t>(aFreeSpace / 1024) + cacheUsage);
+||||||| merged common ancestors
+  uint32_t smartSize = SmartCacheSize(static_cast<uint32_t>(aFreeSpace / 1024) +
+                                      cacheUsage);
+=======
+  uint32_t smartSize = SmartCacheSize(aFreeSpace + cacheUsage);
+>>>>>>> upstream-releases
 
-  if (smartSize == (CacheObserver::DiskCacheCapacity() >> 10)) {
+  if (smartSize == CacheObserver::DiskCacheCapacity()) {
     // Smart size has not changed.
     return NS_OK;
   }
 
-  CacheObserver::SetDiskCacheCapacity(smartSize << 10);
+  CacheObserver::SetDiskCacheCapacity(smartSize);
 
   return NS_OK;
 }
@@ -4170,6 +5302,7 @@ namespace {
 class SizeOfHandlesRunnable : public Runnable {
  public:
   SizeOfHandlesRunnable(mozilla::MallocSizeOf mallocSizeOf,
+<<<<<<< HEAD
                         CacheFileHandles const &handles,
                         nsTArray<CacheFileHandle *> const &specialHandles)
       : Runnable("net::SizeOfHandlesRunnable"),
@@ -4181,6 +5314,34 @@ class SizeOfHandlesRunnable : public Runnable {
         mSize(0) {}
 
   size_t Get(CacheIOThread *thread) {
+||||||| merged common ancestors
+                        CacheFileHandles const& handles,
+                        nsTArray<CacheFileHandle*> const& specialHandles)
+    : Runnable("net::SizeOfHandlesRunnable")
+    , mMonitor("SizeOfHandlesRunnable.mMonitor")
+    , mMonitorNotified(false)
+    , mMallocSizeOf(mallocSizeOf)
+    , mHandles(handles)
+    , mSpecialHandles(specialHandles)
+    , mSize(0)
+  {
+  }
+
+  size_t Get(CacheIOThread* thread)
+  {
+=======
+                        CacheFileHandles const& handles,
+                        nsTArray<CacheFileHandle*> const& specialHandles)
+      : Runnable("net::SizeOfHandlesRunnable"),
+        mMonitor("SizeOfHandlesRunnable.mMonitor"),
+        mMonitorNotified(false),
+        mMallocSizeOf(mallocSizeOf),
+        mHandles(handles),
+        mSpecialHandles(specialHandles),
+        mSize(0) {}
+
+  size_t Get(CacheIOThread* thread) {
+>>>>>>> upstream-releases
     nsCOMPtr<nsIEventTarget> target = thread->Target();
     if (!target) {
       NS_ERROR("If we have the I/O thread we also must have the I/O target");
@@ -4219,8 +5380,8 @@ class SizeOfHandlesRunnable : public Runnable {
   mozilla::Monitor mMonitor;
   bool mMonitorNotified;
   mozilla::MallocSizeOf mMallocSizeOf;
-  CacheFileHandles const &mHandles;
-  nsTArray<CacheFileHandle *> const &mSpecialHandles;
+  CacheFileHandles const& mHandles;
+  nsTArray<CacheFileHandle*> const& mSpecialHandles;
   size_t mSize;
 };
 

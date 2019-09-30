@@ -24,10 +24,10 @@
 // SkArenaAlloc allocates object and destroys the allocated objects when destroyed. It's designed
 // to minimize the number of underlying block allocations. SkArenaAlloc allocates first out of an
 // (optional) user-provided block of memory, and when that's exhausted it allocates on the heap,
-// starting with an allocation of extraSize bytes.  If your data (plus a small overhead) fits in
-// the user-provided block, SkArenaAlloc never uses the heap, and if it fits in extraSize bytes,
-// it'll use the heap only once.  If you pass extraSize = 0, it allocates blocks for each call to
-// make<T>.
+// starting with an allocation of firstHeapAllocation bytes.  If your data (plus a small overhead)
+// fits in the user-provided block, SkArenaAlloc never uses the heap, and if it fits in
+// firstHeapAllocation bytes, it'll use the heap only once. If 0 is specified for
+// firstHeapAllocation, then blockSize is used unless that too is 0, then 1024 is used.
 //
 // Examples:
 //
@@ -53,20 +53,55 @@
 //
 // In addition, the system is optimized to handle POD data including arrays of PODs (where
 // POD is really data with no destructors). For POD data it has zero overhead per item, and a
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
 // typical block overhead of 8 bytes. For non-POD objects there is a per item overhead of 4 bytes.
 // For arrays of non-POD objects there is a per array overhead of typically 8 bytes. There is an
 // addition overhead when switching from POD data to non-POD data of typically 8 bytes.
 //
+||||||| merged common ancestors
+// typical block overhead of 8 bytes. For non-POD objects there is a per item overhead of 4 bytes.
+// For arrays of non-POD objects there is a per array overhead of typically 8 bytes. There is an
+// addition overhead when switching from POD data to non-POD data of typically 8 bytes.
+//
+// You can track memory use by adding SkArenaAlloc::kTrack as the last parameter to any constructor.
+//
+//   char storage[someNumber];
+//   SkArenaAlloc alloc{storage, SkArenaAlloc::kTrack};
+//
+// This will print out a line for every destructor or reset call that has the total memory
+// allocated, the total slop (the unused portion of a block), and the slop of the last block.
+//
+=======
+// typical per block overhead of 8 bytes. For non-POD objects there is a per item overhead of 4
+// bytes. For arrays of non-POD objects there is a per array overhead of typically 8 bytes. There
+// is an addition overhead when switching from POD data to non-POD data of typically 8 bytes.
+//
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
 // If additional blocks are needed they are increased exponentially. This strategy bounds the
 // recursion of the RunDtorsOnBlock to be limited to O(log size-of-memory). Block size grow using
 // the Fibonacci sequence which means that for 2^32 memory there are 48 allocations, and for 2^48
 // there are 71 allocations.
 class SkArenaAlloc {
 public:
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     SkArenaAlloc(char* block, size_t blockSize, size_t extraSize);
+||||||| merged common ancestors
+    enum Tracking {kDontTrack, kTrack};
+    SkArenaAlloc(char* block, size_t size, size_t, Tracking tracking = kDontTrack);
+=======
+    SkArenaAlloc(char* block, size_t blockSize, size_t firstHeapAllocation);
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     SkArenaAlloc(size_t extraSize)
         : SkArenaAlloc(nullptr, 0, extraSize)
+||||||| merged common ancestors
+    SkArenaAlloc(size_t extraSize, Tracking tracking = kDontTrack)
+        : SkArenaAlloc(nullptr, 0, extraSize, tracking)
+=======
+    explicit SkArenaAlloc(size_t firstHeapAllocation)
+        : SkArenaAlloc(nullptr, 0, firstHeapAllocation)
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     {}
 
     ~SkArenaAlloc();
@@ -215,10 +250,23 @@ private:
     char*          fEnd;
     char* const    fFirstBlock;
     const uint32_t fFirstSize;
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     const uint32_t fExtraSize;
 
+||||||| merged common ancestors
+    const uint32_t fExtraSize;
+
+    // Track some useful stats. Track stats if fTotalSlop is >= 0;
+    uint32_t       fTotalAlloc { 0};
+    int32_t        fTotalSlop  {-1};
+
+=======
+    const uint32_t fFirstHeapAllocationSize;
+
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     // Use the Fibonacci sequence as the growth factor for block size. The size of the block
-    // allocated is fFib0 * fExtraSize. Using 2 ^ n * fExtraSize had too much slop for Android.
+    // allocated is fFib0 * fFirstHeapAllocationSize. Using 2 ^ n * fFirstHeapAllocationSize
+    // had too much slop for Android.
     uint32_t       fFib0 {1}, fFib1 {1};
 };
 
@@ -227,8 +275,16 @@ private:
 template <size_t InlineStorageSize>
 class SkSTArenaAlloc : public SkArenaAlloc {
 public:
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
     explicit SkSTArenaAlloc(size_t extraSize = InlineStorageSize)
         : INHERITED(fInlineStorage, InlineStorageSize, extraSize) {}
+||||||| merged common ancestors
+    explicit SkSTArenaAlloc(size_t extraSize = InlineStorageSize, Tracking tracking = kDontTrack)
+        : INHERITED(fInlineStorage, InlineStorageSize, extraSize, tracking) {}
+=======
+    explicit SkSTArenaAlloc(size_t firstHeapAllocation = InlineStorageSize)
+        : INHERITED(fInlineStorage, InlineStorageSize, firstHeapAllocation) {}
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/SkArenaAlloc.h
 
 private:
     char fInlineStorage[InlineStorageSize];

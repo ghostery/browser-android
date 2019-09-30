@@ -7,6 +7,7 @@
 #ifndef nsChildContentList_h__
 #define nsChildContentList_h__
 
+#include "mozilla/RefPtr.h"
 #include "nsISupportsImpl.h"
 #include "nsINodeList.h"   // base class
 #include "js/TypeDecls.h"  // for Handle, Value, JSObject, JSContext
@@ -35,19 +36,38 @@ class nsAttrChildContentList : public nsINodeList {
   virtual int32_t IndexOf(nsIContent* aContent) override;
   virtual nsIContent* Item(uint32_t aIndex) override;
   uint32_t Length() override;
+  nsINode* GetParentObject() final { return mNode; }
 
+<<<<<<< HEAD
   virtual void DropReference() { mNode = nullptr; }
+||||||| merged common ancestors
+  virtual void DropReference()
+  {
+    mNode = nullptr;
+  }
+=======
+  virtual void InvalidateCacheIfAvailable() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsINode* GetParentObject() override { return mNode; }
 
  protected:
+||||||| merged common ancestors
+  virtual nsINode* GetParentObject() override
+  {
+    return mNode;
+  }
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   virtual ~nsAttrChildContentList() {}
 
  private:
   // The node whose children make up the list.
-  // This is a non-owning ref which is safe because it's set to nullptr by
-  // DropReference() by the node slots get destroyed.
-  nsINode* MOZ_NON_OWNING_REF mNode;
+  RefPtr<nsINode> mNode;
 };
 
 class nsParentNodeChildContentList final : public nsAttrChildContentList {
@@ -62,10 +82,20 @@ class nsParentNodeChildContentList final : public nsAttrChildContentList {
   virtual nsIContent* Item(uint32_t aIndex) override;
   uint32_t Length() override;
 
+<<<<<<< HEAD
   void DropReference() override {
     InvalidateCache();
     nsAttrChildContentList::DropReference();
   }
+||||||| merged common ancestors
+  void DropReference() override
+  {
+    InvalidateCache();
+    nsAttrChildContentList::DropReference();
+  }
+=======
+  void InvalidateCacheIfAvailable() final { InvalidateCache(); }
+>>>>>>> upstream-releases
 
   void InvalidateCache() {
     mIsCacheValid = false;

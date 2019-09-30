@@ -39,17 +39,39 @@ class NullHttpTransaction : public nsAHttpTransaction {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSAHTTPTRANSACTION
 
+<<<<<<< HEAD
   NullHttpTransaction(nsHttpConnectionInfo *ci,
                       nsIInterfaceRequestor *callbacks, uint32_t caps);
+||||||| merged common ancestors
+  NullHttpTransaction(nsHttpConnectionInfo *ci,
+                      nsIInterfaceRequestor *callbacks,
+                      uint32_t caps);
+=======
+  NullHttpTransaction(nsHttpConnectionInfo* ci,
+                      nsIInterfaceRequestor* callbacks, uint32_t caps);
+>>>>>>> upstream-releases
 
   MOZ_MUST_USE bool Claim();
   void Unclaim();
 
   // Overload of nsAHttpTransaction methods
   bool IsNullTransaction() final { return true; }
+<<<<<<< HEAD
   NullHttpTransaction *QueryNullTransaction() final { return this; }
   bool ResponseTimeoutEnabled() const final { return true; }
   PRIntervalTime ResponseTimeout() final { return PR_SecondsToInterval(15); }
+||||||| merged common ancestors
+  NullHttpTransaction *QueryNullTransaction() final { return this; }
+  bool ResponseTimeoutEnabled() const final {return true; }
+  PRIntervalTime ResponseTimeout() final
+  {
+    return PR_SecondsToInterval(15);
+  }
+=======
+  NullHttpTransaction* QueryNullTransaction() final { return this; }
+  bool ResponseTimeoutEnabled() const final { return true; }
+  PRIntervalTime ResponseTimeout() final { return PR_SecondsToInterval(15); }
+>>>>>>> upstream-releases
 
   // We have to override this function because |mTransaction| in
   // nsHalfOpenSocket could be either nsHttpTransaction or NullHttpTransaction.
@@ -76,9 +98,18 @@ class NullHttpTransaction : public nsAHttpTransaction {
 
  protected:
   uint32_t mCaps;
+<<<<<<< HEAD
   nsHttpRequestHead *mRequestHead;
 
  private:
+||||||| merged common ancestors
+  nsHttpRequestHead *mRequestHead;
+private:
+=======
+  nsHttpRequestHead* mRequestHead;
+
+ private:
+>>>>>>> upstream-releases
   // mCapsToClear holds flags that should be cleared in mCaps, e.g. unset
   // NS_HTTP_REFRESH_DNS when DNS refresh request has completed to avoid
   // redundant requests on the network. The member itself is atomic, but

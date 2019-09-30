@@ -21,8 +21,19 @@ class WebrtcGlobalChild : public PWebrtcGlobalChild {
   virtual mozilla::ipc::IPCResult RecvGetStatsRequest(
       const int& aRequestId, const nsString& aPcIdFilter) override;
   virtual mozilla::ipc::IPCResult RecvClearStatsRequest() override;
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvGetLogRequest(
       const int& aReqestId, const nsCString& aPattern) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvGetLogRequest(const int& aReqestId,
+                                                    const nsCString& aPattern) override;
+=======
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY because we can't do MOZ_CAN_RUN_SCRIPT in
+  // ipdl-generated things yet.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual mozilla::ipc::IPCResult RecvGetLogRequest(
+      const int& aReqestId, const nsCString& aPattern) override;
+>>>>>>> upstream-releases
   virtual mozilla::ipc::IPCResult RecvClearLogRequest() override;
   virtual mozilla::ipc::IPCResult RecvSetAecLogging(
       const bool& aEnable) override;

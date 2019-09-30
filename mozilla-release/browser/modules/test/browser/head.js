@@ -1,11 +1,22 @@
-
-ChromeUtils.defineModuleGetter(this, "PlacesTestUtils",
-                               "resource://testing-common/PlacesTestUtils.jsm");
+ChromeUtils.defineModuleGetter(
+  this,
+  "PlacesTestUtils",
+  "resource://testing-common/PlacesTestUtils.jsm"
+);
+ChromeUtils.defineModuleGetter(
+  this,
+  "TelemetryTestUtils",
+  "resource://testing-common/TelemetryTestUtils.jsm"
+);
 
 const SINGLE_TRY_TIMEOUT = 100;
 const NUMBER_OF_TRIES = 30;
 
-function waitForConditionPromise(condition, timeoutMsg, tryCount = NUMBER_OF_TRIES) {
+function waitForConditionPromise(
+  condition,
+  timeoutMsg,
+  tryCount = NUMBER_OF_TRIES
+) {
   return new Promise((resolve, reject) => {
     let tries = 0;
     function checkCondition() {
@@ -30,53 +41,10 @@ function waitForConditionPromise(condition, timeoutMsg, tryCount = NUMBER_OF_TRI
 }
 
 function waitForCondition(condition, nextTest, errorMsg) {
-  waitForConditionPromise(condition, errorMsg).then(nextTest, (reason) => {
+  waitForConditionPromise(condition, errorMsg).then(nextTest, reason => {
     ok(false, reason + (reason.stack ? "\n" + reason.stack : ""));
   });
 }
-
-/**
- * Checks if the snapshotted keyed scalars contain the expected
- * data.
- *
- * @param {Object} scalars
- *        The snapshot of the keyed scalars.
- * @param {String} scalarName
- *        The name of the keyed scalar to check.
- * @param {String} key
- *        The key that must be within the keyed scalar.
- * @param {String|Boolean|Number} expectedValue
- *        The expected value for the provided key in the scalar.
- */
-function checkKeyedScalar(scalars, scalarName, key, expectedValue) {
-  Assert.ok(scalarName in scalars,
-            scalarName + " must be recorded.");
-  Assert.ok(key in scalars[scalarName],
-            scalarName + " must contain the '" + key + "' key.");
-  Assert.equal(scalars[scalarName][key], expectedValue,
-            scalarName + "['" + key + "'] must contain the expected value");
-}
-
-/**
- * An helper that checks the value of a scalar if it's expected to be > 0,
- * otherwise makes sure that the scalar it's not reported.
- *
- * @param {Object} scalars
- *        The snapshot of the scalars.
- * @param {String} scalarName
- *        The name of the scalar to check.
- * @param {Number} value
- *        The expected value for the provided scalar.
- * @param {String} msg
- *        The message to print when checking the value.
- */
-let checkScalar = (scalars, scalarName, value, msg) => {
-  if (value > 0) {
-    is(scalars[scalarName], value, msg);
-    return;
-  }
-  ok(!(scalarName in scalars), scalarName + " must not be reported.");
-};
 
 /**
  * An utility function to write some text in the search input box
@@ -89,7 +57,10 @@ let checkScalar = (scalars, scalarName, value, msg) => {
  *        The name of the field to write to.
  */
 let typeInSearchField = async function(browser, text, fieldName) {
-  await ContentTask.spawn(browser, [fieldName, text], async function([contentFieldName, contentText]) {
+  await ContentTask.spawn(browser, [fieldName, text], async function([
+    contentFieldName,
+    contentText,
+  ]) {
     // Put the focus on the search box.
     let searchInput = content.document.getElementById(contentFieldName);
     searchInput.focus();
@@ -97,6 +68,7 @@ let typeInSearchField = async function(browser, text, fieldName) {
   });
 };
 
+<<<<<<< HEAD
 
 /**
  * Clear and get the named histogram
@@ -165,6 +137,73 @@ function checkEvents(events, expectedEvents) {
   }
 }
 
+||||||| merged common ancestors
+
+/**
+ * Clear and get the named histogram
+ * @param {String} name
+ *        The name of the histogram
+ */
+function getAndClearHistogram(name) {
+  let histogram = Services.telemetry.getHistogramById(name);
+  histogram.clear();
+  return histogram;
+}
+
+
+/**
+ * Clear and get the named keyed histogram
+ * @param {String} name
+ *        The name of the keyed histogram
+ */
+function getAndClearKeyedHistogram(name) {
+  let histogram = Services.telemetry.getKeyedHistogramById(name);
+  histogram.clear();
+  return histogram;
+}
+
+
+/**
+ * Check that the keyed histogram contains the right value.
+ */
+function checkKeyedHistogram(h, key, expectedValue) {
+  const snapshot = h.snapshot();
+  if (expectedValue === undefined) {
+    Assert.ok(!(key in snapshot), `The histogram must not contain ${key}.`);
+    return;
+  }
+  Assert.ok(key in snapshot, `The histogram must contain ${key}.`);
+  Assert.equal(snapshot[key].sum, expectedValue, `The key ${key} must contain ${expectedValue}.`);
+}
+
+/**
+ * Return the scalars from the parent-process.
+ */
+function getParentProcessScalars(aChannel, aKeyed = false, aClear = false) {
+  const scalars = aKeyed ?
+    Services.telemetry.snapshotKeyedScalars(aChannel, aClear).parent :
+    Services.telemetry.snapshotScalars(aChannel, aClear).parent;
+  return scalars || {};
+}
+
+function checkEvents(events, expectedEvents) {
+  if (!Services.telemetry.canRecordExtended) {
+    // Currently we only collect the tested events when extended Telemetry is enabled.
+    return;
+  }
+
+  Assert.equal(events.length, expectedEvents.length, "Should have matching amount of events.");
+
+  // Strip timestamps from the events for easier comparison.
+  events = events.map(e => e.slice(1));
+
+  for (let i = 0; i < events.length; ++i) {
+    Assert.deepEqual(events[i], expectedEvents[i], "Events should match.");
+  }
+}
+
+=======
+>>>>>>> upstream-releases
 /**
  * Given a <xul:browser> at some non-internal web page,
  * return something that resembles an nsIContentPermissionRequest,
@@ -184,6 +223,9 @@ function makeMockPermissionRequest(browser) {
   types.appendElement(type);
   let result = {
     types,
+    documentDOMContentLoadedTimestamp: 0,
+    isHandlingUserInput: false,
+    userHadInteractedWithDocument: false,
     principal: browser.contentPrincipal,
     topLevelPrincipal: browser.contentPrincipal,
     requester: null,
@@ -218,8 +260,10 @@ function makeMockPermissionRequest(browser) {
  *         event.
  */
 function clickMainAction() {
-  let removePromise =
-    BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popuphidden");
+  let removePromise = BrowserTestUtils.waitForEvent(
+    PopupNotifications.panel,
+    "popuphidden"
+  );
   let popupNotification = getPopupNotificationNode();
   popupNotification.button.click();
   return removePromise;
@@ -239,8 +283,10 @@ function clickMainAction() {
  *         event.
  */
 function clickSecondaryAction(actionIndex) {
-  let removePromise =
-    BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popuphidden");
+  let removePromise = BrowserTestUtils.waitForEvent(
+    PopupNotifications.panel,
+    "popuphidden"
+  );
   let popupNotification = getPopupNotificationNode();
   if (!actionIndex) {
     popupNotification.secondaryButton.click();
@@ -249,8 +295,10 @@ function clickSecondaryAction(actionIndex) {
 
   return (async function() {
     // Click the dropmarker arrow and wait for the menu to show up.
-    let dropdownPromise =
-      BrowserTestUtils.waitForEvent(popupNotification.menupopup, "popupshown");
+    let dropdownPromise = BrowserTestUtils.waitForEvent(
+      popupNotification.menupopup,
+      "popupshown"
+    );
     await EventUtils.synthesizeMouseAtCenter(popupNotification.menubutton, {});
     await dropdownPromise;
 
@@ -258,7 +306,9 @@ function clickSecondaryAction(actionIndex) {
     // because they are injected into a <children> node in the XBL binding.
     // The target action is the menuitem at index actionIndex - 1, because the first
     // secondary action (index 0) is the button shown directly in the panel.
-    let actionMenuItem = popupNotification.querySelectorAll("menuitem")[actionIndex - 1];
+    let actionMenuItem = popupNotification.querySelectorAll("menuitem")[
+      actionIndex - 1
+    ];
     await EventUtils.synthesizeMouseAtCenter(actionMenuItem, {});
     await removePromise;
   })();
@@ -275,11 +325,13 @@ function getPopupNotificationNode() {
   // clear, popupNotifications is a list of <xul:popupnotification>
   // nodes.
   let popupNotifications = PopupNotifications.panel.childNodes;
-  Assert.equal(popupNotifications.length, 1,
-               "Should be showing a <xul:popupnotification>");
+  Assert.equal(
+    popupNotifications.length,
+    1,
+    "Should be showing a <xul:popupnotification>"
+  );
   return popupNotifications[0];
 }
-
 
 /**
  * Disable non-release page actions (that are tested elsewhere).
@@ -287,7 +339,18 @@ function getPopupNotificationNode() {
  * @return void
  */
 async function disableNonReleaseActions() {
+<<<<<<< HEAD
   if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
     SpecialPowers.Services.prefs.setBoolPref("extensions.webcompat-reporter.enabled", false);
+||||||| merged common ancestors
+  if (AppConstants.MOZ_DEV_EDITION || AppConstants.NIGHTLY_BUILD) {
+    SpecialPowers.Services.prefs.setBoolPref("extensions.webcompat-reporter.enabled", false);
+=======
+  if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
+    SpecialPowers.Services.prefs.setBoolPref(
+      "extensions.webcompat-reporter.enabled",
+      false
+    );
+>>>>>>> upstream-releases
   }
 }

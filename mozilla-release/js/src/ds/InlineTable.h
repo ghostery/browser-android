@@ -91,8 +91,20 @@ class InlineTable : private AllocPolicy {
  public:
   static const size_t SizeOfInlineEntries = sizeof(InlineEntry) * InlineEntries;
 
+<<<<<<< HEAD
   explicit InlineTable(AllocPolicy a = AllocPolicy())
       : AllocPolicy(a), inlNext_(0), inlCount_(0), table_(a) {}
+||||||| merged common ancestors
+    explicit InlineTable(AllocPolicy a = AllocPolicy())
+      : AllocPolicy(a),
+        inlNext_(0),
+        inlCount_(0),
+        table_(a)
+    { }
+=======
+  explicit InlineTable(AllocPolicy a = AllocPolicy())
+      : AllocPolicy(std::move(a)), inlNext_(0), inlCount_(0), table_(a) {}
+>>>>>>> upstream-releases
 
   class Ptr {
     friend class InlineTable;
@@ -467,7 +479,17 @@ class InlineMap {
 
   static const size_t SizeOfInlineEntries = Impl::SizeOfInlineEntries;
 
+<<<<<<< HEAD
   explicit InlineMap(AllocPolicy a = AllocPolicy()) : impl_(a) {}
+||||||| merged common ancestors
+    template <typename KeyInput, typename ValueInput>
+    MOZ_ALWAYS_INLINE
+    MOZ_MUST_USE bool add(AddPtr& p, KeyInput&& key, ValueInput&& value) {
+        return impl_.add(p, std::forward<KeyInput>(key), std::forward<ValueInput>(value));
+    }
+=======
+  explicit InlineMap(AllocPolicy a = AllocPolicy()) : impl_(std::move(a)) {}
+>>>>>>> upstream-releases
 
   size_t count() const { return impl_.count(); }
 
@@ -571,7 +593,16 @@ class InlineSet {
 
   static const size_t SizeOfInlineEntries = Impl::SizeOfInlineEntries;
 
+<<<<<<< HEAD
   explicit InlineSet(AllocPolicy a = AllocPolicy()) : impl_(a) {}
+||||||| merged common ancestors
+    MOZ_ALWAYS_INLINE
+    bool has(const Lookup& l) const {
+        return const_cast<InlineSet*>(this)->lookup(l).found();
+    }
+=======
+  explicit InlineSet(AllocPolicy a = AllocPolicy()) : impl_(std::move(a)) {}
+>>>>>>> upstream-releases
 
   size_t count() const { return impl_.count(); }
 

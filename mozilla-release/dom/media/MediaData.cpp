@@ -17,8 +17,8 @@
 #include <stdint.h>
 
 #ifdef XP_WIN
-#include "mozilla/WindowsVersion.h"
-#include "mozilla/layers/D3D11YCbCrImage.h"
+#  include "mozilla/WindowsVersion.h"
+#  include "mozilla/layers/D3D11YCbCrImage.h"
 #endif
 
 namespace mozilla {
@@ -40,15 +40,111 @@ bool IsDataLoudnessHearable(const AudioDataValue aData) {
   return 20.0f * std::log10(AudioSampleToFloat(aData)) > -100;
 }
 
+<<<<<<< HEAD
 void AudioData::EnsureAudioBuffer() {
   if (mAudioBuffer) return;
   mAudioBuffer =
       SharedBuffer::Create(mFrames * mChannels * sizeof(AudioDataValue));
+||||||| merged common ancestors
+void
+AudioData::EnsureAudioBuffer()
+{
+  if (mAudioBuffer)
+    return;
+  mAudioBuffer = SharedBuffer::Create(mFrames*mChannels*sizeof(AudioDataValue));
+=======
+AudioData::AudioData(int64_t aOffset, const media::TimeUnit& aTime,
+                     AlignedAudioBuffer&& aData, uint32_t aChannels,
+                     uint32_t aRate, uint32_t aChannelMap)
+    : MediaData(sType, aOffset, aTime,
+                FramesToTimeUnit(aData.Length() / aChannels, aRate)),
+      mChannels(aChannels),
+      mChannelMap(aChannelMap),
+      mRate(aRate),
+      mOriginalTime(aTime),
+      mAudioData(std::move(aData)),
+      mFrames(mAudioData.Length() / aChannels) {}
 
-  AudioDataValue* data = static_cast<AudioDataValue*>(mAudioBuffer->Data());
+Span<AudioDataValue> AudioData::Data() const {
+  return MakeSpan(GetAdjustedData(), mFrames * mChannels);
+}
+
+bool AudioData::AdjustForStartTime(const media::TimeUnit& aStartTime) {
+  mOriginalTime -= aStartTime;
+  if (mTrimWindow) {
+    *mTrimWindow -= aStartTime;
+  }
+  return MediaData::AdjustForStartTime(aStartTime) && mOriginalTime.IsValid();
+}
+
+bool AudioData::SetTrimWindow(const media::TimeInterval& aTrim) {
+  MOZ_DIAGNOSTIC_ASSERT(aTrim.mStart.IsValid() && aTrim.mEnd.IsValid(),
+                        "An overflow occurred on the provided TimeInterval");
+  if (!mAudioData) {
+    // MoveableData got called. Can no longer work on it.
+    return false;
+  }
+  const size_t originalFrames = mAudioData.Length() / mChannels;
+  const TimeUnit originalDuration = FramesToTimeUnit(originalFrames, mRate);
+  if (aTrim.mStart < mOriginalTime ||
+      aTrim.mEnd > mOriginalTime + originalDuration) {
+    return false;
+  }
+
+  auto trimBefore = TimeUnitToFrames(aTrim.mStart - mOriginalTime, mRate);
+  auto trimAfter = aTrim.mEnd == GetEndTime()
+                       ? originalFrames
+                       : TimeUnitToFrames(aTrim.mEnd - mOriginalTime, mRate);
+  if (!trimBefore.isValid() || !trimAfter.isValid()) {
+    // Overflow.
+    return false;
+  }
+  MOZ_DIAGNOSTIC_ASSERT(trimAfter.value() >= trimBefore.value(),
+                        "Something went wrong with trimming value");
+  if (!mTrimWindow && trimBefore == 0 && trimAfter == originalFrames) {
+    // Nothing to change, abort early to prevent rounding errors.
+    return true;
+  }
+
+  mTrimWindow = Some(aTrim);
+  mDataOffset = trimBefore.value() * mChannels;
+  MOZ_DIAGNOSTIC_ASSERT(mDataOffset <= mAudioData.Length(),
+                        "Data offset outside original buffer");
+  mFrames = (trimAfter - trimBefore).value();
+  MOZ_DIAGNOSTIC_ASSERT(mFrames <= originalFrames,
+                        "More frames than found in container");
+  mTime = mOriginalTime + FramesToTimeUnit(trimBefore.value(), mRate);
+  mDuration = FramesToTimeUnit(mFrames, mRate);
+
+  return true;
+}
+
+AudioDataValue* AudioData::GetAdjustedData() const {
+  if (!mAudioData) {
+    return nullptr;
+  }
+  return mAudioData.Data() + mDataOffset;
+}
+
+void AudioData::EnsureAudioBuffer() {
+  if (mAudioBuffer || !mAudioData) {
+    return;
+  }
+  const AudioDataValue* srcData = GetAdjustedData();
+  mAudioBuffer =
+      SharedBuffer::Create(mFrames * mChannels * sizeof(AudioDataValue));
+>>>>>>> upstream-releases
+
+  AudioDataValue* destData = static_cast<AudioDataValue*>(mAudioBuffer->Data());
   for (uint32_t i = 0; i < mFrames; ++i) {
     for (uint32_t j = 0; j < mChannels; ++j) {
+<<<<<<< HEAD
       data[j * mFrames + i] = mAudioData[i * mChannels + j];
+||||||| merged common ancestors
+      data[j*mFrames + i] = mAudioData[i*mChannels + j];
+=======
+      destData[j * mFrames + i] = srcData[i * mChannels + j];
+>>>>>>> upstream-releases
     }
   }
 }
@@ -67,9 +163,11 @@ bool AudioData::IsAudible() const {
     return false;
   }
 
+  const AudioDataValue* data = GetAdjustedData();
+
   for (uint32_t frame = 0; frame < mFrames; ++frame) {
     for (uint32_t channel = 0; channel < mChannels; ++channel) {
-      if (IsDataLoudnessHearable(mAudioData[frame * mChannels + channel])) {
+      if (IsDataLoudnessHearable(data[frame * mChannels + channel])) {
         return true;
       }
     }
@@ -77,6 +175,7 @@ bool AudioData::IsAudible() const {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */
 already_AddRefed<AudioData> AudioData::TransferAndUpdateTimestampAndDuration(
     AudioData* aOther, const TimeUnit& aTimestamp, const TimeUnit& aDuration) {
@@ -86,6 +185,33 @@ already_AddRefed<AudioData> AudioData::TransferAndUpdateTimestampAndDuration(
                     std::move(aOther->mAudioData), aOther->mChannels,
                     aOther->mRate, aOther->mChannelMap);
   return v.forget();
+||||||| merged common ancestors
+/* static */
+already_AddRefed<AudioData>
+AudioData::TransferAndUpdateTimestampAndDuration(AudioData* aOther,
+                                                 const TimeUnit& aTimestamp,
+                                                 const TimeUnit& aDuration)
+{
+  NS_ENSURE_TRUE(aOther, nullptr);
+  RefPtr<AudioData> v = new AudioData(aOther->mOffset,
+                                      aTimestamp,
+                                      aDuration,
+                                      aOther->mFrames,
+                                      std::move(aOther->mAudioData),
+                                      aOther->mChannels,
+                                      aOther->mRate,
+                                      aOther->mChannelMap);
+  return v.forget();
+=======
+AlignedAudioBuffer AudioData::MoveableData() {
+  // Trim buffer according to trimming mask.
+  mAudioData.PopFront(mDataOffset);
+  mAudioData.SetLength(mFrames * mChannels);
+  mDataOffset = 0;
+  mFrames = 0;
+  mTrimWindow.reset();
+  return std::move(mAudioData);
+>>>>>>> upstream-releases
 }
 
 static bool ValidatePlane(const VideoData::YCbCrBuffer::Plane& aPlane) {
@@ -107,8 +233,7 @@ static bool ValidateBufferAndPicture(const VideoData::YCbCrBuffer& aBuffer,
 
   // The following situations could be triggered by invalid input
   if (aPicture.width <= 0 || aPicture.height <= 0) {
-    // In debug mode, makes the error more noticeable
-    MOZ_ASSERT(false, "Empty picture rect");
+    NS_WARNING("Empty picture rect");
     return false;
   }
   if (!ValidatePlane(aBuffer.mPlanes[0]) ||
@@ -136,11 +261,26 @@ VideoData::VideoData(int64_t aOffset, const TimeUnit& aTime,
                      const TimeUnit& aDuration, bool aKeyframe,
                      const TimeUnit& aTimecode, IntSize aDisplay,
                      layers::ImageContainer::FrameID aFrameID)
+<<<<<<< HEAD
     : MediaData(VIDEO_DATA, aOffset, aTime, aDuration, 1),
       mDisplay(aDisplay),
       mFrameID(aFrameID),
       mSentToCompositor(false),
       mNextKeyFrameTime(TimeUnit::Invalid()) {
+||||||| merged common ancestors
+  : MediaData(VIDEO_DATA, aOffset, aTime, aDuration, 1)
+  , mDisplay(aDisplay)
+  , mFrameID(aFrameID)
+  , mSentToCompositor(false)
+  , mNextKeyFrameTime(TimeUnit::Invalid())
+{
+=======
+    : MediaData(Type::VIDEO_DATA, aOffset, aTime, aDuration),
+      mDisplay(aDisplay),
+      mFrameID(aFrameID),
+      mSentToCompositor(false),
+      mNextKeyFrameTime(TimeUnit::Invalid()) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mDuration.IsNegative(), "Frame must have non-negative duration.");
   mKeyframe = aKeyframe;
   mTimecode = aTimecode;
@@ -223,11 +363,27 @@ PlanarYCbCrData ConstructPlanarYCbCrData(const VideoInfo& aInfo,
   return data;
 }
 
+<<<<<<< HEAD
 /* static */ bool VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
                                                  const VideoInfo& aInfo,
                                                  const YCbCrBuffer& aBuffer,
                                                  const IntRect& aPicture,
                                                  bool aCopyData) {
+||||||| merged common ancestors
+/* static */ bool
+VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
+                               const VideoInfo& aInfo,
+                               const YCbCrBuffer &aBuffer,
+                               const IntRect& aPicture,
+                               bool aCopyData)
+{
+=======
+/* static */
+bool VideoData::SetVideoDataToImage(PlanarYCbCrImage* aVideoImage,
+                                    const VideoInfo& aInfo,
+                                    const YCbCrBuffer& aBuffer,
+                                    const IntRect& aPicture, bool aCopyData) {
+>>>>>>> upstream-releases
   if (!aVideoImage) {
     return false;
   }
@@ -333,20 +489,56 @@ already_AddRefed<VideoData> VideoData::CreateAndCopyData(
   if (!v->mImage) {
     return nullptr;
   }
+<<<<<<< HEAD
+  if (!videoImage->Allocate(
+          IntSize(aBuffer.mPlanes[0].mWidth, aBuffer.mPlanes[0].mHeight),
+          SurfaceFormat::B8G8R8A8)) {
+||||||| merged common ancestors
+  if (!videoImage->Allocate(IntSize(aBuffer.mPlanes[0].mWidth,
+                                    aBuffer.mPlanes[0].mHeight),
+                            SurfaceFormat::B8G8R8A8)) {
+=======
   if (!videoImage->Allocate(
           IntSize(aBuffer.mPlanes[0].mWidth, aBuffer.mPlanes[0].mHeight),
           SurfaceFormat::B8G8R8A8)) {
     return nullptr;
   }
-  uint8_t* argb_buffer = videoImage->GetBuffer();
-  IntSize size = videoImage->GetSize();
+
+  RefPtr<layers::TextureClient> texture =
+      videoImage->GetTextureClient(/* aKnowsCompositor */ nullptr);
+  if (!texture) {
+    NS_WARNING("Failed to allocate TextureClient");
+    return nullptr;
+  }
+
+  layers::TextureClientAutoLock autoLock(texture,
+                                         layers::OpenMode::OPEN_WRITE_ONLY);
+  if (!autoLock.Succeeded()) {
+    NS_WARNING("Failed to lock TextureClient");
+    return nullptr;
+  }
+
+  layers::MappedTextureData buffer;
+  if (!texture->BorrowMappedData(buffer)) {
+    NS_WARNING("Failed to borrow mapped data");
+>>>>>>> upstream-releases
+    return nullptr;
+  }
 
   // The naming convention for libyuv and associated utils is word-order.
   // The naming convention in the gfx stack is byte-order.
   ConvertYCbCrAToARGB(aBuffer.mPlanes[0].mData, aBuffer.mPlanes[1].mData,
                       aBuffer.mPlanes[2].mData, aAlphaPlane.mData,
                       aBuffer.mPlanes[0].mStride, aBuffer.mPlanes[1].mStride,
+<<<<<<< HEAD
                       argb_buffer, size.width * 4, size.width, size.height);
+||||||| merged common ancestors
+                      argb_buffer, size.width * 4,
+                      size.width, size.height);
+=======
+                      buffer.data, buffer.stride, buffer.size.width,
+                      buffer.size.height);
+>>>>>>> upstream-releases
 
   return v.forget();
 }
@@ -363,17 +555,52 @@ already_AddRefed<VideoData> VideoData::CreateFromImage(
 }
 
 MediaRawData::MediaRawData()
+<<<<<<< HEAD
     : MediaData(RAW_DATA, 0), mCrypto(mCryptoInternal) {}
+||||||| merged common ancestors
+  : MediaData(RAW_DATA, 0)
+  , mCrypto(mCryptoInternal)
+{
+}
+=======
+    : MediaData(Type::RAW_DATA), mCrypto(mCryptoInternal) {}
+>>>>>>> upstream-releases
 
 MediaRawData::MediaRawData(const uint8_t* aData, size_t aSize)
+<<<<<<< HEAD
     : MediaData(RAW_DATA, 0), mCrypto(mCryptoInternal), mBuffer(aData, aSize) {}
+||||||| merged common ancestors
+  : MediaData(RAW_DATA, 0)
+  , mCrypto(mCryptoInternal)
+  , mBuffer(aData, aSize)
+{
+}
+=======
+    : MediaData(Type::RAW_DATA),
+      mCrypto(mCryptoInternal),
+      mBuffer(aData, aSize) {}
+>>>>>>> upstream-releases
 
 MediaRawData::MediaRawData(const uint8_t* aData, size_t aSize,
                            const uint8_t* aAlphaData, size_t aAlphaSize)
+<<<<<<< HEAD
     : MediaData(RAW_DATA, 0),
       mCrypto(mCryptoInternal),
       mBuffer(aData, aSize),
       mAlphaBuffer(aAlphaData, aAlphaSize) {}
+||||||| merged common ancestors
+  : MediaData(RAW_DATA, 0)
+  , mCrypto(mCryptoInternal)
+  , mBuffer(aData, aSize)
+  , mAlphaBuffer(aAlphaData, aAlphaSize)
+{
+}
+=======
+    : MediaData(Type::RAW_DATA),
+      mCrypto(mCryptoInternal),
+      mBuffer(aData, aSize),
+      mAlphaBuffer(aAlphaData, aAlphaSize) {}
+>>>>>>> upstream-releases
 
 already_AddRefed<MediaRawData> MediaRawData::Clone() const {
   RefPtr<MediaRawData> s = new MediaRawData;
@@ -386,6 +613,7 @@ already_AddRefed<MediaRawData> MediaRawData::Clone() const {
   s->mCryptoInternal = mCryptoInternal;
   s->mTrackInfo = mTrackInfo;
   s->mEOS = mEOS;
+  s->mOriginalPresentationWindow = mOriginalPresentationWindow;
   if (!s->mBuffer.Append(mBuffer.Data(), mBuffer.Length())) {
     return nullptr;
   }

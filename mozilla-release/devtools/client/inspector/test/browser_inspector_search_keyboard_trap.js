@@ -25,9 +25,19 @@ const TEST_DATA = [
     keys: [
       {
         key: "VK_TAB",
+<<<<<<< HEAD
         options: { },
       },
     ],
+||||||| merged common ancestors
+        options: { }
+      }
+    ]
+=======
+        options: {},
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     desc: "Move focus back to searchbox",
@@ -40,23 +50,46 @@ const TEST_DATA = [
     ],
   },
   {
-    desc: "Open popup and then tab away (2 times) to the a next focusable " +
-          "element",
+    desc:
+      "Open popup and then tab away (2 times) to the a next focusable " +
+      "element",
     focused: false,
     keys: [
       {
         key: "d",
+<<<<<<< HEAD
         options: { },
+||||||| merged common ancestors
+        options: { }
+=======
+        options: {},
+>>>>>>> upstream-releases
       },
       {
         key: "VK_TAB",
+<<<<<<< HEAD
         options: { },
+||||||| merged common ancestors
+        options: { }
+=======
+        options: {},
+>>>>>>> upstream-releases
       },
       {
         key: "VK_TAB",
+<<<<<<< HEAD
         options: { },
       },
     ],
+||||||| merged common ancestors
+        options: { }
+      }
+    ]
+=======
+        options: {},
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     desc: "Move focus back to searchbox",
@@ -84,8 +117,9 @@ add_task(async function() {
   for (const { desc, focused, keys } of TEST_DATA) {
     info(desc);
     for (const { key, options } of keys) {
-      const done = !focused ?
-        inspector.searchSuggestions.once("processing-done") : Promise.resolve();
+      const done = !focused
+        ? inspector.searchSuggestions.once("processing-done")
+        : Promise.resolve();
       EventUtils.synthesizeKey(key, options);
       await done;
     }

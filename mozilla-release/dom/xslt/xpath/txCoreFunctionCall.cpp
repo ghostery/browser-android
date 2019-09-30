@@ -187,6 +187,7 @@ nsresult txCoreFunctionCall::evaluate(txIEvalContext* aContext,
 
           return NS_OK;
         }
+<<<<<<< HEAD
         default: { MOZ_CRASH("Unexpected mType?!"); }
       }
       MOZ_CRASH("Inner mType switch should have returned!");
@@ -197,20 +198,108 @@ nsresult txCoreFunctionCall::evaluate(txIEvalContext* aContext,
     }
 
       // String functions
+||||||| merged common ancestors
+        case STARTS_WITH:
+        {
+            nsAutoString arg2;
+            rv = mParams[1]->evaluateToString(aContext, arg2);
+            NS_ENSURE_SUCCESS(rv, rv);
 
+            bool result = false;
+            if (arg2.IsEmpty()) {
+                result = true;
+            }
+            else {
+                nsAutoString arg1;
+                rv = mParams[0]->evaluateToString(aContext, arg1);
+                NS_ENSURE_SUCCESS(rv, rv);
+
+                result = StringBeginsWith(arg1, arg2);
+            }
+
+            aContext->recycler()->getBoolResult(result, aResult);
+
+            return NS_OK;
+        }
+        case STRING:
+        {
+            RefPtr<StringResult> strRes;
+            rv = aContext->recycler()->getStringResult(getter_AddRefs(strRes));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+        default: {
+          MOZ_CRASH("Unexpected mType?!");
+        }
+      }
+      MOZ_CRASH("Inner mType switch should have returned!");
+    }
+    case POSITION: {
+      return aContext->recycler()->getNumberResult(aContext->position(),
+                                                   aResult);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     case CONCAT: {
       RefPtr<StringResult> strRes;
       rv = aContext->recycler()->getStringResult(getter_AddRefs(strRes));
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            if (!mParams.IsEmpty()) {
+                rv = mParams[0]->evaluateToString(aContext, strRes->mValue);
+                NS_ENSURE_SUCCESS(rv, rv);
+            }
+            else {
+                txXPathNodeUtils::appendNodeValue(aContext->getContextNode(),
+                                                  strRes->mValue);
+            }
+=======
+      // String functions
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       uint32_t i, len = mParams.Length();
       for (i = 0; i < len; ++i) {
         rv = mParams[i]->evaluateToString(aContext, strRes->mValue);
         NS_ENSURE_SUCCESS(rv, rv);
       }
+||||||| merged common ancestors
+            NS_ADDREF(*aResult = strRes);
+=======
+    case CONCAT: {
+      RefPtr<StringResult> strRes;
+      rv = aContext->recycler()->getStringResult(getter_AddRefs(strRes));
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       NS_ADDREF(*aResult = strRes);
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        case STRING_LENGTH:
+        {
+            nsAutoString resultStr;
+            if (!mParams.IsEmpty()) {
+                rv = mParams[0]->evaluateToString(aContext, resultStr);
+                NS_ENSURE_SUCCESS(rv, rv);
+            }
+            else {
+                txXPathNodeUtils::appendNodeValue(aContext->getContextNode(),
+                                                  resultStr);
+            }
+            rv = aContext->recycler()->getNumberResult(resultStr.Length(),
+                                                       aResult);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      uint32_t i, len = mParams.Length();
+      for (i = 0; i < len; ++i) {
+        rv = mParams[i]->evaluateToString(aContext, strRes->mValue);
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       return NS_OK;
     }
     case CONTAINS: {
@@ -271,7 +360,19 @@ nsresult txCoreFunctionCall::evaluate(txIEvalContext* aContext,
       nsAutoString arg2;
       rv = mParams[1]->evaluateToString(aContext, arg2);
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        case SUBSTRING:
+        {
+            nsAutoString src;
+            rv = mParams[0]->evaluateToString(aContext, src);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      NS_ADDREF(*aResult = strRes);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       bool result = false;
       if (arg2.IsEmpty()) {
         result = true;
@@ -279,12 +380,103 @@ nsresult txCoreFunctionCall::evaluate(txIEvalContext* aContext,
         nsAutoString arg1;
         rv = mParams[0]->evaluateToString(aContext, arg1);
         NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            double start;
+            rv = evaluateToNumber(mParams[1], aContext, &start);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      return NS_OK;
+    }
+    case CONTAINS: {
+      nsAutoString arg2;
+      rv = mParams[1]->evaluateToString(aContext, arg2);
+      NS_ENSURE_SUCCESS(rv, rv);
 
-        result = StringBeginsWith(arg1, arg2);
+      if (arg2.IsEmpty()) {
+        aContext->recycler()->getBoolResult(true, aResult);
+      } else {
+        nsAutoString arg1;
+        rv = mParams[0]->evaluateToString(aContext, arg1);
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        aContext->recycler()->getBoolResult(FindInReadable(arg2, arg1),
+                                            aResult);
       }
 
-      aContext->recycler()->getBoolResult(result, aResult);
+      return NS_OK;
+    }
+    case NORMALIZE_SPACE: {
+      nsAutoString resultStr;
+      if (!mParams.IsEmpty()) {
+        rv = mParams[0]->evaluateToString(aContext, resultStr);
+        NS_ENSURE_SUCCESS(rv, rv);
+      } else {
+        txXPathNodeUtils::appendNodeValue(aContext->getContextNode(),
+                                          resultStr);
+      }
 
+      RefPtr<StringResult> strRes;
+      rv = aContext->recycler()->getStringResult(getter_AddRefs(strRes));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      bool addSpace = false;
+      bool first = true;
+      strRes->mValue.SetCapacity(resultStr.Length());
+      char16_t c;
+      uint32_t src;
+      for (src = 0; src < resultStr.Length(); src++) {
+        c = resultStr.CharAt(src);
+        if (XMLUtils::isWhitespace(c)) {
+          addSpace = true;
+        } else {
+          if (addSpace && !first) strRes->mValue.Append(char16_t(' '));
+
+          strRes->mValue.Append(c);
+          addSpace = false;
+          first = false;
+        }
+      }
+      *aResult = strRes;
+      NS_ADDREF(*aResult);
+
+      return NS_OK;
+    }
+    case STARTS_WITH: {
+      nsAutoString arg2;
+      rv = mParams[1]->evaluateToString(aContext, arg2);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        result = StringBeginsWith(arg1, arg2);
+      }
+||||||| merged common ancestors
+            // check for NaN or +/-Inf
+            if (mozilla::IsNaN(start) ||
+                mozilla::IsInfinite(start) ||
+                start >= src.Length() + 0.5) {
+                aContext->recycler()->getEmptyStringResult(aResult);
+=======
+      bool result = false;
+      if (arg2.IsEmpty()) {
+        result = true;
+      } else {
+        nsAutoString arg1;
+        rv = mParams[0]->evaluateToString(aContext, arg1);
+        NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      aContext->recycler()->getBoolResult(result, aResult);
+||||||| merged common ancestors
+                return NS_OK;
+            }
+=======
+        result = StringBeginsWith(arg1, arg2);
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       return NS_OK;
     }
     case STRING: {
@@ -322,31 +514,147 @@ nsresult txCoreFunctionCall::evaluate(txIEvalContext* aContext,
       nsAutoString src;
       rv = mParams[0]->evaluateToString(aContext, src);
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            start = floor(start + 0.5) - 1;
+=======
+      aContext->recycler()->getBoolResult(result, aResult);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       double start;
       rv = evaluateToNumber(mParams[1], aContext, &start);
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            double end;
+            if (mParams.Length() == 3) {
+                rv = evaluateToNumber(mParams[2], aContext, &end);
+                NS_ENSURE_SUCCESS(rv, rv);
+=======
+      return NS_OK;
+    }
+    case STRING: {
+      RefPtr<StringResult> strRes;
+      rv = aContext->recycler()->getStringResult(getter_AddRefs(strRes));
+      NS_ENSURE_SUCCESS(rv, rv);
 
+      if (!mParams.IsEmpty()) {
+        rv = mParams[0]->evaluateToString(aContext, strRes->mValue);
+        NS_ENSURE_SUCCESS(rv, rv);
+      } else {
+        txXPathNodeUtils::appendNodeValue(aContext->getContextNode(),
+                                          strRes->mValue);
+      }
+
+      NS_ADDREF(*aResult = strRes);
+
+      return NS_OK;
+    }
+    case STRING_LENGTH: {
+      nsAutoString resultStr;
+      if (!mParams.IsEmpty()) {
+        rv = mParams[0]->evaluateToString(aContext, resultStr);
+        NS_ENSURE_SUCCESS(rv, rv);
+      } else {
+        txXPathNodeUtils::appendNodeValue(aContext->getContextNode(),
+                                          resultStr);
+      }
+      rv = aContext->recycler()->getNumberResult(resultStr.Length(), aResult);
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      return NS_OK;
+    }
+    case SUBSTRING: {
+      nsAutoString src;
+      rv = mParams[0]->evaluateToString(aContext, src);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       // check for NaN or +/-Inf
       if (mozilla::IsNaN(start) || mozilla::IsInfinite(start) ||
           start >= src.Length() + 0.5) {
         aContext->recycler()->getEmptyStringResult(aResult);
+||||||| merged common ancestors
+                end += start;
+                if (mozilla::IsNaN(end) || end < 0) {
+                    aContext->recycler()->getEmptyStringResult(aResult);
+=======
+      double start;
+      rv = evaluateToNumber(mParams[1], aContext, &start);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         return NS_OK;
       }
+||||||| merged common ancestors
+                    return NS_OK;
+                }
+=======
+      // check for NaN or +/-Inf
+      if (mozilla::IsNaN(start) || mozilla::IsInfinite(start) ||
+          start >= src.Length() + 0.5) {
+        aContext->recycler()->getEmptyStringResult(aResult);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       start = floor(start + 0.5) - 1;
+||||||| merged common ancestors
+                if (end > src.Length())
+                    end = src.Length();
+                else
+                    end = floor(end + 0.5);
+            }
+            else {
+                end = src.Length();
+            }
+=======
+        return NS_OK;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       double end;
       if (mParams.Length() == 3) {
         rv = evaluateToNumber(mParams[2], aContext, &end);
         NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            if (start < 0)
+                start = 0;
+=======
+      start = floor(start + 0.5) - 1;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        end += start;
+        if (mozilla::IsNaN(end) || end < 0) {
+          aContext->recycler()->getEmptyStringResult(aResult);
+||||||| merged common ancestors
+            if (start > end) {
+                aContext->recycler()->getEmptyStringResult(aResult);
+=======
+      double end;
+      if (mParams.Length() == 3) {
+        rv = evaluateToNumber(mParams[2], aContext, &end);
+        NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+          return NS_OK;
+||||||| merged common ancestors
+                return NS_OK;
+            }
+
+            return aContext->recycler()->getStringResult(
+                  Substring(src, (uint32_t)start, (uint32_t)(end - start)),
+                  aResult);
+=======
         end += start;
         if (mozilla::IsNaN(end) || end < 0) {
           aContext->recycler()->getEmptyStringResult(aResult);
 
           return NS_OK;
+>>>>>>> upstream-releases
         }
 
         if (end > src.Length())

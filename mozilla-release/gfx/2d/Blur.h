@@ -15,7 +15,13 @@ namespace mozilla {
 namespace gfx {
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(disable : 4251)
+||||||| merged common ancestors
+#pragma warning( disable : 4251 )
+=======
+#  pragma warning(disable : 4251)
+>>>>>>> upstream-releases
 #endif
 
 /**
@@ -36,8 +42,18 @@ namespace gfx {
  * A spread N makes each output pixel the maximum value of all source
  * pixels within a square of side length 2N+1 centered on the output pixel.
  */
+<<<<<<< HEAD
 class GFX2D_API AlphaBoxBlur {
  public:
+||||||| merged common ancestors
+class GFX2D_API AlphaBoxBlur
+{
+public:
+
+=======
+class GFX2D_API AlphaBoxBlur final {
+ public:
+>>>>>>> upstream-releases
   /** Constructs a box blur and computes the backing surface size.
    *
    * @param aRect The coordinates of the surface to create in device units.
@@ -127,6 +143,7 @@ class GFX2D_API AlphaBoxBlur {
   static IntSize CalculateBlurRadius(const Point& aStandardDeviation);
   static Float CalculateBlurSigma(int32_t aBlurRadius);
 
+<<<<<<< HEAD
  private:
   void BoxBlur_C(uint8_t* aData, int32_t aLeftLobe, int32_t aRightLobe,
                  int32_t aTopLobe, int32_t aBottomLobe,
@@ -141,6 +158,34 @@ class GFX2D_API AlphaBoxBlur {
                     uint32_t* aIntegralImage,
                     size_t aIntegralImageStride) const;
 #endif
+||||||| merged common ancestors
+private:
+
+  void BoxBlur_C(uint8_t* aData,
+                 int32_t aLeftLobe, int32_t aRightLobe, int32_t aTopLobe,
+                 int32_t aBottomLobe, uint32_t *aIntegralImage, size_t aIntegralImageStride) const;
+  void BoxBlur_SSE2(uint8_t* aData,
+                    int32_t aLeftLobe, int32_t aRightLobe, int32_t aTopLobe,
+                    int32_t aBottomLobe, uint32_t *aIntegralImage, size_t aIntegralImageStride) const;
+#ifdef BUILD_ARM_NEON
+  void BoxBlur_NEON(uint8_t* aData,
+                    int32_t aLeftLobe, int32_t aRightLobe, int32_t aTopLobe,
+                    int32_t aBottomLobe, uint32_t *aIntegralImage, size_t aIntegralImageStride) const;
+#endif
+=======
+ private:
+  void BoxBlur_C(uint8_t* aData, int32_t aLeftLobe, int32_t aRightLobe,
+                 int32_t aTopLobe, int32_t aBottomLobe,
+                 uint32_t* aIntegralImage, size_t aIntegralImageStride) const;
+  void BoxBlur_SSE2(uint8_t* aData, int32_t aLeftLobe, int32_t aRightLobe,
+                    int32_t aTopLobe, int32_t aBottomLobe,
+                    uint32_t* aIntegralImage,
+                    size_t aIntegralImageStride) const;
+  void BoxBlur_NEON(uint8_t* aData, int32_t aLeftLobe, int32_t aRightLobe,
+                    int32_t aTopLobe, int32_t aBottomLobe,
+                    uint32_t* aIntegralImage,
+                    size_t aIntegralImageStride) const;
+>>>>>>> upstream-releases
 #ifdef _MIPS_ARCH_LOONGSON3A
   void BoxBlur_LS3(uint8_t* aData, int32_t aLeftLobe, int32_t aRightLobe,
                    int32_t aTopLobe, int32_t aBottomLobe,

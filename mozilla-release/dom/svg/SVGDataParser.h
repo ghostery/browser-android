@@ -1,0 +1,60 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set ts=8 sts=2 et sw=2 tw=80: */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#ifndef __NS_SVGDATAPARSER_H__
+#define __NS_SVGDATAPARSER_H__
+
+#include <cctype>
+#include "mozilla/RangedPtr.h"
+#include "nsStringFwd.h"
+
+namespace mozilla {
+
+////////////////////////////////////////////////////////////////////////
+// SVGDataParser: a simple base class for parsing values
+// for path and transform values.
+//
+<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.h
+class nsSVGDataParser {
+ public:
+  explicit nsSVGDataParser(const nsAString& aValue);
+||||||| merged common ancestors
+class nsSVGDataParser
+{
+public:
+  explicit nsSVGDataParser(const nsAString& aValue);
+=======
+class SVGDataParser {
+ public:
+  explicit SVGDataParser(const nsAString& aValue);
+>>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.h
+
+ protected:
+  static bool IsAlpha(char16_t aCh) {
+    // Exclude non-ascii characters before calling isalpha
+    return (aCh & 0x7f) == aCh && isalpha(aCh);
+  }
+
+  // Returns true if there are more characters to read, false otherwise.
+  bool SkipCommaWsp();
+
+  // Returns true if there are more characters to read, false otherwise.
+  bool SkipWsp();
+
+  mozilla::RangedPtr<const char16_t> mIter;
+  const mozilla::RangedPtr<const char16_t> mEnd;
+};
+
+<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.h
+#endif  // __NS_SVGDATAPARSER_H__
+||||||| merged common ancestors
+
+#endif // __NS_SVGDATAPARSER_H__
+=======
+}  // namespace mozilla
+
+#endif  // __NS_SVGDATAPARSER_H__
+>>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.h

@@ -42,11 +42,36 @@ class ServiceWorkerRegistrationProxy final
   void FireUpdateFoundOnBGThread();
 
   // Main thread methods
+<<<<<<< HEAD
+  void InitOnMainThread();
+||||||| merged common ancestors
+  void
+  InitOnMainThread();
+=======
   void InitOnMainThread();
 
   void MaybeShutdownOnMainThread();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void MaybeShutdownOnMainThread();
+||||||| merged common ancestors
+  void
+  MaybeShutdownOnMainThread();
+=======
   void StopListeningOnMainThread();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void StopListeningOnMainThread();
+||||||| merged common ancestors
+  void
+  StopListeningOnMainThread();
+=======
+  // The timer callback to perform the delayed update
+  class DelayedUpdate;
+  RefPtr<DelayedUpdate> mDelayedUpdate;
+>>>>>>> upstream-releases
 
   // ServiceWorkerRegistrationListener interface
   void UpdateState(

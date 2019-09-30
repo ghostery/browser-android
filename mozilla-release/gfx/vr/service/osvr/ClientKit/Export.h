@@ -59,6 +59,7 @@
 #if defined(_MSC_VER)
 /* MSVC on Windows */
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_EXPORT
 #ifdef osvrClientKit_EXPORTS
 /* We are building this library */
@@ -68,14 +69,46 @@
 #define OSVR_CLIENTKIT_EXPORT __declspec(dllimport)
 #endif
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_EXPORT
+#  ifdef osvrClientKit_EXPORTS
+      /* We are building this library */
+#    define OSVR_CLIENTKIT_EXPORT __declspec(dllexport)
+#  else
+      /* We are using this library */
+#    define OSVR_CLIENTKIT_EXPORT __declspec(dllimport)
+#  endif
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_EXPORT
+#    ifdef osvrClientKit_EXPORTS
+/* We are building this library */
+#      define OSVR_CLIENTKIT_EXPORT __declspec(dllexport)
+#    else
+/* We are using this library */
+#      define OSVR_CLIENTKIT_EXPORT __declspec(dllimport)
+#    endif
+#  endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_DEPRECATED
 #define OSVR_CLIENTKIT_DEPRECATED __declspec(deprecated)
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_DEPRECATED
+#  define OSVR_CLIENTKIT_DEPRECATED __declspec(deprecated)
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_DEPRECATED
+#    define OSVR_CLIENTKIT_DEPRECATED __declspec(deprecated)
+#  endif
+>>>>>>> upstream-releases
 
 #elif defined(_WIN32) && defined(__GNUC__)
 /* GCC-compatible on Windows */
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_EXPORT
 #ifdef osvrClientKit_EXPORTS
 /* We are building this library */
@@ -85,10 +118,41 @@
 #define OSVR_CLIENTKIT_EXPORT __attribute__((dllimport))
 #endif
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_EXPORT
+#  ifdef osvrClientKit_EXPORTS
+      /* We are building this library */
+#    define OSVR_CLIENTKIT_EXPORT __attribute__((dllexport))
+#  else
+      /* We are using this library */
+#    define OSVR_CLIENTKIT_EXPORT __attribute__((dllimport))
+#  endif
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_EXPORT
+#    ifdef osvrClientKit_EXPORTS
+/* We are building this library */
+#      define OSVR_CLIENTKIT_EXPORT __attribute__((dllexport))
+#    else
+/* We are using this library */
+#      define OSVR_CLIENTKIT_EXPORT __attribute__((dllimport))
+#    endif
+#  endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_DEPRECATED
 #define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_DEPRECATED
+#  define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_DEPRECATED
+#    define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
+#  endif
+>>>>>>> upstream-releases
 
 #elif defined(OSVR_CLIENTKIT_EXPORT_HEADER_SUPPORTS_ATTRIBUTES) || \
     (defined(__APPLE__) && defined(__MACH__))
@@ -96,18 +160,50 @@
 /* (The first macro is defined at the top of the file, if applicable) */
 /* see https://gcc.gnu.org/wiki/Visibility */
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_EXPORT
 /* We are building/using this library */
 #define OSVR_CLIENTKIT_EXPORT __attribute__((visibility("default")))
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_EXPORT
+  /* We are building/using this library */
+#  define OSVR_CLIENTKIT_EXPORT __attribute__((visibility("default")))
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_EXPORT
+/* We are building/using this library */
+#    define OSVR_CLIENTKIT_EXPORT __attribute__((visibility("default")))
+#  endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_NO_EXPORT
 #define OSVR_CLIENTKIT_NO_EXPORT __attribute__((visibility("hidden")))
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_NO_EXPORT
+#  define OSVR_CLIENTKIT_NO_EXPORT __attribute__((visibility("hidden")))
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_NO_EXPORT
+#    define OSVR_CLIENTKIT_NO_EXPORT __attribute__((visibility("hidden")))
+#  endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifndef OSVR_CLIENTKIT_DEPRECATED
 #define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
 #endif
+||||||| merged common ancestors
+#ifndef OSVR_CLIENTKIT_DEPRECATED
+#  define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
+#endif
+=======
+#  ifndef OSVR_CLIENTKIT_DEPRECATED
+#    define OSVR_CLIENTKIT_DEPRECATED __attribute__((__deprecated__))
+#  endif
+>>>>>>> upstream-releases
 
 #endif
 /* End of platform ifdefs */
@@ -124,14 +220,28 @@
 
 /* fallback def */
 #ifndef OSVR_CLIENTKIT_DEPRECATED_EXPORT
+<<<<<<< HEAD
 #define OSVR_CLIENTKIT_DEPRECATED_EXPORT \
   OSVR_CLIENTKIT_EXPORT OSVR_CLIENTKIT_DEPRECATED
+||||||| merged common ancestors
+#  define OSVR_CLIENTKIT_DEPRECATED_EXPORT OSVR_CLIENTKIT_EXPORT OSVR_CLIENTKIT_DEPRECATED
+=======
+#  define OSVR_CLIENTKIT_DEPRECATED_EXPORT \
+    OSVR_CLIENTKIT_EXPORT OSVR_CLIENTKIT_DEPRECATED
+>>>>>>> upstream-releases
 #endif
 
 /* fallback def */
 #ifndef OSVR_CLIENTKIT_DEPRECATED_NO_EXPORT
+<<<<<<< HEAD
 #define OSVR_CLIENTKIT_DEPRECATED_NO_EXPORT \
   OSVR_CLIENTKIT_NO_EXPORT OSVR_CLIENTKIT_DEPRECATED
+||||||| merged common ancestors
+#  define OSVR_CLIENTKIT_DEPRECATED_NO_EXPORT OSVR_CLIENTKIT_NO_EXPORT OSVR_CLIENTKIT_DEPRECATED
+=======
+#  define OSVR_CLIENTKIT_DEPRECATED_NO_EXPORT \
+    OSVR_CLIENTKIT_NO_EXPORT OSVR_CLIENTKIT_DEPRECATED
+>>>>>>> upstream-releases
 #endif
 
 /* Clean up after ourselves */

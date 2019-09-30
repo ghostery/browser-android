@@ -124,7 +124,19 @@ function TypedObjectGetReference(descr, typedObj, offset) {
     return Load_Any(typedObj, offset | 0);
 
   case JS_REFERENCETYPEREPR_OBJECT:
+<<<<<<< HEAD
     return Load_Object(typedObj, offset | 0);
+||||||| merged common ancestors
+    return Load_Object(typedObj, offset);
+=======
+    return Load_Object(typedObj, offset | 0);
+
+  case JS_REFERENCETYPEREPR_WASM_ANYREF:
+    var boxed = Load_WasmAnyRef(typedObj, offset | 0);
+    if (!IsBoxedWasmAnyRef(boxed))
+      return boxed;
+    return UnboxBoxedWasmAnyRef(boxed);
+>>>>>>> upstream-releases
 
   case JS_REFERENCETYPEREPR_STRING:
     return Load_string(typedObj, offset | 0);
@@ -258,7 +270,17 @@ function TypedObjectSetReference(descr, typedObj, offset, name, fromValue) {
 
   case JS_REFERENCETYPEREPR_OBJECT:
     var value = (fromValue === null ? fromValue : ToObject(fromValue));
+<<<<<<< HEAD
     return Store_Object(typedObj, offset | 0, name, value);
+||||||| merged common ancestors
+    return Store_Object(typedObj, offset, name, value);
+=======
+    return Store_Object(typedObj, offset | 0, name, value);
+
+  case JS_REFERENCETYPEREPR_WASM_ANYREF:
+    var value = (IsBoxableWasmAnyRef(fromValue) ? BoxWasmAnyRef(fromValue) : fromValue);
+    return Store_WasmAnyRef(typedObj, offset | 0, name, value);
+>>>>>>> upstream-releases
 
   case JS_REFERENCETYPEREPR_STRING:
     return Store_string(typedObj, offset | 0, name, ToString(fromValue));
@@ -852,7 +874,6 @@ function ReduceTypedSeqImpl(array, outputType, func, initial) {
 
     for (var i = start; i < array.length; i++)
       value = outputType(func(value, array[i]));
-
   } else {
     if (initial === undefined) {
       start = 1;

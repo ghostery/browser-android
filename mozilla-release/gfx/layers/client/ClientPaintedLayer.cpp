@@ -11,11 +11,25 @@
 #include "client/ClientLayerManager.h"  // for ClientLayerManager, etc
 #include "gfxContext.h"                 // for gfxContext
 #include "gfx2DGlue.h"
+<<<<<<< HEAD
 #include "gfxEnv.h"              // for gfxEnv
 #include "gfxRect.h"             // for gfxRect
 #include "gfxPrefs.h"            // for gfxPrefs
 #include "mozilla/Assertions.h"  // for MOZ_ASSERT, etc
 #include "mozilla/gfx/2D.h"      // for DrawTarget
+||||||| merged common ancestors
+#include "gfxEnv.h"                     // for gfxEnv
+#include "gfxRect.h"                    // for gfxRect
+#include "gfxPrefs.h"                   // for gfxPrefs
+#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc
+#include "mozilla/gfx/2D.h"             // for DrawTarget
+=======
+#include "gfxEnv.h"   // for gfxEnv
+#include "gfxRect.h"  // for gfxRect
+
+#include "mozilla/Assertions.h"  // for MOZ_ASSERT, etc
+#include "mozilla/gfx/2D.h"      // for DrawTarget
+>>>>>>> upstream-releases
 #include "mozilla/gfx/DrawEventRecorder.h"
 #include "mozilla/gfx/Matrix.h"  // for Matrix
 #include "mozilla/gfx/Rect.h"    // for Rect, IntRect
@@ -147,10 +161,35 @@ void ClientPaintedLayer::RenderLayerWithReadback(ReadbackProcessor* aReadback) {
     MOZ_ASSERT(ctx);  // already checked the target above
 
     if (!gfxEnv::SkipRasterization()) {
+<<<<<<< HEAD
       ClientManager()->GetPaintedLayerCallback()(
           this, ctx, iter.mDrawRegion, iter.mDrawRegion, state.mClip,
           state.mRegionToInvalidate,
           ClientManager()->GetPaintedLayerCallbackData());
+||||||| merged common ancestors
+      ClientManager()->GetPaintedLayerCallback()(this,
+                                                ctx,
+                                                iter.mDrawRegion,
+                                                iter.mDrawRegion,
+                                                state.mClip,
+                                                state.mRegionToInvalidate,
+                                                ClientManager()->GetPaintedLayerCallbackData());
+=======
+      if (!target->IsCaptureDT()) {
+        target->ClearRect(Rect());
+        if (target->IsValid()) {
+          ClientManager()->GetPaintedLayerCallback()(
+              this, ctx, iter.mDrawRegion, iter.mDrawRegion, state.mClip,
+              state.mRegionToInvalidate,
+              ClientManager()->GetPaintedLayerCallbackData());
+        }
+      } else {
+        ClientManager()->GetPaintedLayerCallback()(
+            this, ctx, iter.mDrawRegion, iter.mDrawRegion, state.mClip,
+            state.mRegionToInvalidate,
+            ClientManager()->GetPaintedLayerCallbackData());
+      }
+>>>>>>> upstream-releases
     }
 
     ctx = nullptr;

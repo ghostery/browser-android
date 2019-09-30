@@ -95,15 +95,39 @@ nsIndexedToHTML::AsyncConvertData(const char* aFromType, const char* aToType,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports* aContext) {
   nsCString buffer;
   nsresult rv = DoOnStartRequest(request, aContext, buffer);
   if (NS_FAILED(rv)) {
     request->Cancel(rv);
   }
+||||||| merged common ancestors
+nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
+    nsCString buffer;
+    nsresult rv = DoOnStartRequest(request, aContext, buffer);
+    if (NS_FAILED(rv)) {
+        request->Cancel(rv);
+    }
+=======
+nsIndexedToHTML::OnStartRequest(nsIRequest* request) {
+  nsCString buffer;
+  nsresult rv = DoOnStartRequest(request, nullptr, buffer);
+  if (NS_FAILED(rv)) {
+    request->Cancel(rv);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   rv = mListener->OnStartRequest(request, aContext);
   if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+    rv = mListener->OnStartRequest(request, aContext);
+    if (NS_FAILED(rv)) return rv;
+=======
+  rv = mListener->OnStartRequest(request);
+  if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
   // The request may have been canceled, and if that happens, we want to
   // suppress calls to OnDataAvailable.
@@ -112,8 +136,16 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports* aContext) {
 
   // Push our buffer to the listener.
 
+<<<<<<< HEAD
   rv = SendToListener(request, aContext, buffer);
   return rv;
+||||||| merged common ancestors
+    rv = SendToListener(request, aContext, buffer);
+    return rv;
+=======
+  rv = SendToListener(request, nullptr, buffer);
+  return rv;
+>>>>>>> upstream-releases
 }
 
 nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
@@ -145,8 +177,16 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
   rv = mParser->SetListener(this);
   if (NS_FAILED(rv)) return rv;
 
+<<<<<<< HEAD
   rv = mParser->OnStartRequest(request, aContext);
   if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+    rv = mParser->OnStartRequest(request, aContext);
+    if (NS_FAILED(rv)) return rv;
+=======
+  rv = mParser->OnStartRequest(request);
+  if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
   nsAutoCString baseUri, titleUri;
   rv = uri->GetAsciiSpec(baseUri);
@@ -256,6 +296,7 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
     }
   }
 
+<<<<<<< HEAD
   rv = titleURL->GetAsciiSpec(titleUri);
   if (NS_FAILED(rv)) {
     return rv;
@@ -499,7 +540,22 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
         "YAAAAABJRU5ErkJggg%3D%3D");
   }
   buffer.AppendLiteral("\">\n<title>");
+||||||| merged common ancestors
+    buffer.AppendLiteral("</head>\n<body dir=\"");
+    buffer.Append(direction);
+    buffer.AppendLiteral("\">\n<h1>");
 
+    const char16_t* formatHeading[] = {
+        htmlEscSpec.get()
+    };
+=======
+  rv = titleURL->GetAsciiSpec(titleUri);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Everything needs to end in a /,
   // otherwise we end up linking to file:///foo/dirfile
 
@@ -507,7 +563,254 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
     mTextToSubURI = do_GetService(NS_ITEXTTOSUBURI_CONTRACTID, &rv);
     if (NS_FAILED(rv)) return rv;
   }
+||||||| merged common ancestors
+    rv = mBundle->FormatStringFromName("DirTitle",
+                                       formatHeading,
+                                       sizeof(formatHeading)/sizeof(char16_t*),
+                                       title);
+    if (NS_FAILED(rv)) return rv;
+=======
+  buffer.AppendLiteral(
+      "<style type=\"text/css\">\n"
+      ":root {\n"
+      "  font-family: sans-serif;\n"
+      "}\n"
+      "img {\n"
+      "  border: 0;\n"
+      "}\n"
+      "th {\n"
+      "  text-align: start;\n"
+      "  white-space: nowrap;\n"
+      "}\n"
+      "th > a {\n"
+      "  color: inherit;\n"
+      "}\n"
+      "table[order] > thead > tr > th {\n"
+      "  cursor: pointer;\n"
+      "}\n"
+      "table[order] > thead > tr > th::after {\n"
+      "  display: none;\n"
+      "  width: .8em;\n"
+      "  margin-inline-end: -.8em;\n"
+      "  text-align: end;\n"
+      "}\n"
+      "table[order=\"asc\"] > thead > tr > th::after {\n"
+      "  content: \"\\2193\"; /* DOWNWARDS ARROW (U+2193) */\n"
+      "}\n"
+      "table[order=\"desc\"] > thead > tr > th::after {\n"
+      "  content: \"\\2191\"; /* UPWARDS ARROW (U+2191) */\n"
+      "}\n"
+      "table[order][order-by=\"0\"] > thead > tr > th:first-child > a ,\n"
+      "table[order][order-by=\"1\"] > thead > tr > th:first-child + th > a ,\n"
+      "table[order][order-by=\"2\"] > thead > tr > th:first-child + th + th > "
+      "a {\n"
+      "  text-decoration: underline;\n"
+      "}\n"
+      "table[order][order-by=\"0\"] > thead > tr > th:first-child::after ,\n"
+      "table[order][order-by=\"1\"] > thead > tr > th:first-child + th::after "
+      ",\n"
+      "table[order][order-by=\"2\"] > thead > tr > th:first-child + th + "
+      "th::after {\n"
+      "  display: inline-block;\n"
+      "}\n"
+      "table.remove-hidden > tbody > tr.hidden-object {\n"
+      "  display: none;\n"
+      "}\n"
+      "td {\n"
+      "  white-space: nowrap;\n"
+      "}\n"
+      "table.ellipsis {\n"
+      "  width: 100%;\n"
+      "  table-layout: fixed;\n"
+      "  border-spacing: 0;\n"
+      "}\n"
+      "table.ellipsis > tbody > tr > td {\n"
+      "  padding: 0;\n"
+      "  overflow: hidden;\n"
+      "  text-overflow: ellipsis;\n"
+      "}\n"
+      "/* name */\n"
+      "/* name */\n"
+      "th:first-child {\n"
+      "  padding-inline-end: 2em;\n"
+      "}\n"
+      "/* size */\n"
+      "th:first-child + th {\n"
+      "  padding-inline-end: 1em;\n"
+      "}\n"
+      "td:first-child + td {\n"
+      "  text-align: end;\n"
+      "  padding-inline-end: 1em;\n"
+      "}\n"
+      "/* date */\n"
+      "td:first-child + td + td {\n"
+      "  padding-inline-start: 1em;\n"
+      "  padding-inline-end: .5em;\n"
+      "}\n"
+      "/* time */\n"
+      "td:first-child + td + td + td {\n"
+      "  padding-inline-start: .5em;\n"
+      "}\n"
+      ".symlink {\n"
+      "  font-style: italic;\n"
+      "}\n"
+      ".dir ,\n"
+      ".symlink ,\n"
+      ".file {\n"
+      "  margin-inline-start: 20px;\n"
+      "}\n"
+      ".dir::before ,\n"
+      ".file > img {\n"
+      "  margin-inline-end: 4px;\n"
+      "  margin-inline-start: -20px;\n"
+      "  max-width: 16px;\n"
+      "  max-height: 16px;\n"
+      "  vertical-align: middle;\n"
+      "}\n"
+      ".dir::before {\n"
+      "  content: url(resource://content-accessible/html/folder.png);\n"
+      "}\n"
+      "</style>\n"
+      "<link rel=\"stylesheet\" media=\"screen, projection\" type=\"text/css\""
+      " href=\"chrome://global/skin/dirListing/dirListing.css\">\n"
+      "<script type=\"application/javascript\">\n"
+      "'use strict';\n"
+      "var gTable, gOrderBy, gTBody, gRows, gUI_showHidden;\n"
+      "document.addEventListener(\"DOMContentLoaded\", function() {\n"
+      "  gTable = document.getElementsByTagName(\"table\")[0];\n"
+      "  gTBody = gTable.tBodies[0];\n"
+      "  if (gTBody.rows.length < 2)\n"
+      "    return;\n"
+      "  gUI_showHidden = document.getElementById(\"UI_showHidden\");\n"
+      "  var headCells = gTable.tHead.rows[0].cells,\n"
+      "      hiddenObjects = false;\n"
+      "  function rowAction(i) {\n"
+      "    return function(event) {\n"
+      "      event.preventDefault();\n"
+      "      orderBy(i);\n"
+      "    }\n"
+      "  }\n"
+      "  for (var i = headCells.length - 1; i >= 0; i--) {\n"
+      "    var anchor = document.createElement(\"a\");\n"
+      "    anchor.href = \"\";\n"
+      "    anchor.appendChild(headCells[i].firstChild);\n"
+      "    headCells[i].appendChild(anchor);\n"
+      "    headCells[i].addEventListener(\"click\", rowAction(i), true);\n"
+      "  }\n"
+      "  if (gUI_showHidden) {\n"
+      "    gRows = Array.from(gTBody.rows);\n"
+      "    hiddenObjects = gRows.some(row => row.className == "
+      "\"hidden-object\");\n"
+      "  }\n"
+      "  gTable.setAttribute(\"order\", \"\");\n"
+      "  if (hiddenObjects) {\n"
+      "    gUI_showHidden.style.display = \"block\";\n"
+      "    updateHidden();\n"
+      "  }\n"
+      "}, \"false\");\n"
+      "function compareRows(rowA, rowB) {\n"
+      "  var a = rowA.cells[gOrderBy].getAttribute(\"sortable-data\") || "
+      "\"\";\n"
+      "  var b = rowB.cells[gOrderBy].getAttribute(\"sortable-data\") || "
+      "\"\";\n"
+      "  var intA = +a;\n"
+      "  var intB = +b;\n"
+      "  if (a == intA && b == intB) {\n"
+      "    a = intA;\n"
+      "    b = intB;\n"
+      "  } else {\n"
+      "    a = a.toLowerCase();\n"
+      "    b = b.toLowerCase();\n"
+      "  }\n"
+      "  if (a < b)\n"
+      "    return -1;\n"
+      "  if (a > b)\n"
+      "    return 1;\n"
+      "  return 0;\n"
+      "}\n"
+      "function orderBy(column) {\n"
+      "  if (!gRows)\n"
+      "    gRows = Array.from(gTBody.rows);\n"
+      "  var order;\n"
+      "  if (gOrderBy == column) {\n"
+      "    order = gTable.getAttribute(\"order\") == \"asc\" ? \"desc\" : "
+      "\"asc\";\n"
+      "  } else {\n"
+      "    order = \"asc\";\n"
+      "    gOrderBy = column;\n"
+      "    gTable.setAttribute(\"order-by\", column);\n"
+      "    gRows.sort(compareRows);\n"
+      "  }\n"
+      "  gTable.removeChild(gTBody);\n"
+      "  gTable.setAttribute(\"order\", order);\n"
+      "  if (order == \"asc\")\n"
+      "    for (var i = 0; i < gRows.length; i++)\n"
+      "      gTBody.appendChild(gRows[i]);\n"
+      "  else\n"
+      "    for (var i = gRows.length - 1; i >= 0; i--)\n"
+      "      gTBody.appendChild(gRows[i]);\n"
+      "  gTable.appendChild(gTBody);\n"
+      "}\n"
+      "function updateHidden() {\n"
+      "  gTable.className = "
+      "gUI_showHidden.getElementsByTagName(\"input\")[0].checked ?\n"
+      "                     \"\" :\n"
+      "                     \"remove-hidden\";\n"
+      "}\n"
+      "</script>\n");
 
+  buffer.AppendLiteral(R"(<link rel="icon" type="image/png" href=")");
+  nsCOMPtr<nsIURI> innerUri = NS_GetInnermostURI(uri);
+  if (!innerUri) return NS_ERROR_UNEXPECTED;
+  nsCOMPtr<nsIFileURL> fileURL(do_QueryInterface(innerUri));
+  // XXX bug 388553: can't use skinnable icons here due to security restrictions
+  if (fileURL) {
+    buffer.AppendLiteral(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB"
+        "AAAAAQCAYAAAAf8%2F9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9i"
+        "ZSBJbWFnZVJlYWR5ccllPAAAAjFJREFUeNqsU8uOElEQPffR"
+        "3XQ3ONASdBJCSBxHos5%2B3Bg3rvkCv8PElS78gPkO%2FATj"
+        "QoUdO2ftrJiRh6aneTb9sOpC4weMN6lcuFV16pxDIfI8x12O"
+        "YIDhcPiu2Wx%2B%2FHF5CW1Z6Jyegt%2FTNEWSJIjjGFEUIQ"
+        "xDrFYrWFSzXC4%2FdLvd95pRKpXKy%2BpRFZ7nwaWo1%2BsG"
+        "nQG2260BKJfLKJVKGI1GEEJw7ateryd0v993W63WEwjgxfn5"
+        "obGYzgCbzcaEbdsIggDj8Riu6z6iUk9SYZMSx8W0LMsM%2FS"
+        "KK75xnJlIq80anQXdbEp0OhcPJ0eiaJnGRMEyyPDsAKKUM9c"
+        "lkYoDo3SZJzzSdp0VSKYmfV1co%2Bz580kw5KDIM8RbRfEnU"
+        "f1HzxtQyMAGcaGruTKczMzEIaqhKifV6jd%2BzGQQB5llunF"
+        "%2FM52BizC2K5sYPYvZcu653tjOM9O93wnYc08gmkgg4VAxi"
+        "xfqFUJT36AYBZGd6PJkFCZnnlBxMp38gqIgLpZB0y4Nph18l"
+        "yWh5FFbrOSxbl3V4G%2BVB7T4ajYYxTyuLtO%2BCvWGgJE1M"
+        "c7JNsJEhvgw%2FQV4fo%2F24nbEsX2u1d5sVyn8sJO0ZAQiI"
+        "YnFh%2BxrfLz%2Fj29cBS%2FO14zg3i8XigW3ZkErDtmKoeM"
+        "%2BAJGRMnXeEPGKf0nCD1ydvkDzU9Jbc6OpR7WIw6L8lQ%2B"
+        "4pQ1%2FlPF0RGM9Ns91Wmptk0GfB4EJkt77vXYj%2F8m%2B8"
+        "y%2FkrwABHbz2H9V68DQAAAABJRU5ErkJggg%3D%3D");
+  } else {
+    buffer.AppendLiteral(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB"
+        "AAAAAQCAYAAAAf8%2F9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9i"
+        "ZSBJbWFnZVJlYWR5ccllPAAAAeBJREFUeNqcU81O20AQ%2Ft"
+        "Z2AgQSYQRqL1UPVG2hAUQkxLEStz4DrXpLpD5Drz31Cajax%"
+        "2Bghhx6qHIJURBTxIwQRwopCBbZjHMcOTrzermPipsSt1Iw0"
+        "3p3ZmW%2B%2B2R0TxhgOD34wjCHZlQ0iDYz9yvEfhxMTCYhE"
+        "QDIZhkxKd2sqzX2TOD2vBQCQhpPefng1ZP2dVPlLLdpL8SEM"
+        "cxng%2Fbs0RIHhtgs4twxOh%2BHjZxvzDx%2F3GQQiDFISiR"
+        "BLFMPKTRMollzcWECrDVhtxtdRVsL9youPxGj%2FbdfFlUZh"
+        "tDyYbYqWRUdai1oQRZ5oHeHl2gNM%2B01Uqio8RlH%2Bnsaz"
+        "JzNwXcq1B%2BiXPHprlEEymeBfXs1w8XxxihfyuXqoHqpoGj"
+        "ZM04bddgG%2F9%2B8WGj87qDdsrK9m%2BoA%2BpbhQTDh2l1"
+        "%2Bi2weNbSHMZyjvNXmVbqh9Fj5Oz27uEoP%2BSTxANruJs9"
+        "L%2FT6P0ewqPx5nmiAG5f6AoCtN1PbJzuRyJAyDBzzSQYvEr"
+        "f06yYxhGXlEa8H2KVGoasjwLx3Ewk858opQWXm%2B%2Fib9E"
+        "QrBzclLLLy89xYvlpchvtixcX6uo1y%2FzsiwHrkIsgKbp%2"
+        "BYWFOWicuqppoNTnStHzPFCPQhBEBOyGAX4JMADFetubi4BS"
+        "YAAAAABJRU5ErkJggg%3D%3D");
+  }
+  buffer.AppendLiteral("\">\n<title>");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   nsAutoString unEscapeSpec;
   rv = mTextToSubURI->UnEscapeAndConvert(NS_LITERAL_CSTRING("UTF-8"), titleUri,
                                          unEscapeSpec);
@@ -562,25 +865,136 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
   } else {
     NS_ERROR("broken protocol handler didn't escape double-quote.");
   }
+||||||| merged common ancestors
+    AppendNonAsciiToNCR(title, buffer);
+    buffer.AppendLiteral("</h1>\n");
+=======
+  // Everything needs to end in a /,
+  // otherwise we end up linking to file:///foo/dirfile
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsCString direction(NS_LITERAL_CSTRING("ltr"));
   if (LocaleService::GetInstance()->IsAppLocaleRTL()) {
     direction.AssignLiteral("rtl");
   }
+||||||| merged common ancestors
+    if (!parentStr.IsEmpty()) {
+        nsAutoString parentText;
+        rv = mBundle->GetStringFromName("DirGoUp", parentText);
+        if (NS_FAILED(rv)) return rv;
+=======
+  if (!mTextToSubURI) {
+    mTextToSubURI = do_GetService(NS_ITEXTTOSUBURI_CONTRACTID, &rv);
+    if (NS_FAILED(rv)) return rv;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   buffer.AppendLiteral("</head>\n<body dir=\"");
   buffer.Append(direction);
   buffer.AppendLiteral("\">\n<h1>");
+||||||| merged common ancestors
+        buffer.AppendLiteral(R"(<p id="UI_goUp"><a class="up" href=")");
+        nsAppendEscapedHTML(parentStr, buffer);
+        buffer.AppendLiteral("\">");
+        AppendNonAsciiToNCR(parentText, buffer);
+        buffer.AppendLiteral("</a></p>\n");
+    }
+=======
+  nsAutoString unEscapeSpec;
+  rv = mTextToSubURI->UnEscapeAndConvert(NS_LITERAL_CSTRING("UTF-8"), titleUri,
+                                         unEscapeSpec);
+  // unescape may fail because
+  // 1. file URL may be encoded in platform charset for backward compatibility
+  // 2. query part may not be encoded in UTF-8 (see bug 261929)
+  // so try the platform's default if this is file url
+  if (NS_FAILED(rv) && isSchemeFile && !NS_IsNativeUTF8()) {
+    auto encoding = mozilla::dom::FallbackEncoding::FromLocale();
+    nsAutoCString charset;
+    encoding->Name(charset);
+    rv = mTextToSubURI->UnEscapeAndConvert(charset, titleUri, unEscapeSpec);
+  }
+  if (NS_FAILED(rv)) return rv;
 
+  nsCString htmlEscSpecUtf8;
+  nsAppendEscapedHTML(NS_ConvertUTF16toUTF8(unEscapeSpec), htmlEscSpecUtf8);
+  AutoTArray<nsString, 1> formatTitle;
+  CopyUTF8toUTF16(htmlEscSpecUtf8, *formatTitle.AppendElement());
+
+  nsAutoString title;
+  rv = mBundle->FormatStringFromName("DirTitle", formatTitle, title);
+  if (NS_FAILED(rv)) return rv;
+
+  // we want to convert string bundle to NCR
+  // to ensure they're shown in any charsets
+  AppendNonAsciiToNCR(title, buffer);
+
+  buffer.AppendLiteral("</title>\n");
+
+  // If there is a quote character in the baseUri, then
+  // lets not add a base URL.  The reason for this is that
+  // if we stick baseUri containing a quote into a quoted
+  // string, the quote character will prematurely close
+  // the base href string.  This is a fall-back check;
+  // that's why it is OK to not use a base rather than
+  // trying to play nice and escaping the quotes.  See bug
+  // 358128.
+
+  if (!baseUri.Contains('"')) {
+    // Great, the baseUri does not contain a char that
+    // will prematurely close the string.  Go ahead an
+    // add a base href, but only do so if we're not
+    // dealing with a resource URI.
+    if (!isResource) {
+      buffer.AppendLiteral("<base href=\"");
+      nsAppendEscapedHTML(baseUri, buffer);
+      buffer.AppendLiteral("\" />\n");
+    }
+  } else {
+    NS_ERROR("broken protocol handler didn't escape double-quote.");
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   const char16_t* formatHeading[] = {htmlEscSpec.get()};
 
   rv = mBundle->FormatStringFromName("DirTitle", formatHeading,
                                      sizeof(formatHeading) / sizeof(char16_t*),
                                      title);
   if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+    if (isSchemeFile) {
+        nsAutoString showHiddenText;
+        rv = mBundle->GetStringFromName("ShowHidden", showHiddenText);
+        if (NS_FAILED(rv)) return rv;
 
+        buffer.AppendLiteral("<p id=\"UI_showHidden\" style=\"display:none\"><label><input type=\"checkbox\" checked onchange=\"updateHidden()\">");
+        AppendNonAsciiToNCR(showHiddenText, buffer);
+        buffer.AppendLiteral("</label></p>\n");
+    }
+=======
+  nsCString direction(NS_LITERAL_CSTRING("ltr"));
+  if (LocaleService::GetInstance()->IsAppLocaleRTL()) {
+    direction.AssignLiteral("rtl");
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   AppendNonAsciiToNCR(title, buffer);
   buffer.AppendLiteral("</h1>\n");
+||||||| merged common ancestors
+    buffer.AppendLiteral("<table>\n"
+                         " <thead>\n"
+                         "  <tr>\n"
+                         "   <th>");
+=======
+  buffer.AppendLiteral("</head>\n<body dir=\"");
+  buffer.Append(direction);
+  buffer.AppendLiteral("\">\n<h1>");
+  AppendNonAsciiToNCR(title, buffer);
+  buffer.AppendLiteral("</h1>\n");
+>>>>>>> upstream-releases
 
   if (!parentStr.IsEmpty()) {
     nsAutoString parentText;
@@ -641,21 +1055,57 @@ nsresult nsIndexedToHTML::DoOnStartRequest(nsIRequest* request,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsIndexedToHTML::OnStopRequest(nsIRequest* request, nsISupports* aContext,
                                nsresult aStatus) {
   if (NS_SUCCEEDED(aStatus)) {
     nsCString buffer;
     buffer.AssignLiteral("</tbody></table></body></html>\n");
+||||||| merged common ancestors
+nsIndexedToHTML::OnStopRequest(nsIRequest* request, nsISupports *aContext,
+                               nsresult aStatus) {
+    if (NS_SUCCEEDED(aStatus)) {
+        nsCString buffer;
+        buffer.AssignLiteral("</tbody></table></body></html>\n");
+=======
+nsIndexedToHTML::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+  if (NS_SUCCEEDED(aStatus)) {
+    nsCString buffer;
+    buffer.AssignLiteral("</tbody></table></body></html>\n");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     aStatus = SendToListener(request, aContext, buffer);
   }
+||||||| merged common ancestors
+        aStatus = SendToListener(request, aContext, buffer);
+    }
+=======
+    aStatus = SendToListener(request, nullptr, buffer);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mParser->OnStopRequest(request, aContext, aStatus);
   mParser = nullptr;
+||||||| merged common ancestors
+    mParser->OnStopRequest(request, aContext, aStatus);
+    mParser = nullptr;
+=======
+  mParser->OnStopRequest(request, aStatus);
+  mParser = nullptr;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return mListener->OnStopRequest(request, aContext, aStatus);
+||||||| merged common ancestors
+    return mListener->OnStopRequest(request, aContext, aStatus);
+=======
+  return mListener->OnStopRequest(request, aStatus);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsresult nsIndexedToHTML::SendToListener(nsIRequest* aRequest,
                                          nsISupports* aContext,
                                          const nsACString& aBuffer) {
@@ -664,13 +1114,44 @@ nsresult nsIndexedToHTML::SendToListener(nsIRequest* aRequest,
   NS_ENSURE_SUCCESS(rv, rv);
   return mListener->OnDataAvailable(aRequest, aContext, inputData, 0,
                                     aBuffer.Length());
+||||||| merged common ancestors
+nsresult
+nsIndexedToHTML::SendToListener(nsIRequest* aRequest, nsISupports *aContext, const nsACString &aBuffer)
+{
+    nsCOMPtr<nsIInputStream> inputData;
+    nsresult rv = NS_NewCStringInputStream(getter_AddRefs(inputData), aBuffer);
+    NS_ENSURE_SUCCESS(rv, rv);
+    return mListener->OnDataAvailable(aRequest, aContext,
+                                      inputData, 0, aBuffer.Length());
+=======
+nsresult nsIndexedToHTML::SendToListener(nsIRequest* aRequest,
+                                         nsISupports* aContext,
+                                         const nsACString& aBuffer) {
+  nsCOMPtr<nsIInputStream> inputData;
+  nsresult rv = NS_NewCStringInputStream(getter_AddRefs(inputData), aBuffer);
+  NS_ENSURE_SUCCESS(rv, rv);
+  return mListener->OnDataAvailable(aRequest, inputData, 0, aBuffer.Length());
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsIndexedToHTML::OnDataAvailable(nsIRequest* aRequest, nsISupports* aCtxt,
                                  nsIInputStream* aInput, uint64_t aOffset,
                                  uint32_t aCount) {
   return mParser->OnDataAvailable(aRequest, aCtxt, aInput, aOffset, aCount);
+||||||| merged common ancestors
+nsIndexedToHTML::OnDataAvailable(nsIRequest *aRequest,
+                                 nsISupports *aCtxt,
+                                 nsIInputStream* aInput,
+                                 uint64_t aOffset,
+                                 uint32_t aCount) {
+    return mParser->OnDataAvailable(aRequest, aCtxt, aInput, aOffset, aCount);
+=======
+nsIndexedToHTML::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInput,
+                                 uint64_t aOffset, uint32_t aCount) {
+  return mParser->OnDataAvailable(aRequest, aInput, aOffset, aCount);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

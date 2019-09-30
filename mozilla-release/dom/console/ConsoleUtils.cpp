@@ -19,7 +19,16 @@ StaticRefPtr<ConsoleUtils> gConsoleUtilsService;
 
 }
 
+<<<<<<< HEAD
 /* static */ ConsoleUtils* ConsoleUtils::GetOrCreate() {
+||||||| merged common ancestors
+/* static */ ConsoleUtils*
+ConsoleUtils::GetOrCreate()
+{
+=======
+/* static */
+ConsoleUtils* ConsoleUtils::GetOrCreate() {
+>>>>>>> upstream-releases
   if (!gConsoleUtilsService) {
     MOZ_ASSERT(NS_IsMainThread());
 
@@ -33,10 +42,29 @@ StaticRefPtr<ConsoleUtils> gConsoleUtilsService;
 ConsoleUtils::ConsoleUtils() = default;
 ConsoleUtils::~ConsoleUtils() = default;
 
+<<<<<<< HEAD
 /* static */ void ConsoleUtils::ReportForServiceWorkerScope(
     const nsAString& aScope, const nsAString& aMessage,
     const nsAString& aFilename, uint32_t aLineNumber, uint32_t aColumnNumber,
     Level aLevel) {
+||||||| merged common ancestors
+/* static */ void
+ConsoleUtils::ReportForServiceWorkerScope(const nsAString& aScope,
+                                          const nsAString& aMessage,
+                                          const nsAString& aFilename,
+                                          uint32_t aLineNumber,
+                                          uint32_t aColumnNumber,
+                                          Level aLevel)
+{
+=======
+/* static */
+void ConsoleUtils::ReportForServiceWorkerScope(const nsAString& aScope,
+                                               const nsAString& aMessage,
+                                               const nsAString& aFilename,
+                                               uint32_t aLineNumber,
+                                               uint32_t aColumnNumber,
+                                               Level aLevel) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   RefPtr<ConsoleUtils> service = ConsoleUtils::GetOrCreate();

@@ -132,6 +132,7 @@ class UrlClassifierDBServiceWorkerProxy final
     const mozilla::safebrowsing::ConstCacheResultArray mEntries;
   };
 
+<<<<<<< HEAD
   class DoLocalLookupRunnable : public mozilla::Runnable {
    public:
     DoLocalLookupRunnable(nsUrlClassifierDBServiceWorker* aTarget,
@@ -154,6 +155,37 @@ class UrlClassifierDBServiceWorkerProxy final
 
   class ClearLastResultsRunnable : public mozilla::Runnable {
    public:
+||||||| merged common ancestors
+  class DoLocalLookupRunnable : public mozilla::Runnable
+  {
+  public:
+    DoLocalLookupRunnable(nsUrlClassifierDBServiceWorker* aTarget,
+                          const nsACString& spec,
+                          const nsACString& tables,
+                          mozilla::safebrowsing::LookupResultArray& results)
+      : mozilla::Runnable(
+          "UrlClassifierDBServiceWorkerProxy::DoLocalLookupRunnable")
+      , mTarget(aTarget)
+      , mSpec(spec)
+      , mTables(tables)
+      , mResults(results)
+    { }
+
+    NS_DECL_NSIRUNNABLE
+  private:
+    const RefPtr<nsUrlClassifierDBServiceWorker> mTarget;
+    const nsCString mSpec;
+    const nsCString mTables;
+    mozilla::safebrowsing::LookupResultArray& mResults;
+  };
+
+  class ClearLastResultsRunnable : public mozilla::Runnable
+  {
+  public:
+=======
+  class ClearLastResultsRunnable : public mozilla::Runnable {
+   public:
+>>>>>>> upstream-releases
     explicit ClearLastResultsRunnable(nsUrlClassifierDBServiceWorker* aTarget)
         : mozilla::Runnable(
               "UrlClassifierDBServiceWorkerProxy::ClearLastResultsRunnable"),
@@ -203,11 +235,21 @@ class UrlClassifierDBServiceWorkerProxy final
     const nsMainThreadPtrHandle<nsIUrlClassifierGetCacheCallback> mCallback;
   };
 
+<<<<<<< HEAD
  public:
   nsresult DoLocalLookup(
       const nsACString& spec, const nsACString& tables,
       mozilla::safebrowsing::LookupResultArray& results) const;
 
+||||||| merged common ancestors
+public:
+  nsresult DoLocalLookup(const nsACString& spec,
+                         const nsACString& tables,
+                         mozilla::safebrowsing::LookupResultArray& results) const;
+
+=======
+ public:
+>>>>>>> upstream-releases
   nsresult OpenDb() const;
   nsresult CloseDb() const;
   nsresult PreShutdown() const;

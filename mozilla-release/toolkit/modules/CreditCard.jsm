@@ -93,7 +93,13 @@ class CreditCard {
   }
 
   set expirationString(value) {
+<<<<<<< HEAD
     let {month, year} = CreditCard.parseExpirationString(value);
+||||||| merged common ancestors
+    let {month, year} = this._parseExpirationString(value);
+=======
+    let { month, year } = CreditCard.parseExpirationString(value);
+>>>>>>> upstream-releases
     this.expirationMonth = month;
     this.expirationYear = year;
   }
@@ -120,8 +126,17 @@ class CreditCard {
       // Based on the information on wiki[1], the shortest valid length should be
       // 12 digits (Maestro).
       // [1] https://en.wikipedia.org/wiki/Payment_card_number
+<<<<<<< HEAD
       normalizedNumber = normalizedNumber.match(/^\d{12,}$/) ?
         normalizedNumber : "";
+||||||| merged common ancestors
+      normalizedNumber = normalizedNumber.match(/^\d{12,}$/) ?
+        normalizedNumber : null;
+=======
+      normalizedNumber = normalizedNumber.match(/^\d{12,}$/)
+        ? normalizedNumber
+        : "";
+>>>>>>> upstream-releases
       this._number = normalizedNumber;
     } else {
       this._number = "";
@@ -196,8 +211,10 @@ class CreditCard {
 
     // getMonth is 0-based, so add 1 because credit cards are 1-based
     let currentMonth = currentDate.getMonth() + 1;
-    return this._expirationYear == currentYear &&
-           this._expirationMonth >= currentMonth;
+    return (
+      this._expirationYear == currentYear &&
+      this._expirationMonth >= currentMonth
+    );
   }
 
   get maskedNumber() {
@@ -212,14 +229,53 @@ class CreditCard {
    * Get credit card display label. It should display masked numbers and the
    * cardholder's name, separated by a comma.
    */
+<<<<<<< HEAD
   static getLabel({number, name}) {
+||||||| merged common ancestors
+  async getLabel({showNumbers} = {}) {
+=======
+  static getLabel({ number, name }) {
+>>>>>>> upstream-releases
     let parts = [];
+<<<<<<< HEAD
 
     if (number) {
       parts.push(CreditCard.getMaskedNumber(number));
     }
     if (name) {
       parts.push(name);
+||||||| merged common ancestors
+    let label;
+
+    if (showNumbers) {
+      if (this._encryptedNumber) {
+        label = await MasterPassword.decrypt(this._encryptedNumber);
+      } else {
+        label = this._number;
+      }
+    }
+    if (this._unmodifiedNumber && !label) {
+      if (this.isValidNumber()) {
+        label = this.maskedNumber;
+      } else {
+        let maskedNumber = CreditCard.formatMaskedNumber(this._unmodifiedNumber);
+        label = `${maskedNumber.affix} ${maskedNumber.label}`;
+      }
+    }
+
+    if (label) {
+      parts.push(label);
+    }
+    if (this._name) {
+      parts.push(this._name);
+=======
+
+    if (number) {
+      parts.push(CreditCard.getMaskedNumber(number));
+    }
+    if (name) {
+      parts.push(name);
+>>>>>>> upstream-releases
     }
     return parts.join(", ");
   }
@@ -264,7 +320,9 @@ class CreditCard {
     ];
 
     for (let rule of rules) {
-      let result = new RegExp(`(?:^|\\D)${rule.regex}(?!\\d)`).exec(expirationString);
+      let result = new RegExp(`(?:^|\\D)${rule.regex}(?!\\d)`).exec(
+        expirationString
+      );
       if (!result) {
         continue;
       }
@@ -284,14 +342,33 @@ class CreditCard {
         month = parseInt(result[rule.monthIndex], 10);
       }
 
-      if ((month < 1 || month > 12) ||
-          (year >= 100 && year < 2000)) {
+      if (month < 1 || month > 12 || (year >= 100 && year < 2000)) {
         continue;
       }
 
-      return {month, year};
+      return { month, year };
     }
-    return {month: undefined, year: undefined};
+    return { month: undefined, year: undefined };
+  }
+
+  static normalizeExpiration({
+    expirationString,
+    expirationMonth,
+    expirationYear,
+  }) {
+    // Only prefer the string version if missing one or both parsed formats.
+    let parsedExpiration = {};
+    if (expirationString && (!expirationMonth || !expirationYear)) {
+      parsedExpiration = CreditCard.parseExpirationString(expirationString);
+    }
+    return {
+      month: CreditCard.normalizeExpirationMonth(
+        parsedExpiration.month || expirationMonth
+      ),
+      year: CreditCard.normalizeExpirationYear(
+        parsedExpiration.year || expirationYear
+      ),
+    };
   }
 
   static normalizeExpiration({expirationString, expirationMonth, expirationYear}) {
@@ -326,12 +403,24 @@ class CreditCard {
    * method does not throw an exception if the number is invalid.
    */
   static isValidNumber(number) {
+<<<<<<< HEAD
     try {
       new CreditCard({number});
     } catch (ex) {
       return false;
     }
     return true;
+||||||| merged common ancestors
+    let creditCard = new CreditCard({number});
+    return creditCard.isValidNumber();
+=======
+    try {
+      new CreditCard({ number });
+    } catch (ex) {
+      return false;
+    }
+    return true;
+>>>>>>> upstream-releases
   }
 
   static isValidNetwork(network) {
@@ -339,4 +428,3 @@ class CreditCard {
   }
 }
 CreditCard.SUPPORTED_NETWORKS = SUPPORTED_NETWORKS;
-

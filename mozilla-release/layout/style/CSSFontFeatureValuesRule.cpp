@@ -44,13 +44,41 @@ void CSSFontFeatureValuesRule::GetValueText(nsAString& aValueText) {
   Servo_FontFeatureValuesRule_GetValueText(mRawRule, &aValueText);
 }
 
+<<<<<<< HEAD
 void CSSFontFeatureValuesRule::SetFontFamily(const nsAString& aFontFamily,
                                              ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+CSSFontFeatureValuesRule::SetFontFamily(const nsAString& aFontFamily,
+                                        ErrorResult& aRv)
+{
+=======
+void CSSFontFeatureValuesRule::SetFontFamily(const nsAString& aFontFamily,
+                                             ErrorResult& aRv) {
+  if (IsReadOnly()) {
+    return;
+  }
+
+>>>>>>> upstream-releases
   aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
 }
 
+<<<<<<< HEAD
 void CSSFontFeatureValuesRule::SetValueText(const nsAString& aValueText,
                                             ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+CSSFontFeatureValuesRule::SetValueText(const nsAString& aValueText,
+                                       ErrorResult& aRv)
+{
+=======
+void CSSFontFeatureValuesRule::SetValueText(const nsAString& aValueText,
+                                            ErrorResult& aRv) {
+  if (IsReadOnly()) {
+    return;
+  }
+
+>>>>>>> upstream-releases
   aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
 }
 
@@ -59,8 +87,19 @@ void CSSFontFeatureValuesRule::SetValueText(const nsAString& aValueText,
 
 bool CSSFontFeatureValuesRule::IsCCLeaf() const { return Rule::IsCCLeaf(); }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* CSSFontFeatureValuesRule::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+CSSFontFeatureValuesRule::WrapObject(JSContext* aCx,
+                                     JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* CSSFontFeatureValuesRule::WrapObject(
+    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return CSSFontFeatureValuesRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

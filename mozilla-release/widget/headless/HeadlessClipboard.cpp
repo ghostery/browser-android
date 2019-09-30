@@ -17,9 +17,20 @@ HeadlessClipboard::HeadlessClipboard()
     : mClipboard(MakeUnique<HeadlessClipboardData>()) {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HeadlessClipboard::SetData(nsITransferable *aTransferable,
                            nsIClipboardOwner *anOwner,
                            int32_t aWhichClipboard) {
+||||||| merged common ancestors
+HeadlessClipboard::SetData(nsITransferable *aTransferable,
+                     nsIClipboardOwner *anOwner,
+                     int32_t aWhichClipboard)
+{
+=======
+HeadlessClipboard::SetData(nsITransferable* aTransferable,
+                           nsIClipboardOwner* anOwner,
+                           int32_t aWhichClipboard) {
+>>>>>>> upstream-releases
   if (aWhichClipboard != kGlobalClipboard) {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
@@ -46,8 +57,17 @@ HeadlessClipboard::SetData(nsITransferable *aTransferable,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HeadlessClipboard::GetData(nsITransferable *aTransferable,
                            int32_t aWhichClipboard) {
+||||||| merged common ancestors
+HeadlessClipboard::GetData(nsITransferable *aTransferable,
+                     int32_t aWhichClipboard)
+{
+=======
+HeadlessClipboard::GetData(nsITransferable* aTransferable,
+                           int32_t aWhichClipboard) {
+>>>>>>> upstream-releases
   if (aWhichClipboard != kGlobalClipboard) {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
@@ -77,35 +97,57 @@ HeadlessClipboard::EmptyClipboard(int32_t aWhichClipboard) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HeadlessClipboard::HasDataMatchingFlavors(const char **aFlavorList,
                                           uint32_t aLength,
                                           int32_t aWhichClipboard,
                                           bool *aHasType) {
+||||||| merged common ancestors
+HeadlessClipboard::HasDataMatchingFlavors(const char **aFlavorList,
+                                    uint32_t aLength, int32_t aWhichClipboard,
+                                    bool *aHasType)
+{
+=======
+HeadlessClipboard::HasDataMatchingFlavors(
+    const nsTArray<nsCString>& aFlavorList, int32_t aWhichClipboard,
+    bool* aHasType) {
+>>>>>>> upstream-releases
   *aHasType = false;
   if (aWhichClipboard != kGlobalClipboard) {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   // Retrieve the union of all aHasType in aFlavorList
-  for (uint32_t i = 0; i < aLength; ++i) {
-    const char *flavor = aFlavorList[i];
-    if (!flavor) {
-      continue;
-    }
-    if (!strcmp(flavor, kUnicodeMime) && mClipboard->HasText()) {
+  for (auto& flavor : aFlavorList) {
+    if (flavor.EqualsLiteral(kUnicodeMime) && mClipboard->HasText()) {
       *aHasType = true;
+      break;
     }
   }
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HeadlessClipboard::SupportsSelectionClipboard(bool *aIsSupported) {
+||||||| merged common ancestors
+HeadlessClipboard::SupportsSelectionClipboard(bool *aIsSupported)
+{
+=======
+HeadlessClipboard::SupportsSelectionClipboard(bool* aIsSupported) {
+>>>>>>> upstream-releases
   *aIsSupported = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HeadlessClipboard::SupportsFindClipboard(bool *_retval) {
+||||||| merged common ancestors
+HeadlessClipboard::SupportsFindClipboard(bool* _retval)
+{
+=======
+HeadlessClipboard::SupportsFindClipboard(bool* _retval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
 
   *_retval = false;

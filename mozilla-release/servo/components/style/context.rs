@@ -4,8 +4,39 @@
 
 //! The context within which style is calculated.
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+#[cfg(feature = "servo")]
+use animation::Animation;
+=======
+#[cfg(feature = "servo")]
+use crate::animation::Animation;
+use crate::bloom::StyleBloom;
+use crate::data::{EagerPseudoStyles, ElementData};
+#[cfg(feature = "servo")]
+use crate::dom::OpaqueNode;
+use crate::dom::{SendElement, TElement};
+use crate::font_metrics::FontMetricsProvider;
+#[cfg(feature = "gecko")]
+use crate::gecko_bindings::structs;
+use crate::parallel::{STACK_SAFETY_MARGIN_KB, STYLE_THREAD_STACK_SIZE_KB};
+use crate::properties::ComputedValues;
+#[cfg(feature = "servo")]
+use crate::properties::PropertyId;
+use crate::rule_cache::RuleCache;
+use crate::rule_tree::StrongRuleNode;
+use crate::selector_parser::{SnapshotMap, EAGER_PSEUDO_COUNT};
+use crate::shared_lock::StylesheetGuards;
+use crate::sharing::StyleSharingCache;
+use crate::stylist::Stylist;
+use crate::thread_state::{self, ThreadState};
+use crate::timer::Timer;
+use crate::traversal::DomTraversal;
+use crate::traversal_flags::TraversalFlags;
+>>>>>>> upstream-releases
 use app_units::Au;
 #[cfg(feature = "servo")]
+<<<<<<< HEAD
 use crate::animation::Animation;
 use crate::bloom::StyleBloom;
 use crate::data::{EagerPseudoStyles, ElementData};
@@ -31,6 +62,11 @@ use crate::traversal::DomTraversal;
 use crate::traversal_flags::TraversalFlags;
 #[cfg(feature = "servo")]
 use crossbeam_channel::Sender;
+||||||| merged common ancestors
+use dom::OpaqueNode;
+=======
+use crossbeam_channel::Sender;
+>>>>>>> upstream-releases
 use euclid::Size2D;
 use euclid::TypedScale;
 use fxhash::FxHashMap;
@@ -181,7 +217,7 @@ pub struct SharedStyleContext<'a> {
 
     /// Paint worklets
     #[cfg(feature = "servo")]
-    pub registered_speculative_painters: &'a RegisteredSpeculativePainters,
+    pub registered_speculative_painters: &'a dyn RegisteredSpeculativePainters,
 
     /// Data needed to create the thread-local style context from the shared one.
     #[cfg(feature = "servo")]
@@ -304,7 +340,7 @@ impl ElementCascadeInputs {
 /// Statistics gathered during the traversal. We gather statistics on each
 /// thread and then combine them after the threads join via the Add
 /// implementation below.
-#[derive(Default)]
+#[derive(AddAssign, Clone, Default)]
 pub struct PerThreadTraversalStatistics {
     /// The total number of elements traversed.
     pub elements_traversed: u32,
@@ -317,20 +353,6 @@ pub struct PerThreadTraversalStatistics {
     /// The number of styles reused via rule node comparison from the
     /// StyleSharingCache.
     pub styles_reused: u32,
-}
-
-/// Implementation of Add to aggregate statistics across different threads.
-impl<'a> ops::Add for &'a PerThreadTraversalStatistics {
-    type Output = PerThreadTraversalStatistics;
-    fn add(self, other: Self) -> PerThreadTraversalStatistics {
-        PerThreadTraversalStatistics {
-            elements_traversed: self.elements_traversed + other.elements_traversed,
-            elements_styled: self.elements_styled + other.elements_styled,
-            elements_matched: self.elements_matched + other.elements_matched,
-            styles_shared: self.styles_shared + other.styles_shared,
-            styles_reused: self.styles_reused + other.styles_reused,
-        }
-    }
 }
 
 /// Statistics gathered during the traversal plus some information from
@@ -840,5 +862,5 @@ pub trait RegisteredSpeculativePainter: SpeculativePainter {
 #[cfg(feature = "servo")]
 pub trait RegisteredSpeculativePainters: Sync {
     /// Look up a speculative painter
-    fn get(&self, name: &Atom) -> Option<&RegisteredSpeculativePainter>;
+    fn get(&self, name: &Atom) -> Option<&dyn RegisteredSpeculativePainter>;
 }

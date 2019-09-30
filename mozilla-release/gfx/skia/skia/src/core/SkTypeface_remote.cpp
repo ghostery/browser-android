@@ -5,12 +5,25 @@
  * found in the LICENSE file.
  */
 
+<<<<<<< HEAD
 #include "SkTypeface_remote.h"
 #include "SkGlyphCache.h"
+||||||| merged common ancestors
+=======
+#include "SkTypeface_remote.h"
+>>>>>>> upstream-releases
 #include "SkPaint.h"
+<<<<<<< HEAD
 #include "SkRemoteGlyphCache.h"
 #include "SkStrikeCache.h"
 #include "SkTraceEvent.h"
+||||||| merged common ancestors
+=======
+#include "SkRemoteGlyphCache.h"
+#include "SkStrike.h"
+#include "SkStrikeCache.h"
+#include "SkTraceEvent.h"
+>>>>>>> upstream-releases
 
 SkScalerContextProxy::SkScalerContextProxy(sk_sp<SkTypeface> tf,
                                            const SkScalerContextEffects& effects,
@@ -19,6 +32,7 @@ SkScalerContextProxy::SkScalerContextProxy(sk_sp<SkTypeface> tf,
         : SkScalerContext{std::move(tf), effects, desc}
         , fDiscardableManager{std::move(manager)} {}
 
+<<<<<<< HEAD
 void SkScalerContextProxy::initCache(SkGlyphCache* cache, SkStrikeCache* strikeCache) {
     SkASSERT(fCache == nullptr);
     SkASSERT(cache != nullptr);
@@ -40,6 +54,37 @@ uint16_t SkScalerContextProxy::generateCharToGlyph(SkUnichar) {
 bool SkScalerContextProxy::generateAdvance(SkGlyph* glyph) {
     return false;
 }
+||||||| merged common ancestors
+SkScalerContextProxy::SkScalerContextProxy(
+        sk_sp<SkTypeface> tf,
+        const SkScalerContextEffects& effects,
+        const SkDescriptor* desc,
+        SkRemoteScalerContext* rsc)
+    : SkScalerContext{std::move(tf), effects, desc}
+    , fRemote{rsc} {}
+=======
+void SkScalerContextProxy::initCache(SkStrike* cache, SkStrikeCache* strikeCache) {
+    SkASSERT(fCache == nullptr);
+    SkASSERT(cache != nullptr);
+
+    fCache = cache;
+    fStrikeCache = strikeCache;
+}
+
+unsigned SkScalerContextProxy::generateGlyphCount()  {
+    SK_ABORT("Should never be called.");
+    return 0;
+}
+
+uint16_t SkScalerContextProxy::generateCharToGlyph(SkUnichar) {
+    SK_ABORT("Should never be called.");
+    return 0;
+}
+
+bool SkScalerContextProxy::generateAdvance(SkGlyph* glyph) {
+    return false;
+}
+>>>>>>> upstream-releases
 
 void SkScalerContextProxy::generateMetrics(SkGlyph* glyph) {
     TRACE_EVENT1("skia", "generateMetrics", "rec", TRACE_STR_COPY(this->getRec().dump().c_str()));
@@ -100,6 +145,7 @@ bool SkScalerContextProxy::generatePath(SkGlyphID glyphID, SkPath* path) {
     return foundPath;
 }
 
+<<<<<<< HEAD
 void SkScalerContextProxy::generateFontMetrics(SkPaint::FontMetrics* metrics) {
     TRACE_EVENT1(
             "skia", "generateFontMetrics", "rec", TRACE_STR_COPY(this->getRec().dump().c_str()));
@@ -111,6 +157,22 @@ void SkScalerContextProxy::generateFontMetrics(SkPaint::FontMetrics* metrics) {
     // Font metrics aren't really used for render, so just zero out the data and return.
     fDiscardableManager->notifyCacheMiss(SkStrikeClient::CacheMissType::kFontMetrics);
     sk_bzero(metrics, sizeof(*metrics));
+||||||| merged common ancestors
+void SkScalerContextProxy::generateFontMetrics(SkPaint::FontMetrics* metrics) {
+    fRemote->generateFontMetrics(*this->typefaceProxy(), this->getRec(), metrics);
+=======
+void SkScalerContextProxy::generateFontMetrics(SkFontMetrics* metrics) {
+    TRACE_EVENT1(
+            "skia", "generateFontMetrics", "rec", TRACE_STR_COPY(this->getRec().dump().c_str()));
+    if (this->getProxyTypeface()->isLogging()) {
+        SkDebugf("GlyphCacheMiss generateFontMetrics: %s\n", this->getRec().dump().c_str());
+        SkDEBUGCODE(SkStrikeCache::Dump());
+    }
+
+    // Font metrics aren't really used for render, so just zero out the data and return.
+    fDiscardableManager->notifyCacheMiss(SkStrikeClient::CacheMissType::kFontMetrics);
+    sk_bzero(metrics, sizeof(*metrics));
+>>>>>>> upstream-releases
 }
 
 SkTypefaceProxy* SkScalerContextProxy::getProxyTypeface() const {

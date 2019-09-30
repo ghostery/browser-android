@@ -68,9 +68,23 @@ struct AlignasHelper {
  */
 
 #if defined(__GNUC__)
+<<<<<<< HEAD
 #define MOZ_ALIGNED_DECL(_type, _align) _type __attribute__((aligned(_align)))
+||||||| merged common ancestors
+#  define MOZ_ALIGNED_DECL(_type, _align) \
+     _type __attribute__((aligned(_align)))
+=======
+#  define MOZ_ALIGNED_DECL(_type, _align) _type __attribute__((aligned(_align)))
+>>>>>>> upstream-releases
 #elif defined(_MSC_VER)
+<<<<<<< HEAD
 #define MOZ_ALIGNED_DECL(_type, _align) __declspec(align(_align)) _type
+||||||| merged common ancestors
+#  define MOZ_ALIGNED_DECL(_type, _align) \
+     __declspec(align(_align)) _type
+=======
+#  define MOZ_ALIGNED_DECL(_type, _align) __declspec(align(_align)) _type
+>>>>>>> upstream-releases
 #else
 #warning "We don't know how to align variables on this compiler."
 #define MOZ_ALIGNED_DECL(_type, _align) _type

@@ -13,7 +13,6 @@
 #include "nsCOMPtr.h"
 #include "ImageContainer.h"
 #include "MediaSegment.h"
-#include "MediaStreamVideoSink.h"
 #include "VideoSegment.h"
 
 namespace mozilla {
@@ -29,19 +28,24 @@ class MediaDecoderOwner;
  * element itself ... well, maybe we could, but it could be risky and/or
  * confusing.
  */
-class VideoFrameContainer : public MediaStreamVideoSink {
+class VideoFrameContainer {
   virtual ~VideoFrameContainer();
 
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VideoFrameContainer)
+
+ public:
+>>>>>>> upstream-releases
   typedef layers::ImageContainer ImageContainer;
   typedef layers::Image Image;
 
   VideoFrameContainer(MediaDecoderOwner* aOwner,
                       already_AddRefed<ImageContainer> aContainer);
 
-  // Call on any thread
-  virtual void SetCurrentFrames(const VideoSegment& aSegment) override;
-  virtual void ClearFrames() override;
   void SetCurrentFrame(const gfx::IntSize& aIntrinsicSize, Image* aImage,
                        const TimeStamp& aTargetTime);
   // Returns the last principalHandle we notified mElement about.
@@ -63,7 +67,6 @@ class VideoFrameContainer : public MediaStreamVideoSink {
     SetCurrentFrames(aIntrinsicSize,
                      nsTArray<ImageContainer::NonOwningImage>());
   }
-  VideoFrameContainer* AsVideoFrameContainer() override { return this; }
 
   void ClearCurrentFrame();
   // Make the current frame the only frame in the container, i.e. discard
@@ -83,8 +86,19 @@ class VideoFrameContainer : public MediaStreamVideoSink {
   ImageContainer::FrameID NewFrameID() { return ++mFrameID; }
 
   // Call on main thread
+<<<<<<< HEAD
   enum { INVALIDATE_DEFAULT, INVALIDATE_FORCE };
   void Invalidate() override { InvalidateWithFlags(INVALIDATE_DEFAULT); }
+||||||| merged common ancestors
+  enum {
+    INVALIDATE_DEFAULT,
+    INVALIDATE_FORCE
+  };
+  void Invalidate() override { InvalidateWithFlags(INVALIDATE_DEFAULT); }
+=======
+  enum { INVALIDATE_DEFAULT, INVALIDATE_FORCE };
+  void Invalidate() { InvalidateWithFlags(INVALIDATE_DEFAULT); }
+>>>>>>> upstream-releases
   void InvalidateWithFlags(uint32_t aFlags);
   ImageContainer* GetImageContainer();
   void ForgetElement() { mOwner = nullptr; }
@@ -121,9 +135,6 @@ class VideoFrameContainer : public MediaStreamVideoSink {
 
   // mMutex protects all the fields below.
   Mutex mMutex;
-  // Once the frame is forced to black, we initialize mBlackImage for following
-  // frames.
-  RefPtr<Image> mBlackImage;
   // The intrinsic size is the ideal size which we should render the
   // ImageContainer's current Image at.
   // This can differ from the Image's actual size when the media resource
@@ -133,9 +144,6 @@ class VideoFrameContainer : public MediaStreamVideoSink {
   // We maintain our own mFrameID which is auto-incremented at every
   // SetCurrentFrame() or NewFrameID() call.
   ImageContainer::FrameID mFrameID;
-  // We record the last played video frame to avoid playing the frame again
-  // with a different frame id.
-  VideoFrame mLastPlayedVideoFrame;
   // The last PrincipalHandle we notified mElement about.
   PrincipalHandle mLastPrincipalHandle;
   // The PrincipalHandle the client has notified us is changing with FrameID

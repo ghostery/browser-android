@@ -25,7 +25,7 @@
  */
 class SkBaseShadowTessellator {
 public:
-    SkBaseShadowTessellator(const SkPoint3& zPlaneParams, bool transparent);
+    SkBaseShadowTessellator(const SkPoint3& zPlaneParams, const SkRect& bounds, bool transparent);
     virtual ~SkBaseShadowTessellator() {}
 
     sk_sp<SkVertices> releaseVertices() {
@@ -95,6 +95,7 @@ protected:
     SkTDArray<SkColor>  fColors;
     SkTDArray<uint16_t> fIndices;
 
+<<<<<<< HEAD
     SkTDArray<SkPoint>   fPathPolygon;
     SkTDArray<SkPoint>   fClipPolygon;
     SkTDArray<SkVector>  fClipVectors;
@@ -104,6 +105,19 @@ protected:
     SkScalar            fLastArea;
     SkScalar            fLastCross;
 
+||||||| merged common ancestors
+=======
+    SkTDArray<SkPoint>   fPathPolygon;
+    SkTDArray<SkPoint>   fClipPolygon;
+    SkTDArray<SkVector>  fClipVectors;
+
+    SkRect              fPathBounds;
+    SkPoint             fCentroid;
+    SkScalar            fArea;
+    SkScalar            fLastArea;
+    SkScalar            fLastCross;
+
+>>>>>>> upstream-releases
     int                 fFirstVertexIndex;
     SkVector            fFirstOutset;
     SkPoint             fFirstPoint;
@@ -155,12 +169,23 @@ static SkScalar perp_dot(const SkPoint& p0, const SkPoint& p1, const SkPoint& p2
     return v0.cross(v1);
 }
 
-SkBaseShadowTessellator::SkBaseShadowTessellator(const SkPoint3& zPlaneParams, bool transparent)
+SkBaseShadowTessellator::SkBaseShadowTessellator(const SkPoint3& zPlaneParams, const SkRect& bounds,
+                                                 bool transparent)
         : fZPlaneParams(zPlaneParams)
+<<<<<<< HEAD
         , fCentroid({0, 0})
         , fArea(0)
         , fLastArea(0)
         , fLastCross(0)
+||||||| merged common ancestors
+        , fZOffset(0)
+=======
+        , fPathBounds(bounds)
+        , fCentroid({0, 0})
+        , fArea(0)
+        , fLastArea(0)
+        , fLastCross(0)
+>>>>>>> upstream-releases
         , fFirstVertexIndex(-1)
         , fSucceeded(false)
         , fTransparent(transparent)
@@ -533,6 +558,7 @@ int SkBaseShadowTessellator::getClosestUmbraIndex(const SkPoint& p,
         index = next;
         minDistance = distance;
     } else {
+<<<<<<< HEAD
         dir = umbraPolygon.count() - 1;
     }
 
@@ -564,7 +590,45 @@ bool SkBaseShadowTessellator::computeConcaveShadow(SkScalar inset, SkScalar outs
         // TODO: figure out how to handle this case
         return false;
     }
+||||||| merged common ancestors
+        *fIndices.push() = fPrevUmbraIndex;
+        *fIndices.push() = fPositions.count() - 2;
+        *fIndices.push() = fPositions.count() - 1;
+=======
+        dir = umbraPolygon.count() - 1;
+    }
 
+    // iterate until we find a point that increases the distance
+    next = (index + dir) % umbraPolygon.count();
+    distance = SkPointPriv::DistanceToSqd(p, umbraPolygon[next]);
+    while (distance < minDistance) {
+        index = next;
+        minDistance = distance;
+        next = (index + dir) % umbraPolygon.count();
+        distance = SkPointPriv::DistanceToSqd(p, umbraPolygon[next]);
+    }
+
+    fCurrUmbraIndex = index;
+    return index;
+}
+
+bool SkBaseShadowTessellator::computeConcaveShadow(SkScalar inset, SkScalar outset) {
+    if (!SkIsSimplePolygon(&fPathPolygon[0], fPathPolygon.count())) {
+        return false;
+    }
+
+    // generate inner ring
+    SkTDArray<SkPoint> umbraPolygon;
+    SkTDArray<int> umbraIndices;
+    umbraIndices.setReserve(fPathPolygon.count());
+    if (!SkOffsetSimplePolygon(&fPathPolygon[0], fPathPolygon.count(), fPathBounds, inset,
+                                &umbraPolygon, &umbraIndices)) {
+        // TODO: figure out how to handle this case
+        return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // generate outer ring
     SkTDArray<SkPoint> penumbraPolygon;
     SkTDArray<int> penumbraIndices;
@@ -578,6 +642,25 @@ bool SkBaseShadowTessellator::computeConcaveShadow(SkScalar inset, SkScalar outs
 
     if (!umbraPolygon.count() || !penumbraPolygon.count()) {
         return false;
+||||||| merged common ancestors
+        *fIndices.push() = fPrevUmbraIndex;
+        *fIndices.push() = fPositions.count() - 1;
+        *fIndices.push() = fPositions.count() - 3;
+=======
+    // generate outer ring
+    SkTDArray<SkPoint> penumbraPolygon;
+    SkTDArray<int> penumbraIndices;
+    penumbraPolygon.setReserve(umbraPolygon.count());
+    penumbraIndices.setReserve(umbraPolygon.count());
+    if (!SkOffsetSimplePolygon(&fPathPolygon[0], fPathPolygon.count(), fPathBounds, -outset,
+                               &penumbraPolygon, &penumbraIndices)) {
+        // TODO: figure out how to handle this case
+        return false;
+    }
+
+    if (!umbraPolygon.count() || !penumbraPolygon.count()) {
+        return false;
+>>>>>>> upstream-releases
     }
 
     // attach the rings together
@@ -714,6 +797,7 @@ void SkBaseShadowTessellator::stitchConcaveRings(const SkTDArray<SkPoint>& umbra
                      fPrevUmbraIndex, currUmbraIndex);
 
     if (fTransparent) {
+<<<<<<< HEAD
         SkTriangulateSimplePolygon(umbraPolygon.begin(), indexMap, umbraPolygon.count(),
                                    &fIndices);
     }
@@ -743,6 +827,57 @@ void SkBaseShadowTessellator::handleLine(const SkPoint& p) {
             return;
         }
     }
+||||||| merged common ancestors
+        fPositions[0] += nextPoint;
+        ++fCentroidCount;
+=======
+        SkTriangulateSimplePolygon(umbraPolygon.begin(), indexMap, umbraPolygon.count(),
+                                   &fIndices);
+    }
+}
+
+
+// tesselation tolerance values, in device space pixels
+#if SK_SUPPORT_GPU
+static const SkScalar kQuadTolerance = 0.2f;
+static const SkScalar kCubicTolerance = 0.2f;
+#endif
+static const SkScalar kConicTolerance = 0.25f;
+
+// clamps the point to the nearest 16th of a pixel
+static void sanitize_point(const SkPoint& in, SkPoint* out) {
+    out->fX = SkScalarRoundToScalar(16.f*in.fX)*0.0625f;
+    out->fY = SkScalarRoundToScalar(16.f*in.fY)*0.0625f;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (fPathPolygon.count() > 1) {
+        if (!checkConvexity(fPathPolygon[fPathPolygon.count() - 2],
+                            fPathPolygon[fPathPolygon.count() - 1],
+                            pSanitized)) {
+            // remove collinear point
+            fPathPolygon.pop();
+            // it's possible that the previous point is coincident with the new one now
+            if (duplicate_pt(fPathPolygon[fPathPolygon.count() - 1], pSanitized)) {
+                fPathPolygon.pop();
+            }
+        }
+||||||| merged common ancestors
+        *fIndices.push() = 0;
+        *fIndices.push() = fPrevUmbraIndex;
+        *fIndices.push() = fPositions.count() - 2;
+=======
+void SkBaseShadowTessellator::handleLine(const SkPoint& p) {
+    SkPoint pSanitized;
+    sanitize_point(p, &pSanitized);
+
+    if (fPathPolygon.count() > 0) {
+        if (!this->accumulateCentroid(fPathPolygon[fPathPolygon.count() - 1], pSanitized)) {
+            // skip coincident point
+            return;
+        }
+    }
 
     if (fPathPolygon.count() > 1) {
         if (!checkConvexity(fPathPolygon[fPathPolygon.count() - 2],
@@ -755,6 +890,7 @@ void SkBaseShadowTessellator::handleLine(const SkPoint& p) {
                 fPathPolygon.pop();
             }
         }
+>>>>>>> upstream-releases
     }
 
     fPathPolygon.push_back(pSanitized);
@@ -900,6 +1036,7 @@ private:
     typedef SkBaseShadowTessellator INHERITED;
 };
 
+<<<<<<< HEAD
 SkAmbientShadowTessellator::SkAmbientShadowTessellator(const SkPath& path,
                                                        const SkMatrix& ctm,
                                                        const SkPoint3& zPlaneParams,
@@ -910,6 +1047,24 @@ SkAmbientShadowTessellator::SkAmbientShadowTessellator(const SkPath& path,
     // umbraColor is the interior value, penumbraColor the exterior value.
     auto outset = SkDrawShadowMetrics::AmbientBlurRadius(baseZ);
     auto inset = outset * SkDrawShadowMetrics::AmbientRecipAlpha(baseZ) - outset;
+||||||| merged common ancestors
+    void mapPoints(SkScalar scale, const SkVector& xlate, SkPoint* pts, int count);
+    bool addInnerPoint(const SkPoint& pathPoint);
+    void addEdge(const SkVector& nextPoint, const SkVector& nextNormal);
+=======
+SkAmbientShadowTessellator::SkAmbientShadowTessellator(const SkPath& path,
+                                                       const SkMatrix& ctm,
+                                                       const SkPoint3& zPlaneParams,
+                                                       bool transparent)
+        : INHERITED(zPlaneParams, path.getBounds(), transparent) {
+    // Set base colors
+    auto baseZ = heightFunc(fPathBounds.centerX(), fPathBounds.centerY());
+    // umbraColor is the interior value, penumbraColor the exterior value.
+    auto outset = SkDrawShadowMetrics::AmbientBlurRadius(baseZ);
+    auto inset = outset * SkDrawShadowMetrics::AmbientRecipAlpha(baseZ) - outset;
+    inset = SkScalarPin(inset, 0, SkTMin(path.getBounds().width(),
+                                         path.getBounds().height()));
+>>>>>>> upstream-releases
 
     if (!this->computePathPolygon(path, ctm)) {
         return;
@@ -999,7 +1154,38 @@ SkSpotShadowTessellator::SkSpotShadowTessellator(const SkPath& path, const SkMat
                                                  const SkPoint3& zPlaneParams,
                                                  const SkPoint3& lightPos, SkScalar lightRadius,
                                                  bool transparent)
+<<<<<<< HEAD
     : INHERITED(zPlaneParams, transparent) {
+||||||| merged common ancestors
+    : INHERITED(zPlaneParams, transparent)
+    , fLightZ(lightPos.fZ)
+    , fLightRadius(lightRadius)
+    , fOffsetAdjust(0)
+    , fCurrClipPoint(0)
+    , fPrevUmbraOutside(false)
+    , fFirstUmbraOutside(false)
+    , fValidUmbra(true) {
+
+    // TODO: support some concave paths
+    if (!path.isConvex()) {
+        return;
+    }
+
+    // make sure we're not below the canvas plane
+    if (this->setZOffset(path.getBounds(), ctm.hasPerspective())) {
+        // Adjust light height and radius
+        fLightRadius *= (fLightZ + fZOffset) / fLightZ;
+        fLightZ += fZOffset;
+    }
+
+    // Set radius and colors
+    SkPoint center = SkPoint::Make(path.getBounds().centerX(), path.getBounds().centerY());
+    SkScalar occluderHeight = this->heightFunc(center.fX, center.fY) + fZOffset;
+    fUmbraColor = SkColorSetARGB(255, 0, 0, 0);
+    fPenumbraColor = SkColorSetARGB(0, 0, 0, 0);
+=======
+    : INHERITED(zPlaneParams, path.getBounds(), transparent) {
+>>>>>>> upstream-releases
 
     // Compute the blur radius, scale and translation for the spot shadow.
     SkMatrix shadowTransform;

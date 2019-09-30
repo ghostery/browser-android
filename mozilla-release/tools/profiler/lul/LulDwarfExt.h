@@ -42,12 +42,13 @@
 #ifndef LulDwarfExt_h
 #define LulDwarfExt_h
 
-#include <stdint.h>
+#include "LulDwarfSummariser.h"
 
 #include "mozilla/Assertions.h"
 
-#include "LulDwarfSummariser.h"
+#include <stdint.h>
 
+<<<<<<< HEAD
 typedef signed char int8;
 typedef short int16;
 typedef int int32;
@@ -56,16 +57,37 @@ typedef long long int64;
 typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
+||||||| merged common ancestors
+typedef signed char         int8;
+typedef short               int16;
+typedef int                 int32;
+typedef long long           int64;
+
+typedef unsigned char      uint8;
+typedef unsigned short     uint16;
+typedef unsigned int       uint32;
+=======
+typedef signed char int8;
+typedef short int16;
+typedef int int32;
+typedef long long int64;
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+>>>>>>> upstream-releases
 typedef unsigned long long uint64;
 
 #ifdef __PTRDIFF_TYPE__
 typedef __PTRDIFF_TYPE__ intptr;
 typedef unsigned __PTRDIFF_TYPE__ uintptr;
 #else
-#error "Can't find pointer-sized integral types."
+#  error "Can't find pointer-sized integral types."
 #endif
 
 namespace lul {
+
+class UniqueString;
 
 // Exception handling frame description pointer formats, as described
 // by the Linux Standard Base Core Specification 4.0, section 11.5,
@@ -294,7 +316,7 @@ class ByteReader {
   // is BUFFER_BASE. This allows us to find the address that a given
   // byte in our buffer would have when loaded into the program the
   // data describes. We need this to resolve DW_EH_PE_pcrel pointers.
-  void SetCFIDataBase(uint64 section_base, const char *buffer_base);
+  void SetCFIDataBase(uint64 section_base, const char* buffer_base);
 
   // Indicate that the base address of the program's ".text" section
   // is TEXT_BASE. We need this to resolve DW_EH_PE_textrel pointers.
@@ -333,8 +355,8 @@ class ByteReader {
   // base address this reader hasn't been given, so you should check
   // with ValidEncoding and UsableEncoding first if you would rather
   // die in a more helpful way.
-  uint64 ReadEncodedPointer(const char *buffer, DwarfPointerEncoding encoding,
-                            size_t *len) const;
+  uint64 ReadEncodedPointer(const char* buffer, DwarfPointerEncoding encoding,
+                            size_t* len) const;
 
  private:
   // Function pointer type for our address and offset readers.
@@ -362,16 +384,33 @@ class ByteReader {
   bool have_function_base_;
   uint64 section_base_;
   uint64 text_base_, data_base_, function_base_;
-  const char *buffer_base_;
+  const char* buffer_base_;
 };
 
+<<<<<<< HEAD
 inline uint8 ByteReader::ReadOneByte(const char *buffer) const {
+||||||| merged common ancestors
+
+inline uint8 ByteReader::ReadOneByte(const char* buffer) const {
+=======
+inline uint8 ByteReader::ReadOneByte(const char* buffer) const {
+>>>>>>> upstream-releases
   return buffer[0];
 }
 
+<<<<<<< HEAD
 inline uint16 ByteReader::ReadTwoBytes(const char *signed_buffer) const {
   const unsigned char *buffer =
       reinterpret_cast<const unsigned char *>(signed_buffer);
+||||||| merged common ancestors
+inline uint16 ByteReader::ReadTwoBytes(const char* signed_buffer) const {
+  const unsigned char *buffer
+    = reinterpret_cast<const unsigned char *>(signed_buffer);
+=======
+inline uint16 ByteReader::ReadTwoBytes(const char* signed_buffer) const {
+  const unsigned char* buffer =
+      reinterpret_cast<const unsigned char*>(signed_buffer);
+>>>>>>> upstream-releases
   const uint16 buffer0 = buffer[0];
   const uint16 buffer1 = buffer[1];
   if (endian_ == ENDIANNESS_LITTLE) {
@@ -381,9 +420,19 @@ inline uint16 ByteReader::ReadTwoBytes(const char *signed_buffer) const {
   }
 }
 
+<<<<<<< HEAD
 inline uint64 ByteReader::ReadFourBytes(const char *signed_buffer) const {
   const unsigned char *buffer =
       reinterpret_cast<const unsigned char *>(signed_buffer);
+||||||| merged common ancestors
+inline uint64 ByteReader::ReadFourBytes(const char* signed_buffer) const {
+  const unsigned char *buffer
+    = reinterpret_cast<const unsigned char *>(signed_buffer);
+=======
+inline uint64 ByteReader::ReadFourBytes(const char* signed_buffer) const {
+  const unsigned char* buffer =
+      reinterpret_cast<const unsigned char*>(signed_buffer);
+>>>>>>> upstream-releases
   const uint32 buffer0 = buffer[0];
   const uint32 buffer1 = buffer[1];
   const uint32 buffer2 = buffer[2];
@@ -395,9 +444,19 @@ inline uint64 ByteReader::ReadFourBytes(const char *signed_buffer) const {
   }
 }
 
+<<<<<<< HEAD
 inline uint64 ByteReader::ReadEightBytes(const char *signed_buffer) const {
   const unsigned char *buffer =
       reinterpret_cast<const unsigned char *>(signed_buffer);
+||||||| merged common ancestors
+inline uint64 ByteReader::ReadEightBytes(const char* signed_buffer) const {
+  const unsigned char *buffer
+    = reinterpret_cast<const unsigned char *>(signed_buffer);
+=======
+inline uint64 ByteReader::ReadEightBytes(const char* signed_buffer) const {
+  const unsigned char* buffer =
+      reinterpret_cast<const unsigned char*>(signed_buffer);
+>>>>>>> upstream-releases
   const uint64 buffer0 = buffer[0];
   const uint64 buffer1 = buffer[1];
   const uint64 buffer2 = buffer[2];
@@ -475,7 +534,7 @@ inline uint64 ByteReader::ReadAddress(const char *buffer) const {
 }
 
 inline void ByteReader::SetCFIDataBase(uint64 section_base,
-                                       const char *buffer_base) {
+                                       const char* buffer_base) {
   section_base_ = section_base;
   buffer_base_ = buffer_base;
   have_section_base_ = true;
@@ -730,6 +789,7 @@ class CallFrameInfo {
   // and language-specific data areas are described here, rather nicely:
   // http://www.codesourcery.com/public/cxx-abi/abi-eh.html
 
+<<<<<<< HEAD
   CallFrameInfo(const char *buffer, size_t buffer_length, ByteReader *reader,
                 Handler *handler, Reporter *reporter, bool eh_frame = false)
       : buffer_(buffer),
@@ -738,6 +798,23 @@ class CallFrameInfo {
         handler_(handler),
         reporter_(reporter),
         eh_frame_(eh_frame) {}
+||||||| merged common ancestors
+  CallFrameInfo(const char *buffer, size_t buffer_length,
+                ByteReader *reader, Handler *handler, Reporter *reporter,
+                bool eh_frame = false)
+      : buffer_(buffer), buffer_length_(buffer_length),
+        reader_(reader), handler_(handler), reporter_(reporter),
+        eh_frame_(eh_frame) { }
+=======
+  CallFrameInfo(const char* buffer, size_t buffer_length, ByteReader* reader,
+                Handler* handler, Reporter* reporter, bool eh_frame = false)
+      : buffer_(buffer),
+        buffer_length_(buffer_length),
+        reader_(reader),
+        handler_(handler),
+        reporter_(reporter),
+        eh_frame_(eh_frame) {}
+>>>>>>> upstream-releases
 
   ~CallFrameInfo() {}
 
@@ -747,7 +824,7 @@ class CallFrameInfo {
   bool Start();
 
   // Return the textual name of KIND. For error reporting.
-  static const char *KindName(EntryKind kind);
+  static const char* KindName(EntryKind kind);
 
  private:
   struct CIE;
@@ -759,7 +836,7 @@ class CallFrameInfo {
     size_t offset;
 
     // The start of this entry in the buffer.
-    const char *start;
+    const char* start;
 
     // Which kind of entry this is.
     //
@@ -770,16 +847,16 @@ class CallFrameInfo {
 
     // The end of this entry's common prologue (initial length and id), and
     // the start of this entry's kind-specific fields.
-    const char *fields;
+    const char* fields;
 
     // The start of this entry's instructions.
-    const char *instructions;
+    const char* instructions;
 
     // The address past the entry's last byte in the buffer. (Note that
     // since offset points to the entry's initial length field, and the
     // length field is the number of bytes after that field, this is not
     // simply buffer_ + offset + length.)
-    const char *end;
+    const char* end;
 
     // For both DWARF CFI and .eh_frame sections, this is the CIE id in a
     // CIE, and the offset of the associated CIE in an FDE.
@@ -787,7 +864,7 @@ class CallFrameInfo {
 
     // The CIE that applies to this entry, if we've parsed it. If this is a
     // CIE, then this field points to this structure.
-    CIE *cie;
+    CIE* cie;
   };
 
   // A common information entry (CIE).
@@ -856,14 +933,14 @@ class CallFrameInfo {
   // true. On failure, report the problem, and return false. Even if we
   // return false, set ENTRY->end to the first byte after the entry if we
   // were able to figure that out, or NULL if we weren't.
-  bool ReadEntryPrologue(const char *cursor, Entry *entry);
+  bool ReadEntryPrologue(const char* cursor, Entry* entry);
 
   // Parse the fields of a CIE after the entry prologue, including any 'z'
   // augmentation data. Assume that the 'Entry' fields of CIE are
   // populated; use CIE->fields and CIE->end as the start and limit for
   // parsing. On success, populate the rest of *CIE, and return true; on
   // failure, report the problem and return false.
-  bool ReadCIEFields(CIE *cie);
+  bool ReadCIEFields(CIE* cie);
 
   // Parse the fields of an FDE after the entry prologue, including any 'z'
   // augmentation data. Assume that the 'Entry' fields of *FDE are
@@ -871,12 +948,12 @@ class CallFrameInfo {
   // parsing. Assume that FDE->cie is fully initialized. On success,
   // populate the rest of *FDE, and return true; on failure, report the
   // problem and return false.
-  bool ReadFDEFields(FDE *fde);
+  bool ReadFDEFields(FDE* fde);
 
   // Report that ENTRY is incomplete, and return false. This is just a
   // trivial wrapper for invoking reporter_->Incomplete; it provides a
   // little brevity.
-  bool ReportIncomplete(Entry *entry);
+  bool ReportIncomplete(Entry* entry);
 
   // Return true if ENCODING has the DW_EH_PE_indirect bit set.
   static bool IsIndirectEncoding(DwarfPointerEncoding encoding) {
@@ -884,17 +961,17 @@ class CallFrameInfo {
   }
 
   // The contents of the DWARF .debug_info section we're parsing.
-  const char *buffer_;
+  const char* buffer_;
   size_t buffer_length_;
 
   // For reading multi-byte values with the appropriate endianness.
-  ByteReader *reader_;
+  ByteReader* reader_;
 
   // The handler to which we should report the data we find.
-  Handler *handler_;
+  Handler* handler_;
 
   // For reporting problems in the info we're parsing.
-  Reporter *reporter_;
+  Reporter* reporter_;
 
   // True if we are processing .eh_frame-format data.
   bool eh_frame_;
@@ -927,7 +1004,7 @@ class CallFrameInfo::Handler {
   // process a given FDE, the parser reiterates the appropriate CIE's
   // contents at the beginning of the FDE's rules.
   virtual bool Entry(size_t offset, uint64 address, uint64 length,
-                     uint8 version, const std::string &augmentation,
+                     uint8 version, const std::string& augmentation,
                      unsigned return_address) = 0;
 
   // When the Entry function returns true, the parser calls these
@@ -976,13 +1053,13 @@ class CallFrameInfo::Handler {
   // At ADDRESS, the DWARF expression EXPRESSION yields the address at
   // which REG was saved.
   virtual bool ExpressionRule(uint64 address, int reg,
-                              const std::string &expression) = 0;
+                              const std::string& expression) = 0;
 
   // At ADDRESS, the DWARF expression EXPRESSION yields the caller's
   // value for REG. (This rule doesn't provide an address at which the
   // register's value is saved.)
   virtual bool ValExpressionRule(uint64 address, int reg,
-                                 const std::string &expression) = 0;
+                                 const std::string& expression) = 0;
 
   // Indicate that the rules for the address range reported by the
   // last call to Entry are complete.  End should return true if
@@ -1059,10 +1136,23 @@ class CallFrameInfo::Reporter {
   // in a Mach-O section named __debug_frame. If we support
   // Linux-style exception handling data, we could be reading an
   // .eh_frame section.
+<<<<<<< HEAD
   Reporter(void (*aLog)(const char *), const std::string &filename,
            const std::string &section = ".debug_frame")
       : log_(aLog), filename_(filename), section_(section) {}
   virtual ~Reporter() {}
+||||||| merged common ancestors
+  Reporter(void (*aLog)(const char*),
+           const std::string &filename,
+           const std::string &section = ".debug_frame")
+      : log_(aLog), filename_(filename), section_(section) { }
+  virtual ~Reporter() { }
+=======
+  Reporter(void (*aLog)(const char*), const std::string& filename,
+           const std::string& section = ".debug_frame")
+      : log_(aLog), filename_(filename), section_(section) {}
+  virtual ~Reporter() {}
+>>>>>>> upstream-releases
 
   // The CFI entry at OFFSET ends too early to be well-formed. KIND
   // indicates what kind of entry it is; KIND can be kUnknown if we
@@ -1092,7 +1182,7 @@ class CallFrameInfo::Reporter {
   // which we don't recognize. We cannot parse DWARF CFI if it uses
   // augmentations we don't recognize.
   virtual void UnrecognizedAugmentation(uint64 offset,
-                                        const std::string &augmentation);
+                                        const std::string& augmentation);
 
   // The FDE at OFFSET contains an invalid or otherwise unusable Dwarf4
   // specific field (currently, only "address_size" or "segment_size").
@@ -1165,14 +1255,33 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
     // |aLog|. FILE is the name of the file we're processing, and
     // SECTION is the name of the section within that file that we're
     // looking at (.debug_frame, .eh_frame, etc.).
+<<<<<<< HEAD
     Reporter(void (*aLog)(const char *), const std::string &file,
              const std::string &section)
         : log_(aLog), file_(file), section_(section) {}
     virtual ~Reporter() {}
+||||||| merged common ancestors
+    Reporter(void (*aLog)(const char*),
+             const std::string &file, const std::string &section)
+      : log_(aLog), file_(file), section_(section) { }
+    virtual ~Reporter() { }
+=======
+    Reporter(void (*aLog)(const char*), const std::string& file,
+             const std::string& section)
+        : log_(aLog), file_(file), section_(section) {}
+    virtual ~Reporter() {}
+>>>>>>> upstream-releases
 
     // The DWARF CFI entry at OFFSET says that REG is undefined, but the
     // Breakpad symbol file format cannot express this.
+<<<<<<< HEAD
     virtual void UndefinedNotSupported(size_t offset, const UniqueString *reg);
+||||||| merged common ancestors
+    virtual void UndefinedNotSupported(size_t offset,
+                                       const UniqueString* reg);
+=======
+    virtual void UndefinedNotSupported(size_t offset, const UniqueString* reg);
+>>>>>>> upstream-releases
 
     // The DWARF CFI entry at OFFSET says that REG uses a DWARF
     // expression to find its value, but parseDwarfExpr could not
@@ -1182,9 +1291,18 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
 
    private:
     // A logging sink function, as supplied by LUL's user.
+<<<<<<< HEAD
     void (*log_)(const char *);
 
    protected:
+||||||| merged common ancestors
+    void (*log_)(const char*);
+  protected:
+=======
+    void (*log_)(const char*);
+
+   protected:
+>>>>>>> upstream-releases
     std::string file_, section_;
   };
 
@@ -1218,6 +1336,7 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
   //
   // Use REPORTER for reporting problems encountered in the conversion
   // process.
+<<<<<<< HEAD
   DwarfCFIToModule(const unsigned int num_dw_regs, Reporter *reporter,
                    ByteReader *reader,
                    /*MOD*/ UniqueStringUniverse *usu,
@@ -1228,10 +1347,31 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
         reporter_(reporter),
         reader_(reader),
         return_address_(-1) {}
+||||||| merged common ancestors
+  DwarfCFIToModule(const unsigned int num_dw_regs,
+                   Reporter *reporter,
+                   ByteReader* reader,
+                   /*MOD*/UniqueStringUniverse* usu,
+                   /*OUT*/Summariser* summ)
+      : summ_(summ), usu_(usu), num_dw_regs_(num_dw_regs),
+        reporter_(reporter), reader_(reader), return_address_(-1) {
+  }
+=======
+  DwarfCFIToModule(const unsigned int num_dw_regs, Reporter* reporter,
+                   ByteReader* reader,
+                   /*MOD*/ UniqueStringUniverse* usu,
+                   /*OUT*/ Summariser* summ)
+      : summ_(summ),
+        usu_(usu),
+        num_dw_regs_(num_dw_regs),
+        reporter_(reporter),
+        reader_(reader),
+        return_address_(-1) {}
+>>>>>>> upstream-releases
   virtual ~DwarfCFIToModule() {}
 
   virtual bool Entry(size_t offset, uint64 address, uint64 length,
-                     uint8 version, const std::string &augmentation,
+                     uint8 version, const std::string& augmentation,
                      unsigned return_address) override;
   virtual bool UndefinedRule(uint64 address, int reg) override;
   virtual bool SameValueRule(uint64 address, int reg) override;
@@ -1242,9 +1382,9 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
   virtual bool RegisterRule(uint64 address, int reg,
                             int base_register) override;
   virtual bool ExpressionRule(uint64 address, int reg,
-                              const std::string &expression) override;
+                              const std::string& expression) override;
   virtual bool ValExpressionRule(uint64 address, int reg,
-                                 const std::string &expression) override;
+                                 const std::string& expression) override;
   virtual bool End() override;
 
  private:
@@ -1261,7 +1401,7 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
   const unsigned int num_dw_regs_;
 
   // The reporter to use to report problems.
-  Reporter *reporter_;
+  Reporter* reporter_;
 
   // The ByteReader to use for parsing Dwarf expressions.
   ByteReader *reader_;
@@ -1277,8 +1417,18 @@ class DwarfCFIToModule : public CallFrameInfo::Handler {
 // Convert the Dwarf expression in |expr| into PfxInstrs stored in the
 // SecMap referred to by |summ|, and return the index of the starting
 // PfxInstr added, which must be >= 0.  In case of failure return -1.
+<<<<<<< HEAD
 int32_t parseDwarfExpr(Summariser *summ, const ByteReader *reader, string expr,
                        bool debug, bool pushCfaAtStart, bool derefAtEnd);
+||||||| merged common ancestors
+int32_t parseDwarfExpr(Summariser* summ, const ByteReader* reader,
+                       string expr, bool debug,
+                       bool pushCfaAtStart, bool derefAtEnd);
+=======
+int32_t parseDwarfExpr(Summariser* summ, const ByteReader* reader,
+                       std::string expr, bool debug, bool pushCfaAtStart,
+                       bool derefAtEnd);
+>>>>>>> upstream-releases
 
 }  // namespace lul
 

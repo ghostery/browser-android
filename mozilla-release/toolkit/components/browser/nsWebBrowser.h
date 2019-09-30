@@ -105,19 +105,30 @@ class nsWebBrowser final : public nsIWebBrowser,
   void FocusActivate();
   void FocusDeactivate();
 
+<<<<<<< HEAD
   static already_AddRefed<nsWebBrowser> Create(
       nsIWebBrowserChrome* aContainerWindow, nsIWidget* aParentWidget,
       const mozilla::OriginAttributes& aOriginAttributes,
       mozIDOMWindowProxy* aOpener, int aItemType);
 
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  static already_AddRefed<nsWebBrowser> Create(
+      nsIWebBrowserChrome* aContainerWindow, nsIWidget* aParentWidget,
+      const mozilla::OriginAttributes& aOriginAttributes,
+      mozilla::dom::BrowsingContext* aBrowsingContext,
+      bool aDisableHistory = false);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~nsWebBrowser();
   NS_IMETHOD InternalDestroy();
 
   // XXXbz why are these NS_IMETHOD?  They're not interface methods!
   NS_IMETHOD SetDocShell(nsIDocShell* aDocShell);
   NS_IMETHOD EnsureDocShellTreeOwner();
-  NS_IMETHOD BindListener(nsISupports* aListener, const nsIID& aIID);
   NS_IMETHOD EnableGlobalHistory(bool aEnable);
 
   nsIWidget* EnsureWidget();

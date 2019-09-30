@@ -17,6 +17,8 @@
 #include "nsUnicharUtils.h"
 #include "mozilla/Logging.h"
 
+class nsIChannel;
+
 namespace mozilla {
 namespace dom {
 struct CSP;
@@ -25,15 +27,44 @@ struct CSP;
 
 /* =============== Logging =================== */
 
+<<<<<<< HEAD
 void CSP_LogLocalizedStr(const char* aName, const char16_t** aParams,
                          uint32_t aLength, const nsAString& aSourceName,
                          const nsAString& aSourceLine, uint32_t aLineNumber,
                          uint32_t aColumnNumber, uint32_t aFlags,
                          const nsACString& aCategory, uint64_t aInnerWindowID,
+||||||| merged common ancestors
+void CSP_LogLocalizedStr(const char* aName,
+                         const char16_t** aParams,
+                         uint32_t aLength,
+                         const nsAString& aSourceName,
+                         const nsAString& aSourceLine,
+                         uint32_t aLineNumber,
+                         uint32_t aColumnNumber,
+                         uint32_t aFlags,
+                         const nsACString& aCategory,
+                         uint64_t aInnerWindowID,
+=======
+void CSP_LogLocalizedStr(const char* aName, const nsTArray<nsString>& aParams,
+                         const nsAString& aSourceName,
+                         const nsAString& aSourceLine, uint32_t aLineNumber,
+                         uint32_t aColumnNumber, uint32_t aFlags,
+                         const nsACString& aCategory, uint64_t aInnerWindowID,
+>>>>>>> upstream-releases
                          bool aFromPrivateWindow);
 
+<<<<<<< HEAD
 void CSP_GetLocalizedStr(const char* aName, const char16_t** aParams,
                          uint32_t aLength, nsAString& outResult);
+||||||| merged common ancestors
+void CSP_GetLocalizedStr(const char* aName,
+                         const char16_t** aParams,
+                         uint32_t aLength,
+                         nsAString& outResult);
+=======
+void CSP_GetLocalizedStr(const char* aName, const nsTArray<nsString>& aParams,
+                         nsAString& outResult);
+>>>>>>> upstream-releases
 
 void CSP_LogStrMessage(const nsAString& aMsg);
 
@@ -45,6 +76,7 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
 
 /* =============== Constant and Type Definitions ================== */
 
+<<<<<<< HEAD
 #define INLINE_STYLE_VIOLATION_OBSERVER_TOPIC \
   "violated base restriction: Inline Stylesheets will not apply"
 #define INLINE_SCRIPT_VIOLATION_OBSERVER_TOPIC \
@@ -59,6 +91,28 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
   "Missing required Subresource Integrity for Script"
 #define REQUIRE_SRI_STYLE_VIOLATION_OBSERVER_TOPIC \
   "Missing required Subresource Integrity for Style"
+||||||| merged common ancestors
+#define INLINE_STYLE_VIOLATION_OBSERVER_TOPIC        "violated base restriction: Inline Stylesheets will not apply"
+#define INLINE_SCRIPT_VIOLATION_OBSERVER_TOPIC       "violated base restriction: Inline Scripts will not execute"
+#define EVAL_VIOLATION_OBSERVER_TOPIC                "violated base restriction: Code will not be created from strings"
+#define SCRIPT_NONCE_VIOLATION_OBSERVER_TOPIC        "Inline Script had invalid nonce"
+#define STYLE_NONCE_VIOLATION_OBSERVER_TOPIC         "Inline Style had invalid nonce"
+#define SCRIPT_HASH_VIOLATION_OBSERVER_TOPIC         "Inline Script had invalid hash"
+#define STYLE_HASH_VIOLATION_OBSERVER_TOPIC          "Inline Style had invalid hash"
+#define REQUIRE_SRI_SCRIPT_VIOLATION_OBSERVER_TOPIC  "Missing required Subresource Integrity for Script"
+#define REQUIRE_SRI_STYLE_VIOLATION_OBSERVER_TOPIC   "Missing required Subresource Integrity for Style"
+=======
+#define INLINE_STYLE_VIOLATION_OBSERVER_TOPIC \
+  "violated base restriction: Inline Stylesheets will not apply"
+#define INLINE_SCRIPT_VIOLATION_OBSERVER_TOPIC \
+  "violated base restriction: Inline Scripts will not execute"
+#define EVAL_VIOLATION_OBSERVER_TOPIC \
+  "violated base restriction: Code will not be created from strings"
+#define SCRIPT_NONCE_VIOLATION_OBSERVER_TOPIC "Inline Script had invalid nonce"
+#define STYLE_NONCE_VIOLATION_OBSERVER_TOPIC "Inline Style had invalid nonce"
+#define SCRIPT_HASH_VIOLATION_OBSERVER_TOPIC "Inline Script had invalid hash"
+#define STYLE_HASH_VIOLATION_OBSERVER_TOPIC "Inline Style had invalid hash"
+>>>>>>> upstream-releases
 
 // these strings map to the CSPDirectives in nsIContentSecurityPolicy
 // NOTE: When implementing a new directive, you will need to add it here but
@@ -68,6 +122,7 @@ void CSP_LogMessage(const nsAString& aMessage, const nsAString& aSourceName,
 // Order of elements below important! Make sure it matches the order as in
 // nsIContentSecurityPolicy.idl
 static const char* CSPStrDirectives[] = {
+<<<<<<< HEAD
     "-error-",                    // NO_DIRECTIVE
     "default-src",                // DEFAULT_SRC_DIRECTIVE
     "script-src",                 // SCRIPT_SRC_DIRECTIVE
@@ -90,6 +145,52 @@ static const char* CSPStrDirectives[] = {
     "require-sri-for",            // REQUIRE_SRI_FOR
     "sandbox",                    // SANDBOX_DIRECTIVE
     "worker-src"                  // WORKER_SRC_DIRECTIVE
+||||||| merged common ancestors
+  "-error-",                   // NO_DIRECTIVE
+  "default-src",               // DEFAULT_SRC_DIRECTIVE
+  "script-src",                // SCRIPT_SRC_DIRECTIVE
+  "object-src",                // OBJECT_SRC_DIRECTIVE
+  "style-src",                 // STYLE_SRC_DIRECTIVE
+  "img-src",                   // IMG_SRC_DIRECTIVE
+  "media-src",                 // MEDIA_SRC_DIRECTIVE
+  "frame-src",                 // FRAME_SRC_DIRECTIVE
+  "font-src",                  // FONT_SRC_DIRECTIVE
+  "connect-src",               // CONNECT_SRC_DIRECTIVE
+  "report-uri",                // REPORT_URI_DIRECTIVE
+  "frame-ancestors",           // FRAME_ANCESTORS_DIRECTIVE
+  "reflected-xss",             // REFLECTED_XSS_DIRECTIVE
+  "base-uri",                  // BASE_URI_DIRECTIVE
+  "form-action",               // FORM_ACTION_DIRECTIVE
+  "manifest-src",              // MANIFEST_SRC_DIRECTIVE
+  "upgrade-insecure-requests", // UPGRADE_IF_INSECURE_DIRECTIVE
+  "child-src",                 // CHILD_SRC_DIRECTIVE
+  "block-all-mixed-content",   // BLOCK_ALL_MIXED_CONTENT
+  "require-sri-for",           // REQUIRE_SRI_FOR
+  "sandbox",                   // SANDBOX_DIRECTIVE
+  "worker-src"                 // WORKER_SRC_DIRECTIVE
+=======
+    "-error-",                    // NO_DIRECTIVE
+    "default-src",                // DEFAULT_SRC_DIRECTIVE
+    "script-src",                 // SCRIPT_SRC_DIRECTIVE
+    "object-src",                 // OBJECT_SRC_DIRECTIVE
+    "style-src",                  // STYLE_SRC_DIRECTIVE
+    "img-src",                    // IMG_SRC_DIRECTIVE
+    "media-src",                  // MEDIA_SRC_DIRECTIVE
+    "frame-src",                  // FRAME_SRC_DIRECTIVE
+    "font-src",                   // FONT_SRC_DIRECTIVE
+    "connect-src",                // CONNECT_SRC_DIRECTIVE
+    "report-uri",                 // REPORT_URI_DIRECTIVE
+    "frame-ancestors",            // FRAME_ANCESTORS_DIRECTIVE
+    "reflected-xss",              // REFLECTED_XSS_DIRECTIVE
+    "base-uri",                   // BASE_URI_DIRECTIVE
+    "form-action",                // FORM_ACTION_DIRECTIVE
+    "manifest-src",               // MANIFEST_SRC_DIRECTIVE
+    "upgrade-insecure-requests",  // UPGRADE_IF_INSECURE_DIRECTIVE
+    "child-src",                  // CHILD_SRC_DIRECTIVE
+    "block-all-mixed-content",    // BLOCK_ALL_MIXED_CONTENT
+    "sandbox",                    // SANDBOX_DIRECTIVE
+    "worker-src"                  // WORKER_SRC_DIRECTIVE
+>>>>>>> upstream-releases
 };
 
 inline const char* CSP_CSPDirectiveToString(CSPDirective aDir) {
@@ -110,6 +211,7 @@ inline CSPDirective CSP_StringToCSPDirective(const nsAString& aDir) {
   return nsIContentSecurityPolicy::NO_DIRECTIVE;
 }
 
+<<<<<<< HEAD
 #define FOR_EACH_CSP_KEYWORD(MACRO)             \
   MACRO(CSP_SELF, "'self'")                     \
   MACRO(CSP_UNSAFE_INLINE, "'unsafe-inline'")   \
@@ -119,6 +221,26 @@ inline CSPDirective CSP_StringToCSPDirective(const nsAString& aDir) {
   MACRO(CSP_REQUIRE_SRI_FOR, "require-sri-for") \
   MACRO(CSP_REPORT_SAMPLE, "'report-sample'")   \
   MACRO(CSP_STRICT_DYNAMIC, "'strict-dynamic'")
+||||||| merged common ancestors
+#define FOR_EACH_CSP_KEYWORD(macro) \
+  macro(CSP_SELF,            "'self'") \
+  macro(CSP_UNSAFE_INLINE,   "'unsafe-inline'") \
+  macro(CSP_UNSAFE_EVAL,     "'unsafe-eval'") \
+  macro(CSP_NONE,            "'none'") \
+  macro(CSP_NONCE,           "'nonce-") \
+  macro(CSP_REQUIRE_SRI_FOR, "require-sri-for") \
+  macro(CSP_REPORT_SAMPLE,   "'report-sample'") \
+  macro(CSP_STRICT_DYNAMIC,  "'strict-dynamic'")
+=======
+#define FOR_EACH_CSP_KEYWORD(MACRO)           \
+  MACRO(CSP_SELF, "'self'")                   \
+  MACRO(CSP_UNSAFE_INLINE, "'unsafe-inline'") \
+  MACRO(CSP_UNSAFE_EVAL, "'unsafe-eval'")     \
+  MACRO(CSP_NONE, "'none'")                   \
+  MACRO(CSP_NONCE, "'nonce-")                 \
+  MACRO(CSP_REPORT_SAMPLE, "'report-sample'") \
+  MACRO(CSP_STRICT_DYNAMIC, "'strict-dynamic'")
+>>>>>>> upstream-releases
 
 enum CSPKeyword {
 #define KEYWORD_ENUM(id_, string_) id_,
@@ -209,6 +331,7 @@ CSPDirective CSP_ContentTypeToDirective(nsContentPolicyType aType);
 class nsCSPSrcVisitor;
 
 void CSP_PercentDecodeStr(const nsAString& aEncStr, nsAString& outDecStr);
+bool CSP_ShouldResponseInheritCSP(nsIChannel* aChannel);
 
 /* =============== nsCSPSrc ================== */
 
@@ -321,12 +444,29 @@ class nsCSPKeywordSrc : public nsCSPBaseSrc {
     if (mKeyword == CSP_SELF || mKeyword == CSP_UNSAFE_INLINE) {
       mInvalidated = true;
     }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
   }
 
+  bool isReportSample() const override { return mKeyword == CSP_REPORT_SAMPLE; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool isReportSample() const override { return mKeyword == CSP_REPORT_SAMPLE; }
 
  private:
   CSPKeyword mKeyword;
+||||||| merged common ancestors
+    bool isReportSample() const override
+      { return mKeyword == CSP_REPORT_SAMPLE; }
+  private:
+    CSPKeyword mKeyword;
+=======
+ private:
+  CSPKeyword mKeyword;
+>>>>>>> upstream-releases
 };
 
 /* =============== nsCSPNonceSource =========== */
@@ -359,6 +499,7 @@ class nsCSPNonceSrc : public nsCSPBaseSrc {
 /* =============== nsCSPHashSource ============ */
 
 class nsCSPHashSrc : public nsCSPBaseSrc {
+<<<<<<< HEAD
  public:
   nsCSPHashSrc(const nsAString& algo, const nsAString& hash);
   virtual ~nsCSPHashSrc();
@@ -368,6 +509,59 @@ class nsCSPHashSrc : public nsCSPBaseSrc {
   void toString(nsAString& outStr) const override;
   bool visit(nsCSPSrcVisitor* aVisitor) const override;
 
+  inline void getAlgorithm(nsAString& outStr) const {
+    outStr.Assign(mAlgorithm);
+  };
+
+  inline void getHash(nsAString& outStr) const { outStr.Assign(mHash); };
+||||||| merged common ancestors
+  public:
+    nsCSPHashSrc(const nsAString& algo, const nsAString& hash);
+    virtual ~nsCSPHashSrc();
+
+    bool allows(enum CSPKeyword aKeyword, const nsAString& aHashOrNonce,
+                bool aParserCreated) const override;
+    void toString(nsAString& outStr) const override;
+    bool visit(nsCSPSrcVisitor* aVisitor) const override;
+
+    inline void getAlgorithm(nsAString& outStr) const
+      { outStr.Assign(mAlgorithm); };
+
+    inline void getHash(nsAString& outStr) const
+      { outStr.Assign(mHash); };
+
+    inline void invalidate() const override
+    {
+      // overwrite nsCSPBaseSRC::invalidate() and explicitily
+      // do *not* invalidate, because 'strict-dynamic' should
+      // not invalidate hashes.
+    }
+=======
+ public:
+  nsCSPHashSrc(const nsAString& algo, const nsAString& hash);
+  virtual ~nsCSPHashSrc();
+
+  bool allows(enum CSPKeyword aKeyword, const nsAString& aHashOrNonce,
+              bool aParserCreated) const override;
+  void toString(nsAString& outStr) const override;
+  bool visit(nsCSPSrcVisitor* aVisitor) const override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  inline void invalidate() const override {
+    // overwrite nsCSPBaseSRC::invalidate() and explicitily
+    // do *not* invalidate, because 'strict-dynamic' should
+    // not invalidate hashes.
+  }
+
+ private:
+  nsString mAlgorithm;
+  nsString mHash;
+||||||| merged common ancestors
+  private:
+    nsString mAlgorithm;
+    nsString mHash;
+=======
   inline void getAlgorithm(nsAString& outStr) const {
     outStr.Assign(mAlgorithm);
   };
@@ -383,6 +577,7 @@ class nsCSPHashSrc : public nsCSPBaseSrc {
  private:
   nsString mAlgorithm;
   nsString mHash;
+>>>>>>> upstream-releases
 };
 
 /* =============== nsCSPReportURI ============ */
@@ -607,8 +802,9 @@ class nsUpgradeInsecureDirective : public nsCSPDirective {
   void getDirName(nsAString& outStr) const override;
 };
 
-/* ===== nsRequireSRIForDirective ========================= */
+/* =============== nsCSPPolicy ================== */
 
+<<<<<<< HEAD
 class nsRequireSRIForDirective : public nsCSPDirective {
  public:
   explicit nsRequireSRIForDirective(CSPDirective aDirective);
@@ -626,9 +822,62 @@ class nsRequireSRIForDirective : public nsCSPDirective {
  private:
   nsTArray<nsContentPolicyType> mTypes;
 };
+||||||| merged common ancestors
+class nsRequireSRIForDirective : public nsCSPDirective {
+  public:
+    explicit nsRequireSRIForDirective(CSPDirective aDirective);
+    ~nsRequireSRIForDirective();
 
-/* =============== nsCSPPolicy ================== */
+    void toString(nsAString& outStr) const override;
 
+    void addType(nsContentPolicyType aType)
+      { mTypes.AppendElement(aType); }
+    bool hasType(nsContentPolicyType aType) const;
+    bool restrictsContentType(nsContentPolicyType aType) const override;
+    bool allows(enum CSPKeyword aKeyword, const nsAString& aHashOrNonce,
+                bool aParserCreated) const override;
+    void getDirName(nsAString& outStr) const override;
+
+  private:
+    nsTArray<nsContentPolicyType> mTypes;
+};
+=======
+class nsCSPPolicy {
+ public:
+  nsCSPPolicy();
+  virtual ~nsCSPPolicy();
+
+  bool permits(CSPDirective aDirective, nsIURI* aUri, const nsAString& aNonce,
+               bool aWasRedirected, bool aSpecific, bool aParserCreated,
+               nsAString& outViolatedDirective) const;
+  bool permits(CSPDirective aDir, nsIURI* aUri, bool aSpecific) const;
+  bool allows(nsContentPolicyType aContentType, enum CSPKeyword aKeyword,
+              const nsAString& aHashOrNonce, bool aParserCreated) const;
+  bool allows(nsContentPolicyType aContentType, enum CSPKeyword aKeyword) const;
+  void toString(nsAString& outStr) const;
+  void toDomCSPStruct(mozilla::dom::CSP& outCSP) const;
+
+  inline void addDirective(nsCSPDirective* aDir) {
+    mDirectives.AppendElement(aDir);
+  }
+
+  inline void addUpgradeInsecDir(nsUpgradeInsecureDirective* aDir) {
+    mUpgradeInsecDir = aDir;
+    addDirective(aDir);
+  }
+
+  bool hasDirective(CSPDirective aDir) const;
+
+  inline void setDeliveredViaMetaTagFlag(bool aFlag) {
+    mDeliveredViaMetaTag = aFlag;
+  }
+>>>>>>> upstream-releases
+
+  inline bool getDeliveredViaMetaTagFlag() const {
+    return mDeliveredViaMetaTag;
+  }
+
+<<<<<<< HEAD
 class nsCSPPolicy {
  public:
   nsCSPPolicy();
@@ -688,6 +937,94 @@ class nsCSPPolicy {
   nsTArray<nsCSPDirective*> mDirectives;
   bool mReportOnly;
   bool mDeliveredViaMetaTag;
+||||||| merged common ancestors
+class nsCSPPolicy {
+  public:
+    nsCSPPolicy();
+    virtual ~nsCSPPolicy();
+
+    bool permits(CSPDirective aDirective,
+                 nsIURI* aUri,
+                 const nsAString& aNonce,
+                 bool aWasRedirected,
+                 bool aSpecific,
+                 bool aParserCreated,
+                 nsAString& outViolatedDirective) const;
+    bool permits(CSPDirective aDir,
+                 nsIURI* aUri,
+                 bool aSpecific) const;
+    bool allows(nsContentPolicyType aContentType,
+                enum CSPKeyword aKeyword,
+                const nsAString& aHashOrNonce,
+                bool aParserCreated) const;
+    bool allows(nsContentPolicyType aContentType,
+                enum CSPKeyword aKeyword) const;
+    void toString(nsAString& outStr) const;
+    void toDomCSPStruct(mozilla::dom::CSP& outCSP) const;
+
+    inline void addDirective(nsCSPDirective* aDir)
+      { mDirectives.AppendElement(aDir); }
+
+    inline void addUpgradeInsecDir(nsUpgradeInsecureDirective* aDir)
+      {
+        mUpgradeInsecDir = aDir;
+        addDirective(aDir);
+      }
+
+    bool hasDirective(CSPDirective aDir) const;
+
+    inline void setReportOnlyFlag(bool aFlag)
+      { mReportOnly = aFlag; }
+
+    inline bool getReportOnlyFlag() const
+      { return mReportOnly; }
+
+    void getReportURIs(nsTArray<nsString> &outReportURIs) const;
+
+    void getDirectiveStringAndReportSampleForContentType(nsContentPolicyType aContentType,
+                                                         nsAString& outDirective,
+                                                         bool* aReportSample) const;
+
+    void getDirectiveAsString(CSPDirective aDir, nsAString& outDirective) const;
+
+    uint32_t getSandboxFlags() const;
+
+    bool requireSRIForType(nsContentPolicyType aContentType);
+
+    inline uint32_t getNumDirectives() const
+      { return mDirectives.Length(); }
+
+    bool visitDirectiveSrcs(CSPDirective aDir, nsCSPSrcVisitor* aVisitor) const;
+
+  private:
+    nsUpgradeInsecureDirective* mUpgradeInsecDir;
+    nsTArray<nsCSPDirective*>   mDirectives;
+    bool                        mReportOnly;
+=======
+  inline void setReportOnlyFlag(bool aFlag) { mReportOnly = aFlag; }
+
+  inline bool getReportOnlyFlag() const { return mReportOnly; }
+
+  void getReportURIs(nsTArray<nsString>& outReportURIs) const;
+
+  void getDirectiveStringAndReportSampleForContentType(
+      nsContentPolicyType aContentType, nsAString& outDirective,
+      bool* aReportSample) const;
+
+  void getDirectiveAsString(CSPDirective aDir, nsAString& outDirective) const;
+
+  uint32_t getSandboxFlags() const;
+
+  inline uint32_t getNumDirectives() const { return mDirectives.Length(); }
+
+  bool visitDirectiveSrcs(CSPDirective aDir, nsCSPSrcVisitor* aVisitor) const;
+
+ private:
+  nsUpgradeInsecureDirective* mUpgradeInsecDir;
+  nsTArray<nsCSPDirective*> mDirectives;
+  bool mReportOnly;
+  bool mDeliveredViaMetaTag;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsCSPUtils_h___ */

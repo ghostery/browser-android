@@ -45,9 +45,18 @@ class APZEventRegionsTester : public APZCTreeManagerTester {
     regions.mHitRegion = nsIntRegion(IntRect(0, 100, 200, 100));
     layers[2]->SetEventRegions(regions);
 
+<<<<<<< HEAD
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+||||||| merged common ancestors
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
+    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+=======
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
+                                                           root, mcc);
+    manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
+>>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
   }
 
@@ -68,9 +77,18 @@ class APZEventRegionsTester : public APZCTreeManagerTester {
     regions.mHitRegion = nsIntRegion(IntRect(0, 150, 100, 100));
     layers[1]->SetEventRegions(regions);
 
+<<<<<<< HEAD
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+||||||| merged common ancestors
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
+    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+=======
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
+                                                           root, mcc);
+    manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
+>>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
   }
 
@@ -109,9 +127,18 @@ class APZEventRegionsTester : public APZCTreeManagerTester {
     regions.mHitRegion = nsIntRegion(IntRect(0, 100, 200, 100));
     layers[2]->SetEventRegions(regions);
 
+<<<<<<< HEAD
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+||||||| merged common ancestors
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
+    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+=======
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
+                                                           root, mcc);
+    manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
+>>>>>>> upstream-releases
     rootApzc = ApzcOf(root);
   }
 
@@ -134,9 +161,18 @@ class APZEventRegionsTester : public APZCTreeManagerTester {
     SetScrollableFrameMetrics(layers[1],
                               ScrollableLayerGuid::START_SCROLL_ID + 1);
 
+<<<<<<< HEAD
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+||||||| merged common ancestors
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
+    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+=======
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
+                                                           root, mcc);
+    manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
+>>>>>>> upstream-releases
   }
 
   void CreateBug1117712LayerTree() {
@@ -176,9 +212,18 @@ class APZEventRegionsTester : public APZCTreeManagerTester {
     regions.mDispatchToContentHitRegion = nsIntRegion(IntRect(0, 0, 100, 100));
     layers[3]->SetEventRegions(regions);
 
+<<<<<<< HEAD
     registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
                                                            root, mcc);
     manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+||||||| merged common ancestors
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0}, root, mcc);
+    manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+=======
+    registration = MakeUnique<ScopedLayerTreeRegistration>(manager, LayersId{0},
+                                                           root, mcc);
+    manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
+>>>>>>> upstream-releases
   }
 };
 
@@ -265,7 +310,7 @@ TEST_F(APZEventRegionsTester, Obscuration) {
   CreateObscuringLayerTree();
   ScopedLayerTreeRegistration registration(manager, LayersId{0}, root, mcc);
 
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, 0);
+  manager->UpdateHitTestingTree(root, false, LayersId{0}, 0);
 
   RefPtr<TestAsyncPanZoomController> parent = ApzcOf(layers[1]);
   TestAsyncPanZoomController* child = ApzcOf(layers[2]);
@@ -273,8 +318,15 @@ TEST_F(APZEventRegionsTester, Obscuration) {
   Pan(parent, 75, 25, PanOptions::NoFling);
 
   gfx::CompositorHitTestInfo result;
+<<<<<<< HEAD
   RefPtr<AsyncPanZoomController> hit =
       manager->GetTargetAPZC(ScreenPoint(50, 75), &result);
+||||||| merged common ancestors
+  RefPtr<AsyncPanZoomController> hit = manager->GetTargetAPZC(ScreenPoint(50, 75), &result);
+=======
+  RefPtr<AsyncPanZoomController> hit =
+      manager->GetTargetAPZC(ScreenPoint(50, 75), &result, nullptr);
+>>>>>>> upstream-releases
   EXPECT_EQ(child, hit.get());
   EXPECT_EQ(result, CompositorHitTestFlags::eVisibleToHitTest);
 }
@@ -283,10 +335,21 @@ TEST_F(APZEventRegionsTester, Bug1119497) {
   CreateBug1119497LayerTree();
 
   gfx::CompositorHitTestInfo result;
+<<<<<<< HEAD
   RefPtr<AsyncPanZoomController> hit =
       manager->GetTargetAPZC(ScreenPoint(50, 50), &result);
   // We should hit layers[2], so |result| will be eVisibleToHitTest but there's
   // no actual APZC on layers[2], so it will be the APZC of the root layer.
+||||||| merged common ancestors
+  RefPtr<AsyncPanZoomController> hit = manager->GetTargetAPZC(ScreenPoint(50, 50), &result);
+  // We should hit layers[2], so |result| will be eVisibleToHitTest but there's no
+  // actual APZC on layers[2], so it will be the APZC of the root layer.
+=======
+  RefPtr<AsyncPanZoomController> hit =
+      manager->GetTargetAPZC(ScreenPoint(50, 50), &result, nullptr);
+  // We should hit layers[2], so |result| will be eVisibleToHitTest but there's
+  // no actual APZC on layers[2], so it will be the APZC of the root layer.
+>>>>>>> upstream-releases
   EXPECT_EQ(ApzcOf(layers[0]), hit.get());
   EXPECT_EQ(result, CompositorHitTestFlags::eVisibleToHitTest);
 }

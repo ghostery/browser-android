@@ -13,6 +13,7 @@ using namespace js::jit;
 
 ABIArgGenerator::ABIArgGenerator() : stackOffset_(0), current_() {}
 
+<<<<<<< HEAD
 ABIArg ABIArgGenerator::next(MIRType type) {
   switch (type) {
     case MIRType::Int32:
@@ -44,6 +45,74 @@ ABIArg ABIArgGenerator::next(MIRType type) {
       MOZ_CRASH("Unexpected argument type");
   }
   return current_;
+||||||| merged common ancestors
+ABIArg
+ABIArgGenerator::next(MIRType type)
+{
+    switch (type) {
+      case MIRType::Int32:
+      case MIRType::Float32:
+      case MIRType::Pointer:
+        current_ = ABIArg(stackOffset_);
+        stackOffset_ += sizeof(uint32_t);
+        break;
+      case MIRType::Double:
+      case MIRType::Int64:
+        current_ = ABIArg(stackOffset_);
+        stackOffset_ += sizeof(uint64_t);
+        break;
+      case MIRType::Int8x16:
+      case MIRType::Int16x8:
+      case MIRType::Int32x4:
+      case MIRType::Float32x4:
+      case MIRType::Bool8x16:
+      case MIRType::Bool16x8:
+      case MIRType::Bool32x4:
+        // SIMD values aren't passed in or out of C++, so we can make up
+        // whatever internal ABI we like. visitWasmStackArg assumes
+        // SimdMemoryAlignment.
+        stackOffset_ = AlignBytes(stackOffset_, SimdMemoryAlignment);
+        current_ = ABIArg(stackOffset_);
+        stackOffset_ += Simd128DataSize;
+        break;
+      default:
+        MOZ_CRASH("Unexpected argument type");
+    }
+    return current_;
+=======
+ABIArg ABIArgGenerator::next(MIRType type) {
+  switch (type) {
+    case MIRType::Int32:
+    case MIRType::Float32:
+    case MIRType::Pointer:
+    case MIRType::RefOrNull:
+      current_ = ABIArg(stackOffset_);
+      stackOffset_ += sizeof(uint32_t);
+      break;
+    case MIRType::Double:
+    case MIRType::Int64:
+      current_ = ABIArg(stackOffset_);
+      stackOffset_ += sizeof(uint64_t);
+      break;
+    case MIRType::Int8x16:
+    case MIRType::Int16x8:
+    case MIRType::Int32x4:
+    case MIRType::Float32x4:
+    case MIRType::Bool8x16:
+    case MIRType::Bool16x8:
+    case MIRType::Bool32x4:
+      // SIMD values aren't passed in or out of C++, so we can make up
+      // whatever internal ABI we like. visitWasmStackArg assumes
+      // SimdMemoryAlignment.
+      stackOffset_ = AlignBytes(stackOffset_, SimdMemoryAlignment);
+      current_ = ABIArg(stackOffset_);
+      stackOffset_ += Simd128DataSize;
+      break;
+    default:
+      MOZ_CRASH("Unexpected argument type");
+  }
+  return current_;
+>>>>>>> upstream-releases
 }
 
 void Assembler::executableCopy(uint8_t* buffer, bool flushICache) {

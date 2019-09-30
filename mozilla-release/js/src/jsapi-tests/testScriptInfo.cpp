@@ -5,12 +5,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/ArrayUtils.h"  // mozilla::ArrayLength
+#include "mozilla/Utf8.h"        // mozilla::Utf8Unit
+
 #include "jsapi.h"
 
-#include "js/CompilationAndEvaluation.h"
+#include "js/CompilationAndEvaluation.h"  // JS::CompileDontInflate
+#include "js/SourceText.h"                // JS::Source{Ownership,Text}
 #include "jsapi-tests/tests.h"
 
-const char code[] =
+static const char code[] =
     "xx = 1;       \n\
                    \n\
 try {              \n\
@@ -24,15 +28,45 @@ catch (e)          \n\
 }\n\
 //@ sourceMappingURL=http://example.com/path/to/source-map.json";
 
+<<<<<<< HEAD
+BEGIN_TEST(testScriptInfo) {
+  unsigned startLine = 1000;
+||||||| merged common ancestors
+BEGIN_TEST(testScriptInfo)
+{
+    unsigned startLine = 1000;
+=======
 BEGIN_TEST(testScriptInfo) {
   unsigned startLine = 1000;
 
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, startLine);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, startLine);
+||||||| merged common ancestors
+    JS::CompileOptions options(cx);
+    options.setFileAndLine(__FILE__, startLine);
+=======
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, code, mozilla::ArrayLength(code) - 1,
+                    JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8(cx, options, code, strlen(code), &script));
   CHECK(script);
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, code, strlen(code), &script));
+    CHECK(script);
+=======
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   CHECK_EQUAL(JS_GetScriptBaseLineNumber(cx, script), startLine);
   CHECK(strcmp(JS_GetScriptFilename(script), __FILE__) == 0);

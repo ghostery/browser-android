@@ -7,6 +7,7 @@
 
 #include "SkBitmapProvider.h"
 #include "SkImage_Base.h"
+<<<<<<< HEAD
 #include "SkPixelRef.h"
 
 int SkBitmapProvider::width() const {
@@ -31,6 +32,38 @@ bool SkBitmapProvider::isVolatile() const {
     return bm ? bm->isVolatile() : false;
 }
 
+||||||| merged common ancestors
+#include "SkPixelRef.h"
+
+int SkBitmapProvider::width() const {
+    return fImage->width();
+}
+
+int SkBitmapProvider::height() const {
+    return fImage->height();
+}
+
+uint32_t SkBitmapProvider::getID() const {
+    return fImage->uniqueID();
+}
+
+SkImageInfo SkBitmapProvider::info() const {
+    return as_IB(fImage)->onImageInfo();
+}
+
+bool SkBitmapProvider::isVolatile() const {
+    // add flag to images?
+    const SkBitmap* bm = as_IB(fImage)->onPeekBitmap();
+    return bm ? bm->isVolatile() : false;
+}
+
+SkBitmapCacheDesc SkBitmapProvider::makeCacheDesc(int w, int h) const {
+    return SkBitmapCacheDesc::Make(fImage, w, h);
+}
+
+=======
+
+>>>>>>> upstream-releases
 SkBitmapCacheDesc SkBitmapProvider::makeCacheDesc() const {
     return SkBitmapCacheDesc::Make(fImage);
 }
@@ -40,5 +73,11 @@ void SkBitmapProvider::notifyAddedToCache() const {
 }
 
 bool SkBitmapProvider::asBitmap(SkBitmap* bm) const {
+<<<<<<< HEAD
     return as_IB(fImage)->getROPixels(bm, nullptr, SkImage::kAllow_CachingHint);
+||||||| merged common ancestors
+    return as_IB(fImage)->getROPixels(bm, fDstColorSpace, SkImage::kAllow_CachingHint);
+=======
+    return as_IB(fImage)->getROPixels(bm);
+>>>>>>> upstream-releases
 }

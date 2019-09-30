@@ -14,8 +14,18 @@ add_task(async function() {
   const { document: doc } = flexboxInspector;
 
   // Select the flex container in the inspector.
+<<<<<<< HEAD
   const onItemsListRendered = waitForDOM(doc,
     ".layout-flexbox-wrapper .flex-item-list");
+||||||| merged common ancestors
+  const onItemsListRendered = waitForDOM(doc,
+    "#layout-flexbox-container .flex-item-list");
+=======
+  const onItemsListRendered = waitForDOM(
+    doc,
+    ".layout-flexbox-wrapper .flex-item-list"
+  );
+>>>>>>> upstream-releases
   await selectNode(".container", inspector);
   const [flexItemList] = await onItemsListRendered;
 

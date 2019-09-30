@@ -10,13 +10,16 @@
 
 // There are shutdown issues for which multiple rejections are left uncaught.
 // See bug 1018184 for resolving these issues.
-const { PromiseTestUtils } = scopedCuImport("resource://testing-common/PromiseTestUtils.jsm");
+const { PromiseTestUtils } = ChromeUtils.import(
+  "resource://testing-common/PromiseTestUtils.jsm"
+);
 PromiseTestUtils.whitelistRejectionsGlobally(/Component not initialized/);
 PromiseTestUtils.whitelistRejectionsGlobally(/this\.worker is null/);
 
-const TEST_URI = "http://example.com/browser/devtools/client/webconsole/" +
-                 "test/mochitest/" +
-                 "test-stacktrace-location-debugger-link.html";
+const TEST_URI =
+  "http://example.com/browser/devtools/client/webconsole/" +
+  "test/mochitest/" +
+  "test-stacktrace-location-debugger-link.html";
 
 add_task(async function() {
   const hud = await openNewTabAndConsole(TEST_URI);
@@ -30,11 +33,26 @@ add_task(async function() {
 async function testOpenInDebugger(hud, toolbox, text) {
   info(`Testing message with text "${text}"`);
   const messageNode = await waitFor(() => findMessage(hud, text));
+<<<<<<< HEAD
   const framesNode = await waitFor(() => messageNode.querySelector(".frames"));
 
   const frameNodes = framesNode.querySelectorAll(".frame");
   is(frameNodes.length, 3,
     "The message does have the expected number of frames in the stacktrace");
+||||||| merged common ancestors
+  const frameLinksNode = messageNode.querySelectorAll(".stack-trace .frame-link");
+  is(frameLinksNode.length, 3,
+    "The message does have the expected number of frames in the stacktrace");
+=======
+  const framesNode = await waitFor(() => messageNode.querySelector(".frames"));
+
+  const frameNodes = framesNode.querySelectorAll(".frame");
+  is(
+    frameNodes.length,
+    3,
+    "The message does have the expected number of frames in the stacktrace"
+  );
+>>>>>>> upstream-releases
 
   for (const frameNode of frameNodes) {
     await checkClickOnNode(hud, toolbox, frameNode);
@@ -47,7 +65,19 @@ async function testOpenInDebugger(hud, toolbox, text) {
 async function checkClickOnNode(hud, toolbox, frameNode) {
   info("checking click on node location");
   const onSourceInDebuggerOpened = once(hud.ui, "source-in-debugger-opened");
+<<<<<<< HEAD
   EventUtils.sendMouseEvent({ type: "mousedown" }, frameNode.querySelector(".location"));
+||||||| merged common ancestors
+
+  EventUtils.sendMouseEvent({ type: "click" },
+    frameLinkNode.querySelector(".frame-link-source"));
+
+=======
+  EventUtils.sendMouseEvent(
+    { type: "mousedown" },
+    frameNode.querySelector(".location")
+  );
+>>>>>>> upstream-releases
   await onSourceInDebuggerOpened;
 
   const url = frameNode.querySelector(".filename").textContent;

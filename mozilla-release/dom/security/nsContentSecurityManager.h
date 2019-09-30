@@ -12,7 +12,6 @@
 #include "nsIChannelEventSink.h"
 
 class nsIStreamListener;
-class nsIDocument;
 
 #define NS_CONTENTSECURITYMANAGER_CONTRACTID \
   "@mozilla.org/contentsecuritymanager;1"
@@ -39,7 +38,16 @@ class nsContentSecurityManager : public nsIContentSecurityManager,
   static bool AllowTopLevelNavigationToDataURI(nsIChannel* aChannel);
   static bool AllowInsecureRedirectToDataURI(nsIChannel* aNewChannel);
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  static void AssertEvalNotUsingSystemPrincipal(nsIPrincipal* subjectPrincipal,
+                                                JSContext* cx);
+
+ private:
+>>>>>>> upstream-releases
   static nsresult CheckChannel(nsIChannel* aChannel);
   static nsresult CheckFTPSubresourceLoad(nsIChannel* aChannel);
 

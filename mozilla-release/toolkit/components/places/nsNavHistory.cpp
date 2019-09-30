@@ -43,8 +43,8 @@
 #include <algorithm>
 
 #ifdef MOZ_XUL
-#include "nsIAutoCompleteInput.h"
-#include "nsIAutoCompletePopup.h"
+#  include "nsIAutoCompleteInput.h"
+#  include "nsIAutoCompletePopup.h"
 #endif
 
 using namespace mozilla;
@@ -143,7 +143,7 @@ using namespace mozilla::places;
 
 // Observed topics.
 #ifdef MOZ_XUL
-#define TOPIC_AUTOCOMPLETE_FEEDBACK_INCOMING "autocomplete-will-enter-text"
+#  define TOPIC_AUTOCOMPLETE_FEEDBACK_INCOMING "autocomplete-will-enter-text"
 #endif
 #define TOPIC_IDLE_DAILY "idle-daily"
 #define TOPIC_PREF_CHANGED "nsPref:changed"
@@ -926,6 +926,7 @@ nsNavHistory::CanAddURI(nsIURI* aURI, bool* canAdd) {
   }
 
   // now check for all bad things
+<<<<<<< HEAD
   if (scheme.EqualsLiteral("about") || scheme.EqualsLiteral("blob") ||
       scheme.EqualsLiteral("chrome") || scheme.EqualsLiteral("data") ||
       scheme.EqualsLiteral("imap") || scheme.EqualsLiteral("javascript") ||
@@ -933,6 +934,28 @@ nsNavHistory::CanAddURI(nsIURI* aURI, bool* canAdd) {
       scheme.EqualsLiteral("news") || scheme.EqualsLiteral("page-icon") ||
       scheme.EqualsLiteral("resource") || scheme.EqualsLiteral("view-source") ||
       scheme.EqualsLiteral("wyciwyg")) {
+||||||| merged common ancestors
+  if (scheme.EqualsLiteral("about") ||
+      scheme.EqualsLiteral("blob") ||
+      scheme.EqualsLiteral("chrome") ||
+      scheme.EqualsLiteral("data") ||
+      scheme.EqualsLiteral("imap") ||
+      scheme.EqualsLiteral("javascript") ||
+      scheme.EqualsLiteral("mailbox") ||
+      scheme.EqualsLiteral("moz-anno") ||
+      scheme.EqualsLiteral("news") ||
+      scheme.EqualsLiteral("page-icon") ||
+      scheme.EqualsLiteral("resource") ||
+      scheme.EqualsLiteral("view-source") ||
+      scheme.EqualsLiteral("wyciwyg")) {
+=======
+  if (scheme.EqualsLiteral("about") || scheme.EqualsLiteral("blob") ||
+      scheme.EqualsLiteral("chrome") || scheme.EqualsLiteral("data") ||
+      scheme.EqualsLiteral("imap") || scheme.EqualsLiteral("javascript") ||
+      scheme.EqualsLiteral("mailbox") || scheme.EqualsLiteral("moz-anno") ||
+      scheme.EqualsLiteral("news") || scheme.EqualsLiteral("page-icon") ||
+      scheme.EqualsLiteral("resource") || scheme.EqualsLiteral("view-source")) {
+>>>>>>> upstream-releases
     return NS_OK;
   }
   *canAdd = true;
@@ -1598,6 +1621,7 @@ nsresult PlacesSQLQueryBuilder::SelectAsRoots() {
   if (Preferences::GetBool(MOBILE_BOOKMARKS_PREF, false)) {
     nsAutoCString mobileTitle;
     history->GetStringFromName("MobileBookmarksFolderTitle", mobileTitle);
+<<<<<<< HEAD
     mAddParams.Put(NS_LITERAL_CSTRING("MobileBookmarksFolderTitle"),
                    mobileTitle);
 
@@ -1622,6 +1646,49 @@ nsresult PlacesSQLQueryBuilder::SelectAsRoots() {
           "', :OtherBookmarksFolderTitle, null, null, null, "
           "null, null, 0, 0, null, null, null, null, 'unfiled___v', null) ") +
       mobileString + NS_LITERAL_CSTRING(")");
+||||||| merged common ancestors
+    mAddParams.Put(NS_LITERAL_CSTRING("MobileBookmarksFolderTitle"), mobileTitle);
+
+    mobileString = NS_LITERAL_CSTRING(","
+      "(null, 'place:parent=" MOBILE_ROOT_GUID "', :MobileBookmarksFolderTitle, null, null, null, "
+       "null, null, 0, 0, null, null, null, null, '" MOBILE_BOOKMARKS_VIRTUAL_GUID "', null) ");
+  }
+
+  mQueryString = NS_LITERAL_CSTRING(
+    "SELECT * FROM ("
+        "VALUES(null, 'place:parent=" TOOLBAR_ROOT_GUID "', :BookmarksToolbarFolderTitle, null, null, null, "
+               "null, null, 0, 0, null, null, null, null, 'toolbar____v', null), "
+              "(null, 'place:parent=" MENU_ROOT_GUID "', :BookmarksMenuFolderTitle, null, null, null, "
+               "null, null, 0, 0, null, null, null, null, 'menu_______v', null), "
+              "(null, 'place:parent=" UNFILED_ROOT_GUID "', :OtherBookmarksFolderTitle, null, null, null, "
+               "null, null, 0, 0, null, null, null, null, 'unfiled___v', null) ") +
+    mobileString + NS_LITERAL_CSTRING(")");
+=======
+    mAddParams.Put(NS_LITERAL_CSTRING("MobileBookmarksFolderTitle"),
+                   mobileTitle);
+
+    mobileString = NS_LITERAL_CSTRING(
+        ","
+        "(null, 'place:parent=" MOBILE_ROOT_GUID
+        "', :MobileBookmarksFolderTitle, null, null, null, "
+        "null, null, 0, 0, null, null, null, null, "
+        "'" MOBILE_BOOKMARKS_VIRTUAL_GUID "', null) ");
+  }
+
+  mQueryString =
+      NS_LITERAL_CSTRING(
+          "SELECT * FROM ("
+          "VALUES(null, 'place:parent=" TOOLBAR_ROOT_GUID
+          "', :BookmarksToolbarFolderTitle, null, null, null, "
+          "null, null, 0, 0, null, null, null, null, 'toolbar____v', null), "
+          "(null, 'place:parent=" MENU_ROOT_GUID
+          "', :BookmarksMenuFolderTitle, null, null, null, "
+          "null, null, 0, 0, null, null, null, null, 'menu_______v', null), "
+          "(null, 'place:parent=" UNFILED_ROOT_GUID
+          "', :OtherBookmarksFolderTitle, null, null, null, "
+          "null, null, 0, 0, null, null, null, null, 'unfiled____v', null) ") +
+      mobileString + NS_LITERAL_CSTRING(")");
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -2026,6 +2093,7 @@ nsNavHistory::RemoveObserver(nsINavHistoryObserver* aObserver) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNavHistory::GetObservers(uint32_t* _count,
                            nsINavHistoryObserver*** _observers) {
   NS_ENSURE_ARG_POINTER(_count);
@@ -2033,28 +2101,77 @@ nsNavHistory::GetObservers(uint32_t* _count,
 
   *_count = 0;
   *_observers = nullptr;
+||||||| merged common ancestors
+nsNavHistory::GetObservers(uint32_t* _count,
+                           nsINavHistoryObserver*** _observers)
+{
+  NS_ENSURE_ARG_POINTER(_count);
+  NS_ENSURE_ARG_POINTER(_observers);
+
+  *_count = 0;
+  *_observers = nullptr;
+=======
+nsNavHistory::GetObservers(
+    nsTArray<RefPtr<nsINavHistoryObserver>>& aObservers) {
+  aObservers.Clear();
+>>>>>>> upstream-releases
 
   // Clear any cached value, cause it's very likely the consumer has made
   // changes to history and is now trying to notify them.
   mDaysOfHistory = -1;
 
+<<<<<<< HEAD
   if (!mCanNotify) return NS_OK;
 
   nsCOMArray<nsINavHistoryObserver> observers;
+||||||| merged common ancestors
+  if (!mCanNotify)
+    return NS_OK;
+
+  nsCOMArray<nsINavHistoryObserver> observers;
+=======
+  if (!mCanNotify) return NS_OK;
+>>>>>>> upstream-releases
 
   // Then add the other observers.
   for (uint32_t i = 0; i < mObservers.Length(); ++i) {
+<<<<<<< HEAD
     const nsCOMPtr<nsINavHistoryObserver>& observer =
         mObservers.ElementAt(i).GetValue();
+||||||| merged common ancestors
+    const nsCOMPtr<nsINavHistoryObserver> &observer = mObservers.ElementAt(i).GetValue();
+=======
+    nsCOMPtr<nsINavHistoryObserver> observer =
+        mObservers.ElementAt(i).GetValue();
+>>>>>>> upstream-releases
     // Skip nullified weak observers.
+<<<<<<< HEAD
     if (observer) observers.AppendElement(observer);
+||||||| merged common ancestors
+    if (observer)
+      observers.AppendElement(observer);
+=======
+    if (observer) {
+      aObservers.AppendElement(observer.forget());
+    }
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   if (observers.Count() == 0) return NS_OK;
 
   *_count = observers.Count();
   observers.Forget(_observers);
 
+||||||| merged common ancestors
+  if (observers.Count() == 0)
+    return NS_OK;
+
+  *_count = observers.Count();
+  observers.Forget(_observers);
+
+=======
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -2274,7 +2391,24 @@ nsNavHistory::Observe(nsISupports* aSubject, const char* aTopic,
 
     nsCOMPtr<nsIAutoCompletePopup> popup;
     input->GetPopup(getter_AddRefs(popup));
+<<<<<<< HEAD
     if (!popup) return NS_OK;
+||||||| merged common ancestors
+    if (!popup)
+      return NS_OK;
+=======
+    if (!popup) {
+      nsCOMPtr<Element> popupEl;
+      input->GetPopupElement(getter_AddRefs(popupEl));
+      if (!popupEl) {
+        return NS_OK;
+      }
+      popup = popupEl->AsAutoCompletePopup();
+      if (!popup) {
+        return NS_OK;
+      }
+    }
+>>>>>>> upstream-releases
 
     nsCOMPtr<nsIAutoCompleteController> controller;
     input->GetController(getter_AddRefs(controller));
@@ -2301,15 +2435,28 @@ nsNavHistory::Observe(nsISupports* aSubject, const char* aTopic,
   }
 
   else if (strcmp(aTopic, TOPIC_IDLE_DAILY) == 0) {
-    (void)FixAndDecayFrecency();
+    (void)DecayFrecency();
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsNavHistory::FixAndDecayFrecency() {
   float decayRate =
       Preferences::GetFloat(PREF_FREC_DECAY_RATE, PREF_FREC_DECAY_RATE_DEF);
+||||||| merged common ancestors
+nsresult
+nsNavHistory::FixAndDecayFrecency()
+{
+  float decayRate = Preferences::GetFloat(PREF_FREC_DECAY_RATE,
+                                          PREF_FREC_DECAY_RATE_DEF);
+=======
+NS_IMETHODIMP
+nsNavHistory::DecayFrecency() {
+  float decayRate =
+      Preferences::GetFloat(PREF_FREC_DECAY_RATE, PREF_FREC_DECAY_RATE_DEF);
+>>>>>>> upstream-releases
   if (decayRate > 1.0f) {
     MOZ_ASSERT(false, "The frecency decay rate should not be greater than 1.0");
     decayRate = PREF_FREC_DECAY_RATE_DEF;
@@ -2643,8 +2790,9 @@ nsresult nsNavHistory::BindQueryClauseParameters(
   if (tags.Length() > 0) {
     for (uint32_t i = 0; i < tags.Length(); ++i) {
       nsPrintfCString paramName("tag%d_", i);
-      NS_ConvertUTF16toUTF8 tag(tags[i]);
-      ToLowerCase(tag);
+      nsString utf16Tag = tags[i];
+      ToLowerCase(utf16Tag);
+      NS_ConvertUTF16toUTF8 tag(utf16Tag);
       rv = statement->BindUTF8StringByName(paramName, tag);
       NS_ENSURE_SUCCESS(rv, rv);
     }
@@ -3287,11 +3435,20 @@ void nsNavHistory::GetAgeInDaysString(int32_t aInt, const char* aName,
                                       nsACString& aResult) {
   nsIStringBundle* bundle = GetBundle();
   if (bundle) {
+<<<<<<< HEAD
     nsAutoString intString;
     intString.AppendInt(aInt);
     const char16_t* strings[1] = {intString.get()};
+||||||| merged common ancestors
+    nsAutoString intString;
+    intString.AppendInt(aInt);
+    const char16_t* strings[1] = { intString.get() };
+=======
+    AutoTArray<nsString, 1> strings;
+    strings.AppendElement()->AppendInt(aInt);
+>>>>>>> upstream-releases
     nsAutoString value;
-    nsresult rv = bundle->FormatStringFromName(aName, strings, 1, value);
+    nsresult rv = bundle->FormatStringFromName(aName, strings, value);
     if (NS_SUCCEEDED(rv)) {
       CopyUTF16toUTF8(value, aResult);
       return;
@@ -3411,6 +3568,7 @@ void ParseSearchTermsFromQuery(const RefPtr<nsNavHistoryQuery>& aQuery,
   }
 }
 
+<<<<<<< HEAD
 }  // namespace
 
 nsresult nsNavHistory::UpdateFrecency(int64_t aPlaceId) {
@@ -3421,6 +3579,32 @@ nsresult nsNavHistory::UpdateFrecency(int64_t aPlaceId) {
           "CALCULATE_FRECENCY(:page_id), url, guid, hidden, last_visit_date"
           ") "
           "WHERE id = :page_id");
+||||||| merged common ancestors
+} // namespace
+
+
+nsresult
+nsNavHistory::UpdateFrecency(int64_t aPlaceId)
+{
+  nsCOMPtr<mozIStorageAsyncStatement> updateFrecencyStmt = mDB->GetAsyncStatement(
+    "UPDATE moz_places "
+    "SET frecency = NOTIFY_FRECENCY("
+      "CALCULATE_FRECENCY(:page_id), url, guid, hidden, last_visit_date"
+    ") "
+    "WHERE id = :page_id"
+  );
+=======
+}  // namespace
+
+nsresult nsNavHistory::UpdateFrecency(int64_t aPlaceId) {
+  nsCOMPtr<mozIStorageAsyncStatement> updateFrecencyStmt =
+      mDB->GetAsyncStatement(
+          "UPDATE moz_places "
+          "SET frecency = NOTIFY_FRECENCY("
+          "CALCULATE_FRECENCY(:page_id), url, guid, hidden, last_visit_date"
+          ") "
+          "WHERE id = :page_id");
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(updateFrecencyStmt);
   nsresult rv = updateFrecencyStmt->BindInt64ByName(
       NS_LITERAL_CSTRING("page_id"), aPlaceId);
@@ -3439,11 +3623,22 @@ nsresult nsNavHistory::UpdateFrecency(int64_t aPlaceId) {
     return NS_ERROR_UNEXPECTED;
   }
 
+<<<<<<< HEAD
   mozIStorageBaseStatement* stmts[] = {updateFrecencyStmt.get(),
                                        updateHiddenStmt.get()};
+||||||| merged common ancestors
+  mozIStorageBaseStatement *stmts[] = {
+    updateFrecencyStmt.get()
+  , updateHiddenStmt.get()
+  };
+=======
+  nsTArray<RefPtr<mozIStorageBaseStatement>> stmts = {
+      updateFrecencyStmt.forget(),
+      updateHiddenStmt.forget(),
+  };
+>>>>>>> upstream-releases
   nsCOMPtr<mozIStoragePendingStatement> ps;
-  rv = conn->ExecuteAsync(stmts, ArrayLength(stmts), nullptr,
-                          getter_AddRefs(ps));
+  rv = conn->ExecuteAsync(stmts, nullptr, getter_AddRefs(ps));
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Trigger frecency updates for all affected origins.

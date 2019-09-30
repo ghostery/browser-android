@@ -10,13 +10,22 @@
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/gfx/GPUChild.h"
 #include "mozilla/ipc/ProtocolTypes.h"
+<<<<<<< HEAD
 #include "mozilla/ipc/ProtocolUtils.h"  // for IToplevelProtocol
 #include "mozilla/TimeStamp.h"          // for TimeStamp
+||||||| merged common ancestors
+#include "mozilla/ipc/ProtocolUtils.h"       // for IToplevelProtocol
+#include "mozilla/TimeStamp.h"               // for TimeStamp
+=======
+#include "mozilla/ipc/ProtocolUtils.h"  // for IToplevelProtocol
+#include "mozilla/StaticPrefs.h"
+#include "mozilla/TimeStamp.h"  // for TimeStamp
+>>>>>>> upstream-releases
 #include "mozilla/Unused.h"
+#include "ProcessUtils.h"
 #include "VRChild.h"
 #include "VRManager.h"
 #include "VRThread.h"
-#include "gfxVRPuppet.h"
 
 #include "nsAppRunner.h"  // for IToplevelProtocol
 #include "mozilla/ipc/ProtocolUtils.h"
@@ -29,10 +38,26 @@ using namespace mozilla::ipc;
 namespace mozilla {
 namespace gfx {
 
+<<<<<<< HEAD
 VRProcessParent::VRProcessParent()
     : GeckoChildProcessHost(GeckoProcessType_VR),
       mTaskFactory(this),
       mChannelClosed(false) {
+||||||| merged common ancestors
+VRProcessParent::VRProcessParent()
+  : GeckoChildProcessHost(GeckoProcessType_VR),
+    mTaskFactory(this),
+    mChannelClosed(false)
+{
+=======
+VRProcessParent::VRProcessParent(Listener* aListener)
+    : GeckoChildProcessHost(GeckoProcessType_VR),
+      mTaskFactory(this),
+      mListener(aListener),
+      mLaunchPhase(LaunchPhase::Unlaunched),
+      mChannelClosed(false),
+      mShutdownRequested(false) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRProcessParent);
 }
 
@@ -46,26 +71,83 @@ VRProcessParent::~VRProcessParent() {
   MOZ_COUNT_DTOR(VRProcessParent);
 }
 
+<<<<<<< HEAD
 bool VRProcessParent::Launch() {
+||||||| merged common ancestors
+bool
+VRProcessParent::Launch()
+{
+=======
+bool VRProcessParent::Launch() {
+  MOZ_ASSERT(mLaunchPhase == LaunchPhase::Unlaunched);
+  MOZ_ASSERT(!mVRChild);
+>>>>>>> upstream-releases
   mLaunchThread = NS_GetCurrentThread();
+
+  mLaunchPhase = LaunchPhase::Waiting;
 
   std::vector<std::string> extraArgs;
   nsCString parentBuildID(mozilla::PlatformBuildID());
   extraArgs.push_back("-parentBuildID");
   extraArgs.push_back(parentBuildID.get());
 
+  mPrefSerializer = MakeUnique<ipc::SharedPreferenceSerializer>();
+  if (!mPrefSerializer->SerializeToSharedMemory()) {
+    return false;
+  }
+  mPrefSerializer->AddSharedPrefCmdLineArgs(*this, extraArgs);
+
   if (!GeckoChildProcessHost::AsyncLaunch(extraArgs)) {
+    mLaunchPhase = LaunchPhase::Complete;
+    mPrefSerializer = nullptr;
     return false;
   }
   return true;
 }
 
+<<<<<<< HEAD
 void VRProcessParent::Shutdown() {
+||||||| merged common ancestors
+void
+VRProcessParent::Shutdown()
+{
+=======
+bool VRProcessParent::WaitForLaunch() {
+  if (mLaunchPhase == LaunchPhase::Complete) {
+    return !!mVRChild;
+  }
+
+  int32_t timeoutMs = StaticPrefs::dom_vr_process_startup_timeout_ms();
+
+  // If one of the following environment variables are set we can effectively
+  // ignore the timeout - as we can guarantee the compositor process will be
+  // terminated
+  if (PR_GetEnv("MOZ_DEBUG_CHILD_PROCESS") ||
+      PR_GetEnv("MOZ_DEBUG_CHILD_PAUSE")) {
+    timeoutMs = 0;
+  }
+
+  // Our caller expects the connection to be finished after we return, so we
+  // immediately set up the IPDL actor and fire callbacks. The IO thread will
+  // still dispatch a notification to the main thread - we'll just ignore it.
+  bool result = GeckoChildProcessHost::WaitUntilConnected(timeoutMs);
+  InitAfterConnect(result);
+  return result;
+}
+
+void VRProcessParent::Shutdown() {
+  MOZ_ASSERT(!mShutdownRequested);
+  mListener = nullptr;
+
+>>>>>>> upstream-releases
   if (mVRChild) {
     // The channel might already be closed if we got here unexpectedly.
     if (!mChannelClosed) {
       mVRChild->Close();
     }
+    // OnChannelClosed uses this to check if the shutdown was expected or
+    // unexpected.
+    mShutdownRequested = true;
 
 #ifndef NS_FREE_PERMANENT_DATA
     // No need to communicate shutdown, the VR process doesn't need to
@@ -74,10 +156,10 @@ void VRProcessParent::Shutdown() {
 #endif
 
     // If we're shutting down unexpectedly, we're in the middle of handling an
-    // ActorDestroy for PGPUChild, which is still on the stack. We'll return
+    // ActorDestroy for PVRChild, which is still on the stack. We'll return
     // back to OnChannelClosed.
     //
-    // Otherwise, we'll wait for OnChannelClose to be called whenever PGPUChild
+    // Otherwise, we'll wait for OnChannelClose to be called whenever PVRChild
     // acknowledges shutdown.
     return;
   }
@@ -85,17 +167,54 @@ void VRProcessParent::Shutdown() {
   DestroyProcess();
 }
 
+<<<<<<< HEAD
 static void DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess) {
   XRE_GetIOMessageLoop()->PostTask(
       mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
+||||||| merged common ancestors
+static void
+DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess)
+{
+  XRE_GetIOMessageLoop()->
+    PostTask(mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
+=======
+void VRProcessParent::DestroyProcess() {
+  if (mLaunchThread) {
+    mLaunchThread->Dispatch(NS_NewRunnableFunction("DestroyProcessRunnable",
+                                                   [this] { Destroy(); }));
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void VRProcessParent::DestroyProcess() {
   mLaunchThread->Dispatch(NewRunnableFunction("DestroyProcessRunnable",
                                               DelayedDeleteSubprocess, this));
 }
+||||||| merged common ancestors
 
+void
+VRProcessParent::DestroyProcess()
+{
+  mLaunchThread->Dispatch(NewRunnableFunction("DestroyProcessRunnable", DelayedDeleteSubprocess, this));
+}
+=======
 void VRProcessParent::InitAfterConnect(bool aSucceeded) {
+  MOZ_ASSERT(mLaunchPhase == LaunchPhase::Waiting);
+  MOZ_ASSERT(!mVRChild);
+
+  mLaunchPhase = LaunchPhase::Complete;
+  mPrefSerializer = nullptr;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void VRProcessParent::InitAfterConnect(bool aSucceeded) {
+||||||| merged common ancestors
+void
+VRProcessParent::InitAfterConnect(bool aSucceeded)
+{
+=======
+>>>>>>> upstream-releases
   if (aSucceeded) {
     mVRChild = MakeUnique<VRChild>(this);
 
@@ -104,6 +223,10 @@ void VRProcessParent::InitAfterConnect(bool aSucceeded) {
     MOZ_ASSERT(rv);
 
     mVRChild->Init();
+
+    if (mListener) {
+      mListener->OnProcessLaunchComplete(this);
+    }
 
     // Make vr-gpu process connection
     GPUChild* gpuChild = GPUProcessManager::Get()->GetGPUChild();
@@ -148,22 +271,73 @@ void VRProcessParent::OnChannelConnected(int32_t peer_pid) {
   NS_DispatchToMainThread(runnable);
 }
 
+<<<<<<< HEAD
 void VRProcessParent::OnChannelConnectedTask() { InitAfterConnect(true); }
+||||||| merged common ancestors
+void
+VRProcessParent::OnChannelConnectedTask()
+{
+  InitAfterConnect(true);
+}
+=======
+void VRProcessParent::OnChannelConnectedTask() {
+  if (mLaunchPhase == LaunchPhase::Waiting) {
+    InitAfterConnect(true);
+  }
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void VRProcessParent::OnChannelErrorTask() {
   MOZ_ASSERT(false, "VR process channel error.");
+||||||| merged common ancestors
+void
+VRProcessParent::OnChannelErrorTask()
+{
+  MOZ_ASSERT(false, "VR process channel error.");
+=======
+void VRProcessParent::OnChannelErrorTask() {
+  if (mLaunchPhase == LaunchPhase::Waiting) {
+    InitAfterConnect(false);
+  }
+>>>>>>> upstream-releases
 }
 
 void VRProcessParent::OnChannelClosed() {
   mChannelClosed = true;
-  DestroyProcess();
+  if (!mShutdownRequested && mListener) {
+    // This is an unclean shutdown. Notify we're going away.
+    mListener->OnProcessUnexpectedShutdown(this);
+  } else {
+    DestroyProcess();
+  }
 
   // Release the actor.
   VRChild::Destroy(std::move(mVRChild));
   MOZ_ASSERT(!mVRChild);
 }
 
+<<<<<<< HEAD
+base::ProcessId VRProcessParent::OtherPid() { return mVRChild->OtherPid(); }
+||||||| merged common ancestors
+base::ProcessId
+VRProcessParent::OtherPid()
+{
+  return mVRChild->OtherPid();
+}
+=======
 base::ProcessId VRProcessParent::OtherPid() { return mVRChild->OtherPid(); }
 
+bool VRProcessParent::IsConnected() const { return !!mVRChild; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+=======
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases

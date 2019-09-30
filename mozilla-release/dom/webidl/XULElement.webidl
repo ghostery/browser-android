@@ -60,6 +60,10 @@ interface XULElement : Element {
   [SetterThrows]
   attribute DOMString top;
 
+  // Return the screen coordinates of the element.
+  readonly attribute long screenX;
+  readonly attribute long screenY;
+
   // Tooltip
   [SetterThrows]
   attribute DOMString tooltipText;
@@ -72,13 +76,19 @@ interface XULElement : Element {
 
   [Throws, ChromeOnly]
   readonly attribute XULControllers             controllers;
-  [Throws]
-  readonly attribute BoxObject?                 boxObject;
 
+<<<<<<< HEAD
   [SetterThrows]
   attribute long tabIndex;
   [Throws]
   void                      focus();
+||||||| merged common ancestors
+  [Throws]
+  void                      focus();
+=======
+  [SetterThrows]
+  attribute long tabIndex;
+>>>>>>> upstream-releases
   [Throws]
   void                      blur();
   [NeedsCallerType]
@@ -98,5 +108,6 @@ interface XULElement : Element {
 };
 
 XULElement implements GlobalEventHandlers;
+XULElement implements HTMLOrSVGOrXULElementMixin;
 XULElement implements TouchEventHandlers;
 XULElement implements OnErrorEventHandlerForNodes;

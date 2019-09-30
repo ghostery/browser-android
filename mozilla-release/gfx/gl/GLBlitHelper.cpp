@@ -19,15 +19,20 @@
 #include "GPUVideoImage.h"
 
 #ifdef MOZ_WIDGET_ANDROID
-#include "GeneratedJNIWrappers.h"
-#include "AndroidSurfaceTexture.h"
-#include "GLImages.h"
-#include "GLLibraryEGL.h"
+#  include "GeneratedJNIWrappers.h"
+#  include "AndroidSurfaceTexture.h"
+#  include "GLImages.h"
+#  include "GLLibraryEGL.h"
 #endif
 
 #ifdef XP_MACOSX
-#include "MacIOSurfaceImage.h"
-#include "GLContextCGL.h"
+#  include "MacIOSurfaceImage.h"
+#  include "GLContextCGL.h"
+#endif
+
+#ifdef XP_WIN
+#  include "mozilla/layers/D3D11ShareHandleImage.h"
+#  include "mozilla/layers/D3D11YCbCrImage.h"
 #endif
 
 using mozilla::layers::PlanarYCbCrData;
@@ -508,8 +513,32 @@ GLBlitHelper::GLBlitHelper(GLContext* const gl)
 
       mGL->fBindVertexArray(prev);
     }
+<<<<<<< HEAD
   }
 
+  // --
+
+  const auto glslVersion = mGL->ShadingLanguageVersion();
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Always use 100 on ES because some devices have OES_EGL_image_external but
+  // not OES_EGL_image_external_essl3. We could just use 100 in that particular
+  // case, but this is a lot easier and is not harmful to other usages.
+  if (mGL->IsGLES()) {
+    mDrawBlitProg_VersionLine = nsCString("#version 100\n");
+  } else if (glslVersion >= 130) {
+    mDrawBlitProg_VersionLine = nsPrintfCString("#version %u\n", glslVersion);
+  }
+
+  const char kVertSource[] =
+      "\
+||||||| merged common ancestors
+    const char kVertSource[] = "\
+=======
   // --
 
   const auto glslVersion = mGL->ShadingLanguageVersion();
@@ -525,6 +554,7 @@ GLBlitHelper::GLBlitHelper(GLContext* const gl)
 
   const char kVertSource[] =
       "\
+>>>>>>> upstream-releases
         #if __VERSION__ >= 130                                               \n\
             #define ATTRIBUTE in                                             \n\
             #define VARYING out                                              \n\
@@ -690,11 +720,29 @@ bool GLBlitHelper::BlitImageToFramebuffer(layers::Image* const srcImage,
 #endif
 #ifdef XP_WIN
     case ImageFormat::GPU_VIDEO:
+<<<<<<< HEAD
       return BlitImage(static_cast<layers::GPUVideoImage*>(srcImage), destSize,
                        destOrigin);
+||||||| merged common ancestors
+        return BlitImage(static_cast<layers::GPUVideoImage*>(srcImage), destSize,
+                         destOrigin);
+=======
+      return BlitImage(static_cast<layers::GPUVideoImage*>(srcImage), destSize,
+                       destOrigin);
+    case ImageFormat::D3D11_SHARE_HANDLE_TEXTURE:
+      return BlitImage(static_cast<layers::D3D11ShareHandleImage*>(srcImage),
+                       destSize, destOrigin);
+>>>>>>> upstream-releases
     case ImageFormat::D3D11_YCBCR_IMAGE:
+<<<<<<< HEAD
       return BlitImage((layers::D3D11YCbCrImage*)srcImage, destSize,
                        destOrigin);
+||||||| merged common ancestors
+        return BlitImage((layers::D3D11YCbCrImage*)srcImage, destSize, destOrigin);
+=======
+      return BlitImage(static_cast<layers::D3D11YCbCrImage*>(srcImage),
+                       destSize, destOrigin);
+>>>>>>> upstream-releases
     case ImageFormat::D3D9_RGB32_TEXTURE:
       return false;  // todo
 #endif
@@ -708,6 +756,7 @@ bool GLBlitHelper::BlitImageToFramebuffer(layers::Image* const srcImage,
 // -------------------------------------
 
 #ifdef MOZ_WIDGET_ANDROID
+<<<<<<< HEAD
 bool GLBlitHelper::BlitImage(layers::SurfaceTextureImage* srcImage,
                              const gfx::IntSize& destSize,
                              const OriginPos destOrigin) const {
@@ -775,6 +824,142 @@ bool GLBlitHelper::BlitImage(layers::SurfaceTextureImage* srcImage,
   }
 
   return true;
+||||||| merged common ancestors
+bool
+GLBlitHelper::BlitImage(layers::SurfaceTextureImage* srcImage, const gfx::IntSize& destSize,
+                        const OriginPos destOrigin) const
+{
+    AndroidSurfaceTextureHandle handle = srcImage->GetHandle();
+    const auto& surfaceTexture = java::GeckoSurfaceTexture::Lookup(handle);
+
+    if (!surfaceTexture) {
+        return false;
+    }
+
+    const ScopedBindTextureUnit boundTU(mGL, LOCAL_GL_TEXTURE0);
+
+    if (!surfaceTexture->IsAttachedToGLContext((int64_t)mGL)) {
+        GLuint tex;
+        mGL->MakeCurrent();
+        mGL->fGenTextures(1, &tex);
+
+        if (NS_FAILED(surfaceTexture->AttachToGLContext((int64_t)mGL, tex))) {
+            mGL->fDeleteTextures(1, &tex);
+            return false;
+        }
+    }
+
+    const ScopedBindTexture savedTex(mGL, surfaceTexture->GetTexName(), LOCAL_GL_TEXTURE_EXTERNAL);
+    surfaceTexture->UpdateTexImage();
+
+    gfx::Matrix4x4 transform4;
+    AndroidSurfaceTexture::GetTransformMatrix(java::sdk::SurfaceTexture::Ref::From(surfaceTexture),
+                                              &transform4);
+    Mat3 transform3;
+    transform3.at(0,0) = transform4._11;
+    transform3.at(0,1) = transform4._12;
+    transform3.at(0,2) = transform4._14;
+    transform3.at(1,0) = transform4._21;
+    transform3.at(1,1) = transform4._22;
+    transform3.at(1,2) = transform4._24;
+    transform3.at(2,0) = transform4._41;
+    transform3.at(2,1) = transform4._42;
+    transform3.at(2,2) = transform4._44;
+
+    // We don't do w-divison, so if these aren't what we expect, we're probably doing
+    // something wrong.
+    MOZ_ASSERT(transform3.at(0,2) == 0);
+    MOZ_ASSERT(transform3.at(1,2) == 0);
+    MOZ_ASSERT(transform3.at(2,2) == 1);
+
+    const auto& srcOrigin = srcImage->GetOriginPos();
+
+    // I honestly have no idea why this logic is flipped, but changing the
+    // source origin would mean we'd have to flip it in the compositor
+    // which makes just as little sense as this.
+    const bool yFlip = (srcOrigin == destOrigin);
+
+    const auto& prog = GetDrawBlitProg({kFragHeader_TexExt, kFragBody_RGBA});
+    MOZ_RELEASE_ASSERT(prog);
+
+    // There is no padding on these images, so we can use the GetTransformMatrix directly.
+    const DrawBlitProg::BaseArgs baseArgs = { transform3, yFlip, destSize, Nothing() };
+    prog->Draw(baseArgs, nullptr);
+
+    if (surfaceTexture->IsSingleBuffer()) {
+        surfaceTexture->ReleaseTexImage();
+    }
+
+    return true;
+=======
+bool GLBlitHelper::BlitImage(layers::SurfaceTextureImage* srcImage,
+                             const gfx::IntSize& destSize,
+                             const OriginPos destOrigin) const {
+  AndroidSurfaceTextureHandle handle = srcImage->GetHandle();
+  const auto& surfaceTexture = java::GeckoSurfaceTexture::Lookup(handle);
+
+  if (!surfaceTexture) {
+    return false;
+  }
+
+  const ScopedBindTextureUnit boundTU(mGL, LOCAL_GL_TEXTURE0);
+
+  if (!surfaceTexture->IsAttachedToGLContext((int64_t)mGL)) {
+    GLuint tex;
+    mGL->MakeCurrent();
+    mGL->fGenTextures(1, &tex);
+
+    if (NS_FAILED(surfaceTexture->AttachToGLContext((int64_t)mGL, tex))) {
+      mGL->fDeleteTextures(1, &tex);
+      return false;
+    }
+  }
+
+  const ScopedBindTexture savedTex(mGL, surfaceTexture->GetTexName(),
+                                   LOCAL_GL_TEXTURE_EXTERNAL);
+  surfaceTexture->UpdateTexImage();
+
+  gfx::Matrix4x4 transform4;
+  AndroidSurfaceTexture::GetTransformMatrix(
+      java::sdk::SurfaceTexture::Ref::From(surfaceTexture), &transform4);
+  Mat3 transform3;
+  transform3.at(0, 0) = transform4._11;
+  transform3.at(0, 1) = transform4._12;
+  transform3.at(0, 2) = transform4._14;
+  transform3.at(1, 0) = transform4._21;
+  transform3.at(1, 1) = transform4._22;
+  transform3.at(1, 2) = transform4._24;
+  transform3.at(2, 0) = transform4._41;
+  transform3.at(2, 1) = transform4._42;
+  transform3.at(2, 2) = transform4._44;
+
+  // We don't do w-divison, so if these aren't what we expect, we're probably
+  // doing something wrong.
+  MOZ_ASSERT(transform3.at(0, 2) == 0);
+  MOZ_ASSERT(transform3.at(1, 2) == 0);
+  MOZ_ASSERT(transform3.at(2, 2) == 1);
+
+  const auto& srcOrigin = srcImage->GetOriginPos();
+
+  // I honestly have no idea why this logic is flipped, but changing the
+  // source origin would mean we'd have to flip it in the compositor
+  // which makes just as little sense as this.
+  const bool yFlip = (srcOrigin == destOrigin);
+
+  const auto& prog = GetDrawBlitProg({kFragHeader_TexExt, kFragBody_RGBA});
+
+  // There is no padding on these images, so we can use the GetTransformMatrix
+  // directly.
+  const DrawBlitProg::BaseArgs baseArgs = {transform3, yFlip, destSize,
+                                           Nothing()};
+  prog->Draw(baseArgs, nullptr);
+
+  if (surfaceTexture->IsSingleBuffer()) {
+    surfaceTexture->ReleaseTexImage();
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 #endif
 
@@ -792,6 +977,7 @@ bool GuessDivisors(const gfx::IntSize& ySize, const gfx::IntSize& uvSize,
   return true;
 }
 
+<<<<<<< HEAD
 bool GLBlitHelper::BlitImage(layers::PlanarYCbCrImage* const yuvImage,
                              const gfx::IntSize& destSize,
                              const OriginPos destOrigin) {
@@ -859,6 +1045,169 @@ bool GLBlitHelper::BlitImage(layers::PlanarYCbCrImage* const yuvImage,
   if (yTexSize != mYuvUploads_YSize || uvTexSize != mYuvUploads_UVSize) {
     mYuvUploads_YSize = yTexSize;
     mYuvUploads_UVSize = uvTexSize;
+||||||| merged common ancestors
+bool
+GLBlitHelper::BlitImage(layers::PlanarYCbCrImage* const yuvImage,
+                        const gfx::IntSize& destSize, const OriginPos destOrigin)
+{
+    const auto& prog = GetDrawBlitProg({kFragHeader_Tex2D, kFragBody_PlanarYUV});
+    MOZ_RELEASE_ASSERT(prog);
+
+    if (!mYuvUploads[0]) {
+        mGL->fGenTextures(3, mYuvUploads);
+        const ScopedBindTexture bindTex(mGL, mYuvUploads[0]);
+        mGL->TexParams_SetClampNoMips();
+        mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[1]);
+        mGL->TexParams_SetClampNoMips();
+        mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[2]);
+        mGL->TexParams_SetClampNoMips();
+    }
+
+    // --
+
+    const PlanarYCbCrData* const yuvData = yuvImage->GetData();
+
+    if (yuvData->mYSkip || yuvData->mCbSkip || yuvData->mCrSkip ||
+        yuvData->mYSize.width < 0 || yuvData->mYSize.height < 0 ||
+        yuvData->mCbCrSize.width < 0 || yuvData->mCbCrSize.height < 0 ||
+        yuvData->mYStride < 0 || yuvData->mCbCrStride < 0)
+    {
+        gfxCriticalError() << "Unusual PlanarYCbCrData: "
+                           << yuvData->mYSkip << ","
+                           << yuvData->mCbSkip << ","
+                           << yuvData->mCrSkip << ", "
+                           << yuvData->mYSize.width << ","
+                           << yuvData->mYSize.height << ", "
+                           << yuvData->mCbCrSize.width << ","
+                           << yuvData->mCbCrSize.height << ", "
+                           << yuvData->mYStride << ","
+                           << yuvData->mCbCrStride;
+        return false;
+    }
+
+    gfx::IntSize divisors;
+    if (!GuessDivisors(yuvData->mYSize, yuvData->mCbCrSize, &divisors)) {
+        gfxCriticalError() << "GuessDivisors failed:"
+                           << yuvData->mYSize.width << ","
+                           << yuvData->mYSize.height << ", "
+                           << yuvData->mCbCrSize.width << ","
+                           << yuvData->mCbCrSize.height;
+        return false;
+    }
+
+    // --
+
+    // RED textures aren't valid in GLES2, and ALPHA textures are not valid in desktop GL Core Profiles.
+    // So use R8 textures on GL3.0+ and GLES3.0+, but LUMINANCE/LUMINANCE/UNSIGNED_BYTE otherwise.
+    GLenum internalFormat;
+    GLenum unpackFormat;
+    if (mGL->IsAtLeast(gl::ContextProfile::OpenGLCore, 300) ||
+        mGL->IsAtLeast(gl::ContextProfile::OpenGLES, 300))
+    {
+        internalFormat = LOCAL_GL_R8;
+        unpackFormat = LOCAL_GL_RED;
+    } else {
+        internalFormat = LOCAL_GL_LUMINANCE;
+        unpackFormat = LOCAL_GL_LUMINANCE;
+    }
+
+    // --
+
+    const ScopedSaveMultiTex saveTex(mGL, 3, LOCAL_GL_TEXTURE_2D);
+    const ResetUnpackState reset(mGL);
+    const gfx::IntSize yTexSize(yuvData->mYStride, yuvData->mYSize.height);
+    const gfx::IntSize uvTexSize(yuvData->mCbCrStride, yuvData->mCbCrSize.height);
+
+    if (yTexSize != mYuvUploads_YSize ||
+        uvTexSize != mYuvUploads_UVSize)
+    {
+        mYuvUploads_YSize = yTexSize;
+        mYuvUploads_UVSize = uvTexSize;
+
+        mGL->fActiveTexture(LOCAL_GL_TEXTURE0);
+        mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[0]);
+        mGL->fTexImage2D(LOCAL_GL_TEXTURE_2D, 0, internalFormat,
+                         yTexSize.width, yTexSize.height, 0,
+                         unpackFormat, LOCAL_GL_UNSIGNED_BYTE, nullptr);
+        for (int i = 1; i < 3; i++) {
+            mGL->fActiveTexture(LOCAL_GL_TEXTURE0 + i);
+            mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[i]);
+            mGL->fTexImage2D(LOCAL_GL_TEXTURE_2D, 0, internalFormat,
+                             uvTexSize.width, uvTexSize.height, 0,
+                             unpackFormat, LOCAL_GL_UNSIGNED_BYTE, nullptr);
+        }
+    }
+
+    // --
+=======
+bool GLBlitHelper::BlitImage(layers::PlanarYCbCrImage* const yuvImage,
+                             const gfx::IntSize& destSize,
+                             const OriginPos destOrigin) {
+  const auto& prog = GetDrawBlitProg({kFragHeader_Tex2D, kFragBody_PlanarYUV});
+
+  if (!mYuvUploads[0]) {
+    mGL->fGenTextures(3, mYuvUploads);
+    const ScopedBindTexture bindTex(mGL, mYuvUploads[0]);
+    mGL->TexParams_SetClampNoMips();
+    mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[1]);
+    mGL->TexParams_SetClampNoMips();
+    mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[2]);
+    mGL->TexParams_SetClampNoMips();
+  }
+
+  // --
+
+  const PlanarYCbCrData* const yuvData = yuvImage->GetData();
+
+  if (yuvData->mYSkip || yuvData->mCbSkip || yuvData->mCrSkip ||
+      yuvData->mYSize.width < 0 || yuvData->mYSize.height < 0 ||
+      yuvData->mCbCrSize.width < 0 || yuvData->mCbCrSize.height < 0 ||
+      yuvData->mYStride < 0 || yuvData->mCbCrStride < 0) {
+    gfxCriticalError() << "Unusual PlanarYCbCrData: " << yuvData->mYSkip << ","
+                       << yuvData->mCbSkip << "," << yuvData->mCrSkip << ", "
+                       << yuvData->mYSize.width << "," << yuvData->mYSize.height
+                       << ", " << yuvData->mCbCrSize.width << ","
+                       << yuvData->mCbCrSize.height << ", " << yuvData->mYStride
+                       << "," << yuvData->mCbCrStride;
+    return false;
+  }
+
+  gfx::IntSize divisors;
+  if (!GuessDivisors(yuvData->mYSize, yuvData->mCbCrSize, &divisors)) {
+    gfxCriticalError() << "GuessDivisors failed:" << yuvData->mYSize.width
+                       << "," << yuvData->mYSize.height << ", "
+                       << yuvData->mCbCrSize.width << ","
+                       << yuvData->mCbCrSize.height;
+    return false;
+  }
+
+  // --
+
+  // RED textures aren't valid in GLES2, and ALPHA textures are not valid in
+  // desktop GL Core Profiles. So use R8 textures on GL3.0+ and GLES3.0+, but
+  // LUMINANCE/LUMINANCE/UNSIGNED_BYTE otherwise.
+  GLenum internalFormat;
+  GLenum unpackFormat;
+  if (mGL->IsAtLeast(gl::ContextProfile::OpenGLCore, 300) ||
+      mGL->IsAtLeast(gl::ContextProfile::OpenGLES, 300)) {
+    internalFormat = LOCAL_GL_R8;
+    unpackFormat = LOCAL_GL_RED;
+  } else {
+    internalFormat = LOCAL_GL_LUMINANCE;
+    unpackFormat = LOCAL_GL_LUMINANCE;
+  }
+
+  // --
+
+  const ScopedSaveMultiTex saveTex(mGL, 3, LOCAL_GL_TEXTURE_2D);
+  const ResetUnpackState reset(mGL);
+  const gfx::IntSize yTexSize(yuvData->mYStride, yuvData->mYSize.height);
+  const gfx::IntSize uvTexSize(yuvData->mCbCrStride, yuvData->mCbCrSize.height);
+
+  if (yTexSize != mYuvUploads_YSize || uvTexSize != mYuvUploads_UVSize) {
+    mYuvUploads_YSize = yTexSize;
+    mYuvUploads_UVSize = uvTexSize;
+>>>>>>> upstream-releases
 
     mGL->fActiveTexture(LOCAL_GL_TEXTURE0);
     mGL->fBindTexture(LOCAL_GL_TEXTURE_2D, mYuvUploads[0]);
@@ -909,6 +1258,7 @@ bool GLBlitHelper::BlitImage(layers::PlanarYCbCrImage* const yuvImage,
 // -------------------------------------
 
 #ifdef XP_MACOSX
+<<<<<<< HEAD
 bool GLBlitHelper::BlitImage(layers::MacIOSurfaceImage* const srcImage,
                              const gfx::IntSize& destSize,
                              const OriginPos destOrigin) const {
@@ -960,6 +1310,121 @@ bool GLBlitHelper::BlitImage(layers::MacIOSurfaceImage* const srcImage,
   GLenum unpackTypes[3] = {LOCAL_GL_UNSIGNED_BYTE, LOCAL_GL_UNSIGNED_BYTE,
                            LOCAL_GL_UNSIGNED_BYTE};
   switch (planes) {
+||||||| merged common ancestors
+bool
+GLBlitHelper::BlitImage(layers::MacIOSurfaceImage* const srcImage,
+                        const gfx::IntSize& destSize, const OriginPos destOrigin) const
+{
+    MacIOSurface* const iosurf = srcImage->GetSurface();
+    if (mGL->GetContextType() != GLContextType::CGL) {
+        MOZ_ASSERT(false);
+        return false;
+    }
+    const auto glCGL = static_cast<GLContextCGL*>(mGL);
+    const auto cglContext = glCGL->GetCGLContext();
+
+    const auto& srcOrigin = OriginPos::BottomLeft;
+
+    DrawBlitProg::BaseArgs baseArgs;
+    baseArgs.yFlip = (destOrigin != srcOrigin);
+    baseArgs.destSize = destSize;
+
+    DrawBlitProg::YUVArgs yuvArgs;
+    yuvArgs.colorSpace = YUVColorSpace::BT601;
+
+    const DrawBlitProg::YUVArgs* pYuvArgs = nullptr;
+
+    auto planes = iosurf->GetPlaneCount();
+    if (!planes) {
+        planes = 1; // Bad API. No cookie.
+    }
+
+    const GLenum texTarget = LOCAL_GL_TEXTURE_RECTANGLE;
+    const char* const fragHeader = kFragHeader_Tex2DRect;
+
+    const ScopedSaveMultiTex saveTex(mGL, planes, texTarget);
+    const ScopedTexture tex0(mGL);
+    const ScopedTexture tex1(mGL);
+    const ScopedTexture tex2(mGL);
+    const GLuint texs[3] = {
+        tex0,
+        tex1,
+        tex2
+    };
+
+    const auto pixelFormat = iosurf->GetPixelFormat();
+    const auto formatChars = (const char*)&pixelFormat;
+    const char formatStr[] = {
+        formatChars[3],
+        formatChars[2],
+        formatChars[1],
+        formatChars[0],
+        0
+    };
+    if (mGL->ShouldSpew()) {
+        printf_stderr("iosurf format: %s (0x%08x)\n", formatStr, uint32_t(pixelFormat));
+    }
+
+    const char* fragBody;
+    GLenum internalFormats[3] = {0, 0, 0};
+    GLenum unpackFormats[3] = {0, 0, 0};
+    GLenum unpackTypes[3] = { LOCAL_GL_UNSIGNED_BYTE,
+                              LOCAL_GL_UNSIGNED_BYTE,
+                              LOCAL_GL_UNSIGNED_BYTE };
+    switch (planes) {
+=======
+bool GLBlitHelper::BlitImage(layers::MacIOSurfaceImage* const srcImage,
+                             const gfx::IntSize& destSize,
+                             const OriginPos destOrigin) const {
+  MacIOSurface* const iosurf = srcImage->GetSurface();
+  if (mGL->GetContextType() != GLContextType::CGL) {
+    MOZ_ASSERT(false);
+    return false;
+  }
+  const auto glCGL = static_cast<GLContextCGL*>(mGL);
+  const auto cglContext = glCGL->GetCGLContext();
+
+  const auto& srcOrigin = OriginPos::BottomLeft;
+
+  DrawBlitProg::BaseArgs baseArgs;
+  baseArgs.yFlip = (destOrigin != srcOrigin);
+  baseArgs.destSize = destSize;
+
+  DrawBlitProg::YUVArgs yuvArgs;
+  yuvArgs.colorSpace = gfx::YUVColorSpace::BT601;
+
+  const DrawBlitProg::YUVArgs* pYuvArgs = nullptr;
+
+  auto planes = iosurf->GetPlaneCount();
+  if (!planes) {
+    planes = 1;  // Bad API. No cookie.
+  }
+
+  const GLenum texTarget = LOCAL_GL_TEXTURE_RECTANGLE;
+  const char* const fragHeader = kFragHeader_Tex2DRect;
+
+  const ScopedSaveMultiTex saveTex(mGL, planes, texTarget);
+  const ScopedTexture tex0(mGL);
+  const ScopedTexture tex1(mGL);
+  const ScopedTexture tex2(mGL);
+  const GLuint texs[3] = {tex0, tex1, tex2};
+
+  const auto pixelFormat = iosurf->GetPixelFormat();
+  const auto formatChars = (const char*)&pixelFormat;
+  const char formatStr[] = {formatChars[3], formatChars[2], formatChars[1],
+                            formatChars[0], 0};
+  if (mGL->ShouldSpew()) {
+    printf_stderr("iosurf format: %s (0x%08x)\n", formatStr,
+                  uint32_t(pixelFormat));
+  }
+
+  const char* fragBody;
+  GLenum internalFormats[3] = {0, 0, 0};
+  GLenum unpackFormats[3] = {0, 0, 0};
+  GLenum unpackTypes[3] = {LOCAL_GL_UNSIGNED_BYTE, LOCAL_GL_UNSIGNED_BYTE,
+                           LOCAL_GL_UNSIGNED_BYTE};
+  switch (planes) {
+>>>>>>> upstream-releases
     case 1:
       fragBody = kFragBody_RGBA;
       internalFormats[0] = LOCAL_GL_RGBA;

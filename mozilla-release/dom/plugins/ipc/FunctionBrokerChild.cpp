@@ -19,11 +19,26 @@ void FunctionBrokerChild::PostToDispatchThread(
   mThread->Dispatch(std::move(runnable));
 }
 
+<<<<<<< HEAD
 /* static */ bool FunctionBrokerChild::Initialize(
     Endpoint<PFunctionBrokerChild>&& aBrokerEndpoint) {
   MOZ_RELEASE_ASSERT(
       XRE_IsPluginProcess(),
       "FunctionBrokerChild can only be used in plugin processes");
+||||||| merged common ancestors
+/* static */ bool
+FunctionBrokerChild::Initialize(Endpoint<PFunctionBrokerChild>&& aBrokerEndpoint)
+{
+  MOZ_RELEASE_ASSERT(XRE_IsPluginProcess(),
+                     "FunctionBrokerChild can only be used in plugin processes");
+=======
+/* static */
+bool FunctionBrokerChild::Initialize(
+    Endpoint<PFunctionBrokerChild>&& aBrokerEndpoint) {
+  MOZ_RELEASE_ASSERT(
+      XRE_IsPluginProcess(),
+      "FunctionBrokerChild can only be used in plugin processes");
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(!sInstance);
   FunctionBrokerThread* thread = FunctionBrokerThread::Create();
@@ -34,10 +49,24 @@ void FunctionBrokerChild::PostToDispatchThread(
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ FunctionBrokerChild* FunctionBrokerChild::GetInstance() {
   MOZ_RELEASE_ASSERT(
       XRE_IsPluginProcess(),
       "FunctionBrokerChild can only be used in plugin processes");
+||||||| merged common ancestors
+/* static */ FunctionBrokerChild*
+FunctionBrokerChild::GetInstance()
+{
+  MOZ_RELEASE_ASSERT(XRE_IsPluginProcess(),
+                     "FunctionBrokerChild can only be used in plugin processes");
+=======
+/* static */
+FunctionBrokerChild* FunctionBrokerChild::GetInstance() {
+  MOZ_RELEASE_ASSERT(
+      XRE_IsPluginProcess(),
+      "FunctionBrokerChild can only be used in plugin processes");
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(sInstance, "Must initialize FunctionBrokerChild before using it");
   return sInstance;

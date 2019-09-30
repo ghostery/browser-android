@@ -17,10 +17,20 @@ namespace widget {
 class TaskbarTabPreview : public nsITaskbarTabPreview, public TaskbarPreview {
   virtual ~TaskbarTabPreview();
 
+<<<<<<< HEAD
  public:
   TaskbarTabPreview(ITaskbarList4 *aTaskbar,
                     nsITaskbarPreviewController *aController, HWND aHWND,
                     nsIDocShell *aShell);
+||||||| merged common ancestors
+public:
+  TaskbarTabPreview(ITaskbarList4 *aTaskbar, nsITaskbarPreviewController *aController, HWND aHWND, nsIDocShell *aShell);
+=======
+ public:
+  TaskbarTabPreview(ITaskbarList4* aTaskbar,
+                    nsITaskbarPreviewController* aController, HWND aHWND,
+                    nsIDocShell* aShell);
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSITASKBARTABPREVIEW
@@ -28,7 +38,7 @@ class TaskbarTabPreview : public nsITaskbarTabPreview, public TaskbarPreview {
 
  private:
   virtual nsresult ShowActive(bool active);
-  virtual HWND &PreviewWindow();
+  virtual HWND& PreviewWindow();
   virtual LRESULT WndProc(UINT nMsg, WPARAM wParam, LPARAM lParam);
   static LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT nMsg, WPARAM wParam,
                                         LPARAM lParam);
@@ -39,8 +49,18 @@ class TaskbarTabPreview : public nsITaskbarTabPreview, public TaskbarPreview {
   virtual void DetachFromNSWindow();
 
   // WindowHook procedure for hooking mWnd
+<<<<<<< HEAD
   static bool MainWindowHook(void *aContext, HWND hWnd, UINT nMsg,
                              WPARAM wParam, LPARAM lParam, LRESULT *aResult);
+||||||| merged common ancestors
+  static bool MainWindowHook(void *aContext,
+                               HWND hWnd, UINT nMsg,
+                               WPARAM wParam, LPARAM lParam,
+                               LRESULT *aResult);
+=======
+  static bool MainWindowHook(void* aContext, HWND hWnd, UINT nMsg,
+                             WPARAM wParam, LPARAM lParam, LRESULT* aResult);
+>>>>>>> upstream-releases
 
   // Bug 520807 - we need to update the proxy window style based on the main
   // window's style to workaround a bug with the way the DWM displays the

@@ -12,7 +12,7 @@
 #include "OmxPlatformLayer.h"
 
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 
 #define LOG(arg, ...)                        \
@@ -298,7 +298,18 @@ bool OmxPromiseLayer::Event(OMX_EVENTTYPE aEvent, OMX_U32 aData1,
       }
       break;
     }
+<<<<<<< HEAD
     default: { return false; }
+||||||| merged common ancestors
+    default:
+    {
+      return false;
+    }
+=======
+    default: {
+      return false;
+    }
+>>>>>>> upstream-releases
   }
   return true;
 }

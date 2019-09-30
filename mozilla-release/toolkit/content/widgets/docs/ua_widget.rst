@@ -15,9 +15,19 @@ When the element is appended to the tree, a chrome-only ``UAWidgetSetupOrChange`
 
 UAWidgetsChild then grabs the sandbox for that origin (lazily creating it as needed), loads the script as needed, and initializes an instance by calling the JS constructor with a reference to the UA Widget Shadow Root created by the DOM. We will discuss the sandbox in the latter section.
 
+<<<<<<< HEAD
 The ``onsetup`` method is called right after the instance is constructed. The call to constructor must not throw, or UAWidgetsChild will be confused since an instance of the widget will not be returned, but the widget is already half-initalized. If the ``onsetup`` method call throws, UAWidgetsChild will still be able to hold the reference of the widget and call the destructor later on.
 
 When the element is removed from the tree, ``UAWidgetTeardown`` is dispatched so UAWidgetsChild can destroy the widget, if it exists. If so, the UAWidgetsChild calls the ``destructor()`` method on the widget, causing the widget to destruct itself.
+||||||| merged common ancestors
+When the element is removed from the tree, ``UAWidgetUnbindFromTree`` is dispatched so UAWidgetsChild can destroy the widget, if it exists. If so, the UAWidgetsChild calls the ``destructor()`` method on the widget, causing the widget to destruct itself.
+=======
+The ``onsetup`` method is called right after the instance is constructed. The call to constructor must not throw, or UAWidgetsChild will be confused since an instance of the widget will not be returned, but the widget is already half-initalized. If the ``onsetup`` method call throws, UAWidgetsChild will still be able to hold the reference of the widget and call the destructor later on.
+
+When the element is removed from the tree, ``UAWidgetTeardown`` is dispatched so UAWidgetsChild can destroy the widget, if it exists. If so, the UAWidgetsChild calls the ``destructor()`` method on the widget, causing the widget to destruct itself.
+
+Counter-intuitively, elements are not considered "removed from the tree" when the document is unloaded. This is considered safe as anything the widget touches should be reset or cleaned up when the document unloads. Please do not violate the assumption by having any browser state toggled by the destructor.
+>>>>>>> upstream-releases
 
 When a UA Widget initializes, it should create its own DOM inside the passed UA Widget Shadow Root, including the ``<link>`` element necessary to load the stylesheet, add event listeners, etc. When destroyed (i.e. the destructor method is called), it should do the opposite.
 
@@ -33,6 +43,8 @@ UA Widget Shadow Root
 The UA Widget Shadow Root is a closed shadow root, with the UA Widget flag turned on. As a closed shadow root, it may not be accessed by other scripts. It is attached on host element which the spec disallow a shadow root to be attached.
 
 The UA Widget flag enables the security feature covered in the next section.
+
+**Side note**: XML pretty print hides its transformed content inside a UA Widget Shadow DOM as well, even though there isn't any JavaScript to run. This is set in order to leverage the same security feature and behaviors there.
 
 The JavaScript sandbox
 ----------------------

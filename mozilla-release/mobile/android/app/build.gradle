@@ -49,6 +49,10 @@ def customVersionCode() {
 android {
     compileSdkVersion project.ext.compileSdkVersion
 
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+
     defaultConfig {
         targetSdkVersion project.ext.targetSdkVersion
         minSdkVersion project.ext.minSdkVersion
@@ -64,7 +68,17 @@ android {
         testApplicationId 'org.mozilla.roboexample.test'
         testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
         // Used by Robolectric based tests; see TestRunner.
+<<<<<<< HEAD
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
+||||||| merged common ancestors
+        buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
+
+        vectorDrawables.useSupportLibrary = true
+=======
+        buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\"".tr(File.separator, "/")
+
+        vectorDrawables.useSupportLibrary = true
+>>>>>>> upstream-releases
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -91,7 +105,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
         jumboMode = true
     }
 
@@ -139,8 +153,25 @@ android {
                 signingConfig signingConfigs.release
             }
         }
+<<<<<<< HEAD
 
     }
+||||||| merged common ancestors
+    }
+
+    // The "audience" flavour dimension distinguishes between _local_ builds (intended for
+    // development) and _official_ builds (intended for testing in automation and to ship in one of
+    // the Fennec distribution channels).
+    //
+    // The "skin" flavor dimension distinguishes between different user interfaces.  We sometimes
+    // want to develop significant new user interface pieces in-tree that don't ship (even in the
+    // Nightly channel) while under development.  A new "skin" flavour allows us to develop such
+    // pieces in Gradle without changing the mainline configuration.
+
+=======
+    }
+
+>>>>>>> upstream-releases
     project.configureProductFlavors.delegate = it
     project.configureProductFlavors()
 
@@ -191,6 +222,11 @@ android {
                 if (!mozconfig.substs.MOZ_ANDROID_GCM) {
                     exclude 'org/mozilla/gecko/gcm/**/*.java'
                     exclude 'org/mozilla/gecko/push/**/*.java'
+                    exclude 'org/mozilla/gecko/advertising/**'
+                }
+
+                if (!mozconfig.substs.MOZ_ANDROID_GOOGLE_PLAY_SERVICES) {
+                    exclude 'org/mozilla/gecko/util/WebAuthnUtils.java'
                 }
             }
 
@@ -217,6 +253,7 @@ android {
                 if (!mozconfig.substs.MOZ_ANDROID_GCM) {
                     exclude 'org/mozilla/gecko/gcm/**/*.java'
                     exclude 'org/mozilla/gecko/push/**/*.java'
+                    exclude 'org/mozilla/gecko/advertising/**'
                 }
             }
             resources {
@@ -275,7 +312,7 @@ dependencies {
         implementation "com.android.support:mediarouter-v7:$support_library_version"
         implementation "com.google.android.gms:play-services-basement:$google_play_services_version"
         implementation "com.google.android.gms:play-services-base:$google_play_services_version"
-        implementation "com.google.android.gms:play-services-cast:$google_play_services_version"
+        implementation "com.google.android.gms:play-services-cast:$google_play_services_cast_version"
     }
 
     if (mozconfig.substs.MOZ_INSTALL_TRACKING) {
@@ -287,6 +324,12 @@ dependencies {
         implementation "com.google.android.gms:play-services-basement:$google_play_services_version"
         implementation "com.google.android.gms:play-services-base:$google_play_services_version"
         implementation "com.google.android.gms:play-services-gcm:$google_play_services_version"
+        implementation "com.google.android.gms:play-services-ads-identifier:$google_play_services_version"
+        implementation "org.mindrot:jbcrypt:0.4"
+    }
+
+    if (mozconfig.substs.MOZ_ANDROID_GOOGLE_PLAY_SERVICES) {
+        implementation "com.google.android.gms:play-services-fido:$google_play_services_fido_version"
     }
 
     // Include LeakCanary in local builds, but not in official builds.
@@ -395,7 +438,7 @@ android.applicationVariants.all { variant ->
     // what we want for Fennec, however, with applicationId.  To use the same
     // manifest as moz.build, we replace the package with org.mozilla.gecko (the
     // eventual package) here.
-    def rewriteManifestPackage = task("rewriteManifestPackageFor${variant.name.capitalize()}", type: Copy, dependsOn: rootProject.generateCodeAndResources) {
+    def rewriteManifestPackage = task("rewriteManifestPackageFor${variant.name.capitalize()}", type: Copy, dependsOn: rootProject.machBuildGeneratedAndroidCodeAndResources) {
         into("${project.buildDir}/moz.build/src/${variant.name}")
         from("${topobjdir}/mobile/android/base/AndroidManifest.xml")
         filter { it.replaceFirst(/package=".*?"/, 'package="org.mozilla.gecko"') }
@@ -415,10 +458,22 @@ android.applicationVariants.all { variant ->
     // this, the Gradle build calls out to the moz.build system, which can be
     // re-entrant.  Official builds are driven by the moz.build system and
     // should never be re-entrant in this way.
+<<<<<<< HEAD
     if (!mozconfig.substs.MOZILLA_OFFICIAL) {
         syncPreprocessedJava.dependsOn rootProject.generateCodeAndResources
         syncPreprocessedRes.dependsOn rootProject.generateCodeAndResources
         rewriteManifestPackage.dependsOn rootProject.generateCodeAndResources
+||||||| merged common ancestors
+    if (!((variant.productFlavors*.name).contains('official'))) {
+        syncPreprocessedJava.dependsOn rootProject.generateCodeAndResources
+        syncPreprocessedRes.dependsOn rootProject.generateCodeAndResources
+        rewriteManifestPackage.dependsOn rootProject.generateCodeAndResources
+=======
+    if (!mozconfig.substs.MOZILLA_OFFICIAL) {
+        syncPreprocessedJava.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
+        syncPreprocessedRes.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
+        rewriteManifestPackage.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
+>>>>>>> upstream-releases
     }
 
     // When driven from moz.build via |mach build|, Gradle does not require or
@@ -435,7 +490,9 @@ android.applicationVariants.all { variant ->
 }
 
 android.applicationVariants.all { variant ->
-    configureApplicationVariantWithJNIWrappers(variant, "Fennec")
+    if (variant.name == mozconfig.substs.GRADLE_ANDROID_APP_VARIANT_NAME) {
+        configureApplicationVariantWithJNIWrappers(variant, "Fennec")
+    }
 }
 
 if (gradle.startParameter.taskNames.any { it.endsWith('UnitTest') }) {
@@ -514,12 +571,14 @@ android.applicationVariants.all configureVariantDebugLevel
 import groovy.xml.XmlUtil
 
 // Workaround for fixing sub-dependencies upon gradle error:
-// All gms/firebase libraries must use the exact same version specification (mixing versions can
+// All gms/firebase (except play-services-cast since it has sub-dependencies in 15.0.0)
+// libraries must use the exact same version specification (mixing versions can
 // lead to runtime crashes). Found versions 15.0.1, 15.0.0. Examples include
-// com.google.android.gms:play-services-base:15.0.1 and com.google.android.gms:play-services-cast:15.0.0
+// com.google.android.gms:play-services-base:15.0.1 and com.google.android.gms:play-services-basement:15.0.0
 configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
+<<<<<<< HEAD
 
             /* Cliqz start */
             if (details.requested.name == 'android-jsc') {
@@ -531,6 +590,13 @@ configurations.all {
             /* Cliqz end */
 
             if (details.requested.group == 'com.google.android.gms') {
+||||||| merged common ancestors
+            if (details.requested.group == 'com.google.android.gms') {
+=======
+            if (details.requested.group == 'com.google.android.gms'
+                    && details.requested.name != 'play-services-cast'
+                    && details.requested.name != 'play-services-fido') {
+>>>>>>> upstream-releases
                 details.useVersion "$google_play_services_version"
             }
         }
@@ -575,51 +641,3 @@ android.applicationVariants.all { variant ->
     tasks["compile${productFlavor}${buildType}UnitTestSources"].dependsOn(tasks["merge${productFlavor}${buildType}Assets"])
 }
 
-apply from: "${topsrcdir}/mobile/android/gradle/jacoco_dependencies.gradle"
-if (project.hasProperty('enable_code_coverage')) {
-    apply from: "${topsrcdir}/mobile/android/gradle/jacoco_for_junit.gradle"
-}
-
-
-// Set up code coverage for tests on emulators.
-if (mozconfig.substs.MOZ_JAVA_CODE_COVERAGE) {
-    android {
-        jacoco {
-            version = "$jacoco_version"
-        }
-        buildTypes {
-            debug {
-                testCoverageEnabled true
-            }
-        }
-    }
-
-    dependencies {
-        // This is required both in the instrumented application classes and the test classes,
-        // so `api` has to be used instead of `androidTestImplementation`.
-        api "org.jacoco:org.jacoco.agent:$jacoco_version:runtime"
-    }
-
-    // Generate tasks to archive compiled classfiles for later use with JaCoCo report generation.
-    // One of these tasks is used by `mach android archive-coverage-artifacts`.
-    android.applicationVariants.all { variant ->
-        def name = variant.name
-        def compileTask = tasks.getByName("compile${name.capitalize()}JavaWithJavac")
-        task "archiveClassfiles${name.capitalize()}"(type: Zip, dependsOn: compileTask) {
-            description = "Archive compiled classfiles for $name in order to export them as code coverage artifacts."
-            def fileFilter = ['**/androidTest/**',
-                              '**/test/**',
-                              '**/R.class',
-                              '**/R$*.class',
-                              '**/BuildConfig.*',
-                              '**/Manifest*.*',
-                              '**/*Test*.*',
-                              'android/**/*.*']
-            from fileTree(dir: compileTask.destinationDir, excludes: fileFilter)
-            destinationDir = file("${buildDir}/coverage")
-            // Note: This task assumes only one variant of archiveClassfiles* will be used.
-            // Running multiple variants of this task will overwrite the output archive.
-            archiveName = 'target.app_classfiles.zip'
-        }
-    }
-}

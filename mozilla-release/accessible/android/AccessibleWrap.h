@@ -19,8 +19,17 @@ class AccessibleWrap : public Accessible {
   AccessibleWrap(nsIContent* aContent, DocAccessible* aDoc);
   virtual ~AccessibleWrap();
 
+<<<<<<< HEAD
   virtual nsresult HandleAccEvent(AccEvent* aEvent) override;
 
+||||||| merged common ancestors
+  virtual nsresult HandleAccEvent(AccEvent* aEvent) override;
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY  // TODO: Mark this as MOZ_CAN_RUN_SCRIPT
+      virtual nsresult
+      HandleAccEvent(AccEvent* aEvent) override;
+
+>>>>>>> upstream-releases
   virtual void Shutdown() override;
 
   virtual bool DoAction(uint8_t aIndex) const override;
@@ -33,6 +42,7 @@ class AccessibleWrap : public Accessible {
 
   virtual bool GetSelectionBounds(int32_t* aStartOffset, int32_t* aEndOffset);
 
+<<<<<<< HEAD
   mozilla::java::GeckoBundle::LocalRef ToBundle();
 
   mozilla::java::GeckoBundle::LocalRef ToBundle(
@@ -41,12 +51,45 @@ class AccessibleWrap : public Accessible {
       const nsString& aTextValue, const nsString& aDOMNodeID,
       const double& aCurVal, const double& aMinVal, const double& aMaxVal,
       const double& aStep, nsIPersistentProperties* aAttributes);
+||||||| merged common ancestors
+  mozilla::java::GeckoBundle::LocalRef ToBundle();
 
+  mozilla::java::GeckoBundle::LocalRef ToBundle(const uint64_t aState,
+                                                const nsIntRect& aBounds,
+                                                const nsString& aName,
+                                                const nsString& aTextValue,
+                                                const nsString& aDOMNodeID,
+                                                const double& aCurVal,
+                                                const double& aMinVal,
+                                                const double& aMaxVal,
+                                                const double& aStep,
+                                                nsIPersistentProperties* aAttributes);
+=======
+  mozilla::java::GeckoBundle::LocalRef ToBundle(bool aSmall = false);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   mozilla::java::GeckoBundle::LocalRef ToSmallBundle(
       const uint64_t aState, const nsIntRect& aBounds,
       const uint8_t aActionCount);
 
   mozilla::java::GeckoBundle::LocalRef ToSmallBundle();
+||||||| merged common ancestors
+  mozilla::java::GeckoBundle::LocalRef ToSmallBundle(const uint64_t aState, const nsIntRect& aBounds);
+
+  mozilla::java::GeckoBundle::LocalRef ToSmallBundle();
+=======
+  mozilla::java::GeckoBundle::LocalRef ToBundle(
+      const uint64_t aState, const nsIntRect& aBounds,
+      const uint8_t aActionCount, const nsString& aName,
+      const nsString& aTextValue, const nsString& aDOMNodeID,
+      const nsString& aDescription,
+      const double& aCurVal = UnspecifiedNaN<double>(),
+      const double& aMinVal = UnspecifiedNaN<double>(),
+      const double& aMaxVal = UnspecifiedNaN<double>(),
+      const double& aStep = UnspecifiedNaN<double>(),
+      nsIPersistentProperties* aAttributes = nullptr);
+>>>>>>> upstream-releases
 
   virtual void WrapperDOMNodeID(nsString& aDOMNodeID);
 
@@ -80,6 +123,10 @@ class AccessibleWrap : public Accessible {
                                 double* aMaxVal, double* aStep);
 
   virtual role WrapperRole() { return Role(); }
+
+  void GetTextEquiv(nsString& aText);
+
+  bool HandleLiveRegionEvent(AccEvent* aEvent);
 
   static void GetRoleDescription(role aRole,
                                  nsIPersistentProperties* aAttributes,

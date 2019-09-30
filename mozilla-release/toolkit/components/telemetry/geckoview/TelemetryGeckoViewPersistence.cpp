@@ -48,19 +48,35 @@ using PathCharPtr = const PathChar*;
 // Enable logging by default on Debug builds.
 #ifdef DEBUG
 // If we're building for Android, use the provided logging facility.
-#ifdef MOZ_WIDGET_ANDROID
-#include <android/log.h>
-#define ANDROID_LOG(fmt, ...) \
-  __android_log_print(ANDROID_LOG_DEBUG, "Telemetry", fmt, ##__VA_ARGS__)
-#else
+#  ifdef MOZ_WIDGET_ANDROID
+#    include <android/log.h>
+#    define ANDROID_LOG(fmt, ...) \
+      __android_log_print(ANDROID_LOG_DEBUG, "Telemetry", fmt, ##__VA_ARGS__)
+#  else
 // If we're building for other platforms (e.g. for running test coverage), try
 // to print something anyway.
+<<<<<<< HEAD
 #define ANDROID_LOG(...) printf_stderr("\n**** TELEMETRY: " __VA_ARGS__)
 #endif  // MOZ_WIDGET_ANDROID
+||||||| merged common ancestors
+#define ANDROID_LOG(...) printf_stderr("\n**** TELEMETRY: " __VA_ARGS__)
+#endif // MOZ_WIDGET_ANDROID
+=======
+#    define ANDROID_LOG(...) printf_stderr("\n**** TELEMETRY: " __VA_ARGS__)
+#  endif  // MOZ_WIDGET_ANDROID
+>>>>>>> upstream-releases
 #else
 // No-op on Release builds.
+<<<<<<< HEAD
 #define ANDROID_LOG(...)
 #endif  // DEBUG
+||||||| merged common ancestors
+#define ANDROID_LOG(...)
+#endif // DEBUG
+=======
+#  define ANDROID_LOG(...)
+#endif  // DEBUG
+>>>>>>> upstream-releases
 
 // The Gecko runtime can be killed at anytime. Moreover, we can
 // have very short lived sessions. The persistence timeout governs

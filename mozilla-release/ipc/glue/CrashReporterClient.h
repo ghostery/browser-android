@@ -43,7 +43,14 @@ class CrashReporterClient {
 
     InitSingletonWithShmem(shmem);
     Unused << aToplevelProtocol->SendInitCrashReporter(
+<<<<<<< HEAD
         shmem, CrashReporter::CurrentThreadId());
+||||||| merged common ancestors
+      shmem,
+      CrashReporter::CurrentThreadId());
+=======
+        std::move(shmem), CrashReporter::CurrentThreadId());
+>>>>>>> upstream-releases
     return true;
   }
 
@@ -62,8 +69,8 @@ class CrashReporterClient {
   static RefPtr<CrashReporterClient> GetSingleton();
 
   void AnnotateCrashReport(CrashReporter::Annotation aKey,
-                           const nsCString& aData);
-  void AppendAppNotes(const nsCString& aData);
+                           const nsACString& aData);
+  void AppendAppNotes(const nsACString& aData);
 
  private:
   explicit CrashReporterClient(const Shmem& aShmem);

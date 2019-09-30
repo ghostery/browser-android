@@ -8,6 +8,7 @@
 
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/Assertions.h"
+#include "mozilla/Attributes.h"
 #include "mozilla/IntegerPrintfMacros.h"
 #include "mozilla/StackWalk.h"
 
@@ -18,32 +19,32 @@ using namespace mozilla;
 // for _Unwind_Backtrace from libcxxrt or libunwind
 // cxxabi.h from libcxxrt implicitly includes unwind.h first
 #if defined(HAVE__UNWIND_BACKTRACE) && !defined(_GNU_SOURCE)
-#define _GNU_SOURCE
+#  define _GNU_SOURCE
 #endif
 
 #if defined(HAVE_DLOPEN) || defined(XP_DARWIN)
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 #if (defined(XP_DARWIN) && \
      (defined(__i386) || defined(__ppc__) || defined(HAVE__UNWIND_BACKTRACE)))
-#define MOZ_STACKWALK_SUPPORTS_MACOSX 1
+#  define MOZ_STACKWALK_SUPPORTS_MACOSX 1
 #else
-#define MOZ_STACKWALK_SUPPORTS_MACOSX 0
+#  define MOZ_STACKWALK_SUPPORTS_MACOSX 0
 #endif
 
 #if (defined(linux) &&                                            \
      ((defined(__GNUC__) && (defined(__i386) || defined(PPC))) || \
       defined(HAVE__UNWIND_BACKTRACE)))
-#define MOZ_STACKWALK_SUPPORTS_LINUX 1
+#  define MOZ_STACKWALK_SUPPORTS_LINUX 1
 #else
-#define MOZ_STACKWALK_SUPPORTS_LINUX 0
+#  define MOZ_STACKWALK_SUPPORTS_LINUX 0
 #endif
 
 #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 1)
-#define HAVE___LIBC_STACK_END 1
+#  define HAVE___LIBC_STACK_END 1
 #else
-#define HAVE___LIBC_STACK_END 0
+#  define HAVE___LIBC_STACK_END 0
 #endif
 
 #if HAVE___LIBC_STACK_END
@@ -51,29 +52,29 @@ extern MOZ_EXPORT void* __libc_stack_end;  // from ld-linux.so
 #endif
 
 #ifdef ANDROID
-#include <algorithm>
-#include <unistd.h>
-#include <pthread.h>
+#  include <algorithm>
+#  include <unistd.h>
+#  include <pthread.h>
 #endif
 
 #if MOZ_STACKWALK_SUPPORTS_WINDOWS
 
-#include <windows.h>
-#include <process.h>
-#include <stdio.h>
-#include <malloc.h>
-#include "mozilla/ArrayUtils.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/StackWalk_windows.h"
-#include "mozilla/WindowsVersion.h"
+#  include <windows.h>
+#  include <process.h>
+#  include <stdio.h>
+#  include <malloc.h>
+#  include "mozilla/ArrayUtils.h"
+#  include "mozilla/Atomics.h"
+#  include "mozilla/StackWalk_windows.h"
+#  include "mozilla/WindowsVersion.h"
 
-#include <imagehlp.h>
+#  include <imagehlp.h>
 // We need a way to know if we are building for WXP (or later), as if we are, we
 // need to use the newer 64-bit APIs. API_VERSION_NUMBER seems to fit the bill.
 // A value of 9 indicates we want to use the new APIs.
-#if API_VERSION_NUMBER < 9
-#error Too old imagehlp.h
-#endif
+#  if API_VERSION_NUMBER < 9
+#    error Too old imagehlp.h
+#  endif
 
 struct WalkStackData {
   // Are we walking the stack of the calling thread? Note that we need to avoid
@@ -96,7 +97,7 @@ struct WalkStackData {
 
 CRITICAL_SECTION gDbgHelpCS;
 
-#ifdef _M_AMD64
+#  if defined(_M_AMD64) || defined(_M_ARM64)
 // Because various Win64 APIs acquire function-table locks, we need a way of
 // preventing stack walking while those APIs are being called. Otherwise, the
 // stack walker may suspend a thread holding such a lock, and deadlock when the
@@ -146,7 +147,13 @@ MFBT_API void UnregisterJitCodeRegion(uint8_t* aStart, size_t aSize) {
   sJitCodeRegionSize = 0;
 }
 
+<<<<<<< HEAD
 #endif  // _M_AMD64
+||||||| merged common ancestors
+#endif // _M_AMD64
+=======
+#  endif  // _M_AMD64 || _M_ARM64
+>>>>>>> upstream-releases
 
 // Routine to print an error message to standard error.
 static void PrintError(const char* aPrefix) {
@@ -189,18 +196,35 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     context = aData->context;
   }
 
-#if defined(_M_IX86) || defined(_M_IA64) || defined(_M_ARM64)
+#  if defined(_M_IX86) || defined(_M_IA64)
   // Setup initial stack frame to walk from.
   STACKFRAME64 frame64;
   memset(&frame64, 0, sizeof(frame64));
+<<<<<<< HEAD
 #ifdef _M_IX86
   frame64.AddrPC.Offset = context->Eip;
+||||||| merged common ancestors
+#ifdef _M_IX86
+  frame64.AddrPC.Offset    = context->Eip;
+=======
+#    ifdef _M_IX86
+  frame64.AddrPC.Offset = context->Eip;
+>>>>>>> upstream-releases
   frame64.AddrStack.Offset = context->Esp;
   frame64.AddrFrame.Offset = context->Ebp;
+<<<<<<< HEAD
 #elif defined _M_IA64
   frame64.AddrPC.Offset = context->StIIP;
+||||||| merged common ancestors
+#elif defined _M_IA64
+  frame64.AddrPC.Offset    = context->StIIP;
+=======
+#    elif defined _M_IA64
+  frame64.AddrPC.Offset = context->StIIP;
+>>>>>>> upstream-releases
   frame64.AddrStack.Offset = context->SP;
   frame64.AddrFrame.Offset = context->RsBSP;
+<<<<<<< HEAD
 #elif defined _M_ARM64
   frame64.AddrPC.Offset = context->Pc;
   frame64.AddrStack.Offset = context->Sp;
@@ -213,6 +237,29 @@ static void WalkStackMain64(struct WalkStackData* aData) {
 #endif
 
 #ifdef _M_AMD64
+||||||| merged common ancestors
+#elif defined _M_ARM64
+  frame64.AddrPC.Offset    = context->Pc;
+  frame64.AddrStack.Offset = context->Sp;
+  frame64.AddrFrame.Offset = context->Fp;
+#endif
+  frame64.AddrPC.Mode      = AddrModeFlat;
+  frame64.AddrStack.Mode   = AddrModeFlat;
+  frame64.AddrFrame.Mode   = AddrModeFlat;
+  frame64.AddrReturn.Mode  = AddrModeFlat;
+#endif
+
+#ifdef _M_AMD64
+=======
+#    endif
+  frame64.AddrPC.Mode = AddrModeFlat;
+  frame64.AddrStack.Mode = AddrModeFlat;
+  frame64.AddrFrame.Mode = AddrModeFlat;
+  frame64.AddrReturn.Mode = AddrModeFlat;
+#  endif
+
+#  if defined(_M_AMD64) || defined(_M_ARM64)
+>>>>>>> upstream-releases
   // If there are any active suppressions, then at least one thread (we don't
   // know which) is holding a lock that can deadlock RtlVirtualUnwind. Since
   // that thread may be the one that we're trying to unwind, we can't proceed.
@@ -226,11 +273,11 @@ static void WalkStackMain64(struct WalkStackData* aData) {
   if (sStackWalkSuppressions) {
     return;
   }
-#endif
+#  endif
 
-#ifdef _M_AMD64
+#  if defined(_M_AMD64) || defined(_M_ARM64)
   bool firstFrame = true;
-#endif
+#  endif
 
   // Skip our own stack walking frames.
   int skip = (aData->walkCallingThread ? 3 : 0) + aData->skipFrames;
@@ -240,11 +287,12 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     DWORD64 addr;
     DWORD64 spaddr;
 
-#if defined(_M_IX86) || defined(_M_IA64) || defined(_M_ARM64)
+#  if defined(_M_IX86) || defined(_M_IA64)
     // 32-bit frame unwinding.
     // Debug routines are not threadsafe, so grab the lock.
     EnterCriticalSection(&gDbgHelpCS);
     BOOL ok = StackWalk64(
+<<<<<<< HEAD
 #if defined _M_IA64
         IMAGE_FILE_MACHINE_IA64,
 #elif defined _M_IX86
@@ -256,6 +304,34 @@ static void WalkStackMain64(struct WalkStackData* aData) {
         SymFunctionTableAccess64,  // function table access routine
         SymGetModuleBase64,        // module base routine
         0);
+||||||| merged common ancestors
+#if defined _M_IA64
+      IMAGE_FILE_MACHINE_IA64,
+#elif defined _M_IX86
+      IMAGE_FILE_MACHINE_I386,
+#elif defined _M_ARM64
+      IMAGE_FILE_MACHINE_ARM64,
+#endif
+      aData->process,
+      aData->thread,
+      &frame64,
+      context,
+      nullptr,
+      SymFunctionTableAccess64, // function table access routine
+      SymGetModuleBase64,       // module base routine
+      0
+    );
+=======
+#    if defined _M_IA64
+        IMAGE_FILE_MACHINE_IA64,
+#    elif defined _M_IX86
+        IMAGE_FILE_MACHINE_I386,
+#    endif
+        aData->process, aData->thread, &frame64, context, nullptr,
+        SymFunctionTableAccess64,  // function table access routine
+        SymGetModuleBase64,        // module base routine
+        0);
+>>>>>>> upstream-releases
     LeaveCriticalSection(&gDbgHelpCS);
 
     if (ok) {
@@ -273,11 +349,27 @@ static void WalkStackMain64(struct WalkStackData* aData) {
       break;
     }
 
-#elif defined(_M_AMD64)
+#  elif defined(_M_AMD64) || defined(_M_ARM64)
+
+#    if defined(_M_AMD64)
+    auto currentInstr = context->Rip;
+#    elif defined(_M_ARM64)
+    auto currentInstr = context->Pc;
+#    endif
+
     // If we reach a frame in JIT code, we don't have enough information to
     // unwind, so we have to give up.
+<<<<<<< HEAD
     if (sJitCodeRegionStart && (uint8_t*)context->Rip >= sJitCodeRegionStart &&
         (uint8_t*)context->Rip < sJitCodeRegionStart + sJitCodeRegionSize) {
+||||||| merged common ancestors
+    if (sJitCodeRegionStart &&
+        (uint8_t*)context->Rip >= sJitCodeRegionStart &&
+        (uint8_t*)context->Rip < sJitCodeRegionStart + sJitCodeRegionSize) {
+=======
+    if (sJitCodeRegionStart && (uint8_t*)currentInstr >= sJitCodeRegionStart &&
+        (uint8_t*)currentInstr < sJitCodeRegionStart + sJitCodeRegionSize) {
+>>>>>>> upstream-releases
       break;
     }
 
@@ -285,9 +377,18 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     // unwind data, so their JIT unwind callback just throws up its hands and
     // terminates the process.
     if (sMsMpegJitCodeRegionStart &&
+<<<<<<< HEAD
         (uint8_t*)context->Rip >= sMsMpegJitCodeRegionStart &&
         (uint8_t*)context->Rip <
             sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
+||||||| merged common ancestors
+        (uint8_t*)context->Rip >= sMsMpegJitCodeRegionStart &&
+        (uint8_t*)context->Rip < sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
+=======
+        (uint8_t*)currentInstr >= sMsMpegJitCodeRegionStart &&
+        (uint8_t*)currentInstr <
+            sMsMpegJitCodeRegionStart + sMsMpegJitCodeRegionSize) {
+>>>>>>> upstream-releases
       break;
     }
 
@@ -295,29 +396,60 @@ static void WalkStackMain64(struct WalkStackData* aData) {
     // Try to look up unwind metadata for the current function.
     ULONG64 imageBase;
     PRUNTIME_FUNCTION runtimeFunction =
+<<<<<<< HEAD
         RtlLookupFunctionEntry(context->Rip, &imageBase, NULL);
+||||||| merged common ancestors
+      RtlLookupFunctionEntry(context->Rip, &imageBase, NULL);
+=======
+        RtlLookupFunctionEntry(currentInstr, &imageBase, NULL);
+>>>>>>> upstream-releases
 
     if (runtimeFunction) {
       PVOID dummyHandlerData;
       ULONG64 dummyEstablisherFrame;
+<<<<<<< HEAD
       RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, context->Rip,
                        runtimeFunction, context, &dummyHandlerData,
                        &dummyEstablisherFrame, nullptr);
+||||||| merged common ancestors
+      RtlVirtualUnwind(UNW_FLAG_NHANDLER,
+                       imageBase,
+                       context->Rip,
+                       runtimeFunction,
+                       context,
+                       &dummyHandlerData,
+                       &dummyEstablisherFrame,
+                       nullptr);
+=======
+      RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, currentInstr,
+                       runtimeFunction, context, &dummyHandlerData,
+                       &dummyEstablisherFrame, nullptr);
+>>>>>>> upstream-releases
     } else if (firstFrame) {
       // Leaf functions can be unwound by hand.
+#    if defined(_M_AMD64)
       context->Rip = *reinterpret_cast<DWORD64*>(context->Rsp);
       context->Rsp += sizeof(void*);
+#    elif defined(_M_ARM64)
+      context->Pc = *reinterpret_cast<DWORD64*>(context->Sp);
+      context->Sp += sizeof(void*);
+#    endif
     } else {
       // Something went wrong.
       break;
     }
 
+#    if defined(_M_AMD64)
     addr = context->Rip;
     spaddr = context->Rsp;
+#    elif defined(_M_ARM64)
+    addr = context->Pc;
+    spaddr = context->Sp;
+#    endif
     firstFrame = false;
-#else
-#error "unknown platform"
-#endif
+#  else
+#    error "unknown platform"
+#  endif
 
     if (addr == 0) {
       break;
@@ -341,11 +473,11 @@ static void WalkStackMain64(struct WalkStackData* aData) {
       break;
     }
 
-#if defined(_M_IX86) || defined(_M_IA64)
+#  if defined(_M_IX86) || defined(_M_IA64)
     if (frame64.AddrReturn.Offset == 0) {
       break;
     }
-#endif
+#  endif
   }
 }
 
@@ -483,6 +615,7 @@ static BOOL CALLBACK callbackEspecial64(PCSTR aModuleName, DWORD64 aModuleBase,
 // compiler version, and the version number in debughlp.h was NOT bumped
 // when these changes were made, ifdef based on a constant that was
 // added between these versions.
+<<<<<<< HEAD
 #ifdef SSRVOPT_SETCONTEXT
 #define NS_IMAGEHLP_MODULE64_SIZE                                        \
   (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / \
@@ -491,6 +624,22 @@ static BOOL CALLBACK callbackEspecial64(PCSTR aModuleName, DWORD64 aModuleBase,
 #else
 #define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
 #endif
+||||||| merged common ancestors
+#ifdef SSRVOPT_SETCONTEXT
+#define NS_IMAGEHLP_MODULE64_SIZE (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / sizeof(DWORD64)) * sizeof(DWORD64))
+#else
+#define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
+#endif
+=======
+#  ifdef SSRVOPT_SETCONTEXT
+#    define NS_IMAGEHLP_MODULE64_SIZE                                        \
+      (((offsetof(IMAGEHLP_MODULE64, LoadedPdbName) + sizeof(DWORD64) - 1) / \
+        sizeof(DWORD64)) *                                                   \
+       sizeof(DWORD64))
+#  else
+#    define NS_IMAGEHLP_MODULE64_SIZE sizeof(IMAGEHLP_MODULE64)
+#  endif
+>>>>>>> upstream-releases
 
 BOOL SymGetModuleInfoEspecial64(HANDLE aProcess, DWORD64 aAddr,
                                 PIMAGEHLP_MODULE64 aModuleInfo,
@@ -640,28 +789,45 @@ MFBT_API bool MozDescribeCodeAddress(void* aPC,
     (HAVE__UNWIND_BACKTRACE || MOZ_STACKWALK_SUPPORTS_LINUX || \
      MOZ_STACKWALK_SUPPORTS_MACOSX)
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#  include <stdlib.h>
+#  include <string.h>
+#  include <stdio.h>
 
 // On glibc 2.1, the Dl_info api defined in <dlfcn.h> is only exposed
 // if __USE_GNU is defined.  I suppose its some kind of standards
 // adherence thing.
 //
-#if (__GLIBC_MINOR__ >= 1) && !defined(__USE_GNU)
-#define __USE_GNU
-#endif
+#  if (__GLIBC_MINOR__ >= 1) && !defined(__USE_GNU)
+#    define __USE_GNU
+#  endif
 
 // This thing is exported by libstdc++
 // Yes, this is a gcc only hack
+<<<<<<< HEAD
 #if defined(MOZ_DEMANGLE_SYMBOLS)
 #include <cxxabi.h>
 #endif  // MOZ_DEMANGLE_SYMBOLS
 
 void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
+||||||| merged common ancestors
+#if defined(MOZ_DEMANGLE_SYMBOLS)
+#include <cxxabi.h>
+#endif // MOZ_DEMANGLE_SYMBOLS
+
+void DemangleSymbol(const char* aSymbol,
+                    char* aBuffer,
+                    int aBufLen)
+{
+=======
+#  if defined(MOZ_DEMANGLE_SYMBOLS)
+#    include <cxxabi.h>
+#  endif  // MOZ_DEMANGLE_SYMBOLS
+
+void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
+>>>>>>> upstream-releases
   aBuffer[0] = '\0';
 
-#if defined(MOZ_DEMANGLE_SYMBOLS)
+#  if defined(MOZ_DEMANGLE_SYMBOLS)
   /* See demangle.h in the gcc source for the voodoo */
   char* demangled = abi::__cxa_demangle(aSymbol, 0, 0, 0);
 
@@ -670,12 +836,18 @@ void DemangleSymbol(const char* aSymbol, char* aBuffer, int aBufLen) {
     aBuffer[aBufLen - 1] = '\0';
     free(demangled);
   }
+<<<<<<< HEAD
 #endif  // MOZ_DEMANGLE_SYMBOLS
+||||||| merged common ancestors
+#endif // MOZ_DEMANGLE_SYMBOLS
+=======
+#  endif  // MOZ_DEMANGLE_SYMBOLS
+>>>>>>> upstream-releases
 }
 
 // {x86, ppc} x {Linux, Mac} stackwalking code.
-#if ((defined(__i386) || defined(PPC) || defined(__ppc__)) && \
-     (MOZ_STACKWALK_SUPPORTS_MACOSX || MOZ_STACKWALK_SUPPORTS_LINUX))
+#  if ((defined(__i386) || defined(PPC) || defined(__ppc__)) && \
+       (MOZ_STACKWALK_SUPPORTS_MACOSX || MOZ_STACKWALK_SUPPORTS_LINUX))
 
 MFBT_API void MozStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
                            uint32_t aMaxFrames, void* aClosure) {
@@ -683,11 +855,11 @@ MFBT_API void MozStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
   void** bp = (void**)__builtin_frame_address(0);
 
   void* stackEnd;
-#if HAVE___LIBC_STACK_END
+#    if HAVE___LIBC_STACK_END
   stackEnd = __libc_stack_end;
-#elif defined(XP_DARWIN)
+#    elif defined(XP_DARWIN)
   stackEnd = pthread_get_stackaddr_np(pthread_self());
-#elif defined(ANDROID)
+#    elif defined(ANDROID)
   pthread_attr_t sattr;
   pthread_attr_init(&sattr);
   pthread_getattr_np(pthread_self(), &sattr);
@@ -712,17 +884,27 @@ MFBT_API void MozStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
     uintptr_t stackStart = std::max(maxStackStart, uintptr_t(bp));
     stackEnd = reinterpret_cast<void*>(stackStart + kMaxStackSize);
   }
+<<<<<<< HEAD
 #else
 #error Unsupported configuration
 #endif
+||||||| merged common ancestors
+#else
+#  error Unsupported configuration
+#endif
+=======
+#    else
+#      error Unsupported configuration
+#    endif
+>>>>>>> upstream-releases
   FramePointerStackWalk(aCallback, aSkipFrames, aMaxFrames, aClosure, bp,
                         stackEnd);
 }
 
-#elif defined(HAVE__UNWIND_BACKTRACE)
+#  elif defined(HAVE__UNWIND_BACKTRACE)
 
 // libgcc_s.so symbols _Unwind_Backtrace@@GCC_3.3 and _Unwind_GetIP@@GCC_3.0
-#include <unwind.h>
+#    include <unwind.h>
 
 struct unwind_info {
   MozWalkStackCallback callback;
@@ -769,7 +951,7 @@ MFBT_API void MozStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
   (void)_Unwind_Backtrace(unwind_callback, &info);
 }
 
-#endif
+#  endif
 
 bool MFBT_API MozDescribeCodeAddress(void* aPC,
                                      MozCodeAddressDetails* aDetails) {
@@ -827,9 +1009,22 @@ MFBT_API bool MozDescribeCodeAddress(void* aPC,
 
 #if defined(XP_WIN) || defined(XP_MACOSX) || defined(XP_LINUX)
 namespace mozilla {
+<<<<<<< HEAD
 void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
                            uint32_t aMaxFrames, void* aClosure, void** aBp,
                            void* aStackEnd) {
+||||||| merged common ancestors
+void
+FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
+                      uint32_t aMaxFrames, void* aClosure, void** aBp,
+                      void* aStackEnd)
+{
+=======
+MOZ_ASAN_BLACKLIST
+void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
+                           uint32_t aMaxFrames, void* aClosure, void** aBp,
+                           void* aStackEnd) {
+>>>>>>> upstream-releases
   // Stack walking code courtesy Kipp's "leaky".
 
   int32_t skip = aSkipFrames;
@@ -842,17 +1037,31 @@ void FramePointerStackWalk(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
     // a little if the stack has been corrupted.)
     // We don't need to check against the begining of the stack because
     // we can assume that aBp > sp
+<<<<<<< HEAD
     if (next <= aBp || next > aStackEnd || (uintptr_t(next) & 3)) {
+||||||| merged common ancestors
+    if (next <= aBp ||
+        next > aStackEnd ||
+        (uintptr_t(next) & 3)) {
+=======
+    if (next <= aBp || next >= aStackEnd || (uintptr_t(next) & 3)) {
+>>>>>>> upstream-releases
       break;
     }
-#if (defined(__ppc__) && defined(XP_MACOSX)) || defined(__powerpc64__)
+#  if (defined(__ppc__) && defined(XP_MACOSX)) || defined(__powerpc64__)
     // ppc mac or powerpc64 linux
     void* pc = *(aBp + 2);
     aBp += 3;
+<<<<<<< HEAD
 #else  // i386 or powerpc32 linux
+||||||| merged common ancestors
+#else // i386 or powerpc32 linux
+=======
+#  else  // i386 or powerpc32 linux
+>>>>>>> upstream-releases
     void* pc = *(aBp + 1);
     aBp += 2;
-#endif
+#  endif
     if (--skip < 0) {
       // Assume that the SP points to the BP of the function
       // it called. We can't know the exact location of the SP

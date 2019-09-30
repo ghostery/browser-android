@@ -14,8 +14,18 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ nsresult DebuggerOnGCRunnable::Enqueue(
     JSContext* aCx, const JS::GCDescription& aDesc) {
+||||||| merged common ancestors
+/* static */ nsresult
+DebuggerOnGCRunnable::Enqueue(JSContext* aCx, const JS::GCDescription& aDesc)
+{
+=======
+/* static */
+nsresult DebuggerOnGCRunnable::Enqueue(JSContext* aCx,
+                                       const JS::GCDescription& aDesc) {
+>>>>>>> upstream-releases
   auto gcEvent = aDesc.toGCEvent(aCx);
   if (!gcEvent) {
     return NS_ERROR_OUT_OF_MEMORY;

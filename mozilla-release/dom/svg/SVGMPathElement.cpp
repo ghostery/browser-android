@@ -4,17 +4,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/ArrayUtils.h"
-
 #include "mozilla/dom/SVGMPathElement.h"
+
 #include "nsDebug.h"
+#include "mozilla/ArrayUtils.h"
 #include "mozilla/dom/SVGAnimateMotionElement.h"
 #include "mozilla/dom/SVGPathElement.h"
 #include "nsContentUtils.h"
 #include "mozilla/dom/SVGMPathElementBinding.h"
 #include "nsIURI.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(MPath)
+NS_IMPL_NS_NEW_SVG_ELEMENT(MPath)
 
 namespace mozilla {
 namespace dom {
@@ -24,9 +24,21 @@ JSObject* SVGMPathElement::WrapNode(JSContext* aCx,
   return SVGMPathElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGMPathElement::sStringInfo[2] = {
     {nsGkAtoms::href, kNameSpaceID_None, false},
     {nsGkAtoms::href, kNameSpaceID_XLink, false}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGMPathElement::sStringInfo[2] =
+{
+  { nsGkAtoms::href, kNameSpaceID_None, false },
+  { nsGkAtoms::href, kNameSpaceID_XLink, false }
+};
+=======
+SVGElement::StringInfo SVGMPathElement::sStringInfo[2] = {
+    {nsGkAtoms::href, kNameSpaceID_None, false},
+    {nsGkAtoms::href, kNameSpaceID_XLink, false}};
+>>>>>>> upstream-releases
 
 // Cycle collection magic -- based on SVGUseElement
 NS_IMPL_CYCLE_COLLECTION_CLASS(SVGMPathElement)
@@ -60,7 +72,15 @@ SVGMPathElement::~SVGMPathElement() { UnlinkHrefTarget(false); }
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGMPathElement)
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGMPathElement::Href() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGMPathElement::Href()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGMPathElement::Href() {
+>>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -69,31 +89,59 @@ already_AddRefed<SVGAnimatedString> SVGMPathElement::Href() {
 //----------------------------------------------------------------------
 // nsIContent methods
 
+<<<<<<< HEAD
 nsresult SVGMPathElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+SVGMPathElement::BindToTree(nsIDocument* aDocument,
+                            nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+=======
+nsresult SVGMPathElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mPathTracker.get(),
              "Shouldn't have href-target yet (or it should've been cleared)");
+<<<<<<< HEAD
   nsresult rv =
       SVGMPathElementBase::BindToTree(aDocument, aParent, aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  nsresult rv = SVGMPathElementBase::BindToTree(aDocument, aParent,
+                                                aBindingParent);
+  NS_ENSURE_SUCCESS(rv,rv);
+=======
+  nsresult rv = SVGMPathElementBase::BindToTree(aContext, aParent);
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
-  if (aDocument) {
+  if (IsInComposedDoc()) {
     const nsAttrValue* hrefAttrValue =
         HasAttr(kNameSpaceID_None, nsGkAtoms::href)
             ? mAttrs.GetAttr(nsGkAtoms::href, kNameSpaceID_None)
             : mAttrs.GetAttr(nsGkAtoms::href, kNameSpaceID_XLink);
     if (hrefAttrValue) {
-      UpdateHrefTarget(aParent, hrefAttrValue->GetStringValue());
+      UpdateHrefTarget(nsIContent::FromNode(aParent),
+                       hrefAttrValue->GetStringValue());
     }
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SVGMPathElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+SVGMPathElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void SVGMPathElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   UnlinkHrefTarget(true);
-  SVGMPathElementBase::UnbindFromTree(aDeep, aNullParent);
+  SVGMPathElementBase::UnbindFromTree(aNullParent);
 }
 
 bool SVGMPathElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
@@ -103,8 +151,17 @@ bool SVGMPathElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
   bool returnVal = SVGMPathElementBase::ParseAttribute(
       aNamespaceID, aAttribute, aValue, aMaybeScriptedPrincipal, aResult);
   if ((aNamespaceID == kNameSpaceID_XLink ||
+<<<<<<< HEAD
        aNamespaceID == kNameSpaceID_None) &&
       aAttribute == nsGkAtoms::href && IsInUncomposedDoc()) {
+||||||| merged common ancestors
+       aNamespaceID == kNameSpaceID_None ) &&
+      aAttribute == nsGkAtoms::href &&
+      IsInUncomposedDoc()) {
+=======
+       aNamespaceID == kNameSpaceID_None) &&
+      aAttribute == nsGkAtoms::href && IsInComposedDoc()) {
+>>>>>>> upstream-releases
     // Note: If we fail the IsInDoc call, it's ok -- we'll update the target
     // on next BindToTree call.
 
@@ -148,9 +205,17 @@ nsresult SVGMPathElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGMPathElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGMPathElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGMPathElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

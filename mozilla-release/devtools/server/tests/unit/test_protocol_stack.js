@@ -11,7 +11,7 @@
  */
 
 var protocol = require("devtools/shared/protocol");
-var {RetVal} = protocol;
+var { RetVal } = protocol;
 
 function simpleHello() {
   return {
@@ -47,14 +47,14 @@ var RootActor = protocol.ActorClassWithSpec(rootSpec, {
   },
 });
 
-var RootFront = protocol.FrontClassWithSpec(rootSpec, {
-  initialize: function(client) {
+class RootFront extends protocol.FrontClassWithSpec(rootSpec) {
+  constructor(client) {
+    super(client);
     this.actorID = "root";
-    protocol.Front.prototype.initialize.call(this, client);
     // Root owns itself.
     this.manage(this);
-  },
-});
+  }
+}
 
 function run_test() {
   if (!Services.prefs.getBoolPref("javascript.options.asyncstack")) {
@@ -70,6 +70,7 @@ function run_test() {
   let rootFront;
 
   client.connect().then(function onConnect() {
+<<<<<<< HEAD
     rootFront = RootFront(client);
 
     rootFront.simpleReturn().then(() => {
@@ -80,17 +81,46 @@ function run_test() {
           // Reached back to outer function before request
           ok(true, "Complete stack");
           return;
+||||||| merged common ancestors
+    rootClient = RootFront(client);
+
+    rootClient.simpleReturn().then(() => {
+      let stack = Components.stack;
+      while (stack) {
+        info(stack.name);
+        if (stack.name.includes("run_test/onConnect")) {
+          // Reached back to outer function before request
+          ok(true, "Complete stack");
+          return;
+=======
+    rootFront = new RootFront(client);
+
+    rootFront
+      .simpleReturn()
+      .then(
+        () => {
+          let stack = Components.stack;
+          while (stack) {
+            info(stack.name);
+            if (stack.name.includes("run_test/onConnect")) {
+              // Reached back to outer function before request
+              ok(true, "Complete stack");
+              return;
+            }
+            stack = stack.asyncCaller || stack.caller;
+          }
+          ok(false, "Incomplete stack");
+        },
+        () => {
+          ok(false, "Request failed unexpectedly");
+>>>>>>> upstream-releases
         }
-        stack = stack.asyncCaller || stack.caller;
-      }
-      ok(false, "Incomplete stack");
-    }, () => {
-      ok(false, "Request failed unexpectedly");
-    }).then(() => {
-      client.close().then(() => {
-        do_test_finished();
+      )
+      .then(() => {
+        client.close().then(() => {
+          do_test_finished();
+        });
       });
-    });
   });
 
   do_test_pending();

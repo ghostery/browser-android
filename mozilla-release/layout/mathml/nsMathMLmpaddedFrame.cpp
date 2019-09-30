@@ -7,6 +7,7 @@
 #include "nsMathMLmpaddedFrame.h"
 #include "nsMathMLElement.h"
 #include "mozilla/gfx/2D.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/TextUtils.h"
 #include <algorithm>
 
@@ -22,6 +23,7 @@ using namespace mozilla;
 #define NS_MATHML_SIGN_PLUS 2
 
 #define NS_MATHML_PSEUDO_UNIT_UNSPECIFIED 0
+<<<<<<< HEAD
 #define NS_MATHML_PSEUDO_UNIT_ITSELF 1  // special
 #define NS_MATHML_PSEUDO_UNIT_WIDTH 2
 #define NS_MATHML_PSEUDO_UNIT_HEIGHT 3
@@ -31,6 +33,29 @@ using namespace mozilla;
 nsIFrame* NS_NewMathMLmpaddedFrame(nsIPresShell* aPresShell,
                                    ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmpaddedFrame(aStyle);
+||||||| merged common ancestors
+#define NS_MATHML_PSEUDO_UNIT_ITSELF      1 // special
+#define NS_MATHML_PSEUDO_UNIT_WIDTH       2
+#define NS_MATHML_PSEUDO_UNIT_HEIGHT      3
+#define NS_MATHML_PSEUDO_UNIT_DEPTH       4
+#define NS_MATHML_PSEUDO_UNIT_NAMEDSPACE  5
+
+nsIFrame*
+NS_NewMathMLmpaddedFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmpaddedFrame(aStyle);
+=======
+#define NS_MATHML_PSEUDO_UNIT_ITSELF 1  // special
+#define NS_MATHML_PSEUDO_UNIT_WIDTH 2
+#define NS_MATHML_PSEUDO_UNIT_HEIGHT 3
+#define NS_MATHML_PSEUDO_UNIT_DEPTH 4
+#define NS_MATHML_PSEUDO_UNIT_NAMEDSPACE 5
+
+nsIFrame* NS_NewMathMLmpaddedFrame(PresShell* aPresShell,
+                                   ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmpaddedFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmpaddedFrame)
@@ -308,10 +333,25 @@ void nsMathMLmpaddedFrame::Reflow(nsPresContext* aPresContext,
   // NS_ASSERTION(aStatus.IsComplete(), "bad status");
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmpaddedFrame::Place(DrawTarget* aDrawTarget,
                                                    bool aPlaceOrigin,
                                                    ReflowOutput& aDesiredSize) {
   nsresult rv = nsMathMLContainerFrame::Place(aDrawTarget, false, aDesiredSize);
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmpaddedFrame::Place(DrawTarget*          aDrawTarget,
+                            bool                 aPlaceOrigin,
+                            ReflowOutput& aDesiredSize)
+{
+  nsresult rv =
+    nsMathMLContainerFrame::Place(aDrawTarget, false, aDesiredSize);
+=======
+/* virtual */
+nsresult nsMathMLmpaddedFrame::Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
+                                     ReflowOutput& aDesiredSize) {
+  nsresult rv = nsMathMLContainerFrame::Place(aDrawTarget, false, aDesiredSize);
+>>>>>>> upstream-releases
   if (NS_MATHML_HAS_ERROR(mPresentationData.flags) || NS_FAILED(rv)) {
     DidReflowChildren(PrincipalChildList().FirstChild());
     return rv;
@@ -430,8 +470,19 @@ void nsMathMLmpaddedFrame::Reflow(nsPresContext* aPresContext,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmpaddedFrame::MeasureForWidth(
     DrawTarget* aDrawTarget, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmpaddedFrame::MeasureForWidth(DrawTarget* aDrawTarget,
+                                      ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLmpaddedFrame::MeasureForWidth(DrawTarget* aDrawTarget,
+                                               ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   ProcessAttributes();
   return Place(aDrawTarget, false, aDesiredSize);
 }

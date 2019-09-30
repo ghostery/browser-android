@@ -37,6 +37,7 @@ class nsIScriptContext : public nsISupports {
    * Return the global object.
    *
    **/
+<<<<<<< HEAD
   virtual nsIScriptGlobalObject* GetGlobalObject() = 0;
 
   /**
@@ -52,6 +53,25 @@ class nsIScriptContext : public nsISupports {
    *
    */
   virtual bool IsContextInitialized() = 0;
+||||||| merged common ancestors
+  virtual nsIScriptGlobalObject *GetGlobalObject() = 0;
+
+  /**
+   * Initialize the context generally. Does not create a global object.
+   **/
+  virtual nsresult InitContext() = 0;
+
+  /**
+   * Check to see if context is as yet intialized. Used to prevent
+   * reentrancy issues during the initialization process.
+   *
+   * @return true if initialized, false if not
+   *
+   */
+  virtual bool IsContextInitialized() = 0;
+=======
+  virtual nsIScriptGlobalObject* GetGlobalObject() = 0;
+>>>>>>> upstream-releases
 
   // SetProperty is suspect and jst believes should not be needed.  Currenly
   // used only for "arguments".
@@ -65,14 +85,12 @@ class nsIScriptContext : public nsISupports {
   virtual void SetProcessingScriptTag(bool aResult) = 0;
 
   /**
-   * Initialize DOM classes on aGlobalObj, always call
-   * WillInitializeContext() before calling InitContext(), and always
-   * call DidInitializeContext() when a context is fully
-   * (successfully) initialized.
+   * Initialize DOM classes on aGlobalObj.
    */
   virtual nsresult InitClasses(JS::Handle<JSObject*> aGlobalObj) = 0;
 
   /**
+<<<<<<< HEAD
    * Tell the context we're about to be reinitialize it.
    */
   virtual void WillInitializeContext() = 0;
@@ -85,6 +103,22 @@ class nsIScriptContext : public nsISupports {
   /**
    * Access the Window Proxy. The setter should only be called by
    * nsGlobalWindow.
+||||||| merged common ancestors
+   * Tell the context we're about to be reinitialize it.
+   */
+  virtual void WillInitializeContext() = 0;
+
+  /**
+   * Tell the context we're done reinitializing it.
+   */
+  virtual void DidInitializeContext() = 0;
+
+  /**
+   * Access the Window Proxy. The setter should only be called by nsGlobalWindow.
+=======
+   * Access the Window Proxy. The setter should only be called by
+   * nsGlobalWindow.
+>>>>>>> upstream-releases
    */
   virtual void SetWindowProxy(JS::Handle<JSObject*> aWindowProxy) = 0;
   virtual JSObject* GetWindowProxy() = 0;

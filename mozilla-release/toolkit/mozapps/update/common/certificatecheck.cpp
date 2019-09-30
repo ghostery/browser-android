@@ -22,7 +22,15 @@ static const int ENCODING = X509_ASN_ENCODING | PKCS_7_ASN_ENCODING;
  *         does not match, or the last error otherwise.
  */
 DWORD
+<<<<<<< HEAD
 CheckCertificateForPEFile(LPCWSTR filePath, CertificateCheckInfo &infoToMatch) {
+||||||| merged common ancestors
+CheckCertificateForPEFile(LPCWSTR filePath,
+                          CertificateCheckInfo &infoToMatch)
+{
+=======
+CheckCertificateForPEFile(LPCWSTR filePath, CertificateCheckInfo& infoToMatch) {
+>>>>>>> upstream-releases
   HCERTSTORE certStore = nullptr;
   HCRYPTMSG cryptMsg = nullptr;
   PCCERT_CONTEXT certContext = nullptr;
@@ -111,8 +119,18 @@ cleanup:
  * @param  infoToMatch  The acceptable information to match
  * @return FALSE if the info does not match or if any error occurs in the check
  */
+<<<<<<< HEAD
 BOOL DoCertificateAttributesMatch(PCCERT_CONTEXT certContext,
                                   CertificateCheckInfo &infoToMatch) {
+||||||| merged common ancestors
+BOOL
+DoCertificateAttributesMatch(PCCERT_CONTEXT certContext,
+                             CertificateCheckInfo &infoToMatch)
+{
+=======
+BOOL DoCertificateAttributesMatch(PCCERT_CONTEXT certContext,
+                                  CertificateCheckInfo& infoToMatch) {
+>>>>>>> upstream-releases
   DWORD dwData;
   LPWSTR szName = nullptr;
 

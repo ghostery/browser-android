@@ -12,7 +12,14 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 gfxMathTable::gfxMathTable(hb_face_t *aFace, gfxFloat aSize) {
+||||||| merged common ancestors
+gfxMathTable::gfxMathTable(hb_face_t *aFace, gfxFloat aSize)
+{
+=======
+gfxMathTable::gfxMathTable(hb_face_t* aFace, gfxFloat aSize) {
+>>>>>>> upstream-releases
   mMathVariantCache.vertical = false;
   mHBFont = hb_font_create(aFace);
   if (mHBFont) {

@@ -21,12 +21,18 @@
   background: var(--arrowpanel-background);
   color: var(--arrowpanel-color);
   border: 1px solid var(--arrowpanel-border-color);
-  border-radius: 3.5px;
   margin-top: -4px;
 }
 
+/* Add border-radius on Windows 7 */
+@media (-moz-os-version: windows-win7) {
+  #BMB_bookmarksPopup menupopup[placespopup=true] > hbox {
+    border-radius: 3.5px;
+  }
+}
+
 /* Add some space at the top because there are no headers: */
-#BMB_bookmarksPopup menupopup[placespopup=true] > hbox > .popup-internal-box > .arrowscrollbox-scrollbox > .scrollbox-innerbox  {
+#BMB_bookmarksPopup menupopup[placespopup=true] > hbox > .popup-internal-box > .arrowscrollbox-scrollbox  {
   padding-top: 4px;
 }
 
@@ -43,6 +49,7 @@ menuitem.subviewbutton[disabled]:not(.menuitem-iconic) {
   min-height: 22px;
 }
 
+<<<<<<< HEAD
 /* Win8 and beyond. */
 @media not (-moz-os-version: windows-win7) {
   #BMB_bookmarksPopup menupopup[placespopup=true] > hbox,
@@ -54,6 +61,20 @@ menuitem.subviewbutton[disabled]:not(.menuitem-iconic) {
   }
 }
 
+||||||| merged common ancestors
+/* Win8 and beyond. */
+@media not all and (-moz-os-version: windows-win7) {
+  #BMB_bookmarksPopup menupopup[placespopup=true] > hbox,
+  #edit-controls@inAnyPanel@,
+  #zoom-controls@inAnyPanel@,
+  #edit-controls@inAnyPanel@ > toolbarbutton,
+  #zoom-controls@inAnyPanel@ > toolbarbutton {
+    border-radius: 0;
+  }
+}
+
+=======
+>>>>>>> upstream-releases
 /* Anchor the bookmark menu drop down panel at the same height as other
    panels when in the #toolbar-menubar */
 #toolbar-menubar #BMB_bookmarksPopup {

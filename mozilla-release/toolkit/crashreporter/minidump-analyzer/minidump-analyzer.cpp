@@ -24,23 +24,23 @@
 #include "mozilla/FStream.h"
 #include "mozilla/Unused.h"
 
-#if defined(XP_WIN32)
+#if defined(XP_WIN)
 
-#include <windows.h>
-#include "mozilla/glue/WindowsDllServices.h"
+#  include <windows.h>
+#  include "mozilla/glue/WindowsDllServices.h"
 
 #elif defined(XP_UNIX) || defined(XP_MACOSX)
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
 
 #endif
 
 #include "MinidumpAnalyzerUtils.h"
 
-#if XP_WIN && HAVE_64BIT_BUILD
-#include "MozStackFrameSymbolizer.h"
+#if XP_WIN && HAVE_64BIT_BUILD && defined(_M_X64)
+#  include "MozStackFrameSymbolizer.h"
 #endif
 
 namespace CrashReporter {
@@ -326,10 +326,23 @@ static void ConvertProcessStateToJSON(const ProcessState& aProcessState,
 // the node specified in |aStackTraces|. We also populate |aCertSubjects| with
 // information about the certificates used to sign modules, when present and
 // supported by the underlying OS.
+<<<<<<< HEAD
 static bool ProcessMinidump(Json::Value& aStackTraces,
                             Json::Value& aCertSubjects, const string& aDumpFile,
                             const bool aFullStacks) {
 #if XP_WIN && HAVE_64BIT_BUILD
+||||||| merged common ancestors
+static bool
+ProcessMinidump(Json::Value& aStackTraces, Json::Value& aCertSubjects,
+                const string& aDumpFile, const bool aFullStacks)
+{
+#if XP_WIN && HAVE_64BIT_BUILD
+=======
+static bool ProcessMinidump(Json::Value& aStackTraces,
+                            Json::Value& aCertSubjects, const string& aDumpFile,
+                            const bool aFullStacks) {
+#if XP_WIN && HAVE_64BIT_BUILD && defined(_M_X64)
+>>>>>>> upstream-releases
   MozStackFrameSymbolizer symbolizer;
   MinidumpProcessor minidumpProcessor(&symbolizer, false);
 #else
@@ -418,9 +431,9 @@ bool GenerateStacks(const string& aDumpPath, const bool aFullStacks) {
 using namespace CrashReporter;
 
 #if defined(XP_WIN)
-#define XP_LITERAL(s) L##s
+#  define XP_LITERAL(s) L##s
 #else
-#define XP_LITERAL(s) s
+#  define XP_LITERAL(s) s
 #endif
 
 template <typename CharT>

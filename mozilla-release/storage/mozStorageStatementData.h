@@ -24,20 +24,57 @@ struct sqlite3_stmt;
 namespace mozilla {
 namespace storage {
 
+<<<<<<< HEAD
 class StatementData {
  public:
   StatementData(sqlite3_stmt *aStatement,
+||||||| merged common ancestors
+class StatementData
+{
+public:
+  StatementData(sqlite3_stmt *aStatement,
+=======
+class StatementData {
+ public:
+  StatementData(sqlite3_stmt* aStatement,
+>>>>>>> upstream-releases
                 already_AddRefed<BindingParamsArray> aParamsArray,
+<<<<<<< HEAD
                 StorageBaseStatementInternal *aStatementOwner)
       : mStatement(aStatement),
         mParamsArray(aParamsArray),
         mStatementOwner(aStatementOwner) {
+||||||| merged common ancestors
+                StorageBaseStatementInternal *aStatementOwner)
+  : mStatement(aStatement)
+  , mParamsArray(aParamsArray)
+  , mStatementOwner(aStatementOwner)
+  {
+=======
+                StorageBaseStatementInternal* aStatementOwner)
+      : mStatement(aStatement),
+        mParamsArray(aParamsArray),
+        mStatementOwner(aStatementOwner) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mStatementOwner, "Must have a statement owner!");
   }
+<<<<<<< HEAD
   StatementData(const StatementData &aSource)
       : mStatement(aSource.mStatement),
         mParamsArray(aSource.mParamsArray),
         mStatementOwner(aSource.mStatementOwner) {
+||||||| merged common ancestors
+  StatementData(const StatementData &aSource)
+  : mStatement(aSource.mStatement)
+  , mParamsArray(aSource.mParamsArray)
+  , mStatementOwner(aSource.mStatementOwner)
+  {
+=======
+  StatementData(const StatementData& aSource)
+      : mStatement(aSource.mStatement),
+        mParamsArray(aSource.mParamsArray),
+        mStatementOwner(aSource.mStatementOwner) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mStatementOwner, "Must have a statement owner!");
   }
   StatementData() : mStatement(nullptr) {}
@@ -53,7 +90,14 @@ class StatementData {
    * Return the sqlite statement, fetching it from the storage statement.  In
    * the case of AsyncStatements this may actually create the statement
    */
+<<<<<<< HEAD
   inline int getSqliteStatement(sqlite3_stmt **_stmt) {
+||||||| merged common ancestors
+  inline int getSqliteStatement(sqlite3_stmt **_stmt)
+  {
+=======
+  inline int getSqliteStatement(sqlite3_stmt** _stmt) {
+>>>>>>> upstream-releases
     if (!mStatement) {
       int rc = mStatementOwner->getAsyncStatement(&mStatement);
       NS_ENSURE_TRUE(rc == SQLITE_OK, rc);
@@ -62,7 +106,7 @@ class StatementData {
     return SQLITE_OK;
   }
 
-  operator BindingParamsArray *() const { return mParamsArray; }
+  operator BindingParamsArray*() const { return mParamsArray; }
 
   /**
    * NULLs out our sqlite3_stmt (it is held by the owner) after reseting it and
@@ -103,7 +147,7 @@ class StatementData {
     // Be sure to use the getSqliteStatement helper, since sqlite3_stmt_readonly
     // can only analyze prepared statements and AsyncStatements are prepared
     // lazily.
-    sqlite3_stmt *stmt;
+    sqlite3_stmt* stmt;
     int rc = getSqliteStatement(&stmt);
     if (SQLITE_OK != rc || ::sqlite3_stmt_readonly(stmt)) {
       return 0;
@@ -111,8 +155,16 @@ class StatementData {
     return mParamsArray ? mParamsArray->length() : 1;
   }
 
+<<<<<<< HEAD
  private:
   sqlite3_stmt *mStatement;
+||||||| merged common ancestors
+private:
+  sqlite3_stmt *mStatement;
+=======
+ private:
+  sqlite3_stmt* mStatement;
+>>>>>>> upstream-releases
   RefPtr<BindingParamsArray> mParamsArray;
 
   /**

@@ -10,7 +10,7 @@
 #include "nsCoreUtils.h"
 #include "StyleInfo.h"
 
-#include "gfxFont.h"
+#include "gfxTextRun.h"
 #include "nsFontMetrics.h"
 #include "nsLayoutUtils.h"
 #include "nsContainerFrame.h"
@@ -345,14 +345,27 @@ bool TextAttrsMgr::BGColorTextAttr::GetColor(nsIFrame* aFrame,
 // ColorTextAttr
 ////////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 TextAttrsMgr::ColorTextAttr::ColorTextAttr(nsIFrame* aRootFrame,
                                            nsIFrame* aFrame)
     : TTextAttr<nscolor>(!aFrame) {
   mRootNativeValue = aRootFrame->StyleColor()->mColor;
+||||||| merged common ancestors
+TextAttrsMgr::ColorTextAttr::
+  ColorTextAttr(nsIFrame* aRootFrame, nsIFrame* aFrame) :
+  TTextAttr<nscolor>(!aFrame)
+{
+  mRootNativeValue = aRootFrame->StyleColor()->mColor;
+=======
+TextAttrsMgr::ColorTextAttr::ColorTextAttr(nsIFrame* aRootFrame,
+                                           nsIFrame* aFrame)
+    : TTextAttr<nscolor>(!aFrame) {
+  mRootNativeValue = aRootFrame->StyleText()->mColor.ToColor();
+>>>>>>> upstream-releases
   mIsRootDefined = true;
 
   if (aFrame) {
-    mNativeValue = aFrame->StyleColor()->mColor;
+    mNativeValue = aFrame->StyleText()->mColor.ToColor();
     mIsDefined = true;
   }
 }
@@ -361,9 +374,8 @@ bool TextAttrsMgr::ColorTextAttr::GetValueFor(Accessible* aAccessible,
                                               nscolor* aValue) {
   nsIContent* elm = nsCoreUtils::GetDOMElementFor(aAccessible->GetContent());
   if (elm) {
-    nsIFrame* frame = elm->GetPrimaryFrame();
-    if (frame) {
-      *aValue = frame->StyleColor()->mColor;
+    if (nsIFrame* frame = elm->GetPrimaryFrame()) {
+      *aValue = frame->StyleText()->mColor.ToColor();
       return true;
     }
   }
@@ -606,9 +618,19 @@ TextAttrsMgr::TextDecorValue::TextDecorValue(nsIFrame* aFrame) {
   const nsStyleTextReset* textReset = aFrame->StyleTextReset();
   mStyle = textReset->mTextDecorationStyle;
   mColor = textReset->mTextDecorationColor.CalcColor(aFrame);
+<<<<<<< HEAD
   mLine = textReset->mTextDecorationLine &
           (NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE |
            NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH);
+||||||| merged common ancestors
+  mLine = textReset->mTextDecorationLine &
+    (NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE |
+     NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH);
+=======
+  mLine =
+      textReset->mTextDecorationLine & (StyleTextDecorationLine_UNDERLINE |
+                                        StyleTextDecorationLine_LINE_THROUGH);
+>>>>>>> upstream-releases
 }
 
 TextAttrsMgr::TextDecorTextAttr::TextDecorTextAttr(nsIFrame* aRootFrame,
@@ -716,6 +738,7 @@ void TextAttrsMgr::TextPosTextAttr::ExposeValue(
   }
 }
 
+<<<<<<< HEAD
 TextAttrsMgr::TextPosValue TextAttrsMgr::TextPosTextAttr::GetTextPosValue(
     nsIFrame* aFrame) const {
   const nsStyleCoord& styleCoord = aFrame->StyleDisplay()->mVerticalAlign;
@@ -748,30 +771,109 @@ TextAttrsMgr::TextPosValue TextAttrsMgr::TextPosTextAttr::GetTextPosValue(
       return percentValue > 0
                  ? eTextPosSuper
                  : (percentValue < 0 ? eTextPosSub : eTextPosBaseline);
-    }
+||||||| merged common ancestors
+TextAttrsMgr::TextPosValue
+TextAttrsMgr::TextPosTextAttr::
+  GetTextPosValue(nsIFrame* aFrame) const
+{
+  const nsStyleCoord& styleCoord = aFrame->StyleDisplay()->mVerticalAlign;
+  switch (styleCoord.GetUnit()) {
+    case eStyleUnit_Enumerated:
+      switch (styleCoord.GetIntValue()) {
+        case NS_STYLE_VERTICAL_ALIGN_BASELINE:
+          return eTextPosBaseline;
+        case NS_STYLE_VERTICAL_ALIGN_SUB:
+          return eTextPosSub;
+        case NS_STYLE_VERTICAL_ALIGN_SUPER:
+          return eTextPosSuper;
 
+        // No good guess for these:
+        //   NS_STYLE_VERTICAL_ALIGN_TOP
+        //   NS_STYLE_VERTICAL_ALIGN_TEXT_TOP
+        //   NS_STYLE_VERTICAL_ALIGN_MIDDLE
+        //   NS_STYLE_VERTICAL_ALIGN_TEXT_BOTTOM
+        //   NS_STYLE_VERTICAL_ALIGN_BOTTOM
+        //   NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE
+        // Do not expose value of text-position attribute.
+
+        default:
+          break;
+      }
+      return eTextPosNone;
+
+    case eStyleUnit_Percent:
+    {
+      float percentValue = styleCoord.GetPercentValue();
+      return percentValue > 0 ?
+        eTextPosSuper :
+        (percentValue < 0 ? eTextPosSub : eTextPosBaseline);
+=======
+TextAttrsMgr::TextPosValue TextAttrsMgr::TextPosTextAttr::GetTextPosValue(
+    nsIFrame* aFrame) const {
+  const auto& verticalAlign = aFrame->StyleDisplay()->mVerticalAlign;
+  if (verticalAlign.IsKeyword()) {
+    switch (verticalAlign.AsKeyword()) {
+      case StyleVerticalAlignKeyword::Baseline:
+        return eTextPosBaseline;
+      case StyleVerticalAlignKeyword::Sub:
+        return eTextPosSub;
+      case StyleVerticalAlignKeyword::Super:
+        return eTextPosSuper;
+      // No good guess for the rest, so do not expose value of text-position
+      // attribute.
+      default:
+        return eTextPosNone;
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
     case eStyleUnit_Coord: {
       nscoord coordValue = styleCoord.GetCoordValue();
       return coordValue > 0 ? eTextPosSuper
                             : (coordValue < 0 ? eTextPosSub : eTextPosBaseline);
     }
+||||||| merged common ancestors
+    case eStyleUnit_Coord:
+    {
+       nscoord coordValue = styleCoord.GetCoordValue();
+       return coordValue > 0 ?
+         eTextPosSuper :
+         (coordValue < 0 ? eTextPosSub : eTextPosBaseline);
+    }
+=======
+  const auto& length = verticalAlign.AsLength();
+  if (length.ConvertsToPercentage()) {
+    float percentValue = length.ToPercentage();
+    return percentValue > 0
+               ? eTextPosSuper
+               : (percentValue < 0 ? eTextPosSub : eTextPosBaseline);
+  }
+>>>>>>> upstream-releases
 
-    case eStyleUnit_Null:
-    case eStyleUnit_Normal:
-    case eStyleUnit_Auto:
-    case eStyleUnit_None:
-    case eStyleUnit_Factor:
-    case eStyleUnit_Degree:
-    case eStyleUnit_FlexFraction:
-    case eStyleUnit_Integer:
-    case eStyleUnit_Calc:
-      break;
+  if (length.ConvertsToLength()) {
+    nscoord coordValue = length.ToLength();
+    return coordValue > 0 ? eTextPosSuper
+                          : (coordValue < 0 ? eTextPosSub : eTextPosBaseline);
   }
 
+<<<<<<< HEAD
   const nsIContent* content = aFrame->GetContent();
   if (content) {
     if (content->IsHTMLElement(nsGkAtoms::sup)) return eTextPosSuper;
     if (content->IsHTMLElement(nsGkAtoms::sub)) return eTextPosSub;
+||||||| merged common ancestors
+  const nsIContent* content = aFrame->GetContent();
+  if (content) {
+    if (content->IsHTMLElement(nsGkAtoms::sup))
+      return eTextPosSuper;
+    if (content->IsHTMLElement(nsGkAtoms::sub))
+      return eTextPosSub;
+=======
+  if (const nsIContent* content = aFrame->GetContent()) {
+    if (content->IsHTMLElement(nsGkAtoms::sup)) return eTextPosSuper;
+    if (content->IsHTMLElement(nsGkAtoms::sub)) return eTextPosSub;
+>>>>>>> upstream-releases
   }
 
   return eTextPosNone;

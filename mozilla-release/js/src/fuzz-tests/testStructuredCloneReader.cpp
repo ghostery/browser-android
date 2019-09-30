@@ -21,6 +21,7 @@ using namespace js;
 extern JS::PersistentRootedObject gGlobal;
 extern JSContext* gCx;
 
+<<<<<<< HEAD
 static int testStructuredCloneReaderInit(int* argc, char*** argv) { return 0; }
 
 static int testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
@@ -53,6 +54,129 @@ static int testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
                               scope, &deserialized, nullptr, nullptr)) {
     return 0;
   }
+||||||| merged common ancestors
+static int
+testStructuredCloneReaderInit(int *argc, char ***argv) {
+  return 0;
+}
+=======
+static int testStructuredCloneReaderInit(int* argc, char*** argv) { return 0; }
+
+static int testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
+  auto gcGuard = mozilla::MakeScopeExit([&] {
+    JS::PrepareForFullGC(gCx);
+    JS::NonIncrementalGC(gCx, GC_NORMAL, JS::GCReason::API);
+  });
+
+  if (!size) return 0;
+
+  // Make sure to pad the buffer to a multiple of kSegmentAlignment
+  const size_t kSegmentAlignment = 8;
+  size_t buf_size = JS_ROUNDUP(size, kSegmentAlignment);
+
+  JS::StructuredCloneScope scope = JS::StructuredCloneScope::DifferentProcess;
+
+  auto clonebuf = MakeUnique<JSStructuredCloneData>(scope);
+  if (!clonebuf || !clonebuf->Init(buf_size)) {
+    ReportOutOfMemory(gCx);
+    return 0;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  /* If we succeeded in deserializing, we should try to reserialize the data.
+     This has two main advantages:
+||||||| merged common ancestors
+static int
+testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
+    auto gcGuard = mozilla::MakeScopeExit([&] {
+        JS::PrepareForFullGC(gCx);
+        JS::NonIncrementalGC(gCx, GC_NORMAL, JS::gcreason::API);
+    });
+
+    if (!size) return 0;
+
+    // Make sure to pad the buffer to a multiple of kSegmentAlignment
+    const size_t kSegmentAlignment = 8;
+    size_t buf_size = JS_ROUNDUP(size, kSegmentAlignment);
+
+    JS::StructuredCloneScope scope = JS::StructuredCloneScope::DifferentProcess;
+
+    auto clonebuf = MakeUnique<JSStructuredCloneData>(scope);
+    if (!clonebuf || !clonebuf->Init(buf_size)) {
+        ReportOutOfMemory(gCx);
+        return 0;
+    }
+
+    // Copy buffer then pad with zeroes.
+    clonebuf->AppendBytes((const char*)buf, size);
+    char padding[kSegmentAlignment] = {0};
+    clonebuf->AppendBytes(padding, buf_size - size);
+
+    RootedValue deserialized(gCx);
+    if (!JS_ReadStructuredClone(gCx, *clonebuf,
+    			JS_STRUCTURED_CLONE_VERSION,
+    			scope,
+    			&deserialized, nullptr, nullptr))
+    {
+        return 0;
+    }
+
+    /* If we succeeded in deserializing, we should try to reserialize the data.
+       This has two main advantages:
+
+       1) It tests parts of the serializer as well.
+       2) The deserialized data is actually used, making it more likely to detect
+          further memory-related problems.
+
+       Tests show that this also doesn't cause a serious performance penalty.
+    */
+    mozilla::Maybe<JSAutoStructuredCloneBuffer> clonebufOut;
+    JS::CloneDataPolicy policy;
+
+    clonebufOut.emplace(scope, nullptr, nullptr);
+    if (!clonebufOut->write(gCx, deserialized, UndefinedHandleValue, policy)) {
+        return 0;
+    }
+=======
+  // Copy buffer then pad with zeroes.
+  if (!clonebuf->AppendBytes((const char*)buf, size)) {
+    ReportOutOfMemory(gCx);
+    return 0;
+  }
+  char padding[kSegmentAlignment] = {0};
+  if (!clonebuf->AppendBytes(padding, buf_size - size)) {
+    ReportOutOfMemory(gCx);
+    return 0;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+     1) It tests parts of the serializer as well.
+     2) The deserialized data is actually used, making it more likely to detect
+        further memory-related problems.
+
+     Tests show that this also doesn't cause a serious performance penalty.
+  */
+  mozilla::Maybe<JSAutoStructuredCloneBuffer> clonebufOut;
+  JS::CloneDataPolicy policy;
+
+  clonebufOut.emplace(scope, nullptr, nullptr);
+  if (!clonebufOut->write(gCx, deserialized, UndefinedHandleValue, policy)) {
+||||||| merged common ancestors
+=======
+  RootedValue deserialized(gCx);
+  if (!JS_ReadStructuredClone(gCx, *clonebuf, JS_STRUCTURED_CLONE_VERSION,
+                              scope, &deserialized, nullptr, nullptr)) {
+>>>>>>> upstream-releases
+    return 0;
+<<<<<<< HEAD
+  }
+
+  return 0;
+||||||| merged common ancestors
+=======
+  }
 
   /* If we succeeded in deserializing, we should try to reserialize the data.
      This has two main advantages:
@@ -72,6 +196,7 @@ static int testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
   }
 
   return 0;
+>>>>>>> upstream-releases
 }
 
 MOZ_FUZZING_INTERFACE_RAW(testStructuredCloneReaderInit,

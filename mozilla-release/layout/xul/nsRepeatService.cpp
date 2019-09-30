@@ -13,7 +13,7 @@
 
 #include "nsRepeatService.h"
 #include "mozilla/StaticPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIServiceManager.h"
 
 using namespace mozilla;
@@ -28,19 +28,52 @@ nsRepeatService::~nsRepeatService() {
                "Callback was not removed before shutdown");
 }
 
+<<<<<<< HEAD
 /* static */ nsRepeatService* nsRepeatService::GetInstance() {
+||||||| merged common ancestors
+/* static */ nsRepeatService*
+nsRepeatService::GetInstance()
+{
+=======
+/* static */
+nsRepeatService* nsRepeatService::GetInstance() {
+>>>>>>> upstream-releases
   if (!gRepeatService) {
     gRepeatService = new nsRepeatService();
   }
   return gRepeatService;
 }
 
+<<<<<<< HEAD
 /*static*/ void nsRepeatService::Shutdown() { gRepeatService = nullptr; }
+||||||| merged common ancestors
+/*static*/ void
+nsRepeatService::Shutdown()
+{
+  gRepeatService = nullptr;
+}
+=======
+/*static*/
+void nsRepeatService::Shutdown() { gRepeatService = nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void nsRepeatService::Start(Callback aCallback, void* aCallbackData,
                             nsIDocument* aDocument,
                             const nsACString& aCallbackName,
                             uint32_t aInitialDelay) {
+||||||| merged common ancestors
+void
+nsRepeatService::Start(Callback aCallback, void* aCallbackData,
+                       nsIDocument* aDocument, const nsACString& aCallbackName,
+                       uint32_t aInitialDelay)
+{
+=======
+void nsRepeatService::Start(Callback aCallback, void* aCallbackData,
+                            dom::Document* aDocument,
+                            const nsACString& aCallbackName,
+                            uint32_t aInitialDelay) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCallback != nullptr, "null ptr");
 
   mCallback = aCallback;

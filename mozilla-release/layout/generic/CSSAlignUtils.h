@@ -21,16 +21,34 @@ class CSSAlignUtils {
    * Flags to customize the behavior of AlignJustifySelf:
    */
   enum class AlignJustifyFlags {
+<<<<<<< HEAD
     eNoFlags = 0,
+||||||| merged common ancestors
+    eNoFlags           = 0,
+=======
+    NoFlags = 0,
+>>>>>>> upstream-releases
     // Indicates that we have <overflow-position> = safe.
+<<<<<<< HEAD
     eOverflowSafe = 1 << 0,
+||||||| merged common ancestors
+    eOverflowSafe      = 1 << 0,
+=======
+    OverflowSafe = 1 << 0,
+>>>>>>> upstream-releases
     // Indicates that the container's start side in aAxis is the same
     // as the child's start side in the child's parallel axis.
+<<<<<<< HEAD
     eSameSide = 1 << 1,
+||||||| merged common ancestors
+    eSameSide          = 1 << 1,
+=======
+    SameSide = 1 << 1,
+>>>>>>> upstream-releases
     // Indicates that AlignJustifySelf() shouldn't expand "auto" margins.
     // (By default, AlignJustifySelf() *will* expand such margins, to fill the
     // available space before any alignment is done.)
-    eIgnoreAutoMargins = 1 << 2,
+    IgnoreAutoMargins = 1 << 2,
   };
 
   /**

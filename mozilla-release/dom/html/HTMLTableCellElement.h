@@ -26,12 +26,36 @@ class HTMLTableCellElement final : public nsGenericHTMLElement {
   NS_INLINE_DECL_REFCOUNTING_INHERITED(HTMLTableCellElement,
                                        nsGenericHTMLElement)
 
+<<<<<<< HEAD
   uint32_t ColSpan() const { return GetIntAttr(nsGkAtoms::colspan, 1); }
   void SetColSpan(uint32_t aColSpan, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t ColSpan() const
+  {
+    return GetIntAttr(nsGkAtoms::colspan, 1);
+  }
+  void SetColSpan(uint32_t aColSpan, ErrorResult& aError)
+  {
+=======
+  uint32_t ColSpan() const { return GetUnsignedIntAttr(nsGkAtoms::colspan, 1); }
+  void SetColSpan(uint32_t aColSpan, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::colspan, aColSpan, 1, aError);
   }
+<<<<<<< HEAD
   uint32_t RowSpan() const { return GetIntAttr(nsGkAtoms::rowspan, 1); }
   void SetRowSpan(uint32_t aRowSpan, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t RowSpan() const
+  {
+    return GetIntAttr(nsGkAtoms::rowspan, 1);
+  }
+  void SetRowSpan(uint32_t aRowSpan, ErrorResult& aError)
+  {
+=======
+  uint32_t RowSpan() const { return GetUnsignedIntAttr(nsGkAtoms::rowspan, 1); }
+  void SetRowSpan(uint32_t aRowSpan, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::rowspan, aRowSpan, 1, aError);
   }
   // already_AddRefed<nsDOMTokenList> Headers() const;

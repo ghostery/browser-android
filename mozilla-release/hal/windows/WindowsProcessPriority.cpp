@@ -12,6 +12,7 @@ using namespace mozilla::hal;
 namespace mozilla {
 namespace hal_impl {
 
+<<<<<<< HEAD
 bool SetProcessPrioritySupported() { return true; }
 
 void SetProcessPriority(int aPid, ProcessPriority aPriority) {
@@ -20,12 +21,43 @@ void SetProcessPriority(int aPid, ProcessPriority aPriority) {
 
   nsAutoHandle processHandle(
       ::OpenProcess(PROCESS_SET_INFORMATION, FALSE, aPid));
+||||||| merged common ancestors
+bool
+SetProcessPrioritySupported()
+{
+  return true;
+}
+
+void
+SetProcessPriority(int aPid, ProcessPriority aPriority)
+{
+  HAL_LOG("WindowsProcessPriority - SetProcessPriority(%d, %s)\n",
+          aPid, ProcessPriorityToString(aPriority));
+
+  nsAutoHandle processHandle(::OpenProcess(PROCESS_SET_INFORMATION, FALSE, aPid));
+=======
+bool SetProcessPrioritySupported() { return true; }
+
+void SetProcessPriority(int aPid, ProcessPriority aPriority) {
+  HAL_LOG("WindowsProcessPriority - SetProcessPriority(%d, %s)\n", aPid,
+          ProcessPriorityToString(aPriority));
+
+  nsAutoHandle processHandle(
+      ::OpenProcess(PROCESS_SET_INFORMATION, FALSE, aPid));
+#ifdef DEBUG
+  if (!processHandle) {
+    printf_stderr("::OpenProcess() failed with error %#08x\n",
+                  ::GetLastError());
+  }
+#endif  // DEBUG
+>>>>>>> upstream-releases
   MOZ_ASSERT(processHandle);
   if (processHandle) {
     DWORD priority = NORMAL_PRIORITY_CLASS;
-    if (aPriority == PROCESS_PRIORITY_BACKGROUND ||
-        aPriority == PROCESS_PRIORITY_BACKGROUND_PERCEIVABLE) {
+    if (aPriority == PROCESS_PRIORITY_BACKGROUND) {
       priority = IDLE_PRIORITY_CLASS;
+    } else if (aPriority == PROCESS_PRIORITY_BACKGROUND_PERCEIVABLE) {
+      priority = BELOW_NORMAL_PRIORITY_CLASS;
     }
     ::SetPriorityClass(processHandle, priority);
   }

@@ -23,9 +23,17 @@ interface Client {
   // readonly attribute boolean reserved;
 
   [Throws]
+<<<<<<< HEAD
   void postMessage(any message, sequence<object> transfer);
   [Throws]
   void postMessage(any message, optional PostMessageOptions aOptions);
+||||||| merged common ancestors
+  void postMessage(any message, optional sequence<object> transfer = []);
+=======
+  void postMessage(any message, sequence<object> transfer);
+  [Throws]
+  void postMessage(any message, optional PostMessageOptions aOptions = {});
+>>>>>>> upstream-releases
 };
 
 [Exposed=ServiceWorker]

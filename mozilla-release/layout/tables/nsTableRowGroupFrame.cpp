@@ -2,17 +2,19 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-#include "nsCOMPtr.h"
 #include "nsTableRowGroupFrame.h"
+
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
+
+#include "nsCOMPtr.h"
 #include "nsTableRowFrame.h"
 #include "nsTableFrame.h"
 #include "nsTableCellFrame.h"
 #include "nsPresContext.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsStyleConsts.h"
 #include "nsIContent.h"
 #include "nsGkAtoms.h"
-#include "nsIPresShell.h"
 #include "nsCSSRendering.h"
 #include "nsHTMLParts.h"
 #include "nsCSSFrameConstructor.h"
@@ -27,7 +29,7 @@ using namespace mozilla::layout;
 namespace mozilla {
 
 struct TableRowGroupReflowInput {
-  const ReflowInput& reflowInput;  // Our reflow state
+  const ReflowInput& reflowInput;  // Our reflow input
 
   nsTableFrame* tableFrame;
 
@@ -49,8 +51,18 @@ struct TableRowGroupReflowInput {
 
 }  // namespace mozilla
 
+<<<<<<< HEAD
 nsTableRowGroupFrame::nsTableRowGroupFrame(ComputedStyle* aStyle)
     : nsContainerFrame(aStyle, kClassID) {
+||||||| merged common ancestors
+nsTableRowGroupFrame::nsTableRowGroupFrame(ComputedStyle* aStyle)
+  : nsContainerFrame(aStyle, kClassID)
+{
+=======
+nsTableRowGroupFrame::nsTableRowGroupFrame(ComputedStyle* aStyle,
+                                           nsPresContext* aPresContext)
+    : nsContainerFrame(aStyle, aPresContext, kClassID) {
+>>>>>>> upstream-releases
   SetRepeatable(false);
 }
 
@@ -201,11 +213,20 @@ static void DisplayRows(nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
   if (kid) {
     // have a cursor, use it
     while (kid) {
+<<<<<<< HEAD
       if (kid->GetRect().y - overflowAbove >=
               aBuilder->GetVisibleRect().YMost() &&
           kid->GetNormalRect().y - overflowAbove >=
               aBuilder->GetVisibleRect().YMost())
+||||||| merged common ancestors
+      if (kid->GetRect().y - overflowAbove >= aBuilder->GetVisibleRect().YMost() &&
+          kid->GetNormalRect().y - overflowAbove >= aBuilder->GetVisibleRect().YMost())
+=======
+      if (kid->GetRect().y - overflowAbove >=
+          aBuilder->GetVisibleRect().YMost()) {
+>>>>>>> upstream-releases
         break;
+      }
       f->BuildDisplayListForChild(aBuilder, kid, aLists);
       kid = kid->GetNextSibling();
     }
@@ -233,9 +254,36 @@ static void DisplayRows(nsDisplayListBuilder* aBuilder, nsFrame* aFrame,
   }
 }
 
+<<<<<<< HEAD
 void nsTableRowGroupFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                             const nsDisplayListSet& aLists) {
   nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists, DisplayRows);
+||||||| merged common ancestors
+void
+nsTableRowGroupFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                                       const nsDisplayListSet& aLists)
+{
+  nsTableFrame::DisplayGenericTablePart(aBuilder, this, aLists, DisplayRows);
+=======
+void nsTableRowGroupFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
+                                            const nsDisplayListSet& aLists) {
+  DisplayOutsetBoxShadow(aBuilder, aLists.BorderBackground());
+
+  for (nsTableRowFrame* row = GetFirstRow(); row; row = row->GetNextRow()) {
+    if (!aBuilder->GetDirtyRect().Intersects(row->GetVisualOverflowRect() +
+                                             row->GetNormalPosition())) {
+      continue;
+    }
+    row->PaintCellBackgroundsForFrame(this, aBuilder, aLists,
+                                      row->GetNormalPosition());
+  }
+
+  DisplayInsetBoxShadow(aBuilder, aLists.BorderBackground());
+
+  DisplayOutline(aBuilder, aLists);
+
+  DisplayRows(aBuilder, this, aLists);
+>>>>>>> upstream-releases
 }
 
 nsIFrame::LogicalSides nsTableRowGroupFrame::GetLogicalSkipSides(
@@ -255,12 +303,34 @@ nsIFrame::LogicalSides nsTableRowGroupFrame::GetLogicalSkipSides(
   return skip;
 }
 
+<<<<<<< HEAD
 // Position and size aKidFrame and update our reflow state.
 void nsTableRowGroupFrame::PlaceChild(
     nsPresContext* aPresContext, TableRowGroupReflowInput& aReflowInput,
     nsIFrame* aKidFrame, WritingMode aWM, const LogicalPoint& aKidPosition,
     const nsSize& aContainerSize, ReflowOutput& aDesiredSize,
     const nsRect& aOriginalKidRect, const nsRect& aOriginalKidVisualOverflow) {
+||||||| merged common ancestors
+// Position and size aKidFrame and update our reflow state.
+void
+nsTableRowGroupFrame::PlaceChild(nsPresContext*         aPresContext,
+                                 TableRowGroupReflowInput& aReflowInput,
+                                 nsIFrame*              aKidFrame,
+                                 WritingMode            aWM,
+                                 const LogicalPoint&    aKidPosition,
+                                 const nsSize&          aContainerSize,
+                                 ReflowOutput&   aDesiredSize,
+                                 const nsRect&          aOriginalKidRect,
+                                 const nsRect&          aOriginalKidVisualOverflow)
+{
+=======
+// Position and size aKidFrame and update our reflow input.
+void nsTableRowGroupFrame::PlaceChild(
+    nsPresContext* aPresContext, TableRowGroupReflowInput& aReflowInput,
+    nsIFrame* aKidFrame, WritingMode aWM, const LogicalPoint& aKidPosition,
+    const nsSize& aContainerSize, ReflowOutput& aDesiredSize,
+    const nsRect& aOriginalKidRect, const nsRect& aOriginalKidVisualOverflow) {
+>>>>>>> upstream-releases
   bool isFirstReflow = aKidFrame->HasAnyStateBits(NS_FRAME_FIRST_REFLOW);
 
   // Place and size the child
@@ -297,7 +367,7 @@ void nsTableRowGroupFrame::InitChildReflowInput(nsPresContext& aPresContext,
       pCollapseBorder = &collapseBorder;
     }
   }
-  aReflowInput.Init(&aPresContext, nullptr, pCollapseBorder, &padding);
+  aReflowInput.Init(&aPresContext, Nothing(), pCollapseBorder, &padding);
 }
 
 static void CacheRowBSizesForPrinting(nsPresContext* aPresContext,
@@ -369,8 +439,17 @@ void nsTableRowGroupFrame::ReflowChildren(
       LogicalSize kidAvailSize = aReflowInput.availSize;
       kidAvailSize.BSize(wm) = NS_UNCONSTRAINEDSIZE;
       ReflowInput kidReflowInput(aPresContext, aReflowInput.reflowInput,
+<<<<<<< HEAD
                                  kidFrame, kidAvailSize, nullptr,
                                  ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+                                       kidFrame, kidAvailSize,
+                                       nullptr,
+                                       ReflowInput::CALLER_WILL_INIT);
+=======
+                                 kidFrame, kidAvailSize, Nothing(),
+                                 ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
       InitChildReflowInput(*aPresContext, borderCollapse, kidReflowInput);
 
       // This can indicate that columns were resized.
@@ -403,10 +482,17 @@ void nsTableRowGroupFrame::ReflowChildren(
           // Inform the row of its new bsize.
           rowFrame->DidResize();
           // the overflow area may have changed inflate the overflow area
+<<<<<<< HEAD
           const nsStylePosition* stylePos = StylePosition();
           nsStyleUnit unit = stylePos->BSize(wm).GetUnit();
+||||||| merged common ancestors
+          const nsStylePosition *stylePos = StylePosition();
+          nsStyleUnit unit = stylePos->BSize(wm).GetUnit();
+=======
+          const nsStylePosition* stylePos = StylePosition();
+>>>>>>> upstream-releases
           if (aReflowInput.tableFrame->IsAutoBSize(wm) &&
-              unit != eStyleUnit_Coord) {
+              !stylePos->BSize(wm).ConvertsToLength()) {
             // Because other cells in the row may need to be aligned
             // differently, repaint the entire row
             InvalidateFrame();
@@ -990,10 +1076,23 @@ void nsTableRowGroupFrame::SplitSpanningCells(
         // don't let the available height exceed what
         // CalculateRowBSizes set for it
         rowAvailSize.height = std::min(rowAvailSize.height, rowRect.height);
+<<<<<<< HEAD
         ReflowInput rowReflowInput(
             &aPresContext, aReflowInput, row,
             LogicalSize(row->GetWritingMode(), rowAvailSize), nullptr,
             ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+        ReflowInput rowReflowInput(&aPresContext, aReflowInput, row,
+                                         LogicalSize(row->GetWritingMode(),
+                                                     rowAvailSize),
+                                         nullptr,
+                                         ReflowInput::CALLER_WILL_INIT);
+=======
+        ReflowInput rowReflowInput(
+            &aPresContext, aReflowInput, row,
+            LogicalSize(row->GetWritingMode(), rowAvailSize), Nothing(),
+            ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
         InitChildReflowInput(aPresContext, borderCollapse, rowReflowInput);
         rowReflowInput.mFlags.mIsTopOfPage = isTopOfPage;  // set top of page
 
@@ -1126,10 +1225,23 @@ nsresult nsTableRowGroupFrame::SplitRowGroup(nsPresContext* aPresContext,
         // for it
         availSize.height = std::min(availSize.height, rowRect.height);
 
+<<<<<<< HEAD
         ReflowInput rowReflowInput(
             aPresContext, aReflowInput, rowFrame,
             LogicalSize(rowFrame->GetWritingMode(), availSize), nullptr,
             ReflowInput::CALLER_WILL_INIT);
+||||||| merged common ancestors
+        ReflowInput rowReflowInput(aPresContext, aReflowInput, rowFrame,
+                                         LogicalSize(rowFrame->GetWritingMode(),
+                                                     availSize),
+                                         nullptr,
+                                         ReflowInput::CALLER_WILL_INIT);
+=======
+        ReflowInput rowReflowInput(
+            aPresContext, aReflowInput, rowFrame,
+            LogicalSize(rowFrame->GetWritingMode(), availSize), Nothing(),
+            ReflowInput::CALLER_WILL_INIT);
+>>>>>>> upstream-releases
 
         InitChildReflowInput(*aPresContext, borderCollapse, rowReflowInput);
         rowReflowInput.mFlags.mIsTopOfPage = isTopOfPage;  // set top of page
@@ -1229,8 +1341,13 @@ nsresult nsTableRowGroupFrame::SplitRowGroup(nsPresContext* aPresContext,
         if (prevRowFrame) {
           spanningRowBottom = prevRowFrame->GetNormalRect().YMost();
           lastRowThisPage = prevRowFrame;
+<<<<<<< HEAD
           isTopOfPage = (lastRowThisPage == firstRowThisPage) &&
                         aReflowInput.mFlags.mIsTopOfPage;
+||||||| merged common ancestors
+          isTopOfPage = (lastRowThisPage == firstRowThisPage) && aReflowInput.mFlags.mIsTopOfPage;
+=======
+>>>>>>> upstream-releases
           aStatus.Reset();
           aStatus.SetIncomplete();
         } else {
@@ -1437,8 +1554,18 @@ bool nsTableRowGroupFrame::ComputeCustomOverflow(
   return nsContainerFrame::ComputeCustomOverflow(aOverflowAreas);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsTableRowGroupFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsTableRowGroupFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsTableRowGroupFrame::DidSetComputedStyle(
+    ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsContainerFrame::DidSetComputedStyle(aOldComputedStyle);
 
   if (!aOldComputedStyle)  // avoid this on init
@@ -1481,7 +1608,7 @@ void nsTableRowGroupFrame::AppendFrames(ChildListID aListID,
   if (rows.Length() > 0) {
     nsTableFrame* tableFrame = GetTableFrame();
     tableFrame->AppendRows(this, rowIndex, rows);
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
     tableFrame->SetGeometryDirty();
   }
@@ -1530,7 +1657,7 @@ void nsTableRowGroupFrame::InsertFrames(ChildListID aListID,
     int32_t rowIndex = (prevRow) ? prevRow->GetRowIndex() + 1 : startRowIndex;
     tableFrame->InsertRows(this, rows, rowIndex, true);
 
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
     tableFrame->SetGeometryDirty();
   }
@@ -1549,23 +1676,56 @@ void nsTableRowGroupFrame::RemoveFrame(ChildListID aListID,
     // remove the rows from the table (and flag a rebalance)
     tableFrame->RemoveRows(*rowFrame, 1, true);
 
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
     tableFrame->SetGeometryDirty();
   }
   mFrames.DestroyFrame(aOldFrame);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableRowGroupFrame::GetUsedMargin() const {
   return nsMargin(0, 0, 0, 0);
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableRowGroupFrame::GetUsedMargin() const
+{
+  return nsMargin(0,0,0,0);
+=======
+/* virtual */
+nsMargin nsTableRowGroupFrame::GetUsedMargin() const {
+  return nsMargin(0, 0, 0, 0);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableRowGroupFrame::GetUsedBorder() const {
   return nsMargin(0, 0, 0, 0);
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableRowGroupFrame::GetUsedBorder() const
+{
+  return nsMargin(0,0,0,0);
+=======
+/* virtual */
+nsMargin nsTableRowGroupFrame::GetUsedBorder() const {
+  return nsMargin(0, 0, 0, 0);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMargin nsTableRowGroupFrame::GetUsedPadding() const {
   return nsMargin(0, 0, 0, 0);
+||||||| merged common ancestors
+/* virtual */ nsMargin
+nsTableRowGroupFrame::GetUsedPadding() const
+{
+  return nsMargin(0,0,0,0);
+=======
+/* virtual */
+nsMargin nsTableRowGroupFrame::GetUsedPadding() const {
+  return nsMargin(0, 0, 0, 0);
+>>>>>>> upstream-releases
 }
 
 nscoord nsTableRowGroupFrame::GetBSizeBasis(const ReflowInput& aReflowInput) {
@@ -1625,9 +1785,21 @@ bool nsTableRowGroupFrame::HasInternalBreakAfter() const {
 }
 /* ----- global methods ----- */
 
+<<<<<<< HEAD
 nsTableRowGroupFrame* NS_NewTableRowGroupFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsTableRowGroupFrame(aStyle);
+||||||| merged common ancestors
+nsTableRowGroupFrame*
+NS_NewTableRowGroupFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTableRowGroupFrame(aStyle);
+=======
+nsTableRowGroupFrame* NS_NewTableRowGroupFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsTableRowGroupFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTableRowGroupFrame)
@@ -1894,13 +2066,19 @@ nsIFrame* nsTableRowGroupFrame::GetFirstRowContaining(nscoord aY,
   // encountering a row whose overflowArea.YMost() is <= aY but which has
   // a row above it containing cell(s) that span to include aY.
   while (cursorIndex > 0 &&
-         cursorFrame->GetNormalRect().YMost() + property->mOverflowBelow > aY) {
+         cursorFrame->GetRect().YMost() + property->mOverflowBelow > aY) {
     --cursorIndex;
     cursorFrame = property->mFrames[cursorIndex];
   }
   while (cursorIndex + 1 < frameCount &&
+<<<<<<< HEAD
          cursorFrame->GetNormalRect().YMost() + property->mOverflowBelow <=
              aY) {
+||||||| merged common ancestors
+         cursorFrame->GetNormalRect().YMost() + property->mOverflowBelow <= aY) {
+=======
+         cursorFrame->GetRect().YMost() + property->mOverflowBelow <= aY) {
+>>>>>>> upstream-releases
     ++cursorIndex;
     cursorFrame = property->mFrames[cursorIndex];
   }
@@ -1910,6 +2088,7 @@ nsIFrame* nsTableRowGroupFrame::GetFirstRowContaining(nscoord aY,
   return cursorFrame;
 }
 
+<<<<<<< HEAD
 bool nsTableRowGroupFrame::FrameCursorData::AppendFrame(nsIFrame* aFrame) {
   // Relative positioning can cause table parts to move, but we will still paint
   // the backgrounds for the parts under them at their 'normal' position. That
@@ -1918,6 +2097,26 @@ bool nsTableRowGroupFrame::FrameCursorData::AppendFrame(nsIFrame* aFrame) {
   // will still paint the row background for that cell at its normal position,
   // which will overflow the row.
   // XXX(seth): This probably isn't correct in the presence of transforms.
+||||||| merged common ancestors
+bool
+nsTableRowGroupFrame::FrameCursorData::AppendFrame(nsIFrame* aFrame)
+{
+  // Relative positioning can cause table parts to move, but we will still paint
+  // the backgrounds for the parts under them at their 'normal' position. That
+  // means that we must consider the overflow rects at both positions. For
+  // example, if we use relative positioning to move a row-spanning cell, we
+  // will still paint the row background for that cell at its normal position,
+  // which will overflow the row.
+  // XXX(seth): This probably isn't correct in the presence of transforms.
+=======
+bool nsTableRowGroupFrame::FrameCursorData::AppendFrame(nsIFrame* aFrame) {
+  // The cursor requires a monotonically increasing sequence in order to
+  // identify which rows can be skipped, and position:relative can move
+  // rows around such that the overflow areas don't provide this.
+  // We take the union of the overflow rect, and the frame's 'normal' position
+  // (excluding position:relative changes) and record the max difference between
+  // this combined overflow and the frame's rect.
+>>>>>>> upstream-releases
   nsRect positionedOverflowRect = aFrame->GetVisualOverflowRect();
   nsPoint positionedToNormal =
       aFrame->GetNormalPosition() - aFrame->GetPosition();

@@ -1,4 +1,5 @@
 from .base import Browser, ExecutorBrowser, require_arg
+from .base import get_timeout_multiplier   # noqa: F401
 from ..executors import executor_kwargs as base_executor_kwargs
 from ..executors.executorwebdriver import (WebDriverTestharnessExecutor,  # noqa: F401
                                            WebDriverRefTestExecutor)  # noqa: F401
@@ -15,8 +16,16 @@ __wptrunner__ = {"product": "webkit",
                               "wdspec": "WebKitDriverWdspecExecutor"},
                  "executor_kwargs": "executor_kwargs",
                  "env_extras": "env_extras",
+<<<<<<< HEAD
                  "env_options": "env_options",
                  "run_info_extras": "run_info_extras"}
+||||||| merged common ancestors
+                 "env_options": "env_options"}
+=======
+                 "env_options": "env_options",
+                 "run_info_extras": "run_info_extras",
+                 "timeout_multiplier": "get_timeout_multiplier"}
+>>>>>>> upstream-releases
 
 
 def check_args(**kwargs):

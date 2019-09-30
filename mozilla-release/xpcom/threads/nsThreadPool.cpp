@@ -21,7 +21,7 @@ using namespace mozilla;
 
 static LazyLogModule sThreadPoolLog("nsThreadPool");
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 #define LOG(args) MOZ_LOG(sThreadPoolLog, mozilla::LogLevel::Debug, args)
 
@@ -44,6 +44,7 @@ NS_IMPL_QUERY_INTERFACE_CI(nsThreadPool, nsIThreadPool, nsIEventTarget,
 NS_IMPL_CI_INTERFACE_GETTER(nsThreadPool, nsIThreadPool, nsIEventTarget)
 
 nsThreadPool::nsThreadPool()
+<<<<<<< HEAD
     : mMutex("[nsThreadPool.mMutex]"),
       mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]"),
       mThreadLimit(DEFAULT_THREAD_LIMIT),
@@ -52,6 +53,27 @@ nsThreadPool::nsThreadPool()
       mIdleCount(0),
       mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE),
       mShutdown(false) {
+||||||| merged common ancestors
+  : mMutex("[nsThreadPool.mMutex]")
+  , mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]")
+  , mThreadLimit(DEFAULT_THREAD_LIMIT)
+  , mIdleThreadLimit(DEFAULT_IDLE_THREAD_LIMIT)
+  , mIdleThreadTimeout(DEFAULT_IDLE_THREAD_TIMEOUT)
+  , mIdleCount(0)
+  , mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE)
+  , mShutdown(false)
+{
+=======
+    : mMutex("[nsThreadPool.mMutex]"),
+      mEventsAvailable(mMutex, "[nsThreadPool.mEventsAvailable]"),
+      mThreadLimit(DEFAULT_THREAD_LIMIT),
+      mIdleThreadLimit(DEFAULT_IDLE_THREAD_LIMIT),
+      mIdleThreadTimeout(DEFAULT_IDLE_THREAD_TIMEOUT),
+      mIdleCount(0),
+      mStackSize(nsIThreadManager::DEFAULT_STACK_SIZE),
+      mShutdown(false),
+      mRegressiveMaxIdleTime(false) {
+>>>>>>> upstream-releases
   LOG(("THRD-P(%p) constructor!!!\n", this));
 }
 
@@ -91,7 +113,7 @@ nsresult nsThreadPool::PutEvent(already_AddRefed<nsIRunnable> aEvent,
       spawnThread = true;
     }
 
-    mEvents.PutEvent(std::move(aEvent), EventPriority::Normal, lock);
+    mEvents.PutEvent(std::move(aEvent), EventQueuePriority::Normal, lock);
     mEventsAvailable.Notify();
     stackSize = mStackSize;
   }
@@ -116,7 +138,9 @@ nsresult nsThreadPool::PutEvent(already_AddRefed<nsIRunnable> aEvent,
   bool killThread = false;
   {
     MutexAutoLock lock(mMutex);
-    if (mThreads.Count() < (int32_t)mThreadLimit) {
+    if (mShutdown) {
+      killThread = true;
+    } else if (mThreads.Count() < (int32_t)mThreadLimit) {
       mThreads.AppendObject(thread);
     } else {
       killThread = true;  // okay, we don't need this thread anymore
@@ -182,8 +206,17 @@ nsThreadPool::Run() {
       event = mEvents.GetEvent(nullptr, lock);
       if (!event) {
         TimeStamp now = TimeStamp::Now();
+<<<<<<< HEAD
         TimeDuration timeout =
             TimeDuration::FromMilliseconds(mIdleThreadTimeout);
+||||||| merged common ancestors
+        TimeDuration timeout = TimeDuration::FromMilliseconds(mIdleThreadTimeout);
+=======
+        uint32_t idleTimeoutDivider =
+            (mIdleCount && mRegressiveMaxIdleTime) ? mIdleCount : 1;
+        TimeDuration timeout = TimeDuration::FromMilliseconds(
+            static_cast<double>(mIdleThreadTimeout) / idleTimeoutDivider);
+>>>>>>> upstream-releases
 
         // If we are shutting down, then don't keep any idle threads
         if (mShutdown) {
@@ -505,8 +538,35 @@ nsThreadPool::SetIdleThreadTimeout(uint32_t aValue) {
 
   // Do we need to notify any idle threads that their sleep time has shortened?
   if (mIdleThreadTimeout < oldTimeout && mIdleCount > 0) {
+<<<<<<< HEAD
     mEventsAvailable
         .NotifyAll();  // wake up threads so they observe this change
+||||||| merged common ancestors
+    mEventsAvailable.NotifyAll();  // wake up threads so they observe this change
+=======
+    mEventsAvailable
+        .NotifyAll();  // wake up threads so they observe this change
+  }
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsThreadPool::GetIdleThreadTimeoutRegressive(bool* aValue) {
+  *aValue = mRegressiveMaxIdleTime;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsThreadPool::SetIdleThreadTimeoutRegressive(bool aValue) {
+  MutexAutoLock lock(mMutex);
+  bool oldRegressive = mRegressiveMaxIdleTime;
+  mRegressiveMaxIdleTime = aValue;
+
+  // Would setting regressive timeout effect idle threads?
+  if (mRegressiveMaxIdleTime > oldRegressive && mIdleCount > 1) {
+    mEventsAvailable
+        .NotifyAll();  // wake up threads so they observe this change
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }

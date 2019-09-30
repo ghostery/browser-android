@@ -19,11 +19,31 @@
 namespace mozilla {
 namespace scache {
 
+<<<<<<< HEAD
 nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
                                         nsIObjectInputStream **stream) {
+||||||| merged common ancestors
+nsresult
+NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
+                               nsIObjectInputStream** stream)
+{
+=======
+nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
+                                        nsIObjectInputStream** stream) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIInputStream> stringStream;
+<<<<<<< HEAD
   nsresult rv = NS_NewByteInputStream(
       getter_AddRefs(stringStream), buffer.release(), len, NS_ASSIGNMENT_ADOPT);
+||||||| merged common ancestors
+  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stringStream),
+                                      buffer.release(), len,
+                                      NS_ASSIGNMENT_ADOPT);
+=======
+  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stringStream),
+                                      MakeSpan(buffer.release(), len),
+                                      NS_ASSIGNMENT_ADOPT);
+>>>>>>> upstream-releases
   MOZ_ALWAYS_SUCCEEDS(rv);
 
   nsCOMPtr<nsIObjectInputStream> objectInput =
@@ -33,9 +53,21 @@ nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NewObjectOutputWrappedStorageStream(
     nsIObjectOutputStream **wrapperStream, nsIStorageStream **stream,
     bool wantDebugStream) {
+||||||| merged common ancestors
+nsresult
+NewObjectOutputWrappedStorageStream(nsIObjectOutputStream **wrapperStream,
+                                    nsIStorageStream** stream,
+                                    bool wantDebugStream)
+{
+=======
+nsresult NewObjectOutputWrappedStorageStream(
+    nsIObjectOutputStream** wrapperStream, nsIStorageStream** stream,
+    bool wantDebugStream) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIStorageStream> storageStream;
 
   nsresult rv =
@@ -67,8 +99,18 @@ nsresult NewObjectOutputWrappedStorageStream(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NewBufferFromStorageStream(nsIStorageStream *storageStream,
                                     UniquePtr<char[]> *buffer, uint32_t *len) {
+||||||| merged common ancestors
+nsresult
+NewBufferFromStorageStream(nsIStorageStream *storageStream,
+                           UniquePtr<char[]>* buffer, uint32_t* len)
+{
+=======
+nsresult NewBufferFromStorageStream(nsIStorageStream* storageStream,
+                                    UniquePtr<char[]>* buffer, uint32_t* len) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIInputStream> inputStream;
   rv = storageStream->NewInputStream(0, getter_AddRefs(inputStream));
@@ -94,6 +136,7 @@ nsresult NewBufferFromStorageStream(nsIStorageStream *storageStream,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static const char baseName[2][5] = {"gre/", "app/"};
 
 static inline bool canonicalizeBase(nsAutoCString &spec, nsACString &out) {
@@ -128,12 +171,89 @@ static inline bool canonicalizeBase(nsAutoCString &spec, nsACString &out) {
       baseName[underGre ? mozilla::Omnijar::GRE : mozilla::Omnijar::APP]);
   out.Append(Substring(spec, underGre ? greBase.Length() : appBase.Length()));
   return true;
+||||||| merged common ancestors
+static const char baseName[2][5] = { "gre/", "app/" };
+
+static inline bool
+canonicalizeBase(nsAutoCString &spec,
+                 nsACString &out)
+{
+    nsAutoCString greBase, appBase;
+    nsresult rv = mozilla::Omnijar::GetURIString(mozilla::Omnijar::GRE, greBase);
+    if (NS_FAILED(rv) || !greBase.Length())
+        return false;
+
+    rv = mozilla::Omnijar::GetURIString(mozilla::Omnijar::APP, appBase);
+    if (NS_FAILED(rv))
+        return false;
+
+    bool underGre = !greBase.Compare(spec.get(), false, greBase.Length());
+    bool underApp = appBase.Length() &&
+                    !appBase.Compare(spec.get(), false, appBase.Length());
+
+    if (!underGre && !underApp)
+        return false;
+
+    /**
+     * At this point, if both underGre and underApp are true, it can be one
+     * of the two following cases:
+     * - the GRE directory points to a subdirectory of the APP directory,
+     *   meaning spec points under GRE.
+     * - the APP directory points to a subdirectory of the GRE directory,
+     *   meaning spec points under APP.
+     * Checking the GRE and APP path length is enough to know in which case
+     * we are.
+     */
+    if (underGre && underApp && greBase.Length() < appBase.Length())
+        underGre = false;
+
+    out.AppendLiteral("/resource/");
+    out.Append(baseName[underGre ? mozilla::Omnijar::GRE : mozilla::Omnijar::APP]);
+    out.Append(Substring(spec, underGre ? greBase.Length() : appBase.Length()));
+    return true;
+=======
+static const char baseName[2][5] = {"gre/", "app/"};
+
+static inline bool canonicalizeBase(nsAutoCString& spec, nsACString& out) {
+  nsAutoCString greBase, appBase;
+  nsresult rv = mozilla::Omnijar::GetURIString(mozilla::Omnijar::GRE, greBase);
+  if (NS_FAILED(rv) || !greBase.Length()) return false;
+
+  rv = mozilla::Omnijar::GetURIString(mozilla::Omnijar::APP, appBase);
+  if (NS_FAILED(rv)) return false;
+
+  bool underGre = !greBase.Compare(spec.get(), false, greBase.Length());
+  bool underApp =
+      appBase.Length() && !appBase.Compare(spec.get(), false, appBase.Length());
+
+  if (!underGre && !underApp) return false;
+
+  /**
+   * At this point, if both underGre and underApp are true, it can be one
+   * of the two following cases:
+   * - the GRE directory points to a subdirectory of the APP directory,
+   *   meaning spec points under GRE.
+   * - the APP directory points to a subdirectory of the GRE directory,
+   *   meaning spec points under APP.
+   * Checking the GRE and APP path length is enough to know in which case
+   * we are.
+   */
+  if (underGre && underApp && greBase.Length() < appBase.Length())
+    underGre = false;
+
+  out.AppendLiteral("/resource/");
+  out.Append(
+      baseName[underGre ? mozilla::Omnijar::GRE : mozilla::Omnijar::APP]);
+  out.Append(Substring(spec, underGre ? greBase.Length() : appBase.Length()));
+  return true;
+>>>>>>> upstream-releases
 }
 
 /**
  * ResolveURI transforms a chrome: or resource: URI into the URI for its
  * underlying resource, or returns any other URI unchanged.
  */
+<<<<<<< HEAD
 nsresult ResolveURI(nsIURI *in, nsIURI **out) {
   bool equals;
   nsresult rv;
@@ -160,6 +280,67 @@ nsresult ResolveURI(nsIURI *in, nsIURI **out) {
     nsCOMPtr<nsIChromeRegistry> chromeReg =
         mozilla::services::GetChromeRegistryService();
     if (!chromeReg) return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+nsresult
+ResolveURI(nsIURI *in, nsIURI **out)
+{
+    bool equals;
+    nsresult rv;
+
+    // Resolve resource:// URIs. At the end of this if/else block, we
+    // have both spec and uri variables identifying the same URI.
+    if (NS_SUCCEEDED(in->SchemeIs("resource", &equals)) && equals) {
+        nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        nsCOMPtr<nsIProtocolHandler> ph;
+        rv = ioService->GetProtocolHandler("resource", getter_AddRefs(ph));
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        nsCOMPtr<nsIResProtocolHandler> irph(do_QueryInterface(ph, &rv));
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        nsAutoCString spec;
+        rv = irph->ResolveURI(in, spec);
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        return ioService->NewURI(spec, nullptr, nullptr, out);
+    } else if (NS_SUCCEEDED(in->SchemeIs("chrome", &equals)) && equals) {
+        nsCOMPtr<nsIChromeRegistry> chromeReg =
+            mozilla::services::GetChromeRegistryService();
+        if (!chromeReg)
+            return NS_ERROR_UNEXPECTED;
+
+        return chromeReg->ConvertChromeURL(in, out);
+    }
+=======
+nsresult ResolveURI(nsIURI* in, nsIURI** out) {
+  bool equals;
+  nsresult rv;
+
+  // Resolve resource:// URIs. At the end of this if/else block, we
+  // have both spec and uri variables identifying the same URI.
+  if (NS_SUCCEEDED(in->SchemeIs("resource", &equals)) && equals) {
+    nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIProtocolHandler> ph;
+    rv = ioService->GetProtocolHandler("resource", getter_AddRefs(ph));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIResProtocolHandler> irph(do_QueryInterface(ph, &rv));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsAutoCString spec;
+    rv = irph->ResolveURI(in, spec);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    return ioService->NewURI(spec, nullptr, nullptr, out);
+  } else if (NS_SUCCEEDED(in->SchemeIs("chrome", &equals)) && equals) {
+    nsCOMPtr<nsIChromeRegistry> chromeReg =
+        mozilla::services::GetChromeRegistryService();
+    if (!chromeReg) return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 
     return chromeReg->ConvertChromeURL(in, out);
   }
@@ -193,9 +374,25 @@ nsresult ResolveURI(nsIURI *in, nsIURI **out) {
  *  jar:file://$PROFILE_DIR/extensions/some.xpi!/components/component.js becomes
  *     jsloader/$PROFILE_DIR/extensions/some.xpi/components/component.js
  */
+<<<<<<< HEAD
 nsresult PathifyURI(nsIURI *in, nsACString &out) {
   bool equals;
   nsresult rv;
+||||||| merged common ancestors
+nsresult
+PathifyURI(nsIURI *in, nsACString &out)
+{
+    bool equals;
+    nsresult rv;
+
+    nsCOMPtr<nsIURI> uri;
+    rv = ResolveURI(in, getter_AddRefs(uri));
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+nsresult PathifyURI(nsIURI* in, nsACString& out) {
+  bool equals;
+  nsresult rv;
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIURI> uri;
   rv = ResolveURI(in, getter_AddRefs(uri));

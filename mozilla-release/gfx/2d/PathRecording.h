@@ -12,89 +12,277 @@
 #include <ostream>
 
 #include "PathHelpers.h"
+#include "RecordingTypes.h"
 
 namespace mozilla {
 namespace gfx {
 
+<<<<<<< HEAD
 struct PathOp {
   enum OpType {
+||||||| merged common ancestors
+struct PathOp
+{
+  enum OpType {
+=======
+class PathOps {
+ public:
+  PathOps() {}
+
+  template <class S>
+  explicit PathOps(S& aStream);
+
+  PathOps(PathOps&& aOther) : mPathData(std::move(aOther.mPathData)) {}
+
+  PathOps(const PathOps& aOther) : mPathData(aOther.mPathData) {}
+
+  PathOps& operator=(PathOps&& aOther) {
+    mPathData = std::move(aOther.mPathData);
+    return *this;
+  }
+
+  template <class S>
+  void Record(S& aStream) const;
+
+  bool StreamToSink(PathSink& aPathSink) const;
+
+  PathOps TransformedCopy(const Matrix& aTransform) const;
+
+  size_t NumberOfOps() const;
+
+  void MoveTo(const Point& aPoint) { AppendPathOp(OpType::OP_MOVETO, aPoint); }
+
+  void LineTo(const Point& aPoint) { AppendPathOp(OpType::OP_LINETO, aPoint); }
+
+  void BezierTo(const Point& aCP1, const Point& aCP2, const Point& aCP3) {
+    AppendPathOp(OpType::OP_BEZIERTO, ThreePoints{aCP1, aCP2, aCP3});
+  }
+
+  void QuadraticBezierTo(const Point& aCP1, const Point& aCP2) {
+    AppendPathOp(OpType::OP_QUADRATICBEZIERTO, TwoPoints{aCP1, aCP2});
+  }
+
+  void Arc(const Point& aOrigin, float aRadius, float aStartAngle,
+           float aEndAngle, bool aAntiClockwise) {
+    AppendPathOp(OpType::OP_ARC, ArcParams{aOrigin, aRadius, aStartAngle,
+                                           aEndAngle, aAntiClockwise});
+  }
+
+  void Close() {
+    size_t oldSize = mPathData.size();
+    mPathData.resize(oldSize + sizeof(OpType));
+    *reinterpret_cast<OpType*>(mPathData.data() + oldSize) = OpType::OP_CLOSE;
+  }
+
+ private:
+  void operator=(const PathOps&) = delete;  // assign using std::move()!
+
+  enum class OpType : uint32_t {
+>>>>>>> upstream-releases
     OP_MOVETO = 0,
     OP_LINETO,
     OP_BEZIERTO,
     OP_QUADRATICBEZIERTO,
-    OP_CLOSE
+    OP_ARC,
+    OP_CLOSE,
+    OP_INVALID
   };
 
-  OpType mType;
-  Point mP1;
-  Point mP2;
-  Point mP3;
+  template <typename T>
+  void AppendPathOp(const OpType& aOpType, const T& aOpParams) {
+    size_t oldSize = mPathData.size();
+    mPathData.resize(oldSize + sizeof(OpType) + sizeof(T));
+    memcpy(mPathData.data() + oldSize, &aOpType, sizeof(OpType));
+    oldSize += sizeof(OpType);
+    memcpy(mPathData.data() + oldSize, &aOpParams, sizeof(T));
+  }
+
+  struct TwoPoints {
+    Point p1;
+    Point p2;
+  };
+
+  struct ThreePoints {
+    Point p1;
+    Point p2;
+    Point p3;
+  };
+
+  struct ArcParams {
+    Point origin;
+    float radius;
+    float startAngle;
+    float endAngle;
+    bool antiClockwise;
+  };
+
+  std::vector<uint8_t> mPathData;
 };
 
+<<<<<<< HEAD
 const int32_t sPointCount[] = {1, 1, 3, 2, 0, 0};
+||||||| merged common ancestors
+const int32_t sPointCount[] = { 1, 1, 3, 2, 0, 0 };
+=======
+template <class S>
+PathOps::PathOps(S& aStream) {
+  ReadVector(aStream, mPathData);
+}
+
+template <class S>
+inline void PathOps::Record(S& aStream) const {
+  WriteVector(aStream, mPathData);
+}
+>>>>>>> upstream-releases
 
 class PathRecording;
 class DrawEventRecorderPrivate;
 
+<<<<<<< HEAD
 class PathBuilderRecording : public PathBuilder {
  public:
+||||||| merged common ancestors
+class PathBuilderRecording : public PathBuilder
+{
+public:
+=======
+class PathBuilderRecording final : public PathBuilder {
+ public:
+>>>>>>> upstream-releases
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PathBuilderRecording, override)
 
+<<<<<<< HEAD
   PathBuilderRecording(PathBuilder *aBuilder, FillRule aFillRule)
       : mPathBuilder(aBuilder), mFillRule(aFillRule) {}
+||||||| merged common ancestors
+  PathBuilderRecording(PathBuilder *aBuilder, FillRule aFillRule)
+    : mPathBuilder(aBuilder), mFillRule(aFillRule)
+  {
+  }
+=======
+  PathBuilderRecording(PathBuilder* aBuilder, FillRule aFillRule)
+      : mPathBuilder(aBuilder), mFillRule(aFillRule) {}
+
+  PathBuilderRecording(PathBuilder* aBuilder, const PathOps& aPathOps,
+                       FillRule aFillRule)
+      : mPathBuilder(aBuilder), mFillRule(aFillRule), mPathOps(aPathOps) {}
+>>>>>>> upstream-releases
 
   /* Move the current point in the path, any figure currently being drawn will
    * be considered closed during fill operations, however when stroking the
    * closing line segment will not be drawn.
    */
-  virtual void MoveTo(const Point &aPoint) override;
+  void MoveTo(const Point& aPoint) final;
+
   /* Add a linesegment to the current figure */
-  virtual void LineTo(const Point &aPoint) override;
+  void LineTo(const Point& aPoint) final;
+
   /* Add a cubic bezier curve to the current figure */
+<<<<<<< HEAD
   virtual void BezierTo(const Point &aCP1, const Point &aCP2,
                         const Point &aCP3) override;
+||||||| merged common ancestors
+  virtual void BezierTo(const Point &aCP1,
+                        const Point &aCP2,
+                        const Point &aCP3) override;
+=======
+  void BezierTo(const Point& aCP1, const Point& aCP2, const Point& aCP3) final;
+
+>>>>>>> upstream-releases
   /* Add a quadratic bezier curve to the current figure */
+<<<<<<< HEAD
   virtual void QuadraticBezierTo(const Point &aCP1, const Point &aCP2) override;
+||||||| merged common ancestors
+  virtual void QuadraticBezierTo(const Point &aCP1,
+                                 const Point &aCP2) override;
+=======
+  void QuadraticBezierTo(const Point& aCP1, const Point& aCP2) final;
+
+>>>>>>> upstream-releases
   /* Close the current figure, this will essentially generate a line segment
    * from the current point to the starting point for the current figure
    */
-  virtual void Close() override;
+  void Close() final;
 
   /* Add an arc to the current figure */
-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
-                   float aEndAngle, bool aAntiClockwise) override {
-    ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle,
-                aAntiClockwise);
-  }
+  void Arc(const Point& aOrigin, float aRadius, float aStartAngle,
+           float aEndAngle, bool aAntiClockwise) final;
 
   /* Point the current subpath is at - or where the next subpath will start
    * if there is no active subpath.
    */
-  virtual Point CurrentPoint() const override;
+  Point CurrentPoint() const final { return mPathBuilder->CurrentPoint(); }
 
-  virtual already_AddRefed<Path> Finish() override;
+  Point BeginPoint() const final { return mPathBuilder->BeginPoint(); }
 
+  void SetCurrentPoint(const Point& aPoint) final {
+    mPathBuilder->SetCurrentPoint(aPoint);
+  }
+
+  void SetBeginPoint(const Point& aPoint) final {
+    mPathBuilder->SetBeginPoint(aPoint);
+  }
+
+<<<<<<< HEAD
   virtual BackendType GetBackendType() const override {
     return BackendType::RECORDING;
   }
+||||||| merged common ancestors
+  virtual BackendType GetBackendType() const override { return BackendType::RECORDING; }
+=======
+  already_AddRefed<Path> Finish() final;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   friend class PathRecording;
+||||||| merged common ancestors
+private:
+  friend class PathRecording;
+=======
+  BackendType GetBackendType() const final { return BackendType::RECORDING; }
+>>>>>>> upstream-releases
 
+ private:
   RefPtr<PathBuilder> mPathBuilder;
   FillRule mFillRule;
-  std::vector<PathOp> mPathOps;
+  PathOps mPathOps;
 };
 
+<<<<<<< HEAD
 class PathRecording : public Path {
  public:
+||||||| merged common ancestors
+class PathRecording : public Path
+{
+public:
+=======
+class PathRecording final : public Path {
+ public:
+>>>>>>> upstream-releases
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PathRecording, override)
 
+<<<<<<< HEAD
   PathRecording(Path *aPath, const std::vector<PathOp> aOps, FillRule aFillRule)
       : mPath(aPath), mPathOps(aOps), mFillRule(aFillRule) {}
+||||||| merged common ancestors
+  PathRecording(Path *aPath, const std::vector<PathOp> aOps, FillRule aFillRule)
+    : mPath(aPath), mPathOps(aOps), mFillRule(aFillRule)
+  {
+  }
+=======
+  PathRecording(Path* aPath, PathOps&& aOps, FillRule aFillRule,
+                const Point& aCurrentPoint, const Point& aBeginPoint)
+      : mPath(aPath),
+        mPathOps(std::move(aOps)),
+        mFillRule(aFillRule),
+        mCurrentPoint(aCurrentPoint),
+        mBeginPoint(aBeginPoint) {}
+>>>>>>> upstream-releases
 
   ~PathRecording();
 
+<<<<<<< HEAD
   virtual BackendType GetBackendType() const override {
     return BackendType::RECORDING;
   }
@@ -115,21 +303,68 @@ class PathRecording : public Path {
   virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const override {
     return mPath->GetBounds(aTransform);
   }
+||||||| merged common ancestors
+  virtual BackendType GetBackendType() const override { return BackendType::RECORDING; }
+  virtual already_AddRefed<PathBuilder> CopyToBuilder(FillRule aFillRule) const override;
+  virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(const Matrix &aTransform,
+                                                             FillRule aFillRule) const override;
+  virtual bool ContainsPoint(const Point &aPoint, const Matrix &aTransform) const override
+  { return mPath->ContainsPoint(aPoint, aTransform); }
+  virtual bool StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
+                                   const Point &aPoint,
+                                   const Matrix &aTransform) const override
+  { return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform); }
 
+  virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const override
+  { return mPath->GetBounds(aTransform); }
+=======
+  BackendType GetBackendType() const final { return BackendType::RECORDING; }
+  already_AddRefed<PathBuilder> CopyToBuilder(FillRule aFillRule) const final;
+  already_AddRefed<PathBuilder> TransformedCopyToBuilder(
+      const Matrix& aTransform, FillRule aFillRule) const final;
+  bool ContainsPoint(const Point& aPoint,
+                     const Matrix& aTransform) const final {
+    return mPath->ContainsPoint(aPoint, aTransform);
+  }
+  bool StrokeContainsPoint(const StrokeOptions& aStrokeOptions,
+                           const Point& aPoint,
+                           const Matrix& aTransform) const final {
+    return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual Rect GetStrokedBounds(
       const StrokeOptions &aStrokeOptions,
       const Matrix &aTransform = Matrix()) const override {
     return mPath->GetStrokedBounds(aStrokeOptions, aTransform);
   }
+||||||| merged common ancestors
+  virtual Rect GetStrokedBounds(const StrokeOptions &aStrokeOptions,
+                                const Matrix &aTransform = Matrix()) const override
+  { return mPath->GetStrokedBounds(aStrokeOptions, aTransform); }
+=======
+  Rect GetBounds(const Matrix& aTransform = Matrix()) const final {
+    return mPath->GetBounds(aTransform);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void StreamToSink(PathSink *aSink) const override {
     mPath->StreamToSink(aSink);
   }
+||||||| merged common ancestors
+  virtual void StreamToSink(PathSink *aSink) const override { mPath->StreamToSink(aSink); }
+=======
+  Rect GetStrokedBounds(const StrokeOptions& aStrokeOptions,
+                        const Matrix& aTransform = Matrix()) const final {
+    return mPath->GetStrokedBounds(aStrokeOptions, aTransform);
+  }
+>>>>>>> upstream-releases
 
-  virtual FillRule GetFillRule() const override { return mFillRule; }
+  void StreamToSink(PathSink* aSink) const final { mPath->StreamToSink(aSink); }
 
-  void StorePath(std::ostream &aStream) const;
-  static void ReadPathToBuilder(std::istream &aStream, PathBuilder *aBuilder);
+  FillRule GetFillRule() const final { return mFillRule; }
 
  private:
   friend class DrawTargetWrapAndRecord;
@@ -137,8 +372,10 @@ class PathRecording : public Path {
   friend class RecordedPathCreation;
 
   RefPtr<Path> mPath;
-  std::vector<PathOp> mPathOps;
+  PathOps mPathOps;
   FillRule mFillRule;
+  Point mCurrentPoint;
+  Point mBeginPoint;
 
   // Event recorders that have this path in their event stream.
   std::vector<RefPtr<DrawEventRecorderPrivate>> mStoredRecorders;

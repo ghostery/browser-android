@@ -23,12 +23,21 @@ public:
             const SkRect& constraintRect,
             FilterConstraint filterConstraint,
             bool coordsLimitedToConstraintRect,
-            const GrSamplerState::Filter* filterOrNullForBicubic,
-            SkColorSpace* dstColorSpace) override;
+            const GrSamplerState::Filter* filterOrNullForBicubic) override;
 
 protected:
+<<<<<<< HEAD
     GrTextureMaker(GrContext* context, int width, int height, bool isAlphaOnly)
         : INHERITED(context, width, height, isAlphaOnly) {}
+||||||| merged common ancestors
+    GrTextureMaker(GrContext* context, int width, int height, bool isAlphaOnly)
+        : INHERITED(width, height, isAlphaOnly)
+        , fContext(context) {}
+=======
+    GrTextureMaker(GrRecordingContext* context, int width, int height, bool isAlphaOnly,
+                   bool domainNeedsLocal)
+        : INHERITED(context, width, height, isAlphaOnly, domainNeedsLocal) {}
+>>>>>>> upstream-releases
 
     /**
      *  Return the maker's "original" texture. It is the responsibility of the maker to handle any
@@ -38,9 +47,9 @@ protected:
      *  by drawing into a render target).
      */
     virtual sk_sp<GrTextureProxy> refOriginalTextureProxy(bool willBeMipped,
-                                                          SkColorSpace* dstColorSpace,
                                                           AllowedTexGenType genType) = 0;
 
+<<<<<<< HEAD
     /**
      *  Returns the color space of the maker's "original" texture, assuming it was retrieved with
      *  the same destination color space.
@@ -49,12 +58,45 @@ protected:
 
     GrContext* context() const { return fContext; }
 
+||||||| merged common ancestors
+    /**
+     *  Returns the color space of the maker's "original" texture, assuming it was retrieved with
+     *  the same destination color space.
+     */
+    virtual sk_sp<SkColorSpace> getColorSpace(SkColorSpace* dstColorSpace) = 0;
+
+    /**
+     *  Return a new (uncached) texture that is the stretch of the maker's original.
+     *
+     *  The base-class handles general logic for this, and only needs access to the following
+     *  method:
+     *  - refOriginalTextureProxy()
+     *
+     *  Subclass may override this if they can handle creating the texture more directly than
+     *  by copying.
+     */
+    virtual sk_sp<GrTextureProxy> generateTextureProxyForParams(const CopyParams&,
+                                                                bool willBeMipped,
+                                                                SkColorSpace* dstColorSpace);
+
+    GrContext* context() const { return fContext; }
+
+=======
+>>>>>>> upstream-releases
 private:
+<<<<<<< HEAD
     sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
                                                      SkColorSpace* dstColorSpace,
                                                      sk_sp<SkColorSpace>* proxyColorSpace,
                                                      bool willBeMipped,
                                                      SkScalar scaleAdjust[2]) override;
+||||||| merged common ancestors
+    GrContext*  fContext;
+=======
+    sk_sp<GrTextureProxy> onRefTextureProxyForParams(const GrSamplerState&,
+                                                     bool willBeMipped,
+                                                     SkScalar scaleAdjust[2]) override;
+>>>>>>> upstream-releases
 
     typedef GrTextureProducer INHERITED;
 };

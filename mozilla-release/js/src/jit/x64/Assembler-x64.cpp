@@ -40,6 +40,7 @@ ABIArg ABIArgGenerator::next(MIRType type) {
       stackOffset_ += sizeof(uint64_t);
     }
     return current_;
+<<<<<<< HEAD
   }
   switch (type) {
     case MIRType::Int32:
@@ -69,7 +70,41 @@ ABIArg ABIArgGenerator::next(MIRType type) {
       MOZ_CRASH("Unexpected argument type");
   }
   return current_;
+||||||| merged common ancestors
+=======
+  }
+  switch (type) {
+    case MIRType::Int32:
+    case MIRType::Int64:
+    case MIRType::Pointer:
+    case MIRType::RefOrNull:
+      current_ = ABIArg(IntArgRegs[regIndex_++]);
+      break;
+    case MIRType::Float32:
+      current_ = ABIArg(FloatArgRegs[regIndex_++].asSingle());
+      break;
+    case MIRType::Double:
+      current_ = ABIArg(FloatArgRegs[regIndex_++]);
+      break;
+    case MIRType::Int8x16:
+    case MIRType::Int16x8:
+    case MIRType::Int32x4:
+    case MIRType::Float32x4:
+    case MIRType::Bool8x16:
+    case MIRType::Bool16x8:
+    case MIRType::Bool32x4:
+      // On Win64, >64 bit args need to be passed by reference, but wasm
+      // doesn't allow passing SIMD values to FFIs. The only way to reach
+      // here is asm to asm calls, so we can break the ABI here.
+      current_ = ABIArg(FloatArgRegs[regIndex_++].asSimd128());
+      break;
+    default:
+      MOZ_CRASH("Unexpected argument type");
+  }
+  return current_;
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
   switch (type) {
     case MIRType::Int32:
     case MIRType::Int64:
@@ -77,6 +112,27 @@ ABIArg ABIArgGenerator::next(MIRType type) {
       if (intRegIndex_ == NumIntArgRegs) {
         current_ = ABIArg(stackOffset_);
         stackOffset_ += sizeof(uint64_t);
+||||||| merged common ancestors
+    switch (type) {
+      case MIRType::Int32:
+      case MIRType::Int64:
+      case MIRType::Pointer:
+        if (intRegIndex_ == NumIntArgRegs) {
+            current_ = ABIArg(stackOffset_);
+            stackOffset_ += sizeof(uint64_t);
+            break;
+        }
+        current_ = ABIArg(IntArgRegs[intRegIndex_++]);
+=======
+  switch (type) {
+    case MIRType::Int32:
+    case MIRType::Int64:
+    case MIRType::Pointer:
+    case MIRType::RefOrNull:
+      if (intRegIndex_ == NumIntArgRegs) {
+        current_ = ABIArg(stackOffset_);
+        stackOffset_ += sizeof(uint64_t);
+>>>>>>> upstream-releases
         break;
       }
       current_ = ABIArg(IntArgRegs[intRegIndex_++]);

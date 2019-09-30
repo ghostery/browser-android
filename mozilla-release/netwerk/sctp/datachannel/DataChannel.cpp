@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #if !defined(__Userspace_os_Windows)
-#include <arpa/inet.h>
+#  include <arpa/inet.h>
 #endif
 // usrsctp.h expects to have errno definitions prior to its inclusion.
 #include <errno.h>
@@ -20,14 +20,22 @@
 // Disable "warning C4200: nonstandard extension used : zero-sized array in
 //          struct/union"
 // ...which the third-party file usrsctp.h runs afoul of.
+<<<<<<< HEAD
 #pragma warning(push)
 #pragma warning(disable : 4200)
+||||||| merged common ancestors
+#pragma warning(push)
+#pragma warning(disable:4200)
+=======
+#  pragma warning(push)
+#  pragma warning(disable : 4200)
+>>>>>>> upstream-releases
 #endif
 
 #include "usrsctp.h"
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+#  pragma warning(pop)
 #endif
 
 #include "DataChannelLog.h"
@@ -51,9 +59,17 @@
 #include "mozilla/StaticMutex.h"
 #include "mozilla/Unused.h"
 #ifdef MOZ_PEERCONNECTION
+<<<<<<< HEAD
 #include "mtransport/runnable_utils.h"
 #include "signaling/src/peerconnection/MediaTransportHandler.h"
 #include "mediapacket.h"
+||||||| merged common ancestors
+#include "mtransport/runnable_utils.h"
+=======
+#  include "mtransport/runnable_utils.h"
+#  include "signaling/src/peerconnection/MediaTransportHandler.h"
+#  include "mediapacket.h"
+>>>>>>> upstream-releases
 #endif
 
 #include "DataChannel.h"
@@ -61,14 +77,25 @@
 
 // Let us turn on and off important assertions in non-debug builds
 #ifdef DEBUG
-#define ASSERT_WEBRTC(x) MOZ_ASSERT((x))
+#  define ASSERT_WEBRTC(x) MOZ_ASSERT((x))
 #elif defined(MOZ_WEBRTC_ASSERT_ALWAYS)
+<<<<<<< HEAD
 #define ASSERT_WEBRTC(x) \
   do {                   \
     if (!(x)) {          \
       MOZ_CRASH();       \
     }                    \
   } while (0)
+||||||| merged common ancestors
+#define ASSERT_WEBRTC(x) do { if (!(x)) { MOZ_CRASH(); } } while (0)
+=======
+#  define ASSERT_WEBRTC(x) \
+    do {                   \
+      if (!(x)) {          \
+        MOZ_CRASH();       \
+      }                    \
+    } while (0)
+>>>>>>> upstream-releases
 #endif
 
 static bool sctp_initialized;
@@ -81,12 +108,30 @@ static LazyLogModule gSCTPLog("SCTP");
 #define SCTP_LOG(args) \
   MOZ_LOG(mozilla::gSCTPLog, mozilla::LogLevel::Debug, args)
 
+<<<<<<< HEAD
 class DataChannelConnectionShutdown : public nsITimerCallback {
  public:
   explicit DataChannelConnectionShutdown(DataChannelConnection *aConnection)
       : mConnection(aConnection) {
     mTimer = NS_NewTimer();  // we'll crash if this fails
     mTimer->InitWithCallback(this, 30 * 1000, nsITimer::TYPE_ONE_SHOT);
+||||||| merged common ancestors
+class DataChannelConnectionShutdown : public nsITimerCallback
+{
+public:
+  explicit DataChannelConnectionShutdown(DataChannelConnection* aConnection)
+    : mConnection(aConnection)
+  {
+    mTimer = NS_NewTimer(); // we'll crash if this fails
+    mTimer->InitWithCallback(this, 30*1000, nsITimer::TYPE_ONE_SHOT);
+=======
+class DataChannelConnectionShutdown : public nsITimerCallback {
+ public:
+  explicit DataChannelConnectionShutdown(DataChannelConnection* aConnection)
+      : mConnection(aConnection) {
+    mTimer = NS_NewTimer();  // we'll crash if this fails
+    mTimer->InitWithCallback(this, 30 * 1000, nsITimer::TYPE_ONE_SHOT);
+>>>>>>> upstream-releases
   }
 
   NS_IMETHODIMP Notify(nsITimer *aTimer) override;
@@ -128,8 +173,17 @@ class DataChannelShutdown : public nsIObserver {
     (void)rv;
   }
 
+<<<<<<< HEAD
   NS_IMETHOD Observe(nsISupports *aSubject, const char *aTopic,
                      const char16_t *aData) override {
+||||||| merged common ancestors
+  NS_IMETHOD Observe(nsISupports* aSubject, const char* aTopic,
+                     const char16_t* aData) override
+  {
+=======
+  NS_IMETHOD Observe(nsISupports* aSubject, const char* aTopic,
+                     const char16_t* aData) override {
+>>>>>>> upstream-releases
     // Note: MainThread
     if (strcmp(aTopic, "xpcom-will-shutdown") == 0) {
       LOG(("Shutting down SCTP"));
@@ -155,7 +209,14 @@ class DataChannelShutdown : public nsIObserver {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   void CreateConnectionShutdown(DataChannelConnection *aConnection) {
+||||||| merged common ancestors
+  void CreateConnectionShutdown(DataChannelConnection* aConnection)
+  {
+=======
+  void CreateConnectionShutdown(DataChannelConnection* aConnection) {
+>>>>>>> upstream-releases
     StaticMutexAutoLock lock(sLock);
     if (!sConnections) {
       sConnections = new nsTArray<RefPtr<DataChannelConnectionShutdown>>();
@@ -163,8 +224,16 @@ class DataChannelShutdown : public nsIObserver {
     sConnections->AppendElement(new DataChannelConnectionShutdown(aConnection));
   }
 
+<<<<<<< HEAD
   void RemoveConnectionShutdown(
       DataChannelConnectionShutdown *aConnectionShutdown) {
+||||||| merged common ancestors
+  void RemoveConnectionShutdown(DataChannelConnectionShutdown* aConnectionShutdown)
+  {
+=======
+  void RemoveConnectionShutdown(
+      DataChannelConnectionShutdown* aConnectionShutdown) {
+>>>>>>> upstream-releases
     StaticMutexAutoLock lock(sLock);
     if (sConnections) {
       sConnections->RemoveElement(aConnectionShutdown);
@@ -191,7 +260,14 @@ NS_IMPL_ISUPPORTS(DataChannelShutdown, nsIObserver);
 NS_IMPL_ISUPPORTS(DataChannelConnectionShutdown, nsITimerCallback)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 DataChannelConnectionShutdown::Notify(nsITimer *aTimer) {
+||||||| merged common ancestors
+DataChannelConnectionShutdown::Notify(nsITimer* aTimer)
+{
+=======
+DataChannelConnectionShutdown::Notify(nsITimer* aTimer) {
+>>>>>>> upstream-releases
   // safely release reference to ourself
   RefPtr<DataChannelConnectionShutdown> grip(this);
   // Might not be set. We don't actually use the |this| pointer in
@@ -203,7 +279,7 @@ DataChannelConnectionShutdown::Notify(nsITimer *aTimer) {
   return NS_OK;
 }
 
-OutgoingMsg::OutgoingMsg(struct sctp_sendv_spa &info, const uint8_t *data,
+OutgoingMsg::OutgoingMsg(struct sctp_sendv_spa& info, const uint8_t* data,
                          size_t length)
     : mLength(length), mData(data) {
   mInfo = &info;
@@ -217,9 +293,22 @@ void OutgoingMsg::Advance(size_t offset) {
   }
 }
 
+<<<<<<< HEAD
 BufferedOutgoingMsg::BufferedOutgoingMsg(OutgoingMsg &msg) {
+||||||| merged common ancestors
+BufferedOutgoingMsg::BufferedOutgoingMsg(OutgoingMsg &msg)
+{
+=======
+BufferedOutgoingMsg::BufferedOutgoingMsg(OutgoingMsg& msg) {
+>>>>>>> upstream-releases
   size_t length = msg.GetLeft();
+<<<<<<< HEAD
   auto *tmp = new uint8_t[length];  // infallible malloc!
+||||||| merged common ancestors
+  auto *tmp = new uint8_t[length]; // infallible malloc!
+=======
+  auto* tmp = new uint8_t[length];  // infallible malloc!
+>>>>>>> upstream-releases
   memcpy(tmp, msg.GetData(), length);
   mLength = length;
   mData = tmp;
@@ -233,16 +322,42 @@ BufferedOutgoingMsg::~BufferedOutgoingMsg() {
   delete mData;
 }
 
+<<<<<<< HEAD
 static int receive_cb(struct socket *sock, union sctp_sockstore addr,
                       void *data, size_t datalen, struct sctp_rcvinfo rcv,
                       int flags, void *ulp_info) {
   DataChannelConnection *connection =
       static_cast<DataChannelConnection *>(ulp_info);
+||||||| merged common ancestors
+static int
+receive_cb(struct socket* sock, union sctp_sockstore addr,
+           void *data, size_t datalen,
+           struct sctp_rcvinfo rcv, int flags, void *ulp_info)
+{
+  DataChannelConnection *connection = static_cast<DataChannelConnection*>(ulp_info);
+=======
+static int receive_cb(struct socket* sock, union sctp_sockstore addr,
+                      void* data, size_t datalen, struct sctp_rcvinfo rcv,
+                      int flags, void* ulp_info) {
+  DataChannelConnection* connection =
+      static_cast<DataChannelConnection*>(ulp_info);
+>>>>>>> upstream-releases
   return connection->ReceiveCallback(sock, data, datalen, rcv, flags);
 }
 
+<<<<<<< HEAD
 static DataChannelConnection *GetConnectionFromSocket(struct socket *sock) {
   struct sockaddr *addrs = nullptr;
+||||||| merged common ancestors
+static
+DataChannelConnection *
+GetConnectionFromSocket(struct socket* sock)
+{
+  struct sockaddr *addrs = nullptr;
+=======
+static DataChannelConnection* GetConnectionFromSocket(struct socket* sock) {
+  struct sockaddr* addrs = nullptr;
+>>>>>>> upstream-releases
   int naddrs = usrsctp_getladdrs(sock, 0, &addrs);
   if (naddrs <= 0 || addrs[0].sa_family != AF_CONN) {
     return nullptr;
@@ -252,18 +367,39 @@ static DataChannelConnection *GetConnectionFromSocket(struct socket *sock) {
   // then free the list of addresses once we have the pointer.  We only open
   // AF_CONN sockets, and they should all have the sconn_addr set to the
   // pointer that created them, so [0] is as good as any other.
+<<<<<<< HEAD
   struct sockaddr_conn *sconn =
       reinterpret_cast<struct sockaddr_conn *>(&addrs[0]);
   DataChannelConnection *connection =
       reinterpret_cast<DataChannelConnection *>(sconn->sconn_addr);
+||||||| merged common ancestors
+  struct sockaddr_conn *sconn = reinterpret_cast<struct sockaddr_conn *>(&addrs[0]);
+  DataChannelConnection *connection =
+    reinterpret_cast<DataChannelConnection *>(sconn->sconn_addr);
+=======
+  struct sockaddr_conn* sconn =
+      reinterpret_cast<struct sockaddr_conn*>(&addrs[0]);
+  DataChannelConnection* connection =
+      reinterpret_cast<DataChannelConnection*>(sconn->sconn_addr);
+>>>>>>> upstream-releases
   usrsctp_freeladdrs(addrs);
 
   return connection;
 }
 
 // called when the buffer empties to the threshold value
+<<<<<<< HEAD
 static int threshold_event(struct socket *sock, uint32_t sb_free) {
   DataChannelConnection *connection = GetConnectionFromSocket(sock);
+||||||| merged common ancestors
+static int
+threshold_event(struct socket* sock, uint32_t sb_free)
+{
+  DataChannelConnection *connection = GetConnectionFromSocket(sock);
+=======
+static int threshold_event(struct socket* sock, uint32_t sb_free) {
+  DataChannelConnection* connection = GetConnectionFromSocket(sock);
+>>>>>>> upstream-releases
   if (connection) {
     connection->SendDeferredMessages();
   } else {
@@ -272,7 +408,15 @@ static int threshold_event(struct socket *sock, uint32_t sb_free) {
   return 0;
 }
 
+<<<<<<< HEAD
 static void debug_printf(const char *format, ...) {
+||||||| merged common ancestors
+static void
+debug_printf(const char *format, ...)
+{
+=======
+static void debug_printf(const char* format, ...) {
+>>>>>>> upstream-releases
   va_list ap;
   char buffer[1024];
 
@@ -289,6 +433,7 @@ static void debug_printf(const char *format, ...) {
   }
 }
 
+<<<<<<< HEAD
 DataChannelConnection::DataChannelConnection(DataConnectionListener *listener,
                                              nsIEventTarget *aTarget,
                                              MediaTransportHandler *aHandler)
@@ -318,6 +463,40 @@ DataChannelConnection::DataChannelConnection(DataConnectionListener *listener,
 
 DataChannelConnection::~DataChannelConnection() {
   LOG(("Deleting DataChannelConnection %p", (void *)this));
+||||||| merged common ancestors
+DataChannelConnection::DataChannelConnection(DataConnectionListener *listener,
+                                             nsIEventTarget *aTarget)
+  : NeckoTargetHolder(aTarget)
+  , mLock("netwerk::sctp::DataChannelConnection")
+  , mSendInterleaved(false)
+  , mPpidFragmentation(false)
+  , mMaxMessageSizeSet(false)
+  , mMaxMessageSize(0)
+  , mAllocateEven(false)
+{
+  mCurrentStream = 0;
+  mState = CLOSED;
+  mSocket = nullptr;
+  mMasterSocket = nullptr;
+  mListener = listener;
+  mDtls = nullptr;
+  mLocalPort = 0;
+  mRemotePort = 0;
+  mPendingType = PENDING_NONE;
+  LOG(("Constructor DataChannelConnection=%p, listener=%p", this, mListener.get()));
+  mInternalIOThread = nullptr;
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+  mShutdown = false;
+#endif
+}
+
+DataChannelConnection::~DataChannelConnection()
+{
+  LOG(("Deleting DataChannelConnection %p", (void *) this));
+=======
+DataChannelConnection::~DataChannelConnection() {
+  LOG(("Deleting DataChannelConnection %p", (void*)this));
+>>>>>>> upstream-releases
   // This may die on the MainThread, or on the STS thread
   ASSERT_WEBRTC(mState == CLOSED);
   MOZ_ASSERT(!mMasterSocket);
@@ -329,8 +508,16 @@ DataChannelConnection::~DataChannelConnection() {
     if (mInternalIOThread) {
       // Avoid spinning the event thread from here (which if we're mainthread
       // is in the event loop already)
+<<<<<<< HEAD
       nsCOMPtr<nsIRunnable> r = WrapRunnable(
           nsCOMPtr<nsIThread>(mInternalIOThread), &nsIThread::Shutdown);
+||||||| merged common ancestors
+      nsCOMPtr<nsIRunnable> r = WrapRunnable(nsCOMPtr<nsIThread>(mInternalIOThread),
+                                             &nsIThread::Shutdown);
+=======
+      nsCOMPtr<nsIRunnable> r = WrapRunnable(
+          nsCOMPtr<nsIThread>(mInternalIOThread), &nsIThread::AsyncShutdown);
+>>>>>>> upstream-releases
       Dispatch(r.forget());
     }
   } else {
@@ -346,7 +533,13 @@ void DataChannelConnection::Destroy() {
   // if we really want it to do true clean shutdowns it can
   // create a dependant Internal object that would remain around
   // until the network shut down the association or timed out.
+<<<<<<< HEAD
   LOG(("Destroying DataChannelConnection %p", (void *)this));
+||||||| merged common ancestors
+  LOG(("Destroying DataChannelConnection %p", (void *) this));
+=======
+  LOG(("Destroying DataChannelConnection %p", (void*)this));
+>>>>>>> upstream-releases
   ASSERT_WEBRTC(NS_IsMainThread());
   CloseAll();
 
@@ -377,18 +570,34 @@ void DataChannelConnection::Destroy() {
   // nsDOMDataChannel objects have refs to DataChannels that have refs to us
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::DestroyOnSTS(struct socket *aMasterSocket,
                                          struct socket *aSocket) {
   if (aSocket && aSocket != aMasterSocket) usrsctp_close(aSocket);
   if (aMasterSocket) usrsctp_close(aMasterSocket);
+||||||| merged common ancestors
+void DataChannelConnection::DestroyOnSTS(struct socket *aMasterSocket,
+                                         struct socket *aSocket)
+{
+  if (aSocket && aSocket != aMasterSocket)
+    usrsctp_close(aSocket);
+  if (aMasterSocket)
+    usrsctp_close(aMasterSocket);
+=======
+void DataChannelConnection::DestroyOnSTS(struct socket* aMasterSocket,
+                                         struct socket* aSocket) {
+  if (aSocket && aSocket != aMasterSocket) usrsctp_close(aSocket);
+  if (aMasterSocket) usrsctp_close(aMasterSocket);
+>>>>>>> upstream-releases
 
-  usrsctp_deregister_address(static_cast<void *>(this));
-  LOG(("Deregistered %p from the SCTP stack.", static_cast<void *>(this)));
+  usrsctp_deregister_address(static_cast<void*>(this));
+  LOG(("Deregistered %p from the SCTP stack.", static_cast<void*>(this)));
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   mShutdown = true;
 #endif
 
   disconnect_all();
+  mTransportHandler = nullptr;
 
   // we may have queued packet sends on STS after this; dispatch to ourselves
   // before finishing here so we can be sure there aren't anymore runnables
@@ -399,14 +608,64 @@ void DataChannelConnection::DestroyOnSTS(struct socket *aMasterSocket,
                  NS_DISPATCH_NORMAL);
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::DestroyOnSTSFinal() {
   mTransportHandler = nullptr;
+||||||| merged common ancestors
+void DataChannelConnection::DestroyOnSTSFinal()
+{
+  mTransportFlow = nullptr;
+  mDtls = nullptr;
+=======
+void DataChannelConnection::DestroyOnSTSFinal() {
+>>>>>>> upstream-releases
   sDataChannelShutdown->CreateConnectionShutdown(this);
 }
 
+<<<<<<< HEAD
 bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
                                  bool aMaxMessageSizeSet,
                                  uint64_t aMaxMessageSize) {
+||||||| merged common ancestors
+bool
+DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams, bool aMaxMessageSizeSet,
+                            uint64_t aMaxMessageSize)
+{
+=======
+Maybe<RefPtr<DataChannelConnection>> DataChannelConnection::Create(
+    DataChannelConnection::DataConnectionListener* aListener,
+    nsIEventTarget* aTarget, MediaTransportHandler* aHandler,
+    const uint16_t aLocalPort, const uint16_t aNumStreams,
+    const Maybe<uint64_t>& aMaxMessageSize) {
+  ASSERT_WEBRTC(NS_IsMainThread());
+
+  RefPtr<DataChannelConnection> connection = new DataChannelConnection(
+      aListener, aTarget, aHandler);  // Walks into a bar
+  return connection->Init(aLocalPort, aNumStreams, aMaxMessageSize)
+             ? Some(connection)
+             : Nothing();
+}
+
+DataChannelConnection::DataChannelConnection(
+    DataChannelConnection::DataConnectionListener* aListener,
+    nsIEventTarget* aTarget, MediaTransportHandler* aHandler)
+    : NeckoTargetHolder(aTarget),
+      mLock("netwerk::sctp::DataChannelConnection"),
+      mListener(aListener),
+      mTransportHandler(aHandler) {
+  LOG(("Constructor DataChannelConnection=%p, listener=%p", this,
+       mListener.get()));
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+  mShutdown = false;
+#endif
+}
+
+bool DataChannelConnection::Init(const uint16_t aLocalPort,
+                                 const uint16_t aNumStreams,
+                                 const Maybe<uint64_t>& aMaxMessageSize) {
+  ASSERT_WEBRTC(NS_IsMainThread());
+
+>>>>>>> upstream-releases
   struct sctp_initmsg initmsg;
   struct sctp_assoc_value av;
   struct sctp_event event;
@@ -419,13 +678,9 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
       SCTP_SEND_FAILED_EVENT,     SCTP_STREAM_RESET_EVENT,
       SCTP_STREAM_CHANGE_EVENT};
   {
-    ASSERT_WEBRTC(NS_IsMainThread());
     // MutexAutoLock lock(mLock); Not needed since we're on mainthread always
-
-    mSendInterleaved = false;
-    mPpidFragmentation = false;
-    mMaxMessageSizeSet = false;
-    SetMaxMessageSize(aMaxMessageSizeSet, aMaxMessageSize);
+    mLocalPort = aLocalPort;
+    SetMaxMessageSize(aMaxMessageSize.isSome(), aMaxMessageSize.valueOr(0));
 
     if (!sctp_initialized) {
       LOG(("sctp_init"));
@@ -475,12 +730,12 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
   int buf_size = 1024 * 1024;
 
   if (usrsctp_setsockopt(mMasterSocket, SOL_SOCKET, SO_RCVBUF,
-                         (const void *)&buf_size, sizeof(buf_size)) < 0) {
+                         (const void*)&buf_size, sizeof(buf_size)) < 0) {
     LOG(("Couldn't change receive buffer size on SCTP socket"));
     goto error_cleanup;
   }
   if (usrsctp_setsockopt(mMasterSocket, SOL_SOCKET, SO_SNDBUF,
-                         (const void *)&buf_size, sizeof(buf_size)) < 0) {
+                         (const void*)&buf_size, sizeof(buf_size)) < 0) {
     LOG(("Couldn't change send buffer size on SCTP socket"));
     goto error_cleanup;
   }
@@ -500,8 +755,16 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
   struct linger l;
   l.l_onoff = 1;
   l.l_linger = 0;
+<<<<<<< HEAD
   if (usrsctp_setsockopt(mMasterSocket, SOL_SOCKET, SO_LINGER, (const void *)&l,
                          (socklen_t)sizeof(struct linger)) < 0) {
+||||||| merged common ancestors
+  if (usrsctp_setsockopt(mMasterSocket, SOL_SOCKET, SO_LINGER,
+                         (const void *)&l, (socklen_t)sizeof(struct linger)) < 0) {
+=======
+  if (usrsctp_setsockopt(mMasterSocket, SOL_SOCKET, SO_LINGER, (const void*)&l,
+                         (socklen_t)sizeof(struct linger)) < 0) {
+>>>>>>> upstream-releases
     LOG(("Couldn't set SO_LINGER on SCTP socket"));
     // unsafe to allow it to continue if this fails
     goto error_cleanup;
@@ -513,13 +776,27 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
   {
     const int option_value = 1;
     if (usrsctp_setsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_REUSE_PORT,
+<<<<<<< HEAD
                            (const void *)&option_value,
                            (socklen_t)sizeof(option_value)) < 0) {
+||||||| merged common ancestors
+                           (const void *)&option_value, (socklen_t)sizeof(option_value)) < 0) {
+=======
+                           (const void*)&option_value,
+                           (socklen_t)sizeof(option_value)) < 0) {
+>>>>>>> upstream-releases
       LOG(("Couldn't set SCTP_REUSE_PORT on SCTP socket"));
     }
     if (usrsctp_setsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_NODELAY,
+<<<<<<< HEAD
                            (const void *)&option_value,
                            (socklen_t)sizeof(option_value)) < 0) {
+||||||| merged common ancestors
+                           (const void *)&option_value, (socklen_t)sizeof(option_value)) < 0) {
+=======
+                           (const void*)&option_value,
+                           (socklen_t)sizeof(option_value)) < 0) {
+>>>>>>> upstream-releases
       LOG(("Couldn't set SCTP_NODELAY on SCTP socket"));
     }
   }
@@ -528,8 +805,15 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
   {
     const int option_value = 1;
     if (usrsctp_setsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_EXPLICIT_EOR,
+<<<<<<< HEAD
                            (const void *)&option_value,
                            (socklen_t)sizeof(option_value)) < 0) {
+||||||| merged common ancestors
+                           (const void *)&option_value, (socklen_t)sizeof(option_value)) < 0) {
+=======
+                           (const void*)&option_value,
+                           (socklen_t)sizeof(option_value)) < 0) {
+>>>>>>> upstream-releases
       LOG(("*** failed enable explicit EOR mode %d", errno));
       goto error_cleanup;
     }
@@ -568,11 +852,6 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
     }
   }
 
-  // Update number of streams
-  mStreams.AppendElements(aNumStreams);
-  for (uint32_t i = 0; i < aNumStreams; ++i) {
-    mStreams[i] = nullptr;
-  }
   memset(&initmsg, 0, sizeof(initmsg));
   len = sizeof(initmsg);
   if (usrsctp_getsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_INITMSG, &initmsg,
@@ -591,8 +870,8 @@ bool DataChannelConnection::Init(unsigned short aPort, uint16_t aNumStreams,
   }
 
   mSocket = nullptr;
-  usrsctp_register_address(static_cast<void *>(this));
-  LOG(("Registered %p within the SCTP stack.", static_cast<void *>(this)));
+  usrsctp_register_address(static_cast<void*>(this));
+  LOG(("Registered %p within the SCTP stack.", static_cast<void*>(this)));
   return true;
 
 error_cleanup:
@@ -613,7 +892,6 @@ void DataChannelConnection::SetMaxMessageSize(bool aMaxMessageSizeSet,
   mMaxMessageSizeSet = aMaxMessageSizeSet;
   mMaxMessageSize = aMaxMessageSize;
 
-  bool ppidFragmentationEnforced = false;
   nsresult rv;
   nsCOMPtr<nsIPrefService> prefs =
       do_GetService("@mozilla.org/preferences-service;1", &rv);
@@ -621,6 +899,7 @@ void DataChannelConnection::SetMaxMessageSize(bool aMaxMessageSizeSet,
     nsCOMPtr<nsIPrefBranch> branch = do_QueryInterface(prefs);
 
     if (branch) {
+<<<<<<< HEAD
       if (!NS_FAILED(branch->GetBoolPref(
               "media.peerconnection.sctp.force_ppid_fragmentation",
               &mPpidFragmentation))) {
@@ -630,6 +909,17 @@ void DataChannelConnection::SetMaxMessageSize(bool aMaxMessageSizeSet,
         ppidFragmentationEnforced = true;
       }
 
+||||||| merged common ancestors
+      if (!NS_FAILED(branch->GetBoolPref(
+          "media.peerconnection.sctp.force_ppid_fragmentation", &mPpidFragmentation))) {
+        // Ensure that forced on/off PPID fragmentation does not get overridden when Firefox has
+        // been detected.
+        mMaxMessageSizeSet = true;
+        ppidFragmentationEnforced = true;
+      }
+
+=======
+>>>>>>> upstream-releases
       int32_t temp;
       if (!NS_FAILED(branch->GetIntPref(
               "media.peerconnection.sctp.force_maximum_message_size", &temp))) {
@@ -654,11 +944,20 @@ void DataChannelConnection::SetMaxMessageSize(bool aMaxMessageSizeSet,
     mMaxMessageSize = WEBRTC_DATACHANNEL_MAX_MESSAGE_SIZE_REMOTE;
   }
 
+<<<<<<< HEAD
   LOG(("Use PPID-based fragmentation/reassembly: %s (enforced=%s)",
        mPpidFragmentation ? "yes" : "no",
        ppidFragmentationEnforced ? "yes" : "no"));
   LOG(("Maximum message size (outgoing data): %" PRIu64
        " (set=%s, enforced=%s)",
+||||||| merged common ancestors
+  LOG(("Use PPID-based fragmentation/reassembly: %s (enforced=%s)",
+       mPpidFragmentation ? "yes" : "no", ppidFragmentationEnforced ? "yes" : "no"));
+  LOG(("Maximum message size (outgoing data): %" PRIu64 " (set=%s, enforced=%s)",
+=======
+  LOG(("Maximum message size (outgoing data): %" PRIu64
+       " (set=%s, enforced=%s)",
+>>>>>>> upstream-releases
        mMaxMessageSize, mMaxMessageSizeSet ? "yes" : "no",
        aMaxMessageSize != mMaxMessageSize ? "yes" : "no"));
 }
@@ -666,10 +965,30 @@ void DataChannelConnection::SetMaxMessageSize(bool aMaxMessageSizeSet,
 uint64_t DataChannelConnection::GetMaxMessageSize() { return mMaxMessageSize; }
 
 #ifdef MOZ_PEERCONNECTION
+<<<<<<< HEAD
 
 bool DataChannelConnection::ConnectToTransport(const std::string &aTransportId,
                                                bool aClient, uint16_t localport,
                                                uint16_t remoteport) {
+||||||| merged common ancestors
+void
+DataChannelConnection::SetEvenOdd()
+{
+  ASSERT_WEBRTC(IsSTSThread());
+
+  MOZ_ASSERT(mDtls);  // DTLS is mandatory
+  mAllocateEven = (mDtls->role() == TransportLayerDtls::CLIENT);
+}
+
+bool
+DataChannelConnection::ConnectViaTransportFlow(TransportFlow *aFlow, uint16_t localport, uint16_t remoteport)
+{
+=======
+
+bool DataChannelConnection::ConnectToTransport(const std::string& aTransportId,
+                                               bool aClient, uint16_t localport,
+                                               uint16_t remoteport) {
+>>>>>>> upstream-releases
   LOG(("Connect DTLS local %u, remote %u", localport, remoteport));
 
   MOZ_ASSERT(mMasterSocket,
@@ -681,22 +1000,62 @@ bool DataChannelConnection::ConnectToTransport(const std::string &aTransportId,
   mLocalPort = localport;
   mRemotePort = remoteport;
   mState = CONNECTING;
+  mAllocateEven = Some(aClient);
 
+  // Could be faster. Probably doesn't matter.
+  while (auto channel = mChannels.Get(INVALID_STREAM)) {
+    mChannels.Remove(channel);
+    channel->mStream = FindFreeStream();
+    if (channel->mStream != INVALID_STREAM) {
+      mChannels.Insert(channel);
+    }
+  }
+
+<<<<<<< HEAD
   RUN_ON_THREAD(
       mSTS,
       WrapRunnable(RefPtr<DataChannelConnection>(this),
                    &DataChannelConnection::SetSignals, aTransportId, aClient),
       NS_DISPATCH_NORMAL);
+||||||| merged common ancestors
+  RUN_ON_THREAD(mSTS, WrapRunnable(RefPtr<DataChannelConnection>(this),
+                                   &DataChannelConnection::SetSignals),
+                NS_DISPATCH_NORMAL);
+=======
+  RUN_ON_THREAD(mSTS,
+                WrapRunnable(RefPtr<DataChannelConnection>(this),
+                             &DataChannelConnection::SetSignals, aTransportId),
+                NS_DISPATCH_NORMAL);
+>>>>>>> upstream-releases
   return true;
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::SetSignals(const std::string &aTransportId,
                                        bool aClient) {
+||||||| merged common ancestors
+void
+DataChannelConnection::SetSignals()
+{
+=======
+void DataChannelConnection::SetSignals(const std::string& aTransportId) {
+>>>>>>> upstream-releases
   ASSERT_WEBRTC(IsSTSThread());
+<<<<<<< HEAD
   mTransportId = aTransportId;
   mAllocateEven = aClient;
   mTransportHandler->SignalPacketReceived.connect(
       this, &DataChannelConnection::SctpDtlsInput);
+||||||| merged common ancestors
+  mDtls = static_cast<TransportLayerDtls*>(mTransportFlow->GetLayer("dtls"));
+  ASSERT_WEBRTC(mDtls);
+  LOG(("Setting transport signals, state: %d", mDtls->state()));
+  mDtls->SignalPacketReceived.connect(this, &DataChannelConnection::SctpDtlsInput);
+=======
+  mTransportId = aTransportId;
+  mTransportHandler->SignalPacketReceived.connect(
+      this, &DataChannelConnection::SctpDtlsInput);
+>>>>>>> upstream-releases
   // SignalStateChange() doesn't call you with the initial state
   if (mTransportHandler->GetState(mTransportId, false) ==
       TransportLayer::TS_OPEN) {
@@ -709,6 +1068,7 @@ void DataChannelConnection::SetSignals(const std::string &aTransportId,
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::TransportStateChange(
     const std::string &aTransportId, TransportLayer::State aState) {
   if (aState == TransportLayer::TS_OPEN) {
@@ -718,6 +1078,22 @@ void DataChannelConnection::TransportStateChange(
 
 void DataChannelConnection::CompleteConnect() {
   LOG(("dtls open"));
+||||||| merged common ancestors
+void
+DataChannelConnection::CompleteConnect(TransportLayer *layer, TransportLayer::State state)
+{
+  LOG(("Data transport state: %d", state));
+=======
+void DataChannelConnection::TransportStateChange(
+    const std::string& aTransportId, TransportLayer::State aState) {
+  if (aState == TransportLayer::TS_OPEN) {
+    CompleteConnect();
+  }
+}
+
+void DataChannelConnection::CompleteConnect() {
+  LOG(("dtls open"));
+>>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   ASSERT_WEBRTC(IsSTSThread());
   if (!mMasterSocket) {
@@ -727,24 +1103,40 @@ void DataChannelConnection::CompleteConnect() {
   struct sockaddr_conn addr;
   memset(&addr, 0, sizeof(addr));
   addr.sconn_family = AF_CONN;
-#if defined(__Userspace_os_Darwin)
+#  if defined(__Userspace_os_Darwin)
   addr.sconn_len = sizeof(addr);
-#endif
+#  endif
   addr.sconn_port = htons(mLocalPort);
-  addr.sconn_addr = static_cast<void *>(this);
+  addr.sconn_addr = static_cast<void*>(this);
 
   LOG(("Calling usrsctp_bind"));
+<<<<<<< HEAD
   int r = usrsctp_bind(
       mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
+||||||| merged common ancestors
+  int r = usrsctp_bind(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr),
+                       sizeof(addr));
+=======
+  int r = usrsctp_bind(mMasterSocket, reinterpret_cast<struct sockaddr*>(&addr),
+                       sizeof(addr));
+>>>>>>> upstream-releases
   if (r < 0) {
     LOG(("usrsctp_bind failed: %d", r));
   } else {
     // This is the remote addr
     addr.sconn_port = htons(mRemotePort);
     LOG(("Calling usrsctp_connect"));
+<<<<<<< HEAD
     r = usrsctp_connect(mMasterSocket,
                         reinterpret_cast<struct sockaddr *>(&addr),
                         sizeof(addr));
+||||||| merged common ancestors
+    r = usrsctp_connect(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr),
+                        sizeof(addr));
+=======
+    r = usrsctp_connect(
+        mMasterSocket, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr));
+>>>>>>> upstream-releases
     if (r >= 0 || errno == EINPROGRESS) {
       struct sctp_paddrparams paddrparams;
       socklen_t opt_len;
@@ -799,17 +1191,38 @@ void DataChannelConnection::ProcessQueuedOpens() {
   // Can't copy nsDeque's.  Move into temp array since any that fail will
   // go back to mPending
   nsDeque temp;
+<<<<<<< HEAD
   DataChannel *temp_channel;  // really already_AddRefed<>
   while (nullptr !=
          (temp_channel = static_cast<DataChannel *>(mPending.PopFront()))) {
     temp.Push(static_cast<void *>(temp_channel));
+||||||| merged common ancestors
+  DataChannel *temp_channel; // really already_AddRefed<>
+  while (nullptr != (temp_channel = static_cast<DataChannel *>(mPending.PopFront()))) {
+    temp.Push(static_cast<void *>(temp_channel));
+=======
+  DataChannel* temp_channel;  // really already_AddRefed<>
+  while (nullptr !=
+         (temp_channel = static_cast<DataChannel*>(mPending.PopFront()))) {
+    temp.Push(static_cast<void*>(temp_channel));
+>>>>>>> upstream-releases
   }
 
   RefPtr<DataChannel> channel;
+<<<<<<< HEAD
   // All these entries have an AddRef(); make that explicit now via the
   // dont_AddRef()
   while (nullptr !=
          (channel = dont_AddRef(static_cast<DataChannel *>(temp.PopFront())))) {
+||||||| merged common ancestors
+  // All these entries have an AddRef(); make that explicit now via the dont_AddRef()
+  while (nullptr != (channel = dont_AddRef(static_cast<DataChannel *>(temp.PopFront())))) {
+=======
+  // All these entries have an AddRef(); make that explicit now via the
+  // dont_AddRef()
+  while (nullptr !=
+         (channel = dont_AddRef(static_cast<DataChannel*>(temp.PopFront())))) {
+>>>>>>> upstream-releases
     if (channel->mFlags & DATA_CHANNEL_FLAGS_FINISH_OPEN) {
       LOG(("Processing queued open for %p (%u)", channel.get(),
            channel->mStream));
@@ -825,16 +1238,36 @@ void DataChannelConnection::ProcessQueuedOpens() {
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::SctpDtlsInput(const std::string &aTransportId,
                                           MediaPacket &packet) {
   if ((packet.type() != MediaPacket::SCTP) || (mTransportId != aTransportId)) {
     return;
   }
 
-  if (MOZ_LOG_TEST(gSCTPLog, LogLevel::Debug)) {
-    char *buf;
+||||||| merged common ancestors
+void
+DataChannelConnection::SctpDtlsInput(TransportLayer *layer, MediaPacket& packet)
+{
+=======
+void DataChannelConnection::SctpDtlsInput(const std::string& aTransportId,
+                                          MediaPacket& packet) {
+  if ((packet.type() != MediaPacket::SCTP) || (mTransportId != aTransportId)) {
+    return;
+  }
 
+>>>>>>> upstream-releases
+  if (MOZ_LOG_TEST(gSCTPLog, LogLevel::Debug)) {
+    char* buf;
+
+<<<<<<< HEAD
     if ((buf = usrsctp_dumppacket((void *)packet.data(), packet.len(),
+||||||| merged common ancestors
+    if ((buf = usrsctp_dumppacket((void *)packet.data(),
+                                  packet.len(),
+=======
+    if ((buf = usrsctp_dumppacket((void*)packet.data(), packet.len(),
+>>>>>>> upstream-releases
                                   SCTP_DUMP_INBOUND)) != nullptr) {
       SCTP_LOG(("%s", buf));
       usrsctp_freedumpbuffer(buf);
@@ -842,25 +1275,60 @@ void DataChannelConnection::SctpDtlsInput(const std::string &aTransportId,
   }
   // Pass the data to SCTP
   MutexAutoLock lock(mLock);
-  usrsctp_conninput(static_cast<void *>(this), packet.data(), packet.len(), 0);
+  usrsctp_conninput(static_cast<void*>(this), packet.data(), packet.len(), 0);
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::SendPacket(nsAutoPtr<MediaPacket> packet) {
   // LOG(("%p: SCTP/DTLS sent %ld bytes", this, len));
   if (!mTransportId.empty()) {
     mTransportHandler->SendPacket(mTransportId, *packet);
   }
+||||||| merged common ancestors
+int
+DataChannelConnection::SendPacket(nsAutoPtr<MediaPacket> packet)
+{
+  //LOG(("%p: SCTP/DTLS sent %ld bytes", this, len));
+  if (mDtls) {
+    return mDtls->SendPacket(*packet) < 0 ? 1 : 0;
+  }
+  return 0;
+=======
+void DataChannelConnection::SendPacket(std::unique_ptr<MediaPacket>&& packet) {
+  mSTS->Dispatch(NS_NewRunnableFunction(
+      "DataChannelConnection::SendPacket",
+      [this, self = RefPtr<DataChannelConnection>(this),
+       packet = std::move(packet)]() mutable {
+        // LOG(("%p: SCTP/DTLS sent %ld bytes", this, len));
+        if (!mTransportId.empty() && mTransportHandler) {
+          mTransportHandler->SendPacket(mTransportId, std::move(*packet));
+        }
+      }));
+>>>>>>> upstream-releases
 }
 
 /* static */
+<<<<<<< HEAD
 int DataChannelConnection::SctpDtlsOutput(void *addr, void *buffer,
                                           size_t length, uint8_t tos,
                                           uint8_t set_df) {
   DataChannelConnection *peer = static_cast<DataChannelConnection *>(addr);
+||||||| merged common ancestors
+int
+DataChannelConnection::SctpDtlsOutput(void *addr, void *buffer, size_t length,
+                                      uint8_t tos, uint8_t set_df)
+{
+  DataChannelConnection *peer = static_cast<DataChannelConnection *>(addr);
+=======
+int DataChannelConnection::SctpDtlsOutput(void* addr, void* buffer,
+                                          size_t length, uint8_t tos,
+                                          uint8_t set_df) {
+  DataChannelConnection* peer = static_cast<DataChannelConnection*>(addr);
+>>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(!peer->mShutdown);
 
   if (MOZ_LOG_TEST(gSCTPLog, LogLevel::Debug)) {
-    char *buf;
+    char* buf;
 
     if ((buf = usrsctp_dumppacket(buffer, length, SCTP_DUMP_OUTBOUND)) !=
         nullptr) {
@@ -874,10 +1342,20 @@ int DataChannelConnection::SctpDtlsOutput(void *addr, void *buffer,
   // SCTP has an option for Apple, on IP connections only, to release at least
   // one of the locks before calling a packet output routine; with changes to
   // the underlying SCTP stack this might remove the need to use an async proxy.
+<<<<<<< HEAD
   nsAutoPtr<MediaPacket> packet(new MediaPacket);
   packet->SetType(MediaPacket::SCTP);
   packet->Copy(static_cast<const uint8_t *>(buffer), length);
+||||||| merged common ancestors
+  nsAutoPtr<MediaPacket> packet(new MediaPacket);
+  packet->Copy(static_cast<const uint8_t*>(buffer), length);
+=======
+  std::unique_ptr<MediaPacket> packet(new MediaPacket);
+  packet->SetType(MediaPacket::SCTP);
+  packet->Copy(static_cast<const uint8_t*>(buffer), length);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // XXX It might be worthwhile to add an assertion against the thread
   // somehow getting into the DataChannel/SCTP code again, as
   // DISPATCH_SYNC is not fully blocking.  This may be tricky, as it
@@ -886,6 +1364,25 @@ int DataChannelConnection::SctpDtlsOutput(void *addr, void *buffer,
                                     &DataChannelConnection::SendPacket, packet),
                        NS_DISPATCH_NORMAL);
   return 0;  // cheat!  Packets can always be dropped later anyways
+||||||| merged common ancestors
+  // XXX It might be worthwhile to add an assertion against the thread
+  // somehow getting into the DataChannel/SCTP code again, as
+  // DISPATCH_SYNC is not fully blocking.  This may be tricky, as it
+  // needs to be a per-thread check, not a global.
+  peer->mSTS->Dispatch(WrapRunnable(
+                         RefPtr<DataChannelConnection>(peer),
+                         &DataChannelConnection::SendPacket, packet),
+                                 NS_DISPATCH_NORMAL);
+  return 0; // cheat!  Packets can always be dropped later anyways
+=======
+  if (NS_IsMainThread() && peer->mDeferSend) {
+    peer->mDeferredSend.emplace_back(std::move(packet));
+    return 0;
+  }
+
+  peer->SendPacket(std::move(packet));
+  return 0;  // cheat!  Packets can always be dropped later anyways
+>>>>>>> upstream-releases
 }
 #endif
 
@@ -901,17 +1398,24 @@ bool DataChannelConnection::Listen(unsigned short port) {
                        "Blocks, do not call from main thread!!!");
 
   /* Acting as the 'server' */
-  memset((void *)&addr, 0, sizeof(addr));
-#ifdef HAVE_SIN_LEN
+  memset((void*)&addr, 0, sizeof(addr));
+#  ifdef HAVE_SIN_LEN
   addr.sin_len = sizeof(struct sockaddr_in);
-#endif
+#  endif
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
   LOG(("Waiting for connections on port %u", ntohs(addr.sin_port)));
   mState = CONNECTING;
+<<<<<<< HEAD
   if (usrsctp_bind(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr),
                    sizeof(struct sockaddr_in)) < 0) {
+||||||| merged common ancestors
+  if (usrsctp_bind(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr), sizeof(struct sockaddr_in)) < 0) {
+=======
+  if (usrsctp_bind(mMasterSocket, reinterpret_cast<struct sockaddr*>(&addr),
+                   sizeof(struct sockaddr_in)) < 0) {
+>>>>>>> upstream-releases
     LOG(("***Failed userspace_bind"));
     return false;
   }
@@ -932,8 +1436,16 @@ bool DataChannelConnection::Listen(unsigned short port) {
   struct linger l;
   l.l_onoff = 1;
   l.l_linger = 0;
+<<<<<<< HEAD
   if (usrsctp_setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (const void *)&l,
                          (socklen_t)sizeof(struct linger)) < 0) {
+||||||| merged common ancestors
+  if (usrsctp_setsockopt(mSocket, SOL_SOCKET, SO_LINGER,
+                         (const void *)&l, (socklen_t)sizeof(struct linger)) < 0) {
+=======
+  if (usrsctp_setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (const void*)&l,
+                         (socklen_t)sizeof(struct linger)) < 0) {
+>>>>>>> upstream-releases
     LOG(("Couldn't set SO_LINGER on SCTP socket"));
   }
 
@@ -942,13 +1454,29 @@ bool DataChannelConnection::Listen(unsigned short port) {
   // delivered
   LOG(("%s: sending ON_CONNECTION for %p", __FUNCTION__, this));
   Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+<<<<<<< HEAD
       DataChannelOnMessageAvailable::ON_CONNECTION, this,
       (DataChannel *)nullptr)));
+||||||| merged common ancestors
+             DataChannelOnMessageAvailable::ON_CONNECTION,
+             this, (DataChannel *) nullptr)));
+=======
+      DataChannelOnMessageAvailable::ON_CONNECTION, this,
+      (DataChannel*)nullptr)));
+>>>>>>> upstream-releases
   return true;
 }
 
 // Blocks! - Don't call this from main thread!
+<<<<<<< HEAD
 bool DataChannelConnection::Connect(const char *addr, unsigned short port) {
+||||||| merged common ancestors
+bool
+DataChannelConnection::Connect(const char *addr, unsigned short port)
+{
+=======
+bool DataChannelConnection::Connect(const char* addr, unsigned short port) {
+>>>>>>> upstream-releases
   struct sockaddr_in addr4;
   struct sockaddr_in6 addr6;
 
@@ -957,43 +1485,60 @@ bool DataChannelConnection::Connect(const char *addr, unsigned short port) {
 
   /* Acting as the connector */
   LOG(("Connecting to %s, port %u", addr, port));
-  memset((void *)&addr4, 0, sizeof(struct sockaddr_in));
-  memset((void *)&addr6, 0, sizeof(struct sockaddr_in6));
-#ifdef HAVE_SIN_LEN
+  memset((void*)&addr4, 0, sizeof(struct sockaddr_in));
+  memset((void*)&addr6, 0, sizeof(struct sockaddr_in6));
+#  ifdef HAVE_SIN_LEN
   addr4.sin_len = sizeof(struct sockaddr_in);
-#endif
-#ifdef HAVE_SIN6_LEN
+#  endif
+#  ifdef HAVE_SIN6_LEN
   addr6.sin6_len = sizeof(struct sockaddr_in6);
-#endif
+#  endif
   addr4.sin_family = AF_INET;
   addr6.sin6_family = AF_INET6;
   addr4.sin_port = htons(port);
   addr6.sin6_port = htons(port);
   mState = CONNECTING;
 
-#if !defined(__Userspace_os_Windows)
+#  if !defined(__Userspace_os_Windows)
   if (inet_pton(AF_INET6, addr, &addr6.sin6_addr) == 1) {
+<<<<<<< HEAD
     if (usrsctp_connect(mMasterSocket,
                         reinterpret_cast<struct sockaddr *>(&addr6),
                         sizeof(struct sockaddr_in6)) < 0) {
+||||||| merged common ancestors
+    if (usrsctp_connect(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr6), sizeof(struct sockaddr_in6)) < 0) {
+=======
+    if (usrsctp_connect(mMasterSocket,
+                        reinterpret_cast<struct sockaddr*>(&addr6),
+                        sizeof(struct sockaddr_in6)) < 0) {
+>>>>>>> upstream-releases
       LOG(("*** Failed userspace_connect"));
       return false;
     }
   } else if (inet_pton(AF_INET, addr, &addr4.sin_addr) == 1) {
+<<<<<<< HEAD
     if (usrsctp_connect(mMasterSocket,
                         reinterpret_cast<struct sockaddr *>(&addr4),
                         sizeof(struct sockaddr_in)) < 0) {
+||||||| merged common ancestors
+    if (usrsctp_connect(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr4), sizeof(struct sockaddr_in)) < 0) {
+=======
+    if (usrsctp_connect(mMasterSocket,
+                        reinterpret_cast<struct sockaddr*>(&addr4),
+                        sizeof(struct sockaddr_in)) < 0) {
+>>>>>>> upstream-releases
       LOG(("*** Failed userspace_connect"));
       return false;
     }
   } else {
     LOG(("*** Illegal destination address."));
   }
-#else
+#  else
   {
     struct sockaddr_storage ss;
     int sslen = sizeof(ss);
 
+<<<<<<< HEAD
     if (!WSAStringToAddressA(const_cast<char *>(addr), AF_INET6, nullptr,
                              (struct sockaddr *)&ss, &sslen)) {
       addr6.sin6_addr =
@@ -1001,15 +1546,41 @@ bool DataChannelConnection::Connect(const char *addr, unsigned short port) {
       if (usrsctp_connect(mMasterSocket,
                           reinterpret_cast<struct sockaddr *>(&addr6),
                           sizeof(struct sockaddr_in6)) < 0) {
+||||||| merged common ancestors
+    if (!WSAStringToAddressA(const_cast<char *>(addr), AF_INET6, nullptr, (struct sockaddr*)&ss, &sslen)) {
+      addr6.sin6_addr = (reinterpret_cast<struct sockaddr_in6 *>(&ss))->sin6_addr;
+      if (usrsctp_connect(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr6), sizeof(struct sockaddr_in6)) < 0) {
+=======
+    if (!WSAStringToAddressA(const_cast<char*>(addr), AF_INET6, nullptr,
+                             (struct sockaddr*)&ss, &sslen)) {
+      addr6.sin6_addr =
+          (reinterpret_cast<struct sockaddr_in6*>(&ss))->sin6_addr;
+      if (usrsctp_connect(mMasterSocket,
+                          reinterpret_cast<struct sockaddr*>(&addr6),
+                          sizeof(struct sockaddr_in6)) < 0) {
+>>>>>>> upstream-releases
         LOG(("*** Failed userspace_connect"));
         return false;
       }
+<<<<<<< HEAD
     } else if (!WSAStringToAddressA(const_cast<char *>(addr), AF_INET, nullptr,
                                     (struct sockaddr *)&ss, &sslen)) {
       addr4.sin_addr = (reinterpret_cast<struct sockaddr_in *>(&ss))->sin_addr;
       if (usrsctp_connect(mMasterSocket,
                           reinterpret_cast<struct sockaddr *>(&addr4),
                           sizeof(struct sockaddr_in)) < 0) {
+||||||| merged common ancestors
+    } else if (!WSAStringToAddressA(const_cast<char *>(addr), AF_INET, nullptr, (struct sockaddr*)&ss, &sslen)) {
+      addr4.sin_addr = (reinterpret_cast<struct sockaddr_in *>(&ss))->sin_addr;
+      if (usrsctp_connect(mMasterSocket, reinterpret_cast<struct sockaddr *>(&addr4), sizeof(struct sockaddr_in)) < 0) {
+=======
+    } else if (!WSAStringToAddressA(const_cast<char*>(addr), AF_INET, nullptr,
+                                    (struct sockaddr*)&ss, &sslen)) {
+      addr4.sin_addr = (reinterpret_cast<struct sockaddr_in*>(&ss))->sin_addr;
+      if (usrsctp_connect(mMasterSocket,
+                          reinterpret_cast<struct sockaddr*>(&addr4),
+                          sizeof(struct sockaddr_in)) < 0) {
+>>>>>>> upstream-releases
         LOG(("*** Failed userspace_connect"));
         return false;
       }
@@ -1017,7 +1588,7 @@ bool DataChannelConnection::Connect(const char *addr, unsigned short port) {
       LOG(("*** Illegal destination address."));
     }
   }
-#endif
+#  endif
 
   mSocket = mMasterSocket;
 
@@ -1029,22 +1600,60 @@ bool DataChannelConnection::Connect(const char *addr, unsigned short port) {
   // delivered
   LOG(("%s: sending ON_CONNECTION for %p", __FUNCTION__, this));
   Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+<<<<<<< HEAD
       DataChannelOnMessageAvailable::ON_CONNECTION, this,
       (DataChannel *)nullptr)));
+||||||| merged common ancestors
+             DataChannelOnMessageAvailable::ON_CONNECTION,
+             this, (DataChannel *) nullptr)));
+=======
+      DataChannelOnMessageAvailable::ON_CONNECTION, this,
+      (DataChannel*)nullptr)));
+>>>>>>> upstream-releases
   return true;
 }
 #endif
 
+<<<<<<< HEAD
 DataChannel *DataChannelConnection::FindChannelByStream(uint16_t stream) {
   return mStreams.SafeElementAt(stream);
+||||||| merged common ancestors
+DataChannel *
+DataChannelConnection::FindChannelByStream(uint16_t stream)
+{
+  return mStreams.SafeElementAt(stream);
+=======
+DataChannel* DataChannelConnection::FindChannelByStream(uint16_t stream) {
+  return mChannels.Get(stream).get();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 uint16_t DataChannelConnection::FindFreeStream() {
   uint32_t i, j, limit;
+||||||| merged common ancestors
+uint16_t
+DataChannelConnection::FindFreeStream()
+{
+  uint32_t i, j, limit;
+=======
+uint16_t DataChannelConnection::FindFreeStream() {
+  ASSERT_WEBRTC(NS_IsMainThread());
+  uint16_t i, limit;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   limit = mStreams.Length();
   if (limit > MAX_NUM_STREAMS) limit = MAX_NUM_STREAMS;
+||||||| merged common ancestors
+  limit = mStreams.Length();
+  if (limit > MAX_NUM_STREAMS)
+    limit = MAX_NUM_STREAMS;
+=======
+  limit = MAX_NUM_STREAMS;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   for (i = (mAllocateEven ? 0 : 1); i < limit; i += 2) {
     if (!mStreams[i]) {
       // Verify it's not still in the process of closing
@@ -1054,30 +1663,81 @@ uint16_t DataChannelConnection::FindFreeStream() {
         }
       }
       if (j == mStreamsResetting.Length()) break;
+||||||| merged common ancestors
+  for (i = (mAllocateEven ? 0 : 1); i < limit; i += 2) {
+    if (!mStreams[i]) {
+      // Verify it's not still in the process of closing
+      for (j = 0; j < mStreamsResetting.Length(); ++j) {
+        if (mStreamsResetting[j] == i) {
+          break;
+        }
+      }
+      if (j == mStreamsResetting.Length())
+        break;
+=======
+  MOZ_ASSERT(mAllocateEven.isSome());
+  for (i = (*mAllocateEven ? 0 : 1); i < limit; i += 2) {
+    if (mChannels.Get(i)) {
+      continue;
+    }
+
+    // Verify it's not still in the process of closing
+    size_t j;
+    for (j = 0; j < mStreamsResetting.Length(); ++j) {
+      if (mStreamsResetting[j] == i) {
+        break;
+      }
+    }
+
+    if (j == mStreamsResetting.Length()) {
+      return i;
+>>>>>>> upstream-releases
     }
   }
-  if (i >= limit) {
-    return INVALID_STREAM;
-  }
-  return i;
+  return INVALID_STREAM;
 }
 
+<<<<<<< HEAD
 uint32_t DataChannelConnection::UpdateCurrentStreamIndex() {
   if (mCurrentStream == mStreams.Length() - 1) {
     mCurrentStream = 0;
+||||||| merged common ancestors
+uint32_t
+DataChannelConnection::UpdateCurrentStreamIndex()
+{
+  if (mCurrentStream == mStreams.Length() - 1) {
+      mCurrentStream = 0;
+=======
+uint32_t DataChannelConnection::UpdateCurrentStreamIndex() {
+  RefPtr<DataChannel> channel = mChannels.GetNextChannel(mCurrentStream);
+  if (!channel) {
+    mCurrentStream = 0;
+>>>>>>> upstream-releases
   } else {
-    ++mCurrentStream;
+    mCurrentStream = channel->mStream;
   }
-
   return mCurrentStream;
 }
 
+<<<<<<< HEAD
 uint32_t DataChannelConnection::GetCurrentStreamIndex() {
   // Fix current stream index (in case #streams decreased)
   if (mCurrentStream >= mStreams.Length()) {
     mCurrentStream = 0;
   }
 
+||||||| merged common ancestors
+uint32_t
+DataChannelConnection::GetCurrentStreamIndex()
+{
+  // Fix current stream index (in case #streams decreased)
+  if (mCurrentStream >= mStreams.Length()) {
+    mCurrentStream = 0;
+  }
+
+=======
+uint32_t DataChannelConnection::GetCurrentStreamIndex() {
+>>>>>>> upstream-releases
   return mCurrentStream;
 }
 
@@ -1087,8 +1747,8 @@ bool DataChannelConnection::RequestMoreStreams(int32_t aNeeded) {
   uint32_t outStreamsNeeded;
   socklen_t len;
 
-  if (aNeeded + mStreams.Length() > MAX_NUM_STREAMS) {
-    aNeeded = MAX_NUM_STREAMS - mStreams.Length();
+  if (aNeeded + mNegotiatedIdLimit > MAX_NUM_STREAMS) {
+    aNeeded = MAX_NUM_STREAMS - mNegotiatedIdLimit;
   }
   if (aNeeded <= 0) {
     return false;
@@ -1119,14 +1779,23 @@ bool DataChannelConnection::RequestMoreStreams(int32_t aNeeded) {
     return false;
   }
   LOG(("Requested %u more streams", outStreamsNeeded));
-  // We add to mStreams when we get a SCTP_STREAM_CHANGE_EVENT and the
-  // values are larger than mStreams.Length()
+  // We add to mNegotiatedIdLimit when we get a SCTP_STREAM_CHANGE_EVENT and the
+  // values are larger than mNegotiatedIdLimit
   return true;
 }
 
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendControlMessage(const uint8_t *data, uint32_t len,
                                               uint16_t stream) {
+||||||| merged common ancestors
+int
+DataChannelConnection::SendControlMessage(const uint8_t *data, uint32_t len, uint16_t stream)
+{
+=======
+int DataChannelConnection::SendControlMessage(const uint8_t* data, uint32_t len,
+                                              uint16_t stream) {
+>>>>>>> upstream-releases
   struct sctp_sendv_spa info = {0};
 
   // General flags
@@ -1146,7 +1815,7 @@ int DataChannelConnection::SendControlMessage(const uint8_t *data, uint32_t len,
 #endif
   OutgoingMsg msg(info, data, (size_t)len);
   bool buffered;
-  int error = SendMsgInternalOrBuffer(mBufferedControl, msg, buffered);
+  int error = SendMsgInternalOrBuffer(mBufferedControl, msg, buffered, nullptr);
 
   // Set pending type (if buffered)
   if (!error && buffered && !mPendingType) {
@@ -1162,20 +1831,47 @@ int DataChannelConnection::SendOpenAckMessage(uint16_t stream) {
   memset(&ack, 0, sizeof(struct rtcweb_datachannel_ack));
   ack.msg_type = DATA_CHANNEL_ACK;
 
-  return SendControlMessage((const uint8_t *)&ack, sizeof(ack), stream);
+  return SendControlMessage((const uint8_t*)&ack, sizeof(ack), stream);
 }
 
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendOpenRequestMessage(
     const nsACString &label, const nsACString &protocol, uint16_t stream,
     bool unordered, uint16_t prPolicy, uint32_t prValue) {
   const int label_len = label.Length();     // not including nul
   const int proto_len = protocol.Length();  // not including nul
+||||||| merged common ancestors
+int
+DataChannelConnection::SendOpenRequestMessage(const nsACString& label,
+                                              const nsACString& protocol,
+                                              uint16_t stream, bool unordered,
+                                              uint16_t prPolicy, uint32_t prValue)
+{
+  const int label_len = label.Length(); // not including nul
+  const int proto_len = protocol.Length(); // not including nul
+=======
+int DataChannelConnection::SendOpenRequestMessage(
+    const nsACString& label, const nsACString& protocol, uint16_t stream,
+    bool unordered, uint16_t prPolicy, uint32_t prValue) {
+  const int label_len = label.Length();     // not including nul
+  const int proto_len = protocol.Length();  // not including nul
+>>>>>>> upstream-releases
   // careful - request struct include one char for the label
   const int req_size = sizeof(struct rtcweb_datachannel_open_request) - 1 +
+<<<<<<< HEAD
                        label_len + proto_len;
   struct rtcweb_datachannel_open_request *req =
       (struct rtcweb_datachannel_open_request *)moz_xmalloc(req_size);
+||||||| merged common ancestors
+                        label_len + proto_len;
+  struct rtcweb_datachannel_open_request *req =
+    (struct rtcweb_datachannel_open_request*) moz_xmalloc(req_size);
+=======
+                       label_len + proto_len;
+  struct rtcweb_datachannel_open_request* req =
+      (struct rtcweb_datachannel_open_request*)moz_xmalloc(req_size);
+>>>>>>> upstream-releases
 
   memset(req, 0, req_size);
   req->msg_type = DATA_CHANNEL_OPEN_REQUEST;
@@ -1207,7 +1903,7 @@ int DataChannelConnection::SendOpenRequestMessage(
   memcpy(&req->label[label_len], PromiseFlatCString(protocol).get(), proto_len);
 
   // TODO: req_size is an int... that looks hairy
-  int error = SendControlMessage((const uint8_t *)req, req_size, stream);
+  int error = SendControlMessage((const uint8_t*)req, req_size, stream);
 
   free(req);
   return error;
@@ -1226,8 +1922,16 @@ int DataChannelConnection::SendOpenRequestMessage(
 bool DataChannelConnection::SendDeferredMessages() {
   RefPtr<DataChannel> channel;  // we may null out the refs to this
 
+<<<<<<< HEAD
   // This may block while something is modifying channels, but should not block
   // for IO
+||||||| merged common ancestors
+  // This may block while something is modifying channels, but should not block for IO
+=======
+  // This may block while something is modifying channels, but should not block
+  // for IO
+  ASSERT_WEBRTC(!NS_IsMainThread());
+>>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
 
   LOG(("SendDeferredMessages called, pending type: %d", mPendingType));
@@ -1239,9 +1943,18 @@ bool DataChannelConnection::SendDeferredMessages() {
   // Note: If ndata is not active, check if DCEP messages are currently
   // outstanding. These need to
   //       be sent first before other streams can be used for sending.
+<<<<<<< HEAD
   if (!mBufferedControl.IsEmpty() &&
       (mSendInterleaved || mPendingType == PENDING_DCEP)) {
     if (SendBufferedMessages(mBufferedControl)) {
+||||||| merged common ancestors
+  if (!mBufferedControl.IsEmpty() && (mSendInterleaved || mPendingType == PENDING_DCEP)) {
+    if (SendBufferedMessages(mBufferedControl)) {
+=======
+  if (!mBufferedControl.IsEmpty() &&
+      (mSendInterleaved || mPendingType == PENDING_DCEP)) {
+    if (SendBufferedMessages(mBufferedControl, nullptr)) {
+>>>>>>> upstream-releases
       return true;
     }
 
@@ -1253,22 +1966,12 @@ bool DataChannelConnection::SendDeferredMessages() {
   uint32_t i = GetCurrentStreamIndex();
   uint32_t end = i;
   do {
-    channel = mStreams[i];
+    channel = mChannels.Get(i);
+    // Should already be cleared if closing/closed
     if (!channel || channel->mBufferedData.IsEmpty()) {
       i = UpdateCurrentStreamIndex();
       continue;
     }
-
-    // Clear if closing/closed
-    if (channel->mState == CLOSED || channel->mState == CLOSING) {
-      channel->mBufferedData.Clear();
-      i = UpdateCurrentStreamIndex();
-      continue;
-    }
-
-    size_t bufferedAmount = channel->GetBufferedAmountLocked();
-    size_t threshold = channel->mBufferedThreshold;
-    bool wasOverThreshold = bufferedAmount >= threshold;
 
     // Send buffered data messages
     // Warning: This will fail in case ndata is inactive and a previously
@@ -1276,6 +1979,7 @@ bool DataChannelConnection::SendDeferredMessages() {
     //          ever see that no messages can be sent on any channel, this is
     //          likely the cause (an explicit EOR message partially sent whose
     //          remaining chunks are still being waited for).
+<<<<<<< HEAD
     blocked = SendBufferedMessages(channel->mBufferedData);
     bufferedAmount = channel->GetBufferedAmountLocked();
 
@@ -1285,8 +1989,28 @@ bool DataChannelConnection::SendDeferredMessages() {
            channel->mLabel.get(), channel->mProtocol.get(), channel->mStream));
       Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
           DataChannelOnMessageAvailable::BUFFER_LOW_THRESHOLD, this, channel)));
+||||||| merged common ancestors
+    blocked = SendBufferedMessages(channel->mBufferedData);
+    bufferedAmount = channel->GetBufferedAmountLocked();
+
+    // can never fire with default threshold of 0
+    if (wasOverThreshold && bufferedAmount < threshold) {
+      LOG(("%s: sending BUFFER_LOW_THRESHOLD for %s/%s: %u", __FUNCTION__,
+           channel->mLabel.get(), channel->mProtocol.get(), channel->mStream));
+      Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                 DataChannelOnMessageAvailable::BUFFER_LOW_THRESHOLD,
+                 this, channel)));
+=======
+    size_t written = 0;
+    mDeferSend = true;
+    blocked = SendBufferedMessages(channel->mBufferedData, &written);
+    mDeferSend = false;
+    if (written) {
+      channel->DecrementBufferedAmount(written);
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (bufferedAmount == 0) {
       // buffered-to-not-buffered transition; tell the DOM code in case this
       // makes it available for GC
@@ -1294,7 +2018,22 @@ bool DataChannelConnection::SendDeferredMessages() {
            channel->mLabel.get(), channel->mProtocol.get(), channel->mStream));
       Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
           DataChannelOnMessageAvailable::NO_LONGER_BUFFERED, this, channel)));
+||||||| merged common ancestors
+    if (bufferedAmount == 0) {
+      // buffered-to-not-buffered transition; tell the DOM code in case this makes it
+      // available for GC
+      LOG(("%s: sending NO_LONGER_BUFFERED for %s/%s: %u", __FUNCTION__,
+           channel->mLabel.get(), channel->mProtocol.get(), channel->mStream));
+      Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                 DataChannelOnMessageAvailable::NO_LONGER_BUFFERED,
+                 this, channel)));
+=======
+    for (auto&& packet : mDeferredSend) {
+      MOZ_ASSERT(written);
+      SendPacket(std::move(packet));
+>>>>>>> upstream-releases
     }
+    mDeferredSend.clear();
 
     // Update current stream index
     // Note: If ndata is not active, the outstanding data messages on this
@@ -1314,11 +2053,20 @@ bool DataChannelConnection::SendDeferredMessages() {
 // Called with mLock locked!
 // buffer MUST have at least one item!
 // returns if we're still blocked (true)
+<<<<<<< HEAD
 bool DataChannelConnection::SendBufferedMessages(
     nsTArray<nsAutoPtr<BufferedOutgoingMsg>> &buffer) {
+||||||| merged common ancestors
+bool
+DataChannelConnection::SendBufferedMessages(nsTArray<nsAutoPtr<BufferedOutgoingMsg>> &buffer)
+{
+=======
+bool DataChannelConnection::SendBufferedMessages(
+    nsTArray<nsAutoPtr<BufferedOutgoingMsg>>& buffer, size_t* aWritten) {
+>>>>>>> upstream-releases
   do {
     // Re-send message
-    int error = SendMsgInternal(*buffer[0]);
+    int error = SendMsgInternal(*buffer[0], aWritten);
     switch (error) {
       case 0:
         buffer.RemoveElementAt(0);
@@ -1339,14 +2087,25 @@ bool DataChannelConnection::SendBufferedMessages(
 }
 
 // Caller must ensure that length <= SIZE_MAX
+<<<<<<< HEAD
 void DataChannelConnection::HandleOpenRequestMessage(
     const struct rtcweb_datachannel_open_request *req, uint32_t length,
     uint16_t stream) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleOpenRequestMessage(const struct rtcweb_datachannel_open_request *req,
+                                                uint32_t length, uint16_t stream)
+{
+=======
+void DataChannelConnection::HandleOpenRequestMessage(
+    const struct rtcweb_datachannel_open_request* req, uint32_t length,
+    uint16_t stream) {
+>>>>>>> upstream-releases
   RefPtr<DataChannel> channel;
   uint32_t prValue;
   uint16_t prPolicy;
-  uint32_t flags;
 
+  ASSERT_WEBRTC(!NS_IsMainThread());
   mLock.AssertCurrentThreadOwns();
 
   const size_t requiredLength = (sizeof(*req) - 1) + ntohs(req->label_length) +
@@ -1379,19 +2138,41 @@ void DataChannelConnection::HandleOpenRequestMessage(
       return;
   }
   prValue = ntohl(req->reliability_param);
+<<<<<<< HEAD
   flags =
       (req->channel_type & 0x80) ? DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED : 0;
+||||||| merged common ancestors
+  flags = (req->channel_type & 0x80) ? DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED : 0;
+=======
+  bool ordered = !(req->channel_type & 0x80);
+>>>>>>> upstream-releases
 
   if ((channel = FindChannelByStream(stream))) {
+<<<<<<< HEAD
     if (!(channel->mFlags & DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED)) {
       LOG(
           ("ERROR: HandleOpenRequestMessage: channel for stream %u is in state "
            "%d instead of CLOSED.",
            stream, channel->mState));
       /* XXX: some error handling */
+||||||| merged common ancestors
+    if (!(channel->mFlags & DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED)) {
+      LOG(("ERROR: HandleOpenRequestMessage: channel for stream %u is in state %d instead of CLOSED.",
+           stream, channel->mState));
+     /* XXX: some error handling */
+=======
+    if (!channel->mNegotiated) {
+      LOG(
+          ("ERROR: HandleOpenRequestMessage: channel for pre-existing stream "
+           "%u that was not externally negotiated. JS is lying to us, or "
+           "there's an id collision.",
+           stream));
+      /* XXX: some error handling */
+>>>>>>> upstream-releases
     } else {
       LOG(("Open for externally negotiated channel %u", stream));
       // XXX should also check protocol, maybe label
+<<<<<<< HEAD
       if (prPolicy != channel->mPrPolicy || prValue != channel->mPrValue ||
           flags !=
               (channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED)) {
@@ -1400,16 +2181,44 @@ void DataChannelConnection::HandleOpenRequestMessage(
              "channel %u, policy %u/%u, value %u/%u, flags %x/%x",
              stream, prPolicy, channel->mPrPolicy, prValue, channel->mPrValue,
              flags, channel->mFlags));
+||||||| merged common ancestors
+      if (prPolicy != channel->mPrPolicy ||
+          prValue != channel->mPrValue ||
+          flags != (channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED))
+      {
+        LOG(("WARNING: external negotiation mismatch with OpenRequest:"
+             "channel %u, policy %u/%u, value %u/%u, flags %x/%x",
+             stream, prPolicy, channel->mPrPolicy,
+             prValue, channel->mPrValue, flags, channel->mFlags));
+=======
+      if (prPolicy != channel->mPrPolicy || prValue != channel->mPrValue ||
+          ordered != channel->mOrdered) {
+        LOG(
+            ("WARNING: external negotiation mismatch with OpenRequest:"
+             "channel %u, policy %u/%u, value %u/%u, ordered %d/%d",
+             stream, prPolicy, channel->mPrPolicy, prValue, channel->mPrValue,
+             static_cast<int>(ordered), static_cast<int>(channel->mOrdered)));
+>>>>>>> upstream-releases
       }
     }
     return;
   }
+<<<<<<< HEAD
   if (stream >= mStreams.Length()) {
     LOG(("%s: stream %u out of bounds (%zu)", __FUNCTION__, stream,
          mStreams.Length()));
+||||||| merged common ancestors
+  if (stream >= mStreams.Length()) {
+    LOG(("%s: stream %u out of bounds (%zu)", __FUNCTION__, stream, mStreams.Length()));
+=======
+  if (stream >= mNegotiatedIdLimit) {
+    LOG(("%s: stream %u out of bounds (%zu)", __FUNCTION__, stream,
+         mNegotiatedIdLimit));
+>>>>>>> upstream-releases
     return;
   }
 
+<<<<<<< HEAD
   nsCString label(
       nsDependentCSubstring(&req->label[0], ntohs(req->label_length)));
   nsCString protocol(nsDependentCSubstring(
@@ -1419,17 +2228,56 @@ void DataChannelConnection::HandleOpenRequestMessage(
       new DataChannel(this, stream, DataChannel::CONNECTING, label, protocol,
                       prPolicy, prValue, flags, nullptr, nullptr);
   mStreams[stream] = channel;
+||||||| merged common ancestors
+  nsCString label(nsDependentCSubstring(&req->label[0], ntohs(req->label_length)));
+  nsCString protocol(nsDependentCSubstring(&req->label[ntohs(req->label_length)],
+                                           ntohs(req->protocol_length)));
 
-  channel->mState = DataChannel::WAITING_TO_OPEN;
+  channel = new DataChannel(this,
+                            stream,
+                            DataChannel::CONNECTING,
+                            label,
+                            protocol,
+                            prPolicy, prValue,
+                            flags,
+                            nullptr, nullptr);
+  mStreams[stream] = channel;
+=======
+  nsCString label(
+      nsDependentCSubstring(&req->label[0], ntohs(req->label_length)));
+  nsCString protocol(nsDependentCSubstring(
+      &req->label[ntohs(req->label_length)], ntohs(req->protocol_length)));
+>>>>>>> upstream-releases
 
+  channel =
+      new DataChannel(this, stream, DataChannel::OPEN, label, protocol,
+                      prPolicy, prValue, ordered, false, nullptr, nullptr);
+  mChannels.Insert(channel);
+
+<<<<<<< HEAD
   LOG(("%s: sending ON_CHANNEL_CREATED for %s/%s: %u (state %u)", __FUNCTION__,
        channel->mLabel.get(), channel->mProtocol.get(), stream,
        channel->mState));
+||||||| merged common ancestors
+  LOG(("%s: sending ON_CHANNEL_CREATED for %s/%s: %u (state %u)", __FUNCTION__,
+       channel->mLabel.get(), channel->mProtocol.get(), stream, channel->mState));
+=======
+  LOG(("%s: sending ON_CHANNEL_CREATED for %s/%s: %u", __FUNCTION__,
+       channel->mLabel.get(), channel->mProtocol.get(), stream));
+>>>>>>> upstream-releases
   Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
       DataChannelOnMessageAvailable::ON_CHANNEL_CREATED, this, channel)));
 
+<<<<<<< HEAD
   LOG(("%s: deferring sending ON_CHANNEL_OPEN for %p", __FUNCTION__,
        channel.get()));
+||||||| merged common ancestors
+  LOG(("%s: deferring sending ON_CHANNEL_OPEN for %p", __FUNCTION__, channel.get()));
+=======
+  LOG(("%s: deferring sending ON_CHANNEL_OPEN for %p", __FUNCTION__,
+       channel.get()));
+  channel->AnnounceOpen();
+>>>>>>> upstream-releases
 
   int error = SendOpenAckMessage(stream);
   if (error) {
@@ -1440,9 +2288,6 @@ void DataChannelConnection::HandleOpenRequestMessage(
     return;
   }
 
-  // Now process any queued data messages for the channel (which will
-  // themselves likely get queued until we leave WAITING_TO_OPEN, plus any
-  // more that come in before that happens)
   DeliverQueuedData(stream);
 }
 
@@ -1470,10 +2315,23 @@ void DataChannelConnection::DeliverQueuedData(uint16_t stream) {
 }
 
 // Caller must ensure that length <= SIZE_MAX
+<<<<<<< HEAD
 void DataChannelConnection::HandleOpenAckMessage(
     const struct rtcweb_datachannel_ack *ack, uint32_t length,
     uint16_t stream) {
   DataChannel *channel;
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleOpenAckMessage(const struct rtcweb_datachannel_ack *ack,
+                                            uint32_t length, uint16_t stream)
+{
+  DataChannel *channel;
+=======
+void DataChannelConnection::HandleOpenAckMessage(
+    const struct rtcweb_datachannel_ack* ack, uint32_t length,
+    uint16_t stream) {
+  DataChannel* channel;
+>>>>>>> upstream-releases
 
   mLock.AssertCurrentThreadOwns();
 
@@ -1497,10 +2355,23 @@ void DataChannelConnection::HandleUnknownMessage(uint32_t ppid, uint32_t length,
   // XXX Log to JS error console if possible
 }
 
+<<<<<<< HEAD
 uint8_t DataChannelConnection::BufferMessage(nsACString &recvBuffer,
                                              const void *data, uint32_t length,
                                              uint32_t ppid, int flags) {
   const char *buffer = (const char *)data;
+||||||| merged common ancestors
+uint8_t
+DataChannelConnection::BufferMessage(nsACString& recvBuffer, const void *data,
+                                     uint32_t length, uint32_t ppid, int flags)
+{
+  const char *buffer = (const char *) data;
+=======
+uint8_t DataChannelConnection::BufferMessage(nsACString& recvBuffer,
+                                             const void* data, uint32_t length,
+                                             uint32_t ppid, int flags) {
+  const char* buffer = (const char*)data;
+>>>>>>> upstream-releases
   uint8_t bufferFlags = 0;
 
   if ((flags & MSG_EOR) && ppid != DATA_CHANNEL_PPID_BINARY_PARTIAL &&
@@ -1528,11 +2399,26 @@ uint8_t DataChannelConnection::BufferMessage(nsACString &recvBuffer,
   return bufferFlags;
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleDataMessage(const void *data, size_t length,
                                               uint32_t ppid, uint16_t stream,
                                               int flags) {
   DataChannel *channel;
   const char *buffer = (const char *)data;
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleDataMessage(const void *data, size_t length, uint32_t ppid,
+                                         uint16_t stream, int flags)
+{
+  DataChannel *channel;
+  const char *buffer = (const char *) data;
+=======
+void DataChannelConnection::HandleDataMessage(const void* data, size_t length,
+                                              uint32_t ppid, uint16_t stream,
+                                              int flags) {
+  DataChannel* channel;
+  const char* buffer = (const char*)data;
+>>>>>>> upstream-releases
 
   mLock.AssertCurrentThreadOwns();
   channel = FindChannelByStream(stream);
@@ -1565,6 +2451,7 @@ void DataChannelConnection::HandleDataMessage(const void *data, size_t length,
     // data messages to deliver once the channel opens.
     LOG(("Queuing data for stream %u, length %u", stream, data_length));
     // Copies data
+<<<<<<< HEAD
     mQueuedData.AppendElement(
         new QueuedDataMessage(stream, ppid, flags, data, data_length));
     return;
@@ -1572,6 +2459,17 @@ void DataChannelConnection::HandleDataMessage(const void *data, size_t length,
 
   // Ignore incoming data in case the channel is closed
   if (channel->mState == CLOSED) {
+||||||| merged common ancestors
+    mQueuedData.AppendElement(new QueuedDataMessage(stream, ppid, flags, data, data_length));
+    return;
+  }
+
+  // Ignore incoming data in case the channel is closed
+  if (channel->mState == CLOSED) {
+=======
+    mQueuedData.AppendElement(
+        new QueuedDataMessage(stream, ppid, flags, data, data_length));
+>>>>>>> upstream-releases
     return;
   }
 
@@ -1600,8 +2498,14 @@ void DataChannelConnection::HandleDataMessage(const void *data, size_t length,
          "closing",
          data_length));
     // Only unblock if unordered
+<<<<<<< HEAD
     if ((channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED) &&
         (flags & MSG_EOR)) {
+||||||| merged common ancestors
+    if ((channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED) && (flags & MSG_EOR)) {
+=======
+    if (!channel->mOrdered && (flags & MSG_EOR)) {
+>>>>>>> upstream-releases
       channel->mFlags &= ~DATA_CHANNEL_FLAGS_CLOSING_TOO_LARGE;
     }
   }
@@ -1683,11 +2587,26 @@ void DataChannelConnection::HandleDataMessage(const void *data, size_t length,
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleDCEPMessage(const void *buffer, size_t length,
                                               uint32_t ppid, uint16_t stream,
                                               int flags) {
   const struct rtcweb_datachannel_open_request *req;
   const struct rtcweb_datachannel_ack *ack;
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleDCEPMessage(const void *buffer, size_t length, uint32_t ppid,
+                                         uint16_t stream, int flags)
+{
+  const struct rtcweb_datachannel_open_request *req;
+  const struct rtcweb_datachannel_ack *ack;
+=======
+void DataChannelConnection::HandleDCEPMessage(const void* buffer, size_t length,
+                                              uint32_t ppid, uint16_t stream,
+                                              int flags) {
+  const struct rtcweb_datachannel_open_request* req;
+  const struct rtcweb_datachannel_ack* ack;
+>>>>>>> upstream-releases
 
   // Note: Until we support SIZE_MAX sized messages, we need this check
 #if (SIZE_MAX > UINT32_MAX)
@@ -1718,11 +2637,11 @@ void DataChannelConnection::HandleDCEPMessage(const void *buffer, size_t length,
     return;
   }
   if (bufferFlags & DATA_CHANNEL_BUFFER_MESSAGE_FLAGS_BUFFERED) {
-    buffer = reinterpret_cast<const void *>(mRecvBuffer.BeginReading());
+    buffer = reinterpret_cast<const void*>(mRecvBuffer.BeginReading());
     data_length = mRecvBuffer.Length();
   }
 
-  req = static_cast<const struct rtcweb_datachannel_open_request *>(buffer);
+  req = static_cast<const struct rtcweb_datachannel_open_request*>(buffer);
   LOG(("Handling DCEP message of length %u", data_length));
 
   // Ensure minimum message size (ack is the smallest DCEP message)
@@ -1744,7 +2663,7 @@ void DataChannelConnection::HandleDCEPMessage(const void *buffer, size_t length,
     case DATA_CHANNEL_ACK:
       // >= sizeof(*ack) checked above
 
-      ack = static_cast<const struct rtcweb_datachannel_ack *>(buffer);
+      ack = static_cast<const struct rtcweb_datachannel_ack*>(buffer);
       HandleOpenAckMessage(ack, data_length, stream);
       break;
     default:
@@ -1757,9 +2676,20 @@ void DataChannelConnection::HandleDCEPMessage(const void *buffer, size_t length,
 }
 
 // Called with mLock locked!
+<<<<<<< HEAD
 void DataChannelConnection::HandleMessage(const void *buffer, size_t length,
                                           uint32_t ppid, uint16_t stream,
                                           int flags) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleMessage(const void *buffer, size_t length, uint32_t ppid,
+                                     uint16_t stream, int flags)
+{
+=======
+void DataChannelConnection::HandleMessage(const void* buffer, size_t length,
+                                          uint32_t ppid, uint16_t stream,
+                                          int flags) {
+>>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
 
   switch (ppid) {
@@ -1779,11 +2709,21 @@ void DataChannelConnection::HandleMessage(const void *buffer, size_t length,
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleAssociationChangeEvent(
     const struct sctp_assoc_change *sac) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleAssociationChangeEvent(const struct sctp_assoc_change *sac)
+{
+=======
+void DataChannelConnection::HandleAssociationChangeEvent(
+    const struct sctp_assoc_change* sac) {
+>>>>>>> upstream-releases
   uint32_t i, n;
 
   switch (sac->sac_state) {
+<<<<<<< HEAD
     case SCTP_COMM_UP:
       LOG(("Association change: SCTP_COMM_UP"));
       if (mState == CONNECTING) {
@@ -1799,6 +2739,38 @@ void DataChannelConnection::HandleAssociationChangeEvent(
           LOG(("Older Firefox detected, using PPID-based fragmentation"));
           mPpidFragmentation = true;
         }
+||||||| merged common ancestors
+  case SCTP_COMM_UP:
+    LOG(("Association change: SCTP_COMM_UP"));
+    if (mState == CONNECTING) {
+      mSocket = mMasterSocket;
+      mState = OPEN;
+
+      // Check for older Firefox by looking at the amount of incoming streams
+      LOG(("Negotiated number of incoming streams: %" PRIu16, sac->sac_inbound_streams));
+      if (!mMaxMessageSizeSet
+          && sac->sac_inbound_streams == WEBRTC_DATACHANNEL_STREAMS_OLDER_FIREFOX) {
+        LOG(("Older Firefox detected, using PPID-based fragmentation"));
+        mPpidFragmentation = true;
+      }
+
+      SetEvenOdd();
+=======
+    case SCTP_COMM_UP:
+      LOG(("Association change: SCTP_COMM_UP"));
+      if (mState == CONNECTING) {
+        mSocket = mMasterSocket;
+        mState = OPEN;
+
+        LOG(("Negotiated number of incoming streams: %" PRIu16,
+             sac->sac_inbound_streams));
+        LOG(("Negotiated number of outgoing streams: %" PRIu16,
+             sac->sac_outbound_streams));
+        mNegotiatedIdLimit =
+            std::max(mNegotiatedIdLimit,
+                     static_cast<size_t>(std::max(sac->sac_outbound_streams,
+                                                  sac->sac_inbound_streams)));
+>>>>>>> upstream-releases
 
         Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
             DataChannelOnMessageAvailable::ON_CONNECTION, this)));
@@ -1889,26 +2861,53 @@ void DataChannelConnection::HandleAssociationChangeEvent(
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandlePeerAddressChangeEvent(
     const struct sctp_paddr_change *spc) {
   const char *addr = "";
+||||||| merged common ancestors
+void
+DataChannelConnection::HandlePeerAddressChangeEvent(const struct sctp_paddr_change *spc)
+{
+  const char *addr = "";
+=======
+void DataChannelConnection::HandlePeerAddressChangeEvent(
+    const struct sctp_paddr_change* spc) {
+  const char* addr = "";
+>>>>>>> upstream-releases
 #if !defined(__Userspace_os_Windows)
   char addr_buf[INET6_ADDRSTRLEN];
-  struct sockaddr_in *sin;
-  struct sockaddr_in6 *sin6;
+  struct sockaddr_in* sin;
+  struct sockaddr_in6* sin6;
 #endif
 
   switch (spc->spc_aaddr.ss_family) {
     case AF_INET:
 #if !defined(__Userspace_os_Windows)
+<<<<<<< HEAD
       sin = (struct sockaddr_in *)&spc->spc_aaddr;
       addr = inet_ntop(AF_INET, &sin->sin_addr, addr_buf, INET6_ADDRSTRLEN);
+||||||| merged common ancestors
+    sin = (struct sockaddr_in *)&spc->spc_aaddr;
+    addr = inet_ntop(AF_INET, &sin->sin_addr, addr_buf, INET6_ADDRSTRLEN);
+=======
+      sin = (struct sockaddr_in*)&spc->spc_aaddr;
+      addr = inet_ntop(AF_INET, &sin->sin_addr, addr_buf, INET6_ADDRSTRLEN);
+>>>>>>> upstream-releases
 #endif
       break;
     case AF_INET6:
 #if !defined(__Userspace_os_Windows)
+<<<<<<< HEAD
       sin6 = (struct sockaddr_in6 *)&spc->spc_aaddr;
       addr = inet_ntop(AF_INET6, &sin6->sin6_addr, addr_buf, INET6_ADDRSTRLEN);
+||||||| merged common ancestors
+    sin6 = (struct sockaddr_in6 *)&spc->spc_aaddr;
+    addr = inet_ntop(AF_INET6, &sin6->sin6_addr, addr_buf, INET6_ADDRSTRLEN);
+=======
+      sin6 = (struct sockaddr_in6*)&spc->spc_aaddr;
+      addr = inet_ntop(AF_INET6, &sin6->sin6_addr, addr_buf, INET6_ADDRSTRLEN);
+>>>>>>> upstream-releases
 #endif
       break;
     case AF_CONN:
@@ -1944,8 +2943,17 @@ void DataChannelConnection::HandlePeerAddressChangeEvent(
   LOG((" (error = 0x%08x).\n", spc->spc_error));
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleRemoteErrorEvent(
     const struct sctp_remote_error *sre) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleRemoteErrorEvent(const struct sctp_remote_error *sre)
+{
+=======
+void DataChannelConnection::HandleRemoteErrorEvent(
+    const struct sctp_remote_error* sre) {
+>>>>>>> upstream-releases
   size_t i, n;
 
   n = sre->sre_length - sizeof(struct sctp_remote_error);
@@ -1955,20 +2963,49 @@ void DataChannelConnection::HandleRemoteErrorEvent(
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleShutdownEvent(
     const struct sctp_shutdown_event *sse) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleShutdownEvent(const struct sctp_shutdown_event *sse)
+{
+=======
+void DataChannelConnection::HandleShutdownEvent(
+    const struct sctp_shutdown_event* sse) {
+>>>>>>> upstream-releases
   LOG(("Shutdown event."));
   /* XXX: notify all channels. */
   // Attempts to actually send anything will fail
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleAdaptationIndication(
     const struct sctp_adaptation_event *sai) {
   LOG(("Adaptation indication: %x.", sai->sai_adaptation_ind));
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleAdaptationIndication(const struct sctp_adaptation_event *sai)
+{
+  LOG(("Adaptation indication: %x.", sai-> sai_adaptation_ind));
+=======
+void DataChannelConnection::HandleAdaptationIndication(
+    const struct sctp_adaptation_event* sai) {
+  LOG(("Adaptation indication: %x.", sai->sai_adaptation_ind));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandlePartialDeliveryEvent(
     const struct sctp_pdapi_event *spde) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandlePartialDeliveryEvent(const struct sctp_pdapi_event *spde)
+{
+=======
+void DataChannelConnection::HandlePartialDeliveryEvent(
+    const struct sctp_pdapi_event* spde) {
+>>>>>>> upstream-releases
   // Note: Be aware that stream and sequence number being u32 instead of u16 is
   //       a bug in the SCTP API. This may change in the future.
 
@@ -1992,7 +3029,7 @@ void DataChannelConnection::HandlePartialDeliveryEvent(
   }
 
   // Find channel and reset buffer
-  DataChannel *channel = FindChannelByStream((uint16_t)spde->pdapi_stream);
+  DataChannel* channel = FindChannelByStream((uint16_t)spde->pdapi_stream);
   if (channel) {
     LOG(("Abort partially delivered message of %u bytes\n",
          channel->mRecvBuffer.Length()));
@@ -2000,8 +3037,17 @@ void DataChannelConnection::HandlePartialDeliveryEvent(
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleSendFailedEvent(
     const struct sctp_send_failed_event *ssfe) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleSendFailedEvent(const struct sctp_send_failed_event *ssfe)
+{
+=======
+void DataChannelConnection::HandleSendFailedEvent(
+    const struct sctp_send_failed_event* ssfe) {
+>>>>>>> upstream-releases
   size_t i, n;
 
   if (ssfe->ssfe_flags & SCTP_DATA_UNSENT) {
@@ -2032,9 +3078,20 @@ void DataChannelConnection::ClearResets() {
     RefPtr<DataChannel> channel;
     channel = FindChannelByStream(mStreamsResetting[i]);
     if (channel) {
+<<<<<<< HEAD
       LOG(("Forgetting channel %u (%p) with pending reset", channel->mStream,
            channel.get()));
       mStreams[channel->mStream] = nullptr;
+||||||| merged common ancestors
+      LOG(("Forgetting channel %u (%p) with pending reset",channel->mStream, channel.get()));
+      mStreams[channel->mStream] = nullptr;
+=======
+      LOG(("Forgetting channel %u (%p) with pending reset", channel->mStream,
+           channel.get()));
+      // TODO: Do we _really_ want to remove this? Are we allowed to reuse the
+      // id?
+      mChannels.Remove(channel);
+>>>>>>> upstream-releases
     }
   }
   mStreamsResetting.Clear();
@@ -2044,7 +3101,14 @@ void DataChannelConnection::ResetOutgoingStream(uint16_t stream) {
   uint32_t i;
 
   mLock.AssertCurrentThreadOwns();
+<<<<<<< HEAD
   LOG(("Connection %p: Resetting outgoing stream %u", (void *)this, stream));
+||||||| merged common ancestors
+  LOG(("Connection %p: Resetting outgoing stream %u",
+       (void *) this, stream));
+=======
+  LOG(("Connection %p: Resetting outgoing stream %u", (void*)this, stream));
+>>>>>>> upstream-releases
   // Rarely has more than a couple items and only for a short time
   for (i = 0; i < mStreamsResetting.Length(); ++i) {
     if (mStreamsResetting[i] == stream) {
@@ -2054,22 +3118,48 @@ void DataChannelConnection::ResetOutgoingStream(uint16_t stream) {
   mStreamsResetting.AppendElement(stream);
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::SendOutgoingStreamReset() {
   struct sctp_reset_streams *srs;
+||||||| merged common ancestors
+void
+DataChannelConnection::SendOutgoingStreamReset()
+{
+  struct sctp_reset_streams *srs;
+=======
+void DataChannelConnection::SendOutgoingStreamReset() {
+  struct sctp_reset_streams* srs;
+>>>>>>> upstream-releases
   uint32_t i;
   size_t len;
 
   LOG(("Connection %p: Sending outgoing stream reset for %zu streams",
+<<<<<<< HEAD
        (void *)this, mStreamsResetting.Length()));
+||||||| merged common ancestors
+       (void *) this, mStreamsResetting.Length()));
+=======
+       (void*)this, mStreamsResetting.Length()));
+>>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
   if (mStreamsResetting.IsEmpty()) {
     LOG(("No streams to reset"));
     return;
   }
+<<<<<<< HEAD
   len = sizeof(sctp_assoc_t) +
         (2 + mStreamsResetting.Length()) * sizeof(uint16_t);
   srs = static_cast<struct sctp_reset_streams *>(
       moz_xmalloc(len));  // infallible malloc
+||||||| merged common ancestors
+  len = sizeof(sctp_assoc_t) + (2 + mStreamsResetting.Length()) * sizeof(uint16_t);
+  srs = static_cast<struct sctp_reset_streams *> (moz_xmalloc(len)); // infallible malloc
+=======
+  len = sizeof(sctp_assoc_t) +
+        (2 + mStreamsResetting.Length()) * sizeof(uint16_t);
+  srs = static_cast<struct sctp_reset_streams*>(
+      moz_xmalloc(len));  // infallible malloc
+>>>>>>> upstream-releases
   memset(srs, 0, len);
   srs->srs_flags = SCTP_STREAM_RESET_OUTGOING;
   srs->srs_number_streams = mStreamsResetting.Length();
@@ -2090,8 +3180,17 @@ void DataChannelConnection::SendOutgoingStreamReset() {
   free(srs);
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleStreamResetEvent(
     const struct sctp_stream_reset_event *strrst) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleStreamResetEvent(const struct sctp_stream_reset_event *strrst)
+{
+=======
+void DataChannelConnection::HandleStreamResetEvent(
+    const struct sctp_stream_reset_event* strrst) {
+>>>>>>> upstream-releases
   uint32_t n, i;
   RefPtr<DataChannel> channel;  // since we may null out the ref to the channel
 
@@ -2112,6 +3211,7 @@ void DataChannelConnection::HandleStreamResetEvent(
           //    wire, or this is a response to our Reset.
           //    Go to CLOSED
           // 3. We've sent a open but haven't gotten a response yet (CONNECTING)
+<<<<<<< HEAD
           //    I believe this is impossible, as we don't have an input stream
           //    yet.
 
@@ -2123,14 +3223,38 @@ void DataChannelConnection::HandleStreamResetEvent(
                         channel->mState == DataChannel::WAITING_TO_OPEN);
           if (channel->mState == DataChannel::OPEN ||
               channel->mState == DataChannel::WAITING_TO_OPEN) {
+||||||| merged common ancestors
+          //    I believe this is impossible, as we don't have an input stream yet.
+
+          LOG(("Incoming: Channel %u  closed, state %d",
+               channel->mStream, channel->mState));
+          ASSERT_WEBRTC(channel->mState == DataChannel::OPEN ||
+                        channel->mState == DataChannel::CLOSING ||
+                        channel->mState == DataChannel::CONNECTING ||
+                        channel->mState == DataChannel::WAITING_TO_OPEN);
+          if (channel->mState == DataChannel::OPEN ||
+              channel->mState == DataChannel::WAITING_TO_OPEN) {
+=======
+          //    I believe this is impossible, as we don't have an input stream
+          //    yet.
+
+          LOG(("Incoming: Channel %u  closed", channel->mStream));
+          if (mChannels.Remove(channel)) {
+>>>>>>> upstream-releases
             // Mark the stream for reset (the reset is sent below)
             ResetOutgoingStream(channel->mStream);
           }
-          mStreams[channel->mStream] = nullptr;
 
           LOG(("Disconnected DataChannel %p from connection %p",
+<<<<<<< HEAD
                (void *)channel.get(), (void *)channel->mConnection.get()));
           // This sends ON_CHANNEL_CLOSED to mainthread
+||||||| merged common ancestors
+               (void *) channel.get(), (void *) channel->mConnection.get()));
+          // This sends ON_CHANNEL_CLOSED to mainthread
+=======
+               (void*)channel.get(), (void*)channel->mConnection.get()));
+>>>>>>> upstream-releases
           channel->StreamClosedLocked();
         } else {
           LOG(("Can't find incoming channel %d", i));
@@ -2146,41 +3270,90 @@ void DataChannelConnection::HandleStreamResetEvent(
   }
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::HandleStreamChangeEvent(
     const struct sctp_stream_change_event *strchg) {
   uint16_t stream;
   RefPtr<DataChannel> channel;
 
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleStreamChangeEvent(const struct sctp_stream_change_event *strchg)
+{
+  uint16_t stream;
+  RefPtr<DataChannel> channel;
+
+=======
+void DataChannelConnection::HandleStreamChangeEvent(
+    const struct sctp_stream_change_event* strchg) {
+  ASSERT_WEBRTC(!NS_IsMainThread());
+>>>>>>> upstream-releases
   if (strchg->strchange_flags == SCTP_STREAM_CHANGE_DENIED) {
     LOG(("*** Failed increasing number of streams from %zu (%u/%u)",
+<<<<<<< HEAD
          mStreams.Length(), strchg->strchange_instrms,
+||||||| merged common ancestors
+         mStreams.Length(),
+         strchg->strchange_instrms,
+=======
+         mNegotiatedIdLimit, strchg->strchange_instrms,
+>>>>>>> upstream-releases
          strchg->strchange_outstrms));
     // XXX FIX! notify pending opens of failure
     return;
   }
+<<<<<<< HEAD
   if (strchg->strchange_instrms > mStreams.Length()) {
     LOG(("Other side increased streams from %zu to %u", mStreams.Length(),
          strchg->strchange_instrms));
+||||||| merged common ancestors
+  if (strchg->strchange_instrms > mStreams.Length()) {
+    LOG(("Other side increased streams from %zu to %u",
+         mStreams.Length(), strchg->strchange_instrms));
+=======
+  if (strchg->strchange_instrms > mNegotiatedIdLimit) {
+    LOG(("Other side increased streams from %zu to %u", mNegotiatedIdLimit,
+         strchg->strchange_instrms));
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   if (strchg->strchange_outstrms > mStreams.Length() ||
       strchg->strchange_instrms > mStreams.Length()) {
     uint16_t old_len = mStreams.Length();
     uint16_t new_len =
         std::max(strchg->strchange_outstrms, strchg->strchange_instrms);
+||||||| merged common ancestors
+  if (strchg->strchange_outstrms > mStreams.Length() ||
+      strchg->strchange_instrms > mStreams.Length()) {
+    uint16_t old_len = mStreams.Length();
+    uint16_t new_len = std::max(strchg->strchange_outstrms,
+                                strchg->strchange_instrms);
+=======
+  uint16_t old_limit = mNegotiatedIdLimit;
+  uint16_t new_limit =
+      std::max(strchg->strchange_outstrms, strchg->strchange_instrms);
+  if (new_limit > mNegotiatedIdLimit) {
+>>>>>>> upstream-releases
     LOG(("Increasing number of streams from %u to %u - adding %u (in: %u)",
+<<<<<<< HEAD
          old_len, new_len, new_len - old_len, strchg->strchange_instrms));
+||||||| merged common ancestors
+         old_len, new_len, new_len - old_len,
+         strchg->strchange_instrms));
+=======
+         old_limit, new_limit, new_limit - old_limit,
+         strchg->strchange_instrms));
+>>>>>>> upstream-releases
     // make sure both are the same length
-    mStreams.AppendElements(new_len - old_len);
-    LOG(("New length = %zu (was %d)", mStreams.Length(), old_len));
-    for (size_t i = old_len; i < mStreams.Length(); ++i) {
-      mStreams[i] = nullptr;
-    }
+    mNegotiatedIdLimit = new_limit;
+    LOG(("New length = %zu (was %d)", mNegotiatedIdLimit, old_limit));
     // Re-process any channels waiting for streams.
     // Linear search, but we don't increase channels often and
     // the array would only get long in case of an app error normally
 
     // Make sure we request enough streams if there's a big jump in streams
     // Could make a more complex API for OpenXxxFinish() and avoid this loop
+<<<<<<< HEAD
     size_t num_needed = mPending.GetSize();
     LOG(("%zu of %d new streams already needed", num_needed,
          new_len - old_len));
@@ -2188,8 +3361,26 @@ void DataChannelConnection::HandleStreamChangeEvent(
     if (num_needed > 0) {
       if (num_needed < 16) num_needed = 16;
       LOG(("Not enough new streams, asking for %zu more", num_needed));
+||||||| merged common ancestors
+    size_t num_needed = mPending.GetSize();
+    LOG(("%zu of %d new streams already needed", num_needed,
+         new_len - old_len));
+    num_needed -= (new_len - old_len); // number we added
+    if (num_needed > 0) {
+      if (num_needed < 16)
+        num_needed = 16;
+      LOG(("Not enough new streams, asking for %zu more", num_needed));
+=======
+    auto channels = mChannels.GetAll();
+    size_t num_needed =
+        channels.Length() ? (channels.LastElement()->mStream + 1) : 0;
+    MOZ_ASSERT(num_needed != INVALID_STREAM);
+    if (num_needed > new_limit) {
+      int32_t more_needed = num_needed - ((int32_t)mNegotiatedIdLimit) + 16;
+      LOG(("Not enough new streams, asking for %d more", more_needed));
+>>>>>>> upstream-releases
       // TODO: parameter is an int32_t but we pass size_t
-      RequestMoreStreams(num_needed);
+      RequestMoreStreams(more_needed);
     } else if (strchg->strchange_outstrms < strchg->strchange_instrms) {
       LOG(("Requesting %d output streams to match partner",
            strchg->strchange_instrms - strchg->strchange_outstrms));
@@ -2201,6 +3392,7 @@ void DataChannelConnection::HandleStreamChangeEvent(
   }
   // else probably not a change in # of streams
 
+<<<<<<< HEAD
   for (uint32_t i = 0; i < mStreams.Length(); ++i) {
     channel = mStreams[i];
     if (!channel) continue;
@@ -2209,11 +3401,38 @@ void DataChannelConnection::HandleStreamChangeEvent(
         (channel->mStream == INVALID_STREAM)) {
       if ((strchg->strchange_flags & SCTP_STREAM_CHANGE_DENIED) ||
           (strchg->strchange_flags & SCTP_STREAM_CHANGE_FAILED)) {
+||||||| merged common ancestors
+  for (uint32_t i = 0; i < mStreams.Length(); ++i) {
+    channel = mStreams[i];
+    if (!channel)
+      continue;
+
+    if ((channel->mState == CONNECTING) &&
+        (channel->mStream == INVALID_STREAM)) {
+      if ((strchg->strchange_flags & SCTP_STREAM_CHANGE_DENIED) ||
+          (strchg->strchange_flags & SCTP_STREAM_CHANGE_FAILED)) {
+=======
+  if ((strchg->strchange_flags & SCTP_STREAM_CHANGE_DENIED) ||
+      (strchg->strchange_flags & SCTP_STREAM_CHANGE_FAILED)) {
+    // Other side denied our request. Need to AnnounceClosed some stuff.
+    for (auto& channel : mChannels.GetAll()) {
+      if (channel->mStream >= mNegotiatedIdLimit) {
+>>>>>>> upstream-releases
         /* XXX: Signal to the other end. */
+<<<<<<< HEAD
         channel->mState = CLOSED;
         Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
             DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this, channel)));
+||||||| merged common ancestors
+        channel->mState = CLOSED;
+        Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                   DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this,
+                   channel)));
+=======
+        channel->AnnounceClosed();
+>>>>>>> upstream-releases
         // maybe fire onError (bug 843625)
+<<<<<<< HEAD
       } else {
         stream = FindFreeStream();
         if (stream != INVALID_STREAM) {
@@ -2247,19 +3466,64 @@ void DataChannelConnection::HandleStreamChangeEvent(
           /* We will not find more ... */
           break;
         }
+||||||| merged common ancestors
+      } else {
+        stream = FindFreeStream();
+        if (stream != INVALID_STREAM) {
+          channel->mStream = stream;
+          mStreams[stream] = channel;
+
+          // Send open request
+          int error = SendOpenRequestMessage(
+              channel->mLabel, channel->mProtocol, channel->mStream,
+              !!(channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED), channel->mPrPolicy,
+              channel->mPrValue);
+          if (error) {
+            LOG(("SendOpenRequest failed, error = %d", error));
+            // Close the channel, inform the user
+            mStreams[channel->mStream] = nullptr;
+            channel->mState = CLOSED;
+            // Don't need to reset; we didn't open it
+            Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                       DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this,
+                       channel)));
+          } else {
+            channel->mState = OPEN;
+            channel->mFlags |= DATA_CHANNEL_FLAGS_READY;
+            LOG(("%s: sending ON_CHANNEL_OPEN for %p", __FUNCTION__, channel.get()));
+            Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                       DataChannelOnMessageAvailable::ON_CHANNEL_OPEN, this,
+                       channel)));
+          }
+        } else {
+          /* We will not find more ... */
+          break;
+        }
+=======
+>>>>>>> upstream-releases
       }
     }
   }
 }
 
 // Called with mLock locked!
+<<<<<<< HEAD
 void DataChannelConnection::HandleNotification(
     const union sctp_notification *notif, size_t n) {
+||||||| merged common ancestors
+void
+DataChannelConnection::HandleNotification(const union sctp_notification *notif, size_t n)
+{
+=======
+void DataChannelConnection::HandleNotification(
+    const union sctp_notification* notif, size_t n) {
+>>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
   if (notif->sn_header.sn_length != (uint32_t)n) {
     return;
   }
   switch (notif->sn_header.sn_type) {
+<<<<<<< HEAD
     case SCTP_ASSOC_CHANGE:
       HandleAssociationChangeEvent(&(notif->sn_assoc_change));
       break;
@@ -2308,16 +3572,125 @@ void DataChannelConnection::HandleNotification(
 int DataChannelConnection::ReceiveCallback(struct socket *sock, void *data,
                                            size_t datalen,
                                            struct sctp_rcvinfo rcv, int flags) {
+||||||| merged common ancestors
+  case SCTP_ASSOC_CHANGE:
+    HandleAssociationChangeEvent(&(notif->sn_assoc_change));
+    break;
+  case SCTP_PEER_ADDR_CHANGE:
+    HandlePeerAddressChangeEvent(&(notif->sn_paddr_change));
+    break;
+  case SCTP_REMOTE_ERROR:
+    HandleRemoteErrorEvent(&(notif->sn_remote_error));
+    break;
+  case SCTP_SHUTDOWN_EVENT:
+    HandleShutdownEvent(&(notif->sn_shutdown_event));
+    break;
+  case SCTP_ADAPTATION_INDICATION:
+    HandleAdaptationIndication(&(notif->sn_adaptation_event));
+    break;
+  case SCTP_AUTHENTICATION_EVENT:
+    LOG(("SCTP_AUTHENTICATION_EVENT"));
+    break;
+  case SCTP_SENDER_DRY_EVENT:
+    //LOG(("SCTP_SENDER_DRY_EVENT"));
+    break;
+  case SCTP_NOTIFICATIONS_STOPPED_EVENT:
+    LOG(("SCTP_NOTIFICATIONS_STOPPED_EVENT"));
+    break;
+  case SCTP_PARTIAL_DELIVERY_EVENT:
+    HandlePartialDeliveryEvent(&(notif->sn_pdapi_event));
+    break;
+  case SCTP_SEND_FAILED_EVENT:
+    HandleSendFailedEvent(&(notif->sn_send_failed_event));
+    break;
+  case SCTP_STREAM_RESET_EVENT:
+    HandleStreamResetEvent(&(notif->sn_strreset_event));
+    break;
+  case SCTP_ASSOC_RESET_EVENT:
+    LOG(("SCTP_ASSOC_RESET_EVENT"));
+    break;
+  case SCTP_STREAM_CHANGE_EVENT:
+    HandleStreamChangeEvent(&(notif->sn_strchange_event));
+    break;
+  default:
+    LOG(("unknown SCTP event: %u", (uint32_t)notif->sn_header.sn_type));
+    break;
+   }
+ }
+
+int
+DataChannelConnection::ReceiveCallback(struct socket* sock, void *data, size_t datalen,
+                                       struct sctp_rcvinfo rcv, int flags)
+{
+=======
+    case SCTP_ASSOC_CHANGE:
+      HandleAssociationChangeEvent(&(notif->sn_assoc_change));
+      break;
+    case SCTP_PEER_ADDR_CHANGE:
+      HandlePeerAddressChangeEvent(&(notif->sn_paddr_change));
+      break;
+    case SCTP_REMOTE_ERROR:
+      HandleRemoteErrorEvent(&(notif->sn_remote_error));
+      break;
+    case SCTP_SHUTDOWN_EVENT:
+      HandleShutdownEvent(&(notif->sn_shutdown_event));
+      break;
+    case SCTP_ADAPTATION_INDICATION:
+      HandleAdaptationIndication(&(notif->sn_adaptation_event));
+      break;
+    case SCTP_AUTHENTICATION_EVENT:
+      LOG(("SCTP_AUTHENTICATION_EVENT"));
+      break;
+    case SCTP_SENDER_DRY_EVENT:
+      // LOG(("SCTP_SENDER_DRY_EVENT"));
+      break;
+    case SCTP_NOTIFICATIONS_STOPPED_EVENT:
+      LOG(("SCTP_NOTIFICATIONS_STOPPED_EVENT"));
+      break;
+    case SCTP_PARTIAL_DELIVERY_EVENT:
+      HandlePartialDeliveryEvent(&(notif->sn_pdapi_event));
+      break;
+    case SCTP_SEND_FAILED_EVENT:
+      HandleSendFailedEvent(&(notif->sn_send_failed_event));
+      break;
+    case SCTP_STREAM_RESET_EVENT:
+      HandleStreamResetEvent(&(notif->sn_strreset_event));
+      break;
+    case SCTP_ASSOC_RESET_EVENT:
+      LOG(("SCTP_ASSOC_RESET_EVENT"));
+      break;
+    case SCTP_STREAM_CHANGE_EVENT:
+      HandleStreamChangeEvent(&(notif->sn_strchange_event));
+      break;
+    default:
+      LOG(("unknown SCTP event: %u", (uint32_t)notif->sn_header.sn_type));
+      break;
+  }
+}
+
+int DataChannelConnection::ReceiveCallback(struct socket* sock, void* data,
+                                           size_t datalen,
+                                           struct sctp_rcvinfo rcv, int flags) {
+>>>>>>> upstream-releases
   ASSERT_WEBRTC(!NS_IsMainThread());
 
   if (!data) {
     LOG(("ReceiveCallback: SCTP has finished shutting down"));
   } else {
-    mLock.AssertCurrentThreadOwns();
+    bool locked = false;
+    if (!IsSTSThread()) {
+      mLock.Lock();
+      locked = true;
+    } else {
+      mLock.AssertCurrentThreadOwns();
+    }
     if (flags & MSG_NOTIFICATION) {
-      HandleNotification(static_cast<union sctp_notification *>(data), datalen);
+      HandleNotification(static_cast<union sctp_notification*>(data), datalen);
     } else {
       HandleMessage(data, datalen, ntohl(rcv.rcv_ppid), rcv.rcv_sid, flags);
+    }
+    if (locked) {
+      mLock.Unlock();
     }
   }
   // sctp allocates 'data' with malloc(), and expects the receiver to free
@@ -2329,13 +3702,41 @@ int DataChannelConnection::ReceiveCallback(struct socket *sock, void *data,
   return 1;
 }
 
+<<<<<<< HEAD
 already_AddRefed<DataChannel> DataChannelConnection::Open(
     const nsACString &label, const nsACString &protocol, Type type,
     bool inOrder, uint32_t prValue, DataChannelListener *aListener,
     nsISupports *aContext, bool aExternalNegotiated, uint16_t aStream) {
   // aStream == INVALID_STREAM to have the protocol allocate
+||||||| merged common ancestors
+already_AddRefed<DataChannel>
+DataChannelConnection::Open(const nsACString& label, const nsACString& protocol,
+                            Type type, bool inOrder,
+                            uint32_t prValue, DataChannelListener *aListener,
+                            nsISupports *aContext, bool aExternalNegotiated,
+                            uint16_t aStream)
+{
+  // aStream == INVALID_STREAM to have the protocol allocate
+=======
+already_AddRefed<DataChannel> DataChannelConnection::Open(
+    const nsACString& label, const nsACString& protocol, Type type,
+    bool inOrder, uint32_t prValue, DataChannelListener* aListener,
+    nsISupports* aContext, bool aExternalNegotiated, uint16_t aStream) {
+  ASSERT_WEBRTC(NS_IsMainThread());
+  if (!aExternalNegotiated) {
+    if (mAllocateEven.isSome()) {
+      aStream = FindFreeStream();
+      if (aStream == INVALID_STREAM) {
+        return nullptr;
+      }
+    } else {
+      // We do not yet know whether we are client or server, and an id has not
+      // been chosen for us. We will need to choose later.
+      aStream = INVALID_STREAM;
+    }
+  }
+>>>>>>> upstream-releases
   uint16_t prPolicy = SCTP_PR_SCTP_NONE;
-  uint32_t flags;
 
   LOG(
       ("DC Open: label %s/%s, type %u, inorder %d, prValue %u, listener %p, "
@@ -2362,15 +3763,23 @@ already_AddRefed<DataChannel> DataChannelConnection::Open(
     return nullptr;
   }
 
+<<<<<<< HEAD
   // Don't look past currently-negotiated streams
   if (aStream != INVALID_STREAM && aStream < mStreams.Length() &&
       mStreams[aStream]) {
+||||||| merged common ancestors
+  // Don't look past currently-negotiated streams
+  if (aStream != INVALID_STREAM && aStream < mStreams.Length() && mStreams[aStream]) {
+=======
+  if (aStream != INVALID_STREAM && mChannels.Get(aStream)) {
+>>>>>>> upstream-releases
     LOG(("ERROR: external negotiation of already-open channel %u", aStream));
     // XXX How do we indicate this up to the application?  Probably the
     // caller's job, but we may need to return an error code.
     return nullptr;
   }
 
+<<<<<<< HEAD
   flags = !inOrder ? DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED : 0;
 
   RefPtr<DataChannel> channel(
@@ -2379,19 +3788,48 @@ already_AddRefed<DataChannel> DataChannelConnection::Open(
   if (aExternalNegotiated) {
     channel->mFlags |= DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED;
   }
+||||||| merged common ancestors
+  flags = !inOrder ? DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED : 0;
+
+  RefPtr<DataChannel> channel(new DataChannel(this,
+                                                aStream,
+                                                DataChannel::CONNECTING,
+                                                label, protocol,
+                                                prPolicy, prValue,
+                                                flags,
+                                                aListener, aContext));
+  if (aExternalNegotiated) {
+    channel->mFlags |= DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED;
+  }
+=======
+  RefPtr<DataChannel> channel(new DataChannel(
+      this, aStream, DataChannel::CONNECTING, label, protocol, prPolicy,
+      prValue, inOrder, aExternalNegotiated, aListener, aContext));
+  mChannels.Insert(channel);
+>>>>>>> upstream-releases
 
   MutexAutoLock lock(mLock);  // OpenFinish assumes this
   return OpenFinish(channel.forget());
 }
 
 // Separate routine so we can also call it to finish up from pending opens
+<<<<<<< HEAD
 already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
     already_AddRefed<DataChannel> &&aChannel) {
   RefPtr<DataChannel> channel(aChannel);  // takes the reference passed in
+||||||| merged common ancestors
+already_AddRefed<DataChannel>
+DataChannelConnection::OpenFinish(already_AddRefed<DataChannel>&& aChannel)
+{
+  RefPtr<DataChannel> channel(aChannel); // takes the reference passed in
+=======
+already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
+    already_AddRefed<DataChannel>&& aChannel) {
+  RefPtr<DataChannel> channel(aChannel);  // takes the reference passed in
+>>>>>>> upstream-releases
   // Normally 1 reference if called from ::Open(), or 2 if called from
   // ProcessQueuedOpens() unless the DOMDataChannel was gc'd
-  uint16_t stream = channel->mStream;
-  bool queue = false;
+  const uint16_t stream = channel->mStream;
 
   mLock.AssertCurrentThreadOwns();
 
@@ -2419,6 +3857,7 @@ already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
   // Not Open cases are simply queue for non-negotiated, and
   // either change the initial ask or possibly renegotiate after open.
 
+<<<<<<< HEAD
   if (mState == OPEN) {
     if (stream == INVALID_STREAM) {
       stream = FindFreeStream();  // may be INVALID_STREAM if we need more
@@ -2430,12 +3869,31 @@ already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
       int32_t more_needed = (stream == INVALID_STREAM)
                                 ? 16
                                 : (stream - ((int32_t)mStreams.Length())) + 16;
+||||||| merged common ancestors
+  if (mState == OPEN) {
+    if (stream == INVALID_STREAM) {
+      stream = FindFreeStream(); // may be INVALID_STREAM if we need more
+    }
+    if (stream == INVALID_STREAM || stream >= mStreams.Length()) {
+      // RequestMoreStreams() limits to MAX_NUM_STREAMS -- allocate extra streams
+      // to avoid going back immediately for more if the ask to N, N+1, etc
+      int32_t more_needed = (stream == INVALID_STREAM) ? 16 :
+                            (stream-((int32_t)mStreams.Length())) + 16;
+=======
+  if (mState != OPEN || stream >= mNegotiatedIdLimit) {
+    if (mState == OPEN) {
+      MOZ_ASSERT(stream != INVALID_STREAM);
+      // RequestMoreStreams() limits to MAX_NUM_STREAMS -- allocate extra
+      // streams to avoid going back immediately for more if the ask to N, N+1,
+      // etc
+      int32_t more_needed = stream - ((int32_t)mNegotiatedIdLimit) + 16;
+>>>>>>> upstream-releases
       if (!RequestMoreStreams(more_needed)) {
         // Something bad happened... we're done
         goto request_error_cleanup;
       }
-      queue = true;
     }
+<<<<<<< HEAD
   } else {
     // not OPEN
     if (stream != INVALID_STREAM && stream >= mStreams.Length() &&
@@ -2472,6 +3930,44 @@ already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
     queue = true;
   }
   if (queue) {
+||||||| merged common ancestors
+  } else {
+    // not OPEN
+    if (stream != INVALID_STREAM && stream >= mStreams.Length() &&
+        mState == CLOSED) {
+      // Update number of streams for init message
+      struct sctp_initmsg initmsg;
+      socklen_t len = sizeof(initmsg);
+      int32_t total_needed = stream+16;
+
+      memset(&initmsg, 0, sizeof(initmsg));
+      if (usrsctp_getsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_INITMSG, &initmsg, &len) < 0) {
+        LOG(("*** failed getsockopt SCTP_INITMSG"));
+        goto request_error_cleanup;
+      }
+      LOG(("Setting number of SCTP streams to %u, was %u/%u", total_needed,
+           initmsg.sinit_num_ostreams, initmsg.sinit_max_instreams));
+      initmsg.sinit_num_ostreams  = total_needed;
+      initmsg.sinit_max_instreams = MAX_NUM_STREAMS;
+      if (usrsctp_setsockopt(mMasterSocket, IPPROTO_SCTP, SCTP_INITMSG, &initmsg,
+                             (socklen_t)sizeof(initmsg)) < 0) {
+        LOG(("*** failed setsockopt SCTP_INITMSG, errno %d", errno));
+        goto request_error_cleanup;
+      }
+
+      int32_t old_len = mStreams.Length();
+      mStreams.AppendElements(total_needed - old_len);
+      for (int32_t i = old_len; i < total_needed; ++i) {
+        mStreams[i] = nullptr;
+      }
+    }
+    // else if state is CONNECTING, we'll just re-negotiate when OpenFinish
+    // is called, if needed
+    queue = true;
+  }
+  if (queue) {
+=======
+>>>>>>> upstream-releases
     LOG(("Queuing channel %p (%u) to finish open", channel.get(), stream));
     // Also serves to mark we told the app
     channel->mFlags |= DATA_CHANNEL_FLAGS_FINISH_OPEN;
@@ -2483,63 +3979,127 @@ already_AddRefed<DataChannel> DataChannelConnection::OpenFinish(
   }
 
   MOZ_ASSERT(stream != INVALID_STREAM);
+<<<<<<< HEAD
   // just allocated (& OPEN), or externally negotiated
   mStreams[stream] = channel;  // holds a reference
   channel->mStream = stream;
+||||||| merged common ancestors
+  // just allocated (& OPEN), or externally negotiated
+  mStreams[stream] = channel; // holds a reference
+  channel->mStream = stream;
+=======
+  MOZ_ASSERT(stream < mNegotiatedIdLimit);
+>>>>>>> upstream-releases
 
 #ifdef TEST_QUEUED_DATA
   // It's painful to write a test for this...
+<<<<<<< HEAD
   channel->mState = OPEN;
   channel->mFlags |= DATA_CHANNEL_FLAGS_READY;
   SendDataMsgInternalOrBuffer(channel, "Help me!", 8,
                               DATA_CHANNEL_PPID_DOMSTRING);
+||||||| merged common ancestors
+  channel->mState = OPEN;
+  channel->mFlags |= DATA_CHANNEL_FLAGS_READY;
+  SendDataMsgInternalOrBuffer(channel, "Help me!", 8, DATA_CHANNEL_PPID_DOMSTRING);
+=======
+  channel->AnnounceOpen();
+  SendDataMsgInternalOrBuffer(channel, "Help me!", 8,
+                              DATA_CHANNEL_PPID_DOMSTRING);
+>>>>>>> upstream-releases
 #endif
 
-  if (channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED) {
+  if (!channel->mOrdered) {
     // Don't send unordered until this gets cleared
     channel->mFlags |= DATA_CHANNEL_FLAGS_WAITING_ACK;
   }
 
+<<<<<<< HEAD
   if (!(channel->mFlags & DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED)) {
     int error = SendOpenRequestMessage(
         channel->mLabel, channel->mProtocol, stream,
         !!(channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED),
         channel->mPrPolicy, channel->mPrValue);
+||||||| merged common ancestors
+  if (!(channel->mFlags & DATA_CHANNEL_FLAGS_EXTERNAL_NEGOTIATED)) {
+    int error = SendOpenRequestMessage(
+        channel->mLabel, channel->mProtocol, stream,
+        !!(channel->mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED), channel->mPrPolicy,
+        channel->mPrValue);
+=======
+  if (!channel->mNegotiated) {
+    int error = SendOpenRequestMessage(channel->mLabel, channel->mProtocol,
+                                       stream, !channel->mOrdered,
+                                       channel->mPrPolicy, channel->mPrValue);
+>>>>>>> upstream-releases
     if (error) {
       LOG(("SendOpenRequest failed, error = %d", error));
       if (channel->mFlags & DATA_CHANNEL_FLAGS_FINISH_OPEN) {
         // We already returned the channel to the app.
         NS_ERROR("Failed to send open request");
+<<<<<<< HEAD
         Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
             DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this, channel)));
+||||||| merged common ancestors
+        Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+                   DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this,
+                   channel)));
+=======
+        channel->AnnounceClosed();
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
       // If we haven't returned the channel yet, it will get destroyed when we
       // exit this function.
       mStreams[stream] = nullptr;
       channel->mStream = INVALID_STREAM;
+||||||| merged common ancestors
+      // If we haven't returned the channel yet, it will get destroyed when we exit
+      // this function.
+      mStreams[stream] = nullptr;
+      channel->mStream = INVALID_STREAM;
+=======
+      // If we haven't returned the channel yet, it will get destroyed when we
+      // exit this function.
+      mChannels.Remove(channel);
+>>>>>>> upstream-releases
       // we'll be destroying the channel
-      channel->mState = CLOSED;
       return nullptr;
       /* NOTREACHED */
     }
   }
+
   // Either externally negotiated or we sent Open
-  channel->mState = OPEN;
-  channel->mFlags |= DATA_CHANNEL_FLAGS_READY;
   // FIX?  Move into DOMDataChannel?  I don't think we can send it yet here
+<<<<<<< HEAD
   LOG(("%s: sending ON_CHANNEL_OPEN for %p", __FUNCTION__, channel.get()));
   Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
       DataChannelOnMessageAvailable::ON_CHANNEL_OPEN, this, channel)));
+||||||| merged common ancestors
+  LOG(("%s: sending ON_CHANNEL_OPEN for %p", __FUNCTION__, channel.get()));
+  Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+             DataChannelOnMessageAvailable::ON_CHANNEL_OPEN, this,
+             channel)));
+=======
+  channel->AnnounceOpen();
+>>>>>>> upstream-releases
 
   return channel.forget();
 
 request_error_cleanup:
-  channel->mState = CLOSED;
   if (channel->mFlags & DATA_CHANNEL_FLAGS_FINISH_OPEN) {
     // We already returned the channel to the app.
     NS_ERROR("Failed to request more streams");
+<<<<<<< HEAD
     Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
         DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this, channel)));
+||||||| merged common ancestors
+    Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
+               DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, this,
+               channel)));
+=======
+    channel->AnnounceClosed();
+>>>>>>> upstream-releases
     return channel.forget();
   }
   // we'll be destroying the channel, but it never really got set up
@@ -2550,8 +4110,18 @@ request_error_cleanup:
 
 // Requires mLock to be locked!
 // Returns a POSIX error code directly instead of setting errno.
+<<<<<<< HEAD
 int DataChannelConnection::SendMsgInternal(OutgoingMsg &msg) {
   auto &info = msg.GetInfo().sendv_sndinfo;
+||||||| merged common ancestors
+int
+DataChannelConnection::SendMsgInternal(OutgoingMsg &msg)
+{
+  auto &info = msg.GetInfo().sendv_sndinfo;
+=======
+int DataChannelConnection::SendMsgInternal(OutgoingMsg& msg, size_t* aWritten) {
+  auto& info = msg.GetInfo().sendv_sndinfo;
+>>>>>>> upstream-releases
   int error;
 
   // EOR set?
@@ -2582,17 +4152,46 @@ int DataChannelConnection::SendMsgInternal(OutgoingMsg &msg) {
     // size (or EAGAIN if there isn't space). However, we can avoid EMSGSIZE
     // by carefully crafting small enough message chunks.
     ssize_t written = usrsctp_sendv(
+<<<<<<< HEAD
         mSocket, msg.GetData(), length, nullptr, 0, (void *)&msg.GetInfo(),
         (socklen_t)sizeof(struct sctp_sendv_spa), SCTP_SENDV_SPA, 0);
+||||||| merged common ancestors
+        mSocket, msg.GetData(), length, nullptr, 0,
+        (void *)&msg.GetInfo(), (socklen_t)sizeof(struct sctp_sendv_spa),
+        SCTP_SENDV_SPA, 0);
+=======
+        mSocket, msg.GetData(), length, nullptr, 0, (void*)&msg.GetInfo(),
+        (socklen_t)sizeof(struct sctp_sendv_spa), SCTP_SENDV_SPA, 0);
+
+>>>>>>> upstream-releases
     if (written < 0) {
       error = errno;
       goto out;
+    }
+<<<<<<< HEAD
+    LOG(("Sent buffer (written=%zu, len=%zu, left=%zu)", (size_t)written,
+         length, left - (size_t)written));
+||||||| merged common ancestors
+    LOG(("Sent buffer (written=%zu, len=%zu, left=%zu)",
+         (size_t)written, length, left - (size_t)written));
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // TODO: Remove once resolved
+    // (https://github.com/sctplab/usrsctp/issues/132)
+||||||| merged common ancestors
+    // TODO: Remove once resolved (https://github.com/sctplab/usrsctp/issues/132)
+=======
+    if (aWritten) {
+      *aWritten += written;
     }
     LOG(("Sent buffer (written=%zu, len=%zu, left=%zu)", (size_t)written,
          length, left - (size_t)written));
 
     // TODO: Remove once resolved
     // (https://github.com/sctplab/usrsctp/issues/132)
+>>>>>>> upstream-releases
     if (written == 0) {
       LOG(("@tuexen: usrsctp_sendv returned 0"));
       error = EAGAIN;
@@ -2629,9 +4228,20 @@ out:
 // Requires mLock to be locked!
 // Returns a POSIX error code directly instead of setting errno.
 // IMPORTANT: Ensure that the buffer passed is guarded by mLock!
+<<<<<<< HEAD
 int DataChannelConnection::SendMsgInternalOrBuffer(
     nsTArray<nsAutoPtr<BufferedOutgoingMsg>> &buffer, OutgoingMsg &msg,
     bool &buffered) {
+||||||| merged common ancestors
+int
+DataChannelConnection::SendMsgInternalOrBuffer(nsTArray<nsAutoPtr<BufferedOutgoingMsg>> &buffer,
+                                               OutgoingMsg &msg, bool &buffered)
+{
+=======
+int DataChannelConnection::SendMsgInternalOrBuffer(
+    nsTArray<nsAutoPtr<BufferedOutgoingMsg>>& buffer, OutgoingMsg& msg,
+    bool& buffered, size_t* aWritten) {
+>>>>>>> upstream-releases
   NS_WARNING_ASSERTION(msg.GetLength() > 0, "Length is 0?!");
 
   int error = 0;
@@ -2655,7 +4265,7 @@ int DataChannelConnection::SendMsgInternalOrBuffer(
   // Must lock before empty check for similar reasons!
   mLock.AssertCurrentThreadOwns();
   if (buffer.IsEmpty() && (mSendInterleaved || !mPendingType)) {
-    error = SendMsgInternal(msg);
+    error = SendMsgInternal(msg, aWritten);
     switch (error) {
       case 0:
         break;
@@ -2674,12 +4284,27 @@ int DataChannelConnection::SendMsgInternalOrBuffer(
   }
 
   if (need_buffering) {
+<<<<<<< HEAD
     // queue data for resend!  And queue any further data for the stream until
     // it is...
     auto *bufferedMsg = new BufferedOutgoingMsg(msg);  // infallible malloc
     buffer.AppendElement(bufferedMsg);  // owned by mBufferedData array
     LOG(("Queued %zu buffers (left=%zu, total=%zu)", buffer.Length(),
          msg.GetLeft(), msg.GetLength()));
+||||||| merged common ancestors
+    // queue data for resend!  And queue any further data for the stream until it is...
+    auto *bufferedMsg = new BufferedOutgoingMsg(msg); // infallible malloc
+    buffer.AppendElement(bufferedMsg); // owned by mBufferedData array
+    LOG(("Queued %zu buffers (left=%zu, total=%zu)",
+         buffer.Length(), msg.GetLeft(), msg.GetLength()));
+=======
+    // queue data for resend!  And queue any further data for the stream until
+    // it is...
+    auto* bufferedMsg = new BufferedOutgoingMsg(msg);  // infallible malloc
+    buffer.AppendElement(bufferedMsg);  // owned by mBufferedData array
+    LOG(("Queued %zu buffers (left=%zu, total=%zu)", buffer.Length(),
+         msg.GetLeft(), msg.GetLength()));
+>>>>>>> upstream-releases
     buffered = true;
     return 0;
   }
@@ -2690,12 +4315,28 @@ int DataChannelConnection::SendMsgInternalOrBuffer(
 
 // Caller must ensure that length <= UINT32_MAX
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel &channel,
                                                        const uint8_t *data,
                                                        size_t len,
                                                        uint32_t ppid) {
   if (NS_WARN_IF(channel.mState != OPEN && channel.mState != CONNECTING)) {
     return EINVAL;  // TODO: Find a better error code
+||||||| merged common ancestors
+int
+DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel &channel, const uint8_t *data,
+                                                   size_t len, uint32_t ppid)
+{
+  if (NS_WARN_IF(channel.mState != OPEN && channel.mState != CONNECTING)) {
+    return EINVAL; // TODO: Find a better error code
+=======
+int DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel& channel,
+                                                       const uint8_t* data,
+                                                       size_t len,
+                                                       uint32_t ppid) {
+  if (NS_WARN_IF(channel.mReadyState != OPEN)) {
+    return EINVAL;  // TODO: Find a better error code
+>>>>>>> upstream-releases
   }
 
   struct sctp_sendv_spa info = {0};
@@ -2708,12 +4349,12 @@ int DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel &channel,
   info.sendv_sndinfo.snd_flags = SCTP_EOR;
   info.sendv_sndinfo.snd_ppid = htonl(ppid);
 
+  MutexAutoLock lock(mLock);  // Need to protect mFlags... :(
   // Unordered?
   // To avoid problems where an in-order OPEN is lost and an
   // out-of-order data message "beats" it, require data to be in-order
   // until we get an ACK.
-  if ((channel.mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED) &&
-      !(channel.mFlags & DATA_CHANNEL_FLAGS_WAITING_ACK)) {
+  if (!channel.mOrdered && !(channel.mFlags & DATA_CHANNEL_FLAGS_WAITING_ACK)) {
     info.sendv_sndinfo.snd_flags |= SCTP_UNORDERED;
   }
 
@@ -2726,9 +4367,21 @@ int DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel &channel,
 
   // Create message instance and send
   OutgoingMsg msg(info, data, len);
-  MutexAutoLock lock(mLock);
   bool buffered;
-  int error = SendMsgInternalOrBuffer(channel.mBufferedData, msg, buffered);
+  size_t written = 0;
+  mDeferSend = true;
+  int error =
+      SendMsgInternalOrBuffer(channel.mBufferedData, msg, buffered, &written);
+  mDeferSend = false;
+  if (written) {
+    channel.DecrementBufferedAmount(written);
+  }
+
+  for (auto&& packet : mDeferredSend) {
+    MOZ_ASSERT(written);
+    SendPacket(std::move(packet));
+  }
+  mDeferredSend.clear();
 
   // Set pending type and stream index (if buffered)
   if (!error && buffered && !mPendingType) {
@@ -2740,13 +4393,26 @@ int DataChannelConnection::SendDataMsgInternalOrBuffer(DataChannel &channel,
 
 // Caller must ensure that length <= UINT32_MAX
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendDataMsg(DataChannel &channel,
                                        const uint8_t *data, size_t len,
                                        uint32_t ppidPartial,
                                        uint32_t ppidFinal) {
+||||||| merged common ancestors
+int
+DataChannelConnection::SendDataMsg(DataChannel &channel, const uint8_t *data, size_t len,
+                                   uint32_t ppidPartial, uint32_t ppidFinal)
+{
+=======
+int DataChannelConnection::SendDataMsg(DataChannel& channel,
+                                       const uint8_t* data, size_t len,
+                                       uint32_t ppidPartial,
+                                       uint32_t ppidFinal) {
+>>>>>>> upstream-releases
   // We *really* don't want to do this from main thread! - and
   // SendDataMsgInternalOrBuffer avoids blocking.
 
+<<<<<<< HEAD
   if (mPpidFragmentation) {
     // TODO: Bug 1381136, remove this block and all other code that uses PPIDs
     //       for fragmentation and reassembly once older Firefoxes without EOR
@@ -2804,6 +4470,64 @@ int DataChannelConnection::SendDataMsg(DataChannel &channel,
            mMaxMessageSize));
       return EMSGSIZE;
     }
+||||||| merged common ancestors
+  if (mPpidFragmentation) {
+    // TODO: Bug 1381136, remove this block and all other code that uses PPIDs for fragmentation
+    //       and reassembly once older Firefoxes without EOR are no longer supported as target
+    //       clients.
+
+    // Use the deprecated PPID-level fragmentation if enabled. Should be enabled
+    // in case we can be certain that the other peer is an older Firefox browser
+    // that does support PPID-level fragmentation/reassembly.
+
+    // PPID-level fragmentation can only be applied on reliable data channels.
+    if (len > DATA_CHANNEL_MAX_BINARY_FRAGMENT &&
+        channel.mPrPolicy == DATA_CHANNEL_RELIABLE &&
+        !(channel.mFlags & DATA_CHANNEL_FLAGS_OUT_OF_ORDER_ALLOWED)) {
+      LOG(("Sending data message (total=%zu) using deprecated PPID-based chunks", len));
+
+      size_t left = len;
+      while (left > 0) {
+        // Note: For correctness, chunkLen should also consider mMaxMessageSize as minimum but as
+        //       this block is going to be removed soon, I see no need for it.
+        size_t chunkLen = std::min<size_t>(left, DATA_CHANNEL_MAX_BINARY_FRAGMENT);
+        left -= chunkLen;
+        uint32_t ppid = left > 0 ? ppidPartial : ppidFinal;
+
+        // Send the chunk
+        // Note that these might end up being deferred and queued.
+        LOG(("Send chunk (len=%zu, left=%zu, total=%zu, ppid %u",
+             chunkLen, left, len, ppid));
+        int error = SendDataMsgInternalOrBuffer(channel, data, chunkLen, ppid);
+        if (error) {
+          LOG(("*** send chunk fail %d", error));
+          return error;
+        }
+
+        // Update data position
+        data += chunkLen;
+      }
+
+      // Sending chunks complete
+      LOG(("Sent %zu chunks using deprecated PPID-based fragmentation",
+           (size_t)(len+DATA_CHANNEL_MAX_BINARY_FRAGMENT-1)/DATA_CHANNEL_MAX_BINARY_FRAGMENT));
+      return 0;
+    }
+
+    // Cannot do PPID-based fragmentaton on unreliable channels
+    NS_WARNING_ASSERTION(len <= DATA_CHANNEL_MAX_BINARY_FRAGMENT,
+                         "Sending too-large data on unreliable channel!");
+  } else {
+    if (mMaxMessageSize != 0 && len > mMaxMessageSize) {
+      LOG(("Message rejected, too large (%zu > %" PRIu64 ")", len, mMaxMessageSize));
+      return EMSGSIZE;
+    }
+=======
+  if (mMaxMessageSize != 0 && len > mMaxMessageSize) {
+    LOG(("Message rejected, too large (%zu > %" PRIu64 ")", len,
+         mMaxMessageSize));
+    return EMSGSIZE;
+>>>>>>> upstream-releases
   }
 
   // This will use EOR-based fragmentation if the message is too large (> 64
@@ -2812,6 +4536,7 @@ int DataChannelConnection::SendDataMsg(DataChannel &channel,
 }
 
 class ReadBlobRunnable : public Runnable {
+<<<<<<< HEAD
  public:
   ReadBlobRunnable(DataChannelConnection *aConnection, uint16_t aStream,
                    nsIInputStream *aBlob)
@@ -2819,10 +4544,29 @@ class ReadBlobRunnable : public Runnable {
         mConnection(aConnection),
         mStream(aStream),
         mBlob(aBlob) {}
+||||||| merged common ancestors
+public:
+  ReadBlobRunnable(DataChannelConnection* aConnection,
+                   uint16_t aStream,
+                   nsIInputStream* aBlob)
+    : Runnable("ReadBlobRunnable")
+    , mConnection(aConnection)
+    , mStream(aStream)
+    , mBlob(aBlob)
+  {}
+=======
+ public:
+  ReadBlobRunnable(DataChannelConnection* aConnection, uint16_t aStream,
+                   nsIInputStream* aBlob)
+      : Runnable("ReadBlobRunnable"),
+        mConnection(aConnection),
+        mStream(aStream),
+        mBlob(aBlob) {}
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     // ReadBlob() is responsible to releasing the reference
-    DataChannelConnection *self = mConnection;
+    DataChannelConnection* self = mConnection;
     self->ReadBlob(mConnection.forget(), mStream, mBlob);
     return NS_OK;
   }
@@ -2840,8 +4584,18 @@ class ReadBlobRunnable : public Runnable {
 };
 
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendBlob(uint16_t stream, nsIInputStream *aBlob) {
   DataChannel *channel = mStreams[stream];
+||||||| merged common ancestors
+int
+DataChannelConnection::SendBlob(uint16_t stream, nsIInputStream *aBlob)
+{
+  DataChannel *channel = mStreams[stream];
+=======
+int DataChannelConnection::SendBlob(uint16_t stream, nsIInputStream* aBlob) {
+  RefPtr<DataChannel> channel = mChannels.Get(stream);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!channel)) {
     return EINVAL;  // TODO: Find a better error code
   }
@@ -2863,12 +4617,31 @@ int DataChannelConnection::SendBlob(uint16_t stream, nsIInputStream *aBlob) {
 class DataChannelBlobSendRunnable : public Runnable {
  public:
   DataChannelBlobSendRunnable(
+<<<<<<< HEAD
       already_AddRefed<DataChannelConnection> &aConnection, uint16_t aStream)
       : Runnable("DataChannelBlobSendRunnable"),
         mConnection(aConnection),
         mStream(aStream) {}
 
   ~DataChannelBlobSendRunnable() override {
+||||||| merged common ancestors
+    already_AddRefed<DataChannelConnection>& aConnection,
+    uint16_t aStream)
+    : Runnable("DataChannelBlobSendRunnable")
+    , mConnection(aConnection)
+    , mStream(aStream)
+  {}
+
+  ~DataChannelBlobSendRunnable() override
+  {
+=======
+      already_AddRefed<DataChannelConnection>& aConnection, uint16_t aStream)
+      : Runnable("DataChannelBlobSendRunnable"),
+        mConnection(aConnection),
+        mStream(aStream) {}
+
+  ~DataChannelBlobSendRunnable() override {
+>>>>>>> upstream-releases
     if (!NS_IsMainThread() && mConnection) {
       MOZ_ASSERT(false);
       // explicitly leak the connection if destroyed off mainthread
@@ -2894,9 +4667,20 @@ class DataChannelBlobSendRunnable : public Runnable {
   uint16_t mStream;
 };
 
+<<<<<<< HEAD
 void DataChannelConnection::ReadBlob(
     already_AddRefed<DataChannelConnection> aThis, uint16_t aStream,
     nsIInputStream *aBlob) {
+||||||| merged common ancestors
+void
+DataChannelConnection::ReadBlob(already_AddRefed<DataChannelConnection> aThis,
+                                uint16_t aStream, nsIInputStream* aBlob)
+{
+=======
+void DataChannelConnection::ReadBlob(
+    already_AddRefed<DataChannelConnection> aThis, uint16_t aStream,
+    nsIInputStream* aBlob) {
+>>>>>>> upstream-releases
   // NOTE: 'aThis' has been forgotten by the caller to avoid releasing
   // it off mainthread; if PeerConnectionImpl has released then we want
   // ~DataChannelConnection() to run on MainThread
@@ -2927,6 +4711,7 @@ void DataChannelConnection::ReadBlob(
   Dispatch(runnable.forget());
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::GetStreamIds(std::vector<uint16_t> *aStreamList) {
   ASSERT_WEBRTC(NS_IsMainThread());
   for (uint32_t i = 0; i < mStreams.Length(); ++i) {
@@ -2936,33 +4721,65 @@ void DataChannelConnection::GetStreamIds(std::vector<uint16_t> *aStreamList) {
   }
 }
 
+||||||| merged common ancestors
+void
+DataChannelConnection::GetStreamIds(std::vector<uint16_t>* aStreamList)
+{
+  ASSERT_WEBRTC(NS_IsMainThread());
+  for (uint32_t i = 0; i < mStreams.Length(); ++i) {
+    if (mStreams[i]) {
+      aStreamList->push_back(mStreams[i]->mStream);
+    }
+  }
+}
+
+=======
+>>>>>>> upstream-releases
 // Returns a POSIX error code.
+<<<<<<< HEAD
 int DataChannelConnection::SendDataMsgCommon(uint16_t stream,
                                              const nsACString &aMsg,
                                              bool isBinary) {
+||||||| merged common ancestors
+int
+DataChannelConnection::SendDataMsgCommon(uint16_t stream, const nsACString &aMsg,
+                                         bool isBinary)
+{
+=======
+int DataChannelConnection::SendDataMsgCommon(uint16_t stream,
+                                             const nsACString& aMsg,
+                                             bool isBinary) {
+>>>>>>> upstream-releases
   ASSERT_WEBRTC(NS_IsMainThread());
   // We really could allow this from other threads, so long as we deal with
   // asynchronosity issues with channels closing, in particular access to
-  // mStreams, and issues with the association closing (access to mSocket).
+  // mChannels, and issues with the association closing (access to mSocket).
 
+<<<<<<< HEAD
   const uint8_t *data = (const uint8_t *)aMsg.BeginReading();
   uint32_t len = aMsg.Length();
+||||||| merged common ancestors
+  const uint8_t *data = (const uint8_t *)aMsg.BeginReading();
+  uint32_t len     = aMsg.Length();
+=======
+  const uint8_t* data = (const uint8_t*)aMsg.BeginReading();
+  uint32_t len = aMsg.Length();
+>>>>>>> upstream-releases
 #if (UINT32_MAX > SIZE_MAX)
   if (len > SIZE_MAX) {
     return EMSGSIZE;
   }
 #endif
-  DataChannel *channelPtr;
 
   LOG(("Sending %sto stream %u: %u bytes", isBinary ? "binary " : "", stream,
        len));
   // XXX if we want more efficiency, translate flags once at open time
-  channelPtr = mStreams[stream];
+  RefPtr<DataChannel> channelPtr = mChannels.Get(stream);
   if (NS_WARN_IF(!channelPtr)) {
     return EINVAL;  // TODO: Find a better error code
   }
 
-  auto &channel = *channelPtr;
+  auto& channel = *channelPtr;
 
   if (isBinary) {
     return SendDataMsg(channel, data, len, DATA_CHANNEL_PPID_BINARY_PARTIAL,
@@ -2978,42 +4795,72 @@ void DataChannelConnection::Stop() {
       DataChannelOnMessageAvailable::ON_DISCONNECTED, this)));
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::Close(DataChannel *aChannel) {
+||||||| merged common ancestors
+void
+DataChannelConnection::Close(DataChannel *aChannel)
+{
+=======
+void DataChannelConnection::Close(DataChannel* aChannel) {
+>>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   CloseInt(aChannel);
 }
 
 // So we can call Close() with the lock already held
 // Called from someone who holds a ref via ::Close(), or from ~DataChannel
+<<<<<<< HEAD
 void DataChannelConnection::CloseInt(DataChannel *aChannel) {
+||||||| merged common ancestors
+void
+DataChannelConnection::CloseInt(DataChannel *aChannel)
+{
+=======
+void DataChannelConnection::CloseInt(DataChannel* aChannel) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aChannel);
   RefPtr<DataChannel> channel(aChannel);  // make sure it doesn't go away on us
 
   mLock.AssertCurrentThreadOwns();
   LOG(("Connection %p/Channel %p: Closing stream %u",
        channel->mConnection.get(), channel.get(), channel->mStream));
+
+  aChannel->mBufferedData.Clear();
+  if (mState == CLOSED) {
+    // If we're CLOSING, we might leave this in place until we can send a
+    // reset.
+    mChannels.Remove(channel);
+  }
+
   // re-test since it may have closed before the lock was grabbed
-  if (aChannel->mState == CLOSED || aChannel->mState == CLOSING) {
-    LOG(("Channel already closing/closed (%u)", aChannel->mState));
-    if (mState == CLOSED && channel->mStream != INVALID_STREAM) {
-      // called from CloseAll()
-      // we're not going to hang around waiting any more
-      mStreams[channel->mStream] = nullptr;
-    }
+  if (aChannel->mReadyState == CLOSED || aChannel->mReadyState == CLOSING) {
+    LOG(("Channel already closing/closed (%u)", aChannel->mReadyState));
     return;
   }
-  aChannel->mBufferedData.Clear();
+
   if (channel->mStream != INVALID_STREAM) {
     ResetOutgoingStream(channel->mStream);
+<<<<<<< HEAD
     if (mState == CLOSED) {  // called from CloseAll()
       // Let resets accumulate then send all at once in CloseAll()
       // we're not going to hang around waiting
       mStreams[channel->mStream] = nullptr;
     } else {
+||||||| merged common ancestors
+    if (mState == CLOSED) { // called from CloseAll()
+      // Let resets accumulate then send all at once in CloseAll()
+      // we're not going to hang around waiting
+      mStreams[channel->mStream] = nullptr;
+    } else {
+=======
+    if (mState != CLOSED) {
+      // Individual channel is being closed, send reset now.
+>>>>>>> upstream-releases
       SendOutgoingStreamReset();
     }
   }
-  aChannel->mState = CLOSING;
+  aChannel->mReadyState = CLOSING;
   if (mState == CLOSED) {
     // we're not going to hang around waiting
     channel->StreamClosedLocked();
@@ -3022,8 +4869,17 @@ void DataChannelConnection::CloseInt(DataChannel *aChannel) {
   // the DOM object
 }
 
+<<<<<<< HEAD
 void DataChannelConnection::CloseAll() {
   LOG(("Closing all channels (connection %p)", (void *)this));
+||||||| merged common ancestors
+void DataChannelConnection::CloseAll()
+{
+  LOG(("Closing all channels (connection %p)", (void*) this));
+=======
+void DataChannelConnection::CloseAll() {
+  LOG(("Closing all channels (connection %p)", (void*)this));
+>>>>>>> upstream-releases
   // Don't need to lock here
 
   // Make sure no more channels will be opened
@@ -3035,37 +4891,125 @@ void DataChannelConnection::CloseAll() {
   // Close current channels
   // If there are runnables, they hold a strong ref and keep the channel
   // and/or connection alive (even if in a CLOSED state)
-  bool closed_some = false;
-  for (uint32_t i = 0; i < mStreams.Length(); ++i) {
-    if (mStreams[i]) {
-      mStreams[i]->Close();
-      closed_some = true;
-    }
+  for (auto& channel : mChannels.GetAll()) {
+    channel->Close();
   }
 
   // Clean up any pending opens for channels
   RefPtr<DataChannel> channel;
+<<<<<<< HEAD
   while (nullptr != (channel = dont_AddRef(
                          static_cast<DataChannel *>(mPending.PopFront())))) {
     LOG(("closing pending channel %p, stream %u", channel.get(),
          channel->mStream));
     channel->Close();  // also releases the ref on each iteration
     closed_some = true;
+||||||| merged common ancestors
+  while (nullptr != (channel = dont_AddRef(static_cast<DataChannel *>(mPending.PopFront())))) {
+    LOG(("closing pending channel %p, stream %u", channel.get(), channel->mStream));
+    channel->Close(); // also releases the ref on each iteration
+    closed_some = true;
+=======
+  while (nullptr != (channel = dont_AddRef(
+                         static_cast<DataChannel*>(mPending.PopFront())))) {
+    LOG(("closing pending channel %p, stream %u", channel.get(),
+         channel->mStream));
+    channel->Close();  // also releases the ref on each iteration
+>>>>>>> upstream-releases
   }
   // It's more efficient to let the Resets queue in shutdown and then
   // SendOutgoingStreamReset() here.
-  if (closed_some) {
-    MutexAutoLock lock(mLock);
-    SendOutgoingStreamReset();
+  MutexAutoLock lock(mLock);
+  SendOutgoingStreamReset();
+}
+
+bool DataChannelConnection::Channels::IdComparator::Equals(
+    const RefPtr<DataChannel>& aChannel, uint16_t aId) const {
+  return aChannel->mStream == aId;
+}
+
+bool DataChannelConnection::Channels::IdComparator::LessThan(
+    const RefPtr<DataChannel>& aChannel, uint16_t aId) const {
+  return aChannel->mStream < aId;
+}
+
+bool DataChannelConnection::Channels::IdComparator::Equals(
+    const RefPtr<DataChannel>& a1, const RefPtr<DataChannel>& a2) const {
+  return Equals(a1, a2->mStream);
+}
+
+bool DataChannelConnection::Channels::IdComparator::LessThan(
+    const RefPtr<DataChannel>& a1, const RefPtr<DataChannel>& a2) const {
+  return LessThan(a1, a2->mStream);
+}
+
+void DataChannelConnection::Channels::Insert(
+    const RefPtr<DataChannel>& aChannel) {
+  LOG(("Inserting channel %u : %p", aChannel->mStream, aChannel.get()));
+  MutexAutoLock lock(mMutex);
+  if (aChannel->mStream != INVALID_STREAM) {
+    MOZ_ASSERT(!mChannels.ContainsSorted(aChannel, IdComparator()));
   }
+
+  MOZ_ASSERT(!mChannels.Contains(aChannel));
+
+  mChannels.InsertElementSorted(aChannel, IdComparator());
+}
+
+<<<<<<< HEAD
+DataChannel::~DataChannel() {
+||||||| merged common ancestors
+DataChannel::~DataChannel()
+{
+=======
+bool DataChannelConnection::Channels::Remove(
+    const RefPtr<DataChannel>& aChannel) {
+  LOG(("Removing channel %u : %p", aChannel->mStream, aChannel.get()));
+  MutexAutoLock lock(mMutex);
+  if (aChannel->mStream == INVALID_STREAM) {
+    return mChannels.RemoveElement(aChannel);
+  }
+
+  return mChannels.RemoveElementSorted(aChannel, IdComparator());
+}
+
+RefPtr<DataChannel> DataChannelConnection::Channels::Get(uint16_t aId) const {
+  MutexAutoLock lock(mMutex);
+  auto index = mChannels.BinaryIndexOf(aId, IdComparator());
+  if (index == ChannelArray::NoIndex) {
+    return nullptr;
+  }
+  return mChannels[index];
+}
+
+RefPtr<DataChannel> DataChannelConnection::Channels::GetNextChannel(
+    uint16_t aCurrentId) const {
+  MutexAutoLock lock(mMutex);
+  if (mChannels.IsEmpty()) {
+    return nullptr;
+  }
+
+  auto index = mChannels.IndexOfFirstElementGt(aCurrentId, IdComparator());
+  if (index == mChannels.Length()) {
+    index = 0;
+  }
+  return mChannels[index];
 }
 
 DataChannel::~DataChannel() {
+>>>>>>> upstream-releases
   // NS_ASSERTION since this is more "I think I caught all the cases that
   // can cause this" than a true kill-the-program assertion.  If this is
   // wrong, nothing bad happens.  A worst it's a leak.
+<<<<<<< HEAD
   NS_ASSERTION(mState == CLOSED || mState == CLOSING,
                "unexpected state in ~DataChannel");
+||||||| merged common ancestors
+  NS_ASSERTION(mState == CLOSED || mState == CLOSING, "unexpected state in ~DataChannel");
+=======
+  NS_ASSERTION(mReadyState == CLOSED || mReadyState == CLOSING,
+               "unexpected state in ~DataChannel");
+>>>>>>> upstream-releases
 }
 
 void DataChannel::Close() {
@@ -3084,10 +5028,21 @@ void DataChannel::StreamClosedLocked() {
   LOG(("Destroying Data channel %u", mStream));
   MOZ_ASSERT_IF(mStream != INVALID_STREAM,
                 !mConnection->FindChannelByStream(mStream));
+<<<<<<< HEAD
   mStream = INVALID_STREAM;
   mState = CLOSED;
   mMainThreadEventTarget->Dispatch(do_AddRef(new DataChannelOnMessageAvailable(
       DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED, mConnection, this)));
+||||||| merged common ancestors
+  mStream = INVALID_STREAM;
+  mState = CLOSED;
+  mMainThreadEventTarget->Dispatch(
+    do_AddRef(new DataChannelOnMessageAvailable(
+                DataChannelOnMessageAvailable::ON_CHANNEL_CLOSED,
+                mConnection, this)));
+=======
+  AnnounceClosed();
+>>>>>>> upstream-releases
   // We leave mConnection live until the DOM releases us, to avoid races
 }
 
@@ -3096,14 +5051,33 @@ void DataChannel::ReleaseConnection() {
   mConnection = nullptr;
 }
 
+<<<<<<< HEAD
 void DataChannel::SetListener(DataChannelListener *aListener,
                               nsISupports *aContext) {
   MutexAutoLock mLock(mListenerLock);
+||||||| merged common ancestors
+void
+DataChannel::SetListener(DataChannelListener *aListener, nsISupports *aContext)
+{
+  MutexAutoLock mLock(mListenerLock);
+=======
+void DataChannel::SetListener(DataChannelListener* aListener,
+                              nsISupports* aContext) {
+  ASSERT_WEBRTC(NS_IsMainThread());
+>>>>>>> upstream-releases
   mContext = aContext;
   mListener = aListener;
 }
 
+<<<<<<< HEAD
 void DataChannel::SendErrnoToErrorResult(int error, ErrorResult &aRv) {
+||||||| merged common ancestors
+void
+DataChannel::SendErrnoToErrorResult(int error, ErrorResult& aRv)
+{
+=======
+void DataChannel::SendErrnoToErrorResult(int error, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   switch (error) {
     case 0:
       break;
@@ -3116,28 +5090,140 @@ void DataChannel::SendErrnoToErrorResult(int error, ErrorResult &aRv) {
   }
 }
 
+<<<<<<< HEAD
 void DataChannel::SendMsg(const nsACString &aMsg, ErrorResult &aRv) {
+||||||| merged common ancestors
+void
+DataChannel::SendMsg(const nsACString &aMsg, ErrorResult& aRv)
+{
+=======
+void DataChannel::IncrementBufferedAmount(uint32_t aSize, ErrorResult& aRv) {
+  ASSERT_WEBRTC(NS_IsMainThread());
+  if (mBufferedAmount > UINT32_MAX - aSize) {
+    aRv.Throw(NS_ERROR_FILE_TOO_BIG);
+    return;
+  }
+
+  mBufferedAmount += aSize;
+}
+
+void DataChannel::DecrementBufferedAmount(uint32_t aSize) {
+  mMainThreadEventTarget->Dispatch(NS_NewRunnableFunction(
+      "DataChannel::DecrementBufferedAmount",
+      [this, self = RefPtr<DataChannel>(this), aSize] {
+        MOZ_ASSERT(aSize <= mBufferedAmount);
+        bool wasLow = mBufferedAmount <= mBufferedThreshold;
+        mBufferedAmount -= aSize;
+        if (!wasLow && mBufferedAmount <= mBufferedThreshold) {
+          LOG(("%s: sending BUFFER_LOW_THRESHOLD for %s/%s: %u", __FUNCTION__,
+               mLabel.get(), mProtocol.get(), mStream));
+          mListener->OnBufferLow(mContext);
+        }
+        if (mBufferedAmount == 0) {
+          LOG(("%s: sending NO_LONGER_BUFFERED for %s/%s: %u", __FUNCTION__,
+               mLabel.get(), mProtocol.get(), mStream));
+          mListener->NotBuffered(mContext);
+        }
+      }));
+}
+
+void DataChannel::AnnounceOpen() {
+  mMainThreadEventTarget->Dispatch(NS_NewRunnableFunction(
+      "DataChannel::AnnounceOpen", [this, self = RefPtr<DataChannel>(this)] {
+        // Special-case; spec says to put brand-new remote-created DataChannel
+        // in "open", but queue the firing of the "open" event.
+        if (mReadyState != CLOSING && mReadyState != CLOSED && mListener) {
+          mReadyState = OPEN;
+          LOG(("%s: sending ON_CHANNEL_OPEN for %s/%s: %u", __FUNCTION__,
+               mLabel.get(), mProtocol.get(), mStream));
+          mListener->OnChannelConnected(mContext);
+        }
+      }));
+}
+
+void DataChannel::AnnounceClosed() {
+  mMainThreadEventTarget->Dispatch(NS_NewRunnableFunction(
+      "DataChannel::AnnounceClosed", [this, self = RefPtr<DataChannel>(this)] {
+        if (mReadyState == CLOSED) {
+          return;
+        }
+        mReadyState = CLOSED;
+        mBufferedData.Clear();
+        if (mListener) {
+          LOG(("%s: sending ON_CHANNEL_CLOSED for %s/%s: %u", __FUNCTION__,
+               mLabel.get(), mProtocol.get(), mStream));
+          mListener->OnChannelClosed(mContext);
+        }
+      }));
+}
+
+void DataChannel::SendMsg(const nsACString& aMsg, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (!EnsureValidStream(aRv)) {
     return;
   }
 
   SendErrnoToErrorResult(mConnection->SendMsg(mStream, aMsg), aRv);
+  if (!aRv.Failed()) {
+    IncrementBufferedAmount(aMsg.Length(), aRv);
+  }
 }
 
+<<<<<<< HEAD
 void DataChannel::SendBinaryMsg(const nsACString &aMsg, ErrorResult &aRv) {
+||||||| merged common ancestors
+void
+DataChannel::SendBinaryMsg(const nsACString &aMsg, ErrorResult& aRv)
+{
+=======
+void DataChannel::SendBinaryMsg(const nsACString& aMsg, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (!EnsureValidStream(aRv)) {
     return;
   }
 
   SendErrnoToErrorResult(mConnection->SendBinaryMsg(mStream, aMsg), aRv);
+  if (!aRv.Failed()) {
+    IncrementBufferedAmount(aMsg.Length(), aRv);
+  }
 }
 
+<<<<<<< HEAD
 void DataChannel::SendBinaryStream(nsIInputStream *aBlob, ErrorResult &aRv) {
+||||||| merged common ancestors
+void
+DataChannel::SendBinaryStream(nsIInputStream *aBlob,ErrorResult& aRv)
+{
+=======
+void DataChannel::SendBinaryBlob(dom::Blob& aBlob, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (!EnsureValidStream(aRv)) {
     return;
   }
 
-  SendErrnoToErrorResult(mConnection->SendBlob(mStream, aBlob), aRv);
+  uint64_t msgLength = aBlob.GetSize(aRv);
+  if (aRv.Failed()) {
+    return;
+  }
+
+  if (msgLength > UINT32_MAX) {
+    aRv.Throw(NS_ERROR_FILE_TOO_BIG);
+    return;
+  }
+
+  // We convert to an nsIInputStream here, because Blob is not threadsafe, and
+  // we don't convert it earlier because we need to know how large this is so we
+  // can update bufferedAmount.
+  nsCOMPtr<nsIInputStream> msgStream;
+  aBlob.CreateInputStream(getter_AddRefs(msgStream), aRv);
+  if (NS_WARN_IF(aRv.Failed())) {
+    return;
+  }
+
+  SendErrnoToErrorResult(mConnection->SendBlob(mStream, msgStream), aRv);
+  if (!aRv.Failed()) {
+    IncrementBufferedAmount(msgLength, aRv);
+  }
 }
 
 dom::Nullable<uint16_t> DataChannel::GetMaxPacketLifeTime() const {
@@ -3154,6 +5240,7 @@ dom::Nullable<uint16_t> DataChannel::GetMaxRetransmits() const {
   return dom::Nullable<uint16_t>();
 }
 
+<<<<<<< HEAD
 // May be called from another (i.e. Main) thread!
 void DataChannel::AppReady() {
   ENSURE_DATACONNECTION;
@@ -3199,6 +5286,60 @@ size_t DataChannel::GetBufferedAmountLocked() const {
 }
 
 uint32_t DataChannel::GetBufferedAmountLowThreshold() {
+||||||| merged common ancestors
+// May be called from another (i.e. Main) thread!
+void
+DataChannel::AppReady()
+{
+  ENSURE_DATACONNECTION;
+
+  MutexAutoLock lock(mConnection->mLock);
+
+  mFlags |= DATA_CHANNEL_FLAGS_READY;
+  if (mState == WAITING_TO_OPEN) {
+    mState = OPEN;
+    mMainThreadEventTarget->Dispatch(
+      do_AddRef(new DataChannelOnMessageAvailable(
+                  DataChannelOnMessageAvailable::ON_CHANNEL_OPEN, mConnection,
+                  this)));
+    for (uint32_t i = 0; i < mQueuedMessages.Length(); ++i) {
+      nsCOMPtr<nsIRunnable> runnable = mQueuedMessages[i];
+      MOZ_ASSERT(runnable);
+      mMainThreadEventTarget->Dispatch(runnable.forget());
+    }
+  } else {
+    NS_ASSERTION(mQueuedMessages.IsEmpty(), "Shouldn't have queued messages if not WAITING_TO_OPEN");
+  }
+  mQueuedMessages.Clear();
+  mQueuedMessages.Compact();
+  // We never use it again...  We could even allocate the array in the odd
+  // cases we need it.
+}
+
+size_t
+DataChannel::GetBufferedAmountLocked() const
+{
+  size_t buffered = 0;
+
+  for (auto &msg : mBufferedData) {
+    buffered += msg->GetLeft();
+  }
+  // XXX Note: per Michael Tuexen, there's no way to currently get the buffered
+  // amount from the SCTP stack for a single stream.  It is on their to-do
+  // list, and once we import a stack with support for that, we'll need to
+  // add it to what we buffer.  Also we'll need to ask for notification of a per-
+  // stream buffer-low event and merge that into the handling of buffer-low
+  // (the equivalent to TCP_NOTSENT_LOWAT on TCP sockets)
+
+  return buffered;
+}
+
+uint32_t
+DataChannel::GetBufferedAmountLowThreshold()
+{
+=======
+uint32_t DataChannel::GetBufferedAmountLowThreshold() {
+>>>>>>> upstream-releases
   return mBufferedThreshold;
 }
 
@@ -3208,6 +5349,7 @@ void DataChannel::SetBufferedAmountLowThreshold(uint32_t aThreshold) {
 }
 
 // Called with mLock locked!
+<<<<<<< HEAD
 void DataChannel::SendOrQueue(DataChannelOnMessageAvailable *aMessage) {
   if (!(mFlags & DATA_CHANNEL_FLAGS_READY) &&
       (mState == CONNECTING || mState == WAITING_TO_OPEN)) {
@@ -3216,9 +5358,33 @@ void DataChannel::SendOrQueue(DataChannelOnMessageAvailable *aMessage) {
     nsCOMPtr<nsIRunnable> runnable = aMessage;
     mMainThreadEventTarget->Dispatch(runnable.forget());
   }
+||||||| merged common ancestors
+void
+DataChannel::SendOrQueue(DataChannelOnMessageAvailable *aMessage)
+{
+  if (!(mFlags & DATA_CHANNEL_FLAGS_READY) &&
+      (mState == CONNECTING || mState == WAITING_TO_OPEN)) {
+    mQueuedMessages.AppendElement(aMessage);
+  } else {
+    nsCOMPtr<nsIRunnable> runnable = aMessage;
+    mMainThreadEventTarget->Dispatch(runnable.forget());
+  }
+=======
+void DataChannel::SendOrQueue(DataChannelOnMessageAvailable* aMessage) {
+  nsCOMPtr<nsIRunnable> runnable = aMessage;
+  mMainThreadEventTarget->Dispatch(runnable.forget());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool DataChannel::EnsureValidStream(ErrorResult &aRv) {
+||||||| merged common ancestors
+bool
+DataChannel::EnsureValidStream(ErrorResult& aRv)
+{
+=======
+bool DataChannel::EnsureValidStream(ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mConnection);
   if (mConnection && mStream != INVALID_STREAM) {
     return true;

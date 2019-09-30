@@ -12,13 +12,17 @@
 class nsPageFrame;
 class nsSharedPageData;
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 // Page frame class used by the simple page sequence frame
 class nsPageContentFrame final : public mozilla::ViewportFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsPageContentFrame)
 
-  friend nsPageContentFrame* NS_NewPageContentFrame(nsIPresShell* aPresShell,
-                                                    ComputedStyle* aStyle);
+  friend nsPageContentFrame* NS_NewPageContentFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
   friend class nsPageFrame;
 
   // nsIFrame
@@ -45,9 +49,21 @@ class nsPageContentFrame final : public mozilla::ViewportFrame {
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
+<<<<<<< HEAD
  protected:
   explicit nsPageContentFrame(ComputedStyle* aStyle)
       : ViewportFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsPageContentFrame(ComputedStyle* aStyle)
+    : ViewportFrame(aStyle, kClassID)
+  {}
+=======
+ protected:
+  explicit nsPageContentFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext)
+      : ViewportFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   nsSharedPageData* mPD;
 };

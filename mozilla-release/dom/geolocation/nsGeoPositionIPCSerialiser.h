@@ -14,7 +14,14 @@
 namespace IPC {
 
 template <>
+<<<<<<< HEAD
 struct ParamTraits<nsIDOMGeoPositionCoords> {
+||||||| merged common ancestors
+struct ParamTraits<nsIDOMGeoPositionCoords>
+{
+=======
+struct ParamTraits<nsIDOMGeoPositionCoords*> {
+>>>>>>> upstream-releases
   // Function to serialize a geoposition
   static void Write(Message* aMsg, nsIDOMGeoPositionCoords* aParam) {
     bool isNull = !aParam;
@@ -89,7 +96,14 @@ struct ParamTraits<nsIDOMGeoPositionCoords> {
 };
 
 template <>
+<<<<<<< HEAD
 struct ParamTraits<nsIDOMGeoPosition> {
+||||||| merged common ancestors
+struct ParamTraits<nsIDOMGeoPosition>
+{
+=======
+struct ParamTraits<nsIDOMGeoPosition*> {
+>>>>>>> upstream-releases
   // Function to serialize a geoposition
   static void Write(Message* aMsg, nsIDOMGeoPosition* aParam) {
     bool isNull = !aParam;

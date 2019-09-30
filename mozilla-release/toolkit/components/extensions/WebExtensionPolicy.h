@@ -9,6 +9,7 @@
 #include "mozilla/dom/BindingDeclarations.h"
 #include "mozilla/dom/Nullable.h"
 #include "mozilla/dom/WebExtensionPolicyBinding.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "mozilla/extensions/MatchPattern.h"
 
 #include "jspubtd.h"
@@ -21,6 +22,10 @@
 #include "nsWrapperCache.h"
 
 namespace mozilla {
+namespace dom {
+class Promise;
+}  // namespace dom
+
 namespace extensions {
 
 using dom::WebExtensionInit;
@@ -89,6 +94,7 @@ class WebExtensionPolicy final : public nsISupports,
 
   nsCString BackgroundPageHTML() const;
 
+  MOZ_CAN_RUN_SCRIPT
   void Localize(const nsAString& aInput, nsString& aResult) const;
 
   const nsString& Name() const { return mName; }
@@ -121,10 +127,63 @@ class WebExtensionPolicy final : public nsISupports,
   bool Active() const { return mActive; }
   void SetActive(bool aActive, ErrorResult& aRv);
 
+<<<<<<< HEAD
   static void GetActiveExtensions(
       dom::GlobalObject& aGlobal,
       nsTArray<RefPtr<WebExtensionPolicy>>& aResults);
+||||||| merged common ancestors
+=======
+  bool PrivateBrowsingAllowed() const {
+    return mAllowPrivateBrowsingByDefault ||
+           HasPermission(nsGkAtoms::privateBrowsingAllowedPermission);
+  }
 
+  bool CanAccessContext(nsILoadContext* aContext) const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static already_AddRefed<WebExtensionPolicy> GetByID(
+      dom::GlobalObject& aGlobal, const nsAString& aID);
+||||||| merged common ancestors
+  static void
+  GetActiveExtensions(dom::GlobalObject& aGlobal, nsTArray<RefPtr<WebExtensionPolicy>>& aResults);
+=======
+  bool CanAccessWindow(const dom::WindowProxyHolder& aWindow) const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static already_AddRefed<WebExtensionPolicy> GetByHostname(
+      dom::GlobalObject& aGlobal, const nsACString& aHostname);
+||||||| merged common ancestors
+  static already_AddRefed<WebExtensionPolicy>
+  GetByID(dom::GlobalObject& aGlobal, const nsAString& aID);
+=======
+  void GetReadyPromise(JSContext* aCx, JS::MutableHandleObject aResult) const;
+  dom::Promise* ReadyPromise() const { return mReadyPromise; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static already_AddRefed<WebExtensionPolicy> GetByURI(
+      dom::GlobalObject& aGlobal, nsIURI* aURI);
+||||||| merged common ancestors
+  static already_AddRefed<WebExtensionPolicy>
+  GetByHostname(dom::GlobalObject& aGlobal, const nsACString& aHostname);
+=======
+  static void GetActiveExtensions(
+      dom::GlobalObject& aGlobal,
+      nsTArray<RefPtr<WebExtensionPolicy>>& aResults);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static bool IsRestrictedURI(dom::GlobalObject& aGlobal, const URLInfo& aURI) {
+||||||| merged common ancestors
+  static already_AddRefed<WebExtensionPolicy>
+  GetByURI(dom::GlobalObject& aGlobal, nsIURI* aURI);
+
+  static bool
+  IsRestrictedURI(dom::GlobalObject& aGlobal, const URLInfo& aURI)
+  {
+=======
   static already_AddRefed<WebExtensionPolicy> GetByID(
       dom::GlobalObject& aGlobal, const nsAString& aID);
 
@@ -135,6 +194,7 @@ class WebExtensionPolicy final : public nsISupports,
       dom::GlobalObject& aGlobal, nsIURI* aURI);
 
   static bool IsRestrictedURI(dom::GlobalObject& aGlobal, const URLInfo& aURI) {
+>>>>>>> upstream-releases
     return IsRestrictedURI(aURI);
   }
 
@@ -166,6 +226,7 @@ class WebExtensionPolicy final : public nsISupports,
   nsString mContentSecurityPolicy;
 
   bool mActive = false;
+  bool mAllowPrivateBrowsingByDefault = true;
 
   RefPtr<WebExtensionLocalizeCallback> mLocalizeCallback;
 
@@ -176,6 +237,8 @@ class WebExtensionPolicy final : public nsISupports,
   dom::Nullable<nsTArray<nsString>> mBackgroundScripts;
 
   nsTArray<RefPtr<WebExtensionContentScript>> mContentScripts;
+
+  RefPtr<dom::Promise> mReadyPromise;
 };
 
 }  // namespace extensions

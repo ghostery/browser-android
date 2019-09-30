@@ -19,8 +19,11 @@ add_task(async function() {
   CustomizableUI.getCustomizationTarget(navbar).appendChild(draggedItem);
   await startCustomizing();
   simulateItemDrag(draggedItem, gCustomizeMode.visiblePalette);
-  is(document.documentElement.hasAttribute("customizing-movingItem"), false,
-     "Make sure customizing-movingItem is removed after dragging to the palette");
+  is(
+    document.documentElement.hasAttribute("customizing-movingItem"),
+    false,
+    "Make sure customizing-movingItem is removed after dragging to the palette"
+  );
   await endCustomizing();
 });
 
@@ -34,13 +37,26 @@ add_task(async function() {
   let navbar = document.getElementById("nav-bar");
   CustomizableUI.getCustomizationTarget(navbar).appendChild(draggedItem);
   await startCustomizing();
+<<<<<<< HEAD
   simulateItemDrag(draggedItem, CustomizableUI.getCustomizationTarget(dest));
   is(document.documentElement.hasAttribute("customizing-movingItem"), false,
      "Make sure customizing-movingItem is removed");
+||||||| merged common ancestors
+  simulateItemDrag(draggedItem, dest.customizationTarget);
+  is(document.documentElement.hasAttribute("customizing-movingItem"), false,
+     "Make sure customizing-movingItem is removed");
+=======
+  simulateItemDrag(draggedItem, CustomizableUI.getCustomizationTarget(dest));
+  is(
+    document.documentElement.hasAttribute("customizing-movingItem"),
+    false,
+    "Make sure customizing-movingItem is removed"
+  );
+>>>>>>> upstream-releases
   await endCustomizing();
 });
 
-add_task(async function asyncCleanup() {
+registerCleanupFunction(async function asyncCleanup() {
   await endCustomizing();
-  await resetCustomization();
+  removeCustomToolbars();
 });

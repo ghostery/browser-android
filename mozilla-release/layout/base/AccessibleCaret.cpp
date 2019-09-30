@@ -8,6 +8,7 @@
 
 #include "AccessibleCaretLogger.h"
 #include "mozilla/FloatingPoint.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/ToString.h"
 #include "nsCanvasFrame.h"
@@ -66,8 +67,17 @@ std::ostream& operator<<(
 // -----------------------------------------------------------------------------
 // Implementation of AccessibleCaret methods
 
+<<<<<<< HEAD
 AccessibleCaret::AccessibleCaret(nsIPresShell* aPresShell)
     : mPresShell(aPresShell) {
+||||||| merged common ancestors
+AccessibleCaret::AccessibleCaret(nsIPresShell* aPresShell)
+  : mPresShell(aPresShell)
+{
+=======
+AccessibleCaret::AccessibleCaret(PresShell* aPresShell)
+    : mPresShell(aPresShell) {
+>>>>>>> upstream-releases
   // Check all resources required.
   if (mPresShell) {
     MOZ_ASSERT(RootFrame());
@@ -106,8 +116,17 @@ void AccessibleCaret::SetAppearance(Appearance aAppearance) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ nsAutoString AccessibleCaret::AppearanceString(
     Appearance aAppearance) {
+||||||| merged common ancestors
+/* static */ nsAutoString
+AccessibleCaret::AppearanceString(Appearance aAppearance)
+{
+=======
+/* static */
+nsAutoString AccessibleCaret::AppearanceString(Appearance aAppearance) {
+>>>>>>> upstream-releases
   nsAutoString string;
   switch (aAppearance) {
     case Appearance::None:
@@ -171,7 +190,15 @@ void AccessibleCaret::EnsureApzAware() {
   }
 }
 
+<<<<<<< HEAD
 void AccessibleCaret::InjectCaretElement(nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+AccessibleCaret::InjectCaretElement(nsIDocument* aDocument)
+{
+=======
+void AccessibleCaret::InjectCaretElement(Document* aDocument) {
+>>>>>>> upstream-releases
   ErrorResult rv;
   RefPtr<Element> element = CreateCaretElement(aDocument);
   mCaretElementHolder = aDocument->InsertAnonymousContent(*element, rv);
@@ -185,8 +212,17 @@ void AccessibleCaret::InjectCaretElement(nsIDocument* aDocument) {
   EnsureApzAware();
 }
 
+<<<<<<< HEAD
 already_AddRefed<Element> AccessibleCaret::CreateCaretElement(
     nsIDocument* aDocument) const {
+||||||| merged common ancestors
+already_AddRefed<Element>
+AccessibleCaret::CreateCaretElement(nsIDocument* aDocument) const
+{
+=======
+already_AddRefed<Element> AccessibleCaret::CreateCaretElement(
+    Document* aDocument) const {
+>>>>>>> upstream-releases
   // Content structure of AccessibleCaret
   // <div class="moz-accessiblecaret">  <- CaretElement()
   //   <div id="text-overlay"           <- TextOverlayElement()
@@ -210,7 +246,15 @@ already_AddRefed<Element> AccessibleCaret::CreateCaretElement(
   return parent.forget();
 }
 
+<<<<<<< HEAD
 void AccessibleCaret::RemoveCaretElement(nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+AccessibleCaret::RemoveCaretElement(nsIDocument* aDocument)
+{
+=======
+void AccessibleCaret::RemoveCaretElement(Document* aDocument) {
+>>>>>>> upstream-releases
   CaretElement().RemoveEventListener(NS_LITERAL_STRING("touchstart"),
                                      mDummyTouchListener, false);
 

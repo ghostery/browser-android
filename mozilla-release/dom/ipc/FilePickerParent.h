@@ -37,6 +37,7 @@ class FilePickerParent : public PFilePickerParent {
 
   void SendFilesOrDirectories(const nsTArray<BlobImplOrString>& aData);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvOpen(
       const int16_t& aSelectedType, const bool& aAddToRecentDocs,
       const nsString& aDefaultFile, const nsString& aDefaultExtension,
@@ -45,6 +46,28 @@ class FilePickerParent : public PFilePickerParent {
       const nsString& aDisplayDirectory,
       const nsString& aDisplaySpecialDirectory,
       const nsString& aOkButtonLabel) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvOpen(const int16_t& aSelectedType,
+                                           const bool& aAddToRecentDocs,
+                                           const nsString& aDefaultFile,
+                                           const nsString& aDefaultExtension,
+                                           InfallibleTArray<nsString>&& aFilters,
+                                           InfallibleTArray<nsString>&& aFilterNames,
+                                           const nsString& aDisplayDirectory,
+                                           const nsString& aDisplaySpecialDirectory,
+                                           const nsString& aOkButtonLabel) override;
+=======
+  mozilla::ipc::IPCResult RecvOpen(const int16_t& aSelectedType,
+                                   const bool& aAddToRecentDocs,
+                                   const nsString& aDefaultFile,
+                                   const nsString& aDefaultExtension,
+                                   InfallibleTArray<nsString>&& aFilters,
+                                   InfallibleTArray<nsString>&& aFilterNames,
+                                   InfallibleTArray<nsString>&& aRawFilters,
+                                   const nsString& aDisplayDirectory,
+                                   const nsString& aDisplaySpecialDirectory,
+                                   const nsString& aOkButtonLabel);
+>>>>>>> upstream-releases
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 

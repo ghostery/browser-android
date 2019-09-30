@@ -6,9 +6,12 @@ let enabledOnStartup = false;
 // PocketEnabled/Disabled promises return true if it was already
 // Enabled/Disabled, and false if it need to Enable/Disable.
 function promisePocketEnabled() {
-  if (Services.prefs.getPrefType("extensions.pocket.enabled") != Services.prefs.PREF_INVALID &&
-      Services.prefs.getBoolPref("extensions.pocket.enabled")) {
-    info( "pocket was already enabled, assuming enabled by default for tests");
+  if (
+    Services.prefs.getPrefType("extensions.pocket.enabled") !=
+      Services.prefs.PREF_INVALID &&
+    Services.prefs.getBoolPref("extensions.pocket.enabled")
+  ) {
+    info("pocket was already enabled, assuming enabled by default for tests");
     enabledOnStartup = true;
     return Promise.resolve(true);
   }
@@ -20,8 +23,11 @@ function promisePocketEnabled() {
 }
 
 function promisePocketDisabled() {
-  if (Services.prefs.getPrefType("extensions.pocket.enabled") == Services.prefs.PREF_INVALID ||
-      !Services.prefs.getBoolPref("extensions.pocket.enabled")) {
+  if (
+    Services.prefs.getPrefType("extensions.pocket.enabled") ==
+      Services.prefs.PREF_INVALID ||
+    !Services.prefs.getBoolPref("extensions.pocket.enabled")
+  ) {
     info("pocket-button already disabled");
     return Promise.resolve(true);
   }
@@ -31,11 +37,20 @@ function promisePocketDisabled() {
   Services.prefs.setBoolPref("extensions.pocket.enabled", false);
   return BrowserTestUtils.waitForCondition(() => {
     return !PageActions.actionForID("pocket");
+<<<<<<< HEAD
   }).then(() => {
     // wait for a full unload of pocket
     return BrowserTestUtils.waitForCondition(() => {
       return !window.hasOwnProperty("pktUI") || !window.pktUI;
     });
+||||||| merged common ancestors
+  }).then(() => {
+    // wait for a full unload of pocket
+    return BrowserTestUtils.waitForCondition(() => {
+      return !window.hasOwnProperty("pktUI");
+    });
+=======
+>>>>>>> upstream-releases
   });
 }
 
@@ -47,6 +62,7 @@ function promisePocketReset() {
   info("reset is disabling pocket addon");
   return promisePocketDisabled();
 }
+<<<<<<< HEAD
 
 function checkWindowProperties(expectPresent, l) {
   for (let name of l) {
@@ -60,3 +76,19 @@ function checkElements(expectPresent, l) {
     is(!!el, expectPresent, "element " + id + (expectPresent ? " is" : " is not") + " present");
   }
 }
+||||||| merged common ancestors
+=======
+
+function checkElements(expectPresent, l, win = window) {
+  for (let id of l) {
+    let el =
+      win.document.getElementById(id) ||
+      win.gNavToolbox.palette.querySelector("#" + id);
+    is(
+      !!el && !el.hidden,
+      expectPresent,
+      "element " + id + (expectPresent ? " is" : " is not") + " present"
+    );
+  }
+}
+>>>>>>> upstream-releases

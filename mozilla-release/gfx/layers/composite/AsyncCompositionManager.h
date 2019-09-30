@@ -7,7 +7,14 @@
 #ifndef GFX_ASYNCCOMPOSITIONMANAGER_H
 #define GFX_ASYNCCOMPOSITIONMANAGER_H
 
+<<<<<<< HEAD
 #include "Units.h"                                 // for ScreenPoint, etc
+||||||| merged common ancestors
+#include "Units.h"                      // for ScreenPoint, etc
+=======
+#include "Units.h"                                 // for ScreenPoint, etc
+#include "FrameMetrics.h"                          // for FrameMetrics
+>>>>>>> upstream-releases
 #include "mozilla/layers/LayerManagerComposite.h"  // for LayerManagerComposite
 #include "mozilla/Attributes.h"                    // for final, etc
 #include "mozilla/RefPtr.h"                        // for RefCounted
@@ -66,8 +73,15 @@ class AsyncCompositionManager final {
  public:
   NS_INLINE_DECL_REFCOUNTING(AsyncCompositionManager)
 
+<<<<<<< HEAD
   explicit AsyncCompositionManager(CompositorBridgeParent* aParent,
                                    HostLayerManager* aManager);
+||||||| merged common ancestors
+  explicit AsyncCompositionManager(CompositorBridgeParent* aParent, HostLayerManager* aManager);
+=======
+  AsyncCompositionManager(CompositorBridgeParent* aParent,
+                          HostLayerManager* aManager);
+>>>>>>> upstream-releases
 
   /**
    * This forces the is-first-paint flag to true. This is intended to
@@ -156,18 +170,47 @@ class AsyncCompositionManager final {
    * zooming.
    * |aTransformScrollId| is the scroll id of the scroll frame that scrolls
    * |aTransformedSubtreeRoot|.
-   * |aClipPartsCache| optionally maps layers to separate fixed and scrolled
+   * |aClipPartsCache| maps layers to separate fixed and scrolled
    * clips, so we can only adjust the fixed portion.
    * This function has a recursive implementation; aStartTraversalAt specifies
    * where to start the current recursion of the traversal. For the initial
    * call, it should be the same as aTrasnformedSubtreeRoot.
    */
+<<<<<<< HEAD
   void AlignFixedAndStickyLayers(
       Layer* aTransformedSubtreeRoot, Layer* aStartTraversalAt,
       ScrollableLayerGuid::ViewID aTransformScrollId,
       const LayerToParentLayerMatrix4x4& aPreviousTransformForRoot,
       const LayerToParentLayerMatrix4x4& aCurrentTransformForRoot,
       const ScreenMargin& aFixedLayerMargins, ClipPartsCache* aClipPartsCache);
+||||||| merged common ancestors
+  void AlignFixedAndStickyLayers(Layer* aTransformedSubtreeRoot,
+                                 Layer* aStartTraversalAt,
+                                 FrameMetrics::ViewID aTransformScrollId,
+                                 const LayerToParentLayerMatrix4x4& aPreviousTransformForRoot,
+                                 const LayerToParentLayerMatrix4x4& aCurrentTransformForRoot,
+                                 const ScreenMargin& aFixedLayerMargins,
+                                 ClipPartsCache* aClipPartsCache);
+=======
+  void AlignFixedAndStickyLayers(
+      Layer* aTransformedSubtreeRoot, Layer* aStartTraversalAt,
+      ScrollableLayerGuid::ViewID aTransformScrollId,
+      const LayerToParentLayerMatrix4x4& aPreviousTransformForRoot,
+      const LayerToParentLayerMatrix4x4& aCurrentTransformForRoot,
+      const ScreenMargin& aFixedLayerMargins, ClipPartsCache& aClipPartsCache);
+
+  /**
+   * Helper function for AlignFixedAndStickyLayers() to perform a transform
+   * adjustment for a single fixed or sticky layer, rather than all such
+   * layers rooted at a subtree. May also be called directly.
+   */
+  void AdjustFixedOrStickyLayer(
+      Layer* aTransformedSubtreeRoot, Layer* aFixedOrSticky,
+      ScrollableLayerGuid::ViewID aTransformScrollId,
+      const LayerToParentLayerMatrix4x4& aPreviousTransformForRoot,
+      const LayerToParentLayerMatrix4x4& aCurrentTransformForRoot,
+      const ScreenMargin& aFixedLayerMargins, ClipPartsCache& aClipPartsCache);
+>>>>>>> upstream-releases
 
   /**
    * DRAWING PHASE ONLY
@@ -224,8 +267,21 @@ class AsyncCompositionManager final {
 #ifdef MOZ_WIDGET_ANDROID
  public:
   void SetFixedLayerMargins(ScreenIntCoord aTop, ScreenIntCoord aBottom);
+<<<<<<< HEAD
 
  private:
+||||||| merged common ancestors
+private:
+=======
+  ScreenMargin GetFixedLayerMargins() const;
+
+ private:
+  // This calculates whether frame metrics should be sent to Java.
+  bool FrameMetricsHaveUpdated(const FrameMetrics& aMetrics);
+  // This holds the most recent scroll/zoom metrics sent to Java, and is used
+  // to send new updates when it changes.
+  FrameMetrics mLastMetrics;
+>>>>>>> upstream-releases
   // The following two fields are only needed on Fennec with C++ APZ, because
   // then we need to reposition the gecko scrollbar to deal with the
   // dynamic toolbar shifting content around.

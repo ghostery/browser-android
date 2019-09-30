@@ -12,30 +12,38 @@
 #include <memory>
 #include "stdlib.h"
 #include "string.h"
-#include "assert.h"
+#include "SkSLDefines.h"
 #include "SkSLString.h"
 #include "SkSLStringStream.h"
 
+<<<<<<< HEAD
 #if !defined(SKSL_STANDALONE) && SK_SUPPORT_GPU
+||||||| merged common ancestors
+#ifndef SKSL_STANDALONE
+=======
+#ifndef SKSL_STANDALONE
+#include "SkTypes.h"
+#if SK_SUPPORT_GPU
+>>>>>>> upstream-releases
 #include "GrContextOptions.h"
 #include "GrShaderCaps.h"
-#endif
-
-#ifdef SKSL_STANDALONE
-#if defined(_WIN32) || defined(__SYMBIAN32__)
-#define SKSL_BUILD_FOR_WIN
-#endif
-#else
-#ifdef SK_BUILD_FOR_WIN
-#define SKSL_BUILD_FOR_WIN
-#endif // SK_BUILD_FOR_WIN
+#endif // SK_SUPPORT_GPU
 #endif // SKSL_STANDALONE
 
 class GrShaderCaps;
 
 namespace SkSL {
 
+<<<<<<< HEAD
 #if defined(SKSL_STANDALONE) || !SK_SUPPORT_GPU
+||||||| merged common ancestors
+#ifdef SKSL_STANDALONE
+=======
+class OutputStream;
+class StringStream;
+
+#if defined(SKSL_STANDALONE) || !SK_SUPPORT_GPU
+>>>>>>> upstream-releases
 
 // we're being compiled standalone, so we don't have access to caps...
 enum GrGLSLGeneration {
@@ -105,12 +113,22 @@ public:
         return true;
     }
 
-    bool externalTextureSupport() const {
+    bool sampleVariablesSupport() const {
         return true;
     }
 
+<<<<<<< HEAD
     bool imageLoadStoreSupport() const {
+||||||| merged common ancestors
+    bool texelFetchSupport() const {
+=======
+    bool externalTextureSupport() const {
+>>>>>>> upstream-releases
         return true;
+    }
+
+    bool mustDoOpBetweenFloorAndAbs() const {
+        return false;
     }
 
     bool mustDoOpBetweenFloorAndAbs() const {
@@ -135,6 +153,10 @@ public:
 
     bool integerSupport() const {
         return false;
+    }
+
+    bool builtinFMASupport() const {
+        return true;
     }
 
     const char* shaderDerivativeExtensionString() const {
@@ -340,6 +362,7 @@ public:
         result->fCanUseFragCoord = false;
         return result;
     }
+<<<<<<< HEAD
 
     static sk_sp<GrShaderCaps> IncompleteShortIntPrecision() {
         sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
@@ -385,33 +408,77 @@ public:
     }
 };
 #endif
-
-void write_stringstream(const StringStream& d, OutputStream& out);
-
-#if _MSC_VER
-#define NORETURN __declspec(noreturn)
-#else
-#define NORETURN __attribute__((__noreturn__))
+||||||| merged common ancestors
+};
 #endif
+=======
+>>>>>>> upstream-releases
 
-NORETURN void sksl_abort();
+    static sk_sp<GrShaderCaps> IncompleteShortIntPrecision() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 310es";
+        result->fUsesPrecisionModifiers = true;
+        result->fIncompleteShortIntPrecision = true;
+        return result;
+    }
 
-} // namespace
+    static sk_sp<GrShaderCaps> AddAndTrueToLoopCondition() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 400";
+        result->fAddAndTrueToLoopCondition = true;
+        return result;
+    }
 
+    static sk_sp<GrShaderCaps> UnfoldShortCircuitAsTernary() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 400";
+        result->fUnfoldShortCircuitAsTernary = true;
+        return result;
+    }
+
+    static sk_sp<GrShaderCaps> EmulateAbsIntFunction() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 400";
+        result->fEmulateAbsIntFunction = true;
+        return result;
+    }
+
+<<<<<<< HEAD
 #ifdef SKSL_STANDALONE
 #define SkASSERT(x)
 #define SkAssertResult(x) x
 #define SkDEBUGCODE(x)
-#endif
-
-#define SKSL_WARN_UNUSED_RESULT __attribute__((warn_unused_result))
-
-#if defined(__clang__) || defined(__GNUC__)
-#define SKSL_PRINTF_LIKE(A, B) __attribute__((format(printf, (A), (B))))
+||||||| merged common ancestors
+#ifdef SKSL_STANDALONE
+#define ASSERT(x) (void)((x) || (ABORT("failed assert(%s): %s:%d\n", #x, __FILE__, __LINE__), 0))
+#define ASSERT_RESULT(x) ASSERT(x)
+#define SKSL_DEBUGCODE(x) x
 #else
-#define SKSL_PRINTF_LIKE(A, B)
+#define ASSERT SkASSERT
+#define ASSERT_RESULT(x) SkAssertResult(x)
+#define SKSL_DEBUGCODE(x) SkDEBUGCODE(x)
+=======
+    static sk_sp<GrShaderCaps> RewriteDoWhileLoops() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 400";
+        result->fRewriteDoWhileLoops = true;
+        return result;
+    }
+
+    static sk_sp<GrShaderCaps> RemovePowWithConstantExponent() {
+        sk_sp<GrShaderCaps> result = sk_make_sp<GrShaderCaps>(GrContextOptions());
+        result->fVersionDeclString = "#version 400";
+        result->fRemovePowWithConstantExponent = true;
+        return result;
+    }
+};
+>>>>>>> upstream-releases
 #endif
 
-#define ABORT(...) (printf(__VA_ARGS__), sksl_abort())
+void write_stringstream(const StringStream& d, OutputStream& out);
+
+NORETURN void sksl_abort();
+
+} // namespace
 
 #endif

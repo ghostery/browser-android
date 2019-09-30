@@ -24,6 +24,7 @@ inline LexicalEnvironmentObject& NearestEnclosingExtensibleLexicalEnvironment(
   return env->as<LexicalEnvironmentObject>();
 }
 
+<<<<<<< HEAD
 inline void EnvironmentObject::setAliasedBinding(JSContext* cx, uint32_t slot,
                                                  PropertyName* name,
                                                  const Value& v) {
@@ -39,20 +40,115 @@ inline void EnvironmentObject::setAliasedBinding(JSContext* cx, uint32_t slot,
   }
 
   setSlot(slot, v);
+||||||| merged common ancestors
+inline void
+EnvironmentObject::setAliasedBinding(JSContext* cx, uint32_t slot, PropertyName* name,
+                                     const Value& v)
+{
+    if (isSingleton()) {
+        MOZ_ASSERT(name);
+        AddTypePropertyId(cx, this, NameToId(name), v);
+
+        // Keep track of properties which have ever been overwritten.
+        if (!getSlot(slot).isUndefined()) {
+            Shape* shape = lookup(cx, name);
+            shape->setOverwritten();
+        }
+    }
+
+    setSlot(slot, v);
+=======
+// Returns the innermost "qualified var object" on the environment chain.
+// See the JSObject::isQualifiedVarObj comment for more info.
+inline JSObject& GetVariablesObject(JSObject* envChain) {
+  while (!envChain->isQualifiedVarObj()) {
+    envChain = envChain->enclosingEnvironment();
+  }
+  MOZ_ASSERT(envChain);
+  return *envChain;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline void EnvironmentObject::setAliasedBinding(JSContext* cx,
                                                  EnvironmentCoordinate ec,
                                                  PropertyName* name,
                                                  const Value& v) {
   setAliasedBinding(cx, ec.slot(), name, v);
+||||||| merged common ancestors
+inline void
+EnvironmentObject::setAliasedBinding(JSContext* cx, EnvironmentCoordinate ec, PropertyName* name,
+                                     const Value& v)
+{
+    setAliasedBinding(cx, ec.slot(), name, v);
+=======
+inline const Value& EnvironmentObject::aliasedBinding(
+    EnvironmentCoordinate ec) {
+  MOZ_ASSERT(!IsExtensibleLexicalEnvironment(this));
+  MOZ_ASSERT(nonExtensibleIsFixedSlot(ec) ==
+             NativeObject::isFixedSlot(ec.slot()));
+  return getSlot(ec.slot());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline void EnvironmentObject::setAliasedBinding(JSContext* cx,
                                                  const BindingIter& bi,
                                                  const Value& v) {
   MOZ_ASSERT(bi.location().kind() == BindingLocation::Kind::Environment);
   setAliasedBinding(cx, bi.location().slot(), bi.name()->asPropertyName(), v);
+||||||| merged common ancestors
+inline void
+EnvironmentObject::setAliasedBinding(JSContext* cx, const BindingIter& bi, const Value& v)
+{
+    MOZ_ASSERT(bi.location().kind() == BindingLocation::Kind::Environment);
+    setAliasedBinding(cx, bi.location().slot(), bi.name()->asPropertyName(), v);
+=======
+inline void EnvironmentObject::setAliasedBinding(JSContext* cx, uint32_t slot,
+                                                 const Value& v) {
+  MOZ_ASSERT(!isSingleton());
+  setSlot(slot, v);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+inline void CallObject::setAliasedFormalFromArguments(JSContext* cx,
+                                                      const Value& argsValue,
+                                                      jsid id, const Value& v) {
+  setSlot(ArgumentsObject::SlotFromMagicScopeSlotValue(argsValue), v);
+  if (isSingleton()) {
+    AddTypePropertyId(cx, this, id, v);
+  }
+||||||| merged common ancestors
+inline void
+CallObject::setAliasedFormalFromArguments(JSContext* cx, const Value& argsValue, jsid id,
+                                          const Value& v)
+{
+    setSlot(ArgumentsObject::SlotFromMagicScopeSlotValue(argsValue), v);
+    if (isSingleton()) {
+        AddTypePropertyId(cx, this, id, v);
+    }
+=======
+inline void EnvironmentObject::setAliasedBinding(JSContext* cx,
+                                                 EnvironmentCoordinate ec,
+                                                 const Value& v) {
+  MOZ_ASSERT(!IsExtensibleLexicalEnvironment(this));
+  MOZ_ASSERT(nonExtensibleIsFixedSlot(ec) ==
+             NativeObject::isFixedSlot(ec.slot()));
+  setAliasedBinding(cx, ec.slot(), v);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+} /* namespace js */
+||||||| merged common ancestors
+}  /* namespace js */
+=======
+inline void EnvironmentObject::setAliasedBinding(JSContext* cx,
+                                                 const BindingIter& bi,
+                                                 const Value& v) {
+  MOZ_ASSERT(bi.location().kind() == BindingLocation::Kind::Environment);
+  setAliasedBinding(cx, bi.location().slot(), v);
 }
 
 inline void CallObject::setAliasedFormalFromArguments(JSContext* cx,
@@ -65,6 +161,7 @@ inline void CallObject::setAliasedFormalFromArguments(JSContext* cx,
 }
 
 } /* namespace js */
+>>>>>>> upstream-releases
 
 inline JSObject* JSObject::enclosingEnvironment() const {
   if (is<js::EnvironmentObject>()) {

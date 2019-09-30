@@ -198,6 +198,7 @@ HashNumber OptimizationTypeInfo::hash() const {
 }
 
 template <class Vec>
+<<<<<<< HEAD
 static HashNumber HashVectorContents(const Vec* xs, HashNumber h) {
   for (auto x = xs->begin(); x != xs->end(); x++) {
     h = CombineHash(h, x->hash());
@@ -245,6 +246,111 @@ struct FrequencyComparator {
     *lessOrEqualp = b.frequency <= a.frequency;
     return true;
   }
+||||||| merged common ancestors
+static HashNumber
+HashVectorContents(const Vec* xs, HashNumber h)
+{
+    for (auto x = xs->begin(); x != xs->end(); x++) {
+        h = CombineHash(h, x->hash());
+    }
+    return h;
+}
+
+/* static */ HashNumber
+UniqueTrackedOptimizations::Key::hash(const Lookup& lookup)
+{
+    HashNumber h = HashVectorContents(lookup.types, 0);
+    h = HashVectorContents(lookup.attempts, h);
+    h += (h << 3);
+    h ^= (h >> 11);
+    h += (h << 15);
+    return h;
+}
+
+/* static */ bool
+UniqueTrackedOptimizations::Key::match(const Key& key, const Lookup& lookup)
+{
+    return VectorContentsMatch(key.attempts, lookup.attempts) &&
+           VectorContentsMatch(key.types, lookup.types);
+}
+
+bool
+UniqueTrackedOptimizations::add(const TrackedOptimizations* optimizations)
+{
+    MOZ_ASSERT(!sorted());
+    Key key;
+    key.types = &optimizations->types_;
+    key.attempts = &optimizations->attempts_;
+    AttemptsMap::AddPtr p = map_.lookupForAdd(key);
+    if (p) {
+        p->value().frequency++;
+        return true;
+    }
+    Entry entry;
+    entry.index = UINT8_MAX;
+    entry.frequency = 1;
+    return map_.add(p, key, entry);
+}
+
+struct FrequencyComparator
+{
+    bool operator()(const UniqueTrackedOptimizations::SortEntry& a,
+                    const UniqueTrackedOptimizations::SortEntry& b,
+                    bool* lessOrEqualp)
+    {
+        *lessOrEqualp = b.frequency <= a.frequency;
+        return true;
+    }
+=======
+static HashNumber HashVectorContents(const Vec* xs, HashNumber h) {
+  for (auto x = xs->begin(); x != xs->end(); x++) {
+    h = CombineHash(h, x->hash());
+  }
+  return h;
+}
+
+/* static */
+HashNumber UniqueTrackedOptimizations::Key::hash(const Lookup& lookup) {
+  HashNumber h = HashVectorContents(lookup.types, 0);
+  h = HashVectorContents(lookup.attempts, h);
+  h += (h << 3);
+  h ^= (h >> 11);
+  h += (h << 15);
+  return h;
+}
+
+/* static */
+bool UniqueTrackedOptimizations::Key::match(const Key& key,
+                                            const Lookup& lookup) {
+  return VectorContentsMatch(key.attempts, lookup.attempts) &&
+         VectorContentsMatch(key.types, lookup.types);
+}
+
+bool UniqueTrackedOptimizations::add(
+    const TrackedOptimizations* optimizations) {
+  MOZ_ASSERT(!sorted());
+  Key key;
+  key.types = &optimizations->types_;
+  key.attempts = &optimizations->attempts_;
+  AttemptsMap::AddPtr p = map_.lookupForAdd(key);
+  if (p) {
+    p->value().frequency++;
+    return true;
+  }
+  Entry entry;
+  entry.index = UINT8_MAX;
+  entry.frequency = 1;
+  return map_.add(p, key, entry);
+}
+
+struct FrequencyComparator {
+  bool operator()(const UniqueTrackedOptimizations::SortEntry& a,
+                  const UniqueTrackedOptimizations::SortEntry& b,
+                  bool* lessOrEqualp) {
+    *lessOrEqualp = b.frequency <= a.frequency;
+    return true;
+  }
+>>>>>>> upstream-releases
 };
 
 bool UniqueTrackedOptimizations::sortByFrequency(JSContext* cx) {
@@ -526,10 +632,25 @@ IonTrackedOptimizationsRegionTable::findRegion(uint32_t offset) const {
   return Nothing();
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t IonTrackedOptimizationsRegion::ExpectedRunLength(
     const NativeToTrackedOptimizations* start,
     const NativeToTrackedOptimizations* end) {
   MOZ_ASSERT(start < end);
+||||||| merged common ancestors
+void
+OptimizationAttempt::writeCompact(CompactBufferWriter& writer) const
+{
+    writer.writeUnsigned((uint32_t) strategy_);
+    writer.writeUnsigned((uint32_t) outcome_);
+}
+=======
+/* static */
+uint32_t IonTrackedOptimizationsRegion::ExpectedRunLength(
+    const NativeToTrackedOptimizations* start,
+    const NativeToTrackedOptimizations* end) {
+  MOZ_ASSERT(start < end);
+>>>>>>> upstream-releases
 
   // A run always has at least 1 entry, which is not delta encoded.
   uint32_t runLength = 1;
@@ -577,6 +698,7 @@ bool OptimizationTypeInfo::writeCompact(CompactBufferWriter& writer,
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ void IonTrackedOptimizationsRegion::ReadDelta(
     CompactBufferReader& reader, uint32_t* startDelta, uint32_t* length,
     uint8_t* index) {
@@ -720,6 +842,167 @@ bool OptimizationTypeInfo::writeCompact(CompactBufferWriter& writer,
     uint32_t startDelta = startOffset - prevEndOffset;
     uint32_t length = endOffset - startOffset;
     uint8_t index = unique.indexOf(entry->optimizations);
+||||||| merged common ancestors
+/* static */ bool
+IonTrackedOptimizationsRegion::WriteRun(CompactBufferWriter& writer,
+                                        const NativeToTrackedOptimizations* start,
+                                        const NativeToTrackedOptimizations* end,
+                                        const UniqueTrackedOptimizations& unique)
+{
+    // Write the header, which is the range that this whole run encompasses.
+    JitSpew(JitSpew_OptimizationTrackingExtended, "     Header: [%zu, %zu]",
+            start->startOffset.offset(), (end - 1)->endOffset.offset());
+    writer.writeUnsigned(start->startOffset.offset());
+    writer.writeUnsigned((end - 1)->endOffset.offset());
+=======
+/* static */
+void IonTrackedOptimizationsRegion::ReadDelta(CompactBufferReader& reader,
+                                              uint32_t* startDelta,
+                                              uint32_t* length,
+                                              uint8_t* index) {
+  // 2 bytes
+  // SSSS-SSSL LLLL-LII0
+  const uint32_t firstByte = reader.readByte();
+  const uint32_t secondByte = reader.readByte();
+  if ((firstByte & ENC1_MASK) == ENC1_MASK_VAL) {
+    uint32_t encVal = firstByte | secondByte << 8;
+    *startDelta = encVal >> ENC1_START_DELTA_SHIFT;
+    *length = (encVal >> ENC1_LENGTH_SHIFT) & ENC1_LENGTH_MAX;
+    *index = (encVal >> ENC1_INDEX_SHIFT) & ENC1_INDEX_MAX;
+    MOZ_ASSERT(length != 0);
+    return;
+  }
+
+  // 3 bytes
+  // SSSS-SSSS SSSS-LLLL LLII-II01
+  const uint32_t thirdByte = reader.readByte();
+  if ((firstByte & ENC2_MASK) == ENC2_MASK_VAL) {
+    uint32_t encVal = firstByte | secondByte << 8 | thirdByte << 16;
+    *startDelta = encVal >> ENC2_START_DELTA_SHIFT;
+    *length = (encVal >> ENC2_LENGTH_SHIFT) & ENC2_LENGTH_MAX;
+    *index = (encVal >> ENC2_INDEX_SHIFT) & ENC2_INDEX_MAX;
+    MOZ_ASSERT(length != 0);
+    return;
+  }
+
+  // 4 bytes
+  // SSSS-SSSS SSSL-LLLL LLLL-LIII IIII-I011
+  const uint32_t fourthByte = reader.readByte();
+  if ((firstByte & ENC3_MASK) == ENC3_MASK_VAL) {
+    uint32_t encVal =
+        firstByte | secondByte << 8 | thirdByte << 16 | fourthByte << 24;
+    *startDelta = encVal >> ENC3_START_DELTA_SHIFT;
+    *length = (encVal >> ENC3_LENGTH_SHIFT) & ENC3_LENGTH_MAX;
+    *index = (encVal >> ENC3_INDEX_SHIFT) & ENC3_INDEX_MAX;
+    MOZ_ASSERT(length != 0);
+    return;
+  }
+
+  // 5 bytes
+  // SSSS-SSSS SSSS-SSSL LLLL-LLLL LLLL-LIII IIII-I111
+  MOZ_ASSERT((firstByte & ENC4_MASK) == ENC4_MASK_VAL);
+  uint64_t fifthByte = reader.readByte();
+  uint64_t encVal = firstByte | secondByte << 8 | thirdByte << 16 |
+                    fourthByte << 24 | fifthByte << 32;
+  *startDelta = encVal >> ENC4_START_DELTA_SHIFT;
+  *length = (encVal >> ENC4_LENGTH_SHIFT) & ENC4_LENGTH_MAX;
+  *index = (encVal >> ENC4_INDEX_SHIFT) & ENC4_INDEX_MAX;
+  MOZ_ASSERT(length != 0);
+}
+
+/* static */
+void IonTrackedOptimizationsRegion::WriteDelta(CompactBufferWriter& writer,
+                                               uint32_t startDelta,
+                                               uint32_t length, uint8_t index) {
+  // 2 bytes
+  // SSSS-SSSL LLLL-LII0
+  if (startDelta <= ENC1_START_DELTA_MAX && length <= ENC1_LENGTH_MAX &&
+      index <= ENC1_INDEX_MAX) {
+    uint16_t val = ENC1_MASK_VAL | (startDelta << ENC1_START_DELTA_SHIFT) |
+                   (length << ENC1_LENGTH_SHIFT) | (index << ENC1_INDEX_SHIFT);
+    writer.writeByte(val & 0xff);
+    writer.writeByte((val >> 8) & 0xff);
+    return;
+  }
+
+  // 3 bytes
+  // SSSS-SSSS SSSS-LLLL LLII-II01
+  if (startDelta <= ENC2_START_DELTA_MAX && length <= ENC2_LENGTH_MAX &&
+      index <= ENC2_INDEX_MAX) {
+    uint32_t val = ENC2_MASK_VAL | (startDelta << ENC2_START_DELTA_SHIFT) |
+                   (length << ENC2_LENGTH_SHIFT) | (index << ENC2_INDEX_SHIFT);
+    writer.writeByte(val & 0xff);
+    writer.writeByte((val >> 8) & 0xff);
+    writer.writeByte((val >> 16) & 0xff);
+    return;
+  }
+
+  // 4 bytes
+  // SSSS-SSSS SSSL-LLLL LLLL-LIII IIII-I011
+  if (startDelta <= ENC3_START_DELTA_MAX && length <= ENC3_LENGTH_MAX) {
+    // index always fits because it's an uint8_t; change this if
+    // ENC3_INDEX_MAX changes.
+    MOZ_ASSERT(ENC3_INDEX_MAX == UINT8_MAX);
+    uint32_t val = ENC3_MASK_VAL | (startDelta << ENC3_START_DELTA_SHIFT) |
+                   (length << ENC3_LENGTH_SHIFT) | (index << ENC3_INDEX_SHIFT);
+    writer.writeByte(val & 0xff);
+    writer.writeByte((val >> 8) & 0xff);
+    writer.writeByte((val >> 16) & 0xff);
+    writer.writeByte((val >> 24) & 0xff);
+    return;
+  }
+
+  // 5 bytes
+  // SSSS-SSSS SSSS-SSSL LLLL-LLLL LLLL-LIII IIII-I111
+  if (startDelta <= ENC4_START_DELTA_MAX && length <= ENC4_LENGTH_MAX) {
+    // index always fits because it's an uint8_t; change this if
+    // ENC4_INDEX_MAX changes.
+    MOZ_ASSERT(ENC4_INDEX_MAX == UINT8_MAX);
+    uint64_t val = ENC4_MASK_VAL |
+                   (((uint64_t)startDelta) << ENC4_START_DELTA_SHIFT) |
+                   (((uint64_t)length) << ENC4_LENGTH_SHIFT) |
+                   (((uint64_t)index) << ENC4_INDEX_SHIFT);
+    writer.writeByte(val & 0xff);
+    writer.writeByte((val >> 8) & 0xff);
+    writer.writeByte((val >> 16) & 0xff);
+    writer.writeByte((val >> 24) & 0xff);
+    writer.writeByte((val >> 32) & 0xff);
+    return;
+  }
+
+  MOZ_CRASH("startDelta,length,index triple too large to encode.");
+}
+
+/* static */
+bool IonTrackedOptimizationsRegion::WriteRun(
+    CompactBufferWriter& writer, const NativeToTrackedOptimizations* start,
+    const NativeToTrackedOptimizations* end,
+    const UniqueTrackedOptimizations& unique) {
+  // Write the header, which is the range that this whole run encompasses.
+  JitSpew(JitSpew_OptimizationTrackingExtended, "     Header: [%zu, %zu]",
+          start->startOffset.offset(), (end - 1)->endOffset.offset());
+  writer.writeUnsigned(start->startOffset.offset());
+  writer.writeUnsigned((end - 1)->endOffset.offset());
+
+  // Write the first entry of the run, which is not delta-encoded.
+  JitSpew(JitSpew_OptimizationTrackingExtended,
+          "     [%6zu, %6zu]                        vector %3u, offset %4zu",
+          start->startOffset.offset(), start->endOffset.offset(),
+          unique.indexOf(start->optimizations), writer.length());
+  uint32_t prevEndOffset = start->endOffset.offset();
+  writer.writeUnsigned(prevEndOffset);
+  writer.writeByte(unique.indexOf(start->optimizations));
+
+  // Delta encode the run.
+  for (const NativeToTrackedOptimizations* entry = start + 1; entry != end;
+       entry++) {
+    uint32_t startOffset = entry->startOffset.offset();
+    uint32_t endOffset = entry->endOffset.offset();
+
+    uint32_t startDelta = startOffset - prevEndOffset;
+    uint32_t length = endOffset - startOffset;
+    uint8_t index = unique.indexOf(entry->optimizations);
+>>>>>>> upstream-releases
 
     JitSpew(JitSpew_OptimizationTrackingExtended,
             "     [%6u, %6u] delta [+%5u, +%5u] vector %3u, offset %4zu",
@@ -774,6 +1057,7 @@ static bool WriteOffsetsTable(CompactBufferWriter& writer,
   return true;
 }
 
+<<<<<<< HEAD
 static JSFunction* MaybeConstructorFromType(TypeSet::Type ty) {
   if (ty.isUnknown() || ty.isAnyObject() || !ty.isGroup()) {
     return nullptr;
@@ -803,6 +1087,38 @@ static void InterpretedFunctionFilenameAndLineNumber(JSFunction* fun,
 }
 
 static void SpewConstructor(TypeSet::Type ty, JSFunction* constructor) {
+||||||| merged common ancestors
+static void
+SpewConstructor(TypeSet::Type ty, JSFunction* constructor)
+{
+=======
+static JSFunction* MaybeConstructorFromType(TypeSet::Type ty) {
+  if (ty.isUnknown() || ty.isAnyObject() || !ty.isGroup()) {
+    return nullptr;
+  }
+  ObjectGroup* obj = ty.group();
+  AutoSweepObjectGroup sweep(obj);
+  TypeNewScript* newScript = obj->newScript(sweep);
+  return newScript ? newScript->function() : nullptr;
+}
+
+static void InterpretedFunctionFilenameAndLineNumber(JSFunction* fun,
+                                                     const char** filename,
+                                                     Maybe<unsigned>* lineno) {
+  if (fun->hasScript()) {
+    *filename = fun->nonLazyScript()->maybeForwardedScriptSource()->filename();
+    *lineno = Some((unsigned)fun->nonLazyScript()->lineno());
+  } else if (fun->lazyScriptOrNull()) {
+    *filename = fun->lazyScript()->maybeForwardedScriptSource()->filename();
+    *lineno = Some((unsigned)fun->lazyScript()->lineno());
+  } else {
+    *filename = "(self-hosted builtin)";
+    *lineno = Nothing();
+  }
+}
+
+static void SpewConstructor(TypeSet::Type ty, JSFunction* constructor) {
+>>>>>>> upstream-releases
 #ifdef JS_JITSPEW
   if (!constructor->isInterpreted()) {
     JitSpew(JitSpew_OptimizationTrackingExtended,

@@ -18,10 +18,12 @@
 
 namespace js {
 
+class ArgumentsObject;
 class NamedLambdaObject;
 class WithScope;
 class InlineTypedObject;
-class GeneratorObject;
+class AbstractGeneratorObject;
+class AsyncFunctionGeneratorObject;
 class RegExpObject;
 class TypedArrayObject;
 
@@ -52,6 +54,7 @@ struct PopValues {
 
 enum MaybeTailCall : bool { TailCall, NonTailCall };
 
+<<<<<<< HEAD
 // [SMDOC] JIT-to-C++ Function Calls. (callVM)
 //
 // Sometimes it is easier to reuse C++ code by calling VM's functions. Calling a
@@ -76,6 +79,35 @@ enum MaybeTailCall : bool { TailCall, NonTailCall };
 // call.
 //
 // Functions described using the VMFunction system must conform to a simple
+||||||| merged common ancestors
+// Contains information about a virtual machine function that can be called
+// from JIT code. Functions described in this manner must conform to a simple
+=======
+// [SMDOC] JIT-to-C++ Function Calls. (callVM)
+//
+// Sometimes it is easier to reuse C++ code by calling VM's functions. Calling a
+// function from the VM can be achieved with the use of callWithABI but this is
+// discouraged when the called functions might trigger exceptions and/or
+// garbage collections which are expecting to walk the stack. VMFunctions and
+// callVM are interfaces provided to handle the exception handling and register
+// the stack end (JITActivation) such that walking the stack is made possible.
+//
+// VMFunctionData is a structure which contains the necessary information needed
+// for generating a trampoline function to make a call (with generateVMWrapper)
+// and to root the arguments of the function (in TraceJitExitFrame).
+// VMFunctionData is created with the VMFunctionDataHelper template, which
+// infers the VMFunctionData fields from the function signature. The rooting and
+// trampoline code is therefore determined by the arguments of a function and
+// their locations in the signature of a function.
+//
+// VM functions all expect a JSContext* as first argument. This argument is
+// implicitly provided by the trampoline code (in generateVMWrapper) and used
+// for creating new objects or reporting errors. If your function does not make
+// use of a JSContext* argument, then you might probably use a callWithABI
+// call.
+//
+// Functions described using the VMFunction system must conform to a simple
+>>>>>>> upstream-releases
 // protocol: the return type must have a special "failure" value (for example,
 // false for bool, or nullptr for Objects). If the function is designed to
 // return a value that does not meet this requirement - such as
@@ -83,6 +115,7 @@ enum MaybeTailCall : bool { TailCall, NonTailCall };
 // specified. In this case, the return type must be boolean to indicate
 // failure.
 //
+<<<<<<< HEAD
 // JIT Code usage:
 //
 // Different JIT compilers in SpiderMonkey have their own implementations of
@@ -129,13 +162,69 @@ struct VMFunction {
 
   // Address of the C function.
   void* wrapped;
+||||||| merged common ancestors
+// All functions described by VMFunction take a JSContext * as a first
+// argument, and are treated as re-entrant into the VM and therefore fallible.
+struct VMFunction
+{
+    // Global linked list of all VMFunctions.
+    static VMFunction* functions;
+    VMFunction* next;
 
+    // Address of the C function.
+    void* wrapped;
+=======
+// JIT Code usage:
+//
+// Different JIT compilers in SpiderMonkey have their own implementations of
+// callVM to call VM functions. However, the general shape of them is that
+// arguments (excluding the JSContext or trailing out-param) are pushed on to
+// the stack from right to left (rightmost argument is pushed first).
+//
+// Regardless of return value protocol being used (final outParam, or return
+// value) the generated trampolines ensure the return value ends up in
+// JSReturnOperand, ReturnReg or ReturnDoubleReg.
+//
+// Example:
+//
+// The details will differ slightly between the different compilers in
+// SpiderMonkey, but the general shape of our usage looks like this:
+//
+// Suppose we have a function Foo:
+//
+//      bool Foo(JSContext* cx, HandleObject x, HandleId y,
+//               MutableHandleValue z);
+//
+// This function returns true on success, and z is the outparam return value.
+//
+// A VM function wrapper for this can be created by adding an entry to
+// VM_FUNCTION_LIST in VMFunctionList-inl.h:
+//
+//    _(Foo, js::Foo)
+//
+// In the compiler code the call would then be issued like this:
+//
+//      masm.Push(id);
+//      masm.Push(obj);
+//
+//      using Fn = bool (*)(JSContext*, HandleObject, HandleId,
+//                          MutableHandleValue);
+//      if (!callVM<Fn, js::Foo>()) {
+//          return false;
+//      }
+//
+// After this, the result value is in the return value register.
+>>>>>>> upstream-releases
+
+// Data for a VM function. All VMFunctionDatas are stored in a constexpr array.
+struct VMFunctionData {
 #if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
   // Informative name of the wrapped function. The name should not be present
   // in release builds in order to save memory.
   const char* name_;
 #endif
 
+<<<<<<< HEAD
   // Note: a maximum of seven root types is supported.
   enum RootType : uint8_t {
     RootNone = 0,
@@ -224,6 +313,165 @@ struct VMFunction {
   bool argPassedInFloatReg(uint32_t explicitArg) const {
     return ((argumentPassedInFloatRegs >> explicitArg) & 1) == 1;
   }
+||||||| merged common ancestors
+    // Note: a maximum of seven root types is supported.
+    enum RootType : uint8_t {
+        RootNone = 0,
+        RootObject,
+        RootString,
+        RootId,
+        RootFunction,
+        RootValue,
+        RootCell
+    };
+
+    // Contains an combination of enumerated types used by the gc for marking
+    // arguments of the VM wrapper.
+    uint64_t argumentRootTypes;
+
+    enum ArgProperties {
+        WordByValue = 0,
+        DoubleByValue = 1,
+        WordByRef = 2,
+        DoubleByRef = 3,
+        // BitMask version.
+        Word = 0,
+        Double = 1,
+        ByRef = 2
+    };
+
+    // Contains properties about the first 16 arguments.
+    uint32_t argumentProperties;
+
+    // Which arguments should be passed in float register on platforms that
+    // have them.
+    uint32_t argumentPassedInFloatRegs;
+
+    // Number of arguments expected, excluding JSContext * as an implicit
+    // first argument and an outparam as a possible implicit final argument.
+    uint8_t explicitArgs;
+
+    // The root type of the out param if outParam == Type_Handle.
+    RootType outParamRootType;
+
+    // The outparam may be any Type_*, and must be the final argument to the
+    // function, if not Void. outParam != Void implies that the return type
+    // has a boolean failure mode.
+    DataType outParam;
+
+    // Type returned by the C function and used by the VMFunction wrapper to
+    // check for failures of the C function.  Valid failure/return types are
+    // boolean and object pointers which are asserted inside the VMFunction
+    // constructor. If the C function use an outparam (!= Type_Void), then
+    // the only valid failure/return type is boolean -- object pointers are
+    // pointless because the wrapper will only use it to compare it against
+    // nullptr before discarding its value.
+    DataType returnType;
+
+    // Number of Values the VM wrapper should pop from the stack when it returns.
+    // Used by baseline IC stubs so that they can use tail calls to call the VM
+    // wrapper.
+    uint8_t extraValuesToPop;
+
+    // On some architectures, called functions need to explicitly push their
+    // return address, for a tail call, there is nothing to push, so tail-callness
+    // needs to be known at compile time.
+    MaybeTailCall expectTailCall;
+
+    uint32_t argc() const {
+        // JSContext * + args + (OutParam? *)
+        return 1 + explicitArgc() + ((outParam == Type_Void) ? 0 : 1);
+    }
+=======
+  // Note: a maximum of seven root types is supported.
+  enum RootType : uint8_t {
+    RootNone = 0,
+    RootObject,
+    RootString,
+    RootId,
+    RootFunction,
+    RootValue,
+    RootCell
+  };
+
+  // Contains an combination of enumerated types used by the gc for marking
+  // arguments of the VM wrapper.
+  uint64_t argumentRootTypes;
+
+  enum ArgProperties {
+    WordByValue = 0,
+    DoubleByValue = 1,
+    WordByRef = 2,
+    DoubleByRef = 3,
+    // BitMask version.
+    Word = 0,
+    Double = 1,
+    ByRef = 2
+  };
+
+  // Contains properties about the first 16 arguments.
+  uint32_t argumentProperties;
+
+  // Which arguments should be passed in float register on platforms that
+  // have them.
+  uint32_t argumentPassedInFloatRegs;
+
+  // Number of arguments expected, excluding JSContext * as an implicit
+  // first argument and an outparam as a possible implicit final argument.
+  uint8_t explicitArgs;
+
+  // The root type of the out param if outParam == Type_Handle.
+  RootType outParamRootType;
+
+  // The outparam may be any Type_*, and must be the final argument to the
+  // function, if not Void. outParam != Void implies that the return type
+  // has a boolean failure mode.
+  DataType outParam;
+
+  // Type returned by the C function and used by the VMFunction wrapper to
+  // check for failures of the C function.  Valid failure/return types are
+  // boolean and object pointers which are asserted inside the VMFunction
+  // constructor. If the C function use an outparam (!= Type_Void), then
+  // the only valid failure/return type is boolean -- object pointers are
+  // pointless because the wrapper will only use it to compare it against
+  // nullptr before discarding its value.
+  DataType returnType;
+
+  // Number of Values the VM wrapper should pop from the stack when it returns.
+  // Used by baseline IC stubs so that they can use tail calls to call the VM
+  // wrapper.
+  uint8_t extraValuesToPop;
+
+  // On some architectures, called functions need to explicitly push their
+  // return address, for a tail call, there is nothing to push, so tail-callness
+  // needs to be known at compile time.
+  MaybeTailCall expectTailCall;
+
+  uint32_t argc() const {
+    // JSContext * + args + (OutParam? *)
+    return 1 + explicitArgc() + ((outParam == Type_Void) ? 0 : 1);
+  }
+
+  DataType failType() const { return returnType; }
+
+  // Whether this function returns anything more than a boolean flag for
+  // failures.
+  bool returnsData() const {
+    return returnType == Type_Object || outParam != Type_Void;
+  }
+
+  ArgProperties argProperties(uint32_t explicitArg) const {
+    return ArgProperties((argumentProperties >> (2 * explicitArg)) & 3);
+  }
+
+  RootType argRootType(uint32_t explicitArg) const {
+    return RootType((argumentRootTypes >> (3 * explicitArg)) & 7);
+  }
+
+  bool argPassedInFloatReg(uint32_t explicitArg) const {
+    return ((argumentPassedInFloatRegs >> explicitArg) & 1) == 1;
+  }
+>>>>>>> upstream-releases
 
 #if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
   const char* name() const { return name_; }
@@ -289,6 +537,7 @@ struct VMFunction {
       count++;
       n &= n - 1;
     }
+<<<<<<< HEAD
     return count;
   }
 
@@ -301,6 +550,28 @@ struct VMFunction {
                        MaybeTailCall expectTailCall = NonTailCall)
       : next(nullptr),
         wrapped(wrapped),
+||||||| merged common ancestors
+
+    constexpr
+    VMFunction(void* wrapped, const char* name, uint32_t explicitArgs, uint32_t argumentProperties,
+               uint32_t argumentPassedInFloatRegs, uint64_t argRootTypes,
+               DataType outParam, RootType outParamRootType, DataType returnType,
+               uint8_t extraValuesToPop = 0, MaybeTailCall expectTailCall = NonTailCall)
+      : next(nullptr),
+        wrapped(wrapped),
+=======
+    return count;
+  }
+
+  constexpr VMFunctionData(const char* name, uint32_t explicitArgs,
+                           uint32_t argumentProperties,
+                           uint32_t argumentPassedInFloatRegs,
+                           uint64_t argRootTypes, DataType outParam,
+                           RootType outParamRootType, DataType returnType,
+                           uint8_t extraValuesToPop = 0,
+                           MaybeTailCall expectTailCall = NonTailCall)
+      :
+>>>>>>> upstream-releases
 #if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
         name_(name),
 #endif
@@ -312,6 +583,7 @@ struct VMFunction {
         outParam(outParam),
         returnType(returnType),
         extraValuesToPop(extraValuesToPop),
+<<<<<<< HEAD
         expectTailCall(expectTailCall) {
   }
 
@@ -370,8 +642,83 @@ struct VMFunction {
     MOZ_ASSERT(f1->outParamRootType == f2->outParamRootType);
     return true;
   }
+||||||| merged common ancestors
+        expectTailCall(expectTailCall)
+    { }
+
+    VMFunction(const VMFunction& o)
+      : next(functions),
+        wrapped(o.wrapped),
+#if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
+        name_(o.name_),
+#endif
+        argumentRootTypes(o.argumentRootTypes),
+        argumentProperties(o.argumentProperties),
+        argumentPassedInFloatRegs(o.argumentPassedInFloatRegs),
+        explicitArgs(o.explicitArgs),
+        outParamRootType(o.outParamRootType),
+        outParam(o.outParam),
+        returnType(o.returnType),
+        extraValuesToPop(o.extraValuesToPop),
+        expectTailCall(o.expectTailCall)
+    {
+        // Add this to the global list of VMFunctions.
+        functions = this;
+
+        // Check for valid failure/return type.
+        MOZ_ASSERT_IF(outParam != Type_Void,
+                      returnType == Type_Void ||
+                      returnType == Type_Bool);
+        MOZ_ASSERT(returnType == Type_Void ||
+                   returnType == Type_Bool ||
+                   returnType == Type_Object);
+    }
+
+    typedef const VMFunction* Lookup;
+
+    static HashNumber hash(const VMFunction* f) {
+        // The hash is based on the wrapped function, not the VMFunction*, to
+        // avoid generating duplicate wrapper code.
+        HashNumber hash = 0;
+        hash = mozilla::AddToHash(hash, f->wrapped);
+        hash = mozilla::AddToHash(hash, f->expectTailCall);
+        return hash;
+    }
+    static bool match(const VMFunction* f1, const VMFunction* f2) {
+        if (f1->wrapped != f2->wrapped ||
+            f1->expectTailCall != f2->expectTailCall)
+        {
+            return false;
+        }
+
+        // If this starts failing, add extraValuesToPop to the if-statement and
+        // hash() method above.
+        MOZ_ASSERT(f1->extraValuesToPop == f2->extraValuesToPop);
+
+        MOZ_ASSERT(strcmp(f1->name_, f2->name_) == 0);
+        MOZ_ASSERT(f1->explicitArgs == f2->explicitArgs);
+        MOZ_ASSERT(f1->argumentProperties == f2->argumentProperties);
+        MOZ_ASSERT(f1->argumentPassedInFloatRegs == f2->argumentPassedInFloatRegs);
+        MOZ_ASSERT(f1->outParam == f2->outParam);
+        MOZ_ASSERT(f1->returnType == f2->returnType);
+        MOZ_ASSERT(f1->argumentRootTypes == f2->argumentRootTypes);
+        MOZ_ASSERT(f1->outParamRootType == f2->outParamRootType);
+        return true;
+    }
+=======
+        expectTailCall(expectTailCall) {
+    // Check for valid failure/return type.
+    MOZ_ASSERT_IF(outParam != Type_Void,
+                  returnType == Type_Void || returnType == Type_Bool);
+    MOZ_ASSERT(returnType == Type_Void || returnType == Type_Bool ||
+               returnType == Type_Object);
+  }
+
+  constexpr VMFunctionData(const VMFunctionData& o) = default;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 template <class>
 struct TypeToDataType { /* Unexpected return type for a VMFunction. */
 };
@@ -499,112 +846,505 @@ template <>
 struct TypeToDataType<HandleId> {
   static const DataType result = Type_Handle;
 };
+||||||| merged common ancestors
+template <class> struct TypeToDataType { /* Unexpected return type for a VMFunction. */ };
+template <> struct TypeToDataType<void> { static const DataType result = Type_Void; };
+template <> struct TypeToDataType<bool> { static const DataType result = Type_Bool; };
+template <> struct TypeToDataType<JSObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<JSFunction*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<NativeObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<PlainObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<InlineTypedObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<NamedLambdaObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<LexicalEnvironmentObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<ArrayObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<TypedArrayObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<ArrayIteratorObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<StringIteratorObject*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<JSString*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<JSFlatString*> { static const DataType result = Type_Object; };
+template <> struct TypeToDataType<HandleObject> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandleString> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandlePropertyName> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandleFunction> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<NativeObject*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<InlineTypedObject*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<ArrayObject*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<GeneratorObject*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<PlainObject*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<WithScope*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<LexicalScope*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<Handle<Scope*> > { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandleScript> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandleValue> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<MutableHandleValue> { static const DataType result = Type_Handle; };
+template <> struct TypeToDataType<HandleId> { static const DataType result = Type_Handle; };
+=======
+template <class>
+struct TypeToDataType { /* Unexpected return type for a VMFunction. */
+};
+template <>
+struct TypeToDataType<void> {
+  static const DataType result = Type_Void;
+};
+template <>
+struct TypeToDataType<bool> {
+  static const DataType result = Type_Bool;
+};
+template <>
+struct TypeToDataType<JSObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<JSFunction*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<NativeObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<PlainObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<InlineTypedObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<NamedLambdaObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<LexicalEnvironmentObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<ArgumentsObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<ArrayObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<TypedArrayObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<ArrayIteratorObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<StringIteratorObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<RegExpStringIteratorObject*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<JSString*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<JSFlatString*> {
+  static const DataType result = Type_Object;
+};
+template <>
+struct TypeToDataType<HandleObject> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandleString> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandlePropertyName> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandleFunction> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<NativeObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<InlineTypedObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<ArrayObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<AbstractGeneratorObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<AsyncFunctionGeneratorObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<PlainObject*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<WithScope*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<LexicalScope*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<Handle<Scope*> > {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandleScript> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandleValue> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<MutableHandleValue> {
+  static const DataType result = Type_Handle;
+};
+template <>
+struct TypeToDataType<HandleId> {
+  static const DataType result = Type_Handle;
+};
+>>>>>>> upstream-releases
 
 // Convert argument types to properties of the argument known by the jit.
+<<<<<<< HEAD
 template <class T>
 struct TypeToArgProperties {
   static const uint32_t result =
       (sizeof(T) <= sizeof(void*) ? VMFunction::Word : VMFunction::Double);
+||||||| merged common ancestors
+template <class T> struct TypeToArgProperties {
+    static const uint32_t result =
+        (sizeof(T) <= sizeof(void*) ? VMFunction::Word : VMFunction::Double);
+=======
+template <class T>
+struct TypeToArgProperties {
+  static const uint32_t result =
+      (sizeof(T) <= sizeof(void*) ? VMFunctionData::Word
+                                  : VMFunctionData::Double);
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<const Value&> {
   static const uint32_t result =
       TypeToArgProperties<Value>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<const Value&> {
+    static const uint32_t result = TypeToArgProperties<Value>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<const Value&> {
+  static const uint32_t result =
+      TypeToArgProperties<Value>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleObject> {
   static const uint32_t result =
       TypeToArgProperties<JSObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleObject> {
+    static const uint32_t result = TypeToArgProperties<JSObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleObject> {
+  static const uint32_t result =
+      TypeToArgProperties<JSObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleString> {
   static const uint32_t result =
       TypeToArgProperties<JSString*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleString> {
+    static const uint32_t result = TypeToArgProperties<JSString*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleString> {
+  static const uint32_t result =
+      TypeToArgProperties<JSString*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandlePropertyName> {
   static const uint32_t result =
       TypeToArgProperties<PropertyName*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandlePropertyName> {
+    static const uint32_t result = TypeToArgProperties<PropertyName*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandlePropertyName> {
+  static const uint32_t result =
+      TypeToArgProperties<PropertyName*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleFunction> {
   static const uint32_t result =
       TypeToArgProperties<JSFunction*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleFunction> {
+    static const uint32_t result = TypeToArgProperties<JSFunction*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleFunction> {
+  static const uint32_t result =
+      TypeToArgProperties<JSFunction*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<NativeObject*> > {
   static const uint32_t result =
       TypeToArgProperties<NativeObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<NativeObject*> > {
+    static const uint32_t result = TypeToArgProperties<NativeObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<NativeObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<NativeObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<InlineTypedObject*> > {
   static const uint32_t result =
       TypeToArgProperties<InlineTypedObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<InlineTypedObject*> > {
+    static const uint32_t result = TypeToArgProperties<InlineTypedObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<InlineTypedObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<InlineTypedObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<ArrayObject*> > {
   static const uint32_t result =
       TypeToArgProperties<ArrayObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<ArrayObject*> > {
+    static const uint32_t result = TypeToArgProperties<ArrayObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<ArrayObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<ArrayObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<GeneratorObject*> > {
   static const uint32_t result =
       TypeToArgProperties<GeneratorObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<GeneratorObject*> > {
+    static const uint32_t result = TypeToArgProperties<GeneratorObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<AbstractGeneratorObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<AbstractGeneratorObject*>::result |
+      VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<PlainObject*> > {
   static const uint32_t result =
       TypeToArgProperties<PlainObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<PlainObject*> > {
+    static const uint32_t result = TypeToArgProperties<PlainObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<AsyncFunctionGeneratorObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<AsyncFunctionGeneratorObject*>::result |
+      VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<RegExpObject*> > {
   static const uint32_t result =
       TypeToArgProperties<RegExpObject*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<RegExpObject*> > {
+    static const uint32_t result = TypeToArgProperties<RegExpObject*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<PlainObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<PlainObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<WithScope*> > {
   static const uint32_t result =
       TypeToArgProperties<WithScope*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<WithScope*> > {
+    static const uint32_t result = TypeToArgProperties<WithScope*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<RegExpObject*> > {
+  static const uint32_t result =
+      TypeToArgProperties<RegExpObject*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<LexicalScope*> > {
   static const uint32_t result =
       TypeToArgProperties<LexicalScope*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<LexicalScope*> > {
+    static const uint32_t result = TypeToArgProperties<LexicalScope*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<WithScope*> > {
+  static const uint32_t result =
+      TypeToArgProperties<WithScope*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<Handle<Scope*> > {
   static const uint32_t result =
       TypeToArgProperties<Scope*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<Handle<Scope*> > {
+    static const uint32_t result = TypeToArgProperties<Scope*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<Handle<LexicalScope*> > {
+  static const uint32_t result =
+      TypeToArgProperties<LexicalScope*>::result | VMFunctionData::ByRef;
 };
+template <>
+struct TypeToArgProperties<Handle<Scope*> > {
+  static const uint32_t result =
+      TypeToArgProperties<Scope*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
+};
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleScript> {
   static const uint32_t result =
       TypeToArgProperties<JSScript*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleScript> {
+    static const uint32_t result = TypeToArgProperties<JSScript*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleScript> {
+  static const uint32_t result =
+      TypeToArgProperties<JSScript*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleValue> {
   static const uint32_t result =
       TypeToArgProperties<Value>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleValue> {
+    static const uint32_t result = TypeToArgProperties<Value>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleValue> {
+  static const uint32_t result =
+      TypeToArgProperties<Value>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<MutableHandleValue> {
   static const uint32_t result =
       TypeToArgProperties<Value>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<MutableHandleValue> {
+    static const uint32_t result = TypeToArgProperties<Value>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<MutableHandleValue> {
+  static const uint32_t result =
+      TypeToArgProperties<Value>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleId> {
   static const uint32_t result =
       TypeToArgProperties<jsid>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleId> {
+    static const uint32_t result = TypeToArgProperties<jsid>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleId> {
+  static const uint32_t result =
+      TypeToArgProperties<jsid>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleShape> {
   static const uint32_t result =
       TypeToArgProperties<Shape*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleShape> {
+    static const uint32_t result = TypeToArgProperties<Shape*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleShape> {
+  static const uint32_t result =
+      TypeToArgProperties<Shape*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToArgProperties<HandleObjectGroup> {
   static const uint32_t result =
       TypeToArgProperties<ObjectGroup*>::result | VMFunction::ByRef;
+||||||| merged common ancestors
+template <> struct TypeToArgProperties<HandleObjectGroup> {
+    static const uint32_t result = TypeToArgProperties<ObjectGroup*>::result | VMFunction::ByRef;
+=======
+template <>
+struct TypeToArgProperties<HandleObjectGroup> {
+  static const uint32_t result =
+      TypeToArgProperties<ObjectGroup*>::result | VMFunctionData::ByRef;
+>>>>>>> upstream-releases
 };
 
 // Convert argument type to whether or not it should be passed in a float
@@ -619,91 +1359,276 @@ struct TypeToPassInFloatReg<double> {
 };
 
 // Convert argument types to root types used by the gc, see MarkJitExitFrame.
+<<<<<<< HEAD
 template <class T>
 struct TypeToRootType {
   static const uint32_t result = VMFunction::RootNone;
+||||||| merged common ancestors
+template <class T> struct TypeToRootType {
+    static const uint32_t result = VMFunction::RootNone;
+=======
+template <class T>
+struct TypeToRootType {
+  static const uint32_t result = VMFunctionData::RootNone;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleObject> {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleObject> {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<HandleObject> {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleString> {
   static const uint32_t result = VMFunction::RootString;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleString> {
+    static const uint32_t result = VMFunction::RootString;
+=======
+template <>
+struct TypeToRootType<HandleString> {
+  static const uint32_t result = VMFunctionData::RootString;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandlePropertyName> {
   static const uint32_t result = VMFunction::RootString;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandlePropertyName> {
+    static const uint32_t result = VMFunction::RootString;
+=======
+template <>
+struct TypeToRootType<HandlePropertyName> {
+  static const uint32_t result = VMFunctionData::RootString;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleFunction> {
   static const uint32_t result = VMFunction::RootFunction;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleFunction> {
+    static const uint32_t result = VMFunction::RootFunction;
+=======
+template <>
+struct TypeToRootType<HandleFunction> {
+  static const uint32_t result = VMFunctionData::RootFunction;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleValue> {
   static const uint32_t result = VMFunction::RootValue;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleValue> {
+    static const uint32_t result = VMFunction::RootValue;
+=======
+template <>
+struct TypeToRootType<HandleValue> {
+  static const uint32_t result = VMFunctionData::RootValue;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<MutableHandleValue> {
   static const uint32_t result = VMFunction::RootValue;
+||||||| merged common ancestors
+template <> struct TypeToRootType<MutableHandleValue> {
+    static const uint32_t result = VMFunction::RootValue;
+=======
+template <>
+struct TypeToRootType<MutableHandleValue> {
+  static const uint32_t result = VMFunctionData::RootValue;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleId> {
   static const uint32_t result = VMFunction::RootId;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleId> {
+    static const uint32_t result = VMFunction::RootId;
+=======
+template <>
+struct TypeToRootType<HandleId> {
+  static const uint32_t result = VMFunctionData::RootId;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleShape> {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleShape> {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<HandleShape> {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleObjectGroup> {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleObjectGroup> {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<HandleObjectGroup> {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<HandleScript> {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<HandleScript> {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<HandleScript> {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<NativeObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<NativeObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<NativeObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<InlineTypedObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<InlineTypedObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<InlineTypedObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<ArrayObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<ArrayObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<ArrayObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<GeneratorObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<GeneratorObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<AbstractGeneratorObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<PlainObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<PlainObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<AsyncFunctionGeneratorObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
 };
+template <>
+struct TypeToRootType<Handle<PlainObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
+};
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<RegExpObject*> > {
   static const uint32_t result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<RegExpObject*> > {
+    static const uint32_t result = VMFunction::RootObject;
+=======
+template <>
+struct TypeToRootType<Handle<RegExpObject*> > {
+  static const uint32_t result = VMFunctionData::RootObject;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<LexicalScope*> > {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<LexicalScope*> > {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<Handle<LexicalScope*> > {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<WithScope*> > {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<WithScope*> > {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<Handle<WithScope*> > {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct TypeToRootType<Handle<Scope*> > {
   static const uint32_t result = VMFunction::RootCell;
+||||||| merged common ancestors
+template <> struct TypeToRootType<Handle<Scope*> > {
+    static const uint32_t result = VMFunction::RootCell;
+=======
+template <>
+struct TypeToRootType<Handle<Scope*> > {
+  static const uint32_t result = VMFunctionData::RootCell;
+>>>>>>> upstream-releases
 };
 template <class T>
 struct TypeToRootType<Handle<T> > {
   // Fail for Handle types that aren't specialized above.
 };
 
+<<<<<<< HEAD
 template <class>
 struct OutParamToDataType {
   static const DataType result = Type_Void;
@@ -748,25 +1673,117 @@ struct OutParamToDataType<MutableHandleString> {
 template <class>
 struct OutParamToRootType {
   static const VMFunction::RootType result = VMFunction::RootNone;
+||||||| merged common ancestors
+template <class> struct OutParamToDataType { static const DataType result = Type_Void; };
+template <> struct OutParamToDataType<Value*> { static const DataType result = Type_Value; };
+template <> struct OutParamToDataType<int*> { static const DataType result = Type_Int32; };
+template <> struct OutParamToDataType<uint32_t*> { static const DataType result = Type_Int32; };
+template <> struct OutParamToDataType<uint8_t**> { static const DataType result = Type_Pointer; };
+template <> struct OutParamToDataType<bool*> { static const DataType result = Type_Bool; };
+template <> struct OutParamToDataType<double*> { static const DataType result = Type_Double; };
+template <> struct OutParamToDataType<MutableHandleValue> { static const DataType result = Type_Handle; };
+template <> struct OutParamToDataType<MutableHandleObject> { static const DataType result = Type_Handle; };
+template <> struct OutParamToDataType<MutableHandleString> { static const DataType result = Type_Handle; };
+
+template <class> struct OutParamToRootType {
+    static const VMFunction::RootType result = VMFunction::RootNone;
+=======
+template <class>
+struct OutParamToDataType {
+  static const DataType result = Type_Void;
 };
+template <>
+struct OutParamToDataType<Value*> {
+  static const DataType result = Type_Value;
+};
+template <>
+struct OutParamToDataType<int*> {
+  static const DataType result = Type_Int32;
+>>>>>>> upstream-releases
+};
+<<<<<<< HEAD
 template <>
 struct OutParamToRootType<MutableHandleValue> {
   static const VMFunction::RootType result = VMFunction::RootValue;
+||||||| merged common ancestors
+template <> struct OutParamToRootType<MutableHandleValue> {
+    static const VMFunction::RootType result = VMFunction::RootValue;
+=======
+template <>
+struct OutParamToDataType<uint32_t*> {
+  static const DataType result = Type_Int32;
 };
+template <>
+struct OutParamToDataType<uint8_t**> {
+  static const DataType result = Type_Pointer;
+};
+template <>
+struct OutParamToDataType<bool*> {
+  static const DataType result = Type_Bool;
+};
+template <>
+struct OutParamToDataType<double*> {
+  static const DataType result = Type_Double;
+};
+template <>
+struct OutParamToDataType<MutableHandleValue> {
+  static const DataType result = Type_Handle;
+>>>>>>> upstream-releases
+};
+<<<<<<< HEAD
 template <>
 struct OutParamToRootType<MutableHandleObject> {
   static const VMFunction::RootType result = VMFunction::RootObject;
+||||||| merged common ancestors
+template <> struct OutParamToRootType<MutableHandleObject> {
+    static const VMFunction::RootType result = VMFunction::RootObject;
+=======
+template <>
+struct OutParamToDataType<MutableHandleObject> {
+  static const DataType result = Type_Handle;
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
 template <>
 struct OutParamToRootType<MutableHandleString> {
   static const VMFunction::RootType result = VMFunction::RootString;
+||||||| merged common ancestors
+template <> struct OutParamToRootType<MutableHandleString> {
+    static const VMFunction::RootType result = VMFunction::RootString;
+=======
+template <>
+struct OutParamToDataType<MutableHandleString> {
+  static const DataType result = Type_Handle;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 template <class>
 struct MatchContext {};
 template <>
 struct MatchContext<JSContext*> {
   static const bool valid = true;
+||||||| merged common ancestors
+template <class> struct MatchContext { };
+template <> struct MatchContext<JSContext*> {
+    static const bool valid = true;
+=======
+template <class>
+struct OutParamToRootType {
+  static const VMFunctionData::RootType result = VMFunctionData::RootNone;
+};
+template <>
+struct OutParamToRootType<MutableHandleValue> {
+  static const VMFunctionData::RootType result = VMFunctionData::RootValue;
+};
+template <>
+struct OutParamToRootType<MutableHandleObject> {
+  static const VMFunctionData::RootType result = VMFunctionData::RootObject;
+};
+template <>
+struct OutParamToRootType<MutableHandleString> {
+  static const VMFunctionData::RootType result = VMFunctionData::RootString;
+>>>>>>> upstream-releases
 };
 
 // Extract the last element of a list of types.
@@ -807,6 +1824,7 @@ struct BitMask<Each, ResultType, Shift> {
 
 template <template <typename> class Each, typename ResultType, size_t Shift,
           typename HeadType, typename... TailTypes>
+<<<<<<< HEAD
 struct BitMask<Each, ResultType, Shift, HeadType, TailTypes...> {
   static_assert(ResultType(Each<HeadType>::result) < (1 << Shift),
                 "not enough bits reserved by the shift for individual results");
@@ -867,6 +1885,83 @@ struct FunctionInfo<R (*)(Context, Args...)> : public VMFunction {
     static_assert(MatchContext<Context>::valid,
                   "Invalid cx type in VMFunction");
   }
+||||||| merged common ancestors
+struct BitMask<Each, ResultType, Shift, HeadType, TailTypes...>
+{
+    static_assert(ResultType(Each<HeadType>::result) < (1 << Shift),
+                  "not enough bits reserved by the shift for individual results");
+    static_assert(LastArg<TailTypes...>::nbArgs < (8 * sizeof(ResultType) / Shift),
+                  "not enough bits in the result type to store all bit masks");
+
+    static constexpr ResultType result =
+        ResultType(Each<HeadType>::result) |
+        (BitMask<Each, ResultType, Shift, TailTypes...>::result << Shift);
+};
+
+// Extract VMFunction properties based on the signature of the function. The
+// properties are used to generate the logic for calling the VM function, and
+// also for marking the stack during GCs.
+template <typename... Args>
+struct FunctionInfo;
+
+template <class R, class Context, typename... Args>
+struct FunctionInfo<R (*)(Context, Args...)> : public VMFunction
+{
+    typedef R (*pf)(Context, Args...);
+
+    static DataType returnType() {
+        return TypeToDataType<R>::result;
+    }
+    static DataType outParam() {
+        return OutParamToDataType<typename LastArg<Args...>::Type>::result;
+    }
+    static RootType outParamRootType() {
+        return OutParamToRootType<typename LastArg<Args...>::Type>::result;
+    }
+    static size_t NbArgs() {
+        return LastArg<Args...>::nbArgs;
+    }
+    static size_t explicitArgs() {
+        return NbArgs() - (outParam() != Type_Void ? 1 : 0);
+    }
+    static uint32_t argumentProperties() {
+        return BitMask<TypeToArgProperties, uint32_t, 2, Args...>::result;
+    }
+    static uint32_t argumentPassedInFloatRegs() {
+        return BitMask<TypeToPassInFloatReg, uint32_t, 2, Args...>::result;
+    }
+    static uint64_t argumentRootTypes() {
+        return BitMask<TypeToRootType, uint64_t, 3, Args...>::result;
+    }
+    explicit FunctionInfo(pf fun, const char* name, PopValues extraValuesToPop = PopValues(0))
+        : VMFunction(JS_FUNC_TO_DATA_PTR(void*, fun), name, explicitArgs(),
+                     argumentProperties(), argumentPassedInFloatRegs(),
+                     argumentRootTypes(), outParam(), outParamRootType(),
+                     returnType(), extraValuesToPop.numValues, NonTailCall)
+    {
+        static_assert(MatchContext<Context>::valid, "Invalid cx type in VMFunction");
+    }
+    explicit FunctionInfo(pf fun, const char* name, MaybeTailCall expectTailCall,
+                          PopValues extraValuesToPop = PopValues(0))
+        : VMFunction(JS_FUNC_TO_DATA_PTR(void*, fun), name, explicitArgs(),
+                     argumentProperties(), argumentPassedInFloatRegs(),
+                     argumentRootTypes(), outParam(), outParamRootType(),
+                     returnType(), extraValuesToPop.numValues, expectTailCall)
+    {
+        static_assert(MatchContext<Context>::valid, "Invalid cx type in VMFunction");
+    }
+=======
+struct BitMask<Each, ResultType, Shift, HeadType, TailTypes...> {
+  static_assert(ResultType(Each<HeadType>::result) < (1 << Shift),
+                "not enough bits reserved by the shift for individual results");
+  static_assert(LastArg<TailTypes...>::nbArgs <
+                    (8 * sizeof(ResultType) / Shift),
+                "not enough bits in the result type to store all bit masks");
+
+  static constexpr ResultType result =
+      ResultType(Each<HeadType>::result) |
+      (BitMask<Each, ResultType, Shift, TailTypes...>::result << Shift);
+>>>>>>> upstream-releases
 };
 
 class AutoDetectInvalidation {
@@ -917,6 +2012,7 @@ bool InvokeFromInterpreterStub(JSContext* cx,
 bool CheckOverRecursed(JSContext* cx);
 bool CheckOverRecursedBaseline(JSContext* cx, BaselineFrame* frame);
 
+<<<<<<< HEAD
 JSObject* BindVar(JSContext* cx, HandleObject scopeChain);
 MOZ_MUST_USE bool DefVar(JSContext* cx, HandlePropertyName dn, unsigned attrs,
                          HandleObject scopeChain);
@@ -961,6 +2057,84 @@ MOZ_MUST_USE bool ArrayPushDense(JSContext* cx, HandleArrayObject arr,
                                  HandleValue v, uint32_t* length);
 MOZ_MUST_USE bool ArrayShiftDense(JSContext* cx, HandleObject obj,
                                   MutableHandleValue rval);
+||||||| merged common ancestors
+JSObject* BindVar(JSContext* cx, HandleObject scopeChain);
+MOZ_MUST_USE bool
+DefVar(JSContext* cx, HandlePropertyName dn, unsigned attrs, HandleObject scopeChain);
+MOZ_MUST_USE bool
+DefLexical(JSContext* cx, HandlePropertyName dn, unsigned attrs, HandleObject scopeChain);
+MOZ_MUST_USE bool
+DefGlobalLexical(JSContext* cx, HandlePropertyName dn, unsigned attrs);
+MOZ_MUST_USE bool
+MutatePrototype(JSContext* cx, HandlePlainObject obj, HandleValue value);
+MOZ_MUST_USE bool
+InitProp(JSContext* cx, HandleObject obj, HandlePropertyName name, HandleValue value,
+         jsbytecode* pc);
+
+template<bool Equal>
+bool LooselyEqual(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+
+template<bool Equal>
+bool StrictlyEqual(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+
+bool LessThan(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+bool LessThanOrEqual(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+bool GreaterThan(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+bool GreaterThanOrEqual(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, bool* res);
+
+template<bool Equal>
+bool StringsEqual(JSContext* cx, HandleString left, HandleString right, bool* res);
+
+MOZ_MUST_USE bool StringSplitHelper(JSContext* cx, HandleString str, HandleString sep,
+                                    HandleObjectGroup group, uint32_t limit,
+                                    MutableHandleValue result);
+
+MOZ_MUST_USE bool ArrayPopDense(JSContext* cx, HandleObject obj, MutableHandleValue rval);
+MOZ_MUST_USE bool ArrayPushDense(JSContext* cx, HandleArrayObject arr, HandleValue v,
+                                 uint32_t* length);
+MOZ_MUST_USE bool ArrayShiftDense(JSContext* cx, HandleObject obj, MutableHandleValue rval);
+=======
+MOZ_MUST_USE bool MutatePrototype(JSContext* cx, HandlePlainObject obj,
+                                  HandleValue value);
+MOZ_MUST_USE bool InitProp(JSContext* cx, HandleObject obj,
+                           HandlePropertyName name, HandleValue value,
+                           jsbytecode* pc);
+
+enum class EqualityKind : bool { NotEqual, Equal };
+
+template <EqualityKind Kind>
+bool LooselyEqual(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+                  bool* res);
+
+template <EqualityKind Kind>
+bool StrictlyEqual(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, bool* res);
+
+bool LessThan(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+              bool* res);
+bool LessThanOrEqual(JSContext* cx, MutableHandleValue lhs,
+                     MutableHandleValue rhs, bool* res);
+bool GreaterThan(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+                 bool* res);
+bool GreaterThanOrEqual(JSContext* cx, MutableHandleValue lhs,
+                        MutableHandleValue rhs, bool* res);
+
+template <EqualityKind Kind>
+bool StringsEqual(JSContext* cx, HandleString lhs, HandleString rhs, bool* res);
+
+enum class ComparisonKind : bool { GreaterThanOrEqual, LessThan };
+
+template <ComparisonKind Kind>
+bool StringsCompare(JSContext* cx, HandleString lhs, HandleString rhs,
+                    bool* res);
+
+MOZ_MUST_USE bool ArrayPopDense(JSContext* cx, HandleObject obj,
+                                MutableHandleValue rval);
+MOZ_MUST_USE bool ArrayPushDense(JSContext* cx, HandleArrayObject arr,
+                                 HandleValue v, uint32_t* length);
+MOZ_MUST_USE bool ArrayShiftDense(JSContext* cx, HandleObject obj,
+                                  MutableHandleValue rval);
+>>>>>>> upstream-releases
 JSString* ArrayJoin(JSContext* cx, HandleObject array, HandleString sep);
 MOZ_MUST_USE bool SetArrayLength(JSContext* cx, HandleObject obj,
                                  HandleValue value, bool strict);
@@ -976,10 +2150,19 @@ MOZ_MUST_USE bool SetProperty(JSContext* cx, HandleObject obj,
 
 MOZ_MUST_USE bool InterruptCheck(JSContext* cx);
 
+<<<<<<< HEAD
 void* MallocWrapper(JS::Zone* zone, size_t nbytes);
 JSObject* NewCallObject(JSContext* cx, HandleShape shape,
                         HandleObjectGroup group);
 JSObject* NewSingletonCallObject(JSContext* cx, HandleShape shape);
+||||||| merged common ancestors
+void* MallocWrapper(JS::Zone* zone, size_t nbytes);
+JSObject* NewCallObject(JSContext* cx, HandleShape shape, HandleObjectGroup group);
+JSObject* NewSingletonCallObject(JSContext* cx, HandleShape shape);
+=======
+JSObject* NewCallObject(JSContext* cx, HandleShape shape,
+                        HandleObjectGroup group);
+>>>>>>> upstream-releases
 JSObject* NewStringObject(JSContext* cx, HandleString str);
 
 bool OperatorIn(JSContext* cx, HandleValue key, HandleObject obj, bool* out);
@@ -1019,6 +2202,7 @@ void FrameIsDebuggeeCheck(BaselineFrame* frame);
 
 JSObject* CreateGenerator(JSContext* cx, BaselineFrame* frame);
 
+<<<<<<< HEAD
 MOZ_MUST_USE bool NormalSuspend(JSContext* cx, HandleObject obj,
                                 BaselineFrame* frame, jsbytecode* pc,
                                 uint32_t stackDepth);
@@ -1082,23 +2266,179 @@ MOZ_MUST_USE bool PopVarEnv(JSContext* cx, BaselineFrame* frame);
 MOZ_MUST_USE bool InitBaselineFrameForOsr(BaselineFrame* frame,
                                           InterpreterFrame* interpFrame,
                                           uint32_t numStackValues);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+NormalSuspend(JSContext* cx, HandleObject obj, BaselineFrame* frame, jsbytecode* pc,
+              uint32_t stackDepth);
+MOZ_MUST_USE bool
+FinalSuspend(JSContext* cx, HandleObject obj, jsbytecode* pc);
+MOZ_MUST_USE bool
+InterpretResume(JSContext* cx, HandleObject obj, HandleValue val, HandlePropertyName kind,
+                MutableHandleValue rval);
+MOZ_MUST_USE bool
+DebugAfterYield(JSContext* cx, BaselineFrame* frame, jsbytecode* pc, bool* mustReturn);
+MOZ_MUST_USE bool
+GeneratorThrowOrReturn(JSContext* cx, BaselineFrame* frame, Handle<GeneratorObject*> genObj,
+                       HandleValue arg, uint32_t resumeKind);
+
+MOZ_MUST_USE bool
+GlobalNameConflictsCheckFromIon(JSContext* cx, HandleScript script);
+MOZ_MUST_USE bool
+CheckGlobalOrEvalDeclarationConflicts(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool
+InitFunctionEnvironmentObjects(JSContext* cx, BaselineFrame* frame);
+
+MOZ_MUST_USE bool
+NewArgumentsObject(JSContext* cx, BaselineFrame* frame, MutableHandleValue res);
+
+JSObject* CopyLexicalEnvironmentObject(JSContext* cx, HandleObject env, bool copySlots);
+
+JSObject* InitRestParameter(JSContext* cx, uint32_t length, Value* rest, HandleObject templateObj,
+                            HandleObject res);
+
+MOZ_MUST_USE bool
+HandleDebugTrap(JSContext* cx, BaselineFrame* frame, uint8_t* retAddr, bool* mustReturn);
+MOZ_MUST_USE bool
+OnDebuggerStatement(JSContext* cx, BaselineFrame* frame, jsbytecode* pc, bool* mustReturn);
+MOZ_MUST_USE bool
+GlobalHasLiveOnDebuggerStatement(JSContext* cx);
+
+MOZ_MUST_USE bool
+EnterWith(JSContext* cx, BaselineFrame* frame, HandleValue val, Handle<WithScope*> templ);
+MOZ_MUST_USE bool
+LeaveWith(JSContext* cx, BaselineFrame* frame);
+
+MOZ_MUST_USE bool
+PushLexicalEnv(JSContext* cx, BaselineFrame* frame, Handle<LexicalScope*> scope);
+MOZ_MUST_USE bool
+PopLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool
+DebugLeaveThenPopLexicalEnv(JSContext* cx, BaselineFrame* frame, jsbytecode* pc);
+MOZ_MUST_USE bool
+FreshenLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool
+DebugLeaveThenFreshenLexicalEnv(JSContext* cx, BaselineFrame* frame, jsbytecode* pc);
+MOZ_MUST_USE bool
+RecreateLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool
+DebugLeaveThenRecreateLexicalEnv(JSContext* cx, BaselineFrame* frame, jsbytecode* pc);
+MOZ_MUST_USE bool
+DebugLeaveLexicalEnv(JSContext* cx, BaselineFrame* frame, jsbytecode* pc);
+
+MOZ_MUST_USE bool
+PushVarEnv(JSContext* cx, BaselineFrame* frame, HandleScope scope);
+MOZ_MUST_USE bool
+PopVarEnv(JSContext* cx, BaselineFrame* frame);
+
+MOZ_MUST_USE bool
+InitBaselineFrameForOsr(BaselineFrame* frame, InterpreterFrame* interpFrame,
+                             uint32_t numStackValues);
+=======
+MOZ_MUST_USE bool NormalSuspend(JSContext* cx, HandleObject obj,
+                                BaselineFrame* frame, jsbytecode* pc);
+MOZ_MUST_USE bool FinalSuspend(JSContext* cx, HandleObject obj, jsbytecode* pc);
+MOZ_MUST_USE bool InterpretResume(JSContext* cx, HandleObject obj,
+                                  HandleValue val, HandlePropertyName kind,
+                                  MutableHandleValue rval);
+MOZ_MUST_USE bool DebugAfterYield(JSContext* cx, BaselineFrame* frame,
+                                  jsbytecode* pc, bool* mustReturn);
+MOZ_MUST_USE bool GeneratorThrowOrReturn(
+    JSContext* cx, BaselineFrame* frame,
+    Handle<AbstractGeneratorObject*> genObj, HandleValue arg,
+    uint32_t resumeKindArg);
+
+MOZ_MUST_USE bool GlobalNameConflictsCheckFromIon(JSContext* cx,
+                                                  HandleScript script);
+MOZ_MUST_USE bool InitFunctionEnvironmentObjects(JSContext* cx,
+                                                 BaselineFrame* frame);
+
+MOZ_MUST_USE bool NewArgumentsObject(JSContext* cx, BaselineFrame* frame,
+                                     MutableHandleValue res);
+
+JSObject* CopyLexicalEnvironmentObject(JSContext* cx, HandleObject env,
+                                       bool copySlots);
+
+JSObject* InitRestParameter(JSContext* cx, uint32_t length, Value* rest,
+                            HandleObject templateObj, HandleObject res);
+
+MOZ_MUST_USE bool HandleDebugTrap(JSContext* cx, BaselineFrame* frame,
+                                  uint8_t* retAddr, bool* mustReturn);
+MOZ_MUST_USE bool OnDebuggerStatement(JSContext* cx, BaselineFrame* frame,
+                                      jsbytecode* pc, bool* mustReturn);
+MOZ_MUST_USE bool GlobalHasLiveOnDebuggerStatement(JSContext* cx);
+
+MOZ_MUST_USE bool EnterWith(JSContext* cx, BaselineFrame* frame,
+                            HandleValue val, Handle<WithScope*> templ);
+MOZ_MUST_USE bool LeaveWith(JSContext* cx, BaselineFrame* frame);
+
+MOZ_MUST_USE bool PushLexicalEnv(JSContext* cx, BaselineFrame* frame,
+                                 Handle<LexicalScope*> scope);
+MOZ_MUST_USE bool PopLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool DebugLeaveThenPopLexicalEnv(JSContext* cx,
+                                              BaselineFrame* frame,
+                                              jsbytecode* pc);
+MOZ_MUST_USE bool FreshenLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool DebugLeaveThenFreshenLexicalEnv(JSContext* cx,
+                                                  BaselineFrame* frame,
+                                                  jsbytecode* pc);
+MOZ_MUST_USE bool RecreateLexicalEnv(JSContext* cx, BaselineFrame* frame);
+MOZ_MUST_USE bool DebugLeaveThenRecreateLexicalEnv(JSContext* cx,
+                                                   BaselineFrame* frame,
+                                                   jsbytecode* pc);
+MOZ_MUST_USE bool DebugLeaveLexicalEnv(JSContext* cx, BaselineFrame* frame,
+                                       jsbytecode* pc);
+
+MOZ_MUST_USE bool PushVarEnv(JSContext* cx, BaselineFrame* frame,
+                             HandleScope scope);
+MOZ_MUST_USE bool PopVarEnv(JSContext* cx, BaselineFrame* frame);
+
+MOZ_MUST_USE bool InitBaselineFrameForOsr(BaselineFrame* frame,
+                                          InterpreterFrame* interpFrame,
+                                          uint32_t numStackValues);
+>>>>>>> upstream-releases
 
 JSObject* CreateDerivedTypedObj(JSContext* cx, HandleObject descr,
                                 HandleObject owner, int32_t offset);
 
+<<<<<<< HEAD
 MOZ_MUST_USE bool Recompile(JSContext* cx);
 MOZ_MUST_USE bool ForcedRecompile(JSContext* cx);
+JSString* StringReplace(JSContext* cx, HandleString string,
+                        HandleString pattern, HandleString repl);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+Recompile(JSContext* cx);
+MOZ_MUST_USE bool
+ForcedRecompile(JSContext* cx);
+JSString* StringReplace(JSContext* cx, HandleString string, HandleString pattern,
+                        HandleString repl);
+=======
+MOZ_MUST_USE bool IonRecompile(JSContext* cx);
+MOZ_MUST_USE bool IonForcedRecompile(JSContext* cx);
+MOZ_MUST_USE bool IonForcedInvalidation(JSContext* cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+MOZ_MUST_USE bool SetDenseElement(JSContext* cx, HandleNativeObject obj,
+                                  int32_t index, HandleValue value,
+                                  bool strict);
+||||||| merged common ancestors
+MOZ_MUST_USE bool SetDenseElement(JSContext* cx, HandleNativeObject obj, int32_t index,
+                                  HandleValue value, bool strict);
+=======
 JSString* StringReplace(JSContext* cx, HandleString string,
                         HandleString pattern, HandleString repl);
 
 MOZ_MUST_USE bool SetDenseElement(JSContext* cx, HandleNativeObject obj,
                                   int32_t index, HandleValue value,
                                   bool strict);
+>>>>>>> upstream-releases
 
 void AssertValidObjectPtr(JSContext* cx, JSObject* obj);
 void AssertValidObjectOrNullPtr(JSContext* cx, JSObject* obj);
 void AssertValidStringPtr(JSContext* cx, JSString* str);
 void AssertValidSymbolPtr(JSContext* cx, JS::Symbol* sym);
+void AssertValidBigIntPtr(JSContext* cx, JS::BigInt* bi);
 void AssertValidValue(JSContext* cx, Value* v);
 
 void MarkValueFromJit(JSRuntime* rt, Value* vp);
@@ -1128,30 +2468,98 @@ inline void* JitMarkFunction(MIRType type) {
 bool ObjectIsCallable(JSObject* obj);
 bool ObjectIsConstructor(JSObject* obj);
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool ThrowRuntimeLexicalError(JSContext* cx, unsigned errorNumber);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+ThrowRuntimeLexicalError(JSContext* cx, unsigned errorNumber);
+=======
 MOZ_MUST_USE bool ThrowRuntimeLexicalError(JSContext* cx, unsigned errorNumber);
 
 MOZ_MUST_USE bool BaselineThrowUninitializedThis(JSContext* cx,
                                                  BaselineFrame* frame);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool BaselineThrowUninitializedThis(JSContext* cx,
+                                                 BaselineFrame* frame);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+BaselineThrowUninitializedThis(JSContext* cx, BaselineFrame* frame);
+=======
 MOZ_MUST_USE bool BaselineThrowInitializedThis(JSContext* cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool BaselineThrowInitializedThis(JSContext* cx);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+BaselineThrowInitializedThis(JSContext* cx);
+=======
 MOZ_MUST_USE bool ThrowBadDerivedReturn(JSContext* cx, HandleValue v);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool ThrowBadDerivedReturn(JSContext* cx, HandleValue v);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+ThrowBadDerivedReturn(JSContext* cx, HandleValue v);
+=======
 MOZ_MUST_USE bool ThrowObjectCoercible(JSContext* cx, HandleValue v);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool ThrowObjectCoercible(JSContext* cx, HandleValue v);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+ThrowObjectCoercible(JSContext* cx, HandleValue v);
+=======
 MOZ_MUST_USE bool BaselineGetFunctionThis(JSContext* cx, BaselineFrame* frame,
                                           MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool BaselineGetFunctionThis(JSContext* cx, BaselineFrame* frame,
+                                          MutableHandleValue res);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+BaselineGetFunctionThis(JSContext* cx, BaselineFrame* frame, MutableHandleValue res);
+=======
 MOZ_MUST_USE bool CallNativeGetter(JSContext* cx, HandleFunction callee,
                                    HandleObject obj, MutableHandleValue result);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+MOZ_MUST_USE bool CallNativeGetter(JSContext* cx, HandleFunction callee,
+                                   HandleObject obj, MutableHandleValue result);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+CallNativeGetter(JSContext* cx, HandleFunction callee, HandleObject obj,
+                 MutableHandleValue result);
+=======
+MOZ_MUST_USE bool CallNativeGetterByValue(JSContext* cx, HandleFunction callee,
+                                          HandleValue receiver,
+                                          MutableHandleValue result);
+>>>>>>> upstream-releases
 
 MOZ_MUST_USE bool CallNativeSetter(JSContext* cx, HandleFunction callee,
                                    HandleObject obj, HandleValue rhs);
 
 MOZ_MUST_USE bool EqualStringsHelperPure(JSString* str1, JSString* str2);
 
+<<<<<<< HEAD
 MOZ_MUST_USE bool CheckIsCallable(JSContext* cx, HandleValue v,
                                   CheckIsCallableKind kind);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+CheckIsCallable(JSContext* cx, HandleValue v, CheckIsCallableKind kind);
+=======
+MOZ_MUST_USE bool CheckIsCallable(JSContext* cx, HandleValue v,
+                                  CheckIsCallableKind kind);
+
+void HandleCodeCoverageAtPC(BaselineFrame* frame, jsbytecode* pc);
+void HandleCodeCoverageAtPrologue(BaselineFrame* frame);
+>>>>>>> upstream-releases
 
 template <bool HandleMissing>
 bool GetNativeDataPropertyPure(JSContext* cx, JSObject* obj, PropertyName* name,
@@ -1167,17 +2575,50 @@ bool HasNativeElementPure(JSContext* cx, NativeObject* obj, int32_t index,
                           Value* vp);
 
 template <bool NeedsTypeBarrier>
+<<<<<<< HEAD
 bool SetNativeDataPropertyPure(JSContext* cx, JSObject* obj, PropertyName* name,
                                Value* val);
 
 bool ObjectHasGetterSetterPure(JSContext* cx, JSObject* obj, Shape* propShape);
+||||||| merged common ancestors
+bool
+SetNativeDataPropertyPure(JSContext* cx, JSObject* obj, PropertyName* name, Value* val);
 
+bool
+ObjectHasGetterSetterPure(JSContext* cx, JSObject* obj, Shape* propShape);
+=======
+bool SetNativeDataPropertyPure(JSContext* cx, JSObject* obj, PropertyName* name,
+                               Value* val);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JSString* TypeOfObject(JSObject* obj, JSRuntime* rt);
+||||||| merged common ancestors
+JSString*
+TypeOfObject(JSObject* obj, JSRuntime* rt);
+=======
+bool ObjectHasGetterSetterPure(JSContext* cx, JSObject* obj, Shape* propShape);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetPrototypeOf(JSContext* cx, HandleObject target,
                     MutableHandleValue rval);
+||||||| merged common ancestors
+bool
+GetPrototypeOf(JSContext* cx, HandleObject target, MutableHandleValue rval);
+=======
+JSString* TypeOfObject(JSObject* obj, JSRuntime* rt);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void CloseIteratorFromIon(JSContext* cx, JSObject* obj);
+||||||| merged common ancestors
+void
+CloseIteratorFromIon(JSContext* cx, JSObject* obj);
+=======
+bool GetPrototypeOf(JSContext* cx, HandleObject target,
+                    MutableHandleValue rval);
+>>>>>>> upstream-releases
 
 bool DoConcatStringObject(JSContext* cx, HandleValue lhs, HandleValue rhs,
                           MutableHandleValue res);
@@ -1186,32 +2627,46 @@ bool DoConcatStringObject(JSContext* cx, HandleValue lhs, HandleValue rhs,
 // If the await operation can be skipped and the resolution value for `val` can
 // be acquired, stored the resolved value to `resolved`.  Otherwise, stores
 // the JS_CANNOT_SKIP_AWAIT magic value to `resolved`.
+<<<<<<< HEAD
 MOZ_MUST_USE bool TrySkipAwait(JSContext* cx, HandleValue val,
                                MutableHandleValue resolved);
 
 // VMFunctions shared by JITs
 extern const VMFunction SetArrayLengthInfo;
 extern const VMFunction SetObjectElementInfo;
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+TrySkipAwait(JSContext* cx, HandleValue val, MutableHandleValue resolved);
 
-extern const VMFunction StringsEqualInfo;
-extern const VMFunction StringsNotEqualInfo;
-extern const VMFunction ConcatStringsInfo;
-extern const VMFunction StringSplitHelperInfo;
+// VMFunctions shared by JITs
+extern const VMFunction SetArrayLengthInfo;
+extern const VMFunction SetObjectElementInfo;
+=======
+MOZ_MUST_USE bool TrySkipAwait(JSContext* cx, HandleValue val,
+                               MutableHandleValue resolved);
+>>>>>>> upstream-releases
 
-extern const VMFunction ProxyGetPropertyInfo;
-extern const VMFunction ProxyGetPropertyByValueInfo;
-extern const VMFunction ProxySetPropertyInfo;
-extern const VMFunction ProxySetPropertyByValueInfo;
-extern const VMFunction ProxyHasInfo;
-extern const VMFunction ProxyHasOwnInfo;
+bool IsPossiblyWrappedTypedArray(JSContext* cx, JSObject* obj, bool* result);
 
-extern const VMFunction NativeGetElementInfo;
+bool DoToNumber(JSContext* cx, HandleValue arg, MutableHandleValue ret);
+bool DoToNumeric(JSContext* cx, HandleValue arg, MutableHandleValue ret);
 
+enum class TailCallVMFunctionId;
+enum class VMFunctionId;
+
+<<<<<<< HEAD
 extern const VMFunction AddOrUpdateSparseElementHelperInfo;
 extern const VMFunction GetSparseElementHelperInfo;
 
 // TailCall VMFunctions
 extern const VMFunction DoConcatStringObjectInfo;
+||||||| merged common ancestors
+// TailCall VMFunctions
+extern const VMFunction DoConcatStringObjectInfo;
+=======
+extern const VMFunctionData& GetVMFunction(VMFunctionId id);
+extern const VMFunctionData& GetVMFunction(TailCallVMFunctionId id);
+>>>>>>> upstream-releases
 
 }  // namespace jit
 }  // namespace js

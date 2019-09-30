@@ -102,6 +102,7 @@ bool PropOpEmitter::emitGet(JSAtom* prop) {
   return true;
 }
 
+<<<<<<< HEAD
 bool PropOpEmitter::prepareForRhs() {
   MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
   MOZ_ASSERT_IF(isSimpleAssignment(), state_ == State::Obj);
@@ -114,6 +115,35 @@ bool PropOpEmitter::prepareForRhs() {
         //          [stack] THIS SUPERBASE
         return false;
       }
+||||||| merged common ancestors
+bool
+PropOpEmitter::prepareForRhs()
+{
+    MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
+    MOZ_ASSERT_IF(isSimpleAssignment(), state_ == State::Obj);
+    MOZ_ASSERT_IF(isCompoundAssignment(), state_ == State::Get);
+
+    if (isSimpleAssignment()) {
+        // For CompoundAssignment, SUPERBASE is already emitted by emitGet.
+        if (isSuper()) {
+            if (!bce_->emit1(JSOP_SUPERBASE)) {       // THIS SUPERBASE
+                return false;
+            }
+        }
+=======
+bool PropOpEmitter::prepareForRhs() {
+  MOZ_ASSERT(isSimpleAssignment() || isPropInit() || isCompoundAssignment());
+  MOZ_ASSERT_IF(isSimpleAssignment() || isPropInit(), state_ == State::Obj);
+  MOZ_ASSERT_IF(isCompoundAssignment(), state_ == State::Get);
+
+  if (isSimpleAssignment() || isPropInit()) {
+    // For CompoundAssignment, SUPERBASE is already emitted by emitGet.
+    if (isSuper()) {
+      if (!bce_->emitSuperBase()) {
+        //          [stack] THIS SUPERBASE
+        return false;
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -123,9 +153,21 @@ bool PropOpEmitter::prepareForRhs() {
   return true;
 }
 
+<<<<<<< HEAD
 bool PropOpEmitter::skipObjAndRhs() {
   MOZ_ASSERT(state_ == State::Start);
   MOZ_ASSERT(isSimpleAssignment());
+||||||| merged common ancestors
+bool
+PropOpEmitter::skipObjAndRhs()
+{
+    MOZ_ASSERT(state_ == State::Start);
+    MOZ_ASSERT(isSimpleAssignment());
+=======
+bool PropOpEmitter::skipObjAndRhs() {
+  MOZ_ASSERT(state_ == State::Start);
+  MOZ_ASSERT(isSimpleAssignment() || isPropInit());
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::Rhs;
@@ -173,10 +215,23 @@ bool PropOpEmitter::emitDelete(JSAtom* prop) {
   return true;
 }
 
+<<<<<<< HEAD
 bool PropOpEmitter::emitAssignment(JSAtom* prop) {
   MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
   MOZ_ASSERT(state_ == State::Rhs);
+||||||| merged common ancestors
+bool
+PropOpEmitter::emitAssignment(JSAtom* prop)
+{
+    MOZ_ASSERT(isSimpleAssignment() || isCompoundAssignment());
+    MOZ_ASSERT(state_ == State::Rhs);
+=======
+bool PropOpEmitter::emitAssignment(JSAtom* prop) {
+  MOZ_ASSERT(isSimpleAssignment() || isPropInit() || isCompoundAssignment());
+  MOZ_ASSERT(state_ == State::Rhs);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (isSimpleAssignment()) {
     if (!prepareAtomIndex(prop)) {
       return false;
@@ -191,6 +246,38 @@ bool PropOpEmitter::emitAssignment(JSAtom* prop) {
     //              [stack] VAL
     return false;
   }
+||||||| merged common ancestors
+    if (isSimpleAssignment()) {
+        if (!prepareAtomIndex(prop)) {
+            return false;
+        }
+    }
+
+    JSOp setOp = isSuper()
+                 ? bce_->sc->strict() ? JSOP_STRICTSETPROP_SUPER : JSOP_SETPROP_SUPER
+                 : bce_->sc->strict() ? JSOP_STRICTSETPROP : JSOP_SETPROP;
+    if (!bce_->emitAtomOp(propAtomIndex_, setOp)) {   // VAL
+        return false;
+    }
+=======
+  if (isSimpleAssignment() || isPropInit()) {
+    if (!prepareAtomIndex(prop)) {
+      return false;
+    }
+  }
+
+  MOZ_ASSERT_IF(isPropInit(), !isSuper());
+  JSOp setOp =
+      isPropInit()
+          ? JSOP_INITPROP
+          : isSuper() ? bce_->sc->strict() ? JSOP_STRICTSETPROP_SUPER
+                                           : JSOP_SETPROP_SUPER
+                      : bce_->sc->strict() ? JSOP_STRICTSETPROP : JSOP_SETPROP;
+  if (!bce_->emitAtomOp(propAtomIndex_, setOp)) {
+    //              [stack] VAL
+    return false;
+  }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::Assignment;
@@ -208,8 +295,15 @@ bool PropOpEmitter::emitIncDec(JSAtom* prop) {
 
   MOZ_ASSERT(state_ == State::Get);
 
+<<<<<<< HEAD
   JSOp binOp = isInc() ? JSOP_ADD : JSOP_SUB;
+||||||| merged common ancestors
+    JSOp binOp = isInc() ? JSOP_ADD : JSOP_SUB;
+=======
+  JSOp incOp = isInc() ? JSOP_INC : JSOP_DEC;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!bce_->emit1(JSOP_POS)) {
     //              [stack] ... N
     return false;
@@ -218,7 +312,26 @@ bool PropOpEmitter::emitIncDec(JSAtom* prop) {
     if (!bce_->emit1(JSOP_DUP)) {
       //            [stack] .. N N
       return false;
+||||||| merged common ancestors
+    if (!bce_->emit1(JSOP_POS)) {                     // ... N
+        return false;
     }
+    if (isPostIncDec()) {
+        if (!bce_->emit1(JSOP_DUP)) {                 // ... N N
+            return false;
+        }
+=======
+  if (!bce_->emit1(JSOP_TONUMERIC)) {
+    //              [stack] ... N
+    return false;
+  }
+  if (isPostIncDec()) {
+    if (!bce_->emit1(JSOP_DUP)) {
+      //            [stack] .. N N
+      return false;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
   }
   if (!bce_->emit1(JSOP_ONE)) {
     //              [stack] ... N? N 1
@@ -233,6 +346,20 @@ bool PropOpEmitter::emitIncDec(JSAtom* prop) {
       //            [stack] THIS OBJ N N+1
       if (!bce_->emit2(JSOP_PICK, 3)) {
         //          [stack] OBJ N N+1 THIS
+||||||| merged common ancestors
+    if (!bce_->emit1(JSOP_ONE)) {                     // ... N? N 1
+=======
+  }
+  if (!bce_->emit1(incOp)) {
+    //              [stack] ... N? N+1
+    return false;
+  }
+  if (isPostIncDec()) {
+    if (isSuper()) {
+      //            [stack] THIS OBJ N N+1
+      if (!bce_->emit2(JSOP_PICK, 3)) {
+        //          [stack] OBJ N N+1 THIS
+>>>>>>> upstream-releases
         return false;
       }
       if (!bce_->emit1(JSOP_SWAP)) {

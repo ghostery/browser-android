@@ -11,7 +11,7 @@
 #include "mozilla/Attributes.h"
 #include "nsISystemProxySettings.h"
 #include "nsIServiceManager.h"
-#include "mozilla/ModuleUtils.h"
+#include "mozilla/Components.h"
 #include "nsPrintfCString.h"
 #include "nsNetCID.h"
 #include "nsISupportsPrimitives.h"
@@ -26,8 +26,15 @@ class nsWindowsSystemProxySettings final : public nsISystemProxySettings {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSISYSTEMPROXYSETTINGS
 
+<<<<<<< HEAD
   nsWindowsSystemProxySettings(){};
   nsresult Init();
+||||||| merged common ancestors
+    nsWindowsSystemProxySettings() {};
+    nsresult Init();
+=======
+  nsWindowsSystemProxySettings(){};
+>>>>>>> upstream-releases
 
  private:
   ~nsWindowsSystemProxySettings(){};
@@ -47,8 +54,19 @@ nsWindowsSystemProxySettings::GetMainThreadOnly(bool* aMainThreadOnly) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsWindowsSystemProxySettings::Init() { return NS_OK; }
 
+||||||| merged common ancestors
+
+nsresult
+nsWindowsSystemProxySettings::Init()
+{
+    return NS_OK;
+}
+
+=======
+>>>>>>> upstream-releases
 static void SetProxyResult(const char* aType, const nsACString& aHostPort,
                            nsACString& aResult) {
   aResult.AssignASCII(aType);
@@ -62,6 +80,7 @@ static void SetProxyResultDirect(nsACString& aResult) {
 }
 
 static nsresult ReadInternetOption(uint32_t aOption, uint32_t& aFlags,
+<<<<<<< HEAD
                                    nsAString& aValue) {
   // Bug 1366133: InternetGetConnectedStateExW() may cause hangs
   MOZ_ASSERT(!NS_IsMainThread());
@@ -97,6 +116,81 @@ static nsresult ReadInternetOption(uint32_t aOption, uint32_t& aFlags,
   GlobalFree(options[1].Value.pszValue);
 
   return NS_OK;
+||||||| merged common ancestors
+                                   nsAString& aValue)
+{
+    // Bug 1366133: InternetGetConnectedStateExW() may cause hangs
+    MOZ_ASSERT(!NS_IsMainThread());
+
+    DWORD connFlags = 0;
+    WCHAR connName[RAS_MaxEntryName + 1];
+    MOZ_SEH_TRY {
+        InternetGetConnectedStateExW(&connFlags, connName,
+                                     mozilla::ArrayLength(connName), 0);
+    } MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
+        return NS_ERROR_FAILURE;
+    }
+
+    INTERNET_PER_CONN_OPTIONW options[2];
+    options[0].dwOption = INTERNET_PER_CONN_FLAGS_UI;
+    options[1].dwOption = aOption;
+
+    INTERNET_PER_CONN_OPTION_LISTW list;
+    list.dwSize = sizeof(INTERNET_PER_CONN_OPTION_LISTW);
+    list.pszConnection = connFlags & INTERNET_CONNECTION_MODEM ?
+                         connName : nullptr;
+    list.dwOptionCount = mozilla::ArrayLength(options);
+    list.dwOptionError = 0;
+    list.pOptions = options;
+
+    unsigned long size = sizeof(INTERNET_PER_CONN_OPTION_LISTW);
+    if (!InternetQueryOptionW(nullptr, INTERNET_OPTION_PER_CONNECTION_OPTION,
+                              &list, &size)) {
+        return NS_ERROR_FAILURE;
+    }
+
+    aFlags = options[0].Value.dwValue;
+    aValue.Assign(options[1].Value.pszValue);
+    GlobalFree(options[1].Value.pszValue);
+
+    return NS_OK;
+=======
+                                   nsAString& aValue) {
+  // Bug 1366133: InternetGetConnectedStateExW() may cause hangs
+  MOZ_ASSERT(!NS_IsMainThread());
+
+  DWORD connFlags = 0;
+  WCHAR connName[RAS_MaxEntryName + 1];
+  MOZ_SEH_TRY {
+    InternetGetConnectedStateExW(&connFlags, connName,
+                                 mozilla::ArrayLength(connName), 0);
+  }
+  MOZ_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) { return NS_ERROR_FAILURE; }
+
+  INTERNET_PER_CONN_OPTIONW options[2];
+  options[0].dwOption = INTERNET_PER_CONN_FLAGS_UI;
+  options[1].dwOption = aOption;
+
+  INTERNET_PER_CONN_OPTION_LISTW list;
+  list.dwSize = sizeof(INTERNET_PER_CONN_OPTION_LISTW);
+  list.pszConnection =
+      connFlags & INTERNET_CONNECTION_MODEM ? connName : nullptr;
+  list.dwOptionCount = mozilla::ArrayLength(options);
+  list.dwOptionError = 0;
+  list.pOptions = options;
+
+  unsigned long size = sizeof(INTERNET_PER_CONN_OPTION_LISTW);
+  if (!InternetQueryOptionW(nullptr, INTERNET_OPTION_PER_CONNECTION_OPTION,
+                            &list, &size)) {
+    return NS_ERROR_FAILURE;
+  }
+
+  aFlags = options[0].Value.dwValue;
+  aValue.Assign(options[1].Value.pszValue);
+  GlobalFree(options[1].Value.pszValue);
+
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 bool nsWindowsSystemProxySettings::MatchOverride(const nsACString& aHost) {
@@ -247,6 +341,7 @@ nsresult nsWindowsSystemProxySettings::GetProxyForURI(const nsACString& aSpec,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* 4e22d3ea-aaa2-436e-ada4-9247de57d367 */
 #define NS_WINDOWSSYSTEMPROXYSERVICE_CID             \
   {                                                  \
@@ -271,3 +366,34 @@ static const mozilla::Module kSysProxyModule = {
     mozilla::Module::kVersion, kSysProxyCIDs, kSysProxyContracts};
 
 NSMODULE_DEFN(nsWindowsProxyModule) = &kSysProxyModule;
+||||||| merged common ancestors
+#define NS_WINDOWSSYSTEMPROXYSERVICE_CID  /* 4e22d3ea-aaa2-436e-ada4-9247de57d367 */\
+    { 0x4e22d3ea, 0xaaa2, 0x436e, \
+        {0xad, 0xa4, 0x92, 0x47, 0xde, 0x57, 0xd3, 0x67 } }
+
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsWindowsSystemProxySettings, Init)
+NS_DEFINE_NAMED_CID(NS_WINDOWSSYSTEMPROXYSERVICE_CID);
+
+static const mozilla::Module::CIDEntry kSysProxyCIDs[] = {
+    { &kNS_WINDOWSSYSTEMPROXYSERVICE_CID, false, nullptr, nsWindowsSystemProxySettingsConstructor },
+    { nullptr }
+};
+
+static const mozilla::Module::ContractIDEntry kSysProxyContracts[] = {
+    { NS_SYSTEMPROXYSETTINGS_CONTRACTID, &kNS_WINDOWSSYSTEMPROXYSERVICE_CID },
+    { nullptr }
+};
+
+static const mozilla::Module kSysProxyModule = {
+    mozilla::Module::kVersion,
+    kSysProxyCIDs,
+    kSysProxyContracts
+};
+
+NSMODULE_DEFN(nsWindowsProxyModule) = &kSysProxyModule;
+=======
+NS_IMPL_COMPONENT_FACTORY(nsWindowsSystemProxySettings) {
+  return mozilla::MakeAndAddRef<nsWindowsSystemProxySettings>()
+      .downcast<nsISupports>();
+}
+>>>>>>> upstream-releases

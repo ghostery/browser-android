@@ -10,11 +10,21 @@ add_task(async function() {
 
   await promiseStartupManager();
 
+<<<<<<< HEAD
   await promiseInstallWebExtension({
     manifest: {
       applications: {gecko: {id: ID}},
     },
   });
+||||||| merged common ancestors
+  await promiseInstallXPI(ADDON);
+=======
+  await promiseInstallWebExtension({
+    manifest: {
+      applications: { gecko: { id: ID } },
+    },
+  });
+>>>>>>> upstream-releases
 
   let addon = await AddonManager.getAddonByID(ID);
   Assert.equal(addon.isDebuggable, true);

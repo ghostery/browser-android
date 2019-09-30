@@ -22,7 +22,7 @@ class X11TextureSource : public TextureSource {
   // Useful for determining whether to rebind a GLXPixmap to a texture.
   virtual void Updated() = 0;
 
-  virtual const char* Name() const override { return "X11TextureSource"; }
+  const char* Name() const override { return "X11TextureSource"; }
 };
 
 // TextureHost for Xlib-backed TextureSources.
@@ -30,30 +30,55 @@ class X11TextureHost : public TextureHost {
  public:
   X11TextureHost(TextureFlags aFlags, const SurfaceDescriptorX11& aDescriptor);
 
+<<<<<<< HEAD
   virtual void SetTextureSourceProvider(
       TextureSourceProvider* aProvider) override;
+||||||| merged common ancestors
+  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+=======
+  void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+>>>>>>> upstream-releases
 
-  virtual bool Lock() override;
+  bool Lock() override;
 
-  virtual gfx::SurfaceFormat GetFormat() const override;
+  gfx::SurfaceFormat GetFormat() const override;
 
-  virtual gfx::IntSize GetSize() const override;
+  gfx::IntSize GetSize() const override;
 
+<<<<<<< HEAD
   virtual bool BindTextureSource(
       CompositableTextureSourceRef& aTexture) override {
+||||||| merged common ancestors
+  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override
+  {
+=======
+  bool BindTextureSource(CompositableTextureSourceRef& aTexture) override {
+>>>>>>> upstream-releases
     aTexture = mTextureSource;
     return !!aTexture;
   }
 
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
+  already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
 
 #ifdef MOZ_LAYERS_HAVE_LOG
-  virtual const char* Name() override { return "X11TextureHost"; }
+  const char* Name() override { return "X11TextureHost"; }
 #endif
 
+<<<<<<< HEAD
  protected:
   virtual void UpdatedInternal(const nsIntRegion*) override {
     if (mTextureSource) mTextureSource->Updated();
+||||||| merged common ancestors
+protected:
+  virtual void UpdatedInternal(const nsIntRegion*) override
+  {
+    if (mTextureSource)
+      mTextureSource->Updated();
+=======
+ protected:
+  void UpdatedInternal(const nsIntRegion*) override {
+    if (mTextureSource) mTextureSource->Updated();
+>>>>>>> upstream-releases
   }
 
   RefPtr<Compositor> mCompositor;

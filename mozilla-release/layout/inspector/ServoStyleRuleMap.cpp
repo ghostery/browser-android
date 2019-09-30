@@ -10,13 +10,20 @@
 #include "mozilla/dom/CSSImportRule.h"
 #include "mozilla/dom/CSSRuleBinding.h"
 #include "mozilla/dom/CSSStyleRule.h"
+<<<<<<< HEAD
 #include "mozilla/dom/ShadowRoot.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/dom/Document.h"
+#include "mozilla/dom/ShadowRoot.h"
+>>>>>>> upstream-releases
 #include "mozilla/IntegerRange.h"
 #include "mozilla/ServoStyleSet.h"
 #include "mozilla/StyleSheetInlines.h"
-#include "nsDocument.h"
 #include "nsStyleSheetService.h"
 #include "nsXBLPrototypeResources.h"
+
+using namespace mozilla::dom;
 
 using namespace mozilla::dom;
 
@@ -26,6 +33,7 @@ void ServoStyleRuleMap::EnsureTable(ServoStyleSet& aStyleSet) {
   if (!IsEmpty()) {
     return;
   }
+<<<<<<< HEAD
   aStyleSet.EnumerateStyleSheetArrays(
       [this](const nsTArray<RefPtr<StyleSheet>>& aArray) {
         for (auto& sheet : aArray) {
@@ -41,6 +49,28 @@ void ServoStyleRuleMap::EnsureTable(nsXBLPrototypeResources& aXBLResources) {
   for (auto index : IntegerRange(aXBLResources.SheetCount())) {
     FillTableFromStyleSheet(*aXBLResources.StyleSheetAt(index));
   }
+||||||| merged common ancestors
+  aStyleSet.EnumerateStyleSheetArrays(
+    [this](const nsTArray<RefPtr<StyleSheet>>& aArray) {
+      for (auto& sheet : aArray) {
+        FillTableFromStyleSheet(*sheet);
+      }
+    });
+}
+
+void
+ServoStyleRuleMap::EnsureTable(nsXBLPrototypeResources& aXBLResources)
+{
+  if (!IsEmpty() || !aXBLResources.GetServoStyles()) {
+    return;
+  }
+  for (auto index : IntegerRange(aXBLResources.SheetCount())) {
+    FillTableFromStyleSheet(*aXBLResources.StyleSheetAt(index));
+  }
+=======
+  aStyleSet.EnumerateStyleSheets(
+      [&](StyleSheet& aSheet) { FillTableFromStyleSheet(aSheet); });
+>>>>>>> upstream-releases
 }
 
 void ServoStyleRuleMap::EnsureTable(ShadowRoot& aShadowRoot) {

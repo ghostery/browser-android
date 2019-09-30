@@ -105,6 +105,7 @@ void TextTrackList::RemoveTextTrack(TextTrack* aTrack) {
   }
 }
 
+<<<<<<< HEAD
 void TextTrackList::DidSeek() {
   for (uint32_t i = 0; i < mTextTracks.Length(); i++) {
     mTextTracks[i]->SetDirty();
@@ -113,17 +114,41 @@ void TextTrackList::DidSeek() {
 
 class TrackEventRunner : public Runnable {
  public:
+||||||| merged common ancestors
+void
+TextTrackList::DidSeek()
+{
+  for (uint32_t i = 0; i < mTextTracks.Length(); i++) {
+    mTextTracks[i]->SetDirty();
+  }
+}
+
+class TrackEventRunner : public Runnable
+{
+public:
+=======
+class TrackEventRunner : public Runnable {
+ public:
+>>>>>>> upstream-releases
   TrackEventRunner(TextTrackList* aList, Event* aEvent)
       : Runnable("dom::TrackEventRunner"), mList(aList), mEvent(aEvent) {}
 
   NS_IMETHOD Run() override { return mList->DispatchTrackEvent(mEvent); }
 
   RefPtr<TextTrackList> mList;
+<<<<<<< HEAD
 
  private:
   RefPtr<Event> mEvent;
 };
+||||||| merged common ancestors
+private:
+  RefPtr<Event> mEvent;
+};
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 class ChangeEventRunner final : public TrackEventRunner {
  public:
   ChangeEventRunner(TextTrackList* aList, Event* aEvent)
@@ -133,6 +158,23 @@ class ChangeEventRunner final : public TrackEventRunner {
     mList->mPendingTextTrackChange = false;
     return TrackEventRunner::Run();
   }
+||||||| merged common ancestors
+class ChangeEventRunner final : public TrackEventRunner
+{
+public:
+  ChangeEventRunner(TextTrackList* aList, Event* aEvent)
+    : TrackEventRunner(aList, aEvent)
+  {}
+
+  NS_IMETHOD Run() override
+  {
+    mList->mPendingTextTrackChange = false;
+    return TrackEventRunner::Run();
+  }
+=======
+ private:
+  RefPtr<Event> mEvent;
+>>>>>>> upstream-releases
 };
 
 nsresult TextTrackList::DispatchTrackEvent(Event* aEvent) {
@@ -141,22 +183,30 @@ nsresult TextTrackList::DispatchTrackEvent(Event* aEvent) {
 
 void TextTrackList::CreateAndDispatchChangeEvent() {
   MOZ_ASSERT(NS_IsMainThread());
-  if (!mPendingTextTrackChange) {
-    nsPIDOMWindowInner* win = GetOwner();
-    if (!win) {
-      return;
-    }
+  nsPIDOMWindowInner* win = GetOwner();
+  if (!win) {
+    return;
+  }
 
-    mPendingTextTrackChange = true;
-    RefPtr<Event> event = NS_NewDOMEvent(this, nullptr, nullptr);
+  RefPtr<Event> event = NS_NewDOMEvent(this, nullptr, nullptr);
 
-    event->InitEvent(NS_LITERAL_STRING("change"), false, false);
-    event->SetTrusted(true);
+  event->InitEvent(NS_LITERAL_STRING("change"), false, false);
+  event->SetTrusted(true);
 
+<<<<<<< HEAD
     nsCOMPtr<nsIRunnable> eventRunner = new ChangeEventRunner(this, event);
     nsGlobalWindowInner::Cast(win)->Dispatch(TaskCategory::Other,
                                              eventRunner.forget());
   }
+||||||| merged common ancestors
+    nsCOMPtr<nsIRunnable> eventRunner = new ChangeEventRunner(this, event);
+    nsGlobalWindowInner::Cast(win)->Dispatch(TaskCategory::Other, eventRunner.forget());
+  }
+=======
+  nsCOMPtr<nsIRunnable> eventRunner = new TrackEventRunner(this, event);
+  nsGlobalWindowInner::Cast(win)->Dispatch(TaskCategory::Other,
+                                           eventRunner.forget());
+>>>>>>> upstream-releases
 }
 
 void TextTrackList::CreateAndDispatchTrackEventRunner(

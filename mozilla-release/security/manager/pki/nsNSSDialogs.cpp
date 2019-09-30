@@ -17,7 +17,6 @@
 #include "nsIDialogParamBlock.h"
 #include "nsIInterfaceRequestor.h"
 #include "nsIInterfaceRequestorUtils.h"
-#include "nsIKeygenThread.h"
 #include "nsIPK11Token.h"
 #include "nsIPromptService.h"
 #include "nsIProtectedAuthThread.h"
@@ -35,9 +34,20 @@ nsNSSDialogs::nsNSSDialogs() {}
 
 nsNSSDialogs::~nsNSSDialogs() {}
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsNSSDialogs, nsITokenPasswordDialogs, nsICertificateDialogs,
                   nsIClientAuthDialogs, nsITokenDialogs,
                   nsIGeneratingKeypairInfoDialogs)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsNSSDialogs, nsITokenPasswordDialogs,
+                  nsICertificateDialogs,
+                  nsIClientAuthDialogs,
+                  nsITokenDialogs,
+                  nsIGeneratingKeypairInfoDialogs)
+=======
+NS_IMPL_ISUPPORTS(nsNSSDialogs, nsITokenPasswordDialogs, nsICertificateDialogs,
+                  nsIClientAuthDialogs, nsITokenDialogs)
+>>>>>>> upstream-releases
 
 nsresult nsNSSDialogs::Init() {
   nsresult rv;
@@ -326,13 +336,29 @@ nsNSSDialogs::GetPKCS12FilePassword(nsIInterfaceRequestor* ctx,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSDialogs::DisplayGeneratingKeypairInfo(nsIInterfaceRequestor* aCtx,
                                            nsIKeygenThread* runnable) {
   nsresult rv;
+||||||| merged common ancestors
+nsNSSDialogs::DisplayGeneratingKeypairInfo(nsIInterfaceRequestor *aCtx, nsIKeygenThread *runnable)
+{
+  nsresult rv;
+=======
+nsNSSDialogs::DisplayProtectedAuth(nsIInterfaceRequestor* aCtx,
+                                   nsIProtectedAuthThread* runnable) {
+  // We cannot use nsNSSDialogHelper here. We cannot allow close widget
+  // in the window because protected authentication is interruptible
+  // from user interface and changing nsNSSDialogHelper's static variable
+  // would not be thread-safe
+
+  nsresult rv = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
   // Get the parent window for the dialog
   nsCOMPtr<mozIDOMWindowProxy> parent = do_GetInterface(aCtx);
 
+<<<<<<< HEAD
   rv = nsNSSDialogHelper::openDialog(
       parent, "chrome://pippki/content/createCertInfo.xul", runnable);
   return rv;
@@ -365,21 +391,54 @@ nsNSSDialogs::ChooseToken(nsIInterfaceRequestor* /*aCtx*/,
 
   rv = nsNSSDialogHelper::openDialog(
       nullptr, "chrome://pippki/content/choosetoken.xul", block);
-  if (NS_FAILED(rv)) return rv;
-
-  int32_t status;
-
-  rv = block->GetInt(0, &status);
-  if (NS_FAILED(rv)) return rv;
-
-  *aCanceled = (status == 0);
-  if (!*aCanceled) {
-    // retrieve the nickname
-    rv = block->GetString(0, getter_Copies(aTokenChosen));
-  }
+||||||| merged common ancestors
+  rv = nsNSSDialogHelper::openDialog(parent,
+                                     "chrome://pippki/content/createCertInfo.xul",
+                                     runnable);
   return rv;
 }
 
+NS_IMETHODIMP
+nsNSSDialogs::ChooseToken(nsIInterfaceRequestor* /*aCtx*/,
+                          const char16_t** aTokenList,
+                          uint32_t aCount,
+                  /*out*/ nsAString& aTokenChosen,
+                  /*out*/ bool* aCanceled)
+{
+  NS_ENSURE_ARG(aTokenList);
+  NS_ENSURE_ARG(aCanceled);
+
+  *aCanceled = false;
+
+  nsCOMPtr<nsIDialogParamBlock> block =
+           do_CreateInstance(NS_DIALOGPARAMBLOCK_CONTRACTID);
+  if (!block) return NS_ERROR_FAILURE;
+
+  block->SetNumberStrings(aCount);
+
+  nsresult rv;
+  for (uint32_t i = 0; i < aCount; i++) {
+    rv = block->SetString(i, aTokenList[i]);
+    if (NS_FAILED(rv)) return rv;
+  }
+
+  rv = block->SetInt(0, aCount);
+  if (NS_FAILED(rv)) return rv;
+
+  rv = nsNSSDialogHelper::openDialog(nullptr,
+                                "chrome://pippki/content/choosetoken.xul",
+                                block);
+=======
+  nsCOMPtr<nsIWindowWatcher> windowWatcher =
+      do_GetService("@mozilla.org/embedcomp/window-watcher;1", &rv);
+>>>>>>> upstream-releases
+  if (NS_FAILED(rv)) return rv;
+
+  if (!parent) {
+    windowWatcher->GetActiveWindow(getter_AddRefs(parent));
+  }
+
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsNSSDialogs::DisplayProtectedAuth(nsIInterfaceRequestor* aCtx,
                                    nsIProtectedAuthThread* runnable) {
@@ -392,7 +451,28 @@ nsNSSDialogs::DisplayProtectedAuth(nsIInterfaceRequestor* aCtx,
 
   // Get the parent window for the dialog
   nsCOMPtr<mozIDOMWindowProxy> parent = do_GetInterface(aCtx);
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsNSSDialogs::DisplayProtectedAuth(nsIInterfaceRequestor *aCtx, nsIProtectedAuthThread *runnable)
+{
+    // We cannot use nsNSSDialogHelper here. We cannot allow close widget
+    // in the window because protected authentication is interruptible
+    // from user interface and changing nsNSSDialogHelper's static variable
+    // would not be thread-safe
 
+    nsresult rv = NS_ERROR_FAILURE;
+
+    // Get the parent window for the dialog
+    nsCOMPtr<mozIDOMWindowProxy> parent = do_GetInterface(aCtx);
+=======
+  nsCOMPtr<mozIDOMWindowProxy> newWindow;
+  rv = windowWatcher->OpenWindow(
+      parent, "chrome://pippki/content/protectedAuth.xul", "_blank",
+      "centerscreen,chrome,modal,titlebar,close=no", runnable,
+      getter_AddRefs(newWindow));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   nsCOMPtr<nsIWindowWatcher> windowWatcher =
       do_GetService("@mozilla.org/embedcomp/window-watcher;1", &rv);
   if (NS_FAILED(rv)) return rv;
@@ -408,4 +488,26 @@ nsNSSDialogs::DisplayProtectedAuth(nsIInterfaceRequestor* aCtx,
       getter_AddRefs(newWindow));
 
   return rv;
+||||||| merged common ancestors
+    nsCOMPtr<nsIWindowWatcher> windowWatcher =
+        do_GetService("@mozilla.org/embedcomp/window-watcher;1", &rv);
+    if (NS_FAILED(rv))
+        return rv;
+
+    if (!parent) {
+        windowWatcher->GetActiveWindow(getter_AddRefs(parent));
+    }
+
+    nsCOMPtr<mozIDOMWindowProxy> newWindow;
+    rv = windowWatcher->OpenWindow(parent,
+        "chrome://pippki/content/protectedAuth.xul",
+        "_blank",
+        "centerscreen,chrome,modal,titlebar,close=no",
+        runnable,
+        getter_AddRefs(newWindow));
+
+    return rv;
+=======
+  return rv;
+>>>>>>> upstream-releases
 }

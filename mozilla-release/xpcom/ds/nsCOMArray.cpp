@@ -250,6 +250,7 @@ bool nsCOMArray_base::SetCount(int32_t aNewCount) {
   mArray.SetLength(aNewCount);
   return true;
 }
+<<<<<<< HEAD
 
 void nsCOMArray_base::Adopt(nsISupports** aElements, uint32_t aSize) {
   Clear();
@@ -271,3 +272,31 @@ uint32_t nsCOMArray_base::Forget(nsISupports*** aElements) {
 
   return length;
 }
+||||||| merged common ancestors
+
+void
+nsCOMArray_base::Adopt(nsISupports** aElements, uint32_t aSize)
+{
+  Clear();
+  mArray.AppendElements(aElements, aSize);
+
+  // Free the allocated array as well.
+  free(aElements);
+}
+
+uint32_t
+nsCOMArray_base::Forget(nsISupports*** aElements)
+{
+  uint32_t length = Length();
+  size_t array_size = sizeof(nsISupports*) * length;
+  nsISupports** array = static_cast<nsISupports**>(moz_xmalloc(array_size));
+  memmove(array, Elements(), array_size);
+  *aElements = array;
+  // Don't Release the contained pointers; the caller of the method will
+  // do this eventually.
+  mArray.Clear();
+
+  return length;
+}
+=======
+>>>>>>> upstream-releases

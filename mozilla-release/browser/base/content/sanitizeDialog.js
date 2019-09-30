@@ -5,7 +5,8 @@
 
 /* import-globals-from ../../../toolkit/content/preferencesBindings.js */
 
-var {Sanitizer} = ChromeUtils.import("resource:///modules/Sanitizer.jsm", {});
+var { Sanitizer } = ChromeUtils.import("resource:///modules/Sanitizer.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 Preferences.addAll([
   { id: "privacy.cpd.history", type: "bool" },
@@ -20,7 +21,18 @@ Preferences.addAll([
 ]);
 
 var gSanitizePromptDialog = {
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+  get bundleBrowser() {
+    if (!this._bundleBrowser)
+      this._bundleBrowser = document.getElementById("bundleBrowser");
+    return this._bundleBrowser;
+  },
+
+=======
+>>>>>>> upstream-releases
   get selectedTimespan() {
     var durList = document.getElementById("sanitizeDurationChoice");
     return parseInt(durList.value);
@@ -34,12 +46,25 @@ var gSanitizePromptDialog = {
     // This is used by selectByTimespan() to determine if the window has loaded.
     this._inited = true;
 
+<<<<<<< HEAD
     let OKButton = document.documentElement.getButton("accept");
     document.l10n.setAttributes(OKButton, "sanitize-button-ok");
+||||||| merged common ancestors
+    document.documentElement.getButton("accept").label =
+      this.bundleBrowser.getString("sanitizeButtonOK");
+=======
+    let OKButton = document.documentElement.getButton("accept");
+    document.l10n.setAttributes(OKButton, "sanitize-button-ok");
+
+    document.addEventListener("dialogaccept", function(e) {
+      gSanitizePromptDialog.sanitize(e);
+    });
+>>>>>>> upstream-releases
 
     if (this.selectedTimespan === Sanitizer.TIMESPAN_EVERYTHING) {
       this.prepareWarning();
       this.warningBox.hidden = false;
+<<<<<<< HEAD
       document.l10n.setAttributes(document.documentElement, "dialog-title-everything");
       let warningDesc = document.getElementById("sanitizeEverythingWarning");
       // Ensure we've translated and sized the warning.
@@ -50,15 +75,52 @@ var gSanitizePromptDialog = {
           return rootWin.promiseDocumentFlushed(() => {});
         });
     } else {
+||||||| merged common ancestors
+      document.title =
+        this.bundleBrowser.getString("sanitizeDialog2.everything.title");
+    } else
+=======
+      document.l10n.setAttributes(
+        document.documentElement,
+        "dialog-title-everything"
+      );
+      let warningDesc = document.getElementById("sanitizeEverythingWarning");
+      // Ensure we've translated and sized the warning.
+      document.mozSubdialogReady = document.l10n
+        .translateFragment(warningDesc)
+        .then(() => {
+          // And then ensure we've run layout.
+          let rootWin = window.docShell.rootTreeItem.QueryInterface(
+            Ci.nsIDocShell
+          ).domWindow;
+          return rootWin.promiseDocumentFlushed(() => {});
+        });
+    } else {
+>>>>>>> upstream-releases
       this.warningBox.hidden = true;
+<<<<<<< HEAD
     }
+||||||| merged common ancestors
+=======
+    }
+
+    // Only apply the following if the dialog is opened outside of the Preferences.
+    if (!("gSubDialog" in window.opener)) {
+      // The style attribute on the dialog may get set after the dialog has been sized.
+      // Force the dialog to size again after the style attribute has been applied.
+      document.l10n.translateElements([document.documentElement]).then(() => {
+        window.sizeToContent();
+      });
+    }
+>>>>>>> upstream-releases
   },
 
   selectByTimespan() {
     // This method is the onselect handler for the duration dropdown.  As a
     // result it's called a couple of times before onload calls init().
-    if (!this._inited)
+    if (!this._inited) {
       return;
+    }
 
     var warningBox = this.warningBox;
 
@@ -67,21 +129,31 @@ var gSanitizePromptDialog = {
       this.prepareWarning();
       if (warningBox.hidden) {
         warningBox.hidden = false;
-        window.resizeBy(0, warningBox.boxObject.height);
+        window.resizeBy(0, warningBox.getBoundingClientRect().height);
       }
+<<<<<<< HEAD
       document.l10n.setAttributes(document.documentElement, "dialog-title-everything");
+||||||| merged common ancestors
+      window.document.title =
+        this.bundleBrowser.getString("sanitizeDialog2.everything.title");
+=======
+      document.l10n.setAttributes(
+        document.documentElement,
+        "dialog-title-everything"
+      );
+>>>>>>> upstream-releases
       return;
     }
 
     // If clearing a specific time range
     if (!warningBox.hidden) {
-      window.resizeBy(0, -warningBox.boxObject.height);
+      window.resizeBy(0, -warningBox.getBoundingClientRect().height);
       warningBox.hidden = true;
     }
     document.l10n.setAttributes(document.documentElement, "dialog-title");
   },
 
-  sanitize() {
+  sanitize(event) {
     // Update pref values before handing off to the sanitizer (bug 453440)
     this.updatePrefs();
 
@@ -105,10 +177,9 @@ var gSanitizePromptDialog = {
         .catch(Cu.reportError)
         .then(() => window.close())
         .catch(Cu.reportError);
-      return false;
+      event.preventDefault();
     } catch (er) {
       Cu.reportError("Exception during sanitize: " + er);
-      return true; // We *do* want to close immediately on error.
     }
   },
 
@@ -134,7 +205,9 @@ var gSanitizePromptDialog = {
    * of history.  The only pref this excludes is privacy.sanitize.timeSpan.
    */
   _getItemPrefs() {
-    return Preferences.getAll().filter(p => p.id !== "privacy.sanitize.timeSpan");
+    return Preferences.getAll().filter(
+      p => p.id !== "privacy.sanitize.timeSpan"
+    );
   },
 
   /**
@@ -144,11 +217,13 @@ var gSanitizePromptDialog = {
   onReadGeneric() {
     // Find any other pref that's checked and enabled (except for
     // privacy.sanitize.timeSpan, which doesn't affect the button's status).
-    var found = this._getItemPrefs().some(pref => !!pref.value && !pref.disabled);
+    var found = this._getItemPrefs().some(
+      pref => !!pref.value && !pref.disabled
+    );
 
     try {
       document.documentElement.getButton("accept").disabled = !found;
-    } catch (e) { }
+    } catch (e) {}
 
     // Update the warning prompt if needed
     this.prepareWarning();
@@ -167,8 +242,9 @@ var gSanitizePromptDialog = {
     Services.prefs.setIntPref(Sanitizer.PREF_TIMESPAN, this.selectedTimespan);
 
     // Keep the pref for the download history in sync with the history pref.
-    Preferences.get("privacy.cpd.downloads").value =
-      Preferences.get("privacy.cpd.history").value;
+    Preferences.get("privacy.cpd.downloads").value = Preferences.get(
+      "privacy.cpd.history"
+    ).value;
 
     // Now manually set the prefs from their corresponding preference
     // elements.
@@ -186,8 +262,9 @@ var gSanitizePromptDialog = {
     let checkboxes = document.querySelectorAll("checkbox[preference]");
     for (let i = 0; i < checkboxes.length; ++i) {
       let pref = Preferences.get(checkboxes[i].getAttribute("preference"));
-      if (!pref.value)
+      if (!pref.value) {
         return true;
+      }
     }
     return false;
   },

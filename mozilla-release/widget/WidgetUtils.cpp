@@ -14,20 +14,38 @@
 #include "nsIStringBundle.h"
 #include "nsTArray.h"
 #ifdef XP_WIN
-#include "WinUtils.h"
+#  include "WinUtils.h"
 #endif
 #ifdef MOZ_WIDGET_GTK
-#include "mozilla/WidgetUtilsGtk.h"
+#  include "mozilla/WidgetUtilsGtk.h"
 #endif
 
 namespace mozilla {
 
+<<<<<<< HEAD
 gfx::Matrix ComputeTransformForRotation(const nsIntRect& aBounds,
                                         ScreenRotation aRotation) {
   gfx::Matrix transform;
   static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
 
   switch (aRotation) {
+||||||| merged common ancestors
+gfx::Matrix
+ComputeTransformForRotation(const nsIntRect& aBounds,
+                              ScreenRotation aRotation)
+{
+    gfx::Matrix transform;
+    static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
+
+    switch (aRotation) {
+=======
+gfx::Matrix ComputeTransformForRotation(const nsIntRect& aBounds,
+                                        ScreenRotation aRotation) {
+  gfx::Matrix transform;
+  static const gfx::Float floatPi = static_cast<gfx::Float>(M_PI);
+
+  switch (aRotation) {
+>>>>>>> upstream-releases
     case ROTATION_0:
       break;
     case ROTATION_90:

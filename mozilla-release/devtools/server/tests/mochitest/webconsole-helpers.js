@@ -1,9 +1,19 @@
 /* exported attachURL, evaluateJS */
 "use strict";
 
+<<<<<<< HEAD
 const {require} = ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
 const {DebuggerServer} = require("devtools/server/main");
 const {TargetFactory} = require("devtools/client/framework/target");
+||||||| merged common ancestors
+const {require} = ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
+const {DebuggerClient} = require("devtools/shared/client/debugger-client");
+const {DebuggerServer} = require("devtools/server/main");
+=======
+const { require } = ChromeUtils.import("resource://devtools/shared/Loader.jsm");
+const { DebuggerServer } = require("devtools/server/main");
+const { TargetFactory } = require("devtools/client/framework/target");
+>>>>>>> upstream-releases
 
 const Services = require("Services");
 
@@ -35,16 +45,60 @@ if (!DebuggerServer.initialized) {
  *             the opened tab and disconnect its debugger client.
  */
 async function attachURL(url) {
+<<<<<<< HEAD
   const tab = await addTab(url);
   const target = await TargetFactory.forTab(tab);
   const { client } = target;
   const { consoleActor } = target.form;
   const [, consoleClient] = await client.attachConsole(consoleActor, []);
 
+||||||| merged common ancestors
+  let win = window.open(url, "_blank");
+  let client = null;
+
+  const cleanup = async function() {
+    if (client) {
+      await client.close();
+      client = null;
+    }
+    if (win) {
+      win.close();
+      win = null;
+    }
+  };
+  SimpleTest.registerCleanupFunction(cleanup);
+
+  client = new DebuggerClient(DebuggerServer.connectPipe());
+  await client.connect();
+  const {tabs} = await client.listTabs();
+  const attachedTab = tabs.find(tab => tab.url === url);
+
+  if (!attachedTab) {
+    throw new Error(`Could not find a tab matching URL ${url}`);
+  }
+
+  const [, targetFront] = await client.attachTarget(attachedTab.actor);
+  const [, consoleClient] = await client.attachConsole(attachedTab.consoleActor, []);
+
+=======
+  const tab = await addTab(url);
+  const target = await TargetFactory.forTab(tab);
+  await target.attach();
+>>>>>>> upstream-releases
   return {
+<<<<<<< HEAD
     consoleClient,
+||||||| merged common ancestors
+    tab: attachedTab,
+    targetFront,
+    consoleClient,
+    cleanup,
+=======
+    consoleClient: target.activeConsole,
+>>>>>>> upstream-releases
   };
 }
+<<<<<<< HEAD
 
 /**
  * Naive implementaion of addTab working from a mochitest-chrome test.
@@ -56,3 +110,19 @@ async function addTab(url) {
   await BrowserTestUtils.browserLoaded(tab.linkedBrowser);
   return tab;
 }
+||||||| merged common ancestors
+=======
+
+/**
+ * Naive implementaion of addTab working from a mochitest-chrome test.
+ */
+async function addTab(url) {
+  const { gBrowser } = Services.wm.getMostRecentWindow("navigator:browser");
+  const {
+    BrowserTestUtils,
+  } = require("resource://testing-common/BrowserTestUtils.jsm");
+  const tab = (gBrowser.selectedTab = BrowserTestUtils.addTab(gBrowser, url));
+  await BrowserTestUtils.browserLoaded(tab.linkedBrowser);
+  return tab;
+}
+>>>>>>> upstream-releases

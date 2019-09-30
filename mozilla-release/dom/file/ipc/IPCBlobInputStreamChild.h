@@ -4,10 +4,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef mozilla_dom_ipc_IPCBlobInputStreamChild_h
-#define mozilla_dom_ipc_IPCBlobInputStreamChild_h
+#ifndef mozilla_dom_IPCBlobInputStreamChild_h
+#define mozilla_dom_IPCBlobInputStreamChild_h
 
-#include "mozilla/ipc/PIPCBlobInputStreamChild.h"
+#include "mozilla/dom/PIPCBlobInputStreamChild.h"
 #include "mozilla/Mutex.h"
 #include "mozilla/UniquePtr.h"
 #include "nsIThread.h"
@@ -19,10 +19,23 @@ namespace dom {
 class IPCBlobInputStream;
 class ThreadSafeWorkerRef;
 
+<<<<<<< HEAD
 class IPCBlobInputStreamChild final
     : public mozilla::ipc::PIPCBlobInputStreamChild {
  public:
   enum ActorState {
+||||||| merged common ancestors
+class IPCBlobInputStreamChild final
+  : public mozilla::ipc::PIPCBlobInputStreamChild
+{
+public:
+  enum ActorState
+  {
+=======
+class IPCBlobInputStreamChild final : public PIPCBlobInputStreamChild {
+ public:
+  enum ActorState {
+>>>>>>> upstream-releases
     // The actor is connected via IPDL to the parent.
     eActive,
 
@@ -56,12 +69,26 @@ class IPCBlobInputStreamChild final
 
   void StreamNeeded(IPCBlobInputStream* aStream, nsIEventTarget* aEventTarget);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvStreamReady(
       const OptionalIPCStream& aStream) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvStreamReady(const OptionalIPCStream& aStream) override;
+=======
+  mozilla::ipc::IPCResult RecvStreamReady(const Maybe<IPCStream>& aStream);
+>>>>>>> upstream-releases
 
   void LengthNeeded(IPCBlobInputStream* aStream, nsIEventTarget* aEventTarget);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvLengthReady(const int64_t& aLength) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvLengthReady(const int64_t& aLength) override;
+=======
+  mozilla::ipc::IPCResult RecvLengthReady(const int64_t& aLength);
+>>>>>>> upstream-releases
 
   void Shutdown();
 
@@ -102,4 +129,10 @@ class IPCBlobInputStreamChild final
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 #endif  // mozilla_dom_ipc_IPCBlobInputStreamChild_h
+||||||| merged common ancestors
+#endif // mozilla_dom_ipc_IPCBlobInputStreamChild_h
+=======
+#endif  // mozilla_dom_IPCBlobInputStreamChild_h
+>>>>>>> upstream-releases

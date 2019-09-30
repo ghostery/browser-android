@@ -59,6 +59,7 @@ bool PluginProcessParent::Launch(
     mozilla::UniquePtr<LaunchCompleteTask> aLaunchCompleteTask,
     int32_t aSandboxLevel, bool aIsSandboxLoggingEnabled) {
 #if (defined(XP_WIN) || defined(XP_MACOSX)) && defined(MOZ_SANDBOX)
+<<<<<<< HEAD
   // At present, the Mac Flash plugin sandbox does not support different
   // levels and is enabled via a boolean pref or environment variable.
   // On Mac, when |aSandboxLevel| is positive, we enable the sandbox.
@@ -72,6 +73,34 @@ bool PluginProcessParent::Launch(
     mAllowedFilesRead.push_back(pluginFile);
   }
 #endif  // XP_WIN
+||||||| merged common ancestors
+    // At present, the Mac Flash plugin sandbox does not support different
+    // levels and is enabled via a boolean pref or environment variable.
+    // On Mac, when |aSandboxLevel| is positive, we enable the sandbox.
+#if defined(XP_WIN)
+    mSandboxLevel = aSandboxLevel;
+
+    // The sandbox process sometimes needs read access to the plugin file.
+    if (aSandboxLevel >= 3) {
+        std::wstring pluginFile(NS_ConvertUTF8toUTF16(mPluginFilePath.c_str()).get());
+        mAllowedFilesRead.push_back(pluginFile);
+    }
+#endif // XP_WIN
+=======
+  // At present, the Mac Flash plugin sandbox does not support different
+  // levels and is enabled via a boolean pref or environment variable.
+  // On Mac, when |aSandboxLevel| is positive, we enable the sandbox.
+#  if defined(XP_WIN)
+  mSandboxLevel = aSandboxLevel;
+
+  // The sandbox process sometimes needs read access to the plugin file.
+  if (aSandboxLevel >= 3) {
+    std::wstring pluginFile(
+        NS_ConvertUTF8toUTF16(mPluginFilePath.c_str()).get());
+    mAllowedFilesRead.push_back(pluginFile);
+  }
+#  endif  // XP_WIN
+>>>>>>> upstream-releases
 #else
   if (aSandboxLevel != 0) {
     MOZ_ASSERT(false,
@@ -126,6 +155,7 @@ bool PluginProcessParent::Launch(
   args.push_back(NS_ConvertUTF16toUTF8(appdataDir).get());
 #endif
 
+<<<<<<< HEAD
   bool result = AsyncLaunch(args);
   if (!result) {
     mLaunchCompleteTask = nullptr;
@@ -140,11 +170,43 @@ void PluginProcessParent::Delete() {
   if (currentLoop == ioLoop) {
     delete this;
     return;
+||||||| merged common ancestors
+    bool result = AsyncLaunch(args);
+    if (!result) {
+        mLaunchCompleteTask = nullptr;
+    }
+    return result;
+}
+
+void
+PluginProcessParent::Delete()
+{
+  MessageLoop* currentLoop = MessageLoop::current();
+  MessageLoop* ioLoop = XRE_GetIOMessageLoop();
+
+  if (currentLoop == ioLoop) {
+      delete this;
+      return;
+=======
+  bool result = AsyncLaunch(args);
+  if (!result) {
+    mLaunchCompleteTask = nullptr;
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   ioLoop->PostTask(
       NewNonOwningRunnableMethod("plugins::PluginProcessParent::Delete", this,
                                  &PluginProcessParent::Delete));
+||||||| merged common ancestors
+
+  ioLoop->PostTask(
+    NewNonOwningRunnableMethod("plugins::PluginProcessParent::Delete",
+                               this,
+                               &PluginProcessParent::Delete));
+=======
+  return result;
+>>>>>>> upstream-releases
 }
 
 /**

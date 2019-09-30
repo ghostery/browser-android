@@ -18,7 +18,14 @@ nsAndroidNetworkLinkService::nsAndroidNetworkLinkService() {}
 nsAndroidNetworkLinkService::~nsAndroidNetworkLinkService() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidNetworkLinkService::GetIsLinkUp(bool *aIsUp) {
+||||||| merged common ancestors
+nsAndroidNetworkLinkService::GetIsLinkUp(bool *aIsUp)
+{
+=======
+nsAndroidNetworkLinkService::GetIsLinkUp(bool* aIsUp) {
+>>>>>>> upstream-releases
   if (!mozilla::AndroidBridge::Bridge()) {
     // Fail soft here and assume a connection exists
     NS_WARNING("GetIsLinkUp is not supported without a bridge connection");
@@ -31,7 +38,14 @@ nsAndroidNetworkLinkService::GetIsLinkUp(bool *aIsUp) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidNetworkLinkService::GetLinkStatusKnown(bool *aIsKnown) {
+||||||| merged common ancestors
+nsAndroidNetworkLinkService::GetLinkStatusKnown(bool *aIsKnown)
+{
+=======
+nsAndroidNetworkLinkService::GetLinkStatusKnown(bool* aIsKnown) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(mozilla::AndroidBridge::Bridge(), NS_ERROR_NOT_IMPLEMENTED);
 
   *aIsKnown = java::GeckoAppShell::IsNetworkLinkKnown();
@@ -39,7 +53,14 @@ nsAndroidNetworkLinkService::GetLinkStatusKnown(bool *aIsKnown) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidNetworkLinkService::GetLinkType(uint32_t *aLinkType) {
+||||||| merged common ancestors
+nsAndroidNetworkLinkService::GetLinkType(uint32_t *aLinkType)
+{
+=======
+nsAndroidNetworkLinkService::GetLinkType(uint32_t* aLinkType) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aLinkType);
 
   if (!mozilla::AndroidBridge::Bridge()) {
@@ -50,5 +71,11 @@ nsAndroidNetworkLinkService::GetLinkType(uint32_t *aLinkType) {
   }
 
   *aLinkType = java::GeckoAppShell::GetNetworkLinkType();
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsAndroidNetworkLinkService::GetNetworkID(nsACString& aNetworkID) {
+  aNetworkID.Truncate();
   return NS_OK;
 }

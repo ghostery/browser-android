@@ -57,6 +57,7 @@ class SurfaceDescriptor;
 class HostIPCAllocator;
 class ISurfaceAllocator;
 class MacIOSurfaceTextureHostOGL;
+class SurfaceTextureHost;
 class TextureHostOGL;
 class TextureReadLock;
 class TextureSourceOGL;
@@ -288,9 +289,9 @@ class DataTextureSource : public TextureSource {
  public:
   DataTextureSource() : mOwner(0), mUpdateSerial(0) {}
 
-  virtual const char* Name() const override { return "DataTextureSource"; }
+  const char* Name() const override { return "DataTextureSource"; }
 
-  virtual DataTextureSource* AsDataTextureSource() override { return this; }
+  DataTextureSource* AsDataTextureSource() override { return this; }
 
   /**
    * Upload a (portion of) surface to the TextureSource.
@@ -315,7 +316,16 @@ class DataTextureSource : public TextureSource {
 
   // By default at least set the update serial to zero.
   // overloaded versions should do that too.
+<<<<<<< HEAD
   virtual void DeallocateDeviceData() override { SetUpdateSerial(0); }
+||||||| merged common ancestors
+  virtual void DeallocateDeviceData() override
+  {
+    SetUpdateSerial(0);
+  }
+=======
+  void DeallocateDeviceData() override { SetUpdateSerial(0); }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   /**
@@ -435,9 +445,17 @@ class TextureHost : public AtomicRefCountedWithFinalize<TextureHost> {
    */
   virtual gfx::SurfaceFormat GetReadFormat() const { return GetFormat(); }
 
+<<<<<<< HEAD
   virtual YUVColorSpace GetYUVColorSpace() const {
     return YUVColorSpace::UNKNOWN;
   }
+||||||| merged common ancestors
+  virtual YUVColorSpace GetYUVColorSpace() const { return YUVColorSpace::UNKNOWN; }
+=======
+  virtual gfx::YUVColorSpace GetYUVColorSpace() const {
+    return gfx::YUVColorSpace::UNKNOWN;
+  }
+>>>>>>> upstream-releases
 
   /**
    * Return the color depth of the image. Used with YUV textures.
@@ -596,7 +614,12 @@ class TextureHost : public AtomicRefCountedWithFinalize<TextureHost> {
    */
   virtual bool HasIntermediateBuffer() const { return false; }
 
-  void AddCompositableRef() { ++mCompositableCount; }
+  void AddCompositableRef() {
+    ++mCompositableCount;
+    if (mCompositableCount == 1) {
+      PrepareForUse();
+    }
+  }
 
   void ReleaseCompositableRef() {
     --mCompositableCount;
@@ -623,6 +646,7 @@ class TextureHost : public AtomicRefCountedWithFinalize<TextureHost> {
     return nullptr;
   }
   virtual WebRenderTextureHost* AsWebRenderTextureHost() { return nullptr; }
+  virtual SurfaceTextureHost* AsSurfaceTextureHost() { return nullptr; }
 
   // Create the corresponding RenderTextureHost type of this texture, and
   // register the RenderTextureHost into render thread.
@@ -635,7 +659,7 @@ class TextureHost : public AtomicRefCountedWithFinalize<TextureHost> {
 
   /// Returns the number of actual textures that will be used to render this.
   /// For example in a lot of YUV cases it will be 3
-  virtual uint32_t NumSubTextures() const { return 1; }
+  virtual uint32_t NumSubTextures() { return 1; }
 
   enum ResourceUpdateOp {
     ADD_IMAGE,
@@ -670,14 +694,33 @@ class TextureHost : public AtomicRefCountedWithFinalize<TextureHost> {
 
   virtual bool SupportsWrNativeTexture() { return false; }
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  virtual bool NeedsYFlip() const;
+
+ protected:
+>>>>>>> upstream-releases
   virtual void ReadUnlock();
 
   void RecycleTexture(TextureFlags aFlags);
 
   virtual void MaybeNotifyUnlocked() {}
 
+<<<<<<< HEAD
   virtual void UpdatedInternal(const nsIntRegion* Region) {}
+||||||| merged common ancestors
+  virtual void UpdatedInternal(const nsIntRegion *Region) {}
+=======
+  virtual void UpdatedInternal(const nsIntRegion* Region) {}
+
+  /**
+   * Called when mCompositableCount becomes from 0 to 1.
+   */
+  virtual void PrepareForUse() {}
+>>>>>>> upstream-releases
 
   /**
    * Called when mCompositableCount becomes 0.
@@ -718,30 +761,50 @@ class BufferTextureHost : public TextureHost {
  public:
   BufferTextureHost(const BufferDescriptor& aDescriptor, TextureFlags aFlags);
 
-  ~BufferTextureHost();
+  virtual ~BufferTextureHost();
 
   virtual uint8_t* GetBuffer() = 0;
 
   virtual size_t GetBufferSize() = 0;
 
-  virtual bool Lock() override;
+  bool Lock() override;
 
-  virtual void Unlock() override;
+  void Unlock() override;
 
+<<<<<<< HEAD
   virtual void PrepareTextureSource(
       CompositableTextureSourceRef& aTexture) override;
+||||||| merged common ancestors
+  virtual void PrepareTextureSource(CompositableTextureSourceRef& aTexture) override;
+=======
+  void PrepareTextureSource(CompositableTextureSourceRef& aTexture) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool BindTextureSource(
       CompositableTextureSourceRef& aTexture) override;
   virtual bool AcquireTextureSource(
       CompositableTextureSourceRef& aTexture) override;
+||||||| merged common ancestors
+  virtual bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
+  virtual bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
+=======
+  bool BindTextureSource(CompositableTextureSourceRef& aTexture) override;
+  bool AcquireTextureSource(CompositableTextureSourceRef& aTexture) override;
+>>>>>>> upstream-releases
 
-  virtual void UnbindTextureSource() override;
+  void UnbindTextureSource() override;
 
-  virtual void DeallocateDeviceData() override;
+  void DeallocateDeviceData() override;
 
+<<<<<<< HEAD
   virtual void SetTextureSourceProvider(
       TextureSourceProvider* aProvider) override;
+||||||| merged common ancestors
+  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+=======
+  void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+>>>>>>> upstream-releases
 
   /**
    * Return the format that is exposed to the compositor when calling
@@ -750,44 +813,66 @@ class BufferTextureHost : public TextureHost {
    * If the shared format is YCbCr and the compositor does not support it,
    * GetFormat will be RGB32 (even though mFormat is SurfaceFormat::YUV).
    */
-  virtual gfx::SurfaceFormat GetFormat() const override;
+  gfx::SurfaceFormat GetFormat() const override;
 
-  virtual YUVColorSpace GetYUVColorSpace() const override;
+  gfx::YUVColorSpace GetYUVColorSpace() const override;
 
-  virtual gfx::ColorDepth GetColorDepth() const override;
+  gfx::ColorDepth GetColorDepth() const override;
 
-  virtual gfx::IntSize GetSize() const override { return mSize; }
+  gfx::IntSize GetSize() const override { return mSize; }
 
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
+  already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
 
+<<<<<<< HEAD
   virtual bool HasIntermediateBuffer() const override {
     return mHasIntermediateBuffer;
   }
+||||||| merged common ancestors
+  virtual bool HasIntermediateBuffer() const override { return mHasIntermediateBuffer; }
+=======
+  bool HasIntermediateBuffer() const override { return mHasIntermediateBuffer; }
+>>>>>>> upstream-releases
 
-  virtual BufferTextureHost* AsBufferTextureHost() override { return this; }
+  BufferTextureHost* AsBufferTextureHost() override { return this; }
 
   const BufferDescriptor& GetBufferDescriptor() const { return mDescriptor; }
 
+<<<<<<< HEAD
   virtual void CreateRenderTexture(
       const wr::ExternalImageId& aExternalImageId) override;
+||||||| merged common ancestors
+  virtual void CreateRenderTexture(const wr::ExternalImageId& aExternalImageId) override;
+=======
+  void CreateRenderTexture(
+      const wr::ExternalImageId& aExternalImageId) override;
+>>>>>>> upstream-releases
 
-  virtual uint32_t NumSubTextures() const override;
+  uint32_t NumSubTextures() override;
 
-  virtual void PushResourceUpdates(wr::TransactionBuilder& aResources,
-                                   ResourceUpdateOp aOp,
-                                   const Range<wr::ImageKey>& aImageKeys,
-                                   const wr::ExternalImageId& aExtID) override;
+  void PushResourceUpdates(wr::TransactionBuilder& aResources,
+                           ResourceUpdateOp aOp,
+                           const Range<wr::ImageKey>& aImageKeys,
+                           const wr::ExternalImageId& aExtID) override;
 
-  virtual void PushDisplayItems(wr::DisplayListBuilder& aBuilder,
-                                const wr::LayoutRect& aBounds,
-                                const wr::LayoutRect& aClip,
-                                wr::ImageRendering aFilter,
-                                const Range<wr::ImageKey>& aImageKeys) override;
+  void PushDisplayItems(wr::DisplayListBuilder& aBuilder,
+                        const wr::LayoutRect& aBounds,
+                        const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
+                        const Range<wr::ImageKey>& aImageKeys) override;
 
+<<<<<<< HEAD
   virtual void ReadUnlock() override;
   virtual bool IsDirectMap() override {
     return mFirstSource && mFirstSource->IsDirectMap();
   };
+||||||| merged common ancestors
+  virtual void ReadUnlock() override;
+  virtual bool IsDirectMap() override { return mFirstSource && mFirstSource->IsDirectMap(); };
+=======
+  void ReadUnlock() override;
+  bool IsDirectMap() override {
+    return mFirstSource && mFirstSource->IsDirectMap();
+  };
+>>>>>>> upstream-releases
 
   bool CanUnlock() { return !mFirstSource || mFirstSource->Sync(false); }
 
@@ -797,9 +882,20 @@ class BufferTextureHost : public TextureHost {
   bool MaybeUpload(nsIntRegion* aRegion);
   bool EnsureWrappingTextureSource();
 
+<<<<<<< HEAD
   virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
   virtual void MaybeNotifyUnlocked() override;
 
+||||||| merged common ancestors
+  virtual void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
+  virtual void MaybeNotifyUnlocked() override;
+
+
+=======
+  void UpdatedInternal(const nsIntRegion* aRegion = nullptr) override;
+  void MaybeNotifyUnlocked() override;
+
+>>>>>>> upstream-releases
   BufferDescriptor mDescriptor;
   RefPtr<Compositor> mCompositor;
   RefPtr<DataTextureSource> mFirstSource;
@@ -828,18 +924,32 @@ class ShmemTextureHost : public BufferTextureHost {
  protected:
   ~ShmemTextureHost();
 
+<<<<<<< HEAD
  public:
   virtual void DeallocateSharedData() override;
+||||||| merged common ancestors
+public:
+  virtual void DeallocateSharedData() override;
+=======
+ public:
+  void DeallocateSharedData() override;
+>>>>>>> upstream-releases
 
-  virtual void ForgetSharedData() override;
+  void ForgetSharedData() override;
 
-  virtual uint8_t* GetBuffer() override;
+  uint8_t* GetBuffer() override;
 
-  virtual size_t GetBufferSize() override;
+  size_t GetBufferSize() override;
 
+<<<<<<< HEAD
   virtual const char* Name() override { return "ShmemTextureHost"; }
+||||||| merged common ancestors
+  virtual const char *Name() override { return "ShmemTextureHost"; }
+=======
+  const char* Name() override { return "ShmemTextureHost"; }
+>>>>>>> upstream-releases
 
-  virtual void OnShutdown() override;
+  void OnShutdown() override;
 
  protected:
   UniquePtr<mozilla::ipc::Shmem> mShmem;
@@ -860,16 +970,30 @@ class MemoryTextureHost : public BufferTextureHost {
  protected:
   ~MemoryTextureHost();
 
+<<<<<<< HEAD
  public:
   virtual void DeallocateSharedData() override;
+||||||| merged common ancestors
+public:
+  virtual void DeallocateSharedData() override;
+=======
+ public:
+  void DeallocateSharedData() override;
+>>>>>>> upstream-releases
 
-  virtual void ForgetSharedData() override;
+  void ForgetSharedData() override;
 
-  virtual uint8_t* GetBuffer() override;
+  uint8_t* GetBuffer() override;
 
-  virtual size_t GetBufferSize() override;
+  size_t GetBufferSize() override;
 
+<<<<<<< HEAD
   virtual const char* Name() override { return "MemoryTextureHost"; }
+||||||| merged common ancestors
+  virtual const char *Name() override { return "MemoryTextureHost"; }
+=======
+  const char* Name() override { return "MemoryTextureHost"; }
+>>>>>>> upstream-releases
 
  protected:
   uint8_t* mBuffer;
@@ -921,6 +1045,7 @@ class MOZ_STACK_CLASS AutoLockTextureHostWithoutCompositor {
 class CompositingRenderTarget : public TextureSource {
  public:
   explicit CompositingRenderTarget(const gfx::IntPoint& aOrigin)
+<<<<<<< HEAD
       : mClearOnBind(false),
         mOrigin(aOrigin),
         mZNear(0),
@@ -928,10 +1053,34 @@ class CompositingRenderTarget : public TextureSource {
         mHasComplexProjection(false),
         mEnableDepthBuffer(false) {}
   virtual ~CompositingRenderTarget() {}
+||||||| merged common ancestors
+    : mClearOnBind(false)
+    , mOrigin(aOrigin)
+    , mZNear(0)
+    , mZFar(0)
+    , mHasComplexProjection(false)
+    , mEnableDepthBuffer(false)
+  {}
+  virtual ~CompositingRenderTarget() {}
+=======
+      : mClearOnBind(false),
+        mOrigin(aOrigin),
+        mZNear(0),
+        mZFar(0),
+        mHasComplexProjection(false),
+        mEnableDepthBuffer(false) {}
+  virtual ~CompositingRenderTarget() = default;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual const char* Name() const override {
     return "CompositingRenderTarget";
   }
+||||||| merged common ancestors
+  virtual const char* Name() const override { return "CompositingRenderTarget"; }
+=======
+  const char* Name() const override { return "CompositingRenderTarget"; }
+>>>>>>> upstream-releases
 
 #ifdef MOZ_DUMP_PAINTING
   virtual already_AddRefed<gfx::DataSourceSurface> Dump(

@@ -15,11 +15,26 @@
 using namespace mozilla;
 
 nsDocShellEditorData::nsDocShellEditorData(nsIDocShell* aOwningDocShell)
+<<<<<<< HEAD
     : mDocShell(aOwningDocShell),
       mDetachedEditingState(nsIHTMLDocument::eOff),
       mMakeEditable(false),
       mIsDetached(false),
       mDetachedMakeEditable(false) {
+||||||| merged common ancestors
+  : mDocShell(aOwningDocShell)
+  , mDetachedEditingState(nsIHTMLDocument::eOff)
+  , mMakeEditable(false)
+  , mIsDetached(false)
+  , mDetachedMakeEditable(false)
+{
+=======
+    : mDocShell(aOwningDocShell),
+      mDetachedEditingState(Document::EditingState::eOff),
+      mMakeEditable(false),
+      mIsDetached(false),
+      mDetachedMakeEditable(false) {
+>>>>>>> upstream-releases
   NS_ASSERTION(mDocShell, "Where is my docShell?");
 }
 
@@ -58,6 +73,7 @@ bool nsDocShellEditorData::GetEditable() {
   return mMakeEditable || (mHTMLEditor != nullptr);
 }
 
+<<<<<<< HEAD
 nsresult nsDocShellEditorData::CreateEditor() {
   nsCOMPtr<nsIEditingSession> editingSession;
   nsresult rv = GetEditingSession(getter_AddRefs(editingSession));
@@ -76,11 +92,35 @@ nsresult nsDocShellEditorData::CreateEditor() {
 }
 
 nsresult nsDocShellEditorData::GetEditingSession(nsIEditingSession** aResult) {
-  EnsureEditingSession();
+||||||| merged common ancestors
+nsresult
+nsDocShellEditorData::CreateEditor()
+{
+  nsCOMPtr<nsIEditingSession> editingSession;
+  nsresult rv = GetEditingSession(getter_AddRefs(editingSession));
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
 
-  NS_ADDREF(*aResult = mEditingSession);
+  nsCOMPtr<nsPIDOMWindowOuter> domWindow =
+    mDocShell ? mDocShell->GetWindow() : nullptr;
+  rv = editingSession->SetupEditorOnWindow(domWindow);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
 
   return NS_OK;
+}
+
+nsresult
+nsDocShellEditorData::GetEditingSession(nsIEditingSession** aResult)
+{
+=======
+nsEditingSession* nsDocShellEditorData::GetEditingSession() {
+>>>>>>> upstream-releases
+  EnsureEditingSession();
+
+  return mEditingSession.get();
 }
 
 nsresult nsDocShellEditorData::SetHTMLEditor(HTMLEditor* aHTMLEditor) {
@@ -129,11 +169,8 @@ nsresult nsDocShellEditorData::DetachFromWindow() {
   mDetachedMakeEditable = mMakeEditable;
   mMakeEditable = false;
 
-  nsCOMPtr<nsIDocument> doc = domWindow->GetDoc();
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(doc);
-  if (htmlDoc) {
-    mDetachedEditingState = htmlDoc->GetEditingState();
-  }
+  nsCOMPtr<dom::Document> doc = domWindow->GetDoc();
+  mDetachedEditingState = doc->GetEditingState();
 
   mDocShell = nullptr;
 
@@ -151,11 +188,8 @@ nsresult nsDocShellEditorData::ReattachToWindow(nsIDocShell* aDocShell) {
   mIsDetached = false;
   mMakeEditable = mDetachedMakeEditable;
 
-  nsCOMPtr<nsIDocument> doc = domWindow->GetDoc();
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(doc);
-  if (htmlDoc) {
-    htmlDoc->SetEditingState(mDetachedEditingState);
-  }
+  RefPtr<dom::Document> doc = domWindow->GetDoc();
+  doc->SetEditingState(mDetachedEditingState);
 
   return NS_OK;
 }

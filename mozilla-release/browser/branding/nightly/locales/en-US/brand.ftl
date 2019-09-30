@@ -12,8 +12,18 @@
 ##
 ## Reference: https://www.mozilla.org/styleguide/communications/translation/
 
+-brand-shorter-name = Nightly
 -brand-short-name = Nightly
+-brand-full-name = Firefox Nightly
+# This brand name can be used in messages where the product name needs to
+# remain unchanged across different versions (Nightly, Beta, etc.).
+-brand-product-name = Firefox
 -vendor-short-name = Mozilla
+<<<<<<< HEAD
 -brand-full-name = Firefox Nightly
 -brand-shorter-name = Nightly
 trademarkInfo = { " " }
+||||||| merged common ancestors
+=======
+trademarkInfo = { " " }
+>>>>>>> upstream-releases

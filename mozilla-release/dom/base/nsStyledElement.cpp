@@ -16,7 +16,7 @@
 #include "nsDOMCSSDeclaration.h"
 #include "nsDOMCSSAttrDeclaration.h"
 #include "nsServiceManagerUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/DeclarationBlock.h"
 #include "mozilla/css/Loader.h"
 #include "nsXULElement.h"
@@ -93,11 +93,26 @@ void nsStyledElement::InlineStyleDeclarationWillChange(
     }
   }
 
+<<<<<<< HEAD
   aData.mModType =
       modification ? static_cast<uint8_t>(MutationEvent_Binding::MODIFICATION)
                    : static_cast<uint8_t>(MutationEvent_Binding::ADDITION);
   nsNodeUtils::AttributeWillChange(this, kNameSpaceID_None, nsGkAtoms::style,
                                    aData.mModType, nullptr);
+||||||| merged common ancestors
+  aData.mModType = modification ?
+    static_cast<uint8_t>(MutationEvent_Binding::MODIFICATION) :
+    static_cast<uint8_t>(MutationEvent_Binding::ADDITION);
+  nsNodeUtils::AttributeWillChange(this, kNameSpaceID_None,
+                                   nsGkAtoms::style,
+                                   aData.mModType, nullptr);
+=======
+  aData.mModType =
+      modification ? static_cast<uint8_t>(MutationEvent_Binding::MODIFICATION)
+                   : static_cast<uint8_t>(MutationEvent_Binding::ADDITION);
+  nsNodeUtils::AttributeWillChange(this, kNameSpaceID_None, nsGkAtoms::style,
+                                   aData.mModType);
+>>>>>>> upstream-releases
 
   // XXXsmaug In order to make attribute handling more consistent, consider to
   //         call BeforeSetAttr and pass kCallAfterSetAttr to
@@ -117,7 +132,7 @@ nsresult nsStyledElement::SetInlineStyleDeclaration(
   nsAttrValue attrValue(do_AddRef(&aDeclaration), nullptr);
   SetMayHaveStyle();
 
-  nsIDocument* document = GetComposedDoc();
+  Document* document = GetComposedDoc();
   mozAutoDocUpdate updateBatch(document, true);
   return SetAttrAndNotify(kNameSpaceID_None, nsGkAtoms::style, nullptr,
                           aData.mOldValue.ptrOr(nullptr), attrValue, nullptr,
@@ -165,7 +180,15 @@ nsresult nsStyledElement::ReparseStyleAttribute(bool aForceInDataDoc,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsStyledElement::NodeInfoChanged(nsIDocument* aOldDoc) {
+||||||| merged common ancestors
+void
+nsStyledElement::NodeInfoChanged(nsIDocument* aOldDoc)
+{
+=======
+void nsStyledElement::NodeInfoChanged(Document* aOldDoc) {
+>>>>>>> upstream-releases
   nsStyledElementBase::NodeInfoChanged(aOldDoc);
 }
 
@@ -178,16 +201,44 @@ nsICSSDeclaration* nsStyledElement::GetExistingStyle() {
   return slots->mStyle;
 }
 
+<<<<<<< HEAD
 void nsStyledElement::ParseStyleAttribute(const nsAString& aValue,
                                           nsIPrincipal* aMaybeScriptedPrincipal,
                                           nsAttrValue& aResult,
                                           bool aForceInDataDoc) {
   nsIDocument* doc = OwnerDoc();
+||||||| merged common ancestors
+void
+nsStyledElement::ParseStyleAttribute(const nsAString& aValue,
+                                     nsIPrincipal* aMaybeScriptedPrincipal,
+                                     nsAttrValue& aResult,
+                                     bool aForceInDataDoc)
+{
+  nsIDocument* doc = OwnerDoc();
+=======
+void nsStyledElement::ParseStyleAttribute(const nsAString& aValue,
+                                          nsIPrincipal* aMaybeScriptedPrincipal,
+                                          nsAttrValue& aResult,
+                                          bool aForceInDataDoc) {
+  Document* doc = OwnerDoc();
+>>>>>>> upstream-releases
   bool isNativeAnon = IsInNativeAnonymousSubtree();
 
+<<<<<<< HEAD
   if (!isNativeAnon && !nsStyleUtil::CSPAllowsInlineStyle(
                            this, NodePrincipal(), aMaybeScriptedPrincipal,
                            doc->GetDocumentURI(), 0, 0, aValue, nullptr))
+||||||| merged common ancestors
+  if (!isNativeAnon &&
+      !nsStyleUtil::CSPAllowsInlineStyle(this, NodePrincipal(),
+                                         aMaybeScriptedPrincipal,
+                                         doc->GetDocumentURI(), 0, 0, aValue,
+                                         nullptr))
+=======
+  if (!isNativeAnon &&
+      !nsStyleUtil::CSPAllowsInlineStyle(this, doc, aMaybeScriptedPrincipal, 0,
+                                         0, aValue, nullptr))
+>>>>>>> upstream-releases
     return;
 
   if (aForceInDataDoc || !doc->IsLoadedAsData() || GetExistingStyle() ||

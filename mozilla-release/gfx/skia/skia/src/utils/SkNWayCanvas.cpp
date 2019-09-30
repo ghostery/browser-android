@@ -4,7 +4,9 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
+
 #include "SkNWayCanvas.h"
+#include "SkCanvasPriv.h"
 
 SkNWayCanvas::SkNWayCanvas(int width, int height) : INHERITED(width, height) {}
 
@@ -45,6 +47,7 @@ public:
         return false;
     }
     SkCanvas* operator->() { return fCanvas; }
+    SkCanvas* get() const { return fCanvas; }
 
 private:
     const SkTDArray<SkCanvas*>& fList;
@@ -70,6 +73,15 @@ SkCanvas::SaveLayerStrategy SkNWayCanvas::getSaveLayerStrategy(const SaveLayerRe
     this->INHERITED::getSaveLayerStrategy(rec);
     // No need for a layer.
     return kNoLayer_SaveLayerStrategy;
+}
+
+bool SkNWayCanvas::onDoSaveBehind(const SkRect* bounds) {
+    Iter iter(fList);
+    while (iter.next()) {
+        SkCanvasPriv::SaveBehind(iter.get(), bounds);
+    }
+    this->INHERITED::onDoSaveBehind(bounds);
+    return false;
 }
 
 void SkNWayCanvas::willRestore() {
@@ -150,6 +162,7 @@ void SkNWayCanvas::onDrawRect(const SkRect& rect, const SkPaint& paint) {
     }
 }
 
+<<<<<<< HEAD
 void SkNWayCanvas::onDrawRegion(const SkRegion& region, const SkPaint& paint) {
     Iter iter(fList);
     while (iter.next()) {
@@ -157,6 +170,24 @@ void SkNWayCanvas::onDrawRegion(const SkRegion& region, const SkPaint& paint) {
     }
 }
 
+||||||| merged common ancestors
+=======
+void SkNWayCanvas::onDrawEdgeAARect(const SkRect& rect, SkCanvas::QuadAAFlags aa, SkColor color,
+                                    SkBlendMode mode) {
+    Iter iter(fList);
+    while (iter.next()) {
+        iter->experimental_DrawEdgeAARectV1(rect, aa, color, mode);
+    }
+}
+
+void SkNWayCanvas::onDrawRegion(const SkRegion& region, const SkPaint& paint) {
+    Iter iter(fList);
+    while (iter.next()) {
+        iter->drawRegion(region, paint);
+    }
+}
+
+>>>>>>> upstream-releases
 void SkNWayCanvas::onDrawOval(const SkRect& rect, const SkPaint& paint) {
     Iter iter(fList);
     while (iter.next()) {
@@ -241,6 +272,7 @@ void SkNWayCanvas::onDrawImageRect(const SkImage* image, const SkRect* src, cons
     }
 }
 
+<<<<<<< HEAD
 void SkNWayCanvas::onDrawImageNine(const SkImage* image, const SkIRect& center, const SkRect& dst,
                                    const SkPaint* paint) {
     Iter iter(fList);
@@ -259,24 +291,32 @@ void SkNWayCanvas::onDrawImageLattice(const SkImage* image, const Lattice& latti
 
 void SkNWayCanvas::onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
                               const SkPaint& paint) {
+||||||| merged common ancestors
+void SkNWayCanvas::onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
+                              const SkPaint& paint) {
+=======
+void SkNWayCanvas::onDrawImageNine(const SkImage* image, const SkIRect& center, const SkRect& dst,
+                                   const SkPaint* paint) {
+>>>>>>> upstream-releases
     Iter iter(fList);
     while (iter.next()) {
-        iter->drawText(text, byteLength, x, y, paint);
+        iter->drawImageNine(image, center, dst, paint);
     }
 }
 
-void SkNWayCanvas::onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
-                                 const SkPaint& paint) {
+void SkNWayCanvas::onDrawImageLattice(const SkImage* image, const Lattice& lattice,
+                                      const SkRect& dst, const SkPaint* paint) {
     Iter iter(fList);
     while (iter.next()) {
-        iter->drawPosText(text, byteLength, pos, paint);
+        iter->drawImageLattice(image, lattice, dst, paint);
     }
 }
 
-void SkNWayCanvas::onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xpos[],
-                                  SkScalar constY, const SkPaint& paint) {
+void SkNWayCanvas::onDrawImageSet(const SkCanvas::ImageSetEntry set[], int count,
+                                  SkFilterQuality filterQuality, SkBlendMode mode) {
     Iter iter(fList);
     while (iter.next()) {
+<<<<<<< HEAD
         iter->drawPosTextH(text, byteLength, xpos, constY, paint);
     }
 }
@@ -286,6 +326,27 @@ void SkNWayCanvas::onDrawTextRSXform(const void* text, size_t byteLength, const 
     Iter iter(fList);
     while (iter.next()) {
         iter->drawTextRSXform(text, byteLength, xform, cull, paint);
+||||||| merged common ancestors
+        iter->drawPosTextH(text, byteLength, xpos, constY, paint);
+    }
+}
+
+void SkNWayCanvas::onDrawTextOnPath(const void* text, size_t byteLength, const SkPath& path,
+                                    const SkMatrix* matrix, const SkPaint& paint) {
+    Iter iter(fList);
+    while (iter.next()) {
+        iter->drawTextOnPath(text, byteLength, path, matrix, paint);
+    }
+}
+
+void SkNWayCanvas::onDrawTextRSXform(const void* text, size_t byteLength, const SkRSXform xform[],
+                                     const SkRect* cull, const SkPaint& paint) {
+    Iter iter(fList);
+    while (iter.next()) {
+        iter->drawTextRSXform(text, byteLength, xform, cull, paint);
+=======
+        iter->experimental_DrawImageSetV1(set, count, filterQuality, mode);
+>>>>>>> upstream-releases
     }
 }
 

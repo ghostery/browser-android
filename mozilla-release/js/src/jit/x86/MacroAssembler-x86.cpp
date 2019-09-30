@@ -299,10 +299,23 @@ void MacroAssembler::subFromStackPtr(Imm32 imm32) {
 // ===============================================================
 // ABI function calls.
 
+<<<<<<< HEAD
 void MacroAssembler::setupUnalignedABICall(Register scratch) {
   MOZ_ASSERT(!IsCompilingWasm(), "wasm should only use aligned ABI calls");
   setupABICall();
   dynamicAlignment_ = true;
+||||||| merged common ancestors
+void
+MacroAssembler::setupUnalignedABICall(Register scratch)
+{
+    MOZ_ASSERT(!IsCompilingWasm(), "wasm should only use aligned ABI calls");
+    setupABICall();
+    dynamicAlignment_ = true;
+=======
+void MacroAssembler::setupUnalignedABICall(Register scratch) {
+  setupABICall();
+  dynamicAlignment_ = true;
+>>>>>>> upstream-releases
 
   movl(esp, scratch);
   andl(Imm32(~(ABIStackAlignment - 1)), esp);
@@ -597,6 +610,7 @@ template void MacroAssembler::storeUnboxedValue(
 
 // wasm specific methods, used in both the wasm baseline compiler and ion.
 
+<<<<<<< HEAD
 void MacroAssembler::wasmLoad(const wasm::MemoryAccessDesc& access,
                               Operand srcAddr, AnyRegister out) {
   MOZ_ASSERT(srcAddr.kind() == Operand::MEM_REG_DISP ||
@@ -635,6 +649,87 @@ void MacroAssembler::wasmLoad(const wasm::MemoryAccessDesc& access,
   }
 
   memoryBarrierAfter(access.sync());
+||||||| merged common ancestors
+void
+MacroAssembler::wasmLoad(const wasm::MemoryAccessDesc& access, Operand srcAddr, AnyRegister out)
+{
+    MOZ_ASSERT(srcAddr.kind() == Operand::MEM_REG_DISP || srcAddr.kind() == Operand::MEM_SCALE);
+
+    memoryBarrierBefore(access.sync());
+
+    append(access, size());
+    switch (access.type()) {
+      case Scalar::Int8:
+        movsbl(srcAddr, out.gpr());
+        break;
+      case Scalar::Uint8:
+        movzbl(srcAddr, out.gpr());
+        break;
+      case Scalar::Int16:
+        movswl(srcAddr, out.gpr());
+        break;
+      case Scalar::Uint16:
+        movzwl(srcAddr, out.gpr());
+        break;
+      case Scalar::Int32:
+      case Scalar::Uint32:
+        movl(srcAddr, out.gpr());
+        break;
+      case Scalar::Float32:
+        vmovss(srcAddr, out.fpu());
+        break;
+      case Scalar::Float64:
+        vmovsd(srcAddr, out.fpu());
+        break;
+      case Scalar::Int64:
+      case Scalar::Uint8Clamped:
+      case Scalar::MaxTypedArrayViewType:
+        MOZ_CRASH("unexpected type");
+    }
+
+    memoryBarrierAfter(access.sync());
+=======
+void MacroAssembler::wasmLoad(const wasm::MemoryAccessDesc& access,
+                              Operand srcAddr, AnyRegister out) {
+  MOZ_ASSERT(srcAddr.kind() == Operand::MEM_REG_DISP ||
+             srcAddr.kind() == Operand::MEM_SCALE);
+
+  memoryBarrierBefore(access.sync());
+
+  append(access, size());
+  switch (access.type()) {
+    case Scalar::Int8:
+      movsbl(srcAddr, out.gpr());
+      break;
+    case Scalar::Uint8:
+      movzbl(srcAddr, out.gpr());
+      break;
+    case Scalar::Int16:
+      movswl(srcAddr, out.gpr());
+      break;
+    case Scalar::Uint16:
+      movzwl(srcAddr, out.gpr());
+      break;
+    case Scalar::Int32:
+    case Scalar::Uint32:
+      movl(srcAddr, out.gpr());
+      break;
+    case Scalar::Float32:
+      vmovss(srcAddr, out.fpu());
+      break;
+    case Scalar::Float64:
+      vmovsd(srcAddr, out.fpu());
+      break;
+    case Scalar::Int64:
+    case Scalar::Uint8Clamped:
+    case Scalar::BigInt64:
+    case Scalar::BigUint64:
+    case Scalar::MaxTypedArrayViewType:
+      MOZ_CRASH("unexpected type");
+  }
+
+  memoryBarrierAfter(access.sync());
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::wasmLoadI64(const wasm::MemoryAccessDesc& access,
@@ -690,13 +785,61 @@ void MacroAssembler::wasmLoadI64(const wasm::MemoryAccessDesc& access,
         MOZ_RELEASE_ASSERT(srcAddr.toAddress().base != out.low);
       }
 
+<<<<<<< HEAD
       movl(LowWord(srcAddr), out.low);
 
       append(access, size());
       movl(HighWord(srcAddr), out.high);
+||||||| merged common ancestors
+    memoryBarrierAfter(access.sync());
+}
+=======
+      movl(LowWord(srcAddr), out.low);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      break;
+||||||| merged common ancestors
+void
+MacroAssembler::wasmStore(const wasm::MemoryAccessDesc& access, AnyRegister value, Operand dstAddr)
+{
+    MOZ_ASSERT(dstAddr.kind() == Operand::MEM_REG_DISP || dstAddr.kind() == Operand::MEM_SCALE);
+
+    memoryBarrierBefore(access.sync());
+
+    append(access, size());
+    switch (access.type()) {
+      case Scalar::Int8:
+      case Scalar::Uint8Clamped:
+      case Scalar::Uint8:
+        movb(value.gpr(), dstAddr);
+        break;
+      case Scalar::Int16:
+      case Scalar::Uint16:
+        movw(value.gpr(), dstAddr);
+        break;
+      case Scalar::Int32:
+      case Scalar::Uint32:
+        movl(value.gpr(), dstAddr);
+        break;
+      case Scalar::Float32:
+        vmovss(value.fpu(), dstAddr);
+        break;
+      case Scalar::Float64:
+        vmovsd(value.fpu(), dstAddr);
+        break;
+      case Scalar::Int64:
+        MOZ_CRASH("Should be handled in storeI64.");
+      case Scalar::MaxTypedArrayViewType:
+        MOZ_CRASH("unexpected type");
+=======
+      append(access, size());
+      movl(HighWord(srcAddr), out.high);
 
       break;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     case Scalar::Float32:
     case Scalar::Float64:
       MOZ_CRASH("non-int64 loads should use load()");
@@ -707,7 +850,23 @@ void MacroAssembler::wasmLoadI64(const wasm::MemoryAccessDesc& access,
 
   memoryBarrierAfter(access.sync());
 }
+||||||| merged common ancestors
+=======
+    case Scalar::Float32:
+    case Scalar::Float64:
+      MOZ_CRASH("non-int64 loads should use load()");
+    case Scalar::Uint8Clamped:
+    case Scalar::BigInt64:
+    case Scalar::BigUint64:
+    case Scalar::MaxTypedArrayViewType:
+      MOZ_CRASH("unexpected array type");
+  }
 
+  memoryBarrierAfter(access.sync());
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void MacroAssembler::wasmStore(const wasm::MemoryAccessDesc& access,
                                AnyRegister value, Operand dstAddr) {
   MOZ_ASSERT(dstAddr.kind() == Operand::MEM_REG_DISP ||
@@ -743,6 +902,47 @@ void MacroAssembler::wasmStore(const wasm::MemoryAccessDesc& access,
   }
 
   memoryBarrierAfter(access.sync());
+||||||| merged common ancestors
+    memoryBarrierAfter(access.sync());
+=======
+void MacroAssembler::wasmStore(const wasm::MemoryAccessDesc& access,
+                               AnyRegister value, Operand dstAddr) {
+  MOZ_ASSERT(dstAddr.kind() == Operand::MEM_REG_DISP ||
+             dstAddr.kind() == Operand::MEM_SCALE);
+
+  memoryBarrierBefore(access.sync());
+
+  append(access, size());
+  switch (access.type()) {
+    case Scalar::Int8:
+    case Scalar::Uint8Clamped:
+    case Scalar::Uint8:
+      movb(value.gpr(), dstAddr);
+      break;
+    case Scalar::Int16:
+    case Scalar::Uint16:
+      movw(value.gpr(), dstAddr);
+      break;
+    case Scalar::Int32:
+    case Scalar::Uint32:
+      movl(value.gpr(), dstAddr);
+      break;
+    case Scalar::Float32:
+      vmovss(value.fpu(), dstAddr);
+      break;
+    case Scalar::Float64:
+      vmovsd(value.fpu(), dstAddr);
+      break;
+    case Scalar::Int64:
+      MOZ_CRASH("Should be handled in storeI64.");
+    case Scalar::MaxTypedArrayViewType:
+    case Scalar::BigInt64:
+    case Scalar::BigUint64:
+      MOZ_CRASH("unexpected type");
+  }
+
+  memoryBarrierAfter(access.sync());
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::wasmStoreI64(const wasm::MemoryAccessDesc& access,
@@ -921,9 +1121,20 @@ void MacroAssembler::wasmTruncateDoubleToUInt32(FloatRegister input,
   vcvttsd2si(input, output);
   branch32(Assembler::Condition::NotSigned, output, Imm32(0), &done);
 
+<<<<<<< HEAD
   loadConstantDouble(double(int32_t(0x80000000)), ScratchDoubleReg);
   addDouble(input, ScratchDoubleReg);
   vcvttsd2si(ScratchDoubleReg, output);
+||||||| merged common ancestors
+    loadConstantDouble(double(int32_t(0x80000000)), ScratchDoubleReg);
+    addDouble(input, ScratchDoubleReg);
+    vcvttsd2si(ScratchDoubleReg, output);
+=======
+  ScratchDoubleScope fpscratch(*this);
+  loadConstantDouble(double(int32_t(0x80000000)), fpscratch);
+  addDouble(input, fpscratch);
+  vcvttsd2si(fpscratch, output);
+>>>>>>> upstream-releases
 
   branch32(Assembler::Condition::Signed, output, Imm32(0), oolEntry);
   or32(Imm32(0x80000000), output);
@@ -939,9 +1150,20 @@ void MacroAssembler::wasmTruncateFloat32ToUInt32(FloatRegister input,
   vcvttss2si(input, output);
   branch32(Assembler::Condition::NotSigned, output, Imm32(0), &done);
 
+<<<<<<< HEAD
   loadConstantFloat32(float(int32_t(0x80000000)), ScratchFloat32Reg);
   addFloat32(input, ScratchFloat32Reg);
   vcvttss2si(ScratchFloat32Reg, output);
+||||||| merged common ancestors
+    loadConstantFloat32(float(int32_t(0x80000000)), ScratchFloat32Reg);
+    addFloat32(input, ScratchFloat32Reg);
+    vcvttss2si(ScratchFloat32Reg, output);
+=======
+  ScratchFloat32Scope fpscratch(*this);
+  loadConstantFloat32(float(int32_t(0x80000000)), fpscratch);
+  addFloat32(input, fpscratch);
+  vcvttss2si(fpscratch, output);
+>>>>>>> upstream-releases
 
   branch32(Assembler::Condition::Signed, output, Imm32(0), oolEntry);
   or32(Imm32(0x80000000), output);
@@ -1078,6 +1300,7 @@ void MacroAssembler::wasmTruncateFloat32ToUInt64(
 // ========================================================================
 // Convert floating point.
 
+<<<<<<< HEAD
 bool MacroAssembler::convertUInt64ToDoubleNeedsTemp() { return HasSSE3(); }
 
 void MacroAssembler::convertUInt64ToDouble(Register64 src, FloatRegister dest,
@@ -1085,6 +1308,124 @@ void MacroAssembler::convertUInt64ToDouble(Register64 src, FloatRegister dest,
   // SUBPD needs SSE2, HADDPD needs SSE3.
   if (!HasSSE3()) {
     MOZ_ASSERT(temp == Register::Invalid());
+||||||| merged common ancestors
+bool
+MacroAssembler::convertUInt64ToDoubleNeedsTemp()
+{
+    return HasSSE3();
+}
+
+void
+MacroAssembler::convertUInt64ToDouble(Register64 src, FloatRegister dest, Register temp)
+{
+    // SUBPD needs SSE2, HADDPD needs SSE3.
+    if (!HasSSE3()) {
+        MOZ_ASSERT(temp == Register::Invalid());
+
+        // Zero the dest register to break dependencies, see convertInt32ToDouble.
+        zeroDouble(dest);
+
+        Push(src.high);
+        Push(src.low);
+        fild(Operand(esp, 0));
+
+        Label notNegative;
+        branch32(Assembler::NotSigned, src.high, Imm32(0), &notNegative);
+        double add_constant = 18446744073709551616.0; // 2^64
+        store64(Imm64(mozilla::BitwiseCast<uint64_t>(add_constant)), Address(esp, 0));
+        fld(Operand(esp, 0));
+        faddp();
+        bind(&notNegative);
+
+        fstp(Operand(esp, 0));
+        vmovsd(Address(esp, 0), dest);
+        freeStack(2 * sizeof(intptr_t));
+        return;
+    }
+
+    // Following operation uses entire 128-bit of dest XMM register.
+    // Currently higher 64-bit is free when we have access to lower 64-bit.
+    MOZ_ASSERT(dest.size() == 8);
+    FloatRegister dest128 = FloatRegister(dest.encoding(), FloatRegisters::Simd128);
+
+    // Assume that src is represented as following:
+    //   src      = 0x HHHHHHHH LLLLLLLL
+
+    // Move src to dest (=dest128) and ScratchInt32x4Reg (=scratch):
+    //   dest     = 0x 00000000 00000000  00000000 LLLLLLLL
+    //   scratch  = 0x 00000000 00000000  00000000 HHHHHHHH
+    vmovd(src.low, dest128);
+    vmovd(src.high, ScratchSimd128Reg);
+
+    // Unpack and interleave dest and scratch to dest:
+    //   dest     = 0x 00000000 00000000  HHHHHHHH LLLLLLLL
+    vpunpckldq(ScratchSimd128Reg, dest128, dest128);
+
+    // Unpack and interleave dest and a constant C1 to dest:
+    //   C1       = 0x 00000000 00000000  45300000 43300000
+    //   dest     = 0x 45300000 HHHHHHHH  43300000 LLLLLLLL
+    // here, each 64-bit part of dest represents following double:
+    //   HI(dest) = 0x 1.00000HHHHHHHH * 2**84 == 2**84 + 0x HHHHHHHH 00000000
+    //   LO(dest) = 0x 1.00000LLLLLLLL * 2**52 == 2**52 + 0x 00000000 LLLLLLLL
+    // See convertUInt64ToDouble for the details.
+    static const int32_t CST1[4] = {
+        0x43300000,
+        0x45300000,
+        0x0,
+        0x0,
+    };
+
+    loadConstantSimd128Int(SimdConstant::CreateX4(CST1), ScratchSimd128Reg);
+    vpunpckldq(ScratchSimd128Reg, dest128, dest128);
+
+    // Subtract a constant C2 from dest, for each 64-bit part:
+    //   C2       = 0x 45300000 00000000  43300000 00000000
+    // here, each 64-bit part of C2 represents following double:
+    //   HI(C2)   = 0x 1.0000000000000 * 2**84 == 2**84
+    //   LO(C2)   = 0x 1.0000000000000 * 2**52 == 2**52
+    // after the operation each 64-bit part of dest represents following:
+    //   HI(dest) = double(0x HHHHHHHH 00000000)
+    //   LO(dest) = double(0x 00000000 LLLLLLLL)
+    static const int32_t CST2[4] = {
+        0x0,
+        0x43300000,
+        0x0,
+        0x45300000,
+    };
+
+    loadConstantSimd128Int(SimdConstant::CreateX4(CST2), ScratchSimd128Reg);
+    vsubpd(ScratchSimd128Reg, dest128, dest128);
+
+    // Add HI(dest) and LO(dest) in double and store it into LO(dest),
+    //   LO(dest) = double(0x HHHHHHHH 00000000) + double(0x 00000000 LLLLLLLL)
+    //            = double(0x HHHHHHHH LLLLLLLL)
+    //            = double(src)
+    vhaddpd(dest128, dest128);
+}
+
+void
+MacroAssembler::convertInt64ToDouble(Register64 input, FloatRegister output)
+{
+    // Zero the output register to break dependencies, see convertInt32ToDouble.
+    zeroDouble(output);
+
+    Push(input.high);
+    Push(input.low);
+    fild(Operand(esp, 0));
+
+    fstp(Operand(esp, 0));
+    vmovsd(Address(esp, 0), output);
+    freeStack(2 * sizeof(intptr_t));
+}
+=======
+bool MacroAssembler::convertUInt64ToDoubleNeedsTemp() { return HasSSE3(); }
+
+void MacroAssembler::convertUInt64ToDouble(Register64 src, FloatRegister dest,
+                                           Register temp) {
+  // SUBPD needs SSE2, HADDPD needs SSE3.
+  if (!HasSSE3()) {
+    MOZ_ASSERT(temp == Register::Invalid());
+>>>>>>> upstream-releases
 
     // Zero the dest register to break dependencies, see convertInt32ToDouble.
     zeroDouble(dest);
@@ -1234,4 +1575,14 @@ void MacroAssembler::convertInt64ToFloat32(Register64 input,
   freeStack(2 * sizeof(intptr_t));
 }
 
+<<<<<<< HEAD
 //}}} check_macroassembler_style
+||||||| merged common ancestors
+//}}} check_macroassembler_style
+// clang-format on
+
+=======
+void MacroAssembler::PushBoxed(FloatRegister reg) { Push(reg); }
+
+//}}} check_macroassembler_style
+>>>>>>> upstream-releases

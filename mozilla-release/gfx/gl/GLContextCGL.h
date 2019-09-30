@@ -12,7 +12,7 @@
 #include "OpenGL/OpenGL.h"
 
 #ifdef __OBJC__
-#include <AppKit/NSOpenGL.h>
+#  include <AppKit/NSOpenGL.h>
 #else
 typedef void NSOpenGLContext;
 #endif
@@ -41,24 +41,76 @@ class GLContextCGL : public GLContext {
     return static_cast<GLContextCGL*>(gl);
   }
 
+<<<<<<< HEAD
   bool Init() override;
-
+||||||| merged common ancestors
+    bool Init() override;
+=======
   NSOpenGLContext* GetNSOpenGLContext() const { return mContext; }
   CGLContextObj GetCGLContext() const;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  NSOpenGLContext* GetNSOpenGLContext() const { return mContext; }
+  CGLContextObj GetCGLContext() const;
+||||||| merged common ancestors
+    NSOpenGLContext* GetNSOpenGLContext() const { return mContext; }
+    CGLContextObj GetCGLContext() const;
+=======
   virtual bool MakeCurrentImpl() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool MakeCurrentImpl() const override;
+||||||| merged common ancestors
+    virtual bool MakeCurrentImpl() const override;
+=======
   virtual bool IsCurrentImpl() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool IsCurrentImpl() const override;
+||||||| merged common ancestors
+    virtual bool IsCurrentImpl() const override;
+=======
   virtual GLenum GetPreferredARGB32Format() const override;
+>>>>>>> upstream-releases
 
-  virtual bool SetupLookupFunction() override;
-
+<<<<<<< HEAD
+  virtual GLenum GetPreferredARGB32Format() const override;
+||||||| merged common ancestors
+    virtual GLenum GetPreferredARGB32Format() const override;
+=======
   virtual bool IsDoubleBuffered() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool SetupLookupFunction() override;
+||||||| merged common ancestors
+    virtual bool SetupLookupFunction() override;
+=======
+  virtual bool SwapBuffers() override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual bool IsDoubleBuffered() const override;
+||||||| merged common ancestors
+    virtual bool IsDoubleBuffered() const override;
+=======
+  virtual void GetWSIInfo(nsCString* const out) const override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual bool SwapBuffers() override;
 
   virtual void GetWSIInfo(nsCString* const out) const override;
+||||||| merged common ancestors
+    virtual bool SwapBuffers() override;
+
+    virtual void GetWSIInfo(nsCString* const out) const override;
+=======
+  Maybe<SymbolLoader> GetSymbolLoader() const override;
+>>>>>>> upstream-releases
 };
 
 }  // namespace gl

@@ -85,8 +85,16 @@ typedef struct NPClass NPClass;
 
 typedef char NPUTF8;
 typedef struct _NPString {
+<<<<<<< HEAD
   const NPUTF8 *UTF8Characters;
   uint32_t UTF8Length;
+||||||| merged common ancestors
+    const NPUTF8 *UTF8Characters;
+    uint32_t UTF8Length;
+=======
+  const NPUTF8* UTF8Characters;
+  uint32_t UTF8Length;
+>>>>>>> upstream-releases
 } NPString;
 
 typedef enum {
@@ -100,6 +108,7 @@ typedef enum {
 } NPVariantType;
 
 typedef struct _NPVariant {
+<<<<<<< HEAD
   NPVariantType type;
   union {
     bool boolValue;
@@ -108,6 +117,25 @@ typedef struct _NPVariant {
     NPString stringValue;
     NPObject *objectValue;
   } value;
+||||||| merged common ancestors
+    NPVariantType type;
+    union {
+        bool boolValue;
+        int32_t intValue;
+        double doubleValue;
+        NPString stringValue;
+        NPObject *objectValue;
+    } value;
+=======
+  NPVariantType type;
+  union {
+    bool boolValue;
+    int32_t intValue;
+    double doubleValue;
+    NPString stringValue;
+    NPObject* objectValue;
+  } value;
+>>>>>>> upstream-releases
 } NPVariant;
 
 /*
@@ -120,7 +148,7 @@ typedef struct _NPVariant {
     After calling NPN_ReleaseVariantValue, the type of the variant
     will be NPVariantType_Void.
 */
-void NPN_ReleaseVariantValue(NPVariant *variant);
+void NPN_ReleaseVariantValue(NPVariant* variant);
 
 #define NPVARIANT_IS_VOID(_v) ((_v).type == NPVariantType_Void)
 #define NPVARIANT_IS_NULL(_v) ((_v).type == NPVariantType_Null)
@@ -200,7 +228,7 @@ void NPN_ReleaseVariantValue(NPVariant *variant);
   NPVariantType_Object            Object
 */
 
-typedef void *NPIdentifier;
+typedef void* NPIdentifier;
 
 /*
     NPObjects have methods and properties.  Methods and properties are
@@ -213,16 +241,16 @@ typedef void *NPIdentifier;
     by the browser. Plugins do not need to worry about memory management
     with regards to NPIdentifiers.
 */
-NPIdentifier NPN_GetStringIdentifier(const NPUTF8 *name);
-void NPN_GetStringIdentifiers(const NPUTF8 **names, int32_t nameCount,
-                              NPIdentifier *identifiers);
+NPIdentifier NPN_GetStringIdentifier(const NPUTF8* name);
+void NPN_GetStringIdentifiers(const NPUTF8** names, int32_t nameCount,
+                              NPIdentifier* identifiers);
 NPIdentifier NPN_GetIntIdentifier(int32_t intid);
 bool NPN_IdentifierIsString(NPIdentifier identifier);
 
 /*
     The NPUTF8 returned from NPN_UTF8FromIdentifier SHOULD be freed.
 */
-NPUTF8 *NPN_UTF8FromIdentifier(NPIdentifier identifier);
+NPUTF8* NPN_UTF8FromIdentifier(NPIdentifier identifier);
 
 /*
     Get the integer represented by identifier. If identifier is not an
@@ -237,16 +265,17 @@ int32_t NPN_IntFromIdentifier(NPIdentifier identifier);
     The NPVariant *result argument of these functions (where
     applicable) should be released using NPN_ReleaseVariantValue().
 */
-typedef NPObject *(*NPAllocateFunctionPtr)(NPP npp, NPClass *aClass);
-typedef void (*NPDeallocateFunctionPtr)(NPObject *npobj);
-typedef void (*NPInvalidateFunctionPtr)(NPObject *npobj);
-typedef bool (*NPHasMethodFunctionPtr)(NPObject *npobj, NPIdentifier name);
-typedef bool (*NPInvokeFunctionPtr)(NPObject *npobj, NPIdentifier name,
-                                    const NPVariant *args, uint32_t argCount,
-                                    NPVariant *result);
-typedef bool (*NPInvokeDefaultFunctionPtr)(NPObject *npobj,
-                                           const NPVariant *args,
+typedef NPObject* (*NPAllocateFunctionPtr)(NPP npp, NPClass* aClass);
+typedef void (*NPDeallocateFunctionPtr)(NPObject* npobj);
+typedef void (*NPInvalidateFunctionPtr)(NPObject* npobj);
+typedef bool (*NPHasMethodFunctionPtr)(NPObject* npobj, NPIdentifier name);
+typedef bool (*NPInvokeFunctionPtr)(NPObject* npobj, NPIdentifier name,
+                                    const NPVariant* args, uint32_t argCount,
+                                    NPVariant* result);
+typedef bool (*NPInvokeDefaultFunctionPtr)(NPObject* npobj,
+                                           const NPVariant* args,
                                            uint32_t argCount,
+<<<<<<< HEAD
                                            NPVariant *result);
 typedef bool (*NPHasPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name);
 typedef bool (*NPGetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
@@ -258,6 +287,34 @@ typedef bool (*NPEnumerationFunctionPtr)(NPObject *npobj, NPIdentifier **value,
                                          uint32_t *count);
 typedef bool (*NPConstructFunctionPtr)(NPObject *npobj, const NPVariant *args,
                                        uint32_t argCount, NPVariant *result);
+||||||| merged common ancestors
+                                           NPVariant *result);
+typedef bool (*NPHasPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name);
+typedef bool (*NPGetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
+                                         NPVariant *result);
+typedef bool (*NPSetPropertyFunctionPtr)(NPObject *npobj, NPIdentifier name,
+                                         const NPVariant *value);
+typedef bool (*NPRemovePropertyFunctionPtr)(NPObject *npobj,
+                                            NPIdentifier name);
+typedef bool (*NPEnumerationFunctionPtr)(NPObject *npobj, NPIdentifier **value,
+                                         uint32_t *count);
+typedef bool (*NPConstructFunctionPtr)(NPObject *npobj,
+                                       const NPVariant *args,
+                                       uint32_t argCount,
+                                       NPVariant *result);
+=======
+                                           NPVariant* result);
+typedef bool (*NPHasPropertyFunctionPtr)(NPObject* npobj, NPIdentifier name);
+typedef bool (*NPGetPropertyFunctionPtr)(NPObject* npobj, NPIdentifier name,
+                                         NPVariant* result);
+typedef bool (*NPSetPropertyFunctionPtr)(NPObject* npobj, NPIdentifier name,
+                                         const NPVariant* value);
+typedef bool (*NPRemovePropertyFunctionPtr)(NPObject* npobj, NPIdentifier name);
+typedef bool (*NPEnumerationFunctionPtr)(NPObject* npobj, NPIdentifier** value,
+                                         uint32_t* count);
+typedef bool (*NPConstructFunctionPtr)(NPObject* npobj, const NPVariant* args,
+                                       uint32_t argCount, NPVariant* result);
+>>>>>>> upstream-releases
 
 /*
     NPObjects returned by create, retain, invoke, and getProperty pass
@@ -310,11 +367,25 @@ struct NPClass {
   ((npclass)->structVersion >= NP_CLASS_STRUCT_VERSION_CTOR)
 
 struct NPObject {
+<<<<<<< HEAD
   NPClass *_class;
   uint32_t referenceCount;
   /*
    * Additional space may be allocated here by types of NPObjects
    */
+||||||| merged common ancestors
+    NPClass *_class;
+    uint32_t referenceCount;
+    /*
+     * Additional space may be allocated here by types of NPObjects
+     */
+=======
+  NPClass* _class;
+  uint32_t referenceCount;
+  /*
+   * Additional space may be allocated here by types of NPObjects
+   */
+>>>>>>> upstream-releases
 };
 
 /*
@@ -323,19 +394,19 @@ struct NPObject {
     returned. This method will initialize the referenceCount member of
     the NPObject to 1.
 */
-NPObject *NPN_CreateObject(NPP npp, NPClass *aClass);
+NPObject* NPN_CreateObject(NPP npp, NPClass* aClass);
 
 /*
     Increment the NPObject's reference count.
 */
-NPObject *NPN_RetainObject(NPObject *npobj);
+NPObject* NPN_RetainObject(NPObject* npobj);
 
 /*
     Decremented the NPObject's reference count.  If the reference
     count goes to zero, the class's destroy function is invoke if
     specified, otherwise the object is freed directly.
 */
-void NPN_ReleaseObject(NPObject *npobj);
+void NPN_ReleaseObject(NPObject* npobj);
 
 /*
     Functions to access script objects represented by NPObject.
@@ -349,23 +420,23 @@ void NPN_ReleaseObject(NPObject *npobj);
     on which the plugin was initialized.
 */
 
-bool NPN_Invoke(NPP npp, NPObject *npobj, NPIdentifier methodName,
-                const NPVariant *args, uint32_t argCount, NPVariant *result);
-bool NPN_InvokeDefault(NPP npp, NPObject *npobj, const NPVariant *args,
-                       uint32_t argCount, NPVariant *result);
-bool NPN_Evaluate(NPP npp, NPObject *npobj, NPString *script,
-                  NPVariant *result);
-bool NPN_GetProperty(NPP npp, NPObject *npobj, NPIdentifier propertyName,
-                     NPVariant *result);
-bool NPN_SetProperty(NPP npp, NPObject *npobj, NPIdentifier propertyName,
-                     const NPVariant *value);
-bool NPN_RemoveProperty(NPP npp, NPObject *npobj, NPIdentifier propertyName);
-bool NPN_HasProperty(NPP npp, NPObject *npobj, NPIdentifier propertyName);
-bool NPN_HasMethod(NPP npp, NPObject *npobj, NPIdentifier methodName);
-bool NPN_Enumerate(NPP npp, NPObject *npobj, NPIdentifier **identifier,
-                   uint32_t *count);
-bool NPN_Construct(NPP npp, NPObject *npobj, const NPVariant *args,
-                   uint32_t argCount, NPVariant *result);
+bool NPN_Invoke(NPP npp, NPObject* npobj, NPIdentifier methodName,
+                const NPVariant* args, uint32_t argCount, NPVariant* result);
+bool NPN_InvokeDefault(NPP npp, NPObject* npobj, const NPVariant* args,
+                       uint32_t argCount, NPVariant* result);
+bool NPN_Evaluate(NPP npp, NPObject* npobj, NPString* script,
+                  NPVariant* result);
+bool NPN_GetProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName,
+                     NPVariant* result);
+bool NPN_SetProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName,
+                     const NPVariant* value);
+bool NPN_RemoveProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
+bool NPN_HasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
+bool NPN_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
+bool NPN_Enumerate(NPP npp, NPObject* npobj, NPIdentifier** identifier,
+                   uint32_t* count);
+bool NPN_Construct(NPP npp, NPObject* npobj, const NPVariant* args,
+                   uint32_t argCount, NPVariant* result);
 
 /*
     NPN_SetException may be called to trigger a script exception upon
@@ -373,7 +444,7 @@ bool NPN_Construct(NPP npp, NPObject *npobj, const NPVariant *args,
 
     NPN_SetException (npobj, message);
 */
-void NPN_SetException(NPObject *npobj, const NPUTF8 *message);
+void NPN_SetException(NPObject* npobj, const NPUTF8* message);
 
 #ifdef __cplusplus
 }

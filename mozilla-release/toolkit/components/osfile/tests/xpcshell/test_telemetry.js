@@ -1,7 +1,9 @@
 "use strict";
 
-var {OS: {File, Path, Constants}} = ChromeUtils.import("resource://gre/modules/osfile.jsm", {});
-var {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
+var {
+  OS: { File, Path, Constants },
+} = ChromeUtils.import("resource://gre/modules/osfile.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 // Ensure that we have a profile but that the OS.File worker is not launched
 add_task(async function init() {
@@ -27,13 +29,29 @@ add_task(async function test_startup() {
   let LAUNCH = "OSFILE_WORKER_LAUNCH_MS";
   let READY = "OSFILE_WORKER_READY_MS";
 
+<<<<<<< HEAD
   let before = Services.telemetry.getSnapshotForHistograms("main", false).parent;
+||||||| merged common ancestors
+  let before = Services.telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                     false).parent;
+=======
+  let before = Services.telemetry.getSnapshotForHistograms("main", false)
+    .parent;
+>>>>>>> upstream-releases
 
   // Launch the OS.File worker
   await File.getCurrentDirectory();
 
+<<<<<<< HEAD
   let after = Services.telemetry.getSnapshotForHistograms("main", false).parent;
 
+||||||| merged common ancestors
+  let after = Services.telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                    false).parent;
+
+=======
+  let after = Services.telemetry.getSnapshotForHistograms("main", false).parent;
+>>>>>>> upstream-releases
 
   info("Ensuring that we have recorded measures for histograms");
   Assert.equal(getCount(after[LAUNCH]), getCount(before[LAUNCH]) + 1);
@@ -47,11 +65,19 @@ add_task(async function test_startup() {
 add_task(async function test_writeAtomic() {
   let LABEL = "OSFILE_WRITEATOMIC_JANK_MS";
 
+<<<<<<< HEAD
   let before = Services.telemetry.getSnapshotForHistograms("main", false).parent;
+||||||| merged common ancestors
+  let before = Services.telemetry.snapshotHistograms(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN,
+                                                     false).parent;
+=======
+  let before = Services.telemetry.getSnapshotForHistograms("main", false)
+    .parent;
+>>>>>>> upstream-releases
 
   // Perform a write.
   let path = Path.join(Constants.Path.profileDir, "test_osfile_telemetry.tmp");
-  await File.writeAtomic(path, LABEL, { tmpPath: path + ".tmp" } );
+  await File.writeAtomic(path, LABEL, { tmpPath: path + ".tmp" });
 
   let after = Services.telemetry.getSnapshotForHistograms("main", false).parent;
 

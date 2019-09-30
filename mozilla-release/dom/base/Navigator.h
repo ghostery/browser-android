@@ -57,7 +57,6 @@ class BatteryManager;
 
 class Promise;
 
-class MozIdleObserver;
 class Gamepad;
 class GamepadServiceTest;
 class NavigatorUserMediaSuccessCallback;
@@ -113,6 +112,9 @@ class Navigator final : public nsISupports, public nsWrapperCache {
   void GetUserAgent(nsAString& aUserAgent, CallerType aCallerType,
                     ErrorResult& aRv) const;
   bool OnLine();
+  void CheckProtocolHandlerAllowed(const nsAString& aScheme,
+                                   nsIURI* aHandlerURI, nsIURI* aDocumentURI,
+                                   ErrorResult& aRv);
   void RegisterProtocolHandler(const nsAString& aScheme, const nsAString& aURL,
                                const nsAString& aTitle, ErrorResult& aRv);
   void RegisterContentHandler(const nsAString& aMIMEType, const nsAString& aURL,
@@ -124,16 +126,27 @@ class Navigator final : public nsISupports, public nsWrapperCache {
   Geolocation* GetGeolocation(ErrorResult& aRv);
   Promise* GetBattery(ErrorResult& aRv);
 
-  static void AppName(nsAString& aAppName, bool aUsePrefOverriddenValue);
+  static void AppName(nsAString& aAppName, nsIPrincipal* aCallerPrincipal,
+                      bool aUsePrefOverriddenValue);
 
   static nsresult GetPlatform(nsAString& aPlatform,
+                              nsIPrincipal* aCallerPrincipal,
                               bool aUsePrefOverriddenValue);
 
   static nsresult GetAppVersion(nsAString& aAppVersion,
+                                nsIPrincipal* aCallerPrincipal,
                                 bool aUsePrefOverriddenValue);
 
   static nsresult GetUserAgent(nsPIDOMWindowInner* aWindow,
+<<<<<<< HEAD
                                bool aIsCallerChrome, nsAString& aUserAgent);
+||||||| merged common ancestors
+                               bool aIsCallerChrome,
+                               nsAString& aUserAgent);
+=======
+                               nsIPrincipal* aCallerPrincipal,
+                               bool aIsCallerChrome, nsAString& aUserAgent);
+>>>>>>> upstream-releases
 
   // Clears the user agent cache by calling:
   // Navigator_Binding::ClearCachedUserAgentValue(this);
@@ -154,9 +167,20 @@ class Navigator final : public nsISupports, public nsWrapperCache {
                   ErrorResult& aRv) const;
   bool JavaEnabled() { return false; }
   uint64_t HardwareConcurrency();
+<<<<<<< HEAD
   bool TaintEnabled() { return false; }
   void AddIdleObserver(MozIdleObserver& aObserver, ErrorResult& aRv);
   void RemoveIdleObserver(MozIdleObserver& aObserver, ErrorResult& aRv);
+||||||| merged common ancestors
+  bool TaintEnabled()
+  {
+    return false;
+  }
+  void AddIdleObserver(MozIdleObserver& aObserver, ErrorResult& aRv);
+  void RemoveIdleObserver(MozIdleObserver& aObserver, ErrorResult& aRv);
+=======
+  bool TaintEnabled() { return false; }
+>>>>>>> upstream-releases
 
   already_AddRefed<LegacyMozTCPSocket> MozTCPSocket();
   network::Connection* GetConnection(ErrorResult& aRv);
@@ -181,7 +205,15 @@ class Navigator final : public nsISupports, public nsWrapperCache {
   void MozGetUserMedia(const MediaStreamConstraints& aConstraints,
                        NavigatorUserMediaSuccessCallback& aOnSuccess,
                        NavigatorUserMediaErrorCallback& aOnError,
+<<<<<<< HEAD
                        CallerType aCallerType, ErrorResult& aRv);
+||||||| merged common ancestors
+                       CallerType aCallerType,
+                       ErrorResult& aRv);
+=======
+                       CallerType aCallerType, ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+>>>>>>> upstream-releases
   void MozGetUserMediaDevices(const MediaStreamConstraints& aConstraints,
                               MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
                               NavigatorUserMediaErrorCallback& aOnError,
@@ -235,8 +267,22 @@ class Navigator final : public nsISupports, public nsWrapperCache {
   // types.
   enum BeaconType { eBeaconTypeBlob, eBeaconTypeArrayBuffer, eBeaconTypeOther };
 
+<<<<<<< HEAD
   bool SendBeaconInternal(const nsAString& aUrl, BodyExtractorBase* aBody,
                           BeaconType aType, ErrorResult& aRv);
+||||||| merged common ancestors
+  bool SendBeaconInternal(const nsAString& aUrl,
+                          BodyExtractorBase* aBody,
+                          BeaconType aType,
+                          ErrorResult& aRv);
+=======
+  bool SendBeaconInternal(const nsAString& aUrl, BodyExtractorBase* aBody,
+                          BeaconType aType, ErrorResult& aRv);
+
+  nsIDocShell* GetDocShell() const {
+    return mWindow ? mWindow->GetDocShell() : nullptr;
+  }
+>>>>>>> upstream-releases
 
   RefPtr<nsMimeTypeArray> mMimeTypes;
   RefPtr<nsPluginArray> mPlugins;

@@ -4,23 +4,23 @@
 /* import-globals-from pippki.js */
 "use strict";
 
-const nsIFilePicker = Ci.nsIFilePicker;
-const nsFilePicker = "@mozilla.org/filepicker;1";
-const nsIX509CertDB = Ci.nsIX509CertDB;
-const nsX509CertDB = "@mozilla.org/security/x509certdb;1";
-const nsIX509Cert = Ci.nsIX509Cert;
-const nsStringBundle = "@mozilla.org/intl/stringbundle;1";
-const nsIStringBundleService = Ci.nsIStringBundleService;
-const nsICertTree = Ci.nsICertTree;
-const nsCertTree = "@mozilla.org/security/nsCertTree;1";
-
 const gCertFileTypes = "*.p7b; *.crt; *.cert; *.cer; *.pem; *.der";
 
-var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm", {});
+var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 
 var key;
 
+<<<<<<< HEAD
 var certdialogs = Cc[nsCertificateDialogs].getService(nsICertificateDialogs);
+||||||| merged common ancestors
+var certdialogs = Cc[nsCertificateDialogs].getService(nsICertificateDialogs);
+var strbundle = Cc[nsStringBundle].getService(nsIStringBundleService)
+                  .createBundle("chrome://pipnss/locale/pipnss.properties");
+=======
+var certdialogs = Cc["@mozilla.org/nsCertificateDialogs;1"].getService(
+  Ci.nsICertificateDialogs
+);
+>>>>>>> upstream-releases
 
 /**
  * List of certs currently selected in the active tab.
@@ -53,27 +53,33 @@ var emailTreeView;
 var userTreeView;
 
 function LoadCerts() {
-  certdb = Cc[nsX509CertDB].getService(nsIX509CertDB);
+  certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(
+    Ci.nsIX509CertDB
+  );
   var certcache = certdb.getCerts();
 
-  caTreeView = Cc[nsCertTree]
-                    .createInstance(nsICertTree);
-  caTreeView.loadCertsFromCache(certcache, nsIX509Cert.CA_CERT);
+  caTreeView = Cc["@mozilla.org/security/nsCertTree;1"].createInstance(
+    Ci.nsICertTree
+  );
+  caTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.CA_CERT);
   document.getElementById("ca-tree").view = caTreeView;
 
-  serverTreeView = Cc[nsCertTree]
-                        .createInstance(nsICertTree);
-  serverTreeView.loadCertsFromCache(certcache, nsIX509Cert.SERVER_CERT);
+  serverTreeView = Cc["@mozilla.org/security/nsCertTree;1"].createInstance(
+    Ci.nsICertTree
+  );
+  serverTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.SERVER_CERT);
   document.getElementById("server-tree").view = serverTreeView;
 
-  emailTreeView = Cc[nsCertTree]
-                       .createInstance(nsICertTree);
-  emailTreeView.loadCertsFromCache(certcache, nsIX509Cert.EMAIL_CERT);
+  emailTreeView = Cc["@mozilla.org/security/nsCertTree;1"].createInstance(
+    Ci.nsICertTree
+  );
+  emailTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.EMAIL_CERT);
   document.getElementById("email-tree").view = emailTreeView;
 
-  userTreeView = Cc[nsCertTree]
-                      .createInstance(nsICertTree);
-  userTreeView.loadCertsFromCache(certcache, nsIX509Cert.USER_CERT);
+  userTreeView = Cc["@mozilla.org/security/nsCertTree;1"].createInstance(
+    Ci.nsICertTree
+  );
+  userTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.USER_CERT);
   document.getElementById("user-tree").view = userTreeView;
 
   enableBackupAllButton();
@@ -102,7 +108,9 @@ function getSelectedCerts() {
   selected_certs = [];
   var cert = null;
   var nr = 0;
-  if (items != null) nr = items.getRangeCount();
+  if (items != null) {
+    nr = items.getRangeCount();
+  }
   if (nr > 0) {
     for (let i = 0; i < nr; i++) {
       var o1 = {};
@@ -150,7 +158,9 @@ function getSelectedTreeItems() {
   selected_index = [];
   var tree_item = null;
   var nr = 0;
-  if (items != null) nr = items.getRangeCount();
+  if (items != null) {
+    nr = items.getRangeCount();
+  }
   if (nr > 0) {
     for (let i = 0; i < nr; i++) {
       var o1 = {};
@@ -235,7 +245,13 @@ async function promptError(aErrorCode) {
       default:
         break;
     }
+<<<<<<< HEAD
     let [message] = await document.l10n.formatValues([{id: msgName}]);
+||||||| merged common ancestors
+    let message = strbundle.GetStringFromName(msgName);
+=======
+    let [message] = await document.l10n.formatValues([{ id: msgName }]);
+>>>>>>> upstream-releases
     let prompter = Services.ww.getNewPrompter(window);
     prompter.alert(null, message);
   }
@@ -268,11 +284,7 @@ function ca_enableButtons() {
 }
 
 function mine_enableButtons() {
-  let idList = [
-    "mine_viewButton",
-    "mine_backupButton",
-    "mine_deleteButton",
-  ];
+  let idList = ["mine_viewButton", "mine_backupButton", "mine_deleteButton"];
   enableButtonsForCertTree(userTreeView, idList);
 }
 
@@ -286,11 +298,7 @@ function websites_enableButtons() {
 }
 
 function email_enableButtons() {
-  let idList = [
-    "email_viewButton",
-    "email_exportButton",
-    "email_deleteButton",
-  ];
+  let idList = ["email_viewButton", "email_exportButton", "email_deleteButton"];
   enableButtonsForCertTree(emailTreeView, idList);
 }
 
@@ -301,6 +309,7 @@ async function backupCerts() {
     return;
   }
 
+<<<<<<< HEAD
   var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
   let [backupFileDialog, filePkcs12Spec] = await document.l10n.formatValues([
     {id: "choose-p12-backup-file-dialog"},
@@ -309,13 +318,38 @@ async function backupCerts() {
   fp.init(window, backupFileDialog, nsIFilePicker.modeSave);
   fp.appendFilter(filePkcs12Spec, "*.p12");
   fp.appendFilters(nsIFilePicker.filterAll);
+||||||| merged common ancestors
+  var bundle = document.getElementById("pippki_bundle");
+  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
+  fp.init(window,
+          bundle.getString("chooseP12BackupFileDialog"),
+          nsIFilePicker.modeSave);
+  fp.appendFilter(bundle.getString("file_browse_PKCS12_spec"),
+                  "*.p12");
+  fp.appendFilters(nsIFilePicker.filterAll);
+=======
+  var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+  let [backupFileDialog, filePkcs12Spec] = await document.l10n.formatValues([
+    { id: "choose-p12-backup-file-dialog" },
+    { id: "file-browse-pkcs12-spec" },
+  ]);
+  fp.init(window, backupFileDialog, Ci.nsIFilePicker.modeSave);
+  fp.appendFilter(filePkcs12Spec, "*.p12");
+  fp.appendFilters(Ci.nsIFilePicker.filterAll);
+>>>>>>> upstream-releases
   fp.defaultExtension = "p12";
   fp.open(rv => {
-    if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
+    if (
+      rv == Ci.nsIFilePicker.returnOK ||
+      rv == Ci.nsIFilePicker.returnReplace
+    ) {
       let password = {};
       if (certdialogs.setPKCS12FilePassword(window, password)) {
-        let errorCode = certdb.exportPKCS12File(fp.file, selected_certs.length,
-                                                selected_certs, password.value);
+        let errorCode = certdb.exportPKCS12File(
+          fp.file,
+          selected_certs,
+          password.value
+        );
         promptError(errorCode);
       }
     }
@@ -332,11 +366,16 @@ function editCerts() {
   getSelectedCerts();
 
   for (let cert of selected_certs) {
-    window.openDialog("chrome://pippki/content/editcacert.xul", "",
-                      "chrome,centerscreen,modal", cert);
+    window.openDialog(
+      "chrome://pippki/content/editcacert.xul",
+      "",
+      "chrome,centerscreen,modal",
+      cert
+    );
   }
 }
 
+<<<<<<< HEAD
 async function restoreCerts() {
   var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
   let [restoreFileDialog, filePkcs12Spec, fileCertSpec] = await document.l10n.formatValues([
@@ -348,8 +387,37 @@ async function restoreCerts() {
   fp.appendFilter(filePkcs12Spec, "*.p12; *.pfx");
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(nsIFilePicker.filterAll);
+||||||| merged common ancestors
+function restoreCerts() {
+  var bundle = document.getElementById("pippki_bundle");
+  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
+  fp.init(window,
+          bundle.getString("chooseP12RestoreFileDialog2"),
+          nsIFilePicker.modeOpen);
+  fp.appendFilter(bundle.getString("file_browse_PKCS12_spec"),
+                  "*.p12; *.pfx");
+  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
+                  gCertFileTypes);
+  fp.appendFilters(nsIFilePicker.filterAll);
+=======
+async function restoreCerts() {
+  var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+  let [
+    restoreFileDialog,
+    filePkcs12Spec,
+    fileCertSpec,
+  ] = await document.l10n.formatValues([
+    { id: "choose-p12-restore-file-dialog" },
+    { id: "file-browse-pkcs12-spec" },
+    { id: "file-browse-certificate-spec" },
+  ]);
+  fp.init(window, restoreFileDialog, Ci.nsIFilePicker.modeOpen);
+  fp.appendFilter(filePkcs12Spec, "*.p12; *.pfx");
+  fp.appendFilter(fileCertSpec, gCertFileTypes);
+  fp.appendFilters(Ci.nsIFilePicker.filterAll);
+>>>>>>> upstream-releases
   fp.open(rv => {
-    if (rv != nsIFilePicker.returnOK) {
+    if (rv != Ci.nsIFilePicker.returnOK) {
       return;
     }
 
@@ -365,10 +433,14 @@ async function restoreCerts() {
     }
 
     if (isX509FileType) {
-      let fstream = Cc["@mozilla.org/network/file-input-stream;1"]
-                      .createInstance(Ci.nsIFileInputStream);
+      let fstream = Cc[
+        "@mozilla.org/network/file-input-stream;1"
+      ].createInstance(Ci.nsIFileInputStream);
       fstream.init(fp.file, -1, 0, 0);
-      let dataString = NetUtil.readInputStreamToString(fstream, fstream.available());
+      let dataString = NetUtil.readInputStreamToString(
+        fstream,
+        fstream.available()
+      );
       let dataArray = [];
       for (let i = 0; i < dataString.length; i++) {
         dataArray.push(dataString.charCodeAt(i));
@@ -380,16 +452,24 @@ async function restoreCerts() {
           return prompter;
         },
       };
-      certdb.importUserCertificate(dataArray, dataArray.length, interfaceRequestor);
+      certdb.importUserCertificate(
+        dataArray,
+        dataArray.length,
+        interfaceRequestor
+      );
     } else {
       // Otherwise, assume it's a PKCS12 file and import it that way.
       let password = {};
       let errorCode = Ci.nsIX509CertDB.ERROR_BAD_PASSWORD;
-      while (errorCode == Ci.nsIX509CertDB.ERROR_BAD_PASSWORD &&
-             certdialogs.getPKCS12FilePassword(window, password)) {
+      while (
+        errorCode == Ci.nsIX509CertDB.ERROR_BAD_PASSWORD &&
+        certdialogs.getPKCS12FilePassword(window, password)
+      ) {
         errorCode = certdb.importPKCS12File(fp.file, password.value);
-        if (errorCode == Ci.nsIX509CertDB.ERROR_BAD_PASSWORD &&
-            password.value.length == 0) {
+        if (
+          errorCode == Ci.nsIX509CertDB.ERROR_BAD_PASSWORD &&
+          password.value.length == 0
+        ) {
           // It didn't like empty string password, try no password.
           errorCode = certdb.importPKCS12File(fp.file, null);
         }
@@ -398,9 +478,9 @@ async function restoreCerts() {
     }
 
     var certcache = certdb.getCerts();
-    userTreeView.loadCertsFromCache(certcache, nsIX509Cert.USER_CERT);
+    userTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.USER_CERT);
     userTreeView.selection.clearSelection();
-    caTreeView.loadCertsFromCache(certcache, nsIX509Cert.CA_CERT);
+    caTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.CA_CERT);
     caTreeView.selection.clearSelection();
     enableBackupAllButton();
   });
@@ -425,10 +505,10 @@ function deleteCerts() {
   }
 
   const treeViewMap = {
-    "mine_tab": userTreeView,
-    "websites_tab": serverTreeView,
-    "ca_tab": caTreeView,
-    "others_tab": emailTreeView,
+    mine_tab: userTreeView,
+    websites_tab: serverTreeView,
+    ca_tab: caTreeView,
+    others_tab: emailTreeView,
   };
   let selTab = document.getElementById("certMgrTabbox").selectedItem;
   let selTabID = selTab.getAttribute("id");
@@ -440,9 +520,14 @@ function deleteCerts() {
   let retVals = {
     deleteConfirmed: false,
   };
-  window.openDialog("chrome://pippki/content/deletecert.xul", "",
-                    "chrome,centerscreen,modal", selTabID, selected_tree_items,
-                    retVals);
+  window.openDialog(
+    "chrome://pippki/content/deletecert.xul",
+    "",
+    "chrome,centerscreen,modal",
+    selTabID,
+    selected_tree_items,
+    retVals
+  );
 
   if (retVals.deleteConfirmed) {
     let treeView = treeViewMap[selTabID];
@@ -468,6 +553,7 @@ function viewCerts() {
   }
 }
 
+<<<<<<< HEAD
 async function addCACerts() {
   var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
   let [importCa, fileCertSpec] = await document.l10n.formatValues([
@@ -477,15 +563,37 @@ async function addCACerts() {
   fp.init(window, importCa, nsIFilePicker.modeOpen);
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(nsIFilePicker.filterAll);
+||||||| merged common ancestors
+function addCACerts() {
+  var bundle = document.getElementById("pippki_bundle");
+  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
+  fp.init(window,
+          bundle.getString("importCACertsPrompt"),
+          nsIFilePicker.modeOpen);
+  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
+                  gCertFileTypes);
+  fp.appendFilters(nsIFilePicker.filterAll);
+=======
+async function addCACerts() {
+  var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+  let [importCa, fileCertSpec] = await document.l10n.formatValues([
+    { id: "import-ca-certs-prompt" },
+    { id: "file-browse-certificate-spec" },
+  ]);
+  fp.init(window, importCa, Ci.nsIFilePicker.modeOpen);
+  fp.appendFilter(fileCertSpec, gCertFileTypes);
+  fp.appendFilters(Ci.nsIFilePicker.filterAll);
+>>>>>>> upstream-releases
   fp.open(rv => {
-    if (rv == nsIFilePicker.returnOK) {
-      certdb.importCertsFromFile(fp.file, nsIX509Cert.CA_CERT);
-      caTreeView.loadCerts(nsIX509Cert.CA_CERT);
+    if (rv == Ci.nsIFilePicker.returnOK) {
+      certdb.importCertsFromFile(fp.file, Ci.nsIX509Cert.CA_CERT);
+      caTreeView.loadCerts(Ci.nsIX509Cert.CA_CERT);
       caTreeView.selection.clearSelection();
     }
   });
 }
 
+<<<<<<< HEAD
 async function addEmailCert() {
   var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
   let [importEmail, fileCertSpec] = await document.l10n.formatValues([
@@ -495,22 +603,46 @@ async function addEmailCert() {
   fp.init(window, importEmail, nsIFilePicker.modeOpen);
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(nsIFilePicker.filterAll);
+||||||| merged common ancestors
+function addEmailCert() {
+  var bundle = document.getElementById("pippki_bundle");
+  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
+  fp.init(window,
+          bundle.getString("importEmailCertPrompt"),
+          nsIFilePicker.modeOpen);
+  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
+                  gCertFileTypes);
+  fp.appendFilters(nsIFilePicker.filterAll);
+=======
+async function addEmailCert() {
+  var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+  let [importEmail, fileCertSpec] = await document.l10n.formatValues([
+    { id: "import-email-cert-prompt" },
+    { id: "file-browse-certificate-spec" },
+  ]);
+  fp.init(window, importEmail, Ci.nsIFilePicker.modeOpen);
+  fp.appendFilter(fileCertSpec, gCertFileTypes);
+  fp.appendFilters(Ci.nsIFilePicker.filterAll);
+>>>>>>> upstream-releases
   fp.open(rv => {
-    if (rv == nsIFilePicker.returnOK) {
-      certdb.importCertsFromFile(fp.file, nsIX509Cert.EMAIL_CERT);
+    if (rv == Ci.nsIFilePicker.returnOK) {
+      certdb.importCertsFromFile(fp.file, Ci.nsIX509Cert.EMAIL_CERT);
       var certcache = certdb.getCerts();
-      emailTreeView.loadCertsFromCache(certcache, nsIX509Cert.EMAIL_CERT);
+      emailTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.EMAIL_CERT);
       emailTreeView.selection.clearSelection();
-      caTreeView.loadCertsFromCache(certcache, nsIX509Cert.CA_CERT);
+      caTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.CA_CERT);
       caTreeView.selection.clearSelection();
     }
   });
 }
 
 function addException() {
-  window.openDialog("chrome://pippki/content/exceptionDialog.xul", "",
-                    "chrome,centerscreen,modal");
+  window.openDialog(
+    "chrome://pippki/content/exceptionDialog.xul",
+    "",
+    "chrome,centerscreen,modal"
+  );
   var certcache = certdb.getCerts();
-  serverTreeView.loadCertsFromCache(certcache, nsIX509Cert.SERVER_CERT);
+  serverTreeView.loadCertsFromCache(certcache, Ci.nsIX509Cert.SERVER_CERT);
   serverTreeView.selection.clearSelection();
 }

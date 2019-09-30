@@ -22,25 +22,49 @@
 #include "nsCOMPtr.h"
 
 namespace mozilla {
+class PresShell;
 namespace dom {
 struct DateTimeValue;
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 class nsDateTimeControlFrame final : public nsContainerFrame,
                                      public nsIAnonymousContentCreator {
+||||||| merged common ancestors
+class nsDateTimeControlFrame final : public nsContainerFrame,
+                                     public nsIAnonymousContentCreator
+{
+=======
+class nsDateTimeControlFrame final : public nsContainerFrame {
+>>>>>>> upstream-releases
   typedef mozilla::dom::DateTimeValue DateTimeValue;
 
-  explicit nsDateTimeControlFrame(ComputedStyle* aStyle);
+  explicit nsDateTimeControlFrame(ComputedStyle* aStyle,
+                                  nsPresContext* aPresContext);
 
+<<<<<<< HEAD
  public:
   friend nsIFrame* NS_NewDateTimeControlFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+public:
+  friend nsIFrame* NS_NewDateTimeControlFrame(nsIPresShell* aPresShell,
+=======
+ public:
+  friend nsIFrame* NS_NewDateTimeControlFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                               ComputedStyle* aStyle);
 
   void ContentStatesChanged(mozilla::EventStates aStates) override;
+<<<<<<< HEAD
   void DestroyFrom(nsIFrame* aDestructRoot,
                    PostDestroyData& aPostDestroyData) override;
 
+||||||| merged common ancestors
+  void DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) override;
+
+=======
+>>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsDateTimeControlFrame)
 
@@ -64,6 +88,7 @@ class nsDateTimeControlFrame final : public nsContainerFrame,
               const ReflowInput& aReflowInput,
               nsReflowStatus& aStatus) override;
 
+<<<<<<< HEAD
   bool IsLeafDynamic() const override;
 
   // nsIAnonymousContentCreator
@@ -71,9 +96,18 @@ class nsDateTimeControlFrame final : public nsContainerFrame,
   void AppendAnonymousContentTo(nsTArray<nsIContent*>& aElements,
                                 uint32_t aFilter) override;
 
+||||||| merged common ancestors
+  // nsIAnonymousContentCreator
+  nsresult CreateAnonymousContent(nsTArray<ContentInfo>& aElements) override;
+  void AppendAnonymousContentTo(nsTArray<nsIContent*>& aElements,
+                                uint32_t aFilter) override;
+
+=======
+>>>>>>> upstream-releases
   nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
                             int32_t aModType) override;
 
+<<<<<<< HEAD
   nsIContent* GetInputAreaContent();
 
   void OnValueChanged();
@@ -82,6 +116,19 @@ class nsDateTimeControlFrame final : public nsContainerFrame,
   void HandleBlurEvent();
 
  private:
+||||||| merged common ancestors
+  void OnValueChanged();
+  void OnMinMaxStepAttrChanged();
+  void SetValueFromPicker(const DateTimeValue& aValue);
+  void HandleFocusEvent();
+  void HandleBlurEvent();
+  void SetPickerState(bool aOpen);
+  bool HasBadInput();
+
+private:
+=======
+ private:
+>>>>>>> upstream-releases
   class SyncDisabledStateEvent;
   friend class SyncDisabledStateEvent;
   class SyncDisabledStateEvent : public mozilla::Runnable {
@@ -104,13 +151,9 @@ class nsDateTimeControlFrame final : public nsContainerFrame,
   };
 
   /**
-   * Sync the disabled state of the anonymous children up with our content's.
+   * Sync the disabled state of the datetimebox children up with our content's.
    */
   void SyncDisabledState();
-
-  // Anonymous child which is bound via XBL to an element that wraps the input
-  // area and reset button.
-  RefPtr<mozilla::dom::Element> mInputAreaContent;
 };
 
 #endif  // nsDateTimeControlFrame_h__

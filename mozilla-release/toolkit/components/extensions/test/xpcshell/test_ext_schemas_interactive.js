@@ -1,7 +1,20 @@
 "use strict";
 
+<<<<<<< HEAD
 const {ExtensionManager} = ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm", {});
 
+||||||| merged common ancestors
+const {ExtensionManager} = ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm", {});
+
+Cu.importGlobalProperties(["Blob", "URL"]);
+
+=======
+const { ExtensionManager } = ChromeUtils.import(
+  "resource://gre/modules/ExtensionChild.jsm",
+  null
+);
+
+>>>>>>> upstream-releases
 let experimentAPIs = {
   userinputtest: {
     schema: "schema.json",
@@ -110,13 +123,19 @@ add_task(async function test_proxy() {
 
   extension.sendMessage("test");
   let result = await extension.awaitMessage("result");
-  ok(/test may only be called from a user input handler/.test(result),
-     `function failed when not called from a user input handler: ${result}`);
+  ok(
+    /test may only be called from a user input handler/.test(result),
+    `function failed when not called from a user input handler: ${result}`
+  );
 
   let handle = setHandlingUserInput(extension);
   extension.sendMessage("test");
   result = await extension.awaitMessage("result");
-  equal(result, null, "function succeeded when called from a user input handler");
+  equal(
+    result,
+    null,
+    "function succeeded when called from a user input handler"
+  );
   handle.destruct();
 
   await extension.unload();
@@ -147,13 +166,19 @@ add_task(async function test_local() {
 
   extension.sendMessage("test");
   let result = await extension.awaitMessage("result");
-  ok(/child may only be called from a user input handler/.test(result),
-     `function failed when not called from a user input handler: ${result}`);
+  ok(
+    /child may only be called from a user input handler/.test(result),
+    `function failed when not called from a user input handler: ${result}`
+  );
 
   let handle = setHandlingUserInput(extension);
   extension.sendMessage("test");
   result = await extension.awaitMessage("result");
-  equal(result, null, "function succeeded when called from a user input handler");
+  equal(
+    result,
+    null,
+    "function succeeded when called from a user input handler"
+  );
   handle.destruct();
 
   await extension.unload();

@@ -103,10 +103,25 @@ already_AddRefed<MediaData> BlankAudioDataCreator::Create(
     }
     mFrameSum++;
   }
+<<<<<<< HEAD
   RefPtr<AudioData> data(
       new AudioData(aSample->mOffset, aSample->mTime, aSample->mDuration,
                     uint32_t(frames.value()), std::move(samples), mChannelCount,
                     mSampleRate));
+||||||| merged common ancestors
+  RefPtr<AudioData> data(new AudioData(aSample->mOffset,
+                                       aSample->mTime,
+                                       aSample->mDuration,
+                                       uint32_t(frames.value()),
+                                       std::move(samples),
+                                       mChannelCount,
+                                       mSampleRate));
+=======
+  RefPtr<AudioData> data(new AudioData(aSample->mOffset, aSample->mTime,
+                                       std::move(samples), mChannelCount,
+                                       mSampleRate));
+  MOZ_DIAGNOSTIC_ASSERT(aSample->mDuration == data->mDuration, "must be equal");
+>>>>>>> upstream-releases
   return data.forget();
 }
 

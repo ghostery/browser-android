@@ -9,6 +9,7 @@
 
 // needed for HeadersGuardEnum.
 #include "mozilla/dom/HeadersBinding.h"
+#include "mozilla/dom/RequestBinding.h"
 #include "mozilla/dom/UnionTypes.h"
 
 #include "nsClassHashtable.h"
@@ -109,11 +110,23 @@ class InternalHeaders final {
 
   bool HasRevalidationHeaders() const;
 
+<<<<<<< HEAD
   static already_AddRefed<InternalHeaders> BasicHeaders(
       InternalHeaders* aHeaders);
 
   static already_AddRefed<InternalHeaders> CORSHeaders(
       InternalHeaders* aHeaders);
+||||||| merged common ancestors
+  static already_AddRefed<InternalHeaders>
+  BasicHeaders(InternalHeaders* aHeaders);
+=======
+  static already_AddRefed<InternalHeaders> BasicHeaders(
+      InternalHeaders* aHeaders);
+
+  static already_AddRefed<InternalHeaders> CORSHeaders(
+      InternalHeaders* aHeaders,
+      RequestCredentials mCredentialsMode = RequestCredentials::Omit);
+>>>>>>> upstream-releases
 
   void GetEntries(nsTArray<InternalHeaders::Entry>& aEntries) const;
 
@@ -124,28 +137,76 @@ class InternalHeaders final {
 
   static bool IsInvalidName(const nsACString& aName, ErrorResult& aRv);
   static bool IsInvalidValue(const nsACString& aValue, ErrorResult& aRv);
+  bool IsValidHeaderValue(const nsCString& aLowerName,
+                          const nsCString& aNormalizedValue, ErrorResult& aRv);
   bool IsImmutable(ErrorResult& aRv) const;
-  bool IsForbiddenRequestHeader(const nsACString& aName) const;
-  bool IsForbiddenRequestNoCorsHeader(const nsACString& aName) const;
-  bool IsForbiddenRequestNoCorsHeader(const nsACString& aName,
+  bool IsForbiddenRequestHeader(const nsCString& aName) const;
+  bool IsForbiddenRequestNoCorsHeader(const nsCString& aName) const;
+  bool IsForbiddenRequestNoCorsHeader(const nsCString& aName,
                                       const nsACString& aValue) const;
-  bool IsForbiddenResponseHeader(const nsACString& aName) const;
+  bool IsForbiddenResponseHeader(const nsCString& aName) const;
 
+<<<<<<< HEAD
   bool IsInvalidMutableHeader(const nsACString& aName, ErrorResult& aRv) const {
+||||||| merged common ancestors
+  bool IsInvalidMutableHeader(const nsACString& aName,
+                              ErrorResult& aRv) const
+  {
+=======
+  bool IsInvalidMutableHeader(const nsCString& aName, ErrorResult& aRv) const {
+>>>>>>> upstream-releases
     return IsInvalidMutableHeader(aName, EmptyCString(), aRv);
   }
 
+<<<<<<< HEAD
   bool IsInvalidMutableHeader(const nsACString& aName, const nsACString& aValue,
                               ErrorResult& aRv) const {
     return IsInvalidName(aName, aRv) || IsInvalidValue(aValue, aRv) ||
            IsImmutable(aRv) || IsForbiddenRequestHeader(aName) ||
+||||||| merged common ancestors
+  bool IsInvalidMutableHeader(const nsACString& aName,
+                              const nsACString& aValue,
+                              ErrorResult& aRv) const
+  {
+    return IsInvalidName(aName, aRv) ||
+           IsInvalidValue(aValue, aRv) ||
+           IsImmutable(aRv) ||
+           IsForbiddenRequestHeader(aName) ||
+=======
+  bool IsInvalidMutableHeader(const nsCString& aName, const nsACString& aValue,
+                              ErrorResult& aRv) const {
+    return IsInvalidName(aName, aRv) || IsInvalidValue(aValue, aRv) ||
+           IsImmutable(aRv) || IsForbiddenRequestHeader(aName) ||
+>>>>>>> upstream-releases
            IsForbiddenRequestNoCorsHeader(aName, aValue) ||
            IsForbiddenResponseHeader(aName);
   }
 
+<<<<<<< HEAD
   static bool IsSimpleHeader(const nsACString& aName, const nsACString& aValue);
+||||||| merged common ancestors
+  static bool IsSimpleHeader(const nsACString& aName,
+                             const nsACString& aValue);
+=======
+  // This method updates the passed name to match the capitalization of a header
+  // with the same name (ignoring case, per the spec).
+  void ReuseExistingNameIfExists(nsCString& aName) const;
 
-  static bool IsRevalidationHeader(const nsACString& aName);
+  void RemovePrivilegedNoCorsRequestHeaders();
+
+  void GetInternal(const nsCString& aLowerName, nsACString& aValue,
+                   ErrorResult& aRv) const;
+
+  bool DeleteInternal(const nsCString& aLowerName, ErrorResult& aRv);
+
+  static bool IsNoCorsSafelistedRequestHeaderName(const nsCString& aName);
+
+  static bool IsPrivilegedNoCorsRequestHeaderName(const nsCString& aName);
+
+  static bool IsSimpleHeader(const nsCString& aName, const nsACString& aValue);
+>>>>>>> upstream-releases
+
+  static bool IsRevalidationHeader(const nsCString& aName);
 
   void MaybeSortList();
   void SetListDirty();

@@ -9,10 +9,23 @@
 #include "base/message_loop.h"
 #include "base/task.h"
 #include "MainThreadUtils.h"
+<<<<<<< HEAD
 #include "mozilla/dom/TabParent.h"
+||||||| merged common ancestors
+#include "mozilla/dom/ContentParent.h"
+#include "mozilla/dom/TabParent.h"
+=======
+#include "mozilla/dom/BrowserParent.h"
+>>>>>>> upstream-releases
 #include "mozilla/layers/APZCCallbackHelper.h"
 #include "mozilla/layers/APZCTreeManagerParent.h"  // for APZCTreeManagerParent
 #include "mozilla/layers/APZThreadUtils.h"
+<<<<<<< HEAD
+||||||| merged common ancestors
+#include "mozilla/layout/RenderFrameParent.h"
+=======
+#include "mozilla/layers/MatrixMessage.h"
+>>>>>>> upstream-releases
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/Unused.h"
 #include "Units.h"
@@ -23,9 +36,41 @@ namespace layers {
 using namespace mozilla::gfx;
 
 RemoteContentController::RemoteContentController()
+<<<<<<< HEAD
+    : mCompositorThread(MessageLoop::current()), mCanSend(true) {}
+||||||| merged common ancestors
+  : mCompositorThread(MessageLoop::current())
+  , mCanSend(true)
+{
+}
+=======
     : mCompositorThread(MessageLoop::current()), mCanSend(true) {}
 
 RemoteContentController::~RemoteContentController() {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+RemoteContentController::~RemoteContentController() {}
+||||||| merged common ancestors
+RemoteContentController::~RemoteContentController()
+{
+}
+=======
+void RemoteContentController::NotifyLayerTransforms(
+    const nsTArray<MatrixMessage>& aTransforms) {
+  if (MessageLoop::current() != mCompositorThread) {
+    // We have to send messages from the compositor thread
+    mCompositorThread->PostTask(NewRunnableMethod<nsTArray<MatrixMessage>>(
+        "layers::RemoteContentController::NotifyLayerTransforms", this,
+        &RemoteContentController::NotifyLayerTransforms, aTransforms));
+    return;
+  }
+
+  if (mCanSend) {
+    Unused << SendLayerTransforms(aTransforms);
+  }
+}
+>>>>>>> upstream-releases
 
 void RemoteContentController::RequestContentRepaint(
     const RepaintRequest& aRequest) {
@@ -43,8 +88,15 @@ void RemoteContentController::HandleTapOnMainThread(TapType aTapType,
                                                     uint64_t aInputBlockId) {
   MOZ_ASSERT(NS_IsMainThread());
 
+<<<<<<< HEAD
   dom::TabParent* tab =
       dom::TabParent::GetTabParentFromLayersId(aGuid.mLayersId);
+||||||| merged common ancestors
+  dom::TabParent* tab = dom::TabParent::GetTabParentFromLayersId(aGuid.mLayersId);
+=======
+  dom::BrowserParent* tab =
+      dom::BrowserParent::GetBrowserParentFromLayersId(aGuid.mLayersId);
+>>>>>>> upstream-releases
   if (tab) {
     tab->SendHandleTap(aTapType, aPoint, aModifiers, aGuid, aInputBlockId);
   }
@@ -94,6 +146,7 @@ void RemoteContentController::HandleTap(TapType aTapType,
   if (NS_IsMainThread()) {
     HandleTapOnMainThread(aTapType, aPoint, aModifiers, aGuid, aInputBlockId);
   } else {
+<<<<<<< HEAD
     // We don't want to get the TabParent or call TabParent::SendHandleTap()
     // from a non-main thread (this might happen on Android, where this is
     // called from the Java UI thread)
@@ -103,6 +156,33 @@ void RemoteContentController::HandleTap(TapType aTapType,
             "layers::RemoteContentController::HandleTapOnMainThread", this,
             &RemoteContentController::HandleTapOnMainThread, aTapType, aPoint,
             aModifiers, aGuid, aInputBlockId));
+||||||| merged common ancestors
+    // We don't want to get the TabParent or call TabParent::SendHandleTap() from a non-main thread (this might happen
+    // on Android, where this is called from the Java UI thread)
+    NS_DispatchToMainThread(NewRunnableMethod<TapType,
+                                              LayoutDevicePoint,
+                                              Modifiers,
+                                              ScrollableLayerGuid,
+                                              uint64_t>(
+      "layers::RemoteContentController::HandleTapOnMainThread",
+      this,
+      &RemoteContentController::HandleTapOnMainThread,
+      aTapType,
+      aPoint,
+      aModifiers,
+      aGuid,
+      aInputBlockId));
+=======
+    // We don't want to get the BrowserParent or call
+    // BrowserParent::SendHandleTap() from a non-main thread (this might happen
+    // on Android, where this is called from the Java UI thread)
+    NS_DispatchToMainThread(
+        NewRunnableMethod<TapType, LayoutDevicePoint, Modifiers,
+                          ScrollableLayerGuid, uint64_t>(
+            "layers::RemoteContentController::HandleTapOnMainThread", this,
+            &RemoteContentController::HandleTapOnMainThread, aTapType, aPoint,
+            aModifiers, aGuid, aInputBlockId));
+>>>>>>> upstream-releases
   }
 }
 
@@ -354,5 +434,22 @@ void RemoteContentController::Destroy() {
   }
 }
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+mozilla::ipc::IPCResult RemoteContentController::RecvDestroy() {
+  // The actor on the other side is about to get destroyed, so let's not send
+  // it any more messages.
+  mCanSend = false;
+  return IPC_OK();
+}
+
+bool RemoteContentController::IsRemote() { return true; }
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases

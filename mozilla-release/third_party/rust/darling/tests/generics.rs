@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate darling;
+#[macro_use]
 extern crate syn;
+#[macro_use]
+extern crate quote;
 
 use darling::FromDeriveInput;
 
@@ -15,12 +18,25 @@ struct Foo<T> {
 
 #[test]
 fn expansion() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem = "Hello")]
         pub struct Foo;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#)
+        .unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
-    let _parsed = Foo::<String>::from_derive_input(&di).unwrap();
+    Foo::<String>::from_derive_input(&di).unwrap();
 }

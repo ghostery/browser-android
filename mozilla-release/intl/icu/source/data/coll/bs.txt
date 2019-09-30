@@ -5,11 +5,23 @@ bs{
     collations{
         search{
             Sequence{"[import hr-u-co-search]"}
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
         standard{
             Sequence{"[import hr]"}
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

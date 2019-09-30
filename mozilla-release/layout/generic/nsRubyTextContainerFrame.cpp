@@ -9,6 +9,7 @@
 #include "nsRubyTextContainerFrame.h"
 
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/UniquePtr.h"
 #include "mozilla/WritingModes.h"
 #include "nsLineLayout.h"
@@ -27,9 +28,22 @@ NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRubyTextContainerFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewRubyTextContainerFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsRubyTextContainerFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewRubyTextContainerFrame(nsIPresShell* aPresShell,
+                             ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsRubyTextContainerFrame(aStyle);
+=======
+nsContainerFrame* NS_NewRubyTextContainerFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsRubyTextContainerFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -43,36 +57,91 @@ nsresult nsRubyTextContainerFrame::GetFrameName(nsAString& aResult) const {
 }
 #endif
 
+<<<<<<< HEAD
 /* virtual */ bool nsRubyTextContainerFrame::IsFrameOfType(
     uint32_t aFlags) const {
+||||||| merged common ancestors
+/* virtual */ bool
+nsRubyTextContainerFrame::IsFrameOfType(uint32_t aFlags) const
+{
+=======
+/* virtual */
+bool nsRubyTextContainerFrame::IsFrameOfType(uint32_t aFlags) const {
+>>>>>>> upstream-releases
   if (aFlags & (eSupportsCSSTransforms | eSupportsContainLayoutAndPaint)) {
     return false;
   }
   return nsContainerFrame::IsFrameOfType(aFlags);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextContainerFrame::SetInitialChildList(
     ChildListID aListID, nsFrameList& aChildList) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextContainerFrame::SetInitialChildList(ChildListID aListID,
+                                              nsFrameList& aChildList)
+{
+=======
+/* virtual */
+void nsRubyTextContainerFrame::SetInitialChildList(ChildListID aListID,
+                                                   nsFrameList& aChildList) {
+>>>>>>> upstream-releases
   nsContainerFrame::SetInitialChildList(aListID, aChildList);
   if (aListID == kPrincipalList) {
     UpdateSpanFlag();
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextContainerFrame::AppendFrames(
     ChildListID aListID, nsFrameList& aFrameList) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextContainerFrame::AppendFrames(ChildListID aListID,
+                                       nsFrameList& aFrameList)
+{
+=======
+/* virtual */
+void nsRubyTextContainerFrame::AppendFrames(ChildListID aListID,
+                                            nsFrameList& aFrameList) {
+>>>>>>> upstream-releases
   nsContainerFrame::AppendFrames(aListID, aFrameList);
   UpdateSpanFlag();
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextContainerFrame::InsertFrames(
     ChildListID aListID, nsIFrame* aPrevFrame, nsFrameList& aFrameList) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextContainerFrame::InsertFrames(ChildListID aListID,
+                                       nsIFrame* aPrevFrame,
+                                       nsFrameList& aFrameList)
+{
+=======
+/* virtual */
+void nsRubyTextContainerFrame::InsertFrames(ChildListID aListID,
+                                            nsIFrame* aPrevFrame,
+                                            nsFrameList& aFrameList) {
+>>>>>>> upstream-releases
   nsContainerFrame::InsertFrames(aListID, aPrevFrame, aFrameList);
   UpdateSpanFlag();
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextContainerFrame::RemoveFrame(ChildListID aListID,
                                                          nsIFrame* aOldFrame) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextContainerFrame::RemoveFrame(ChildListID aListID,
+                                      nsIFrame* aOldFrame)
+{
+=======
+/* virtual */
+void nsRubyTextContainerFrame::RemoveFrame(ChildListID aListID,
+                                           nsIFrame* aOldFrame) {
+>>>>>>> upstream-releases
   nsContainerFrame::RemoveFrame(aListID, aOldFrame);
   UpdateSpanFlag();
 }
@@ -96,9 +165,24 @@ void nsRubyTextContainerFrame::UpdateSpanFlag() {
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextContainerFrame::Reflow(
     nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
     const ReflowInput& aReflowInput, nsReflowStatus& aStatus) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextContainerFrame::Reflow(nsPresContext* aPresContext,
+                                 ReflowOutput& aDesiredSize,
+                                 const ReflowInput& aReflowInput,
+                                 nsReflowStatus& aStatus)
+{
+=======
+/* virtual */
+void nsRubyTextContainerFrame::Reflow(nsPresContext* aPresContext,
+                                      ReflowOutput& aDesiredSize,
+                                      const ReflowInput& aReflowInput,
+                                      nsReflowStatus& aStatus) {
+>>>>>>> upstream-releases
   MarkInReflow();
   DO_GLOBAL_REFLOW_COUNT("nsRubyTextContainerFrame");
   DISPLAY_REFLOW(aPresContext, this, aReflowInput, aDesiredSize, aStatus);

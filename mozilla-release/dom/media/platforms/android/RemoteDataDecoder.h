@@ -42,13 +42,36 @@ class RemoteDataDecoder : public MediaDataDecoder,
                     const nsString& aDrmStubId, TaskQueue* aTaskQueue);
 
   // Methods only called on mTaskQueue.
+  RefPtr<FlushPromise> ProcessFlush();
+  RefPtr<DecodePromise> ProcessDecode(MediaRawData* aSample);
   RefPtr<ShutdownPromise> ProcessShutdown();
   void UpdateInputStatus(int64_t aTimestamp, bool aProcessed);
   void UpdateOutputStatus(RefPtr<MediaData>&& aSample);
   void ReturnDecodedData();
   void DrainComplete();
   void Error(const MediaResult& aError);
+<<<<<<< HEAD
   void AssertOnTaskQueue() { MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn()); }
+||||||| merged common ancestors
+  void AssertOnTaskQueue()
+  {
+    MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn());
+  }
+=======
+  void AssertOnTaskQueue() const {
+    MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn());
+  }
+>>>>>>> upstream-releases
+
+  enum class State { DRAINED, DRAINABLE, DRAINING, SHUTDOWN };
+  void SetState(State aState) {
+    AssertOnTaskQueue();
+    mState = aState;
+  }
+  State GetState() const {
+    AssertOnTaskQueue();
+    return mState;
+  }
 
   // Whether the sample will be used.
   virtual bool IsUsefulData(const RefPtr<MediaData>& aSample) { return true; }
@@ -63,17 +86,45 @@ class RemoteDataDecoder : public MediaDataDecoder,
   nsString mDrmStubId;
 
   RefPtr<TaskQueue> mTaskQueue;
-  // Only ever accessed on mTaskqueue.
-  bool mShutdown = false;
+
+  // Preallocated Java object used as a reusable storage for input buffer
+  // information. Contents must be changed only on mTaskQueue.
+  java::sdk::BufferInfo::GlobalRef mInputBufferInfo;
+
+  // Session ID attached to samples. It is returned by CodecProxy::Input().
+  // Accessed on mTaskqueue only.
+  int64_t mSession;
+
+ private:
+  enum class PendingOp { INCREASE, DECREASE, CLEAR };
+  void UpdatePendingInputStatus(PendingOp aOp);
+  size_t HasPendingInputs() {
+    AssertOnTaskQueue();
+    return mNumPendingInputs > 0;
+  }
+
+  // The following members must only be accessed on mTaskqueue.
   MozPromiseHolder<DecodePromise> mDecodePromise;
   MozPromiseHolder<DecodePromise> mDrainPromise;
+<<<<<<< HEAD
   enum class DrainStatus {
     DRAINED,
     DRAINABLE,
     DRAINING,
   };
   DrainStatus mDrainStatus = DrainStatus::DRAINED;
+||||||| merged common ancestors
+  enum class DrainStatus
+  {
+    DRAINED,
+    DRAINABLE,
+    DRAINING,
+  };
+  DrainStatus mDrainStatus = DrainStatus::DRAINED;
+=======
+>>>>>>> upstream-releases
   DecodedData mDecodedData;
+  State mState = State::DRAINED;
   size_t mNumPendingInputs;
 };
 

@@ -17,6 +17,7 @@ namespace dom {
 
 typedef SVGViewportElement SVGSymbolElementBase;
 
+<<<<<<< HEAD
 class SVGSymbolElement final : public SVGSymbolElementBase {
  protected:
   friend nsresult(::NS_NewSVGSymbolElement(
@@ -29,6 +30,31 @@ class SVGSymbolElement final : public SVGSymbolElementBase {
                              JS::Handle<JSObject*> aGivenProto) override;
 
  public:
+||||||| merged common ancestors
+class SVGSymbolElement final : public SVGSymbolElementBase
+{
+protected:
+  friend nsresult (::NS_NewSVGSymbolElement(nsIContent **aResult,
+                                            already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGSymbolElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGSymbolElement();
+  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
+
+public:
+=======
+class SVGSymbolElement final : public SVGSymbolElementBase {
+ protected:
+  friend nsresult(::NS_NewSVGSymbolElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGSymbolElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGSymbolElement() = default;
+  virtual JSObject* WrapNode(JSContext* cx,
+                             JS::Handle<JSObject*> aGivenProto) override;
+
+ public:
+>>>>>>> upstream-releases
   // interfaces:
   NS_DECL_ISUPPORTS_INHERITED
 

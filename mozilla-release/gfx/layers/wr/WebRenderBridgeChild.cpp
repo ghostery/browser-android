@@ -7,6 +7,7 @@
 #include "mozilla/layers/WebRenderBridgeChild.h"
 
 #include "gfxPlatform.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/dom/TabGroup.h"
 #include "mozilla/layers/CompositableClient.h"
 #include "mozilla/layers/CompositorBridgeChild.h"
@@ -23,6 +24,7 @@ namespace layers {
 using namespace mozilla::gfx;
 
 WebRenderBridgeChild::WebRenderBridgeChild(const wr::PipelineId& aPipelineId)
+<<<<<<< HEAD
     : mIsInTransaction(false),
       mIsInClearCachedResources(false),
       mIdNamespace{0},
@@ -35,6 +37,36 @@ WebRenderBridgeChild::WebRenderBridgeChild(const wr::PipelineId& aPipelineId)
       mFontInstanceKeysDeleted(0) {}
 
 WebRenderBridgeChild::~WebRenderBridgeChild() {
+||||||| merged common ancestors
+  : mIsInTransaction(false)
+  , mIsInClearCachedResources(false)
+  , mIdNamespace{0}
+  , mResourceId(0)
+  , mPipelineId(aPipelineId)
+  , mManager(nullptr)
+  , mIPCOpen(false)
+  , mDestroyed(false)
+  , mFontKeysDeleted(0)
+  , mFontInstanceKeysDeleted(0)
+{
+}
+
+WebRenderBridgeChild::~WebRenderBridgeChild()
+{
+=======
+    : mIsInTransaction(false),
+      mIsInClearCachedResources(false),
+      mIdNamespace{0},
+      mResourceId(0),
+      mPipelineId(aPipelineId),
+      mManager(nullptr),
+      mIPCOpen(false),
+      mDestroyed(false),
+      mFontKeysDeleted(),
+      mFontInstanceKeysDeleted() {}
+
+WebRenderBridgeChild::~WebRenderBridgeChild() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mDestroyed);
 }
@@ -70,9 +102,23 @@ void WebRenderBridgeChild::DoDestroy() {
   mManager = nullptr;
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::AddWebRenderParentCommand(
     const WebRenderParentCommand& aCmd) {
   mParentCommands.AppendElement(aCmd);
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::AddWebRenderParentCommand(const WebRenderParentCommand& aCmd)
+{
+  mParentCommands.AppendElement(aCmd);
+=======
+void WebRenderBridgeChild::AddWebRenderParentCommand(
+    const WebRenderParentCommand& aCmd, wr::RenderRoot aRenderRoot) {
+  MOZ_ASSERT(aRenderRoot == wr::RenderRoot::Default ||
+             (XRE_IsParentProcess() &&
+              StaticPrefs::gfx_webrender_split_render_roots()));
+  mParentCommands[aRenderRoot].AppendElement(aCmd);
+>>>>>>> upstream-releases
 }
 
 void WebRenderBridgeChild::BeginTransaction() {
@@ -82,8 +128,17 @@ void WebRenderBridgeChild::BeginTransaction() {
   mIsInTransaction = true;
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::UpdateResources(
     wr::IpcResourceUpdateQueue& aResources) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::UpdateResources(wr::IpcResourceUpdateQueue& aResources)
+{
+=======
+void WebRenderBridgeChild::UpdateResources(
+    wr::IpcResourceUpdateQueue& aResources, wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   if (!IPCOpen()) {
     aResources.Clear();
     return;
@@ -98,9 +153,17 @@ void WebRenderBridgeChild::UpdateResources(
   nsTArray<ipc::Shmem> largeShmems;
   aResources.Flush(resourceUpdates, smallShmems, largeShmems);
 
+<<<<<<< HEAD
   this->SendUpdateResources(resourceUpdates, smallShmems, largeShmems);
+||||||| merged common ancestors
+  this->SendUpdateResources(resourceUpdates, std::move(smallShmems), largeShmems);
+=======
+  this->SendUpdateResources(resourceUpdates, smallShmems,
+                            std::move(largeShmems), aRenderRoot);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::EndTransaction(
     const wr::LayoutSize& aContentSize, wr::BuiltDisplayList& aDL,
     wr::IpcResourceUpdateQueue& aResources, const gfx::IntSize& aSize,
@@ -108,32 +171,82 @@ void WebRenderBridgeChild::EndTransaction(
     bool aContainsSVGGroup, const mozilla::VsyncId& aVsyncId,
     const mozilla::TimeStamp& aRefreshStartTime,
     const mozilla::TimeStamp& aTxnStartTime, const nsCString& aTxnURL) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::EndTransaction(const wr::LayoutSize& aContentSize,
+                                     wr::BuiltDisplayList& aDL,
+                                     wr::IpcResourceUpdateQueue& aResources,
+                                     const gfx::IntSize& aSize,
+                                     TransactionId aTransactionId,
+                                     const WebRenderScrollData& aScrollData,
+                                     bool aContainsSVGGroup,
+                                     const mozilla::TimeStamp& aRefreshStartTime,
+                                     const mozilla::TimeStamp& aTxnStartTime)
+{
+=======
+void WebRenderBridgeChild::EndTransaction(
+    nsTArray<RenderRootDisplayListData>& aRenderRoots,
+    TransactionId aTransactionId, bool aContainsSVGGroup,
+    const mozilla::VsyncId& aVsyncId, const mozilla::TimeStamp& aVsyncStartTime,
+    const mozilla::TimeStamp& aRefreshStartTime,
+    const mozilla::TimeStamp& aTxnStartTime, const nsCString& aTxnURL) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mDestroyed);
   MOZ_ASSERT(mIsInTransaction);
 
-  ByteBuf dlData(aDL.dl.inner.data, aDL.dl.inner.length, aDL.dl.inner.capacity);
-  aDL.dl.inner.capacity = 0;
-  aDL.dl.inner.data = nullptr;
-
   TimeStamp fwdTime = TimeStamp::Now();
 
-  nsTArray<OpUpdateResource> resourceUpdates;
-  nsTArray<RefCountedShmem> smallShmems;
-  nsTArray<ipc::Shmem> largeShmems;
-  aResources.Flush(resourceUpdates, smallShmems, largeShmems);
+<<<<<<< HEAD
+  TimeStamp fwdTime = TimeStamp::Now();
+||||||| merged common ancestors
+  TimeStamp fwdTime;
+#if defined(ENABLE_FRAME_LATENCY_LOG)
+  fwdTime = TimeStamp::Now();
+#endif
+=======
+  for (auto& renderRoot : aRenderRoots) {
+    MOZ_ASSERT(renderRoot.mRenderRoot == wr::RenderRoot::Default ||
+               (XRE_IsParentProcess() &&
+                StaticPrefs::gfx_webrender_split_render_roots()));
+    renderRoot.mCommands = std::move(mParentCommands[renderRoot.mRenderRoot]);
+  }
+>>>>>>> upstream-releases
 
+  nsTArray<CompositionPayload> payloads;
+  if (mManager) {
+    mManager->TakeCompositionPayloads(payloads);
+  }
+
+<<<<<<< HEAD
   this->SendSetDisplayList(aSize, mParentCommands, mDestroyedActors,
                            GetFwdTransactionId(), aTransactionId, aContentSize,
                            dlData, aDL.dl_desc, aScrollData, resourceUpdates,
                            smallShmems, largeShmems, mIdNamespace,
                            aContainsSVGGroup, aVsyncId, aRefreshStartTime,
                            aTxnStartTime, aTxnURL, fwdTime);
+||||||| merged common ancestors
+  this->SendSetDisplayList(aSize, mParentCommands, mDestroyedActors,
+                           GetFwdTransactionId(), aTransactionId,
+                           aContentSize, dlData, aDL.dl_desc, aScrollData,
+                           std::move(resourceUpdates), std::move(smallShmems), largeShmems,
+                           mIdNamespace, aContainsSVGGroup, aRefreshStartTime, aTxnStartTime, fwdTime);
+=======
+  this->SendSetDisplayList(std::move(aRenderRoots), mDestroyedActors,
+                           GetFwdTransactionId(), aTransactionId, mIdNamespace,
+                           aContainsSVGGroup, aVsyncId, aVsyncStartTime,
+                           aRefreshStartTime, aTxnStartTime, aTxnURL, fwdTime,
+                           payloads);
+>>>>>>> upstream-releases
 
-  mParentCommands.Clear();
+  // With multiple render roots, we may not have sent all of our
+  // mParentCommands, so go ahead and go through our mParentCommands and ensure
+  // they get sent.
+  ProcessWebRenderParentCommands();
   mDestroyedActors.Clear();
   mIsInTransaction = false;
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::EndEmptyTransaction(
     const FocusTarget& aFocusTarget, const ScrollUpdatesMap& aUpdates,
     Maybe<wr::IpcResourceUpdateQueue>& aResources,
@@ -141,9 +254,28 @@ void WebRenderBridgeChild::EndEmptyTransaction(
     const mozilla::VsyncId& aVsyncId,
     const mozilla::TimeStamp& aRefreshStartTime,
     const mozilla::TimeStamp& aTxnStartTime, const nsCString& aTxnURL) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::EndEmptyTransaction(const FocusTarget& aFocusTarget,
+                                          const ScrollUpdatesMap& aUpdates,
+                                          uint32_t aPaintSequenceNumber,
+                                          TransactionId aTransactionId,
+                                          const mozilla::TimeStamp& aRefreshStartTime,
+                                          const mozilla::TimeStamp& aTxnStartTime)
+{
+=======
+void WebRenderBridgeChild::EndEmptyTransaction(
+    const FocusTarget& aFocusTarget,
+    nsTArray<RenderRootUpdates>& aRenderRootUpdates,
+    uint32_t aPaintSequenceNumber, TransactionId aTransactionId,
+    const mozilla::VsyncId& aVsyncId, const mozilla::TimeStamp& aVsyncStartTime,
+    const mozilla::TimeStamp& aRefreshStartTime,
+    const mozilla::TimeStamp& aTxnStartTime, const nsCString& aTxnURL) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mDestroyed);
   MOZ_ASSERT(mIsInTransaction);
 
+<<<<<<< HEAD
   TimeStamp fwdTime = TimeStamp::Now();
 
   nsTArray<OpUpdateResource> resourceUpdates;
@@ -153,13 +285,52 @@ void WebRenderBridgeChild::EndEmptyTransaction(
     aResources->Flush(resourceUpdates, smallShmems, largeShmems);
     aResources.reset();
   }
+||||||| merged common ancestors
+  TimeStamp fwdTime;
+#if defined(ENABLE_FRAME_LATENCY_LOG)
+  fwdTime = TimeStamp::Now();
+#endif
+=======
+  TimeStamp fwdTime = TimeStamp::Now();
 
+  for (auto& update : aRenderRootUpdates) {
+    MOZ_ASSERT(update.mRenderRoot == wr::RenderRoot::Default ||
+               (XRE_IsParentProcess() &&
+                StaticPrefs::gfx_webrender_split_render_roots()));
+    update.mCommands = std::move(mParentCommands[update.mRenderRoot]);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   this->SendEmptyTransaction(
       aFocusTarget, aUpdates, aPaintSequenceNumber, mParentCommands,
       mDestroyedActors, GetFwdTransactionId(), aTransactionId, resourceUpdates,
       smallShmems, largeShmems, mIdNamespace, aVsyncId, aRefreshStartTime,
       aTxnStartTime, aTxnURL, fwdTime);
   mParentCommands.Clear();
+||||||| merged common ancestors
+  this->SendEmptyTransaction(aFocusTarget, aUpdates, aPaintSequenceNumber,
+                             mParentCommands, mDestroyedActors,
+                             GetFwdTransactionId(), aTransactionId,
+                             mIdNamespace, aRefreshStartTime, aTxnStartTime, fwdTime);
+  mParentCommands.Clear();
+=======
+  nsTArray<CompositionPayload> payloads;
+  if (mManager) {
+    mManager->TakeCompositionPayloads(payloads);
+  }
+
+  this->SendEmptyTransaction(
+      aFocusTarget, aPaintSequenceNumber, std::move(aRenderRootUpdates),
+      mDestroyedActors, GetFwdTransactionId(), aTransactionId, mIdNamespace,
+      aVsyncId, aVsyncStartTime, aRefreshStartTime, aTxnStartTime, aTxnURL,
+      fwdTime, payloads);
+
+  // With multiple render roots, we may not have sent all of our
+  // mParentCommands, so go ahead and go through our mParentCommands and ensure
+  // they get sent.
+  ProcessWebRenderParentCommands();
+>>>>>>> upstream-releases
   mDestroyedActors.Clear();
   mIsInTransaction = false;
 }
@@ -167,28 +338,78 @@ void WebRenderBridgeChild::EndEmptyTransaction(
 void WebRenderBridgeChild::ProcessWebRenderParentCommands() {
   MOZ_ASSERT(!mDestroyed);
 
-  if (mParentCommands.IsEmpty()) {
-    return;
+  for (auto renderRoot : wr::kRenderRoots) {
+    if (!mParentCommands[renderRoot].IsEmpty()) {
+      MOZ_ASSERT(renderRoot == wr::RenderRoot::Default ||
+                 StaticPrefs::gfx_webrender_split_render_roots());
+      this->SendParentCommands(mParentCommands[renderRoot], renderRoot);
+      mParentCommands[renderRoot].Clear();
+    }
   }
-  this->SendParentCommands(mParentCommands);
-  mParentCommands.Clear();
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::AddPipelineIdForAsyncCompositable(
     const wr::PipelineId& aPipelineId, const CompositableHandle& aHandle) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::AddPipelineIdForAsyncCompositable(const wr::PipelineId& aPipelineId,
+                                                        const CompositableHandle& aHandle)
+{
+=======
+void WebRenderBridgeChild::AddPipelineIdForAsyncCompositable(
+    const wr::PipelineId& aPipelineId, const CompositableHandle& aHandle,
+    wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   AddWebRenderParentCommand(
+<<<<<<< HEAD
       OpAddPipelineIdForCompositable(aPipelineId, aHandle, /* isAsync */ true));
+||||||| merged common ancestors
+    OpAddPipelineIdForCompositable(aPipelineId, aHandle, /* isAsync */ true));
+=======
+      OpAddPipelineIdForCompositable(aPipelineId, aHandle, /* isAsync */ true),
+      aRenderRoot);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::AddPipelineIdForCompositable(
     const wr::PipelineId& aPipelineId, const CompositableHandle& aHandle) {
   AddWebRenderParentCommand(OpAddPipelineIdForCompositable(
       aPipelineId, aHandle, /* isAsync */ false));
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::AddPipelineIdForCompositable(const wr::PipelineId& aPipelineId,
+                                                   const CompositableHandle& aHandle)
+{
+  AddWebRenderParentCommand(
+    OpAddPipelineIdForCompositable(aPipelineId, aHandle, /* isAsync */ false));
+=======
+void WebRenderBridgeChild::AddPipelineIdForCompositable(
+    const wr::PipelineId& aPipelineId, const CompositableHandle& aHandle,
+    wr::RenderRoot aRenderRoot) {
+  AddWebRenderParentCommand(
+      OpAddPipelineIdForCompositable(aPipelineId, aHandle, /* isAsync */ false),
+      aRenderRoot);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::RemovePipelineIdForCompositable(
     const wr::PipelineId& aPipelineId) {
   AddWebRenderParentCommand(OpRemovePipelineIdForCompositable(aPipelineId));
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::RemovePipelineIdForCompositable(const wr::PipelineId& aPipelineId)
+{
+  AddWebRenderParentCommand(
+    OpRemovePipelineIdForCompositable(aPipelineId));
+=======
+void WebRenderBridgeChild::RemovePipelineIdForCompositable(
+    const wr::PipelineId& aPipelineId, wr::RenderRoot aRenderRoot) {
+  AddWebRenderParentCommand(OpRemovePipelineIdForCompositable(aPipelineId),
+                            aRenderRoot);
+>>>>>>> upstream-releases
 }
 
 wr::ExternalImageId WebRenderBridgeChild::GetNextExternalImageId() {
@@ -198,8 +419,27 @@ wr::ExternalImageId WebRenderBridgeChild::GetNextExternalImageId() {
   return id.value();
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::ReleaseTextureOfImage(const wr::ImageKey& aKey) {
   AddWebRenderParentCommand(OpReleaseTextureOfImage(aKey));
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::DeallocExternalImageId(const wr::ExternalImageId& aImageId)
+{
+  AddWebRenderParentCommand(
+    OpRemoveExternalImageId(aImageId));
+}
+
+void
+WebRenderBridgeChild::ReleaseTextureOfImage(const wr::ImageKey& aKey)
+{
+  AddWebRenderParentCommand(
+    OpReleaseTextureOfImage(aKey));
+=======
+void WebRenderBridgeChild::ReleaseTextureOfImage(const wr::ImageKey& aKey,
+                                                 wr::RenderRoot aRenderRoot) {
+  AddWebRenderParentCommand(OpReleaseTextureOfImage(aKey), aRenderRoot);
+>>>>>>> upstream-releases
 }
 
 struct FontFileDataSink {
@@ -238,33 +478,83 @@ void WebRenderBridgeChild::PushGlyphs(
     const wr::GlyphOptions* aGlyphOptions) {
   MOZ_ASSERT(aFont);
 
-  wr::WrFontInstanceKey key = GetFontKeyForScaledFont(aFont);
-  MOZ_ASSERT(key.mNamespace.mHandle && key.mHandle);
+  Maybe<wr::WrFontInstanceKey> key =
+      GetFontKeyForScaledFont(aFont, aBuilder.GetRenderRoot());
+  MOZ_ASSERT(key.isSome());
 
+<<<<<<< HEAD
   aBuilder.PushText(aBounds, aClip, aBackfaceVisible, aColor, key, aGlyphs,
                     aGlyphOptions);
+||||||| merged common ancestors
+  aBuilder.PushText(aBounds,
+                    aClip,
+                    aBackfaceVisible,
+                    aColor,
+                    key,
+                    aGlyphs,
+                    aGlyphOptions);
+=======
+  if (key.isSome()) {
+    aBuilder.PushText(aBounds, aClip, aBackfaceVisible, aColor, key.value(),
+                      aGlyphs, aGlyphOptions);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 wr::FontInstanceKey WebRenderBridgeChild::GetFontKeyForScaledFont(
     gfx::ScaledFont* aScaledFont, wr::IpcResourceUpdateQueue* aResources) {
+||||||| merged common ancestors
+wr::FontInstanceKey
+WebRenderBridgeChild::GetFontKeyForScaledFont(gfx::ScaledFont* aScaledFont,
+                                              wr::IpcResourceUpdateQueue* aResources)
+{
+=======
+Maybe<wr::FontInstanceKey> WebRenderBridgeChild::GetFontKeyForScaledFont(
+    gfx::ScaledFont* aScaledFont, wr::RenderRoot aRenderRoot,
+    wr::IpcResourceUpdateQueue* aResources) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mDestroyed);
   MOZ_ASSERT(aScaledFont);
   MOZ_ASSERT(aScaledFont->CanSerialize());
 
+<<<<<<< HEAD
   wr::FontInstanceKey instanceKey = {wr::IdNamespace{0}, 0};
   if (mFontInstanceKeys.Get(aScaledFont, &instanceKey)) {
     return instanceKey;
+||||||| merged common ancestors
+  wr::FontInstanceKey instanceKey = { wr::IdNamespace { 0 }, 0 };
+  if (mFontInstanceKeys.Get(aScaledFont, &instanceKey)) {
+    return instanceKey;
+=======
+  auto& fontInstanceKeys = mFontInstanceKeys[aRenderRoot];
+  wr::FontInstanceKey instanceKey = {wr::IdNamespace{0}, 0};
+  if (fontInstanceKeys.Get(aScaledFont, &instanceKey)) {
+    return Some(instanceKey);
+>>>>>>> upstream-releases
   }
 
   Maybe<wr::IpcResourceUpdateQueue> resources =
       aResources ? Nothing() : Some(wr::IpcResourceUpdateQueue(this));
   aResources = resources.ptrOr(aResources);
 
+<<<<<<< HEAD
   wr::FontKey fontKey =
       GetFontKeyForUnscaledFont(aScaledFont->GetUnscaledFont(), aResources);
   wr::FontKey nullKey = {wr::IdNamespace{0}, 0};
   if (fontKey == nullKey) {
     return instanceKey;
+||||||| merged common ancestors
+  wr::FontKey fontKey = GetFontKeyForUnscaledFont(aScaledFont->GetUnscaledFont(), aResources);
+  wr::FontKey nullKey = { wr::IdNamespace { 0 }, 0};
+  if (fontKey == nullKey) {
+    return instanceKey;
+=======
+  Maybe<wr::FontKey> fontKey = GetFontKeyForUnscaledFont(
+      aScaledFont->GetUnscaledFont(), aRenderRoot, aResources);
+  if (fontKey.isNothing()) {
+    return Nothing();
+>>>>>>> upstream-releases
   }
 
   instanceKey = GetNextFontInstanceKey();
@@ -275,25 +565,67 @@ wr::FontInstanceKey WebRenderBridgeChild::GetFontKeyForScaledFont(
   aScaledFont->GetWRFontInstanceOptions(&options, &platformOptions,
                                         &variations);
 
+<<<<<<< HEAD
   aResources->AddFontInstance(
       instanceKey, fontKey, aScaledFont->GetSize(), options.ptrOr(nullptr),
       platformOptions.ptrOr(nullptr),
       Range<const FontVariation>(variations.data(), variations.size()));
+||||||| merged common ancestors
+  aResources->AddFontInstance(instanceKey, fontKey, aScaledFont->GetSize(),
+                              options.ptrOr(nullptr), platformOptions.ptrOr(nullptr),
+                              Range<const FontVariation>(variations.data(), variations.size()));
+=======
+  aResources->AddFontInstance(
+      instanceKey, fontKey.value(), aScaledFont->GetSize(),
+      options.ptrOr(nullptr), platformOptions.ptrOr(nullptr),
+      Range<const FontVariation>(variations.data(), variations.size()));
+>>>>>>> upstream-releases
   if (resources.isSome()) {
-    UpdateResources(resources.ref());
+    UpdateResources(resources.ref(), aRenderRoot);
   }
 
+<<<<<<< HEAD
   mFontInstanceKeys.Put(aScaledFont, instanceKey);
 
   return instanceKey;
+||||||| merged common ancestors
+  mFontInstanceKeys.Put(aScaledFont, instanceKey);
+
+  return instanceKey;
+
+=======
+  fontInstanceKeys.Put(aScaledFont, instanceKey);
+
+  return Some(instanceKey);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 wr::FontKey WebRenderBridgeChild::GetFontKeyForUnscaledFont(
     gfx::UnscaledFont* aUnscaled, wr::IpcResourceUpdateQueue* aResources) {
+||||||| merged common ancestors
+wr::FontKey
+WebRenderBridgeChild::GetFontKeyForUnscaledFont(gfx::UnscaledFont* aUnscaled,
+                                                wr::IpcResourceUpdateQueue* aResources)
+{
+=======
+Maybe<wr::FontKey> WebRenderBridgeChild::GetFontKeyForUnscaledFont(
+    gfx::UnscaledFont* aUnscaled, wr::RenderRoot aRenderRoot,
+    wr::IpcResourceUpdateQueue* aResources) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mDestroyed);
 
+<<<<<<< HEAD
   wr::FontKey fontKey = {wr::IdNamespace{0}, 0};
   if (!mFontKeys.Get(aUnscaled, &fontKey)) {
+||||||| merged common ancestors
+  wr::FontKey fontKey = { wr::IdNamespace { 0 }, 0};
+  if (!mFontKeys.Get(aUnscaled, &fontKey)) {
+=======
+  auto& fontKeys = mFontKeys[aRenderRoot];
+  wr::FontKey fontKey = {wr::IdNamespace{0}, 0};
+  if (!fontKeys.Get(aUnscaled, &fontKey)) {
+>>>>>>> upstream-releases
     Maybe<wr::IpcResourceUpdateQueue> resources =
         aResources ? Nothing() : Some(wr::IpcResourceUpdateQueue(this));
 
@@ -305,25 +637,40 @@ wr::FontKey WebRenderBridgeChild::GetFontKeyForUnscaledFont(
     // null font key.
     if (!aUnscaled->GetWRFontDescriptor(WriteFontDescriptor, &sink) &&
         !aUnscaled->GetFontFileData(WriteFontFileData, &sink)) {
-      return fontKey;
+      return Nothing();
     }
 
     if (resources.isSome()) {
-      UpdateResources(resources.ref());
+      UpdateResources(resources.ref(), aRenderRoot);
     }
 
-    mFontKeys.Put(aUnscaled, fontKey);
+    fontKeys.Put(aUnscaled, fontKey);
   }
 
-  return fontKey;
+  return Some(fontKey);
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::RemoveExpiredFontKeys(
     wr::IpcResourceUpdateQueue& aResourceUpdates) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::RemoveExpiredFontKeys(wr::IpcResourceUpdateQueue& aResourceUpdates)
+{
+=======
+void WebRenderBridgeChild::RemoveExpiredFontKeys(
+    wr::IpcResourceUpdateQueue& aResourceUpdates) {
+  auto& fontInstanceKeys = mFontInstanceKeys[aResourceUpdates.GetRenderRoot()];
+  auto& fontKeys = mFontKeys[aResourceUpdates.GetRenderRoot()];
+  auto& fontInstanceKeysDeleted =
+      mFontInstanceKeysDeleted[aResourceUpdates.GetRenderRoot()];
+  auto& fontKeysDeleted = mFontKeysDeleted[aResourceUpdates.GetRenderRoot()];
+
+>>>>>>> upstream-releases
   uint32_t counter = gfx::ScaledFont::DeletionCounter();
-  if (mFontInstanceKeysDeleted != counter) {
-    mFontInstanceKeysDeleted = counter;
-    for (auto iter = mFontInstanceKeys.Iter(); !iter.Done(); iter.Next()) {
+  if (fontInstanceKeysDeleted != counter) {
+    fontInstanceKeysDeleted = counter;
+    for (auto iter = fontInstanceKeys.Iter(); !iter.Done(); iter.Next()) {
       if (!iter.Key()) {
         aResourceUpdates.DeleteFontInstance(iter.Data());
         iter.Remove();
@@ -331,9 +678,9 @@ void WebRenderBridgeChild::RemoveExpiredFontKeys(
     }
   }
   counter = gfx::UnscaledFont::DeletionCounter();
-  if (mFontKeysDeleted != counter) {
-    mFontKeysDeleted = counter;
-    for (auto iter = mFontKeys.Iter(); !iter.Done(); iter.Next()) {
+  if (fontKeysDeleted != counter) {
+    fontKeysDeleted = counter;
+    for (auto iter = fontKeys.Iter(); !iter.Done(); iter.Next()) {
       if (!iter.Key()) {
         aResourceUpdates.DeleteFont(iter.Data());
         iter.Remove();
@@ -416,8 +763,19 @@ bool WebRenderBridgeChild::DestroyInTransaction(
   return AddOpDestroy(OpDestroy(aHandle));
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::RemoveTextureFromCompositable(
     CompositableClient* aCompositable, TextureClient* aTexture) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::RemoveTextureFromCompositable(CompositableClient* aCompositable,
+                                                    TextureClient* aTexture)
+{
+=======
+void WebRenderBridgeChild::RemoveTextureFromCompositable(
+    CompositableClient* aCompositable, TextureClient* aTexture,
+    const Maybe<wr::RenderRoot>& aRenderRoot) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCompositable);
   MOZ_ASSERT(aTexture);
   MOZ_ASSERT(aTexture->GetIPDLActor());
@@ -428,14 +786,38 @@ void WebRenderBridgeChild::RemoveTextureFromCompositable(
     return;
   }
 
+<<<<<<< HEAD
   AddWebRenderParentCommand(CompositableOperation(
       aCompositable->GetIPCHandle(),
       OpRemoveTexture(nullptr, aTexture->GetIPDLActor())));
+||||||| merged common ancestors
+  AddWebRenderParentCommand(
+    CompositableOperation(
+      aCompositable->GetIPCHandle(),
+      OpRemoveTexture(nullptr, aTexture->GetIPDLActor())));
+=======
+  AddWebRenderParentCommand(
+      CompositableOperation(aCompositable->GetIPCHandle(),
+                            OpRemoveTexture(nullptr, aTexture->GetIPDLActor())),
+      *aRenderRoot);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderBridgeChild::UseTextures(
     CompositableClient* aCompositable,
     const nsTArray<TimedTextureClient>& aTextures) {
+||||||| merged common ancestors
+void
+WebRenderBridgeChild::UseTextures(CompositableClient* aCompositable,
+                                  const nsTArray<TimedTextureClient>& aTextures)
+{
+=======
+void WebRenderBridgeChild::UseTextures(
+    CompositableClient* aCompositable,
+    const nsTArray<TimedTextureClient>& aTextures,
+    const Maybe<wr::RenderRoot>& aRenderRoot) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCompositable);
 
   if (!aCompositable->IsConnected()) {
@@ -458,7 +840,14 @@ void WebRenderBridgeChild::UseTextures(
         t.mTextureClient);
   }
   AddWebRenderParentCommand(CompositableOperation(aCompositable->GetIPCHandle(),
+<<<<<<< HEAD
                                                   OpUseTexture(textures)));
+||||||| merged common ancestors
+                                            OpUseTexture(textures)));
+=======
+                                                  OpUseTexture(textures)),
+                            *aRenderRoot);
+>>>>>>> upstream-releases
 }
 
 void WebRenderBridgeChild::UseComponentAlphaTextures(
@@ -486,10 +875,23 @@ mozilla::ipc::IPCResult WebRenderBridgeChild::RecvWrUpdated(
   // WebRenderBridgeParent. Since usage of invalid keys could cause crash in
   // webrender.
   mIdNamespace = aNewIdNamespace;
+<<<<<<< HEAD
   // Just clear FontInstaceKeys/FontKeys, they are removed during WebRenderAPI
   // destruction.
   mFontInstanceKeys.Clear();
   mFontKeys.Clear();
+||||||| merged common ancestors
+  // Just clear FontInstaceKeys/FontKeys, they are removed during WebRenderAPI destruction.
+  mFontInstanceKeys.Clear();
+  mFontKeys.Clear();
+=======
+  // Just clear FontInstaceKeys/FontKeys, they are removed during WebRenderAPI
+  // destruction.
+  for (auto renderRoot : wr::kRenderRoots) {
+    mFontInstanceKeys[renderRoot].Clear();
+    mFontKeys[renderRoot].Clear();
+  }
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -538,8 +940,20 @@ ipc::IShmemAllocator* WebRenderBridgeChild::GetShmemAllocator() {
 
 RefPtr<KnowsCompositor> WebRenderBridgeChild::GetForMedia() {
   MOZ_ASSERT(NS_IsMainThread());
+<<<<<<< HEAD
   return MakeAndAddRef<KnowsCompositorMediaProxy>(
       GetTextureFactoryIdentifier());
+||||||| merged common ancestors
+  return MakeAndAddRef<KnowsCompositorMediaProxy>(GetTextureFactoryIdentifier());
+=======
+
+  // Ensure devices initialization for video playback. The devices are lazily
+  // initialized with WebRender to reduce memory usage.
+  gfxPlatform::GetPlatform()->EnsureDevicesInitialized();
+
+  return MakeAndAddRef<KnowsCompositorMediaProxy>(
+      GetTextureFactoryIdentifier());
+>>>>>>> upstream-releases
 }
 
 bool WebRenderBridgeChild::AllocResourceShmem(size_t aSize,

@@ -13,7 +13,7 @@
 #include "nsCycleCollectionParticipant.h"
 #include "nsIWebVTTParserWrapper.h"
 #include "mozilla/StaticPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/HTMLDivElement.h"
 #include "mozilla/dom/TextTrack.h"
 #include "mozilla/StateWatching.h"
@@ -280,18 +280,37 @@ class TextTrackCue final : public DOMEventTargetHelper {
 
   void SetTrackElement(HTMLTrackElement* aTrackElement);
 
+<<<<<<< HEAD
   void SetActive(bool aActive) {
     if (mActive == aActive) {
       return;
     }
-
-    mActive = aActive;
-    mDisplayState = mActive ? mDisplayState : nullptr;
-  }
+||||||| merged common ancestors
+  void SetActive(bool aActive)
+  {
+    if (mActive == aActive) {
+      return;
+    }
+=======
+  void SetActive(bool aActive);
+>>>>>>> upstream-releases
 
   bool GetActive() { return mActive; }
 
+<<<<<<< HEAD
+  bool GetActive() { return mActive; }
+
  private:
+||||||| merged common ancestors
+  bool GetActive()
+  {
+    return mActive;
+  }
+
+private:
+=======
+ private:
+>>>>>>> upstream-releases
   ~TextTrackCue();
 
   void NotifyCueUpdated(TextTrackCue* aCue) {
@@ -305,7 +324,9 @@ class TextTrackCue final : public DOMEventTargetHelper {
   void SetDefaultCueSettings();
   nsresult StashDocument();
 
-  RefPtr<nsIDocument> mDocument;
+  bool IsTextBaseDirectionLTR() const;
+
+  RefPtr<Document> mDocument;
   nsString mText;
   double mStartTime;
   double mEndTime;

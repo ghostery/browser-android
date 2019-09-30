@@ -52,6 +52,7 @@ struct OptimizedICStubSpace : public ICStubSpace {
 
 // Space for fallback stubs. Every BaselineScript has a
 // FallbackICStubSpace.
+<<<<<<< HEAD
 struct FallbackICStubSpace : public ICStubSpace {
   static const size_t STUB_DEFAULT_CHUNK_SIZE = 4096;
 
@@ -61,6 +62,26 @@ struct FallbackICStubSpace : public ICStubSpace {
   inline void adoptFrom(FallbackICStubSpace* other) {
     allocator_.steal(&(other->allocator_));
   }
+||||||| merged common ancestors
+struct FallbackICStubSpace : public ICStubSpace
+{
+    static const size_t STUB_DEFAULT_CHUNK_SIZE = 4096;
+
+  public:
+    FallbackICStubSpace()
+      : ICStubSpace(STUB_DEFAULT_CHUNK_SIZE)
+    {}
+
+    inline void adoptFrom(FallbackICStubSpace* other) {
+        allocator_.steal(&(other->allocator_));
+    }
+=======
+struct FallbackICStubSpace : public ICStubSpace {
+  static const size_t STUB_DEFAULT_CHUNK_SIZE = 4096;
+
+ public:
+  FallbackICStubSpace() : ICStubSpace(STUB_DEFAULT_CHUNK_SIZE) {}
+>>>>>>> upstream-releases
 };
 
 }  // namespace jit

@@ -8,7 +8,7 @@
 #define mozilla_PrioritizedEventQueue_h
 
 #include "mozilla/AbstractEventQueue.h"
-#include "LabeledEventQueue.h"
+#include "mozilla/EventQueue.h"
 #include "mozilla/TimeStamp.h"
 #include "mozilla/TypeTraits.h"
 #include "mozilla/UniquePtr.h"
@@ -19,9 +19,9 @@ class nsIRunnable;
 
 namespace mozilla {
 
-// This AbstractEventQueue implementation has one queue for each EventPriority.
-// The type of queue used for each priority is determined by the template
-// parameter.
+// This AbstractEventQueue implementation has one queue for each
+// EventQueuePriority. The type of queue used for each priority is determined by
+// the template parameter.
 //
 // When an event is pushed, its priority is determined by QIing the runnable to
 // nsIRunnablePriority, or by falling back to the aPriority parameter if the QI
@@ -36,25 +36,57 @@ namespace mozilla {
 //   normal and high queues.
 // - We do not select events from the idle queue if the current idle period
 //   is almost over.
+<<<<<<< HEAD
 template <class InnerQueueT>
 class PrioritizedEventQueue final : public AbstractEventQueue {
  public:
+||||||| merged common ancestors
+template<class InnerQueueT>
+class PrioritizedEventQueue final : public AbstractEventQueue
+{
+public:
+=======
+class PrioritizedEventQueue final : public AbstractEventQueue {
+ public:
+>>>>>>> upstream-releases
   static const bool SupportsPrioritization = true;
 
-  PrioritizedEventQueue(UniquePtr<InnerQueueT> aHighQueue,
-                        UniquePtr<InnerQueueT> aInputQueue,
-                        UniquePtr<InnerQueueT> aNormalQueue,
-                        UniquePtr<InnerQueueT> aIdleQueue,
-                        already_AddRefed<nsIIdlePeriod> aIdlePeriod);
+  explicit PrioritizedEventQueue(already_AddRefed<nsIIdlePeriod> aIdlePeriod)
+      : mHighQueue(MakeUnique<EventQueue>(EventQueuePriority::High)),
+        mInputQueue(MakeUnique<EventQueue>(EventQueuePriority::Input)),
+        mMediumHighQueue(
+            MakeUnique<EventQueue>(EventQueuePriority::MediumHigh)),
+        mNormalQueue(MakeUnique<EventQueue>(EventQueuePriority::Normal)),
+        mDeferredTimersQueue(
+            MakeUnique<EventQueue>(EventQueuePriority::DeferredTimers)),
+        mIdleQueue(MakeUnique<EventQueue>(EventQueuePriority::Idle)),
+        mIdlePeriod(aIdlePeriod) {}
 
+<<<<<<< HEAD
   void PutEvent(already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority,
+||||||| merged common ancestors
+  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                EventPriority aPriority,
+=======
+  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                EventQueuePriority aPriority,
+>>>>>>> upstream-releases
                 const MutexAutoLock& aProofOfLock) final;
+<<<<<<< HEAD
   already_AddRefed<nsIRunnable> GetEvent(
       EventPriority* aPriority, const MutexAutoLock& aProofOfLock) final;
+||||||| merged common ancestors
+  already_AddRefed<nsIRunnable> GetEvent(EventPriority* aPriority,
+                                         const MutexAutoLock& aProofOfLock) final;
+=======
+  already_AddRefed<nsIRunnable> GetEvent(
+      EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) final;
+>>>>>>> upstream-releases
 
   bool IsEmpty(const MutexAutoLock& aProofOfLock) final;
   size_t Count(const MutexAutoLock& aProofOfLock) const final;
   bool HasReadyEvent(const MutexAutoLock& aProofOfLock) final;
+  bool HasPendingHighPriorityEvents(const MutexAutoLock& aProofOfLock) final;
 
   // When checking the idle deadline, we need to drop whatever mutex protects
   // this queue. This method allows that mutex to be stored so that we can drop
@@ -82,7 +114,9 @@ class PrioritizedEventQueue final : public AbstractEventQueue {
 
     n += mHighQueue->SizeOfIncludingThis(aMallocSizeOf);
     n += mInputQueue->SizeOfIncludingThis(aMallocSizeOf);
+    n += mMediumHighQueue->SizeOfIncludingThis(aMallocSizeOf);
     n += mNormalQueue->SizeOfIncludingThis(aMallocSizeOf);
+    n += mDeferredTimersQueue->SizeOfIncludingThis(aMallocSizeOf);
     n += mIdleQueue->SizeOfIncludingThis(aMallocSizeOf);
 
     if (mIdlePeriod) {
@@ -92,17 +126,28 @@ class PrioritizedEventQueue final : public AbstractEventQueue {
     return n;
   }
 
+<<<<<<< HEAD
  private:
   EventPriority SelectQueue(bool aUpdateState,
                             const MutexAutoLock& aProofOfLock);
+||||||| merged common ancestors
+private:
+  EventPriority SelectQueue(bool aUpdateState, const MutexAutoLock& aProofOfLock);
+=======
+ private:
+  EventQueuePriority SelectQueue(bool aUpdateState,
+                                 const MutexAutoLock& aProofOfLock);
+>>>>>>> upstream-releases
 
   // Returns a null TimeStamp if we're not in the idle period.
   mozilla::TimeStamp GetIdleDeadline();
 
-  UniquePtr<InnerQueueT> mHighQueue;
-  UniquePtr<InnerQueueT> mInputQueue;
-  UniquePtr<InnerQueueT> mNormalQueue;
-  UniquePtr<InnerQueueT> mIdleQueue;
+  UniquePtr<EventQueue> mHighQueue;
+  UniquePtr<EventQueue> mInputQueue;
+  UniquePtr<EventQueue> mMediumHighQueue;
+  UniquePtr<EventQueue> mNormalQueue;
+  UniquePtr<EventQueue> mDeferredTimersQueue;
+  UniquePtr<EventQueue> mIdleQueue;
 
   // We need to drop the queue mutex when checking the idle deadline, so we keep
   // a pointer to it here.
@@ -142,10 +187,20 @@ class PrioritizedEventQueue final : public AbstractEventQueue {
   InputEventQueueState mInputQueueState = STATE_DISABLED;
 };
 
+<<<<<<< HEAD
 class EventQueue;
 extern template class PrioritizedEventQueue<EventQueue>;
 extern template class PrioritizedEventQueue<LabeledEventQueue>;
 
 }  // namespace mozilla
+||||||| merged common ancestors
+class EventQueue;
+extern template class PrioritizedEventQueue<EventQueue>;
+extern template class PrioritizedEventQueue<LabeledEventQueue>;
+
+} // namespace mozilla
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // mozilla_PrioritizedEventQueue_h

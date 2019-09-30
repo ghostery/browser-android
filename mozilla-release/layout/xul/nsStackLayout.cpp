@@ -39,7 +39,18 @@ nsresult NS_NewStackLayout(nsCOMPtr<nsBoxLayout>& aNewLayout) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /*static*/ void nsStackLayout::Shutdown() { NS_IF_RELEASE(gInstance); }
+||||||| merged common ancestors
+/*static*/ void
+nsStackLayout::Shutdown()
+{
+  NS_IF_RELEASE(gInstance);
+}
+=======
+/*static*/
+void nsStackLayout::Shutdown() { NS_IF_RELEASE(gInstance); }
+>>>>>>> upstream-releases
 
 nsStackLayout::nsStackLayout() {}
 
@@ -117,8 +128,18 @@ nsSize nsStackLayout::GetXULMinSize(nsIFrame* aBox, nsBoxLayoutState& aState) {
   return minSize;
 }
 
+<<<<<<< HEAD
 nsSize nsStackLayout::GetXULMaxSize(nsIFrame* aBox, nsBoxLayoutState& aState) {
   nsSize maxSize(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+||||||| merged common ancestors
+nsSize
+nsStackLayout::GetXULMaxSize(nsIFrame* aBox, nsBoxLayoutState& aState)
+{
+  nsSize maxSize (NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+=======
+nsSize nsStackLayout::GetXULMaxSize(nsIFrame* aBox, nsBoxLayoutState& aState) {
+  nsSize maxSize(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
 
   nsIFrame* child = nsBox::GetChildXULBox(aBox);
   while (child) {

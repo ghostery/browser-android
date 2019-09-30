@@ -32,7 +32,13 @@ haw{
         }
         minimumGroupingDigits{"1"}
     }
+<<<<<<< HEAD
     Version{"2.1.43.94"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.48.4"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -108,10 +114,6 @@ haw{
                 MEd{"E, d/M"}
                 MMM{"LLL"}
                 MMMEd{"E, d MMM"}
-                MMMMW{
-                    one{"'week' W 'of' MMM"}
-                    other{"'week' W 'of' MMM"}
-                }
                 MMMMd{"MMMM d"}
                 MMMd{"d MMM"}
                 Md{"d/M"}
@@ -132,10 +134,6 @@ haw{
                 yMd{"d/M/y"}
                 yQQQ{"y QQQ"}
                 yQQQQ{"y QQQQ"}
-                yw{
-                    one{"'week' w 'of' Y"}
-                    other{"'week' w 'of' Y"}
-                }
             }
             dayNames{
                 format{

@@ -12,7 +12,7 @@ from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.schema import (
     Schema,
 )
-from taskgraph.util.taskcluster import get_artifact_path, get_artifact_url
+from taskgraph.util.taskcluster import get_artifact_path
 from voluptuous import (
     Any,
     Optional,
@@ -44,10 +44,35 @@ diff_description_schema = Schema({
 
     # Extra arguments to pass to diffoscope, that can be set per job.
     Optional('extra-args'): basestring,
+
+<<<<<<< HEAD
+transforms = TransformSequence()
+transforms.add_validate(diff_description_schema)
+||||||| merged common ancestors
+
+@transforms.add
+def validate(config, tasks):
+    for task in tasks:
+        validate_schema(
+            diff_description_schema, task,
+            "In diff task {!r}:".format(task.get('name', 'unknown')))
+        yield task
+=======
+    # Fail the task when differences are detected.
+    Optional('fail-on-diff'): bool,
+
+    # Whether to unpack first. Diffoscope can normally work without unpacking,
+    # but when one needs to --exclude some contents, that doesn't work out well
+    # if said content is packed (e.g. in omni.ja).
+    Optional('unpack'): bool,
+
+    # Commands to run before performing the diff.
+    Optional('pre-diff-commands'): [basestring],
 })
 
 transforms = TransformSequence()
 transforms.add_validate(diff_description_schema)
+>>>>>>> upstream-releases
 
 
 @transforms.add
@@ -64,7 +89,7 @@ def fill_template(config, tasks):
             value = task[k]
             if isinstance(value, basestring):
                 deps[k] = value
-                task_id = '<{}>'.format(k)
+                dep_name = k
                 os_hint = value
             else:
                 index = value['index-search']
@@ -82,7 +107,7 @@ def fill_template(config, tasks):
                     }
                     yield dummy_tasks[index]
                 deps[index] = 'index-search-' + index
-                task_id = '<{}>'.format(index)
+                dep_name = index
                 os_hint = index.split('.')[-1]
             if 'linux' in os_hint:
                 artifact = 'target.tar.bz2'
@@ -98,8 +123,10 @@ def fill_template(config, tasks):
             if previous_artifact is not None and previous_artifact != artifact:
                 raise Exception(
                     'Cannot compare builds from different OSes')
-            url = get_artifact_url(task_id, get_artifact_path(task, artifact))
-            urls[k] = {'task-reference': url}
+            urls[k] = {
+                'artifact-reference': '<{}/{}>'.format(
+                    dep_name, get_artifact_path(task, artifact)),
+            }
             previous_artifact = artifact
 
         taskdesc = {
@@ -111,8 +138,7 @@ def fill_template(config, tasks):
                 'kind': 'other',
                 'tier': 2,
             },
-            'worker-type': 'aws-provisioner-v1/gecko-{}-b-linux'.format(
-               config.params['level']),
+            'worker-type': 'b-linux',
             'worker': {
                 'docker-image': {'in-tree': 'diffoscope'},
                 'artifacts': [{
@@ -128,15 +154,18 @@ def fill_template(config, tasks):
                     'ORIG_URL': urls['original'],
                     'NEW_URL': urls['new'],
                     'DIFFOSCOPE_ARGS': ' '.join(
-                        task[k] for k in ('args', 'extra-args') if k in task)
+                        task[k] for k in ('args', 'extra-args') if k in task),
+                    'PRE_DIFF': '; '.join(task.get('pre-diff-commands', [])),
                 },
                 'max-run-time': 1800,
             },
             'run': {
                 'using': 'run-task',
-                'checkout': False,
-                'command': '/builds/worker/bin/get_and_diffoscope '
-                           '"$ORIG_URL" "$NEW_URL"',
+                'checkout': task.get('unpack', False),
+                'command': '/builds/worker/bin/get_and_diffoscope{}{}'.format(
+                    ' --unpack' if task.get('unpack') else '',
+                    ' --fail' if task.get('fail-on-diff') else '',
+                ),
             },
             'dependencies': deps,
         }

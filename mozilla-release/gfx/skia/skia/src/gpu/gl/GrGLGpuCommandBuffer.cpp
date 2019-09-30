@@ -7,6 +7,7 @@
 
 #include "GrGLGpuCommandBuffer.h"
 
+#include "GrContextPriv.h"
 #include "GrFixedClip.h"
 #include "GrRenderTargetPriv.h"
 
@@ -22,6 +23,7 @@ void GrGLGpuRTCommandBuffer::begin() {
         }
     }
 }
+<<<<<<< HEAD
 
 void GrGLGpuRTCommandBuffer::set(GrRenderTarget* rt, GrSurfaceOrigin origin,
                                  const GrGpuRTCommandBuffer::LoadAndStoreInfo& colorInfo,
@@ -34,3 +36,18 @@ void GrGLGpuRTCommandBuffer::set(GrRenderTarget* rt, GrSurfaceOrigin origin,
     fColorLoadAndStoreInfo = colorInfo;
     fStencilLoadAndStoreInfo = stencilInfo;
 }
+||||||| merged common ancestors
+=======
+
+void GrGLGpuRTCommandBuffer::set(GrRenderTarget* rt, GrSurfaceOrigin origin,
+                                 const GrGpuRTCommandBuffer::LoadAndStoreInfo& colorInfo,
+                                 const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo& stencilInfo) {
+    SkASSERT(fGpu);
+    SkASSERT(!fRenderTarget);
+    SkASSERT(fGpu == rt->getContext()->priv().getGpu());
+
+    this->INHERITED::set(rt, origin);
+    fColorLoadAndStoreInfo = colorInfo;
+    fStencilLoadAndStoreInfo = stencilInfo;
+}
+>>>>>>> upstream-releases

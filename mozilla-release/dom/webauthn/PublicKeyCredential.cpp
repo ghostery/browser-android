@@ -9,6 +9,10 @@
 #include "mozilla/dom/WebAuthenticationBinding.h"
 #include "nsCycleCollectionParticipant.h"
 
+#ifdef OS_WIN
+#  include "WinWebAuthnManager.h"
+#endif
+
 namespace mozilla {
 namespace dom {
 
@@ -68,8 +72,59 @@ void PublicKeyCredential::SetResponse(RefPtr<AuthenticatorResponse> aResponse) {
   mResponse = aResponse;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Promise>
 PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
+    GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Promise>
+PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(GlobalObject& aGlobal)
+{
+=======
+/* static */
+already_AddRefed<Promise>
+PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
+    GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
+  nsIGlobalObject* globalObject = xpc::CurrentNativeGlobal(aGlobal.Context());
+  if (NS_WARN_IF(!globalObject)) {
+    return nullptr;
+  }
+
+  ErrorResult rv;
+  RefPtr<Promise> promise = Promise::Create(globalObject, rv);
+  if (rv.Failed()) {
+    return nullptr;
+  }
+
+// https://w3c.github.io/webauthn/#isUserVerifyingPlatformAuthenticatorAvailable
+//
+// If on latest windows, call system APIs, otherwise return false, as we don't
+// have other UVPAAs available at this time.
+#ifdef OS_WIN
+
+  if (WinWebAuthnManager::IsUserVerifyingPlatformAuthenticatorAvailable()) {
+    promise->MaybeResolve(true);
+    return promise.forget();
+  }
+
+#endif
+
+  promise->MaybeResolve(false);
+  return promise.forget();
+}
+
+<<<<<<< HEAD
+void PublicKeyCredential::GetClientExtensionResults(
+    AuthenticationExtensionsClientOutputs& aResult) {
+||||||| merged common ancestors
+void
+PublicKeyCredential::GetClientExtensionResults(AuthenticationExtensionsClientOutputs& aResult)
+{
+=======
+/* static */
+already_AddRefed<Promise>
+PublicKeyCredential::IsExternalCTAP2SecurityKeySupported(
     GlobalObject& aGlobal) {
   nsIGlobalObject* globalObject = xpc::CurrentNativeGlobal(aGlobal.Context());
   if (NS_WARN_IF(!globalObject)) {
@@ -82,25 +137,20 @@ PublicKeyCredential::IsUserVerifyingPlatformAuthenticatorAvailable(
     return nullptr;
   }
 
-  // https://w3c.github.io/webauthn/#isUserVerifyingPlatformAuthenticatorAvailable
-  //
-  // We currently implement no platform authenticators, so this would always
-  // resolve to false. For those cases, the spec recommends a resolve timeout
-  // on the order of 10 minutes to avoid fingerprinting.
-  //
-  // A simple solution is thus to never resolve the promise, otherwise we'd
-  // have to track every single call to this method along with a promise
-  // and timer to resolve it after exactly X minutes.
-  //
-  // A Relying Party has to deal with a non-response in a timely fashion, so
-  // we can keep this as-is (and not resolve) even when we support platform
-  // authenticators but they're not available, or a user rejects a website's
-  // request to use them.
+#ifdef OS_WIN
+  if (WinWebAuthnManager::AreWebAuthNApisAvailable()) {
+    promise->MaybeResolve(true);
+    return promise.forget();
+  }
+#endif
+
+  promise->MaybeResolve(false);
   return promise.forget();
 }
 
 void PublicKeyCredential::GetClientExtensionResults(
     AuthenticationExtensionsClientOutputs& aResult) {
+>>>>>>> upstream-releases
   aResult = mClientExtensionOutputs;
 }
 
@@ -109,5 +159,20 @@ void PublicKeyCredential::SetClientExtensionResultAppId(bool aResult) {
   mClientExtensionOutputs.mAppid.Value() = aResult;
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+
+} // namespace dom
+} // namespace mozilla
+=======
+void PublicKeyCredential::SetClientExtensionResultHmacSecret(
+    bool aHmacCreateSecret) {
+  mClientExtensionOutputs.mHmacCreateSecret.Construct();
+  mClientExtensionOutputs.mHmacCreateSecret.Value() = aHmacCreateSecret;
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

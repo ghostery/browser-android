@@ -56,68 +56,100 @@ class ContainerLayerComposite : public ContainerLayer, public LayerComposite {
                      LayerManagerComposite* aManager,
                      const RenderTargetIntRect& aClipRect, Layer* aLayer);
 
+<<<<<<< HEAD
  public:
   explicit ContainerLayerComposite(LayerManagerComposite* aManager);
 
  protected:
   ~ContainerLayerComposite();
+||||||| merged common ancestors
+protected:
+  ~ContainerLayerComposite();
+=======
+ public:
+  explicit ContainerLayerComposite(LayerManagerComposite* aManager);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  virtual ~ContainerLayerComposite();
 
  public:
+>>>>>>> upstream-releases
   // LayerComposite Implementation
-  virtual Layer* GetLayer() override { return this; }
+  Layer* GetLayer() override { return this; }
 
+<<<<<<< HEAD
   virtual void SetLayerManager(HostLayerManager* aManager) override {
+||||||| merged common ancestors
+  virtual void SetLayerManager(HostLayerManager* aManager) override
+  {
+=======
+  void SetLayerManager(HostLayerManager* aManager) override {
+>>>>>>> upstream-releases
     LayerComposite::SetLayerManager(aManager);
     mManager = aManager;
     mLastIntermediateSurface = nullptr;
   }
 
-  virtual void Destroy() override;
+  void Destroy() override;
 
   LayerComposite* GetFirstChildComposite() override;
 
-  virtual void Cleanup() override;
+  void Cleanup() override;
 
-  virtual void RenderLayer(const gfx::IntRect& aClipRect,
-                           const Maybe<gfx::Polygon>& aGeometry) override;
+  void RenderLayer(const gfx::IntRect& aClipRect,
+                   const Maybe<gfx::Polygon>& aGeometry) override;
 
-  virtual void Prepare(const RenderTargetIntRect& aClipRect) override;
+  void Prepare(const RenderTargetIntRect& aClipRect) override;
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
+  {
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override {
+>>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 
-  virtual const LayerIntRegion& GetShadowVisibleRegion() override;
+  const LayerIntRegion& GetShadowVisibleRegion() override;
 
-  virtual void CleanupResources() override;
+  void CleanupResources() override;
 
-  virtual HostLayer* AsHostLayer() override { return this; }
+  HostLayer* AsHostLayer() override { return this; }
 
   // container layers don't use a compositable
   CompositableHost* GetCompositableHost() override { return nullptr; }
 
-  // If the layer is marked as scale-to-resolution, add a post-scale
+  // If the layer has a pres shell resolution, add a post-scale
   // to the layer's transform equal to the pres shell resolution we're
   // scaling to. This cancels out the post scale of '1 / resolution'
   // added by Layout. TODO: It would be nice to get rid of both of these
   // post-scales.
-  virtual float GetPostXScale() const override {
-    if (mScaleToResolution) {
-      return mSimpleAttrs.GetPostXScale() * mPresShellResolution;
-    }
-    return mSimpleAttrs.GetPostXScale();
+  float GetPostXScale() const override {
+    return mSimpleAttrs.GetPostXScale() * mPresShellResolution;
   }
-  virtual float GetPostYScale() const override {
-    if (mScaleToResolution) {
-      return mSimpleAttrs.GetPostYScale() * mPresShellResolution;
-    }
-    return mSimpleAttrs.GetPostYScale();
+  float GetPostYScale() const override {
+    return mSimpleAttrs.GetPostYScale() * mPresShellResolution;
   }
 
+<<<<<<< HEAD
   virtual const char* Name() const override {
     return "ContainerLayerComposite";
   }
+||||||| merged common ancestors
+  virtual const char* Name() const override { return "ContainerLayerComposite"; }
+=======
+  const char* Name() const override { return "ContainerLayerComposite"; }
+>>>>>>> upstream-releases
   UniquePtr<PreparedData> mPrepared;
 
   RefPtr<CompositingRenderTarget> mLastIntermediateSurface;
@@ -156,14 +188,29 @@ class RefLayerComposite : public RefLayer, public LayerComposite {
  public:
   explicit RefLayerComposite(LayerManagerComposite* aManager);
 
+<<<<<<< HEAD
  protected:
   ~RefLayerComposite();
+||||||| merged common ancestors
+protected:
+  ~RefLayerComposite();
+=======
+ protected:
+  virtual ~RefLayerComposite();
+>>>>>>> upstream-releases
 
  public:
   /** LayerOGL implementation */
   Layer* GetLayer() override { return this; }
 
+<<<<<<< HEAD
   virtual void SetLayerManager(HostLayerManager* aManager) override {
+||||||| merged common ancestors
+  virtual void SetLayerManager(HostLayerManager* aManager) override
+  {
+=======
+  void SetLayerManager(HostLayerManager* aManager) override {
+>>>>>>> upstream-releases
     LayerComposite::SetLayerManager(aManager);
     mManager = aManager;
     mLastIntermediateSurface = nullptr;
@@ -173,28 +220,36 @@ class RefLayerComposite : public RefLayer, public LayerComposite {
 
   LayerComposite* GetFirstChildComposite() override;
 
-  virtual void RenderLayer(const gfx::IntRect& aClipRect,
-                           const Maybe<gfx::Polygon>& aGeometry) override;
+  void RenderLayer(const gfx::IntRect& aClipRect,
+                   const Maybe<gfx::Polygon>& aGeometry) override;
 
-  virtual void Prepare(const RenderTargetIntRect& aClipRect) override;
+  void Prepare(const RenderTargetIntRect& aClipRect) override;
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
+  {
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override {
+>>>>>>> upstream-releases
     DefaultComputeEffectiveTransforms(aTransformToSurface);
   }
 
-  virtual const LayerIntRegion& GetShadowVisibleRegion() override;
+  const LayerIntRegion& GetShadowVisibleRegion() override;
 
-  virtual void Cleanup() override;
+  void Cleanup() override;
 
-  virtual void CleanupResources() override;
+  void CleanupResources() override;
 
-  virtual HostLayer* AsHostLayer() override { return this; }
+  HostLayer* AsHostLayer() override { return this; }
 
   // ref layers don't use a compositable
   CompositableHost* GetCompositableHost() override { return nullptr; }
 
-  virtual const char* Name() const override { return "RefLayerComposite"; }
+  const char* Name() const override { return "RefLayerComposite"; }
   UniquePtr<PreparedData> mPrepared;
   RefPtr<CompositingRenderTarget> mLastIntermediateSurface;
 };

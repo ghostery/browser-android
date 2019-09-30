@@ -42,6 +42,7 @@ struct ScriptedCaller {
 
 // Describes all the parameters that control wasm compilation.
 
+<<<<<<< HEAD
 struct CompileArgs : ShareableBase<CompileArgs> {
   ScriptedCaller scriptedCaller;
   UniqueChars sourceMapURL;
@@ -54,20 +55,73 @@ struct CompileArgs : ShareableBase<CompileArgs> {
   bool testTiering;
 
   explicit CompileArgs(ScriptedCaller&& scriptedCaller)
+||||||| merged common ancestors
+struct CompileArgs : ShareableBase<CompileArgs>
+{
+    ScriptedCaller scriptedCaller;
+    UniqueChars sourceMapURL;
+    bool baselineEnabled;
+    bool forceCranelift;
+    bool debugEnabled;
+    bool ionEnabled;
+    bool sharedMemoryEnabled;
+    HasGcTypes gcTypesConfigured;
+    bool testTiering;
+
+    explicit CompileArgs(ScriptedCaller&& scriptedCaller)
+=======
+struct CompileArgs;
+typedef RefPtr<CompileArgs> MutableCompileArgs;
+typedef RefPtr<const CompileArgs> SharedCompileArgs;
+
+struct CompileArgs : ShareableBase<CompileArgs> {
+  ScriptedCaller scriptedCaller;
+  UniqueChars sourceMapURL;
+
+  bool baselineEnabled;
+  bool ionEnabled;
+  bool craneliftEnabled;
+  bool debugEnabled;
+  bool sharedMemoryEnabled;
+  bool forceTiering;
+  bool gcEnabled;
+
+  // CompileArgs has two constructors:
+  //
+  // - one through a factory function `build`, which checks that flags are
+  // consistent with each other.
+  // - one that gives complete access to underlying fields.
+  //
+  // You should use the first one in general, unless you have a very good
+  // reason (i.e. no JSContext around and you know which flags have been used).
+
+  static SharedCompileArgs build(JSContext* cx,
+                                 ScriptedCaller&& scriptedCaller);
+
+  explicit CompileArgs(ScriptedCaller&& scriptedCaller)
+>>>>>>> upstream-releases
       : scriptedCaller(std::move(scriptedCaller)),
         baselineEnabled(false),
-        forceCranelift(false),
-        debugEnabled(false),
         ionEnabled(false),
+        craneliftEnabled(false),
+        debugEnabled(false),
         sharedMemoryEnabled(false),
+<<<<<<< HEAD
         gcTypesConfigured(HasGcTypes::False),
         testTiering(false) {}
 
   CompileArgs(JSContext* cx, ScriptedCaller&& scriptedCaller);
-};
+||||||| merged common ancestors
+        gcTypesConfigured(HasGcTypes::False),
+        testTiering(false)
+    {}
 
-typedef RefPtr<CompileArgs> MutableCompileArgs;
-typedef RefPtr<const CompileArgs> SharedCompileArgs;
+    CompileArgs(JSContext* cx, ScriptedCaller&& scriptedCaller);
+=======
+        forceTiering(false),
+        gcEnabled(false) {}
+>>>>>>> upstream-releases
+};
 
 // Return the estimated compiled (machine) code size for the given bytecode size
 // compiled at the given tier.
@@ -80,10 +134,23 @@ double EstimateCompiledCodeSize(Tier tier, size_t bytecodeSize);
 //  - *error points to a string description of the error
 //  - *error is null and the caller should report out-of-memory.
 
+<<<<<<< HEAD
 SharedModule CompileBuffer(const CompileArgs& args,
                            const ShareableBytes& bytecode, UniqueChars* error,
                            UniqueCharsVector* warnings,
                            UniqueLinkData* maybeLinkData = nullptr);
+||||||| merged common ancestors
+SharedModule
+CompileBuffer(const CompileArgs& args,
+              const ShareableBytes& bytecode,
+              UniqueChars* error,
+              UniqueCharsVector* warnings);
+=======
+SharedModule CompileBuffer(const CompileArgs& args,
+                           const ShareableBytes& bytecode, UniqueChars* error,
+                           UniqueCharsVector* warnings,
+                           JS::OptimizedEncodingListener* listener = nullptr);
+>>>>>>> upstream-releases
 
 // Attempt to compile the second tier of the given wasm::Module.
 

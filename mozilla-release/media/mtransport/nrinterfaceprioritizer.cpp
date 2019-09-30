@@ -17,6 +17,7 @@ namespace {
 class LocalAddress {
  public:
   LocalAddress()
+<<<<<<< HEAD
       : ifname_(),
         addr_(),
         key_(),
@@ -26,6 +27,27 @@ class LocalAddress {
         ip_version_(-1) {}
 
   bool Init(const nr_local_addr &local_addr) {
+||||||| merged common ancestors
+    : ifname_(),
+      addr_(),
+      key_(),
+      is_vpn_(-1),
+      estimated_speed_(-1),
+      type_preference_(-1),
+      ip_version_(-1) {}
+
+  bool Init(const nr_local_addr& local_addr) {
+=======
+      : ifname_(),
+        addr_(),
+        key_(),
+        is_vpn_(-1),
+        estimated_speed_(-1),
+        type_preference_(-1),
+        ip_version_(-1) {}
+
+  bool Init(const nr_local_addr& local_addr) {
+>>>>>>> upstream-releases
     ifname_ = local_addr.addr.ifname;
 
     char buf[MAXIFNAME + 47];
@@ -93,7 +115,15 @@ class LocalAddress {
     return addr_ < rhs.addr_;
   }
 
+<<<<<<< HEAD
   const std::string &GetKey() const { return key_; }
+||||||| merged common ancestors
+  const std::string& GetKey() const {
+    return key_;
+  }
+=======
+  const std::string& GetKey() const { return key_; }
+>>>>>>> upstream-releases
 
  private:
   // Getting the preference corresponding to a type. Getting lower number here
@@ -117,7 +147,14 @@ class LocalAddress {
 
   // TODO(bug 895790): Once we can get useful interface properties on Darwin,
   // we should remove this stuff.
+<<<<<<< HEAD
   static const std::vector<std::string> &interface_preference_list() {
+||||||| merged common ancestors
+  static const std::vector<std::string>& interface_preference_list()
+  {
+=======
+  static const std::vector<std::string>& interface_preference_list() {
+>>>>>>> upstream-releases
     static std::vector<std::string> list(build_interface_preference_list());
     return list;
   }
@@ -166,7 +203,7 @@ class InterfacePrioritizer {
  public:
   InterfacePrioritizer() : local_addrs_(), preference_map_(), sorted_(false) {}
 
-  int add(const nr_local_addr *iface) {
+  int add(const nr_local_addr* iface) {
     LocalAddress addr;
     if (!addr.Init(*iface)) {
       return R_FAILED;
@@ -193,7 +230,7 @@ class InterfacePrioritizer {
     return 0;
   }
 
-  int getPreference(const char *key, UCHAR *pref) {
+  int getPreference(const char* key, UCHAR* pref) {
     if (!sorted_) {
       return R_FAILED;
     }
@@ -213,27 +250,57 @@ class InterfacePrioritizer {
 
 }  // anonymous namespace
 
+<<<<<<< HEAD
 static int add_interface(void *obj, nr_local_addr *iface) {
   InterfacePrioritizer *ip = static_cast<InterfacePrioritizer *>(obj);
+||||||| merged common ancestors
+static int add_interface(void *obj, nr_local_addr *iface) {
+  InterfacePrioritizer *ip = static_cast<InterfacePrioritizer*>(obj);
+=======
+static int add_interface(void* obj, nr_local_addr* iface) {
+  InterfacePrioritizer* ip = static_cast<InterfacePrioritizer*>(obj);
+>>>>>>> upstream-releases
   return ip->add(iface);
 }
 
+<<<<<<< HEAD
 static int get_priority(void *obj, const char *key, UCHAR *pref) {
   InterfacePrioritizer *ip = static_cast<InterfacePrioritizer *>(obj);
+||||||| merged common ancestors
+static int get_priority(void *obj, const char *key, UCHAR *pref) {
+  InterfacePrioritizer *ip = static_cast<InterfacePrioritizer*>(obj);
+=======
+static int get_priority(void* obj, const char* key, UCHAR* pref) {
+  InterfacePrioritizer* ip = static_cast<InterfacePrioritizer*>(obj);
+>>>>>>> upstream-releases
   return ip->getPreference(key, pref);
 }
 
+<<<<<<< HEAD
 static int sort_preference(void *obj) {
   InterfacePrioritizer *ip = static_cast<InterfacePrioritizer *>(obj);
+||||||| merged common ancestors
+static int sort_preference(void *obj) {
+  InterfacePrioritizer *ip = static_cast<InterfacePrioritizer*>(obj);
+=======
+static int sort_preference(void* obj) {
+  InterfacePrioritizer* ip = static_cast<InterfacePrioritizer*>(obj);
+>>>>>>> upstream-releases
   return ip->sort();
 }
 
-static int destroy(void **objp) {
+static int destroy(void** objp) {
   if (!objp || !*objp) {
     return 0;
   }
 
+<<<<<<< HEAD
   InterfacePrioritizer *ip = static_cast<InterfacePrioritizer *>(*objp);
+||||||| merged common ancestors
+  InterfacePrioritizer *ip = static_cast<InterfacePrioritizer*>(*objp);
+=======
+  InterfacePrioritizer* ip = static_cast<InterfacePrioritizer*>(*objp);
+>>>>>>> upstream-releases
   *objp = nullptr;
   delete ip;
 
@@ -245,8 +312,16 @@ static nr_interface_prioritizer_vtbl priorizer_vtbl = {
 
 namespace mozilla {
 
+<<<<<<< HEAD
 nr_interface_prioritizer *CreateInterfacePrioritizer() {
   nr_interface_prioritizer *ip;
+||||||| merged common ancestors
+nr_interface_prioritizer* CreateInterfacePrioritizer() {
+  nr_interface_prioritizer *ip;
+=======
+nr_interface_prioritizer* CreateInterfacePrioritizer() {
+  nr_interface_prioritizer* ip;
+>>>>>>> upstream-releases
   int r = nr_interface_prioritizer_create_int(new InterfacePrioritizer(),
                                               &priorizer_vtbl, &ip);
   if (r != 0) {

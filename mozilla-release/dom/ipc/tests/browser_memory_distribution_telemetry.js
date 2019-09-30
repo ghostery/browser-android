@@ -1,6 +1,9 @@
 "use strict";
 
-var session = ChromeUtils.import("resource://gre/modules/TelemetrySession.jsm", {});
+var session = ChromeUtils.import(
+  "resource://gre/modules/TelemetrySession.jsm",
+  null
+);
 
 const DUMMY_PAGE_DATA_URI = `data:text/html,
     <html>
@@ -28,18 +31,29 @@ add_task(async function test_memory_distribution() {
 
   Services.telemetry.canRecordExtended = true;
 
-  let histogram = Services.telemetry.getKeyedHistogramById("MEMORY_DISTRIBUTION_AMONG_CONTENT");
+  let histogram = Services.telemetry.getKeyedHistogramById(
+    "MEMORY_DISTRIBUTION_AMONG_CONTENT"
+  );
   histogram.clear();
 
-  let tab1 = await BrowserTestUtils.openNewForegroundTab(gBrowser, DUMMY_PAGE_DATA_URI);
-  let tab2 = await BrowserTestUtils.openNewForegroundTab(gBrowser, DUMMY_PAGE_DATA_URI);
-  let tab3 = await BrowserTestUtils.openNewForegroundTab(gBrowser, DUMMY_PAGE_DATA_URI);
+  let tab1 = await BrowserTestUtils.openNewForegroundTab(
+    gBrowser,
+    DUMMY_PAGE_DATA_URI
+  );
+  let tab2 = await BrowserTestUtils.openNewForegroundTab(
+    gBrowser,
+    DUMMY_PAGE_DATA_URI
+  );
+  let tab3 = await BrowserTestUtils.openNewForegroundTab(
+    gBrowser,
+    DUMMY_PAGE_DATA_URI
+  );
 
   let finishedGathering = new Promise(resolve => {
-    let obs = function () {
+    let obs = function() {
       Services.obs.removeObserver(obs, "gather-memory-telemetry-finished");
       resolve();
-    }
+    };
     Services.obs.addObserver(obs, "gather-memory-telemetry-finished");
   });
 
@@ -48,10 +62,11 @@ add_task(async function test_memory_distribution() {
   await finishedGathering;
 
   let s = histogram.snapshot();
-  ok("0 - 10 tabs" in s, "We should have some samples by now in this bucket.")
+  ok("0 - 10 tabs" in s, "We should have some samples by now in this bucket.");
   for (var key in s) {
     is(key, "0 - 10 tabs");
     let fewTabsSnapshot = s[key];
+<<<<<<< HEAD
     ok(fewTabsSnapshot.sum > 0, "Zero difference between all the content processes is unlikely, what happened?");
     ok(fewTabsSnapshot.sum < 80, "20 percentage difference on average is unlikely, what happened?");
     let values = fewTabsSnapshot.values;
@@ -60,6 +75,29 @@ add_task(async function test_memory_distribution() {
         // If this check fails it means that one of the content processes uses at least 20% more or 20% less than the mean.
         is(value, 0, "All the buckets above 10 should be empty");
       }
+||||||| merged common ancestors
+    ok(fewTabsSnapshot.sum > 0, "Zero difference between all the content processes is unlikely, what happened?");
+    ok(fewTabsSnapshot.sum < 80, "20 percentage difference on average is unlikely, what happened?");
+    let c = fewTabsSnapshot.counts;
+    for (let i = 10; i < c.length; i++) {
+      // If this check fails it means that one of the content processes uses at least 20% more or 20% less than the mean.
+      is(c[i], 0, "All the buckets above 10 should be empty");
+=======
+    ok(
+      fewTabsSnapshot.sum > 0,
+      "Zero difference between all the content processes is unlikely, what happened?"
+    );
+    ok(
+      fewTabsSnapshot.sum < 80,
+      "20 percentage difference on average is unlikely, what happened?"
+    );
+    let values = fewTabsSnapshot.values;
+    for (let [bucket, value] of Object.entries(values)) {
+      if (bucket >= 10) {
+        // If this check fails it means that one of the content processes uses at least 20% more or 20% less than the mean.
+        is(value, 0, "All the buckets above 10 should be empty");
+      }
+>>>>>>> upstream-releases
     }
   }
 

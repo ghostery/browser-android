@@ -66,7 +66,7 @@ std::string Diagnostics::GetFrameOverlayString(const GPUStats& aStats) {
     gpuTimeString = nsPrintfCString("%0.1fms", mGPUDrawMs.Average()).get();
   }
 
-  // DL  = nsDisplayListBuilder
+  // DL  = nsDisplayListBuilder, p = partial, f = full
   // FLB = FrameLayerBuilder
   // R   = ClientLayerManager::EndTransaction
   // CP  = ShadowLayerForwarder::EndTransaction (txn build)
@@ -76,6 +76,7 @@ std::string Diagnostics::GetFrameOverlayString(const GPUStats& aStats) {
   // CC_BUILD = Container prepare/composite frame building
   // CC_EXEC  = Container render/composite drawing
   nsPrintfCString line1("FPS: %d (TXN: %d)", fps, txnFps);
+<<<<<<< HEAD
   nsPrintfCString line2(
       "[CC] Build: %0.1fms Exec: %0.1fms GPU: %s Fill Ratio: %0.1f/%0.1f",
       mPrepareMs.Average(), mCompositeMs.Average(), gpuTimeString.c_str(),
@@ -91,6 +92,36 @@ std::string Diagnostics::GetFrameOverlayString(const GPUStats& aStats) {
         "[Content] DL: %0.1fms FLB: %0.1fms Raster: %0.1fms", mDlbMs.Average(),
         mFlbMs.Average(), mRasterMs.Average());
   }
+||||||| merged common ancestors
+  nsPrintfCString line2("[CC] Build: %0.1fms Exec: %0.1fms GPU: %s Fill Ratio: %0.1f/%0.1f",
+    mPrepareMs.Average(),
+    mCompositeMs.Average(),
+    gpuTimeString.c_str(),
+    pixelFillRatio,
+    screenFillRatio);
+  nsCString line3;
+  if (mDlb2Ms.Average() != 0.0f) {
+    line3 += nsPrintfCString("[Content] DL: %0.1f/%0.1fms FLB: %0.1fms Raster: %0.1fms",
+    mDlb2Ms.Average(),
+    mDlbMs.Average(),
+    mFlbMs.Average(),
+    mRasterMs.Average());
+  } else {
+    line3 += nsPrintfCString("[Content] DL: %0.1fms FLB: %0.1fms Raster: %0.1fms",
+    mDlbMs.Average(),
+    mFlbMs.Average(),
+    mRasterMs.Average());
+  }
+=======
+  nsPrintfCString line2(
+      "[CC] Build: %0.1fms Exec: %0.1fms GPU: %s Fill Ratio: %0.1f/%0.1f",
+      mPrepareMs.Average(), mCompositeMs.Average(), gpuTimeString.c_str(),
+      pixelFillRatio, screenFillRatio);
+  nsPrintfCString line3(
+      "[Content] DL p: %0.1f DL f: %0.1fms FLB: %0.1fms Raster: %0.1fms",
+      mDlbMs.Average(), mDlb2Ms.Average(), mFlbMs.Average(),
+      mRasterMs.Average());
+>>>>>>> upstream-releases
   nsPrintfCString line4("[IPDL] Build: %0.1fms Send: %0.1fms Update: %0.1fms",
                         mSerializeMs.Average(), mSendMs.Average(),
                         mUpdateMs.Average());

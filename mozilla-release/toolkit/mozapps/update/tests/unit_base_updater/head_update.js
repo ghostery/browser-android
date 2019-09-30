@@ -2,11 +2,16 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-const IS_SERVICE_TEST = false;
-
 /* import-globals-from ../data/xpcshellUtilsAUS.js */
+<<<<<<< HEAD
 load("../data/xpcshellUtilsAUS.js");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AppConstants: "resource://gre/modules/AppConstants.jsm",
 });
+||||||| merged common ancestors
+load("../data/xpcshellUtilsAUS.js");
+=======
+load("xpcshellUtilsAUS.js");
+gIsServiceTest = false;
+>>>>>>> upstream-releases

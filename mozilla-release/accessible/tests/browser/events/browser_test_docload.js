@@ -35,23 +35,34 @@ async function runTests(browser, accDoc) {
     expected: [
       [EVENT_REORDER, getAccessible(browser)],
       [EVENT_DOCUMENT_LOAD_COMPLETE, "body2"],
-      [EVENT_STATE_CHANGE, busyChecker(false)]],
+      [EVENT_STATE_CHANGE, busyChecker(false)],
+    ],
     unexpected: [
       [EVENT_DOCUMENT_LOAD_COMPLETE, inIframeChecker("iframe1")],
-      [EVENT_STATE_CHANGE, inIframeChecker("iframe1")]]
+      [EVENT_STATE_CHANGE, inIframeChecker("iframe1")],
+    ],
   });
 
+<<<<<<< HEAD
   BrowserTestUtils.loadURI(browser, `data:text/html;charset=utf-8,
+||||||| merged common ancestors
+  browser.loadURI(`data:text/html;charset=utf-8,
+=======
+  BrowserTestUtils.loadURI(
+    browser,
+    `data:text/html;charset=utf-8,
+>>>>>>> upstream-releases
     <html><body id="body2">
       <iframe id="iframe1" src="http://example.com"></iframe>
-    </body></html>`);
+    </body></html>`
+  );
 
   await onLoadEvents;
 
   onLoadEvents = waitForEvents([
-      [EVENT_DOCUMENT_LOAD_COMPLETE, urlChecker("about:about")],
-      [EVENT_STATE_CHANGE, busyChecker(false)],
-      [EVENT_REORDER, getAccessible(browser)]
+    [EVENT_DOCUMENT_LOAD_COMPLETE, urlChecker("about:about")],
+    [EVENT_STATE_CHANGE, busyChecker(false)],
+    [EVENT_REORDER, getAccessible(browser)],
   ]);
 
   BrowserTestUtils.loadURI(browser, "about:about");
@@ -61,7 +72,7 @@ async function runTests(browser, accDoc) {
   onLoadEvents = waitForEvents([
     [EVENT_DOCUMENT_RELOAD, evt => evt.isFromUserInput],
     [EVENT_REORDER, getAccessible(browser)],
-    [EVENT_STATE_CHANGE, busyChecker(false)]
+    [EVENT_STATE_CHANGE, busyChecker(false)],
   ]);
 
   EventUtils.synthesizeKey("VK_F5", {}, browser.ownerGlobal);
@@ -71,7 +82,7 @@ async function runTests(browser, accDoc) {
   onLoadEvents = waitForEvents([
     [EVENT_DOCUMENT_LOAD_COMPLETE, urlChecker("about:mozilla")],
     [EVENT_STATE_CHANGE, busyChecker(false)],
-    [EVENT_REORDER, getAccessible(browser)]
+    [EVENT_REORDER, getAccessible(browser)],
   ]);
 
   BrowserTestUtils.loadURI(browser, "about:mozilla");
@@ -81,7 +92,7 @@ async function runTests(browser, accDoc) {
   onLoadEvents = waitForEvents([
     [EVENT_DOCUMENT_RELOAD, evt => !evt.isFromUserInput],
     [EVENT_REORDER, getAccessible(browser)],
-    [EVENT_STATE_CHANGE, busyChecker(false)]
+    [EVENT_STATE_CHANGE, busyChecker(false)],
   ]);
 
   browser.reload();
@@ -91,7 +102,7 @@ async function runTests(browser, accDoc) {
   onLoadEvents = waitForEvents([
     [EVENT_DOCUMENT_LOAD_COMPLETE, urlChecker("http://www.wronguri.wronguri/")],
     [EVENT_STATE_CHANGE, busyChecker(false)],
-    [EVENT_REORDER, getAccessible(browser)]
+    [EVENT_REORDER, getAccessible(browser)],
   ]);
 
   BrowserTestUtils.loadURI(browser, "http://www.wronguri.wronguri/");
@@ -101,7 +112,7 @@ async function runTests(browser, accDoc) {
   onLoadEvents = waitForEvents([
     [EVENT_DOCUMENT_LOAD_COMPLETE, urlChecker("https://nocert.example.com/")],
     [EVENT_STATE_CHANGE, busyChecker(false)],
-    [EVENT_REORDER, getAccessible(browser)]
+    [EVENT_REORDER, getAccessible(browser)],
   ]);
 
   BrowserTestUtils.loadURI(browser, "https://nocert.example.com:443/");

@@ -22,11 +22,21 @@
 
 #![deny(missing_docs)]
 
-use arrayvec::ArrayVec;
 use crate::context::{StyleContext, ThreadLocalStyleContext};
 use crate::dom::{OpaqueNode, SendNode, TElement};
 use crate::scoped_tls::ScopedTLS;
 use crate::traversal::{DomTraversal, PerLevelTraversalData};
+use arrayvec::ArrayVec;
+<<<<<<< HEAD
+use crate::context::{StyleContext, ThreadLocalStyleContext};
+use crate::dom::{OpaqueNode, SendNode, TElement};
+use crate::scoped_tls::ScopedTLS;
+use crate::traversal::{DomTraversal, PerLevelTraversalData};
+||||||| merged common ancestors
+use context::{StyleContext, ThreadLocalStyleContext};
+use dom::{OpaqueNode, SendNode, TElement};
+=======
+>>>>>>> upstream-releases
 use itertools::Itertools;
 use rayon;
 use smallvec::SmallVec;
@@ -277,6 +287,7 @@ pub fn traverse_nodes<'a, 'scope, E, D, I>(
             top_down_dom(&work, root, traversal_data, scope, pool, traversal, tls);
         } else {
             scope.spawn(move |scope| {
+                profiler_label!(Style);
                 let work = work;
                 top_down_dom(&work, root, traversal_data, scope, pool, traversal, tls);
             });
@@ -286,6 +297,7 @@ pub fn traverse_nodes<'a, 'scope, E, D, I>(
             let nodes: WorkUnit<E::ConcreteNode> = chunk.collect();
             let traversal_data_copy = traversal_data.clone();
             scope.spawn(move |scope| {
+                profiler_label!(Style);
                 let n = nodes;
                 top_down_dom(&*n, root, traversal_data_copy, scope, pool, traversal, tls)
             });

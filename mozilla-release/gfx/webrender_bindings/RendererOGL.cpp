@@ -19,9 +19,22 @@
 namespace mozilla {
 namespace wr {
 
+<<<<<<< HEAD
 wr::WrExternalImage LockExternalImage(void* aObj, wr::WrExternalImageId aId,
                                       uint8_t aChannelIndex,
                                       wr::ImageRendering aRendering) {
+||||||| merged common ancestors
+wr::WrExternalImage
+LockExternalImage(void* aObj,
+                  wr::WrExternalImageId aId,
+                  uint8_t aChannelIndex,
+                  wr::ImageRendering aRendering)
+{
+=======
+wr::WrExternalImage wr_renderer_lock_external_image(
+    void* aObj, wr::WrExternalImageId aId, uint8_t aChannelIndex,
+    wr::ImageRendering aRendering) {
+>>>>>>> upstream-releases
   RendererOGL* renderer = reinterpret_cast<RendererOGL*>(aObj);
   RenderTextureHost* texture = renderer->GetRenderTexture(aId);
   MOZ_ASSERT(texture);
@@ -33,8 +46,16 @@ wr::WrExternalImage LockExternalImage(void* aObj, wr::WrExternalImageId aId,
   return texture->Lock(aChannelIndex, renderer->gl(), aRendering);
 }
 
+<<<<<<< HEAD
 void UnlockExternalImage(void* aObj, wr::WrExternalImageId aId,
                          uint8_t aChannelIndex) {
+||||||| merged common ancestors
+void UnlockExternalImage(void* aObj, wr::WrExternalImageId aId, uint8_t aChannelIndex)
+{
+=======
+void wr_renderer_unlock_external_image(void* aObj, wr::WrExternalImageId aId,
+                                       uint8_t aChannelIndex) {
+>>>>>>> upstream-releases
   RendererOGL* renderer = reinterpret_cast<RendererOGL*>(aObj);
   RenderTextureHost* texture = renderer->GetRenderTexture(aId);
   MOZ_ASSERT(texture);
@@ -71,11 +92,25 @@ RendererOGL::~RendererOGL() {
   wr_renderer_delete(mRenderer);
 }
 
+<<<<<<< HEAD
 wr::WrExternalImageHandler RendererOGL::GetExternalImageHandler() {
   return wr::WrExternalImageHandler{
       this,
       LockExternalImage,
       UnlockExternalImage,
+||||||| merged common ancestors
+wr::WrExternalImageHandler
+RendererOGL::GetExternalImageHandler()
+{
+  return wr::WrExternalImageHandler {
+    this,
+    LockExternalImage,
+    UnlockExternalImage,
+=======
+wr::WrExternalImageHandler RendererOGL::GetExternalImageHandler() {
+  return wr::WrExternalImageHandler{
+      this,
+>>>>>>> upstream-releases
   };
 }
 
@@ -90,10 +125,33 @@ static void DoNotifyWebRenderContextPurge(
   aBridge->NotifyWebRenderContextPurge();
 }
 
+<<<<<<< HEAD
 bool RendererOGL::UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
                                   const Maybe<Range<uint8_t>>& aReadbackBuffer,
                                   bool aHadSlowFrame,
                                   RendererStats* aOutStats) {
+||||||| merged common ancestors
+bool
+RendererOGL::UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize, const Maybe<Range<uint8_t>>& aReadbackBuffer)
+{
+  uint32_t flags = gfx::gfxVars::WebRenderDebugFlags();
+  // Disable debug flags during readback
+  if (aReadbackBuffer.isSome()) {
+    flags = 0;
+  }
+
+  if (mDebugFlags.mBits != flags) {
+    mDebugFlags.mBits = flags;
+    wr_renderer_set_debug_flags(mRenderer, mDebugFlags);
+  }
+
+=======
+bool RendererOGL::UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
+                                  const Maybe<wr::ImageFormat>& aReadbackFormat,
+                                  const Maybe<Range<uint8_t>>& aReadbackBuffer,
+                                  bool aHadSlowFrame,
+                                  RendererStats* aOutStats) {
+>>>>>>> upstream-releases
   mozilla::widget::WidgetRenderingContext widgetContext;
 
 #if defined(XP_MACOSX)
@@ -118,17 +176,40 @@ bool RendererOGL::UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
 
   auto size = mCompositor->GetBufferSize();
 
+<<<<<<< HEAD
   if (!wr_renderer_render(mRenderer, size.width, size.height, aHadSlowFrame,
                           aOutStats)) {
     NotifyWebRenderError(WebRenderError::RENDER);
+||||||| merged common ancestors
+  if (!wr_renderer_render(mRenderer, size.width, size.height)) {
+    NotifyWebRenderError(WebRenderError::RENDER);
+=======
+  if (!wr_renderer_render(mRenderer, size.width, size.height, aHadSlowFrame,
+                          aOutStats)) {
+    RenderThread::Get()->HandleWebRenderError(WebRenderError::RENDER);
+    return false;
+>>>>>>> upstream-releases
   }
 
   if (aReadbackBuffer.isSome()) {
     MOZ_ASSERT(aReadbackSize.isSome());
+<<<<<<< HEAD
     wr_renderer_readback(mRenderer, aReadbackSize.ref().width,
                          aReadbackSize.ref().height, &aReadbackBuffer.ref()[0],
+||||||| merged common ancestors
+    wr_renderer_readback(mRenderer,
+                         aReadbackSize.ref().width, aReadbackSize.ref().height,
+                         &aReadbackBuffer.ref()[0],
+=======
+    MOZ_ASSERT(aReadbackFormat.isSome());
+    wr_renderer_readback(mRenderer, aReadbackSize.ref().width,
+                         aReadbackSize.ref().height, aReadbackFormat.ref(),
+                         &aReadbackBuffer.ref()[0],
+>>>>>>> upstream-releases
                          aReadbackBuffer.ref().length());
   }
+
+  mScreenshotGrabber.MaybeGrabScreenshot(mRenderer, size.ToUnknownSize());
 
   mCompositor->EndFrame();
 
@@ -144,6 +225,7 @@ bool RendererOGL::UpdateAndRender(const Maybe<gfx::IntSize>& aReadbackSize,
   mFrameStartTime = TimeStamp();
 #endif
 
+<<<<<<< HEAD
   // TODO: Flush pending actions such as texture deletions/unlocks and
   //       textureHosts recycling.
 
@@ -164,8 +246,78 @@ void RendererOGL::CheckGraphicsResetStatus() {
                               &DoNotifyWebRenderContextPurge, mBridge));
     }
   }
+||||||| merged common ancestors
+  gl::GLContext* gl = mCompositor->gl();
+  if (gl->IsSupported(gl::GLFeature::robustness)) {
+    GLenum resetStatus = gl->fGetGraphicsResetStatus();
+    if (resetStatus == LOCAL_GL_PURGED_CONTEXT_RESET_NV) {
+      layers::CompositorThreadHolder::Loop()->PostTask(NewRunnableFunction(
+        "DoNotifyWebRenderContextPurgeRunnable",
+        &DoNotifyWebRenderContextPurge,
+        mBridge
+      ));
+    }
+  }
+
+  // TODO: Flush pending actions such as texture deletions/unlocks and
+  //       textureHosts recycling.
+
+  return true;
+=======
+  mScreenshotGrabber.MaybeProcessQueue(mRenderer);
+
+  // TODO: Flush pending actions such as texture deletions/unlocks and
+  //       textureHosts recycling.
+
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void RendererOGL::WaitForGPU() { mCompositor->WaitForGPU(); }
+||||||| merged common ancestors
+void
+RendererOGL::Pause()
+{
+  mCompositor->Pause();
+}
+=======
+void RendererOGL::CheckGraphicsResetStatus() {
+  if (!mCompositor || !mCompositor->gl()) {
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void RendererOGL::Pause() { mCompositor->Pause(); }
+
+bool RendererOGL::Resume() { return mCompositor->Resume(); }
+||||||| merged common ancestors
+bool
+RendererOGL::Resume()
+{
+  return mCompositor->Resume();
+}
+=======
+  gl::GLContext* gl = mCompositor->gl();
+  if (gl->IsSupported(gl::GLFeature::robustness)) {
+    GLenum resetStatus = gl->fGetGraphicsResetStatus();
+    if (resetStatus == LOCAL_GL_PURGED_CONTEXT_RESET_NV) {
+      layers::CompositorThreadHolder::Loop()->PostTask(
+          NewRunnableFunction("DoNotifyWebRenderContextPurgeRunnable",
+                              &DoNotifyWebRenderContextPurge, mBridge));
+    }
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+layers::SyncObjectHost* RendererOGL::GetSyncObject() const {
+||||||| merged common ancestors
+layers::SyncObjectHost*
+RendererOGL::GetSyncObject() const
+{
+=======
 void RendererOGL::WaitForGPU() { mCompositor->WaitForGPU(); }
 
 void RendererOGL::Pause() { mCompositor->Pause(); }
@@ -173,6 +325,7 @@ void RendererOGL::Pause() { mCompositor->Pause(); }
 bool RendererOGL::Resume() { return mCompositor->Resume(); }
 
 layers::SyncObjectHost* RendererOGL::GetSyncObject() const {
+>>>>>>> upstream-releases
   return mCompositor->GetSyncObject();
 }
 
@@ -197,6 +350,7 @@ RenderTextureHost* RendererOGL::GetRenderTexture(
   return mThread->GetRenderTexture(aExternalImageId);
 }
 
+<<<<<<< HEAD
 void RendererOGL::AccumulateMemoryReport(MemoryReport* aReport) {
   wr_renderer_accumulate_memory_report(GetRenderer(), aReport);
 
@@ -214,11 +368,42 @@ static void DoNotifyWebRenderError(layers::CompositorBridgeParent* aBridge,
                                    WebRenderError aError) {
   aBridge->NotifyWebRenderError(aError);
 }
+||||||| merged common ancestors
+static void
+DoNotifyWebRenderError(layers::CompositorBridgeParent* aBridge, WebRenderError aError)
+{
+  aBridge->NotifyWebRenderError(aError);
+}
+=======
+void RendererOGL::AccumulateMemoryReport(MemoryReport* aReport) {
+  wr_renderer_accumulate_memory_report(GetRenderer(), aReport);
 
+  LayoutDeviceIntSize size = mCompositor->GetBufferSize();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void RendererOGL::NotifyWebRenderError(WebRenderError aError) {
   layers::CompositorThreadHolder::Loop()->PostTask(
       NewRunnableFunction("DoNotifyWebRenderErrorRunnable",
                           &DoNotifyWebRenderError, mBridge, aError));
+||||||| merged common ancestors
+void
+RendererOGL::NotifyWebRenderError(WebRenderError aError)
+{
+  layers::CompositorThreadHolder::Loop()->PostTask(NewRunnableFunction(
+    "DoNotifyWebRenderErrorRunnable",
+    &DoNotifyWebRenderError,
+    mBridge,
+    aError
+  ));
+=======
+  // Assume BGRA8 for the format since it's not exposed anywhere,
+  // and all compositor backends should be using that.
+  uintptr_t swapChainSize = size.width * size.height *
+                            BytesPerPixel(SurfaceFormat::B8G8R8A8) *
+                            (mCompositor->UseTripleBuffering() ? 3 : 2);
+  aReport->swap_chain += swapChainSize;
+>>>>>>> upstream-releases
 }
 
 }  // namespace wr

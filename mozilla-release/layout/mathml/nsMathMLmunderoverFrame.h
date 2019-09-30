@@ -11,6 +11,10 @@
 #include "nsIReflowCallback.h"
 #include "nsMathMLContainerFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <munderover> -- attach an underscript-overscript pair to a base
 //
@@ -20,8 +24,15 @@ class nsMathMLmunderoverFrame final : public nsMathMLContainerFrame,
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmunderoverFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmunderoverFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmunderoverFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLmunderoverFrame(mozilla::PresShell* aPresShell,
+                                               ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   nsresult Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
                  ReflowOutput& aDesiredSize) override;
@@ -44,11 +55,27 @@ class nsMathMLmunderoverFrame final : public nsMathMLContainerFrame,
   bool ReflowFinished() override;
   void ReflowCallbackCanceled() override;
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmunderoverFrame(ComputedStyle* aStyle)
       : nsMathMLContainerFrame(aStyle, kClassID),
         mIncrementUnder(false),
         mIncrementOver(false) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmunderoverFrame(ComputedStyle* aStyle)
+    : nsMathMLContainerFrame(aStyle, kClassID)
+    , mIncrementUnder(false)
+    , mIncrementOver(false)
+  {}
+=======
+ protected:
+  explicit nsMathMLmunderoverFrame(ComputedStyle* aStyle,
+                                   nsPresContext* aPresContext)
+      : nsMathMLContainerFrame(aStyle, aPresContext, kClassID),
+        mIncrementUnder(false),
+        mIncrementOver(false) {}
+>>>>>>> upstream-releases
 
   virtual ~nsMathMLmunderoverFrame();
 

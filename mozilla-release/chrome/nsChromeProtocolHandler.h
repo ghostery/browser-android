@@ -25,8 +25,18 @@ class nsChromeProtocolHandler final : public nsIProtocolHandler,
   // nsIProtocolHandler methods:
   NS_DECL_NSIPROTOCOLHANDLER
 
+<<<<<<< HEAD
   // nsChromeProtocolHandler methods:
   nsChromeProtocolHandler() {}
+||||||| merged common ancestors
+    // nsChromeProtocolHandler methods:
+    nsChromeProtocolHandler() {}
+=======
+  // nsChromeProtocolHandler methods:
+  nsChromeProtocolHandler() {}
+  static nsresult CreateNewURI(const nsACString& aSpec, const char* aCharset,
+                               nsIURI* aBaseURI, nsIURI** result);
+>>>>>>> upstream-releases
 
  private:
   ~nsChromeProtocolHandler() {}

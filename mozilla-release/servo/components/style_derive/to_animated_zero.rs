@@ -2,10 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 use crate::animate::{AnimationFieldAttrs, AnimationInputAttrs, AnimationVariantAttrs};
 use crate::cg;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
+||||||| merged common ancestors
+use animate::{AnimationFieldAttrs, AnimationInputAttrs, AnimationVariantAttrs};
+use cg;
+use quote;
+=======
+use crate::animate::{AnimationFieldAttrs, AnimationInputAttrs, AnimationVariantAttrs};
+use derive_common::cg;
+use proc_macro2::TokenStream;
+use quote::TokenStreamExt;
+>>>>>>> upstream-releases
 use syn;
 use synstructure;
 
@@ -28,7 +39,7 @@ pub fn derive(mut input: syn::DeriveInput) -> TokenStream {
             return Some(quote! { Err(()) });
         }
         let (mapped, mapped_bindings) = cg::value(variant, "mapped");
-        let bindings_pairs = variant.bindings().into_iter().zip(mapped_bindings);
+        let bindings_pairs = variant.bindings().iter().zip(mapped_bindings);
         let mut computations = quote!();
         computations.append_all(bindings_pairs.map(|(binding, mapped_binding)| {
             let field_attrs = cg::parse_field_attrs::<AnimationFieldAttrs>(&binding.ast());

@@ -619,6 +619,7 @@ AtkRole getRoleCB(AtkObject* aAtkObj) {
   return aAtkObj->role;
 }
 
+<<<<<<< HEAD
 static AtkAttributeSet* ConvertToAtkAttributeSet(
     nsIPersistentProperties* aAttributes) {
   if (!aAttributes) return nullptr;
@@ -650,9 +651,89 @@ static AtkAttributeSet* ConvertToAtkAttributeSet(
     objAttr->value = g_strdup(NS_ConvertUTF16toUTF8(value).get());
     objAttributeSet = g_slist_prepend(objAttributeSet, objAttr);
   }
+||||||| merged common ancestors
+static AtkAttributeSet*
+ConvertToAtkAttributeSet(nsIPersistentProperties* aAttributes)
+{
+    if (!aAttributes)
+        return nullptr;
+
+    AtkAttributeSet *objAttributeSet = nullptr;
+    nsCOMPtr<nsISimpleEnumerator> propEnum;
+    nsresult rv = aAttributes->Enumerate(getter_AddRefs(propEnum));
+    NS_ENSURE_SUCCESS(rv, nullptr);
+
+    bool hasMore;
+    while (NS_SUCCEEDED(propEnum->HasMoreElements(&hasMore)) && hasMore) {
+        nsCOMPtr<nsISupports> sup;
+        rv = propEnum->GetNext(getter_AddRefs(sup));
+        NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+        nsCOMPtr<nsIPropertyElement> propElem(do_QueryInterface(sup));
+        NS_ENSURE_TRUE(propElem, objAttributeSet);
+
+        nsAutoCString name;
+        rv = propElem->GetKey(name);
+        NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+        nsAutoString value;
+        rv = propElem->GetValue(value);
+        NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+        AtkAttribute *objAttr = (AtkAttribute *)g_malloc(sizeof(AtkAttribute));
+        objAttr->name = g_strdup(name.get());
+        objAttr->value = g_strdup(NS_ConvertUTF16toUTF8(value).get());
+        objAttributeSet = g_slist_prepend(objAttributeSet, objAttr);
+    }
+=======
+static AtkAttributeSet* ConvertToAtkAttributeSet(
+    nsIPersistentProperties* aAttributes) {
+  if (!aAttributes) return nullptr;
+
+  AtkAttributeSet* objAttributeSet = nullptr;
+  nsCOMPtr<nsISimpleEnumerator> propEnum;
+  nsresult rv = aAttributes->Enumerate(getter_AddRefs(propEnum));
+  NS_ENSURE_SUCCESS(rv, nullptr);
+
+  bool hasMore;
+  while (NS_SUCCEEDED(propEnum->HasMoreElements(&hasMore)) && hasMore) {
+    nsCOMPtr<nsISupports> sup;
+    rv = propEnum->GetNext(getter_AddRefs(sup));
+    NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+    nsCOMPtr<nsIPropertyElement> propElem(do_QueryInterface(sup));
+    NS_ENSURE_TRUE(propElem, objAttributeSet);
+
+    nsAutoCString name;
+    rv = propElem->GetKey(name);
+    NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+    nsAutoString value;
+    rv = propElem->GetValue(value);
+    NS_ENSURE_SUCCESS(rv, objAttributeSet);
+
+    // On ATK, the placeholder attribute is called placeholder-text.
+    if (name.Equals("placeholder")) {
+      name.AssignLiteral("placeholder-text");
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // libspi will free it
+  return objAttributeSet;
+||||||| merged common ancestors
+    //libspi will free it
+    return objAttributeSet;
+=======
+    AtkAttribute* objAttr = (AtkAttribute*)g_malloc(sizeof(AtkAttribute));
+    objAttr->name = g_strdup(name.get());
+    objAttr->value = g_strdup(NS_ConvertUTF16toUTF8(value).get());
+    objAttributeSet = g_slist_prepend(objAttributeSet, objAttr);
+  }
 
   // libspi will free it
   return objAttributeSet;
+>>>>>>> upstream-releases
 }
 
 AtkAttributeSet* GetAttributeSet(Accessible* aAccessible) {
@@ -675,7 +756,17 @@ AtkAttributeSet* getAttributesCB(AtkObject* aAtkObj) {
 
   AtkAttributeSet* objAttributeSet = nullptr;
   for (uint32_t i = 0; i < attrs.Length(); i++) {
+<<<<<<< HEAD
     AtkAttribute* objAttr = (AtkAttribute*)g_malloc(sizeof(AtkAttribute));
+||||||| merged common ancestors
+    AtkAttribute *objAttr = (AtkAttribute *)g_malloc(sizeof(AtkAttribute));
+=======
+    AtkAttribute* objAttr = (AtkAttribute*)g_malloc(sizeof(AtkAttribute));
+    // On ATK, the placeholder attribute is called placeholder-text.
+    if (attrs[i].Name().Equals("placeholder")) {
+      attrs[i].Name().AssignLiteral("placeholder-text");
+    }
+>>>>>>> upstream-releases
     objAttr->name = g_strdup(attrs[i].Name().get());
     objAttr->value = g_strdup(NS_ConvertUTF16toUTF8(attrs[i].Value()).get());
     objAttributeSet = g_slist_prepend(objAttributeSet, objAttr);
@@ -726,7 +817,7 @@ gint getChildCountCB(AtkObject* aAtkObj) {
   }
 
   ProxyAccessible* proxy = GetProxy(aAtkObj);
-  if (proxy && !proxy->MustPruneChildren()) {
+  if (proxy && !nsAccUtils::MustPrune(proxy)) {
     return proxy->EmbeddedChildCount();
   }
 
@@ -757,7 +848,16 @@ AtkObject* refChildCB(AtkObject* aAtkObj, gint aChildIndex) {
       }
     }
   } else if (ProxyAccessible* proxy = GetProxy(aAtkObj)) {
+<<<<<<< HEAD
     if (proxy->MustPruneChildren()) return nullptr;
+||||||| merged common ancestors
+    if (proxy->MustPruneChildren())
+      return nullptr;
+=======
+    if (nsAccUtils::MustPrune(proxy)) {
+      return nullptr;
+    }
+>>>>>>> upstream-releases
 
     ProxyAccessible* child = proxy->EmbeddedChildAt(aChildIndex);
     if (child) childAtkObj = GetWrapperFor(child);
@@ -1299,6 +1399,7 @@ void a11y::ProxyEvent(ProxyAccessible* aTarget, uint32_t aEventType) {
   AtkObject* wrapper = GetWrapperFor(aTarget);
 
   switch (aEventType) {
+<<<<<<< HEAD
     case nsIAccessibleEvent::EVENT_FOCUS:
       atk_focus_tracker_notify(wrapper);
       atk_object_notify_state_change(wrapper, ATK_STATE_FOCUSED, true);
@@ -1332,6 +1433,77 @@ void a11y::ProxyEvent(ProxyAccessible* aTarget, uint32_t aEventType) {
     case nsIAccessibleEvent::EVENT_SELECTION_WITHIN:
       g_signal_emit_by_name(wrapper, "selection_changed");
       break;
+||||||| merged common ancestors
+  case nsIAccessibleEvent::EVENT_FOCUS:
+    atk_focus_tracker_notify(wrapper);
+    atk_object_notify_state_change(wrapper, ATK_STATE_FOCUSED, true);
+    break;
+  case nsIAccessibleEvent::EVENT_DOCUMENT_LOAD_COMPLETE:
+    g_signal_emit_by_name(wrapper, "load_complete");
+    break;
+  case nsIAccessibleEvent::EVENT_DOCUMENT_RELOAD:
+    g_signal_emit_by_name(wrapper, "reload");
+    break;
+  case nsIAccessibleEvent::EVENT_DOCUMENT_LOAD_STOPPED:
+    g_signal_emit_by_name(wrapper, "load_stopped");
+    break;
+  case nsIAccessibleEvent::EVENT_MENUPOPUP_START:
+    atk_focus_tracker_notify(wrapper); // fire extra focus event
+    atk_object_notify_state_change(wrapper, ATK_STATE_VISIBLE, true);
+    atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, true);
+    break;
+  case nsIAccessibleEvent::EVENT_MENUPOPUP_END:
+    atk_object_notify_state_change(wrapper, ATK_STATE_VISIBLE, false);
+    atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, false);
+    break;
+  case nsIAccessibleEvent::EVENT_ALERT:
+    // A hack using state change showing events as alert events.
+    atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, true);
+    break;
+  case nsIAccessibleEvent::EVENT_VALUE_CHANGE:
+    g_object_notify((GObject*)wrapper, "accessible-value");
+    break;
+  case nsIAccessibleEvent::EVENT_TEXT_SELECTION_CHANGED:
+  case nsIAccessibleEvent::EVENT_SELECTION_WITHIN:
+    g_signal_emit_by_name(wrapper, "selection_changed");
+    break;
+=======
+    case nsIAccessibleEvent::EVENT_FOCUS:
+      atk_focus_tracker_notify(wrapper);
+      atk_object_notify_state_change(wrapper, ATK_STATE_FOCUSED, true);
+      break;
+    case nsIAccessibleEvent::EVENT_DOCUMENT_LOAD_COMPLETE:
+      g_signal_emit_by_name(wrapper, "load_complete");
+      break;
+    case nsIAccessibleEvent::EVENT_DOCUMENT_RELOAD:
+      g_signal_emit_by_name(wrapper, "reload");
+      break;
+    case nsIAccessibleEvent::EVENT_DOCUMENT_LOAD_STOPPED:
+      g_signal_emit_by_name(wrapper, "load_stopped");
+      break;
+    case nsIAccessibleEvent::EVENT_MENUPOPUP_START:
+      atk_focus_tracker_notify(wrapper);  // fire extra focus event
+      atk_object_notify_state_change(wrapper, ATK_STATE_VISIBLE, true);
+      atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, true);
+      break;
+    case nsIAccessibleEvent::EVENT_MENUPOPUP_END:
+      atk_object_notify_state_change(wrapper, ATK_STATE_VISIBLE, false);
+      atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, false);
+      break;
+    case nsIAccessibleEvent::EVENT_ALERT:
+      // A hack using state change showing events as alert events.
+      atk_object_notify_state_change(wrapper, ATK_STATE_SHOWING, true);
+      break;
+    case nsIAccessibleEvent::EVENT_VALUE_CHANGE:
+      g_object_notify((GObject*)wrapper, "accessible-value");
+      break;
+    case nsIAccessibleEvent::EVENT_TEXT_SELECTION_CHANGED:
+      g_signal_emit_by_name(wrapper, "text_selection_changed");
+      break;
+    case nsIAccessibleEvent::EVENT_SELECTION_WITHIN:
+      g_signal_emit_by_name(wrapper, "selection_changed");
+      break;
+>>>>>>> upstream-releases
   }
 }
 

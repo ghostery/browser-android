@@ -360,12 +360,34 @@ nsAndroidHistory::CanAddURI(nsIURI* aURI, bool* canAdd) {
   }
 
   // now check for all bad things
+<<<<<<< HEAD
   if (scheme.EqualsLiteral("about") || scheme.EqualsLiteral("imap") ||
       scheme.EqualsLiteral("news") || scheme.EqualsLiteral("mailbox") ||
       scheme.EqualsLiteral("moz-anno") || scheme.EqualsLiteral("view-source") ||
       scheme.EqualsLiteral("chrome") || scheme.EqualsLiteral("resource") ||
       scheme.EqualsLiteral("data") || scheme.EqualsLiteral("wyciwyg") ||
       scheme.EqualsLiteral("javascript") || scheme.EqualsLiteral("blob")) {
+||||||| merged common ancestors
+  if (scheme.EqualsLiteral("about") ||
+      scheme.EqualsLiteral("imap") ||
+      scheme.EqualsLiteral("news") ||
+      scheme.EqualsLiteral("mailbox") ||
+      scheme.EqualsLiteral("moz-anno") ||
+      scheme.EqualsLiteral("view-source") ||
+      scheme.EqualsLiteral("chrome") ||
+      scheme.EqualsLiteral("resource") ||
+      scheme.EqualsLiteral("data") ||
+      scheme.EqualsLiteral("wyciwyg") ||
+      scheme.EqualsLiteral("javascript") ||
+      scheme.EqualsLiteral("blob")) {
+=======
+  if (scheme.EqualsLiteral("about") || scheme.EqualsLiteral("imap") ||
+      scheme.EqualsLiteral("news") || scheme.EqualsLiteral("mailbox") ||
+      scheme.EqualsLiteral("moz-anno") || scheme.EqualsLiteral("view-source") ||
+      scheme.EqualsLiteral("chrome") || scheme.EqualsLiteral("resource") ||
+      scheme.EqualsLiteral("data") || scheme.EqualsLiteral("javascript") ||
+      scheme.EqualsLiteral("blob")) {
+>>>>>>> upstream-releases
     *canAdd = false;
     return NS_OK;
   }

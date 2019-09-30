@@ -40,9 +40,10 @@
 #include "nsNodeUtils.h"
 #include "nsIConsoleService.h"
 #include "nsIScriptError.h"
-#include "nsIHTMLDocument.h"
+#include "nsHTMLDocument.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/EventDispatcher.h"
+#include "mozilla/Encoding.h"
 #include "mozilla/dom/DocumentType.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/XMLDocumentBinding.h"
@@ -55,6 +56,7 @@ using namespace mozilla::dom;
 // =
 // ==================================================================
 
+<<<<<<< HEAD
 nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
                            const nsAString& aNamespaceURI,
                            const nsAString& aQualifiedName,
@@ -62,6 +64,29 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
                            nsIURI* aBaseURI, nsIPrincipal* aPrincipal,
                            bool aLoadedAsData, nsIGlobalObject* aEventObject,
                            DocumentFlavor aFlavor) {
+||||||| merged common ancestors
+
+nsresult
+NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
+                  const nsAString& aNamespaceURI,
+                  const nsAString& aQualifiedName,
+                  DocumentType* aDoctype,
+                  nsIURI* aDocumentURI,
+                  nsIURI* aBaseURI,
+                  nsIPrincipal* aPrincipal,
+                  bool aLoadedAsData,
+                  nsIGlobalObject* aEventObject,
+                  DocumentFlavor aFlavor)
+{
+=======
+nsresult NS_NewDOMDocument(Document** aInstancePtrResult,
+                           const nsAString& aNamespaceURI,
+                           const nsAString& aQualifiedName,
+                           DocumentType* aDoctype, nsIURI* aDocumentURI,
+                           nsIURI* aBaseURI, nsIPrincipal* aPrincipal,
+                           bool aLoadedAsData, nsIGlobalObject* aEventObject,
+                           DocumentFlavor aFlavor) {
+>>>>>>> upstream-releases
   // Note: can't require that aDocumentURI/aBaseURI/aPrincipal be non-null,
   // since at least one caller (XMLHttpRequest) doesn't have decent args to
   // pass in.
@@ -70,7 +95,7 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
 
   *aInstancePtrResult = nullptr;
 
-  nsCOMPtr<nsIDocument> d;
+  nsCOMPtr<Document> d;
   bool isHTML = false;
   bool isXHTML = false;
   if (aFlavor == DocumentFlavorSVG) {
@@ -120,17 +145,14 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
   }
 
   if (isHTML) {
-    nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(d);
-    NS_ASSERTION(htmlDoc, "HTML Document doesn't implement nsIHTMLDocument?");
-    htmlDoc->SetCompatibilityMode(eCompatibility_FullStandards);
-    htmlDoc->SetIsXHTML(isXHTML);
+    d->SetCompatibilityMode(eCompatibility_FullStandards);
+    d->AsHTMLDocument()->SetIsXHTML(isXHTML);
   }
-  nsDocument* doc = static_cast<nsDocument*>(d.get());
-  doc->SetLoadedAsData(aLoadedAsData);
-  doc->nsDocument::SetDocumentURI(aDocumentURI);
+  d->SetLoadedAsData(aLoadedAsData);
+  d->SetDocumentURI(aDocumentURI);
   // Must set the principal first, since SetBaseURI checks it.
-  doc->SetPrincipal(aPrincipal);
-  doc->SetBaseURI(aBaseURI);
+  d->SetPrincipals(aPrincipal, aPrincipal);
+  d->SetBaseURI(aBaseURI);
 
   // We need to set the script handling object after we set the principal such
   // that the doc group is assigned correctly.
@@ -142,7 +164,7 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
 
   // XMLDocuments and documents "created in memory" get to be UTF-8 by default,
   // unlike the legacy HTML mess
-  doc->SetDocumentCharacterSet(UTF_8_ENCODING);
+  d->SetDocumentCharacterSet(UTF_8_ENCODING);
 
   if (aDoctype) {
     ErrorResult result;
@@ -162,7 +184,13 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
     options.SetAsString();
 
     nsCOMPtr<Element> root =
+<<<<<<< HEAD
         doc->CreateElementNS(aNamespaceURI, aQualifiedName, options, result);
+||||||| merged common ancestors
+      doc->CreateElementNS(aNamespaceURI, aQualifiedName, options, result);
+=======
+        d->CreateElementNS(aNamespaceURI, aQualifiedName, options, result);
+>>>>>>> upstream-releases
     if (NS_WARN_IF(result.Failed())) {
       return result.StealNSResult();
     }
@@ -182,8 +210,18 @@ nsresult NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NS_NewXMLDocument(nsIDocument** aInstancePtrResult, bool aLoadedAsData,
                            bool aIsPlainDocument) {
+||||||| merged common ancestors
+nsresult
+NS_NewXMLDocument(nsIDocument** aInstancePtrResult, bool aLoadedAsData,
+                  bool aIsPlainDocument)
+{
+=======
+nsresult NS_NewXMLDocument(Document** aInstancePtrResult, bool aLoadedAsData,
+                           bool aIsPlainDocument) {
+>>>>>>> upstream-releases
   RefPtr<XMLDocument> doc = new XMLDocument();
 
   nsresult rv = doc->Init();
@@ -200,6 +238,7 @@ nsresult NS_NewXMLDocument(nsIDocument** aInstancePtrResult, bool aLoadedAsData,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult NS_NewXBLDocument(nsIDocument** aInstancePtrResult,
                            nsIURI* aDocumentURI, nsIURI* aBaseURI,
                            nsIPrincipal* aPrincipal) {
@@ -207,18 +246,37 @@ nsresult NS_NewXBLDocument(nsIDocument** aInstancePtrResult,
       aInstancePtrResult, NS_LITERAL_STRING("http://www.mozilla.org/xbl"),
       NS_LITERAL_STRING("bindings"), nullptr, aDocumentURI, aBaseURI,
       aPrincipal, false, nullptr, DocumentFlavorLegacyGuess);
+||||||| merged common ancestors
+nsresult
+NS_NewXBLDocument(nsIDocument** aInstancePtrResult,
+                  nsIURI* aDocumentURI,
+                  nsIURI* aBaseURI,
+                  nsIPrincipal* aPrincipal)
+{
+  nsresult rv = NS_NewDOMDocument(aInstancePtrResult,
+                                  NS_LITERAL_STRING("http://www.mozilla.org/xbl"),
+                                  NS_LITERAL_STRING("bindings"), nullptr,
+                                  aDocumentURI, aBaseURI, aPrincipal, false,
+                                  nullptr, DocumentFlavorLegacyGuess);
+=======
+nsresult NS_NewXBLDocument(Document** aInstancePtrResult, nsIURI* aDocumentURI,
+                           nsIURI* aBaseURI, nsIPrincipal* aPrincipal) {
+  nsresult rv = NS_NewDOMDocument(
+      aInstancePtrResult, NS_LITERAL_STRING("http://www.mozilla.org/xbl"),
+      NS_LITERAL_STRING("bindings"), nullptr, aDocumentURI, aBaseURI,
+      aPrincipal, false, nullptr, DocumentFlavorLegacyGuess);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsIDocument* idoc = *aInstancePtrResult;
+  Document* doc = *aInstancePtrResult;
 
   // XBL documents must allow XUL and XBL elements in them but the usual check
   // only checks if the document is loaded in the system principal which is
   // sometimes not the case.
-  idoc->ForceEnableXULXBL();
+  doc->ForceEnableXULXBL();
 
-  nsDocument* doc = static_cast<nsDocument*>(idoc);
   doc->SetLoadedAsInteractiveData(true);
-  doc->SetReadyStateInternal(nsIDocument::READYSTATE_COMPLETE);
+  doc->SetReadyStateInternal(Document::READYSTATE_COMPLETE);
 
   return NS_OK;
 }
@@ -227,6 +285,7 @@ namespace mozilla {
 namespace dom {
 
 XMLDocument::XMLDocument(const char* aContentType)
+<<<<<<< HEAD
     : nsDocument(aContentType),
       mChannelIsPending(false),
       mAsync(true),
@@ -234,6 +293,24 @@ XMLDocument::XMLDocument(const char* aContentType)
       mIsPlainDocument(false),
       mSuppressParserErrorElement(false),
       mSuppressParserErrorConsoleMessages(false) {
+||||||| merged common ancestors
+  : nsDocument(aContentType),
+    mChannelIsPending(false),
+    mAsync(true),
+    mLoopingForSyncLoad(false),
+    mIsPlainDocument(false),
+    mSuppressParserErrorElement(false),
+    mSuppressParserErrorConsoleMessages(false)
+{
+=======
+    : Document(aContentType),
+      mChannelIsPending(false),
+      mAsync(true),
+      mLoopingForSyncLoad(false),
+      mIsPlainDocument(false),
+      mSuppressParserErrorElement(false),
+      mSuppressParserErrorConsoleMessages(false) {
+>>>>>>> upstream-releases
   mType = eGenericXML;
 }
 
@@ -242,26 +319,57 @@ XMLDocument::~XMLDocument() {
   mLoopingForSyncLoad = false;
 }
 
+<<<<<<< HEAD
 nsresult XMLDocument::Init() {
   nsresult rv = nsDocument::Init();
+||||||| merged common ancestors
+nsresult
+XMLDocument::Init()
+{
+  nsresult rv = nsDocument::Init();
+=======
+nsresult XMLDocument::Init() {
+  nsresult rv = Document::Init();
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   return rv;
 }
 
+<<<<<<< HEAD
 void XMLDocument::Reset(nsIChannel* aChannel, nsILoadGroup* aLoadGroup) {
   nsDocument::Reset(aChannel, aLoadGroup);
+||||||| merged common ancestors
+void
+XMLDocument::Reset(nsIChannel* aChannel, nsILoadGroup* aLoadGroup)
+{
+  nsDocument::Reset(aChannel, aLoadGroup);
+=======
+void XMLDocument::Reset(nsIChannel* aChannel, nsILoadGroup* aLoadGroup) {
+  Document::Reset(aChannel, aLoadGroup);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void XMLDocument::ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
                              nsIPrincipal* aPrincipal) {
+||||||| merged common ancestors
+void
+XMLDocument::ResetToURI(nsIURI *aURI, nsILoadGroup *aLoadGroup,
+                        nsIPrincipal* aPrincipal)
+{
+=======
+void XMLDocument::ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
+                             nsIPrincipal* aPrincipal,
+                             nsIPrincipal* aStoragePrincipal) {
+>>>>>>> upstream-releases
   if (mChannelIsPending) {
     StopDocumentLoad();
     mChannel->Cancel(NS_BINDING_ABORTED);
     mChannelIsPending = false;
   }
 
-  nsDocument::ResetToURI(aURI, aLoadGroup, aPrincipal);
+  Document::ResetToURI(aURI, aLoadGroup, aPrincipal, aStoragePrincipal);
 }
 
 bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
@@ -274,8 +382,9 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
     return false;
   }
 
-  nsCOMPtr<nsIDocument> callingDoc = GetEntryDocument();
+  nsCOMPtr<Document> callingDoc = GetEntryDocument();
   nsCOMPtr<nsIPrincipal> principal = NodePrincipal();
+  nsCOMPtr<nsIPrincipal> storagePrincipal = EffectiveStoragePrincipal();
 
   // The callingDoc's Principal and doc's Principal should be the same
   if (callingDoc && (callingDoc->NodePrincipal() != principal)) {
@@ -292,11 +401,11 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
   // loaded in a docshell, so won't accumulate telemetry for use counters.  Try
   // warning on our entry document, if any, since that should have things like
   // window ids and associated docshells.
-  nsIDocument* docForWarning = callingDoc ? callingDoc.get() : this;
+  Document* docForWarning = callingDoc ? callingDoc.get() : this;
   if (aCallerType == CallerType::System) {
-    docForWarning->WarnOnceAbout(nsIDocument::eChromeUseOfDOM3LoadMethod);
+    docForWarning->WarnOnceAbout(Document::eChromeUseOfDOM3LoadMethod);
   } else {
-    docForWarning->WarnOnceAbout(nsIDocument::eUseOfDOM3LoadMethod);
+    docForWarning->WarnOnceAbout(Document::eUseOfDOM3LoadMethod);
   }
 
   nsIURI* baseURI = mDocumentURI;
@@ -372,7 +481,7 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
     loadGroup = callingDoc->GetDocumentLoadGroup();
   }
 
-  ResetToURI(uri, loadGroup, principal);
+  ResetToURI(uri, loadGroup, principal, storagePrincipal);
 
   mListenerManager = elm;
 
@@ -382,6 +491,7 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
   nsCOMPtr<nsIChannel> channel;
   // nsIRequest::LOAD_BACKGROUND prevents throbber from becoming active,
   // which in turn keeps STOP button from becoming active
+<<<<<<< HEAD
   rv = NS_NewChannel(
       getter_AddRefs(channel), uri,
       callingDoc ? callingDoc.get() : static_cast<nsIDocument*>(this),
@@ -389,6 +499,26 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
       nsIContentPolicy::TYPE_INTERNAL_XMLHTTPREQUEST,
       nullptr,  // aPerformanceStorage
       loadGroup, req, nsIRequest::LOAD_BACKGROUND);
+||||||| merged common ancestors
+  rv = NS_NewChannel(getter_AddRefs(channel),
+                     uri,
+                     callingDoc ? callingDoc.get() :
+                                  static_cast<nsIDocument*>(this),
+                     nsILoadInfo::SEC_REQUIRE_SAME_ORIGIN_DATA_IS_BLOCKED,
+                     nsIContentPolicy::TYPE_INTERNAL_XMLHTTPREQUEST,
+                     nullptr, // aPerformanceStorage
+                     loadGroup,
+                     req,
+                     nsIRequest::LOAD_BACKGROUND);
+=======
+  rv = NS_NewChannel(
+      getter_AddRefs(channel), uri,
+      callingDoc ? callingDoc.get() : static_cast<Document*>(this),
+      nsILoadInfo::SEC_REQUIRE_SAME_ORIGIN_DATA_IS_BLOCKED,
+      nsIContentPolicy::TYPE_INTERNAL_XMLHTTPREQUEST,
+      nullptr,  // aPerformanceStorage
+      loadGroup, req, nsIRequest::LOAD_BACKGROUND);
+>>>>>>> upstream-releases
 
   if (NS_FAILED(rv)) {
     aRv.Throw(rv);
@@ -409,9 +539,9 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
   // uninitialize it. SetReadyStateInternal make this transition invisible to
   // Web content. But before doing that, assert that the current readyState
   // is complete as it should be after the call to ResetToURI() above.
-  MOZ_ASSERT(GetReadyStateEnum() == nsIDocument::READYSTATE_COMPLETE,
+  MOZ_ASSERT(GetReadyStateEnum() == Document::READYSTATE_COMPLETE,
              "Bad readyState");
-  SetReadyStateInternal(nsIDocument::READYSTATE_UNINITIALIZED);
+  SetReadyStateInternal(Document::READYSTATE_UNINITIALIZED);
 
   // Prepare for loading the XML document "into oneself"
   nsCOMPtr<nsIStreamListener> listener;
@@ -426,7 +556,7 @@ bool XMLDocument::Load(const nsAString& aUrl, CallerType aCallerType,
   // mChannelIsPending.
 
   // Start an asynchronous read of the XML document
-  rv = channel->AsyncOpen2(listener);
+  rv = channel->AsyncOpen(listener);
   if (NS_FAILED(rv)) {
     mChannelIsPending = false;
     aRv.Throw(rv);
@@ -473,6 +603,7 @@ bool XMLDocument::SuppressParserErrorConsoleMessages() {
   return mSuppressParserErrorConsoleMessages;
 }
 
+<<<<<<< HEAD
 nsresult XMLDocument::StartDocumentLoad(const char* aCommand,
                                         nsIChannel* aChannel,
                                         nsILoadGroup* aLoadGroup,
@@ -481,6 +612,30 @@ nsresult XMLDocument::StartDocumentLoad(const char* aCommand,
                                         bool aReset, nsIContentSink* aSink) {
   nsresult rv = nsDocument::StartDocumentLoad(
       aCommand, aChannel, aLoadGroup, aContainer, aDocListener, aReset, aSink);
+||||||| merged common ancestors
+nsresult
+XMLDocument::StartDocumentLoad(const char* aCommand,
+                               nsIChannel* aChannel,
+                               nsILoadGroup* aLoadGroup,
+                               nsISupports* aContainer,
+                               nsIStreamListener **aDocListener,
+                               bool aReset,
+                               nsIContentSink* aSink)
+{
+  nsresult rv = nsDocument::StartDocumentLoad(aCommand,
+                                              aChannel, aLoadGroup,
+                                              aContainer,
+                                              aDocListener, aReset, aSink);
+=======
+nsresult XMLDocument::StartDocumentLoad(const char* aCommand,
+                                        nsIChannel* aChannel,
+                                        nsILoadGroup* aLoadGroup,
+                                        nsISupports* aContainer,
+                                        nsIStreamListener** aDocListener,
+                                        bool aReset, nsIContentSink* aSink) {
+  nsresult rv = Document::StartDocumentLoad(
+      aCommand, aChannel, aLoadGroup, aContainer, aDocListener, aReset, aSink);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) return rv;
 
   if (nsCRT::strcmp("loadAsInteractiveData", aCommand) == 0) {
@@ -537,24 +692,35 @@ void XMLDocument::EndLoad() {
   mLoopingForSyncLoad = false;
 
   mSynchronousDOMContentLoaded = (mLoadedAsData || mLoadedAsInteractiveData);
-  nsDocument::EndLoad();
+  Document::EndLoad();
   if (mSynchronousDOMContentLoaded) {
     mSynchronousDOMContentLoaded = false;
-    nsDocument::SetReadyStateInternal(nsIDocument::READYSTATE_COMPLETE);
+    Document::SetReadyStateInternal(Document::READYSTATE_COMPLETE);
     // Generate a document load event for the case when an XML
     // document was loaded as pure data without any presentation
     // attached to it.
     WidgetEvent event(true, eLoad);
-    EventDispatcher::Dispatch(static_cast<nsIDocument*>(this), nullptr, &event);
+    EventDispatcher::Dispatch(ToSupports(this), nullptr, &event);
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void XMLDocument::DocAddSizeOfExcludingThis(
     nsWindowSizes& aWindowSizes) const {
   nsDocument::DocAddSizeOfExcludingThis(aWindowSizes);
+||||||| merged common ancestors
+/* virtual */ void
+XMLDocument::DocAddSizeOfExcludingThis(nsWindowSizes& aWindowSizes) const
+{
+  nsDocument::DocAddSizeOfExcludingThis(aWindowSizes);
+=======
+/* virtual */
+void XMLDocument::DocAddSizeOfExcludingThis(nsWindowSizes& aWindowSizes) const {
+  Document::DocAddSizeOfExcludingThis(aWindowSizes);
+>>>>>>> upstream-releases
 }
 
-// nsIDocument interface
+// Document interface
 
 nsresult XMLDocument::Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const {
   NS_ASSERTION(aNodeInfo->NodeInfoManager() == mNodeInfoManager,

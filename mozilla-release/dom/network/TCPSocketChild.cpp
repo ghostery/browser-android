@@ -10,12 +10,14 @@
 #include "mozilla/UniquePtr.h"
 #include "mozilla/net/NeckoChild.h"
 #include "mozilla/dom/PBrowserChild.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "nsITCPSocketCallback.h"
 #include "TCPSocket.h"
 #include "nsContentUtils.h"
-#include "jsapi.h"
-#include "jsfriendapi.h"
+#include "js/ArrayBuffer.h"  // JS::NewArrayBufferWithContents
+#include "js/RootingAPI.h"   // JS::MutableHandle
+#include "js/Utility.h"  // js::ArrayBufferContentsArena, JS::FreePolicy, js_pod_arena_malloc
+#include "js/Value.h"  // JS::Value
 
 using mozilla::net::gNeckoChild;
 
@@ -30,10 +32,22 @@ bool DeserializeArrayBuffer(JSContext* cx,
   if (!data) return false;
   memcpy(data.get(), aBuffer.Elements(), aBuffer.Length());
 
+<<<<<<< HEAD
   JSObject* obj =
       JS_NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
   if (!obj) return false;
   // If JS_NewArrayBufferWithContents returns non-null, the ownership of
+||||||| merged common ancestors
+  JSObject* obj = JS_NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
+  if (!obj)
+      return false;
+  // If JS_NewArrayBufferWithContents returns non-null, the ownership of
+=======
+  JSObject* obj =
+      JS::NewArrayBufferWithContents(cx, aBuffer.Length(), data.get());
+  if (!obj) return false;
+  // If JS::NewArrayBufferWithContents returns non-null, the ownership of
+>>>>>>> upstream-releases
   // the data is transfered to obj, so we release the ownership here.
   mozilla::Unused << data.release();
 

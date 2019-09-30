@@ -24,21 +24,33 @@ class PresentationBuilderParent final
 
   explicit PresentationBuilderParent(PresentationParent* aParent);
 
-  virtual mozilla::ipc::IPCResult RecvSendOffer(const nsString& aSDP) override;
+  mozilla::ipc::IPCResult RecvSendOffer(const nsString& aSDP);
 
-  virtual mozilla::ipc::IPCResult RecvSendAnswer(const nsString& aSDP) override;
+  mozilla::ipc::IPCResult RecvSendAnswer(const nsString& aSDP);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvSendIceCandidate(
       const nsString& aCandidate) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvSendIceCandidate(const nsString& aCandidate) override;
+=======
+  mozilla::ipc::IPCResult RecvSendIceCandidate(const nsString& aCandidate);
+>>>>>>> upstream-releases
 
-  virtual mozilla::ipc::IPCResult RecvClose(const nsresult& aReason) override;
+  mozilla::ipc::IPCResult RecvClose(const nsresult& aReason);
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 
-  virtual mozilla::ipc::IPCResult RecvOnSessionTransport() override;
+  mozilla::ipc::IPCResult RecvOnSessionTransport();
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvOnSessionTransportError(
       const nsresult& aReason) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvOnSessionTransportError(const nsresult& aReason) override;
+=======
+  mozilla::ipc::IPCResult RecvOnSessionTransportError(const nsresult& aReason);
+>>>>>>> upstream-releases
 
  private:
   virtual ~PresentationBuilderParent();

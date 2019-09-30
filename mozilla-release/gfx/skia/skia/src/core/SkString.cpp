@@ -5,11 +5,22 @@
  * found in the LICENSE file.
  */
 
+<<<<<<< HEAD
 #include "SkString.h"
 
 #include "SkAtomics.h"
 #include "SkSafeMath.h"
 #include "SkTo.h"
+||||||| merged common ancestors
+#include "SkAtomics.h"
+#include "SkSafeMath.h"
+#include "SkString.h"
+=======
+#include "SkString.h"
+
+#include "SkSafeMath.h"
+#include "SkTo.h"
+>>>>>>> upstream-releases
 #include "SkUtils.h"
 
 #include <cstdarg>

@@ -14,6 +14,7 @@
 #include "mozilla/RefPtr.h"
 #include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
+#include "nsIDocumentActivity.h"
 #include "nsRefPtrHashtable.h"
 #include "mozilla/dom/Promise.h"
 #include "mozilla/dom/MediaKeysBinding.h"
@@ -48,16 +49,33 @@ typedef uint32_t PromiseId;
 
 // This class is used on the main thread only.
 // Note: its addref/release is not (and can't be) thread safe!
+<<<<<<< HEAD
 class MediaKeys final : public nsISupports,
                         public nsWrapperCache,
                         public SupportsWeakPtr<MediaKeys>,
                         public DecoderDoctorLifeLogger<MediaKeys> {
+||||||| merged common ancestors
+class MediaKeys final
+  : public nsISupports
+  , public nsWrapperCache
+  , public SupportsWeakPtr<MediaKeys>
+  , public DecoderDoctorLifeLogger<MediaKeys>
+{
+=======
+class MediaKeys final : public nsIDocumentActivity,
+                        public nsWrapperCache,
+                        public SupportsWeakPtr<MediaKeys>,
+                        public DecoderDoctorLifeLogger<MediaKeys> {
+>>>>>>> upstream-releases
   ~MediaKeys();
 
  public:
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(MediaKeys)
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(MediaKeys)
+  // We want to listen to the owning document so we can shutdown if it goes
+  // inactive.
+  NS_DECL_NSIDOCUMENTACTIVITY
 
   MediaKeys(nsPIDOMWindowInner* aParentWindow, const nsAString& aKeySystem,
             const MediaKeySystemConfiguration& aConfig);
@@ -149,18 +167,31 @@ class MediaKeys final : public nsISupports,
 
  private:
   // Instantiate CDMProxy instance.
+<<<<<<< HEAD
   // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the
   // rest).
   already_AddRefed<CDMProxy> CreateCDMProxy(nsIEventTarget* aMainThread);
+||||||| merged common ancestors
+  // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the rest).
+  already_AddRefed<CDMProxy> CreateCDMProxy(nsIEventTarget* aMainThread);
+=======
+  // It could be MediaDrmCDMProxy (Widevine on Fennec) or ChromiumCDMProxy (the
+  // rest).
+  already_AddRefed<CDMProxy> CreateCDMProxy(nsISerialEventTarget* aMainThread);
+>>>>>>> upstream-releases
 
   // Removes promise from mPromises, and returns it.
   already_AddRefed<DetailedPromise> RetrievePromise(PromiseId aId);
+
+  void RegisterActivityObserver();
+  void UnregisterActivityObserver();
 
   // Owning ref to proxy. The proxy has a weak reference back to the MediaKeys,
   // and the MediaKeys destructor clears the proxy's reference to the MediaKeys.
   RefPtr<CDMProxy> mProxy;
 
   RefPtr<HTMLMediaElement> mElement;
+  RefPtr<Document> mDocument;
 
   nsCOMPtr<nsPIDOMWindowInner> mParent;
   const nsString mKeySystem;

@@ -15,6 +15,7 @@
 
 #ifdef MOZ_PHOENIX
 
+<<<<<<< HEAD
 // Splash screen dialog ID.
 #define IDD_SPLASH 100
 
@@ -32,6 +33,34 @@
 #ifndef IDI_APPLICATION
 #define IDI_APPLICATION 32512
 #endif
+||||||| merged common ancestors
+// Splash screen dialog ID.
+#define IDD_SPLASH  100
+
+// Splash screen bitmap ID.
+#define IDB_SPLASH  101
+
+// DDE application name
+#define ID_DDE_APPLICATION_NAME 102
+
+#define IDI_APPICON 1
+#define IDI_DOCUMENT 2
+#define IDI_NEWWINDOW 3
+#define IDI_NEWTAB 4
+#define IDI_PBMODE 5
+#ifndef IDI_APPLICATION
+#define IDI_APPLICATION 32512
+#endif
+=======
+#  define IDI_APPICON 1
+#  define IDI_DOCUMENT 2
+#  define IDI_NEWWINDOW 3
+#  define IDI_NEWTAB 4
+#  define IDI_PBMODE 5
+#  ifndef IDI_APPLICATION
+#    define IDI_APPLICATION 32512
+#  endif
+>>>>>>> upstream-releases
 
 #endif
 

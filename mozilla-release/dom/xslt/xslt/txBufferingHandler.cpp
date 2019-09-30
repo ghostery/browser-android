@@ -324,6 +324,7 @@ static nsresult flushTransaction(txOutputTransaction* aTransaction,
           aTransaction->mType ==
               txOutputTransaction::eCharacterNoOETransaction);
     }
+<<<<<<< HEAD
     case txOutputTransaction::eCommentTransaction: {
       txCommentTransaction* commentTransaction =
           static_cast<txCommentTransaction*>(aTransaction);
@@ -356,6 +357,43 @@ static nsresult flushTransaction(txOutputTransaction* aTransaction,
     }
     default: { MOZ_ASSERT_UNREACHABLE("Unexpected transaction type"); }
   }
+||||||| merged common ancestors
+=======
+    case txOutputTransaction::eCommentTransaction: {
+      txCommentTransaction* commentTransaction =
+          static_cast<txCommentTransaction*>(aTransaction);
+      return aHandler->comment(commentTransaction->mValue);
+    }
+    case txOutputTransaction::eEndElementTransaction: {
+      return aHandler->endElement();
+    }
+    case txOutputTransaction::ePITransaction: {
+      txPITransaction* piTransaction =
+          static_cast<txPITransaction*>(aTransaction);
+      return aHandler->processingInstruction(piTransaction->mTarget,
+                                             piTransaction->mData);
+    }
+    case txOutputTransaction::eStartDocumentTransaction: {
+      return aHandler->startDocument();
+    }
+    case txOutputTransaction::eStartElementAtomTransaction: {
+      txStartElementAtomTransaction* transaction =
+          static_cast<txStartElementAtomTransaction*>(aTransaction);
+      return aHandler->startElement(
+          transaction->mPrefix, transaction->mLocalName,
+          transaction->mLowercaseLocalName, transaction->mNsID);
+    }
+    case txOutputTransaction::eStartElementTransaction: {
+      txStartElementTransaction* transaction =
+          static_cast<txStartElementTransaction*>(aTransaction);
+      return aHandler->startElement(
+          transaction->mPrefix, transaction->mLocalName, transaction->mNsID);
+    }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("Unexpected transaction type");
+    }
+  }
+>>>>>>> upstream-releases
 
   return NS_ERROR_UNEXPECTED;
 }

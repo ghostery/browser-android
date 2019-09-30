@@ -15,7 +15,13 @@ app_units = "0.7"
 cssparser = "0.25"
 euclid = "0.19"
 html5ever = "0.22"
+<<<<<<< HEAD
 parking_lot = "0.6"
+||||||| merged common ancestors
+parking_lot = "0.5"
+=======
+parking_lot = "0.8"
+>>>>>>> upstream-releases
 rayon = "1"
 serde_json = "1.0"
 selectors = {path = "../../../components/selectors"}
@@ -26,4 +32,10 @@ servo_url = {path = "../../../components/url"}
 size_of_test = {path = "../../../components/size_of_test"}
 style = {path = "../../../components/style"}
 style_traits = {path = "../../../components/style_traits"}
+<<<<<<< HEAD
 std_test_override = { path = "../../../components/std_test_override" }
+||||||| merged common ancestors
+=======
+std_test_override = { path = "../../../components/std_test_override" }
+to_shmem = { path = "../../../components/to_shmem" }
+>>>>>>> upstream-releases

@@ -15,18 +15,48 @@
 #include "nsViewManager.h"
 #include "nsIPersistentProperties2.h"
 
+<<<<<<< HEAD
 #include "mozilla/dom/TabParent.h"
 #include "mozilla/a11y/DocAccessibleParent.h"
 #include "mozilla/a11y/DocManager.h"
 
+||||||| merged common ancestors
+=======
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/BrowserParent.h"
+#include "mozilla/a11y/DocAccessibleParent.h"
+#include "mozilla/a11y/DocManager.h"
+#include "mozilla/jni/GeckoBundleUtils.h"
+
+>>>>>>> upstream-releases
 #ifdef DEBUG
+<<<<<<< HEAD
 #include <android/log.h>
 #define AALOG(args...) \
   __android_log_print(ANDROID_LOG_INFO, "GeckoAccessibilityNative", ##args)
+||||||| merged common ancestors
+#include <android/log.h>
+#define AALOG(args...)                                                         \
+  __android_log_print(ANDROID_LOG_INFO, "GeckoAccessibilityNative", ##args)
+=======
+#  include <android/log.h>
+#  define AALOG(args...) \
+    __android_log_print(ANDROID_LOG_INFO, "GeckoAccessibilityNative", ##args)
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define AALOG(args...) \
   do {                 \
   } while (0)
+||||||| merged common ancestors
+#define AALOG(args...)                                                         \
+  do {                                                                         \
+  } while (0)
+=======
+#  define AALOG(args...) \
+    do {                 \
+    } while (0)
+>>>>>>> upstream-releases
 #endif
 
 template <>
@@ -106,6 +136,7 @@ void SessionAccessibility::SetText(int32_t aID, jni::String::Param aText) {
   }
 }
 
+<<<<<<< HEAD
 void SessionAccessibility::Click(int32_t aID) {
   if (RootAccessibleWrap* rootAcc = GetRoot()) {
     AccessibleWrap* acc = rootAcc->FindAccessibleById(aID);
@@ -123,6 +154,32 @@ SessionAccessibility* SessionAccessibility::GetInstanceFor(
   dom::Element* frame = tab->GetOwnerElement();
   MOZ_ASSERT(frame);
   if (!frame) {
+||||||| merged common ancestors
+SessionAccessibility*
+SessionAccessibility::GetInstanceFor(ProxyAccessible* aAccessible)
+{
+  Accessible* outerDoc = aAccessible->OuterDocOfRemoteBrowser();
+  if (!outerDoc) {
+=======
+void SessionAccessibility::Click(int32_t aID) {
+  if (RootAccessibleWrap* rootAcc = GetRoot()) {
+    AccessibleWrap* acc = rootAcc->FindAccessibleById(aID);
+    if (!acc) {
+      return;
+    }
+
+    acc->DoAction(0);
+  }
+}
+
+SessionAccessibility* SessionAccessibility::GetInstanceFor(
+    ProxyAccessible* aAccessible) {
+  auto tab =
+      static_cast<dom::BrowserParent*>(aAccessible->Document()->Manager());
+  dom::Element* frame = tab->GetOwnerElement();
+  MOZ_ASSERT(frame);
+  if (!frame) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -133,8 +190,7 @@ SessionAccessibility* SessionAccessibility::GetInstanceFor(
 SessionAccessibility* SessionAccessibility::GetInstanceFor(
     Accessible* aAccessible) {
   RootAccessible* rootAcc = aAccessible->RootAccessible();
-  nsIPresShell* shell = rootAcc->PresShell();
-  nsViewManager* vm = shell->GetViewManager();
+  nsViewManager* vm = rootAcc->PresShellPtr()->GetViewManager();
   if (!vm) {
     return nullptr;
   }
@@ -198,17 +254,44 @@ void SessionAccessibility::SendScrollingEvent(AccessibleWrap* aAccessible,
   GECKOBUNDLE_FINISH(eventInfo);
 
   mSessionAccessibility->SendEvent(
+<<<<<<< HEAD
       java::sdk::AccessibilityEvent::TYPE_VIEW_SCROLLED, virtualViewId,
       aAccessible->AndroidClass(), eventInfo);
 
   SendWindowContentChangedEvent(aAccessible);
+||||||| merged common ancestors
+    java::sdk::AccessibilityEvent::TYPE_VIEW_SCROLLED, virtualViewId,
+    aAccessible->AndroidClass(), eventInfo);
+
+  SendWindowContentChangedEvent(aAccessible);
+=======
+      java::sdk::AccessibilityEvent::TYPE_VIEW_SCROLLED, virtualViewId,
+      aAccessible->AndroidClass(), eventInfo);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void SessionAccessibility::SendWindowContentChangedEvent(
     AccessibleWrap* aAccessible) {
+||||||| merged common ancestors
+void
+SessionAccessibility::SendWindowContentChangedEvent(AccessibleWrap* aAccessible)
+{
+=======
+void SessionAccessibility::SendWindowContentChangedEvent() {
+>>>>>>> upstream-releases
   mSessionAccessibility->SendEvent(
+<<<<<<< HEAD
       java::sdk::AccessibilityEvent::TYPE_WINDOW_CONTENT_CHANGED,
       aAccessible->VirtualViewID(), aAccessible->AndroidClass(), nullptr);
+||||||| merged common ancestors
+    java::sdk::AccessibilityEvent::TYPE_WINDOW_CONTENT_CHANGED,
+    aAccessible->VirtualViewID(), aAccessible->AndroidClass(), nullptr);
+=======
+      java::sdk::AccessibilityEvent::TYPE_WINDOW_CONTENT_CHANGED,
+      AccessibleWrap::kNoID, java::SessionAccessibility::CLASSNAME_WEBVIEW,
+      nullptr);
+>>>>>>> upstream-releases
 }
 
 void SessionAccessibility::SendWindowStateChangedEvent(
@@ -315,6 +398,12 @@ void SessionAccessibility::SendSelectedEvent(AccessibleWrap* aAccessible,
                                              bool aSelected) {
   GECKOBUNDLE_START(eventInfo);
   // Boolean::FALSE/TRUE gets clobbered by a macro, so ugh.
+<<<<<<< HEAD
+  GECKOBUNDLE_PUT(eventInfo, "selected",
+                  java::sdk::Integer::ValueOf(aSelected ? 1 : 0));
+||||||| merged common ancestors
+  GECKOBUNDLE_PUT(eventInfo, "selected", java::sdk::Integer::ValueOf(aSelected ? 1 : 0));
+=======
   GECKOBUNDLE_PUT(eventInfo, "selected",
                   java::sdk::Integer::ValueOf(aSelected ? 1 : 0));
   GECKOBUNDLE_FINISH(eventInfo);
@@ -324,22 +413,59 @@ void SessionAccessibility::SendSelectedEvent(AccessibleWrap* aAccessible,
       aAccessible->VirtualViewID(), aAccessible->AndroidClass(), eventInfo);
 }
 
+void SessionAccessibility::SendAnnouncementEvent(AccessibleWrap* aAccessible,
+                                                 const nsString& aAnnouncement,
+                                                 uint16_t aPriority) {
+  GECKOBUNDLE_START(eventInfo);
+  GECKOBUNDLE_PUT(eventInfo, "text", jni::StringParam(aAnnouncement));
+>>>>>>> upstream-releases
+  GECKOBUNDLE_FINISH(eventInfo);
+
+  // Announcements should have the root as their source, so we ignore the
+  // accessible of the event.
+  mSessionAccessibility->SendEvent(
+<<<<<<< HEAD
+      java::sdk::AccessibilityEvent::TYPE_VIEW_SELECTED,
+      aAccessible->VirtualViewID(), aAccessible->AndroidClass(), eventInfo);
+||||||| merged common ancestors
+    java::sdk::AccessibilityEvent::TYPE_VIEW_SELECTED,
+    aAccessible->VirtualViewID(), aAccessible->AndroidClass(), eventInfo);
+=======
+      java::sdk::AccessibilityEvent::TYPE_ANNOUNCEMENT, AccessibleWrap::kNoID,
+      java::SessionAccessibility::CLASSNAME_WEBVIEW, eventInfo);
+>>>>>>> upstream-releases
+}
+
 void SessionAccessibility::ReplaceViewportCache(
     const nsTArray<AccessibleWrap*>& aAccessibles,
     const nsTArray<BatchData>& aData) {
   auto infos = jni::ObjectArray::New<java::GeckoBundle>(aAccessibles.Length());
   for (size_t i = 0; i < aAccessibles.Length(); i++) {
     AccessibleWrap* acc = aAccessibles.ElementAt(i);
+    if (!acc) {
+      MOZ_ASSERT_UNREACHABLE("Updated accessible is gone.");
+      continue;
+    }
+
     if (aData.Length() == aAccessibles.Length()) {
       const BatchData& data = aData.ElementAt(i);
+<<<<<<< HEAD
       auto bundle = acc->ToSmallBundle(data.State(), data.Bounds(), data.ActionCount());
+||||||| merged common ancestors
+      auto bundle = acc->ToSmallBundle(data.State(), data.Bounds());
+=======
+      auto bundle = acc->ToBundle(
+          data.State(), data.Bounds(), data.ActionCount(), data.Name(),
+          data.TextValue(), data.DOMNodeID(), data.Description());
+>>>>>>> upstream-releases
       infos->SetElement(i, bundle);
     } else {
-      infos->SetElement(i, acc->ToSmallBundle());
+      infos->SetElement(i, acc->ToBundle(true));
     }
   }
 
   mSessionAccessibility->ReplaceViewportCache(infos);
+  SendWindowContentChangedEvent();
 }
 
 void SessionAccessibility::ReplaceFocusPathCache(
@@ -348,14 +474,40 @@ void SessionAccessibility::ReplaceFocusPathCache(
   auto infos = jni::ObjectArray::New<java::GeckoBundle>(aAccessibles.Length());
   for (size_t i = 0; i < aAccessibles.Length(); i++) {
     AccessibleWrap* acc = aAccessibles.ElementAt(i);
+    if (!acc) {
+      MOZ_ASSERT_UNREACHABLE("Updated accessible is gone.");
+      continue;
+    }
+
     if (aData.Length() == aAccessibles.Length()) {
       const BatchData& data = aData.ElementAt(i);
       nsCOMPtr<nsIPersistentProperties> props =
+<<<<<<< HEAD
           AccessibleWrap::AttributeArrayToProperties(data.Attributes());
       auto bundle = acc->ToBundle(
           data.State(), data.Bounds(), data.ActionCount(), data.Name(),
           data.TextValue(), data.DOMNodeID(), data.CurValue(), data.MinValue(),
           data.MaxValue(), data.Step(), props);
+||||||| merged common ancestors
+        AccessibleWrap::AttributeArrayToProperties(data.Attributes());
+      auto bundle = acc->ToBundle(data.State(),
+                                  data.Bounds(),
+                                  data.Name(),
+                                  data.TextValue(),
+                                  data.DOMNodeID(),
+                                  data.CurValue(),
+                                  data.MinValue(),
+                                  data.MaxValue(),
+                                  data.Step(),
+                                  props);
+=======
+          AccessibleWrap::AttributeArrayToProperties(data.Attributes());
+      auto bundle =
+          acc->ToBundle(data.State(), data.Bounds(), data.ActionCount(),
+                        data.Name(), data.TextValue(), data.DOMNodeID(),
+                        data.Description(), data.CurValue(), data.MinValue(),
+                        data.MaxValue(), data.Step(), props);
+>>>>>>> upstream-releases
       infos->SetElement(i, bundle);
     } else {
       infos->SetElement(i, acc->ToBundle());
@@ -378,13 +530,22 @@ void SessionAccessibility::UpdateCachedBounds(
 
     if (aData.Length() == aAccessibles.Length()) {
       const BatchData& data = aData.ElementAt(i);
+<<<<<<< HEAD
       auto bundle =
           acc->ToSmallBundle(data.State(), data.Bounds(), data.ActionCount());
+||||||| merged common ancestors
+      auto bundle = acc->ToSmallBundle(data.State(), data.Bounds());
+=======
+      auto bundle = acc->ToBundle(
+          data.State(), data.Bounds(), data.ActionCount(), data.Name(),
+          data.TextValue(), data.DOMNodeID(), data.Description());
+>>>>>>> upstream-releases
       infos->SetElement(i, bundle);
     } else {
-      infos->SetElement(i, acc->ToSmallBundle());
+      infos->SetElement(i, acc->ToBundle(true));
     }
   }
 
   mSessionAccessibility->UpdateCachedBounds(infos);
+  SendWindowContentChangedEvent();
 }

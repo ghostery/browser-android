@@ -17,11 +17,13 @@ add_task(async function test_telemetry() {
 
   let extension1 = ExtensionTestUtils.loadExtension({
     manifest: {
-      content_scripts: [{
-        "matches": ["http://*/*/file_sample.html"],
-        "js": ["content_script.js"],
-        "run_at": "document_end",
-      }],
+      content_scripts: [
+        {
+          matches: ["http://*/*/file_sample.html"],
+          js: ["content_script.js"],
+          run_at: "document_end",
+        },
+      ],
     },
 
     files: {
@@ -30,11 +32,13 @@ add_task(async function test_telemetry() {
   });
   let extension2 = ExtensionTestUtils.loadExtension({
     manifest: {
-      content_scripts: [{
-        "matches": ["http://*/*/file_sample.html"],
-        "js": ["content_script.js"],
-        "run_at": "document_end",
-      }],
+      content_scripts: [
+        {
+          matches: ["http://*/*/file_sample.html"],
+          js: ["content_script.js"],
+          run_at: "document_end",
+        },
+      ],
     },
 
     files: {
@@ -45,29 +49,58 @@ add_task(async function test_telemetry() {
   clearHistograms();
 
   let process = IS_OOP ? "content" : "parent";
-  ok(!(HISTOGRAM in getSnapshots(process)), `No data recorded for histogram: ${HISTOGRAM}.`);
-  ok(!(HISTOGRAM_KEYED in getKeyedSnapshots(process)),
-     `No data recorded for keyed histogram: ${HISTOGRAM_KEYED}.`);
+  ok(
+    !(HISTOGRAM in getSnapshots(process)),
+    `No data recorded for histogram: ${HISTOGRAM}.`
+  );
+  ok(
+    !(HISTOGRAM_KEYED in getKeyedSnapshots(process)),
+    `No data recorded for keyed histogram: ${HISTOGRAM_KEYED}.`
+  );
 
   await extension1.startup();
   let extensionId = extension1.extension.id;
 
   info(`Started extension with id ${extensionId}`);
 
-  ok(!(HISTOGRAM in getSnapshots(process)),
-     `No data recorded for histogram after startup: ${HISTOGRAM}.`);
-  ok(!(HISTOGRAM_KEYED in getKeyedSnapshots(process)),
-     `No data recorded for keyed histogram: ${HISTOGRAM_KEYED}.`);
+  ok(
+    !(HISTOGRAM in getSnapshots(process)),
+    `No data recorded for histogram after startup: ${HISTOGRAM}.`
+  );
+  ok(
+    !(HISTOGRAM_KEYED in getKeyedSnapshots(process)),
+    `No data recorded for keyed histogram: ${HISTOGRAM_KEYED}.`
+  );
 
-  let contentPage = await ExtensionTestUtils.loadContentPage(`${BASE_URL}/file_sample.html`);
+  let contentPage = await ExtensionTestUtils.loadContentPage(
+    `${BASE_URL}/file_sample.html`
+  );
   await extension1.awaitMessage("content-script-run");
   await promiseTelemetryRecorded(HISTOGRAM, process, 1);
   await promiseKeyedTelemetryRecorded(HISTOGRAM_KEYED, process, extensionId, 1);
 
+<<<<<<< HEAD
   equal(valueSum(getSnapshots(process)[HISTOGRAM].values), 1,
         `Data recorded for histogram: ${HISTOGRAM}.`);
   equal(valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].values), 1,
         `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`);
+||||||| merged common ancestors
+  equal(arraySum(getSnapshots(process)[HISTOGRAM].counts), 1,
+        `Data recorded for histogram: ${HISTOGRAM}.`);
+  equal(arraySum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].counts), 1,
+        `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`);
+=======
+  equal(
+    valueSum(getSnapshots(process)[HISTOGRAM].values),
+    1,
+    `Data recorded for histogram: ${HISTOGRAM}.`
+  );
+  equal(
+    valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].values),
+    1,
+    `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`
+  );
+>>>>>>> upstream-releases
 
   await contentPage.close();
   await extension1.unload();
@@ -77,6 +110,7 @@ add_task(async function test_telemetry() {
 
   info(`Started extension with id ${extensionId2}`);
 
+<<<<<<< HEAD
   equal(valueSum(getSnapshots(process)[HISTOGRAM].values), 1,
         `No new data recorded for histogram after extension2 startup: ${HISTOGRAM}.`);
   equal(valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].values), 1,
@@ -85,8 +119,38 @@ add_task(async function test_telemetry() {
      `No data recorded for histogram after startup: ${HISTOGRAM_KEYED} with key ${extensionId2}.`);
 
   contentPage = await ExtensionTestUtils.loadContentPage(`${BASE_URL}/file_sample.html`);
+||||||| merged common ancestors
+  equal(arraySum(getSnapshots(process)[HISTOGRAM].counts), 1,
+        `No new data recorded for histogram after extension2 startup: ${HISTOGRAM}.`);
+  equal(arraySum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].counts), 1,
+        `No new data recorded for histogram after extension2 startup: ${HISTOGRAM_KEYED} with key ${extensionId}.`);
+  ok(!(extensionId2 in getKeyedSnapshots(process)[HISTOGRAM_KEYED]),
+     `No data recorded for histogram after startup: ${HISTOGRAM_KEYED} with key ${extensionId2}.`);
+
+  contentPage = await ExtensionTestUtils.loadContentPage(`${BASE_URL}/file_sample.html`);
+=======
+  equal(
+    valueSum(getSnapshots(process)[HISTOGRAM].values),
+    1,
+    `No new data recorded for histogram after extension2 startup: ${HISTOGRAM}.`
+  );
+  equal(
+    valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].values),
+    1,
+    `No new data recorded for histogram after extension2 startup: ${HISTOGRAM_KEYED} with key ${extensionId}.`
+  );
+  ok(
+    !(extensionId2 in getKeyedSnapshots(process)[HISTOGRAM_KEYED]),
+    `No data recorded for histogram after startup: ${HISTOGRAM_KEYED} with key ${extensionId2}.`
+  );
+
+  contentPage = await ExtensionTestUtils.loadContentPage(
+    `${BASE_URL}/file_sample.html`
+  );
+>>>>>>> upstream-releases
   await extension2.awaitMessage("content-script-run");
   await promiseTelemetryRecorded(HISTOGRAM, process, 2);
+<<<<<<< HEAD
   await promiseKeyedTelemetryRecorded(HISTOGRAM_KEYED, process, extensionId2, 1);
 
   equal(valueSum(getSnapshots(process)[HISTOGRAM].values), 2,
@@ -95,6 +159,39 @@ add_task(async function test_telemetry() {
         `No new data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`);
   equal(valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId2].values), 1,
         `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId2}.`);
+||||||| merged common ancestors
+  await promiseKeyedTelemetryRecorded(HISTOGRAM_KEYED, process, extensionId2, 1);
+
+  equal(arraySum(getSnapshots(process)[HISTOGRAM].counts), 2,
+        `Data recorded for histogram: ${HISTOGRAM}.`);
+  equal(arraySum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].counts), 1,
+        `No new data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`);
+  equal(arraySum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId2].counts), 1,
+        `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId2}.`);
+=======
+  await promiseKeyedTelemetryRecorded(
+    HISTOGRAM_KEYED,
+    process,
+    extensionId2,
+    1
+  );
+
+  equal(
+    valueSum(getSnapshots(process)[HISTOGRAM].values),
+    2,
+    `Data recorded for histogram: ${HISTOGRAM}.`
+  );
+  equal(
+    valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId].values),
+    1,
+    `No new data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId}.`
+  );
+  equal(
+    valueSum(getKeyedSnapshots(process)[HISTOGRAM_KEYED][extensionId2].values),
+    1,
+    `Data recorded for histogram: ${HISTOGRAM_KEYED} with key ${extensionId2}.`
+  );
+>>>>>>> upstream-releases
 
   await contentPage.close();
   await extension2.unload();

@@ -17,19 +17,26 @@ public:
     LinearGradient4fContext(const SkLinearGradient&, const ContextRec&);
 
     void shadeSpan(int x, int y, SkPMColor dst[], int count) override;
+<<<<<<< HEAD
     void shadeSpan4f(int x, int y, SkPMColor4f dst[], int count) override;
+||||||| merged common ancestors
+    void shadeSpan4f(int x, int y, SkPM4f dst[], int count) override;
+=======
+>>>>>>> upstream-releases
 
 private:
     using INHERITED = GradientShaderBase4fContext;
 
-    template<typename dstType, ApplyPremul, TileMode>
+    template<ApplyPremul, TileMode>
     class LinearIntervalProcessor;
 
-    template <typename dstType, ApplyPremul premul>
-    void shadePremulSpan(int x, int y, dstType dst[], int count, float bias0, float bias1) const;
+    template <ApplyPremul premul>
+    void shadePremulSpan(int x, int y, SkPMColor dst[], int count,
+                         float bias0, float bias1) const;
 
-    template <typename dstType, ApplyPremul premul, SkShader::TileMode tileMode>
-    void shadeSpanInternal(int x, int y, dstType dst[], int count, float bias0, float bias1) const;
+    template <ApplyPremul premul, SkShader::TileMode tileMode>
+    void shadeSpanInternal(int x, int y, SkPMColor dst[], int count,
+                           float bias0, float bias1) const;
 
     const Sk4fGradientInterval* findInterval(SkScalar fx) const;
 

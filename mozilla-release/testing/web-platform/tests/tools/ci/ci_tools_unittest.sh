@@ -18,8 +18,19 @@ run_applicable_tox () {
     export TOXENV="$OLD_TOXENV"
 }
 
+<<<<<<< HEAD
 if ./wpt test-jobs --includes tools_unittest; then
     pip install -U tox codecov
+||||||| merged common ancestors
+RELEVANT_JOBS=$(./wpt test-jobs)
+
+RELEVANT_CHANGES_TOOLS=$(echo "$RELEVANT_JOBS" | grep "tools_unittest" || true)
+if [[ ! -z $RELEVANT_CHANGES_TOOLS ]]; then
+    pip install -U tox codecov
+=======
+if ./wpt test-jobs --includes tools_unittest; then
+    pip install --user -U tox codecov
+>>>>>>> upstream-releases
     cd tools
     run_applicable_tox
     cd $WPT_ROOT

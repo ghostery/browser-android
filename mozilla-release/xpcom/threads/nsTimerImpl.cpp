@@ -18,17 +18,17 @@
 #include "mozilla/Mutex.h"
 #include "mozilla/ResultExtensions.h"
 #ifdef MOZ_TASK_TRACER
-#include "GeckoTaskTracerImpl.h"
+#  include "GeckoTaskTracerImpl.h"
 using namespace mozilla::tasktracer;
 #endif
 
 #ifdef XP_WIN
-#include <process.h>
-#ifndef getpid
-#define getpid _getpid
-#endif
+#  include <process.h>
+#  ifndef getpid
+#    define getpid _getpid
+#  endif
 #else
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 using mozilla::Atomic;
@@ -193,7 +193,17 @@ nsresult NS_NewTimerWithFuncCallback(nsITimer** aTimer,
 //
 static mozilla::LazyLogModule sTimerFiringsLog("TimerFirings");
 
+<<<<<<< HEAD
 mozilla::LogModule* GetTimerFiringsLog() { return sTimerFiringsLog; }
+||||||| merged common ancestors
+mozilla::LogModule*
+GetTimerFiringsLog()
+{
+  return sTimerFiringsLog;
+}
+=======
+static mozilla::LogModule* GetTimerFiringsLog() { return sTimerFiringsLog; }
+>>>>>>> upstream-releases
 
 #include <math.h>
 
@@ -238,6 +248,7 @@ nsTimer::Release(void) {
   return count;
 }
 
+<<<<<<< HEAD
 nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
     : mEventTarget(aTarget),
       mHolder(nullptr),
@@ -245,6 +256,25 @@ nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
       mGeneration(0),
       mITimer(aTimer),
       mMutex("nsTimerImpl::mMutex") {
+||||||| merged common ancestors
+nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget) :
+  mEventTarget(aTarget),
+  mHolder(nullptr),
+  mType(0),
+  mGeneration(0),
+  mITimer(aTimer),
+  mMutex("nsTimerImpl::mMutex")
+{
+=======
+nsTimerImpl::nsTimerImpl(nsITimer* aTimer, nsIEventTarget* aTarget)
+    : mEventTarget(aTarget),
+      mHolder(nullptr),
+      mType(0),
+      mGeneration(0),
+      mITimer(aTimer),
+      mMutex("nsTimerImpl::mMutex"),
+      mFiring(0) {
+>>>>>>> upstream-releases
   // XXX some code creates timers during xpcom shutdown, when threads are no
   // longer available, so we cannot turn this on yet.
   // MOZ_ASSERT(mEventTarget);
@@ -296,7 +326,7 @@ nsresult nsTimerImpl::InitCommon(const TimeDuration& aDelay, uint32_t aType,
                                  Callback&& newCallback) {
   mMutex.AssertCurrentThreadOwns();
 
-  if (NS_WARN_IF(!gThread)) {
+  if (!gThread) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
@@ -406,11 +436,22 @@ void nsTimerImpl::CancelImpl(bool aClearITimer) {
 
     // Don't clear this if we're firing; once Fire returns, we'll get this call
     // again.
+<<<<<<< HEAD
     if (aClearITimer &&
         (mCallbackDuringFire.mType == Callback::Type::Unknown)) {
       MOZ_RELEASE_ASSERT(
           mITimer,
           "mITimer was nulled already! "
+||||||| merged common ancestors
+    if (aClearITimer &&
+        (mCallbackDuringFire.mType == Callback::Type::Unknown)) {
+      MOZ_RELEASE_ASSERT(mITimer, "mITimer was nulled already! "
+=======
+    if (aClearITimer && !mFiring) {
+      MOZ_RELEASE_ASSERT(
+          mITimer,
+          "mITimer was nulled already! "
+>>>>>>> upstream-releases
           "This indicates that someone has messed up the refcount on nsTimer!");
       timerTrash.swap(mITimer);
     }
@@ -510,6 +551,7 @@ void nsTimerImpl::Fire(int32_t aGeneration) {
   uint8_t oldType;
   uint32_t oldDelay;
   TimeStamp oldTimeout;
+  Callback callbackDuringFire;
   nsCOMPtr<nsITimer> kungFuDeathGrip;
 
   {
@@ -520,7 +562,8 @@ void nsTimerImpl::Fire(int32_t aGeneration) {
       return;
     }
 
-    mCallbackDuringFire.swap(mCallback);
+    ++mFiring;
+    callbackDuringFire = mCallback;
     oldType = mType;
     oldDelay = mDelay.ToMilliseconds();
     oldTimeout = mTimeout;
@@ -551,39 +594,48 @@ void nsTimerImpl::Fire(int32_t aGeneration) {
   }
 
   if (MOZ_LOG_TEST(GetTimerFiringsLog(), LogLevel::Debug)) {
-    LogFiring(mCallbackDuringFire, oldType, oldDelay);
+    LogFiring(callbackDuringFire, oldType, oldDelay);
   }
 
-  switch (mCallbackDuringFire.mType) {
+  switch (callbackDuringFire.mType) {
     case Callback::Type::Function:
-      mCallbackDuringFire.mCallback.c(mITimer, mCallbackDuringFire.mClosure);
+      callbackDuringFire.mCallback.c(mITimer, callbackDuringFire.mClosure);
       break;
     case Callback::Type::Interface:
-      mCallbackDuringFire.mCallback.i->Notify(mITimer);
+      callbackDuringFire.mCallback.i->Notify(mITimer);
       break;
     case Callback::Type::Observer:
-      mCallbackDuringFire.mCallback.o->Observe(mITimer, NS_TIMER_CALLBACK_TOPIC,
-                                               nullptr);
+      callbackDuringFire.mCallback.o->Observe(mITimer, NS_TIMER_CALLBACK_TOPIC,
+                                              nullptr);
       break;
     default:;
   }
 
+<<<<<<< HEAD
   Callback trash;  // Swap into here to dispose of callback after the unlock
+||||||| merged common ancestors
+  Callback trash; // Swap into here to dispose of callback after the unlock
+=======
+>>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
-  if (aGeneration == mGeneration && IsRepeating()) {
-    // Repeating timer has not been re-init or canceled; reschedule
-    mCallbackDuringFire.swap(mCallback);
-    if (IsSlack()) {
-      mTimeout = TimeStamp::Now() + mDelay;
+  if (aGeneration == mGeneration) {
+    if (IsRepeating()) {
+      // Repeating timer has not been re-init or canceled; reschedule
+      if (IsSlack()) {
+        mTimeout = TimeStamp::Now() + mDelay;
+      } else {
+        mTimeout = mTimeout + mDelay;
+      }
+      if (gThread) {
+        gThread->AddTimer(this);
+      }
     } else {
-      mTimeout = mTimeout + mDelay;
-    }
-    if (gThread) {
-      gThread->AddTimer(this);
+      // Non-repeating timer that has not been re-scheduled. Clear.
+      mCallback.clear();
     }
   }
 
-  mCallbackDuringFire.swap(trash);
+  --mFiring;
 
   MOZ_LOG(GetTimerLog(), LogLevel::Debug,
           ("[this=%p] Took %fms to fire timer callback\n", this,
@@ -591,12 +643,12 @@ void nsTimerImpl::Fire(int32_t aGeneration) {
 }
 
 #if defined(HAVE_DLADDR) && defined(HAVE___CXA_DEMANGLE)
-#define USE_DLADDR 1
+#  define USE_DLADDR 1
 #endif
 
 #ifdef USE_DLADDR
-#include <cxxabi.h>
-#include <dlfcn.h>
+#  include <cxxabi.h>
+#  include <dlfcn.h>
 #endif
 
 // See the big comment above GetTimerFiringsLog() to understand this code.
@@ -766,15 +818,34 @@ size_t nsTimer::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const {
   return aMallocSizeOf(this);
 }
 
+<<<<<<< HEAD
 /* static */ RefPtr<nsTimer> nsTimer::WithEventTarget(nsIEventTarget* aTarget) {
+||||||| merged common ancestors
+/* static */ RefPtr<nsTimer>
+nsTimer::WithEventTarget(nsIEventTarget* aTarget)
+{
+=======
+/* static */
+RefPtr<nsTimer> nsTimer::WithEventTarget(nsIEventTarget* aTarget) {
+>>>>>>> upstream-releases
   if (!aTarget) {
     aTarget = mozilla::GetCurrentThreadEventTarget();
   }
   return do_AddRef(new nsTimer(aTarget));
 }
 
+<<<<<<< HEAD
 /* static */ nsresult nsTimer::XPCOMConstructor(nsISupports* aOuter,
                                                 REFNSIID aIID, void** aResult) {
+||||||| merged common ancestors
+/* static */ nsresult
+nsTimer::XPCOMConstructor(nsISupports* aOuter, REFNSIID aIID, void** aResult)
+{
+=======
+/* static */
+nsresult nsTimer::XPCOMConstructor(nsISupports* aOuter, REFNSIID aIID,
+                                   void** aResult) {
+>>>>>>> upstream-releases
   *aResult = nullptr;
   if (aOuter != nullptr) {
     return NS_ERROR_NO_AGGREGATION;

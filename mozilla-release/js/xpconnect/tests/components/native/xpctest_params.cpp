@@ -344,6 +344,14 @@ nsXPCTestParams::TestJsvalSequence(const nsTArray<JS::Value>& a,
 NS_IMETHODIMP
 nsXPCTestParams::TestSequenceSequence(const nsTArray<nsTArray<short>>& a,
                                       nsTArray<nsTArray<short>>& b,
+<<<<<<< HEAD
+                                      nsTArray<nsTArray<short>>& _retval) {
+  SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_NOOP);
+||||||| merged common ancestors
+                                      nsTArray<nsTArray<short>>& _retval)
+{
+    SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_NOOP);
+=======
                                       nsTArray<nsTArray<short>>& _retval) {
   SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_NOOP);
 }
@@ -359,4 +367,36 @@ nsXPCTestParams::TestInterfaceIsSequence(const nsIID* aIID,
 
   // Perform the generic sequence shuffle.
   SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_INTERFACE);
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCTestParams::TestInterfaceIsSequence(const nsIID* aIID,
+                                         const nsTArray<void*>& a, nsIID** bIID,
+                                         nsTArray<void*>& b, nsIID** rvIID,
+                                         nsTArray<void*>& _retval) {
+  // Shuffle around our nsIIDs
+  *rvIID = (*bIID)->Clone();
+  *bIID = aIID->Clone();
+
+  // Perform the generic sequence shuffle.
+  SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_INTERFACE);
+||||||| merged common ancestors
+nsXPCTestParams::TestInterfaceIsSequence(const nsIID* aIID, const nsTArray<void*>& a,
+                                         nsIID** bIID, nsTArray<void*>& b,
+                                         nsIID** rvIID, nsTArray<void*>& _retval)
+{
+    // Shuffle around our nsIIDs
+    *rvIID = (*bIID)->Clone();
+    *bIID = aIID->Clone();
+
+    // Perform the generic sequence shuffle.
+    SEQUENCE_METHOD_IMPL(TAKE_OWNERSHIP_INTERFACE);
+=======
+nsXPCTestParams::TestOptionalSequence(const nsTArray<uint8_t>& aInArr,
+                                      nsTArray<uint8_t>& aReturnArr) {
+  aReturnArr = aInArr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }

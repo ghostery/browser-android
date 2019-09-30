@@ -13,19 +13,37 @@
 #include "nsCOMPtr.h"
 
 namespace mozilla {
+<<<<<<< HEAD
 enum class CSSPseudoElementType : uint8_t;
 }  // namespace mozilla
 
 class nsProgressFrame final : public nsContainerFrame,
                               public nsIAnonymousContentCreator {
   typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
+||||||| merged common ancestors
+enum class CSSPseudoElementType : uint8_t;
+} // namespace mozilla
+
+class nsProgressFrame final
+  : public nsContainerFrame
+  , public nsIAnonymousContentCreator
+{
+  typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
+=======
+enum class PseudoStyleType : uint8_t;
+}  // namespace mozilla
+
+class nsProgressFrame final : public nsContainerFrame,
+                              public nsIAnonymousContentCreator {
+  typedef mozilla::PseudoStyleType PseudoStyleType;
+>>>>>>> upstream-releases
   typedef mozilla::dom::Element Element;
 
  public:
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsProgressFrame)
 
-  explicit nsProgressFrame(ComputedStyle* aStyle);
+  explicit nsProgressFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
   virtual ~nsProgressFrame();
 
   virtual void DestroyFrom(nsIFrame* aDestructRoot,

@@ -3,17 +3,17 @@
 //! This module exports the `expand_global_value` function which transforms a `global_value`
 //! instruction into code that depends on the kind of global value referenced.
 
-use cursor::{Cursor, FuncCursor};
-use flowgraph::ControlFlowGraph;
-use ir::{self, InstBuilder};
-use isa::TargetIsa;
+use crate::cursor::{Cursor, FuncCursor};
+use crate::flowgraph::ControlFlowGraph;
+use crate::ir::{self, InstBuilder};
+use crate::isa::TargetIsa;
 
 /// Expand a `global_value` instruction according to the definition of the global value.
 pub fn expand_global_value(
     inst: ir::Inst,
     func: &mut ir::Function,
     _cfg: &mut ControlFlowGraph,
-    isa: &TargetIsa,
+    isa: &dyn TargetIsa,
 ) {
     // Unpack the instruction.
     let gv = match func.dfg[inst] {
@@ -64,6 +64,7 @@ fn iadd_imm_addr(
     func: &mut ir::Function,
     base: ir::GlobalValue,
     offset: i64,
+<<<<<<< HEAD
     global_type: ir::Type,
 ) {
     let mut pos = FuncCursor::new(func).at_inst(inst);
@@ -91,6 +92,38 @@ fn load_addr(
     global_type: ir::Type,
     readonly: bool,
     isa: &TargetIsa,
+||||||| merged common ancestors
+    memory_type: ir::Type,
+    isa: &TargetIsa,
+=======
+    global_type: ir::Type,
+) {
+    let mut pos = FuncCursor::new(func).at_inst(inst);
+
+    // Get the value for the lhs. For tidiness, expand VMContext here so that we avoid
+    // `vmctx_addr` which creates an otherwise unneeded value alias.
+    let lhs = if let ir::GlobalValueData::VMContext = pos.func.global_values[base] {
+        pos.func
+            .special_param(ir::ArgumentPurpose::VMContext)
+            .expect("Missing vmctx parameter")
+    } else {
+        pos.ins().global_value(global_type, base)
+    };
+
+    // Simply replace the `global_value` instruction with an `iadd_imm`, reusing the result value.
+    pos.func.dfg.replace(inst).iadd_imm(lhs, offset);
+}
+
+/// Expand a `global_value` instruction for a load global.
+fn load_addr(
+    inst: ir::Inst,
+    func: &mut ir::Function,
+    base: ir::GlobalValue,
+    offset: ir::immediates::Offset32,
+    global_type: ir::Type,
+    readonly: bool,
+    isa: &dyn TargetIsa,
+>>>>>>> upstream-releases
 ) {
     // We need to load a pointer from the `base` global value, so insert a new `global_value`
     // instruction. This depends on the iterative legalization loop. Note that the IR verifier
@@ -99,6 +132,7 @@ fn load_addr(
     let mut pos = FuncCursor::new(func).at_inst(inst);
     pos.use_srcloc(inst);
 
+<<<<<<< HEAD
     // Get the value for the base. For tidiness, expand VMContext here so that we avoid
     // `vmctx_addr` which creates an otherwise unneeded value alias.
     let base_addr = if let ir::GlobalValueData::VMContext = pos.func.global_values[base] {
@@ -122,10 +156,47 @@ fn load_addr(
         .dfg
         .replace(inst)
         .load(global_type, mflags, base_addr, offset);
+||||||| merged common ancestors
+    let base_addr = pos.ins().global_value(ptr_ty, base);
+    let mut mflags = ir::MemFlags::new();
+    // Deref globals are required to be accessible and aligned.
+    mflags.set_notrap();
+    mflags.set_aligned();
+    let loaded = pos.ins().load(memory_type, mflags, base_addr, 0);
+    pos.func.dfg.replace(inst).iadd_imm(loaded, offset);
+=======
+    // Get the value for the base. For tidiness, expand VMContext here so that we avoid
+    // `vmctx_addr` which creates an otherwise unneeded value alias.
+    let base_addr = if let ir::GlobalValueData::VMContext = pos.func.global_values[base] {
+        pos.func
+            .special_param(ir::ArgumentPurpose::VMContext)
+            .expect("Missing vmctx parameter")
+    } else {
+        pos.ins().global_value(ptr_ty, base)
+    };
+
+    // Global-value loads are always notrap and aligned. They may be readonly.
+    let mut mflags = ir::MemFlags::trusted();
+    if readonly {
+        mflags.set_readonly();
+    }
+
+    // Perform the load.
+    pos.func
+        .dfg
+        .replace(inst)
+        .load(global_type, mflags, base_addr, offset);
+>>>>>>> upstream-releases
 }
 
 /// Expand a `global_value` instruction for a symbolic name global.
+<<<<<<< HEAD
 fn symbol(inst: ir::Inst, func: &mut ir::Function, gv: ir::GlobalValue, isa: &TargetIsa) {
+||||||| merged common ancestors
+fn globalsym(inst: ir::Inst, func: &mut ir::Function, gv: ir::GlobalValue, isa: &TargetIsa) {
+=======
+fn symbol(inst: ir::Inst, func: &mut ir::Function, gv: ir::GlobalValue, isa: &dyn TargetIsa) {
+>>>>>>> upstream-releases
     let ptr_ty = isa.pointer_type();
     func.dfg.replace(inst).symbol_value(ptr_ty, gv);
 }

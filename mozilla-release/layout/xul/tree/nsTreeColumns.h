@@ -7,7 +7,6 @@
 #ifndef nsTreeColumns_h__
 #define nsTreeColumns_h__
 
-#include "nsITreeBoxObject.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/RefPtr.h"
 #include "nsCoord.h"
@@ -27,9 +26,19 @@ namespace mozilla {
 class ErrorResult;
 namespace dom {
 class Element;
+<<<<<<< HEAD
 class TreeBoxObject;
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+class TreeBoxObject;
+} // namespace dom
+} // namespace mozilla
+=======
+class XULTreeElement;
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #define NS_TREECOLUMN_IMPL_CID                       \
   { /* 02cd1963-4b5d-4a6c-9223-814d3ade93a3 */       \
@@ -71,6 +80,8 @@ class nsTreeColumn final : public nsISupports, public nsWrapperCache {
 
   nsTreeColumn* GetNext() const { return mNext; }
   nsTreeColumn* GetPrevious() const { return mPrevious; }
+
+  already_AddRefed<nsTreeColumn> GetPreviousColumn();
 
   void Invalidate(mozilla::ErrorResult& aRv);
 
@@ -162,7 +173,7 @@ class nsTreeColumns final : public nsISupports, public nsWrapperCache {
                                JS::Handle<JSObject*> aGivenProto) override;
 
   // WebIDL
-  mozilla::dom::TreeBoxObject* GetTree() const;
+  mozilla::dom::XULTreeElement* GetTree() const;
   uint32_t Count();
   uint32_t Length() { return Count(); }
 

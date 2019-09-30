@@ -9,6 +9,7 @@
 #include "nsFrameLoader.h"
 #include "mozilla/AsyncEventDispatcher.h"
 #include "mozilla/dom/HTMLIFrameElement.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "mozilla/dom/XULFrameElement.h"
 #include "mozilla/dom/XULFrameElementBinding.h"
 
@@ -29,15 +30,32 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(XULFrameElement, nsXULElement)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mFrameLoader, mOpener)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement, nsXULElement,
                                              nsIFrameLoaderOwner)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement,
+                                             nsXULElement,
+                                             nsIFrameLoaderOwner)
+=======
+NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(XULFrameElement, nsXULElement,
+                                             nsFrameLoaderOwner)
+>>>>>>> upstream-releases
 
 JSObject* XULFrameElement::WrapNode(JSContext* aCx,
                                     JS::Handle<JSObject*> aGivenProto) {
   return XULFrameElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsIDocShell* XULFrameElement::GetDocShell() {
+||||||| merged common ancestors
+nsIDocShell*
+XULFrameElement::GetDocShell()
+{
+=======
+nsDocShell* XULFrameElement::GetDocShell() {
+>>>>>>> upstream-releases
   RefPtr<nsFrameLoader> frameLoader = GetFrameLoader();
   return frameLoader ? frameLoader->GetDocShell(IgnoreErrors()) : nullptr;
 }
@@ -48,19 +66,46 @@ already_AddRefed<nsIWebNavigation> XULFrameElement::GetWebNavigation() {
   return webnav.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsPIDOMWindowOuter> XULFrameElement::GetContentWindow() {
   nsCOMPtr<nsIDocShell> docShell = GetDocShell();
+||||||| merged common ancestors
+already_AddRefed<nsPIDOMWindowOuter>
+XULFrameElement::GetContentWindow()
+{
+  nsCOMPtr<nsIDocShell> docShell = GetDocShell();
+=======
+Nullable<WindowProxyHolder> XULFrameElement::GetContentWindow() {
+  RefPtr<nsDocShell> docShell = GetDocShell();
+>>>>>>> upstream-releases
   if (docShell) {
-    nsCOMPtr<nsPIDOMWindowOuter> win = docShell->GetWindow();
-    return win.forget();
+    return WindowProxyHolder(docShell->GetWindowProxy());
   }
 
   return nullptr;
 }
 
+<<<<<<< HEAD
 nsIDocument* XULFrameElement::GetContentDocument() {
   nsCOMPtr<nsPIDOMWindowOuter> win = GetContentWindow();
   return win ? win->GetDoc() : nullptr;
+||||||| merged common ancestors
+nsIDocument*
+XULFrameElement::GetContentDocument()
+{
+  nsCOMPtr<nsPIDOMWindowOuter> win = GetContentWindow();
+  return win ? win->GetDoc() : nullptr;
+=======
+Document* XULFrameElement::GetContentDocument() {
+  nsCOMPtr<nsIDocShell> docShell = GetDocShell();
+  if (docShell) {
+    nsCOMPtr<nsPIDOMWindowOuter> win = docShell->GetWindow();
+    if (win) {
+      return win->GetDoc();
+    }
+  }
+  return nullptr;
+>>>>>>> upstream-releases
 }
 
 void XULFrameElement::LoadSrc() {
@@ -70,7 +115,7 @@ void XULFrameElement::LoadSrc() {
   RefPtr<nsFrameLoader> frameLoader = GetFrameLoader();
   if (!frameLoader) {
     // Check if we have an opener we need to be setting
-    nsCOMPtr<nsPIDOMWindowOuter> opener = mOpener;
+    RefPtr<BrowsingContext> opener = mOpener;
     if (!opener) {
       // If we are a primary xul-browser, we want to take the opener property!
       nsCOMPtr<nsPIDOMWindowOuter> window = OwnerDoc()->GetWindow();
@@ -114,8 +159,23 @@ void XULFrameElement::SwapFrameLoaders(XULFrameElement& aOtherLoaderOwner,
   aOtherLoaderOwner.SwapFrameLoaders(this, rv);
 }
 
+<<<<<<< HEAD
 void XULFrameElement::SwapFrameLoaders(nsIFrameLoaderOwner* aOtherLoaderOwner,
                                        mozilla::ErrorResult& rv) {
+||||||| merged common ancestors
+void
+XULFrameElement::SwapFrameLoaders(nsIFrameLoaderOwner* aOtherLoaderOwner,
+                                  mozilla::ErrorResult& rv)
+{
+=======
+void XULFrameElement::SwapFrameLoaders(nsFrameLoaderOwner* aOtherLoaderOwner,
+                                       mozilla::ErrorResult& rv) {
+  if (RefPtr<Document> doc = GetComposedDoc()) {
+    // SwapWithOtherLoader relies on frames being up-to-date.
+    doc->FlushPendingNotifications(FlushType::Frames);
+  }
+
+>>>>>>> upstream-releases
   RefPtr<nsFrameLoader> loader = GetFrameLoader();
   RefPtr<nsFrameLoader> otherLoader = aOtherLoaderOwner->GetFrameLoader();
   if (!loader || !otherLoader) {
@@ -126,13 +186,25 @@ void XULFrameElement::SwapFrameLoaders(nsIFrameLoaderOwner* aOtherLoaderOwner,
   rv = loader->SwapWithOtherLoader(otherLoader, this, aOtherLoaderOwner);
 }
 
+<<<<<<< HEAD
 nsresult XULFrameElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
   nsresult rv = nsXULElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+XULFrameElement::BindToTree(nsIDocument* aDocument,
+                            nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+  nsresult rv = nsXULElement::BindToTree(aDocument, aParent, aBindingParent);
+=======
+nsresult XULFrameElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = nsXULElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  if (aDocument) {
+  if (IsInUncomposedDoc()) {
     NS_ASSERTION(!nsContentUtils::IsSafeToRunScript(),
                  "Missing a script blocker!");
     // We're in a document now.  Kick off the frame load.
@@ -142,14 +214,22 @@ nsresult XULFrameElement::BindToTree(nsIDocument* aDocument,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void XULFrameElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+XULFrameElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void XULFrameElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   RefPtr<nsFrameLoader> frameLoader = GetFrameLoader();
   if (frameLoader) {
     frameLoader->Destroy();
   }
   mFrameLoader = nullptr;
 
-  nsXULElement::UnbindFromTree(aDeep, aNullParent);
+  nsXULElement::UnbindFromTree(aNullParent);
 }
 
 void XULFrameElement::DestroyContent() {

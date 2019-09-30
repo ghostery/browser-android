@@ -5,12 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ChannelMediaDecoder.h"
+#include "ChannelMediaResource.h"
 #include "DecoderTraits.h"
 #include "MediaDecoderStateMachine.h"
 #include "MediaFormatReader.h"
 #include "BaseMediaResource.h"
 #include "MediaShutdownManager.h"
 #include "mozilla/StaticPrefs.h"
+#include "VideoUtils.h"
 
 namespace mozilla {
 
@@ -73,8 +75,19 @@ void ChannelMediaDecoder::ResourceCallback::NotifyNetworkError(
   }
 }
 
+<<<<<<< HEAD
 /* static */ void ChannelMediaDecoder::ResourceCallback::TimerCallback(
     nsITimer* aTimer, void* aClosure) {
+||||||| merged common ancestors
+/* static */ void
+ChannelMediaDecoder::ResourceCallback::TimerCallback(nsITimer* aTimer,
+                                                     void* aClosure)
+{
+=======
+/* static */
+void ChannelMediaDecoder::ResourceCallback::TimerCallback(nsITimer* aTimer,
+                                                          void* aClosure) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   ResourceCallback* thiz = static_cast<ResourceCallback*>(aClosure);
   MOZ_ASSERT(thiz->mDecoder);
@@ -386,6 +399,7 @@ void ChannelMediaDecoder::DownloadProgressed() {
                 MediaStatistics stats = GetStatistics(rate, res, pos);
                 return StatsPromise::CreateAndResolve(stats, __func__);
               })
+<<<<<<< HEAD
       ->Then(mAbstractMainThread, __func__,
              [=, self = RefPtr<ChannelMediaDecoder>(this)](
                  MediaStatistics aStats) {
@@ -399,6 +413,37 @@ void ChannelMediaDecoder::DownloadProgressed() {
                GetOwner()->UpdateReadyState();
              },
              []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
+||||||| merged common ancestors
+    ->Then(
+      mAbstractMainThread,
+      __func__,
+      [ =, self = RefPtr<ChannelMediaDecoder>(this) ](MediaStatistics aStats) {
+        if (IsShutdown()) {
+          return;
+        }
+        mCanPlayThrough = aStats.CanPlayThrough();
+        GetStateMachine()->DispatchCanPlayThrough(mCanPlayThrough);
+        mResource->ThrottleReadahead(ShouldThrottleDownload(aStats));
+        // Update readyState since mCanPlayThrough might have changed.
+        GetOwner()->UpdateReadyState();
+      },
+      []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
+=======
+      ->Then(
+          mAbstractMainThread, __func__,
+          [=,
+           self = RefPtr<ChannelMediaDecoder>(this)](MediaStatistics aStats) {
+            if (IsShutdown()) {
+              return;
+            }
+            mCanPlayThrough = aStats.CanPlayThrough();
+            GetStateMachine()->DispatchCanPlayThrough(mCanPlayThrough);
+            mResource->ThrottleReadahead(ShouldThrottleDownload(aStats));
+            // Update readyState since mCanPlayThrough might have changed.
+            GetOwner()->UpdateReadyState();
+          },
+          []() { MOZ_ASSERT_UNREACHABLE("Promise not resolved"); });
+>>>>>>> upstream-releases
 }
 
 /* static */ ChannelMediaDecoder::PlaybackRateInfo
@@ -408,8 +453,17 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
   MOZ_ASSERT(!NS_IsMainThread());
 
   int64_t length = aResource->GetLength();
+<<<<<<< HEAD
   if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0) {
     return {uint32_t(length / aDuration), true};
+||||||| merged common ancestors
+  if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0) {
+    return { uint32_t(length / aDuration), true };
+=======
+  if (mozilla::IsFinite<double>(aDuration) && aDuration > 0 && length >= 0 &&
+      length / aDuration < UINT32_MAX) {
+    return {uint32_t(length / aDuration), true};
+>>>>>>> upstream-releases
   }
 
   bool reliable = false;
@@ -417,8 +471,19 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
   return {rate, reliable};
 }
 
+<<<<<<< HEAD
 /* static */ void ChannelMediaDecoder::UpdatePlaybackRate(
     const PlaybackRateInfo& aInfo, BaseMediaResource* aResource) {
+||||||| merged common ancestors
+/* static */ void
+ChannelMediaDecoder::UpdatePlaybackRate(const PlaybackRateInfo& aInfo,
+                                        BaseMediaResource* aResource)
+{
+=======
+/* static */
+void ChannelMediaDecoder::UpdatePlaybackRate(const PlaybackRateInfo& aInfo,
+                                             BaseMediaResource* aResource) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 
   uint32_t rate = aInfo.mRate;
@@ -435,9 +500,22 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
   aResource->SetPlaybackRate(rate);
 }
 
+<<<<<<< HEAD
 /* static */ MediaStatistics ChannelMediaDecoder::GetStatistics(
     const PlaybackRateInfo& aInfo, BaseMediaResource* aRes,
     int64_t aPlaybackPosition) {
+||||||| merged common ancestors
+/* static */ MediaStatistics
+ChannelMediaDecoder::GetStatistics(const PlaybackRateInfo& aInfo,
+                                   BaseMediaResource* aRes,
+                                   int64_t aPlaybackPosition)
+{
+=======
+/* static */
+MediaStatistics ChannelMediaDecoder::GetStatistics(
+    const PlaybackRateInfo& aInfo, BaseMediaResource* aRes,
+    int64_t aPlaybackPosition) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 
   MediaStatistics result;
@@ -453,22 +531,24 @@ ChannelMediaDecoder::ComputePlaybackRate(const MediaChannelStatistics& aStats,
 bool ChannelMediaDecoder::ShouldThrottleDownload(
     const MediaStatistics& aStats) {
   // We throttle the download if either the throttle override pref is set
-  // (so that we can always throttle in Firefox on mobile) or if the download
-  // is fast enough that there's no concern about playback being interrupted.
+  // (so that we always throttle at the readahead limit on mobile if using
+  // a cellular network) or if the download is fast enough that there's no
+  // concern about playback being interrupted.
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_TRUE(GetStateMachine(), false);
 
   int64_t length = aStats.mTotalBytes;
   if (length > 0 &&
-      length <= int64_t(StaticPrefs::MediaMemoryCacheMaxSize()) * 1024) {
+      length <= int64_t(StaticPrefs::media_memory_cache_max_size()) * 1024) {
     // Don't throttle the download of small resources. This is to speed
     // up seeking, as seeks into unbuffered ranges would require starting
     // up a new HTTP transaction, which adds latency.
     return false;
   }
 
-  if (Preferences::GetBool("media.throttle-regardless-of-download-rate",
-                           false)) {
+  if (OnCellularConnection() &&
+      Preferences::GetBool(
+          "media.throttle-cellular-regardless-of-download-rate", false)) {
     return true;
   }
 
@@ -492,7 +572,20 @@ already_AddRefed<nsIPrincipal> ChannelMediaDecoder::GetCurrentPrincipal() {
   return mResource ? mResource->GetCurrentPrincipal() : nullptr;
 }
 
+<<<<<<< HEAD
 bool ChannelMediaDecoder::IsTransportSeekable() {
+||||||| merged common ancestors
+bool
+ChannelMediaDecoder::IsTransportSeekable()
+{
+=======
+bool ChannelMediaDecoder::HadCrossOriginRedirects() {
+  MOZ_ASSERT(NS_IsMainThread());
+  return mResource ? mResource->HadCrossOriginRedirects() : false;
+}
+
+bool ChannelMediaDecoder::IsTransportSeekable() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   return mResource->IsTransportSeekable();
 }
@@ -527,12 +620,21 @@ void ChannelMediaDecoder::MetadataLoaded(
   mResource->SetReadMode(MediaCacheStream::MODE_PLAYBACK);
 }
 
+<<<<<<< HEAD
 nsCString ChannelMediaDecoder::GetDebugInfo() {
   nsCString str = MediaDecoder::GetDebugInfo();
+||||||| merged common ancestors
+nsCString
+ChannelMediaDecoder::GetDebugInfo()
+{
+  nsCString str = MediaDecoder::GetDebugInfo();
+=======
+void ChannelMediaDecoder::GetDebugInfo(dom::MediaDecoderDebugInfo& aInfo) {
+  MediaDecoder::GetDebugInfo(aInfo);
+>>>>>>> upstream-releases
   if (mResource) {
-    AppendStringIfNotEmpty(str, mResource->GetDebugInfo());
+    mResource->GetDebugInfo(aInfo.mResource);
   }
-  return str;
 }
 
 }  // namespace mozilla

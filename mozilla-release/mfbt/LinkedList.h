@@ -543,8 +543,17 @@ class LinkedList {
    * In a debug build, make sure that the list is sane (no cycles, consistent
    * mNext/mPrev pointers, only one sentinel).  Has no effect in release builds.
    */
+<<<<<<< HEAD
   void debugAssertIsSane() const {
 #ifdef DEBUG
+||||||| merged common ancestors
+  void debugAssertIsSane() const
+  {
+#ifdef DEBUG
+=======
+  void debugAssertIsSane() const {
+#  ifdef DEBUG
+>>>>>>> upstream-releases
     const LinkedListElement<T>* slow;
     const LinkedListElement<T>* fast1;
     const LinkedListElement<T>* fast2;
@@ -589,21 +598,30 @@ class LinkedList {
       prev = cur;
       cur = cur->mNext;
     } while (cur != &sentinel);
-#endif /* ifdef DEBUG */
+#  endif /* ifdef DEBUG */
   }
 
  private:
   friend class LinkedListElement<T>;
 
+<<<<<<< HEAD
   void assertContains(const RawType aValue) const {
 #ifdef DEBUG
+||||||| merged common ancestors
+  void assertContains(const RawType aValue) const
+  {
+#ifdef DEBUG
+=======
+  void assertContains(const RawType aValue) const {
+#  ifdef DEBUG
+>>>>>>> upstream-releases
     for (ConstRawType elem = getFirst(); elem; elem = elem->getNext()) {
       if (elem == aValue) {
         return;
       }
     }
     MOZ_CRASH("element wasn't found in this list!");
-#endif
+#  endif
   }
 
   LinkedList& operator=(const LinkedList<T>& aOther) = delete;

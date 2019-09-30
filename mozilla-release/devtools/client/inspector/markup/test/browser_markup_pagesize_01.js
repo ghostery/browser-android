@@ -10,6 +10,7 @@
 Services.prefs.setIntPref("devtools.markup.pagesize", 5);
 
 const TEST_URL = URL_ROOT + "doc_markup_pagesize_01.html";
+<<<<<<< HEAD
 const TEST_DATA = [{
   desc: "Select the last item",
   selector: "#z",
@@ -36,9 +37,70 @@ const TEST_DATA = [{
   // w should center around w.
   expected: "*more*uvwxy*more*",
 }];
+||||||| merged common ancestors
+const TEST_DATA = [{
+  desc: "Select the last item",
+  selector: "#z",
+  expected: "*more*vwxyz"
+}, {
+  desc: "Select the first item",
+  selector: "#a",
+  expected: "abcde*more*"
+}, {
+  desc: "Select the last item",
+  selector: "#z",
+  expected: "*more*vwxyz"
+}, {
+  desc: "Select an already-visible item",
+  selector: "#v",
+  // Because "v" was already visible, we shouldn't have loaded
+  // a different page.
+  expected: "*more*vwxyz"
+}, {
+  desc: "Verify childrenDirty reloads the page",
+  selector: "#w",
+  forceReload: true,
+  // But now that we don't already have a loaded page, selecting
+  // w should center around w.
+  expected: "*more*uvwxy*more*"
+}];
+=======
+const TEST_DATA = [
+  {
+    desc: "Select the last item",
+    selector: "#z",
+    expected: "*more*vwxyz",
+  },
+  {
+    desc: "Select the first item",
+    selector: "#a",
+    expected: "abcde*more*",
+  },
+  {
+    desc: "Select the last item",
+    selector: "#z",
+    expected: "*more*vwxyz",
+  },
+  {
+    desc: "Select an already-visible item",
+    selector: "#v",
+    // Because "v" was already visible, we shouldn't have loaded
+    // a different page.
+    expected: "*more*vwxyz",
+  },
+  {
+    desc: "Verify childrenDirty reloads the page",
+    selector: "#w",
+    forceReload: true,
+    // But now that we don't already have a loaded page, selecting
+    // w should center around w.
+    expected: "*more*uvwxy*more*",
+  },
+];
+>>>>>>> upstream-releases
 
 add_task(async function() {
-  const {inspector} = await openInspectorForURL(TEST_URL);
+  const { inspector } = await openInspectorForURL(TEST_URL);
 
   info("Start iterating through the test data");
   for (const step of TEST_DATA) {
@@ -82,5 +144,5 @@ async function clickShowMoreNodes(inspector) {
   const container = await getContainerForSelector("body", inspector);
   const button = container.elt.querySelector("button");
   const win = button.ownerDocument.defaultView;
-  EventUtils.sendMouseEvent({type: "click"}, button, win);
+  EventUtils.sendMouseEvent({ type: "click" }, button, win);
 }

@@ -37,8 +37,10 @@ static EGLSurface CreatePBufferSurface(GLLibraryEGL* egl, EGLDisplay display,
   return surface;
 }
 
-/*static*/ UniquePtr<SharedSurface_ANGLEShareHandle>
+/*static*/
+UniquePtr<SharedSurface_ANGLEShareHandle>
 SharedSurface_ANGLEShareHandle::Create(GLContext* gl, EGLConfig config,
+<<<<<<< HEAD
                                        const gfx::IntSize& size,
                                        bool hasAlpha) {
   auto* egl = gl::GLLibraryEGL::Get();
@@ -65,6 +67,65 @@ SharedSurface_ANGLEShareHandle::Create(GLContext* gl, EGLConfig config,
       display, pbuffer, LOCAL_EGL_DXGI_KEYED_MUTEX_ANGLE, &opaqueKeyedMutex);
   RefPtr<IDXGIKeyedMutex> keyedMutex =
       static_cast<IDXGIKeyedMutex*>(opaqueKeyedMutex);
+||||||| merged common ancestors
+                                       const gfx::IntSize& size, bool hasAlpha)
+{
+    auto* egl = gl::GLLibraryEGL::Get();
+    MOZ_ASSERT(egl);
+    MOZ_ASSERT(egl->IsExtensionSupported(
+               GLLibraryEGL::ANGLE_surface_d3d_texture_2d_share_handle));
+    MOZ_ASSERT(config);
+
+    EGLDisplay display = egl->Display();
+    EGLSurface pbuffer = CreatePBufferSurface(egl, display, config, size);
+    if (!pbuffer)
+        return nullptr;
+
+    // Declare everything before 'goto's.
+    HANDLE shareHandle = nullptr;
+    bool ok = egl->fQuerySurfacePointerANGLE(display,
+                                             pbuffer,
+                                             LOCAL_EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE,
+                                             &shareHandle);
+    if (!ok) {
+        egl->fDestroySurface(egl->Display(), pbuffer);
+        return nullptr;
+    }
+    void* opaqueKeyedMutex = nullptr;
+    egl->fQuerySurfacePointerANGLE(display,
+                                   pbuffer,
+                                   LOCAL_EGL_DXGI_KEYED_MUTEX_ANGLE,
+                                   &opaqueKeyedMutex);
+    RefPtr<IDXGIKeyedMutex> keyedMutex = static_cast<IDXGIKeyedMutex*>(opaqueKeyedMutex);
+=======
+                                       const gfx::IntSize& size,
+                                       bool hasAlpha) {
+  const auto& gle = GLContextEGL::Cast(gl);
+  const auto& egl = gle->mEgl;
+  MOZ_ASSERT(egl);
+  MOZ_ASSERT(egl->IsExtensionSupported(
+      GLLibraryEGL::ANGLE_surface_d3d_texture_2d_share_handle));
+  MOZ_ASSERT(config);
+
+  EGLDisplay display = egl->Display();
+  EGLSurface pbuffer = CreatePBufferSurface(egl, display, config, size);
+  if (!pbuffer) return nullptr;
+
+  // Declare everything before 'goto's.
+  HANDLE shareHandle = nullptr;
+  bool ok = egl->fQuerySurfacePointerANGLE(
+      display, pbuffer, LOCAL_EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE,
+      &shareHandle);
+  if (!ok) {
+    egl->fDestroySurface(egl->Display(), pbuffer);
+    return nullptr;
+  }
+  void* opaqueKeyedMutex = nullptr;
+  egl->fQuerySurfacePointerANGLE(
+      display, pbuffer, LOCAL_EGL_DXGI_KEYED_MUTEX_ANGLE, &opaqueKeyedMutex);
+  RefPtr<IDXGIKeyedMutex> keyedMutex =
+      static_cast<IDXGIKeyedMutex*>(opaqueKeyedMutex);
+>>>>>>> upstream-releases
 #ifdef DEBUG
   if (!keyedMutex) {
     std::string envStr("1");
@@ -78,12 +139,111 @@ SharedSurface_ANGLEShareHandle::Create(GLContext* gl, EGLConfig config,
   }
 #endif
 
+<<<<<<< HEAD
   typedef SharedSurface_ANGLEShareHandle ptrT;
   UniquePtr<ptrT> ret(
       new ptrT(gl, egl, size, hasAlpha, pbuffer, shareHandle, keyedMutex));
   return ret;
 }
 
+EGLDisplay SharedSurface_ANGLEShareHandle::Display() { return mEGL->Display(); }
+
+SharedSurface_ANGLEShareHandle::SharedSurface_ANGLEShareHandle(
+    GLContext* gl, GLLibraryEGL* egl, const gfx::IntSize& size, bool hasAlpha,
+    EGLSurface pbuffer, HANDLE shareHandle,
+    const RefPtr<IDXGIKeyedMutex>& keyedMutex)
+    : SharedSurface(SharedSurfaceType::EGLSurfaceANGLE, AttachmentType::Screen,
+                    gl, size, hasAlpha, true),
+      mEGL(egl),
+      mPBuffer(pbuffer),
+      mShareHandle(shareHandle),
+      mKeyedMutex(keyedMutex) {}
+
+SharedSurface_ANGLEShareHandle::~SharedSurface_ANGLEShareHandle() {
+  GLContext* gl = mGL;
+
+  if (gl && GLContextEGL::Cast(gl)->GetEGLSurfaceOverride() == mPBuffer) {
+    GLContextEGL::Cast(gl)->SetEGLSurfaceOverride(EGL_NO_SURFACE);
+  }
+  mEGL->fDestroySurface(Display(), mPBuffer);
+}
+
+void SharedSurface_ANGLEShareHandle::LockProdImpl() {
+  GLContextEGL::Cast(mGL)->SetEGLSurfaceOverride(mPBuffer);
+||||||| merged common ancestors
+    typedef SharedSurface_ANGLEShareHandle ptrT;
+    UniquePtr<ptrT> ret( new ptrT(gl, egl, size, hasAlpha, pbuffer, shareHandle,
+                                  keyedMutex) );
+    return ret;
+}
+
+EGLDisplay
+SharedSurface_ANGLEShareHandle::Display()
+{
+    return mEGL->Display();
+}
+
+SharedSurface_ANGLEShareHandle::SharedSurface_ANGLEShareHandle(GLContext* gl,
+                                                               GLLibraryEGL* egl,
+                                                               const gfx::IntSize& size,
+                                                               bool hasAlpha,
+                                                               EGLSurface pbuffer,
+                                                               HANDLE shareHandle,
+                                                               const RefPtr<IDXGIKeyedMutex>& keyedMutex)
+    : SharedSurface(SharedSurfaceType::EGLSurfaceANGLE,
+                    AttachmentType::Screen,
+                    gl,
+                    size,
+                    hasAlpha,
+                    true)
+    , mEGL(egl)
+    , mPBuffer(pbuffer)
+    , mShareHandle(shareHandle)
+    , mKeyedMutex(keyedMutex)
+{
+=======
+  typedef SharedSurface_ANGLEShareHandle ptrT;
+  UniquePtr<ptrT> ret(
+      new ptrT(gl, egl, size, hasAlpha, pbuffer, shareHandle, keyedMutex));
+  return ret;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void SharedSurface_ANGLEShareHandle::UnlockProdImpl() {}
+
+void SharedSurface_ANGLEShareHandle::ProducerAcquireImpl() {
+  if (mKeyedMutex) {
+    HRESULT hr = mKeyedMutex->AcquireSync(0, 10000);
+    if (hr == WAIT_TIMEOUT) {
+      MOZ_CRASH("GFX: ANGLE share handle timeout");
+||||||| merged common ancestors
+
+SharedSurface_ANGLEShareHandle::~SharedSurface_ANGLEShareHandle()
+{
+    mEGL->fDestroySurface(Display(), mPBuffer);
+}
+
+void
+SharedSurface_ANGLEShareHandle::LockProdImpl()
+{
+    GLContextEGL::Cast(mGL)->SetEGLSurfaceOverride(mPBuffer);
+}
+
+void
+SharedSurface_ANGLEShareHandle::UnlockProdImpl()
+{
+}
+
+void
+SharedSurface_ANGLEShareHandle::ProducerAcquireImpl()
+{
+    if (mKeyedMutex) {
+        HRESULT hr = mKeyedMutex->AcquireSync(0, 10000);
+        if (hr == WAIT_TIMEOUT) {
+            MOZ_CRASH("GFX: ANGLE share handle timeout");
+        }
+=======
 EGLDisplay SharedSurface_ANGLEShareHandle::Display() { return mEGL->Display(); }
 
 SharedSurface_ANGLEShareHandle::SharedSurface_ANGLEShareHandle(
@@ -117,6 +277,7 @@ void SharedSurface_ANGLEShareHandle::ProducerAcquireImpl() {
     HRESULT hr = mKeyedMutex->AcquireSync(0, 10000);
     if (hr == WAIT_TIMEOUT) {
       MOZ_CRASH("GFX: ANGLE share handle timeout");
+>>>>>>> upstream-releases
     }
   }
 }
@@ -144,6 +305,7 @@ void SharedSurface_ANGLEShareHandle::ProducerReadReleaseImpl() {
   }
 }
 
+<<<<<<< HEAD
 bool SharedSurface_ANGLEShareHandle::ToSurfaceDescriptor(
     layers::SurfaceDescriptor* const out_descriptor) {
   gfx::SurfaceFormat format =
@@ -151,6 +313,24 @@ bool SharedSurface_ANGLEShareHandle::ToSurfaceDescriptor(
   *out_descriptor = layers::SurfaceDescriptorD3D10((WindowsHandle)mShareHandle,
                                                    format, mSize);
   return true;
+||||||| merged common ancestors
+bool
+SharedSurface_ANGLEShareHandle::ToSurfaceDescriptor(layers::SurfaceDescriptor* const out_descriptor)
+{
+    gfx::SurfaceFormat format = mHasAlpha ? gfx::SurfaceFormat::B8G8R8A8
+                                          : gfx::SurfaceFormat::B8G8R8X8;
+    *out_descriptor = layers::SurfaceDescriptorD3D10((WindowsHandle)mShareHandle, format,
+                                                     mSize);
+    return true;
+=======
+bool SharedSurface_ANGLEShareHandle::ToSurfaceDescriptor(
+    layers::SurfaceDescriptor* const out_descriptor) {
+  gfx::SurfaceFormat format =
+      mHasAlpha ? gfx::SurfaceFormat::B8G8R8A8 : gfx::SurfaceFormat::B8G8R8X8;
+  *out_descriptor = layers::SurfaceDescriptorD3D10(
+      (WindowsHandle)mShareHandle, format, mSize, gfx::YUVColorSpace::UNKNOWN);
+  return true;
+>>>>>>> upstream-releases
 }
 
 class ScopedLockTexture final {
@@ -299,6 +479,7 @@ bool SharedSurface_ANGLEShareHandle::ReadbackBySharedHandle(
 ////////////////////////////////////////////////////////////////////////////////
 // Factory
 
+<<<<<<< HEAD
 /*static*/ UniquePtr<SurfaceFactory_ANGLEShareHandle>
 SurfaceFactory_ANGLEShareHandle::Create(
     GLContext* gl, const SurfaceCaps& caps,
@@ -315,6 +496,45 @@ SurfaceFactory_ANGLEShareHandle::Create(
   typedef SurfaceFactory_ANGLEShareHandle ptrT;
   UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, egl, config));
   return ret;
+||||||| merged common ancestors
+/*static*/ UniquePtr<SurfaceFactory_ANGLEShareHandle>
+SurfaceFactory_ANGLEShareHandle::Create(GLContext* gl, const SurfaceCaps& caps,
+                                        const RefPtr<layers::LayersIPCChannel>& allocator,
+                                        const layers::TextureFlags& flags)
+{
+    auto* egl = gl::GLLibraryEGL::Get();
+    if (!egl)
+        return nullptr;
+
+    auto ext = GLLibraryEGL::ANGLE_surface_d3d_texture_2d_share_handle;
+    if (!egl->IsExtensionSupported(ext))
+        return nullptr;
+
+    EGLConfig config = GLContextEGL::Cast(gl)->mConfig;
+
+    typedef SurfaceFactory_ANGLEShareHandle ptrT;
+    UniquePtr<ptrT> ret( new ptrT(gl, caps, allocator, flags, egl, config) );
+    return ret;
+=======
+/*static*/
+UniquePtr<SurfaceFactory_ANGLEShareHandle>
+SurfaceFactory_ANGLEShareHandle::Create(
+    GLContext* gl, const SurfaceCaps& caps,
+    const RefPtr<layers::LayersIPCChannel>& allocator,
+    const layers::TextureFlags& flags) {
+  const auto& gle = GLContextEGL::Cast(gl);
+  const auto& egl = gle->mEgl;
+  if (!egl) return nullptr;
+
+  auto ext = GLLibraryEGL::ANGLE_surface_d3d_texture_2d_share_handle;
+  if (!egl->IsExtensionSupported(ext)) return nullptr;
+
+  const auto& config = gle->mConfig;
+
+  typedef SurfaceFactory_ANGLEShareHandle ptrT;
+  UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, egl, config));
+  return ret;
+>>>>>>> upstream-releases
 }
 
 SurfaceFactory_ANGLEShareHandle::SurfaceFactory_ANGLEShareHandle(

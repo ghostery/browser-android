@@ -12,12 +12,12 @@
 #include "nsIExternalHelperAppService.h"
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 #include "nsIBrowserDOMWindow.h"
 #include "nsStringStream.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "nsNetUtil.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/net/ChannelDiverterParent.h"
 
 #include "mozilla/Unused.h"
@@ -33,8 +33,18 @@ NS_IMPL_ISUPPORTS_INHERITED(ExternalHelperAppParent, nsHashPropertyBag,
                             nsIStreamListener, nsIExternalHelperAppParent)
 
 ExternalHelperAppParent::ExternalHelperAppParent(
+<<<<<<< HEAD
     const OptionalURIParams& uri, const int64_t& aContentLength,
     const bool& aWasFileChannel, const nsCString& aContentDispositionHeader,
+||||||| merged common ancestors
+    const OptionalURIParams& uri,
+    const int64_t& aContentLength,
+    const bool& aWasFileChannel,
+    const nsCString& aContentDispositionHeader,
+=======
+    const Maybe<URIParams>& uri, const int64_t& aContentLength,
+    const bool& aWasFileChannel, const nsCString& aContentDispositionHeader,
+>>>>>>> upstream-releases
     const uint32_t& aContentDispositionHint,
     const nsString& aContentDispositionFilename)
     : mURI(DeserializeURI(uri)),
@@ -61,17 +71,37 @@ ExternalHelperAppParent::ExternalHelperAppParent(
   }
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsIInterfaceRequestor> GetWindowFromTabParent(
     PBrowserParent* aBrowser) {
+||||||| merged common ancestors
+already_AddRefed<nsIInterfaceRequestor>
+GetWindowFromTabParent(PBrowserParent* aBrowser)
+{
+=======
+already_AddRefed<nsIInterfaceRequestor> GetWindowFromBrowserParent(
+    PBrowserParent* aBrowser) {
+>>>>>>> upstream-releases
   if (!aBrowser) {
     return nullptr;
   }
 
   nsCOMPtr<nsIInterfaceRequestor> window;
+<<<<<<< HEAD
   TabParent* tabParent = TabParent::GetFrom(aBrowser);
   if (tabParent->GetOwnerElement()) {
     window = do_QueryInterface(
         tabParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+||||||| merged common ancestors
+  TabParent* tabParent = TabParent::GetFrom(aBrowser);
+  if (tabParent->GetOwnerElement()) {
+    window = do_QueryInterface(tabParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+=======
+  BrowserParent* browserParent = BrowserParent::GetFrom(aBrowser);
+  if (browserParent->GetOwnerElement()) {
+    window = do_QueryInterface(
+        browserParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+>>>>>>> upstream-releases
   }
 
   return window.forget();
@@ -80,15 +110,41 @@ already_AddRefed<nsIInterfaceRequestor> GetWindowFromTabParent(
 void UpdateContentContext(nsIStreamListener* aListener,
                           PBrowserParent* aBrowser) {
   MOZ_ASSERT(aListener);
+<<<<<<< HEAD
   nsCOMPtr<nsIInterfaceRequestor> window = GetWindowFromTabParent(aBrowser);
   static_cast<nsExternalAppHandler*>(aListener)->SetContentContext(window);
+||||||| merged common ancestors
+  nsCOMPtr<nsIInterfaceRequestor> window = GetWindowFromTabParent(aBrowser);
+  static_cast<nsExternalAppHandler *>(aListener)->SetContentContext(window);
+=======
+  nsCOMPtr<nsIInterfaceRequestor> window = GetWindowFromBrowserParent(aBrowser);
+  static_cast<nsExternalAppHandler*>(aListener)->SetContentContext(window);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void ExternalHelperAppParent::Init(ContentParent* parent,
                                    const nsCString& aMimeContentType,
                                    const bool& aForceSave,
                                    const OptionalURIParams& aReferrer,
                                    PBrowserParent* aBrowser) {
+||||||| merged common ancestors
+void
+ExternalHelperAppParent::Init(ContentParent *parent,
+                              const nsCString& aMimeContentType,
+                              const bool& aForceSave,
+                              const OptionalURIParams& aReferrer,
+                              PBrowserParent* aBrowser)
+{
+=======
+void ExternalHelperAppParent::Init(
+    const Maybe<mozilla::net::LoadInfoArgs>& aLoadInfoArgs,
+    const nsCString& aMimeContentType, const bool& aForceSave,
+    const Maybe<URIParams>& aReferrer, PBrowserParent* aBrowser) {
+  mozilla::ipc::LoadInfoArgsToLoadInfo(aLoadInfoArgs,
+                                       getter_AddRefs(mLoadInfo));
+
+>>>>>>> upstream-releases
   nsCOMPtr<nsIExternalHelperAppService> helperAppService =
       do_GetService(NS_EXTERNALHELPERAPPSERVICE_CONTRACTID);
   NS_ASSERTION(helperAppService, "No Helper App Service!");
@@ -100,13 +156,24 @@ void ExternalHelperAppParent::Init(ContentParent* parent,
 
   nsCOMPtr<nsIInterfaceRequestor> window;
   if (aBrowser) {
+<<<<<<< HEAD
     TabParent* tabParent = TabParent::GetFrom(aBrowser);
     if (tabParent->GetOwnerElement())
       window = do_QueryInterface(
           tabParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+||||||| merged common ancestors
+    TabParent* tabParent = TabParent::GetFrom(aBrowser);
+    if (tabParent->GetOwnerElement())
+      window = do_QueryInterface(tabParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+=======
+    BrowserParent* browserParent = BrowserParent::GetFrom(aBrowser);
+    if (browserParent->GetOwnerElement())
+      window = do_QueryInterface(
+          browserParent->GetOwnerElement()->OwnerDoc()->GetWindow());
+>>>>>>> upstream-releases
 
     bool isPrivate = false;
-    nsCOMPtr<nsILoadContext> loadContext = tabParent->GetLoadContext();
+    nsCOMPtr<nsILoadContext> loadContext = browserParent->GetLoadContext();
     loadContext->GetUsePrivateBrowsing(&isPrivate);
     SetPrivate(isPrivate);
   }
@@ -134,7 +201,7 @@ mozilla::ipc::IPCResult ExternalHelperAppParent::RecvOnStartRequest(
 
   mEntityID = entityID;
   mPending = true;
-  mStatus = mListener->OnStartRequest(this, nullptr);
+  mStatus = mListener->OnStartRequest(this);
   return IPC_OK();
 }
 
@@ -147,11 +214,25 @@ mozilla::ipc::IPCResult ExternalHelperAppParent::RecvOnDataAvailable(
   MOZ_ASSERT(mPending, "must be pending!");
 
   nsCOMPtr<nsIInputStream> stringStream;
+<<<<<<< HEAD
   DebugOnly<nsresult> rv = NS_NewByteInputStream(
       getter_AddRefs(stringStream), data.get(), count, NS_ASSIGNMENT_DEPEND);
+||||||| merged common ancestors
+  DebugOnly<nsresult> rv = NS_NewByteInputStream(getter_AddRefs(stringStream), data.get(), count, NS_ASSIGNMENT_DEPEND);
+=======
+  DebugOnly<nsresult> rv =
+      NS_NewByteInputStream(getter_AddRefs(stringStream),
+                            MakeSpan(data).To(count), NS_ASSIGNMENT_DEPEND);
+>>>>>>> upstream-releases
   NS_ASSERTION(NS_SUCCEEDED(rv), "failed to create dependent string!");
+<<<<<<< HEAD
   mStatus =
       mListener->OnDataAvailable(this, nullptr, stringStream, offset, count);
+||||||| merged common ancestors
+  mStatus = mListener->OnDataAvailable(this, nullptr, stringStream, offset, count);
+=======
+  mStatus = mListener->OnDataAvailable(this, stringStream, offset, count);
+>>>>>>> upstream-releases
 
   return IPC_OK();
 }
@@ -162,9 +243,17 @@ mozilla::ipc::IPCResult ExternalHelperAppParent::RecvOnStopRequest(
              "child forwarding callbacks after request was diverted");
 
   mPending = false;
+<<<<<<< HEAD
   mListener->OnStopRequest(
       this, nullptr,
       (NS_SUCCEEDED(code) && NS_FAILED(mStatus)) ? mStatus : code);
+||||||| merged common ancestors
+  mListener->OnStopRequest(this, nullptr,
+                           (NS_SUCCEEDED(code) && NS_FAILED(mStatus)) ? mStatus : code);
+=======
+  mListener->OnStopRequest(
+      this, (NS_SUCCEEDED(code) && NS_FAILED(mStatus)) ? mStatus : code);
+>>>>>>> upstream-releases
   Delete();
   return IPC_OK();
 }
@@ -187,24 +276,53 @@ mozilla::ipc::IPCResult ExternalHelperAppParent::RecvDivertToParentUsing(
 //
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::OnDataAvailable(nsIRequest* request, nsISupports* ctx,
                                          nsIInputStream* input, uint64_t offset,
                                          uint32_t count) {
+||||||| merged common ancestors
+ExternalHelperAppParent::OnDataAvailable(nsIRequest *request,
+                                         nsISupports *ctx,
+                                         nsIInputStream *input,
+                                         uint64_t offset,
+                                         uint32_t count)
+{
+=======
+ExternalHelperAppParent::OnDataAvailable(nsIRequest* request,
+                                         nsIInputStream* input, uint64_t offset,
+                                         uint32_t count) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mDiverted);
-  return mListener->OnDataAvailable(request, ctx, input, offset, count);
+  return mListener->OnDataAvailable(request, input, offset, count);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::OnStartRequest(nsIRequest* request, nsISupports* ctx) {
+||||||| merged common ancestors
+ExternalHelperAppParent::OnStartRequest(nsIRequest *request, nsISupports *ctx)
+{
+=======
+ExternalHelperAppParent::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mDiverted);
-  return mListener->OnStartRequest(request, ctx);
+  return mListener->OnStartRequest(request);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::OnStopRequest(nsIRequest* request, nsISupports* ctx,
                                        nsresult status) {
+||||||| merged common ancestors
+ExternalHelperAppParent::OnStopRequest(nsIRequest *request,
+                                       nsISupports *ctx,
+                                       nsresult status)
+{
+=======
+ExternalHelperAppParent::OnStopRequest(nsIRequest* request, nsresult status) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mDiverted);
-  nsresult rv = mListener->OnStopRequest(request, ctx, status);
+  nsresult rv = mListener->OnStopRequest(request, status);
   Delete();
   return rv;
 }
@@ -277,11 +395,19 @@ ExternalHelperAppParent::Open(nsIInputStream** aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::Open2(nsIInputStream** aStream) {
+||||||| merged common ancestors
+ExternalHelperAppParent::Open2(nsIInputStream** aStream)
+{
+=======
+ExternalHelperAppParent::AsyncOpen(nsIStreamListener* aListener) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::AsyncOpen(nsIStreamListener* aListener,
                                    nsISupports* aContext) {
   return NS_ERROR_NOT_IMPLEMENTED;
@@ -294,6 +420,26 @@ ExternalHelperAppParent::AsyncOpen2(nsIStreamListener* aListener) {
 
 NS_IMETHODIMP
 ExternalHelperAppParent::GetLoadFlags(nsLoadFlags* aLoadFlags) {
+||||||| merged common ancestors
+ExternalHelperAppParent::AsyncOpen(nsIStreamListener *aListener,
+                                   nsISupports *aContext)
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+NS_IMETHODIMP
+ExternalHelperAppParent::AsyncOpen2(nsIStreamListener *aListener)
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+
+NS_IMETHODIMP
+ExternalHelperAppParent::GetLoadFlags(nsLoadFlags *aLoadFlags)
+{
+=======
+ExternalHelperAppParent::GetLoadFlags(nsLoadFlags* aLoadFlags) {
+>>>>>>> upstream-releases
   *aLoadFlags = mLoadFlags;
   return NS_OK;
 }
@@ -332,8 +478,17 @@ ExternalHelperAppParent::SetOwner(nsISupports* aOwner) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExternalHelperAppParent::GetLoadInfo(nsILoadInfo** aLoadInfo) {
   *aLoadInfo = nullptr;
+||||||| merged common ancestors
+ExternalHelperAppParent::GetLoadInfo(nsILoadInfo* *aLoadInfo)
+{
+  *aLoadInfo = nullptr;
+=======
+ExternalHelperAppParent::GetLoadInfo(nsILoadInfo** aLoadInfo) {
+  NS_IF_ADDREF(*aLoadInfo = mLoadInfo);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 

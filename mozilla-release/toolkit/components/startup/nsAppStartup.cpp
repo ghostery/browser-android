@@ -46,7 +46,11 @@
 
 #if defined(XP_WIN)
 // Prevent collisions with nsAppStartup::GetStartupInfo()
-#undef GetStartupInfo
+#  undef GetStartupInfo
+
+#  include <windows.h>
+#elif defined(XP_DARWIN)
+#  include <mach/mach_time.h>
 #endif
 
 #include "mozilla/IOInterposer.h"
@@ -60,8 +64,10 @@ static NS_DEFINE_CID(kAppShellCID, NS_APPSHELL_CID);
 #define kPrefRecentCrashes "toolkit.startup.recent_crashes"
 #define kPrefAlwaysUseSafeMode "toolkit.startup.always_use_safe_mode"
 
+#define kNanosecondsPerSecond 1000000000.0
+
 #if defined(XP_WIN)
-#include "mozilla/perfprobe.h"
+#  include "mozilla/perfprobe.h"
 /**
  * Events sent to the system for profiling purposes
  */
@@ -69,6 +75,7 @@ static NS_DEFINE_CID(kAppShellCID, NS_APPSHELL_CID);
 
 // Process-wide GUID, used by the OS to differentiate sources
 // {509962E0-406B-46F4-99BA-5A009F8D2225}
+<<<<<<< HEAD
 // Keep it synchronized with the .mof file
 #define NS_APPLICATION_TRACING_CID                   \
   {                                                  \
@@ -76,23 +83,64 @@ static NS_DEFINE_CID(kAppShellCID, NS_APPSHELL_CID);
       0x99, 0xBA, 0x5A, 0x00, 0x9F, 0x8D, 0x22, 0x25 \
     }                                                \
   }
+||||||| merged common ancestors
+//Keep it synchronized with the .mof file
+#define NS_APPLICATION_TRACING_CID \
+  { 0x509962E0, 0x406B, 0x46F4, \
+  { 0x99, 0xBA, 0x5A, 0x00, 0x9F, 0x8D, 0x22, 0x25} }
+=======
+// Keep it synchronized with the .mof file
+#  define NS_APPLICATION_TRACING_CID                   \
+    {                                                  \
+      0x509962E0, 0x406B, 0x46F4, {                    \
+        0x99, 0xBA, 0x5A, 0x00, 0x9F, 0x8D, 0x22, 0x25 \
+      }                                                \
+    }
+>>>>>>> upstream-releases
 
 // Event-specific GUIDs, used by the OS to differentiate events
 // {A3DA04E0-57D7-482A-A1C1-61DA5F95BACB}
+<<<<<<< HEAD
 #define NS_PLACES_INIT_COMPLETE_EVENT_CID            \
   {                                                  \
     0xA3DA04E0, 0x57D7, 0x482A, {                    \
       0xA1, 0xC1, 0x61, 0xDA, 0x5F, 0x95, 0xBA, 0xCB \
     }                                                \
   }
+||||||| merged common ancestors
+#define NS_PLACES_INIT_COMPLETE_EVENT_CID \
+  { 0xA3DA04E0, 0x57D7, 0x482A, \
+  { 0xA1, 0xC1, 0x61, 0xDA, 0x5F, 0x95, 0xBA, 0xCB} }
+=======
+#  define NS_PLACES_INIT_COMPLETE_EVENT_CID            \
+    {                                                  \
+      0xA3DA04E0, 0x57D7, 0x482A, {                    \
+        0xA1, 0xC1, 0x61, 0xDA, 0x5F, 0x95, 0xBA, 0xCB \
+      }                                                \
+    }
+>>>>>>> upstream-releases
 // {917B96B1-ECAD-4DAB-A760-8D49027748AE}
+<<<<<<< HEAD
 #define NS_SESSION_STORE_WINDOW_RESTORED_EVENT_CID   \
   {                                                  \
     0x917B96B1, 0xECAD, 0x4DAB, {                    \
       0xA7, 0x60, 0x8D, 0x49, 0x02, 0x77, 0x48, 0xAE \
     }                                                \
   }
+||||||| merged common ancestors
+#define NS_SESSION_STORE_WINDOW_RESTORED_EVENT_CID \
+  { 0x917B96B1, 0xECAD, 0x4DAB, \
+  { 0xA7, 0x60, 0x8D, 0x49, 0x02, 0x77, 0x48, 0xAE} }
+=======
+#  define NS_SESSION_STORE_WINDOW_RESTORED_EVENT_CID   \
+    {                                                  \
+      0x917B96B1, 0xECAD, 0x4DAB, {                    \
+        0xA7, 0x60, 0x8D, 0x49, 0x02, 0x77, 0x48, 0xAE \
+      }                                                \
+    }
+>>>>>>> upstream-releases
 // {26D1E091-0AE7-4F49-A554-4214445C505C}
+<<<<<<< HEAD
 #define NS_XPCOM_SHUTDOWN_EVENT_CID                  \
   {                                                  \
     0x26D1E091, 0x0AE7, 0x4F49, {                    \
@@ -102,6 +150,26 @@ static NS_DEFINE_CID(kAppShellCID, NS_APPSHELL_CID);
 
 static NS_DEFINE_CID(kApplicationTracingCID, NS_APPLICATION_TRACING_CID);
 static NS_DEFINE_CID(kPlacesInitCompleteCID, NS_PLACES_INIT_COMPLETE_EVENT_CID);
+||||||| merged common ancestors
+#define NS_XPCOM_SHUTDOWN_EVENT_CID \
+  { 0x26D1E091, 0x0AE7, 0x4F49, \
+  { 0xA5, 0x54, 0x42, 0x14, 0x44, 0x5C, 0x50, 0x5C} }
+
+static NS_DEFINE_CID(kApplicationTracingCID,
+  NS_APPLICATION_TRACING_CID);
+static NS_DEFINE_CID(kPlacesInitCompleteCID,
+  NS_PLACES_INIT_COMPLETE_EVENT_CID);
+=======
+#  define NS_XPCOM_SHUTDOWN_EVENT_CID                  \
+    {                                                  \
+      0x26D1E091, 0x0AE7, 0x4F49, {                    \
+        0xA5, 0x54, 0x42, 0x14, 0x44, 0x5C, 0x50, 0x5C \
+      }                                                \
+    }
+
+static NS_DEFINE_CID(kApplicationTracingCID, NS_APPLICATION_TRACING_CID);
+static NS_DEFINE_CID(kPlacesInitCompleteCID, NS_PLACES_INIT_COMPLETE_EVENT_CID);
+>>>>>>> upstream-releases
 static NS_DEFINE_CID(kSessionStoreWindowRestoredCID,
                      NS_SESSION_STORE_WINDOW_RESTORED_EVENT_CID);
 static NS_DEFINE_CID(kXPCOMShutdownCID, NS_XPCOM_SHUTDOWN_EVENT_CID);
@@ -113,9 +181,22 @@ class nsAppExitEvent : public mozilla::Runnable {
  private:
   RefPtr<nsAppStartup> mService;
 
+<<<<<<< HEAD
  public:
   explicit nsAppExitEvent(nsAppStartup *service)
       : mozilla::Runnable("nsAppExitEvent"), mService(service) {}
+||||||| merged common ancestors
+public:
+  explicit nsAppExitEvent(nsAppStartup* service)
+    : mozilla::Runnable("nsAppExitEvent")
+    , mService(service)
+  {
+  }
+=======
+ public:
+  explicit nsAppExitEvent(nsAppStartup* service)
+      : mozilla::Runnable("nsAppExitEvent"), mService(service) {}
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     // Tell the appshell to exit
@@ -146,6 +227,7 @@ static uint64_t ComputeAbsoluteTimestamp(TimeStamp stamp) {
 // nsAppStartup
 //
 
+<<<<<<< HEAD
 nsAppStartup::nsAppStartup()
     : mConsiderQuitStopper(0),
       mRunning(false),
@@ -159,6 +241,38 @@ nsAppStartup::nsAppStartup()
       mRestartNotSameProfile(false) {}
 
 nsresult nsAppStartup::Init() {
+||||||| merged common ancestors
+nsAppStartup::nsAppStartup() :
+  mConsiderQuitStopper(0),
+  mRunning(false),
+  mShuttingDown(false),
+  mStartingUp(true),
+  mAttemptingQuit(false),
+  mRestart(false),
+  mInterrupted(false),
+  mIsSafeModeNecessary(false),
+  mStartupCrashTrackingEnded(false),
+  mRestartNotSameProfile(false)
+{ }
+
+
+nsresult
+nsAppStartup::Init()
+{
+=======
+nsAppStartup::nsAppStartup()
+    : mConsiderQuitStopper(0),
+      mRunning(false),
+      mShuttingDown(false),
+      mStartingUp(true),
+      mAttemptingQuit(false),
+      mRestart(false),
+      mInterrupted(false),
+      mIsSafeModeNecessary(false),
+      mStartupCrashTrackingEnded(false) {}
+
+nsresult nsAppStartup::Init() {
+>>>>>>> upstream-releases
   nsresult rv;
 
   // Create widget application shell
@@ -219,9 +333,24 @@ nsresult nsAppStartup::Init() {
 // nsAppStartup->nsISupports
 //
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsAppStartup, nsIAppStartup, nsIWindowCreator,
                   nsIWindowCreator2, nsIObserver, nsISupportsWeakReference)
 
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsAppStartup,
+                  nsIAppStartup,
+                  nsIWindowCreator,
+                  nsIWindowCreator2,
+                  nsIObserver,
+                  nsISupportsWeakReference)
+
+
+=======
+NS_IMPL_ISUPPORTS(nsAppStartup, nsIAppStartup, nsIWindowCreator, nsIObserver,
+                  nsISupportsWeakReference)
+
+>>>>>>> upstream-releases
 //
 // nsAppStartup->nsIAppStartup
 //
@@ -275,8 +404,6 @@ nsAppStartup::Run(void) {
   nsresult retval = NS_OK;
   if (mRestart) {
     retval = NS_SUCCESS_RESTART_APP;
-  } else if (mRestartNotSameProfile) {
-    retval = NS_SUCCESS_RESTART_APP_NOT_SAME_PROFILE;
   }
 
   return retval;
@@ -362,18 +489,14 @@ nsAppStartup::Quit(uint32_t aMode) {
       }
     }
 
-    PROFILER_ADD_MARKER("Shutdown start");
+    PROFILER_ADD_MARKER("Shutdown start", OTHER);
     mozilla::RecordShutdownStartTimeStamp();
     mShuttingDown = true;
     if (!mRestart) {
       mRestart = (aMode & eRestart) != 0;
     }
 
-    if (!mRestartNotSameProfile) {
-      mRestartNotSameProfile = (aMode & eRestartNotSameProfile) != 0;
-    }
-
-    if (mRestart || mRestartNotSameProfile) {
+    if (mRestart) {
       // Mark the next startup as a restart.
       PR_SetEnv("MOZ_APP_RESTART=1");
 
@@ -440,9 +563,17 @@ nsAppStartup::Quit(uint32_t aMode) {
     // No chance of the shutdown being cancelled from here on; tell people
     // we're shutting down for sure while all services are still available.
     if (obsService) {
+<<<<<<< HEAD
       obsService->NotifyObservers(
           nullptr, "quit-application",
           (mRestart || mRestartNotSameProfile) ? u"restart" : u"shutdown");
+||||||| merged common ancestors
+      obsService->NotifyObservers(nullptr, "quit-application",
+        (mRestart || mRestartNotSameProfile) ? u"restart" : u"shutdown");
+=======
+      obsService->NotifyObservers(nullptr, "quit-application",
+                                  mRestart ? u"restart" : u"shutdown");
+>>>>>>> upstream-releases
     }
 
     if (!mRunning) {
@@ -511,13 +642,27 @@ nsAppStartup::ExitLastWindowClosingSurvivalArea(void) {
 //
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetShuttingDown(bool *aResult) {
+||||||| merged common ancestors
+nsAppStartup::GetShuttingDown(bool *aResult)
+{
+=======
+nsAppStartup::GetShuttingDown(bool* aResult) {
+>>>>>>> upstream-releases
   *aResult = mShuttingDown;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetStartingUp(bool *aResult) {
+||||||| merged common ancestors
+nsAppStartup::GetStartingUp(bool *aResult)
+{
+=======
+nsAppStartup::GetStartingUp(bool* aResult) {
+>>>>>>> upstream-releases
   *aResult = mStartingUp;
   return NS_OK;
 }
@@ -532,14 +677,30 @@ nsAppStartup::DoneStartingUp() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetRestarting(bool *aResult) {
+||||||| merged common ancestors
+nsAppStartup::GetRestarting(bool *aResult)
+{
+=======
+nsAppStartup::GetRestarting(bool* aResult) {
+>>>>>>> upstream-releases
   *aResult = mRestart;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetWasRestarted(bool *aResult) {
   char *mozAppRestart = PR_GetEnv("MOZ_APP_RESTART");
+||||||| merged common ancestors
+nsAppStartup::GetWasRestarted(bool *aResult)
+{
+  char *mozAppRestart = PR_GetEnv("MOZ_APP_RESTART");
+=======
+nsAppStartup::GetWasRestarted(bool* aResult) {
+  char* mozAppRestart = PR_GetEnv("MOZ_APP_RESTART");
+>>>>>>> upstream-releases
 
   /* When calling PR_SetEnv() with an empty value the existing variable may
    * be unset or set to the empty string depending on the underlying platform
@@ -550,13 +711,46 @@ nsAppStartup::GetWasRestarted(bool *aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::SetInterrupted(bool aInterrupted) {
+||||||| merged common ancestors
+nsAppStartup::SetInterrupted(bool aInterrupted)
+{
+=======
+nsAppStartup::GetSecondsSinceLastOSRestart(int64_t* aResult) {
+#if defined(XP_WIN)
+  *aResult = int64_t(GetTickCount64() / 1000ull);
+  return NS_OK;
+#elif defined(XP_DARWIN)
+  uint64_t absTime = mach_absolute_time();
+  mach_timebase_info_data_t timebaseInfo;
+  mach_timebase_info(&timebaseInfo);
+  double toNanoseconds =
+      double(timebaseInfo.numer) / double(timebaseInfo.denom);
+  *aResult =
+      std::llround(double(absTime) * toNanoseconds / kNanosecondsPerSecond);
+  return NS_OK;
+#else
+  return NS_ERROR_NOT_IMPLEMENTED;
+#endif
+}
+
+NS_IMETHODIMP
+nsAppStartup::SetInterrupted(bool aInterrupted) {
+>>>>>>> upstream-releases
   mInterrupted = aInterrupted;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetInterrupted(bool *aInterrupted) {
+||||||| merged common ancestors
+nsAppStartup::GetInterrupted(bool *aInterrupted)
+{
+=======
+nsAppStartup::GetInterrupted(bool* aInterrupted) {
+>>>>>>> upstream-releases
   *aInterrupted = mInterrupted;
   return NS_OK;
 }
@@ -566,8 +760,9 @@ nsAppStartup::GetInterrupted(bool *aInterrupted) {
 //
 
 NS_IMETHODIMP
-nsAppStartup::CreateChromeWindow(nsIWebBrowserChrome *aParent,
+nsAppStartup::CreateChromeWindow(nsIWebBrowserChrome* aParent,
                                  uint32_t aChromeFlags,
+<<<<<<< HEAD
                                  nsIWebBrowserChrome **_retval) {
   bool cancel;
   return CreateChromeWindow2(aParent, aChromeFlags, nullptr, nullptr, 0,
@@ -596,6 +791,44 @@ nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
                                   mozIDOMWindowProxy *aOpener,
                                   uint64_t aNextTabParentId, bool *aCancel,
                                   nsIWebBrowserChrome **_retval) {
+||||||| merged common ancestors
+                                 nsIWebBrowserChrome **_retval)
+{
+  bool cancel;
+  return CreateChromeWindow2(aParent, aChromeFlags, nullptr, nullptr, 0, &cancel, _retval);
+}
+
+
+//
+// nsAppStartup->nsIWindowCreator2
+//
+
+NS_IMETHODIMP
+nsAppStartup::SetScreenId(uint32_t aScreenId)
+{
+  nsCOMPtr<nsIAppShellService> appShell(do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
+  if (!appShell) {
+    return NS_ERROR_FAILURE;
+  }
+
+  return appShell->SetScreenId(aScreenId);
+}
+
+NS_IMETHODIMP
+nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
+                                  uint32_t aChromeFlags,
+                                  nsITabParent *aOpeningTab,
+                                  mozIDOMWindowProxy* aOpener,
+                                  uint64_t aNextTabParentId,
+                                  bool *aCancel,
+                                  nsIWebBrowserChrome **_retval)
+{
+=======
+                                 nsIRemoteTab* aOpeningTab,
+                                 mozIDOMWindowProxy* aOpener,
+                                 uint64_t aNextRemoteTabId, bool* aCancel,
+                                 nsIWebBrowserChrome** _retval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aCancel);
   NS_ENSURE_ARG_POINTER(_retval);
   *aCancel = false;
@@ -605,6 +838,13 @@ nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
   if (mAttemptingQuit &&
       (aChromeFlags & nsIWebBrowserChrome::CHROME_MODAL) == 0)
     return NS_ERROR_ILLEGAL_DURING_SHUTDOWN;
+
+  // Fission windows must also be marked as remote
+  if ((aChromeFlags & nsIWebBrowserChrome::CHROME_FISSION_WINDOW) &&
+      !(aChromeFlags & nsIWebBrowserChrome::CHROME_REMOTE_WINDOW)) {
+    NS_WARNING("Cannot create non-remote fission window!");
+    return NS_ERROR_FAILURE;
+  }
 
   nsCOMPtr<nsIXULWindow> newWindow;
 
@@ -616,13 +856,31 @@ nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
 
     if (xulParent)
       xulParent->CreateNewWindow(aChromeFlags, aOpeningTab, aOpener,
+<<<<<<< HEAD
                                  aNextTabParentId, getter_AddRefs(newWindow));
+||||||| merged common ancestors
+                                 aNextTabParentId,
+                                 getter_AddRefs(newWindow));
+=======
+                                 aNextRemoteTabId, getter_AddRefs(newWindow));
+>>>>>>> upstream-releases
     // And if it fails, don't try again without a parent. It could fail
     // intentionally (bug 115969).
+<<<<<<< HEAD
   } else {  // try using basic methods:
     MOZ_RELEASE_ASSERT(aNextTabParentId == 0,
                        "Unexpected aNextTabParentId, we shouldn't ever have a "
                        "next actor ID without a parent");
+||||||| merged common ancestors
+  } else { // try using basic methods:
+    MOZ_RELEASE_ASSERT(aNextTabParentId == 0,
+                       "Unexpected aNextTabParentId, we shouldn't ever have a next actor ID without a parent");
+=======
+  } else {  // try using basic methods:
+    MOZ_RELEASE_ASSERT(aNextRemoteTabId == 0,
+                       "Unexpected aNextRemoteTabId, we shouldn't ever have a "
+                       "next actor ID without a parent");
+>>>>>>> upstream-releases
 
     /* You really shouldn't be making dependent windows without a parent.
       But unparented modal (and therefore dependent) windows happen
@@ -654,8 +912,17 @@ nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
 //
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::Observe(nsISupports *aSubject, const char *aTopic,
                       const char16_t *aData) {
+||||||| merged common ancestors
+nsAppStartup::Observe(nsISupports *aSubject,
+                      const char *aTopic, const char16_t *aData)
+{
+=======
+nsAppStartup::Observe(nsISupports* aSubject, const char* aTopic,
+                      const char16_t* aData) {
+>>>>>>> upstream-releases
   NS_ASSERTION(mAppShell, "appshell service notified before appshell built");
   if (!strcmp(aTopic, "quit-application-forced")) {
     mShuttingDown = true;
@@ -702,9 +969,19 @@ nsAppStartup::Observe(nsISupports *aSubject, const char *aTopic,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetStartupInfo(JSContext *aCx,
                              JS::MutableHandle<JS::Value> aRetval) {
   JS::Rooted<JSObject *> obj(aCx, JS_NewPlainObject(aCx));
+||||||| merged common ancestors
+nsAppStartup::GetStartupInfo(JSContext* aCx, JS::MutableHandle<JS::Value> aRetval)
+{
+  JS::Rooted<JSObject*> obj(aCx, JS_NewPlainObject(aCx));
+=======
+nsAppStartup::GetStartupInfo(JSContext* aCx,
+                             JS::MutableHandle<JS::Value> aRetval) {
+  JS::Rooted<JSObject*> obj(aCx, JS_NewPlainObject(aCx));
+>>>>>>> upstream-releases
 
   aRetval.setObject(*obj);
 
@@ -738,11 +1015,24 @@ nsAppStartup::GetStartupInfo(JSContext *aCx,
 
     if (!stamp.IsNull()) {
       if (stamp >= procTime) {
+<<<<<<< HEAD
         PRTime prStamp = ComputeAbsoluteTimestamp(stamp) / PR_USEC_PER_MSEC;
         JS::Rooted<JSObject *> date(
             aCx, JS::NewDateObject(aCx, JS::TimeClip(prStamp)));
         JS_DefineProperty(aCx, obj, StartupTimeline::Describe(ev), date,
                           JSPROP_ENUMERATE);
+||||||| merged common ancestors
+        PRTime prStamp = ComputeAbsoluteTimestamp(stamp)
+          / PR_USEC_PER_MSEC;
+        JS::Rooted<JSObject*> date(aCx, JS::NewDateObject(aCx, JS::TimeClip(prStamp)));
+        JS_DefineProperty(aCx, obj, StartupTimeline::Describe(ev), date, JSPROP_ENUMERATE);
+=======
+        PRTime prStamp = ComputeAbsoluteTimestamp(stamp) / PR_USEC_PER_MSEC;
+        JS::Rooted<JSObject*> date(
+            aCx, JS::NewDateObject(aCx, JS::TimeClip(prStamp)));
+        JS_DefineProperty(aCx, obj, StartupTimeline::Describe(ev), date,
+                          JSPROP_ENUMERATE);
+>>>>>>> upstream-releases
       } else {
         Telemetry::Accumulate(Telemetry::STARTUP_MEASUREMENT_ERRORS, ev);
       }
@@ -753,7 +1043,14 @@ nsAppStartup::GetStartupInfo(JSContext *aCx,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::GetAutomaticSafeModeNecessary(bool *_retval) {
+||||||| merged common ancestors
+nsAppStartup::GetAutomaticSafeModeNecessary(bool *_retval)
+{
+=======
+nsAppStartup::GetAutomaticSafeModeNecessary(bool* _retval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
 
   bool alwaysSafe = false;
@@ -772,7 +1069,14 @@ nsAppStartup::GetAutomaticSafeModeNecessary(bool *_retval) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::TrackStartupCrashBegin(bool *aIsSafeModeNecessary) {
+||||||| merged common ancestors
+nsAppStartup::TrackStartupCrashBegin(bool *aIsSafeModeNecessary)
+{
+=======
+nsAppStartup::TrackStartupCrashBegin(bool* aIsSafeModeNecessary) {
+>>>>>>> upstream-releases
   const int32_t MAX_TIME_SINCE_STARTUP = 6 * 60 * 60 * 1000;
   const int32_t MAX_STARTUP_BUFFER = 10;
   nsresult rv;
@@ -811,6 +1115,7 @@ nsAppStartup::TrackStartupCrashBegin(bool *aIsSafeModeNecessary) {
 
   int32_t recentCrashes = 0;
   Preferences::GetInt(kPrefRecentCrashes, &recentCrashes);
+<<<<<<< HEAD
   mIsSafeModeNecessary =
       (recentCrashes > maxResumedCrashes && maxResumedCrashes != -1);
 
@@ -819,6 +1124,23 @@ nsAppStartup::TrackStartupCrashBegin(bool *aIsSafeModeNecessary) {
   // time has been changed so can't be used on this startup. After a restart,
   // it's safe to assume the last startup was successful.
   char *xreProfilePath = PR_GetEnv("XRE_PROFILE_PATH");
+||||||| merged common ancestors
+  mIsSafeModeNecessary = (recentCrashes > maxResumedCrashes && maxResumedCrashes != -1);
+
+  // Bug 731613 - Don't check if the last startup was a crash if XRE_PROFILE_PATH is set.  After
+  // profile manager, the profile lock's mod. time has been changed so can't be used on this startup.
+  // After a restart, it's safe to assume the last startup was successful.
+  char *xreProfilePath = PR_GetEnv("XRE_PROFILE_PATH");
+=======
+  mIsSafeModeNecessary =
+      (recentCrashes > maxResumedCrashes && maxResumedCrashes != -1);
+
+  // Bug 731613 - Don't check if the last startup was a crash if
+  // XRE_PROFILE_PATH is set.  After profile manager, the profile lock's mod.
+  // time has been changed so can't be used on this startup. After a restart,
+  // it's safe to assume the last startup was successful.
+  char* xreProfilePath = PR_GetEnv("XRE_PROFILE_PATH");
+>>>>>>> upstream-releases
   if (xreProfilePath) {
     GetAutomaticSafeModeNecessary(aIsSafeModeNecessary);
     return NS_ERROR_NOT_AVAILABLE;
@@ -871,9 +1193,17 @@ nsAppStartup::TrackStartupCrashBegin(bool *aIsSafeModeNecessary) {
       (recentCrashes > maxResumedCrashes && maxResumedCrashes != -1);
 
   nsCOMPtr<nsIPrefService> prefs = Preferences::GetService();
+<<<<<<< HEAD
   rv = static_cast<Preferences *>(prefs.get())
            ->SavePrefFileBlocking();  // flush prefs to disk since we are
                                       // tracking crashes
+||||||| merged common ancestors
+  rv = static_cast<Preferences *>(prefs.get())->SavePrefFileBlocking(); // flush prefs to disk since we are tracking crashes
+=======
+  rv = static_cast<Preferences*>(prefs.get())
+           ->SavePrefFileBlocking();  // flush prefs to disk since we are
+                                      // tracking crashes
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   GetAutomaticSafeModeNecessary(aIsSafeModeNecessary);
@@ -961,7 +1291,14 @@ nsAppStartup::RestartInSafeMode(uint32_t aQuitMode) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAppStartup::CreateInstanceWithProfile(nsIToolkitProfile *aProfile) {
+||||||| merged common ancestors
+nsAppStartup::CreateInstanceWithProfile(nsIToolkitProfile* aProfile)
+{
+=======
+nsAppStartup::CreateInstanceWithProfile(nsIToolkitProfile* aProfile) {
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!aProfile)) {
     return NS_ERROR_FAILURE;
   }
@@ -993,7 +1330,13 @@ nsAppStartup::CreateInstanceWithProfile(nsIToolkitProfile *aProfile) {
     return rv;
   }
 
+<<<<<<< HEAD
   const char *args[] = {"-no-remote", "-P", profileName.get()};
+||||||| merged common ancestors
+  const char *args[] = { "-no-remote", "-P", profileName.get() };
+=======
+  const char* args[] = {"-no-remote", "-P", profileName.get()};
+>>>>>>> upstream-releases
   rv = process->Run(false, args, 3);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;

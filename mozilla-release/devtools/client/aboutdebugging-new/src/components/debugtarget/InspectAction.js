@@ -4,7 +4,10 @@
 
 "use strict";
 
-const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
+const {
+  createFactory,
+  PureComponent,
+} = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 
@@ -21,7 +24,14 @@ class InspectAction extends PureComponent {
   static get propTypes() {
     return {
       dispatch: PropTypes.func.isRequired,
+<<<<<<< HEAD
       target: Types.debugTarget.isRequired,
+||||||| merged common ancestors
+      target: PropTypes.object.isRequired,
+=======
+      target: Types.debugTarget.isRequired,
+      disabled: PropTypes.bool,
+>>>>>>> upstream-releases
     };
   }
 
@@ -31,6 +41,8 @@ class InspectAction extends PureComponent {
   }
 
   render() {
+    const { disabled } = this.props;
+
     return Localized(
       {
         id: "about-debugging-debug-target-inspect-button",
@@ -38,7 +50,14 @@ class InspectAction extends PureComponent {
       dom.button(
         {
           onClick: e => this.inspect(),
+<<<<<<< HEAD
           className: "default-button  js-debug-target-inspect-button",
+||||||| merged common ancestors
+          className: "aboutdebugging-button",
+=======
+          className: "default-button  qa-debug-target-inspect-button",
+          disabled,
+>>>>>>> upstream-releases
         },
         "Inspect"
       )

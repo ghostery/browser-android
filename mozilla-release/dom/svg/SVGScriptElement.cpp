@@ -4,14 +4,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/dom/SVGScriptElement.h"
+
 #include "nsGkAtoms.h"
 #include "nsNetUtil.h"
 #include "nsContentUtils.h"
-#include "mozilla/dom/SVGScriptElement.h"
 #include "mozilla/dom/SVGScriptElementBinding.h"
 #include "nsIScriptError.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT_CHECK_PARSER(Script)
+NS_IMPL_NS_NEW_SVG_ELEMENT_CHECK_PARSER(Script)
 
 namespace mozilla {
 namespace dom {
@@ -21,9 +22,21 @@ JSObject* SVGScriptElement::WrapNode(JSContext* aCx,
   return SVGScriptElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGScriptElement::sStringInfo[2] = {
     {nsGkAtoms::href, kNameSpaceID_None, false},
     {nsGkAtoms::href, kNameSpaceID_XLink, false}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGScriptElement::sStringInfo[2] =
+{
+  { nsGkAtoms::href, kNameSpaceID_None, false },
+  { nsGkAtoms::href, kNameSpaceID_XLink, false }
+};
+=======
+SVGElement::StringInfo SVGScriptElement::sStringInfo[2] = {
+    {nsGkAtoms::href, kNameSpaceID_None, false},
+    {nsGkAtoms::href, kNameSpaceID_XLink, false}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsISupports methods
@@ -42,8 +55,16 @@ SVGScriptElement::SVGScriptElement(
   AddMutationObserver(this);
 }
 
+<<<<<<< HEAD
 SVGScriptElement::~SVGScriptElement() {}
 
+||||||| merged common ancestors
+SVGScriptElement::~SVGScriptElement()
+{
+}
+
+=======
+>>>>>>> upstream-releases
 //----------------------------------------------------------------------
 // nsINode methods
 
@@ -89,7 +110,15 @@ void SVGScriptElement::SetCrossOrigin(const nsAString& aCrossOrigin,
   SetOrRemoveNullableStringAttr(nsGkAtoms::crossorigin, aCrossOrigin, aError);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGScriptElement::Href() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGScriptElement::Href()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGScriptElement::Href() {
+>>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -110,7 +139,15 @@ void SVGScriptElement::GetScriptCharset(nsAString& charset) {
   charset.Truncate();
 }
 
+<<<<<<< HEAD
 void SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc) {
+||||||| merged common ancestors
+void
+SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc)
+{
+=======
+void SVGScriptElement::FreezeExecutionAttrs(Document* aOwnerDoc) {
+>>>>>>> upstream-releases
   if (mFrozen) {
     return;
   }
@@ -134,6 +171,7 @@ void SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc) {
       NS_NewURI(getter_AddRefs(mUri), src, nullptr, baseURI);
 
       if (!mUri) {
+<<<<<<< HEAD
         const char16_t* params[] = {isHref ? u"href" : u"xlink:href",
                                     src.get()};
 
@@ -142,15 +180,55 @@ void SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc) {
             nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri", params,
             ArrayLength(params), nullptr, EmptyString(), GetScriptLineNumber(),
             GetScriptColumnNumber());
+||||||| merged common ancestors
+        const char16_t* params[] = { isHref ? u"href" : u"xlink:href", src.get() };
+
+        nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
+          NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
+          nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri",
+          params, ArrayLength(params), nullptr,
+          EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
+=======
+        AutoTArray<nsString, 2> params = {isHref
+                                              ? NS_LITERAL_STRING("href")
+                                              : NS_LITERAL_STRING("xlink:href"),
+                                          src};
+
+        nsContentUtils::ReportToConsole(
+            nsIScriptError::warningFlag, NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
+            nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri", params,
+            nullptr, EmptyString(), GetScriptLineNumber(),
+            GetScriptColumnNumber());
+>>>>>>> upstream-releases
       }
     } else {
+<<<<<<< HEAD
       const char16_t* params[] = {isHref ? u"href" : u"xlink:href"};
+||||||| merged common ancestors
+      const char16_t* params[] = { isHref ? u"href" : u"xlink:href" };
+=======
+      AutoTArray<nsString, 1> params = {
+          isHref ? NS_LITERAL_STRING("href") : NS_LITERAL_STRING("xlink:href")};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       nsContentUtils::ReportToConsole(
           nsIScriptError::warningFlag, NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
           nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty", params,
           ArrayLength(params), nullptr, EmptyString(), GetScriptLineNumber(),
           GetScriptColumnNumber());
+||||||| merged common ancestors
+      nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
+        NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
+        nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty",
+        params, ArrayLength(params), nullptr,
+        EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
+=======
+      nsContentUtils::ReportToConsole(
+          nsIScriptError::warningFlag, NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
+          nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty", params, nullptr,
+          EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
+>>>>>>> upstream-releases
     }
 
     // At this point mUri will be null for invalid URLs.
@@ -171,9 +249,17 @@ bool SVGScriptElement::HasScriptContent() {
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGScriptElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGScriptElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGScriptElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }
@@ -181,14 +267,26 @@ nsSVGElement::StringAttributesInfo SVGScriptElement::GetStringInfo() {
 //----------------------------------------------------------------------
 // nsIContent methods
 
+<<<<<<< HEAD
 nsresult SVGScriptElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
                                       nsIContent* aBindingParent) {
   nsresult rv =
       SVGScriptElementBase::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+SVGScriptElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                             nsIContent* aBindingParent)
+{
+  nsresult rv = SVGScriptElementBase::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+nsresult SVGScriptElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = SVGScriptElementBase::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  if (aDocument) {
+  if (IsInComposedDoc()) {
     MaybeProcessScript();
   }
 

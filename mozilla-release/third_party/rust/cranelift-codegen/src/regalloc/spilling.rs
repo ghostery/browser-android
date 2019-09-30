@@ -15,6 +15,7 @@
 //!    be compatible. Otherwise, the value must be copied into a new register for some of the
 //!    operands.
 
+<<<<<<< HEAD
 use cursor::{Cursor, EncCursor};
 use dominator_tree::DominatorTree;
 use ir::{ArgumentLoc, Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
@@ -26,9 +27,44 @@ use regalloc::liveness::Liveness;
 use regalloc::pressure::Pressure;
 use regalloc::virtregs::VirtRegs;
 use std::fmt;
+||||||| merged common ancestors
+use cursor::{Cursor, EncCursor};
+use dominator_tree::DominatorTree;
+use ir::{Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
+use isa::registers::{RegClassIndex, RegClassMask};
+use isa::{ConstraintKind, EncInfo, RecipeConstraints, RegInfo, TargetIsa};
+use regalloc::affinity::Affinity;
+use regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
+use regalloc::liveness::Liveness;
+use regalloc::pressure::Pressure;
+use regalloc::virtregs::VirtRegs;
+use std::fmt;
+=======
+use crate::cursor::{Cursor, EncCursor};
+use crate::dominator_tree::DominatorTree;
+use crate::ir::{ArgumentLoc, Ebb, Function, Inst, InstBuilder, SigRef, Value, ValueLoc};
+use crate::isa::registers::{RegClass, RegClassIndex, RegClassMask, RegUnit};
+use crate::isa::{ConstraintKind, EncInfo, RecipeConstraints, RegInfo, TargetIsa};
+use crate::regalloc::affinity::Affinity;
+use crate::regalloc::live_value_tracker::{LiveValue, LiveValueTracker};
+use crate::regalloc::liveness::Liveness;
+use crate::regalloc::pressure::Pressure;
+use crate::regalloc::virtregs::VirtRegs;
+use crate::timing;
+use crate::topo_order::TopoOrder;
+use core::fmt;
+use log::debug;
+>>>>>>> upstream-releases
 use std::vec::Vec;
-use timing;
-use topo_order::TopoOrder;
+
+/// Return a top-level register class which contains `unit`.
+fn toprc_containing_regunit(unit: RegUnit, reginfo: &RegInfo) -> RegClass {
+    let bank = reginfo.bank_containing_regunit(unit).unwrap();
+    reginfo.classes[bank.first_toprc..(bank.first_toprc + bank.num_toprcs)]
+        .iter()
+        .find(|&rc| rc.contains(unit))
+        .expect("reg unit should be in a toprc")
+}
 
 /// Return a top-level register class which contains `unit`.
 fn toprc_containing_regunit(unit: RegUnit, reginfo: &RegInfo) -> RegClass {
@@ -90,7 +126,7 @@ impl Spilling {
     /// Run the spilling algorithm over `func`.
     pub fn run(
         &mut self,
-        isa: &TargetIsa,
+        isa: &dyn TargetIsa,
         func: &mut Function,
         domtree: &DominatorTree,
         liveness: &mut Liveness,
@@ -419,6 +455,7 @@ impl<'a> Context<'a> {
         // secondary `opidx` key makes it possible to use an unstable (non-allocating) sort.
         self.reg_uses.sort_unstable_by_key(|u| (u.value, u.opidx));
 
+        self.cur.use_srcloc(inst);
         for i in 0..self.reg_uses.len() {
             let ru = self.reg_uses[i];
 

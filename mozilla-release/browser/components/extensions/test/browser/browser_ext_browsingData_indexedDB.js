@@ -5,36 +5,44 @@
 
 add_task(async function testIndexedDB() {
   function background() {
-    const PAGE = "/browser/browser/components/extensions/test/browser/file_indexedDB.html";
+    const PAGE =
+      "/browser/browser/components/extensions/test/browser/file_indexedDB.html";
 
-    browser.test.onMessage.addListener(async (msg) => {
-      await browser.browsingData.remove({}, {indexedDB: true});
+    browser.test.onMessage.addListener(async msg => {
+      await browser.browsingData.remove({}, { indexedDB: true });
       browser.test.sendMessage("indexedDBRemoved");
     });
 
     // Create two tabs.
-    browser.tabs.create({url: `http://mochi.test:8888${PAGE}`});
-    browser.tabs.create({url: `http://example.com${PAGE}`});
+    browser.tabs.create({ url: `http://mochi.test:8888${PAGE}` });
+    browser.tabs.create({ url: `http://example.com${PAGE}` });
   }
 
   function contentScript() {
-    window.addEventListener("message", msg => { // eslint-disable-line mozilla/balanced-listeners
-      browser.test.sendMessage("indexedDBCreated");
-    }, true);
+    // eslint-disable-next-line mozilla/balanced-listeners
+    window.addEventListener(
+      "message",
+      msg => {
+        browser.test.sendMessage("indexedDBCreated");
+      },
+      true
+    );
   }
 
   let extension = ExtensionTestUtils.loadExtension({
     background,
     manifest: {
       permissions: ["browsingData", "tabs"],
-      "content_scripts": [{
-        "matches": [
-          "http://mochi.test/*/file_indexedDB.html",
-          "http://example.com/*/file_indexedDB.html",
-        ],
-        "js": ["script.js"],
-        "run_at": "document_start",
-      }],
+      content_scripts: [
+        {
+          matches: [
+            "http://mochi.test/*/file_indexedDB.html",
+            "http://example.com/*/file_indexedDB.html",
+          ],
+          js: ["script.js"],
+          run_at: "document_start",
+        },
+      ],
     },
     files: {
       "script.js": contentScript,
@@ -53,11 +61,24 @@ add_task(async function testIndexedDB() {
       let origins = [];
       Services.qms.getUsage(request => {
         for (let i = 0; i < request.result.length; ++i) {
+<<<<<<< HEAD
           if (request.result[i].usage === 0) {
             continue;
           }
           if (request.result[i].origin.startsWith("http://mochi.test") ||
               request.result[i].origin.startsWith("http://example.com")) {
+||||||| merged common ancestors
+          if (request.result[i].origin.startsWith("http://mochi.test") ||
+              request.result[i].origin.startsWith("http://example.com")) {
+=======
+          if (request.result[i].usage === 0) {
+            continue;
+          }
+          if (
+            request.result[i].origin.startsWith("http://mochi.test") ||
+            request.result[i].origin.startsWith("http://example.com")
+          ) {
+>>>>>>> upstream-releases
             origins.push(request.result[i].origin);
           }
         }

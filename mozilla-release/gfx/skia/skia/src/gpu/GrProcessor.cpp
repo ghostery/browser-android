@@ -18,14 +18,22 @@
 #if GR_TEST_UTILS
 
 GrResourceProvider* GrProcessorTestData::resourceProvider() {
-    return fContext->contextPriv().resourceProvider();
+    return fContext->priv().resourceProvider();
 }
 
 GrProxyProvider* GrProcessorTestData::proxyProvider() {
-    return fContext->contextPriv().proxyProvider();
+    return fContext->priv().proxyProvider();
 }
 
+<<<<<<< HEAD
 const GrCaps* GrProcessorTestData::caps() { return fContext->contextPriv().caps(); }
+||||||| merged common ancestors
+const GrCaps* GrProcessorTestData::caps() {
+    return fContext->caps();
+}
+=======
+const GrCaps* GrProcessorTestData::caps() { return fContext->priv().caps(); }
+>>>>>>> upstream-releases
 
 #if SK_ALLOW_STATIC_GLOBAL_INITIALIZERS
 class GrFragmentProcessor;

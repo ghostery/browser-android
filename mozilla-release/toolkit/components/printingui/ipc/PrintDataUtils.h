@@ -20,9 +20,20 @@
 namespace mozilla {
 namespace embedding {
 
+<<<<<<< HEAD
 class MockWebBrowserPrint final : public nsIWebBrowserPrint {
  public:
   explicit MockWebBrowserPrint(const PrintData &aData);
+||||||| merged common ancestors
+class MockWebBrowserPrint final : public nsIWebBrowserPrint
+{
+public:
+  explicit MockWebBrowserPrint(const PrintData &aData);
+=======
+class MockWebBrowserPrint final : public nsIWebBrowserPrint {
+ public:
+  explicit MockWebBrowserPrint(const PrintData& aData);
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSIWEBBROWSERPRINT

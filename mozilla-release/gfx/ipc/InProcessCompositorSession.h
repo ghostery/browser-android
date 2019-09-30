@@ -33,14 +33,31 @@ class InProcessCompositorSession final : public CompositorSession {
 
   void NotifySessionLost();
 
+<<<<<<< HEAD
  private:
   InProcessCompositorSession(widget::CompositorWidget* aWidget,
                              nsBaseWidget* baseWidget,
+||||||| merged common ancestors
+private:
+  InProcessCompositorSession(widget::CompositorWidget* aWidget,
+                             nsBaseWidget* baseWidget,
+=======
+ private:
+  InProcessCompositorSession(nsBaseWidget* aWidget,
+                             widget::CompositorWidget* aCompositorWidget,
+>>>>>>> upstream-releases
                              CompositorBridgeChild* aChild,
                              CompositorBridgeParent* aParent);
 
+<<<<<<< HEAD
  private:
   nsBaseWidget* mWidget;
+||||||| merged common ancestors
+private:
+  nsBaseWidget* mWidget;
+=======
+ private:
+>>>>>>> upstream-releases
   RefPtr<CompositorBridgeParent> mCompositorBridgeParent;
   RefPtr<CompositorWidget> mCompositorWidget;
 };

@@ -7,24 +7,49 @@
 #include "mozilla/dom/DocGroup.h"
 #include "mozilla/dom/DOMTypes.h"
 #include "mozilla/dom/TabGroup.h"
+<<<<<<< HEAD
 #include "mozilla/PerformanceUtils.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/AbstractThread.h"
+#include "mozilla/PerformanceUtils.h"
+#include "mozilla/ThrottledEventQueue.h"
+>>>>>>> upstream-releases
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
 #include "nsIDocShell.h"
 #include "nsDOMMutationObserver.h"
+#include "nsProxyRelease.h"
 #if defined(XP_WIN)
-#include <processthreadsapi.h>  // for GetCurrentProcessId()
+#  include <processthreadsapi.h>  // for GetCurrentProcessId()
 #else
+<<<<<<< HEAD
 #include <unistd.h>  // for getpid()
 #endif               // defined(XP_WIN)
+||||||| merged common ancestors
+#include <unistd.h> // for getpid()
+#endif // defined(XP_WIN)
+=======
+#  include <unistd.h>  // for getpid()
+#endif                 // defined(XP_WIN)
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
 
 AutoTArray<RefPtr<DocGroup>, 2>* DocGroup::sPendingDocGroups = nullptr;
 
+<<<<<<< HEAD
 /* static */ nsresult DocGroup::GetKey(nsIPrincipal* aPrincipal,
                                        nsACString& aKey) {
+||||||| merged common ancestors
+/* static */ nsresult
+DocGroup::GetKey(nsIPrincipal* aPrincipal, nsACString& aKey)
+{
+=======
+/* static */
+nsresult DocGroup::GetKey(nsIPrincipal* aPrincipal, nsACString& aKey) {
+>>>>>>> upstream-releases
   // Use GetBaseDomain() to handle things like file URIs, IP address URIs,
   // etc. correctly.
   nsresult rv = aPrincipal->GetBaseDomain(aKey);
@@ -40,13 +65,22 @@ AutoTArray<RefPtr<DocGroup>, 2>* DocGroup::sPendingDocGroups = nullptr;
   return rv;
 }
 
+<<<<<<< HEAD
 void DocGroup::RemoveDocument(nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+DocGroup::RemoveDocument(nsIDocument* aDocument)
+{
+=======
+void DocGroup::RemoveDocument(Document* aDocument) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mDocuments.Contains(aDocument));
   mDocuments.RemoveElement(aDocument);
 }
 
 DocGroup::DocGroup(TabGroup* aTabGroup, const nsACString& aKey)
+<<<<<<< HEAD
     : mKey(aKey), mTabGroup(aTabGroup) {
   // This method does not add itself to mTabGroup->mDocGroups as the caller does
   // it for us.
@@ -54,6 +88,20 @@ DocGroup::DocGroup(TabGroup* aTabGroup, const nsACString& aKey)
     mPerformanceCounter =
         new mozilla::PerformanceCounter(NS_LITERAL_CSTRING("DocGroup:") + aKey);
   }
+||||||| merged common ancestors
+  : mKey(aKey), mTabGroup(aTabGroup)
+{
+  // This method does not add itself to mTabGroup->mDocGroups as the caller does it for us.
+  if (mozilla::StaticPrefs::dom_performance_enable_scheduler_timing()) {
+    mPerformanceCounter = new mozilla::PerformanceCounter(NS_LITERAL_CSTRING("DocGroup:") + aKey);
+  }
+=======
+    : mKey(aKey), mTabGroup(aTabGroup) {
+  // This method does not add itself to mTabGroup->mDocGroups as the caller does
+  // it for us.
+  mPerformanceCounter =
+      new mozilla::PerformanceCounter(NS_LITERAL_CSTRING("DocGroup:") + aKey);
+>>>>>>> upstream-releases
 }
 
 DocGroup::~DocGroup() {
@@ -65,6 +113,10 @@ DocGroup::~DocGroup() {
   }
 
   mTabGroup->mDocGroups.RemoveEntry(mKey);
+
+  if (mIframePostMessageQueue) {
+    FlushIframePostMessageQueue();
+  }
 }
 
 RefPtr<PerformanceInfoPromise> DocGroup::ReportPerformanceInfo() {
@@ -85,7 +137,7 @@ RefPtr<PerformanceInfoPromise> DocGroup::ReportPerformanceInfo() {
 
   // iterating on documents until we find the top window
   for (const auto& document : *this) {
-    nsCOMPtr<nsIDocument> doc = document;
+    nsCOMPtr<Document> doc = document;
     MOZ_ASSERT(doc);
     nsCOMPtr<nsIURI> docURI = doc->GetDocumentURI();
     if (!docURI) {
@@ -101,17 +153,34 @@ RefPtr<PerformanceInfoPromise> DocGroup::ReportPerformanceInfo() {
     if (!win) {
       continue;
     }
+<<<<<<< HEAD
     nsPIDOMWindowOuter* outer = win->GetOuterWindow();
     if (!outer) {
       continue;
     }
     top = outer->GetTop();
+||||||| merged common ancestors
+    nsPIDOMWindowOuter* outer = win->GetOuterWindow();
+    if (!outer) {
+      continue;
+    }
+    nsCOMPtr<nsPIDOMWindowOuter> top = outer->GetTop();
+=======
+    top = win->GetTop();
+>>>>>>> upstream-releases
     if (!top) {
       continue;
     }
     windowID = top->WindowID();
+<<<<<<< HEAD
     isTopLevel = outer->IsTopLevelWindow();
     mainThread = AbstractMainThreadFor(TaskCategory::Performance);
+||||||| merged common ancestors
+    isTopLevel = outer->IsTopLevelWindow();
+=======
+    isTopLevel = win->IsTopLevelWindow();
+    mainThread = AbstractMainThreadFor(TaskCategory::Performance);
+>>>>>>> upstream-releases
     break;
   }
 
@@ -130,6 +199,7 @@ RefPtr<PerformanceInfoPromise> DocGroup::ReportPerformanceInfo() {
     }
   }
 
+<<<<<<< HEAD
   if (!isTopLevel) {
     return PerformanceInfoPromise::CreateAndResolve(
         PerformanceInfo(host, pid, windowID, duration,
@@ -157,6 +227,39 @@ RefPtr<PerformanceInfoPromise> DocGroup::ReportPerformanceInfo() {
              [self](const nsresult rv) {
                return PerformanceInfoPromise::CreateAndReject(rv, __func__);
              });
+||||||| merged common ancestors
+  return PerformanceInfo(host, pid, windowID, duration, mPerformanceCounter->GetID(),
+                         false, isTopLevel, items);
+=======
+  if (!isTopLevel) {
+    return PerformanceInfoPromise::CreateAndResolve(
+        PerformanceInfo(host, pid, windowID, duration,
+                        mPerformanceCounter->GetID(), false, isTopLevel,
+                        PerformanceMemoryInfo(),  // Empty memory info
+                        items),
+        __func__);
+  }
+
+  MOZ_ASSERT(mainThread);
+  RefPtr<DocGroup> self = this;
+
+  return CollectMemoryInfo(top, mainThread)
+      ->Then(
+          mainThread, __func__,
+          [self, host, pid, windowID, duration, isTopLevel,
+           items](const PerformanceMemoryInfo& aMemoryInfo) {
+            PerformanceInfo info =
+                PerformanceInfo(host, pid, windowID, duration,
+                                self->mPerformanceCounter->GetID(), false,
+                                isTopLevel, aMemoryInfo, items);
+
+            return PerformanceInfoPromise::CreateAndResolve(std::move(info),
+                                                            __func__);
+          },
+          [self](const nsresult rv) {
+            return PerformanceInfoPromise::CreateAndReject(rv, __func__);
+          });
+>>>>>>> upstream-releases
 }
 
 nsresult DocGroup::Dispatch(TaskCategory aCategory,
@@ -191,7 +294,66 @@ void DocGroup::SignalSlotChange(HTMLSlotElement& aSlot) {
   sPendingDocGroups->AppendElement(this);
 }
 
+<<<<<<< HEAD
 void DocGroup::MoveSignalSlotListTo(nsTArray<RefPtr<HTMLSlotElement>>& aDest) {
+||||||| merged common ancestors
+void
+DocGroup::MoveSignalSlotListTo(nsTArray<RefPtr<HTMLSlotElement>>& aDest)
+{
+=======
+bool DocGroup::TryToLoadIframesInBackground() {
+  return StaticPrefs::dom_separate_event_queue_for_post_message_enabled() &&
+         StaticPrefs::dom_cross_origin_iframes_loaded_in_background();
+}
+
+nsresult DocGroup::QueueIframePostMessages(
+    already_AddRefed<nsIRunnable>&& aRunnable, uint64_t aWindowId) {
+  if (DocGroup::TryToLoadIframesInBackground()) {
+    if (!mIframePostMessageQueue) {
+      nsCOMPtr<nsISerialEventTarget> target = GetMainThreadSerialEventTarget();
+      mIframePostMessageQueue = ThrottledEventQueue::Create(
+          target, "Background Loading Iframe PostMessage Queue",
+          nsIRunnablePriority::PRIORITY_DEFERRED_TIMERS);
+      nsresult rv = mIframePostMessageQueue->SetIsPaused(true);
+      MOZ_ALWAYS_SUCCEEDS(rv);
+    }
+
+    // Ensure the queue is disabled. Unlike the postMessageEvent queue in
+    // TabGroup, this postMessage queue should always be paused, because if
+    // we leave it open, the postMessage may get dispatched to an unloaded
+    // iframe
+    MOZ_ASSERT(mIframePostMessageQueue);
+    MOZ_ASSERT(mIframePostMessageQueue->IsPaused());
+
+    mIframesUsedPostMessageQueue.PutEntry(aWindowId);
+
+    mIframePostMessageQueue->Dispatch(std::move(aRunnable), NS_DISPATCH_NORMAL);
+    return NS_OK;
+  }
+  return NS_ERROR_FAILURE;
+}
+
+void DocGroup::TryFlushIframePostMessages(uint64_t aWindowId) {
+  if (DocGroup::TryToLoadIframesInBackground()) {
+    mIframesUsedPostMessageQueue.RemoveEntry(aWindowId);
+    if (mIframePostMessageQueue && mIframesUsedPostMessageQueue.IsEmpty()) {
+      MOZ_ASSERT(mIframePostMessageQueue->IsPaused());
+      nsresult rv = mIframePostMessageQueue->SetIsPaused(true);
+      MOZ_ALWAYS_SUCCEEDS(rv);
+      FlushIframePostMessageQueue();
+    }
+  }
+}
+
+void DocGroup::FlushIframePostMessageQueue() {
+  nsCOMPtr<nsIRunnable> event;
+  while ((event = mIframePostMessageQueue->GetEvent())) {
+    Dispatch(TaskCategory::Other, event.forget());
+  }
+}
+
+void DocGroup::MoveSignalSlotListTo(nsTArray<RefPtr<HTMLSlotElement>>& aDest) {
+>>>>>>> upstream-releases
   aDest.SetCapacity(aDest.Length() + mSignalSlotList.Length());
   for (RefPtr<HTMLSlotElement>& slot : mSignalSlotList) {
     slot->RemovedFromSignalSlotList();
@@ -200,8 +362,18 @@ void DocGroup::MoveSignalSlotListTo(nsTArray<RefPtr<HTMLSlotElement>>& aDest) {
   mSignalSlotList.Clear();
 }
 
+<<<<<<< HEAD
 bool DocGroup::IsActive() const {
   for (nsIDocument* doc : mDocuments) {
+||||||| merged common ancestors
+bool
+DocGroup::IsActive() const
+{
+  for (nsIDocument* doc : mDocuments) {
+=======
+bool DocGroup::IsActive() const {
+  for (Document* doc : mDocuments) {
+>>>>>>> upstream-releases
     if (doc->IsCurrentActiveDocument()) {
       return true;
     }

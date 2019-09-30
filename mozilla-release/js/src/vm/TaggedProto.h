@@ -7,6 +7,8 @@
 #ifndef vm_TaggedProto_h
 #define vm_TaggedProto_h
 
+#include "mozilla/Maybe.h"
+
 #include "gc/Tracer.h"
 
 namespace js {
@@ -14,6 +16,7 @@ namespace js {
 // Information about an object prototype, which can be either a particular
 // object, null, or a lazily generated object. The latter is only used by
 // certain kinds of proxies.
+<<<<<<< HEAD
 class TaggedProto {
  public:
   static JSObject* const LazyProto;
@@ -56,9 +59,96 @@ class TaggedProto {
 
  private:
   JSObject* proto;
+||||||| merged common ancestors
+class TaggedProto
+{
+  public:
+    static JSObject * const LazyProto;
+
+    TaggedProto() : proto(nullptr) {}
+    TaggedProto(const TaggedProto& other) : proto(other.proto) {}
+    explicit TaggedProto(JSObject* proto) : proto(proto) {}
+
+    uintptr_t toWord() const { return uintptr_t(proto); }
+
+    bool isDynamic() const {
+        return proto == LazyProto;
+    }
+    bool isObject() const {
+        /* Skip nullptr and LazyProto. */
+        return uintptr_t(proto) > uintptr_t(TaggedProto::LazyProto);
+    }
+    JSObject* toObject() const {
+        MOZ_ASSERT(isObject());
+        return proto;
+    }
+    JSObject* toObjectOrNull() const {
+        MOZ_ASSERT(!proto || isObject());
+        return proto;
+    }
+    JSObject* raw() const { return proto; }
+
+    bool operator ==(const TaggedProto& other) const { return proto == other.proto; }
+    bool operator !=(const TaggedProto& other) const { return proto != other.proto; }
+
+    HashNumber hashCode() const;
+
+    void trace(JSTracer* trc) {
+        if (isObject()) {
+            TraceManuallyBarrieredEdge(trc, &proto, "TaggedProto");
+        }
+    }
+
+  private:
+    JSObject* proto;
+=======
+class TaggedProto {
+ public:
+  static JSObject* const LazyProto;
+
+  TaggedProto() : proto(nullptr) {}
+  TaggedProto(const TaggedProto& other) : proto(other.proto) {}
+  explicit TaggedProto(JSObject* proto) : proto(proto) {}
+
+  uintptr_t toWord() const { return uintptr_t(proto); }
+
+  bool isDynamic() const { return proto == LazyProto; }
+  bool isObject() const {
+    /* Skip nullptr and LazyProto. */
+    return uintptr_t(proto) > uintptr_t(TaggedProto::LazyProto);
+  }
+  JSObject* toObject() const {
+    MOZ_ASSERT(isObject());
+    return proto;
+  }
+  JSObject* toObjectOrNull() const {
+    MOZ_ASSERT(!proto || isObject());
+    return proto;
+  }
+  JSObject* raw() const { return proto; }
+
+  bool operator==(const TaggedProto& other) const {
+    return proto == other.proto;
+  }
+  bool operator!=(const TaggedProto& other) const {
+    return proto != other.proto;
+  }
+
+  HashNumber hashCode() const;
+
+  void trace(JSTracer* trc) {
+    if (isObject()) {
+      TraceManuallyBarrieredEdge(trc, &proto, "TaggedProto");
+    }
+  }
+
+ private:
+  JSObject* proto;
+>>>>>>> upstream-releases
 };
 
 template <>
+<<<<<<< HEAD
 struct MovableCellHasher<TaggedProto> {
   using Key = TaggedProto;
   using Lookup = TaggedProto;
@@ -76,6 +166,51 @@ struct MovableCellHasher<TaggedProto> {
     }
     if (!l.isObject()) {
       return uint64_t(0);
+||||||| merged common ancestors
+struct MovableCellHasher<TaggedProto>
+{
+    using Key = TaggedProto;
+    using Lookup = TaggedProto;
+
+    static bool hasHash(const Lookup& l) {
+        return !l.isObject() || MovableCellHasher<JSObject*>::hasHash(l.toObject());
+    }
+    static bool ensureHash(const Lookup& l) {
+        return !l.isObject() || MovableCellHasher<JSObject*>::ensureHash(l.toObject());
+    }
+    static HashNumber hash(const Lookup& l) {
+        if (l.isDynamic()) {
+            return uint64_t(1);
+        }
+        if (!l.isObject()) {
+            return uint64_t(0);
+        }
+        return MovableCellHasher<JSObject*>::hash(l.toObject());
+    }
+    static bool match(const Key& k, const Lookup& l) {
+        return k.isDynamic() == l.isDynamic() &&
+               k.isObject() == l.isObject() &&
+               (!k.isObject() ||
+                MovableCellHasher<JSObject*>::match(k.toObject(), l.toObject()));
+=======
+struct MovableCellHasher<TaggedProto> {
+  using Key = TaggedProto;
+  using Lookup = TaggedProto;
+
+  static bool hasHash(const Lookup& l) {
+    return !l.isObject() || MovableCellHasher<JSObject*>::hasHash(l.toObject());
+  }
+  static bool ensureHash(const Lookup& l) {
+    return !l.isObject() ||
+           MovableCellHasher<JSObject*>::ensureHash(l.toObject());
+  }
+  static HashNumber hash(const Lookup& l) {
+    if (l.isDynamic()) {
+      return uint64_t(1);
+    }
+    if (!l.isObject()) {
+      return uint64_t(0);
+>>>>>>> upstream-releases
     }
     return MovableCellHasher<JSObject*>::hash(l.toObject());
   }
@@ -87,12 +222,28 @@ struct MovableCellHasher<TaggedProto> {
 };
 
 #ifdef DEBUG
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool TaggedProtoIsNotGray(const TaggedProto& proto) {
   if (!proto.isObject()) {
     return true;
   }
 
   return JS::ObjectIsNotGray(proto.toObject());
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+TaggedProtoIsNotGray(const TaggedProto& proto)
+{
+    if (!proto.isObject()) {
+        return true;
+    }
+
+    return JS::ObjectIsNotGray(proto.toObject());
+=======
+MOZ_ALWAYS_INLINE void AssertTaggedProtoIsNotGray(const TaggedProto& proto) {
+  if (proto.isObject()) {
+    JS::AssertObjectIsNotGray(proto.toObject());
+  }
+>>>>>>> upstream-releases
 }
 #endif
 
@@ -107,9 +258,19 @@ struct InternalBarrierMethods<TaggedProto> {
   static bool isMarkable(const TaggedProto& proto) { return proto.isObject(); }
 
 #ifdef DEBUG
+<<<<<<< HEAD
   static bool thingIsNotGray(const TaggedProto& proto) {
     return TaggedProtoIsNotGray(proto);
   }
+||||||| merged common ancestors
+    static bool thingIsNotGray(const TaggedProto& proto) {
+        return TaggedProtoIsNotGray(proto);
+    }
+=======
+  static void assertThingIsNotGray(const TaggedProto& proto) {
+    AssertTaggedProtoIsNotGray(proto);
+  }
+>>>>>>> upstream-releases
 #endif
 };
 
@@ -131,6 +292,7 @@ class WrappedPtrOperations<TaggedProto, Wrapper> {
 };
 
 // If the TaggedProto is a JSObject pointer, convert to that type and call |f|
+<<<<<<< HEAD
 // with the pointer. If the TaggedProto is lazy, calls F::defaultValue.
 template <typename F, typename... Args>
 auto DispatchTyped(F f, const TaggedProto& proto, Args&&... args)
@@ -140,6 +302,37 @@ auto DispatchTyped(F f, const TaggedProto& proto, Args&&... args)
     return f(proto.toObject(), std::forward<Args>(args)...);
   }
   return F::defaultValue(proto);
+||||||| merged common ancestors
+// with the pointer. If the TaggedProto is lazy, calls F::defaultValue.
+template <typename F, typename... Args>
+auto
+DispatchTyped(F f, const TaggedProto& proto, Args&&... args)
+  -> decltype(f(static_cast<JSObject*>(nullptr), std::forward<Args>(args)...))
+{
+    if (proto.isObject()) {
+        return f(proto.toObject(), std::forward<Args>(args)...);
+    }
+    return F::defaultValue(proto);
+=======
+// with the pointer. If the TaggedProto is lazy, returns None().
+template <typename F>
+auto MapGCThingTyped(const TaggedProto& proto, F&& f) {
+  if (proto.isObject()) {
+    return mozilla::Some(f(proto.toObject()));
+  }
+  using ReturnType = decltype(f(static_cast<JSObject*>(nullptr)));
+  return mozilla::Maybe<ReturnType>();
+}
+
+template <typename F>
+bool ApplyGCThingTyped(const TaggedProto& proto, F&& f) {
+  return MapGCThingTyped(proto,
+                         [&f](auto t) {
+                           f(t);
+                           return true;
+                         })
+      .isSome();
+>>>>>>> upstream-releases
 }
 
 // Since JSObject pointers are either nullptr or a valid object and since the

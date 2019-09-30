@@ -11,13 +11,11 @@
 #include "gfxPoint.h"
 #include "gfxRect.h"
 #include "nsCOMPtr.h"
+#include "FilterSupport.h"
 #include "nsHashKeys.h"
 #include "nsPoint.h"
 #include "nsRect.h"
 #include "nsSize.h"
-#include "nsSVGFilters.h"
-#include "nsSVGNumber2.h"
-#include "nsSVGNumberPair.h"
 #include "nsTArray.h"
 #include "nsIFrame.h"
 #include "mozilla/gfx/2D.h"
@@ -49,7 +47,18 @@ class UserSpaceMetrics;
  * The definition of "filter region" can be found here:
  * http://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion
  */
+<<<<<<< HEAD
 class nsFilterInstance {
+||||||| merged common ancestors
+class nsFilterInstance
+{
+=======
+class nsFilterInstance {
+  template <typename T>
+  using Span = mozilla::Span<T>;
+  using StyleFilter = mozilla::StyleFilter;
+
+>>>>>>> upstream-releases
   typedef mozilla::gfx::IntRect IntRect;
   typedef mozilla::gfx::SourceSurface SourceSurface;
   typedef mozilla::gfx::DrawTarget DrawTarget;
@@ -72,11 +81,26 @@ class nsFilterInstance {
    *   render the filter (from feImage primitives).
    * @return A FilterDescription describing the filter.
    */
+<<<<<<< HEAD
   static FilterDescription GetFilterDescription(
       nsIContent* aFilteredElement, const nsTArray<nsStyleFilter>& aFilterChain,
       bool aFilterInputIsTainted, const UserSpaceMetrics& aMetrics,
       const gfxRect& aBBox,
       nsTArray<RefPtr<SourceSurface>>& aOutAdditionalImages);
+||||||| merged common ancestors
+  static FilterDescription GetFilterDescription(nsIContent* aFilteredElement,
+                                                const nsTArray<nsStyleFilter>& aFilterChain,
+                                                bool aFilterInputIsTainted,
+                                                const UserSpaceMetrics& aMetrics,
+                                                const gfxRect& aBBox,
+                                                nsTArray<RefPtr<SourceSurface>>& aOutAdditionalImages);
+=======
+  static FilterDescription GetFilterDescription(
+      nsIContent* aFilteredElement, Span<const StyleFilter> aFilterChain,
+      bool aFilterInputIsTainted, const UserSpaceMetrics& aMetrics,
+      const gfxRect& aBBox,
+      nsTArray<RefPtr<SourceSurface>>& aOutAdditionalImages);
+>>>>>>> upstream-releases
 
   /**
    * Paint the given filtered frame.
@@ -116,6 +140,7 @@ class nsFilterInstance {
    * @param aPreFilterBounds The pre-filter visual overflow rect of
    *   aFilteredFrame, if non-null.
    */
+<<<<<<< HEAD
   static nsRect GetPostFilterBounds(nsIFrame* aFilteredFrame,
                                     const gfxRect* aOverrideBBox = nullptr,
                                     const nsRect* aPreFilterBounds = nullptr);
@@ -129,6 +154,23 @@ class nsFilterInstance {
       const mozilla::LayoutDeviceIntRect& aPreFilterBounds,
       nsTArray<mozilla::wr::WrFilterOp>& aWrFilters,
       mozilla::LayoutDeviceIntRect& aPostFilterBounds);
+||||||| merged common ancestors
+  static nsRect GetPostFilterBounds(nsIFrame *aFilteredFrame,
+                                    const gfxRect *aOverrideBBox = nullptr,
+                                    const nsRect *aPreFilterBounds = nullptr);
+=======
+  static nsRect GetPostFilterBounds(nsIFrame* aFilteredFrame,
+                                    const gfxRect* aOverrideBBox = nullptr,
+                                    const nsRect* aPreFilterBounds = nullptr);
+
+  /**
+   * Try to build WebRender filters for a frame if the filters applied to it are
+   * supported.
+   */
+  static bool BuildWebRenderFilters(nsIFrame* aFilteredFrame,
+                                    WrFiltersHolder& aWrFilters,
+                                    mozilla::Maybe<nsRect>& aPostFilterClip);
+>>>>>>> upstream-releases
 
  private:
   /**
@@ -150,21 +192,33 @@ class nsFilterInstance {
    * @param aPreFilterDirtyRegion [optional] The pre-filter area of
    *   the filtered element that changed, in app units. Only required if you
    *   will call ComputePostFilterDirtyRegion().
-   * @param aOverridePreFilterVisualOverflowRect [optional] Use a different
+   * @param aPreFilterVisualOverflowRectOverride [optional] Use a different
    *   visual overflow rect for the target element.
    * @param aOverrideBBox [optional] Use a different SVG bbox for the target
    *   element. Must be non-null if aTargetFrame is null.
    */
   nsFilterInstance(nsIFrame* aTargetFrame, nsIContent* aTargetContent,
                    const UserSpaceMetrics& aMetrics,
-                   const nsTArray<nsStyleFilter>& aFilterChain,
+                   Span<const StyleFilter> aFilterChain,
                    bool aFilterInputIsTainted,
                    nsSVGFilterPaintCallback* aPaintCallback,
                    const gfxMatrix& aPaintTransform,
+<<<<<<< HEAD
                    const nsRegion* aPostFilterDirtyRegion = nullptr,
                    const nsRegion* aPreFilterDirtyRegion = nullptr,
                    const nsRect* aOverridePreFilterVisualOverflowRect = nullptr,
                    const gfxRect* aOverrideBBox = nullptr);
+||||||| merged common ancestors
+                   const nsRegion *aPostFilterDirtyRegion = nullptr,
+                   const nsRegion *aPreFilterDirtyRegion = nullptr,
+                   const nsRect *aOverridePreFilterVisualOverflowRect = nullptr,
+                   const gfxRect *aOverrideBBox = nullptr);
+=======
+                   const nsRegion* aPostFilterDirtyRegion = nullptr,
+                   const nsRegion* aPreFilterDirtyRegion = nullptr,
+                   const nsRect* aPreFilterVisualOverflowRectOverride = nullptr,
+                   const gfxRect* aOverrideBBox = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * Returns true if the filter instance was created successfully.
@@ -231,7 +285,13 @@ class nsFilterInstance {
    * Creates a SourceSurface for either the FillPaint or StrokePaint graph
    * nodes
    */
+<<<<<<< HEAD
   void BuildSourcePaint(SourceInfo* aPrimitive, imgDrawingParams& aImgParams);
+||||||| merged common ancestors
+  void BuildSourcePaint(SourceInfo *aPrimitive, imgDrawingParams& aImgParams);
+=======
+  void BuildSourcePaint(SourceInfo* aSource, imgDrawingParams& aImgParams);
+>>>>>>> upstream-releases
 
   /**
    * Creates a SourceSurface for either the FillPaint and StrokePaint graph
@@ -244,7 +304,16 @@ class nsFilterInstance {
    * Creates the SourceSurface for the SourceGraphic graph node, paints its
    * contents, and assigns it to mSourceGraphic.mSourceSurface.
    */
+<<<<<<< HEAD
   void BuildSourceImage(DrawTarget* aDest, imgDrawingParams& aImgParams);
+||||||| merged common ancestors
+  void BuildSourceImage(DrawTarget *aDest, imgDrawingParams& aImgParams);
+=======
+  void BuildSourceImage(DrawTarget* aDest, imgDrawingParams& aImgParams,
+                        mozilla::gfx::FilterNode* aFilter,
+                        mozilla::gfx::FilterNode* aSource,
+                        const mozilla::gfx::Rect& aSourceRect);
+>>>>>>> upstream-releases
 
   /**
    * Build the list of FilterPrimitiveDescriptions that describes the filter's
@@ -252,8 +321,17 @@ class nsFilterInstance {
    * mPrimitiveDescriptions and mInputImages. aFilterInputIsTainted describes
    * whether the SourceGraphic is tainted.
    */
+<<<<<<< HEAD
   nsresult BuildPrimitives(const nsTArray<nsStyleFilter>& aFilterChain,
                            nsIFrame* aTargetFrame, bool aFilterInputIsTainted);
+||||||| merged common ancestors
+  nsresult BuildPrimitives(const nsTArray<nsStyleFilter>& aFilterChain,
+                           nsIFrame* aTargetFrame,
+                           bool aFilterInputIsTainted);
+=======
+  nsresult BuildPrimitives(Span<const StyleFilter> aFilterChain,
+                           nsIFrame* aTargetFrame, bool aFilterInputIsTainted);
+>>>>>>> upstream-releases
 
   /**
    * Add to the list of FilterPrimitiveDescriptions for a particular SVG
@@ -261,10 +339,21 @@ class nsFilterInstance {
    * mInputImages. aInputIsTainted describes whether the input to aFilter is
    * tainted.
    */
+<<<<<<< HEAD
   nsresult BuildPrimitivesForFilter(
       const nsStyleFilter& aFilter, nsIFrame* aTargetFrame,
       bool aInputIsTainted,
       nsTArray<FilterPrimitiveDescription>& aPrimitiveDescriptions);
+||||||| merged common ancestors
+  nsresult BuildPrimitivesForFilter(const nsStyleFilter& aFilter,
+                                    nsIFrame* aTargetFrame,
+                                    bool aInputIsTainted,
+                                    nsTArray<FilterPrimitiveDescription>& aPrimitiveDescriptions);
+=======
+  nsresult BuildPrimitivesForFilter(
+      const StyleFilter& aFilter, nsIFrame* aTargetFrame, bool aInputIsTainted,
+      nsTArray<FilterPrimitiveDescription>& aPrimitiveDescriptions);
+>>>>>>> upstream-releases
 
   /**
    * Computes the filter space bounds of the areas that we actually *need* from

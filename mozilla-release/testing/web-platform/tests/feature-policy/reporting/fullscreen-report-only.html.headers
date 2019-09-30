@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: fullscreen-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: fullscreen 'none'
+>>>>>>> upstream-releases

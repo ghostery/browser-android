@@ -249,7 +249,6 @@ class ScreenCapturerMac : public DesktopCapturer {
 
   // DesktopCapturer interface.
   void Start(Callback* callback) override;
-  void Stop() override;
   void CaptureFrame() override;
   void SetExcludedWindow(WindowId window) override;
   bool GetSourceList(SourceList* screens) override;
@@ -383,10 +382,27 @@ void ScreenCapturerMac::Start(Callback* callback) {
   desktop_config_monitor_->Unlock();
 }
 
+<<<<<<< HEAD
 void ScreenCapturerMac::Stop() {
   callback_ = NULL;
 }
 
+||||||| merged common ancestors
+void ScreenCapturerMac::Stop() {
+  if (power_assertion_id_display_ != kIOPMNullAssertionID) {
+    IOPMAssertionRelease(power_assertion_id_display_);
+    power_assertion_id_display_ = kIOPMNullAssertionID;
+  }
+  if (power_assertion_id_user_ != kIOPMNullAssertionID) {
+    IOPMAssertionRelease(power_assertion_id_user_);
+    power_assertion_id_user_ = kIOPMNullAssertionID;
+  }
+
+  callback_ = NULL;
+}
+
+=======
+>>>>>>> upstream-releases
 void ScreenCapturerMac::CaptureFrame() {
   int64_t capture_start_time_nanos = rtc::TimeNanos();
 

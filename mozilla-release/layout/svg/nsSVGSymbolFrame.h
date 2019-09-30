@@ -9,6 +9,7 @@
 
 #include "nsSVGViewportFrame.h"
 
+<<<<<<< HEAD
 class nsSVGSymbolFrame final : public nsSVGViewportFrame {
   friend nsIFrame* NS_NewSVGSymbolFrame(nsIPresShell* aPresShell,
                                         ComputedStyle* aStyle);
@@ -16,6 +17,29 @@ class nsSVGSymbolFrame final : public nsSVGViewportFrame {
  protected:
   explicit nsSVGSymbolFrame(ComputedStyle* aStyle)
       : nsSVGViewportFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+class nsSVGSymbolFrame final : public nsSVGViewportFrame
+{
+  friend nsIFrame*
+  NS_NewSVGSymbolFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGSymbolFrame(ComputedStyle* aStyle)
+    : nsSVGViewportFrame(aStyle, kClassID)
+  {
+  }
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsSVGSymbolFrame final : public nsSVGViewportFrame {
+  friend nsIFrame* NS_NewSVGSymbolFrame(mozilla::PresShell* aPresShell,
+                                        ComputedStyle* aStyle);
+
+ protected:
+  explicit nsSVGSymbolFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsSVGViewportFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
  public:
   NS_DECL_QUERYFRAME

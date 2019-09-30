@@ -50,8 +50,14 @@ class ToolboxTabsOrderManager {
   }
 
   isLastTab(tabElement) {
-    return !tabElement.nextSibling ||
-           tabElement.nextSibling.id === "tools-chevron-menu-button";
+    return (
+      !tabElement.nextSibling ||
+      tabElement.nextSibling.id === "tools-chevron-menu-button"
+    );
+  }
+
+  isRTL() {
+    return this.toolbox.direction === "rtl";
   }
 
   isRTL() {
@@ -64,10 +70,9 @@ class ToolboxTabsOrderManager {
     // Concat the overflowed tabs id since they are not contained in visible tabs.
     // The overflowed tabs cannot be reordered so we just append the id from current
     // panel definitions on their order.
-    const overflowedTabIds =
-      this.currentPanelDefinitions
-          .filter(definition => !tabs.some(tab => tab.dataset.id === definition.id))
-          .map(definition => definition.extensionId || definition.id);
+    const overflowedTabIds = this.currentPanelDefinitions
+      .filter(definition => !tabs.some(tab => tab.dataset.id === definition.id))
+      .map(definition => definition.extensionId || definition.id);
     const currentTabIds = tabIds.concat(overflowedTabIds);
     const dragTargetId =
       this.dragTarget.dataset.extensionId || this.dragTarget.dataset.id;
@@ -77,9 +82,11 @@ class ToolboxTabsOrderManager {
     // Remove panel id which is not in panel definitions and addons list.
     const extensions = await AddonManager.getAllAddons();
     const definitions = gDevTools.getToolDefinitionArray();
-    const result =
-      absoluteIds.filter(id => definitions.find(d => id === (d.extensionId || d.id)) ||
-                               extensions.find(e => id === e.id));
+    const result = absoluteIds.filter(
+      id =>
+        definitions.find(d => id === (d.extensionId || d.id)) ||
+        extensions.find(e => id === e.id)
+    );
 
     Services.prefs.setCharPref(PREFERENCE_NAME, result.join(","));
   }
@@ -96,7 +103,9 @@ class ToolboxTabsOrderManager {
     this.dragStartX = e.pageX;
     this.dragTarget = e.target;
     this.previousPageX = e.pageX;
-    this.toolboxContainerElement = this.dragTarget.closest("#toolbox-container");
+    this.toolboxContainerElement = this.dragTarget.closest(
+      "#toolbox-container"
+    );
     this.toolboxTabsElement = this.dragTarget.closest(".toolbox-tabs");
     this.isOrderUpdated = false;
     this.eventTarget = this.dragTarget.ownerGlobal.top;
@@ -113,6 +122,7 @@ class ToolboxTabsOrderManager {
       this.dragTarget.offsetLeft + diffPageX + this.dragTarget.clientWidth / 2;
     let isDragTargetPreviousSibling = false;
 
+<<<<<<< HEAD
     const tabElements = this.toolboxTabsElement.querySelectorAll(".devtools-tab");
 
     // Calculate the minimum and maximum X-offset that can be valid for the drag target.
@@ -128,6 +138,29 @@ class ToolboxTabsOrderManager {
     dragTargetCenterX = Math.max(min, dragTargetCenterX);
 
     for (const tabElement of tabElements) {
+||||||| merged common ancestors
+    for (const tabElement of this.toolboxTabsElement.querySelectorAll(".devtools-tab")) {
+=======
+    const tabElements = this.toolboxTabsElement.querySelectorAll(
+      ".devtools-tab"
+    );
+
+    // Calculate the minimum and maximum X-offset that can be valid for the drag target.
+    const firstElement = tabElements[0];
+    const firstElementCenterX =
+      firstElement.offsetLeft + firstElement.clientWidth / 2;
+    const lastElement = tabElements[tabElements.length - 1];
+    const lastElementCenterX =
+      lastElement.offsetLeft + lastElement.clientWidth / 2;
+    const max = Math.max(firstElementCenterX, lastElementCenterX);
+    const min = Math.min(firstElementCenterX, lastElementCenterX);
+
+    // Normalize the target center X so to remain between the first and last tab.
+    dragTargetCenterX = Math.min(max, dragTargetCenterX);
+    dragTargetCenterX = Math.max(min, dragTargetCenterX);
+
+    for (const tabElement of tabElements) {
+>>>>>>> upstream-releases
       if (tabElement === this.dragTarget) {
         isDragTargetPreviousSibling = true;
         continue;
@@ -135,12 +168,30 @@ class ToolboxTabsOrderManager {
 
       // Is the dragTarget near the center of the other tab?
       const anotherCenterX = tabElement.offsetLeft + tabElement.clientWidth / 2;
+<<<<<<< HEAD
       const distanceWithDragTarget = Math.abs(dragTargetCenterX - anotherCenterX);
       const isReplaceable = distanceWithDragTarget < tabElement.clientWidth / 3;
+||||||| merged common ancestors
+      const isReplaceable =
+        // Is the dragTarget near the center of the other tab?
+        Math.abs(dragTargetCenterX - anotherCenterX) < tabElement.clientWidth / 3 ||
+        // Has the dragTarget moved before the first tab
+        // (mouse moved too fast between two events)
+        (this.isFirstTab(tabElement) && dragTargetCenterX < anotherCenterX) ||
+        // Has the dragTarget moved after the last tab
+        // (mouse moved too fast between two events)
+        (this.isLastTab(tabElement) && anotherCenterX < dragTargetCenterX);
+=======
+      const distanceWithDragTarget = Math.abs(
+        dragTargetCenterX - anotherCenterX
+      );
+      const isReplaceable = distanceWithDragTarget < tabElement.clientWidth / 3;
+>>>>>>> upstream-releases
 
       if (isReplaceable) {
-        const replaceableElement =
-          isDragTargetPreviousSibling ? tabElement.nextSibling : tabElement;
+        const replaceableElement = isDragTargetPreviousSibling
+          ? tabElement.nextSibling
+          : tabElement;
         this.insertBefore(replaceableElement);
         break;
       }
@@ -162,7 +213,7 @@ class ToolboxTabsOrderManager {
       distance = 0;
     }
 
-    this.dragTarget.style.left = `${ distance }px`;
+    this.dragTarget.style.left = `${distance}px`;
     this.previousPageX = e.pageX;
   }
 
@@ -179,7 +230,8 @@ class ToolboxTabsOrderManager {
 
       // Log which tabs reordered. The question we want to answer is:
       // "How frequently are the tabs re-ordered, also which tabs get re-ordered?"
-      const toolId = this.dragTarget.dataset.extensionId || this.dragTarget.dataset.id;
+      const toolId =
+        this.dragTarget.dataset.extensionId || this.dragTarget.dataset.id;
       this.telemetry.keyedScalarAdd(TABS_REORDERED_SCALAR, toolId, 1);
     }
 

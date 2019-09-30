@@ -11,10 +11,26 @@ using mozilla::hal::WindowIdentifier;
 namespace mozilla {
 namespace hal_impl {
 
+<<<<<<< HEAD
 void Vibrate(const nsTArray<uint32_t> &pattern, const hal::WindowIdentifier &) {
 }
+||||||| merged common ancestors
+void
+Vibrate(const nsTArray<uint32_t>& pattern, const hal::WindowIdentifier &)
+{}
+=======
+void Vibrate(const nsTArray<uint32_t>& pattern, const hal::WindowIdentifier&) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void CancelVibrate(const hal::WindowIdentifier &) {}
+||||||| merged common ancestors
+void
+CancelVibrate(const hal::WindowIdentifier &)
+{}
+=======
+void CancelVibrate(const hal::WindowIdentifier&) {}
+>>>>>>> upstream-releases
 
 }  // namespace hal_impl
 }  // namespace mozilla

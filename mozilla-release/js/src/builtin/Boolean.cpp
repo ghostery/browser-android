@@ -14,10 +14,9 @@
 #include "jstypes.h"
 
 #include "jit/InlinableNatives.h"
+#include "js/PropertySpec.h"
 #include "util/StringBuffer.h"
-#ifdef ENABLE_BIGINT
 #include "vm/BigIntType.h"
-#endif
 #include "vm/GlobalObject.h"
 #include "vm/JSAtom.h"
 #include "vm/JSContext.h"
@@ -36,6 +35,7 @@ MOZ_ALWAYS_INLINE bool IsBoolean(HandleValue v) {
   return v.isBoolean() || (v.isObject() && v.toObject().is<BooleanObject>());
 }
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool bool_toSource_impl(JSContext* cx, const CallArgs& args) {
   HandleValue thisv = args.thisv();
   MOZ_ASSERT(IsBoolean(thisv));
@@ -55,6 +55,47 @@ MOZ_ALWAYS_INLINE bool bool_toSource_impl(JSContext* cx, const CallArgs& args) {
   }
   args.rval().setString(str);
   return true;
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+bool_toSource_impl(JSContext* cx, const CallArgs& args)
+{
+    HandleValue thisv = args.thisv();
+    MOZ_ASSERT(IsBoolean(thisv));
+
+    bool b = thisv.isBoolean() ? thisv.toBoolean() : thisv.toObject().as<BooleanObject>().unbox();
+
+    StringBuffer sb(cx);
+    if (!sb.append("(new Boolean(") || !BooleanToStringBuffer(b, sb) || !sb.append("))")) {
+        return false;
+    }
+
+    JSString* str = sb.finishString();
+    if (!str) {
+        return false;
+    }
+    args.rval().setString(str);
+    return true;
+=======
+MOZ_ALWAYS_INLINE bool bool_toSource_impl(JSContext* cx, const CallArgs& args) {
+  HandleValue thisv = args.thisv();
+  MOZ_ASSERT(IsBoolean(thisv));
+
+  bool b = thisv.isBoolean() ? thisv.toBoolean()
+                             : thisv.toObject().as<BooleanObject>().unbox();
+
+  JSStringBuilder sb(cx);
+  if (!sb.append("(new Boolean(") || !BooleanToStringBuffer(b, sb) ||
+      !sb.append("))")) {
+    return false;
+  }
+
+  JSString* str = sb.finishString();
+  if (!str) {
+    return false;
+  }
+  args.rval().setString(str);
+  return true;
+>>>>>>> upstream-releases
 }
 
 static bool bool_toSource(JSContext* cx, unsigned argc, Value* vp) {
@@ -102,10 +143,21 @@ static bool Boolean(JSContext* cx, unsigned argc, Value* vp) {
 
   bool b = args.length() != 0 ? JS::ToBoolean(args[0]) : false;
 
+<<<<<<< HEAD
   if (args.isConstructing()) {
     RootedObject proto(cx);
     if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
       return false;
+||||||| merged common ancestors
+    if (!DefinePropertiesAndFunctions(cx, booleanProto, nullptr, boolean_methods)) {
+        return nullptr;
+=======
+  if (args.isConstructing()) {
+    RootedObject proto(cx);
+    if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Boolean,
+                                            &proto)) {
+      return false;
+>>>>>>> upstream-releases
     }
 
     JSObject* obj = BooleanObject::create(cx, b, proto);
@@ -156,6 +208,7 @@ JSString* js::BooleanToString(JSContext* cx, bool b) {
   return b ? cx->names().true_ : cx->names().false_;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool js::ToBooleanSlow(HandleValue v) {
   if (v.isString()) {
     return v.toString()->length() != 0;
@@ -165,6 +218,27 @@ JS_PUBLIC_API bool js::ToBooleanSlow(HandleValue v) {
     return v.toBigInt()->toBoolean();
   }
 #endif
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+js::ToBooleanSlow(HandleValue v)
+{
+    if (v.isString()) {
+        return v.toString()->length() != 0;
+    }
+#ifdef ENABLE_BIGINT
+    if (v.isBigInt()) {
+        return v.toBigInt()->toBoolean();
+    }
+#endif
+=======
+JS_PUBLIC_API bool js::ToBooleanSlow(HandleValue v) {
+  if (v.isString()) {
+    return v.toString()->length() != 0;
+  }
+  if (v.isBigInt()) {
+    return !v.toBigInt()->isZero();
+  }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(v.isObject());
   return !EmulatesUndefined(&v.toObject());

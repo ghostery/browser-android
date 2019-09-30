@@ -8,7 +8,7 @@
 
 #include "nsXBLProtoImpl.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsContentUtils.h"
 #include "nsIXPConnect.h"
 #include "nsIServiceManager.h"
@@ -37,7 +37,7 @@ nsresult nsXBLProtoImpl::InstallImplementation(
 
   // If the way this gets the script context changes, fix
   // nsXBLProtoImplAnonymousMethod::Execute
-  nsIDocument* document = aBinding->GetBoundElement()->OwnerDoc();
+  Document* document = aBinding->GetBoundElement()->OwnerDoc();
 
   // This sometimes gets called when we have no outer window and if we don't
   // catch this, we get leaks during crashtests and reftests.
@@ -192,8 +192,16 @@ nsresult nsXBLProtoImpl::InitTargetObjects(
     MOZ_ASSERT(mPrecompiledMemberHolder);
   }
 
+<<<<<<< HEAD
   nsIDocument* ownerDoc = aBoundElement->OwnerDoc();
   nsIGlobalObject* sgo;
+||||||| merged common ancestors
+  nsIDocument *ownerDoc = aBoundElement->OwnerDoc();
+  nsIGlobalObject *sgo;
+=======
+  Document* ownerDoc = aBoundElement->OwnerDoc();
+  nsIGlobalObject* sgo;
+>>>>>>> upstream-releases
 
   if (!(sgo = ownerDoc->GetScopeObject())) {
     return NS_ERROR_UNEXPECTED;

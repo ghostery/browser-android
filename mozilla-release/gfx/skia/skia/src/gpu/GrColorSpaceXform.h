@@ -8,7 +8,6 @@
 #ifndef GrColorSpaceXform_DEFINED
 #define GrColorSpaceXform_DEFINED
 
-#include "GrColor.h"
 #include "GrFragmentProcessor.h"
 #include "SkColorSpaceXformSteps.h"
 #include "SkRefCnt.h"
@@ -38,8 +37,15 @@ public:
 
     static bool Equals(const GrColorSpaceXform* a, const GrColorSpaceXform* b);
 
+<<<<<<< HEAD
     GrColor4f apply(const GrColor4f& srcColor);
     SkColor4f apply(const SkColor4f& srcColor);
+||||||| merged common ancestors
+    GrColor4f unclampedXform(const GrColor4f& srcColor);
+    GrColor4f clampedXform(const GrColor4f& srcColor);
+=======
+    SkColor4f apply(const SkColor4f& srcColor);
+>>>>>>> upstream-releases
 
 private:
     friend class GrGLSLColorSpaceXformHelper;
@@ -60,8 +66,24 @@ public:
      *  the color space of the output from src to dst.
      */
     static std::unique_ptr<GrFragmentProcessor> Make(std::unique_ptr<GrFragmentProcessor> child,
+<<<<<<< HEAD
                                                      SkColorSpace* src, SkAlphaType srcAT,
                                                      SkColorSpace* dst);
+||||||| merged common ancestors
+                                                     const SkColorSpace* src,
+                                                     GrPixelConfig srcConfig,
+                                                     const SkColorSpace* dst);
+=======
+                                                     SkColorSpace* src, SkAlphaType srcAT,
+                                                     SkColorSpace* dst);
+
+    /**
+     * Returns a fragment processor that calls the passed in FP and then converts it with the given
+     * color xform. Returns null if child is null, returns child if the xform is null (e.g. noop).
+     */
+    static std::unique_ptr<GrFragmentProcessor> Make(std::unique_ptr<GrFragmentProcessor> child,
+                                                     sk_sp<GrColorSpaceXform> colorXform);
+>>>>>>> upstream-releases
 
     const char* name() const override { return "ColorSpaceXform"; }
     std::unique_ptr<GrFragmentProcessor> clone() const override;

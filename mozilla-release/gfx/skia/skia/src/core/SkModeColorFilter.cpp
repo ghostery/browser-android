@@ -10,9 +10,17 @@
 #include "SkBlitRow.h"
 #include "SkColorFilter.h"
 #include "SkColorData.h"
+#include "SkColorSpacePriv.h"
 #include "SkColorSpaceXformer.h"
+#include "SkColorSpaceXformSteps.h"
 #include "SkModeColorFilter.h"
+<<<<<<< HEAD
 #include "SkPM4fPriv.h"
+||||||| merged common ancestors
+#include "SkPM4f.h"
+#include "SkPM4fPriv.h"
+=======
+>>>>>>> upstream-releases
 #include "SkRandom.h"
 #include "SkRasterPipeline.h"
 #include "SkReadBuffer.h"
@@ -66,7 +74,16 @@ void SkModeColorFilter::onAppendStages(SkRasterPipeline* p,
                                        SkArenaAlloc* scratch,
                                        bool shaderIsOpaque) const {
     p->append(SkRasterPipeline::move_src_dst);
+<<<<<<< HEAD
     p->append_constant_color(scratch, premul_in_dst_colorspace(fColor, dst));
+||||||| merged common ancestors
+    p->append_constant_color(scratch, SkPM4f_from_SkColor(fColor, dst));
+=======
+    SkColor4f color = SkColor4f::FromColor(fColor);
+    SkColorSpaceXformSteps(sk_srgb_singleton(), kUnpremul_SkAlphaType,
+                           dst,                 kUnpremul_SkAlphaType).apply(color.vec());
+    p->append_constant_color(scratch, color.premul().vec());
+>>>>>>> upstream-releases
     SkBlendMode_AppendStages(fMode, p);
 }
 
@@ -86,7 +103,7 @@ sk_sp<SkColorFilter> SkModeColorFilter::onMakeColorSpace(SkColorSpaceXformer* xf
 #include "SkGr.h"
 
 std::unique_ptr<GrFragmentProcessor> SkModeColorFilter::asFragmentProcessor(
-        GrContext*, const GrColorSpaceInfo& dstColorSpaceInfo) const {
+        GrRecordingContext*, const GrColorSpaceInfo& dstColorSpaceInfo) const {
     if (SkBlendMode::kDst == fMode) {
         return nullptr;
     }

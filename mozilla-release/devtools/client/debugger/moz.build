@@ -4,13 +4,41 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DIRS += [
+<<<<<<< HEAD
     'new'
+||||||| merged common ancestors
+    'content',
+    'new'
+=======
+  'dist',
+  'images',
+  'src',
+>>>>>>> upstream-releases
 ]
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+DevToolsModules(
+    'panel.js'
+)
+
+=======
+include('../shared/build/node-templates.mozbuild')
+
+>>>>>>> upstream-releases
 BROWSER_CHROME_MANIFESTS += [
+<<<<<<< HEAD
   'new/test/mochitest/browser.ini',
   'test/mochitest/browser.ini'
+||||||| merged common ancestors
+  'new/test/mochitest/browser.ini',
+  'test/mochitest/browser.ini',
+  'test/mochitest/browser2.ini'
+=======
+  'test/mochitest/browser.ini',
+>>>>>>> upstream-releases
 ]
 
-with Files('**'):
-    BUG_COMPONENT = ('DevTools', 'Debugger')
+DevToolsModules(
+    'panel.js',
+)

@@ -23,7 +23,7 @@ load 1235605.gif
 load 1241728-1.html
 load 1241729-1.html
 load 1242093-1.html
-load 1242778-1.png
+skip-if(/^Windows\x20NT\x2010\.0/.test(http.oscpu)&&/^aarch64-msvc/.test(xulRuntime.XPCOMABI)) load 1242778-1.png
 load 1249576-1.png
 load 1253362-1.html
 skip-if(Android&&browserIsRemote) load 1355898-1.html # bug 1507207
@@ -55,6 +55,15 @@ load invalid-size-second-frame.gif
 load multiple-png-hassize.ico # Bug 863958 - This icon's size is such that it leads to multiple writes to the PNG decoder after we've gotten our size.
 asserts(0-2) load ownerdiscard.html # Bug 1323672, bug 807211
 load truncated-second-frame.png # Bug 863975
+<<<<<<< HEAD
 
 # Bug 1509998 - Ensure that we handle empty frame rects in animated images.
 load 1509998.gif
+||||||| merged common ancestors
+=======
+
+# Bug 1509998 - Ensure that we handle empty frame rects in animated images.
+load 1509998.gif
+
+load 1526717-1.html
+>>>>>>> upstream-releases

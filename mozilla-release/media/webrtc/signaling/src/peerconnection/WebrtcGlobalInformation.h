@@ -18,8 +18,18 @@ class GlobalObject;
 class WebrtcGlobalStatisticsCallback;
 class WebrtcGlobalLoggingCallback;
 
+<<<<<<< HEAD
 class WebrtcGlobalInformation {
  public:
+||||||| merged common ancestors
+class WebrtcGlobalInformation
+{
+public:
+=======
+class WebrtcGlobalInformation {
+ public:
+  MOZ_CAN_RUN_SCRIPT
+>>>>>>> upstream-releases
   static void GetAllStats(const GlobalObject& aGlobal,
                           WebrtcGlobalStatisticsCallback& aStatsCallback,
                           const Optional<nsAString>& pcIdFilter,
@@ -27,7 +37,15 @@ class WebrtcGlobalInformation {
 
   static void ClearAllStats(const GlobalObject& aGlobal);
 
+<<<<<<< HEAD
   static void GetLogging(const GlobalObject& aGlobal, const nsAString& aPattern,
+||||||| merged common ancestors
+  static void GetLogging(const GlobalObject& aGlobal,
+                         const nsAString& aPattern,
+=======
+  MOZ_CAN_RUN_SCRIPT
+  static void GetLogging(const GlobalObject& aGlobal, const nsAString& aPattern,
+>>>>>>> upstream-releases
                          WebrtcGlobalLoggingCallback& aLoggingCallback,
                          ErrorResult& aRv);
 

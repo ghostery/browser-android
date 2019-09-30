@@ -113,6 +113,7 @@ static GLenum DoRenderbufferStorageMaybeMultisample(gl::GLContext* gl,
   return errorScope.GetError();
 }
 
+<<<<<<< HEAD
 GLenum WebGLRenderbuffer::DoRenderbufferStorage(
     uint32_t samples, const webgl::FormatUsageInfo* format, uint32_t width,
     uint32_t height) {
@@ -123,18 +124,148 @@ GLenum WebGLRenderbuffer::DoRenderbufferStorage(
 
   GLenum primaryFormat = format->format->sizedFormat;
   GLenum secondaryFormat = 0;
+||||||| merged common ancestors
+GLenum
+WebGLRenderbuffer::DoRenderbufferStorage(uint32_t samples,
+                                         const webgl::FormatUsageInfo* format,
+                                         uint32_t width, uint32_t height)
+{
+    MOZ_ASSERT(mContext->mBoundRenderbuffer == this);
 
+    gl::GLContext* gl = mContext->gl;
+    MOZ_ASSERT(samples <= 256); // Sanity check.
+
+    GLenum primaryFormat = format->format->sizedFormat;
+    GLenum secondaryFormat = 0;
+
+    if (mEmulatePackedDepthStencil && primaryFormat == LOCAL_GL_DEPTH24_STENCIL8) {
+        primaryFormat = DepthFormatForDepthStencilEmu(gl);
+        secondaryFormat = LOCAL_GL_STENCIL_INDEX8;
+    }
+
+    gl->fBindRenderbuffer(LOCAL_GL_RENDERBUFFER, mPrimaryRB);
+    GLenum error = DoRenderbufferStorageMaybeMultisample(gl, samples, primaryFormat,
+                                                         width, height);
+    if (error)
+        return error;
+
+    if (secondaryFormat) {
+        if (!mSecondaryRB) {
+            gl->fGenRenderbuffers(1, &mSecondaryRB);
+        }
+=======
+GLenum WebGLRenderbuffer::DoRenderbufferStorage(
+    uint32_t samples, const webgl::FormatUsageInfo* format, uint32_t width,
+    uint32_t height) {
+  MOZ_ASSERT(mContext->mBoundRenderbuffer == this);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (mEmulatePackedDepthStencil &&
       primaryFormat == LOCAL_GL_DEPTH24_STENCIL8) {
     primaryFormat = DepthFormatForDepthStencilEmu(gl);
     secondaryFormat = LOCAL_GL_STENCIL_INDEX8;
   }
+||||||| merged common ancestors
+        gl->fBindRenderbuffer(LOCAL_GL_RENDERBUFFER, mSecondaryRB);
+        error = DoRenderbufferStorageMaybeMultisample(gl, samples, secondaryFormat,
+                                                      width, height);
+        if (error)
+            return error;
+    } else if (mSecondaryRB) {
+        gl->fDeleteRenderbuffers(1, &mSecondaryRB);
+        mSecondaryRB = 0;
+    }
+=======
+  gl::GLContext* gl = mContext->gl;
+  MOZ_ASSERT(samples <= 256);  // Sanity check.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gl->fBindRenderbuffer(LOCAL_GL_RENDERBUFFER, mPrimaryRB);
   GLenum error = DoRenderbufferStorageMaybeMultisample(
       gl, samples, primaryFormat, width, height);
   if (error) return error;
+||||||| merged common ancestors
+    return 0;
+}
+=======
+  GLenum primaryFormat = format->format->sizedFormat;
+  GLenum secondaryFormat = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (secondaryFormat) {
+    if (!mSecondaryRB) {
+      gl->fGenRenderbuffers(1, &mSecondaryRB);
+    }
+||||||| merged common ancestors
+void
+WebGLRenderbuffer::RenderbufferStorage(uint32_t samples, GLenum internalFormat,
+                                       uint32_t width, uint32_t height)
+{
+    const auto usage = mContext->mFormatUsage->GetRBUsage(internalFormat);
+    if (!usage) {
+        mContext->ErrorInvalidEnum("Invalid `internalFormat`: 0x%04x.",
+                                   internalFormat);
+        return;
+    }
+=======
+  if (mEmulatePackedDepthStencil &&
+      primaryFormat == LOCAL_GL_DEPTH24_STENCIL8) {
+    primaryFormat = DepthFormatForDepthStencilEmu(gl);
+    secondaryFormat = LOCAL_GL_STENCIL_INDEX8;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    gl->fBindRenderbuffer(LOCAL_GL_RENDERBUFFER, mSecondaryRB);
+    error = DoRenderbufferStorageMaybeMultisample(gl, samples, secondaryFormat,
+                                                  width, height);
+    if (error) return error;
+  } else if (mSecondaryRB) {
+    gl->fDeleteRenderbuffers(1, &mSecondaryRB);
+    mSecondaryRB = 0;
+  }
+||||||| merged common ancestors
+    if (width > mContext->mGLMaxRenderbufferSize ||
+        height > mContext->mGLMaxRenderbufferSize)
+    {
+        mContext->ErrorInvalidValue("Width or height exceeds maximum renderbuffer"
+                                    " size.");
+        return;
+    }
+=======
+  gl->fBindRenderbuffer(LOCAL_GL_RENDERBUFFER, mPrimaryRB);
+  GLenum error = DoRenderbufferStorageMaybeMultisample(
+      gl, samples, primaryFormat, width, height);
+  if (error) return error;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return 0;
+}
+||||||| merged common ancestors
+    if (!usage->maxSamplesKnown) {
+        const_cast<webgl::FormatUsageInfo*>(usage)->ResolveMaxSamples(mContext->gl);
+    }
+    MOZ_ASSERT(usage->maxSamplesKnown);
+
+    if (samples > usage->maxSamples) {
+        mContext->ErrorInvalidOperation("`samples` is out of the valid range.");
+        return;
+    }
+
+    // Validation complete.
+
+    const GLenum error = DoRenderbufferStorage(samples, usage, width, height);
+    if (error) {
+        mContext->GenerateWarning("Unexpected error %s", EnumString(error).c_str());
+        return;
+    }
+
+    mContext->OnDataAllocCall();
+=======
   if (secondaryFormat) {
     if (!mSecondaryRB) {
       gl->fGenRenderbuffers(1, &mSecondaryRB);
@@ -152,6 +283,47 @@ GLenum WebGLRenderbuffer::DoRenderbufferStorage(
   return 0;
 }
 
+void WebGLRenderbuffer::RenderbufferStorage(uint32_t samples,
+                                            GLenum internalFormat,
+                                            uint32_t width, uint32_t height) {
+  const auto usage = mContext->mFormatUsage->GetRBUsage(internalFormat);
+  if (!usage) {
+    mContext->ErrorInvalidEnum("Invalid `internalFormat`: 0x%04x.",
+                               internalFormat);
+    return;
+  }
+
+  if (width > mContext->mGLMaxRenderbufferSize ||
+      height > mContext->mGLMaxRenderbufferSize) {
+    mContext->ErrorInvalidValue(
+        "Width or height exceeds maximum renderbuffer"
+        " size.");
+    return;
+  }
+
+  const auto maxSamples = usage->MaxSamples(*mContext->gl);
+  if (samples > maxSamples) {
+    mContext->ErrorInvalidOperation("`samples` is out of the valid range.");
+    return;
+  }
+
+  // Validation complete.
+
+  const GLenum error = DoRenderbufferStorage(samples, usage, width, height);
+  if (error) {
+    mContext->GenerateWarning("Unexpected error %s", EnumString(error).c_str());
+    if (error == LOCAL_GL_OUT_OF_MEMORY) {
+      // Truncate.
+      mImageInfo = {};
+      InvalidateCaches();
+    }
+    return;
+  }
+
+  mContext->OnDataAllocCall();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void WebGLRenderbuffer::RenderbufferStorage(uint32_t samples,
                                             GLenum internalFormat,
                                             uint32_t width, uint32_t height) {
@@ -194,6 +366,17 @@ void WebGLRenderbuffer::RenderbufferStorage(uint32_t samples,
   const bool hasData = false;
   mImageInfo = {usage, width, height, depth, hasData, uint8_t(samples)};
   InvalidateCaches();
+||||||| merged common ancestors
+    const uint32_t depth = 1;
+    const bool hasData = false;
+    mImageInfo = { usage, width, height, depth, hasData, uint8_t(samples) };
+    InvalidateCaches();
+=======
+  const uint32_t depth = 1;
+  const bool hasData = false;
+  mImageInfo = {usage, width, height, depth, hasData, uint8_t(samples)};
+  InvalidateCaches();
+>>>>>>> upstream-releases
 }
 
 void WebGLRenderbuffer::DoFramebufferRenderbuffer(

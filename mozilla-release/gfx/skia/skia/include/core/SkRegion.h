@@ -452,11 +452,23 @@ public:
     */
     bool op(const SkRegion& rgna, const SkRegion& rgnb, Op op);
 
+<<<<<<< HEAD
 #ifdef SK_BUILD_FOR_ANDROID
     /** Android framework only.
 
         @return  string representation of SkRegion
     */
+||||||| merged common ancestors
+#ifdef SK_BUILD_FOR_ANDROID
+    /** Returns a new char* containing the list of rectangles in this region
+     */
+=======
+#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
+    /** Private. Android framework only.
+
+        @return  string representation of SkRegion
+    */
+>>>>>>> upstream-releases
     char* toString();
 #endif
 
@@ -466,12 +478,23 @@ public:
     */
     class SK_API Iterator {
     public:
+<<<<<<< HEAD
 
         /** Initializes SkRegion::Iterator with an empty SkRegion. done() on SkRegion::Iterator returns true.
             Call reset() to initialized SkRegion::Iterator at a later time.
 
             @return  empty SkRegion ierator
         */
+||||||| merged common ancestors
+=======
+
+        /** Initializes SkRegion::Iterator with an empty SkRegion. done() on SkRegion::Iterator
+            returns true.
+            Call reset() to initialized SkRegion::Iterator at a later time.
+
+            @return  empty SkRegion iterator
+        */
+>>>>>>> upstream-releases
         Iterator() : fRgn(nullptr), fDone(true) {}
 
         /** Sets SkRegion::Iterator to return elements of SkIRect array in region.
@@ -548,6 +571,7 @@ public:
         /** Advances iterator to next SkIRect in SkRegion contained by clip.
         */
         void  next();
+<<<<<<< HEAD
 
         /** Returns SkIRect element in SkRegion, intersected with clip passed to SkRegion::Cliperator
             constructor. Does not return predictable results if SkRegion
@@ -555,6 +579,16 @@ public:
 
             @return  part of SkRegion inside clip as SkIRect
         */
+||||||| merged common ancestors
+=======
+
+        /** Returns SkIRect element in SkRegion, intersected with clip passed to
+            SkRegion::Cliperator constructor. Does not return predictable results if SkRegion
+            is empty.
+
+            @return  part of SkRegion inside clip as SkIRect
+        */
+>>>>>>> upstream-releases
         const SkIRect& rect() const { return fRect; }
 
     private:

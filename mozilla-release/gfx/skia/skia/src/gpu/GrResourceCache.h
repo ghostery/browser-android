@@ -23,6 +23,7 @@ class GrCaps;
 class GrProxyProvider;
 class SkString;
 class SkTraceMemoryDump;
+class GrSingleOwner;
 
 struct GrGpuResourceFreedMessage {
     GrGpuResource* fResource;
@@ -32,6 +33,12 @@ struct GrGpuResourceFreedMessage {
         return inboxID == fOwningUniqueID;
     }
 };
+
+static inline bool SkShouldPostMessageToBus(
+        const GrGpuResourceFreedMessage& msg, uint32_t msgBusUniqueID) {
+    // The inbox's ID is the unique ID of the owning GrContext.
+    return msgBusUniqueID == msg.fOwningUniqueID;
+}
 
 /**
  * Manages the lifetime of all GrGpuResource instances.
@@ -52,7 +59,7 @@ struct GrGpuResourceFreedMessage {
  */
 class GrResourceCache {
 public:
-    GrResourceCache(const GrCaps*, uint32_t contextUniqueID);
+    GrResourceCache(const GrCaps*, GrSingleOwner* owner, uint32_t contextUniqueID);
     ~GrResourceCache();
 
     // Default maximum number of budgeted resources in the cache.
@@ -222,7 +229,7 @@ public:
             if (resource->resourcePriv().refsWrappedObjects()) {
                 ++fWrapped;
             }
-            if (SkBudgeted::kNo  == resource->resourcePriv().isBudgeted()) {
+            if (GrBudgetedType::kBudgeted != resource->resourcePriv().budgetedType()) {
                 fUnbudgetedSize += resource->gpuMemorySize();
             }
         }
@@ -230,9 +237,12 @@ public:
 
     void getStats(Stats*) const;
 
+#if GR_TEST_UTILS
     void dumpStats(SkString*) const;
 
     void dumpStatsKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* value) const;
+#endif
+
 #endif
 
 #ifdef SK_DEBUG
@@ -261,7 +271,6 @@ private:
     void refAndMakeResourceMRU(GrGpuResource*);
     /// @}
 
-    void processInvalidUniqueKeys(const SkTArray<GrUniqueKeyInvalidatedMessage>&);
     void processFreedGpuResources();
     void addToNonpurgeableArray(GrGpuResource*);
     void removeFromNonpurgeableArray(GrGpuResource*);
@@ -352,6 +361,7 @@ private:
     SkTDArray<GrGpuResource*>           fResourcesWaitingForFreeMsg;
 
     uint32_t                            fContextUniqueID;
+    GrSingleOwner*                      fSingleOwner;
 
     // This resource is allowed to be in the nonpurgeable array for the sake of validate() because
     // we're in the midst of converting it to purgeable status.

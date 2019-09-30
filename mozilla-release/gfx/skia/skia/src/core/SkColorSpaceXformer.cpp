@@ -18,6 +18,7 @@
 
 SkColorSpaceXformer::SkColorSpaceXformer(sk_sp<SkColorSpace> dst)
     : fDst(std::move(dst))
+<<<<<<< HEAD
     , fFromSRGBSteps(sk_srgb_singleton(), kUnpremul_SkAlphaType,
                      fDst.get()         , kUnpremul_SkAlphaType)
     , fReentryCount(0) {
@@ -28,6 +29,23 @@ SkColorSpaceXformer::SkColorSpaceXformer(sk_sp<SkColorSpace> dst)
     p.append(SkRasterPipeline::store_bgra, &fFromSRGBDst);
     fFromSRGB = p.compile();
 }
+||||||| merged common ancestors
+    , fFromSRGB(std::move(fromSRGB))
+    , fReentryCount(0) {}
+=======
+    , fFromSRGBSteps(sk_srgb_singleton(), kUnpremul_SkAlphaType,
+                     fDst.get()         , kUnpremul_SkAlphaType)
+    , fReentryCount(0) {
+
+    SkRasterPipeline p(&fAlloc);
+    p.append(SkRasterPipeline::load_8888, &fFromSRGBSrc);
+    p.append(SkRasterPipeline::swap_rb);
+    fFromSRGBSteps.apply(&p, kBGRA_8888_SkColorType);
+    p.append(SkRasterPipeline::swap_rb);
+    p.append(SkRasterPipeline::store_8888, &fFromSRGBDst);
+    fFromSRGB = p.compile();
+}
+>>>>>>> upstream-releases
 
 SkColorSpaceXformer::~SkColorSpaceXformer() {}
 

@@ -35,8 +35,8 @@ template <class T>
 struct ClassStorage {
   char bytes[sizeof(T)];
 
-  const T *addr() const { return (const T *)bytes; }
-  T *addr() { return (T *)(void *)bytes; }
+  const T* addr() const { return (const T*)bytes; }
+  T* addr() { return (T*)(void*)bytes; }
 };
 
 static inline bool FuzzyEqual(Float aA, Float aB, Float aErr) {
@@ -46,7 +46,15 @@ static inline bool FuzzyEqual(Float aA, Float aB, Float aErr) {
   return false;
 }
 
+<<<<<<< HEAD
 static inline void NudgeToInteger(float *aVal) {
+||||||| merged common ancestors
+static inline void
+NudgeToInteger(float *aVal)
+{
+=======
+static inline void NudgeToInteger(float* aVal) {
+>>>>>>> upstream-releases
   float r = floorf(*aVal + 0.5f);
   // The error threshold should be proportional to the rounded value. This
   // bounds the relative error introduced by the nudge operation. However,
@@ -58,14 +66,30 @@ static inline void NudgeToInteger(float *aVal) {
   }
 }
 
+<<<<<<< HEAD
 static inline void NudgeToInteger(float *aVal, float aErr) {
+||||||| merged common ancestors
+static inline void
+NudgeToInteger(float *aVal, float aErr)
+{
+=======
+static inline void NudgeToInteger(float* aVal, float aErr) {
+>>>>>>> upstream-releases
   float r = floorf(*aVal + 0.5f);
   if (FuzzyEqual(r, *aVal, aErr)) {
     *aVal = r;
   }
 }
 
+<<<<<<< HEAD
 static inline void NudgeToInteger(double *aVal) {
+||||||| merged common ancestors
+static inline void
+NudgeToInteger(double *aVal)
+{
+=======
+static inline void NudgeToInteger(double* aVal) {
+>>>>>>> upstream-releases
   float f = float(*aVal);
   NudgeToInteger(&f);
   *aVal = f;
@@ -75,8 +99,17 @@ static inline Float Distance(Point aA, Point aB) {
   return hypotf(aB.x - aA.x, aB.y - aA.y);
 }
 
+<<<<<<< HEAD
 template <typename T, int alignment = 16>
 struct AlignedArray {
+||||||| merged common ancestors
+template<typename T, int alignment = 16>
+struct AlignedArray
+{
+=======
+template <typename T, int alignment = 16>
+struct AlignedArray final {
+>>>>>>> upstream-releases
   typedef T value_type;
 
   AlignedArray() : mPtr(nullptr), mStorage(nullptr), mCount(0) {}
@@ -125,9 +158,9 @@ struct AlignedArray {
     if (aZero) {
       // calloc can be more efficient than new[] for large chunks,
       // so we use calloc/malloc/free for everything.
-      mStorage = static_cast<uint8_t *>(calloc(1, storageByteCount.value()));
+      mStorage = static_cast<uint8_t*>(calloc(1u, storageByteCount.value()));
     } else {
-      mStorage = static_cast<uint8_t *>(malloc(storageByteCount.value()));
+      mStorage = static_cast<uint8_t*>(malloc(storageByteCount.value()));
     }
     if (!mStorage) {
       mStorage = nullptr;
@@ -136,10 +169,20 @@ struct AlignedArray {
       return;
     }
     if (uintptr_t(mStorage) % alignment) {
+<<<<<<< HEAD
       // Our storage does not start at a <alignment>-byte boundary. Make sure
       // mPtr does!
       mPtr = (T *)(uintptr_t(mStorage) + alignment -
                    (uintptr_t(mStorage) % alignment));
+||||||| merged common ancestors
+      // Our storage does not start at a <alignment>-byte boundary. Make sure mPtr does!
+      mPtr = (T*)(uintptr_t(mStorage) + alignment - (uintptr_t(mStorage) % alignment));
+=======
+      // Our storage does not start at a <alignment>-byte boundary. Make sure
+      // mPtr does!
+      mPtr = (T*)(uintptr_t(mStorage) + alignment -
+                  (uintptr_t(mStorage) % alignment));
+>>>>>>> upstream-releases
     } else {
       mPtr = (T *)(mStorage);
     }
@@ -151,7 +194,14 @@ struct AlignedArray {
     mCount = aCount;
   }
 
+<<<<<<< HEAD
   void Swap(AlignedArray<T, alignment> &aOther) {
+||||||| merged common ancestors
+  void Swap(AlignedArray<T, alignment>& aOther)
+  {
+=======
+  void Swap(AlignedArray<T, alignment>& aOther) {
+>>>>>>> upstream-releases
     mozilla::Swap(mPtr, aOther.mPtr);
     mozilla::Swap(mStorage, aOther.mStorage);
     mozilla::Swap(mCount, aOther.mCount);
@@ -161,12 +211,29 @@ struct AlignedArray {
     return aMallocSizeOf(mStorage);
   }
 
+<<<<<<< HEAD
   MOZ_ALWAYS_INLINE operator T *() { return mPtr; }
+||||||| merged common ancestors
+  MOZ_ALWAYS_INLINE operator T*()
+  {
+    return mPtr;
+  }
+=======
+  MOZ_ALWAYS_INLINE operator T*() { return mPtr; }
+>>>>>>> upstream-releases
 
-  T *mPtr;
+  T* mPtr;
 
+<<<<<<< HEAD
  private:
   uint8_t *mStorage;
+||||||| merged common ancestors
+private:
+  uint8_t *mStorage;
+=======
+ private:
+  uint8_t* mStorage;
+>>>>>>> upstream-releases
   size_t mCount;
 };
 

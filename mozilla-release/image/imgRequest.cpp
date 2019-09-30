@@ -18,7 +18,7 @@
 
 #include "nsIChannel.h"
 #include "nsICacheInfoChannel.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIThreadRetargetableRequest.h"
 #include "nsIInputStream.h"
 #include "nsIMultiPartChannel.h"
@@ -52,6 +52,7 @@ NS_IMPL_ISUPPORTS(imgRequest, nsIStreamListener, nsIRequestObserver,
                   nsIInterfaceRequestor, nsIAsyncVerifyRedirectCallback)
 
 imgRequest::imgRequest(imgLoader* aLoader, const ImageCacheKey& aCacheKey)
+<<<<<<< HEAD
     : mLoader(aLoader),
       mCacheKey(aCacheKey),
       mLoadId(nullptr),
@@ -68,6 +69,43 @@ imgRequest::imgRequest(imgLoader* aLoader, const ImageCacheKey& aCacheKey)
       mDecodeRequested(false),
       mNewPartPending(false),
       mHadInsecureRedirect(false) {
+||||||| merged common ancestors
+ : mLoader(aLoader)
+ , mCacheKey(aCacheKey)
+ , mLoadId(nullptr)
+ , mFirstProxy(nullptr)
+ , mValidator(nullptr)
+ , mInnerWindowId(0)
+ , mCORSMode(imgIRequest::CORS_NONE)
+ , mReferrerPolicy(mozilla::net::RP_Unset)
+ , mImageErrorCode(NS_OK)
+ , mMutex("imgRequest")
+ , mProgressTracker(new ProgressTracker())
+ , mIsMultiPartChannel(false)
+ , mIsInCache(false)
+ , mDecodeRequested(false)
+ , mNewPartPending(false)
+ , mHadInsecureRedirect(false)
+{
+=======
+    : mLoader(aLoader),
+      mCacheKey(aCacheKey),
+      mLoadId(nullptr),
+      mFirstProxy(nullptr),
+      mValidator(nullptr),
+      mInnerWindowId(0),
+      mCORSMode(imgIRequest::CORS_NONE),
+      mReferrerPolicy(mozilla::net::RP_Unset),
+      mImageErrorCode(NS_OK),
+      mImageAvailable(false),
+      mMutex("imgRequest"),
+      mProgressTracker(new ProgressTracker()),
+      mIsMultiPartChannel(false),
+      mIsInCache(false),
+      mDecodeRequested(false),
+      mNewPartPending(false),
+      mHadInsecureRedirect(false) {
+>>>>>>> upstream-releases
   LOG_FUNC(gImgLog, "imgRequest::imgRequest()");
 }
 
@@ -140,7 +178,7 @@ nsresult imgRequest::Init(nsIURI* aURI, nsIURI* aFinalURI,
   SetLoadId(aCX);
 
   // Grab the inner window ID of the loading document, if possible.
-  nsCOMPtr<nsIDocument> doc = do_QueryInterface(aCX);
+  nsCOMPtr<dom::Document> doc = do_QueryInterface(aCX);
   if (doc) {
     mInnerWindowId = doc->InnerWindowID();
   }
@@ -467,8 +505,18 @@ void imgRequest::AdjustPriorityInternal(int32_t aDelta) {
   }
 }
 
+<<<<<<< HEAD
 void imgRequest::BoostPriority(uint32_t aCategory) {
   if (!gfxPrefs::ImageLayoutNetworkPriority()) {
+||||||| merged common ancestors
+void
+imgRequest::BoostPriority(uint32_t aCategory)
+{
+  if (!gfxPrefs::ImageLayoutNetworkPriority()) {
+=======
+void imgRequest::BoostPriority(uint32_t aCategory) {
+  if (!StaticPrefs::image_layout_network_priority()) {
+>>>>>>> upstream-releases
     return;
   }
 
@@ -486,6 +534,10 @@ void imgRequest::BoostPriority(uint32_t aCategory) {
   int32_t delta = 0;
 
   if (newRequestedCategory & imgIRequest::CATEGORY_FRAME_INIT) {
+    --delta;
+  }
+
+  if (newRequestedCategory & imgIRequest::CATEGORY_FRAME_STYLE) {
     --delta;
   }
 
@@ -645,7 +697,14 @@ bool imgRequest::HadInsecureRedirect() const {
 /** nsIRequestObserver methods **/
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 imgRequest::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
+||||||| merged common ancestors
+imgRequest::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt)
+{
+=======
+imgRequest::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   LOG_SCOPE(gImgLog, "imgRequest::OnStartRequest");
 
   RefPtr<Image> image;
@@ -735,8 +794,16 @@ imgRequest::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 imgRequest::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
                           nsresult status) {
+||||||| merged common ancestors
+imgRequest::OnStopRequest(nsIRequest* aRequest,
+                          nsISupports* ctxt, nsresult status)
+{
+=======
+imgRequest::OnStopRequest(nsIRequest* aRequest, nsresult status) {
+>>>>>>> upstream-releases
   LOG_FUNC(gImgLog, "imgRequest::OnStopRequest");
   MOZ_ASSERT(NS_IsMainThread(), "Can't send notifications off-main-thread");
 
@@ -745,7 +812,7 @@ imgRequest::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
   RefPtr<imgRequest> strongThis = this;
 
   if (mIsMultiPartChannel && mNewPartPending) {
-    OnDataAvailable(aRequest, ctxt, nullptr, 0, 0);
+    OnDataAvailable(aRequest, nullptr, 0, 0);
   }
 
   // XXXldb What if this is a non-last part of a multipart request?
@@ -779,7 +846,8 @@ imgRequest::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
   // trigger a failure, since the image might be waiting for more non-optional
   // data and this is the point where we break the news that it's not coming.
   if (image) {
-    nsresult rv = image->OnImageDataComplete(aRequest, ctxt, status, lastPart);
+    nsresult rv =
+        image->OnImageDataComplete(aRequest, nullptr, status, lastPart);
 
     // If we got an error in the OnImageDataComplete() call, we don't want to
     // proceed as if nothing bad happened. However, we also want to give
@@ -974,6 +1042,7 @@ void imgRequest::FinishPreparingForNewPart(const NewPartResult& aResult) {
 
   if (aResult.mIsFirstPart) {
     // Notify listeners that we have an image.
+    mImageAvailable = true;
     RefPtr<ProgressTracker> progressTracker = GetProgressTracker();
     progressTracker->OnImageAvailable();
     MOZ_ASSERT(progressTracker->HasImage());
@@ -988,11 +1057,26 @@ void imgRequest::FinishPreparingForNewPart(const NewPartResult& aResult) {
   }
 }
 
+bool imgRequest::ImageAvailable() const { return mImageAvailable; }
+
 NS_IMETHODIMP
+<<<<<<< HEAD
 imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
                             nsIInputStream* aInStr, uint64_t aOffset,
                             uint32_t aCount) {
   LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable", "count", aCount);
+||||||| merged common ancestors
+imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
+                            nsIInputStream* aInStr, uint64_t aOffset,
+                            uint32_t aCount)
+{
+  LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable",
+                       "count", aCount);
+=======
+imgRequest::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStr,
+                            uint64_t aOffset, uint32_t aCount) {
+  LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::OnDataAvailable", "count", aCount);
+>>>>>>> upstream-releases
 
   NS_ASSERTION(aRequest, "imgRequest::OnDataAvailable -- no request!");
 
@@ -1048,8 +1132,17 @@ imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
         FinishPreparingForNewPart(result);
       } else {
         nsCOMPtr<nsIRunnable> runnable =
+<<<<<<< HEAD
             new FinishPreparingForNewPartRunnable(this, std::move(result));
         eventTarget->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
+||||||| merged common ancestors
+          new FinishPreparingForNewPartRunnable(this, std::move(result));
+        eventTarget->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
+=======
+            new FinishPreparingForNewPartRunnable(this, std::move(result));
+        eventTarget->Dispatch(CreateMediumHighRunnable(runnable.forget()),
+                              NS_DISPATCH_NORMAL);
+>>>>>>> upstream-releases
       }
     }
 
@@ -1062,8 +1155,16 @@ imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
 
   // Notify the image that it has new data.
   if (aInStr) {
+<<<<<<< HEAD
     nsresult rv = image->OnImageDataAvailable(aRequest, aContext, aInStr,
                                               aOffset, aCount);
+||||||| merged common ancestors
+    nsresult rv =
+      image->OnImageDataAvailable(aRequest, aContext, aInStr, aOffset, aCount);
+=======
+    nsresult rv =
+        image->OnImageDataAvailable(aRequest, nullptr, aInStr, aOffset, aCount);
+>>>>>>> upstream-releases
 
     if (NS_FAILED(rv)) {
       MOZ_LOG(gImgLog, LogLevel::Warning,
@@ -1197,6 +1298,7 @@ imgRequest::OnRedirectVerifyCallback(nsresult result) {
     MutexAutoLock lock(mMutex);
 
     // The csp directive upgrade-insecure-requests performs an internal redirect
+<<<<<<< HEAD
     // to upgrade all requests from http to https before any data is fetched
     // from the network. Do not pollute mHadInsecureRedirect in case of such an
     // internal redirect.
@@ -1205,6 +1307,25 @@ imgRequest::OnRedirectVerifyCallback(nsresult result) {
         loadInfo ? loadInfo->GetUpgradeInsecureRequests() ||
                        loadInfo->GetBrowserUpgradeInsecureRequests()
                  : false;
+||||||| merged common ancestors
+    // to upgrade all requests from http to https before any data is fetched from
+    // the network. Do not pollute mHadInsecureRedirect in case of such an internal
+    // redirect.
+    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
+    bool upgradeInsecureRequests = loadInfo ?
+                                   loadInfo->GetUpgradeInsecureRequests() ||
+                                   loadInfo->GetBrowserUpgradeInsecureRequests()
+                                            : false;
+=======
+    // to upgrade all requests from http to https before any data is fetched
+    // from the network. Do not pollute mHadInsecureRedirect in case of such an
+    // internal redirect.
+    nsCOMPtr<nsILoadInfo> loadInfo = mChannel->LoadInfo();
+    bool upgradeInsecureRequests =
+        loadInfo ? loadInfo->GetUpgradeInsecureRequests() ||
+                       loadInfo->GetBrowserUpgradeInsecureRequests()
+                 : false;
+>>>>>>> upstream-releases
     if (!upgradeInsecureRequests) {
       mHadInsecureRedirect = true;
     }

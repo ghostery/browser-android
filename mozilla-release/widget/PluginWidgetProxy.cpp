@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "PluginWidgetProxy.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/plugins/PluginWidgetChild.h"
 #include "mozilla/plugins/PluginInstanceParent.h"
 #include "nsDebug.h"
@@ -12,10 +12,26 @@
 // #define PWLOG(...) printf_stderr(__VA_ARGS__)
 
 /* static */
+<<<<<<< HEAD
 already_AddRefed<nsIWidget> nsIWidget::CreatePluginProxyWidget(
     TabChild* aTabChild, mozilla::plugins::PluginWidgetChild* aActor) {
+||||||| merged common ancestors
+already_AddRefed<nsIWidget>
+nsIWidget::CreatePluginProxyWidget(TabChild* aTabChild,
+                                   mozilla::plugins::PluginWidgetChild* aActor)
+{
+=======
+already_AddRefed<nsIWidget> nsIWidget::CreatePluginProxyWidget(
+    BrowserChild* aBrowserChild, mozilla::plugins::PluginWidgetChild* aActor) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIWidget> widget =
+<<<<<<< HEAD
       new mozilla::widget::PluginWidgetProxy(aTabChild, aActor);
+||||||| merged common ancestors
+    new mozilla::widget::PluginWidgetProxy(aTabChild, aActor);
+=======
+      new mozilla::widget::PluginWidgetProxy(aBrowserChild, aActor);
+>>>>>>> upstream-releases
   return widget.forget();
 }
 
@@ -26,6 +42,7 @@ using mozilla::plugins::PluginInstanceParent;
 
 NS_IMPL_ISUPPORTS_INHERITED(PluginWidgetProxy, PuppetWidget, nsIWidget)
 
+<<<<<<< HEAD
 #define ENSURE_CHANNEL                             \
   do {                                             \
     if (!mActor) {                                 \
@@ -37,6 +54,34 @@ NS_IMPL_ISUPPORTS_INHERITED(PluginWidgetProxy, PuppetWidget, nsIWidget)
 PluginWidgetProxy::PluginWidgetProxy(
     dom::TabChild* aTabChild, mozilla::plugins::PluginWidgetChild* aActor)
     : PuppetWidget(aTabChild), mActor(aActor), mCachedPluginPort(0) {
+||||||| merged common ancestors
+#define ENSURE_CHANNEL do {                                   \
+  if (!mActor) {                                              \
+    NS_WARNING("called on an invalid channel.");              \
+    return NS_ERROR_FAILURE;                                  \
+  }                                                           \
+} while (0)
+
+PluginWidgetProxy::PluginWidgetProxy(dom::TabChild* aTabChild,
+                                     mozilla::plugins::PluginWidgetChild* aActor) :
+  PuppetWidget(aTabChild),
+  mActor(aActor),
+  mCachedPluginPort(0)
+{
+=======
+#define ENSURE_CHANNEL                             \
+  do {                                             \
+    if (!mActor) {                                 \
+      NS_WARNING("called on an invalid channel."); \
+      return NS_ERROR_FAILURE;                     \
+    }                                              \
+  } while (0)
+
+PluginWidgetProxy::PluginWidgetProxy(
+    dom::BrowserChild* aBrowserChild,
+    mozilla::plugins::PluginWidgetChild* aActor)
+    : PuppetWidget(aBrowserChild), mActor(aActor), mCachedPluginPort(0) {
+>>>>>>> upstream-releases
   // See ChannelDestroyed() in the header
   mActor->SetWidget(this);
 }
@@ -116,7 +161,7 @@ void* PluginWidgetProxy::GetNativeData(uint32_t aDataType) {
   if (!mActor) {
     return nullptr;
   }
-  auto tab = static_cast<mozilla::dom::TabChild*>(mActor->Manager());
+  auto tab = static_cast<mozilla::dom::BrowserChild*>(mActor->Manager());
   if (tab && tab->IsDestroyed()) {
     return nullptr;
   }
@@ -146,7 +191,7 @@ void PluginWidgetProxy::SetNativeData(uint32_t aDataType, uintptr_t aVal) {
     return;
   }
 
-  auto tab = static_cast<mozilla::dom::TabChild*>(mActor->Manager());
+  auto tab = static_cast<mozilla::dom::BrowserChild*>(mActor->Manager());
   if (tab && tab->IsDestroyed()) {
     return;
   }
@@ -160,11 +205,27 @@ void PluginWidgetProxy::SetNativeData(uint32_t aDataType, uintptr_t aVal) {
   }
 }
 
+<<<<<<< HEAD
 nsresult PluginWidgetProxy::SetFocus(bool aRaise) {
   ENSURE_CHANNEL;
   PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise);
   mActor->SendSetFocus(aRaise);
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+PluginWidgetProxy::SetFocus(bool aRaise)
+{
+  ENSURE_CHANNEL;
+  PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise);
+  mActor->SendSetFocus(aRaise);
+  return NS_OK;
+=======
+void PluginWidgetProxy::SetFocus(Raise aRaise) {
+  if (mActor) {
+    PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise == Raise::Yes);
+    mActor->SendSetFocus(aRaise == Raise::Yes);
+  }
+>>>>>>> upstream-releases
 }
 
 }  // namespace widget

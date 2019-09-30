@@ -9,6 +9,7 @@
 #include "nsRubyBaseFrame.h"
 
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/WritingModes.h"
 #include "nsLineLayout.h"
 #include "nsPresContext.h"
@@ -26,9 +27,21 @@ NS_QUERYFRAME_TAIL_INHERITING(nsRubyContentFrame)
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRubyBaseFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
                                       ComputedStyle* aStyle) {
   return new (aPresShell) nsRubyBaseFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
+                    ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsRubyBaseFrame(aStyle);
+=======
+nsContainerFrame* NS_NewRubyBaseFrame(mozilla::PresShell* aPresShell,
+                                      ComputedStyle* aStyle) {
+  return new (aPresShell) nsRubyBaseFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------

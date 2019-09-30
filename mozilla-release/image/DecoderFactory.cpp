@@ -28,7 +28,16 @@ using namespace gfx;
 
 namespace image {
 
+<<<<<<< HEAD
 /* static */ DecoderType DecoderFactory::GetDecoderType(const char* aMimeType) {
+||||||| merged common ancestors
+/* static */ DecoderType
+DecoderFactory::GetDecoderType(const char* aMimeType)
+{
+=======
+/* static */
+DecoderType DecoderFactory::GetDecoderType(const char* aMimeType) {
+>>>>>>> upstream-releases
   // By default we don't know.
   DecoderType type = DecoderType::UNKNOWN;
 
@@ -71,17 +80,39 @@ namespace image {
     // Icon
   } else if (!strcmp(aMimeType, IMAGE_ICON_MS)) {
     type = DecoderType::ICON;
+<<<<<<< HEAD
 
     // WebP
   } else if (!strcmp(aMimeType, IMAGE_WEBP) && gfxPrefs::ImageWebPEnabled()) {
     type = DecoderType::WEBP;
+||||||| merged common ancestors
+=======
+
+    // WebP
+  } else if (!strcmp(aMimeType, IMAGE_WEBP) &&
+             StaticPrefs::image_webp_enabled()) {
+    type = DecoderType::WEBP;
+>>>>>>> upstream-releases
   }
 
   return type;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Decoder> DecoderFactory::GetDecoder(
     DecoderType aType, RasterImage* aImage, bool aIsRedecode) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Decoder>
+DecoderFactory::GetDecoder(DecoderType aType,
+                           RasterImage* aImage,
+                           bool aIsRedecode)
+{
+=======
+/* static */
+already_AddRefed<Decoder> DecoderFactory::GetDecoder(DecoderType aType,
+                                                     RasterImage* aImage,
+                                                     bool aIsRedecode) {
+>>>>>>> upstream-releases
   RefPtr<Decoder> decoder;
 
   switch (aType) {
@@ -119,11 +150,31 @@ namespace image {
   return decoder.forget();
 }
 
+<<<<<<< HEAD
 /* static */ nsresult DecoderFactory::CreateDecoder(
     DecoderType aType, NotNull<RasterImage*> aImage,
     NotNull<SourceBuffer*> aSourceBuffer, const IntSize& aIntrinsicSize,
     const IntSize& aOutputSize, DecoderFlags aDecoderFlags,
     SurfaceFlags aSurfaceFlags, IDecodingTask** aOutTask) {
+||||||| merged common ancestors
+/* static */ nsresult
+DecoderFactory::CreateDecoder(DecoderType aType,
+                              NotNull<RasterImage*> aImage,
+                              NotNull<SourceBuffer*> aSourceBuffer,
+                              const IntSize& aIntrinsicSize,
+                              const IntSize& aOutputSize,
+                              DecoderFlags aDecoderFlags,
+                              SurfaceFlags aSurfaceFlags,
+                              IDecodingTask** aOutTask)
+{
+=======
+/* static */
+nsresult DecoderFactory::CreateDecoder(
+    DecoderType aType, NotNull<RasterImage*> aImage,
+    NotNull<SourceBuffer*> aSourceBuffer, const IntSize& aIntrinsicSize,
+    const IntSize& aOutputSize, DecoderFlags aDecoderFlags,
+    SurfaceFlags aSurfaceFlags, IDecodingTask** aOutTask) {
+>>>>>>> upstream-releases
   if (aType == DecoderType::UNKNOWN) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -173,11 +224,31 @@ namespace image {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ nsresult DecoderFactory::CreateAnimationDecoder(
     DecoderType aType, NotNull<RasterImage*> aImage,
     NotNull<SourceBuffer*> aSourceBuffer, const IntSize& aIntrinsicSize,
     DecoderFlags aDecoderFlags, SurfaceFlags aSurfaceFlags,
     size_t aCurrentFrame, IDecodingTask** aOutTask) {
+||||||| merged common ancestors
+/* static */ nsresult
+DecoderFactory::CreateAnimationDecoder(DecoderType aType,
+                                       NotNull<RasterImage*> aImage,
+                                       NotNull<SourceBuffer*> aSourceBuffer,
+                                       const IntSize& aIntrinsicSize,
+                                       DecoderFlags aDecoderFlags,
+                                       SurfaceFlags aSurfaceFlags,
+                                       size_t aCurrentFrame,
+                                       IDecodingTask** aOutTask)
+{
+=======
+/* static */
+nsresult DecoderFactory::CreateAnimationDecoder(
+    DecoderType aType, NotNull<RasterImage*> aImage,
+    NotNull<SourceBuffer*> aSourceBuffer, const IntSize& aIntrinsicSize,
+    DecoderFlags aDecoderFlags, SurfaceFlags aSurfaceFlags,
+    size_t aCurrentFrame, IDecodingTask** aOutTask) {
+>>>>>>> upstream-releases
   if (aType == DecoderType::UNKNOWN) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -227,8 +298,18 @@ namespace image {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Decoder> DecoderFactory::CloneAnimationDecoder(
     Decoder* aDecoder) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Decoder>
+DecoderFactory::CloneAnimationDecoder(Decoder* aDecoder)
+{
+=======
+/* static */
+already_AddRefed<Decoder> DecoderFactory::CloneAnimationDecoder(
+    Decoder* aDecoder) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDecoder);
 
   // In an ideal world, we would assert aDecoder->HasAnimation() but we cannot.
@@ -257,10 +338,23 @@ namespace image {
   return decoder.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<IDecodingTask>
 DecoderFactory::CreateMetadataDecoder(DecoderType aType,
                                       NotNull<RasterImage*> aImage,
                                       NotNull<SourceBuffer*> aSourceBuffer) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<IDecodingTask>
+DecoderFactory::CreateMetadataDecoder(DecoderType aType,
+                                      NotNull<RasterImage*> aImage,
+                                      NotNull<SourceBuffer*> aSourceBuffer)
+{
+=======
+/* static */
+already_AddRefed<IDecodingTask> DecoderFactory::CreateMetadataDecoder(
+    DecoderType aType, NotNull<RasterImage*> aImage,
+    NotNull<SourceBuffer*> aSourceBuffer) {
+>>>>>>> upstream-releases
   if (aType == DecoderType::UNKNOWN) {
     return nullptr;
   }
@@ -281,6 +375,7 @@ DecoderFactory::CreateMetadataDecoder(DecoderType aType,
   return task.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Decoder>
 DecoderFactory::CreateDecoderForICOResource(DecoderType aType,
                                             SourceBufferIterator&& aIterator,
@@ -289,6 +384,24 @@ DecoderFactory::CreateDecoderForICOResource(DecoderType aType,
                                             const Maybe<IntSize>& aExpectedSize,
                                             const Maybe<uint32_t>& aDataOffset
                                             /* = Nothing() */) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Decoder>
+DecoderFactory::CreateDecoderForICOResource(DecoderType aType,
+                                            SourceBufferIterator&& aIterator,
+                                            NotNull<nsICODecoder*> aICODecoder,
+                                            bool aIsMetadataDecode,
+                                            const Maybe<IntSize>& aExpectedSize,
+                                            const Maybe<uint32_t>& aDataOffset
+                                              /* = Nothing() */)
+{
+=======
+/* static */
+already_AddRefed<Decoder> DecoderFactory::CreateDecoderForICOResource(
+    DecoderType aType, SourceBufferIterator&& aIterator,
+    NotNull<nsICODecoder*> aICODecoder, bool aIsMetadataDecode,
+    const Maybe<IntSize>& aExpectedSize, const Maybe<uint32_t>& aDataOffset
+    /* = Nothing() */) {
+>>>>>>> upstream-releases
   // Create the decoder.
   RefPtr<Decoder> decoder;
   switch (aType) {
@@ -330,10 +443,26 @@ DecoderFactory::CreateDecoderForICOResource(DecoderType aType,
   return decoder.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Decoder> DecoderFactory::CreateAnonymousDecoder(
     DecoderType aType, NotNull<SourceBuffer*> aSourceBuffer,
     const Maybe<IntSize>& aOutputSize, DecoderFlags aDecoderFlags,
     SurfaceFlags aSurfaceFlags) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Decoder>
+DecoderFactory::CreateAnonymousDecoder(DecoderType aType,
+                                       NotNull<SourceBuffer*> aSourceBuffer,
+                                       const Maybe<IntSize>& aOutputSize,
+                                       DecoderFlags aDecoderFlags,
+                                       SurfaceFlags aSurfaceFlags)
+{
+=======
+/* static */
+already_AddRefed<Decoder> DecoderFactory::CreateAnonymousDecoder(
+    DecoderType aType, NotNull<SourceBuffer*> aSourceBuffer,
+    const Maybe<IntSize>& aOutputSize, DecoderFlags aDecoderFlags,
+    SurfaceFlags aSurfaceFlags) {
+>>>>>>> upstream-releases
   if (aType == DecoderType::UNKNOWN) {
     return nullptr;
   }
@@ -365,9 +494,20 @@ DecoderFactory::CreateDecoderForICOResource(DecoderType aType,
   return decoder.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Decoder>
 DecoderFactory::CreateAnonymousMetadataDecoder(
     DecoderType aType, NotNull<SourceBuffer*> aSourceBuffer) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Decoder>
+DecoderFactory::CreateAnonymousMetadataDecoder(DecoderType aType,
+                                               NotNull<SourceBuffer*> aSourceBuffer)
+{
+=======
+/* static */
+already_AddRefed<Decoder> DecoderFactory::CreateAnonymousMetadataDecoder(
+    DecoderType aType, NotNull<SourceBuffer*> aSourceBuffer) {
+>>>>>>> upstream-releases
   if (aType == DecoderType::UNKNOWN) {
     return nullptr;
   }

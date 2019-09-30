@@ -2,11 +2,23 @@
 <html>
 <head>
   <title>Test for simple WebExtension</title>
+<<<<<<< HEAD
   <meta charset="utf-8">
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/AddTask.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/ExtensionTestUtils.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+||||||| merged common ancestors
+  <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/AddTask.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/ExtensionTestUtils.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+=======
+  <meta charset="utf-8">
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/ExtensionTestUtils.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+>>>>>>> upstream-releases
   <script type="text/javascript" src="head.js"></script>
   <script type="text/javascript" src="head_unlimitedStorage.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
@@ -76,6 +88,7 @@ async function test_background_storagePersist(EXTENSION_ID) {
 
   const uuid = await extension.awaitMessage("extension-uuid");
 
+<<<<<<< HEAD
   await extension.awaitMessage("storage-local-called");
 
   let chromeScript = SpecialPowers.loadChromeScript(function test_country_data() {
@@ -87,6 +100,73 @@ async function test_background_storagePersist(EXTENSION_ID) {
       } = ChromeUtils.import("resource://gre/modules/ExtensionStorageIDB.jsm", {});
 
       const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
+
+      const {WebExtensionPolicy} = Cu.getGlobalForObject(ExtensionStorageIDB);
+      const policy = WebExtensionPolicy.getByHostname(uuid);
+      const storagePrincipal = ExtensionStorageIDB.getStoragePrincipal(policy.extension);
+      const request = Services.qms.persisted(storagePrincipal);
+      request.callback = () => {
+        // request.result will be undeinfed if the request failed (request.resultCode !== Cr.NS_OK).
+        sendAsyncMessage("gotPersistedStatus", request.result);
+      };
+    });
+  });
+
+  const persistedPromise = chromeScript.promiseOneMessage("gotPersistedStatus");
+  chromeScript.sendAsyncMessage("getPersistedStatus", uuid);
+  is(await persistedPromise, true, "Got the expected persist status for the storagePrincipal");
+
+  await extension.awaitFinish("indexeddb-storagePersistent-unlimitedStorage-done");
+  await extension.unload();
+||||||| merged common ancestors
+  await extension.awaitFinish("indexeddb-storagePersistent-unlimitedStorage-done");
+  await extension.unload();
+=======
+  await extension.awaitMessage("storage-local-called");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  checkSitePermissions(uuid, Services.perms.UNKNOWN_ACTION, "has been cleared");
+}
+
+add_task(async function test_unlimitedStorage() {
+  const EXTENSION_ID = "test-storagePersist@mozilla";
+  await SpecialPowers.pushPrefEnv({
+    "set": [
+      ["extensions.webextensions.ExtensionStorageIDB.enabled", true],
+    ],
+  });
+
+  // Verify persist mode enabled when the storage.local IDB database is opened from
+  // the main process (from parent/ext-storage.js).
+  info("Test unlimitedStorage on an extension migrating to the IndexedDB storage.local backend)");
+  await test_background_storagePersist(EXTENSION_ID);
+
+  await SpecialPowers.pushPrefEnv({
+    "set": [
+      [`extensions.webextensions.ExtensionStorageIDB.migrated.` + EXTENSION_ID, true],
+    ],
+  });
+
+  // Verify persist mode enabled when the storage.local IDB database is opened from
+  // the child process (from child/ext-storage.js).
+  info("Test unlimitedStorage on an extension migrated to the IndexedDB storage.local backend");
+  await test_background_storagePersist(EXTENSION_ID);
+});
+||||||| merged common ancestors
+  checkSitePermissions(uuid, Services.perms.UNKNOWN_ACTION, "has been cleared");
+});
+=======
+  let chromeScript = SpecialPowers.loadChromeScript(function test_country_data() {
+    const {addMessageListener, sendAsyncMessage} = this;
+>>>>>>> upstream-releases
+
+    addMessageListener("getPersistedStatus", (uuid) => {
+      const {
+        ExtensionStorageIDB,
+      } = ChromeUtils.import("resource://gre/modules/ExtensionStorageIDB.jsm");
+
+      const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
       const {WebExtensionPolicy} = Cu.getGlobalForObject(ExtensionStorageIDB);
       const policy = WebExtensionPolicy.getByHostname(uuid);
@@ -132,58 +212,6 @@ add_task(async function test_unlimitedStorage() {
   // the child process (from child/ext-storage.js).
   info("Test unlimitedStorage on an extension migrated to the IndexedDB storage.local backend");
   await test_background_storagePersist(EXTENSION_ID);
-});
-
-add_task(async function test_unlimitedStorage_removed_on_update() {
-  const EXTENSION_ID = "test-unlimitedStorage-removed-on-update@mozilla";
-
-  let extension = ExtensionTestUtils.loadExtension({
-    manifest: {
-      permissions: ["unlimitedStorage"],
-      applications: {
-        gecko: {
-          id: EXTENSION_ID,
-        },
-      },
-    },
-
-    background: async function() {
-      browser.test.sendMessage("extension-uuid", window.location.host);
-    },
-  });
-
-  await extension.startup();
-
-  const uuid = await extension.awaitMessage("extension-uuid");
-
-  checkSitePermissions(uuid, Services.perms.ALLOW_ACTION, "has been allowed");
-
-  await extension.unload();
-
-  // Simulate an update which do not require the unlimitedStorage permission.
-  let updatedExtension = ExtensionTestUtils.loadExtension({
-    manifest: {
-      applications: {
-        gecko: {
-          id: EXTENSION_ID,
-        },
-      },
-    },
-
-    background: async function() {
-      browser.test.sendMessage("updated-extension-uuid", window.location.host);
-    },
-  });
-
-  updatedExtension.startup();
-
-  const updatedExtensionUUID = await updatedExtension.awaitMessage("updated-extension-uuid");
-
-  is(uuid, updatedExtensionUUID, "The updated extension has the same uuid");
-
-  checkSitePermissions(uuid, Services.perms.UNKNOWN_ACTION, "has been cleared");
-
-  await updatedExtension.unload();
 });
 
 </script>

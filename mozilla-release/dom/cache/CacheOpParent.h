@@ -54,8 +54,16 @@ class CacheOpParent final : public PCacheOpParent,
                             StreamList* aStreamList) override;
 
   // utility methods
+<<<<<<< HEAD
   already_AddRefed<nsIInputStream> DeserializeCacheStream(
       const CacheReadStreamOrVoid& aStreamOrVoid);
+||||||| merged common ancestors
+  already_AddRefed<nsIInputStream>
+  DeserializeCacheStream(const CacheReadStreamOrVoid& aStreamOrVoid);
+=======
+  already_AddRefed<nsIInputStream> DeserializeCacheStream(
+      const Maybe<CacheReadStream>& aMaybeStream);
+>>>>>>> upstream-releases
 
   mozilla::ipc::PBackgroundParent* mIpcManager;
   const CacheId mCacheId;

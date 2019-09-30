@@ -8,14 +8,13 @@
 
 #include "AudioStream.h"
 #include "MediaEventSource.h"
-#include "MediaQueue.h"
 #include "MediaInfo.h"
+#include "MediaQueue.h"
 #include "MediaSink.h"
-
 #include "mozilla/Atomics.h"
 #include "mozilla/Maybe.h"
-#include "mozilla/MozPromise.h"
 #include "mozilla/Monitor.h"
+#include "mozilla/MozPromise.h"
 #include "mozilla/RefPtr.h"
 #include "nsISupportsImpl.h"
 
@@ -23,28 +22,45 @@ namespace mozilla {
 
 class AudioConverter;
 
-namespace media {
-
 class AudioSink : private AudioStream::DataSource {
   using PlaybackParams = MediaSink::PlaybackParams;
 
+<<<<<<< HEAD
  public:
   AudioSink(AbstractThread* aThread, MediaQueue<AudioData>& aAudioQueue,
             const TimeUnit& aStartTime, const AudioInfo& aInfo);
+||||||| merged common ancestors
+public:
+  AudioSink(AbstractThread* aThread,
+            MediaQueue<AudioData>& aAudioQueue,
+            const TimeUnit& aStartTime,
+            const AudioInfo& aInfo);
+=======
+ public:
+  AudioSink(AbstractThread* aThread, MediaQueue<AudioData>& aAudioQueue,
+            const media::TimeUnit& aStartTime, const AudioInfo& aInfo);
+>>>>>>> upstream-releases
 
   ~AudioSink();
 
   // Return a promise which will be resolved when AudioSink
   // finishes playing, or rejected if any error.
+<<<<<<< HEAD
   nsresult Init(const PlaybackParams& aParams,
                 RefPtr<GenericPromise>& aEndPromise);
+||||||| merged common ancestors
+  nsresult Init(const PlaybackParams& aParams, RefPtr<GenericPromise>& aEndPromise);
+=======
+  nsresult Init(const PlaybackParams& aParams,
+                RefPtr<MediaSink::EndedPromise>& aEndedPromise);
+>>>>>>> upstream-releases
 
   /*
    * All public functions are not thread-safe.
    * Called on the task queue of MDSM only.
    */
-  TimeUnit GetPosition();
-  TimeUnit GetEndTime() const;
+  media::TimeUnit GetPosition();
+  media::TimeUnit GetEndTime() const;
 
   // Check whether we've pushed more frames to the audio hardware than it has
   // played.
@@ -60,7 +76,7 @@ class AudioSink : private AudioStream::DataSource {
 
   MediaEventSource<bool>& AudibleEvent() { return mAudibleEvent; }
 
-  nsCString GetDebugInfo();
+  void GetDebugInfo(dom::MediaSinkDebugInfo& aInfo);
 
  private:
   // Allocate and initialize mAudioStream. Returns NS_OK on success.
@@ -80,19 +96,19 @@ class AudioSink : private AudioStream::DataSource {
   // The presentation time of the first audio frame that was played.
   // We can add this to the audio stream position to determine
   // the current audio time.
-  const TimeUnit mStartTime;
+  const media::TimeUnit mStartTime;
 
   // Keep the last good position returned from the audio stream. Used to ensure
   // position returned by GetPosition() is mono-increasing in spite of audio
   // stream error. Used on the task queue of MDSM only.
-  TimeUnit mLastGoodPosition;
+  media::TimeUnit mLastGoodPosition;
 
   const AudioInfo mInfo;
 
   // Used on the task queue of MDSM only.
   bool mPlaying;
 
-  MozPromiseHolder<GenericPromise> mEndPromise;
+  MozPromiseHolder<MediaSink::EndedPromise> mEndedPromise;
 
   /*
    * Members to implement AudioStream::DataSource.
@@ -135,7 +151,7 @@ class AudioSink : private AudioStream::DataSource {
   UniquePtr<AudioConverter> mConverter;
   MediaQueue<AudioData> mProcessedQueue;
   // Length in microseconds of the ProcessedQueue
-  Atomic<int32_t> mProcessedQueueLength;
+  Atomic<uint64_t> mProcessedQueueLength;
   MediaEventListener mAudioQueueListener;
   MediaEventListener mAudioQueueFinishListener;
   MediaEventListener mProcessedQueueListener;
@@ -144,7 +160,7 @@ class AudioSink : private AudioStream::DataSource {
   // at the current input framerate.
   int64_t mFramesParsed;
   Maybe<RefPtr<AudioData>> mLastProcessedPacket;
-  TimeUnit mLastEndTime;
+  media::TimeUnit mLastEndTime;
   // Never modifed after construction.
   uint32_t mOutputRate;
   uint32_t mOutputChannels;
@@ -157,7 +173,14 @@ class AudioSink : private AudioStream::DataSource {
   MediaQueue<AudioData>& mAudioQueue;
 };
 
+<<<<<<< HEAD
 }  // namespace media
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace media
+} // namespace mozilla
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // AudioSink_h__

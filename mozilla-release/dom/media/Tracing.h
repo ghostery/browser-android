@@ -17,21 +17,28 @@
 #include "mozilla/UniquePtr.h"
 
 #if defined(_WIN32)
-#include <process.h>
-#define getpid() _getpid()
+#  include <process.h>
+#  define getpid() _getpid()
 #else
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 #if defined(_MSC_VER)
 // MSVC
+<<<<<<< HEAD
 #define FUNCTION_SIGNATURE __FUNCSIG__
+||||||| merged common ancestors
+#define FUNCTION_SIGNATURE  __FUNCSIG__
+=======
+#  define FUNCTION_SIGNATURE __FUNCSIG__
+>>>>>>> upstream-releases
 #elif defined(__GNUC__)
 // gcc, clang
-#define FUNCTION_SIGNATURE __PRETTY_FUNCTION__
+#  define FUNCTION_SIGNATURE __PRETTY_FUNCTION__
 #endif
 
 #ifdef TRACING
+<<<<<<< HEAD
 /* TRACE is for use in the real-time audio rendering thread.
  * It would be better to always pass in the thread id. However, the thread an
  * audio callback runs on can change when the underlying audio device change,
@@ -57,12 +64,82 @@
   AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(),            \
                    std::hash<std::thread::id>{}(std::this_thread::get_id()), \
                    AutoTracer::EventType::DURATION, aFmt, ##__VA_ARGS__);
+||||||| merged common ancestors
+  /* TRACE is for use in the real-time audio rendering thread.
+   * It would be better to always pass in the thread id. However, the thread an
+   * audio callback runs on can change when the underlying audio device change,
+   * and also it seems to be called from a thread pool in a round-robin fashion
+   * when audio remoting is activated, making the traces unreadable.
+   * The thread on which the AudioCallbackDriver::DataCallback is to always
+   * be thread 0, and the budget is set to always be thread 1. This allows
+   * displaying those elements in two separate lanes.
+   * The other thread have "normal" tid. Hashing allows being able to get a
+   * string representation that is unique and guaranteed to be portable. */
+  #define TRACE_AUDIO_CALLBACK()                                               \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(), 0);
+  #define TRACE_AUDIO_CALLBACK_BUDGET(aFrames, aSampleRate)                    \
+    AutoTracer budget(gMSGTraceLogger, "Real-time budget", getpid(), 1,        \
+                      AutoTracer::EventType::BUDGET, aFrames, aSampleRate);
+  #define TRACE_AUDIO_CALLBACK_COMMENT(aFmt, ...)                              \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(), 0,         \
+                     AutoTracer::EventType::DURATION,                          \
+                     aFmt, ##__VA_ARGS__);
+  #define TRACE()                                                              \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(),            \
+                     std::hash<std::thread::id>{}(std::this_thread::get_id()));
+  #define TRACE_COMMENT(aFmt, ...)                                             \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(),            \
+                     std::hash<std::thread::id>{}(std::this_thread::get_id()), \
+                     AutoTracer::EventType::DURATION,                          \
+                     aFmt, ##__VA_ARGS__);
+=======
+/* TRACE is for use in the real-time audio rendering thread.
+ * It would be better to always pass in the thread id. However, the thread an
+ * audio callback runs on can change when the underlying audio device change,
+ * and also it seems to be called from a thread pool in a round-robin fashion
+ * when audio remoting is activated, making the traces unreadable.
+ * The thread on which the AudioCallbackDriver::DataCallback is to always
+ * be thread 0, and the budget is set to always be thread 1. This allows
+ * displaying those elements in two separate lanes.
+ * The other thread have "normal" tid. Hashing allows being able to get a
+ * string representation that is unique and guaranteed to be portable. */
+#  define TRACE_AUDIO_CALLBACK() \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(), 0);
+#  define TRACE_AUDIO_CALLBACK_BUDGET(aFrames, aSampleRate)             \
+    AutoTracer budget(gMSGTraceLogger, "Real-time budget", getpid(), 1, \
+                      AutoTracer::EventType::BUDGET, aFrames, aSampleRate);
+#  define TRACE_AUDIO_CALLBACK_COMMENT(aFmt, ...)                      \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(), 0, \
+                     AutoTracer::EventType::DURATION, aFmt, ##__VA_ARGS__);
+#  define TRACE()                                      \
+    AutoTracer trace(                                  \
+        gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(), \
+        std::hash<std::thread::id>{}(std::this_thread::get_id()));
+#  define TRACE_COMMENT(aFmt, ...)                                             \
+    AutoTracer trace(gMSGTraceLogger, FUNCTION_SIGNATURE, getpid(),            \
+                     std::hash<std::thread::id>{}(std::this_thread::get_id()), \
+                     AutoTracer::EventType::DURATION, aFmt, ##__VA_ARGS__);
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define TRACE_AUDIO_CALLBACK()
 #define TRACE_AUDIO_CALLBACK_BUDGET(aFrames, aSampleRate)
 #define TRACE_AUDIO_CALLBACK_COMMENT(aFmt, ...)
 #define TRACE()
 #define TRACE_COMMENT(aFmt, ...)
+||||||| merged common ancestors
+  #define TRACE_AUDIO_CALLBACK()
+  #define TRACE_AUDIO_CALLBACK_BUDGET(aFrames, aSampleRate)
+  #define TRACE_AUDIO_CALLBACK_COMMENT(aFmt, ...)
+  #define TRACE()
+  #define TRACE_COMMENT(aFmt, ...)
+=======
+#  define TRACE_AUDIO_CALLBACK()
+#  define TRACE_AUDIO_CALLBACK_BUDGET(aFrames, aSampleRate)
+#  define TRACE_AUDIO_CALLBACK_COMMENT(aFmt, ...)
+#  define TRACE()
+#  define TRACE_COMMENT(aFmt, ...)
+>>>>>>> upstream-releases
 #endif
 
 class MOZ_RAII AutoTracer {
@@ -140,7 +217,7 @@ class MOZ_RAII AutoTracer {
 };
 
 #if defined(_WIN32)
-#undef getpid
+#  undef getpid
 #endif
 
 #endif /* TRACING_H */

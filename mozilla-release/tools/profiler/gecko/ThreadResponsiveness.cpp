@@ -5,11 +5,11 @@
 
 #include "ThreadResponsiveness.h"
 
+#include "platform.h"
+
 #include "mozilla/Atomics.h"
 #include "mozilla/SystemGroup.h"
-
 #include "nsITimer.h"
-#include "platform.h"
 
 using namespace mozilla;
 
@@ -17,6 +17,7 @@ class CheckResponsivenessTask : public CancelableRunnable,
                                 public nsITimerCallback {
  public:
   explicit CheckResponsivenessTask(nsIEventTarget* aThread, bool aIsMainThread)
+<<<<<<< HEAD
       : CancelableRunnable("CheckResponsivenessTask"),
         mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0)),
         mStop(false),
@@ -26,6 +27,33 @@ class CheckResponsivenessTask : public CancelableRunnable,
 
  protected:
   ~CheckResponsivenessTask() {}
+||||||| merged common ancestors
+    : CancelableRunnable("CheckResponsivenessTask")
+    , mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0))
+    , mStop(false)
+    , mHasEverBeenSuccessfullyDispatched(false)
+    , mThread(aThread)
+    , mIsMainThread(aIsMainThread)
+  {
+  }
+
+protected:
+  ~CheckResponsivenessTask()
+  {
+  }
+
+public:
+=======
+      : CancelableRunnable("CheckResponsivenessTask"),
+        mStartToPrevTracer_us(uint64_t(profiler_time() * 1000.0)),
+        mStop(false),
+        mHasEverBeenSuccessfullyDispatched(false),
+        mThread(aThread),
+        mIsMainThread(aIsMainThread) {}
+
+ protected:
+  ~CheckResponsivenessTask() {}
+>>>>>>> upstream-releases
 
  public:
   // Must be called from the same thread every time. Call that the update

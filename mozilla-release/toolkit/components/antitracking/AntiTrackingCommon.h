@@ -11,10 +11,10 @@
 #include "mozilla/MozPromise.h"
 #include "mozilla/RefPtr.h"
 
-#define USER_INTERACTION_PERM "storageAccessAPI"
+#define USER_INTERACTION_PERM NS_LITERAL_CSTRING("storageAccessAPI")
 
 class nsIChannel;
-class nsIHttpChannel;
+class nsICookieSettings;
 class nsIPermission;
 class nsIPrincipal;
 class nsIURI;
@@ -47,7 +47,7 @@ class AntiTrackingCommon final {
       uint32_t* aRejectedReason);
 
   // Note: you should use IsFirstPartyStorageAccessGrantedFor() passing the
-  // nsIHttpChannel! Use this method _only_ if the channel is not available.
+  // nsIChannel! Use this method _only_ if the channel is not available.
   // For first party window, it's impossible to know if the aURI is a tracking
   // resource synchronously, so here we return the best guest: if we are sure
   // that the permission is granted for the origin of aURI, this method returns
@@ -59,13 +59,31 @@ class AntiTrackingCommon final {
   // aChannel can be a 3rd party channel, or not.
   // See IsFirstPartyStorageAccessGrantedFor(window) to see the possible values
   // of aRejectedReason.
+<<<<<<< HEAD
   static bool IsFirstPartyStorageAccessGrantedFor(nsIHttpChannel* aChannel,
                                                   nsIURI* aURI,
                                                   uint32_t* aRejectedReason);
+||||||| merged common ancestors
+  static bool
+  IsFirstPartyStorageAccessGrantedFor(nsIHttpChannel* aChannel, nsIURI* aURI,
+                                      uint32_t* aRejectedReason);
+=======
+  static bool IsFirstPartyStorageAccessGrantedFor(nsIChannel* aChannel,
+                                                  nsIURI* aURI,
+                                                  uint32_t* aRejectedReason);
+>>>>>>> upstream-releases
 
   // This method checks if the principal has the permission to access to the
   // first party storage.
+<<<<<<< HEAD
   static bool IsFirstPartyStorageAccessGrantedFor(nsIPrincipal* aPrincipal);
+||||||| merged common ancestors
+  static bool
+  IsFirstPartyStorageAccessGrantedFor(nsIPrincipal* aPrincipal);
+=======
+  static bool IsFirstPartyStorageAccessGrantedFor(
+      nsIPrincipal* aPrincipal, nsICookieSettings* aCookieSettings);
+>>>>>>> upstream-releases
 
   enum StorageAccessGrantedReason {
     eStorageAccessAPI,
@@ -101,12 +119,42 @@ class AntiTrackingCommon final {
 
   // Returns true if the permission passed in is a storage access permission
   // for the passed in principal argument.
+<<<<<<< HEAD
+  static bool IsStorageAccessPermission(nsIPermission* aPermission,
+                                        nsIPrincipal* aPrincipal);
+||||||| merged common ancestors
+  static bool
+  IsStorageAccessPermission(nsIPermission* aPermission, nsIPrincipal* aPrincipal);
+=======
   static bool IsStorageAccessPermission(nsIPermission* aPermission,
                                         nsIPrincipal* aPrincipal);
 
   static void StoreUserInteractionFor(nsIPrincipal* aPrincipal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static void StoreUserInteractionFor(nsIPrincipal* aPrincipal);
+||||||| merged common ancestors
+  static void
+  StoreUserInteractionFor(nsIPrincipal* aPrincipal);
+=======
   static bool HasUserInteraction(nsIPrincipal* aPrincipal);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static bool HasUserInteraction(nsIPrincipal* aPrincipal);
+||||||| merged common ancestors
+  static bool
+  HasUserInteraction(nsIPrincipal* aPrincipal);
+=======
+  // This API allows consumers to get notified when the anti-tracking component
+  // settings change.  After this callback is called, an anti-tracking check
+  // that has been previously performed with the same parameters may now return
+  // a different result.
+  typedef std::function<void()> AntiTrackingSettingsChangedCallback;
+  static void OnAntiTrackingSettingsChanged(
+      const AntiTrackingSettingsChangedCallback& aCallback);
+>>>>>>> upstream-releases
 
   // For IPC only.
   typedef MozPromise<nsresult, bool, true> FirstPartyStorageAccessGrantPromise;
@@ -120,6 +168,9 @@ class AntiTrackingCommon final {
     eStorageChecks,
     eTrackingProtection,
     eTrackingAnnotations,
+    eFingerprinting,
+    eCryptomining,
+    eSocialTracking,
   };
 
   // Check whether a top window URI is on the content blocking allow list.
@@ -144,6 +195,15 @@ class AntiTrackingCommon final {
   //  * nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER
   //  * nsIWebProgressListener::STATE_COOKIES_BLOCKED_ALL
   //  * nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN
+<<<<<<< HEAD
+  static void NotifyBlockingDecision(nsIChannel* aChannel,
+                                     BlockingDecision aDecision,
+                                     uint32_t aRejectedReason);
+||||||| merged common ancestors
+  //  * nsIWebProgressListener::STATE_BLOCKED_SLOW_TRACKING_CONTENT
+  static void
+  NotifyRejection(nsIChannel* aChannel, uint32_t aRejectedReason);
+=======
   static void NotifyBlockingDecision(nsIChannel* aChannel,
                                      BlockingDecision aDecision,
                                      uint32_t aRejectedReason);
@@ -151,6 +211,20 @@ class AntiTrackingCommon final {
   static void NotifyBlockingDecision(nsPIDOMWindowInner* aWindow,
                                      BlockingDecision aDecision,
                                      uint32_t aRejectedReason);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static void NotifyBlockingDecision(nsPIDOMWindowInner* aWindow,
+                                     BlockingDecision aDecision,
+                                     uint32_t aRejectedReason);
+||||||| merged common ancestors
+  static void
+  NotifyRejection(nsPIDOMWindowInner* aWindow, uint32_t aRejectedReason);
+=======
+  // Get the current document URI from a document channel as it is being loaded.
+  static already_AddRefed<nsIURI> MaybeGetDocumentURIBeingLoaded(
+      nsIChannel* aChannel);
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

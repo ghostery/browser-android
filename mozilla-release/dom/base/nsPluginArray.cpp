@@ -22,7 +22,7 @@
 #include "nsIInterfaceRequestorUtils.h"
 #include "nsContentUtils.h"
 #include "nsIPermissionManager.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIBlocklistService.h"
 
 using namespace mozilla;
@@ -224,9 +224,19 @@ nsPluginElement* nsPluginArray::NamedGetter(const nsAString& aName,
 void nsPluginArray::NotifyHiddenPluginTouched(nsPluginElement* aHiddenElement) {
   HiddenPluginEventInit init;
   init.mTag = aHiddenElement->PluginTag();
+<<<<<<< HEAD
   nsCOMPtr<nsIDocument> doc = aHiddenElement->GetParentObject()->GetDoc();
   RefPtr<HiddenPluginEvent> event = HiddenPluginEvent::Constructor(
       doc, NS_LITERAL_STRING("HiddenPlugin"), init);
+||||||| merged common ancestors
+  nsCOMPtr<nsIDocument> doc = aHiddenElement->GetParentObject()->GetDoc();
+  RefPtr<HiddenPluginEvent> event =
+    HiddenPluginEvent::Constructor(doc, NS_LITERAL_STRING("HiddenPlugin"), init);
+=======
+  nsCOMPtr<Document> doc = aHiddenElement->GetParentObject()->GetDoc();
+  RefPtr<HiddenPluginEvent> event = HiddenPluginEvent::Constructor(
+      doc, NS_LITERAL_STRING("HiddenPlugin"), init);
+>>>>>>> upstream-releases
   event->SetTarget(doc);
   event->SetTrusted(true);
   event->WidgetEventPtr()->mFlags.mOnlyChromeDispatch = true;
@@ -273,7 +283,7 @@ bool nsPluginArray::AllowPlugins() const {
   if (!mWindow) {
     return false;
   }
-  nsCOMPtr<nsIDocument> doc = mWindow->GetDoc();
+  nsCOMPtr<Document> doc = mWindow->GetDoc();
   if (!doc) {
     return false;
   }
@@ -329,6 +339,7 @@ void nsPluginArray::EnsurePlugins() {
           nsresult rv =
               pluginHost->GetPermissionStringForTag(pluginTag, 0, permString);
           if (rv == NS_OK) {
+<<<<<<< HEAD
             nsCOMPtr<nsIDocument> currentDoc = mWindow->GetExtantDoc();
 
             // The top-level content document gets the final say on whether or
@@ -340,13 +351,46 @@ void nsPluginArray::EnsurePlugins() {
             // permission.
             nsCOMPtr<nsIDocument> topDoc =
                 currentDoc->GetTopLevelContentDocument();
+||||||| merged common ancestors
+            nsCOMPtr<nsIDocument> currentDoc = mWindow->GetExtantDoc();
+
+            // The top-level content document gets the final say on whether or not
+            // a plugin is going to be hidden or not, regardless of the origin
+            // that a subframe is hosted at. This is to avoid spamming the user
+            // with the hidden plugin notification bar when third-party iframes
+            // attempt to access navigator.plugins after the user has already
+            // expressed that the top-level document has this permission.
+            nsCOMPtr<nsIDocument> topDoc = currentDoc->GetTopLevelContentDocument();
+=======
+            nsCOMPtr<Document> currentDoc = mWindow->GetExtantDoc();
+
+            // The top-level content document gets the final say on whether or
+            // not a plugin is going to be hidden or not, regardless of the
+            // origin that a subframe is hosted at. This is to avoid spamming
+            // the user with the hidden plugin notification bar when third-party
+            // iframes attempt to access navigator.plugins after the user has
+            // already expressed that the top-level document has this
+            // permission.
+            nsCOMPtr<Document> topDoc =
+                currentDoc->GetTopLevelContentDocument();
+>>>>>>> upstream-releases
 
             if (topDoc) {
               nsIPrincipal* principal = topDoc->NodePrincipal();
+<<<<<<< HEAD
               nsCOMPtr<nsIPermissionManager> permMgr =
                   services::GetPermissionManager();
               permMgr->TestPermissionFromPrincipal(principal, permString.get(),
                                                    &permission);
+||||||| merged common ancestors
+              nsCOMPtr<nsIPermissionManager> permMgr = services::GetPermissionManager();
+              permMgr->TestPermissionFromPrincipal(principal, permString.get(), &permission);
+=======
+              nsCOMPtr<nsIPermissionManager> permMgr =
+                  services::GetPermissionManager();
+              permMgr->TestPermissionFromPrincipal(principal, permString,
+                                                   &permission);
+>>>>>>> upstream-releases
             }
           }
         }

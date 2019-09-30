@@ -9,6 +9,7 @@
 #include "nsRubyTextFrame.h"
 
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/WritingModes.h"
 #include "nsLineLayout.h"
 #include "nsPresContext.h"
@@ -26,9 +27,21 @@ NS_QUERYFRAME_TAIL_INHERITING(nsRubyContentFrame)
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRubyTextFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewRubyTextFrame(nsIPresShell* aPresShell,
                                       ComputedStyle* aStyle) {
   return new (aPresShell) nsRubyTextFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewRubyTextFrame(nsIPresShell* aPresShell,
+                    ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsRubyTextFrame(aStyle);
+=======
+nsContainerFrame* NS_NewRubyTextFrame(PresShell* aPresShell,
+                                      ComputedStyle* aStyle) {
+  return new (aPresShell) nsRubyTextFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -36,7 +49,18 @@ nsContainerFrame* NS_NewRubyTextFrame(nsIPresShell* aPresShell,
 // nsRubyTextFrame Method Implementations
 // ======================================
 
+<<<<<<< HEAD
 /* virtual */ bool nsRubyTextFrame::CanContinueTextRun() const { return false; }
+||||||| merged common ancestors
+/* virtual */ bool
+nsRubyTextFrame::CanContinueTextRun() const
+{
+  return false;
+}
+=======
+/* virtual */
+bool nsRubyTextFrame::CanContinueTextRun() const { return false; }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG_FRAME_DUMP
 nsresult nsRubyTextFrame::GetFrameName(nsAString& aResult) const {
@@ -44,8 +68,21 @@ nsresult nsRubyTextFrame::GetFrameName(nsAString& aResult) const {
 }
 #endif
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextFrame::BuildDisplayList(
     nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) {
+||||||| merged common ancestors
+
+
+/* virtual */ void
+nsRubyTextFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                                  const nsDisplayListSet& aLists)
+{
+=======
+/* virtual */
+void nsRubyTextFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
+                                       const nsDisplayListSet& aLists) {
+>>>>>>> upstream-releases
   if (IsAutoHidden()) {
     return;
   }
@@ -53,10 +90,25 @@ nsresult nsRubyTextFrame::GetFrameName(nsAString& aResult) const {
   nsRubyContentFrame::BuildDisplayList(aBuilder, aLists);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyTextFrame::Reflow(nsPresContext* aPresContext,
                                            ReflowOutput& aDesiredSize,
                                            const ReflowInput& aReflowInput,
                                            nsReflowStatus& aStatus) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyTextFrame::Reflow(nsPresContext* aPresContext,
+                        ReflowOutput& aDesiredSize,
+                        const ReflowInput& aReflowInput,
+                        nsReflowStatus& aStatus)
+{
+=======
+/* virtual */
+void nsRubyTextFrame::Reflow(nsPresContext* aPresContext,
+                             ReflowOutput& aDesiredSize,
+                             const ReflowInput& aReflowInput,
+                             nsReflowStatus& aStatus) {
+>>>>>>> upstream-releases
   // Even if we want to hide this frame, we have to reflow it first.
   // If we leave it dirty, changes to its content will never be
   // propagated to the ancestors, then it won't be displayed even if

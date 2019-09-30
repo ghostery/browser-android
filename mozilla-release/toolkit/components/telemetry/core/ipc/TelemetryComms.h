@@ -69,12 +69,28 @@ struct DynamicScalarDefinition {
   uint32_t dataset;
   bool expired;
   bool keyed;
+  bool builtin;
   nsCString name;
 
+<<<<<<< HEAD
   bool operator==(const DynamicScalarDefinition& rhs) const {
     return type == rhs.type && dataset == rhs.dataset &&
            expired == rhs.expired && keyed == rhs.keyed &&
            name.Equals(rhs.name);
+||||||| merged common ancestors
+  bool operator ==(const DynamicScalarDefinition& rhs) const
+  {
+    return type == rhs.type &&
+           dataset == rhs.dataset &&
+           expired == rhs.expired &&
+           keyed == rhs.keyed &&
+           name.Equals(rhs.name);
+=======
+  bool operator==(const DynamicScalarDefinition& rhs) const {
+    return type == rhs.type && dataset == rhs.dataset &&
+           expired == rhs.expired && keyed == rhs.keyed &&
+           builtin == rhs.builtin && name.Equals(rhs.name);
+>>>>>>> upstream-releases
   }
 };
 
@@ -337,6 +353,7 @@ struct ParamTraits<mozilla::Telemetry::DynamicScalarDefinition> {
     WriteParam(aMsg, aParam.dataset);
     WriteParam(aMsg, aParam.expired);
     WriteParam(aMsg, aParam.keyed);
+    WriteParam(aMsg, aParam.builtin);
     WriteParam(aMsg, aParam.name);
   }
 
@@ -348,6 +365,7 @@ struct ParamTraits<mozilla::Telemetry::DynamicScalarDefinition> {
                    reinterpret_cast<uint32_t*>(&(aResult->dataset))) ||
         !ReadParam(aMsg, aIter, reinterpret_cast<bool*>(&(aResult->expired))) ||
         !ReadParam(aMsg, aIter, reinterpret_cast<bool*>(&(aResult->keyed))) ||
+        !ReadParam(aMsg, aIter, reinterpret_cast<bool*>(&(aResult->builtin))) ||
         !ReadParam(aMsg, aIter, &(aResult->name))) {
       return false;
     }

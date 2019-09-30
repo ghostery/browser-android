@@ -79,6 +79,27 @@ OriginUsageResult::GetLimit(uint64_t* aLimit) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 }  // namespace quota
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace quota
+} // namespace dom
+} // namespace mozilla
+=======
+InitializedOriginsResult::InitializedOriginsResult(const nsACString& aOrigin)
+    : mOrigin(aOrigin) {}
+
+NS_IMPL_ISUPPORTS(InitializedOriginsResult, nsIQuotaInitializedOriginsResult)
+
+NS_IMETHODIMP
+InitializedOriginsResult::GetOrigin(nsACString& aOrigin) {
+  aOrigin = mOrigin;
+  return NS_OK;
+}
+
+}  // namespace quota
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

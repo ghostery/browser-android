@@ -2081,6 +2081,7 @@ metaZones:table(nofallback){
             {
                 "Alaska",
                 "2015-11-01 10:00",
+<<<<<<< HEAD
                 "2018-11-04 10:00",
             }
             {
@@ -2091,6 +2092,19 @@ metaZones:table(nofallback){
             {
                 "Alaska",
                 "2019-03-10 11:00",
+||||||| merged common ancestors
+=======
+                "2018-11-04 10:00",
+            }
+            {
+                "America_Pacific",
+                "2018-11-04 10:00",
+                "2019-01-20 10:00",
+            }
+            {
+                "Alaska",
+                "2019-01-20 10:00",
+>>>>>>> upstream-releases
                 "9999-12-31 23:59",
             }
         }

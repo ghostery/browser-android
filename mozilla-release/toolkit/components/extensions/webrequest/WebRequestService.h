@@ -17,14 +17,24 @@
 #include "nsDataHashtable.h"
 
 class nsAtom;
-class nsITabParent;
+class nsIRemoteTab;
 class nsITraceableChannel;
 
 namespace mozilla {
 namespace dom {
+<<<<<<< HEAD
 class TabParent;
 class nsIContentParent;
 }  // namespace dom
+||||||| merged common ancestors
+  class TabParent;
+  class nsIContentParent;
+}
+=======
+class BrowserParent;
+class ContentParent;
+}  // namespace dom
+>>>>>>> upstream-releases
 
 namespace extensions {
 
@@ -59,9 +69,19 @@ class WebRequestService final {
 
   void UnregisterTraceableChannel(uint64_t aChannelId);
 
+<<<<<<< HEAD
   already_AddRefed<nsITraceableChannel> GetTraceableChannel(
       uint64_t aChannelId, nsAtom* aAddonId,
       dom::nsIContentParent* aContentParent);
+||||||| merged common ancestors
+  already_AddRefed<nsITraceableChannel>
+  GetTraceableChannel(uint64_t aChannelId, nsAtom* aAddonId,
+                      dom::nsIContentParent* aContentParent);
+=======
+  already_AddRefed<nsITraceableChannel> GetTraceableChannel(
+      uint64_t aChannelId, nsAtom* aAddonId,
+      dom::ContentParent* aContentParent);
+>>>>>>> upstream-releases
 
  private:
   ~WebRequestService();

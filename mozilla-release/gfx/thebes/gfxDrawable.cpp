@@ -9,8 +9,8 @@
 #include "gfxPlatform.h"
 #include "gfx2DGlue.h"
 #ifdef MOZ_X11
-#include "cairo.h"
-#include "gfxXlibSurface.h"
+#  include "cairo.h"
+#  include "gfxXlibSurface.h"
 #endif
 #include "mozilla/gfx/Logging.h"
 
@@ -92,6 +92,7 @@ void gfxSurfaceDrawable::DrawInternal(
 
 gfxCallbackDrawable::gfxCallbackDrawable(gfxDrawingCallback* aCallback,
                                          const IntSize aSize)
+<<<<<<< HEAD
     : gfxDrawable(aSize), mCallback(aCallback) {}
 
 already_AddRefed<gfxSurfaceDrawable> gfxCallbackDrawable::MakeSurfaceDrawable(
@@ -115,6 +116,62 @@ already_AddRefed<gfxSurfaceDrawable> gfxCallbackDrawable::MakeSurfaceDrawable(
     return drawable.forget();
   }
   return nullptr;
+||||||| merged common ancestors
+ : gfxDrawable(aSize)
+ , mCallback(aCallback)
+{
+}
+
+already_AddRefed<gfxSurfaceDrawable>
+gfxCallbackDrawable::MakeSurfaceDrawable(gfxContext *aContext, const SamplingFilter aSamplingFilter)
+{
+    SurfaceFormat format =
+        gfxPlatform::GetPlatform()->Optimal2DFormatForContent(gfxContentType::COLOR_ALPHA);
+    RefPtr<DrawTarget> dt =
+        aContext->GetDrawTarget()->CreateSimilarDrawTarget(mSize, format);
+
+    if (!dt || !dt->IsValid())
+        return nullptr;
+
+    RefPtr<gfxContext> ctx = gfxContext::CreateOrNull(dt);
+    MOZ_ASSERT(ctx); // already checked for target above
+    Draw(ctx, gfxRect(0, 0, mSize.width, mSize.height), ExtendMode::CLAMP,
+         aSamplingFilter);
+
+    RefPtr<SourceSurface> surface = dt->Snapshot();
+    if (surface) {
+        RefPtr<gfxSurfaceDrawable> drawable = new gfxSurfaceDrawable(surface, mSize);
+        return drawable.forget();
+    }
+    return nullptr;
+=======
+    : gfxDrawable(aSize), mCallback(aCallback) {}
+
+already_AddRefed<gfxSurfaceDrawable> gfxCallbackDrawable::MakeSurfaceDrawable(
+    gfxContext* aContext, const SamplingFilter aSamplingFilter) {
+  SurfaceFormat format = gfxPlatform::GetPlatform()->Optimal2DFormatForContent(
+      gfxContentType::COLOR_ALPHA);
+  if (!aContext->GetDrawTarget()->CanCreateSimilarDrawTarget(mSize, format)) {
+    return nullptr;
+  }
+  RefPtr<DrawTarget> dt =
+      aContext->GetDrawTarget()->CreateSimilarDrawTarget(mSize, format);
+
+  if (!dt || !dt->IsValid()) return nullptr;
+
+  RefPtr<gfxContext> ctx = gfxContext::CreateOrNull(dt);
+  MOZ_ASSERT(ctx);  // already checked for target above
+  Draw(ctx, gfxRect(0, 0, mSize.width, mSize.height), ExtendMode::CLAMP,
+       aSamplingFilter);
+
+  RefPtr<SourceSurface> surface = dt->Snapshot();
+  if (surface) {
+    RefPtr<gfxSurfaceDrawable> drawable =
+        new gfxSurfaceDrawable(surface, mSize);
+    return drawable.forget();
+  }
+  return nullptr;
+>>>>>>> upstream-releases
 }
 
 static bool IsRepeatingExtendMode(ExtendMode aExtendMode) {
@@ -155,6 +212,7 @@ gfxPatternDrawable::gfxPatternDrawable(gfxPattern* aPattern,
 gfxPatternDrawable::~gfxPatternDrawable() = default;
 
 class DrawingCallbackFromDrawable : public gfxDrawingCallback {
+<<<<<<< HEAD
  public:
   explicit DrawingCallbackFromDrawable(gfxDrawable* aDrawable)
       : mDrawable(aDrawable) {
@@ -172,6 +230,45 @@ class DrawingCallbackFromDrawable : public gfxDrawingCallback {
 
  private:
   RefPtr<gfxDrawable> mDrawable;
+||||||| merged common ancestors
+public:
+    explicit DrawingCallbackFromDrawable(gfxDrawable* aDrawable)
+     : mDrawable(aDrawable) {
+        NS_ASSERTION(aDrawable, "aDrawable is null!");
+    }
+
+    ~DrawingCallbackFromDrawable() override = default;
+
+    bool operator()(gfxContext* aContext,
+                    const gfxRect& aFillRect,
+                    const SamplingFilter aSamplingFilter,
+                    const gfxMatrix& aTransform = gfxMatrix()) override
+    {
+        return mDrawable->Draw(aContext, aFillRect, ExtendMode::CLAMP,
+                               aSamplingFilter, 1.0,
+                               aTransform);
+    }
+private:
+    RefPtr<gfxDrawable> mDrawable;
+=======
+ public:
+  explicit DrawingCallbackFromDrawable(gfxDrawable* aDrawable)
+      : mDrawable(aDrawable) {
+    NS_ASSERTION(aDrawable, "aDrawable is null!");
+  }
+
+  virtual ~DrawingCallbackFromDrawable() = default;
+
+  bool operator()(gfxContext* aContext, const gfxRect& aFillRect,
+                  const SamplingFilter aSamplingFilter,
+                  const gfxMatrix& aTransform = gfxMatrix()) override {
+    return mDrawable->Draw(aContext, aFillRect, ExtendMode::CLAMP,
+                           aSamplingFilter, 1.0, aTransform);
+  }
+
+ private:
+  RefPtr<gfxDrawable> mDrawable;
+>>>>>>> upstream-releases
 };
 
 already_AddRefed<gfxCallbackDrawable>

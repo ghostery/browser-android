@@ -16,6 +16,7 @@
 #include "nsTableFrame.h"
 #include "celldata.h"
 
+#include "mozilla/PresShell.h"
 #include "mozilla/RestyleManager.h"
 #include <algorithm>
 
@@ -33,13 +34,13 @@ static int8_t ParseStyleValue(nsAtom* aAttribute,
                               const nsAString& aAttributeValue) {
   if (aAttribute == nsGkAtoms::rowalign_) {
     if (aAttributeValue.EqualsLiteral("top"))
-      return NS_STYLE_VERTICAL_ALIGN_TOP;
+      return static_cast<int8_t>(StyleVerticalAlignKeyword::Top);
     else if (aAttributeValue.EqualsLiteral("bottom"))
-      return NS_STYLE_VERTICAL_ALIGN_BOTTOM;
+      return static_cast<int8_t>(StyleVerticalAlignKeyword::Bottom);
     else if (aAttributeValue.EqualsLiteral("center"))
-      return NS_STYLE_VERTICAL_ALIGN_MIDDLE;
+      return static_cast<int8_t>(StyleVerticalAlignKeyword::Middle);
     else
-      return NS_STYLE_VERTICAL_ALIGN_BASELINE;
+      return static_cast<int8_t>(StyleVerticalAlignKeyword::Baseline);
   } else if (aAttribute == nsGkAtoms::columnalign_) {
     if (aAttributeValue.EqualsLiteral("left"))
       return NS_STYLE_TEXT_ALIGN_LEFT;
@@ -112,13 +113,36 @@ static nsresult ReportParseError(nsIFrame* aFrame, const char16_t* aAttribute,
                                  const char16_t* aValue) {
   nsIContent* content = aFrame->GetContent();
 
+<<<<<<< HEAD
   const char16_t* params[] = {
       aValue, aAttribute, content->NodeInfo()->NameAtom()->GetUTF16String()};
+||||||| merged common ancestors
+  const char16_t* params[] =
+    { aValue, aAttribute, content->NodeInfo()->NameAtom()->GetUTF16String() };
+=======
+  AutoTArray<nsString, 3> params;
+  params.AppendElement(aValue);
+  params.AppendElement(aAttribute);
+  params.AppendElement(nsDependentAtomString(content->NodeInfo()->NameAtom()));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return nsContentUtils::ReportToConsole(
       nsIScriptError::errorFlag, NS_LITERAL_CSTRING("Layout: MathML"),
       content->OwnerDoc(), nsContentUtils::eMATHML_PROPERTIES,
       "AttributeParsingError", params, 3);
+||||||| merged common ancestors
+  return nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
+                                         NS_LITERAL_CSTRING("Layout: MathML"),
+                                         content->OwnerDoc(),
+                                         nsContentUtils::eMATHML_PROPERTIES,
+                                         "AttributeParsingError", params, 3);
+=======
+  return nsContentUtils::ReportToConsole(
+      nsIScriptError::errorFlag, NS_LITERAL_CSTRING("Layout: MathML"),
+      content->OwnerDoc(), nsContentUtils::eMATHML_PROPERTIES,
+      "AttributeParsingError", params);
+>>>>>>> upstream-releases
 }
 
 // Each rowalign='top bottom' or columnalign='left right center' (from
@@ -296,33 +320,81 @@ class nsDisplaymtdBorder final : public nsDisplayBorder {
     bounds.Inflate(overflow);
 
     PaintBorderFlags flags = aBuilder->ShouldSyncDecodeImages()
+<<<<<<< HEAD
                                  ? PaintBorderFlags::SYNC_DECODE_IMAGES
                                  : PaintBorderFlags();
 
     ImgDrawResult result = nsCSSRendering::PaintBorderWithStyleBorder(
         mFrame->PresContext(), *aCtx, mFrame, GetPaintRect(), bounds,
         styleBorder, mFrame->Style(), flags, mFrame->GetSkipSides());
+||||||| merged common ancestors
+                           ? PaintBorderFlags::SYNC_DECODE_IMAGES
+                           : PaintBorderFlags();
+
+    ImgDrawResult result =
+      nsCSSRendering::PaintBorderWithStyleBorder(mFrame->PresContext(), *aCtx,
+                                                 mFrame, GetPaintRect(),
+                                                 bounds,
+                                                 styleBorder,
+                                                 mFrame->Style(),
+                                                 flags,
+                                                 mFrame->GetSkipSides());
+=======
+                                 ? PaintBorderFlags::SyncDecodeImages
+                                 : PaintBorderFlags();
+
+    ImgDrawResult result = nsCSSRendering::PaintBorderWithStyleBorder(
+        mFrame->PresContext(), *aCtx, mFrame, GetPaintRect(), bounds,
+        styleBorder, mFrame->Style(), flags, mFrame->GetSkipSides());
+>>>>>>> upstream-releases
 
     nsDisplayItemGenericImageGeometry::UpdateDrawResult(this, result);
   }
 
+<<<<<<< HEAD
   bool CreateWebRenderCommands(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const StackingContextHelper& aSc,
       mozilla::layers::WebRenderLayerManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override {
+||||||| merged common ancestors
+  bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                               mozilla::wr::IpcResourceUpdateQueue& aResources,
+                               const StackingContextHelper& aSc,
+                               mozilla::layers::WebRenderLayerManager* aManager,
+                               nsDisplayListBuilder* aDisplayListBuilder) override
+  {
+=======
+  bool CreateWebRenderCommands(
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const StackingContextHelper& aSc,
+      mozilla::layers::RenderRootStateManager* aManager,
+      nsDisplayListBuilder* aDisplayListBuilder) override {
+>>>>>>> upstream-releases
     return false;
   }
 };
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define DEBUG_VERIFY_THAT_FRAME_IS(_frame, _expected)                       \
   MOZ_ASSERT(                                                               \
       mozilla::StyleDisplay::_expected == _frame->StyleDisplay()->mDisplay, \
       "internal error");
+||||||| merged common ancestors
+#define DEBUG_VERIFY_THAT_FRAME_IS(_frame, _expected)                              \
+  MOZ_ASSERT(mozilla::StyleDisplay::_expected == _frame->StyleDisplay()->mDisplay, \
+             "internal error");
+=======
+#  define DEBUG_VERIFY_THAT_FRAME_IS(_frame, _expected)                       \
+    MOZ_ASSERT(                                                               \
+        mozilla::StyleDisplay::_expected == _frame->StyleDisplay()->mDisplay, \
+        "internal error");
+>>>>>>> upstream-releases
 #else
-#define DEBUG_VERIFY_THAT_FRAME_IS(_frame, _expected)
+#  define DEBUG_VERIFY_THAT_FRAME_IS(_frame, _expected)
 #endif
 
 static void ParseFrameAttribute(nsIFrame* aFrame, nsAtom* aAttribute,
@@ -652,9 +724,21 @@ NS_QUERYFRAME_HEAD(nsMathMLmtableWrapperFrame)
   NS_QUERYFRAME_ENTRY(nsIMathMLFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsTableWrapperFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewMathMLmtableOuterFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmtableWrapperFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewMathMLmtableOuterFrame (nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmtableWrapperFrame(aStyle);
+=======
+nsContainerFrame* NS_NewMathMLmtableOuterFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmtableWrapperFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmtableWrapperFrame)
@@ -688,8 +772,16 @@ nsresult nsMathMLmtableWrapperFrame::AttributeChanged(int32_t aNameSpaceID,
 
   // align - just need to issue a dirty (resize) reflow command
   if (aAttribute == nsGkAtoms::align) {
+<<<<<<< HEAD
     PresShell()->FrameNeedsReflow(this, nsIPresShell::eResize,
                                   NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+    PresShell()->
+      FrameNeedsReflow(this, nsIPresShell::eResize, NS_FRAME_IS_DIRTY);
+=======
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::Resize,
+                                  NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -700,8 +792,16 @@ nsresult nsMathMLmtableWrapperFrame::AttributeChanged(int32_t aNameSpaceID,
     nsMathMLContainerFrame::RebuildAutomaticDataForChildren(GetParent());
     // Need to reflow the parent, not us, because this can actually
     // affect siblings.
+<<<<<<< HEAD
     PresShell()->FrameNeedsReflow(GetParent(), nsIPresShell::eStyleChange,
                                   NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+    PresShell()->
+      FrameNeedsReflow(GetParent(), nsIPresShell::eStyleChange, NS_FRAME_IS_DIRTY);
+=======
+    PresShell()->FrameNeedsReflow(GetParent(), IntrinsicDirty::StyleChange,
+                                  NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -730,8 +830,16 @@ nsresult nsMathMLmtableWrapperFrame::AttributeChanged(int32_t aNameSpaceID,
   }
 
   // Explicitly request a reflow in our subtree to pick up any changes
+<<<<<<< HEAD
   presContext->PresShell()->FrameNeedsReflow(this, nsIPresShell::eStyleChange,
                                              NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+  presContext->PresShell()->
+      FrameNeedsReflow(this, nsIPresShell::eStyleChange, NS_FRAME_IS_DIRTY);
+=======
+  presContext->PresShell()->FrameNeedsReflow(this, IntrinsicDirty::StyleChange,
+                                             NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -876,9 +984,21 @@ void nsMathMLmtableWrapperFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewMathMLmtableFrame(nsIPresShell* aPresShell,
                                           ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmtableFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewMathMLmtableFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmtableFrame(aStyle);
+=======
+nsContainerFrame* NS_NewMathMLmtableFrame(PresShell* aPresShell,
+                                          ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmtableFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmtableFrame)
@@ -895,10 +1015,23 @@ void nsMathMLmtableFrame::RestyleTable() {
   // re-sync MathML specific style data that may have changed
   MapAllAttributesIntoCSS(this);
 
+<<<<<<< HEAD
   // Explicitly request a re-resolve and reflow in our subtree to pick up any
   // changes
   PresContext()->RestyleManager()->PostRestyleEvent(
       mContent->AsElement(), eRestyle_Subtree, nsChangeHint_AllReflowHints);
+||||||| merged common ancestors
+  // Explicitly request a re-resolve and reflow in our subtree to pick up any changes
+  PresContext()->RestyleManager()->
+    PostRestyleEvent(mContent->AsElement(), eRestyle_Subtree,
+                     nsChangeHint_AllReflowHints);
+=======
+  // Explicitly request a re-resolve and reflow in our subtree to pick up any
+  // changes
+  PresContext()->RestyleManager()->PostRestyleEvent(
+      mContent->AsElement(), RestyleHint::RestyleSubtree(),
+      nsChangeHint_AllReflowHints);
+>>>>>>> upstream-releases
 }
 
 nscoord nsMathMLmtableFrame::GetColSpacing(int32_t aColIndex) {
@@ -1029,9 +1162,21 @@ NS_QUERYFRAME_TAIL_INHERITING(nsTableFrame)
 // --------
 // implementation of nsMathMLmtrFrame
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewMathMLmtrFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmtrFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewMathMLmtrFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmtrFrame(aStyle);
+=======
+nsContainerFrame* NS_NewMathMLmtrFrame(PresShell* aPresShell,
+                                       ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmtrFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmtrFrame)
@@ -1061,8 +1206,16 @@ nsresult nsMathMLmtrFrame::AttributeChanged(int32_t aNameSpaceID,
   ParseFrameAttribute(this, aAttribute, allowMultiValues);
 
   // Explicitly request a reflow in our subtree to pick up any changes
+<<<<<<< HEAD
   presContext->PresShell()->FrameNeedsReflow(this, nsIPresShell::eStyleChange,
                                              NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+  presContext->PresShell()->
+      FrameNeedsReflow(this, nsIPresShell::eStyleChange, NS_FRAME_IS_DIRTY);
+=======
+  presContext->PresShell()->FrameNeedsReflow(this, IntrinsicDirty::StyleChange,
+                                             NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1070,9 +1223,21 @@ nsresult nsMathMLmtrFrame::AttributeChanged(int32_t aNameSpaceID,
 // --------
 // implementation of nsMathMLmtdFrame
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewMathMLmtdFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle,
                                        nsTableFrame* aTableFrame) {
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewMathMLmtdFrame(nsIPresShell*   aPresShell,
+                     ComputedStyle* aStyle,
+                     nsTableFrame*   aTableFrame)
+{
+=======
+nsContainerFrame* NS_NewMathMLmtdFrame(PresShell* aPresShell,
+                                       ComputedStyle* aStyle,
+                                       nsTableFrame* aTableFrame) {
+>>>>>>> upstream-releases
   return new (aPresShell) nsMathMLmtdFrame(aStyle, aTableFrame);
 }
 
@@ -1119,9 +1284,17 @@ nsresult nsMathMLmtdFrame::AttributeChanged(int32_t aNameSpaceID,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 uint8_t nsMathMLmtdFrame::GetVerticalAlign() const {
+||||||| merged common ancestors
+uint8_t
+nsMathMLmtdFrame::GetVerticalAlign() const
+{
+=======
+StyleVerticalAlignKeyword nsMathMLmtdFrame::GetVerticalAlign() const {
+>>>>>>> upstream-releases
   // Set the default alignment in case no alignment was specified
-  uint8_t alignment = nsTableCellFrame::GetVerticalAlign();
+  auto alignment = nsTableCellFrame::GetVerticalAlign();
 
   nsTArray<int8_t>* alignmentList = FindCellProperty(this, RowAlignProperty());
 
@@ -1130,20 +1303,34 @@ uint8_t nsMathMLmtdFrame::GetVerticalAlign() const {
 
     // If the row number is greater than the number of provided rowalign values,
     // we simply repeat the last value.
-    if (rowIndex < alignmentList->Length())
-      alignment = alignmentList->ElementAt(rowIndex);
-    else
-      alignment = alignmentList->ElementAt(alignmentList->Length() - 1);
+    return static_cast<StyleVerticalAlignKeyword>(
+        (rowIndex < alignmentList->Length())
+            ? alignmentList->ElementAt(rowIndex)
+            : alignmentList->LastElement());
   }
 
   return alignment;
 }
 
+<<<<<<< HEAD
 nsresult nsMathMLmtdFrame::ProcessBorders(nsTableFrame* aFrame,
                                           nsDisplayListBuilder* aBuilder,
                                           const nsDisplayListSet& aLists) {
   aLists.BorderBackground()->AppendToTop(
       MakeDisplayItem<nsDisplaymtdBorder>(aBuilder, this));
+||||||| merged common ancestors
+nsresult
+nsMathMLmtdFrame::ProcessBorders(nsTableFrame* aFrame,
+                                 nsDisplayListBuilder* aBuilder,
+                                 const nsDisplayListSet& aLists)
+{
+  aLists.BorderBackground()->AppendToTop(MakeDisplayItem<nsDisplaymtdBorder>(aBuilder, this));
+=======
+nsresult nsMathMLmtdFrame::ProcessBorders(nsTableFrame* aFrame,
+                                          nsDisplayListBuilder* aBuilder,
+                                          const nsDisplayListSet& aLists) {
+  aLists.BorderBackground()->AppendNewToTop<nsDisplaymtdBorder>(aBuilder, this);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1167,18 +1354,46 @@ NS_QUERYFRAME_HEAD(nsMathMLmtdInnerFrame)
   NS_QUERYFRAME_ENTRY(nsIMathMLFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsBlockFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewMathMLmtdInnerFrame(nsIPresShell* aPresShell,
                                             ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmtdInnerFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewMathMLmtdInnerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmtdInnerFrame(aStyle);
+=======
+nsContainerFrame* NS_NewMathMLmtdInnerFrame(PresShell* aPresShell,
+                                            ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmtdInnerFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmtdInnerFrame)
 
+<<<<<<< HEAD
 nsMathMLmtdInnerFrame::nsMathMLmtdInnerFrame(ComputedStyle* aStyle)
     : nsBlockFrame(aStyle, kClassID)
       // Make a copy of the parent nsStyleText for later modification.
       ,
       mUniqueStyleText(MakeUnique<nsStyleText>(*StyleText())) {}
+||||||| merged common ancestors
+nsMathMLmtdInnerFrame::nsMathMLmtdInnerFrame(ComputedStyle* aStyle)
+  : nsBlockFrame(aStyle, kClassID)
+  // Make a copy of the parent nsStyleText for later modification.
+  , mUniqueStyleText(MakeUnique<nsStyleText>(*StyleText()))
+{
+}
+=======
+nsMathMLmtdInnerFrame::nsMathMLmtdInnerFrame(ComputedStyle* aStyle,
+                                             nsPresContext* aPresContext)
+    : nsBlockFrame(aStyle, aPresContext, kClassID)
+      // Make a copy of the parent nsStyleText for later modification.
+      ,
+      mUniqueStyleText(MakeUnique<nsStyleText>(*StyleText())) {}
+>>>>>>> upstream-releases
 
 void nsMathMLmtdInnerFrame::Reflow(nsPresContext* aPresContext,
                                    ReflowOutput& aDesiredSize,
@@ -1214,8 +1429,18 @@ const nsStyleText* nsMathMLmtdInnerFrame::StyleTextForLineLayout() {
   return mUniqueStyleText.get();
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsMathMLmtdInnerFrame::DidSetComputedStyle(
     ComputedStyle* aOldComputedStyle) {
+||||||| merged common ancestors
+/* virtual */ void
+nsMathMLmtdInnerFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
+{
+=======
+/* virtual */
+void nsMathMLmtdInnerFrame::DidSetComputedStyle(
+    ComputedStyle* aOldComputedStyle) {
+>>>>>>> upstream-releases
   nsBlockFrame::DidSetComputedStyle(aOldComputedStyle);
   mUniqueStyleText = MakeUnique<nsStyleText>(*StyleText());
 }

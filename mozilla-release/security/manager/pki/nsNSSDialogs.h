@@ -10,7 +10,6 @@
 #include "nsCOMPtr.h"
 #include "nsICertificateDialogs.h"
 #include "nsIClientAuthDialogs.h"
-#include "nsIGenKeypairInfoDlg.h"
 #include "nsIStringBundle.h"
 #include "nsITokenDialogs.h"
 #include "nsITokenPasswordDialogs.h"
@@ -22,18 +21,33 @@
     }                                                \
   }
 
+<<<<<<< HEAD
 class nsNSSDialogs : public nsICertificateDialogs,
                      public nsIClientAuthDialogs,
                      public nsIGeneratingKeypairInfoDialogs,
                      public nsITokenDialogs,
                      public nsITokenPasswordDialogs {
  public:
+||||||| merged common ancestors
+class nsNSSDialogs : public nsICertificateDialogs
+                   , public nsIClientAuthDialogs
+                   , public nsIGeneratingKeypairInfoDialogs
+                   , public nsITokenDialogs
+                   , public nsITokenPasswordDialogs
+{
+public:
+=======
+class nsNSSDialogs : public nsICertificateDialogs,
+                     public nsIClientAuthDialogs,
+                     public nsITokenDialogs,
+                     public nsITokenPasswordDialogs {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSITOKENPASSWORDDIALOGS
   NS_DECL_NSICERTIFICATEDIALOGS
   NS_DECL_NSICLIENTAUTHDIALOGS
   NS_DECL_NSITOKENDIALOGS
-  NS_DECL_NSIGENERATINGKEYPAIRINFODIALOGS
   nsNSSDialogs();
 
   nsresult Init();

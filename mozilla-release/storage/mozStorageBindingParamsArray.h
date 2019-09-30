@@ -27,7 +27,7 @@ class BindingParamsArray final : public mozIStorageBindingParamsArray {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_MOZISTORAGEBINDINGPARAMSARRAY
 
-  explicit BindingParamsArray(StorageBaseStatementInternal *aOwningStatement);
+  explicit BindingParamsArray(StorageBaseStatementInternal* aOwningStatement);
 
   typedef array_type::size_type size_type;
 
@@ -40,7 +40,7 @@ class BindingParamsArray final : public mozIStorageBindingParamsArray {
   /**
    * @return the pointer to the owning BindingParamsArray.
    */
-  const StorageBaseStatementInternal *getOwner() const;
+  const StorageBaseStatementInternal* getOwner() const;
 
   /**
    * @return the number of elemets the array contains.
@@ -48,28 +48,79 @@ class BindingParamsArray final : public mozIStorageBindingParamsArray {
   size_type length() const { return mArray.Length(); }
 
   class iterator {
+<<<<<<< HEAD
    public:
     iterator(BindingParamsArray *aArray, uint32_t aIndex)
         : mArray(aArray), mIndex(aIndex) {}
+||||||| merged common ancestors
+  public:
+    iterator(BindingParamsArray *aArray,
+             uint32_t aIndex)
+    : mArray(aArray)
+    , mIndex(aIndex)
+    {
+    }
+=======
+   public:
+    iterator(BindingParamsArray* aArray, uint32_t aIndex)
+        : mArray(aArray), mIndex(aIndex) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     iterator &operator++(int) {
+||||||| merged common ancestors
+    iterator &operator++(int)
+    {
+=======
+    iterator& operator++(int) {
+>>>>>>> upstream-releases
       mIndex++;
       return *this;
     }
 
+<<<<<<< HEAD
     bool operator==(const iterator &aOther) const {
+||||||| merged common ancestors
+    bool operator==(const iterator &aOther) const
+    {
+=======
+    bool operator==(const iterator& aOther) const {
+>>>>>>> upstream-releases
       return mIndex == aOther.mIndex;
     }
+<<<<<<< HEAD
     bool operator!=(const iterator &aOther) const { return !(*this == aOther); }
     mozIStorageBindingParams *operator*() {
+||||||| merged common ancestors
+    bool operator!=(const iterator &aOther) const
+    {
+      return !(*this == aOther);
+    }
+    mozIStorageBindingParams *operator*()
+    {
+=======
+    bool operator!=(const iterator& aOther) const { return !(*this == aOther); }
+    mozIStorageBindingParams* operator*() {
+>>>>>>> upstream-releases
       NS_ASSERTION(mIndex < mArray->length(),
                    "Dereferenceing an invalid value!");
       return mArray->mArray[mIndex].get();
     }
+<<<<<<< HEAD
 
    private:
     void operator--() {}
     BindingParamsArray *mArray;
+||||||| merged common ancestors
+  private:
+    void operator--() { }
+    BindingParamsArray *mArray;
+=======
+
+   private:
+    void operator--() {}
+    BindingParamsArray* mArray;
+>>>>>>> upstream-releases
     uint32_t mIndex;
   };
 

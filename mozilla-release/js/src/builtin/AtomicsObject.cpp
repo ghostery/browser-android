@@ -61,6 +61,8 @@
 #include "jit/AtomicOperations.h"
 #include "jit/InlinableNatives.h"
 #include "js/Class.h"
+#include "js/PropertySpec.h"
+#include "js/Result.h"
 #include "vm/GlobalObject.h"
 #include "vm/Time.h"
 #include "vm/TypedArrayObject.h"
@@ -70,6 +72,50 @@
 
 using namespace js;
 
+<<<<<<< HEAD
+const Class AtomicsObject::class_ = {"Atomics",
+                                     JSCLASS_HAS_CACHED_PROTO(JSProto_Atomics)};
+
+static bool ReportBadArrayType(JSContext* cx) {
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                            JSMSG_ATOMICS_BAD_ARRAY);
+  return false;
+}
+
+static bool ReportOutOfRange(JSContext* cx) {
+  // Use JSMSG_BAD_INDEX here, it is what ToIndex uses for some cases that it
+  // reports directly.
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_INDEX);
+  return false;
+}
+
+static bool GetSharedTypedArray(JSContext* cx, HandleValue v,
+                                MutableHandle<TypedArrayObject*> viewp) {
+  if (!v.isObject()) {
+    return ReportBadArrayType(cx);
+  }
+  if (!v.toObject().is<TypedArrayObject>()) {
+    return ReportBadArrayType(cx);
+  }
+  viewp.set(&v.toObject().as<TypedArrayObject>());
+  if (!viewp->isSharedMemory()) {
+    return ReportBadArrayType(cx);
+  }
+  return true;
+}
+||||||| merged common ancestors
+const Class AtomicsObject::class_ = {
+    "Atomics",
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Atomics)
+};
+
+static bool
+ReportBadArrayType(JSContext* cx)
+{
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_ATOMICS_BAD_ARRAY);
+    return false;
+}
+=======
 const Class AtomicsObject::class_ = {"Atomics",
                                      JSCLASS_HAS_CACHED_PROTO(JSProto_Atomics)};
 
@@ -115,6 +161,98 @@ static bool GetTypedArrayIndex(JSContext* cx, HandleValue v,
   return true;
 }
 
+template <typename T>
+struct ArrayOps {
+  static JS::Result<T> convertValue(JSContext* cx, HandleValue v) {
+    int32_t n;
+    if (!ToInt32(cx, v, &n)) {
+      return cx->alreadyReportedError();
+    }
+    return (T)n;
+  }
+
+  static JS::Result<T> convertValue(JSContext* cx, HandleValue v,
+                                    MutableHandleValue result) {
+    double d;
+    if (!ToInteger(cx, v, &d)) {
+      return cx->alreadyReportedError();
+    }
+    result.setNumber(d);
+    return (T)JS::ToInt32(d);
+  }
+
+  static JS::Result<> storeResult(JSContext* cx, T v,
+                                  MutableHandleValue result) {
+    result.setInt32(v);
+    return Ok();
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+static bool GetTypedArrayIndex(JSContext* cx, HandleValue v,
+                               Handle<TypedArrayObject*> view,
+                               uint32_t* offset) {
+  uint64_t index;
+  if (!ToIndex(cx, v, &index)) {
+    return false;
+  }
+  if (index >= view->length()) {
+    return ReportOutOfRange(cx);
+  }
+  *offset = uint32_t(index);
+  return true;
+}
+||||||| merged common ancestors
+static bool
+ReportOutOfRange(JSContext* cx)
+{
+    // Use JSMSG_BAD_INDEX here, it is what ToIndex uses for some cases that it
+    // reports directly.
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_INDEX);
+    return false;
+}
+=======
+template <>
+JS::Result<> ArrayOps<uint32_t>::storeResult(JSContext* cx, uint32_t v,
+                                             MutableHandleValue result) {
+  result.setNumber(v);
+  return Ok();
+}
+
+template <>
+struct ArrayOps<int64_t> {
+  static JS::Result<int64_t> convertValue(JSContext* cx, HandleValue v) {
+    BigInt* bi = ToBigInt(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    return BigInt::toInt64(bi);
+  }
+
+  static JS::Result<int64_t> convertValue(JSContext* cx, HandleValue v,
+                                          MutableHandleValue result) {
+    BigInt* bi = ToBigInt(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    result.setBigInt(bi);
+    return BigInt::toInt64(bi);
+  }
+
+  static JS::Result<> storeResult(JSContext* cx, int64_t v,
+                                  MutableHandleValue result) {
+    BigInt* bi = BigInt::createFromInt64(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    result.setBigInt(bi);
+    return Ok();
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 static int32_t CompareExchange(Scalar::Type viewType, int32_t oldCandidate,
                                int32_t newCandidate, SharedMem<void*> viewData,
                                uint32_t offset, bool* badArrayType = nullptr) {
@@ -168,7 +306,127 @@ static int32_t CompareExchange(Scalar::Type viewType, int32_t oldCandidate,
       return 0;
   }
 }
+||||||| merged common ancestors
+static bool
+GetSharedTypedArray(JSContext* cx, HandleValue v,
+                    MutableHandle<TypedArrayObject*> viewp)
+{
+    if (!v.isObject()) {
+        return ReportBadArrayType(cx);
+    }
+    if (!v.toObject().is<TypedArrayObject>()) {
+        return ReportBadArrayType(cx);
+    }
+    viewp.set(&v.toObject().as<TypedArrayObject>());
+    if (!viewp->isSharedMemory()) {
+        return ReportBadArrayType(cx);
+    }
+    return true;
+}
 
+static bool
+GetTypedArrayIndex(JSContext* cx, HandleValue v, Handle<TypedArrayObject*> view, uint32_t* offset)
+{
+    uint64_t index;
+    if (!ToIndex(cx, v, &index)) {
+        return false;
+    }
+    if (index >= view->length()) {
+        return ReportOutOfRange(cx);
+    }
+    *offset = uint32_t(index);
+    return true;
+}
+=======
+template <>
+struct ArrayOps<uint64_t> {
+  static JS::Result<uint64_t> convertValue(JSContext* cx, HandleValue v) {
+    BigInt* bi = ToBigInt(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    return BigInt::toUint64(bi);
+  }
+
+  static JS::Result<uint64_t> convertValue(JSContext* cx, HandleValue v,
+                                           MutableHandleValue result) {
+    BigInt* bi = ToBigInt(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    result.setBigInt(bi);
+    return BigInt::toUint64(bi);
+  }
+
+  static JS::Result<> storeResult(JSContext* cx, uint64_t v,
+                                  MutableHandleValue result) {
+    BigInt* bi = BigInt::createFromUint64(cx, v);
+    if (!bi) {
+      return cx->alreadyReportedError();
+    }
+    result.setBigInt(bi);
+    return Ok();
+  }
+};
+
+template <template <typename> class F, typename... Args>
+bool perform(JSContext* cx, HandleValue objv, HandleValue idxv, Args... args) {
+  Rooted<TypedArrayObject*> view(cx, nullptr);
+  if (!GetSharedTypedArray(cx, objv, &view)) {
+    return false;
+  }
+  uint32_t offset;
+  if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+    return false;
+  }
+  SharedMem<void*> viewData = view->dataPointerShared();
+  switch (view->type()) {
+    case Scalar::Int8:
+      return F<int8_t>::run(cx, viewData.cast<int8_t*>() + offset, args...);
+    case Scalar::Uint8:
+      return F<uint8_t>::run(cx, viewData.cast<uint8_t*>() + offset, args...);
+    case Scalar::Int16:
+      return F<int16_t>::run(cx, viewData.cast<int16_t*>() + offset, args...);
+    case Scalar::Uint16:
+      return F<uint16_t>::run(cx, viewData.cast<uint16_t*>() + offset, args...);
+    case Scalar::Int32:
+      return F<int32_t>::run(cx, viewData.cast<int32_t*>() + offset, args...);
+    case Scalar::Uint32:
+      return F<uint32_t>::run(cx, viewData.cast<uint32_t*>() + offset, args...);
+    case Scalar::Float32:
+    case Scalar::Float64:
+    case Scalar::Uint8Clamped:
+      return ReportBadArrayType(cx);
+    case Scalar::BigInt64:
+      return F<int64_t>::run(cx, viewData.cast<int64_t*>() + offset, args...);
+    case Scalar::BigUint64:
+      return F<uint64_t>::run(cx, viewData.cast<uint64_t*>() + offset, args...);
+    case Scalar::MaxTypedArrayViewType:
+    case Scalar::Int64:
+      break;
+  }
+  MOZ_CRASH("Unsupported TypedArray type");
+}
+
+template <typename T>
+struct DoCompareExchange {
+  static bool run(JSContext* cx, SharedMem<T*> addr, HandleValue oldv,
+                  HandleValue newv, MutableHandleValue result) {
+    using Ops = ArrayOps<T>;
+    T oldval;
+    JS_TRY_VAR_OR_RETURN_FALSE(cx, oldval, Ops::convertValue(cx, oldv));
+    T newval;
+    JS_TRY_VAR_OR_RETURN_FALSE(cx, newval, Ops::convertValue(cx, newv));
+
+    oldval = jit::AtomicOperations::compareExchangeSeqCst(addr, oldval, newval);
+
+    JS_TRY_OR_RETURN_FALSE(cx, Ops::storeResult(cx, oldval, result));
+    return true;
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool js::atomics_compareExchange(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   HandleValue objv = args.get(0);
@@ -208,8 +466,69 @@ bool js::atomics_compareExchange(JSContext* cx, unsigned argc, Value* vp) {
     r.setInt32(result);
   }
   return true;
+||||||| merged common ancestors
+static int32_t
+CompareExchange(Scalar::Type viewType, int32_t oldCandidate, int32_t newCandidate,
+                SharedMem<void*> viewData, uint32_t offset, bool* badArrayType = nullptr)
+{
+    switch (viewType) {
+      case Scalar::Int8: {
+        int8_t oldval = (int8_t)oldCandidate;
+        int8_t newval = (int8_t)newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<int8_t*>() + offset,
+                                                              oldval, newval);
+        return oldval;
+      }
+      case Scalar::Uint8: {
+        uint8_t oldval = (uint8_t)oldCandidate;
+        uint8_t newval = (uint8_t)newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<uint8_t*>() + offset,
+                                                              oldval, newval);
+        return oldval;
+      }
+      case Scalar::Int16: {
+        int16_t oldval = (int16_t)oldCandidate;
+        int16_t newval = (int16_t)newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<int16_t*>() + offset,
+                                                              oldval, newval);
+        return oldval;
+      }
+      case Scalar::Uint16: {
+        uint16_t oldval = (uint16_t)oldCandidate;
+        uint16_t newval = (uint16_t)newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<uint16_t*>() + offset,
+                                                              oldval, newval);
+        return oldval;
+      }
+      case Scalar::Int32: {
+        int32_t oldval = oldCandidate;
+        int32_t newval = newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<int32_t*>() + offset,
+                                                              oldval, newval);
+        return oldval;
+      }
+      case Scalar::Uint32: {
+        uint32_t oldval = (uint32_t)oldCandidate;
+        uint32_t newval = (uint32_t)newCandidate;
+        oldval = jit::AtomicOperations::compareExchangeSeqCst(viewData.cast<uint32_t*>() + offset,
+                                                              oldval, newval);
+        return (int32_t)oldval;
+      }
+      default:
+        if (badArrayType) {
+            *badArrayType = true;
+        }
+        return 0;
+    }
+=======
+bool js::atomics_compareExchange(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return perform<DoCompareExchange>(cx, args.get(0), args.get(1), args.get(2),
+                                    args.get(3), args.rval());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::atomics_load(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   HandleValue objv = args.get(0);
@@ -329,7 +648,224 @@ static bool ExchangeOrStore(JSContext* cx, unsigned argc, Value* vp) {
   HandleValue idxv = args.get(1);
   HandleValue valv = args.get(2);
   MutableHandleValue r = args.rval();
+||||||| merged common ancestors
+bool
+js::atomics_compareExchange(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    HandleValue objv = args.get(0);
+    HandleValue idxv = args.get(1);
+    HandleValue oldv = args.get(2);
+    HandleValue newv = args.get(3);
+    MutableHandleValue r = args.rval();
 
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
+    }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+    }
+    int32_t oldCandidate;
+    if (!ToInt32(cx, oldv, &oldCandidate)) {
+        return false;
+    }
+    int32_t newCandidate;
+    if (!ToInt32(cx, newv, &newCandidate)) {
+        return false;
+    }
+
+    bool badType = false;
+    int32_t result = CompareExchange(view->type(), oldCandidate, newCandidate,
+                                     view->dataPointerShared(), offset, &badType);
+
+    if (badType) {
+        return ReportBadArrayType(cx);
+    }
+
+    if (view->type() == Scalar::Uint32) {
+        r.setNumber((double)(uint32_t)result);
+    } else {
+        r.setInt32(result);
+    }
+    return true;
+}
+
+bool
+js::atomics_load(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    HandleValue objv = args.get(0);
+    HandleValue idxv = args.get(1);
+    MutableHandleValue r = args.rval();
+
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
+    }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+    }
+
+    SharedMem<void*> viewData = view->dataPointerShared();
+    switch (view->type()) {
+      case Scalar::Uint8: {
+        uint8_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<uint8_t*>() + offset);
+        r.setInt32(v);
+        return true;
+      }
+      case Scalar::Int8: {
+        int8_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<uint8_t*>() + offset);
+        r.setInt32(v);
+        return true;
+      }
+      case Scalar::Int16: {
+        int16_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<int16_t*>() + offset);
+        r.setInt32(v);
+        return true;
+      }
+      case Scalar::Uint16: {
+        uint16_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<uint16_t*>() + offset);
+        r.setInt32(v);
+        return true;
+      }
+      case Scalar::Int32: {
+        int32_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<int32_t*>() + offset);
+        r.setInt32(v);
+        return true;
+      }
+      case Scalar::Uint32: {
+        uint32_t v = jit::AtomicOperations::loadSeqCst(viewData.cast<uint32_t*>() + offset);
+        r.setNumber(v);
+        return true;
+      }
+      default:
+        return ReportBadArrayType(cx);
+    }
+}
+
+enum XchgStoreOp {
+    DoExchange,
+    DoStore
+};
+
+template<XchgStoreOp op>
+static int32_t
+ExchangeOrStore(Scalar::Type viewType, int32_t numberValue, SharedMem<void*> viewData,
+                uint32_t offset, bool* badArrayType = nullptr)
+{
+#define INT_OP(ptr, value)                                         \
+    JS_BEGIN_MACRO                                                 \
+    if (op == DoStore)                                             \
+        jit::AtomicOperations::storeSeqCst(ptr, value);            \
+    else                                                           \
+        value = jit::AtomicOperations::exchangeSeqCst(ptr, value); \
+    JS_END_MACRO
+
+    switch (viewType) {
+      case Scalar::Int8: {
+        int8_t value = (int8_t)numberValue;
+        INT_OP(viewData.cast<int8_t*>() + offset, value);
+        return value;
+      }
+      case Scalar::Uint8: {
+        uint8_t value = (uint8_t)numberValue;
+        INT_OP(viewData.cast<uint8_t*>() + offset, value);
+        return value;
+      }
+      case Scalar::Int16: {
+        int16_t value = (int16_t)numberValue;
+        INT_OP(viewData.cast<int16_t*>() + offset, value);
+        return value;
+      }
+      case Scalar::Uint16: {
+        uint16_t value = (uint16_t)numberValue;
+        INT_OP(viewData.cast<uint16_t*>() + offset, value);
+        return value;
+      }
+      case Scalar::Int32: {
+        int32_t value = numberValue;
+        INT_OP(viewData.cast<int32_t*>() + offset, value);
+        return value;
+      }
+      case Scalar::Uint32: {
+        uint32_t value = (uint32_t)numberValue;
+        INT_OP(viewData.cast<uint32_t*>() + offset, value);
+        return (int32_t)value;
+      }
+      default:
+        if (badArrayType) {
+            *badArrayType = true;
+        }
+        return 0;
+    }
+#undef INT_OP
+}
+
+template<XchgStoreOp op>
+static bool
+ExchangeOrStore(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    HandleValue objv = args.get(0);
+    HandleValue idxv = args.get(1);
+    HandleValue valv = args.get(2);
+    MutableHandleValue r = args.rval();
+
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
+    }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+    }
+    double integerValue;
+    if (!ToInteger(cx, valv, &integerValue)) {
+        return false;
+    }
+
+    bool badType = false;
+    int32_t result = ExchangeOrStore<op>(view->type(), JS::ToInt32(integerValue),
+                                         view->dataPointerShared(), offset, &badType);
+
+    if (badType) {
+        return ReportBadArrayType(cx);
+    }
+=======
+template <typename T>
+struct DoLoad {
+  static bool run(JSContext* cx, SharedMem<T*> addr,
+                  MutableHandleValue result) {
+    using Ops = ArrayOps<T>;
+    T v = jit::AtomicOperations::loadSeqCst(addr);
+    JS_TRY_OR_RETURN_FALSE(cx, Ops::storeResult(cx, v, result));
+    return true;
+  }
+};
+
+bool js::atomics_load(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return perform<DoLoad>(cx, args.get(0), args.get(1), args.rval());
+}
+
+template <typename T>
+struct DoExchange {
+  static bool run(JSContext* cx, SharedMem<T*> addr, HandleValue valv,
+                  MutableHandleValue result) {
+    using Ops = ArrayOps<T>;
+    T value;
+    JS_TRY_VAR_OR_RETURN_FALSE(cx, value, Ops::convertValue(cx, valv));
+    value = jit::AtomicOperations::exchangeSeqCst(addr, value);
+    JS_TRY_OR_RETURN_FALSE(cx, Ops::storeResult(cx, value, result));
+    return true;
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   Rooted<TypedArrayObject*> view(cx, nullptr);
   if (!GetSharedTypedArray(cx, objv, &view)) {
     return false;
@@ -361,15 +897,63 @@ static bool ExchangeOrStore(JSContext* cx, unsigned argc, Value* vp) {
   }
   return true;
 }
+||||||| merged common ancestors
+    if (op == DoStore) {
+        r.setNumber(integerValue);
+    } else if (view->type() == Scalar::Uint32) {
+        r.setNumber((double)(uint32_t)result);
+    } else {
+        r.setInt32(result);
+    }
+    return true;
+}
+=======
+template <typename T>
+struct DoStore {
+  static bool run(JSContext* cx, SharedMem<T*> addr, HandleValue valv,
+                  MutableHandleValue result) {
+    using Ops = ArrayOps<T>;
+    T value;
+    JS_TRY_VAR_OR_RETURN_FALSE(cx, value, Ops::convertValue(cx, valv, result));
+    jit::AtomicOperations::storeSeqCst(addr, value);
+    return true;
+  }
+};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::atomics_store(JSContext* cx, unsigned argc, Value* vp) {
   return ExchangeOrStore<DoStore>(cx, argc, vp);
+||||||| merged common ancestors
+bool
+js::atomics_store(JSContext* cx, unsigned argc, Value* vp)
+{
+    return ExchangeOrStore<DoStore>(cx, argc, vp);
+=======
+bool js::atomics_store(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return perform<DoStore>(cx, args.get(0), args.get(1), args.get(2),
+                          args.rval());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::atomics_exchange(JSContext* cx, unsigned argc, Value* vp) {
   return ExchangeOrStore<DoExchange>(cx, argc, vp);
+||||||| merged common ancestors
+bool
+js::atomics_exchange(JSContext* cx, unsigned argc, Value* vp)
+{
+    return ExchangeOrStore<DoExchange>(cx, argc, vp);
+=======
+bool js::atomics_exchange(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return perform<DoExchange>(cx, args.get(0), args.get(1), args.get(2),
+                             args.rval());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template <typename T>
 static bool AtomicsBinop(JSContext* cx, HandleValue objv, HandleValue idxv,
                          HandleValue valv, MutableHandleValue r) {
@@ -397,7 +981,35 @@ static bool AtomicsBinop(JSContext* cx, HandleValue objv, HandleValue idxv,
       uint8_t v = (uint8_t)numberValue;
       r.setInt32(T::operate(viewData.cast<uint8_t*>() + offset, v));
       return true;
+||||||| merged common ancestors
+template<typename T>
+static bool
+AtomicsBinop(JSContext* cx, HandleValue objv, HandleValue idxv, HandleValue valv,
+             MutableHandleValue r)
+{
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
     }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+=======
+template <typename Operate>
+struct DoBinopWithOperation {
+  template <typename T>
+  struct DoBinop {
+    static bool run(JSContext* cx, SharedMem<T*> addr, HandleValue valv,
+                    MutableHandleValue result) {
+      using Ops = ArrayOps<T>;
+      T v;
+      JS_TRY_VAR_OR_RETURN_FALSE(cx, v, Ops::convertValue(cx, valv));
+      v = Operate::operate(addr, v);
+      JS_TRY_OR_RETURN_FALSE(cx, Ops::storeResult(cx, v, result));
+      return true;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     case Scalar::Int16: {
       int16_t v = (int16_t)numberValue;
       r.setInt32(T::operate(viewData.cast<int16_t*>() + offset, v));
@@ -422,7 +1034,54 @@ static bool AtomicsBinop(JSContext* cx, HandleValue objv, HandleValue idxv,
       return ReportBadArrayType(cx);
   }
 }
+||||||| merged common ancestors
+    int32_t numberValue;
+    if (!ToInt32(cx, valv, &numberValue)) {
+        return false;
+    }
 
+    SharedMem<void*> viewData = view->dataPointerShared();
+    switch (view->type()) {
+      case Scalar::Int8: {
+        int8_t v = (int8_t)numberValue;
+        r.setInt32(T::operate(viewData.cast<int8_t*>() + offset, v));
+        return true;
+      }
+      case Scalar::Uint8: {
+        uint8_t v = (uint8_t)numberValue;
+        r.setInt32(T::operate(viewData.cast<uint8_t*>() + offset, v));
+        return true;
+      }
+      case Scalar::Int16: {
+        int16_t v = (int16_t)numberValue;
+        r.setInt32(T::operate(viewData.cast<int16_t*>() + offset, v));
+        return true;
+      }
+      case Scalar::Uint16: {
+        uint16_t v = (uint16_t)numberValue;
+        r.setInt32(T::operate(viewData.cast<uint16_t*>() + offset, v));
+        return true;
+      }
+      case Scalar::Int32: {
+        int32_t v = numberValue;
+        r.setInt32(T::operate(viewData.cast<int32_t*>() + offset, v));
+        return true;
+      }
+      case Scalar::Uint32: {
+        uint32_t v = (uint32_t)numberValue;
+        r.setNumber((double)T::operate(viewData.cast<uint32_t*>() + offset, v));
+        return true;
+      }
+      default:
+        return ReportBadArrayType(cx);
+    }
+}
+=======
+  };
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #define INTEGRAL_TYPES_FOR_EACH(NAME)                              \
   static int8_t operate(SharedMem<int8_t*> addr, int8_t v) {       \
     return NAME(addr, v);                                          \
@@ -447,6 +1106,58 @@ class PerformAdd {
  public:
   INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAddSeqCst)
   static int32_t perform(int32_t x, int32_t y) { return x + y; }
+||||||| merged common ancestors
+#define INTEGRAL_TYPES_FOR_EACH(NAME) \
+    static int8_t operate(SharedMem<int8_t*> addr, int8_t v) { return NAME(addr, v); } \
+    static uint8_t operate(SharedMem<uint8_t*> addr, uint8_t v) { return NAME(addr, v); } \
+    static int16_t operate(SharedMem<int16_t*> addr, int16_t v) { return NAME(addr, v); } \
+    static uint16_t operate(SharedMem<uint16_t*> addr, uint16_t v) { return NAME(addr, v); } \
+    static int32_t operate(SharedMem<int32_t*> addr, int32_t v) { return NAME(addr, v); } \
+    static uint32_t operate(SharedMem<uint32_t*> addr, uint32_t v) { return NAME(addr, v); }
+
+class PerformAdd
+{
+public:
+    INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAddSeqCst)
+    static int32_t perform(int32_t x, int32_t y) { return x + y; }
+=======
+template <typename Operate>
+static bool AtomicsBinop(JSContext* cx, HandleValue objv, HandleValue idxv,
+                         HandleValue valv, MutableHandleValue r) {
+  return perform<DoBinopWithOperation<Operate>::template DoBinop>(
+      cx, objv, idxv, valv, r);
+}
+
+#define INTEGRAL_TYPES_FOR_EACH(NAME)                              \
+  static int8_t operate(SharedMem<int8_t*> addr, int8_t v) {       \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static uint8_t operate(SharedMem<uint8_t*> addr, uint8_t v) {    \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static int16_t operate(SharedMem<int16_t*> addr, int16_t v) {    \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static uint16_t operate(SharedMem<uint16_t*> addr, uint16_t v) { \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static int32_t operate(SharedMem<int32_t*> addr, int32_t v) {    \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static uint32_t operate(SharedMem<uint32_t*> addr, uint32_t v) { \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static int64_t operate(SharedMem<int64_t*> addr, int64_t v) {    \
+    return NAME(addr, v);                                          \
+  }                                                                \
+  static uint64_t operate(SharedMem<uint64_t*> addr, uint64_t v) { \
+    return NAME(addr, v);                                          \
+  }
+
+class PerformAdd {
+ public:
+  INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAddSeqCst)
+>>>>>>> upstream-releases
 };
 
 bool js::atomics_add(JSContext* cx, unsigned argc, Value* vp) {
@@ -455,10 +1166,22 @@ bool js::atomics_add(JSContext* cx, unsigned argc, Value* vp) {
                                   args.rval());
 }
 
+<<<<<<< HEAD
 class PerformSub {
  public:
   INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchSubSeqCst)
   static int32_t perform(int32_t x, int32_t y) { return x - y; }
+||||||| merged common ancestors
+class PerformSub
+{
+public:
+    INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchSubSeqCst)
+    static int32_t perform(int32_t x, int32_t y) { return x - y; }
+=======
+class PerformSub {
+ public:
+  INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchSubSeqCst)
+>>>>>>> upstream-releases
 };
 
 bool js::atomics_sub(JSContext* cx, unsigned argc, Value* vp) {
@@ -467,10 +1190,22 @@ bool js::atomics_sub(JSContext* cx, unsigned argc, Value* vp) {
                                   args.rval());
 }
 
+<<<<<<< HEAD
 class PerformAnd {
  public:
   INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAndSeqCst)
   static int32_t perform(int32_t x, int32_t y) { return x & y; }
+||||||| merged common ancestors
+class PerformAnd
+{
+public:
+    INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAndSeqCst)
+    static int32_t perform(int32_t x, int32_t y) { return x & y; }
+=======
+class PerformAnd {
+ public:
+  INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchAndSeqCst)
+>>>>>>> upstream-releases
 };
 
 bool js::atomics_and(JSContext* cx, unsigned argc, Value* vp) {
@@ -479,10 +1214,22 @@ bool js::atomics_and(JSContext* cx, unsigned argc, Value* vp) {
                                   args.rval());
 }
 
+<<<<<<< HEAD
 class PerformOr {
  public:
   INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchOrSeqCst)
   static int32_t perform(int32_t x, int32_t y) { return x | y; }
+||||||| merged common ancestors
+class PerformOr
+{
+public:
+    INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchOrSeqCst)
+    static int32_t perform(int32_t x, int32_t y) { return x | y; }
+=======
+class PerformOr {
+ public:
+  INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchOrSeqCst)
+>>>>>>> upstream-releases
 };
 
 bool js::atomics_or(JSContext* cx, unsigned argc, Value* vp) {
@@ -491,10 +1238,22 @@ bool js::atomics_or(JSContext* cx, unsigned argc, Value* vp) {
                                  args.rval());
 }
 
+<<<<<<< HEAD
 class PerformXor {
  public:
   INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchXorSeqCst)
   static int32_t perform(int32_t x, int32_t y) { return x ^ y; }
+||||||| merged common ancestors
+class PerformXor
+{
+public:
+    INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchXorSeqCst)
+    static int32_t perform(int32_t x, int32_t y) { return x ^ y; }
+=======
+class PerformXor {
+ public:
+  INTEGRAL_TYPES_FOR_EACH(jit::AtomicOperations::fetchXorSeqCst)
+>>>>>>> upstream-releases
 };
 
 bool js::atomics_xor(JSContext* cx, unsigned argc, Value* vp) {
@@ -566,6 +1325,80 @@ class AutoLockFutexAPI {
   js::UniqueLock<js::Mutex>& unique() { return *unique_; }
 };
 
+<<<<<<< HEAD
+}  // namespace js
+
+template <typename T>
+static FutexThread::WaitResult AtomicsWait(
+    JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset, T value,
+    const mozilla::Maybe<mozilla::TimeDuration>& timeout) {
+  // Validation and other guards should ensure that this does not happen.
+  MOZ_ASSERT(sarb, "wait is only applicable to shared memory");
+
+  if (!cx->fx.canWait()) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_ATOMICS_WAIT_NOT_ALLOWED);
+    return FutexThread::WaitResult::Error;
+  }
+
+  SharedMem<T*> addr =
+      sarb->dataPointerShared().cast<T*>() + (byteOffset / sizeof(T));
+
+  // This lock also protects the "waiters" field on SharedArrayRawBuffer,
+  // and it provides the necessary memory fence.
+  AutoLockFutexAPI lock;
+
+  if (jit::AtomicOperations::loadSafeWhenRacy(addr) != value) {
+    return FutexThread::WaitResult::NotEqual;
+  }
+
+  FutexWaiter w(byteOffset, cx);
+  if (FutexWaiter* waiters = sarb->waiters()) {
+    w.lower_pri = waiters;
+    w.back = waiters->back;
+    waiters->back->lower_pri = &w;
+    waiters->back = &w;
+  } else {
+    w.lower_pri = w.back = &w;
+    sarb->setWaiters(&w);
+  }
+
+  FutexThread::WaitResult retval = cx->fx.wait(cx, lock.unique(), timeout);
+
+  if (w.lower_pri == &w) {
+    sarb->setWaiters(nullptr);
+  } else {
+    w.lower_pri->back = w.back;
+    w.back->lower_pri = w.lower_pri;
+    if (sarb->waiters() == &w) {
+      sarb->setWaiters(w.lower_pri);
+    }
+  }
+
+  return retval;
+}
+
+FutexThread::WaitResult js::atomics_wait_impl(
+    JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset,
+    int32_t value, const mozilla::Maybe<mozilla::TimeDuration>& timeout) {
+  return AtomicsWait(cx, sarb, byteOffset, value, timeout);
+}
+||||||| merged common ancestors
+} // namespace js
+
+template<typename T>
+static FutexThread::WaitResult
+AtomicsWait(JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset, T value,
+            const mozilla::Maybe<mozilla::TimeDuration>& timeout)
+{
+    // Validation and other guards should ensure that this does not happen.
+    MOZ_ASSERT(sarb, "wait is only applicable to shared memory");
+
+    if (!cx->fx.canWait()) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_ATOMICS_WAIT_NOT_ALLOWED);
+        return FutexThread::WaitResult::Error;
+    }
+=======
 }  // namespace js
 
 template <typename T>
@@ -624,6 +1457,73 @@ FutexThread::WaitResult js::atomics_wait_impl(
   return AtomicsWait(cx, sarb, byteOffset, value, timeout);
 }
 
+FutexThread::WaitResult js::atomics_wait_impl(
+    JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset,
+    int64_t value, const mozilla::Maybe<mozilla::TimeDuration>& timeout) {
+  return AtomicsWait(cx, sarb, byteOffset, value, timeout);
+}
+
+template <typename T>
+static bool DoAtomicsWait(JSContext* cx, Handle<TypedArrayObject*> view,
+                          uint32_t offset, T value, HandleValue timeoutv,
+                          MutableHandleValue r) {
+  mozilla::Maybe<mozilla::TimeDuration> timeout;
+  if (!timeoutv.isUndefined()) {
+    double timeout_ms;
+    if (!ToNumber(cx, timeoutv, &timeout_ms)) {
+      return false;
+    }
+    if (!mozilla::IsNaN(timeout_ms)) {
+      if (timeout_ms < 0) {
+        timeout = mozilla::Some(mozilla::TimeDuration::FromSeconds(0.0));
+      } else if (!mozilla::IsInfinite(timeout_ms)) {
+        timeout =
+            mozilla::Some(mozilla::TimeDuration::FromMilliseconds(timeout_ms));
+      }
+    }
+  }
+
+  Rooted<SharedArrayBufferObject*> sab(cx, view->bufferShared());
+  // The computation will not overflow because range checks have been
+  // performed.
+  uint32_t byteOffset =
+      offset * sizeof(T) +
+      (view->dataPointerShared().cast<uint8_t*>().unwrap(/* arithmetic */) -
+       sab->dataPointerShared().unwrap(/* arithmetic */));
+
+  switch (atomics_wait_impl(cx, sab->rawBufferObject(), byteOffset, value,
+                            timeout)) {
+    case FutexThread::WaitResult::NotEqual:
+      r.setString(cx->names().futexNotEqual);
+      return true;
+    case FutexThread::WaitResult::OK:
+      r.setString(cx->names().futexOK);
+      return true;
+    case FutexThread::WaitResult::TimedOut:
+      r.setString(cx->names().futexTimedOut);
+      return true;
+    case FutexThread::WaitResult::Error:
+      return false;
+    default:
+      MOZ_CRASH("Should not happen");
+  }
+}
+
+bool js::atomics_wait(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  HandleValue objv = args.get(0);
+  HandleValue idxv = args.get(1);
+  HandleValue valv = args.get(2);
+  HandleValue timeoutv = args.get(3);
+  MutableHandleValue r = args.rval();
+
+  Rooted<TypedArrayObject*> view(cx, nullptr);
+  if (!GetSharedTypedArray(cx, objv, &view)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 FutexThread::WaitResult js::atomics_wait_impl(
     JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset,
     int64_t value, const mozilla::Maybe<mozilla::TimeDuration>& timeout) {
@@ -699,11 +1599,78 @@ int64_t js::atomics_notify_impl(SharedArrayRawBuffer* sarb, uint32_t byteOffset,
                                 int64_t count) {
   // Validation should ensure this does not happen.
   MOZ_ASSERT(sarb, "notify is only applicable to shared memory");
+||||||| merged common ancestors
+    SharedMem<T*> addr = sarb->dataPointerShared().cast<T*>() + (byteOffset / sizeof(T));
 
+    // This lock also protects the "waiters" field on SharedArrayRawBuffer,
+    // and it provides the necessary memory fence.
+    AutoLockFutexAPI lock;
+
+    if (jit::AtomicOperations::loadSafeWhenRacy(addr) != value) {
+        return FutexThread::WaitResult::NotEqual;
+    }
+
+    FutexWaiter w(byteOffset, cx);
+    if (FutexWaiter* waiters = sarb->waiters()) {
+        w.lower_pri = waiters;
+        w.back = waiters->back;
+        waiters->back->lower_pri = &w;
+        waiters->back = &w;
+    } else {
+        w.lower_pri = w.back = &w;
+        sarb->setWaiters(&w);
+    }
+
+    FutexThread::WaitResult retval = cx->fx.wait(cx, lock.unique(), timeout);
+=======
+  if (view->type() != Scalar::Int32 && view->type() != Scalar::BigInt64) {
+    return ReportBadArrayType(cx);
+  }
+
+  uint32_t offset;
+  if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   AutoLockFutexAPI lock;
+||||||| merged common ancestors
+    if (w.lower_pri == &w) {
+        sarb->setWaiters(nullptr);
+    } else {
+        w.lower_pri->back = w.back;
+        w.back->lower_pri = w.lower_pri;
+        if (sarb->waiters() == &w) {
+            sarb->setWaiters(w.lower_pri);
+        }
+    }
+=======
+  if (view->type() == Scalar::Int32) {
+    int32_t value;
+    if (!ToInt32(cx, valv, &value)) {
+      return false;
+    }
+    return DoAtomicsWait(cx, view, offset, value, timeoutv, r);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   int64_t woken = 0;
+||||||| merged common ancestors
+    return retval;
+}
+=======
+  MOZ_ASSERT(view->type() == Scalar::BigInt64);
+  RootedBigInt valbi(cx, ToBigInt(cx, valv));
+  if (!valbi) {
+    return false;
+  }
+  return DoAtomicsWait(cx, view, offset, BigInt::toInt64(valbi), timeoutv, r);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   FutexWaiter* waiters = sarb->waiters();
   if (waiters && count) {
     FutexWaiter* iter = waiters;
@@ -726,7 +1693,21 @@ int64_t js::atomics_notify_impl(SharedArrayRawBuffer* sarb, uint32_t byteOffset,
       }
     } while (count && iter != waiters);
   }
+||||||| merged common ancestors
+FutexThread::WaitResult
+js::atomics_wait_impl(JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset,
+                      int32_t value, const mozilla::Maybe<mozilla::TimeDuration>& timeout)
+{
+    return AtomicsWait(cx, sarb, byteOffset, value, timeout);
+}
+=======
+int64_t js::atomics_notify_impl(SharedArrayRawBuffer* sarb, uint32_t byteOffset,
+                                int64_t count) {
+  // Validation should ensure this does not happen.
+  MOZ_ASSERT(sarb, "notify is only applicable to shared memory");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return woken;
 }
 
@@ -736,7 +1717,58 @@ bool js::atomics_notify(JSContext* cx, unsigned argc, Value* vp) {
   HandleValue idxv = args.get(1);
   HandleValue countv = args.get(2);
   MutableHandleValue r = args.rval();
+||||||| merged common ancestors
+FutexThread::WaitResult
+js::atomics_wait_impl(JSContext* cx, SharedArrayRawBuffer* sarb, uint32_t byteOffset,
+                      int64_t value, const mozilla::Maybe<mozilla::TimeDuration>& timeout)
+{
+    return AtomicsWait(cx, sarb, byteOffset, value, timeout);
+}
 
+bool
+js::atomics_wait(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    HandleValue objv = args.get(0);
+    HandleValue idxv = args.get(1);
+    HandleValue valv = args.get(2);
+    HandleValue timeoutv = args.get(3);
+    MutableHandleValue r = args.rval();
+
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
+    }
+    if (view->type() != Scalar::Int32) {
+        return ReportBadArrayType(cx);
+    }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+    }
+    int32_t value;
+    if (!ToInt32(cx, valv, &value)) {
+        return false;
+    }
+    mozilla::Maybe<mozilla::TimeDuration> timeout;
+    if (!timeoutv.isUndefined()) {
+        double timeout_ms;
+        if (!ToNumber(cx, timeoutv, &timeout_ms)) {
+            return false;
+        }
+        if (!mozilla::IsNaN(timeout_ms)) {
+            if (timeout_ms < 0) {
+                timeout = mozilla::Some(mozilla::TimeDuration::FromSeconds(0.0));
+            } else if (!mozilla::IsInfinite(timeout_ms)) {
+                timeout = mozilla::Some(mozilla::TimeDuration::FromMilliseconds(timeout_ms));
+            }
+        }
+    }
+=======
+  AutoLockFutexAPI lock;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   Rooted<TypedArrayObject*> view(cx, nullptr);
   if (!GetSharedTypedArray(cx, objv, &view)) {
     return false;
@@ -761,7 +1793,91 @@ bool js::atomics_notify(JSContext* cx, unsigned argc, Value* vp) {
     }
     count = dcount > INT64_MAX ? -1 : int64_t(dcount);
   }
+||||||| merged common ancestors
+    Rooted<SharedArrayBufferObject*> sab(cx, view->bufferShared());
+    // The computation will not overflow because range checks have been
+    // performed.
+    uint32_t byteOffset = offset * sizeof(int32_t) +
+                          (view->dataPointerShared().cast<uint8_t*>().unwrap(/* arithmetic */) -
+                           sab->dataPointerShared().unwrap(/* arithmetic */));
 
+    switch (atomics_wait_impl(cx, sab->rawBufferObject(), byteOffset, value, timeout)) {
+      case FutexThread::WaitResult::NotEqual:
+        r.setString(cx->names().futexNotEqual);
+        return true;
+      case FutexThread::WaitResult::OK:
+        r.setString(cx->names().futexOK);
+        return true;
+      case FutexThread::WaitResult::TimedOut:
+        r.setString(cx->names().futexTimedOut);
+        return true;
+      case FutexThread::WaitResult::Error:
+        return false;
+      default:
+        MOZ_CRASH("Should not happen");
+    }
+}
+
+int64_t
+js::atomics_notify_impl(SharedArrayRawBuffer* sarb, uint32_t byteOffset, int64_t count)
+{
+    // Validation should ensure this does not happen.
+    MOZ_ASSERT(sarb, "notify is only applicable to shared memory");
+
+    AutoLockFutexAPI lock;
+
+    int64_t woken = 0;
+
+    FutexWaiter* waiters = sarb->waiters();
+    if (waiters && count) {
+        FutexWaiter* iter = waiters;
+        do {
+            FutexWaiter* c = iter;
+            iter = iter->lower_pri;
+            if (c->offset != byteOffset || !c->cx->fx.isWaiting()) {
+                continue;
+            }
+            c->cx->fx.notify(FutexThread::NotifyExplicit);
+            // Overflow will be a problem only in two cases:
+            // (1) 128-bit systems with substantially more than 2^64 bytes of
+            //     memory per process, and a very lightweight
+            //     Atomics.waitAsync().  Obviously a future problem.
+            // (2) Bugs.
+            MOZ_RELEASE_ASSERT(woken < INT64_MAX);
+            ++woken;
+            if (count > 0) {
+                --count;
+            }
+        } while (count && iter != waiters);
+    }
+=======
+  int64_t woken = 0;
+
+  FutexWaiter* waiters = sarb->waiters();
+  if (waiters && count) {
+    FutexWaiter* iter = waiters;
+    do {
+      FutexWaiter* c = iter;
+      iter = iter->lower_pri;
+      if (c->offset != byteOffset || !c->cx->fx.isWaiting()) {
+        continue;
+      }
+      c->cx->fx.notify(FutexThread::NotifyExplicit);
+      // Overflow will be a problem only in two cases:
+      // (1) 128-bit systems with substantially more than 2^64 bytes of
+      //     memory per process, and a very lightweight
+      //     Atomics.waitAsync().  Obviously a future problem.
+      // (2) Bugs.
+      MOZ_RELEASE_ASSERT(woken < INT64_MAX);
+      ++woken;
+      if (count > 0) {
+        --count;
+      }
+    } while (count && iter != waiters);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   Rooted<SharedArrayBufferObject*> sab(cx, view->bufferShared());
   // The computation will not overflow because range checks have been
   // performed.
@@ -769,30 +1885,180 @@ bool js::atomics_notify(JSContext* cx, unsigned argc, Value* vp) {
       offset * sizeof(int32_t) +
       (view->dataPointerShared().cast<uint8_t*>().unwrap(/* arithmetic */) -
        sab->dataPointerShared().unwrap(/* arithmetic */));
+||||||| merged common ancestors
+    return woken;
+}
 
+bool
+js::atomics_notify(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    HandleValue objv = args.get(0);
+    HandleValue idxv = args.get(1);
+    HandleValue countv = args.get(2);
+    MutableHandleValue r = args.rval();
+
+    Rooted<TypedArrayObject*> view(cx, nullptr);
+    if (!GetSharedTypedArray(cx, objv, &view)) {
+        return false;
+    }
+    if (view->type() != Scalar::Int32) {
+        return ReportBadArrayType(cx);
+    }
+    uint32_t offset;
+    if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+        return false;
+    }
+    int64_t count;
+    if (countv.isUndefined()) {
+        count = -1;
+    } else {
+        double dcount;
+        if (!ToInteger(cx, countv, &dcount)) {
+            return false;
+        }
+        if (dcount < 0.0) {
+            dcount = 0.0;
+        }
+        count = dcount > INT64_MAX ? -1 : int64_t(dcount);
+    }
+=======
+  return woken;
+}
+
+bool js::atomics_notify(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  HandleValue objv = args.get(0);
+  HandleValue idxv = args.get(1);
+  HandleValue countv = args.get(2);
+  MutableHandleValue r = args.rval();
+
+  Rooted<TypedArrayObject*> view(cx, nullptr);
+  if (!GetSharedTypedArray(cx, objv, &view)) {
+    return false;
+  }
+  if (view->type() != Scalar::Int32 && view->type() != Scalar::BigInt64) {
+    return ReportBadArrayType(cx);
+  }
+  uint32_t elementSize =
+      view->type() == Scalar::Int32 ? sizeof(int32_t) : sizeof(int64_t);
+  uint32_t offset;
+  if (!GetTypedArrayIndex(cx, idxv, view, &offset)) {
+    return false;
+  }
+  int64_t count;
+  if (countv.isUndefined()) {
+    count = -1;
+  } else {
+    double dcount;
+    if (!ToInteger(cx, countv, &dcount)) {
+      return false;
+    }
+    if (dcount < 0.0) {
+      dcount = 0.0;
+    }
+    count = dcount > INT64_MAX ? -1 : int64_t(dcount);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  r.setNumber(
+      double(atomics_notify_impl(sab->rawBufferObject(), byteOffset, count)));
+||||||| merged common ancestors
+    Rooted<SharedArrayBufferObject*> sab(cx, view->bufferShared());
+    // The computation will not overflow because range checks have been
+    // performed.
+    uint32_t byteOffset = offset * sizeof(int32_t) +
+                          (view->dataPointerShared().cast<uint8_t*>().unwrap(/* arithmetic */) -
+                           sab->dataPointerShared().unwrap(/* arithmetic */));
+=======
+  Rooted<SharedArrayBufferObject*> sab(cx, view->bufferShared());
+  // The computation will not overflow because range checks have been
+  // performed.
+  uint32_t byteOffset =
+      offset * elementSize +
+      (view->dataPointerShared().cast<uint8_t*>().unwrap(/* arithmetic */) -
+       sab->dataPointerShared().unwrap(/* arithmetic */));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return true;
+||||||| merged common ancestors
+    r.setNumber(double(atomics_notify_impl(sab->rawBufferObject(), byteOffset, count)));
+
+    return true;
+=======
   r.setNumber(
       double(atomics_notify_impl(sab->rawBufferObject(), byteOffset, count)));
 
   return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ bool js::FutexThread::initialize() {
   MOZ_ASSERT(!lock_);
   lock_ = js_new<js::Mutex>(mutexid::FutexThread);
   return lock_ != nullptr;
+||||||| merged common ancestors
+/* static */ bool
+js::FutexThread::initialize()
+{
+    MOZ_ASSERT(!lock_);
+    lock_ = js_new<js::Mutex>(mutexid::FutexThread);
+    return lock_ != nullptr;
+=======
+/* static */
+bool js::FutexThread::initialize() {
+  MOZ_ASSERT(!lock_);
+  lock_ = js_new<js::Mutex>(mutexid::FutexThread);
+  return lock_ != nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ void js::FutexThread::destroy() {
   if (lock_) {
     js::Mutex* lock = lock_;
     js_delete(lock);
     lock_ = nullptr;
   }
+||||||| merged common ancestors
+/* static */ void
+js::FutexThread::destroy()
+{
+    if (lock_) {
+        js::Mutex* lock = lock_;
+        js_delete(lock);
+        lock_ = nullptr;
+    }
+=======
+/* static */
+void js::FutexThread::destroy() {
+  if (lock_) {
+    js::Mutex* lock = lock_;
+    js_delete(lock);
+    lock_ = nullptr;
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ void js::FutexThread::lock() {
   // Load the atomic pointer.
   js::Mutex* lock = lock_;
+||||||| merged common ancestors
+/* static */ void
+js::FutexThread::lock()
+{
+    // Load the atomic pointer.
+    js::Mutex* lock = lock_;
+=======
+/* static */
+void js::FutexThread::lock() {
+  // Load the atomic pointer.
+  js::Mutex* lock = lock_;
+>>>>>>> upstream-releases
 
   lock->lock();
 }
@@ -801,14 +2067,28 @@ bool js::atomics_notify(JSContext* cx, unsigned argc, Value* vp) {
                              mozilla::recordreplay::Behavior::DontPreserve>
     FutexThread::lock_;
 
+<<<<<<< HEAD
 /* static */ void js::FutexThread::unlock() {
   // Load the atomic pointer.
   js::Mutex* lock = lock_;
+||||||| merged common ancestors
+/* static */ void
+js::FutexThread::unlock()
+{
+    // Load the atomic pointer.
+    js::Mutex* lock = lock_;
+=======
+/* static */
+void js::FutexThread::unlock() {
+  // Load the atomic pointer.
+  js::Mutex* lock = lock_;
+>>>>>>> upstream-releases
 
   lock->unlock();
 }
 
 js::FutexThread::FutexThread()
+<<<<<<< HEAD
     : cond_(nullptr), state_(Idle), canWait_(false) {}
 
 bool js::FutexThread::initInstance() {
@@ -873,6 +2153,133 @@ FutexThread::WaitResult js::FutexThread::wait(
         sliceEnd = finalEnd;
       }
       return sliceEnd;
+||||||| merged common ancestors
+  : cond_(nullptr),
+    state_(Idle),
+    canWait_(false)
+{
+}
+
+bool
+js::FutexThread::initInstance()
+{
+    MOZ_ASSERT(lock_);
+    cond_ = js_new<js::ConditionVariable>();
+    return cond_ != nullptr;
+}
+
+void
+js::FutexThread::destroyInstance()
+{
+    if (cond_) {
+        js_delete(cond_);
+    }
+}
+
+bool
+js::FutexThread::isWaiting()
+{
+    // When a worker is awoken for an interrupt it goes into state
+    // WaitingNotifiedForInterrupt for a short time before it actually
+    // wakes up and goes into WaitingInterrupted.  In those states the
+    // worker is still waiting, and if an explicit notify arrives the
+    // worker transitions to Woken.  See further comments in
+    // FutexThread::wait().
+    return state_ == Waiting || state_ == WaitingInterrupted || state_ == WaitingNotifiedForInterrupt;
+}
+
+FutexThread::WaitResult
+js::FutexThread::wait(JSContext* cx, js::UniqueLock<js::Mutex>& locked,
+                      const mozilla::Maybe<mozilla::TimeDuration>& timeout)
+{
+    MOZ_ASSERT(&cx->fx == this);
+    MOZ_ASSERT(cx->fx.canWait());
+    MOZ_ASSERT(state_ == Idle || state_ == WaitingInterrupted);
+
+    // Disallow waiting when a runtime is processing an interrupt.
+    // See explanation below.
+
+    if (state_ == WaitingInterrupted) {
+        UnlockGuard<Mutex> unlock(locked);
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_ATOMICS_WAIT_NOT_ALLOWED);
+        return WaitResult::Error;
+    }
+
+    // Go back to Idle after returning.
+    auto onFinish = mozilla::MakeScopeExit([&] {
+        state_ = Idle;
+    });
+
+    const bool isTimed = timeout.isSome();
+
+    auto finalEnd = timeout.map([](const mozilla::TimeDuration& timeout) {
+        return mozilla::TimeStamp::Now() + timeout;
+=======
+    : cond_(nullptr), state_(Idle), canWait_(false) {}
+
+bool js::FutexThread::initInstance() {
+  MOZ_ASSERT(lock_);
+  cond_ = js_new<js::ConditionVariable>();
+  return cond_ != nullptr;
+}
+
+void js::FutexThread::destroyInstance() {
+  if (cond_) {
+    js_delete(cond_);
+  }
+}
+
+bool js::FutexThread::isWaiting() {
+  // When a worker is awoken for an interrupt it goes into state
+  // WaitingNotifiedForInterrupt for a short time before it actually
+  // wakes up and goes into WaitingInterrupted.  In those states the
+  // worker is still waiting, and if an explicit notify arrives the
+  // worker transitions to Woken.  See further comments in
+  // FutexThread::wait().
+  return state_ == Waiting || state_ == WaitingInterrupted ||
+         state_ == WaitingNotifiedForInterrupt;
+}
+
+FutexThread::WaitResult js::FutexThread::wait(
+    JSContext* cx, js::UniqueLock<js::Mutex>& locked,
+    const mozilla::Maybe<mozilla::TimeDuration>& timeout) {
+  MOZ_ASSERT(&cx->fx == this);
+  MOZ_ASSERT(cx->fx.canWait());
+  MOZ_ASSERT(state_ == Idle || state_ == WaitingInterrupted);
+
+  // Disallow waiting when a runtime is processing an interrupt.
+  // See explanation below.
+
+  if (state_ == WaitingInterrupted) {
+    UnlockGuard<Mutex> unlock(locked);
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_ATOMICS_WAIT_NOT_ALLOWED);
+    return WaitResult::Error;
+  }
+
+  // Go back to Idle after returning.
+  auto onFinish = mozilla::MakeScopeExit([&] { state_ = Idle; });
+
+  const bool isTimed = timeout.isSome();
+
+  auto finalEnd = timeout.map([](const mozilla::TimeDuration& timeout) {
+    return mozilla::TimeStamp::Now() + timeout;
+  });
+
+  // 4000s is about the longest timeout slice that is guaranteed to
+  // work cross-platform.
+  auto maxSlice = mozilla::TimeDuration::FromSeconds(4000.0);
+
+  for (;;) {
+    // If we are doing a timed wait, calculate the end time for this wait
+    // slice.
+    auto sliceEnd = finalEnd.map([&](mozilla::TimeStamp& finalEnd) {
+      auto sliceEnd = mozilla::TimeStamp::Now() + maxSlice;
+      if (finalEnd < sliceEnd) {
+        sliceEnd = finalEnd;
+      }
+      return sliceEnd;
+>>>>>>> upstream-releases
     });
 
     state_ = Waiting;
@@ -945,6 +2352,7 @@ FutexThread::WaitResult js::FutexThread::wait(
   }
 }
 
+<<<<<<< HEAD
 void js::FutexThread::notify(NotifyReason reason) {
   MOZ_ASSERT(isWaiting());
 
@@ -1017,10 +2425,144 @@ JSObject* AtomicsObject::initClass(JSContext* cx,
 
   global->setConstructor(JSProto_Atomics, AtomicsValue);
   return Atomics;
+||||||| merged common ancestors
+const JSFunctionSpec AtomicsMethods[] = {
+    // clang-format off
+    JS_INLINABLE_FN("compareExchange",    atomics_compareExchange,    4,0, AtomicsCompareExchange),
+    JS_INLINABLE_FN("load",               atomics_load,               2,0, AtomicsLoad),
+    JS_INLINABLE_FN("store",              atomics_store,              3,0, AtomicsStore),
+    JS_INLINABLE_FN("exchange",           atomics_exchange,           3,0, AtomicsExchange),
+    JS_INLINABLE_FN("add",                atomics_add,                3,0, AtomicsAdd),
+    JS_INLINABLE_FN("sub",                atomics_sub,                3,0, AtomicsSub),
+    JS_INLINABLE_FN("and",                atomics_and,                3,0, AtomicsAnd),
+    JS_INLINABLE_FN("or",                 atomics_or,                 3,0, AtomicsOr),
+    JS_INLINABLE_FN("xor",                atomics_xor,                3,0, AtomicsXor),
+    JS_INLINABLE_FN("isLockFree",         atomics_isLockFree,         1,0, AtomicsIsLockFree),
+    JS_FN("wait",                         atomics_wait,               4,0),
+    JS_FN("notify",                       atomics_notify,             3,0),
+    JS_FN("wake",                         atomics_notify,             3,0), // Legacy name
+    JS_FS_END
+    // clang-format on
+};
+
+JSObject*
+AtomicsObject::initClass(JSContext* cx, Handle<GlobalObject*> global)
+{
+    // Create Atomics Object.
+    RootedObject objProto(cx, GlobalObject::getOrCreateObjectPrototype(cx, global));
+    if (!objProto) {
+        return nullptr;
+    }
+    RootedObject Atomics(cx, NewObjectWithGivenProto(cx, &AtomicsObject::class_, objProto,
+                                                     SingletonObject));
+    if (!Atomics) {
+        return nullptr;
+    }
+
+    if (!JS_DefineFunctions(cx, Atomics, AtomicsMethods)) {
+        return nullptr;
+    }
+    if (!DefineToStringTag(cx, Atomics, cx->names().Atomics)) {
+        return nullptr;
+    }
+
+    RootedValue AtomicsValue(cx, ObjectValue(*Atomics));
+
+    // Everything is set up, install Atomics on the global object.
+    if (!DefineDataProperty(cx, global, cx->names().Atomics, AtomicsValue, JSPROP_RESOLVING)) {
+        return nullptr;
+    }
+
+    global->setConstructor(JSProto_Atomics, AtomicsValue);
+    return Atomics;
+=======
+void js::FutexThread::notify(NotifyReason reason) {
+  MOZ_ASSERT(isWaiting());
+
+  if ((state_ == WaitingInterrupted || state_ == WaitingNotifiedForInterrupt) &&
+      reason == NotifyExplicit) {
+    state_ = Woken;
+    return;
+  }
+  switch (reason) {
+    case NotifyExplicit:
+      state_ = Woken;
+      break;
+    case NotifyForJSInterrupt:
+      if (state_ == WaitingNotifiedForInterrupt) {
+        return;
+      }
+      state_ = WaitingNotifiedForInterrupt;
+      break;
+    default:
+      MOZ_CRASH("bad NotifyReason in FutexThread::notify()");
+  }
+  cond_->notify_all();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+JSObject* js::InitAtomicsClass(JSContext* cx, Handle<GlobalObject*> global) {
+  return AtomicsObject::initClass(cx, global);
+||||||| merged common ancestors
+JSObject*
+js::InitAtomicsClass(JSContext* cx, Handle<GlobalObject*> global)
+{
+    return AtomicsObject::initClass(cx, global);
+=======
+const JSFunctionSpec AtomicsMethods[] = {
+    JS_INLINABLE_FN("compareExchange", atomics_compareExchange, 4, 0,
+                    AtomicsCompareExchange),
+    JS_INLINABLE_FN("load", atomics_load, 2, 0, AtomicsLoad),
+    JS_INLINABLE_FN("store", atomics_store, 3, 0, AtomicsStore),
+    JS_INLINABLE_FN("exchange", atomics_exchange, 3, 0, AtomicsExchange),
+    JS_INLINABLE_FN("add", atomics_add, 3, 0, AtomicsAdd),
+    JS_INLINABLE_FN("sub", atomics_sub, 3, 0, AtomicsSub),
+    JS_INLINABLE_FN("and", atomics_and, 3, 0, AtomicsAnd),
+    JS_INLINABLE_FN("or", atomics_or, 3, 0, AtomicsOr),
+    JS_INLINABLE_FN("xor", atomics_xor, 3, 0, AtomicsXor),
+    JS_INLINABLE_FN("isLockFree", atomics_isLockFree, 1, 0, AtomicsIsLockFree),
+    JS_FN("wait", atomics_wait, 4, 0),
+    JS_FN("notify", atomics_notify, 3, 0),
+    JS_FN("wake", atomics_notify, 3, 0),  // Legacy name
+    JS_FS_END};
+
+JSObject* AtomicsObject::initClass(JSContext* cx,
+                                   Handle<GlobalObject*> global) {
+  // Create Atomics Object.
+  RootedObject objProto(cx,
+                        GlobalObject::getOrCreateObjectPrototype(cx, global));
+  if (!objProto) {
+    return nullptr;
+  }
+  RootedObject Atomics(cx, NewObjectWithGivenProto(cx, &AtomicsObject::class_,
+                                                   objProto, SingletonObject));
+  if (!Atomics) {
+    return nullptr;
+  }
+
+  if (!JS_DefineFunctions(cx, Atomics, AtomicsMethods)) {
+    return nullptr;
+  }
+  if (!DefineToStringTag(cx, Atomics, cx->names().Atomics)) {
+    return nullptr;
+  }
+
+  RootedValue AtomicsValue(cx, ObjectValue(*Atomics));
+
+  // Everything is set up, install Atomics on the global object.
+  if (!DefineDataProperty(cx, global, cx->names().Atomics, AtomicsValue,
+                          JSPROP_RESOLVING)) {
+    return nullptr;
+  }
+
+  global->setConstructor(JSProto_Atomics, AtomicsValue);
+  return Atomics;
 }
 
 JSObject* js::InitAtomicsClass(JSContext* cx, Handle<GlobalObject*> global) {
   return AtomicsObject::initClass(cx, global);
+>>>>>>> upstream-releases
 }
 
 #undef CXX11_ATOMICS

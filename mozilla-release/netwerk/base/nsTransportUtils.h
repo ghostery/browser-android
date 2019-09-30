@@ -18,8 +18,19 @@
  * Coalescing events can help prevent a backlog of unprocessed transport
  * events in the case that the target thread is overworked.
  */
+<<<<<<< HEAD
 nsresult net_NewTransportEventSinkProxy(nsITransportEventSink **aResult,
                                         nsITransportEventSink *aSink,
                                         nsIEventTarget *aTarget);
+||||||| merged common ancestors
+nsresult
+net_NewTransportEventSinkProxy(nsITransportEventSink **aResult,
+                               nsITransportEventSink *aSink,
+                               nsIEventTarget *aTarget);
+=======
+nsresult net_NewTransportEventSinkProxy(nsITransportEventSink** aResult,
+                                        nsITransportEventSink* aSink,
+                                        nsIEventTarget* aTarget);
+>>>>>>> upstream-releases
 
 #endif  // nsTransportUtils_h__

@@ -12,11 +12,18 @@
 #include "mozilla/UniquePtr.h"
 #include "mozilla/Maybe.h"
 
+class PickleIterator;
+
+namespace IPC {
+class Message;
+}
+
 namespace mozilla {
 
 // TODO: It might be worthwhile to teach this class how to "borrow" a buffer.
 // That would make it easier to misuse, however, so maybe not worth it.
 class MediaPacket {
+<<<<<<< HEAD
  public:
   MediaPacket() = default;
   MediaPacket(MediaPacket&& orig) = default;
@@ -27,15 +34,60 @@ class MediaPacket {
     len_ = len;
     if (capacity < len) {
       capacity = len;
+||||||| merged common ancestors
+  public:
+    MediaPacket() = default;
+    MediaPacket(MediaPacket&& orig) = default;
+
+    // Takes ownership of the passed-in data
+    void Take(UniquePtr<uint8_t[]>&& data, size_t len, size_t capacity=0)
+    {
+      data_ = std::move(data);
+      len_ = len;
+      if (capacity < len) {
+        capacity = len;
+      }
+      capacity_ = capacity;
+=======
+ public:
+  MediaPacket() = default;
+  MediaPacket(MediaPacket&& orig) = default;
+  MediaPacket(const MediaPacket& orig);
+
+  // Takes ownership of the passed-in data
+  void Take(UniquePtr<uint8_t[]>&& data, size_t len, size_t capacity = 0) {
+    data_ = std::move(data);
+    len_ = len;
+    if (capacity < len) {
+      capacity = len;
+>>>>>>> upstream-releases
     }
     capacity_ = capacity;
   }
 
+<<<<<<< HEAD
   void Reset() {
     data_.reset();
     len_ = 0;
     capacity_ = 0;
   }
+||||||| merged common ancestors
+    void Reset()
+    {
+      data_.reset();
+      len_ = 0;
+      capacity_ = 0;
+    }
+=======
+  void Reset() {
+    data_.reset();
+    len_ = 0;
+    capacity_ = 0;
+    encrypted_data_.reset();
+    encrypted_len_ = 0;
+    sdp_level_.reset();
+  }
+>>>>>>> upstream-releases
 
   // Copies the passed-in data
   void Copy(const uint8_t* data, size_t len, size_t capacity = 0);
@@ -66,8 +118,30 @@ class MediaPacket {
 
   void SetType(Type type) { type_ = type; }
 
+<<<<<<< HEAD
+  Type type() const { return type_; }
+||||||| merged common ancestors
+  private:
+    UniquePtr<uint8_t[]> data_;
+    size_t len_ = 0;
+    size_t capacity_ = 0;
+    // Encrypted form of the data, if there is one.
+    UniquePtr<uint8_t[]> encrypted_data_;
+    size_t encrypted_len_ = 0;
+    // SDP level that this packet belongs to, if known.
+    Maybe<size_t> sdp_level_;
+    Type type_ = UNCLASSIFIED;
+};
+}
+#endif // mediapacket_h__
+=======
   Type type() const { return type_; }
 
+  void Serialize(IPC::Message* aMsg) const;
+  bool Deserialize(const IPC::Message* aMsg, PickleIterator* aIter);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   UniquePtr<uint8_t[]> data_;
   size_t len_ = 0;
@@ -81,3 +155,36 @@ class MediaPacket {
 };
 }  // namespace mozilla
 #endif  // mediapacket_h__
+||||||| merged common ancestors
+=======
+ private:
+  UniquePtr<uint8_t[]> data_;
+  size_t len_ = 0;
+  size_t capacity_ = 0;
+  // Encrypted form of the data, if there is one.
+  UniquePtr<uint8_t[]> encrypted_data_;
+  size_t encrypted_len_ = 0;
+  // SDP level that this packet belongs to, if known.
+  Maybe<size_t> sdp_level_;
+  Type type_ = UNCLASSIFIED;
+};
+}  // namespace mozilla
+
+namespace IPC {
+template <typename>
+struct ParamTraits;
+
+template <>
+struct ParamTraits<mozilla::MediaPacket> {
+  static void Write(Message* aMsg, const mozilla::MediaPacket& aParam) {
+    aParam.Serialize(aMsg);
+  }
+
+  static bool Read(const Message* aMsg, PickleIterator* aIter,
+                   mozilla::MediaPacket* aResult) {
+    return aResult->Deserialize(aMsg, aIter);
+  }
+};
+}  // namespace IPC
+#endif  // mediapacket_h__
+>>>>>>> upstream-releases

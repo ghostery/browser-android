@@ -62,7 +62,13 @@ enum DW_REG_NUMBER {
   DW_REG_MIPS_FP = 30,
   DW_REG_MIPS_PC = 34,
 #else
+<<<<<<< HEAD
 #error "Unknown arch"
+||||||| merged common ancestors
+# error "Unknown arch"
+=======
+#  error "Unknown arch"
+>>>>>>> upstream-releases
 #endif
 };
 
@@ -184,7 +190,7 @@ struct LExpr {
 
   // Print a rule for recovery of |aNewReg| whose recovered value
   // is this LExpr.
-  string ShowRule(const char* aNewReg) const;
+  std::string ShowRule(const char* aNewReg) const;
 
   // Evaluate this expression, producing a TaggedUWord.  |aOldRegs|
   // holds register values that may be referred to by the expression.
@@ -285,7 +291,13 @@ class RuleSet {
   LExpr mFPexpr;
   LExpr mSPexpr;
 #else
+<<<<<<< HEAD
 #error "Unknown arch"
+||||||| merged common ancestors
+#   error "Unknown arch"
+=======
+#  error "Unknown arch"
+>>>>>>> upstream-releases
 #endif
 };
 
@@ -316,9 +328,19 @@ static inline bool registerIsTracked(DW_REG_NUMBER reg) {
     case DW_REG_MIPS_SP:
     case DW_REG_MIPS_PC:
       return true;
+<<<<<<< HEAD
 #else
 #error "Unknown arch"
 #endif
+||||||| merged common ancestors
+#   else
+#     error "Unknown arch"
+#   endif
+=======
+#else
+#  error "Unknown arch"
+#endif
+>>>>>>> upstream-releases
     default:
       return false;
   }

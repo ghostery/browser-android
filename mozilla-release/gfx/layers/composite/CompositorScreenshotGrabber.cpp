@@ -10,7 +10,9 @@
 #include "mozilla/TimeStamp.h"
 #include "mozilla/UniquePtr.h"
 
+#include "mozilla/layers/Compositor.h"
 #include "mozilla/layers/ProfilerScreenshots.h"
+#include "mozilla/layers/TextureHost.h"
 #include "mozilla/gfx/Point.h"
 #include "nsTArray.h"
 
@@ -53,7 +55,7 @@ class CompositorScreenshotGrabberImpl final {
   nsTArray<RefPtr<AsyncReadbackBuffer>> mAvailableBuffers;
   Maybe<QueueItem> mCurrentFrameQueueItem;
   nsTArray<QueueItem> mQueue;
-  UniquePtr<ProfilerScreenshots> mProfilerScreenshots;
+  RefPtr<ProfilerScreenshots> mProfilerScreenshots;
   const IntSize mBufferSize;
 };
 
@@ -87,7 +89,8 @@ void CompositorScreenshotGrabber::MaybeProcessQueue() {
 
 void CompositorScreenshotGrabber::NotifyEmptyFrame() {
 #ifdef MOZ_GECKO_PROFILER
-  profiler_add_marker("NoCompositorScreenshot because nothing changed");
+  profiler_add_marker("NoCompositorScreenshot because nothing changed",
+                      JS::ProfilingCategoryPair::GRAPHICS);
 #endif
 }
 
@@ -144,9 +147,18 @@ void CompositorScreenshotGrabberImpl::GrabScreenshot(Compositor* aCompositor) {
       aCompositor->GetWindowRenderTarget();
 
   if (!windowTarget) {
+<<<<<<< HEAD
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because of unsupported compositor "
         "configuration");
+||||||| merged common ancestors
+    PROFILER_ADD_MARKER("NoCompositorScreenshot because of unsupported compositor configuration");
+=======
+    PROFILER_ADD_MARKER(
+        "NoCompositorScreenshot because of unsupported compositor "
+        "configuration",
+        GRAPHICS);
+>>>>>>> upstream-releases
     return;
   }
 
@@ -161,15 +173,31 @@ void CompositorScreenshotGrabberImpl::GrabScreenshot(Compositor* aCompositor) {
   aCompositor->SetRenderTarget(previousTarget);
 
   if (!scaledTarget) {
+<<<<<<< HEAD
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because ScaleDownWindowTargetToSize failed");
+||||||| merged common ancestors
+    PROFILER_ADD_MARKER("NoCompositorScreenshot because ScaleDownWindowTargetToSize failed");
+=======
+    PROFILER_ADD_MARKER(
+        "NoCompositorScreenshot because ScaleDownWindowTargetToSize failed",
+        GRAPHICS);
+>>>>>>> upstream-releases
     return;
   }
 
   RefPtr<AsyncReadbackBuffer> buffer = TakeNextBuffer(aCompositor);
   if (!buffer) {
+<<<<<<< HEAD
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because AsyncReadbackBuffer creation failed");
+||||||| merged common ancestors
+    PROFILER_ADD_MARKER("NoCompositorScreenshot because AsyncReadbackBuffer creation failed");
+=======
+    PROFILER_ADD_MARKER(
+        "NoCompositorScreenshot because AsyncReadbackBuffer creation failed",
+        GRAPHICS);
+>>>>>>> upstream-releases
     return;
   }
 
@@ -201,7 +229,7 @@ void CompositorScreenshotGrabberImpl::ReturnBuffer(
 void CompositorScreenshotGrabberImpl::ProcessQueue() {
   if (!mQueue.IsEmpty()) {
     if (!mProfilerScreenshots) {
-      mProfilerScreenshots = MakeUnique<ProfilerScreenshots>();
+      mProfilerScreenshots = new ProfilerScreenshots();
     }
     for (const auto& item : mQueue) {
       mProfilerScreenshots->SubmitScreenshot(

@@ -33,8 +33,18 @@ Crypto::Crypto(nsIGlobalObject* aParent) : mParent(aParent) {}
 
 Crypto::~Crypto() {}
 
+<<<<<<< HEAD
 /* virtual */ JSObject* Crypto::WrapObject(JSContext* aCx,
                                            JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+Crypto::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* Crypto::WrapObject(JSContext* aCx,
+                             JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return Crypto_Binding::Wrap(aCx, this, aGivenProto);
 }
 

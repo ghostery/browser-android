@@ -17,6 +17,7 @@ class LayersIPCChannel;
 
 namespace gl {
 
+<<<<<<< HEAD
 struct SurfaceCaps final {
   bool any;
   bool color, alpha;
@@ -25,6 +26,27 @@ struct SurfaceCaps final {
   bool antialias;
   bool premultAlpha;
   bool preserve;
+||||||| merged common ancestors
+struct SurfaceCaps final
+{
+    bool any;
+    bool color, alpha;
+    bool bpp16;
+    bool depth, stencil;
+    bool antialias;
+    bool premultAlpha;
+    bool preserve;
+=======
+struct SurfaceCaps final {
+  bool any = false;
+  bool color = false;
+  bool alpha = false;
+  bool bpp16 = false;
+  bool depth = false;
+  bool stencil = false;
+  bool premultAlpha = true;
+  bool preserve = false;
+>>>>>>> upstream-releases
 
   // The surface allocator that we want to create this
   // for.  May be null.
@@ -34,7 +56,13 @@ struct SurfaceCaps final {
   SurfaceCaps(const SurfaceCaps& other);
   ~SurfaceCaps();
 
+<<<<<<< HEAD
   void Clear();
+||||||| merged common ancestors
+    void Clear();
+=======
+  void Clear() { *this = {}; }
+>>>>>>> upstream-releases
 
   SurfaceCaps& operator=(const SurfaceCaps& other);
 

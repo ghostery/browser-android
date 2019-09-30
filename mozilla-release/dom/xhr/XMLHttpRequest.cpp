@@ -7,13 +7,28 @@
 #include "XMLHttpRequest.h"
 #include "XMLHttpRequestMainThread.h"
 #include "XMLHttpRequestWorker.h"
+#include "mozilla/net/CookieSettings.h"
+#include "nsGlobalWindowInner.h"
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<XMLHttpRequest> XMLHttpRequest::Constructor(
     const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<XMLHttpRequest>
+XMLHttpRequest::Constructor(const GlobalObject& aGlobal,
+                            const MozXMLHttpRequestParameters& aParams,
+                            ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<XMLHttpRequest> XMLHttpRequest::Constructor(
+    const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     nsCOMPtr<nsIGlobalObject> global =
         do_QueryInterface(aGlobal.GetAsSupports());
@@ -24,8 +39,23 @@ namespace dom {
       return nullptr;
     }
 
+    nsCOMPtr<nsICookieSettings> cookieSettings;
+    nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(global);
+    if (window) {
+      Document* document = window->GetExtantDoc();
+      if (NS_WARN_IF(!document)) {
+        aRv.Throw(NS_ERROR_FAILURE);
+        return nullptr;
+      }
+
+      cookieSettings = document->CookieSettings();
+    } else {
+      // We are here because this is a sandbox.
+      cookieSettings = net::CookieSettings::Create();
+    }
+
     RefPtr<XMLHttpRequestMainThread> req = new XMLHttpRequestMainThread();
-    req->Construct(principal->GetPrincipal(), global);
+    req->Construct(principal->GetPrincipal(), global, cookieSettings, false);
     req->InitParameters(aParams.mMozAnon, aParams.mMozSystem);
     return req.forget();
   }

@@ -29,6 +29,7 @@ NS_INTERFACE_MAP_END
 StructuredCloneTester::StructuredCloneTester(nsISupports* aParent,
                                              const bool aSerializable,
                                              const bool aDeserializable)
+<<<<<<< HEAD
     : mParent(aParent),
       mSerializable(aSerializable),
       mDeserializable(aDeserializable) {}
@@ -40,6 +41,34 @@ StructuredCloneTester::Constructor(const GlobalObject& aGlobal,
                                    ErrorResult& aRv) {
   RefPtr<StructuredCloneTester> sct = new StructuredCloneTester(
       aGlobal.GetAsSupports(), aSerializable, aDeserializable);
+||||||| merged common ancestors
+  : mParent(aParent),
+    mSerializable(aSerializable),
+    mDeserializable(aDeserializable)
+{
+}
+
+/* static */ already_AddRefed<StructuredCloneTester>
+StructuredCloneTester::Constructor(const GlobalObject& aGlobal,
+                                   const bool aSerializable,
+                                   const bool aDeserializable,
+                                   ErrorResult& aRv)
+{
+  RefPtr<StructuredCloneTester> sct = new StructuredCloneTester(aGlobal.GetAsSupports(),
+                                                                aSerializable,
+                                                                aDeserializable);
+=======
+    : mParent(aParent),
+      mSerializable(aSerializable),
+      mDeserializable(aDeserializable) {}
+
+/* static */
+already_AddRefed<StructuredCloneTester> StructuredCloneTester::Constructor(
+    const GlobalObject& aGlobal, const bool aSerializable,
+    const bool aDeserializable, ErrorResult& aRv) {
+  RefPtr<StructuredCloneTester> sct = new StructuredCloneTester(
+      aGlobal.GetAsSupports(), aSerializable, aDeserializable);
+>>>>>>> upstream-releases
   return sct.forget();
 }
 
@@ -47,8 +76,21 @@ bool StructuredCloneTester::Serializable() const { return mSerializable; }
 
 bool StructuredCloneTester::Deserializable() const { return mDeserializable; }
 
+<<<<<<< HEAD
 /* static */ JSObject* StructuredCloneTester::ReadStructuredClone(
     JSContext* aCx, JSStructuredCloneReader* aReader) {
+||||||| merged common ancestors
+/* static */ JSObject*
+StructuredCloneTester::ReadStructuredClone(JSContext* aCx,
+                                           JSStructuredCloneReader* aReader)
+{
+=======
+/* static */
+already_AddRefed<StructuredCloneTester>
+StructuredCloneTester::ReadStructuredClone(JSContext* aCx,
+                                           nsIGlobalObject* aGlobal,
+                                           JSStructuredCloneReader* aReader) {
+>>>>>>> upstream-releases
   uint32_t serializable = 0;
   uint32_t deserializable = 0;
 
@@ -56,12 +98,17 @@ bool StructuredCloneTester::Deserializable() const { return mDeserializable; }
     return nullptr;
   }
 
-  nsIGlobalObject* global = xpc::CurrentNativeGlobal(aCx);
+  RefPtr<StructuredCloneTester> sct =
+      new StructuredCloneTester(aGlobal, static_cast<bool>(serializable),
+                                static_cast<bool>(deserializable));
 
-  if (NS_WARN_IF(!global)) {
+  // "Fail" deserialization
+  if (!sct->Deserializable()) {
+    xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
     return nullptr;
   }
 
+<<<<<<< HEAD
   // Prevent the return value from being trashed by a GC during ~RefPtr
   JS::Rooted<JSObject*> result(aCx);
   {
@@ -79,12 +126,50 @@ bool StructuredCloneTester::Deserializable() const { return mDeserializable; }
   }
 
   return result;
+||||||| merged common ancestors
+  // Prevent the return value from being trashed by a GC during ~RefPtr
+  JS::Rooted<JSObject*> result(aCx);
+  {
+    RefPtr<StructuredCloneTester> sct = new StructuredCloneTester(
+      global,
+      static_cast<bool>(serializable),
+      static_cast<bool>(deserializable)
+    );
+
+    // "Fail" deserialization
+    if (!sct->Deserializable()) {
+      xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
+      return nullptr;
+    }
+
+    result = sct->WrapObject(aCx, nullptr);
+  }
+
+  return result;
+=======
+  return sct.forget();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool StructuredCloneTester::WriteStructuredClone(
     JSStructuredCloneWriter* aWriter) const {
   return JS_WriteUint32Pair(aWriter, SCTAG_DOM_STRUCTURED_CLONE_TESTER, 0) &&
          JS_WriteUint32Pair(aWriter, static_cast<uint32_t>(Serializable()),
+||||||| merged common ancestors
+bool
+StructuredCloneTester::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
+{
+  return JS_WriteUint32Pair(aWriter, SCTAG_DOM_STRUCTURED_CLONE_TESTER, 0) &&
+         JS_WriteUint32Pair(aWriter, static_cast<uint32_t>(Serializable()),
+=======
+bool StructuredCloneTester::WriteStructuredClone(
+    JSContext* aCx, JSStructuredCloneWriter* aWriter) const {
+  if (!Serializable()) {
+    return xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
+  }
+  return JS_WriteUint32Pair(aWriter, static_cast<uint32_t>(Serializable()),
+>>>>>>> upstream-releases
                             static_cast<uint32_t>(Deserializable()));
 }
 

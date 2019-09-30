@@ -30,16 +30,27 @@ interface nsIProfilerStartParams : nsISupports
   [noscript, notxpcom, nostdcall] StringArrayRef getFilters();
 };
 
-[scriptable, uuid(ead3f75c-0e0e-4fbb-901c-1e5392ef5b2a)]
+[scriptable, builtinclass, uuid(ead3f75c-0e0e-4fbb-901c-1e5392ef5b2a)]
 interface nsIProfiler : nsISupports
 {
   boolean CanProfile();
   void StartProfiler(in uint32_t aEntries, in double aInterval,
+<<<<<<< HEAD
                       [array, size_is(aFeatureCount)] in string aFeatures,
                       in uint32_t aFeatureCount,
                       [array, size_is(aFilterCount), optional] in string aFilters,
                       [optional] in uint32_t aFilterCount,
                       [optional] in double aDuration);
+||||||| merged common ancestors
+                      [array, size_is(aFeatureCount)] in string aFeatures,
+                      in uint32_t aFeatureCount,
+                      [array, size_is(aFilterCount), optional] in string aFilters,
+                      [optional] in uint32_t aFilterCount);
+=======
+                     in Array<AUTF8String> aFeatures,
+                     [optional] in Array<AUTF8String> aFilters,
+                     [optional] in double aDuration);
+>>>>>>> upstream-releases
   void StopProfiler();
   boolean IsPaused();
   void PauseSampling();
@@ -64,6 +75,9 @@ interface nsIProfiler : nsISupports
   [implicit_jscontext]
   Promise getProfileDataAsArrayBuffer([optional] in double aSinceTime);
 
+  [implicit_jscontext]
+  Promise getProfileDataAsGzippedArrayBuffer([optional] in double aSinceTime);
+
   /**
    * Returns a promise that resolves once the file has been written.
    */
@@ -74,17 +88,36 @@ interface nsIProfiler : nsISupports
   boolean IsActive();
 
   /**
+   * Clear all registered and unregistered page information in prifiler.
+   */
+  void ClearAllPages();
+
+  /**
    * Returns an array of the features that are supported in this build.
    * Features may vary depending on platform and build flags.
    */
-  void GetFeatures(out uint32_t aCount, [retval, array, size_is(aCount)] out string aFeatures);
+  Array<AUTF8String> GetFeatures();
 
   /**
    * Returns an array of all features that are supported by the profiler.
    * The array may contain features that are not supported in this build.
    */
+<<<<<<< HEAD
   void GetAllFeatures(out uint32_t aCount, [retval, array, size_is(aCount)] out string aFeatures);
 
+||||||| merged common ancestors
+  void GetAllFeatures(out uint32_t aCount, [retval, array, size_is(aCount)] out string aFeatures);
+
+  /**
+   * The starting parameters that were sent to the profiler for sampling.
+   * If the profiler is not currently sampling, this will return null.
+   */
+  [noscript] readonly attribute nsIProfilerStartParams startParams;
+
+=======
+  Array<AUTF8String> GetAllFeatures();
+
+>>>>>>> upstream-releases
   void GetBufferInfo(out uint32_t aCurrentPosition, out uint32_t aTotalSize,
                      out uint32_t aGeneration);
 

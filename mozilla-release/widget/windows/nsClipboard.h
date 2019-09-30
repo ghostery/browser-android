@@ -32,9 +32,18 @@ class nsClipboard : public nsBaseClipboard, public nsIObserver {
   NS_DECL_NSIOBSERVER
 
   // nsIClipboard
+<<<<<<< HEAD
   NS_IMETHOD HasDataMatchingFlavors(const char** aFlavorList, uint32_t aLength,
                                     int32_t aWhichClipboard,
                                     bool* _retval) override;
+||||||| merged common ancestors
+  NS_IMETHOD HasDataMatchingFlavors(const char** aFlavorList, uint32_t aLength,
+                                    int32_t aWhichClipboard, bool *_retval) override; 
+=======
+  NS_IMETHOD HasDataMatchingFlavors(const nsTArray<nsCString>& aFlavorList,
+                                    int32_t aWhichClipboard,
+                                    bool* _retval) override;
+>>>>>>> upstream-releases
   NS_IMETHOD EmptyClipboard(int32_t aWhichClipboard) override;
 
   // Internal Native Routines

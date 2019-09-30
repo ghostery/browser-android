@@ -19,6 +19,7 @@ NS_IMPL_ISUPPORTS(nsNSSASN1PrintableItem, nsIASN1PrintableItem, nsIASN1Object)
 // structure.  This interprets the buffer in data
 // as defined by the DER (Distinguised Encoding Rules) of
 // ASN1.
+<<<<<<< HEAD
 static int getInteger256(unsigned char *data, unsigned int nb) {
   int val;
 
@@ -38,6 +39,49 @@ static int getInteger256(unsigned char *data, unsigned int nb) {
     default:
       return -1;
   }
+||||||| merged common ancestors
+static int
+getInteger256(unsigned char *data, unsigned int nb)
+{
+    int val;
+
+    switch (nb) {
+      case 1:
+        val = data[0];
+        break;
+      case 2:
+        val = (data[0] << 8) | data[1];
+        break;
+      case 3:
+        val = (data[0] << 16) | (data[1] << 8) | data[2];
+        break;
+      case 4:
+        val = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+        break;
+      default:
+        return -1;
+    }
+=======
+static int getInteger256(unsigned char* data, unsigned int nb) {
+  int val;
+
+  switch (nb) {
+    case 1:
+      val = data[0];
+      break;
+    case 2:
+      val = (data[0] << 8) | data[1];
+      break;
+    case 3:
+      val = (data[0] << 16) | (data[1] << 8) | data[2];
+      break;
+    case 4:
+      val = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+      break;
+    default:
+      return -1;
+  }
+>>>>>>> upstream-releases
 
   return val;
 }
@@ -50,8 +94,18 @@ static int getInteger256(unsigned char *data, unsigned int nb) {
 // A DER encoded item has the following structure:
 //
 //  <tag><length<data consisting of lenght bytes>
+<<<<<<< HEAD
 static int32_t getDERItemLength(unsigned char *data, unsigned char *end,
                                 unsigned long *bytesUsed, bool *indefinite) {
+||||||| merged common ancestors
+static int32_t
+getDERItemLength(unsigned char *data, unsigned char *end,
+                 unsigned long *bytesUsed, bool *indefinite)
+{
+=======
+static int32_t getDERItemLength(unsigned char* data, unsigned char* end,
+                                unsigned long* bytesUsed, bool* indefinite) {
+>>>>>>> upstream-releases
   unsigned char lbyte = *data++;
   int32_t length = -1;
 
@@ -80,8 +134,19 @@ static int32_t getDERItemLength(unsigned char *data, unsigned char *end,
   return length;
 }
 
+<<<<<<< HEAD
 static nsresult buildASN1ObjectFromDER(unsigned char *data, unsigned char *end,
                                        nsIASN1Sequence *parent) {
+||||||| merged common ancestors
+static nsresult
+buildASN1ObjectFromDER(unsigned char *data,
+                       unsigned char *end,
+                       nsIASN1Sequence *parent)
+{
+=======
+static nsresult buildASN1ObjectFromDER(unsigned char* data, unsigned char* end,
+                                       nsIASN1Sequence* parent) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIASN1Sequence> sequence;
   nsCOMPtr<nsIASN1PrintableItem> printableItem;
@@ -169,8 +234,19 @@ static nsresult buildASN1ObjectFromDER(unsigned char *data, unsigned char *end,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CreateFromDER(unsigned char *data, unsigned int len,
                        nsIASN1Object **retval) {
+||||||| merged common ancestors
+nsresult
+CreateFromDER(unsigned char *data,
+              unsigned int   len,
+              nsIASN1Object **retval)
+{
+=======
+nsresult CreateFromDER(unsigned char* data, unsigned int len,
+                       nsIASN1Object** retval) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIASN1Sequence> sequence = new nsNSSASN1Sequence;
   *retval = nullptr;
 
@@ -201,7 +277,14 @@ nsNSSASN1Sequence::~nsNSSASN1Sequence() { /* destructor code */
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetASN1Objects(nsIMutableArray **aASN1Objects) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetASN1Objects(nsIMutableArray * *aASN1Objects)
+{
+=======
+nsNSSASN1Sequence::GetASN1Objects(nsIMutableArray** aASN1Objects) {
+>>>>>>> upstream-releases
   if (!mASN1Objects) {
     mASN1Objects = nsArrayBase::Create();
   }
@@ -211,13 +294,27 @@ nsNSSASN1Sequence::GetASN1Objects(nsIMutableArray **aASN1Objects) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::SetASN1Objects(nsIMutableArray *aASN1Objects) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::SetASN1Objects(nsIMutableArray * aASN1Objects)
+{
+=======
+nsNSSASN1Sequence::SetASN1Objects(nsIMutableArray* aASN1Objects) {
+>>>>>>> upstream-releases
   mASN1Objects = aASN1Objects;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetTag(uint32_t *aTag) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetTag(uint32_t *aTag)
+{
+=======
+nsNSSASN1Sequence::GetTag(uint32_t* aTag) {
+>>>>>>> upstream-releases
   *aTag = mTag;
   return NS_OK;
 }
@@ -229,7 +326,14 @@ nsNSSASN1Sequence::SetTag(uint32_t aTag) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetType(uint32_t *aType) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetType(uint32_t *aType)
+{
+=======
+nsNSSASN1Sequence::GetType(uint32_t* aType) {
+>>>>>>> upstream-releases
   *aType = mType;
   return NS_OK;
 }
@@ -241,31 +345,66 @@ nsNSSASN1Sequence::SetType(uint32_t aType) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetDisplayName(nsAString &aDisplayName) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetDisplayName(nsAString &aDisplayName)
+{
+=======
+nsNSSASN1Sequence::GetDisplayName(nsAString& aDisplayName) {
+>>>>>>> upstream-releases
   aDisplayName = mDisplayName;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::SetDisplayName(const nsAString &aDisplayName) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::SetDisplayName(const nsAString &aDisplayName)
+{
+=======
+nsNSSASN1Sequence::SetDisplayName(const nsAString& aDisplayName) {
+>>>>>>> upstream-releases
   mDisplayName = aDisplayName;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetDisplayValue(nsAString &aDisplayValue) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetDisplayValue(nsAString &aDisplayValue)
+{
+=======
+nsNSSASN1Sequence::GetDisplayValue(nsAString& aDisplayValue) {
+>>>>>>> upstream-releases
   aDisplayValue = mDisplayValue;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::SetDisplayValue(const nsAString &aDisplayValue) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::SetDisplayValue(const nsAString &aDisplayValue)
+{
+=======
+nsNSSASN1Sequence::SetDisplayValue(const nsAString& aDisplayValue) {
+>>>>>>> upstream-releases
   mDisplayValue = aDisplayValue;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetIsValidContainer(bool *aIsValidContainer) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetIsValidContainer(bool *aIsValidContainer)
+{
+=======
+nsNSSASN1Sequence::GetIsValidContainer(bool* aIsValidContainer) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aIsValidContainer);
   *aIsValidContainer = mIsValidContainer;
   return NS_OK;
@@ -279,7 +418,14 @@ nsNSSASN1Sequence::SetIsValidContainer(bool aIsValidContainer) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1Sequence::GetIsExpanded(bool *aIsExpanded) {
+||||||| merged common ancestors
+nsNSSASN1Sequence::GetIsExpanded(bool *aIsExpanded)
+{
+=======
+nsNSSASN1Sequence::GetIsExpanded(bool* aIsExpanded) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aIsExpanded);
   *aIsExpanded = mIsExpanded;
   return NS_OK;
@@ -302,19 +448,40 @@ nsNSSASN1PrintableItem::~nsNSSASN1PrintableItem() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::GetDisplayValue(nsAString &aValue) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::GetDisplayValue(nsAString &aValue)
+{
+=======
+nsNSSASN1PrintableItem::GetDisplayValue(nsAString& aValue) {
+>>>>>>> upstream-releases
   aValue = mValue;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::SetDisplayValue(const nsAString &aValue) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::SetDisplayValue(const nsAString &aValue)
+{
+=======
+nsNSSASN1PrintableItem::SetDisplayValue(const nsAString& aValue) {
+>>>>>>> upstream-releases
   mValue = aValue;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::GetTag(uint32_t *aTag) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::GetTag(uint32_t *aTag)
+{
+=======
+nsNSSASN1PrintableItem::GetTag(uint32_t* aTag) {
+>>>>>>> upstream-releases
   *aTag = mTag;
   return NS_OK;
 }
@@ -326,7 +493,14 @@ nsNSSASN1PrintableItem::SetTag(uint32_t aTag) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::GetType(uint32_t *aType) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::GetType(uint32_t *aType)
+{
+=======
+nsNSSASN1PrintableItem::GetType(uint32_t* aType) {
+>>>>>>> upstream-releases
   *aType = mType;
   return NS_OK;
 }
@@ -338,7 +512,14 @@ nsNSSASN1PrintableItem::SetType(uint32_t aType) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::SetData(char *data, uint32_t len) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::SetData(char *data, uint32_t len)
+{
+=======
+nsNSSASN1PrintableItem::SetData(char* data, uint32_t len) {
+>>>>>>> upstream-releases
   if (len > 0) {
     if (mLen < len) {
       mData = (unsigned char *)moz_xrealloc(mData, len);
@@ -356,23 +537,52 @@ nsNSSASN1PrintableItem::SetData(char *data, uint32_t len) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::GetData(char **outData, uint32_t *outLen) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::GetData(char **outData, uint32_t *outLen)
+{
+=======
+nsNSSASN1PrintableItem::GetData(char** outData, uint32_t* outLen) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(outData);
   NS_ENSURE_ARG_POINTER(outLen);
 
+<<<<<<< HEAD
   *outData = (char *)mData;
   *outLen = mLen;
+||||||| merged common ancestors
+  *outData = (char*)mData;
+  *outLen  = mLen;
+=======
+  *outData = (char*)mData;
+  *outLen = mLen;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::GetDisplayName(nsAString &aDisplayName) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::GetDisplayName(nsAString &aDisplayName)
+{
+=======
+nsNSSASN1PrintableItem::GetDisplayName(nsAString& aDisplayName) {
+>>>>>>> upstream-releases
   aDisplayName = mDisplayName;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSASN1PrintableItem::SetDisplayName(const nsAString &aDisplayName) {
+||||||| merged common ancestors
+nsNSSASN1PrintableItem::SetDisplayName(const nsAString &aDisplayName)
+{
+=======
+nsNSSASN1PrintableItem::SetDisplayName(const nsAString& aDisplayName) {
+>>>>>>> upstream-releases
   mDisplayName = aDisplayName;
   return NS_OK;
 }

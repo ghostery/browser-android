@@ -19,18 +19,13 @@ def test(mod, path, entity=None):
         # keep this file list in sync with jar.mn
         if path in (
             "chrome/global/aboutReader.properties",
-            "chrome/global/aboutRights.dtd",
             "chrome/global/charsetMenu.properties",
             "chrome/global/commonDialogs.properties",
             "chrome/global/intl.properties",
             "chrome/global/intl.css",
             "chrome/search/search.properties",
             "chrome/pluginproblem/pluginproblem.dtd",
-            "chrome/global/aboutSupport.dtd",
-            "chrome/global/aboutSupport.properties",
             "chrome/global/mozilla.dtd",
-            "chrome/global/aboutTelemetry.dtd",
-            "chrome/global/aboutTelemetry.properties",
             "chrome/global/aboutWebrtc.properties",
         ):
             return "error"
@@ -41,9 +36,25 @@ def test(mod, path, entity=None):
         if re.match(r"toolkit/about/[^/]*About.ftl", path):
             # error on toolkit/about/*About.ftl
             return "error"
+<<<<<<< HEAD
         if re.match(r"toolkit/about/[^/]*Plugins.ftl", path):
             # error on toolkit/about/*Plugins.ftl
             return "error"
+||||||| merged common ancestors
+=======
+        if re.match(r"toolkit/about/[^/]*Plugins.ftl", path):
+            # error on toolkit/about/*Plugins.ftl
+            return "error"
+        if re.match(r"toolkit/about/[^/]*Rights.ftl", path):
+            # error on toolkit/about/*Rights.ftl
+            return "error"
+        if re.match(r"toolkit/about/[^/]*Compat.ftl", path):
+            # error on toolkit/about/*Compat.ftl
+            return "error"
+        if re.match(r"toolkit/about/[^/]*Support.ftl", path):
+            # error on toolkit/about/*Support.ftl
+            return "error"
+>>>>>>> upstream-releases
         return "ignore"
 
     if mod == "dom":

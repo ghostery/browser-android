@@ -1,4 +1,10 @@
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 use std::slice;
+||||||| merged common ancestors
+//! Utility types for working with the AST.
+=======
+use std::{slice, vec};
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 
 use syn;
 
@@ -16,9 +22,16 @@ pub enum Data<V, F> {
     Struct(Fields<F>),
 }
 
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 #[deprecated(since = "0.3", note = "this has been renamed to Data")]
 pub type Body<V, F> = Data<V, F>;
 
+||||||| merged common ancestors
+#[deprecated(since="0.3", note="this has been renamed to Data")]
+pub type Body<V, F> = Data<V, F>;
+
+=======
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 impl<V, F> Data<V, F> {
     /// Creates an empty body of the same shape as the passed-in body.
     pub fn empty_from(src: &syn::Data) -> Self {
@@ -32,7 +45,7 @@ impl<V, F> Data<V, F> {
     /// Creates a new `Data<&'a V, &'a F>` instance from `Data<V, F>`.
     pub fn as_ref<'a>(&'a self) -> Data<&'a V, &'a F> {
         match *self {
-            Data::Enum(ref variants) => Data::Enum(variants.into_iter().collect()),
+            Data::Enum(ref variants) => Data::Enum(variants.iter().collect()),
             Data::Struct(ref data) => Data::Struct(data.as_ref()),
         }
     }
@@ -107,11 +120,17 @@ impl<V: FromVariant, F: FromField> Data<V, F> {
             syn::Data::Enum(ref data) => {
                 let mut items = Vec::with_capacity(data.variants.len());
                 let mut errors = Vec::new();
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
                 for v_result in data.variants
                     .clone()
                     .into_iter()
                     .map(|v| FromVariant::from_variant(&v))
                 {
+||||||| merged common ancestors
+                for v_result in data.variants.clone().into_iter().map(|v| FromVariant::from_variant(&v)) {
+=======
+                for v_result in data.variants.iter().map(FromVariant::from_variant) {
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
                     match v_result {
                         Ok(val) => items.push(val),
                         Err(err) => errors.push(err),
@@ -130,6 +149,7 @@ impl<V: FromVariant, F: FromField> Data<V, F> {
     }
 }
 
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 impl<V: UsesTypeParams, F: UsesTypeParams> UsesTypeParams for Data<V, F> {
     fn uses_type_params<'a>(
         &self,
@@ -156,15 +176,52 @@ impl<V: UsesLifetimes, F: UsesLifetimes> UsesLifetimes for Data<V, F> {
     }
 }
 
+||||||| merged common ancestors
+=======
+impl<V: UsesTypeParams, F: UsesTypeParams> UsesTypeParams for Data<V, F> {
+    fn uses_type_params<'a>(
+        &self,
+        options: &usage::Options,
+        type_set: &'a IdentSet,
+    ) -> IdentRefSet<'a> {
+        match *self {
+            Data::Struct(ref v) => v.uses_type_params(options, type_set),
+            Data::Enum(ref v) => v.uses_type_params(options, type_set),
+        }
+    }
+}
+
+impl<V: UsesLifetimes, F: UsesLifetimes> UsesLifetimes for Data<V, F> {
+    fn uses_lifetimes<'a>(
+        &self,
+        options: &usage::Options,
+        lifetimes: &'a LifetimeSet,
+    ) -> LifetimeRefSet<'a> {
+        match *self {
+            Data::Struct(ref v) => v.uses_lifetimes(options, lifetimes),
+            Data::Enum(ref v) => v.uses_lifetimes(options, lifetimes),
+        }
+    }
+}
+
+/// Equivalent to `syn::Fields`, but replaces the AST element with a generic.
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Fields<T> {
     pub style: Style,
     pub fields: Vec<T>,
 }
 
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 #[deprecated(since = "0.3", note = "this has been renamed to Fields")]
 pub type VariantData<T> = Fields<T>;
 
+||||||| merged common ancestors
+#[deprecated(since="0.3", note="this has been renamed to Fields")]
+pub type VariantData<T> = Fields<T>;
+
+=======
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 impl<T> Fields<T> {
     pub fn empty_from(vd: &syn::Fields) -> Self {
         Fields {
@@ -181,7 +238,7 @@ impl<T> Fields<T> {
 
     /// Returns true if this variant's data makes it a newtype.
     pub fn is_newtype(&self) -> bool {
-        self.style == Style::Tuple && self.fields.len() == 1
+        self.style == Style::Tuple && self.len() == 1
     }
 
     pub fn is_unit(&self) -> bool {
@@ -212,10 +269,28 @@ impl<T> Fields<T> {
             fields: self.fields.into_iter().map(map).collect(),
         }
     }
+<<<<<<< HEAD:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 
     pub fn iter(&self) -> slice::Iter<T> {
         self.fields.iter()
     }
+||||||| merged common ancestors
+=======
+
+    pub fn iter(&self) -> slice::Iter<T> {
+        self.fields.iter()
+    }
+
+    /// Returns the number of fields in the structure.
+    pub fn len(&self) -> usize {
+        self.fields.len()
+    }
+
+    /// Returns `true` if the `Fields` contains no fields.
+    pub fn is_empty(&self) -> bool {
+        self.fields.is_empty()
+    }
+>>>>>>> upstream-releases:mozilla-release/third_party/rust/darling_core/src/ast/data.rs
 }
 
 impl<F: FromField> Fields<F> {
@@ -226,8 +301,7 @@ impl<F: FromField> Fields<F> {
                 let mut errors = Vec::new();
 
                 for field in &fields.named {
-                    let f_result = FromField::from_field(field);
-                    match f_result {
+                    match FromField::from_field(field) {
                         Ok(val) => items.push(val),
                         Err(err) => errors.push(if let Some(ref ident) = field.ident {
                             err.at(ident)
@@ -244,8 +318,7 @@ impl<F: FromField> Fields<F> {
                 let mut errors = Vec::new();
 
                 for field in &fields.unnamed {
-                    let f_result = FromField::from_field(field);
-                    match f_result {
+                    match FromField::from_field(field) {
                         Ok(val) => items.push(val),
                         Err(err) => errors.push(if let Some(ref ident) = field.ident {
                             err.at(ident)
@@ -268,6 +341,15 @@ impl<F: FromField> Fields<F> {
                 fields: items,
             })
         }
+    }
+}
+
+impl<T> IntoIterator for Fields<T> {
+    type Item = T;
+    type IntoIter = vec::IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.fields.into_iter()
     }
 }
 
@@ -314,16 +396,16 @@ pub enum Style {
 }
 
 impl Style {
-    pub fn is_unit(&self) -> bool {
-        *self == Style::Unit
+    pub fn is_unit(self) -> bool {
+        self == Style::Unit
     }
 
-    pub fn is_tuple(&self) -> bool {
-        *self == Style::Tuple
+    pub fn is_tuple(self) -> bool {
+        self == Style::Tuple
     }
 
-    pub fn is_struct(&self) -> bool {
-        *self == Style::Struct
+    pub fn is_struct(self) -> bool {
+        self == Style::Struct
     }
 
     /// Creates a new `Fields` of the specified style with the passed-in fields.

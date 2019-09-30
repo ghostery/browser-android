@@ -7,27 +7,37 @@
 #include "mozilla/BlockingResourceBase.h"
 
 #ifdef DEBUG
-#include "prthread.h"
+#  include "prthread.h"
 
-#include "nsAutoPtr.h"
+#  include "nsAutoPtr.h"
 
-#ifndef MOZ_CALLSTACK_DISABLED
-#include "CodeAddressService.h"
-#include "nsHashKeys.h"
-#include "mozilla/StackWalk.h"
-#include "nsTHashtable.h"
-#endif
+#  ifndef MOZ_CALLSTACK_DISABLED
+#    include "CodeAddressService.h"
+#    include "nsHashKeys.h"
+#    include "mozilla/StackWalk.h"
+#    include "nsTHashtable.h"
+#  endif
 
-#include "mozilla/CondVar.h"
-#include "mozilla/DeadlockDetector.h"
-#include "mozilla/RecursiveMutex.h"
-#include "mozilla/ReentrantMonitor.h"
-#include "mozilla/Mutex.h"
-#include "mozilla/RWLock.h"
+#  include "mozilla/CondVar.h"
+#  include "mozilla/DeadlockDetector.h"
+#  include "mozilla/RecursiveMutex.h"
+#  include "mozilla/ReentrantMonitor.h"
+#  include "mozilla/Mutex.h"
+#  include "mozilla/RWLock.h"
 
+<<<<<<< HEAD
 #if defined(MOZILLA_INTERNAL_API)
 #include "GeckoProfiler.h"
 #endif  // MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+#if defined(MOZILLA_INTERNAL_API)
+#include "GeckoProfiler.h"
+#endif //MOZILLA_INTERNAL_API
+=======
+#  if defined(MOZILLA_INTERNAL_API)
+#    include "GeckoProfiler.h"
+#  endif  // MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
 
 #endif  // ifdef DEBUG
 
@@ -44,28 +54,57 @@ const char* const BlockingResourceBase::kResourceTypeName[] = {
 #ifdef DEBUG
 
 PRCallOnceType BlockingResourceBase::sCallOnce;
-unsigned BlockingResourceBase::sResourceAcqnChainFrontTPI = (unsigned)-1;
+MOZ_THREAD_LOCAL(BlockingResourceBase*)
+BlockingResourceBase::sResourceAcqnChainFront;
 BlockingResourceBase::DDT* BlockingResourceBase::sDeadlockDetector;
 
+<<<<<<< HEAD
 void BlockingResourceBase::StackWalkCallback(uint32_t aFrameNumber, void* aPc,
                                              void* aSp, void* aClosure) {
 #ifndef MOZ_CALLSTACK_DISABLED
+||||||| merged common ancestors
+
+void
+BlockingResourceBase::StackWalkCallback(uint32_t aFrameNumber, void* aPc,
+                                        void* aSp, void* aClosure)
+{
+#ifndef MOZ_CALLSTACK_DISABLED
+=======
+void BlockingResourceBase::StackWalkCallback(uint32_t aFrameNumber, void* aPc,
+                                             void* aSp, void* aClosure) {
+#  ifndef MOZ_CALLSTACK_DISABLED
+>>>>>>> upstream-releases
   AcquisitionState* state = (AcquisitionState*)aClosure;
-  state->AppendElement(aPc);
-#endif
+  state->ref().AppendElement(aPc);
+#  endif
 }
 
+<<<<<<< HEAD
 void BlockingResourceBase::GetStackTrace(AcquisitionState& aState) {
 #ifndef MOZ_CALLSTACK_DISABLED
+||||||| merged common ancestors
+void
+BlockingResourceBase::GetStackTrace(AcquisitionState& aState)
+{
+#ifndef MOZ_CALLSTACK_DISABLED
+=======
+void BlockingResourceBase::GetStackTrace(AcquisitionState& aState) {
+#  ifndef MOZ_CALLSTACK_DISABLED
+>>>>>>> upstream-releases
   // Skip this function and the calling function.
   const uint32_t kSkipFrames = 2;
 
-  aState.Clear();
+  // Clear the array...
+  aState.reset();
+  // ...and create a new one; this also puts the state to 'acquired' status
+  // regardless of whether we obtain a stack trace or not.
+  aState.emplace();
 
   // NB: Ignore the return value, there's nothing useful we can do if this
   //     this fails.
-  MozStackWalk(StackWalkCallback, kSkipFrames, 24, &aState);
-#endif
+  MozStackWalk(StackWalkCallback, kSkipFrames, kAcquisitionStateStackSize,
+               aState.ptr());
+#  endif
 }
 
 /**
@@ -82,9 +121,20 @@ void BlockingResourceBase::GetStackTrace(AcquisitionState& aState) {
  * contexts into strings, all info is written to stderr, but only
  * some info is written into |aOut|
  */
+<<<<<<< HEAD
 bool PrintCycle(
     const BlockingResourceBase::DDT::ResourceAcquisitionArray* aCycle,
     nsACString& aOut) {
+||||||| merged common ancestors
+bool
+PrintCycle(const BlockingResourceBase::DDT::ResourceAcquisitionArray* aCycle,
+           nsACString& aOut)
+{
+=======
+static bool PrintCycle(
+    const BlockingResourceBase::DDT::ResourceAcquisitionArray* aCycle,
+    nsACString& aOut) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aCycle->Length() > 1, "need > 1 element for cycle!");
 
   bool maybeImminent = true;
@@ -115,10 +165,23 @@ bool PrintCycle(
   return maybeImminent;
 }
 
+<<<<<<< HEAD
 #ifndef MOZ_CALLSTACK_DISABLED
 struct CodeAddressServiceLock final {
   static void Unlock() {}
   static void Lock() {}
+||||||| merged common ancestors
+#ifndef MOZ_CALLSTACK_DISABLED
+struct CodeAddressServiceLock final
+{
+  static void Unlock() { }
+  static void Lock() { }
+=======
+#  ifndef MOZ_CALLSTACK_DISABLED
+struct CodeAddressServiceLock final {
+  static void Unlock() {}
+  static void Lock() {}
+>>>>>>> upstream-releases
   static bool IsLocked() { return true; }
 };
 
@@ -147,9 +210,18 @@ class CodeAddressServiceStringTable final {
 
 typedef CodeAddressService<CodeAddressServiceStringTable,
                            CodeAddressServiceStringAlloc,
+<<<<<<< HEAD
                            CodeAddressServiceLock>
     WalkTheStackCodeAddressService;
 #endif
+||||||| merged common ancestors
+                           CodeAddressServiceLock> WalkTheStackCodeAddressService;
+#endif
+=======
+                           CodeAddressServiceLock>
+    WalkTheStackCodeAddressService;
+#  endif
+>>>>>>> upstream-releases
 
 bool BlockingResourceBase::Print(nsACString& aOut) const {
   fprintf(stderr, "--- %s : %s", kResourceTypeName[mType], mName);
@@ -165,17 +237,17 @@ bool BlockingResourceBase::Print(nsACString& aOut) const {
   }
 
   fputs(" calling context\n", stderr);
-#ifdef MOZ_CALLSTACK_DISABLED
+#  ifdef MOZ_CALLSTACK_DISABLED
   fputs("  [stack trace unavailable]\n", stderr);
-#else
+#  else
   const AcquisitionState& state = acquired ? mAcquired : mFirstSeen;
 
   WalkTheStackCodeAddressService addressService;
 
-  for (uint32_t i = 0; i < state.Length(); i++) {
+  for (uint32_t i = 0; i < state.ref().Length(); i++) {
     const size_t kMaxLength = 1024;
     char buffer[kMaxLength];
-    addressService.GetLocation(i + 1, state[i], buffer, kMaxLength);
+    addressService.GetLocation(i + 1, state.ref()[i], buffer, kMaxLength);
     const char* fmt = "    %s\n";
     aOut.AppendLiteral("    ");
     aOut.Append(buffer);
@@ -183,12 +255,13 @@ bool BlockingResourceBase::Print(nsACString& aOut) const {
     fprintf(stderr, fmt, buffer);
   }
 
-#endif
+#  endif
 
   return acquired;
 }
 
 BlockingResourceBase::BlockingResourceBase(
+<<<<<<< HEAD
     const char* aName, BlockingResourceBase::BlockingResourceType aType)
     : mName(aName),
       mType(aType)
@@ -199,6 +272,28 @@ BlockingResourceBase::BlockingResourceBase(
       ,
       mAcquired()
 #endif
+||||||| merged common ancestors
+    const char* aName,
+    BlockingResourceBase::BlockingResourceType aType)
+  : mName(aName)
+  , mType(aType)
+#ifdef MOZ_CALLSTACK_DISABLED
+  , mAcquired(false)
+#else
+  , mAcquired()
+#endif
+=======
+    const char* aName, BlockingResourceBase::BlockingResourceType aType)
+    : mName(aName),
+      mType(aType)
+#  ifdef MOZ_CALLSTACK_DISABLED
+      ,
+      mAcquired(false)
+#  else
+      ,
+      mAcquired()
+#  endif
+>>>>>>> upstream-releases
 {
   MOZ_ASSERT(mName, "Name must be nonnull");
   // PR_CallOnce guaranatees that InitStatics is called in a
@@ -229,8 +324,19 @@ size_t BlockingResourceBase::SizeOfDeadlockDetector(
              : 0;
 }
 
+<<<<<<< HEAD
 PRStatus BlockingResourceBase::InitStatics() {
   PR_NewThreadPrivateIndex(&sResourceAcqnChainFrontTPI, 0);
+||||||| merged common ancestors
+
+PRStatus
+BlockingResourceBase::InitStatics()
+{
+  PR_NewThreadPrivateIndex(&sResourceAcqnChainFrontTPI, 0);
+=======
+PRStatus BlockingResourceBase::InitStatics() {
+  MOZ_ASSERT(sResourceAcqnChainFront.init());
+>>>>>>> upstream-releases
   sDeadlockDetector = new DDT();
   if (!sDeadlockDetector) {
     MOZ_CRASH("can't allocate deadlock detector");
@@ -257,10 +363,10 @@ void BlockingResourceBase::CheckAcquire() {
     return;
   }
 
-#ifndef MOZ_CALLSTACK_DISABLED
+#  ifndef MOZ_CALLSTACK_DISABLED
   // Update the current stack before printing.
   GetStackTrace(mAcquired);
-#endif
+#  endif
 
   fputs("###!!! ERROR: Potential deadlock detected:\n", stderr);
   nsAutoCString out("Potential deadlock detected:\n");
@@ -292,15 +398,17 @@ void BlockingResourceBase::Acquire() {
 
   ResourceChainAppend(ResourceChainFront());
 
-#ifdef MOZ_CALLSTACK_DISABLED
+#  ifdef MOZ_CALLSTACK_DISABLED
   mAcquired = true;
-#else
+#  else
   // Take a stack snapshot.
   GetStackTrace(mAcquired);
-  if (mFirstSeen.IsEmpty()) {
+  MOZ_ASSERT(IsAcquired());
+
+  if (!mFirstSeen) {
     mFirstSeen = mAcquired;
   }
-#endif
+#  endif
 }
 
 void BlockingResourceBase::Release() {
@@ -349,7 +457,25 @@ void OffTheBooksMutex::Lock() {
   Acquire();
 }
 
+<<<<<<< HEAD
 void OffTheBooksMutex::Unlock() {
+||||||| merged common ancestors
+void
+OffTheBooksMutex::Unlock()
+{
+=======
+bool OffTheBooksMutex::TryLock() {
+  CheckAcquire();
+  bool locked = this->tryLock();
+  if (locked) {
+    mOwningThread = PR_GetCurrentThread();
+    Acquire();
+  }
+  return locked;
+}
+
+void OffTheBooksMutex::Unlock() {
+>>>>>>> upstream-releases
   Release();
   mOwningThread = nullptr;
   this->unlock();
@@ -450,9 +576,9 @@ nsresult ReentrantMonitor::Wait(PRIntervalTime aInterval) {
 
   nsresult rv;
   {
-#if defined(MOZILLA_INTERNAL_API)
+#  if defined(MOZILLA_INTERNAL_API)
     AUTO_PROFILER_THREAD_SLEEP;
-#endif
+#  endif
     // give up the monitor until we're back from Wait()
     rv = PR_Wait(mReentrantMonitor, aInterval) == PR_SUCCESS ? NS_OK
                                                              : NS_ERROR_FAILURE;

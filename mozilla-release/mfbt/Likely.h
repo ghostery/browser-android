@@ -13,11 +13,27 @@
 #define mozilla_Likely_h
 
 #if defined(__clang__) || defined(__GNUC__)
+<<<<<<< HEAD
 #define MOZ_LIKELY(x) (__builtin_expect(!!(x), 1))
 #define MOZ_UNLIKELY(x) (__builtin_expect(!!(x), 0))
+||||||| merged common ancestors
+#  define MOZ_LIKELY(x)   (__builtin_expect(!!(x), 1))
+#  define MOZ_UNLIKELY(x) (__builtin_expect(!!(x), 0))
+=======
+#  define MOZ_LIKELY(x) (__builtin_expect(!!(x), 1))
+#  define MOZ_UNLIKELY(x) (__builtin_expect(!!(x), 0))
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define MOZ_LIKELY(x) (!!(x))
 #define MOZ_UNLIKELY(x) (!!(x))
+||||||| merged common ancestors
+#  define MOZ_LIKELY(x)   (!!(x))
+#  define MOZ_UNLIKELY(x) (!!(x))
+=======
+#  define MOZ_LIKELY(x) (!!(x))
+#  define MOZ_UNLIKELY(x) (!!(x))
+>>>>>>> upstream-releases
 #endif
 
 #endif /* mozilla_Likely_h */

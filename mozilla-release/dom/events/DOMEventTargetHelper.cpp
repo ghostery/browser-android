@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsContentUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/Sprintf.h"
 #include "nsGlobalWindow.h"
 #include "mozilla/dom/Event.h"
@@ -133,15 +133,33 @@ void DOMEventTargetHelper::DisconnectFromOwner() {
   MaybeDontKeepAlive();
 }
 
+<<<<<<< HEAD
 nsPIDOMWindowInner* DOMEventTargetHelper::GetWindowIfCurrent() const {
   if (NS_FAILED(CheckInnerWindowCorrectness())) {
+||||||| merged common ancestors
+nsPIDOMWindowInner*
+DOMEventTargetHelper::GetWindowIfCurrent() const
+{
+  if (NS_FAILED(CheckInnerWindowCorrectness())) {
+=======
+nsPIDOMWindowInner* DOMEventTargetHelper::GetWindowIfCurrent() const {
+  if (NS_FAILED(CheckCurrentGlobalCorrectness())) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
   return GetOwner();
 }
 
+<<<<<<< HEAD
 nsIDocument* DOMEventTargetHelper::GetDocumentIfCurrent() const {
+||||||| merged common ancestors
+nsIDocument*
+DOMEventTargetHelper::GetDocumentIfCurrent() const
+{
+=======
+Document* DOMEventTargetHelper::GetDocumentIfCurrent() const {
+>>>>>>> upstream-releases
   nsPIDOMWindowInner* win = GetWindowIfCurrent();
   if (!win) {
     return nullptr;
@@ -211,11 +229,21 @@ EventListenerManager* DOMEventTargetHelper::GetExistingListenerManager() const {
   return mListenerManager;
 }
 
+<<<<<<< HEAD
 nsresult DOMEventTargetHelper::WantsUntrusted(bool* aRetVal) {
   nsresult rv = CheckInnerWindowCorrectness();
+||||||| merged common ancestors
+nsresult
+DOMEventTargetHelper::WantsUntrusted(bool* aRetVal)
+{
+  nsresult rv = CheckInnerWindowCorrectness();
+=======
+nsresult DOMEventTargetHelper::WantsUntrusted(bool* aRetVal) {
+  nsresult rv = CheckCurrentGlobalCorrectness();
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIDocument> doc = GetDocumentIfCurrent();
+  nsCOMPtr<Document> doc = GetDocumentIfCurrent();
   // We can let listeners on workers to always handle all the events.
   *aRetVal = (doc && !nsContentUtils::IsChromeDoc(doc)) || !NS_IsMainThread();
   return rv;
@@ -253,7 +281,7 @@ void DOMEventTargetHelper::IgnoreKeepAliveIfHasListenersFor(nsAtom* aType) {
 void DOMEventTargetHelper::MaybeUpdateKeepAlive() {
   bool shouldBeKeptAlive = false;
 
-  if (NS_SUCCEEDED(CheckInnerWindowCorrectness())) {
+  if (NS_SUCCEEDED(CheckCurrentGlobalCorrectness())) {
     if (!mKeepingAliveTypes.mAtoms.IsEmpty()) {
       for (uint32_t i = 0; i < mKeepingAliveTypes.mAtoms.Length(); ++i) {
         if (HasListenersFor(mKeepingAliveTypes.mAtoms[i])) {
@@ -314,4 +342,29 @@ void DOMEventTargetHelper::BindToOwnerInternal(nsIGlobalObject* aOwner) {
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+nsresult DOMEventTargetHelper::CheckCurrentGlobalCorrectness() const {
+  NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
+
+  // Main-thread.
+  if (mOwnerWindow && !mOwnerWindow->IsCurrentInnerWindow()) {
+    return NS_ERROR_FAILURE;
+  }
+
+  if (NS_IsMainThread()) {
+    return NS_OK;
+  }
+
+  if (!mParentObject) {
+    return NS_ERROR_FAILURE;
+  }
+
+  return NS_OK;
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

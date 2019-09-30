@@ -9,25 +9,47 @@
 
 "use strict";
 
-let searchEngineDetails = [{
-  alias: "g",
-  codes: {
-    context: "",
-    keyword: "",
-    newTab: "",
-    submission: "",
+let searchEngineDetails = [
+  {
+    alias: "g",
+    codes: {
+      context: "",
+      keyword: "",
+      newTab: "",
+      submission: "",
+    },
+    name: "Google",
   },
-  name: "Google",
-}];
+];
 
 let region = Services.prefs.getCharPref("browser.search.region");
 let code = "";
 switch (region) {
   case "US":
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     code = "firefox-b-1-d";
+||||||| merged common ancestors
+    code = "firefox-b-1";
+=======
+    if (AppConstants.MOZ_APP_VERSION_DISPLAY.endsWith("esr")) {
+      code = "firefox-b-1-e";
+    } else {
+      code = "firefox-b-1-d";
+    }
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     break;
   case "DE":
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     code = "firefox-b-d";
+||||||| merged common ancestors
+    code = "firefox-b";
+=======
+    if (AppConstants.MOZ_APP_VERSION_DISPLAY.endsWith("esr")) {
+      code = "firefox-b-e";
+    } else {
+      code = "firefox-b-d";
+    }
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     break;
 }
 
@@ -49,7 +71,9 @@ function promiseContentSearchReady(browser) {
         }
       }
 
-      content.addEventListener("ContentSearchService", function listener(aEvent) {
+      content.addEventListener("ContentSearchService", function listener(
+        aEvent
+      ) {
         if (aEvent.detail.type == "State") {
           content.removeEventListener("ContentSearchService", listener);
           resolve();
@@ -58,6 +82,10 @@ function promiseContentSearchReady(browser) {
     });
   });
 }
+
+add_task(async function setup() {
+  await Services.search.init();
+});
 
 for (let engine of searchEngineDetails) {
   add_task(async function() {
@@ -90,7 +118,12 @@ async function testSearchEngine(engineDetails) {
       run() {
         // Simulate a contextmenu search
         // FIXME: This is a bit "low-level"...
-        BrowserSearch._loadSearch("foo", false, "contextmenu", Services.scriptSecurityManager.getSystemPrincipal());
+        BrowserSearch._loadSearch(
+          "foo",
+          false,
+          "contextmenu",
+          Services.scriptSecurityManager.getSystemPrincipal()
+        );
       },
     },
     {

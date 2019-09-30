@@ -13,17 +13,31 @@ from distutils.spawn import find_executable
 
 from mozboot.util import get_state_dir
 from mozterm import Terminal
+<<<<<<< HEAD
 from six import string_types
+||||||| merged common ancestors
+from moztest.resolve import TestResolver, get_suite_definition
+from six import string_types
+=======
+>>>>>>> upstream-releases
 
-from .. import preset as pset
 from ..cli import BaseTryParser
+<<<<<<< HEAD
 from ..tasks import generate_tasks, filter_tasks_by_paths
 from ..push import check_working_directory, push_to_try, vcs
+||||||| merged common ancestors
+from ..tasks import generate_tasks
+from ..push import check_working_directory, push_to_try, vcs
+=======
+from ..tasks import generate_tasks, filter_tasks_by_paths
+from ..push import check_working_directory, push_to_try, generate_try_task_config
+>>>>>>> upstream-releases
 
 terminal = Terminal()
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+<<<<<<< HEAD
 # Some tasks show up in the target task set, but are either special cases
 # or uncommon enough that they should only be selectable with --full.
 TARGET_TASK_FILTERS = (
@@ -31,6 +45,18 @@ TARGET_TASK_FILTERS = (
 )
 
 
+||||||| merged common ancestors
+=======
+# Some tasks show up in the target task set, but are either special cases
+# or uncommon enough that they should only be selectable with --full.
+TARGET_TASK_FILTERS = (
+    '.*-ccov\/.*',
+    'windows10-aarch64/opt.*',
+    'android-hw.*'
+)
+
+
+>>>>>>> upstream-releases
 FZF_NOT_FOUND = """
 Could not find the `fzf` binary.
 
@@ -88,10 +114,31 @@ class FuzzyParser(BaseTryParser):
         [['-q', '--query'],
          {'metavar': 'STR',
           'action': 'append',
+          'default': [],
           'help': "Use the given query instead of entering the selection "
                   "interface. Equivalent to typing <query><ctrl-a><enter> "
                   "from the interface. Specifying multiple times schedules "
                   "the union of computed tasks.",
+          }],
+        [['-i', '--interactive'],
+         {'action': 'store_true',
+          'default': False,
+          'help': "Force running fzf interactively even when using presets or "
+                  "queries with -q/--query."
+          }],
+        [['-x', '--and'],
+         {'dest': 'intersection',
+          'action': 'store_true',
+          'default': False,
+          'help': "When specifying queries on the command line with -q/--query, "
+                  "use the intersection of tasks rather than the union. This is "
+                  "especially useful for post filtering presets.",
+          }],
+        [['-e', '--exact'],
+         {'action': 'store_true',
+          'default': False,
+          'help': "Enable exact match mode. Terms will use an exact match "
+                  "by default, and terms prefixed with ' will become fuzzy."
           }],
         [['-u', '--update'],
          {'action': 'store_true',
@@ -100,10 +147,18 @@ class FuzzyParser(BaseTryParser):
           }],
     ]
     common_groups = ['push', 'task', 'preset']
+<<<<<<< HEAD
     templates = ['artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'gecko-profile']
+||||||| merged common ancestors
+    templates = ['artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'talos-profile']
+=======
+    templates = [
+        'artifact', 'path', 'env', 'rebuild', 'chemspill-prio', 'gecko-profile', 'disable-pgo',
+    ]
+>>>>>>> upstream-releases
 
 
-def run(cmd, cwd=None):
+def run_cmd(cmd, cwd=None):
     is_win = platform.system() == 'Windows'
     return subprocess.call(cmd, cwd=cwd, shell=True if is_win else False)
 
@@ -114,7 +169,7 @@ def run_fzf_install_script(fzf_path):
     else:
         cmd = ['./install', '--bin']
 
-    if run(cmd, cwd=fzf_path):
+    if run_cmd(cmd, cwd=fzf_path):
         print(FZF_INSTALL_FAILED)
         sys.exit(1)
 
@@ -130,7 +185,7 @@ def fzf_bootstrap(update=False):
     if fzf_bin and not update:
         return fzf_bin
 
-    fzf_path = os.path.join(get_state_dir()[0], 'fzf')
+    fzf_path = os.path.join(get_state_dir(), 'fzf')
     if update and not os.path.isdir(fzf_path):
         print("fzf installed somewhere other than {}, please update manually".format(fzf_path))
         sys.exit(1)
@@ -139,7 +194,7 @@ def fzf_bootstrap(update=False):
         return find_executable('fzf', os.path.join(fzf_path, 'bin'))
 
     if update:
-        ret = run(['git', 'pull'], cwd=fzf_path)
+        ret = run_cmd(['git', 'pull'], cwd=fzf_path)
         if ret:
             print("Update fzf failed.")
             sys.exit(1)
@@ -194,6 +249,7 @@ def run_fzf(cmd, tasks):
     return query, selected
 
 
+<<<<<<< HEAD
 def filter_target_task(task):
     return not any(re.search(pattern, task) for pattern in TARGET_TASK_FILTERS)
 
@@ -203,7 +259,21 @@ def run_fuzzy_try(update=False, query=None, templates=None, full=False, paramete
                   paths=None, **kwargs):
     if mod_presets:
         return getattr(pset, mod_presets)(section='fuzzy')
+||||||| merged common ancestors
+def run_fuzzy_try(update=False, query=None, templates=None, full=False, parameters=None,
+                  save=False, preset=None, mod_presets=False, push=True, message='{msg}',
+                  paths=None, **kwargs):
+    if mod_presets:
+        return getattr(pset, mod_presets)(section='fuzzy')
+=======
+def filter_target_task(task):
+    return not any(re.search(pattern, task) for pattern in TARGET_TASK_FILTERS)
 
+>>>>>>> upstream-releases
+
+def run(update=False, query=None, intersect_query=None, try_config=None, full=False,
+        parameters=None, save_query=False, push=True, message='{msg}',
+        test_paths=None, exact=False, closed_tree=False):
     fzf = fzf_bootstrap(update)
 
     if not fzf:
@@ -211,14 +281,32 @@ def run_fuzzy_try(update=False, query=None, templates=None, full=False, paramete
         return 1
 
     check_working_directory(push)
+<<<<<<< HEAD
     tg = generate_tasks(parameters, full, root=vcs.path)
     all_tasks = sorted(tg.tasks.keys())
 
     if not full:
         all_tasks = filter(filter_target_task, all_tasks)
+||||||| merged common ancestors
+    all_tasks = generate_tasks(parameters, full, root=vcs.path)
+=======
+    tg = generate_tasks(parameters, full)
+    all_tasks = sorted(tg.tasks.keys())
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if paths:
         all_tasks = filter_tasks_by_paths(all_tasks, paths)
+||||||| merged common ancestors
+    if paths:
+        all_tasks = filter_by_paths(all_tasks, paths)
+=======
+    if not full:
+        all_tasks = filter(filter_target_task, all_tasks)
+
+    if test_paths:
+        all_tasks = filter_tasks_by_paths(all_tasks, test_paths)
+>>>>>>> upstream-releases
         if not all_tasks:
             return 1
 
@@ -234,43 +322,49 @@ def run_fuzzy_try(update=False, query=None, templates=None, full=False, paramete
         '--print-query',
     ]
 
-    query = query or []
-    if isinstance(query, string_types):
-        query = [query]
+    if exact:
+        base_cmd.append('--exact')
 
-    if preset:
-        query.append(pset.load(preset, section='fuzzy')[0])
-
-    commands = []
-    if query:
-        for q in query:
-            commands.append(base_cmd + ['-f', q])
-    else:
-        commands.append(base_cmd)
-
-    queries = []
     selected = set()
-    for command in commands:
-        query, tasks = run_fzf(command, all_tasks)
-        if tasks:
-            queries.append(query)
-            selected.update(tasks)
+    queries = []
+
+    def get_tasks(query_arg=None, candidate_tasks=all_tasks):
+        cmd = base_cmd[:]
+        if query_arg and query_arg != 'INTERACTIVE':
+            cmd.extend(['-f', query_arg])
+
+        query_str, tasks = run_fzf(cmd, sorted(candidate_tasks))
+        queries.append(query_str)
+        return set(tasks)
+
+    for q in query or []:
+        selected |= get_tasks(q)
+
+    for q in intersect_query or []:
+        if not selected:
+            tasks = get_tasks(q)
+            selected |= tasks
+        else:
+            tasks = get_tasks(q, selected)
+            selected &= tasks
+
+    if not queries:
+        selected = get_tasks()
 
     if not selected:
         print("no tasks selected")
         return
 
-    if save:
-        pset.save('fuzzy', save, queries[0])
+    if save_query:
+        return queries
 
     # build commit message
     msg = "Fuzzy"
-    args = []
-    if paths:
-        args.append("paths={}".format(':'.join(paths)))
-    if query:
-        args.extend(["query={}".format(q) for q in queries])
+    args = ["query={}".format(q) for q in queries]
+    if test_paths:
+        args.append("paths={}".format(':'.join(test_paths)))
     if args:
         msg = "{} {}".format(msg, '&'.join(args))
-    return push_to_try('fuzzy', message.format(msg=msg), selected, templates, push=push,
-                       closed_tree=kwargs["closed_tree"])
+    return push_to_try('fuzzy', message.format(msg=msg),
+                       try_task_config=generate_try_task_config('fuzzy', selected, try_config),
+                       push=push, closed_tree=closed_tree)

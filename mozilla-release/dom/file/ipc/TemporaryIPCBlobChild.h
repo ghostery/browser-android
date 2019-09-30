@@ -4,11 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef mozilla_dom_ipc_TemporaryIPCBlobChild_h
-#define mozilla_dom_ipc_TemporaryIPCBlobChild_h
+#ifndef mozilla_dom_TemporaryIPCBlobChild_h
+#define mozilla_dom_TemporaryIPCBlobChild_h
 
-#include "mozilla/ipc/PTemporaryIPCBlob.h"
-#include "mozilla/ipc/PTemporaryIPCBlobChild.h"
+#include "mozilla/dom/PTemporaryIPCBlob.h"
+#include "mozilla/dom/PTemporaryIPCBlobChild.h"
 
 namespace mozilla {
 namespace dom {
@@ -23,9 +23,20 @@ class TemporaryIPCBlobChildCallback {
   virtual void OperationFailed(nsresult aRv) = 0;
 };
 
+<<<<<<< HEAD
 class TemporaryIPCBlobChild final
     : public mozilla::ipc::PTemporaryIPCBlobChild {
  public:
+||||||| merged common ancestors
+class TemporaryIPCBlobChild final : public mozilla::ipc::PTemporaryIPCBlobChild
+{
+public:
+=======
+class TemporaryIPCBlobChild final : public PTemporaryIPCBlobChild {
+  friend class PTemporaryIPCBlobChild;
+
+ public:
+>>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(TemporaryIPCBlobChild)
 
   explicit TemporaryIPCBlobChild(MutableBlobStorage* aMutableBlobStorage);
@@ -36,7 +47,14 @@ class TemporaryIPCBlobChild final
  private:
   ~TemporaryIPCBlobChild();
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvFileDesc(const FileDescriptor& aFD) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvFileDesc(const FileDescriptor& aFD) override;
+=======
+  mozilla::ipc::IPCResult RecvFileDesc(const FileDescriptor& aFD);
+>>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult Recv__delete__(
       const IPCBlobOrError& aBlobOrError) override;
@@ -51,4 +69,10 @@ class TemporaryIPCBlobChild final
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 #endif  // mozilla_dom_ipc_TemporaryIPCBlobChild_h
+||||||| merged common ancestors
+#endif // mozilla_dom_ipc_TemporaryIPCBlobChild_h
+=======
+#endif  // mozilla_dom_TemporaryIPCBlobChild_h
+>>>>>>> upstream-releases

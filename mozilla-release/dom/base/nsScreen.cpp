@@ -6,9 +6,9 @@
 
 #include "nsContentUtils.h"
 #include "nsScreen.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDocShell.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsPresContext.h"
 #include "nsCOMPtr.h"
 #include "nsIDocShellTreeItem.h"
@@ -19,8 +19,17 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<nsScreen> nsScreen::Create(
     nsPIDOMWindowInner* aWindow) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<nsScreen>
+nsScreen::Create(nsPIDOMWindowInner* aWindow)
+{
+=======
+/* static */
+already_AddRefed<nsScreen> nsScreen::Create(nsPIDOMWindowInner* aWindow) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
 
   if (!aWindow->GetDocShell()) {
@@ -113,7 +122,19 @@ nsresult nsScreen::GetAvailRect(nsRect& aRect) {
     return GetWindowInnerRect(aRect);
   }
 
+<<<<<<< HEAD
   nsDeviceContext* context = GetDeviceContext();
+||||||| merged common ancestors
+  nsDeviceContext *context = GetDeviceContext();
+=======
+  // Here we manipulate the value of aRect to represent the screen avail size,
+  // if in RDM.
+  if (IsInRDMPane()) {
+    return GetRDMScreenSize(aRect);
+  }
+
+  nsDeviceContext* context = GetDeviceContext();
+>>>>>>> upstream-releases
 
   if (!context) {
     return NS_ERROR_FAILURE;
@@ -139,7 +160,38 @@ nsresult nsScreen::GetAvailRect(nsRect& aRect) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 mozilla::dom::ScreenOrientation* nsScreen::Orientation() const {
+||||||| merged common ancestors
+mozilla::dom::ScreenOrientation*
+nsScreen::Orientation() const
+{
+=======
+nsresult nsScreen::GetRDMScreenSize(nsRect& aRect) {
+  GetWindowInnerRect(aRect);
+
+  // GetOwner(), GetDocShell(), and GetPresContext() can potentially return
+  // nullptr, so to be safe let's make sure we check these before proceeding.
+  nsCOMPtr<nsPIDOMWindowInner> owner = GetOwner();
+  if (owner) {
+    nsIDocShell* docShell = owner->GetDocShell();
+    if (docShell) {
+      RefPtr<nsPresContext> presContext = docShell->GetPresContext();
+      if (presContext) {
+        float zoom = presContext->GetDeviceFullZoom();
+        int32_t width = std::round(aRect.Width() * zoom);
+        int32_t height = std::round(aRect.Height() * zoom);
+        aRect.SetHeight(height);
+        aRect.SetWidth(width);
+        return NS_OK;
+      }
+    }
+  }
+  return NS_ERROR_FAILURE;
+}
+
+mozilla::dom::ScreenOrientation* nsScreen::Orientation() const {
+>>>>>>> upstream-releases
   return mScreenOrientation;
 }
 
@@ -287,4 +339,16 @@ bool nsScreen::ShouldResistFingerprinting() const {
     resist = nsContentUtils::ShouldResistFingerprinting(owner->GetDocShell());
   }
   return resist;
+}
+
+bool nsScreen::IsInRDMPane() const {
+  bool isInRDM = false;
+  nsCOMPtr<nsPIDOMWindowInner> owner = GetOwner();
+
+  if (owner) {
+    Document* doc = owner->GetExtantDoc();
+    isInRDM = doc && doc->InRDMPane();
+  }
+
+  return isInRDM;
 }

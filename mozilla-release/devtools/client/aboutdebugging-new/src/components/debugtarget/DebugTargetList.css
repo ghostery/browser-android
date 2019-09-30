@@ -3,10 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 .debug-target-list {
+<<<<<<< HEAD
   margin-inline-start: calc(var(--base-distance) * 6);
   overflow: hidden;
 }
 
 .debug-target-list--collapsed {
   max-height: 0;
+||||||| merged common ancestors
+  margin-inline-start: 60px;
+  overflow: hidden;
+}
+
+.debug-target-list--collapsed {
+  max-height: 0;
+=======
+  margin-block-start: calc(var(--base-unit) * 4);
+>>>>>>> upstream-releases
 }

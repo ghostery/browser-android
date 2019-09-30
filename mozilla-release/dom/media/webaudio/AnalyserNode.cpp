@@ -86,6 +86,7 @@ class AnalyserNodeEngine final : public AudioNodeEngine {
   uint32_t mChunksToProcess = 0;
 };
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<AnalyserNode> AnalyserNode::Create(
     AudioContext& aAudioContext, const AnalyserOptions& aOptions,
     ErrorResult& aRv) {
@@ -93,6 +94,22 @@ class AnalyserNodeEngine final : public AudioNodeEngine {
     return nullptr;
   }
 
+||||||| merged common ancestors
+/* static */ already_AddRefed<AnalyserNode>
+AnalyserNode::Create(AudioContext& aAudioContext,
+                     const AnalyserOptions& aOptions,
+                     ErrorResult& aRv)
+{
+  if (aAudioContext.CheckClosed(aRv)) {
+    return nullptr;
+  }
+
+=======
+/* static */
+already_AddRefed<AnalyserNode> AnalyserNode::Create(
+    AudioContext& aAudioContext, const AnalyserOptions& aOptions,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<AnalyserNode> analyserNode = new AnalyserNode(&aAudioContext);
 
   analyserNode->Initialize(aOptions, aRv);

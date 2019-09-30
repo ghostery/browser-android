@@ -9,7 +9,6 @@
 #include <algorithm>
 
 #include "nsThreadUtils.h"
-#include "ipc/IPCMessageUtils.h"
 
 namespace mozilla {
 
@@ -71,6 +70,7 @@ WebBrowserPersistSerializeChild::Flush() {
 
 NS_IMETHODIMP
 WebBrowserPersistSerializeChild::Write(const char* aBuf, uint32_t aCount,
+<<<<<<< HEAD
                                        uint32_t* aWritten) {
   // Normally an nsIOutputStream would have to be thread-safe, but
   // nsDocumentEncoder currently doesn't call this off the main
@@ -99,6 +99,70 @@ WebBrowserPersistSerializeChild::Write(const char* aBuf, uint32_t aCount,
     count -= toWrite;
   }
   return NS_OK;
+||||||| merged common ancestors
+                                       uint32_t* aWritten)
+{
+    // Normally an nsIOutputStream would have to be thread-safe, but
+    // nsDocumentEncoder currently doesn't call this off the main
+    // thread (which also means it's difficult to test the
+    // thread-safety code this class doesn't yet have).
+    //
+    // This is *not* an NS_ERROR_NOT_IMPLEMENTED, because at this
+    // point we've probably already misused the non-thread-safe
+    // refcounting.
+    MOZ_RELEASE_ASSERT(NS_IsMainThread(), "Fix this class to be thread-safe.");
+
+    // Work around bug 1181433 by sending multiple messages if
+    // necessary to write the entire aCount bytes, even though
+    // nsIOutputStream.idl says we're allowed to do a short write.
+    const char* buf = aBuf;
+    uint32_t count = aCount;
+    *aWritten = 0;
+    while (count > 0) {
+        uint32_t toWrite = std::min(IPC::MAX_MESSAGE_SIZE, count);
+        nsTArray<uint8_t> arrayBuf;
+        // It would be nice if this extra copy could be avoided.
+        arrayBuf.AppendElements(buf, toWrite);
+        SendWriteData(std::move(arrayBuf));
+        *aWritten += toWrite;
+        buf += toWrite;
+        count -= toWrite;
+    }
+    return NS_OK;
+=======
+                                       uint32_t* aWritten) {
+  // Normally an nsIOutputStream would have to be thread-safe, but
+  // nsDocumentEncoder currently doesn't call this off the main
+  // thread (which also means it's difficult to test the
+  // thread-safety code this class doesn't yet have).
+  //
+  // This is *not* an NS_ERROR_NOT_IMPLEMENTED, because at this
+  // point we've probably already misused the non-thread-safe
+  // refcounting.
+  MOZ_RELEASE_ASSERT(NS_IsMainThread(), "Fix this class to be thread-safe.");
+
+  // Limit the message size to 64k because large messages are
+  // potentially bad for the latency of other messages on the same channel.
+  static const uint32_t kMaxWrite = 65536;
+
+  // Work around bug 1181433 by sending multiple messages if
+  // necessary to write the entire aCount bytes, even though
+  // nsIOutputStream.idl says we're allowed to do a short write.
+  const char* buf = aBuf;
+  uint32_t count = aCount;
+  *aWritten = 0;
+  while (count > 0) {
+    uint32_t toWrite = std::min(kMaxWrite, count);
+    nsTArray<uint8_t> arrayBuf;
+    // It would be nice if this extra copy could be avoided.
+    arrayBuf.AppendElements(buf, toWrite);
+    SendWriteData(std::move(arrayBuf));
+    *aWritten += toWrite;
+    buf += toWrite;
+    count -= toWrite;
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

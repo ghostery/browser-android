@@ -12,12 +12,12 @@
 
 #if MOZ_STRING_WITH_OBSOLETE_API
 
-#include "nsDependentString.h"
-#include "nsDependentSubstring.h"
-#include "nsReadableUtils.h"
-#include "nsCRT.h"
-#include "nsUTF8Utils.h"
-#include "prdtoa.h"
+#  include "nsDependentString.h"
+#  include "nsDependentSubstring.h"
+#  include "nsReadableUtils.h"
+#  include "nsCRT.h"
+#  include "nsUTF8Utils.h"
+#  include "prdtoa.h"
 
 /* ***** BEGIN RICKG BLOCK *****
  *
@@ -62,6 +62,7 @@ static int32_t FindChar1(const char* aDest, uint32_t aDestLength,
     // We'll only search if the given aChar is within the normal ascii a range,
     //(Since this string is definitely within the ascii range).
 
+<<<<<<< HEAD
     if (0 < aCount) {
       const char* left = aDest + anOffset;
       const char* last = left + aCount;
@@ -72,6 +73,34 @@ static int32_t FindChar1(const char* aDest, uint32_t aDestLength,
       if (0 < theMax) {
         unsigned char theChar = (unsigned char)aChar;
         const char* result = (const char*)memchr(left, (int)theChar, theMax);
+||||||| merged common ancestors
+    if(0<aCount) {
+
+      const char* left= aDest+anOffset;
+      const char* last= left+aCount;
+      const char* max = aDest+aDestLength;
+      const char* end = (last<max) ? last : max;
+
+      int32_t theMax = end-left;
+      if(0<theMax) {
+
+        unsigned char theChar = (unsigned char) aChar;
+        const char* result=(const char*)memchr(left, (int)theChar, theMax);
+
+        if(result)
+          return result-aDest;
+=======
+    if (0 < aCount) {
+      const char* left = aDest + anOffset;
+      const char* last = left + aCount;
+      const char* max = aDest + aDestLength;
+      const char* end = (last < max) ? last : max;
+
+      int32_t theMax = end - left;
+      if (0 < theMax) {
+        unsigned char theChar = (unsigned char)aChar;
+        const char* result = (const char*)memchr(left, (int)theChar, theMax);
+>>>>>>> upstream-releases
 
         if (result) return result - aDest;
       }
@@ -93,12 +122,34 @@ static int32_t FindChar1(const char* aDest, uint32_t aDestLength,
  * be different than aLength); -1 means use full length.
  *  @return  index of pos if found, else -1 (kNotFound)
  */
+<<<<<<< HEAD
 static int32_t FindChar2(const char16_t* aDest, uint32_t aDestLength,
                          int32_t anOffset, const char16_t aChar,
                          int32_t aCount) {
   if (anOffset < 0) anOffset = 0;
 
   if (aCount < 0) aCount = (int32_t)aDestLength;
+||||||| merged common ancestors
+static int32_t
+FindChar2(const char16_t* aDest,uint32_t aDestLength,int32_t anOffset,const char16_t aChar,int32_t aCount) {
+
+  if(anOffset < 0)
+    anOffset=0;
+
+  if(aCount < 0)
+    aCount = (int32_t)aDestLength;
+
+  if((0<aDestLength) && ((uint32_t)anOffset < aDestLength)) {
+
+    if(0<aCount) {
+=======
+static int32_t FindChar2(const char16_t* aDest, uint32_t aDestLength,
+                         int32_t anOffset, const char16_t aChar,
+                         int32_t aCount) {
+  if (anOffset < 0) anOffset = 0;
+
+  if (aCount < 0) aCount = (int32_t)aDestLength;
+>>>>>>> upstream-releases
 
   if ((0 < aDestLength) && ((uint32_t)anOffset < aDestLength)) {
     if (0 < aCount) {
@@ -132,16 +183,44 @@ static int32_t FindChar2(const char16_t* aDest, uint32_t aDestLength,
  *  @return  index of pos if found, else -1 (kNotFound)
  */
 
+<<<<<<< HEAD
 static int32_t RFindChar1(const char* aDest, uint32_t aDestLength,
                           int32_t anOffset, const char16_t aChar,
                           int32_t aCount) {
   if (anOffset < 0) anOffset = (int32_t)aDestLength - 1;
 
   if (aCount < 0) aCount = int32_t(aDestLength);
+||||||| merged common ancestors
+static int32_t
+RFindChar1(const char* aDest,uint32_t aDestLength,int32_t anOffset,const char16_t aChar,int32_t aCount) {
+
+  if(anOffset < 0)
+    anOffset=(int32_t)aDestLength-1;
+=======
+static int32_t RFindChar1(const char* aDest, uint32_t aDestLength,
+                          int32_t anOffset, const char16_t aChar,
+                          int32_t aCount) {
+  if (anOffset < 0) anOffset = (int32_t)aDestLength - 1;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if ((aChar < 256) && (0 < aDestLength) &&
+      ((uint32_t)anOffset < aDestLength)) {
+    // We'll only search if the given aChar is within the normal ascii a range,
+||||||| merged common ancestors
+  if(aCount < 0)
+    aCount = int32_t(aDestLength);
+
+  if((aChar<256) && (0 < aDestLength) && ((uint32_t)anOffset < aDestLength)) {
+
+    //We'll only search if the given aChar is within the normal ascii a range,
+=======
+  if (aCount < 0) aCount = int32_t(aDestLength);
 
   if ((aChar < 256) && (0 < aDestLength) &&
       ((uint32_t)anOffset < aDestLength)) {
     // We'll only search if the given aChar is within the normal ascii a range,
+>>>>>>> upstream-releases
     //(Since this string is definitely within the ascii range).
 
     if (0 < aCount) {
@@ -173,16 +252,46 @@ static int32_t RFindChar1(const char* aDest, uint32_t aDestLength,
  * be different than aLength); -1 means use full length.
  *  @return  index of pos if found, else -1 (kNotFound)
  */
+<<<<<<< HEAD
 static int32_t RFindChar2(const char16_t* aDest, uint32_t aDestLength,
                           int32_t anOffset, const char16_t aChar,
                           int32_t aCount) {
   if (anOffset < 0) anOffset = (int32_t)aDestLength - 1;
 
   if (aCount < 0) aCount = int32_t(aDestLength);
+||||||| merged common ancestors
+static int32_t
+RFindChar2(const char16_t* aDest,uint32_t aDestLength,int32_t anOffset,const char16_t aChar,int32_t aCount) {
+
+  if(anOffset < 0)
+    anOffset=(int32_t)aDestLength-1;
+
+  if(aCount < 0)
+    aCount = int32_t(aDestLength);
+=======
+static int32_t RFindChar2(const char16_t* aDest, uint32_t aDestLength,
+                          int32_t anOffset, const char16_t aChar,
+                          int32_t aCount) {
+  if (anOffset < 0) anOffset = (int32_t)aDestLength - 1;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if ((0 < aDestLength) && ((uint32_t)anOffset < aDestLength)) {
+    if (0 < aCount) {
+      const char16_t* root = aDest;
+||||||| merged common ancestors
+  if((0 < aDestLength) && ((uint32_t)anOffset < aDestLength)) {
+
+    if(0 < aCount) {
+
+      const char16_t* root      = aDest;
+=======
+  if (aCount < 0) aCount = int32_t(aDestLength);
 
   if ((0 < aDestLength) && ((uint32_t)anOffset < aDestLength)) {
     if (0 < aCount) {
       const char16_t* root = aDest;
+>>>>>>> upstream-releases
       const char16_t* rightmost = root + anOffset;
       const char16_t* min = rightmost - aCount + 1;
       const char16_t* leftmost = (min < root) ? root : min;
@@ -217,6 +326,7 @@ static int32_t RFindChar2(const char16_t* aDest, uint32_t aDestLength,
  * @return  -1,0,1 depending on <,==,>
  */
 static
+<<<<<<< HEAD
 #ifdef __SUNPRO_CC
     inline
 #endif /* __SUNPRO_CC */
@@ -226,6 +336,26 @@ static
   int32_t result = 0;
   if (aIgnoreCase)
     result = int32_t(PL_strncasecmp(aStr1, aStr2, aCount));
+||||||| merged common ancestors
+#ifdef __SUNPRO_CC
+inline
+#endif /* __SUNPRO_CC */
+int32_t
+Compare1To1(const char* aStr1,const char* aStr2,uint32_t aCount,bool aIgnoreCase) {
+  int32_t result=0;
+  if(aIgnoreCase)
+    result=int32_t(PL_strncasecmp(aStr1, aStr2, aCount));
+=======
+#  ifdef __SUNPRO_CC
+    inline
+#  endif /* __SUNPRO_CC */
+    int32_t
+    Compare1To1(const char* aStr1, const char* aStr2, uint32_t aCount,
+                bool aIgnoreCase) {
+  int32_t result = 0;
+  if (aIgnoreCase)
+    result = int32_t(PL_strncasecmp(aStr1, aStr2, aCount));
+>>>>>>> upstream-releases
   else
     result = nsCharTraits<char>::compare(aStr1, aStr2, aCount);
 
@@ -248,11 +378,25 @@ static
  * @return  -1,0,1 depending on <,==,>
  */
 static
+<<<<<<< HEAD
 #ifdef __SUNPRO_CC
     inline
 #endif /* __SUNPRO_CC */
     int32_t
     Compare2To2(const char16_t* aStr1, const char16_t* aStr2, uint32_t aCount) {
+||||||| merged common ancestors
+#ifdef __SUNPRO_CC
+inline
+#endif /* __SUNPRO_CC */
+int32_t
+Compare2To2(const char16_t* aStr1,const char16_t* aStr2,uint32_t aCount){
+=======
+#  ifdef __SUNPRO_CC
+    inline
+#  endif /* __SUNPRO_CC */
+    int32_t
+    Compare2To2(const char16_t* aStr1, const char16_t* aStr2, uint32_t aCount) {
+>>>>>>> upstream-releases
   int32_t result;
 
   if (aStr1 && aStr2)
@@ -287,12 +431,27 @@ static
  * @return  -1,0,1 depending on <,==,>
  */
 static
+<<<<<<< HEAD
 #ifdef __SUNPRO_CC
     inline
 #endif /* __SUNPRO_CC */
     int32_t
     Compare2To1(const char16_t* aStr1, const char* aStr2, uint32_t aCount,
                 bool aIgnoreCase) {
+||||||| merged common ancestors
+#ifdef __SUNPRO_CC
+inline
+#endif /* __SUNPRO_CC */
+int32_t
+Compare2To1(const char16_t* aStr1,const char* aStr2,uint32_t aCount,bool aIgnoreCase){
+=======
+#  ifdef __SUNPRO_CC
+    inline
+#  endif /* __SUNPRO_CC */
+    int32_t
+    Compare2To1(const char16_t* aStr1, const char* aStr2, uint32_t aCount,
+                bool aIgnoreCase) {
+>>>>>>> upstream-releases
   const char16_t* s1 = aStr1;
   const char* s2 = aStr2;
 
@@ -303,16 +462,28 @@ static
         char16_t c2 = char16_t((unsigned char)*s2++);
 
         if (c1 != c2) {
-#ifdef DEBUG
+#  ifdef DEBUG
           // we won't warn on c1>=128 (the 2-byte value) because often
           // it is just fine to compare an constant, ascii value (i.e. "body")
           // against some non-ascii value (i.e. a unicode string that
           // was downloaded from a web page)
+<<<<<<< HEAD
           if (aIgnoreCase && c2 >= 128)
             NS_WARNING(
                 "got a non-ASCII string, but we can't do an accurate case "
                 "conversion!");
 #endif
+||||||| merged common ancestors
+          if (aIgnoreCase && c2>=128)
+            NS_WARNING("got a non-ASCII string, but we can't do an accurate case conversion!");
+#endif
+=======
+          if (aIgnoreCase && c2 >= 128)
+            NS_WARNING(
+                "got a non-ASCII string, but we can't do an accurate case "
+                "conversion!");
+#  endif
+>>>>>>> upstream-releases
 
           // can't do case conversion on characters out of our range
           if (aIgnoreCase && c1 < 128 && c2 < 128) {
@@ -363,6 +534,7 @@ inline int32_t Compare1To2(const char* aStr1, const char16_t* aStr2,
  *          of the buffer
  * @return  the new length of the given buffer
  */
+<<<<<<< HEAD
 static int32_t CompressChars1(char* aString, uint32_t aLength,
                               const char* aSet) {
   char* from = aString;
@@ -373,6 +545,30 @@ static int32_t CompressChars1(char* aString, uint32_t aLength,
   // it also compresses runs of whitespace down to a single char...
   if (aSet && aString && (0 < aLength)) {
     uint32_t aSetLen = strlen(aSet);
+||||||| merged common ancestors
+static int32_t
+CompressChars1(char* aString,uint32_t aLength,const char* aSet){
+
+  char*  from = aString;
+  char*  end =  aString + aLength;
+  char*  to = from;
+
+  //this code converts /n, /t, /r into normal space ' ';
+  //it also compresses runs of whitespace down to a single char...
+  if(aSet && aString && (0 < aLength)){
+    uint32_t aSetLen=strlen(aSet);
+=======
+static int32_t CompressChars1(char* aString, uint32_t aLength,
+                              const char* aSet) {
+  char* from = aString;
+  char* end = aString + aLength;
+  char* to = from;
+
+  // this code converts /n, /t, /r into normal space ' ';
+  // it also compresses runs of whitespace down to a single char...
+  if (aSet && aString && (0 < aLength)) {
+    uint32_t aSetLen = strlen(aSet);
+>>>>>>> upstream-releases
 
     while (from < end) {
       char theChar = *from++;
@@ -514,12 +710,25 @@ static int32_t StripChars2(char16_t* aString, uint32_t aLength,
 
 // This function is used to implement FindCharInSet and friends
 template <class CharT>
-#ifndef __SUNPRO_CC
+#  ifndef __SUNPRO_CC
 static
+<<<<<<< HEAD
 #endif /* !__SUNPRO_CC */
     CharT
     GetFindInSetFilter(const CharT* set) {
   CharT filter = ~CharT(0);  // All bits set
+||||||| merged common ancestors
+#endif /* !__SUNPRO_CC */
+CharT
+GetFindInSetFilter( const CharT* set)
+{
+  CharT filter = ~CharT(0); // All bits set
+=======
+#  endif /* !__SUNPRO_CC */
+    CharT
+    GetFindInSetFilter(const CharT* set) {
+  CharT filter = ~CharT(0);  // All bits set
+>>>>>>> upstream-releases
   while (*set) {
     filter &= ~(*set);
     ++set;
@@ -608,13 +817,30 @@ struct nsBufferRoutines<char16_t> {
 //-----------------------------------------------------------------------------
 
 template <class L, class R>
-#ifndef __SUNPRO_CC
+#  ifndef __SUNPRO_CC
 static
+<<<<<<< HEAD
 #endif /* !__SUNPRO_CC */
     int32_t
     FindSubstring(const L* big, uint32_t bigLen, const R* little,
                   uint32_t littleLen, bool ignoreCase) {
   if (littleLen > bigLen) return kNotFound;
+||||||| merged common ancestors
+#endif /* !__SUNPRO_CC */
+int32_t
+FindSubstring( const L* big, uint32_t bigLen,
+               const R* little, uint32_t littleLen,
+               bool ignoreCase )
+{
+  if (littleLen > bigLen)
+    return kNotFound;
+=======
+#  endif /* !__SUNPRO_CC */
+    int32_t
+    FindSubstring(const L* big, uint32_t bigLen, const R* little,
+                  uint32_t littleLen, bool ignoreCase) {
+  if (littleLen > bigLen) return kNotFound;
+>>>>>>> upstream-releases
 
   int32_t i, max = int32_t(bigLen - littleLen);
   for (i = 0; i <= max; ++i, ++big) {
@@ -626,13 +852,30 @@ static
 }
 
 template <class L, class R>
-#ifndef __SUNPRO_CC
+#  ifndef __SUNPRO_CC
 static
+<<<<<<< HEAD
 #endif /* !__SUNPRO_CC */
     int32_t
     RFindSubstring(const L* big, uint32_t bigLen, const R* little,
                    uint32_t littleLen, bool ignoreCase) {
   if (littleLen > bigLen) return kNotFound;
+||||||| merged common ancestors
+#endif /* !__SUNPRO_CC */
+int32_t
+RFindSubstring( const L* big, uint32_t bigLen,
+                const R* little, uint32_t littleLen,
+                bool ignoreCase )
+{
+  if (littleLen > bigLen)
+    return kNotFound;
+=======
+#  endif /* !__SUNPRO_CC */
+    int32_t
+    RFindSubstring(const L* big, uint32_t bigLen, const R* little,
+                   uint32_t littleLen, bool ignoreCase) {
+  if (littleLen > bigLen) return kNotFound;
+>>>>>>> upstream-releases
 
   int32_t i, max = int32_t(bigLen - littleLen);
 
@@ -646,11 +889,22 @@ static
 }
 
 template <class CharT, class SetCharT>
-#ifndef __SUNPRO_CC
+#  ifndef __SUNPRO_CC
 static
+<<<<<<< HEAD
 #endif /* !__SUNPRO_CC */
     int32_t
     FindCharInSet(const CharT* data, uint32_t dataLen, const SetCharT* set) {
+||||||| merged common ancestors
+#endif /* !__SUNPRO_CC */
+int32_t
+FindCharInSet( const CharT* data, uint32_t dataLen, const SetCharT* set )
+{
+=======
+#  endif /* !__SUNPRO_CC */
+    int32_t
+    FindCharInSet(const CharT* data, uint32_t dataLen, const SetCharT* set) {
+>>>>>>> upstream-releases
   CharT filter = nsBufferRoutines<CharT>::get_find_in_set_filter(set);
 
   const CharT* end = data + dataLen;
@@ -673,11 +927,22 @@ static
 }
 
 template <class CharT, class SetCharT>
-#ifndef __SUNPRO_CC
+#  ifndef __SUNPRO_CC
 static
+<<<<<<< HEAD
 #endif /* !__SUNPRO_CC */
     int32_t
     RFindCharInSet(const CharT* data, uint32_t dataLen, const SetCharT* set) {
+||||||| merged common ancestors
+#endif /* !__SUNPRO_CC */
+int32_t
+RFindCharInSet( const CharT* data, uint32_t dataLen, const SetCharT* set )
+{
+=======
+#  endif /* !__SUNPRO_CC */
+    int32_t
+    RFindCharInSet(const CharT* data, uint32_t dataLen, const SetCharT* set) {
+>>>>>>> upstream-releases
   CharT filter = nsBufferRoutines<CharT>::get_find_in_set_filter(set);
 
   for (const CharT* iter = data + dataLen - 1; iter >= data; --iter) {
@@ -769,7 +1034,7 @@ static void RFind_ComputeSearchRange(uint32_t bigLen, uint32_t littleLen,
 
 //-----------------------------------------------------------------------------
 
-#include "nsTStringObsolete.cpp"
+#  include "nsTStringObsolete.cpp"
 
 //-----------------------------------------------------------------------------
 
@@ -918,18 +1183,52 @@ bool nsTString<T>::EqualsIgnoreCase(const incompatible_char_type* aString,
  */
 
 template <>
+<<<<<<< HEAD
 double nsTString<char>::ToDouble(nsresult* aErrorCode) const {
+||||||| merged common ancestors
+double
+nsTString<char>::ToDouble(nsresult* aErrorCode) const
+{
+=======
+double nsTString<char>::ToDouble(TrailingCharsPolicy aTrailingCharsPolicy,
+                                 nsresult* aErrorCode) const {
+>>>>>>> upstream-releases
   double res = 0.0;
   if (this->mLength > 0) {
     char* conv_stopped;
     const char* str = this->mData;
     // Use PR_strtod, not strtod, since we don't want locale involved.
     res = PR_strtod(str, &conv_stopped);
+<<<<<<< HEAD
     if (conv_stopped == str + this->mLength)
+||||||| merged common ancestors
+    if (conv_stopped == str+this->mLength)
+=======
+    if (aTrailingCharsPolicy == TrailingCharsPolicy::Allow &&
+        conv_stopped != str) {
+>>>>>>> upstream-releases
       *aErrorCode = NS_OK;
+<<<<<<< HEAD
     else  // Not all the string was scanned
+||||||| merged common ancestors
+    else // Not all the string was scanned
+=======
+    } else if (aTrailingCharsPolicy == TrailingCharsPolicy::Disallow &&
+               conv_stopped == str + this->mLength) {
+      *aErrorCode = NS_OK;
+    } else {
+>>>>>>> upstream-releases
       *aErrorCode = NS_ERROR_ILLEGAL_VALUE;
+<<<<<<< HEAD
   } else {
+||||||| merged common ancestors
+  }
+  else
+  {
+=======
+    }
+  } else {
+>>>>>>> upstream-releases
     // The string was too short (0 characters)
     *aErrorCode = NS_ERROR_ILLEGAL_VALUE;
   }
@@ -937,13 +1236,43 @@ double nsTString<char>::ToDouble(nsresult* aErrorCode) const {
 }
 
 template <>
+<<<<<<< HEAD
 double nsTString<char16_t>::ToDouble(nsresult* aErrorCode) const {
+||||||| merged common ancestors
+double
+nsTString<char16_t>::ToDouble(nsresult* aErrorCode) const
+{
+=======
+double nsTString<char>::ToDouble(nsresult* aErrorCode) const {
+  return ToDouble(TrailingCharsPolicy::Disallow, aErrorCode);
+}
+
+template <>
+double nsTString<char16_t>::ToDouble(nsresult* aErrorCode) const {
+>>>>>>> upstream-releases
   return NS_LossyConvertUTF16toASCII(*this).ToDouble(aErrorCode);
 }
 
 template <typename T>
 float nsTString<T>::ToFloat(nsresult* aErrorCode) const {
   return (float)ToDouble(aErrorCode);
+}
+
+template <>
+double nsTString<char>::ToDoubleAllowTrailingChars(nsresult* aErrorCode) const {
+  return ToDouble(TrailingCharsPolicy::Allow, aErrorCode);
+}
+
+template <>
+double nsTString<char16_t>::ToDoubleAllowTrailingChars(
+    nsresult* aErrorCode) const {
+  return NS_LossyConvertUTF16toASCII(*this).ToDoubleAllowTrailingChars(
+      aErrorCode);
+}
+
+template <typename T>
+float nsTString<T>::ToFloatAllowTrailingChars(nsresult* aErrorCode) const {
+  return (float)ToDoubleAllowTrailingChars(aErrorCode);
 }
 
 template class nsTString<char>;

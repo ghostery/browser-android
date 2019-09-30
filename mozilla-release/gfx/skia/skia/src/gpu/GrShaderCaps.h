@@ -73,8 +73,16 @@ public:
 
     bool noperspectiveInterpolationSupport() const { return fNoPerspectiveInterpolationSupport; }
 
+    bool sampleVariablesSupport() const { return fSampleVariablesSupport; }
+
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
+||||||| merged common ancestors
+    bool texelFetchSupport() const { return fTexelFetchSupport; }
+
+=======
     bool externalTextureSupport() const { return fExternalTextureSupport; }
 
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
     bool vertexIDSupport() const { return fVertexIDSupport; }
 
     // frexp, ldexp, etc.
@@ -84,8 +92,17 @@ public:
 
     bool halfIs32Bits() const { return fHalfIs32Bits; }
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
     bool unsignedSupport() const { return fUnsignedSupport; }
 
+||||||| merged common ancestors
+=======
+    bool unsignedSupport() const { return fUnsignedSupport; }
+
+    // SkSL only.
+    bool builtinFMASupport() const { return fBuiltinFMASupport; }
+
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
     AdvBlendEqInteraction advBlendEqInteraction() const { return fAdvBlendEqInteraction; }
 
     bool mustEnableAdvBlendEqs() const {
@@ -204,6 +221,11 @@ public:
         return fNoPerspectiveInterpolationExtensionString;
     }
 
+    const char* sampleVariablesExtensionString() const {
+        SkASSERT(this->sampleVariablesSupport());
+        return fSampleVariablesExtensionString;
+    }
+
     const char* imageLoadStoreExtensionString() const {
         SkASSERT(this->imageLoadStoreSupport());
         return fImageLoadStoreExtensionString;
@@ -247,12 +269,31 @@ private:
     bool fFlatInterpolationSupport          : 1;
     bool fPreferFlatInterpolation           : 1;
     bool fNoPerspectiveInterpolationSupport : 1;
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
     bool fExternalTextureSupport            : 1;
     bool fVertexIDSupport                   : 1;
     bool fFPManipulationSupport             : 1;
     bool fFloatIs32Bits                     : 1;
     bool fHalfIs32Bits                      : 1;
     bool fUnsignedSupport                   : 1;
+||||||| merged common ancestors
+    bool fExternalTextureSupport : 1;
+    bool fTexelFetchSupport : 1;
+    bool fVertexIDSupport : 1;
+    bool fFloatIs32Bits : 1;
+    bool fHalfIs32Bits : 1;
+=======
+    bool fSampleVariablesSupport            : 1;
+    bool fExternalTextureSupport            : 1;
+    bool fVertexIDSupport                   : 1;
+    bool fFPManipulationSupport             : 1;
+    bool fFloatIs32Bits                     : 1;
+    bool fHalfIs32Bits                      : 1;
+    bool fUnsignedSupport                   : 1;
+
+    // Used by SkSL to know when to generate polyfills.
+    bool fBuiltinFMASupport : 1;
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
 
     // Used for specific driver bug work arounds
     bool fCanUseAnyFunctionInShader                   : 1;
@@ -282,14 +323,22 @@ private:
     const char* fExternalTextureExtensionString;
     const char* fSecondExternalTextureExtensionString;
     const char* fNoPerspectiveInterpolationExtensionString;
+    const char* fSampleVariablesExtensionString;
     const char* fImageLoadStoreExtensionString;
 
     const char* fFBFetchColorName;
     const char* fFBFetchExtensionString;
 
     int fMaxFragmentSamplers;
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
 
     size_t fDisableImageMultitexturingDstRectAreaThreshold;
+||||||| merged common ancestors
+    int fMaxCombinedSamplers;
+
+    size_t fDisableImageMultitexturingDstRectAreaThreshold;
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrShaderCaps.h
 
     AdvBlendEqInteraction fAdvBlendEqInteraction;
 

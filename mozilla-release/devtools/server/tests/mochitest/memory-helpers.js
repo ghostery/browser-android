@@ -2,17 +2,22 @@
    waitForTime, waitUntil */
 "use strict";
 
-const { require } = ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
+const { require } = ChromeUtils.import("resource://devtools/shared/Loader.jsm");
 const Services = require("Services");
 const { TargetFactory } = require("devtools/client/framework/target");
 
 // Always log packets when running tests.
 Services.prefs.setBoolPref("devtools.debugger.log", true);
-var gReduceTimePrecision = Services.prefs.getBoolPref("privacy.reduceTimerPrecision");
+var gReduceTimePrecision = Services.prefs.getBoolPref(
+  "privacy.reduceTimerPrecision"
+);
 Services.prefs.setBoolPref("privacy.reduceTimerPrecision", false);
 SimpleTest.registerCleanupFunction(function() {
   Services.prefs.clearUserPref("devtools.debugger.log");
-  Services.prefs.setBoolPref("privacy.reduceTimerPrecision", gReduceTimePrecision);
+  Services.prefs.setBoolPref(
+    "privacy.reduceTimerPrecision",
+    gReduceTimePrecision
+  );
 });
 
 async function getTargetForSelectedTab() {
@@ -23,8 +28,16 @@ async function getTargetForSelectedTab() {
 
 async function startServerAndGetSelectedTabMemory() {
   const target = await getTargetForSelectedTab();
+<<<<<<< HEAD
   const memory = await target.getFront("memory");
   return {memory, target};
+||||||| merged common ancestors
+  const memory = target.getFront("memory");
+  return {memory, target};
+=======
+  const memory = await target.getFront("memory");
+  return { memory, target };
+>>>>>>> upstream-releases
 }
 
 async function destroyServerAndFinish(target) {
@@ -42,6 +55,7 @@ function waitUntil(predicate) {
   if (predicate()) {
     return Promise.resolve(true);
   }
-  return new Promise(resolve => setTimeout(() => waitUntil(predicate)
-         .then(() => resolve(true)), 10));
+  return new Promise(resolve =>
+    setTimeout(() => waitUntil(predicate).then(() => resolve(true)), 10)
+  );
 }

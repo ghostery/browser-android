@@ -57,14 +57,39 @@ already_AddRefed<BlobImpl> Deserialize(const IPCBlob& aIPCBlob) {
 
   RefPtr<StreamBlobImpl> blobImpl;
 
+<<<<<<< HEAD
   if (aIPCBlob.file().type() == IPCFileUnion::Tvoid_t) {
     blobImpl = StreamBlobImpl::Create(inputStream.forget(), aIPCBlob.type(),
                                       aIPCBlob.size());
+||||||| merged common ancestors
+  if (aIPCBlob.file().type() == IPCFileUnion::Tvoid_t) {
+    blobImpl = StreamBlobImpl::Create(inputStream.forget(),
+                                      aIPCBlob.type(),
+                                      aIPCBlob.size());
+=======
+  if (aIPCBlob.file().isNothing()) {
+    blobImpl = StreamBlobImpl::Create(inputStream.forget(), aIPCBlob.type(),
+                                      aIPCBlob.size(), aIPCBlob.blobImplType());
+>>>>>>> upstream-releases
   } else {
+<<<<<<< HEAD
     const IPCFile& file = aIPCBlob.file().get_IPCFile();
     blobImpl = StreamBlobImpl::Create(inputStream.forget(), file.name(),
                                       aIPCBlob.type(), file.lastModified(),
                                       aIPCBlob.size());
+||||||| merged common ancestors
+    const IPCFile& file = aIPCBlob.file().get_IPCFile();
+    blobImpl = StreamBlobImpl::Create(inputStream.forget(),
+                                      file.name(),
+                                      aIPCBlob.type(),
+                                      file.lastModified(),
+                                      aIPCBlob.size());
+=======
+    const IPCFile& file = aIPCBlob.file().ref();
+    blobImpl = StreamBlobImpl::Create(inputStream.forget(), file.name(),
+                                      aIPCBlob.type(), file.lastModified(),
+                                      aIPCBlob.size(), aIPCBlob.blobImplType());
+>>>>>>> upstream-releases
     blobImpl->SetDOMPath(file.DOMPath());
     blobImpl->SetFullPath(file.fullPath());
     blobImpl->SetIsDirectory(file.isDirectory());
@@ -87,8 +112,16 @@ nsresult SerializeInputStreamParent(nsIInputStream* aInputStream,
   // In case this is a IPCBlobInputStream, we don't want to create a loop:
   // IPCBlobInputStreamParent -> IPCBlobInputStream ->
   // IPCBlobInputStreamParent. Let's use the underlying inputStream instead.
+<<<<<<< HEAD
   nsCOMPtr<nsIIPCBlobInputStream> ipcBlobInputStream =
       do_QueryInterface(aInputStream);
+||||||| merged common ancestors
+  nsCOMPtr<nsIIPCBlobInputStream> ipcBlobInputStream =
+    do_QueryInterface(aInputStream);
+=======
+  nsCOMPtr<mozIIPCBlobInputStream> ipcBlobInputStream =
+      do_QueryInterface(aInputStream);
+>>>>>>> upstream-releases
   if (ipcBlobInputStream) {
     stream = ipcBlobInputStream->GetInternalStream();
     // If we don't have an underlying stream, it's better to terminate here
@@ -132,9 +165,21 @@ nsresult SerializeInputStreamChild(nsIInputStream* aInputStream,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
                               uint64_t aChildID, IPCBlob& aIPCBlob,
                               nsIContentParent* aManager) {
+||||||| merged common ancestors
+nsresult
+SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
+                     uint64_t aChildID, IPCBlob& aIPCBlob,
+                     nsIContentParent* aManager)
+{
+=======
+nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
+                              uint64_t aChildID, IPCBlob& aIPCBlob,
+                              ContentParent* aManager) {
+>>>>>>> upstream-releases
   return SerializeInputStreamParent(aInputStream, aSize, aChildID, aIPCBlob,
                                     aManager);
 }
@@ -146,9 +191,21 @@ nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
                                     aManager);
 }
 
+<<<<<<< HEAD
 nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
                               uint64_t aChildID, IPCBlob& aIPCBlob,
                               nsIContentChild* aManager) {
+||||||| merged common ancestors
+nsresult
+SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
+                     uint64_t aChildID, IPCBlob& aIPCBlob,
+                     nsIContentChild* aManager)
+{
+=======
+nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
+                              uint64_t aChildID, IPCBlob& aIPCBlob,
+                              ContentChild* aManager) {
+>>>>>>> upstream-releases
   return SerializeInputStreamChild(aInputStream, aIPCBlob, aManager);
 }
 
@@ -158,7 +215,15 @@ nsresult SerializeInputStream(nsIInputStream* aInputStream, uint64_t aSize,
   return SerializeInputStreamChild(aInputStream, aIPCBlob, aManager);
 }
 
+<<<<<<< HEAD
 uint64_t ChildIDFromManager(nsIContentParent* aManager) {
+||||||| merged common ancestors
+uint64_t
+ChildIDFromManager(nsIContentParent* aManager)
+{
+=======
+uint64_t ChildIDFromManager(ContentParent* aManager) {
+>>>>>>> upstream-releases
   return aManager->ChildID();
 }
 
@@ -166,7 +231,17 @@ uint64_t ChildIDFromManager(PBackgroundParent* aManager) {
   return BackgroundParent::GetChildID(aManager);
 }
 
+<<<<<<< HEAD
 uint64_t ChildIDFromManager(nsIContentChild* aManager) { return 0; }
+||||||| merged common ancestors
+uint64_t
+ChildIDFromManager(nsIContentChild* aManager)
+{
+  return 0;
+}
+=======
+uint64_t ChildIDFromManager(ContentChild* aManager) { return 0; }
+>>>>>>> upstream-releases
 
 uint64_t ChildIDFromManager(PBackgroundChild* aManager) { return 0; }
 
@@ -179,6 +254,9 @@ nsresult SerializeInternal(BlobImpl* aBlobImpl, M* aManager,
   aBlobImpl->GetType(value);
   aIPCBlob.type() = value;
 
+  aBlobImpl->GetBlobImplType(value);
+  aIPCBlob.blobImplType() = value;
+
   ErrorResult rv;
   aIPCBlob.size() = aBlobImpl->GetSize(rv);
   if (NS_WARN_IF(rv.Failed())) {
@@ -186,7 +264,7 @@ nsresult SerializeInternal(BlobImpl* aBlobImpl, M* aManager,
   }
 
   if (!aBlobImpl->IsFile()) {
-    aIPCBlob.file() = void_t();
+    aIPCBlob.file() = Nothing();
   } else {
     IPCFile file;
 
@@ -209,7 +287,7 @@ nsresult SerializeInternal(BlobImpl* aBlobImpl, M* aManager,
 
     file.isDirectory() = aBlobImpl->IsDirectory();
 
-    aIPCBlob.file() = file;
+    aIPCBlob.file() = Some(file);
   }
 
   aIPCBlob.fileId() = aBlobImpl->GetFileId();
@@ -229,8 +307,17 @@ nsresult SerializeInternal(BlobImpl* aBlobImpl, M* aManager,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult Serialize(BlobImpl* aBlobImpl, nsIContentChild* aManager,
                    IPCBlob& aIPCBlob) {
+||||||| merged common ancestors
+nsresult
+Serialize(BlobImpl* aBlobImpl, nsIContentChild* aManager, IPCBlob& aIPCBlob)
+{
+=======
+nsresult Serialize(BlobImpl* aBlobImpl, ContentChild* aManager,
+                   IPCBlob& aIPCBlob) {
+>>>>>>> upstream-releases
   return SerializeInternal(aBlobImpl, aManager, aIPCBlob);
 }
 
@@ -239,8 +326,17 @@ nsresult Serialize(BlobImpl* aBlobImpl, PBackgroundChild* aManager,
   return SerializeInternal(aBlobImpl, aManager, aIPCBlob);
 }
 
+<<<<<<< HEAD
 nsresult Serialize(BlobImpl* aBlobImpl, nsIContentParent* aManager,
                    IPCBlob& aIPCBlob) {
+||||||| merged common ancestors
+nsresult
+Serialize(BlobImpl* aBlobImpl, nsIContentParent* aManager, IPCBlob& aIPCBlob)
+{
+=======
+nsresult Serialize(BlobImpl* aBlobImpl, ContentParent* aManager,
+                   IPCBlob& aIPCBlob) {
+>>>>>>> upstream-releases
   return SerializeInternal(aBlobImpl, aManager, aIPCBlob);
 }
 
@@ -258,6 +354,7 @@ nsresult SerializeUntyped(BlobImpl* aBlobImpl, IProtocol* aActor,
   }
 
   // We always need the toplevel protocol
+<<<<<<< HEAD
   switch (manager->GetProtocolTypeId()) {
     case PBackgroundMsgStart:
       if (manager->GetSide() == mozilla::ipc::ParentSide) {
@@ -277,6 +374,51 @@ nsresult SerializeUntyped(BlobImpl* aBlobImpl, IProtocol* aActor,
       }
     default:
       MOZ_CRASH("Unsupported protocol passed to BlobImpl serialize");
+||||||| merged common ancestors
+  switch(manager->GetProtocolTypeId()) {
+  case PBackgroundMsgStart:
+    if (manager->GetSide() == mozilla::ipc::ParentSide) {
+      return SerializeInternal(aBlobImpl,
+                               static_cast<PBackgroundParent*>(manager),
+                               aIPCBlob);
+    } else {
+      return SerializeInternal(aBlobImpl,
+                               static_cast<PBackgroundChild*>(manager),
+                               aIPCBlob);
+    }
+  case PContentMsgStart:
+    if (manager->GetSide() == mozilla::ipc::ParentSide) {
+      return SerializeInternal(aBlobImpl,
+                               static_cast<ContentParent*>(manager),
+                               aIPCBlob);
+    } else {
+      return SerializeInternal(aBlobImpl,
+                               static_cast<ContentChild*>(manager),
+                               aIPCBlob);
+    }
+  default:
+    MOZ_CRASH("Unsupported protocol passed to BlobImpl serialize");
+=======
+  switch (manager->GetProtocolId()) {
+    case PBackgroundMsgStart:
+      if (manager->GetSide() == mozilla::ipc::ParentSide) {
+        return SerializeInternal(
+            aBlobImpl, static_cast<PBackgroundParent*>(manager), aIPCBlob);
+      } else {
+        return SerializeInternal(
+            aBlobImpl, static_cast<PBackgroundChild*>(manager), aIPCBlob);
+      }
+    case PContentMsgStart:
+      if (manager->GetSide() == mozilla::ipc::ParentSide) {
+        return SerializeInternal(
+            aBlobImpl, static_cast<ContentParent*>(manager), aIPCBlob);
+      } else {
+        return SerializeInternal(aBlobImpl, static_cast<ContentChild*>(manager),
+                                 aIPCBlob);
+      }
+    default:
+      MOZ_CRASH("Unsupported protocol passed to BlobImpl serialize");
+>>>>>>> upstream-releases
   }
 }
 
@@ -284,8 +426,19 @@ nsresult SerializeUntyped(BlobImpl* aBlobImpl, IProtocol* aActor,
 }  // namespace dom
 
 namespace ipc {
+<<<<<<< HEAD
 void IPDLParamTraits<mozilla::dom::BlobImpl>::Write(
     IPC::Message* aMsg, IProtocol* aActor, mozilla::dom::BlobImpl* aParam) {
+||||||| merged common ancestors
+void
+IPDLParamTraits<mozilla::dom::BlobImpl>::Write(
+  IPC::Message* aMsg, IProtocol* aActor,
+  mozilla::dom::BlobImpl* aParam)
+{
+=======
+void IPDLParamTraits<mozilla::dom::BlobImpl*>::Write(
+    IPC::Message* aMsg, IProtocol* aActor, mozilla::dom::BlobImpl* aParam) {
+>>>>>>> upstream-releases
   nsresult rv;
   mozilla::dom::IPCBlob ipcblob;
   if (aParam) {
@@ -299,9 +452,21 @@ void IPDLParamTraits<mozilla::dom::BlobImpl>::Write(
   }
 }
 
+<<<<<<< HEAD
 bool IPDLParamTraits<mozilla::dom::BlobImpl>::Read(
     const IPC::Message* aMsg, PickleIterator* aIter, IProtocol* aActor,
     RefPtr<mozilla::dom::BlobImpl>* aResult) {
+||||||| merged common ancestors
+bool
+IPDLParamTraits<mozilla::dom::BlobImpl>::Read(
+  const IPC::Message* aMsg, PickleIterator* aIter,
+  IProtocol* aActor, RefPtr<mozilla::dom::BlobImpl>* aResult)
+{
+=======
+bool IPDLParamTraits<mozilla::dom::BlobImpl*>::Read(
+    const IPC::Message* aMsg, PickleIterator* aIter, IProtocol* aActor,
+    RefPtr<mozilla::dom::BlobImpl>* aResult) {
+>>>>>>> upstream-releases
   *aResult = nullptr;
 
   bool notnull = false;

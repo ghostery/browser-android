@@ -12,7 +12,7 @@
 #include "mozilla/webrender/WebRenderTypes.h"
 
 #ifdef USE_SKIA
-#include "skia/include/ports/SkTypeface_cairo.h"
+#  include "skia/include/ports/SkTypeface_cairo.h"
 #endif
 
 #include FT_MULTIPLE_MASTERS_H
@@ -32,8 +32,17 @@ ScaledFontFreeType::ScaledFontFreeType(
 }
 
 #ifdef USE_SKIA
+<<<<<<< HEAD
 SkTypeface* ScaledFontFreeType::CreateSkTypeface() {
   return SkCreateTypefaceFromCairoFTFont(mScaledFont);
+||||||| merged common ancestors
+SkTypeface* ScaledFontFreeType::CreateSkTypeface()
+{
+  return SkCreateTypefaceFromCairoFTFont(mScaledFont);
+=======
+SkTypeface* ScaledFontFreeType::CreateSkTypeface() {
+  return SkCreateTypefaceFromCairoFTFont(mScaledFont, mFace);
+>>>>>>> upstream-releases
 }
 #endif
 
@@ -55,8 +64,8 @@ bool ScaledFontFreeType::GetWRFontInstanceOptions(
   wr::FontInstanceOptions options;
   options.render_mode = wr::FontRenderMode::Alpha;
   // FIXME: Cairo-FT metrics are not compatible with subpixel positioning.
-  // options.flags = wr::FontInstanceFlags::SUBPIXEL_POSITION;
-  options.flags = 0;
+  // options.flags = wr::FontInstanceFlags_SUBPIXEL_POSITION;
+  options.flags = wr::FontInstanceFlags{0};
   options.bg_color = wr::ToColorU(Color());
   options.synthetic_italics =
       wr::DegreesToSyntheticItalics(GetSyntheticObliqueAngle());
@@ -75,6 +84,23 @@ bool ScaledFontFreeType::GetWRFontInstanceOptions(
   return true;
 }
 
+FT_Face UnscaledFontFreeType::InitFace() {
+  if (mFace) {
+    return mFace;
+  }
+  if (mFile.empty()) {
+    return nullptr;
+  }
+  FT_Face face = Factory::NewFTFace(nullptr, mFile.c_str(), mIndex);
+  if (!face) {
+    gfxWarning() << "Failed initializing FreeType face from filename";
+    return nullptr;
+  }
+  mOwnsFace = true;
+  mFace = face;
+  return mFace;
+}
+
 static cairo_user_data_key_t sNativeFontResourceKey;
 
 static void ReleaseNativeFontResource(void* aData) {
@@ -87,11 +113,28 @@ static void ReleaseFace(void* aData) {
   Factory::ReleaseFTFace(static_cast<FT_Face>(aData));
 }
 
+<<<<<<< HEAD
 already_AddRefed<ScaledFont> UnscaledFontFreeType::CreateScaledFont(
     Float aGlyphSize, const uint8_t* aInstanceData,
     uint32_t aInstanceDataLength, const FontVariation* aVariations,
     uint32_t aNumVariations) {
   FT_Face face = GetFace();
+||||||| merged common ancestors
+already_AddRefed<ScaledFont>
+UnscaledFontFreeType::CreateScaledFont(Float aGlyphSize,
+                                       const uint8_t* aInstanceData,
+                                       uint32_t aInstanceDataLength,
+                                       const FontVariation* aVariations,
+                                       uint32_t aNumVariations)
+{
+  FT_Face face = GetFace();
+=======
+already_AddRefed<ScaledFont> UnscaledFontFreeType::CreateScaledFont(
+    Float aGlyphSize, const uint8_t* aInstanceData,
+    uint32_t aInstanceDataLength, const FontVariation* aVariations,
+    uint32_t aNumVariations) {
+  FT_Face face = InitFace();
+>>>>>>> upstream-releases
   if (!face) {
     gfxWarning() << "Attempted to deserialize FreeType scaled font without "
                     "FreeType face";
@@ -116,8 +159,19 @@ already_AddRefed<ScaledFont> UnscaledFontFreeType::CreateScaledFont(
   }
 
   int flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_HINTING;
+<<<<<<< HEAD
   cairo_font_face_t* font = cairo_ft_font_face_create_for_ft_face(
       face, flags, coords.data(), aNumVariations);
+||||||| merged common ancestors
+  cairo_font_face_t* font =
+    cairo_ft_font_face_create_for_ft_face(face, flags, coords.data(), aNumVariations);
+=======
+  if (face->face_flags & FT_FACE_FLAG_TRICKY) {
+    flags &= ~FT_LOAD_NO_AUTOHINT;
+  }
+  cairo_font_face_t* font = cairo_ft_font_face_create_for_ft_face(
+      face, flags, coords.data(), aNumVariations);
+>>>>>>> upstream-releases
   if (cairo_font_face_status(font) != CAIRO_STATUS_SUCCESS) {
     gfxWarning() << "Failed creating Cairo font face for FreeType face";
     if (varFace) {

@@ -62,7 +62,10 @@ static Locale   *gLocaleCache = NULL;
 static UInitOnce gLocaleCacheInitOnce = U_INITONCE_INITIALIZER;
 
 // gDefaultLocaleMutex protects all access to gDefaultLocalesHashT and gDefaultLocale.
-static UMutex gDefaultLocaleMutex = U_MUTEX_INITIALIZER;
+static UMutex *gDefaultLocaleMutex() {
+    static UMutex m = U_MUTEX_INITIALIZER;
+    return &m;
+}
 static UHashtable *gDefaultLocalesHashT = NULL;
 static Locale *gDefaultLocale = NULL;
 
@@ -171,7 +174,7 @@ U_NAMESPACE_BEGIN
 
 Locale *locale_set_default_internal(const char *id, UErrorCode& status) {
     // Synchronize this entire function.
-    Mutex lock(&gDefaultLocaleMutex);
+    Mutex lock(gDefaultLocaleMutex());
 
     UBool canonicalize = FALSE;
 
@@ -569,9 +572,19 @@ Locale& Locale::init(const char* localeID, UBool canonicalize)
         variantBegin = length;
 
         /* after uloc_getName/canonicalize() we know that only '_' are separators */
+        /* But _ could also appeared in timezone such as "en@timezone=America/Los_Angeles" */
         separator = field[0] = fullName;
         fieldIdx = 1;
+<<<<<<< HEAD
         while ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) != 0 && fieldIdx < UPRV_LENGTHOF(field)-1) {
+||||||| merged common ancestors
+        while ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) && fieldIdx < UPRV_LENGTHOF(field)-1) {
+=======
+        char* at = uprv_strchr(fullName, '@');
+        while ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) != 0 &&
+               fieldIdx < UPRV_LENGTHOF(field)-1 &&
+               (at == nullptr || separator < at)) {
+>>>>>>> upstream-releases
             field[fieldIdx] = separator + 1;
             fieldLen[fieldIdx-1] = (int32_t)(separator - field[fieldIdx-1]);
             fieldIdx++;
@@ -704,7 +717,7 @@ const Locale& U_EXPORT2
 Locale::getDefault()
 {
     {
-        Mutex lock(&gDefaultLocaleMutex);
+        Mutex lock(gDefaultLocaleMutex());
         if (gDefaultLocale != NULL) {
             return *gDefaultLocale;
         }
@@ -730,6 +743,7 @@ Locale::setDefault( const   Locale&     newLocale,
     locale_set_default_internal(localeID, status);
 }
 
+<<<<<<< HEAD
 void
 Locale::addLikelySubtags(UErrorCode& status) {
     if (U_FAILURE(status)) {
@@ -1000,6 +1014,115 @@ Locale::toLanguageTag(ByteSink& sink, UErrorCode& status) const
     }
 }
 
+||||||| merged common ancestors
+=======
+void
+Locale::addLikelySubtags(UErrorCode& status) {
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    CharString maximizedLocaleID;
+    {
+        CharStringByteSink sink(&maximizedLocaleID);
+        ulocimp_addLikelySubtags(fullName, sink, &status);
+    }
+
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    init(maximizedLocaleID.data(), /*canonicalize=*/FALSE);
+    if (isBogus()) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+    }
+}
+
+void
+Locale::minimizeSubtags(UErrorCode& status) {
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    CharString minimizedLocaleID;
+    {
+        CharStringByteSink sink(&minimizedLocaleID);
+        ulocimp_minimizeSubtags(fullName, sink, &status);
+    }
+
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    init(minimizedLocaleID.data(), /*canonicalize=*/FALSE);
+    if (isBogus()) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+    }
+}
+
+Locale U_EXPORT2
+Locale::forLanguageTag(StringPiece tag, UErrorCode& status)
+{
+    Locale result(Locale::eBOGUS);
+
+    if (U_FAILURE(status)) {
+        return result;
+    }
+
+    // If a BCP-47 language tag is passed as the language parameter to the
+    // normal Locale constructor, it will actually fall back to invoking
+    // uloc_forLanguageTag() to parse it if it somehow is able to detect that
+    // the string actually is BCP-47. This works well for things like strings
+    // using BCP-47 extensions, but it does not at all work for things like
+    // BCP-47 grandfathered tags (eg. "en-GB-oed") which are possible to also
+    // interpret as ICU locale IDs and because of that won't trigger the BCP-47
+    // parsing. Therefore the code here explicitly calls uloc_forLanguageTag()
+    // and then Locale::init(), instead of just calling the normal constructor.
+
+    CharString localeID;
+    int32_t parsedLength;
+    {
+        CharStringByteSink sink(&localeID);
+        ulocimp_forLanguageTag(
+                tag.data(),
+                tag.length(),
+                sink,
+                &parsedLength,
+                &status);
+    }
+
+    if (U_FAILURE(status)) {
+        return result;
+    }
+
+    if (parsedLength != tag.size()) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+        return result;
+    }
+
+    result.init(localeID.data(), /*canonicalize=*/FALSE);
+    if (result.isBogus()) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+    }
+    return result;
+}
+
+void
+Locale::toLanguageTag(ByteSink& sink, UErrorCode& status) const
+{
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    if (fIsBogus) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+        return;
+    }
+
+    ulocimp_toLanguageTag(fullName, sink, /*strict=*/FALSE, &status);
+}
+
+>>>>>>> upstream-releases
 Locale U_EXPORT2
 Locale::createFromName (const char *name)
 {
@@ -1507,6 +1630,7 @@ Locale::setKeywordValue(const char* keywordName, const char* keywordValue, UErro
     }
 }
 
+<<<<<<< HEAD
 void
 Locale::setKeywordValue(StringPiece keywordName,
                         StringPiece keywordValue,
@@ -1547,6 +1671,53 @@ Locale::setUnicodeKeywordValue(StringPiece keywordName,
     setKeywordValue(legacy_key, legacy_value, status);
 }
 
+||||||| merged common ancestors
+=======
+void
+Locale::setKeywordValue(StringPiece keywordName,
+                        StringPiece keywordValue,
+                        UErrorCode& status) {
+    // TODO: Remove the need for a const char* to a NUL terminated buffer.
+    const CharString keywordName_nul(keywordName, status);
+    const CharString keywordValue_nul(keywordValue, status);
+    setKeywordValue(keywordName_nul.data(), keywordValue_nul.data(), status);
+}
+
+void
+Locale::setUnicodeKeywordValue(StringPiece keywordName,
+                               StringPiece keywordValue,
+                               UErrorCode& status) {
+    // TODO: Remove the need for a const char* to a NUL terminated buffer.
+    const CharString keywordName_nul(keywordName, status);
+    const CharString keywordValue_nul(keywordValue, status);
+
+    if (U_FAILURE(status)) {
+        return;
+    }
+
+    const char* legacy_key = uloc_toLegacyKey(keywordName_nul.data());
+
+    if (legacy_key == nullptr) {
+        status = U_ILLEGAL_ARGUMENT_ERROR;
+        return;
+    }
+
+    const char* legacy_value = nullptr;
+
+    if (!keywordValue_nul.isEmpty()) {
+        legacy_value =
+            uloc_toLegacyType(keywordName_nul.data(), keywordValue_nul.data());
+
+        if (legacy_value == nullptr) {
+            status = U_ILLEGAL_ARGUMENT_ERROR;
+            return;
+        }
+    }
+
+    setKeywordValue(legacy_key, legacy_value, status);
+}
+
+>>>>>>> upstream-releases
 const char *
 Locale::getBaseName() const {
     return baseName;

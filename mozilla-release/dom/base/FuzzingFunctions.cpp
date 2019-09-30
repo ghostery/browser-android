@@ -21,18 +21,49 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ void FuzzingFunctions::GarbageCollect(const GlobalObject&) {
   nsJSContext::GarbageCollectNow(JS::gcreason::COMPONENT_UTILS,
+||||||| merged common ancestors
+/* static */ void
+FuzzingFunctions::GarbageCollect(const GlobalObject&)
+{
+  nsJSContext::GarbageCollectNow(JS::gcreason::COMPONENT_UTILS,
+=======
+/* static */
+void FuzzingFunctions::GarbageCollect(const GlobalObject&) {
+  nsJSContext::GarbageCollectNow(JS::GCReason::COMPONENT_UTILS,
+>>>>>>> upstream-releases
                                  nsJSContext::NonIncrementalGC,
                                  nsJSContext::NonShrinkingGC);
 }
 
+<<<<<<< HEAD
 /* static */ void FuzzingFunctions::CycleCollect(const GlobalObject&) {
+||||||| merged common ancestors
+/* static */ void
+FuzzingFunctions::CycleCollect(const GlobalObject&)
+{
+=======
+/* static */
+void FuzzingFunctions::CycleCollect(const GlobalObject&) {
+>>>>>>> upstream-releases
   nsJSContext::CycleCollectNow();
 }
 
+<<<<<<< HEAD
 /* static */ void FuzzingFunctions::EnableAccessibility(const GlobalObject&,
                                                         ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+FuzzingFunctions::EnableAccessibility(const GlobalObject&,
+                                      ErrorResult& aRv)
+{
+=======
+/* static */
+void FuzzingFunctions::EnableAccessibility(const GlobalObject&,
+                                           ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<nsIAccessibilityService> a11y;
   nsresult rv;
 
@@ -69,9 +100,23 @@ static const ModifierKey kModifierKeys[] = {
     ModifierKey(MODIFIER_SYMBOLLOCK, KEY_NAME_INDEX_SymbolLock, true),
 };
 
+<<<<<<< HEAD
 /* static */ Modifiers FuzzingFunctions::ActivateModifiers(
     TextInputProcessor* aTextInputProcessor, Modifiers aModifiers,
     nsIWidget* aWidget, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ Modifiers
+FuzzingFunctions::ActivateModifiers(TextInputProcessor* aTextInputProcessor,
+                                    Modifiers aModifiers,
+                                    nsIWidget* aWidget,
+                                    ErrorResult& aRv)
+{
+=======
+/* static */
+Modifiers FuzzingFunctions::ActivateModifiers(
+    TextInputProcessor* aTextInputProcessor, Modifiers aModifiers,
+    nsIWidget* aWidget, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aTextInputProcessor);
 
   if (aModifiers == MODIFIER_NONE) {
@@ -114,9 +159,23 @@ static const ModifierKey kModifierKeys[] = {
   return activatedModifiers;
 }
 
+<<<<<<< HEAD
 /* static */ Modifiers FuzzingFunctions::InactivateModifiers(
     TextInputProcessor* aTextInputProcessor, Modifiers aModifiers,
     nsIWidget* aWidget, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ Modifiers
+FuzzingFunctions::InactivateModifiers(TextInputProcessor* aTextInputProcessor,
+                                      Modifiers aModifiers,
+                                      nsIWidget* aWidget,
+                                      ErrorResult& aRv)
+{
+=======
+/* static */
+Modifiers FuzzingFunctions::InactivateModifiers(
+    TextInputProcessor* aTextInputProcessor, Modifiers aModifiers,
+    nsIWidget* aWidget, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aTextInputProcessor);
 
   if (aModifiers == MODIFIER_NONE) {
@@ -159,9 +218,24 @@ static const ModifierKey kModifierKeys[] = {
   return inactivatedModifiers;
 }
 
+<<<<<<< HEAD
 /* static */ void FuzzingFunctions::SynthesizeKeyboardEvents(
     const GlobalObject&, const nsAString& aKeyValue,
     const KeyboardEventInit& aDict, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+FuzzingFunctions::SynthesizeKeyboardEvents(const GlobalObject&,
+                                           const nsAString& aKeyValue,
+                                           const KeyboardEventInit& aDict,
+                                           ErrorResult& aRv)
+{
+=======
+/* static */
+void FuzzingFunctions::SynthesizeKeyboardEvents(const GlobalObject&,
+                                                const nsAString& aKeyValue,
+                                                const KeyboardEventInit& aDict,
+                                                ErrorResult& aRv) {
+>>>>>>> upstream-releases
   // Prepare keyboard event to synthesize first.
   uint32_t flags = 0;
   // Don't modify the given dictionary since caller may want to modify

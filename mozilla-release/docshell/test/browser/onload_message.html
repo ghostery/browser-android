@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
   <head>
     <meta charset="utf-8">
@@ -11,3 +12,19 @@
     This file posts a message containing "load" to opener on load completion.
   </body>
 </html>
+||||||| merged common ancestors
+=======
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script>
+      addEventListener("load", function() {
+        opener.postMessage("load", "*");
+      });
+    </script>
+  </head>
+  <body>
+    This file posts a message containing "load" to opener on load completion.
+  </body>
+</html>
+>>>>>>> upstream-releases

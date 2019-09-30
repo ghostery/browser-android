@@ -165,9 +165,42 @@ nsresult XPathResult::SetExprResult(txAExprResult* aExprResult,
       mResult->stringValue(mStringResult);
       break;
     }
+<<<<<<< HEAD
     default: { MOZ_ASSERT(isNode() || isIterator() || isSnapshot()); }
   }
 
+  if (aExprResult->getResultType() == txAExprResult::NODESET) {
+    txNodeSet* nodeSet = static_cast<txNodeSet*>(aExprResult);
+    int32_t i, count = nodeSet->size();
+    for (i = 0; i < count; ++i) {
+      nsINode* node = txXPathNativeNode::getNode(nodeSet->get(i));
+      mResultNodes.AppendObject(node);
+||||||| merged common ancestors
+
+    if (!isIterator()) {
+        return NS_OK;
+=======
+    default: {
+      MOZ_ASSERT(isNode() || isIterator() || isSnapshot());
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+    if (count > 0) {
+      mResult = nullptr;
+||||||| merged common ancestors
+    mInvalidIteratorState = false;
+
+    if (mResultNodes.Count() > 0) {
+        // If we support the document() function in DOM-XPath we need to
+        // observe all documents that we have resultnodes in.
+        mDocument = mResultNodes[0]->OwnerDoc();
+        NS_ASSERTION(mDocument, "We need a document!");
+        if (mDocument) {
+            mDocument->AddMutationObserver(this);
+        }
+=======
   if (aExprResult->getResultType() == txAExprResult::NODESET) {
     txNodeSet* nodeSet = static_cast<txNodeSet*>(aExprResult);
     int32_t i, count = nodeSet->size();
@@ -178,6 +211,7 @@ nsresult XPathResult::SetExprResult(txAExprResult* aExprResult,
 
     if (count > 0) {
       mResult = nullptr;
+>>>>>>> upstream-releases
     }
   }
 
@@ -185,7 +219,35 @@ nsresult XPathResult::SetExprResult(txAExprResult* aExprResult,
     return NS_OK;
   }
 
+<<<<<<< HEAD
   mInvalidIteratorState = false;
+||||||| merged common ancestors
+void
+XPathResult::Invalidate(const nsIContent* aChangeRoot)
+{
+    nsCOMPtr<nsINode> contextNode = do_QueryReferent(mContextNode);
+    if (contextNode && aChangeRoot && aChangeRoot->GetBindingParent()) {
+        // If context node is in anonymous content, changes to
+        // non-anonymous content need to invalidate the XPathResult. If
+        // the changes are happening in a different anonymous trees, no
+        // invalidation should happen.
+        nsIContent* ctxBindingParent = nullptr;
+        if (contextNode->IsContent()) {
+            ctxBindingParent =
+              contextNode->AsContent()->GetBindingParent();
+        } else if (auto* attr = Attr::FromNode(contextNode)) {
+            if (Element* parent = attr->GetElement()) {
+                ctxBindingParent = parent->GetBindingParent();
+            }
+        }
+        if (ctxBindingParent != aChangeRoot->GetBindingParent()) {
+          return;
+        }
+    }
+=======
+  mCurrentPos = 0;
+  mInvalidIteratorState = false;
+>>>>>>> upstream-releases
 
   if (mResultNodes.Count() > 0) {
     // If we support the document() function in DOM-XPath we need to

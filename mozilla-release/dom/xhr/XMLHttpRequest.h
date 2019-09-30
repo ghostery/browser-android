@@ -11,8 +11,6 @@
 #include "mozilla/dom/XMLHttpRequestEventTarget.h"
 #include "mozilla/dom/XMLHttpRequestBinding.h"
 
-class nsIJSID;
-
 namespace mozilla {
 namespace dom {
 
@@ -102,7 +100,14 @@ class XMLHttpRequest : public XMLHttpRequestEventTarget {
 
   virtual void GetResponseText(DOMString& aResponseText, ErrorResult& aRv) = 0;
 
+<<<<<<< HEAD
   virtual nsIDocument* GetResponseXML(ErrorResult& aRv) = 0;
+||||||| merged common ancestors
+  virtual nsIDocument*
+  GetResponseXML(ErrorResult& aRv) = 0;
+=======
+  virtual Document* GetResponseXML(ErrorResult& aRv) = 0;
+>>>>>>> upstream-releases
 
   virtual bool MozBackgroundRequest() const = 0;
 
@@ -112,9 +117,20 @@ class XMLHttpRequest : public XMLHttpRequestEventTarget {
   virtual nsIChannel* GetChannel() const = 0;
 
   // We need a GetInterface callable from JS for chrome JS
+<<<<<<< HEAD
   virtual void GetInterface(JSContext* aCx, nsIJSID* aIID,
                             JS::MutableHandle<JS::Value> aRetval,
                             ErrorResult& aRv) = 0;
+||||||| merged common ancestors
+  virtual void
+  GetInterface(JSContext* aCx, nsIJSID* aIID,
+               JS::MutableHandle<JS::Value> aRetval,
+               ErrorResult& aRv) = 0;
+=======
+  virtual void GetInterface(JSContext* aCx, JS::Handle<JS::Value> aIID,
+                            JS::MutableHandle<JS::Value> aRetval,
+                            ErrorResult& aRv) = 0;
+>>>>>>> upstream-releases
 
   virtual void SetOriginAttributes(
       const mozilla::dom::OriginAttributesDictionary& aAttrs) = 0;

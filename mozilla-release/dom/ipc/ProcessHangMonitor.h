@@ -11,18 +11,28 @@
 #include "mozilla/Atomics.h"
 #include "nsCOMPtr.h"
 #include "nsIObserver.h"
+#include "nsIRemoteTab.h"
 #include "nsStringFwd.h"
 
 class nsIRunnable;
-class nsITabChild;
+class nsIBrowserChild;
 class nsIThread;
 
 namespace mozilla {
 
 namespace dom {
 class ContentParent;
+<<<<<<< HEAD
 class TabParent;
 }  // namespace dom
+||||||| merged common ancestors
+class TabParent;
+} // namespace dom
+=======
+class BrowserParent;
+struct CancelContentJSOptions;
+}  // namespace dom
+>>>>>>> upstream-releases
 
 namespace layers {
 struct LayersObserverEpoch;
@@ -48,12 +58,31 @@ class ProcessHangMonitor final : public nsIObserver {
 
   static void ClearHang();
 
+<<<<<<< HEAD
   static void PaintWhileInterruptingJS(
       PProcessHangMonitorParent* aParent, dom::TabParent* aTab,
       bool aForceRepaint, const layers::LayersObserverEpoch& aEpoch);
   static void ClearPaintWhileInterruptingJS(
       const layers::LayersObserverEpoch& aEpoch);
+||||||| merged common ancestors
+  static void PaintWhileInterruptingJS(PProcessHangMonitorParent* aParent,
+                                       dom::TabParent* aTab,
+                                       bool aForceRepaint,
+                                       const layers::LayersObserverEpoch& aEpoch);
+  static void ClearPaintWhileInterruptingJS(const layers::LayersObserverEpoch& aEpoch);
+=======
+  static void PaintWhileInterruptingJS(
+      PProcessHangMonitorParent* aParent, dom::BrowserParent* aTab,
+      bool aForceRepaint, const layers::LayersObserverEpoch& aEpoch);
+  static void ClearPaintWhileInterruptingJS(
+      const layers::LayersObserverEpoch& aEpoch);
+>>>>>>> upstream-releases
   static void MaybeStartPaintWhileInterruptingJS();
+
+  static void CancelContentJSExecutionIfRunning(
+      PProcessHangMonitorParent* aParent, dom::BrowserParent* aTab,
+      nsIRemoteTab::NavigationType aNavigationType,
+      const dom::CancelContentJSOptions& aCancelContentJSOptions);
 
   enum SlowScriptAction {
     Continue,
@@ -61,7 +90,7 @@ class ProcessHangMonitor final : public nsIObserver {
     StartDebugger,
     TerminateGlobal,
   };
-  SlowScriptAction NotifySlowScript(nsITabChild* aTabChild,
+  SlowScriptAction NotifySlowScript(nsIBrowserChild* aBrowserChild,
                                     const char* aFileName,
                                     const nsString& aAddonId);
 

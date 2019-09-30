@@ -8,8 +8,10 @@
 namespace mozilla {
 namespace widget {
 
-/*static*/ uint32_t nsAutoRollup::sCount = 0;
-/*static*/ StaticRefPtr<nsIContent> nsAutoRollup::sLastRollup;
+/*static*/
+uint32_t nsAutoRollup::sCount = 0;
+/*static*/
+StaticRefPtr<nsIContent> nsAutoRollup::sLastRollup;
 
 nsAutoRollup::nsAutoRollup() {
   // remember if sLastRollup was null, and only clear it upon destruction
@@ -33,16 +35,36 @@ nsAutoRollup::~nsAutoRollup() {
   sCount--;
 }
 
+<<<<<<< HEAD
 /*static*/ void nsAutoRollup::SetLastRollup(nsIContent* aLastRollup) {
+||||||| merged common ancestors
+/*static*/ void
+nsAutoRollup::SetLastRollup(nsIContent* aLastRollup)
+{
+=======
+/*static*/
+void nsAutoRollup::SetLastRollup(nsIContent* aLastRollup) {
+>>>>>>> upstream-releases
   // There must be at least one nsAutoRollup on the stack.
   MOZ_ASSERT(sCount);
 
   sLastRollup = aLastRollup;
 }
 
+<<<<<<< HEAD
 /*static*/ nsIContent* nsAutoRollup::GetLastRollup() {
   return sLastRollup.get();
 }
+||||||| merged common ancestors
+/*static*/ nsIContent*
+nsAutoRollup::GetLastRollup()
+{
+  return sLastRollup.get();
+}
+=======
+/*static*/
+nsIContent* nsAutoRollup::GetLastRollup() { return sLastRollup.get(); }
+>>>>>>> upstream-releases
 
 }  // namespace widget
 }  // namespace mozilla

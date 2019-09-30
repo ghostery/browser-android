@@ -3,29 +3,37 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "nsAutoPtr.h"
 #include "nsViewManager.h"
+
+#include "mozilla/MouseEvents.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/PresShellInlines.h"
+#include "mozilla/Preferences.h"
+#include "mozilla/StartupTimeline.h"
+#include "mozilla/dom/Document.h"
+#include "nsAutoPtr.h"
 #include "nsGfxCIID.h"
 #include "nsView.h"
 #include "nsCOMPtr.h"
-#include "mozilla/MouseEvents.h"
 #include "nsRegion.h"
 #include "nsCOMArray.h"
 #include "nsIPluginWidget.h"
 #include "nsXULPopupManager.h"
-#include "nsIPresShell.h"
-#include "nsIPresShellInlines.h"
 #include "nsPresContext.h"
-#include "mozilla/StartupTimeline.h"
 #include "GeckoProfiler.h"
 #include "nsRefreshDriver.h"
+<<<<<<< HEAD
 #include "mozilla/Preferences.h"
 #include "nsContentUtils.h"  // for nsAutoScriptBlocker
+||||||| merged common ancestors
+#include "mozilla/Preferences.h"
+#include "nsContentUtils.h" // for nsAutoScriptBlocker
+=======
+#include "nsContentUtils.h"  // for nsAutoScriptBlocker
+>>>>>>> upstream-releases
 #include "nsLayoutUtils.h"
 #include "Layers.h"
 #include "gfxPlatform.h"
-#include "gfxPrefs.h"
-#include "nsIDocument.h"
 
 /**
    XXX TODO XXX
@@ -178,9 +186,18 @@ void nsViewManager::DoSetWindowDimensions(nscoord aWidth, nscoord aHeight) {
   if (!oldDim.IsEqualEdges(newDim)) {
     // Don't resize the widget. It is already being set elsewhere.
     mRootView->SetDimensions(newDim, true, false);
+<<<<<<< HEAD
     if (mPresShell)
       mPresShell->ResizeReflow(aWidth, aHeight, oldDim.Width(),
                                oldDim.Height());
+||||||| merged common ancestors
+    if (mPresShell)
+      mPresShell->ResizeReflow(aWidth, aHeight, oldDim.Width(), oldDim.Height());
+=======
+    if (RefPtr<PresShell> presShell = mPresShell) {
+      presShell->ResizeReflow(aWidth, aHeight, oldDim.Width(), oldDim.Height());
+    }
+>>>>>>> upstream-releases
   }
 }
 
@@ -325,18 +342,32 @@ void nsViewManager::Refresh(nsView* aView,
     NS_ASSERTION(GetDisplayRootFor(aView) == aView,
                  "Widgets that we paint must all be display roots");
 
-    if (mPresShell) {
+    if (RefPtr<PresShell> presShell = mPresShell) {
 #ifdef MOZ_DUMP_PAINTING
       if (nsLayoutUtils::InvalidationDebuggingIsEnabled()) {
-        printf_stderr("--COMPOSITE-- %p\n", mPresShell);
+        printf_stderr("--COMPOSITE-- %p\n", presShell.get());
       }
 #endif
+<<<<<<< HEAD
       uint32_t paintFlags = nsIPresShell::PAINT_COMPOSITE;
       LayerManager* manager = widget->GetLayerManager();
+||||||| merged common ancestors
+      uint32_t paintFlags = nsIPresShell::PAINT_COMPOSITE;
+      LayerManager *manager = widget->GetLayerManager();
+=======
+      LayerManager* manager = widget->GetLayerManager();
+>>>>>>> upstream-releases
       if (!manager->NeedsWidgetInvalidation()) {
         manager->FlushRendering();
       } else {
+<<<<<<< HEAD
         mPresShell->Paint(aView, damageRegion, paintFlags);
+||||||| merged common ancestors
+        mPresShell->Paint(aView, damageRegion,
+                          paintFlags);
+=======
+        presShell->Paint(aView, damageRegion, PaintFlags::PaintComposite);
+>>>>>>> upstream-releases
       }
 #ifdef MOZ_DUMP_PAINTING
       if (nsLayoutUtils::InvalidationDebuggingIsEnabled()) {
@@ -363,7 +394,7 @@ void nsViewManager::ProcessPendingUpdatesForView(nsView* aView,
     return;
   }
 
-  nsCOMPtr<nsIPresShell> rootShell(mPresShell);
+  RefPtr<PresShell> rootPresShell = mPresShell;
   AutoTArray<nsCOMPtr<nsIWidget>, 1> widgets;
   aView->GetViewManager()->ProcessPendingUpdatesRecurse(aView, widgets);
   for (uint32_t i = 0; i < widgets.Length(); ++i) {
@@ -372,8 +403,8 @@ void nsViewManager::ProcessPendingUpdatesForView(nsView* aView,
       if (view->mNeedsWindowPropertiesSync) {
         view->mNeedsWindowPropertiesSync = false;
         if (nsViewManager* vm = view->GetViewManager()) {
-          if (nsIPresShell* ps = vm->GetPresShell()) {
-            ps->SyncWindowProperties(view);
+          if (PresShell* presShell = vm->GetPresShell()) {
+            presShell->SyncWindowProperties(view);
           }
         }
       }
@@ -383,8 +414,16 @@ void nsViewManager::ProcessPendingUpdatesForView(nsView* aView,
       view->ResetWidgetBounds(false, true);
     }
   }
+<<<<<<< HEAD
   if (rootShell->GetViewManager() != this) {
     return;  // presentation might have been torn down
+||||||| merged common ancestors
+  if (rootShell->GetViewManager() != this) {
+    return; // presentation might have been torn down
+=======
+  if (rootPresShell->GetViewManager() != this) {
+    return;  // presentation might have been torn down
+>>>>>>> upstream-releases
   }
   if (aFlushDirtyRegion) {
     nsAutoScriptBlocker scriptBlocker;
@@ -393,7 +432,8 @@ void nsViewManager::ProcessPendingUpdatesForView(nsView* aView,
       nsIWidget* widget = widgets[i];
       nsView* view = nsView::GetViewFor(widget);
       if (view) {
-        view->GetViewManager()->ProcessPendingUpdatesPaint(widget);
+        RefPtr<nsViewManager> viewManager = view->GetViewManager();
+        viewManager->ProcessPendingUpdatesPaint(MOZ_KnownLive(widget));
       }
     }
     SetPainting(false);
@@ -449,16 +489,25 @@ void nsViewManager::ProcessPendingUpdatesPaint(nsIWidget* aWidget) {
       return;
     }
 
-    if (mPresShell) {
+    if (RefPtr<PresShell> presShell = mPresShell) {
 #ifdef MOZ_DUMP_PAINTING
       if (nsLayoutUtils::InvalidationDebuggingIsEnabled()) {
+<<<<<<< HEAD
         printf_stderr(
             "---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
             mPresShell, view, aWidget);
+||||||| merged common ancestors
+        printf_stderr("---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
+                      mPresShell, view, aWidget);
+=======
+        printf_stderr(
+            "---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
+            presShell.get(), view, aWidget);
+>>>>>>> upstream-releases
       }
 #endif
 
-      mPresShell->Paint(view, nsRegion(), nsIPresShell::PAINT_LAYERS);
+      presShell->Paint(view, nsRegion(), PaintFlags::PaintLayers);
       view->SetForcedRepaint(false);
 
 #ifdef MOZ_DUMP_PAINTING
@@ -589,8 +638,8 @@ void nsViewManager::InvalidateWidgetArea(nsView* aWidgetView,
 
 static bool ShouldIgnoreInvalidation(nsViewManager* aVM) {
   while (aVM) {
-    nsIPresShell* shell = aVM->GetPresShell();
-    if (!shell || shell->ShouldIgnoreInvalidation()) {
+    PresShell* presShell = aVM->GetPresShell();
+    if (!presShell || presShell->ShouldIgnoreInvalidation()) {
       return true;
     }
     nsView* view = aVM->GetRootView()->GetParent();
@@ -656,26 +705,39 @@ void nsViewManager::InvalidateViews(nsView* aView) {
   }
 }
 
+<<<<<<< HEAD
 void nsViewManager::WillPaintWindow(nsIWidget* aWidget) {
   RefPtr<nsIWidget> widget(aWidget);
   if (widget) {
     nsView* view = nsView::GetViewFor(widget);
     LayerManager* manager = widget->GetLayerManager();
+||||||| merged common ancestors
+void nsViewManager::WillPaintWindow(nsIWidget* aWidget)
+{
+  RefPtr<nsIWidget> widget(aWidget);
+  if (widget) {
+    nsView* view = nsView::GetViewFor(widget);
+    LayerManager* manager = widget->GetLayerManager();
+=======
+void nsViewManager::WillPaintWindow(nsIWidget* aWidget) {
+  if (aWidget) {
+    nsView* view = nsView::GetViewFor(aWidget);
+    LayerManager* manager = aWidget->GetLayerManager();
+>>>>>>> upstream-releases
     if (view &&
         (view->ForcedRepaint() || !manager->NeedsWidgetInvalidation())) {
       ProcessPendingUpdates();
       // Re-get the view pointer here since the ProcessPendingUpdates might have
       // destroyed it during CallWillPaintOnObservers.
-      view = nsView::GetViewFor(widget);
+      view = nsView::GetViewFor(aWidget);
       if (view) {
         view->SetForcedRepaint(false);
       }
     }
   }
 
-  nsCOMPtr<nsIPresShell> shell = mPresShell;
-  if (shell) {
-    shell->WillPaintWindow();
+  if (RefPtr<PresShell> presShell = mPresShell) {
+    presShell->WillPaintWindow();
   }
 }
 
@@ -697,10 +759,22 @@ bool nsViewManager::PaintWindow(nsIWidget* aWidget,
   return true;
 }
 
+<<<<<<< HEAD
 void nsViewManager::DidPaintWindow() {
   nsCOMPtr<nsIPresShell> shell = mPresShell;
   if (shell) {
     shell->DidPaintWindow();
+||||||| merged common ancestors
+void nsViewManager::DidPaintWindow()
+{
+  nsCOMPtr<nsIPresShell> shell = mPresShell;
+  if (shell) {
+    shell->DidPaintWindow();
+=======
+void nsViewManager::DidPaintWindow() {
+  if (RefPtr<PresShell> presShell = mPresShell) {
+    presShell->DidPaintWindow();
+>>>>>>> upstream-releases
   }
 }
 
@@ -750,6 +824,7 @@ void nsViewManager::DispatchEvent(WidgetGUIEvent* aEvent, nsView* aView,
     // Hold a refcount to the presshell. The continued existence of the
     // presshell will delay deletion of this view hierarchy should the event
     // want to cause its destruction in, say, some JavaScript event handler.
+<<<<<<< HEAD
     nsCOMPtr<nsIPresShell> shell = view->GetViewManager()->GetPresShell();
     if (shell) {
       if (aEvent->mMessage == eMouseDown || aEvent->mMessage == eMouseUp) {
@@ -762,6 +837,25 @@ void nsViewManager::DispatchEvent(WidgetGUIEvent* aEvent, nsView* aView,
       }
       shell->HandleEvent(frame, aEvent, false, aStatus);
       return;
+||||||| merged common ancestors
+    nsCOMPtr<nsIPresShell> shell = view->GetViewManager()->GetPresShell();
+    if (shell) {
+      if (aEvent->mMessage == eMouseDown ||
+          aEvent->mMessage == eMouseUp) {
+        AutoWeakFrame weakFrame(frame);
+        shell->FlushPendingNotifications(FlushType::Layout);
+        if (!weakFrame.IsAlive()) {
+          *aStatus = nsEventStatus_eIgnore;
+          return;
+        }
+      }
+      shell->HandleEvent(frame, aEvent, false, aStatus);
+	  return;
+=======
+    if (RefPtr<PresShell> presShell = view->GetViewManager()->GetPresShell()) {
+      presShell->HandleEvent(frame, aEvent, false, aStatus);
+      return;
+>>>>>>> upstream-releases
     }
   }
 
@@ -1016,7 +1110,8 @@ void nsViewManager::IsPainting(bool& aIsPainting) {
 
 void nsViewManager::ProcessPendingUpdates() {
   if (!IsRootVM()) {
-    RootViewManager()->ProcessPendingUpdates();
+    RefPtr<nsViewManager> rootViewManager = RootViewManager();
+    rootViewManager->ProcessPendingUpdates();
     return;
   }
 
@@ -1033,13 +1128,13 @@ void nsViewManager::ProcessPendingUpdates() {
 
 void nsViewManager::UpdateWidgetGeometry() {
   if (!IsRootVM()) {
-    RootViewManager()->UpdateWidgetGeometry();
+    RefPtr<nsViewManager> rootViewManager = RootViewManager();
+    rootViewManager->UpdateWidgetGeometry();
     return;
   }
 
   if (mHasPendingWidgetGeometryChanges) {
     mHasPendingWidgetGeometryChanges = false;
-    RefPtr<nsViewManager> strongThis(this);
     ProcessPendingUpdatesForView(mRootView, false);
   }
 }
@@ -1057,9 +1152,8 @@ void nsViewManager::CallWillPaintOnObservers() {
     if (vm->RootViewManager() == this) {
       // One of our kids.
       if (vm->mRootView && vm->mRootView->IsEffectivelyVisible()) {
-        nsCOMPtr<nsIPresShell> shell = vm->GetPresShell();
-        if (shell) {
-          shell->WillPaint();
+        if (RefPtr<PresShell> presShell = vm->GetPresShell()) {
+          presShell->WillPaint();
         }
       }
     }

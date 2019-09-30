@@ -27,7 +27,7 @@ class nsIDirectoryEnumerator;
 class nsITimer;
 
 #ifdef DEBUG
-#define DEBUG_STATS 1
+#  define DEBUG_STATS 1
 #endif
 
 namespace mozilla {
@@ -65,14 +65,25 @@ static_assert(sizeof(CacheIndexHeader::mVersion) +
                   sizeof(CacheIndexHeader),
               "Unexpected sizeof(CacheIndexHeader)!");
 
-#pragma pack(push, 4)
+#pragma pack(push, 1)
 struct CacheIndexRecord {
   SHA1Sum::Hash mHash;
   uint32_t mFrecency;
   OriginAttrsHash mOriginAttrsHash;
+<<<<<<< HEAD
   uint32_t mExpirationTime;
   uint16_t mOnStartTime;
   uint16_t mOnStopTime;
+||||||| merged common ancestors
+  uint32_t        mExpirationTime;
+  uint16_t        mOnStartTime;
+  uint16_t        mOnStopTime;
+=======
+  uint16_t mOnStartTime;
+  uint16_t mOnStopTime;
+  uint8_t mContentType;
+  uint16_t mBaseDomainAccessCount;
+>>>>>>> upstream-releases
 
   /*
    *    1000 0000 0000 0000 0000 0000 0000 0000 : initialized
@@ -88,15 +99,34 @@ struct CacheIndexRecord {
   uint32_t mFlags;
 
   CacheIndexRecord()
+<<<<<<< HEAD
       : mFrecency(0),
         mOriginAttrsHash(0),
         mExpirationTime(nsICacheEntry::NO_EXPIRATION_TIME),
         mOnStartTime(kIndexTimeNotAvailable),
         mOnStopTime(kIndexTimeNotAvailable),
         mFlags(0) {}
+||||||| merged common ancestors
+    : mFrecency(0)
+    , mOriginAttrsHash(0)
+    , mExpirationTime(nsICacheEntry::NO_EXPIRATION_TIME)
+    , mOnStartTime(kIndexTimeNotAvailable)
+    , mOnStopTime(kIndexTimeNotAvailable)
+    , mFlags(0)
+  {}
+=======
+      : mFrecency(0),
+        mOriginAttrsHash(0),
+        mOnStartTime(kIndexTimeNotAvailable),
+        mOnStopTime(kIndexTimeNotAvailable),
+        mContentType(nsICacheEntry::CONTENT_TYPE_UNKNOWN),
+        mBaseDomainAccessCount(0),
+        mFlags(0) {}
+>>>>>>> upstream-releases
 };
 #pragma pack(pop)
 
+<<<<<<< HEAD
 static_assert(sizeof(CacheIndexRecord::mHash) +
                       sizeof(CacheIndexRecord::mFrecency) +
                       sizeof(CacheIndexRecord::mOriginAttrsHash) +
@@ -113,13 +143,55 @@ class CacheIndexEntry : public PLDHashEntryHdr {
   typedef const SHA1Sum::Hash *KeyTypePointer;
 
   explicit CacheIndexEntry(KeyTypePointer aKey) {
+||||||| merged common ancestors
+static_assert(
+  sizeof(CacheIndexRecord::mHash) + sizeof(CacheIndexRecord::mFrecency) +
+  sizeof(CacheIndexRecord::mOriginAttrsHash) + sizeof(CacheIndexRecord::mExpirationTime) +
+  sizeof(CacheIndexRecord::mOnStartTime) + sizeof(CacheIndexRecord::mOnStopTime) +
+  sizeof(CacheIndexRecord::mFlags) == sizeof(CacheIndexRecord),
+  "Unexpected sizeof(CacheIndexRecord)!");
+
+class CacheIndexEntry : public PLDHashEntryHdr
+{
+public:
+  typedef const SHA1Sum::Hash& KeyType;
+  typedef const SHA1Sum::Hash* KeyTypePointer;
+
+  explicit CacheIndexEntry(KeyTypePointer aKey)
+  {
+=======
+static_assert(sizeof(CacheIndexRecord::mHash) +
+                      sizeof(CacheIndexRecord::mFrecency) +
+                      sizeof(CacheIndexRecord::mOriginAttrsHash) +
+                      sizeof(CacheIndexRecord::mOnStartTime) +
+                      sizeof(CacheIndexRecord::mOnStopTime) +
+                      sizeof(CacheIndexRecord::mContentType) +
+                      sizeof(CacheIndexRecord::mBaseDomainAccessCount) +
+                      sizeof(CacheIndexRecord::mFlags) ==
+                  sizeof(CacheIndexRecord),
+              "Unexpected sizeof(CacheIndexRecord)!");
+
+class CacheIndexEntry : public PLDHashEntryHdr {
+ public:
+  typedef const SHA1Sum::Hash& KeyType;
+  typedef const SHA1Sum::Hash* KeyTypePointer;
+
+  explicit CacheIndexEntry(KeyTypePointer aKey) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(CacheIndexEntry);
     mRec = new CacheIndexRecord();
     LOG(("CacheIndexEntry::CacheIndexEntry() - Created record [rec=%p]",
          mRec.get()));
     memcpy(&mRec->mHash, aKey, sizeof(SHA1Sum::Hash));
   }
+<<<<<<< HEAD
   CacheIndexEntry(const CacheIndexEntry &aOther) {
+||||||| merged common ancestors
+  CacheIndexEntry(const CacheIndexEntry& aOther)
+  {
+=======
+  CacheIndexEntry(const CacheIndexEntry& aOther) {
+>>>>>>> upstream-releases
     MOZ_ASSERT_UNREACHABLE("CacheIndexEntry copy constructor is forbidden!");
   }
   ~CacheIndexEntry() {
@@ -137,45 +209,75 @@ class CacheIndexEntry : public PLDHashEntryHdr {
   static KeyTypePointer KeyToPointer(KeyType aKey) { return &aKey; }
 
   // HashKey(): calculate the hash number
+<<<<<<< HEAD
   static PLDHashNumber HashKey(KeyTypePointer aKey) {
     return (reinterpret_cast<const uint32_t *>(aKey))[0];
+||||||| merged common ancestors
+  static PLDHashNumber HashKey(KeyTypePointer aKey)
+  {
+    return (reinterpret_cast<const uint32_t *>(aKey))[0];
+=======
+  static PLDHashNumber HashKey(KeyTypePointer aKey) {
+    return (reinterpret_cast<const uint32_t*>(aKey))[0];
+>>>>>>> upstream-releases
   }
 
   // ALLOW_MEMMOVE can we move this class with memmove(), or do we have
   // to use the copy constructor?
   enum { ALLOW_MEMMOVE = true };
 
+<<<<<<< HEAD
   bool operator==(const CacheIndexEntry &aOther) const {
+||||||| merged common ancestors
+  bool operator==(const CacheIndexEntry& aOther) const
+  {
+=======
+  bool operator==(const CacheIndexEntry& aOther) const {
+>>>>>>> upstream-releases
     return KeyEquals(&aOther.mRec->mHash);
   }
 
+<<<<<<< HEAD
   CacheIndexEntry &operator=(const CacheIndexEntry &aOther) {
     MOZ_ASSERT(
         memcmp(&mRec->mHash, &aOther.mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+||||||| merged common ancestors
+  CacheIndexEntry& operator=(const CacheIndexEntry& aOther)
+  {
+    MOZ_ASSERT(memcmp(&mRec->mHash, &aOther.mRec->mHash,
+               sizeof(SHA1Sum::Hash)) == 0);
+=======
+  CacheIndexEntry& operator=(const CacheIndexEntry& aOther) {
+    MOZ_ASSERT(
+        memcmp(&mRec->mHash, &aOther.mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+>>>>>>> upstream-releases
     mRec->mFrecency = aOther.mRec->mFrecency;
-    mRec->mExpirationTime = aOther.mRec->mExpirationTime;
     mRec->mOriginAttrsHash = aOther.mRec->mOriginAttrsHash;
     mRec->mOnStartTime = aOther.mRec->mOnStartTime;
     mRec->mOnStopTime = aOther.mRec->mOnStopTime;
+    mRec->mContentType = aOther.mRec->mContentType;
+    mRec->mBaseDomainAccessCount = aOther.mRec->mBaseDomainAccessCount;
     mRec->mFlags = aOther.mRec->mFlags;
     return *this;
   }
 
   void InitNew() {
     mRec->mFrecency = 0;
-    mRec->mExpirationTime = nsICacheEntry::NO_EXPIRATION_TIME;
     mRec->mOriginAttrsHash = 0;
     mRec->mOnStartTime = kIndexTimeNotAvailable;
     mRec->mOnStopTime = kIndexTimeNotAvailable;
+    mRec->mContentType = nsICacheEntry::CONTENT_TYPE_UNKNOWN;
+    mRec->mBaseDomainAccessCount = 0;
     mRec->mFlags = 0;
   }
 
   void Init(OriginAttrsHash aOriginAttrsHash, bool aAnonymous, bool aPinned) {
     MOZ_ASSERT(mRec->mFrecency == 0);
-    MOZ_ASSERT(mRec->mExpirationTime == nsICacheEntry::NO_EXPIRATION_TIME);
     MOZ_ASSERT(mRec->mOriginAttrsHash == 0);
     MOZ_ASSERT(mRec->mOnStartTime == kIndexTimeNotAvailable);
     MOZ_ASSERT(mRec->mOnStopTime == kIndexTimeNotAvailable);
+    MOZ_ASSERT(mRec->mContentType == nsICacheEntry::CONTENT_TYPE_UNKNOWN);
+    MOZ_ASSERT(mRec->mBaseDomainAccessCount == 0);
     // When we init the entry it must be fresh and may be dirty
     MOZ_ASSERT((mRec->mFlags & ~kDirtyMask) == kFreshMask);
 
@@ -189,7 +291,13 @@ class CacheIndexEntry : public PLDHashEntryHdr {
     }
   }
 
+<<<<<<< HEAD
   const SHA1Sum::Hash *Hash() const { return &mRec->mHash; }
+||||||| merged common ancestors
+  const SHA1Sum::Hash * Hash() const { return &mRec->mHash; }
+=======
+  const SHA1Sum::Hash* Hash() const { return &mRec->mHash; }
+>>>>>>> upstream-releases
 
   bool IsInitialized() const { return !!(mRec->mFlags & kInitializedMask); }
 
@@ -214,12 +322,25 @@ class CacheIndexEntry : public PLDHashEntryHdr {
   void SetFrecency(uint32_t aFrecency) { mRec->mFrecency = aFrecency; }
   uint32_t GetFrecency() const { return mRec->mFrecency; }
 
+<<<<<<< HEAD
   void SetExpirationTime(uint32_t aExpirationTime) {
     mRec->mExpirationTime = aExpirationTime;
   }
   uint32_t GetExpirationTime() const { return mRec->mExpirationTime; }
 
   void SetHasAltData(bool aHasAltData) {
+||||||| merged common ancestors
+  void     SetExpirationTime(uint32_t aExpirationTime)
+  {
+    mRec->mExpirationTime = aExpirationTime;
+  }
+  uint32_t GetExpirationTime() const { return mRec->mExpirationTime; }
+
+  void     SetHasAltData(bool aHasAltData)
+  {
+=======
+  void SetHasAltData(bool aHasAltData) {
+>>>>>>> upstream-releases
     aHasAltData ? mRec->mFlags |= kHasAltDataMask
                 : mRec->mFlags &= ~kHasAltDataMask;
   }
@@ -228,8 +349,29 @@ class CacheIndexEntry : public PLDHashEntryHdr {
   void SetOnStartTime(uint16_t aTime) { mRec->mOnStartTime = aTime; }
   uint16_t GetOnStartTime() const { return mRec->mOnStartTime; }
 
+<<<<<<< HEAD
   void SetOnStopTime(uint16_t aTime) { mRec->mOnStopTime = aTime; }
   uint16_t GetOnStopTime() const { return mRec->mOnStopTime; }
+||||||| merged common ancestors
+  void     SetOnStopTime(uint16_t aTime)
+  {
+    mRec->mOnStopTime = aTime;
+  }
+  uint16_t  GetOnStopTime() const { return mRec->mOnStopTime; }
+=======
+  void SetOnStopTime(uint16_t aTime) { mRec->mOnStopTime = aTime; }
+  uint16_t GetOnStopTime() const { return mRec->mOnStopTime; }
+
+  void SetContentType(uint8_t aType) { mRec->mContentType = aType; }
+  uint8_t GetContentType() const { return mRec->mContentType; }
+
+  void SetBaseDomainAccessCount(uint16_t aCount) {
+    mRec->mBaseDomainAccessCount = aCount;
+  }
+  uint8_t GetBaseDomainAccessCount() const {
+    return mRec->mBaseDomainAccessCount;
+  }
+>>>>>>> upstream-releases
 
   // Sets filesize in kilobytes.
   void SetFileSize(uint32_t aFileSize) {
@@ -245,12 +387,27 @@ class CacheIndexEntry : public PLDHashEntryHdr {
   }
   // Returns filesize in kilobytes.
   uint32_t GetFileSize() const { return GetFileSize(mRec); }
+<<<<<<< HEAD
   static uint32_t GetFileSize(CacheIndexRecord *aRec) {
+||||||| merged common ancestors
+  static uint32_t GetFileSize(CacheIndexRecord *aRec)
+  {
+=======
+  static uint32_t GetFileSize(CacheIndexRecord* aRec) {
+>>>>>>> upstream-releases
     return aRec->mFlags & kFileSizeMask;
   }
+<<<<<<< HEAD
   static uint32_t IsPinned(CacheIndexRecord *aRec) {
+||||||| merged common ancestors
+  static uint32_t IsPinned(CacheIndexRecord *aRec)
+  {
+=======
+  static uint32_t IsPinned(CacheIndexRecord* aRec) {
+>>>>>>> upstream-releases
     return aRec->mFlags & kPinnedMask;
   }
+<<<<<<< HEAD
   bool IsFileEmpty() const { return GetFileSize() == 0; }
 
   void WriteToBuf(void *aBuf) {
@@ -267,11 +424,44 @@ class CacheIndexEntry : public PLDHashEntryHdr {
     ptr += sizeof(uint16_t);
     NetworkEndian::writeUint16(ptr, mRec->mOnStopTime);
     ptr += sizeof(uint16_t);
+||||||| merged common ancestors
+  bool     IsFileEmpty() const { return GetFileSize() == 0; }
+
+  void WriteToBuf(void *aBuf)
+  {
+    uint8_t* ptr = static_cast<uint8_t*>(aBuf);
+    memcpy(ptr, mRec->mHash, sizeof(SHA1Sum::Hash)); ptr += sizeof(SHA1Sum::Hash);
+    NetworkEndian::writeUint32(ptr, mRec->mFrecency); ptr += sizeof(uint32_t);
+    NetworkEndian::writeUint64(ptr, mRec->mOriginAttrsHash); ptr += sizeof(uint64_t);
+    NetworkEndian::writeUint32(ptr, mRec->mExpirationTime); ptr += sizeof(uint32_t);
+    NetworkEndian::writeUint16(ptr, mRec->mOnStartTime); ptr += sizeof(uint16_t);
+    NetworkEndian::writeUint16(ptr, mRec->mOnStopTime); ptr += sizeof(uint16_t);
+=======
+  bool IsFileEmpty() const { return GetFileSize() == 0; }
+
+  void WriteToBuf(void* aBuf) {
+    uint8_t* ptr = static_cast<uint8_t*>(aBuf);
+    memcpy(ptr, mRec->mHash, sizeof(SHA1Sum::Hash));
+    ptr += sizeof(SHA1Sum::Hash);
+    NetworkEndian::writeUint32(ptr, mRec->mFrecency);
+    ptr += sizeof(uint32_t);
+    NetworkEndian::writeUint64(ptr, mRec->mOriginAttrsHash);
+    ptr += sizeof(uint64_t);
+    NetworkEndian::writeUint16(ptr, mRec->mOnStartTime);
+    ptr += sizeof(uint16_t);
+    NetworkEndian::writeUint16(ptr, mRec->mOnStopTime);
+    ptr += sizeof(uint16_t);
+    *ptr = mRec->mContentType;
+    ptr += sizeof(uint8_t);
+    NetworkEndian::writeUint16(ptr, mRec->mBaseDomainAccessCount);
+    ptr += sizeof(uint16_t);
+>>>>>>> upstream-releases
     // Dirty and fresh flags should never go to disk, since they make sense only
     // during current session.
     NetworkEndian::writeUint32(ptr, mRec->mFlags & ~(kDirtyMask | kFreshMask));
   }
 
+<<<<<<< HEAD
   void ReadFromBuf(void *aBuf) {
     const uint8_t *ptr = static_cast<const uint8_t *>(aBuf);
     MOZ_ASSERT(memcmp(&mRec->mHash, ptr, sizeof(SHA1Sum::Hash)) == 0);
@@ -286,6 +476,34 @@ class CacheIndexEntry : public PLDHashEntryHdr {
     ptr += sizeof(uint16_t);
     mRec->mOnStopTime = NetworkEndian::readUint16(ptr);
     ptr += sizeof(uint16_t);
+||||||| merged common ancestors
+  void ReadFromBuf(void *aBuf)
+  {
+    const uint8_t* ptr = static_cast<const uint8_t*>(aBuf);
+    MOZ_ASSERT(memcmp(&mRec->mHash, ptr, sizeof(SHA1Sum::Hash)) == 0); ptr += sizeof(SHA1Sum::Hash);
+    mRec->mFrecency = NetworkEndian::readUint32(ptr); ptr += sizeof(uint32_t);
+    mRec->mOriginAttrsHash = NetworkEndian::readUint64(ptr); ptr += sizeof(uint64_t);
+    mRec->mExpirationTime = NetworkEndian::readUint32(ptr); ptr += sizeof(uint32_t);
+    mRec->mOnStartTime = NetworkEndian::readUint16(ptr); ptr += sizeof(uint16_t);
+    mRec->mOnStopTime = NetworkEndian::readUint16(ptr); ptr += sizeof(uint16_t);
+=======
+  void ReadFromBuf(void* aBuf) {
+    const uint8_t* ptr = static_cast<const uint8_t*>(aBuf);
+    MOZ_ASSERT(memcmp(&mRec->mHash, ptr, sizeof(SHA1Sum::Hash)) == 0);
+    ptr += sizeof(SHA1Sum::Hash);
+    mRec->mFrecency = NetworkEndian::readUint32(ptr);
+    ptr += sizeof(uint32_t);
+    mRec->mOriginAttrsHash = NetworkEndian::readUint64(ptr);
+    ptr += sizeof(uint64_t);
+    mRec->mOnStartTime = NetworkEndian::readUint16(ptr);
+    ptr += sizeof(uint16_t);
+    mRec->mOnStopTime = NetworkEndian::readUint16(ptr);
+    ptr += sizeof(uint16_t);
+    mRec->mContentType = *ptr;
+    ptr += sizeof(uint8_t);
+    mRec->mBaseDomainAccessCount = NetworkEndian::readUint16(ptr);
+    ptr += sizeof(uint16_t);
+>>>>>>> upstream-releases
     mRec->mFlags = NetworkEndian::readUint32(ptr);
   }
 
@@ -293,16 +511,26 @@ class CacheIndexEntry : public PLDHashEntryHdr {
     LOG(
         ("CacheIndexEntry::Log() [this=%p, hash=%08x%08x%08x%08x%08x, fresh=%u,"
          " initialized=%u, removed=%u, dirty=%u, anonymous=%u, "
-         "originAttrsHash=%" PRIx64 ", frecency=%u, expirationTime=%u, "
-         "hasAltData=%u, onStartTime=%u, onStopTime=%u, size=%u]",
+         "originAttrsHash=%" PRIx64 ", frecency=%u, hasAltData=%u, "
+         "onStartTime=%u, onStopTime=%u, contentType=%u, "
+         "baseDomainAccessCount=%u, size=%u]",
          this, LOGSHA1(mRec->mHash), IsFresh(), IsInitialized(), IsRemoved(),
          IsDirty(), Anonymous(), OriginAttrsHash(), GetFrecency(),
-         GetExpirationTime(), GetHasAltData(), GetOnStartTime(),
-         GetOnStopTime(), GetFileSize()));
+         GetHasAltData(), GetOnStartTime(), GetOnStopTime(), GetContentType(),
+         GetBaseDomainAccessCount(), GetFileSize()));
   }
 
+<<<<<<< HEAD
   static bool RecordMatchesLoadContextInfo(CacheIndexRecord *aRec,
                                            nsILoadContextInfo *aInfo) {
+||||||| merged common ancestors
+  static bool RecordMatchesLoadContextInfo(CacheIndexRecord *aRec,
+                                           nsILoadContextInfo *aInfo)
+  {
+=======
+  static bool RecordMatchesLoadContextInfo(CacheIndexRecord* aRec,
+                                           nsILoadContextInfo* aInfo) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(aInfo);
 
     if (!aInfo->IsPrivate() &&
@@ -370,18 +598,42 @@ class CacheIndexEntryUpdate : public CacheIndexEntry {
     LOG(("CacheIndexEntryUpdate::~CacheIndexEntryUpdate()"));
   }
 
+<<<<<<< HEAD
   CacheIndexEntryUpdate &operator=(const CacheIndexEntry &aOther) {
     MOZ_ASSERT(
         memcmp(&mRec->mHash, &aOther.mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+||||||| merged common ancestors
+  CacheIndexEntryUpdate& operator=(const CacheIndexEntry& aOther)
+  {
+    MOZ_ASSERT(memcmp(&mRec->mHash, &aOther.mRec->mHash,
+               sizeof(SHA1Sum::Hash)) == 0);
+=======
+  CacheIndexEntryUpdate& operator=(const CacheIndexEntry& aOther) {
+    MOZ_ASSERT(
+        memcmp(&mRec->mHash, &aOther.mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+>>>>>>> upstream-releases
     mUpdateFlags = 0;
-    *(static_cast<CacheIndexEntry *>(this)) = aOther;
+    *(static_cast<CacheIndexEntry*>(this)) = aOther;
     return *this;
   }
 
+<<<<<<< HEAD
   void InitNew() {
     mUpdateFlags = kFrecencyUpdatedMask | kExpirationUpdatedMask |
                    kHasAltDataUpdatedMask | kOnStartTimeUpdatedMask |
                    kOnStopTimeUpdatedMask | kFileSizeUpdatedMask;
+||||||| merged common ancestors
+  void InitNew()
+  {
+    mUpdateFlags = kFrecencyUpdatedMask | kExpirationUpdatedMask |
+                   kHasAltDataUpdatedMask | kOnStartTimeUpdatedMask |
+                   kOnStopTimeUpdatedMask | kFileSizeUpdatedMask;
+=======
+  void InitNew() {
+    mUpdateFlags = kFrecencyUpdatedMask | kHasAltDataUpdatedMask |
+                   kOnStartTimeUpdatedMask | kOnStopTimeUpdatedMask |
+                   kContentTypeUpdatedMask | kFileSizeUpdatedMask;
+>>>>>>> upstream-releases
     CacheIndexEntry::InitNew();
   }
 
@@ -390,12 +642,25 @@ class CacheIndexEntryUpdate : public CacheIndexEntry {
     CacheIndexEntry::SetFrecency(aFrecency);
   }
 
+<<<<<<< HEAD
   void SetExpirationTime(uint32_t aExpirationTime) {
     mUpdateFlags |= kExpirationUpdatedMask;
     CacheIndexEntry::SetExpirationTime(aExpirationTime);
   }
 
   void SetHasAltData(bool aHasAltData) {
+||||||| merged common ancestors
+  void SetExpirationTime(uint32_t aExpirationTime)
+  {
+    mUpdateFlags |= kExpirationUpdatedMask;
+    CacheIndexEntry::SetExpirationTime(aExpirationTime);
+  }
+
+  void SetHasAltData(bool aHasAltData)
+  {
+=======
+  void SetHasAltData(bool aHasAltData) {
+>>>>>>> upstream-releases
     mUpdateFlags |= kHasAltDataUpdatedMask;
     CacheIndexEntry::SetHasAltData(aHasAltData);
   }
@@ -410,19 +675,43 @@ class CacheIndexEntryUpdate : public CacheIndexEntry {
     CacheIndexEntry::SetOnStopTime(aTime);
   }
 
+<<<<<<< HEAD
   void SetFileSize(uint32_t aFileSize) {
+||||||| merged common ancestors
+  void SetFileSize(uint32_t aFileSize)
+  {
+=======
+  void SetContentType(uint8_t aType) {
+    mUpdateFlags |= kContentTypeUpdatedMask;
+    CacheIndexEntry::SetContentType(aType);
+  }
+
+  void SetBaseDomainAccessCount(uint16_t aCount) {
+    mUpdateFlags |= kBaseDomainAccessCountUpdatedMask;
+    CacheIndexEntry::SetBaseDomainAccessCount(aCount);
+  }
+
+  void SetFileSize(uint32_t aFileSize) {
+>>>>>>> upstream-releases
     mUpdateFlags |= kFileSizeUpdatedMask;
     CacheIndexEntry::SetFileSize(aFileSize);
   }
 
+<<<<<<< HEAD
   void ApplyUpdate(CacheIndexEntry *aDst) {
     MOZ_ASSERT(
         memcmp(&mRec->mHash, &aDst->mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+||||||| merged common ancestors
+  void ApplyUpdate(CacheIndexEntry *aDst) {
+    MOZ_ASSERT(memcmp(&mRec->mHash, &aDst->mRec->mHash,
+               sizeof(SHA1Sum::Hash)) == 0);
+=======
+  void ApplyUpdate(CacheIndexEntry* aDst) {
+    MOZ_ASSERT(
+        memcmp(&mRec->mHash, &aDst->mRec->mHash, sizeof(SHA1Sum::Hash)) == 0);
+>>>>>>> upstream-releases
     if (mUpdateFlags & kFrecencyUpdatedMask) {
       aDst->mRec->mFrecency = mRec->mFrecency;
-    }
-    if (mUpdateFlags & kExpirationUpdatedMask) {
-      aDst->mRec->mExpirationTime = mRec->mExpirationTime;
     }
     aDst->mRec->mOriginAttrsHash = mRec->mOriginAttrsHash;
     if (mUpdateFlags & kOnStartTimeUpdatedMask) {
@@ -430,6 +719,12 @@ class CacheIndexEntryUpdate : public CacheIndexEntry {
     }
     if (mUpdateFlags & kOnStopTimeUpdatedMask) {
       aDst->mRec->mOnStopTime = mRec->mOnStopTime;
+    }
+    if (mUpdateFlags & kContentTypeUpdatedMask) {
+      aDst->mRec->mContentType = mRec->mContentType;
+    }
+    if (mUpdateFlags & kBaseDomainAccessCountUpdatedMask) {
+      aDst->mRec->mBaseDomainAccessCount = mRec->mBaseDomainAccessCount;
     }
     if (mUpdateFlags & kHasAltDataUpdatedMask &&
         ((aDst->mRec->mFlags ^ mRec->mFlags) & kHasAltDataMask)) {
@@ -449,11 +744,12 @@ class CacheIndexEntryUpdate : public CacheIndexEntry {
 
  private:
   static const uint32_t kFrecencyUpdatedMask = 0x00000001;
-  static const uint32_t kExpirationUpdatedMask = 0x00000002;
+  static const uint32_t kContentTypeUpdatedMask = 0x00000002;
   static const uint32_t kFileSizeUpdatedMask = 0x00000004;
   static const uint32_t kHasAltDataUpdatedMask = 0x00000008;
   static const uint32_t kOnStartTimeUpdatedMask = 0x00000010;
   static const uint32_t kOnStopTimeUpdatedMask = 0x00000020;
+  static const uint32_t kBaseDomainAccessCountUpdatedMask = 0x00000040;
 
   uint32_t mUpdateFlags;
 };
@@ -476,7 +772,14 @@ class CacheIndexStats {
   {
   }
 
+<<<<<<< HEAD
   bool operator==(const CacheIndexStats &aOther) const {
+||||||| merged common ancestors
+  bool operator==(const CacheIndexStats& aOther) const
+  {
+=======
+  bool operator==(const CacheIndexStats& aOther) const {
+>>>>>>> upstream-releases
     return
 #ifdef DEBUG
         aOther.mStateLogged == mStateLogged &&
@@ -541,7 +844,7 @@ class CacheIndexStats {
     return mSize;
   }
 
-  void BeforeChange(const CacheIndexEntry *aEntry) {
+  void BeforeChange(const CacheIndexEntry* aEntry) {
 #ifdef DEBUG_STATS
     if (!mDisableLogging) {
       LOG(("CacheIndexStats::BeforeChange()"));
@@ -586,9 +889,18 @@ class CacheIndexStats {
     }
   }
 
+<<<<<<< HEAD
   void AfterChange(const CacheIndexEntry *aEntry) {
     MOZ_ASSERT(mStateLogged,
                "CacheIndexStats::AfterChange() - state not "
+||||||| merged common ancestors
+  void AfterChange(const CacheIndexEntry *aEntry) {
+    MOZ_ASSERT(mStateLogged, "CacheIndexStats::AfterChange() - state not "
+=======
+  void AfterChange(const CacheIndexEntry* aEntry) {
+    MOZ_ASSERT(mStateLogged,
+               "CacheIndexStats::AfterChange() - state not "
+>>>>>>> upstream-releases
                "logged!");
 #ifdef DEBUG
     mStateLogged = false;
@@ -652,7 +964,7 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
   CacheIndex();
 
-  static nsresult Init(nsIFile *aCacheDirectory);
+  static nsresult Init(nsIFile* aCacheDirectory);
   static nsresult PreShutdown();
   static nsresult Shutdown();
 
@@ -662,28 +974,40 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   // method is called whenever a new handle for a new entry file is created. The
   // newly created entry is not initialized and it must be either initialized
   // with InitEntry() or removed with RemoveEntry().
-  static nsresult AddEntry(const SHA1Sum::Hash *aHash);
+  static nsresult AddEntry(const SHA1Sum::Hash* aHash);
 
   // Inform index about an existing entry that should be present in index. This
   // method is called whenever a new handle for an existing entry file is
   // created. Like in case of AddEntry(), either InitEntry() or RemoveEntry()
   // must be called on the entry, since the entry is not initizlized if the
   // index is outdated.
-  static nsresult EnsureEntryExists(const SHA1Sum::Hash *aHash);
+  static nsresult EnsureEntryExists(const SHA1Sum::Hash* aHash);
 
   // Initialize the entry. It MUST be present in index. Call to AddEntry() or
   // EnsureEntryExists() must precede the call to this method.
+<<<<<<< HEAD
   static nsresult InitEntry(const SHA1Sum::Hash *aHash,
                             OriginAttrsHash aOriginAttrsHash, bool aAnonymous,
                             bool aPinned);
+||||||| merged common ancestors
+  static nsresult InitEntry(const SHA1Sum::Hash *aHash,
+                            OriginAttrsHash      aOriginAttrsHash,
+                            bool                 aAnonymous,
+                            bool                 aPinned);
+=======
+  static nsresult InitEntry(const SHA1Sum::Hash* aHash,
+                            OriginAttrsHash aOriginAttrsHash, bool aAnonymous,
+                            bool aPinned);
+>>>>>>> upstream-releases
 
   // Remove entry from index. The entry should be present in index.
-  static nsresult RemoveEntry(const SHA1Sum::Hash *aHash);
+  static nsresult RemoveEntry(const SHA1Sum::Hash* aHash);
 
   // Update some information in entry. The entry MUST be present in index and
   // MUST be initialized. Call to AddEntry() or EnsureEntryExists() and to
   // InitEntry() must precede the call to this method.
   // Pass nullptr if the value didn't change.
+<<<<<<< HEAD
   static nsresult UpdateEntry(const SHA1Sum::Hash *aHash,
                               const uint32_t *aFrecency,
                               const uint32_t *aExpirationTime,
@@ -691,6 +1015,22 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
                               const uint16_t *aOnStartTime,
                               const uint16_t *aOnStopTime,
                               const uint32_t *aSize);
+||||||| merged common ancestors
+  static nsresult UpdateEntry(const SHA1Sum::Hash *aHash,
+                              const uint32_t      *aFrecency,
+                              const uint32_t      *aExpirationTime,
+                              const bool          *aHasAltData,
+                              const uint16_t      *aOnStartTime,
+                              const uint16_t      *aOnStopTime,
+                              const uint32_t      *aSize);
+=======
+  static nsresult UpdateEntry(
+      const SHA1Sum::Hash* aHash, const uint32_t* aFrecency,
+      const bool* aHasAltData, const uint16_t* aOnStartTime,
+      const uint16_t* aOnStopTime, const uint8_t* aContentType,
+      const uint16_t* aBaseDomainAccessCount, const uint32_t aTelemetryReportID,
+      const uint32_t* aSize);
+>>>>>>> upstream-releases
 
   // Remove all entries from the index. Called when clearing the whole cache.
   static nsresult RemoveAll();
@@ -701,57 +1041,102 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   // on any thread.
   // If the optional aCB callback is given, the it will be called with a
   // CacheIndexEntry only if _retval is EXISTS when the method returns.
+<<<<<<< HEAD
   static nsresult HasEntry(
       const nsACString &aKey, EntryStatus *_retval,
       const std::function<void(const CacheIndexEntry *)> &aCB = nullptr);
   static nsresult HasEntry(
       const SHA1Sum::Hash &hash, EntryStatus *_retval,
       const std::function<void(const CacheIndexEntry *)> &aCB = nullptr);
+||||||| merged common ancestors
+  static nsresult HasEntry(const nsACString &aKey, EntryStatus *_retval,
+                           const std::function<void(const CacheIndexEntry*)> &aCB = nullptr);
+  static nsresult HasEntry(const SHA1Sum::Hash &hash, EntryStatus *_retval,
+                           const std::function<void(const CacheIndexEntry*)> &aCB = nullptr);
+=======
+  static nsresult HasEntry(
+      const nsACString& aKey, EntryStatus* _retval,
+      const std::function<void(const CacheIndexEntry*)>& aCB = nullptr);
+  static nsresult HasEntry(
+      const SHA1Sum::Hash& hash, EntryStatus* _retval,
+      const std::function<void(const CacheIndexEntry*)>& aCB = nullptr);
+>>>>>>> upstream-releases
 
   // Returns a hash of the least important entry that should be evicted if the
   // cache size is over limit and also returns a total number of all entries in
   // the index minus the number of forced valid entries and unpinned entries
   // that we encounter when searching (see below)
+<<<<<<< HEAD
   static nsresult GetEntryForEviction(bool aIgnoreEmptyEntries,
                                       SHA1Sum::Hash *aHash, uint32_t *aCnt);
+||||||| merged common ancestors
+  static nsresult GetEntryForEviction(bool aIgnoreEmptyEntries, SHA1Sum::Hash *aHash, uint32_t *aCnt);
+=======
+  static nsresult GetEntryForEviction(bool aIgnoreEmptyEntries,
+                                      SHA1Sum::Hash* aHash, uint32_t* aCnt);
+>>>>>>> upstream-releases
 
   // Checks if a cache entry is currently forced valid. Used to prevent an entry
   // (that has been forced valid) from being evicted when the cache size reaches
   // its limit.
-  static bool IsForcedValidEntry(const SHA1Sum::Hash *aHash);
+  static bool IsForcedValidEntry(const SHA1Sum::Hash* aHash);
 
   // Returns cache size in kB.
-  static nsresult GetCacheSize(uint32_t *_retval);
+  static nsresult GetCacheSize(uint32_t* _retval);
 
   // Returns number of entry files in the cache
-  static nsresult GetEntryFileCount(uint32_t *_retval);
+  static nsresult GetEntryFileCount(uint32_t* _retval);
 
+<<<<<<< HEAD
   // Synchronously returns the disk occupation and number of entries
   // per-context. Callable on any thread. It will ignore loadContextInfo and get
   // stats for all entries if the aInfo is a nullptr.
   static nsresult GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize,
                                 uint32_t *aCount);
+||||||| merged common ancestors
+  // Synchronously returns the disk occupation and number of entries per-context.
+  // Callable on any thread. It will ignore loadContextInfo and get stats for
+  // all entries if the aInfo is a nullptr.
+  static nsresult GetCacheStats(nsILoadContextInfo *aInfo, uint32_t *aSize, uint32_t *aCount);
+=======
+  // Synchronously returns the disk occupation and number of entries
+  // per-context. Callable on any thread. It will ignore loadContextInfo and get
+  // stats for all entries if the aInfo is a nullptr.
+  static nsresult GetCacheStats(nsILoadContextInfo* aInfo, uint32_t* aSize,
+                                uint32_t* aCount);
+>>>>>>> upstream-releases
 
   // Asynchronously gets the disk cache size, used for display in the UI.
+<<<<<<< HEAD
   static nsresult AsyncGetDiskConsumption(
       nsICacheStorageConsumptionObserver *aObserver);
+||||||| merged common ancestors
+  static nsresult AsyncGetDiskConsumption(nsICacheStorageConsumptionObserver* aObserver);
+=======
+  static nsresult AsyncGetDiskConsumption(
+      nsICacheStorageConsumptionObserver* aObserver);
+>>>>>>> upstream-releases
 
   // Returns an iterator that returns entries matching a given context that were
   // present in the index at the time this method was called. If aAddNew is true
   // then the iterator will also return entries created after this call.
   // NOTE: When some entry is removed from index it is removed also from the
   // iterator regardless what aAddNew was passed.
-  static nsresult GetIterator(nsILoadContextInfo *aInfo, bool aAddNew,
-                              CacheIndexIterator **_retval);
+  static nsresult GetIterator(nsILoadContextInfo* aInfo, bool aAddNew,
+                              CacheIndexIterator** _retval);
 
   // Returns true if we _think_ that the index is up to date. I.e. the state is
   // READY or WRITING and mIndexNeedsUpdate as well as mShuttingDown is false.
-  static nsresult IsUpToDate(bool *_retval);
+  static nsresult IsUpToDate(bool* _retval);
 
   // Called from CacheStorageService::Clear() and
   // CacheFileContextEvictor::EvictEntries(), sets a flag that blocks
   // notification to AsyncGetDiskConsumption.
   static void OnAsyncEviction(bool aEvicting);
+
+  // We keep track of total bytes written to the cache to be able to do
+  // a telemetry report after writting certain amount of data to the cache.
+  static void UpdateTotalBytesWritten(uint32_t aBytesWritten);
 
   // Memory reporting
   static size_t SizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
@@ -764,19 +1149,52 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
   virtual ~CacheIndex();
 
+<<<<<<< HEAD
   NS_IMETHOD OnFileOpened(CacheFileHandle *aHandle, nsresult aResult) override;
   nsresult OnFileOpenedInternal(FileOpenHelper *aOpener,
                                 CacheFileHandle *aHandle, nsresult aResult);
   NS_IMETHOD OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
+||||||| merged common ancestors
+  NS_IMETHOD OnFileOpened(CacheFileHandle *aHandle, nsresult aResult) override;
+  nsresult   OnFileOpenedInternal(FileOpenHelper *aOpener,
+                                  CacheFileHandle *aHandle, nsresult aResult);
+  NS_IMETHOD OnDataWritten(CacheFileHandle *aHandle, const char *aBuf,
+=======
+  NS_IMETHOD OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) override;
+  nsresult OnFileOpenedInternal(FileOpenHelper* aOpener,
+                                CacheFileHandle* aHandle, nsresult aResult);
+  NS_IMETHOD OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
+>>>>>>> upstream-releases
                            nsresult aResult) override;
+<<<<<<< HEAD
   NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf,
                         nsresult aResult) override;
   NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
   NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
   NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
+||||||| merged common ancestors
+  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf, nsresult aResult) override;
+  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
+  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
+  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
+=======
+  NS_IMETHOD OnDataRead(CacheFileHandle* aHandle, char* aBuf,
+                        nsresult aResult) override;
+  NS_IMETHOD OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) override;
+  NS_IMETHOD OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) override;
+  NS_IMETHOD OnFileRenamed(CacheFileHandle* aHandle, nsresult aResult) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult InitInternal(nsIFile *aCacheDirectory);
   void PreShutdownInternal();
+||||||| merged common ancestors
+  nsresult InitInternal(nsIFile *aCacheDirectory);
+  void     PreShutdownInternal();
+=======
+  nsresult InitInternal(nsIFile* aCacheDirectory);
+  void PreShutdownInternal();
+>>>>>>> upstream-releases
 
   // This method returns false when index is not initialized or is shut down.
   bool IsIndexUsable();
@@ -785,10 +1203,20 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   // originAttributes and isAnonymous. We don't expect to find a collision
   // since these values are part of the key that we hash and we use a strong
   // hash function.
+<<<<<<< HEAD
   static bool IsCollision(CacheIndexEntry *aEntry,
                           OriginAttrsHash aOriginAttrsHash, bool aAnonymous);
+||||||| merged common ancestors
+  static bool IsCollision(CacheIndexEntry *aEntry,
+                          OriginAttrsHash  aOriginAttrsHash,
+                          bool             aAnonymous);
+=======
+  static bool IsCollision(CacheIndexEntry* aEntry,
+                          OriginAttrsHash aOriginAttrsHash, bool aAnonymous);
+>>>>>>> upstream-releases
 
   // Checks whether any of the information about the entry has changed.
+<<<<<<< HEAD
   static bool HasEntryChanged(CacheIndexEntry *aEntry,
                               const uint32_t *aFrecency,
                               const uint32_t *aExpirationTime,
@@ -796,6 +1224,21 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
                               const uint16_t *aOnStartTime,
                               const uint16_t *aOnStopTime,
                               const uint32_t *aSize);
+||||||| merged common ancestors
+  static bool HasEntryChanged(CacheIndexEntry *aEntry,
+                              const uint32_t  *aFrecency,
+                              const uint32_t  *aExpirationTime,
+                              const bool      *aHasAltData,
+                              const uint16_t  *aOnStartTime,
+                              const uint16_t  *aOnStopTime,
+                              const uint32_t  *aSize);
+=======
+  static bool HasEntryChanged(
+      CacheIndexEntry* aEntry, const uint32_t* aFrecency,
+      const bool* aHasAltData, const uint16_t* aOnStartTime,
+      const uint16_t* aOnStopTime, const uint8_t* aContentType,
+      const uint16_t* aBaseDomainAccessCount, const uint32_t* aSize);
+>>>>>>> upstream-releases
 
   // Merge all pending operations from mPendingUpdates into mIndex.
   void ProcessPendingOperations();
@@ -826,10 +1269,22 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   // dirty, i.e. changes that are not present in the index file on the disk.
   // When the log is written successfully, the dirty flag in index file is
   // cleared.
+<<<<<<< HEAD
   nsresult GetFile(const nsACString &aName, nsIFile **_retval);
   nsresult RemoveFile(const nsACString &aName);
   void RemoveAllIndexFiles();
   void RemoveJournalAndTempFile();
+||||||| merged common ancestors
+  nsresult GetFile(const nsACString &aName, nsIFile **_retval);
+  nsresult RemoveFile(const nsACString &aName);
+  void     RemoveAllIndexFiles();
+  void     RemoveJournalAndTempFile();
+=======
+  nsresult GetFile(const nsACString& aName, nsIFile** _retval);
+  nsresult RemoveFile(const nsACString& aName);
+  void RemoveAllIndexFiles();
+  void RemoveJournalAndTempFile();
+>>>>>>> upstream-releases
   // Writes journal to the disk and clears dirty flag in index header.
   nsresult WriteLogToDisk();
 
@@ -892,13 +1347,13 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
   // Following methods perform updating and building of the index.
   // Timer callback that starts update or build process.
-  static void DelayedUpdate(nsITimer *aTimer, void *aClosure);
+  static void DelayedUpdate(nsITimer* aTimer, void* aClosure);
   void DelayedUpdateLocked();
   // Posts timer event that start update or build process.
   nsresult ScheduleUpdateTimer(uint32_t aDelay);
   nsresult SetupDirectoryEnumerator();
-  nsresult InitEntryFromDiskData(CacheIndexEntry *aEntry,
-                                 CacheFileMetadata *aMetaData,
+  nsresult InitEntryFromDiskData(CacheIndexEntry* aEntry,
+                                 CacheFileMetadata* aMetaData,
                                  int64_t aFileSize);
   // Returns true when either a timer is scheduled or event is posted.
   bool IsUpdatePending();
@@ -969,7 +1424,13 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
     SHUTDOWN = 6
   };
 
+<<<<<<< HEAD
   static char const *StateString(EState aState);
+||||||| merged common ancestors
+  static char const * StateString(EState aState);
+=======
+  static char const* StateString(EState aState);
+>>>>>>> upstream-releases
   void ChangeState(EState aNewState);
   void NotifyAsyncGetDiskConsumptionCallbacks();
 
@@ -978,15 +1439,20 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   void ReleaseBuffer();
 
   // Methods used by CacheIndexEntryAutoManage to keep the iterators up to date.
-  void AddRecordToIterators(CacheIndexRecord *aRecord);
-  void RemoveRecordFromIterators(CacheIndexRecord *aRecord);
-  void ReplaceRecordInIterators(CacheIndexRecord *aOldRecord,
-                                CacheIndexRecord *aNewRecord);
+  void AddRecordToIterators(CacheIndexRecord* aRecord);
+  void RemoveRecordFromIterators(CacheIndexRecord* aRecord);
+  void ReplaceRecordInIterators(CacheIndexRecord* aOldRecord,
+                                CacheIndexRecord* aNewRecord);
 
   // Memory reporting (private part)
   size_t SizeOfExcludingThisInternal(mozilla::MallocSizeOf mallocSizeOf) const;
 
   void ReportHashStats();
+
+  // Reports telemetry about cache, i.e. size, entry count, content type stats
+  // and first party cache isolation stats. Clears first party cache isolation
+  // counters stored in the index entries and bumps a telemetry report ID.
+  void DoTelemetryReport();
 
   static mozilla::StaticRefPtr<CacheIndex> gInstance;
   static StaticMutex sLock;
@@ -1038,6 +1504,7 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   //  - in index file when reading index because they were already read
   uint32_t mSkipEntries;
   // Number of entries that should be written to disk. This is number of entries
+<<<<<<< HEAD
   // in hashtable that are initialized and are not marked as removed when
   // writing begins.
   uint32_t mProcessEntries;
@@ -1045,6 +1512,23 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   uint32_t mRWBufSize;
   uint32_t mRWBufPos;
   RefPtr<CacheHash> mRWHash;
+||||||| merged common ancestors
+  // in hashtable that are initialized and are not marked as removed when writing
+  // begins.
+  uint32_t                  mProcessEntries;
+  char                     *mRWBuf;
+  uint32_t                  mRWBufSize;
+  uint32_t                  mRWBufPos;
+  RefPtr<CacheHash>         mRWHash;
+=======
+  // in hashtable that are initialized and are not marked as removed when
+  // writing begins.
+  uint32_t mProcessEntries;
+  char* mRWBuf;
+  uint32_t mRWBufSize;
+  uint32_t mRWBufPos;
+  RefPtr<CacheHash> mRWHash;
+>>>>>>> upstream-releases
 
   // True if read or write operation is pending. It is used to ensure that
   // mRWBuf is not freed until OnDataRead or OnDataWritten is called.
@@ -1091,11 +1575,29 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
   // at the end of the array. This protects recently updated entries from
   // eviction. The array is sorted once we hit the limit of maximum unsorted
   // entries.
+<<<<<<< HEAD
   class FrecencyArray {
     class Iterator {
      public:
       explicit Iterator(nsTArray<CacheIndexRecord *> *aRecs)
           : mRecs(aRecs), mIdx(0) {
+||||||| merged common ancestors
+  class FrecencyArray
+  {
+    class Iterator
+    {
+    public:
+      explicit Iterator(nsTArray<CacheIndexRecord *> *aRecs)
+        : mRecs(aRecs)
+        , mIdx(0)
+      {
+=======
+  class FrecencyArray {
+    class Iterator {
+     public:
+      explicit Iterator(nsTArray<CacheIndexRecord*>* aRecs)
+          : mRecs(aRecs), mIdx(0) {
+>>>>>>> upstream-releases
         while (!Done() && !(*mRecs)[mIdx]) {
           mIdx++;
         }
@@ -1103,7 +1605,14 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
       bool Done() const { return mIdx == mRecs->Length(); }
 
+<<<<<<< HEAD
       CacheIndexRecord *Get() const {
+||||||| merged common ancestors
+      CacheIndexRecord* Get() const
+      {
+=======
+      CacheIndexRecord* Get() const {
+>>>>>>> upstream-releases
         MOZ_ASSERT(!Done());
         return (*mRecs)[mIdx];
       }
@@ -1116,8 +1625,16 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
         }
       }
 
+<<<<<<< HEAD
      private:
       nsTArray<CacheIndexRecord *> *mRecs;
+||||||| merged common ancestors
+    private:
+      nsTArray<CacheIndexRecord *> *mRecs;
+=======
+     private:
+      nsTArray<CacheIndexRecord*>* mRecs;
+>>>>>>> upstream-releases
       uint32_t mIdx;
     };
 
@@ -1127,10 +1644,10 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
     FrecencyArray() : mUnsortedElements(0), mRemovedElements(0) {}
 
     // Methods used by CacheIndexEntryAutoManage to keep the array up to date.
-    void AppendRecord(CacheIndexRecord *aRecord);
-    void RemoveRecord(CacheIndexRecord *aRecord);
-    void ReplaceRecord(CacheIndexRecord *aOldRecord,
-                       CacheIndexRecord *aNewRecord);
+    void AppendRecord(CacheIndexRecord* aRecord);
+    void RemoveRecord(CacheIndexRecord* aRecord);
+    void ReplaceRecord(CacheIndexRecord* aOldRecord,
+                       CacheIndexRecord* aNewRecord);
     void SortIfNeeded();
 
     size_t Length() const { return mRecs.Length() - mRemovedElements; }
@@ -1139,8 +1656,16 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
    private:
     friend class CacheIndex;
 
+<<<<<<< HEAD
     nsTArray<CacheIndexRecord *> mRecs;
     uint32_t mUnsortedElements;
+||||||| merged common ancestors
+    nsTArray<CacheIndexRecord *> mRecs;
+    uint32_t                     mUnsortedElements;
+=======
+    nsTArray<CacheIndexRecord*> mRecs;
+    uint32_t mUnsortedElements;
+>>>>>>> upstream-releases
     // Instead of removing elements from the array immediately, we null them out
     // and the iterator skips them when accessing the array. The null pointers
     // are placed at the end during sorting and we strip them out all at once.
@@ -1150,17 +1675,30 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
   FrecencyArray mFrecencyArray;
 
-  nsTArray<CacheIndexIterator *> mIterators;
+  nsTArray<CacheIndexIterator*> mIterators;
 
   // This flag is true iff we are between CacheStorageService:Clear() and
   // processing all contexts to be evicted.  It will make UI to show
   // "calculating" instead of any intermediate cache size.
   bool mAsyncGetDiskConsumptionBlocked;
 
+<<<<<<< HEAD
   class DiskConsumptionObserver : public Runnable {
    public:
     static DiskConsumptionObserver *Init(
         nsICacheStorageConsumptionObserver *aObserver) {
+||||||| merged common ancestors
+  class DiskConsumptionObserver : public Runnable
+  {
+  public:
+    static DiskConsumptionObserver* Init(nsICacheStorageConsumptionObserver* aObserver)
+    {
+=======
+  class DiskConsumptionObserver : public Runnable {
+   public:
+    static DiskConsumptionObserver* Init(
+        nsICacheStorageConsumptionObserver* aObserver) {
+>>>>>>> upstream-releases
       nsWeakPtr observer = do_GetWeakReference(aObserver);
       if (!observer) return nullptr;
 
@@ -1172,11 +1710,27 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
       NS_DispatchToMainThread(this);
     }
 
+<<<<<<< HEAD
    private:
     explicit DiskConsumptionObserver(nsWeakPtr const &aWeakObserver)
         : Runnable("net::CacheIndex::DiskConsumptionObserver"),
           mObserver(aWeakObserver),
           mSize(0) {}
+||||||| merged common ancestors
+  private:
+    explicit DiskConsumptionObserver(nsWeakPtr const& aWeakObserver)
+      : Runnable("net::CacheIndex::DiskConsumptionObserver")
+      , mObserver(aWeakObserver)
+      , mSize(0)
+    {
+    }
+=======
+   private:
+    explicit DiskConsumptionObserver(nsWeakPtr const& aWeakObserver)
+        : Runnable("net::CacheIndex::DiskConsumptionObserver"),
+          mObserver(aWeakObserver),
+          mSize(0) {}
+>>>>>>> upstream-releases
     virtual ~DiskConsumptionObserver() {
       if (mObserver && !NS_IsMainThread()) {
         NS_ReleaseOnMainThreadSystemGroup("DiskConsumptionObserver::mObserver",
@@ -1205,6 +1759,9 @@ class CacheIndex final : public CacheFileIOListener, public nsIRunnable {
 
   // List of async observers that want to get disk consumption information
   nsTArray<RefPtr<DiskConsumptionObserver> > mDiskConsumptionObservers;
+
+  // Number of bytes written to the cache since the last telemetry report
+  uint64_t mTotalBytesWritten;
 };
 
 }  // namespace net

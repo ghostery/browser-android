@@ -10,6 +10,7 @@
 #include "nsXULPrototypeDocument.h"
 #include "nsIServiceManager.h"
 #include "nsIURI.h"
+#include "nsNetUtil.h"
 
 #include "nsIFile.h"
 #include "nsIMemoryReporter.h"
@@ -67,20 +68,75 @@ static void DisableXULCacheChangedCallback(const char* aPref, void* aClosure) {
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsXULPrototypeCache* nsXULPrototypeCache::sInstance = nullptr;
 
 nsXULPrototypeCache::nsXULPrototypeCache() {}
+||||||| merged common ancestors
+nsXULPrototypeCache*  nsXULPrototypeCache::sInstance = nullptr;
+
+
+nsXULPrototypeCache::nsXULPrototypeCache()
+{
+}
+
+
+nsXULPrototypeCache::~nsXULPrototypeCache()
+{
+    FlushScripts();
+}
+=======
+nsXULPrototypeCache* nsXULPrototypeCache::sInstance = nullptr;
+
+nsXULPrototypeCache::nsXULPrototypeCache() {}
+>>>>>>> upstream-releases
 
 nsXULPrototypeCache::~nsXULPrototypeCache() { FlushScripts(); }
 
 NS_IMPL_ISUPPORTS(nsXULPrototypeCache, nsIObserver)
 
+<<<<<<< HEAD
 /* static */ nsXULPrototypeCache* nsXULPrototypeCache::GetInstance() {
+  if (!sInstance) {
+    NS_ADDREF(sInstance = new nsXULPrototypeCache());
+||||||| merged common ancestors
+/* static */ nsXULPrototypeCache*
+nsXULPrototypeCache::GetInstance()
+{
+    if (!sInstance) {
+        NS_ADDREF(sInstance = new nsXULPrototypeCache());
+
+        UpdategDisableXULCache();
+
+        Preferences::RegisterCallback(DisableXULCacheChangedCallback,
+                                      kDisableXULCachePref);
+=======
+/* static */
+nsXULPrototypeCache* nsXULPrototypeCache::GetInstance() {
   if (!sInstance) {
     NS_ADDREF(sInstance = new nsXULPrototypeCache());
 
     UpdategDisableXULCache();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    UpdategDisableXULCache();
+||||||| merged common ancestors
+        nsCOMPtr<nsIObserverService> obsSvc =
+            mozilla::services::GetObserverService();
+        if (obsSvc) {
+            nsXULPrototypeCache *p = sInstance;
+            obsSvc->AddObserver(p, "chrome-flush-skin-caches", false);
+            obsSvc->AddObserver(p, "chrome-flush-caches", false);
+            obsSvc->AddObserver(p, NS_XPCOM_SHUTDOWN_OBSERVER_ID, false);
+            obsSvc->AddObserver(p, "startupcache-invalidate", false);
+        }
+=======
+    Preferences::RegisterCallback(DisableXULCacheChangedCallback,
+                                  kDisableXULCachePref);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     Preferences::RegisterCallback(DisableXULCacheChangedCallback,
                                   kDisableXULCachePref);
 
@@ -92,6 +148,16 @@ NS_IMPL_ISUPPORTS(nsXULPrototypeCache, nsIObserver)
       obsSvc->AddObserver(p, "chrome-flush-caches", false);
       obsSvc->AddObserver(p, NS_XPCOM_SHUTDOWN_OBSERVER_ID, false);
       obsSvc->AddObserver(p, "startupcache-invalidate", false);
+||||||| merged common ancestors
+=======
+    nsCOMPtr<nsIObserverService> obsSvc =
+        mozilla::services::GetObserverService();
+    if (obsSvc) {
+      nsXULPrototypeCache* p = sInstance;
+      obsSvc->AddObserver(p, "chrome-flush-caches", false);
+      obsSvc->AddObserver(p, NS_XPCOM_SHUTDOWN_OBSERVER_ID, false);
+      obsSvc->AddObserver(p, "startupcache-invalidate", false);
+>>>>>>> upstream-releases
     }
   }
   return sInstance;
@@ -100,6 +166,7 @@ NS_IMPL_ISUPPORTS(nsXULPrototypeCache, nsIObserver)
 //----------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXULPrototypeCache::Observe(nsISupports* aSubject, const char* aTopic,
                              const char16_t* aData) {
   if (!strcmp(aTopic, "chrome-flush-skin-caches")) {
@@ -113,6 +180,38 @@ nsXULPrototypeCache::Observe(nsISupports* aSubject, const char* aTopic,
     NS_WARNING("Unexpected observer topic.");
   }
   return NS_OK;
+||||||| merged common ancestors
+nsXULPrototypeCache::Observe(nsISupports* aSubject,
+                             const char *aTopic,
+                             const char16_t *aData)
+{
+    if (!strcmp(aTopic, "chrome-flush-skin-caches")) {
+        FlushSkinFiles();
+    }
+    else if (!strcmp(aTopic, "chrome-flush-caches") ||
+             !strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
+        Flush();
+    }
+    else if (!strcmp(aTopic, "startupcache-invalidate")) {
+        AbortCaching();
+    }
+    else {
+        NS_WARNING("Unexpected observer topic.");
+    }
+    return NS_OK;
+=======
+nsXULPrototypeCache::Observe(nsISupports* aSubject, const char* aTopic,
+                             const char16_t* aData) {
+  if (!strcmp(aTopic, "chrome-flush-caches") ||
+      !strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
+    Flush();
+  } else if (!strcmp(aTopic, "startupcache-invalidate")) {
+    AbortCaching();
+  } else {
+    NS_WARNING("Unexpected observer topic.");
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsXULPrototypeDocument* nsXULPrototypeCache::GetPrototype(nsIURI* aURI) {
@@ -209,6 +308,7 @@ nsresult nsXULPrototypeCache::PutXBLDocumentInfo(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsXULPrototypeCache::FlushSkinFiles() {
   // Flush out skin XBL files from the cache.
   for (auto iter = mXBLDocTable.Iter(); !iter.Done(); iter.Next()) {
@@ -237,6 +337,44 @@ void nsXULPrototypeCache::FlushSkinFiles() {
 }
 
 void nsXULPrototypeCache::FlushScripts() { mScriptTable.Clear(); }
+||||||| merged common ancestors
+void
+nsXULPrototypeCache::FlushSkinFiles()
+{
+  // Flush out skin XBL files from the cache.
+  for (auto iter = mXBLDocTable.Iter(); !iter.Done(); iter.Next()) {
+    nsAutoCString str;
+    iter.Key()->GetPathQueryRef(str);
+    if (strncmp(str.get(), "/skin", 5) == 0) {
+      iter.Remove();
+    }
+  }
+
+  // Now flush out our skin stylesheets from the cache.
+  for (auto iter = mStyleSheetTable.Iter(); !iter.Done(); iter.Next()) {
+    nsAutoCString str;
+    iter.Data()->GetSheetURI()->GetPathQueryRef(str);
+    if (strncmp(str.get(), "/skin", 5) == 0) {
+      iter.Remove();
+    }
+  }
+
+  // Iterate over all the remaining XBL and make sure cached
+  // scoped skin stylesheets are flushed and refetched by the
+  // prototype bindings.
+  for (auto iter = mXBLDocTable.Iter(); !iter.Done(); iter.Next()) {
+    iter.Data()->FlushSkinStylesheets();
+  }
+}
+
+void
+nsXULPrototypeCache::FlushScripts()
+{
+    mScriptTable.Clear();
+}
+=======
+void nsXULPrototypeCache::FlushScripts() { mScriptTable.Clear(); }
+>>>>>>> upstream-releases
 
 void nsXULPrototypeCache::Flush() {
   mPrototypeTable.Clear();
@@ -264,10 +402,47 @@ nsresult nsXULPrototypeCache::WritePrototype(
     nsXULPrototypeDocument* aPrototypeDocument) {
   nsresult rv = NS_OK, rv2 = NS_OK;
 
+<<<<<<< HEAD
   if (!StartupCache::GetSingleton()) return NS_OK;
 
   nsCOMPtr<nsIURI> protoURI = aPrototypeDocument->GetURI();
+||||||| merged common ancestors
+nsresult
+nsXULPrototypeCache::WritePrototype(nsXULPrototypeDocument* aPrototypeDocument)
+{
+    nsresult rv = NS_OK, rv2 = NS_OK;
 
+    if (!StartupCache::GetSingleton())
+        return NS_OK;
+=======
+  if (!StartupCache::GetSingleton()) return NS_OK;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsCOMPtr<nsIObjectOutputStream> oos;
+  rv = GetOutputStream(protoURI, getter_AddRefs(oos));
+  NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+    nsCOMPtr<nsIURI> protoURI = aPrototypeDocument->GetURI();
+=======
+  nsCOMPtr<nsIURI> protoURI = aPrototypeDocument->GetURI();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  rv = aPrototypeDocument->Write(oos);
+  NS_ENSURE_SUCCESS(rv, rv);
+  FinishOutputStream(protoURI);
+  return NS_FAILED(rv) ? rv : rv2;
+||||||| merged common ancestors
+    nsCOMPtr<nsIObjectOutputStream> oos;
+    rv = GetOutputStream(protoURI, getter_AddRefs(oos));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    rv = aPrototypeDocument->Write(oos);
+    NS_ENSURE_SUCCESS(rv, rv);
+    FinishOutputStream(protoURI);
+    return NS_FAILED(rv) ? rv : rv2;
+=======
   nsCOMPtr<nsIObjectOutputStream> oos;
   rv = GetOutputStream(protoURI, getter_AddRefs(oos));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -276,6 +451,7 @@ nsresult nsXULPrototypeCache::WritePrototype(
   NS_ENSURE_SUCCESS(rv, rv);
   FinishOutputStream(protoURI);
   return NS_FAILED(rv) ? rv : rv2;
+>>>>>>> upstream-releases
 }
 
 nsresult nsXULPrototypeCache::GetInputStream(nsIURI* uri,
@@ -338,12 +514,39 @@ nsresult nsXULPrototypeCache::FinishOutputStream(nsIURI* uri) {
   StartupCache* sc = StartupCache::GetSingleton();
   if (!sc) return NS_ERROR_NOT_AVAILABLE;
 
+<<<<<<< HEAD
+  nsCOMPtr<nsIStorageStream> storageStream;
+  bool found = mOutputStreamTable.Get(uri, getter_AddRefs(storageStream));
+  if (!found) return NS_ERROR_UNEXPECTED;
+  nsCOMPtr<nsIOutputStream> outputStream = do_QueryInterface(storageStream);
+  outputStream->Close();
+||||||| merged common ancestors
+    nsCOMPtr<nsIStorageStream> storageStream;
+    bool found = mOutputStreamTable.Get(uri, getter_AddRefs(storageStream));
+    if (!found)
+        return NS_ERROR_UNEXPECTED;
+    nsCOMPtr<nsIOutputStream> outputStream
+        = do_QueryInterface(storageStream);
+    outputStream->Close();
+
+    UniquePtr<char[]> buf;
+    uint32_t len;
+    rv = NewBufferFromStorageStream(storageStream, &buf, &len);
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
   nsCOMPtr<nsIStorageStream> storageStream;
   bool found = mOutputStreamTable.Get(uri, getter_AddRefs(storageStream));
   if (!found) return NS_ERROR_UNEXPECTED;
   nsCOMPtr<nsIOutputStream> outputStream = do_QueryInterface(storageStream);
   outputStream->Close();
 
+  UniquePtr<char[]> buf;
+  uint32_t len;
+  rv = NewBufferFromStorageStream(storageStream, &buf, &len);
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   UniquePtr<char[]> buf;
   uint32_t len;
   rv = NewBufferFromStorageStream(storageStream, &buf, &len);
@@ -357,6 +560,27 @@ nsresult nsXULPrototypeCache::FinishOutputStream(nsIURI* uri) {
     if (NS_SUCCEEDED(rv)) {
       mOutputStreamTable.Remove(uri);
       mStartupCacheURITable.PutEntry(uri);
+||||||| merged common ancestors
+    if (!mStartupCacheURITable.GetEntry(uri)) {
+        nsAutoCString spec(kXULCachePrefix);
+        rv = PathifyURI(uri, spec);
+        if (NS_FAILED(rv))
+            return NS_ERROR_NOT_AVAILABLE;
+        rv = sc->PutBuffer(spec.get(), std::move(buf), len);
+        if (NS_SUCCEEDED(rv)) {
+            mOutputStreamTable.Remove(uri);
+            mStartupCacheURITable.PutEntry(uri);
+        }
+=======
+  if (!mStartupCacheURITable.GetEntry(uri)) {
+    nsAutoCString spec(kXULCachePrefix);
+    rv = PathifyURI(uri, spec);
+    if (NS_FAILED(rv)) return NS_ERROR_NOT_AVAILABLE;
+    rv = sc->PutBuffer(spec.get(), std::move(buf), len);
+    if (NS_SUCCEEDED(rv)) {
+      mOutputStreamTable.Remove(uri);
+      mStartupCacheURITable.PutEntry(uri);
+>>>>>>> upstream-releases
     }
   }
 
@@ -389,6 +613,7 @@ nsresult nsXULPrototypeCache::HasData(nsIURI* uri, bool* exists) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsXULPrototypeCache::BeginCaching(nsIURI* aURI) {
   nsresult rv, tmp;
 
@@ -448,7 +673,17 @@ nsresult nsXULPrototypeCache::BeginCaching(nsIURI* aURI) {
   } else if (rv != NS_ERROR_NOT_AVAILABLE)
     // NS_ERROR_NOT_AVAILABLE is normal, usually if there's no cachefile.
     return rv;
+||||||| merged common ancestors
+nsresult
+nsXULPrototypeCache::BeginCaching(nsIURI* aURI)
+{
+    nsresult rv, tmp;
+=======
+nsresult nsXULPrototypeCache::BeginCaching(nsIURI* aURI) {
+  nsresult rv, tmp;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (NS_FAILED(rv)) {
     // Either the cache entry was invalid or it didn't exist, so write it now.
     nsCOMPtr<nsIObjectOutputStream> objectOutput;
@@ -482,7 +717,178 @@ nsresult nsXULPrototypeCache::BeginCaching(nsIURI* aURI) {
           rv = NS_ERROR_FILE_TOO_BIG;
       }
     }
+||||||| merged common ancestors
+    nsAutoCString path;
+    aURI->GetPathQueryRef(path);
+    if (!StringEndsWith(path, NS_LITERAL_CSTRING(".xul")))
+        return NS_ERROR_NOT_AVAILABLE;
 
+    StartupCache* startupCache = StartupCache::GetSingleton();
+    if (!startupCache)
+        return NS_ERROR_FAILURE;
+
+    if (gDisableXULCache)
+        return NS_ERROR_NOT_AVAILABLE;
+
+    // Get the chrome directory to validate against the one stored in the
+    // cache file, or to store there if we're generating a new file.
+    nsCOMPtr<nsIFile> chromeDir;
+    rv = NS_GetSpecialDirectory(NS_APP_CHROME_DIR, getter_AddRefs(chromeDir));
+    if (NS_FAILED(rv))
+        return rv;
+    nsAutoCString chromePath;
+    rv = chromeDir->GetPersistentDescriptor(chromePath);
+    if (NS_FAILED(rv))
+        return rv;
+
+    // XXXbe we assume the first package's locale is the same as the locale of
+    // all subsequent packages of cached chrome URIs....
+    nsAutoCString package;
+    rv = aURI->GetHost(package);
+    if (NS_FAILED(rv))
+        return rv;
+    nsAutoCString locale;
+    LocaleService::GetInstance()->GetAppLocaleAsLangTag(locale);
+
+    nsAutoCString fileChromePath, fileLocale;
+
+    UniquePtr<char[]> buf;
+    uint32_t len, amtRead;
+    nsCOMPtr<nsIObjectInputStream> objectInput;
+
+    rv = startupCache->GetBuffer(kXULCacheInfoKey, &buf, &len);
+    if (NS_SUCCEEDED(rv))
+        rv = NewObjectInputStreamFromBuffer(std::move(buf), len,
+                                            getter_AddRefs(objectInput));
+=======
+  nsAutoCString path;
+  aURI->GetPathQueryRef(path);
+  if (!(StringEndsWith(path, NS_LITERAL_CSTRING(".xul")) ||
+        StringEndsWith(path, NS_LITERAL_CSTRING(".xhtml")))) {
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+
+  StartupCache* startupCache = StartupCache::GetSingleton();
+  if (!startupCache) return NS_ERROR_FAILURE;
+
+  if (gDisableXULCache) return NS_ERROR_NOT_AVAILABLE;
+
+  // Get the chrome directory to validate against the one stored in the
+  // cache file, or to store there if we're generating a new file.
+  nsCOMPtr<nsIFile> chromeDir;
+  rv = NS_GetSpecialDirectory(NS_APP_CHROME_DIR, getter_AddRefs(chromeDir));
+  if (NS_FAILED(rv)) return rv;
+  nsAutoCString chromePath;
+  rv = chromeDir->GetPersistentDescriptor(chromePath);
+  if (NS_FAILED(rv)) return rv;
+
+  // XXXbe we assume the first package's locale is the same as the locale of
+  // all subsequent packages of cached chrome URIs....
+  nsAutoCString package;
+  rv = aURI->GetHost(package);
+  if (NS_FAILED(rv)) return rv;
+  nsAutoCString locale;
+  LocaleService::GetInstance()->GetAppLocaleAsLangTag(locale);
+
+  nsAutoCString fileChromePath, fileLocale;
+
+  UniquePtr<char[]> buf;
+  uint32_t len, amtRead;
+  nsCOMPtr<nsIObjectInputStream> objectInput;
+
+  rv = startupCache->GetBuffer(kXULCacheInfoKey, &buf, &len);
+  if (NS_SUCCEEDED(rv))
+    rv = NewObjectInputStreamFromBuffer(std::move(buf), len,
+                                        getter_AddRefs(objectInput));
+
+  if (NS_SUCCEEDED(rv)) {
+    rv = objectInput->ReadCString(fileLocale);
+    tmp = objectInput->ReadCString(fileChromePath);
+    if (NS_FAILED(tmp)) {
+      rv = tmp;
+    }
+    if (NS_FAILED(rv) ||
+        (!fileChromePath.Equals(chromePath) || !fileLocale.Equals(locale))) {
+      // Our cache won't be valid in this case, we'll need to rewrite.
+      // XXX This blows away work that other consumers (like
+      // mozJSComponentLoader) have done, need more fine-grained control.
+      startupCache->InvalidateCache();
+      mStartupCacheURITable.Clear();
+      rv = NS_ERROR_UNEXPECTED;
+    }
+  } else if (rv != NS_ERROR_NOT_AVAILABLE)
+    // NS_ERROR_NOT_AVAILABLE is normal, usually if there's no cachefile.
+    return rv;
+>>>>>>> upstream-releases
+
+  if (NS_FAILED(rv)) {
+    // Either the cache entry was invalid or it didn't exist, so write it now.
+    nsCOMPtr<nsIObjectOutputStream> objectOutput;
+    nsCOMPtr<nsIInputStream> inputStream;
+    nsCOMPtr<nsIStorageStream> storageStream;
+    rv = NewObjectOutputWrappedStorageStream(
+        getter_AddRefs(objectOutput), getter_AddRefs(storageStream), false);
+    if (NS_SUCCEEDED(rv)) {
+<<<<<<< HEAD
+      buf = MakeUnique<char[]>(len);
+      rv = inputStream->Read(buf.get(), len, &amtRead);
+      if (NS_SUCCEEDED(rv) && len == amtRead)
+        rv = startupCache->PutBuffer(kXULCacheInfoKey, std::move(buf), len);
+      else {
+        rv = NS_ERROR_UNEXPECTED;
+      }
+    }
+||||||| merged common ancestors
+        rv = objectInput->ReadCString(fileLocale);
+        tmp = objectInput->ReadCString(fileChromePath);
+        if (NS_FAILED(tmp)) {
+          rv = tmp;
+        }
+        if (NS_FAILED(rv) ||
+            (!fileChromePath.Equals(chromePath) ||
+             !fileLocale.Equals(locale))) {
+            // Our cache won't be valid in this case, we'll need to rewrite.
+            // XXX This blows away work that other consumers (like
+            // mozJSComponentLoader) have done, need more fine-grained control.
+            startupCache->InvalidateCache();
+            mStartupCacheURITable.Clear();
+            rv = NS_ERROR_UNEXPECTED;
+        }
+    } else if (rv != NS_ERROR_NOT_AVAILABLE)
+        // NS_ERROR_NOT_AVAILABLE is normal, usually if there's no cachefile.
+        return rv;
+=======
+      rv = objectOutput->WriteStringZ(locale.get());
+      tmp = objectOutput->WriteStringZ(chromePath.get());
+      if (NS_FAILED(tmp)) {
+        rv = tmp;
+      }
+      tmp = objectOutput->Close();
+      if (NS_FAILED(tmp)) {
+        rv = tmp;
+      }
+      tmp = storageStream->NewInputStream(0, getter_AddRefs(inputStream));
+      if (NS_FAILED(tmp)) {
+        rv = tmp;
+      }
+    }
+
+    if (NS_SUCCEEDED(rv)) {
+      uint64_t len64;
+      rv = inputStream->Available(&len64);
+      if (NS_SUCCEEDED(rv)) {
+        if (len64 <= UINT32_MAX)
+          len = (uint32_t)len64;
+        else
+          rv = NS_ERROR_FILE_TOO_BIG;
+      }
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Failed again, just bail.
+||||||| merged common ancestors
+=======
     if (NS_SUCCEEDED(rv)) {
       buf = MakeUnique<char[]>(len);
       rv = inputStream->Read(buf.get(), len, &amtRead);
@@ -494,6 +900,7 @@ nsresult nsXULPrototypeCache::BeginCaching(nsIURI* aURI) {
     }
 
     // Failed again, just bail.
+>>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       startupCache->InvalidateCache();
       mStartupCacheURITable.Clear();
@@ -542,8 +949,19 @@ static void AppendURIForMemoryReport(nsIURI* aUri, nsACString& aOutput) {
   aOutput += spec;
 }
 
+<<<<<<< HEAD
 /* static */ void nsXULPrototypeCache::CollectMemoryReports(
     nsIHandleReportCallback* aHandleReport, nsISupports* aData) {
+||||||| merged common ancestors
+/* static */ void
+nsXULPrototypeCache::CollectMemoryReports(
+  nsIHandleReportCallback* aHandleReport, nsISupports* aData)
+{
+=======
+/* static */
+void nsXULPrototypeCache::CollectMemoryReports(
+    nsIHandleReportCallback* aHandleReport, nsISupports* aData) {
+>>>>>>> upstream-releases
   if (!sInstance) {
     return;
   }

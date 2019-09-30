@@ -9,6 +9,15 @@
 #include "jsapi.h"
 
 #include "js/CharacterEncoding.h"
+<<<<<<< HEAD
+||||||| merged common ancestors
+#include "vm/Interpreter.h" // For InstanceOfOperator
+=======
+#include "js/PropertyDescriptor.h"  // JS::FromPropertyDescriptor
+#include "vm/EqualityOperations.h"  // js::SameValue
+#include "vm/JSFunction.h"
+#include "vm/JSObject.h"
+>>>>>>> upstream-releases
 
 #include "vm/JSObject-inl.h"
 #include "vm/NativeObject-inl.h"
@@ -162,6 +171,7 @@ static bool IsCompatiblePropertyDescriptor(JSContext* cx, bool extensible,
 }
 
 // Get the [[ProxyHandler]] of a scripted proxy.
+<<<<<<< HEAD
 /* static */ JSObject* ScriptedProxyHandler::handlerObject(
     const JSObject* proxy) {
   MOZ_ASSERT(proxy->as<ProxyObject>().handler() ==
@@ -169,6 +179,21 @@ static bool IsCompatiblePropertyDescriptor(JSContext* cx, bool extensible,
   return proxy->as<ProxyObject>()
       .reservedSlot(ScriptedProxyHandler::HANDLER_EXTRA)
       .toObjectOrNull();
+||||||| merged common ancestors
+/* static */ JSObject*
+ScriptedProxyHandler::handlerObject(const JSObject* proxy)
+{
+    MOZ_ASSERT(proxy->as<ProxyObject>().handler() == &ScriptedProxyHandler::singleton);
+    return proxy->as<ProxyObject>().reservedSlot(ScriptedProxyHandler::HANDLER_EXTRA).toObjectOrNull();
+=======
+/* static */
+JSObject* ScriptedProxyHandler::handlerObject(const JSObject* proxy) {
+  MOZ_ASSERT(proxy->as<ProxyObject>().handler() ==
+             &ScriptedProxyHandler::singleton);
+  return proxy->as<ProxyObject>()
+      .reservedSlot(ScriptedProxyHandler::HANDLER_EXTRA)
+      .toObjectOrNull();
+>>>>>>> upstream-releases
 }
 
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
@@ -596,6 +621,18 @@ bool ScriptedProxyHandler::getOwnPropertyDescriptor(
   // Step 14.
   CompletePropertyDescriptor(&resultDesc);
 
+<<<<<<< HEAD
+  // Step 15.
+  const char* errorDetails = nullptr;
+  if (!IsCompatiblePropertyDescriptor(cx, extensibleTarget, resultDesc,
+                                      targetDesc, &errorDetails))
+    return false;
+||||||| merged common ancestors
+        // Step 11f.
+        desc.object().set(nullptr);
+        return true;
+    }
+=======
   // Step 15.
   const char* errorDetails = nullptr;
   if (!IsCompatiblePropertyDescriptor(cx, extensibleTarget, resultDesc,
@@ -612,18 +649,73 @@ bool ScriptedProxyHandler::getOwnPropertyDescriptor(
     if (!targetDesc.object()) {
       return js::Throw(cx, id, JSMSG_CANT_REPORT_NE_AS_NC);
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 16.
+  if (errorDetails) {
+    return js::Throw(cx, id, JSMSG_CANT_REPORT_INVALID, errorDetails);
+  }
+||||||| merged common ancestors
+    // Step 12.
+    bool extensibleTarget;
+    if (!IsExtensible(cx, target, &extensibleTarget)) {
+        return false;
+    }
+=======
+    if (targetDesc.configurable()) {
+      return js::Throw(cx, id, JSMSG_CANT_REPORT_C_AS_NC);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Step 17.
+  if (!resultDesc.configurable()) {
+    if (!targetDesc.object()) {
+      return js::Throw(cx, id, JSMSG_CANT_REPORT_NE_AS_NC);
+||||||| merged common ancestors
+    // Step 13.
+    Rooted<PropertyDescriptor> resultDesc(cx);
+    if (!ToPropertyDescriptor(cx, trapResult, true, &resultDesc)) {
+        return false;
+=======
+    if (resultDesc.hasWritable() && !resultDesc.writable()) {
+      if (targetDesc.writable()) {
+        return js::Throw(cx, id, JSMSG_CANT_REPORT_W_AS_NW);
+      }
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
     if (targetDesc.configurable()) {
       return js::Throw(cx, id, JSMSG_CANT_REPORT_C_AS_NC);
     }
   }
-
+||||||| merged common ancestors
+    // Step 14.
+    CompletePropertyDescriptor(&resultDesc);
+=======
   // Step 18.
   desc.set(resultDesc);
   desc.object().set(proxy);
   return true;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 18.
+  desc.set(resultDesc);
+  desc.object().set(proxy);
+  return true;
+}
+||||||| merged common ancestors
+    // Step 15.
+    const char* errorDetails = nullptr;
+    if (!IsCompatiblePropertyDescriptor(cx, extensibleTarget, resultDesc, targetDesc,
+                                        &errorDetails))
+        return false;
+=======
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
 // 9.5.6 Proxy.[[DefineOwnProperty]](P, Desc)
 bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
@@ -637,78 +729,267 @@ bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
                               JSMSG_PROXY_REVOKED);
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
+// 9.5.6 Proxy.[[DefineOwnProperty]](P, Desc)
+bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
+                                          HandleId id,
+                                          Handle<PropertyDescriptor> desc,
+                                          ObjectOpResult& result) const {
+  // Steps 2-4.
+  RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+  if (!handler) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_PROXY_REVOKED);
+    return false;
+  }
+||||||| merged common ancestors
+    // Step 16.
+    if (errorDetails) {
+        return js::Throw(cx, id, JSMSG_CANT_REPORT_INVALID, errorDetails);
+    }
+=======
   // Step 5.
   RootedObject target(cx, proxy->as<ProxyObject>().target());
   MOZ_ASSERT(target);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 5.
+  RootedObject target(cx, proxy->as<ProxyObject>().target());
+  MOZ_ASSERT(target);
+||||||| merged common ancestors
+    // Step 17.
+    if (!resultDesc.configurable()) {
+        if (!targetDesc.object()) {
+            return js::Throw(cx, id, JSMSG_CANT_REPORT_NE_AS_NC);
+        }
+=======
   // Step 6.
   RootedValue trap(cx);
   if (!GetProxyTrap(cx, handler, cx->names().defineProperty, &trap)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 6.
+  RootedValue trap(cx);
+  if (!GetProxyTrap(cx, handler, cx->names().defineProperty, &trap)) {
+    return false;
+  }
+||||||| merged common ancestors
+        if (targetDesc.configurable()) {
+            return js::Throw(cx, id, JSMSG_CANT_REPORT_C_AS_NC);
+        }
+    }
+=======
   // Step 7.
   if (trap.isUndefined()) {
     return DefineProperty(cx, target, id, desc, result);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 7.
+  if (trap.isUndefined()) {
+    return DefineProperty(cx, target, id, desc, result);
+  }
+||||||| merged common ancestors
+    // Step 18.
+    desc.set(resultDesc);
+    desc.object().set(proxy);
+    return true;
+}
+=======
   // Step 8.
   RootedValue descObj(cx);
   if (!FromPropertyDescriptorToObject(cx, desc, &descObj)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 8.
+  RootedValue descObj(cx);
+  if (!FromPropertyDescriptorToObject(cx, desc, &descObj)) {
+    return false;
+  }
+||||||| merged common ancestors
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93 9.5.6 Proxy.[[DefineOwnProperty]](P, Desc)
+bool
+ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy, HandleId id,
+                                     Handle<PropertyDescriptor> desc, ObjectOpResult& result) const
+{
+    // Steps 2-4.
+    RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+    if (!handler) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_PROXY_REVOKED);
+        return false;
+    }
+=======
   // Step 9.
   RootedValue propKey(cx);
   if (!IdToStringOrSymbol(cx, id, &propKey)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 9.
+  RootedValue propKey(cx);
+  if (!IdToStringOrSymbol(cx, id, &propKey)) {
+    return false;
+  }
+||||||| merged common ancestors
+    // Step 5.
+    RootedObject target(cx, proxy->as<ProxyObject>().target());
+    MOZ_ASSERT(target);
+=======
   RootedValue trapResult(cx);
   {
     FixedInvokeArgs<3> args(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedValue trapResult(cx);
+  {
+    FixedInvokeArgs<3> args(cx);
+||||||| merged common ancestors
+    // Step 6.
+    RootedValue trap(cx);
+    if (!GetProxyTrap(cx, handler, cx->names().defineProperty, &trap)) {
+        return false;
+    }
+=======
     args[0].setObject(*target);
     args[1].set(propKey);
     args[2].set(descObj);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    args[0].setObject(*target);
+    args[1].set(propKey);
+    args[2].set(descObj);
+||||||| merged common ancestors
+    // Step 7.
+    if (trap.isUndefined()) {
+        return DefineProperty(cx, target, id, desc, result);
+    }
+=======
     RootedValue thisv(cx, ObjectValue(*handler));
     if (!Call(cx, trap, thisv, args, &trapResult)) {
       return false;
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    RootedValue thisv(cx, ObjectValue(*handler));
+    if (!Call(cx, trap, thisv, args, &trapResult)) {
+      return false;
+    }
+  }
+||||||| merged common ancestors
+    // Step 8.
+    RootedValue descObj(cx);
+    if (!FromPropertyDescriptorToObject(cx, desc, &descObj)) {
+        return false;
+    }
+=======
   // Step 10.
   if (!ToBoolean(trapResult)) {
     return result.fail(JSMSG_PROXY_DEFINE_RETURNED_FALSE);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 10.
+  if (!ToBoolean(trapResult)) {
+    return result.fail(JSMSG_PROXY_DEFINE_RETURNED_FALSE);
+  }
+||||||| merged common ancestors
+    // Step 9.
+    RootedValue propKey(cx);
+    if (!IdToStringOrSymbol(cx, id, &propKey)) {
+        return false;
+    }
+=======
   // Step 11.
   Rooted<PropertyDescriptor> targetDesc(cx);
   if (!GetOwnPropertyDescriptor(cx, target, id, &targetDesc)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 11.
+  Rooted<PropertyDescriptor> targetDesc(cx);
+  if (!GetOwnPropertyDescriptor(cx, target, id, &targetDesc)) {
+    return false;
+  }
+||||||| merged common ancestors
+    RootedValue trapResult(cx);
+    {
+        FixedInvokeArgs<3> args(cx);
+=======
   // Step 12.
   bool extensibleTarget;
   if (!IsExtensible(cx, target, &extensibleTarget)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 12.
+  bool extensibleTarget;
+  if (!IsExtensible(cx, target, &extensibleTarget)) {
+    return false;
+  }
+||||||| merged common ancestors
+        args[0].setObject(*target);
+        args[1].set(propKey);
+        args[2].set(descObj);
+=======
   // Steps 13-14.
   bool settingConfigFalse = desc.hasConfigurable() && !desc.configurable();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Steps 13-14.
+  bool settingConfigFalse = desc.hasConfigurable() && !desc.configurable();
+||||||| merged common ancestors
+        RootedValue thisv(cx, ObjectValue(*handler));
+        if (!Call(cx, trap, thisv, args, &trapResult)) {
+            return false;
+        }
+    }
+=======
   // Steps 15-16.
   if (!targetDesc.object()) {
     // Step 15a.
     if (!extensibleTarget) {
       return js::Throw(cx, id, JSMSG_CANT_DEFINE_NEW);
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Steps 15-16.
+  if (!targetDesc.object()) {
+    // Step 15a.
+    if (!extensibleTarget) {
+      return js::Throw(cx, id, JSMSG_CANT_DEFINE_NEW);
+||||||| merged common ancestors
+    // Step 10.
+    if (!ToBoolean(trapResult)) {
+        return result.fail(JSMSG_PROXY_DEFINE_RETURNED_FALSE);
+=======
     // Step 15b.
     if (settingConfigFalse) {
       return js::Throw(cx, id, JSMSG_CANT_DEFINE_NE_AS_NC);
+>>>>>>> upstream-releases
     }
   } else {
     // Step 16a.
@@ -717,10 +998,36 @@ bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
                                         &errorDetails))
       return false;
 
+<<<<<<< HEAD
+    // Step 15b.
+    if (settingConfigFalse) {
+      return js::Throw(cx, id, JSMSG_CANT_DEFINE_NE_AS_NC);
+||||||| merged common ancestors
+    // Step 11.
+    Rooted<PropertyDescriptor> targetDesc(cx);
+    if (!GetOwnPropertyDescriptor(cx, target, id, &targetDesc)) {
+        return false;
+=======
     if (errorDetails) {
       return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID, errorDetails);
+>>>>>>> upstream-releases
     }
+  } else {
+    // Step 16a.
+    const char* errorDetails = nullptr;
+    if (!IsCompatiblePropertyDescriptor(cx, extensibleTarget, desc, targetDesc,
+                                        &errorDetails))
+      return false;
 
+<<<<<<< HEAD
+    if (errorDetails) {
+      return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID, errorDetails);
+||||||| merged common ancestors
+    // Step 12.
+    bool extensibleTarget;
+    if (!IsExtensible(cx, target, &extensibleTarget)) {
+        return false;
+=======
     // Step 16b.
     if (settingConfigFalse && targetDesc.configurable()) {
       static const char DETAILS_CANT_REPORT_C_AS_NC[] =
@@ -728,6 +1035,60 @@ bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
           "non-configurable";
       return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID,
                        DETAILS_CANT_REPORT_C_AS_NC);
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
+    // Step 16b.
+    if (settingConfigFalse && targetDesc.configurable()) {
+      static const char DETAILS_CANT_REPORT_C_AS_NC[] =
+          "proxy can't define an existing configurable property as "
+          "non-configurable";
+      return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID,
+                       DETAILS_CANT_REPORT_C_AS_NC);
+||||||| merged common ancestors
+    // Steps 13-14.
+    bool settingConfigFalse = desc.hasConfigurable() && !desc.configurable();
+
+    // Steps 15-16.
+    if (!targetDesc.object()) {
+        // Step 15a.
+        if (!extensibleTarget) {
+            return js::Throw(cx, id, JSMSG_CANT_DEFINE_NEW);
+        }
+
+        // Step 15b.
+        if (settingConfigFalse) {
+            return js::Throw(cx, id, JSMSG_CANT_DEFINE_NE_AS_NC);
+        }
+    } else {
+        // Step 16a.
+        const char* errorDetails = nullptr;
+        if (!IsCompatiblePropertyDescriptor(cx, extensibleTarget, desc, targetDesc,
+                                            &errorDetails))
+            return false;
+
+        if (errorDetails) {
+            return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID, errorDetails);
+        }
+
+        // Step 16b.
+        if (settingConfigFalse && targetDesc.configurable()) {
+            static const char DETAILS_CANT_REPORT_C_AS_NC[] =
+                "proxy can't define an existing configurable property as non-configurable";
+            return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID, DETAILS_CANT_REPORT_C_AS_NC);
+        }
+=======
+    if (targetDesc.isDataDescriptor() && !targetDesc.configurable() &&
+        targetDesc.writable()) {
+      if (desc.hasWritable() && !desc.writable()) {
+        static const char DETAILS_CANT_DEFINE_NW[] =
+            "proxy can't define an existing non-configurable writable property "
+            "as non-writable";
+        return js::Throw(cx, id, JSMSG_CANT_DEFINE_INVALID,
+                         DETAILS_CANT_DEFINE_NW);
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -737,6 +1098,7 @@ bool ScriptedProxyHandler::defineProperty(JSContext* cx, HandleObject proxy,
 
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
 // 7.3.17 CreateListFromArrayLike with elementTypes fixed to symbol/string.
+<<<<<<< HEAD
 static bool CreateFilteredListFromArrayLike(JSContext* cx, HandleValue v,
                                             AutoIdVector& props) {
   // Step 2.
@@ -745,6 +1107,31 @@ static bool CreateFilteredListFromArrayLike(JSContext* cx, HandleValue v,
   if (!obj) {
     return false;
   }
+||||||| merged common ancestors
+static bool
+CreateFilteredListFromArrayLike(JSContext* cx, HandleValue v, AutoIdVector& props)
+{
+    // Step 2.
+    RootedObject obj(cx, NonNullObjectWithName(cx, "return value of the ownKeys trap", v));
+    if (!obj) {
+        return false;
+    }
+
+    // Step 3.
+    uint32_t len;
+    if (!GetLengthProperty(cx, obj, &len)) {
+        return false;
+    }
+=======
+static bool CreateFilteredListFromArrayLike(JSContext* cx, HandleValue v,
+                                            MutableHandleIdVector props) {
+  // Step 2.
+  RootedObject obj(cx, RequireObject(cx, JSMSG_OBJECT_REQUIRED_RET_OWNKEYS,
+                                     JSDVG_IGNORE_STACK, v));
+  if (!obj) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   // Step 3.
   uint32_t len;
@@ -788,6 +1175,7 @@ static bool CreateFilteredListFromArrayLike(JSContext* cx, HandleValue v,
 
 // ES2018 draft rev aab1ea3bd4d03c85d6f4a91503b4169346ab7271
 // 9.5.11 Proxy.[[OwnPropertyKeys]]()
+<<<<<<< HEAD
 bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
                                            AutoIdVector& props) const {
   // Steps 1-3.
@@ -797,11 +1185,33 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
                               JSMSG_PROXY_REVOKED);
     return false;
   }
+||||||| merged common ancestors
+bool
+ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy, AutoIdVector& props) const
+{
+    // Steps 1-3.
+    RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+    if (!handler) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_PROXY_REVOKED);
+        return false;
+    }
+=======
+bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
+                                           MutableHandleIdVector props) const {
+  // Steps 1-3.
+  RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+  if (!handler) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_PROXY_REVOKED);
+    return false;
+  }
+>>>>>>> upstream-releases
 
   // Step 4.
   RootedObject target(cx, proxy->as<ProxyObject>().target());
   MOZ_ASSERT(target);
 
+<<<<<<< HEAD
   // Step 5.
   RootedValue trap(cx);
   if (!GetProxyTrap(cx, handler, cx->names().ownKeys, &trap)) {
@@ -820,12 +1230,51 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
   if (!Call(cx, trap, handler, targetVal, &trapResultArray)) {
     return false;
   }
+||||||| merged common ancestors
+    // Step 5.
+    RootedValue trap(cx);
+    if (!GetProxyTrap(cx, handler, cx->names().ownKeys, &trap)) {
+        return false;
+    }
+=======
+  // Step 5.
+  RootedValue trap(cx);
+  if (!GetProxyTrap(cx, handler, cx->names().ownKeys, &trap)) {
+    return false;
+  }
 
+  // Step 6.
+  if (trap.isUndefined()) {
+    return GetPropertyKeys(
+        cx, target, JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS, props);
+  }
+
+  // Step 7.
+  RootedValue trapResultArray(cx);
+  RootedValue targetVal(cx, ObjectValue(*target));
+  if (!Call(cx, trap, handler, targetVal, &trapResultArray)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Step 8.
   AutoIdVector trapResult(cx);
   if (!CreateFilteredListFromArrayLike(cx, trapResultArray, trapResult)) {
     return false;
   }
+||||||| merged common ancestors
+    // Step 6.
+    if (trap.isUndefined()) {
+        return GetPropertyKeys(cx, target, JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS, &props);
+    }
+=======
+  // Step 8.
+  RootedIdVector trapResult(cx);
+  if (!CreateFilteredListFromArrayLike(cx, trapResultArray, &trapResult)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   // Steps 9, 18.
   Rooted<GCHashSet<jsid>> uncheckedResultKeys(
@@ -850,6 +1299,7 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
     return false;
   }
 
+<<<<<<< HEAD
   // Steps 11-13.
   AutoIdVector targetKeys(cx);
   if (!GetPropertyKeys(cx, target,
@@ -857,10 +1307,33 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
                        &targetKeys)) {
     return false;
   }
+||||||| merged common ancestors
+    for (size_t i = 0, len = trapResult.length(); i < len; i++) {
+        MOZ_ASSERT(!JSID_IS_VOID(trapResult[i]));
+=======
+  // Steps 11-13.
+  RootedIdVector targetKeys(cx);
+  if (!GetPropertyKeys(cx, target,
+                       JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS,
+                       &targetKeys)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Steps 14-15.
   AutoIdVector targetConfigurableKeys(cx);
   AutoIdVector targetNonconfigurableKeys(cx);
+||||||| merged common ancestors
+        auto ptr = uncheckedResultKeys.lookupForAdd(trapResult[i]);
+        if (ptr) {
+            return js::Throw(cx, trapResult[i], JSMSG_OWNKEYS_DUPLICATE);
+        }
+=======
+  // Steps 14-15.
+  RootedIdVector targetConfigurableKeys(cx);
+  RootedIdVector targetNonconfigurableKeys(cx);
+>>>>>>> upstream-releases
 
   // Step 16.
   Rooted<PropertyDescriptor> desc(cx);
@@ -923,6 +1396,7 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
     uncheckedResultKeys.remove(ptr);
   }
 
+<<<<<<< HEAD
   // Step 22.
   if (!uncheckedResultKeys.empty()) {
     RootedId id(cx, uncheckedResultKeys.all().front());
@@ -932,6 +1406,28 @@ bool ScriptedProxyHandler::ownPropertyKeys(JSContext* cx, HandleObject proxy,
   // Step 23.
   return props.appendAll(trapResult);
 }
+||||||| merged common ancestors
+        auto ptr = uncheckedResultKeys.lookup(targetConfigurableKeys[i]);
+
+        // Step 21.a.
+        if (!ptr) {
+            return js::Throw(cx, targetConfigurableKeys[i], JSMSG_CANT_REPORT_E_AS_NE);
+        }
+
+        // Step 21.b.
+        uncheckedResultKeys.remove(ptr);
+    }
+=======
+  // Step 22.
+  if (!uncheckedResultKeys.empty()) {
+    RootedId id(cx, uncheckedResultKeys.all().front());
+    return js::Throw(cx, id, JSMSG_CANT_REPORT_NEW);
+  }
+
+  // Step 23.
+  return props.appendAll(trapResult);
+}
+>>>>>>> upstream-releases
 
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
 // 9.5.10 Proxy.[[Delete]](P)
@@ -988,6 +1484,7 @@ bool ScriptedProxyHandler::delete_(JSContext* cx, HandleObject proxy,
     return false;
   }
 
+<<<<<<< HEAD
   // Step 12.
   if (desc.object() && !desc.configurable()) {
     UniqueChars bytes =
@@ -995,16 +1492,55 @@ bool ScriptedProxyHandler::delete_(JSContext* cx, HandleObject proxy,
     if (!bytes) {
       return false;
     }
+||||||| merged common ancestors
+    // Step 9.
+    if (!booleanTrapResult) {
+        return result.fail(JSMSG_PROXY_DELETE_RETURNED_FALSE);
+    }
+=======
+  // Step 11.
+  if (!desc.object()) {
+    return result.succeed();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, JSMSG_CANT_DELETE,
                              bytes.get());
     return false;
   }
+||||||| merged common ancestors
+    // Step 10.
+    Rooted<PropertyDescriptor> desc(cx);
+    if (!GetOwnPropertyDescriptor(cx, target, id, &desc)) {
+        return false;
+    }
+=======
+  // Step 12.
+  if (!desc.configurable()) {
+    return Throw(cx, id, JSMSG_CANT_DELETE);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Steps 11,13.
   return result.succeed();
 }
+||||||| merged common ancestors
+    // Step 12.
+    if (desc.object() && !desc.configurable()) {
+        UniqueChars bytes = IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsPropertyKey);
+        if (!bytes) {
+            return false;
+        }
+=======
+  bool extensible;
+  if (!IsExtensible(cx, target, &extensible)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
 // 9.5.7 Proxy.[[HasProperty]](P)
 bool ScriptedProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id,
@@ -1016,28 +1552,143 @@ bool ScriptedProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id,
                               JSMSG_PROXY_REVOKED);
     return false;
   }
+||||||| merged common ancestors
+        JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, JSMSG_CANT_DELETE, bytes.get());
+        return false;
+    }
+=======
+  if (!extensible) {
+    return Throw(cx, id, JSMSG_CANT_DELETE_NON_EXTENSIBLE);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 5.
   RootedObject target(cx, proxy->as<ProxyObject>().target());
   MOZ_ASSERT(target);
+||||||| merged common ancestors
+    // Steps 11,13.
+    return result.succeed();
+}
+=======
+  // Step 13.
+  return result.succeed();
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 6.
   RootedValue trap(cx);
   if (!GetProxyTrap(cx, handler, cx->names().has, &trap)) {
     return false;
   }
+||||||| merged common ancestors
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93 9.5.7 Proxy.[[HasProperty]](P)
+bool
+ScriptedProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id, bool* bp) const
+{
+    // Steps 2-4.
+    RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+    if (!handler) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_PROXY_REVOKED);
+        return false;
+    }
+=======
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
+// 9.5.7 Proxy.[[HasProperty]](P)
+bool ScriptedProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id,
+                               bool* bp) const {
+  // Steps 2-4.
+  RootedObject handler(cx, ScriptedProxyHandler::handlerObject(proxy));
+  if (!handler) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_PROXY_REVOKED);
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 7.
   if (trap.isUndefined()) {
     return HasProperty(cx, target, id, bp);
   }
+||||||| merged common ancestors
+    // Step 5.
+    RootedObject target(cx, proxy->as<ProxyObject>().target());
+    MOZ_ASSERT(target);
+=======
+  // Step 5.
+  RootedObject target(cx, proxy->as<ProxyObject>().target());
+  MOZ_ASSERT(target);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 8.
   RootedValue value(cx);
   if (!IdToStringOrSymbol(cx, id, &value)) {
     return false;
   }
+||||||| merged common ancestors
+    // Step 6.
+    RootedValue trap(cx);
+    if (!GetProxyTrap(cx, handler, cx->names().has, &trap)) {
+        return false;
+    }
+=======
+  // Step 6.
+  RootedValue trap(cx);
+  if (!GetProxyTrap(cx, handler, cx->names().has, &trap)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedValue trapResult(cx);
+  RootedValue targetVal(cx, ObjectValue(*target));
+  if (!Call(cx, trap, handler, targetVal, value, &trapResult)) {
+    return false;
+  }
+||||||| merged common ancestors
+    // Step 7.
+    if (trap.isUndefined()) {
+        return HasProperty(cx, target, id, bp);
+    }
+=======
+  // Step 7.
+  if (trap.isUndefined()) {
+    return HasProperty(cx, target, id, bp);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool booleanTrapResult = ToBoolean(trapResult);
+||||||| merged common ancestors
+    // Step 8.
+    RootedValue value(cx);
+    if (!IdToStringOrSymbol(cx, id, &value)) {
+        return false;
+    }
+=======
+  // Step 8.
+  RootedValue value(cx);
+  if (!IdToStringOrSymbol(cx, id, &value)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Step 9.
+  if (!booleanTrapResult) {
+    // Step 9a.
+    Rooted<PropertyDescriptor> desc(cx);
+    if (!GetOwnPropertyDescriptor(cx, target, id, &desc)) {
+      return false;
+||||||| merged common ancestors
+    RootedValue trapResult(cx);
+    RootedValue targetVal(cx, ObjectValue(*target));
+    if (!Call(cx, trap, handler, targetVal, value, &trapResult)) {
+        return false;
+=======
   RootedValue trapResult(cx);
   RootedValue targetVal(cx, ObjectValue(*target));
   if (!Call(cx, trap, handler, targetVal, value, &trapResult)) {
@@ -1052,6 +1703,7 @@ bool ScriptedProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id,
     Rooted<PropertyDescriptor> desc(cx);
     if (!GetOwnPropertyDescriptor(cx, target, id, &desc)) {
       return false;
+>>>>>>> upstream-releases
     }
 
     // Step 9b.
@@ -1437,11 +2089,24 @@ bool ScriptedProxyHandler::isConstructor(JSObject* obj) const {
 const char ScriptedProxyHandler::family = 0;
 const ScriptedProxyHandler ScriptedProxyHandler::singleton;
 
+<<<<<<< HEAD
 bool IsRevokedScriptedProxy(JSObject* obj) {
   obj = CheckedUnwrap(obj);
   return obj && IsScriptedProxy(obj) && !obj->as<ProxyObject>().target();
+||||||| merged common ancestors
+bool
+IsRevokedScriptedProxy(JSObject* obj)
+{
+    obj = CheckedUnwrap(obj);
+    return obj && IsScriptedProxy(obj) && !obj->as<ProxyObject>().target();
+=======
+bool IsRevokedScriptedProxy(JSObject* obj) {
+  obj = CheckedUnwrapStatic(obj);
+  return obj && IsScriptedProxy(obj) && !obj->as<ProxyObject>().target();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 // ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
 // 9.5.14 ProxyCreate.
 static bool ProxyCreate(JSContext* cx, CallArgs& args, const char* callerName) {
@@ -1450,13 +2115,64 @@ static bool ProxyCreate(JSContext* cx, CallArgs& args, const char* callerName) {
                               JSMSG_MORE_ARGS_NEEDED, callerName, "1", "s");
     return false;
   }
+||||||| merged common ancestors
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93 9.5.14 ProxyCreate.
+static bool
+ProxyCreate(JSContext* cx, CallArgs& args, const char* callerName)
+{
+    if (args.length() < 2) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_MORE_ARGS_NEEDED,
+                                  callerName, "1", "s");
+        return false;
+    }
 
+    // Step 1.
+    RootedObject target(cx, NonNullObjectArg(cx, "`target`", callerName, args[0]));
+    if (!target) {
+        return false;
+    }
+
+    // Step 2.
+    if (IsRevokedScriptedProxy(target)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_PROXY_ARG_REVOKED, "1");
+        return false;
+    }
+
+    // Step 3.
+    RootedObject handler(cx, NonNullObjectArg(cx, "`handler`", callerName, args[1]));
+    if (!handler) {
+        return false;
+    }
+=======
+// ES8 rev 0c1bd3004329336774cbc90de727cd0cf5f11e93
+// 9.5.14 ProxyCreate.
+static bool ProxyCreate(JSContext* cx, CallArgs& args, const char* callerName) {
+  if (!args.requireAtLeast(cx, callerName, 2)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Step 1.
   RootedObject target(cx,
                       NonNullObjectArg(cx, "`target`", callerName, args[0]));
   if (!target) {
     return false;
   }
+||||||| merged common ancestors
+    // Step 4.
+    if (IsRevokedScriptedProxy(handler)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_PROXY_ARG_REVOKED, "2");
+        return false;
+    }
+=======
+  // Step 1.
+  RootedObject target(cx,
+                      RequireObjectArg(cx, "`target`", callerName, args[0]));
+  if (!target) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   // Step 2.
   if (IsRevokedScriptedProxy(target)) {
@@ -1465,12 +2181,25 @@ static bool ProxyCreate(JSContext* cx, CallArgs& args, const char* callerName) {
     return false;
   }
 
+<<<<<<< HEAD
   // Step 3.
   RootedObject handler(cx,
                        NonNullObjectArg(cx, "`handler`", callerName, args[1]));
   if (!handler) {
     return false;
   }
+||||||| merged common ancestors
+    // Step 9 (reordered).
+    Rooted<ProxyObject*> proxy(cx, &proxy_->as<ProxyObject>());
+    proxy->setReservedSlot(ScriptedProxyHandler::HANDLER_EXTRA, ObjectValue(*handler));
+=======
+  // Step 3.
+  RootedObject handler(cx,
+                       RequireObjectArg(cx, "`handler`", callerName, args[1]));
+  if (!handler) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   // Step 4.
   if (IsRevokedScriptedProxy(handler)) {
@@ -1546,15 +2275,36 @@ bool js::proxy_revocable(JSContext* cx, unsigned argc, Value* vp) {
   RootedValue proxyVal(cx, args.rval());
   MOZ_ASSERT(proxyVal.toObject().is<ProxyObject>());
 
+<<<<<<< HEAD
   RootedObject revoker(
       cx, NewFunctionByIdWithReserved(cx, RevokeProxy, 0, 0,
                                       NameToId(cx->names().revoke)));
   if (!revoker) {
     return false;
   }
+||||||| merged common ancestors
+    RootedObject revoker(cx, NewFunctionByIdWithReserved(cx, RevokeProxy, 0, 0,
+                         NameToId(cx->names().revoke)));
+    if (!revoker) {
+        return false;
+    }
+=======
+  RootedFunction revoker(
+      cx, NewNativeFunction(cx, RevokeProxy, 0, nullptr,
+                            gc::AllocKind::FUNCTION_EXTENDED, GenericObject));
+  if (!revoker) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   revoker->as<JSFunction>().initExtendedSlot(ScriptedProxyHandler::REVOKE_SLOT,
                                              proxyVal);
+||||||| merged common ancestors
+    revoker->as<JSFunction>().initExtendedSlot(ScriptedProxyHandler::REVOKE_SLOT, proxyVal);
+=======
+  revoker->initExtendedSlot(ScriptedProxyHandler::REVOKE_SLOT, proxyVal);
+>>>>>>> upstream-releases
 
   RootedPlainObject result(cx, NewBuiltinClassInstance<PlainObject>(cx));
   if (!result) {

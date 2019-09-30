@@ -6,18 +6,45 @@
 #ifndef mozilla_HTMLEditorController_h__
 #define mozilla_HTMLEditorController_h__
 
+<<<<<<< HEAD
 #include "nscore.h"  // for nsresult
 
 class nsIControllerCommandTable;
+||||||| merged common ancestors
+
+#include "nscore.h"                     // for nsresult
+
+class nsIControllerCommandTable;
+=======
+#include "nscore.h"  // for nsresult
+
+class nsControllerCommandTable;
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
+<<<<<<< HEAD
 class HTMLEditorController final {
  public:
   static nsresult RegisterEditorDocStateCommands(
       nsIControllerCommandTable* inCommandTable);
   static nsresult RegisterHTMLEditorCommands(
       nsIControllerCommandTable* inCommandTable);
+||||||| merged common ancestors
+class HTMLEditorController final
+{
+public:
+  static nsresult RegisterEditorDocStateCommands(nsIControllerCommandTable* inCommandTable);
+  static nsresult RegisterHTMLEditorCommands(nsIControllerCommandTable* inCommandTable);
+=======
+class HTMLEditorController final {
+ public:
+  static nsresult RegisterEditorDocStateCommands(
+      nsControllerCommandTable* aCommandTable);
+  static nsresult RegisterHTMLEditorCommands(
+      nsControllerCommandTable* aCommandTable);
+  static void Shutdown();
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

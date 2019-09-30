@@ -12,11 +12,24 @@
 #include "mozilla/Attributes.h"
 #include "nsBlockFrame.h"
 
+<<<<<<< HEAD
 class nsXULLabelFrame final : public nsBlockFrame {
  public:
+||||||| merged common ancestors
+class nsXULLabelFrame final : public nsBlockFrame
+{
+public:
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsXULLabelFrame final : public nsBlockFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsXULLabelFrame)
 
-  friend nsIFrame* NS_NewXULLabelFrame(nsIPresShell* aPresShell,
+  friend nsIFrame* NS_NewXULLabelFrame(mozilla::PresShell* aPresShell,
                                        ComputedStyle* aStyle);
 
   // nsIFrame
@@ -33,14 +46,33 @@ class nsXULLabelFrame final : public nsBlockFrame {
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
+<<<<<<< HEAD
  protected:
   explicit nsXULLabelFrame(ComputedStyle* aStyle)
       : nsBlockFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsXULLabelFrame(ComputedStyle* aStyle)
+    : nsBlockFrame(aStyle, kClassID)
+  {}
+=======
+ protected:
+  explicit nsXULLabelFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBlockFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   nsresult RegUnregAccessKey(bool aDoReg);
 };
 
+<<<<<<< HEAD
 nsIFrame* NS_NewXULLabelFrame(nsIPresShell* aPresShell,
                               mozilla::ComputedStyle* aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewXULLabelFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
+=======
+nsIFrame* NS_NewXULLabelFrame(mozilla::PresShell* aPresShell,
+                              mozilla::ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
 #endif /* !defined(nsXULLabelFrame_h_) */

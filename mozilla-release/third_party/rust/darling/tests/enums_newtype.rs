@@ -1,11 +1,23 @@
 #[macro_use]
 extern crate darling;
+#[macro_use]
+extern crate syn;
+#[macro_use]
+extern crate quote;
 
 use darling::FromDeriveInput;
 
+<<<<<<< HEAD
 extern crate syn;
 
 #[derive(Debug, Default, PartialEq, Eq, FromMeta)]
+||||||| merged common ancestors
+extern crate syn;
+
+#[derive(Debug, Default, PartialEq, Eq, FromMetaItem)]
+=======
+#[derive(Debug, Default, PartialEq, Eq, FromMeta)]
+>>>>>>> upstream-releases
 #[darling(default)]
 pub struct Amet {
     hello: bool,
@@ -34,12 +46,24 @@ impl PartialEq<Lorem> for Holder {
 
 #[test]
 fn bool_word() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem(ipsum))]
         pub struct Bar;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#).unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
     let pr = Holder::from_derive_input(&di).unwrap();
     assert_eq!(pr, Lorem::Ipsum(true));
@@ -47,12 +71,24 @@ fn bool_word() {
 
 #[test]
 fn bool_literal() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem(ipsum = false))]
         pub struct Bar;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#).unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
     let pr = Holder::from_derive_input(&di).unwrap();
     assert_eq!(pr, Lorem::Ipsum(false));
@@ -60,12 +96,24 @@ fn bool_literal() {
 
 #[test]
 fn string_literal() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem(dolor = "Hello"))]
         pub struct Bar;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#).unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
     let pr = Holder::from_derive_input(&di).unwrap();
     assert_eq!(pr, Lorem::Dolor("Hello".to_string()));
@@ -73,12 +121,24 @@ fn string_literal() {
 
 #[test]
 fn struct_nested() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem(sit(world = "Hello", hello = false)))]
         pub struct Bar;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#).unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
     let pr = Holder::from_derive_input(&di).unwrap();
     assert_eq!(
@@ -93,12 +153,24 @@ fn struct_nested() {
 #[test]
 #[should_panic]
 fn format_mismatch() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[hello(lorem(dolor(world = "Hello", hello = false)))]
         pub struct Bar;
+<<<<<<< HEAD
     "#,
     ).unwrap();
+||||||| merged common ancestors
+    "#).unwrap();
+=======
+    };
+>>>>>>> upstream-releases
 
     Holder::from_derive_input(&di).unwrap();
 }

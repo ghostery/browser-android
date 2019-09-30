@@ -28,7 +28,25 @@ class CSPService : public nsIContentPolicy, public nsIChannelEventSink {
 
   CSPService();
 
+<<<<<<< HEAD
  protected:
   virtual ~CSPService();
+||||||| merged common ancestors
+protected:
+  virtual ~CSPService();
+
+private:
+  // Maps origins to app status.
+  nsDataHashtable<nsCStringHashKey, uint16_t> mAppStatusCache;
+=======
+  // helper function to avoid creating a new instance of the
+  // cspservice everytime we call content policies.
+  static nsresult ConsultCSP(nsIURI* aContentLocation, nsILoadInfo* aLoadInfo,
+                             const nsACString& aMimeTypeGuess,
+                             int16_t* aDecision);
+
+ protected:
+  virtual ~CSPService();
+>>>>>>> upstream-releases
 };
 #endif /* nsCSPService_h___ */

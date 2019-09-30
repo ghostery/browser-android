@@ -56,8 +56,19 @@ struct VerifiedSCT {
 typedef std::vector<VerifiedSCT> VerifiedSCTList;
 
 // Holds Signed Certificate Timestamps verification results.
+<<<<<<< HEAD
 class CTVerifyResult {
  public:
+||||||| merged common ancestors
+class CTVerifyResult
+{
+public:
+=======
+class CTVerifyResult {
+ public:
+  CTVerifyResult() { Reset(); }
+
+>>>>>>> upstream-releases
   // SCTs that were processed during the verification along with their
   // verification results.
   VerifiedSCTList verifiedScts;

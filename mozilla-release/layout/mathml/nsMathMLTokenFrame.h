@@ -10,6 +10,10 @@
 #include "mozilla/Attributes.h"
 #include "nsMathMLContainerFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // Base class to handle token elements
 //
@@ -18,8 +22,15 @@ class nsMathMLTokenFrame : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLTokenFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLTokenFrame(nsIPresShell* aPresShell,
                                           ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLTokenFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLTokenFrame(mozilla::PresShell* aPresShell,
+                                          ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   NS_IMETHOD
   TransmitAutomaticData() override {
@@ -36,6 +47,7 @@ class nsMathMLTokenFrame : public nsMathMLContainerFrame {
 
   virtual eMathMLFrameType GetMathMLFrameType() override;
 
+<<<<<<< HEAD
   virtual void SetInitialChildList(ChildListID aListID,
                                    nsFrameList& aChildList) override;
 
@@ -55,6 +67,57 @@ class nsMathMLTokenFrame : public nsMathMLContainerFrame {
  protected:
   explicit nsMathMLTokenFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
       : nsMathMLContainerFrame(aStyle, aID) {}
+||||||| merged common ancestors
+  virtual void
+  SetInitialChildList(ChildListID     aListID,
+                      nsFrameList&    aChildList) override;
+
+  virtual void
+  AppendFrames(ChildListID            aListID,
+               nsFrameList&           aChildList) override;
+
+  virtual void
+  InsertFrames(ChildListID            aListID,
+               nsIFrame*              aPrevFrame,
+               nsFrameList&           aChildList) override;
+
+  virtual void
+  Reflow(nsPresContext*          aPresContext,
+         ReflowOutput&     aDesiredSize,
+         const ReflowInput& aReflowInput,
+         nsReflowStatus&          aStatus) override;
+
+  virtual nsresult
+  Place(DrawTarget*          aDrawTarget,
+        bool                 aPlaceOrigin,
+        ReflowOutput& aDesiredSize) override;
+
+protected:
+  explicit nsMathMLTokenFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
+    : nsMathMLContainerFrame(aStyle, aID) {}
+=======
+  virtual void SetInitialChildList(ChildListID aListID,
+                                   nsFrameList& aChildList) override;
+
+  virtual void AppendFrames(ChildListID aListID,
+                            nsFrameList& aChildList) override;
+
+  virtual void InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
+                            nsFrameList& aChildList) override;
+
+  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+                      const ReflowInput& aReflowInput,
+                      nsReflowStatus& aStatus) override;
+
+  virtual nsresult Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
+                         ReflowOutput& aDesiredSize) override;
+
+ protected:
+  explicit nsMathMLTokenFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext,
+                              ClassID aID = kClassID)
+      : nsMathMLContainerFrame(aStyle, aPresContext, aID) {}
+>>>>>>> upstream-releases
   virtual ~nsMathMLTokenFrame();
 
   void MarkTextFramesAsTokenMathML();

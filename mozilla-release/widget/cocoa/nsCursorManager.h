@@ -17,10 +17,23 @@
                 setting different types of cursors, animating cursors and
                 cleaning up cursors when they are no longer in use.
  */
+<<<<<<< HEAD
 @interface nsCursorManager : NSObject {
  @private
   NSMutableDictionary *mCursors;
   nsMacCursor *mCurrentMacCursor;
+||||||| merged common ancestors
+@interface nsCursorManager : NSObject
+{
+  @private
+  NSMutableDictionary *mCursors;
+  nsMacCursor *mCurrentMacCursor;
+=======
+@interface nsCursorManager : NSObject {
+ @private
+  NSMutableDictionary* mCursors;
+  nsMacCursor* mCurrentMacCursor;
+>>>>>>> upstream-releases
 }
 
 /*! @method     setCursor:
@@ -40,17 +53,33 @@
  @param aHotSpotY the y coordinate of the cursor's hotspot
  @param scaleFactor the scale factor of the target display (2 for a retina display)
  */
+<<<<<<< HEAD
 - (nsresult)setCursorWithImage:(imgIContainer *)aCursorImage
                       hotSpotX:(uint32_t)aHotspotX
                       hotSpotY:(uint32_t)aHotspotY
                    scaleFactor:(CGFloat)scaleFactor;
+||||||| merged common ancestors
+- (nsresult) setCursorWithImage: (imgIContainer*) aCursorImage hotSpotX: (uint32_t) aHotspotX hotSpotY: (uint32_t) aHotspotY scaleFactor: (CGFloat) scaleFactor;
+
+=======
+- (nsresult)setCursorWithImage:(imgIContainer*)aCursorImage
+                      hotSpotX:(uint32_t)aHotspotX
+                      hotSpotY:(uint32_t)aHotspotY
+                   scaleFactor:(CGFloat)scaleFactor;
+>>>>>>> upstream-releases
 
 /*! @method     sharedInstance
     @abstract   Get the Singleton instance of the cursor manager.
     @discussion Use this method to obtain a reference to the cursor manager.
     @result a reference to the cursor manager
 */
+<<<<<<< HEAD
 + (nsCursorManager *)sharedInstance;
+||||||| merged common ancestors
++ (nsCursorManager *) sharedInstance;
+=======
++ (nsCursorManager*)sharedInstance;
+>>>>>>> upstream-releases
 
 /*! @method     dispose
     @abstract   Releases the shared instance of the cursor manager.

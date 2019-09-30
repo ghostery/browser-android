@@ -28,13 +28,31 @@ CrashReporterMetadataShmem::~CrashReporterMetadataShmem() {
   MOZ_COUNT_DTOR(CrashReporterMetadataShmem);
 }
 
+<<<<<<< HEAD
 void CrashReporterMetadataShmem::AnnotateCrashReport(Annotation aKey,
                                                      const nsCString& aData) {
+||||||| merged common ancestors
+void
+CrashReporterMetadataShmem::AnnotateCrashReport(Annotation aKey,
+                                                const nsCString& aData)
+{
+=======
+void CrashReporterMetadataShmem::AnnotateCrashReport(Annotation aKey,
+                                                     const nsACString& aData) {
+>>>>>>> upstream-releases
   mAnnotations[aKey] = aData;
   SyncNotesToShmem();
 }
 
+<<<<<<< HEAD
 void CrashReporterMetadataShmem::AppendAppNotes(const nsCString& aData) {
+||||||| merged common ancestors
+void
+CrashReporterMetadataShmem::AppendAppNotes(const nsCString& aData)
+{
+=======
+void CrashReporterMetadataShmem::AppendAppNotes(const nsACString& aData) {
+>>>>>>> upstream-releases
   mAppNotes.Append(aData);
   mAnnotations[Annotation::Notes] = mAppNotes;
   SyncNotesToShmem();

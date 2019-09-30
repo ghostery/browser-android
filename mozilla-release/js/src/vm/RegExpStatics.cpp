@@ -20,11 +20,26 @@ using namespace js;
  * that js::Class in a global reserved slot.
  */
 
+<<<<<<< HEAD
 static void resc_finalize(FreeOp* fop, JSObject* obj) {
   MOZ_ASSERT(fop->onMainThread());
   RegExpStatics* res =
       static_cast<RegExpStatics*>(obj->as<RegExpStaticsObject>().getPrivate());
   fop->delete_(res);
+||||||| merged common ancestors
+static void
+resc_finalize(FreeOp* fop, JSObject* obj)
+{
+    MOZ_ASSERT(fop->onMainThread());
+    RegExpStatics* res = static_cast<RegExpStatics*>(obj->as<RegExpStaticsObject>().getPrivate());
+    fop->delete_(res);
+=======
+static void resc_finalize(FreeOp* fop, JSObject* obj) {
+  MOZ_ASSERT(fop->onMainThread());
+  RegExpStatics* res =
+      static_cast<RegExpStatics*>(obj->as<RegExpStaticsObject>().getPrivate());
+  fop->delete_(obj, res, MemoryUse::RegExpStatics);
+>>>>>>> upstream-releases
 }
 
 static void resc_trace(JSTracer* trc, JSObject* obj) {
@@ -34,6 +49,7 @@ static void resc_trace(JSTracer* trc, JSObject* obj) {
   }
 }
 
+<<<<<<< HEAD
 static const ClassOps RegExpStaticsObjectClassOps = {nullptr, /* addProperty */
                                                      nullptr, /* delProperty */
                                                      nullptr, /* enumerate */
@@ -45,8 +61,36 @@ static const ClassOps RegExpStaticsObjectClassOps = {nullptr, /* addProperty */
                                                      nullptr, /* hasInstance */
                                                      nullptr, /* construct */
                                                      resc_trace};
+||||||| merged common ancestors
+static const ClassOps RegExpStaticsObjectClassOps = {
+    nullptr, /* addProperty */
+    nullptr, /* delProperty */
+    nullptr, /* enumerate */
+    nullptr, /* newEnumerate */
+    nullptr, /* resolve */
+    nullptr, /* mayResolve */
+    resc_finalize,
+    nullptr, /* call */
+    nullptr, /* hasInstance */
+    nullptr, /* construct */
+    resc_trace
+};
+=======
+static const ClassOps RegExpStaticsObjectClassOps = {nullptr, /* addProperty */
+                                                     nullptr, /* delProperty */
+                                                     nullptr, /* enumreate */
+                                                     nullptr, /* newEnumerate */
+                                                     nullptr, /* resolve */
+                                                     nullptr, /* mayResolve */
+                                                     resc_finalize,
+                                                     nullptr, /* call */
+                                                     nullptr, /* hasInstance */
+                                                     nullptr, /* construct */
+                                                     resc_trace};
+>>>>>>> upstream-releases
 
 const Class RegExpStaticsObject::class_ = {
+<<<<<<< HEAD
     "RegExpStatics", JSCLASS_HAS_PRIVATE | JSCLASS_FOREGROUND_FINALIZE,
     &RegExpStaticsObjectClassOps};
 
@@ -62,6 +106,45 @@ RegExpStaticsObject* RegExpStatics::create(JSContext* cx) {
   }
   obj->setPrivate(static_cast<void*>(res));
   return obj;
+||||||| merged common ancestors
+    "RegExpStatics",
+    JSCLASS_HAS_PRIVATE |
+    JSCLASS_FOREGROUND_FINALIZE,
+    &RegExpStaticsObjectClassOps
+};
+
+RegExpStaticsObject*
+RegExpStatics::create(JSContext* cx)
+{
+    RegExpStaticsObject* obj = NewObjectWithGivenProto<RegExpStaticsObject>(cx, nullptr);
+    if (!obj) {
+        return nullptr;
+    }
+    RegExpStatics* res = cx->new_<RegExpStatics>();
+    if (!res) {
+        return nullptr;
+    }
+    obj->setPrivate(static_cast<void*>(res));
+    return obj;
+=======
+    "RegExpStatics", JSCLASS_HAS_PRIVATE | JSCLASS_FOREGROUND_FINALIZE,
+    &RegExpStaticsObjectClassOps};
+
+RegExpStaticsObject* RegExpStatics::create(JSContext* cx) {
+  RegExpStaticsObject* obj =
+      NewObjectWithGivenProto<RegExpStaticsObject>(cx, nullptr);
+  if (!obj) {
+    return nullptr;
+  }
+  RegExpStatics* res = cx->new_<RegExpStatics>();
+  if (!res) {
+    return nullptr;
+  }
+  // TODO: This doesn't account for match vector heap memory used if there are
+  // more 10 matches. This is likely to be rare.
+  InitObjectPrivate(obj, res, MemoryUse::RegExpStatics);
+  return obj;
+>>>>>>> upstream-releases
 }
 
 bool RegExpStatics::executeLazy(JSContext* cx) {

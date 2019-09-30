@@ -24,18 +24,48 @@ class ReadContinuation {
                           uint32_t aDataSize) = 0;
 };
 
+<<<<<<< HEAD
 void WriteRecord(cdm::Host_9* aHost, const std::string& aRecordName,
                  const std::string& aData, std::function<void()>&& aOnSuccess,
+||||||| merged common ancestors
+void WriteRecord(cdm::Host_9* aHost,
+                 const std::string& aRecordName,
+                 const std::string& aData,
+                 std::function<void()>&& aOnSuccess,
+=======
+void WriteRecord(cdm::Host_10* aHost, const std::string& aRecordName,
+                 const std::string& aData, std::function<void()>&& aOnSuccess,
+>>>>>>> upstream-releases
                  std::function<void()>&& aOnFailure);
 
+<<<<<<< HEAD
 void WriteRecord(cdm::Host_9* aHost, const std::string& aRecordName,
                  const uint8_t* aData, uint32_t aNumBytes,
+||||||| merged common ancestors
+void WriteRecord(cdm::Host_9* aHost,
+                 const std::string& aRecordName,
+                 const uint8_t* aData,
+                 uint32_t aNumBytes,
+=======
+void WriteRecord(cdm::Host_10* aHost, const std::string& aRecordName,
+                 const uint8_t* aData, uint32_t aNumBytes,
+>>>>>>> upstream-releases
                  std::function<void()>&& aOnSuccess,
                  std::function<void()>&& aOnFailure);
 
+<<<<<<< HEAD
 void ReadRecord(
     cdm::Host_9* aHost, const std::string& aRecordName,
     std::function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete);
+||||||| merged common ancestors
+void ReadRecord(cdm::Host_9* aHost,
+                const std::string& aRecordName,
+                std::function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete);
+=======
+void ReadRecord(
+    cdm::Host_10* aHost, const std::string& aRecordName,
+    std::function<void(bool, const uint8_t*, uint32_t)>&& aOnReadComplete);
+>>>>>>> upstream-releases
 
 class OpenContinuation {
  public:
@@ -43,6 +73,13 @@ class OpenContinuation {
   virtual void operator()(bool aSuccess) = 0;
 };
 
+<<<<<<< HEAD
 void OpenRecord(cdm::Host_9* aHost, const std::string& aRecordName,
+||||||| merged common ancestors
+void OpenRecord(cdm::Host_9* aHost,
+                const std::string& aRecordName,
+=======
+void OpenRecord(cdm::Host_10* aHost, const std::string& aRecordName,
+>>>>>>> upstream-releases
                 std::function<void(bool)>&& aOpenComplete);
 #endif  // TEST_CDM_STORAGE_H__

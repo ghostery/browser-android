@@ -26,15 +26,15 @@
 #include <algorithm>
 
 #ifdef CAIRO_HAS_WIN32_SURFACE
-#include "gfxWindowsSurface.h"
+#  include "gfxWindowsSurface.h"
 #endif
 
 #ifdef MOZ_X11
-#include "gfxXlibSurface.h"
+#  include "gfxXlibSurface.h"
 #endif
 
 #ifdef CAIRO_HAS_QUARTZ_SURFACE
-#include "gfxQuartzSurface.h"
+#  include "gfxQuartzSurface.h"
 #endif
 
 #include <stdio.h>
@@ -108,29 +108,83 @@ nsrefcnt gfxASurface::Release(void) {
   return mFloatingRefs;
 }
 
+<<<<<<< HEAD
 void gfxASurface::SurfaceDestroyFunc(void *data) {
   gfxASurface *surf = (gfxASurface *)data;
   // fprintf (stderr, "Deleting wrapper for %p (wrapper: %p)\n", surf->mSurface,
   //          data);
   delete surf;
+||||||| merged common ancestors
+void
+gfxASurface::SurfaceDestroyFunc(void *data) {
+    gfxASurface *surf = (gfxASurface*) data;
+    // fprintf (stderr, "Deleting wrapper for %p (wrapper: %p)\n", surf->mSurface, data);
+    delete surf;
+=======
+void gfxASurface::SurfaceDestroyFunc(void* data) {
+  gfxASurface* surf = (gfxASurface*)data;
+  // fprintf (stderr, "Deleting wrapper for %p (wrapper: %p)\n", surf->mSurface,
+  //          data);
+  delete surf;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 gfxASurface *gfxASurface::GetSurfaceWrapper(cairo_surface_t *csurf) {
   if (!csurf) return nullptr;
   return (gfxASurface *)cairo_surface_get_user_data(csurf,
                                                     &gfxasurface_pointer_key);
+||||||| merged common ancestors
+gfxASurface*
+gfxASurface::GetSurfaceWrapper(cairo_surface_t *csurf)
+{
+    if (!csurf)
+        return nullptr;
+    return (gfxASurface*) cairo_surface_get_user_data(csurf, &gfxasurface_pointer_key);
+=======
+gfxASurface* gfxASurface::GetSurfaceWrapper(cairo_surface_t* csurf) {
+  if (!csurf) return nullptr;
+  return (gfxASurface*)cairo_surface_get_user_data(csurf,
+                                                   &gfxasurface_pointer_key);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void gfxASurface::SetSurfaceWrapper(cairo_surface_t *csurf,
                                     gfxASurface *asurf) {
   if (!csurf) return;
   cairo_surface_set_user_data(csurf, &gfxasurface_pointer_key, asurf,
                               SurfaceDestroyFunc);
+||||||| merged common ancestors
+void
+gfxASurface::SetSurfaceWrapper(cairo_surface_t *csurf, gfxASurface *asurf)
+{
+    if (!csurf)
+        return;
+    cairo_surface_set_user_data(csurf, &gfxasurface_pointer_key, asurf, SurfaceDestroyFunc);
+=======
+void gfxASurface::SetSurfaceWrapper(cairo_surface_t* csurf,
+                                    gfxASurface* asurf) {
+  if (!csurf) return;
+  cairo_surface_set_user_data(csurf, &gfxasurface_pointer_key, asurf,
+                              SurfaceDestroyFunc);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 already_AddRefed<gfxASurface> gfxASurface::Wrap(cairo_surface_t *csurf,
                                                 const IntSize &aSize) {
   RefPtr<gfxASurface> result;
+||||||| merged common ancestors
+already_AddRefed<gfxASurface>
+gfxASurface::Wrap (cairo_surface_t *csurf, const IntSize& aSize)
+{
+    RefPtr<gfxASurface> result;
+=======
+already_AddRefed<gfxASurface> gfxASurface::Wrap(cairo_surface_t* csurf,
+                                                const IntSize& aSize) {
+  RefPtr<gfxASurface> result;
+>>>>>>> upstream-releases
 
   /* Do we already have a wrapper for this surface? */
   result = GetSurfaceWrapper(csurf);
@@ -170,9 +224,21 @@ already_AddRefed<gfxASurface> gfxASurface::Wrap(cairo_surface_t *csurf,
   return result.forget();
 }
 
+<<<<<<< HEAD
 void gfxASurface::Init(cairo_surface_t *surface, bool existingSurface) {
   SetSurfaceWrapper(surface, this);
   MOZ_ASSERT(surface, "surface should be a valid pointer");
+||||||| merged common ancestors
+void
+gfxASurface::Init(cairo_surface_t* surface, bool existingSurface)
+{
+    SetSurfaceWrapper(surface, this);
+    MOZ_ASSERT(surface, "surface should be a valid pointer");
+=======
+void gfxASurface::Init(cairo_surface_t* surface, bool existingSurface) {
+  SetSurfaceWrapper(surface, this);
+  MOZ_ASSERT(surface, "surface should be a valid pointer");
+>>>>>>> upstream-releases
 
   mSurface = surface;
   mSurfaceValid = !cairo_surface_status(surface);
@@ -206,9 +272,23 @@ gfxContentType gfxASurface::GetContentType() const {
   return (gfxContentType)cairo_surface_get_content(mSurface);
 }
 
+<<<<<<< HEAD
 void gfxASurface::SetDeviceOffset(const gfxPoint &offset) {
   if (!mSurfaceValid) return;
   cairo_surface_set_device_offset(mSurface, offset.x, offset.y);
+||||||| merged common ancestors
+void
+gfxASurface::SetDeviceOffset(const gfxPoint& offset)
+{
+    if (!mSurfaceValid)
+        return;
+    cairo_surface_set_device_offset(mSurface,
+                                    offset.x, offset.y);
+=======
+void gfxASurface::SetDeviceOffset(const gfxPoint& offset) {
+  if (!mSurfaceValid) return;
+  cairo_surface_set_device_offset(mSurface, offset.x, offset.y);
+>>>>>>> upstream-releases
 }
 
 gfxPoint gfxASurface::GetDeviceOffset() const {
@@ -218,10 +298,25 @@ gfxPoint gfxASurface::GetDeviceOffset() const {
   return pt;
 }
 
+<<<<<<< HEAD
 void gfxASurface::Flush() const {
   if (!mSurfaceValid) return;
   cairo_surface_flush(mSurface);
   gfxPlatform::ClearSourceSurfaceForSurface(const_cast<gfxASurface *>(this));
+||||||| merged common ancestors
+void
+gfxASurface::Flush() const
+{
+    if (!mSurfaceValid)
+        return;
+    cairo_surface_flush(mSurface);
+    gfxPlatform::ClearSourceSurfaceForSurface(const_cast<gfxASurface*>(this));
+=======
+void gfxASurface::Flush() const {
+  if (!mSurfaceValid) return;
+  cairo_surface_flush(mSurface);
+  gfxPlatform::ClearSourceSurfaceForSurface(const_cast<gfxASurface*>(this));
+>>>>>>> upstream-releases
 }
 
 void gfxASurface::MarkDirty() {
@@ -230,22 +325,69 @@ void gfxASurface::MarkDirty() {
   gfxPlatform::ClearSourceSurfaceForSurface(this);
 }
 
+<<<<<<< HEAD
 void gfxASurface::MarkDirty(const gfxRect &r) {
   if (!mSurfaceValid) return;
   cairo_surface_mark_dirty_rectangle(mSurface, (int)r.X(), (int)r.Y(),
                                      (int)r.Width(), (int)r.Height());
   gfxPlatform::ClearSourceSurfaceForSurface(this);
+||||||| merged common ancestors
+void
+gfxASurface::MarkDirty(const gfxRect& r)
+{
+    if (!mSurfaceValid)
+        return;
+    cairo_surface_mark_dirty_rectangle(mSurface,
+                                       (int) r.X(), (int) r.Y(),
+                                       (int) r.Width(), (int) r.Height());
+    gfxPlatform::ClearSourceSurfaceForSurface(this);
+=======
+void gfxASurface::MarkDirty(const gfxRect& r) {
+  if (!mSurfaceValid) return;
+  cairo_surface_mark_dirty_rectangle(mSurface, (int)r.X(), (int)r.Y(),
+                                     (int)r.Width(), (int)r.Height());
+  gfxPlatform::ClearSourceSurfaceForSurface(this);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void gfxASurface::SetData(const cairo_user_data_key_t *key, void *user_data,
                           thebes_destroy_func_t destroy) {
   if (!mSurfaceValid) return;
   cairo_surface_set_user_data(mSurface, key, user_data, destroy);
+||||||| merged common ancestors
+void
+gfxASurface::SetData(const cairo_user_data_key_t *key,
+                     void *user_data,
+                     thebes_destroy_func_t destroy)
+{
+    if (!mSurfaceValid)
+        return;
+    cairo_surface_set_user_data(mSurface, key, user_data, destroy);
+=======
+void gfxASurface::SetData(const cairo_user_data_key_t* key, void* user_data,
+                          thebes_destroy_func_t destroy) {
+  if (!mSurfaceValid) return;
+  cairo_surface_set_user_data(mSurface, key, user_data, destroy);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void *gfxASurface::GetData(const cairo_user_data_key_t *key) {
   if (!mSurfaceValid) return nullptr;
   return cairo_surface_get_user_data(mSurface, key);
+||||||| merged common ancestors
+void *
+gfxASurface::GetData(const cairo_user_data_key_t *key)
+{
+    if (!mSurfaceValid)
+        return nullptr;
+    return cairo_surface_get_user_data(mSurface, key);
+=======
+void* gfxASurface::GetData(const cairo_user_data_key_t* key) {
+  if (!mSurfaceValid) return nullptr;
+  return cairo_surface_get_user_data(mSurface, key);
+>>>>>>> upstream-releases
 }
 
 void gfxASurface::Finish() {
@@ -253,15 +395,47 @@ void gfxASurface::Finish() {
   cairo_surface_finish(mSurface);
 }
 
+<<<<<<< HEAD
 already_AddRefed<gfxASurface> gfxASurface::CreateSimilarSurface(
     gfxContentType aContent, const IntSize &aSize) {
   if (!mSurface || !mSurfaceValid) {
     return nullptr;
   }
+||||||| merged common ancestors
+already_AddRefed<gfxASurface>
+gfxASurface::CreateSimilarSurface(gfxContentType aContent,
+                                  const IntSize& aSize)
+{
+    if (!mSurface || !mSurfaceValid) {
+      return nullptr;
+    }
+    
+    cairo_surface_t *surface =
+        cairo_surface_create_similar(mSurface, cairo_content_t(int(aContent)),
+                                     aSize.width, aSize.height);
+    if (cairo_surface_status(surface)) {
+        cairo_surface_destroy(surface);
+        return nullptr;
+    }
+=======
+already_AddRefed<gfxASurface> gfxASurface::CreateSimilarSurface(
+    gfxContentType aContent, const IntSize& aSize) {
+  if (!mSurface || !mSurfaceValid) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   cairo_surface_t *surface = cairo_surface_create_similar(
       mSurface, cairo_content_t(int(aContent)), aSize.width, aSize.height);
   if (cairo_surface_status(surface)) {
+||||||| merged common ancestors
+    RefPtr<gfxASurface> result = Wrap(surface, aSize);
+=======
+  cairo_surface_t* surface = cairo_surface_create_similar(
+      mSurface, cairo_content_t(int(aContent)), aSize.width, aSize.height);
+  if (cairo_surface_status(surface)) {
+>>>>>>> upstream-releases
     cairo_surface_destroy(surface);
     return nullptr;
   }
@@ -280,11 +454,21 @@ already_AddRefed<gfxImageSurface> gfxASurface::CopyToARGB32ImageSurface() {
   RefPtr<gfxImageSurface> imgSurface =
       new gfxImageSurface(size, SurfaceFormat::A8R8G8B8_UINT32);
 
+<<<<<<< HEAD
   RefPtr<DrawTarget> dt =
       gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(
           imgSurface, IntSize(size.width, size.height));
   RefPtr<SourceSurface> source =
       gfxPlatform::GetPlatform()->GetSourceSurfaceForSurface(dt, this);
+||||||| merged common ancestors
+    RefPtr<DrawTarget> dt = gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(imgSurface, IntSize(size.width, size.height));
+    RefPtr<SourceSurface> source = gfxPlatform::GetPlatform()->GetSourceSurfaceForSurface(dt, this);
+=======
+  RefPtr<DrawTarget> dt = gfxPlatform::CreateDrawTargetForSurface(
+      imgSurface, IntSize(size.width, size.height));
+  RefPtr<SourceSurface> source =
+      gfxPlatform::GetSourceSurfaceForSurface(dt, this);
+>>>>>>> upstream-releases
 
   dt->CopySurface(source, IntRect(0, 0, size.width, size.height), IntPoint());
 
@@ -297,9 +481,20 @@ int gfxASurface::CairoStatus() {
   return cairo_surface_status(mSurface);
 }
 
+<<<<<<< HEAD
 nsresult gfxASurface::BeginPrinting(const nsAString &aTitle,
                                     const nsAString &aPrintToFileName) {
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+gfxASurface::BeginPrinting(const nsAString& aTitle, const nsAString& aPrintToFileName)
+{
+    return NS_OK;
+=======
+nsresult gfxASurface::BeginPrinting(const nsAString& aTitle,
+                                    const nsAString& aPrintToFileName) {
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsresult gfxASurface::EndPrinting() { return NS_OK; }
@@ -343,12 +538,12 @@ int32_t gfxASurface::BytePerPixelFromFormat(gfxImageFormat format) {
 
 /** Memory reporting **/
 
-static const char *sDefaultSurfaceDescription =
+static const char* sDefaultSurfaceDescription =
     "Memory used by gfx surface of the given type.";
 
 struct SurfaceMemoryReporterAttrs {
-  const char *path;
-  const char *description;
+  const char* path;
+  const char* description;
 };
 
 static const SurfaceMemoryReporterAttrs sSurfaceMemoryReporterAttrs[] = {
@@ -392,6 +587,7 @@ static_assert(uint32_t(CAIRO_SURFACE_TYPE_SKIA) ==
 
 /* Surface size memory reporting */
 
+<<<<<<< HEAD
 class SurfaceMemoryReporter final : public nsIMemoryReporter {
   ~SurfaceMemoryReporter() = default;
 
@@ -427,6 +623,86 @@ class SurfaceMemoryReporter final : public nsIMemoryReporter {
         const char *desc = sSurfaceMemoryReporterAttrs[i].description;
         if (!desc) {
           desc = sDefaultSurfaceDescription;
+||||||| merged common ancestors
+class SurfaceMemoryReporter final : public nsIMemoryReporter
+{
+    ~SurfaceMemoryReporter() = default;
+
+    // We can touch this array on several different threads, and we don't
+    // want to introduce memory barriers when recording the memory used.  To
+    // assure dynamic race checkers like TSan that this is OK, we use
+    // relaxed memory ordering here.
+    static Atomic<size_t, Relaxed> sSurfaceMemoryUsed[size_t(gfxSurfaceType::Max)];
+
+public:
+    static void AdjustUsedMemory(gfxSurfaceType aType, int32_t aBytes)
+    {
+        // A read-modify-write operation like += would require a memory barrier
+        // here, which would defeat the purpose of using relaxed memory
+        // ordering.  So separate out the read and write operations.
+        sSurfaceMemoryUsed[size_t(aType)] = sSurfaceMemoryUsed[size_t(aType)] + aBytes;
+    };
+
+    // This memory reporter is sometimes allocated on the compositor thread,
+    // but always released on the main thread, so its refcounting needs to be
+    // threadsafe.
+    NS_DECL_THREADSAFE_ISUPPORTS
+
+    NS_IMETHOD CollectReports(nsIHandleReportCallback *aHandleReport,
+                              nsISupports *aData, bool aAnonymize) override
+    {
+        const size_t len = ArrayLength(sSurfaceMemoryReporterAttrs);
+        for (size_t i = 0; i < len; i++) {
+            int64_t amount = sSurfaceMemoryUsed[i];
+
+            if (amount != 0) {
+                const char *path = sSurfaceMemoryReporterAttrs[i].path;
+                const char *desc = sSurfaceMemoryReporterAttrs[i].description;
+                if (!desc) {
+                    desc = sDefaultSurfaceDescription;
+                }
+
+                aHandleReport->Callback(
+                    EmptyCString(), nsCString(path), KIND_OTHER, UNITS_BYTES,
+                    amount, nsCString(desc), aData);
+            }
+=======
+class SurfaceMemoryReporter final : public nsIMemoryReporter {
+  ~SurfaceMemoryReporter() = default;
+
+  // We can touch this array on several different threads, and we don't
+  // want to introduce memory barriers when recording the memory used.  To
+  // assure dynamic race checkers like TSan that this is OK, we use
+  // relaxed memory ordering here.
+  static Atomic<size_t, Relaxed>
+      sSurfaceMemoryUsed[size_t(gfxSurfaceType::Max)];
+
+ public:
+  static void AdjustUsedMemory(gfxSurfaceType aType, int32_t aBytes) {
+    // A read-modify-write operation like += would require a memory barrier
+    // here, which would defeat the purpose of using relaxed memory
+    // ordering.  So separate out the read and write operations.
+    sSurfaceMemoryUsed[size_t(aType)] =
+        sSurfaceMemoryUsed[size_t(aType)] + aBytes;
+  };
+
+  // This memory reporter is sometimes allocated on the compositor thread,
+  // but always released on the main thread, so its refcounting needs to be
+  // threadsafe.
+  NS_DECL_THREADSAFE_ISUPPORTS
+
+  NS_IMETHOD CollectReports(nsIHandleReportCallback* aHandleReport,
+                            nsISupports* aData, bool aAnonymize) override {
+    const size_t len = ArrayLength(sSurfaceMemoryReporterAttrs);
+    for (size_t i = 0; i < len; i++) {
+      int64_t amount = sSurfaceMemoryUsed[i];
+
+      if (amount != 0) {
+        const char* path = sSurfaceMemoryReporterAttrs[i].path;
+        const char* desc = sSurfaceMemoryReporterAttrs[i].description;
+        if (!desc) {
+          desc = sDefaultSurfaceDescription;
+>>>>>>> upstream-releases
         }
 
         aHandleReport->Callback(EmptyCString(), nsCString(path), KIND_OTHER,
@@ -480,7 +756,16 @@ size_t gfxASurface::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   return aMallocSizeOf(this) + SizeOfExcludingThis(aMallocSizeOf);
 }
 
+<<<<<<< HEAD
 /* static */ uint8_t gfxASurface::BytesPerPixel(gfxImageFormat aImageFormat) {
+||||||| merged common ancestors
+/* static */ uint8_t
+gfxASurface::BytesPerPixel(gfxImageFormat aImageFormat)
+{
+=======
+/* static */
+uint8_t gfxASurface::BytesPerPixel(gfxImageFormat aImageFormat) {
+>>>>>>> upstream-releases
   switch (aImageFormat) {
     case SurfaceFormat::A8R8G8B8_UINT32:
       return 4;
@@ -497,6 +782,7 @@ size_t gfxASurface::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   }
 }
 
+<<<<<<< HEAD
 void gfxASurface::SetOpaqueRect(const gfxRect &aRect) {
   if (aRect.IsEmpty()) {
     mOpaqueRect = nullptr;
@@ -505,9 +791,38 @@ void gfxASurface::SetOpaqueRect(const gfxRect &aRect) {
   } else {
     mOpaqueRect = MakeUnique<gfxRect>(aRect);
   }
+||||||| merged common ancestors
+void
+gfxASurface::SetOpaqueRect(const gfxRect& aRect)
+{
+    if (aRect.IsEmpty()) {
+        mOpaqueRect = nullptr;
+    } else if (!!mOpaqueRect) {
+        *mOpaqueRect = aRect;
+    } else {
+        mOpaqueRect = MakeUnique<gfxRect>(aRect);
+    }
+=======
+void gfxASurface::SetOpaqueRect(const gfxRect& aRect) {
+  if (aRect.IsEmpty()) {
+    mOpaqueRect = nullptr;
+  } else if (!!mOpaqueRect) {
+    *mOpaqueRect = aRect;
+  } else {
+    mOpaqueRect = MakeUnique<gfxRect>(aRect);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ const gfxRect &gfxASurface::GetEmptyOpaqueRect() {
+||||||| merged common ancestors
+/* static */const gfxRect&
+gfxASurface::GetEmptyOpaqueRect()
+{
+=======
+/* static */ const gfxRect& gfxASurface::GetEmptyOpaqueRect() {
+>>>>>>> upstream-releases
   static const gfxRect empty(0, 0, 0, 0);
   return empty;
 }

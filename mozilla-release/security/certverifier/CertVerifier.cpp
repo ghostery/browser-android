@@ -88,6 +88,7 @@ CertVerifier::CertVerifier(OcspDownloadConfig odc, OcspStrictConfig osc,
                            BRNameMatchingPolicy::Mode nameMatchingMode,
                            NetscapeStepUpPolicy netscapeStepUpPolicy,
                            CertificateTransparencyMode ctMode,
+<<<<<<< HEAD
                            DistrustedCAPolicy distrustedCAPolicy)
     : mOCSPDownloadConfig(odc),
       mOCSPStrict(osc == ocspStrict),
@@ -100,7 +101,56 @@ CertVerifier::CertVerifier(OcspDownloadConfig odc, OcspStrictConfig osc,
       mNetscapeStepUpPolicy(netscapeStepUpPolicy),
       mCTMode(ctMode),
       mDistrustedCAPolicy(distrustedCAPolicy) {
+||||||| merged common ancestors
+                           DistrustedCAPolicy distrustedCAPolicy)
+  : mOCSPDownloadConfig(odc)
+  , mOCSPStrict(osc == ocspStrict)
+  , mOCSPTimeoutSoft(ocspTimeoutSoft)
+  , mOCSPTimeoutHard(ocspTimeoutHard)
+  , mCertShortLifetimeInDays(certShortLifetimeInDays)
+  , mPinningMode(pinningMode)
+  , mSHA1Mode(sha1Mode)
+  , mNameMatchingMode(nameMatchingMode)
+  , mNetscapeStepUpPolicy(netscapeStepUpPolicy)
+  , mCTMode(ctMode)
+  , mDistrustedCAPolicy(distrustedCAPolicy)
+{
+=======
+                           DistrustedCAPolicy distrustedCAPolicy,
+                           const Vector<EnterpriseCert>& thirdPartyCerts)
+    : mOCSPDownloadConfig(odc),
+      mOCSPStrict(osc == ocspStrict),
+      mOCSPTimeoutSoft(ocspTimeoutSoft),
+      mOCSPTimeoutHard(ocspTimeoutHard),
+      mCertShortLifetimeInDays(certShortLifetimeInDays),
+      mPinningMode(pinningMode),
+      mSHA1Mode(sha1Mode),
+      mNameMatchingMode(nameMatchingMode),
+      mNetscapeStepUpPolicy(netscapeStepUpPolicy),
+      mCTMode(ctMode),
+      mDistrustedCAPolicy(distrustedCAPolicy) {
+>>>>>>> upstream-releases
   LoadKnownCTLogs();
+  for (const auto& root : thirdPartyCerts) {
+    EnterpriseCert rootCopy;
+    // Best-effort. If we run out of memory, users might see untrusted issuer
+    // errors, but the browser will probably crash before then.
+    if (NS_SUCCEEDED(rootCopy.Init(root))) {
+      Unused << mThirdPartyCerts.append(std::move(rootCopy));
+    }
+  }
+  for (const auto& root : mThirdPartyCerts) {
+    Input input;
+    if (root.GetInput(input) == Success) {
+      // mThirdPartyCerts consists of roots and intermediates.
+      if (root.GetIsRoot()) {
+        // Best effort again.
+        Unused << mThirdPartyRootInputs.append(input);
+      } else {
+        Unused << mThirdPartyIntermediateInputs.append(input);
+      }
+    }
+  }
 }
 
 CertVerifier::~CertVerifier() {}
@@ -278,7 +328,19 @@ Result CertVerifier::VerifyCertificateTransparencyPolicy(
   CERTCertListNode* issuerNode = CERT_LIST_NEXT(endEntityNode);
   if (!issuerNode || CERT_LIST_END(issuerNode, builtChain)) {
     // Issuer certificate is required for SCT verification.
-    return Result::FATAL_ERROR_INVALID_ARGS;
+    // If we've arrived here, we probably have a "trust chain" with only one
+    // certificate (i.e. a self-signed end-entity that has been set as a trust
+    // anchor either by a third party modifying our trust DB or via the
+    // enterprise roots feature). If this is the case, certificate transparency
+    // information will probably not be present, and it certainly won't verify
+    // correctly. To simplify things, we return an empty CTVerifyResult and a
+    // "not enough SCTs" CTPolicyCompliance result.
+    if (ctInfo) {
+      CTVerifyResult emptyResult;
+      ctInfo->verifyResult = std::move(emptyResult);
+      ctInfo->policyCompliance = CTPolicyCompliance::NotEnoughScts;
+    }
+    return Success;
   }
 
   CERTCertificate* endEntity = endEntityNode->cert;
@@ -506,6 +568,7 @@ Result CertVerifier::VerifyCert(
     case certificateUsageSSLClient: {
       // XXX: We don't really have a trust bit for SSL client authentication so
       // just use trustEmail as it is the closest alternative.
+<<<<<<< HEAD
       NSSCertDBTrustDomain trustDomain(
           trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
           mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
@@ -516,6 +579,35 @@ Result CertVerifier::VerifyCert(
           trustDomain, certDER, time, EndEntityOrCA::MustBeEndEntity,
           KeyUsage::digitalSignature, KeyPurposeId::id_kp_clientAuth,
           CertPolicyId::anyPolicy, stapledOCSPResponse);
+||||||| merged common ancestors
+      NSSCertDBTrustDomain trustDomain(trustEmail, defaultOCSPFetching,
+                                       mOCSPCache, pinArg,
+                                       mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                                       mCertShortLifetimeInDays,
+                                       pinningDisabled, MIN_RSA_BITS_WEAK,
+                                       ValidityCheckingMode::CheckingOff,
+                                       SHA1Mode::Allowed,
+                                       NetscapeStepUpPolicy::NeverMatch,
+                                       mDistrustedCAPolicy, originAttributes,
+                                       builtChain, nullptr, nullptr);
+      rv = BuildCertChain(trustDomain, certDER, time,
+                          EndEntityOrCA::MustBeEndEntity,
+                          KeyUsage::digitalSignature,
+                          KeyPurposeId::id_kp_clientAuth,
+                          CertPolicyId::anyPolicy, stapledOCSPResponse);
+=======
+      NSSCertDBTrustDomain trustDomain(
+          trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
+          mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
+          MIN_RSA_BITS_WEAK, ValidityCheckingMode::CheckingOff,
+          SHA1Mode::Allowed, NetscapeStepUpPolicy::NeverMatch,
+          mDistrustedCAPolicy, originAttributes, mThirdPartyRootInputs,
+          mThirdPartyIntermediateInputs, builtChain, nullptr, nullptr);
+      rv = BuildCertChain(
+          trustDomain, certDER, time, EndEntityOrCA::MustBeEndEntity,
+          KeyUsage::digitalSignature, KeyPurposeId::id_kp_clientAuth,
+          CertPolicyId::anyPolicy, stapledOCSPResponse);
+>>>>>>> upstream-releases
       break;
     }
 
@@ -578,6 +670,7 @@ Result CertVerifier::VerifyCert(
           pinningTelemetryInfo->Reset();
         }
 
+<<<<<<< HEAD
         NSSCertDBTrustDomain trustDomain(
             trustSSL, evOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
             mOCSPTimeoutHard, mCertShortLifetimeInDays, mPinningMode,
@@ -592,6 +685,40 @@ Result CertVerifier::VerifyCert(
             KeyUsage::keyAgreement,      // (EC)DH
             KeyPurposeId::id_kp_serverAuth, evPolicy, stapledOCSPResponse,
             ocspStaplingStatus);
+||||||| merged common ancestors
+        NSSCertDBTrustDomain
+          trustDomain(trustSSL, evOCSPFetching,
+                      mOCSPCache, pinArg,
+                      mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                      mCertShortLifetimeInDays, mPinningMode, MIN_RSA_BITS,
+                      ValidityCheckingMode::CheckForEV,
+                      sha1ModeConfigurations[i], mNetscapeStepUpPolicy,
+                      mDistrustedCAPolicy, originAttributes, builtChain,
+                      pinningTelemetryInfo, hostname);
+        rv = BuildCertChainForOneKeyUsage(trustDomain, certDER, time,
+                                          KeyUsage::digitalSignature,// (EC)DHE
+                                          KeyUsage::keyEncipherment, // RSA
+                                          KeyUsage::keyAgreement,    // (EC)DH
+                                          KeyPurposeId::id_kp_serverAuth,
+                                          evPolicy, stapledOCSPResponse,
+                                          ocspStaplingStatus);
+=======
+        NSSCertDBTrustDomain trustDomain(
+            trustSSL, evOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
+            mOCSPTimeoutHard, mCertShortLifetimeInDays, mPinningMode,
+            MIN_RSA_BITS, ValidityCheckingMode::CheckForEV,
+            sha1ModeConfigurations[i], mNetscapeStepUpPolicy,
+            mDistrustedCAPolicy, originAttributes, mThirdPartyRootInputs,
+            mThirdPartyIntermediateInputs, builtChain, pinningTelemetryInfo,
+            hostname);
+        rv = BuildCertChainForOneKeyUsage(
+            trustDomain, certDER, time,
+            KeyUsage::digitalSignature,  // (EC)DHE
+            KeyUsage::keyEncipherment,   // RSA
+            KeyUsage::keyAgreement,      // (EC)DH
+            KeyPurposeId::id_kp_serverAuth, evPolicy, stapledOCSPResponse,
+            ocspStaplingStatus);
+>>>>>>> upstream-releases
         if (rv == Success &&
             sha1ModeConfigurations[i] == SHA1Mode::ImportedRoot) {
           bool isBuiltInRoot = false;
@@ -659,6 +786,7 @@ Result CertVerifier::VerifyCert(
             pinningTelemetryInfo->Reset();
           }
 
+<<<<<<< HEAD
           NSSCertDBTrustDomain trustDomain(
               trustSSL, defaultOCSPFetching, mOCSPCache, pinArg,
               mOCSPTimeoutSoft, mOCSPTimeoutHard, mCertShortLifetimeInDays,
@@ -673,6 +801,43 @@ Result CertVerifier::VerifyCert(
               KeyUsage::keyAgreement,      //(EC)DH
               KeyPurposeId::id_kp_serverAuth, CertPolicyId::anyPolicy,
               stapledOCSPResponse, ocspStaplingStatus);
+||||||| merged common ancestors
+          NSSCertDBTrustDomain trustDomain(trustSSL, defaultOCSPFetching,
+                                           mOCSPCache, pinArg,
+                                           mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                                           mCertShortLifetimeInDays,
+                                           mPinningMode, keySizeOptions[i],
+                                           ValidityCheckingMode::CheckingOff,
+                                           sha1ModeConfigurations[j],
+                                           mNetscapeStepUpPolicy,
+                                           mDistrustedCAPolicy, originAttributes,
+                                           builtChain, pinningTelemetryInfo,
+                                           hostname);
+          rv = BuildCertChainForOneKeyUsage(trustDomain, certDER, time,
+                                            KeyUsage::digitalSignature,//(EC)DHE
+                                            KeyUsage::keyEncipherment,//RSA
+                                            KeyUsage::keyAgreement,//(EC)DH
+                                            KeyPurposeId::id_kp_serverAuth,
+                                            CertPolicyId::anyPolicy,
+                                            stapledOCSPResponse,
+                                            ocspStaplingStatus);
+=======
+          NSSCertDBTrustDomain trustDomain(
+              trustSSL, defaultOCSPFetching, mOCSPCache, pinArg,
+              mOCSPTimeoutSoft, mOCSPTimeoutHard, mCertShortLifetimeInDays,
+              mPinningMode, keySizeOptions[i],
+              ValidityCheckingMode::CheckingOff, sha1ModeConfigurations[j],
+              mNetscapeStepUpPolicy, mDistrustedCAPolicy, originAttributes,
+              mThirdPartyRootInputs, mThirdPartyIntermediateInputs, builtChain,
+              pinningTelemetryInfo, hostname);
+          rv = BuildCertChainForOneKeyUsage(
+              trustDomain, certDER, time,
+              KeyUsage::digitalSignature,  //(EC)DHE
+              KeyUsage::keyEncipherment,   // RSA
+              KeyUsage::keyAgreement,      //(EC)DH
+              KeyPurposeId::id_kp_serverAuth, CertPolicyId::anyPolicy,
+              stapledOCSPResponse, ocspStaplingStatus);
+>>>>>>> upstream-releases
           if (rv != Success && !IsFatalError(rv) &&
               rv != Result::ERROR_REVOKED_CERTIFICATE &&
               trustDomain.GetIsErrorDueToDistrustedCAPolicy()) {
@@ -728,6 +893,7 @@ Result CertVerifier::VerifyCert(
     }
 
     case certificateUsageSSLCA: {
+<<<<<<< HEAD
       NSSCertDBTrustDomain trustDomain(
           trustSSL, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
           mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
@@ -736,11 +902,36 @@ Result CertVerifier::VerifyCert(
           originAttributes, builtChain, nullptr, nullptr);
       rv = BuildCertChain(trustDomain, certDER, time, EndEntityOrCA::MustBeCA,
                           KeyUsage::keyCertSign, KeyPurposeId::id_kp_serverAuth,
+||||||| merged common ancestors
+      NSSCertDBTrustDomain trustDomain(trustSSL, defaultOCSPFetching,
+                                       mOCSPCache, pinArg,
+                                       mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                                       mCertShortLifetimeInDays,
+                                       pinningDisabled, MIN_RSA_BITS_WEAK,
+                                       ValidityCheckingMode::CheckingOff,
+                                       SHA1Mode::Allowed, mNetscapeStepUpPolicy,
+                                       mDistrustedCAPolicy, originAttributes,
+                                       builtChain, nullptr, nullptr);
+      rv = BuildCertChain(trustDomain, certDER, time,
+                          EndEntityOrCA::MustBeCA, KeyUsage::keyCertSign,
+                          KeyPurposeId::id_kp_serverAuth,
+=======
+      NSSCertDBTrustDomain trustDomain(
+          trustSSL, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
+          mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
+          MIN_RSA_BITS_WEAK, ValidityCheckingMode::CheckingOff,
+          SHA1Mode::Allowed, mNetscapeStepUpPolicy, mDistrustedCAPolicy,
+          originAttributes, mThirdPartyRootInputs,
+          mThirdPartyIntermediateInputs, builtChain, nullptr, nullptr);
+      rv = BuildCertChain(trustDomain, certDER, time, EndEntityOrCA::MustBeCA,
+                          KeyUsage::keyCertSign, KeyPurposeId::id_kp_serverAuth,
+>>>>>>> upstream-releases
                           CertPolicyId::anyPolicy, stapledOCSPResponse);
       break;
     }
 
     case certificateUsageEmailSigner: {
+<<<<<<< HEAD
       NSSCertDBTrustDomain trustDomain(
           trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
           mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
@@ -751,6 +942,35 @@ Result CertVerifier::VerifyCert(
           trustDomain, certDER, time, EndEntityOrCA::MustBeEndEntity,
           KeyUsage::digitalSignature, KeyPurposeId::id_kp_emailProtection,
           CertPolicyId::anyPolicy, stapledOCSPResponse);
+||||||| merged common ancestors
+      NSSCertDBTrustDomain trustDomain(trustEmail, defaultOCSPFetching,
+                                       mOCSPCache, pinArg,
+                                       mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                                       mCertShortLifetimeInDays,
+                                       pinningDisabled, MIN_RSA_BITS_WEAK,
+                                       ValidityCheckingMode::CheckingOff,
+                                       SHA1Mode::Allowed,
+                                       NetscapeStepUpPolicy::NeverMatch,
+                                       mDistrustedCAPolicy, originAttributes,
+                                       builtChain, nullptr, nullptr);
+      rv = BuildCertChain(trustDomain, certDER, time,
+                          EndEntityOrCA::MustBeEndEntity,
+                          KeyUsage::digitalSignature,
+                          KeyPurposeId::id_kp_emailProtection,
+                          CertPolicyId::anyPolicy, stapledOCSPResponse);
+=======
+      NSSCertDBTrustDomain trustDomain(
+          trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
+          mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
+          MIN_RSA_BITS_WEAK, ValidityCheckingMode::CheckingOff,
+          SHA1Mode::Allowed, NetscapeStepUpPolicy::NeverMatch,
+          mDistrustedCAPolicy, originAttributes, mThirdPartyRootInputs,
+          mThirdPartyIntermediateInputs, builtChain, nullptr, nullptr);
+      rv = BuildCertChain(
+          trustDomain, certDER, time, EndEntityOrCA::MustBeEndEntity,
+          KeyUsage::digitalSignature, KeyPurposeId::id_kp_emailProtection,
+          CertPolicyId::anyPolicy, stapledOCSPResponse);
+>>>>>>> upstream-releases
       if (rv == Result::ERROR_INADEQUATE_KEY_USAGE) {
         rv = BuildCertChain(
             trustDomain, certDER, time, EndEntityOrCA::MustBeEndEntity,
@@ -764,12 +984,33 @@ Result CertVerifier::VerifyCert(
       // TODO: The higher level S/MIME processing should pass in which key
       // usage it is trying to verify for, and base its algorithm choices
       // based on the result of the verification(s).
+<<<<<<< HEAD
       NSSCertDBTrustDomain trustDomain(
           trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
           mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
           MIN_RSA_BITS_WEAK, ValidityCheckingMode::CheckingOff,
           SHA1Mode::Allowed, NetscapeStepUpPolicy::NeverMatch,
           mDistrustedCAPolicy, originAttributes, builtChain, nullptr, nullptr);
+||||||| merged common ancestors
+      NSSCertDBTrustDomain trustDomain(trustEmail, defaultOCSPFetching,
+                                       mOCSPCache, pinArg,
+                                       mOCSPTimeoutSoft, mOCSPTimeoutHard,
+                                       mCertShortLifetimeInDays,
+                                       pinningDisabled, MIN_RSA_BITS_WEAK,
+                                       ValidityCheckingMode::CheckingOff,
+                                       SHA1Mode::Allowed,
+                                       NetscapeStepUpPolicy::NeverMatch,
+                                       mDistrustedCAPolicy, originAttributes,
+                                       builtChain, nullptr, nullptr);
+=======
+      NSSCertDBTrustDomain trustDomain(
+          trustEmail, defaultOCSPFetching, mOCSPCache, pinArg, mOCSPTimeoutSoft,
+          mOCSPTimeoutHard, mCertShortLifetimeInDays, pinningDisabled,
+          MIN_RSA_BITS_WEAK, ValidityCheckingMode::CheckingOff,
+          SHA1Mode::Allowed, NetscapeStepUpPolicy::NeverMatch,
+          mDistrustedCAPolicy, originAttributes, mThirdPartyRootInputs,
+          mThirdPartyIntermediateInputs, builtChain, nullptr, nullptr);
+>>>>>>> upstream-releases
       rv = BuildCertChain(trustDomain, certDER, time,
                           EndEntityOrCA::MustBeEndEntity,
                           KeyUsage::keyEncipherment,  // RSA

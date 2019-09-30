@@ -25,10 +25,24 @@ enum {
   MOZILLA_HAS_NEON_FLAG = 8
 };
 
+<<<<<<< HEAD
 static unsigned get_arm_cpu_flags(void) {
   unsigned flags;
   FILE *fin;
   bool armv6_processor = false;
+||||||| merged common ancestors
+static unsigned
+get_arm_cpu_flags(void)
+{
+  unsigned  flags;
+  FILE     *fin;
+  bool      armv6_processor = false;
+=======
+static unsigned get_arm_cpu_flags(void) {
+  unsigned flags;
+  FILE* fin;
+  bool armv6_processor = false;
+>>>>>>> upstream-releases
   flags = 0;
   /*Reading /proc/self/auxv would be easier, but that doesn't work reliably on
     Android. This also means that detection will fail in Scratchbox, which is
@@ -40,9 +54,21 @@ static unsigned get_arm_cpu_flags(void) {
     /*512 should be enough for anybody (it's even enough for all the flags that
       x86 has accumulated... so far).*/
     char buf[512];
+<<<<<<< HEAD
     while (fgets(buf, 511, fin) != nullptr) {
       if (memcmp(buf, "Features", 8) == 0) {
         char *p;
+||||||| merged common ancestors
+    while (fgets(buf, 511, fin) != nullptr)
+    {
+      if (memcmp(buf, "Features", 8) == 0)
+      {
+        char *p;
+=======
+    while (fgets(buf, 511, fin) != nullptr) {
+      if (memcmp(buf, "Features", 8) == 0) {
+        char* p;
+>>>>>>> upstream-releases
         p = strstr(buf, " edsp");
         if (p != nullptr && (p[5] == ' ' || p[5] == '\n'))
           flags |= MOZILLA_HAS_EDSP_FLAG;
@@ -85,33 +111,80 @@ static unsigned get_arm_cpu_flags(void) {
 // Cache a local copy so we only have to read /proc/cpuinfo once.
 static unsigned arm_cpu_flags = get_arm_cpu_flags();
 
+<<<<<<< HEAD
 #if !defined(MOZILLA_PRESUME_EDSP)
 static bool check_edsp(void) {
+||||||| merged common ancestors
+#    if !defined(MOZILLA_PRESUME_EDSP)
+static bool
+check_edsp(void)
+{
+=======
+#    if !defined(MOZILLA_PRESUME_EDSP)
+static bool check_edsp(void) {
+>>>>>>> upstream-releases
   return (arm_cpu_flags & MOZILLA_HAS_EDSP_FLAG) != 0;
 }
 #endif
 
+<<<<<<< HEAD
 #if !defined(MOZILLA_PRESUME_ARMV6)
 static bool check_armv6(void) {
+||||||| merged common ancestors
+#    if !defined(MOZILLA_PRESUME_ARMV6)
+static bool
+check_armv6(void)
+{
+=======
+#    if !defined(MOZILLA_PRESUME_ARMV6)
+static bool check_armv6(void) {
+>>>>>>> upstream-releases
   return (arm_cpu_flags & MOZILLA_HAS_ARMV6_FLAG) != 0;
 }
 #endif
 
+<<<<<<< HEAD
 #if !defined(MOZILLA_PRESUME_ARMV7)
 static bool check_armv7(void) {
+||||||| merged common ancestors
+#    if !defined(MOZILLA_PRESUME_ARMV7)
+static bool
+check_armv7(void)
+{
+=======
+#    if !defined(MOZILLA_PRESUME_ARMV7)
+static bool check_armv7(void) {
+>>>>>>> upstream-releases
   return (arm_cpu_flags & MOZILLA_HAS_ARMV7_FLAG) != 0;
 }
 #endif
 
+<<<<<<< HEAD
 #if !defined(MOZILLA_PRESUME_NEON)
 static bool check_neon(void) {
+||||||| merged common ancestors
+#    if !defined(MOZILLA_PRESUME_NEON)
+static bool
+check_neon(void)
+{
+=======
+#    if !defined(MOZILLA_PRESUME_NEON)
+static bool check_neon(void) {
+>>>>>>> upstream-releases
   return (arm_cpu_flags & MOZILLA_HAS_NEON_FLAG) != 0;
 }
 #endif
 
+<<<<<<< HEAD
 #endif  // defined(__linux__) || defined(ANDROID)
+||||||| merged common ancestors
+#  endif // defined(__linux__) || defined(ANDROID)
+=======
+#  endif  // defined(__linux__) || defined(ANDROID)
+>>>>>>> upstream-releases
 
 namespace mozilla {
+<<<<<<< HEAD
 namespace arm_private {
 #if !defined(MOZILLA_PRESUME_EDSP)
 bool edsp_enabled = check_edsp();
@@ -127,5 +200,38 @@ bool neon_enabled = check_neon();
 #endif
 }  // namespace arm_private
 }  // namespace mozilla
+||||||| merged common ancestors
+  namespace arm_private {
+#  if !defined(MOZILLA_PRESUME_EDSP)
+    bool edsp_enabled = check_edsp();
+#  endif
+#  if !defined(MOZILLA_PRESUME_ARMV6)
+    bool armv6_enabled = check_armv6();
+#  endif
+#  if !defined(MOZILLA_PRESUME_ARMV7)
+    bool armv7_enabled = check_armv7();
+#  endif
+#  if !defined(MOZILLA_PRESUME_NEON)
+    bool neon_enabled = check_neon();
+#  endif
+  } // namespace arm_private
+} // namespace mozilla
+=======
+namespace arm_private {
+#  if !defined(MOZILLA_PRESUME_EDSP)
+bool edsp_enabled = check_edsp();
+#  endif
+#  if !defined(MOZILLA_PRESUME_ARMV6)
+bool armv6_enabled = check_armv6();
+#  endif
+#  if !defined(MOZILLA_PRESUME_ARMV7)
+bool armv7_enabled = check_armv7();
+#  endif
+#  if !defined(MOZILLA_PRESUME_NEON)
+bool neon_enabled = check_neon();
+#  endif
+}  // namespace arm_private
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // MOZILLA_ARM_HAVE_CPUID_DETECTION

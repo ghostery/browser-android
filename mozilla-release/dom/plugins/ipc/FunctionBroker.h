@@ -20,6 +20,7 @@
 #include "FunctionBrokerIPCUtils.h"
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #define SECURITY_WIN32
 #include <security.h>
 #include <wininet.h>
@@ -28,6 +29,25 @@
 #include "sandboxPermissions.h"
 #endif
 #endif  // defined(XP_WIN)
+||||||| merged common ancestors
+#define SECURITY_WIN32
+#include <security.h>
+#include <wininet.h>
+#include <schnlsp.h>
+#if defined(MOZ_SANDBOX)
+#include "sandboxPermissions.h"
+#endif
+#endif // defined(XP_WIN)
+=======
+#  define SECURITY_WIN32
+#  include <security.h>
+#  include <wininet.h>
+#  include <schnlsp.h>
+#  if defined(MOZ_SANDBOX)
+#    include "sandboxPermissions.h"
+#  endif
+#endif  // defined(XP_WIN)
+>>>>>>> upstream-releases
 
 /**
  * This functionality supports automatic method hooking (FunctionHook) and
@@ -159,7 +179,7 @@ namespace plugins {
 #if defined(XP_WIN)
 
 // Currently, all methods we hook use the WINAPI calling convention.
-#define HOOK_CALL WINAPI
+#  define HOOK_CALL WINAPI
 
 typedef std::pair<ULONG_PTR, ULONG_PTR> UlongPair;
 typedef std::map<UlongPair, uint64_t> UlongPairToIdMap;
@@ -174,7 +194,7 @@ extern IdToPtrMap sIdToPtrMap;
 #else  // defined(XP_WIN)
 
 // Any methods we hook use the default calling convention.
-#define HOOK_CALL
+#  define HOOK_CALL
 
 #endif  // defined(XP_WIN)
 
@@ -243,19 +263,37 @@ inline void LogParameterValue(int aIndex, const char* const& aParam) {
 
 #if defined(XP_WIN)
 template <>
+<<<<<<< HEAD
 inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam) {
 #ifdef DEBUG
+||||||| merged common ancestors
+inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam)
+{
+#ifdef DEBUG
+=======
+inline void LogParameterValue(int aIndex, const SEC_GET_KEY_FN& aParam) {
+#  ifdef DEBUG
+>>>>>>> upstream-releases
   MOZ_ASSERT(aParam == nullptr);
   HOOK_LOG(LogLevel::Verbose, ("Parameter %d: null function.", aIndex));
-#endif
+#  endif
 }
 
 template <>
+<<<<<<< HEAD
 inline void LogParameterValue(int aIndex, LPVOID* const& aParam) {
 #ifdef DEBUG
+||||||| merged common ancestors
+inline void LogParameterValue(int aIndex, LPVOID* const & aParam)
+{
+#ifdef DEBUG
+=======
+inline void LogParameterValue(int aIndex, LPVOID* const& aParam) {
+#  ifdef DEBUG
+>>>>>>> upstream-releases
   MOZ_ASSERT(aParam == nullptr);
   HOOK_LOG(LogLevel::Verbose, ("Parameter %d: null void pointer.", aIndex));
-#endif
+#  endif
 }
 #endif  // defined(XP_WIN)
 

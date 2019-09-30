@@ -10,7 +10,6 @@
 #include "mozilla/Printf.h"
 #include "mozilla/RangedPtr.h"
 
-#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -282,10 +281,16 @@ static bool QuoteString(Sprinter* sp, const mozilla::Range<const CharT> chars,
     if (!sp->putChar(quote)) {
       return false;
     }
+<<<<<<< HEAD
   }
 
   const CharPtr end = chars.end();
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* Loop control variables: end points at end of string sentinel. */
   for (CharPtr t = chars.begin(); t < end; ++t) {
     /* Move t forward from s past un-quote-worthy characters. */
@@ -301,14 +306,46 @@ static bool QuoteString(Sprinter* sp, const mozilla::Range<const CharT> chars,
           break;
         }
       }
+||||||| merged common ancestors
+    /* Sprint the closing quote and return the quoted string. */
+    if (quote) {
+        if (!sp->putChar(quote)) {
+            return false;
+        }
+    }
+=======
+  const CharPtr end = chars.end();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       ++t;
       if (t == end) {
         break;
       }
       c = *t;
     }
+||||||| merged common ancestors
+    return true;
+}
+=======
+  /* Loop control variables: end points at end of string sentinel. */
+  for (CharPtr t = chars.begin(); t < end; ++t) {
+    /* Move t forward from s past un-quote-worthy characters. */
+    const CharPtr s = t;
+    char16_t c = *t;
+    while (c < 127 && c != '\\') {
+      if (target == QuoteTarget::String) {
+        if (!IsAsciiPrintable(c) || c == quote || c == '\t') {
+          break;
+        }
+      } else {
+        if (c < ' ' || c == '"') {
+          break;
+        }
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     {
       ptrdiff_t len = t - s;
       ptrdiff_t base = sp->getOffset();
@@ -320,12 +357,42 @@ static bool QuoteString(Sprinter* sp, const mozilla::Range<const CharT> chars,
         (*sp)[base + i] = char(s[i]);
       }
       (*sp)[base + len] = '\0';
+||||||| merged common ancestors
+bool
+QuoteString(Sprinter* sp, JSString* str, char quote /*= '\0' */)
+{
+    JSLinearString* linear = str->ensureLinear(sp->context);
+    if (!linear) {
+        return false;
+=======
+      ++t;
+      if (t == end) {
+        break;
+      }
+      c = *t;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (t == end) {
       break;
     }
+||||||| merged common ancestors
+    JS::AutoCheckCannotGC nogc;
+    return linear->hasLatin1Chars()
+           ? QuoteString(sp, linear->latin1Range(nogc), quote)
+           : QuoteString(sp, linear->twoByteRange(nogc), quote);
+}
+=======
+    {
+      ptrdiff_t len = t - s;
+      ptrdiff_t base = sp->getOffset();
+      if (!sp->reserve(len)) {
+        return false;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     /* Use escapeMap, \u, or \x only if necessary. */
     const char* escape;
     if (!(c >> 8) && c != 0 &&
@@ -349,9 +416,32 @@ static bool QuoteString(Sprinter* sp, const mozilla::Range<const CharT> chars,
   if (quote) {
     if (!sp->putChar(quote)) {
       return false;
+||||||| merged common ancestors
+UniqueChars
+QuoteString(JSContext* cx, JSString* str, char quote /* = '\0' */)
+{
+    Sprinter sprinter(cx);
+    if (!sprinter.init()) {
+        return nullptr;
     }
+    if (!QuoteString(&sprinter, str, quote)) {
+        return nullptr;
+=======
+      for (ptrdiff_t i = 0; i < len; ++i) {
+        (*sp)[base + i] = char(s[i]);
+      }
+      (*sp)[base + len] = '\0';
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
   }
+||||||| merged common ancestors
+    return sprinter.release();
+}
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return true;
 }
 
@@ -360,14 +450,67 @@ bool QuoteString(Sprinter* sp, JSString* str, char quote /*= '\0' */) {
   if (!linear) {
     return false;
   }
+||||||| merged common ancestors
+Fprinter::Fprinter(FILE* fp)
+  : file_(nullptr),
+    init_(false)
+{
+    init(fp);
+}
 
+#ifdef DEBUG
+Fprinter::~Fprinter()
+{
+    MOZ_ASSERT_IF(init_, !file_);
+}
+#endif
+=======
+    if (t == end) {
+      break;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::AutoCheckCannotGC nogc;
   return linear->hasLatin1Chars() ? QuoteString<QuoteTarget::String>(
                                         sp, linear->latin1Range(nogc), quote)
                                   : QuoteString<QuoteTarget::String>(
                                         sp, linear->twoByteRange(nogc), quote);
 }
+||||||| merged common ancestors
+bool
+Fprinter::init(const char* path)
+{
+    MOZ_ASSERT(!file_);
+    file_ = fopen(path, "w");
+    if (!file_) {
+        return false;
+    }
+    init_ = true;
+    return true;
+}
+=======
+    /* Use escapeMap, \u, or \x only if necessary. */
+    const char* escape;
+    if (!(c >> 8) && c != 0 &&
+        (escape = strchr(escapeMap, int(c))) != nullptr) {
+      if (!sp->jsprintf("\\%c", escape[1])) {
+        return false;
+      }
+    } else {
+      /*
+       * Use \x only if the high byte is 0 and we're in a quoted string,
+       * because ECMA-262 allows only \u, not \x, in Unicode identifiers
+       * (see bug 621814).
+       */
+      if (!sp->jsprintf((quote && !(c >> 8)) ? "\\x%02X" : "\\u%04X", c)) {
+        return false;
+      }
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 UniqueChars QuoteString(JSContext* cx, JSString* str, char quote /* = '\0' */) {
   Sprinter sprinter(cx);
   if (!sprinter.init()) {
@@ -378,26 +521,104 @@ UniqueChars QuoteString(JSContext* cx, JSString* str, char quote /* = '\0' */) {
   }
   return sprinter.release();
 }
+||||||| merged common ancestors
+void
+Fprinter::init(FILE *fp)
+{
+    MOZ_ASSERT(!file_);
+    file_ = fp;
+    init_ = false;
+}
+=======
+  /* Sprint the closing quote and return the quoted string. */
+  if (quote) {
+    if (!sp->putChar(quote)) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool JSONQuoteString(Sprinter* sp, JSString* str) {
   JSLinearString* linear = str->ensureLinear(sp->context);
   if (!linear) {
     return false;
   }
+||||||| merged common ancestors
+void
+Fprinter::flush()
+{
+    MOZ_ASSERT(file_);
+    fflush(file_);
+}
+=======
+  return true;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JS::AutoCheckCannotGC nogc;
   return linear->hasLatin1Chars() ? QuoteString<QuoteTarget::JSON>(
                                         sp, linear->latin1Range(nogc), '\0')
                                   : QuoteString<QuoteTarget::JSON>(
                                         sp, linear->twoByteRange(nogc), '\0');
 }
+||||||| merged common ancestors
+void
+Fprinter::finish()
+{
+    MOZ_ASSERT(file_);
+    if (init_) {
+        fclose(file_);
+    }
+    file_ = nullptr;
+}
+=======
+bool QuoteString(Sprinter* sp, JSString* str, char quote /*= '\0' */) {
+  JSLinearString* linear = str->ensureLinear(sp->context);
+  if (!linear) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 Fprinter::Fprinter(FILE* fp) : file_(nullptr), init_(false) { init(fp); }
 
 #ifdef DEBUG
 Fprinter::~Fprinter() { MOZ_ASSERT_IF(init_, !file_); }
 #endif
+||||||| merged common ancestors
+bool
+Fprinter::put(const char* s, size_t len)
+{
+    MOZ_ASSERT(file_);
+    int i = fwrite(s, /*size=*/ 1, /*nitems=*/ len, file_);
+    if (size_t(i) != len) {
+        reportOutOfMemory();
+        return false;
+    }
+#ifdef XP_WIN32
+    if ((file_ == stderr) && (IsDebuggerPresent())) {
+        UniqueChars buf = DuplicateString(s, len);
+        if (!buf) {
+            reportOutOfMemory();
+            return false;
+        }
+        OutputDebugStringA(buf.get());
+    }
+#endif
+    return true;
+}
+=======
+  JS::AutoCheckCannotGC nogc;
+  return linear->hasLatin1Chars() ? QuoteString<QuoteTarget::String>(
+                                        sp, linear->latin1Range(nogc), quote)
+                                  : QuoteString<QuoteTarget::String>(
+                                        sp, linear->twoByteRange(nogc), quote);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool Fprinter::init(const char* path) {
   MOZ_ASSERT(!file_);
   file_ = fopen(path, "w");
@@ -406,19 +627,71 @@ bool Fprinter::init(const char* path) {
   }
   init_ = true;
   return true;
+||||||| merged common ancestors
+LSprinter::LSprinter(LifoAlloc* lifoAlloc)
+  : alloc_(lifoAlloc),
+    head_(nullptr),
+    tail_(nullptr),
+    unused_(0)
+{ }
+
+LSprinter::~LSprinter()
+{
+    // This LSprinter might be allocated as part of the same LifoAlloc, so we
+    // should not expect the destructor to be called.
+=======
+UniqueChars QuoteString(JSContext* cx, JSString* str, char quote /* = '\0' */) {
+  Sprinter sprinter(cx);
+  if (!sprinter.init()) {
+    return nullptr;
+  }
+  if (!QuoteString(&sprinter, str, quote)) {
+    return nullptr;
+  }
+  return sprinter.release();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void Fprinter::init(FILE* fp) {
   MOZ_ASSERT(!file_);
   file_ = fp;
   init_ = false;
 }
+||||||| merged common ancestors
+void
+LSprinter::exportInto(GenericPrinter& out) const
+{
+    if (!head_) {
+        return;
+    }
+=======
+bool JSONQuoteString(Sprinter* sp, JSString* str) {
+  JSLinearString* linear = str->ensureLinear(sp->context);
+  if (!linear) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void Fprinter::flush() {
   MOZ_ASSERT(file_);
   fflush(file_);
+||||||| merged common ancestors
+    for (Chunk* it = head_; it != tail_; it = it->next) {
+        out.put(it->chars(), it->length);
+    }
+    out.put(tail_->chars(), tail_->length - unused_);
+=======
+  JS::AutoCheckCannotGC nogc;
+  return linear->hasLatin1Chars() ? QuoteString<QuoteTarget::JSON>(
+                                        sp, linear->latin1Range(nogc), '\0')
+                                  : QuoteString<QuoteTarget::JSON>(
+                                        sp, linear->twoByteRange(nogc), '\0');
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void Fprinter::finish() {
   MOZ_ASSERT(file_);
   if (init_) {
@@ -426,7 +699,20 @@ void Fprinter::finish() {
   }
   file_ = nullptr;
 }
+||||||| merged common ancestors
+void
+LSprinter::clear()
+{
+    head_ = nullptr;
+    tail_ = nullptr;
+    unused_ = 0;
+    hadOOM_ = false;
+}
+=======
+Fprinter::Fprinter(FILE* fp) : file_(nullptr), init_(false) { init(fp); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool Fprinter::put(const char* s, size_t len) {
   MOZ_ASSERT(file_);
   int i = fwrite(s, /*size=*/1, /*nitems=*/len, file_);
@@ -446,7 +732,24 @@ bool Fprinter::put(const char* s, size_t len) {
 #endif
   return true;
 }
+||||||| merged common ancestors
+bool
+LSprinter::put(const char* s, size_t len)
+{
+    // Compute how much data will fit in the current chunk.
+    size_t existingSpaceWrite = 0;
+    size_t overflow = len;
+    if (unused_ > 0 && tail_) {
+        existingSpaceWrite = std::min(unused_, len);
+        overflow = len - existingSpaceWrite;
+    }
+=======
+#ifdef DEBUG
+Fprinter::~Fprinter() { MOZ_ASSERT_IF(init_, !file_); }
+#endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 LSprinter::LSprinter(LifoAlloc* lifoAlloc)
     : alloc_(lifoAlloc), head_(nullptr), tail_(nullptr), unused_(0) {}
 
@@ -519,22 +822,222 @@ bool LSprinter::put(const char* s, size_t len) {
       size_t availableSpace = allocLength - sizeof(Chunk);
       last->next = nullptr;
       last->length = availableSpace;
+||||||| merged common ancestors
+    // If necessary, allocate a new chunk for overflow data.
+    size_t allocLength = 0;
+    Chunk* last = nullptr;
+    if (overflow > 0) {
+        allocLength = AlignBytes(sizeof(Chunk) + overflow, js::detail::LIFO_ALLOC_ALIGN);
 
+        LifoAlloc::AutoFallibleScope fallibleAllocator(alloc_);
+        last = reinterpret_cast<Chunk*>(alloc_->alloc(allocLength));
+        if (!last) {
+            reportOutOfMemory();
+            return false;
+        }
+    }
+=======
+bool Fprinter::init(const char* path) {
+  MOZ_ASSERT(!file_);
+  file_ = fopen(path, "w");
+  if (!file_) {
+    return false;
+  }
+  init_ = true;
+  return true;
+}
+
+void Fprinter::init(FILE* fp) {
+  MOZ_ASSERT(!file_);
+  file_ = fp;
+  init_ = false;
+}
+
+void Fprinter::flush() {
+  MOZ_ASSERT(file_);
+  fflush(file_);
+}
+
+void Fprinter::finish() {
+  MOZ_ASSERT(file_);
+  if (init_) {
+    fclose(file_);
+  }
+  file_ = nullptr;
+}
+
+bool Fprinter::put(const char* s, size_t len) {
+  MOZ_ASSERT(file_);
+  int i = fwrite(s, /*size=*/1, /*nitems=*/len, file_);
+  if (size_t(i) != len) {
+    reportOutOfMemory();
+    return false;
+  }
+#ifdef XP_WIN
+  if ((file_ == stderr) && (IsDebuggerPresent())) {
+    UniqueChars buf = DuplicateString(s, len);
+    if (!buf) {
+      reportOutOfMemory();
+      return false;
+    }
+    OutputDebugStringA(buf.get());
+  }
+#endif
+  return true;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       unused_ = availableSpace;
       if (!head_) {
         head_ = last;
       } else {
         tail_->next = last;
       }
+||||||| merged common ancestors
+    // All fallible operations complete: now fill up existing space, then
+    // overflow space in any new chunk.
+    MOZ_ASSERT(existingSpaceWrite + overflow == len);
+=======
+LSprinter::LSprinter(LifoAlloc* lifoAlloc)
+    : alloc_(lifoAlloc), head_(nullptr), tail_(nullptr), unused_(0) {}
 
+LSprinter::~LSprinter() {
+  // This LSprinter might be allocated as part of the same LifoAlloc, so we
+  // should not expect the destructor to be called.
+}
+
+void LSprinter::exportInto(GenericPrinter& out) const {
+  if (!head_) {
+    return;
+  }
+
+  for (Chunk* it = head_; it != tail_; it = it->next) {
+    out.put(it->chars(), it->length);
+  }
+  out.put(tail_->chars(), tail_->length - unused_);
+}
+
+void LSprinter::clear() {
+  head_ = nullptr;
+  tail_ = nullptr;
+  unused_ = 0;
+  hadOOM_ = false;
+}
+
+bool LSprinter::put(const char* s, size_t len) {
+  // Compute how much data will fit in the current chunk.
+  size_t existingSpaceWrite = 0;
+  size_t overflow = len;
+  if (unused_ > 0 && tail_) {
+    existingSpaceWrite = std::min(unused_, len);
+    overflow = len - existingSpaceWrite;
+  }
+
+  // If necessary, allocate a new chunk for overflow data.
+  size_t allocLength = 0;
+  Chunk* last = nullptr;
+  if (overflow > 0) {
+    allocLength =
+        AlignBytes(sizeof(Chunk) + overflow, js::detail::LIFO_ALLOC_ALIGN);
+
+    LifoAlloc::AutoFallibleScope fallibleAllocator(alloc_);
+    last = reinterpret_cast<Chunk*>(alloc_->alloc(allocLength));
+    if (!last) {
+      reportOutOfMemory();
+      return false;
+    }
+  }
+
+  // All fallible operations complete: now fill up existing space, then
+  // overflow space in any new chunk.
+  MOZ_ASSERT(existingSpaceWrite + overflow == len);
+
+  if (existingSpaceWrite > 0) {
+    PodCopy(tail_->end() - unused_, s, existingSpaceWrite);
+    unused_ -= existingSpaceWrite;
+    s += existingSpaceWrite;
+  }
+
+  if (overflow > 0) {
+    if (tail_ && reinterpret_cast<char*>(last) == tail_->end()) {
+      // tail_ and last are consecutive in memory.  LifoAlloc has no
+      // metadata and is just a bump allocator, so we can cheat by
+      // appending the newly-allocated space to tail_.
+      unused_ = allocLength;
+      tail_->length += allocLength;
+    } else {
+      // Remove the size of the header from the allocated length.
+      size_t availableSpace = allocLength - sizeof(Chunk);
+      last->next = nullptr;
+      last->length = availableSpace;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       tail_ = last;
     }
+||||||| merged common ancestors
+    if (existingSpaceWrite > 0) {
+        PodCopy(tail_->end() - unused_, s, existingSpaceWrite);
+        unused_ -= existingSpaceWrite;
+        s += existingSpaceWrite;
+    }
+=======
+      unused_ = availableSpace;
+      if (!head_) {
+        head_ = last;
+      } else {
+        tail_->next = last;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    PodCopy(tail_->end() - unused_, s, overflow);
+||||||| merged common ancestors
+    if (overflow > 0) {
+        if (tail_ && reinterpret_cast<char*>(last) == tail_->end()) {
+            // tail_ and last are consecutive in memory.  LifoAlloc has no
+            // metadata and is just a bump allocator, so we can cheat by
+            // appending the newly-allocated space to tail_.
+            unused_ = allocLength;
+            tail_->length += allocLength;
+        } else {
+            // Remove the size of the header from the allocated length.
+            size_t availableSpace = allocLength - sizeof(Chunk);
+            last->next = nullptr;
+            last->length = availableSpace;
+
+            unused_ = availableSpace;
+            if (!head_) {
+                head_ = last;
+            } else {
+                tail_->next = last;
+            }
+
+            tail_ = last;
+        }
+=======
+      tail_ = last;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    MOZ_ASSERT(unused_ >= overflow);
+    unused_ -= overflow;
+  }
+||||||| merged common ancestors
+        PodCopy(tail_->end() - unused_, s, overflow);
+
+        MOZ_ASSERT(unused_ >= overflow);
+        unused_ -= overflow;
+    }
+=======
     PodCopy(tail_->end() - unused_, s, overflow);
 
     MOZ_ASSERT(unused_ >= overflow);
     unused_ -= overflow;
   }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(len <= INT_MAX);
   return true;

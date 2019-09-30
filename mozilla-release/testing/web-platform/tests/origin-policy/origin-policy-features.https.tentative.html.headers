@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Sec-Origin-Policy: policy-features
+||||||| merged common ancestors
+=======
+Sec-Origin-Policy: policy=policy-features
+>>>>>>> upstream-releases

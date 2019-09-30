@@ -6,7 +6,17 @@
 
 #ifdef JS_JITSPEW
 
-#include "jit/JSONSpewer.h"
+#  include "jit/JSONSpewer.h"
+
+<<<<<<< HEAD
+#include <stdarg.h>
+
+#include "jit/BacktrackingAllocator.h"
+#include "jit/LIR.h"
+#include "jit/MIR.h"
+#include "jit/MIRGraph.h"
+#include "jit/RangeAnalysis.h"
+||||||| merged common ancestors
 
 #include <stdarg.h>
 
@@ -15,10 +25,20 @@
 #include "jit/MIR.h"
 #include "jit/MIRGraph.h"
 #include "jit/RangeAnalysis.h"
+=======
+#  include <stdarg.h>
+
+#  include "jit/BacktrackingAllocator.h"
+#  include "jit/LIR.h"
+#  include "jit/MIR.h"
+#  include "jit/MIRGraph.h"
+#  include "jit/RangeAnalysis.h"
+>>>>>>> upstream-releases
 
 using namespace js;
 using namespace js::jit;
 
+<<<<<<< HEAD
 void JSONSpewer::beginFunction(JSScript* script) {
   beginObject();
   if (script) {
@@ -27,13 +47,44 @@ void JSONSpewer::beginFunction(JSScript* script) {
     property("name", "wasm compilation");
   }
   beginListProperty("passes");
+||||||| merged common ancestors
+void
+JSONSpewer::beginFunction(JSScript* script)
+{
+    beginObject();
+    if (script) {
+        formatProperty("name", "%s:%u", script->filename(), script->lineno());
+    } else {
+        property("name", "wasm compilation");
+    }
+    beginListProperty("passes");
+=======
+void JSONSpewer::beginFunction(JSScript* script) {
+  beginObject();
+  formatProperty("name", "%s:%u", script->filename(), script->lineno());
+  beginListProperty("passes");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void JSONSpewer::beginPass(const char* pass) {
   beginObject();
   property("name", pass);
+||||||| merged common ancestors
+void
+JSONSpewer::beginPass(const char* pass)
+{
+    beginObject();
+    property("name", pass);
+=======
+void JSONSpewer::beginWasmFunction(unsigned funcIndex) {
+  beginObject();
+  formatProperty("name", "wasm-func%u", funcIndex);
+  beginListProperty("passes");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void JSONSpewer::spewMResumePoint(MResumePoint* rp) {
   if (!rp) {
     return;
@@ -70,12 +121,80 @@ void JSONSpewer::spewMResumePoint(MResumePoint* rp) {
 
   endObject();
 }
+||||||| merged common ancestors
+void
+JSONSpewer::spewMResumePoint(MResumePoint* rp)
+{
+    if (!rp) {
+        return;
+    }
 
+    beginObjectProperty("resumePoint");
+=======
+void JSONSpewer::beginPass(const char* pass) {
+  beginObject();
+  property("name", pass);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void JSONSpewer::spewMDef(MDefinition* def) {
   beginObject();
 
   property("id", def->id());
+||||||| merged common ancestors
+    if (rp->caller()) {
+        property("caller", rp->caller()->block()->id());
+    }
 
+    switch (rp->mode()) {
+      case MResumePoint::ResumeAt:
+        property("mode", "At");
+        break;
+      case MResumePoint::ResumeAfter:
+        property("mode", "After");
+        break;
+      case MResumePoint::Outer:
+        property("mode", "Outer");
+        break;
+    }
+=======
+void JSONSpewer::spewMResumePoint(MResumePoint* rp) {
+  if (!rp) {
+    return;
+  }
+
+  beginObjectProperty("resumePoint");
+
+  if (rp->caller()) {
+    property("caller", rp->caller()->block()->id());
+  }
+
+  switch (rp->mode()) {
+    case MResumePoint::ResumeAt:
+      property("mode", "At");
+      break;
+    case MResumePoint::ResumeAfter:
+      property("mode", "After");
+      break;
+    case MResumePoint::Outer:
+      property("mode", "Outer");
+      break;
+  }
+
+  beginListProperty("operands");
+  for (MResumePoint* iter = rp; iter; iter = iter->caller()) {
+    for (int i = iter->numOperands() - 1; i >= 0; i--) {
+      value(iter->getOperand(i)->id());
+    }
+    if (iter->caller()) {
+      value("|");
+    }
+  }
+  endList();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   propertyName("opcode");
   out_.printf("\"");
   def->printOpcode(out_);
@@ -106,6 +225,55 @@ void JSONSpewer::spewMDef(MDefinition* def) {
     beginListProperty("memInputs");
     if (def->dependency()) {
       value(def->dependency()->id());
+||||||| merged common ancestors
+    beginListProperty("operands");
+    for (MResumePoint* iter = rp; iter; iter = iter->caller()) {
+        for (int i = iter->numOperands() - 1; i >= 0; i--) {
+            value(iter->getOperand(i)->id());
+        }
+        if (iter->caller()) {
+            value("|");
+        }
+=======
+  endObject();
+}
+
+void JSONSpewer::spewMDef(MDefinition* def) {
+  beginObject();
+
+  property("id", def->id());
+
+  propertyName("opcode");
+  out_.printf("\"");
+  def->printOpcode(out_);
+  out_.printf("\"");
+
+  beginListProperty("attributes");
+#  define OUTPUT_ATTRIBUTE(X)      \
+    do {                           \
+      if (def->is##X()) value(#X); \
+    } while (0);
+  MIR_FLAG_LIST(OUTPUT_ATTRIBUTE);
+#  undef OUTPUT_ATTRIBUTE
+  endList();
+
+  beginListProperty("inputs");
+  for (size_t i = 0, e = def->numOperands(); i < e; i++) {
+    value(def->getOperand(i)->id());
+  }
+  endList();
+
+  beginListProperty("uses");
+  for (MUseDefIterator use(def); use; use++) {
+    value(use.def()->id());
+  }
+  endList();
+
+  if (!def->isLowered()) {
+    beginListProperty("memInputs");
+    if (def->dependency()) {
+      value(def->dependency()->id());
+>>>>>>> upstream-releases
     }
     endList();
   }
@@ -188,11 +356,55 @@ void JSONSpewer::spewMIR(MIRGraph* mir) {
     spewMResumePoint(block->entryResumePoint());
 
     endObject();
+<<<<<<< HEAD
   }
 
   endList();
   endObject();
 }
+||||||| merged common ancestors
+}
+
+void
+JSONSpewer::spewMIR(MIRGraph* mir)
+{
+    beginObjectProperty("mir");
+    beginListProperty("blocks");
+
+    for (MBasicBlockIterator block(mir->begin()); block != mir->end(); block++) {
+        beginObject();
+
+        property("number", block->id());
+        if (block->getHitState() == MBasicBlock::HitState::Count) {
+            property("count", block->getHitCount());
+        }
+
+        beginListProperty("attributes");
+        if (block->hasLastIns()) {
+            if (block->isLoopBackedge()) {
+                value("backedge");
+            }
+            if (block->isLoopHeader()) {
+                value("loopheader");
+            }
+            if (block->isSplitEdge()) {
+                value("splitedge");
+            }
+        }
+        endList();
+
+        beginListProperty("predecessors");
+        for (size_t i = 0; i < block->numPredecessors(); i++) {
+            value(block->getPredecessor(i)->id());
+        }
+        endList();
+=======
+  }
+
+  endList();
+  endObject();
+}
+>>>>>>> upstream-releases
 
 void JSONSpewer::spewLIns(LNode* ins) {
   beginObject();
@@ -240,11 +452,45 @@ void JSONSpewer::spewLIR(MIRGraph* mir) {
     endList();
 
     endObject();
+<<<<<<< HEAD
   }
 
   endList();
   endObject();
 }
+||||||| merged common ancestors
+}
+
+void
+JSONSpewer::spewLIR(MIRGraph* mir)
+{
+    beginObjectProperty("lir");
+    beginListProperty("blocks");
+
+    for (MBasicBlockIterator i(mir->begin()); i != mir->end(); i++) {
+        LBlock* block = i->lir();
+        if (!block) {
+            continue;
+        }
+
+        beginObject();
+        property("number", i->id());
+
+        beginListProperty("instructions");
+        for (size_t p = 0; p < block->numPhis(); p++) {
+            spewLIns(block->getPhi(p));
+        }
+        for (LInstructionIterator ins(block->begin()); ins != block->end(); ins++) {
+            spewLIns(*ins);
+        }
+        endList();
+=======
+  }
+
+  endList();
+  endObject();
+}
+>>>>>>> upstream-releases
 
 void JSONSpewer::spewRanges(BacktrackingAllocator* regalloc) {
   beginObjectProperty("ranges");

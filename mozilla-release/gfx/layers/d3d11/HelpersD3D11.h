@@ -8,6 +8,7 @@
 #define mozilla_gfx_layers_d3d11_HelpersD3D11_h
 
 #include <d3d11.h>
+#include "mozilla/Telemetry.h"
 #include "mozilla/TimeStamp.h"
 
 namespace mozilla {
@@ -30,7 +31,34 @@ static inline bool WaitForGPUQuery(ID3D11Device* aDevice,
   return true;
 }
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace gfx
+=======
+static inline bool WaitForFrameGPUQuery(ID3D11Device* aDevice,
+                                        ID3D11DeviceContext* aContext,
+                                        ID3D11Query* aQuery, BOOL* aOut) {
+  TimeStamp start = TimeStamp::Now();
+  bool success = true;
+  while (aContext->GetData(aQuery, aOut, sizeof(*aOut), 0) != S_OK) {
+    if (aDevice->GetDeviceRemovedReason() != S_OK) {
+      return false;
+    }
+    if (TimeStamp::Now() - start > TimeDuration::FromSeconds(2)) {
+      success = false;
+      break;
+    }
+    Sleep(0);
+  }
+  Telemetry::AccumulateTimeDelta(Telemetry::GPU_WAIT_TIME_MS, start);
+  return success;
+}
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // mozilla_gfx_layers_d3d11_HelpersD3D11_h

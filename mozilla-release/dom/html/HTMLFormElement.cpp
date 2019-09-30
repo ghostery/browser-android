@@ -9,8 +9,8 @@
 #include "jsapi.h"
 #include "mozilla/ContentEvents.h"
 #include "mozilla/EventDispatcher.h"
-#include "mozilla/EventStateManager.h"
 #include "mozilla/EventStates.h"
+#include "mozilla/dom/BindContext.h"
 #include "mozilla/dom/nsCSPUtils.h"
 #include "mozilla/dom/nsCSPContext.h"
 #include "mozilla/dom/nsMixedContentBlocker.h"
@@ -18,14 +18,15 @@
 #include "mozilla/dom/HTMLFormControlsCollection.h"
 #include "mozilla/dom/HTMLFormElementBinding.h"
 #include "mozilla/Move.h"
-#include "nsIHTMLDocument.h"
 #include "nsGkAtoms.h"
+#include "nsHTMLDocument.h"
 #include "nsStyleConsts.h"
 #include "nsPresContext.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIFormControlFrame.h"
 #include "nsError.h"
 #include "nsContentUtils.h"
+#include "nsHTMLDocument.h"
 #include "nsInterfaceHashtable.h"
 #include "nsContentList.h"
 #include "nsCOMArray.h"
@@ -54,6 +55,7 @@
 #include "nsIPrompt.h"
 #include "nsISecurityUITelemetry.h"
 #include "nsIStringBundle.h"
+#include "nsIProtocolHandler.h"
 
 // radio buttons
 #include "mozilla/dom/HTMLInputElement.h"
@@ -89,6 +91,7 @@ static const nsAttrValue::EnumTable kFormAutocompleteTable[] = {
     {"off", NS_FORM_AUTOCOMPLETE_OFF},
     {nullptr, 0}};
 // Default autocomplete value is 'on'.
+<<<<<<< HEAD
 static const nsAttrValue::EnumTable* kFormDefaultAutocomplete =
     &kFormAutocompleteTable[0];
 
@@ -119,6 +122,65 @@ HTMLFormElement::HTMLFormElement(
       mNotifiedObserversResult(false),
       mSubmitInitiatedFromUserInput(false),
       mEverTriedInvalidSubmit(false) {
+||||||| merged common ancestors
+static const nsAttrValue::EnumTable* kFormDefaultAutocomplete = &kFormAutocompleteTable[0];
+
+bool HTMLFormElement::gFirstFormSubmitted = false;
+bool HTMLFormElement::gPasswordManagerInitialized = false;
+
+HTMLFormElement::HTMLFormElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+  : nsGenericHTMLElement(std::move(aNodeInfo)),
+    mControls(new HTMLFormControlsCollection(this)),
+    mSelectedRadioButtons(2),
+    mRequiredRadioButtonCounts(2),
+    mValueMissingRadioGroups(2),
+    mPendingSubmission(nullptr),
+    mSubmittingRequest(nullptr),
+    mDefaultSubmitElement(nullptr),
+    mFirstSubmitInElements(nullptr),
+    mFirstSubmitNotInElements(nullptr),
+    mImageNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
+    mPastNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
+    mSubmitPopupState(openAbused),
+    mInvalidElementsCount(0),
+    mGeneratingSubmit(false),
+    mGeneratingReset(false),
+    mIsSubmitting(false),
+    mDeferSubmission(false),
+    mNotifiedObservers(false),
+    mNotifiedObserversResult(false),
+    mSubmitInitiatedFromUserInput(false),
+    mEverTriedInvalidSubmit(false)
+{
+=======
+static const nsAttrValue::EnumTable* kFormDefaultAutocomplete =
+    &kFormAutocompleteTable[0];
+
+HTMLFormElement::HTMLFormElement(
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : nsGenericHTMLElement(std::move(aNodeInfo)),
+      mControls(new HTMLFormControlsCollection(this)),
+      mSelectedRadioButtons(2),
+      mRequiredRadioButtonCounts(2),
+      mValueMissingRadioGroups(2),
+      mPendingSubmission(nullptr),
+      mSubmittingRequest(nullptr),
+      mDefaultSubmitElement(nullptr),
+      mFirstSubmitInElements(nullptr),
+      mFirstSubmitNotInElements(nullptr),
+      mImageNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
+      mPastNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
+      mSubmitPopupState(PopupBlocker::openAbused),
+      mInvalidElementsCount(0),
+      mFormNumber(-1),
+      mGeneratingSubmit(false),
+      mGeneratingReset(false),
+      mIsSubmitting(false),
+      mDeferSubmission(false),
+      mNotifiedObservers(false),
+      mNotifiedObserversResult(false),
+      mEverTriedInvalidSubmit(false) {
+>>>>>>> upstream-releases
   // We start out valid.
   AddStatesSilently(NS_EVENT_STATE_VALID);
 }
@@ -255,16 +317,27 @@ bool HTMLFormElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
+<<<<<<< HEAD
 nsresult HTMLFormElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLFormElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+nsresult HTMLFormElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIHTMLDocument> htmlDoc(do_QueryInterface(aDocument));
-  if (htmlDoc) {
-    htmlDoc->AddedForm();
+  if (IsInUncomposedDoc() && aContext.OwnerDoc().IsHTMLOrXHTML()) {
+    aContext.OwnerDoc().AsHTMLDocument()->AddedForm();
   }
 
   return rv;
@@ -361,17 +434,25 @@ static void CollectOrphans(nsINode* aRemovalRoot,
   }
 }
 
+<<<<<<< HEAD
 void HTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+HTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void HTMLFormElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   // Note, this is explicitly using uncomposed doc, since we count
   // only forms in document.
-  nsCOMPtr<nsIHTMLDocument> oldDocument = do_QueryInterface(GetUncomposedDoc());
+  RefPtr<Document> oldDocument = GetUncomposedDoc();
 
   // Mark all of our controls as maybe being orphans
   MarkOrphans(mControls->mElements);
   MarkOrphans(mControls->mNotInElements);
   MarkOrphans(mImageElements);
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 
   nsINode* ancestor = this;
   nsINode* cur;
@@ -402,8 +483,8 @@ void HTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent) {
 #endif
   );
 
-  if (oldDocument) {
-    oldDocument->RemovedForm();
+  if (oldDocument && oldDocument->IsHTMLOrXHTML()) {
+    oldDocument->AsHTMLDocument()->RemovedForm();
   }
   ForgetCurrentSubmission();
 }
@@ -494,7 +575,7 @@ nsresult HTMLFormElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
 nsresult HTMLFormElement::DoSubmitOrReset(WidgetEvent* aEvent,
                                           EventMessage aMessage) {
   // Make sure the presentation is up-to-date
-  nsIDocument* doc = GetComposedDoc();
+  Document* doc = GetComposedDoc();
   if (doc) {
     doc->FlushPendingNotifications(FlushType::ContentAndNotify);
   }
@@ -567,17 +648,32 @@ nsresult HTMLFormElement::DoSubmit(WidgetEvent* aEvent) {
 
   // XXXbz if the script global is that for an sXBL/XBL2 doc, it won't
   // be a window...
+<<<<<<< HEAD
   nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
 
+||||||| merged common ancestors
+  nsPIDOMWindowOuter *window = OwnerDoc()->GetWindow();
+
+=======
+  nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
+>>>>>>> upstream-releases
   if (window) {
-    mSubmitPopupState = window->GetPopupControlState();
+    mSubmitPopupState = PopupBlocker::GetPopupControlState();
   } else {
-    mSubmitPopupState = openAbused;
+    mSubmitPopupState = PopupBlocker::openAbused;
   }
 
+<<<<<<< HEAD
   mSubmitInitiatedFromUserInput = EventStateManager::IsHandlingUserInput();
 
   if (mDeferSubmission) {
+||||||| merged common ancestors
+  mSubmitInitiatedFromUserInput = EventStateManager::IsHandlingUserInput();
+
+  if(mDeferSubmission) {
+=======
+  if (mDeferSubmission) {
+>>>>>>> upstream-releases
     // we are in an event handler, JS submitted so we have to
     // defer this submission. let's remember it and return
     // without submitting
@@ -641,7 +737,7 @@ nsresult HTMLFormElement::SubmitSubmission(
   }
 
   // If there is no link handler, then we won't actually be able to submit.
-  nsIDocument* doc = GetComposedDoc();
+  Document* doc = GetComposedDoc();
   nsCOMPtr<nsISupports> container = doc ? doc->GetContainer() : nullptr;
   nsCOMPtr<nsILinkHandler> linkHandler(do_QueryInterface(container));
   if (!linkHandler || IsEditable()) {
@@ -697,10 +793,17 @@ nsresult HTMLFormElement::SubmitSubmission(
   nsCOMPtr<nsIDocShell> docShell;
 
   {
-    nsAutoPopupStatePusher popupStatePusher(mSubmitPopupState);
+    AutoPopupStatePusher popupStatePusher(mSubmitPopupState);
 
     AutoHandlingUserInputStatePusher userInpStatePusher(
+<<<<<<< HEAD
         mSubmitInitiatedFromUserInput, nullptr, doc);
+||||||| merged common ancestors
+                                       mSubmitInitiatedFromUserInput,
+                                       nullptr, doc);
+=======
+        aFormSubmission->IsInitiatedFromUserInput());
+>>>>>>> upstream-releases
 
     nsCOMPtr<nsIInputStream> postDataStream;
     rv = aFormSubmission->GetEncodedSubmission(
@@ -709,10 +812,26 @@ nsresult HTMLFormElement::SubmitSubmission(
 
     nsAutoString target;
     aFormSubmission->GetTarget(target);
+<<<<<<< HEAD
     rv = linkHandler->OnLinkClickSync(
         this, actionURI, target, VoidString(), postDataStream, nullptr, false,
         getter_AddRefs(docShell), getter_AddRefs(mSubmittingRequest),
         EventStateManager::IsHandlingUserInput());
+||||||| merged common ancestors
+    rv = linkHandler->OnLinkClickSync(this, actionURI,
+                                      target.get(),
+                                      VoidString(),
+                                      postDataStream,
+                                      nullptr, false,
+                                      getter_AddRefs(docShell),
+                                      getter_AddRefs(mSubmittingRequest),
+                                      EventStateManager::IsHandlingUserInput());
+=======
+    rv = linkHandler->OnLinkClickSync(
+        this, actionURI, target, VoidString(), postDataStream, nullptr, false,
+        getter_AddRefs(docShell), getter_AddRefs(mSubmittingRequest),
+        aFormSubmission->IsInitiatedFromUserInput());
+>>>>>>> upstream-releases
     NS_ENSURE_SUBMIT_SUCCESS(rv);
   }
 
@@ -748,7 +867,7 @@ nsresult HTMLFormElement::DoSecureToInsecureSubmitCheck(nsIURI* aActionURL,
   // Only ask the user about posting from a secure URI to an insecure URI if
   // this element is in the root document. When this is not the case, the mixed
   // content blocker will take care of security for us.
-  nsIDocument* parent = OwnerDoc()->GetParentDocument();
+  Document* parent = OwnerDoc()->GetParentDocument();
   bool isRootDocument = (!parent || nsContentUtils::IsChromeDoc(parent));
   if (!isRootDocument) {
     return NS_OK;
@@ -772,22 +891,16 @@ nsresult HTMLFormElement::DoSecureToInsecureSubmitCheck(nsIURI* aActionURL,
   if (NS_FAILED(rv)) {
     return rv;
   }
-  bool actionIsHTTPS;
-  rv = aActionURL->SchemeIs("https", &actionIsHTTPS);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-  bool actionIsJS;
-  rv = aActionURL->SchemeIs("javascript", &actionIsJS);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
 
-  if (!formIsHTTPS || actionIsHTTPS || actionIsJS) {
+  if (!formIsHTTPS) {
     return NS_OK;
   }
 
   if (nsMixedContentBlocker::IsPotentiallyTrustworthyLoopbackURL(aActionURL)) {
+    return NS_OK;
+  }
+
+  if (nsMixedContentBlocker::URISafeToBeLoadedInSecureContext(aActionURL)) {
     return NS_OK;
   }
 
@@ -852,6 +965,7 @@ nsresult HTMLFormElement::DoSecureToInsecureSubmitCheck(nsIURI* aActionURL,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
                                                 bool* aCancelSubmit,
                                                 bool aEarlyNotify) {
@@ -863,6 +977,26 @@ nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
                                   NS_FIRST_FORMSUBMIT_CATEGORY);
   }
 
+||||||| merged common ancestors
+nsresult
+HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
+                                       bool* aCancelSubmit,
+                                       bool    aEarlyNotify)
+{
+  // If this is the first form, bring alive the first form submit
+  // category observers
+  if (!gFirstFormSubmitted) {
+    gFirstFormSubmitted = true;
+    NS_CreateServicesFromCategory(NS_FIRST_FORMSUBMIT_CATEGORY,
+                                  nullptr,
+                                  NS_FIRST_FORMSUBMIT_CATEGORY);
+  }
+
+=======
+nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
+                                                bool* aCancelSubmit,
+                                                bool aEarlyNotify) {
+>>>>>>> upstream-releases
   if (!aEarlyNotify) {
     nsresult rv = DoSecureToInsecureSubmitCheck(aActionURL, aCancelSubmit);
     if (NS_FAILED(rv)) {
@@ -873,6 +1007,7 @@ nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
     }
   }
 
+<<<<<<< HEAD
   // Notify observers that the form is being submitted.
   nsCOMPtr<nsIObserverService> service =
       mozilla::services::GetObserverService();
@@ -909,8 +1044,58 @@ nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
         return NS_OK;
       }
     }
-  }
+||||||| merged common ancestors
+  // Notify observers that the form is being submitted.
+  nsCOMPtr<nsIObserverService> service =
+    mozilla::services::GetObserverService();
+  if (!service)
+    return NS_ERROR_FAILURE;
 
+  nsCOMPtr<nsISimpleEnumerator> theEnum;
+  nsresult rv = service->EnumerateObservers(aEarlyNotify ?
+                                            NS_EARLYFORMSUBMIT_SUBJECT :
+                                            NS_FORMSUBMIT_SUBJECT,
+                                            getter_AddRefs(theEnum));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  if (theEnum) {
+    nsCOMPtr<nsISupports> inst;
+    *aCancelSubmit = false;
+
+    // XXXbz what do the submit observers actually want?  The window
+    // of the document this is shown in?  Or something else?
+    // sXBL/XBL2 issue
+    nsCOMPtr<nsPIDOMWindowOuter> window = OwnerDoc()->GetWindow();
+
+    bool loop = true;
+    while (NS_SUCCEEDED(theEnum->HasMoreElements(&loop)) && loop) {
+      theEnum->GetNext(getter_AddRefs(inst));
+
+      nsCOMPtr<nsIFormSubmitObserver> formSubmitObserver(
+                      do_QueryInterface(inst));
+      if (formSubmitObserver) {
+        rv = formSubmitObserver->Notify(this,
+                                        window ? window->GetCurrentInnerWindow() : nullptr,
+                                        aActionURL,
+                                        aCancelSubmit);
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+      if (*aCancelSubmit) {
+        return NS_OK;
+      }
+    }
+=======
+  bool defaultAction = true;
+  nsresult rv = nsContentUtils::DispatchEventOnlyToChrome(
+      OwnerDoc(), static_cast<nsINode*>(this),
+      aEarlyNotify ? NS_LITERAL_STRING("DOMFormBeforeSubmit")
+                   : NS_LITERAL_STRING("DOMFormSubmit"),
+      CanBubble::eYes, Cancelable::eYes, &defaultAction);
+  *aCancelSubmit = !defaultAction;
+  if (*aCancelSubmit) {
+    return NS_OK;
+>>>>>>> upstream-releases
+  }
   return rv;
 }
 
@@ -960,8 +1145,21 @@ HTMLFormElement::GetElementAt(int32_t aIndex) const {
  *         > 0 if aControl1 is after aControl2,
  *         0 otherwise
  */
+<<<<<<< HEAD
 /* static */ int32_t HTMLFormElement::CompareFormControlPosition(
     Element* aElement1, Element* aElement2, const nsIContent* aForm) {
+||||||| merged common ancestors
+/* static */ int32_t
+HTMLFormElement::CompareFormControlPosition(Element* aElement1,
+                                            Element* aElement2,
+                                            const nsIContent* aForm)
+{
+=======
+/* static */
+int32_t HTMLFormElement::CompareFormControlPosition(Element* aElement1,
+                                                    Element* aElement2,
+                                                    const nsIContent* aForm) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aElement1 != aElement2, "Comparing a form control to itself");
 
   // If an element has a @form, we can assume it *might* be able to not have
@@ -996,8 +1194,19 @@ HTMLFormElement::GetElementAt(int32_t aIndex) const {
  * @param aControls List of form controls to check.
  * @param aForm Parent form of the controls.
  */
+<<<<<<< HEAD
 /* static */ void HTMLFormElement::AssertDocumentOrder(
     const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm) {
+||||||| merged common ancestors
+/* static */ void
+HTMLFormElement::AssertDocumentOrder(
+  const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm)
+{
+=======
+/* static */
+void HTMLFormElement::AssertDocumentOrder(
+    const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm) {
+>>>>>>> upstream-releases
   // TODO: remove the return statement with bug 598468.
   // This is done to prevent asserts in some edge cases.
   return;
@@ -1020,9 +1229,21 @@ HTMLFormElement::GetElementAt(int32_t aIndex) const {
  * @param aControls List of form controls to check.
  * @param aForm Parent form of the controls.
  */
+<<<<<<< HEAD
 /* static */ void HTMLFormElement::AssertDocumentOrder(
     const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls,
     nsIContent* aForm) {
+||||||| merged common ancestors
+/* static */ void
+HTMLFormElement::AssertDocumentOrder(
+  const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls, nsIContent* aForm)
+{
+=======
+/* static */
+void HTMLFormElement::AssertDocumentOrder(
+    const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls,
+    nsIContent* aForm) {
+>>>>>>> upstream-releases
   // TODO: remove the return statement with bug 598468.
   // This is done to prevent asserts in some edge cases.
   return;
@@ -1126,16 +1347,23 @@ nsresult HTMLFormElement::AddElement(nsGenericHTMLFormElement* aChild,
 
   int32_t type = aChild->ControlType();
 
-  //
-  // If it is a password control, and the password manager has not yet been
-  // initialized, initialize the password manager
-  //
+  // If it is a password control, inform the password manager.
   if (type == NS_FORM_INPUT_PASSWORD) {
+<<<<<<< HEAD
     if (!gPasswordManagerInitialized) {
       gPasswordManagerInitialized = true;
       NS_CreateServicesFromCategory(NS_PASSWORDMANAGER_CATEGORY, nullptr,
                                     NS_PASSWORDMANAGER_CATEGORY);
     }
+||||||| merged common ancestors
+    if (!gPasswordManagerInitialized) {
+      gPasswordManagerInitialized = true;
+      NS_CreateServicesFromCategory(NS_PASSWORDMANAGER_CATEGORY,
+                                    nullptr,
+                                    NS_PASSWORDMANAGER_CATEGORY);
+    }
+=======
+>>>>>>> upstream-releases
     PostPasswordEvent();
   }
 
@@ -1450,7 +1678,7 @@ void HTMLFormElement::FlushPendingSubmission() {
 void HTMLFormElement::GetAction(nsString& aValue) {
   if (!GetAttr(kNameSpaceID_None, nsGkAtoms::action, aValue) ||
       aValue.IsEmpty()) {
-    nsIDocument* document = OwnerDoc();
+    Document* document = OwnerDoc();
     nsIURI* docURI = document->GetDocumentURI();
     if (docURI) {
       nsAutoCString spec;
@@ -1519,8 +1747,16 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
   }
 
   // Get base URL
+<<<<<<< HEAD
   nsIDocument* document = OwnerDoc();
   nsIURI* docURI = document->GetDocumentURI();
+||||||| merged common ancestors
+  nsIDocument *document = OwnerDoc();
+  nsIURI *docURI = document->GetDocumentURI();
+=======
+  Document* document = OwnerDoc();
+  nsIURI* docURI = document->GetDocumentURI();
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(docURI, NS_ERROR_UNEXPECTED);
 
   // If an action is not specified and we are inside
@@ -1532,8 +1768,7 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
 
   nsCOMPtr<nsIURI> actionURL;
   if (action.IsEmpty()) {
-    nsCOMPtr<nsIHTMLDocument> htmlDoc(do_QueryInterface(document));
-    if (!htmlDoc) {
+    if (!document->IsHTMLOrXHTML()) {
       // Must be a XML, XUL or other non-HTML document type
       // so do nothing.
       return NS_OK;
@@ -1561,6 +1796,7 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
       NodePrincipal(), actionURL, nsIScriptSecurityManager::STANDARD);
   NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
   // Check if CSP allows this form-action
   nsCOMPtr<nsIContentSecurityPolicy> csp;
   rv = NodePrincipal()->GetCsp(getter_AddRefs(csp));
@@ -1580,6 +1816,28 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
     }
   }
 
+||||||| merged common ancestors
+  // Check if CSP allows this form-action
+  nsCOMPtr<nsIContentSecurityPolicy> csp;
+  rv = NodePrincipal()->GetCsp(getter_AddRefs(csp));
+  NS_ENSURE_SUCCESS(rv, rv);
+  if (csp) {
+    bool permitsFormAction = true;
+
+    // form-action is only enforced if explicitly defined in the
+    // policy - do *not* consult default-src, see:
+    // http://www.w3.org/TR/CSP2/#directive-default-src
+    rv = csp->Permits(this, nullptr /* nsICSPEventListener */, actionURL,
+                      nsIContentSecurityPolicy::FORM_ACTION_DIRECTIVE,
+                      true, &permitsFormAction);
+    NS_ENSURE_SUCCESS(rv, rv);
+    if (!permitsFormAction) {
+      return NS_ERROR_CSP_FORM_ACTION_VIOLATION;
+    }
+  }
+
+=======
+>>>>>>> upstream-releases
   // Potentially the page uses the CSP directive 'upgrade-insecure-requests'. In
   // such a case we have to upgrade the action url from http:// to https://.
   // If the actionURL is not http, then there is nothing to do.
@@ -1588,10 +1846,11 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
   NS_ENSURE_SUCCESS(rv, rv);
   if (isHttpScheme && document->GetUpgradeInsecureRequests(false)) {
     // let's use the old specification before the upgrade for logging
+    AutoTArray<nsString, 2> params;
     nsAutoCString spec;
     rv = actionURL->GetSpec(spec);
     NS_ENSURE_SUCCESS(rv, rv);
-    NS_ConvertUTF8toUTF16 reportSpec(spec);
+    CopyUTF8toUTF16(spec, *params.AppendElement());
 
     // upgrade the actionURL from http:// to use https://
     nsCOMPtr<nsIURI> upgradedActionURL;
@@ -1603,8 +1862,9 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
     nsAutoCString scheme;
     rv = actionURL->GetScheme(scheme);
     NS_ENSURE_SUCCESS(rv, rv);
-    NS_ConvertUTF8toUTF16 reportScheme(scheme);
+    CopyUTF8toUTF16(scheme, *params.AppendElement());
 
+<<<<<<< HEAD
     const char16_t* params[] = {reportSpec.get(), reportScheme.get()};
     CSP_LogLocalizedStr(
         "upgradeInsecureRequest", params, ArrayLength(params),
@@ -1615,6 +1875,29 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
         nsIScriptError::warningFlag,
         NS_LITERAL_CSTRING("upgradeInsecureRequest"), document->InnerWindowID(),
         !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
+||||||| merged common ancestors
+    const char16_t* params[] = { reportSpec.get(), reportScheme.get() };
+    CSP_LogLocalizedStr("upgradeInsecureRequest",
+                        params, ArrayLength(params),
+                        EmptyString(), // aSourceFile
+                        EmptyString(), // aScriptSample
+                        0, // aLineNumber
+                        0, // aColumnNumber
+                        nsIScriptError::warningFlag,
+                        NS_LITERAL_CSTRING("upgradeInsecureRequest"),
+                        document->InnerWindowID(),
+                        !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
+=======
+    CSP_LogLocalizedStr(
+        "upgradeInsecureRequest", params,
+        EmptyString(),  // aSourceFile
+        EmptyString(),  // aScriptSample
+        0,              // aLineNumber
+        0,              // aColumnNumber
+        nsIScriptError::warningFlag,
+        NS_LITERAL_CSTRING("upgradeInsecureRequest"), document->InnerWindowID(),
+        !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
+>>>>>>> upstream-releases
   }
 
   //
@@ -1685,8 +1968,8 @@ bool HTMLFormElement::IsLastActiveElement(
   MOZ_ASSERT(aControl, "Unexpected call");
 
   for (auto* element : Reversed(mControls->mElements)) {
-    if (element->IsSingleLineTextOrNumberControl(false) &&
-        !element->IsDisabled()) {
+    // XXX How about date/time control?
+    if (element->IsTextOrNumberControl(false) && !element->IsDisabled()) {
       return element == aControl;
     }
   }
@@ -1995,7 +2278,24 @@ HTMLFormElement::OnStatusChange(nsIWebProgress* aWebProgress,
 
 NS_IMETHODIMP
 HTMLFormElement::OnSecurityChange(nsIWebProgress* aWebProgress,
+<<<<<<< HEAD
                                   nsIRequest* aRequest, uint32_t state) {
+||||||| merged common ancestors
+                                  nsIRequest* aRequest,
+                                  uint32_t aOldState,
+                                  uint32_t aState,
+                                  const nsAString& aContentBlockingLogJSON)
+{
+=======
+                                  nsIRequest* aRequest, uint32_t aState) {
+  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+HTMLFormElement::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
+                                        nsIRequest* aRequest, uint32_t aEvent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
@@ -2374,5 +2674,34 @@ JSObject* HTMLFormElement::WrapNode(JSContext* aCx,
   return HTMLFormElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+int32_t HTMLFormElement::GetFormNumberForStateKey() {
+  if (mFormNumber == -1) {
+    mFormNumber = OwnerDoc()->GetNextFormNumber();
+  }
+  return mFormNumber;
+}
+
+void HTMLFormElement::NodeInfoChanged(Document* aOldDoc) {
+  nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
+
+  // When a <form> element is adopted into a new document, we want any state
+  // keys generated from it to no longer consider this element to be parser
+  // inserted, and so have state keys based on the position of the <form>
+  // element in the document, rather than the order it was inserted in.
+  //
+  // This is not strictly necessary, since we only ever look at the form number
+  // for parser inserted form controls, and we do that at the time the form
+  // control element is inserted into its original document by the parser.
+  mFormNumber = -1;
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

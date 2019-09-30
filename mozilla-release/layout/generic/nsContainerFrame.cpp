@@ -9,18 +9,18 @@
 #include "nsContainerFrame.h"
 
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/HTMLSummaryElement.h"
 #include "nsAbsoluteContainingBlock.h"
 #include "nsAttrValue.h"
 #include "nsAttrValueInlines.h"
 #include "nsFlexContainerFrame.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsPresContext.h"
 #include "nsRect.h"
 #include "nsPoint.h"
 #include "nsStyleConsts.h"
 #include "nsView.h"
-#include "nsIPresShell.h"
 #include "nsCOMPtr.h"
 #include "nsGkAtoms.h"
 #include "nsViewManager.h"
@@ -65,6 +65,9 @@ void nsContainerFrame::SetInitialChildList(ChildListID aListID,
                                            nsFrameList& aChildList) {
 #ifdef DEBUG
   nsFrame::VerifyDirtyBitSet(aChildList);
+  for (nsIFrame* f : aChildList) {
+    MOZ_ASSERT(f->GetParent() == this, "Unexpected parent");
+  }
 #endif
   if (aListID == kPrincipalList) {
     MOZ_ASSERT(mFrames.IsEmpty(),
@@ -109,7 +112,7 @@ void nsContainerFrame::AppendFrames(ChildListID aListID,
   mFrames.AppendFrames(this, aFrameList);
 
   if (aListID != kNoReflowPrincipalList) {
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
   }
 }
@@ -129,7 +132,7 @@ void nsContainerFrame::InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
   mFrames.InsertFrames(this, aPrevFrame, aFrameList);
 
   if (aListID != kNoReflowPrincipalList) {
-    PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
                                   NS_FRAME_HAS_DIRTY_CHILDREN);
   }
 }
@@ -147,7 +150,7 @@ void nsContainerFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
     }
   }
 
-  nsIPresShell* shell = PresShell();
+  mozilla::PresShell* presShell = PresShell();
   nsContainerFrame* lastParent = nullptr;
 
   // Loop and destroy aOldFrame and all of its continuations.
@@ -164,8 +167,8 @@ void nsContainerFrame::RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) {
     parent->StealFrame(continuation);
     continuation->Destroy();
     if (generateReflowCommand && parent != lastParent) {
-      shell->FrameNeedsReflow(parent, nsIPresShell::eTreeChange,
-                              NS_FRAME_HAS_DIRTY_CHILDREN);
+      presShell->FrameNeedsReflow(parent, IntrinsicDirty::TreeChange,
+                                  NS_FRAME_HAS_DIRTY_CHILDREN);
       lastParent = parent;
     }
   }
@@ -180,9 +183,22 @@ void nsContainerFrame::DestroyAbsoluteFrames(
   }
 }
 
+<<<<<<< HEAD
 void nsContainerFrame::SafelyDestroyFrameListProp(
     nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData,
     nsIPresShell* aPresShell, FrameListPropertyDescriptor aProp) {
+||||||| merged common ancestors
+void
+nsContainerFrame::SafelyDestroyFrameListProp(nsIFrame*        aDestructRoot,
+                                             PostDestroyData& aPostDestroyData,
+                                             nsIPresShell*    aPresShell,
+                                             FrameListPropertyDescriptor aProp)
+{
+=======
+void nsContainerFrame::SafelyDestroyFrameListProp(
+    nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData,
+    mozilla::PresShell* aPresShell, FrameListPropertyDescriptor aProp) {
+>>>>>>> upstream-releases
   // Note that the last frame can be removed through another route and thus
   // delete the property -- that's why we fetch the property again before
   // removing each frame rather than fetching it once and iterating the list.
@@ -254,9 +270,9 @@ void nsContainerFrame::DestroyFrom(nsIFrame* aDestructRoot,
 
     // Destroy frames on the auxiliary frame lists and delete the lists.
     nsPresContext* pc = PresContext();
-    nsIPresShell* shell = pc->PresShell();
+    mozilla::PresShell* presShell = pc->PresShell();
     if (hasO) {
-      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, shell,
+      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, presShell,
                                  OverflowProperty());
     }
 
@@ -264,11 +280,11 @@ void nsContainerFrame::DestroyFrom(nsIFrame* aDestructRoot,
         IsFrameOfType(eCanContainOverflowContainers) || !(hasOC || hasEOC),
         "this type of frame shouldn't have overflow containers");
     if (hasOC) {
-      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, shell,
+      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, presShell,
                                  OverflowContainersProperty());
     }
     if (hasEOC) {
-      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, shell,
+      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, presShell,
                                  ExcessOverflowContainersProperty());
     }
 
@@ -276,7 +292,7 @@ void nsContainerFrame::DestroyFrom(nsIFrame* aDestructRoot,
                    StyleDisplay()->mTopLayer != NS_STYLE_TOP_LAYER_NONE,
                "only top layer frame may have backdrop");
     if (hasBackdrop) {
-      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, shell,
+      SafelyDestroyFrameListProp(aDestructRoot, aPostDestroyData, presShell,
                                  BackdropProperty());
     }
   }
@@ -364,7 +380,16 @@ void nsContainerFrame::BuildDisplayListForNonBlockChildren(
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsContainerFrame::ChildIsDirty(nsIFrame* aChild) {
+||||||| merged common ancestors
+/* virtual */ void
+nsContainerFrame::ChildIsDirty(nsIFrame* aChild)
+{
+=======
+/* virtual */
+void nsContainerFrame::ChildIsDirty(nsIFrame* aChild) {
+>>>>>>> upstream-releases
   NS_ASSERTION(NS_SUBTREE_DIRTY(aChild), "child isn't actually dirty");
 
   AddStateBits(NS_FRAME_HAS_DIRTY_CHILDREN);
@@ -619,6 +644,7 @@ void nsContainerFrame::SyncWindowProperties(nsPresContext* aPresContext,
 void nsContainerFrame::SetSizeConstraints(nsPresContext* aPresContext,
                                           nsIWidget* aWidget,
                                           const nsSize& aMinSize,
+<<<<<<< HEAD
                                           const nsSize& aMaxSize) {
   LayoutDeviceIntSize devMinSize(
       aPresContext->AppUnitsToDevPixels(aMinSize.width),
@@ -630,6 +656,28 @@ void nsContainerFrame::SetSizeConstraints(nsPresContext* aPresContext,
       aMaxSize.height == NS_INTRINSICSIZE
           ? NS_MAXSIZE
           : aPresContext->AppUnitsToDevPixels(aMaxSize.height));
+||||||| merged common ancestors
+                                          const nsSize& aMaxSize)
+{
+  LayoutDeviceIntSize devMinSize(aPresContext->AppUnitsToDevPixels(aMinSize.width),
+                                 aPresContext->AppUnitsToDevPixels(aMinSize.height));
+  LayoutDeviceIntSize devMaxSize(aMaxSize.width == NS_INTRINSICSIZE ? NS_MAXSIZE :
+                                 aPresContext->AppUnitsToDevPixels(aMaxSize.width),
+                                 aMaxSize.height == NS_INTRINSICSIZE ? NS_MAXSIZE :
+                                 aPresContext->AppUnitsToDevPixels(aMaxSize.height));
+=======
+                                          const nsSize& aMaxSize) {
+  LayoutDeviceIntSize devMinSize(
+      aPresContext->AppUnitsToDevPixels(aMinSize.width),
+      aPresContext->AppUnitsToDevPixels(aMinSize.height));
+  LayoutDeviceIntSize devMaxSize(
+      aMaxSize.width == NS_UNCONSTRAINEDSIZE
+          ? NS_MAXSIZE
+          : aPresContext->AppUnitsToDevPixels(aMaxSize.width),
+      aMaxSize.height == NS_UNCONSTRAINEDSIZE
+          ? NS_MAXSIZE
+          : aPresContext->AppUnitsToDevPixels(aMaxSize.height));
+>>>>>>> upstream-releases
 
   // MinSize has a priority over MaxSize
   if (devMinSize.width > devMaxSize.width) devMaxSize.width = devMinSize.width;
@@ -674,13 +722,51 @@ void nsContainerFrame::SyncFrameViewAfterReflow(
   }
 }
 
+<<<<<<< HEAD
 static nscoord GetCoord(const nsStyleCoord& aCoord, nscoord aIfNotCoord) {
+||||||| merged common ancestors
+static nscoord GetCoord(const nsStyleCoord& aCoord, nscoord aIfNotCoord)
+{
+=======
+static nscoord GetCoord(const LengthPercentage& aCoord, nscoord aIfNotCoord) {
+>>>>>>> upstream-releases
   if (aCoord.ConvertsToLength()) {
-    return aCoord.ComputeCoordPercentCalc(0);
+    return aCoord.ToLength();
   }
   return aIfNotCoord;
 }
 
+<<<<<<< HEAD
+void nsContainerFrame::DoInlineIntrinsicISize(
+    gfxContext* aRenderingContext, InlineIntrinsicISizeData* aData,
+    nsLayoutUtils::IntrinsicISizeType aType) {
+  if (GetPrevInFlow()) return;  // Already added.
+||||||| merged common ancestors
+void
+nsContainerFrame::DoInlineIntrinsicISize(gfxContext *aRenderingContext,
+                                         InlineIntrinsicISizeData *aData,
+                                         nsLayoutUtils::IntrinsicISizeType aType)
+{
+  if (GetPrevInFlow())
+    return; // Already added.
+=======
+static nscoord GetCoord(const LengthPercentageOrAuto& aCoord,
+                        nscoord aIfNotCoord) {
+  if (aCoord.IsAuto()) {
+    return aIfNotCoord;
+  }
+  return GetCoord(aCoord.AsLengthPercentage(), aIfNotCoord);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MOZ_ASSERT(
+      aType == nsLayoutUtils::MIN_ISIZE || aType == nsLayoutUtils::PREF_ISIZE,
+      "bad type");
+||||||| merged common ancestors
+  MOZ_ASSERT(aType == nsLayoutUtils::MIN_ISIZE ||
+             aType == nsLayoutUtils::PREF_ISIZE, "bad type");
+=======
 void nsContainerFrame::DoInlineIntrinsicISize(
     gfxContext* aRenderingContext, InlineIntrinsicISizeData* aData,
     nsLayoutUtils::IntrinsicISizeType aType) {
@@ -689,6 +775,7 @@ void nsContainerFrame::DoInlineIntrinsicISize(
   MOZ_ASSERT(
       aType == nsLayoutUtils::MIN_ISIZE || aType == nsLayoutUtils::PREF_ISIZE,
       "bad type");
+>>>>>>> upstream-releases
 
   WritingMode wm = GetWritingMode();
   mozilla::Side startSide = wm.PhysicalSideForInlineAxis(eLogicalEdgeStart);
@@ -709,8 +796,16 @@ void nsContainerFrame::DoInlineIntrinsicISize(
   // add that to each line.  For box-decoration-break:slice clonePBM is zero.
   nscoord clonePBM = 0;  // PBM = PaddingBorderMargin
   const bool sliceBreak =
+<<<<<<< HEAD
       styleBorder->mBoxDecorationBreak == StyleBoxDecorationBreak::Slice;
   if (!GetPrevContinuation()) {
+||||||| merged common ancestors
+    styleBorder->mBoxDecorationBreak == StyleBoxDecorationBreak::Slice;
+  if (!GetPrevContinuation()) {
+=======
+      styleBorder->mBoxDecorationBreak == StyleBoxDecorationBreak::Slice;
+  if (!GetPrevContinuation() || MOZ_UNLIKELY(!sliceBreak)) {
+>>>>>>> upstream-releases
     nscoord startPBM =
         // clamp negative calc() to 0
         std::max(GetCoord(stylePadding->mPadding.Get(startSide), 0), 0) +
@@ -730,6 +825,7 @@ void nsContainerFrame::DoInlineIntrinsicISize(
       GetCoord(styleMargin->mMargin.Get(endSide), 0);
   if (MOZ_UNLIKELY(!sliceBreak)) {
     clonePBM += endPBM;
+    aData->mCurrentLine += clonePBM;
   }
 
   const nsLineList_iterator* savedLine = aData->mLine;
@@ -791,10 +887,8 @@ LogicalSize nsContainerFrame::ComputeAutoSize(
     // flex item with our inline axis being the main axis), AND we have
     // flex-basis:content.
     const nsStylePosition* pos = StylePosition();
-    if (pos->ISize(aWM).GetUnit() == eStyleUnit_Auto ||
-        (pos->mFlexBasis.GetUnit() == eStyleUnit_Enumerated &&
-         pos->mFlexBasis.GetIntValue() == NS_STYLE_FLEX_BASIS_CONTENT &&
-         IsFlexItem() &&
+    if (pos->ISize(aWM).IsAuto() ||
+        (pos->mFlexBasis.IsContent() && IsFlexItem() &&
          nsFlexContainerFrame::IsItemInlineAxisMainAxis(this))) {
       result.ISize(aWM) =
           ShrinkWidthToFit(aRenderingContext, availBased, aFlags);
@@ -854,6 +948,7 @@ LogicalSize nsContainerFrame::ComputeAutoSize(
   return result;
 }
 
+<<<<<<< HEAD
 void nsContainerFrame::ReflowChild(
     nsIFrame* aKidFrame, nsPresContext* aPresContext,
     ReflowOutput& aDesiredSize, const ReflowInput& aReflowInput,
@@ -861,6 +956,29 @@ void nsContainerFrame::ReflowChild(
     const nsSize& aContainerSize, uint32_t aFlags, nsReflowStatus& aStatus,
     nsOverflowContinuationTracker* aTracker) {
   MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow state");
+||||||| merged common ancestors
+void
+nsContainerFrame::ReflowChild(nsIFrame*                aKidFrame,
+                              nsPresContext*           aPresContext,
+                              ReflowOutput&            aDesiredSize,
+                              const ReflowInput&       aReflowInput,
+                              const WritingMode&       aWM,
+                              const LogicalPoint&      aPos,
+                              const nsSize&            aContainerSize,
+                              uint32_t                 aFlags,
+                              nsReflowStatus&          aStatus,
+                              nsOverflowContinuationTracker* aTracker)
+{
+  MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow state");
+=======
+void nsContainerFrame::ReflowChild(
+    nsIFrame* aKidFrame, nsPresContext* aPresContext,
+    ReflowOutput& aDesiredSize, const ReflowInput& aReflowInput,
+    const WritingMode& aWM, const LogicalPoint& aPos,
+    const nsSize& aContainerSize, uint32_t aFlags, nsReflowStatus& aStatus,
+    nsOverflowContinuationTracker* aTracker) {
+  MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow input");
+>>>>>>> upstream-releases
   if (aWM.IsVerticalRL() || (!aWM.IsVertical() && !aWM.IsBidiLTR())) {
     NS_ASSERTION(aContainerSize.width != NS_UNCONSTRAINEDSIZE,
                  "ReflowChild with unconstrained container width!");
@@ -899,6 +1017,7 @@ void nsContainerFrame::ReflowChild(
 
 // XXX temporary: hold on to a copy of the old physical version of
 //    ReflowChild so that we can convert callers incrementally.
+<<<<<<< HEAD
 void nsContainerFrame::ReflowChild(nsIFrame* aKidFrame,
                                    nsPresContext* aPresContext,
                                    ReflowOutput& aDesiredSize,
@@ -907,6 +1026,29 @@ void nsContainerFrame::ReflowChild(nsIFrame* aKidFrame,
                                    nsReflowStatus& aStatus,
                                    nsOverflowContinuationTracker* aTracker) {
   MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow state");
+||||||| merged common ancestors
+void
+nsContainerFrame::ReflowChild(nsIFrame*                aKidFrame,
+                              nsPresContext*           aPresContext,
+                              ReflowOutput&     aDesiredSize,
+                              const ReflowInput& aReflowInput,
+                              nscoord                  aX,
+                              nscoord                  aY,
+                              uint32_t                 aFlags,
+                              nsReflowStatus&          aStatus,
+                              nsOverflowContinuationTracker* aTracker)
+{
+  MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow state");
+=======
+void nsContainerFrame::ReflowChild(nsIFrame* aKidFrame,
+                                   nsPresContext* aPresContext,
+                                   ReflowOutput& aDesiredSize,
+                                   const ReflowInput& aReflowInput, nscoord aX,
+                                   nscoord aY, uint32_t aFlags,
+                                   nsReflowStatus& aStatus,
+                                   nsOverflowContinuationTracker* aTracker) {
+  MOZ_ASSERT(aReflowInput.mFrame == aKidFrame, "bad reflow input");
+>>>>>>> upstream-releases
 
   // Position the child frame and its view if requested.
   if (NS_FRAME_NO_MOVE_FRAME != (aFlags & NS_FRAME_NO_MOVE_FRAME)) {
@@ -992,7 +1134,7 @@ void nsContainerFrame::PositionChildViews(nsIFrame* aFrame) {
  * https://bugzil.la/1424281#c12
  */
 #if defined(_MSC_VER) && !defined(__clang__) && defined(_M_AMD64)
-#pragma optimize("g", off)
+#  pragma optimize("g", off)
 #endif
 void nsContainerFrame::FinishReflowChild(
     nsIFrame* aKidFrame, nsPresContext* aPresContext,
@@ -1036,7 +1178,7 @@ void nsContainerFrame::FinishReflowChild(
   aKidFrame->DidReflow(aPresContext, aReflowInput);
 }
 #if defined(_MSC_VER) && !defined(__clang__) && defined(_M_AMD64)
-#pragma optimize("", on)
+#  pragma optimize("", on)
 #endif
 
 // XXX temporary: hold on to a copy of the old physical version of
@@ -1479,8 +1621,7 @@ bool nsContainerFrame::MoveInlineOverflowToChildList(nsIFrame* aLineContainer) {
       // container if the container has prev continuation.
       if (aLineContainer->GetPrevContinuation()) {
         ReparentFloatsForInlineChild(aLineContainer,
-                                     prevOverflowFrames->FirstChild(), true,
-                                     ReparentingDirection::Forwards);
+                                     prevOverflowFrames->FirstChild(), true);
       }
       // When pushing and pulling frames we need to check for whether
       // any views need to be reparented.
@@ -1627,9 +1768,23 @@ nsIFrame* nsContainerFrame::PullNextInFlowChild(
   return frame;
 }
 
+<<<<<<< HEAD
 /* static */ void nsContainerFrame::ReparentFloatsForInlineChild(
     nsIFrame* aOurLineContainer, nsIFrame* aFrame, bool aReparentSiblings,
     ReparentingDirection aDirection) {
+||||||| merged common ancestors
+/* static */ void
+nsContainerFrame::ReparentFloatsForInlineChild(nsIFrame* aOurLineContainer,
+                                               nsIFrame* aFrame,
+                                               bool aReparentSiblings,
+                                               ReparentingDirection aDirection)
+{
+=======
+/* static */
+void nsContainerFrame::ReparentFloatsForInlineChild(nsIFrame* aOurLineContainer,
+                                                    nsIFrame* aFrame,
+                                                    bool aReparentSiblings) {
+>>>>>>> upstream-releases
   // XXXbz this would be better if it took a nsFrameList or a frame
   // list slice....
   NS_ASSERTION(aOurLineContainer->GetNextContinuation() ||
@@ -1645,11 +1800,11 @@ nsIFrame* nsContainerFrame::PullNextInFlowChild(
     return;
   }
 
-  nsBlockFrame* ourBlock = nsLayoutUtils::GetAsBlock(aOurLineContainer);
+  nsBlockFrame* ourBlock = do_QueryFrame(aOurLineContainer);
   NS_ASSERTION(ourBlock, "Not a block, but broke vertically?");
 
   while (true) {
-    ourBlock->ReparentFloats(aFrame, frameBlock, false, aDirection);
+    ourBlock->ReparentFloats(aFrame, frameBlock, false);
 
     if (!aReparentSiblings) return;
     nsIFrame* next = aFrame->GetNextSibling();
@@ -1662,8 +1817,7 @@ nsIFrame* nsContainerFrame::PullNextInFlowChild(
     // trust that the frames in the sibling chain all have the same parent,
     // because lazy reparenting may be going on. If we find a different
     // parent we need to redo our analysis.
-    ReparentFloatsForInlineChild(aOurLineContainer, next, aReparentSiblings,
-                                 aDirection);
+    ReparentFloatsForInlineChild(aOurLineContainer, next, aReparentSiblings);
     return;
   }
 }
@@ -1684,6 +1838,7 @@ bool nsContainerFrame::ResolvedOrientationIsVertical() {
   return false;
 }
 
+<<<<<<< HEAD
 // static
 bool nsContainerFrame::FrameStartsCounterScope(nsIFrame* aFrame) {
   nsIContent* content = aFrame->GetContent();
@@ -1857,6 +2012,196 @@ bool nsContainerFrame::RenumberChildFrames(int32_t* aOrdinal, int32_t aDepth,
 
 uint16_t nsContainerFrame::CSSAlignmentForAbsPosChild(
     const ReflowInput& aChildRI, LogicalAxis aLogicalAxis) const {
+||||||| merged common ancestors
+// static
+bool
+nsContainerFrame::FrameStartsCounterScope(nsIFrame* aFrame)
+{
+  nsIContent* content = aFrame->GetContent();
+  if (!content || !content->IsHTMLElement())
+    return false;
+
+  nsAtom* localName = content->NodeInfo()->NameAtom();
+  return localName == nsGkAtoms::ol ||
+         localName == nsGkAtoms::ul ||
+         localName == nsGkAtoms::dir ||
+         localName == nsGkAtoms::menu;
+}
+
+bool
+nsContainerFrame::RenumberList()
+{
+  if (!FrameStartsCounterScope(this)) {
+    // If this frame doesn't start a counter scope then we don't need
+    // to renumber child list items.
+    return false;
+  }
+
+  MOZ_ASSERT(mContent->IsHTMLElement(),
+             "FrameStartsCounterScope should only return true for HTML elements");
+
+  // Setup initial list ordinal value
+  // XXX Map html's start property to counter-reset style
+  int32_t ordinal = 1;
+  int32_t increment;
+  if (mContent->IsHTMLElement(nsGkAtoms::ol) &&
+      mContent->AsElement()->HasAttr(kNameSpaceID_None, nsGkAtoms::reversed)) {
+    increment = -1;
+  } else {
+    increment = 1;
+  }
+
+  nsGenericHTMLElement* hc = nsGenericHTMLElement::FromNode(mContent);
+  // Must be non-null, since FrameStartsCounterScope only returns true
+  // for HTML elements.
+  MOZ_ASSERT(hc, "How is mContent not HTML?");
+  const nsAttrValue* attr = hc->GetParsedAttr(nsGkAtoms::start);
+  nsContainerFrame* fif = static_cast<nsContainerFrame*>(FirstInFlow());
+  if (attr && attr->Type() == nsAttrValue::eInteger) {
+    ordinal = attr->GetIntegerValue();
+  } else if (increment < 0) {
+    // <ol reversed> case, or some other case with a negative increment: count
+    // up the child list
+    ordinal = 0;
+    fif->RenumberChildFrames(&ordinal, 0, -increment, true);
+  }
+
+  return fif->RenumberChildFrames(&ordinal, 0, increment, false);
+}
+
+// add in a sanity check for absurdly deep frame trees.  See bug 42138
+// can't just use IsFrameTreeTooDeep() because that method has side effects we don't want
+#define MAX_DEPTH_FOR_LIST_RENUMBERING 200  // 200 open displayable tags is pretty unrealistic
+
+bool
+nsContainerFrame::RenumberFrameAndDescendants(int32_t* aOrdinal,
+                                              int32_t aDepth,
+                                              int32_t aIncrement,
+                                              bool aForCounting)
+{
+  MOZ_ASSERT(aOrdinal, "null params are immoral!");
+
+  // add in a sanity check for absurdly deep frame trees.  See bug 42138
+  if (MAX_DEPTH_FOR_LIST_RENUMBERING < aDepth) {
+    return false;
+  }
+  const nsStyleDisplay* display = StyleDisplay();
+
+  // drill down through any wrappers to the real frame
+  nsIFrame* kid = GetContentInsertionFrame();
+  if (!kid) {
+    return false;
+  }
+
+  // Do not renumber list for summary elements.
+  HTMLSummaryElement* summary =
+    HTMLSummaryElement::FromNode(kid->GetContent());
+  if (summary && summary->IsMainSummary()) {
+    return false;
+  }
+
+  bool kidRenumberedABullet = false;
+
+  // If the frame is a list-item and the frame implements our
+  // block frame API then get its bullet and set the list item
+  // ordinal.
+  if (mozilla::StyleDisplay::ListItem == display->mDisplay) {
+    // Make certain that the frame is a block frame in case
+    // something foreign has crept in.
+    nsBlockFrame* listItem = nsLayoutUtils::GetAsBlock(kid);
+    if (listItem) {
+      nsBulletFrame* bullet = listItem->GetBullet();
+      if (bullet) {
+        if (!aForCounting) {
+          bool changed;
+          *aOrdinal = bullet->SetListItemOrdinal(*aOrdinal, &changed, aIncrement);
+          if (changed) {
+            kidRenumberedABullet = true;
+
+            // The ordinal changed - mark the bullet frame, and any
+            // intermediate frames between it and the block (are there
+            // ever any?), dirty.
+            // The calling code will make the necessary FrameNeedsReflow
+            // call for the list ancestor.
+            bullet->AddStateBits(NS_FRAME_IS_DIRTY);
+            nsIFrame *f = bullet;
+            do {
+              nsIFrame *parent = f->GetParent();
+              parent->ChildIsDirty(f);
+              f = parent;
+            } while (f != listItem);
+          }
+        } else {
+          // We're only counting the number of children,
+          // not restyling them. Don't take |value|
+          // into account when incrementing the ordinal
+          // or dirty the bullet.
+          *aOrdinal += aIncrement;
+        }
+      }
+
+      // XXX temporary? if the list-item has child list-items they
+      // should be numbered too; especially since the list-item is
+      // itself (ASSUMED!) not to be a counter-resetter.
+      bool meToo = listItem->RenumberChildFrames(aOrdinal, aDepth + 1,
+                                                 aIncrement, aForCounting);
+      if (meToo) {
+        kidRenumberedABullet = true;
+      }
+    }
+  } else if (display->mDisplay == mozilla::StyleDisplay::Block ||
+             display->mDisplay == mozilla::StyleDisplay::Flex ||
+             display->mDisplay == mozilla::StyleDisplay::Grid) {
+    if (FrameStartsCounterScope(kid)) {
+      // Don't bother recursing into a frame that is a new counter scope.
+      // Any list-items in there will be handled by it.
+    } else {
+      nsContainerFrame* container = do_QueryFrame(kid);
+      if (container) {
+        kidRenumberedABullet =
+          container->RenumberChildFrames(aOrdinal, aDepth + 1,
+                                         aIncrement, aForCounting);
+      }
+    }
+  }
+  return kidRenumberedABullet;
+}
+
+bool
+nsContainerFrame::RenumberChildFrames(int32_t* aOrdinal,
+                                      int32_t aDepth,
+                                      int32_t aIncrement,
+                                      bool aForCounting)
+{
+  bool renumbered = false;
+  for (auto kid : mFrames) {
+    bool kidRenumbered =
+      kid->RenumberFrameAndDescendants(aOrdinal, aDepth, aIncrement, aForCounting);
+    if (!aForCounting && kidRenumbered) {
+      renumbered = true;
+    }
+  }
+
+  // We need to set NS_FRAME_HAS_DIRTY_CHILDREN bits up the tree between
+  // the bullet and the caller of RenumberList.  But the caller itself
+  // has to be responsible for setting the bit itself, since that caller
+  // might be making a FrameNeedsReflow call, which requires that the
+  // bit not be set yet.
+  if (renumbered && aDepth != 0) {
+    AddStateBits(NS_FRAME_HAS_DIRTY_CHILDREN);
+  }
+
+  return renumbered;
+}
+
+uint16_t
+nsContainerFrame::CSSAlignmentForAbsPosChild(const ReflowInput& aChildRI,
+                                             LogicalAxis aLogicalAxis) const
+{
+=======
+uint16_t nsContainerFrame::CSSAlignmentForAbsPosChild(
+    const ReflowInput& aChildRI, LogicalAxis aLogicalAxis) const {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aChildRI.mFrame->IsAbsolutelyPositioned(),
              "This method should only be called for abspos children");
   NS_ERROR(
@@ -1868,6 +2213,7 @@ uint16_t nsContainerFrame::CSSAlignmentForAbsPosChild(
   return NS_STYLE_ALIGN_START;
 }
 
+<<<<<<< HEAD
 nsresult nsContainerFrame::AttributeChanged(int32_t aNameSpaceID,
                                             nsAtom* aAttribute,
                                             int32_t aModType) {
@@ -1897,6 +2243,51 @@ nsOverflowContinuationTracker::nsOverflowContinuationTracker(
       mParent(aFrame),
       mSkipOverflowContainerChildren(aSkipOverflowContainerChildren),
       mWalkOOFFrames(aWalkOOFFrames) {
+||||||| merged common ancestors
+nsresult
+nsContainerFrame::AttributeChanged(int32_t         aNameSpaceID,
+                                   nsAtom*        aAttribute,
+                                   int32_t         aModType)
+{
+  nsresult rv = nsSplittableFrame::AttributeChanged(aNameSpaceID,
+                                                    aAttribute, aModType);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  if (nsGkAtoms::start == aAttribute ||
+      (nsGkAtoms::reversed == aAttribute &&
+       mContent->IsHTMLElement(nsGkAtoms::ol))) {
+
+    // XXX Not sure if this is necessary anymore
+    if (RenumberList()) {
+      PresShell()->FrameNeedsReflow(this, nsIPresShell::eStyleChange,
+                                    NS_FRAME_HAS_DIRTY_CHILDREN);
+    }
+  }
+  return rv;
+}
+
+nsOverflowContinuationTracker::nsOverflowContinuationTracker(nsContainerFrame* aFrame,
+                                                             bool              aWalkOOFFrames,
+                                                             bool              aSkipOverflowContainerChildren)
+  : mOverflowContList(nullptr),
+    mPrevOverflowCont(nullptr),
+    mSentry(nullptr),
+    mParent(aFrame),
+    mSkipOverflowContainerChildren(aSkipOverflowContainerChildren),
+    mWalkOOFFrames(aWalkOOFFrames)
+{
+=======
+nsOverflowContinuationTracker::nsOverflowContinuationTracker(
+    nsContainerFrame* aFrame, bool aWalkOOFFrames,
+    bool aSkipOverflowContainerChildren)
+    : mOverflowContList(nullptr),
+      mPrevOverflowCont(nullptr),
+      mSentry(nullptr),
+      mParent(aFrame),
+      mSkipOverflowContainerChildren(aSkipOverflowContainerChildren),
+      mWalkOOFFrames(aWalkOOFFrames) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aFrame, "null frame pointer");
   SetupOverflowContList();
 }
@@ -2057,8 +2448,9 @@ nsresult nsOverflowContinuationTracker::Insert(nsIFrame* aOverflowCont,
   }
 
   // If we need to reflow it, mark it dirty
-  if (aReflowStatus.NextInFlowNeedsReflow())
-    aOverflowCont->AddStateBits(NS_FRAME_IS_DIRTY);
+  if (aReflowStatus.NextInFlowNeedsReflow()) {
+    aOverflowCont->MarkSubtreeDirty();
+  }
 
   // It's in our list, just step forward
   StepForward();
@@ -2184,6 +2576,29 @@ void nsContainerFrame::List(FILE* out, const char* aPrefix,
 
   if (!outputOneList) {
     fprintf_stderr(out, "%s<>\n", str.get());
+  }
+}
+
+void nsContainerFrame::ListWithMatchedRules(FILE* out,
+                                            const char* aPrefix) const {
+  fprintf_stderr(out, "%s%s\n", aPrefix, ListTag().get());
+
+  nsCString rulePrefix;
+  rulePrefix += aPrefix;
+  rulePrefix += "    ";
+  ListMatchedRules(out, rulePrefix.get());
+
+  nsCString childPrefix;
+  childPrefix += aPrefix;
+  childPrefix += "  ";
+
+  ChildListIterator lists(this);
+  for (; !lists.IsDone(); lists.Next()) {
+    nsFrameList::Enumerator childFrames(lists.CurrentList());
+    for (; !childFrames.AtEnd(); childFrames.Next()) {
+      nsIFrame* kid = childFrames.get();
+      kid->ListWithMatchedRules(out, childPrefix.get());
+    }
   }
 }
 #endif

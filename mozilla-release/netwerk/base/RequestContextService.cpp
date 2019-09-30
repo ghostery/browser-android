@@ -6,7 +6,7 @@
 
 #include "nsAutoPtr.h"
 #include "nsIDocShell.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDocumentLoader.h"
 #include "nsIObserverService.h"
 #include "nsIXULRuntime.h"
@@ -154,8 +154,16 @@ RequestContext::DOMContentLoaded() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContext::GetBlockingTransactionCount(
     uint32_t *aBlockingTransactionCount) {
+||||||| merged common ancestors
+RequestContext::GetBlockingTransactionCount(uint32_t *aBlockingTransactionCount)
+{
+=======
+RequestContext::GetBlockingTransactionCount(
+    uint32_t* aBlockingTransactionCount) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aBlockingTransactionCount);
   *aBlockingTransactionCount = mBlockingTransactionCount;
   return NS_OK;
@@ -170,7 +178,14 @@ RequestContext::AddBlockingTransaction() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContext::RemoveBlockingTransaction(uint32_t *outval) {
+||||||| merged common ancestors
+RequestContext::RemoveBlockingTransaction(uint32_t *outval)
+{
+=======
+RequestContext::RemoveBlockingTransaction(uint32_t* outval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(outval);
   mBlockingTransactionCount--;
   LOG(("RequestContext::RemoveBlockingTransaction this=%p blockers=%u", this,
@@ -179,20 +194,59 @@ RequestContext::RemoveBlockingTransaction(uint32_t *outval) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 SpdyPushCache *RequestContext::GetSpdyPushCache() { return mSpdyCache; }
+||||||| merged common ancestors
+NS_IMETHODIMP
+RequestContext::GetSpdyPushCache(mozilla::net::SpdyPushCache **aSpdyPushCache)
+{
+  *aSpdyPushCache = mSpdyCache.get();
+  return NS_OK;
+}
+=======
+SpdyPushCache* RequestContext::GetSpdyPushCache() { return mSpdyCache; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void RequestContext::SetSpdyPushCache(SpdyPushCache *aSpdyPushCache) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+RequestContext::SetSpdyPushCache(mozilla::net::SpdyPushCache *aSpdyPushCache)
+{
+=======
+void RequestContext::SetSpdyPushCache(SpdyPushCache* aSpdyPushCache) {
+>>>>>>> upstream-releases
   mSpdyCache = aSpdyPushCache;
 }
 
 uint64_t RequestContext::GetID() { return mID; }
 
+<<<<<<< HEAD
 const nsACString &RequestContext::GetUserAgentOverride() {
   return mUserAgentOverride;
+||||||| merged common ancestors
+NS_IMETHODIMP
+RequestContext::GetUserAgentOverride(nsACString& aUserAgentOverride)
+{
+  aUserAgentOverride = mUserAgentOverride;
+  return NS_OK;
+=======
+const nsACString& RequestContext::GetUserAgentOverride() {
+  return mUserAgentOverride;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void RequestContext::SetUserAgentOverride(
     const nsACString &aUserAgentOverride) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+RequestContext::SetUserAgentOverride(const nsACString& aUserAgentOverride)
+{
+=======
+void RequestContext::SetUserAgentOverride(
+    const nsACString& aUserAgentOverride) {
+>>>>>>> upstream-releases
   mUserAgentOverride = aUserAgentOverride;
 }
 
@@ -278,7 +332,15 @@ void RequestContext::ScheduleUnblock() {
   }
 }
 
+<<<<<<< HEAD
 void RequestContext::RescheduleUntailTimer(TimeStamp const &now) {
+||||||| merged common ancestors
+void
+RequestContext::RescheduleUntailTimer(TimeStamp const& now)
+{
+=======
+void RequestContext::RescheduleUntailTimer(TimeStamp const& now) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mUntailAt >= now);
 
   if (mUntailTimer) {
@@ -311,7 +373,14 @@ void RequestContext::RescheduleUntailTimer(TimeStamp const &now) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContext::Notify(nsITimer *timer) {
+||||||| merged common ancestors
+RequestContext::Notify(nsITimer *timer)
+{
+=======
+RequestContext::Notify(nsITimer* timer) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(timer == mUntailTimer);
   MOZ_ASSERT(!mTimerScheduledAt.IsNull());
@@ -335,8 +404,17 @@ RequestContext::Notify(nsITimer *timer) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContext::IsContextTailBlocked(nsIRequestTailUnblockCallback *aRequest,
                                      bool *aBlocked) {
+||||||| merged common ancestors
+RequestContext::IsContextTailBlocked(nsIRequestTailUnblockCallback * aRequest,
+                                     bool *aBlocked)
+{
+=======
+RequestContext::IsContextTailBlocked(nsIRequestTailUnblockCallback* aRequest,
+                                     bool* aBlocked) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   LOG(("RequestContext::IsContextTailBlocked this=%p, request=%p, queued=%zu",
@@ -377,7 +455,14 @@ RequestContext::IsContextTailBlocked(nsIRequestTailUnblockCallback *aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContext::CancelTailedRequest(nsIRequestTailUnblockCallback *aRequest) {
+||||||| merged common ancestors
+RequestContext::CancelTailedRequest(nsIRequestTailUnblockCallback * aRequest)
+{
+=======
+RequestContext::CancelTailedRequest(nsIRequestTailUnblockCallback* aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   bool removed = mTailQueue.RemoveElement(aRequest);
@@ -429,8 +514,16 @@ RequestContext::CancelTailPendingRequests(nsresult aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 // nsIRequestContextService
 RequestContextService *RequestContextService::sSelf = nullptr;
+||||||| merged common ancestors
+//nsIRequestContextService
+RequestContextService *RequestContextService::sSelf = nullptr;
+=======
+// nsIRequestContextService
+RequestContextService* RequestContextService::sSelf = nullptr;
+>>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(RequestContextService, nsIRequestContextService, nsIObserver)
 
@@ -482,8 +575,18 @@ void RequestContextService::Shutdown() {
   sShutdown = true;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<nsIRequestContextService>
 RequestContextService::GetOrCreate() {
+||||||| merged common ancestors
+/* static */ nsresult
+RequestContextService::Create(nsISupports *aOuter, const nsIID& aIID, void **aResult)
+{
+=======
+/* static */
+already_AddRefed<nsIRequestContextService>
+RequestContextService::GetOrCreate() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   RefPtr<RequestContextService> svc;
@@ -501,8 +604,16 @@ RequestContextService::GetOrCreate() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContextService::GetRequestContext(const uint64_t rcID,
                                          nsIRequestContext **rc) {
+||||||| merged common ancestors
+RequestContextService::GetRequestContext(const uint64_t rcID, nsIRequestContext **rc)
+{
+=======
+RequestContextService::GetRequestContext(const uint64_t rcID,
+                                         nsIRequestContext** rc) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG_POINTER(rc);
   *rc = nullptr;
@@ -521,8 +632,16 @@ RequestContextService::GetRequestContext(const uint64_t rcID,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContextService::GetRequestContextFromLoadGroup(nsILoadGroup *aLoadGroup,
                                                       nsIRequestContext **rc) {
+||||||| merged common ancestors
+RequestContextService::GetRequestContextFromLoadGroup(nsILoadGroup *aLoadGroup, nsIRequestContext **rc)
+{
+=======
+RequestContextService::GetRequestContextFromLoadGroup(nsILoadGroup* aLoadGroup,
+                                                      nsIRequestContext** rc) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   uint64_t rcID;
@@ -535,7 +654,14 @@ RequestContextService::GetRequestContextFromLoadGroup(nsILoadGroup *aLoadGroup,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContextService::NewRequestContext(nsIRequestContext **rc) {
+||||||| merged common ancestors
+RequestContextService::NewRequestContext(nsIRequestContext **rc)
+{
+=======
+RequestContextService::NewRequestContext(nsIRequestContext** rc) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG_POINTER(rc);
   *rc = nullptr;
@@ -567,8 +693,17 @@ RequestContextService::RemoveRequestContext(const uint64_t rcID) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 RequestContextService::Observe(nsISupports *subject, const char *topic,
                                const char16_t *data_unicode) {
+||||||| merged common ancestors
+RequestContextService::Observe(nsISupports *subject, const char *topic,
+                                  const char16_t *data_unicode)
+{
+=======
+RequestContextService::Observe(nsISupports* subject, const char* topic,
+                               const char16_t* data_unicode) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!strcmp(NS_XPCOM_SHUTDOWN_OBSERVER_ID, topic)) {
     Shutdown();
@@ -576,7 +711,7 @@ RequestContextService::Observe(nsISupports *subject, const char *topic,
   }
 
   if (!strcmp("content-document-interactive", topic)) {
-    nsCOMPtr<nsIDocument> document(do_QueryInterface(subject));
+    nsCOMPtr<dom::Document> document(do_QueryInterface(subject));
     MOZ_ASSERT(document);
     // We want this be triggered also for iframes, since those track their
     // own request context ids.

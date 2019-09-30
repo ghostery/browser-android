@@ -7,11 +7,13 @@
 #include "nsUConvPropertySearch.h"
 #include "nsUnicharUtils.h"
 #include "nsAtom.h"
+#include "nsGkAtoms.h"
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/Encoding.h"
 #include "mozilla/intl/OSPreferences.h"
 #include "mozilla/ServoBindings.h"
+#include "mozilla/ServoUtils.h"
 
 using namespace mozilla;
 using mozilla::intl::OSPreferences;
@@ -20,6 +22,7 @@ static constexpr nsUConvProp encodingsGroups[] = {
 #include "encodingsgroups.properties.h"
 };
 
+<<<<<<< HEAD
 // List of mozilla internal x-* tags that map to themselves (see bug 256257)
 static constexpr const char* kLangGroups[] = {
     // This list must be sorted!
@@ -34,8 +37,29 @@ static constexpr const char* kLangGroups[] = {
     // x-gujr=x-gujr
     // x-khmr=x-khmr
     // x-mlym=x-mlym
+||||||| merged common ancestors
+static constexpr nsUConvProp kLangGroups[] = {
+#include "langGroups.properties.h"
+=======
+// List of mozilla internal x-* tags that map to themselves (see bug 256257)
+static constexpr nsStaticAtom* kLangGroups[] = {
+    // This list must be sorted!
+    nsGkAtoms::x_armn,  nsGkAtoms::x_cyrillic, nsGkAtoms::x_devanagari,
+    nsGkAtoms::x_geor,  nsGkAtoms::x_math,     nsGkAtoms::x_tamil,
+    nsGkAtoms::Unicode, nsGkAtoms::x_western
+    // These self-mappings are not necessary unless somebody use them to specify
+    // lang in (X)HTML/XML documents, which they shouldn't. (see bug 256257)
+    // x-beng=x-beng
+    // x-cans=x-cans
+    // x-ethi=x-ethi
+    // x-guru=x-guru
+    // x-gujr=x-gujr
+    // x-khmr=x-khmr
+    // x-mlym=x-mlym
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 // Map ISO 15924 script codes from BCP47 lang tag to mozilla's langGroups.
 static constexpr struct {
   const char* mTag;
@@ -76,6 +100,49 @@ static constexpr struct {
     {"Thai", nsGkAtoms::th},
     {"Tibt", nsGkAtoms::x_tibt}};
 
+||||||| merged common ancestors
+=======
+// Map ISO 15924 script codes from BCP47 lang tag to mozilla's langGroups.
+static constexpr struct {
+  const char* mTag;
+  nsStaticAtom* mAtom;
+} kScriptLangGroup[] = {
+    // This list must be sorted by script code!
+    {"Arab", nsGkAtoms::ar},
+    {"Armn", nsGkAtoms::x_armn},
+    {"Beng", nsGkAtoms::x_beng},
+    {"Cans", nsGkAtoms::x_cans},
+    {"Cyrl", nsGkAtoms::x_cyrillic},
+    {"Deva", nsGkAtoms::x_devanagari},
+    {"Ethi", nsGkAtoms::x_ethi},
+    {"Geok", nsGkAtoms::x_geor},
+    {"Geor", nsGkAtoms::x_geor},
+    {"Grek", nsGkAtoms::el},
+    {"Gujr", nsGkAtoms::x_gujr},
+    {"Guru", nsGkAtoms::x_guru},
+    {"Hang", nsGkAtoms::ko},
+    {"Hani", nsGkAtoms::Japanese},
+    {"Hans", nsGkAtoms::Chinese},
+    // Hant is special-cased in code
+    // Hant=zh-HK
+    // Hant=zh-TW
+    {"Hebr", nsGkAtoms::he},
+    {"Hira", nsGkAtoms::Japanese},
+    {"Jpan", nsGkAtoms::Japanese},
+    {"Kana", nsGkAtoms::Japanese},
+    {"Khmr", nsGkAtoms::x_khmr},
+    {"Knda", nsGkAtoms::x_knda},
+    {"Kore", nsGkAtoms::ko},
+    {"Latn", nsGkAtoms::x_western},
+    {"Mlym", nsGkAtoms::x_mlym},
+    {"Orya", nsGkAtoms::x_orya},
+    {"Sinh", nsGkAtoms::x_sinh},
+    {"Taml", nsGkAtoms::x_tamil},
+    {"Telu", nsGkAtoms::x_telu},
+    {"Thai", nsGkAtoms::th},
+    {"Tibt", nsGkAtoms::x_tibt}};
+
+>>>>>>> upstream-releases
 // static
 nsLanguageAtomService* nsLanguageAtomService::GetService() {
   static UniquePtr<nsLanguageAtomService> gLangAtomService;
@@ -86,7 +153,16 @@ nsLanguageAtomService* nsLanguageAtomService::GetService() {
   return gLangAtomService.get();
 }
 
+<<<<<<< HEAD
 nsAtom* nsLanguageAtomService::LookupLanguage(const nsACString& aLanguage) {
+||||||| merged common ancestors
+nsAtom*
+nsLanguageAtomService::LookupLanguage(const nsACString &aLanguage)
+{
+=======
+nsStaticAtom* nsLanguageAtomService::LookupLanguage(
+    const nsACString& aLanguage) {
+>>>>>>> upstream-releases
   nsAutoCString lowered(aLanguage);
   ToLowerCase(lowered);
 
@@ -128,6 +204,7 @@ nsAtom* nsLanguageAtomService::GetLocaleLanguage() {
   return mLocaleLanguage;
 }
 
+<<<<<<< HEAD
 nsAtom* nsLanguageAtomService::GetLanguageGroup(nsAtom* aLanguage,
                                                 bool* aNeedsToCache) {
   nsAtom* retVal = mLangToGroup.GetWeak(aLanguage);
@@ -143,17 +220,56 @@ nsAtom* nsLanguageAtomService::GetLanguageGroup(nsAtom* aLanguage,
     AssertIsMainThreadOrServoFontMetricsLocked();
     // The hashtable will keep an owning reference to the atom
     mLangToGroup.Put(aLanguage, uncached);
-  }
+||||||| merged common ancestors
+nsAtom*
+nsLanguageAtomService::GetLanguageGroup(nsAtom *aLanguage, bool* aNeedsToCache)
+{
+  nsAtom *retVal = mLangToGroup.GetWeak(aLanguage);
 
-  return retVal;
+  if (!retVal) {
+    if (aNeedsToCache) {
+      *aNeedsToCache = true;
+      return nullptr;
+    }
+    RefPtr<nsAtom> uncached = GetUncachedLanguageGroup(aLanguage);
+    retVal = uncached.get();
+
+    AssertIsMainThreadOrServoFontMetricsLocked();
+    // The hashtable will keep an owning reference to the atom
+    mLangToGroup.Put(aLanguage, uncached);
+=======
+nsStaticAtom* nsLanguageAtomService::GetLanguageGroup(nsAtom* aLanguage,
+                                                      bool* aNeedsToCache) {
+  if (nsStaticAtom* group = mLangToGroup.Get(aLanguage)) {
+    return group;
+>>>>>>> upstream-releases
+  }
+  if (aNeedsToCache) {
+    *aNeedsToCache = true;
+    return nullptr;
+  }
+  AssertIsMainThreadOrServoFontMetricsLocked();
+  nsStaticAtom* group = GetUncachedLanguageGroup(aLanguage);
+  mLangToGroup.Put(aLanguage, group);
+  return group;
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsAtom> nsLanguageAtomService::GetUncachedLanguageGroup(
     nsAtom* aLanguage) const {
+||||||| merged common ancestors
+already_AddRefed<nsAtom>
+nsLanguageAtomService::GetUncachedLanguageGroup(nsAtom* aLanguage) const
+{
+=======
+nsStaticAtom* nsLanguageAtomService::GetUncachedLanguageGroup(
+    nsAtom* aLanguage) const {
+>>>>>>> upstream-releases
   nsAutoCString langStr;
   aLanguage->ToUTF8String(langStr);
   ToLowerCase(langStr);
 
+<<<<<<< HEAD
   RefPtr<nsAtom> langGroup;
   if (langStr[0] == 'x' && langStr[1] == '-') {
     // Internal x-* langGroup codes map to themselves (see bug 256257)
@@ -191,10 +307,71 @@ already_AddRefed<nsAtom> nsLanguageAtomService::GetUncachedLanguageGroup(
           return langGroup.forget();
         }
       }
+||||||| merged common ancestors
+  nsAutoCString langGroupStr;
+  nsresult res =
+    nsUConvPropertySearch::SearchPropertyValue(kLangGroups,
+                                               ArrayLength(kLangGroups),
+                                               langStr, langGroupStr);
+  while (NS_FAILED(res)) {
+    int32_t hyphen = langStr.RFindChar('-');
+    if (hyphen <= 0) {
+      langGroupStr.AssignLiteral("x-unicode");
+      break;
+=======
+  if (langStr[0] == 'x' && langStr[1] == '-') {
+    // Internal x-* langGroup codes map to themselves (see bug 256257)
+    for (nsStaticAtom* langGroup : kLangGroups) {
+      if (langGroup == aLanguage) {
+        return langGroup;
+      }
+      if (aLanguage->IsAsciiLowercase()) {
+        continue;
+      }
+      // Do the slow ascii-case-insensitive comparison just if needed.
+      nsDependentAtomString string(langGroup);
+      if (string.EqualsASCII(langStr.get(), langStr.Length())) {
+        return langGroup;
+      }
+    }
+  } else {
+    // If the lang code can be parsed as BCP47, look up its (likely) script
+    Locale loc(langStr);
+    if (loc.IsWellFormed()) {
+      if (loc.GetScript().IsEmpty()) {
+        loc.AddLikelySubtags();
+      }
+      if (loc.GetScript().EqualsLiteral("Hant")) {
+        if (loc.GetRegion().EqualsLiteral("HK")) {
+          return nsGkAtoms::HongKongChinese;
+        }
+        return nsGkAtoms::Taiwanese;
+      } else {
+        size_t foundIndex;
+        const nsCString& script = loc.GetScript();
+        if (BinarySearchIf(
+                kScriptLangGroup, 0, ArrayLength(kScriptLangGroup),
+                [script](const auto& entry) -> int {
+                  return script.Compare(entry.mTag);
+                },
+                &foundIndex)) {
+          return kScriptLangGroup[foundIndex].mAtom;
+        }
+      }
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // Fall back to x-unicode if no match was found
   langGroup = nsGkAtoms::Unicode;
   return langGroup.forget();
+||||||| merged common ancestors
+  RefPtr<nsAtom> langGroup = NS_Atomize(langGroupStr);
+
+  return langGroup.forget();
+=======
+  // Fall back to x-unicode if no match was found
+  return nsGkAtoms::Unicode;
+>>>>>>> upstream-releases
 }

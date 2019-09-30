@@ -19,8 +19,17 @@ class MLGBuffer;
 class MLGDevice;
 
 // Cache MLGBuffers based on how long ago they were last used.
+<<<<<<< HEAD
 class BufferCache {
  public:
+||||||| merged common ancestors
+class BufferCache
+{
+public:
+=======
+class BufferCache final {
+ public:
+>>>>>>> upstream-releases
   explicit BufferCache(MLGDevice* aDevice);
   ~BufferCache();
 

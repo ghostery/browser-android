@@ -17,9 +17,16 @@ class GrGLSLFragmentProcessor;
 class GrGLSLPrimitiveProcessor;
 class GrGLSLXferProcessor;
 class GrPipeline;
+<<<<<<< HEAD
 class GrPrimitiveProcessor;
 class GrRenderTargetProxy;
 class GrTextureProxy;
+||||||| merged common ancestors
+=======
+class GrPrimitiveProcessor;
+class GrRenderTarget;
+class GrTextureProxy;
+>>>>>>> upstream-releases
 
 /**
  * This class manages a GPU program and records per-program information. It also records the vertex
@@ -118,8 +125,16 @@ public:
      *
      * It is the caller's responsibility to ensure the program is bound before calling.
      */
+<<<<<<< HEAD
     void updateUniformsAndTextureBindings(const GrPrimitiveProcessor&, const GrPipeline&,
                                           const GrTextureProxy* const primitiveProcessorTextures[]);
+||||||| merged common ancestors
+    void setData(const GrPrimitiveProcessor&, const GrPipeline&);
+=======
+    void updateUniformsAndTextureBindings(const GrRenderTarget*, GrSurfaceOrigin,
+                                          const GrPrimitiveProcessor&, const GrPipeline&,
+                                          const GrTextureProxy* const primitiveProcessorTextures[]);
+>>>>>>> upstream-releases
 
     void updatePrimitiveProcessorTextureBindings(const GrPrimitiveProcessor&,
                                                  const GrTextureProxy* const[]);
@@ -144,8 +159,23 @@ private:
     void setFragmentData(const GrPipeline&, int* nextTexSamplerIdx);
 
     // Helper for setData() that sets the view matrix and loads the render target height uniform
+<<<<<<< HEAD
     void setRenderTargetState(const GrPrimitiveProcessor&, const GrRenderTargetProxy*);
 
+||||||| merged common ancestors
+    void setRenderTargetState(const GrPrimitiveProcessor&, const GrRenderTargetProxy*);
+
+    // Helper for setData() that binds textures and texel buffers to the appropriate texture units
+    void bindTextures(const GrResourceIOProcessor&, bool allowSRGBInputs, int* nextSamplerIdx,
+                      int* nextTexelBufferIdx);
+
+    // Helper for generateMipmaps() that ensures mipmaps are up to date
+    void generateMipmaps(const GrResourceIOProcessor&, bool allowSRGBInputs);
+
+=======
+    void setRenderTargetState(const GrRenderTarget*, GrSurfaceOrigin, const GrPrimitiveProcessor&);
+
+>>>>>>> upstream-releases
     // these reflect the current values of uniforms (GL uniform values travel with program)
     RenderTargetState fRenderTargetState;
     GrGLSLBuiltinUniformHandles fBuiltinUniformHandles;

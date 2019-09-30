@@ -9,6 +9,7 @@ add_task(async function() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   await promiseStartupManager();
+<<<<<<< HEAD
 
   const ID = "addon@tests.mozilla.org";
   await promiseInstallWebExtension({
@@ -18,11 +19,23 @@ add_task(async function() {
     },
   });
 
+||||||| merged common ancestors
+=======
+
+  const ID = "addon@tests.mozilla.org";
+  await promiseInstallWebExtension({
+    manifest: {
+      version: "2.0",
+      applications: { gecko: { id: ID } },
+    },
+  });
+
+>>>>>>> upstream-releases
   await promiseShutdownManager();
 
   // First startup/shutdown finished
   // Replace the JSON store with something bogus
-  await saveJSON({not: "what we expect to find"}, gExtensionsJSON.path);
+  await saveJSON({ not: "what we expect to find" }, gExtensionsJSON.path);
 
   await promiseStartupManager();
   // Retrieve an addon to force the database to rebuild

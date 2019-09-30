@@ -8,12 +8,32 @@
 
 /* See testValueABI.cpp */
 
+<<<<<<< HEAD
 bool C_ValueToObject(JSContext *cx, jsval v, JSObject **obj) {
   return JS_ValueToObject(cx, v, obj);
+||||||| merged common ancestors
+bool
+C_ValueToObject(JSContext *cx, jsval v, JSObject **obj)
+{
+    return JS_ValueToObject(cx, v, obj);
+=======
+bool C_ValueToObject(JSContext* cx, jsval v, JSObject** obj) {
+  return JS_ValueToObject(cx, v, obj);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 jsval C_GetEmptyStringValue(JSContext *cx) {
   return JS_GetEmptyStringValue(cx);
+||||||| merged common ancestors
+jsval
+C_GetEmptyStringValue(JSContext *cx)
+{
+    return JS_GetEmptyStringValue(cx);
+=======
+jsval C_GetEmptyStringValue(JSContext* cx) {
+  return JS_GetEmptyStringValue(cx);
+>>>>>>> upstream-releases
 }
 
 size_t C_jsvalAlignmentTest() {

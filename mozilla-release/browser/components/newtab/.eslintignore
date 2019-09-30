@@ -1,11 +1,14 @@
-activity-streams-env/
-dist/
-firefox/
+data/
 logs/
-stats.json
-prerendered/
 vendor/
+<<<<<<< HEAD
 data/
 bin/prerender.js
 bin/prerender.js.map
 aboutlibrary/content/
+||||||| merged common ancestors
+data/
+bin/prerender.js
+bin/prerender.js.map
+=======
+>>>>>>> upstream-releases

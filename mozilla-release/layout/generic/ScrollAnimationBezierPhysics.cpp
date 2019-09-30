@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ScrollAnimationBezierPhysics.h"
-#include "gfxPrefs.h"
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 ScrollAnimationBezierPhysics::ScrollAnimationBezierPhysics(
     const nsPoint& aStartPos,
     const ScrollAnimationBezierPhysicsSettings& aSettings)
@@ -17,6 +17,30 @@ ScrollAnimationBezierPhysics::ScrollAnimationBezierPhysics(
 void ScrollAnimationBezierPhysics::Update(const TimeStamp& aTime,
                                           const nsPoint& aDestination,
                                           const nsSize& aCurrentVelocity) {
+||||||| merged common ancestors
+ScrollAnimationBezierPhysics::ScrollAnimationBezierPhysics(const nsPoint& aStartPos,
+                                const ScrollAnimationBezierPhysicsSettings& aSettings)
+ : mSettings(aSettings)
+ , mStartPos(aStartPos)
+ , mIsFirstIteration(true)
+{
+}
+
+void
+ScrollAnimationBezierPhysics::Update(const TimeStamp& aTime,
+                                     const nsPoint& aDestination,
+                                     const nsSize& aCurrentVelocity)
+{
+=======
+ScrollAnimationBezierPhysics::ScrollAnimationBezierPhysics(
+    const nsPoint& aStartPos,
+    const ScrollAnimationBezierPhysicsSettings& aSettings)
+    : mSettings(aSettings), mStartPos(aStartPos), mIsFirstIteration(true) {}
+
+void ScrollAnimationBezierPhysics::Update(const TimeStamp& aTime,
+                                          const nsPoint& aDestination,
+                                          const nsSize& aCurrentVelocity) {
+>>>>>>> upstream-releases
   if (mIsFirstIteration) {
     InitializeHistory(aTime);
   }
@@ -89,6 +113,7 @@ void ScrollAnimationBezierPhysics::InitializeHistory(const TimeStamp& aTime) {
   mPrevEventTime[2] = mPrevEventTime[1] - maxDelta;
 }
 
+<<<<<<< HEAD
 void ScrollAnimationBezierPhysics::InitTimingFunction(
     nsSMILKeySpline& aTimingFunction, nscoord aCurrentPos,
     nscoord aCurrentVelocity, nscoord aDestination) {
@@ -96,6 +121,25 @@ void ScrollAnimationBezierPhysics::InitTimingFunction(
       gfxPrefs::SmoothScrollCurrentVelocityWeighting() == 0) {
     aTimingFunction.Init(
         0, 0, 1 - gfxPrefs::SmoothScrollStopDecelerationWeighting(), 1);
+||||||| merged common ancestors
+void
+ScrollAnimationBezierPhysics::InitTimingFunction(nsSMILKeySpline& aTimingFunction,
+                                                 nscoord aCurrentPos,
+                                                 nscoord aCurrentVelocity,
+                                                 nscoord aDestination)
+{
+  if (aDestination == aCurrentPos || gfxPrefs::SmoothScrollCurrentVelocityWeighting() == 0) {
+    aTimingFunction.Init(0, 0, 1 - gfxPrefs::SmoothScrollStopDecelerationWeighting(), 1);
+=======
+void ScrollAnimationBezierPhysics::InitTimingFunction(
+    SMILKeySpline& aTimingFunction, nscoord aCurrentPos,
+    nscoord aCurrentVelocity, nscoord aDestination) {
+  if (aDestination == aCurrentPos ||
+      StaticPrefs::general_smoothScroll_currentVelocityWeighting() == 0) {
+    aTimingFunction.Init(
+        0, 0, 1 - StaticPrefs::general_smoothScroll_stopDecelerationWeighting(),
+        1);
+>>>>>>> upstream-releases
     return;
   }
 
@@ -103,12 +147,26 @@ void ScrollAnimationBezierPhysics::InitTimingFunction(
   double slope =
       aCurrentVelocity * (mDuration / oneSecond) / (aDestination - aCurrentPos);
   double normalization = sqrt(1.0 + slope * slope);
+<<<<<<< HEAD
   double dt =
       1.0 / normalization * gfxPrefs::SmoothScrollCurrentVelocityWeighting();
   double dxy =
       slope / normalization * gfxPrefs::SmoothScrollCurrentVelocityWeighting();
   aTimingFunction.Init(
       dt, dxy, 1 - gfxPrefs::SmoothScrollStopDecelerationWeighting(), 1);
+||||||| merged common ancestors
+  double dt = 1.0 / normalization * gfxPrefs::SmoothScrollCurrentVelocityWeighting();
+  double dxy = slope / normalization * gfxPrefs::SmoothScrollCurrentVelocityWeighting();
+  aTimingFunction.Init(dt, dxy, 1 - gfxPrefs::SmoothScrollStopDecelerationWeighting(), 1);
+=======
+  double dt = 1.0 / normalization *
+              StaticPrefs::general_smoothScroll_currentVelocityWeighting();
+  double dxy = slope / normalization *
+               StaticPrefs::general_smoothScroll_currentVelocityWeighting();
+  aTimingFunction.Init(
+      dt, dxy,
+      1 - StaticPrefs::general_smoothScroll_stopDecelerationWeighting(), 1);
+>>>>>>> upstream-releases
 }
 
 nsPoint ScrollAnimationBezierPhysics::PositionAt(const TimeStamp& aTime) {
@@ -136,9 +194,22 @@ nsSize ScrollAnimationBezierPhysics::VelocityAt(const TimeStamp& aTime) {
                                   mDestination.y));
 }
 
+<<<<<<< HEAD
 nscoord ScrollAnimationBezierPhysics::VelocityComponent(
     double aTimeProgress, const nsSMILKeySpline& aTimingFunction,
     nscoord aStart, nscoord aDestination) const {
+||||||| merged common ancestors
+nscoord
+ScrollAnimationBezierPhysics::VelocityComponent(double aTimeProgress,
+                                                const nsSMILKeySpline& aTimingFunction,
+                                                nscoord aStart,
+                                                nscoord aDestination) const
+{
+=======
+nscoord ScrollAnimationBezierPhysics::VelocityComponent(
+    double aTimeProgress, const SMILKeySpline& aTimingFunction, nscoord aStart,
+    nscoord aDestination) const {
+>>>>>>> upstream-releases
   double dt, dxy;
   aTimingFunction.GetSplineDerivativeValues(aTimeProgress, dt, dxy);
   if (dt == 0) return dxy >= 0 ? nscoord_MAX : nscoord_MIN;

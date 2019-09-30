@@ -22,6 +22,7 @@
 #include <mach/vm_statistics.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <stdarg.h>
@@ -32,7 +33,21 @@
 
 // this port is based off of v8 svn revision 9837
 
+<<<<<<< HEAD
 /* static */ int Thread::GetCurrentId() { return gettid(); }
+||||||| merged common ancestors
+/* static */ int
+Thread::GetCurrentId()
+{
+  return gettid();
+}
+=======
+int profiler_current_process_id() { return getpid(); }
+
+int profiler_current_thread_id() {
+  return static_cast<int>(static_cast<pid_t>(syscall(SYS_thread_selfid)));
+}
+>>>>>>> upstream-releases
 
 void* GetStackTop(void* aGuess) {
   pthread_t thread = pthread_self();
@@ -99,6 +114,7 @@ void Sampler::SuspendAndSampleAndResumeThread(
   thread_state_flavor_t flavor = x86_THREAD_STATE64;
   x86_thread_state64_t state;
   mach_msg_type_number_t count = x86_THREAD_STATE64_COUNT;
+<<<<<<< HEAD
 #if __DARWIN_UNIX03
 #define REGISTER_FIELD(name) __r##name
 #else
@@ -106,6 +122,24 @@ void Sampler::SuspendAndSampleAndResumeThread(
 #endif  // __DARWIN_UNIX03
 
   if (thread_get_state(samplee_thread, flavor,
+||||||| merged common ancestors
+# if __DARWIN_UNIX03
+#  define REGISTER_FIELD(name) __r ## name
+# else
+#  define REGISTER_FIELD(name) r ## name
+# endif  // __DARWIN_UNIX03
+
+  if (thread_get_state(samplee_thread,
+                       flavor,
+=======
+#if __DARWIN_UNIX03
+#  define REGISTER_FIELD(name) __r##name
+#else
+#  define REGISTER_FIELD(name) r##name
+#endif  // __DARWIN_UNIX03
+
+  if (thread_get_state(samplee_thread, flavor,
+>>>>>>> upstream-releases
                        reinterpret_cast<natural_t*>(&state),
                        &count) == KERN_SUCCESS) {
     Registers regs;

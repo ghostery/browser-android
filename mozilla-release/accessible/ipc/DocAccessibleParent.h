@@ -10,6 +10,7 @@
 #include "nsAccessibilityService.h"
 #include "mozilla/a11y/PDocAccessibleParent.h"
 #include "mozilla/a11y/ProxyAccessible.h"
+#include "mozilla/Tuple.h"
 #include "nsClassHashtable.h"
 #include "nsHashKeys.h"
 #include "nsISupportsImpl.h"
@@ -24,32 +25,88 @@ class xpcAccessibleGeneric;
  * an accessible document in a content process.
  */
 class DocAccessibleParent : public ProxyAccessible,
+<<<<<<< HEAD
                             public PDocAccessibleParent {
  public:
   DocAccessibleParent()
       : ProxyAccessible(this),
         mParentDoc(kNoParentDoc),
+||||||| merged common ancestors
+    public PDocAccessibleParent
+{
+public:
+  DocAccessibleParent() :
+    ProxyAccessible(this), mParentDoc(kNoParentDoc),
+=======
+                            public PDocAccessibleParent {
+ public:
+  NS_INLINE_DECL_REFCOUNTING(DocAccessibleParent);
+
+  DocAccessibleParent()
+      : ProxyAccessible(this),
+        mParentDoc(kNoParentDoc),
+>>>>>>> upstream-releases
 #if defined(XP_WIN)
+<<<<<<< HEAD
         mEmulatedWindowHandle(nullptr),
 #endif  // defined(XP_WIN)
         mTopLevel(false),
         mShutdown(false) {
     MOZ_COUNT_CTOR_INHERITED(DocAccessibleParent, ProxyAccessible);
+||||||| merged common ancestors
+    mEmulatedWindowHandle(nullptr),
+#endif // defined(XP_WIN)
+    mTopLevel(false), mShutdown(false)
+  {
+    MOZ_COUNT_CTOR_INHERITED(DocAccessibleParent, ProxyAccessible);
+=======
+        mEmulatedWindowHandle(nullptr),
+#endif  // defined(XP_WIN)
+        mTopLevel(false),
+        mTopLevelInContentProcess(false),
+        mShutdown(false) {
+>>>>>>> upstream-releases
     sMaxDocID++;
     mActorID = sMaxDocID;
     MOZ_ASSERT(!LiveDocs().Get(mActorID));
     LiveDocs().Put(mActorID, this);
   }
 
+<<<<<<< HEAD
   ~DocAccessibleParent() {
     LiveDocs().Remove(mActorID);
     MOZ_COUNT_DTOR_INHERITED(DocAccessibleParent, ProxyAccessible);
     MOZ_ASSERT(mChildDocs.Length() == 0);
     MOZ_ASSERT(!ParentDoc());
+||||||| merged common ancestors
+  ~DocAccessibleParent()
+  {
+    LiveDocs().Remove(mActorID);
+    MOZ_COUNT_DTOR_INHERITED(DocAccessibleParent, ProxyAccessible);
+    MOZ_ASSERT(mChildDocs.Length() == 0);
+    MOZ_ASSERT(!ParentDoc());
+=======
+  /**
+   * Set this as a top level document; i.e. it is not embedded by another remote
+   * document. This also means it is a top level document in its content
+   * process.
+   * Tab documents are top level documents.
+   */
+  void SetTopLevel() {
+    mTopLevel = true;
+    mTopLevelInContentProcess = true;
+>>>>>>> upstream-releases
   }
-
-  void SetTopLevel() { mTopLevel = true; }
   bool IsTopLevel() const { return mTopLevel; }
+
+  /**
+   * Set this as a top level document in its content process.
+   * Note that this could be an out-of-process iframe embedded by a remote
+   * embedder document. In that case, IsToplevel() will return false, but
+   * IsTopLevelInContentProcess() will return true.
+   */
+  void SetTopLevelInContentProcess() { mTopLevelInContentProcess = true; }
+  bool IsTopLevelInContentProcess() const { return mTopLevelInContentProcess; }
 
   bool IsShutdown() const { return mShutdown; }
 
@@ -92,6 +149,7 @@ class DocAccessibleParent : public ProxyAccessible,
       const bool& aFromUser) override;
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvSyncTextChangeEvent(
       const uint64_t& aID, const nsString& aStr, const int32_t& aStart,
       const uint32_t& aLen, const bool& aIsInsert,
@@ -116,6 +174,70 @@ class DocAccessibleParent : public ProxyAccessible,
       const uint64_t& aID, const uint64_t& aType, const uint32_t& aScrollX,
       const uint32_t& aScrollY, const uint32_t& aMaxScrollX,
       const uint32_t& aMaxScrollY) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvSyncTextChangeEvent(const uint64_t& aID, const nsString& aStr,
+                                                          const int32_t& aStart, const uint32_t& aLen,
+                                                          const bool& aIsInsert,
+                                                          const bool& aFromUser) override;
+
+  virtual mozilla::ipc::IPCResult RecvFocusEvent(const uint64_t& aID,
+                                                 const LayoutDeviceIntRect& aCaretRect) override;
+#endif // defined(XP_WIN)
+
+  virtual mozilla::ipc::IPCResult RecvSelectionEvent(const uint64_t& aID,
+                                                     const uint64_t& aWidgetID,
+                                                     const uint32_t& aType) override;
+
+  virtual mozilla::ipc::IPCResult RecvVirtualCursorChangeEvent(const uint64_t& aID,
+                                                               const uint64_t& aOldPositionID,
+                                                               const int32_t& aOldStartOffset,
+                                                               const int32_t& aOldEndOffset,
+                                                               const uint64_t& aNewPositionID,
+                                                               const int32_t& aNewStartOffset,
+                                                               const int32_t& aNewEndOffset,
+                                                               const int16_t& aReason,
+                                                               const int16_t& aBoundaryType,
+                                                               const bool& aFromUser) override;
+
+  virtual mozilla::ipc::IPCResult RecvScrollingEvent(const uint64_t& aID,
+                                                     const uint64_t& aType,
+                                                     const uint32_t& aScrollX,
+                                                     const uint32_t& aScrollY,
+                                                     const uint32_t& aMaxScrollX,
+                                                     const uint32_t& aMaxScrollY) override;
+=======
+  virtual mozilla::ipc::IPCResult RecvSyncTextChangeEvent(
+      const uint64_t& aID, const nsString& aStr, const int32_t& aStart,
+      const uint32_t& aLen, const bool& aIsInsert,
+      const bool& aFromUser) override;
+
+  virtual mozilla::ipc::IPCResult RecvFocusEvent(
+      const uint64_t& aID, const LayoutDeviceIntRect& aCaretRect) override;
+#endif  // defined(XP_WIN)
+
+  virtual mozilla::ipc::IPCResult RecvSelectionEvent(
+      const uint64_t& aID, const uint64_t& aWidgetID,
+      const uint32_t& aType) override;
+
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual mozilla::ipc::IPCResult RecvVirtualCursorChangeEvent(
+      const uint64_t& aID, const uint64_t& aOldPositionID,
+      const int32_t& aOldStartOffset, const int32_t& aOldEndOffset,
+      const uint64_t& aNewPositionID, const int32_t& aNewStartOffset,
+      const int32_t& aNewEndOffset, const int16_t& aReason,
+      const int16_t& aBoundaryType, const bool& aFromUser) override;
+
+  virtual mozilla::ipc::IPCResult RecvScrollingEvent(
+      const uint64_t& aID, const uint64_t& aType, const uint32_t& aScrollX,
+      const uint32_t& aScrollY, const uint32_t& aMaxScrollX,
+      const uint32_t& aMaxScrollY) override;
+
+#if !defined(XP_WIN)
+  virtual mozilla::ipc::IPCResult RecvAnnouncementEvent(
+      const uint64_t& aID, const nsString& aAnnouncement,
+      const uint16_t& aPriority) override;
+#endif
+>>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvRoleChangedEvent(const a11y::role& aRole) final;
 
@@ -195,7 +317,16 @@ class DocAccessibleParent : public ProxyAccessible,
 
 #if defined(XP_WIN)
   void MaybeInitWindowEmulation();
-  void SendParentCOMProxy();
+
+  /**
+   * Note that an OuterDocAccessible can be created before the
+   * DocAccessibleParent or vice versa. Therefore, this must be conditionally
+   * called when either of these is created.
+   * @param aOuterDoc The OuterDocAccessible to be returned as the parent of
+   *        this document. Only GetNativeInterface() is called on this, so it
+   *        may be a ProxyAccessibleWrap or similar.
+   */
+  void SendParentCOMProxy(Accessible* aOuterDoc);
 
   virtual mozilla::ipc::IPCResult RecvGetWindowedPluginIAccessible(
       const WindowsHandle& aHwnd, IAccessibleHolder* aPluginCOMProxy) override;
@@ -213,9 +344,34 @@ class DocAccessibleParent : public ProxyAccessible,
       const uint64_t& aBatchType, nsTArray<BatchData>&& aData) override;
 #endif
 
+<<<<<<< HEAD
  private:
   class ProxyEntry : public PLDHashEntryHdr {
    public:
+||||||| merged common ancestors
+private:
+
+  class ProxyEntry : public PLDHashEntryHdr
+  {
+  public:
+=======
+  /**
+   * If this is an iframe document rendered in a different process to its
+   * embedder, return the DocAccessibleParent and id for the embedder
+   * accessible. Otherwise, return null and 0.
+   */
+  Tuple<DocAccessibleParent*, uint64_t> GetRemoteEmbedder();
+
+ private:
+  ~DocAccessibleParent() {
+    LiveDocs().Remove(mActorID);
+    MOZ_ASSERT(mChildDocs.Length() == 0);
+    MOZ_ASSERT(!ParentDoc());
+  }
+
+  class ProxyEntry : public PLDHashEntryHdr {
+   public:
+>>>>>>> upstream-releases
     explicit ProxyEntry(const void*) : mProxy(nullptr) {}
     ProxyEntry(ProxyEntry&& aOther) : mProxy(aOther.mProxy) {
       aOther.mProxy = nullptr;
@@ -251,10 +407,19 @@ class DocAccessibleParent : public ProxyAccessible,
   // The handle associated with the emulated window that contains this document
   HWND mEmulatedWindowHandle;
 
-#if defined(MOZ_CONTENT_SANDBOX)
+#  if defined(MOZ_SANDBOX)
   mscom::PreservedStreamPtr mParentProxyStream;
+<<<<<<< HEAD
 #endif  // defined(MOZ_CONTENT_SANDBOX)
 #endif  // defined(XP_WIN)
+||||||| merged common ancestors
+#endif // defined(MOZ_CONTENT_SANDBOX)
+#endif // defined(XP_WIN)
+=======
+  mscom::PreservedStreamPtr mDocProxyStream;
+#  endif  // defined(MOZ_SANDBOX)
+#endif    // defined(XP_WIN)
+>>>>>>> upstream-releases
 
   /*
    * Conceptually this is a map from IDs to proxies, but we store the ID in the
@@ -263,6 +428,7 @@ class DocAccessibleParent : public ProxyAccessible,
   nsTHashtable<ProxyEntry> mAccessibles;
   uint64_t mActorID;
   bool mTopLevel;
+  bool mTopLevelInContentProcess;
   bool mShutdown;
 
   static uint64_t sMaxDocID;

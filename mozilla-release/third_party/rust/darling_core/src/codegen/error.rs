@@ -2,7 +2,9 @@ use proc_macro2::TokenStream;
 use quote::{TokenStreamExt, ToTokens};
 
 /// Declares the local variable into which errors will be accumulated.
+#[derive(Default)]
 pub struct ErrorDeclaration {
+<<<<<<< HEAD
     __hidden: (),
 }
 
@@ -10,23 +12,38 @@ impl ErrorDeclaration {
     pub fn new() -> Self {
         ErrorDeclaration { __hidden: () }
     }
+||||||| merged common ancestors
+    __hidden: ()
+}
+
+impl ErrorDeclaration {
+    pub fn new() -> Self {
+        ErrorDeclaration {
+            __hidden: ()
+        }
+    }
+=======
+    __hidden: (),
+>>>>>>> upstream-releases
 }
 
 impl ToTokens for ErrorDeclaration {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.append_all(quote! {
-            let mut __errors = Vec::new();
+            let mut __errors = ::darling::export::Vec::new();
         })
     }
 }
 
 /// Returns early if attribute or body parsing has caused any errors.
+#[derive(Default)]
 pub struct ErrorCheck<'a> {
     location: Option<&'a str>,
     __hidden: (),
 }
 
 impl<'a> ErrorCheck<'a> {
+<<<<<<< HEAD
     pub fn new() -> Self {
         ErrorCheck {
             location: None,
@@ -34,6 +51,16 @@ impl<'a> ErrorCheck<'a> {
         }
     }
 
+||||||| merged common ancestors
+    pub fn new() -> Self {
+        ErrorCheck {
+            location: None,
+            __hidden: ()
+        }
+    }
+
+=======
+>>>>>>> upstream-releases
     pub fn with_location(location: &'a str) -> Self {
         ErrorCheck {
             location: Some(location),

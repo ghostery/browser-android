@@ -55,8 +55,18 @@ static bool IsTypeValid(const MediaContainerType& aType) {
          aType.Type() == MEDIAMIMETYPE("video/x-m4v");
 }
 
+<<<<<<< HEAD
 /* statis */ nsTArray<UniquePtr<TrackInfo>> MP4Decoder::GetTracksInfo(
     const MediaContainerType& aType, MediaResult& aError) {
+||||||| merged common ancestors
+/* statis */ nsTArray<UniquePtr<TrackInfo>>
+MP4Decoder::GetTracksInfo(const MediaContainerType& aType, MediaResult& aError)
+{
+=======
+/* statis */
+nsTArray<UniquePtr<TrackInfo>> MP4Decoder::GetTracksInfo(
+    const MediaContainerType& aType, MediaResult& aError) {
+>>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
 
   if (!IsTypeValid(aType)) {
@@ -191,10 +201,30 @@ bool MP4Decoder::IsAAC(const nsACString& aMimeType) {
 }
 
 /* static */
+<<<<<<< HEAD
 bool MP4Decoder::IsEnabled() { return StaticPrefs::MediaMp4Enabled(); }
+||||||| merged common ancestors
+bool
+MP4Decoder::IsEnabled()
+{
+  return StaticPrefs::MediaMp4Enabled();
+}
+=======
+bool MP4Decoder::IsEnabled() { return StaticPrefs::media_mp4_enabled(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> MP4Decoder::GetTracksInfo(
     const MediaContainerType& aType) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+MP4Decoder::GetTracksInfo(const MediaContainerType& aType)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> MP4Decoder::GetTracksInfo(
+    const MediaContainerType& aType) {
+>>>>>>> upstream-releases
   MediaResult rv = NS_OK;
   return GetTracksInfo(aType, rv);
 }

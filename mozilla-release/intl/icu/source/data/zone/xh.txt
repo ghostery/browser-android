@@ -1,5 +1,14 @@
+<<<<<<< HEAD
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 xh{
     Version{"2.1.44.88"}
 }
+||||||| merged common ancestors
+=======
+﻿// © 2016 and later: Unicode, Inc. and others.
+// License & terms of use: http://www.unicode.org/copyright.html#License
+xh{
+    Version{"2.1.49.82"}
+}
+>>>>>>> upstream-releases

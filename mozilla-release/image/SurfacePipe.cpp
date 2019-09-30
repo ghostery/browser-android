@@ -53,21 +53,37 @@ uint8_t* AbstractSurfaceSink::DoAdvanceRow() {
   return mRow < uint32_t(InputSize().height) ? GetRowPointer() : nullptr;
 }
 
+<<<<<<< HEAD
 nsresult SurfaceSink::Configure(const SurfaceConfig& aConfig) {
   // For non-paletted surfaces, the surface size is just the output size.
+||||||| merged common ancestors
+nsresult
+SurfaceSink::Configure(const SurfaceConfig& aConfig)
+{
+  // For non-paletted surfaces, the surface size is just the output size.
+=======
+nsresult SurfaceSink::Configure(const SurfaceConfig& aConfig) {
+>>>>>>> upstream-releases
   IntSize surfaceSize = aConfig.mOutputSize;
-
-  // Non-paletted surfaces should not have frame rects, so we just pass
-  // AllocateFrame() a frame rect which covers the entire surface.
-  IntRect frameRect(0, 0, surfaceSize.width, surfaceSize.height);
 
   // Allocate the frame.
   // XXX(seth): Once every Decoder subclass uses SurfacePipe, we probably want
   // to allocate the frame directly here and get rid of Decoder::AllocateFrame
   // altogether.
+<<<<<<< HEAD
   nsresult rv = aConfig.mDecoder->AllocateFrame(
       surfaceSize, frameRect, aConfig.mFormat,
       /* aPaletteDepth */ 0, aConfig.mAnimParams);
+||||||| merged common ancestors
+  nsresult rv = aConfig.mDecoder->AllocateFrame(surfaceSize,
+                                                frameRect,
+                                                aConfig.mFormat,
+                                                /* aPaletteDepth */ 0,
+                                                aConfig.mAnimParams);
+=======
+  nsresult rv = aConfig.mDecoder->AllocateFrame(surfaceSize, aConfig.mFormat,
+                                                aConfig.mAnimParams);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return rv;
   }
@@ -95,6 +111,7 @@ uint8_t* SurfaceSink::GetRowPointer() const {
   MOZ_ASSERT(rowPtr >= mImageData);
   MOZ_ASSERT(rowPtr < mImageData + mImageDataLength);
   MOZ_ASSERT(rowPtr + InputSize().width * sizeof(uint32_t) <=
+<<<<<<< HEAD
              mImageData + mImageDataLength);
 
   return rowPtr;
@@ -142,6 +159,65 @@ uint8_t* PalettedSurfaceSink::GetRowPointer() const {
   MOZ_ASSERT(rowPtr < mImageData + mImageDataLength);
   MOZ_ASSERT(rowPtr + InputSize().width * sizeof(uint8_t) <=
              mImageData + mImageDataLength);
+||||||| merged common ancestors
+               mImageData + mImageDataLength);
+
+  return rowPtr;
+}
+
+
+nsresult
+PalettedSurfaceSink::Configure(const PalettedSurfaceConfig& aConfig)
+{
+  MOZ_ASSERT(aConfig.mFormat == SurfaceFormat::B8G8R8A8);
+
+  // For paletted surfaces, the surface size is the size of the frame rect.
+  IntSize surfaceSize = aConfig.mFrameRect.Size();
+
+  // Allocate the frame.
+  // XXX(seth): Once every Decoder subclass uses SurfacePipe, we probably want
+  // to allocate the frame directly here and get rid of Decoder::AllocateFrame
+  // altogether.
+  nsresult rv = aConfig.mDecoder->AllocateFrame(aConfig.mOutputSize,
+                                                aConfig.mFrameRect,
+                                                aConfig.mFormat,
+                                                aConfig.mPaletteDepth,
+                                                aConfig.mAnimParams);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+
+  mImageData = aConfig.mDecoder->mImageData;
+  mImageDataLength = aConfig.mDecoder->mImageDataLength;
+  mFlipVertically = aConfig.mFlipVertically;
+  mFrameRect = aConfig.mFrameRect;
+
+  MOZ_ASSERT(mImageData);
+  MOZ_ASSERT(mImageDataLength ==
+             uint32_t(mFrameRect.Width() * mFrameRect.Height() * sizeof(uint8_t)));
+
+  ConfigureFilter(surfaceSize, sizeof(uint8_t));
+  return NS_OK;
+}
+
+uint8_t*
+PalettedSurfaceSink::GetRowPointer() const
+{
+  // If we're flipping vertically, reverse the order in which we traverse the
+  // rows.
+  uint32_t row = mFlipVertically
+               ? InputSize().height - (mRow + 1)
+               : mRow;
+
+  uint8_t* rowPtr = mImageData + row * InputSize().width * sizeof(uint8_t);
+
+  MOZ_ASSERT(rowPtr >= mImageData);
+  MOZ_ASSERT(rowPtr < mImageData + mImageDataLength);
+  MOZ_ASSERT(rowPtr + InputSize().width * sizeof(uint8_t) <=
+               mImageData + mImageDataLength);
+=======
+             mImageData + mImageDataLength);
+>>>>>>> upstream-releases
 
   return rowPtr;
 }

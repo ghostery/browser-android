@@ -7,7 +7,8 @@
 #include "DocAccessibleWrap.h"
 
 #include "Compatibility.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "DocAccessibleChild.h"
 #include "nsWinUtils.h"
 #include "Role.h"
@@ -25,9 +26,21 @@ using namespace mozilla::a11y;
 // DocAccessibleWrap
 ////////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 DocAccessibleWrap::DocAccessibleWrap(nsIDocument* aDocument,
                                      nsIPresShell* aPresShell)
     : DocAccessible(aDocument, aPresShell), mHWND(nullptr) {}
+||||||| merged common ancestors
+DocAccessibleWrap::
+  DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell) :
+  DocAccessible(aDocument, aPresShell), mHWND(nullptr)
+{
+}
+=======
+DocAccessibleWrap::DocAccessibleWrap(dom::Document* aDocument,
+                                     PresShell* aPresShell)
+    : DocAccessible(aDocument, aPresShell), mHWND(nullptr) {}
+>>>>>>> upstream-releases
 
 DocAccessibleWrap::~DocAccessibleWrap() {}
 
@@ -77,7 +90,8 @@ DocAccessibleWrap::get_accValue(VARIANT aVarChild, BSTR __RPC_FAR* aValue) {
   // If document is being used to create a widget, don't use the URL hack
   roles::Role role = Role();
   if (role != roles::DOCUMENT && role != roles::APPLICATION &&
-      role != roles::DIALOG && role != roles::ALERT)
+      role != roles::DIALOG && role != roles::ALERT &&
+      role != roles::NON_NATIVE_DOCUMENT)
     return hr;
 
   nsAutoString url;

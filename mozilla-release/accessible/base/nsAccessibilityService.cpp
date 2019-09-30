@@ -20,6 +20,7 @@
 #include "HTMLTableAccessibleWrap.h"
 #include "HyperTextAccessibleWrap.h"
 #include "RootAccessible.h"
+#include "StyleInfo.h"
 #include "nsAccUtils.h"
 #include "nsArrayUtils.h"
 #include "nsAttrName.h"
@@ -30,7 +31,7 @@
 #include "OuterDocAccessible.h"
 #include "Role.h"
 #ifdef MOZ_ACCESSIBILITY_ATK
-#include "RootAccessibleWrap.h"
+#  include "RootAccessibleWrap.h"
 #endif
 #include "States.h"
 #include "Statistics.h"
@@ -40,18 +41,18 @@
 #include "xpcAccessibleDocument.h"
 
 #ifdef MOZ_ACCESSIBILITY_ATK
-#include "AtkSocketAccessible.h"
+#  include "AtkSocketAccessible.h"
 #endif
 
 #ifdef XP_WIN
-#include "mozilla/a11y/Compatibility.h"
-#include "mozilla/dom/ContentChild.h"
-#include "HTMLWin32ObjectAccessible.h"
-#include "mozilla/StaticPtr.h"
+#  include "mozilla/a11y/Compatibility.h"
+#  include "mozilla/dom/ContentChild.h"
+#  include "HTMLWin32ObjectAccessible.h"
+#  include "mozilla/StaticPtr.h"
 #endif
 
 #ifdef A11Y_LOG
-#include "Logging.h"
+#  include "Logging.h"
 #endif
 
 #include "nsExceptionHandler.h"
@@ -71,22 +72,23 @@
 #include "mozilla/dom/EventTarget.h"
 #include "mozilla/dom/HTMLTableElement.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Services.h"
 #include "nsDeckFrame.h"
 
 #ifdef MOZ_XUL
-#include "XULAlertAccessible.h"
-#include "XULComboboxAccessible.h"
-#include "XULElementAccessibles.h"
-#include "XULFormControlAccessible.h"
-#include "XULListboxAccessibleWrap.h"
-#include "XULMenuAccessibleWrap.h"
-#include "XULTabAccessible.h"
-#include "XULTreeGridAccessibleWrap.h"
+#  include "XULAlertAccessible.h"
+#  include "XULComboboxAccessible.h"
+#  include "XULElementAccessibles.h"
+#  include "XULFormControlAccessible.h"
+#  include "XULListboxAccessibleWrap.h"
+#  include "XULMenuAccessibleWrap.h"
+#  include "XULTabAccessible.h"
+#  include "XULTreeGridAccessibleWrap.h"
 #endif
 
 #if defined(XP_WIN) || defined(MOZ_ACCESSIBILITY_ATK)
-#include "nsNPAPIPluginInstance.h"
+#  include "nsNPAPIPluginInstance.h"
 #endif
 
 using namespace mozilla;
@@ -118,6 +120,12 @@ static bool MustBeAccessible(nsIContent* aContent, DocAccessible* aDocument) {
       const nsAttrName* attr = aContent->AsElement()->GetAttrNameAt(attrIdx);
       if (attr->NamespaceEquals(kNameSpaceID_None)) {
         nsAtom* attrAtom = attr->Atom();
+        if (attrAtom == nsGkAtoms::title && aContent->IsHTMLElement()) {
+          // If the author provided a title on an element that would not
+          // be accessible normally, assume an intent and make it accessible.
+          return true;
+        }
+
         nsDependentAtomString attrStr(attrAtom);
         if (!StringBeginsWith(attrStr, NS_LITERAL_STRING("aria-")))
           continue;  // not ARIA
@@ -147,6 +155,7 @@ static bool MustBeAccessible(nsIContent* aContent, DocAccessible* aDocument) {
  * Used by XULMap.h to map both menupopup and popup elements
  */
 #ifdef MOZ_XUL
+<<<<<<< HEAD
 Accessible* CreateMenupopupAccessible(Element* aElement, Accessible* aContext) {
 #ifdef MOZ_ACCESSIBILITY_ATK
   // ATK considers this node to be redundant when within menubars, and it makes
@@ -160,18 +169,113 @@ Accessible* CreateMenupopupAccessible(Element* aElement, Accessible* aContext) {
 #endif
 
   return new XULMenupopupAccessible(aElement, aContext->Document());
+||||||| merged common ancestors
+Accessible*
+CreateMenupopupAccessible(Element* aElement, Accessible* aContext)
+{
+#ifdef MOZ_ACCESSIBILITY_ATK
+    // ATK considers this node to be redundant when within menubars, and it makes menu
+    // navigation with assistive technologies more difficult
+    // XXX In the future we will should this for consistency across the nsIAccessible
+    // implementations on each platform for a consistent scripting environment, but
+    // then strip out redundant accessibles in the AccessibleWrap class for each platform.
+    nsIContent *parent = aElement->GetParent();
+    if (parent && parent->IsXULElement(nsGkAtoms::menu))
+      return nullptr;
+#endif
+
+    return new XULMenupopupAccessible(aElement, aContext->Document());
+=======
+Accessible* CreateMenupopupAccessible(Element* aElement, Accessible* aContext) {
+#  ifdef MOZ_ACCESSIBILITY_ATK
+  // ATK considers this node to be redundant when within menubars, and it makes
+  // menu navigation with assistive technologies more difficult
+  // XXX In the future we will should this for consistency across the
+  // nsIAccessible implementations on each platform for a consistent scripting
+  // environment, but then strip out redundant accessibles in the AccessibleWrap
+  // class for each platform.
+  nsIContent* parent = aElement->GetParent();
+  if (parent && parent->IsXULElement(nsGkAtoms::menu)) return nullptr;
+#  endif
+
+  return new XULMenupopupAccessible(aElement, aContext->Document());
+>>>>>>> upstream-releases
 }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Accessible constructors
 
+<<<<<<< HEAD
 static Accessible* New_HyperText(Element* aElement, Accessible* aContext) {
   return new HyperTextAccessibleWrap(aElement, aContext->Document());
 }
 
 template <typename AccClass>
 static Accessible* New_HTMLDtOrDd(Element* aElement, Accessible* aContext) {
+||||||| merged common ancestors
+static Accessible*
+New_HTMLLink(Element* aElement, Accessible* aContext)
+{
+  // Only some roles truly enjoy life as HTMLLinkAccessibles, for details
+  // see closed bug 494807.
+  const nsRoleMapEntry* roleMapEntry = aria::GetRoleMap(aElement);
+  if (roleMapEntry && roleMapEntry->role != roles::NOTHING &&
+      roleMapEntry->role != roles::LINK) {
+    return new HyperTextAccessibleWrap(aElement, aContext->Document());
+  }
+
+  return new HTMLLinkAccessible(aElement, aContext->Document());
+}
+
+static Accessible* New_HyperText(Element* aElement, Accessible* aContext)
+  { return new HyperTextAccessibleWrap(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLFigcaption(Element* aElement, Accessible* aContext)
+  { return new HTMLFigcaptionAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLFigure(Element* aElement, Accessible* aContext)
+  { return new HTMLFigureAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLHeaderOrFooter(Element* aElement, Accessible* aContext)
+  { return new HTMLHeaderOrFooterAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLLegend(Element* aElement, Accessible* aContext)
+  { return new HTMLLegendAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLOption(Element* aElement, Accessible* aContext)
+  { return new HTMLSelectOptionAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLOptgroup(Element* aElement, Accessible* aContext)
+  { return new HTMLSelectOptGroupAccessible(aElement, aContext->Document()); }
+
+static Accessible* New_HTMLList(Element* aElement, Accessible* aContext)
+  { return new HTMLListAccessible(aElement, aContext->Document()); }
+
+static Accessible*
+New_HTMLListitem(Element* aElement, Accessible* aContext)
+{
+  // If list item is a child of accessible list then create an accessible for
+  // it unconditionally by tag name. nsBlockFrame creates the list item
+  // accessible for other elements styled as list items.
+  if (aContext->IsList() && aContext->GetContent() == aElement->GetParent())
+    return new HTMLLIAccessible(aElement, aContext->Document());
+
+  return nullptr;
+}
+
+template<typename AccClass>
+static Accessible*
+New_HTMLDtOrDd(Element* aElement, Accessible* aContext)
+{
+=======
+static Accessible* New_HyperText(Element* aElement, Accessible* aContext) {
+  return new HyperTextAccessibleWrap(aElement, aContext->Document());
+}
+
+template <typename AccClass>
+static Accessible* New_HTMLDtOrDd(Element* aElement, Accessible* aContext) {
+>>>>>>> upstream-releases
   nsIContent* parent = aContext->GetContent();
   if (parent->IsHTMLElement(nsGkAtoms::div)) {
     // It is conforming in HTML to use a div to group dt/dd elements.
@@ -212,19 +316,47 @@ static const HTMLMarkupMapInfo sHTMLMarkupMapList[] = {
 #undef MARKUPMAP
 
 #ifdef MOZ_XUL
+<<<<<<< HEAD
 #define XULMAP(atom, ...) {nsGkAtoms::atom, __VA_ARGS__},
+||||||| merged common ancestors
+#define XULMAP(atom, ...) \
+  { nsGkAtoms::atom, __VA_ARGS__ },
+=======
+#  define XULMAP(atom, ...) {nsGkAtoms::atom, __VA_ARGS__},
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define XULMAP_TYPE(atom, new_type)                                         \
   XULMAP(atom, [](Element* aElement, Accessible* aContext) -> Accessible* { \
     return new new_type(aElement, aContext->Document());                    \
   })
+||||||| merged common ancestors
+#define XULMAP_TYPE(atom, new_type) \
+XULMAP( \
+  atom, \
+  [](Element* aElement, Accessible* aContext) -> Accessible* { \
+    return new new_type(aElement, aContext->Document()); \
+  } \
+)
+=======
+#  define XULMAP_TYPE(atom, new_type)                                         \
+    XULMAP(atom, [](Element* aElement, Accessible* aContext) -> Accessible* { \
+      return new new_type(aElement, aContext->Document());                    \
+    })
+>>>>>>> upstream-releases
 
 static const XULMarkupMapInfo sXULMarkupMapList[] = {
+<<<<<<< HEAD
 #include "XULMap.h"
+||||||| merged common ancestors
+  #include "XULMap.h"
+=======
+#  include "XULMap.h"
+>>>>>>> upstream-releases
 };
 
-#undef XULMAP_TYPE
-#undef XULMAP
+#  undef XULMAP_TYPE
+#  undef XULMAP
 #endif
 
 #undef Attr
@@ -281,8 +413,16 @@ nsAccessibilityService::ListenersChanged(nsIArray* aEventChanges) {
     change->GetCountOfEventListenerChangesAffectingAccessibility(&changeCount);
     NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
     for (uint32_t i = 0; i < changeCount; i++) {
       nsIDocument* ownerDoc = node->OwnerDoc();
+||||||| merged common ancestors
+    for (uint32_t i = 0 ; i < changeCount ; i++) {
+      nsIDocument* ownerDoc = node->OwnerDoc();
+=======
+    for (uint32_t i = 0; i < changeCount; i++) {
+      Document* ownerDoc = node->OwnerDoc();
+>>>>>>> upstream-releases
       DocAccessible* document = GetExistingDocAccessible(ownerDoc);
 
       // Create an accessible for a inaccessible element having click event
@@ -317,8 +457,18 @@ nsAccessibilityService::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::NotifyOfAnchorJumpTo(nsIContent* aTargetNode) {
   nsIDocument* documentNode = aTargetNode->GetUncomposedDoc();
+||||||| merged common ancestors
+void
+nsAccessibilityService::NotifyOfAnchorJumpTo(nsIContent* aTargetNode)
+{
+  nsIDocument* documentNode = aTargetNode->GetUncomposedDoc();
+=======
+void nsAccessibilityService::NotifyOfAnchorJumpTo(nsIContent* aTargetNode) {
+  Document* documentNode = aTargetNode->GetUncomposedDoc();
+>>>>>>> upstream-releases
   if (documentNode) {
     DocAccessible* document = GetDocAccessible(documentNode);
     if (document) document->SetAnchorJump(aTargetNode);
@@ -330,10 +480,24 @@ void nsAccessibilityService::FireAccessibleEvent(uint32_t aEvent,
   nsEventShell::FireEvent(aEvent, aTarget);
 }
 
+<<<<<<< HEAD
 Accessible* nsAccessibilityService::GetRootDocumentAccessible(
     nsIPresShell* aPresShell, bool aCanCreate) {
   nsIPresShell* ps = aPresShell;
   nsIDocument* documentNode = aPresShell->GetDocument();
+||||||| merged common ancestors
+Accessible*
+nsAccessibilityService::GetRootDocumentAccessible(nsIPresShell* aPresShell,
+                                                  bool aCanCreate)
+{
+  nsIPresShell* ps = aPresShell;
+  nsIDocument* documentNode = aPresShell->GetDocument();
+=======
+Accessible* nsAccessibilityService::GetRootDocumentAccessible(
+    PresShell* aPresShell, bool aCanCreate) {
+  PresShell* presShell = aPresShell;
+  Document* documentNode = aPresShell->GetDocument();
+>>>>>>> upstream-releases
   if (documentNode) {
     nsCOMPtr<nsIDocShellTreeItem> treeItem(documentNode->GetDocShell());
     if (treeItem) {
@@ -341,10 +505,11 @@ Accessible* nsAccessibilityService::GetRootDocumentAccessible(
       treeItem->GetRootTreeItem(getter_AddRefs(rootTreeItem));
       if (treeItem != rootTreeItem) {
         nsCOMPtr<nsIDocShell> docShell(do_QueryInterface(rootTreeItem));
-        ps = docShell->GetPresShell();
+        presShell = docShell->GetPresShell();
       }
 
-      return aCanCreate ? GetDocAccessible(ps) : ps->GetDocAccessible();
+      return aCanCreate ? GetDocAccessible(presShell)
+                        : presShell->GetDocAccessible();
     }
   }
   return nullptr;
@@ -365,9 +530,9 @@ class PluginTimerCallBack final : public nsITimerCallback, public nsINamed {
   NS_IMETHOD Notify(nsITimer* aTimer) final {
     if (!mContent->IsInUncomposedDoc()) return NS_OK;
 
-    nsIPresShell* ps = mContent->OwnerDoc()->GetShell();
-    if (ps) {
-      DocAccessible* doc = ps->GetDocAccessible();
+    PresShell* presShell = mContent->OwnerDoc()->GetPresShell();
+    if (presShell) {
+      DocAccessible* doc = presShell->GetDocAccessible();
       if (doc) {
         // Make sure that if we created an accessible for the plugin that wasn't
         // a plugin accessible we remove it before creating the right
@@ -404,9 +569,20 @@ already_AddRefed<Accessible> nsAccessibilityService::CreatePluginAccessible(
   if (aFrame->GetRect().IsEmpty()) return nullptr;
 
 #if defined(XP_WIN) || defined(MOZ_ACCESSIBILITY_ATK)
+<<<<<<< HEAD
   RefPtr<nsNPAPIPluginInstance> pluginInstance = aFrame->GetPluginInstance();
   if (pluginInstance) {
 #ifdef XP_WIN
+||||||| merged common ancestors
+  RefPtr<nsNPAPIPluginInstance> pluginInstance;
+  if (NS_SUCCEEDED(aFrame->GetPluginInstance(getter_AddRefs(pluginInstance))) &&
+      pluginInstance) {
+#ifdef XP_WIN
+=======
+  RefPtr<nsNPAPIPluginInstance> pluginInstance = aFrame->GetPluginInstance();
+  if (pluginInstance) {
+#  ifdef XP_WIN
+>>>>>>> upstream-releases
     if (!sPendingPlugins->Contains(aContent) &&
         (Preferences::GetBool("accessibility.delay_plugins") ||
          Compatibility::IsJAWS() || Compatibility::IsWE())) {
@@ -434,8 +610,17 @@ already_AddRefed<Accessible> nsAccessibilityService::CreatePluginAccessible(
         aContent, aContext->Document(), pluginPort);
     return accessible.forget();
 
+<<<<<<< HEAD
 #elif MOZ_ACCESSIBILITY_ATK
     if (!AtkSocketAccessible::gCanEmbed) return nullptr;
+||||||| merged common ancestors
+#elif MOZ_ACCESSIBILITY_ATK
+    if (!AtkSocketAccessible::gCanEmbed)
+      return nullptr;
+=======
+#  elif MOZ_ACCESSIBILITY_ATK
+    if (!AtkSocketAccessible::gCanEmbed) return nullptr;
+>>>>>>> upstream-releases
 
     // Note this calls into the plugin, so crazy things may happen and aFrame
     // may go away.
@@ -448,17 +633,31 @@ already_AddRefed<Accessible> nsAccessibilityService::CreatePluginAccessible(
 
       return socketAccessible.forget();
     }
-#endif
+#  endif
   }
 #endif
 
   return nullptr;
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::DeckPanelSwitched(nsIPresShell* aPresShell,
                                                nsIContent* aDeckNode,
                                                nsIFrame* aPrevBoxFrame,
                                                nsIFrame* aCurrentBoxFrame) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::DeckPanelSwitched(nsIPresShell* aPresShell,
+                                          nsIContent* aDeckNode,
+                                          nsIFrame* aPrevBoxFrame,
+                                          nsIFrame* aCurrentBoxFrame)
+{
+=======
+void nsAccessibilityService::DeckPanelSwitched(PresShell* aPresShell,
+                                               nsIContent* aDeckNode,
+                                               nsIFrame* aPrevBoxFrame,
+                                               nsIFrame* aCurrentBoxFrame) {
+>>>>>>> upstream-releases
   // Ignore tabpanels elements (a deck having an accessible) since their
   // children are accessible not depending on selected tab.
   DocAccessible* document = GetDocAccessible(aPresShell);
@@ -493,9 +692,21 @@ void nsAccessibilityService::DeckPanelSwitched(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::ContentRangeInserted(nsIPresShell* aPresShell,
                                                   nsIContent* aStartChild,
                                                   nsIContent* aEndChild) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::ContentRangeInserted(nsIPresShell* aPresShell,
+                                             nsIContent* aStartChild,
+                                             nsIContent* aEndChild)
+{
+=======
+void nsAccessibilityService::ContentRangeInserted(PresShell* aPresShell,
+                                                  nsIContent* aStartChild,
+                                                  nsIContent* aEndChild) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
 #ifdef A11Y_LOG
   if (logging::IsEnabled(logging::eTree)) {
@@ -515,8 +726,18 @@ void nsAccessibilityService::ContentRangeInserted(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::ContentRemoved(nsIPresShell* aPresShell,
                                             nsIContent* aChildNode) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::ContentRemoved(nsIPresShell* aPresShell,
+                                       nsIContent* aChildNode)
+{
+=======
+void nsAccessibilityService::ContentRemoved(PresShell* aPresShell,
+                                            nsIContent* aChildNode) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
 #ifdef A11Y_LOG
   if (logging::IsEnabled(logging::eTree)) {
@@ -539,15 +760,37 @@ void nsAccessibilityService::ContentRemoved(nsIPresShell* aPresShell,
 #endif
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::UpdateText(nsIPresShell* aPresShell,
                                         nsIContent* aContent) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::UpdateText(nsIPresShell* aPresShell,
+                                   nsIContent* aContent)
+{
+=======
+void nsAccessibilityService::UpdateText(PresShell* aPresShell,
+                                        nsIContent* aContent) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) document->UpdateText(aContent);
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::TreeViewChanged(nsIPresShell* aPresShell,
                                              nsIContent* aContent,
                                              nsITreeView* aView) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::TreeViewChanged(nsIPresShell* aPresShell,
+                                        nsIContent* aContent,
+                                        nsITreeView* aView)
+{
+=======
+void nsAccessibilityService::TreeViewChanged(PresShell* aPresShell,
+                                             nsIContent* aContent,
+                                             nsITreeView* aView) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) {
     Accessible* accessible = document->GetAccessible(aContent);
@@ -558,8 +801,18 @@ void nsAccessibilityService::TreeViewChanged(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::RangeValueChanged(nsIPresShell* aPresShell,
                                                nsIContent* aContent) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::RangeValueChanged(nsIPresShell* aPresShell,
+                                          nsIContent* aContent)
+{
+=======
+void nsAccessibilityService::RangeValueChanged(PresShell* aPresShell,
+                                               nsIContent* aContent) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) {
     Accessible* accessible = document->GetAccessible(aContent);
@@ -570,9 +823,21 @@ void nsAccessibilityService::RangeValueChanged(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::UpdateListBullet(nsIPresShell* aPresShell,
                                               nsIContent* aHTMLListItemContent,
                                               bool aHasBullet) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::UpdateListBullet(nsIPresShell* aPresShell,
+                                         nsIContent* aHTMLListItemContent,
+                                         bool aHasBullet)
+{
+=======
+void nsAccessibilityService::UpdateListBullet(PresShell* aPresShell,
+                                              nsIContent* aHTMLListItemContent,
+                                              bool aHasBullet) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) {
     Accessible* accessible = document->GetAccessible(aHTMLListItemContent);
@@ -583,8 +848,18 @@ void nsAccessibilityService::UpdateListBullet(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::UpdateImageMap(nsImageFrame* aImageFrame) {
   nsIPresShell* presShell = aImageFrame->PresShell();
+||||||| merged common ancestors
+void
+nsAccessibilityService::UpdateImageMap(nsImageFrame* aImageFrame)
+{
+  nsIPresShell* presShell = aImageFrame->PresShell();
+=======
+void nsAccessibilityService::UpdateImageMap(nsImageFrame* aImageFrame) {
+  PresShell* presShell = aImageFrame->PresShell();
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(presShell);
   if (document) {
     Accessible* accessible = document->GetAccessible(aImageFrame->GetContent());
@@ -602,9 +877,21 @@ void nsAccessibilityService::UpdateImageMap(nsImageFrame* aImageFrame) {
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::UpdateLabelValue(nsIPresShell* aPresShell,
                                               nsIContent* aLabelElm,
                                               const nsString& aNewValue) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::UpdateLabelValue(nsIPresShell* aPresShell,
+                                         nsIContent* aLabelElm,
+                                         const nsString& aNewValue)
+{
+=======
+void nsAccessibilityService::UpdateLabelValue(PresShell* aPresShell,
+                                              nsIContent* aLabelElm,
+                                              const nsString& aNewValue) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) {
     Accessible* accessible = document->GetAccessible(aLabelElm);
@@ -617,7 +904,15 @@ void nsAccessibilityService::UpdateLabelValue(nsIPresShell* aPresShell,
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::PresShellActivated(nsIPresShell* aPresShell) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::PresShellActivated(nsIPresShell* aPresShell)
+{
+=======
+void nsAccessibilityService::PresShellActivated(PresShell* aPresShell) {
+>>>>>>> upstream-releases
   DocAccessible* document = aPresShell->GetDocAccessible();
   if (document) {
     RootAccessible* rootDocument = document->RootAccessible();
@@ -626,8 +921,18 @@ void nsAccessibilityService::PresShellActivated(nsIPresShell* aPresShell) {
   }
 }
 
+<<<<<<< HEAD
 void nsAccessibilityService::RecreateAccessible(nsIPresShell* aPresShell,
                                                 nsIContent* aContent) {
+||||||| merged common ancestors
+void
+nsAccessibilityService::RecreateAccessible(nsIPresShell* aPresShell,
+                                           nsIContent* aContent)
+{
+=======
+void nsAccessibilityService::RecreateAccessible(PresShell* aPresShell,
+                                                nsIContent* aContent) {
+>>>>>>> upstream-releases
   DocAccessible* document = GetDocAccessible(aPresShell);
   if (document) document->RecreateAccessible(aContent);
 }
@@ -957,9 +1262,19 @@ Accessible* nsAccessibilityService::CreateAccessible(nsINode* aNode,
 
   // Create accessible for visible text frames.
   if (content->IsText()) {
+<<<<<<< HEAD
     nsIFrame::RenderedText text = frame->GetRenderedText(
         0, UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
         nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
+||||||| merged common ancestors
+    nsIFrame::RenderedText text = frame->GetRenderedText(0,
+        UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
+        nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
+=======
+    nsIFrame::RenderedText text = frame->GetRenderedText(
+        0, UINT32_MAX, nsIFrame::TextOffsetType::OffsetsInContentText,
+        nsIFrame::TrailingWhitespace::DontTrim);
+>>>>>>> upstream-releases
     // Ignore not rendered text nodes and whitespace text nodes between table
     // cells.
     if (text.mString.IsEmpty() ||
@@ -1035,8 +1350,10 @@ Accessible* nsAccessibilityService::CreateAccessible(nsINode* aNode,
           newAcc = new ARIAGridCellAccessibleWrap(content, document);
 
       } else if (roleMapEntry->IsOfType(eTableRow)) {
-        if (aContext->IsTable())
+        if (aContext->IsTable() ||
+            (aContext->Parent() && aContext->Parent()->IsTable())) {
           newAcc = new ARIARowAccessible(content, document);
+        }
 
       } else if (roleMapEntry->IsOfType(eTable)) {
         newAcc = new ARIAGridAccessibleWrap(content, document);
@@ -1384,14 +1701,20 @@ nsAccessibilityService::CreateAccessibleByFrameType(nsIFrame* aFrame,
         table = aContext->Parent();
 
       if (table) {
-        nsIContent* parentContent = aContent->GetParent();
-        nsIFrame* parentFrame = parentContent->GetPrimaryFrame();
-        if (!parentFrame->IsTableWrapperFrame()) {
-          parentContent = parentContent->GetParent();
+        nsIContent* parentContent =
+            aContent->GetParentOrHostNode()->AsContent();
+        nsIFrame* parentFrame = nullptr;
+        if (parentContent) {
           parentFrame = parentContent->GetPrimaryFrame();
+          if (!parentFrame || !parentFrame->IsTableWrapperFrame()) {
+            parentContent = parentContent->GetParentOrHostNode()->AsContent();
+            if (parentContent) {
+              parentFrame = parentContent->GetPrimaryFrame();
+            }
+          }
         }
 
-        if (parentFrame->IsTableWrapperFrame() &&
+        if (parentFrame && parentFrame->IsTableWrapperFrame() &&
             table->GetContent() == parentContent) {
           newAcc = new HTMLTableRowAccessible(aContent, document);
         }
@@ -1402,8 +1725,10 @@ nsAccessibilityService::CreateAccessibleByFrameType(nsIFrame* aFrame,
       newAcc = new HTMLTextFieldAccessible(aContent, document);
       break;
     case eHyperTextType:
-      if (!aContent->IsAnyOfHTMLElements(nsGkAtoms::dt, nsGkAtoms::dd))
+      if (!aContent->IsAnyOfHTMLElements(nsGkAtoms::dt, nsGkAtoms::dd,
+                                         nsGkAtoms::div)) {
         newAcc = new HyperTextAccessibleWrap(aContent, document);
+      }
       break;
 
     case eImageType:

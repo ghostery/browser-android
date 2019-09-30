@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "PDMFactory.h"
+<<<<<<< HEAD
 #include "AgnosticDecoderModule.h"
 #include "DecoderDoctorDiagnostics.h"
 #include "EMEDecoderModule.h"
@@ -25,25 +26,49 @@
 #include "mozilla/SyncRunnable.h"
 #include "mozilla/TaskQueue.h"
 #include "mozilla/gfx/gfxVars.h"
+||||||| merged common ancestors
+=======
+#include "AgnosticDecoderModule.h"
+#include "AudioTrimmer.h"
+#include "DecoderDoctorDiagnostics.h"
+#include "EMEDecoderModule.h"
+#include "GMPDecoderModule.h"
+#include "H264.h"
+#include "MP4Decoder.h"
+#include "MediaChangeMonitor.h"
+#include "MediaInfo.h"
+#include "VPXDecoder.h"
+#include "nsIXULRuntime.h"  // for BrowserTabsRemoteAutostart
+#include "mozilla/CDMProxy.h"
+#include "mozilla/ClearOnShutdown.h"
+#include "mozilla/GpuDecoderModule.h"
+#include "mozilla/RemoteDecoderModule.h"
+#include "mozilla/SharedThreadPool.h"
+#include "mozilla/StaticPrefs.h"
+#include "mozilla/StaticPtr.h"
+#include "mozilla/SyncRunnable.h"
+#include "mozilla/TaskQueue.h"
+#include "mozilla/gfx/gfxVars.h"
+>>>>>>> upstream-releases
 
 #ifdef XP_WIN
-#include "WMFDecoderModule.h"
-#include "mozilla/WindowsVersion.h"
+#  include "WMFDecoderModule.h"
+#  include "mozilla/WindowsVersion.h"
 #endif
 #ifdef MOZ_FFVPX
-#include "FFVPXRuntimeLinker.h"
+#  include "FFVPXRuntimeLinker.h"
 #endif
 #ifdef MOZ_FFMPEG
-#include "FFmpegRuntimeLinker.h"
+#  include "FFmpegRuntimeLinker.h"
 #endif
 #ifdef MOZ_APPLEMEDIA
-#include "AppleDecoderModule.h"
+#  include "AppleDecoderModule.h"
 #endif
 #ifdef MOZ_WIDGET_ANDROID
-#include "AndroidDecoderModule.h"
+#  include "AndroidDecoderModule.h"
 #endif
 #ifdef MOZ_OMX
-#include "OmxDecoderModule.h"
+#  include "OmxDecoderModule.h"
 #endif
 
 #include <functional>
@@ -156,13 +181,23 @@ PDMFactory::PDMFactory() {
 
 PDMFactory::~PDMFactory() {}
 
+<<<<<<< HEAD
 void PDMFactory::EnsureInit() const {
+||||||| merged common ancestors
+void
+PDMFactory::EnsureInit() const
+{
+=======
+/* static */
+void PDMFactory::EnsureInit() {
+>>>>>>> upstream-releases
   {
     StaticMutexAutoLock mon(sMonitor);
     if (sInstance) {
       // Quick exit if we already have an instance.
       return;
     }
+<<<<<<< HEAD
   }
 
   auto initalization = []() {
@@ -172,6 +207,18 @@ void PDMFactory::EnsureInit() const {
       // Ensure that all system variables are initialized.
       gfx::gfxVars::Initialize();
       gfxPrefs::GetSingleton();
+||||||| merged common ancestors
+    if (NS_IsMainThread()) {
+=======
+  }
+
+  auto initalization = []() {
+    MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread());
+    StaticMutexAutoLock mon(sMonitor);
+    if (!sInstance) {
+      // Ensure that all system variables are initialized.
+      gfx::gfxVars::Initialize();
+>>>>>>> upstream-releases
       // On the main thread and holding the lock -> Create instance.
       sInstance = new PDMFactoryImpl();
       ClearOnShutdown(&sInstance);
@@ -189,46 +236,62 @@ void PDMFactory::EnsureInit() const {
   SyncRunnable::DispatchToThread(mainTarget, runnable);
 }
 
+<<<<<<< HEAD
 already_AddRefed<MediaDataDecoder> PDMFactory::CreateDecoder(
     const CreateDecoderParams& aParams) {
+||||||| merged common ancestors
+already_AddRefed<MediaDataDecoder>
+PDMFactory::CreateDecoder(const CreateDecoderParams& aParams)
+{
+=======
+already_AddRefed<MediaDataDecoder> PDMFactory::CreateDecoder(
+    const CreateDecoderParams& aParams) {
+  RefPtr<MediaDataDecoder> decoder;
+  const TrackInfo& config = aParams.mConfig;
+>>>>>>> upstream-releases
   if (aParams.mUseNullDecoder.mUse) {
     MOZ_ASSERT(mNullPDM);
-    return CreateDecoderWithPDM(mNullPDM, aParams);
-  }
+    decoder = CreateDecoderWithPDM(mNullPDM, aParams);
+  } else {
+    bool isEncrypted = mEMEPDM && config.mCrypto.IsEncrypted();
 
-  const TrackInfo& config = aParams.mConfig;
-  bool isEncrypted = mEMEPDM && config.mCrypto.mValid;
+    if (isEncrypted) {
+      decoder = CreateDecoderWithPDM(mEMEPDM, aParams);
+    } else {
+      DecoderDoctorDiagnostics* diagnostics = aParams.mDiagnostics;
+      if (diagnostics) {
+        // If libraries failed to load, the following loop over mCurrentPDMs
+        // will not even try to use them. So we record failures now.
+        if (mWMFFailedToLoad) {
+          diagnostics->SetWMFFailedToLoad();
+        }
+        if (mFFmpegFailedToLoad) {
+          diagnostics->SetFFmpegFailedToLoad();
+        }
+        if (mGMPPDMFailedToStartup) {
+          diagnostics->SetGMPPDMFailedToStartup();
+        }
+      }
 
-  if (isEncrypted) {
-    return CreateDecoderWithPDM(mEMEPDM, aParams);
-  }
-
-  DecoderDoctorDiagnostics* diagnostics = aParams.mDiagnostics;
-  if (diagnostics) {
-    // If libraries failed to load, the following loop over mCurrentPDMs
-    // will not even try to use them. So we record failures now.
-    if (mWMFFailedToLoad) {
-      diagnostics->SetWMFFailedToLoad();
-    }
-    if (mFFmpegFailedToLoad) {
-      diagnostics->SetFFmpegFailedToLoad();
-    }
-    if (mGMPPDMFailedToStartup) {
-      diagnostics->SetGMPPDMFailedToStartup();
-    }
-  }
-
-  for (auto& current : mCurrentPDMs) {
-    if (!current->Supports(config, diagnostics)) {
-      continue;
-    }
-    RefPtr<MediaDataDecoder> m = CreateDecoderWithPDM(current, aParams);
-    if (m) {
-      return m.forget();
+      for (auto& current : mCurrentPDMs) {
+        if (!current->Supports(config, diagnostics)) {
+          continue;
+        }
+        decoder = CreateDecoderWithPDM(current, aParams);
+        if (decoder) {
+          break;
+        }
+      }
     }
   }
-  NS_WARNING("Unable to create a decoder, no platform found.");
-  return nullptr;
+  if (!decoder) {
+    NS_WARNING("Unable to create a decoder, no platform found.");
+    return nullptr;
+  }
+  if (config.IsAudio()) {
+    decoder = new AudioTrimmer(decoder.forget(), aParams);
+  }
+  return decoder.forget();
 }
 
 already_AddRefed<MediaDataDecoder> PDMFactory::CreateDecoderWithPDM(
@@ -311,6 +374,14 @@ bool PDMFactory::Supports(const TrackInfo& aTrackInfo,
   if (mEMEPDM) {
     return mEMEPDM->Supports(aTrackInfo, aDiagnostics);
   }
+  if (VPXDecoder::IsVPX(aTrackInfo.mMimeType,
+                        VPXDecoder::VP8 | VPXDecoder::VP9)) {
+    // Work around bug 1521370, where trying to instantiate an external decoder
+    // could cause a crash.
+    // We always ship a VP8/VP9 decoder (libvpx) and optionally we have ffvpx.
+    // So we can speed up the test by assuming that this codec is supported.
+    return true;
+  }
   RefPtr<PlatformDecoderModule> current = GetDecoder(aTrackInfo, aDiagnostics);
   return !!current;
 }
@@ -318,7 +389,7 @@ bool PDMFactory::Supports(const TrackInfo& aTrackInfo,
 void PDMFactory::CreatePDMs() {
   RefPtr<PlatformDecoderModule> m;
 
-  if (StaticPrefs::MediaUseBlankDecoder()) {
+  if (StaticPrefs::media_use_blank_decoder()) {
     m = CreateBlankDecoderModule();
     StartupPDM(m);
     // The Blank PDM SupportsMimeType reports true for all codecs; the creation
@@ -327,35 +398,53 @@ void PDMFactory::CreatePDMs() {
     return;
   }
 
+<<<<<<< HEAD
   if (StaticPrefs::MediaRddProcessEnabled()) {
     m = new RemoteDecoderModule;
     StartupPDM(m);
   }
 
+||||||| merged common ancestors
+=======
+  if (StaticPrefs::media_rdd_process_enabled() &&
+      BrowserTabsRemoteAutostart()) {
+    m = new RemoteDecoderModule;
+    StartupPDM(m);
+  }
+
+>>>>>>> upstream-releases
 #ifdef XP_WIN
-  if (StaticPrefs::MediaWmfEnabled() && !IsWin7AndPre2000Compatible()) {
+  if (StaticPrefs::media_wmf_enabled() && !IsWin7AndPre2000Compatible()) {
     m = new WMFDecoderModule();
     RefPtr<PlatformDecoderModule> remote = new GpuDecoderModule(m);
     StartupPDM(remote);
     mWMFFailedToLoad = !StartupPDM(m);
   } else {
+<<<<<<< HEAD
     mWMFFailedToLoad = StaticPrefs::MediaDecoderDoctorWmfDisabledIsFailure();
+||||||| merged common ancestors
+    mWMFFailedToLoad =
+      StaticPrefs::MediaDecoderDoctorWmfDisabledIsFailure();
+=======
+    mWMFFailedToLoad =
+        StaticPrefs::media_decoder_doctor_wmf_disabled_is_failure();
+>>>>>>> upstream-releases
   }
 #endif
 #ifdef MOZ_OMX
-  if (StaticPrefs::MediaOmxEnabled()) {
+  if (StaticPrefs::media_omx_enabled()) {
     m = OmxDecoderModule::Create();
     StartupPDM(m);
   }
 #endif
 #ifdef MOZ_FFVPX
-  if (StaticPrefs::MediaFfvpxEnabled()) {
+  if (StaticPrefs::media_ffvpx_enabled()) {
     m = FFVPXRuntimeLinker::CreateDecoderModule();
     StartupPDM(m);
   }
 #endif
 #ifdef MOZ_FFMPEG
-  if (StaticPrefs::MediaFfmpegEnabled()) {
+  if (StaticPrefs::media_ffmpeg_enabled()) {
     m = FFmpegRuntimeLinker::CreateDecoderModule();
     mFFmpegFailedToLoad = !StartupPDM(m);
   } else {
@@ -367,16 +456,16 @@ void PDMFactory::CreatePDMs() {
   StartupPDM(m);
 #endif
 #ifdef MOZ_WIDGET_ANDROID
-  if (StaticPrefs::MediaAndroidMediaCodecEnabled()) {
+  if (StaticPrefs::media_android_media_codec_enabled()) {
     m = new AndroidDecoderModule();
-    StartupPDM(m, StaticPrefs::MediaAndroidMediaCodecPreferred());
+    StartupPDM(m, StaticPrefs::media_android_media_codec_preferred());
   }
 #endif
 
   m = new AgnosticDecoderModule();
   StartupPDM(m);
 
-  if (StaticPrefs::MediaGmpDecoderEnabled()) {
+  if (StaticPrefs::media_gmp_decoder_enabled()) {
     m = new GMPDecoderModule();
     mGMPPDMFailedToStartup = !StartupPDM(m);
   } else {

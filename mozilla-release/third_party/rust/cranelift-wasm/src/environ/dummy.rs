@@ -1,24 +1,57 @@
 //! "Dummy" implementations of `ModuleEnvironment` and `FuncEnvironment` for testing
-//! wasm translation.
+//! wasm translation. For complete implementations of `ModuleEnvironment` and
+//! `FuncEnvironment`, see [wasmtime-environ] in [Wasmtime].
+//!
+//! [wasmtime-environ]: https://crates.io/crates/wasmtime-environ
+//! [Wasmtime]: https://github.com/CraneStation/wasmtime
 
+use crate::environ::{FuncEnvironment, GlobalVariable, ModuleEnvironment, ReturnMode, WasmResult};
+use crate::func_translator::FuncTranslator;
+use crate::translation_utils::{
+    DefinedFuncIndex, FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table,
+    TableIndex,
+};
+use core::convert::TryFrom;
 use cranelift_codegen::cursor::FuncCursor;
+<<<<<<< HEAD
 use cranelift_codegen::ir::immediates::{Imm64, Offset32};
+||||||| merged common ancestors
+use cranelift_codegen::ir::immediates::Imm64;
+=======
+use cranelift_codegen::ir::immediates::{Offset32, Uimm64};
+>>>>>>> upstream-releases
 use cranelift_codegen::ir::types::*;
 use cranelift_codegen::ir::{self, InstBuilder};
 use cranelift_codegen::isa::TargetFrontendConfig;
 use cranelift_entity::{EntityRef, PrimaryMap};
+<<<<<<< HEAD
 use environ::{FuncEnvironment, GlobalVariable, ModuleEnvironment, ReturnMode, WasmResult};
 use func_translator::FuncTranslator;
+||||||| merged common ancestors
+use environ::{FuncEnvironment, GlobalVariable, ModuleEnvironment, WasmResult};
+use func_translator::FuncTranslator;
+=======
+use std::boxed::Box;
+>>>>>>> upstream-releases
 use std::string::String;
 use std::vec::Vec;
+<<<<<<< HEAD
 use translation_utils::{
     DefinedFuncIndex, FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table,
     TableIndex,
 };
+||||||| merged common ancestors
+use target_lexicon::Triple;
+use translation_utils::{
+    DefinedFuncIndex, FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table,
+    TableIndex,
+};
+=======
+>>>>>>> upstream-releases
 
 /// Compute a `ir::ExternalName` for a given wasm function index.
 fn get_func_name(func_index: FuncIndex) -> ir::ExternalName {
-    ir::ExternalName::user(0, func_index.index() as u32)
+    ir::ExternalName::user(0, func_index.as_u32())
 }
 
 /// A collection of names under which a given entity is exported.
@@ -112,26 +145,70 @@ pub struct DummyEnvironment {
 
     /// Vector of wasm bytecode size for each function.
     pub func_bytecode_sizes: Vec<usize>,
+<<<<<<< HEAD
 
     /// How to return from functions.
     return_mode: ReturnMode,
+||||||| merged common ancestors
+=======
+
+    /// How to return from functions.
+    return_mode: ReturnMode,
+
+    /// Instructs to collect debug data during translation.
+    debug_info: bool,
+>>>>>>> upstream-releases
 }
 
 impl DummyEnvironment {
+<<<<<<< HEAD
     /// Creates a new `DummyEnvironment` instance.
     pub fn new(config: TargetFrontendConfig, return_mode: ReturnMode) -> Self {
+||||||| merged common ancestors
+    /// Allocates the data structures with default flags.
+    pub fn with_triple(triple: Triple) -> Self {
+        Self::with_triple_flags(triple, settings::Flags::new(settings::builder()))
+    }
+
+    /// Allocates the data structures with the given flags.
+    pub fn with_triple_flags(triple: Triple, flags: settings::Flags) -> Self {
+=======
+    /// Creates a new `DummyEnvironment` instance.
+    pub fn new(config: TargetFrontendConfig, return_mode: ReturnMode, debug_info: bool) -> Self {
+>>>>>>> upstream-releases
         Self {
             info: DummyModuleInfo::new(config),
             trans: FuncTranslator::new(),
             func_bytecode_sizes: Vec::new(),
+<<<<<<< HEAD
             return_mode,
+||||||| merged common ancestors
+=======
+            return_mode,
+            debug_info,
+>>>>>>> upstream-releases
         }
     }
 
     /// Return a `DummyFuncEnvironment` for translating functions within this
     /// `DummyEnvironment`.
     pub fn func_env(&self) -> DummyFuncEnvironment {
+<<<<<<< HEAD
         DummyFuncEnvironment::new(&self.info, self.return_mode)
+||||||| merged common ancestors
+        DummyFuncEnvironment::new(&self.info)
+=======
+        DummyFuncEnvironment::new(&self.info, self.return_mode)
+    }
+
+    fn get_func_type(&self, func_index: FuncIndex) -> SignatureIndex {
+        self.info.functions[func_index].entity
+    }
+
+    /// Return the number of imported functions within this `DummyEnvironment`.
+    pub fn get_num_func_imports(&self) -> usize {
+        self.info.imported_funcs.len()
+>>>>>>> upstream-releases
     }
 }
 
@@ -163,12 +240,33 @@ impl<'dummy_environment> DummyFuncEnvironment<'dummy_environment> {
 }
 
 impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environment> {
+<<<<<<< HEAD
+    fn target_config(&self) -> TargetFrontendConfig {
+        self.mod_info.config
+||||||| merged common ancestors
+    fn triple(&self) -> &Triple {
+        &self.mod_info.triple
+    }
+
+    fn flags(&self) -> &settings::Flags {
+        &self.mod_info.flags
+=======
     fn target_config(&self) -> TargetFrontendConfig {
         self.mod_info.config
     }
 
-    fn make_global(&mut self, func: &mut ir::Function, index: GlobalIndex) -> GlobalVariable {
+    fn return_mode(&self) -> ReturnMode {
+        self.return_mode
+>>>>>>> upstream-releases
+    }
+
+    fn make_global(
+        &mut self,
+        func: &mut ir::Function,
+        index: GlobalIndex,
+    ) -> WasmResult<GlobalVariable> {
         // Just create a dummy `vmctx` global.
+<<<<<<< HEAD
         let offset = ((index.index() * 8) as i64 + 8).into();
         let vmctx = func.create_global_value(ir::GlobalValueData::VMContext {});
         let iadd = func.create_global_value(ir::GlobalValueData::IAddImm {
@@ -178,11 +276,23 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
         });
         GlobalVariable::Memory {
             gv: iadd,
+||||||| merged common ancestors
+        let offset = ((index * 8) as i32 + 8).into();
+        let gv = func.create_global_value(ir::GlobalValueData::VMContext { offset });
+        GlobalVariable::Memory {
+            gv,
+=======
+        let offset = i32::try_from((index.index() * 8) + 8).unwrap().into();
+        let vmctx = func.create_global_value(ir::GlobalValueData::VMContext {});
+        Ok(GlobalVariable::Memory {
+            gv: vmctx,
+            offset,
+>>>>>>> upstream-releases
             ty: self.mod_info.globals[index].entity.ty,
-        }
+        })
     }
 
-    fn make_heap(&mut self, func: &mut ir::Function, _index: MemoryIndex) -> ir::Heap {
+    fn make_heap(&mut self, func: &mut ir::Function, _index: MemoryIndex) -> WasmResult<ir::Heap> {
         // Create a static heap whose base address is stored at `vmctx+0`.
         let addr = func.create_global_value(ir::GlobalValueData::VMContext);
         let gv = func.create_global_value(ir::GlobalValueData::Load {
@@ -192,18 +302,18 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
             readonly: true,
         });
 
-        func.create_heap(ir::HeapData {
+        Ok(func.create_heap(ir::HeapData {
             base: gv,
             min_size: 0.into(),
-            guard_size: 0x8000_0000.into(),
+            offset_guard_size: 0x8000_0000.into(),
             style: ir::HeapStyle::Static {
                 bound: 0x1_0000_0000.into(),
             },
             index_type: I32,
-        })
+        }))
     }
 
-    fn make_table(&mut self, func: &mut ir::Function, _index: TableIndex) -> ir::Table {
+    fn make_table(&mut self, func: &mut ir::Function, _index: TableIndex) -> WasmResult<ir::Table> {
         // Create a table whose base address is stored at `vmctx+0`.
         let vmctx = func.create_global_value(ir::GlobalValueData::VMContext);
         let base_gv = func.create_global_value(ir::GlobalValueData::Load {
@@ -219,32 +329,40 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
             readonly: true,
         });
 
-        func.create_table(ir::TableData {
+        Ok(func.create_table(ir::TableData {
             base_gv,
-            min_size: Imm64::new(0),
+            min_size: Uimm64::new(0),
             bound_gv,
-            element_size: Imm64::new(i64::from(self.pointer_bytes()) * 2),
+            element_size: Uimm64::from(u64::from(self.pointer_bytes()) * 2),
             index_type: I32,
-        })
+        }))
     }
 
-    fn make_indirect_sig(&mut self, func: &mut ir::Function, index: SignatureIndex) -> ir::SigRef {
+    fn make_indirect_sig(
+        &mut self,
+        func: &mut ir::Function,
+        index: SignatureIndex,
+    ) -> WasmResult<ir::SigRef> {
         // A real implementation would probably change the calling convention and add `vmctx` and
         // signature index arguments.
-        func.import_signature(self.vmctx_sig(index))
+        Ok(func.import_signature(self.vmctx_sig(index)))
     }
 
-    fn make_direct_func(&mut self, func: &mut ir::Function, index: FuncIndex) -> ir::FuncRef {
+    fn make_direct_func(
+        &mut self,
+        func: &mut ir::Function,
+        index: FuncIndex,
+    ) -> WasmResult<ir::FuncRef> {
         let sigidx = self.mod_info.functions[index].entity;
         // A real implementation would probably add a `vmctx` argument.
         // And maybe attempt some signature de-duplication.
         let signature = func.import_signature(self.vmctx_sig(sigidx));
         let name = get_func_name(index);
-        func.import_function(ir::ExtFuncData {
+        Ok(func.import_function(ir::ExtFuncData {
             name,
             signature,
             colocated: false,
-        })
+        }))
     }
 
     fn translate_call_indirect(
@@ -273,9 +391,7 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
             let ext = pos.ins().uextend(I64, callee);
             pos.ins().imul_imm(ext, 4)
         };
-        let mut mflags = ir::MemFlags::new();
-        mflags.set_notrap();
-        mflags.set_aligned();
+        let mflags = ir::MemFlags::trusted();
         let func_ptr = pos.ins().load(ptr, mflags, callee_offset, 0);
 
         // Build a value list for the indirect call instruction containing the callee, call_args,
@@ -338,20 +454,28 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
 }
 
 impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
+<<<<<<< HEAD
     fn target_config(&self) -> TargetFrontendConfig {
         self.info.config
     }
 
     fn get_func_name(&self, func_index: FuncIndex) -> ir::ExternalName {
         get_func_name(func_index)
+||||||| merged common ancestors
+    fn flags(&self) -> &settings::Flags {
+        &self.info.flags
     }
 
-    fn declare_signature(&mut self, sig: &ir::Signature) {
-        self.info.signatures.push(sig.clone());
+    fn get_func_name(&self, func_index: FuncIndex) -> ir::ExternalName {
+        get_func_name(func_index)
+=======
+    fn target_config(&self) -> TargetFrontendConfig {
+        self.info.config
+>>>>>>> upstream-releases
     }
 
-    fn get_signature(&self, sig_index: SignatureIndex) -> &ir::Signature {
-        &self.info.signatures[sig_index]
+    fn declare_signature(&mut self, sig: ir::Signature) {
+        self.info.signatures.push(sig);
     }
 
     fn declare_func_import(
@@ -371,22 +495,15 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
             .push((String::from(module), String::from(field)));
     }
 
-    fn get_num_func_imports(&self) -> usize {
-        self.info.imported_funcs.len()
-    }
-
     fn declare_func_type(&mut self, sig_index: SignatureIndex) {
         self.info.functions.push(Exportable::new(sig_index));
-    }
-
-    fn get_func_type(&self, func_index: FuncIndex) -> SignatureIndex {
-        self.info.functions[func_index].entity
     }
 
     fn declare_global(&mut self, global: Global) {
         self.info.globals.push(Exportable::new(global));
     }
 
+<<<<<<< HEAD
     fn declare_global_import(&mut self, global: Global, module: &'data str, field: &'data str) {
         self.info.globals.push(Exportable::new(global));
         self.info
@@ -396,6 +513,16 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
 
     fn get_global(&self, global_index: GlobalIndex) -> &Global {
         &self.info.globals[global_index].entity
+||||||| merged common ancestors
+    fn get_global(&self, global_index: GlobalIndex) -> &Global {
+        &self.info.globals[global_index].entity
+=======
+    fn declare_global_import(&mut self, global: Global, module: &'data str, field: &'data str) {
+        self.info.globals.push(Exportable::new(global));
+        self.info
+            .imported_globals
+            .push((String::from(module), String::from(field)));
+>>>>>>> upstream-releases
     }
 
     fn declare_table(&mut self, table: Table) {
@@ -414,7 +541,7 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
         _table_index: TableIndex,
         _base: Option<GlobalIndex>,
         _offset: usize,
-        _elements: Vec<FuncIndex>,
+        _elements: Box<[FuncIndex]>,
     ) {
         // We do nothing
     }
@@ -469,7 +596,11 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
         self.info.start_func = Some(func_index);
     }
 
-    fn define_function_body(&mut self, body_bytes: &'data [u8]) -> WasmResult<()> {
+    fn define_function_body(
+        &mut self,
+        body_bytes: &'data [u8],
+        body_offset: usize,
+    ) -> WasmResult<()> {
         let func = {
             let mut func_environ = DummyFuncEnvironment::new(&self.info, self.return_mode);
             let func_index =
@@ -477,8 +608,11 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
             let name = get_func_name(func_index);
             let sig = func_environ.vmctx_sig(self.get_func_type(func_index));
             let mut func = ir::Function::with_name_signature(name, sig);
+            if self.debug_info {
+                func.collect_debug_info();
+            }
             self.trans
-                .translate(body_bytes, &mut func, &mut func_environ)?;
+                .translate(body_bytes, body_offset, &mut func, &mut func_environ)?;
             func
         };
         self.func_bytecode_sizes.push(body_bytes.len());

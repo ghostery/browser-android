@@ -17,7 +17,7 @@
 //! Build script for the Baldr <-> Cranelift bindings.
 //!
 //! This file is executed by cargo when this crate is built. It generates the
-//! `$OUT_DIR/bindings.rs` file which is then included by `src/baldrapi.rs`.
+//! `$OUT_DIR/bindings.rs` file which is then included by `src/bindings/low_level.rs`.
 
 extern crate bindgen;
 
@@ -42,6 +42,7 @@ fn main() {
         .rustified_enum("BD_.*|Trap|TypeCode|FuncTypeIdDescKind")
         .whitelist_type("BD_.*|Trap|TypeCode|FuncTypeIdDescKind")
         .header("baldrapi.h")
+<<<<<<< HEAD
         .clang_args(&[
             "-x",
             "c++",
@@ -49,6 +50,19 @@ fn main() {
             "-fno-sized-deallocation",
             "-DRUST_BINDGEN",
         ]).clang_arg("-I../..");
+||||||| merged common ancestors
+        .clang_args(&["-x", "c++", "-std=gnu++14", "-fno-sized-deallocation", "-DRUST_BINDGEN"])
+        .clang_arg("-I../..");
+=======
+        .clang_args(&[
+            "-x",
+            "c++",
+            "-std=gnu++14",
+            "-fno-sized-deallocation",
+            "-DRUST_BINDGEN",
+        ])
+        .clang_arg("-I../..");
+>>>>>>> upstream-releases
 
     match env::var_os("MOZ_TOPOBJDIR") {
         Some(path) => {

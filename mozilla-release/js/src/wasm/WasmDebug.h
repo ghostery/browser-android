@@ -46,10 +46,20 @@ struct ExprLoc {
       : lineno(lineno_), column(column_), offset(offset_) {}
 };
 
+<<<<<<< HEAD
 typedef HashMap<uint32_t, uint32_t, DefaultHasher<uint32_t>, SystemAllocPolicy>
     StepModeCounters;
 typedef HashMap<uint32_t, WasmBreakpointSite*, DefaultHasher<uint32_t>,
                 SystemAllocPolicy>
+||||||| merged common ancestors
+typedef HashMap<uint32_t, uint32_t, DefaultHasher<uint32_t>, SystemAllocPolicy> StepModeCounters;
+typedef HashMap<uint32_t, WasmBreakpointSite*, DefaultHasher<uint32_t>, SystemAllocPolicy>
+=======
+typedef HashMap<uint32_t, uint32_t, DefaultHasher<uint32_t>, SystemAllocPolicy>
+    StepperCounters;
+typedef HashMap<uint32_t, WasmBreakpointSite*, DefaultHasher<uint32_t>,
+                SystemAllocPolicy>
+>>>>>>> upstream-releases
     WasmBreakpointSiteMap;
 
 class DebugState {
@@ -60,10 +70,22 @@ class DebugState {
   // not actually shared, but is referenced uniquely by the instance that is
   // being debugged.
 
+<<<<<<< HEAD
   bool enterFrameTrapsEnabled_;
   uint32_t enterAndLeaveFrameTrapsCounter_;
   WasmBreakpointSiteMap breakpointSites_;
   StepModeCounters stepModeCounters_;
+||||||| merged common ancestors
+    bool                     enterFrameTrapsEnabled_;
+    uint32_t                 enterAndLeaveFrameTrapsCounter_;
+    WasmBreakpointSiteMap    breakpointSites_;
+    StepModeCounters         stepModeCounters_;
+=======
+  bool enterFrameTrapsEnabled_;
+  uint32_t enterAndLeaveFrameTrapsCounter_;
+  WasmBreakpointSiteMap breakpointSites_;
+  StepperCounters stepperCounters_;
+>>>>>>> upstream-releases
 
   void toggleDebugTrap(uint32_t offset, bool enabled);
 
@@ -99,9 +121,19 @@ class DebugState {
   // When the Code is debug-enabled, single-stepping mode can be toggled on
   // the granularity of individual functions.
 
+<<<<<<< HEAD
   bool stepModeEnabled(uint32_t funcIndex) const;
   bool incrementStepModeCount(JSContext* cx, uint32_t funcIndex);
   bool decrementStepModeCount(FreeOp* fop, uint32_t funcIndex);
+||||||| merged common ancestors
+    bool stepModeEnabled(uint32_t funcIndex) const;
+    bool incrementStepModeCount(JSContext* cx, uint32_t funcIndex);
+    bool decrementStepModeCount(FreeOp* fop, uint32_t funcIndex);
+=======
+  bool stepModeEnabled(uint32_t funcIndex) const;
+  bool incrementStepperCount(JSContext* cx, uint32_t funcIndex);
+  bool decrementStepperCount(FreeOp* fop, uint32_t funcIndex);
+>>>>>>> upstream-releases
 
   // Stack inspection helpers.
 

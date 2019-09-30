@@ -11,6 +11,7 @@
 
 #include "nsIObserver.h"
 
+#include "js/ContextOptions.h"
 #include "mozilla/dom/BindingDeclarations.h"
 #include "mozilla/dom/workerinternals/JSSettings.h"
 #include "mozilla/Mutex.h"
@@ -93,27 +94,116 @@ class RuntimeService final : public nsIObserver {
   NS_DECL_ISUPPORTS
   NS_DECL_NSIOBSERVER
 
+<<<<<<< HEAD
   static RuntimeService* GetOrCreateService();
 
   static RuntimeService* GetService();
+||||||| merged common ancestors
+  static RuntimeService*
+  GetOrCreateService();
 
+  static RuntimeService*
+  GetService();
+
+  bool
+  RegisterWorker(WorkerPrivate* aWorkerPrivate);
+=======
+  static RuntimeService* GetOrCreateService();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool RegisterWorker(WorkerPrivate* aWorkerPrivate);
+||||||| merged common ancestors
+  void
+  UnregisterWorker(WorkerPrivate* aWorkerPrivate);
+=======
+  static RuntimeService* GetService();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void UnregisterWorker(WorkerPrivate* aWorkerPrivate);
+||||||| merged common ancestors
+  void
+  RemoveSharedWorker(WorkerDomainInfo* aDomainInfo,
+                     WorkerPrivate* aWorkerPrivate);
+=======
+  bool RegisterWorker(WorkerPrivate* aWorkerPrivate);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+  void UnregisterWorker(WorkerPrivate* aWorkerPrivate);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+  void CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+  void FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+  void ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+  void SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void PropagateFirstPartyStorageAccessGranted(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+  void
+  PropagateFirstPartyStorageAccessGranted(nsPIDOMWindowInner* aWindow);
+=======
+  void ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  const NavigatorProperties& GetNavigatorProperties() const {
+||||||| merged common ancestors
+  nsresult
+  CreateSharedWorker(const GlobalObject& aGlobal,
+                     const nsAString& aScriptURL,
+                     const nsAString& aName,
+                     SharedWorker** aSharedWorker);
+
+  void
+  ForgetSharedWorker(WorkerPrivate* aWorkerPrivate);
+
+  const NavigatorProperties&
+  GetNavigatorProperties() const
+  {
+=======
   void PropagateFirstPartyStorageAccessGranted(nsPIDOMWindowInner* aWindow);
 
   const NavigatorProperties& GetNavigatorProperties() const {
+>>>>>>> upstream-releases
     return mNavigatorProperties;
   }
 
@@ -157,7 +247,16 @@ class RuntimeService final : public nsIObserver {
   void UpdateAllWorkerGCZeal();
 #endif
 
+<<<<<<< HEAD
   void GarbageCollectAllWorkers(bool aShrinking);
+||||||| merged common ancestors
+  void
+  GarbageCollectAllWorkers(bool aShrinking);
+=======
+  void SetLowMemoryStateAllWorkers(bool aState);
+
+  void GarbageCollectAllWorkers(bool aShrinking);
+>>>>>>> upstream-releases
 
   void CycleCollectAllWorkers();
 

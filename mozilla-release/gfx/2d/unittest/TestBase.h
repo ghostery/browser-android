@@ -9,9 +9,10 @@
 #include <string>
 #include <vector>
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 // On MSVC otherwise our generic member pointer trick doesn't work.
-#pragma pointers_to_members(full_generality, single_inheritance)
+// JYA: Do we still need this?
+#  pragma pointers_to_members(full_generality, single_inheritance)
 #endif
 
 #define VERIFY(arg)                          \
@@ -30,17 +31,29 @@ class TestBase {
 
   typedef void (TestBase::*TestCall)();
 
-  int RunTests(int *aFailures);
+  int RunTests(int* aFailures);
 
  protected:
   static void LogMessage(std::string aMessage);
 
   struct Test {
+<<<<<<< HEAD
     Test(TestCall aCall, std::string aName, void *aImplPointer)
         : funcCall(aCall), name(aName), implPointer(aImplPointer) {}
+||||||| merged common ancestors
+    Test(TestCall aCall, std::string aName, void *aImplPointer)
+      : funcCall(aCall)
+      , name(aName)
+      , implPointer(aImplPointer)
+    {
+    }
+=======
+    Test(TestCall aCall, std::string aName, void* aImplPointer)
+        : funcCall(aCall), name(aName), implPointer(aImplPointer) {}
+>>>>>>> upstream-releases
     TestCall funcCall;
     std::string name;
-    void *implPointer;
+    void* implPointer;
   };
   std::vector<Test> mTests;
 
@@ -48,5 +61,5 @@ class TestBase {
 
  private:
   // This doesn't really work with our generic member pointer trick.
-  TestBase(const TestBase &aOther);
+  TestBase(const TestBase& aOther);
 };

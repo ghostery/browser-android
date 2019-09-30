@@ -36,12 +36,40 @@ mozilla::ipc::IPCResult RemoteSpellcheckEngineParent::RecvSetDictionaryFromList(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult RemoteSpellcheckEngineParent::RecvCheck(
     const nsString& aWord, bool* aIsMisspelled) {
   nsresult rv = mSpellChecker->CheckWord(aWord, aIsMisspelled, nullptr);
 
   // If CheckWord failed, we can't tell whether the word is correctly spelled.
   if (NS_FAILED(rv)) *aIsMisspelled = false;
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+RemoteSpellcheckEngineParent::RecvCheck(
+  const nsString& aWord,
+  bool* aIsMisspelled)
+{
+  nsresult rv = mSpellChecker->CheckWord(aWord, aIsMisspelled, nullptr);
+
+  // If CheckWord failed, we can't tell whether the word is correctly spelled.
+  if (NS_FAILED(rv))
+    *aIsMisspelled = false;
+=======
+mozilla::ipc::IPCResult RemoteSpellcheckEngineParent::RecvCheckAsync(
+    nsTArray<nsString>&& aWords, CheckAsyncResolver&& aResolve) {
+  nsTArray<bool> misspells;
+  misspells.SetCapacity(aWords.Length());
+  for (auto& word : aWords) {
+    bool misspelled;
+    nsresult rv = mSpellChecker->CheckWord(word, &misspelled, nullptr);
+    // If CheckWord failed, we can't tell whether the word is correctly spelled
+    if (NS_FAILED(rv)) {
+      misspelled = false;
+    }
+    misspells.AppendElement(misspelled);
+  }
+  aResolve(std::move(misspells));
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 

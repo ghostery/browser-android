@@ -15,7 +15,6 @@
 #include "GrProcessorSet.h"
 #include "GrProgramDesc.h"
 #include "GrRect.h"
-#include "GrRenderTargetProxy.h"
 #include "GrScissorState.h"
 #include "GrUserStencilSettings.h"
 #include "GrWindowRectsState.h"
@@ -56,7 +55,6 @@ public:
     struct InitArgs {
         uint32_t fFlags = 0;
         const GrUserStencilSettings* fUserStencil = &GrUserStencilSettings::kUnused;
-        GrRenderTargetProxy* fProxy = nullptr;
         const GrCaps* fCaps = nullptr;
         GrResourceProvider* fResourceProvider = nullptr;
         GrXferProcessor::DstProxy fDstProxy;
@@ -95,7 +93,13 @@ public:
      * must be "Porter Duff" (<= kLastCoeffMode). If using GrScissorTest::kEnabled, the caller must
      * specify a scissor rectangle through the DynamicState struct.
      **/
+<<<<<<< HEAD
     GrPipeline(GrRenderTargetProxy*, GrScissorTest, SkBlendMode);
+||||||| merged common ancestors
+    GrPipeline(GrRenderTargetProxy*, ScissorState, SkBlendMode);
+=======
+    GrPipeline(GrScissorTest, SkBlendMode);
+>>>>>>> upstream-releases
 
     GrPipeline(const InitArgs&, GrProcessorSet&&, GrAppliedClip&&);
 
@@ -161,6 +165,7 @@ public:
 
     /// @}
 
+<<<<<<< HEAD
     /**
      * Retrieves the currently set render-target.
      *
@@ -169,6 +174,17 @@ public:
     GrRenderTargetProxy* proxy() const { return fProxy.get(); }
     GrRenderTarget* renderTarget() const { return fProxy.get()->peekRenderTarget(); }
 
+||||||| merged common ancestors
+    /**
+     * Retrieves the currently set render-target.
+     *
+     * @return    The currently set render target.
+     */
+    GrRenderTargetProxy* proxy() const { return fProxy.get(); }
+    GrRenderTarget* renderTarget() const { return fProxy.get()->priv().peekRenderTarget(); }
+
+=======
+>>>>>>> upstream-releases
     const GrUserStencilSettings* getUserStencil() const { return fUserStencilSettings; }
 
     bool isScissorEnabled() const {
@@ -189,7 +205,7 @@ public:
     }
     bool isBad() const { return SkToBool(fFlags & kIsBad_Flag); }
 
-    GrXferBarrierType xferBarrierType(const GrCaps& caps) const;
+    GrXferBarrierType xferBarrierType(GrTexture*, const GrCaps&) const;
 
     static SkString DumpFlags(uint32_t flags) {
         if (flags) {
@@ -205,6 +221,9 @@ public:
         return SkString("No pipeline flags\n");
     }
 
+    // Used by Vulkan and Metal to cache their respective pipeline objects
+    uint32_t getBlendInfoKey() const;
+
 private:
     void markAsBad() { fFlags |= kIsBad_Flag; }
 
@@ -216,14 +235,20 @@ private:
         kIsBad_Flag = 0x80,
     };
 
-    using RenderTargetProxy = GrPendingIOResource<GrRenderTargetProxy, kWrite_GrIOType>;
     using DstTextureProxy = GrPendingIOResource<GrTextureProxy, kRead_GrIOType>;
     using FragmentProcessorArray = SkAutoSTArray<8, std::unique_ptr<const GrFragmentProcessor>>;
 
     DstTextureProxy fDstTextureProxy;
     SkIPoint fDstTextureOffset;
+<<<<<<< HEAD
     // MDB TODO: do we still need the destination proxy here?
     RenderTargetProxy fProxy;
+||||||| merged common ancestors
+    // MDB TODO: do we still need the destination proxy here?
+    RenderTargetProxy fProxy;
+    GrScissorState fScissorState;
+=======
+>>>>>>> upstream-releases
     GrWindowRectsState fWindowRectsState;
     const GrUserStencilSettings* fUserStencilSettings;
     uint16_t fFlags;

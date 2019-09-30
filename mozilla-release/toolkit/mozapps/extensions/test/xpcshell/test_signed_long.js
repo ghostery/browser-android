@@ -13,9 +13,23 @@ add_task(async function test_long_id() {
   await promiseInstallFile(do_get_file("data/signing_checks/long.xpi"));
   let addon = await promiseAddonByID(ID);
 
+<<<<<<< HEAD
   Assert.notEqual(addon, null, "Addon install properly");
   Assert.ok(addon.signedState > AddonManager.SIGNEDSTATE_MISSING,
             "Signature verification worked properly");
+||||||| merged common ancestors
+// Checks the cases that should be broken
+add_task(async function test_broken() {
+  let promises = [AddonManager.getInstallForFile(do_get_file(DATA + "long_63_hash.xpi")),
+                  AddonManager.getInstallForFile(do_get_file(DATA + "long_64_hash.xpi"))];
+  let installs = await Promise.all(promises);
+=======
+  Assert.notEqual(addon, null, "Addon install properly");
+  Assert.ok(
+    addon.signedState > AddonManager.SIGNEDSTATE_MISSING,
+    "Signature verification worked properly"
+  );
+>>>>>>> upstream-releases
 
   await addon.uninstall();
 });

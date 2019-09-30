@@ -19,10 +19,21 @@ namespace mozilla {
 namespace widget {
 
 namespace {
+<<<<<<< HEAD
 bool WindowHookProc(void *aContext, HWND hWnd, UINT nMsg, WPARAM wParam,
                     LPARAM lParam, LRESULT *aResult) {
   TaskbarWindowPreview *preview =
       reinterpret_cast<TaskbarWindowPreview *>(aContext);
+||||||| merged common ancestors
+bool WindowHookProc(void *aContext, HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam, LRESULT *aResult)
+{
+  TaskbarWindowPreview *preview = reinterpret_cast<TaskbarWindowPreview*>(aContext);
+=======
+bool WindowHookProc(void* aContext, HWND hWnd, UINT nMsg, WPARAM wParam,
+                    LPARAM lParam, LRESULT* aResult) {
+  TaskbarWindowPreview* preview =
+      reinterpret_cast<TaskbarWindowPreview*>(aContext);
+>>>>>>> upstream-releases
   *aResult = preview->WndProc(nMsg, wParam, lParam);
   return true;
 }
@@ -36,6 +47,7 @@ NS_IMPL_ISUPPORTS(TaskbarWindowPreview, nsITaskbarWindowPreview,
  * These correspond directly to the states defined in nsITaskbarProgress.idl, so
  * they should be kept in sync.
  */
+<<<<<<< HEAD
 static TBPFLAG sNativeStates[] = {TBPF_NOPROGRESS, TBPF_INDETERMINATE,
                                   TBPF_NORMAL, TBPF_ERROR, TBPF_PAUSED};
 
@@ -49,6 +61,40 @@ TaskbarWindowPreview::TaskbarWindowPreview(
       mCurrentValue(0),
       mMaxValue(0),
       mOverlayIcon(nullptr) {
+||||||| merged common ancestors
+static TBPFLAG sNativeStates[] =
+{
+  TBPF_NOPROGRESS,
+  TBPF_INDETERMINATE,
+  TBPF_NORMAL,
+  TBPF_ERROR,
+  TBPF_PAUSED
+};
+
+TaskbarWindowPreview::TaskbarWindowPreview(ITaskbarList4 *aTaskbar, nsITaskbarPreviewController *aController, HWND aHWND, nsIDocShell *aShell)
+  : TaskbarPreview(aTaskbar, aController, aHWND, aShell),
+    mCustomDrawing(false),
+    mHaveButtons(false),
+    mState(TBPF_NOPROGRESS),
+    mCurrentValue(0),
+    mMaxValue(0),
+    mOverlayIcon(nullptr)
+{
+=======
+static TBPFLAG sNativeStates[] = {TBPF_NOPROGRESS, TBPF_INDETERMINATE,
+                                  TBPF_NORMAL, TBPF_ERROR, TBPF_PAUSED};
+
+TaskbarWindowPreview::TaskbarWindowPreview(
+    ITaskbarList4* aTaskbar, nsITaskbarPreviewController* aController,
+    HWND aHWND, nsIDocShell* aShell)
+    : TaskbarPreview(aTaskbar, aController, aHWND, aShell),
+      mCustomDrawing(false),
+      mHaveButtons(false),
+      mState(TBPF_NOPROGRESS),
+      mCurrentValue(0),
+      mMaxValue(0),
+      mOverlayIcon(nullptr) {
+>>>>>>> upstream-releases
   // Window previews are visible by default
   (void)SetVisible(true);
 
@@ -59,7 +105,7 @@ TaskbarWindowPreview::TaskbarWindowPreview(
     mThumbButtons[i].dwFlags = THBF_HIDDEN;
   }
 
-  WindowHook &hook = GetWindowHook();
+  WindowHook& hook = GetWindowHook();
   if (!CanMakeTaskbarCalls())
     hook.AddMonitor(nsAppShell::GetTaskbarButtonCreatedMessage(),
                     TaskbarWindowHook, this);
@@ -84,10 +130,27 @@ nsresult TaskbarWindowPreview::ShowActive(bool active) {
              : NS_OK;
 }
 
+<<<<<<< HEAD
 HWND &TaskbarWindowPreview::PreviewWindow() { return mWnd; }
+||||||| merged common ancestors
+HWND &
+TaskbarWindowPreview::PreviewWindow() {
+  return mWnd;
+}
+=======
+HWND& TaskbarWindowPreview::PreviewWindow() { return mWnd; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult TaskbarWindowPreview::GetButton(uint32_t index,
                                          nsITaskbarPreviewButton **_retVal) {
+||||||| merged common ancestors
+nsresult
+TaskbarWindowPreview::GetButton(uint32_t index, nsITaskbarPreviewButton **_retVal) {
+=======
+nsresult TaskbarWindowPreview::GetButton(uint32_t index,
+                                         nsITaskbarPreviewButton** _retVal) {
+>>>>>>> upstream-releases
   if (index >= nsITaskbarWindowPreview::NUM_TOOLBAR_BUTTONS)
     return NS_ERROR_INVALID_ARG;
 
@@ -106,8 +169,16 @@ nsresult TaskbarWindowPreview::GetButton(uint32_t index,
   if (!mHaveButtons) {
     mHaveButtons = true;
 
+<<<<<<< HEAD
     WindowHook &hook = GetWindowHook();
     (void)hook.AddHook(WM_COMMAND, WindowHookProc, this);
+||||||| merged common ancestors
+    WindowHook &hook = GetWindowHook();
+    (void) hook.AddHook(WM_COMMAND, WindowHookProc, this);
+=======
+    WindowHook& hook = GetWindowHook();
+    (void)hook.AddHook(WM_COMMAND, WindowHookProc, this);
+>>>>>>> upstream-releases
 
     if (mVisible && FAILED(mTaskbar->ThumbBarAddButtons(
                         mWnd, nsITaskbarWindowPreview::NUM_TOOLBAR_BUTTONS,
@@ -125,7 +196,7 @@ TaskbarWindowPreview::SetEnableCustomDrawing(bool aEnable) {
   mCustomDrawing = aEnable;
   TaskbarPreview::EnableCustomDrawing(mWnd, aEnable);
 
-  WindowHook &hook = GetWindowHook();
+  WindowHook& hook = GetWindowHook();
   if (aEnable) {
     (void)hook.AddHook(WM_DWMSENDICONICTHUMBNAIL, WindowHookProc, this);
     (void)hook.AddHook(WM_DWMSENDICONICLIVEPREVIEWBITMAP, WindowHookProc, this);
@@ -138,7 +209,7 @@ TaskbarWindowPreview::SetEnableCustomDrawing(bool aEnable) {
 }
 
 NS_IMETHODIMP
-TaskbarWindowPreview::GetEnableCustomDrawing(bool *aEnable) {
+TaskbarWindowPreview::GetEnableCustomDrawing(bool* aEnable) {
   *aEnable = mCustomDrawing;
   return NS_OK;
 }
@@ -180,9 +251,19 @@ TaskbarWindowPreview::SetOverlayIcon(imgIContainer *aStatusIcon,
 
   HICON hIcon = nullptr;
   if (aStatusIcon) {
+<<<<<<< HEAD
     rv = nsWindowGfx::CreateIcon(
         aStatusIcon, false, 0, 0,
         nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon), &hIcon);
+||||||| merged common ancestors
+    rv = nsWindowGfx::CreateIcon(aStatusIcon, false, 0, 0,
+                                 nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon),
+                                 &hIcon);
+=======
+    rv = nsWindowGfx::CreateIcon(
+        aStatusIcon, false, LayoutDeviceIntPoint(),
+        nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon), &hIcon);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -239,13 +320,34 @@ TaskbarWindowPreview::WndProc(UINT nMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 /* static */
+<<<<<<< HEAD
 bool TaskbarWindowPreview::TaskbarWindowHook(void *aContext, HWND hWnd,
                                              UINT nMsg, WPARAM wParam,
                                              LPARAM lParam, LRESULT *aResult) {
+||||||| merged common ancestors
+bool
+TaskbarWindowPreview::TaskbarWindowHook(void *aContext,
+                                        HWND hWnd, UINT nMsg,
+                                        WPARAM wParam, LPARAM lParam,
+                                        LRESULT *aResult)
+{
+=======
+bool TaskbarWindowPreview::TaskbarWindowHook(void* aContext, HWND hWnd,
+                                             UINT nMsg, WPARAM wParam,
+                                             LPARAM lParam, LRESULT* aResult) {
+>>>>>>> upstream-releases
   NS_ASSERTION(nMsg == nsAppShell::GetTaskbarButtonCreatedMessage(),
                "Window hook proc called with wrong message");
+<<<<<<< HEAD
   TaskbarWindowPreview *preview =
       reinterpret_cast<TaskbarWindowPreview *>(aContext);
+||||||| merged common ancestors
+  TaskbarWindowPreview *preview =
+    reinterpret_cast<TaskbarWindowPreview*>(aContext);
+=======
+  TaskbarWindowPreview* preview =
+      reinterpret_cast<TaskbarWindowPreview*>(aContext);
+>>>>>>> upstream-releases
   // Now we can make all the calls to mTaskbar
   preview->UpdateTaskbarProperties();
   return false;
@@ -269,10 +371,22 @@ void TaskbarWindowPreview::DetachFromNSWindow() {
   // Remove the hooks we have for drawing
   SetEnableCustomDrawing(false);
 
+<<<<<<< HEAD
   WindowHook &hook = GetWindowHook();
   (void)hook.RemoveHook(WM_COMMAND, WindowHookProc, this);
   (void)hook.RemoveMonitor(nsAppShell::GetTaskbarButtonCreatedMessage(),
                            TaskbarWindowHook, this);
+||||||| merged common ancestors
+  WindowHook &hook = GetWindowHook();
+  (void) hook.RemoveHook(WM_COMMAND, WindowHookProc, this);
+  (void) hook.RemoveMonitor(nsAppShell::GetTaskbarButtonCreatedMessage(),
+                            TaskbarWindowHook, this);
+=======
+  WindowHook& hook = GetWindowHook();
+  (void)hook.RemoveHook(WM_COMMAND, WindowHookProc, this);
+  (void)hook.RemoveMonitor(nsAppShell::GetTaskbarButtonCreatedMessage(),
+                           TaskbarWindowHook, this);
+>>>>>>> upstream-releases
 
   TaskbarPreview::DetachFromNSWindow();
 }

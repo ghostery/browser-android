@@ -52,9 +52,18 @@ class NormalizedConstraintSet {
         aList->AppendElement(aMemberPtr);
       }
     }
+<<<<<<< HEAD
     virtual ~BaseRange() {}
 
    public:
+||||||| merged common ancestors
+    virtual ~BaseRange() {}
+  public:
+=======
+    virtual ~BaseRange() = default;
+
+   public:
+>>>>>>> upstream-releases
     virtual bool Merge(const BaseRange& aOther) = 0;
     virtual void FinalizeMerge() = 0;
 
@@ -72,11 +81,23 @@ class NormalizedConstraintSet {
 
     Range(MemberPtrType aMemberPtr, const char* aName, ValueType aMin,
           ValueType aMax, nsTArray<MemberPtrType>* aList)
+<<<<<<< HEAD
         : BaseRange(aMemberPtr, aName, aList),
           mMin(aMin),
           mMax(aMax),
           mMergeDenominator(0) {}
     virtual ~Range(){};
+||||||| merged common ancestors
+      : BaseRange(aMemberPtr, aName, aList)
+      , mMin(aMin), mMax(aMax), mMergeDenominator(0) {}
+    virtual ~Range() {};
+=======
+        : BaseRange(aMemberPtr, aName, aList),
+          mMin(aMin),
+          mMax(aMax),
+          mMergeDenominator(0) {}
+    virtual ~Range() = default;
+>>>>>>> upstream-releases
 
     template <class ConstrainRange>
     void SetFrom(const ConstrainRange& aOther);
@@ -206,7 +227,7 @@ class NormalizedConstraintSet {
       mIdeal.insert(aOther);
     }
 
-    ~StringRange() {}
+    ~StringRange() = default;
 
     void SetFrom(const dom::ConstrainDOMStringParameters& aOther);
     ValueType Clamp(const ValueType& n) const;
@@ -307,6 +328,7 @@ class MediaConstraintsHelper {
  public:
   template <class ValueType, class NormalizedRange>
   static uint32_t FitnessDistance(ValueType aN, const NormalizedRange& aRange);
+<<<<<<< HEAD
   template <class ValueType, class NormalizedRange>
   static uint32_t FeasibilityDistance(ValueType aN,
                                       const NormalizedRange& aRange);
@@ -328,6 +350,49 @@ class MediaConstraintsHelper {
                                     bool aIsChrome);
 
   static const char* FindBadConstraint(
+||||||| merged common ancestors
+  template<class ValueType, class NormalizedRange>
+  static uint32_t FeasibilityDistance(ValueType aN, const NormalizedRange& aRange);
+  static uint32_t FitnessDistance(nsString aN,
+      const NormalizedConstraintSet::StringRange& aConstraint);
+protected:
+
+  static bool
+  SomeSettingsFit(const NormalizedConstraints &aConstraints,
+                  const nsTArray<RefPtr<MediaDevice>>& aDevices);
+
+public:
+
+  static uint32_t
+  GetMinimumFitnessDistance(const NormalizedConstraintSet &aConstraints,
+                            const nsString& aDeviceId);
+
+  // Apply constrains to a supplied list of devices (removes items from the list)
+  static const char*
+  SelectSettings(
+=======
+  template <class ValueType, class NormalizedRange>
+  static uint32_t FeasibilityDistance(ValueType aN,
+                                      const NormalizedRange& aRange);
+  static uint32_t FitnessDistance(
+      const nsString& aN, const NormalizedConstraintSet::StringRange& aParams);
+
+ protected:
+  static bool SomeSettingsFit(const NormalizedConstraints& aConstraints,
+                              const nsTArray<RefPtr<MediaDevice>>& aDevices);
+
+ public:
+  static uint32_t GetMinimumFitnessDistance(
+      const NormalizedConstraintSet& aConstraints, const nsString& aDeviceId);
+
+  // Apply constrains to a supplied list of devices (removes items from the
+  // list)
+  static const char* SelectSettings(const NormalizedConstraints& aConstraints,
+                                    nsTArray<RefPtr<MediaDevice>>& aDevices,
+                                    bool aIsChrome);
+
+  static const char* FindBadConstraint(
+>>>>>>> upstream-releases
       const NormalizedConstraints& aConstraints,
       const nsTArray<RefPtr<MediaDevice>>& aDevices);
 

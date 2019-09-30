@@ -30,7 +30,14 @@ bool nsIFrame::IsFlexOrGridItem() const {
 
 bool nsIFrame::IsTableCaption() const {
   return StyleDisplay()->mDisplay == mozilla::StyleDisplay::TableCaption &&
+<<<<<<< HEAD
          GetParent()->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper();
+||||||| merged common ancestors
+    GetParent()->Style()->GetPseudo() == nsCSSAnonBoxes::tableWrapper();
+=======
+         GetParent()->Style()->GetPseudoType() ==
+             mozilla::PseudoStyleType::tableWrapper;
+>>>>>>> upstream-releases
 }
 
 bool nsIFrame::IsFloating() const { return StyleDisplay()->IsFloating(this); }
@@ -47,8 +54,21 @@ bool nsIFrame::IsRelativelyPositioned() const {
   return StyleDisplay()->IsRelativelyPositioned(this);
 }
 
+<<<<<<< HEAD
 bool nsIFrame::IsAbsolutelyPositioned(
     const nsStyleDisplay* aStyleDisplay) const {
+||||||| merged common ancestors
+bool
+nsIFrame::IsAbsolutelyPositioned(const nsStyleDisplay* aStyleDisplay) const
+{
+=======
+bool nsIFrame::IsStickyPositioned() const {
+  return StyleDisplay()->IsStickyPositioned(this);
+}
+
+bool nsIFrame::IsAbsolutelyPositioned(
+    const nsStyleDisplay* aStyleDisplay) const {
+>>>>>>> upstream-releases
   const nsStyleDisplay* disp = StyleDisplayWithOptionalParam(aStyleDisplay);
   return disp->IsAbsolutelyPositioned(this);
 }
@@ -65,6 +85,7 @@ bool nsIFrame::IsInlineOutside() const {
   return StyleDisplay()->IsInlineOutside(this);
 }
 
+<<<<<<< HEAD
 bool nsIFrame::IsColumnSpan() const {
   return IsBlockOutside() && StyleColumn()->IsColumnSpanStyle();
 }
@@ -74,6 +95,26 @@ bool nsIFrame::IsColumnSpanInMulticolSubtree() const {
 }
 
 mozilla::StyleDisplay nsIFrame::GetDisplay() const {
+||||||| merged common ancestors
+mozilla::StyleDisplay
+nsIFrame::GetDisplay() const
+{
+=======
+bool nsIFrame::IsColumnSpan() const {
+  return IsBlockOutside() && StyleColumn()->IsColumnSpanStyle();
+}
+
+bool nsIFrame::IsColumnSpanInMulticolSubtree() const {
+  return IsColumnSpan() &&
+         (HasAnyStateBits(NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR) ||
+          // A frame other than inline and block won't have
+          // NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR. We instead test its parent.
+          (GetParent() && GetParent()->Style()->GetPseudoType() ==
+                              mozilla::PseudoStyleType::columnSpanWrapper));
+}
+
+mozilla::StyleDisplay nsIFrame::GetDisplay() const {
+>>>>>>> upstream-releases
   return StyleDisplay()->GetDisplay(this);
 }
 
@@ -81,7 +122,7 @@ nscoord nsIFrame::SynthesizeBaselineBOffsetFromMarginBox(
     mozilla::WritingMode aWM, BaselineSharingGroup aGroup) const {
   MOZ_ASSERT(!aWM.IsOrthogonalTo(GetWritingMode()));
   auto margin = GetLogicalUsedMargin(aWM);
-  if (aGroup == BaselineSharingGroup::eFirst) {
+  if (aGroup == BaselineSharingGroup::First) {
     if (aWM.IsAlphabeticalBaseline()) {
       // First baseline for inverted-line content is the block-start margin
       // edge, as the frame is in effect "flipped" for alignment purposes.
@@ -91,7 +132,7 @@ nscoord nsIFrame::SynthesizeBaselineBOffsetFromMarginBox(
     nscoord marginBoxCenter = (BSize(aWM) + margin.BStartEnd(aWM)) / 2;
     return marginBoxCenter - margin.BStart(aWM);
   }
-  MOZ_ASSERT(aGroup == BaselineSharingGroup::eLast);
+  MOZ_ASSERT(aGroup == BaselineSharingGroup::Last);
   if (aWM.IsAlphabeticalBaseline()) {
     // Last baseline for inverted-line content is the block-start margin edge,
     // as the frame is in effect "flipped" for alignment purposes.
@@ -108,11 +149,11 @@ nscoord nsIFrame::SynthesizeBaselineBOffsetFromBorderBox(
     mozilla::WritingMode aWM, BaselineSharingGroup aGroup) const {
   MOZ_ASSERT(!aWM.IsOrthogonalTo(GetWritingMode()));
   nscoord borderBoxSize = BSize(aWM);
-  if (aGroup == BaselineSharingGroup::eFirst) {
+  if (aGroup == BaselineSharingGroup::First) {
     return MOZ_LIKELY(aWM.IsAlphabeticalBaseline()) ? borderBoxSize
                                                     : borderBoxSize / 2;
   }
-  MOZ_ASSERT(aGroup == BaselineSharingGroup::eLast);
+  MOZ_ASSERT(aGroup == BaselineSharingGroup::Last);
   // Round up for central baseline offset, to be consistent with eFirst.
   auto borderBoxCenter = (borderBoxSize / 2) + (borderBoxSize % 2);
   return MOZ_LIKELY(aWM.IsAlphabeticalBaseline()) ? 0 : borderBoxCenter;
@@ -126,10 +167,10 @@ nscoord nsIFrame::BaselineBOffset(mozilla::WritingMode aWM,
   if (GetNaturalBaselineBOffset(aWM, aBaselineGroup, &baseline)) {
     return baseline;
   }
-  if (aAlignmentContext == AlignmentContext::eInline) {
+  if (aAlignmentContext == AlignmentContext::Inline) {
     return SynthesizeBaselineBOffsetFromMarginBox(aWM, aBaselineGroup);
   }
-  // XXX AlignmentContext::eTable should use content box?
+  // XXX AlignmentContext::Table should use content box?
   return SynthesizeBaselineBOffsetFromBorderBox(aWM, aBaselineGroup);
 }
 

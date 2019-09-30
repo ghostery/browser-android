@@ -32,12 +32,28 @@ class nsIURI;
 class nsPIDOMWindowOuter;
 class nsIRunnable;
 
+<<<<<<< HEAD
 namespace mozilla {
 
 class OriginAttributes;
 
 }  // namespace mozilla
 
+||||||| merged common ancestors
+=======
+namespace mozilla {
+
+class OriginAttributes;
+
+namespace ipc {
+
+class PrincipalInfo;
+
+}  // namespace ipc
+
+}  // namespace mozilla
+
+>>>>>>> upstream-releases
 BEGIN_QUOTA_NAMESPACE
 
 class DirectoryLockImpl;
@@ -55,10 +71,29 @@ class NS_NO_VTABLE RefCountedObject {
 class DirectoryLock : public RefCountedObject {
   friend class DirectoryLockImpl;
 
+<<<<<<< HEAD
+ private:
+  DirectoryLock() {}
+||||||| merged common ancestors
+private:
+  DirectoryLock()
+  { }
+=======
+ public:
+  virtual void LogState() = 0;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ~DirectoryLock() {}
+||||||| merged common ancestors
+  ~DirectoryLock()
+  { }
+=======
  private:
   DirectoryLock() {}
 
   ~DirectoryLock() {}
+>>>>>>> upstream-releases
 };
 
 class NS_NO_VTABLE OpenDirectoryListener : public RefCountedObject {
@@ -85,23 +120,60 @@ class QuotaManager final : public BackgroundThreadObject {
   friend class OriginInfo;
   friend class QuotaObject;
 
+<<<<<<< HEAD
   typedef nsClassHashtable<nsCStringHashKey, nsTArray<DirectoryLockImpl*>>
       DirectoryLockTable;
 
  public:
   class CreateRunnable;
+||||||| merged common ancestors
+  typedef nsClassHashtable<nsCStringHashKey,
+                           nsTArray<DirectoryLockImpl*>> DirectoryLockTable;
 
+public:
+  class CreateRunnable;
+=======
+  typedef mozilla::ipc::PrincipalInfo PrincipalInfo;
+  typedef nsClassHashtable<nsCStringHashKey, nsTArray<DirectoryLockImpl*>>
+      DirectoryLockTable;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   class ShutdownRunnable;
   class ShutdownObserver;
+||||||| merged common ancestors
+private:
+  class ShutdownRunnable;
+  class ShutdownObserver;
+=======
+  class Observer;
+>>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_REFCOUNTING(QuotaManager)
 
+<<<<<<< HEAD
   static bool IsRunningXPCShellTests() {
     static bool kRunningXPCShellTests =
         !!PR_GetEnv("XPCSHELL_TEST_PROFILE_DIR");
+||||||| merged common ancestors
+  static bool IsRunningXPCShellTests()
+  {
+    static bool kRunningXPCShellTests = !!PR_GetEnv("XPCSHELL_TEST_PROFILE_DIR");
+=======
+  static nsresult Initialize();
+
+  static bool IsRunningXPCShellTests() {
+    static bool kRunningXPCShellTests =
+        !!PR_GetEnv("XPCSHELL_TEST_PROFILE_DIR");
+>>>>>>> upstream-releases
     return kRunningXPCShellTests;
+  }
+
+  static bool IsRunningGTests() {
+    static bool kRunningGTests = !!PR_GetEnv("MOZ_RUN_GTEST");
+    return kRunningGTests;
   }
 
   static const char kReplaceChars[];
@@ -115,7 +187,21 @@ class QuotaManager final : public BackgroundThreadObject {
   // Returns true if we've begun the shutdown process.
   static bool IsShuttingDown();
 
+<<<<<<< HEAD
   bool IsOriginInitialized(const nsACString& aOrigin) const {
+||||||| merged common ancestors
+  bool
+  IsOriginInitialized(const nsACString& aOrigin) const
+  {
+=======
+  static void ShutdownInstance();
+
+  static bool IsOSMetadata(const nsAString& aFileName);
+
+  static bool IsDotFile(const nsAString& aFileName);
+
+  bool IsOriginInitialized(const nsACString& aOrigin) const {
+>>>>>>> upstream-releases
     AssertIsOnIOThread();
 
     return mInitializedOrigins.Contains(aOrigin);
@@ -127,6 +213,7 @@ class QuotaManager final : public BackgroundThreadObject {
     return mTemporaryStorageInitialized;
   }
 
+<<<<<<< HEAD
   void InitQuotaForOrigin(PersistenceType aPersistenceType,
                           const nsACString& aGroup, const nsACString& aOrigin,
                           uint64_t aUsageBytes, int64_t aAccessTime,
@@ -145,6 +232,85 @@ class QuotaManager final : public BackgroundThreadObject {
   void RemoveQuotaForOrigin(PersistenceType aPersistenceType,
                             const nsACString& aGroup,
                             const nsACString& aOrigin) {
+||||||| merged common ancestors
+  void
+  InitQuotaForOrigin(PersistenceType aPersistenceType,
+                     const nsACString& aGroup,
+                     const nsACString& aOrigin,
+                     uint64_t aUsageBytes,
+                     int64_t aAccessTime,
+                     bool aPersisted);
+
+  void
+  DecreaseUsageForOrigin(PersistenceType aPersistenceType,
+                         const nsACString& aGroup,
+                         const nsACString& aOrigin,
+                         int64_t aSize);
+
+  void
+  UpdateOriginAccessTime(PersistenceType aPersistenceType,
+                         const nsACString& aGroup,
+                         const nsACString& aOrigin);
+
+  void
+  RemoveQuota();
+
+  void
+  RemoveQuotaForOrigin(PersistenceType aPersistenceType,
+                       const nsACString& aGroup,
+                       const nsACString& aOrigin)
+  {
+=======
+  /**
+   * For initialization of an origin where the directory already exists. This is
+   * used by EnsureTemporaryStorageIsInitialized/InitializeRepository once it
+   * has tallied origin usage by calling each of the QuotaClient InitOrigin
+   * methods.
+   */
+  void InitQuotaForOrigin(PersistenceType aPersistenceType,
+                          const nsACString& aGroup, const nsACString& aOrigin,
+                          uint64_t aUsageBytes, int64_t aAccessTime,
+                          bool aPersisted);
+
+  /**
+   * For use in special-cases like LSNG where we need to be able to know that
+   * there is no data stored for an origin. LSNG knows that there is 0 usage for
+   * its storage of an origin and wants to make sure there is a QuotaObject
+   * tracking this. This method will create a non-persisted, 0-usage,
+   * mDirectoryExists=false OriginInfo if there isn't already an OriginInfo. If
+   * an OriginInfo already exists, it will be left as-is, because that implies a
+   * different client has usages for the origin (and there's no need to add
+   * LSNG's 0 usage to the QuotaObject).
+   */
+  void EnsureQuotaForOrigin(PersistenceType aPersistenceType,
+                            const nsACString& aGroup,
+                            const nsACString& aOrigin);
+
+  /**
+   * For use when creating an origin directory. It's possible that origin usage
+   * is already being tracked due to a call to EnsureQuotaForOrigin, and in that
+   * case we need to update the existing OriginInfo rather than create a new
+   * one.
+   */
+  void NoteOriginDirectoryCreated(PersistenceType aPersistenceType,
+                                  const nsACString& aGroup,
+                                  const nsACString& aOrigin, bool aPersisted,
+                                  int64_t& aTimestamp);
+
+  void DecreaseUsageForOrigin(PersistenceType aPersistenceType,
+                              const nsACString& aGroup,
+                              const nsACString& aOrigin, int64_t aSize);
+
+  void UpdateOriginAccessTime(PersistenceType aPersistenceType,
+                              const nsACString& aGroup,
+                              const nsACString& aOrigin);
+
+  void RemoveQuota();
+
+  void RemoveQuotaForOrigin(PersistenceType aPersistenceType,
+                            const nsACString& aGroup,
+                            const nsACString& aOrigin) {
+>>>>>>> upstream-releases
     MutexAutoLock lock(mQuotaMutex);
     LockedRemoveQuotaForOrigin(aPersistenceType, aGroup, aOrigin);
   }
@@ -170,6 +336,7 @@ class QuotaManager final : public BackgroundThreadObject {
 
   // Called when a process is being shot down. Aborts any running operations
   // for the given process.
+<<<<<<< HEAD
   void AbortOperationsForProcess(ContentParentId aContentParentId);
 
   nsresult GetDirectoryForOrigin(PersistenceType aPersistenceType,
@@ -194,6 +361,76 @@ class QuotaManager final : public BackgroundThreadObject {
                                             bool aPersistent,
                                             int64_t* aTimestamp,
                                             bool* aPersisted);
+||||||| merged common ancestors
+  void
+  AbortOperationsForProcess(ContentParentId aContentParentId);
+
+  nsresult
+  GetDirectoryForOrigin(PersistenceType aPersistenceType,
+                        const nsACString& aASCIIOrigin,
+                        nsIFile** aDirectory) const;
+
+  nsresult
+  RestoreDirectoryMetadata2(nsIFile* aDirectory, bool aPersistent);
+
+  nsresult
+  GetDirectoryMetadata2(nsIFile* aDirectory,
+                        int64_t* aTimestamp,
+                        bool* aPersisted,
+                        nsACString& aSuffix,
+                        nsACString& aGroup,
+                        nsACString& aOrigin);
+
+  nsresult
+  GetDirectoryMetadata2WithRestore(nsIFile* aDirectory,
+                                   bool aPersistent,
+                                   int64_t* aTimestamp,
+                                   bool* aPersisted,
+                                   nsACString& aSuffix,
+                                   nsACString& aGroup,
+                                   nsACString& aOrigin);
+
+  nsresult
+  GetDirectoryMetadata2(nsIFile* aDirectory,
+                        int64_t* aTimestamp,
+                        bool* aPersisted);
+
+  nsresult
+  GetDirectoryMetadata2WithRestore(nsIFile* aDirectory,
+                                   bool aPersistent,
+                                   int64_t* aTimestamp,
+                                   bool* aPersisted);
+=======
+  void AbortOperationsForProcess(ContentParentId aContentParentId);
+
+  nsresult GetDirectoryForOrigin(PersistenceType aPersistenceType,
+                                 const nsACString& aASCIIOrigin,
+                                 nsIFile** aDirectory) const;
+
+  nsresult RestoreDirectoryMetadata2(nsIFile* aDirectory, bool aPersistent);
+
+  nsresult GetDirectoryMetadata2(nsIFile* aDirectory, int64_t* aTimestamp,
+                                 bool* aPersisted, nsACString& aSuffix,
+                                 nsACString& aGroup, nsACString& aOrigin);
+
+  nsresult GetDirectoryMetadata2WithRestore(
+      nsIFile* aDirectory, bool aPersistent, int64_t* aTimestamp,
+      bool* aPersisted, nsACString& aSuffix, nsACString& aGroup,
+      nsACString& aOrigin, const bool aTelemetry = false);
+
+  nsresult GetDirectoryMetadata2(nsIFile* aDirectory, int64_t* aTimestamp,
+                                 bool* aPersisted);
+
+  nsresult GetDirectoryMetadata2WithRestore(nsIFile* aDirectory,
+                                            bool aPersistent,
+                                            int64_t* aTimestamp,
+                                            bool* aPersisted);
+
+  already_AddRefed<DirectoryLock> CreateDirectoryLock(
+      PersistenceType aPersistenceType, const nsACString& aGroup,
+      const nsACString& aOrigin, Client::Type aClientType, bool aExclusive,
+      OpenDirectoryListener* aOpenListener);
+>>>>>>> upstream-releases
 
   // This is the main entry point into the QuotaManager API.
   // Any storage API implementation (quota client) that participates in
@@ -222,10 +459,37 @@ class QuotaManager final : public BackgroundThreadObject {
                              OpenDirectoryListener* aOpenListener);
 
   // Collect inactive and the least recently used origins.
+<<<<<<< HEAD
   uint64_t CollectOriginsForEviction(
       uint64_t aMinSizeToBeFreed, nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
 
   void AssertStorageIsInitialized() const
+||||||| merged common ancestors
+  uint64_t
+  CollectOriginsForEviction(uint64_t aMinSizeToBeFreed,
+                            nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
+
+  void
+  AssertStorageIsInitialized() const
+=======
+  uint64_t CollectOriginsForEviction(
+      uint64_t aMinSizeToBeFreed, nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
+
+  /**
+   * Helper method to invoke the provided predicate on all "pending" OriginInfo
+   * instances. These are origins for which the origin directory has not yet
+   * been created but for which quota is already being tracked. This happens,
+   * for example, for the LocalStorage client where an origin that previously
+   * was not using LocalStorage can start issuing writes which it buffers until
+   * eventually flushing them. We defer creating the origin directory for as
+   * long as possible in that case, so the directory won't exist. Logic that
+   * would otherwise only consult the filesystem also needs to use this method.
+   */
+  template <typename P>
+  void CollectPendingOriginsForListing(P aPredicate);
+
+  void AssertStorageIsInitialized() const
+>>>>>>> upstream-releases
 #ifdef DEBUG
       ;
 #else
@@ -235,6 +499,7 @@ class QuotaManager final : public BackgroundThreadObject {
 
   nsresult EnsureStorageIsInitialized();
 
+<<<<<<< HEAD
   nsresult EnsureOriginIsInitialized(PersistenceType aPersistenceType,
                                      const nsACString& aSuffix,
                                      const nsACString& aGroup,
@@ -246,11 +511,39 @@ class QuotaManager final : public BackgroundThreadObject {
       PersistenceType aPersistenceType, const nsACString& aSuffix,
       const nsACString& aGroup, const nsACString& aOrigin,
       bool aCreateIfNotExists, nsIFile** aDirectory, bool* aCreated);
+||||||| merged common ancestors
+  nsresult
+  EnsureOriginIsInitialized(PersistenceType aPersistenceType,
+                            const nsACString& aSuffix,
+                            const nsACString& aGroup,
+                            const nsACString& aOrigin,
+                            nsIFile** aDirectory);
+=======
+  nsresult EnsureOriginIsInitialized(PersistenceType aPersistenceType,
+                                     const nsACString& aSuffix,
+                                     const nsACString& aGroup,
+                                     const nsACString& aOrigin,
+                                     nsIFile** aDirectory);
+
+  nsresult EnsureOriginIsInitializedInternal(PersistenceType aPersistenceType,
+                                             const nsACString& aSuffix,
+                                             const nsACString& aGroup,
+                                             const nsACString& aOrigin,
+                                             nsIFile** aDirectory,
+                                             bool* aCreated);
+>>>>>>> upstream-releases
 
   nsresult EnsureTemporaryStorageIsInitialized();
 
+<<<<<<< HEAD
   nsresult EnsureOriginDirectory(nsIFile* aDirectory, bool aCreateIfNotExists,
                                  bool* aCreated);
+||||||| merged common ancestors
+  nsresult
+  EnsureTemporaryStorageIsInitialized();
+=======
+  nsresult EnsureOriginDirectory(nsIFile* aDirectory, bool* aCreated);
+>>>>>>> upstream-releases
 
   nsresult AboutToClearOrigins(
       const Nullable<PersistenceType>& aPersistenceType,
@@ -308,6 +601,12 @@ class QuotaManager final : public BackgroundThreadObject {
     return mDefaultStoragePath;
   }
 
+<<<<<<< HEAD
+  uint64_t GetGroupLimit() const;
+||||||| merged common ancestors
+  uint64_t
+  GetGroupLimit() const;
+=======
   uint64_t GetGroupLimit() const;
 
   void GetGroupUsageAndLimit(const nsACString& aGroup, UsageInfo* aUsageInfo);
@@ -317,28 +616,127 @@ class QuotaManager final : public BackgroundThreadObject {
   static void GetStorageId(PersistenceType aPersistenceType,
                            const nsACString& aOrigin, Client::Type aClientType,
                            nsACString& aDatabaseId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void GetGroupUsageAndLimit(const nsACString& aGroup, UsageInfo* aUsageInfo);
+||||||| merged common ancestors
+  void
+  GetGroupUsageAndLimit(const nsACString& aGroup,
+                        UsageInfo* aUsageInfo);
+=======
+  static bool IsPrincipalInfoValid(const PrincipalInfo& aPrincipalInfo);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void NotifyStoragePressure(uint64_t aUsage);
+||||||| merged common ancestors
+  void
+  NotifyStoragePressure(uint64_t aUsage);
+=======
+  static void GetInfoFromValidatedPrincipalInfo(
+      const PrincipalInfo& aPrincipalInfo, nsACString* aSuffix,
+      nsACString* aGroup, nsACString* aOrigin);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static void GetStorageId(PersistenceType aPersistenceType,
+                           const nsACString& aOrigin, Client::Type aClientType,
+                           nsACString& aDatabaseId);
+||||||| merged common ancestors
+  static void
+  GetStorageId(PersistenceType aPersistenceType,
+               const nsACString& aOrigin,
+               Client::Type aClientType,
+               nsACString& aDatabaseId);
+=======
   static nsresult GetInfoFromPrincipal(nsIPrincipal* aPrincipal,
                                        nsACString* aSuffix, nsACString* aGroup,
                                        nsACString* aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static nsresult GetInfoFromPrincipal(nsIPrincipal* aPrincipal,
+                                       nsACString* aSuffix, nsACString* aGroup,
+                                       nsACString* aOrigin);
+||||||| merged common ancestors
+  static nsresult
+  GetInfoFromPrincipal(nsIPrincipal* aPrincipal,
+                       nsACString* aSuffix,
+                       nsACString* aGroup,
+                       nsACString* aOrigin);
+=======
   static nsresult GetInfoFromWindow(nsPIDOMWindowOuter* aWindow,
                                     nsACString* aSuffix, nsACString* aGroup,
                                     nsACString* aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static nsresult GetInfoFromWindow(nsPIDOMWindowOuter* aWindow,
+                                    nsACString* aSuffix, nsACString* aGroup,
+                                    nsACString* aOrigin);
+||||||| merged common ancestors
+  static nsresult
+  GetInfoFromWindow(nsPIDOMWindowOuter* aWindow,
+                    nsACString* aSuffix,
+                    nsACString* aGroup,
+                    nsACString* aOrigin);
+=======
   static void GetInfoForChrome(nsACString* aSuffix, nsACString* aGroup,
                                nsACString* aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static void GetInfoForChrome(nsACString* aSuffix, nsACString* aGroup,
+                               nsACString* aOrigin);
+||||||| merged common ancestors
+  static void
+  GetInfoForChrome(nsACString* aSuffix,
+                   nsACString* aGroup,
+                   nsACString* aOrigin);
+=======
   static bool IsOriginInternal(const nsACString& aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool IsOriginInternal(const nsACString& aOrigin);
+||||||| merged common ancestors
+  static bool
+  IsOriginInternal(const nsACString& aOrigin);
+=======
   static void ChromeOrigin(nsACString& aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static void ChromeOrigin(nsACString& aOrigin);
+||||||| merged common ancestors
+  static void
+  ChromeOrigin(nsACString& aOrigin);
+=======
   static bool AreOriginsEqualOnDisk(nsACString& aOrigin1, nsACString& aOrigin2);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool AreOriginsEqualOnDisk(nsACString& aOrigin1, nsACString& aOrigin2);
+||||||| merged common ancestors
+  static bool
+  AreOriginsEqualOnDisk(nsACString& aOrigin1,
+                        nsACString& aOrigin2);
+=======
+  static bool ParseOrigin(const nsACString& aOrigin, nsCString& aSpec,
+                          OriginAttributes* aAttrs);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static bool ParseOrigin(const nsACString& aOrigin, nsCString& aSpec,
                           OriginAttributes* aAttrs);
 
  private:
+||||||| merged common ancestors
+private:
+=======
+ private:
+>>>>>>> upstream-releases
   QuotaManager();
 
   virtual ~QuotaManager();
@@ -370,31 +768,178 @@ class QuotaManager final : public BackgroundThreadObject {
                                   const nsACString& aGroup,
                                   const nsACString& aOrigin);
 
+<<<<<<< HEAD
   already_AddRefed<OriginInfo> LockedGetOriginInfo(
       PersistenceType aPersistenceType, const nsACString& aGroup,
       const nsACString& aOrigin);
+||||||| merged common ancestors
+  already_AddRefed<OriginInfo>
+  LockedGetOriginInfo(PersistenceType aPersistenceType,
+                      const nsACString& aGroup,
+                      const nsACString& aOrigin);
+=======
+  already_AddRefed<GroupInfo> LockedGetOrCreateGroupInfo(
+      PersistenceType aPersistenceType, const nsACString& aGroup);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeUpgradeIndexedDBDirectory();
+||||||| merged common ancestors
+  nsresult
+  MaybeUpgradeIndexedDBDirectory();
+=======
+  already_AddRefed<OriginInfo> LockedGetOriginInfo(
+      PersistenceType aPersistenceType, const nsACString& aGroup,
+      const nsACString& aOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeUpgradePersistentStorageDirectory();
+||||||| merged common ancestors
+  nsresult
+  MaybeUpgradePersistentStorageDirectory();
+=======
+  nsresult MaybeUpgradeIndexedDBDirectory();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeRemoveOldDirectories();
+||||||| merged common ancestors
+  nsresult
+  MaybeRemoveOldDirectories();
+=======
+  nsresult MaybeUpgradePersistentStorageDirectory();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   template <typename Helper>
   nsresult UpgradeStorage(const int32_t aOldVersion, const int32_t aNewVersion,
                           mozIStorageConnection* aConnection);
+||||||| merged common ancestors
+  nsresult
+  UpgradeStorageFrom0_0To1_0(mozIStorageConnection* aConnection);
+=======
+  nsresult MaybeRemoveOldDirectories();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult UpgradeStorageFrom0_0To1_0(mozIStorageConnection* aConnection);
+||||||| merged common ancestors
+  nsresult
+  UpgradeStorageFrom1_0To2_0(mozIStorageConnection* aConnection);
+=======
+  template <typename Helper>
+  nsresult UpgradeStorage(const int32_t aOldVersion, const int32_t aNewVersion,
+                          mozIStorageConnection* aConnection);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult UpgradeStorageFrom1_0To2_0(mozIStorageConnection* aConnection);
+||||||| merged common ancestors
+  nsresult
+  UpgradeStorageFrom2_0To2_1(mozIStorageConnection* aConnection);
+=======
+  nsresult UpgradeStorageFrom0_0To1_0(mozIStorageConnection* aConnection);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult UpgradeStorageFrom2_0To2_1(mozIStorageConnection* aConnection);
+||||||| merged common ancestors
+  nsresult
+  MaybeRemoveLocalStorageData();
+=======
+  nsresult UpgradeStorageFrom1_0To2_0(mozIStorageConnection* aConnection);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeRemoveLocalStorageData();
+||||||| merged common ancestors
+  nsresult
+  MaybeRemoveLocalStorageDirectories();
+=======
+  nsresult UpgradeStorageFrom2_0To2_1(mozIStorageConnection* aConnection);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeRemoveLocalStorageDirectories();
+||||||| merged common ancestors
+  nsresult
+  InitializeRepository(PersistenceType aPersistenceType);
+=======
+  nsresult UpgradeStorageFrom2_1To2_2(mozIStorageConnection* aConnection);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult MaybeCreateLocalStorageArchive();
+||||||| merged common ancestors
+  nsresult
+  InitializeOrigin(PersistenceType aPersistenceType,
+                   const nsACString& aGroup,
+                   const nsACString& aOrigin,
+                   int64_t aAccessTime,
+                   bool aPersisted,
+                   nsIFile* aDirectory);
+=======
+  nsresult MaybeRemoveLocalStorageData();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsresult InitializeRepository(PersistenceType aPersistenceType);
+||||||| merged common ancestors
+  void
+  CheckTemporaryStorageLimits();
+=======
+  nsresult MaybeRemoveLocalStorageDirectories();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsresult InitializeOrigin(PersistenceType aPersistenceType,
+                            const nsACString& aGroup, const nsACString& aOrigin,
+                            int64_t aAccessTime, bool aPersisted,
+                            nsIFile* aDirectory);
+||||||| merged common ancestors
+  void
+  DeleteFilesForOrigin(PersistenceType aPersistenceType,
+                       const nsACString& aOrigin);
+=======
+  nsresult CreateLocalStorageArchiveConnectionFromWebAppsStore(
+      mozIStorageConnection** aConnection);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void CheckTemporaryStorageLimits();
+||||||| merged common ancestors
+  void
+  FinalizeOriginEviction(nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
+=======
+  nsresult CreateLocalStorageArchiveConnection(
+      mozIStorageConnection** aConnection, bool& aNewlyCreated);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void DeleteFilesForOrigin(PersistenceType aPersistenceType,
+                            const nsACString& aOrigin);
+
+  void FinalizeOriginEviction(nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
+
+  void ReleaseIOThreadObjects() {
+||||||| merged common ancestors
+  void
+  ReleaseIOThreadObjects()
+  {
+=======
+  nsresult RecreateLocalStorageArchive(
+      nsCOMPtr<mozIStorageConnection>& aConnection);
+
+  nsresult DowngradeLocalStorageArchive(
+      nsCOMPtr<mozIStorageConnection>& aConnection);
+
+  nsresult UpgradeLocalStorageArchiveFromLessThan4To4(
+      nsCOMPtr<mozIStorageConnection>& aConnection);
+
+  /*
+  nsresult UpgradeLocalStorageArchiveFrom4To5();
+  */
 
   nsresult InitializeRepository(PersistenceType aPersistenceType);
 
@@ -411,6 +956,7 @@ class QuotaManager final : public BackgroundThreadObject {
   void FinalizeOriginEviction(nsTArray<RefPtr<DirectoryLockImpl>>& aLocks);
 
   void ReleaseIOThreadObjects() {
+>>>>>>> upstream-releases
     AssertIsOnIOThread();
 
     for (uint32_t index = 0; index < uint32_t(Client::TypeMax()); index++) {

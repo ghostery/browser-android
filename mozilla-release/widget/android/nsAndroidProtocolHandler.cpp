@@ -44,32 +44,80 @@ NS_IMETHODIMP AndroidInputStream::Close(void) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP AndroidInputStream::Available(uint64_t *_retval) {
   *_retval = AndroidBridge::InputStreamAvailable(mBridgeInputStream);
   return NS_OK;
+||||||| merged common ancestors
+NS_IMETHODIMP AndroidInputStream::Available(uint64_t *_retval) {
+    *_retval = AndroidBridge::InputStreamAvailable(mBridgeInputStream);
+    return NS_OK;
+=======
+NS_IMETHODIMP AndroidInputStream::Available(uint64_t* _retval) {
+  *_retval = AndroidBridge::InputStreamAvailable(mBridgeInputStream);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP AndroidInputStream::Read(char *aBuf, uint32_t aCount,
                                        uint32_t *_retval) {
   return AndroidBridge::InputStreamRead(mBridgeChannel, aBuf, aCount, _retval);
+||||||| merged common ancestors
+NS_IMETHODIMP AndroidInputStream::Read(char *aBuf, uint32_t aCount, uint32_t *_retval) {
+    return  AndroidBridge::InputStreamRead(mBridgeChannel, aBuf, aCount, _retval);
+=======
+NS_IMETHODIMP AndroidInputStream::Read(char* aBuf, uint32_t aCount,
+                                       uint32_t* _retval) {
+  return AndroidBridge::InputStreamRead(mBridgeChannel, aBuf, aCount, _retval);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP AndroidInputStream::ReadSegments(nsWriteSegmentFun aWriter,
                                                void *aClosure, uint32_t aCount,
                                                uint32_t *_retval) {
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+NS_IMETHODIMP AndroidInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure, uint32_t aCount, uint32_t *_retval) {
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+NS_IMETHODIMP AndroidInputStream::ReadSegments(nsWriteSegmentFun aWriter,
+                                               void* aClosure, uint32_t aCount,
+                                               uint32_t* _retval) {
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP AndroidInputStream::IsNonBlocking(bool *_retval) {
   *_retval = false;
   return NS_OK;
+||||||| merged common ancestors
+NS_IMETHODIMP AndroidInputStream::IsNonBlocking(bool *_retval) {
+    *_retval = false;
+    return NS_OK;
+=======
+NS_IMETHODIMP AndroidInputStream::IsNonBlocking(bool* _retval) {
+  *_retval = false;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 class AndroidChannel : public nsBaseChannel {
  private:
   AndroidChannel(nsIURI *aURI, jni::Object::Param aConnection) {
     mConnection = aConnection;
     SetURI(aURI);
+||||||| merged common ancestors
+=======
+class AndroidChannel : public nsBaseChannel {
+ private:
+  AndroidChannel(nsIURI* aURI, jni::Object::Param aConnection) {
+    mConnection = aConnection;
+    SetURI(aURI);
+>>>>>>> upstream-releases
 
     auto type = java::GeckoAppShell::ConnectionGetMimeType(mConnection);
     if (type) {
@@ -77,10 +125,22 @@ class AndroidChannel : public nsBaseChannel {
     }
   }
 
+<<<<<<< HEAD
  public:
   static AndroidChannel *CreateChannel(nsIURI *aURI) {
     nsCString spec;
     aURI->GetSpec(spec);
+||||||| merged common ancestors
+public:
+    static AndroidChannel* CreateChannel(nsIURI *aURI)  {
+        nsCString spec;
+        aURI->GetSpec(spec);
+=======
+ public:
+  static AndroidChannel* CreateChannel(nsIURI* aURI) {
+    nsCString spec;
+    aURI->GetSpec(spec);
+>>>>>>> upstream-releases
 
     auto connection = java::GeckoAppShell::GetConnection(spec);
     return connection ? new AndroidChannel(aURI, connection) : nullptr;
@@ -88,12 +148,28 @@ class AndroidChannel : public nsBaseChannel {
 
   virtual ~AndroidChannel() {}
 
+<<<<<<< HEAD
   virtual nsresult OpenContentStream(bool async, nsIInputStream **result,
                                      nsIChannel **channel) {
     nsCOMPtr<nsIInputStream> stream = new AndroidInputStream(mConnection);
     NS_ADDREF(*result = stream);
     return NS_OK;
   }
+||||||| merged common ancestors
+    virtual nsresult OpenContentStream(bool async, nsIInputStream **result,
+                                       nsIChannel** channel) {
+        nsCOMPtr<nsIInputStream> stream = new AndroidInputStream(mConnection);
+        NS_ADDREF(*result = stream);
+        return NS_OK;
+    }
+=======
+  virtual nsresult OpenContentStream(bool async, nsIInputStream** result,
+                                     nsIChannel** channel) {
+    nsCOMPtr<nsIInputStream> stream = new AndroidInputStream(mConnection);
+    NS_ADDREF(*result = stream);
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
  private:
   jni::Object::GlobalRef mConnection;
@@ -103,33 +179,82 @@ NS_IMPL_ISUPPORTS(nsAndroidProtocolHandler, nsIProtocolHandler,
                   nsISupportsWeakReference)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidProtocolHandler::GetScheme(nsACString &result) {
   result.AssignLiteral("android");
   return NS_OK;
+||||||| merged common ancestors
+nsAndroidProtocolHandler::GetScheme(nsACString &result)
+{
+    result.AssignLiteral("android");
+    return NS_OK;
+=======
+nsAndroidProtocolHandler::GetScheme(nsACString& result) {
+  result.AssignLiteral("android");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidProtocolHandler::GetDefaultPort(int32_t *result) {
   *result = -1;  // no port for android: URLs
   return NS_OK;
+||||||| merged common ancestors
+nsAndroidProtocolHandler::GetDefaultPort(int32_t *result)
+{
+    *result = -1;        // no port for android: URLs
+    return NS_OK;
+=======
+nsAndroidProtocolHandler::GetDefaultPort(int32_t* result) {
+  *result = -1;  // no port for android: URLs
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidProtocolHandler::AllowPort(int32_t port, const char *scheme,
                                     bool *_retval) {
   // don't override anything.
   *_retval = false;
   return NS_OK;
+||||||| merged common ancestors
+nsAndroidProtocolHandler::AllowPort(int32_t port, const char *scheme, bool *_retval)
+{
+    // don't override anything.
+    *_retval = false;
+    return NS_OK;
+=======
+nsAndroidProtocolHandler::AllowPort(int32_t port, const char* scheme,
+                                    bool* _retval) {
+  // don't override anything.
+  *_retval = false;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidProtocolHandler::GetProtocolFlags(uint32_t *result) {
   *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE |
             URI_NORELATIVE | URI_DANGEROUS_TO_LOAD;
   return NS_OK;
+||||||| merged common ancestors
+nsAndroidProtocolHandler::GetProtocolFlags(uint32_t *result)
+{
+    *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE | URI_NORELATIVE | URI_DANGEROUS_TO_LOAD;
+    return NS_OK;
+=======
+nsAndroidProtocolHandler::GetProtocolFlags(uint32_t* result) {
+  *result = URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE |
+            URI_NORELATIVE | URI_DANGEROUS_TO_LOAD;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAndroidProtocolHandler::NewURI(const nsACString &aSpec, const char *aCharset,
                                  nsIURI *aBaseURI, nsIURI **result) {
   nsCOMPtr<nsIURI> base(aBaseURI);
@@ -139,7 +264,28 @@ nsAndroidProtocolHandler::NewURI(const nsACString &aSpec, const char *aCharset,
                               nsCString(aSpec), aCharset, base, nullptr))
       .Finalize(result);
 }
+||||||| merged common ancestors
+nsAndroidProtocolHandler::NewURI(const nsACString &aSpec,
+                                 const char *aCharset,
+                                 nsIURI *aBaseURI,
+                                 nsIURI **result)
+{
+    nsCOMPtr<nsIURI> base(aBaseURI);
+    return NS_MutateURI(NS_STANDARDURLMUTATOR_CONTRACTID)
+        .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
+                                nsIStandardURL::URLTYPE_STANDARD,
+                                -1, nsCString(aSpec), aCharset,
+                                base, nullptr))
+        .Finalize(result);
+}
+=======
+nsAndroidProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+                                     nsIChannel** aResult) {
+  nsCOMPtr<nsIChannel> channel = AndroidChannel::CreateChannel(aURI);
+  if (!channel) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsAndroidProtocolHandler::NewChannel2(nsIURI *aURI, nsILoadInfo *aLoadInfo,
                                       nsIChannel **aResult) {
@@ -153,8 +299,41 @@ nsAndroidProtocolHandler::NewChannel2(nsIURI *aURI, nsILoadInfo *aLoadInfo,
   NS_ADDREF(*aResult = channel);
   return NS_OK;
 }
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsAndroidProtocolHandler::NewChannel2(nsIURI* aURI,
+                                      nsILoadInfo* aLoadInfo,
+                                      nsIChannel** aResult)
+{
+    nsCOMPtr<nsIChannel> channel = AndroidChannel::CreateChannel(aURI);
+    if (!channel)
+        return NS_ERROR_FAILURE;
 
+    // set the loadInfo on the new channel
+    nsresult rv = channel->SetLoadInfo(aLoadInfo);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    NS_ADDREF(*aResult = channel);
+    return NS_OK;
+}
+=======
+  // set the loadInfo on the new channel
+  nsresult rv = channel->SetLoadInfo(aLoadInfo);
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsAndroidProtocolHandler::NewChannel(nsIURI *aURI, nsIChannel **aResult) {
   return NewChannel2(aURI, nullptr, aResult);
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsAndroidProtocolHandler::NewChannel(nsIURI* aURI,
+                                     nsIChannel* *aResult)
+{
+    return NewChannel2(aURI, nullptr, aResult);
+=======
+  NS_ADDREF(*aResult = channel);
+  return NS_OK;
+>>>>>>> upstream-releases
 }

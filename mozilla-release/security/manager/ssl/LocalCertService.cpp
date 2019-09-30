@@ -402,7 +402,7 @@ LocalCertService::GetOrCreateCert(const nsACString& aNickname,
   }
 
   RefPtr<LocalCertGetTask> task(new LocalCertGetTask(aNickname, aCallback));
-  return task->Dispatch("LocalCertGet");
+  return task->Dispatch();
 }
 
 NS_IMETHODIMP
@@ -423,8 +423,16 @@ LocalCertService::RemoveCert(const nsACString& aNickname,
   }
 
   RefPtr<LocalCertRemoveTask> task(
+<<<<<<< HEAD
       new LocalCertRemoveTask(aNickname, aCallback));
   return task->Dispatch("LocalCertRm");
+||||||| merged common ancestors
+    new LocalCertRemoveTask(aNickname, aCallback));
+  return task->Dispatch("LocalCertRm");
+=======
+      new LocalCertRemoveTask(aNickname, aCallback));
+  return task->Dispatch();
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -450,6 +458,7 @@ LocalCertService::GetLoginPromptRequired(bool* aRequired) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #define LOCALCERTSERVICE_CID                         \
   {                                                  \
     0x47402be2, 0xe653, 0x45d0, {                    \
@@ -474,3 +483,34 @@ static const Module kLocalCertServiceModule = {
 NSMODULE_DEFN(LocalCertServiceModule) = &kLocalCertServiceModule;
 
 }  // namespace mozilla
+||||||| merged common ancestors
+#define LOCALCERTSERVICE_CID \
+{ 0x47402be2, 0xe653, 0x45d0, \
+  { 0x8d, 0xaa, 0x9f, 0x0d, 0xce, 0x0a, 0xc1, 0x48 } }
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(LocalCertService)
+
+NS_DEFINE_NAMED_CID(LOCALCERTSERVICE_CID);
+
+static const Module::CIDEntry kLocalCertServiceCIDs[] = {
+  { &kLOCALCERTSERVICE_CID, false, nullptr, LocalCertServiceConstructor },
+  { nullptr }
+};
+
+static const Module::ContractIDEntry kLocalCertServiceContracts[] = {
+  { LOCALCERTSERVICE_CONTRACTID, &kLOCALCERTSERVICE_CID },
+  { nullptr }
+};
+
+static const Module kLocalCertServiceModule = {
+  Module::kVersion,
+  kLocalCertServiceCIDs,
+  kLocalCertServiceContracts
+};
+
+NSMODULE_DEFN(LocalCertServiceModule) = &kLocalCertServiceModule;
+
+} // namespace mozilla
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases

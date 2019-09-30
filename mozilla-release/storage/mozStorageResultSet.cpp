@@ -17,7 +17,15 @@ ResultSet::ResultSet() : mCurrentIndex(0) {}
 
 ResultSet::~ResultSet() { mData.Clear(); }
 
+<<<<<<< HEAD
 nsresult ResultSet::add(mozIStorageRow *aRow) {
+||||||| merged common ancestors
+nsresult
+ResultSet::add(mozIStorageRow *aRow)
+{
+=======
+nsresult ResultSet::add(mozIStorageRow* aRow) {
+>>>>>>> upstream-releases
   return mData.AppendObject(aRow) ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
 }
 
@@ -31,7 +39,14 @@ NS_IMPL_ISUPPORTS(ResultSet, mozIStorageResultSet)
 //// mozIStorageResultSet
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ResultSet::GetNextRow(mozIStorageRow **_row) {
+||||||| merged common ancestors
+ResultSet::GetNextRow(mozIStorageRow **_row)
+{
+=======
+ResultSet::GetNextRow(mozIStorageRow** _row) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_row);
 
   if (mCurrentIndex >= mData.Count()) {

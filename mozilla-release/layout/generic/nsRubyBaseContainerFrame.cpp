@@ -13,6 +13,7 @@
 #include "mozilla/ComputedStyle.h"
 #include "mozilla/DebugOnly.h"
 #include "mozilla/Maybe.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/WritingModes.h"
 #include "nsLayoutUtils.h"
 #include "nsLineLayout.h"
@@ -35,9 +36,22 @@ NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
 NS_IMPL_FRAMEARENA_HELPERS(nsRubyBaseContainerFrame)
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewRubyBaseContainerFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsRubyBaseContainerFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewRubyBaseContainerFrame(nsIPresShell* aPresShell,
+                             ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsRubyBaseContainerFrame(aStyle);
+=======
+nsContainerFrame* NS_NewRubyBaseContainerFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsRubyBaseContainerFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -155,8 +169,19 @@ static nscoord CalculateColumnPrefISize(
 // FIXME Currently we use pref isize of ruby content frames for
 //       computing min isize of ruby frame, which may cause problem.
 //       See bug 1134945.
+<<<<<<< HEAD
 /* virtual */ void nsRubyBaseContainerFrame::AddInlineMinISize(
     gfxContext* aRenderingContext, nsIFrame::InlineMinISizeData* aData) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyBaseContainerFrame::AddInlineMinISize(
+  gfxContext *aRenderingContext, nsIFrame::InlineMinISizeData *aData)
+{
+=======
+/* virtual */
+void nsRubyBaseContainerFrame::AddInlineMinISize(
+    gfxContext* aRenderingContext, nsIFrame::InlineMinISizeData* aData) {
+>>>>>>> upstream-releases
   AutoRubyTextContainerArray textContainers(this);
 
   for (uint32_t i = 0, iend = textContainers.Length(); i < iend; i++) {
@@ -207,8 +232,19 @@ static nscoord CalculateColumnPrefISize(
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyBaseContainerFrame::AddInlinePrefISize(
     gfxContext* aRenderingContext, nsIFrame::InlinePrefISizeData* aData) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyBaseContainerFrame::AddInlinePrefISize(
+  gfxContext *aRenderingContext, nsIFrame::InlinePrefISizeData *aData)
+{
+=======
+/* virtual */
+void nsRubyBaseContainerFrame::AddInlinePrefISize(
+    gfxContext* aRenderingContext, nsIFrame::InlinePrefISizeData* aData) {
+>>>>>>> upstream-releases
   AutoRubyTextContainerArray textContainers(this);
 
   nscoord sum = 0;
@@ -231,8 +267,17 @@ static nscoord CalculateColumnPrefISize(
   aData->mCurrentLine += sum;
 }
 
+<<<<<<< HEAD
 /* virtual */ bool nsRubyBaseContainerFrame::IsFrameOfType(
     uint32_t aFlags) const {
+||||||| merged common ancestors
+/* virtual */ bool
+nsRubyBaseContainerFrame::IsFrameOfType(uint32_t aFlags) const
+{
+=======
+/* virtual */
+bool nsRubyBaseContainerFrame::IsFrameOfType(uint32_t aFlags) const {
+>>>>>>> upstream-releases
   if (aFlags & (eSupportsCSSTransforms | eSupportsContainLayoutAndPaint)) {
     return false;
   }
@@ -240,22 +285,63 @@ static nscoord CalculateColumnPrefISize(
                                          ~(nsIFrame::eLineParticipant));
 }
 
+<<<<<<< HEAD
 /* virtual */ bool nsRubyBaseContainerFrame::CanContinueTextRun() const {
   return true;
 }
+||||||| merged common ancestors
+/* virtual */ bool
+nsRubyBaseContainerFrame::CanContinueTextRun() const
+{
+  return true;
+}
+=======
+/* virtual */
+bool nsRubyBaseContainerFrame::CanContinueTextRun() const { return true; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* virtual */ LogicalSize nsRubyBaseContainerFrame::ComputeSize(
     gfxContext* aRenderingContext, WritingMode aWM, const LogicalSize& aCBSize,
     nscoord aAvailableISize, const LogicalSize& aMargin,
     const LogicalSize& aBorder, const LogicalSize& aPadding,
     ComputeSizeFlags aFlags) {
+||||||| merged common ancestors
+/* virtual */ LogicalSize
+nsRubyBaseContainerFrame::ComputeSize(gfxContext *aRenderingContext,
+                                      WritingMode aWM,
+                                      const LogicalSize& aCBSize,
+                                      nscoord aAvailableISize,
+                                      const LogicalSize& aMargin,
+                                      const LogicalSize& aBorder,
+                                      const LogicalSize& aPadding,
+                                      ComputeSizeFlags aFlags)
+{
+=======
+/* virtual */
+LogicalSize nsRubyBaseContainerFrame::ComputeSize(
+    gfxContext* aRenderingContext, WritingMode aWM, const LogicalSize& aCBSize,
+    nscoord aAvailableISize, const LogicalSize& aMargin,
+    const LogicalSize& aBorder, const LogicalSize& aPadding,
+    ComputeSizeFlags aFlags) {
+>>>>>>> upstream-releases
   // Ruby base container frame is inline,
   // hence don't compute size before reflow.
   return LogicalSize(aWM, NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
 }
 
+<<<<<<< HEAD
 /* virtual */ nscoord nsRubyBaseContainerFrame::GetLogicalBaseline(
     WritingMode aWritingMode) const {
+||||||| merged common ancestors
+/* virtual */ nscoord
+nsRubyBaseContainerFrame::GetLogicalBaseline(WritingMode aWritingMode) const
+{
+=======
+/* virtual */
+nscoord nsRubyBaseContainerFrame::GetLogicalBaseline(
+    WritingMode aWritingMode) const {
+>>>>>>> upstream-releases
   return mBaseline;
 }
 
@@ -267,9 +353,24 @@ struct nsRubyBaseContainerFrame::RubyReflowInput {
   const nsTArray<UniquePtr<ReflowInput>>& mTextReflowInputs;
 };
 
+<<<<<<< HEAD
 /* virtual */ void nsRubyBaseContainerFrame::Reflow(
     nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
     const ReflowInput& aReflowInput, nsReflowStatus& aStatus) {
+||||||| merged common ancestors
+/* virtual */ void
+nsRubyBaseContainerFrame::Reflow(nsPresContext* aPresContext,
+                                 ReflowOutput& aDesiredSize,
+                                 const ReflowInput& aReflowInput,
+                                 nsReflowStatus& aStatus)
+{
+=======
+/* virtual */
+void nsRubyBaseContainerFrame::Reflow(nsPresContext* aPresContext,
+                                      ReflowOutput& aDesiredSize,
+                                      const ReflowInput& aReflowInput,
+                                      nsReflowStatus& aStatus) {
+>>>>>>> upstream-releases
   MarkInReflow();
   DO_GLOBAL_REFLOW_COUNT("nsRubyBaseContainerFrame");
   DISPLAY_REFLOW(aPresContext, this, aReflowInput, aDesiredSize, aStatus);
@@ -297,11 +398,11 @@ struct nsRubyBaseContainerFrame::RubyReflowInput {
   LogicalSize availSize(lineWM, aReflowInput.AvailableISize(),
                         aReflowInput.AvailableBSize());
 
-  // We have a reflow state and a line layout for each RTC.
+  // We have a reflow input and a line layout for each RTC.
   // They are conceptually the state of the RTCs, but we don't actually
   // reflow those RTCs in this code. These two arrays are holders of
-  // the reflow states and line layouts.
-  // Since there are pointers refer to reflow states and line layouts,
+  // the reflow inputs and line layouts.
+  // Since there are pointers refer to reflow inputs and line layouts,
   // it is necessary to guarantee that they won't be moved. For this
   // reason, they are wrapped in UniquePtr here.
   AutoTArray<UniquePtr<ReflowInput>, RTC_ARRAY_SIZE> reflowInputs;
@@ -735,13 +836,19 @@ void nsRubyBaseContainerFrame::PullOneColumn(nsLineLayout* aLineLayout,
                  "the same old float containing block");
     }
 #endif
+<<<<<<< HEAD
     nsBlockFrame* newFloatCB =
         nsLayoutUtils::GetAsBlock(aLineLayout->LineContainerFrame());
+||||||| merged common ancestors
+    nsBlockFrame* newFloatCB =
+      nsLayoutUtils::GetAsBlock(aLineLayout->LineContainerFrame());
+=======
+    nsBlockFrame* newFloatCB = do_QueryFrame(aLineLayout->LineContainerFrame());
+>>>>>>> upstream-releases
     MOZ_ASSERT(newFloatCB, "Must have a float containing block");
     if (oldFloatCB != newFloatCB) {
       for (nsIFrame* frame : aColumn) {
-        newFloatCB->ReparentFloats(frame, oldFloatCB, false,
-                                   ReparentingDirection::Backwards);
+        newFloatCB->ReparentFloats(frame, oldFloatCB, false);
       }
     }
   }

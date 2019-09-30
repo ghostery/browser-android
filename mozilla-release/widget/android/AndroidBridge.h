@@ -83,6 +83,7 @@ class AndroidBridge final {
     LAYER_CLIENT_TYPE_GL = 2  // AndroidGeckoGLLayerClient
   };
 
+<<<<<<< HEAD
   static bool IsJavaUiThread() {
     return mozilla::jni::GetUIThreadId() == gettid();
   }
@@ -91,69 +92,239 @@ class AndroidBridge final {
   static void DeconstructBridge();
 
   static AndroidBridge* Bridge() { return sBridge; }
+||||||| merged common ancestors
+    static AndroidBridge *Bridge() {
+        return sBridge;
+    }
+=======
+  static bool IsJavaUiThread() {
+    return mozilla::jni::GetUIThreadId() == gettid();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ContentDocumentChanged(mozIDOMWindowProxy* aDOMWindow);
   bool IsContentDocumentDisplayed(mozIDOMWindowProxy* aDOMWindow);
+||||||| merged common ancestors
+    void ContentDocumentChanged(mozIDOMWindowProxy* aDOMWindow);
+    bool IsContentDocumentDisplayed(mozIDOMWindowProxy* aDOMWindow);
+=======
+  static void ConstructBridge();
+  static void DeconstructBridge();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetHandlersForURL(const nsAString& aURL,
                          nsIMutableArray* handlersArray = nullptr,
                          nsIHandlerApp** aDefaultApp = nullptr,
                          const nsAString& aAction = EmptyString());
+||||||| merged common ancestors
+    bool GetHandlersForURL(const nsAString& aURL,
+                           nsIMutableArray* handlersArray = nullptr,
+                           nsIHandlerApp **aDefaultApp = nullptr,
+                           const nsAString& aAction = EmptyString());
+=======
+  static AndroidBridge* Bridge() { return sBridge; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetHandlersForMimeType(const nsAString& aMimeType,
                               nsIMutableArray* handlersArray = nullptr,
                               nsIHandlerApp** aDefaultApp = nullptr,
                               const nsAString& aAction = EmptyString());
+||||||| merged common ancestors
+    bool GetHandlersForMimeType(const nsAString& aMimeType,
+                                nsIMutableArray* handlersArray = nullptr,
+                                nsIHandlerApp **aDefaultApp = nullptr,
+                                const nsAString& aAction = EmptyString());
+=======
+  void ContentDocumentChanged(mozIDOMWindowProxy* aDOMWindow);
+  bool IsContentDocumentDisplayed(mozIDOMWindowProxy* aDOMWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetHWEncoderCapability();
   bool GetHWDecoderCapability();
+||||||| merged common ancestors
+    bool GetHWEncoderCapability();
+    bool GetHWDecoderCapability();
+=======
+  bool GetHandlersForURL(const nsAString& aURL,
+                         nsIMutableArray* handlersArray = nullptr,
+                         nsIHandlerApp** aDefaultApp = nullptr,
+                         const nsAString& aAction = EmptyString());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetMimeTypeFromExtensions(const nsACString& aFileExt,
                                  nsCString& aMimeType);
   void GetExtensionFromMimeType(const nsACString& aMimeType,
                                 nsACString& aFileExt);
+||||||| merged common ancestors
+    void GetMimeTypeFromExtensions(const nsACString& aFileExt, nsCString& aMimeType);
+    void GetExtensionFromMimeType(const nsACString& aMimeType, nsACString& aFileExt);
+=======
+  bool GetHandlersForMimeType(const nsAString& aMimeType,
+                              nsIMutableArray* handlersArray = nullptr,
+                              nsIHandlerApp** aDefaultApp = nullptr,
+                              const nsAString& aAction = EmptyString());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetClipboardText(nsAString& aText);
+||||||| merged common ancestors
+    bool GetClipboardText(nsAString& aText);
+=======
+  bool GetHWEncoderCapability();
+  bool GetHWDecoderCapability();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   int GetScreenDepth();
+||||||| merged common ancestors
+    int GetScreenDepth();
+=======
+  void GetMimeTypeFromExtensions(const nsACString& aFileExt,
+                                 nsCString& aMimeType);
+  void GetExtensionFromMimeType(const nsACString& aMimeType,
+                                nsACString& aFileExt);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void Vibrate(const nsTArray<uint32_t>& aPattern);
+||||||| merged common ancestors
+    void Vibrate(const nsTArray<uint32_t>& aPattern);
+=======
+  int GetScreenDepth();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetSystemColors(AndroidSystemColors* aColors);
+||||||| merged common ancestors
+    void GetSystemColors(AndroidSystemColors *aColors);
+=======
+  void Vibrate(const nsTArray<uint32_t>& aPattern);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetIconForExtension(const nsACString& aFileExt, uint32_t aIconSize,
                            uint8_t* const aBuf);
+||||||| merged common ancestors
+    void GetIconForExtension(const nsACString& aFileExt, uint32_t aIconSize, uint8_t * const aBuf);
+=======
+  void GetSystemColors(AndroidSystemColors* aColors);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetStaticStringField(const char* classID, const char* field,
                             nsAString& result, JNIEnv* env = nullptr);
+||||||| merged common ancestors
+    bool GetStaticStringField(const char *classID, const char *field, nsAString &result, JNIEnv* env = nullptr);
+=======
+  void GetIconForExtension(const nsACString& aFileExt, uint32_t aIconSize,
+                           uint8_t* const aBuf);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetStaticIntField(const char* className, const char* fieldName,
                          int32_t* aInt, JNIEnv* env = nullptr);
+||||||| merged common ancestors
+    bool GetStaticIntField(const char *className, const char *fieldName, int32_t* aInt, JNIEnv* env = nullptr);
+=======
+  bool GetStaticStringField(const char* classID, const char* field,
+                            nsAString& result, JNIEnv* env = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Returns a global reference to the Context for Fennec's Activity. The
   // caller is responsible for ensuring this doesn't leak by calling
   // DeleteGlobalRef() when the context is no longer needed.
   jobject GetGlobalContextRef(void);
+||||||| merged common ancestors
+    // Returns a global reference to the Context for Fennec's Activity. The
+    // caller is responsible for ensuring this doesn't leak by calling
+    // DeleteGlobalRef() when the context is no longer needed.
+    jobject GetGlobalContextRef(void);
+=======
+  bool GetStaticIntField(const char* className, const char* fieldName,
+                         int32_t* aInt, JNIEnv* env = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetCurrentBatteryInformation(hal::BatteryInformation* aBatteryInfo);
+||||||| merged common ancestors
+    void GetCurrentBatteryInformation(hal::BatteryInformation* aBatteryInfo);
+=======
+  // Returns a global reference to the Context for Fennec's Activity. The
+  // caller is responsible for ensuring this doesn't leak by calling
+  // DeleteGlobalRef() when the context is no longer needed.
+  jobject GetGlobalContextRef(void);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetCurrentNetworkInformation(hal::NetworkInformation* aNetworkInfo);
+||||||| merged common ancestors
+    void GetCurrentNetworkInformation(hal::NetworkInformation* aNetworkInfo);
+=======
+  void GetCurrentBatteryInformation(hal::BatteryInformation* aBatteryInfo);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // These methods don't use a ScreenOrientation because it's an
   // enum and that would require including the header which requires
   // include IPC headers which requires including basictypes.h which
   // requires a lot of changes...
   uint32_t GetScreenOrientation();
   uint16_t GetScreenAngle();
+||||||| merged common ancestors
+    // These methods don't use a ScreenOrientation because it's an
+    // enum and that would require including the header which requires
+    // include IPC headers which requires including basictypes.h which
+    // requires a lot of changes...
+    uint32_t GetScreenOrientation();
+    uint16_t GetScreenAngle();
+=======
+  void GetCurrentNetworkInformation(hal::NetworkInformation* aNetworkInfo);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   int GetAPIVersion() { return mAPIVersion; }
+||||||| merged common ancestors
+    int GetAPIVersion() { return mAPIVersion; }
+=======
+  // These methods don't use a ScreenOrientation because it's an
+  // enum and that would require including the header which requires
+  // include IPC headers which requires including basictypes.h which
+  // requires a lot of changes...
+  uint32_t GetScreenOrientation();
+  uint16_t GetScreenAngle();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult GetProxyForURI(const nsACString& aSpec, const nsACString& aScheme,
                           const nsACString& aHost, const int32_t aPort,
                           nsACString& aResult);
+||||||| merged common ancestors
+    nsresult GetProxyForURI(const nsACString & aSpec,
+                            const nsACString & aScheme,
+                            const nsACString & aHost,
+                            const int32_t      aPort,
+                            nsACString & aResult);
+=======
+  int GetAPIVersion() { return mAPIVersion; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool PumpMessageLoop();
+||||||| merged common ancestors
+    bool PumpMessageLoop();
+=======
+  nsresult GetProxyForURI(const nsACString& aSpec, const nsACString& aScheme,
+                          const nsACString& aHost, const int32_t aPort,
+                          nsACString& aResult);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Utility methods.
   static jfieldID GetFieldID(JNIEnv* env, jclass jClass, const char* fieldName,
                              const char* fieldType);
@@ -165,42 +336,156 @@ class AndroidBridge final {
   static jmethodID GetStaticMethodID(JNIEnv* env, jclass jClass,
                                      const char* methodName,
                                      const char* methodType);
+||||||| merged common ancestors
+    // Utility methods.
+    static jfieldID GetFieldID(JNIEnv* env, jclass jClass, const char* fieldName, const char* fieldType);
+    static jfieldID GetStaticFieldID(JNIEnv* env, jclass jClass, const char* fieldName, const char* fieldType);
+    static jmethodID GetMethodID(JNIEnv* env, jclass jClass, const char* methodName, const char* methodType);
+    static jmethodID GetStaticMethodID(JNIEnv* env, jclass jClass, const char* methodName, const char* methodType);
+=======
+  bool PumpMessageLoop();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static jni::Object::LocalRef ChannelCreate(jni::Object::Param);
+||||||| merged common ancestors
+    static jni::Object::LocalRef ChannelCreate(jni::Object::Param);
+=======
+  // Utility methods.
+  static jfieldID GetFieldID(JNIEnv* env, jclass jClass, const char* fieldName,
+                             const char* fieldType);
+  static jfieldID GetStaticFieldID(JNIEnv* env, jclass jClass,
+                                   const char* fieldName,
+                                   const char* fieldType);
+  static jmethodID GetMethodID(JNIEnv* env, jclass jClass,
+                               const char* methodName, const char* methodType);
+  static jmethodID GetStaticMethodID(JNIEnv* env, jclass jClass,
+                                     const char* methodName,
+                                     const char* methodType);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void InputStreamClose(jni::Object::Param obj);
   static uint32_t InputStreamAvailable(jni::Object::Param obj);
   static nsresult InputStreamRead(jni::Object::Param obj, char* aBuf,
                                   uint32_t aCount, uint32_t* aRead);
+||||||| merged common ancestors
+    static void InputStreamClose(jni::Object::Param obj);
+    static uint32_t InputStreamAvailable(jni::Object::Param obj);
+    static nsresult InputStreamRead(jni::Object::Param obj, char *aBuf, uint32_t aCount, uint32_t *aRead);
+=======
+  static jni::Object::LocalRef ChannelCreate(jni::Object::Param);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   static nsDataHashtable<nsStringHashKey, nsString> sStoragePaths;
+||||||| merged common ancestors
+protected:
+    static nsDataHashtable<nsStringHashKey, nsString> sStoragePaths;
+=======
+  static void InputStreamClose(jni::Object::Param obj);
+  static uint32_t InputStreamAvailable(jni::Object::Param obj);
+  static nsresult InputStreamRead(jni::Object::Param obj, char* aBuf,
+                                  uint32_t aCount, uint32_t* aRead);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static AndroidBridge* sBridge;
+||||||| merged common ancestors
+    static AndroidBridge* sBridge;
+=======
+ protected:
+  static nsDataHashtable<nsStringHashKey, nsString> sStoragePaths;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   AndroidBridge();
   ~AndroidBridge();
+||||||| merged common ancestors
+    AndroidBridge();
+    ~AndroidBridge();
+=======
+  static AndroidBridge* sBridge;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   int mAPIVersion;
+||||||| merged common ancestors
+    int mAPIVersion;
+=======
+  AndroidBridge();
+  ~AndroidBridge();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // intput stream
   jclass jReadableByteChannel;
   jclass jChannels;
   jmethodID jChannelCreate;
   jmethodID jByteBufferRead;
+||||||| merged common ancestors
+    // intput stream
+    jclass jReadableByteChannel;
+    jclass jChannels;
+    jmethodID jChannelCreate;
+    jmethodID jByteBufferRead;
+=======
+  int mAPIVersion;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   jclass jInputStream;
   jmethodID jClose;
   jmethodID jAvailable;
+||||||| merged common ancestors
+    jclass jInputStream;
+    jmethodID jClose;
+    jmethodID jAvailable;
+=======
+  // intput stream
+  jclass jReadableByteChannel;
+  jclass jChannels;
+  jmethodID jChannelCreate;
+  jmethodID jByteBufferRead;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   jmethodID jCalculateLength;
+||||||| merged common ancestors
+    jmethodID jCalculateLength;
+=======
+  jclass jInputStream;
+  jmethodID jClose;
+  jmethodID jAvailable;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // some convinient types to have around
+  jclass jStringClass;
+||||||| merged common ancestors
+    // some convinient types to have around
+    jclass jStringClass;
+=======
+  jmethodID jCalculateLength;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  jni::Object::GlobalRef mMessageQueue;
+  jfieldID mMessageQueueMessages;
+  jmethodID mMessageQueueNext;
+||||||| merged common ancestors
+    jni::Object::GlobalRef mMessageQueue;
+    jfieldID mMessageQueueMessages;
+    jmethodID mMessageQueueNext;
+=======
   // some convinient types to have around
   jclass jStringClass;
 
   jni::Object::GlobalRef mMessageQueue;
   jfieldID mMessageQueueMessages;
   jmethodID mMessageQueueNext;
+>>>>>>> upstream-releases
 };
 
 class AutoJNIClass {

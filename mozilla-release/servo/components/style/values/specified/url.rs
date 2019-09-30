@@ -4,7 +4,13 @@
 
 //! Common handling for the specified value CSS url() values.
 
+<<<<<<< HEAD
 use crate::values::generics::url::UrlOrNone as GenericUrlOrNone;
+||||||| merged common ancestors
+use values::generics::url::UrlOrNone as GenericUrlOrNone;
+=======
+use crate::values::generics::url::GenericUrlOrNone;
+>>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 pub use crate::gecko::url::{SpecifiedImageUrl, SpecifiedUrl};

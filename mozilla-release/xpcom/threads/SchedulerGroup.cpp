@@ -92,8 +92,19 @@ SchedulerEventTarget::IsOnCurrentThreadInfallible() {
   return NS_IsMainThread();
 }
 
+<<<<<<< HEAD
 /* static */ nsresult SchedulerGroup::UnlabeledDispatch(
     TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
+||||||| merged common ancestors
+/* static */ nsresult
+SchedulerGroup::UnlabeledDispatch(TaskCategory aCategory,
+                                  already_AddRefed<nsIRunnable>&& aRunnable)
+{
+=======
+/* static */
+nsresult SchedulerGroup::UnlabeledDispatch(
+    TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     return NS_DispatchToCurrentThread(std::move(aRunnable));
   } else {
@@ -101,7 +112,16 @@ SchedulerEventTarget::IsOnCurrentThreadInfallible() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void SchedulerGroup::MarkVsyncReceived() {
+||||||| merged common ancestors
+/* static */ void
+SchedulerGroup::MarkVsyncReceived()
+{
+=======
+/* static */
+void SchedulerGroup::MarkVsyncReceived() {
+>>>>>>> upstream-releases
   if (gEarliestUnprocessedVsync) {
     // If we've seen a vsync already, but haven't handled it, keep the
     // older one.
@@ -118,9 +138,20 @@ SchedulerEventTarget::IsOnCurrentThreadInfallible() {
   gEarliestUnprocessedVsync = (TimeStamp::Now() - creation).ToMicroseconds();
 }
 
+<<<<<<< HEAD
 /* static */ void SchedulerGroup::MarkVsyncRan() {
   gEarliestUnprocessedVsync = 0;
 }
+||||||| merged common ancestors
+/* static */ void
+SchedulerGroup::MarkVsyncRan()
+{
+  gEarliestUnprocessedVsync = 0;
+}
+=======
+/* static */
+void SchedulerGroup::MarkVsyncRan() { gEarliestUnprocessedVsync = 0; }
+>>>>>>> upstream-releases
 
 MOZ_THREAD_LOCAL(bool) SchedulerGroup::sTlsValidatingAccess;
 
@@ -202,8 +233,17 @@ already_AddRefed<nsISerialEventTarget> SchedulerGroup::CreateEventTargetFor(
   return target.forget();
 }
 
+<<<<<<< HEAD
 /* static */ SchedulerGroup* SchedulerGroup::FromEventTarget(
     nsIEventTarget* aEventTarget) {
+||||||| merged common ancestors
+/* static */ SchedulerGroup*
+SchedulerGroup::FromEventTarget(nsIEventTarget* aEventTarget)
+{
+=======
+/* static */
+SchedulerGroup* SchedulerGroup::FromEventTarget(nsIEventTarget* aEventTarget) {
+>>>>>>> upstream-releases
   RefPtr<SchedulerEventTarget> target = do_QueryObject(aEventTarget);
   if (!target) {
     return nullptr;
@@ -223,8 +263,19 @@ nsresult SchedulerGroup::LabeledDispatch(
   return UnlabeledDispatch(aCategory, runnable.forget());
 }
 
+<<<<<<< HEAD
 /*static*/ nsresult SchedulerGroup::InternalUnlabeledDispatch(
     TaskCategory aCategory, already_AddRefed<Runnable>&& aRunnable) {
+||||||| merged common ancestors
+/*static*/ nsresult
+SchedulerGroup::InternalUnlabeledDispatch(TaskCategory aCategory,
+                                          already_AddRefed<Runnable>&& aRunnable)
+{
+=======
+/*static*/
+nsresult SchedulerGroup::InternalUnlabeledDispatch(
+    TaskCategory aCategory, already_AddRefed<Runnable>&& aRunnable) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     // NS_DispatchToCurrentThread will not leak the passed in runnable
     // when it fails, so we don't need to do anything special.
@@ -250,7 +301,16 @@ nsresult SchedulerGroup::LabeledDispatch(
   return rv;
 }
 
+<<<<<<< HEAD
 /* static */ void SchedulerGroup::SetValidatingAccess(ValidationType aType) {
+||||||| merged common ancestors
+/* static */ void
+SchedulerGroup::SetValidatingAccess(ValidationType aType)
+{
+=======
+/* static */
+void SchedulerGroup::SetValidatingAccess(ValidationType aType) {
+>>>>>>> upstream-releases
   bool validating = aType == StartValidation;
   sTlsValidatingAccess.set(validating);
 
@@ -267,6 +327,7 @@ SchedulerGroup::Runnable::Runnable(already_AddRefed<nsIRunnable>&& aRunnable,
       mGroup(aGroup),
       mDocGroup(aDocGroup) {}
 
+<<<<<<< HEAD
 bool SchedulerGroup::Runnable::GetAffectedSchedulerGroups(
     SchedulerGroupSet& aGroups) {
   aGroups.Clear();
@@ -275,6 +336,23 @@ bool SchedulerGroup::Runnable::GetAffectedSchedulerGroups(
 }
 
 dom::DocGroup* SchedulerGroup::Runnable::DocGroup() const { return mDocGroup; }
+||||||| merged common ancestors
+bool
+SchedulerGroup::Runnable::GetAffectedSchedulerGroups(SchedulerGroupSet& aGroups)
+{
+  aGroups.Clear();
+  aGroups.Put(Group());
+  return true;
+}
+
+dom::DocGroup*
+SchedulerGroup::Runnable::DocGroup() const
+{
+  return mDocGroup;
+}
+=======
+dom::DocGroup* SchedulerGroup::Runnable::DocGroup() const { return mDocGroup; }
+>>>>>>> upstream-releases
 
 #ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
 NS_IMETHODIMP
@@ -313,6 +391,17 @@ SchedulerGroup::Runnable::GetPriority(uint32_t* aPriority) {
   return runnablePrio ? runnablePrio->GetPriority(aPriority) : NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS_INHERITED(SchedulerGroup::Runnable, mozilla::Runnable,
                             nsIRunnablePriority, nsILabelableRunnable,
                             SchedulerGroup::Runnable)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS_INHERITED(SchedulerGroup::Runnable,
+                            mozilla::Runnable,
+                            nsIRunnablePriority,
+                            nsILabelableRunnable,
+                            SchedulerGroup::Runnable)
+=======
+NS_IMPL_ISUPPORTS_INHERITED(SchedulerGroup::Runnable, mozilla::Runnable,
+                            nsIRunnablePriority, SchedulerGroup::Runnable)
+>>>>>>> upstream-releases

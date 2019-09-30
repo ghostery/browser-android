@@ -13,7 +13,13 @@
 <script>
 
     var db,
+<<<<<<< HEAD
         t = async_test(document.title);
+||||||| merged common ancestors
+        t = async_test(document.title, {timeout: 10000});
+=======
+        t = async_test();
+>>>>>>> upstream-releases
 
     t.step(function() {
         var openrq = indexedDB.open('db', 3);

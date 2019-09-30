@@ -9,10 +9,10 @@
 
 #ifdef JS_JITSPEW
 
-#include <stdio.h>
+#  include <stdio.h>
 
-#include "js/TypeDecls.h"
-#include "vm/JSONPrinter.h"
+#  include "js/TypeDecls.h"
+#  include "vm/JSONPrinter.h"
 
 namespace js {
 namespace jit {
@@ -23,6 +23,7 @@ class MIRGraph;
 class MResumePoint;
 class LNode;
 
+<<<<<<< HEAD
 class JSONSpewer : JSONPrinter {
  public:
   explicit JSONSpewer(GenericPrinter& out) : JSONPrinter(out) {}
@@ -37,6 +38,41 @@ class JSONSpewer : JSONPrinter {
   void spewRanges(BacktrackingAllocator* regalloc);
   void endPass();
   void endFunction();
+||||||| merged common ancestors
+class JSONSpewer : JSONPrinter
+{
+  public:
+    explicit JSONSpewer(GenericPrinter& out)
+      : JSONPrinter(out)
+    { }
+
+    void beginFunction(JSScript* script);
+    void beginPass(const char * pass);
+    void spewMDef(MDefinition* def);
+    void spewMResumePoint(MResumePoint* rp);
+    void spewMIR(MIRGraph* mir);
+    void spewLIns(LNode* ins);
+    void spewLIR(MIRGraph* mir);
+    void spewRanges(BacktrackingAllocator* regalloc);
+    void endPass();
+    void endFunction();
+=======
+class JSONSpewer : JSONPrinter {
+ public:
+  explicit JSONSpewer(GenericPrinter& out) : JSONPrinter(out) {}
+
+  void beginFunction(JSScript* script);
+  void beginWasmFunction(unsigned funcIndex);
+  void beginPass(const char* pass);
+  void spewMDef(MDefinition* def);
+  void spewMResumePoint(MResumePoint* rp);
+  void spewMIR(MIRGraph* mir);
+  void spewLIns(LNode* ins);
+  void spewLIR(MIRGraph* mir);
+  void spewRanges(BacktrackingAllocator* regalloc);
+  void endPass();
+  void endFunction();
+>>>>>>> upstream-releases
 };
 
 }  // namespace jit

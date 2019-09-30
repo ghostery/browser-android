@@ -10,9 +10,21 @@
 namespace js {
 namespace jit {
 
+<<<<<<< HEAD
 void FrameInfo::pop(StackAdjustment adjust) {
   spIndex--;
   StackValue* popped = &stack[spIndex];
+||||||| merged common ancestors
+void
+FrameInfo::pop(StackAdjustment adjust)
+{
+    spIndex--;
+    StackValue* popped = &stack[spIndex];
+=======
+void CompilerFrameInfo::pop(StackAdjustment adjust) {
+  spIndex--;
+  StackValue* popped = &stack[spIndex];
+>>>>>>> upstream-releases
 
   if (adjust == AdjustStack && popped->kind() == StackValue::Stack) {
     masm.addToStackPtr(Imm32(sizeof(Value)));
@@ -21,11 +33,32 @@ void FrameInfo::pop(StackAdjustment adjust) {
   popped->reset();
 }
 
+<<<<<<< HEAD
 void FrameInfo::popn(uint32_t n, StackAdjustment adjust) {
   uint32_t poppedStack = 0;
   for (uint32_t i = 0; i < n; i++) {
     if (peek(-1)->kind() == StackValue::Stack) {
       poppedStack++;
+||||||| merged common ancestors
+void
+FrameInfo::popn(uint32_t n, StackAdjustment adjust)
+{
+    uint32_t poppedStack = 0;
+    for (uint32_t i = 0; i < n; i++) {
+        if (peek(-1)->kind() == StackValue::Stack) {
+            poppedStack++;
+        }
+        pop(DontAdjustStack);
+    }
+    if (adjust == AdjustStack && poppedStack > 0) {
+        masm.addToStackPtr(Imm32(sizeof(Value) * poppedStack));
+=======
+void CompilerFrameInfo::popn(uint32_t n, StackAdjustment adjust) {
+  uint32_t poppedStack = 0;
+  for (uint32_t i = 0; i < n; i++) {
+    if (peek(-1)->kind() == StackValue::Stack) {
+      poppedStack++;
+>>>>>>> upstream-releases
     }
     pop(DontAdjustStack);
   }

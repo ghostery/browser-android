@@ -29,6 +29,7 @@ enum class CommandType : int8_t {
   COPYSURFACE,
   COPYRECT,
   FILLRECT,
+  FILLROUNDEDRECT,
   STROKERECT,
   STROKELINE,
   STROKE,
@@ -49,15 +50,26 @@ enum class CommandType : int8_t {
   PADEDGES,
 };
 
+<<<<<<< HEAD
 class DrawingCommand {
  public:
   virtual ~DrawingCommand() {}
+||||||| merged common ancestors
+class DrawingCommand
+{
+public:
+  virtual ~DrawingCommand() {}
+=======
+class DrawingCommand {
+ public:
+  virtual ~DrawingCommand() = default;
+>>>>>>> upstream-releases
 
   virtual CommandType GetType() const = 0;
   virtual void ExecuteOnDT(DrawTarget* aDT,
                            const Matrix* aTransform = nullptr) const = 0;
   virtual void CloneInto(CaptureCommandList* aList) = 0;
-  virtual void Log(TreeLog& aLog) const = 0;
+  virtual void Log(TreeLog<>& aLog) const = 0;
 };
 
 }  // namespace gfx

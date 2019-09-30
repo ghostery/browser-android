@@ -14,9 +14,20 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 // A hash entry that uses a RefPtr<dom::Element>, CSSPseudoElementType pair
 class PseudoElementHashEntry : public PLDHashEntryHdr {
  public:
+||||||| merged common ancestors
+// A hash entry that uses a RefPtr<dom::Element>, CSSPseudoElementType pair
+class PseudoElementHashEntry : public PLDHashEntryHdr
+{
+public:
+=======
+// A hash entry that uses a RefPtr<dom::Element>, PseudoStyleType pair
+class PseudoElementHashEntry : public PLDHashEntryHdr {
+ public:
+>>>>>>> upstream-releases
   typedef NonOwningAnimationTarget KeyType;
   typedef const NonOwningAnimationTarget* KeyTypePointer;
 
@@ -36,15 +47,14 @@ class PseudoElementHashEntry : public PLDHashEntryHdr {
     if (!aKey) return 0;
 
     // Convert the scoped enum into an integer while adding it to hash.
-    // Note: CSSPseudoElementTypeBase is uint8_t, so we convert it into
-    //       uint8_t directly to avoid including the header.
+    static_assert(sizeof(PseudoStyleType) == sizeof(uint8_t), "");
     return mozilla::HashGeneric(aKey->mElement,
                                 static_cast<uint8_t>(aKey->mPseudoType));
   }
   enum { ALLOW_MEMMOVE = true };
 
   RefPtr<dom::Element> mElement;
-  CSSPseudoElementType mPseudoType;
+  PseudoStyleType mPseudoType;
 };
 
 }  // namespace mozilla

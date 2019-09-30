@@ -54,12 +54,31 @@ LocalStorage::LocalStorage(nsPIDOMWindowInner* aWindow,
                            LocalStorageManager* aManager,
                            LocalStorageCache* aCache,
                            const nsAString& aDocumentURI,
+<<<<<<< HEAD
                            nsIPrincipal* aPrincipal, bool aIsPrivate)
     : Storage(aWindow, aPrincipal),
       mManager(aManager),
       mCache(aCache),
       mDocumentURI(aDocumentURI),
       mIsPrivate(aIsPrivate) {
+||||||| merged common ancestors
+                           nsIPrincipal* aPrincipal,
+                           bool aIsPrivate)
+  : Storage(aWindow, aPrincipal)
+  , mManager(aManager)
+  , mCache(aCache)
+  , mDocumentURI(aDocumentURI)
+  , mIsPrivate(aIsPrivate)
+{
+=======
+                           nsIPrincipal* aPrincipal,
+                           nsIPrincipal* aStoragePrincipal, bool aIsPrivate)
+    : Storage(aWindow, aPrincipal, aStoragePrincipal),
+      mManager(aManager),
+      mCache(aCache),
+      mDocumentURI(aDocumentURI),
+      mIsPrivate(aIsPrivate) {
+>>>>>>> upstream-releases
   mCache->Preload();
 }
 
@@ -161,11 +180,34 @@ void LocalStorage::Clear(nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {
   }
 }
 
+<<<<<<< HEAD
 void LocalStorage::OnChange(const nsAString& aKey, const nsAString& aOldValue,
                             const nsAString& aNewValue) {
   NotifyChange(/* aStorage */ this, Principal(), aKey, aOldValue, aNewValue,
                /* aStorageType */ u"localStorage", mDocumentURI, mIsPrivate,
                /* aImmediateDispatch */ false);
+||||||| merged common ancestors
+void
+LocalStorage::OnChange(const nsAString& aKey,
+                       const nsAString& aOldValue,
+                       const nsAString& aNewValue)
+{
+  NotifyChange(/* aStorage */ this,
+               Principal(),
+               aKey,
+               aOldValue,
+               aNewValue,
+               /* aStorageType */ u"localStorage",
+               mDocumentURI,
+               mIsPrivate,
+               /* aImmediateDispatch */ false);
+=======
+void LocalStorage::OnChange(const nsAString& aKey, const nsAString& aOldValue,
+                            const nsAString& aNewValue) {
+  NotifyChange(/* aStorage */ this, StoragePrincipal(), aKey, aOldValue,
+               aNewValue, /* aStorageType */ u"localStorage", mDocumentURI,
+               mIsPrivate, /* aImmediateDispatch */ false);
+>>>>>>> upstream-releases
 }
 
 void LocalStorage::ApplyEvent(StorageEvent* aStorageEvent) {
@@ -195,11 +237,25 @@ void LocalStorage::ApplyEvent(StorageEvent* aStorageEvent) {
   mCache->SetItem(this, key, value, old, LocalStorageCache::E10sPropagated);
 }
 
+<<<<<<< HEAD
 bool LocalStorage::PrincipalEquals(nsIPrincipal* aPrincipal) {
   return StorageUtils::PrincipalsEqual(mPrincipal, aPrincipal);
 }
 
 void LocalStorage::GetSupportedNames(nsTArray<nsString>& aKeys) {
+||||||| merged common ancestors
+bool
+LocalStorage::PrincipalEquals(nsIPrincipal* aPrincipal)
+{
+  return StorageUtils::PrincipalsEqual(mPrincipal, aPrincipal);
+}
+
+void
+LocalStorage::GetSupportedNames(nsTArray<nsString>& aKeys)
+{
+=======
+void LocalStorage::GetSupportedNames(nsTArray<nsString>& aKeys) {
+>>>>>>> upstream-releases
   if (!CanUseStorage(*nsContentUtils::SubjectPrincipal())) {
     // return just an empty array
     aKeys.Clear();

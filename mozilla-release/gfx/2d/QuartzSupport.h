@@ -8,13 +8,13 @@
 #define nsCoreAnimationSupport_h__
 #ifdef XP_MACOSX
 
-#import <OpenGL/OpenGL.h>
-#import <OpenGL/gl.h>
-#import "ApplicationServices/ApplicationServices.h"
-#include "gfxTypes.h"
-#include "mozilla/RefPtr.h"
-#include "mozilla/gfx/MacIOSurface.h"
-#include "nsError.h"
+#  import <OpenGL/OpenGL.h>
+#  import <OpenGL/gl.h>
+#  import "ApplicationServices/ApplicationServices.h"
+#  include "gfxTypes.h"
+#  include "mozilla/RefPtr.h"
+#  include "mozilla/gfx/MacIOSurface.h"
+#  include "nsError.h"
 
 // Get the system color space.
 CGColorSpaceRef CreateSystemColorSpace();
@@ -54,31 +54,65 @@ class nsCARenderer : public mozilla::RefCounted<nsCARenderer> {
                          AllowOfflineRendererEnum aAllowOfflineRenderer);
   // aWidth and aHeight are in "display pixels".  Multiply by
   // aContentsScaleFactor to get device pixels.
+<<<<<<< HEAD
   nsresult Render(int aWidth, int aHeight, double aContentsScaleFactor,
                   CGImageRef *aOutCAImage);
+||||||| merged common ancestors
+  nsresult Render(int aWidth, int aHeight,
+                  double aContentsScaleFactor,
+                  CGImageRef *aOutCAImage);
+=======
+  nsresult Render(int aWidth, int aHeight, double aContentsScaleFactor,
+                  CGImageRef* aOutCAImage);
+>>>>>>> upstream-releases
   bool isInit() { return mCARenderer != nullptr; }
   /*
    * Render the CALayer to an IOSurface. If no IOSurface
    * is attached then an internal pixel buffer will be
    * used.
    */
-  void AttachIOSurface(MacIOSurface *aSurface);
+  void AttachIOSurface(MacIOSurface* aSurface);
   IOSurfaceID GetIOSurfaceID();
   // aX, aY, aWidth and aHeight are in "display pixels".  Multiply by
   // surf->GetContentsScaleFactor() to get device pixels.
   static nsresult DrawSurfaceToCGContext(CGContextRef aContext,
+<<<<<<< HEAD
                                          MacIOSurface *surf,
                                          CGColorSpaceRef aColorSpace, int aX,
                                          int aY, size_t aWidth, size_t aHeight);
+||||||| merged common ancestors
+                                         MacIOSurface *surf,
+                                         CGColorSpaceRef aColorSpace,
+                                         int aX, int aY,
+                                         size_t aWidth, size_t aHeight);
+=======
+                                         MacIOSurface* surf,
+                                         CGColorSpaceRef aColorSpace, int aX,
+                                         int aY, size_t aWidth, size_t aHeight);
+>>>>>>> upstream-releases
 
   // Remove & Add the layer without destroying
   // the renderer for fast back buffer swapping.
   void DetachCALayer();
+<<<<<<< HEAD
   void AttachCALayer(void *aCALayer);
 #ifdef DEBUG
   static void SaveToDisk(MacIOSurface *surf);
 #endif
  private:
+||||||| merged common ancestors
+  void AttachCALayer(void *aCALayer);
+#ifdef DEBUG
+  static void SaveToDisk(MacIOSurface *surf);
+#endif
+private:
+=======
+  void AttachCALayer(void* aCALayer);
+#  ifdef DEBUG
+  static void SaveToDisk(MacIOSurface* surf);
+#  endif
+ private:
+>>>>>>> upstream-releases
   // aWidth and aHeight are in "display pixels".  Multiply by
   // mContentsScaleFactor to get device pixels.
   void SetBounds(int aWidth, int aHeight);
@@ -87,12 +121,28 @@ class nsCARenderer : public mozilla::RefCounted<nsCARenderer> {
   void SetViewport(int aWidth, int aHeight);
   void Destroy();
 
+<<<<<<< HEAD
   void *mCARenderer;
   void *mWrapperCALayer;
   GLuint mFBOTexture;
   _CGLContextObject *mOpenGLContext;
   CGImageRef mCGImage;
   void *mCGData;
+||||||| merged common ancestors
+  void *mCARenderer;
+  void *mWrapperCALayer;
+  GLuint                    mFBOTexture;
+  _CGLContextObject        *mOpenGLContext;
+  CGImageRef                mCGImage;
+  void                     *mCGData;
+=======
+  void* mCARenderer;
+  void* mWrapperCALayer;
+  GLuint mFBOTexture;
+  _CGLContextObject* mOpenGLContext;
+  CGImageRef mCGImage;
+  void* mCGData;
+>>>>>>> upstream-releases
   RefPtr<MacIOSurface> mIOSurface;
   uint32_t mFBO;
   uint32_t mIOTexture;

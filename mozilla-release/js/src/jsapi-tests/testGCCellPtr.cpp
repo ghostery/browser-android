@@ -9,25 +9,79 @@
 #include "jspubtd.h"
 
 #include "gc/Heap.h"
-#include "js/CompilationAndEvaluation.h"
+#include "js/CompilationAndEvaluation.h"  // JS::CompileDontInflate
+#include "js/SourceText.h"                // JS::Source{Ownership,Text}
 #include "jsapi-tests/tests.h"
 
+<<<<<<< HEAD
+JS::GCCellPtr GivesAndTakesCells(JS::GCCellPtr cell) { return cell; }
+||||||| merged common ancestors
+JS::GCCellPtr
+GivesAndTakesCells(JS::GCCellPtr cell)
+{
+    return cell;
+}
+=======
 JS::GCCellPtr GivesAndTakesCells(JS::GCCellPtr cell) { return cell; }
 
 BEGIN_TEST(testGCCellPtr) {
   JS::RootedObject obj(cx, JS_NewPlainObject(cx));
   CHECK(obj);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+BEGIN_TEST(testGCCellPtr) {
+  JS::RootedObject obj(cx, JS_NewPlainObject(cx));
+  CHECK(obj);
+||||||| merged common ancestors
+BEGIN_TEST(testGCCellPtr)
+{
+    JS::RootedObject obj(cx, JS_NewPlainObject(cx));
+    CHECK(obj);
+=======
   JS::RootedString str(cx, JS_NewStringCopyZ(cx, "probably foobar"));
   CHECK(str);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::RootedString str(cx, JS_NewStringCopyZ(cx, "probably foobar"));
+  CHECK(str);
+||||||| merged common ancestors
+    JS::RootedString str(cx, JS_NewStringCopyZ(cx, "probably foobar"));
+    CHECK(str);
+=======
   const char* code = "function foo() { return 'bar'; }";
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const char* code = "function foo() { return 'bar'; }";
+||||||| merged common ancestors
+    const char* code = "function foo() { return 'bar'; }";
+=======
   JS::CompileOptions opts(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::CompileOptions opts(cx);
+||||||| merged common ancestors
+    JS::CompileOptions opts(cx);
+=======
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, code, strlen(code), JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8(cx, opts, code, strlen(code), &script));
   CHECK(script);
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, opts, code, strlen(code), &script));
+    CHECK(script);
+=======
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, opts, srcBuf));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   CHECK(!JS::GCCellPtr(nullptr));
 

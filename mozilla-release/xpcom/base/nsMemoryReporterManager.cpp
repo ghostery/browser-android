@@ -16,16 +16,18 @@
 #include "nsThreadUtils.h"
 #include "nsPIDOMWindow.h"
 #include "nsIObserverService.h"
+#include "nsIOService.h"
 #include "nsIGlobalObject.h"
 #include "nsIXPConnect.h"
 #ifdef MOZ_GECKO_PROFILER
-#include "GeckoProfilerReporter.h"
+#  include "GeckoProfilerReporter.h"
 #endif
 #if defined(XP_UNIX) || defined(MOZ_DMD)
-#include "nsMemoryInfoDumper.h"
+#  include "nsMemoryInfoDumper.h"
 #endif
 #include "nsNetCID.h"
 #include "nsThread.h"
+#include "VRProcessManager.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/MemoryReportingProcess.h"
 #include "mozilla/PodOperations.h"
@@ -41,14 +43,14 @@
 #include "mozilla/ipc/FileDescriptorUtils.h"
 
 #ifdef XP_WIN
-#include "mozilla/MemoryInfo.h"
+#  include "mozilla/MemoryInfo.h"
 
-#include <process.h>
-#ifndef getpid
-#define getpid _getpid
-#endif
+#  include <process.h>
+#  ifndef getpid
+#    define getpid _getpid
+#  endif
 #else
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 using namespace mozilla;
@@ -61,11 +63,11 @@ using namespace dom;
 
 #if defined(XP_LINUX)
 
-#include "mozilla/MemoryMapping.h"
+#  include "mozilla/MemoryMapping.h"
 
-#include <malloc.h>
-#include <string.h>
-#include <stdlib.h>
+#  include <malloc.h>
+#  include <string.h>
+#  include <stdlib.h>
 
 static MOZ_MUST_USE nsresult GetProcSelfStatmField(int aField, int64_t* aN) {
   // There are more than two fields, but we're only interested in the first
@@ -104,8 +106,18 @@ static MOZ_MUST_USE nsresult GetProcSelfSmapsPrivate(int64_t* aN) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
 static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult
+VsizeDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   return GetProcSelfStatmField(0, aN);
 }
 
@@ -117,15 +129,39 @@ static MOZ_MUST_USE nsresult ResidentFastDistinguishedAmount(int64_t* aN) {
   return ResidentDistinguishedAmount(aN);
 }
 
+<<<<<<< HEAD
 #define HAVE_RESIDENT_UNIQUE_REPORTER 1
 static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_RESIDENT_UNIQUE_REPORTER 1
+static MOZ_MUST_USE nsresult
+ResidentUniqueDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_RESIDENT_UNIQUE_REPORTER 1
+static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   return GetProcSelfSmapsPrivate(aN);
 }
 
+<<<<<<< HEAD
 #ifdef HAVE_MALLINFO
 #define HAVE_SYSTEM_HEAP_REPORTER 1
 static MOZ_MUST_USE nsresult SystemHeapSize(int64_t* aSizeOut) {
   struct mallinfo info = mallinfo();
+||||||| merged common ancestors
+#ifdef HAVE_MALLINFO
+#define HAVE_SYSTEM_HEAP_REPORTER 1
+static MOZ_MUST_USE nsresult
+SystemHeapSize(int64_t* aSizeOut)
+{
+    struct mallinfo info = mallinfo();
+=======
+#  ifdef HAVE_MALLINFO
+#    define HAVE_SYSTEM_HEAP_REPORTER 1
+static MOZ_MUST_USE nsresult SystemHeapSize(int64_t* aSizeOut) {
+  struct mallinfo info = mallinfo();
+>>>>>>> upstream-releases
 
   // The documentation in the glibc man page makes it sound like |uordblks|
   // would suffice, but that only gets the small allocations that are put in
@@ -140,6 +176,7 @@ static MOZ_MUST_USE nsresult SystemHeapSize(int64_t* aSizeOut) {
   *aSizeOut = size_t(info.hblkhd) + size_t(info.uordblks);
   return NS_OK;
 }
+<<<<<<< HEAD
 #endif
 
 #elif defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
@@ -179,20 +216,103 @@ static MOZ_MUST_USE nsresult SystemHeapSize(int64_t* aSizeOut) {
 
 static MOZ_MUST_USE nsresult GetKinfoProcSelf(KINFO_PROC* aProc) {
 #if defined(__OpenBSD__) && defined(MOZ_SANDBOX)
+||||||| merged common ancestors
+#endif
+
+#elif defined(__DragonFly__) || defined(__FreeBSD__) \
+    || defined(__NetBSD__) || defined(__OpenBSD__) \
+    || defined(__FreeBSD_kernel__)
+
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+#include <sys/user.h>
+#endif
+
+#include <unistd.h>
+
+#if defined(__NetBSD__)
+#undef KERN_PROC
+#define KERN_PROC KERN_PROC2
+#define KINFO_PROC struct kinfo_proc2
+#else
+#define KINFO_PROC struct kinfo_proc
+#endif
+
+#if defined(__DragonFly__)
+#define KP_SIZE(kp) (kp.kp_vm_map_size)
+#define KP_RSS(kp) (kp.kp_vm_rssize * getpagesize())
+#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+#define KP_SIZE(kp) (kp.ki_size)
+#define KP_RSS(kp) (kp.ki_rssize * getpagesize())
+#elif defined(__NetBSD__)
+#define KP_SIZE(kp) (kp.p_vm_msize * getpagesize())
+#define KP_RSS(kp) (kp.p_vm_rssize * getpagesize())
+#elif defined(__OpenBSD__)
+#define KP_SIZE(kp) ((kp.p_vm_dsize + kp.p_vm_ssize                     \
+                      + kp.p_vm_tsize) * getpagesize())
+#define KP_RSS(kp) (kp.p_vm_rssize * getpagesize())
+#endif
+
+static MOZ_MUST_USE nsresult
+GetKinfoProcSelf(KINFO_PROC* aProc)
+{
+#if defined(__OpenBSD__) && defined(MOZ_SANDBOX)
+=======
+#  endif
+
+#elif defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
+    defined(__OpenBSD__) || defined(__FreeBSD_kernel__)
+
+#  include <sys/param.h>
+#  include <sys/sysctl.h>
+#  if defined(__DragonFly__) || defined(__FreeBSD__) || \
+      defined(__FreeBSD_kernel__)
+#    include <sys/user.h>
+#  endif
+
+#  include <unistd.h>
+
+#  if defined(__NetBSD__)
+#    undef KERN_PROC
+#    define KERN_PROC KERN_PROC2
+#    define KINFO_PROC struct kinfo_proc2
+#  else
+#    define KINFO_PROC struct kinfo_proc
+#  endif
+
+#  if defined(__DragonFly__)
+#    define KP_SIZE(kp) (kp.kp_vm_map_size)
+#    define KP_RSS(kp) (kp.kp_vm_rssize * getpagesize())
+#  elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+#    define KP_SIZE(kp) (kp.ki_size)
+#    define KP_RSS(kp) (kp.ki_rssize * getpagesize())
+#  elif defined(__NetBSD__)
+#    define KP_SIZE(kp) (kp.p_vm_msize * getpagesize())
+#    define KP_RSS(kp) (kp.p_vm_rssize * getpagesize())
+#  elif defined(__OpenBSD__)
+#    define KP_SIZE(kp) \
+      ((kp.p_vm_dsize + kp.p_vm_ssize + kp.p_vm_tsize) * getpagesize())
+#    define KP_RSS(kp) (kp.p_vm_rssize * getpagesize())
+#  endif
+
+static MOZ_MUST_USE nsresult GetKinfoProcSelf(KINFO_PROC* aProc) {
+#  if defined(__OpenBSD__) && defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
   static LazyLogModule sPledgeLog("SandboxPledge");
   MOZ_LOG(sPledgeLog, LogLevel::Debug,
           ("%s called when pledged, returning NS_ERROR_FAILURE\n", __func__));
   return NS_ERROR_FAILURE;
-#endif
+#  endif
   int mib[] = {
     CTL_KERN,
     KERN_PROC,
     KERN_PROC_PID,
     getpid(),
-#if defined(__NetBSD__) || defined(__OpenBSD__)
+#  if defined(__NetBSD__) || defined(__OpenBSD__)
     sizeof(KINFO_PROC),
     1,
-#endif
+#  endif
   };
   u_int miblen = sizeof(mib) / sizeof(mib[0]);
   size_t size = sizeof(KINFO_PROC);
@@ -202,8 +322,18 @@ static MOZ_MUST_USE nsresult GetKinfoProcSelf(KINFO_PROC* aProc) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
 static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult
+VsizeDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   KINFO_PROC proc;
   nsresult rv = GetKinfoProcSelf(&proc);
   if (NS_SUCCEEDED(rv)) {
@@ -225,9 +355,9 @@ static MOZ_MUST_USE nsresult ResidentFastDistinguishedAmount(int64_t* aN) {
   return ResidentDistinguishedAmount(aN);
 }
 
-#ifdef __FreeBSD__
-#include <libutil.h>
-#include <algorithm>
+#  ifdef __FreeBSD__
+#    include <libutil.h>
+#    include <algorithm>
 
 static MOZ_MUST_USE nsresult GetKinfoVmentrySelf(int64_t* aPrss,
                                                  uint64_t* aMaxreg) {
@@ -258,8 +388,18 @@ static MOZ_MUST_USE nsresult GetKinfoVmentrySelf(int64_t* aPrss,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #define HAVE_PRIVATE_REPORTER 1
 static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_PRIVATE_REPORTER 1
+static MOZ_MUST_USE nsresult
+PrivateDistinguishedAmount(int64_t* aN)
+{
+=======
+#    define HAVE_PRIVATE_REPORTER 1
+static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   int64_t priv;
   nsresult rv = GetKinfoVmentrySelf(&priv, nullptr);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -267,7 +407,7 @@ static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
   return NS_OK;
 }
 
-#define HAVE_VSIZE_MAX_CONTIGUOUS_REPORTER 1
+#    define HAVE_VSIZE_MAX_CONTIGUOUS_REPORTER 1
 static MOZ_MUST_USE nsresult
 VsizeMaxContiguousDistinguishedAmount(int64_t* aN) {
   uint64_t biggestRegion;
@@ -277,13 +417,19 @@ VsizeMaxContiguousDistinguishedAmount(int64_t* aN) {
   }
   return NS_OK;
 }
+<<<<<<< HEAD
 #endif  // FreeBSD
+||||||| merged common ancestors
+#endif // FreeBSD
+=======
+#  endif  // FreeBSD
+>>>>>>> upstream-releases
 
 #elif defined(SOLARIS)
 
-#include <procfs.h>
-#include <fcntl.h>
-#include <unistd.h>
+#  include <procfs.h>
+#  include <fcntl.h>
+#  include <unistd.h>
 
 static void XMappingIter(int64_t& aVsize, int64_t& aResident,
                          int64_t& aShared) {
@@ -331,8 +477,18 @@ static void XMappingIter(int64_t& aVsize, int64_t& aResident,
   }
 }
 
+<<<<<<< HEAD
 #define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
 static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult
+VsizeDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   int64_t vsize, resident, shared;
   XMappingIter(vsize, resident, shared);
   if (vsize == -1) {
@@ -356,8 +512,18 @@ static MOZ_MUST_USE nsresult ResidentFastDistinguishedAmount(int64_t* aN) {
   return ResidentDistinguishedAmount(aN);
 }
 
+<<<<<<< HEAD
 #define HAVE_RESIDENT_UNIQUE_REPORTER 1
 static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_RESIDENT_UNIQUE_REPORTER 1
+static MOZ_MUST_USE nsresult
+ResidentUniqueDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_RESIDENT_UNIQUE_REPORTER 1
+static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   int64_t vsize, resident, shared;
   XMappingIter(vsize, resident, shared);
   if (resident == -1) {
@@ -369,11 +535,11 @@ static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
 
 #elif defined(XP_MACOSX)
 
-#include <mach/mach_init.h>
-#include <mach/mach_vm.h>
-#include <mach/shared_region.h>
-#include <mach/task.h>
-#include <sys/sysctl.h>
+#  include <mach/mach_init.h>
+#  include <mach/mach_vm.h>
+#  include <mach/shared_region.h>
+#  include <mach/task.h>
+#  include <sys/sysctl.h>
 
 static MOZ_MUST_USE bool GetTaskBasicInfo(struct task_basic_info* aTi) {
   mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
@@ -385,8 +551,18 @@ static MOZ_MUST_USE bool GetTaskBasicInfo(struct task_basic_info* aTi) {
 // The VSIZE figure on Mac includes huge amounts of shared memory and is always
 // absurdly high, eg. 2GB+ even at start-up.  But both 'top' and 'ps' report
 // it, so we might as well too.
+<<<<<<< HEAD
 #define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
 static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult
+VsizeDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   task_basic_info ti;
   if (!GetTaskBasicInfo(&ti)) {
     return NS_ERROR_FAILURE;
@@ -402,14 +578,25 @@ static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
 //
 // Purging these pages can take a long time for some users (see bug 789975),
 // so we provide the option to get the RSS without purging first.
+<<<<<<< HEAD
 static MOZ_MUST_USE nsresult ResidentDistinguishedAmountHelper(int64_t* aN,
                                                                bool aDoPurge) {
 #ifdef HAVE_JEMALLOC_STATS
+||||||| merged common ancestors
+static MOZ_MUST_USE nsresult
+ResidentDistinguishedAmountHelper(int64_t* aN, bool aDoPurge)
+{
+#ifdef HAVE_JEMALLOC_STATS
+=======
+static MOZ_MUST_USE nsresult ResidentDistinguishedAmountHelper(int64_t* aN,
+                                                               bool aDoPurge) {
+#  ifdef HAVE_JEMALLOC_STATS
+>>>>>>> upstream-releases
   if (aDoPurge) {
     Telemetry::AutoTimer<Telemetry::MEMORY_FREE_PURGED_PAGES_MS> timer;
     jemalloc_purge_freed_pages();
   }
-#endif
+#  endif
 
   task_basic_info ti;
   if (!GetTaskBasicInfo(&ti)) {
@@ -427,7 +614,7 @@ static MOZ_MUST_USE nsresult ResidentDistinguishedAmount(int64_t* aN) {
   return ResidentDistinguishedAmountHelper(aN, /* doPurge = */ true);
 }
 
-#define HAVE_RESIDENT_UNIQUE_REPORTER 1
+#  define HAVE_RESIDENT_UNIQUE_REPORTER 1
 
 static bool InSharedRegion(mach_vm_address_t aAddr, cpu_type_t aType) {
   mach_vm_address_t base;
@@ -519,12 +706,22 @@ static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
 
 #elif defined(XP_WIN)
 
-#include <windows.h>
-#include <psapi.h>
-#include <algorithm>
+#  include <windows.h>
+#  include <psapi.h>
+#  include <algorithm>
 
+<<<<<<< HEAD
 #define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
 static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult
+VsizeDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_VSIZE_AND_RESIDENT_REPORTERS 1
+static MOZ_MUST_USE nsresult VsizeDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   MEMORYSTATUSEX s;
   s.dwLength = sizeof(s);
 
@@ -552,7 +749,7 @@ static MOZ_MUST_USE nsresult ResidentFastDistinguishedAmount(int64_t* aN) {
   return ResidentDistinguishedAmount(aN);
 }
 
-#define HAVE_RESIDENT_UNIQUE_REPORTER 1
+#  define HAVE_RESIDENT_UNIQUE_REPORTER 1
 
 static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
   // Determine how many entries we need.
@@ -599,7 +796,7 @@ static MOZ_MUST_USE nsresult ResidentUniqueDistinguishedAmount(int64_t* aN) {
   return NS_OK;
 }
 
-#define HAVE_VSIZE_MAX_CONTIGUOUS_REPORTER 1
+#  define HAVE_VSIZE_MAX_CONTIGUOUS_REPORTER 1
 static MOZ_MUST_USE nsresult
 VsizeMaxContiguousDistinguishedAmount(int64_t* aN) {
   SIZE_T biggestRegion = 0;
@@ -627,8 +824,18 @@ VsizeMaxContiguousDistinguishedAmount(int64_t* aN) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #define HAVE_PRIVATE_REPORTER 1
 static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
+||||||| merged common ancestors
+#define HAVE_PRIVATE_REPORTER 1
+static MOZ_MUST_USE nsresult
+PrivateDistinguishedAmount(int64_t* aN)
+{
+=======
+#  define HAVE_PRIVATE_REPORTER 1
+static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
+>>>>>>> upstream-releases
   PROCESS_MEMORY_COUNTERS_EX pmcex;
   pmcex.cb = sizeof(PROCESS_MEMORY_COUNTERS_EX);
 
@@ -641,7 +848,7 @@ static MOZ_MUST_USE nsresult PrivateDistinguishedAmount(int64_t* aN) {
   return NS_OK;
 }
 
-#define HAVE_SYSTEM_HEAP_REPORTER 1
+#  define HAVE_SYSTEM_HEAP_REPORTER 1
 // Windows can have multiple separate heaps. During testing there were multiple
 // heaps present but the non-default ones had sizes no more than a few 10s of
 // KiBs. So we combine their sizes into a single measurement.
@@ -1074,9 +1281,9 @@ NS_IMPL_ISUPPORTS(SystemHeapReporter, nsIMemoryReporter)
 
 #ifdef XP_UNIX
 
-#include <sys/resource.h>
+#  include <sys/resource.h>
 
-#define HAVE_RESIDENT_PEAK_REPORTER 1
+#  define HAVE_RESIDENT_PEAK_REPORTER 1
 
 static MOZ_MUST_USE nsresult ResidentPeakDistinguishedAmount(int64_t* aN) {
   struct rusage usage;
@@ -1086,13 +1293,13 @@ static MOZ_MUST_USE nsresult ResidentPeakDistinguishedAmount(int64_t* aN) {
     // - Solaris: pages? But some sources it actually always returns 0, so
     //   check for that
     // - Linux, {Net/Open/Free}BSD, DragonFly: KiB
-#ifdef XP_MACOSX
+#  ifdef XP_MACOSX
     *aN = usage.ru_maxrss;
-#elif defined(SOLARIS)
+#  elif defined(SOLARIS)
     *aN = usage.ru_maxrss * getpagesize();
-#else
+#  else
     *aN = usage.ru_maxrss * 1024;
-#endif
+#  endif
     if (*aN > 0) {
       return NS_OK;
     }
@@ -1119,7 +1326,7 @@ class ResidentPeakReporter final : public nsIMemoryReporter {
 };
 NS_IMPL_ISUPPORTS(ResidentPeakReporter, nsIMemoryReporter)
 
-#define HAVE_PAGE_FAULT_REPORTERS 1
+#  define HAVE_PAGE_FAULT_REPORTERS 1
 
 class PageFaultsSoftReporter final : public nsIMemoryReporter {
   ~PageFaultsSoftReporter() {}
@@ -1401,10 +1608,10 @@ class ThreadsReporter final : public nsIMemoryReporter {
       // special cases don't cover. And if there are, we want to know about it.
       // So assert that total size of the memory region we're reporting actually
       // matches the allocated size of the thread stack.
-#ifndef ANDROID
+#  ifndef ANDROID
       MOZ_ASSERT(mappings[idx].Size() == thread->StackSize(),
                  "Mapping region size doesn't match stack allocation size");
-#endif
+#  endif
 #elif defined(XP_WIN)
       auto memInfo = MemoryInfo::Get(thread->StackBase(), thread->StackSize());
       size_t privateSize = memInfo.Committed();
@@ -1457,11 +1664,11 @@ class ThreadsReporter final : public nsIMemoryReporter {
     // On Linux, kernel stacks are usually 8K. However, on x86, they are
     // allocated virtually, and start out at 4K. They may grow to 8K, but we
     // have no way of knowing which ones do, so all we can do is guess.
-#if defined(__x86_64__) || defined(__i386__)
+#  if defined(__x86_64__) || defined(__i386__)
     constexpr size_t kKernelSize = 4 * 1024;
-#else
+#  else
     constexpr size_t kKernelSize = 8 * 1024;
-#endif
+#  endif
 #elif defined(XP_MACOSX)
     // On Darwin, kernel stacks are 16K:
     //
@@ -1703,10 +1910,10 @@ nsMemoryReporterManager::CollectReports(nsIHandleReportCallback* aHandleReport,
 }
 
 #ifdef DEBUG_CHILD_PROCESS_MEMORY_REPORTING
-#define MEMORY_REPORTING_LOG(format, ...) \
-  printf_stderr("++++ MEMORY REPORTING: " format, ##__VA_ARGS__);
+#  define MEMORY_REPORTING_LOG(format, ...) \
+    printf_stderr("++++ MEMORY REPORTING: " format, ##__VA_ARGS__);
 #else
-#define MEMORY_REPORTING_LOG(...)
+#  define MEMORY_REPORTING_LOG(...)
 #endif
 
 NS_IMETHODIMP
@@ -1807,12 +2014,35 @@ nsresult nsMemoryReporterManager::StartGettingReports() {
     }
   }
 
+<<<<<<< HEAD
   if (RDDProcessManager* rdd = RDDProcessManager::Get()) {
     if (RefPtr<MemoryReportingProcess> proc = rdd->GetProcessMemoryReporter()) {
       s->mChildrenPending.AppendElement(proc.forget());
     }
   }
 
+||||||| merged common ancestors
+=======
+  if (RDDProcessManager* rdd = RDDProcessManager::Get()) {
+    if (RefPtr<MemoryReportingProcess> proc = rdd->GetProcessMemoryReporter()) {
+      s->mChildrenPending.AppendElement(proc.forget());
+    }
+  }
+
+  if (gfx::VRProcessManager* vr = gfx::VRProcessManager::Get()) {
+    if (RefPtr<MemoryReportingProcess> proc = vr->GetProcessMemoryReporter()) {
+      s->mChildrenPending.AppendElement(proc.forget());
+    }
+  }
+
+  if (!mIsRegistrationBlocked && net::gIOService) {
+    if (RefPtr<MemoryReportingProcess> proc =
+            net::gIOService->GetSocketProcessMemoryReporter()) {
+      s->mChildrenPending.AppendElement(proc.forget());
+    }
+  }
+
+>>>>>>> upstream-releases
   if (!s->mChildrenPending.IsEmpty()) {
     nsCOMPtr<nsITimer> timer;
     rv = NS_NewTimerWithFuncCallback(
@@ -1980,9 +2210,21 @@ void nsMemoryReporterManager::HandleChildReport(
                              s->mHandleReportData);
 }
 
+<<<<<<< HEAD
 /* static */ bool nsMemoryReporterManager::StartChildReport(
     mozilla::MemoryReportingProcess* aChild,
     const PendingProcessesState* aState) {
+||||||| merged common ancestors
+/* static */ bool
+nsMemoryReporterManager::StartChildReport(mozilla::MemoryReportingProcess* aChild,
+                                          const PendingProcessesState* aState)
+{
+=======
+/* static */
+bool nsMemoryReporterManager::StartChildReport(
+    mozilla::MemoryReportingProcess* aChild,
+    const PendingProcessesState* aState) {
+>>>>>>> upstream-releases
   if (!aChild->IsAlive()) {
     MEMORY_REPORTING_LOG(
         "StartChildReports (gen=%u): child exited before"
@@ -1991,7 +2233,7 @@ void nsMemoryReporterManager::HandleChildReport(
     return false;
   }
 
-  mozilla::dom::MaybeFileDesc dmdFileDesc = void_t();
+  Maybe<mozilla::ipc::FileDescriptor> dmdFileDesc;
 #ifdef MOZ_DMD
   if (!aState->mDMDDumpIdent.IsEmpty()) {
     FILE* dmdFile = nullptr;
@@ -2002,7 +2244,7 @@ void nsMemoryReporterManager::HandleChildReport(
       dmdFile = nullptr;
     }
     if (dmdFile) {
-      dmdFileDesc = mozilla::ipc::FILEToFileDescriptor(dmdFile);
+      dmdFileDesc = Some(mozilla::ipc::FILEToFileDescriptor(dmdFile));
       fclose(dmdFile);
     }
   }
@@ -2057,8 +2299,17 @@ void nsMemoryReporterManager::EndProcessReport(uint32_t aGeneration,
   }
 }
 
+<<<<<<< HEAD
 /* static */ void nsMemoryReporterManager::TimeoutCallback(nsITimer* aTimer,
                                                            void* aData) {
+||||||| merged common ancestors
+/* static */ void
+nsMemoryReporterManager::TimeoutCallback(nsITimer* aTimer, void* aData)
+{
+=======
+/* static */
+void nsMemoryReporterManager::TimeoutCallback(nsITimer* aTimer, void* aData) {
+>>>>>>> upstream-releases
   nsMemoryReporterManager* mgr = static_cast<nsMemoryReporterManager*>(aData);
   PendingProcessesState* s = mgr->mPendingProcessesState;
 
@@ -2338,7 +2589,16 @@ nsMemoryReporterManager::GetResidentFast(int64_t* aAmount) {
 #endif
 }
 
+<<<<<<< HEAD
 /*static*/ int64_t nsMemoryReporterManager::ResidentFast() {
+||||||| merged common ancestors
+/*static*/ int64_t
+nsMemoryReporterManager::ResidentFast()
+{
+=======
+/*static*/
+int64_t nsMemoryReporterManager::ResidentFast() {
+>>>>>>> upstream-releases
 #ifdef HAVE_VSIZE_AND_RESIDENT_REPORTERS
   int64_t amount;
   nsresult rv = ResidentFastDistinguishedAmount(&amount);
@@ -2359,7 +2619,16 @@ nsMemoryReporterManager::GetResidentPeak(int64_t* aAmount) {
 #endif
 }
 
+<<<<<<< HEAD
 /*static*/ int64_t nsMemoryReporterManager::ResidentPeak() {
+||||||| merged common ancestors
+/*static*/ int64_t
+nsMemoryReporterManager::ResidentPeak()
+{
+=======
+/*static*/
+int64_t nsMemoryReporterManager::ResidentPeak() {
+>>>>>>> upstream-releases
 #ifdef HAVE_RESIDENT_PEAK_REPORTER
   int64_t amount = 0;
   nsresult rv = ResidentPeakDistinguishedAmount(&amount);
@@ -2380,7 +2649,16 @@ nsMemoryReporterManager::GetResidentUnique(int64_t* aAmount) {
 #endif
 }
 
+<<<<<<< HEAD
 /*static*/ int64_t nsMemoryReporterManager::ResidentUnique() {
+||||||| merged common ancestors
+/*static*/ int64_t
+nsMemoryReporterManager::ResidentUnique()
+{
+=======
+/*static*/
+int64_t nsMemoryReporterManager::ResidentUnique() {
+>>>>>>> upstream-releases
 #ifdef HAVE_RESIDENT_UNIQUE_REPORTER
   int64_t amount = 0;
   nsresult rv = ResidentUniqueDistinguishedAmount(&amount);
@@ -2404,6 +2682,7 @@ nsMemoryReporterManager::GetHeapAllocated(int64_t* aAmount) {
 #endif
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsMemoryReporterManager::GetHeapAllocatedAsync(
     nsIHeapAllocatedCallback* aCallback) {
@@ -2447,6 +2726,52 @@ nsMemoryReporterManager::GetHeapAllocatedAsync(
 #endif
 }
 
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsMemoryReporterManager::GetHeapAllocatedAsync(nsIHeapAllocatedCallback *aCallback)
+{
+#ifdef HAVE_JEMALLOC_STATS
+  if (!mThreadPool) {
+    return NS_ERROR_UNEXPECTED;
+  }
+
+  RefPtr<nsIMemoryReporterManager> self{this};
+  nsMainThreadPtrHandle<nsIHeapAllocatedCallback> mainThreadCallback(
+    new nsMainThreadPtrHolder<nsIHeapAllocatedCallback>("HeapAllocatedCallback",
+                                                        aCallback));
+
+  nsCOMPtr<nsIRunnable> getHeapAllocatedRunnable = NS_NewRunnableFunction(
+    "nsMemoryReporterManager::GetHeapAllocatedAsync",
+    [self, mainThreadCallback]() mutable {
+      MOZ_ASSERT(!NS_IsMainThread());
+
+      int64_t heapAllocated = 0;
+      nsresult rv = self->GetHeapAllocated(&heapAllocated);
+
+      nsCOMPtr<nsIRunnable> resultCallbackRunnable = NS_NewRunnableFunction(
+        "nsMemoryReporterManager::GetHeapAllocatedAsync",
+        [mainThreadCallback, heapAllocated, rv]() mutable {
+          MOZ_ASSERT(NS_IsMainThread());
+
+          if (NS_FAILED(rv)) {
+            mainThreadCallback->Callback(0);
+            return;
+          }
+
+          mainThreadCallback->Callback(heapAllocated);
+        });  // resultCallbackRunnable.
+
+      Unused << NS_DispatchToMainThread(resultCallbackRunnable);
+    }); // getHeapAllocatedRunnable.
+
+  return mThreadPool->Dispatch(getHeapAllocatedRunnable, NS_DISPATCH_NORMAL);
+#else
+  return NS_ERROR_NOT_AVAILABLE;
+#endif
+}
+
+=======
+>>>>>>> upstream-releases
 // This has UNITS_PERCENTAGE, so it is multiplied by 100x.
 NS_IMETHODIMP
 nsMemoryReporterManager::GetHeapOverheadFraction(int64_t* aAmount) {
@@ -2482,6 +2807,44 @@ nsMemoryReporterManager::GetJSMainRuntimeTemporaryPeak(int64_t* aAmount) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsMemoryReporterManager::GetJSMainRuntimeRealmsSystem(int64_t* aAmount) {
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeRealmsSystem, aAmount);
+||||||| merged common ancestors
+nsMemoryReporterManager::GetJSMainRuntimeRealmsSystem(int64_t* aAmount)
+{
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeRealmsSystem,
+                             aAmount);
+=======
+nsMemoryReporterManager::GetJSMainRuntimeCompartmentsSystem(int64_t* aAmount) {
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeCompartmentsSystem,
+                             aAmount);
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsMemoryReporterManager::GetJSMainRuntimeRealmsUser(int64_t* aAmount) {
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeRealmsUser, aAmount);
+||||||| merged common ancestors
+nsMemoryReporterManager::GetJSMainRuntimeRealmsUser(int64_t* aAmount)
+{
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeRealmsUser,
+                             aAmount);
+=======
+nsMemoryReporterManager::GetJSMainRuntimeCompartmentsUser(int64_t* aAmount) {
+  return GetInfallibleAmount(mAmountFns.mJSMainRuntimeCompartmentsUser,
+                             aAmount);
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsMemoryReporterManager::GetImagesContentUsedUncompressed(int64_t* aAmount) {
+||||||| merged common ancestors
+nsMemoryReporterManager::GetImagesContentUsedUncompressed(int64_t* aAmount)
+{
+=======
 nsMemoryReporterManager::GetJSMainRuntimeRealmsSystem(int64_t* aAmount) {
   return GetInfallibleAmount(mAmountFns.mJSMainRuntimeRealmsSystem, aAmount);
 }
@@ -2493,6 +2856,7 @@ nsMemoryReporterManager::GetJSMainRuntimeRealmsUser(int64_t* aAmount) {
 
 NS_IMETHODIMP
 nsMemoryReporterManager::GetImagesContentUsedUncompressed(int64_t* aAmount) {
+>>>>>>> upstream-releases
   return GetInfallibleAmount(mAmountFns.mImagesContentUsedUncompressed,
                              aAmount);
 }
@@ -2744,6 +3108,9 @@ nsresult UnregisterWeakMemoryReporter(nsIMemoryReporter* aReporter) {
 
 DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible, JSMainRuntimeGCHeap)
 DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible, JSMainRuntimeTemporaryPeak)
+DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible,
+                                     JSMainRuntimeCompartmentsSystem)
+DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible, JSMainRuntimeCompartmentsUser)
 DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible, JSMainRuntimeRealmsSystem)
 DEFINE_REGISTER_DISTINGUISHED_AMOUNT(Infallible, JSMainRuntimeRealmsUser)
 

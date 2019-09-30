@@ -14,6 +14,7 @@
 // Note: "GP" is short for "Gecko Profiler".
 
 #undef GP_PLAT_x86_android
+#undef GP_PLAT_amd64_android
 #undef GP_PLAT_arm_android
 #undef GP_PLAT_arm64_android
 #undef GP_PLAT_x86_linux
@@ -40,69 +41,204 @@
 // Android and Linux, whereas GP_OS_android is not defined on vanilla Linux.
 
 #if defined(__ANDROID__) && defined(__i386__)
+<<<<<<< HEAD
 #define GP_PLAT_x86_android 1
 #define GP_ARCH_x86 1
 #define GP_OS_android 1
+||||||| merged common ancestors
+# define GP_PLAT_x86_android 1
+# define GP_ARCH_x86 1
+# define GP_OS_android 1
+=======
+#  define GP_PLAT_x86_android 1
+#  define GP_ARCH_x86 1
+#  define GP_OS_android 1
+
+#elif defined(__ANDROID__) && defined(__x86_64__)
+#  define GP_PLAT_amd64_android 1
+#  define GP_ARCH_amd64 1
+#  define GP_OS_android 1
+>>>>>>> upstream-releases
 
 #elif defined(__ANDROID__) && defined(__arm__)
+<<<<<<< HEAD
 #define GP_PLAT_arm_android 1
 #define GP_ARCH_arm 1
 #define GP_OS_android 1
+||||||| merged common ancestors
+# define GP_PLAT_arm_android 1
+# define GP_ARCH_arm 1
+# define GP_OS_android 1
+=======
+#  define GP_PLAT_arm_android 1
+#  define GP_ARCH_arm 1
+#  define GP_OS_android 1
+>>>>>>> upstream-releases
 
 #elif defined(__ANDROID__) && defined(__aarch64__)
+<<<<<<< HEAD
 #define GP_PLAT_arm64_android 1
 #define GP_ARCH_arm64 1
 #define GP_OS_android 1
+||||||| merged common ancestors
+# define GP_PLAT_arm64_android 1
+# define GP_ARCH_arm64 1
+# define GP_OS_android 1
+=======
+#  define GP_PLAT_arm64_android 1
+#  define GP_ARCH_arm64 1
+#  define GP_OS_android 1
+>>>>>>> upstream-releases
 
 #elif defined(__linux__) && defined(__i386__)
+<<<<<<< HEAD
 #define GP_PLAT_x86_linux 1
 #define GP_ARCH_x86 1
 #define GP_OS_linux 1
+||||||| merged common ancestors
+# define GP_PLAT_x86_linux 1
+# define GP_ARCH_x86 1
+# define GP_OS_linux 1
+=======
+#  define GP_PLAT_x86_linux 1
+#  define GP_ARCH_x86 1
+#  define GP_OS_linux 1
+>>>>>>> upstream-releases
 
 #elif defined(__linux__) && defined(__x86_64__)
+<<<<<<< HEAD
 #define GP_PLAT_amd64_linux 1
 #define GP_ARCH_amd64 1
 #define GP_OS_linux 1
+||||||| merged common ancestors
+# define GP_PLAT_amd64_linux 1
+# define GP_ARCH_amd64 1
+# define GP_OS_linux 1
+=======
+#  define GP_PLAT_amd64_linux 1
+#  define GP_ARCH_amd64 1
+#  define GP_OS_linux 1
+>>>>>>> upstream-releases
 
 #elif defined(__linux__) && defined(__arm__)
+<<<<<<< HEAD
 #define GP_PLAT_arm_linux 1
 #define GP_ARCH_arm 1
 #define GP_OS_linux 1
+||||||| merged common ancestors
+# define GP_PLAT_arm_linux 1
+# define GP_ARCH_arm 1
+# define GP_OS_linux 1
+=======
+#  define GP_PLAT_arm_linux 1
+#  define GP_ARCH_arm 1
+#  define GP_OS_linux 1
+>>>>>>> upstream-releases
 
 #elif defined(__linux__) && defined(__aarch64__)
+<<<<<<< HEAD
 #define GP_PLAT_arm64_linux 1
 #define GP_ARCH_arm64 1
 #define GP_OS_linux 1
+||||||| merged common ancestors
+# define GP_PLAT_arm64_linux 1
+# define GP_ARCH_arm64 1
+# define GP_OS_linux 1
+=======
+#  define GP_PLAT_arm64_linux 1
+#  define GP_ARCH_arm64 1
+#  define GP_OS_linux 1
+>>>>>>> upstream-releases
 
 #elif defined(__linux__) && defined(__mips64)
+<<<<<<< HEAD
 #define GP_PLAT_mips64_linux 1
 #define GP_ARCH_mips64 1
 #define GP_OS_linux 1
+||||||| merged common ancestors
+# define GP_PLAT_mips64_linux 1
+# define GP_ARCH_mips64 1
+# define GP_OS_linux 1
+=======
+#  define GP_PLAT_mips64_linux 1
+#  define GP_ARCH_mips64 1
+#  define GP_OS_linux 1
+>>>>>>> upstream-releases
 
 #elif defined(__APPLE__) && defined(__x86_64__)
+<<<<<<< HEAD
 #define GP_PLAT_amd64_darwin 1
 #define GP_ARCH_amd64 1
 #define GP_OS_darwin 1
+||||||| merged common ancestors
+# define GP_PLAT_amd64_darwin 1
+# define GP_ARCH_amd64 1
+# define GP_OS_darwin 1
+=======
+#  define GP_PLAT_amd64_darwin 1
+#  define GP_ARCH_amd64 1
+#  define GP_OS_darwin 1
+>>>>>>> upstream-releases
 
 #elif (defined(_MSC_VER) || defined(__MINGW32__)) && \
+<<<<<<< HEAD
     (defined(_M_IX86) || defined(__i386__))
 #define GP_PLAT_x86_windows 1
 #define GP_ARCH_x86 1
 #define GP_OS_windows 1
+||||||| merged common ancestors
+      (defined(_M_IX86) || defined(__i386__))
+# define GP_PLAT_x86_windows 1
+# define GP_ARCH_x86 1
+# define GP_OS_windows 1
+=======
+    (defined(_M_IX86) || defined(__i386__))
+#  define GP_PLAT_x86_windows 1
+#  define GP_ARCH_x86 1
+#  define GP_OS_windows 1
+>>>>>>> upstream-releases
 
 #elif (defined(_MSC_VER) || defined(__MINGW32__)) && \
+<<<<<<< HEAD
     (defined(_M_X64) || defined(__x86_64__))
 #define GP_PLAT_amd64_windows 1
 #define GP_ARCH_amd64 1
 #define GP_OS_windows 1
+||||||| merged common ancestors
+      (defined(_M_X64) || defined(__x86_64__))
+# define GP_PLAT_amd64_windows 1
+# define GP_ARCH_amd64 1
+# define GP_OS_windows 1
+=======
+    (defined(_M_X64) || defined(__x86_64__))
+#  define GP_PLAT_amd64_windows 1
+#  define GP_ARCH_amd64 1
+#  define GP_OS_windows 1
+>>>>>>> upstream-releases
 
 #elif defined(_MSC_VER) && defined(_M_ARM64)
+<<<<<<< HEAD
 #define GP_PLAT_arm64_windows 1
 #define GP_ARCH_arm64 1
 #define GP_OS_windows 1
+||||||| merged common ancestors
+# define GP_PLAT_arm64_windows 1
+# define GP_ARCH_arm64 1
+# define GP_OS_windows 1
+=======
+#  define GP_PLAT_arm64_windows 1
+#  define GP_ARCH_arm64 1
+#  define GP_OS_windows 1
+>>>>>>> upstream-releases
 
 #else
+<<<<<<< HEAD
 #error "Unsupported platform"
+||||||| merged common ancestors
+# error "Unsupported platform"
+=======
+#  error "Unsupported platform"
+>>>>>>> upstream-releases
 #endif
 
 #endif /* ndef PLATFORM_MACROS_H */

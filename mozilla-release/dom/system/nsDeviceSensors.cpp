@@ -16,6 +16,7 @@
 #include "nsIServiceManager.h"
 #include "nsIServiceManager.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Attributes.h"
 #include "nsIPermissionManager.h"
 #include "mozilla/dom/DeviceLightEvent.h"
@@ -34,12 +35,6 @@ using namespace hal;
 #undef near
 
 #define DEFAULT_SENSOR_POLL 100
-
-static bool gPrefSensorsEnabled = false;
-static bool gPrefMotionSensorEnabled = false;
-static bool gPrefOrientationSensorEnabled = false;
-static bool gPrefProximitySensorEnabled = false;
-static bool gPrefAmbientLightSensorEnabled = false;
 
 static const nsTArray<nsIDOMWindow*>::index_type NoIndex =
     nsTArray<nsIDOMWindow*>::NoIndex;
@@ -101,6 +96,7 @@ NS_IMPL_ISUPPORTS(nsDeviceSensors, nsIDeviceSensors)
 nsDeviceSensors::nsDeviceSensors() {
   mIsUserProximityNear = false;
   mLastDOMMotionEventTime = TimeStamp::Now();
+<<<<<<< HEAD
   Preferences::AddBoolVarCache(&gPrefSensorsEnabled, "device.sensors.enabled",
                                true);
   Preferences::AddBoolVarCache(&gPrefMotionSensorEnabled,
@@ -111,6 +107,24 @@ nsDeviceSensors::nsDeviceSensors() {
                                "device.sensors.proximity.enabled", false);
   Preferences::AddBoolVarCache(&gPrefAmbientLightSensorEnabled,
                                "device.sensors.ambientLight.enabled", false);
+||||||| merged common ancestors
+  Preferences::AddBoolVarCache(&gPrefSensorsEnabled,
+                              "device.sensors.enabled",
+                              true);
+  Preferences::AddBoolVarCache(&gPrefMotionSensorEnabled,
+                              "device.sensors.motion.enabled",
+                              true);
+  Preferences::AddBoolVarCache(&gPrefOrientationSensorEnabled,
+                              "device.sensors.orientation.enabled",
+                              true);
+  Preferences::AddBoolVarCache(&gPrefProximitySensorEnabled,
+                              "device.sensors.proximity.enabled",
+                              false);
+  Preferences::AddBoolVarCache(&gPrefAmbientLightSensorEnabled,
+                              "device.sensors.ambientLight.enabled",
+                              false);
+=======
+>>>>>>> upstream-releases
 
   for (int i = 0; i < NUM_SENSOR_TYPE; i++) {
     nsTArray<nsIDOMWindow*>* windows = new nsTArray<nsIDOMWindow*>();
@@ -334,9 +348,18 @@ void nsDeviceSensors::Notify(const mozilla::hal::SensorData& aSensorData) {
       continue;
     }
 
+<<<<<<< HEAD
     if (nsCOMPtr<nsIDocument> doc = pwindow->GetDoc()) {
       nsCOMPtr<mozilla::dom::EventTarget> target =
           do_QueryInterface(windowListeners[i]);
+||||||| merged common ancestors
+    if (nsCOMPtr<nsIDocument> doc = pwindow->GetDoc()) {
+      nsCOMPtr<mozilla::dom::EventTarget> target = do_QueryInterface(windowListeners[i]);
+=======
+    if (nsCOMPtr<Document> doc = pwindow->GetDoc()) {
+      nsCOMPtr<mozilla::dom::EventTarget> target =
+          do_QueryInterface(windowListeners[i]);
+>>>>>>> upstream-releases
       if (type == nsIDeviceSensorData::TYPE_ACCELERATION ||
           type == nsIDeviceSensorData::TYPE_LINEAR_ACCELERATION ||
           type == nsIDeviceSensorData::TYPE_GYROSCOPE) {
@@ -453,9 +476,25 @@ void nsDeviceSensors::FireDOMOrientationEvent(EventTarget* aTarget,
   }
 }
 
+<<<<<<< HEAD
 void nsDeviceSensors::FireDOMMotionEvent(nsIDocument* doc, EventTarget* target,
                                          uint32_t type, PRTime timestamp,
                                          double x, double y, double z) {
+||||||| merged common ancestors
+void
+nsDeviceSensors::FireDOMMotionEvent(nsIDocument *doc,
+                                    EventTarget* target,
+                                    uint32_t type,
+                                    PRTime timestamp,
+                                    double x,
+                                    double y,
+                                    double z)
+{
+=======
+void nsDeviceSensors::FireDOMMotionEvent(Document* doc, EventTarget* target,
+                                         uint32_t type, PRTime timestamp,
+                                         double x, double y, double z) {
+>>>>>>> upstream-releases
   // Attempt to coalesce events
   TimeDuration sensorPollDuration =
       TimeDuration::FromMilliseconds(DEFAULT_SENSOR_POLL);
@@ -532,17 +571,18 @@ void nsDeviceSensors::FireDOMMotionEvent(nsIDocument* doc, EventTarget* target,
 bool nsDeviceSensors::IsSensorAllowedByPref(uint32_t aType,
                                             nsIDOMWindow* aWindow) {
   // checks "device.sensors.enabled" master pref
-  if (!gPrefSensorsEnabled) {
+  if (!StaticPrefs::device_sensors_enabled()) {
     return false;
   }
 
   nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aWindow);
-  nsCOMPtr<nsIDocument> doc;
+  nsCOMPtr<Document> doc;
   if (window) {
     doc = window->GetExtantDoc();
   }
 
   switch (aType) {
+<<<<<<< HEAD
     case nsIDeviceSensorData::TYPE_LINEAR_ACCELERATION:
     case nsIDeviceSensorData::TYPE_ACCELERATION:
     case nsIDeviceSensorData::TYPE_GYROSCOPE:
@@ -581,6 +621,78 @@ bool nsDeviceSensors::IsSensorAllowedByPref(uint32_t aType,
       break;
     default:
       MOZ_ASSERT_UNREACHABLE("Device sensor type not recognised");
+||||||| merged common ancestors
+  case nsIDeviceSensorData::TYPE_LINEAR_ACCELERATION:
+  case nsIDeviceSensorData::TYPE_ACCELERATION:
+  case nsIDeviceSensorData::TYPE_GYROSCOPE:
+    // checks "device.sensors.motion.enabled" pref
+    if (!gPrefMotionSensorEnabled) {
+      return false;
+    } else if (doc) {
+      doc->WarnOnceAbout(nsIDocument::eMotionEvent);
+    }
+    break;
+  case nsIDeviceSensorData::TYPE_GAME_ROTATION_VECTOR:
+  case nsIDeviceSensorData::TYPE_ORIENTATION:
+  case nsIDeviceSensorData::TYPE_ROTATION_VECTOR:
+    // checks "device.sensors.orientation.enabled" pref
+    if (!gPrefOrientationSensorEnabled) {
+      return false;
+    } else if (doc) {
+      doc->WarnOnceAbout(nsIDocument::eOrientationEvent);
+    }
+    break;
+  case nsIDeviceSensorData::TYPE_PROXIMITY:
+    // checks "device.sensors.proximity.enabled" pref
+    if (!gPrefProximitySensorEnabled) {
+      return false;
+    } else if (doc) {
+      doc->WarnOnceAbout(nsIDocument::eProximityEvent, true);
+    }
+    break;
+  case nsIDeviceSensorData::TYPE_LIGHT:
+    // checks "device.sensors.ambientLight.enabled" pref
+    if (!gPrefAmbientLightSensorEnabled) {
+=======
+    case nsIDeviceSensorData::TYPE_LINEAR_ACCELERATION:
+    case nsIDeviceSensorData::TYPE_ACCELERATION:
+    case nsIDeviceSensorData::TYPE_GYROSCOPE:
+      // checks "device.sensors.motion.enabled" pref
+      if (!StaticPrefs::device_sensors_motion_enabled()) {
+        return false;
+      } else if (doc) {
+        doc->WarnOnceAbout(Document::eMotionEvent);
+      }
+      break;
+    case nsIDeviceSensorData::TYPE_GAME_ROTATION_VECTOR:
+    case nsIDeviceSensorData::TYPE_ORIENTATION:
+    case nsIDeviceSensorData::TYPE_ROTATION_VECTOR:
+      // checks "device.sensors.orientation.enabled" pref
+      if (!StaticPrefs::device_sensors_orientation_enabled()) {
+        return false;
+      } else if (doc) {
+        doc->WarnOnceAbout(Document::eOrientationEvent);
+      }
+      break;
+    case nsIDeviceSensorData::TYPE_PROXIMITY:
+      // checks "device.sensors.proximity.enabled" pref
+      if (!StaticPrefs::device_sensors_proximity_enabled()) {
+        return false;
+      } else if (doc) {
+        doc->WarnOnceAbout(Document::eProximityEvent, true);
+      }
+      break;
+    case nsIDeviceSensorData::TYPE_LIGHT:
+      // checks "device.sensors.ambientLight.enabled" pref
+      if (!StaticPrefs::device_sensors_ambientLight_enabled()) {
+        return false;
+      } else if (doc) {
+        doc->WarnOnceAbout(Document::eAmbientLightEvent, true);
+      }
+      break;
+    default:
+      MOZ_ASSERT_UNREACHABLE("Device sensor type not recognised");
+>>>>>>> upstream-releases
       return false;
   }
 

@@ -16,6 +16,10 @@
 class gfxContext;
 class nsSVGForeignObjectFrame;
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 ////////////////////////////////////////////////////////////////////////
 // nsSVGOuterSVGFrame class
 
@@ -23,11 +27,25 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
                                  public nsISVGSVGFrame {
   typedef mozilla::image::imgDrawingParams imgDrawingParams;
 
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewSVGOuterSVGFrame(nsIPresShell* aPresShell,
                                                   ComputedStyle* aStyle);
 
  protected:
   explicit nsSVGOuterSVGFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsContainerFrame*
+  NS_NewSVGOuterSVGFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGOuterSVGFrame(ComputedStyle* aStyle);
+=======
+  friend nsContainerFrame* NS_NewSVGOuterSVGFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+
+ protected:
+  explicit nsSVGOuterSVGFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext);
+>>>>>>> upstream-releases
 
  public:
   NS_DECL_QUERYFRAME
@@ -45,6 +63,7 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
   virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
 
   virtual mozilla::IntrinsicSize GetIntrinsicSize() override;
+<<<<<<< HEAD
   virtual nsSize GetIntrinsicRatio() override;
 
   virtual mozilla::LogicalSize ComputeSize(
@@ -54,6 +73,32 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
       const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
 
   virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+||||||| merged common ancestors
+  virtual nsSize  GetIntrinsicRatio() override;
+
+  virtual mozilla::LogicalSize
+  ComputeSize(gfxContext *aRenderingContext,
+              mozilla::WritingMode aWritingMode,
+              const mozilla::LogicalSize& aCBSize,
+              nscoord aAvailableISize,
+              const mozilla::LogicalSize& aMargin,
+              const mozilla::LogicalSize& aBorder,
+              const mozilla::LogicalSize& aPadding,
+              ComputeSizeFlags aFlags) override;
+
+  virtual void Reflow(nsPresContext*           aPresContext,
+                      ReflowOutput&     aDesiredSize,
+=======
+  virtual mozilla::AspectRatio GetIntrinsicRatio() override;
+
+  virtual mozilla::LogicalSize ComputeSize(
+      gfxContext* aRenderingContext, mozilla::WritingMode aWritingMode,
+      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
+      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
+      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
+
+  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+>>>>>>> upstream-releases
                       const ReflowInput& aReflowInput,
                       nsReflowStatus& aStatus) override;
 
@@ -70,7 +115,14 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
 
   bool IsFrameOfType(uint32_t aFlags) const override {
     return nsSVGDisplayContainerFrame::IsFrameOfType(
+<<<<<<< HEAD
         aFlags & ~eSupportsContainLayoutAndPaint);
+||||||| merged common ancestors
+      aFlags & ~eSupportsContainLayoutAndPaint);
+=======
+        aFlags &
+        ~(eSupportsContainLayoutAndPaint | eReplaced | eReplacedSizing));
+>>>>>>> upstream-releases
   }
 
 #ifdef DEBUG_FRAME_DUMP
@@ -185,6 +237,11 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
 
   bool mViewportInitialized;
   bool mIsRootContent;
+
+ private:
+  template <typename... Args>
+  bool IsContainingWindowElementOfType(nsIFrame** aContainingWindowFrame,
+                                       Args... aArgs) const;
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -213,12 +270,34 @@ class nsSVGOuterSVGFrame final : public nsSVGDisplayContainerFrame,
  * example, the implementations of IsSVGTransformed and GetCanvasTM assume
  * nsSVGContainerFrame instances all the way up to the nsSVGOuterSVGFrame.
  */
+<<<<<<< HEAD
 class nsSVGOuterSVGAnonChildFrame final : public nsSVGDisplayContainerFrame {
   friend nsContainerFrame* NS_NewSVGOuterSVGAnonChildFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGOuterSVGAnonChildFrame final : public nsSVGDisplayContainerFrame
+{
+  friend nsContainerFrame*
+  NS_NewSVGOuterSVGAnonChildFrame(nsIPresShell* aPresShell,
+                                  ComputedStyle* aStyle);
+=======
+class nsSVGOuterSVGAnonChildFrame final : public nsSVGDisplayContainerFrame {
+  friend nsContainerFrame* NS_NewSVGOuterSVGAnonChildFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   explicit nsSVGOuterSVGAnonChildFrame(ComputedStyle* aStyle)
       : nsSVGDisplayContainerFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsSVGOuterSVGAnonChildFrame(ComputedStyle* aStyle)
+    : nsSVGDisplayContainerFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsSVGOuterSVGAnonChildFrame(ComputedStyle* aStyle,
+                                       nsPresContext* aPresContext)
+      : nsSVGDisplayContainerFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsSVGOuterSVGAnonChildFrame)

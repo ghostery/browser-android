@@ -6,13 +6,28 @@
 
 #include "nsTransform2D.h"
 
+<<<<<<< HEAD
 void nsTransform2D ::TransformCoord(nscoord *ptX, nscoord *ptY) const {
+||||||| merged common ancestors
+void nsTransform2D :: TransformCoord(nscoord *ptX, nscoord *ptY) const
+{
+=======
+void nsTransform2D ::TransformCoord(nscoord* ptX, nscoord* ptY) const {
+>>>>>>> upstream-releases
   *ptX = NSToCoordRound(*ptX * m00 + m20);
   *ptY = NSToCoordRound(*ptY * m11 + m21);
 }
 
+<<<<<<< HEAD
 void nsTransform2D ::TransformCoord(nscoord *aX, nscoord *aY, nscoord *aWidth,
                                     nscoord *aHeight) const {
+||||||| merged common ancestors
+void nsTransform2D :: TransformCoord(nscoord *aX, nscoord *aY, nscoord *aWidth, nscoord *aHeight) const
+{
+=======
+void nsTransform2D ::TransformCoord(nscoord* aX, nscoord* aY, nscoord* aWidth,
+                                    nscoord* aHeight) const {
+>>>>>>> upstream-releases
   nscoord x2 = *aX + *aWidth;
   nscoord y2 = *aY + *aHeight;
   TransformCoord(aX, aY);

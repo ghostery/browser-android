@@ -107,10 +107,10 @@ void FlushRecording();
 // Called when any thread hits the end of its event stream.
 void HitEndOfRecording();
 
-// Called when the main thread hits the latest recording endpoint it knows
-// about.
-bool HitRecordingEndpoint();
+// Called in a replaying process to load the last checkpoint in the recording.
+size_t RecordingEndpoint();
 
+<<<<<<< HEAD
 // Possible directives to give via the RecordReplayDirective function.
 enum class Directive {
   // Crash at the next use of MaybeCrash.
@@ -125,6 +125,28 @@ enum class Directive {
   // Mark all future checkpoints as major checkpoints in the middleman.
   AlwaysMarkMajorCheckpoints = 4
 };
+||||||| merged common ancestors
+// Possible directives to give via the RecordReplayDirective function.
+enum class Directive
+{
+  // Crash at the next use of MaybeCrash.
+  CrashSoon = 1,
+
+  // Irrevocably crash if CrashSoon has ever been used on the process.
+  MaybeCrash = 2,
+
+  // Always save temporary checkpoints when stepping around in the debugger.
+  AlwaysSaveTemporaryCheckpoints = 3,
+
+  // Mark all future checkpoints as major checkpoints in the middleman.
+  AlwaysMarkMajorCheckpoints = 4
+};
+=======
+// Access the flag for whether this is the main child. The main child never
+// rewinds and sends graphics updates to the middleman while running forward.
+bool IsMainChild();
+void SetMainChild();
+>>>>>>> upstream-releases
 
 // Get the process kind and recording file specified at the command line.
 // These are available in the middleman as well as while recording/replaying.
@@ -283,8 +305,8 @@ enum class MemoryKind {
   SortedDirtyPageSet,
   PageCopy,
 
-  // Memory used for navigation state.
-  Navigation,
+  // Memory used by various parts of JS integration.
+  ScriptHits,
 
   Count
 };

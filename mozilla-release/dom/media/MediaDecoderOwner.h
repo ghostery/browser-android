@@ -10,9 +10,16 @@
 #include "MediaInfo.h"
 #include "MediaSegment.h"
 #include "nsSize.h"
+<<<<<<< HEAD
 #include "TrackID.h"
 
 class nsIDocument;
+||||||| merged common ancestors
+
+class nsIDocument;
+=======
+#include "TrackID.h"
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -23,6 +30,7 @@ class MediaInfo;
 class MediaResult;
 
 namespace dom {
+class Document;
 class HTMLMediaElement;
 }  // namespace dom
 
@@ -171,7 +179,7 @@ class MediaDecoderOwner {
   virtual VideoFrameContainer* GetVideoFrameContainer() { return nullptr; }
 
   // Return the decoder owner's owner document.
-  virtual nsIDocument* GetDocument() const { return nullptr; }
+  virtual mozilla::dom::Document* GetDocument() const { return nullptr; }
 
   // Called by the media decoder to create a GMPCrashHelper.
   virtual already_AddRefed<GMPCrashHelper> CreateGMPCrashHelper() {

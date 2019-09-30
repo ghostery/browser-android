@@ -16,7 +16,6 @@
 
 namespace js {
 
-using JS::AutoIdVector;
 using JS::CallArgs;
 using JS::Handle;
 using JS::HandleId;
@@ -24,6 +23,7 @@ using JS::HandleObject;
 using JS::HandleValue;
 using JS::IsAcceptableThis;
 using JS::MutableHandle;
+using JS::MutableHandleIdVector;
 using JS::MutableHandleObject;
 using JS::MutableHandleValue;
 using JS::NativeImpl;
@@ -167,6 +167,7 @@ class JS_FRIEND_API Wrapper;
  * explicit override for the method in SecurityWrapper. See bug 945826 comment
  * 0.
  */
+<<<<<<< HEAD
 class JS_FRIEND_API BaseProxyHandler {
   /*
    * Sometimes it's desirable to designate groups of proxy handlers as
@@ -211,8 +212,98 @@ class JS_FRIEND_API BaseProxyHandler {
   explicit constexpr BaseProxyHandler(const void* aFamily,
                                       bool aHasPrototype = false,
                                       bool aHasSecurityPolicy = false)
+||||||| merged common ancestors
+class JS_FRIEND_API(BaseProxyHandler)
+{
+    /*
+     * Sometimes it's desirable to designate groups of proxy handlers as "similar".
+     * For this, we use the notion of a "family": A consumer-provided opaque pointer
+     * that designates the larger group to which this proxy belongs.
+     *
+     * If it will never be important to differentiate this proxy from others as
+     * part of a distinct group, nullptr may be used instead.
+     */
+    const void* mFamily;
+
+    /*
+     * Proxy handlers can use mHasPrototype to request the following special
+     * treatment from the JS engine:
+     *
+     *   - When mHasPrototype is true, the engine never calls these methods:
+     *     getPropertyDescriptor, has, set, enumerate, iterate.  Instead, for
+     *     these operations, it calls the "own" methods like
+     *     getOwnPropertyDescriptor, hasOwn, defineProperty,
+     *     getOwnEnumerablePropertyKeys, etc., and consults the prototype chain
+     *     if needed.
+     *
+     *   - When mHasPrototype is true, the engine calls handler->get() only if
+     *     handler->hasOwn() says an own property exists on the proxy. If not,
+     *     it consults the prototype chain.
+     *
+     * This is useful because it frees the ProxyHandler from having to implement
+     * any behavior having to do with the prototype chain.
+     */
+    bool mHasPrototype;
+
+    /*
+     * All proxies indicate whether they have any sort of interesting security
+     * policy that might prevent the caller from doing something it wants to
+     * the object. In the case of wrappers, this distinction is used to
+     * determine whether the caller may strip off the wrapper if it so desires.
+     */
+    bool mHasSecurityPolicy;
+
+  public:
+    explicit constexpr BaseProxyHandler(const void* aFamily, bool aHasPrototype = false,
+                                            bool aHasSecurityPolicy = false)
+=======
+class JS_FRIEND_API BaseProxyHandler {
+  /*
+   * Sometimes it's desirable to designate groups of proxy handlers as
+   * "similar". For this, we use the notion of a "family": A consumer-provided
+   * opaque pointer that designates the larger group to which this proxy
+   * belongs.
+   *
+   * If it will never be important to differentiate this proxy from others as
+   * part of a distinct group, nullptr may be used instead.
+   */
+  const void* mFamily;
+
+  /*
+   * Proxy handlers can use mHasPrototype to request the following special
+   * treatment from the JS engine:
+   *
+   *   - When mHasPrototype is true, the engine never calls these methods:
+   *     has, set, enumerate, iterate.  Instead, for these operations,
+   *     it calls the "own" methods like getOwnPropertyDescriptor, hasOwn,
+   *     defineProperty, getOwnEnumerablePropertyKeys, etc.,
+   *     and consults the prototype chain if needed.
+   *
+   *   - When mHasPrototype is true, the engine calls handler->get() only if
+   *     handler->hasOwn() says an own property exists on the proxy. If not,
+   *     it consults the prototype chain.
+   *
+   * This is useful because it frees the ProxyHandler from having to implement
+   * any behavior having to do with the prototype chain.
+   */
+  bool mHasPrototype;
+
+  /*
+   * All proxies indicate whether they have any sort of interesting security
+   * policy that might prevent the caller from doing something it wants to
+   * the object. In the case of wrappers, this distinction is used to
+   * determine whether the caller may strip off the wrapper if it so desires.
+   */
+  bool mHasSecurityPolicy;
+
+ public:
+  explicit constexpr BaseProxyHandler(const void* aFamily,
+                                      bool aHasPrototype = false,
+                                      bool aHasSecurityPolicy = false)
+>>>>>>> upstream-releases
       : mFamily(aFamily),
         mHasPrototype(aHasPrototype),
+<<<<<<< HEAD
         mHasSecurityPolicy(aHasSecurityPolicy) {}
 
   bool hasPrototype() const { return mHasPrototype; }
@@ -229,12 +320,133 @@ class JS_FRIEND_API BaseProxyHandler {
      */
     return true;
   }
+||||||| merged common ancestors
+        mHasSecurityPolicy(aHasSecurityPolicy)
+    { }
 
-  virtual bool canNurseryAllocate() const {
+    bool hasPrototype() const {
+        return mHasPrototype;
+    }
+
+    bool hasSecurityPolicy() const {
+        return mHasSecurityPolicy;
+    }
+
+    inline const void* family() const {
+        return mFamily;
+    }
+    static size_t offsetOfFamily() {
+        return offsetof(BaseProxyHandler, mFamily);
+    }
+
+    virtual bool finalizeInBackground(const Value& priv) const {
+        /*
+         * Called on creation of a proxy to determine whether its finalize
+         * method can be finalized on the background thread.
+         */
+        return true;
+    }
+
+    virtual bool canNurseryAllocate() const {
+        /*
+         * Nursery allocation is allowed if and only if it is safe to not
+         * run |finalize| when the ProxyObject dies.
+         */
+        return false;
+    }
+
+    /* Policy enforcement methods.
+     *
+     * enter() allows the policy to specify whether the caller may perform |act|
+     * on the proxy's |id| property. In the case when |act| is CALL, |id| is
+     * generally JSID_VOID.  The |mayThrow| parameter indicates whether a
+     * handler that wants to throw custom exceptions when denying should do so
+     * or not.
+     *
+     * The |act| parameter to enter() specifies the action being performed.
+     * If |bp| is false, the method suggests that the caller throw (though it
+     * may still decide to squelch the error).
+     *
+     * We make these OR-able so that assertEnteredPolicy can pass a union of them.
+     * For example, get{,Own}PropertyDescriptor is invoked by calls to ::get()
+     * ::set(), in addition to being invoked on its own, so there are several
+     * valid Actions that could have been entered.
+     */
+    typedef uint32_t Action;
+    enum {
+        NONE      = 0x00,
+        GET       = 0x01,
+        SET       = 0x02,
+        CALL      = 0x04,
+        ENUMERATE = 0x08,
+        GET_PROPERTY_DESCRIPTOR = 0x10
+    };
+
+    virtual bool enter(JSContext* cx, HandleObject wrapper, HandleId id, Action act, bool mayThrow,
+                       bool* bp) const;
+
+    /* Standard internal methods. */
+    virtual bool getOwnPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
+                                          MutableHandle<PropertyDescriptor> desc) const = 0;
+    virtual bool defineProperty(JSContext* cx, HandleObject proxy, HandleId id,
+                                Handle<PropertyDescriptor> desc,
+                                ObjectOpResult& result) const = 0;
+    virtual bool ownPropertyKeys(JSContext* cx, HandleObject proxy,
+                                 AutoIdVector& props) const = 0;
+    virtual bool delete_(JSContext* cx, HandleObject proxy, HandleId id,
+                         ObjectOpResult& result) const = 0;
+
     /*
+     * These methods are standard, but the engine does not normally call them.
+     * They're opt-in. See "Proxy prototype chains" above.
+     *
+     * getPrototype() crashes if called. setPrototype() throws a TypeError.
+     */
+    virtual bool getPrototype(JSContext* cx, HandleObject proxy, MutableHandleObject protop) const;
+    virtual bool setPrototype(JSContext* cx, HandleObject proxy, HandleObject proto,
+                              ObjectOpResult& result) const;
+
+    /* Non-standard but conceptual kin to {g,s}etPrototype, so these live here. */
+    virtual bool getPrototypeIfOrdinary(JSContext* cx, HandleObject proxy, bool* isOrdinary,
+                                        MutableHandleObject protop) const = 0;
+    virtual bool setImmutablePrototype(JSContext* cx, HandleObject proxy, bool* succeeded) const;
+
+    virtual bool preventExtensions(JSContext* cx, HandleObject proxy,
+                                   ObjectOpResult& result) const = 0;
+    virtual bool isExtensible(JSContext* cx, HandleObject proxy, bool* extensible) const = 0;
+=======
+        mHasSecurityPolicy(aHasSecurityPolicy) {}
+
+  bool hasPrototype() const { return mHasPrototype; }
+
+  bool hasSecurityPolicy() const { return mHasSecurityPolicy; }
+
+  inline const void* family() const { return mFamily; }
+  static size_t offsetOfFamily() { return offsetof(BaseProxyHandler, mFamily); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual bool canNurseryAllocate() const {
+||||||| merged common ancestors
+=======
+  virtual bool finalizeInBackground(const Value& priv) const {
+>>>>>>> upstream-releases
+    /*
+<<<<<<< HEAD
      * Nursery allocation is allowed if and only if it is safe to not
      * run |finalize| when the ProxyObject dies.
+||||||| merged common ancestors
+     * These standard internal methods are implemented, as a convenience, so
+     * that ProxyHandler subclasses don't have to provide every single method.
+     *
+     * The base-class implementations work by calling getPropertyDescriptor().
+     * They do not follow any standard. When in doubt, override them.
+=======
+     * Called on creation of a proxy to determine whether its finalize
+     * method can be finalized on the background thread.
+>>>>>>> upstream-releases
      */
+<<<<<<< HEAD
     return false;
   }
 
@@ -376,6 +588,211 @@ class JS_FRIEND_API BaseProxyHandler {
   /* See comment for weakmapKeyDelegateOp in js/Class.h. */
   virtual JSObject* weakmapKeyDelegate(JSObject* proxy) const;
   virtual bool isScripted() const { return false; }
+||||||| merged common ancestors
+    virtual bool has(JSContext* cx, HandleObject proxy, HandleId id, bool* bp) const;
+    virtual bool get(JSContext* cx, HandleObject proxy, HandleValue receiver,
+                     HandleId id, MutableHandleValue vp) const;
+    virtual bool set(JSContext* cx, HandleObject proxy, HandleId id, HandleValue v,
+                     HandleValue receiver, ObjectOpResult& result) const;
+
+    /*
+     * [[Call]] and [[Construct]] are standard internal methods but according
+     * to the spec, they are not present on every object.
+     *
+     * SpiderMonkey never calls a proxy's call()/construct() internal method
+     * unless isCallable()/isConstructor() returns true for that proxy.
+     *
+     * BaseProxyHandler::isCallable()/isConstructor() always return false, and
+     * BaseProxyHandler::call()/construct() crash if called. So if you're
+     * creating a kind of that is never callable, you don't have to override
+     * anything, but otherwise you probably want to override all four.
+     */
+    virtual bool call(JSContext* cx, HandleObject proxy, const CallArgs& args) const;
+    virtual bool construct(JSContext* cx, HandleObject proxy, const CallArgs& args) const;
+
+    /* SpiderMonkey extensions. */
+    virtual JSObject* enumerate(JSContext* cx, HandleObject proxy) const;
+    virtual bool getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
+                                       MutableHandle<PropertyDescriptor> desc) const;
+    virtual bool hasOwn(JSContext* cx, HandleObject proxy, HandleId id, bool* bp) const;
+    virtual bool getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
+                                              AutoIdVector& props) const;
+    virtual bool nativeCall(JSContext* cx, IsAcceptableThis test, NativeImpl impl,
+                            const CallArgs& args) const;
+    virtual bool hasInstance(JSContext* cx, HandleObject proxy, MutableHandleValue v, bool* bp) const;
+    virtual bool getBuiltinClass(JSContext* cx, HandleObject proxy,
+                                 ESClass* cls) const;
+    virtual bool isArray(JSContext* cx, HandleObject proxy, JS::IsArrayAnswer* answer) const;
+    virtual const char* className(JSContext* cx, HandleObject proxy) const;
+    virtual JSString* fun_toString(JSContext* cx, HandleObject proxy, bool isToSource) const;
+    virtual RegExpShared* regexp_toShared(JSContext* cx, HandleObject proxy) const;
+    virtual bool boxedValue_unbox(JSContext* cx, HandleObject proxy, MutableHandleValue vp) const;
+    virtual void trace(JSTracer* trc, JSObject* proxy) const;
+    virtual void finalize(JSFreeOp* fop, JSObject* proxy) const;
+    virtual size_t objectMoved(JSObject* proxy, JSObject* old) const;
+
+    // Allow proxies, wrappers in particular, to specify callability at runtime.
+    // Note: These do not take const JSObject*, but they do in spirit.
+    //       We are not prepared to do this, as there's little const correctness
+    //       in the external APIs that handle proxies.
+    virtual bool isCallable(JSObject* obj) const;
+    virtual bool isConstructor(JSObject* obj) const;
+
+    virtual bool getElements(JSContext* cx, HandleObject proxy, uint32_t begin, uint32_t end,
+                             ElementAdder* adder) const;
+
+    /* See comment for weakmapKeyDelegateOp in js/Class.h. */
+    virtual JSObject* weakmapKeyDelegate(JSObject* proxy) const;
+    virtual bool isScripted() const { return false; }
+=======
+    return true;
+  }
+
+  virtual bool canNurseryAllocate() const {
+    /*
+     * Nursery allocation is allowed if and only if it is safe to not
+     * run |finalize| when the ProxyObject dies.
+     */
+    return false;
+  }
+
+  /* Policy enforcement methods.
+   *
+   * enter() allows the policy to specify whether the caller may perform |act|
+   * on the proxy's |id| property. In the case when |act| is CALL, |id| is
+   * generally JSID_VOID.  The |mayThrow| parameter indicates whether a
+   * handler that wants to throw custom exceptions when denying should do so
+   * or not.
+   *
+   * The |act| parameter to enter() specifies the action being performed.
+   * If |bp| is false, the method suggests that the caller throw (though it
+   * may still decide to squelch the error).
+   *
+   * We make these OR-able so that assertEnteredPolicy can pass a union of them.
+   * For example, get{,Own}PropertyDescriptor is invoked by calls to ::get()
+   * ::set(), in addition to being invoked on its own, so there are several
+   * valid Actions that could have been entered.
+   */
+  typedef uint32_t Action;
+  enum {
+    NONE = 0x00,
+    GET = 0x01,
+    SET = 0x02,
+    CALL = 0x04,
+    ENUMERATE = 0x08,
+    GET_PROPERTY_DESCRIPTOR = 0x10
+  };
+
+  virtual bool enter(JSContext* cx, HandleObject wrapper, HandleId id,
+                     Action act, bool mayThrow, bool* bp) const;
+
+  /* Standard internal methods. */
+  virtual bool getOwnPropertyDescriptor(
+      JSContext* cx, HandleObject proxy, HandleId id,
+      MutableHandle<PropertyDescriptor> desc) const = 0;
+  virtual bool defineProperty(JSContext* cx, HandleObject proxy, HandleId id,
+                              Handle<PropertyDescriptor> desc,
+                              ObjectOpResult& result) const = 0;
+  virtual bool ownPropertyKeys(JSContext* cx, HandleObject proxy,
+                               MutableHandleIdVector props) const = 0;
+  virtual bool delete_(JSContext* cx, HandleObject proxy, HandleId id,
+                       ObjectOpResult& result) const = 0;
+
+  /*
+   * These methods are standard, but the engine does not normally call them.
+   * They're opt-in. See "Proxy prototype chains" above.
+   *
+   * getPrototype() crashes if called. setPrototype() throws a TypeError.
+   */
+  virtual bool getPrototype(JSContext* cx, HandleObject proxy,
+                            MutableHandleObject protop) const;
+  virtual bool setPrototype(JSContext* cx, HandleObject proxy,
+                            HandleObject proto, ObjectOpResult& result) const;
+
+  /* Non-standard but conceptual kin to {g,s}etPrototype, so these live here. */
+  virtual bool getPrototypeIfOrdinary(JSContext* cx, HandleObject proxy,
+                                      bool* isOrdinary,
+                                      MutableHandleObject protop) const = 0;
+  virtual bool setImmutablePrototype(JSContext* cx, HandleObject proxy,
+                                     bool* succeeded) const;
+
+  virtual bool preventExtensions(JSContext* cx, HandleObject proxy,
+                                 ObjectOpResult& result) const = 0;
+  virtual bool isExtensible(JSContext* cx, HandleObject proxy,
+                            bool* extensible) const = 0;
+
+  /*
+   * These standard internal methods are implemented, as a convenience, so
+   * that ProxyHandler subclasses don't have to provide every single method.
+   *
+   * The base-class implementations work by calling getOwnPropertyDescriptor()
+   * and going up the [[Prototype]] chain if necessary. The algorithm for this
+   * follows what is defined for Ordinary Objects in the ES spec.
+   * They do not follow any standard. When in doubt, override them.
+   */
+  virtual bool has(JSContext* cx, HandleObject proxy, HandleId id,
+                   bool* bp) const;
+  virtual bool get(JSContext* cx, HandleObject proxy, HandleValue receiver,
+                   HandleId id, MutableHandleValue vp) const;
+  virtual bool set(JSContext* cx, HandleObject proxy, HandleId id,
+                   HandleValue v, HandleValue receiver,
+                   ObjectOpResult& result) const;
+
+  /*
+   * [[Call]] and [[Construct]] are standard internal methods but according
+   * to the spec, they are not present on every object.
+   *
+   * SpiderMonkey never calls a proxy's call()/construct() internal method
+   * unless isCallable()/isConstructor() returns true for that proxy.
+   *
+   * BaseProxyHandler::isCallable()/isConstructor() always return false, and
+   * BaseProxyHandler::call()/construct() crash if called. So if you're
+   * creating a kind of that is never callable, you don't have to override
+   * anything, but otherwise you probably want to override all four.
+   */
+  virtual bool call(JSContext* cx, HandleObject proxy,
+                    const CallArgs& args) const;
+  virtual bool construct(JSContext* cx, HandleObject proxy,
+                         const CallArgs& args) const;
+
+  /* SpiderMonkey extensions. */
+  virtual bool enumerate(JSContext* cx, HandleObject proxy,
+                         MutableHandleIdVector props) const;
+  virtual bool hasOwn(JSContext* cx, HandleObject proxy, HandleId id,
+                      bool* bp) const;
+  virtual bool getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
+                                            MutableHandleIdVector props) const;
+  virtual bool nativeCall(JSContext* cx, IsAcceptableThis test, NativeImpl impl,
+                          const CallArgs& args) const;
+  virtual bool hasInstance(JSContext* cx, HandleObject proxy,
+                           MutableHandleValue v, bool* bp) const;
+  virtual bool getBuiltinClass(JSContext* cx, HandleObject proxy,
+                               ESClass* cls) const;
+  virtual bool isArray(JSContext* cx, HandleObject proxy,
+                       JS::IsArrayAnswer* answer) const;
+  virtual const char* className(JSContext* cx, HandleObject proxy) const;
+  virtual JSString* fun_toString(JSContext* cx, HandleObject proxy,
+                                 bool isToSource) const;
+  virtual RegExpShared* regexp_toShared(JSContext* cx,
+                                        HandleObject proxy) const;
+  virtual bool boxedValue_unbox(JSContext* cx, HandleObject proxy,
+                                MutableHandleValue vp) const;
+  virtual void trace(JSTracer* trc, JSObject* proxy) const;
+  virtual void finalize(JSFreeOp* fop, JSObject* proxy) const;
+  virtual size_t objectMoved(JSObject* proxy, JSObject* old) const;
+
+  // Allow proxies, wrappers in particular, to specify callability at runtime.
+  // Note: These do not take const JSObject*, but they do in spirit.
+  //       We are not prepared to do this, as there's little const correctness
+  //       in the external APIs that handle proxies.
+  virtual bool isCallable(JSObject* obj) const;
+  virtual bool isConstructor(JSObject* obj) const;
+
+  virtual bool getElements(JSContext* cx, HandleObject proxy, uint32_t begin,
+                           uint32_t end, ElementAdder* adder) const;
+
+  virtual bool isScripted() const { return false; }
+>>>>>>> upstream-releases
 };
 
 extern JS_FRIEND_DATA const js::Class ProxyClass;
@@ -523,15 +940,46 @@ inline void SetProxyHandler(JSObject* obj, const BaseProxyHandler* handler) {
   detail::GetProxyDataLayout(obj)->handler = handler;
 }
 
+<<<<<<< HEAD
 inline void SetProxyReservedSlot(JSObject* obj, size_t n, const Value& extra) {
   MOZ_ASSERT_IF(gc::detail::ObjectIsMarkedBlack(obj),
                 JS::ValueIsNotGray(extra));
   detail::SetProxyReservedSlotUnchecked(obj, n, extra);
+||||||| merged common ancestors
+inline void
+SetProxyReservedSlot(JSObject* obj, size_t n, const Value& extra)
+{
+    MOZ_ASSERT_IF(gc::detail::ObjectIsMarkedBlack(obj), JS::ValueIsNotGray(extra));
+    detail::SetProxyReservedSlotUnchecked(obj, n, extra);
+=======
+inline void SetProxyReservedSlot(JSObject* obj, size_t n, const Value& extra) {
+#ifdef DEBUG
+  if (gc::detail::ObjectIsMarkedBlack(obj)) {
+    JS::AssertValueIsNotGray(extra);
+  }
+#endif
+
+  detail::SetProxyReservedSlotUnchecked(obj, n, extra);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline void SetProxyPrivate(JSObject* obj, const Value& value) {
   MOZ_ASSERT_IF(gc::detail::ObjectIsMarkedBlack(obj),
                 JS::ValueIsNotGray(value));
+||||||| merged common ancestors
+inline void
+SetProxyPrivate(JSObject* obj, const Value& value)
+{
+    MOZ_ASSERT_IF(gc::detail::ObjectIsMarkedBlack(obj), JS::ValueIsNotGray(value));
+=======
+inline void SetProxyPrivate(JSObject* obj, const Value& value) {
+#ifdef DEBUG
+  if (gc::detail::ObjectIsMarkedBlack(obj)) {
+    JS::AssertValueIsNotGray(value);
+  }
+#endif
+>>>>>>> upstream-releases
 
   Value* vp = &detail::GetProxyDataLayout(obj)->values()->privateSlot;
 

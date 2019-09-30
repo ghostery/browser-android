@@ -11,8 +11,15 @@
  * is an eight-bit character.
  */
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+=======
+const {NetUtil} = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
+>>>>>>> upstream-releases
 
 const beBOM="%FE%FF";
 const leBOM="%FF%FE";
@@ -49,7 +56,7 @@ function testCase(withBOM, charset, charsetDec, decoder, bufferLength)
 			     "init");
 
   var channel = NetUtil.newChannel({uri: dataURI, loadUsingSystemPrincipal: true});
-  var testInputStream = channel.open2();
+  var testInputStream = channel.open();
   var testConverter = new ConverterInputStream(testInputStream,
 					       decoder,
 					       bufferLength,

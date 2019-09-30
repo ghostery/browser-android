@@ -62,8 +62,18 @@ uint32_t DisplayItemClipChain::Hash(const DisplayItemClipChain* aClip) {
   return hash;
 }
 
+<<<<<<< HEAD
 /* static */ nsCString DisplayItemClipChain::ToString(
     const DisplayItemClipChain* aClipChain) {
+||||||| merged common ancestors
+/* static */ nsCString
+DisplayItemClipChain::ToString(const DisplayItemClipChain* aClipChain)
+{
+=======
+/* static */
+nsCString DisplayItemClipChain::ToString(
+    const DisplayItemClipChain* aClipChain) {
+>>>>>>> upstream-releases
   nsAutoCString str;
   for (auto* sc = aClipChain; sc; sc = sc->mParent) {
     if (sc->mASR) {

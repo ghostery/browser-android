@@ -7,18 +7,34 @@
 #include <stddef.h>                     // for size_t
 #include "Units.h"                      // for ScreenIntRect
 #include "gfxRect.h"                    // for gfxRect
-#include "gfxPrefs.h"                   // for gfxPrefs
 #include "mozilla/gfx/Point.h"          // for IntSize, Point
 #include "mozilla/gfx/Rect.h"           // for Rect
 #include "mozilla/gfx/Types.h"          // for Color, SurfaceFormat
 #include "mozilla/layers/Compositor.h"  // for Compositor
 #include "mozilla/layers/CompositorTypes.h"
+<<<<<<< HEAD
 #include "mozilla/layers/Effects.h"  // for Effect, EffectChain, etc
 #include "mozilla/TimeStamp.h"       // for TimeStamp, TimeDuration
 #include "nsPoint.h"                 // for nsIntPoint
 #include "nsRect.h"                  // for mozilla::gfx::IntRect
 #include "nsIFile.h"                 // for nsIFile
 #include "nsDirectoryServiceDefs.h"  // for NS_OS_TMP_DIR
+||||||| merged common ancestors
+#include "mozilla/layers/Effects.h"     // for Effect, EffectChain, etc
+#include "mozilla/TimeStamp.h"          // for TimeStamp, TimeDuration
+#include "nsPoint.h"                    // for nsIntPoint
+#include "nsRect.h"                     // for mozilla::gfx::IntRect
+#include "nsIFile.h"                    // for nsIFile
+#include "nsDirectoryServiceDefs.h"     // for NS_OS_TMP_DIR
+=======
+#include "mozilla/layers/Effects.h"  // for Effect, EffectChain, etc
+#include "mozilla/StaticPrefs.h"     // for StaticPrefs
+#include "mozilla/TimeStamp.h"       // for TimeStamp, TimeDuration
+#include "nsPoint.h"                 // for nsIntPoint
+#include "nsRect.h"                  // for mozilla::gfx::IntRect
+#include "nsIFile.h"                 // for nsIFile
+#include "nsDirectoryServiceDefs.h"  // for NS_OS_TMP_DIR
+>>>>>>> upstream-releases
 #include "mozilla/Sprintf.h"
 #include "FPSCounter.h"
 
@@ -258,8 +274,18 @@ double FPSCounter::GetStdDev(std::map<int, int> aHistogram) {
   return sqrt(stdDev);
 }
 
+<<<<<<< HEAD
 void FPSCounter::PrintFPS() {
   if (!gfxPrefs::FPSPrintHistogram()) {
+||||||| merged common ancestors
+void
+FPSCounter::PrintFPS()
+{
+  if (!gfxPrefs::FPSPrintHistogram()) {
+=======
+void FPSCounter::PrintFPS() {
+  if (!StaticPrefs::layers_acceleration_draw_fps_print_histogram()) {
+>>>>>>> upstream-releases
     return;
   }
 
@@ -307,8 +333,18 @@ void FPSCounter::PrintHistogram(std::map<int, int>& aHistogram) {
 
 // Write FPS timestamp data to a file only if
 // draw-fps.write-to-file is true
+<<<<<<< HEAD
 nsresult FPSCounter::WriteFrameTimeStamps() {
   if (!gfxPrefs::WriteFPSToFile()) {
+||||||| merged common ancestors
+nsresult
+FPSCounter::WriteFrameTimeStamps()
+{
+  if (!gfxPrefs::WriteFPSToFile()) {
+=======
+nsresult FPSCounter::WriteFrameTimeStamps() {
+  if (!StaticPrefs::layers_acceleration_draw_fps_write_to_file()) {
+>>>>>>> upstream-releases
     return NS_OK;
   }
 

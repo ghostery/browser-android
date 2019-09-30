@@ -8,16 +8,30 @@
 #ifndef GrOpList_DEFINED
 #define GrOpList_DEFINED
 
+<<<<<<< HEAD
 #include "GrColor.h"
 #include "GrProxyRef.h"
+||||||| merged common ancestors
+#include "GrColor.h"
+#include "GrSurfaceProxyRef.h"
+=======
+#include "GrProxyRef.h"
+>>>>>>> upstream-releases
 #include "GrTextureProxy.h"
+#include "SkColorData.h"
 #include "SkRefCnt.h"
 #include "SkTDArray.h"
 
 class GrAuditTrail;
 class GrCaps;
 class GrOpFlushState;
+<<<<<<< HEAD
 class GrOpMemoryPool;
+||||||| merged common ancestors
+=======
+class GrOpMemoryPool;
+class GrRecordingContext;
+>>>>>>> upstream-releases
 class GrRenderTargetOpList;
 class GrResourceAllocator;
 class GrResourceProvider;
@@ -39,7 +53,13 @@ public:
     void prepare(GrOpFlushState* flushState);
     bool execute(GrOpFlushState* flushState) { return this->onExecute(flushState); }
 
+<<<<<<< HEAD
     virtual bool copySurface(GrContext*,
+||||||| merged common ancestors
+    virtual bool copySurface(const GrCaps& caps,
+=======
+    virtual bool copySurface(GrRecordingContext*,
+>>>>>>> upstream-releases
                              GrSurfaceProxy* dst,
                              GrSurfaceProxy* src,
                              const SkIRect& srcRect,
@@ -86,11 +106,7 @@ public:
      */
     SkDEBUGCODE(virtual void dump(bool printDependencies) const;)
 
-    SkDEBUGCODE(virtual int numOps() const = 0;)
     SkDEBUGCODE(virtual int numClips() const { return 0; })
-
-    // TODO: it would be nice for this to be hidden
-    void setStencilLoadOp(GrLoadOp loadOp) { fStencilLoadOp = loadOp; }
 
 protected:
     bool isInstantiated() const;
@@ -106,9 +122,19 @@ protected:
     GrSurfaceProxyRef     fTarget;
     GrAuditTrail*         fAuditTrail;
 
+<<<<<<< HEAD
     GrLoadOp              fColorLoadOp    = GrLoadOp::kLoad;
     GrColor               fLoadClearColor = 0x0;
     GrLoadOp              fStencilLoadOp  = GrLoadOp::kLoad;
+||||||| merged common ancestors
+    GrLoadOp          fColorLoadOp    = GrLoadOp::kLoad;
+    GrColor           fLoadClearColor = 0x0;
+    GrLoadOp          fStencilLoadOp  = GrLoadOp::kLoad;
+=======
+    GrLoadOp              fColorLoadOp    = GrLoadOp::kLoad;
+    SkPMColor4f           fLoadClearColor = SK_PMColor4fTRANSPARENT;
+    GrLoadOp              fStencilLoadOp  = GrLoadOp::kLoad;
+>>>>>>> upstream-releases
 
     // List of texture proxies whose contents are being prepared on a worker thread
     SkTArray<GrTextureProxy*, true> fDeferredProxies;
@@ -116,6 +142,7 @@ protected:
 private:
     friend class GrDrawingManager; // for resetFlag, TopoSortTraits & gatherProxyIntervals
 
+<<<<<<< HEAD
     void addDependency(GrOpList* dependedOn);
     void addDependent(GrOpList* dependent);
     SkDEBUGCODE(bool isDependedent(const GrOpList* dependent) const);
@@ -123,6 +150,17 @@ private:
     void closeThoseWhoDependOnMe(const GrCaps&);
 
     // Remove all Ops which reference proxies that have not been instantiated.
+||||||| merged common ancestors
+    // Remove all Ops which reference proxies that have not been instantiated.
+=======
+    void addDependency(GrOpList* dependedOn);
+    void addDependent(GrOpList* dependent);
+    SkDEBUGCODE(bool isDependedent(const GrOpList* dependent) const;)
+    SkDEBUGCODE(void validate() const;)
+    void closeThoseWhoDependOnMe(const GrCaps&);
+
+    // Remove all Ops which reference proxies that are not instantiated.
+>>>>>>> upstream-releases
     virtual void purgeOpsWithUninstantiatedProxies() = 0;
 
     // Feed proxy usage intervals to the GrResourceAllocator class

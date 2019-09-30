@@ -7,7 +7,7 @@
 #include "mozilla/dom/HTMLStyleElementBinding.h"
 #include "nsGkAtoms.h"
 #include "nsStyleConsts.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsUnicharUtils.h"
 #include "nsThreadUtils.h"
 #include "nsContentUtils.h"
@@ -45,7 +45,16 @@ NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLStyleElement,
 
 NS_IMPL_ELEMENT_CLONE(HTMLStyleElement)
 
+<<<<<<< HEAD
 bool HTMLStyleElement::Disabled() {
+||||||| merged common ancestors
+
+bool
+HTMLStyleElement::Disabled()
+{
+=======
+bool HTMLStyleElement::Disabled() const {
+>>>>>>> upstream-releases
   StyleSheet* ss = GetSheet();
   return ss && ss->Disabled();
 }
@@ -81,11 +90,23 @@ void HTMLStyleElement::ContentChanged(nsIContent* aContent) {
   }
 }
 
+<<<<<<< HEAD
 nsresult HTMLStyleElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
                                       nsIContent* aBindingParent) {
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLStyleElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                             nsIContent* aBindingParent)
+{
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+nsresult HTMLStyleElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   void (HTMLStyleElement::*update)() =
@@ -96,11 +117,21 @@ nsresult HTMLStyleElement::BindToTree(nsIDocument* aDocument,
   return rv;
 }
 
+<<<<<<< HEAD
 void HTMLStyleElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
+||||||| merged common ancestors
+void
+HTMLStyleElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
+=======
+void HTMLStyleElement::UnbindFromTree(bool aNullParent) {
+  nsCOMPtr<Document> oldDoc = GetUncomposedDoc();
+>>>>>>> upstream-releases
   ShadowRoot* oldShadow = GetContainingShadow();
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 
   if (oldShadow && GetContainingShadow()) {
     // The style is in a shadow tree and is still in the
@@ -176,6 +207,7 @@ Maybe<nsStyleLinkElement::SheetInfo> HTMLStyleElement::GetStyleSheetInfo() {
   GetTitleAndMediaForElement(*this, title, media);
 
   nsCOMPtr<nsIPrincipal> prin = mTriggeringPrincipal;
+<<<<<<< HEAD
   return Some(SheetInfo{
       *OwnerDoc(),
       this,
@@ -187,6 +219,32 @@ Maybe<nsStyleLinkElement::SheetInfo> HTMLStyleElement::GetStyleSheetInfo() {
       media,
       HasAlternateRel::No,
       IsInline::Yes,
+||||||| merged common ancestors
+  return Some(SheetInfo {
+    *OwnerDoc(),
+    this,
+    nullptr,
+    prin.forget(),
+    net::ReferrerPolicy::RP_Unset,
+    CORS_NONE,
+    title,
+    media,
+    HasAlternateRel::No,
+    IsInline::Yes,
+=======
+  return Some(SheetInfo{
+      *OwnerDoc(),
+      this,
+      nullptr,
+      prin.forget(),
+      net::ReferrerPolicy::RP_Unset,
+      CORS_NONE,
+      title,
+      media,
+      HasAlternateRel::No,
+      IsInline::Yes,
+      IsExplicitlyEnabled::No,
+>>>>>>> upstream-releases
   });
 }
 

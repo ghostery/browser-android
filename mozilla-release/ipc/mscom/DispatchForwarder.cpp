@@ -13,9 +13,21 @@
 namespace mozilla {
 namespace mscom {
 
+<<<<<<< HEAD
 /* static */ HRESULT DispatchForwarder::Create(IInterceptor* aInterceptor,
                                                STAUniquePtr<IDispatch>& aTarget,
                                                IUnknown** aOutput) {
+||||||| merged common ancestors
+/* static */ HRESULT
+DispatchForwarder::Create(IInterceptor* aInterceptor,
+                          STAUniquePtr<IDispatch>& aTarget, IUnknown** aOutput)
+{
+=======
+/* static */
+HRESULT DispatchForwarder::Create(IInterceptor* aInterceptor,
+                                  STAUniquePtr<IDispatch>& aTarget,
+                                  IUnknown** aOutput) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aInterceptor && aOutput);
   if (!aOutput) {
     return E_INVALIDARG;

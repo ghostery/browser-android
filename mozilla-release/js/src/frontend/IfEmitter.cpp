@@ -40,12 +40,30 @@ bool BranchEmitterBase::emitThenInternal(SrcNoteType type) {
 
   // To restore stack depth in else part, save depth of the then part.
 #ifdef DEBUG
+<<<<<<< HEAD
   // If DEBUG, this is also necessary to calculate |pushed_|.
   thenDepth_ = bce_->stackDepth;
+||||||| merged common ancestors
+    // If DEBUG, this is also necessary to calculate |pushed_|.
+    thenDepth_ = bce_->stackDepth;
+=======
+  // If DEBUG, this is also necessary to calculate |pushed_|.
+  thenDepth_ = bce_->bytecodeSection().stackDepth();
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
   if (type == SRC_COND || type == SRC_IF_ELSE) {
     thenDepth_ = bce_->stackDepth;
   }
+||||||| merged common ancestors
+    if (type == SRC_COND || type == SRC_IF_ELSE) {
+        thenDepth_ = bce_->stackDepth;
+    }
+=======
+  if (type == SRC_COND || type == SRC_IF_ELSE) {
+    thenDepth_ = bce_->bytecodeSection().stackDepth();
+  }
+>>>>>>> upstream-releases
 #endif
 
   // Enclose then-branch with TDZCheckCache.
@@ -58,12 +76,28 @@ bool BranchEmitterBase::emitThenInternal(SrcNoteType type) {
 
 void BranchEmitterBase::calculateOrCheckPushed() {
 #ifdef DEBUG
+<<<<<<< HEAD
   if (!calculatedPushed_) {
     pushed_ = bce_->stackDepth - thenDepth_;
     calculatedPushed_ = true;
   } else {
     MOZ_ASSERT(pushed_ == bce_->stackDepth - thenDepth_);
   }
+||||||| merged common ancestors
+    if (!calculatedPushed_) {
+        pushed_ = bce_->stackDepth - thenDepth_;
+        calculatedPushed_ = true;
+    } else {
+        MOZ_ASSERT(pushed_ == bce_->stackDepth - thenDepth_);
+    }
+=======
+  if (!calculatedPushed_) {
+    pushed_ = bce_->bytecodeSection().stackDepth() - thenDepth_;
+    calculatedPushed_ = true;
+  } else {
+    MOZ_ASSERT(pushed_ == bce_->bytecodeSection().stackDepth() - thenDepth_);
+  }
+>>>>>>> upstream-releases
 #endif
 }
 
@@ -91,8 +125,16 @@ bool BranchEmitterBase::emitElseInternal() {
   // Clear jumpAroundThen_ offset, to tell emitEnd there was an else part.
   jumpAroundThen_ = JumpList();
 
+<<<<<<< HEAD
   // Restore stack depth of the then part.
   bce_->stackDepth = thenDepth_;
+||||||| merged common ancestors
+    // Restore stack depth of the then part.
+    bce_->stackDepth = thenDepth_;
+=======
+  // Restore stack depth of the then part.
+  bce_->bytecodeSection().setStackDepth(thenDepth_);
+>>>>>>> upstream-releases
 
   // Enclose else-branch with TDZCheckCache.
   if (kind_ == Kind::MayContainLexicalAccessInBranch) {
@@ -111,11 +153,26 @@ bool BranchEmitterBase::emitEndInternal() {
 
   calculateOrCheckPushed();
 
+<<<<<<< HEAD
   if (jumpAroundThen_.offset != -1) {
     // No else part for the last branch, fixup the branch-if-false to
     // come here.
     if (!bce_->emitJumpTargetAndPatch(jumpAroundThen_)) {
       return false;
+||||||| merged common ancestors
+    if (jumpAroundThen_.offset != -1) {
+        // No else part for the last branch, fixup the branch-if-false to
+        // come here.
+        if (!bce_->emitJumpTargetAndPatch(jumpAroundThen_)) {
+            return false;
+        }
+=======
+  if (jumpAroundThen_.offset.valid()) {
+    // No else part for the last branch, fixup the branch-if-false to
+    // come here.
+    if (!bce_->emitJumpTargetAndPatch(jumpAroundThen_)) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 
@@ -208,6 +265,7 @@ bool IfEmitter::emitElse() {
   return true;
 }
 
+<<<<<<< HEAD
 bool IfEmitter::emitEnd() {
   MOZ_ASSERT(state_ == State::Then || state_ == State::Else);
   // If there was an else part for the last branch, jumpAroundThen_ is
@@ -218,6 +276,31 @@ bool IfEmitter::emitEnd() {
   if (!emitEndInternal()) {
     return false;
   }
+||||||| merged common ancestors
+bool
+IfEmitter::emitEnd()
+{
+    MOZ_ASSERT(state_ == State::Then || state_ == State::Else);
+    // If there was an else part for the last branch, jumpAroundThen_ is
+    // already fixed up when emitting the else part.
+    MOZ_ASSERT_IF(state_ == State::Then, jumpAroundThen_.offset != -1);
+    MOZ_ASSERT_IF(state_ == State::Else, jumpAroundThen_.offset == -1);
+
+    if (!emitEndInternal()) {
+        return false;
+    }
+=======
+bool IfEmitter::emitEnd() {
+  MOZ_ASSERT(state_ == State::Then || state_ == State::Else);
+  // If there was an else part for the last branch, jumpAroundThen_ is
+  // already fixed up when emitting the else part.
+  MOZ_ASSERT_IF(state_ == State::Then, jumpAroundThen_.offset.valid());
+  MOZ_ASSERT_IF(state_ == State::Else, !jumpAroundThen_.offset.valid());
+
+  if (!emitEndInternal()) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::End;
@@ -269,9 +352,21 @@ bool CondEmitter::emitElse() {
   return true;
 }
 
+<<<<<<< HEAD
 bool CondEmitter::emitEnd() {
   MOZ_ASSERT(state_ == State::Else);
   MOZ_ASSERT(jumpAroundThen_.offset == -1);
+||||||| merged common ancestors
+bool
+CondEmitter::emitEnd()
+{
+    MOZ_ASSERT(state_ == State::Else);
+    MOZ_ASSERT(jumpAroundThen_.offset == -1);
+=======
+bool CondEmitter::emitEnd() {
+  MOZ_ASSERT(state_ == State::Else);
+  MOZ_ASSERT(!jumpAroundThen_.offset.valid());
+>>>>>>> upstream-releases
 
   if (!emitEndInternal()) {
     return false;

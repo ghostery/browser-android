@@ -17,17 +17,45 @@
 #define INITAL_REPEAT_DELAY 250
 
 #ifdef XP_MACOSX
+<<<<<<< HEAD
 #define REPEAT_DELAY 25
+||||||| merged common ancestors
+#define REPEAT_DELAY        25
+=======
+#  define REPEAT_DELAY 25
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define REPEAT_DELAY 50
+||||||| merged common ancestors
+#define REPEAT_DELAY        50
+=======
+#  define REPEAT_DELAY 50
+>>>>>>> upstream-releases
 #endif
 
-class nsIDocument;
 class nsITimer;
+
+<<<<<<< HEAD
+class nsRepeatService final {
+ public:
+  typedef void (*Callback)(void* aData);
+||||||| merged common ancestors
+class nsRepeatService final
+{
+public:
+  typedef void (* Callback)(void* aData);
+=======
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
 
 class nsRepeatService final {
  public:
   typedef void (*Callback)(void* aData);
+>>>>>>> upstream-releases
 
   ~nsRepeatService();
 
@@ -40,8 +68,16 @@ class nsRepeatService final {
   //
   // aDocument is used to get the event target in Start(). We need an event
   // target to init mRepeatTimer.
+<<<<<<< HEAD
   void Start(Callback aCallback, void* aCallbackData, nsIDocument* aDocument,
              const nsACString& aCallbackName,
+||||||| merged common ancestors
+  void Start(Callback aCallback, void* aCallbackData,
+             nsIDocument* aDocument, const nsACString& aCallbackName,
+=======
+  void Start(Callback aCallback, void* aCallbackData,
+             mozilla::dom::Document* aDocument, const nsACString& aCallbackName,
+>>>>>>> upstream-releases
              uint32_t aInitialDelay = INITAL_REPEAT_DELAY);
   // Stop dispatching timer events to the callback. If the repeat service
   // is not currently configured with the given callback and data, this

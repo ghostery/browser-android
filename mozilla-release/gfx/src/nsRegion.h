@@ -31,7 +31,7 @@
 // Uncomment this line to get additional integrity checking.
 //#define DEBUG_REGIONS
 #ifdef DEBUG_REGIONS
-#include <sstream>
+#  include <sstream>
 #endif
 
 /* For information on the internal representation look at pixman-region.c
@@ -535,9 +535,20 @@ class nsRegion {
 
  private:
 #ifdef DEBUG_REGIONS
+<<<<<<< HEAD
   class OperationStringGenerator {
    public:
     virtual ~OperationStringGenerator() {}
+||||||| merged common ancestors
+  class OperationStringGenerator
+  {
+  public:
+    virtual ~OperationStringGenerator() {}
+=======
+  class OperationStringGenerator {
+   public:
+    virtual ~OperationStringGenerator() = default;
+>>>>>>> upstream-releases
 
     virtual void OutputOp() = 0;
   };

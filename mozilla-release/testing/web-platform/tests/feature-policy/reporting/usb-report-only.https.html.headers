@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: usb-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: usb 'none'
+>>>>>>> upstream-releases

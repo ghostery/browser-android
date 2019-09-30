@@ -25,7 +25,6 @@
 #include "nsPIDOMWindow.h"
 #include "nsIWebProgress.h"
 #include "nsIWebProgressListener.h"
-#include "nsIPresShell.h"
 #include "nsIURIContentListener.h"
 #include "nsISHistoryListener.h"
 #include "nsIURI.h"
@@ -37,15 +36,21 @@
 #include "nsDocShell.h"
 
 #include "mozilla/dom/Element.h"
+<<<<<<< HEAD
 #include "mozilla/dom/BrowsingContext.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/dom/BrowsingContext.h"
+#include "mozilla/dom/LoadURIOptionsBinding.h"
+>>>>>>> upstream-releases
 
 // for painting the background window
 #include "mozilla/LookAndFeel.h"
 
 // Printing Includes
 #ifdef NS_PRINTING
-#include "nsIWebBrowserPrint.h"
-#include "nsIContentViewer.h"
+#  include "nsIWebBrowserPrint.h"
+#  include "nsIContentViewer.h"
 #endif
 
 // PSM2 includes
@@ -73,6 +78,7 @@ nsWebBrowser::nsWebBrowser(int aItemType)
   NS_ASSERTION(mWWatch, "failed to get WindowWatcher");
 }
 
+<<<<<<< HEAD
 nsWebBrowser::~nsWebBrowser() { InternalDestroy(); }
 
 nsIWidget* nsWebBrowser::EnsureWidget() {
@@ -186,6 +192,118 @@ nsIWidget* nsWebBrowser::EnsureWidget() {
   docShellTreeOwner->AddChromeListeners();
 
   return browser.forget();
+||||||| merged common ancestors
+nsWebBrowser::~nsWebBrowser()
+{
+  InternalDestroy();
+=======
+nsWebBrowser::~nsWebBrowser() { InternalDestroy(); }
+
+nsIWidget* nsWebBrowser::EnsureWidget() {
+  if (mParentWidget) {
+    return mParentWidget;
+  }
+
+  mInternalWidget = nsIWidget::CreateChildWindow();
+  if (NS_WARN_IF(!mInternalWidget)) {
+    return nullptr;
+  }
+
+  nsWidgetInitData widgetInit;
+  widgetInit.clipChildren = true;
+  widgetInit.mWindowType = eWindowType_child;
+  LayoutDeviceIntRect bounds(0, 0, 0, 0);
+
+  mInternalWidget->SetWidgetListener(&mWidgetListenerDelegate);
+  NS_ENSURE_SUCCESS(mInternalWidget->Create(nullptr, mParentNativeWindow,
+                                            bounds, &widgetInit),
+                    nullptr);
+
+  return mInternalWidget;
+}
+
+/* static */
+already_AddRefed<nsWebBrowser> nsWebBrowser::Create(
+    nsIWebBrowserChrome* aContainerWindow, nsIWidget* aParentWidget,
+    const OriginAttributes& aOriginAttributes,
+    dom::BrowsingContext* aBrowsingContext,
+    bool aDisableHistory /* = false */) {
+  RefPtr<nsWebBrowser> browser = new nsWebBrowser(
+      aBrowsingContext->IsContent() ? typeContentWrapper : typeChromeWrapper);
+
+  // nsWebBrowser::SetContainer also calls nsWebBrowser::EnsureDocShellTreeOwner
+  NS_ENSURE_SUCCESS(browser->SetContainerWindow(aContainerWindow), nullptr);
+  NS_ENSURE_SUCCESS(browser->SetParentWidget(aParentWidget), nullptr);
+
+  nsCOMPtr<nsIWidget> docShellParentWidget = browser->EnsureWidget();
+  if (NS_WARN_IF(!docShellParentWidget)) {
+    return nullptr;
+  }
+
+  RefPtr<nsDocShell> docShell = nsDocShell::Create(aBrowsingContext);
+  if (NS_WARN_IF(!docShell)) {
+    return nullptr;
+  }
+  docShell->SetOriginAttributes(aOriginAttributes);
+  browser->SetDocShell(docShell);
+
+  // get the system default window background colour
+  LookAndFeel::GetColor(LookAndFeel::ColorID::WindowBackground,
+                        &browser->mBackgroundColor);
+
+  // HACK ALERT - this registration registers the nsDocShellTreeOwner as a
+  // nsIWebBrowserListener so it can setup its MouseListener in one of the
+  // progress callbacks. If we can register the MouseListener another way, this
+  // registration can go away, and nsDocShellTreeOwner can stop implementing
+  // nsIWebProgressListener.
+  RefPtr<nsDocShellTreeOwner> docShellTreeOwner = browser->mDocShellTreeOwner;
+  NS_ASSERTION(
+      browser->mWebProgress,
+      "this should only be called after we've retrieved a progress iface");
+  if (browser->mWebProgress) {
+    Unused << browser->mWebProgress->AddProgressListener(
+        docShellTreeOwner, nsIWebProgress::NOTIFY_ALL);
+  }
+
+  nsCOMPtr<nsIBaseWindow> docShellAsWin = browser->mDocShellAsWin;
+  NS_ENSURE_SUCCESS(
+      docShellAsWin->InitWindow(nullptr, docShellParentWidget, 0, 0, 0, 0),
+      nullptr);
+
+  docShell->SetTreeOwner(docShellTreeOwner);
+
+  // If the webbrowser is a content docshell item then we won't hear any
+  // events from subframes. To solve that we install our own chrome event
+  // handler that always gets called (even for subframes) for any bubbling
+  // event.
+
+  docShell->InitSessionHistory();
+
+  if (XRE_IsParentProcess() && !aDisableHistory) {
+    // Hook up global history. Do not fail if we can't - just warn.
+    DebugOnly<nsresult> rv =
+        browser->EnableGlobalHistory(browser->mShouldEnableHistory);
+    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "EnableGlobalHistory() failed");
+  }
+
+  NS_ENSURE_SUCCESS(docShellAsWin->Create(), nullptr);
+
+  // Hook into the OnSecurityChange() notification for lock/unlock icon
+  // updates
+  // this works because the implementation of nsISecureBrowserUI
+  // (nsSecureBrowserUIImpl) calls docShell->SetSecurityUI(this);
+  nsCOMPtr<nsISecureBrowserUI> securityUI =
+      do_CreateInstance(NS_SECURE_BROWSER_UI_CONTRACTID);
+  if (NS_WARN_IF(!securityUI)) {
+    return nullptr;
+  }
+  securityUI->Init(docShell);
+
+  docShellTreeOwner->AddToWatcher();  // evil twin of Remove in SetDocShell(0)
+  docShellTreeOwner->AddChromeListeners();
+
+  return browser.forget();
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -267,6 +385,7 @@ nsWebBrowser::GetInterface(const nsIID& aIID, void** aSink) {
 //*****************************************************************************
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWebBrowser::BindListener(nsISupports* aListener, const nsIID& aIID) {
   NS_ENSURE_ARG_POINTER(aListener);
   NS_ASSERTION(
@@ -300,6 +419,42 @@ nsWebBrowser::BindListener(nsISupports* aListener, const nsIID& aIID) {
 
 NS_IMETHODIMP
 nsWebBrowser::EnableGlobalHistory(bool aEnable) {
+||||||| merged common ancestors
+nsWebBrowser::BindListener(nsISupports* aListener, const nsIID& aIID)
+{
+  NS_ENSURE_ARG_POINTER(aListener);
+  NS_ASSERTION(mWebProgress,
+               "this should only be called after we've retrieved a progress iface");
+  nsresult rv = NS_OK;
+
+  // register this listener for the specified interface id
+  if (aIID.Equals(NS_GET_IID(nsIWebProgressListener))) {
+    nsCOMPtr<nsIWebProgressListener> listener = do_QueryInterface(aListener, &rv);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    NS_ENSURE_STATE(mWebProgress);
+    rv = mWebProgress->AddProgressListener(listener, nsIWebProgress::NOTIFY_ALL);
+  } else if (aIID.Equals(NS_GET_IID(nsISHistoryListener))) {
+    nsCOMPtr<nsISHistory> shistory(do_GetInterface(mDocShell, &rv));
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    nsCOMPtr<nsISHistoryListener> listener(do_QueryInterface(aListener, &rv));
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    rv = shistory->AddSHistoryListener(listener);
+  }
+  return rv;
+}
+
+NS_IMETHODIMP
+nsWebBrowser::EnableGlobalHistory(bool aEnable)
+{
+=======
+nsWebBrowser::EnableGlobalHistory(bool aEnable) {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mDocShell);
 
   return mDocShell->SetUseGlobalHistory(aEnable);
@@ -372,7 +527,18 @@ nsWebBrowser::NameEquals(const nsAString& aName, bool* aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ int32_t nsWebBrowser::ItemType() { return mContentType; }
+||||||| merged common ancestors
+/* virtual */ int32_t
+nsWebBrowser::ItemType()
+{
+  return mContentType;
+}
+=======
+/* virtual */
+int32_t nsWebBrowser::ItemType() { return mContentType; }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 nsWebBrowser::GetItemType(int32_t* aItemType) {
@@ -443,7 +609,15 @@ nsWebBrowser::FindItemWithName(const nsAString& aName,
                                      aSkipTabGroup, aResult);
 }
 
+<<<<<<< HEAD
 nsIDocument* nsWebBrowser::GetDocument() {
+||||||| merged common ancestors
+nsIDocument*
+nsWebBrowser::GetDocument()
+{
+=======
+dom::Document* nsWebBrowser::GetDocument() {
+>>>>>>> upstream-releases
   return mDocShell ? mDocShell->GetDocument() : nullptr;
 }
 
@@ -547,6 +721,7 @@ nsWebBrowser::GoForward() {
   return mDocShellAsNav->GoForward();
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsWebBrowser::LoadURIWithOptions(const nsAString& aURI, uint32_t aLoadFlags,
                                  nsIURI* aReferringURI,
@@ -560,21 +735,65 @@ nsWebBrowser::LoadURIWithOptions(const nsAString& aURI, uint32_t aLoadFlags,
       aTriggeringPrincipal,
       "nsWebBrowser::LoadURIWithOptions - Need a valid triggeringPrincipal");
 #endif
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsWebBrowser::LoadURIWithOptions(const nsAString& aURI, uint32_t aLoadFlags,
+                                 nsIURI* aReferringURI,
+                                 uint32_t aReferrerPolicy,
+                                 nsIInputStream* aPostDataStream,
+                                 nsIInputStream* aExtraHeaderStream,
+                                 nsIURI* aBaseURI,
+                                 nsIPrincipal* aTriggeringPrincipal)
+{
+=======
+nsresult nsWebBrowser::LoadURI(const nsAString& aURI,
+                               const dom::LoadURIOptions& aLoadURIOptions) {
+#ifndef ANDROID
+  MOZ_ASSERT(aLoadURIOptions.mTriggeringPrincipal,
+             "nsWebBrowser::LoadURI - Need a valid triggeringPrincipal");
+#endif
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mDocShell);
 
+<<<<<<< HEAD
   return mDocShellAsNav->LoadURIWithOptions(
       aURI, aLoadFlags, aReferringURI, aReferrerPolicy, aPostDataStream,
       aExtraHeaderStream, aBaseURI, aTriggeringPrincipal);
+||||||| merged common ancestors
+  return mDocShellAsNav->LoadURIWithOptions(
+    aURI, aLoadFlags, aReferringURI, aReferrerPolicy, aPostDataStream,
+    aExtraHeaderStream, aBaseURI, aTriggeringPrincipal);
+=======
+  return mDocShellAsNav->LoadURI(aURI, aLoadURIOptions);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWebBrowser::SetOriginAttributesBeforeLoading(
     JS::Handle<JS::Value> aOriginAttributes, JSContext* aCx) {
   return mDocShellAsNav->SetOriginAttributesBeforeLoading(aOriginAttributes,
                                                           aCx);
+||||||| merged common ancestors
+nsWebBrowser::SetOriginAttributesBeforeLoading(JS::Handle<JS::Value> aOriginAttributes,
+                                               JSContext* aCx)
+{
+  return mDocShellAsNav->SetOriginAttributesBeforeLoading(aOriginAttributes, aCx);
+=======
+nsWebBrowser::LoadURIFromScript(const nsAString& aURI,
+                                JS::Handle<JS::Value> aLoadURIOptions,
+                                JSContext* aCx) {
+  // generate dictionary for loadURIOptions and forward call
+  dom::LoadURIOptions loadURIOptions;
+  if (!loadURIOptions.Init(aCx, aLoadURIOptions)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  return LoadURI(aURI, loadURIOptions);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWebBrowser::LoadURI(const nsAString& aURI, uint32_t aLoadFlags,
                       nsIURI* aReferringURI, nsIInputStream* aPostDataStream,
                       nsIInputStream* aExtraHeaderStream,
@@ -584,10 +803,26 @@ nsWebBrowser::LoadURI(const nsAString& aURI, uint32_t aLoadFlags,
              "nsWebBrowser::LoadURI - Need a valid triggeringPrincipal");
 #endif
   NS_ENSURE_STATE(mDocShell);
+||||||| merged common ancestors
+nsWebBrowser::LoadURI(const nsAString& aURI, uint32_t aLoadFlags,
+                      nsIURI* aReferringURI,
+                      nsIInputStream* aPostDataStream,
+                      nsIInputStream* aExtraHeaderStream,
+                      nsIPrincipal* aTriggeringPrincipal)
+{
+  NS_ENSURE_STATE(mDocShell);
+=======
+nsWebBrowser::SetOriginAttributesBeforeLoading(
+    JS::Handle<JS::Value> aOriginAttributes, JSContext* aCx) {
+  return mDocShellAsNav->SetOriginAttributesBeforeLoading(aOriginAttributes,
+                                                          aCx);
+}
+>>>>>>> upstream-releases
 
-  return mDocShellAsNav->LoadURI(aURI, aLoadFlags, aReferringURI,
-                                 aPostDataStream, aExtraHeaderStream,
-                                 aTriggeringPrincipal);
+NS_IMETHODIMP
+nsWebBrowser::ResumeRedirectedLoad(uint64_t aIdentifier,
+                                   int32_t aHistoryIndex) {
+  return mDocShellAsNav->ResumeRedirectedLoad(aIdentifier, aHistoryIndex);
 }
 
 NS_IMETHODIMP
@@ -618,6 +853,7 @@ nsWebBrowser::GetCurrentURI(nsIURI** aURI) {
   return mDocShellAsNav->GetCurrentURI(aURI);
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsWebBrowser::GetReferringURI(nsIURI** aURI) {
   NS_ENSURE_STATE(mDocShell);
@@ -625,6 +861,17 @@ nsWebBrowser::GetReferringURI(nsIURI** aURI) {
   return mDocShellAsNav->GetReferringURI(aURI);
 }
 
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsWebBrowser::GetReferringURI(nsIURI** aURI)
+{
+  NS_ENSURE_STATE(mDocShell);
+
+  return mDocShellAsNav->GetReferringURI(aURI);
+}
+
+=======
+>>>>>>> upstream-releases
 // XXX(nika): Consider making the mozilla::dom::ChildSHistory version the
 // canonical one?
 NS_IMETHODIMP
@@ -640,7 +887,14 @@ nsWebBrowser::GetSessionHistoryXPCOM(nsISupports** aSessionHistory) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWebBrowser::GetDocument(nsIDocument** aDocument) {
+||||||| merged common ancestors
+nsWebBrowser::GetDocument(nsIDocument** aDocument)
+{
+=======
+nsWebBrowser::GetDocument(dom::Document** aDocument) {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mDocShell);
 
   return mDocShellAsNav->GetDocument(aDocument);
@@ -713,7 +967,24 @@ NS_IMETHODIMP
 nsWebBrowser::OnSecurityChange(nsIWebProgress* aWebProgress,
                                nsIRequest* aRequest, uint32_t aState) {
   if (mProgressListener) {
+<<<<<<< HEAD
     return mProgressListener->OnSecurityChange(aWebProgress, aRequest, aState);
+||||||| merged common ancestors
+    return mProgressListener->OnSecurityChange(aWebProgress, aRequest, aOldState,
+                                               aState, aContentBlockingLogJSON);
+=======
+    return mProgressListener->OnSecurityChange(aWebProgress, aRequest, aState);
+  }
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsWebBrowser::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
+                                     nsIRequest* aRequest, uint32_t aEvent) {
+  if (mProgressListener) {
+    return mProgressListener->OnContentBlockingEvent(aWebProgress, aRequest,
+                                                     aEvent);
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -885,9 +1156,9 @@ nsWebBrowser::SaveDocument(nsISupports* aDocumentish, nsISupports* aFile,
   if (aDocumentish) {
     doc = aDocumentish;
   } else {
-    nsCOMPtr<nsIDocument> domDoc;
+    RefPtr<dom::Document> domDoc;
     GetDocument(getter_AddRefs(domDoc));
-    doc = domDoc.forget();
+    doc = already_AddRefed<nsISupports>(ToSupports(domDoc.forget().take()));
   }
   if (!doc) {
     return NS_ERROR_FAILURE;
@@ -1320,7 +1591,7 @@ static void DrawPaintedLayer(PaintedLayer* aLayer, gfxContext* aContext,
 
 void nsWebBrowser::WindowActivated() {
 #if defined(DEBUG_smaug)
-  nsCOMPtr<nsIDocument> document = mDocShell->GetDocument();
+  RefPtr<dom::Document> document = mDocShell->GetDocument();
   nsAutoString documentURI;
   document->GetDocumentURI(documentURI);
   printf("nsWebBrowser::NS_ACTIVATE %p %s\n", (void*)this,
@@ -1331,7 +1602,7 @@ void nsWebBrowser::WindowActivated() {
 
 void nsWebBrowser::WindowDeactivated() {
 #if defined(DEBUG_smaug)
-  nsCOMPtr<nsIDocument> document = mDocShell->GetDocument();
+  RefPtr<dom::Document> document = mDocShell->GetDocument();
   nsAutoString documentURI;
   document->GetDocumentURI(documentURI);
   printf("nsWebBrowser::NS_DEACTIVATE %p %s\n", (void*)this,

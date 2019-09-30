@@ -5,8 +5,14 @@
 
 #include "ctypes.h"
 #include "jsapi.h"
+<<<<<<< HEAD
 #include "js/MemoryFunctions.h"
 #include "mozilla/ModuleUtils.h"
+||||||| merged common ancestors
+#include "mozilla/ModuleUtils.h"
+=======
+#include "js/MemoryFunctions.h"
+>>>>>>> upstream-releases
 #include "nsMemory.h"
 #include "nsString.h"
 #include "nsNativeCharsetUtils.h"
@@ -15,6 +21,7 @@
 #include "nsZipArchive.h"
 #include "xpc_make_class.h"
 
+<<<<<<< HEAD
 #define JSCTYPES_CONTRACTID "@mozilla.org/jsctypes;1"
 
 #define JSCTYPES_CID                                \
@@ -24,6 +31,16 @@
     }                                               \
   }
 
+||||||| merged common ancestors
+#define JSCTYPES_CONTRACTID \
+  "@mozilla.org/jsctypes;1"
+
+
+#define JSCTYPES_CID \
+{ 0xc797702, 0x1c60, 0x4051, { 0x9d, 0xd7, 0x4d, 0x74, 0x5, 0x60, 0x56, 0x42 } }
+
+=======
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace ctypes {
 
@@ -44,9 +61,19 @@ static char* UnicodeToNative(JSContext* cx, const char16_t* source,
   return result;
 }
 
+<<<<<<< HEAD
 static JSCTypesCallbacks sCallbacks = {UnicodeToNative};
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(Module)
+||||||| merged common ancestors
+static JSCTypesCallbacks sCallbacks = {
+  UnicodeToNative
+};
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(Module)
+=======
+static JSCTypesCallbacks sCallbacks = {UnicodeToNative};
+>>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(Module, nsIXPCScriptable)
 
@@ -110,6 +137,7 @@ Module::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* obj,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 }  // namespace ctypes
 }  // namespace mozilla
 
@@ -126,3 +154,30 @@ static const mozilla::Module kCTypesModule = {mozilla::Module::kVersion,
                                               kCTypesCIDs, kCTypesContracts};
 
 NSMODULE_DEFN(jsctypes) = &kCTypesModule;
+||||||| merged common ancestors
+} // namespace ctypes
+} // namespace mozilla
+
+NS_DEFINE_NAMED_CID(JSCTYPES_CID);
+
+static const mozilla::Module::CIDEntry kCTypesCIDs[] = {
+  { &kJSCTYPES_CID, false, nullptr, mozilla::ctypes::ModuleConstructor },
+  { nullptr }
+};
+
+static const mozilla::Module::ContractIDEntry kCTypesContracts[] = {
+  { JSCTYPES_CONTRACTID, &kJSCTYPES_CID },
+  { nullptr }
+};
+
+static const mozilla::Module kCTypesModule = {
+  mozilla::Module::kVersion,
+  kCTypesCIDs,
+  kCTypesContracts
+};
+
+NSMODULE_DEFN(jsctypes) = &kCTypesModule;
+=======
+}  // namespace ctypes
+}  // namespace mozilla
+>>>>>>> upstream-releases

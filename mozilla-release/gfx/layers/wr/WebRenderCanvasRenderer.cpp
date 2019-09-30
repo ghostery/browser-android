@@ -11,7 +11,7 @@
 #include "mozilla/layers/CompositorBridgeChild.h"
 #include "SharedSurfaceGL.h"
 #include "WebRenderBridgeChild.h"
-#include "WebRenderLayerManager.h"
+#include "RenderRootStateManager.h"
 
 namespace mozilla {
 namespace layers {
@@ -31,7 +31,7 @@ void WebRenderCanvasRendererAsync::Initialize(
   WebRenderCanvasRenderer::Initialize(aData);
 
   if (mPipelineId.isSome()) {
-    mManager->WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref());
+    mManager->RemovePipelineIdForCompositable(mPipelineId.ref());
     mPipelineId.reset();
   }
 }
@@ -58,10 +58,21 @@ bool WebRenderCanvasRendererAsync::CreateCompositable() {
 
   if (!mPipelineId) {
     // Alloc async image pipeline id.
+<<<<<<< HEAD
     mPipelineId = Some(
         mManager->WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
     mManager->WrBridge()->AddPipelineIdForCompositable(
         mPipelineId.ref(), mCanvasClient->GetIPCHandle());
+||||||| merged common ancestors
+    mPipelineId = Some(mManager->WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
+    mManager->WrBridge()->AddPipelineIdForCompositable(mPipelineId.ref(),
+                                                       mCanvasClient->GetIPCHandle());
+=======
+    mPipelineId = Some(
+        mManager->WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
+    mManager->AddPipelineIdForCompositable(mPipelineId.ref(),
+                                           mCanvasClient->GetIPCHandle());
+>>>>>>> upstream-releases
   }
 
   return true;
@@ -69,29 +80,54 @@ bool WebRenderCanvasRendererAsync::CreateCompositable() {
 
 void WebRenderCanvasRendererAsync::ClearCachedResources() {
   if (mPipelineId.isSome()) {
-    mManager->WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref());
+    mManager->RemovePipelineIdForCompositable(mPipelineId.ref());
     mPipelineId.reset();
   }
 }
 
 void WebRenderCanvasRendererAsync::Destroy() {
   if (mPipelineId.isSome()) {
-    mManager->WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref());
+    mManager->RemovePipelineIdForCompositable(mPipelineId.ref());
     mPipelineId.reset();
   }
 }
 
+<<<<<<< HEAD
 void WebRenderCanvasRendererAsync::
     UpdateCompositableClientForEmptyTransaction() {
   UpdateCompositableClient();
+||||||| merged common ancestors
+void
+WebRenderCanvasRendererAsync::UpdateCompositableClientForEmptyTransaction()
+{
+  UpdateCompositableClient();
+=======
+void WebRenderCanvasRendererAsync::
+    UpdateCompositableClientForEmptyTransaction() {
+  UpdateCompositableClient(mManager->GetRenderRoot());
+>>>>>>> upstream-releases
   if (mPipelineId.isSome()) {
     // Notify an update of async image pipeline during empty transaction.
+<<<<<<< HEAD
     // During non empty transaction, WebRenderBridgeParent receives
     // OpUpdateAsyncImagePipeline message, but during empty transaction, the
     // message is not sent to WebRenderBridgeParent. Then
     // OpUpdatedAsyncImagePipeline is used to notify the update.
     mManager->WrBridge()->AddWebRenderParentCommand(
         OpUpdatedAsyncImagePipeline(mPipelineId.ref()));
+||||||| merged common ancestors
+    // During non empty transaction, WebRenderBridgeParent receives OpUpdateAsyncImagePipeline message,
+    // but during empty transaction, the message is not sent to WebRenderBridgeParent.
+    // Then OpUpdatedAsyncImagePipeline is used to notify the update.
+    mManager->WrBridge()->AddWebRenderParentCommand(OpUpdatedAsyncImagePipeline(mPipelineId.ref()));
+=======
+    // During non empty transaction, WebRenderBridgeParent receives
+    // OpUpdateAsyncImagePipeline message, but during empty transaction, the
+    // message is not sent to WebRenderBridgeParent. Then
+    // OpUpdatedAsyncImagePipeline is used to notify the update.
+    mManager->AddWebRenderParentCommand(
+        OpUpdatedAsyncImagePipeline(mPipelineId.ref()));
+>>>>>>> upstream-releases
   }
 }
 

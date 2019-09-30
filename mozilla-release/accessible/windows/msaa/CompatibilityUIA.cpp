@@ -22,16 +22,32 @@
 
 #if defined(UIA_LOGGING)
 
+<<<<<<< HEAD
 #define LOG_ERROR(FuncName)                                       \
   {                                                               \
     DWORD err = ::GetLastError();                                 \
     nsPrintfCString msg(#FuncName " failed with code %u\n", err); \
     ::OutputDebugStringA(msg.get());                              \
   }
+||||||| merged common ancestors
+#define LOG_ERROR(FuncName) \
+  { \
+    DWORD err = ::GetLastError(); \
+    nsPrintfCString msg(#FuncName " failed with code %u\n", err); \
+    ::OutputDebugStringA(msg.get()); \
+  }
+=======
+#  define LOG_ERROR(FuncName)                                       \
+    {                                                               \
+      DWORD err = ::GetLastError();                                 \
+      nsPrintfCString msg(#FuncName " failed with code %u\n", err); \
+      ::OutputDebugStringA(msg.get());                              \
+    }
+>>>>>>> upstream-releases
 
 #else
 
-#define LOG_ERROR(FuncName)
+#  define LOG_ERROR(FuncName)
 
 #endif  // defined(UIA_LOGGING)
 

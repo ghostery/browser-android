@@ -7,7 +7,6 @@
 #define nsJARProtocolHandler_h__
 
 #include "mozilla/StaticPtr.h"
-#include "nsIJARProtocolHandler.h"
 #include "nsIProtocolHandler.h"
 #include "nsIJARURI.h"
 #include "nsIZipReader.h"
@@ -15,12 +14,28 @@
 #include "nsWeakReference.h"
 #include "nsCOMPtr.h"
 
+<<<<<<< HEAD
 class nsJARProtocolHandler final : public nsIJARProtocolHandler,
                                    public nsSupportsWeakReference {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIPROTOCOLHANDLER
   NS_DECL_NSIJARPROTOCOLHANDLER
+||||||| merged common ancestors
+class nsJARProtocolHandler final : public nsIJARProtocolHandler
+                                 , public nsSupportsWeakReference
+{
+public:
+    NS_DECL_THREADSAFE_ISUPPORTS
+    NS_DECL_NSIPROTOCOLHANDLER
+    NS_DECL_NSIJARPROTOCOLHANDLER
+=======
+class nsJARProtocolHandler final : public nsIProtocolHandler,
+                                   public nsSupportsWeakReference {
+ public:
+  NS_DECL_THREADSAFE_ISUPPORTS
+  NS_DECL_NSIPROTOCOLHANDLER
+>>>>>>> upstream-releases
 
   // nsJARProtocolHandler methods:
   nsJARProtocolHandler();
@@ -29,9 +44,21 @@ class nsJARProtocolHandler final : public nsIJARProtocolHandler,
 
   nsresult Init();
 
+<<<<<<< HEAD
   // returns non addref'ed pointer.
   nsIMIMEService *MimeService();
   nsIZipReaderCache *JarCache() { return mJARCache; }
+||||||| merged common ancestors
+    // returns non addref'ed pointer.
+    nsIMIMEService    *MimeService();
+    nsIZipReaderCache *JarCache() { return mJARCache; }
+protected:
+    virtual ~nsJARProtocolHandler();
+=======
+  // returns non addref'ed pointer.
+  nsIMIMEService* MimeService();
+  nsIZipReaderCache* JarCache() const { return mJARCache; }
+>>>>>>> upstream-releases
 
  protected:
   virtual ~nsJARProtocolHandler();

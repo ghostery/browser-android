@@ -30,15 +30,40 @@ promise_test(function(t) {
 
           return new Promise(function(resolve, reject) {
               var channel = new MessageChannel();
+<<<<<<< HEAD
               channel.port1.onmessage = resolve;
+||||||| merged common ancestors
+              channel.port1.onmessage = t.step_func(function(e) {
+                  assert_equals(e.data.results, 'finish');
+                  frame.remove();
+                  service_worker_unregister_and_done(t, SCOPE);
+                });
+=======
+              channel.port1.onmessage = (event) => {
+                  if (event.data === 'done') {
+                    resolve();
+                    return;
+                  }
+                  test(() => {
+                    assert_true(event.data.result);
+                  }, event.data.testName);
+              };
+>>>>>>> upstream-releases
               frame.contentWindow.postMessage({},
                                               host_info['HTTPS_ORIGIN'],
                                               [channel.port2]);
             });
+<<<<<<< HEAD
         })
       .then(function(e) {
           assert_equals(e.data.results, 'finish');
         });
+||||||| merged common ancestors
+        })
+      .catch(unreached_rejection(t));
+=======
+        });
+>>>>>>> upstream-releases
   }, 'Verify CORS XHR of fetch() in a Service Worker');
 </script>
 </body>

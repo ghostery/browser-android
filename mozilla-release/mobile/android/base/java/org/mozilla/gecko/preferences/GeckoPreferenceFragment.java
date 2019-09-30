@@ -19,6 +19,7 @@ import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.TelemetryContract.Method;
 import org.mozilla.gecko.fxa.AccountLoader;
 import org.mozilla.gecko.fxa.authenticator.AndroidFxAccount;
+import org.mozilla.gecko.util.PackageUtil;
 
 import android.accounts.Account;
 import android.app.Activity;
@@ -28,6 +29,7 @@ import android.content.Loader;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
@@ -69,6 +71,7 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         // Write prefs to our custom GeckoSharedPrefs file.
         getPreferenceManager().setSharedPreferencesName(GeckoSharedPrefs.APP_PREFS_NAME);
+<<<<<<< HEAD
 
         int res = getResource();
         if (res == R.xml.preferences) {
@@ -90,6 +93,30 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
         syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
+||||||| merged common ancestors
+
+        int res = getResource();
+        if (res == R.xml.preferences) {
+            Telemetry.startUISession(TelemetryContract.Session.SETTINGS);
+        } else {
+            final String resourceName = getArguments().getString("resource");
+            Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, Method.SETTINGS, resourceName);
+        }
+
+        // Display a menu for Search preferences.
+        if (res == R.xml.preferences_search) {
+            setHasOptionsMenu(true);
+        }
+
+        addPreferencesFromResource(res);
+
+        PreferenceScreen screen = getPreferenceScreen();
+        setPreferenceScreen(screen);
+        mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
+        syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
+=======
+        loadPreferences();
+>>>>>>> upstream-releases
     }
 
     /**
@@ -188,6 +215,36 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         // Force reload as the account may have been deleted while the app was in background.
         getLoaderManager().restartLoader(ACCOUNT_LOADER_ID, null, accountLoaderCallbacks);
+
+        PreferenceScreen screen = getPreferenceScreen();
+
+        Preference defaultBrowser = screen.findPreference(GeckoPreferences.PREFS_DEFAULT_BROWSER);
+        if (defaultBrowser == null && !PackageUtil.isDefaultBrowser(this.getActivity().getBaseContext())) {
+            // force a reload of all preferences to add/remove the default browser one if conditions were changed while the app was backgrounded
+            getPreferenceScreen().removeAll();
+            loadPreferences();
+        }
+
+        setPreferenceScreen(screen);
+        mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
+        syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
+    }
+
+    private void loadPreferences() {
+        int res = getResource();
+        if (res == R.xml.preferences) {
+            Telemetry.startUISession(TelemetryContract.Session.SETTINGS);
+        } else {
+            final String resourceName = getArguments().getString("resource");
+            Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, Method.SETTINGS, resourceName);
+        }
+
+        // Display a menu for Search preferences.
+        if (res == R.xml.preferences_search) {
+            setHasOptionsMenu(true);
+        }
+
+        addPreferencesFromResource(res);
     }
 
     private void applyLocale(final Locale currentLocale) {

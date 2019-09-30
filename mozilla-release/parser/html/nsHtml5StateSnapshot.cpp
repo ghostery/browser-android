@@ -55,6 +55,7 @@
 #include "nsHtml5StateSnapshot.h"
 
 nsHtml5StateSnapshot::nsHtml5StateSnapshot(
+<<<<<<< HEAD
     jArray<nsHtml5StackNode*, int32_t> stack,
     jArray<nsHtml5StackNode*, int32_t> listOfActiveFormattingElements,
     jArray<int32_t, int32_t> templateModeStack, nsIContentHandle* formPointer,
@@ -72,6 +73,47 @@ nsHtml5StateSnapshot::nsHtml5StateSnapshot(
       framesetOk(framesetOk),
       needToDropLF(needToDropLF),
       quirks(quirks) {
+||||||| merged common ancestors
+  jArray<nsHtml5StackNode*, int32_t> stack,
+  jArray<nsHtml5StackNode*, int32_t> listOfActiveFormattingElements,
+  jArray<int32_t, int32_t> templateModeStack,
+  nsIContentHandle* formPointer,
+  nsIContentHandle* headPointer,
+  nsIContentHandle* deepTreeSurrogateParent,
+  int32_t mode,
+  int32_t originalMode,
+  bool framesetOk,
+  bool needToDropLF,
+  bool quirks)
+  : stack(stack)
+  , listOfActiveFormattingElements(listOfActiveFormattingElements)
+  , templateModeStack(templateModeStack)
+  , formPointer(formPointer)
+  , headPointer(headPointer)
+  , deepTreeSurrogateParent(deepTreeSurrogateParent)
+  , mode(mode)
+  , originalMode(originalMode)
+  , framesetOk(framesetOk)
+  , needToDropLF(needToDropLF)
+  , quirks(quirks)
+{
+=======
+    jArray<nsHtml5StackNode*, int32_t> stack,
+    jArray<nsHtml5StackNode*, int32_t> listOfActiveFormattingElements,
+    jArray<int32_t, int32_t> templateModeStack, nsIContentHandle* formPointer,
+    nsIContentHandle* headPointer, int32_t mode, int32_t originalMode,
+    bool framesetOk, bool needToDropLF, bool quirks)
+    : stack(stack),
+      listOfActiveFormattingElements(listOfActiveFormattingElements),
+      templateModeStack(templateModeStack),
+      formPointer(formPointer),
+      headPointer(headPointer),
+      mode(mode),
+      originalMode(originalMode),
+      framesetOk(framesetOk),
+      needToDropLF(needToDropLF),
+      quirks(quirks) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(nsHtml5StateSnapshot);
 }
 
@@ -92,19 +134,75 @@ nsIContentHandle* nsHtml5StateSnapshot::getFormPointer() { return formPointer; }
 
 nsIContentHandle* nsHtml5StateSnapshot::getHeadPointer() { return headPointer; }
 
+<<<<<<< HEAD
 nsIContentHandle* nsHtml5StateSnapshot::getDeepTreeSurrogateParent() {
   return deepTreeSurrogateParent;
 }
-
+||||||| merged common ancestors
+nsIContentHandle*
+nsHtml5StateSnapshot::getDeepTreeSurrogateParent()
+{
+  return deepTreeSurrogateParent;
+}
+=======
 int32_t nsHtml5StateSnapshot::getMode() { return mode; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+int32_t nsHtml5StateSnapshot::getMode() { return mode; }
+||||||| merged common ancestors
+int32_t
+nsHtml5StateSnapshot::getMode()
+{
+  return mode;
+}
+=======
 int32_t nsHtml5StateSnapshot::getOriginalMode() { return originalMode; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+int32_t nsHtml5StateSnapshot::getOriginalMode() { return originalMode; }
+||||||| merged common ancestors
+int32_t
+nsHtml5StateSnapshot::getOriginalMode()
+{
+  return originalMode;
+}
+=======
 bool nsHtml5StateSnapshot::isFramesetOk() { return framesetOk; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+bool nsHtml5StateSnapshot::isFramesetOk() { return framesetOk; }
+||||||| merged common ancestors
+bool
+nsHtml5StateSnapshot::isFramesetOk()
+{
+  return framesetOk;
+}
+=======
+bool nsHtml5StateSnapshot::isNeedToDropLF() { return needToDropLF; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool nsHtml5StateSnapshot::isNeedToDropLF() { return needToDropLF; }
 
 bool nsHtml5StateSnapshot::isQuirks() { return quirks; }
+||||||| merged common ancestors
+bool
+nsHtml5StateSnapshot::isNeedToDropLF()
+{
+  return needToDropLF;
+}
+
+bool
+nsHtml5StateSnapshot::isQuirks()
+{
+  return quirks;
+}
+=======
+bool nsHtml5StateSnapshot::isQuirks() { return quirks; }
+>>>>>>> upstream-releases
 
 int32_t nsHtml5StateSnapshot::getListOfActiveFormattingElementsLength() {
   return listOfActiveFormattingElements.length;

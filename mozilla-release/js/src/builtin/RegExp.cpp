@@ -6,29 +6,35 @@
 
 #include "builtin/RegExp.h"
 
+#include "mozilla/Casting.h"
 #include "mozilla/CheckedInt.h"
 #include "mozilla/TypeTraits.h"
 
 #include "frontend/TokenStream.h"
 #include "irregexp/RegExpParser.h"
 #include "jit/InlinableNatives.h"
+#include "js/PropertySpec.h"
+#include "js/RegExpFlags.h"  // JS::RegExpFlag, JS::RegExpFlags
 #include "util/StringBuffer.h"
 #include "util/Unicode.h"
 #include "vm/JSContext.h"
 #include "vm/RegExpStatics.h"
 #include "vm/SelfHosting.h"
 
+#include "vm/EnvironmentObject-inl.h"
 #include "vm/JSObject-inl.h"
 #include "vm/NativeObject-inl.h"
 #include "vm/ObjectOperations-inl.h"
-#include "vm/UnboxedObject-inl.h"
 
 using namespace js;
 
+using mozilla::AssertedCast;
 using mozilla::CheckedInt;
 using mozilla::IsAsciiDigit;
 
 using JS::CompileOptions;
+using JS::RegExpFlag;
+using JS::RegExpFlags;
 
 /*
  * ES 2017 draft rev 6a13789aa9e7c6de4e96b7d3e24d9e6eba6584ad 21.2.5.2.2
@@ -185,6 +191,7 @@ bool js::ExecuteRegExpLegacy(JSContext* cx, RegExpStatics* res,
   return CreateRegExpMatchResult(cx, input, matches, rval);
 }
 
+<<<<<<< HEAD
 static bool CheckPatternSyntaxSlow(JSContext* cx, HandleAtom pattern,
                                    RegExpFlag flags) {
   LifoAllocScope allocScope(&cx->tempLifoAlloc());
@@ -192,12 +199,42 @@ static bool CheckPatternSyntaxSlow(JSContext* cx, HandleAtom pattern,
   frontend::TokenStream dummyTokenStream(cx, options, nullptr, 0, nullptr);
   return irregexp::ParsePatternSyntax(dummyTokenStream, allocScope.alloc(),
                                       pattern, flags & UnicodeFlag);
+||||||| merged common ancestors
+static bool
+CheckPatternSyntaxSlow(JSContext* cx, HandleAtom pattern, RegExpFlag flags)
+{
+    CompileOptions options(cx);
+    frontend::TokenStream dummyTokenStream(cx, options, nullptr, 0, nullptr);
+    return irregexp::ParsePatternSyntax(dummyTokenStream, cx->tempLifoAlloc(), pattern,
+                                        flags & UnicodeFlag);
+=======
+static bool CheckPatternSyntaxSlow(JSContext* cx, HandleAtom pattern,
+                                   RegExpFlags flags) {
+  LifoAllocScope allocScope(&cx->tempLifoAlloc());
+  CompileOptions options(cx);
+  frontend::TokenStream dummyTokenStream(cx, options, nullptr, 0, nullptr);
+  return irregexp::ParsePatternSyntax(dummyTokenStream, allocScope.alloc(),
+                                      pattern, flags.unicode());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static RegExpShared* CheckPatternSyntax(JSContext* cx, HandleAtom pattern,
                                         RegExpFlag flags) {
   // If we already have a RegExpShared for this pattern/flags, we can
   // avoid the much slower CheckPatternSyntaxSlow call.
+||||||| merged common ancestors
+static RegExpShared*
+CheckPatternSyntax(JSContext* cx, HandleAtom pattern, RegExpFlag flags)
+{
+    // If we already have a RegExpShared for this pattern/flags, we can
+    // avoid the much slower CheckPatternSyntaxSlow call.
+=======
+static RegExpShared* CheckPatternSyntax(JSContext* cx, HandleAtom pattern,
+                                        RegExpFlags flags) {
+  // If we already have a RegExpShared for this pattern/flags, we can
+  // avoid the much slower CheckPatternSyntaxSlow call.
+>>>>>>> upstream-releases
 
   if (RegExpShared* shared = cx->zone()->regExps().maybeGet(pattern, flags)) {
 #ifdef DEBUG
@@ -250,6 +287,7 @@ static bool RegExpInitializeIgnoringLastIndex(JSContext* cx,
     }
   }
 
+<<<<<<< HEAD
   /* Step 3. */
   RegExpFlag flags = RegExpFlag(0);
   if (!flagsValue.isUndefined()) {
@@ -257,6 +295,29 @@ static bool RegExpInitializeIgnoringLastIndex(JSContext* cx,
     RootedString flagStr(cx, ToString<CanGC>(cx, flagsValue));
     if (!flagStr) {
       return false;
+||||||| merged common ancestors
+    /* Step 3. */
+    RegExpFlag flags = RegExpFlag(0);
+    if (!flagsValue.isUndefined()) {
+        /* Step 4. */
+        RootedString flagStr(cx, ToString<CanGC>(cx, flagsValue));
+        if (!flagStr) {
+            return false;
+        }
+
+        /* Step 5. */
+        if (!ParseRegExpFlags(cx, flagStr, &flags)) {
+            return false;
+        }
+=======
+  /* Step 3. */
+  RegExpFlags flags = RegExpFlag::NoFlags;
+  if (!flagsValue.isUndefined()) {
+    /* Step 4. */
+    RootedString flagStr(cx, ToString<CanGC>(cx, flagsValue));
+    if (!flagStr) {
+      return false;
+>>>>>>> upstream-releases
     }
 
     /* Step 5. */
@@ -342,6 +403,7 @@ MOZ_ALWAYS_INLINE bool regexp_compile_impl(JSContext* cx,
 
   Rooted<RegExpObject*> regexp(cx, &args.thisv().toObject().as<RegExpObject>());
 
+<<<<<<< HEAD
   // Step 3.
   RootedValue patternValue(cx, args.get(0));
   ESClass cls;
@@ -367,6 +429,38 @@ MOZ_ALWAYS_INLINE bool regexp_compile_impl(JSContext* cx,
       // Step 3b.
       RegExpShared* shared = RegExpToShared(cx, patternObj);
       if (!shared) {
+||||||| merged common ancestors
+    // Step 3.
+    RootedValue patternValue(cx, args.get(0));
+    ESClass cls;
+    if (!GetClassOfValue(cx, patternValue, &cls)) {
+=======
+  // Step 3.
+  RootedValue patternValue(cx, args.get(0));
+  ESClass cls;
+  if (!GetClassOfValue(cx, patternValue, &cls)) {
+    return false;
+  }
+  if (cls == ESClass::RegExp) {
+    // Step 3a.
+    if (args.hasDefined(1)) {
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_NEWREGEXP_FLAGGED);
+      return false;
+    }
+
+    // Beware!  |patternObj| might be a proxy into another compartment, so
+    // don't assume |patternObj.is<RegExpObject>()|.  For the same reason,
+    // don't reuse the RegExpShared below.
+    RootedObject patternObj(cx, &patternValue.toObject());
+
+    RootedAtom sourceAtom(cx);
+    RegExpFlags flags = RegExpFlag::NoFlags;
+    {
+      // Step 3b.
+      RegExpShared* shared = RegExpToShared(cx, patternObj);
+      if (!shared) {
+>>>>>>> upstream-releases
         return false;
       }
 
@@ -449,6 +543,7 @@ bool js::regexp_construct(JSContext* cx, unsigned argc, Value* vp) {
 
   RootedValue patternValue(cx, args.get(0));
 
+<<<<<<< HEAD
   // Step 4.
   ESClass cls;
   if (!GetClassOfValue(cx, patternValue, &cls)) {
@@ -466,6 +561,29 @@ bool js::regexp_construct(JSContext* cx, unsigned argc, Value* vp) {
       // Step 4.a.
       shared = RegExpToShared(cx, patternObj);
       if (!shared) {
+||||||| merged common ancestors
+    // Step 4.
+    ESClass cls;
+    if (!GetClassOfValue(cx, patternValue, &cls)) {
+=======
+  // Step 4.
+  ESClass cls;
+  if (!GetClassOfValue(cx, patternValue, &cls)) {
+    return false;
+  }
+  if (cls == ESClass::RegExp) {
+    // Beware!  |patternObj| might be a proxy into another compartment, so
+    // don't assume |patternObj.is<RegExpObject>()|.
+    RootedObject patternObj(cx, &patternValue.toObject());
+
+    RootedAtom sourceAtom(cx);
+    RegExpFlags flags;
+    RootedRegExpShared shared(cx);
+    {
+      // Step 4.a.
+      shared = RegExpToShared(cx, patternObj);
+      if (!shared) {
+>>>>>>> upstream-releases
         return false;
       }
       sourceAtom = shared->getSource();
@@ -480,17 +598,56 @@ bool js::regexp_construct(JSContext* cx, unsigned argc, Value* vp) {
       }
     }
 
+<<<<<<< HEAD
     // Step 7.
     RootedObject proto(cx);
     if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
       return false;
     }
+||||||| merged common ancestors
+        // Step 8.
+        if (args.hasDefined(1)) {
+            // Step 4.c / 21.2.3.2.2 RegExpInitialize step 4.
+            RegExpFlag flagsArg = RegExpFlag(0);
+            RootedString flagStr(cx, ToString<CanGC>(cx, args[1]));
+            if (!flagStr) {
+                return false;
+            }
+            if (!ParseRegExpFlags(cx, flagStr, &flagsArg)) {
+                return false;
+            }
+
+            // Don't reuse the RegExpShared if we have different flags.
+            if (flags != flagsArg) {
+                shared = nullptr;
+            }
+
+            if (!(flags & UnicodeFlag) && flagsArg & UnicodeFlag) {
+                // Have to check syntax again when adding 'u' flag.
+
+                // ES 2017 draft rev 9b49a888e9dfe2667008a01b2754c3662059ae56
+                // 21.2.3.2.2 step 7.
+                shared = CheckPatternSyntax(cx, sourceAtom, flagsArg);
+                if (!shared) {
+                    return false;
+                }
+            }
+            flags = flagsArg;
+        }
+=======
+    // Step 7.
+    RootedObject proto(cx);
+    if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_RegExp, &proto)) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
     Rooted<RegExpObject*> regexp(cx, RegExpAlloc(cx, GenericObject, proto));
     if (!regexp) {
       return false;
     }
 
+<<<<<<< HEAD
     // Step 8.
     if (args.hasDefined(1)) {
       // Step 4.c / 21.2.3.2.2 RegExpInitialize step 4.
@@ -516,6 +673,36 @@ bool js::regexp_construct(JSContext* cx, unsigned argc, Value* vp) {
         shared = CheckPatternSyntax(cx, sourceAtom, flagsArg);
         if (!shared) {
           return false;
+||||||| merged common ancestors
+        if (shared) {
+            regexp->setShared(*shared);
+=======
+    // Step 8.
+    if (args.hasDefined(1)) {
+      // Step 4.c / 21.2.3.2.2 RegExpInitialize step 4.
+      RegExpFlags flagsArg = RegExpFlag::NoFlags;
+      RootedString flagStr(cx, ToString<CanGC>(cx, args[1]));
+      if (!flagStr) {
+        return false;
+      }
+      if (!ParseRegExpFlags(cx, flagStr, &flagsArg)) {
+        return false;
+      }
+
+      // Don't reuse the RegExpShared if we have different flags.
+      if (flags != flagsArg) {
+        shared = nullptr;
+      }
+
+      if (!flags.unicode() && flagsArg.unicode()) {
+        // Have to check syntax again when adding 'u' flag.
+
+        // ES 2017 draft rev 9b49a888e9dfe2667008a01b2754c3662059ae56
+        // 21.2.3.2.2 step 7.
+        shared = CheckPatternSyntax(cx, sourceAtom, flagsArg);
+        if (!shared) {
+          return false;
+>>>>>>> upstream-releases
         }
       }
       flags = flagsArg;
@@ -556,11 +743,24 @@ bool js::regexp_construct(JSContext* cx, unsigned argc, Value* vp) {
     F = args.get(1);
   }
 
+<<<<<<< HEAD
   // Step 7.
   RootedObject proto(cx);
   if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
     return false;
   }
+||||||| merged common ancestors
+    Rooted<RegExpObject*> regexp(cx, RegExpAlloc(cx, GenericObject, proto));
+    if (!regexp) {
+        return false;
+    }
+=======
+  // Step 7.
+  RootedObject proto(cx);
+  if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_RegExp, &proto)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   Rooted<RegExpObject*> regexp(cx, RegExpAlloc(cx, GenericObject, proto));
   if (!regexp) {
@@ -592,8 +792,16 @@ bool js::regexp_construct_raw_flags(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
+<<<<<<< HEAD
   // Step 4.c.
   int32_t flags = int32_t(args[1].toNumber());
+||||||| merged common ancestors
+    // Step 4.c.
+    int32_t flags = int32_t(args[1].toNumber());
+=======
+  // Step 4.c.
+  RegExpFlags flags = AssertedCast<uint8_t>(int32_t(args[1].toNumber()));
+>>>>>>> upstream-releases
 
   // Step 7.
   RegExpObject* regexp = RegExpAlloc(cx, GenericObject);
@@ -601,12 +809,25 @@ bool js::regexp_construct_raw_flags(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
+<<<<<<< HEAD
   // Step 8.
   regexp->initAndZeroLastIndex(sourceAtom, RegExpFlag(flags), cx);
   args.rval().setObject(*regexp);
   return true;
+||||||| merged common ancestors
+    // Step 8.
+    regexp->initAndZeroLastIndex(sourceAtom, RegExpFlag(flags), cx);
+    args.rval().setObject(*regexp);
+    return true;
+=======
+  // Step 8.
+  regexp->initAndZeroLastIndex(sourceAtom, flags, cx);
+  args.rval().setObject(*regexp);
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool IsRegExpPrototype(HandleValue v) {
   if (IsRegExpObject(v) || !v.isObject()) {
     return false;
@@ -614,6 +835,21 @@ MOZ_ALWAYS_INLINE bool IsRegExpPrototype(HandleValue v) {
 
   // Note: The prototype shares its JSClass with instances.
   return StandardProtoKeyOrNull(&v.toObject()) == JSProto_RegExp;
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+IsRegExpPrototype(HandleValue v)
+{
+    if (IsRegExpObject(v) || !v.isObject()) {
+        return false;
+    }
+
+    // Note: The prototype shares its JSClass with instances.
+    return StandardProtoKeyOrNull(&v.toObject()) == JSProto_RegExp;
+=======
+MOZ_ALWAYS_INLINE bool IsRegExpPrototype(HandleValue v, JSContext* cx) {
+  return (v.isObject() &&
+          cx->global()->maybeGetRegExpPrototype() == &v.toObject());
+>>>>>>> upstream-releases
 }
 
 // ES 2017 draft 21.2.5.4.
@@ -629,11 +865,25 @@ MOZ_ALWAYS_INLINE bool regexp_global_impl(JSContext* cx, const CallArgs& args) {
 bool js::regexp_global(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setUndefined();
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setUndefined();
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setUndefined();
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-3.
   return CallNonGenericMethod<IsRegExpObject, regexp_global_impl>(cx, args);
@@ -653,11 +903,25 @@ MOZ_ALWAYS_INLINE bool regexp_ignoreCase_impl(JSContext* cx,
 bool js::regexp_ignoreCase(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setUndefined();
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setUndefined();
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setUndefined();
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-3.
   return CallNonGenericMethod<IsRegExpObject, regexp_ignoreCase_impl>(cx, args);
@@ -677,11 +941,25 @@ MOZ_ALWAYS_INLINE bool regexp_multiline_impl(JSContext* cx,
 bool js::regexp_multiline(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setUndefined();
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setUndefined();
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setUndefined();
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-3.
   return CallNonGenericMethod<IsRegExpObject, regexp_multiline_impl>(cx, args);
@@ -711,11 +989,25 @@ MOZ_ALWAYS_INLINE bool regexp_source_impl(JSContext* cx, const CallArgs& args) {
 static bool regexp_source(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setString(cx->names().emptyRegExp);
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setString(cx->names().emptyRegExp);
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setString(cx->names().emptyRegExp);
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-4.
   return CallNonGenericMethod<IsRegExpObject, regexp_source_impl>(cx, args);
@@ -734,11 +1026,25 @@ MOZ_ALWAYS_INLINE bool regexp_sticky_impl(JSContext* cx, const CallArgs& args) {
 bool js::regexp_sticky(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setUndefined();
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setUndefined();
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setUndefined();
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-3.
   return CallNonGenericMethod<IsRegExpObject, regexp_sticky_impl>(cx, args);
@@ -758,18 +1064,32 @@ MOZ_ALWAYS_INLINE bool regexp_unicode_impl(JSContext* cx,
 bool js::regexp_unicode(JSContext* cx, unsigned argc, JS::Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   // Step 3.a.
   if (IsRegExpPrototype(args.thisv())) {
     args.rval().setUndefined();
     return true;
   }
+||||||| merged common ancestors
+    // Step 3.a.
+    if (IsRegExpPrototype(args.thisv())) {
+        args.rval().setUndefined();
+        return true;
+    }
+=======
+  // Step 3.a.
+  if (IsRegExpPrototype(args.thisv(), cx)) {
+    args.rval().setUndefined();
+    return true;
+  }
+>>>>>>> upstream-releases
 
   // Steps 1-3.
   return CallNonGenericMethod<IsRegExpObject, regexp_unicode_impl>(cx, args);
 }
 
 const JSPropertySpec js::regexp_properties[] = {
-    JS_SELF_HOSTED_GET("flags", "RegExpFlagsGetter", 0),
+    JS_SELF_HOSTED_GET("flags", "$RegExpFlagsGetter", 0),
     JS_PSG("global", regexp_global, 0),
     JS_PSG("ignoreCase", regexp_ignoreCase, 0),
     JS_PSG("multiline", regexp_multiline, 0),
@@ -779,6 +1099,7 @@ const JSPropertySpec js::regexp_properties[] = {
     JS_PS_END};
 
 const JSFunctionSpec js::regexp_methods[] = {
+<<<<<<< HEAD
     JS_SELF_HOSTED_FN(js_toSource_str, "RegExpToString", 0, 0),
     JS_SELF_HOSTED_FN(js_toString_str, "RegExpToString", 0, 0),
     JS_FN("compile", regexp_compile, 2, 0),
@@ -795,6 +1116,44 @@ const JSFunctionSpec js::regexp_methods[] = {
   if (args.rval().isUndefined())                                  \
     args.rval().setString(cx->runtime()->emptyString);            \
   return true
+||||||| merged common ancestors
+    JS_SELF_HOSTED_FN(js_toSource_str, "RegExpToString", 0, 0),
+    JS_SELF_HOSTED_FN(js_toString_str, "RegExpToString", 0, 0),
+    JS_FN("compile",        regexp_compile,     2,0),
+    JS_SELF_HOSTED_FN("exec", "RegExp_prototype_Exec", 1,0),
+    JS_SELF_HOSTED_FN("test", "RegExpTest" ,    1,0),
+    JS_SELF_HOSTED_SYM_FN(match, "RegExpMatch", 1,0),
+    JS_SELF_HOSTED_SYM_FN(replace, "RegExpReplace", 2,0),
+    JS_SELF_HOSTED_SYM_FN(search, "RegExpSearch", 1,0),
+    JS_SELF_HOSTED_SYM_FN(split, "RegExpSplit", 2,0),
+    JS_FS_END
+};
+
+#define STATIC_PAREN_GETTER_CODE(parenNum)                                      \
+    if (!res->createParen(cx, parenNum, args.rval()))                           \
+        return false;                                                           \
+    if (args.rval().isUndefined())                                              \
+        args.rval().setString(cx->runtime()->emptyString);                      \
+    return true
+=======
+    JS_SELF_HOSTED_FN(js_toSource_str, "$RegExpToString", 0, 0),
+    JS_SELF_HOSTED_FN(js_toString_str, "$RegExpToString", 0, 0),
+    JS_FN("compile", regexp_compile, 2, 0),
+    JS_SELF_HOSTED_FN("exec", "RegExp_prototype_Exec", 1, 0),
+    JS_SELF_HOSTED_FN("test", "RegExpTest", 1, 0),
+    JS_SELF_HOSTED_SYM_FN(match, "RegExpMatch", 1, 0),
+    JS_SELF_HOSTED_SYM_FN(matchAll, "RegExpMatchAll", 1, 0),
+    JS_SELF_HOSTED_SYM_FN(replace, "RegExpReplace", 2, 0),
+    JS_SELF_HOSTED_SYM_FN(search, "RegExpSearch", 1, 0),
+    JS_SELF_HOSTED_SYM_FN(split, "RegExpSplit", 2, 0),
+    JS_FS_END};
+
+#define STATIC_PAREN_GETTER_CODE(parenNum)                        \
+  if (!res->createParen(cx, parenNum, args.rval())) return false; \
+  if (args.rval().isUndefined())                                  \
+    args.rval().setString(cx->runtime()->emptyString);            \
+  return true
+>>>>>>> upstream-releases
 
 /*
  * RegExp static properties.
@@ -887,8 +1246,17 @@ const JSPropertySpec js::regexp_static_props[] = {
     JS_PSG("$+", static_lastParen_getter, JSPROP_PERMANENT),
     JS_PSG("$`", static_leftContext_getter, JSPROP_PERMANENT),
     JS_PSG("$'", static_rightContext_getter, JSPROP_PERMANENT),
+<<<<<<< HEAD
     JS_SELF_HOSTED_SYM_GET(species, "RegExpSpecies", 0),
     JS_PS_END};
+||||||| merged common ancestors
+    JS_SELF_HOSTED_SYM_GET(species, "RegExpSpecies", 0),
+    JS_PS_END
+};
+=======
+    JS_SELF_HOSTED_SYM_GET(species, "$RegExpSpecies", 0),
+    JS_PS_END};
+>>>>>>> upstream-releases
 
 template <typename CharT>
 static bool IsTrailSurrogateWithLeadSurrogateImpl(HandleLinearString input,
@@ -985,9 +1353,64 @@ static RegExpRunStatus ExecuteRegExp(JSContext* cx, HandleObject regexp,
     return RegExpRunStatus_Error;
   }
 
+<<<<<<< HEAD
   /* Steps 12.a.i, 12.c.i.i, 15 are done by Self-hosted function. */
 
   return status;
+||||||| merged common ancestors
+    RootedLinearString input(cx, string->ensureLinear(cx));
+    if (!input) {
+        return RegExpRunStatus_Error;
+    }
+
+    /* Handled by caller */
+    MOZ_ASSERT(lastIndex >= 0 && size_t(lastIndex) <= input->length());
+
+    /* Steps 4-8 performed by the caller. */
+
+    /* Step 10. */
+    if (reobj->unicode()) {
+        /*
+         * ES 2017 draft rev 6a13789aa9e7c6de4e96b7d3e24d9e6eba6584ad
+         * 21.2.2.2 step 2.
+         *   Let listIndex be the index into Input of the character that was
+         *   obtained from element index of str.
+         *
+         * In the spec, pattern match is performed with decoded Unicode code
+         * points, but our implementation performs it with UTF-16 encoded
+         * string.  In step 2, we should decrement lastIndex (index) if it
+         * points the trail surrogate that has corresponding lead surrogate.
+         *
+         *   var r = /\uD83D\uDC38/ug;
+         *   r.lastIndex = 1;
+         *   var str = "\uD83D\uDC38";
+         *   var result = r.exec(str); // pattern match starts from index 0
+         *   print(result.index);      // prints 0
+         *
+         * Note: this doesn't match the current spec text and result in
+         * different values for `result.index` under certain conditions.
+         * However, the spec will change to match our implementation's
+         * behavior. See https://github.com/tc39/ecma262/issues/128.
+         */
+        if (IsTrailSurrogateWithLeadSurrogate(input, lastIndex)) {
+            lastIndex--;
+        }
+    }
+
+    /* Steps 3, 11-14, except 12.a.i, 12.c.i.1. */
+    RegExpRunStatus status = ExecuteRegExpImpl(cx, res, &re, input, lastIndex, matches, endIndex);
+    if (status == RegExpRunStatus_Error) {
+        return RegExpRunStatus_Error;
+    }
+
+    /* Steps 12.a.i, 12.c.i.i, 15 are done by Self-hosted function. */
+
+    return status;
+=======
+  /* Steps 12.a.i, 12.c.i.i, 15 are done by Self-hosted function. */
+
+  return status;
+>>>>>>> upstream-releases
 }
 
 /*
@@ -1223,6 +1646,7 @@ static void GetParen(JSLinearString* matched, const JS::Value& capture,
 }
 
 template <typename CharT>
+<<<<<<< HEAD
 static bool InterpretDollar(JSLinearString* matched, JSLinearString* string,
                             size_t position, size_t tailPos,
                             Handle<CapturesVector> captures,
@@ -1258,6 +1682,86 @@ static bool InterpretDollar(JSLinearString* matched, JSLinearString* string,
         if (tmpNum <= captures.length()) {
           currentChar++;
           num = tmpNum;
+||||||| merged common ancestors
+static bool
+InterpretDollar(JSLinearString* matched, JSLinearString* string, size_t position, size_t tailPos,
+                Handle<CapturesVector> captures, JSLinearString* replacement,
+                const CharT* replacementBegin, const CharT* currentDollar,
+                const CharT* replacementEnd,
+                JSSubString* out, size_t* skip)
+{
+    MOZ_ASSERT(*currentDollar == '$');
+
+    /* If there is only a dollar, bail now. */
+    if (currentDollar + 1 >= replacementEnd) {
+        return false;
+    }
+
+    /* ES 2016 draft Mar 25, 2016 Table 46. */
+    char16_t c = currentDollar[1];
+    if (IsAsciiDigit(c)) {
+        /* $n, $nn */
+        unsigned num = JS7_UNDEC(c);
+        if (num > captures.length()) {
+            // The result is implementation-defined, do not substitute.
+            return false;
+        }
+
+        const CharT* currentChar = currentDollar + 2;
+        if (currentChar < replacementEnd) {
+            c = *currentChar;
+            if (IsAsciiDigit(c)) {
+                unsigned tmpNum = 10 * num + JS7_UNDEC(c);
+                // If num > captures.length(), the result is implementation-defined.
+                // Consume next character only if num <= captures.length().
+                if (tmpNum <= captures.length()) {
+                    currentChar++;
+                    num = tmpNum;
+                }
+            }
+        }
+
+        if (num == 0) {
+            // The result is implementation-defined.
+            // Do not substitute.
+            return false;
+=======
+static bool InterpretDollar(JSLinearString* matched, JSLinearString* string,
+                            size_t position, size_t tailPos,
+                            Handle<CapturesVector> captures,
+                            JSLinearString* replacement,
+                            const CharT* replacementBegin,
+                            const CharT* currentDollar,
+                            const CharT* replacementEnd, JSSubString* out,
+                            size_t* skip) {
+  MOZ_ASSERT(*currentDollar == '$');
+
+  /* If there is only a dollar, bail now. */
+  if (currentDollar + 1 >= replacementEnd) {
+    return false;
+  }
+
+  /* ES 2016 draft Mar 25, 2016 Table 46. */
+  char16_t c = currentDollar[1];
+  if (IsAsciiDigit(c)) {
+    /* $n, $nn */
+    unsigned num = AsciiDigitToNumber(c);
+    if (num > captures.length()) {
+      // The result is implementation-defined, do not substitute.
+      return false;
+    }
+
+    const CharT* currentChar = currentDollar + 2;
+    if (currentChar < replacementEnd) {
+      c = *currentChar;
+      if (IsAsciiDigit(c)) {
+        unsigned tmpNum = 10 * num + AsciiDigitToNumber(c);
+        // If num > captures.length(), the result is implementation-defined.
+        // Consume next character only if num <= captures.length().
+        if (tmpNum <= captures.length()) {
+          currentChar++;
+          num = tmpNum;
+>>>>>>> upstream-releases
         }
       }
     }
@@ -1416,6 +1920,7 @@ static bool NeedTwoBytes(HandleLinearString string,
     return true;
   }
 
+<<<<<<< HEAD
   for (size_t i = 0, len = captures.length(); i < len; i++) {
     const Value& capture = captures[i];
     if (capture.isUndefined()) {
@@ -1423,13 +1928,37 @@ static bool NeedTwoBytes(HandleLinearString string,
     }
     if (capture.toString()->hasTwoByteChars()) {
       return true;
+||||||| merged common ancestors
+    for (size_t i = 0, len = captures.length(); i < len; i++) {
+        const Value& capture = captures[i];
+        if (capture.isUndefined()) {
+            continue;
+        }
+        if (capture.toString()->hasTwoByteChars()) {
+            return true;
+        }
+=======
+  for (size_t i = 0, len = captures.length(); i < len; i++) {
+    const Value& capture = captures[i];
+    if (capture.isUndefined()) {
+      continue;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    if (capture.toString()->hasTwoByteChars()) {
+      return true;
     }
   }
+>>>>>>> upstream-releases
 
   return false;
 }
 
 /* ES 2016 draft Mar 25, 2016 21.1.3.14.1. */
+<<<<<<< HEAD
 bool js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult,
                                HandleLinearString string, size_t position,
                                HandleLinearString replacement,
@@ -1452,9 +1981,87 @@ bool js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult,
 
   // Step 2.
   size_t matchLength = matched->length();
+||||||| merged common ancestors
+bool
+js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult, HandleLinearString string,
+                          size_t position, HandleLinearString replacement,
+                          size_t firstDollarIndex, MutableHandleValue rval)
+{
+    MOZ_ASSERT(firstDollarIndex < replacement->length());
 
+    // Step 1 (skipped).
+
+    // Step 10 (reordered).
+    uint32_t matchResultLength = matchResult->length();
+    MOZ_ASSERT(matchResultLength > 0);
+    MOZ_ASSERT(matchResultLength == matchResult->getDenseInitializedLength());
+
+    const Value& matchedValue = matchResult->getDenseElement(0);
+    RootedLinearString matched(cx, matchedValue.toString()->ensureLinear(cx));
+    if (!matched) {
+        return false;
+    }
+
+    // Step 2.
+    size_t matchLength = matched->length();
+=======
+bool js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult,
+                               HandleLinearString string, size_t position,
+                               HandleLinearString replacement,
+                               size_t firstDollarIndex,
+                               MutableHandleValue rval) {
+  MOZ_ASSERT(firstDollarIndex < replacement->length());
+
+  // Step 1 (skipped).
+
+  // Step 10 (reordered).
+  uint32_t matchResultLength = matchResult->length();
+  MOZ_ASSERT(matchResultLength > 0);
+  MOZ_ASSERT(matchResultLength == matchResult->getDenseInitializedLength());
+
+  const Value& matchedValue = matchResult->getDenseElement(0);
+  RootedLinearString matched(cx, matchedValue.toString()->ensureLinear(cx));
+  if (!matched) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Steps 3-5 (skipped).
+||||||| merged common ancestors
+    // Steps 3-5 (skipped).
+=======
+  // Step 2.
+  size_t matchLength = matched->length();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Step 6.
+  MOZ_ASSERT(position <= string->length());
+||||||| merged common ancestors
+    // Step 6.
+    MOZ_ASSERT(position <= string->length());
+=======
+  // Steps 3-5 (skipped).
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  uint32_t nCaptures = matchResultLength - 1;
+  Rooted<CapturesVector> captures(cx, CapturesVector(cx));
+  if (!captures.reserve(nCaptures)) {
+    return false;
+  }
+||||||| merged common ancestors
+    uint32_t nCaptures = matchResultLength - 1;
+    Rooted<CapturesVector> captures(cx, CapturesVector(cx));
+    if (!captures.reserve(nCaptures)) {
+        return false;
+    }
+
+    // Step 7.
+    for (uint32_t i = 1; i <= nCaptures; i++) {
+        const Value& capture = matchResult->getDenseElement(i);
+=======
   // Step 6.
   MOZ_ASSERT(position <= string->length());
 
@@ -1463,6 +2070,7 @@ bool js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult,
   if (!captures.reserve(nCaptures)) {
     return false;
   }
+>>>>>>> upstream-releases
 
   // Step 7.
   for (uint32_t i = 1; i <= nCaptures; i++) {
@@ -1499,10 +2107,24 @@ bool js::RegExpGetSubstitution(JSContext* cx, HandleArrayObject matchResult,
     return false;
   }
 
+<<<<<<< HEAD
   StringBuffer result(cx);
   if (NeedTwoBytes(string, replacement, matched, captures)) {
     if (!result.ensureTwoByteChars()) {
       return false;
+||||||| merged common ancestors
+    if (replacement->hasLatin1Chars()) {
+        DoReplace<Latin1Char>(matched, string, position, tailPos, captures,
+                              replacement, firstDollarIndex, result);
+    } else {
+        DoReplace<char16_t>(matched, string, position, tailPos, captures,
+                            replacement, firstDollarIndex, result);
+=======
+  JSStringBuilder result(cx);
+  if (NeedTwoBytes(string, replacement, matched, captures)) {
+    if (!result.ensureTwoByteChars()) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 

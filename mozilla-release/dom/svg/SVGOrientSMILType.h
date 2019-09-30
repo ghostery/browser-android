@@ -8,20 +8,18 @@
 #define MOZILLA_SVGORIENTSMILTYPE_H_
 
 #include "mozilla/Attributes.h"
-#include "nsISMILType.h"
-
-class nsSMILValue;
+#include "mozilla/SMILType.h"
 
 /**
- * This nsISMILType class is a special case for the 'orient' attribute on SVG's
+ * This SMILType class is a special case for the 'orient' attribute on SVG's
  * 'marker' element.
  *
  *   orient = "auto | auto-start-reverse | <angle>"
  *
  * Unusually, this attribute doesn't have just a single corresponding DOM
  * property, but rather is split into two properties: 'orientType' (of type
- * SVGAnimatedEnumeration) and 'orientAngle' (of type SVGAnimatedAngle). If
- * 'orientType.animVal' is SVG_MARKER_ORIENT_ANGLE, then
+ * DOMSVGAnimatedEnumeration) and 'orientAngle' (of type DOMSVGAnimatedAngle).
+ * If 'orientType.animVal' is SVG_MARKER_ORIENT_ANGLE, then
  * 'orientAngle.animVal' contains the angle that is being used. The lacuna
  * value is 0.
  *
@@ -34,14 +32,36 @@ class nsSMILValue;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 class SVGOrientSMILType : public nsISMILType {
  public:
   // Singleton for nsSMILValue objects to hold onto.
+||||||| merged common ancestors
+class SVGOrientSMILType : public nsISMILType
+{
+public:
+  // Singleton for nsSMILValue objects to hold onto.
+=======
+class SMILValue;
+
+class SVGOrientSMILType : public SMILType {
+ public:
+  // Singleton for SMILValue objects to hold onto.
+>>>>>>> upstream-releases
   static SVGOrientSMILType sSingleton;
 
+<<<<<<< HEAD
  protected:
   // nsISMILType Methods
+||||||| merged common ancestors
+protected:
+  // nsISMILType Methods
+=======
+ protected:
+  // SMILType Methods
+>>>>>>> upstream-releases
   // -------------------
+<<<<<<< HEAD
   virtual void Init(nsSMILValue& aValue) const override;
   virtual void Destroy(nsSMILValue&) const override;
   virtual nsresult Assign(nsSMILValue& aDest,
@@ -49,17 +69,43 @@ class SVGOrientSMILType : public nsISMILType {
   virtual bool IsEqual(const nsSMILValue& aLeft,
                        const nsSMILValue& aRight) const override;
   virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
+||||||| merged common ancestors
+  virtual void     Init(nsSMILValue& aValue) const override;
+  virtual void     Destroy(nsSMILValue&) const override;
+  virtual nsresult Assign(nsSMILValue& aDest, const nsSMILValue& aSrc) const override;
+  virtual bool     IsEqual(const nsSMILValue& aLeft,
+                           const nsSMILValue& aRight) const override;
+  virtual nsresult Add(nsSMILValue& aDest, const nsSMILValue& aValueToAdd,
+=======
+  virtual void Init(SMILValue& aValue) const override;
+  virtual void Destroy(SMILValue&) const override;
+  virtual nsresult Assign(SMILValue& aDest,
+                          const SMILValue& aSrc) const override;
+  virtual bool IsEqual(const SMILValue& aLeft,
+                       const SMILValue& aRight) const override;
+  virtual nsresult Add(SMILValue& aDest, const SMILValue& aValueToAdd,
+>>>>>>> upstream-releases
                        uint32_t aCount) const override;
-  virtual nsresult ComputeDistance(const nsSMILValue& aFrom,
-                                   const nsSMILValue& aTo,
+  virtual nsresult ComputeDistance(const SMILValue& aFrom, const SMILValue& aTo,
                                    double& aDistance) const override;
+<<<<<<< HEAD
   virtual nsresult Interpolate(const nsSMILValue& aStartVal,
                                const nsSMILValue& aEndVal, double aUnitDistance,
                                nsSMILValue& aResult) const override;
+||||||| merged common ancestors
+  virtual nsresult Interpolate(const nsSMILValue& aStartVal,
+                               const nsSMILValue& aEndVal,
+                               double aUnitDistance,
+                               nsSMILValue& aResult) const override;
+=======
+  virtual nsresult Interpolate(const SMILValue& aStartVal,
+                               const SMILValue& aEndVal, double aUnitDistance,
+                               SMILValue& aResult) const override;
+>>>>>>> upstream-releases
 
  private:
   // Private constructor: prevent instances beyond my singleton.
-  constexpr SVGOrientSMILType() {}
+  constexpr SVGOrientSMILType() = default;
 };
 
 }  // namespace mozilla

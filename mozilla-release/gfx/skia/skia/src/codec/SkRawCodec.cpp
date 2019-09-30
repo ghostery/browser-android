@@ -17,7 +17,6 @@
 #include "SkRefCnt.h"
 #include "SkStream.h"
 #include "SkStreamPriv.h"
-#include "SkSwizzler.h"
 #include "SkTArray.h"
 #include "SkTaskGroup.h"
 #include "SkTemplates.h"
@@ -648,6 +647,7 @@ std::unique_ptr<SkCodec> SkRawCodec::MakeFromStream(std::unique_ptr<SkStream> st
             return nullptr;
         }
 
+<<<<<<< HEAD
         std::unique_ptr<SkEncodedInfo::ICCProfile> profile;
         if (imageData.color_space == ::piex::PreviewImageData::kAdobeRgb) {
             constexpr skcms_TransferFunction twoDotTwo =
@@ -657,6 +657,25 @@ std::unique_ptr<SkCodec> SkRawCodec::MakeFromStream(std::unique_ptr<SkStream> st
             skcms_SetTransferFunction(&skcmsProfile, &twoDotTwo);
             skcms_SetXYZD50(&skcmsProfile, &gAdobe_RGB_to_XYZD50);
             profile = SkEncodedInfo::ICCProfile::Make(skcmsProfile);
+||||||| merged common ancestors
+        sk_sp<SkColorSpace> colorSpace;
+        switch (imageData.color_space) {
+            case ::piex::PreviewImageData::kSrgb:
+                colorSpace = SkColorSpace::MakeSRGB();
+                break;
+            case ::piex::PreviewImageData::kAdobeRgb:
+                colorSpace = SkColorSpace::MakeRGB(g2Dot2_TransferFn,
+                                                   SkColorSpace::kAdobeRGB_Gamut);
+                break;
+=======
+        std::unique_ptr<SkEncodedInfo::ICCProfile> profile;
+        if (imageData.color_space == ::piex::PreviewImageData::kAdobeRgb) {
+            skcms_ICCProfile skcmsProfile;
+            skcms_Init(&skcmsProfile);
+            skcms_SetTransferFunction(&skcmsProfile, &SkNamedTransferFn::k2Dot2);
+            skcms_SetXYZD50(&skcmsProfile, &SkNamedGamut::kAdobeRGB);
+            profile = SkEncodedInfo::ICCProfile::Make(skcmsProfile);
+>>>>>>> upstream-releases
         }
 
         //  Theoretically PIEX can return JPEG compressed image or uncompressed RGB image. We only
@@ -697,17 +716,6 @@ std::unique_ptr<SkCodec> SkRawCodec::MakeFromStream(std::unique_ptr<SkStream> st
 SkCodec::Result SkRawCodec::onGetPixels(const SkImageInfo& dstInfo, void* dst,
                                         size_t dstRowBytes, const Options& options,
                                         int* rowsDecoded) {
-    SkImageInfo swizzlerInfo = dstInfo;
-    std::unique_ptr<uint32_t[]> xformBuffer = nullptr;
-    if (this->colorXform()) {
-        swizzlerInfo = swizzlerInfo.makeColorType(kRGBA_8888_SkColorType);
-        xformBuffer.reset(new uint32_t[dstInfo.width()]);
-    }
-
-    std::unique_ptr<SkSwizzler> swizzler(SkSwizzler::CreateSwizzler(
-            this->getEncodedInfo(), nullptr, swizzlerInfo, options));
-    SkASSERT(swizzler);
-
     const int width = dstInfo.width();
     const int height = dstInfo.height();
     std::unique_ptr<dng_image> image(fDngImage->render(width, height));
@@ -737,6 +745,20 @@ SkCodec::Result SkRawCodec::onGetPixels(const SkImageInfo& dstInfo, void* dst,
     buffer.fPixelSize = sizeof(uint8_t);
     buffer.fRowStep = width * 3;
 
+    constexpr auto srcFormat = skcms_PixelFormat_RGB_888;
+    skcms_PixelFormat dstFormat;
+    if (!sk_select_xform_format(dstInfo.colorType(), false, &dstFormat)) {
+        return kInvalidConversion;
+    }
+
+    const skcms_ICCProfile* const srcProfile = this->getEncodedInfo().profile();
+    skcms_ICCProfile dstProfileStorage;
+    const skcms_ICCProfile* dstProfile = nullptr;
+    if (auto cs = dstInfo.colorSpace()) {
+        cs->toProfile(&dstProfileStorage);
+        dstProfile = &dstProfileStorage;
+    }
+
     for (int i = 0; i < height; ++i) {
         buffer.fArea = dng_rect(i, 0, i + 1, width);
 
@@ -747,13 +769,30 @@ SkCodec::Result SkRawCodec::onGetPixels(const SkImageInfo& dstInfo, void* dst,
             return kIncompleteInput;
         }
 
+<<<<<<< HEAD
         if (this->colorXform()) {
             swizzler->swizzle(xformBuffer.get(), &srcRow[0]);
 
             this->applyColorXform(dstRow, xformBuffer.get(), dstInfo.width());
         } else {
             swizzler->swizzle(dstRow, &srcRow[0]);
+||||||| merged common ancestors
+        if (this->colorXform()) {
+            swizzler->swizzle(xformBuffer.get(), &srcRow[0]);
+
+            this->applyColorXform(dstRow, xformBuffer.get(), dstInfo.width(), kOpaque_SkAlphaType);
+        } else {
+            swizzler->swizzle(dstRow, &srcRow[0]);
+=======
+        if (!skcms_Transform(&srcRow[0], srcFormat, skcms_AlphaFormat_Unpremul, srcProfile,
+                             dstRow,     dstFormat, skcms_AlphaFormat_Unpremul, dstProfile,
+                             dstInfo.width())) {
+            SkDebugf("failed to transform\n");
+            *rowsDecoded = i;
+            return kInternalError;
+>>>>>>> upstream-releases
         }
+
         dstRow = SkTAddOffset<void>(dstRow, dstRowBytes);
     }
     return kSuccess;

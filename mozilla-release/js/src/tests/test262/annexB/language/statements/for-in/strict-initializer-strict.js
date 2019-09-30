@@ -12,7 +12,16 @@ negative:
 flags: [onlyStrict]
 ---*/
 
+<<<<<<< HEAD
 $DONOTEVALUATE();
 throw NotEarlyError;
 for (var a = 0 in {});
+||||||| merged common ancestors
+throw "Test262: This statement should not be evaluated.";
+throw NotEarlyError;
+for (var a = 0 in {});
+=======
+$DONOTEVALUATE();
+>>>>>>> upstream-releases
 
+for (var a = 0 in {});

@@ -27,7 +27,7 @@
 #include "nsPluginInstanceOwner.h"
 #include "nsFocusManager.h"
 #ifdef MOZ_X11
-#include "gfxXlibSurface.h"
+#  include "gfxXlibSurface.h"
 #endif
 #include "gfxUtils.h"
 #include "mozilla/gfx/2D.h"
@@ -35,37 +35,54 @@
 #include "ImageContainer.h"
 #include "GLContext.h"
 #include "GLContextProvider.h"
-#include "gfxPrefs.h"
 #include "LayersLogging.h"
 #include "mozilla/layers/TextureWrapperImage.h"
 #include "mozilla/layers/TextureClientRecycleAllocator.h"
 #include "mozilla/layers/ImageBridgeChild.h"
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include "mozilla/layers/D3D11ShareHandleImage.h"
 #include "mozilla/gfx/DeviceManagerDx.h"
 #include "mozilla/layers/TextureD3D11.h"
+||||||| merged common ancestors
+# include "mozilla/layers/D3D11ShareHandleImage.h"
+# include "mozilla/gfx/DeviceManagerDx.h"
+# include "mozilla/layers/TextureD3D11.h"
+=======
+#  include "mozilla/layers/D3D11ShareHandleImage.h"
+#  include "mozilla/gfx/DeviceManagerDx.h"
+#  include "mozilla/layers/TextureD3D11.h"
+>>>>>>> upstream-releases
 #endif
 
 #ifdef XP_MACOSX
-#include "MacIOSurfaceImage.h"
+#  include "MacIOSurfaceImage.h"
 #endif
 
 #if defined(OS_WIN)
-#include <windowsx.h>
-#include "gfxWindowsPlatform.h"
-#include "mozilla/plugins/PluginSurfaceParent.h"
-#include "nsClassHashtable.h"
-#include "nsHashKeys.h"
-#include "nsIWidget.h"
-#include "nsPluginNativeWindow.h"
-#include "PluginQuirks.h"
+#  include <windowsx.h>
+#  include "gfxWindowsPlatform.h"
+#  include "mozilla/plugins/PluginSurfaceParent.h"
+#  include "nsClassHashtable.h"
+#  include "nsHashKeys.h"
+#  include "nsIWidget.h"
+#  include "nsPluginNativeWindow.h"
+#  include "PluginQuirks.h"
 extern const wchar_t* kFlashFullscreenClass;
 #elif defined(MOZ_WIDGET_GTK)
-#include "mozilla/dom/ContentChild.h"
-#include <gdk/gdk.h>
+#  include "mozilla/dom/ContentChild.h"
+#  include <gdk/gdk.h>
 #elif defined(XP_MACOSX)
+<<<<<<< HEAD
 #include <ApplicationServices/ApplicationServices.h>
 #endif  // defined(XP_MACOSX)
+||||||| merged common ancestors
+#include <ApplicationServices/ApplicationServices.h>
+#endif // defined(XP_MACOSX)
+=======
+#  include <ApplicationServices/ApplicationServices.h>
+#endif  // defined(XP_MACOSX)
+>>>>>>> upstream-releases
 
 using namespace mozilla::plugins;
 using namespace mozilla::layers;
@@ -234,7 +251,7 @@ PluginInstanceParent::AnswerNPN_GetValue_NPNVnetscapeWindow(
   // TODO: Need Android impl
   int id;
 #else
-#warning Implement me
+#  warning Implement me
 #endif
 
   *result = mNPNIface->getvalue(mNPP, NPNVnetscapeWindow, &id);
@@ -313,17 +330,47 @@ PluginInstanceParent::AnswerNPN_GetValue_NPNVdocumentOrigin(nsCString* value,
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 static inline bool AllowDirectBitmapSurfaceDrawing() {
   if (!gfxPrefs::PluginAsyncDrawingEnabled()) {
     return false;
   }
   return gfxPlatform::GetPlatform()->SupportsPluginDirectBitmapDrawing();
+||||||| merged common ancestors
+static inline bool
+AllowDirectBitmapSurfaceDrawing()
+{
+    if (!gfxPrefs::PluginAsyncDrawingEnabled()) {
+        return false;
+    }
+    return gfxPlatform::GetPlatform()->SupportsPluginDirectBitmapDrawing();
+=======
+static inline bool AllowDirectBitmapSurfaceDrawing() {
+  if (!StaticPrefs::dom_ipc_plugins_asyncdrawing_enabled()) {
+    return false;
+  }
+  return gfxPlatform::GetPlatform()->SupportsPluginDirectBitmapDrawing();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool AllowDirectDXGISurfaceDrawing() {
   if (!gfxPrefs::PluginAsyncDrawingEnabled()) {
     return false;
   }
+||||||| merged common ancestors
+static inline bool
+AllowDirectDXGISurfaceDrawing()
+{
+    if (!gfxPrefs::PluginAsyncDrawingEnabled()) {
+        return false;
+    }
+=======
+static inline bool AllowDirectDXGISurfaceDrawing() {
+  if (!StaticPrefs::dom_ipc_plugins_asyncdrawing_enabled()) {
+    return false;
+  }
+>>>>>>> upstream-releases
 #if defined(XP_WIN)
   return gfxWindowsPlatform::GetPlatform()->SupportsPluginDirectDXGIDrawing();
 #else
@@ -607,6 +654,7 @@ mozilla::ipc::IPCResult PluginInstanceParent::RecvInitDXGISurface(
       return IPC_OK();
     }
 
+<<<<<<< HEAD
     RefPtr<IDXGIResource> resource;
     if (FAILED(back->QueryInterface(IID_IDXGIResource,
                                     getter_AddRefs(resource))) ||
@@ -615,8 +663,31 @@ mozilla::ipc::IPCResult PluginInstanceParent::RecvInitDXGISurface(
     }
     if (FAILED(resource->GetSharedHandle(&sharedHandle) || !sharedHandle)) {
       return IPC_OK();
+||||||| merged common ancestors
+        RefPtr<IDXGIResource> resource;
+        if (FAILED(back->QueryInterface(IID_IDXGIResource, getter_AddRefs(resource))) || !resource) {
+            return IPC_OK();
+        }
+        if (FAILED(resource->GetSharedHandle(&sharedHandle) || !sharedHandle)) {
+            return IPC_OK();
+        }
+=======
+    RefPtr<IDXGIResource> resource;
+    if (FAILED(back->QueryInterface(IID_IDXGIResource,
+                                    getter_AddRefs(resource))) ||
+        !resource) {
+      return IPC_OK();
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    if (FAILED(resource->GetSharedHandle(&sharedHandle) || !sharedHandle)) {
+      return IPC_OK();
     }
   }
+>>>>>>> upstream-releases
 
   RefPtr<D3D11SurfaceHolder> holder =
       new D3D11SurfaceHolder(back, format, size);
@@ -848,6 +919,7 @@ mozilla::ipc::IPCResult PluginInstanceParent::RecvShow(
     }
   }
 
+<<<<<<< HEAD
   if (mFrontSurface && gfxSharedImageSurface::IsSharedImage(mFrontSurface))
     *prevSurface =
         static_cast<gfxSharedImageSurface*>(mFrontSurface.get())->GetShmem();
@@ -871,6 +943,59 @@ mozilla::ipc::IPCResult PluginInstanceParent::RecvShow(
 
     AutoTArray<ImageContainer::NonOwningImage, 1> imageList;
     imageList.AppendElement(ImageContainer::NonOwningImage(image));
+||||||| merged common ancestors
+    if (mFrontSurface && gfxSharedImageSurface::IsSharedImage(mFrontSurface))
+        *prevSurface = static_cast<gfxSharedImageSurface*>(mFrontSurface.get())->GetShmem();
+    else
+        *prevSurface = null_t();
+
+    if (surface) {
+        // Notify the cairo backend that this surface has changed behind
+        // its back.
+        gfxRect ur(updatedRect.left, updatedRect.top,
+                   updatedRect.right - updatedRect.left,
+                   updatedRect.bottom - updatedRect.top);
+        surface->MarkDirty(ur);
+
+        bool isPlugin = true;
+        RefPtr<gfx::SourceSurface> sourceSurface =
+            gfxPlatform::GetPlatform()->GetSourceSurfaceForSurface(nullptr, surface, isPlugin);
+        RefPtr<SourceSurfaceImage> image = new SourceSurfaceImage(surface->GetSize(), sourceSurface);
+
+        AutoTArray<ImageContainer::NonOwningImage,1> imageList;
+        imageList.AppendElement(
+            ImageContainer::NonOwningImage(image));
+
+        ImageContainer *container = GetImageContainer();
+        container->SetCurrentImages(imageList);
+    }
+    else if (mImageContainer) {
+        mImageContainer->ClearAllImages();
+    }
+=======
+  if (mFrontSurface && gfxSharedImageSurface::IsSharedImage(mFrontSurface))
+    *prevSurface = std::move(
+        static_cast<gfxSharedImageSurface*>(mFrontSurface.get())->GetShmem());
+  else
+    *prevSurface = null_t();
+
+  if (surface) {
+    // Notify the cairo backend that this surface has changed behind
+    // its back.
+    gfxRect ur(updatedRect.left, updatedRect.top,
+               updatedRect.right - updatedRect.left,
+               updatedRect.bottom - updatedRect.top);
+    surface->MarkDirty(ur);
+
+    bool isPlugin = true;
+    RefPtr<gfx::SourceSurface> sourceSurface =
+        gfxPlatform::GetSourceSurfaceForSurface(nullptr, surface, isPlugin);
+    RefPtr<SourceSurfaceImage> image =
+        new SourceSurfaceImage(surface->GetSize(), sourceSurface);
+
+    AutoTArray<ImageContainer::NonOwningImage, 1> imageList;
+    imageList.AppendElement(ImageContainer::NonOwningImage(image));
+>>>>>>> upstream-releases
 
     ImageContainer* container = GetImageContainer();
     container->SetCurrentImages(imageList);
@@ -1052,10 +1177,20 @@ nsresult PluginInstanceParent::BeginUpdateBackground(const nsIntRect& aRect,
              "Update outside of background area");
 #endif
 
+<<<<<<< HEAD
   RefPtr<gfx::DrawTarget> dt =
       gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(
           mBackground, gfx::IntSize(sz.width, sz.height));
   dt.forget(aDrawTarget);
+||||||| merged common ancestors
+    RefPtr<gfx::DrawTarget> dt = gfxPlatform::GetPlatform()->
+      CreateDrawTargetForSurface(mBackground, gfx::IntSize(sz.width, sz.height));
+    dt.forget(aDrawTarget);
+=======
+  RefPtr<gfx::DrawTarget> dt = gfxPlatform::CreateDrawTargetForSurface(
+      mBackground, gfx::IntSize(sz.width, sz.height));
+  dt.forget(aDrawTarget);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1066,6 +1201,7 @@ nsresult PluginInstanceParent::EndUpdateBackground(const nsIntRect& aRect) {
        this, aRect.x, aRect.y, aRect.width, aRect.height));
 
 #ifdef MOZ_X11
+<<<<<<< HEAD
   // Have to XSync here to avoid the plugin trying to draw with this
   // surface racing with its creation in the X server.  We also want
   // to avoid the plugin drawing onto stale pixels, then handing us
@@ -1076,6 +1212,29 @@ nsresult PluginInstanceParent::EndUpdateBackground(const nsIntRect& aRect) {
   // drawing onto pixels no older than those in the latest
   // EndUpdateBackground().
   XSync(DefaultXDisplay(), False);
+||||||| merged common ancestors
+    // Have to XSync here to avoid the plugin trying to draw with this
+    // surface racing with its creation in the X server.  We also want
+    // to avoid the plugin drawing onto stale pixels, then handing us
+    // back a front surface from those pixels that we might
+    // recomposite for "a while" until the next update.  This XSync
+    // still doesn't guarantee that the plugin draws onto a consistent
+    // view of its background, but it does mean that the plugin is
+    // drawing onto pixels no older than those in the latest
+    // EndUpdateBackground().
+    XSync(DefaultXDisplay(), False);
+=======
+  // Have to XSync here to avoid the plugin trying to draw with this
+  // surface racing with its creation in the X server.  We also want
+  // to avoid the plugin drawing onto stale pixels, then handing us
+  // back a front surface from those pixels that we might
+  // recomposite for "a while" until the next update.  This XSync
+  // still doesn't guarantee that the plugin draws onto a consistent
+  // view of its background, but it does mean that the plugin is
+  // drawing onto pixels no older than those in the latest
+  // EndUpdateBackground().
+  XSync(DefaultXDisplay(), X11False);
+>>>>>>> upstream-releases
 #endif
 
   Unused << SendUpdateBackground(BackgroundDescriptor(), aRect);
@@ -1157,11 +1316,25 @@ PluginInstanceParent::BackgroundDescriptor() {
 #endif
 
 #ifdef XP_WIN
+<<<<<<< HEAD
   MOZ_ASSERT(gfxSharedImageSurface::IsSharedImage(mBackground),
              "Expected shared image surface");
   gfxSharedImageSurface* shmem =
       static_cast<gfxSharedImageSurface*>(mBackground.get());
   return shmem->GetShmem();
+||||||| merged common ancestors
+    MOZ_ASSERT(gfxSharedImageSurface::IsSharedImage(mBackground),
+               "Expected shared image surface");
+    gfxSharedImageSurface* shmem =
+        static_cast<gfxSharedImageSurface*>(mBackground.get());
+    return shmem->GetShmem();
+=======
+  MOZ_ASSERT(gfxSharedImageSurface::IsSharedImage(mBackground),
+             "Expected shared image surface");
+  gfxSharedImageSurface* shmem =
+      static_cast<gfxSharedImageSurface*>(mBackground.get());
+  return mozilla::plugins::SurfaceDescriptor(std::move(shmem->GetShmem()));
+>>>>>>> upstream-releases
 #endif
 
   // If this is ever used, which it shouldn't be, it will trigger a
@@ -1475,6 +1648,7 @@ int16_t PluginInstanceParent::NPP_HandleEvent(void* event) {
       return CallPaint(npremoteevent, &handled) ? handled : 0;
 
     case ButtonPress:
+<<<<<<< HEAD
       // Release any active pointer grab so that the plugin X client can
       // grab the pointer if it wishes.
       Display* dpy = DefaultXDisplay();
@@ -1497,9 +1671,57 @@ int16_t PluginInstanceParent::NPP_HandleEvent(void* event) {
       XSync(dpy, False);
       break;
   }
+||||||| merged common ancestors
+        // Release any active pointer grab so that the plugin X client can
+        // grab the pointer if it wishes.
+        Display *dpy = DefaultXDisplay();
+#  ifdef MOZ_WIDGET_GTK
+        // GDK attempts to (asynchronously) track whether there is an active
+        // grab so ungrab through GDK.
+        //
+        // This call needs to occur in the same process that receives the event in
+        // the first place (chrome process)
+        if (XRE_IsContentProcess()) {
+          dom::ContentChild* cp = dom::ContentChild::GetSingleton();
+          cp->SendUngrabPointer(npevent->xbutton.time);
+        } else {
+          gdk_pointer_ungrab(npevent->xbutton.time);
+        }
+#  else
+        XUngrabPointer(dpy, npevent->xbutton.time);
+#  endif
+        // Wait for the ungrab to complete.
+        XSync(dpy, False);
+        break;
+    }
+=======
+      // Release any active pointer grab so that the plugin X client can
+      // grab the pointer if it wishes.
+      Display* dpy = DefaultXDisplay();
+#  ifdef MOZ_WIDGET_GTK
+      // GDK attempts to (asynchronously) track whether there is an active
+      // grab so ungrab through GDK.
+      //
+      // This call needs to occur in the same process that receives the event in
+      // the first place (chrome process)
+      if (XRE_IsContentProcess()) {
+        dom::ContentChild* cp = dom::ContentChild::GetSingleton();
+        cp->SendUngrabPointer(npevent->xbutton.time);
+      } else {
+        gdk_pointer_ungrab(npevent->xbutton.time);
+      }
+#  else
+      XUngrabPointer(dpy, npevent->xbutton.time);
+#  endif
+      // Wait for the ungrab to complete.
+      XSync(dpy, X11False);
+      break;
+  }
+>>>>>>> upstream-releases
 #endif
 
 #ifdef XP_MACOSX
+<<<<<<< HEAD
   if (npevent->type == NPCocoaEventDrawRect) {
     if (mDrawingModel == NPDrawingModelCoreAnimation ||
         mDrawingModel == NPDrawingModelInvalidatingCoreAnimation) {
@@ -1593,6 +1815,203 @@ int16_t PluginInstanceParent::NPP_HandleEvent(void* event) {
       }
       ::CGContextRelease(shContext);
       return true;
+||||||| merged common ancestors
+    if (npevent->type == NPCocoaEventDrawRect) {
+        if (mDrawingModel == NPDrawingModelCoreAnimation ||
+            mDrawingModel == NPDrawingModelInvalidatingCoreAnimation) {
+            if (!mIOSurface) {
+                NS_ERROR("No IOSurface allocated.");
+                return false;
+            }
+            if (!CallNPP_HandleEvent_IOSurface(npremoteevent,
+                                               mIOSurface->GetIOSurfaceID(),
+                                               &handled))
+                return false; // no good way to handle errors here...
+
+            CGContextRef cgContext = npevent->data.draw.context;
+            if (!mShColorSpace) {
+                mShColorSpace = CreateSystemColorSpace();
+            }
+            if (!mShColorSpace) {
+                PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+                return false;
+            }
+            if (cgContext) {
+                nsCARenderer::DrawSurfaceToCGContext(cgContext, mIOSurface,
+                                                     mShColorSpace,
+                                                     npevent->data.draw.x,
+                                                     npevent->data.draw.y,
+                                                     npevent->data.draw.width,
+                                                     npevent->data.draw.height);
+            }
+            return true;
+        } else if (mFrontIOSurface) {
+            CGContextRef cgContext = npevent->data.draw.context;
+            if (!mShColorSpace) {
+                mShColorSpace = CreateSystemColorSpace();
+            }
+            if (!mShColorSpace) {
+                PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+                return false;
+            }
+            if (cgContext) {
+                nsCARenderer::DrawSurfaceToCGContext(cgContext, mFrontIOSurface,
+                                                     mShColorSpace,
+                                                     npevent->data.draw.x,
+                                                     npevent->data.draw.y,
+                                                     npevent->data.draw.width,
+                                                     npevent->data.draw.height);
+            }
+            return true;
+        } else {
+            if (mShWidth == 0 && mShHeight == 0) {
+                PLUGIN_LOG_DEBUG(("NPCocoaEventDrawRect on window of size 0."));
+                return false;
+            }
+            if (!mShSurface.IsReadable()) {
+                PLUGIN_LOG_DEBUG(("Shmem is not readable."));
+                return false;
+            }
+
+            if (!CallNPP_HandleEvent_Shmem(npremoteevent, mShSurface,
+                                           &handled, &mShSurface))
+                return false; // no good way to handle errors here...
+
+            if (!mShSurface.IsReadable()) {
+                PLUGIN_LOG_DEBUG(("Shmem not returned. Either the plugin crashed "
+                                  "or we have a bug."));
+                return false;
+            }
+
+            char* shContextByte = mShSurface.get<char>();
+
+            if (!mShColorSpace) {
+                mShColorSpace = CreateSystemColorSpace();
+            }
+            if (!mShColorSpace) {
+                PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+                return false;
+            }
+            CGContextRef shContext = ::CGBitmapContextCreate(shContextByte,
+                                    mShWidth, mShHeight, 8,
+                                    mShWidth*4, mShColorSpace,
+                                    kCGImageAlphaPremultipliedFirst |
+                                    kCGBitmapByteOrder32Host);
+            if (!shContext) {
+                PLUGIN_LOG_DEBUG(("Could not allocate CGBitmapContext."));
+                return false;
+            }
+
+            CGImageRef shImage = ::CGBitmapContextCreateImage(shContext);
+            if (shImage) {
+                CGContextRef cgContext = npevent->data.draw.context;
+
+                ::CGContextDrawImage(cgContext,
+                                     CGRectMake(0,0,mShWidth,mShHeight),
+                                     shImage);
+                ::CGImageRelease(shImage);
+            } else {
+                ::CGContextRelease(shContext);
+                return false;
+            }
+            ::CGContextRelease(shContext);
+            return true;
+        }
+=======
+  if (npevent->type == NPCocoaEventDrawRect) {
+    if (mDrawingModel == NPDrawingModelCoreAnimation ||
+        mDrawingModel == NPDrawingModelInvalidatingCoreAnimation) {
+      if (!mIOSurface) {
+        NS_ERROR("No IOSurface allocated.");
+        return false;
+      }
+      if (!CallNPP_HandleEvent_IOSurface(
+              npremoteevent, mIOSurface->GetIOSurfaceID(), &handled))
+        return false;  // no good way to handle errors here...
+
+      CGContextRef cgContext = npevent->data.draw.context;
+      if (!mShColorSpace) {
+        mShColorSpace = CreateSystemColorSpace();
+      }
+      if (!mShColorSpace) {
+        PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+        return false;
+      }
+      if (cgContext) {
+        nsCARenderer::DrawSurfaceToCGContext(
+            cgContext, mIOSurface, mShColorSpace, npevent->data.draw.x,
+            npevent->data.draw.y, npevent->data.draw.width,
+            npevent->data.draw.height);
+      }
+      return true;
+    } else if (mFrontIOSurface) {
+      CGContextRef cgContext = npevent->data.draw.context;
+      if (!mShColorSpace) {
+        mShColorSpace = CreateSystemColorSpace();
+      }
+      if (!mShColorSpace) {
+        PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+        return false;
+      }
+      if (cgContext) {
+        nsCARenderer::DrawSurfaceToCGContext(
+            cgContext, mFrontIOSurface, mShColorSpace, npevent->data.draw.x,
+            npevent->data.draw.y, npevent->data.draw.width,
+            npevent->data.draw.height);
+      }
+      return true;
+    } else {
+      if (mShWidth == 0 && mShHeight == 0) {
+        PLUGIN_LOG_DEBUG(("NPCocoaEventDrawRect on window of size 0."));
+        return false;
+      }
+      if (!mShSurface.IsReadable()) {
+        PLUGIN_LOG_DEBUG(("Shmem is not readable."));
+        return false;
+      }
+
+      if (!CallNPP_HandleEvent_Shmem(npremoteevent, std::move(mShSurface),
+                                     &handled, &mShSurface))
+        return false;  // no good way to handle errors here...
+
+      if (!mShSurface.IsReadable()) {
+        PLUGIN_LOG_DEBUG(
+            ("Shmem not returned. Either the plugin crashed "
+             "or we have a bug."));
+        return false;
+      }
+
+      char* shContextByte = mShSurface.get<char>();
+
+      if (!mShColorSpace) {
+        mShColorSpace = CreateSystemColorSpace();
+      }
+      if (!mShColorSpace) {
+        PLUGIN_LOG_DEBUG(("Could not allocate ColorSpace."));
+        return false;
+      }
+      CGContextRef shContext = ::CGBitmapContextCreate(
+          shContextByte, mShWidth, mShHeight, 8, mShWidth * 4, mShColorSpace,
+          kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
+      if (!shContext) {
+        PLUGIN_LOG_DEBUG(("Could not allocate CGBitmapContext."));
+        return false;
+      }
+
+      CGImageRef shImage = ::CGBitmapContextCreateImage(shContext);
+      if (shImage) {
+        CGContextRef cgContext = npevent->data.draw.context;
+
+        ::CGContextDrawImage(cgContext, CGRectMake(0, 0, mShWidth, mShHeight),
+                             shImage);
+        ::CGImageRelease(shImage);
+      } else {
+        ::CGContextRelease(shContext);
+        return false;
+      }
+      ::CGContextRelease(shContext);
+      return true;
+>>>>>>> upstream-releases
     }
   }
 #endif

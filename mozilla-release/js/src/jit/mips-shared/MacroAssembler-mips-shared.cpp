@@ -463,6 +463,7 @@ void MacroAssemblerMIPSShared::ma_load(Register dest, const BaseIndex& src,
       default:
         MOZ_CRASH("Invalid argument for ma_load");
     }
+<<<<<<< HEAD
     return;
   }
 
@@ -522,6 +523,68 @@ void MacroAssemblerMIPSShared::ma_load_unaligned(
     default:
       MOZ_CRASH("Invalid argument for ma_load");
   }
+||||||| merged common ancestors
+=======
+    return;
+  }
+
+  asMasm().computeScaledAddress(src, SecondScratchReg);
+  asMasm().ma_load(dest, Address(SecondScratchReg, src.offset), size,
+                   extension);
+}
+
+void MacroAssemblerMIPSShared::ma_load_unaligned(
+    const wasm::MemoryAccessDesc& access, Register dest, const BaseIndex& src,
+    Register temp, LoadStoreSize size, LoadStoreExtension extension) {
+  MOZ_ASSERT(MOZ_LITTLE_ENDIAN, "Wasm-only; wasm is disabled on big-endian.");
+  int16_t lowOffset, hiOffset;
+  Register base;
+
+  asMasm().computeScaledAddress(src, SecondScratchReg);
+
+  if (Imm16::IsInSignedRange(src.offset) &&
+      Imm16::IsInSignedRange(src.offset + size / 8 - 1)) {
+    base = SecondScratchReg;
+    lowOffset = Imm16(src.offset).encode();
+    hiOffset = Imm16(src.offset + size / 8 - 1).encode();
+  } else {
+    ma_li(ScratchRegister, Imm32(src.offset));
+    asMasm().addPtr(SecondScratchReg, ScratchRegister);
+    base = ScratchRegister;
+    lowOffset = Imm16(0).encode();
+    hiOffset = Imm16(size / 8 - 1).encode();
+  }
+
+  BufferOffset load;
+  switch (size) {
+    case SizeHalfWord:
+      if (extension == ZeroExtend) {
+        load = as_lbu(temp, base, hiOffset);
+      } else {
+        load = as_lb(temp, base, hiOffset);
+      }
+      as_lbu(dest, base, lowOffset);
+      ma_ins(dest, temp, 8, 24);
+      break;
+    case SizeWord:
+      load = as_lwl(dest, base, hiOffset);
+      as_lwr(dest, base, lowOffset);
+#ifdef JS_CODEGEN_MIPS64
+      if (extension == ZeroExtend) {
+        as_dext(dest, dest, 0, 32);
+      }
+#endif
+      break;
+#ifdef JS_CODEGEN_MIPS64
+    case SizeDouble:
+      load = as_ldl(dest, base, hiOffset);
+      as_ldr(dest, base, lowOffset);
+      break;
+#endif
+    default:
+      MOZ_CRASH("Invalid argument for ma_load");
+  }
+>>>>>>> upstream-releases
 
   append(access, load.getOffset());
 }
@@ -1397,6 +1460,7 @@ void MacroAssembler::PopStackPtr() {
 // ===============================================================
 // Simple call functions.
 
+<<<<<<< HEAD
 CodeOffset MacroAssembler::call(Register reg) {
   as_jalr(reg);
   as_nop();
@@ -1480,6 +1544,136 @@ void MacroAssembler::call(JitCode* c) {
   addPendingJump(bo, ImmPtr(c->raw()), RelocationKind::JITCODE);
   ma_liPatchable(ScratchRegister, ImmPtr(c->raw()));
   callJitNoProfiler(ScratchRegister);
+||||||| merged common ancestors
+CodeOffset
+MacroAssembler::call(Register reg)
+{
+    as_jalr(reg);
+    as_nop();
+    return CodeOffset(currentOffset());
+}
+
+CodeOffset
+MacroAssembler::call(Label* label)
+{
+    ma_bal(label);
+    return CodeOffset(currentOffset());
+}
+
+CodeOffset
+MacroAssembler::callWithPatch()
+{
+    as_bal(BOffImm16(3 * sizeof(uint32_t)));
+    addPtr(Imm32(5 * sizeof(uint32_t)), ra);
+    // Allocate space which will be patched by patchCall().
+    spew(".space 32bit initValue 0xffff ffff");
+    writeInst(UINT32_MAX);
+    as_lw(ScratchRegister, ra, -(int32_t)(5 * sizeof(uint32_t)));
+    addPtr(ra, ScratchRegister);
+    as_jr(ScratchRegister);
+    as_nop();
+    return CodeOffset(currentOffset());
+}
+
+void
+MacroAssembler::patchCall(uint32_t callerOffset, uint32_t calleeOffset)
+{
+    BufferOffset call(callerOffset - 7 * sizeof(uint32_t));
+
+    BOffImm16 offset = BufferOffset(calleeOffset).diffB<BOffImm16>(call);
+    if (!offset.isInvalid()) {
+        InstImm* bal = (InstImm*)editSrc(call);
+        bal->setBOffImm16(offset);
+    } else {
+        uint32_t u32Offset = callerOffset - 5 * sizeof(uint32_t);
+        uint32_t* u32 = reinterpret_cast<uint32_t*>(editSrc(BufferOffset(u32Offset)));
+        *u32 = calleeOffset - callerOffset;
+    }
+=======
+CodeOffset MacroAssembler::call(Register reg) {
+  as_jalr(reg);
+  as_nop();
+  return CodeOffset(currentOffset());
+}
+
+CodeOffset MacroAssembler::call(Label* label) {
+  ma_bal(label);
+  return CodeOffset(currentOffset());
+}
+
+CodeOffset MacroAssembler::callWithPatch() {
+  as_bal(BOffImm16(3 * sizeof(uint32_t)));
+  addPtr(Imm32(5 * sizeof(uint32_t)), ra);
+  // Allocate space which will be patched by patchCall().
+  spew(".space 32bit initValue 0xffff ffff");
+  writeInst(UINT32_MAX);
+  as_lw(ScratchRegister, ra, -(int32_t)(5 * sizeof(uint32_t)));
+  addPtr(ra, ScratchRegister);
+  as_jr(ScratchRegister);
+  as_nop();
+  return CodeOffset(currentOffset());
+}
+
+void MacroAssembler::patchCall(uint32_t callerOffset, uint32_t calleeOffset) {
+  BufferOffset call(callerOffset - 7 * sizeof(uint32_t));
+
+  BOffImm16 offset = BufferOffset(calleeOffset).diffB<BOffImm16>(call);
+  if (!offset.isInvalid()) {
+    InstImm* bal = (InstImm*)editSrc(call);
+    bal->setBOffImm16(offset);
+  } else {
+    uint32_t u32Offset = callerOffset - 5 * sizeof(uint32_t);
+    uint32_t* u32 =
+        reinterpret_cast<uint32_t*>(editSrc(BufferOffset(u32Offset)));
+    *u32 = calleeOffset - callerOffset;
+  }
+}
+
+CodeOffset MacroAssembler::farJumpWithPatch() {
+  ma_move(SecondScratchReg, ra);
+  as_bal(BOffImm16(3 * sizeof(uint32_t)));
+  as_lw(ScratchRegister, ra, 0);
+  // Allocate space which will be patched by patchFarJump().
+  CodeOffset farJump(currentOffset());
+  spew(".space 32bit initValue 0xffff ffff");
+  writeInst(UINT32_MAX);
+  addPtr(ra, ScratchRegister);
+  as_jr(ScratchRegister);
+  ma_move(ra, SecondScratchReg);
+  return farJump;
+}
+
+void MacroAssembler::patchFarJump(CodeOffset farJump, uint32_t targetOffset) {
+  uint32_t* u32 =
+      reinterpret_cast<uint32_t*>(editSrc(BufferOffset(farJump.offset())));
+  MOZ_ASSERT(*u32 == UINT32_MAX);
+  *u32 = targetOffset - farJump.offset();
+}
+
+CodeOffset MacroAssembler::call(wasm::SymbolicAddress target) {
+  movePtr(target, CallReg);
+  return call(CallReg);
+}
+
+void MacroAssembler::call(const Address& addr) {
+  loadPtr(addr, CallReg);
+  call(CallReg);
+}
+
+void MacroAssembler::call(ImmWord target) { call(ImmPtr((void*)target.value)); }
+
+void MacroAssembler::call(ImmPtr target) {
+  BufferOffset bo = m_buffer.nextOffset();
+  addPendingJump(bo, target, RelocationKind::HARDCODED);
+  ma_call(target);
+}
+
+void MacroAssembler::call(JitCode* c) {
+  BufferOffset bo = m_buffer.nextOffset();
+  addPendingJump(bo, ImmPtr(c->raw()), RelocationKind::JITCODE);
+  ma_liPatchable(ScratchRegister, ImmPtr(c->raw()));
+  callJitNoProfiler(ScratchRegister);
+>>>>>>> upstream-releases
 }
 
 CodeOffset MacroAssembler::nopPatchableToCall(const wasm::CallSiteDesc& desc) {

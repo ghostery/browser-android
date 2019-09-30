@@ -136,10 +136,25 @@ void LinuxGamepadService::AddDevice(struct udev_device* dev) {
   ioctl(fd, JSIOCGBUTTONS, &numButtons);
   gamepad.numButtons = numButtons;
 
+<<<<<<< HEAD
   gamepad.index = service->AddGamepad(
       gamepad.idstring, mozilla::dom::GamepadMappingType::_empty,
       mozilla::dom::GamepadHand::_empty, gamepad.numButtons, gamepad.numAxes,
       0);  // TODO: Bug 680289, implement gamepad haptics for Linux.
+||||||| merged common ancestors
+  gamepad.index = service->AddGamepad(gamepad.idstring,
+                                      mozilla::dom::GamepadMappingType::_empty,
+                                      mozilla::dom::GamepadHand::_empty,
+                                      gamepad.numButtons,
+                                      gamepad.numAxes,
+                                      0); // TODO: Bug 680289, implement gamepad haptics for Linux.
+=======
+  gamepad.index = service->AddGamepad(
+      gamepad.idstring, mozilla::dom::GamepadMappingType::_empty,
+      mozilla::dom::GamepadHand::_empty, gamepad.numButtons, gamepad.numAxes, 0,
+      0, 0);  // TODO: Bug 680289, implement gamepad haptics for Linux.
+  // TODO: Bug 1523355, implement gamepad lighindicator and touch for Linux.
+>>>>>>> upstream-releases
 
   gamepad.source_id =
       g_io_add_watch(channel, GIOCondition(G_IO_IN | G_IO_ERR | G_IO_HUP),
@@ -342,5 +357,20 @@ void StopGamepadMonitoring() {
   gService = nullptr;
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+void SetGamepadLightIndicatorColor(uint32_t aControllerIdx,
+                                   uint32_t aLightColorIndex, uint8_t aRed,
+                                   uint8_t aGreen, uint8_t aBlue) {
+  // TODO: Bug 1523355.
+  NS_WARNING("Linux doesn't support gamepad light indicator.");
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

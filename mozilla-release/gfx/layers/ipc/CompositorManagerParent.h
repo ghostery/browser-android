@@ -22,7 +22,7 @@ class CompositorBridgeParent;
 class CompositorThreadHolder;
 
 #ifndef DEBUG
-#define COMPOSITOR_MANAGER_PARENT_EXPLICIT_SHUTDOWN
+#  define COMPOSITOR_MANAGER_PARENT_EXPLICIT_SHUTDOWN
 #endif
 
 class CompositorManagerParent final : public PCompositorManagerParent {
@@ -30,7 +30,8 @@ class CompositorManagerParent final : public PCompositorManagerParent {
 
  public:
   static already_AddRefed<CompositorManagerParent> CreateSameProcess();
-  static void Create(Endpoint<PCompositorManagerParent>&& aEndpoint);
+  static bool Create(Endpoint<PCompositorManagerParent>&& aEndpoint,
+                     bool aIsRoot);
   static void Shutdown();
 
   static already_AddRefed<CompositorBridgeParent>
@@ -39,6 +40,7 @@ class CompositorManagerParent final : public PCompositorManagerParent {
                                           bool aUseExternalSurfaceSize,
                                           const gfx::IntSize& aSurfaceSize);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvAddSharedSurface(
       const wr::ExternalImageId& aId,
       const SurfaceDescriptorShared& aDesc) override;
@@ -46,20 +48,56 @@ class CompositorManagerParent final : public PCompositorManagerParent {
       const wr::ExternalImageId& aId) override;
   mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(
       ReportSharedSurfacesMemoryResolver&&) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvAddSharedSurface(const wr::ExternalImageId& aId,
+                                               const SurfaceDescriptorShared& aDesc) override;
+  mozilla::ipc::IPCResult RecvRemoveSharedSurface(const wr::ExternalImageId& aId) override;
+  mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(ReportSharedSurfacesMemoryResolver&&) override;
+=======
+  mozilla::ipc::IPCResult RecvAddSharedSurface(
+      const wr::ExternalImageId& aId, const SurfaceDescriptorShared& aDesc);
+  mozilla::ipc::IPCResult RecvRemoveSharedSurface(
+      const wr::ExternalImageId& aId);
+  mozilla::ipc::IPCResult RecvReportSharedSurfacesMemory(
+      ReportSharedSurfacesMemoryResolver&&);
+>>>>>>> upstream-releases
 
-  virtual mozilla::ipc::IPCResult RecvNotifyMemoryPressure() override;
+  mozilla::ipc::IPCResult RecvNotifyMemoryPressure();
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvReportMemory(
       ReportMemoryResolver&&) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvReportMemory(ReportMemoryResolver&&) override;
+=======
+  mozilla::ipc::IPCResult RecvReportMemory(ReportMemoryResolver&&);
+>>>>>>> upstream-releases
 
-  void BindComplete();
+  void BindComplete(bool aIsRoot);
   void ActorDestroy(ActorDestroyReason aReason) override;
 
+<<<<<<< HEAD
   bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor) override;
   PCompositorBridgeParent* AllocPCompositorBridgeParent(
       const CompositorBridgeOptions& aOpt) override;
+||||||| merged common ancestors
+  bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor) override;
+  PCompositorBridgeParent* AllocPCompositorBridgeParent(const CompositorBridgeOptions& aOpt) override;
+=======
+  bool DeallocPCompositorBridgeParent(PCompositorBridgeParent* aActor);
+  PCompositorBridgeParent* AllocPCompositorBridgeParent(
+      const CompositorBridgeOptions& aOpt);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
+  static void NotifyWebRenderError(wr::WebRenderError aError);
 
  private:
+>>>>>>> upstream-releases
   static StaticRefPtr<CompositorManagerParent> sInstance;
   static StaticMutex sMutex;
 
@@ -69,11 +107,11 @@ class CompositorManagerParent final : public PCompositorManagerParent {
 #endif
 
   CompositorManagerParent();
-  ~CompositorManagerParent() override;
+  virtual ~CompositorManagerParent();
 
-  void Bind(Endpoint<PCompositorManagerParent>&& aEndpoint);
+  void Bind(Endpoint<PCompositorManagerParent>&& aEndpoint, bool aIsRoot);
 
-  void DeallocPCompositorManagerParent() override;
+  void ActorDealloc() override;
 
   void DeferredDestroy();
 

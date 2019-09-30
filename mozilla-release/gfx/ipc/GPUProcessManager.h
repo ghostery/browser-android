@@ -24,6 +24,7 @@ class nsBaseWidget;
 
 namespace mozilla {
 class MemoryReportingProcess;
+class PRemoteDecoderManagerChild;
 namespace layers {
 class IAPZCTreeManager;
 class CompositorOptions;
@@ -41,9 +42,18 @@ class CompositorWidget;
 }  // namespace widget
 namespace dom {
 class ContentParent;
+<<<<<<< HEAD
 class TabParent;
 class PVideoDecoderManagerChild;
 }  // namespace dom
+||||||| merged common ancestors
+class TabParent;
+class PVideoDecoderManagerChild;
+} // namespace dom
+=======
+class BrowserParent;
+}  // namespace dom
+>>>>>>> upstream-releases
 namespace ipc {
 class GeckoChildProcessHost;
 }  // namespace ipc
@@ -97,12 +107,28 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
       bool* aRetry);
 
   bool CreateContentBridges(
+<<<<<<< HEAD
       base::ProcessId aOtherProcess,
       mozilla::ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
       mozilla::ipc::Endpoint<PImageBridgeChild>* aOutImageBridge,
       mozilla::ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
       mozilla::ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutVideoManager,
       nsTArray<uint32_t>* aNamespaces);
+||||||| merged common ancestors
+    base::ProcessId aOtherProcess,
+    mozilla::ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
+    mozilla::ipc::Endpoint<PImageBridgeChild>* aOutImageBridge,
+    mozilla::ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
+    mozilla::ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutVideoManager,
+    nsTArray<uint32_t>* aNamespaces);
+=======
+      base::ProcessId aOtherProcess,
+      mozilla::ipc::Endpoint<PCompositorManagerChild>* aOutCompositor,
+      mozilla::ipc::Endpoint<PImageBridgeChild>* aOutImageBridge,
+      mozilla::ipc::Endpoint<PVRManagerChild>* aOutVRBridge,
+      mozilla::ipc::Endpoint<PRemoteDecoderManagerChild>* aOutVideoManager,
+      nsTArray<uint32_t>* aNamespaces);
+>>>>>>> upstream-releases
 
   // Maps the layer tree and process together so that aOwningPID is allowed
   // to access aLayersId across process.
@@ -174,11 +200,23 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
   GPUChild* GetGPUChild() { return mGPUChild; }
 
   // Returns whether or not a GPU process was ever launched.
+<<<<<<< HEAD
   bool AttemptedGPUProcess() const { return mNumProcessAttempts > 0; }
+||||||| merged common ancestors
+  bool AttemptedGPUProcess() const {
+    return mNumProcessAttempts > 0;
+  }
+=======
+  bool AttemptedGPUProcess() const { return mNumProcessAttempts > 0; }
+
+  // Returns the process host
+  GPUProcessHost* Process() { return mProcess; }
+>>>>>>> upstream-releases
 
  private:
   // Called from our xpcom-shutdown observer.
   void OnXPCOMShutdown();
+<<<<<<< HEAD
 
   bool CreateContentCompositorManager(
       base::ProcessId aOtherProcess,
@@ -192,6 +230,32 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
   void CreateContentVideoDecoderManager(
       base::ProcessId aOtherProcess,
       mozilla::ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutEndPoint);
+||||||| merged common ancestors
+
+  bool CreateContentCompositorManager(base::ProcessId aOtherProcess,
+                                      mozilla::ipc::Endpoint<PCompositorManagerChild>* aOutEndpoint);
+  bool CreateContentImageBridge(base::ProcessId aOtherProcess,
+                                mozilla::ipc::Endpoint<PImageBridgeChild>* aOutEndpoint);
+  bool CreateContentVRManager(base::ProcessId aOtherProcess,
+                              mozilla::ipc::Endpoint<PVRManagerChild>* aOutEndpoint);
+  void CreateContentVideoDecoderManager(base::ProcessId aOtherProcess,
+                                        mozilla::ipc::Endpoint<dom::PVideoDecoderManagerChild>* aOutEndPoint);
+=======
+  void OnPreferenceChange(const char16_t* aData);
+
+  bool CreateContentCompositorManager(
+      base::ProcessId aOtherProcess,
+      mozilla::ipc::Endpoint<PCompositorManagerChild>* aOutEndpoint);
+  bool CreateContentImageBridge(
+      base::ProcessId aOtherProcess,
+      mozilla::ipc::Endpoint<PImageBridgeChild>* aOutEndpoint);
+  bool CreateContentVRManager(
+      base::ProcessId aOtherProcess,
+      mozilla::ipc::Endpoint<PVRManagerChild>* aOutEndpoint);
+  void CreateContentRemoteDecoderManager(
+      base::ProcessId aOtherProcess,
+      mozilla::ipc::Endpoint<PRemoteDecoderManagerChild>* aOutEndPoint);
+>>>>>>> upstream-releases
 
   // Called from RemoteCompositorSession. We track remote sessions so we can
   // notify their owning widgets that the session must be restarted.
@@ -205,6 +269,8 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
 
   void RebuildRemoteSessions();
   void RebuildInProcessSessions();
+
+  void NotifyDisablingWebRender();
 
   void FallbackToSoftware(const char* aMessage);
 
@@ -247,8 +313,16 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
     NS_DECL_NSIOBSERVER
     explicit Observer(GPUProcessManager* aManager);
 
+<<<<<<< HEAD
    protected:
     ~Observer() {}
+||||||| merged common ancestors
+  protected:
+    ~Observer() {}
+=======
+   protected:
+    virtual ~Observer() = default;
+>>>>>>> upstream-releases
 
     GPUProcessManager* mManager;
   };
@@ -277,6 +351,10 @@ class GPUProcessManager final : public GPUProcessHost::Listener {
   uint64_t mProcessToken;
   GPUChild* mGPUChild;
   RefPtr<VsyncBridgeChild> mVsyncBridge;
+  // Collects any pref changes that occur during process launch (after
+  // the initial map is passed in command-line arguments) to be sent
+  // when the process can receive IPC messages.
+  nsTArray<mozilla::dom::Pref> mQueuedPrefs;
 };
 
 }  // namespace gfx

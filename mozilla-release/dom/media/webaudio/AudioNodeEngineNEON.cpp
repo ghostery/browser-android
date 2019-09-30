@@ -4,15 +4,37 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "AudioNodeEngineNEON.h"
-#include <arm_neon.h>
+#if defined(_MSC_VER) && defined(_M_ARM64) && !defined(__clang__)
+#  include <arm64_neon.h>
+#else
+#  include <arm_neon.h>
+#endif
 
 //#ifdef DEBUG
+<<<<<<< HEAD
 #if 0  // see bug 921099
 #define ASSERT_ALIGNED(ptr)                                     \
   MOZ_ASSERT((((uintptr_t)ptr + 15) & ~0x0F) == (uintptr_t)ptr, \
              #ptr " has to be aligned 16-bytes aligned.");
+||||||| merged common ancestors
+#if 0 // see bug 921099
+  #define ASSERT_ALIGNED(ptr)                                                  \
+            MOZ_ASSERT((((uintptr_t)ptr + 15) & ~0x0F) == (uintptr_t)ptr,      \
+                       #ptr " has to be aligned 16-bytes aligned.");
+=======
+#if 0  // see bug 921099
+#  define ASSERT_ALIGNED(ptr)                                     \
+    MOZ_ASSERT((((uintptr_t)ptr + 15) & ~0x0F) == (uintptr_t)ptr, \
+               #ptr " has to be aligned 16-bytes aligned.");
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define ASSERT_ALIGNED(ptr)
+||||||| merged common ancestors
+  #define ASSERT_ALIGNED(ptr)
+=======
+#  define ASSERT_ALIGNED(ptr)
+>>>>>>> upstream-releases
 #endif
 
 #define ADDRESS_OF(array, index) ((float32_t*)&array[index])
@@ -271,10 +293,22 @@ void AudioBlockPanStereoToStereo_NEON(
   float32x4_t vscaleR0, vscaleR1;
   float32x4_t onleft0, onleft1, notonleft0, notonleft1;
 
-  float32x4_t zero = {0, 0, 0, 0};
+  float32x4_t zero = vmovq_n_f32(0);
   uint8x8_t isOnTheLeft;
 
+<<<<<<< HEAD
   for (uint32_t i = 0; i < WEBAUDIO_BLOCK_SIZE; i += 8) {
+||||||| merged common ancestors
+  for (uint32_t i = 0; i < WEBAUDIO_BLOCK_SIZE; i+=8) {
+=======
+  // Although MSVC throws uninitialized value warning for voutL0 and voutL1,
+  // since we fill all lanes by vsetq_lane_f32, we can ignore it. But to avoid
+  // compiler warning, set zero.
+  voutL0 = zero;
+  voutL1 = zero;
+
+  for (uint32_t i = 0; i < WEBAUDIO_BLOCK_SIZE; i += 8) {
+>>>>>>> upstream-releases
     vinL0 = vld1q_f32(ADDRESS_OF(aInputL, i));
     vinL1 = vld1q_f32(ADDRESS_OF(aInputL, i + 4));
 

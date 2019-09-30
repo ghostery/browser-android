@@ -5,10 +5,12 @@
 #include <limits>
 #include <math.h>
 
+#include "js/Equality.h"  // JS::LooselyEqual
 #include "jsapi-tests/tests.h"
 
 using namespace std;
 
+<<<<<<< HEAD
 struct LooseEqualityFixture : public JSAPITest {
   virtual ~LooseEqualityFixture() {}
 
@@ -25,6 +27,42 @@ struct LooseEqualityFixture : public JSAPITest {
     CHECK(JS_LooselyEqual(cx, y, x, &equal) && !equal);
     return true;
   }
+||||||| merged common ancestors
+struct LooseEqualityFixture : public JSAPITest
+{
+    virtual ~LooseEqualityFixture() {}
+
+    bool leq(JS::HandleValue x, JS::HandleValue y) {
+        bool equal;
+        CHECK(JS_LooselyEqual(cx, x, y, &equal) && equal);
+        CHECK(JS_LooselyEqual(cx, y, x, &equal) && equal);
+        return true;
+    }
+
+    bool nleq(JS::HandleValue x, JS::HandleValue y) {
+        bool equal;
+        CHECK(JS_LooselyEqual(cx, x, y, &equal) && !equal);
+        CHECK(JS_LooselyEqual(cx, y, x, &equal) && !equal);
+        return true;
+    }
+=======
+struct LooseEqualityFixture : public JSAPITest {
+  virtual ~LooseEqualityFixture() {}
+
+  bool leq(JS::HandleValue x, JS::HandleValue y) {
+    bool equal;
+    CHECK(JS::LooselyEqual(cx, x, y, &equal) && equal);
+    CHECK(JS::LooselyEqual(cx, y, x, &equal) && equal);
+    return true;
+  }
+
+  bool nleq(JS::HandleValue x, JS::HandleValue y) {
+    bool equal;
+    CHECK(JS::LooselyEqual(cx, x, y, &equal) && !equal);
+    CHECK(JS::LooselyEqual(cx, y, x, &equal) && !equal);
+    return true;
+  }
+>>>>>>> upstream-releases
 };
 
 struct LooseEqualityData {
@@ -59,12 +97,24 @@ struct LooseEqualityData {
     poszero = JS::DoubleValue(0.0);
     negzero = JS::DoubleValue(-0.0);
 #ifdef XP_WIN
+<<<<<<< HEAD
 #define copysign _copysign
+||||||| merged common ancestors
+# define copysign _copysign
+=======
+#  define copysign _copysign
+>>>>>>> upstream-releases
 #endif
     MOZ_RELEASE_ASSERT(copysign(1.0, poszero.toDouble()) == 1.0);
     MOZ_RELEASE_ASSERT(copysign(1.0, negzero.toDouble()) == -1.0);
 #ifdef XP_WIN
+<<<<<<< HEAD
 #undef copysign
+||||||| merged common ancestors
+# undef copysign
+=======
+#  undef copysign
+>>>>>>> upstream-releases
 #endif
   }
 };

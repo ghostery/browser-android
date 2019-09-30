@@ -22,6 +22,13 @@
 #include <ostream>
 #include <type_traits>
 
+class nsCycleCollectionTraversalCallback;
+
+template <typename T>
+inline void CycleCollectionNoteChild(
+    nsCycleCollectionTraversalCallback& aCallback, T* aChild, const char* aName,
+    uint32_t aFlags);
+
 namespace mozilla {
 
 struct Nothing {};
@@ -619,6 +626,28 @@ bool operator>=(const Maybe<T>& aLHS, const Maybe<T>& aRHS) {
   return !(aLHS < aRHS);
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+template <typename T>
+inline void ImplCycleCollectionTraverse(
+    nsCycleCollectionTraversalCallback& aCallback, mozilla::Maybe<T>& aField,
+    const char* aName, uint32_t aFlags = 0) {
+  if (aField) {
+    ImplCycleCollectionTraverse(aCallback, aField.ref(), aName, aFlags);
+  }
+}
+
+template <typename T>
+inline void ImplCycleCollectionUnlink(mozilla::Maybe<T>& aField) {
+  if (aField) {
+    ImplCycleCollectionUnlink(aField.ref());
+  }
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif /* mozilla_Maybe_h */

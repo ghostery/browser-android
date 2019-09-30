@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 #ifdef MOZ_MEMORY
 #define MOZ_MEMORY_IMPL
 #include "mozmemory_wrap.h"
@@ -16,21 +17,57 @@
 #include "mozilla/mozalloc.h"
 #endif
 
+||||||| merged common ancestors
+#ifdef MOZ_MEMORY
+#define MOZ_MEMORY_IMPL
+#include "mozmemory_wrap.h"
+#define MALLOC_FUNCS MALLOC_FUNCS_MALLOC
+// See mozmemory_wrap.h for more details. This file is part of libmozglue, so
+// it needs to use _impl suffixes.
+#define MALLOC_DECL(name, return_type, ...) \
+  extern "C" MOZ_MEMORY_API return_type name ## _impl(__VA_ARGS__);
+#include "malloc_decls.h"
+#include "mozilla/mozalloc.h"
+#endif
+
+=======
+>>>>>>> upstream-releases
 // We need Windows 8 functions and structures to be able to verify SHA-256.
 #if defined(_WIN32_WINNT)
+<<<<<<< HEAD
 #undef _WIN32_WINNT
 #define _WIN32_WINNT _WIN32_WINNT_WIN8
 #endif  // defined(_WIN32_WINNT)
+||||||| merged common ancestors
+#undef _WIN32_WINNT
+#define _WIN32_WINNT _WIN32_WINNT_WIN8
+#endif // defined(_WIN32_WINNT)
+=======
+#  undef _WIN32_WINNT
+#  define _WIN32_WINNT _WIN32_WINNT_WIN8
+#endif  // defined(_WIN32_WINNT)
+>>>>>>> upstream-releases
 #if defined(NTDDI_VERSION)
+<<<<<<< HEAD
 #undef NTDDI_VERSION
 #define NTDDI_VERSION NTDDI_WIN8
 #endif  // defined(NTDDI_VERSION)
+||||||| merged common ancestors
+#undef NTDDI_VERSION
+#define NTDDI_VERSION NTDDI_WIN8
+#endif // defined(NTDDI_VERSION)
+=======
+#  undef NTDDI_VERSION
+#  define NTDDI_VERSION NTDDI_WIN8
+#endif  // defined(NTDDI_VERSION)
+>>>>>>> upstream-releases
 
 #include "Authenticode.h"
 
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/DynamicallyLinkedFunctionPtr.h"
+#include "mozilla/ScopeExit.h"
 #include "mozilla/TypeTraits.h"
 #include "mozilla/UniquePtr.h"
 #include "mozilla/WindowsVersion.h"
@@ -41,6 +78,8 @@
 #include <wincrypt.h>
 #include <wintrust.h>
 #include <mscat.h>
+
+#include <string.h>
 
 namespace {
 
@@ -172,8 +211,17 @@ bool SignedBinary::QueryObject(const wchar_t* aFilePath) {
  *                   |dwUnionChoice|, and appropriate union field. This function
  *                   will then populate the remaining fields as appropriate.
  */
+<<<<<<< HEAD
 /* static */ bool SignedBinary::VerifySignatureInternal(
     WINTRUST_DATA& aTrustData) {
+||||||| merged common ancestors
+/* static */ bool
+SignedBinary::VerifySignatureInternal(WINTRUST_DATA& aTrustData)
+{
+=======
+/* static */
+bool SignedBinary::VerifySignatureInternal(WINTRUST_DATA& aTrustData) {
+>>>>>>> upstream-releases
   aTrustData.dwUIChoice = WTD_UI_NONE;
   aTrustData.fdwRevocationChecks = WTD_REVOKE_NONE;
   aTrustData.dwStateAction = WTD_STATEACTION_VERIFY;
@@ -307,11 +355,35 @@ bool SignedBinary::VerifySignature(const wchar_t* aFilePath) {
     return false;
   }
 
+<<<<<<< HEAD
   HCATINFO catInfoHdl = pCryptCATAdminEnumCatalogFromHash(
       rawCatAdmin, hashBuf.get(), hashLen, 0, nullptr);
+||||||| merged common ancestors
+  HCATINFO catInfoHdl = pCryptCATAdminEnumCatalogFromHash(rawCatAdmin,
+                                                          hashBuf.get(), hashLen,
+                                                          0, nullptr);
+=======
+  static const mozilla::DynamicallyLinkedFunctionPtr<decltype(
+      &::CryptCATAdminReleaseCatalogContext)>
+      pCryptCATAdminReleaseCatalogContext(L"wintrust.dll",
+                                          "CryptCATAdminReleaseCatalogContext");
+  if (!pCryptCATAdminReleaseCatalogContext) {
+    return false;
+  }
+
+  HCATINFO catInfoHdl = pCryptCATAdminEnumCatalogFromHash(
+      rawCatAdmin, hashBuf.get(), hashLen, 0, nullptr);
+>>>>>>> upstream-releases
   if (!catInfoHdl) {
     return false;
   }
+
+  // We can't use UniquePtr for this because the deleter function requires two
+  // parameters.
+  auto cleanCatInfoHdl =
+      mozilla::MakeScopeExit([rawCatAdmin, catInfoHdl]() -> void {
+        pCryptCATAdminReleaseCatalogContext(rawCatAdmin, catInfoHdl, 0);
+      });
 
   // We found a catalog! Now query for the path to the catalog file.
 
@@ -336,6 +408,13 @@ bool SignedBinary::VerifySignature(const wchar_t* aFilePath) {
   if (!::CryptBinaryToStringW(hashBuf.get(), hashLen,
                               CRYPT_STRING_HEXRAW | CRYPT_STRING_NOCRLF,
                               strHashBuf.get(), &strHashBufLen)) {
+    return false;
+  }
+
+  // Ensure that the tag is uppercase for WinVerifyTrust
+  // NB: CryptBinaryToStringW overwrites strHashBufLen with the length excluding
+  //     the null terminator, so we need to add it back for this call.
+  if (_wcsupr_s(strHashBuf.get(), strHashBufLen + 1)) {
     return false;
   }
 

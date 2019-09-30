@@ -311,6 +311,7 @@ void ReadPixelsIntoDataSurface(GLContext* gl, DataSourceSurface* dest) {
     }
     SurfaceFormat readFormatGFX;
 
+<<<<<<< HEAD
     switch (readFormat) {
       case LOCAL_GL_RGBA: {
         readFormatGFX =
@@ -329,11 +330,49 @@ void ReadPixelsIntoDataSurface(GLContext* gl, DataSourceSurface* dest) {
         break;
       }
       default: { MOZ_CRASH("GFX: Bad read format, read format."); }
+||||||| merged common ancestors
+    MOZ_ASSERT(readAlignment);
+    MOZ_ASSERT(reinterpret_cast<uintptr_t>(map->GetData()) % readAlignment == 0);
+
+    GLsizei width = dest->GetSize().width;
+    GLsizei height = dest->GetSize().height;
+
+    {
+        ScopedPackState safePackState(gl);
+        gl->fPixelStorei(LOCAL_GL_PACK_ALIGNMENT, readAlignment);
+
+        gl->fReadPixels(0, 0,
+                        width, height,
+                        readFormat, readType,
+                        map->GetData());
+=======
+    switch (readFormat) {
+      case LOCAL_GL_RGBA: {
+        readFormatGFX =
+            hasAlpha ? SurfaceFormat::R8G8B8A8 : SurfaceFormat::R8G8B8X8;
+        break;
+      }
+      case LOCAL_GL_BGRA: {
+        readFormatGFX =
+            hasAlpha ? SurfaceFormat::B8G8R8A8 : SurfaceFormat::B8G8R8X8;
+        break;
+      }
+      case LOCAL_GL_RGB: {
+        MOZ_ASSERT(destPixelSize == 2);
+        MOZ_ASSERT(readType == LOCAL_GL_UNSIGNED_SHORT_5_6_5_REV);
+        readFormatGFX = SurfaceFormat::R5G6B5_UINT16;
+        break;
+      }
+      default: {
+        MOZ_CRASH("GFX: Bad read format, read format.");
+      }
+>>>>>>> upstream-releases
     }
 
     switch (readType) {
       case LOCAL_GL_UNSIGNED_BYTE: {
         MOZ_ASSERT(readFormat == LOCAL_GL_RGBA);
+<<<<<<< HEAD
         readAlignment = 1;
         break;
       }
@@ -348,6 +387,44 @@ void ReadPixelsIntoDataSurface(GLContext* gl, DataSourceSurface* dest) {
         break;
       }
       default: { MOZ_CRASH("GFX: Bad read type, read type."); }
+||||||| merged common ancestors
+        MOZ_ASSERT(readType == LOCAL_GL_UNSIGNED_BYTE);
+        gfx::Factory::CopyDataSourceSurface(readSurf, dest);
+    }
+}
+
+already_AddRefed<gfx::DataSourceSurface>
+YInvertImageSurface(gfx::DataSourceSurface* aSurf, uint32_t aStride)
+{
+    RefPtr<DataSourceSurface> temp =
+      Factory::CreateDataSourceSurfaceWithStride(aSurf->GetSize(),
+                                                 aSurf->GetFormat(),
+                                                 aStride);
+    if (NS_WARN_IF(!temp)) {
+        return nullptr;
+    }
+
+    DataSourceSurface::MappedSurface map;
+    if (!temp->Map(DataSourceSurface::MapType::WRITE, &map)) {
+        return nullptr;
+=======
+        readAlignment = 1;
+        break;
+      }
+      case LOCAL_GL_UNSIGNED_INT_8_8_8_8_REV: {
+        MOZ_ASSERT(readFormat == LOCAL_GL_BGRA);
+        readAlignment = 4;
+        break;
+      }
+      case LOCAL_GL_UNSIGNED_SHORT_5_6_5_REV: {
+        MOZ_ASSERT(readFormat == LOCAL_GL_RGB);
+        readAlignment = 2;
+        break;
+      }
+      default: {
+        MOZ_CRASH("GFX: Bad read type, read type.");
+      }
+>>>>>>> upstream-releases
     }
 
     int32_t stride = dest->GetSize().width * BytesPerPixel(readFormatGFX);

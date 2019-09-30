@@ -69,6 +69,7 @@ bug_numbers:
 
         self.assertRaises(SystemExit, ParserError.exit_func)
 
+<<<<<<< HEAD
     def test_multistore_default(self):
         SAMPLE_SCALAR = """
 description: A nice one-line description.
@@ -134,6 +135,138 @@ record_into_store: []
                                  strict_type_checks=True)
         self.assertRaises(SystemExit, ParserError.exit_func)
 
+||||||| merged common ancestors
+=======
+    def test_multistore_default(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        sclr = parse_scalars.ScalarType("CATEGORY",
+                                        "PROVE",
+                                        scalar,
+                                        strict_type_checks=True)
+        ParserError.exit_func()
+
+        self.assertEqual(sclr.record_into_store, ["main"])
+
+    def test_multistore_extended(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+record_into_store:
+    - main
+    - sync
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        sclr = parse_scalars.ScalarType("CATEGORY",
+                                        "PROVE",
+                                        scalar,
+                                        strict_type_checks=True)
+        ParserError.exit_func()
+
+        self.assertEqual(sclr.record_into_store, ["main", "sync"])
+
+    def test_multistore_empty(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+record_into_store: []
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        parse_scalars.ScalarType("CATEGORY",
+                                 "PROVE",
+                                 scalar,
+                                 strict_type_checks=True)
+        self.assertRaises(SystemExit, ParserError.exit_func)
+
+    def test_operating_systems_default(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        sclr = parse_scalars.ScalarType("CATEGORY",
+                                        "PROVE",
+                                        scalar,
+                                        strict_type_checks=True)
+        ParserError.exit_func()
+
+        self.assertEqual(sclr.operating_systems, ["all"])
+
+    def test_operating_systems_custom(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+operating_systems:
+    - windows
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        sclr = parse_scalars.ScalarType("CATEGORY",
+                                        "PROVE",
+                                        scalar,
+                                        strict_type_checks=True)
+        ParserError.exit_func()
+
+        self.assertEqual(sclr.operating_systems, ["windows"])
+
+    def test_operating_systems_empty(self):
+        SAMPLE_SCALAR = """
+description: A nice one-line description.
+expires: never
+record_in_processes:
+  - 'main'
+kind: uint
+notification_emails:
+  - test01@mozilla.com
+bug_numbers:
+  - 12345
+operating_systems: []
+"""
+        scalar = load_scalar(SAMPLE_SCALAR)
+        parse_scalars.ScalarType("CATEGORY",
+                                 "PROVE",
+                                 scalar,
+                                 strict_type_checks=True)
+        self.assertRaises(SystemExit, ParserError.exit_func)
+
+>>>>>>> upstream-releases
 
 if __name__ == '__main__':
     mozunit.main()

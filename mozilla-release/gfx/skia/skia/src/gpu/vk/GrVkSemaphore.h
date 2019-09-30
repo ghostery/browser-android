@@ -12,7 +12,6 @@
 
 #include "GrResourceProvider.h"
 #include "GrVkResource.h"
-
 #include "vk/GrVkTypes.h"
 
 class GrBackendSemaphore;
@@ -69,13 +68,23 @@ public:
         }
 #endif
     private:
-        void freeGPUData(const GrVkGpu* gpu) const override;
+        void freeGPUData(GrVkGpu* gpu) const override;
 
         static SkMutex* GetMutex() {
             static SkMutex kMutex;
             return &kMutex;
         }
 
+<<<<<<< HEAD
+        static SkMutex* GetMutex() {
+            static SkMutex kMutex;
+            return &kMutex;
+        }
+
+||||||| merged common ancestors
+        static SkMutex gMutex;
+=======
+>>>>>>> upstream-releases
         VkSemaphore fSemaphore;
         bool        fHasBeenSubmittedToQueueForSignal;
         bool        fHasBeenSubmittedToQueueForWait;

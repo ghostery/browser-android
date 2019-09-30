@@ -3,15 +3,24 @@
 tt{
     AuxExemplarCharacters{"[ғ қ ӯ]"}
     ExemplarCharacters{
-        "[а ә б в г д е ё ж җ з и й к л м н ң о ө п р с т у ү ф х һ ц ч ш щ ъ ы ь э ю"
-        " я]"
+        "[а ә б в г д е ё ж җ з и й к л м н о ө п р с т у ү ф х һ ц ч ш щ ъ ы ь э ю я"
+        "]"
     }
+<<<<<<< HEAD
     ExemplarCharactersIndex{
         "[А Ә Б В Г Д Е Ё Ж Җ З И Й К Л М Н Ң О Ө П Р С Т У Ү Ф Х Һ Ц Ч Ш Щ Ъ Ы Ь Э Ю"
         " Я]"
     }
     ExemplarCharactersNumbers{"[  \\- , % ‰ + 0 1 2 3 4 5 6 7 8 9]"}
     ExemplarCharactersPunctuation{"[\\- ‐ – — , ; \\: ! ? . … ' ‘ ’ \u0022 “ ” ( ) \\[ \\] § @ * / \\& # ′ ″]"}
+||||||| merged common ancestors
+    ExemplarCharactersIndex{
+        "[А Ә Б В Г Д Е Ё Ж Җ З И Й К Л М Н Ң О Ө П Р С Т У Ү Ф Х Һ Ц Ч Ш Щ Ъ Ы Ь Э Ю"
+        " Я]"
+    }
+    ExemplarCharactersNumbers{"[  \\- , % ‰ + 0 1 2 3 4 5 6 7 8 9]"}
+=======
+>>>>>>> upstream-releases
     NumberElements{
         default{"latn"}
         latn{
@@ -42,7 +51,13 @@ tt{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
+<<<<<<< HEAD
     Version{"2.1.44.88"}
+||||||| merged common ancestors
+    Version{"2.1.38.72"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

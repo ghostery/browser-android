@@ -28,12 +28,6 @@
 
 #include "base/basictypes.h"
 
-#if defined(OS_WIN)
-// For FILETIME in FromFileTime, until it moves to a new converter class.
-// See TODO(iyengar) below.
-#include <windows.h>
-#endif
-
 namespace base {
 
 class Time;
@@ -199,11 +193,21 @@ class Time {
   static Time FromDoubleT(double dt);
   double ToDoubleT() const;
 
+<<<<<<< HEAD
 #if defined(OS_WIN)
   static Time FromFileTime(FILETIME ft);
   FILETIME ToFileTime() const;
 #endif
 
+||||||| merged common ancestors
+
+#if defined(OS_WIN)
+  static Time FromFileTime(FILETIME ft);
+  FILETIME ToFileTime() const;
+#endif
+
+=======
+>>>>>>> upstream-releases
   // Converts an exploded structure representing either the local time or UTC
   // into a Time class.
   static Time FromUTCExploded(const Exploded& exploded) {
@@ -391,11 +395,6 @@ class TimeTicks {
 
   // Tick count in microseconds.
   int64_t ticks_;
-
-#if defined(OS_WIN)
-  typedef DWORD (*TickFunctionType)(void);
-  static TickFunctionType SetMockTickFunction(TickFunctionType ticker);
-#endif
 };
 
 inline TimeTicks TimeDelta::operator+(TimeTicks t) const {

@@ -16,6 +16,7 @@ namespace mozilla {
 namespace dom {
 
 class HTMLFormSubmission;
+<<<<<<< HEAD
 
 class HTMLObjectElement final : public nsGenericHTMLFormElement,
                                 public nsObjectLoadingContent,
@@ -24,6 +25,28 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   explicit HTMLObjectElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
       FromParser aFromParser = NOT_FROM_PARSER);
+||||||| merged common ancestors
+
+class HTMLObjectElement final : public nsGenericHTMLFormElement
+                              , public nsObjectLoadingContent
+                              , public nsIConstraintValidation
+{
+public:
+  explicit HTMLObjectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+                             FromParser aFromParser = NOT_FROM_PARSER);
+=======
+template <typename T>
+struct Nullable;
+class WindowProxyHolder;
+
+class HTMLObjectElement final : public nsGenericHTMLFormElement,
+                                public nsObjectLoadingContent,
+                                public nsIConstraintValidation {
+ public:
+  explicit HTMLObjectElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+      FromParser aFromParser = NOT_FROM_PARSER);
+>>>>>>> upstream-releases
 
   // nsISupports
   NS_DECL_ISUPPORTS_INHERITED
@@ -49,10 +72,20 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   // EventTarget
   virtual void AsyncEventRunning(AsyncEventDispatcher* aEvent) override;
 
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
                               bool aNullParent = true) override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument *aDocument, nsIContent *aParent,
+                              nsIContent *aBindingParent) override;
+  virtual void UnbindFromTree(bool aDeep = true,
+                              bool aNullParent = true) override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
+>>>>>>> upstream-releases
 
   virtual bool IsHTMLFocusable(bool aWithMouse, bool* aIsFocusable,
                                int32_t* aTabIndex) override;
@@ -98,12 +131,32 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   void SetType(const nsAString& aValue, ErrorResult& aRv) {
     SetHTMLAttr(nsGkAtoms::type, aValue, aRv);
   }
+<<<<<<< HEAD
   bool TypeMustMatch() { return GetBoolAttr(nsGkAtoms::typemustmatch); }
   void SetTypeMustMatch(bool aValue, ErrorResult& aRv) {
     SetHTMLBoolAttr(nsGkAtoms::typemustmatch, aValue, aRv);
   }
   void GetName(DOMString& aValue) { GetHTMLAttr(nsGkAtoms::name, aValue); }
   void SetName(const nsAString& aValue, ErrorResult& aRv) {
+||||||| merged common ancestors
+  bool TypeMustMatch()
+  {
+    return GetBoolAttr(nsGkAtoms::typemustmatch);
+  }
+  void SetTypeMustMatch(bool aValue, ErrorResult& aRv)
+  {
+    SetHTMLBoolAttr(nsGkAtoms::typemustmatch, aValue, aRv);
+  }
+  void GetName(DOMString& aValue)
+  {
+    GetHTMLAttr(nsGkAtoms::name, aValue);
+  }
+  void SetName(const nsAString& aValue, ErrorResult& aRv)
+  {
+=======
+  void GetName(DOMString& aValue) { GetHTMLAttr(nsGkAtoms::name, aValue); }
+  void SetName(const nsAString& aValue, ErrorResult& aRv) {
+>>>>>>> upstream-releases
     SetHTMLAttr(nsGkAtoms::name, aValue, aRv);
   }
   void GetUseMap(DOMString& aValue) { GetHTMLAttr(nsGkAtoms::usemap, aValue); }
@@ -121,7 +174,14 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   }
   using nsObjectLoadingContent::GetContentDocument;
 
+<<<<<<< HEAD
   nsPIDOMWindowOuter* GetContentWindow(nsIPrincipal& aSubjectPrincipal);
+||||||| merged common ancestors
+  nsPIDOMWindowOuter*
+  GetContentWindow(nsIPrincipal& aSubjectPrincipal);
+=======
+  Nullable<WindowProxyHolder> GetContentWindow(nsIPrincipal& aSubjectPrincipal);
+>>>>>>> upstream-releases
 
   using nsIConstraintValidation::GetValidationMessage;
   using nsIConstraintValidation::SetCustomValidity;
@@ -143,8 +203,22 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   void SetDeclare(bool aValue, ErrorResult& aRv) {
     SetHTMLBoolAttr(nsGkAtoms::declare, aValue, aRv);
   }
+<<<<<<< HEAD
   uint32_t Hspace() { return GetUnsignedIntAttr(nsGkAtoms::hspace, 0); }
   void SetHspace(uint32_t aValue, ErrorResult& aRv) {
+||||||| merged common ancestors
+  uint32_t Hspace()
+  {
+    return GetUnsignedIntAttr(nsGkAtoms::hspace, 0);
+  }
+  void SetHspace(uint32_t aValue, ErrorResult& aRv)
+  {
+=======
+  uint32_t Hspace() {
+    return GetDimensionAttrAsUnsignedInt(nsGkAtoms::hspace, 0);
+  }
+  void SetHspace(uint32_t aValue, ErrorResult& aRv) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::hspace, aValue, 0, aRv);
   }
   void GetStandby(DOMString& aValue) {
@@ -153,8 +227,22 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
   void SetStandby(const nsAString& aValue, ErrorResult& aRv) {
     SetHTMLAttr(nsGkAtoms::standby, aValue, aRv);
   }
+<<<<<<< HEAD
   uint32_t Vspace() { return GetUnsignedIntAttr(nsGkAtoms::vspace, 0); }
   void SetVspace(uint32_t aValue, ErrorResult& aRv) {
+||||||| merged common ancestors
+  uint32_t Vspace()
+  {
+    return GetUnsignedIntAttr(nsGkAtoms::vspace, 0);
+  }
+  void SetVspace(uint32_t aValue, ErrorResult& aRv)
+  {
+=======
+  uint32_t Vspace() {
+    return GetDimensionAttrAsUnsignedInt(nsGkAtoms::vspace, 0);
+  }
+  void SetVspace(uint32_t aValue, ErrorResult& aRv) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::vspace, aValue, 0, aRv);
   }
   void GetCodeBase(DOMString& aValue) {
@@ -174,7 +262,15 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
     SetHTMLAttr(nsGkAtoms::border, aValue, aRv);
   }
 
+<<<<<<< HEAD
   nsIDocument* GetSVGDocument(nsIPrincipal& aSubjectPrincipal) {
+||||||| merged common ancestors
+  nsIDocument*
+  GetSVGDocument(nsIPrincipal& aSubjectPrincipal)
+  {
+=======
+  Document* GetSVGDocument(nsIPrincipal& aSubjectPrincipal) {
+>>>>>>> upstream-releases
     return GetContentDocument(aSubjectPrincipal);
   }
 
@@ -183,9 +279,17 @@ class HTMLObjectElement final : public nsGenericHTMLFormElement,
    */
   void StartObjectLoad(bool aNotify, bool aForceLoad);
 
+<<<<<<< HEAD
   NS_FORWARD_NSIFRAMELOADEROWNER(nsObjectLoadingContent::)
 
  protected:
+||||||| merged common ancestors
+  NS_FORWARD_NSIFRAMELOADEROWNER(nsObjectLoadingContent::)
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   // Override for nsImageLoadingContent.
   nsIContent* AsContent() override { return this; }
 

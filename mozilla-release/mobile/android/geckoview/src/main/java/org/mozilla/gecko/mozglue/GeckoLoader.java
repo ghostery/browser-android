@@ -8,8 +8,14 @@ package org.mozilla.gecko.mozglue;
 import org.mozilla.gecko.GeckoAppShell;
 import org.mozilla.gecko.annotation.JNITarget;
 import org.mozilla.gecko.annotation.RobocopTarget;
+<<<<<<< HEAD
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.geckoview.BuildConfig;
+||||||| merged common ancestors
+import org.mozilla.geckoview.BuildConfig;
+=======
+import org.mozilla.gecko.util.HardwareUtils;
+>>>>>>> upstream-releases
 
 import android.content.Context;
 import android.os.Build;
@@ -40,14 +46,14 @@ public final class GeckoLoader {
         // prevent instantiation
     }
 
-    public static File getCacheDir(Context context) {
+    public static File getCacheDir(final Context context) {
         if (sCacheFile == null) {
             sCacheFile = context.getCacheDir();
         }
         return sCacheFile;
     }
 
-    public static File getGREDir(Context context) {
+    public static File getGREDir(final Context context) {
         if (sGREDir == null) {
             sGREDir = new File(context.getApplicationInfo().dataDir);
         }
@@ -71,7 +77,7 @@ public final class GeckoLoader {
         }
     }
 
-    private static void delTree(File file) {
+    private static void delTree(final File file) {
         if (file.isDirectory()) {
             File children[] = file.listFiles();
             for (File child : children) {
@@ -81,7 +87,7 @@ public final class GeckoLoader {
         file.delete();
     }
 
-    private static File getTmpDir(Context context) {
+    private static File getTmpDir(final Context context) {
         File tmpDir = context.getDir("tmpdir", Context.MODE_PRIVATE);
         // check if the old tmp dir is there
         File oldDir = new File(tmpDir.getParentFile(), "app_tmp");
@@ -91,6 +97,7 @@ public final class GeckoLoader {
         return tmpDir;
     }
 
+<<<<<<< HEAD
     private static String escapeDoubleQuotes(final String str) {
         return str.replaceAll("\"", "\\\"");
     }
@@ -116,6 +123,35 @@ public final class GeckoLoader {
         }
     }
 
+||||||| merged common ancestors
+=======
+    private static String escapeDoubleQuotes(final String str) {
+        return str.replaceAll("\"", "\\\"");
+    }
+
+    private static void setupInitialPrefs(final Map<String, Object> prefs) {
+        if (prefs != null) {
+            final StringBuilder prefsEnv = new StringBuilder("MOZ_DEFAULT_PREFS=");
+            for (final String key : prefs.keySet()) {
+                prefsEnv.append(String.format("pref(\"%s\",", escapeDoubleQuotes(key)));
+                final Object value = prefs.get(key);
+                if (value instanceof String) {
+                    prefsEnv.append(String.format("\"%s\"", escapeDoubleQuotes(value.toString())));
+                } else if (value instanceof Boolean) {
+                    prefsEnv.append((Boolean)value ? "true" : "false");
+                } else {
+                    prefsEnv.append(value.toString());
+                }
+
+                prefsEnv.append(");\n");
+            }
+
+            putenv(prefsEnv.toString());
+        }
+    }
+
+    @SuppressWarnings("deprecation") // for Build.CPU_ABI
+>>>>>>> upstream-releases
     public synchronized static void setupGeckoEnvironment(final Context context,
                                                           final String profilePath,
                                                           final Collection<String> env,
@@ -176,6 +212,9 @@ public final class GeckoLoader {
         }
 
         putenv("MOZ_ANDROID_DEVICE_SDK_VERSION=" + Build.VERSION.SDK_INT);
+        putenv("MOZ_ANDROID_CPU_ABI=" + Build.CPU_ABI);
+
+        setupInitialPrefs(prefs);
 
         setupInitialPrefs(prefs);
 
@@ -183,7 +222,14 @@ public final class GeckoLoader {
         loadLibsSetupLocked(context);
     }
 
+<<<<<<< HEAD
     private static void loadLibsSetupLocked(Context context) {
+||||||| merged common ancestors
+    private static void loadLibsSetupLocked(Context context) {
+        // setup the libs cache
+=======
+    private static void loadLibsSetupLocked(final Context context) {
+>>>>>>> upstream-releases
         putenv("GRE_HOME=" + getGREDir(context).getPath());
         putenv("MOZ_ANDROID_LIBDIR=" + context.getApplicationInfo().nativeLibraryDir);
     }
@@ -212,7 +258,7 @@ public final class GeckoLoader {
     }
 
     @SuppressWarnings("deprecation")
-    private static final String getCPUABI() {
+    private static String getCPUABI() {
         return android.os.Build.CPU_ABI;
     }
 
@@ -224,7 +270,8 @@ public final class GeckoLoader {
      * @param outDir the output directory for the .so. No trailing slash.
      * @return true on success, false on failure.
      */
-    private static boolean extractLibrary(final Context context, final String lib, final String outDir) {
+    private static boolean extractLibrary(final Context context, final String lib,
+                                          final String outDir) {
         final String apkPath = context.getApplicationInfo().sourceDir;
 
         // Sanity check.
@@ -256,7 +303,8 @@ public final class GeckoLoader {
         }
     }
 
-    private static boolean tryLoadWithABI(String lib, String outDir, String apkPath, String abi) {
+    private static boolean tryLoadWithABI(final String lib, final String outDir,
+                                          final String apkPath, final String abi) {
         try {
             final ZipFile zipFile = new ZipFile(new File(apkPath));
             try {
@@ -359,7 +407,7 @@ public final class GeckoLoader {
         return message.toString();
     }
 
-    private static final boolean attemptLoad(final String path) {
+    private static boolean attemptLoad(final String path) {
         try {
             System.load(path);
             return true;
@@ -376,7 +424,7 @@ public final class GeckoLoader {
      *
      * Returns null or the cause exception.
      */
-    private static final Throwable doLoadLibraryExpected(final Context context, final String lib) {
+    private static Throwable doLoadLibraryExpected(final Context context, final String lib) {
         try {
             // Attempt 1: the way that should work.
             System.loadLibrary(lib);
@@ -477,7 +525,7 @@ public final class GeckoLoader {
 
     @SuppressWarnings("serial")
     public static class AbortException extends Exception {
-        public AbortException(String msg) {
+        public AbortException(final String msg) {
             super(msg);
         }
     }

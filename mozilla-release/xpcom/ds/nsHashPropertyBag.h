@@ -30,9 +30,25 @@ class nsHashPropertyBagBase : public nsIWritablePropertyBag,
   nsInterfaceHashtable<nsStringHashKey, nsIVariant> mPropertyHash;
 };
 
+<<<<<<< HEAD
 class nsHashPropertyBag : public nsHashPropertyBagBase {
  public:
   nsHashPropertyBag() {}
+||||||| merged common ancestors
+class nsHashPropertyBag : public nsHashPropertyBagBase
+{
+public:
+  nsHashPropertyBag() {}
+=======
+class nsHashPropertyBag : public nsHashPropertyBagBase {
+ public:
+  nsHashPropertyBag() {
+    // Avoid destroying this object when recording/replaying. See bug 1497299.
+    if (mozilla::recordreplay::IsRecordingOrReplaying()) {
+      AddRef();
+    }
+  }
+>>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
 
  protected:

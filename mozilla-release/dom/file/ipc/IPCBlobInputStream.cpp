@@ -117,7 +117,7 @@ NS_INTERFACE_MAP_BEGIN(IPCBlobInputStream)
   NS_INTERFACE_MAP_ENTRY(nsIAsyncFileMetadata)
   NS_INTERFACE_MAP_ENTRY(nsIInputStreamLength)
   NS_INTERFACE_MAP_ENTRY(nsIAsyncInputStreamLength)
-  NS_INTERFACE_MAP_ENTRY(nsIIPCBlobInputStream)
+  NS_INTERFACE_MAP_ENTRY(mozIIPCBlobInputStream)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIInputStream)
 NS_INTERFACE_MAP_END
 
@@ -409,6 +409,7 @@ IPCBlobInputStream::AsyncWait(nsIInputStreamCallback* aCallback,
         return NS_OK;
       }
 
+<<<<<<< HEAD
       // We have the remote inputStream, let's check if we can execute the
       // callback.
       case eRunning: {
@@ -420,6 +421,35 @@ IPCBlobInputStream::AsyncWait(nsIInputStreamCallback* aCallback,
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
+||||||| merged common ancestors
+      mInputStreamCallback = aCallback;
+      mInputStreamCallbackEventTarget = aEventTarget;
+      return NS_OK;
+    }
+
+    // We have the remote inputStream, let's check if we can execute the callback.
+    case eRunning: {
+      if (mInputStreamCallback && aCallback) {
+        return NS_ERROR_FAILURE;
+      }
+
+      nsresult rv = EnsureAsyncRemoteStream(lock);
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return rv;
+      }
+=======
+      // We have the remote inputStream, let's check if we can execute the
+      // callback.
+      case eRunning: {
+        if (mInputStreamCallback && aCallback) {
+          return NS_ERROR_FAILURE;
+        }
+
+        nsresult rv = EnsureAsyncRemoteStream(lock);
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          return rv;
+        }
+>>>>>>> upstream-releases
 
         mInputStreamCallback = aCallback;
         mInputStreamCallbackEventTarget = aEventTarget;
@@ -563,8 +593,62 @@ IPCBlobInputStream::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 
 // nsIIPCSerializableInputStream
 
+<<<<<<< HEAD
 void IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
                                    FileDescriptorArray& aFileDescriptors) {
+||||||| merged common ancestors
+void
+IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                              FileDescriptorArray& aFileDescriptors)
+{
+=======
+void IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                   FileDescriptorArray& aFileDescriptors,
+                                   bool aDelayedStart, uint32_t aMaxSize,
+                                   uint32_t* aSizeUsed,
+                                   ContentChild* aManager) {
+  MOZ_ASSERT(aSizeUsed);
+  *aSizeUsed = 0;
+
+  SerializeInternal(aParams);
+}
+
+void IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                   FileDescriptorArray& aFileDescriptors,
+                                   bool aDelayedStart, uint32_t aMaxSize,
+                                   uint32_t* aSizeUsed,
+                                   mozilla::ipc::PBackgroundChild* aManager) {
+  MOZ_ASSERT(aSizeUsed);
+  *aSizeUsed = 0;
+
+  SerializeInternal(aParams);
+}
+
+void IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                   FileDescriptorArray& aFileDescriptors,
+                                   bool aDelayedStart, uint32_t aMaxSize,
+                                   uint32_t* aSizeUsed,
+                                   ContentParent* aManager) {
+  MOZ_ASSERT(aSizeUsed);
+  *aSizeUsed = 0;
+
+  SerializeInternal(aParams);
+}
+
+void IPCBlobInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                   FileDescriptorArray& aFileDescriptors,
+                                   bool aDelayedStart, uint32_t aMaxSize,
+                                   uint32_t* aSizeUsed,
+                                   mozilla::ipc::PBackgroundParent* aManager) {
+  MOZ_ASSERT(aSizeUsed);
+  *aSizeUsed = 0;
+
+  SerializeInternal(aParams);
+}
+
+void IPCBlobInputStream::SerializeInternal(
+    mozilla::ipc::InputStreamParams& aParams) {
+>>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
 
   mozilla::ipc::IPCBlobInputStreamParams params;
@@ -582,10 +666,20 @@ bool IPCBlobInputStream::Deserialize(
   return false;
 }
 
+<<<<<<< HEAD
 mozilla::Maybe<uint64_t> IPCBlobInputStream::ExpectedSerializedLength() {
   return mozilla::Nothing();
 }
 
+||||||| merged common ancestors
+mozilla::Maybe<uint64_t>
+IPCBlobInputStream::ExpectedSerializedLength()
+{
+  return mozilla::Nothing();
+}
+
+=======
+>>>>>>> upstream-releases
 // nsIAsyncFileMetadata
 
 NS_IMETHODIMP

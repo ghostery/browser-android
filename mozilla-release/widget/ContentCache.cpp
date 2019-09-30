@@ -14,7 +14,7 @@
 #include "mozilla/RefPtr.h"
 #include "mozilla/TextComposition.h"
 #include "mozilla/TextEvents.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 #include "nsExceptionHandler.h"
 #include "nsIWidget.h"
 
@@ -479,6 +479,7 @@ void ContentCacheInChild::SetSelection(nsIWidget* aWidget,
  * mozilla::ContentCacheInParent
  *****************************************************************************/
 
+<<<<<<< HEAD
 ContentCacheInParent::ContentCacheInParent(TabParent& aTabParent)
     : ContentCache(),
       mTabParent(aTabParent),
@@ -494,6 +495,43 @@ ContentCacheInParent::ContentCacheInParent(TabParent& aTabParent)
 void ContentCacheInParent::AssignContent(const ContentCache& aOther,
                                          nsIWidget* aWidget,
                                          const IMENotification* aNotification) {
+||||||| merged common ancestors
+ContentCacheInParent::ContentCacheInParent(TabParent& aTabParent)
+  : ContentCache()
+  , mTabParent(aTabParent)
+  , mCommitStringByRequest(nullptr)
+  , mPendingEventsNeedingAck(0)
+  , mCompositionStartInChild(UINT32_MAX)
+  , mPendingCommitLength(0)
+  , mPendingCompositionCount(0)
+  , mPendingCommitCount(0)
+  , mWidgetHasComposition(false)
+  , mIsChildIgnoringCompositionEvents(false)
+{
+}
+
+void
+ContentCacheInParent::AssignContent(const ContentCache& aOther,
+                                    nsIWidget* aWidget,
+                                    const IMENotification* aNotification)
+{
+=======
+ContentCacheInParent::ContentCacheInParent(BrowserParent& aBrowserParent)
+    : ContentCache(),
+      mBrowserParent(aBrowserParent),
+      mCommitStringByRequest(nullptr),
+      mPendingEventsNeedingAck(0),
+      mCompositionStartInChild(UINT32_MAX),
+      mPendingCommitLength(0),
+      mPendingCompositionCount(0),
+      mPendingCommitCount(0),
+      mWidgetHasComposition(false),
+      mIsChildIgnoringCompositionEvents(false) {}
+
+void ContentCacheInParent::AssignContent(const ContentCache& aOther,
+                                         nsIWidget* aWidget,
+                                         const IMENotification* aNotification) {
+>>>>>>> upstream-releases
   mText = aOther.mText;
   mSelection = aOther.mSelection;
   mFirstCharRect = aOther.mFirstCharRect;
@@ -1290,6 +1328,7 @@ void ContentCacheInParent::OnEventNeedingAckHandled(nsIWidget* aWidget,
   FlushPendingNotifications(aWidget);
 }
 
+<<<<<<< HEAD
 bool ContentCacheInParent::RequestIMEToCommitComposition(
     nsIWidget* aWidget, bool aCancel, nsAString& aCommittedString) {
   MOZ_LOG(
@@ -1303,6 +1342,38 @@ bool ContentCacheInParent::RequestIMEToCommitComposition(
        mPendingCommitCount, GetBoolName(mIsChildIgnoringCompositionEvents),
        GetBoolName(IMEStateManager::DoesTabParentHaveIMEFocus(&mTabParent)),
        GetBoolName(mWidgetHasComposition), mCommitStringByRequest));
+||||||| merged common ancestors
+bool
+ContentCacheInParent::RequestIMEToCommitComposition(nsIWidget* aWidget,
+                                                    bool aCancel,
+                                                    nsAString& aCommittedString)
+{
+  MOZ_LOG(sContentCacheLog, LogLevel::Info,
+    ("0x%p RequestToCommitComposition(aWidget=%p, "
+     "aCancel=%s), mPendingCompositionCount=%" PRIu8 ", "
+     "mPendingCommitCount=%" PRIu8 ", mIsChildIgnoringCompositionEvents=%s, "
+     "IMEStateManager::DoesTabParentHaveIMEFocus(&mTabParent)=%s, "
+     "mWidgetHasComposition=%s, mCommitStringByRequest=%p",
+     this, aWidget, GetBoolName(aCancel), mPendingCompositionCount,
+     mPendingCommitCount, GetBoolName(mIsChildIgnoringCompositionEvents),
+     GetBoolName(IMEStateManager::DoesTabParentHaveIMEFocus(&mTabParent)),
+     GetBoolName(mWidgetHasComposition), mCommitStringByRequest));
+=======
+bool ContentCacheInParent::RequestIMEToCommitComposition(
+    nsIWidget* aWidget, bool aCancel, nsAString& aCommittedString) {
+  MOZ_LOG(
+      sContentCacheLog, LogLevel::Info,
+      ("0x%p RequestToCommitComposition(aWidget=%p, "
+       "aCancel=%s), mPendingCompositionCount=%" PRIu8 ", "
+       "mPendingCommitCount=%" PRIu8 ", mIsChildIgnoringCompositionEvents=%s, "
+       "IMEStateManager::DoesBrowserParentHaveIMEFocus(&mBrowserParent)=%s, "
+       "mWidgetHasComposition=%s, mCommitStringByRequest=%p",
+       this, aWidget, GetBoolName(aCancel), mPendingCompositionCount,
+       mPendingCommitCount, GetBoolName(mIsChildIgnoringCompositionEvents),
+       GetBoolName(
+           IMEStateManager::DoesBrowserParentHaveIMEFocus(&mBrowserParent)),
+       GetBoolName(mWidgetHasComposition), mCommitStringByRequest));
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(!mCommitStringByRequest);
 
@@ -1337,15 +1408,26 @@ bool ContentCacheInParent::RequestIMEToCommitComposition(
     return false;
   }
 
-  // If TabParent which has IME focus was already changed to different one, the
-  // request shouldn't be sent to IME because it's too late.
-  if (!IMEStateManager::DoesTabParentHaveIMEFocus(&mTabParent)) {
+  // If BrowserParent which has IME focus was already changed to different one,
+  // the request shouldn't be sent to IME because it's too late.
+  if (!IMEStateManager::DoesBrowserParentHaveIMEFocus(&mBrowserParent)) {
     // Use the latest composition string which may not be handled in the
     // remote process for avoiding data loss.
 #if MOZ_DIAGNOSTIC_ASSERT_ENABLED
+<<<<<<< HEAD
     mRequestIMEToCommitCompositionResults.AppendElement(
         RequestIMEToCommitCompositionResult::eReceivedAfterTabParentBlur);
 #endif  // #if MOZ_DIAGNOSTIC_ASSERT_ENABLED
+||||||| merged common ancestors
+    mRequestIMEToCommitCompositionResults.
+      AppendElement(RequestIMEToCommitCompositionResult::
+                      eReceivedAfterTabParentBlur);
+#endif // #if MOZ_DIAGNOSTIC_ASSERT_ENABLED
+=======
+    mRequestIMEToCommitCompositionResults.AppendElement(
+        RequestIMEToCommitCompositionResult::eReceivedAfterBrowserParentBlur);
+#endif  // #if MOZ_DIAGNOSTIC_ASSERT_ENABLED
+>>>>>>> upstream-releases
     aCommittedString = mCompositionString;
     // After we return true from here, i.e., without actually requesting IME
     // to commit composition, we will receive eCompositionCommitRequestHandled
@@ -1420,7 +1502,7 @@ bool ContentCacheInParent::RequestIMEToCommitComposition(
 void ContentCacheInParent::MaybeNotifyIME(
     nsIWidget* aWidget, const IMENotification& aNotification) {
   if (!mPendingEventsNeedingAck) {
-    IMEStateManager::NotifyIME(aNotification, aWidget, &mTabParent);
+    IMEStateManager::NotifyIME(aNotification, aWidget, &mBrowserParent);
     return;
   }
 
@@ -1446,7 +1528,7 @@ void ContentCacheInParent::MaybeNotifyIME(
 void ContentCacheInParent::FlushPendingNotifications(nsIWidget* aWidget) {
   MOZ_ASSERT(!mPendingEventsNeedingAck);
 
-  // If the TabParent's widget has already gone, this can do nothing since
+  // If the BrowserParent's widget has already gone, this can do nothing since
   // widget is necessary to notify IME of something.
   if (!aWidget) {
     return;
@@ -1465,7 +1547,7 @@ void ContentCacheInParent::FlushPendingNotifications(nsIWidget* aWidget) {
     IMENotification notification(mPendingTextChange);
     if (!widget->Destroyed()) {
       mPendingTextChange.Clear();
-      IMEStateManager::NotifyIME(notification, widget, &mTabParent);
+      IMEStateManager::NotifyIME(notification, widget, &mBrowserParent);
     }
   }
 
@@ -1473,7 +1555,7 @@ void ContentCacheInParent::FlushPendingNotifications(nsIWidget* aWidget) {
     IMENotification notification(mPendingSelectionChange);
     if (!widget->Destroyed()) {
       mPendingSelectionChange.Clear();
-      IMEStateManager::NotifyIME(notification, widget, &mTabParent);
+      IMEStateManager::NotifyIME(notification, widget, &mBrowserParent);
     }
   }
 
@@ -1483,7 +1565,7 @@ void ContentCacheInParent::FlushPendingNotifications(nsIWidget* aWidget) {
     IMENotification notification(mPendingLayoutChange);
     if (!widget->Destroyed()) {
       mPendingLayoutChange.Clear();
-      IMEStateManager::NotifyIME(notification, widget, &mTabParent);
+      IMEStateManager::NotifyIME(notification, widget, &mBrowserParent);
     }
   }
 
@@ -1493,7 +1575,7 @@ void ContentCacheInParent::FlushPendingNotifications(nsIWidget* aWidget) {
     IMENotification notification(mPendingCompositionUpdate);
     if (!widget->Destroyed()) {
       mPendingCompositionUpdate.Clear();
-      IMEStateManager::NotifyIME(notification, widget, &mTabParent);
+      IMEStateManager::NotifyIME(notification, widget, &mBrowserParent);
     }
   }
 
@@ -1555,8 +1637,15 @@ void ContentCacheInParent::RemoveUnnecessaryEventMessageLog() {
     for (size_t i = mRequestIMEToCommitCompositionResults.Length(); i > 1;
          i--) {
       if (mRequestIMEToCommitCompositionResults[i - 1] ==
+<<<<<<< HEAD
               RequestIMEToCommitCompositionResult::
                   eReceivedAfterTabParentBlur ||
+||||||| merged common ancestors
+            RequestIMEToCommitCompositionResult::eReceivedAfterTabParentBlur ||
+=======
+              RequestIMEToCommitCompositionResult::
+                  eReceivedAfterBrowserParentBlur ||
+>>>>>>> upstream-releases
           mRequestIMEToCommitCompositionResults[i - 1] ==
               RequestIMEToCommitCompositionResult::eHandledSynchronously) {
         --numberOfCompositionCommitRequestHandled;

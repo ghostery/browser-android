@@ -31,7 +31,11 @@ class Worklet final : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Worklet)
 
-  Worklet(nsPIDOMWindowInner* aWindow, RefPtr<WorkletImpl> aImpl);
+  // |aOwnedObject| may be provided by the WorkletImpl as a parent thread
+  // object to keep alive and traverse for CC as long as the Worklet has
+  // references remaining.
+  Worklet(nsPIDOMWindowInner* aWindow, RefPtr<WorkletImpl> aImpl,
+          nsISupports* aOwnedObject = nullptr);
 
   nsPIDOMWindowInner* GetParentObject() const { return mWindow; }
 
@@ -42,7 +46,15 @@ class Worklet final : public nsISupports, public nsWrapperCache {
                                       const WorkletOptions& aOptions,
                                       CallerType aCallerType, ErrorResult& aRv);
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  WorkletImpl* Impl() const { return mImpl; }
+
+ private:
+>>>>>>> upstream-releases
   ~Worklet();
 
   WorkletFetchHandler* GetImportFetchHandler(const nsACString& aURI);
@@ -51,6 +63,7 @@ class Worklet final : public nsISupports, public nsWrapperCache {
                              WorkletFetchHandler* aHandler);
 
   nsCOMPtr<nsPIDOMWindowInner> mWindow;
+  nsCOMPtr<nsISupports> mOwnedObject;
 
   nsRefPtrHashtable<nsCStringHashKey, WorkletFetchHandler> mImportHandlers;
 

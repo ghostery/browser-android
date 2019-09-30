@@ -8,15 +8,43 @@
 #define mozilla_dom_SVGMetadataElement_h
 
 #include "mozilla/Attributes.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 
+<<<<<<< HEAD
 nsresult NS_NewSVGMetadataElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
 typedef nsSVGElement SVGMetadataElementBase;
+||||||| merged common ancestors
+nsresult NS_NewSVGMetadataElement(nsIContent **aResult,
+                                  already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+
+typedef nsSVGElement SVGMetadataElementBase;
+=======
+nsresult NS_NewSVGMetadataElement(
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
+
+<<<<<<< HEAD
+class SVGMetadataElement final : public SVGMetadataElementBase {
+ protected:
+  friend nsresult(::NS_NewSVGMetadataElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGMetadataElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+||||||| merged common ancestors
+class SVGMetadataElement final : public SVGMetadataElementBase
+{
+protected:
+  friend nsresult (::NS_NewSVGMetadataElement(nsIContent **aResult,
+                                              already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGMetadataElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+=======
+typedef SVGElement SVGMetadataElementBase;
 
 class SVGMetadataElement final : public SVGMetadataElementBase {
  protected:
@@ -25,6 +53,7 @@ class SVGMetadataElement final : public SVGMetadataElementBase {
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
   explicit SVGMetadataElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+>>>>>>> upstream-releases
 
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;

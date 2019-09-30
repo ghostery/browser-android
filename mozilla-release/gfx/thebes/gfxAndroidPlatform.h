@@ -27,22 +27,61 @@ class gfxAndroidPlatform : public gfxPlatform {
     return (gfxAndroidPlatform*)gfxPlatform::GetPlatform();
   }
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfxASurface> CreateOffscreenSurface(
       const IntSize& aSize, gfxImageFormat aFormat) override;
+||||||| merged common ancestors
+    virtual already_AddRefed<gfxASurface>
+    CreateOffscreenSurface(const IntSize& aSize,
+                           gfxImageFormat aFormat) override;
+    
+    virtual gfxImageFormat GetOffscreenFormat() override { return mOffscreenFormat; }
+=======
+  already_AddRefed<gfxASurface> CreateOffscreenSurface(
+      const IntSize& aSize, gfxImageFormat aFormat) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual gfxImageFormat GetOffscreenFormat() override {
     return mOffscreenFormat;
   }
+||||||| merged common ancestors
+    // to support IPC font list (sharing between chrome and content)
+    void GetSystemFontList(InfallibleTArray<FontListEntry>* retValue);
+=======
+  gfxImageFormat GetOffscreenFormat() override { return mOffscreenFormat; }
+>>>>>>> upstream-releases
 
   // to support IPC font list (sharing between chrome and content)
   void GetSystemFontList(InfallibleTArray<FontListEntry>* retValue);
 
+<<<<<<< HEAD
   // platform implementations of font functions
   virtual gfxPlatformFontList* CreatePlatformFontList() override;
+||||||| merged common ancestors
+    virtual void GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh,
+                                        Script aRunScript,
+                                        nsTArray<const char*>& aFontList) override;
+=======
+  // platform implementations of font functions
+  gfxPlatformFontList* CreatePlatformFontList() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void GetCommonFallbackFonts(
       uint32_t aCh, uint32_t aNextCh, Script aRunScript,
       nsTArray<const char*>& aFontList) override;
+||||||| merged common ancestors
+    gfxFontGroup*
+    CreateFontGroup(const mozilla::FontFamilyList& aFontFamilyList,
+                    const gfxFontStyle *aStyle,
+                    gfxTextPerfMetrics* aTextPerf,
+                    gfxUserFontSet *aUserFontSet,
+                    gfxFloat aDevToCssSize) override;
+=======
+  void GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh, Script aRunScript,
+                              nsTArray<const char*>& aFontList) override;
+>>>>>>> upstream-releases
 
   gfxFontGroup* CreateFontGroup(const mozilla::FontFamilyList& aFontFamilyList,
                                 const gfxFontStyle* aStyle,
@@ -50,13 +89,30 @@ class gfxAndroidPlatform : public gfxPlatform {
                                 gfxUserFontSet* aUserFontSet,
                                 gfxFloat aDevToCssSize) override;
 
+<<<<<<< HEAD
   virtual bool FontHintingEnabled() override;
   virtual bool RequiresLinearZoom() override;
+||||||| merged common ancestors
+    FT_Library GetFTLibrary() override;
+=======
+  bool FontHintingEnabled() override;
+  bool RequiresLinearZoom() override;
+>>>>>>> upstream-releases
 
   FT_Library GetFTLibrary() override;
 
+<<<<<<< HEAD
   virtual already_AddRefed<mozilla::gfx::VsyncSource>
   CreateHardwareVsyncSource() override;
+||||||| merged common ancestors
+protected:
+    bool AccelerateLayersByDefault() override {
+      return true;
+    }
+=======
+  already_AddRefed<mozilla::gfx::VsyncSource> CreateHardwareVsyncSource()
+      override;
+>>>>>>> upstream-releases
 
  protected:
   bool AccelerateLayersByDefault() override { return true; }

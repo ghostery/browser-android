@@ -23,12 +23,20 @@
 #include "nsWindowsHelpers.h"
 
 #if defined(MOZILLA_INTERNAL_API)
-#include "mozilla/ClearOnShutdown.h"
-#include "mozilla/mscom/EnsureMTA.h"
+#  include "mozilla/ClearOnShutdown.h"
+#  include "mozilla/mscom/EnsureMTA.h"
 HRESULT RegisterPassthruProxy();
 #else
+<<<<<<< HEAD
 #include <stdlib.h>
 #endif  // defined(MOZILLA_INTERNAL_API)
+||||||| merged common ancestors
+#include <stdlib.h>
+#endif // defined(MOZILLA_INTERNAL_API)
+=======
+#  include <stdlib.h>
+#endif  // defined(MOZILLA_INTERNAL_API)
+>>>>>>> upstream-releases
 
 #include <oaidl.h>
 #include <objidl.h>
@@ -302,17 +310,28 @@ RegisteredProxy::RegisteredProxy(ITypeLib* aTypeLib)
   AddToRegistry(this);
 }
 
+<<<<<<< HEAD
 RegisteredProxy::~RegisteredProxy() {
   DeleteFromRegistry(this);
+||||||| merged common ancestors
+RegisteredProxy::~RegisteredProxy()
+{
+  DeleteFromRegistry(this);
+=======
+void RegisteredProxy::Clear() {
+>>>>>>> upstream-releases
   if (mTypeLib) {
     mTypeLib->lpVtbl->Release(mTypeLib);
+    mTypeLib = nullptr;
   }
   if (mClassObject) {
     // NB: mClassObject and mRegCookie must be freed from inside the apartment
     // which they were created in.
     auto cleanupFn = [&]() -> void {
       ::CoRevokeClassObject(mRegCookie);
+      mRegCookie = 0;
       mClassObject->lpVtbl->Release(mClassObject);
+      mClassObject = nullptr;
     };
 #if defined(MOZILLA_INTERNAL_API)
     // This code only supports MTA when built internally
@@ -327,14 +346,47 @@ RegisteredProxy::~RegisteredProxy() {
   }
   if (mModule) {
     ::FreeLibrary(reinterpret_cast<HMODULE>(mModule));
+    mModule = 0;
   }
 }
 
+<<<<<<< HEAD
 RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther) {
-  *this = std::forward<RegisteredProxy>(aOther);
+||||||| merged common ancestors
+RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther)
+{
+=======
+RegisteredProxy::~RegisteredProxy() {
+  DeleteFromRegistry(this);
+  Clear();
 }
 
+RegisteredProxy::RegisteredProxy(RegisteredProxy&& aOther)
+    : mModule(0),
+      mClassObject(nullptr),
+      mRegCookie(0),
+      mTypeLib(nullptr)
+#if defined(MOZILLA_INTERNAL_API)
+      ,
+      mIsRegisteredInMTA(false)
+#endif  // defined(MOZILLA_INTERNAL_API)
+{
+>>>>>>> upstream-releases
+  *this = std::forward<RegisteredProxy>(aOther);
+  AddToRegistry(this);
+}
+
+<<<<<<< HEAD
 RegisteredProxy& RegisteredProxy::operator=(RegisteredProxy&& aOther) {
+||||||| merged common ancestors
+RegisteredProxy&
+RegisteredProxy::operator=(RegisteredProxy&& aOther)
+{
+=======
+RegisteredProxy& RegisteredProxy::operator=(RegisteredProxy&& aOther) {
+  Clear();
+
+>>>>>>> upstream-releases
   mModule = aOther.mModule;
   aOther.mModule = 0;
   mClassObject = aOther.mClassObject;
@@ -343,6 +395,11 @@ RegisteredProxy& RegisteredProxy::operator=(RegisteredProxy&& aOther) {
   aOther.mRegCookie = 0;
   mTypeLib = aOther.mTypeLib;
   aOther.mTypeLib = nullptr;
+
+#if defined(MOZILLA_INTERNAL_API)
+  mIsRegisteredInMTA = aOther.mIsRegisteredInMTA;
+#endif  // defined(MOZILLA_INTERNAL_API)
+
   return *this;
 }
 
@@ -383,7 +440,16 @@ static CRITICAL_SECTION* GetMutex() {
   return &mutex;
 }
 
+<<<<<<< HEAD
 /* static */ bool RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo) {
+||||||| merged common ancestors
+/* static */ bool
+RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo)
+{
+=======
+/* static */
+bool RegisteredProxy::Find(REFIID aIid, ITypeInfo** aTypeInfo) {
+>>>>>>> upstream-releases
   AutoCriticalSection lock(GetMutex());
 
   if (!sRegistry) {
@@ -399,7 +465,16 @@ static CRITICAL_SECTION* GetMutex() {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ void RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy) {
+||||||| merged common ancestors
+/* static */ void
+RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy)
+{
+=======
+/* static */
+void RegisteredProxy::AddToRegistry(RegisteredProxy* aProxy) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aProxy);
 
   AutoCriticalSection lock(GetMutex());
@@ -415,10 +490,19 @@ static CRITICAL_SECTION* GetMutex() {
 #endif
   }
 
-  sRegistry->emplaceBack(aProxy);
+  MOZ_ALWAYS_TRUE(sRegistry->emplaceBack(aProxy));
 }
 
+<<<<<<< HEAD
 /* static */ void RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy) {
+||||||| merged common ancestors
+/* static */ void
+RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy)
+{
+=======
+/* static */
+void RegisteredProxy::DeleteFromRegistry(RegisteredProxy* aProxy) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aProxy);
 
   AutoCriticalSection lock(GetMutex());
@@ -449,7 +533,7 @@ void RegisterArrayData(const ArrayData* aArrayData, size_t aLength) {
     ClearOnShutdown(&sArrayData, ShutdownPhase::ShutdownThreads);
   }
 
-  sArrayData->emplaceBack(MakePair(aArrayData, aLength));
+  MOZ_ALWAYS_TRUE(sArrayData->emplaceBack(MakePair(aArrayData, aLength)));
 }
 
 const ArrayData* FindArrayData(REFIID aIid, ULONG aMethodIndex) {

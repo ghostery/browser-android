@@ -6,24 +6,41 @@
 
 #include "SVGAnimatedNumberList.h"
 
-#include "DOMSVGAnimatedNumberList.h"
+#include "mozilla/dom/SVGElement.h"
 #include "mozilla/Move.h"
-#include "nsSVGElement.h"
-#include "nsSVGAttrTearoffTable.h"
-#include "nsSMILValue.h"
+#include "mozilla/SMILValue.h"
+#include "DOMSVGAnimatedNumberList.h"
 #include "SVGNumberListSMILType.h"
+
+using namespace mozilla::dom;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 nsresult SVGAnimatedNumberList::SetBaseValueString(const nsAString &aValue) {
+||||||| merged common ancestors
+nsresult
+SVGAnimatedNumberList::SetBaseValueString(const nsAString& aValue)
+{
+=======
+nsresult SVGAnimatedNumberList::SetBaseValueString(const nsAString& aValue) {
+>>>>>>> upstream-releases
   SVGNumberList newBaseValue;
   nsresult rv = newBaseValue.SetValueFromString(aValue);
   if (NS_FAILED(rv)) {
     return rv;
   }
 
+<<<<<<< HEAD
   DOMSVGAnimatedNumberList *domWrapper =
       DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+  DOMSVGAnimatedNumberList *domWrapper =
+    DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+=======
+  DOMSVGAnimatedNumberList* domWrapper =
+      DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // We must send this notification *before* changing mBaseVal! If the length
     // of our baseVal is being reduced, our baseVal's DOM wrapper list may have
@@ -34,7 +51,7 @@ nsresult SVGAnimatedNumberList::SetBaseValueString(const nsAString &aValue) {
   }
 
   // We don't need to call DidChange* here - we're only called by
-  // nsSVGElement::ParseAttribute under Element::SetAttr,
+  // SVGElement::ParseAttribute under Element::SetAttr,
   // which takes care of notifying.
 
   mIsBaseSet = true;
@@ -47,9 +64,21 @@ nsresult SVGAnimatedNumberList::SetBaseValueString(const nsAString &aValue) {
   return rv;
 }
 
+<<<<<<< HEAD
 void SVGAnimatedNumberList::ClearBaseValue(uint32_t aAttrEnum) {
   DOMSVGAnimatedNumberList *domWrapper =
       DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+void
+SVGAnimatedNumberList::ClearBaseValue(uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedNumberList *domWrapper =
+    DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+=======
+void SVGAnimatedNumberList::ClearBaseValue(uint32_t aAttrEnum) {
+  DOMSVGAnimatedNumberList* domWrapper =
+      DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // We must send this notification *before* changing mBaseVal! (See above.)
     domWrapper->InternalBaseValListWillChangeTo(SVGNumberList());
@@ -59,11 +88,27 @@ void SVGAnimatedNumberList::ClearBaseValue(uint32_t aAttrEnum) {
   // Caller notifies
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedNumberList::SetAnimValue(const SVGNumberList &aNewAnimValue,
                                              nsSVGElement *aElement,
                                              uint32_t aAttrEnum) {
   DOMSVGAnimatedNumberList *domWrapper =
       DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+nsresult
+SVGAnimatedNumberList::SetAnimValue(const SVGNumberList& aNewAnimValue,
+                                    nsSVGElement *aElement,
+                                    uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedNumberList *domWrapper =
+    DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+=======
+nsresult SVGAnimatedNumberList::SetAnimValue(const SVGNumberList& aNewAnimValue,
+                                             SVGElement* aElement,
+                                             uint32_t aAttrEnum) {
+  DOMSVGAnimatedNumberList* domWrapper =
+      DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // A new animation may totally change the number of items in the animVal
     // list, replacing what was essentially a mirror of the baseVal list, or
@@ -97,10 +142,24 @@ nsresult SVGAnimatedNumberList::SetAnimValue(const SVGNumberList &aNewAnimValue,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SVGAnimatedNumberList::ClearAnimValue(nsSVGElement *aElement,
                                            uint32_t aAttrEnum) {
   DOMSVGAnimatedNumberList *domWrapper =
       DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+void
+SVGAnimatedNumberList::ClearAnimValue(nsSVGElement *aElement,
+                                      uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedNumberList *domWrapper =
+    DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+=======
+void SVGAnimatedNumberList::ClearAnimValue(SVGElement* aElement,
+                                           uint32_t aAttrEnum) {
+  DOMSVGAnimatedNumberList* domWrapper =
+      DOMSVGAnimatedNumberList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // When all animation ends, animVal simply mirrors baseVal, which may have
     // a different number of items to the last active animated value. We must
@@ -113,16 +172,44 @@ void SVGAnimatedNumberList::ClearAnimValue(nsSVGElement *aElement,
   aElement->DidAnimateNumberList(aAttrEnum);
 }
 
+<<<<<<< HEAD
 UniquePtr<nsISMILAttr> SVGAnimatedNumberList::ToSMILAttr(
     nsSVGElement *aSVGElement, uint8_t aAttrEnum) {
+||||||| merged common ancestors
+UniquePtr<nsISMILAttr>
+SVGAnimatedNumberList::ToSMILAttr(nsSVGElement *aSVGElement,
+                                  uint8_t aAttrEnum)
+{
+=======
+UniquePtr<SMILAttr> SVGAnimatedNumberList::ToSMILAttr(SVGElement* aSVGElement,
+                                                      uint8_t aAttrEnum) {
+>>>>>>> upstream-releases
   return MakeUnique<SMILAnimatedNumberList>(this, aSVGElement, aAttrEnum);
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedNumberList::SMILAnimatedNumberList::ValueFromString(
     const nsAString &aStr, const dom::SVGAnimationElement * /*aSrcElement*/,
     nsSMILValue &aValue, bool &aPreventCachingOfSandwich) const {
   nsSMILValue val(&SVGNumberListSMILType::sSingleton);
   SVGNumberListAndInfo *nlai = static_cast<SVGNumberListAndInfo *>(val.mU.mPtr);
+||||||| merged common ancestors
+nsresult
+SVGAnimatedNumberList::
+  SMILAnimatedNumberList::ValueFromString(const nsAString& aStr,
+                               const dom::SVGAnimationElement* /*aSrcElement*/,
+                               nsSMILValue& aValue,
+                               bool& aPreventCachingOfSandwich) const
+{
+  nsSMILValue val(&SVGNumberListSMILType::sSingleton);
+  SVGNumberListAndInfo *nlai = static_cast<SVGNumberListAndInfo*>(val.mU.mPtr);
+=======
+nsresult SVGAnimatedNumberList::SMILAnimatedNumberList::ValueFromString(
+    const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
+    SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
+  SMILValue val(&SVGNumberListSMILType::sSingleton);
+  SVGNumberListAndInfo* nlai = static_cast<SVGNumberListAndInfo*>(val.mU.mPtr);
+>>>>>>> upstream-releases
   nsresult rv = nlai->SetValueFromString(aStr);
   if (NS_SUCCEEDED(rv)) {
     nlai->SetInfo(mElement);
@@ -132,15 +219,31 @@ nsresult SVGAnimatedNumberList::SMILAnimatedNumberList::ValueFromString(
   return rv;
 }
 
+<<<<<<< HEAD
 nsSMILValue SVGAnimatedNumberList::SMILAnimatedNumberList::GetBaseValue()
     const {
+||||||| merged common ancestors
+nsSMILValue
+SVGAnimatedNumberList::SMILAnimatedNumberList::GetBaseValue() const
+{
+=======
+SMILValue SVGAnimatedNumberList::SMILAnimatedNumberList::GetBaseValue() const {
+>>>>>>> upstream-releases
   // To benefit from Return Value Optimization and avoid copy constructor calls
   // due to our use of return-by-value, we must return the exact same object
   // from ALL return points. This function must only return THIS variable:
-  nsSMILValue val;
+  SMILValue val;
 
+<<<<<<< HEAD
   nsSMILValue tmp(&SVGNumberListSMILType::sSingleton);
   SVGNumberListAndInfo *nlai = static_cast<SVGNumberListAndInfo *>(tmp.mU.mPtr);
+||||||| merged common ancestors
+  nsSMILValue tmp(&SVGNumberListSMILType::sSingleton);
+  SVGNumberListAndInfo *nlai = static_cast<SVGNumberListAndInfo*>(tmp.mU.mPtr);
+=======
+  SMILValue tmp(&SVGNumberListSMILType::sSingleton);
+  SVGNumberListAndInfo* nlai = static_cast<SVGNumberListAndInfo*>(tmp.mU.mPtr);
+>>>>>>> upstream-releases
   nsresult rv = nlai->CopyFrom(mVal->mBaseVal);
   if (NS_SUCCEEDED(rv)) {
     nlai->SetInfo(mElement);
@@ -149,13 +252,31 @@ nsSMILValue SVGAnimatedNumberList::SMILAnimatedNumberList::GetBaseValue()
   return val;
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedNumberList::SMILAnimatedNumberList::SetAnimValue(
     const nsSMILValue &aValue) {
+||||||| merged common ancestors
+nsresult
+SVGAnimatedNumberList::SMILAnimatedNumberList::SetAnimValue(const nsSMILValue& aValue)
+{
+=======
+nsresult SVGAnimatedNumberList::SMILAnimatedNumberList::SetAnimValue(
+    const SMILValue& aValue) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aValue.mType == &SVGNumberListSMILType::sSingleton,
                "Unexpected type to assign animated value");
   if (aValue.mType == &SVGNumberListSMILType::sSingleton) {
+<<<<<<< HEAD
     mVal->SetAnimValue(*static_cast<SVGNumberListAndInfo *>(aValue.mU.mPtr),
                        mElement, mAttrEnum);
+||||||| merged common ancestors
+    mVal->SetAnimValue(*static_cast<SVGNumberListAndInfo*>(aValue.mU.mPtr),
+                       mElement,
+                       mAttrEnum);
+=======
+    mVal->SetAnimValue(*static_cast<SVGNumberListAndInfo*>(aValue.mU.mPtr),
+                       mElement, mAttrEnum);
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }

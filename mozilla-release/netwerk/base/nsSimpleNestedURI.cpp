@@ -99,9 +99,21 @@ nsSimpleNestedURI::Write(nsIObjectOutputStream* aStream) {
   return rv;
 }
 
+<<<<<<< HEAD
 // nsIIPCSerializableURI
 void nsSimpleNestedURI::Serialize(mozilla::ipc::URIParams& aParams) {
   using namespace mozilla::ipc;
+||||||| merged common ancestors
+// nsIIPCSerializableURI
+void
+nsSimpleNestedURI::Serialize(mozilla::ipc::URIParams& aParams)
+{
+    using namespace mozilla::ipc;
+=======
+NS_IMETHODIMP_(void)
+nsSimpleNestedURI::Serialize(mozilla::ipc::URIParams& aParams) {
+  using namespace mozilla::ipc;
+>>>>>>> upstream-releases
 
   SimpleNestedURIParams params;
   URIParams simpleParams;
@@ -146,6 +158,7 @@ nsSimpleNestedURI::GetInnermostURI(nsIURI** uri) {
 }
 
 // nsSimpleURI overrides
+<<<<<<< HEAD
 /* virtual */ nsresult nsSimpleNestedURI::EqualsInternal(
     nsIURI* other, nsSimpleURI::RefHandlingEnum refHandlingMode, bool* result) {
   *result = false;
@@ -161,6 +174,36 @@ nsSimpleNestedURI::GetInnermostURI(nsIURI** uri) {
       if (nest) {
         nsCOMPtr<nsIURI> otherInner;
         rv = nest->GetInnerURI(getter_AddRefs(otherInner));
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsSimpleNestedURI::EqualsInternal(nsIURI* other,
+                                  nsSimpleURI::RefHandlingEnum refHandlingMode,
+                                  bool* result)
+{
+    *result = false;
+    NS_ENSURE_TRUE(mInnerURI, NS_ERROR_NOT_INITIALIZED);
+
+    if (other) {
+        bool correctScheme;
+        nsresult rv = other->SchemeIs(mScheme.get(), &correctScheme);
+=======
+/* virtual */
+nsresult nsSimpleNestedURI::EqualsInternal(
+    nsIURI* other, nsSimpleURI::RefHandlingEnum refHandlingMode, bool* result) {
+  *result = false;
+  NS_ENSURE_TRUE(mInnerURI, NS_ERROR_NOT_INITIALIZED);
+
+  if (other) {
+    bool correctScheme;
+    nsresult rv = other->SchemeIs(mScheme.get(), &correctScheme);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    if (correctScheme) {
+      nsCOMPtr<nsINestedURI> nest = do_QueryInterface(other);
+      if (nest) {
+        nsCOMPtr<nsIURI> otherInner;
+        rv = nest->GetInnerURI(getter_AddRefs(otherInner));
+>>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, rv);
 
         return (refHandlingMode == eHonorRef)
@@ -173,6 +216,7 @@ nsSimpleNestedURI::GetInnermostURI(nsIURI** uri) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsSimpleURI* nsSimpleNestedURI::StartClone(
     nsSimpleURI::RefHandlingEnum refHandlingMode, const nsACString& newRef) {
   NS_ENSURE_TRUE(mInnerURI, nullptr);
@@ -195,6 +239,56 @@ nsSimpleNestedURI::GetInnermostURI(nsIURI** uri) {
   SetRefOnClone(url, refHandlingMode, newRef);
 
   return url;
+||||||| merged common ancestors
+/* virtual */ nsSimpleURI*
+nsSimpleNestedURI::StartClone(nsSimpleURI::RefHandlingEnum refHandlingMode,
+                              const nsACString& newRef)
+{
+    NS_ENSURE_TRUE(mInnerURI, nullptr);
+
+    nsCOMPtr<nsIURI> innerClone;
+    nsresult rv = NS_OK;
+    if (refHandlingMode == eHonorRef) {
+        innerClone = mInnerURI;
+    } else if (refHandlingMode == eReplaceRef) {
+        rv = NS_GetURIWithNewRef(mInnerURI, newRef, getter_AddRefs(innerClone));
+    } else {
+        rv = NS_GetURIWithoutRef(mInnerURI, getter_AddRefs(innerClone));
+    }
+
+    if (NS_FAILED(rv)) {
+        return nullptr;
+    }
+
+    nsSimpleNestedURI* url = new nsSimpleNestedURI(innerClone);
+    SetRefOnClone(url, refHandlingMode, newRef);
+
+    return url;
+=======
+/* virtual */
+nsSimpleURI* nsSimpleNestedURI::StartClone(
+    nsSimpleURI::RefHandlingEnum refHandlingMode, const nsACString& newRef) {
+  NS_ENSURE_TRUE(mInnerURI, nullptr);
+
+  nsCOMPtr<nsIURI> innerClone;
+  nsresult rv = NS_OK;
+  if (refHandlingMode == eHonorRef) {
+    innerClone = mInnerURI;
+  } else if (refHandlingMode == eReplaceRef) {
+    rv = NS_GetURIWithNewRef(mInnerURI, newRef, getter_AddRefs(innerClone));
+  } else {
+    rv = NS_GetURIWithoutRef(mInnerURI, getter_AddRefs(innerClone));
+  }
+
+  if (NS_FAILED(rv)) {
+    return nullptr;
+  }
+
+  nsSimpleNestedURI* url = new nsSimpleNestedURI(innerClone);
+  SetRefOnClone(url, refHandlingMode, newRef);
+
+  return url;
+>>>>>>> upstream-releases
 }
 
 // nsIClassInfo overrides

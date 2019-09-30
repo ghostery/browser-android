@@ -28,6 +28,7 @@ class CopyableCanvasRenderer;
 class PersistentBufferProvider;
 class WebRenderCanvasRendererAsync;
 
+<<<<<<< HEAD
 struct CanvasInitializeData {
   CanvasInitializeData()
       : mBufferProvider(nullptr),
@@ -41,13 +42,45 @@ struct CanvasInitializeData {
         mSize(0, 0),
         mHasAlpha(false),
         mIsGLAlphaPremult(true) {}
+||||||| merged common ancestors
+struct CanvasInitializeData {
+  CanvasInitializeData()
+    : mBufferProvider(nullptr)
+    , mGLContext(nullptr)
+    , mRenderer(nullptr)
+    , mPreTransCallback(nullptr)
+    , mPreTransCallbackData(nullptr)
+    , mDidTransCallback(nullptr)
+    , mDidTransCallbackData(nullptr)
+    , mFrontbufferGLTex(0)
+    , mSize(0,0)
+    , mHasAlpha(false)
+    , mIsGLAlphaPremult(true)
+  { }
+=======
+struct CanvasInitializeData final {
+  CanvasInitializeData();
+  ~CanvasInitializeData();
+>>>>>>> upstream-releases
 
   // One of these three must be specified for Canvas2D, but never more than one
+<<<<<<< HEAD
   PersistentBufferProvider*
       mBufferProvider;  // A BufferProvider for the Canvas contents
   mozilla::gl::GLContext* mGLContext;  // or this, for GL.
   AsyncCanvasRenderer* mRenderer;      // or this, for OffscreenCanvas
+||||||| merged common ancestors
+  PersistentBufferProvider* mBufferProvider; // A BufferProvider for the Canvas contents
+  mozilla::gl::GLContext* mGLContext; // or this, for GL.
+  AsyncCanvasRenderer* mRenderer; // or this, for OffscreenCanvas
+=======
+  RefPtr<PersistentBufferProvider>
+      mBufferProvider;  // A BufferProvider for the Canvas contents
+  RefPtr<mozilla::gl::GLContext> mGLContext;  // or this, for GL.
+  RefPtr<AsyncCanvasRenderer> mRenderer;      // or this, for OffscreenCanvas
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   typedef void (*TransactionCallback)(void* closureData);
   TransactionCallback mPreTransCallback;
   void* mPreTransCallbackData;
@@ -56,15 +89,31 @@ struct CanvasInitializeData {
 
   // Frontbuffer override
   uint32_t mFrontbufferGLTex;
+||||||| merged common ancestors
+  typedef void (* TransactionCallback)(void* closureData);
+  TransactionCallback mPreTransCallback;
+  void* mPreTransCallbackData;
+  TransactionCallback mDidTransCallback;
+  void* mDidTransCallbackData;
+
+  // Frontbuffer override
+  uint32_t mFrontbufferGLTex;
+=======
+  typedef void (*TransactionCallback)(void* closureData);
+  TransactionCallback mPreTransCallback = nullptr;
+  void* mPreTransCallbackData = nullptr;
+  TransactionCallback mDidTransCallback = nullptr;
+  void* mDidTransCallbackData = nullptr;
+>>>>>>> upstream-releases
 
   // The size of the canvas content
-  gfx::IntSize mSize;
+  gfx::IntSize mSize = {0, 0};
 
   // Whether the canvas drawingbuffer has an alpha channel.
-  bool mHasAlpha;
+  bool mHasAlpha = false;
 
   // Whether mGLContext contains data that is alpha-premultiplied.
-  bool mIsGLAlphaPremult;
+  bool mIsGLAlphaPremult = true;
 };
 
 // Based class which used for canvas rendering. There are many derived classes

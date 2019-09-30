@@ -43,5 +43,11 @@ sw_CD{
             "Faranga CFA BCEAO",
         }
     }
+<<<<<<< HEAD
     Version{"2.1.43.65"}
+||||||| merged common ancestors
+    Version{"2.1.39.11"}
+=======
+    Version{"2.1.47.71"}
+>>>>>>> upstream-releases
 }

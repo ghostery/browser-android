@@ -5,8 +5,8 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1473515
 <html>
 <head>
   <title>Test for Bug 1473515</title>
-  <script type="application/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
-  <script type="application/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
 </head>
 <body>
@@ -29,6 +29,7 @@ SimpleTest.waitForFocus(function() {
     document.getElementById("textarea"),
   ];
   for (let editableElement of editableElements) {
+<<<<<<< HEAD
     function checkInputEvent(aEvent, aDescription) {
       ok(aEvent instanceof InputEvent,
          `"input" event should be dispatched with InputEvent interface ${aDescription}`);
@@ -44,31 +45,81 @@ SimpleTest.waitForFocus(function() {
     }
     editableElement.addEventListener("input", onInput);
 
+||||||| merged common ancestors
+=======
+    function checkInputEvent(aEvent, aInputType, aData, aDescription) {
+      ok(aEvent instanceof InputEvent,
+         `"input" event should be dispatched with InputEvent interface ${aDescription}`);
+      is(aEvent.cancelable, false,
+         `"input" event should be never cancelable ${aDescription}`);
+      is(aEvent.bubbles, true,
+         `"input" event should always bubble ${aDescription}`);
+      is(aEvent.inputType, aInputType,
+         `inputType should be "${aInputType}" ${aDescription}`);
+      is(aEvent.data, aData,
+         `data should be ${aData} ${aDescription}`);
+      is(aEvent.dataTransfer, null,
+         `dataTransfer should be null ${aDescription}`);
+    }
+
+    let inputEvents = [];
+    function onInput(aEvent) {
+      inputEvents.push(aEvent);
+    }
+    editableElement.addEventListener("input", onInput);
+
+>>>>>>> upstream-releases
     editableElement.focus();
 
     inputEvents = [];
     synthesizeKey("a");
+<<<<<<< HEAD
     is(inputEvents.length, 1,
        `Only one "input" event should be fired when inserting "a" with key on <${editableElement.tagName.toLowerCase()}> element`);
     checkInputEvent(inputEvents[0], `when inserting "a" with key on <${editableElement.tagName.toLowerCase()}> element`);
 
     inputEvents = [];
+||||||| merged common ancestors
+=======
+    is(inputEvents.length, 1,
+       `Only one "input" event should be fired when inserting "a" with key on <${editableElement.tagName.toLowerCase()}> element`);
+    checkInputEvent(inputEvents[0], "insertText", "a", `when inserting "a" with key on <${editableElement.tagName.toLowerCase()}> element`);
+
+    inputEvents = [];
+>>>>>>> upstream-releases
     synthesizeKey("c");
+<<<<<<< HEAD
     is(inputEvents.length, 1,
        `Only one "input" event should be fired when inserting "c" with key on <${editableElement.tagName.toLowerCase()}> element`);
     checkInputEvent(inputEvents[0], `when inserting "c" with key on <${editableElement.tagName.toLowerCase()}> element`);
 
     inputEvents = [];
+||||||| merged common ancestors
+=======
+    is(inputEvents.length, 1,
+       `Only one "input" event should be fired when inserting "c" with key on <${editableElement.tagName.toLowerCase()}> element`);
+    checkInputEvent(inputEvents[0], "insertText", "c", `when inserting "c" with key on <${editableElement.tagName.toLowerCase()}> element`);
+
+    inputEvents = [];
+>>>>>>> upstream-releases
     synthesizeKey("KEY_ArrowLeft");
     is(inputEvents.length, 0,
        `No "input" event should be fired when pressing "ArrowLeft" key on <${editableElement.tagName.toLowerCase()}> element`);
 
     inputEvents = [];
     synthesizeKey("b");
+<<<<<<< HEAD
     is(inputEvents.length, 1,
        `Only one "input" event should be fired when inserting "b" with key on <${editableElement.tagName.toLowerCase()}> element`);
     checkInputEvent(inputEvents[0], `when inserting "b" with key on <${editableElement.tagName.toLowerCase()}> element`);
 
+||||||| merged common ancestors
+=======
+    is(inputEvents.length, 1,
+       `Only one "input" event should be fired when inserting "b" with key on <${editableElement.tagName.toLowerCase()}> element`);
+    checkInputEvent(inputEvents[0], "insertText", "b", `when inserting "b" with key on <${editableElement.tagName.toLowerCase()}> element`);
+
+>>>>>>> upstream-releases
     let editor = SpecialPowers.wrap(editableElement).editor;
     let transactionManager = editor.transactionManager;
     is(transactionManager.numberOfUndoItems, 2,
@@ -89,17 +140,33 @@ SimpleTest.waitForFocus(function() {
 
     inputEvents = [];
     synthesizeKey("a");
+<<<<<<< HEAD
     is(inputEvents.length, 1,
        `Only one "input" event should be fired when inserting "a" with key again on <${editableElement.tagName.toLowerCase()}> element`);
     checkInputEvent(inputEvents[0], `when inserting "a" with key again on <${editableElement.tagName.toLowerCase()}> element`);
 
     inputEvents = [];
+||||||| merged common ancestors
+=======
+    is(inputEvents.length, 1,
+       `Only one "input" event should be fired when inserting "a" with key again on <${editableElement.tagName.toLowerCase()}> element`);
+    checkInputEvent(inputEvents[0], "insertText", "a", `when inserting "a" with key again on <${editableElement.tagName.toLowerCase()}> element`);
+
+    inputEvents = [];
+>>>>>>> upstream-releases
     synthesizeKey("z", { accelKey: true });
     is(editableElement.value, "def",
        editableElement.tagName + ": undo should work after setting value");
+<<<<<<< HEAD
     is(inputEvents.length, 1,
        `Only one "input" event should be fired when undoing on <${editableElement.tagName.toLowerCase()}> element`);
     checkInputEvent(inputEvents[0], `when undoing on <${editableElement.tagName.toLowerCase()}> element`);
+||||||| merged common ancestors
+=======
+    is(inputEvents.length, 1,
+       `Only one "input" event should be fired when undoing on <${editableElement.tagName.toLowerCase()}> element`);
+    checkInputEvent(inputEvents[0], "historyUndo", null, `when undoing on <${editableElement.tagName.toLowerCase()}> element`);
+>>>>>>> upstream-releases
 
     // Disable undo/redo.
     editor.enableUndo(0);

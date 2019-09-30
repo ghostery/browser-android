@@ -13,6 +13,7 @@
 
 #include "jit/BaselineJIT.h"
 #include "jit/IonAnalysis.h"
+#include "jit/JitScript.h"
 #include "vm/EnvironmentObject.h"
 #include "vm/RegExpObject.h"
 #include "wasm/AsmJS.h"
@@ -77,6 +78,7 @@ inline JSFunction* JSScript::functionDelazifying() const {
     if (lazyScript && !lazyScript->maybeScript()) {
       lazyScript->initScript(const_cast<JSScript*>(this));
     }
+<<<<<<< HEAD
   }
   return fun;
 }
@@ -146,8 +148,50 @@ inline js::Shape* JSScript::initialEnvironmentShape() const {
     return scope->environmentShape();
   }
   return nullptr;
+||||||| merged common ancestors
+    return script->function_;
 }
 
+} // namespace js
+
+inline JSFunction*
+JSScript::functionDelazifying() const
+{
+    JSFunction* fun = function();
+    if (fun && fun->isInterpretedLazy()) {
+        fun->setUnlazifiedScript(const_cast<JSScript*>(this));
+        // If this script has a LazyScript, make sure the LazyScript has a
+        // reference to the script when delazifying its canonical function.
+        if (lazyScript && !lazyScript->maybeScript()) {
+            lazyScript->initScript(const_cast<JSScript*>(this));
+        }
+    }
+    return fun;
+}
+
+inline void
+JSScript::ensureNonLazyCanonicalFunction()
+{
+    // Infallibly delazify the canonical script.
+    JSFunction* fun = function();
+    if (fun && fun->isInterpretedLazy()) {
+        functionDelazifying();
+    }
+=======
+  }
+  return fun;
+}
+
+inline void JSScript::ensureNonLazyCanonicalFunction() {
+  // Infallibly delazify the canonical script.
+  JSFunction* fun = function();
+  if (fun && fun->isInterpretedLazy()) {
+    functionDelazifying();
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 inline JSPrincipals* JSScript::principals() { return realm()->principals(); }
 
 inline void JSScript::setBaselineScript(
@@ -159,6 +203,246 @@ inline void JSScript::setBaselineScript(
   baseline = baselineScript;
   resetWarmUpResetCounter();
   updateJitCodeRaw(rt);
+||||||| merged common ancestors
+inline JSFunction*
+JSScript::getFunction(size_t index)
+{
+    JSObject* obj = getObject(index);
+    MOZ_RELEASE_ASSERT(obj->is<JSFunction>(), "Script object is not JSFunction");
+    JSFunction* fun = &obj->as<JSFunction>();
+    MOZ_ASSERT_IF(fun->isNative(), IsAsmJSModuleNative(fun->native()));
+    return fun;
+}
+
+inline js::RegExpObject*
+JSScript::getRegExp(size_t index)
+{
+    JSObject* obj = getObject(index);
+    MOZ_RELEASE_ASSERT(obj->is<js::RegExpObject>(), "Script object is not RegExpObject");
+    return &obj->as<js::RegExpObject>();
+}
+
+inline js::RegExpObject*
+JSScript::getRegExp(jsbytecode* pc)
+{
+    JSObject* obj = getObject(pc);
+    MOZ_RELEASE_ASSERT(obj->is<js::RegExpObject>(), "Script object is not RegExpObject");
+    return &obj->as<js::RegExpObject>();
+}
+
+inline js::GlobalObject&
+JSScript::global() const
+{
+    /*
+     * A JSScript always marks its realm's global (via bindings) so we can
+     * assert that maybeGlobal is non-null here.
+     */
+    return *realm()->maybeGlobal();
+}
+
+inline js::LexicalScope*
+JSScript::maybeNamedLambdaScope() const
+{
+    // Dynamically created Functions via the 'new Function' are considered
+    // named lambdas but they do not have the named lambda scope of
+    // textually-created named lambdas.
+    js::Scope* scope = outermostScope();
+    if (scope->kind() == js::ScopeKind::NamedLambda ||
+        scope->kind() == js::ScopeKind::StrictNamedLambda)
+    {
+        MOZ_ASSERT_IF(!strict(), scope->kind() == js::ScopeKind::NamedLambda);
+        MOZ_ASSERT_IF(strict(), scope->kind() == js::ScopeKind::StrictNamedLambda);
+        return &scope->as<js::LexicalScope>();
+    }
+    return nullptr;
+=======
+inline JSFunction* JSScript::getFunction(size_t index) {
+  JSObject* obj = getObject(index);
+  MOZ_RELEASE_ASSERT(obj->is<JSFunction>(), "Script object is not JSFunction");
+  JSFunction* fun = &obj->as<JSFunction>();
+  MOZ_ASSERT_IF(fun->isNative(), IsAsmJSModuleNative(fun->native()));
+  return fun;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+inline bool JSScript::ensureHasAnalyzedArgsUsage(JSContext* cx) {
+  if (analyzedArgsUsage()) {
+    return true;
+  }
+  return js::jit::AnalyzeArgumentsUsage(cx, this);
+||||||| merged common ancestors
+inline js::Shape*
+JSScript::initialEnvironmentShape() const
+{
+    js::Scope* scope = bodyScope();
+    if (scope->is<js::FunctionScope>()) {
+        if (js::Shape* envShape = scope->environmentShape()) {
+            return envShape;
+        }
+        if (js::Scope* namedLambdaScope = maybeNamedLambdaScope()) {
+            return namedLambdaScope->environmentShape();
+        }
+    } else if (scope->is<js::EvalScope>()) {
+        return scope->environmentShape();
+    }
+    return nullptr;
+=======
+inline JSFunction* JSScript::getFunction(jsbytecode* pc) {
+  return getFunction(GET_UINT32_INDEX(pc));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+inline bool JSScript::isDebuggee() const {
+  return realm_->debuggerObservesAllExecution() || hasDebugScript();
+||||||| merged common ancestors
+inline JSPrincipals*
+JSScript::principals()
+{
+    return realm()->principals();
+=======
+inline js::RegExpObject* JSScript::getRegExp(size_t index) {
+  JSObject* obj = getObject(index);
+  MOZ_RELEASE_ASSERT(obj->is<js::RegExpObject>(),
+                     "Script object is not RegExpObject");
+  return &obj->as<js::RegExpObject>();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+inline bool JSScript::trackRecordReplayProgress() const {
+  // Progress is only tracked when recording or replaying, and only for
+  // scripts associated with the main thread's runtime. Whether self hosted
+  // scripts execute may depend on performed Ion optimizations (for example,
+  // self hosted TypedObject logic), so they are ignored.
+  return MOZ_UNLIKELY(mozilla::recordreplay::IsRecordingOrReplaying()) &&
+         !runtimeFromAnyThread()->parentRuntime && !selfHosted() &&
+         mozilla::recordreplay::ShouldUpdateProgressCounter(filename());
+||||||| merged common ancestors
+inline void
+JSScript::setBaselineScript(JSRuntime* rt, js::jit::BaselineScript* baselineScript)
+{
+    if (hasBaselineScript()) {
+        js::jit::BaselineScript::writeBarrierPre(zone(), baseline);
+    }
+    MOZ_ASSERT(!ion || ion == ION_DISABLED_SCRIPT);
+    baseline = baselineScript;
+    resetWarmUpResetCounter();
+    updateJitCodeRaw(rt);
+=======
+inline js::RegExpObject* JSScript::getRegExp(jsbytecode* pc) {
+  JSObject* obj = getObject(pc);
+  MOZ_RELEASE_ASSERT(obj->is<js::RegExpObject>(),
+                     "Script object is not RegExpObject");
+  return &obj->as<js::RegExpObject>();
+}
+
+inline js::GlobalObject& JSScript::global() const {
+  /*
+   * A JSScript always marks its realm's global so we can assert it's non-null
+   * here. We don't need a read barrier here for the same reason
+   * JSObject::nonCCWGlobal doesn't need one.
+   */
+  return *realm()->unsafeUnbarrieredMaybeGlobal();
+}
+
+inline bool JSScript::hasGlobal(const js::GlobalObject* global) const {
+  return global == realm()->unsafeUnbarrieredMaybeGlobal();
+}
+
+inline js::LexicalScope* JSScript::maybeNamedLambdaScope() const {
+  // Dynamically created Functions via the 'new Function' are considered
+  // named lambdas but they do not have the named lambda scope of
+  // textually-created named lambdas.
+  js::Scope* scope = outermostScope();
+  if (scope->kind() == js::ScopeKind::NamedLambda ||
+      scope->kind() == js::ScopeKind::StrictNamedLambda) {
+    MOZ_ASSERT_IF(!strict(), scope->kind() == js::ScopeKind::NamedLambda);
+    MOZ_ASSERT_IF(strict(), scope->kind() == js::ScopeKind::StrictNamedLambda);
+    return &scope->as<js::LexicalScope>();
+  }
+  return nullptr;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+inline js::jit::ICScript* JSScript::icScript() const {
+  MOZ_ASSERT(hasICScript());
+  return types_->icScript();
+||||||| merged common ancestors
+inline bool
+JSScript::ensureHasAnalyzedArgsUsage(JSContext* cx)
+{
+    if (analyzedArgsUsage()) {
+        return true;
+    }
+    return js::jit::AnalyzeArgumentsUsage(cx, this);
+}
+
+inline bool
+JSScript::isDebuggee() const
+{
+    return realm_->debuggerObservesAllExecution() || bitFields_.hasDebugScript_;
+}
+
+inline bool
+JSScript::trackRecordReplayProgress() const
+{
+    // Progress is only tracked when recording or replaying, and only for
+    // scripts associated with the main thread's runtime. Whether self hosted
+    // scripts execute may depend on performed Ion optimizations (for example,
+    // self hosted TypedObject logic), so they are ignored. Some scripts are
+    // internal to record/replay and run non-deterministically, so are also
+    // ignored.
+    return MOZ_UNLIKELY(mozilla::recordreplay::IsRecordingOrReplaying())
+        && !runtimeFromAnyThread()->parentRuntime
+        && !selfHosted()
+        && !mozilla::recordreplay::IsInternalScript(filename());
+=======
+inline js::Shape* JSScript::initialEnvironmentShape() const {
+  js::Scope* scope = bodyScope();
+  if (scope->is<js::FunctionScope>()) {
+    if (js::Shape* envShape = scope->environmentShape()) {
+      return envShape;
+    }
+    if (js::Scope* namedLambdaScope = maybeNamedLambdaScope()) {
+      return namedLambdaScope->environmentShape();
+    }
+  } else if (scope->is<js::EvalScope>()) {
+    return scope->environmentShape();
+  }
+  return nullptr;
+}
+
+inline JSPrincipals* JSScript::principals() { return realm()->principals(); }
+
+inline void JSScript::setBaselineScript(
+    JSRuntime* rt, js::jit::BaselineScript* baselineScript) {
+  if (hasBaselineScript()) {
+    js::jit::BaselineScript::writeBarrierPre(zone(), baseline);
+    clearBaselineScript();
+  }
+  MOZ_ASSERT(!ion || ion == ION_DISABLED_SCRIPT);
+
+  baseline = baselineScript;
+  if (hasBaselineScript()) {
+    AddCellMemory(this, baseline->allocBytes(), js::MemoryUse::BaselineScript);
+  }
+  resetWarmUpResetCounter();
+  updateJitCodeRaw(rt);
+}
+
+inline void JSScript::clearBaselineScript() {
+  MOZ_ASSERT(hasBaselineScript());
+  RemoveCellMemory(this, baseline->allocBytes(), js::MemoryUse::BaselineScript);
+  baseline = nullptr;
+}
+
+inline void JSScript::clearIonScript() {
+  MOZ_ASSERT(hasIonScript());
+  RemoveCellMemory(this, ion->allocBytes(), js::MemoryUse::IonScript);
+  ion = nullptr;
 }
 
 inline bool JSScript::ensureHasAnalyzedArgsUsage(JSContext* cx) {
@@ -170,21 +454,7 @@ inline bool JSScript::ensureHasAnalyzedArgsUsage(JSContext* cx) {
 
 inline bool JSScript::isDebuggee() const {
   return realm_->debuggerObservesAllExecution() || hasDebugScript();
-}
-
-inline bool JSScript::trackRecordReplayProgress() const {
-  // Progress is only tracked when recording or replaying, and only for
-  // scripts associated with the main thread's runtime. Whether self hosted
-  // scripts execute may depend on performed Ion optimizations (for example,
-  // self hosted TypedObject logic), so they are ignored.
-  return MOZ_UNLIKELY(mozilla::recordreplay::IsRecordingOrReplaying()) &&
-         !runtimeFromAnyThread()->parentRuntime && !selfHosted() &&
-         mozilla::recordreplay::ShouldUpdateProgressCounter(filename());
-}
-
-inline js::jit::ICScript* JSScript::icScript() const {
-  MOZ_ASSERT(hasICScript());
-  return types_->icScript();
+>>>>>>> upstream-releases
 }
 
 #endif /* vm_JSScript_inl_h */

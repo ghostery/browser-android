@@ -38,7 +38,7 @@ class StrokeOptionsCommand : public DrawingCommand {
     }
   }
 
-  virtual ~StrokeOptionsCommand() {}
+  virtual ~StrokeOptionsCommand() = default;
 
  protected:
   StrokeOptions mStrokeOptions;
@@ -125,7 +125,14 @@ class DrawSurfaceCommand : public DrawingCommand {
     aDT->DrawSurface(mSurface, mDest, mSource, mSurfOptions, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[DrawSurface surf=" << mSurface;
     aStream << " dest=" << mDest;
     aStream << " src=" << mSource;
@@ -171,7 +178,14 @@ class DrawSurfaceWithShadowCommand : public DrawingCommand {
                                mOperator);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[DrawSurfaceWithShadow surf=" << mSurface;
     aStream << " dest=" << mDest;
     aStream << " color=" << mColor;
@@ -223,7 +237,14 @@ class DrawFilterCommand : public DrawingCommand {
     aDT->DrawFilter(filter, mSourceRect, mDestPoint, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[DrawFilter surf=" << mFilter;
     aStream << " src=" << mSourceRect;
     aStream << " dest=" << mDestPoint;
@@ -255,7 +276,14 @@ class ClearRectCommand : public DrawingCommand {
     aDT->ClearRect(mRect);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[ClearRect rect=" << mRect << "]";
   }
 
@@ -291,7 +319,14 @@ class CopySurfaceCommand : public DrawingCommand {
                      IntPoint(uint32_t(dest.x), uint32_t(dest.y)));
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[CopySurface surf=" << mSurface;
     aStream << " src=" << mSourceRect;
     aStream << " dest=" << mDestination;
@@ -323,7 +358,14 @@ class CopyRectCommand : public DrawingCommand {
     aDT->CopyRect(mSourceRect, mDestination);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[CopyRect src=" << mSourceRect;
     aStream << " dest=" << mDestination;
     aStream << "]";
@@ -353,7 +395,14 @@ class FillRectCommand : public DrawingCommand {
     aDT->FillRect(mRect, mPattern, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[FillRect rect=" << mRect;
     aStream << " pattern=" << mPattern.Get();
     aStream << " opt=" << mOptions;
@@ -365,6 +414,79 @@ class FillRectCommand : public DrawingCommand {
 
  private:
   Rect mRect;
+  StoredPattern mPattern;
+  DrawOptions mOptions;
+};
+
+<<<<<<< HEAD
+class StrokeRectCommand : public StrokeOptionsCommand {
+ public:
+  StrokeRectCommand(const Rect& aRect, const Pattern& aPattern,
+                    const StrokeOptions& aStrokeOptions,
+                    const DrawOptions& aOptions)
+      : StrokeOptionsCommand(aStrokeOptions),
+        mRect(aRect),
+        mPattern(aPattern),
+        mOptions(aOptions) {}
+||||||| merged common ancestors
+class StrokeRectCommand : public StrokeOptionsCommand
+{
+public:
+  StrokeRectCommand(const Rect& aRect,
+                    const Pattern& aPattern,
+                    const StrokeOptions& aStrokeOptions,
+                    const DrawOptions& aOptions)
+    : StrokeOptionsCommand(aStrokeOptions)
+    , mRect(aRect)
+    , mPattern(aPattern)
+    , mOptions(aOptions)
+  {
+  }
+=======
+class FillRoundedRectCommand : public DrawingCommand {
+ public:
+  FillRoundedRectCommand(const RoundedRect& aRect, const Pattern& aPattern,
+                         const DrawOptions& aOptions)
+      : mRect(aRect), mPattern(aPattern), mOptions(aOptions) {}
+
+  CommandType GetType() const override { return FillRoundedRectCommand::Type; }
+
+  void CloneInto(CaptureCommandList* aList) override {
+    CLONE_INTO(FillRoundedRectCommand)(mRect, mPattern, mOptions);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  CommandType GetType() const override { return StrokeRectCommand::Type; }
+||||||| merged common ancestors
+  CommandType GetType() const override
+  {
+    return StrokeRectCommand::Type;
+  }
+=======
+  void ExecuteOnDT(DrawTarget* aDT, const Matrix*) const override {
+    aDT->FillRoundedRect(mRect, mPattern, mOptions);
+  }
+
+  void Log(TreeLog<>& aStream) const override {
+    aStream << "[FillRoundedRect rect=" << mRect.rect;
+    aStream << " pattern=" << mPattern.Get();
+    aStream << " opt=" << mOptions;
+    aStream << "]";
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void CloneInto(CaptureCommandList* aList) override {
+||||||| merged common ancestors
+  void CloneInto(CaptureCommandList* aList) override
+  {
+=======
+  static const bool AffectsSnapshot = true;
+  static const CommandType Type = CommandType::FILLROUNDEDRECT;
+
+ private:
+  RoundedRect mRect;
   StoredPattern mPattern;
   DrawOptions mOptions;
 };
@@ -382,6 +504,7 @@ class StrokeRectCommand : public StrokeOptionsCommand {
   CommandType GetType() const override { return StrokeRectCommand::Type; }
 
   void CloneInto(CaptureCommandList* aList) override {
+>>>>>>> upstream-releases
     CLONE_INTO(StrokeRectCommand)(mRect, mPattern, mStrokeOptions, mOptions);
   }
 
@@ -389,7 +512,14 @@ class StrokeRectCommand : public StrokeOptionsCommand {
     aDT->StrokeRect(mRect, mPattern, mStrokeOptions, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[StrokeRect rect=" << mRect;
     aStream << " pattern=" << mPattern.Get();
     aStream << " opt=" << mOptions;
@@ -428,7 +558,14 @@ class StrokeLineCommand : public StrokeOptionsCommand {
     aDT->StrokeLine(mStart, mEnd, mPattern, mStrokeOptions, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[StrokeLine start=" << mStart;
     aStream << " end=" << mEnd;
     aStream << " pattern=" << mPattern.Get();
@@ -464,7 +601,14 @@ class FillCommand : public DrawingCommand {
     aDT->Fill(mPath, mPattern, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[FillCommand path=" << mPath;
     aStream << " pattern=" << mPattern.Get();
     aStream << " opt=" << mOptions;
@@ -500,7 +644,14 @@ class StrokeCommand : public StrokeOptionsCommand {
     aDT->Stroke(mPath, mPattern, mStrokeOptions, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[Stroke path=" << mPath;
     aStream << " pattern=" << mPattern.Get();
     aStream << " opt=" << mOptions;
@@ -545,7 +696,14 @@ class FillGlyphsCommand : public DrawingCommand {
     aDT->FillGlyphs(mFont, buf, mPattern, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[FillGlyphs font=" << mFont;
     aStream << " glyphCount=" << mGlyphs.size();
     aStream << " pattern=" << mPattern.Get();
@@ -598,7 +756,14 @@ class StrokeGlyphsCommand : public StrokeOptionsCommand {
     aDT->StrokeGlyphs(mFont, buf, mPattern, mStrokeOptions, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[StrokeGlyphs font=" << mFont;
     aStream << " glyphCount=" << mGlyphs.size();
     aStream << " pattern=" << mPattern.Get();
@@ -632,7 +797,14 @@ class MaskCommand : public DrawingCommand {
     aDT->Mask(mSource, mMask, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[Mask source=" << mSource.Get();
     aStream << " mask=" << mMask.Get();
     aStream << " opt=" << mOptions;
@@ -667,7 +839,14 @@ class MaskSurfaceCommand : public DrawingCommand {
     aDT->MaskSurface(mSource, mMask, mOffset, mOptions);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[Mask source=" << mSource.Get();
     aStream << " mask=" << mMask;
     aStream << " offset=" << &mOffset;
@@ -700,7 +879,14 @@ class PushClipCommand : public DrawingCommand {
     aDT->PushClip(mPath);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[PushClip path=" << mPath << "]";
   }
 
@@ -725,7 +911,14 @@ class PushClipRectCommand : public DrawingCommand {
     aDT->PushClipRect(mRect);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[PushClipRect rect=" << mRect << "]";
   }
 
@@ -760,7 +953,14 @@ class PushLayerCommand : public DrawingCommand {
                    mCopyBackground);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[PushLayer opaque=" << mOpaque;
     aStream << " opacity=" << mOpacity;
     aStream << " mask=" << mMask;
@@ -796,7 +996,16 @@ class PopClipCommand : public DrawingCommand {
     aDT->PopClip();
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override { aStream << "[PopClip]"; }
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[PopClip]";
+  }
+=======
+  void Log(TreeLog<>& aStream) const override { aStream << "[PopClip]"; }
+>>>>>>> upstream-releases
 
   static const bool AffectsSnapshot = false;
   static const CommandType Type = CommandType::POPCLIP;
@@ -816,7 +1025,16 @@ class PopLayerCommand : public DrawingCommand {
     aDT->PopLayer();
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override { aStream << "[PopLayer]"; }
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[PopLayer]";
+  }
+=======
+  void Log(TreeLog<>& aStream) const override { aStream << "[PopLayer]"; }
+>>>>>>> upstream-releases
 
   static const bool AffectsSnapshot = true;
   static const CommandType Type = CommandType::POPLAYER;
@@ -835,8 +1053,15 @@ class SetTransformCommand : public DrawingCommand {
     CLONE_INTO(SetTransformCommand)(mTransform);
   }
 
+<<<<<<< HEAD
   virtual void ExecuteOnDT(DrawTarget* aDT,
                            const Matrix* aMatrix) const override {
+||||||| merged common ancestors
+  virtual void ExecuteOnDT(DrawTarget* aDT, const Matrix* aMatrix) const override
+  {
+=======
+  void ExecuteOnDT(DrawTarget* aDT, const Matrix* aMatrix) const override {
+>>>>>>> upstream-releases
     if (aMatrix) {
       aDT->SetTransform(mTransform * (*aMatrix));
     } else {
@@ -844,7 +1069,14 @@ class SetTransformCommand : public DrawingCommand {
     }
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+=======
+  void Log(TreeLog<>& aStream) const override {
+>>>>>>> upstream-releases
     aStream << "[SetTransform transform=" << mTransform << "]";
   }
 
@@ -870,14 +1102,31 @@ class SetPermitSubpixelAACommand : public DrawingCommand {
     CLONE_INTO(SetPermitSubpixelAACommand)(mPermitSubpixelAA);
   }
 
+<<<<<<< HEAD
   virtual void ExecuteOnDT(DrawTarget* aDT,
                            const Matrix* aMatrix) const override {
+||||||| merged common ancestors
+  virtual void ExecuteOnDT(DrawTarget* aDT, const Matrix* aMatrix) const override
+  {
+=======
+  void ExecuteOnDT(DrawTarget* aDT, const Matrix* aMatrix) const override {
+>>>>>>> upstream-releases
     aDT->SetPermitSubpixelAA(mPermitSubpixelAA);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override {
     aStream << "[SetPermitSubpixelAA permitSubpixelAA=" << mPermitSubpixelAA
             << "]";
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[SetPermitSubpixelAA permitSubpixelAA=" << mPermitSubpixelAA << "]";
+=======
+  void Log(TreeLog<>& aStream) const override {
+    aStream << "[SetPermitSubpixelAA permitSubpixelAA=" << mPermitSubpixelAA
+            << "]";
+>>>>>>> upstream-releases
   }
 
   static const bool AffectsSnapshot = false;
@@ -887,9 +1136,20 @@ class SetPermitSubpixelAACommand : public DrawingCommand {
   bool mPermitSubpixelAA;
 };
 
+<<<<<<< HEAD
 class FlushCommand : public DrawingCommand {
  public:
   explicit FlushCommand() {}
+||||||| merged common ancestors
+class FlushCommand : public DrawingCommand
+{
+public:
+  explicit FlushCommand() {}
+=======
+class FlushCommand : public DrawingCommand {
+ public:
+  FlushCommand() = default;
+>>>>>>> upstream-releases
 
   CommandType GetType() const override { return FlushCommand::Type; }
 
@@ -901,7 +1161,16 @@ class FlushCommand : public DrawingCommand {
     aDT->Flush();
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override { aStream << "[Flush]"; }
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[Flush]";
+  }
+=======
+  void Log(TreeLog<>& aStream) const override { aStream << "[Flush]"; }
+>>>>>>> upstream-releases
 
   static const bool AffectsSnapshot = false;
   static const CommandType Type = CommandType::FLUSH;
@@ -921,7 +1190,16 @@ class BlurCommand : public DrawingCommand {
     aDT->Blur(mBlur);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override { aStream << "[Blur]"; }
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[Blur]";
+  }
+=======
+  void Log(TreeLog<>& aStream) const override { aStream << "[Blur]"; }
+>>>>>>> upstream-releases
 
   static const bool AffectsSnapshot = true;
   static const CommandType Type = CommandType::BLUR;
@@ -944,7 +1222,16 @@ class PadEdgesCommand : public DrawingCommand {
     aDT->PadEdges(mRegion);
   }
 
+<<<<<<< HEAD
   void Log(TreeLog& aStream) const override { aStream << "[PADEDGES]"; }
+||||||| merged common ancestors
+  void Log(TreeLog& aStream) const override
+  {
+    aStream << "[PADEDGES]";
+  }
+=======
+  void Log(TreeLog<>& aStream) const override { aStream << "[PADEDGES]"; }
+>>>>>>> upstream-releases
 
   static const bool AffectsSnapshot = true;
   static const CommandType Type = CommandType::PADEDGES;

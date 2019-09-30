@@ -26,14 +26,26 @@ public:
                        const SkDescriptor*);
     ~SkScalerContext_DW() override;
 
+    // The IDWriteFontFace4 interface is only available in DWrite 3,
+    // so checking if it was found is sufficient to detect DWrite 3.
+    bool isDWrite3() { return bool(getDWriteTypeface()->fDWriteFontFace4); }
+
 protected:
     unsigned generateGlyphCount() override;
     uint16_t generateCharToGlyph(SkUnichar uni) override;
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
+<<<<<<< HEAD
     bool generatePath(SkGlyphID glyph, SkPath* path) override;
     void generateFontMetrics(SkPaint::FontMetrics*) override;
+||||||| merged common ancestors
+    void generatePath(SkGlyphID glyph, SkPath* path) override;
+    void generateFontMetrics(SkPaint::FontMetrics*) override;
+=======
+    bool generatePath(SkGlyphID glyph, SkPath* path) override;
+    void generateFontMetrics(SkFontMetrics*) override;
+>>>>>>> upstream-releases
 
 private:
     const void* drawDWMask(const SkGlyph& glyph,

@@ -31,11 +31,23 @@ class BasicImageLayer : public ImageLayer, public BasicImplData {
     MOZ_COUNT_CTOR(BasicImageLayer);
   }
 
+<<<<<<< HEAD
  protected:
   ~BasicImageLayer() override { MOZ_COUNT_DTOR(BasicImageLayer); }
 
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+||||||| merged common ancestors
+public:
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override
+  {
+=======
+ protected:
+  virtual ~BasicImageLayer() { MOZ_COUNT_DTOR(BasicImageLayer); }
+
+ public:
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+>>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ImageLayer::SetVisibleRegion(aRegion);

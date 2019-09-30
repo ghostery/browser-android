@@ -543,7 +543,14 @@ nsPersistentProperties::Has(const char* aProp, bool* aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPersistentProperties::GetKeys(uint32_t* aCount, char*** aKeys) {
+||||||| merged common ancestors
+nsPersistentProperties::GetKeys(uint32_t* aCount, char*** aKeys)
+{
+=======
+nsPersistentProperties::GetKeys(nsTArray<nsCString>& aKeys) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 

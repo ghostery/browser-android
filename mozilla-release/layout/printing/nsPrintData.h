@@ -18,10 +18,12 @@
 #include "nsTArray.h"
 #include "nsCOMArray.h"
 
-// Classes
 class nsPrintObject;
-class nsPrintPreviewListener;
 class nsIWebProgressListener;
+
+namespace mozilla {
+class PrintPreviewUserEventSuppressor;
+}  // namespace mozilla
 
 //------------------------------------------------------------------------
 // nsPrintData Class
@@ -29,17 +31,21 @@ class nsIWebProgressListener;
 // mPreparingForPrint - indicates that we have started Printing but
 //   have not gone to the timer to start printing the pages. It gets turned
 //   off right before we go to the timer.
-//
-// mDocWasToBeDestroyed - Gets set when "someone" tries to unload the document
-//   while we were prparing to Print. This typically happens if a user starts
-//   to print while a page is still loading. If they start printing and pause
-//   at the print dialog and then the page comes in, we then abort printing
-//   because the document is no longer stable.
-//
 //------------------------------------------------------------------------
 class nsPrintData {
+<<<<<<< HEAD
  public:
   typedef enum { eIsPrinting, eIsPrintPreview } ePrintDataType;
+||||||| merged common ancestors
+public:
+  typedef enum {eIsPrinting, eIsPrintPreview } ePrintDataType;
+=======
+  typedef mozilla::PrintPreviewUserEventSuppressor
+      PrintPreviewUserEventSuppressor;
+
+ public:
+  typedef enum { eIsPrinting, eIsPrintPreview } ePrintDataType;
+>>>>>>> upstream-releases
 
   explicit nsPrintData(ePrintDataType aType);
 
@@ -67,6 +73,7 @@ class nsPrintData {
   // Array of non-owning pointers to all the nsPrintObjects owned by this
   // nsPrintData. This includes this->mPrintObject, as well as all of its
   // mKids (and their mKids, etc.)
+<<<<<<< HEAD
   nsTArray<nsPrintObject*> mPrintDocList;
 
   bool mIsIFrameSelected;
@@ -87,6 +94,47 @@ class nsPrintData {
   nsString mBrandName;  //  needed as a substitute name for a document
 
  private:
+||||||| merged common ancestors
+  nsTArray<nsPrintObject*>    mPrintDocList;
+
+  bool                        mIsIFrameSelected;
+  bool                        mIsParentAFrameSet;
+  bool                        mOnStartSent;
+  bool                        mIsAborted;           // tells us the document is being aborted
+  bool                        mPreparingForPrint;   // see comments above
+  bool                        mDocWasToBeDestroyed; // see comments above
+  bool                        mShrinkToFit;
+  int16_t                     mPrintFrameType;
+  int32_t                     mNumPrintablePages;
+  int32_t                     mNumPagesPrinted;
+  float                       mShrinkRatio;
+
+  nsCOMPtr<nsIPrintSettings>  mPrintSettings;
+  nsPrintPreviewListener*     mPPEventListeners;
+
+  nsString                    mBrandName; //  needed as a substitute name for a document
+
+private:
+=======
+  nsTArray<nsPrintObject*> mPrintDocList;
+
+  bool mIsIFrameSelected;
+  bool mIsParentAFrameSet;
+  bool mOnStartSent;
+  bool mIsAborted;          // tells us the document is being aborted
+  bool mPreparingForPrint;  // see comments above
+  bool mShrinkToFit;
+  int32_t mNumPrintablePages;
+  int32_t mNumPagesPrinted;
+  float mShrinkRatio;
+
+  nsCOMPtr<nsIPrintSettings> mPrintSettings;
+  RefPtr<PrintPreviewUserEventSuppressor> mPPEventSuppressor;
+
+  nsString mBrandName;  //  needed as a substitute name for a document
+
+ private:
+>>>>>>> upstream-releases
   nsPrintData() = delete;
   nsPrintData& operator=(const nsPrintData& aOther) = delete;
 

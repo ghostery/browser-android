@@ -31,16 +31,46 @@ class AuthenticatorResponse : public nsISupports, public nsWrapperCache {
  public:
   nsISupports* GetParentObject() const { return mParent; }
 
+<<<<<<< HEAD
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
-
+||||||| merged common ancestors
+  virtual JSObject*
+  WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
+=======
   void GetFormat(nsString& aRetVal) const;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void GetFormat(nsString& aRetVal) const;
+||||||| merged common ancestors
+  void
+  GetFormat(nsString& aRetVal) const;
+=======
   void GetClientDataJSON(JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void GetClientDataJSON(JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal);
+||||||| merged common ancestors
+  void
+  GetClientDataJSON(JSContext* aCx, JS::MutableHandle<JSObject*> aRetVal);
+=======
+  nsresult SetClientDataJSON(CryptoBuffer& aBuffer);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   nsresult SetClientDataJSON(CryptoBuffer& aBuffer);
 
  private:
+||||||| merged common ancestors
+  nsresult
+  SetClientDataJSON(CryptoBuffer& aBuffer);
+
+private:
+=======
+ private:
+>>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowInner> mParent;
   CryptoBuffer mClientDataJSON;
   JS::Heap<JSObject*> mClientDataJSONCachedObj;

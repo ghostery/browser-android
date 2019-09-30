@@ -164,8 +164,15 @@ void nsNativeDragTarget::DispatchDragDropEvent(EventMessage aEventMessage,
   ModifierKeyState modifierKeyState;
   modifierKeyState.InitInputEvent(event);
 
+<<<<<<< HEAD
   event.inputSource =
       static_cast<nsBaseDragService*>(mDragService)->GetInputSource();
+||||||| merged common ancestors
+  event.inputSource = static_cast<nsBaseDragService*>(mDragService)->GetInputSource();
+=======
+  event.mInputSource =
+      static_cast<nsBaseDragService*>(mDragService)->GetInputSource();
+>>>>>>> upstream-releases
 
   mWidget->DispatchEvent(&event, status);
 }
@@ -327,7 +334,8 @@ nsNativeDragTarget::DragOver(DWORD grfKeyState, POINTL ptl, LPDWORD pdwEffect) {
   }
 
   ModifierKeyState modifierKeyState;
-  mDragService->FireDragEventAtSource(eDrag, modifierKeyState.GetModifiers());
+  nsCOMPtr<nsIDragService> dragService = mDragService;
+  dragService->FireDragEventAtSource(eDrag, modifierKeyState.GetModifiers());
   // Now process the native drag state and then dispatch the event
   ProcessDrag(eDragOver, grfKeyState, ptl, pdwEffect);
 
@@ -363,7 +371,8 @@ nsNativeDragTarget::DragLeave() {
       // we're done with it for now (until the user drags back into
       // mozilla).
       ModifierKeyState modifierKeyState;
-      mDragService->EndDragSession(false, modifierKeyState.GetModifiers());
+      nsCOMPtr<nsIDragService> dragService = mDragService;
+      dragService->EndDragSession(false, modifierKeyState.GetModifiers());
     }
   }
 
@@ -385,7 +394,8 @@ void nsNativeDragTarget::DragCancel() {
     }
     if (mDragService) {
       ModifierKeyState modifierKeyState;
-      mDragService->EndDragSession(false, modifierKeyState.GetModifiers());
+      nsCOMPtr<nsIDragService> dragService = mDragService;
+      dragService->EndDragSession(false, modifierKeyState.GetModifiers());
     }
     this->Release();  // matching the AddRef in DragEnter
     mTookOwnRef = false;

@@ -19,6 +19,7 @@ class nsWindowsDHCPClient final : public nsIDHCPClient {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIDHCPCLIENT
 
+<<<<<<< HEAD
   explicit nsWindowsDHCPClient(
       WindowsNetworkFunctionsWrapper* aNetworkFunctions =
           new WindowsNetworkFunctionsWrapper())
@@ -28,9 +29,42 @@ class nsWindowsDHCPClient final : public nsIDHCPClient {
  private:
   ~nsWindowsDHCPClient(){};
   WindowsNetworkFunctionsWrapper* mNetworkFunctions;
+||||||| merged common ancestors
+  explicit nsWindowsDHCPClient(WindowsNetworkFunctionsWrapper *aNetworkFunctions = new WindowsNetworkFunctionsWrapper())
+    : mNetworkFunctions(aNetworkFunctions) {};
+  nsresult Init();
+
+private:
+
+   ~nsWindowsDHCPClient() {};
+   WindowsNetworkFunctionsWrapper* mNetworkFunctions;
+
+=======
+  explicit nsWindowsDHCPClient(
+      WindowsNetworkFunctionsWrapper* aNetworkFunctions =
+          new WindowsNetworkFunctionsWrapper())
+      : mNetworkFunctions(aNetworkFunctions){};
+
+ private:
+  ~nsWindowsDHCPClient(){};
+  WindowsNetworkFunctionsWrapper* mNetworkFunctions;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 }  // namespace windowsDHCPClient
 }  // namespace system
 }  // namespace toolkit
 }  // namespace mozilla
+||||||| merged common ancestors
+
+} // namespace windowsDHCPClient
+} // namespace system
+} // namespace toolkit
+} // namespace mozilla
+=======
+}  // namespace windowsDHCPClient
+}  // namespace system
+}  // namespace toolkit
+}  // namespace mozilla
+>>>>>>> upstream-releases

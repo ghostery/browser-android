@@ -11,13 +11,13 @@
 #include "nsNodeInfoManager.h"
 
 #include "mozilla/DebugOnly.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/NodeInfo.h"
 #include "mozilla/dom/NodeInfoInlines.h"
 #include "mozilla/NullPrincipal.h"
 #include "nsCOMPtr.h"
 #include "nsString.h"
 #include "nsAtom.h"
-#include "nsIDocument.h"
 #include "nsIPrincipal.h"
 #include "nsIURI.h"
 #include "nsContentUtils.h"
@@ -29,7 +29,6 @@
 #include "nsHashKeys.h"
 #include "nsCCUncollectableMarker.h"
 #include "nsNameSpaceManager.h"
-#include "nsDocument.h"
 #include "nsWindowSizes.h"
 
 using namespace mozilla;
@@ -85,27 +84,59 @@ NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(nsNodeInfoManager, Release)
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
+<<<<<<< HEAD
     return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
         ->CanSkip(tmp->mDocument, aRemovingAllowed);
+||||||| merged common ancestors
+    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkip(tmp->mDocument, aRemovingAllowed);
+=======
+    return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
+        ->CanSkip(tmp->mDocument, aRemovingAllowed);
+>>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_END
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_IN_CC_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
+<<<<<<< HEAD
     return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
         ->CanSkipInCC(tmp->mDocument);
+||||||| merged common ancestors
+    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkipInCC(tmp->mDocument);
+=======
+    return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
+        ->CanSkipInCC(tmp->mDocument);
+>>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_IN_CC_END
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_BEGIN(nsNodeInfoManager)
   if (tmp->mDocument) {
+<<<<<<< HEAD
     return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)
         ->CanSkipThis(tmp->mDocument);
+||||||| merged common ancestors
+    return NS_CYCLE_COLLECTION_PARTICIPANT(nsDocument)->CanSkipThis(tmp->mDocument);
+=======
+    return NS_CYCLE_COLLECTION_PARTICIPANT(mozilla::dom::Document)
+        ->CanSkipThis(tmp->mDocument);
+>>>>>>> upstream-releases
   }
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_END
 
+<<<<<<< HEAD
 nsresult nsNodeInfoManager::Init(nsIDocument* aDocument) {
   MOZ_ASSERT(!mPrincipal, "Being inited when we already have a principal?");
+||||||| merged common ancestors
+nsresult
+nsNodeInfoManager::Init(nsIDocument *aDocument)
+{
+  MOZ_ASSERT(!mPrincipal,
+                  "Being inited when we already have a principal?");
+=======
+nsresult nsNodeInfoManager::Init(mozilla::dom::Document* aDocument) {
+  MOZ_ASSERT(!mPrincipal, "Being inited when we already have a principal?");
+>>>>>>> upstream-releases
 
   mPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
 
@@ -332,7 +363,7 @@ bool nsNodeInfoManager::InternalSVGEnabled() {
     nsCOMPtr<nsIChannel> channel = mDocument->GetChannel();
     // We don't have a channel for SVGs constructed inside a SVG script
     if (channel) {
-      loadInfo = channel->GetLoadInfo();
+      loadInfo = channel->LoadInfo();
     }
   }
   bool conclusion =

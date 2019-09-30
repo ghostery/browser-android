@@ -12,12 +12,24 @@
 #include "nsCOMPtr.h"
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(disable : 4275)
+||||||| merged common ancestors
+#pragma warning( disable : 4275 )
+=======
+#  pragma warning(disable : 4275)
+>>>>>>> upstream-releases
 #endif
 
 class CNavDTD : public nsIDTD {
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(default : 4275)
+||||||| merged common ancestors
+#pragma warning( default : 4275 )
+=======
+#  pragma warning(default : 4275)
+>>>>>>> upstream-releases
 #endif
 
   virtual ~CNavDTD();

@@ -12,23 +12,57 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 // The URL implementation for the main-thread
 class URLMainThread final : public URL {
  public:
   static already_AddRefed<URLMainThread> Constructor(
       const GlobalObject& aGlobal, const nsAString& aURL,
       const Optional<nsAString>& aBase, ErrorResult& aRv);
+||||||| merged common ancestors
+// The URL implementation for the main-thread
+class URLMainThread final : public URL
+{
+public:
+  static already_AddRefed<URLMainThread>
+  Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
+              const Optional<nsAString>& aBase, ErrorResult& aRv);
+=======
+class URLMainThread final {
+ public:
+  static void CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                              nsAString& aResult, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<URLMainThread> Constructor(nsISupports* aParent,
                                                      const nsAString& aURL,
                                                      const nsAString& aBase,
                                                      ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<URLMainThread>
+  Constructor(nsISupports* aParent, const nsAString& aURL,
+              const nsAString& aBase, ErrorResult& aRv);
+=======
+  static void CreateObjectURL(const GlobalObject& aGlobal, MediaSource& aSource,
+                              nsAString& aResult, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<URLMainThread> Constructor(nsISupports* aParent,
                                                      const nsAString& aURL,
                                                      nsIURI* aBase,
                                                      ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<URLMainThread>
+  Constructor(nsISupports* aParent, const nsAString& aURL, nsIURI* aBase,
+              ErrorResult& aRv);
+=======
+  static void RevokeObjectURL(const GlobalObject& aGlobal,
+                              const nsAString& aURL, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
                               nsAString& aResult, ErrorResult& aRv);
 
@@ -52,6 +86,40 @@ class URLMainThread final : public URL {
 
  private:
   ~URLMainThread();
+||||||| merged common ancestors
+  static void
+  CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                  nsAString& aResult, ErrorResult& aRv);
+
+  static void
+  CreateObjectURL(const GlobalObject& aGlobal, MediaSource& aSource,
+                  nsAString& aResult, ErrorResult& aRv);
+
+  static void
+  RevokeObjectURL(const GlobalObject& aGlobal, const nsAString& aURL,
+                  ErrorResult& aRv);
+
+  static bool
+  IsValidURL(const GlobalObject& aGlobal, const nsAString& aURL,
+             ErrorResult& aRv);
+
+  explicit URLMainThread(nsISupports* aParent);
+
+  virtual void
+  SetHref(const nsAString& aHref, ErrorResult& aRv) override;
+
+  virtual void
+  GetOrigin(nsAString& aOrigin, ErrorResult& aRv) const override;
+
+  virtual void
+  SetProtocol(const nsAString& aProtocol, ErrorResult& aRv) override;
+
+private:
+  ~URLMainThread();
+=======
+  static bool IsValidURL(const GlobalObject& aGlobal, const nsAString& aURL,
+                         ErrorResult& aRv);
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

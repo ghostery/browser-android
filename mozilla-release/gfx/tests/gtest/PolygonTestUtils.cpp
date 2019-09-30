@@ -81,10 +81,25 @@ bool operator==(const MozPolygon& lhs, const MozPolygon& rhs) {
   return true;
 }
 
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
 
 TEST(PolygonTestUtils, TestSanity) {
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+
+
+TEST(PolygonTestUtils, TestSanity)
+{
+=======
+}  // namespace gfx
+}  // namespace mozilla
+
+TEST(PolygonTestUtils, TestSanity)
+{
+>>>>>>> upstream-releases
   EXPECT_TRUE(FuzzyEquals(Point4D(0.0f, 0.0f, 0.0f, 1.0f),
                           Point4D(0.0f, 0.0f, 0.0f, 1.0f)));
 

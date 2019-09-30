@@ -8,7 +8,13 @@
 #ifndef SkPathRef_DEFINED
 #define SkPathRef_DEFINED
 
+<<<<<<< HEAD
 #include "SkAtomics.h"
+||||||| merged common ancestors
+#include "../private/SkAtomics.h"
+#include "../private/SkTDArray.h"
+=======
+>>>>>>> upstream-releases
 #include "SkMatrix.h"
 #include "SkMutex.h"
 #include "SkPoint.h"
@@ -17,9 +23,16 @@
 #include "SkRefCnt.h"
 #include "SkTDArray.h"
 #include "SkTemplates.h"
+<<<<<<< HEAD
 #include "SkTo.h"
 
 #include <limits>
+||||||| merged common ancestors
+=======
+#include "SkTo.h"
+#include <atomic>
+#include <limits>
+>>>>>>> upstream-releases
 
 class SkRBuffer;
 class SkWBuffer;
@@ -47,7 +60,7 @@ public:
                int incReserveVerbs = 0,
                int incReservePoints = 0);
 
-        ~Editor() { SkDEBUGCODE(sk_atomic_dec(&fPathRef->fEditorsAttached);) }
+        ~Editor() { SkDEBUGCODE(fPathRef->fEditorsAttached--;) }
 
         /**
          * Returns the array of points.
@@ -309,9 +322,30 @@ public:
      */
     uint32_t genID() const;
 
+<<<<<<< HEAD
     struct GenIDChangeListener : SkRefCnt {
+||||||| merged common ancestors
+    struct GenIDChangeListener {
+=======
+    class GenIDChangeListener : public SkRefCnt {
+    public:
+        GenIDChangeListener() : fShouldUnregisterFromPath(false) {}
+>>>>>>> upstream-releases
         virtual ~GenIDChangeListener() {}
+
         virtual void onChange() = 0;
+
+        // The caller can use this method to notify the path that it no longer needs to listen. Once
+        // called, the path will remove this listener from the list at some future point.
+        void markShouldUnregisterFromPath() {
+            fShouldUnregisterFromPath.store(true, std::memory_order_relaxed);
+        }
+        bool shouldUnregisterFromPath() {
+            return fShouldUnregisterFromPath.load(std::memory_order_acquire);
+        }
+
+    private:
+        std::atomic<bool> fShouldUnregisterFromPath;
     };
 
     void addGenIDChangeListener(sk_sp<GenIDChangeListener>);  // Threadsafe.
@@ -343,7 +377,7 @@ private:
         // The next two values don't matter unless fIsOval or fIsRRect are true.
         fRRectOrOvalIsCCW = false;
         fRRectOrOvalStartIdx = 0xAC;
-        SkDEBUGCODE(fEditorsAttached = 0;)
+        SkDEBUGCODE(fEditorsAttached.store(0);)
         SkDEBUGCODE(this->validate();)
     }
 
@@ -543,7 +577,7 @@ private:
         kEmptyGenID = 1, // GenID reserved for path ref with zero points and zero verbs.
     };
     mutable uint32_t    fGenerationID;
-    SkDEBUGCODE(int32_t fEditorsAttached;) // assert that only one editor in use at any time.
+    SkDEBUGCODE(std::atomic<int> fEditorsAttached;) // assert only one editor in use at any time.
 
     SkMutex                         fGenIDChangeListenersMutex;
     SkTDArray<GenIDChangeListener*> fGenIDChangeListeners;  // pointers are reffed
@@ -561,7 +595,13 @@ private:
 
     friend class PathRefTest_Private;
     friend class ForceIsRRect_Private; // unit test isRRect
+<<<<<<< HEAD
     friend class SkPath;
+||||||| merged common ancestors
+=======
+    friend class SkPath;
+    friend class SkPathPriv;
+>>>>>>> upstream-releases
 };
 
 #endif

@@ -16,7 +16,14 @@
 #include "mozilla/layers/CompositorTypes.h"
 #include "mozilla/layers/LayersTypes.h"    // for LayersBackend, TextureDumpMode
 #include "mozilla/layers/TextureClient.h"  // for TextureClient
+<<<<<<< HEAD
 #include "nsISupportsImpl.h"               // for MOZ_COUNT_CTOR, etc
+||||||| merged common ancestors
+#include "nsISupportsImpl.h"            // for MOZ_COUNT_CTOR, etc
+=======
+#include "mozilla/webrender/WebRenderTypes.h"  // for RenderRoot
+#include "nsISupportsImpl.h"                   // for MOZ_COUNT_CTOR, etc
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -156,7 +163,8 @@ class CompositableClient {
    *
    * See AutoRemoveTexture to automatically invoke this at the end of a scope.
    */
-  virtual void RemoveTexture(TextureClient* aTexture);
+  virtual void RemoveTexture(TextureClient* aTexture,
+                             const Maybe<wr::RenderRoot>& aRenderRoot);
 
   void InitIPDL(const CompositableHandle& aHandle);
 
@@ -186,10 +194,28 @@ class CompositableClient {
 /**
  * Helper to call RemoveTexture at the end of a scope.
  */
+<<<<<<< HEAD
 struct AutoRemoveTexture {
   explicit AutoRemoveTexture(CompositableClient* aCompositable,
                              TextureClient* aTexture = nullptr)
       : mTexture(aTexture), mCompositable(aCompositable) {}
+||||||| merged common ancestors
+struct AutoRemoveTexture
+{
+  explicit AutoRemoveTexture(CompositableClient* aCompositable,
+                             TextureClient* aTexture = nullptr)
+    : mTexture(aTexture)
+    , mCompositable(aCompositable)
+  {}
+=======
+struct AutoRemoveTexture {
+  AutoRemoveTexture(CompositableClient* aCompositable,
+                    wr::RenderRoot aRenderRoot,
+                    TextureClient* aTexture = nullptr)
+      : mTexture(aTexture),
+        mCompositable(aCompositable),
+        mRenderRoot(aRenderRoot) {}
+>>>>>>> upstream-releases
 
   ~AutoRemoveTexture();
 
@@ -197,6 +223,7 @@ struct AutoRemoveTexture {
 
  private:
   CompositableClient* mCompositable;
+  wr::RenderRoot mRenderRoot;
 };
 
 }  // namespace layers

@@ -7,9 +7,8 @@
 #ifndef frontend_JumpList_h
 #define frontend_JumpList_h
 
-#include <stddef.h>
-
-#include "js/TypeDecls.h"
+#include "frontend/BytecodeOffset.h"  // BytecodeOffset
+#include "js/TypeDecls.h"             // jsbytecode
 
 namespace js {
 namespace frontend {
@@ -36,7 +35,7 @@ namespace frontend {
 //     ...
 //     patchJumpsToTarget(brList, label);
 //
-//                 +-> -1
+//                 +-> (the delta is END_OF_LIST_DELTA (=0) for the last item)
 //                 |
 //                 |
 //    ifeq ..   <+ +                +-+   ifeq ..
@@ -56,16 +55,44 @@ namespace frontend {
 
 // Offset of a jump target instruction, used for patching jump instructions.
 struct JumpTarget {
+<<<<<<< HEAD
   ptrdiff_t offset;
+||||||| merged common ancestors
+    ptrdiff_t offset;
+=======
+  BytecodeOffset offset = BytecodeOffset::invalidOffset();
+>>>>>>> upstream-releases
 };
 
 struct JumpList {
+<<<<<<< HEAD
   JumpList() {}
   // -1 is used to mark the end of jump lists.
   ptrdiff_t offset = -1;
+||||||| merged common ancestors
+    JumpList() {}
+    // -1 is used to mark the end of jump lists.
+    ptrdiff_t offset = -1;
+=======
+  // Delta value for pre-patchJumpsToTarget that marks the end of the link.
+  static const ptrdiff_t END_OF_LIST_DELTA = 0;
 
+  // -1 is used to mark the end of jump lists.
+  JumpList() : offset(BytecodeOffset::invalidOffset()) {}
+
+  BytecodeOffset offset;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Add a jump instruction to the list.
   void push(jsbytecode* code, ptrdiff_t jumpOffset);
+||||||| merged common ancestors
+    // Add a jump instruction to the list.
+    void push(jsbytecode* code, ptrdiff_t jumpOffset);
+=======
+  // Add a jump instruction to the list.
+  void push(jsbytecode* code, BytecodeOffset jumpOffset);
+>>>>>>> upstream-releases
 
   // Patch all jump instructions in this list to jump to `target`.  This
   // clobbers the list.

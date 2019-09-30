@@ -25,10 +25,20 @@ class TaskbarWindowPreview : public TaskbarPreview,
                              public nsSupportsWeakReference {
   virtual ~TaskbarWindowPreview();
 
+<<<<<<< HEAD
  public:
   TaskbarWindowPreview(ITaskbarList4 *aTaskbar,
                        nsITaskbarPreviewController *aController, HWND aHWND,
                        nsIDocShell *aShell);
+||||||| merged common ancestors
+public:
+  TaskbarWindowPreview(ITaskbarList4 *aTaskbar, nsITaskbarPreviewController *aController, HWND aHWND, nsIDocShell *aShell);
+=======
+ public:
+  TaskbarWindowPreview(ITaskbarList4* aTaskbar,
+                       nsITaskbarPreviewController* aController, HWND aHWND,
+                       nsIDocShell* aShell);
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSITASKBARWINDOWPREVIEW
@@ -40,7 +50,7 @@ class TaskbarWindowPreview : public TaskbarPreview,
 
  private:
   virtual nsresult ShowActive(bool active) override;
-  virtual HWND &PreviewWindow() override;
+  virtual HWND& PreviewWindow() override;
 
   virtual nsresult UpdateTaskbarProperties() override;
   virtual nsresult Enable() override;
@@ -72,8 +82,18 @@ class TaskbarWindowPreview : public TaskbarPreview,
   nsString mIconDescription;
 
   // WindowHook procedure for hooking mWnd for taskbar progress and icon stuff
+<<<<<<< HEAD
   static bool TaskbarWindowHook(void *aContext, HWND hWnd, UINT nMsg,
                                 WPARAM wParam, LPARAM lParam, LRESULT *aResult);
+||||||| merged common ancestors
+  static bool TaskbarWindowHook(void *aContext,
+                                  HWND hWnd, UINT nMsg,
+                                  WPARAM wParam, LPARAM lParam,
+                                  LRESULT *aResult);
+=======
+  static bool TaskbarWindowHook(void* aContext, HWND hWnd, UINT nMsg,
+                                WPARAM wParam, LPARAM lParam, LRESULT* aResult);
+>>>>>>> upstream-releases
 
   friend class TaskbarPreviewButton;
 };

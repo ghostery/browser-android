@@ -8,7 +8,13 @@
 #include "LayerManagerMLGPU.h"
 #include "MLGDevice.h"
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include "mozilla/layers/MLGDeviceD3D11.h"
+||||||| merged common ancestors
+# include "mozilla/layers/MLGDeviceD3D11.h"
+=======
+#  include "mozilla/layers/MLGDeviceD3D11.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {

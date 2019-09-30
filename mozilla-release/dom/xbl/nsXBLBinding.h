@@ -19,16 +19,24 @@
 class nsXBLPrototypeBinding;
 class nsIContent;
 class nsAtom;
-class nsIDocument;
 struct RawServoAuthorStyles;
 
 namespace mozilla {
 namespace dom {
-
+class Document;
 class XBLChildrenElement;
+<<<<<<< HEAD
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+
+} // namespace dom
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 class nsAnonymousContentList;
 
@@ -94,14 +102,11 @@ class nsXBLBinding final {
   void MarkForDeath();
   bool MarkedForDeath() const { return mMarkedForDeath; }
 
-  bool HasStyleSheets() const;
-  bool InheritsStyle() const;
   bool ImplementsInterface(REFNSIID aIID) const;
 
   void GenerateAnonymousContent();
-  void BindAnonymousContent(nsIContent* aAnonParent, nsIContent* aElement,
-                            bool aNativeAnon);
-  static void UnbindAnonymousContent(nsIDocument* aDocument,
+  void BindAnonymousContent(nsIContent* aAnonParent, nsIContent* aElement);
+  static void UnbindAnonymousContent(mozilla::dom::Document* aDocument,
                                      nsIContent* aAnonParent,
                                      bool aNullParent = true);
   void InstallEventHandlers();
@@ -111,7 +116,6 @@ class nsXBLBinding final {
   void ExecuteDetachedHandler();
   void UnhookEventHandlers();
 
-  nsAtom* GetBaseTag(int32_t* aNameSpaceID);
   nsXBLBinding* RootBinding();
 
   // Resolve all the fields for this binding and all ancestor bindings on the
@@ -121,8 +125,18 @@ class nsXBLBinding final {
   void AttributeChanged(nsAtom* aAttribute, int32_t aNameSpaceID,
                         bool aRemoveFlag, bool aNotify);
 
+<<<<<<< HEAD
   void ChangeDocument(nsIDocument* aOldDocument, nsIDocument* aNewDocument);
 
+||||||| merged common ancestors
+  void ChangeDocument(nsIDocument* aOldDocument, nsIDocument* aNewDocument);
+
+
+=======
+  void ChangeDocument(mozilla::dom::Document* aOldDocument,
+                      mozilla::dom::Document* aNewDocument);
+
+>>>>>>> upstream-releases
   const RawServoAuthorStyles* GetServoStyles() const;
 
   static nsresult DoInitJSClass(JSContext* cx, JS::Handle<JSObject*> obj,
@@ -153,7 +167,6 @@ class nsXBLBinding final {
   // MEMBER VARIABLES
  protected:
   bool mMarkedForDeath;
-  bool mUsingContentXBLScope;
 
   nsXBLPrototypeBinding*
       mPrototypeBinding;  // Weak, but we're holding a ref to the docinfo

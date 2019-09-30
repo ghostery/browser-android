@@ -50,6 +50,7 @@ void ServiceWorkerContainerImpl::Register(
   }
 
   auto holder =
+<<<<<<< HEAD
       MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
           global);
 
@@ -66,6 +67,37 @@ void ServiceWorkerContainerImpl::Register(
                failureCB(CopyableErrorResult(aResult));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(global);
+
+  swm->Register(aClientInfo, aScopeURL, aScriptURL, aUpdateViaCache)->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+      holder->Complete();
+      successCB(aDescriptor);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aResult) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aResult));
+    })->Track(*holder);
+=======
+      MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
+          global);
+
+  swm->Register(aClientInfo, aScopeURL, aScriptURL, aUpdateViaCache)
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+            holder->Complete();
+            successCB(aDescriptor);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aResult) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aResult));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 void ServiceWorkerContainerImpl::GetRegistration(
@@ -87,6 +119,7 @@ void ServiceWorkerContainerImpl::GetRegistration(
   }
 
   auto holder =
+<<<<<<< HEAD
       MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
           global);
 
@@ -103,6 +136,37 @@ void ServiceWorkerContainerImpl::GetRegistration(
                failureCB(CopyableErrorResult(aResult));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(global);
+
+  swm->GetRegistration(aClientInfo, aURL)->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+      holder->Complete();
+      successCB(aDescriptor);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aResult) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aResult));
+    })->Track(*holder);
+=======
+      MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
+          global);
+
+  swm->GetRegistration(aClientInfo, aURL)
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+            holder->Complete();
+            successCB(aDescriptor);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aResult) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aResult));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 void ServiceWorkerContainerImpl::GetRegistrations(
@@ -123,6 +187,7 @@ void ServiceWorkerContainerImpl::GetRegistrations(
     return;
   }
 
+<<<<<<< HEAD
   auto holder = MakeRefPtr<
       DOMMozPromiseRequestHolder<ServiceWorkerRegistrationListPromise>>(global);
 
@@ -139,6 +204,38 @@ void ServiceWorkerContainerImpl::GetRegistrations(
                failureCB(CopyableErrorResult(aResult));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+  auto holder =
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationListPromise>>(global);
+
+  swm->GetRegistrations(aClientInfo)->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const nsTArray<ServiceWorkerRegistrationDescriptor>& aList) {
+      holder->Complete();
+      successCB(aList);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aResult) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aResult));
+    })->Track(*holder);
+=======
+  auto holder = MakeRefPtr<
+      DOMMozPromiseRequestHolder<ServiceWorkerRegistrationListPromise>>(global);
+
+  swm->GetRegistrations(aClientInfo)
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const nsTArray<ServiceWorkerRegistrationDescriptor>& aList) {
+            holder->Complete();
+            successCB(aList);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aResult) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aResult));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 void ServiceWorkerContainerImpl::GetReady(
@@ -160,6 +257,7 @@ void ServiceWorkerContainerImpl::GetReady(
   }
 
   auto holder =
+<<<<<<< HEAD
       MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
           global);
 
@@ -176,6 +274,37 @@ void ServiceWorkerContainerImpl::GetReady(
                failureCB(CopyableErrorResult(aResult));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(global);
+
+  swm->WhenReady(aClientInfo)->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+      holder->Complete();
+      successCB(aDescriptor);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aResult) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aResult));
+    })->Track(*holder);
+=======
+      MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
+          global);
+
+  swm->WhenReady(aClientInfo)
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+            holder->Complete();
+            successCB(aDescriptor);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aResult) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aResult));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

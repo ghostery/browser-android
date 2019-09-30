@@ -43,12 +43,9 @@ public:
 
     GrBackendRenderTarget getBackendRenderTarget() const override;
 
-protected:
-    GrMtlRenderTarget(GrMtlGpu* gpu,
-                      const GrSurfaceDesc& desc,
-                      id<MTLTexture> renderTexture,
-                      id<MTLTexture> resolveTexture);
+    GrBackendFormat backendFormat() const override;
 
+protected:
     GrMtlRenderTarget(GrMtlGpu* gpu,
                       const GrSurfaceDesc& desc,
                       id<MTLTexture> renderTexture);
@@ -75,10 +72,20 @@ protected:
     id<MTLTexture> fResolveTexture;
 
 private:
+    // Extra param to disambiguate from constructor used by subclasses.
+    enum Wrapped { kWrapped };
     GrMtlRenderTarget(GrMtlGpu* gpu,
+<<<<<<< HEAD
                       SkBudgeted,
                       const GrSurfaceDesc& desc,
+||||||| merged common ancestors
+                      const GrSurfaceDesc& desc,
+                      SkBudgeted,
+=======
+                      const GrSurfaceDesc& desc,
+>>>>>>> upstream-releases
                       id<MTLTexture> renderTexture,
+<<<<<<< HEAD
                       id<MTLTexture> resolveTexture);
 
     GrMtlRenderTarget(GrMtlGpu* gpu,
@@ -91,8 +98,26 @@ private:
                                          const GrSurfaceDesc&,
                                          id<MTLTexture> renderTexture,
                                          bool isWrapped);
+||||||| merged common ancestors
+                      id<MTLTexture> resolveTexture);
+
+    GrMtlRenderTarget(GrMtlGpu* gpu,
+                      const GrSurfaceDesc& desc,
+                      SkBudgeted,
+                      id<MTLTexture> renderTexture);
+
+    static sk_sp<GrMtlRenderTarget> Make(GrMtlGpu*,
+                                         const GrSurfaceDesc&,
+                                         SkBudgeted,
+                                         id<MTLTexture> renderTexture,
+                                         bool isWrapped);
+=======
+                      Wrapped);
+>>>>>>> upstream-releases
 
     bool completeStencilAttachment() override;
+
+    typedef GrRenderTarget INHERITED;
 };
 
 

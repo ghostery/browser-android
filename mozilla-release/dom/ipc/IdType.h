@@ -18,7 +18,7 @@ namespace mozilla {
 namespace dom {
 class BrowsingContext;
 class ContentParent;
-class TabParent;
+class BrowserParent;
 
 template <typename T>
 class IdType {
@@ -41,11 +41,20 @@ class IdType {
   uint64_t mId;
 };
 
-typedef IdType<TabParent> TabId;
+typedef IdType<BrowserParent> TabId;
 typedef IdType<ContentParent> ContentParentId;
+<<<<<<< HEAD
 typedef IdType<BrowsingContext> BrowsingContextId;
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+typedef IdType<BrowsingContext> BrowsingContextId;
+} // namespace dom
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 namespace IPC {
 

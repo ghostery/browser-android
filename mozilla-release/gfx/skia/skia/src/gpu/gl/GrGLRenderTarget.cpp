@@ -21,21 +21,42 @@
 // Constructor for wrapped render targets.
 GrGLRenderTarget::GrGLRenderTarget(GrGLGpu* gpu,
                                    const GrSurfaceDesc& desc,
+                                   GrGLenum format,
                                    const IDDesc& idDesc,
                                    GrGLStencilAttachment* stencil)
     : GrSurface(gpu, desc)
+<<<<<<< HEAD
     , INHERITED(gpu, desc, stencil) {
     this->setFlags(gpu->glCaps(), idDesc);
     this->init(desc, idDesc);
     this->registerWithCacheWrapped();
+||||||| merged common ancestors
+    , INHERITED(gpu, desc, ComputeFlags(gpu->glCaps(), idDesc), stencil) {
+    this->init(desc, idDesc);
+    this->registerWithCacheWrapped();
+=======
+    , INHERITED(gpu, desc, stencil) {
+    this->setFlags(gpu->glCaps(), idDesc);
+    this->init(desc, format, idDesc);
+    this->registerWithCacheWrapped(GrWrapCacheable::kNo);
+>>>>>>> upstream-releases
 }
 
-GrGLRenderTarget::GrGLRenderTarget(GrGLGpu* gpu, const GrSurfaceDesc& desc,
+GrGLRenderTarget::GrGLRenderTarget(GrGLGpu* gpu, const GrSurfaceDesc& desc, GrGLenum format,
                                    const IDDesc& idDesc)
     : GrSurface(gpu, desc)
+<<<<<<< HEAD
     , INHERITED(gpu, desc) {
     this->setFlags(gpu->glCaps(), idDesc);
     this->init(desc, idDesc);
+||||||| merged common ancestors
+    , INHERITED(gpu, desc, ComputeFlags(gpu->glCaps(), idDesc)) {
+    this->init(desc, idDesc);
+=======
+    , INHERITED(gpu, desc) {
+    this->setFlags(gpu->glCaps(), idDesc);
+    this->init(desc, format, idDesc);
+>>>>>>> upstream-releases
 }
 
 inline void GrGLRenderTarget::setFlags(const GrGLCaps& glCaps, const IDDesc& idDesc) {
@@ -43,19 +64,29 @@ inline void GrGLRenderTarget::setFlags(const GrGLCaps& glCaps, const IDDesc& idD
         SkASSERT(glCaps.usesMixedSamples() && idDesc.fRTFBOID); // FBO 0 can't be mixed sampled.
         this->setHasMixedSamples();
     }
+<<<<<<< HEAD
     if (glCaps.maxWindowRectangles() > 0 && idDesc.fRTFBOID) {
         this->setSupportsWindowRects();
     }
     if (!idDesc.fRTFBOID) {
         this->setGLRTFBOIDIs0();
+||||||| merged common ancestors
+    if (glCaps.maxWindowRectangles() > 0 && idDesc.fRTFBOID) {
+        flags |= GrRenderTargetFlags::kWindowRectsSupport;
+=======
+    if (!idDesc.fRTFBOID) {
+        this->setGLRTFBOIDIs0();
+>>>>>>> upstream-releases
     }
 }
 
-void GrGLRenderTarget::init(const GrSurfaceDesc& desc, const IDDesc& idDesc) {
+void GrGLRenderTarget::init(const GrSurfaceDesc& desc, GrGLenum format, const IDDesc& idDesc) {
     fRTFBOID                = idDesc.fRTFBOID;
     fTexFBOID               = idDesc.fTexFBOID;
     fMSColorRenderbufferID  = idDesc.fMSColorRenderbufferID;
     fRTFBOOwnership         = idDesc.fRTFBOOwnership;
+
+    fRTFormat               = format;
 
     fViewport.fLeft   = 0;
     fViewport.fBottom = 0;
@@ -67,6 +98,7 @@ void GrGLRenderTarget::init(const GrSurfaceDesc& desc, const IDDesc& idDesc) {
 
 sk_sp<GrGLRenderTarget> GrGLRenderTarget::MakeWrapped(GrGLGpu* gpu,
                                                       const GrSurfaceDesc& desc,
+                                                      GrGLenum format,
                                                       const IDDesc& idDesc,
                                                       int stencilBits) {
     GrGLStencilAttachment* sb = nullptr;
@@ -81,7 +113,7 @@ sk_sp<GrGLRenderTarget> GrGLRenderTarget::MakeWrapped(GrGLGpu* gpu,
         sb = new GrGLStencilAttachment(gpu, sbDesc, desc.fWidth, desc.fHeight,
                                        desc.fSampleCnt, format);
     }
-    return sk_sp<GrGLRenderTarget>(new GrGLRenderTarget(gpu, desc, idDesc, sb));
+    return sk_sp<GrGLRenderTarget>(new GrGLRenderTarget(gpu, desc, format, idDesc, sb));
 }
 
 GrBackendRenderTarget GrGLRenderTarget::getBackendRenderTarget() const {
@@ -94,7 +126,19 @@ GrBackendRenderTarget GrGLRenderTarget::getBackendRenderTarget() const {
     }
 
     return GrBackendRenderTarget(this->width(), this->height(), this->numColorSamples(),
+<<<<<<< HEAD
                                  numStencilBits, fbi);
+||||||| merged common ancestors
+                                 this->numStencilSamples(), fbi);
+=======
+                                 numStencilBits, fbi);
+}
+
+GrBackendFormat GrGLRenderTarget::backendFormat() const {
+    // We should never have a GrGLRenderTarget (even a textureable one with a target that is not
+    // texture 2D.
+    return GrBackendFormat::MakeGL(fRTFormat, GR_GL_TEXTURE_2D);
+>>>>>>> upstream-releases
 }
 
 size_t GrGLRenderTarget::onGpuMemorySize() const {
@@ -188,7 +232,13 @@ GrGLGpu* GrGLRenderTarget::getGLGpu() const {
 }
 
 bool GrGLRenderTarget::canAttemptStencilAttachment() const {
+<<<<<<< HEAD
     if (this->getGpu()->getContext()->contextPriv().caps()->avoidStencilBuffers()) {
+||||||| merged common ancestors
+    if (this->getGpu()->getContext()->caps()->avoidStencilBuffers()) {
+=======
+    if (this->getGpu()->getContext()->priv().caps()->avoidStencilBuffers()) {
+>>>>>>> upstream-releases
         return false;
     }
 

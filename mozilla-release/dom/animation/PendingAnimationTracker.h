@@ -8,19 +8,42 @@
 #define mozilla_dom_PendingAnimationTracker_h
 
 #include "mozilla/dom/Animation.h"
+<<<<<<< HEAD
 #include "mozilla/TypedEnumBits.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/dom/Document.h"
+#include "mozilla/TypedEnumBits.h"
+>>>>>>> upstream-releases
 #include "nsCycleCollectionParticipant.h"
-#include "nsIDocument.h"
 #include "nsTHashtable.h"
 
 class nsIFrame;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 class PendingAnimationTracker final {
  public:
   explicit PendingAnimationTracker(nsIDocument* aDocument)
       : mDocument(aDocument) {}
+||||||| merged common ancestors
+class PendingAnimationTracker final
+{
+public:
+  explicit PendingAnimationTracker(nsIDocument* aDocument)
+    : mDocument(aDocument)
+  { }
+=======
+namespace dom {
+class Document;
+}
+
+class PendingAnimationTracker final {
+ public:
+  explicit PendingAnimationTracker(dom::Document* aDocument)
+      : mDocument(aDocument) {}
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(PendingAnimationTracker)
   NS_DECL_CYCLE_COLLECTION_NATIVE_CLASS(PendingAnimationTracker)
@@ -86,7 +109,7 @@ class PendingAnimationTracker final {
 
   AnimationSet mPlayPendingSet;
   AnimationSet mPausePendingSet;
-  nsCOMPtr<nsIDocument> mDocument;
+  RefPtr<dom::Document> mDocument;
 
  public:
   enum class CheckState {

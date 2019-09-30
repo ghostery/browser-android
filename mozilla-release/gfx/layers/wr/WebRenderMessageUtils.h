@@ -109,9 +109,23 @@ template <>
 struct ParamTraits<mozilla::wr::LayoutPoint>
     : public PlainOldDataSerializer<mozilla::wr::LayoutPoint> {};
 
+<<<<<<< HEAD
 template <>
 struct ParamTraits<mozilla::wr::WrImageMask>
     : public PlainOldDataSerializer<mozilla::wr::WrImageMask> {};
+||||||| merged common ancestors
+template<>
+struct ParamTraits<mozilla::wr::WrImageMask>
+  : public PlainOldDataSerializer<mozilla::wr::WrImageMask>
+{
+};
+=======
+template <>
+struct ParamTraits<mozilla::wr::RenderRoot>
+    : public ContiguousEnumSerializerInclusive<
+          mozilla::wr::RenderRoot, mozilla::wr::RenderRoot::Default,
+          mozilla::wr::kHighestRenderRoot> {};
+>>>>>>> upstream-releases
 
 template <>
 struct ParamTraits<mozilla::wr::ImageRendering>

@@ -9,16 +9,26 @@
 #include <stdlib.h>
 
 #ifndef HAVE_MEMALIGN
+<<<<<<< HEAD
 MOZ_MEMORY_API void* memalign(size_t aAlignment, size_t aSize) {
 #ifdef XP_WIN
+||||||| merged common ancestors
+MOZ_MEMORY_API void*
+memalign(size_t aAlignment, size_t aSize)
+{
+#ifdef XP_WIN
+=======
+MOZ_MEMORY_API void* memalign(size_t aAlignment, size_t aSize) {
+#  ifdef XP_WIN
+>>>>>>> upstream-releases
   return _aligned_malloc(aSize, aAlignment);
-#else
+#  else
   void* ret;
   if (posix_memalign(&ret, aAlignment, aSize) != 0) {
     return nullptr;
   }
   return ret;
-#endif
+#  endif
 }
 #endif
 

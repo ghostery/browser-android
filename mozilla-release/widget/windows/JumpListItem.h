@@ -72,16 +72,36 @@ class JumpListLink : public JumpListItemBase, public nsIJumpListLink {
   JumpListLink() : JumpListItemBase(nsIJumpListItem::JUMPLIST_ITEM_LINK) {}
 
   NS_DECL_ISUPPORTS
+<<<<<<< HEAD
   NS_IMETHOD GetType(int16_t *aType) override {
     return JumpListItemBase::GetType(aType);
   }
   NS_IMETHOD Equals(nsIJumpListItem *item, bool *_retval) override;
+||||||| merged common ancestors
+  NS_IMETHOD GetType(int16_t *aType) override { return JumpListItemBase::GetType(aType); }
+  NS_IMETHOD Equals(nsIJumpListItem *item, bool *_retval) override;
+=======
+  NS_IMETHOD GetType(int16_t* aType) override {
+    return JumpListItemBase::GetType(aType);
+  }
+  NS_IMETHOD Equals(nsIJumpListItem* item, bool* _retval) override;
+>>>>>>> upstream-releases
   NS_DECL_NSIJUMPLISTLINK
 
+<<<<<<< HEAD
   static nsresult GetShellItem(nsCOMPtr<nsIJumpListItem> &item,
                                RefPtr<IShellItem2> &aShellItem);
   static nsresult GetJumpListLink(IShellItem *pItem,
                                   nsCOMPtr<nsIJumpListLink> &aLink);
+||||||| merged common ancestors
+  static nsresult GetShellItem(nsCOMPtr<nsIJumpListItem>& item, RefPtr<IShellItem2>& aShellItem);
+  static nsresult GetJumpListLink(IShellItem *pItem, nsCOMPtr<nsIJumpListLink>& aLink);
+=======
+  static nsresult GetShellItem(nsCOMPtr<nsIJumpListItem>& item,
+                               RefPtr<IShellItem2>& aShellItem);
+  static nsresult GetJumpListLink(IShellItem* pItem,
+                                  nsCOMPtr<nsIJumpListLink>& aLink);
+>>>>>>> upstream-releases
 
  protected:
   nsString mUriTitle;
@@ -98,19 +118,42 @@ class JumpListShortcut : public JumpListItemBase, public nsIJumpListShortcut {
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(JumpListShortcut, JumpListItemBase)
+<<<<<<< HEAD
   NS_IMETHOD GetType(int16_t *aType) override {
     return JumpListItemBase::GetType(aType);
   }
   NS_IMETHOD Equals(nsIJumpListItem *item, bool *_retval) override;
+||||||| merged common ancestors
+  NS_IMETHOD GetType(int16_t *aType) override { return JumpListItemBase::GetType(aType); }
+  NS_IMETHOD Equals(nsIJumpListItem *item, bool *_retval) override;
+=======
+  NS_IMETHOD GetType(int16_t* aType) override {
+    return JumpListItemBase::GetType(aType);
+  }
+  NS_IMETHOD Equals(nsIJumpListItem* item, bool* _retval) override;
+>>>>>>> upstream-releases
   NS_DECL_NSIJUMPLISTSHORTCUT
 
+<<<<<<< HEAD
   static nsresult GetShellLink(nsCOMPtr<nsIJumpListItem> &item,
                                RefPtr<IShellLinkW> &aShellLink,
                                nsCOMPtr<nsIThread> &aIOThread);
   static nsresult GetJumpListShortcut(IShellLinkW *pLink,
                                       nsCOMPtr<nsIJumpListShortcut> &aShortcut);
+||||||| merged common ancestors
+  static nsresult GetShellLink(nsCOMPtr<nsIJumpListItem>& item,
+                               RefPtr<IShellLinkW>& aShellLink,
+                               nsCOMPtr<nsIThread> &aIOThread);
+  static nsresult GetJumpListShortcut(IShellLinkW *pLink, nsCOMPtr<nsIJumpListShortcut>& aShortcut);
+=======
+  static nsresult GetShellLink(nsCOMPtr<nsIJumpListItem>& item,
+                               RefPtr<IShellLinkW>& aShellLink,
+                               nsCOMPtr<nsIThread>& aIOThread);
+  static nsresult GetJumpListShortcut(IShellLinkW* pLink,
+                                      nsCOMPtr<nsIJumpListShortcut>& aShortcut);
+>>>>>>> upstream-releases
   static nsresult GetOutputIconPath(nsCOMPtr<nsIURI> aFaviconPageURI,
-                                    nsCOMPtr<nsIFile> &aICOFile);
+                                    nsCOMPtr<nsIFile>& aICOFile);
 
  protected:
   int32_t mIconIndex;
@@ -119,11 +162,25 @@ class JumpListShortcut : public JumpListItemBase, public nsIJumpListShortcut {
 
   bool ExecutableExists(nsCOMPtr<nsILocalHandlerApp> &handlerApp);
   static nsresult ObtainCachedIconFile(nsCOMPtr<nsIURI> aFaviconPageURI,
+<<<<<<< HEAD
                                        nsString &aICOFilePath,
                                        nsCOMPtr<nsIThread> &aIOThread);
   static nsresult CacheIconFileFromFaviconURIAsync(
       nsCOMPtr<nsIURI> aFaviconPageURI, nsCOMPtr<nsIFile> aICOFile,
       nsCOMPtr<nsIThread> &aIOThread);
+||||||| merged common ancestors
+                                       nsString &aICOFilePath,
+                                       nsCOMPtr<nsIThread> &aIOThread);
+  static nsresult CacheIconFileFromFaviconURIAsync(nsCOMPtr<nsIURI> aFaviconPageURI,
+                                                   nsCOMPtr<nsIFile> aICOFile,
+                                                   nsCOMPtr<nsIThread> &aIOThread);
+=======
+                                       nsString& aICOFilePath,
+                                       nsCOMPtr<nsIThread>& aIOThread);
+  static nsresult CacheIconFileFromFaviconURIAsync(
+      nsCOMPtr<nsIURI> aFaviconPageURI, nsCOMPtr<nsIFile> aICOFile,
+      nsCOMPtr<nsIThread>& aIOThread);
+>>>>>>> upstream-releases
 };
 
 }  // namespace widget

@@ -75,6 +75,8 @@
 #include "mozilla/dom/ScriptSettings.h"
 #include "js/Debug.h"
 #include "js/GCAPI.h"
+#include "js/Warnings.h"  // JS::SetWarningReporter
+#include "jsfriendapi.h"
 #include "nsContentUtils.h"
 #include "nsCycleCollectionNoteRootCallback.h"
 #include "nsCycleCollectionParticipant.h"
@@ -87,7 +89,11 @@
 #include "GeckoProfiler.h"
 
 #ifdef MOZ_GECKO_PROFILER
-#include "ProfilerMarkerPayload.h"
+#  include "ProfilerMarkerPayload.h"
+#endif
+
+#if defined(XP_MACOSX)
+#  include "nsMacUtilsImpl.h"
 #endif
 
 #include "nsIException.h"
@@ -96,10 +102,21 @@
 #include "xpcpublic.h"
 
 #ifdef NIGHTLY_BUILD
+<<<<<<< HEAD
 // For performance reasons, we make the JS Dev Error Interceptor a Nightly-only
 // feature.
 #define MOZ_JS_DEV_ERROR_INTERCEPTOR = 1
 #endif  // NIGHTLY_BUILD
+||||||| merged common ancestors
+// For performance reasons, we make the JS Dev Error Interceptor a Nightly-only feature.
+#define MOZ_JS_DEV_ERROR_INTERCEPTOR = 1
+#endif // NIGHTLY_BUILD
+=======
+// For performance reasons, we make the JS Dev Error Interceptor a Nightly-only
+// feature.
+#  define MOZ_JS_DEV_ERROR_INTERCEPTOR = 1
+#endif  // NIGHTLY_BUILD
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::dom;
@@ -205,7 +222,7 @@ void NoteWeakMapsTracer::trace(JSObject* aMap, JS::GCCellPtr aKey,
 
   JSObject* kdelegate = nullptr;
   if (aKey.is<JSObject>()) {
-    kdelegate = js::GetWeakmapKeyDelegate(&aKey.as<JSObject>());
+    kdelegate = js::UncheckedUnwrapWithoutExpose(&aKey.as<JSObject>());
   }
 
   if (JS::IsCCTraceKind(aValue.kind())) {
@@ -251,7 +268,8 @@ static void ShouldWeakMappingEntryBeBlack(JSObject* aMap, JS::GCCellPtr aKey,
   }
 
   if (keyMightNeedMarking && aKey.is<JSObject>()) {
-    JSObject* kdelegate = js::GetWeakmapKeyDelegate(&aKey.as<JSObject>());
+    JSObject* kdelegate =
+        js::UncheckedUnwrapWithoutExpose(&aKey.as<JSObject>());
     if (kdelegate && !JS::ObjectIsMarkedGray(kdelegate) &&
         (!aMap || !JS::ObjectIsMarkedGray(aMap))) {
       *aKeyShouldBeBlack = true;
@@ -482,6 +500,12 @@ CycleCollectedJSRuntime::CycleCollectedJSRuntime(JSContext* aCx)
   MOZ_ASSERT(aCx);
   MOZ_ASSERT(mJSRuntime);
 
+#if defined(XP_MACOSX)
+  if (!XRE_IsParentProcess()) {
+    nsMacUtilsImpl::EnableTCSMIfAvailable();
+  }
+#endif
+
   if (!JS_AddExtraGCRootsTracer(aCx, TraceBlackJS, this)) {
     MOZ_CRASH("JS_AddExtraGCRootsTracer failed");
   }
@@ -626,12 +650,14 @@ void CycleCollectedJSRuntime::NoteGCThingXPCOMChildren(
     // Nothing else to do!
     return;
   }
+
   // XXX This test does seem fragile, we should probably whitelist classes
   //     that do hold a strong reference, but that might not be possible.
-  else if (aClasp->flags & JSCLASS_HAS_PRIVATE &&
-           aClasp->flags & JSCLASS_PRIVATE_IS_NSISUPPORTS) {
+  if (aClasp->flags & JSCLASS_HAS_PRIVATE &&
+      aClasp->flags & JSCLASS_PRIVATE_IS_NSISUPPORTS) {
     NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(aCb, "js::GetObjectPrivate(obj)");
     aCb.NoteXPCOMChild(static_cast<nsISupports*>(js::GetObjectPrivate(aObj)));
+<<<<<<< HEAD
   } else {
     const DOMJSClass* domClass = GetDOMClass(aObj);
     if (domClass) {
@@ -647,7 +673,52 @@ void CycleCollectedJSRuntime::NoteGCThingXPCOMChildren(
         aCb.NoteNativeChild(UnwrapPossiblyNotInitializedDOMObject<void>(aObj),
                             domClass->mParticipant);
       }
+||||||| merged common ancestors
+  } else {
+    const DOMJSClass* domClass = GetDOMClass(aObj);
+    if (domClass) {
+      NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(aCb, "UnwrapDOMObject(obj)");
+      // It's possible that our object is an unforgeable holder object, in
+      // which case it doesn't actually have a C++ DOM object associated with
+      // it.  Use UnwrapPossiblyNotInitializedDOMObject, which produces null in
+      // that case, since NoteXPCOMChild/NoteNativeChild are null-safe.
+      if (domClass->mDOMObjectIsISupports) {
+        aCb.NoteXPCOMChild(UnwrapPossiblyNotInitializedDOMObject<nsISupports>(aObj));
+      } else if (domClass->mParticipant) {
+        aCb.NoteNativeChild(UnwrapPossiblyNotInitializedDOMObject<void>(aObj),
+                            domClass->mParticipant);
+      }
+=======
+    return;
+  }
+
+  const DOMJSClass* domClass = GetDOMClass(aClasp);
+  if (domClass) {
+    NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(aCb, "UnwrapDOMObject(obj)");
+    // It's possible that our object is an unforgeable holder object, in
+    // which case it doesn't actually have a C++ DOM object associated with
+    // it.  Use UnwrapPossiblyNotInitializedDOMObject, which produces null in
+    // that case, since NoteXPCOMChild/NoteNativeChild are null-safe.
+    if (domClass->mDOMObjectIsISupports) {
+      aCb.NoteXPCOMChild(
+          UnwrapPossiblyNotInitializedDOMObject<nsISupports>(aObj));
+    } else if (domClass->mParticipant) {
+      aCb.NoteNativeChild(UnwrapPossiblyNotInitializedDOMObject<void>(aObj),
+                          domClass->mParticipant);
+>>>>>>> upstream-releases
     }
+    return;
+  }
+
+  if (IsRemoteObjectProxy(aObj)) {
+    auto handler =
+        static_cast<const RemoteObjectProxyBase*>(js::GetProxyHandler(aObj));
+    return handler->NoteChildren(aObj, aCb);
+  }
+
+  JS::Value value = js::MaybeGetScriptPrivate(aObj);
+  if (!value.isUndefined()) {
+    aCb.NoteXPCOMChild(static_cast<nsISupports*>(value.toPrivate()));
   }
 }
 
@@ -717,8 +788,18 @@ void CycleCollectedJSRuntime::TraverseZone(
   js::IterateGrayObjects(aZone, TraverseObjectShim, &closure);
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::TraverseObjectShim(
     void* aData, JS::GCCellPtr aThing) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::TraverseObjectShim(void* aData, JS::GCCellPtr aThing)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::TraverseObjectShim(void* aData,
+                                                 JS::GCCellPtr aThing) {
+>>>>>>> upstream-releases
   TraverseObjectShimClosure* closure =
       static_cast<TraverseObjectShimClosure*>(aData);
 
@@ -752,24 +833,54 @@ void CycleCollectedJSRuntime::TraverseNativeRoots(
   }
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::TraceBlackJS(JSTracer* aTracer,
                                                         void* aData) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::TraceBlackJS(JSTracer* aTracer, void* aData)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::TraceBlackJS(JSTracer* aTracer, void* aData) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = static_cast<CycleCollectedJSRuntime*>(aData);
 
   self->TraceNativeBlackRoots(aTracer);
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::TraceGrayJS(JSTracer* aTracer,
                                                        void* aData) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::TraceGrayJS(JSTracer* aTracer, void* aData)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::TraceGrayJS(JSTracer* aTracer, void* aData) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = static_cast<CycleCollectedJSRuntime*>(aData);
 
   // Mark these roots as gray so the CC can walk them later.
   self->TraceNativeGrayRoots(aTracer);
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::GCCallback(JSContext* aContext,
                                                       JSGCStatus aStatus,
                                                       void* aData) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::GCCallback(JSContext* aContext,
+                                    JSGCStatus aStatus,
+                                    void* aData)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::GCCallback(JSContext* aContext,
+                                         JSGCStatus aStatus, void* aData) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = static_cast<CycleCollectedJSRuntime*>(aData);
 
   MOZ_ASSERT(CycleCollectedJSContext::Get()->Context() == aContext);
@@ -778,9 +889,22 @@ void CycleCollectedJSRuntime::TraverseNativeRoots(
   self->OnGC(aContext, aStatus);
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::GCSliceCallback(
     JSContext* aContext, JS::GCProgress aProgress,
     const JS::GCDescription& aDesc) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::GCSliceCallback(JSContext* aContext,
+                                         JS::GCProgress aProgress,
+                                         const JS::GCDescription& aDesc)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::GCSliceCallback(JSContext* aContext,
+                                              JS::GCProgress aProgress,
+                                              const JS::GCDescription& aDesc) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = CycleCollectedJSRuntime::Get();
   MOZ_ASSERT(CycleCollectedJSContext::Get()->Context() == aContext);
 
@@ -788,26 +912,68 @@ void CycleCollectedJSRuntime::TraverseNativeRoots(
   if (profiler_thread_is_being_profiled()) {
     if (aProgress == JS::GC_CYCLE_END) {
       profiler_add_marker(
+<<<<<<< HEAD
           "GCMajor", MakeUnique<GCMajorMarkerPayload>(
                          aDesc.startTime(aContext), aDesc.endTime(aContext),
                          aDesc.summaryToJSON(aContext)));
+||||||| merged common ancestors
+        "GCMajor",
+        MakeUnique<GCMajorMarkerPayload>(aDesc.startTime(aContext),
+                                         aDesc.endTime(aContext),
+                                         aDesc.summaryToJSON(aContext)));
+=======
+          "GCMajor", JS::ProfilingCategoryPair::GCCC,
+          MakeUnique<GCMajorMarkerPayload>(aDesc.startTime(aContext),
+                                           aDesc.endTime(aContext),
+                                           aDesc.formatJSONProfiler(aContext)));
+>>>>>>> upstream-releases
     } else if (aProgress == JS::GC_SLICE_END) {
+<<<<<<< HEAD
       profiler_add_marker("GCSlice", MakeUnique<GCSliceMarkerPayload>(
                                          aDesc.lastSliceStart(aContext),
                                          aDesc.lastSliceEnd(aContext),
                                          aDesc.sliceToJSON(aContext)));
+||||||| merged common ancestors
+      profiler_add_marker(
+        "GCSlice",
+        MakeUnique<GCSliceMarkerPayload>(aDesc.lastSliceStart(aContext),
+                                         aDesc.lastSliceEnd(aContext),
+                                         aDesc.sliceToJSON(aContext)));
+=======
+      profiler_add_marker(
+          "GCSlice", JS::ProfilingCategoryPair::GCCC,
+          MakeUnique<GCSliceMarkerPayload>(
+              aDesc.lastSliceStart(aContext), aDesc.lastSliceEnd(aContext),
+              aDesc.sliceToJSONProfiler(aContext)));
+>>>>>>> upstream-releases
     }
   }
 #endif
 
   if (aProgress == JS::GC_CYCLE_END &&
       JS::dbg::FireOnGarbageCollectionHookRequired(aContext)) {
+<<<<<<< HEAD
     JS::gcreason::Reason reason = aDesc.reason_;
     Unused << NS_WARN_IF(
         NS_FAILED(DebuggerOnGCRunnable::Enqueue(aContext, aDesc)) &&
         reason != JS::gcreason::SHUTDOWN_CC &&
         reason != JS::gcreason::DESTROY_RUNTIME &&
         reason != JS::gcreason::XPCONNECT_SHUTDOWN);
+||||||| merged common ancestors
+    JS::gcreason::Reason reason = aDesc.reason_;
+    Unused <<
+      NS_WARN_IF(NS_FAILED(DebuggerOnGCRunnable::Enqueue(aContext, aDesc)) &&
+                 reason != JS::gcreason::SHUTDOWN_CC &&
+                 reason != JS::gcreason::DESTROY_RUNTIME &&
+                 reason != JS::gcreason::XPCONNECT_SHUTDOWN);
+=======
+    JS::GCReason reason = aDesc.reason_;
+    Unused << NS_WARN_IF(
+        NS_FAILED(DebuggerOnGCRunnable::Enqueue(aContext, aDesc)) &&
+        reason != JS::GCReason::SHUTDOWN_CC &&
+        reason != JS::GCReason::DESTROY_RUNTIME &&
+        reason != JS::GCReason::XPCONNECT_SHUTDOWN);
+>>>>>>> upstream-releases
   }
 
   if (self->mPrevGCSliceCallback) {
@@ -815,6 +981,7 @@ void CycleCollectedJSRuntime::TraverseNativeRoots(
   }
 }
 
+<<<<<<< HEAD
 class MinorGCMarker : public TimelineMarker {
  private:
   JS::gcreason::Reason mReason;
@@ -838,10 +1005,67 @@ class MinorGCMarker : public TimelineMarker {
 
   virtual void AddDetails(JSContext* aCx,
                           dom::ProfileTimelineMarker& aMarker) override {
+||||||| merged common ancestors
+class MinorGCMarker : public TimelineMarker
+{
+private:
+  JS::gcreason::Reason mReason;
+
+public:
+  MinorGCMarker(MarkerTracingType aTracingType,
+                JS::gcreason::Reason aReason)
+    : TimelineMarker("MinorGC",
+                     aTracingType,
+                     MarkerStackRequest::NO_STACK)
+    , mReason(aReason)
+    {
+      MOZ_ASSERT(aTracingType == MarkerTracingType::START ||
+                 aTracingType == MarkerTracingType::END);
+    }
+
+  MinorGCMarker(JS::GCNurseryProgress aProgress,
+                JS::gcreason::Reason aReason)
+    : TimelineMarker("MinorGC",
+                     aProgress == JS::GCNurseryProgress::GC_NURSERY_COLLECTION_START
+                       ? MarkerTracingType::START
+                       : MarkerTracingType::END,
+                     MarkerStackRequest::NO_STACK)
+    , mReason(aReason)
+  { }
+
+  virtual void
+  AddDetails(JSContext* aCx,
+             dom::ProfileTimelineMarker& aMarker) override
+  {
+=======
+class MinorGCMarker : public TimelineMarker {
+ private:
+  JS::GCReason mReason;
+
+ public:
+  MinorGCMarker(MarkerTracingType aTracingType, JS::GCReason aReason)
+      : TimelineMarker("MinorGC", aTracingType, MarkerStackRequest::NO_STACK),
+        mReason(aReason) {
+    MOZ_ASSERT(aTracingType == MarkerTracingType::START ||
+               aTracingType == MarkerTracingType::END);
+  }
+
+  MinorGCMarker(JS::GCNurseryProgress aProgress, JS::GCReason aReason)
+      : TimelineMarker(
+            "MinorGC",
+            aProgress == JS::GCNurseryProgress::GC_NURSERY_COLLECTION_START
+                ? MarkerTracingType::START
+                : MarkerTracingType::END,
+            MarkerStackRequest::NO_STACK),
+        mReason(aReason) {}
+
+  virtual void AddDetails(JSContext* aCx,
+                          dom::ProfileTimelineMarker& aMarker) override {
+>>>>>>> upstream-releases
     TimelineMarker::AddDetails(aCx, aMarker);
 
     if (GetTracingType() == MarkerTracingType::START) {
-      auto reason = JS::gcreason::ExplainReason(mReason);
+      auto reason = JS::ExplainGCReason(mReason);
       aMarker.mCauseName.Construct(NS_ConvertUTF8toUTF16(reason));
     }
   }
@@ -853,9 +1077,22 @@ class MinorGCMarker : public TimelineMarker {
   }
 };
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::GCNurseryCollectionCallback(
     JSContext* aContext, JS::GCNurseryProgress aProgress,
     JS::gcreason::Reason aReason) {
+||||||| merged common ancestors
+/* static */ void
+CycleCollectedJSRuntime::GCNurseryCollectionCallback(JSContext* aContext,
+                                                     JS::GCNurseryProgress aProgress,
+                                                     JS::gcreason::Reason aReason)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::GCNurseryCollectionCallback(
+    JSContext* aContext, JS::GCNurseryProgress aProgress,
+    JS::GCReason aReason) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = CycleCollectedJSRuntime::Get();
   MOZ_ASSERT(CycleCollectedJSContext::Get()->Context() == aContext);
   MOZ_ASSERT(NS_IsMainThread());
@@ -872,11 +1109,27 @@ class MinorGCMarker : public TimelineMarker {
   }
 #ifdef MOZ_GECKO_PROFILER
   else if (aProgress == JS::GCNurseryProgress::GC_NURSERY_COLLECTION_END &&
+<<<<<<< HEAD
            profiler_thread_is_being_profiled()) {
     profiler_add_marker(
         "GCMinor", MakeUnique<GCMinorMarkerPayload>(
                        self->mLatestNurseryCollectionStart, TimeStamp::Now(),
                        JS::MinorGcToJSON(aContext)));
+||||||| merged common ancestors
+           profiler_is_active())
+  {
+    profiler_add_marker(
+      "GCMinor",
+      MakeUnique<GCMinorMarkerPayload>(self->mLatestNurseryCollectionStart,
+                                       TimeStamp::Now(),
+                                       JS::MinorGcToJSON(aContext)));
+=======
+           profiler_thread_is_being_profiled()) {
+    profiler_add_marker("GCMinor", JS::ProfilingCategoryPair::GCCC,
+                        MakeUnique<GCMinorMarkerPayload>(
+                            self->mLatestNurseryCollectionStart,
+                            TimeStamp::Now(), JS::MinorGcToJSON(aContext)));
+>>>>>>> upstream-releases
   }
 #endif
 
@@ -885,8 +1138,20 @@ class MinorGCMarker : public TimelineMarker {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void CycleCollectedJSRuntime::OutOfMemoryCallback(
     JSContext* aContext, void* aData) {
+||||||| merged common ancestors
+
+/* static */ void
+CycleCollectedJSRuntime::OutOfMemoryCallback(JSContext* aContext,
+                                             void* aData)
+{
+=======
+/* static */
+void CycleCollectedJSRuntime::OutOfMemoryCallback(JSContext* aContext,
+                                                  void* aData) {
+>>>>>>> upstream-releases
   CycleCollectedJSRuntime* self = static_cast<CycleCollectedJSRuntime*>(aData);
 
   MOZ_ASSERT(CycleCollectedJSContext::Get()->Context() == aContext);
@@ -895,8 +1160,19 @@ class MinorGCMarker : public TimelineMarker {
   self->OnOutOfMemory();
 }
 
+<<<<<<< HEAD
 /* static */ size_t CycleCollectedJSRuntime::SizeofExternalStringCallback(
     JSString* aStr, MallocSizeOf aMallocSizeOf) {
+||||||| merged common ancestors
+/* static */ size_t
+CycleCollectedJSRuntime::SizeofExternalStringCallback(JSString* aStr,
+                                                      MallocSizeOf aMallocSizeOf)
+{
+=======
+/* static */
+size_t CycleCollectedJSRuntime::SizeofExternalStringCallback(
+    JSString* aStr, MallocSizeOf aMallocSizeOf) {
+>>>>>>> upstream-releases
   // We promised the JS engine we would not GC.  Enforce that:
   JS::AutoCheckCannotGC autoCannotGC;
 
@@ -1113,13 +1389,24 @@ bool CycleCollectedJSRuntime::AreGCGrayBitsValid() const {
   return js::AreGCGrayBitsValid(mJSRuntime);
 }
 
+<<<<<<< HEAD
 void CycleCollectedJSRuntime::GarbageCollect(uint32_t aReason) const {
   MOZ_ASSERT(aReason < JS::gcreason::NUM_REASONS);
   JS::gcreason::Reason gcreason = static_cast<JS::gcreason::Reason>(aReason);
 
+||||||| merged common ancestors
+void
+CycleCollectedJSRuntime::GarbageCollect(uint32_t aReason) const
+{
+  MOZ_ASSERT(aReason < JS::gcreason::NUM_REASONS);
+  JS::gcreason::Reason gcreason = static_cast<JS::gcreason::Reason>(aReason);
+
+=======
+void CycleCollectedJSRuntime::GarbageCollect(JS::GCReason aReason) const {
+>>>>>>> upstream-releases
   JSContext* cx = CycleCollectedJSContext::Get()->Context();
   JS::PrepareForFullGC(cx);
-  JS::NonIncrementalGC(cx, GC_NORMAL, gcreason);
+  JS::NonIncrementalGC(cx, GC_NORMAL, aReason);
 }
 
 void CycleCollectedJSRuntime::JSObjectsTenured() {
@@ -1175,7 +1462,10 @@ void CycleCollectedJSRuntime::DeferredFinalize(nsISupports* aSupports) {
 
 void CycleCollectedJSRuntime::DumpJSHeap(FILE* aFile) {
   JSContext* cx = CycleCollectedJSContext::Get()->Context();
-  js::DumpHeap(cx, aFile, js::CollectNurseryBeforeDump);
+
+  mozilla::MallocSizeOf mallocSizeOf =
+      PR_GetEnv("MOZ_GC_LOG_SIZE") ? moz_malloc_size_of : nullptr;
+  js::DumpHeap(cx, aFile, js::CollectNurseryBeforeDump, mallocSizeOf);
 }
 
 IncrementalFinalizeRunnable::IncrementalFinalizeRunnable(
@@ -1317,7 +1607,8 @@ void CycleCollectedJSRuntime::FinalizeDeferredThings(
   MOZ_ASSERT(mDeferredFinalizerTable.Count() == 0);
 
   if (aType == CycleCollectedJSContext::FinalizeIncrementally) {
-    NS_IdleDispatchToCurrentThread(do_AddRef(mFinalizeRunnable), 2500);
+    NS_DispatchToCurrentThreadQueue(do_AddRef(mFinalizeRunnable), 2500,
+                                    EventQueuePriority::Idle);
   } else {
     mFinalizeRunnable->ReleaseNow(false);
     MOZ_ASSERT(!mFinalizeRunnable);
@@ -1419,7 +1710,7 @@ void CycleCollectedJSRuntime::EnvironmentPreparer::invoke(
   nsIGlobalObject* nativeGlobal = xpc::NativeGlobal(global);
 
   // Not much we can do if we simply don't have a usable global here...
-  NS_ENSURE_TRUE_VOID(nativeGlobal && nativeGlobal->GetGlobalJSObject());
+  NS_ENSURE_TRUE_VOID(nativeGlobal && nativeGlobal->HasJSGlobal());
 
   AutoEntryScript aes(nativeGlobal, "JS-engine-initiated execution");
 
@@ -1433,7 +1724,16 @@ void CycleCollectedJSRuntime::EnvironmentPreparer::invoke(
   // JSContext and report it as needed as it comes off the stack.
 }
 
+<<<<<<< HEAD
 /* static */ CycleCollectedJSRuntime* CycleCollectedJSRuntime::Get() {
+||||||| merged common ancestors
+/* static */ CycleCollectedJSRuntime*
+CycleCollectedJSRuntime::Get()
+{
+=======
+/* static */
+CycleCollectedJSRuntime* CycleCollectedJSRuntime::Get() {
+>>>>>>> upstream-releases
   auto context = CycleCollectedJSContext::Get();
   if (context) {
     return context->Runtime();
@@ -1452,8 +1752,18 @@ void CycleCollectedJSRuntime::ErrorInterceptor::Shutdown(JSRuntime* rt) {
   mThrownError.reset();
 }
 
+<<<<<<< HEAD
 /* virtual */ void CycleCollectedJSRuntime::ErrorInterceptor::interceptError(
     JSContext* cx, JS::HandleValue exn) {
+||||||| merged common ancestors
+/* virtual */ void
+CycleCollectedJSRuntime::ErrorInterceptor::interceptError(JSContext* cx, const JS::Value& exn)
+{
+=======
+/* virtual */
+void CycleCollectedJSRuntime::ErrorInterceptor::interceptError(
+    JSContext* cx, JS::HandleValue exn) {
+>>>>>>> upstream-releases
   if (mThrownError) {
     // We already have an error, we don't need anything more.
     return;

@@ -13,36 +13,69 @@ namespace mozilla {
 namespace gfx {
 class SourceSurface;
 }
-namespace dom {
-class VideoDecoderManagerChild;
-}
+class RemoteDecoderManagerChild;
+
 namespace layers {
 
+<<<<<<< HEAD
 class GPUVideoTextureData : public TextureData {
  public:
   GPUVideoTextureData(dom::VideoDecoderManagerChild* aManager,
+||||||| merged common ancestors
+class GPUVideoTextureData : public TextureData
+{
+public:
+  GPUVideoTextureData(dom::VideoDecoderManagerChild* aManager,
+=======
+class GPUVideoTextureData : public TextureData {
+ public:
+  GPUVideoTextureData(RemoteDecoderManagerChild* aManager,
+>>>>>>> upstream-releases
                       const SurfaceDescriptorGPUVideo& aSD,
                       const gfx::IntSize& aSize);
-  ~GPUVideoTextureData();
+  virtual ~GPUVideoTextureData();
 
-  virtual void FillInfo(TextureData::Info& aInfo) const override;
+  void FillInfo(TextureData::Info& aInfo) const override;
 
-  virtual bool Lock(OpenMode) override { return true; };
+  bool Lock(OpenMode) override { return true; };
 
+<<<<<<< HEAD
   virtual void Unlock() override{};
+||||||| merged common ancestors
+  virtual void Unlock() override {};
+=======
+  void Unlock() override{};
+>>>>>>> upstream-releases
 
-  virtual bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
+  bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
 
-  virtual void Deallocate(LayersIPCChannel* aAllocator) override;
+  void Deallocate(LayersIPCChannel* aAllocator) override;
 
-  virtual void Forget(LayersIPCChannel* aAllocator) override;
+  void Forget(LayersIPCChannel* aAllocator) override;
 
   already_AddRefed<gfx::SourceSurface> GetAsSourceSurface();
 
+<<<<<<< HEAD
   virtual GPUVideoTextureData* AsGPUVideoTextureData() override { return this; }
+||||||| merged common ancestors
+  virtual GPUVideoTextureData* AsGPUVideoTextureData() override
+  {
+    return this;
+  }
+=======
+  GPUVideoTextureData* AsGPUVideoTextureData() override { return this; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   RefPtr<dom::VideoDecoderManagerChild> mManager;
+||||||| merged common ancestors
+protected:
+  RefPtr<dom::VideoDecoderManagerChild> mManager;
+=======
+ protected:
+  RefPtr<RemoteDecoderManagerChild> mManager;
+>>>>>>> upstream-releases
   SurfaceDescriptorGPUVideo mSD;
   gfx::IntSize mSize;
 

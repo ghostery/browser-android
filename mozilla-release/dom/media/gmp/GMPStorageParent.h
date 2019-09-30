@@ -15,7 +15,15 @@ namespace gmp {
 class GMPParent;
 
 class GMPStorageParent : public PGMPStorageParent {
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  friend class PGMPStorageParent;
+
+ public:
+>>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(GMPStorageParent)
   GMPStorageParent(const nsCString& aNodeId, GMPParent* aPlugin);
 

@@ -3,6 +3,7 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 "use strict";
+<<<<<<< HEAD
 /* eslint-disable no-restricted-globals */
 
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
@@ -11,15 +12,43 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("chrome://marionette/content/accessibility.js");
 ChromeUtils.import("chrome://marionette/content/atom.js");
 ChromeUtils.import("chrome://marionette/content/element.js");
+||||||| merged common ancestors
+
+ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+ChromeUtils.import("chrome://marionette/content/accessibility.js");
+ChromeUtils.import("chrome://marionette/content/atom.js");
+ChromeUtils.import("chrome://marionette/content/element.js");
+=======
+/* eslint-disable no-restricted-globals */
+
+const { Preferences } = ChromeUtils.import(
+  "resource://gre/modules/Preferences.jsm"
+);
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+
+const { accessibility } = ChromeUtils.import(
+  "chrome://marionette/content/accessibility.js"
+);
+const { atom } = ChromeUtils.import("chrome://marionette/content/atom.js");
+const { element } = ChromeUtils.import(
+  "chrome://marionette/content/element.js"
+);
+>>>>>>> upstream-releases
 const {
   ElementClickInterceptedError,
   ElementNotInteractableError,
   InvalidArgumentError,
   InvalidElementStateError,
-} = ChromeUtils.import("chrome://marionette/content/error.js", {});
-ChromeUtils.import("chrome://marionette/content/event.js");
-const {pprint} = ChromeUtils.import("chrome://marionette/content/format.js", {});
-const {TimedPromise} = ChromeUtils.import("chrome://marionette/content/sync.js", {});
+} = ChromeUtils.import("chrome://marionette/content/error.js");
+const { event } = ChromeUtils.import("chrome://marionette/content/event.js");
+const { pprint } = ChromeUtils.import("chrome://marionette/content/format.js");
+const { TimedPromise } = ChromeUtils.import(
+  "chrome://marionette/content/sync.js"
+);
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["File"]);
 
@@ -62,11 +91,7 @@ const DISABLED_ATTRIBUTE_SUPPORTED_XUL = new Set([
  * Common form controls that user can change the value property
  * interactively.
  */
-const COMMON_FORM_CONTROLS = new Set([
-  "input",
-  "textarea",
-  "select",
-]);
+const COMMON_FORM_CONTROLS = new Set(["input", "textarea", "select"]);
 
 /**
  * Input elements that do not fire <tt>input</tt> and <tt>change</tt>
@@ -123,7 +148,10 @@ this.interaction = {};
  *     If <var>el</var> is not enabled.
  */
 interaction.clickElement = async function(
-    el, strict = false, specCompat = false) {
+  el,
+  strict = false,
+  specCompat = false
+) {
   const a11y = accessibility.get(strict);
   if (element.isXULElement(el)) {
     await chromeClick(el, a11y);
@@ -139,8 +167,7 @@ async function webdriverClickElement(el, a11y) {
 
   // step 3
   if (el.localName == "input" && el.type == "file") {
-    throw new InvalidArgumentError(
-        "Cannot click <input type=file> elements");
+    throw new InvalidArgumentError("Cannot click <input type=file> elements");
   }
 
   let containerEl = element.getContainer(el);
@@ -158,7 +185,8 @@ async function webdriverClickElement(el, a11y) {
   // there is no point in checking if it is pointer-interactable
   if (!element.isInView(containerEl)) {
     throw new ElementNotInteractableError(
-        pprint`Element ${el} could not be scrolled into view`);
+      pprint`Element ${el} could not be scrolled into view`
+    );
   }
 
   // step 7
@@ -209,7 +237,7 @@ async function chromeClick(el, a11y) {
 async function seleniumClickElement(el, a11y) {
   let win = getWindow(el);
 
-  let visibilityCheckEl  = el;
+  let visibilityCheckEl = el;
   if (el.localName == "option") {
     visibilityCheckEl = element.getContainer(el);
   }
@@ -319,7 +347,8 @@ interaction.clearElement = function(el) {
   }
   if (!element.isEditable(el)) {
     throw new InvalidElementStateError(
-        pprint`Unable to clear element that cannot be edited: ${el}`);
+      pprint`Unable to clear element that cannot be edited: ${el}`
+    );
   }
 
   if (!element.isInView(el)) {
@@ -327,7 +356,8 @@ interaction.clearElement = function(el) {
   }
   if (!element.isInView(el)) {
     throw new ElementNotInteractableError(
-        pprint`Element ${el} could not be scrolled into view`);
+      pprint`Element ${el} could not be scrolled into view`
+    );
   }
 
   if (element.isEditingHost(el)) {
@@ -349,7 +379,9 @@ function clearContentEditableElement(el) {
 
 function clearResettableElement(el) {
   if (!element.isMutableFormControl(el)) {
-    throw new InvalidElementStateError(pprint`Not an editable form control: ${el}`);
+    throw new InvalidElementStateError(
+      pprint`Not an editable form control: ${el}`
+    );
   }
 
   let isEmpty;
@@ -400,8 +432,8 @@ interaction.flushEventLoop = async function(el) {
       }
     };
 
-    win.addEventListener("unload", unloadEv, {mozSystemGroup: true});
-    el.addEventListener("click", clickEv, {mozSystemGroup: true});
+    win.addEventListener("unload", unloadEv, { mozSystemGroup: true });
+    el.addEventListener("click", clickEv, { mozSystemGroup: true });
   };
   let removeListeners = () => {
     // only one event fires
@@ -409,8 +441,9 @@ interaction.flushEventLoop = async function(el) {
     el.removeEventListener("click", clickEv);
   };
 
-  return new TimedPromise(spinEventLoop, {timeout: 500, throws: null})
-      .then(removeListeners);
+  return new TimedPromise(spinEventLoop, { timeout: 500, throws: null }).then(
+    removeListeners
+  );
 };
 
 /**
@@ -487,10 +520,10 @@ interaction.uploadFiles = async function(el, paths) {
   if (el.hasAttribute("multiple")) {
     // for multiple file uploads new files will be appended
     files = Array.prototype.slice.call(el.files);
-
   } else if (paths.length > 1) {
     throw new InvalidArgumentError(
-        pprint`Element ${el} doesn't accept multiple files`);
+      pprint`Element ${el} doesn't accept multiple files`
+    );
   }
 
   for (let path of paths) {
@@ -548,6 +581,7 @@ interaction.setFormControlValue = function(el, value) {
  * @param {boolean=} webdriverClick
  *     Use WebDriver specification compatible interactability definition.
  */
+<<<<<<< HEAD
 interaction.sendKeysToElement = async function(el, value,
     {
       strictFileInteractability = false,
@@ -559,23 +593,75 @@ interaction.sendKeysToElement = async function(el, value,
   if (webdriverClick) {
     await webdriverSendKeysToElement(
         el, value, a11y, strictFileInteractability);
+||||||| merged common ancestors
+interaction.sendKeysToElement = async function(
+    el, value, strict = false, specCompat = false) {
+  const a11y = accessibility.get(strict);
+
+  if (specCompat) {
+    await webdriverSendKeysToElement(el, value, a11y);
+=======
+interaction.sendKeysToElement = async function(
+  el,
+  value,
+  {
+    strictFileInteractability = false,
+    accessibilityChecks = false,
+    webdriverClick = false,
+  } = {}
+) {
+  const a11y = accessibility.get(accessibilityChecks);
+
+  if (webdriverClick) {
+    await webdriverSendKeysToElement(
+      el,
+      value,
+      a11y,
+      strictFileInteractability
+    );
+>>>>>>> upstream-releases
   } else {
     await legacySendKeysToElement(el, value, a11y);
   }
 };
 
+<<<<<<< HEAD
 async function webdriverSendKeysToElement(el, value,
     a11y, strictFileInteractability) {
+||||||| merged common ancestors
+async function webdriverSendKeysToElement(el, value, a11y) {
+=======
+async function webdriverSendKeysToElement(
+  el,
+  value,
+  a11y,
+  strictFileInteractability
+) {
+>>>>>>> upstream-releases
   const win = getWindow(el);
 
   if (el.type != "file" || strictFileInteractability) {
     let containerEl = element.getContainer(el);
 
+<<<<<<< HEAD
     // TODO: Wait for element to be keyboard-interactible
     if (!interaction.isKeyboardInteractable(containerEl)) {
       throw new ElementNotInteractableError(
           pprint`Element ${el} is not reachable by keyboard`);
     }
+||||||| merged common ancestors
+  // TODO: Wait for element to be keyboard-interactible
+  if (!interaction.isKeyboardInteractable(containerEl)) {
+    throw new ElementNotInteractableError(
+        pprint`Element ${el} is not reachable by keyboard`);
+=======
+    // TODO: Wait for element to be keyboard-interactible
+    if (!interaction.isKeyboardInteractable(containerEl)) {
+      throw new ElementNotInteractableError(
+        pprint`Element ${el} is not reachable by keyboard`
+      );
+    }
+>>>>>>> upstream-releases
   }
 
   let acc = await a11y.getAccessible(el, true);
@@ -590,8 +676,10 @@ async function webdriverSendKeysToElement(el, value,
 
     event.input(el);
     event.change(el);
-  } else if ((el.type == "date" || el.type == "time") &&
-      Preferences.get("dom.forms.datetime")) {
+  } else if (
+    (el.type == "date" || el.type == "time") &&
+    Preferences.get("dom.forms.datetime")
+  ) {
     interaction.setFormControlValue(el, value);
   } else {
     event.sendKeysToElement(value, el, win);
@@ -607,11 +695,13 @@ async function legacySendKeysToElement(el, value, a11y) {
 
     event.input(el);
     event.change(el);
-  } else if ((el.type == "date" || el.type == "time") &&
-      Preferences.get("dom.forms.datetime")) {
+  } else if (
+    (el.type == "date" || el.type == "time") &&
+    Preferences.get("dom.forms.datetime")
+  ) {
     interaction.setFormControlValue(el, value);
   } else {
-    let visibilityCheckEl  = el;
+    let visibilityCheckEl = el;
     if (el.localName == "option") {
       visibilityCheckEl = element.getContainer(el);
     }
@@ -667,14 +757,19 @@ interaction.isElementEnabled = function(el, strict = false) {
   if (element.isXULElement(el)) {
     // check if XUL element supports disabled attribute
     if (DISABLED_ATTRIBUTE_SUPPORTED_XUL.has(el.tagName.toUpperCase())) {
-      if (el.hasAttribute("disabled") && el.getAttribute("disabled") === "true") {
+      if (
+        el.hasAttribute("disabled") &&
+        el.getAttribute("disabled") === "true"
+      ) {
         enabled = false;
       }
     }
-  } else if (["application/xml", "text/xml"].includes(win.document.contentType)) {
+  } else if (
+    ["application/xml", "text/xml"].includes(win.document.contentType)
+  ) {
     enabled = false;
   } else {
-    enabled = atom.isElementEnabled(el, {frame: win});
+    enabled = atom.isElementEnabled(el, { frame: win });
   }
 
   let a11y = accessibility.get(strict);

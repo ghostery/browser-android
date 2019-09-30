@@ -11,7 +11,14 @@ namespace gfx {
 
 class GPUProcessListener {
  public:
+<<<<<<< HEAD
   virtual ~GPUProcessListener() {}
+||||||| merged common ancestors
+  virtual ~GPUProcessListener()
+  {}
+=======
+  virtual ~GPUProcessListener() = default;
+>>>>>>> upstream-releases
 
   // Called when the compositor has died and the rendering stack must be
   // recreated.

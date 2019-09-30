@@ -23,10 +23,9 @@
 #include "nsError.h"
 #include "nsGkAtoms.h"
 #include "nsComboboxControlFrame.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIFormControlFrame.h"
 #include "nsIForm.h"
-#include "nsIFormProcessor.h"
 #include "nsIFrame.h"
 #include "nsListControlFrame.h"
 #include "nsISelectControlFrame.h"
@@ -109,6 +108,7 @@ SafeOptionListMutation::~SafeOptionListMutation() {
 
 // construction, destruction
 
+<<<<<<< HEAD
 HTMLSelectElement::HTMLSelectElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
     FromParser aFromParser)
@@ -127,6 +127,47 @@ HTMLSelectElement::HTMLSelectElement(
       mNonOptionChildren(0),
       mOptGroupCount(0),
       mSelectedIndex(-1) {
+||||||| merged common ancestors
+
+HTMLSelectElement::HTMLSelectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+                                     FromParser aFromParser)
+  : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), NS_FORM_SELECT),
+    mOptions(new HTMLOptionsCollection(this)),
+    mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
+    mAutocompleteInfoState(nsContentUtils::eAutocompleteAttrState_Unknown),
+    mIsDoneAddingChildren(!aFromParser),
+    mDisabledChanged(false),
+    mMutating(false),
+    mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
+    mSelectionHasChanged(false),
+    mDefaultSelectionSet(false),
+    mCanShowInvalidUI(true),
+    mCanShowValidUI(true),
+    mNonOptionChildren(0),
+    mOptGroupCount(0),
+    mSelectedIndex(-1)
+{
+=======
+HTMLSelectElement::HTMLSelectElement(
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
+    FromParser aFromParser)
+    : nsGenericHTMLFormElementWithState(std::move(aNodeInfo), aFromParser,
+                                        NS_FORM_SELECT),
+      mOptions(new HTMLOptionsCollection(this)),
+      mAutocompleteAttrState(nsContentUtils::eAutocompleteAttrState_Unknown),
+      mAutocompleteInfoState(nsContentUtils::eAutocompleteAttrState_Unknown),
+      mIsDoneAddingChildren(!aFromParser),
+      mDisabledChanged(false),
+      mMutating(false),
+      mInhibitStateRestoration(!!(aFromParser & FROM_PARSER_FRAGMENT)),
+      mSelectionHasChanged(false),
+      mDefaultSelectionSet(false),
+      mCanShowInvalidUI(true),
+      mCanShowValidUI(true),
+      mNonOptionChildren(0),
+      mOptGroupCount(0),
+      mSelectedIndex(-1) {
+>>>>>>> upstream-releases
   SetHasWeirdParserInsertionMode();
 
   // DoneAddingChildren() will be called later if it's from the parser,
@@ -622,8 +663,16 @@ nsIHTMLCollection* HTMLSelectElement::SelectedOptions() {
   return mSelectedOptions;
 }
 
+<<<<<<< HEAD
 nsresult HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex,
                                                      bool aNotify) {
+||||||| merged common ancestors
+nsresult
+HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex, bool aNotify)
+{
+=======
+void HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex, bool aNotify) {
+>>>>>>> upstream-releases
   int32_t oldSelectedIndex = mSelectedIndex;
   uint32_t mask = IS_SELECTED | CLEAR_ALL | SET_DISABLED;
   if (aNotify) {
@@ -632,15 +681,12 @@ nsresult HTMLSelectElement::SetSelectedIndexInternal(int32_t aIndex,
 
   SetOptionsSelectedByIndex(aIndex, aIndex, mask);
 
-  nsresult rv = NS_OK;
   nsISelectControlFrame* selectFrame = GetSelectFrame();
   if (selectFrame) {
-    rv = selectFrame->OnSetSelectedIndex(oldSelectedIndex, mSelectedIndex);
+    selectFrame->OnSetSelectedIndex(oldSelectedIndex, mSelectedIndex);
   }
 
   SetSelectionChanged(true, aNotify);
-
-  return rv;
 }
 
 bool HTMLSelectElement::IsOptionSelectedByIndex(int32_t aIndex) {
@@ -995,8 +1041,7 @@ bool HTMLSelectElement::SelectSomething(bool aNotify) {
     nsresult rv = IsOptionDisabled(i, &disabled);
 
     if (NS_FAILED(rv) || !disabled) {
-      rv = SetSelectedIndexInternal(i, aNotify);
-      NS_ENSURE_SUCCESS(rv, false);
+      SetSelectedIndexInternal(i, aNotify);
 
       UpdateValueMissingValidityState();
       UpdateState(aNotify);
@@ -1008,11 +1053,25 @@ bool HTMLSelectElement::SelectSomething(bool aNotify) {
   return false;
 }
 
+<<<<<<< HEAD
 nsresult HTMLSelectElement::BindToTree(nsIDocument* aDocument,
                                        nsIContent* aParent,
                                        nsIContent* aBindingParent) {
   nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(
       aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLSelectElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                              nsIContent* aBindingParent)
+{
+  nsresult rv = nsGenericHTMLFormElementWithState::BindToTree(aDocument, aParent,
+                                                              aBindingParent);
+=======
+nsresult HTMLSelectElement::BindToTree(BindContext& aContext,
+                                       nsINode& aParent) {
+  nsresult rv =
+      nsGenericHTMLFormElementWithState::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // If there is a disabled fieldset in the parent chain, the element is now
@@ -1027,8 +1086,18 @@ nsresult HTMLSelectElement::BindToTree(nsIDocument* aDocument,
   return rv;
 }
 
+<<<<<<< HEAD
 void HTMLSelectElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
+||||||| merged common ancestors
+void
+HTMLSelectElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsGenericHTMLFormElementWithState::UnbindFromTree(aDeep, aNullParent);
+=======
+void HTMLSelectElement::UnbindFromTree(bool aNullParent) {
+  nsGenericHTMLFormElementWithState::UnbindFromTree(aNullParent);
+>>>>>>> upstream-releases
 
   // We might be no longer disabled because our parent chain changed.
   // XXXbz is this still needed now that fieldset changes always call
@@ -1120,10 +1189,8 @@ void HTMLSelectElement::DoneAddingChildren(bool aHaveNotified) {
   }
 
   if (!mInhibitStateRestoration) {
-    nsresult rv = GenerateStateKey();
-    if (NS_SUCCEEDED(rv)) {
-      RestoreFormControlState();
-    }
+    GenerateStateKey();
+    RestoreFormControlState();
   }
 
   // Now that we're done, select something (if it's a single select something
@@ -1402,8 +1469,6 @@ HTMLSelectElement::Reset() {
   return NS_OK;
 }
 
-static NS_DEFINE_CID(kFormProcessorCID, NS_FORMPROCESSOR_CID);
-
 NS_IMETHODIMP
 HTMLSelectElement::SubmitNamesValues(HTMLFormSubmission* aFormSubmission) {
   // Disabled elements don't submit
@@ -1425,13 +1490,6 @@ HTMLSelectElement::SubmitNamesValues(HTMLFormSubmission* aFormSubmission) {
   //
   uint32_t len = Length();
 
-  nsAutoString mozType;
-  nsCOMPtr<nsIFormProcessor> keyGenProcessor;
-  if (GetAttr(kNameSpaceID_None, nsGkAtoms::moztype, mozType) &&
-      mozType.EqualsLiteral("-mozilla-keygen")) {
-    keyGenProcessor = do_GetService(kFormProcessorCID);
-  }
-
   for (uint32_t optIndex = 0; optIndex < len; optIndex++) {
     HTMLOptionElement* option = Item(optIndex);
 
@@ -1446,13 +1504,6 @@ HTMLSelectElement::SubmitNamesValues(HTMLFormSubmission* aFormSubmission) {
 
     nsString value;
     option->GetValue(value);
-
-    if (keyGenProcessor) {
-      nsString tmp(value);
-      if (NS_SUCCEEDED(keyGenProcessor->ProcessValue(this, name, tmp))) {
-        value = tmp;
-      }
-    }
 
     aFormSubmission->AddNameValuePair(name, value);
   }

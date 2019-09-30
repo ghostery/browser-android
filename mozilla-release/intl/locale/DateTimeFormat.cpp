@@ -16,8 +16,18 @@ namespace mozilla {
 using namespace mozilla::intl;
 
 nsCString* DateTimeFormat::mLocale = nullptr;
+nsDataHashtable<nsCStringHashKey, UDateFormat*>* DateTimeFormat::mFormatCache;
 
+<<<<<<< HEAD
 /*static*/ nsresult DateTimeFormat::Initialize() {
+||||||| merged common ancestors
+/*static*/ nsresult
+DateTimeFormat::Initialize()
+{
+=======
+/*static*/
+nsresult DateTimeFormat::Initialize() {
+>>>>>>> upstream-releases
   if (mLocale) {
     return NS_OK;
   }
@@ -32,14 +42,33 @@ nsCString* DateTimeFormat::mLocale = nullptr;
 }
 
 // performs a locale sensitive date formatting operation on the PRTime parameter
+<<<<<<< HEAD
 /*static*/ nsresult DateTimeFormat::FormatPRTime(
     const nsDateFormatSelector aDateFormatSelector,
     const nsTimeFormatSelector aTimeFormatSelector, const PRTime aPrTime,
     nsAString& aStringOut) {
   return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector,
                          (aPrTime / PR_USEC_PER_MSEC), nullptr, aStringOut);
+||||||| merged common ancestors
+/*static*/ nsresult
+DateTimeFormat::FormatPRTime(const nsDateFormatSelector aDateFormatSelector,
+                             const nsTimeFormatSelector aTimeFormatSelector,
+                             const PRTime aPrTime,
+                             nsAString& aStringOut)
+{
+  return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector, (aPrTime / PR_USEC_PER_MSEC), nullptr, aStringOut);
+=======
+/*static*/
+nsresult DateTimeFormat::FormatPRTime(
+    const nsDateFormatSelector aDateFormatSelector,
+    const nsTimeFormatSelector aTimeFormatSelector, const PRTime aPrTime,
+    nsAString& aStringOut) {
+  return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector,
+                         (aPrTime / PR_USEC_PER_MSEC), nullptr, aStringOut);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 // performs a locale sensitive date formatting operation on the PRExplodedTime
 // parameter
 /*static*/ nsresult DateTimeFormat::FormatPRExplodedTime(
@@ -49,13 +78,50 @@ nsCString* DateTimeFormat::mLocale = nullptr;
   return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector,
                          (PR_ImplodeTime(aExplodedTime) / PR_USEC_PER_MSEC),
                          &(aExplodedTime->tm_params), aStringOut);
+||||||| merged common ancestors
+// performs a locale sensitive date formatting operation on the PRExplodedTime parameter
+/*static*/ nsresult
+DateTimeFormat::FormatPRExplodedTime(const nsDateFormatSelector aDateFormatSelector,
+                                     const nsTimeFormatSelector aTimeFormatSelector,
+                                     const PRExplodedTime* aExplodedTime,
+                                     nsAString& aStringOut)
+{
+  return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector, (PR_ImplodeTime(aExplodedTime) / PR_USEC_PER_MSEC), &(aExplodedTime->tm_params), aStringOut);
+=======
+// performs a locale sensitive date formatting operation on the PRExplodedTime
+// parameter
+/*static*/
+nsresult DateTimeFormat::FormatPRExplodedTime(
+    const nsDateFormatSelector aDateFormatSelector,
+    const nsTimeFormatSelector aTimeFormatSelector,
+    const PRExplodedTime* aExplodedTime, nsAString& aStringOut) {
+  return FormatUDateTime(aDateFormatSelector, aTimeFormatSelector,
+                         (PR_ImplodeTime(aExplodedTime) / PR_USEC_PER_MSEC),
+                         &(aExplodedTime->tm_params), aStringOut);
+>>>>>>> upstream-releases
 }
 
 // performs a locale sensitive date formatting operation on the UDate parameter
+<<<<<<< HEAD
 /*static*/ nsresult DateTimeFormat::FormatUDateTime(
     const nsDateFormatSelector aDateFormatSelector,
     const nsTimeFormatSelector aTimeFormatSelector, const UDate aUDateTime,
     const PRTimeParameters* aTimeParameters, nsAString& aStringOut) {
+||||||| merged common ancestors
+/*static*/ nsresult
+DateTimeFormat::FormatUDateTime(const nsDateFormatSelector aDateFormatSelector,
+                                const nsTimeFormatSelector aTimeFormatSelector,
+                                const UDate aUDateTime,
+                                const PRTimeParameters* aTimeParameters,
+                                nsAString& aStringOut)
+{
+=======
+/*static*/
+nsresult DateTimeFormat::FormatUDateTime(
+    const nsDateFormatSelector aDateFormatSelector,
+    const nsTimeFormatSelector aTimeFormatSelector, const UDate aUDateTime,
+    const PRTimeParameters* aTimeParameters, nsAString& aStringOut) {
+>>>>>>> upstream-releases
   const int32_t DATETIME_FORMAT_INITIAL_LEN = 127;
   int32_t dateTimeLen = 0;
   nsresult rv = NS_OK;
@@ -74,6 +140,7 @@ nsCString* DateTimeFormat::mLocale = nullptr;
     return rv;
   }
 
+<<<<<<< HEAD
   // Get the date style for the formatter.
   nsAutoString skeletonDate;
   nsAutoString patternDate;
@@ -113,8 +180,62 @@ nsCString* DateTimeFormat::mLocale = nullptr;
     default:
       NS_ERROR("Unknown nsDateFormatSelector");
       return NS_ERROR_ILLEGAL_VALUE;
+||||||| merged common ancestors
+  // Get the date style for the formatter.
+  nsAutoString skeletonDate;
+  nsAutoString patternDate;
+  bool haveSkeleton = true;
+  switch (aDateFormatSelector) {
+  case kDateFormatLong:
+    rv = OSPreferences::GetInstance()->GetDateTimePattern(mozIOSPreferences::dateTimeFormatStyleLong,
+                                                          mozIOSPreferences::dateTimeFormatStyleNone,
+                                                          nsDependentCString(mLocale->get()),
+                                                          patternDate);
+    NS_ENSURE_SUCCESS(rv, rv);
+    haveSkeleton = false;
+    break;
+  case kDateFormatShort:
+    rv = OSPreferences::GetInstance()->GetDateTimePattern(mozIOSPreferences::dateTimeFormatStyleShort,
+                                                          mozIOSPreferences::dateTimeFormatStyleNone,
+                                                          nsDependentCString(mLocale->get()),
+                                                          patternDate);
+    NS_ENSURE_SUCCESS(rv, rv);
+    haveSkeleton = false;
+    break;
+  case kDateFormatYearMonth:
+    skeletonDate.AssignLiteral("yyyyMM");
+    break;
+  case kDateFormatYearMonthLong:
+    skeletonDate.AssignLiteral("yyyyMMMM");
+    break;
+  case kDateFormatMonthLong:
+    skeletonDate.AssignLiteral("MMMM");
+    break;
+  case kDateFormatWeekday:
+    skeletonDate.AssignLiteral("EEE");
+    break;
+  case kDateFormatNone:
+    haveSkeleton = false;
+    break;
+  default:
+    NS_ERROR("Unknown nsDateFormatSelector");
+    return NS_ERROR_ILLEGAL_VALUE;
+=======
+  UErrorCode status = U_ZERO_ERROR;
+
+  nsAutoCString key;
+  key.AppendInt((int)aDateFormatSelector);
+  key.Append(':');
+  key.AppendInt((int)aTimeFormatSelector);
+  if (aTimeParameters) {
+    key.Append(':');
+    key.AppendInt(aTimeParameters->tp_gmt_offset);
+    key.Append(':');
+    key.AppendInt(aTimeParameters->tp_dst_offset);
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   UErrorCode status = U_ZERO_ERROR;
   if (haveSkeleton) {
     // Get pattern for skeleton.
@@ -139,11 +260,117 @@ nsCString* DateTimeFormat::mLocale = nullptr;
             skeletonDate.Length(),
             reinterpret_cast<UChar*>(patternDate.BeginWriting()), patternLength,
             &status);
-      }
-    }
-    udatpg_close(patternGenerator);
+||||||| merged common ancestors
+  UErrorCode status = U_ZERO_ERROR;
+  if (haveSkeleton) {
+    // Get pattern for skeleton.
+    UDateTimePatternGenerator* patternGenerator = udatpg_open(mLocale->get(), &status);
+    if (U_SUCCESS(status)) {
+      int32_t patternLength;
+      patternDate.SetLength(DATETIME_FORMAT_INITIAL_LEN);
+      patternLength = udatpg_getBestPattern(patternGenerator,
+                                            reinterpret_cast<const UChar*>(skeletonDate.BeginReading()),
+                                            skeletonDate.Length(),
+                                            reinterpret_cast<UChar*>(patternDate.BeginWriting()),
+                                            DATETIME_FORMAT_INITIAL_LEN,
+                                            &status);
+      patternDate.SetLength(patternLength);
+
+      if (status == U_BUFFER_OVERFLOW_ERROR) {
+        status = U_ZERO_ERROR;
+        udatpg_getBestPattern(patternGenerator,
+                              reinterpret_cast<const UChar*>(skeletonDate.BeginReading()),
+                              skeletonDate.Length(),
+                              reinterpret_cast<UChar*>(patternDate.BeginWriting()),
+                              patternLength,
+                              &status);
+=======
+  if (mFormatCache && mFormatCache->Count() == kMaxCachedFormats) {
+    // Don't allow a pathological page to extend the cache unreasonably.
+    NS_WARNING("flushing UDateFormat cache");
+    DeleteCache();
+  }
+  if (!mFormatCache) {
+    mFormatCache =
+        new nsDataHashtable<nsCStringHashKey, UDateFormat*>(kMaxCachedFormats);
   }
 
+  UDateFormat*& dateTimeFormat = mFormatCache->GetOrInsert(key);
+
+  if (!dateTimeFormat) {
+    // We didn't have a cached formatter for this key, so create one.
+
+    // Get the date style for the formatter.
+    nsAutoString skeletonDate;
+    nsAutoString patternDate;
+    bool haveSkeleton = true;
+    switch (aDateFormatSelector) {
+      case kDateFormatLong:
+        rv = OSPreferences::GetInstance()->GetDateTimePattern(
+            mozIOSPreferences::dateTimeFormatStyleLong,
+            mozIOSPreferences::dateTimeFormatStyleNone,
+            nsDependentCString(mLocale->get()), patternDate);
+        NS_ENSURE_SUCCESS(rv, rv);
+        haveSkeleton = false;
+        break;
+      case kDateFormatShort:
+        rv = OSPreferences::GetInstance()->GetDateTimePattern(
+            mozIOSPreferences::dateTimeFormatStyleShort,
+            mozIOSPreferences::dateTimeFormatStyleNone,
+            nsDependentCString(mLocale->get()), patternDate);
+        NS_ENSURE_SUCCESS(rv, rv);
+        haveSkeleton = false;
+        break;
+      case kDateFormatYearMonth:
+        skeletonDate.AssignLiteral("yyyyMM");
+        break;
+      case kDateFormatYearMonthLong:
+        skeletonDate.AssignLiteral("yyyyMMMM");
+        break;
+      case kDateFormatMonthLong:
+        skeletonDate.AssignLiteral("MMMM");
+        break;
+      case kDateFormatWeekday:
+        skeletonDate.AssignLiteral("EEE");
+        break;
+      case kDateFormatNone:
+        haveSkeleton = false;
+        break;
+      default:
+        NS_ERROR("Unknown nsDateFormatSelector");
+        return NS_ERROR_ILLEGAL_VALUE;
+    }
+
+    if (haveSkeleton) {
+      // Get pattern for skeleton.
+      UDateTimePatternGenerator* patternGenerator =
+          udatpg_open(mLocale->get(), &status);
+      if (U_SUCCESS(status)) {
+        int32_t patternLength;
+        patternDate.SetLength(DATETIME_FORMAT_INITIAL_LEN);
+        patternLength = udatpg_getBestPattern(
+            patternGenerator,
+            reinterpret_cast<const UChar*>(skeletonDate.BeginReading()),
+            skeletonDate.Length(),
+            reinterpret_cast<UChar*>(patternDate.BeginWriting()),
+            DATETIME_FORMAT_INITIAL_LEN, &status);
+        patternDate.SetLength(patternLength);
+
+        if (status == U_BUFFER_OVERFLOW_ERROR) {
+          status = U_ZERO_ERROR;
+          udatpg_getBestPattern(
+              patternGenerator,
+              reinterpret_cast<const UChar*>(skeletonDate.BeginReading()),
+              skeletonDate.Length(),
+              reinterpret_cast<UChar*>(patternDate.BeginWriting()),
+              patternLength, &status);
+        }
+>>>>>>> upstream-releases
+      }
+      udatpg_close(patternGenerator);
+    }
+
+<<<<<<< HEAD
   // Get the time style for the formatter.
   nsAutoString patternTime;
   switch (aTimeFormatSelector) {
@@ -167,7 +394,57 @@ nsCString* DateTimeFormat::mLocale = nullptr;
       NS_ERROR("Unknown nsTimeFormatSelector");
       return NS_ERROR_ILLEGAL_VALUE;
   }
+||||||| merged common ancestors
+  // Get the time style for the formatter.
+  nsAutoString patternTime;
+  switch (aTimeFormatSelector) {
+  case kTimeFormatSeconds:
+    rv = OSPreferences::GetInstance()->GetDateTimePattern(mozIOSPreferences::dateTimeFormatStyleNone,
+                                                          mozIOSPreferences::dateTimeFormatStyleLong,
+                                                          nsDependentCString(mLocale->get()),
+                                                          patternTime);
+    NS_ENSURE_SUCCESS(rv, rv);
+    break;
+  case kTimeFormatNoSeconds:
+    rv = OSPreferences::GetInstance()->GetDateTimePattern(mozIOSPreferences::dateTimeFormatStyleNone,
+                                                          mozIOSPreferences::dateTimeFormatStyleShort,
+                                                          nsDependentCString(mLocale->get()),
+                                                          patternTime);
+    NS_ENSURE_SUCCESS(rv, rv);
+    break;
+  case kTimeFormatNone:
+    break;
+  default:
+    NS_ERROR("Unknown nsTimeFormatSelector");
+    return NS_ERROR_ILLEGAL_VALUE;
+  }
+=======
+    // Get the time style for the formatter.
+    nsAutoString patternTime;
+    switch (aTimeFormatSelector) {
+      case kTimeFormatSeconds:
+        rv = OSPreferences::GetInstance()->GetDateTimePattern(
+            mozIOSPreferences::dateTimeFormatStyleNone,
+            mozIOSPreferences::dateTimeFormatStyleLong,
+            nsDependentCString(mLocale->get()), patternTime);
+        NS_ENSURE_SUCCESS(rv, rv);
+        break;
+      case kTimeFormatNoSeconds:
+        rv = OSPreferences::GetInstance()->GetDateTimePattern(
+            mozIOSPreferences::dateTimeFormatStyleNone,
+            mozIOSPreferences::dateTimeFormatStyleShort,
+            nsDependentCString(mLocale->get()), patternTime);
+        NS_ENSURE_SUCCESS(rv, rv);
+        break;
+      case kTimeFormatNone:
+        break;
+      default:
+        NS_ERROR("Unknown nsTimeFormatSelector");
+        return NS_ERROR_ILLEGAL_VALUE;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsAutoString pattern;
   if (patternTime.Length() == 0) {
     pattern.Assign(patternDate);
@@ -181,7 +458,38 @@ nsCString* DateTimeFormat::mLocale = nullptr;
     index = pattern.Find("{0}");
     if (index != kNotFound) pattern.Replace(index, 3, patternTime);
   }
+||||||| merged common ancestors
+  nsAutoString pattern;
+  if (patternTime.Length() == 0) {
+    pattern.Assign(patternDate);
+  } else if (patternDate.Length() == 0) {
+    pattern.Assign(patternTime);
+  } else {
+    OSPreferences::GetDateTimeConnectorPattern(nsDependentCString(mLocale->get()), pattern);
+    int32_t index = pattern.Find("{1}");
+    if (index != kNotFound)
+      pattern.Replace(index, 3, patternDate);
+    index = pattern.Find("{0}");
+    if (index != kNotFound)
+      pattern.Replace(index, 3, patternTime);
+  }
+=======
+    nsAutoString pattern;
+    if (patternTime.Length() == 0) {
+      pattern.Assign(patternDate);
+    } else if (patternDate.Length() == 0) {
+      pattern.Assign(patternTime);
+    } else {
+      OSPreferences::GetDateTimeConnectorPattern(
+          nsDependentCString(mLocale->get()), pattern);
+      int32_t index = pattern.Find("{1}");
+      if (index != kNotFound) pattern.Replace(index, 3, patternDate);
+      index = pattern.Find("{0}");
+      if (index != kNotFound) pattern.Replace(index, 3, patternTime);
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Generate date/time string.
   nsAutoString timeZoneID(u"GMT");
   if (aTimeParameters) {
@@ -192,9 +500,33 @@ nsCString* DateTimeFormat::mLocale = nullptr;
       int32_t hours = abs(totalOffsetMinutes) / 60;
       int32_t minutes = abs(totalOffsetMinutes) % 60;
       timeZoneID.AppendPrintf("%c%02d:%02d", sign, hours, minutes);
+||||||| merged common ancestors
+  // Generate date/time string.
+  nsAutoString timeZoneID(u"GMT");
+  if (aTimeParameters) {
+    int32_t totalOffsetMinutes = (aTimeParameters->tp_gmt_offset + aTimeParameters->tp_dst_offset) / 60;
+    if (totalOffsetMinutes != 0) {
+      char sign = totalOffsetMinutes < 0 ? '-' : '+';
+      int32_t hours = abs(totalOffsetMinutes) / 60;
+      int32_t minutes = abs(totalOffsetMinutes) % 60;
+      timeZoneID.AppendPrintf("%c%02d:%02d", sign, hours, minutes);
+=======
+    // Generate date/time string.
+    nsAutoString timeZoneID(u"GMT");
+    if (aTimeParameters) {
+      int32_t totalOffsetMinutes =
+          (aTimeParameters->tp_gmt_offset + aTimeParameters->tp_dst_offset) /
+          60;
+      if (totalOffsetMinutes != 0) {
+        char sign = totalOffsetMinutes < 0 ? '-' : '+';
+        int32_t hours = abs(totalOffsetMinutes) / 60;
+        int32_t minutes = abs(totalOffsetMinutes) % 60;
+        timeZoneID.AppendPrintf("%c%02d:%02d", sign, hours, minutes);
+      }
+>>>>>>> upstream-releases
     }
-  }
 
+<<<<<<< HEAD
   UDateFormat* dateTimeFormat;
   if (aTimeParameters) {
     dateTimeFormat =
@@ -208,6 +540,36 @@ nsCString* DateTimeFormat::mLocale = nullptr;
         udat_open(UDAT_PATTERN, UDAT_PATTERN, mLocale->get(), nullptr, -1,
                   reinterpret_cast<const UChar*>(pattern.BeginReading()),
                   pattern.Length(), &status);
+||||||| merged common ancestors
+  UDateFormat* dateTimeFormat;
+  if (aTimeParameters) {
+    dateTimeFormat = udat_open(UDAT_PATTERN, UDAT_PATTERN, mLocale->get(),
+                               reinterpret_cast<const UChar*>(timeZoneID.BeginReading()),
+                               timeZoneID.Length(),
+                               reinterpret_cast<const UChar*>(pattern.BeginReading()),
+                               pattern.Length(),
+                               &status);
+  } else {
+    dateTimeFormat = udat_open(UDAT_PATTERN, UDAT_PATTERN, mLocale->get(),
+                               nullptr, -1,
+                               reinterpret_cast<const UChar*>(pattern.BeginReading()),
+                               pattern.Length(),
+                               &status);
+=======
+    if (aTimeParameters) {
+      dateTimeFormat =
+          udat_open(UDAT_PATTERN, UDAT_PATTERN, mLocale->get(),
+                    reinterpret_cast<const UChar*>(timeZoneID.BeginReading()),
+                    timeZoneID.Length(),
+                    reinterpret_cast<const UChar*>(pattern.BeginReading()),
+                    pattern.Length(), &status);
+    } else {
+      dateTimeFormat =
+          udat_open(UDAT_PATTERN, UDAT_PATTERN, mLocale->get(), nullptr, -1,
+                    reinterpret_cast<const UChar*>(pattern.BeginReading()),
+                    pattern.Length(), &status);
+    }
+>>>>>>> upstream-releases
   }
 
   if (U_SUCCESS(status) && dateTimeFormat) {
@@ -230,14 +592,31 @@ nsCString* DateTimeFormat::mLocale = nullptr;
     rv = NS_ERROR_FAILURE;
   }
 
-  if (dateTimeFormat) {
-    udat_close(dateTimeFormat);
-  }
-
   return rv;
 }
 
+<<<<<<< HEAD
 /*static*/ void DateTimeFormat::Shutdown() {
+||||||| merged common ancestors
+/*static*/ void
+DateTimeFormat::Shutdown()
+{
+=======
+/*static*/
+void DateTimeFormat::DeleteCache() {
+  if (mFormatCache) {
+    for (auto i = mFormatCache->Iter(); !i.Done(); i.Next()) {
+      udat_close(i.Data());
+    }
+    delete mFormatCache;
+    mFormatCache = nullptr;
+  }
+}
+
+/*static*/
+void DateTimeFormat::Shutdown() {
+  DeleteCache();
+>>>>>>> upstream-releases
   if (mLocale) {
     delete mLocale;
   }

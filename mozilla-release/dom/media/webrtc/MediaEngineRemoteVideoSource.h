@@ -62,14 +62,30 @@ enum DistanceCalculation { kFitness, kFeasibility };
  * The WebRTC implementation of the MediaEngine interface.
  */
 class MediaEngineRemoteVideoSource : public MediaEngineSource,
+<<<<<<< HEAD
                                      public camera::FrameRelay {
   ~MediaEngineRemoteVideoSource() = default;
+||||||| merged common ancestors
+                                     public camera::FrameRelay
+{
+  ~MediaEngineRemoteVideoSource() = default;
+=======
+                                     public camera::FrameRelay {
+  ~MediaEngineRemoteVideoSource();
+>>>>>>> upstream-releases
 
   struct CapabilityCandidate {
-    explicit CapabilityCandidate(webrtc::CaptureCapability&& aCapability,
+    explicit CapabilityCandidate(webrtc::CaptureCapability aCapability,
                                  uint32_t aDistance = 0)
+<<<<<<< HEAD
         : mCapability(std::forward<webrtc::CaptureCapability>(aCapability)),
           mDistance(aDistance) {}
+||||||| merged common ancestors
+    : mCapability(std::forward<webrtc::CaptureCapability>(aCapability))
+    , mDistance(aDistance) {}
+=======
+        : mCapability(aCapability), mDistance(aDistance) {}
+>>>>>>> upstream-releases
 
     const webrtc::CaptureCapability mCapability;
     uint32_t mDistance;
@@ -108,21 +124,47 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
       const nsTArray<const NormalizedConstraintSet*>& aConstraintSets,
       const nsString& aDeviceId) const override;
 
+<<<<<<< HEAD
  public:
   MediaEngineRemoteVideoSource(int aIndex, camera::CaptureEngine aCapEngine,
                                dom::MediaSourceEnum aMediaSource, bool aScary);
+||||||| merged common ancestors
+public:
+  MediaEngineRemoteVideoSource(int aIndex,
+                               camera::CaptureEngine aCapEngine,
+                               dom::MediaSourceEnum aMediaSource,
+                               bool aScary);
+=======
+ public:
+  MediaEngineRemoteVideoSource(int aIndex, camera::CaptureEngine aCapEngine,
+                               bool aScary);
+>>>>>>> upstream-releases
 
   // ExternalRenderer
-  int DeliverFrame(uint8_t* buffer,
-                   const camera::VideoFrameProperties& properties) override;
+  int DeliverFrame(uint8_t* aBuffer,
+                   const camera::VideoFrameProperties& aProps) override;
 
   // MediaEngineSource
+<<<<<<< HEAD
   dom::MediaSourceEnum GetMediaSource() const override { return mMediaSource; }
   nsresult Allocate(const dom::MediaTrackConstraints& aConstraints,
                     const MediaEnginePrefs& aPrefs, const nsString& aDeviceId,
+||||||| merged common ancestors
+  dom::MediaSourceEnum GetMediaSource() const override
+  {
+    return mMediaSource;
+  }
+  nsresult Allocate(const dom::MediaTrackConstraints &aConstraints,
+                    const MediaEnginePrefs &aPrefs,
+                    const nsString& aDeviceId,
+=======
+  dom::MediaSourceEnum GetMediaSource() const override;
+  nsresult Allocate(const dom::MediaTrackConstraints& aConstraints,
+                    const MediaEnginePrefs& aPrefs, const nsString& aDeviceId,
+>>>>>>> upstream-releases
                     const ipc::PrincipalInfo& aPrincipalInfo,
-                    AllocationHandle** aOutHandle,
                     const char** aOutBadConstraint) override;
+<<<<<<< HEAD
   nsresult Deallocate(const RefPtr<const AllocationHandle>& aHandle) override;
   void SetTrack(const RefPtr<const AllocationHandle>& aHandle,
                 const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
@@ -130,9 +172,26 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
   nsresult Start(const RefPtr<const AllocationHandle>& aHandle) override;
   nsresult Reconfigure(const RefPtr<AllocationHandle>& aHandle,
                        const dom::MediaTrackConstraints& aConstraints,
+||||||| merged common ancestors
+  nsresult Deallocate(const RefPtr<const AllocationHandle>& aHandle) override;
+  nsresult SetTrack(const RefPtr<const AllocationHandle>& aHandle,
+                    const RefPtr<SourceMediaStream>& aStream,
+                    TrackID aTrackID,
+                    const PrincipalHandle& aPrincipal) override;
+  nsresult Start(const RefPtr<const AllocationHandle>& aHandle) override;
+  nsresult Reconfigure(const RefPtr<AllocationHandle>& aHandle,
+                       const dom::MediaTrackConstraints& aConstraints,
+=======
+  nsresult Deallocate() override;
+  void SetTrack(const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
+                const PrincipalHandle& aPrincipal) override;
+  nsresult Start() override;
+  nsresult Reconfigure(const dom::MediaTrackConstraints& aConstraints,
+>>>>>>> upstream-releases
                        const MediaEnginePrefs& aPrefs,
                        const nsString& aDeviceId,
                        const char** aOutBadConstraint) override;
+<<<<<<< HEAD
   nsresult FocusOnSelectedSource(
       const RefPtr<const AllocationHandle>& aHandle) override;
   nsresult Stop(const RefPtr<const AllocationHandle>& aHandle) override;
@@ -141,6 +200,21 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
             StreamTime aEndOfAppendedData, StreamTime aDesiredTime,
             const PrincipalHandle& aPrincipalHandle) override;
 
+||||||| merged common ancestors
+  nsresult FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle) override;
+  nsresult Stop(const RefPtr<const AllocationHandle>& aHandle) override;
+  void Pull(const RefPtr<const AllocationHandle>& aHandle,
+            const RefPtr<SourceMediaStream>& aStream,
+            TrackID aTrackID,
+            StreamTime aDesiredTime,
+            const PrincipalHandle& aPrincipalHandle) override;
+
+
+=======
+  nsresult FocusOnSelectedSource() override;
+  nsresult Stop() override;
+
+>>>>>>> upstream-releases
   void GetSettings(dom::MediaTrackSettings& aOutSettings) const override;
 
   void Refresh(int aIndex);
@@ -153,9 +227,22 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
   nsCString GetUUID() const override;
   void SetUUID(const char* aUUID);
 
+  nsString GetGroupId() const override;
+  void SetGroupId(nsString aGroupId);
+
   bool GetScary() const override { return mScary; }
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  RefPtr<GenericNonExclusivePromise> GetFirstFramePromise() const override {
+    return mFirstFramePromise;
+  }
+
+ private:
+>>>>>>> upstream-releases
   // Initialize the needed Video engine interfaces.
   void Init();
 
@@ -174,9 +261,16 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
   webrtc::CaptureCapability GetCapability(size_t aIndex) const;
 
   int mCaptureIndex;
+<<<<<<< HEAD
   const dom::MediaSourceEnum
       mMediaSource;  // source of media (camera | application | screen)
   const camera::CaptureEngine mCapEngine;
+||||||| merged common ancestors
+  const dom::MediaSourceEnum mMediaSource; // source of media (camera | application | screen)
+  const camera::CaptureEngine mCapEngine;
+=======
+  const camera::CaptureEngine mCapEngine;  // source of media (cam, screen etc)
+>>>>>>> upstream-releases
   const bool mScary;
 
   // mMutex protects certain members on 3 threads:
@@ -204,10 +298,6 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
   // after Start() and before the end of Stop().
   RefPtr<layers::ImageContainer> mImageContainer;
 
-  // The latest frame delivered from the video capture backend.
-  // Protected by mMutex.
-  RefPtr<layers::Image> mImage;
-
   // A buffer pool used to manage the temporary buffer used when rescaling
   // incoming images. Cameras IPC thread only.
   webrtc::I420BufferPool mRescalingBufferPool;
@@ -231,6 +321,8 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
   // since we scale frames to avoid fingerprinting.
   // Members are main thread only.
   const RefPtr<media::Refcountable<dom::MediaTrackSettings>> mSettings;
+  MozPromiseHolder<GenericNonExclusivePromise> mFirstFramePromiseHolder;
+  RefPtr<GenericNonExclusivePromise> mFirstFramePromise;
 
   // The capability currently chosen by constraints of the user of this source.
   // Set under mMutex on the owning thread. Accessed under one of the two.
@@ -246,6 +338,7 @@ class MediaEngineRemoteVideoSource : public MediaEngineSource,
 
   nsString mDeviceName;
   nsCString mUniqueId;
+  nsString mGroupId;
   nsString mFacingMode;
 
   // Whether init has successfully completed.

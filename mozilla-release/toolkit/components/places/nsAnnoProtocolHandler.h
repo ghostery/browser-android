@@ -32,8 +32,16 @@ class nsAnnoProtocolHandler final : public nsIProtocolHandler,
  private:
   ~nsAnnoProtocolHandler() {}
 
+<<<<<<< HEAD
  protected:
   nsresult ParseAnnoURI(nsIURI *aURI, nsIURI **aResultURI, nsCString &aName);
+||||||| merged common ancestors
+protected:
+  nsresult ParseAnnoURI(nsIURI* aURI, nsIURI** aResultURI, nsCString& aName);
+=======
+ protected:
+  nsresult ParseAnnoURI(nsIURI* aURI, nsIURI** aResultURI, nsCString& aName);
+>>>>>>> upstream-releases
 
   /**
    * Obtains a new channel to be used to get a favicon from the database.  This
@@ -49,8 +57,18 @@ class nsAnnoProtocolHandler final : public nsIProtocolHandler,
    *        The loadinfo that requested the resource load.
    * @returns (via _channel) the channel that will obtain the favicon data.
    */
+<<<<<<< HEAD
   nsresult NewFaviconChannel(nsIURI *aURI, nsIURI *aAnnotationURI,
                              nsILoadInfo *aLoadInfo, nsIChannel **_channel);
+||||||| merged common ancestors
+  nsresult NewFaviconChannel(nsIURI *aURI,
+                             nsIURI *aAnnotationURI,
+                             nsILoadInfo *aLoadInfo,
+                             nsIChannel **_channel);
+=======
+  nsresult NewFaviconChannel(nsIURI* aURI, nsIURI* aAnnotationURI,
+                             nsILoadInfo* aLoadInfo, nsIChannel** _channel);
+>>>>>>> upstream-releases
 };
 
 #endif /* nsAnnoProtocolHandler_h___ */

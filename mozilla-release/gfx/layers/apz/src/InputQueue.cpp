@@ -7,12 +7,13 @@
 #include "InputQueue.h"
 
 #include "AsyncPanZoomController.h"
-#include "gfxPrefs.h"
+
 #include "InputBlockState.h"
 #include "LayersLogging.h"
 #include "mozilla/layers/APZThreadUtils.h"
 #include "OverscrollHandoffState.h"
 #include "QueuedInput.h"
+#include "mozilla/StaticPrefs.h"
 
 #define INPQ_LOG(...)
 // #define INPQ_LOG(...) printf_stderr("INPQ: " __VA_ARGS__)
@@ -24,10 +25,24 @@ InputQueue::InputQueue() = default;
 
 InputQueue::~InputQueue() { mQueuedInputs.Clear(); }
 
+<<<<<<< HEAD
 nsEventStatus InputQueue::ReceiveInputEvent(
     const RefPtr<AsyncPanZoomController>& aTarget,
     TargetConfirmationFlags aFlags, const InputData& aEvent,
     uint64_t* aOutInputBlockId) {
+||||||| merged common ancestors
+nsEventStatus
+InputQueue::ReceiveInputEvent(const RefPtr<AsyncPanZoomController>& aTarget,
+                              TargetConfirmationFlags aFlags,
+                              const InputData& aEvent,
+                              uint64_t* aOutInputBlockId) {
+=======
+nsEventStatus InputQueue::ReceiveInputEvent(
+    const RefPtr<AsyncPanZoomController>& aTarget,
+    TargetConfirmationFlags aFlags, const InputData& aEvent,
+    uint64_t* aOutInputBlockId,
+    const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors) {
+>>>>>>> upstream-releases
   APZThreadUtils::AssertOnControllerThread();
 
   AutoRunImmediateTimeout timeoutRunner{this};
@@ -35,7 +50,8 @@ nsEventStatus InputQueue::ReceiveInputEvent(
   switch (aEvent.mInputType) {
     case MULTITOUCH_INPUT: {
       const MultiTouchInput& event = aEvent.AsMultiTouchInput();
-      return ReceiveTouchInput(aTarget, aFlags, event, aOutInputBlockId);
+      return ReceiveTouchInput(aTarget, aFlags, event, aOutInputBlockId,
+                               aTouchBehaviors);
     }
 
     case SCROLLWHEEL_INPUT: {
@@ -71,15 +87,29 @@ nsEventStatus InputQueue::ReceiveInputEvent(
   }
 }
 
+<<<<<<< HEAD
 nsEventStatus InputQueue::ReceiveTouchInput(
     const RefPtr<AsyncPanZoomController>& aTarget,
     TargetConfirmationFlags aFlags, const MultiTouchInput& aEvent,
     uint64_t* aOutInputBlockId) {
+||||||| merged common ancestors
+nsEventStatus
+InputQueue::ReceiveTouchInput(const RefPtr<AsyncPanZoomController>& aTarget,
+                              TargetConfirmationFlags aFlags,
+                              const MultiTouchInput& aEvent,
+                              uint64_t* aOutInputBlockId) {
+=======
+nsEventStatus InputQueue::ReceiveTouchInput(
+    const RefPtr<AsyncPanZoomController>& aTarget,
+    TargetConfirmationFlags aFlags, const MultiTouchInput& aEvent,
+    uint64_t* aOutInputBlockId,
+    const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors) {
+>>>>>>> upstream-releases
   TouchBlockState* block = nullptr;
   if (aEvent.mType == MultiTouchInput::MULTITOUCH_START) {
     nsTArray<TouchBehaviorFlags> currentBehaviors;
     bool haveBehaviors = false;
-    if (!gfxPrefs::TouchActionEnabled()) {
+    if (!StaticPrefs::layout_css_touch_action_enabled()) {
       haveBehaviors = true;
     } else if (mActiveTouchBlock) {
       haveBehaviors =
@@ -111,16 +141,25 @@ nsEventStatus InputQueue::ReceiveTouchInput(
           aTarget, InputBlockState::TargetConfirmationState::eConfirmed,
           nullptr /* the block was just created so it has no events */,
           false /* not a scrollbar drag */);
-      if (gfxPrefs::TouchActionEnabled()) {
+      if (StaticPrefs::layout_css_touch_action_enabled()) {
         block->SetAllowedTouchBehaviors(currentBehaviors);
       }
       INPQ_LOG("block %p tagged as fast-motion\n", block);
+    } else if (aTouchBehaviors) {
+      // If this block isn't started during a fast-fling, and APZCTM has
+      // provided touch behavior information, then put it on the block so
+      // that the ArePointerEventsConsumable call below can use it.
+      block->SetAllowedTouchBehaviors(*aTouchBehaviors);
     }
 
     CancelAnimationsForNewBlock(block);
 
     MaybeRequestContentResponse(aTarget, block);
   } else {
+    // for touch inputs that don't start a block, APZCTM shouldn't be giving
+    // us any touch behaviors.
+    MOZ_ASSERT(aTouchBehaviors.isNothing());
+
     block = mActiveTouchBlock.get();
     if (!block) {
       NS_WARNING(
@@ -306,9 +345,18 @@ nsEventStatus InputQueue::ReceiveKeyboardInput(
 
   // If APZ is allowing passive listeners then we must dispatch the event to
   // content, otherwise we can consume the event.
+<<<<<<< HEAD
   return gfxPrefs::APZKeyboardPassiveListeners()
              ? nsEventStatus_eConsumeDoDefault
              : nsEventStatus_eConsumeNoDefault;
+||||||| merged common ancestors
+  return gfxPrefs::APZKeyboardPassiveListeners() ? nsEventStatus_eConsumeDoDefault
+                                                 : nsEventStatus_eConsumeNoDefault;
+=======
+  return StaticPrefs::apz_keyboard_passive_listeners()
+             ? nsEventStatus_eConsumeDoDefault
+             : nsEventStatus_eConsumeNoDefault;
+>>>>>>> upstream-releases
 }
 
 static bool CanScrollTargetHorizontally(const PanGestureInput& aInitialEvent,
@@ -420,12 +468,8 @@ void InputQueue::MaybeRequestContentResponse(
   } else {
     waitForMainThread = true;
   }
-  if (aBlock->AsTouchBlock() && gfxPrefs::TouchActionEnabled()) {
-    // waitForMainThread is set to true unconditionally here, but if the APZCTM
-    // has the touch-action behaviours for this block, it will set it
-    // immediately after we unwind out of this ReceiveInputEvent call. So even
-    // though we are scheduling the main-thread timeout, we might end up not
-    // waiting.
+  if (aBlock->AsTouchBlock() &&
+      !aBlock->AsTouchBlock()->HasAllowedTouchBehaviors()) {
     INPQ_LOG("waiting for main thread touch-action info on block %p\n", aBlock);
     waitForMainThread = true;
   }
@@ -540,10 +584,23 @@ void InputQueue::ScheduleMainThreadTimeout(
     CancelableBlockState* aBlock) {
   INPQ_LOG("scheduling main thread timeout for target %p\n", aTarget.get());
   aBlock->StartContentResponseTimer();
+<<<<<<< HEAD
   RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>(
       "layers::InputQueue::MainThreadTimeout", this,
       &InputQueue::MainThreadTimeout, aBlock->GetBlockId());
   int32_t timeout = gfxPrefs::APZContentResponseTimeout();
+||||||| merged common ancestors
+  RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>("layers::InputQueue::MainThreadTimeout",
+      this,
+      &InputQueue::MainThreadTimeout,
+      aBlock->GetBlockId());
+  int32_t timeout = gfxPrefs::APZContentResponseTimeout();
+=======
+  RefPtr<Runnable> timeoutTask = NewRunnableMethod<uint64_t>(
+      "layers::InputQueue::MainThreadTimeout", this,
+      &InputQueue::MainThreadTimeout, aBlock->GetBlockId());
+  int32_t timeout = StaticPrefs::apz_content_response_timeout();
+>>>>>>> upstream-releases
   if (timeout == 0) {
     // If the timeout is zero, treat it as a request to ignore any main
     // thread confirmation and unconditionally use fallback behaviour for

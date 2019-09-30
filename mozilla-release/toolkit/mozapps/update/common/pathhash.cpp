@@ -13,10 +13,24 @@
  * @param hashSize  The size of the binary data sequence
  * @param hexString A buffer to store the hex string, must be of
  *                  size 2 * @hashSize
+<<<<<<< HEAD
  */
 static void BinaryDataToHexString(const BYTE *hash, DWORD &hashSize,
                                   LPWSTR hexString) {
   WCHAR *p = hexString;
+||||||| merged common ancestors
+*/
+static void
+BinaryDataToHexString(const BYTE *hash, DWORD &hashSize,
+                      LPWSTR hexString)
+{
+  WCHAR *p = hexString;
+=======
+ */
+static void BinaryDataToHexString(const BYTE* hash, DWORD& hashSize,
+                                  LPWSTR hexString) {
+  WCHAR* p = hexString;
+>>>>>>> upstream-releases
   for (DWORD i = 0; i < hashSize; ++i) {
     wsprintfW(p, L"%.2x", hash[i]);
     p += 2;
@@ -31,9 +45,21 @@ static void BinaryDataToHexString(const BYTE *hash, DWORD &hashSize,
  * @param  hash     Output buffer to store hash, must be freed by the caller
  * @param  hashSize The number of bytes in the output buffer
  * @return TRUE on success
+<<<<<<< HEAD
  */
 static BOOL CalculateMD5(const char *data, DWORD dataSize, BYTE **hash,
                          DWORD &hashSize) {
+||||||| merged common ancestors
+*/
+static BOOL
+CalculateMD5(const char *data, DWORD dataSize,
+             BYTE **hash, DWORD &hashSize)
+{
+=======
+ */
+static BOOL CalculateMD5(const char* data, DWORD dataSize, BYTE** hash,
+                         DWORD& hashSize) {
+>>>>>>> upstream-releases
   HCRYPTPROV hProv = 0;
   HCRYPTHASH hHash = 0;
 
@@ -54,13 +80,27 @@ static BOOL CalculateMD5(const char *data, DWORD dataSize, BYTE **hash,
     return FALSE;
   }
 
+<<<<<<< HEAD
   if (!CryptHashData(hHash, reinterpret_cast<const BYTE *>(data), dataSize,
                      0)) {
+||||||| merged common ancestors
+  if (!CryptHashData(hHash, reinterpret_cast<const BYTE*>(data),
+                    dataSize, 0)) {
+=======
+  if (!CryptHashData(hHash, reinterpret_cast<const BYTE*>(data), dataSize, 0)) {
+>>>>>>> upstream-releases
     return FALSE;
   }
 
   DWORD dwCount = sizeof(DWORD);
+<<<<<<< HEAD
   if (!CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE *)&hashSize, &dwCount, 0)) {
+||||||| merged common ancestors
+  if (!CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE *)&hashSize,
+                        &dwCount, 0)) {
+=======
+  if (!CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE*)&hashSize, &dwCount, 0)) {
+>>>>>>> upstream-releases
     return FALSE;
   }
 
@@ -105,15 +145,24 @@ BOOL CalculateRegistryPathFromFilePath(const LPCWSTR filePath,
   // Copying in the extra slash is OK because we calculate the hash
   // based on the filePathLen which excludes the slash.
   // +2 to account for the possibly trailing slash and the null terminator.
-  WCHAR *lowercasePath = new WCHAR[filePathLen + 2];
+  WCHAR* lowercasePath = new WCHAR[filePathLen + 2];
   memset(lowercasePath, 0, (filePathLen + 2) * sizeof(WCHAR));
   wcsncpy(lowercasePath, filePath, filePathLen + 1);
   _wcslwr(lowercasePath);
 
-  BYTE *hash;
+  BYTE* hash;
   DWORD hashSize = 0;
+<<<<<<< HEAD
   if (!CalculateMD5(reinterpret_cast<const char *>(lowercasePath),
                     filePathLen * 2, &hash, hashSize)) {
+||||||| merged common ancestors
+  if (!CalculateMD5(reinterpret_cast<const char*>(lowercasePath),
+                    filePathLen * 2,
+                    &hash, hashSize)) {
+=======
+  if (!CalculateMD5(reinterpret_cast<const char*>(lowercasePath),
+                    filePathLen * 2, &hash, hashSize)) {
+>>>>>>> upstream-releases
     delete[] lowercasePath;
     return FALSE;
   }

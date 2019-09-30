@@ -14,8 +14,15 @@
 #include "mozilla/StaticPrefs.h"
 
 #ifdef MOZ_AV1
+<<<<<<< HEAD
 #include "AOMDecoder.h"
 #include "DAV1DDecoder.h"
+||||||| merged common ancestors
+#include "AOMDecoder.h"
+=======
+#  include "AOMDecoder.h"
+#  include "DAV1DDecoder.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -23,11 +30,31 @@ namespace mozilla {
 bool AgnosticDecoderModule::SupportsMimeType(
     const nsACString& aMimeType, DecoderDoctorDiagnostics* aDiagnostics) const {
   bool supports =
+<<<<<<< HEAD
       VPXDecoder::IsVPX(aMimeType) || OpusDataDecoder::IsOpus(aMimeType) ||
       VorbisDataDecoder::IsVorbis(aMimeType) ||
       WaveDataDecoder::IsWave(aMimeType) || TheoraDecoder::IsTheora(aMimeType);
+||||||| merged common ancestors
+    VPXDecoder::IsVPX(aMimeType) ||
+    OpusDataDecoder::IsOpus(aMimeType) ||
+    VorbisDataDecoder::IsVorbis(aMimeType) ||
+    WaveDataDecoder::IsWave(aMimeType) ||
+    TheoraDecoder::IsTheora(aMimeType);
+=======
+      VPXDecoder::IsVPX(aMimeType) || OpusDataDecoder::IsOpus(aMimeType) ||
+      WaveDataDecoder::IsWave(aMimeType) || TheoraDecoder::IsTheora(aMimeType);
+  if (!StaticPrefs::media_rdd_vorbis_enabled() ||
+      !StaticPrefs::media_rdd_process_enabled() ||
+      !BrowserTabsRemoteAutostart()) {
+    supports |= VorbisDataDecoder::IsVorbis(aMimeType);
+  }
+>>>>>>> upstream-releases
 #ifdef MOZ_AV1
-  if (StaticPrefs::MediaAv1Enabled()) {
+  // We remove support for decoding AV1 here if RDD is enabled so that
+  // decoding on the content process doesn't accidentally happen in case
+  // something goes wrong with launching the RDD process.
+  if (StaticPrefs::media_av1_enabled() &&
+      !StaticPrefs::media_rdd_process_enabled()) {
     supports |= AOMDecoder::IsAV1(aMimeType);
   }
 #endif
@@ -45,13 +72,27 @@ already_AddRefed<MediaDataDecoder> AgnosticDecoderModule::CreateVideoDecoder(
     m = new VPXDecoder(aParams);
   }
 #ifdef MOZ_AV1
+  // see comment above about AV1 and the RDD process
   else if (AOMDecoder::IsAV1(aParams.mConfig.mMimeType) &&
+<<<<<<< HEAD
            StaticPrefs::MediaAv1Enabled()) {
     if (StaticPrefs::MediaAv1UseDav1d()) {
       m = new DAV1DDecoder(aParams);
     } else {
       m = new AOMDecoder(aParams);
     }
+||||||| merged common ancestors
+           StaticPrefs::MediaAv1Enabled()) {
+    m = new AOMDecoder(aParams);
+=======
+           !StaticPrefs::media_rdd_process_enabled() &&
+           StaticPrefs::media_av1_enabled()) {
+    if (StaticPrefs::media_av1_use_dav1d()) {
+      m = new DAV1DDecoder(aParams);
+    } else {
+      m = new AOMDecoder(aParams);
+    }
+>>>>>>> upstream-releases
   }
 #endif
   else if (TheoraDecoder::IsTheora(aParams.mConfig.mMimeType)) {

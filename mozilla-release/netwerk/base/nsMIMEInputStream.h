@@ -21,7 +21,16 @@
     }                                                \
   }
 
+<<<<<<< HEAD
 extern nsresult nsMIMEInputStreamConstructor(nsISupports *outer, REFNSIID iid,
                                              void **result);
+||||||| merged common ancestors
+extern nsresult nsMIMEInputStreamConstructor(nsISupports *outer,
+                                             REFNSIID iid,
+                                             void **result);
+=======
+extern nsresult nsMIMEInputStreamConstructor(nsISupports* outer, REFNSIID iid,
+                                             void** result);
+>>>>>>> upstream-releases
 
 #endif  // _nsMIMEInputStream_h_

@@ -29,9 +29,23 @@ namespace gmp {
 
 class GMPContentParent;
 
+<<<<<<< HEAD
 class ChromiumCDMParent final : public PChromiumCDMParent,
                                 public GMPCrashHelperHolder {
  public:
+||||||| merged common ancestors
+class ChromiumCDMParent final
+  : public PChromiumCDMParent
+  , public GMPCrashHelperHolder
+{
+public:
+=======
+class ChromiumCDMParent final : public PChromiumCDMParent,
+                                public GMPCrashHelperHolder {
+  friend class PChromiumCDMParent;
+
+ public:
+>>>>>>> upstream-releases
   typedef MozPromise<bool, MediaResult, /* IsExclusive = */ true> InitPromise;
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ChromiumCDMParent)
@@ -88,6 +102,7 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   ~ChromiumCDMParent() {}
 
   ipc::IPCResult Recv__delete__() override;
+<<<<<<< HEAD
   ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(
       const uint32_t& aPromiseId, const uint32_t& aKeyStatus) override;
   ipc::IPCResult RecvOnResolveNewSessionPromise(
@@ -95,14 +110,35 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   ipc::IPCResult RecvResolveLoadSessionPromise(
       const uint32_t& aPromiseId, const bool& aSuccessful) override;
   ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId) override;
+||||||| merged common ancestors
+  ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(
+    const uint32_t& aPromiseId,
+    const uint32_t& aKeyStatus) override;
+  ipc::IPCResult RecvOnResolveNewSessionPromise(
+    const uint32_t& aPromiseId,
+    const nsCString& aSessionId) override;
+  ipc::IPCResult RecvResolveLoadSessionPromise(
+    const uint32_t& aPromiseId,
+    const bool& aSuccessful) override;
+  ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId) override;
+=======
+  ipc::IPCResult RecvOnResolvePromiseWithKeyStatus(const uint32_t& aPromiseId,
+                                                   const uint32_t& aKeyStatus);
+  ipc::IPCResult RecvOnResolveNewSessionPromise(const uint32_t& aPromiseId,
+                                                const nsCString& aSessionId);
+  ipc::IPCResult RecvResolveLoadSessionPromise(const uint32_t& aPromiseId,
+                                               const bool& aSuccessful);
+  ipc::IPCResult RecvOnResolvePromise(const uint32_t& aPromiseId);
+>>>>>>> upstream-releases
   ipc::IPCResult RecvOnRejectPromise(const uint32_t& aPromiseId,
                                      const uint32_t& aError,
                                      const uint32_t& aSystemCode,
-                                     const nsCString& aErrorMessage) override;
+                                     const nsCString& aErrorMessage);
   ipc::IPCResult RecvOnSessionMessage(const nsCString& aSessionId,
                                       const uint32_t& aMessageType,
-                                      nsTArray<uint8_t>&& aMessage) override;
+                                      nsTArray<uint8_t>&& aMessage);
   ipc::IPCResult RecvOnSessionKeysChange(
+<<<<<<< HEAD
       const nsCString& aSessionId,
       nsTArray<CDMKeyInformation>&& aKeysInfo) override;
   ipc::IPCResult RecvOnExpirationChange(
@@ -110,18 +146,36 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId) override;
   ipc::IPCResult RecvDecrypted(const uint32_t& aId, const uint32_t& aStatus,
                                ipc::Shmem&& aData) override;
+||||||| merged common ancestors
+    const nsCString& aSessionId,
+    nsTArray<CDMKeyInformation>&& aKeysInfo) override;
+  ipc::IPCResult RecvOnExpirationChange(
+    const nsCString& aSessionId,
+    const double& aSecondsSinceEpoch) override;
+  ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId) override;
+  ipc::IPCResult RecvDecrypted(const uint32_t& aId,
+                               const uint32_t& aStatus,
+                               ipc::Shmem&& aData) override;
+=======
+      const nsCString& aSessionId, nsTArray<CDMKeyInformation>&& aKeysInfo);
+  ipc::IPCResult RecvOnExpirationChange(const nsCString& aSessionId,
+                                        const double& aSecondsSinceEpoch);
+  ipc::IPCResult RecvOnSessionClosed(const nsCString& aSessionId);
+  ipc::IPCResult RecvDecrypted(const uint32_t& aId, const uint32_t& aStatus,
+                               ipc::Shmem&& aData);
+>>>>>>> upstream-releases
   ipc::IPCResult RecvDecryptFailed(const uint32_t& aId,
-                                   const uint32_t& aStatus) override;
-  ipc::IPCResult RecvOnDecoderInitDone(const uint32_t& aStatus) override;
+                                   const uint32_t& aStatus);
+  ipc::IPCResult RecvOnDecoderInitDone(const uint32_t& aStatus);
   ipc::IPCResult RecvDecodedShmem(const CDMVideoFrame& aFrame,
-                                  ipc::Shmem&& aShmem) override;
+                                  ipc::Shmem&& aShmem);
   ipc::IPCResult RecvDecodedData(const CDMVideoFrame& aFrame,
-                                 nsTArray<uint8_t>&& aData) override;
-  ipc::IPCResult RecvDecodeFailed(const uint32_t& aStatus) override;
-  ipc::IPCResult RecvShutdown() override;
-  ipc::IPCResult RecvResetVideoDecoderComplete() override;
-  ipc::IPCResult RecvDrainComplete() override;
-  ipc::IPCResult RecvIncreaseShmemPoolSize() override;
+                                 nsTArray<uint8_t>&& aData);
+  ipc::IPCResult RecvDecodeFailed(const uint32_t& aStatus);
+  ipc::IPCResult RecvShutdown();
+  ipc::IPCResult RecvResetVideoDecoderComplete();
+  ipc::IPCResult RecvDrainComplete();
+  ipc::IPCResult RecvIncreaseShmemPoolSize();
   void ActorDestroy(ActorDestroyReason aWhy) override;
   bool SendBufferToCDM(uint32_t aSizeInBytes);
 
@@ -179,9 +233,6 @@ class ChromiumCDMParent final : public PChromiumCDMParent,
   // life time of this object, but never more than one active at once.
   uint32_t mMaxRefFrames = 0;
   ReorderQueue mReorderQueue;
-
-  // The main thread associated with the root document. Must be set in Init().
-  nsCOMPtr<nsIEventTarget> mMainThread;
 };
 
 }  // namespace gmp

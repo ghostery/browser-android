@@ -7,9 +7,18 @@
 
 #include "GrSWMaskHelper.h"
 
+<<<<<<< HEAD
 #include "GrContext.h"
 #include "GrContextPriv.h"
 #include "GrProxyProvider.h"
+||||||| merged common ancestors
+#include "GrContext.h"
+#include "GrContextPriv.h"
+=======
+#include "GrProxyProvider.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
+>>>>>>> upstream-releases
 #include "GrShape.h"
 #include "GrSurfaceContext.h"
 #include "GrTextureProxy.h"
@@ -85,19 +94,42 @@ bool GrSWMaskHelper::init(const SkIRect& resultBounds) {
     }
     fPixels->erase(0);
 
-    sk_bzero(&fDraw, sizeof(fDraw));
     fDraw.fDst      = *fPixels;
     fRasterClip.setRect(bounds);
     fDraw.fRC       = &fRasterClip;
     return true;
 }
 
+<<<<<<< HEAD
 sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBackingFit fit) {
     SkImageInfo ii = SkImageInfo::MakeA8(fPixels->width(), fPixels->height());
     size_t rowBytes = fPixels->rowBytes();
 
     sk_sp<SkData> data = fPixels->detachPixelsAsData();
     if (!data) {
+||||||| merged common ancestors
+sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBackingFit fit) {
+    GrSurfaceDesc desc;
+    desc.fOrigin = kTopLeft_GrSurfaceOrigin;
+    desc.fWidth = fPixels->width();
+    desc.fHeight = fPixels->height();
+    desc.fConfig = kAlpha_8_GrPixelConfig;
+
+    sk_sp<GrSurfaceContext> sContext = context->contextPriv().makeDeferredSurfaceContext(
+                                                                                desc,
+                                                                                GrMipMapped::kNo,
+                                                                                fit,
+                                                                                SkBudgeted::kYes);
+    if (!sContext || !sContext->asTextureProxy()) {
+=======
+sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrRecordingContext* context,
+                                                     SkBackingFit fit) {
+    SkImageInfo ii = SkImageInfo::MakeA8(fPixels->width(), fPixels->height());
+    size_t rowBytes = fPixels->rowBytes();
+
+    sk_sp<SkData> data = fPixels->detachPixelsAsData();
+    if (!data) {
+>>>>>>> upstream-releases
         return nullptr;
     }
 
@@ -106,6 +138,7 @@ sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBacki
         return nullptr;
     }
 
+<<<<<<< HEAD
     // TODO: http://skbug.com/8422: Although this fixes http://skbug.com/8351, it seems like these
     // should just participate in the normal allocation process and not need the pending IO flag.
     auto surfaceFlags = GrInternalSurfaceFlags::kNone;
@@ -117,4 +150,28 @@ sk_sp<GrTextureProxy> GrSWMaskHelper::toTextureProxy(GrContext* context, SkBacki
 
     return context->contextPriv().proxyProvider()->createTextureProxy(
             std::move(img), kNone_GrSurfaceFlags, 1, SkBudgeted::kYes, fit, surfaceFlags);
+||||||| merged common ancestors
+    return sContext->asTextureProxyRef();
+=======
+    // TODO: http://skbug.com/8422: Although this fixes http://skbug.com/8351, it seems like these
+    // should just participate in the normal allocation process and not need the pending IO flag.
+    auto surfaceFlags = GrInternalSurfaceFlags::kNone;
+    if (!context->priv().proxyProvider()->renderingDirectly()) {
+        // In DDL mode, this texture proxy will be instantiated at flush time, therfore it cannot
+        // have pending IO.
+        surfaceFlags |= GrInternalSurfaceFlags::kNoPendingIO;
+    }
+    auto clearFlag = kNone_GrSurfaceFlags;
+    // In a WASM build on Firefox, we see warnings like
+    // WebGL warning: texSubImage2D: This operation requires zeroing texture data. This is slow.
+    // WebGL warning: texSubImage2D: Texture has not been initialized prior to a partial upload,
+    //                forcing the browser to clear it. This may be slow.
+    // Setting the initial clear seems to make those warnings go away and offers a substantial
+    // boost in performance in Firefox. Chrome sees a more modest increase.
+#if IS_WEBGL==1
+    clearFlag = kPerformInitialClear_GrSurfaceFlag;
+#endif
+    return context->priv().proxyProvider()->createTextureProxy(
+            std::move(img), clearFlag, 1, SkBudgeted::kYes, fit, surfaceFlags);
+>>>>>>> upstream-releases
 }

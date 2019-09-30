@@ -5,7 +5,7 @@
 
 #include "WebGL2Context.h"
 
-#include "gfxPrefs.h"
+#include "mozilla/StaticPrefs.h"
 #include "GLContext.h"
 #include "mozilla/dom/WebGL2RenderingContextBinding.h"
 #include "mozilla/ArrayUtils.h"
@@ -30,6 +30,7 @@ UniquePtr<webgl::FormatUsageAuthority> WebGL2Context::CreateFormatUsage(
   return webgl::FormatUsageAuthority::CreateForWebGL2(gl);
 }
 
+<<<<<<< HEAD
 /*static*/ bool WebGL2Context::IsSupported() {
   return gfxPrefs::WebGL2Enabled();
 }
@@ -37,10 +38,46 @@ UniquePtr<webgl::FormatUsageAuthority> WebGL2Context::CreateFormatUsage(
 /*static*/ WebGL2Context* WebGL2Context::Create() {
   return new WebGL2Context();
 }
+||||||| merged common ancestors
+UniquePtr<webgl::FormatUsageAuthority>
+WebGL2Context::CreateFormatUsage(gl::GLContext* gl) const
+{
+    return webgl::FormatUsageAuthority::CreateForWebGL2(gl);
+}
+
+/*static*/ bool
+WebGL2Context::IsSupported()
+{
+    return gfxPrefs::WebGL2Enabled();
+}
+=======
+/*static*/
+bool WebGL2Context::IsSupported() { return StaticPrefs::webgl_enable_webgl2(); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+JSObject* WebGL2Context::WrapObject(JSContext* cx,
+                                    JS::Handle<JSObject*> givenProto) {
+  return dom::WebGL2RenderingContext_Binding::Wrap(cx, this, givenProto);
+||||||| merged common ancestors
+/*static*/ WebGL2Context*
+WebGL2Context::Create()
+{
+    return new WebGL2Context();
+}
+
+JSObject*
+WebGL2Context::WrapObject(JSContext* cx, JS::Handle<JSObject*> givenProto)
+{
+    return dom::WebGL2RenderingContext_Binding::Wrap(cx, this, givenProto);
+=======
+/*static*/
+WebGL2Context* WebGL2Context::Create() { return new WebGL2Context(); }
 
 JSObject* WebGL2Context::WrapObject(JSContext* cx,
                                     JS::Handle<JSObject*> givenProto) {
   return dom::WebGL2RenderingContext_Binding::Wrap(cx, this, givenProto);
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +89,6 @@ static const gl::GLFeature kRequiredFeatures[] = {
     gl::GLFeature::copy_buffer,
     gl::GLFeature::depth_texture,
     gl::GLFeature::draw_instanced,
-    gl::GLFeature::draw_range_elements,
     gl::GLFeature::element_index_uint,
     gl::GLFeature::frag_color_float,
     gl::GLFeature::frag_depth,
@@ -119,9 +155,41 @@ bool WebGLContext::InitWebGL2(FailureReason* const out_failReason) {
   fnGatherMissing(gl::GLFeature::texture_swizzle);
 #endif
 
+<<<<<<< HEAD
   fnGatherMissing2(gl::GLFeature::prim_restart_fixed,
                    gl::GLFeature::prim_restart);
 
+  ////
+||||||| merged common ancestors
+    fnGatherMissing2(gl::GLFeature::prim_restart_fixed,
+                     gl::GLFeature::prim_restart);
+
+    ////
+=======
+  fnGatherMissing2(gl::GLFeature::prim_restart_fixed,
+                   gl::GLFeature::prim_restart);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!missingList.empty()) {
+    nsAutoCString exts;
+    for (auto itr = missingList.begin(); itr != missingList.end(); ++itr) {
+      exts.AppendLiteral("\n  ");
+      exts.Append(gl::GLContext::GetFeatureName(*itr));
+||||||| merged common ancestors
+    if (!missingList.empty()) {
+        nsAutoCString exts;
+        for (auto itr = missingList.begin(); itr != missingList.end(); ++itr) {
+            exts.AppendLiteral("\n  ");
+            exts.Append(gl::GLContext::GetFeatureName(*itr));
+        }
+
+        const nsPrintfCString reason("WebGL 2 requires support for the following"
+                                     " features: %s",
+                                     exts.BeginReading());
+        *out_failReason = FailureReason("FEATURE_FAILURE_WEBGL2_OCCL", reason);
+        return false;
+=======
   ////
 
   if (!missingList.empty()) {
@@ -129,6 +197,7 @@ bool WebGLContext::InitWebGL2(FailureReason* const out_failReason) {
     for (auto itr = missingList.begin(); itr != missingList.end(); ++itr) {
       exts.AppendLiteral("\n  ");
       exts.Append(gl::GLContext::GetFeatureName(*itr));
+>>>>>>> upstream-releases
     }
 
     const nsPrintfCString reason(
@@ -145,13 +214,67 @@ bool WebGLContext::InitWebGL2(FailureReason* const out_failReason) {
   gl->GetUIntegerv(LOCAL_GL_MAX_UNIFORM_BUFFER_BINDINGS,
                    &mGLMaxUniformBufferBindings);
 
+<<<<<<< HEAD
   mIndexedUniformBufferBindings.resize(mGLMaxUniformBufferBindings);
+||||||| merged common ancestors
+    mDefaultTransformFeedback = new WebGLTransformFeedback(this, 0);
+    mBoundTransformFeedback = mDefaultTransformFeedback;
+=======
+  mGLMinProgramTexelOffset =
+      gl->GetIntAs<uint32_t>(LOCAL_GL_MIN_PROGRAM_TEXEL_OFFSET);
+  mGLMaxProgramTexelOffset =
+      gl->GetIntAs<uint32_t>(LOCAL_GL_MAX_PROGRAM_TEXEL_OFFSET);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mDefaultTransformFeedback = new WebGLTransformFeedback(this, 0);
   mBoundTransformFeedback = mDefaultTransformFeedback;
+||||||| merged common ancestors
+    gl->fGenTransformFeedbacks(1, &mEmptyTFO);
+=======
+  mIndexedUniformBufferBindings.resize(mGLMaxUniformBufferBindings);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gl->fGenTransformFeedbacks(1, &mEmptyTFO);
+||||||| merged common ancestors
+    ////
+=======
+  mDefaultTransformFeedback = new WebGLTransformFeedback(this, 0);
+  mBoundTransformFeedback = mDefaultTransformFeedback;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+    if (!gl->IsGLES()) {
+        // Desktop OpenGL requires the following to be enabled in order to
+        // support sRGB operations on framebuffers.
+        gl->fEnable(LOCAL_GL_FRAMEBUFFER_SRGB_EXT);
+    }
+=======
+  gl->fGenTransformFeedbacks(1, &mEmptyTFO);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!gl->IsGLES()) {
+    // Desktop OpenGL requires the following to be enabled in order to
+    // support sRGB operations on framebuffers.
+    gl->fEnable(LOCAL_GL_FRAMEBUFFER_SRGB_EXT);
+  }
+
+  if (gl->IsSupported(gl::GLFeature::prim_restart_fixed)) {
+    gl->fEnable(LOCAL_GL_PRIMITIVE_RESTART_FIXED_INDEX);
+  } else {
+    MOZ_ASSERT(gl->IsSupported(gl::GLFeature::prim_restart));
+  }
+||||||| merged common ancestors
+    if (gl->IsSupported(gl::GLFeature::prim_restart_fixed)) {
+        gl->fEnable(LOCAL_GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    } else {
+        MOZ_ASSERT(gl->IsSupported(gl::GLFeature::prim_restart));
+    }
+=======
   ////
 
   if (!gl->IsGLES()) {
@@ -165,6 +288,7 @@ bool WebGLContext::InitWebGL2(FailureReason* const out_failReason) {
   } else {
     MOZ_ASSERT(gl->IsSupported(gl::GLFeature::prim_restart));
   }
+>>>>>>> upstream-releases
 
   //////
 

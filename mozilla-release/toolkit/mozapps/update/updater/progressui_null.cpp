@@ -6,7 +6,16 @@
 
 #include "progressui.h"
 
+<<<<<<< HEAD
 int InitProgressUI(int *argc, char ***argv) { return 0; }
+||||||| merged common ancestors
+int InitProgressUI(int *argc, char ***argv)
+{
+  return 0;
+}
+=======
+int InitProgressUI(int* argc, char*** argv) { return 0; }
+>>>>>>> upstream-releases
 
 int ShowProgressUI() { return 0; }
 

@@ -39,7 +39,13 @@ namespace dom {
 #define SPEECH_RECOGNITION_TEST_END_TOPIC "SpeechRecognitionTest:End"
 
 class GlobalObject;
+<<<<<<< HEAD
 class AudioStreamTrack;
+||||||| merged common ancestors
+=======
+class AudioStreamTrack;
+class SpeechRecognitionShutdownBlocker;
+>>>>>>> upstream-releases
 class SpeechEvent;
 class SpeechTrackListener;
 
@@ -183,9 +189,19 @@ class SpeechRecognition final : public DOMEventTargetHelper,
   void AbortSilently(SpeechEvent* aEvent);
   void AbortError(SpeechEvent* aEvent);
 
+<<<<<<< HEAD
   RefPtr<DOMMediaStream> mStream;
   RefPtr<AudioStreamTrack> mTrack;
   RefPtr<SpeechTrackListener> mSpeechListener;
+||||||| merged common ancestors
+  RefPtr<DOMMediaStream> mDOMStream;
+  RefPtr<SpeechStreamListener> mSpeechListener;
+=======
+  RefPtr<DOMMediaStream> mStream;
+  RefPtr<AudioStreamTrack> mTrack;
+  RefPtr<SpeechTrackListener> mSpeechListener;
+  RefPtr<SpeechRecognitionShutdownBlocker> mShutdownBlocker;
+>>>>>>> upstream-releases
   nsCOMPtr<nsISpeechRecognitionService> mRecognitionService;
 
   FSMState mCurrentState;
@@ -235,7 +251,7 @@ class SpeechRecognition final : public DOMEventTargetHelper,
                                const nsAString& aEventName);
 
   const char* GetName(FSMState aId);
-  const char* GetName(SpeechEvent* aId);
+  const char* GetName(SpeechEvent* aEvent);
 };
 
 class SpeechEvent : public Runnable {

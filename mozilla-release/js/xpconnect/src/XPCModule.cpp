@@ -13,8 +13,21 @@ nsresult xpcModuleCtor() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void xpcModuleDtor() {
   // Release our singletons
   nsXPConnect::ReleaseXPConnectSingleton();
   xpc_DestroyJSxIDClassObjects();
+||||||| merged common ancestors
+void
+xpcModuleDtor()
+{
+    // Release our singletons
+    nsXPConnect::ReleaseXPConnectSingleton();
+    xpc_DestroyJSxIDClassObjects();
+=======
+void xpcModuleDtor() {
+  // Release our singletons
+  nsXPConnect::ReleaseXPConnectSingleton();
+>>>>>>> upstream-releases
 }

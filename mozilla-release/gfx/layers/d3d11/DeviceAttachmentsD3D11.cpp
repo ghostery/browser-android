@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "DeviceAttachmentsD3D11.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/layers/Compositor.h"
 #include "CompositorD3D11Shaders.h"
-#include "gfxPrefs.h"
 #include "ShaderDefinitionsD3D11.h"
 
 namespace mozilla {
@@ -27,8 +27,18 @@ DeviceAttachmentsD3D11::DeviceAttachmentsD3D11(ID3D11Device* device)
 
 DeviceAttachmentsD3D11::~DeviceAttachmentsD3D11() {}
 
+<<<<<<< HEAD
 /* static */ RefPtr<DeviceAttachmentsD3D11> DeviceAttachmentsD3D11::Create(
     ID3D11Device* aDevice) {
+||||||| merged common ancestors
+/* static */ RefPtr<DeviceAttachmentsD3D11>
+DeviceAttachmentsD3D11::Create(ID3D11Device* aDevice)
+{
+=======
+/* static */
+RefPtr<DeviceAttachmentsD3D11> DeviceAttachmentsD3D11::Create(
+    ID3D11Device* aDevice) {
+>>>>>>> upstream-releases
   // We don't return null even if the attachments object even if it fails to
   // initialize, so the compositor can grab the failure ID.
   RefPtr<DeviceAttachmentsD3D11> attachments =
@@ -178,7 +188,7 @@ bool DeviceAttachmentsD3D11::Initialize() {
     return false;
   }
 
-  if (gfxPrefs::ComponentAlphaEnabled()) {
+  if (StaticPrefs::layers_componentalpha_enabled()) {
     D3D11_RENDER_TARGET_BLEND_DESC rtBlendComponent = {
         TRUE,
         D3D11_BLEND_ONE,
@@ -274,11 +284,23 @@ bool DeviceAttachmentsD3D11::CreateShaders() {
   InitPixelShader(sYCbCrShaderMask, mYCbCrShader, MaskType::Mask);
   InitPixelShader(sNV12Shader, mNV12Shader, MaskType::MaskNone);
   InitPixelShader(sNV12ShaderMask, mNV12Shader, MaskType::Mask);
+<<<<<<< HEAD
   if (gfxPrefs::ComponentAlphaEnabled()) {
     InitPixelShader(sComponentAlphaShader, mComponentAlphaShader,
                     MaskType::MaskNone);
     InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader,
                     MaskType::Mask);
+||||||| merged common ancestors
+  if (gfxPrefs::ComponentAlphaEnabled()) {
+    InitPixelShader(sComponentAlphaShader, mComponentAlphaShader, MaskType::MaskNone);
+    InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader, MaskType::Mask);
+=======
+  if (StaticPrefs::layers_componentalpha_enabled()) {
+    InitPixelShader(sComponentAlphaShader, mComponentAlphaShader,
+                    MaskType::MaskNone);
+    InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader,
+                    MaskType::Mask);
+>>>>>>> upstream-releases
   }
 
   return mContinueInit;

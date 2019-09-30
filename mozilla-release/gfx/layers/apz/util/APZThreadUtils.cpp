@@ -12,22 +12,55 @@ namespace layers {
 static bool sThreadAssertionsEnabled = true;
 static MessageLoop* sControllerThread;
 
+<<<<<<< HEAD
 /*static*/ void APZThreadUtils::SetThreadAssertionsEnabled(bool aEnabled) {
+||||||| merged common ancestors
+/*static*/ void
+APZThreadUtils::SetThreadAssertionsEnabled(bool aEnabled) {
+=======
+/*static*/
+void APZThreadUtils::SetThreadAssertionsEnabled(bool aEnabled) {
+>>>>>>> upstream-releases
   sThreadAssertionsEnabled = aEnabled;
 }
 
+<<<<<<< HEAD
 /*static*/ bool APZThreadUtils::GetThreadAssertionsEnabled() {
+||||||| merged common ancestors
+/*static*/ bool
+APZThreadUtils::GetThreadAssertionsEnabled() {
+=======
+/*static*/
+bool APZThreadUtils::GetThreadAssertionsEnabled() {
+>>>>>>> upstream-releases
   return sThreadAssertionsEnabled;
 }
 
+<<<<<<< HEAD
 /*static*/ void APZThreadUtils::SetControllerThread(MessageLoop* aLoop) {
+||||||| merged common ancestors
+/*static*/ void
+APZThreadUtils::SetControllerThread(MessageLoop* aLoop)
+{
+=======
+/*static*/
+void APZThreadUtils::SetControllerThread(MessageLoop* aLoop) {
+>>>>>>> upstream-releases
   // We must either be setting the initial controller thread, or removing it,
   // or re-using an existing controller thread.
   MOZ_ASSERT(!sControllerThread || !aLoop || sControllerThread == aLoop);
   sControllerThread = aLoop;
 }
 
+<<<<<<< HEAD
 /*static*/ void APZThreadUtils::AssertOnControllerThread() {
+||||||| merged common ancestors
+/*static*/ void
+APZThreadUtils::AssertOnControllerThread() {
+=======
+/*static*/
+void APZThreadUtils::AssertOnControllerThread() {
+>>>>>>> upstream-releases
   if (!GetThreadAssertionsEnabled()) {
     return;
   }
@@ -35,9 +68,20 @@ static MessageLoop* sControllerThread;
   MOZ_ASSERT(sControllerThread == MessageLoop::current());
 }
 
+<<<<<<< HEAD
 /*static*/ void APZThreadUtils::RunOnControllerThread(
     RefPtr<Runnable>&& aTask) {
   RefPtr<Runnable> task = std::move(aTask);
+||||||| merged common ancestors
+/*static*/ void
+APZThreadUtils::RunOnControllerThread(already_AddRefed<Runnable> aTask)
+{
+  RefPtr<Runnable> task = aTask;
+=======
+/*static*/
+void APZThreadUtils::RunOnControllerThread(RefPtr<Runnable>&& aTask) {
+  RefPtr<Runnable> task = std::move(aTask);
+>>>>>>> upstream-releases
 
   if (!sControllerThread) {
     // Could happen on startup
@@ -52,7 +96,16 @@ static MessageLoop* sControllerThread;
   }
 }
 
+<<<<<<< HEAD
 /*static*/ bool APZThreadUtils::IsControllerThread() {
+||||||| merged common ancestors
+/*static*/ bool
+APZThreadUtils::IsControllerThread()
+{
+=======
+/*static*/
+bool APZThreadUtils::IsControllerThread() {
+>>>>>>> upstream-releases
   return sControllerThread == MessageLoop::current();
 }
 

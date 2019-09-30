@@ -15,11 +15,13 @@
 #include "nsIImageLoadingContent.h"
 #include "nsLayoutUtils.h"
 #include "imgINotificationObserver.h"
+#include "SVGGeometryProperty.h"
 #include "SVGObserverUtils.h"
 #include "nsSVGUtils.h"
 #include "SVGContentUtils.h"
 #include "SVGGeometryFrame.h"
 #include "SVGImageContext.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/MutationEventBinding.h"
 #include "mozilla/dom/SVGImageElement.h"
 #include "nsIReflowCallback.h"
@@ -29,6 +31,7 @@ using namespace mozilla;
 using namespace mozilla::dom;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
+namespace SVGT = SVGGeometryProperty::Tags;
 
 // ---------------------------------------------------------------------
 // nsQueryFrame methods
@@ -36,8 +39,18 @@ NS_QUERYFRAME_HEAD(nsSVGImageFrame)
   NS_QUERYFRAME_ENTRY(nsSVGImageFrame)
 NS_QUERYFRAME_TAIL_INHERITING(SVGGeometryFrame)
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGImageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGImageFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGImageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGImageFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGImageFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsSVGImageFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGImageFrame)
@@ -88,8 +101,18 @@ void nsSVGImageFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
   imageLoader->AddNativeObserver(mListener);
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsSVGImageFrame::DestroyFrom(
     nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) {
+||||||| merged common ancestors
+/* virtual */ void
+nsSVGImageFrame::DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData)
+{
+=======
+/* virtual */
+void nsSVGImageFrame::DestroyFrom(nsIFrame* aDestructRoot,
+                                  PostDestroyData& aPostDestroyData) {
+>>>>>>> upstream-releases
   if (GetStateBits() & NS_FRAME_IS_NONDISPLAY) {
     DecApproximateVisibleCount();
   }
@@ -116,6 +139,7 @@ nsresult nsSVGImageFrame::AttributeChanged(int32_t aNameSpaceID,
                                            nsAtom* aAttribute,
                                            int32_t aModType) {
   if (aNameSpaceID == kNameSpaceID_None) {
+<<<<<<< HEAD
     if (aAttribute == nsGkAtoms::x || aAttribute == nsGkAtoms::y ||
         aAttribute == nsGkAtoms::width || aAttribute == nsGkAtoms::height) {
       nsLayoutUtils::PostRestyleEvent(
@@ -124,6 +148,21 @@ nsresult nsSVGImageFrame::AttributeChanged(int32_t aNameSpaceID,
       nsSVGUtils::ScheduleReflowSVG(this);
       return NS_OK;
     } else if (aAttribute == nsGkAtoms::preserveAspectRatio) {
+||||||| merged common ancestors
+    if (aAttribute == nsGkAtoms::x ||
+        aAttribute == nsGkAtoms::y ||
+        aAttribute == nsGkAtoms::width ||
+        aAttribute == nsGkAtoms::height) {
+      nsLayoutUtils::PostRestyleEvent(
+        mContent->AsElement(), nsRestyleHint(0),
+        nsChangeHint_InvalidateRenderingObservers);
+      nsSVGUtils::ScheduleReflowSVG(this);
+      return NS_OK;
+    }
+    else if (aAttribute == nsGkAtoms::preserveAspectRatio) {
+=======
+    if (aAttribute == nsGkAtoms::preserveAspectRatio) {
+>>>>>>> upstream-releases
       // We don't paint the content of the image using display lists, therefore
       // we have to invalidate for this children-only transform changes since
       // there is no layer tree to notice that the transform changed and
@@ -173,8 +212,17 @@ void nsSVGImageFrame::OnVisibilityChange(
 gfx::Matrix nsSVGImageFrame::GetRasterImageTransform(int32_t aNativeWidth,
                                                      int32_t aNativeHeight) {
   float x, y, width, height;
+<<<<<<< HEAD
   SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
   element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+||||||| merged common ancestors
+  SVGImageElement *element = static_cast<SVGImageElement*>(GetContent());
+  element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+=======
+  SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height>(
+      element, &x, &y, &width, &height);
+>>>>>>> upstream-releases
 
   Matrix viewBoxTM = SVGContentUtils::GetViewBoxTransform(
       width, height, 0, 0, aNativeWidth, aNativeHeight,
@@ -183,10 +231,24 @@ gfx::Matrix nsSVGImageFrame::GetRasterImageTransform(int32_t aNativeWidth,
   return viewBoxTM * gfx::Matrix::Translation(x, y);
 }
 
+<<<<<<< HEAD
 gfx::Matrix nsSVGImageFrame::GetVectorImageTransform() {
   float x, y, width, height;
   SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
   element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+||||||| merged common ancestors
+gfx::Matrix
+nsSVGImageFrame::GetVectorImageTransform()
+{
+  float x, y, width, height;
+  SVGImageElement *element = static_cast<SVGImageElement*>(GetContent());
+  element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+=======
+gfx::Matrix nsSVGImageFrame::GetVectorImageTransform() {
+  float x, y;
+  SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y>(element, &x, &y);
+>>>>>>> upstream-releases
 
   // No viewBoxTM needed here -- our height/width overrides any concept of
   // "native size" that the SVG image has, and it will handle viewBox and
@@ -195,8 +257,43 @@ gfx::Matrix nsSVGImageFrame::GetVectorImageTransform() {
   return gfx::Matrix::Translation(x, y);
 }
 
+<<<<<<< HEAD
 bool nsSVGImageFrame::TransformContextForPainting(gfxContext* aGfxContext,
                                                   const gfxMatrix& aTransform) {
+||||||| merged common ancestors
+bool
+nsSVGImageFrame::TransformContextForPainting(gfxContext* aGfxContext,
+                                             const gfxMatrix& aTransform)
+{
+=======
+bool nsSVGImageFrame::GetIntrinsicImageDimensions(
+    mozilla::gfx::Size& aSize, mozilla::AspectRatio& aAspectRatio) const {
+  if (!mImageContainer) {
+    return false;
+  }
+
+  int32_t width, height;
+  if (NS_FAILED(mImageContainer->GetWidth(&width))) {
+    aSize.width = -1;
+  } else {
+    aSize.width = width;
+  }
+
+  if (NS_FAILED(mImageContainer->GetHeight(&height))) {
+    aSize.height = -1;
+  } else {
+    aSize.height = height;
+  }
+
+  Maybe<AspectRatio> asp = mImageContainer->GetIntrinsicRatio();
+  aAspectRatio = asp.valueOr(AspectRatio{});
+
+  return true;
+}
+
+bool nsSVGImageFrame::TransformContextForPainting(gfxContext* aGfxContext,
+                                                  const gfxMatrix& aTransform) {
+>>>>>>> upstream-releases
   gfx::Matrix imageTransform;
   if (mImageContainer->GetType() == imgIContainer::TYPE_VECTOR) {
     imageTransform = GetVectorImageTransform() * ToMatrix(aTransform);
@@ -237,8 +334,17 @@ void nsSVGImageFrame::PaintSVG(gfxContext& aContext,
   }
 
   float x, y, width, height;
+<<<<<<< HEAD
   SVGImageElement* imgElem = static_cast<SVGImageElement*>(GetContent());
   imgElem->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+||||||| merged common ancestors
+  SVGImageElement *imgElem = static_cast<SVGImageElement*>(GetContent());
+  imgElem->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+=======
+  SVGImageElement* imgElem = static_cast<SVGImageElement*>(GetContent());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height>(
+      imgElem, &x, &y, &width, &height);
+>>>>>>> upstream-releases
   NS_ASSERTION(width > 0 && height > 0,
                "Should only be painting things with valid width/height");
 
@@ -287,10 +393,44 @@ void nsSVGImageFrame::PaintSVG(gfxContext& aContext,
                        (mState & NS_FRAME_IS_NONDISPLAY),
                    "Display lists handle dirty rect intersection test");
       dirtyRect = ToAppUnits(*aDirtyRect, appUnitsPerDevPx);
+<<<<<<< HEAD
       // Adjust dirtyRect to match our local coordinate system.
       nsRect rootRect = nsSVGUtils::TransformFrameRectToOuterSVG(
           mRect, aTransform, PresContext());
       dirtyRect.MoveBy(-rootRect.TopLeft());
+||||||| merged common ancestors
+      // Adjust dirtyRect to match our local coordinate system.
+      nsRect rootRect =
+        nsSVGUtils::TransformFrameRectToOuterSVG(mRect, aTransform,
+                                                 PresContext());
+      dirtyRect.MoveBy(-rootRect.TopLeft());
+=======
+
+      // dirtyRect is relative to the outer <svg>, we should transform it
+      // down to <image>.
+      Rect dir(dirtyRect.x, dirtyRect.y, dirtyRect.width, dirtyRect.height);
+      dir.Scale(1.f / AppUnitsPerCSSPixel());
+
+      // FIXME: This isn't correct if there is an inner <svg> enclosing
+      // the <image>. But that seems to be a quite obscure usecase, we can
+      // add a dedicated utility for that purpose to replace the GetCTM
+      // here if necessary.
+      auto mat = SVGContentUtils::GetCTM(
+          static_cast<SVGImageElement*>(GetContent()), false);
+      if (mat.IsSingular()) {
+        return;
+      }
+
+      mat.Invert();
+      dir = mat.TransformRect(dir);
+
+      // x, y offset of <image> is not included in CTM.
+      dir.MoveBy(-x, -y);
+
+      dir.Scale(AppUnitsPerCSSPixel());
+      dir.Round();
+      dirtyRect = nsRect(dir.x, dir.y, dir.width, dir.height);
+>>>>>>> upstream-releases
     }
 
     uint32_t flags = aImgParams.imageFlags;
@@ -343,9 +483,19 @@ nsIFrame* nsSVGImageFrame::GetFrameForPoint(const gfxPoint& aPoint) {
   }
 
   Rect rect;
+<<<<<<< HEAD
   SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
   element->GetAnimatedLengthValues(&rect.x, &rect.y, &rect.width, &rect.height,
                                    nullptr);
+||||||| merged common ancestors
+  SVGImageElement *element = static_cast<SVGImageElement*>(GetContent());
+  element->GetAnimatedLengthValues(&rect.x, &rect.y,
+                                   &rect.width, &rect.height, nullptr);
+=======
+  SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height>(
+      element, &rect.x, &rect.y, &rect.width, &rect.height);
+>>>>>>> upstream-releases
 
   if (!rect.Contains(ToPoint(aPoint))) {
     return nullptr;
@@ -398,8 +548,17 @@ void nsSVGImageFrame::ReflowSVG() {
   }
 
   float x, y, width, height;
+<<<<<<< HEAD
   SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
   element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+||||||| merged common ancestors
+  SVGImageElement *element = static_cast<SVGImageElement*>(GetContent());
+  element->GetAnimatedLengthValues(&x, &y, &width, &height, nullptr);
+=======
+  SVGImageElement* element = static_cast<SVGImageElement*>(GetContent());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height>(
+      element, &x, &y, &width, &height);
+>>>>>>> upstream-releases
 
   Rect extent(x, y, width, height);
 
@@ -416,9 +575,8 @@ void nsSVGImageFrame::ReflowSVG() {
     SVGObserverUtils::UpdateEffects(this);
 
     if (!mReflowCallbackPosted) {
-      nsIPresShell* shell = PresShell();
       mReflowCallbackPosted = true;
-      shell->PostReflowCallback(this);
+      PresShell()->PostReflowCallback(this);
     }
   }
 
@@ -503,24 +661,57 @@ nsSVGImageListener::nsSVGImageListener(nsSVGImageFrame* aFrame)
     : mFrame(aFrame) {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSVGImageListener::Notify(imgIRequest* aRequest, int32_t aType,
                            const nsIntRect* aData) {
   if (!mFrame) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+nsSVGImageListener::Notify(imgIRequest *aRequest, int32_t aType, const nsIntRect* aData)
+{
+  if (!mFrame)
+    return NS_ERROR_FAILURE;
+=======
+nsSVGImageListener::Notify(imgIRequest* aRequest, int32_t aType,
+                           const nsIntRect* aData) {
+  if (!mFrame) {
+    return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   if (aType == imgINotificationObserver::LOAD_COMPLETE) {
     mFrame->InvalidateFrame();
+<<<<<<< HEAD
     nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
                                     nsRestyleHint(0),
                                     nsChangeHint_InvalidateRenderingObservers);
+||||||| merged common ancestors
+    nsLayoutUtils::PostRestyleEvent(
+      mFrame->GetContent()->AsElement(), nsRestyleHint(0),
+      nsChangeHint_InvalidateRenderingObservers);
+=======
+    nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
+                                    RestyleHint{0},
+                                    nsChangeHint_InvalidateRenderingObservers);
+>>>>>>> upstream-releases
     nsSVGUtils::ScheduleReflowSVG(mFrame);
   }
 
   if (aType == imgINotificationObserver::FRAME_UPDATE) {
     // No new dimensions, so we don't need to call
     // nsSVGUtils::InvalidateAndScheduleBoundsUpdate.
+<<<<<<< HEAD
     nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
                                     nsRestyleHint(0),
                                     nsChangeHint_InvalidateRenderingObservers);
+||||||| merged common ancestors
+    nsLayoutUtils::PostRestyleEvent(
+      mFrame->GetContent()->AsElement(), nsRestyleHint(0),
+      nsChangeHint_InvalidateRenderingObservers);
+=======
+    nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
+                                    RestyleHint{0},
+                                    nsChangeHint_InvalidateRenderingObservers);
+>>>>>>> upstream-releases
     mFrame->InvalidateFrame();
   }
 
@@ -533,9 +724,19 @@ nsSVGImageListener::Notify(imgIRequest* aRequest, int32_t aType,
       mFrame->mImageContainer = image.forget();
     }
     mFrame->InvalidateFrame();
+<<<<<<< HEAD
     nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
                                     nsRestyleHint(0),
                                     nsChangeHint_InvalidateRenderingObservers);
+||||||| merged common ancestors
+    nsLayoutUtils::PostRestyleEvent(
+      mFrame->GetContent()->AsElement(), nsRestyleHint(0),
+      nsChangeHint_InvalidateRenderingObservers);
+=======
+    nsLayoutUtils::PostRestyleEvent(mFrame->GetContent()->AsElement(),
+                                    RestyleHint{0},
+                                    nsChangeHint_InvalidateRenderingObservers);
+>>>>>>> upstream-releases
     nsSVGUtils::ScheduleReflowSVG(mFrame);
   }
 

@@ -8,12 +8,38 @@
 
 var EXPORTED_SYMBOLS = ["DNSPacket"];
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/Services.jsm");
+||||||| merged common ancestors
+ChromeUtils.import('resource://gre/modules/Services.jsm');
+=======
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/DataReader.jsm");
 ChromeUtils.import("resource://gre/modules/DataWriter.jsm");
 ChromeUtils.import("resource://gre/modules/DNSRecord.jsm");
 ChromeUtils.import("resource://gre/modules/DNSResourceRecord.jsm");
+||||||| merged common ancestors
+ChromeUtils.import('resource://gre/modules/DataReader.jsm');
+ChromeUtils.import('resource://gre/modules/DataWriter.jsm');
+ChromeUtils.import('resource://gre/modules/DNSRecord.jsm');
+ChromeUtils.import('resource://gre/modules/DNSResourceRecord.jsm');
+=======
+const { DataReader } = ChromeUtils.import(
+  "resource://gre/modules/DataReader.jsm"
+);
+const { DataWriter } = ChromeUtils.import(
+  "resource://gre/modules/DataWriter.jsm"
+);
+const { DNSRecord } = ChromeUtils.import(
+  "resource://gre/modules/DNSRecord.jsm"
+);
+const { DNSResourceRecord } = ChromeUtils.import(
+  "resource://gre/modules/DNSResourceRecord.jsm"
+);
+>>>>>>> upstream-releases
 
 const DEBUG = true;
 
@@ -22,10 +48,22 @@ function debug(msg) {
 }
 
 let DNS_PACKET_SECTION_TYPES = [
+<<<<<<< HEAD
   "QD", // Question
   "AN", // Answer
   "NS", // Authority
   "AR",  // Additional
+||||||| merged common ancestors
+  'QD', // Question
+  'AN', // Answer
+  'NS', // Authority
+  'AR'  // Additional
+=======
+  "QD", // Question
+  "AN", // Answer
+  "NS", // Authority
+  "AR", // Additional
+>>>>>>> upstream-releases
 ];
 
 /**
@@ -125,7 +163,7 @@ class DNSPacket {
     this._flags = _valueToFlags(0x0000);
     this._records = {};
 
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       this._records[sectionType] = [];
     });
   }
@@ -142,20 +180,42 @@ class DNSPacket {
     let recordCounts = {};
 
     // Parse the record counts.
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       recordCounts[sectionType] = reader.getValue(2);
     });
 
     // Parse the actual records.
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       let recordCount = recordCounts[sectionType];
       for (let i = 0; i < recordCount; i++) {
+<<<<<<< HEAD
         if (sectionType === "QD") {
           packet.addRecord(sectionType,
               DNSRecord.parseFromPacketReader(reader));
         } else {
           packet.addRecord(sectionType,
               DNSResourceRecord.parseFromPacketReader(reader));
+||||||| merged common ancestors
+        if (sectionType === 'QD') {
+          packet.addRecord(sectionType,
+              DNSRecord.parseFromPacketReader(reader));
+        }
+
+        else {
+          packet.addRecord(sectionType,
+              DNSResourceRecord.parseFromPacketReader(reader));
+=======
+        if (sectionType === "QD") {
+          packet.addRecord(
+            sectionType,
+            DNSRecord.parseFromPacketReader(reader)
+          );
+        } else {
+          packet.addRecord(
+            sectionType,
+            DNSResourceRecord.parseFromPacketReader(reader)
+          );
+>>>>>>> upstream-releases
         }
       }
     });
@@ -182,7 +242,7 @@ class DNSPacket {
   getRecords(sectionTypes, recordType) {
     let records = [];
 
-    sectionTypes.forEach((sectionType) => {
+    sectionTypes.forEach(sectionType => {
       records = records.concat(this._records[sectionType]);
     });
 
@@ -203,13 +263,13 @@ class DNSPacket {
     writer.putValue(_flagsToValue(this._flags), 2);
 
     // Write lengths of record sections (2 bytes each)
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       writer.putValue(this._records[sectionType].length, 2);
     });
 
     // Write records
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
-      this._records[sectionType].forEach((record) => {
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
+      this._records[sectionType].forEach(record => {
         writer.putBytes(record.serialize());
       });
     });
@@ -222,12 +282,12 @@ class DNSPacket {
   }
 
   toJSONObject() {
-    let result = {flags: this._flags};
-    DNS_PACKET_SECTION_TYPES.forEach((sectionType) => {
+    let result = { flags: this._flags };
+    DNS_PACKET_SECTION_TYPES.forEach(sectionType => {
       result[sectionType] = [];
 
       let records = this._records[sectionType];
-      records.forEach((record) => {
+      records.forEach(record => {
         result[sectionType].push(record.toJSONObject());
       });
     });

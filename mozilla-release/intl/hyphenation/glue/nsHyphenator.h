@@ -12,9 +12,20 @@
 
 class nsIURI;
 
+<<<<<<< HEAD
 class nsHyphenator {
  public:
   explicit nsHyphenator(nsIURI* aURI);
+||||||| merged common ancestors
+class nsHyphenator
+{
+public:
+  explicit nsHyphenator(nsIURI *aURI);
+=======
+class nsHyphenator {
+ public:
+  nsHyphenator(nsIURI* aURI, bool aHyphenateCapitalized);
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_REFCOUNTING(nsHyphenator)
 
@@ -25,8 +36,19 @@ class nsHyphenator {
  private:
   ~nsHyphenator();
 
+<<<<<<< HEAD
  protected:
   void* mDict;
+||||||| merged common ancestors
+protected:
+  void                      *mDict;
+=======
+  void HyphenateWord(const nsAString& aString, uint32_t aStart, uint32_t aLimit,
+                     nsTArray<bool>& aHyphens);
+
+  void* mDict;
+  bool mHyphenateCapitalized;
+>>>>>>> upstream-releases
 };
 
 #endif  // nsHyphenator_h__

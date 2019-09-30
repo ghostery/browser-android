@@ -165,7 +165,13 @@ uz_Cyrl{
             }
         }
     }
+<<<<<<< HEAD
     Version{"2.1.43.2"}
+||||||| merged common ancestors
+    Version{"2.1.41.97"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -327,8 +333,8 @@ uz_Cyrl{
                 MMM{"LLL"}
                 MMMEd{"E, d MMM"}
                 MMMMW{
-                    one{"MMM, W-'ҳафта'"}
-                    other{"MMM, W-'ҳафта'"}
+                    one{"MMMM, W-'ҳафта'"}
+                    other{"MMMM, W-'ҳафта'"}
                 }
                 MMMMd{"d MMMM"}
                 MMMd{"d MMM"}

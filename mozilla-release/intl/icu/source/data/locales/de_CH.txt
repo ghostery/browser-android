@@ -31,7 +31,13 @@ de_CH{
             }
         }
     }
+<<<<<<< HEAD
     Version{"2.1.44.50"}
+||||||| merged common ancestors
+    Version{"2.1.39.37"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
     calendar{
         gregorian{
             dayNames{
@@ -76,6 +82,21 @@ de_CH{
         }
         weekdayOfMonth-short{
             dn{"Wochent. i. Mo."}
+        }
+    }
+    parse{
+        general{
+            lenient{
+                "[.․。︒﹒．｡]",
+                "['ʼ՚᾽᾿’＇]",
+                "[%٪﹪％]",
+                "[؉‰]",
+                "[\$﹩＄$]",
+                "[£₤]",
+                "[¥￥]",
+                "[₩￦]",
+                "[₨₹{Rp}{Rs}]",
+            }
         }
     }
 }

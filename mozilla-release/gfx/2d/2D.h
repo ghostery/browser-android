@@ -38,9 +38,19 @@
 #include "nsRegionFwd.h"
 
 #if defined(MOZ_WIDGET_ANDROID) || defined(MOZ_WIDGET_GTK)
+<<<<<<< HEAD
 #ifndef MOZ_ENABLE_FREETYPE
 #define MOZ_ENABLE_FREETYPE
 #endif
+||||||| merged common ancestors
+  #ifndef MOZ_ENABLE_FREETYPE
+  #define MOZ_ENABLE_FREETYPE
+  #endif
+=======
+#  ifndef MOZ_ENABLE_FREETYPE
+#    define MOZ_ENABLE_FREETYPE
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 struct _cairo_surface;
@@ -60,17 +70,18 @@ typedef int FT_Error;
 struct ID3D11Texture2D;
 struct ID3D11Device;
 struct ID2D1Device;
+struct ID2D1DeviceContext;
+struct ID2D1Multithread;
 struct IDWriteFactory;
 struct IDWriteRenderingParams;
 struct IDWriteFontFace;
 struct IDWriteFontCollection;
 
-class GrContext;
 class SkCanvas;
 struct gfxFontStyle;
 
 struct CGContext;
-typedef struct CGContext *CGContextRef;
+typedef struct CGContext* CGContextRef;
 
 struct CGFont;
 typedef CGFont *CGFontRef;
@@ -104,12 +115,12 @@ struct NativeSurface {
   NativeSurfaceType mType;
   SurfaceFormat mFormat;
   gfx::IntSize mSize;
-  void *mSurface;
+  void* mSurface;
 };
 
 struct NativeFont {
   NativeFontType mType;
-  void *mFont;
+  void* mFont;
 };
 
 /**
@@ -142,6 +153,7 @@ struct StrokeOptions {
   explicit StrokeOptions(Float aLineWidth = 1.0f,
                          JoinStyle aLineJoin = JoinStyle::MITER_OR_BEVEL,
                          CapStyle aLineCap = CapStyle::BUTT,
+<<<<<<< HEAD
                          Float aMiterLimit = 10.0f, size_t aDashLength = 0,
                          const Float *aDashPattern = 0, Float aDashOffset = 0.f)
       : mLineWidth(aLineWidth),
@@ -151,14 +163,48 @@ struct StrokeOptions {
         mDashOffset(aDashOffset),
         mLineJoin(aLineJoin),
         mLineCap(aLineCap) {
+||||||| merged common ancestors
+                         Float aMiterLimit = 10.0f,
+                         size_t aDashLength = 0,
+                         const Float* aDashPattern = 0,
+                         Float aDashOffset = 0.f)
+    : mLineWidth(aLineWidth)
+    , mMiterLimit(aMiterLimit)
+    , mDashPattern(aDashLength > 0 ? aDashPattern : 0)
+    , mDashLength(aDashLength)
+    , mDashOffset(aDashOffset)
+    , mLineJoin(aLineJoin)
+    , mLineCap(aLineCap)
+  {
+=======
+                         Float aMiterLimit = 10.0f, size_t aDashLength = 0,
+                         const Float* aDashPattern = 0, Float aDashOffset = 0.f)
+      : mLineWidth(aLineWidth),
+        mMiterLimit(aMiterLimit),
+        mDashPattern(aDashLength > 0 ? aDashPattern : 0),
+        mDashLength(aDashLength),
+        mDashOffset(aDashOffset),
+        mLineJoin(aLineJoin),
+        mLineCap(aLineCap) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(aDashLength == 0 || aDashPattern);
   }
 
   Float mLineWidth;          //!< Width of the stroke in userspace.
   Float mMiterLimit;         //!< Miter limit in units of linewidth
+<<<<<<< HEAD
   const Float *mDashPattern; /**< Series of on/off userspace lengths defining
                                 dash. Owned by the caller; must live at least as
                                 long as this StrokeOptions.
+||||||| merged common ancestors
+  const Float* mDashPattern; /**< Series of on/off userspace lengths defining dash.
+                                  Owned by the caller; must live at least as long as
+                                  this StrokeOptions.
+=======
+  const Float* mDashPattern; /**< Series of on/off userspace lengths defining
+                                dash. Owned by the caller; must live at least as
+                                long as this StrokeOptions.
+>>>>>>> upstream-releases
                                   mDashPattern != null <=> mDashLength > 0. */
   size_t mDashLength;        //!< Number of on/off lengths in mDashPattern.
   Float mDashOffset;         /**< Userspace offset within mDashPattern at which
@@ -194,7 +240,7 @@ struct DrawSurfaceOptions {
 class GradientStops : public external::AtomicRefCounted<GradientStops> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(GradientStops)
-  virtual ~GradientStops() {}
+  virtual ~GradientStops() = default;
 
   virtual BackendType GetBackendType() const = 0;
   virtual bool IsValid() const { return true; }
@@ -209,23 +255,59 @@ class GradientStops : public external::AtomicRefCounted<GradientStops> {
  * drawing commands. These objects are not backend specific, however for
  * example the gradient stops on a gradient pattern can be backend specific.
  */
+<<<<<<< HEAD
 class Pattern {
  public:
   virtual ~Pattern() {}
+||||||| merged common ancestors
+class Pattern
+{
+public:
+  virtual ~Pattern() {}
+=======
+class Pattern {
+ public:
+  virtual ~Pattern() = default;
+>>>>>>> upstream-releases
 
   virtual PatternType GetType() const = 0;
 
+<<<<<<< HEAD
  protected:
   Pattern() {}
+||||||| merged common ancestors
+protected:
+  Pattern() {}
+=======
+ protected:
+  Pattern() = default;
+>>>>>>> upstream-releases
 };
 
 class ColorPattern : public Pattern {
  public:
   // Explicit because consumers should generally use ToDeviceColor when
   // creating a ColorPattern.
+<<<<<<< HEAD
   explicit ColorPattern(const Color &aColor) : mColor(aColor) {}
+||||||| merged common ancestors
+  explicit ColorPattern(const Color &aColor)
+    : mColor(aColor)
+  {}
+=======
+  explicit ColorPattern(const Color& aColor) : mColor(aColor) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual PatternType GetType() const override { return PatternType::COLOR; }
+||||||| merged common ancestors
+  virtual PatternType GetType() const override
+  {
+    return PatternType::COLOR;
+  }
+=======
+  PatternType GetType() const override { return PatternType::COLOR; }
+>>>>>>> upstream-releases
 
   Color mColor;
 };
@@ -238,6 +320,7 @@ class ColorPattern : public Pattern {
 class LinearGradientPattern : public Pattern {
  public:
   /// For constructor parameter description, see member data documentation.
+<<<<<<< HEAD
   LinearGradientPattern(const Point &aBegin, const Point &aEnd,
                         GradientStops *aStops, const Matrix &aMatrix = Matrix())
       : mBegin(aBegin), mEnd(aEnd), mStops(aStops), mMatrix(aMatrix) {}
@@ -256,6 +339,50 @@ class LinearGradientPattern : public Pattern {
                        target this pattern will be used with. */
   Matrix mMatrix; /**< A matrix that transforms the pattern into
                        user space */
+||||||| merged common ancestors
+  LinearGradientPattern(const Point &aBegin,
+                        const Point &aEnd,
+                        GradientStops *aStops,
+                        const Matrix &aMatrix = Matrix())
+    : mBegin(aBegin)
+    , mEnd(aEnd)
+    , mStops(aStops)
+    , mMatrix(aMatrix)
+  {
+  }
+
+  virtual PatternType GetType() const override
+  {
+    return PatternType::LINEAR_GRADIENT;
+  }
+
+  Point mBegin;                 //!< Start of the linear gradient
+  Point mEnd;                   /**< End of the linear gradient - NOTE: In the case
+                                     of a zero length gradient it will act as the
+                                     color of the last stop. */
+  RefPtr<GradientStops> mStops; /**< GradientStops object for this gradient, this
+                                     should match the backend type of the draw
+                                     target this pattern will be used with. */
+  Matrix mMatrix;               /**< A matrix that transforms the pattern into
+                                     user space */
+=======
+  LinearGradientPattern(const Point& aBegin, const Point& aEnd,
+                        GradientStops* aStops, const Matrix& aMatrix = Matrix())
+      : mBegin(aBegin), mEnd(aEnd), mStops(aStops), mMatrix(aMatrix) {}
+
+  PatternType GetType() const override { return PatternType::LINEAR_GRADIENT; }
+
+  Point mBegin;  //!< Start of the linear gradient
+  Point mEnd;    /**< End of the linear gradient - NOTE: In the case
+                      of a zero length gradient it will act as the
+                      color of the last stop. */
+  RefPtr<GradientStops>
+      mStops;     /**< GradientStops object for this gradient, this
+                       should match the backend type of the draw
+                       target this pattern will be used with. */
+  Matrix mMatrix; /**< A matrix that transforms the pattern into
+                       user space */
+>>>>>>> upstream-releases
 };
 
 /**
@@ -266,6 +393,7 @@ class LinearGradientPattern : public Pattern {
 class RadialGradientPattern : public Pattern {
  public:
   /// For constructor parameter description, see member data documentation.
+<<<<<<< HEAD
   RadialGradientPattern(const Point &aCenter1, const Point &aCenter2,
                         Float aRadius1, Float aRadius2, GradientStops *aStops,
                         const Matrix &aMatrix = Matrix())
@@ -289,6 +417,58 @@ class RadialGradientPattern : public Pattern {
                         should match the backend type of the draw target
                         this pattern will be used with. */
   Matrix mMatrix;  //!< A matrix that transforms the pattern into user space
+||||||| merged common ancestors
+  RadialGradientPattern(const Point &aCenter1,
+                        const Point &aCenter2,
+                        Float aRadius1,
+                        Float aRadius2,
+                        GradientStops *aStops,
+                        const Matrix &aMatrix = Matrix())
+    : mCenter1(aCenter1)
+    , mCenter2(aCenter2)
+    , mRadius1(aRadius1)
+    , mRadius2(aRadius2)
+    , mStops(aStops)
+    , mMatrix(aMatrix)
+  {
+  }
+
+  virtual PatternType GetType() const override
+  {
+    return PatternType::RADIAL_GRADIENT;
+  }
+
+  Point mCenter1; //!< Center of the inner (focal) circle.
+  Point mCenter2; //!< Center of the outer circle.
+  Float mRadius1; //!< Radius of the inner (focal) circle.
+  Float mRadius2; //!< Radius of the outer circle.
+  RefPtr<GradientStops> mStops; /**< GradientStops object for this gradient, this
+                                     should match the backend type of the draw target
+                                     this pattern will be used with. */
+  Matrix mMatrix; //!< A matrix that transforms the pattern into user space
+=======
+  RadialGradientPattern(const Point& aCenter1, const Point& aCenter2,
+                        Float aRadius1, Float aRadius2, GradientStops* aStops,
+                        const Matrix& aMatrix = Matrix())
+      : mCenter1(aCenter1),
+        mCenter2(aCenter2),
+        mRadius1(aRadius1),
+        mRadius2(aRadius2),
+        mStops(aStops),
+        mMatrix(aMatrix) {}
+
+  PatternType GetType() const override { return PatternType::RADIAL_GRADIENT; }
+
+  Point mCenter1;  //!< Center of the inner (focal) circle.
+  Point mCenter2;  //!< Center of the outer circle.
+  Float mRadius1;  //!< Radius of the inner (focal) circle.
+  Float mRadius2;  //!< Radius of the outer circle.
+  RefPtr<GradientStops>
+      mStops;      /**< GradientStops object for this gradient, this
+                        should match the backend type of the draw target
+                        this pattern will be used with. */
+  Matrix mMatrix;  //!< A matrix that transforms the pattern into user space
+>>>>>>> upstream-releases
 };
 
 /**
@@ -298,9 +478,10 @@ class RadialGradientPattern : public Pattern {
 class SurfacePattern : public Pattern {
  public:
   /// For constructor parameter description, see member data documentation.
-  SurfacePattern(SourceSurface *aSourceSurface, ExtendMode aExtendMode,
-                 const Matrix &aMatrix = Matrix(),
+  SurfacePattern(SourceSurface* aSourceSurface, ExtendMode aExtendMode,
+                 const Matrix& aMatrix = Matrix(),
                  SamplingFilter aSamplingFilter = SamplingFilter::GOOD,
+<<<<<<< HEAD
                  const IntRect &aSamplingRect = IntRect())
       : mSurface(aSourceSurface),
         mExtendMode(aExtendMode),
@@ -320,6 +501,49 @@ class SurfacePattern : public Pattern {
   IntRect mSamplingRect; /**< Rect that must not be sampled outside of,
                               or an empty rect if none has been
                               specified. */
+||||||| merged common ancestors
+                 const IntRect &aSamplingRect = IntRect())
+    : mSurface(aSourceSurface)
+    , mExtendMode(aExtendMode)
+    , mSamplingFilter(aSamplingFilter)
+    , mMatrix(aMatrix)
+    , mSamplingRect(aSamplingRect)
+  {}
+
+  virtual PatternType GetType() const override
+  {
+    return PatternType::SURFACE;
+  }
+
+  RefPtr<SourceSurface> mSurface; //!< Surface to use for drawing
+  ExtendMode mExtendMode;         /**< This determines how the image is extended
+                                       outside the bounds of the image */
+  SamplingFilter mSamplingFilter; //!< Resampling filter for resampling the image.
+  Matrix mMatrix;                 //!< Transforms the pattern into user space
+
+  IntRect mSamplingRect;          /**< Rect that must not be sampled outside of,
+                                       or an empty rect if none has been specified. */
+=======
+                 const IntRect& aSamplingRect = IntRect())
+      : mSurface(aSourceSurface),
+        mExtendMode(aExtendMode),
+        mSamplingFilter(aSamplingFilter),
+        mMatrix(aMatrix),
+        mSamplingRect(aSamplingRect) {}
+
+  PatternType GetType() const override { return PatternType::SURFACE; }
+
+  RefPtr<SourceSurface> mSurface;  //!< Surface to use for drawing
+  ExtendMode mExtendMode; /**< This determines how the image is extended
+                               outside the bounds of the image */
+  SamplingFilter
+      mSamplingFilter;  //!< Resampling filter for resampling the image.
+  Matrix mMatrix;       //!< Transforms the pattern into user space
+
+  IntRect mSamplingRect; /**< Rect that must not be sampled outside of,
+                              or an empty rect if none has been
+                              specified. */
+>>>>>>> upstream-releases
 };
 
 class StoredPattern;
@@ -338,11 +562,21 @@ class DrawTargetCaptureImpl;
 class SourceSurface : public external::AtomicRefCounted<SourceSurface> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SourceSurface)
-  virtual ~SourceSurface() {}
+  virtual ~SourceSurface() = default;
 
   virtual SurfaceType GetType() const = 0;
   virtual IntSize GetSize() const = 0;
+<<<<<<< HEAD
   virtual IntRect GetRect() const { return IntRect(IntPoint(0, 0), GetSize()); }
+||||||| merged common ancestors
+  virtual IntRect GetRect() const {
+    return IntRect(IntPoint(0, 0), GetSize());
+  }
+=======
+  /* GetRect is useful for when the underlying surface doesn't actually
+   * have a backing store starting at 0, 0. e.g. SourceSurfaceOffset */
+  virtual IntRect GetRect() const { return IntRect(IntPoint(0, 0), GetSize()); }
+>>>>>>> upstream-releases
   virtual SurfaceFormat GetFormat() const = 0;
 
   /** This returns false if some event has made this source surface invalid for
@@ -357,7 +591,14 @@ class SourceSurface : public external::AtomicRefCounted<SourceSurface> {
    * the objects are different (e.g. indirection due to
    * DataSourceSurfaceWrapper).
    */
+<<<<<<< HEAD
   virtual bool Equals(SourceSurface *aOther, bool aSymmetric = true) {
+||||||| merged common ancestors
+  virtual bool Equals(SourceSurface* aOther, bool aSymmetric = true)
+  {
+=======
+  virtual bool Equals(SourceSurface* aOther, bool aSymmetric = true) {
+>>>>>>> upstream-releases
     return this == aOther ||
            (aSymmetric && aOther && aOther->Equals(this, false));
   }
@@ -378,16 +619,48 @@ class SourceSurface : public external::AtomicRefCounted<SourceSurface> {
    */
   virtual already_AddRefed<DataSourceSurface> GetDataSurface() = 0;
 
+  /** This function will return a SourceSurface without any offset. */
+  virtual already_AddRefed<SourceSurface> GetUnderlyingSurface() {
+    RefPtr<SourceSurface> surface = this;
+    return surface.forget();
+  }
+
   /** Tries to get this SourceSurface's native surface.  This will fail if aType
    * is not the type of this SourceSurface's native surface.
    */
+<<<<<<< HEAD
   virtual void *GetNativeSurface(NativeSurfaceType aType) { return nullptr; }
+||||||| merged common ancestors
+  virtual void *GetNativeSurface(NativeSurfaceType aType) {
+    return nullptr;
+  }
+=======
+  virtual void* GetNativeSurface(NativeSurfaceType aType) { return nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void *)) {
+||||||| merged common ancestors
+  void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void*)) {
+=======
+  void AddUserData(UserDataKey* key, void* userData, void (*destroy)(void*)) {
+>>>>>>> upstream-releases
     mUserData.Add(key, userData, destroy);
   }
+<<<<<<< HEAD
   void *GetUserData(UserDataKey *key) const { return mUserData.Get(key); }
   void RemoveUserData(UserDataKey *key) { mUserData.RemoveAndDestroy(key); }
+||||||| merged common ancestors
+  void *GetUserData(UserDataKey *key) const {
+    return mUserData.Get(key);
+  }
+  void RemoveUserData(UserDataKey *key) {
+    mUserData.RemoveAndDestroy(key);
+  }
+=======
+  void* GetUserData(UserDataKey* key) const { return mUserData.Get(key); }
+  void RemoveUserData(UserDataKey* key) { mUserData.RemoveAndDestroy(key); }
+>>>>>>> upstream-releases
 
  protected:
   friend class DrawTargetCaptureImpl;
@@ -412,7 +685,7 @@ class DataSourceSurface : public SourceSurface {
 #endif
 
   struct MappedSurface {
-    uint8_t *mData;
+    uint8_t* mData;
     int32_t mStride;
   };
 
@@ -426,6 +699,7 @@ class DataSourceSurface : public SourceSurface {
    * Use IsMapped() to verify whether Map() succeeded or not.
    */
   class ScopedMap final {
+<<<<<<< HEAD
    public:
     explicit ScopedMap(DataSourceSurface *aSurface, MapType aType)
         : mSurface(aSurface), mIsMapped(aSurface->Map(aType, &mMap)) {}
@@ -434,11 +708,39 @@ class DataSourceSurface : public SourceSurface {
         : mSurface(std::move(aOther.mSurface)),
           mMap(aOther.mMap),
           mIsMapped(aOther.mIsMapped) {
+||||||| merged common ancestors
+  public:
+    explicit ScopedMap(DataSourceSurface* aSurface, MapType aType)
+      : mSurface(aSurface)
+      , mIsMapped(aSurface->Map(aType, &mMap)) {}
+
+    ScopedMap(ScopedMap&& aOther)
+      : mSurface(std::move(aOther.mSurface))
+      , mMap(aOther.mMap)
+      , mIsMapped(aOther.mIsMapped)
+    {
+=======
+   public:
+    ScopedMap(DataSourceSurface* aSurface, MapType aType)
+        : mSurface(aSurface), mIsMapped(aSurface->Map(aType, &mMap)) {}
+
+    ScopedMap(ScopedMap&& aOther)
+        : mSurface(std::move(aOther.mSurface)),
+          mMap(aOther.mMap),
+          mIsMapped(aOther.mIsMapped) {
+>>>>>>> upstream-releases
       aOther.mMap.mData = nullptr;
       aOther.mIsMapped = false;
     }
 
+<<<<<<< HEAD
     ScopedMap &operator=(ScopedMap &&aOther) {
+||||||| merged common ancestors
+    ScopedMap& operator=(ScopedMap&& aOther)
+    {
+=======
+    ScopedMap& operator=(ScopedMap&& aOther) {
+>>>>>>> upstream-releases
       if (mIsMapped) {
         mSurface->Unmap();
       }
@@ -456,7 +758,14 @@ class DataSourceSurface : public SourceSurface {
       }
     }
 
+<<<<<<< HEAD
     uint8_t *GetData() const {
+||||||| merged common ancestors
+    uint8_t* GetData() const
+    {
+=======
+    uint8_t* GetData() const {
+>>>>>>> upstream-releases
       MOZ_ASSERT(mIsMapped);
       return mMap.mData;
     }
@@ -466,23 +775,40 @@ class DataSourceSurface : public SourceSurface {
       return mMap.mStride;
     }
 
+<<<<<<< HEAD
     const MappedSurface *GetMappedSurface() const {
+||||||| merged common ancestors
+    const MappedSurface* GetMappedSurface() const
+    {
+=======
+    const MappedSurface* GetMappedSurface() const {
+>>>>>>> upstream-releases
       MOZ_ASSERT(mIsMapped);
       return &mMap;
     }
 
     bool IsMapped() const { return mIsMapped; }
 
+<<<<<<< HEAD
    private:
     ScopedMap(const ScopedMap &aOther) = delete;
     ScopedMap &operator=(const ScopedMap &aOther) = delete;
+||||||| merged common ancestors
+  private:
+    ScopedMap(const ScopedMap& aOther) = delete;
+    ScopedMap& operator=(const ScopedMap& aOther) = delete;
+=======
+   private:
+    ScopedMap(const ScopedMap& aOther) = delete;
+    ScopedMap& operator=(const ScopedMap& aOther) = delete;
+>>>>>>> upstream-releases
 
     RefPtr<DataSourceSurface> mSurface;
     MappedSurface mMap;
     bool mIsMapped;
   };
 
-  virtual SurfaceType GetType() const override { return SurfaceType::DATA; }
+  SurfaceType GetType() const override { return SurfaceType::DATA; }
   /** @deprecated
    * Get the raw bitmap data of the surface.
    * Can return null if there was OOM allocating surface data.
@@ -490,7 +816,7 @@ class DataSourceSurface : public SourceSurface {
    * Deprecated means you shouldn't be using this!! Use Map instead.
    * Please deny any reviews which add calls to this!
    */
-  virtual uint8_t *GetData() = 0;
+  virtual uint8_t* GetData() = 0;
 
   /** @deprecated
    * Stride of the surface, distance in bytes between the start of the image
@@ -501,6 +827,7 @@ class DataSourceSurface : public SourceSurface {
 
   /**
    * The caller is responsible for ensuring aMappedSurface is not null.
+<<<<<<< HEAD
   // Althought Map (and Moz2D in general) isn't normally threadsafe,
   // we want to allow it for SourceSurfaceRawData since it should
   // always be fine (for reading at least).
@@ -512,6 +839,23 @@ class DataSourceSurface : public SourceSurface {
   // locking to prevent write races.
    */
   virtual bool Map(MapType, MappedSurface *aMappedSurface) {
+||||||| merged common ancestors
+   */
+  virtual bool Map(MapType, MappedSurface *aMappedSurface)
+  {
+=======
+  // Althought Map (and Moz2D in general) isn't normally threadsafe,
+  // we want to allow it for SourceSurfaceRawData since it should
+  // always be fine (for reading at least).
+  //
+  // This is the same as the base class implementation except using
+  // mMapCount instead of mIsMapped since that breaks for multithread.
+  //
+  // Once mfbt supports Monitors we should implement proper read/write
+  // locking to prevent write races.
+   */
+  virtual bool Map(MapType, MappedSurface* aMappedSurface) {
+>>>>>>> upstream-releases
     aMappedSurface->mData = GetData();
     aMappedSurface->mStride = Stride();
     bool success = !!aMappedSurface->mData;
@@ -533,16 +877,30 @@ class DataSourceSurface : public SourceSurface {
    * The returning surface might be null, because of OOM or gfx device reset.
    * The caller needs to do null-check before using it.
    */
-  virtual already_AddRefed<DataSourceSurface> GetDataSurface() override;
+  already_AddRefed<DataSourceSurface> GetDataSurface() override;
 
   /**
    * Add the size of the underlying data buffer to the aggregate.
    */
   virtual void AddSizeOfExcludingThis(MallocSizeOf aMallocSizeOf,
+<<<<<<< HEAD
                                       size_t &aHeapSizeOut,
                                       size_t &aNonHeapSizeOut,
                                       size_t &aExtHandlesOut,
                                       uint64_t &aExtIdOut) const {}
+||||||| merged common ancestors
+                                      size_t& aHeapSizeOut,
+                                      size_t& aNonHeapSizeOut,
+                                      size_t& aExtHandlesOut,
+                                      uint64_t& aExtIdOut) const
+  {
+  }
+=======
+                                      size_t& aHeapSizeOut,
+                                      size_t& aNonHeapSizeOut,
+                                      size_t& aExtHandlesOut,
+                                      uint64_t& aExtIdOut) const {}
+>>>>>>> upstream-releases
 
   /**
    * Returns whether or not the data was allocated on the heap. This should
@@ -558,7 +916,13 @@ class DataSourceSurface : public SourceSurface {
   /**
    * Indicate a region which has changed in the surface.
    */
+<<<<<<< HEAD
   virtual void Invalidate(const IntRect &aDirtyRect) {}
+||||||| merged common ancestors
+  virtual void Invalidate(const IntRect& aDirtyRect) { }
+=======
+  virtual void Invalidate(const IntRect& aDirtyRect) {}
+>>>>>>> upstream-releases
 
  protected:
   Atomic<int32_t> mMapCount;
@@ -568,31 +932,60 @@ class DataSourceSurface : public SourceSurface {
 class PathSink : public RefCounted<PathSink> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PathSink)
-  virtual ~PathSink() {}
+  virtual ~PathSink() = default;
 
   /** Move the current point in the path, any figure currently being drawn will
    * be considered closed during fill operations, however when stroking the
    * closing line segment will not be drawn.
    */
-  virtual void MoveTo(const Point &aPoint) = 0;
+  virtual void MoveTo(const Point& aPoint) = 0;
   /** Add a linesegment to the current figure */
-  virtual void LineTo(const Point &aPoint) = 0;
+  virtual void LineTo(const Point& aPoint) = 0;
   /** Add a cubic bezier curve to the current figure */
+<<<<<<< HEAD
   virtual void BezierTo(const Point &aCP1, const Point &aCP2,
                         const Point &aCP3) = 0;
+||||||| merged common ancestors
+  virtual void BezierTo(const Point &aCP1,
+                        const Point &aCP2,
+                        const Point &aCP3) = 0;
+=======
+  virtual void BezierTo(const Point& aCP1, const Point& aCP2,
+                        const Point& aCP3) = 0;
+>>>>>>> upstream-releases
   /** Add a quadratic bezier curve to the current figure */
+<<<<<<< HEAD
   virtual void QuadraticBezierTo(const Point &aCP1, const Point &aCP2) = 0;
+||||||| merged common ancestors
+  virtual void QuadraticBezierTo(const Point &aCP1,
+                                 const Point &aCP2) = 0;
+=======
+  virtual void QuadraticBezierTo(const Point& aCP1, const Point& aCP2) = 0;
+>>>>>>> upstream-releases
   /** Close the current figure, this will essentially generate a line segment
    * from the current point to the starting point for the current figure
    */
   virtual void Close() = 0;
   /** Add an arc to the current figure */
-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+  virtual void Arc(const Point& aOrigin, float aRadius, float aStartAngle,
                    float aEndAngle, bool aAntiClockwise = false) = 0;
+
+  virtual Point CurrentPoint() const { return mCurrentPoint; }
+
+  virtual Point BeginPoint() const { return mBeginPoint; }
+
+  virtual void SetCurrentPoint(const Point& aPoint) { mCurrentPoint = aPoint; }
+
+  virtual void SetBeginPoint(const Point& aPoint) { mBeginPoint = aPoint; }
+
+ protected:
   /** Point the current subpath is at - or where the next subpath will start
    * if there is no active subpath.
    */
-  virtual Point CurrentPoint() const = 0;
+  Point mCurrentPoint;
+
+  /** Position of the previous MoveTo operation. */
+  Point mBeginPoint;
 };
 
 class PathBuilder;
@@ -614,51 +1007,77 @@ class Path : public external::AtomicRefCounted<Path> {
   inline already_AddRefed<PathBuilder> CopyToBuilder() const {
     return CopyToBuilder(GetFillRule());
   }
+<<<<<<< HEAD
   inline already_AddRefed<PathBuilder> TransformedCopyToBuilder(
       const Matrix &aTransform) const {
+||||||| merged common ancestors
+  inline already_AddRefed<PathBuilder> TransformedCopyToBuilder(const Matrix &aTransform) const {
+=======
+  inline already_AddRefed<PathBuilder> TransformedCopyToBuilder(
+      const Matrix& aTransform) const {
+>>>>>>> upstream-releases
     return TransformedCopyToBuilder(aTransform, GetFillRule());
   }
   /** This returns a PathBuilder object that contains a copy of the contents of
    * this path, converted to use the specified FillRule, and still writable.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<PathBuilder> CopyToBuilder(
       FillRule aFillRule) const = 0;
   virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(
       const Matrix &aTransform, FillRule aFillRule) const = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<PathBuilder> CopyToBuilder(FillRule aFillRule) const = 0;
+  virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(const Matrix &aTransform,
+                                                             FillRule aFillRule) const = 0;
+=======
+  virtual already_AddRefed<PathBuilder> CopyToBuilder(
+      FillRule aFillRule) const = 0;
+  virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(
+      const Matrix& aTransform, FillRule aFillRule) const = 0;
+>>>>>>> upstream-releases
 
   /** This function checks if a point lies within a path. It allows passing a
    * transform that will transform the path to the coordinate space in which
    * aPoint is given.
    */
+<<<<<<< HEAD
   virtual bool ContainsPoint(const Point &aPoint,
                              const Matrix &aTransform) const = 0;
+||||||| merged common ancestors
+  virtual bool ContainsPoint(const Point &aPoint, const Matrix &aTransform) const = 0;
+
+=======
+  virtual bool ContainsPoint(const Point& aPoint,
+                             const Matrix& aTransform) const = 0;
+>>>>>>> upstream-releases
 
   /** This function checks if a point lies within the stroke of a path using the
    * specified strokeoptions. It allows passing a transform that will transform
    * the path to the coordinate space in which aPoint is given.
    */
-  virtual bool StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
-                                   const Point &aPoint,
-                                   const Matrix &aTransform) const = 0;
+  virtual bool StrokeContainsPoint(const StrokeOptions& aStrokeOptions,
+                                   const Point& aPoint,
+                                   const Matrix& aTransform) const = 0;
 
   /** This functions gets the bounds of this path. These bounds are not
    * guaranteed to be tight. A transform may be specified that gives the bounds
    * after application of the transform.
    */
-  virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const = 0;
+  virtual Rect GetBounds(const Matrix& aTransform = Matrix()) const = 0;
 
   /** This function gets the bounds of the stroke of this path using the
    * specified strokeoptions. These bounds are not guaranteed to be tight.
    * A transform may be specified that gives the bounds after application of
    * the transform.
    */
-  virtual Rect GetStrokedBounds(const StrokeOptions &aStrokeOptions,
-                                const Matrix &aTransform = Matrix()) const = 0;
+  virtual Rect GetStrokedBounds(const StrokeOptions& aStrokeOptions,
+                                const Matrix& aTransform = Matrix()) const = 0;
 
   /** Take the contents of this path and stream it to another sink, this works
    * regardless of the backend that might be used for the destination sink.
    */
-  virtual void StreamToSink(PathSink *aSink) const = 0;
+  virtual void StreamToSink(PathSink* aSink) const = 0;
 
   /** This gets the fillrule this path's builder was created with. This is not
    * mutable.
@@ -667,7 +1086,14 @@ class Path : public external::AtomicRefCounted<Path> {
 
   virtual Float ComputeLength();
 
+<<<<<<< HEAD
   virtual Point ComputePointAtLength(Float aLength, Point *aTangent = nullptr);
+||||||| merged common ancestors
+  virtual Point ComputePointAtLength(Float aLength,
+                                     Point* aTangent = nullptr);
+=======
+  virtual Point ComputePointAtLength(Float aLength, Point* aTangent = nullptr);
+>>>>>>> upstream-releases
 
  protected:
   Path();
@@ -703,9 +1129,19 @@ static inline bool operator==(const Glyph &aOne, const Glyph &aOther) {
  * @todo XXX - This should probably contain the guts of gfxTextRun in the future
  * as roc suggested. But for now it's a simple container for a glyph vector.
  */
+<<<<<<< HEAD
 struct GlyphBuffer {
   const Glyph
       *mGlyphs;  //!< A pointer to a buffer of glyphs. Managed by the caller.
+||||||| merged common ancestors
+struct GlyphBuffer
+{
+  const Glyph *mGlyphs; //!< A pointer to a buffer of glyphs. Managed by the caller.
+=======
+struct GlyphBuffer {
+  const Glyph*
+      mGlyphs;  //!< A pointer to a buffer of glyphs. Managed by the caller.
+>>>>>>> upstream-releases
   uint32_t mNumGlyphs;  //!< Number of glyphs mGlyphs points to.
 };
 
@@ -739,6 +1175,7 @@ class UnscaledFont : public SupportsThreadSafeWeakPtr<UnscaledFont> {
 
   static uint32_t DeletionCounter() { return sDeletionCounter; }
 
+<<<<<<< HEAD
   typedef void (*FontFileDataOutput)(const uint8_t *aData, uint32_t aLength,
                                      uint32_t aIndex, void *aBaton);
   typedef void (*WRFontDescriptorOutput)(const uint8_t *aData, uint32_t aLength,
@@ -747,32 +1184,99 @@ class UnscaledFont : public SupportsThreadSafeWeakPtr<UnscaledFont> {
                                          void *aBaton);
   typedef void (*FontDescriptorOutput)(const uint8_t *aData, uint32_t aLength,
                                        uint32_t aIndex, void *aBaton);
+||||||| merged common ancestors
+  typedef void (*FontFileDataOutput)(const uint8_t *aData, uint32_t aLength, uint32_t aIndex,
+                                     void *aBaton);
+  typedef void (*WRFontDescriptorOutput)(const uint8_t *aData, uint32_t aLength, uint32_t aIndex,
+                                         void *aBaton);
+  typedef void (*FontInstanceDataOutput)(const uint8_t* aData, uint32_t aLength, void* aBaton);
+  typedef void (*FontDescriptorOutput)(const uint8_t* aData, uint32_t aLength, uint32_t aIndex,
+                                       void* aBaton);
+=======
+  typedef void (*FontFileDataOutput)(const uint8_t* aData, uint32_t aLength,
+                                     uint32_t aIndex, void* aBaton);
+  typedef void (*WRFontDescriptorOutput)(const uint8_t* aData, uint32_t aLength,
+                                         uint32_t aIndex, void* aBaton);
+  typedef void (*FontInstanceDataOutput)(const uint8_t* aData, uint32_t aLength,
+                                         void* aBaton);
+  typedef void (*FontDescriptorOutput)(const uint8_t* aData, uint32_t aLength,
+                                       uint32_t aIndex, void* aBaton);
+>>>>>>> upstream-releases
 
-  virtual bool GetFontFileData(FontFileDataOutput, void *) { return false; }
+  virtual bool GetFontFileData(FontFileDataOutput, void*) { return false; }
 
+<<<<<<< HEAD
   virtual bool GetWRFontDescriptor(WRFontDescriptorOutput, void *) {
     return false;
   }
+||||||| merged common ancestors
+  virtual bool GetWRFontDescriptor(WRFontDescriptorOutput, void *) { return false; }
+=======
+  virtual bool GetWRFontDescriptor(WRFontDescriptorOutput, void*) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool GetFontInstanceData(FontInstanceDataOutput, void *) {
     return false;
   }
+||||||| merged common ancestors
+  virtual bool GetFontInstanceData(FontInstanceDataOutput, void *) { return false; }
+=======
+  virtual bool GetFontInstanceData(FontInstanceDataOutput, void*) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
-  virtual bool GetFontDescriptor(FontDescriptorOutput, void *) { return false; }
+  virtual bool GetFontDescriptor(FontDescriptorOutput, void*) { return false; }
 
+<<<<<<< HEAD
   virtual already_AddRefed<ScaledFont> CreateScaledFont(
       Float aGlyphSize, const uint8_t *aInstanceData,
       uint32_t aInstanceDataLength, const FontVariation *aVariations,
       uint32_t aNumVariations) {
+||||||| merged common ancestors
+  virtual already_AddRefed<ScaledFont>
+    CreateScaledFont(Float aGlyphSize,
+                     const uint8_t* aInstanceData,
+                     uint32_t aInstanceDataLength,
+                     const FontVariation* aVariations,
+                     uint32_t aNumVariations)
+  {
+=======
+  virtual already_AddRefed<ScaledFont> CreateScaledFont(
+      Float aGlyphSize, const uint8_t* aInstanceData,
+      uint32_t aInstanceDataLength, const FontVariation* aVariations,
+      uint32_t aNumVariations) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
+<<<<<<< HEAD
   virtual already_AddRefed<ScaledFont> CreateScaledFontFromWRFont(
       Float aGlyphSize, const wr::FontInstanceOptions *aOptions,
       const wr::FontInstancePlatformOptions *aPlatformOptions,
       const FontVariation *aVariations, uint32_t aNumVariations) {
     return CreateScaledFont(aGlyphSize, nullptr, 0, aVariations,
                             aNumVariations);
+||||||| merged common ancestors
+  virtual already_AddRefed<ScaledFont>
+    CreateScaledFontFromWRFont(Float aGlyphSize,
+                               const wr::FontInstanceOptions* aOptions,
+                               const wr::FontInstancePlatformOptions* aPlatformOptions,
+                               const FontVariation* aVariations,
+                               uint32_t aNumVariations)
+  {
+    return CreateScaledFont(aGlyphSize, nullptr, 0, aVariations, aNumVariations);
+=======
+  virtual already_AddRefed<ScaledFont> CreateScaledFontFromWRFont(
+      Float aGlyphSize, const wr::FontInstanceOptions* aOptions,
+      const wr::FontInstancePlatformOptions* aPlatformOptions,
+      const FontVariation* aVariations, uint32_t aNumVariations) {
+    return CreateScaledFont(aGlyphSize, nullptr, 0, aVariations,
+                            aNumVariations);
+>>>>>>> upstream-releases
   }
 
  protected:
@@ -804,36 +1308,89 @@ class ScaledFont : public SupportsThreadSafeWeakPtr<ScaledFont> {
    * can be used with any DrawTarget that has the same backend as the one
    * passed in.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<Path> GetPathForGlyphs(
       const GlyphBuffer &aBuffer, const DrawTarget *aTarget) = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<Path> GetPathForGlyphs(const GlyphBuffer &aBuffer, const DrawTarget *aTarget) = 0;
+=======
+  virtual already_AddRefed<Path> GetPathForGlyphs(
+      const GlyphBuffer& aBuffer, const DrawTarget* aTarget) = 0;
+>>>>>>> upstream-releases
 
   /** This copies the path describing the glyphs into a PathBuilder. We use this
    * API rather than a generic API to append paths because it allows easier
    * implementation in some backends, and more efficient implementation in
    * others.
    */
+<<<<<<< HEAD
   virtual void CopyGlyphsToBuilder(const GlyphBuffer &aBuffer,
                                    PathBuilder *aBuilder,
                                    const Matrix *aTransformHint = nullptr) = 0;
+||||||| merged common ancestors
+  virtual void CopyGlyphsToBuilder(const GlyphBuffer &aBuffer, PathBuilder *aBuilder, const Matrix *aTransformHint = nullptr) = 0;
+=======
+  virtual void CopyGlyphsToBuilder(const GlyphBuffer& aBuffer,
+                                   PathBuilder* aBuilder,
+                                   const Matrix* aTransformHint = nullptr) = 0;
+>>>>>>> upstream-releases
 
   /* This gets the metrics of a set of glyphs for the current font face.
    */
+<<<<<<< HEAD
   virtual void GetGlyphDesignMetrics(const uint16_t *aGlyphIndices,
                                      uint32_t aNumGlyphs,
                                      GlyphMetrics *aGlyphMetrics) = 0;
+||||||| merged common ancestors
+  virtual void GetGlyphDesignMetrics(const uint16_t* aGlyphIndices, uint32_t aNumGlyphs, GlyphMetrics* aGlyphMetrics) = 0;
+=======
+  virtual void GetGlyphDesignMetrics(const uint16_t* aGlyphIndices,
+                                     uint32_t aNumGlyphs,
+                                     GlyphMetrics* aGlyphMetrics) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   typedef void (*FontInstanceDataOutput)(const uint8_t *aData, uint32_t aLength,
                                          const FontVariation *aVariations,
                                          uint32_t aNumVariations, void *aBaton);
+||||||| merged common ancestors
+  typedef void (*FontInstanceDataOutput)(const uint8_t* aData, uint32_t aLength,
+                                         const FontVariation* aVariations, uint32_t aNumVariations,
+                                         void* aBaton);
+=======
+  typedef void (*FontInstanceDataOutput)(const uint8_t* aData, uint32_t aLength,
+                                         const FontVariation* aVariations,
+                                         uint32_t aNumVariations, void* aBaton);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool GetFontInstanceData(FontInstanceDataOutput, void *) {
     return false;
   }
+||||||| merged common ancestors
+  virtual bool GetFontInstanceData(FontInstanceDataOutput, void *) { return false; }
+=======
+  virtual bool GetFontInstanceData(FontInstanceDataOutput, void*) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool GetWRFontInstanceOptions(
       Maybe<wr::FontInstanceOptions> *aOutOptions,
       Maybe<wr::FontInstancePlatformOptions> *aOutPlatformOptions,
       std::vector<FontVariation> *aOutVariations) {
+||||||| merged common ancestors
+  virtual bool GetWRFontInstanceOptions(Maybe<wr::FontInstanceOptions>* aOutOptions,
+                                        Maybe<wr::FontInstancePlatformOptions>* aOutPlatformOptions,
+                                        std::vector<FontVariation>* aOutVariations)
+  {
+=======
+  virtual bool GetWRFontInstanceOptions(
+      Maybe<wr::FontInstanceOptions>* aOutOptions,
+      Maybe<wr::FontInstancePlatformOptions>* aOutPlatformOptions,
+      std::vector<FontVariation>* aOutVariations) {
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -841,12 +1398,34 @@ class ScaledFont : public SupportsThreadSafeWeakPtr<ScaledFont> {
 
   virtual bool HasVariationSettings() { return false; }
 
+<<<<<<< HEAD
   void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void *)) {
+||||||| merged common ancestors
+  void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void*)) {
+=======
+  void AddUserData(UserDataKey* key, void* userData, void (*destroy)(void*)) {
+>>>>>>> upstream-releases
     mUserData.Add(key, userData, destroy);
   }
+<<<<<<< HEAD
   void *GetUserData(UserDataKey *key) { return mUserData.Get(key); }
+||||||| merged common ancestors
+  void *GetUserData(UserDataKey *key) {
+    return mUserData.Get(key);
+  }
+=======
+  void* GetUserData(UserDataKey* key) { return mUserData.Get(key); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void RemoveUserData(UserDataKey *key) { mUserData.RemoveAndDestroy(key); }
+||||||| merged common ancestors
+  void RemoveUserData(UserDataKey *key) {
+    mUserData.RemoveAndDestroy(key);
+  }
+=======
+  void RemoveUserData(UserDataKey* key) { mUserData.RemoveAndDestroy(key); }
+>>>>>>> upstream-releases
 
   const RefPtr<UnscaledFont> &GetUnscaledFont() const { return mUnscaledFont; }
 
@@ -858,9 +1437,21 @@ class ScaledFont : public SupportsThreadSafeWeakPtr<ScaledFont> {
     mSyntheticObliqueAngle = aAngle;
   }
 
+<<<<<<< HEAD
  protected:
   explicit ScaledFont(const RefPtr<UnscaledFont> &aUnscaledFont)
       : mUnscaledFont(aUnscaledFont), mSyntheticObliqueAngle(0.0f) {}
+||||||| merged common ancestors
+protected:
+  explicit ScaledFont(const RefPtr<UnscaledFont>& aUnscaledFont)
+    : mUnscaledFont(aUnscaledFont)
+    , mSyntheticObliqueAngle(0.0f)
+  {}
+=======
+ protected:
+  explicit ScaledFont(const RefPtr<UnscaledFont>& aUnscaledFont)
+      : mUnscaledFont(aUnscaledFont), mSyntheticObliqueAngle(0.0f) {}
+>>>>>>> upstream-releases
 
   UserData mUserData;
   RefPtr<UnscaledFont> mUnscaledFont;
@@ -888,11 +1479,22 @@ class NativeFontResource
    * @param aInstanceDataLength the size of the instance data.
    * @return an already_addrefed UnscaledFont, containing nullptr if failed.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<UnscaledFont> CreateUnscaledFont(
       uint32_t aIndex, const uint8_t *aInstanceData,
       uint32_t aInstanceDataLength) = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<UnscaledFont>
+    CreateUnscaledFont(uint32_t aIndex,
+                       const uint8_t* aInstanceData,
+                       uint32_t aInstanceDataLength) = 0;
+=======
+  virtual already_AddRefed<UnscaledFont> CreateUnscaledFont(
+      uint32_t aIndex, const uint8_t* aInstanceData,
+      uint32_t aInstanceDataLength) = 0;
+>>>>>>> upstream-releases
 
-  virtual ~NativeFontResource() {}
+  virtual ~NativeFontResource() = default;
 };
 
 class DrawTargetCapture;
@@ -906,10 +1508,23 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(DrawTarget)
   DrawTarget()
+<<<<<<< HEAD
       : mTransformDirty(false),
         mPermitSubpixelAA(false),
         mFormat(SurfaceFormat::UNKNOWN) {}
   virtual ~DrawTarget() {}
+||||||| merged common ancestors
+    : mTransformDirty(false)
+    , mPermitSubpixelAA(false)
+    , mFormat(SurfaceFormat::UNKNOWN)
+  {}
+  virtual ~DrawTarget() {}
+=======
+      : mTransformDirty(false),
+        mPermitSubpixelAA(false),
+        mFormat(SurfaceFormat::UNKNOWN) {}
+  virtual ~DrawTarget() = default;
+>>>>>>> upstream-releases
 
   virtual bool IsValid() const { return true; };
   virtual DrawTargetType GetType() const = 0;
@@ -938,11 +1553,24 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * While the bits is locked any modifications to this DrawTarget is forbidden.
    * Release takes the original data pointer for safety.
    */
+<<<<<<< HEAD
   virtual bool LockBits(uint8_t **aData, IntSize *aSize, int32_t *aStride,
                         SurfaceFormat *aFormat, IntPoint *aOrigin = nullptr) {
     return false;
   }
   virtual void ReleaseBits(uint8_t *aData) {}
+||||||| merged common ancestors
+  virtual bool LockBits(uint8_t** aData, IntSize* aSize,
+                        int32_t* aStride, SurfaceFormat* aFormat,
+                        IntPoint* aOrigin = nullptr) { return false; }
+  virtual void ReleaseBits(uint8_t* aData) {}
+=======
+  virtual bool LockBits(uint8_t** aData, IntSize* aSize, int32_t* aStride,
+                        SurfaceFormat* aFormat, IntPoint* aOrigin = nullptr) {
+    return false;
+  }
+  virtual void ReleaseBits(uint8_t* aData) {}
+>>>>>>> upstream-releases
 
   /** Ensure that the DrawTarget backend has flushed all drawing operations to
    * this draw target. This must be called before using the backing surface of
@@ -956,8 +1584,16 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aSource Capture DrawTarget to draw
    * @param aTransform Transform to apply when replaying commands
    */
+<<<<<<< HEAD
   virtual void DrawCapturedDT(DrawTargetCapture *aCaptureDT,
                               const Matrix &aTransform);
+||||||| merged common ancestors
+  virtual void DrawCapturedDT(DrawTargetCapture *aCaptureDT,
+                              const Matrix& aTransform);
+=======
+  virtual void DrawCapturedDT(DrawTargetCapture* aCaptureDT,
+                              const Matrix& aTransform);
+>>>>>>> upstream-releases
 
   /**
    * Draw a surface to the draw target. Possibly doing partial drawing or
@@ -972,17 +1608,45 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aOptions General draw options that are applied to the operation
    * @param aSurfOptions DrawSurface options that are applied
    */
+<<<<<<< HEAD
   virtual void DrawSurface(
       SourceSurface *aSurface, const Rect &aDest, const Rect &aSource,
       const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
       const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void DrawSurface(SourceSurface *aSurface,
+                           const Rect &aDest,
+                           const Rect &aSource,
+                           const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
+                           const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void DrawSurface(
+      SourceSurface* aSurface, const Rect& aDest, const Rect& aSource,
+      const DrawSurfaceOptions& aSurfOptions = DrawSurfaceOptions(),
+      const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void DrawDependentSurface(
       uint64_t aId, const Rect &aDest,
       const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
       const DrawOptions &aOptions = DrawOptions()) {
     MOZ_CRASH("GFX: DrawDependentSurface");
   }
+||||||| merged common ancestors
+  virtual void DrawDependentSurface(uint64_t aId,
+                                    const Rect &aDest,
+                                    const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
+                                    const DrawOptions &aOptions = DrawOptions())
+  { MOZ_CRASH("GFX: DrawDependentSurface"); }
+=======
+  virtual void DrawDependentSurface(
+      uint64_t aId, const Rect& aDest,
+      const DrawSurfaceOptions& aSurfOptions = DrawSurfaceOptions(),
+      const DrawOptions& aOptions = DrawOptions()) {
+    MOZ_CRASH("GFX: DrawDependentSurface");
+  }
+>>>>>>> upstream-releases
 
   /**
    * Draw the output of a FilterNode to the DrawTarget.
@@ -992,9 +1656,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aDestPoint Destination point on the DrawTarget to draw the
    *                   SourceRectangle of the filter output to
    */
+<<<<<<< HEAD
   virtual void DrawFilter(FilterNode *aNode, const Rect &aSourceRect,
                           const Point &aDestPoint,
                           const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void DrawFilter(FilterNode *aNode,
+                          const Rect &aSourceRect,
+                          const Point &aDestPoint,
+                          const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void DrawFilter(FilterNode* aNode, const Rect& aSourceRect,
+                          const Point& aDestPoint,
+                          const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Blend a surface to the draw target with a shadow. The shadow is drawn as a
@@ -1010,9 +1685,21 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aSigma Sigma used for the guassian filter kernel
    * @param aOperator Composition operator used
    */
+<<<<<<< HEAD
   virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
                                      const Point &aDest, const Color &aColor,
                                      const Point &aOffset, Float aSigma,
+||||||| merged common ancestors
+  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
+                                     const Point &aDest,
+                                     const Color &aColor,
+                                     const Point &aOffset,
+                                     Float aSigma,
+=======
+  virtual void DrawSurfaceWithShadow(SourceSurface* aSurface,
+                                     const Point& aDest, const Color& aColor,
+                                     const Point& aOffset, Float aSigma,
+>>>>>>> upstream-releases
                                      CompositionOp aOperator) = 0;
 
   /**
@@ -1021,7 +1708,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    *
    * @param aRect Rectangle to clear
    */
-  virtual void ClearRect(const Rect &aRect) = 0;
+  virtual void ClearRect(const Rect& aRect) = 0;
 
   /**
    * This is essentially a 'memcpy' between two surfaces. It moves a pixel
@@ -1032,8 +1719,17 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aSourceRect Source rectangle to be copied
    * @param aDest Destination point to copy the surface to
    */
+<<<<<<< HEAD
   virtual void CopySurface(SourceSurface *aSurface, const IntRect &aSourceRect,
                            const IntPoint &aDestination) = 0;
+||||||| merged common ancestors
+  virtual void CopySurface(SourceSurface *aSurface,
+                           const IntRect &aSourceRect,
+                           const IntPoint &aDestination) = 0;
+=======
+  virtual void CopySurface(SourceSurface* aSurface, const IntRect& aSourceRect,
+                           const IntPoint& aDestination) = 0;
+>>>>>>> upstream-releases
 
   /** @see CopySurface
    * Same as CopySurface, except uses itself as the source.
@@ -1041,8 +1737,17 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * Some backends may be able to optimize this better
    * than just taking a snapshot and using CopySurface.
    */
+<<<<<<< HEAD
   virtual void CopyRect(const IntRect &aSourceRect,
                         const IntPoint &aDestination) {
+||||||| merged common ancestors
+  virtual void CopyRect(const IntRect &aSourceRect,
+                        const IntPoint &aDestination)
+  {
+=======
+  virtual void CopyRect(const IntRect& aSourceRect,
+                        const IntPoint& aDestination) {
+>>>>>>> upstream-releases
     RefPtr<SourceSurface> source = Snapshot();
     CopySurface(source, aSourceRect, aDestination);
   }
@@ -1054,8 +1759,29 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aPattern Pattern that forms the source of this filling operation
    * @param aOptions Options that are applied to this operation
    */
+<<<<<<< HEAD
   virtual void FillRect(const Rect &aRect, const Pattern &aPattern,
                         const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void FillRect(const Rect &aRect,
+                        const Pattern &aPattern,
+                        const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void FillRect(const Rect& aRect, const Pattern& aPattern,
+                        const DrawOptions& aOptions = DrawOptions()) = 0;
+
+  /**
+   * Fill a rounded rectangle on the DrawTarget with a certain source pattern.
+   *
+   * @param aRect Rounded rectangle that forms the mask of this filling
+   * operation
+   * @param aPattern Pattern that forms the source of this filling operation
+   * @param aOptions Options that are applied to this operation
+   */
+  virtual void FillRoundedRect(const RoundedRect& aRect,
+                               const Pattern& aPattern,
+                               const DrawOptions& aOptions = DrawOptions());
+>>>>>>> upstream-releases
 
   /**
    * Stroke a rectangle on the DrawTarget with a certain source pattern.
@@ -1064,9 +1790,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aPattern Pattern that forms the source of this stroking operation
    * @param aOptions Options that are applied to this operation
    */
+<<<<<<< HEAD
   virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
                           const StrokeOptions &aStrokeOptions = StrokeOptions(),
                           const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void StrokeRect(const Rect &aRect,
+                          const Pattern &aPattern,
+                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
+                          const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void StrokeRect(const Rect& aRect, const Pattern& aPattern,
+                          const StrokeOptions& aStrokeOptions = StrokeOptions(),
+                          const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Stroke a line on the DrawTarget with a certain source pattern.
@@ -1076,10 +1813,23 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aPattern Pattern that forms the source of this stroking operation
    * @param aOptions Options that are applied to this operation
    */
+<<<<<<< HEAD
   virtual void StrokeLine(const Point &aStart, const Point &aEnd,
                           const Pattern &aPattern,
                           const StrokeOptions &aStrokeOptions = StrokeOptions(),
                           const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void StrokeLine(const Point &aStart,
+                          const Point &aEnd,
+                          const Pattern &aPattern,
+                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
+                          const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void StrokeLine(const Point& aStart, const Point& aEnd,
+                          const Pattern& aPattern,
+                          const StrokeOptions& aStrokeOptions = StrokeOptions(),
+                          const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Stroke a path on the draw target with a certain source pattern.
@@ -1089,9 +1839,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aStrokeOptions Stroke options used for this operation
    * @param aOptions Draw options used for this operation
    */
+<<<<<<< HEAD
   virtual void Stroke(const Path *aPath, const Pattern &aPattern,
                       const StrokeOptions &aStrokeOptions = StrokeOptions(),
                       const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void Stroke(const Path *aPath,
+                      const Pattern &aPattern,
+                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
+                      const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void Stroke(const Path* aPath, const Pattern& aPattern,
+                      const StrokeOptions& aStrokeOptions = StrokeOptions(),
+                      const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Fill a path on the draw target with a certain source pattern.
@@ -1100,23 +1861,56 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aPattern Pattern that should be used for the fill
    * @param aOptions Draw options used for this operation
    */
+<<<<<<< HEAD
   virtual void Fill(const Path *aPath, const Pattern &aPattern,
                     const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void Fill(const Path *aPath,
+                    const Pattern &aPattern,
+                    const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void Fill(const Path* aPath, const Pattern& aPattern,
+                    const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Fill a series of glyphs on the draw target with a certain source pattern.
    */
+<<<<<<< HEAD
   virtual void FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer,
                           const Pattern &aPattern,
                           const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void FillGlyphs(ScaledFont *aFont,
+                          const GlyphBuffer &aBuffer,
+                          const Pattern &aPattern,
+                          const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void FillGlyphs(ScaledFont* aFont, const GlyphBuffer& aBuffer,
+                          const Pattern& aPattern,
+                          const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Stroke a series of glyphs on the draw target with a certain source pattern.
    */
+<<<<<<< HEAD
   virtual void StrokeGlyphs(
       ScaledFont *aFont, const GlyphBuffer &aBuffer, const Pattern &aPattern,
       const StrokeOptions &aStrokeOptions = StrokeOptions(),
       const DrawOptions &aOptions = DrawOptions());
+||||||| merged common ancestors
+  virtual void StrokeGlyphs(ScaledFont* aFont,
+                            const GlyphBuffer& aBuffer,
+                            const Pattern& aPattern,
+                            const StrokeOptions& aStrokeOptions = StrokeOptions(),
+                            const DrawOptions& aOptions = DrawOptions());
+=======
+  virtual void StrokeGlyphs(
+      ScaledFont* aFont, const GlyphBuffer& aBuffer, const Pattern& aPattern,
+      const StrokeOptions& aStrokeOptions = StrokeOptions(),
+      const DrawOptions& aOptions = DrawOptions());
+>>>>>>> upstream-releases
 
   /**
    * This takes a source pattern and a mask, and composites the source pattern
@@ -1127,8 +1921,17 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aMask Mask pattern
    * @param aOptions Drawing options
    */
+<<<<<<< HEAD
   virtual void Mask(const Pattern &aSource, const Pattern &aMask,
                     const DrawOptions &aOptions = DrawOptions()) = 0;
+||||||| merged common ancestors
+  virtual void Mask(const Pattern &aSource,
+                    const Pattern &aMask,
+                    const DrawOptions &aOptions = DrawOptions()) = 0;
+=======
+  virtual void Mask(const Pattern& aSource, const Pattern& aMask,
+                    const DrawOptions& aOptions = DrawOptions()) = 0;
+>>>>>>> upstream-releases
 
   /**
    * This takes a source pattern and a mask, and composites the source pattern
@@ -1140,9 +1943,16 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aOffset a transformed offset that the surface is masked at
    * @param aOptions Drawing options
    */
+<<<<<<< HEAD
   virtual void MaskSurface(const Pattern &aSource, SourceSurface *aMask,
+||||||| merged common ancestors
+  virtual void MaskSurface(const Pattern &aSource,
+                           SourceSurface *aMask,
+=======
+  virtual void MaskSurface(const Pattern& aSource, SourceSurface* aMask,
+>>>>>>> upstream-releases
                            Point aOffset,
-                           const DrawOptions &aOptions = DrawOptions()) = 0;
+                           const DrawOptions& aOptions = DrawOptions()) = 0;
 
   /**
    * Draw aSurface using the 3D transform aMatrix. The DrawTarget's transform
@@ -1159,7 +1969,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    *
    * @param aPath The path to clip to
    */
-  virtual void PushClip(const Path *aPath) = 0;
+  virtual void PushClip(const Path* aPath) = 0;
 
   /**
    * Push an axis-aligned rectangular clip to the DrawTarget. This rectangle
@@ -1167,7 +1977,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    *
    * @param aRect The rect to clip to
    */
-  virtual void PushClipRect(const Rect &aRect) = 0;
+  virtual void PushClipRect(const Rect& aRect) = 0;
 
   /**
    * Push a clip region specifed by the union of axis-aligned rectangular
@@ -1200,12 +2010,27 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aCopyBackground Whether to copy the background into the layer, this
    *                        is only supported when aOpaque is true.
    */
+<<<<<<< HEAD
   virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface *aMask,
                          const Matrix &aMaskTransform,
                          const IntRect &aBounds = IntRect(),
                          bool aCopyBackground = false) {
     MOZ_CRASH("GFX: PushLayer");
   }
+||||||| merged common ancestors
+  virtual void PushLayer(bool aOpaque, Float aOpacity,
+                         SourceSurface* aMask,
+                         const Matrix& aMaskTransform,
+                         const IntRect& aBounds = IntRect(),
+                         bool aCopyBackground = false) { MOZ_CRASH("GFX: PushLayer"); }
+=======
+  virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface* aMask,
+                         const Matrix& aMaskTransform,
+                         const IntRect& aBounds = IntRect(),
+                         bool aCopyBackground = false) {
+    MOZ_CRASH("GFX: PushLayer");
+  }
+>>>>>>> upstream-releases
 
   /**
    * Push a 'layer' to the DrawTarget, a layer is a temporary surface that all
@@ -1224,6 +2049,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    *                        is only supported when aOpaque is true.
    */
   virtual void PushLayerWithBlend(bool aOpaque, Float aOpacity,
+<<<<<<< HEAD
                                   SourceSurface *aMask,
                                   const Matrix &aMaskTransform,
                                   const IntRect &aBounds = IntRect(),
@@ -1231,6 +2057,22 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
                                   CompositionOp = CompositionOp::OP_OVER) {
     MOZ_CRASH("GFX: PushLayerWithBlend");
   }
+||||||| merged common ancestors
+                         SourceSurface* aMask,
+                         const Matrix& aMaskTransform,
+                         const IntRect& aBounds = IntRect(),
+                         bool aCopyBackground = false,
+                         CompositionOp = CompositionOp::OP_OVER) { MOZ_CRASH("GFX: PushLayerWithBlend"); }
+
+=======
+                                  SourceSurface* aMask,
+                                  const Matrix& aMaskTransform,
+                                  const IntRect& aBounds = IntRect(),
+                                  bool aCopyBackground = false,
+                                  CompositionOp = CompositionOp::OP_OVER) {
+    MOZ_CRASH("GFX: PushLayerWithBlend");
+  }
+>>>>>>> upstream-releases
 
   /**
    * This balances a call to PushLayer and proceeds to blend the layer back
@@ -1263,35 +2105,102 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * The SourceSurface does not take ownership of aData, and may be freed at any
    * time.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
       unsigned char *aData, const IntSize &aSize, int32_t aStride,
       SurfaceFormat aFormat) const = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(unsigned char *aData,
+                                                                      const IntSize &aSize,
+                                                                      int32_t aStride,
+                                                                      SurfaceFormat aFormat) const = 0;
+=======
+  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
+      unsigned char* aData, const IntSize& aSize, int32_t aStride,
+      SurfaceFormat aFormat) const = 0;
+>>>>>>> upstream-releases
 
   /**
    * Create a SourceSurface optimized for use with this DrawTarget from an
    * arbitrary SourceSurface type supported by this backend. This may return
    * aSourceSurface or some other existing surface.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
       SourceSurface *aSurface) const = 0;
   virtual already_AddRefed<SourceSurface> OptimizeSourceSurfaceForUnknownAlpha(
       SourceSurface *aSurface) const {
+||||||| merged common ancestors
+  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const = 0;
+  virtual already_AddRefed<SourceSurface> OptimizeSourceSurfaceForUnknownAlpha(SourceSurface *aSurface) const {
+=======
+  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
+      SourceSurface* aSurface) const = 0;
+  virtual already_AddRefed<SourceSurface> OptimizeSourceSurfaceForUnknownAlpha(
+      SourceSurface* aSurface) const {
+>>>>>>> upstream-releases
     return OptimizeSourceSurface(aSurface);
   }
 
   /**
    * Create a SourceSurface for a type of NativeSurface. This may fail if the
    * draw target does not know how to deal with the type of NativeSurface passed
+<<<<<<< HEAD
+   * in. If this succeeds, the SourceSurface takes the ownersip of the
+   * NativeSurface.
+||||||| merged common ancestors
+   * in. If this succeeds, the SourceSurface takes the ownersip of the NativeSurface.
+=======
    * in. If this succeeds, the SourceSurface takes the ownersip of the
    * NativeSurface.
    */
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
-      const NativeSurface &aSurface) const = 0;
+      const NativeSurface& aSurface) const = 0;
 
   /**
    * Create a DrawTarget whose snapshot is optimized for use with this
    * DrawTarget.
+>>>>>>> upstream-releases
    */
+<<<<<<< HEAD
+  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
+      const NativeSurface &aSurface) const = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<SourceSurface>
+    CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const = 0;
+=======
+  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
+      const IntSize& aSize, SurfaceFormat aFormat) const = 0;
+
+  /**
+   * Create a DrawTarget whose snapshot is optimized for use with this
+   * DrawTarget and aFilter.
+   * @param aSource is the FilterNode that that will be attached to this
+   * surface.
+   * @param aSourceRect is the source rect that will be passed to DrawFilter
+   * @param aDestPoint is the dest point that will be passed to DrawFilter.
+   */
+  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTargetForFilter(
+      const IntSize& aSize, SurfaceFormat aFormat, FilterNode* aFilter,
+      FilterNode* aSource, const Rect& aSourceRect, const Point& aDestPoint) {
+    return CreateSimilarDrawTarget(aSize, aFormat);
+  }
+>>>>>>> upstream-releases
+
+  /**
+<<<<<<< HEAD
+   * Create a DrawTarget whose snapshot is optimized for use with this
+   * DrawTarget.
+||||||| merged common ancestors
+   * Create a DrawTarget whose snapshot is optimized for use with this DrawTarget.
+=======
+   * Returns false if CreateSimilarDrawTarget would return null with the same
+   * parameters. May return true even in cases where CreateSimilarDrawTarget
+   * return null (i.e. this function returning false has meaning, but returning
+   * true doesn't guarantee anything).
+>>>>>>> upstream-releases
+   */
+<<<<<<< HEAD
   virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
       const IntSize &aSize, SurfaceFormat aFormat) const = 0;
 
@@ -1305,6 +2214,15 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
                                           SurfaceFormat aFormat) const {
     return true;
   }
+||||||| merged common ancestors
+  virtual already_AddRefed<DrawTarget>
+    CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const = 0;
+=======
+  virtual bool CanCreateSimilarDrawTarget(const IntSize& aSize,
+                                          SurfaceFormat aFormat) const {
+    return true;
+  }
+>>>>>>> upstream-releases
 
   /**
    * Create a draw target optimized for drawing a shadow.
@@ -1314,20 +2232,43 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * surface, the caller is still responsible for including the shadow area in
    * its size.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<DrawTarget> CreateShadowDrawTarget(
       const IntSize &aSize, SurfaceFormat aFormat, float aSigma) const {
+||||||| merged common ancestors
+  virtual already_AddRefed<DrawTarget>
+    CreateShadowDrawTarget(const IntSize &aSize, SurfaceFormat aFormat,
+                           float aSigma) const
+  {
+=======
+  virtual already_AddRefed<DrawTarget> CreateShadowDrawTarget(
+      const IntSize& aSize, SurfaceFormat aFormat, float aSigma) const {
+>>>>>>> upstream-releases
     return CreateSimilarDrawTarget(aSize, aFormat);
   }
 
   /**
-   * Create a similar DrawTarget whose requested size may be clipped based
-   * on this DrawTarget's rect transformed to the new target's space.
+   * Create a similar DrawTarget in the same space as this DrawTarget whose
+   * device size may be clipped based on the active clips intersected with
+   * aBounds (if it is not empty).
    */
+<<<<<<< HEAD
   virtual RefPtr<DrawTarget> CreateClippedDrawTarget(
       const IntSize &aMaxSize, const Matrix &aTransform,
       SurfaceFormat aFormat) const {
     return CreateSimilarDrawTarget(aMaxSize, aFormat);
   }
+||||||| merged common ancestors
+  virtual RefPtr<DrawTarget> CreateClippedDrawTarget(const IntSize& aMaxSize,
+                                                     const Matrix& aTransform,
+                                                     SurfaceFormat aFormat) const
+  {
+    return CreateSimilarDrawTarget(aMaxSize, aFormat);
+  }
+=======
+  virtual RefPtr<DrawTarget> CreateClippedDrawTarget(const Rect& aBounds,
+                                                     SurfaceFormat aFormat) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Create a similar draw target, but if the draw target is not backed by a
@@ -1335,8 +2276,17 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * create a raster target instead. This is intended for code that wants to
    * cache pixels, and would have no effect if it were caching a recording.
    */
+<<<<<<< HEAD
   virtual RefPtr<DrawTarget> CreateSimilarRasterTarget(
       const IntSize &aSize, SurfaceFormat aFormat) const {
+||||||| merged common ancestors
+  virtual RefPtr<DrawTarget>
+  CreateSimilarRasterTarget(const IntSize& aSize, SurfaceFormat aFormat) const
+  {
+=======
+  virtual RefPtr<DrawTarget> CreateSimilarRasterTarget(
+      const IntSize& aSize, SurfaceFormat aFormat) const {
+>>>>>>> upstream-releases
     return CreateSimilarDrawTarget(aSize, aFormat);
   }
 
@@ -1360,9 +2310,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * @param aExtendNone This describes how to extend the stop color outside of
    * the gradient area.
    */
+<<<<<<< HEAD
   virtual already_AddRefed<GradientStops> CreateGradientStops(
       GradientStop *aStops, uint32_t aNumStops,
       ExtendMode aExtendMode = ExtendMode::CLAMP) const = 0;
+||||||| merged common ancestors
+  virtual already_AddRefed<GradientStops>
+    CreateGradientStops(GradientStop *aStops,
+                        uint32_t aNumStops,
+                        ExtendMode aExtendMode = ExtendMode::CLAMP) const = 0;
+=======
+  virtual already_AddRefed<GradientStops> CreateGradientStops(
+      GradientStop* aStops, uint32_t aNumStops,
+      ExtendMode aExtendMode = ExtendMode::CLAMP) const = 0;
+>>>>>>> upstream-releases
 
   /**
    * Create a FilterNode object that can be used to apply a filter to various
@@ -1385,12 +2346,26 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * aNumGlyphs The amount of elements in aGlyphIndices
    * aGlyphMetrics The glyph metrics
    */
+<<<<<<< HEAD
   virtual void GetGlyphRasterizationMetrics(ScaledFont *aScaledFont,
                                             const uint16_t *aGlyphIndices,
                                             uint32_t aNumGlyphs,
                                             GlyphMetrics *aGlyphMetrics) {
     aScaledFont->GetGlyphDesignMetrics(aGlyphIndices, aNumGlyphs,
                                        aGlyphMetrics);
+||||||| merged common ancestors
+  virtual void GetGlyphRasterizationMetrics(ScaledFont *aScaledFont, const uint16_t* aGlyphIndices,
+                                            uint32_t aNumGlyphs, GlyphMetrics* aGlyphMetrics)
+  {
+    aScaledFont->GetGlyphDesignMetrics(aGlyphIndices, aNumGlyphs, aGlyphMetrics);
+=======
+  virtual void GetGlyphRasterizationMetrics(ScaledFont* aScaledFont,
+                                            const uint16_t* aGlyphIndices,
+                                            uint32_t aNumGlyphs,
+                                            GlyphMetrics* aGlyphMetrics) {
+    aScaledFont->GetGlyphDesignMetrics(aGlyphIndices, aNumGlyphs,
+                                       aGlyphMetrics);
+>>>>>>> upstream-releases
   }
 
   /**
@@ -1410,40 +2385,93 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * FillRect, try to integrate the translation into FillRect's aRect
    * argument's x/y offset.
    */
+<<<<<<< HEAD
   virtual void SetTransform(const Matrix &aTransform) {
     mTransform = aTransform;
     mTransformDirty = true;
   }
+||||||| merged common ancestors
+  virtual void SetTransform(const Matrix &aTransform)
+    { mTransform = aTransform; mTransformDirty = true; }
+=======
+  virtual void SetTransform(const Matrix& aTransform) {
+    mTransform = aTransform;
+    mTransformDirty = true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   inline void ConcatTransform(const Matrix &aTransform) {
     SetTransform(aTransform * Matrix(GetTransform()));
   }
+||||||| merged common ancestors
+  inline void ConcatTransform(const Matrix &aTransform)
+    { SetTransform(aTransform * Matrix(GetTransform())); }
+=======
+  inline void ConcatTransform(const Matrix& aTransform) {
+    SetTransform(aTransform * Matrix(GetTransform()));
+  }
+>>>>>>> upstream-releases
 
   SurfaceFormat GetFormat() const { return mFormat; }
 
   /** Tries to get a native surface for a DrawTarget, this may fail if the
    * draw target cannot convert to this surface type.
    */
-  virtual void *GetNativeSurface(NativeSurfaceType aType) { return nullptr; }
+  virtual void* GetNativeSurface(NativeSurfaceType aType) { return nullptr; }
 
   virtual bool IsDualDrawTarget() const { return false; }
   virtual bool IsTiledDrawTarget() const { return false; }
   virtual bool SupportsRegionClipping() const { return true; }
 
+<<<<<<< HEAD
   void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void *)) {
+||||||| merged common ancestors
+  void AddUserData(UserDataKey *key, void *userData, void (*destroy)(void*)) {
+=======
+  void AddUserData(UserDataKey* key, void* userData, void (*destroy)(void*)) {
+>>>>>>> upstream-releases
     mUserData.Add(key, userData, destroy);
   }
+<<<<<<< HEAD
   void *GetUserData(UserDataKey *key) const { return mUserData.Get(key); }
   void *RemoveUserData(UserDataKey *key) { return mUserData.Remove(key); }
+||||||| merged common ancestors
+  void *GetUserData(UserDataKey *key) const {
+    return mUserData.Get(key);
+  }
+  void *RemoveUserData(UserDataKey *key) {
+    return mUserData.Remove(key);
+  }
+=======
+  void* GetUserData(UserDataKey* key) const { return mUserData.Get(key); }
+  void* RemoveUserData(UserDataKey* key) { return mUserData.Remove(key); }
+>>>>>>> upstream-releases
 
   /** Within this rectangle all pixels will be opaque by the time the result of
    * this DrawTarget is first used for drawing. Either by the underlying surface
    * being used as an input to external drawing, or Snapshot() being called.
    * This rectangle is specified in device space.
    */
+<<<<<<< HEAD
   void SetOpaqueRect(const IntRect &aRect) { mOpaqueRect = aRect; }
+||||||| merged common ancestors
+  void SetOpaqueRect(const IntRect &aRect) {
+    mOpaqueRect = aRect;
+  }
+=======
+  void SetOpaqueRect(const IntRect& aRect) { mOpaqueRect = aRect; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const IntRect &GetOpaqueRect() const { return mOpaqueRect; }
+||||||| merged common ancestors
+  const IntRect &GetOpaqueRect() const {
+    return mOpaqueRect;
+  }
+=======
+  const IntRect& GetOpaqueRect() const { return mOpaqueRect; }
+>>>>>>> upstream-releases
 
   virtual bool IsCurrentGroupOpaque() {
     return GetFormat() == SurfaceFormat::B8G8R8X8;
@@ -1465,7 +2493,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    * Note: this is a bit of a hack. It might be better to just recreate
    * the DrawTargetRecording.
    */
-  virtual void FlushItem(const IntRect &aBounds) {}
+  virtual void FlushItem(const IntRect& aBounds) {}
 
   /**
    * Ensures that no snapshot is still pointing to this DrawTarget's surface
@@ -1479,6 +2507,7 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
    */
   virtual void DetachAllSnapshots() = 0;
 
+<<<<<<< HEAD
 #ifdef USE_SKIA_GPU
   virtual bool InitWithGrContext(GrContext *aGrContext, const IntSize &aSize,
                                  SurfaceFormat aFormat) {
@@ -1487,6 +2516,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
 #endif
 
  protected:
+||||||| merged common ancestors
+#ifdef USE_SKIA_GPU
+  virtual bool InitWithGrContext(GrContext* aGrContext,
+                                 const IntSize &aSize,
+                                 SurfaceFormat aFormat)
+  {
+    MOZ_CRASH("GFX: InitWithGrContext");
+  }
+#endif
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   UserData mUserData;
   Matrix mTransform;
   IntRect mOpaqueRect;
@@ -1496,9 +2539,20 @@ class DrawTarget : public external::AtomicRefCounted<DrawTarget> {
   SurfaceFormat mFormat;
 };
 
+<<<<<<< HEAD
 class DrawTargetCapture : public DrawTarget {
  public:
   virtual bool IsCaptureDT() const override { return true; }
+||||||| merged common ancestors
+class DrawTargetCapture : public DrawTarget
+{
+public:
+  virtual bool IsCaptureDT() const override { return true; }
+=======
+class DrawTargetCapture : public DrawTarget {
+ public:
+  bool IsCaptureDT() const override { return true; }
+>>>>>>> upstream-releases
 
   virtual bool IsEmpty() const = 0;
   virtual void Dump() = 0;
@@ -1509,7 +2563,13 @@ class DrawEventRecorder : public RefCounted<DrawEventRecorder> {
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(DrawEventRecorder)
   // returns true if there were any items in the recording
   virtual bool Finish() = 0;
+<<<<<<< HEAD
   virtual ~DrawEventRecorder() {}
+||||||| merged common ancestors
+  virtual ~DrawEventRecorder() { }
+=======
+  virtual ~DrawEventRecorder() = default;
+>>>>>>> upstream-releases
 };
 
 struct Tile {
@@ -1517,8 +2577,17 @@ struct Tile {
   IntPoint mTileOrigin;
 };
 
+<<<<<<< HEAD
 struct TileSet {
   Tile *mTiles;
+||||||| merged common ancestors
+struct TileSet
+{
+  Tile* mTiles;
+=======
+struct TileSet {
+  Tile* mTiles;
+>>>>>>> upstream-releases
   size_t mTileCount;
 };
 
@@ -1535,9 +2604,18 @@ struct Config {
 
 class GFX2D_API Factory {
   using char_type = filesystem::Path::value_type;
+<<<<<<< HEAD
 
  public:
   static void Init(const Config &aConfig);
+||||||| merged common ancestors
+public:
+  static void Init(const Config& aConfig);
+=======
+
+ public:
+  static void Init(const Config& aConfig);
+>>>>>>> upstream-releases
   static void ShutDown();
 
   static bool HasSSE2();
@@ -1559,7 +2637,14 @@ class GFX2D_API Factory {
    * conservative; some code has in the past and may in the future use signed
    * integers to store buffer lengths etc.
    */
+<<<<<<< HEAD
   static bool CheckSurfaceSize(const IntSize &sz, int32_t limit = 0,
+||||||| merged common ancestors
+  static bool CheckSurfaceSize(const IntSize &sz,
+                               int32_t limit = 0,
+=======
+  static bool CheckSurfaceSize(const IntSize& sz, int32_t limit = 0,
+>>>>>>> upstream-releases
                                int32_t allocLimit = 0);
 
   /**
@@ -1570,20 +2655,44 @@ class GFX2D_API Factory {
   /** Make sure the given dimension satisfies the CheckSurfaceSize and is
    * within 8k limit.  The 8k value is chosen a bit randomly.
    */
-  static bool ReasonableSurfaceSize(const IntSize &aSize);
+  static bool ReasonableSurfaceSize(const IntSize& aSize);
 
-  static bool AllowedSurfaceSize(const IntSize &aSize);
+  static bool AllowedSurfaceSize(const IntSize& aSize);
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDrawTargetForCairoSurface(
       cairo_surface_t *aSurface, const IntSize &aSize,
       SurfaceFormat *aFormat = nullptr);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget> CreateDrawTargetForCairoSurface(cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat* aFormat = nullptr);
+=======
+  static already_AddRefed<DrawTarget> CreateDrawTargetForCairoSurface(
+      cairo_surface_t* aSurface, const IntSize& aSize,
+      SurfaceFormat* aFormat = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<SourceSurface> CreateSourceSurfaceForCairoSurface(
       cairo_surface_t *aSurface, const IntSize &aSize, SurfaceFormat aFormat);
+||||||| merged common ancestors
+  static already_AddRefed<SourceSurface> CreateSourceSurfaceForCairoSurface(cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat aFormat);
+=======
+  static already_AddRefed<SourceSurface> CreateSourceSurfaceForCairoSurface(
+      cairo_surface_t* aSurface, const IntSize& aSize, SurfaceFormat aFormat);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDrawTarget(BackendType aBackend,
                                                        const IntSize &aSize,
                                                        SurfaceFormat aFormat);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget>
+    CreateDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFormat aFormat);
+=======
+  static already_AddRefed<DrawTarget> CreateDrawTarget(BackendType aBackend,
+                                                       const IntSize& aSize,
+                                                       SurfaceFormat aFormat);
+>>>>>>> upstream-releases
 
   /**
    * Create a DrawTarget that captures the drawing commands to eventually be
@@ -1594,8 +2703,16 @@ class GFX2D_API Factory {
    * @param aSize Size of the area this DT will capture.
    * @param aFlushBytes The byte limit at which to flush the CaptureCommandList
    */
+<<<<<<< HEAD
   static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTargetForTarget(
       gfx::DrawTarget *aTarget, size_t aFlushBytes = 0);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTargetCapture>
+    CreateCaptureDrawTargetForTarget(gfx::DrawTarget* aTarget, size_t aFlushBytes = 0);
+=======
+  static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTargetForTarget(
+      gfx::DrawTarget* aTarget, size_t aFlushBytes = 0);
+>>>>>>> upstream-releases
 
   /**
    * Create a DrawTarget that captures the drawing commands and can be replayed
@@ -1603,28 +2720,83 @@ class GFX2D_API Factory {
    *
    * @param aSize Size of the area this DT will capture.
    */
+<<<<<<< HEAD
   static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTarget(
       BackendType aBackend, const IntSize &aSize, SurfaceFormat aFormat);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTargetCapture>
+    CreateCaptureDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFormat aFormat);
+=======
+  static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTarget(
+      BackendType aBackend, const IntSize& aSize, SurfaceFormat aFormat);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTargetForData(
       BackendType aBackend, const IntSize &aSize, SurfaceFormat aFormat,
       int32_t aStride, size_t aSurfaceAllocationSize);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTargetCapture>
+    CreateCaptureDrawTargetForData(BackendType aBackend, const IntSize &aSize, SurfaceFormat aFormat,
+                                   int32_t aStride, size_t aSurfaceAllocationSize);
+=======
+  static already_AddRefed<DrawTargetCapture> CreateCaptureDrawTargetForData(
+      BackendType aBackend, const IntSize& aSize, SurfaceFormat aFormat,
+      int32_t aStride, size_t aSurfaceAllocationSize);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateWrapAndRecordDrawTarget(
       DrawEventRecorder *aRecorder, DrawTarget *aDT);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget>
+    CreateWrapAndRecordDrawTarget(DrawEventRecorder *aRecorder, DrawTarget *aDT);
+=======
+  static already_AddRefed<DrawTarget> CreateWrapAndRecordDrawTarget(
+      DrawEventRecorder* aRecorder, DrawTarget* aDT);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateRecordingDrawTarget(
       DrawEventRecorder *aRecorder, DrawTarget *aDT, IntSize aSize);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget>
+    CreateRecordingDrawTarget(DrawEventRecorder *aRecorder, DrawTarget *aDT, IntSize aSize);
+=======
+  static already_AddRefed<DrawTarget> CreateRecordingDrawTarget(
+      DrawEventRecorder* aRecorder, DrawTarget* aDT, IntSize aSize);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDrawTargetForData(
       BackendType aBackend, unsigned char *aData, const IntSize &aSize,
       int32_t aStride, SurfaceFormat aFormat, bool aUninitialized = false);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget>
+    CreateDrawTargetForData(BackendType aBackend, unsigned char* aData, const IntSize &aSize, int32_t aStride, SurfaceFormat aFormat, bool aUninitialized = false);
+=======
+  static already_AddRefed<DrawTarget> CreateDrawTargetForData(
+      BackendType aBackend, unsigned char* aData, const IntSize& aSize,
+      int32_t aStride, SurfaceFormat aFormat, bool aUninitialized = false);
+>>>>>>> upstream-releases
 
 #ifdef XP_DARWIN
+<<<<<<< HEAD
   static already_AddRefed<ScaledFont> CreateScaledFontForMacFont(
       CGFontRef aCGFont, const RefPtr<UnscaledFont> &aUnscaledFont, Float aSize,
       const Color &aFontSmoothingBackgroundColor, bool aUseFontSmoothing = true,
       bool aApplySyntheticBold = false);
+||||||| merged common ancestors
+  static already_AddRefed<ScaledFont>
+    CreateScaledFontForMacFont(CGFontRef aCGFont, const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize,
+                               const Color& aFontSmoothingBackgroundColor, bool aUseFontSmoothing = true,
+                               bool aApplySyntheticBold = false);
+=======
+  static already_AddRefed<ScaledFont> CreateScaledFontForMacFont(
+      CGFontRef aCGFont, const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize,
+      const Color& aFontSmoothingBackgroundColor, bool aUseFontSmoothing = true,
+      bool aApplySyntheticBold = false);
+>>>>>>> upstream-releases
 #endif
 
   /**
@@ -1639,17 +2811,35 @@ class GFX2D_API Factory {
    *                              NativeFontResource.
    * @return a NativeFontResource of nullptr if failed.
    */
+<<<<<<< HEAD
   static already_AddRefed<NativeFontResource> CreateNativeFontResource(
       uint8_t *aData, uint32_t aSize, BackendType aBackendType,
       FontType aFontType, void *aFontContext = nullptr);
+||||||| merged common ancestors
+  static already_AddRefed<NativeFontResource>
+    CreateNativeFontResource(uint8_t *aData, uint32_t aSize, BackendType aBackendType, FontType aFontType, void* aFontContext = nullptr);
+=======
+  static already_AddRefed<NativeFontResource> CreateNativeFontResource(
+      uint8_t* aData, uint32_t aSize, BackendType aBackendType,
+      FontType aFontType, void* aFontContext = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * This creates an unscaled font of the given type based on font descriptor
    * data retrieved from ScaledFont::GetFontDescriptor.
    */
+<<<<<<< HEAD
   static already_AddRefed<UnscaledFont> CreateUnscaledFontFromFontDescriptor(
       FontType aType, const uint8_t *aData, uint32_t aDataLength,
       uint32_t aIndex);
+||||||| merged common ancestors
+  static already_AddRefed<UnscaledFont>
+    CreateUnscaledFontFromFontDescriptor(FontType aType, const uint8_t* aData, uint32_t aDataLength, uint32_t aIndex);
+=======
+  static already_AddRefed<UnscaledFont> CreateUnscaledFontFromFontDescriptor(
+      FontType aType, const uint8_t* aData, uint32_t aDataLength,
+      uint32_t aIndex);
+>>>>>>> upstream-releases
 
   /**
    * Creates a ScaledFont from the supplied NativeFont.
@@ -1658,9 +2848,21 @@ class GFX2D_API Factory {
    * cairo_scaled_font_t. The NativeFont and cairo_scaled_font_t* parameters
    * must correspond to the same font.
    */
+<<<<<<< HEAD
   static already_AddRefed<ScaledFont> CreateScaledFontForNativeFont(
       const NativeFont &aNativeFont, const RefPtr<UnscaledFont> &aUnscaledFont,
       Float aSize, cairo_scaled_font_t *aScaledFont = nullptr);
+||||||| merged common ancestors
+  static already_AddRefed<ScaledFont>
+    CreateScaledFontForNativeFont(const NativeFont &aNativeFont,
+                                  const RefPtr<UnscaledFont>& aUnscaledFont,
+                                  Float aSize,
+                                  cairo_scaled_font_t* aScaledFont = nullptr);
+=======
+  static already_AddRefed<ScaledFont> CreateScaledFontForNativeFont(
+      const NativeFont& aNativeFont, const RefPtr<UnscaledFont>& aUnscaledFont,
+      Float aSize, cairo_scaled_font_t* aScaledFont = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * This creates a simple data source surface for a certain size. It allocates
@@ -1668,8 +2870,16 @@ class GFX2D_API Factory {
    * destroyed.  The caller is responsible for handing the case where nullptr
    * is returned. The surface is not zeroed unless requested.
    */
+<<<<<<< HEAD
   static already_AddRefed<DataSourceSurface> CreateDataSourceSurface(
       const IntSize &aSize, SurfaceFormat aFormat, bool aZero = false);
+||||||| merged common ancestors
+  static already_AddRefed<DataSourceSurface>
+    CreateDataSourceSurface(const IntSize &aSize, SurfaceFormat aFormat, bool aZero = false);
+=======
+  static already_AddRefed<DataSourceSurface> CreateDataSourceSurface(
+      const IntSize& aSize, SurfaceFormat aFormat, bool aZero = false);
+>>>>>>> upstream-releases
 
   /**
    * This creates a simple data source surface for a certain size with a
@@ -1678,9 +2888,18 @@ class GFX2D_API Factory {
    * the surface is destroyed.  The caller is responsible for handling the case
    * where nullptr is returned. The surface is not zeroed unless requested.
    */
+<<<<<<< HEAD
   static already_AddRefed<DataSourceSurface> CreateDataSourceSurfaceWithStride(
       const IntSize &aSize, SurfaceFormat aFormat, int32_t aStride,
       bool aZero = false);
+||||||| merged common ancestors
+  static already_AddRefed<DataSourceSurface>
+    CreateDataSourceSurfaceWithStride(const IntSize &aSize, SurfaceFormat aFormat, int32_t aStride, bool aZero = false);
+=======
+  static already_AddRefed<DataSourceSurface> CreateDataSourceSurfaceWithStride(
+      const IntSize& aSize, SurfaceFormat aFormat, int32_t aStride,
+      bool aZero = false);
+>>>>>>> upstream-releases
 
   typedef void (*SourceSurfaceDeallocator)(void *aClosure);
 
@@ -1697,6 +2916,7 @@ class GFX2D_API Factory {
    * deallocating the aData memory only after destruction of this
    * DataSourceSurface.
    */
+<<<<<<< HEAD
   static already_AddRefed<DataSourceSurface> CreateWrappingDataSourceSurface(
       uint8_t *aData, int32_t aStride, const IntSize &aSize,
       SurfaceFormat aFormat, SourceSurfaceDeallocator aDeallocator = nullptr,
@@ -1704,18 +2924,57 @@ class GFX2D_API Factory {
 
   static void CopyDataSourceSurface(DataSourceSurface *aSource,
                                     DataSourceSurface *aDest);
+||||||| merged common ancestors
+  static already_AddRefed<DataSourceSurface>
+    CreateWrappingDataSourceSurface(uint8_t *aData,
+                                    int32_t aStride,
+                                    const IntSize &aSize,
+                                    SurfaceFormat aFormat,
+                                    SourceSurfaceDeallocator aDeallocator = nullptr,
+                                    void* aClosure = nullptr);
 
+  static void
+    CopyDataSourceSurface(DataSourceSurface* aSource,
+                          DataSourceSurface* aDest);
+=======
+  static already_AddRefed<DataSourceSurface> CreateWrappingDataSourceSurface(
+      uint8_t* aData, int32_t aStride, const IntSize& aSize,
+      SurfaceFormat aFormat, SourceSurfaceDeallocator aDeallocator = nullptr,
+      void* aClosure = nullptr);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static already_AddRefed<DrawEventRecorder> CreateEventRecorderForFile(
       const char_type *aFilename);
+||||||| merged common ancestors
 
-  static void SetGlobalEventRecorder(DrawEventRecorder *aRecorder);
+  static already_AddRefed<DrawEventRecorder>
+    CreateEventRecorderForFile(const char_type* aFilename);
+=======
+  static void CopyDataSourceSurface(DataSourceSurface* aSource,
+                                    DataSourceSurface* aDest);
+
+  static already_AddRefed<DrawEventRecorder> CreateEventRecorderForFile(
+      const char_type* aFilename);
+>>>>>>> upstream-releases
+
+  static void SetGlobalEventRecorder(DrawEventRecorder* aRecorder);
 
   static uint32_t GetMaxSurfaceSize(BackendType aType);
 
+<<<<<<< HEAD
   static LogForwarder *GetLogForwarder() {
     return sConfig ? sConfig->mLogForwarder : nullptr;
   }
+||||||| merged common ancestors
+  static LogForwarder* GetLogForwarder() { return sConfig ? sConfig->mLogForwarder : nullptr; }
+=======
+  static LogForwarder* GetLogForwarder() {
+    return sConfig ? sConfig->mLogForwarder : nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   static Config *sConfig;
 
@@ -1724,14 +2983,46 @@ class GFX2D_API Factory {
   static already_AddRefed<DrawTarget> CreateDrawTargetSkiaWithGrContext(
       GrContext *aGrContext, const IntSize &aSize, SurfaceFormat aFormat);
 #endif
+||||||| merged common ancestors
+private:
+  static Config* sConfig;
+public:
 
+#ifdef USE_SKIA_GPU
+  static already_AddRefed<DrawTarget>
+    CreateDrawTargetSkiaWithGrContext(GrContext* aGrContext,
+                                      const IntSize &aSize,
+                                      SurfaceFormat aFormat);
+#endif
+=======
+ private:
+  static Config* sConfig;
+>>>>>>> upstream-releases
+
+ public:
   static void PurgeAllCaches();
 
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDualDrawTarget(DrawTarget *targetA,
                                                            DrawTarget *targetB);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget>
+    CreateDualDrawTarget(DrawTarget *targetA, DrawTarget *targetB);
+=======
+  static already_AddRefed<DrawTarget> CreateDualDrawTarget(DrawTarget* targetA,
+                                                           DrawTarget* targetB);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<SourceSurface> CreateDualSourceSurface(
       SourceSurface *sourceA, SourceSurface *sourceB);
+||||||| merged common ancestors
+  static already_AddRefed<SourceSurface>
+    CreateDualSourceSurface(SourceSurface *sourceA, SourceSurface *sourceB);
+=======
+  static already_AddRefed<SourceSurface> CreateDualSourceSurface(
+      SourceSurface* sourceA, SourceSurface* sourceB);
+>>>>>>> upstream-releases
 
   /*
    * This creates a new tiled DrawTarget. When a tiled drawtarget is used the
@@ -1739,16 +3030,40 @@ class GFX2D_API Factory {
    * individual offset. The tiles in the set must each have the same backend
    * and format.
    */
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateTiledDrawTarget(
       const TileSet &aTileSet);
   static already_AddRefed<DrawTarget> CreateOffsetDrawTarget(
       DrawTarget *aDrawTarget, IntPoint aTileOrigin);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget> CreateTiledDrawTarget(const TileSet& aTileSet);
+  static already_AddRefed<DrawTarget> CreateOffsetDrawTarget(DrawTarget *aDrawTarget, IntPoint aTileOrigin);
+=======
+  static already_AddRefed<DrawTarget> CreateTiledDrawTarget(
+      const TileSet& aTileSet);
+  static already_AddRefed<DrawTarget> CreateOffsetDrawTarget(
+      DrawTarget* aDrawTarget, IntPoint aTileOrigin);
+>>>>>>> upstream-releases
 
   static bool DoesBackendSupportDataDrawtarget(BackendType aType);
 
+  static void SetBGRSubpixelOrder(bool aBGR);
+  static bool GetBGRSubpixelOrder();
+
+ private:
+  static bool mBGRSubpixelOrder;
+
+ public:
 #ifdef USE_SKIA
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDrawTargetWithSkCanvas(
       SkCanvas *aCanvas);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget> CreateDrawTargetWithSkCanvas(SkCanvas* aCanvas);
+=======
+  static already_AddRefed<DrawTarget> CreateDrawTargetWithSkCanvas(
+      SkCanvas* aCanvas);
+>>>>>>> upstream-releases
 #endif
 
 #ifdef MOZ_ENABLE_FREETYPE
@@ -1760,10 +3075,20 @@ class GFX2D_API Factory {
   static void LockFTLibrary(FT_Library aFTLibrary);
   static void UnlockFTLibrary(FT_Library aFTLibrary);
 
+<<<<<<< HEAD
   static FT_Face NewFTFace(FT_Library aFTLibrary, const char *aFileName,
                            int aFaceIndex);
   static FT_Face NewFTFaceFromData(FT_Library aFTLibrary, const uint8_t *aData,
                                    size_t aDataSize, int aFaceIndex);
+||||||| merged common ancestors
+  static FT_Face NewFTFace(FT_Library aFTLibrary, const char* aFileName, int aFaceIndex);
+  static FT_Face NewFTFaceFromData(FT_Library aFTLibrary, const uint8_t* aData, size_t aDataSize, int aFaceIndex);
+=======
+  static FT_Face NewFTFace(FT_Library aFTLibrary, const char* aFileName,
+                           int aFaceIndex);
+  static FT_Face NewFTFaceFromData(FT_Library aFTLibrary, const uint8_t* aData,
+                                   size_t aDataSize, int aFaceIndex);
+>>>>>>> upstream-releases
   static void ReleaseFTFace(FT_Face aFace);
   static FT_Error LoadFTGlyph(FT_Face aFace, uint32_t aGlyphIndex,
                               int32_t aFlags);
@@ -1776,33 +3101,66 @@ class GFX2D_API Factory {
 #endif
 
 #ifdef WIN32
+<<<<<<< HEAD
   static already_AddRefed<DrawTarget> CreateDrawTargetForD3D11Texture(
       ID3D11Texture2D *aTexture, SurfaceFormat aFormat);
+||||||| merged common ancestors
+  static already_AddRefed<DrawTarget> CreateDrawTargetForD3D11Texture(ID3D11Texture2D *aTexture, SurfaceFormat aFormat);
+=======
+  static already_AddRefed<DrawTarget> CreateDrawTargetForD3D11Texture(
+      ID3D11Texture2D* aTexture, SurfaceFormat aFormat);
+>>>>>>> upstream-releases
 
   /*
    * Attempts to create and install a D2D1 device from the supplied Direct3D11
    * device. Returns true on success, or false on failure and leaves the
    * D2D1/Direct3D11 devices unset.
    */
-  static bool SetDirect3D11Device(ID3D11Device *aDevice);
+  static bool SetDirect3D11Device(ID3D11Device* aDevice);
   static RefPtr<ID3D11Device> GetDirect3D11Device();
   static RefPtr<ID2D1Device> GetD2D1Device(uint32_t *aOutSeqNo = nullptr);
   static bool HasD2D1Device();
   static RefPtr<IDWriteFactory> GetDWriteFactory();
   static RefPtr<IDWriteFactory> EnsureDWriteFactory();
   static bool SupportsD2D1();
+<<<<<<< HEAD
   static RefPtr<IDWriteFontCollection> GetDWriteSystemFonts(
       bool aUpdate = false);
+||||||| merged common ancestors
+=======
+  static RefPtr<IDWriteFontCollection> GetDWriteSystemFonts(
+      bool aUpdate = false);
+  static RefPtr<ID2D1DeviceContext> GetD2DDeviceContext();
+>>>>>>> upstream-releases
 
   static uint64_t GetD2DVRAMUsageDrawTarget();
   static uint64_t GetD2DVRAMUsageSourceSurface();
   static void D2DCleanup();
 
+<<<<<<< HEAD
   static already_AddRefed<ScaledFont> CreateScaledFontForDWriteFont(
       IDWriteFontFace *aFontFace, const gfxFontStyle *aStyle,
       const RefPtr<UnscaledFont> &aUnscaledFont, Float aSize,
       bool aUseEmbeddedBitmap, bool aForceGDIMode,
       IDWriteRenderingParams *aParams, Float aGamma, Float aContrast);
+||||||| merged common ancestors
+  static already_AddRefed<ScaledFont>
+    CreateScaledFontForDWriteFont(IDWriteFontFace* aFontFace,
+                                  const gfxFontStyle* aStyle,
+                                  const RefPtr<UnscaledFont>& aUnscaledFont,
+                                  Float aSize,
+                                  bool aUseEmbeddedBitmap,
+                                  bool aForceGDIMode,
+                                  IDWriteRenderingParams *aParams,
+                                  Float aGamma,
+                                  Float aContrast);
+=======
+  static already_AddRefed<ScaledFont> CreateScaledFontForDWriteFont(
+      IDWriteFontFace* aFontFace, const gfxFontStyle* aStyle,
+      const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize,
+      bool aUseEmbeddedBitmap, int aRenderingMode,
+      IDWriteRenderingParams* aParams, Float aGamma, Float aContrast);
+>>>>>>> upstream-releases
 
   static void SetSystemTextQuality(uint8_t aQuality);
 
@@ -1811,7 +3169,14 @@ class GFX2D_API Factory {
   static StaticRefPtr<ID3D11Device> mD3D11Device;
   static StaticRefPtr<IDWriteFactory> mDWriteFactory;
   static bool mDWriteFactoryInitialized;
+<<<<<<< HEAD
   static StaticRefPtr<IDWriteFontCollection> mDWriteSystemFonts;
+||||||| merged common ancestors
+=======
+  static StaticRefPtr<IDWriteFontCollection> mDWriteSystemFonts;
+  static StaticRefPtr<ID2D1DeviceContext> mMTDC;
+  static StaticRefPtr<ID2D1DeviceContext> mOffMTDC;
+>>>>>>> upstream-releases
 
  protected:
   // This guards access to the singleton devices above, as well as the
@@ -1824,8 +3189,27 @@ class GFX2D_API Factory {
   friend class DrawTargetD2D1;
 #endif
 
+<<<<<<< HEAD
  private:
   static DrawEventRecorder *mRecorder;
+||||||| merged common ancestors
+private:
+  static DrawEventRecorder *mRecorder;
+=======
+ private:
+  static DrawEventRecorder* mRecorder;
+};
+
+class MOZ_RAII AutoSerializeWithMoz2D final {
+ public:
+  explicit AutoSerializeWithMoz2D(BackendType aBackendType);
+  ~AutoSerializeWithMoz2D();
+
+ private:
+#if defined(WIN32)
+  RefPtr<ID2D1Multithread> mMT;
+#endif
+>>>>>>> upstream-releases
 };
 
 }  // namespace gfx

@@ -32,8 +32,8 @@ static nsresult GetBufferDataAsStream(
   const char* data = reinterpret_cast<const char*>(aData);
 
   nsCOMPtr<nsIInputStream> stream;
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), data, aDataLength,
-                                      NS_ASSIGNMENT_COPY);
+  nsresult rv = NS_NewByteInputStream(
+      getter_AddRefs(stream), MakeSpan(data, aDataLength), NS_ASSIGNMENT_COPY);
   NS_ENSURE_SUCCESS(rv, rv);
 
   stream.forget(aResult);
@@ -61,10 +61,24 @@ nsresult BodyExtractor<const ArrayBufferView>::GetAsStream(
                                aCharset);
 }
 
+<<<<<<< HEAD
 template <>
 nsresult BodyExtractor<nsIDocument>::GetAsStream(
     nsIInputStream** aResult, uint64_t* aContentLength,
     nsACString& aContentTypeWithCharset, nsACString& aCharset) const {
+||||||| merged common ancestors
+template<> nsresult
+BodyExtractor<nsIDocument>::GetAsStream(nsIInputStream** aResult,
+                                        uint64_t* aContentLength,
+                                        nsACString& aContentTypeWithCharset,
+                                        nsACString& aCharset) const
+{
+=======
+template <>
+nsresult BodyExtractor<Document>::GetAsStream(
+    nsIInputStream** aResult, uint64_t* aContentLength,
+    nsACString& aContentTypeWithCharset, nsACString& aCharset) const {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mBody);
   aCharset.AssignLiteral("UTF-8");
 

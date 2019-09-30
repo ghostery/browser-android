@@ -11,6 +11,7 @@
 #include "mozilla/dom/ScriptSettings.h"
 #include "xpcprivate.h"
 #include "js/Class.h"
+#include "js/RegExp.h"
 #include "jsfriendapi.h"
 
 using namespace JS;
@@ -36,11 +37,25 @@ static void MaybeForceDebugGC() {
     sDebugGCs = !!PR_GetEnv("MOZ_DEBUG_DEAD_CPOWS");
   }
 
+<<<<<<< HEAD
   if (sDebugGCs) {
     JSContext* cx = XPCJSContext::Get()->Context();
     PrepareForFullGC(cx);
     NonIncrementalGC(cx, GC_NORMAL, gcreason::COMPONENT_UTILS);
   }
+||||||| merged common ancestors
+    if (sDebugGCs) {
+        JSContext* cx = XPCJSContext::Get()->Context();
+        PrepareForFullGC(cx);
+        NonIncrementalGC(cx, GC_NORMAL, gcreason::COMPONENT_UTILS);
+    }
+=======
+  if (sDebugGCs) {
+    JSContext* cx = XPCJSContext::Get()->Context();
+    PrepareForFullGC(cx);
+    NonIncrementalGC(cx, GC_NORMAL, GCReason::COMPONENT_UTILS);
+  }
+>>>>>>> upstream-releases
 }
 
 bool WrapperAnswer::fail(AutoJSAPI& jsapi, ReturnStatus* rs) {
@@ -426,6 +441,7 @@ bool WrapperAnswer::RecvIsExtensible(const ObjectId& objId, ReturnStatus* rs,
   return ok(rs);
 }
 
+<<<<<<< HEAD
 bool WrapperAnswer::RecvCallOrConstruct(const ObjectId& objId,
                                         InfallibleTArray<JSParam>&& argv,
                                         const bool& construct, ReturnStatus* rs,
@@ -466,6 +482,73 @@ bool WrapperAnswer::RecvCallOrConstruct(const ObjectId& objId,
       // This is an outparam.
       RootedObject obj(cx, xpc::NewOutObject(cx));
       if (!obj) {
+||||||| merged common ancestors
+bool
+WrapperAnswer::RecvSet(const ObjectId& objId, const JSIDVariant& idVar, const JSVariant& value,
+                       const JSVariant& receiverVar, ReturnStatus* rs)
+{
+    if (!IsInAutomation()) {
+        return false;
+    }
+
+    MaybeForceDebugGC();
+
+    // We may run scripted setters.
+    AutoEntryScript aes(scopeForTargetObjects(),
+                        "Cross-Process Object Wrapper 'set'");
+    JSContext* cx = aes.cx();
+
+    RootedObject obj(cx, findObjectById(cx, objId));
+    if (!obj) {
+        return deadCPOW(aes, rs);
+    }
+
+    LOG("set %s[%s] = %s", ReceiverObj(objId), Identifier(idVar), InVariant(value));
+
+    RootedId id(cx);
+    if (!fromJSIDVariant(cx, idVar, &id)) {
+=======
+bool WrapperAnswer::RecvCallOrConstruct(const ObjectId& objId,
+                                        InfallibleTArray<JSParam>&& argv,
+                                        const bool& construct, ReturnStatus* rs,
+                                        JSVariant* result,
+                                        nsTArray<JSParam>* outparams) {
+  if (!IsInAutomation()) {
+    return false;
+  }
+
+  MaybeForceDebugGC();
+
+  AutoEntryScript aes(scopeForTargetObjects(),
+                      "Cross-Process Object Wrapper call/construct");
+  JSContext* cx = aes.cx();
+
+  // The outparam will be written to the buffer, so it must be set even if
+  // the parent won't read it.
+  *result = UndefinedVariant();
+
+  RootedObject obj(cx, findObjectById(cx, objId));
+  if (!obj) {
+    return deadCPOW(aes, rs);
+  }
+
+  MOZ_ASSERT(argv.Length() >= 2);
+
+  RootedValue objv(cx);
+  if (!fromVariant(cx, argv[0], &objv)) {
+    return fail(aes, rs);
+  }
+
+  *result = JSVariant(UndefinedVariant());
+
+  RootedValueVector vals(cx);
+  RootedValueVector outobjects(cx);
+  for (size_t i = 0; i < argv.Length(); i++) {
+    if (argv[i].type() == JSParam::Tvoid_t) {
+      // This is an outparam.
+      RootedObject obj(cx, xpc::NewOutObject(cx));
+      if (!obj) {
+>>>>>>> upstream-releases
         return fail(aes, rs);
       }
       if (!outobjects.append(ObjectValue(*obj))) {
@@ -742,6 +825,7 @@ bool WrapperAnswer::RecvGetPrototypeIfOrdinary(const ObjectId& objId,
   return ok(rs);
 }
 
+<<<<<<< HEAD
 bool WrapperAnswer::RecvRegExpToShared(const ObjectId& objId, ReturnStatus* rs,
                                        nsString* source, uint32_t* flags) {
   if (!IsInAutomation()) {
@@ -774,6 +858,75 @@ bool WrapperAnswer::RecvRegExpToShared(const ObjectId& objId, ReturnStatus* rs,
   *flags = JS_GetRegExpFlags(cx, obj);
 
   return ok(rs);
+||||||| merged common ancestors
+bool
+WrapperAnswer::RecvRegExpToShared(const ObjectId& objId, ReturnStatus* rs,
+                                  nsString* source, uint32_t* flags)
+{
+    if (!IsInAutomation()) {
+        return false;
+    }
+
+    MaybeForceDebugGC();
+
+    AutoJSAPI jsapi;
+    if (NS_WARN_IF(!jsapi.Init(scopeForTargetObjects()))) {
+        return false;
+    }
+    JSContext* cx = jsapi.cx();
+
+    RootedObject obj(cx, findObjectById(cx, objId));
+    if (!obj) {
+        return deadCPOW(jsapi, rs);
+    }
+
+    RootedString sourceJSStr(cx, JS_GetRegExpSource(cx, obj));
+    if (!sourceJSStr) {
+        return fail(jsapi, rs);
+    }
+    nsAutoJSString sourceStr;
+    if (!sourceStr.init(cx, sourceJSStr)) {
+        return fail(jsapi, rs);
+    }
+    source->Assign(sourceStr);
+
+    *flags = JS_GetRegExpFlags(cx, obj);
+
+    return ok(rs);
+=======
+bool WrapperAnswer::RecvRegExpToShared(const ObjectId& objId, ReturnStatus* rs,
+                                       nsString* source, uint32_t* flags) {
+  if (!IsInAutomation()) {
+    return false;
+  }
+
+  MaybeForceDebugGC();
+
+  AutoJSAPI jsapi;
+  if (NS_WARN_IF(!jsapi.Init(scopeForTargetObjects()))) {
+    return false;
+  }
+  JSContext* cx = jsapi.cx();
+
+  RootedObject obj(cx, findObjectById(cx, objId));
+  if (!obj) {
+    return deadCPOW(jsapi, rs);
+  }
+
+  RootedString sourceJSStr(cx, JS::GetRegExpSource(cx, obj));
+  if (!sourceJSStr) {
+    return fail(jsapi, rs);
+  }
+  nsAutoJSString sourceStr;
+  if (!sourceStr.init(cx, sourceJSStr)) {
+    return fail(jsapi, rs);
+  }
+  source->Assign(sourceStr);
+
+  *flags = JS::GetRegExpFlags(cx, obj).value();
+
+  return ok(rs);
+>>>>>>> upstream-releases
 }
 
 bool WrapperAnswer::RecvGetPropertyKeys(const ObjectId& objId,
@@ -798,10 +951,23 @@ bool WrapperAnswer::RecvGetPropertyKeys(const ObjectId& objId,
 
   LOG("%s.getPropertyKeys()", ReceiverObj(objId));
 
+<<<<<<< HEAD
   AutoIdVector props(cx);
   if (!js::GetPropertyKeys(cx, obj, flags, &props)) {
     return fail(jsapi, rs);
   }
+||||||| merged common ancestors
+    for (size_t i = 0; i < props.length(); i++) {
+        JSIDVariant id;
+        if (!toJSIDVariant(cx, props[i], &id)) {
+            return fail(jsapi, rs);
+        }
+=======
+  RootedIdVector props(cx);
+  if (!js::GetPropertyKeys(cx, obj, flags, &props)) {
+    return fail(jsapi, rs);
+  }
+>>>>>>> upstream-releases
 
   for (size_t i = 0; i < props.length(); i++) {
     JSIDVariant id;

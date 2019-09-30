@@ -78,12 +78,23 @@ class xpcAccessible : public nsIAccessible {
                                   nsAString& aDescription) final;
   NS_IMETHOD DoAction(uint8_t aIndex) final;
 
+  MOZ_CAN_RUN_SCRIPT
   NS_IMETHOD ScrollTo(uint32_t aHow) final;
   NS_IMETHOD ScrollToPoint(uint32_t aCoordinateType, int32_t aX,
                            int32_t aY) final;
 
+<<<<<<< HEAD
  protected:
   xpcAccessible() {}
+||||||| merged common ancestors
+protected:
+  xpcAccessible() { }
+=======
+  NS_IMETHOD Announce(const nsAString& aAnnouncement, uint16_t aPriority) final;
+
+ protected:
+  xpcAccessible() {}
+>>>>>>> upstream-releases
   virtual ~xpcAccessible() {}
 
  private:

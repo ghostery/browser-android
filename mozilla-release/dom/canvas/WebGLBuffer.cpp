@@ -12,6 +12,7 @@
 namespace mozilla {
 
 WebGLBuffer::WebGLBuffer(WebGLContext* webgl, GLuint buf)
+<<<<<<< HEAD
     : WebGLRefCountedObject(webgl),
       mGLName(buf),
       mContent(Kind::Undefined),
@@ -20,6 +21,20 @@ WebGLBuffer::WebGLBuffer(WebGLContext* webgl, GLuint buf)
       mTFBindCount(0),
       mNonTFBindCount(0) {
   mContext->mBuffers.insertBack(this);
+||||||| merged common ancestors
+    : WebGLRefCountedObject(webgl)
+    , mGLName(buf)
+    , mContent(Kind::Undefined)
+    , mUsage(LOCAL_GL_STATIC_DRAW)
+    , mByteLength(0)
+    , mTFBindCount(0)
+    , mNonTFBindCount(0)
+{
+    mContext->mBuffers.insertBack(this);
+=======
+    : WebGLRefCountedObject(webgl), mGLName(buf) {
+  mContext->mBuffers.insertBack(this);
+>>>>>>> upstream-releases
 }
 
 WebGLBuffer::~WebGLBuffer() { DeleteOnce(); }
@@ -84,6 +99,7 @@ static bool ValidateBufferUsageEnum(WebGLContext* webgl, GLenum usage) {
   return false;
 }
 
+<<<<<<< HEAD
 void WebGLBuffer::BufferData(GLenum target, size_t size, const void* data,
                              GLenum usage) {
   // Careful: data.Length() could conceivably be any uint32_t, but GLsizeiptr
@@ -99,10 +115,48 @@ void WebGLBuffer::BufferData(GLenum target, size_t size, const void* data,
     mContext->ErrorOutOfMemory("Allocation size too large.");
     return;
   }
+||||||| merged common ancestors
+void
+WebGLBuffer::BufferData(GLenum target, size_t size, const void* data, GLenum usage)
+{
+    // Careful: data.Length() could conceivably be any uint32_t, but GLsizeiptr
+    // is like intptr_t.
+    if (!CheckedInt<GLsizeiptr>(size).isValid())
+        return mContext->ErrorOutOfMemory("bad size");
+
+    if (!ValidateBufferUsageEnum(mContext, usage))
+        return;
+
+#ifdef XP_MACOSX
+    // bug 790879
+    if (mContext->gl->WorkAroundDriverBugs() &&
+        size > INT32_MAX)
+    {
+        mContext->ErrorOutOfMemory("Allocation size too large.");
+        return;
+    }
+=======
+void WebGLBuffer::BufferData(GLenum target, uint64_t size, const void* data,
+                             GLenum usage) {
+  // Careful: data.Length() could conceivably be any uint32_t, but GLsizeiptr
+  // is like intptr_t.
+  if (!CheckedInt<GLsizeiptr>(size).isValid())
+    return mContext->ErrorOutOfMemory("bad size");
+
+  if (!ValidateBufferUsageEnum(mContext, usage)) return;
+
+#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
+  // bug 790879
+  if (mContext->gl->WorkAroundDriverBugs() && size > INT32_MAX) {
+    mContext->ErrorOutOfMemory("Allocation size too large.");
+    return;
+  }
+>>>>>>> upstream-releases
 #endif
 
   const void* uploadData = data;
 
+<<<<<<< HEAD
   UniqueBuffer newIndexCache;
   if (target == LOCAL_GL_ELEMENT_ARRAY_BUFFER &&
       mContext->mNeedsIndexValidation) {
@@ -110,7 +164,34 @@ void WebGLBuffer::BufferData(GLenum target, size_t size, const void* data,
     if (!newIndexCache) {
       mContext->ErrorOutOfMemory("Failed to alloc index cache.");
       return;
+||||||| merged common ancestors
+    const auto& gl = mContext->gl;
+    const ScopedLazyBind lazyBind(gl, target, this);
+
+    const bool sizeChanges = (size != ByteLength());
+    if (sizeChanges) {
+        gl::GLContext::LocalErrorScope errorScope(*gl);
+        gl->fBufferData(target, size, uploadData, usage);
+        const auto error = errorScope.GetError();
+
+        if (error) {
+            MOZ_ASSERT(error == LOCAL_GL_OUT_OF_MEMORY);
+            mContext->ErrorOutOfMemory("Error from driver: 0x%04x", error);
+            return;
+        }
+    } else {
+        gl->fBufferData(target, size, uploadData, usage);
+=======
+  UniqueBuffer newIndexCache;
+  if (target == LOCAL_GL_ELEMENT_ARRAY_BUFFER &&
+      mContext->mNeedsIndexValidation) {
+    newIndexCache = malloc(AssertedCast<size_t>(size));
+    if (!newIndexCache) {
+      mContext->ErrorOutOfMemory("Failed to alloc index cache.");
+      return;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     memcpy(newIndexCache.get(), data, size);
     uploadData = newIndexCache.get();
   }
@@ -128,6 +209,45 @@ void WebGLBuffer::BufferData(GLenum target, size_t size, const void* data,
       MOZ_ASSERT(error == LOCAL_GL_OUT_OF_MEMORY);
       mContext->ErrorOutOfMemory("Error from driver: 0x%04x", error);
       return;
+||||||| merged common ancestors
+
+    mContext->OnDataAllocCall();
+
+    mUsage = usage;
+    mByteLength = size;
+    mFetchInvalidator.InvalidateCaches();
+    mIndexCache = std::move(newIndexCache);
+
+    if (mIndexCache) {
+        if (!mIndexRanges.empty()) {
+            mContext->GeneratePerfWarning("[%p] Invalidating %u ranges.", this,
+                                          uint32_t(mIndexRanges.size()));
+            mIndexRanges.clear();
+        }
+=======
+    memcpy(newIndexCache.get(), data, size);
+    uploadData = newIndexCache.get();
+  }
+
+  const auto& gl = mContext->gl;
+  const ScopedLazyBind lazyBind(gl, target, this);
+
+  const bool sizeChanges = (size != ByteLength());
+  if (sizeChanges) {
+    gl::GLContext::LocalErrorScope errorScope(*gl);
+    gl->fBufferData(target, size, uploadData, usage);
+    const auto error = errorScope.GetError();
+
+    if (error) {
+      MOZ_ASSERT(error == LOCAL_GL_OUT_OF_MEMORY);
+      mContext->ErrorOutOfMemory("Error from driver: 0x%04x", error);
+
+      // Truncate
+      mByteLength = 0;
+      mFetchInvalidator.InvalidateCaches();
+      mIndexCache = nullptr;
+      return;
+>>>>>>> upstream-releases
     }
   } else {
     gl->fBufferData(target, size, uploadData, usage);
@@ -151,12 +271,34 @@ void WebGLBuffer::BufferData(GLenum target, size_t size, const void* data,
   ResetLastUpdateFenceId();
 }
 
+<<<<<<< HEAD
 void WebGLBuffer::BufferSubData(GLenum target, size_t dstByteOffset,
                                 size_t dataLen, const void* data) const {
   if (!ValidateRange(dstByteOffset, dataLen)) return;
+||||||| merged common ancestors
+void
+WebGLBuffer::BufferSubData(GLenum target, size_t dstByteOffset, size_t dataLen,
+                           const void* data) const
+{
+    if (!ValidateRange(dstByteOffset, dataLen))
+        return;
+=======
+void WebGLBuffer::BufferSubData(GLenum target, uint64_t dstByteOffset,
+                                uint64_t dataLen, const void* data) const {
+  if (!ValidateRange(dstByteOffset, dataLen)) return;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!CheckedInt<GLintptr>(dataLen).isValid())
     return mContext->ErrorOutOfMemory("Size too large.");
+||||||| merged common ancestors
+    if (!CheckedInt<GLintptr>(dataLen).isValid())
+        return mContext->ErrorOutOfMemory("Size too large.");
+=======
+  if (!CheckedInt<GLintptr>(dstByteOffset).isValid() ||
+      !CheckedInt<GLsizeiptr>(dataLen).isValid())
+    return mContext->ErrorOutOfMemory("offset or size too large for platform.");
+>>>>>>> upstream-releases
 
   ////
 

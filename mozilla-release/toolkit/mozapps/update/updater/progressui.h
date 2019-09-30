@@ -10,15 +10,31 @@
 #include "updatedefines.h"
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 typedef WCHAR NS_tchar;
 #define NS_main wmain
+||||||| merged common ancestors
+  typedef WCHAR NS_tchar;
+  #define NS_main wmain
+=======
+typedef WCHAR NS_tchar;
+#  define NS_main wmain
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 typedef char NS_tchar;
 #define NS_main main
+||||||| merged common ancestors
+  typedef char NS_tchar;
+  #define NS_main main
+=======
+typedef char NS_tchar;
+#  define NS_main main
+>>>>>>> upstream-releases
 #endif
 
 // Called to perform any initialization of the widget toolkit
-int InitProgressUI(int *argc, NS_tchar ***argv);
+int InitProgressUI(int* argc, NS_tchar*** argv);
 
 #if defined(XP_WIN)
 // Called on the main thread at startup

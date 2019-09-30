@@ -6,8 +6,12 @@
 
 this.EXPORTED_SYMBOLS = ["ExtensionStorageIDB"];
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/IndexedDB.jsm");
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+const { IndexedDB } = ChromeUtils.import(
+  "resource://gre/modules/IndexedDB.jsm"
+);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   ExtensionStorage: "resource://gre/modules/ExtensionStorage.jsm",
@@ -16,10 +20,21 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   OS: "resource://gre/modules/osfile.jsm",
 });
 
+<<<<<<< HEAD
 XPCOMUtils.defineLazyServiceGetter(this, "quotaManagerService",
                                    "@mozilla.org/dom/quota-manager-service;1",
                                    "nsIQuotaManagerService");
 
+||||||| merged common ancestors
+=======
+XPCOMUtils.defineLazyServiceGetter(
+  this,
+  "quotaManagerService",
+  "@mozilla.org/dom/quota-manager-service;1",
+  "nsIQuotaManagerService"
+);
+
+>>>>>>> upstream-releases
 // The userContextID reserved for the extension storage (its purpose is ensuring that the IndexedDB
 // storage used by the browser.storage.local API is not directly accessible from the extension code,
 // it is defined and reserved as "userContextIdInternal.webextStorageLocal" in ContextualIdentityService.jsm).
@@ -28,11 +43,20 @@ const WEBEXT_STORAGE_USER_CONTEXT_ID = -1 >>> 0;
 const IDB_NAME = "webExtensions-storage-local";
 const IDB_DATA_STORENAME = "storage-local-data";
 const IDB_VERSION = 1;
-const IDB_MIGRATE_RESULT_HISTOGRAM = "WEBEXT_STORAGE_LOCAL_IDB_MIGRATE_RESULT_COUNT";
+const IDB_MIGRATE_RESULT_HISTOGRAM =
+  "WEBEXT_STORAGE_LOCAL_IDB_MIGRATE_RESULT_COUNT";
 
 // Whether or not the installed extensions should be migrated to the storage.local IndexedDB backend.
-const BACKEND_ENABLED_PREF = "extensions.webextensions.ExtensionStorageIDB.enabled";
-const IDB_MIGRATED_PREF_BRANCH = "extensions.webextensions.ExtensionStorageIDB.migrated";
+const BACKEND_ENABLED_PREF =
+  "extensions.webextensions.ExtensionStorageIDB.enabled";
+const IDB_MIGRATED_PREF_BRANCH =
+  "extensions.webextensions.ExtensionStorageIDB.migrated";
+
+class DataMigrationAbortedError extends Error {
+  get name() {
+    return "DataMigrationAbortedError";
+  }
+}
 
 var DataMigrationTelemetry = {
   initialized: false,
@@ -46,7 +70,9 @@ var DataMigrationTelemetry = {
     // Ensure that these telemetry events category is enabled.
     Services.telemetry.setEventRecordingEnabled("extensions.data", true);
 
-    this.resultHistogram = Services.telemetry.getHistogramById(IDB_MIGRATE_RESULT_HISTOGRAM);
+    this.resultHistogram = Services.telemetry.getHistogramById(
+      IDB_MIGRATE_RESULT_HISTOGRAM
+    );
   },
 
   /**
@@ -65,7 +91,10 @@ var DataMigrationTelemetry = {
       return undefined;
     }
 
-    if (error instanceof DOMException) {
+    if (
+      error instanceof DOMException ||
+      error instanceof DataMigrationAbortedError
+    ) {
       if (error.name.length > 80) {
         return getTrimmedString(error.name);
       }
@@ -110,7 +139,7 @@ var DataMigrationTelemetry = {
       this.lazyInit();
       this.resultHistogram.add(histogramCategory);
 
-      const extra = {backend};
+      const extra = { backend };
 
       if (dataMigrated != null) {
         extra.data_migrated = dataMigrated ? "y" : "n";
@@ -128,8 +157,13 @@ var DataMigrationTelemetry = {
         extra.error_name = this.getErrorName(error);
       }
 
-      Services.telemetry.recordEvent("extensions.data", "migrateResult", "storageLocal",
-                                     getTrimmedString(extensionId), extra);
+      Services.telemetry.recordEvent(
+        "extensions.data",
+        "migrateResult",
+        "storageLocal",
+        getTrimmedString(extensionId),
+        extra
+      );
     } catch (err) {
       // Report any telemetry error on the browser console, but
       // we treat it as a non-fatal error and we don't re-throw
@@ -152,7 +186,10 @@ class ExtensionStorageLocalIDB extends IndexedDB {
   }
 
   async isEmpty() {
-    const cursor = await this.objectStore(IDB_DATA_STORENAME, "readonly").openKeyCursor();
+    const cursor = await this.objectStore(
+      IDB_DATA_STORENAME,
+      "readonly"
+    ).openKeyCursor();
     return cursor.done;
   }
 
@@ -175,14 +212,17 @@ class ExtensionStorageLocalIDB extends IndexedDB {
    *        Return a promise which resolves to the computed "changes" object
    *        or null.
    */
-  async set(items, {serialize} = {}) {
+  async set(items, { serialize } = {}) {
     const changes = {};
     let changed = false;
 
     // Explicitly create a transaction, so that we can explicitly abort it
     // as soon as one of the put requests fails.
     const transaction = this.transaction(IDB_DATA_STORENAME, "readwrite");
-    const objectStore = transaction.objectStore(IDB_DATA_STORENAME, "readwrite");
+    const objectStore = transaction.objectStore(
+      IDB_DATA_STORENAME,
+      "readwrite"
+    );
     const transactionCompleted = transaction.promiseComplete();
 
     for (let key of Object.keys(items)) {
@@ -234,7 +274,7 @@ class ExtensionStorageLocalIDB extends IndexedDB {
       keys = [keysOrItems];
     } else if (Array.isArray(keysOrItems)) {
       keys = keysOrItems;
-    } else if (keysOrItems && typeof(keysOrItems) === "object") {
+    } else if (keysOrItems && typeof keysOrItems === "object") {
       keys = Object.keys(keysOrItems);
       defaultValues = keysOrItems;
     }
@@ -244,7 +284,10 @@ class ExtensionStorageLocalIDB extends IndexedDB {
     // Retrieve all the stored data using a cursor when browser.storage.local.get()
     // has been called with no keys.
     if (keys == null) {
-      const cursor = await this.objectStore(IDB_DATA_STORENAME, "readonly").openCursor();
+      const cursor = await this.objectStore(
+        IDB_DATA_STORENAME,
+        "readonly"
+      ).openCursor();
       while (!cursor.done) {
         result[cursor.key] = cursor.value;
         await cursor.continue();
@@ -288,16 +331,21 @@ class ExtensionStorageLocalIDB extends IndexedDB {
 
     const objectStore = this.objectStore(IDB_DATA_STORENAME, "readwrite");
 
+    let promises = [];
+
     for (let key of keys) {
-      let oldValue = await objectStore.get(key);
-      changes[key] = {oldValue};
-
-      if (oldValue) {
-        changed = true;
-      }
-
-      await objectStore.delete(key);
+      promises.push(
+        objectStore.getKey(key).then(async foundKey => {
+          if (foundKey === key) {
+            changed = true;
+            changes[key] = { oldValue: await objectStore.get(key) };
+            return objectStore.delete(key);
+          }
+        })
+      );
     }
+
+    await Promise.all(promises);
 
     return changed ? changes : null;
   }
@@ -316,7 +364,7 @@ class ExtensionStorageLocalIDB extends IndexedDB {
 
     const cursor = await objectStore.openCursor();
     while (!cursor.done) {
-      changes[cursor.key] = {oldValue: cursor.value};
+      changes[cursor.key] = { oldValue: cursor.value };
       changed = true;
       await cursor.continue();
     }
@@ -354,12 +402,30 @@ async function migrateJSONFileData(extension, storagePrincipal) {
   let dataMigrateCompleted = false;
   let hasOldData = false;
 
+  function abortIfShuttingDown() {
+    if (extension.hasShutdown || Services.startup.shuttingDown) {
+      throw new DataMigrationAbortedError("extension or app is shutting down");
+    }
+  }
+
   if (ExtensionStorageIDB.isMigratedExtension(extension)) {
     return;
   }
 
   try {
+<<<<<<< HEAD
     idbConn = await ExtensionStorageIDB.open(storagePrincipal, extension.hasPermission("unlimitedStorage"));
+||||||| merged common ancestors
+    idbConn = await ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal);
+=======
+    abortIfShuttingDown();
+    idbConn = await ExtensionStorageIDB.open(
+      storagePrincipal,
+      extension.hasPermission("unlimitedStorage")
+    );
+    abortIfShuttingDown();
+
+>>>>>>> upstream-releases
     hasEmptyIDB = await idbConn.isEmpty();
 
     if (!hasEmptyIDB) {
@@ -372,7 +438,10 @@ async function migrateJSONFileData(extension, storagePrincipal) {
     }
   } catch (err) {
     extension.logWarning(
-      `storage.local data migration cancelled, unable to open IDB connection: ${err.message}::${err.stack}`);
+      `storage.local data migration cancelled, unable to open IDB connection: ${
+        err.message
+      }::${err.stack}`
+    );
 
     DataMigrationTelemetry.recordResult({
       backend: "JSONFile",
@@ -385,23 +454,35 @@ async function migrateJSONFileData(extension, storagePrincipal) {
   }
 
   try {
+    abortIfShuttingDown();
+
     oldStoragePath = ExtensionStorage.getStorageFile(extension.id);
     oldStorageExists = await OS.File.exists(oldStoragePath).catch(fileErr => {
       // If we can't access the oldStoragePath here, then extension is also going to be unable to
       // access it, and so we log the error but we don't stop the extension from switching to
       // the IndexedDB backend.
       extension.logWarning(
-        `Unable to access extension storage.local data file: ${fileErr.message}::${fileErr.stack}`);
+        `Unable to access extension storage.local data file: ${
+          fileErr.message
+        }::${fileErr.stack}`
+      );
       return false;
     });
 
     // Migrate any data stored in the JSONFile backend (if any), and remove the old data file
     // if the migration has been completed successfully.
     if (oldStorageExists) {
+      // Do not load the old JSON file content if shutting down is already in progress.
+      abortIfShuttingDown();
+
       Services.console.logStringMessage(
-        `Migrating storage.local data for ${extension.policy.debugName}...`);
+        `Migrating storage.local data for ${extension.policy.debugName}...`
+      );
 
       jsonFile = await ExtensionStorage.getFile(extension.id);
+
+      abortIfShuttingDown();
+
       const data = {};
       for (let [key, value] of jsonFile.data.entries()) {
         data[key] = value;
@@ -410,20 +491,19 @@ async function migrateJSONFileData(extension, storagePrincipal) {
 
       await idbConn.set(data);
       Services.console.logStringMessage(
-        `storage.local data successfully migrated to IDB Backend for ${extension.policy.debugName}.`);
+        `storage.local data successfully migrated to IDB Backend for ${
+          extension.policy.debugName
+        }.`
+      );
     }
 
     dataMigrateCompleted = true;
   } catch (err) {
-    extension.logWarning(`Error on migrating storage.local data file: ${err.message}::${err.stack}`);
+    extension.logWarning(
+      `Error on migrating storage.local data file: ${err.message}::${err.stack}`
+    );
 
     if (oldStorageExists && !dataMigrateCompleted) {
-      // If the data failed to be stored into the IndexedDB backend, then we clear the IndexedDB
-      // backend to allow the extension to retry the migration on its next startup, and reject
-      // the data migration promise explicitly (which would prevent the new backend
-      // from being enabled for this session).
-      Services.qms.clearStoragesForPrincipal(storagePrincipal);
-
       DataMigrationTelemetry.recordResult({
         backend: "JSONFile",
         dataMigrated: dataMigrateCompleted,
@@ -432,6 +512,15 @@ async function migrateJSONFileData(extension, storagePrincipal) {
         hasJSONFile: oldStorageExists,
         hasOldData,
         histogramCategory: "failure",
+      });
+
+      // If the data failed to be stored into the IndexedDB backend, then we clear the IndexedDB
+      // backend to allow the extension to retry the migration on its next startup, and reject
+      // the data migration promise explicitly (which would prevent the new backend
+      // from being enabled for this session).
+      await new Promise(resolve => {
+        let req = Services.qms.clearStoragesForPrincipal(storagePrincipal);
+        req.callback = resolve;
       });
 
       throw err;
@@ -455,7 +544,9 @@ async function migrateJSONFileData(extension, storagePrincipal) {
       // Only migrate the file when it actually exists (e.g. the file name is not going to exist
       // when it is corrupted, because JSONFile internally rename it to `.corrupt`.
       if (await OS.File.exists(oldStoragePath)) {
-        let openInfo = await OS.File.openUnique(`${oldStoragePath}.migrated`, {humanReadable: true});
+        let openInfo = await OS.File.openUnique(`${oldStoragePath}.migrated`, {
+          humanReadable: true,
+        });
         await openInfo.file.close();
         await OS.File.move(oldStoragePath, openInfo.path);
       }
@@ -498,15 +589,26 @@ this.ExtensionStorageIDB = {
   selectedBackendPromises: new WeakMap(),
 
   init() {
-    XPCOMUtils.defineLazyPreferenceGetter(this, "isBackendEnabled", BACKEND_ENABLED_PREF, false);
+    XPCOMUtils.defineLazyPreferenceGetter(
+      this,
+      "isBackendEnabled",
+      BACKEND_ENABLED_PREF,
+      false
+    );
   },
 
   isMigratedExtension(extension) {
-    return Services.prefs.getBoolPref(`${IDB_MIGRATED_PREF_BRANCH}.${extension.id}`, false);
+    return Services.prefs.getBoolPref(
+      `${IDB_MIGRATED_PREF_BRANCH}.${extension.id}`,
+      false
+    );
   },
 
   setMigratedExtensionPref(extension, val) {
-    Services.prefs.setBoolPref(`${IDB_MIGRATED_PREF_BRANCH}.${extension.id}`, !!val);
+    Services.prefs.setBoolPref(
+      `${IDB_MIGRATED_PREF_BRANCH}.${extension.id}`,
+      !!val
+    );
   },
 
   clearMigratedExtensionPref(extensionId) {
@@ -549,42 +651,48 @@ this.ExtensionStorageIDB = {
    *          not been enabled from the preference).
    */
   selectBackend(context) {
-    const {extension} = context;
+    const { extension } = context;
 
     if (!this.selectedBackendPromises.has(extension)) {
       let promise;
 
       if (context.childManager) {
-        return context.childManager.callParentAsyncFunction(
-          "storage.local.IDBBackend.selectBackend", []
-        ).then(parentResult => {
-          let result;
+        return context.childManager
+          .callParentAsyncFunction("storage.local.IDBBackend.selectBackend", [])
+          .then(parentResult => {
+            let result;
 
-          if (!parentResult.backendEnabled) {
-            result = {backendEnabled: false};
-          } else {
-            result = {
-              ...parentResult,
-              // In the child process, we need to deserialize the storagePrincipal
-              // from the StructuredCloneHolder used to send it across the processes.
-              storagePrincipal: parentResult.storagePrincipal.deserialize(this),
-            };
-          }
+            if (!parentResult.backendEnabled) {
+              result = { backendEnabled: false };
+            } else {
+              result = {
+                ...parentResult,
+                // In the child process, we need to deserialize the storagePrincipal
+                // from the StructuredCloneHolder used to send it across the processes.
+                storagePrincipal: parentResult.storagePrincipal.deserialize(
+                  this,
+                  true
+                ),
+              };
+            }
 
-          // Cache the result once we know that it has been resolved. The promise returned by
-          // context.childManager.callParentAsyncFunction will be dead when context.cloneScope
-          // is destroyed. To keep a promise alive in the cache, we wrap the result in an
-          // independent promise.
-          this.selectedBackendPromises.set(extension, Promise.resolve(result));
+            // Cache the result once we know that it has been resolved. The promise returned by
+            // context.childManager.callParentAsyncFunction will be dead when context.cloneScope
+            // is destroyed. To keep a promise alive in the cache, we wrap the result in an
+            // independent promise.
+            this.selectedBackendPromises.set(
+              extension,
+              Promise.resolve(result)
+            );
 
-          return result;
-        });
+            return result;
+          });
       }
 
       // If migrating to the IDB backend is not enabled by the preference, then we
       // don't need to migrate any data and the new backend is not enabled.
       if (!this.isBackendEnabled) {
-        promise = Promise.resolve({backendEnabled: false});
+        promise = Promise.resolve({ backendEnabled: false });
       } else {
         // In the main process, lazily create a storagePrincipal isolated in a
         // reserved user context id (its purpose is ensuring that the IndexedDB storage used
@@ -593,24 +701,34 @@ this.ExtensionStorageIDB = {
 
         // Serialize the nsIPrincipal object into a StructuredCloneHolder related to the privileged
         // js global, ready to be sent to the child processes.
-        const serializedPrincipal = new StructuredCloneHolder(storagePrincipal, this);
+        const serializedPrincipal = new StructuredCloneHolder(
+          storagePrincipal,
+          this
+        );
 
-        promise = migrateJSONFileData(extension, storagePrincipal).then(() => {
-          return {backendEnabled: true, storagePrincipal: serializedPrincipal};
-        }).catch(err => {
-          // If the data migration promise is rejected, the old data has been read
-          // successfully from the old JSONFile backend but it failed to be saved
-          // into the IndexedDB backend (which is likely unrelated to the kind of
-          // data stored and more likely a general issue with the IndexedDB backend)
-          // In this case we keep the JSONFile backend enabled for this session
-          // and we will retry to migrate to the IDB Backend the next time the
-          // extension is being started.
-          // TODO Bug 1465129: This should be a very unlikely scenario, some telemetry
-          // data about it may be useful.
-          extension.logWarning("JSONFile backend is being kept enabled by an unexpected " +
-                               `IDBBackend failure: ${err.message}::${err.stack}`);
-          return {backendEnabled: false};
-        });
+        promise = migrateJSONFileData(extension, storagePrincipal)
+          .then(() => {
+            return {
+              backendEnabled: true,
+              storagePrincipal: serializedPrincipal,
+            };
+          })
+          .catch(err => {
+            // If the data migration promise is rejected, the old data has been read
+            // successfully from the old JSONFile backend but it failed to be saved
+            // into the IndexedDB backend (which is likely unrelated to the kind of
+            // data stored and more likely a general issue with the IndexedDB backend)
+            // In this case we keep the JSONFile backend enabled for this session
+            // and we will retry to migrate to the IDB Backend the next time the
+            // extension is being started.
+            // TODO Bug 1465129: This should be a very unlikely scenario, some telemetry
+            // data about it may be useful.
+            extension.logWarning(
+              "JSONFile backend is being kept enabled by an unexpected " +
+                `IDBBackend failure: ${err.message}::${err.stack}`
+            );
+            return { backendEnabled: false };
+          });
       }
 
       this.selectedBackendPromises.set(extension, promise);
@@ -619,6 +737,7 @@ this.ExtensionStorageIDB = {
     return this.selectedBackendPromises.get(extension);
   },
 
+<<<<<<< HEAD
   persist(storagePrincipal) {
     return new Promise((resolve, reject) => {
       const request = quotaManagerService.persist(storagePrincipal);
@@ -632,6 +751,28 @@ this.ExtensionStorageIDB = {
     });
   },
 
+||||||| merged common ancestors
+=======
+  persist(storagePrincipal) {
+    return new Promise((resolve, reject) => {
+      const request = quotaManagerService.persist(storagePrincipal);
+      request.callback = () => {
+        if (request.resultCode === Cr.NS_OK) {
+          resolve();
+        } else {
+          reject(
+            new Error(
+              `Failed to persist storage for principal: ${
+                storagePrincipal.originNoSuffix
+              }`
+            )
+          );
+        }
+      };
+    });
+  },
+
+>>>>>>> upstream-releases
   /**
    * Open a connection to the IDB storage.local db for a given extension.
    * given extension.
@@ -645,12 +786,28 @@ this.ExtensionStorageIDB = {
    * @returns {Promise<ExtensionStorageLocalIDB>}
    *          Return a promise which resolves to the opened IDB connection.
    */
+<<<<<<< HEAD
   open(storagePrincipal, persisted) {
     if (!storagePrincipal) {
       return Promise.reject(new Error("Unexpected empty principal"));
     }
     let setPersistentMode = persisted ? this.persist(storagePrincipal) : Promise.resolve();
     return setPersistentMode.then(() => ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal));
+||||||| merged common ancestors
+  open(storagePrincipal) {
+    return ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal);
+=======
+  open(storagePrincipal, persisted) {
+    if (!storagePrincipal) {
+      return Promise.reject(new Error("Unexpected empty principal"));
+    }
+    let setPersistentMode = persisted
+      ? this.persist(storagePrincipal)
+      : Promise.resolve();
+    return setPersistentMode.then(() =>
+      ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal)
+    );
+>>>>>>> upstream-releases
   },
 
   addOnChangedListener(extensionId, listener) {

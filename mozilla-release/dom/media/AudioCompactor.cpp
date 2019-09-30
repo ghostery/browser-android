@@ -5,7 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "AudioCompactor.h"
 #if defined(MOZ_MEMORY)
+<<<<<<< HEAD
 #include "mozmemory.h"
+||||||| merged common ancestors
+# include "mozmemory.h"
+=======
+#  include "mozmemory.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -42,8 +48,18 @@ uint32_t AudioCompactor::GetChunkSamples(uint32_t aFrames, uint32_t aChannels,
   return chunkSize / sizeof(AudioDataValue);
 }
 
+<<<<<<< HEAD
 uint32_t AudioCompactor::NativeCopy::operator()(AudioDataValue *aBuffer,
                                                 uint32_t aSamples) {
+||||||| merged common ancestors
+uint32_t
+AudioCompactor::NativeCopy::operator()(AudioDataValue *aBuffer,
+                                       uint32_t aSamples)
+{
+=======
+uint32_t AudioCompactor::NativeCopy::operator()(AudioDataValue* aBuffer,
+                                                uint32_t aSamples) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aBuffer, "cannot copy to null buffer pointer");
   NS_ASSERTION(aSamples, "cannot copy zero values");
 

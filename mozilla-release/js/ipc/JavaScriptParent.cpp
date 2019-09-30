@@ -83,6 +83,7 @@ bool JavaScriptParent::allowMessage(JSContext* cx) {
       JS_ReportErrorASCII(cx, "unsafe CPOW usage forbidden");
       return false;
     }
+<<<<<<< HEAD
   }
 
   static bool disableUnsafeCPOWWarnings =
@@ -104,6 +105,31 @@ bool JavaScriptParent::allowMessage(JSContext* cx) {
       NS_WARNING("Unsafe synchronous IPC message");
     }
   }
+||||||| merged common ancestors
+=======
+  }
+
+  static bool disableUnsafeCPOWWarnings =
+      PR_GetEnv("DISABLE_UNSAFE_CPOW_WARNINGS");
+  if (!disableUnsafeCPOWWarnings) {
+    nsCOMPtr<nsIConsoleService> console(
+        do_GetService(NS_CONSOLESERVICE_CONTRACTID));
+    if (console) {
+      nsAutoString filename;
+      uint32_t lineno = 0, column = 0;
+      nsJSUtils::GetCallingLocation(cx, filename, &lineno, &column);
+      nsCOMPtr<nsIScriptError> error(
+          do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
+      error->Init(NS_LITERAL_STRING("unsafe/forbidden CPOW usage"), filename,
+                  EmptyString(), lineno, column, nsIScriptError::warningFlag,
+                  "chrome javascript", false /* from private window */,
+                  true /* from chrome context */);
+      console->LogMessage(error);
+    } else {
+      NS_WARNING("Unsafe synchronous IPC message");
+    }
+  }
+>>>>>>> upstream-releases
 
   return true;
 }

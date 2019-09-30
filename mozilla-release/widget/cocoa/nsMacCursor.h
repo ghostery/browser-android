@@ -16,10 +16,23 @@
                 are implemented, in particular the details of managing an
                 animated cursor are hidden.
 */
+<<<<<<< HEAD
 @interface nsMacCursor : NSObject {
  @private
   NSTimer *mTimer;
  @protected
+||||||| merged common ancestors
+@interface nsMacCursor : NSObject
+{
+  @private
+  NSTimer *mTimer;
+  @protected
+=======
+@interface nsMacCursor : NSObject {
+ @private
+  NSTimer* mTimer;
+ @protected
+>>>>>>> upstream-releases
   nsCursor mType;
   int mFrameCounter;
 }
@@ -32,7 +45,13 @@
     @result     an autoreleased instance of <code>nsMacCursor</code>
                 representing the given <code>NSCursor</code>
  */
+<<<<<<< HEAD
 + (nsMacCursor *)cursorWithCursor:(NSCursor *)aCursor type:(nsCursor)aType;
+||||||| merged common ancestors
++ (nsMacCursor *) cursorWithCursor: (NSCursor *) aCursor type: (nsCursor) aType;
+=======
++ (nsMacCursor*)cursorWithCursor:(NSCursor*)aCursor type:(nsCursor)aType;
+>>>>>>> upstream-releases
 
 /*! @method     cursorWithImageNamed:hotSpot:type:
     @abstract   Create a cursor by specifying the name of an image resource to
@@ -50,9 +69,17 @@
     @result     an autoreleased instance of <code>nsMacCursor</code> that uses the given image and
    hotspot
  */
+<<<<<<< HEAD
 + (nsMacCursor *)cursorWithImageNamed:(NSString *)aCursorImage
                               hotSpot:(NSPoint)aPoint
                                  type:(nsCursor)aType;
+||||||| merged common ancestors
++ (nsMacCursor *) cursorWithImageNamed: (NSString *) aCursorImage hotSpot: (NSPoint) aPoint type: (nsCursor) aType;
+=======
++ (nsMacCursor*)cursorWithImageNamed:(NSString*)aCursorImage
+                             hotSpot:(NSPoint)aPoint
+                                type:(nsCursor)aType;
+>>>>>>> upstream-releases
 
 /*! @method     cursorWithFrames:type:
     @abstract   Create an animated cursor by specifying the frames to use for
@@ -67,7 +94,13 @@
     @result     an autoreleased instance of <code>nsMacCursor</code> that will
                 animate the given cursor frames
  */
+<<<<<<< HEAD
 + (nsMacCursor *)cursorWithFrames:(NSArray *)aCursorFrames type:(nsCursor)aType;
+||||||| merged common ancestors
++ (nsMacCursor *) cursorWithFrames: (NSArray *) aCursorFrames type: (nsCursor) aType;
+=======
++ (nsMacCursor*)cursorWithFrames:(NSArray*)aCursorFrames type:(nsCursor)aType;
+>>>>>>> upstream-releases
 
 /*! @method     cocoaCursorWithImageNamed:hotSpot:
     @abstract   Create a Cocoa NSCursor object with a Gecko image resource name
@@ -80,7 +113,13 @@
     @result     an autoreleased instance of <code>nsMacCursor</code> that will
                 animate the given cursor frames
  */
+<<<<<<< HEAD
 + (NSCursor *)cocoaCursorWithImageNamed:(NSString *)imageName hotSpot:(NSPoint)aPoint;
+||||||| merged common ancestors
++ (NSCursor *) cocoaCursorWithImageNamed: (NSString *) imageName hotSpot: (NSPoint) aPoint;
+=======
++ (NSCursor*)cocoaCursorWithImageNamed:(NSString*)imageName hotSpot:(NSPoint)aPoint;
+>>>>>>> upstream-releases
 
 /*! @method     isSet
     @abstract   Determines whether this cursor is currently active.

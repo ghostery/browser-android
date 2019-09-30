@@ -15,8 +15,17 @@ class nsLegendFrame final : public nsBlockFrame {
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsLegendFrame)
 
+<<<<<<< HEAD
   explicit nsLegendFrame(ComputedStyle* aStyle)
       : nsBlockFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsLegendFrame(ComputedStyle* aStyle)
+    : nsBlockFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsLegendFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBlockFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
                       const ReflowInput& aReflowInput,

@@ -477,10 +477,24 @@ nsSize nsGrid::GetMinRowSize(nsBoxLayoutState& aState, int32_t aRowIndex,
   return size;
 }
 
+<<<<<<< HEAD
 nsSize nsGrid::GetMaxRowSize(nsBoxLayoutState& aState, int32_t aRowIndex,
                              bool aIsHorizontal) {
   nsSize size(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
   if (!(aRowIndex >= 0 && aRowIndex < GetRowCount(aIsHorizontal))) return size;
+||||||| merged common ancestors
+nsSize
+nsGrid::GetMaxRowSize(nsBoxLayoutState& aState, int32_t aRowIndex, bool aIsHorizontal)
+{
+  nsSize size(NS_INTRINSICSIZE,NS_INTRINSICSIZE);
+  if (!(aRowIndex >=0 && aRowIndex < GetRowCount(aIsHorizontal)))
+    return size;
+=======
+nsSize nsGrid::GetMaxRowSize(nsBoxLayoutState& aState, int32_t aRowIndex,
+                             bool aIsHorizontal) {
+  nsSize size(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+  if (!(aRowIndex >= 0 && aRowIndex < GetRowCount(aIsHorizontal))) return size;
+>>>>>>> upstream-releases
 
   nscoord height = GetMaxRowHeight(aState, aRowIndex, aIsHorizontal);
   SetSmallestSize(size, height, aIsHorizontal);
@@ -879,6 +893,7 @@ nscoord nsGrid::GetMaxRowHeight(nsBoxLayoutState& aState, int32_t aIndex,
 
   // is the row bogus? If so then just ask it for its size
   // it should not be affected by cells in the grid.
+<<<<<<< HEAD
   if (row->mIsBogus) {
     nsSize size(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
     if (box) {
@@ -889,9 +904,39 @@ nscoord nsGrid::GetMaxRowHeight(nsBoxLayoutState& aState, int32_t aIndex,
 
     row->mMax = GET_HEIGHT(size, aIsHorizontal);
     return row->mMax;
+||||||| merged common ancestors
+  if (row->mIsBogus)
+  {
+     nsSize size(NS_INTRINSICSIZE,NS_INTRINSICSIZE);
+     if (box) {
+       size = box->GetXULPrefSize(aState);
+       nsBox::AddMargin(box, size);
+       nsGridLayout2::AddOffset(box, size);
+     }
+
+     row->mMax = GET_HEIGHT(size, aIsHorizontal);
+     return row->mMax;
+=======
+  if (row->mIsBogus) {
+    nsSize size(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+    if (box) {
+      size = box->GetXULPrefSize(aState);
+      nsBox::AddMargin(box, size);
+      nsGridLayout2::AddOffset(box, size);
+    }
+
+    row->mMax = GET_HEIGHT(size, aIsHorizontal);
+    return row->mMax;
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   nsSize size(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+||||||| merged common ancestors
+  nsSize size(NS_INTRINSICSIZE,NS_INTRINSICSIZE);
+=======
+  nsSize size(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
 
   nsGridCell* child;
 
@@ -949,8 +994,15 @@ nscoord nsGrid::GetRowFlex(int32_t aIndex, bool aIsHorizontal) {
     // affect us. We need to do this for this case:
     // <grid>
     //   <rows>
+<<<<<<< HEAD
     //     <rows> // this is not flexible. So our children should not be
     //     flexible
+||||||| merged common ancestors
+    //     <rows> // this is not flexible. So our children should not be flexible
+=======
+    //     <rows> // this is not flexible.
+    //            // So our children should not be flexible
+>>>>>>> upstream-releases
     //        <row flex="1"/>
     //        <row flex="1"/>
     //     </rows>

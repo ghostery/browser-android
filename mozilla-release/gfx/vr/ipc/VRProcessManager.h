@@ -6,18 +6,34 @@
 #ifndef GFX_VR_PROCESS_MANAGER_H
 #define GFX_VR_PROCESS_MANAGER_H
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+#include "VRProcessParent.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
+class MemoryReportingProcess;
 namespace gfx {
 
-class VRProcessParent;
 class VRManagerChild;
 class PVRGPUChild;
 class VRChild;
 
 // The VRProcessManager is a singleton responsible for creating VR-bound
 // objects that may live in another process.
+<<<<<<< HEAD
 class VRProcessManager final {
  public:
+||||||| merged common ancestors
+class VRProcessManager final
+{
+public:
+=======
+class VRProcessManager final : public VRProcessParent::Listener {
+ public:
+>>>>>>> upstream-releases
   static VRProcessManager* Get();
   static void Initialize();
   static void Shutdown();
@@ -26,14 +42,30 @@ class VRProcessManager final {
 
   // If not using a VR process, launch a new VR process asynchronously.
   void LaunchVRProcess();
-  void DestroyProcess();
+
+  // Ensure that VR-bound methods can be used. If no VR process is being
+  // used, or one is launched and ready, this function returns immediately.
+  // Otherwise it blocks until the VR process has finished launching.
+  bool EnsureVRReady();
 
   bool CreateGPUBridges(base::ProcessId aOtherProcess,
                         mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge);
 
   VRChild* GetVRChild();
+  // If a VR process is present, create a MemoryReportingProcess object.
+  // Otherwise, return null.
+  RefPtr<MemoryReportingProcess> GetProcessMemoryReporter();
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
+  virtual void OnProcessLaunchComplete(VRProcessParent* aParent) override;
+  virtual void OnProcessUnexpectedShutdown(VRProcessParent* aParent) override;
 
  private:
+>>>>>>> upstream-releases
   VRProcessManager();
 
   DISALLOW_COPY_AND_ASSIGN(VRProcessManager);
@@ -41,7 +73,9 @@ class VRProcessManager final {
   bool CreateGPUVRManager(base::ProcessId aOtherProcess,
                           mozilla::ipc::Endpoint<PVRGPUChild>* aOutEndpoint);
   void OnXPCOMShutdown();
+  void OnPreferenceChange(const char16_t* aData);
   void CleanShutdown();
+  void DestroyProcess();
 
   // Permanently disable the VR process and record a message why.
   void DisableVRProcess(const char* aMessage);
@@ -61,6 +95,11 @@ class VRProcessManager final {
 
   RefPtr<Observer> mObserver;
   VRProcessParent* mProcess;
+  VRChild* mVRChild;
+  // Collects any pref changes that occur during process launch (after
+  // the initial map is passed in command-line arguments) to be sent
+  // when the process can receive IPC messages.
+  nsTArray<mozilla::dom::Pref> mQueuedPrefs;
 };
 
 }  // namespace gfx

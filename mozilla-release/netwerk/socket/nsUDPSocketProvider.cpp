@@ -11,6 +11,7 @@ using mozilla::OriginAttributes;
 NS_IMPL_ISUPPORTS(nsUDPSocketProvider, nsISocketProvider)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUDPSocketProvider::NewSocket(int32_t aFamily, const char *aHost,
                                int32_t aPort, nsIProxyInfo *aProxy,
                                const OriginAttributes &originAttributes,
@@ -24,9 +25,44 @@ nsUDPSocketProvider::NewSocket(int32_t aFamily, const char *aHost,
 
   *aFileDesc = udpFD;
   return NS_OK;
+||||||| merged common ancestors
+nsUDPSocketProvider::NewSocket(int32_t aFamily,
+                               const char *aHost,
+                               int32_t aPort,
+                               nsIProxyInfo *aProxy,
+                               const OriginAttributes &originAttributes,
+                               uint32_t aFlags,
+                               uint32_t aTlsFlags,
+                               PRFileDesc * *aFileDesc,
+                               nsISupports **aSecurityInfo)
+{
+    NS_ENSURE_ARG_POINTER(aFileDesc);
+
+    PRFileDesc* udpFD = PR_OpenUDPSocket(aFamily);
+    if (!udpFD)
+        return NS_ERROR_FAILURE;
+
+    *aFileDesc = udpFD;
+    return NS_OK;
+=======
+nsUDPSocketProvider::NewSocket(int32_t aFamily, const char* aHost,
+                               int32_t aPort, nsIProxyInfo* aProxy,
+                               const OriginAttributes& originAttributes,
+                               uint32_t aFlags, uint32_t aTlsFlags,
+                               PRFileDesc** aFileDesc,
+                               nsISupports** aSecurityInfo) {
+  NS_ENSURE_ARG_POINTER(aFileDesc);
+
+  PRFileDesc* udpFD = PR_OpenUDPSocket(aFamily);
+  if (!udpFD) return NS_ERROR_FAILURE;
+
+  *aFileDesc = udpFD;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUDPSocketProvider::AddToSocket(int32_t aFamily, const char *aHost,
                                  int32_t aPort, nsIProxyInfo *aProxy,
                                  const OriginAttributes &originAttributes,
@@ -36,4 +72,29 @@ nsUDPSocketProvider::AddToSocket(int32_t aFamily, const char *aHost,
   // does not make sense to strap a UDP socket onto an existing socket
   MOZ_ASSERT_UNREACHABLE("Cannot layer UDP socket on an existing socket");
   return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+nsUDPSocketProvider::AddToSocket(int32_t aFamily,
+                                 const char *aHost,
+                                 int32_t aPort,
+                                 nsIProxyInfo *aProxy,
+                                 const OriginAttributes &originAttributes,
+                                 uint32_t aFlags,
+                                 uint32_t aTlsFlags,
+                                 struct PRFileDesc * aFileDesc,
+                                 nsISupports **aSecurityInfo)
+{
+    // does not make sense to strap a UDP socket onto an existing socket
+    MOZ_ASSERT_UNREACHABLE("Cannot layer UDP socket on an existing socket");
+    return NS_ERROR_UNEXPECTED;
+=======
+nsUDPSocketProvider::AddToSocket(int32_t aFamily, const char* aHost,
+                                 int32_t aPort, nsIProxyInfo* aProxy,
+                                 const OriginAttributes& originAttributes,
+                                 uint32_t aFlags, uint32_t aTlsFlags,
+                                 struct PRFileDesc* aFileDesc,
+                                 nsISupports** aSecurityInfo) {
+  // does not make sense to strap a UDP socket onto an existing socket
+  MOZ_ASSERT_UNREACHABLE("Cannot layer UDP socket on an existing socket");
+  return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 }

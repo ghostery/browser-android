@@ -8,7 +8,7 @@
 #include "nsBaseWidget.h"
 
 #if defined(MOZ_WIDGET_ANDROID) && !defined(MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING)
-#include "mozilla/widget/AndroidCompositorWidget.h"
+#  include "mozilla/widget/AndroidCompositorWidget.h"
 #endif
 
 namespace mozilla {
@@ -17,10 +17,24 @@ namespace widget {
 // Platforms with no OOP compositor process support use
 // InProcessCompositorWidget by default.
 #if !defined(MOZ_WIDGET_SUPPORTS_OOP_COMPOSITING)
+<<<<<<< HEAD
 /* static */ RefPtr<CompositorWidget> CompositorWidget::CreateLocal(
     const CompositorWidgetInitData& aInitData,
     const layers::CompositorOptions& aOptions, nsIWidget* aWidget) {
+||||||| merged common ancestors
+/* static */ RefPtr<CompositorWidget>
+CompositorWidget::CreateLocal(const CompositorWidgetInitData& aInitData,
+                              const layers::CompositorOptions& aOptions,
+                              nsIWidget* aWidget)
+{
+=======
+/* static */
+RefPtr<CompositorWidget> CompositorWidget::CreateLocal(
+    const CompositorWidgetInitData& aInitData,
+    const layers::CompositorOptions& aOptions, nsIWidget* aWidget) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWidget);
+<<<<<<< HEAD
 #ifdef MOZ_WIDGET_ANDROID
   return new AndroidCompositorWidget(aOptions,
                                      static_cast<nsBaseWidget*>(aWidget));
@@ -28,6 +42,21 @@ namespace widget {
   return new InProcessCompositorWidget(aOptions,
                                        static_cast<nsBaseWidget*>(aWidget));
 #endif
+||||||| merged common ancestors
+#ifdef MOZ_WIDGET_ANDROID
+  return new AndroidCompositorWidget(aOptions, static_cast<nsBaseWidget*>(aWidget));
+#else
+  return new InProcessCompositorWidget(aOptions, static_cast<nsBaseWidget*>(aWidget));
+#endif
+=======
+#  ifdef MOZ_WIDGET_ANDROID
+  return new AndroidCompositorWidget(aOptions,
+                                     static_cast<nsBaseWidget*>(aWidget));
+#  else
+  return new InProcessCompositorWidget(aOptions,
+                                       static_cast<nsBaseWidget*>(aWidget));
+#  endif
+>>>>>>> upstream-releases
 }
 #endif
 

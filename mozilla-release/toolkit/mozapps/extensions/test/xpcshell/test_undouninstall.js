@@ -4,16 +4,15 @@
 
 // This verifies that forcing undo for uninstall works
 
-const APP_STARTUP                     = 1;
-const APP_SHUTDOWN                    = 2;
-const ADDON_DISABLE                   = 4;
-const ADDON_INSTALL                   = 5;
-const ADDON_UNINSTALL                 = 6;
-const ADDON_UPGRADE                   = 7;
+const APP_STARTUP = 1;
+const APP_SHUTDOWN = 2;
+const ADDON_DISABLE = 4;
+const ADDON_INSTALL = 5;
+const ADDON_UNINSTALL = 6;
+const ADDON_UPGRADE = 7;
 
 const ID = "undouninstall1@tests.mozilla.org";
 const INCOMPAT_ID = "incompatible@tests.mozilla.org";
-
 
 const profileDir = gProfD.clone();
 profileDir.append("extensions");
@@ -69,8 +68,16 @@ function getUninstallReason(id) {
 }
 
 function getShutdownNewVersion(id) {
+<<<<<<< HEAD
   let info = Monitor.stopped.get(id);
   return info ? info.params.newVersion : undefined;
+||||||| merged common ancestors
+  let info = BootstrapMonitor.stopped.get(id);
+  return info ? info.data.newVersion : undefined;
+=======
+  let info = BootstrapMonitor.stopped.get(id);
+  return info ? info.params.newVersion : undefined;
+>>>>>>> upstream-releases
 }
 
 // Sets up the profile by installing an add-on.
@@ -93,8 +100,16 @@ add_task(async function uninstallRestartless() {
   let a1 = await promiseAddonByID(ID);
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
@@ -106,8 +121,16 @@ add_task(async function uninstallRestartless() {
   a1 = await promiseAddonByID(ID);
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID);
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID);
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkInstalled(ID);
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_UNINSTALL);
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
@@ -118,7 +141,13 @@ add_task(async function uninstallRestartless() {
   a1 = await promiseAddonByID(ID);
 
   Assert.equal(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
 });
 
 // Tests that an enabled restartless add-on can be uninstalled and then cancelled
@@ -127,29 +156,46 @@ add_task(async function cancelUninstallOfRestartless() {
   let a1 = await promiseAddonByID(ID);
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
   Assert.ok(!a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   clearListeners();
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID);
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID);
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkInstalled(ID);
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_UNINSTALL);
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
@@ -162,8 +208,16 @@ add_task(async function cancelUninstallOfRestartless() {
   a1.cancelUninstall();
   await Promise.all(promises);
 
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
@@ -179,7 +233,13 @@ add_task(async function cancelUninstallOfRestartless() {
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getStartupReason(ID), APP_STARTUP);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
@@ -196,32 +256,50 @@ add_task(async function reinstallAddonAwaitingUninstall() {
   let a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
   Assert.ok(!a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID);
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID);
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkInstalled(ID);
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_UNINSTALL);
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
   Assert.ok(!a1.userDisabled);
 
+<<<<<<< HEAD
   prepare_test({
     "undouninstall1@tests.mozilla.org": [
       ["onInstalling", false],
@@ -234,13 +312,55 @@ add_task(async function reinstallAddonAwaitingUninstall() {
   ]);
 
   await promiseInstallFile(XPIS.test_undouninstall1);
+||||||| merged common ancestors
+  prepare_test({
+    "undouninstall1@tests.mozilla.org": [
+      ["onInstalling", false],
+      "onInstalled",
+    ],
+  }, [
+    "onNewInstall",
+    "onInstallStarted",
+    "onInstallEnded",
+  ]);
+
+  await AddonTestUtils.promiseInstallXPI(ADDONS.test_undouninstall1);
+=======
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [
+          { event: "onInstalling" },
+          { event: "onInstalled" },
+        ],
+      },
+      installEvents: [
+        { event: "onNewInstall" },
+        { event: "onInstallStarted" },
+        { event: "onInstallEnded" },
+      ],
+    },
+    () => promiseInstallFile(XPIS.test_undouninstall1)
+  );
+>>>>>>> upstream-releases
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
+<<<<<<< HEAD
   ensure_test_completed();
 
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  ensure_test_completed();
+
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+  Assert.equal(getUninstallReason(ID), ADDON_UPGRADE);
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_UPGRADE);
   Assert.equal(getStartupReason(ID), ADDON_UPGRADE);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
@@ -256,7 +376,13 @@ add_task(async function reinstallAddonAwaitingUninstall() {
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getStartupReason(ID), APP_STARTUP);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
@@ -273,8 +399,16 @@ add_task(async function uninstallDisabledRestartless() {
   let a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
@@ -282,47 +416,70 @@ add_task(async function uninstallDisabledRestartless() {
   Assert.ok(!a1.userDisabled);
 
   await a1.disable();
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_DISABLE);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
   // commit the uninstall
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalled",
-    ],
-  });
-  await a1.uninstall();
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalled" }],
+      },
+    },
+    () => a1.uninstall()
+  );
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.equal(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
   Monitor.checkNotInstalled(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+  BootstrapMonitor.checkAddonNotInstalled(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+  BootstrapMonitor.checkNotInstalled(ID);
+>>>>>>> upstream-releases
   Assert.equal(getUninstallReason(ID), ADDON_UNINSTALL);
 });
 
 // Tests that a disabled restartless add-on can be uninstalled and then cancelled
 add_task(async function cancelUninstallDisabledRestartless() {
+<<<<<<< HEAD
   prepare_test({
     "undouninstall1@tests.mozilla.org": [
       ["onInstalling", false],
@@ -335,60 +492,128 @@ add_task(async function cancelUninstallDisabledRestartless() {
   ]);
   await promiseInstallFile(XPIS.test_undouninstall1);
   ensure_test_completed();
+||||||| merged common ancestors
+  prepare_test({
+    "undouninstall1@tests.mozilla.org": [
+      ["onInstalling", false],
+      "onInstalled",
+    ],
+  }, [
+    "onNewInstall",
+    "onInstallStarted",
+    "onInstallEnded",
+  ]);
+  await AddonTestUtils.promiseInstallXPI(ADDONS.test_undouninstall1);
+  ensure_test_completed();
+=======
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [
+          { event: "onInstalling" },
+          { event: "onInstalled" },
+        ],
+      },
+      installEvents: [
+        { event: "onNewInstall" },
+        { event: "onInstallStarted" },
+        { event: "onInstallEnded" },
+      ],
+    },
+    () => promiseInstallFile(XPIS.test_undouninstall1)
+  );
+>>>>>>> upstream-releases
 
   let a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
   Assert.ok(!a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      ["onDisabling", false],
-      "onDisabled",
-    ],
-  });
-  await a1.disable();
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [
+          { event: "onDisabling" },
+          { event: "onDisabled" },
+        ],
+      },
+    },
+    () => a1.disable()
+  );
 
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_DISABLE);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
   Monitor.checkInstalled(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+  BootstrapMonitor.checkAddonInstalled(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+  BootstrapMonitor.checkInstalled(ID);
+>>>>>>> upstream-releases
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onOperationCancelled",
-    ],
-  });
-  a1.cancelUninstall();
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onOperationCancelled" }],
+      },
+    },
+    async () => {
+      a1.cancelUninstall();
+    }
+  );
 
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
   Monitor.checkInstalled(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+  BootstrapMonitor.checkAddonInstalled(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+  BootstrapMonitor.checkInstalled(ID);
+>>>>>>> upstream-releases
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
@@ -398,8 +623,16 @@ add_task(async function cancelUninstallDisabledRestartless() {
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
   Monitor.checkInstalled(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+  BootstrapMonitor.checkAddonInstalled(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+  BootstrapMonitor.checkInstalled(ID);
+>>>>>>> upstream-releases
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
@@ -415,8 +648,16 @@ add_task(async function reinstallDisabledAddonAwaitingUninstall() {
   let a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
@@ -424,28 +665,42 @@ add_task(async function reinstallDisabledAddonAwaitingUninstall() {
   Assert.ok(!a1.userDisabled);
 
   await a1.disable();
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.equal(getShutdownReason(ID), ADDON_DISABLE);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID);
+=======
+  BootstrapMonitor.checkNotStarted(ID);
+>>>>>>> upstream-releases
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
 
+<<<<<<< HEAD
   prepare_test({
     "undouninstall1@tests.mozilla.org": [
       ["onInstalling", false],
@@ -458,13 +713,55 @@ add_task(async function reinstallDisabledAddonAwaitingUninstall() {
   ]);
 
   await promiseInstallFile(XPIS.test_undouninstall1);
+||||||| merged common ancestors
+  prepare_test({
+    "undouninstall1@tests.mozilla.org": [
+      ["onInstalling", false],
+      "onInstalled",
+    ],
+  }, [
+    "onNewInstall",
+    "onInstallStarted",
+    "onInstallEnded",
+  ]);
+
+  await AddonTestUtils.promiseInstallXPI(ADDONS.test_undouninstall1);
+=======
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [
+          { event: "onInstalling" },
+          { event: "onInstalled" },
+        ],
+      },
+      installEvents: [
+        { event: "onNewInstall" },
+        { event: "onInstallStarted" },
+        { event: "onInstallEnded" },
+      ],
+    },
+    () => promiseInstallFile(XPIS.test_undouninstall1)
+  );
+>>>>>>> upstream-releases
 
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
+<<<<<<< HEAD
   ensure_test_completed();
 
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkNotStarted(ID, "1.0");
+||||||| merged common ancestors
+  ensure_test_completed();
+
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonNotStarted(ID, "1.0");
+  Assert.equal(getUninstallReason(ID), ADDON_UPGRADE);
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkNotStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_UPGRADE);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
@@ -475,7 +772,13 @@ add_task(async function reinstallDisabledAddonAwaitingUninstall() {
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkNotStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(!a1.isActive);
   Assert.ok(a1.userDisabled);
@@ -483,32 +786,46 @@ add_task(async function reinstallDisabledAddonAwaitingUninstall() {
   await a1.uninstall();
 });
 
-
 // Test that uninstalling a temporary addon can be canceled
 add_task(async function cancelUninstallTemporary() {
   await AddonManager.installTemporaryAddon(XPIS.test_undouninstall1);
 
   let a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkInstalled(ID, "1.0");
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonInstalled(ID, "1.0");
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkInstalled(ID, "1.0");
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(getInstallReason(ID), ADDON_INSTALL);
   Assert.equal(getStartupReason(ID), ADDON_INSTALL);
   Assert.equal(a1.pendingOperations, AddonManager.PENDING_NONE);
   Assert.ok(a1.isActive);
   Assert.ok(!a1.userDisabled);
 
-  prepare_test({
-    "undouninstall1@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "undouninstall1@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
+<<<<<<< HEAD
   clearListeners();
 
   Monitor.checkNotStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkNotStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
 
   let promises = [
@@ -521,7 +838,13 @@ add_task(async function cancelUninstallTemporary() {
   a1 = await promiseAddonByID("undouninstall1@tests.mozilla.org");
 
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkStarted(ID, "1.0");
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonStarted(ID, "1.0");
+=======
+  BootstrapMonitor.checkStarted(ID, "1.0");
+>>>>>>> upstream-releases
   Assert.equal(a1.pendingOperations, 0);
 
   await promiseRestartManager();
@@ -534,33 +857,49 @@ add_task(async function cancelUninstallIncompatibleRestartless() {
 
   let a1 = await promiseAddonByID(INCOMPAT_ID);
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(INCOMPAT_ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(INCOMPAT_ID);
+=======
+  BootstrapMonitor.checkNotStarted(INCOMPAT_ID);
+>>>>>>> upstream-releases
   Assert.ok(!a1.isActive);
 
-  prepare_test({
-    "incompatible@tests.mozilla.org": [
-      "onUninstalling",
-    ],
-  });
-  await a1.uninstall(true);
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "incompatible@tests.mozilla.org": [{ event: "onUninstalling" }],
+      },
+    },
+    () => a1.uninstall(true)
+  );
 
   a1 = await promiseAddonByID(INCOMPAT_ID);
   Assert.notEqual(a1, null);
   Assert.ok(hasFlag(AddonManager.PENDING_UNINSTALL, a1.pendingOperations));
   Assert.ok(!a1.isActive);
 
-  prepare_test({
-    "incompatible@tests.mozilla.org": [
-      "onOperationCancelled",
-    ],
-  });
-  a1.cancelUninstall();
-  ensure_test_completed();
+  await expectEvents(
+    {
+      addonEvents: {
+        "incompatible@tests.mozilla.org": [{ event: "onOperationCancelled" }],
+      },
+    },
+    async () => {
+      a1.cancelUninstall();
+    }
+  );
 
   a1 = await promiseAddonByID(INCOMPAT_ID);
   Assert.notEqual(a1, null);
+<<<<<<< HEAD
   Monitor.checkNotStarted(INCOMPAT_ID);
+||||||| merged common ancestors
+  BootstrapMonitor.checkAddonNotStarted(INCOMPAT_ID);
+=======
+  BootstrapMonitor.checkNotStarted(INCOMPAT_ID);
+>>>>>>> upstream-releases
   Assert.equal(a1.pendingOperations, 0);
   Assert.ok(!a1.isActive);
 });

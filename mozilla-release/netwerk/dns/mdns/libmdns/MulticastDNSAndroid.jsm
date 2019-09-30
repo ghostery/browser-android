@@ -7,14 +7,25 @@
 
 var EXPORTED_SYMBOLS = ["MulticastDNS"];
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/Messaging.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/Messaging.jsm");
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+=======
+const { EventDispatcher } = ChromeUtils.import(
+  "resource://gre/modules/Messaging.jsm"
+);
+>>>>>>> upstream-releases
 
 const DEBUG = false;
 
 var log = function(s) {};
 if (DEBUG) {
-  log = ChromeUtils.import("resource://gre/modules/AndroidLog.jsm", {})
-          .AndroidLog.d.bind(null, "MulticastDNS");
+  log = ChromeUtils.import(
+    "resource://gre/modules/AndroidLog.jsm",
+    {}
+  ).AndroidLog.d.bind(null, "MulticastDNS");
 }
 
 const FAILURE_INTERNAL_ERROR = -65537;
@@ -28,18 +39,20 @@ function send(type, data, callback) {
   for (let i in data) {
     try {
       msg[i] = data[i];
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  EventDispatcher.instance.sendRequestForResult(msg)
-    .then(result => callback(result, null),
-          err => callback(null, typeof err === "number" ? err : FAILURE_INTERNAL_ERROR));
+  EventDispatcher.instance
+    .sendRequestForResult(msg)
+    .then(
+      result => callback(result, null),
+      err =>
+        callback(null, typeof err === "number" ? err : FAILURE_INTERNAL_ERROR)
+    );
 }
 
 // Receives service found/lost event from NsdManager
-function ServiceManager() {
-}
+function ServiceManager() {}
 
 ServiceManager.prototype = {
   listeners: {},
@@ -145,11 +158,19 @@ function parsePropertyBag2(bag) {
   }
 
   let attributes = [];
-  for (let {name} of bag.enumerator) {
+  for (let { name } of bag.enumerator) {
     let value = bag.getPropertyAsACString(name);
     attributes.push({
+<<<<<<< HEAD
       "name": name,
       "value": value,
+||||||| merged common ancestors
+      "name": name,
+      "value": value
+=======
+      name,
+      value,
+>>>>>>> upstream-releases
     });
   }
 

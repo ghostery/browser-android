@@ -24,11 +24,11 @@
 #include "mozilla/Sprintf.h"
 #include "mozilla/TextUtils.h"
 
-#include <ctype.h>
 #include <math.h>
 #include <string.h>
 
 #include "jsapi.h"
+#include "jsfriendapi.h"
 #include "jsnum.h"
 #include "jstypes.h"
 #include "jsutil.h"
@@ -37,9 +37,11 @@
 #include "js/Conversions.h"
 #include "js/Date.h"
 #include "js/LocaleSensitive.h"
+#include "js/PropertySpec.h"
 #include "js/Wrapper.h"
 #include "util/StringBuffer.h"
 #include "util/Text.h"
+#include "vm/DateObject.h"
 #include "vm/DateTime.h"
 #include "vm/GlobalObject.h"
 #include "vm/Interpreter.h"
@@ -56,6 +58,7 @@ using mozilla::ArrayLength;
 using mozilla::Atomic;
 using mozilla::BitwiseCast;
 using mozilla::IsAsciiAlpha;
+using mozilla::IsAsciiDigit;
 using mozilla::IsFinite;
 using mozilla::IsNaN;
 using mozilla::NumbersAreIdentical;
@@ -899,6 +902,7 @@ static int DaysInMonth(int year, int month) {
  *   TZD  = time zone designator (Z or +hh:mm or -hh:mm or missing for local)
  */
 template <typename CharT>
+<<<<<<< HEAD
 static bool ParseISOStyleDate(const CharT* s, size_t length,
                               ClippedTime* result) {
   size_t i = 0;
@@ -914,9 +918,47 @@ static bool ParseISOStyleDate(const CharT* s, size_t length,
   bool isLocalTime = false;
   size_t tzHour = 0;
   size_t tzMin = 0;
+||||||| merged common ancestors
+static bool
+ParseISOStyleDate(const CharT* s, size_t length, ClippedTime* result)
+{
+    size_t i = 0;
+    int tzMul = 1;
+    int dateMul = 1;
+    size_t year = 1970;
+    size_t month = 1;
+    size_t day = 1;
+    size_t hour = 0;
+    size_t min = 0;
+    size_t sec = 0;
+    double frac = 0;
+    bool isLocalTime = false;
+    size_t tzHour = 0;
+    size_t tzMin = 0;
+=======
+static bool ParseISOStyleDate(const CharT* s, size_t length,
+                              ClippedTime* result) {
+  size_t i = 0;
+  size_t pre = 0;
+  int tzMul = 1;
+  int dateMul = 1;
+  size_t year = 1970;
+  size_t month = 1;
+  size_t day = 1;
+  size_t hour = 0;
+  size_t min = 0;
+  size_t sec = 0;
+  double frac = 0;
+  bool isLocalTime = false;
+  size_t tzHour = 0;
+  size_t tzMin = 0;
+  bool isPermissive = false;
+  bool isStrict = false;
+>>>>>>> upstream-releases
 
 #define PEEK(ch) (i < length && s[i] == ch)
 
+<<<<<<< HEAD
 #define NEED(ch)                   \
   if (i >= length || s[i] != ch) { \
     return false;                  \
@@ -981,6 +1023,112 @@ done_date:
       if (!ParseFractional(&frac, s, &i, length)) {
         return false;
       }
+||||||| merged common ancestors
+#define NEED(ch)                                                               \
+    if (i >= length || s[i] != ch) { return false; } else { ++i; }
+
+#define DONE_DATE_UNLESS(ch)                                                   \
+    if (i >= length || s[i] != ch) { goto done_date; } else { ++i; }
+
+#define DONE_UNLESS(ch)                                                        \
+    if (i >= length || s[i] != ch) { goto done; } else { ++i; }
+
+#define NEED_NDIGITS(n, field)                                                 \
+    if (!ParseDigitsN(n, &field, s, &i, length)) { return false; }
+
+#define NEED_NDIGITS_OR_LESS(n, field)                                         \
+    if (!ParseDigitsNOrLess(n, &field, s, &i, length)) { return false; }
+
+    if (PEEK('+') || PEEK('-')) {
+        if (PEEK('-')) {
+            dateMul = -1;
+        }
+        ++i;
+        NEED_NDIGITS(6, year);
+    } else if (!PEEK('T')) {
+        NEED_NDIGITS(4, year);
+=======
+#define NEED(ch)                   \
+  if (i >= length || s[i] != ch) { \
+    return false;                  \
+  } else {                         \
+    ++i;                           \
+  }
+
+#define DONE_DATE_UNLESS(ch)       \
+  if (i >= length || s[i] != ch) { \
+    goto done_date;                \
+  } else {                         \
+    ++i;                           \
+  }
+
+#define DONE_UNLESS(ch)            \
+  if (i >= length || s[i] != ch) { \
+    goto done;                     \
+  } else {                         \
+    ++i;                           \
+  }
+
+#define NEED_NDIGITS(n, field)                   \
+  if (!ParseDigitsN(n, &field, s, &i, length)) { \
+    return false;                                \
+  }
+
+#define NEED_NDIGITS_OR_LESS(n, field)                 \
+  pre = i;                                             \
+  if (!ParseDigitsNOrLess(n, &field, s, &i, length)) { \
+    return false;                                      \
+  }                                                    \
+  if (i < pre + (n)) {                                 \
+    if (isStrict) {                                    \
+      return false;                                    \
+    } else {                                           \
+      isPermissive = true;                             \
+    }                                                  \
+  }
+
+  if (PEEK('+') || PEEK('-')) {
+    if (PEEK('-')) {
+      dateMul = -1;
+    }
+    ++i;
+    NEED_NDIGITS(6, year);
+  } else {
+    NEED_NDIGITS(4, year);
+  }
+  DONE_DATE_UNLESS('-');
+  NEED_NDIGITS_OR_LESS(2, month);
+  DONE_DATE_UNLESS('-');
+  NEED_NDIGITS_OR_LESS(2, day);
+
+done_date:
+  if (PEEK('T')) {
+    if (isPermissive) {
+      // Require standard format "[+00]1970-01-01" if a time part marker "T"
+      // exists
+      return false;
+    }
+    isStrict = true;
+    i++;
+  } else if (PEEK(' ')) {
+    i++;
+  } else {
+    goto done;
+  }
+
+  NEED_NDIGITS_OR_LESS(2, hour);
+  NEED(':');
+  NEED_NDIGITS_OR_LESS(2, min);
+
+  if (PEEK(':')) {
+    ++i;
+    NEED_NDIGITS_OR_LESS(2, sec);
+    if (PEEK('.')) {
+      ++i;
+      if (!ParseFractional(&frac, s, &i, length)) {
+        return false;
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -1035,6 +1183,7 @@ done:
 #undef NEED
 #undef DONE_UNLESS
 #undef NEED_NDIGITS
+#undef NEED_NDIGITS_OR_LESS
 }
 
 template <typename CharT>
@@ -2705,6 +2854,7 @@ JSString* DateTimeHelper::timeZoneComment(JSContext* cx, double utcTime,
 }
 #else
 /* Interface to PRMJTime date struct. */
+<<<<<<< HEAD
 PRMJTime DateTimeHelper::toPRMJTime(double localTime, double utcTime) {
   double year = YearFromTime(localTime);
 
@@ -2758,6 +2908,118 @@ JSString* DateTimeHelper::timeZoneComment(JSContext* cx, double utcTime,
         break;
       }
     }
+||||||| merged common ancestors
+PRMJTime
+DateTimeHelper::toPRMJTime(double localTime, double utcTime)
+{
+    double year = YearFromTime(localTime);
+
+    PRMJTime prtm;
+    prtm.tm_usec = int32_t(msFromTime(localTime)) * 1000;
+    prtm.tm_sec = int8_t(SecFromTime(localTime));
+    prtm.tm_min = int8_t(MinFromTime(localTime));
+    prtm.tm_hour = int8_t(HourFromTime(localTime));
+    prtm.tm_mday = int8_t(DateFromTime(localTime));
+    prtm.tm_mon = int8_t(MonthFromTime(localTime));
+    prtm.tm_wday = int8_t(WeekDay(localTime));
+    prtm.tm_year = year;
+    prtm.tm_yday = int16_t(DayWithinYear(localTime, year));
+    prtm.tm_isdst = (daylightSavingTA(utcTime) != 0);
+
+    return prtm;
+}
+
+size_t
+DateTimeHelper::formatTime(char* buf, size_t buflen, const char* fmt, double utcTime, double localTime)
+{
+    PRMJTime prtm = toPRMJTime(localTime, utcTime);
+
+    // If an equivalent year was used to compute the date/time components, use
+    // the same equivalent year to determine the time zone name and offset in
+    // PRMJ_FormatTime(...).
+    int timeZoneYear = isRepresentableAsTime32(utcTime)
+                       ? prtm.tm_year
+                       : equivalentYearForDST(prtm.tm_year);
+    int offsetInSeconds = (int) floor((localTime - utcTime) / msPerSecond);
+
+    return PRMJ_FormatTime(buf, buflen, fmt, &prtm, timeZoneYear, offsetInSeconds);
+}
+
+JSString*
+DateTimeHelper::timeZoneComment(JSContext* cx, double utcTime, double localTime)
+{
+    char tzbuf[100];
+
+    size_t tzlen = formatTime(tzbuf, sizeof tzbuf, " (%Z)", utcTime, localTime);
+    if (tzlen != 0) {
+        // Decide whether to use the resulting time zone string.
+        //
+        // Reject it if it contains any non-ASCII or non-printable characters.
+        // It's then likely in some other character encoding, and we probably
+        // won't display it correctly.
+        bool usetz = true;
+        for (size_t i = 0; i < tzlen; i++) {
+            char16_t c = tzbuf[i];
+            if (c > 127 || !isprint(c)) {
+                usetz = false;
+                break;
+            }
+        }
+=======
+PRMJTime DateTimeHelper::toPRMJTime(double localTime, double utcTime) {
+  double year = YearFromTime(localTime);
+
+  PRMJTime prtm;
+  prtm.tm_usec = int32_t(msFromTime(localTime)) * 1000;
+  prtm.tm_sec = int8_t(SecFromTime(localTime));
+  prtm.tm_min = int8_t(MinFromTime(localTime));
+  prtm.tm_hour = int8_t(HourFromTime(localTime));
+  prtm.tm_mday = int8_t(DateFromTime(localTime));
+  prtm.tm_mon = int8_t(MonthFromTime(localTime));
+  prtm.tm_wday = int8_t(WeekDay(localTime));
+  prtm.tm_year = year;
+  prtm.tm_yday = int16_t(DayWithinYear(localTime, year));
+  prtm.tm_isdst = (daylightSavingTA(utcTime) != 0);
+
+  return prtm;
+}
+
+size_t DateTimeHelper::formatTime(char* buf, size_t buflen, const char* fmt,
+                                  double utcTime, double localTime) {
+  PRMJTime prtm = toPRMJTime(localTime, utcTime);
+
+  // If an equivalent year was used to compute the date/time components, use
+  // the same equivalent year to determine the time zone name and offset in
+  // PRMJ_FormatTime(...).
+  int timeZoneYear = isRepresentableAsTime32(utcTime)
+                         ? prtm.tm_year
+                         : equivalentYearForDST(prtm.tm_year);
+  int offsetInSeconds = (int)floor((localTime - utcTime) / msPerSecond);
+
+  return PRMJ_FormatTime(buf, buflen, fmt, &prtm, timeZoneYear,
+                         offsetInSeconds);
+}
+
+JSString* DateTimeHelper::timeZoneComment(JSContext* cx, double utcTime,
+                                          double localTime) {
+  char tzbuf[100];
+
+  size_t tzlen = formatTime(tzbuf, sizeof tzbuf, " (%Z)", utcTime, localTime);
+  if (tzlen != 0) {
+    // Decide whether to use the resulting time zone string.
+    //
+    // Reject it if it contains any non-ASCII or non-printable characters.
+    // It's then likely in some other character encoding, and we probably
+    // won't display it correctly.
+    bool usetz = true;
+    for (size_t i = 0; i < tzlen; i++) {
+      char16_t c = tzbuf[i];
+      if (!IsAsciiPrintable(c)) {
+        usetz = false;
+        break;
+      }
+    }
+>>>>>>> upstream-releases
 
     // Also reject it if it's not parenthesized or if it's ' ()'.
     if (tzbuf[0] != ' ' || tzbuf[1] != '(' || tzbuf[2] == ')') {
@@ -2876,6 +3138,7 @@ static bool ToLocaleFormatHelper(JSContext* cx, HandleObject obj,
   } else {
     double localTime = LocalTime(utcTime);
 
+<<<<<<< HEAD
     /* Let PRMJTime format it. */
     size_t result_len =
         DateTimeHelper::formatTime(buf, sizeof buf, format, utcTime, localTime);
@@ -2911,9 +3174,55 @@ static bool ToLocaleFormatHelper(JSContext* cx, HandleObject obj,
   }
   rval.setString(str);
   return true;
+||||||| merged common ancestors
+    JSString* str = NewStringCopyZ<CanGC>(cx, buf);
+    if (!str) {
+        return false;
+    }
+    rval.setString(str);
+    return true;
+=======
+    /* Let PRMJTime format it. */
+    size_t result_len =
+        DateTimeHelper::formatTime(buf, sizeof buf, format, utcTime, localTime);
+
+    /* If it failed, default to toString. */
+    if (result_len == 0) {
+      return FormatDate(cx, utcTime, FormatSpec::DateTime, rval);
+    }
+
+    /* Hacked check against undesired 2-digit year 00/00/00 form. */
+    if (strcmp(format, "%x") == 0 && result_len >= 6 &&
+        /* Format %x means use OS settings, which may have 2-digit yr, so
+           hack end of 3/11/22 or 11.03.22 or 11Mar22 to use 4-digit yr...*/
+        !IsAsciiDigit(buf[result_len - 3]) &&
+        IsAsciiDigit(buf[result_len - 2]) &&
+        IsAsciiDigit(buf[result_len - 1]) &&
+        /* ...but not if starts with 4-digit year, like 2022/3/11. */
+        !(IsAsciiDigit(buf[0]) && IsAsciiDigit(buf[1]) &&
+          IsAsciiDigit(buf[2]) && IsAsciiDigit(buf[3]))) {
+      int year = int(YearFromTime(localTime));
+      snprintf(buf + (result_len - 2), (sizeof buf) - (result_len - 2), "%d",
+               year);
+    }
+  }
+
+  if (cx->runtime()->localeCallbacks &&
+      cx->runtime()->localeCallbacks->localeToUnicode) {
+    return cx->runtime()->localeCallbacks->localeToUnicode(cx, buf, rval);
+  }
+
+  JSString* str = NewStringCopyZ<CanGC>(cx, buf);
+  if (!str) {
+    return false;
+  }
+  rval.setString(str);
+  return true;
+>>>>>>> upstream-releases
 }
 
 /* ES5 15.9.5.5. */
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool date_toLocaleString_impl(JSContext* cx,
                                                 const CallArgs& args) {
   /*
@@ -2927,6 +3236,36 @@ MOZ_ALWAYS_INLINE bool date_toLocaleString_impl(JSContext* cx,
       "%c"
 #endif
       ;
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+date_toLocaleString_impl(JSContext* cx, const CallArgs& args)
+{
+    /*
+     * Use '%#c' for windows, because '%c' is backward-compatible and non-y2k
+     * with msvc; '%#c' requests that a full year be used in the result string.
+     */
+    static const char format[] =
+#if defined(_WIN32) && !defined(__MWERKS__)
+                                   "%#c"
+#else
+                                   "%c"
+#endif
+                                   ;
+=======
+MOZ_ALWAYS_INLINE bool date_toLocaleString_impl(JSContext* cx,
+                                                const CallArgs& args) {
+  /*
+   * Use '%#c' for windows, because '%c' is backward-compatible and non-y2k
+   * with msvc; '%#c' requests that a full year be used in the result string.
+   */
+  static const char format[] =
+#  if defined(_WIN32) && !defined(__MWERKS__)
+      "%#c"
+#  else
+      "%c"
+#  endif
+      ;
+>>>>>>> upstream-releases
 
   Rooted<DateObject*> dateObj(cx, &args.thisv().toObject().as<DateObject>());
   return ToLocaleFormatHelper(cx, dateObj, format, args.rval());
@@ -2938,6 +3277,7 @@ static bool date_toLocaleString(JSContext* cx, unsigned argc, Value* vp) {
 }
 
 /* ES5 15.9.5.6. */
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool date_toLocaleDateString_impl(JSContext* cx,
                                                     const CallArgs& args) {
   /*
@@ -2951,6 +3291,36 @@ MOZ_ALWAYS_INLINE bool date_toLocaleDateString_impl(JSContext* cx,
       "%x"
 #endif
       ;
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+date_toLocaleDateString_impl(JSContext* cx, const CallArgs& args)
+{
+    /*
+     * Use '%#x' for windows, because '%x' is backward-compatible and non-y2k
+     * with msvc; '%#x' requests that a full year be used in the result string.
+     */
+    static const char format[] =
+#if defined(_WIN32) && !defined(__MWERKS__)
+                                   "%#x"
+#else
+                                   "%x"
+#endif
+                                   ;
+=======
+MOZ_ALWAYS_INLINE bool date_toLocaleDateString_impl(JSContext* cx,
+                                                    const CallArgs& args) {
+  /*
+   * Use '%#x' for windows, because '%x' is backward-compatible and non-y2k
+   * with msvc; '%#x' requests that a full year be used in the result string.
+   */
+  static const char format[] =
+#  if defined(_WIN32) && !defined(__MWERKS__)
+      "%#x"
+#  else
+      "%x"
+#  endif
+      ;
+>>>>>>> upstream-releases
 
   Rooted<DateObject*> dateObj(cx, &args.thisv().toObject().as<DateObject>());
   return ToLocaleFormatHelper(cx, dateObj, format, args.rval());
@@ -2995,6 +3365,7 @@ MOZ_ALWAYS_INLINE bool date_toDateString_impl(JSContext* cx,
       FormatSpec::Date, args.rval());
 }
 
+<<<<<<< HEAD
 static bool date_toDateString(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<IsDate, date_toDateString_impl>(cx, args);
@@ -3015,6 +3386,35 @@ MOZ_ALWAYS_INLINE bool date_toSource_impl(JSContext* cx, const CallArgs& args) {
   }
   args.rval().setString(str);
   return true;
+||||||| merged common ancestors
+    JSString* str = sb.finishString();
+    if (!str) {
+        return false;
+    }
+    args.rval().setString(str);
+    return true;
+=======
+static bool date_toDateString(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return CallNonGenericMethod<IsDate, date_toDateString_impl>(cx, args);
+}
+
+MOZ_ALWAYS_INLINE bool date_toSource_impl(JSContext* cx, const CallArgs& args) {
+  JSStringBuilder sb(cx);
+  if (!sb.append("(new Date(") ||
+      !NumberValueToStringBuffer(
+          cx, args.thisv().toObject().as<DateObject>().UTCTime(), sb) ||
+      !sb.append("))")) {
+    return false;
+  }
+
+  JSString* str = sb.finishString();
+  if (!str) {
+    return false;
+  }
+  args.rval().setString(str);
+  return true;
+>>>>>>> upstream-releases
 }
 
 static bool date_toSource(JSContext* cx, unsigned argc, Value* vp) {
@@ -3120,6 +3520,7 @@ static const JSFunctionSpec date_methods[] = {
     JS_FN("toLocaleDateString", date_toLocaleDateString, 0, 0),
     JS_FN("toLocaleTimeString", date_toLocaleTimeString, 0, 0),
 #endif
+<<<<<<< HEAD
     JS_FN("toDateString", date_toDateString, 0, 0),
     JS_FN("toTimeString", date_toTimeString, 0, 0),
     JS_FN("toISOString", date_toISOString, 0, 0),
@@ -3137,6 +3538,47 @@ static bool NewDateObject(JSContext* cx, const CallArgs& args, ClippedTime t) {
   if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
     return false;
   }
+||||||| merged common ancestors
+    JS_FN("toDateString",        date_toDateString,       0,0),
+    JS_FN("toTimeString",        date_toTimeString,       0,0),
+    JS_FN("toISOString",         date_toISOString,        0,0),
+    JS_FN(js_toJSON_str,         date_toJSON,             1,0),
+    JS_FN(js_toSource_str,       date_toSource,           0,0),
+    JS_FN(js_toString_str,       date_toString,           0,0),
+    JS_FN(js_valueOf_str,        date_valueOf,            0,0),
+    JS_SYM_FN(toPrimitive,       date_toPrimitive,        1,JSPROP_READONLY),
+    JS_FS_END
+    // clang-format on
+};
+
+static bool
+NewDateObject(JSContext* cx, const CallArgs& args, ClippedTime t)
+{
+    MOZ_ASSERT(args.isConstructing());
+
+    RootedObject proto(cx);
+    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
+        return false;
+    }
+=======
+    JS_FN("toDateString", date_toDateString, 0, 0),
+    JS_FN("toTimeString", date_toTimeString, 0, 0),
+    JS_FN("toISOString", date_toISOString, 0, 0),
+    JS_FN(js_toJSON_str, date_toJSON, 1, 0),
+    JS_FN(js_toSource_str, date_toSource, 0, 0),
+    JS_FN(js_toString_str, date_toString, 0, 0),
+    JS_FN(js_valueOf_str, date_valueOf, 0, 0),
+    JS_SYM_FN(toPrimitive, date_toPrimitive, 1, JSPROP_READONLY),
+    JS_FS_END};
+
+static bool NewDateObject(JSContext* cx, const CallArgs& args, ClippedTime t) {
+  MOZ_ASSERT(args.isConstructing());
+
+  RootedObject proto(cx);
+  if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Date, &proto)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   JSObject* obj = NewDateObjectMsec(cx, t, proto);
   if (!obj) {
@@ -3335,6 +3777,7 @@ static const ClassSpec DateObjectClassSpec = {
     nullptr,
     date_methods,
     nullptr,
+<<<<<<< HEAD
     FinishDateClassInit};
 
 const Class DateObject::class_ = {js_Date_str,
@@ -3371,18 +3814,189 @@ JS_FRIEND_API bool js::DateIsValid(JSContext* cx, HandleObject obj,
   if (!GetBuiltinClass(cx, obj, &cls)) {
     return false;
   }
+||||||| merged common ancestors
+    FinishDateClassInit
+};
+
+const Class DateObject::class_ = {
+    js_Date_str,
+    JSCLASS_HAS_RESERVED_SLOTS(RESERVED_SLOTS) |
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Date),
+    JS_NULL_CLASS_OPS,
+    &DateObjectClassSpec
+};
+=======
+    FinishDateClassInit};
+
+const Class DateObject::class_ = {js_Date_str,
+                                  JSCLASS_HAS_RESERVED_SLOTS(RESERVED_SLOTS) |
+                                      JSCLASS_HAS_CACHED_PROTO(JSProto_Date),
+                                  JS_NULL_CLASS_OPS, &DateObjectClassSpec};
+
+const Class DateObject::protoClass_ = {js_Object_str,
+                                       JSCLASS_HAS_CACHED_PROTO(JSProto_Date),
+                                       JS_NULL_CLASS_OPS, &DateObjectClassSpec};
+
+JSObject* js::NewDateObjectMsec(JSContext* cx, ClippedTime t,
+                                HandleObject proto /* = nullptr */) {
+  DateObject* obj = NewObjectWithClassProto<DateObject>(cx, proto);
+  if (!obj) {
+    return nullptr;
+  }
+  obj->setUTCTime(t);
+  return obj;
+}
+
+JS_PUBLIC_API JSObject* JS::NewDateObject(JSContext* cx, ClippedTime time) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return NewDateObjectMsec(cx, time);
+}
+
+JS_FRIEND_API JSObject* js::NewDateObject(JSContext* cx, int year, int mon,
+                                          int mday, int hour, int min,
+                                          int sec) {
+  MOZ_ASSERT(mon < 12);
+  double msec_time =
+      MakeDate(MakeDay(year, mon, mday), MakeTime(hour, min, sec, 0.0));
+  return NewDateObjectMsec(cx, TimeClip(UTC(msec_time)));
+}
+
+JS_FRIEND_API bool js::DateIsValid(JSContext* cx, HandleObject obj,
+                                   bool* isValid) {
+  ESClass cls;
+  if (!GetBuiltinClass(cx, obj, &cls)) {
+    return false;
+  }
 
   if (cls != ESClass::Date) {
     *isValid = false;
     return true;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (cls != ESClass::Date) {
+    *isValid = false;
+    return true;
+  }
+||||||| merged common ancestors
+const Class DateObject::protoClass_ = {
+    js_Object_str,
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Date),
+    JS_NULL_CLASS_OPS,
+    &DateObjectClassSpec
+};
+=======
   RootedValue unboxed(cx);
   if (!Unbox(cx, obj, &unboxed)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedValue unboxed(cx);
+  if (!Unbox(cx, obj, &unboxed)) {
+    return false;
+  }
+||||||| merged common ancestors
+JSObject*
+js::NewDateObjectMsec(JSContext* cx, ClippedTime t, HandleObject proto /* = nullptr */)
+{
+    DateObject* obj = NewObjectWithClassProto<DateObject>(cx, proto);
+    if (!obj) {
+        return nullptr;
+    }
+    obj->setUTCTime(t);
+    return obj;
+}
+=======
   *isValid = !IsNaN(unboxed.toNumber());
+  return true;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  *isValid = !IsNaN(unboxed.toNumber());
+  return true;
+||||||| merged common ancestors
+JS_FRIEND_API(JSObject*)
+js::NewDateObject(JSContext* cx, int year, int mon, int mday,
+                  int hour, int min, int sec)
+{
+    MOZ_ASSERT(mon < 12);
+    double msec_time = MakeDate(MakeDay(year, mon, mday), MakeTime(hour, min, sec, 0.0));
+    return NewDateObjectMsec(cx, TimeClip(UTC(msec_time)));
+=======
+JS_PUBLIC_API JSObject* JS::NewDateObject(JSContext* cx, int year, int mon,
+                                          int mday, int hour, int min,
+                                          int sec) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return js::NewDateObject(cx, year, mon, mday, hour, min, sec);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+JS_FRIEND_API bool js::DateGetMsecSinceEpoch(JSContext* cx, HandleObject obj,
+                                             double* msecsSinceEpoch) {
+  ESClass cls;
+  if (!GetBuiltinClass(cx, obj, &cls)) {
+    return false;
+  }
+||||||| merged common ancestors
+JS_FRIEND_API(bool)
+js::DateIsValid(JSContext* cx, HandleObject obj, bool* isValid)
+{
+    ESClass cls;
+    if (!GetBuiltinClass(cx, obj, &cls)) {
+        return false;
+    }
+
+    if (cls != ESClass::Date) {
+        *isValid = false;
+        return true;
+    }
+
+    RootedValue unboxed(cx);
+    if (!Unbox(cx, obj, &unboxed)) {
+        return false;
+    }
+=======
+JS_PUBLIC_API bool JS::ObjectIsDate(JSContext* cx, Handle<JSObject*> obj,
+                                    bool* isDate) {
+  cx->check(obj);
+
+  ESClass cls;
+  if (!GetBuiltinClass(cx, obj, &cls)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (cls != ESClass::Date) {
+    *msecsSinceEpoch = 0;
+    return true;
+  }
+||||||| merged common ancestors
+    *isValid = !IsNaN(unboxed.toNumber());
+    return true;
+}
+
+JS_FRIEND_API(bool)
+js::DateGetMsecSinceEpoch(JSContext* cx, HandleObject obj, double* msecsSinceEpoch)
+{
+    ESClass cls;
+    if (!GetBuiltinClass(cx, obj, &cls)) {
+        return false;
+    }
+
+    if (cls != ESClass::Date) {
+        *msecsSinceEpoch = 0;
+        return true;
+    }
+=======
+  *isDate = cls == ESClass::Date;
   return true;
 }
 
@@ -3397,6 +4011,7 @@ JS_FRIEND_API bool js::DateGetMsecSinceEpoch(JSContext* cx, HandleObject obj,
     *msecsSinceEpoch = 0;
     return true;
   }
+>>>>>>> upstream-releases
 
   RootedValue unboxed(cx);
   if (!Unbox(cx, obj, &unboxed)) {

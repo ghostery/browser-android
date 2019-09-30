@@ -103,11 +103,28 @@ static bool DepthFirstSearchUse(MIRGenerator* mir,
         return push(producer, use);
       }
 
+<<<<<<< HEAD
       if (cphi->isInWorklist() || cphi == producer) {
         // We are already iterating over the uses of this Phi
         // instruction. Skip it.
         continue;
       }
+||||||| merged common ancestors
+            // Use a conservative upper bound to avoid iterating too many times
+            // on very large graphs.
+            if (idx >= conservativeUsesLimit) {
+                isUsed = true;
+                break;
+            }
+        }
+=======
+      if (cphi->isInWorklist() || cphi == producer) {
+        // We are already iterating over the uses of this Phi instruction which
+        // are part of a loop, instead of trying to handle loops, conservatively
+        // mark them as used.
+        return push(producer, use);
+      }
+>>>>>>> upstream-releases
 
       if (cphi->getUsageAnalysis() == PhiUsage::Unused) {
         // The instruction already got visited and is known to have
@@ -1097,11 +1114,35 @@ bool jit::FoldEmptyBlocks(MIRGraph& graph) {
       continue;
     }
 
+<<<<<<< HEAD
     MBasicBlock* succ = block->getSuccessor(0);
     MBasicBlock* pred = block->getPredecessor(0);
 
     if (succ->numPredecessors() != 1) {
       continue;
+||||||| merged common ancestors
+    // Remove testBlock itself.
+    finalTest->ifTrue()->removePredecessor(testBlock);
+    finalTest->ifFalse()->removePredecessor(testBlock);
+    graph.removeBlock(testBlock);
+
+    return true;
+}
+
+bool
+jit::FoldTests(MIRGraph& graph)
+{
+    for (MBasicBlockIterator block(graph.begin()); block != graph.end(); block++) {
+        if (!MaybeFoldConditionBlock(graph, *block)) {
+            return false;
+        }
+=======
+    MBasicBlock* succ = block->getSuccessor(0);
+    MBasicBlock* pred = block->getPredecessor(0);
+
+    if (succ->numPredecessors() != 1) {
+      continue;
+>>>>>>> upstream-releases
     }
 
     size_t pos = pred->getSuccessorIndex(block);
@@ -1283,12 +1324,56 @@ bool jit::EliminateDeadResumePointOperands(MIRGenerator* mir, MIRGraph& graph) {
 }
 
 // Test whether |def| would be needed if it had no uses.
+<<<<<<< HEAD
 bool js::jit::DeadIfUnused(const MDefinition* def) {
   return !def->isEffectful() &&
          (!def->isGuard() ||
           def->block() == def->block()->graph().osrBlock()) &&
          !def->isGuardRangeBailouts() && !def->isControlInstruction() &&
          (!def->isInstruction() || !def->toInstruction()->resumePoint());
+||||||| merged common ancestors
+bool
+js::jit::DeadIfUnused(const MDefinition* def)
+{
+    return !def->isEffectful() &&
+           (!def->isGuard() || def->block() == def->block()->graph().osrBlock()) &&
+           !def->isGuardRangeBailouts() &&
+           !def->isControlInstruction() &&
+           (!def->isInstruction() || !def->toInstruction()->resumePoint());
+=======
+bool js::jit::DeadIfUnused(const MDefinition* def) {
+  // Effectful instructions of course cannot be removed.
+  if (def->isEffectful()) {
+    return false;
+  }
+
+  // Guard instructions by definition are live if they have no uses, however,
+  // in the OSR block we are able to eliminate these guards, as some are
+  // artificially created and superceeded by failible unboxes.
+  if (def->isGuard() && (def->block() != def->block()->graph().osrBlock() ||
+                         def->isImplicitlyUsed())) {
+    return false;
+  }
+
+  // Required to be preserved, as the type guard related to this instruction
+  // is part of the semantics of a transformation.
+  if (def->isGuardRangeBailouts()) {
+    return false;
+  }
+
+  // Control instructions have no uses, but also shouldn't be optimized out
+  if (def->isControlInstruction()) {
+    return false;
+  }
+
+  // Used when lowering to generate the corresponding snapshots and aggregate
+  // the list of recover instructions to be repeated.
+  if (def->isInstruction() && def->toInstruction()->resumePoint()) {
+    return false;
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
 // Test whether |def| may be safely discarded, due to being dead or due to being
@@ -1518,10 +1603,87 @@ class TypeAnalyzer {
 
   TempAllocator& alloc() const { return graph.alloc(); }
 
+<<<<<<< HEAD
   bool addPhiToWorklist(MPhi* phi) {
     if (phi->isInWorklist()) {
       return true;
     }
+    if (!phiWorklist_.append(phi)) {
+      return false;
+||||||| merged common ancestors
+    bool addPhiToWorklist(MPhi* phi) {
+        if (phi->isInWorklist()) {
+            return true;
+        }
+        if (!phiWorklist_.append(phi)) {
+            return false;
+        }
+        phi->setInWorklist();
+        return true;
+=======
+  bool addPhiToWorklist(MPhi* phi) {
+    if (phi->isInWorklist()) {
+      return true;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    phi->setInWorklist();
+    return true;
+  }
+  MPhi* popPhi() {
+    MPhi* phi = phiWorklist_.popCopy();
+    phi->setNotInWorklist();
+    return phi;
+  }
+
+  bool respecialize(MPhi* phi, MIRType type);
+  bool propagateSpecialization(MPhi* phi);
+  bool specializePhis();
+  void replaceRedundantPhi(MPhi* phi);
+  bool adjustPhiInputs(MPhi* phi);
+  bool adjustInputs(MDefinition* def);
+  bool insertConversions();
+
+  bool checkFloatCoherency();
+  bool graphContainsFloat32();
+  bool markPhiConsumers();
+  bool markPhiProducers();
+  bool specializeValidFloatOps();
+  bool tryEmitFloatOperations();
+
+ public:
+  TypeAnalyzer(MIRGenerator* mir, MIRGraph& graph) : mir(mir), graph(graph) {}
+
+  bool analyze();
+||||||| merged common ancestors
+    MPhi* popPhi() {
+        MPhi* phi = phiWorklist_.popCopy();
+        phi->setNotInWorklist();
+        return phi;
+    }
+
+    bool respecialize(MPhi* phi, MIRType type);
+    bool propagateSpecialization(MPhi* phi);
+    bool specializePhis();
+    void replaceRedundantPhi(MPhi* phi);
+    bool adjustPhiInputs(MPhi* phi);
+    bool adjustInputs(MDefinition* def);
+    bool insertConversions();
+
+    bool checkFloatCoherency();
+    bool graphContainsFloat32();
+    bool markPhiConsumers();
+    bool markPhiProducers();
+    bool specializeValidFloatOps();
+    bool tryEmitFloatOperations();
+
+  public:
+    TypeAnalyzer(MIRGenerator* mir, MIRGraph& graph)
+      : mir(mir), graph(graph)
+    { }
+
+    bool analyze();
+=======
     if (!phiWorklist_.append(phi)) {
       return false;
     }
@@ -1553,6 +1715,7 @@ class TypeAnalyzer {
   TypeAnalyzer(MIRGenerator* mir, MIRGraph& graph) : mir(mir), graph(graph) {}
 
   bool analyze();
+>>>>>>> upstream-releases
 };
 
 } /* anonymous namespace */
@@ -2237,6 +2400,94 @@ bool jit::ApplyTypeInformation(MIRGenerator* mir, MIRGraph& graph) {
 }
 
 // Check if `def` is only the N-th operand of `useDef`.
+<<<<<<< HEAD
+static inline size_t IsExclusiveNthOperand(MDefinition* useDef, size_t n,
+                                           MDefinition* def) {
+  uint32_t num = useDef->numOperands();
+  if (n >= num || useDef->getOperand(n) != def) {
+    return false;
+  }
+
+  for (uint32_t i = 0; i < num; i++) {
+    if (i == n) {
+      continue;
+    }
+    if (useDef->getOperand(i) == def) {
+      return false;
+||||||| merged common ancestors
+static inline size_t
+IsExclusiveNthOperand(MDefinition* useDef, size_t n, MDefinition* def)
+{
+    uint32_t num = useDef->numOperands();
+    if (n >= num || useDef->getOperand(n) != def) {
+        return false;
+    }
+
+    for (uint32_t i = 0; i < num; i++) {
+        if (i == n) {
+            continue;
+        }
+        if (useDef->getOperand(i) == def) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+static size_t
+IsExclusiveThisArg(MCall* call, MDefinition* def)
+{
+    return IsExclusiveNthOperand(call, MCall::IndexOfThis(), def);
+}
+
+static size_t
+IsExclusiveFirstArg(MCall* call, MDefinition* def)
+{
+    return IsExclusiveNthOperand(call, MCall::IndexOfArgument(0), def);
+}
+
+static bool
+IsRegExpHoistableCall(CompileRuntime* runtime, MCall* call, MDefinition* def)
+{
+    if (call->isConstructing()) {
+        return false;
+    }
+
+    JSAtom* name;
+    if (WrappedFunction* fun = call->getSingleTarget()) {
+        if (!fun->isSelfHostedBuiltin()) {
+            return false;
+        }
+        name = GetSelfHostedFunctionName(fun->rawJSFunction());
+    } else {
+        MDefinition* funDef = call->getFunction();
+        if (funDef->isDebugCheckSelfHosted()) {
+            funDef = funDef->toDebugCheckSelfHosted()->input();
+        }
+        if (funDef->isTypeBarrier()) {
+            funDef = funDef->toTypeBarrier()->input();
+        }
+
+        if (!funDef->isCallGetIntrinsicValue()) {
+            return false;
+        }
+        name = funDef->toCallGetIntrinsicValue()->name();
+    }
+
+    // Hoistable only if the RegExp is the first argument of RegExpBuiltinExec.
+    if (name == runtime->names().RegExpBuiltinExec ||
+        name == runtime->names().UnwrapAndCallRegExpBuiltinExec ||
+        name == runtime->names().RegExpMatcher ||
+        name == runtime->names().RegExpTester ||
+        name == runtime->names().RegExpSearcher)
+    {
+        return IsExclusiveFirstArg(call, def);
+    }
+
+    if (name == runtime->names().RegExp_prototype_Exec) {
+        return IsExclusiveThisArg(call, def);
+=======
 static inline size_t IsExclusiveNthOperand(MDefinition* useDef, size_t n,
                                            MDefinition* def) {
   uint32_t num = useDef->numOperands();
@@ -2274,6 +2525,90 @@ static bool IsRegExpHoistableCall(CompileRuntime* runtime, MCall* call,
   if (WrappedFunction* fun = call->getSingleTarget()) {
     if (!fun->isSelfHostedBuiltin()) {
       return false;
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  return true;
+}
+
+static size_t IsExclusiveThisArg(MCall* call, MDefinition* def) {
+  return IsExclusiveNthOperand(call, MCall::IndexOfThis(), def);
+}
+||||||| merged common ancestors
+    return false;
+}
+
+static bool
+CanCompareRegExp(MCompare* compare, MDefinition* def)
+{
+    MDefinition* value;
+    if (compare->lhs() == def) {
+        value = compare->rhs();
+    } else {
+        MOZ_ASSERT(compare->rhs() == def);
+        value = compare->lhs();
+    }
+=======
+    // Avoid accessing `JSFunction.flags_` via `JSFunction::isExtended`.
+    if (!fun->isExtended()) {
+      return false;
+    }
+    name = GetClonedSelfHostedFunctionNameOffMainThread(fun->rawJSFunction());
+  } else {
+    MDefinition* funDef = call->getFunction();
+    if (funDef->isDebugCheckSelfHosted()) {
+      funDef = funDef->toDebugCheckSelfHosted()->input();
+    }
+    if (funDef->isTypeBarrier()) {
+      funDef = funDef->toTypeBarrier()->input();
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+static size_t IsExclusiveFirstArg(MCall* call, MDefinition* def) {
+  return IsExclusiveNthOperand(call, MCall::IndexOfArgument(0), def);
+}
+||||||| merged common ancestors
+    // Comparing two regexp that weren't cloned will give different result
+    // than if they were cloned.
+    if (value->mightBeType(MIRType::Object)) {
+        return false;
+    }
+=======
+    if (!funDef->isCallGetIntrinsicValue()) {
+      return false;
+    }
+    name = funDef->toCallGetIntrinsicValue()->name();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+static bool IsRegExpHoistableCall(CompileRuntime* runtime, MCall* call,
+                                  MDefinition* def) {
+  if (call->isConstructing()) {
+    return false;
+  }
+||||||| merged common ancestors
+    // Make sure @@toPrimitive is not called which could notice
+    // the difference between a not cloned/cloned regexp.
+=======
+  // Hoistable only if the RegExp is the first argument of RegExpBuiltinExec.
+  if (name == runtime->names().RegExpBuiltinExec ||
+      name == runtime->names().UnwrapAndCallRegExpBuiltinExec ||
+      name == runtime->names().RegExpMatcher ||
+      name == runtime->names().RegExpTester ||
+      name == runtime->names().RegExpSearcher) {
+    return IsExclusiveFirstArg(call, def);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSAtom* name;
+  if (WrappedFunction* fun = call->getSingleTarget()) {
+    if (!fun->isSelfHostedBuiltin()) {
+      return false;
     }
     name = GetSelfHostedFunctionName(fun->rawJSFunction());
   } else {
@@ -2284,7 +2619,29 @@ static bool IsRegExpHoistableCall(CompileRuntime* runtime, MCall* call,
     if (funDef->isTypeBarrier()) {
       funDef = funDef->toTypeBarrier()->input();
     }
+||||||| merged common ancestors
+    JSOp op = compare->jsop();
+    // Strict equality comparison won't invoke @@toPrimitive.
+    if (op == JSOP_STRICTEQ || op == JSOP_STRICTNE) {
+        return true;
+    }
 
+    if (op != JSOP_EQ && op != JSOP_NE) {
+        // Relational comparison always invoke @@toPrimitive.
+        MOZ_ASSERT(op == JSOP_GT || op == JSOP_GE || op == JSOP_LT || op == JSOP_LE);
+        return false;
+    }
+=======
+  if (name == runtime->names().RegExp_prototype_Exec ||
+      name == runtime->names().CallRegExpMethodIfWrapped) {
+    return IsExclusiveThisArg(call, def);
+  }
+
+  return false;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     if (!funDef->isCallGetIntrinsicValue()) {
       return false;
     }
@@ -2303,7 +2660,33 @@ static bool IsRegExpHoistableCall(CompileRuntime* runtime, MCall* call,
   if (name == runtime->names().RegExp_prototype_Exec) {
     return IsExclusiveThisArg(call, def);
   }
+||||||| merged common ancestors
+    // Loose equality comparison can invoke @@toPrimitive.
+    if (value->mightBeType(MIRType::Boolean) || value->mightBeType(MIRType::String) ||
+        value->mightBeType(MIRType::Int32) ||
+        value->mightBeType(MIRType::Double) || value->mightBeType(MIRType::Float32) ||
+        value->mightBeType(MIRType::Symbol))
+    {
+        return false;
+    }
+=======
+static bool CanCompareRegExp(MCompare* compare, MDefinition* def) {
+  MDefinition* value;
+  if (compare->lhs() == def) {
+    value = compare->rhs();
+  } else {
+    MOZ_ASSERT(compare->rhs() == def);
+    value = compare->lhs();
+  }
 
+  // Comparing two regexp that weren't cloned will give different result
+  // than if they were cloned.
+  if (value->mightBeType(MIRType::Object)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return false;
 }
 
@@ -2328,7 +2711,17 @@ static bool CanCompareRegExp(MCompare* compare, MDefinition* def) {
   JSOp op = compare->jsop();
   // Strict equality comparison won't invoke @@toPrimitive.
   if (op == JSOP_STRICTEQ || op == JSOP_STRICTNE) {
+||||||| merged common ancestors
+=======
+  // Make sure @@toPrimitive is not called which could notice
+  // the difference between a not cloned/cloned regexp.
+
+  JSOp op = compare->jsop();
+  // Strict equality comparison won't invoke @@toPrimitive.
+  if (op == JSOP_STRICTEQ || op == JSOP_STRICTNE) {
+>>>>>>> upstream-releases
     return true;
+<<<<<<< HEAD
   }
 
   if (op != JSOP_EQ && op != JSOP_NE) {
@@ -2349,6 +2742,29 @@ static bool CanCompareRegExp(MCompare* compare, MDefinition* def) {
   }
 
   return true;
+||||||| merged common ancestors
+=======
+  }
+
+  if (op != JSOP_EQ && op != JSOP_NE) {
+    // Relational comparison always invoke @@toPrimitive.
+    MOZ_ASSERT(IsRelationalOp(op));
+    return false;
+  }
+
+  // Loose equality comparison can invoke @@toPrimitive.
+  if (value->mightBeType(MIRType::Boolean) ||
+      value->mightBeType(MIRType::String) ||
+      value->mightBeType(MIRType::Int32) ||
+      value->mightBeType(MIRType::Double) ||
+      value->mightBeType(MIRType::Float32) ||
+      value->mightBeType(MIRType::Symbol) ||
+      value->mightBeType(MIRType::BigInt)) {
+    return false;
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
 static inline void SetNotInWorklist(MDefinitionVector& worklist) {
@@ -2884,6 +3300,7 @@ $ gawk '
 
 */
 
+<<<<<<< HEAD
 static void CheckOperand(const MNode* consumer, const MUse* use,
                          int32_t* usesBalance) {
   MOZ_ASSERT(use->hasProducer());
@@ -2900,8 +3317,45 @@ static void CheckOperand(const MNode* consumer, const MUse* use,
   print.printf("==End\n");
 #endif
   --*usesBalance;
+||||||| merged common ancestors
+static void
+CheckOperand(const MNode* consumer, const MUse* use, int32_t* usesBalance)
+{
+    MOZ_ASSERT(use->hasProducer());
+    MDefinition* producer = use->producer();
+    MOZ_ASSERT(!producer->isDiscarded());
+    MOZ_ASSERT(producer->block() != nullptr);
+    MOZ_ASSERT(use->consumer() == consumer);
+#ifdef _DEBUG_CHECK_OPERANDS_USES_BALANCE
+    Fprinter print(stderr);
+    print.printf("==Check Operand\n");
+    use->producer()->dump(print);
+    print.printf("  index: %zu\n", use->consumer()->indexOf(use));
+    use->consumer()->dump(print);
+    print.printf("==End\n");
+#endif
+    --*usesBalance;
+=======
+static void CheckOperand(const MNode* consumer, const MUse* use,
+                         int32_t* usesBalance) {
+  MOZ_ASSERT(use->hasProducer());
+  MDefinition* producer = use->producer();
+  MOZ_ASSERT(!producer->isDiscarded());
+  MOZ_ASSERT(producer->block() != nullptr);
+  MOZ_ASSERT(use->consumer() == consumer);
+#  ifdef _DEBUG_CHECK_OPERANDS_USES_BALANCE
+  Fprinter print(stderr);
+  print.printf("==Check Operand\n");
+  use->producer()->dump(print);
+  print.printf("  index: %zu\n", use->consumer()->indexOf(use));
+  use->consumer()->dump(print);
+  print.printf("==End\n");
+#  endif
+  --*usesBalance;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static void CheckUse(const MDefinition* producer, const MUse* use,
                      int32_t* usesBalance) {
   MOZ_ASSERT(!use->consumer()->block()->isDead());
@@ -2918,6 +3372,42 @@ static void CheckUse(const MDefinition* producer, const MUse* use,
   print.printf("==End\n");
 #endif
   ++*usesBalance;
+||||||| merged common ancestors
+static void
+CheckUse(const MDefinition* producer, const MUse* use, int32_t* usesBalance)
+{
+    MOZ_ASSERT(!use->consumer()->block()->isDead());
+    MOZ_ASSERT_IF(use->consumer()->isDefinition(),
+                  !use->consumer()->toDefinition()->isDiscarded());
+    MOZ_ASSERT(use->consumer()->block() != nullptr);
+    MOZ_ASSERT(use->consumer()->getOperand(use->index()) == producer);
+#ifdef _DEBUG_CHECK_OPERANDS_USES_BALANCE
+    Fprinter print(stderr);
+    print.printf("==Check Use\n");
+    use->producer()->dump(print);
+    print.printf("  index: %zu\n", use->consumer()->indexOf(use));
+    use->consumer()->dump(print);
+    print.printf("==End\n");
+#endif
+    ++*usesBalance;
+=======
+static void CheckUse(const MDefinition* producer, const MUse* use,
+                     int32_t* usesBalance) {
+  MOZ_ASSERT(!use->consumer()->block()->isDead());
+  MOZ_ASSERT_IF(use->consumer()->isDefinition(),
+                !use->consumer()->toDefinition()->isDiscarded());
+  MOZ_ASSERT(use->consumer()->block() != nullptr);
+  MOZ_ASSERT(use->consumer()->getOperand(use->index()) == producer);
+#  ifdef _DEBUG_CHECK_OPERANDS_USES_BALANCE
+  Fprinter print(stderr);
+  print.printf("==Check Use\n");
+  use->producer()->dump(print);
+  print.printf("  index: %zu\n", use->consumer()->indexOf(use));
+  use->consumer()->dump(print);
+  print.printf("==End\n");
+#  endif
+  ++*usesBalance;
+>>>>>>> upstream-releases
 }
 
 // To properly encode entry resume points, we have to ensure that all the
@@ -3038,6 +3528,7 @@ void jit::AssertBasicGraphCoherency(MIRGraph& graph, bool force) {
         CheckUse(*iter, *use, &usesBalance);
       }
 
+<<<<<<< HEAD
       if (iter->isInstruction()) {
         if (MResumePoint* resume = iter->toInstruction()->resumePoint()) {
           MOZ_ASSERT(resume->instruction() == *iter);
@@ -3045,6 +3536,66 @@ void jit::AssertBasicGraphCoherency(MIRGraph& graph, bool force) {
           MOZ_ASSERT(resume->block()->entryResumePoint() != nullptr);
         }
       }
+||||||| merged common ancestors
+        if (MResumePoint* resume = block->entryResumePoint()) {
+            MOZ_ASSERT(!resume->instruction());
+            MOZ_ASSERT(resume->block() == *block);
+            AssertOperandsBeforeSafeInsertTop(resume);
+        }
+        if (MResumePoint* resume = block->outerResumePoint()) {
+            MOZ_ASSERT(!resume->instruction());
+            MOZ_ASSERT(resume->block() == *block);
+        }
+        for (MResumePointIterator iter(block->resumePointsBegin()); iter != block->resumePointsEnd(); iter++) {
+            // We cannot yet assert that is there is no instruction then this is
+            // the entry resume point because we are still storing resume points
+            // in the InlinePropertyTable.
+            MOZ_ASSERT_IF(iter->instruction(), iter->instruction()->block() == *block);
+            for (uint32_t i = 0, e = iter->numOperands(); i < e; i++) {
+                CheckOperand(*iter, iter->getUseFor(i), &usesBalance);
+            }
+        }
+        for (MPhiIterator phi(block->phisBegin()); phi != block->phisEnd(); phi++) {
+            MOZ_ASSERT(phi->numOperands() == block->numPredecessors());
+            MOZ_ASSERT(!phi->isRecoveredOnBailout());
+            MOZ_ASSERT(phi->type() != MIRType::None);
+            MOZ_ASSERT(phi->dependency() == nullptr);
+        }
+        for (MDefinitionIterator iter(*block); iter; iter++) {
+            MOZ_ASSERT(iter->block() == *block);
+            MOZ_ASSERT_IF(iter->hasUses(), iter->type() != MIRType::None);
+            MOZ_ASSERT(!iter->isDiscarded());
+            MOZ_ASSERT_IF(iter->isStart(),
+                          *block == graph.entryBlock() || *block == graph.osrBlock());
+            MOZ_ASSERT_IF(iter->isParameter(),
+                          *block == graph.entryBlock() || *block == graph.osrBlock());
+            MOZ_ASSERT_IF(iter->isOsrEntry(), *block == graph.osrBlock());
+            MOZ_ASSERT_IF(iter->isOsrValue(), *block == graph.osrBlock());
+
+            // Assert that use chains are valid for this instruction.
+            for (uint32_t i = 0, end = iter->numOperands(); i < end; i++) {
+                CheckOperand(*iter, iter->getUseFor(i), &usesBalance);
+            }
+            for (MUseIterator use(iter->usesBegin()); use != iter->usesEnd(); use++) {
+                CheckUse(*iter, *use, &usesBalance);
+            }
+
+            if (iter->isInstruction()) {
+                if (MResumePoint* resume = iter->toInstruction()->resumePoint()) {
+                    MOZ_ASSERT(resume->instruction() == *iter);
+                    MOZ_ASSERT(resume->block() == *block);
+                    MOZ_ASSERT(resume->block()->entryResumePoint() != nullptr);
+                }
+            }
+=======
+      if (iter->isInstruction()) {
+        if (MResumePoint* resume = iter->toInstruction()->resumePoint()) {
+          MOZ_ASSERT(resume->instruction() == *iter);
+          MOZ_ASSERT(resume->block() == *block);
+          MOZ_ASSERT(resume->block()->entryResumePoint() != nullptr);
+        }
+      }
+>>>>>>> upstream-releases
 
       if (iter->isRecoveredOnBailout()) {
         MOZ_ASSERT(!iter->hasLiveDefUses());
@@ -3165,6 +3716,7 @@ void jit::AssertGraphCoherency(MIRGraph& graph, bool force) {
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 static bool IsResumableMIRType(MIRType type) {
   // see CodeGeneratorShared::encodeAllocation
   switch (type) {
@@ -3205,6 +3757,92 @@ static bool IsResumableMIRType(MIRType type) {
       return false;
   }
   MOZ_CRASH("Unknown MIRType.");
+||||||| merged common ancestors
+static bool
+IsResumableMIRType(MIRType type)
+{
+    // see CodeGeneratorShared::encodeAllocation
+    switch (type) {
+      case MIRType::Undefined:
+      case MIRType::Null:
+      case MIRType::Boolean:
+      case MIRType::Int32:
+      case MIRType::Double:
+      case MIRType::Float32:
+      case MIRType::String:
+      case MIRType::Symbol:
+      case MIRType::Object:
+      case MIRType::MagicOptimizedArguments:
+      case MIRType::MagicOptimizedOut:
+      case MIRType::MagicUninitializedLexical:
+      case MIRType::MagicIsConstructing:
+      case MIRType::Value:
+      case MIRType::Int32x4:
+      case MIRType::Int16x8:
+      case MIRType::Int8x16:
+      case MIRType::Float32x4:
+      case MIRType::Bool32x4:
+      case MIRType::Bool16x8:
+      case MIRType::Bool8x16:
+        return true;
+
+      case MIRType::MagicHole:
+      case MIRType::ObjectOrNull:
+      case MIRType::None:
+      case MIRType::Slots:
+      case MIRType::Elements:
+      case MIRType::Pointer:
+      case MIRType::Shape:
+      case MIRType::ObjectGroup:
+      case MIRType::Doublex2: // NYI, see also RSimdBox::recover
+      case MIRType::SinCosDouble:
+      case MIRType::Int64:
+        return false;
+    }
+    MOZ_CRASH("Unknown MIRType.");
+=======
+static bool IsResumableMIRType(MIRType type) {
+  // see CodeGeneratorShared::encodeAllocation
+  switch (type) {
+    case MIRType::Undefined:
+    case MIRType::Null:
+    case MIRType::Boolean:
+    case MIRType::Int32:
+    case MIRType::Double:
+    case MIRType::Float32:
+    case MIRType::String:
+    case MIRType::Symbol:
+    case MIRType::BigInt:
+    case MIRType::Object:
+    case MIRType::MagicOptimizedArguments:
+    case MIRType::MagicOptimizedOut:
+    case MIRType::MagicUninitializedLexical:
+    case MIRType::MagicIsConstructing:
+    case MIRType::Value:
+    case MIRType::Int32x4:
+    case MIRType::Int16x8:
+    case MIRType::Int8x16:
+    case MIRType::Float32x4:
+    case MIRType::Bool32x4:
+    case MIRType::Bool16x8:
+    case MIRType::Bool8x16:
+      return true;
+
+    case MIRType::MagicHole:
+    case MIRType::ObjectOrNull:
+    case MIRType::None:
+    case MIRType::Slots:
+    case MIRType::Elements:
+    case MIRType::Pointer:
+    case MIRType::Shape:
+    case MIRType::ObjectGroup:
+    case MIRType::Doublex2:  // NYI, see also RSimdBox::recover
+    case MIRType::Int64:
+    case MIRType::RefOrNull:
+      return false;
+  }
+  MOZ_CRASH("Unknown MIRType.");
+>>>>>>> upstream-releases
 }
 
 static void AssertResumableOperands(MNode* node) {
@@ -3419,25 +4057,77 @@ static MathSpace ExtractMathSpace(MDefinition* ins) {
   MOZ_MAKE_COMPILER_ASSUME_IS_UNREACHABLE("Unknown TruncateKind");
 }
 
+<<<<<<< HEAD
 // Extract a linear sum from ins, if possible (otherwise giving the
 // sum 'ins + 0').
 SimpleLinearSum jit::ExtractLinearSum(MDefinition* ins, MathSpace space) {
   if (ins->isBeta()) {
     ins = ins->getOperand(0);
   }
+||||||| merged common ancestors
+// Extract a linear sum from ins, if possible (otherwise giving the sum 'ins + 0').
+SimpleLinearSum
+jit::ExtractLinearSum(MDefinition* ins, MathSpace space)
+{
+    if (ins->isBeta()) {
+        ins = ins->getOperand(0);
+    }
+=======
+static bool MonotoneAdd(int32_t lhs, int32_t rhs) {
+  return (lhs >= 0 && rhs >= 0) || (lhs <= 0 && rhs <= 0);
+}
 
+static bool MonotoneSub(int32_t lhs, int32_t rhs) {
+  return (lhs >= 0 && rhs <= 0) || (lhs <= 0 && rhs >= 0);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (ins->type() != MIRType::Int32) {
     return SimpleLinearSum(ins, 0);
   }
+||||||| merged common ancestors
+    if (ins->type() != MIRType::Int32) {
+        return SimpleLinearSum(ins, 0);
+    }
+=======
+// Extract a linear sum from ins, if possible (otherwise giving the
+// sum 'ins + 0').
+SimpleLinearSum jit::ExtractLinearSum(MDefinition* ins, MathSpace space) {
+  if (ins->isBeta()) {
+    ins = ins->getOperand(0);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (ins->isConstant()) {
     return SimpleLinearSum(nullptr, ins->toConstant()->toInt32());
   }
+||||||| merged common ancestors
+    if (ins->isConstant()) {
+        return SimpleLinearSum(nullptr, ins->toConstant()->toInt32());
+    }
+=======
+  if (ins->type() != MIRType::Int32) {
+    return SimpleLinearSum(ins, 0);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!ins->isAdd() && !ins->isSub()) {
     return SimpleLinearSum(ins, 0);
   }
+||||||| merged common ancestors
+    if (!ins->isAdd() && !ins->isSub()) {
+        return SimpleLinearSum(ins, 0);
+    }
+=======
+  if (ins->isConstant()) {
+    return SimpleLinearSum(nullptr, ins->toConstant()->toInt32());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Only allow math which are in the same space.
   MathSpace insSpace = ExtractMathSpace(ins);
   if (space == MathSpace::Unknown) {
@@ -3446,29 +4136,136 @@ SimpleLinearSum jit::ExtractLinearSum(MDefinition* ins, MathSpace space) {
     return SimpleLinearSum(ins, 0);
   }
   MOZ_ASSERT(space == MathSpace::Modulo || space == MathSpace::Infinite);
+||||||| merged common ancestors
+    // Only allow math which are in the same space.
+    MathSpace insSpace = ExtractMathSpace(ins);
+    if (space == MathSpace::Unknown) {
+        space = insSpace;
+    } else if (space != insSpace) {
+        return SimpleLinearSum(ins, 0);
+    }
+    MOZ_ASSERT(space == MathSpace::Modulo || space == MathSpace::Infinite);
+=======
+  if (!ins->isAdd() && !ins->isSub()) {
+    return SimpleLinearSum(ins, 0);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MDefinition* lhs = ins->getOperand(0);
   MDefinition* rhs = ins->getOperand(1);
   if (lhs->type() != MIRType::Int32 || rhs->type() != MIRType::Int32) {
     return SimpleLinearSum(ins, 0);
   }
+||||||| merged common ancestors
+    MDefinition* lhs = ins->getOperand(0);
+    MDefinition* rhs = ins->getOperand(1);
+    if (lhs->type() != MIRType::Int32 || rhs->type() != MIRType::Int32) {
+        return SimpleLinearSum(ins, 0);
+    }
+=======
+  // Only allow math which are in the same space.
+  MathSpace insSpace = ExtractMathSpace(ins);
+  if (space == MathSpace::Unknown) {
+    space = insSpace;
+  } else if (space != insSpace) {
+    return SimpleLinearSum(ins, 0);
+  }
+  MOZ_ASSERT(space == MathSpace::Modulo || space == MathSpace::Infinite);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Extract linear sums of each operand.
   SimpleLinearSum lsum = ExtractLinearSum(lhs, space);
   SimpleLinearSum rsum = ExtractLinearSum(rhs, space);
+||||||| merged common ancestors
+    // Extract linear sums of each operand.
+    SimpleLinearSum lsum = ExtractLinearSum(lhs, space);
+    SimpleLinearSum rsum = ExtractLinearSum(rhs, space);
+=======
+  MDefinition* lhs = ins->getOperand(0);
+  MDefinition* rhs = ins->getOperand(1);
+  if (lhs->type() != MIRType::Int32 || rhs->type() != MIRType::Int32) {
+    return SimpleLinearSum(ins, 0);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // LinearSum only considers a single term operand, if both sides have
   // terms, then ignore extracted linear sums.
   if (lsum.term && rsum.term) {
     return SimpleLinearSum(ins, 0);
   }
+||||||| merged common ancestors
+    // LinearSum only considers a single term operand, if both sides have
+    // terms, then ignore extracted linear sums.
+    if (lsum.term && rsum.term) {
+        return SimpleLinearSum(ins, 0);
+    }
+=======
+  // Extract linear sums of each operand.
+  SimpleLinearSum lsum = ExtractLinearSum(lhs, space);
+  SimpleLinearSum rsum = ExtractLinearSum(rhs, space);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Check if this is of the form <SUM> + n or n + <SUM>.
   if (ins->isAdd()) {
     int32_t constant;
     if (space == MathSpace::Modulo) {
       constant = uint32_t(lsum.constant) + uint32_t(rsum.constant);
     } else if (!SafeAdd(lsum.constant, rsum.constant, &constant)) {
+      return SimpleLinearSum(ins, 0);
+    }
+    return SimpleLinearSum(lsum.term ? lsum.term : rsum.term, constant);
+  }
+||||||| merged common ancestors
+    // Check if this is of the form <SUM> + n or n + <SUM>.
+    if (ins->isAdd()) {
+        int32_t constant;
+        if (space == MathSpace::Modulo) {
+            constant = uint32_t(lsum.constant) + uint32_t(rsum.constant);
+        } else if (!SafeAdd(lsum.constant, rsum.constant, &constant)) {
+            return SimpleLinearSum(ins, 0);
+        }
+        return SimpleLinearSum(lsum.term ? lsum.term : rsum.term, constant);
+    }
+=======
+  // LinearSum only considers a single term operand, if both sides have
+  // terms, then ignore extracted linear sums.
+  if (lsum.term && rsum.term) {
+    return SimpleLinearSum(ins, 0);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MOZ_ASSERT(ins->isSub());
+  // Check if this is of the form <SUM> - n.
+  if (lsum.term) {
+    int32_t constant;
+    if (space == MathSpace::Modulo) {
+      constant = uint32_t(lsum.constant) - uint32_t(rsum.constant);
+    } else if (!SafeSub(lsum.constant, rsum.constant, &constant)) {
+      return SimpleLinearSum(ins, 0);
+||||||| merged common ancestors
+    MOZ_ASSERT(ins->isSub());
+    // Check if this is of the form <SUM> - n.
+    if (lsum.term) {
+        int32_t constant;
+        if (space == MathSpace::Modulo) {
+            constant = uint32_t(lsum.constant) - uint32_t(rsum.constant);
+        } else if (!SafeSub(lsum.constant, rsum.constant, &constant)) {
+            return SimpleLinearSum(ins, 0);
+        }
+        return SimpleLinearSum(lsum.term, constant);
+=======
+  // Check if this is of the form <SUM> + n or n + <SUM>.
+  if (ins->isAdd()) {
+    int32_t constant;
+    if (space == MathSpace::Modulo) {
+      constant = uint32_t(lsum.constant) + uint32_t(rsum.constant);
+    } else if (!SafeAdd(lsum.constant, rsum.constant, &constant) ||
+               !MonotoneAdd(lsum.constant, rsum.constant)) {
       return SimpleLinearSum(ins, 0);
     }
     return SimpleLinearSum(lsum.term ? lsum.term : rsum.term, constant);
@@ -3480,8 +4277,10 @@ SimpleLinearSum jit::ExtractLinearSum(MDefinition* ins, MathSpace space) {
     int32_t constant;
     if (space == MathSpace::Modulo) {
       constant = uint32_t(lsum.constant) - uint32_t(rsum.constant);
-    } else if (!SafeSub(lsum.constant, rsum.constant, &constant)) {
+    } else if (!SafeSub(lsum.constant, rsum.constant, &constant) ||
+               !MonotoneSub(lsum.constant, rsum.constant)) {
       return SimpleLinearSum(ins, 0);
+>>>>>>> upstream-releases
     }
     return SimpleLinearSum(lsum.term, constant);
   }
@@ -3719,10 +4518,32 @@ static bool TryEliminateTypeBarrier(MTypeBarrier* barrier, bool* eliminated) {
       TryEliminateTypeBarrierFromTest(barrier, filtersNull, filtersUndefined,
                                       test, direction, eliminated);
     }
+<<<<<<< HEAD
 
     MBasicBlock* previous = block->immediateDominator();
     if (previous == block) {
       break;
+||||||| merged common ancestors
+    barrier->replaceAllUsesWith(barrier->input());
+}
+
+static bool
+TryEliminateTypeBarrier(MTypeBarrier* barrier, bool* eliminated)
+{
+    MOZ_ASSERT(!*eliminated);
+
+    const TemporaryTypeSet* barrierTypes = barrier->resultTypeSet();
+    const TemporaryTypeSet* inputTypes = barrier->input()->resultTypeSet();
+
+    // Disregard the possible unbox added before the Typebarrier.
+    if (barrier->input()->isUnbox() && barrier->input()->toUnbox()->mode() != MUnbox::Fallible) {
+        inputTypes = barrier->input()->toUnbox()->input()->resultTypeSet();
+=======
+
+    MBasicBlock* previous = block->immediateDominator();
+    if (previous == block) {
+      break;
+>>>>>>> upstream-releases
     }
     block = previous;
   }
@@ -3784,6 +4605,7 @@ static bool TryOptimizeLoadObjectOrNull(MDefinition* def,
       default:
         return true;
     }
+<<<<<<< HEAD
   }
 
   // On punboxing systems we are better off leaving the value boxed if it
@@ -3801,7 +4623,48 @@ static bool TryOptimizeLoadObjectOrNull(MDefinition* def,
     return true;
   }
 #endif  // JS_PUNBOX64
+||||||| merged common ancestors
+#endif // JS_PUNBOX64
+=======
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  def->setResultType(MIRType::ObjectOrNull);
+||||||| merged common ancestors
+    def->setResultType(MIRType::ObjectOrNull);
+=======
+  // On punboxing systems we are better off leaving the value boxed if it
+  // is only stored back to the heap.
+#ifdef JS_PUNBOX64
+  bool foundUse = false;
+  for (MUseDefIterator iter(def); iter; ++iter) {
+    MDefinition* ndef = iter.def();
+    if (!ndef->isStoreFixedSlot() && !ndef->isStoreSlot()) {
+      foundUse = true;
+      break;
+    }
+  }
+  if (!foundUse) {
+    return true;
+  }
+#endif  // JS_PUNBOX64
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Fixup the result type of MTypeBarrier uses.
+  for (MUseDefIterator iter(def); iter; ++iter) {
+    MDefinition* ndef = iter.def();
+    if (ndef->isTypeBarrier()) {
+      ndef->setResultType(MIRType::ObjectOrNull);
+||||||| merged common ancestors
+    // Fixup the result type of MTypeBarrier uses.
+    for (MUseDefIterator iter(def); iter; ++iter) {
+        MDefinition* ndef = iter.def();
+        if (ndef->isTypeBarrier()) {
+            ndef->setResultType(MIRType::ObjectOrNull);
+        }
+=======
   def->setResultType(MIRType::ObjectOrNull);
 
   // Fixup the result type of MTypeBarrier uses.
@@ -3809,6 +4672,7 @@ static bool TryOptimizeLoadObjectOrNull(MDefinition* def,
     MDefinition* ndef = iter.def();
     if (ndef->isTypeBarrier()) {
       ndef->setResultType(MIRType::ObjectOrNull);
+>>>>>>> upstream-releases
     }
   }
 
@@ -3824,6 +4688,7 @@ static bool TryOptimizeLoadObjectOrNull(MDefinition* def,
   return true;
 }
 
+<<<<<<< HEAD
 static inline MDefinition* PassthroughOperand(MDefinition* def) {
   if (def->isConvertElementsToDoubles()) {
     return def->toConvertElementsToDoubles()->elements();
@@ -3839,6 +4704,34 @@ static inline MDefinition* PassthroughOperand(MDefinition* def) {
     }
   }
   return nullptr;
+||||||| merged common ancestors
+static inline MDefinition*
+PassthroughOperand(MDefinition* def)
+{
+    if (def->isConvertElementsToDoubles()) {
+        return def->toConvertElementsToDoubles()->elements();
+    }
+    if (def->isMaybeCopyElementsForWrite()) {
+        return def->toMaybeCopyElementsForWrite()->object();
+    }
+    if (!JitOptions.spectreObjectMitigationsMisc) {
+        // If Spectre mitigations are enabled, LConvertUnboxedObjectToNative
+        // needs to have its own def.
+        if (def->isConvertUnboxedObjectToNative()) {
+            return def->toConvertUnboxedObjectToNative()->object();
+        }
+    }
+    return nullptr;
+=======
+static inline MDefinition* PassthroughOperand(MDefinition* def) {
+  if (def->isConvertElementsToDoubles()) {
+    return def->toConvertElementsToDoubles()->elements();
+  }
+  if (def->isMaybeCopyElementsForWrite()) {
+    return def->toMaybeCopyElementsForWrite()->object();
+  }
+  return nullptr;
+>>>>>>> upstream-releases
 }
 
 // Eliminate checks which are redundant given each other or other instructions.
@@ -4040,6 +4933,7 @@ bool jit::AddKeepAliveInstructions(MIRGraph& graph) {
           continue;
         }
 
+<<<<<<< HEAD
         if (use->isInArray()) {
           // See StoreElementHole case above.
           MOZ_ASSERT_IF(
@@ -4047,6 +4941,66 @@ bool jit::AddKeepAliveInstructions(MIRGraph& graph) {
               use->toInArray()->object() == ownerObject);
           continue;
         }
+
+        if (!NeedsKeepAlive(ins, use)) {
+          continue;
+||||||| merged common ancestors
+            for (MUseDefIterator uses(ins); uses; uses++) {
+                MInstruction* use = uses.def()->toInstruction();
+
+                if (use->isStoreElementHole()) {
+                    // StoreElementHole has an explicit object operand. If GVN
+                    // is disabled, we can get different unbox instructions with
+                    // the same object as input, so we check for that case.
+                    MOZ_ASSERT_IF(!use->toStoreElementHole()->object()->isUnbox() && !ownerObject->isUnbox(),
+                                  use->toStoreElementHole()->object() == ownerObject);
+                    continue;
+                }
+
+                if (use->isFallibleStoreElement()) {
+                    // See StoreElementHole case above.
+                    MOZ_ASSERT_IF(!use->toFallibleStoreElement()->object()->isUnbox() && !ownerObject->isUnbox(),
+                                  use->toFallibleStoreElement()->object() == ownerObject);
+                    continue;
+                }
+
+                if (use->isInArray()) {
+                    // See StoreElementHole case above.
+                    MOZ_ASSERT_IF(!use->toInArray()->object()->isUnbox() && !ownerObject->isUnbox(),
+                                  use->toInArray()->object() == ownerObject);
+                    continue;
+                }
+
+                if (!NeedsKeepAlive(ins, use)) {
+                    continue;
+                }
+
+                if (!graph.alloc().ensureBallast()) {
+                    return false;
+                }
+                MKeepAliveObject* keepAlive = MKeepAliveObject::New(graph.alloc(), ownerObject);
+                use->block()->insertAfter(use, keepAlive);
+            }
+=======
+        if (use->isInArray()) {
+          // See StoreElementHole case above.
+          MOZ_ASSERT_IF(
+              !use->toInArray()->object()->isUnbox() && !ownerObject->isUnbox(),
+              use->toInArray()->object() == ownerObject);
+          continue;
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+
+        if (!graph.alloc().ensureBallast()) {
+          return false;
+        }
+        MKeepAliveObject* keepAlive =
+            MKeepAliveObject::New(graph.alloc(), ownerObject);
+        use->block()->insertAfter(use, keepAlive);
+      }
+||||||| merged common ancestors
+=======
 
         if (!NeedsKeepAlive(ins, use)) {
           continue;
@@ -4059,6 +5013,7 @@ bool jit::AddKeepAliveInstructions(MIRGraph& graph) {
             MKeepAliveObject::New(graph.alloc(), ownerObject);
         use->block()->insertAfter(use, keepAlive);
       }
+>>>>>>> upstream-releases
     }
   }
 
@@ -4282,6 +5237,7 @@ MCompare* jit::ConvertLinearInequality(TempAllocator& alloc, MBasicBlock* block,
     }
   }
 
+<<<<<<< HEAD
   MDefinition* lhsDef = nullptr;
   JSOp op = JSOP_GE;
 
@@ -4292,6 +5248,39 @@ MCompare* jit::ConvertLinearInequality(TempAllocator& alloc, MBasicBlock* block,
       lhsDef->computeRange(alloc);
       break;
     }
+||||||| merged common ancestors
+    MDefinition* lhsDef = nullptr;
+    JSOp op = JSOP_GE;
+
+    do {
+        if (!lhs.numTerms()) {
+            lhsDef = MConstant::New(alloc, Int32Value(lhs.constant()));
+            block->insertAtEnd(lhsDef->toInstruction());
+            lhsDef->computeRange(alloc);
+            break;
+        }
+
+        lhsDef = ConvertLinearSum(alloc, block, lhs);
+        if (lhs.constant() == 0) {
+            break;
+        }
+
+        if (lhs.constant() == -1) {
+            op = JSOP_GT;
+            break;
+        }
+=======
+  MDefinition* lhsDef = nullptr;
+  JSOp op = JSOP_GE;
+
+  do {
+    if (!lhs.numTerms()) {
+      lhsDef = MConstant::New(alloc, Int32Value(lhs.constant()));
+      block->insertAtEnd(lhsDef->toInstruction());
+      lhsDef->computeRange(alloc);
+      break;
+    }
+>>>>>>> upstream-releases
 
     lhsDef = ConvertLinearSum(alloc, block, lhs);
     if (lhs.constant() == 0) {
@@ -4335,6 +5324,7 @@ MCompare* jit::ConvertLinearInequality(TempAllocator& alloc, MBasicBlock* block,
   return compare;
 }
 
+<<<<<<< HEAD
 static bool AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
                               MDefinition* thisValue, MInstruction* ins,
                               bool definitelyExecuted,
@@ -4344,6 +5334,35 @@ static bool AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
                               bool* phandled) {
   // Determine the effect that a use of the |this| value when calling |new|
   // on a script has on the properties definitely held by the new object.
+||||||| merged common ancestors
+static bool
+AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
+                  MDefinition* thisValue, MInstruction* ins, bool definitelyExecuted,
+                  HandlePlainObject baseobj,
+                  Vector<TypeNewScriptInitializer>* initializerList,
+                  Vector<PropertyName*>* accessedProperties,
+                  bool* phandled)
+{
+    // Determine the effect that a use of the |this| value when calling |new|
+    // on a script has on the properties definitely held by the new object.
+
+    if (ins->isCallSetProperty()) {
+        MCallSetProperty* setprop = ins->toCallSetProperty();
+
+        if (setprop->object() != thisValue) {
+            return true;
+        }
+=======
+static bool AnalyzePoppedThis(JSContext* cx, DPAConstraintInfo& constraintInfo,
+                              ObjectGroup* group, MDefinition* thisValue,
+                              MInstruction* ins, bool definitelyExecuted,
+                              HandlePlainObject baseobj,
+                              Vector<TypeNewScriptInitializer>* initializerList,
+                              Vector<PropertyName*>* accessedProperties,
+                              bool* phandled) {
+  // Determine the effect that a use of the |this| value when calling |new|
+  // on a script has on the properties definitely held by the new object.
+>>>>>>> upstream-releases
 
   if (ins->isCallSetProperty()) {
     MCallSetProperty* setprop = ins->toCallSetProperty();
@@ -4377,12 +5396,36 @@ static bool AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
       return true;
     }
 
+<<<<<<< HEAD
     RootedId id(cx, NameToId(setprop->name()));
     if (!AddClearDefiniteGetterSetterForPrototypeChain(cx, group, id)) {
       // The prototype chain already contains a getter/setter for this
       // property, or type information is too imprecise.
       return true;
     }
+||||||| merged common ancestors
+        Vector<MResumePoint*> callerResumePoints(cx);
+        for (MResumePoint* rp = ins->block()->callerResumePoint();
+             rp;
+             rp = rp->block()->callerResumePoint())
+        {
+            if (!callerResumePoints.append(rp)) {
+                return false;
+            }
+        }
+=======
+    RootedId id(cx, NameToId(setprop->name()));
+    bool added = false;
+    if (!AddClearDefiniteGetterSetterForPrototypeChain(cx, constraintInfo,
+                                                       group, id, &added)) {
+      return false;
+    }
+    if (!added) {
+      // The prototype chain already contains a getter/setter for this
+      // property, or type information is too imprecise.
+      return true;
+    }
+>>>>>>> upstream-releases
 
     // Add the property to the object, being careful not to update type
     // information.
@@ -4444,7 +5487,23 @@ static bool AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
       return false;
     }
 
+<<<<<<< HEAD
     if (!AddClearDefiniteGetterSetterForPrototypeChain(cx, group, id)) {
+      // The |this| value can escape if any property reads it does go
+      // through a getter.
+      return true;
+||||||| merged common ancestors
+    if (ins->isPostWriteBarrier()) {
+        *phandled = true;
+        return true;
+=======
+    bool added = false;
+    if (!AddClearDefiniteGetterSetterForPrototypeChain(cx, constraintInfo,
+                                                       group, id, &added)) {
+      return false;
+>>>>>>> upstream-releases
+    }
+    if (!added) {
       // The |this| value can escape if any property reads it does go
       // through a getter.
       return true;
@@ -4454,8 +5513,18 @@ static bool AnalyzePoppedThis(JSContext* cx, ObjectGroup* group,
     return true;
   }
 
+<<<<<<< HEAD
+    *phandled = true;
+    return true;
+  }
+
   if (ins->isPostWriteBarrier()) {
     *phandled = true;
+||||||| merged common ancestors
+=======
+  if (ins->isPostWriteBarrier()) {
+    *phandled = true;
+>>>>>>> upstream-releases
     return true;
   }
 
@@ -4467,11 +5536,26 @@ static int CmpInstructions(const void* a, const void* b) {
          (*static_cast<MInstruction* const*>(b))->id();
 }
 
+<<<<<<< HEAD
 bool jit::AnalyzeNewScriptDefiniteProperties(
     JSContext* cx, HandleFunction fun, ObjectGroup* group,
     HandlePlainObject baseobj,
     Vector<TypeNewScriptInitializer>* initializerList) {
   MOZ_ASSERT(cx->zone()->types.activeAnalysis);
+||||||| merged common ancestors
+bool
+jit::AnalyzeNewScriptDefiniteProperties(JSContext* cx, HandleFunction fun,
+                                        ObjectGroup* group, HandlePlainObject baseobj,
+                                        Vector<TypeNewScriptInitializer>* initializerList)
+{
+    MOZ_ASSERT(cx->zone()->types.activeAnalysis);
+=======
+bool jit::AnalyzeNewScriptDefiniteProperties(
+    JSContext* cx, DPAConstraintInfo& constraintInfo, HandleFunction fun,
+    ObjectGroup* group, HandlePlainObject baseobj,
+    Vector<TypeNewScriptInitializer>* initializerList) {
+  MOZ_ASSERT(cx->zone()->types.activeAnalysis);
+>>>>>>> upstream-releases
 
   // When invoking 'new' on the specified script, try to find some properties
   // which will definitely be added to the created object before it has a
@@ -4521,7 +5605,13 @@ bool jit::AnalyzeNewScriptDefiniteProperties(
     }
   }
 
+<<<<<<< HEAD
   TypeScript::SetThis(cx, script, TypeSet::ObjectType(group));
+||||||| merged common ancestors
+    TypeScript::SetThis(cx, script, TypeSet::ObjectType(group));
+=======
+  JitScript::MonitorThisType(cx, script, TypeSet::ObjectType(group));
+>>>>>>> upstream-releases
 
   MIRGraph graph(&temp);
   InlineScriptTree* inlineScriptTree =
@@ -4534,8 +5624,15 @@ bool jit::AnalyzeNewScriptDefiniteProperties(
                    /* osrPc = */ nullptr, Analysis_DefiniteProperties,
                    script->needsArgsObj(), inlineScriptTree);
 
+<<<<<<< HEAD
   const OptimizationInfo* optimizationInfo =
       IonOptimizations.get(OptimizationLevel::Normal);
+||||||| merged common ancestors
+    const OptimizationInfo* optimizationInfo = IonOptimizations.get(OptimizationLevel::Normal);
+=======
+  const OptimizationInfo* optimizationInfo =
+      IonOptimizations.get(OptimizationLevel::Full);
+>>>>>>> upstream-releases
 
   CompilerConstraintList* constraints = NewCompilerConstraintList(temp);
   if (!constraints) {
@@ -4642,12 +5739,38 @@ bool jit::AnalyzeNewScriptDefiniteProperties(
       definitelyExecuted = false;
     }
 
+<<<<<<< HEAD
     bool handled = false;
     size_t slotSpan = baseobj->slotSpan();
     if (!AnalyzePoppedThis(cx, group, thisValue, ins, definitelyExecuted,
                            baseobj, initializerList, &accessedProperties,
                            &handled)) {
       return false;
+||||||| merged common ancestors
+    return true;
+}
+
+static bool
+ArgumentsUseCanBeLazy(JSContext* cx, JSScript* script, MInstruction* ins, size_t index,
+                      bool* argumentsContentsObserved)
+{
+    // We can read the frame's arguments directly for f.apply(x, arguments).
+    if (ins->isCall()) {
+        if (*ins->toCall()->resumePoint()->pc() == JSOP_FUNAPPLY &&
+            ins->toCall()->numActualArgs() == 2 &&
+            index == MCall::IndexOfArgument(1))
+        {
+            *argumentsContentsObserved = true;
+            return true;
+        }
+=======
+    bool handled = false;
+    size_t slotSpan = baseobj->slotSpan();
+    if (!AnalyzePoppedThis(cx, constraintInfo, group, thisValue, ins,
+                           definitelyExecuted, baseobj, initializerList,
+                           &accessedProperties, &handled)) {
+      return false;
+>>>>>>> upstream-releases
     }
     if (!handled) {
       break;
@@ -4659,6 +5782,7 @@ bool jit::AnalyzeNewScriptDefiniteProperties(
     }
   }
 
+<<<<<<< HEAD
   if (baseobj->slotSpan() != 0) {
     // We found some definite properties, but their correctness is still
     // contingent on the correct frames being inlined. Add constraints to
@@ -4682,6 +5806,39 @@ bool jit::AnalyzeNewScriptDefiniteProperties(
           }
         }
       }
+||||||| merged common ancestors
+    // arguments.length length can read fp->numActualArgs() directly.
+    // arguments.callee can read fp->callee() directly if the arguments object
+    // is mapped.
+    if (ins->isCallGetProperty() && index == 0 &&
+        (ins->toCallGetProperty()->name() == cx->names().length ||
+         (script->hasMappedArgsObj() && ins->toCallGetProperty()->name() == cx->names().callee)))
+    {
+        return true;
+=======
+  if (baseobj->slotSpan() != 0) {
+    // We found some definite properties, but their correctness is still
+    // contingent on the correct frames being inlined. Add constraints to
+    // invalidate the definite properties if additional functions could be
+    // called at the inline frame sites.
+    for (MBasicBlockIterator block(graph.begin()); block != graph.end();
+         block++) {
+      // Inlining decisions made after the last new property was added to
+      // the object don't need to be frozen.
+      if (block->id() > lastAddedBlock) {
+        break;
+      }
+      if (MResumePoint* rp = block->callerResumePoint()) {
+        if (block->numPredecessors() == 1 &&
+            block->getPredecessor(0) == rp->block()) {
+          JSScript* caller = rp->block()->info().script();
+          JSScript* callee = block->info().script();
+          if (!constraintInfo.addInliningConstraint(caller, callee)) {
+            return false;
+          }
+        }
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -4767,6 +5924,7 @@ bool jit::AnalyzeArgumentsUsage(JSContext* cx, JSScript* scriptArg) {
     return false;
   }
 
+<<<<<<< HEAD
   AutoKeepTypeScripts keepTypes(cx);
   if (!script->ensureHasTypes(cx, keepTypes)) {
     return false;
@@ -4788,6 +5946,36 @@ bool jit::AnalyzeArgumentsUsage(JSContext* cx, JSScript* scriptArg) {
     ReportOutOfMemory(cx);
     return false;
   }
+||||||| merged common ancestors
+    MIRGraph graph(&temp);
+    InlineScriptTree* inlineScriptTree = InlineScriptTree::New(&temp, nullptr, nullptr, script);
+    if (!inlineScriptTree) {
+        ReportOutOfMemory(cx);
+        return false;
+    }
+=======
+  AutoKeepJitScripts keepJitScript(cx);
+  if (!script->ensureHasJitScript(cx, keepJitScript)) {
+    return false;
+  }
+
+  TraceLoggerThread* logger = TraceLoggerForCurrentThread(cx);
+  TraceLoggerEvent event(TraceLogger_AnnotateScripts, script);
+  AutoTraceLog logScript(logger, event);
+  AutoTraceLog logCompile(logger, TraceLogger_IonAnalysis);
+
+  LifoAlloc alloc(TempAllocator::PreferredLifoChunkSize);
+  TempAllocator temp(&alloc);
+  JitContext jctx(cx, &temp);
+
+  MIRGraph graph(&temp);
+  InlineScriptTree* inlineScriptTree =
+      InlineScriptTree::New(&temp, nullptr, nullptr, script);
+  if (!inlineScriptTree) {
+    ReportOutOfMemory(cx);
+    return false;
+  }
+>>>>>>> upstream-releases
 
   CompileInfo info(CompileRuntime::get(cx->runtime()), script,
                    script->functionNonDelazifying(),
@@ -4848,6 +6036,17 @@ bool jit::AnalyzeArgumentsUsage(JSContext* cx, JSScript* scriptArg) {
   for (MUseDefIterator uses(argumentsValue); uses; uses++) {
     MDefinition* use = uses.def();
 
+<<<<<<< HEAD
+    // Don't track |arguments| through assignments to phis.
+    if (!use->isInstruction()) {
+      return true;
+||||||| merged common ancestors
+        if (!ArgumentsUseCanBeLazy(cx, script, use->toInstruction(), use->indexOf(uses.use()),
+                                   &argumentsContentsObserved))
+        {
+            return true;
+        }
+=======
     // Don't track |arguments| through assignments to phis.
     if (!use->isInstruction()) {
       return true;
@@ -4857,9 +6056,37 @@ bool jit::AnalyzeArgumentsUsage(JSContext* cx, JSScript* scriptArg) {
                                use->indexOf(uses.use()),
                                &argumentsContentsObserved)) {
       return true;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
+    if (!ArgumentsUseCanBeLazy(cx, script, use->toInstruction(),
+                               use->indexOf(uses.use()),
+                               &argumentsContentsObserved)) {
+      return true;
+||||||| merged common ancestors
+    // If a script explicitly accesses the contents of 'arguments', and has
+    // formals which may be stored as part of a call object, don't use lazy
+    // arguments. The compiler can then assume that accesses through
+    // arguments[i] will be on unaliased variables.
+    if (script->funHasAnyAliasedFormal() && argumentsContentsObserved) {
+        return true;
+=======
+  // If a script explicitly accesses the contents of 'arguments', and has
+  // formals which may be stored as part of a call object, don't use lazy
+  // arguments. The compiler can then assume that accesses through
+  // arguments[i] will be on unaliased variables.
+  if (argumentsContentsObserved) {
+    for (PositionalFormalParameterIter fi(script); fi; fi++) {
+      if (fi.closedOver()) {
+        return true;
+      }
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
   // If a script explicitly accesses the contents of 'arguments', and has
   // formals which may be stored as part of a call object, don't use lazy
   // arguments. The compiler can then assume that accesses through
@@ -4870,6 +6097,13 @@ bool jit::AnalyzeArgumentsUsage(JSContext* cx, JSScript* scriptArg) {
 
   script->setNeedsArgsObj(false);
   return true;
+||||||| merged common ancestors
+    script->setNeedsArgsObj(false);
+    return true;
+=======
+  script->setNeedsArgsObj(false);
+  return true;
+>>>>>>> upstream-releases
 }
 
 // Mark all the blocks that are in the loop with the given header.
@@ -5066,9 +6300,21 @@ bool jit::MakeLoopsContiguous(MIRGraph& graph) {
   return true;
 }
 
+<<<<<<< HEAD
 MRootList::MRootList(TempAllocator& alloc) {
 #define INIT_VECTOR(name, _0, _1) roots_[JS::RootKind::name].emplace(alloc);
   JS_FOR_EACH_TRACEKIND(INIT_VECTOR)
+||||||| merged common ancestors
+MRootList::MRootList(TempAllocator& alloc)
+{
+#define INIT_VECTOR(name, _0, _1) \
+    roots_[JS::RootKind::name].emplace(alloc);
+JS_FOR_EACH_TRACEKIND(INIT_VECTOR)
+=======
+MRootList::MRootList(TempAllocator& alloc) {
+#define INIT_VECTOR(name, _0, _1, _2) roots_[JS::RootKind::name].emplace(alloc);
+  JS_FOR_EACH_TRACEKIND(INIT_VECTOR)
+>>>>>>> upstream-releases
 #undef INIT_VECTOR
 }
 
@@ -5082,10 +6328,24 @@ static void TraceVector(JSTracer* trc, const MRootList::RootVector& vector,
   }
 }
 
+<<<<<<< HEAD
 void MRootList::trace(JSTracer* trc) {
 #define TRACE_ROOTS(name, type, _) \
   TraceVector<type*>(trc, *roots_[JS::RootKind::name], "mir-root-" #name);
   JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
+||||||| merged common ancestors
+void
+MRootList::trace(JSTracer* trc)
+{
+#define TRACE_ROOTS(name, type, _) \
+    TraceVector<type*>(trc, *roots_[JS::RootKind::name], "mir-root-" #name);
+JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
+=======
+void MRootList::trace(JSTracer* trc) {
+#define TRACE_ROOTS(name, type, _, _1) \
+  TraceVector<type*>(trc, *roots_[JS::RootKind::name], "mir-root-" #name);
+  JS_FOR_EACH_TRACEKIND(TRACE_ROOTS)
+>>>>>>> upstream-releases
 #undef TRACE_ROOTS
 }
 

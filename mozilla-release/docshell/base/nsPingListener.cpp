@@ -9,14 +9,13 @@
 #include "mozilla/Preferences.h"
 
 #include "mozilla/dom/DocGroup.h"
+#include "mozilla/dom/Document.h"
 
-#include "nsIDocument.h"
 #include "nsIHttpChannelInternal.h"
 #include "nsIInputStream.h"
 #include "nsIProtocolHandler.h"
 #include "nsIUploadChannel2.h"
 
-#include "nsDocument.h"
 #include "nsNetUtil.h"
 #include "nsStreamUtils.h"
 #include "nsStringStream.h"
@@ -80,9 +79,8 @@ struct MOZ_STACK_CLASS SendPingInfo {
   int32_t maxPings;
   bool requireSameHost;
   nsIURI* target;
-  nsIURI* referrer;
+  nsIReferrerInfo* referrerInfo;
   nsIDocShell* docShell;
-  uint32_t referrerPolicy;
 };
 
 static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
@@ -92,7 +90,7 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
     return;
   }
 
-  nsIDocument* doc = aContent->OwnerDoc();
+  Document* doc = aContent->OwnerDoc();
 
   nsCOMPtr<nsIChannel> chan;
   NS_NewChannel(getter_AddRefs(chan), aURI, doc,
@@ -112,8 +110,14 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
 
   // Don't bother caching the result of this URI load, but do not exempt
   // it from Safe Browsing.
+<<<<<<< HEAD
   chan->SetLoadFlags(nsIRequest::INHIBIT_CACHING |
                      nsIChannel::LOAD_CLASSIFY_URI);
+||||||| merged common ancestors
+  chan->SetLoadFlags(nsIRequest::INHIBIT_CACHING | nsIChannel::LOAD_CLASSIFY_URI);
+=======
+  chan->SetLoadFlags(nsIRequest::INHIBIT_CACHING);
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIHttpChannel> httpChan = do_QueryInterface(chan);
   if (!httpChan) {
@@ -153,10 +157,13 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
   nsCOMPtr<nsIScriptSecurityManager> sm =
       do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID);
 
-  if (sm && info->referrer) {
-    bool referrerIsSecure;
+  if (sm && info->referrerInfo) {
+    nsCOMPtr<nsIURI> referrer = info->referrerInfo->GetOriginalReferrer();
+    bool referrerIsSecure = false;
     uint32_t flags = nsIProtocolHandler::URI_IS_POTENTIALLY_TRUSTWORTHY;
-    rv = NS_URIChainHasFlags(info->referrer, flags, &referrerIsSecure);
+    if (referrer) {
+      rv = NS_URIChainHasFlags(referrer, flags, &referrerIsSecure);
+    }
 
     // Default to sending less data if NS_URIChainHasFlags() fails.
     referrerIsSecure = NS_FAILED(rv) || referrerIsSecure;
@@ -167,8 +174,16 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
           doc->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId > 0;
     }
 
+<<<<<<< HEAD
     bool sameOrigin = NS_SUCCEEDED(
         sm->CheckSameOriginURI(info->referrer, aURI, false, isPrivateWin));
+||||||| merged common ancestors
+    bool sameOrigin =
+      NS_SUCCEEDED(sm->CheckSameOriginURI(info->referrer, aURI, false, isPrivateWin));
+=======
+    bool sameOrigin = NS_SUCCEEDED(
+        sm->CheckSameOriginURI(referrer, aURI, false, isPrivateWin));
+>>>>>>> upstream-releases
 
     // If both the address of the document containing the hyperlink being
     // audited and "ping URL" have the same origin or the document containing
@@ -176,7 +191,7 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
     // connection, send a Ping-From header.
     if (sameOrigin || !referrerIsSecure) {
       nsAutoCString pingFrom;
-      if (NS_SUCCEEDED(info->referrer->GetSpec(pingFrom))) {
+      if (NS_SUCCEEDED(referrer->GetSpec(pingFrom))) {
         rv = httpChan->SetRequestHeader(NS_LITERAL_CSTRING("Ping-From"),
                                         pingFrom, false);
         MOZ_ASSERT(NS_SUCCEEDED(rv));
@@ -186,9 +201,17 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
     // If the document containing the hyperlink being audited was not retrieved
     // over an encrypted connection and its address does not have the same
     // origin as "ping URL", send a referrer.
+<<<<<<< HEAD
     if (!sameOrigin && !referrerIsSecure) {
       rv =
           httpChan->SetReferrerWithPolicy(info->referrer, info->referrerPolicy);
+||||||| merged common ancestors
+    if (!sameOrigin && !referrerIsSecure) {
+      rv = httpChan->SetReferrerWithPolicy(info->referrer, info->referrerPolicy);
+=======
+    if (!sameOrigin && !referrerIsSecure && info->referrerInfo) {
+      rv = httpChan->SetReferrerInfo(info->referrerInfo);
+>>>>>>> upstream-releases
       MOZ_ASSERT(NS_SUCCEEDED(rv));
     }
   }
@@ -221,7 +244,7 @@ static void SendPing(void* aClosure, nsIContent* aContent, nsIURI* aURI,
   chan->SetLoadGroup(loadGroup);
 
   RefPtr<nsPingListener> pingListener = new nsPingListener();
-  chan->AsyncOpen2(pingListener);
+  chan->AsyncOpen(pingListener);
 
   // Even if AsyncOpen failed, we still count this as a successful ping.  It's
   // possible that AsyncOpen may have failed after triggering some background
@@ -267,7 +290,7 @@ static void ForEachPing(nsIContent* aContent, ForEachPingCallback aCallback,
     return;
   }
 
-  nsIDocument* doc = aContent->OwnerDoc();
+  Document* doc = aContent->OwnerDoc();
   nsAutoCString charset;
   doc->GetDocumentCharacterSet()->Name(charset);
 
@@ -282,21 +305,45 @@ static void ForEachPing(nsIContent* aContent, ForEachPingCallback aCallback,
       continue;
     }
     // Explicitly not allow loading data: URIs
+<<<<<<< HEAD
     bool isDataScheme =
         (NS_SUCCEEDED(uri->SchemeIs("data", &isDataScheme)) && isDataScheme);
 
     if (!isDataScheme) {
+||||||| merged common ancestors
+    bool isDataScheme =
+      (NS_SUCCEEDED(uri->SchemeIs("data", &isDataScheme)) && isDataScheme);
+
+    if (!isDataScheme) {
+=======
+    if (!net::SchemeIsData(uri)) {
+>>>>>>> upstream-releases
       aCallback(aClosure, aContent, uri, ios);
     }
   }
 }
 
 // Spec: http://whatwg.org/specs/web-apps/current-work/#ping
+<<<<<<< HEAD
 /*static*/ void nsPingListener::DispatchPings(nsIDocShell* aDocShell,
                                               nsIContent* aContent,
                                               nsIURI* aTarget,
                                               nsIURI* aReferrer,
                                               uint32_t aReferrerPolicy) {
+||||||| merged common ancestors
+/*static*/ void
+nsPingListener::DispatchPings(nsIDocShell* aDocShell,
+                              nsIContent* aContent,
+                              nsIURI* aTarget,
+                              nsIURI* aReferrer,
+                              uint32_t aReferrerPolicy)
+{
+=======
+/*static*/ void nsPingListener::DispatchPings(nsIDocShell* aDocShell,
+                                              nsIContent* aContent,
+                                              nsIURI* aTarget,
+                                              nsIReferrerInfo* aReferrerInfo) {
+>>>>>>> upstream-releases
   SendPingInfo info;
 
   if (!PingsEnabled(&info.maxPings, &info.requireSameHost)) {
@@ -308,8 +355,7 @@ static void ForEachPing(nsIContent* aContent, ForEachPingCallback aCallback,
 
   info.numPings = 0;
   info.target = aTarget;
-  info.referrer = aReferrer;
-  info.referrerPolicy = aReferrerPolicy;
+  info.referrerInfo = aReferrerInfo;
   info.docShell = aDocShell;
 
   ForEachPing(aContent, SendPing, &info);
@@ -332,21 +378,48 @@ nsresult nsPingListener::StartTimeout(DocGroup* aDocGroup) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPingListener::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
   return NS_OK;
 }
+||||||| merged common ancestors
+nsPingListener::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
+{
+  return NS_OK;
+}
+=======
+nsPingListener::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPingListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
                                 nsIInputStream* aStream, uint64_t aOffset,
                                 uint32_t aCount) {
+||||||| merged common ancestors
+nsPingListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
+                                nsIInputStream* aStream, uint64_t aOffset,
+                                uint32_t aCount)
+{
+=======
+nsPingListener::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
+                                uint64_t aOffset, uint32_t aCount) {
+>>>>>>> upstream-releases
   uint32_t result;
   return aStream->ReadSegments(NS_DiscardSegment, nullptr, aCount, &result);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPingListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
                               nsresult aStatus) {
+||||||| merged common ancestors
+nsPingListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
+                              nsresult aStatus)
+{
+=======
+nsPingListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
+>>>>>>> upstream-releases
   mLoadGroup = nullptr;
 
   if (mTimer) {

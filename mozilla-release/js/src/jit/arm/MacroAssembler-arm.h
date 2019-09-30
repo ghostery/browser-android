@@ -618,6 +618,7 @@ class MacroAssemblerARM : public Assembler {
 
 class MacroAssembler;
 
+<<<<<<< HEAD
 class MacroAssemblerARMCompat : public MacroAssemblerARM {
  private:
   // Perform a downcast. Should be removed by Bug 996602.
@@ -1304,6 +1305,1424 @@ class MacroAssemblerARMCompat : public MacroAssemblerARM {
   // Instrumentation for entering and leaving the profiler.
   void profilerEnterFrame(Register framePtr, Register scratch);
   void profilerExitFrame();
+||||||| merged common ancestors
+class MacroAssemblerARMCompat : public MacroAssemblerARM
+{
+  private:
+    // Perform a downcast. Should be removed by Bug 996602.
+    MacroAssembler& asMasm();
+    const MacroAssembler& asMasm() const;
+
+  public:
+    MacroAssemblerARMCompat()
+    { }
+
+  public:
+
+    // Jumps + other functions that should be called from non-arm specific
+    // code. Basically, an x86 front end on top of the ARM code.
+    void j(Condition code , Label* dest)
+    {
+        as_b(dest, code);
+    }
+    void j(Label* dest)
+    {
+        as_b(dest, Always);
+    }
+
+    void mov(Register src, Register dest) {
+        ma_mov(src, dest);
+    }
+    void mov(ImmWord imm, Register dest) {
+        ma_mov(Imm32(imm.value), dest);
+    }
+    void mov(ImmPtr imm, Register dest) {
+        mov(ImmWord(uintptr_t(imm.value)), dest);
+    }
+
+    void branch(JitCode* c) {
+        BufferOffset bo = m_buffer.nextOffset();
+        addPendingJump(bo, ImmPtr(c->raw()), RelocationKind::JITCODE);
+        ScratchRegisterScope scratch(asMasm());
+        ma_movPatchable(ImmPtr(c->raw()), scratch, Always);
+        ma_bx(scratch);
+    }
+    void branch(const Register reg) {
+        ma_bx(reg);
+    }
+    void nop() {
+        ma_nop();
+    }
+    void shortJumpSizedNop() {
+        ma_nop();
+    }
+    void ret() {
+        ma_pop(pc);
+    }
+    void retn(Imm32 n) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        ma_popn_pc(n, scratch, scratch2);
+    }
+    void push(Imm32 imm) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_mov(imm, scratch);
+        ma_push(scratch);
+    }
+    void push(ImmWord imm) {
+        push(Imm32(imm.value));
+    }
+    void push(ImmGCPtr imm) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_mov(imm, scratch);
+        ma_push(scratch);
+    }
+    void push(const Address& addr) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        ma_ldr(addr, scratch, scratch2);
+        ma_push(scratch);
+    }
+    void push(Register reg) {
+        if (reg == sp) {
+            ScratchRegisterScope scratch(asMasm());
+            ma_push_sp(reg, scratch);
+        } else {
+            ma_push(reg);
+        }
+    }
+    void push(FloatRegister reg) {
+        ma_vpush(VFPRegister(reg));
+    }
+    void pushWithPadding(Register reg, const Imm32 extraSpace) {
+        ScratchRegisterScope scratch(asMasm());
+        Imm32 totSpace = Imm32(extraSpace.value + 4);
+        ma_dtr(IsStore, sp, totSpace, reg, scratch, PreIndex);
+    }
+    void pushWithPadding(Imm32 imm, const Imm32 extraSpace) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        Imm32 totSpace = Imm32(extraSpace.value + 4);
+        ma_mov(imm, scratch);
+        ma_dtr(IsStore, sp, totSpace, scratch, scratch2, PreIndex);
+    }
+
+    void pop(Register reg) {
+        ma_pop(reg);
+    }
+    void pop(FloatRegister reg) {
+        ma_vpop(VFPRegister(reg));
+    }
+
+    void popN(Register reg, Imm32 extraSpace) {
+        ScratchRegisterScope scratch(asMasm());
+        Imm32 totSpace = Imm32(extraSpace.value + 4);
+        ma_dtr(IsLoad, sp, totSpace, reg, scratch, PostIndex);
+    }
+
+    CodeOffset toggledJump(Label* label);
+
+    // Emit a BLX or NOP instruction. ToggleCall can be used to patch this
+    // instruction.
+    CodeOffset toggledCall(JitCode* target, bool enabled);
+
+    CodeOffset pushWithPatch(ImmWord imm) {
+        ScratchRegisterScope scratch(asMasm());
+        CodeOffset label = movWithPatch(imm, scratch);
+        ma_push(scratch);
+        return label;
+    }
+
+    CodeOffset movWithPatch(ImmWord imm, Register dest) {
+        CodeOffset label = CodeOffset(currentOffset());
+        ma_movPatchable(Imm32(imm.value), dest, Always);
+        return label;
+    }
+    CodeOffset movWithPatch(ImmPtr imm, Register dest) {
+        return movWithPatch(ImmWord(uintptr_t(imm.value)), dest);
+    }
+
+    void jump(Label* label) {
+        as_b(label);
+    }
+    void jump(JitCode* code) {
+        branch(code);
+    }
+    void jump(TrampolinePtr code) {
+        ScratchRegisterScope scratch(asMasm());
+        movePtr(ImmPtr(code.value), scratch);
+        ma_bx(scratch);
+    }
+    void jump(Register reg) {
+        ma_bx(reg);
+    }
+    void jump(const Address& addr) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        ma_ldr(addr, scratch, scratch2);
+        ma_bx(scratch);
+    }
+
+    void negl(Register reg) {
+        ma_neg(reg, reg, SetCC);
+    }
+    void test32(Register lhs, Register rhs) {
+        ma_tst(lhs, rhs);
+    }
+    void test32(Register lhs, Imm32 imm) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_tst(lhs, imm, scratch);
+    }
+    void test32(const Address& addr, Imm32 imm) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        ma_ldr(addr, scratch, scratch2);
+        ma_tst(scratch, imm, scratch2);
+    }
+    void testPtr(Register lhs, Register rhs) {
+        test32(lhs, rhs);
+    }
+
+    void splitTagForTest(const ValueOperand& value, ScratchTagScope& tag) {
+        MOZ_ASSERT(value.typeReg() == tag);
+    }
+
+    // Higher level tag testing code.
+    Condition testInt32(Condition cond, const ValueOperand& value);
+    Condition testBoolean(Condition cond, const ValueOperand& value);
+    Condition testDouble(Condition cond, const ValueOperand& value);
+    Condition testNull(Condition cond, const ValueOperand& value);
+    Condition testUndefined(Condition cond, const ValueOperand& value);
+    Condition testString(Condition cond, const ValueOperand& value);
+    Condition testSymbol(Condition cond, const ValueOperand& value);
+    Condition testObject(Condition cond, const ValueOperand& value);
+    Condition testNumber(Condition cond, const ValueOperand& value);
+    Condition testMagic(Condition cond, const ValueOperand& value);
+
+    Condition testPrimitive(Condition cond, const ValueOperand& value);
+
+    // Register-based tests.
+    Condition testInt32(Condition cond, Register tag);
+    Condition testBoolean(Condition cond, Register tag);
+    Condition testNull(Condition cond, Register tag);
+    Condition testUndefined(Condition cond, Register tag);
+    Condition testString(Condition cond, Register tag);
+    Condition testSymbol(Condition cond, Register tag);
+    Condition testObject(Condition cond, Register tag);
+    Condition testDouble(Condition cond, Register tag);
+    Condition testNumber(Condition cond, Register tag);
+    Condition testMagic(Condition cond, Register tag);
+    Condition testPrimitive(Condition cond, Register tag);
+
+    Condition testGCThing(Condition cond, const Address& address);
+    Condition testMagic(Condition cond, const Address& address);
+    Condition testInt32(Condition cond, const Address& address);
+    Condition testDouble(Condition cond, const Address& address);
+    Condition testBoolean(Condition cond, const Address& address);
+    Condition testNull(Condition cond, const Address& address);
+    Condition testUndefined(Condition cond, const Address& address);
+    Condition testString(Condition cond, const Address& address);
+    Condition testSymbol(Condition cond, const Address& address);
+    Condition testObject(Condition cond, const Address& address);
+    Condition testNumber(Condition cond, const Address& address);
+
+    Condition testUndefined(Condition cond, const BaseIndex& src);
+    Condition testNull(Condition cond, const BaseIndex& src);
+    Condition testBoolean(Condition cond, const BaseIndex& src);
+    Condition testString(Condition cond, const BaseIndex& src);
+    Condition testSymbol(Condition cond, const BaseIndex& src);
+    Condition testInt32(Condition cond, const BaseIndex& src);
+    Condition testObject(Condition cond, const BaseIndex& src);
+    Condition testDouble(Condition cond, const BaseIndex& src);
+    Condition testMagic(Condition cond, const BaseIndex& src);
+    Condition testGCThing(Condition cond, const BaseIndex& src);
+
+    // Unboxing code.
+    void unboxNonDouble(const ValueOperand& operand, Register dest, JSValueType type);
+    void unboxNonDouble(const Address& src, Register dest, JSValueType type);
+    void unboxNonDouble(const BaseIndex& src, Register dest, JSValueType type);
+    void unboxInt32(const ValueOperand& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_INT32);
+    }
+    void unboxInt32(const Address& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_INT32);
+    }
+    void unboxBoolean(const ValueOperand& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_BOOLEAN);
+    }
+    void unboxBoolean(const Address& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_BOOLEAN);
+    }
+    void unboxString(const ValueOperand& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_STRING);
+    }
+    void unboxString(const Address& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_STRING);
+    }
+    void unboxSymbol(const ValueOperand& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_SYMBOL);
+    }
+    void unboxSymbol(const Address& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_SYMBOL);
+    }
+    void unboxObject(const ValueOperand& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+    }
+    void unboxObject(const Address& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+    }
+    void unboxObject(const BaseIndex& src, Register dest) {
+        unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+    }
+    void unboxDouble(const ValueOperand& src, FloatRegister dest);
+    void unboxDouble(const Address& src, FloatRegister dest);
+    void unboxValue(const ValueOperand& src, AnyRegister dest, JSValueType type);
+    void unboxPrivate(const ValueOperand& src, Register dest);
+
+    // See comment in MacroAssembler-x64.h.
+    void unboxGCThingForPreBarrierTrampoline(const Address& src, Register dest) {
+        load32(ToPayload(src), dest);
+    }
+
+    void notBoolean(const ValueOperand& val) {
+        as_eor(val.payloadReg(), val.payloadReg(), Imm8(1));
+    }
+
+    // Boxing code.
+    void boxDouble(FloatRegister src, const ValueOperand& dest, FloatRegister);
+    void boxNonDouble(JSValueType type, Register src, const ValueOperand& dest);
+
+    // Extended unboxing API. If the payload is already in a register, returns
+    // that register. Otherwise, provides a move to the given scratch register,
+    // and returns that.
+    MOZ_MUST_USE Register extractObject(const Address& address, Register scratch);
+    MOZ_MUST_USE Register extractObject(const ValueOperand& value, Register scratch) {
+        unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_OBJECT);
+        return value.payloadReg();
+    }
+    MOZ_MUST_USE Register extractSymbol(const ValueOperand& value, Register scratch) {
+        unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_SYMBOL);
+        return value.payloadReg();
+    }
+    MOZ_MUST_USE Register extractInt32(const ValueOperand& value, Register scratch) {
+        return value.payloadReg();
+    }
+    MOZ_MUST_USE Register extractBoolean(const ValueOperand& value, Register scratch) {
+        return value.payloadReg();
+    }
+    MOZ_MUST_USE Register extractTag(const Address& address, Register scratch);
+    MOZ_MUST_USE Register extractTag(const BaseIndex& address, Register scratch);
+    MOZ_MUST_USE Register extractTag(const ValueOperand& value, Register scratch) {
+        return value.typeReg();
+    }
+
+    void boolValueToDouble(const ValueOperand& operand, FloatRegister dest);
+    void int32ValueToDouble(const ValueOperand& operand, FloatRegister dest);
+    void loadInt32OrDouble(const Address& src, FloatRegister dest);
+    void loadInt32OrDouble(Register base, Register index,
+                           FloatRegister dest, int32_t shift = defaultShift);
+    void loadConstantDouble(double dp, FloatRegister dest);
+
+    // Treat the value as a boolean, and set condition codes accordingly.
+    Condition testInt32Truthy(bool truthy, const ValueOperand& operand);
+    Condition testBooleanTruthy(bool truthy, const ValueOperand& operand);
+    Condition testDoubleTruthy(bool truthy, FloatRegister reg);
+    Condition testStringTruthy(bool truthy, const ValueOperand& value);
+
+    void boolValueToFloat32(const ValueOperand& operand, FloatRegister dest);
+    void int32ValueToFloat32(const ValueOperand& operand, FloatRegister dest);
+    void loadConstantFloat32(float f, FloatRegister dest);
+
+    CodeOffsetJump jumpWithPatch(RepatchLabel* label);
+
+    void loadUnboxedValue(Address address, MIRType type, AnyRegister dest) {
+        if (dest.isFloat()) {
+            loadInt32OrDouble(address, dest.fpu());
+        } else {
+            ScratchRegisterScope scratch(asMasm());
+            ma_ldr(address, dest.gpr(), scratch);
+        }
+    }
+
+    void loadUnboxedValue(BaseIndex address, MIRType type, AnyRegister dest) {
+        if (dest.isFloat()) {
+            loadInt32OrDouble(address.base, address.index, dest.fpu(), address.scale);
+        } else {
+            load32(address, dest.gpr());
+        }
+    }
+
+    template <typename T>
+    void storeUnboxedPayload(ValueOperand value, T address, size_t nbytes, JSValueType) {
+        switch (nbytes) {
+          case 4:
+            storePtr(value.payloadReg(), address);
+            return;
+          case 1:
+            store8(value.payloadReg(), address);
+            return;
+          default: MOZ_CRASH("Bad payload width");
+        }
+    }
+
+    void storeValue(ValueOperand val, const Address& dst);
+    void storeValue(ValueOperand val, const BaseIndex& dest);
+    void storeValue(JSValueType type, Register reg, BaseIndex dest) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+
+        int32_t payloadoffset = dest.offset + NUNBOX32_PAYLOAD_OFFSET;
+        int32_t typeoffset = dest.offset + NUNBOX32_TYPE_OFFSET;
+
+        ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+
+        // Store the payload.
+        if (payloadoffset < 4096 && payloadoffset > -4096) {
+            ma_str(reg, DTRAddr(scratch, DtrOffImm(payloadoffset)));
+        } else {
+            ma_str(reg, Address(scratch, payloadoffset), scratch2);
+        }
+
+        // Store the type.
+        if (typeoffset < 4096 && typeoffset > -4096) {
+            // Encodable as DTRAddr, so only two instructions needed.
+            ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch2);
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(typeoffset)));
+        } else {
+            // Since there are only two scratch registers, the offset must be
+            // applied early using a third instruction to be safe.
+            ma_add(Imm32(typeoffset), scratch, scratch2);
+            ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch2);
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+        }
+    }
+    void storeValue(JSValueType type, Register reg, Address dest) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+
+        ma_str(reg, dest, scratch2);
+        ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch);
+        ma_str(scratch, Address(dest.base, dest.offset + NUNBOX32_TYPE_OFFSET), scratch2);
+    }
+    void storeValue(const Value& val, const Address& dest) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+
+        ma_mov(Imm32(val.toNunboxTag()), scratch);
+        ma_str(scratch, ToType(dest), scratch2);
+        if (val.isGCThing()) {
+            ma_mov(ImmGCPtr(val.toGCThing()), scratch);
+        } else {
+            ma_mov(Imm32(val.toNunboxPayload()), scratch);
+        }
+        ma_str(scratch, ToPayload(dest), scratch2);
+    }
+    void storeValue(const Value& val, BaseIndex dest) {
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+
+        int32_t typeoffset = dest.offset + NUNBOX32_TYPE_OFFSET;
+        int32_t payloadoffset = dest.offset + NUNBOX32_PAYLOAD_OFFSET;
+
+        ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+
+        // Store the type.
+        if (typeoffset < 4096 && typeoffset > -4096) {
+            ma_mov(Imm32(val.toNunboxTag()), scratch2);
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(typeoffset)));
+        } else {
+            ma_add(Imm32(typeoffset), scratch, scratch2);
+            ma_mov(Imm32(val.toNunboxTag()), scratch2);
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+            // Restore scratch for the payload store.
+            ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+        }
+
+        // Store the payload, marking if necessary.
+        if (payloadoffset < 4096 && payloadoffset > -4096) {
+            if (val.isGCThing()) {
+                ma_mov(ImmGCPtr(val.toGCThing()), scratch2);
+            } else {
+                ma_mov(Imm32(val.toNunboxPayload()), scratch2);
+            }
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(payloadoffset)));
+        } else {
+            ma_add(Imm32(payloadoffset), scratch, scratch2);
+            if (val.isGCThing()) {
+                ma_mov(ImmGCPtr(val.toGCThing()), scratch2);
+            } else {
+                ma_mov(Imm32(val.toNunboxPayload()), scratch2);
+            }
+            ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+        }
+    }
+    void storeValue(const Address& src, const Address& dest, Register temp) {
+        load32(ToType(src), temp);
+        store32(temp, ToType(dest));
+
+        load32(ToPayload(src), temp);
+        store32(temp, ToPayload(dest));
+    }
+
+    void loadValue(Address src, ValueOperand val);
+    void loadValue(Operand dest, ValueOperand val) {
+        loadValue(dest.toAddress(), val);
+    }
+    void loadValue(const BaseIndex& addr, ValueOperand val);
+    void tagValue(JSValueType type, Register payload, ValueOperand dest);
+
+    void pushValue(ValueOperand val);
+    void popValue(ValueOperand val);
+    void pushValue(const Value& val) {
+        push(Imm32(val.toNunboxTag()));
+        if (val.isGCThing()) {
+            push(ImmGCPtr(val.toGCThing()));
+        } else {
+            push(Imm32(val.toNunboxPayload()));
+        }
+    }
+    void pushValue(JSValueType type, Register reg) {
+        push(ImmTag(JSVAL_TYPE_TO_TAG(type)));
+        ma_push(reg);
+    }
+    void pushValue(const Address& addr);
+
+    void storePayload(const Value& val, const Address& dest);
+    void storePayload(Register src, const Address& dest);
+    void storePayload(const Value& val, const BaseIndex& dest);
+    void storePayload(Register src, const BaseIndex& dest);
+    void storeTypeTag(ImmTag tag, const Address& dest);
+    void storeTypeTag(ImmTag tag, const BaseIndex& dest);
+
+    void handleFailureWithHandlerTail(void* handler, Label* profilerExitTail);
+
+    /////////////////////////////////////////////////////////////////
+    // Common interface.
+    /////////////////////////////////////////////////////////////////
+  public:
+    void not32(Register reg);
+
+    void move32(Imm32 imm, Register dest);
+    void move32(Register src, Register dest);
+
+    void movePtr(Register src, Register dest);
+    void movePtr(ImmWord imm, Register dest);
+    void movePtr(ImmPtr imm, Register dest);
+    void movePtr(wasm::SymbolicAddress imm, Register dest);
+    void movePtr(ImmGCPtr imm, Register dest);
+
+    void load8SignExtend(const Address& address, Register dest);
+    void load8SignExtend(const BaseIndex& src, Register dest);
+
+    void load8ZeroExtend(const Address& address, Register dest);
+    void load8ZeroExtend(const BaseIndex& src, Register dest);
+
+    void load16SignExtend(const Address& address, Register dest);
+    void load16SignExtend(const BaseIndex& src, Register dest);
+
+    void load16ZeroExtend(const Address& address, Register dest);
+    void load16ZeroExtend(const BaseIndex& src, Register dest);
+
+    void load32(const Address& address, Register dest);
+    void load32(const BaseIndex& address, Register dest);
+    void load32(AbsoluteAddress address, Register dest);
+    void load64(const Address& address, Register64 dest) {
+        load32(LowWord(address), dest.low);
+        load32(HighWord(address), dest.high);
+    }
+
+    void loadPtr(const Address& address, Register dest);
+    void loadPtr(const BaseIndex& src, Register dest);
+    void loadPtr(AbsoluteAddress address, Register dest);
+    void loadPtr(wasm::SymbolicAddress address, Register dest);
+
+    void loadPrivate(const Address& address, Register dest);
+
+    void loadDouble(const Address& addr, FloatRegister dest);
+    void loadDouble(const BaseIndex& src, FloatRegister dest);
+
+    // Load a float value into a register, then expand it to a double.
+    void loadFloatAsDouble(const Address& addr, FloatRegister dest);
+    void loadFloatAsDouble(const BaseIndex& src, FloatRegister dest);
+
+    void loadFloat32(const Address& addr, FloatRegister dest);
+    void loadFloat32(const BaseIndex& src, FloatRegister dest);
+
+    void store8(Register src, const Address& address);
+    void store8(Imm32 imm, const Address& address);
+    void store8(Register src, const BaseIndex& address);
+    void store8(Imm32 imm, const BaseIndex& address);
+
+    void store16(Register src, const Address& address);
+    void store16(Imm32 imm, const Address& address);
+    void store16(Register src, const BaseIndex& address);
+    void store16(Imm32 imm, const BaseIndex& address);
+
+    void store32(Register src, AbsoluteAddress address);
+    void store32(Register src, const Address& address);
+    void store32(Register src, const BaseIndex& address);
+    void store32(Imm32 src, const Address& address);
+    void store32(Imm32 src, const BaseIndex& address);
+
+    void store64(Register64 src, Address address) {
+        store32(src.low, LowWord(address));
+        store32(src.high, HighWord(address));
+    }
+
+    void store64(Imm64 imm, Address address) {
+        store32(imm.low(), LowWord(address));
+        store32(imm.hi(), HighWord(address));
+    }
+
+    void storePtr(ImmWord imm, const Address& address);
+    void storePtr(ImmWord imm, const BaseIndex& address);
+    void storePtr(ImmPtr imm, const Address& address);
+    void storePtr(ImmPtr imm, const BaseIndex& address);
+    void storePtr(ImmGCPtr imm, const Address& address);
+    void storePtr(ImmGCPtr imm, const BaseIndex& address);
+    void storePtr(Register src, const Address& address);
+    void storePtr(Register src, const BaseIndex& address);
+    void storePtr(Register src, AbsoluteAddress dest);
+
+    void moveDouble(FloatRegister src, FloatRegister dest, Condition cc = Always) {
+        ma_vmov(src, dest, cc);
+    }
+
+    inline void incrementInt32Value(const Address& addr);
+
+    void cmp32(Register lhs, Imm32 rhs);
+    void cmp32(Register lhs, Register rhs);
+    void cmp32(const Address& lhs, Imm32 rhs);
+    void cmp32(const Address& lhs, Register rhs);
+
+    void cmpPtr(Register lhs, Register rhs);
+    void cmpPtr(Register lhs, ImmWord rhs);
+    void cmpPtr(Register lhs, ImmPtr rhs);
+    void cmpPtr(Register lhs, ImmGCPtr rhs);
+    void cmpPtr(Register lhs, Imm32 rhs);
+    void cmpPtr(const Address& lhs, Register rhs);
+    void cmpPtr(const Address& lhs, ImmWord rhs);
+    void cmpPtr(const Address& lhs, ImmPtr rhs);
+    void cmpPtr(const Address& lhs, ImmGCPtr rhs);
+    void cmpPtr(const Address& lhs, Imm32 rhs);
+
+    void setStackArg(Register reg, uint32_t arg);
+
+    void breakpoint();
+    // Conditional breakpoint.
+    void breakpoint(Condition cc);
+
+    // Trigger the simulator's interactive read-eval-print loop.
+    // The message will be printed at the stopping point.
+    // (On non-simulator builds, does nothing.)
+    void simulatorStop(const char* msg);
+
+    // Evaluate srcDest = minmax<isMax>{Float32,Double}(srcDest, other).
+    // Checks for NaN if canBeNaN is true.
+    void minMaxDouble(FloatRegister srcDest, FloatRegister other, bool canBeNaN, bool isMax);
+    void minMaxFloat32(FloatRegister srcDest, FloatRegister other, bool canBeNaN, bool isMax);
+
+    void compareDouble(FloatRegister lhs, FloatRegister rhs);
+
+    void compareFloat(FloatRegister lhs, FloatRegister rhs);
+
+    void checkStackAlignment();
+
+    // If source is a double, load it into dest. If source is int32, convert it
+    // to double. Else, branch to failure.
+    void ensureDouble(const ValueOperand& source, FloatRegister dest, Label* failure);
+
+    void
+    emitSet(Assembler::Condition cond, Register dest)
+    {
+        ma_mov(Imm32(0), dest);
+        ma_mov(Imm32(1), dest, cond);
+    }
+
+    void testNullSet(Condition cond, const ValueOperand& value, Register dest) {
+        cond = testNull(cond, value);
+        emitSet(cond, dest);
+    }
+
+    void testObjectSet(Condition cond, const ValueOperand& value, Register dest) {
+        cond = testObject(cond, value);
+        emitSet(cond, dest);
+    }
+
+    void testUndefinedSet(Condition cond, const ValueOperand& value, Register dest) {
+        cond = testUndefined(cond, value);
+        emitSet(cond, dest);
+    }
+
+  protected:
+    bool buildOOLFakeExitFrame(void* fakeReturnAddr);
+
+  public:
+    CodeOffset labelForPatch() {
+        return CodeOffset(nextOffset().getOffset());
+    }
+
+    void computeEffectiveAddress(const Address& address, Register dest) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_add(address.base, Imm32(address.offset), dest, scratch, LeaveCC);
+    }
+    void computeEffectiveAddress(const BaseIndex& address, Register dest) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_alu(address.base, lsl(address.index, address.scale), dest, OpAdd, LeaveCC);
+        if (address.offset) {
+            ma_add(dest, Imm32(address.offset), dest, scratch, LeaveCC);
+        }
+    }
+    void floor(FloatRegister input, Register output, Label* handleNotAnInt);
+    void floorf(FloatRegister input, Register output, Label* handleNotAnInt);
+    void ceil(FloatRegister input, Register output, Label* handleNotAnInt);
+    void ceilf(FloatRegister input, Register output, Label* handleNotAnInt);
+    void round(FloatRegister input, Register output, Label* handleNotAnInt, FloatRegister tmp);
+    void roundf(FloatRegister input, Register output, Label* handleNotAnInt, FloatRegister tmp);
+    void trunc(FloatRegister input, Register output, Label* handleNotAnInt);
+    void truncf(FloatRegister input, Register output, Label* handleNotAnInt);
+
+    void clampCheck(Register r, Label* handleNotAnInt) {
+        // Check explicitly for r == INT_MIN || r == INT_MAX
+        // This is the instruction sequence that gcc generated for this
+        // operation.
+        ScratchRegisterScope scratch(asMasm());
+        SecondScratchRegisterScope scratch2(asMasm());
+        ma_sub(r, Imm32(0x80000001), scratch, scratch2);
+        as_cmn(scratch, Imm8(3));
+        ma_b(handleNotAnInt, Above);
+    }
+
+    void lea(Operand addr, Register dest) {
+        ScratchRegisterScope scratch(asMasm());
+        ma_add(addr.baseReg(), Imm32(addr.disp()), dest, scratch);
+    }
+
+    void abiret() {
+        as_bx(lr);
+    }
+
+    void moveFloat32(FloatRegister src, FloatRegister dest, Condition cc = Always) {
+        as_vmov(VFPRegister(dest).singleOverlay(), VFPRegister(src).singleOverlay(), cc);
+    }
+
+    void loadWasmGlobalPtr(uint32_t globalDataOffset, Register dest) {
+        loadPtr(Address(WasmTlsReg, offsetof(wasm::TlsData, globalArea) + globalDataOffset), dest);
+    }
+    void loadWasmPinnedRegsFromTls() {
+        ScratchRegisterScope scratch(asMasm());
+        ma_ldr(Address(WasmTlsReg, offsetof(wasm::TlsData, memoryBase)), HeapReg, scratch);
+    }
+
+    // Instrumentation for entering and leaving the profiler.
+    void profilerEnterFrame(Register framePtr, Register scratch);
+    void profilerExitFrame();
+=======
+class MacroAssemblerARMCompat : public MacroAssemblerARM {
+ private:
+  // Perform a downcast. Should be removed by Bug 996602.
+  MacroAssembler& asMasm();
+  const MacroAssembler& asMasm() const;
+
+ public:
+  MacroAssemblerARMCompat() {}
+
+ public:
+  // Jumps + other functions that should be called from non-arm specific
+  // code. Basically, an x86 front end on top of the ARM code.
+  void j(Condition code, Label* dest) { as_b(dest, code); }
+  void j(Label* dest) { as_b(dest, Always); }
+
+  void mov(Register src, Register dest) { ma_mov(src, dest); }
+  void mov(ImmWord imm, Register dest) { ma_mov(Imm32(imm.value), dest); }
+  void mov(ImmPtr imm, Register dest) {
+    mov(ImmWord(uintptr_t(imm.value)), dest);
+  }
+
+  void branch(JitCode* c) {
+    BufferOffset bo = m_buffer.nextOffset();
+    addPendingJump(bo, ImmPtr(c->raw()), RelocationKind::JITCODE);
+    ScratchRegisterScope scratch(asMasm());
+    ma_movPatchable(ImmPtr(c->raw()), scratch, Always);
+    ma_bx(scratch);
+  }
+  void branch(const Register reg) { ma_bx(reg); }
+  void nop() { ma_nop(); }
+  void shortJumpSizedNop() { ma_nop(); }
+  void ret() { ma_pop(pc); }
+  void retn(Imm32 n) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    ma_popn_pc(n, scratch, scratch2);
+  }
+  void push(Imm32 imm) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_mov(imm, scratch);
+    ma_push(scratch);
+  }
+  void push(ImmWord imm) { push(Imm32(imm.value)); }
+  void push(ImmGCPtr imm) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_mov(imm, scratch);
+    ma_push(scratch);
+  }
+  void push(const Address& addr) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    ma_ldr(addr, scratch, scratch2);
+    ma_push(scratch);
+  }
+  void push(Register reg) {
+    if (reg == sp) {
+      ScratchRegisterScope scratch(asMasm());
+      ma_push_sp(reg, scratch);
+    } else {
+      ma_push(reg);
+    }
+  }
+  void push(FloatRegister reg) { ma_vpush(VFPRegister(reg)); }
+  void pushWithPadding(Register reg, const Imm32 extraSpace) {
+    ScratchRegisterScope scratch(asMasm());
+    Imm32 totSpace = Imm32(extraSpace.value + 4);
+    ma_dtr(IsStore, sp, totSpace, reg, scratch, PreIndex);
+  }
+  void pushWithPadding(Imm32 imm, const Imm32 extraSpace) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    Imm32 totSpace = Imm32(extraSpace.value + 4);
+    ma_mov(imm, scratch);
+    ma_dtr(IsStore, sp, totSpace, scratch, scratch2, PreIndex);
+  }
+
+  void pop(Register reg) { ma_pop(reg); }
+  void pop(FloatRegister reg) { ma_vpop(VFPRegister(reg)); }
+
+  void popN(Register reg, Imm32 extraSpace) {
+    ScratchRegisterScope scratch(asMasm());
+    Imm32 totSpace = Imm32(extraSpace.value + 4);
+    ma_dtr(IsLoad, sp, totSpace, reg, scratch, PostIndex);
+  }
+
+  CodeOffset toggledJump(Label* label);
+
+  // Emit a BLX or NOP instruction. ToggleCall can be used to patch this
+  // instruction.
+  CodeOffset toggledCall(JitCode* target, bool enabled);
+
+  CodeOffset pushWithPatch(ImmWord imm) {
+    ScratchRegisterScope scratch(asMasm());
+    CodeOffset label = movWithPatch(imm, scratch);
+    ma_push(scratch);
+    return label;
+  }
+
+  CodeOffset movWithPatch(ImmWord imm, Register dest) {
+    CodeOffset label = CodeOffset(currentOffset());
+    ma_movPatchable(Imm32(imm.value), dest, Always);
+    return label;
+  }
+  CodeOffset movWithPatch(ImmPtr imm, Register dest) {
+    return movWithPatch(ImmWord(uintptr_t(imm.value)), dest);
+  }
+
+  void jump(Label* label) { as_b(label); }
+  void jump(JitCode* code) { branch(code); }
+  void jump(TrampolinePtr code) {
+    ScratchRegisterScope scratch(asMasm());
+    movePtr(ImmPtr(code.value), scratch);
+    ma_bx(scratch);
+  }
+  void jump(Register reg) { ma_bx(reg); }
+  void jump(const Address& addr) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    ma_ldr(addr, scratch, scratch2);
+    ma_bx(scratch);
+  }
+
+  void negl(Register reg) { ma_neg(reg, reg, SetCC); }
+  void test32(Register lhs, Register rhs) { ma_tst(lhs, rhs); }
+  void test32(Register lhs, Imm32 imm) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_tst(lhs, imm, scratch);
+  }
+  void test32(const Address& addr, Imm32 imm) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    ma_ldr(addr, scratch, scratch2);
+    ma_tst(scratch, imm, scratch2);
+  }
+  void testPtr(Register lhs, Register rhs) { test32(lhs, rhs); }
+
+  void splitTagForTest(const ValueOperand& value, ScratchTagScope& tag) {
+    MOZ_ASSERT(value.typeReg() == tag);
+  }
+
+  // Higher level tag testing code.
+  Condition testInt32(Condition cond, const ValueOperand& value);
+  Condition testBoolean(Condition cond, const ValueOperand& value);
+  Condition testDouble(Condition cond, const ValueOperand& value);
+  Condition testNull(Condition cond, const ValueOperand& value);
+  Condition testUndefined(Condition cond, const ValueOperand& value);
+  Condition testString(Condition cond, const ValueOperand& value);
+  Condition testSymbol(Condition cond, const ValueOperand& value);
+  Condition testBigInt(Condition cond, const ValueOperand& value);
+  Condition testObject(Condition cond, const ValueOperand& value);
+  Condition testNumber(Condition cond, const ValueOperand& value);
+  Condition testMagic(Condition cond, const ValueOperand& value);
+
+  Condition testPrimitive(Condition cond, const ValueOperand& value);
+
+  // Register-based tests.
+  Condition testInt32(Condition cond, Register tag);
+  Condition testBoolean(Condition cond, Register tag);
+  Condition testNull(Condition cond, Register tag);
+  Condition testUndefined(Condition cond, Register tag);
+  Condition testString(Condition cond, Register tag);
+  Condition testSymbol(Condition cond, Register tag);
+  Condition testBigInt(Condition cond, Register tag);
+  Condition testObject(Condition cond, Register tag);
+  Condition testDouble(Condition cond, Register tag);
+  Condition testNumber(Condition cond, Register tag);
+  Condition testMagic(Condition cond, Register tag);
+  Condition testPrimitive(Condition cond, Register tag);
+
+  Condition testGCThing(Condition cond, const Address& address);
+  Condition testMagic(Condition cond, const Address& address);
+  Condition testInt32(Condition cond, const Address& address);
+  Condition testDouble(Condition cond, const Address& address);
+  Condition testBoolean(Condition cond, const Address& address);
+  Condition testNull(Condition cond, const Address& address);
+  Condition testUndefined(Condition cond, const Address& address);
+  Condition testString(Condition cond, const Address& address);
+  Condition testSymbol(Condition cond, const Address& address);
+  Condition testBigInt(Condition cond, const Address& address);
+  Condition testObject(Condition cond, const Address& address);
+  Condition testNumber(Condition cond, const Address& address);
+
+  Condition testUndefined(Condition cond, const BaseIndex& src);
+  Condition testNull(Condition cond, const BaseIndex& src);
+  Condition testBoolean(Condition cond, const BaseIndex& src);
+  Condition testString(Condition cond, const BaseIndex& src);
+  Condition testSymbol(Condition cond, const BaseIndex& src);
+  Condition testBigInt(Condition cond, const BaseIndex& src);
+  Condition testInt32(Condition cond, const BaseIndex& src);
+  Condition testObject(Condition cond, const BaseIndex& src);
+  Condition testDouble(Condition cond, const BaseIndex& src);
+  Condition testMagic(Condition cond, const BaseIndex& src);
+  Condition testGCThing(Condition cond, const BaseIndex& src);
+
+  // Unboxing code.
+  void unboxNonDouble(const ValueOperand& operand, Register dest,
+                      JSValueType type);
+  void unboxNonDouble(const Address& src, Register dest, JSValueType type);
+  void unboxNonDouble(const BaseIndex& src, Register dest, JSValueType type);
+  void unboxInt32(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_INT32);
+  }
+  void unboxInt32(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_INT32);
+  }
+  void unboxBoolean(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_BOOLEAN);
+  }
+  void unboxBoolean(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_BOOLEAN);
+  }
+  void unboxString(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_STRING);
+  }
+  void unboxString(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_STRING);
+  }
+  void unboxSymbol(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_SYMBOL);
+  }
+  void unboxSymbol(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_SYMBOL);
+  }
+  void unboxBigInt(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_BIGINT);
+  }
+  void unboxBigInt(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_BIGINT);
+  }
+  void unboxObject(const ValueOperand& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+  }
+  void unboxObject(const Address& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+  }
+  void unboxObject(const BaseIndex& src, Register dest) {
+    unboxNonDouble(src, dest, JSVAL_TYPE_OBJECT);
+  }
+  void unboxDouble(const ValueOperand& src, FloatRegister dest);
+  void unboxDouble(const Address& src, FloatRegister dest);
+  void unboxDouble(const BaseIndex& src, FloatRegister dest);
+
+  void unboxValue(const ValueOperand& src, AnyRegister dest, JSValueType type);
+  void unboxPrivate(const ValueOperand& src, Register dest);
+
+  // See comment in MacroAssembler-x64.h.
+  void unboxGCThingForPreBarrierTrampoline(const Address& src, Register dest) {
+    load32(ToPayload(src), dest);
+  }
+
+  void notBoolean(const ValueOperand& val) {
+    as_eor(val.payloadReg(), val.payloadReg(), Imm8(1));
+  }
+
+  // Boxing code.
+  void boxDouble(FloatRegister src, const ValueOperand& dest, FloatRegister);
+  void boxNonDouble(JSValueType type, Register src, const ValueOperand& dest);
+
+  // Extended unboxing API. If the payload is already in a register, returns
+  // that register. Otherwise, provides a move to the given scratch register,
+  // and returns that.
+  MOZ_MUST_USE Register extractObject(const Address& address, Register scratch);
+  MOZ_MUST_USE Register extractObject(const ValueOperand& value,
+                                      Register scratch) {
+    unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_OBJECT);
+    return value.payloadReg();
+  }
+  MOZ_MUST_USE Register extractSymbol(const ValueOperand& value,
+                                      Register scratch) {
+    unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_SYMBOL);
+    return value.payloadReg();
+  }
+  MOZ_MUST_USE Register extractInt32(const ValueOperand& value,
+                                     Register scratch) {
+    return value.payloadReg();
+  }
+  MOZ_MUST_USE Register extractBoolean(const ValueOperand& value,
+                                       Register scratch) {
+    return value.payloadReg();
+  }
+  MOZ_MUST_USE Register extractTag(const Address& address, Register scratch);
+  MOZ_MUST_USE Register extractTag(const BaseIndex& address, Register scratch);
+  MOZ_MUST_USE Register extractTag(const ValueOperand& value,
+                                   Register scratch) {
+    return value.typeReg();
+  }
+
+  void boolValueToDouble(const ValueOperand& operand, FloatRegister dest);
+  void int32ValueToDouble(const ValueOperand& operand, FloatRegister dest);
+  void loadInt32OrDouble(const Address& src, FloatRegister dest);
+  void loadInt32OrDouble(Register base, Register index, FloatRegister dest,
+                         int32_t shift = defaultShift);
+  void loadConstantDouble(double dp, FloatRegister dest);
+
+  // Treat the value as a boolean, and set condition codes accordingly.
+  Condition testInt32Truthy(bool truthy, const ValueOperand& operand);
+  Condition testBooleanTruthy(bool truthy, const ValueOperand& operand);
+  Condition testDoubleTruthy(bool truthy, FloatRegister reg);
+  Condition testStringTruthy(bool truthy, const ValueOperand& value);
+  Condition testBigIntTruthy(bool truthy, const ValueOperand& value);
+
+  void boolValueToFloat32(const ValueOperand& operand, FloatRegister dest);
+  void int32ValueToFloat32(const ValueOperand& operand, FloatRegister dest);
+  void loadConstantFloat32(float f, FloatRegister dest);
+
+  CodeOffsetJump jumpWithPatch(RepatchLabel* label);
+
+  void loadUnboxedValue(Address address, MIRType type, AnyRegister dest) {
+    if (dest.isFloat()) {
+      loadInt32OrDouble(address, dest.fpu());
+    } else {
+      ScratchRegisterScope scratch(asMasm());
+      ma_ldr(address, dest.gpr(), scratch);
+    }
+  }
+
+  void loadUnboxedValue(BaseIndex address, MIRType type, AnyRegister dest) {
+    if (dest.isFloat()) {
+      loadInt32OrDouble(address.base, address.index, dest.fpu(), address.scale);
+    } else {
+      load32(address, dest.gpr());
+    }
+  }
+
+  template <typename T>
+  void storeUnboxedPayload(ValueOperand value, T address, size_t nbytes,
+                           JSValueType) {
+    switch (nbytes) {
+      case 4:
+        storePtr(value.payloadReg(), address);
+        return;
+      case 1:
+        store8(value.payloadReg(), address);
+        return;
+      default:
+        MOZ_CRASH("Bad payload width");
+    }
+  }
+
+  void storeValue(ValueOperand val, const Address& dst);
+  void storeValue(ValueOperand val, const BaseIndex& dest);
+  void storeValue(JSValueType type, Register reg, BaseIndex dest) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+
+    int32_t payloadoffset = dest.offset + NUNBOX32_PAYLOAD_OFFSET;
+    int32_t typeoffset = dest.offset + NUNBOX32_TYPE_OFFSET;
+
+    ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+
+    // Store the payload.
+    if (payloadoffset < 4096 && payloadoffset > -4096) {
+      ma_str(reg, DTRAddr(scratch, DtrOffImm(payloadoffset)));
+    } else {
+      ma_str(reg, Address(scratch, payloadoffset), scratch2);
+    }
+
+    // Store the type.
+    if (typeoffset < 4096 && typeoffset > -4096) {
+      // Encodable as DTRAddr, so only two instructions needed.
+      ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch2);
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(typeoffset)));
+    } else {
+      // Since there are only two scratch registers, the offset must be
+      // applied early using a third instruction to be safe.
+      ma_add(Imm32(typeoffset), scratch, scratch2);
+      ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch2);
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+    }
+  }
+  void storeValue(JSValueType type, Register reg, Address dest) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+
+    ma_str(reg, dest, scratch2);
+    ma_mov(ImmTag(JSVAL_TYPE_TO_TAG(type)), scratch);
+    ma_str(scratch, Address(dest.base, dest.offset + NUNBOX32_TYPE_OFFSET),
+           scratch2);
+  }
+  void storeValue(const Value& val, const Address& dest) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+
+    ma_mov(Imm32(val.toNunboxTag()), scratch);
+    ma_str(scratch, ToType(dest), scratch2);
+    if (val.isGCThing()) {
+      ma_mov(ImmGCPtr(val.toGCThing()), scratch);
+    } else {
+      ma_mov(Imm32(val.toNunboxPayload()), scratch);
+    }
+    ma_str(scratch, ToPayload(dest), scratch2);
+  }
+  void storeValue(const Value& val, BaseIndex dest) {
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+
+    int32_t typeoffset = dest.offset + NUNBOX32_TYPE_OFFSET;
+    int32_t payloadoffset = dest.offset + NUNBOX32_PAYLOAD_OFFSET;
+
+    ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+
+    // Store the type.
+    if (typeoffset < 4096 && typeoffset > -4096) {
+      ma_mov(Imm32(val.toNunboxTag()), scratch2);
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(typeoffset)));
+    } else {
+      ma_add(Imm32(typeoffset), scratch, scratch2);
+      ma_mov(Imm32(val.toNunboxTag()), scratch2);
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+      // Restore scratch for the payload store.
+      ma_alu(dest.base, lsl(dest.index, dest.scale), scratch, OpAdd);
+    }
+
+    // Store the payload, marking if necessary.
+    if (payloadoffset < 4096 && payloadoffset > -4096) {
+      if (val.isGCThing()) {
+        ma_mov(ImmGCPtr(val.toGCThing()), scratch2);
+      } else {
+        ma_mov(Imm32(val.toNunboxPayload()), scratch2);
+      }
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(payloadoffset)));
+    } else {
+      ma_add(Imm32(payloadoffset), scratch, scratch2);
+      if (val.isGCThing()) {
+        ma_mov(ImmGCPtr(val.toGCThing()), scratch2);
+      } else {
+        ma_mov(Imm32(val.toNunboxPayload()), scratch2);
+      }
+      ma_str(scratch2, DTRAddr(scratch, DtrOffImm(0)));
+    }
+  }
+  void storeValue(const Address& src, const Address& dest, Register temp) {
+    load32(ToType(src), temp);
+    store32(temp, ToType(dest));
+
+    load32(ToPayload(src), temp);
+    store32(temp, ToPayload(dest));
+  }
+
+  void loadValue(Address src, ValueOperand val);
+  void loadValue(Operand dest, ValueOperand val) {
+    loadValue(dest.toAddress(), val);
+  }
+  void loadValue(const BaseIndex& addr, ValueOperand val);
+
+  // Like loadValue but guaranteed to not use LDRD or LDM instructions (these
+  // don't support unaligned accesses).
+  void loadUnalignedValue(const Address& src, ValueOperand dest);
+
+  void tagValue(JSValueType type, Register payload, ValueOperand dest);
+
+  void pushValue(ValueOperand val);
+  void popValue(ValueOperand val);
+  void pushValue(const Value& val) {
+    push(Imm32(val.toNunboxTag()));
+    if (val.isGCThing()) {
+      push(ImmGCPtr(val.toGCThing()));
+    } else {
+      push(Imm32(val.toNunboxPayload()));
+    }
+  }
+  void pushValue(JSValueType type, Register reg) {
+    push(ImmTag(JSVAL_TYPE_TO_TAG(type)));
+    ma_push(reg);
+  }
+  void pushValue(const Address& addr);
+
+  void storePayload(const Value& val, const Address& dest);
+  void storePayload(Register src, const Address& dest);
+  void storePayload(const Value& val, const BaseIndex& dest);
+  void storePayload(Register src, const BaseIndex& dest);
+  void storeTypeTag(ImmTag tag, const Address& dest);
+  void storeTypeTag(ImmTag tag, const BaseIndex& dest);
+
+  void handleFailureWithHandlerTail(void* handler, Label* profilerExitTail);
+
+  /////////////////////////////////////////////////////////////////
+  // Common interface.
+  /////////////////////////////////////////////////////////////////
+ public:
+  void not32(Register reg);
+
+  void move32(Imm32 imm, Register dest);
+  void move32(Register src, Register dest);
+
+  void movePtr(Register src, Register dest);
+  void movePtr(ImmWord imm, Register dest);
+  void movePtr(ImmPtr imm, Register dest);
+  void movePtr(wasm::SymbolicAddress imm, Register dest);
+  void movePtr(ImmGCPtr imm, Register dest);
+
+  void load8SignExtend(const Address& address, Register dest);
+  void load8SignExtend(const BaseIndex& src, Register dest);
+
+  void load8ZeroExtend(const Address& address, Register dest);
+  void load8ZeroExtend(const BaseIndex& src, Register dest);
+
+  void load16SignExtend(const Address& address, Register dest);
+  void load16SignExtend(const BaseIndex& src, Register dest);
+
+  void load16ZeroExtend(const Address& address, Register dest);
+  void load16ZeroExtend(const BaseIndex& src, Register dest);
+
+  void load32(const Address& address, Register dest);
+  void load32(const BaseIndex& address, Register dest);
+  void load32(AbsoluteAddress address, Register dest);
+  void load64(const Address& address, Register64 dest) {
+    load32(LowWord(address), dest.low);
+    load32(HighWord(address), dest.high);
+  }
+
+  void loadPtr(const Address& address, Register dest);
+  void loadPtr(const BaseIndex& src, Register dest);
+  void loadPtr(AbsoluteAddress address, Register dest);
+  void loadPtr(wasm::SymbolicAddress address, Register dest);
+
+  void loadPrivate(const Address& address, Register dest);
+
+  void loadDouble(const Address& addr, FloatRegister dest);
+  void loadDouble(const BaseIndex& src, FloatRegister dest);
+
+  // Load a float value into a register, then expand it to a double.
+  void loadFloatAsDouble(const Address& addr, FloatRegister dest);
+  void loadFloatAsDouble(const BaseIndex& src, FloatRegister dest);
+
+  void loadFloat32(const Address& addr, FloatRegister dest);
+  void loadFloat32(const BaseIndex& src, FloatRegister dest);
+
+  void store8(Register src, const Address& address);
+  void store8(Imm32 imm, const Address& address);
+  void store8(Register src, const BaseIndex& address);
+  void store8(Imm32 imm, const BaseIndex& address);
+
+  void store16(Register src, const Address& address);
+  void store16(Imm32 imm, const Address& address);
+  void store16(Register src, const BaseIndex& address);
+  void store16(Imm32 imm, const BaseIndex& address);
+
+  void store32(Register src, AbsoluteAddress address);
+  void store32(Register src, const Address& address);
+  void store32(Register src, const BaseIndex& address);
+  void store32(Imm32 src, const Address& address);
+  void store32(Imm32 src, const BaseIndex& address);
+
+  void store64(Register64 src, Address address) {
+    store32(src.low, LowWord(address));
+    store32(src.high, HighWord(address));
+  }
+
+  void store64(Imm64 imm, Address address) {
+    store32(imm.low(), LowWord(address));
+    store32(imm.hi(), HighWord(address));
+  }
+
+  void storePtr(ImmWord imm, const Address& address);
+  void storePtr(ImmWord imm, const BaseIndex& address);
+  void storePtr(ImmPtr imm, const Address& address);
+  void storePtr(ImmPtr imm, const BaseIndex& address);
+  void storePtr(ImmGCPtr imm, const Address& address);
+  void storePtr(ImmGCPtr imm, const BaseIndex& address);
+  void storePtr(Register src, const Address& address);
+  void storePtr(Register src, const BaseIndex& address);
+  void storePtr(Register src, AbsoluteAddress dest);
+
+  void moveDouble(FloatRegister src, FloatRegister dest,
+                  Condition cc = Always) {
+    ma_vmov(src, dest, cc);
+  }
+
+  inline void incrementInt32Value(const Address& addr);
+
+  void cmp32(Register lhs, Imm32 rhs);
+  void cmp32(Register lhs, Register rhs);
+  void cmp32(const Address& lhs, Imm32 rhs);
+  void cmp32(const Address& lhs, Register rhs);
+
+  void cmpPtr(Register lhs, Register rhs);
+  void cmpPtr(Register lhs, ImmWord rhs);
+  void cmpPtr(Register lhs, ImmPtr rhs);
+  void cmpPtr(Register lhs, ImmGCPtr rhs);
+  void cmpPtr(Register lhs, Imm32 rhs);
+  void cmpPtr(const Address& lhs, Register rhs);
+  void cmpPtr(const Address& lhs, ImmWord rhs);
+  void cmpPtr(const Address& lhs, ImmPtr rhs);
+  void cmpPtr(const Address& lhs, ImmGCPtr rhs);
+  void cmpPtr(const Address& lhs, Imm32 rhs);
+
+  void setStackArg(Register reg, uint32_t arg);
+
+  void breakpoint();
+  // Conditional breakpoint.
+  void breakpoint(Condition cc);
+
+  // Trigger the simulator's interactive read-eval-print loop.
+  // The message will be printed at the stopping point.
+  // (On non-simulator builds, does nothing.)
+  void simulatorStop(const char* msg);
+
+  // Evaluate srcDest = minmax<isMax>{Float32,Double}(srcDest, other).
+  // Checks for NaN if canBeNaN is true.
+  void minMaxDouble(FloatRegister srcDest, FloatRegister other, bool canBeNaN,
+                    bool isMax);
+  void minMaxFloat32(FloatRegister srcDest, FloatRegister other, bool canBeNaN,
+                     bool isMax);
+
+  void compareDouble(FloatRegister lhs, FloatRegister rhs);
+
+  void compareFloat(FloatRegister lhs, FloatRegister rhs);
+
+  void checkStackAlignment();
+
+  // If source is a double, load it into dest. If source is int32, convert it
+  // to double. Else, branch to failure.
+  void ensureDouble(const ValueOperand& source, FloatRegister dest,
+                    Label* failure);
+
+  void emitSet(Assembler::Condition cond, Register dest) {
+    ma_mov(Imm32(0), dest);
+    ma_mov(Imm32(1), dest, cond);
+  }
+
+  void testNullSet(Condition cond, const ValueOperand& value, Register dest) {
+    cond = testNull(cond, value);
+    emitSet(cond, dest);
+  }
+
+  void testObjectSet(Condition cond, const ValueOperand& value, Register dest) {
+    cond = testObject(cond, value);
+    emitSet(cond, dest);
+  }
+
+  void testUndefinedSet(Condition cond, const ValueOperand& value,
+                        Register dest) {
+    cond = testUndefined(cond, value);
+    emitSet(cond, dest);
+  }
+
+ protected:
+  bool buildOOLFakeExitFrame(void* fakeReturnAddr);
+
+ public:
+  CodeOffset labelForPatch() { return CodeOffset(nextOffset().getOffset()); }
+
+  void computeEffectiveAddress(const Address& address, Register dest) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_add(address.base, Imm32(address.offset), dest, scratch, LeaveCC);
+  }
+  void computeEffectiveAddress(const BaseIndex& address, Register dest) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_alu(address.base, lsl(address.index, address.scale), dest, OpAdd,
+           LeaveCC);
+    if (address.offset) {
+      ma_add(dest, Imm32(address.offset), dest, scratch, LeaveCC);
+    }
+  }
+  void floor(FloatRegister input, Register output, Label* handleNotAnInt);
+  void floorf(FloatRegister input, Register output, Label* handleNotAnInt);
+  void ceil(FloatRegister input, Register output, Label* handleNotAnInt);
+  void ceilf(FloatRegister input, Register output, Label* handleNotAnInt);
+  void round(FloatRegister input, Register output, Label* handleNotAnInt,
+             FloatRegister tmp);
+  void roundf(FloatRegister input, Register output, Label* handleNotAnInt,
+              FloatRegister tmp);
+  void trunc(FloatRegister input, Register output, Label* handleNotAnInt);
+  void truncf(FloatRegister input, Register output, Label* handleNotAnInt);
+
+  void clampCheck(Register r, Label* handleNotAnInt) {
+    // Check explicitly for r == INT_MIN || r == INT_MAX
+    // This is the instruction sequence that gcc generated for this
+    // operation.
+    ScratchRegisterScope scratch(asMasm());
+    SecondScratchRegisterScope scratch2(asMasm());
+    ma_sub(r, Imm32(0x80000001), scratch, scratch2);
+    as_cmn(scratch, Imm8(3));
+    ma_b(handleNotAnInt, Above);
+  }
+
+  void lea(Operand addr, Register dest) {
+    ScratchRegisterScope scratch(asMasm());
+    ma_add(addr.baseReg(), Imm32(addr.disp()), dest, scratch);
+  }
+
+  void abiret() { as_bx(lr); }
+
+  void moveFloat32(FloatRegister src, FloatRegister dest,
+                   Condition cc = Always) {
+    as_vmov(VFPRegister(dest).singleOverlay(), VFPRegister(src).singleOverlay(),
+            cc);
+  }
+
+  void loadWasmGlobalPtr(uint32_t globalDataOffset, Register dest) {
+    loadPtr(Address(WasmTlsReg,
+                    offsetof(wasm::TlsData, globalArea) + globalDataOffset),
+            dest);
+  }
+  void loadWasmPinnedRegsFromTls() {
+    ScratchRegisterScope scratch(asMasm());
+    ma_ldr(Address(WasmTlsReg, offsetof(wasm::TlsData, memoryBase)), HeapReg,
+           scratch);
+  }
+
+  // Instrumentation for entering and leaving the profiler.
+  void profilerEnterFrame(Register framePtr, Register scratch);
+  void profilerExitFrame();
+>>>>>>> upstream-releases
 };
 
 typedef MacroAssemblerARMCompat MacroAssemblerSpecific;

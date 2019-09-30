@@ -4,6 +4,7 @@
 
 "use strict";
 
+<<<<<<< HEAD
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
@@ -16,6 +17,52 @@ add_task(threadClientTest(async ({ threadClient, debuggee, client }) => {
 
   await test_object_grip(debuggee, threadClient);
 }));
+||||||| merged common ancestors
+async function run_test() {
+  try {
+    do_test_pending();
+    await run_test_with_server(DebuggerServer);
+    await run_test_with_server(WorkerDebuggerServer);
+  } finally {
+    do_test_finished();
+  }
+}
+
+async function run_test_with_server(server) {
+  initTestDebuggerServer(server);
+  const debuggee = addTestGlobal("test-grips", server);
+  debuggee.eval(`
+    function stopMe(arg1) {
+      debugger;
+    }
+  `);
+
+  const dbgClient = new DebuggerClient(server.connectPipe());
+  await dbgClient.connect();
+  const [,, threadClient] = await attachTestTabAndResume(dbgClient, "test-grips");
+
+  await test_object_grip(debuggee, threadClient);
+
+  await dbgClient.close();
+}
+=======
+Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
+registerCleanupFunction(() => {
+  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
+});
+
+add_task(
+  threadClientTest(async ({ threadClient, debuggee, client }) => {
+    debuggee.eval(
+      function stopMe(arg1) {
+        debugger;
+      }.toString()
+    );
+
+    await test_object_grip(debuggee, threadClient);
+  })
+);
+>>>>>>> upstream-releases
 
 async function test_object_grip(debuggee, threadClient) {
   await assert_object_argument(
@@ -37,17 +84,45 @@ async function test_object_grip(debuggee, threadClient) {
       });
     `,
     async objClient => {
+<<<<<<< HEAD
       const obj1 = (await objClient.getPropertyValue("obj1", null)).value.return;
       const obj2 = (await objClient.getPropertyValue("obj2", null)).value.return;
+||||||| merged common ancestors
+      const obj1 = (await objClient.getPropertyValue("obj1")).value.return;
+      const obj2 = (await objClient.getPropertyValue("obj2")).value.return;
+=======
+      const obj1 = (await objClient.getPropertyValue("obj1", null)).value
+        .return;
+      const obj2 = (await objClient.getPropertyValue("obj2", null)).value
+        .return;
+>>>>>>> upstream-releases
 
       const context = threadClient.pauseGrip(
+<<<<<<< HEAD
         (await objClient.getPropertyValue("context", null)).value.return,
+||||||| merged common ancestors
+        (await objClient.getPropertyValue("context")).value.return,
+=======
+        (await objClient.getPropertyValue("context", null)).value.return
+>>>>>>> upstream-releases
       );
       const sum = threadClient.pauseGrip(
+<<<<<<< HEAD
         (await objClient.getPropertyValue("sum", null)).value.return,
+||||||| merged common ancestors
+        (await objClient.getPropertyValue("sum")).value.return,
+=======
+        (await objClient.getPropertyValue("sum", null)).value.return
+>>>>>>> upstream-releases
       );
       const error = threadClient.pauseGrip(
+<<<<<<< HEAD
         (await objClient.getPropertyValue("error", null)).value.return,
+||||||| merged common ancestors
+        (await objClient.getPropertyValue("error")).value.return,
+=======
+        (await objClient.getPropertyValue("error", null)).value.return
+>>>>>>> upstream-releases
       );
 
       assert_response(await context.apply(obj1, [obj1]), {
@@ -70,7 +145,7 @@ async function test_object_grip(debuggee, threadClient) {
       assert_response(await error.apply(null, []), {
         throw: "an error",
       });
-    },
+    }
   );
 }
 
@@ -95,7 +170,7 @@ function eval_and_resume(debuggee, threadClient, code, callback) {
 
 function wait_for_pause(threadClient, callback = () => {}) {
   return new Promise((resolve, reject) => {
-    threadClient.addOneTimeListener("paused", function(event, packet) {
+    threadClient.once("paused", function(packet) {
       (async () => {
         try {
           return await callback(packet.frame);

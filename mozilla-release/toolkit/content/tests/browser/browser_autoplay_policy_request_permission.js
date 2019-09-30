@@ -6,6 +6,7 @@
 
 ChromeUtils.import("resource:///modules/SitePermissions.jsm", this);
 
+<<<<<<< HEAD
 const VIDEO_PAGE = "https://example.com/browser/toolkit/content/tests/browser/file_empty.html";
 
 add_task(() => {
@@ -17,33 +18,76 @@ add_task(() => {
     ["media.autoplay.block-event.enabled", true],
   ]});
 });
+||||||| merged common ancestors
+const VIDEO_PAGE = "https://example.com/browser/toolkit/content/tests/browser/file_empty.html";
+
+add_task(() => {
+  return SpecialPowers.pushPrefEnv({"set": [
+    ["media.autoplay.default", SpecialPowers.Ci.nsIAutoplay.PROMPT],
+    ["media.autoplay.enabled.user-gestures-needed", true],
+    ["media.autoplay.ask-permission", true],
+    ["media.autoplay.block-event.enabled", true],
+  ]});
+});
+=======
+const VIDEO_PAGE =
+  "https://example.com/browser/toolkit/content/tests/browser/file_empty.html";
+
+function setTestingPreferences(defaultSetting) {
+  info(`set default autoplay setting to '${defaultSetting}'`);
+  let defaultValue =
+    defaultSetting == "blocked"
+      ? SpecialPowers.Ci.nsIAutoplay.BLOCKED
+      : SpecialPowers.Ci.nsIAutoplay.ALLOWED;
+  return SpecialPowers.pushPrefEnv({
+    set: [
+      ["media.autoplay.default", defaultValue],
+      ["media.autoplay.enabled.user-gestures-needed", true],
+      ["media.autoplay.block-event.enabled", true],
+    ],
+  });
+}
+>>>>>>> upstream-releases
 
 async function testAutoplayExistingPermission(args) {
   info("- Starting '" + args.name + "' -");
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: VIDEO_PAGE,
-  }, async (browser) => {
-    let promptShowing = () =>
-    PopupNotifications.getNotification("autoplay-media", browser);
+  await BrowserTestUtils.withNewTab(
+    {
+      gBrowser,
+      url: VIDEO_PAGE,
+    },
+    async browser => {
+      let promptShowing = () =>
+        PopupNotifications.getNotification("autoplay-media", browser);
 
-    SitePermissions.set(browser.currentURI, "autoplay-media", args.permission);
-    ok(!promptShowing(), "Should not be showing permission prompt yet");
+      SitePermissions.set(
+        browser.currentURI,
+        "autoplay-media",
+        args.permission
+      );
+      ok(!promptShowing(), "Should not be showing permission prompt yet");
 
-    await loadAutoplayVideo(browser, args);
-    await checkVideoDidPlay(browser, args);
+      await loadAutoplayVideo(browser, args);
+      await checkVideoDidPlay(browser, args);
 
-    // Reset permission.
-    SitePermissions.remove(browser.currentURI, "autoplay-media");
+      // Reset permission.
+      SitePermissions.remove(browser.currentURI, "autoplay-media");
 
-    info("- Finished '" + args.name + "' -");
-  });
+      info("- Finished '" + args.name + "' -");
+    }
+  );
+}
+
+async function testAutoplayExistingPermissionAgainstDefaultSetting(args) {
+  await setTestingPreferences(args.defaultSetting);
+  await testAutoplayExistingPermission(args);
 }
 
 // Test the simple ALLOW/BLOCK cases; when permission is already set to ALLOW,
 // we shoud be able to autoplay via calling play(), or via the autoplay attribute,
 // and when it's set to BLOCK, we should not.
 add_task(async () => {
+  await setTestingPreferences("blocked" /* default setting */);
   await testAutoplayExistingPermission({
     name: "Prexisting allow permission autoplay attribute",
     permission: SitePermissions.ALLOW,
@@ -70,6 +114,7 @@ add_task(async () => {
   });
 });
 
+<<<<<<< HEAD
 async function testAutoplayUnknownPermission(args) {
   info("- Starting '" + args.name + "' -");
   info("- open new tab -");
@@ -146,14 +191,68 @@ async function testAutoplayUnknownPermission(args) {
 // Test the permission UNKNOWN case; we should prompt for permission, and
 // test pressing approve/block in both the autoplay attribute and call
 // play case.
+||||||| merged common ancestors
+async function testAutoplayUnknownPermission(args) {
+  info("- Starting '" + args.name + "' -");
+  info("- open new tab -");
+
+  await BrowserTestUtils.withNewTab({
+    gBrowser,
+    url: VIDEO_PAGE,
+  }, async (browser) => {
+    let promptShowing = () =>
+      PopupNotifications.getNotification("autoplay-media", browser);
+
+    // Set this site to ask permission to autoplay.
+    SitePermissions.set(browser.currentURI, "autoplay-media", SitePermissions.UNKNOWN);
+    ok(!promptShowing(), "Should not be showing permission prompt");
+
+    let popupshown = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popupshown");
+    await loadAutoplayVideo(browser, args);
+
+    info("Awaiting popupshown");
+    await popupshown;
+    ok(promptShowing(), "Should now be showing permission prompt");
+
+    // Click the appropriate doorhanger button.
+    if (args.button == "allow") {
+      info("Clicking allow button");
+      PopupNotifications.panel.firstElementChild.button.click();
+    } else if (args.button == "block") {
+      info("Clicking block button");
+      PopupNotifications.panel.firstElementChild.secondaryButton.click();
+    } else {
+      ok(false, "Invalid button field");
+    }
+    // Check that the video started playing.
+    await checkVideoDidPlay(browser, args);
+
+    // Reset permission.
+    SitePermissions.remove(browser.currentURI, "autoplay-media");
+    info("- Finished '" + args.name + "' -");
+  });
+}
+
+// Test the permission UNKNOWN case; we should prompt for permission, and
+// test pressing approve/block in both the autoplay attribute and call
+// play case.
+=======
+/**
+ * These tests are used to ensure the autoplay setting for specific site can
+ * always override the default autoplay setting.
+ */
+>>>>>>> upstream-releases
 add_task(async () => {
-  await testAutoplayUnknownPermission({
-    name: "Unknown permission click allow autoplay attribute",
-    button: "allow",
+  await testAutoplayExistingPermissionAgainstDefaultSetting({
+    name:
+      "Site has prexisting allow permission but default setting is 'blocked'",
+    permission: SitePermissions.ALLOW,
+    defaultSetting: "blocked",
     shouldPlay: true,
     mode: "autoplay attribute",
     checkbox: true,
   });
+<<<<<<< HEAD
   await testAutoplayUnknownPermission({
     name: "Unknown permission click allow call play",
     button: "allow",
@@ -178,10 +277,28 @@ add_task(async () => {
   await testAutoplayUnknownPermission({
     name: "Unknown permission click block autoplay attribute",
     button: "block",
+||||||| merged common ancestors
+  await testAutoplayUnknownPermission({
+    name: "Unknown permission click allow call play",
+    button: "allow",
+    shouldPlay: true,
+    mode: "call play",
+  });
+  await testAutoplayUnknownPermission({
+    name: "Unknown permission click block autoplay attribute",
+    button: "block",
+=======
+  await testAutoplayExistingPermissionAgainstDefaultSetting({
+    name:
+      "Site has prexisting block permission but default setting is 'allowed'",
+    permission: SitePermissions.BLOCK,
+    defaultSetting: "allowed",
+>>>>>>> upstream-releases
     shouldPlay: false,
     mode: "autoplay attribute",
     checkbox: true,
   });
+<<<<<<< HEAD
   await testAutoplayUnknownPermission({
     name: "Unknown permission click block call play",
     button: "block",
@@ -365,4 +482,72 @@ add_task(async () => {
     type: "WebAudio",
     isAudible: false,
   });
+||||||| merged common ancestors
+  await testAutoplayUnknownPermission({
+    name: "Unknown permission click block call play",
+    button: "block",
+    shouldPlay: false,
+    mode: "call play",
+  });
+});
+
+// Test that if playback starts while the permission prompt is shown,
+// that the prompt is hidden.
+add_task(async () => {
+  await BrowserTestUtils.withNewTab({
+    gBrowser,
+    url: VIDEO_PAGE,
+  }, async (browser) => {
+    info("- Started test prompt hides upon play -");
+    let promptShowing = () =>
+      PopupNotifications.getNotification("autoplay-media", browser);
+
+    // Set this site to ask permission to autoplay.
+    SitePermissions.set(browser.currentURI, "autoplay-media", SitePermissions.UNKNOWN);
+    ok(!promptShowing(), "Should not be showing permission prompt");
+
+    let popupshown = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popupshown");
+    await loadAutoplayVideo(browser, { mode: "call play" });
+
+    info("Awaiting popupshown");
+    await popupshown;
+    ok(promptShowing(), "Should now be showing permission prompt");
+
+    // Check that the video didn't start playing.
+    await ContentTask.spawn(browser, null,
+      async () => {
+        let video = content.document.getElementById("v1");
+        ok(video.paused && !video.didPlay, "Video should not be playing");
+      });
+
+    let popuphidden = BrowserTestUtils.waitForEvent(PopupNotifications.panel, "popuphidden");
+
+    await ContentTask.spawn(browser, null,
+      async () => {
+        // Gesture activate the document, i.e. simulate a click in the document,
+        // to unblock autoplay,
+        content.document.notifyUserGestureActivation();
+        let video = content.document.getElementById("v1");
+        // Gesture activating in itself should not cause the previous pending
+        // play to proceed.
+        ok(video.paused && !video.didPlay, "Video should not have played yet");
+        // But trying to play again now that we're gesture activated will work...
+        let played = await video.play().then(() => true, () => false);
+        ok(played, "Should have played as now gesture activated");
+        // And because we started playing, the previous promise returned in the
+        // first call to play() above should also resolve too.
+        await video.didPlayPromise;
+        ok(video.didPlay, "Existing promise should resolve when media starts playing");
+      });
+
+    info("Awaiting popuphidden");
+    await popuphidden;
+    ok(!promptShowing(), "Permission prompt should have hidden when media started playing");
+
+    // Reset permission.
+    SitePermissions.remove(browser.currentURI, "autoplay-media");
+    info("- Finished test prompt hides upon play -");
+  });
+=======
+>>>>>>> upstream-releases
 });

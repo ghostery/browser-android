@@ -125,8 +125,16 @@ void GrGLMatrixConvolutionEffect::GenKey(const GrProcessor& processor,
 void GrGLMatrixConvolutionEffect::onSetData(const GrGLSLProgramDataManager& pdman,
                                             const GrFragmentProcessor& processor) {
     const GrMatrixConvolutionEffect& conv = processor.cast<GrMatrixConvolutionEffect>();
+<<<<<<< HEAD
     GrSurfaceProxy* proxy = conv.textureSampler(0).proxy();
     GrTexture* texture = proxy->peekTexture();
+||||||| merged common ancestors
+    GrSurfaceProxy* proxy = conv.textureSampler(0).proxy();
+    GrTexture* texture = proxy->priv().peekTexture();
+=======
+    GrTextureProxy* proxy = conv.textureSampler(0).proxy();
+    GrTexture* texture = proxy->peekTexture();
+>>>>>>> upstream-releases
 
     float imageIncrement[2];
     float ySign = proxy->origin() == kTopLeft_GrSurfaceOrigin ? 1.0f : -1.0f;
@@ -140,7 +148,7 @@ void GrGLMatrixConvolutionEffect::onSetData(const GrGLSLProgramDataManager& pdma
     pdman.set4fv(fKernelUni, arrayCount, conv.kernel());
     pdman.set1f(fGainUni, conv.gain());
     pdman.set1f(fBiasUni, conv.bias());
-    fDomain.setData(pdman, conv.domain(), proxy);
+    fDomain.setData(pdman, conv.domain(), proxy, conv.textureSampler(0).samplerState());
 }
 
 GrMatrixConvolutionEffect::GrMatrixConvolutionEffect(sk_sp<GrTextureProxy> srcProxy,
@@ -155,11 +163,22 @@ GrMatrixConvolutionEffect::GrMatrixConvolutionEffect(sk_sp<GrTextureProxy> srcPr
         // To advertise either the modulation or opaqueness optimizations we'd have to examine the
         // parameters.
         : INHERITED(kGrMatrixConvolutionEffect_ClassID, kNone_OptimizationFlags)
+<<<<<<< HEAD
         , fCoordTransform(srcProxy.get())
         , fDomain(srcProxy.get(),
                   GrTextureDomain::MakeTexelDomainForMode(srcBounds, tileMode),
                   tileMode)
         , fTextureSampler(std::move(srcProxy))
+||||||| merged common ancestors
+        , fCoordTransform(proxy.get())
+        , fDomain(proxy.get(), GrTextureDomain::MakeTexelDomainForMode(bounds, tileMode), tileMode)
+        , fTextureSampler(std::move(proxy))
+=======
+        , fCoordTransform(srcProxy.get())
+        , fDomain(srcProxy.get(), GrTextureDomain::MakeTexelDomain(srcBounds, tileMode),
+                  tileMode, tileMode)
+        , fTextureSampler(std::move(srcProxy))
+>>>>>>> upstream-releases
         , fKernelSize(kernelSize)
         , fGain(SkScalarToFloat(gain))
         , fBias(SkScalarToFloat(bias) / 255.0f)

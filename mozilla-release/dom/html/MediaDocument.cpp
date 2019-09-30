@@ -8,7 +8,6 @@
 #include "nsGkAtoms.h"
 #include "nsRect.h"
 #include "nsPresContext.h"
-#include "nsIPresShell.h"
 #include "nsIScrollable.h"
 #include "nsViewManager.h"
 #include "nsITextToSubURI.h"
@@ -19,6 +18,7 @@
 #include "nsNodeInfoManager.h"
 #include "nsContentUtils.h"
 #include "nsDocElementCreatedNotificationRunner.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Services.h"
 #include "nsServiceManagerUtils.h"
 #include "nsIPrincipal.h"
@@ -49,14 +49,21 @@ void MediaDocumentStreamListener::SetStreamListener(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MediaDocumentStreamListener::OnStartRequest(nsIRequest* request,
                                             nsISupports* ctxt) {
+||||||| merged common ancestors
+MediaDocumentStreamListener::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
+{
+=======
+MediaDocumentStreamListener::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(mDocument, NS_ERROR_FAILURE);
 
   mDocument->StartLayout();
 
   if (mNextStream) {
-    return mNextStream->OnStartRequest(request, ctxt);
+    return mNextStream->OnStartRequest(request);
   }
 
   return NS_ERROR_PARSED_DATA_CACHED;
@@ -64,10 +71,18 @@ MediaDocumentStreamListener::OnStartRequest(nsIRequest* request,
 
 NS_IMETHODIMP
 MediaDocumentStreamListener::OnStopRequest(nsIRequest* request,
+<<<<<<< HEAD
                                            nsISupports* ctxt, nsresult status) {
+||||||| merged common ancestors
+                                           nsISupports *ctxt,
+                                           nsresult status)
+{
+=======
+                                           nsresult status) {
+>>>>>>> upstream-releases
   nsresult rv = NS_OK;
   if (mNextStream) {
-    rv = mNextStream->OnStopRequest(request, ctxt, status);
+    rv = mNextStream->OnStopRequest(request, status);
   }
 
   // Don't release mDocument here if we're in the middle of a multipart
@@ -86,13 +101,26 @@ MediaDocumentStreamListener::OnStopRequest(nsIRequest* request,
 
 NS_IMETHODIMP
 MediaDocumentStreamListener::OnDataAvailable(nsIRequest* request,
+<<<<<<< HEAD
                                              nsISupports* ctxt,
                                              nsIInputStream* inStr,
+||||||| merged common ancestors
+                                             nsISupports *ctxt,
+                                             nsIInputStream *inStr,
+=======
+                                             nsIInputStream* inStr,
+>>>>>>> upstream-releases
                                              uint64_t sourceOffset,
                                              uint32_t count) {
   if (mNextStream) {
+<<<<<<< HEAD
     return mNextStream->OnDataAvailable(request, ctxt, inStr, sourceOffset,
                                         count);
+||||||| merged common ancestors
+    return mNextStream->OnDataAvailable(request, ctxt, inStr, sourceOffset, count);
+=======
+    return mNextStream->OnDataAvailable(request, inStr, sourceOffset, count);
+>>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -137,6 +165,7 @@ nsresult MediaDocument::Init() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult MediaDocument::StartDocumentLoad(const char* aCommand,
                                           nsIChannel* aChannel,
                                           nsILoadGroup* aLoadGroup,
@@ -145,6 +174,29 @@ nsresult MediaDocument::StartDocumentLoad(const char* aCommand,
                                           bool aReset, nsIContentSink* aSink) {
   nsresult rv = nsDocument::StartDocumentLoad(
       aCommand, aChannel, aLoadGroup, aContainer, aDocListener, aReset, aSink);
+||||||| merged common ancestors
+nsresult
+MediaDocument::StartDocumentLoad(const char*         aCommand,
+                                 nsIChannel*         aChannel,
+                                 nsILoadGroup*       aLoadGroup,
+                                 nsISupports*        aContainer,
+                                 nsIStreamListener** aDocListener,
+                                 bool                aReset,
+                                 nsIContentSink*     aSink)
+{
+  nsresult rv = nsDocument::StartDocumentLoad(aCommand, aChannel, aLoadGroup,
+                                              aContainer, aDocListener, aReset,
+                                              aSink);
+=======
+nsresult MediaDocument::StartDocumentLoad(const char* aCommand,
+                                          nsIChannel* aChannel,
+                                          nsILoadGroup* aLoadGroup,
+                                          nsISupports* aContainer,
+                                          nsIStreamListener** aDocListener,
+                                          bool aReset, nsIContentSink* aSink) {
+  nsresult rv = Document::StartDocumentLoad(
+      aCommand, aChannel, aLoadGroup, aContainer, aDocListener, aReset, aSink);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return rv;
   }
@@ -183,13 +235,31 @@ nsresult MediaDocument::StartDocumentLoad(const char* aCommand,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void MediaDocument::InitialSetupDone() {
   MOZ_ASSERT(GetReadyStateEnum() == nsIDocument::READYSTATE_LOADING,
+||||||| merged common ancestors
+void
+MediaDocument::InitialSetupDone()
+{
+  MOZ_ASSERT(GetReadyStateEnum() == nsIDocument::READYSTATE_LOADING,
+=======
+void MediaDocument::InitialSetupDone() {
+  MOZ_ASSERT(GetReadyStateEnum() == Document::READYSTATE_LOADING,
+>>>>>>> upstream-releases
              "Bad readyState: we should still be doing our initial load");
   mDidInitialDocumentSetup = true;
   nsContentUtils::AddScriptRunner(
+<<<<<<< HEAD
       new nsDocElementCreatedNotificationRunner(this));
   SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
+||||||| merged common ancestors
+    new nsDocElementCreatedNotificationRunner(this));
+  SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
+=======
+      new nsDocElementCreatedNotificationRunner(this));
+  SetReadyStateInternal(Document::READYSTATE_INTERACTIVE);
+>>>>>>> upstream-releases
 }
 
 nsresult MediaDocument::CreateSyntheticDocument() {
@@ -245,11 +315,11 @@ nsresult MediaDocument::CreateSyntheticDocument() {
 
 nsresult MediaDocument::StartLayout() {
   mMayStartLayout = true;
-  nsCOMPtr<nsIPresShell> shell = GetShell();
+  RefPtr<PresShell> presShell = GetPresShell();
   // Don't mess with the presshell if someone has already handled
   // its initial reflow.
-  if (shell && !shell->DidInitialize()) {
-    nsresult rv = shell->Initialize();
+  if (presShell && !presShell->DidInitialize()) {
+    nsresult rv = presShell->Initialize();
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -274,7 +344,7 @@ void MediaDocument::GetFileName(nsAString& aResult, nsIChannel* aChannel) {
   nsAutoCString docCharset;
   // Now that the charset is set in |StartDocumentLoad| to the charset of
   // the document viewer instead of a bogus value ("windows-1252" set in
-  // |nsDocument|'s ctor), the priority is given to the current charset.
+  // |Document|'s ctor), the priority is given to the current charset.
   // This is necessary to deal with a media document being opened in a new
   // window or a new tab.
   if (mCharacterSetSource != kCharsetUninitialized) {
@@ -350,26 +420,63 @@ void MediaDocument::UpdateTitleAndCharset(const nsACString& aTypeStr,
       heightStr.AppendInt(aHeight);
       // If we got a filename, display it
       if (!fileStr.IsEmpty()) {
+<<<<<<< HEAD
         const char16_t* formatStrings[4] = {fileStr.get(), typeStr.get(),
                                             widthStr.get(), heightStr.get()};
+||||||| merged common ancestors
+        const char16_t *formatStrings[4]  = {fileStr.get(), typeStr.get(),
+          widthStr.get(), heightStr.get()};
+=======
+        AutoTArray<nsString, 4> formatStrings = {fileStr, typeStr, widthStr,
+                                                 heightStr};
+>>>>>>> upstream-releases
         mStringBundle->FormatStringFromName(aFormatNames[eWithDimAndFile],
+<<<<<<< HEAD
                                             formatStrings, 4, title);
       } else {
         const char16_t* formatStrings[3] = {typeStr.get(), widthStr.get(),
                                             heightStr.get()};
+||||||| merged common ancestors
+                                            formatStrings, 4, title);
+      }
+      else {
+        const char16_t *formatStrings[3]  = {typeStr.get(), widthStr.get(),
+          heightStr.get()};
+=======
+                                            formatStrings, title);
+      } else {
+        AutoTArray<nsString, 3> formatStrings = {typeStr, widthStr, heightStr};
+>>>>>>> upstream-releases
         mStringBundle->FormatStringFromName(aFormatNames[eWithDim],
-                                            formatStrings, 3, title);
+                                            formatStrings, title);
       }
     } else {
       // If we got a filename, display it
       if (!fileStr.IsEmpty()) {
+<<<<<<< HEAD
         const char16_t* formatStrings[2] = {fileStr.get(), typeStr.get()};
+||||||| merged common ancestors
+        const char16_t *formatStrings[2] = {fileStr.get(), typeStr.get()};
+=======
+        AutoTArray<nsString, 2> formatStrings = {fileStr, typeStr};
+>>>>>>> upstream-releases
         mStringBundle->FormatStringFromName(aFormatNames[eWithFile],
+<<<<<<< HEAD
                                             formatStrings, 2, title);
       } else {
         const char16_t* formatStrings[1] = {typeStr.get()};
+||||||| merged common ancestors
+                                            formatStrings, 2, title);
+      }
+      else {
+        const char16_t *formatStrings[1] = {typeStr.get()};
+=======
+                                            formatStrings, title);
+      } else {
+        AutoTArray<nsString, 1> formatStrings = {typeStr};
+>>>>>>> upstream-releases
         mStringBundle->FormatStringFromName(aFormatNames[eWithNoInfo],
-                                            formatStrings, 1, title);
+                                            formatStrings, title);
       }
     }
   }
@@ -380,12 +487,28 @@ void MediaDocument::UpdateTitleAndCharset(const nsACString& aTypeStr,
     SetTitle(title, ignored);
   } else {
     nsAutoString titleWithStatus;
+<<<<<<< HEAD
     const nsPromiseFlatString& status = PromiseFlatString(aStatus);
     const char16_t* formatStrings[2] = {title.get(), status.get()};
     mStringBundle->FormatStringFromName("TitleWithStatus", formatStrings, 2,
                                         titleWithStatus);
     IgnoredErrorResult ignored;
     SetTitle(titleWithStatus, ignored);
+||||||| merged common ancestors
+    const nsPromiseFlatString& status = PromiseFlatString(aStatus);
+    const char16_t *formatStrings[2] = {title.get(), status.get()};
+    mStringBundle->FormatStringFromName("TitleWithStatus", formatStrings,
+                                        2, titleWithStatus);
+    IgnoredErrorResult ignored;
+    SetTitle(titleWithStatus, ignored);
+=======
+    AutoTArray<nsString, 2> formatStrings;
+    formatStrings.AppendElement(title);
+    formatStrings.AppendElement(aStatus);
+    mStringBundle->FormatStringFromName("TitleWithStatus", formatStrings,
+                                        titleWithStatus);
+    SetTitle(titleWithStatus, IgnoreErrors());
+>>>>>>> upstream-releases
   }
 }
 

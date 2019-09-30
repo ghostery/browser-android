@@ -16,8 +16,7 @@
 #include "nsString.h"
 #include "nsIStyleSheetLinkingElement.h"
 #include "nsIContentInlines.h"
-#include "nsIDocument.h"
-#include "nsIPresShell.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDOMWindow.h"
 #include "nsXBLBinding.h"
 #include "nsXBLPrototypeBinding.h"
@@ -28,6 +27,8 @@
 #include "mozilla/EventStateManager.h"
 #include "nsAtom.h"
 #include "nsRange.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/PresShellInlines.h"
 #include "mozilla/StyleSheetInlines.h"
 #include "mozilla/dom/CharacterData.h"
 #include "mozilla/dom/Element.h"
@@ -53,23 +54,37 @@ using namespace mozilla::dom;
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetAllStyleSheets(
     GlobalObject& aGlobalObject, nsIDocument& aDocument, bool aDocumentOnly,
     nsTArray<RefPtr<StyleSheet>>& aResult) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetAllStyleSheets(GlobalObject& aGlobalObject,
+                                  nsIDocument& aDocument,
+                                  bool aDocumentOnly,
+                                  nsTArray<RefPtr<StyleSheet>>& aResult)
+{
+=======
+/* static */
+void InspectorUtils::GetAllStyleSheets(GlobalObject& aGlobalObject,
+                                       Document& aDocument, bool aDocumentOnly,
+                                       nsTArray<RefPtr<StyleSheet>>& aResult) {
+>>>>>>> upstream-releases
   // Get the agent, then user and finally xbl sheets in the style set.
-  nsIPresShell* presShell = aDocument.GetShell();
+  PresShell* presShell = aDocument.GetPresShell();
 
   if (presShell) {
     ServoStyleSet* styleSet = presShell->StyleSet();
 
     if (!aDocumentOnly) {
-      SheetType sheetType = SheetType::Agent;
-      for (int32_t i = 0; i < styleSet->SheetCount(sheetType); i++) {
-        aResult.AppendElement(styleSet->StyleSheetAt(sheetType, i));
-      }
-      sheetType = SheetType::User;
-      for (int32_t i = 0; i < styleSet->SheetCount(sheetType); i++) {
-        aResult.AppendElement(styleSet->StyleSheetAt(sheetType, i));
+      const StyleOrigin kOrigins[] = {StyleOrigin::UserAgent,
+                                      StyleOrigin::User};
+      for (const auto origin : kOrigins) {
+        for (size_t i = 0, count = styleSet->SheetCount(origin); i < count;
+             i++) {
+          aResult.AppendElement(styleSet->SheetAt(origin, i));
+        }
       }
     }
 
@@ -109,8 +124,19 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ nsINode* InspectorUtils::GetParentForNode(
     nsINode& aNode, bool aShowingAnonymousContent) {
+||||||| merged common ancestors
+/* static */ nsINode*
+InspectorUtils::GetParentForNode(nsINode& aNode,
+                                 bool aShowingAnonymousContent)
+{
+=======
+/* static */
+nsINode* InspectorUtils::GetParentForNode(nsINode& aNode,
+                                          bool aShowingAnonymousContent) {
+>>>>>>> upstream-releases
   // First do the special cases -- document nodes and anonymous content
   nsINode* parent = nullptr;
 
@@ -130,8 +156,19 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   return parent;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<nsINodeList> InspectorUtils::GetChildrenForNode(
     nsINode& aNode, bool aShowingAnonymousContent) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<nsINodeList>
+InspectorUtils::GetChildrenForNode(nsINode& aNode,
+                                   bool aShowingAnonymousContent)
+{
+=======
+/* static */
+already_AddRefed<nsINodeList> InspectorUtils::GetChildrenForNode(
+    nsINode& aNode, bool aShowingAnonymousContent) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsINodeList> kids;
 
   if (aShowingAnonymousContent) {
@@ -147,9 +184,23 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   return kids.forget();
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetCSSStyleRules(
     GlobalObject& aGlobalObject, Element& aElement, const nsAString& aPseudo,
     nsTArray<RefPtr<css::Rule>>& aResult) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetCSSStyleRules(GlobalObject& aGlobalObject,
+                                 Element& aElement,
+                                 const nsAString& aPseudo,
+                                 nsTArray<RefPtr<css::Rule>>& aResult)
+{
+=======
+/* static */
+void InspectorUtils::GetCSSStyleRules(
+    GlobalObject& aGlobalObject, Element& aElement, const nsAString& aPseudo,
+    nsTArray<RefPtr<BindingStyleRule>>& aResult) {
+>>>>>>> upstream-releases
   RefPtr<nsAtom> pseudoElt;
   if (!aPseudo.IsEmpty()) {
     pseudoElt = NS_Atomize(aPseudo);
@@ -163,9 +214,20 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
     return;
   }
 
+<<<<<<< HEAD
   nsIDocument* doc = aElement.OwnerDoc();
   nsIPresShell* shell = doc->GetShell();
   if (!shell) {
+||||||| merged common ancestors
+
+  nsIDocument* doc = aElement.OwnerDoc();
+  nsIPresShell* shell = doc->GetShell();
+  if (!shell) {
+=======
+  Document* doc = aElement.OwnerDoc();
+  PresShell* presShell = doc->GetPresShell();
+  if (!presShell) {
+>>>>>>> upstream-releases
     return;
   }
 
@@ -174,11 +236,12 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
 
   AutoTArray<ServoStyleRuleMap*, 1> maps;
   {
-    ServoStyleSet* styleSet = shell->StyleSet();
+    ServoStyleSet* styleSet = presShell->StyleSet();
     ServoStyleRuleMap* map = styleSet->StyleRuleMap();
     maps.AppendElement(map);
   }
 
+<<<<<<< HEAD
   // Collect style rule maps for bindings.
   for (nsIContent* bindingContent = &aElement; bindingContent;
        bindingContent = bindingContent->GetBindingParent()) {
@@ -195,6 +258,25 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
     // inheritance in cascading.
   }
 
+||||||| merged common ancestors
+  // Collect style rule maps for bindings.
+  for (nsIContent* bindingContent = &aElement; bindingContent;
+       bindingContent = bindingContent->GetBindingParent()) {
+    for (nsXBLBinding* binding = bindingContent->GetXBLBinding();
+         binding; binding = binding->GetBaseBinding()) {
+      if (auto* map = binding->PrototypeBinding()->GetServoStyleRuleMap()) {
+        maps.AppendElement(map);
+      }
+    }
+    // Note that we intentionally don't cut off here, unlike when we
+    // do styling, because even if style rules from parent binding
+    // do not apply to the element directly in those cases, their
+    // rules may still show up in the list we get above due to the
+    // inheritance in cascading.
+  }
+
+=======
+>>>>>>> upstream-releases
   // Now shadow DOM stuff...
   if (auto* shadow = aElement.GetShadowRoot()) {
     maps.AppendElement(&shadow->ServoStyleRuleMap());
@@ -236,18 +318,47 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t InspectorUtils::GetRuleLine(GlobalObject& aGlobal,
                                                   css::Rule& aRule) {
+||||||| merged common ancestors
+/* static */ uint32_t
+InspectorUtils::GetRuleLine(GlobalObject& aGlobal, css::Rule& aRule)
+{
+=======
+/* static */
+uint32_t InspectorUtils::GetRuleLine(GlobalObject& aGlobal, css::Rule& aRule) {
+>>>>>>> upstream-releases
   return aRule.GetLineNumber();
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t InspectorUtils::GetRuleColumn(GlobalObject& aGlobal,
                                                     css::Rule& aRule) {
+||||||| merged common ancestors
+/* static */ uint32_t
+InspectorUtils::GetRuleColumn(GlobalObject& aGlobal, css::Rule& aRule)
+{
+=======
+/* static */
+uint32_t InspectorUtils::GetRuleColumn(GlobalObject& aGlobal,
+                                       css::Rule& aRule) {
+>>>>>>> upstream-releases
   return aRule.GetColumnNumber();
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t InspectorUtils::GetRelativeRuleLine(GlobalObject& aGlobal,
                                                           css::Rule& aRule) {
+||||||| merged common ancestors
+/* static */ uint32_t
+InspectorUtils::GetRelativeRuleLine(GlobalObject& aGlobal, css::Rule& aRule)
+{
+=======
+/* static */
+uint32_t InspectorUtils::GetRelativeRuleLine(GlobalObject& aGlobal,
+                                             css::Rule& aRule) {
+>>>>>>> upstream-releases
   uint32_t lineNumber = aRule.GetLineNumber();
 
   // If aRule was parsed along with its stylesheet, then it will
@@ -293,54 +404,154 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   return lineNumber;
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::HasRulesModifiedByCSSOM(GlobalObject& aGlobal,
                                                           StyleSheet& aSheet) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::HasRulesModifiedByCSSOM(GlobalObject& aGlobal, StyleSheet& aSheet)
+{
+=======
+/* static */
+bool InspectorUtils::HasRulesModifiedByCSSOM(GlobalObject& aGlobal,
+                                             StyleSheet& aSheet) {
+>>>>>>> upstream-releases
   return aSheet.HasModifiedRules();
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t InspectorUtils::GetSelectorCount(
     GlobalObject& aGlobal, BindingStyleRule& aRule) {
+||||||| merged common ancestors
+/* static */ uint32_t
+InspectorUtils::GetSelectorCount(GlobalObject& aGlobal,
+                                 BindingStyleRule& aRule)
+{
+=======
+/* static */
+uint32_t InspectorUtils::GetSelectorCount(GlobalObject& aGlobal,
+                                          BindingStyleRule& aRule) {
+>>>>>>> upstream-releases
   return aRule.GetSelectorCount();
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetSelectorText(GlobalObject& aGlobal,
                                                   BindingStyleRule& aRule,
                                                   uint32_t aSelectorIndex,
                                                   nsString& aText,
                                                   ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetSelectorText(GlobalObject& aGlobal,
+                                BindingStyleRule& aRule,
+                                uint32_t aSelectorIndex,
+                                nsString& aText,
+                                ErrorResult& aRv)
+{
+=======
+/* static */
+void InspectorUtils::GetSelectorText(GlobalObject& aGlobal,
+                                     BindingStyleRule& aRule,
+                                     uint32_t aSelectorIndex, nsString& aText,
+                                     ErrorResult& aRv) {
+>>>>>>> upstream-releases
   aRv = aRule.GetSelectorText(aSelectorIndex, aText);
 }
 
+<<<<<<< HEAD
 /* static */ uint64_t InspectorUtils::GetSpecificity(GlobalObject& aGlobal,
                                                      BindingStyleRule& aRule,
                                                      uint32_t aSelectorIndex,
                                                      ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ uint64_t
+InspectorUtils::GetSpecificity(GlobalObject& aGlobal,
+                               BindingStyleRule& aRule,
+                               uint32_t aSelectorIndex,
+                               ErrorResult& aRv)
+{
+=======
+/* static */
+uint64_t InspectorUtils::GetSpecificity(GlobalObject& aGlobal,
+                                        BindingStyleRule& aRule,
+                                        uint32_t aSelectorIndex,
+                                        ErrorResult& aRv) {
+>>>>>>> upstream-releases
   uint64_t s;
   aRv = aRule.GetSpecificity(aSelectorIndex, &s);
   return s;
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::SelectorMatchesElement(
     GlobalObject& aGlobalObject, Element& aElement, BindingStyleRule& aRule,
     uint32_t aSelectorIndex, const nsAString& aPseudo, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::SelectorMatchesElement(GlobalObject& aGlobalObject,
+                                       Element& aElement,
+                                       BindingStyleRule& aRule,
+                                       uint32_t aSelectorIndex,
+                                       const nsAString& aPseudo,
+                                       ErrorResult& aRv)
+{
+=======
+/* static */
+bool InspectorUtils::SelectorMatchesElement(
+    GlobalObject& aGlobalObject, Element& aElement, BindingStyleRule& aRule,
+    uint32_t aSelectorIndex, const nsAString& aPseudo, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   bool result = false;
   aRv =
       aRule.SelectorMatchesElement(&aElement, aSelectorIndex, aPseudo, &result);
   return result;
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::IsInheritedProperty(
     GlobalObject& aGlobalObject, const nsAString& aPropertyName) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::IsInheritedProperty(GlobalObject& aGlobalObject,
+                                    const nsAString& aPropertyName)
+{
+=======
+/* static */
+bool InspectorUtils::IsInheritedProperty(GlobalObject& aGlobalObject,
+                                         const nsAString& aPropertyName) {
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 propName(aPropertyName);
   return Servo_Property_IsInherited(&propName);
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetCSSPropertyNames(
     GlobalObject& aGlobalObject, const PropertyNamesOptions& aOptions,
     nsTArray<nsString>& aResult) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetCSSPropertyNames(GlobalObject& aGlobalObject,
+                                    const PropertyNamesOptions& aOptions,
+                                    nsTArray<nsString>& aResult)
+{
+=======
+/* static */
+void InspectorUtils::GetCSSPropertyNames(GlobalObject& aGlobalObject,
+                                         const PropertyNamesOptions& aOptions,
+                                         nsTArray<nsString>& aResult) {
+>>>>>>> upstream-releases
   CSSEnabledState enabledState = aOptions.mIncludeExperimentals
+<<<<<<< HEAD
                                      ? CSSEnabledState::eIgnoreEnabledState
                                      : CSSEnabledState::eForAllContent;
+||||||| merged common ancestors
+    ? CSSEnabledState::eIgnoreEnabledState
+    : CSSEnabledState::eForAllContent;
+=======
+                                     ? CSSEnabledState::IgnoreEnabledState
+                                     : CSSEnabledState::ForAllContent;
+>>>>>>> upstream-releases
 
   auto appendProperty = [enabledState, &aResult](uint32_t prop) {
     nsCSSPropertyID cssProp = nsCSSPropertyID(prop);
@@ -372,8 +583,19 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetCSSPropertyPrefs(
     GlobalObject& aGlobalObject, nsTArray<PropertyPref>& aResult) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetCSSPropertyPrefs(GlobalObject& aGlobalObject,
+                                    nsTArray<PropertyPref>& aResult)
+{
+=======
+/* static */
+void InspectorUtils::GetCSSPropertyPrefs(GlobalObject& aGlobalObject,
+                                         nsTArray<PropertyPref>& aResult) {
+>>>>>>> upstream-releases
   for (const auto* src = nsCSSProps::kPropertyPrefTable;
        src->mPropID != eCSSProperty_UNKNOWN; src++) {
     PropertyPref& dest = *aResult.AppendElement();
@@ -383,9 +605,24 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetSubpropertiesForCSSProperty(
     GlobalObject& aGlobal, const nsAString& aProperty,
     nsTArray<nsString>& aResult, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetSubpropertiesForCSSProperty(GlobalObject& aGlobal,
+                                               const nsAString& aProperty,
+                                               nsTArray<nsString>& aResult,
+                                               ErrorResult& aRv)
+{
+=======
+/* static */
+void InspectorUtils::GetSubpropertiesForCSSProperty(GlobalObject& aGlobal,
+                                                    const nsAString& aProperty,
+                                                    nsTArray<nsString>& aResult,
+                                                    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCSSPropertyID propertyID = nsCSSProps::LookupProperty(aProperty);
 
   if (propertyID == eCSSProperty_UNKNOWN) {
@@ -412,8 +649,21 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::CssPropertyIsShorthand(
     GlobalObject& aGlobalObject, const nsAString& aProperty, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::CssPropertyIsShorthand(GlobalObject& aGlobalObject,
+                                       const nsAString& aProperty,
+                                       ErrorResult& aRv)
+{
+=======
+/* static */
+bool InspectorUtils::CssPropertyIsShorthand(GlobalObject& aGlobalObject,
+                                            const nsAString& aProperty,
+                                            ErrorResult& aRv) {
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 prop(aProperty);
   bool found;
   bool isShorthand = Servo_Property_IsShorthand(&prop, &found);
@@ -423,12 +673,45 @@ bool InspectorUtils::IsIgnorableWhitespace(CharacterData& aDataNode) {
   return isShorthand;
 }
 
+<<<<<<< HEAD
 bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
                                              const nsAString& aProperty,
                                              uint32_t aType, ErrorResult& aRv) {
+||||||| merged common ancestors
+bool
+InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
+                                        const nsAString& aProperty,
+                                        uint32_t aType,
+                                        ErrorResult& aRv)
+{
+=======
+// This should match the constants in specified_value_info.rs
+//
+// Once we can use bitflags in consts, we can also cbindgen that and use them
+// here instead.
+static uint8_t ToServoCssType(InspectorPropertyType aType) {
+  switch (aType) {
+    case InspectorPropertyType::Color:
+      return 1;
+    case InspectorPropertyType::Gradient:
+      return 1 << 1;
+    case InspectorPropertyType::Timing_function:
+      return 1 << 2;
+    default:
+      MOZ_ASSERT_UNREACHABLE("Unknown property type?");
+      return 0;
+  }
+}
+
+bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
+                                             const nsAString& aProperty,
+                                             InspectorPropertyType aType,
+                                             ErrorResult& aRv) {
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 property(aProperty);
   bool found;
-  bool result = Servo_Property_SupportsType(&property, aType, &found);
+  bool result =
+      Servo_Property_SupportsType(&property, ToServoCssType(aType), &found);
   if (!found) {
     aRv.Throw(NS_ERROR_FAILURE);
     return false;
@@ -436,9 +719,24 @@ bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
   return result;
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetCSSValuesForProperty(
     GlobalObject& aGlobalObject, const nsAString& aProperty,
     nsTArray<nsString>& aResult, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetCSSValuesForProperty(GlobalObject& aGlobalObject,
+                                        const nsAString& aProperty,
+                                        nsTArray<nsString>& aResult,
+                                        ErrorResult& aRv)
+{
+=======
+/* static */
+void InspectorUtils::GetCSSValuesForProperty(GlobalObject& aGlobalObject,
+                                             const nsAString& aProperty,
+                                             nsTArray<nsString>& aResult,
+                                             ErrorResult& aRv) {
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 property(aProperty);
   bool found;
   Servo_Property_GetCSSValuesForProperty(&property, &found, &aResult);
@@ -448,11 +746,25 @@ bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
   return;
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::RgbToColorName(GlobalObject& aGlobalObject,
                                                  uint8_t aR, uint8_t aG,
                                                  uint8_t aB,
                                                  nsAString& aColorName,
                                                  ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::RgbToColorName(GlobalObject& aGlobalObject,
+                               uint8_t aR, uint8_t aG, uint8_t aB,
+                               nsAString& aColorName,
+                               ErrorResult& aRv)
+{
+=======
+/* static */
+void InspectorUtils::RgbToColorName(GlobalObject& aGlobalObject, uint8_t aR,
+                                    uint8_t aG, uint8_t aB,
+                                    nsAString& aColorName, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   const char* color = NS_RGBToColorName(NS_RGB(aR, aG, aB));
   if (!color) {
     aColorName.Truncate();
@@ -463,9 +775,22 @@ bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
   aColorName.AssignASCII(color);
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::ColorToRGBA(
     GlobalObject& aGlobalObject, const nsAString& aColorString,
     Nullable<InspectorRGBATuple>& aResult) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::ColorToRGBA(GlobalObject& aGlobalObject,
+                            const nsAString& aColorString,
+                            Nullable<InspectorRGBATuple>& aResult)
+{
+=======
+/* static */
+void InspectorUtils::ColorToRGBA(GlobalObject& aGlobalObject,
+                                 const nsAString& aColorString,
+                                 Nullable<InspectorRGBATuple>& aResult) {
+>>>>>>> upstream-releases
   nscolor color = NS_RGB(0, 0, 0);
 
   if (!ServoCSSParser::ComputeColor(nullptr, NS_RGB(0, 0, 0), aColorString,
@@ -481,8 +806,19 @@ bool InspectorUtils::CssPropertySupportsType(GlobalObject& aGlobalObject,
   tuple.mA = nsStyleUtil::ColorComponentToFloat(NS_GET_A(color));
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::IsValidCSSColor(
     GlobalObject& aGlobalObject, const nsAString& aColorString) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::IsValidCSSColor(GlobalObject& aGlobalObject,
+                                const nsAString& aColorString)
+{
+=======
+/* static */
+bool InspectorUtils::IsValidCSSColor(GlobalObject& aGlobalObject,
+                                     const nsAString& aColorString) {
+>>>>>>> upstream-releases
   return ServoCSSParser::IsValidCSSColor(aColorString);
 }
 
@@ -501,33 +837,80 @@ void InspectorUtils::GetBindingURLs(GlobalObject& aGlobalObject,
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::SetContentState(GlobalObject& aGlobalObject,
                                                   Element& aElement,
                                                   uint64_t aState,
                                                   ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::SetContentState(GlobalObject& aGlobalObject,
+                                Element& aElement,
+                                uint64_t aState,
+                                ErrorResult& aRv)
+{
+=======
+/* static */
+bool InspectorUtils::SetContentState(GlobalObject& aGlobalObject,
+                                     Element& aElement, uint64_t aState,
+                                     ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<EventStateManager> esm =
+<<<<<<< HEAD
       inLayoutUtils::GetEventStateManagerFor(aElement);
   if (!esm) {
+||||||| merged common ancestors
+    inLayoutUtils::GetEventStateManagerFor(aElement);
+  if (!esm) {
+=======
+      inLayoutUtils::GetEventStateManagerFor(aElement);
+  EventStates state(aState);
+  if (!esm || !EventStateManager::ManagesState(state)) {
+>>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_INVALID_ARG);
     return false;
   }
-
-  return esm->SetContentState(&aElement, EventStates(aState));
+  return esm->SetContentState(&aElement, state);
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::RemoveContentState(
     GlobalObject& aGlobalObject, Element& aElement, uint64_t aState,
     bool aClearActiveDocument, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::RemoveContentState(GlobalObject& aGlobalObject,
+                                   Element& aElement,
+                                   uint64_t aState,
+                                   bool aClearActiveDocument,
+                                   ErrorResult& aRv)
+{
+=======
+/* static */
+bool InspectorUtils::RemoveContentState(GlobalObject& aGlobalObject,
+                                        Element& aElement, uint64_t aState,
+                                        bool aClearActiveDocument,
+                                        ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<EventStateManager> esm =
+<<<<<<< HEAD
       inLayoutUtils::GetEventStateManagerFor(aElement);
   if (!esm) {
+||||||| merged common ancestors
+    inLayoutUtils::GetEventStateManagerFor(aElement);
+  if (!esm) {
+=======
+      inLayoutUtils::GetEventStateManagerFor(aElement);
+  EventStates state(aState);
+  if (!esm || !EventStateManager::ManagesState(state)) {
+>>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_INVALID_ARG);
     return false;
   }
 
-  bool result = esm->SetContentState(nullptr, EventStates(aState));
+  bool result = esm->SetContentState(nullptr, state);
 
-  if (aClearActiveDocument && EventStates(aState) == NS_EVENT_STATE_ACTIVE) {
+  if (aClearActiveDocument && state == NS_EVENT_STATE_ACTIVE) {
     EventStateManager* activeESM = static_cast<EventStateManager*>(
         EventStateManager::GetActiveEventStateManager());
     if (activeESM == esm) {
@@ -538,24 +921,52 @@ void InspectorUtils::GetBindingURLs(GlobalObject& aGlobalObject,
   return result;
 }
 
+<<<<<<< HEAD
 /* static */ uint64_t InspectorUtils::GetContentState(
     GlobalObject& aGlobalObject, Element& aElement) {
+||||||| merged common ancestors
+/* static */ uint64_t
+InspectorUtils::GetContentState(GlobalObject& aGlobalObject,
+                                Element& aElement)
+{
+=======
+/* static */
+uint64_t InspectorUtils::GetContentState(GlobalObject& aGlobalObject,
+                                         Element& aElement) {
+>>>>>>> upstream-releases
   // NOTE: if this method is removed,
   // please remove GetInternalValue from EventStates
   return aElement.State().GetInternalValue();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ComputedStyle>
 InspectorUtils::GetCleanComputedStyleForElement(dom::Element* aElement,
                                                 nsAtom* aPseudo) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ComputedStyle>
+InspectorUtils::GetCleanComputedStyleForElement(dom::Element* aElement,
+                                               nsAtom* aPseudo)
+{
+=======
+/* static */
+already_AddRefed<ComputedStyle> InspectorUtils::GetCleanComputedStyleForElement(
+    dom::Element* aElement, nsAtom* aPseudo) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aElement);
 
-  nsIDocument* doc = aElement->GetComposedDoc();
+  Document* doc = aElement->GetComposedDoc();
   if (!doc) {
     return nullptr;
   }
 
+<<<<<<< HEAD
   nsIPresShell* presShell = doc->GetShell();
+||||||| merged common ancestors
+  nsIPresShell *presShell = doc->GetShell();
+=======
+  PresShell* presShell = doc->GetPresShell();
+>>>>>>> upstream-releases
   if (!presShell) {
     return nullptr;
   }
@@ -570,12 +981,33 @@ InspectorUtils::GetCleanComputedStyleForElement(dom::Element* aElement,
   return nsComputedDOMStyle::GetComputedStyle(aElement, aPseudo);
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetUsedFontFaces(
     GlobalObject& aGlobalObject, nsRange& aRange, uint32_t aMaxRanges,
     bool aSkipCollapsedWhitespace,
     nsTArray<nsAutoPtr<InspectorFontFace>>& aResult, ErrorResult& aRv) {
   nsresult rv =
       aRange.GetUsedFontFaces(aResult, aMaxRanges, aSkipCollapsedWhitespace);
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetUsedFontFaces(GlobalObject& aGlobalObject,
+                                 nsRange& aRange,
+                                 uint32_t aMaxRanges,
+                                 bool aSkipCollapsedWhitespace,
+                                 nsTArray<nsAutoPtr<InspectorFontFace>>& aResult,
+                                 ErrorResult& aRv)
+{
+  nsresult rv = aRange.GetUsedFontFaces(aResult, aMaxRanges,
+                                        aSkipCollapsedWhitespace);
+=======
+/* static */
+void InspectorUtils::GetUsedFontFaces(
+    GlobalObject& aGlobalObject, nsRange& aRange, uint32_t aMaxRanges,
+    bool aSkipCollapsedWhitespace,
+    nsTArray<nsAutoPtr<InspectorFontFace>>& aResult, ErrorResult& aRv) {
+  nsresult rv =
+      aRange.GetUsedFontFaces(aResult, aMaxRanges, aSkipCollapsedWhitespace);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     aRv.Throw(rv);
   }
@@ -589,6 +1021,7 @@ static EventStates GetStatesForPseudoClass(const nsAString& aStatePseudo) {
   return EventStates(Servo_PseudoClass_GetStates(&statePseudo));
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::GetCSSPseudoElementNames(
     GlobalObject& aGlobalObject, nsTArray<nsString>& aResult) {
   const CSSPseudoElementTypeBase pseudoCount =
@@ -596,15 +1029,50 @@ static EventStates GetStatesForPseudoClass(const nsAString& aStatePseudo) {
   for (CSSPseudoElementTypeBase i = 0; i < pseudoCount; ++i) {
     CSSPseudoElementType type = static_cast<CSSPseudoElementType>(i);
     if (nsCSSPseudoElements::IsEnabled(type, CSSEnabledState::eForAllContent)) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::GetCSSPseudoElementNames(GlobalObject& aGlobalObject,
+                                         nsTArray<nsString>& aResult)
+{
+  const CSSPseudoElementTypeBase pseudoCount =
+    static_cast<CSSPseudoElementTypeBase>(CSSPseudoElementType::Count);
+  for (CSSPseudoElementTypeBase i = 0; i < pseudoCount; ++i) {
+    CSSPseudoElementType type = static_cast<CSSPseudoElementType>(i);
+    if (nsCSSPseudoElements::IsEnabled(type, CSSEnabledState::eForAllContent)) {
+=======
+/* static */
+void InspectorUtils::GetCSSPseudoElementNames(GlobalObject& aGlobalObject,
+                                              nsTArray<nsString>& aResult) {
+  const auto kPseudoCount =
+      static_cast<size_t>(PseudoStyleType::CSSPseudoElementsEnd);
+  for (size_t i = 0; i < kPseudoCount; ++i) {
+    PseudoStyleType type = static_cast<PseudoStyleType>(i);
+    if (nsCSSPseudoElements::IsEnabled(type, CSSEnabledState::ForAllContent)) {
+>>>>>>> upstream-releases
       nsAtom* atom = nsCSSPseudoElements::GetPseudoAtom(type);
       aResult.AppendElement(nsDependentAtomString(atom));
     }
   }
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::AddPseudoClassLock(
     GlobalObject& aGlobalObject, Element& aElement,
     const nsAString& aPseudoClass, bool aEnabled) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::AddPseudoClassLock(GlobalObject& aGlobalObject,
+                                   Element& aElement,
+                                   const nsAString& aPseudoClass,
+                                   bool aEnabled)
+{
+=======
+/* static */
+void InspectorUtils::AddPseudoClassLock(GlobalObject& aGlobalObject,
+                                        Element& aElement,
+                                        const nsAString& aPseudoClass,
+                                        bool aEnabled) {
+>>>>>>> upstream-releases
   EventStates state = GetStatesForPseudoClass(aPseudoClass);
   if (state.IsEmpty()) {
     return;
@@ -613,8 +1081,21 @@ static EventStates GetStatesForPseudoClass(const nsAString& aStatePseudo) {
   aElement.LockStyleStates(state, aEnabled);
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::RemovePseudoClassLock(
     GlobalObject& aGlobal, Element& aElement, const nsAString& aPseudoClass) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::RemovePseudoClassLock(GlobalObject& aGlobal,
+                                      Element& aElement,
+                                      const nsAString& aPseudoClass)
+{
+=======
+/* static */
+void InspectorUtils::RemovePseudoClassLock(GlobalObject& aGlobal,
+                                           Element& aElement,
+                                           const nsAString& aPseudoClass) {
+>>>>>>> upstream-releases
   EventStates state = GetStatesForPseudoClass(aPseudoClass);
   if (state.IsEmpty()) {
     return;
@@ -623,9 +1104,22 @@ static EventStates GetStatesForPseudoClass(const nsAString& aStatePseudo) {
   aElement.UnlockStyleStates(state);
 }
 
+<<<<<<< HEAD
 /* static */ bool InspectorUtils::HasPseudoClassLock(
     GlobalObject& aGlobalObject, Element& aElement,
     const nsAString& aPseudoClass) {
+||||||| merged common ancestors
+/* static */ bool
+InspectorUtils::HasPseudoClassLock(GlobalObject& aGlobalObject,
+                                   Element& aElement,
+                                   const nsAString& aPseudoClass)
+{
+=======
+/* static */
+bool InspectorUtils::HasPseudoClassLock(GlobalObject& aGlobalObject,
+                                        Element& aElement,
+                                        const nsAString& aPseudoClass) {
+>>>>>>> upstream-releases
   EventStates state = GetStatesForPseudoClass(aPseudoClass);
   if (state.IsEmpty()) {
     return false;
@@ -635,18 +1129,46 @@ static EventStates GetStatesForPseudoClass(const nsAString& aStatePseudo) {
   return locks.HasAllStates(state);
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::ClearPseudoClassLocks(
     GlobalObject& aGlobalObject, Element& aElement) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::ClearPseudoClassLocks(GlobalObject& aGlobalObject,
+                                      Element& aElement)
+{
+=======
+/* static */
+void InspectorUtils::ClearPseudoClassLocks(GlobalObject& aGlobalObject,
+                                           Element& aElement) {
+>>>>>>> upstream-releases
   aElement.ClearStyleStateLocks();
 }
 
+<<<<<<< HEAD
 /* static */ void InspectorUtils::ParseStyleSheet(GlobalObject& aGlobalObject,
                                                   StyleSheet& aSheet,
                                                   const nsAString& aInput,
                                                   ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+InspectorUtils::ParseStyleSheet(GlobalObject& aGlobalObject,
+                                StyleSheet& aSheet,
+                                const nsAString& aInput,
+                                ErrorResult& aRv)
+{
+
+=======
+/* static */
+void InspectorUtils::ParseStyleSheet(GlobalObject& aGlobalObject,
+                                     StyleSheet& aSheet,
+                                     const nsAString& aInput,
+                                     ErrorResult& aRv) {
+>>>>>>> upstream-releases
   aRv = aSheet.ReparseSheet(aInput);
 }
 
+<<<<<<< HEAD
 void InspectorUtils::ScrollElementIntoView(GlobalObject& aGlobalObject,
                                            Element& aElement) {
   nsIPresShell* presShell = aElement.OwnerDoc()->GetShell();
@@ -661,6 +1183,32 @@ void InspectorUtils::ScrollElementIntoView(GlobalObject& aGlobalObject,
 
 bool InspectorUtils::IsCustomElementName(GlobalObject&, const nsAString& aName,
                                          const nsAString& aNamespaceURI) {
+||||||| merged common ancestors
+void
+InspectorUtils::ScrollElementIntoView(GlobalObject& aGlobalObject,
+                                      Element& aElement)
+{
+  nsIPresShell* presShell = aElement.OwnerDoc()->GetShell();
+  if (!presShell) {
+    return;
+  }
+
+  presShell->ScrollContentIntoView(&aElement,
+                                   nsIPresShell::ScrollAxis(),
+                                   nsIPresShell::ScrollAxis(),
+                                   nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
+}
+
+
+bool
+InspectorUtils::IsCustomElementName(GlobalObject&,
+                                    const nsAString& aName,
+                                    const nsAString& aNamespaceURI)
+{
+=======
+bool InspectorUtils::IsCustomElementName(GlobalObject&, const nsAString& aName,
+                                         const nsAString& aNamespaceURI) {
+>>>>>>> upstream-releases
   if (aName.IsEmpty()) {
     return false;
   }

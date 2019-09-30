@@ -30,6 +30,7 @@ namespace js {
 // must either be used with Rooted, or barriered and traced manually.
 template <typename T, size_t MinInlineCapacity = 0,
           typename AllocPolicy = TempAllocPolicy>
+<<<<<<< HEAD
 class TraceableFifo : public js::Fifo<T, MinInlineCapacity, AllocPolicy> {
   using Base = js::Fifo<T, MinInlineCapacity, AllocPolicy>;
 
@@ -45,6 +46,45 @@ class TraceableFifo : public js::Fifo<T, MinInlineCapacity, AllocPolicy> {
   void trace(JSTracer* trc) {
     for (size_t i = 0; i < this->front_.length(); ++i) {
       JS::GCPolicy<T>::trace(trc, &this->front_[i], "fifo element");
+||||||| merged common ancestors
+class TraceableFifo : public js::Fifo<T, MinInlineCapacity, AllocPolicy>
+{
+    using Base = js::Fifo<T, MinInlineCapacity, AllocPolicy>;
+
+  public:
+    explicit TraceableFifo(AllocPolicy alloc = AllocPolicy()) : Base(alloc) {}
+
+    TraceableFifo(TraceableFifo&& rhs) : Base(std::move(rhs)) { }
+    TraceableFifo& operator=(TraceableFifo&& rhs) { return Base::operator=(std::move(rhs)); }
+
+    TraceableFifo(const TraceableFifo&) = delete;
+    TraceableFifo& operator=(const TraceableFifo&) = delete;
+
+    void trace(JSTracer* trc) {
+        for (size_t i = 0; i < this->front_.length(); ++i) {
+            JS::GCPolicy<T>::trace(trc, &this->front_[i], "fifo element");
+        }
+        for (size_t i = 0; i < this->rear_.length(); ++i) {
+            JS::GCPolicy<T>::trace(trc, &this->rear_[i], "fifo element");
+        }
+=======
+class TraceableFifo : public js::Fifo<T, MinInlineCapacity, AllocPolicy> {
+  using Base = js::Fifo<T, MinInlineCapacity, AllocPolicy>;
+
+ public:
+  explicit TraceableFifo(AllocPolicy alloc = AllocPolicy())
+      : Base(std::move(alloc)) {}
+
+  TraceableFifo(TraceableFifo&& rhs) : Base(std::move(rhs)) {}
+  TraceableFifo& operator=(TraceableFifo&& rhs) = default;
+
+  TraceableFifo(const TraceableFifo&) = delete;
+  TraceableFifo& operator=(const TraceableFifo&) = delete;
+
+  void trace(JSTracer* trc) {
+    for (size_t i = 0; i < this->front_.length(); ++i) {
+      JS::GCPolicy<T>::trace(trc, &this->front_[i], "fifo element");
+>>>>>>> upstream-releases
     }
     for (size_t i = 0; i < this->rear_.length(); ++i) {
       JS::GCPolicy<T>::trace(trc, &this->rear_[i], "fifo element");

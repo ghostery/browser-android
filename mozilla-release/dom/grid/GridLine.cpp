@@ -32,7 +32,22 @@ GridLine::GridLine(GridLines* aParent)
 
 GridLine::~GridLine() {}
 
+<<<<<<< HEAD
 void GridLine::GetNames(nsTArray<nsString>& aNames) const { aNames = mNames; }
+||||||| merged common ancestors
+void
+GridLine::GetNames(nsTArray<nsString>& aNames) const
+{
+  aNames = mNames;
+}
+=======
+void GridLine::GetNames(nsTArray<nsString>& aNames) const {
+  aNames.SetCapacity(mNames.Length());
+  for (auto& name : mNames) {
+    aNames.AppendElement(nsDependentAtomString(name));
+  }
+}
+>>>>>>> upstream-releases
 
 JSObject* GridLine::WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) {
@@ -49,9 +64,24 @@ uint32_t GridLine::Number() const { return mNumber; }
 
 int32_t GridLine::NegativeNumber() const { return mNegativeNumber; }
 
+<<<<<<< HEAD
 void GridLine::SetLineValues(const nsTArray<nsString>& aNames, double aStart,
                              double aBreadth, uint32_t aNumber,
                              int32_t aNegativeNumber, GridDeclaration aType) {
+||||||| merged common ancestors
+void
+GridLine::SetLineValues(const nsTArray<nsString>& aNames,
+                        double aStart,
+                        double aBreadth,
+                        uint32_t aNumber,
+                        int32_t aNegativeNumber,
+                        GridDeclaration aType)
+{
+=======
+void GridLine::SetLineValues(const nsTArray<RefPtr<nsAtom>>& aNames,
+                             double aStart, double aBreadth, uint32_t aNumber,
+                             int32_t aNegativeNumber, GridDeclaration aType) {
+>>>>>>> upstream-releases
   mNames = aNames;
   mStart = aStart;
   mBreadth = aBreadth;
@@ -60,5 +90,17 @@ void GridLine::SetLineValues(const nsTArray<nsString>& aNames, double aStart,
   mType = aType;
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+void GridLine::SetLineNames(const nsTArray<RefPtr<nsAtom>>& aNames) {
+  mNames = aNames;
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

@@ -13,10 +13,21 @@
 namespace mozilla {
 namespace wr {
 
+<<<<<<< HEAD
 /* static */ UniquePtr<RenderCompositor> RenderCompositorOGL::Create(
     RefPtr<widget::CompositorWidget>&& aWidget) {
+||||||| merged common ancestors
+/* static */ UniquePtr<RenderCompositor>
+RenderCompositorOGL::Create(RefPtr<widget::CompositorWidget>&& aWidget)
+{
+=======
+/* static */
+UniquePtr<RenderCompositor> RenderCompositorOGL::Create(
+    RefPtr<widget::CompositorWidget>&& aWidget) {
+>>>>>>> upstream-releases
   RefPtr<gl::GLContext> gl;
-  gl = gl::GLContextProvider::CreateForCompositorWidget(aWidget, true);
+  gl = gl::GLContextProvider::CreateForCompositorWidget(
+      aWidget, /* aWebRender */ true, /* aForceAccelerated */ true);
   if (!gl || !gl->MakeCurrent()) {
     gfxCriticalNote << "Failed GL context creation for WebRender: "
                     << gfx::hexa(gl.get());
@@ -43,6 +54,7 @@ bool RenderCompositorOGL::BeginFrame() {
 
 void RenderCompositorOGL::EndFrame() { mGL->SwapBuffers(); }
 
+<<<<<<< HEAD
 void RenderCompositorOGL::WaitForGPU() {}
 
 void RenderCompositorOGL::Pause() {
@@ -54,7 +66,23 @@ void RenderCompositorOGL::Pause() {
   mGL->ReleaseSurface();
 #endif
 }
+||||||| merged common ancestors
+void
+RenderCompositorOGL::Pause()
+{
+#ifdef MOZ_WIDGET_ANDROID
+  if (!mGL || mGL->IsDestroyed()) {
+    return;
+  }
+  // ReleaseSurface internally calls MakeCurrent.
+  mGL->ReleaseSurface();
+#endif
+}
+=======
+void RenderCompositorOGL::WaitForGPU() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool RenderCompositorOGL::Resume() {
 #ifdef MOZ_WIDGET_ANDROID
   if (!mGL || mGL->IsDestroyed()) {
@@ -66,8 +94,35 @@ bool RenderCompositorOGL::Resume() {
   return true;
 #endif
 }
+||||||| merged common ancestors
+bool
+RenderCompositorOGL::Resume()
+{
+#ifdef MOZ_WIDGET_ANDROID
+  if (!mGL || mGL->IsDestroyed()) {
+    return false;
+  }
+  // RenewSurface internally calls MakeCurrent.
+  return mGL->RenewSurface(mWidget);
+#else
+  return true;
+#endif
+}
+=======
+void RenderCompositorOGL::Pause() {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+LayoutDeviceIntSize RenderCompositorOGL::GetBufferSize() {
+||||||| merged common ancestors
+LayoutDeviceIntSize
+RenderCompositorOGL::GetBufferSize()
+{
+=======
+bool RenderCompositorOGL::Resume() { return true; }
 
 LayoutDeviceIntSize RenderCompositorOGL::GetBufferSize() {
+>>>>>>> upstream-releases
   return mWidget->GetClientSize();
 }
 

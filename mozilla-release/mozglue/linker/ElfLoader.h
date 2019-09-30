@@ -20,43 +20,131 @@
  * dlfcn.h replacement functions
  */
 extern "C" {
+<<<<<<< HEAD
 void *__wrap_dlopen(const char *path, int flags);
 const char *__wrap_dlerror(void);
 void *__wrap_dlsym(void *handle, const char *symbol);
 int __wrap_dlclose(void *handle);
+||||||| merged common ancestors
+  void *__wrap_dlopen(const char *path, int flags);
+  const char *__wrap_dlerror(void);
+  void *__wrap_dlsym(void *handle, const char *symbol);
+  int __wrap_dlclose(void *handle);
+=======
+void* __wrap_dlopen(const char* path, int flags);
+const char* __wrap_dlerror(void);
+void* __wrap_dlsym(void* handle, const char* symbol);
+int __wrap_dlclose(void* handle);
+>>>>>>> upstream-releases
 
 #ifndef HAVE_DLADDR
+<<<<<<< HEAD
 typedef struct {
   const char *dli_fname;
   void *dli_fbase;
   const char *dli_sname;
   void *dli_saddr;
 } Dl_info;
+||||||| merged common ancestors
+  typedef struct {
+    const char *dli_fname;
+    void *dli_fbase;
+    const char *dli_sname;
+    void *dli_saddr;
+  } Dl_info;
+=======
+typedef struct {
+  const char* dli_fname;
+  void* dli_fbase;
+  const char* dli_sname;
+  void* dli_saddr;
+} Dl_info;
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
 int __wrap_dladdr(void *addr, Dl_info *info);
+||||||| merged common ancestors
+  int __wrap_dladdr(void *addr, Dl_info *info);
+=======
+int __wrap_dladdr(void* addr, Dl_info* info);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 struct dl_phdr_info {
   Elf::Addr dlpi_addr;
   const char *dlpi_name;
   const Elf::Phdr *dlpi_phdr;
   Elf::Half dlpi_phnum;
 };
+||||||| merged common ancestors
+  struct dl_phdr_info {
+    Elf::Addr dlpi_addr;
+    const char *dlpi_name;
+    const Elf::Phdr *dlpi_phdr;
+    Elf::Half dlpi_phnum;
+  };
+=======
+struct dl_phdr_info {
+  Elf::Addr dlpi_addr;
+  const char* dlpi_name;
+  const Elf::Phdr* dlpi_phdr;
+  Elf::Half dlpi_phnum;
+};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 typedef int (*dl_phdr_cb)(struct dl_phdr_info *, size_t, void *);
 int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
+||||||| merged common ancestors
+  typedef int (*dl_phdr_cb)(struct dl_phdr_info *, size_t, void *);
+  int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
+=======
+typedef int (*dl_phdr_cb)(struct dl_phdr_info*, size_t, void*);
+int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void* data);
+>>>>>>> upstream-releases
 
 #ifdef __ARM_EABI__
+<<<<<<< HEAD
 const void *__wrap___gnu_Unwind_Find_exidx(void *pc, int *pcount);
+||||||| merged common ancestors
+  const void *__wrap___gnu_Unwind_Find_exidx(void *pc, int *pcount);
+=======
+const void* __wrap___gnu_Unwind_Find_exidx(void* pc, int* pcount);
+>>>>>>> upstream-releases
 #endif
 
 /**
  * faulty.lib public API
  */
+<<<<<<< HEAD
 MFBT_API size_t __dl_get_mappable_length(void *handle);
+||||||| merged common ancestors
+MFBT_API size_t
+__dl_get_mappable_length(void *handle);
+=======
+MFBT_API size_t __dl_get_mappable_length(void* handle);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 MFBT_API void *__dl_mmap(void *handle, void *addr, size_t length, off_t offset);
+||||||| merged common ancestors
+MFBT_API void *
+__dl_mmap(void *handle, void *addr, size_t length, off_t offset);
+=======
+MFBT_API void* __dl_mmap(void* handle, void* addr, size_t length, off_t offset);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 MFBT_API void __dl_munmap(void *handle, void *addr, size_t length);
+||||||| merged common ancestors
+MFBT_API void
+__dl_munmap(void *handle, void *addr, size_t length);
+
+MFBT_API bool
+IsSignalHandlingBroken();
+=======
+MFBT_API void __dl_munmap(void* handle, void* addr, size_t length);
+>>>>>>> upstream-releases
 
 MFBT_API bool IsSignalHandlingBroken();
 }
@@ -99,10 +187,22 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
    * Constructor. Takes the path of the loaded library and will store a copy
    * of the leaf name.
    */
+<<<<<<< HEAD
   LibHandle(const char *path)
       : directRefCnt(0),
         path(path ? strdup(path) : nullptr),
         mappable(nullptr) {}
+||||||| merged common ancestors
+  LibHandle(const char *path)
+  : directRefCnt(0), path(path ? strdup(path) : nullptr), mappable(nullptr)
+  {
+  }
+=======
+  LibHandle(const char* path)
+      : directRefCnt(0),
+        path(path ? strdup(path) : nullptr),
+        mappable(nullptr) {}
+>>>>>>> upstream-releases
 
   /**
    * Destructor.
@@ -114,29 +214,38 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
    * inside the library. It is not supposed to resolve the symbol in other
    * libraries, although in practice, it will for system libraries.
    */
-  virtual void *GetSymbolPtr(const char *symbol) const = 0;
+  virtual void* GetSymbolPtr(const char* symbol) const = 0;
 
   /**
    * Returns whether the given address is part of the virtual address space
    * covered by the loaded library.
    */
-  virtual bool Contains(void *addr) const = 0;
+  virtual bool Contains(void* addr) const = 0;
 
   /**
    * Returns the base address of the loaded library.
    */
-  virtual void *GetBase() const = 0;
+  virtual void* GetBase() const = 0;
 
   /**
    * Returns the file name of the library without the containing directory.
    */
-  const char *GetName() const;
+  const char* GetName() const;
 
   /**
    * Returns the full path of the library, when available. Otherwise, returns
    * the file name.
    */
+<<<<<<< HEAD
   const char *GetPath() const { return path; }
+||||||| merged common ancestors
+  const char *GetPath() const
+  {
+    return path;
+  }
+=======
+  const char* GetPath() const { return path; }
+>>>>>>> upstream-releases
 
   /**
    * Library handles can be referenced from other library handles or
@@ -177,27 +286,27 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
    * Returns a memory mapping of the file or stream behind the library
    * handle.
    */
-  void *MappableMMap(void *addr, size_t length, off_t offset) const;
+  void* MappableMMap(void* addr, size_t length, off_t offset) const;
 
   /**
    * Unmaps a memory mapping of the file or stream behind the library
    * handle.
    */
-  void MappableMUnmap(void *addr, size_t length) const;
+  void MappableMUnmap(void* addr, size_t length) const;
 
 #ifdef __ARM_EABI__
   /**
    * Find the address and entry count of the ARM.exidx section
    * associated with the library
    */
-  virtual const void *FindExidx(int *pcount) const = 0;
+  virtual const void* FindExidx(int* pcount) const = 0;
 #endif
 
  protected:
   /**
    * Returns a mappable object for use by MappableMMap and related functions.
    */
-  virtual Mappable *GetMappable() const = 0;
+  virtual Mappable* GetMappable() const = 0;
 
   /**
    * Returns the instance, casted as the wanted type. Returns nullptr if
@@ -207,13 +316,13 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
   friend class ElfLoader;
   friend class CustomElf;
   friend class SEGVHandler;
-  friend int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
-  virtual BaseElf *AsBaseElf() { return nullptr; }
-  virtual SystemElf *AsSystemElf() { return nullptr; }
+  friend int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void* data);
+  virtual BaseElf* AsBaseElf() { return nullptr; }
+  virtual SystemElf* AsSystemElf() { return nullptr; }
 
  private:
   mozilla::Atomic<MozRefCountType> directRefCnt;
-  char *path;
+  char* path;
 
   /* Mappable object keeping the result of GetMappable() */
   mutable RefPtr<Mappable> mappable;
@@ -260,29 +369,37 @@ class SystemElf : public LibHandle {
    * Returns a new SystemElf for the given path. The given flags are passed
    * to dlopen().
    */
-  static already_AddRefed<LibHandle> Load(const char *path, int flags);
+  static already_AddRefed<LibHandle> Load(const char* path, int flags);
 
   /**
    * Inherited from LibHandle
    */
   virtual ~SystemElf();
-  virtual void *GetSymbolPtr(const char *symbol) const;
-  virtual bool Contains(void *addr) const { return false; /* UNIMPLEMENTED */ }
-  virtual void *GetBase() const { return nullptr; /* UNIMPLEMENTED */ }
+  virtual void* GetSymbolPtr(const char* symbol) const;
+  virtual bool Contains(void* addr) const { return false; /* UNIMPLEMENTED */ }
+  virtual void* GetBase() const { return nullptr; /* UNIMPLEMENTED */ }
 
 #ifdef __ARM_EABI__
-  virtual const void *FindExidx(int *pcount) const;
+  virtual const void* FindExidx(int* pcount) const;
 #endif
 
+<<<<<<< HEAD
  protected:
   virtual Mappable *GetMappable() const;
+||||||| merged common ancestors
+protected:
+  virtual Mappable *GetMappable() const;
+=======
+ protected:
+  virtual Mappable* GetMappable() const;
+>>>>>>> upstream-releases
 
   /**
    * Returns the instance, casted as SystemElf. (short of a better way to do
    * this without RTTI)
    */
   friend class ElfLoader;
-  virtual SystemElf *AsSystemElf() { return this; }
+  virtual SystemElf* AsSystemElf() { return this; }
 
   /**
    * Remove the reference to the system linker handle. This avoids dlclose()
@@ -294,11 +411,19 @@ class SystemElf : public LibHandle {
   /**
    * Private constructor
    */
+<<<<<<< HEAD
   SystemElf(const char *path, void *handle)
       : LibHandle(path), dlhandle(handle) {}
+||||||| merged common ancestors
+  SystemElf(const char *path, void *handle)
+  : LibHandle(path), dlhandle(handle) { }
+=======
+  SystemElf(const char* path, void* handle)
+      : LibHandle(path), dlhandle(handle) {}
+>>>>>>> upstream-releases
 
   /* Handle as returned by system dlopen() */
-  void *dlhandle;
+  void* dlhandle;
 };
 
 /**
@@ -316,8 +441,8 @@ class SEGVHandler {
 
   bool isSignalHandlingBroken() { return signalHandlingBroken; }
 
-  static int __wrap_sigaction(int signum, const struct sigaction *act,
-                              struct sigaction *oldact);
+  static int __wrap_sigaction(int signum, const struct sigaction* act,
+                              struct sigaction* oldact);
 
  protected:
   SEGVHandler();
@@ -338,12 +463,12 @@ class SEGVHandler {
   /**
    * ElfLoader SIGSEGV handler.
    */
-  static void handler(int signum, siginfo_t *info, void *context);
+  static void handler(int signum, siginfo_t* info, void* context);
 
   /**
    * Temporary test handler.
    */
-  static void test_handler(int signum, siginfo_t *info, void *context);
+  static void test_handler(int signum, siginfo_t* info, void* context);
 
   /**
    * Size of the alternative stack. The printf family requires more than 8KB
@@ -384,8 +509,16 @@ class ElfLoader : public SEGVHandler {
    * requesting the given library to be loaded. The loader may look in the
    * directory containing that parent library for the library to load.
    */
+<<<<<<< HEAD
   already_AddRefed<LibHandle> Load(const char *path, int flags,
                                    LibHandle *parent = nullptr);
+||||||| merged common ancestors
+  already_AddRefed<LibHandle> Load(const char *path, int flags,
+                                        LibHandle *parent = nullptr);
+=======
+  already_AddRefed<LibHandle> Load(const char* path, int flags,
+                                   LibHandle* parent = nullptr);
+>>>>>>> upstream-releases
 
   /**
    * Returns the handle of the library containing the given address in
@@ -393,7 +526,7 @@ class ElfLoader : public SEGVHandler {
    * LibHandle::Contains returns true. Its purpose is to allow to
    * implement dladdr().
    */
-  already_AddRefed<LibHandle> GetHandleByPtr(void *addr);
+  already_AddRefed<LibHandle> GetHandleByPtr(void* addr);
 
   /**
    * Returns a Mappable object for the path. Paths in the form
@@ -401,7 +534,7 @@ class ElfLoader : public SEGVHandler {
    * try to load the directory/lib.so in /foo/bar/baz/archive, provided
    * that file is a Zip archive.
    */
-  static Mappable *GetMappableFromPath(const char *path);
+  static Mappable* GetMappableFromPath(const char* path);
 
   void ExpectShutdown(bool val) { expect_shutdown = val; }
   bool IsShutdownExpected() { return expect_shutdown; }
@@ -414,20 +547,20 @@ class ElfLoader : public SEGVHandler {
    * Registers the given handle. This method is meant to be called by
    * LibHandle subclass creators.
    */
-  void Register(LibHandle *handle);
-  void Register(CustomElf *handle);
+  void Register(LibHandle* handle);
+  void Register(CustomElf* handle);
 
   /**
    * Forget about the given handle. This method is meant to be called by
    * LibHandle subclass destructors.
    */
-  void Forget(LibHandle *handle);
-  void Forget(CustomElf *handle);
+  void Forget(LibHandle* handle);
+  void Forget(CustomElf* handle);
 
   friend class SystemElf;
-  friend const char *__wrap_dlerror(void);
-  friend void *__wrap_dlsym(void *handle, const char *symbol);
-  friend int __wrap_dlclose(void *handle);
+  friend const char* __wrap_dlerror(void);
+  friend void* __wrap_dlsym(void* handle, const char* symbol);
+  friend int __wrap_dlclose(void* handle);
   /* __wrap_dlerror() returns this custom last error if non-null or the system
    * dlerror() value if this is null. Must refer to a string constant. */
   mozilla::Atomic<const char *, mozilla::Relaxed> lastError;
@@ -458,7 +591,7 @@ class ElfLoader : public SEGVHandler {
 #endif
 
   /* Bookkeeping */
-  typedef std::vector<LibHandle *> LibHandleList;
+  typedef std::vector<LibHandle*> LibHandleList;
   LibHandleList handles;
 
   pthread_mutex_t handlesMutex;
@@ -468,7 +601,7 @@ class ElfLoader : public SEGVHandler {
   friend class LoadedElf;
 
   /* Definition of static destructors as to be used for C++ ABI compatibility */
-  typedef void (*Destructor)(void *object);
+  typedef void (*Destructor)(void* object);
 
   /**
    * C++ ABI makes static initializers register destructors through a specific
@@ -487,23 +620,33 @@ class ElfLoader : public SEGVHandler {
    * DSO handle are called in the reverse order they were registered.
    */
 #ifdef __ARM_EABI__
-  static int __wrap_aeabi_atexit(void *that, Destructor destructor,
-                                 void *dso_handle);
+  static int __wrap_aeabi_atexit(void* that, Destructor destructor,
+                                 void* dso_handle);
 #else
-  static int __wrap_cxa_atexit(Destructor destructor, void *that,
-                               void *dso_handle);
+  static int __wrap_cxa_atexit(Destructor destructor, void* that,
+                               void* dso_handle);
 #endif
 
-  static void __wrap_cxa_finalize(void *dso_handle);
+  static void __wrap_cxa_finalize(void* dso_handle);
 
   /**
    * Registered destructor. Keeps track of the destructor function pointer,
    * associated object to call it with, and DSO handle.
    */
   class DestructorCaller {
+<<<<<<< HEAD
    public:
     DestructorCaller(Destructor destructor, void *object, void *dso_handle)
         : destructor(destructor), object(object), dso_handle(dso_handle) {}
+||||||| merged common ancestors
+  public:
+    DestructorCaller(Destructor destructor, void *object, void *dso_handle)
+    : destructor(destructor), object(object), dso_handle(dso_handle) { }
+=======
+   public:
+    DestructorCaller(Destructor destructor, void* object, void* dso_handle)
+        : destructor(destructor), object(object), dso_handle(dso_handle) {}
+>>>>>>> upstream-releases
 
     /**
      * Call the destructor function with the associated object.
@@ -514,12 +657,21 @@ class ElfLoader : public SEGVHandler {
     /**
      * Returns whether the destructor is associated to the given DSO handle
      */
+<<<<<<< HEAD
     bool IsForHandle(void *handle) const { return handle == dso_handle; }
+||||||| merged common ancestors
+    bool IsForHandle(void *handle) const
+    {
+      return handle == dso_handle;
+    }
+=======
+    bool IsForHandle(void* handle) const { return handle == dso_handle; }
+>>>>>>> upstream-releases
 
    private:
     Destructor destructor;
-    void *object;
-    void *dso_handle;
+    void* object;
+    void* dso_handle;
   };
 
  private:
@@ -533,11 +685,11 @@ class ElfLoader : public SEGVHandler {
   /* Loaded object descriptor for the debugger interface below*/
   struct link_map {
     /* Base address of the loaded object. */
-    const void *l_addr;
+    const void* l_addr;
     /* File name */
-    const char *l_name;
+    const char* l_name;
     /* Address of the PT_DYNAMIC segment. */
-    const void *l_ld;
+    const void* l_ld;
 
    private:
     friend class ElfLoader::DebuggerHelper;
@@ -554,7 +706,7 @@ class ElfLoader : public SEGVHandler {
     int r_version;
 
     /* Head of the linked list of loaded objects. */
-    link_map *r_map;
+    link_map* r_map;
 
     /* Function to be called when updates to the linked list of loaded objects
      * are going to occur. The function is to be called before and after
@@ -582,50 +734,109 @@ class ElfLoader : public SEGVHandler {
    public:
     DebuggerHelper();
 
-    void Init(AuxVector *auvx);
+    void Init(AuxVector* auvx);
 
     explicit operator bool() { return dbg; }
 
     /* Make the debugger aware of a new loaded object */
-    void Add(link_map *map);
+    void Add(link_map* map);
 
     /* Make the debugger aware of the unloading of an object */
-    void Remove(link_map *map);
+    void Remove(link_map* map);
 
     /* Iterates over all link_maps */
+<<<<<<< HEAD
     class iterator {
      public:
       const link_map *operator->() const { return item; }
+||||||| merged common ancestors
+    class iterator
+    {
+    public:
+      const link_map *operator ->() const
+      {
+        return item;
+      }
+=======
+    class iterator {
+     public:
+      const link_map* operator->() const { return item; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       const link_map &operator++() {
+||||||| merged common ancestors
+      const link_map &operator ++()
+      {
+=======
+      const link_map& operator++() {
+>>>>>>> upstream-releases
         item = item->l_next;
         return *item;
       }
 
+<<<<<<< HEAD
       bool operator<(const iterator &other) const {
         if (other.item == nullptr) return item ? true : false;
         MOZ_CRASH(
             "DebuggerHelper::iterator::operator< called with something else "
             "than DebuggerHelper::end()");
+||||||| merged common ancestors
+      bool operator<(const iterator &other) const
+      {
+        if (other.item == nullptr)
+          return item ? true : false;
+        MOZ_CRASH("DebuggerHelper::iterator::operator< called with something else than DebuggerHelper::end()");
+=======
+      bool operator<(const iterator& other) const {
+        if (other.item == nullptr) return item ? true : false;
+        MOZ_CRASH(
+            "DebuggerHelper::iterator::operator< called with something else "
+            "than DebuggerHelper::end()");
+>>>>>>> upstream-releases
       }
 
      protected:
       friend class DebuggerHelper;
+<<<<<<< HEAD
       explicit iterator(const link_map *item) : item(item) {}
+||||||| merged common ancestors
+      explicit iterator(const link_map *item): item(item) { }
+=======
+      explicit iterator(const link_map* item) : item(item) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
      private:
       const link_map *item;
+||||||| merged common ancestors
+    private:
+      const link_map *item;
+=======
+     private:
+      const link_map* item;
+>>>>>>> upstream-releases
     };
 
     iterator begin() const { return iterator(dbg ? dbg->r_map : nullptr); }
 
     iterator end() const { return iterator(nullptr); }
 
+<<<<<<< HEAD
    private:
     r_debug *dbg;
     link_map *firstAdded;
+||||||| merged common ancestors
+  private:
+    r_debug *dbg;
+    link_map *firstAdded;
+=======
+   private:
+    r_debug* dbg;
+    link_map* firstAdded;
+>>>>>>> upstream-releases
   };
-  friend int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
+  friend int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void* data);
   DebuggerHelper dbg;
 };
 

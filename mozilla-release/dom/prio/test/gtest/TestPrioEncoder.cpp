@@ -9,35 +9,101 @@
 #include "jsapi.h"
 #include "PrioEncoder.h"
 
-#include "mozilla/Preferences.h"
 #include "mozilla/dom/ScriptSettings.h"
 
+<<<<<<< HEAD
 TEST(PrioEncoder, BadPublicKeys) {
+||||||| merged common ancestors
+TEST(PrioEncoder, BadPublicKeys)
+{
+=======
+#include "mprio.h"
+
+TEST(PrioEncoder, BadPublicKeys)
+{
+  mozilla::ErrorResult rv;
+  rv = mozilla::dom::PrioEncoder::SetKeys("badA", "badB");
+
+  ASSERT_TRUE(rv.Failed());
+  rv = mozilla::ErrorResult();
+}
+
+TEST(PrioEncoder, BooleanLimitExceeded)
+{
+>>>>>>> upstream-releases
   mozilla::dom::AutoJSAPI jsAPI;
   ASSERT_TRUE(jsAPI.Init(xpc::PrivilegedJunkScope()));
   JSContext* cx = jsAPI.cx();
 
+<<<<<<< HEAD
   mozilla::Preferences::SetCString("prio.publicKeyA",
                                    nsCString(NS_LITERAL_CSTRING("badA")));
   mozilla::Preferences::SetCString("prio.publicKeyB",
                                    nsCString(NS_LITERAL_CSTRING("badB")));
 
+||||||| merged common ancestors
+  mozilla::Preferences::SetCString("prio.publicKeyA",
+    nsCString(NS_LITERAL_CSTRING("badA")));
+  mozilla::Preferences::SetCString("prio.publicKeyB",
+    nsCString(NS_LITERAL_CSTRING("badB")));
+
+=======
+>>>>>>> upstream-releases
   mozilla::dom::GlobalObject global(cx, xpc::PrivilegedJunkScope());
 
   nsCString batchID = NS_LITERAL_CSTRING("abc123");
 
   mozilla::dom::PrioParams prioParams;
+<<<<<<< HEAD
+  mozilla::dom::RootedDictionary<mozilla::dom::PrioEncodedData> prioEncodedData(
+      cx);
+  mozilla::ErrorResult rv;
+||||||| merged common ancestors
+  prioParams.mBrowserIsUserDefault = true;
+  prioParams.mNewTabPageEnabled = true;
+  prioParams.mPdfViewerUsed = false;
+
+  mozilla::dom::RootedDictionary<mozilla::dom::PrioEncodedData> prioEncodedData(cx);
+  mozilla::ErrorResult rv;
+=======
+  FallibleTArray<bool> sequence;
+
+  const int ndata = mozilla::dom::PrioEncoder::gNumBooleans + 1;
+  const int seed = time(nullptr);
+  srand(seed);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
+                                    prioEncodedData, rv);
+  ASSERT_TRUE(rv.Failed());
+||||||| merged common ancestors
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams, prioEncodedData, rv);
+  ASSERT_TRUE(rv.Failed());
+=======
+  for (int i = 0; i < ndata; i++) {
+    // Arbitrary data)
+    *(sequence.AppendElement(mozilla::fallible)) = rand() % 2;
+  }
+
+  prioParams.mBooleans.Assign(sequence);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Call again to ensure that the singleton state is consistent.
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
+                                    prioEncodedData, rv);
+||||||| merged common ancestors
+  // Call again to ensure that the singleton state is consistent.
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams, prioEncodedData, rv);
+=======
   mozilla::dom::RootedDictionary<mozilla::dom::PrioEncodedData> prioEncodedData(
       cx);
   mozilla::ErrorResult rv;
 
   mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
                                     prioEncodedData, rv);
-  ASSERT_TRUE(rv.Failed());
-
-  // Call again to ensure that the singleton state is consistent.
-  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
-                                    prioEncodedData, rv);
+>>>>>>> upstream-releases
   ASSERT_TRUE(rv.Failed());
 
   // Reset error result so test runner does not fail.
@@ -193,11 +259,20 @@ TEST(PrioEncoder, VerifyFull) {
   ASSERT_TRUE(jsAPI.Init(xpc::PrivilegedJunkScope()));
   JSContext* cx = jsAPI.cx();
 
+<<<<<<< HEAD
   mozilla::Preferences::SetCString(
       "prio.publicKeyA", nsCString(reinterpret_cast<const char*>(pkHexA)));
   mozilla::Preferences::SetCString(
       "prio.publicKeyB", nsCString(reinterpret_cast<const char*>(pkHexB)));
 
+||||||| merged common ancestors
+  mozilla::Preferences::SetCString("prio.publicKeyA",
+    nsCString(reinterpret_cast<const char*>(pkHexA)));
+  mozilla::Preferences::SetCString("prio.publicKeyB",
+    nsCString(reinterpret_cast<const char*>(pkHexB)));
+
+=======
+>>>>>>> upstream-releases
   mozilla::dom::GlobalObject global(cx, xpc::PrivilegedJunkScope());
 
   nsCString batchID;
@@ -214,8 +289,20 @@ TEST(PrioEncoder, VerifyFull) {
       cx);
   mozilla::ErrorResult rv;
 
+<<<<<<< HEAD
   mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
                                     prioEncodedData, rv);
+||||||| merged common ancestors
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams, prioEncodedData, rv);
+=======
+  rv =
+      mozilla::dom::PrioEncoder::SetKeys(reinterpret_cast<const char*>(pkHexA),
+                                         reinterpret_cast<const char*>(pkHexB));
+  ASSERT_FALSE(rv.Failed());
+
+  mozilla::dom::PrioEncoder::Encode(global, batchID, prioParams,
+                                    prioEncodedData, rv);
+>>>>>>> upstream-releases
   ASSERT_FALSE(rv.Failed());
 
   prioEncodedData.mA.Value().ComputeLengthAndData();

@@ -164,11 +164,25 @@ enum nsXPTTypeTag : uint8_t {
   //  - All-zeros (NULL) bit pattern is valid,
   //  - Outparams may be uninitialized by caller,
   //  - Supported in xptcall as raw pointer.
+<<<<<<< HEAD
   TD_VOID = 13,
   TD_PNSIID = 14,
   TD_PSTRING = 15,
   TD_PWSTRING = 16,
   TD_INTERFACE_TYPE = 17,
+||||||| merged common ancestors
+  TD_VOID              = 13,
+  TD_PNSIID            = 14,
+  TD_PSTRING           = 15,
+  TD_PWSTRING          = 16,
+  TD_INTERFACE_TYPE    = 17,
+=======
+  TD_VOID = 13,
+  TD_NSIDPTR = 14,
+  TD_PSTRING = 15,
+  TD_PWSTRING = 16,
+  TD_INTERFACE_TYPE = 17,
+>>>>>>> upstream-releases
   TD_INTERFACE_IS_TYPE = 18,
   TD_LEGACY_ARRAY = 19,
   TD_PSTRING_SIZE_IS = 20,
@@ -182,12 +196,29 @@ enum nsXPTTypeTag : uint8_t {
   //  - Always passed indirectly,
   //  - Outparams must be initialized by caller,
   //  - Supported in xptcall due to indirection.
+<<<<<<< HEAD
   TD_UTF8STRING = 24,
   TD_CSTRING = 25,
   TD_ASTRING = 26,
   TD_JSVAL = 27,
   TD_ARRAY = 28,
   _TD_LAST_COMPLEX = TD_ARRAY
+||||||| merged common ancestors
+  TD_UTF8STRING        = 24,
+  TD_CSTRING           = 25,
+  TD_ASTRING           = 26,
+  TD_JSVAL             = 27,
+  TD_ARRAY             = 28,
+  _TD_LAST_COMPLEX     = TD_ARRAY
+=======
+  TD_UTF8STRING = 24,
+  TD_CSTRING = 25,
+  TD_ASTRING = 26,
+  TD_NSID = 27,
+  TD_JSVAL = 28,
+  TD_ARRAY = 29,
+  _TD_LAST_COMPLEX = TD_ARRAY
+>>>>>>> upstream-releases
 };
 
 static_assert(_TD_LAST_COMPLEX < 32, "nsXPTTypeTag must fit in 5 bits");
@@ -212,7 +243,9 @@ struct nsXPTType {
 
  private:
   // Helper for reading 16-bit data values split between mData1 and mData2.
-  uint16_t Data16() const { return ((uint16_t)mData1 << 8) | mData2; }
+  uint16_t Data16() const {
+    return static_cast<uint16_t>(mData1 << 8) | mData2;
+  }
 
  public:
   // Get the type of the element in the current array or sequence. Arrays only
@@ -294,7 +327,7 @@ struct nsXPTType {
     BOOL,
     CHAR,
     WCHAR,
-    PNSIID,
+    NSIDPTR,
     PSTRING,
     PWSTRING,
     INTERFACE_IS_TYPE
@@ -321,6 +354,7 @@ struct nsXPTType {
   operator nsXPTTypeTag() const { return Tag(); }
 
 #define TD_ALIAS_(name_, value_) static constexpr nsXPTTypeTag name_ = value_
+<<<<<<< HEAD
   TD_ALIAS_(T_I8, TD_INT8);
   TD_ALIAS_(T_I16, TD_INT16);
   TD_ALIAS_(T_I32, TD_INT32);
@@ -350,6 +384,68 @@ struct nsXPTType {
   TD_ALIAS_(T_DOMOBJECT, TD_DOMOBJECT);
   TD_ALIAS_(T_PROMISE, TD_PROMISE);
   TD_ALIAS_(T_ARRAY, TD_ARRAY);
+||||||| merged common ancestors
+  TD_ALIAS_(T_I8                , TD_INT8             );
+  TD_ALIAS_(T_I16               , TD_INT16            );
+  TD_ALIAS_(T_I32               , TD_INT32            );
+  TD_ALIAS_(T_I64               , TD_INT64            );
+  TD_ALIAS_(T_U8                , TD_UINT8            );
+  TD_ALIAS_(T_U16               , TD_UINT16           );
+  TD_ALIAS_(T_U32               , TD_UINT32           );
+  TD_ALIAS_(T_U64               , TD_UINT64           );
+  TD_ALIAS_(T_FLOAT             , TD_FLOAT            );
+  TD_ALIAS_(T_DOUBLE            , TD_DOUBLE           );
+  TD_ALIAS_(T_BOOL              , TD_BOOL             );
+  TD_ALIAS_(T_CHAR              , TD_CHAR             );
+  TD_ALIAS_(T_WCHAR             , TD_WCHAR            );
+  TD_ALIAS_(T_VOID              , TD_VOID             );
+  TD_ALIAS_(T_IID               , TD_PNSIID           );
+  TD_ALIAS_(T_CHAR_STR          , TD_PSTRING          );
+  TD_ALIAS_(T_WCHAR_STR         , TD_PWSTRING         );
+  TD_ALIAS_(T_INTERFACE         , TD_INTERFACE_TYPE   );
+  TD_ALIAS_(T_INTERFACE_IS      , TD_INTERFACE_IS_TYPE);
+  TD_ALIAS_(T_LEGACY_ARRAY      , TD_LEGACY_ARRAY     );
+  TD_ALIAS_(T_PSTRING_SIZE_IS   , TD_PSTRING_SIZE_IS  );
+  TD_ALIAS_(T_PWSTRING_SIZE_IS  , TD_PWSTRING_SIZE_IS );
+  TD_ALIAS_(T_UTF8STRING        , TD_UTF8STRING       );
+  TD_ALIAS_(T_CSTRING           , TD_CSTRING          );
+  TD_ALIAS_(T_ASTRING           , TD_ASTRING          );
+  TD_ALIAS_(T_JSVAL             , TD_JSVAL            );
+  TD_ALIAS_(T_DOMOBJECT         , TD_DOMOBJECT        );
+  TD_ALIAS_(T_PROMISE           , TD_PROMISE          );
+  TD_ALIAS_(T_ARRAY             , TD_ARRAY            );
+=======
+  TD_ALIAS_(T_I8, TD_INT8);
+  TD_ALIAS_(T_I16, TD_INT16);
+  TD_ALIAS_(T_I32, TD_INT32);
+  TD_ALIAS_(T_I64, TD_INT64);
+  TD_ALIAS_(T_U8, TD_UINT8);
+  TD_ALIAS_(T_U16, TD_UINT16);
+  TD_ALIAS_(T_U32, TD_UINT32);
+  TD_ALIAS_(T_U64, TD_UINT64);
+  TD_ALIAS_(T_FLOAT, TD_FLOAT);
+  TD_ALIAS_(T_DOUBLE, TD_DOUBLE);
+  TD_ALIAS_(T_BOOL, TD_BOOL);
+  TD_ALIAS_(T_CHAR, TD_CHAR);
+  TD_ALIAS_(T_WCHAR, TD_WCHAR);
+  TD_ALIAS_(T_VOID, TD_VOID);
+  TD_ALIAS_(T_NSIDPTR, TD_NSIDPTR);
+  TD_ALIAS_(T_CHAR_STR, TD_PSTRING);
+  TD_ALIAS_(T_WCHAR_STR, TD_PWSTRING);
+  TD_ALIAS_(T_INTERFACE, TD_INTERFACE_TYPE);
+  TD_ALIAS_(T_INTERFACE_IS, TD_INTERFACE_IS_TYPE);
+  TD_ALIAS_(T_LEGACY_ARRAY, TD_LEGACY_ARRAY);
+  TD_ALIAS_(T_PSTRING_SIZE_IS, TD_PSTRING_SIZE_IS);
+  TD_ALIAS_(T_PWSTRING_SIZE_IS, TD_PWSTRING_SIZE_IS);
+  TD_ALIAS_(T_UTF8STRING, TD_UTF8STRING);
+  TD_ALIAS_(T_CSTRING, TD_CSTRING);
+  TD_ALIAS_(T_ASTRING, TD_ASTRING);
+  TD_ALIAS_(T_NSID, TD_NSID);
+  TD_ALIAS_(T_JSVAL, TD_JSVAL);
+  TD_ALIAS_(T_DOMOBJECT, TD_DOMOBJECT);
+  TD_ALIAS_(T_PROMISE, TD_PROMISE);
+  TD_ALIAS_(T_ARRAY, TD_ARRAY);
+>>>>>>> upstream-releases
 #undef TD_ALIAS_
 
   ////////////////////////////////////////////////////////////////
@@ -411,8 +507,7 @@ static_assert(sizeof(nsXPTParamInfo) == 3, "wrong size");
 struct nsXPTMethodInfo {
   bool IsGetter() const { return mGetter; }
   bool IsSetter() const { return mSetter; }
-  bool IsNotXPCOM() const { return mNotXPCOM; }
-  bool IsHidden() const { return mHidden; }
+  bool IsReflectable() const { return mReflectable; }
   bool IsSymbol() const { return mIsSymbol; }
   bool WantsOptArgc() const { return mOptArgc; }
   bool WantsContext() const { return mContext; }
@@ -448,6 +543,7 @@ struct nsXPTMethodInfo {
     return ParamCount() - uint8_t(HasRetval());
   }
 
+<<<<<<< HEAD
   /////////////////////////////////////////////
   // nsXPTMethodInfo backwards compatibility //
   /////////////////////////////////////////////
@@ -455,6 +551,18 @@ struct nsXPTMethodInfo {
   const char* GetName() const { return Name(); }
 
   JS::SymbolCode GetSymbolCode() const {
+||||||| merged common ancestors
+  /////////////////////////////////////////////
+  // nsXPTMethodInfo backwards compatibility //
+  /////////////////////////////////////////////
+
+  const char* GetName() const { return Name(); }
+
+  JS::SymbolCode GetSymbolCode() const
+  {
+=======
+  JS::SymbolCode GetSymbolCode() const {
+>>>>>>> upstream-releases
     MOZ_ASSERT(IsSymbol());
     return JS::SymbolCode(mName);
   }
@@ -463,7 +571,32 @@ struct nsXPTMethodInfo {
     return JS::GetWellKnownSymbol(aCx, GetSymbolCode());
   }
 
-  void GetSymbolDescription(JSContext* aCx, nsACString& aID) const;
+  const char* SymbolDescription() const;
+
+<<<<<<< HEAD
+  uint8_t GetParamCount() const { return ParamCount(); }
+  const nsXPTParamInfo& GetParam(uint8_t aIndex) const { return Param(aIndex); }
+||||||| merged common ancestors
+  uint8_t GetParamCount() const { return ParamCount(); }
+  const nsXPTParamInfo& GetParam(uint8_t aIndex) const {
+    return Param(aIndex);
+  }
+=======
+  const char* NameOrDescription() const {
+    if (IsSymbol()) {
+      return SymbolDescription();
+    }
+    return Name();
+  }
+>>>>>>> upstream-releases
+
+  bool GetId(JSContext* aCx, jsid& aId) const;
+
+  /////////////////////////////////////////////
+  // nsXPTMethodInfo backwards compatibility //
+  /////////////////////////////////////////////
+
+  const char* GetName() const { return Name(); }
 
   uint8_t GetParamCount() const { return ParamCount(); }
   const nsXPTParamInfo& GetParam(uint8_t aIndex) const { return Param(aIndex); }
@@ -478,8 +611,7 @@ struct nsXPTMethodInfo {
 
   uint8_t mGetter : 1;
   uint8_t mSetter : 1;
-  uint8_t mNotXPCOM : 1;
-  uint8_t mHidden : 1;
+  uint8_t mReflectable : 1;
   uint8_t mOptArgc : 1;
   uint8_t mContext : 1;
   uint8_t mHasRetval : 1;
@@ -521,9 +653,20 @@ static_assert(sizeof(nsXPTConstantInfo) == 8, "wrong size");
  *
  * This object will not live in rodata as it contains relocations.
  */
+<<<<<<< HEAD
 struct nsXPTDOMObjectInfo {
   nsresult Unwrap(JS::HandleValue aHandle, void** aObj) const {
     return mUnwrap(aHandle, aObj);
+||||||| merged common ancestors
+struct nsXPTDOMObjectInfo
+{
+  nsresult Unwrap(JS::HandleValue aHandle, void** aObj) const {
+    return mUnwrap(aHandle, aObj);
+=======
+struct nsXPTDOMObjectInfo {
+  nsresult Unwrap(JS::HandleValue aHandle, void** aObj, JSContext* aCx) const {
+    return mUnwrap(aHandle, aObj, aCx);
+>>>>>>> upstream-releases
   }
 
   bool Wrap(JSContext* aCx, void* aObj, JS::MutableHandleValue aHandle) const {
@@ -536,9 +679,19 @@ struct nsXPTDOMObjectInfo {
   // Ensure these fields are in the same order as xptcodegen.py //
   ////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
   nsresult (*mUnwrap)(JS::HandleValue aHandle, void** aObj);
   bool (*mWrap)(JSContext* aCx, void* aObj, JS::MutableHandleValue aHandle);
   void (*mCleanup)(void* aObj);
+||||||| merged common ancestors
+  nsresult (*mUnwrap) (JS::HandleValue aHandle, void** aObj);
+  bool (*mWrap) (JSContext* aCx, void* aObj, JS::MutableHandleValue aHandle);
+  void (*mCleanup) (void* aObj);
+=======
+  nsresult (*mUnwrap)(JS::HandleValue aHandle, void** aObj, JSContext* aCx);
+  bool (*mWrap)(JSContext* aCx, void* aObj, JS::MutableHandleValue aHandle);
+  void (*mCleanup)(void* aObj);
+>>>>>>> upstream-releases
 };
 
 namespace xpt {
@@ -557,7 +710,11 @@ class UntypedTArray : public nsTArray_base<nsTArrayFallibleAllocator,
     if (!EnsureCapacity<nsTArrayFallibleAllocator>(aTo, aEltTy.Stride())) {
       return false;
     }
-    mHdr->mLength = aTo;
+
+    if (mHdr != EmptyHdr()) {
+      mHdr->mLength = aTo;
+    }
+
     return true;
   }
 
@@ -613,6 +770,7 @@ inline const nsXPTDOMObjectInfo& GetDOMObjectInfo(uint16_t aIndex) {
   return sDOMObjects[aIndex];
 }
 
+<<<<<<< HEAD
 inline const char* GetString(uint32_t aIndex) { return &sStrings[aIndex]; }
 
 }  // namespace detail
@@ -659,6 +817,108 @@ inline const char* GetString(uint32_t aIndex) { return &sStrings[aIndex]; }
   XPT_FOR_EACH_COMPLEX_TYPE(MACRO)
 
 inline size_t nsXPTType::Stride() const {
+||||||| merged common ancestors
+inline const char*
+GetString(uint32_t aIndex)
+{
+  return &sStrings[aIndex];
+}
+
+} // namespace detail
+} // namespace xpt
+
+#define XPT_FOR_EACH_ARITHMETIC_TYPE(macro) \
+  macro(TD_INT8,   int8_t) \
+  macro(TD_INT16,  int16_t) \
+  macro(TD_INT32,  int32_t) \
+  macro(TD_INT64,  int64_t) \
+  macro(TD_UINT8,  uint8_t) \
+  macro(TD_UINT16, uint16_t) \
+  macro(TD_UINT32, uint32_t) \
+  macro(TD_UINT64, uint64_t) \
+  macro(TD_FLOAT,  float) \
+  macro(TD_DOUBLE, double) \
+  macro(TD_BOOL,   bool) \
+  macro(TD_CHAR,   char) \
+  macro(TD_WCHAR,  char16_t)
+
+#define XPT_FOR_EACH_POINTER_TYPE(macro) \
+  macro(TD_VOID,              void*) \
+  macro(TD_PNSIID,            nsID*) \
+  macro(TD_PSTRING,           char*) \
+  macro(TD_PWSTRING,          wchar_t*) \
+  macro(TD_INTERFACE_TYPE,    nsISupports*) \
+  macro(TD_INTERFACE_IS_TYPE, nsISupports*) \
+  macro(TD_LEGACY_ARRAY,      void*) \
+  macro(TD_PSTRING_SIZE_IS,   char*) \
+  macro(TD_PWSTRING_SIZE_IS,  wchar_t*) \
+  macro(TD_DOMOBJECT,         void*) \
+  macro(TD_PROMISE,           mozilla::dom::Promise*)
+
+#define XPT_FOR_EACH_COMPLEX_TYPE(macro) \
+  macro(TD_UTF8STRING, nsCString) \
+  macro(TD_CSTRING,    nsCString) \
+  macro(TD_ASTRING,    nsString) \
+  macro(TD_JSVAL,      JS::Value) \
+  macro(TD_ARRAY,      xpt::detail::UntypedTArray)
+
+#define XPT_FOR_EACH_TYPE(macro) \
+  XPT_FOR_EACH_ARITHMETIC_TYPE(macro) \
+  XPT_FOR_EACH_POINTER_TYPE(macro) \
+  XPT_FOR_EACH_COMPLEX_TYPE(macro)
+
+inline size_t
+nsXPTType::Stride() const
+{
+=======
+inline const char* GetString(uint32_t aIndex) { return &sStrings[aIndex]; }
+
+}  // namespace detail
+}  // namespace xpt
+
+#define XPT_FOR_EACH_ARITHMETIC_TYPE(MACRO) \
+  MACRO(TD_INT8, int8_t)                    \
+  MACRO(TD_INT16, int16_t)                  \
+  MACRO(TD_INT32, int32_t)                  \
+  MACRO(TD_INT64, int64_t)                  \
+  MACRO(TD_UINT8, uint8_t)                  \
+  MACRO(TD_UINT16, uint16_t)                \
+  MACRO(TD_UINT32, uint32_t)                \
+  MACRO(TD_UINT64, uint64_t)                \
+  MACRO(TD_FLOAT, float)                    \
+  MACRO(TD_DOUBLE, double)                  \
+  MACRO(TD_BOOL, bool)                      \
+  MACRO(TD_CHAR, char)                      \
+  MACRO(TD_WCHAR, char16_t)
+
+#define XPT_FOR_EACH_POINTER_TYPE(MACRO)    \
+  MACRO(TD_VOID, void*)                     \
+  MACRO(TD_NSIDPTR, nsID*)                  \
+  MACRO(TD_PSTRING, char*)                  \
+  MACRO(TD_PWSTRING, wchar_t*)              \
+  MACRO(TD_INTERFACE_TYPE, nsISupports*)    \
+  MACRO(TD_INTERFACE_IS_TYPE, nsISupports*) \
+  MACRO(TD_LEGACY_ARRAY, void*)             \
+  MACRO(TD_PSTRING_SIZE_IS, char*)          \
+  MACRO(TD_PWSTRING_SIZE_IS, wchar_t*)      \
+  MACRO(TD_DOMOBJECT, void*)                \
+  MACRO(TD_PROMISE, mozilla::dom::Promise*)
+
+#define XPT_FOR_EACH_COMPLEX_TYPE(MACRO) \
+  MACRO(TD_UTF8STRING, nsCString)        \
+  MACRO(TD_CSTRING, nsCString)           \
+  MACRO(TD_ASTRING, nsString)            \
+  MACRO(TD_NSID, nsID)                   \
+  MACRO(TD_JSVAL, JS::Value)             \
+  MACRO(TD_ARRAY, xpt::detail::UntypedTArray)
+
+#define XPT_FOR_EACH_TYPE(MACRO)      \
+  XPT_FOR_EACH_ARITHMETIC_TYPE(MACRO) \
+  XPT_FOR_EACH_POINTER_TYPE(MACRO)    \
+  XPT_FOR_EACH_COMPLEX_TYPE(MACRO)
+
+inline size_t nsXPTType::Stride() const {
+>>>>>>> upstream-releases
   // Compute the stride to use when walking an array of the given type.
   switch (Tag()) {
 #define XPT_TYPE_STRIDE(tag, type) \

@@ -60,13 +60,44 @@ nsresult RemoveCrashReportAnnotation(Annotation key) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
+nsresult SetGarbageCollecting(bool collecting) {
+  return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+nsresult
+SetGarbageCollecting(bool collecting)
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
+=======
+void MergeCrashAnnotations(AnnotationTable& aDst, const AnnotationTable& aSrc) {
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void SetEventloopNestingLevel(uint32_t level) {}
+||||||| merged common ancestors
+void
+SetEventloopNestingLevel(uint32_t level)
+{
+}
+=======
 nsresult SetGarbageCollecting(bool collecting) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void SetMinidumpAnalysisAllThreads() {}
+||||||| merged common ancestors
+void
+SetMinidumpAnalysisAllThreads()
+{
+}
+=======
 void SetEventloopNestingLevel(uint32_t level) {}
 
 void SetMinidumpAnalysisAllThreads() {}
+>>>>>>> upstream-releases
 
 nsresult AppendAppNotesToCrashReport(const nsACString& data) {
   return NS_ERROR_NOT_IMPLEMENTED;
@@ -101,8 +132,18 @@ void RegisterChildCrashAnnotationFileDescriptor(ProcessId aProcess,
 
 void DeregisterChildCrashAnnotationFileDescriptor(ProcessId aProcess) {}
 
+<<<<<<< HEAD
 #ifdef XP_WIN32
 nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo) {
+||||||| merged common ancestors
+#ifdef XP_WIN32
+nsresult
+WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo)
+{
+=======
+#ifdef XP_WIN
+nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 #endif
@@ -141,33 +182,119 @@ nsresult GetDefaultMemoryReportFile(nsIFile** aFile) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 void SetTelemetrySessionId(const nsACString& id) {}
 
 void DeleteMinidumpFilesForID(const nsAString& id) {}
+||||||| merged common ancestors
+void
+SetTelemetrySessionId(const nsACString& id)
+{
+}
 
+void
+DeleteMinidumpFilesForID(const nsAString& id)
+{
+}
+=======
+void SetTelemetrySessionId(const nsACString& id) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool GetMinidumpForID(const nsAString& id, nsIFile** minidump) { return false; }
+||||||| merged common ancestors
+bool
+GetMinidumpForID(const nsAString& id, nsIFile** minidump)
+{
+  return false;
+}
+=======
+void DeleteMinidumpFilesForID(const nsAString& id) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetIDFromMinidump(nsIFile* minidump, nsAString& id) { return false; }
+||||||| merged common ancestors
+bool
+GetIDFromMinidump(nsIFile* minidump, nsAString& id)
+{
+  return false;
+}
+=======
+bool GetMinidumpForID(const nsAString& id, nsIFile** minidump) { return false; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetExtraFileForID(const nsAString& id, nsIFile** extraFile) {
   return false;
 }
+||||||| merged common ancestors
+bool
+GetExtraFileForID(const nsAString& id,
+                  nsIFile** extraFile)
+{
+  return false;
+}
+=======
+bool GetIDFromMinidump(nsIFile* minidump, nsAString& id) { return false; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetExtraFileForMinidump(nsIFile* minidump, nsIFile** extraFile) {
+||||||| merged common ancestors
+bool
+GetExtraFileForMinidump(nsIFile* minidump,
+                        nsIFile** extraFile)
+{
+=======
+bool GetExtraFileForID(const nsAString& id, nsIFile** extraFile) {
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 bool AppendExtraData(const nsAString& id, const AnnotationTable& data) {
+||||||| merged common ancestors
+bool
+AppendExtraData(const nsAString& id,
+                const AnnotationTable& data)
+{
+=======
+bool GetExtraFileForMinidump(nsIFile* minidump, nsIFile** extraFile) {
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 bool AppendExtraData(nsIFile* extraFile, const AnnotationTable& data) {
+||||||| merged common ancestors
+bool
+AppendExtraData(nsIFile* extraFile,
+                const AnnotationTable& data)
+{
+=======
+bool WriteExtraFile(const nsAString& id, const AnnotationTable& annotations) {
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 void OOPInit() {}
 
 void GetChildProcessTmpDir(nsIFile** aOutTmpDir) {}
+||||||| merged common ancestors
+void
+OOPInit()
+{
+}
+
+void
+GetChildProcessTmpDir(nsIFile** aOutTmpDir)
+{
+}
+=======
+void OOPInit() {}
+>>>>>>> upstream-releases
 
 #if defined(XP_WIN) || defined(XP_MACOSX)
 const char* GetChildNotificationPipe() { return nullptr; }
@@ -202,23 +329,61 @@ bool CreateNotificationPipeForChild(int* childCrashFd, int* childCrashRemapFd) {
 bool SetRemoteExceptionHandler() { return false; }
 #endif  // XP_WIN
 
+<<<<<<< HEAD
 bool TakeMinidumpForChild(uint32_t childPid, nsIFile** dump,
                           uint32_t* aSequence) {
+||||||| merged common ancestors
+bool
+TakeMinidumpForChild(uint32_t childPid, nsIFile** dump, uint32_t* aSequence)
+{
+=======
+bool TakeMinidumpForChild(uint32_t childPid, nsIFile** dump,
+                          AnnotationTable& aAnnotations, uint32_t* aSequence) {
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 void RenameAdditionalHangMinidump(nsIFile* minidump, nsIFile* childMinidump,
                                   const nsACString& name) {}
+||||||| merged common ancestors
+void
+RenameAdditionalHangMinidump(nsIFile* minidump, nsIFile* childMinidump,
+                             const nsACString& name)
+{
+}
+=======
+bool FinalizeOrphanedMinidump(uint32_t aChildPid, GeckoProcessType aType) {
+  return false;
+}
+>>>>>>> upstream-releases
 
 ThreadId CurrentThreadId() { return -1; }
 
 bool TakeMinidump(nsIFile** aResult, bool aMoveToPending) { return false; }
 
+<<<<<<< HEAD
 bool CreateMinidumpsAndPair(ProcessHandle aTargetPid,
                             ThreadId aTargetBlamedThread,
                             const nsACString& aIncomingPairName,
                             nsIFile* aIncomingDumpToPair,
                             nsIFile** aTargetDumpOut) {
+||||||| merged common ancestors
+bool
+CreateMinidumpsAndPair(ProcessHandle aTargetPid,
+                       ThreadId aTargetBlamedThread,
+                       const nsACString& aIncomingPairName,
+                       nsIFile* aIncomingDumpToPair,
+                       nsIFile** aTargetDumpOut)
+{
+=======
+bool CreateMinidumpsAndPair(ProcessHandle aTargetPid,
+                            ThreadId aTargetBlamedThread,
+                            const nsACString& aIncomingPairName,
+                            nsIFile* aIncomingDumpToPair,
+                            AnnotationTable& aTargetAnnotations,
+                            nsIFile** aTargetDumpOut) {
+>>>>>>> upstream-releases
   return false;
 }
 

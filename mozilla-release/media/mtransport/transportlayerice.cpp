@@ -78,7 +78,7 @@ extern "C" {
 namespace mozilla {
 
 #ifdef ERROR
-#undef ERROR
+#  undef ERROR
 #endif
 
 MOZ_MTLOG_MODULE("mtransport")
@@ -135,12 +135,21 @@ TransportResult TransportLayerIce::SendPacket(MediaPacket &packet) {
   return packet.len();
 }
 
+<<<<<<< HEAD
 void TransportLayerIce::IceCandidate(NrIceMediaStream *stream,
                                      const std::string &) {
+||||||| merged common ancestors
+
+void TransportLayerIce::IceCandidate(NrIceMediaStream *stream,
+                                     const std::string&) {
+=======
+void TransportLayerIce::IceCandidate(NrIceMediaStream* stream,
+                                     const std::string&) {
+>>>>>>> upstream-releases
   // NO-OP for now
 }
 
-void TransportLayerIce::IceReady(NrIceMediaStream *stream) {
+void TransportLayerIce::IceReady(NrIceMediaStream* stream) {
   CheckThread();
   // only handle the current stream (not the old stream during restart)
   if (stream != stream_) {
@@ -151,7 +160,7 @@ void TransportLayerIce::IceReady(NrIceMediaStream *stream) {
   TL_SET_STATE(TS_OPEN);
 }
 
-void TransportLayerIce::IceFailed(NrIceMediaStream *stream) {
+void TransportLayerIce::IceFailed(NrIceMediaStream* stream) {
   CheckThread();
   // only handle the current stream (not the old stream during restart)
   if (stream != stream_) {
@@ -162,9 +171,18 @@ void TransportLayerIce::IceFailed(NrIceMediaStream *stream) {
   TL_SET_STATE(TS_ERROR);
 }
 
+<<<<<<< HEAD
 void TransportLayerIce::IcePacketReceived(NrIceMediaStream *stream,
                                           int component,
                                           const unsigned char *data, int len) {
+||||||| merged common ancestors
+void TransportLayerIce::IcePacketReceived(NrIceMediaStream *stream, int component,
+                       const unsigned char *data, int len) {
+=======
+void TransportLayerIce::IcePacketReceived(NrIceMediaStream* stream,
+                                          int component,
+                                          const unsigned char* data, int len) {
+>>>>>>> upstream-releases
   CheckThread();
   // We get packets for both components, so ignore the ones that aren't
   // for us.

@@ -18,23 +18,61 @@ class nsStandardURL;
 
 namespace dom {
 
-class WorkerPrivate;
+class URLWorker final {
+ public:
+  static already_AddRefed<URLWorker> Constructor(
+      const GlobalObject& aGlobal, const nsAString& aURL,
+      const Optional<nsAString>& aBase, ErrorResult& aRv);
 
+<<<<<<< HEAD
 // URLWorker implements the URL object in workers.
 class URLWorker final : public URL {
  public:
   static already_AddRefed<URLWorker> Constructor(
       const GlobalObject& aGlobal, const nsAString& aURL,
       const Optional<nsAString>& aBase, ErrorResult& aRv);
-
+||||||| merged common ancestors
+// URLWorker implements the URL object in workers.
+class URLWorker final : public URL
+{
+public:
+  static already_AddRefed<URLWorker>
+  Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
+              const Optional<nsAString>& aBase, ErrorResult& aRv);
+=======
   static already_AddRefed<URLWorker> Constructor(const GlobalObject& aGlobal,
                                                  const nsAString& aURL,
                                                  const nsAString& aBase,
                                                  ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static already_AddRefed<URLWorker> Constructor(const GlobalObject& aGlobal,
+                                                 const nsAString& aURL,
+                                                 const nsAString& aBase,
+                                                 ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<URLWorker>
+  Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
+              const nsAString& aBase, ErrorResult& aRv);
+=======
   static void CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
                               nsAString& aResult, mozilla::ErrorResult& aRv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static void CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                              nsAString& aResult, mozilla::ErrorResult& aRv);
+||||||| merged common ancestors
+  static void
+  CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                  nsAString& aResult, mozilla::ErrorResult& aRv);
+=======
+  static void RevokeObjectURL(const GlobalObject& aGlobal,
+                              const nsAString& aUrl, ErrorResult& aRv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static void RevokeObjectURL(const GlobalObject& aGlobal,
                               const nsAString& aUrl, ErrorResult& aRv);
 
@@ -57,6 +95,38 @@ class URLWorker final : public URL {
   ~URLWorker();
 
   WorkerPrivate* mWorkerPrivate;
+||||||| merged common ancestors
+  static void
+  RevokeObjectURL(const GlobalObject& aGlobal, const nsAString& aUrl,
+                  ErrorResult& aRv);
+
+  static bool
+  IsValidURL(const GlobalObject& aGlobal, const nsAString& aUrl,
+             ErrorResult& aRv);
+
+  explicit URLWorker(WorkerPrivate* aWorkerPrivate);
+
+  void
+  Init(const nsAString& aURL, const Optional<nsAString>& aBase,
+       ErrorResult& aRv);
+
+  virtual void
+  SetHref(const nsAString& aHref, ErrorResult& aRv) override;
+
+  virtual void
+  GetOrigin(nsAString& aOrigin, ErrorResult& aRv) const override;
+
+  virtual void
+  SetProtocol(const nsAString& aProtocol, ErrorResult& aRv) override;
+
+private:
+  ~URLWorker();
+
+  WorkerPrivate* mWorkerPrivate;
+=======
+  static bool IsValidURL(const GlobalObject& aGlobal, const nsAString& aUrl,
+                         ErrorResult& aRv);
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

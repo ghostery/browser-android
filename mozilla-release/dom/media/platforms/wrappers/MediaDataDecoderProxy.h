@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MediaDataDecoderProxy_h_)
-#define MediaDataDecoderProxy_h_
+#  define MediaDataDecoderProxy_h_
 
-#include "PlatformDecoderModule.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/RefPtr.h"
-#include "nsThreadUtils.h"
-#include "nscore.h"
+#  include "PlatformDecoderModule.h"
+#  include "mozilla/Atomics.h"
+#  include "mozilla/RefPtr.h"
+#  include "nsThreadUtils.h"
+#  include "nscore.h"
 
 namespace mozilla {
 
@@ -22,21 +22,49 @@ class MediaDataDecoderProxy
       public DecoderDoctorLifeLogger<MediaDataDecoderProxy> {
  public:
   explicit MediaDataDecoderProxy(already_AddRefed<AbstractThread> aProxyThread)
+<<<<<<< HEAD
       : mProxyThread(aProxyThread)
 #if defined(DEBUG)
         ,
         mIsShutdown(false)
 #endif
+||||||| merged common ancestors
+    : mProxyThread(aProxyThread)
+#if defined(DEBUG)
+    , mIsShutdown(false)
+#endif
+=======
+      : mProxyThread(aProxyThread)
+#  if defined(DEBUG)
+        ,
+        mIsShutdown(false)
+#  endif
+>>>>>>> upstream-releases
   {
   }
 
   explicit MediaDataDecoderProxy(
+<<<<<<< HEAD
       already_AddRefed<MediaDataDecoder> aProxyDecoder)
       : mProxyDecoder(aProxyDecoder)
 #if defined(DEBUG)
         ,
         mIsShutdown(false)
 #endif
+||||||| merged common ancestors
+    already_AddRefed<MediaDataDecoder> aProxyDecoder)
+    : mProxyDecoder(aProxyDecoder)
+#if defined(DEBUG)
+    , mIsShutdown(false)
+#endif
+=======
+      already_AddRefed<MediaDataDecoder> aProxyDecoder)
+      : mProxyDecoder(aProxyDecoder)
+#  if defined(DEBUG)
+        ,
+        mIsShutdown(false)
+#  endif
+>>>>>>> upstream-releases
   {
     DDLINKCHILD("proxy decoder", mProxyDecoder.get());
   }
@@ -62,9 +90,9 @@ class MediaDataDecoderProxy
   RefPtr<MediaDataDecoder> mProxyDecoder;
   RefPtr<AbstractThread> mProxyThread;
 
-#if defined(DEBUG)
+#  if defined(DEBUG)
   Atomic<bool> mIsShutdown;
-#endif
+#  endif
 };
 
 }  // namespace mozilla

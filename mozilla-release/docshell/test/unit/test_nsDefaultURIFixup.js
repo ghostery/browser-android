@@ -1,5 +1,14 @@
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 
+||||||| merged common ancestors
+var urifixup = Cc["@mozilla.org/docshell/urifixup;1"].
+               getService(Ci.nsIURIFixup);
+var prefs = Cc["@mozilla.org/preferences-service;1"].
+            getService(Ci.nsIPrefBranch);
+
+=======
+>>>>>>> upstream-releases
 var pref = "browser.fixup.typo.scheme";
 
 var data = [
@@ -62,9 +71,20 @@ add_task(function test_unset_pref_fixes_typos() {
   Services.prefs.clearUserPref(pref);
   for (let i = 0; i < len; ++i) {
     let item = data[i];
+<<<<<<< HEAD
     let result =
       Services.uriFixup.createFixupURI(item.wrong,
                               Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+||||||| merged common ancestors
+    let result =
+      urifixup.createFixupURI(item.wrong,
+                              urifixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+=======
+    let result = Services.uriFixup.createFixupURI(
+      item.wrong,
+      Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS
+    ).spec;
+>>>>>>> upstream-releases
     Assert.equal(result, item.fixed);
   }
 });
@@ -75,9 +95,20 @@ add_task(function test_false_pref_keeps_typos() {
   Services.prefs.setBoolPref(pref, false);
   for (let i = 0; i < len; ++i) {
     let item = data[i];
+<<<<<<< HEAD
     let result =
       Services.uriFixup.createFixupURI(item.wrong,
                               Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+||||||| merged common ancestors
+    let result =
+      urifixup.createFixupURI(item.wrong,
+                              urifixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+=======
+    let result = Services.uriFixup.createFixupURI(
+      item.wrong,
+      Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS
+    ).spec;
+>>>>>>> upstream-releases
     Assert.equal(result, item.wrong);
   }
 });
@@ -88,9 +119,20 @@ add_task(function test_true_pref_fixes_typos() {
   Services.prefs.setBoolPref(pref, true);
   for (let i = 0; i < len; ++i) {
     let item = data[i];
+<<<<<<< HEAD
     let result =
         Services.uriFixup.createFixupURI(item.wrong,
                                 Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+||||||| merged common ancestors
+    let result =
+        urifixup.createFixupURI(item.wrong,
+                                urifixup.FIXUP_FLAG_FIX_SCHEME_TYPOS).spec;
+=======
+    let result = Services.uriFixup.createFixupURI(
+      item.wrong,
+      Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS
+    ).spec;
+>>>>>>> upstream-releases
     Assert.equal(result, item.fixed);
   }
 });

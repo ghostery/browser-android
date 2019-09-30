@@ -32,7 +32,16 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::Initialize() {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::Initialize()
+{
+=======
+/* static */
+void SharedSurfacesParent::Initialize() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
@@ -40,7 +49,16 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::Shutdown() {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::Shutdown()
+{
+=======
+/* static */
+void SharedSurfacesParent::Shutdown() {
+>>>>>>> upstream-releases
   // The main thread should blocked on waiting for the render thread to
   // complete so this should be safe to release off the main thread.
   MOZ_ASSERT(wr::RenderThread::IsInRenderThread());
@@ -48,10 +66,21 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   sInstance = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DataSourceSurface> SharedSurfacesParent::Get(
     const wr::ExternalImageId& aId) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DataSourceSurface>
+SharedSurfacesParent::Get(const wr::ExternalImageId& aId)
+{
+=======
+/* static */
+already_AddRefed<DataSourceSurface> SharedSurfacesParent::Get(
+    const wr::ExternalImageId& aId) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
+    gfxCriticalNote << "SSP:Get " << aId.mHandle << " shtd";
     return nullptr;
   }
 
@@ -60,10 +89,21 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   return surface.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DataSourceSurface> SharedSurfacesParent::Acquire(
     const wr::ExternalImageId& aId) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DataSourceSurface>
+SharedSurfacesParent::Acquire(const wr::ExternalImageId& aId)
+{
+=======
+/* static */
+already_AddRefed<DataSourceSurface> SharedSurfacesParent::Acquire(
+    const wr::ExternalImageId& aId) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
+    gfxCriticalNote << "SSP:Acq " << aId.mHandle << " shtd";
     return nullptr;
   }
 
@@ -77,8 +117,18 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   return surface.forget();
 }
 
+<<<<<<< HEAD
 /* static */ bool SharedSurfacesParent::Release(const wr::ExternalImageId& aId,
                                                 bool aForCreator) {
+||||||| merged common ancestors
+/* static */ bool
+SharedSurfacesParent::Release(const wr::ExternalImageId& aId, bool aForCreator)
+{
+=======
+/* static */
+bool SharedSurfacesParent::Release(const wr::ExternalImageId& aId,
+                                   bool aForCreator) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
     return false;
@@ -99,12 +149,24 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::AddSameProcess(
     const wr::ExternalImageId& aId, SourceSurfaceSharedData* aSurface) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::AddSameProcess(const wr::ExternalImageId& aId,
+                                     SourceSurfaceSharedData* aSurface)
+{
+=======
+/* static */
+void SharedSurfacesParent::AddSameProcess(const wr::ExternalImageId& aId,
+                                          SourceSurfaceSharedData* aSurface) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
+    gfxCriticalNote << "SSP:Ads " << aId.mHandle << " shtd";
     return;
   }
 
@@ -128,14 +190,32 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   sInstance->mSurfaces.Put(id, surface);
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::RemoveSameProcess(
     const wr::ExternalImageId& aId) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::RemoveSameProcess(const wr::ExternalImageId& aId)
+{
+=======
+/* static */
+void SharedSurfacesParent::RemoveSameProcess(const wr::ExternalImageId& aId) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
   Release(aId, /* aForCreator */ true);
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::DestroyProcess(base::ProcessId aPid) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::DestroyProcess(base::ProcessId aPid)
+{
+=======
+/* static */
+void SharedSurfacesParent::DestroyProcess(base::ProcessId aPid) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
     return;
@@ -153,21 +233,47 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::Add(
     const wr::ExternalImageId& aId, const SurfaceDescriptorShared& aDesc,
     base::ProcessId aPid) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::Add(const wr::ExternalImageId& aId,
+                          const SurfaceDescriptorShared& aDesc,
+                          base::ProcessId aPid)
+{
+=======
+/* static */
+void SharedSurfacesParent::Add(const wr::ExternalImageId& aId,
+                               const SurfaceDescriptorShared& aDesc,
+                               base::ProcessId aPid) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   MOZ_ASSERT(aPid != base::GetCurrentProcId());
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
+    gfxCriticalNote << "SSP:Add " << aId.mHandle << " shtd";
     return;
   }
 
   // Note that the surface wrapper maps in the given handle as read only.
   RefPtr<SourceSurfaceSharedDataWrapper> surface =
+<<<<<<< HEAD
       new SourceSurfaceSharedDataWrapper();
   if (NS_WARN_IF(!surface->Init(aDesc.size(), aDesc.stride(), aDesc.format(),
                                 aDesc.handle(), aPid))) {
+||||||| merged common ancestors
+    new SourceSurfaceSharedDataWrapper();
+  if (NS_WARN_IF(!surface->Init(aDesc.size(), aDesc.stride(),
+                                aDesc.format(), aDesc.handle(),
+                                aPid))) {
+=======
+      new SourceSurfaceSharedDataWrapper();
+  if (NS_WARN_IF(!surface->Init(aDesc.size(), aDesc.stride(), aDesc.format(),
+                                aDesc.handle(), aPid))) {
+    gfxCriticalNote << "SSP:Add " << aId.mHandle << " init";
+>>>>>>> upstream-releases
     return;
   }
 
@@ -182,13 +288,33 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   sInstance->mSurfaces.Put(id, surface.forget());
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::Remove(const wr::ExternalImageId& aId) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::Remove(const wr::ExternalImageId& aId)
+{
+=======
+/* static */
+void SharedSurfacesParent::Remove(const wr::ExternalImageId& aId) {
+>>>>>>> upstream-releases
   DebugOnly<bool> rv = Release(aId, /* aForCreator */ true);
   MOZ_ASSERT(rv);
 }
 
+<<<<<<< HEAD
 /* static */ void SharedSurfacesParent::AccumulateMemoryReport(
     base::ProcessId aPid, SharedSurfacesMemoryReport& aReport) {
+||||||| merged common ancestors
+/* static */ void
+SharedSurfacesParent::AccumulateMemoryReport(base::ProcessId aPid,
+                                             SharedSurfacesMemoryReport& aReport)
+{
+=======
+/* static */
+void SharedSurfacesParent::AccumulateMemoryReport(
+    base::ProcessId aPid, SharedSurfacesMemoryReport& aReport) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sMutex);
   if (!sInstance) {
     return;
@@ -205,8 +331,18 @@ SharedSurfacesParent::~SharedSurfacesParent() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool SharedSurfacesParent::AccumulateMemoryReport(
     SharedSurfacesMemoryReport& aReport) {
+||||||| merged common ancestors
+/* static */ bool
+SharedSurfacesParent::AccumulateMemoryReport(SharedSurfacesMemoryReport& aReport)
+{
+=======
+/* static */
+bool SharedSurfacesParent::AccumulateMemoryReport(
+    SharedSurfacesMemoryReport& aReport) {
+>>>>>>> upstream-releases
   if (XRE_IsParentProcess()) {
     GPUProcessManager* gpm = GPUProcessManager::Get();
     if (!gpm || gpm->GPUProcessPid() != -1) {

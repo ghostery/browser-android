@@ -18,6 +18,29 @@
 #include "mozilla/FloatingPoint.h"
 
 namespace mozilla {
+
+struct ExternalPixel;
+
+template <>
+struct IsPixel<ExternalPixel> : TrueType {};
+
+typedef gfx::CoordTyped<ExternalPixel> ExternalCoord;
+typedef gfx::IntCoordTyped<ExternalPixel> ExternalIntCoord;
+typedef gfx::PointTyped<ExternalPixel> ExternalPoint;
+typedef gfx::IntPointTyped<ExternalPixel> ExternalIntPoint;
+typedef gfx::SizeTyped<ExternalPixel> ExternalSize;
+typedef gfx::IntSizeTyped<ExternalPixel> ExternalIntSize;
+typedef gfx::RectTyped<ExternalPixel> ExternalRect;
+typedef gfx::IntRectTyped<ExternalPixel> ExternalIntRect;
+typedef gfx::MarginTyped<ExternalPixel> ExternalMargin;
+typedef gfx::IntMarginTyped<ExternalPixel> ExternalIntMargin;
+typedef gfx::IntRegionTyped<ExternalPixel> ExternalIntRegion;
+
+typedef gfx::Matrix4x4Typed<ExternalPixel, ParentLayerPixel>
+    ExternalToParentLayerMatrix4x4;
+
+struct ExternalPixel {};
+
 namespace layers {
 
 class AsyncPanZoomController;
@@ -83,8 +106,9 @@ inline AsyncTransformMatrix CompleteAsyncTransform(
       aMatrix, PixelCastJustification::MultipleAsyncTransforms);
 }
 
-struct TargetConfirmationFlags {
+struct TargetConfirmationFlags final {
   explicit TargetConfirmationFlags(bool aTargetConfirmed)
+<<<<<<< HEAD
       : mTargetConfirmed(aTargetConfirmed),
         mRequiresTargetConfirmation(false) {}
 
@@ -96,11 +120,34 @@ struct TargetConfirmationFlags {
                 gfx::CompositorHitTestFlags::eDispatchToContent)),
         mRequiresTargetConfirmation(aHitTestInfo.contains(
             gfx::CompositorHitTestFlags::eRequiresTargetConfirmation)) {}
+||||||| merged common ancestors
+    : mTargetConfirmed(aTargetConfirmed)
+    , mRequiresTargetConfirmation(false)
+  {}
+
+  explicit TargetConfirmationFlags(const gfx::CompositorHitTestInfo& aHitTestInfo)
+    : mTargetConfirmed((aHitTestInfo != gfx::CompositorHitTestInvisibleToHit) &&
+                       !aHitTestInfo.contains(gfx::CompositorHitTestFlags::eDispatchToContent))
+    , mRequiresTargetConfirmation(aHitTestInfo.contains(gfx::CompositorHitTestFlags::eRequiresTargetConfirmation))
+  {}
+=======
+      : mTargetConfirmed(aTargetConfirmed),
+        mRequiresTargetConfirmation(false) {}
+
+  explicit TargetConfirmationFlags(
+      const gfx::CompositorHitTestInfo& aHitTestInfo)
+      : mTargetConfirmed(
+            (aHitTestInfo != gfx::CompositorHitTestInvisibleToHit) &&
+            (aHitTestInfo & gfx::CompositorHitTestDispatchToContent).isEmpty()),
+        mRequiresTargetConfirmation(aHitTestInfo.contains(
+            gfx::CompositorHitTestFlags::eRequiresTargetConfirmation)) {}
+>>>>>>> upstream-releases
 
   bool mTargetConfirmed : 1;
   bool mRequiresTargetConfirmation : 1;
 };
 
+<<<<<<< HEAD
 /**
  * An RAII class to temporarily apply async test attributes to the provided
  * AsyncPanZoomController.
@@ -114,6 +161,27 @@ class MOZ_RAII AutoApplyAsyncTestAttributes {
   AsyncPanZoomController* mApzc;
   FrameMetrics mPrevFrameMetrics;
 };
+||||||| merged common ancestors
+/**
+ * An RAII class to temporarily apply async test attributes to the provided
+ * AsyncPanZoomController.
+ */
+class MOZ_RAII AutoApplyAsyncTestAttributes {
+public:
+  explicit AutoApplyAsyncTestAttributes(AsyncPanZoomController*);
+  ~AutoApplyAsyncTestAttributes();
+private:
+  AsyncPanZoomController* mApzc;
+  FrameMetrics mPrevFrameMetrics;
+};
+=======
+enum class AsyncTransformComponent { eLayout, eVisual };
+
+using AsyncTransformComponents = EnumSet<AsyncTransformComponent>;
+
+constexpr AsyncTransformComponents LayoutAndVisual(
+    AsyncTransformComponent::eLayout, AsyncTransformComponent::eVisual);
+>>>>>>> upstream-releases
 
 namespace apz {
 

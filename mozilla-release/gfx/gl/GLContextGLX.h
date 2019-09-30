@@ -33,11 +33,23 @@ class GLContextGLX : public GLContext {
       ScopedXFree<GLXFBConfig>* const out_scopedConfigArr,
       GLXFBConfig* const out_config, int* const out_visid, bool aWebRender);
 
+<<<<<<< HEAD
   ~GLContextGLX() override;
+||||||| merged common ancestors
+    ~GLContextGLX();
+=======
+  virtual ~GLContextGLX();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual GLContextType GetContextType() const override {
     return GLContextType::GLX;
   }
+||||||| merged common ancestors
+    virtual GLContextType GetContextType() const override { return GLContextType::GLX; }
+=======
+  GLContextType GetContextType() const override { return GLContextType::GLX; }
+>>>>>>> upstream-releases
 
   static GLContextGLX* Cast(GLContext* gl) {
     MOZ_ASSERT(gl->GetContextType() == GLContextType::GLX);
@@ -46,17 +58,53 @@ class GLContextGLX : public GLContext {
 
   bool Init() override;
 
+<<<<<<< HEAD
   virtual bool MakeCurrentImpl() const override;
+||||||| merged common ancestors
+    virtual bool MakeCurrentImpl() const override;
+=======
+  bool MakeCurrentImpl() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool IsCurrentImpl() const override;
+||||||| merged common ancestors
+    virtual bool IsCurrentImpl() const override;
+=======
+  bool IsCurrentImpl() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool SetupLookupFunction() override;
+||||||| merged common ancestors
+    virtual bool SetupLookupFunction() override;
+=======
+  Maybe<SymbolLoader> GetSymbolLoader() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool IsDoubleBuffered() const override;
+||||||| merged common ancestors
+    virtual bool IsDoubleBuffered() const override;
+=======
+  bool IsDoubleBuffered() const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool SwapBuffers() override;
+||||||| merged common ancestors
+    virtual bool SwapBuffers() override;
+=======
+  bool SwapBuffers() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void GetWSIInfo(nsCString* const out) const override;
+||||||| merged common ancestors
+    virtual void GetWSIInfo(nsCString* const out) const override;
+=======
+  void GetWSIInfo(nsCString* const out) const override;
+>>>>>>> upstream-releases
 
   // Overrides the current GLXDrawable backing the context and makes the
   // context current.

@@ -16,6 +16,7 @@
 #include "nsCycleCollectionParticipant.h"
 #include "mozilla/dom/BindingDeclarations.h"
 #include "mozilla/dom/EventBinding.h"
+#include "mozilla/dom/PopupBlocker.h"
 #include "nsIScriptGlobalObject.h"
 #include "Units.h"
 #include "js/TypeDecls.h"
@@ -141,6 +142,7 @@ class Event : public nsISupports, public nsWrapperCache {
   // Returns true if the event should be trusted.
   bool Init(EventTarget* aGlobal);
 
+<<<<<<< HEAD
   static PopupControlState GetEventPopupControlState(
       WidgetEvent* aEvent, Event* aDOMEvent = nullptr);
 
@@ -148,6 +150,16 @@ class Event : public nsISupports, public nsWrapperCache {
 
   static void Shutdown();
 
+||||||| merged common ancestors
+  static PopupControlState GetEventPopupControlState(WidgetEvent* aEvent,
+                                                     Event* aDOMEvent = nullptr);
+
+  static void PopupAllowedEventsChanged();
+
+  static void Shutdown();
+
+=======
+>>>>>>> upstream-releases
   static const char* GetEventName(EventMessage aEventType);
   static CSSIntPoint GetClientCoords(nsPresContext* aPresContext,
                                      WidgetEvent* aEvent,
@@ -160,6 +172,7 @@ class Event : public nsISupports, public nsWrapperCache {
   static CSSIntPoint GetScreenCoords(nsPresContext* aPresContext,
                                      WidgetEvent* aEvent,
                                      LayoutDeviceIntPoint aPoint);
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   static CSSIntPoint GetOffsetCoords(nsPresContext* aPresContext,
                                      WidgetEvent* aEvent,
                                      LayoutDeviceIntPoint aPoint,
@@ -179,9 +192,8 @@ class Event : public nsISupports, public nsWrapperCache {
   EventTarget* GetTarget() const;
   EventTarget* GetCurrentTarget() const;
 
-  // This method returns the nsIDocument which is associated with the event
-  // target.
-  already_AddRefed<nsIDocument> GetDocument() const;
+  // This method returns the document which is associated with the event target.
+  already_AddRefed<Document> GetDocument() const;
 
   void ComposedPath(nsTArray<RefPtr<EventTarget>>& aPath);
 
@@ -288,6 +300,7 @@ class Event : public nsISupports, public nsWrapperCache {
   already_AddRefed<nsIContent> GetTargetFromFrame();
 
   friend class EventMessageAutoOverride;
+  friend class PopupBlocker;
   friend class WantsPopupControlCheck;
   void SetWantsPopupControlCheck(bool aCheck) {
     mWantsPopupControlCheck = aCheck;

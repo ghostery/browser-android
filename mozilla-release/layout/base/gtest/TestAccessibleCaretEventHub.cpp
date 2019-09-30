@@ -11,7 +11,7 @@
 #include <string>
 
 #include "AccessibleCaretManager.h"
-#include "gfxPrefs.h"
+
 #include "mozilla/AccessibleCaretEventHub.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/MouseEvents.h"
@@ -107,7 +107,7 @@ class AccessibleCaretEventHubTester : public ::testing::Test {
     auto event = MakeUnique<WidgetMouseEvent>(true, aMessage, nullptr,
                                               WidgetMouseEvent::eReal);
 
-    event->button = WidgetMouseEvent::eLeftButton;
+    event->mButton = MouseButton::eLeft;
     event->mRefPoint = LayoutDeviceIntPoint(aX, aY);
 
     return std::move(event);
@@ -171,12 +171,29 @@ class AccessibleCaretEventHubTester : public ::testing::Test {
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void TestAsyncPanZoomScroll();
 
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
+<<<<<<< HEAD
   void HandleEventAndCheckState(
       UniquePtr<WidgetEvent> aEvent,
       MockAccessibleCaretEventHub::State* aExpectedState,
       nsEventStatus aExpectedEventStatus) {
     nsEventStatus rv = mHub->HandleEvent(aEvent.get());
     EXPECT_EQ(mHub->GetState(), aExpectedState);
+||||||| merged common ancestors
+  void HandleEventAndCheckState(UniquePtr<WidgetEvent> aEvent,
+                                MockAccessibleCaretEventHub::State* aExpectedState,
+                                nsEventStatus aExpectedEventStatus)
+  {
+    nsEventStatus rv = mHub->HandleEvent(aEvent.get());
+    EXPECT_EQ(mHub->GetState(), aExpectedState);
+=======
+  void HandleEventAndCheckState(
+      UniquePtr<WidgetEvent> aEvent,
+      MockAccessibleCaretEventHub::State* aExpectedState,
+      nsEventStatus aExpectedEventStatus) {
+    RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+    nsEventStatus rv = hub->HandleEvent(aEvent.get());
+    EXPECT_EQ(hub->GetState(), aExpectedState);
+>>>>>>> upstream-releases
     EXPECT_EQ(rv, aExpectedEventStatus);
   }
 
@@ -537,14 +554,15 @@ void AccessibleCaretEventHubTester::TestLongTapWithSelectWordSuccessful(
                            MockAccessibleCaretEventHub::LongTapState(),
                            nsEventStatus_eIgnore);
 
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 
   HandleEventAndCheckState(aReleaseEventCreator(1, 1),
                            MockAccessibleCaretEventHub::NoActionState(),
@@ -640,19 +658,20 @@ void AccessibleCaretEventHubTester::TestEventDrivenAsyncPanZoomScroll(
   check.Call("1");
 
   // Event driven scroll started
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
   HandleEventAndCheckState(aMoveEventCreator(160, 160),
                            MockAccessibleCaretEventHub::ScrollState(),
                            nsEventStatus_eIgnore);
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
   // Event driven scroll ended
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 
   HandleEventAndCheckState(aReleaseEventCreator(210, 210),
                            MockAccessibleCaretEventHub::NoActionState(),
@@ -672,15 +691,15 @@ void AccessibleCaretEventHubTester::TestEventDrivenAsyncPanZoomScroll(
   check.Call("3");
 
   // Another APZ scroll started
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
   // Another APZ scroll ended
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 
   HandleEventAndCheckState(aReleaseEventCreator(310, 310),
                            MockAccessibleCaretEventHub::NoActionState(),
@@ -711,26 +730,27 @@ void AccessibleCaretEventHubTester::TestAsyncPanZoomScroll() {
   // First APZ scrolling.
   check.Call("1");
 
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 
   // Second APZ scrolling.
   check.Call("2");
 
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 }
 
 TEST_F(AccessibleCaretEventHubTester, TestAsyncPanZoomScrollStartedThenBlur)
@@ -743,14 +763,15 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
     EXPECT_CALL(*mHub->GetMockAccessibleCaretManager(), OnBlur());
   }
 
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->NotifyBlur(true);
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->NotifyBlur(true);
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 }
 
 TEST_F(AccessibleCaretEventHubTester, TestAsyncPanZoomScrollEndedThenBlur)
@@ -763,17 +784,18 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
     EXPECT_CALL(*mHub->GetMockAccessibleCaretManager(), OnBlur());
   }
 
-  mHub->AsyncPanZoomStarted();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  RefPtr<MockAccessibleCaretEventHub> hub(mHub);
+  hub->AsyncPanZoomStarted();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->ScrollPositionChanged();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::ScrollState());
+  hub->ScrollPositionChanged();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::ScrollState());
 
-  mHub->AsyncPanZoomStopped();
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->AsyncPanZoomStopped();
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 
-  mHub->NotifyBlur(true);
-  EXPECT_EQ(mHub->GetState(), MockAccessibleCaretEventHub::NoActionState());
+  hub->NotifyBlur(true);
+  EXPECT_EQ(hub->GetState(), MockAccessibleCaretEventHub::NoActionState());
 }
 
 }  // namespace mozilla

@@ -38,9 +38,15 @@ NS_IMETHODIMP
 nsCryptoHash::Init(uint32_t algorithm) {
   HASH_HashType hashType;
   switch (algorithm) {
+<<<<<<< HEAD
     case nsICryptoHash::MD2:
       hashType = HASH_AlgMD2;
       break;
+||||||| merged common ancestors
+    case nsICryptoHash::MD2:
+      hashType = HASH_AlgMD2; break;
+=======
+>>>>>>> upstream-releases
     case nsICryptoHash::MD5:
       hashType = HASH_AlgMD5;
       break;
@@ -84,10 +90,23 @@ nsCryptoHash::Init(uint32_t algorithm) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHash::InitWithString(const nsACString &aAlgorithm) {
   if (aAlgorithm.LowerCaseEqualsLiteral("md2")) return Init(nsICryptoHash::MD2);
 
   if (aAlgorithm.LowerCaseEqualsLiteral("md5")) return Init(nsICryptoHash::MD5);
+||||||| merged common ancestors
+nsCryptoHash::InitWithString(const nsACString & aAlgorithm)
+{
+  if (aAlgorithm.LowerCaseEqualsLiteral("md2"))
+    return Init(nsICryptoHash::MD2);
+
+  if (aAlgorithm.LowerCaseEqualsLiteral("md5"))
+    return Init(nsICryptoHash::MD5);
+=======
+nsCryptoHash::InitWithString(const nsACString& aAlgorithm) {
+  if (aAlgorithm.LowerCaseEqualsLiteral("md5")) return Init(nsICryptoHash::MD5);
+>>>>>>> upstream-releases
 
   if (aAlgorithm.LowerCaseEqualsLiteral("sha1"))
     return Init(nsICryptoHash::SHA1);
@@ -105,7 +124,14 @@ nsCryptoHash::InitWithString(const nsACString &aAlgorithm) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHash::Update(const uint8_t *data, uint32_t len) {
+||||||| merged common ancestors
+nsCryptoHash::Update(const uint8_t *data, uint32_t len)
+{
+=======
+nsCryptoHash::Update(const uint8_t* data, uint32_t len) {
+>>>>>>> upstream-releases
   if (!mInitialized) {
     return NS_ERROR_NOT_INITIALIZED;
   }
@@ -115,8 +141,18 @@ nsCryptoHash::Update(const uint8_t *data, uint32_t len) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHash::UpdateFromStream(nsIInputStream *data, uint32_t aLen) {
   if (!mInitialized) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsCryptoHash::UpdateFromStream(nsIInputStream *data, uint32_t aLen)
+{
+  if (!mInitialized)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsCryptoHash::UpdateFromStream(nsIInputStream* data, uint32_t aLen) {
+  if (!mInitialized) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   if (!data) return NS_ERROR_INVALID_ARG;
 
@@ -162,7 +198,14 @@ nsCryptoHash::UpdateFromStream(nsIInputStream *data, uint32_t aLen) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHash::Finish(bool ascii, nsACString &_retval) {
+||||||| merged common ancestors
+nsCryptoHash::Finish(bool ascii, nsACString & _retval)
+{
+=======
+nsCryptoHash::Finish(bool ascii, nsACString& _retval) {
+>>>>>>> upstream-releases
   if (!mInitialized) {
     return NS_ERROR_NOT_INITIALIZED;
   }
@@ -191,7 +234,14 @@ NS_IMPL_ISUPPORTS(nsCryptoHMAC, nsICryptoHMAC)
 nsCryptoHMAC::nsCryptoHMAC() : mHMACContext(nullptr) {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHMAC::Init(uint32_t aAlgorithm, nsIKeyObject *aKeyObject) {
+||||||| merged common ancestors
+nsCryptoHMAC::Init(uint32_t aAlgorithm, nsIKeyObject *aKeyObject)
+{
+=======
+nsCryptoHMAC::Init(uint32_t aAlgorithm, nsIKeyObject* aKeyObject) {
+>>>>>>> upstream-releases
   if (mHMACContext) {
     mHMACContext = nullptr;
   }
@@ -247,8 +297,18 @@ nsCryptoHMAC::Init(uint32_t aAlgorithm, nsIKeyObject *aKeyObject) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHMAC::Update(const uint8_t *aData, uint32_t aLen) {
   if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsCryptoHMAC::Update(const uint8_t *aData, uint32_t aLen)
+{
+  if (!mHMACContext)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsCryptoHMAC::Update(const uint8_t* aData, uint32_t aLen) {
+  if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   if (!aData) return NS_ERROR_INVALID_ARG;
 
@@ -260,8 +320,18 @@ nsCryptoHMAC::Update(const uint8_t *aData, uint32_t aLen) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHMAC::UpdateFromStream(nsIInputStream *aStream, uint32_t aLen) {
   if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsCryptoHMAC::UpdateFromStream(nsIInputStream *aStream, uint32_t aLen)
+{
+  if (!mHMACContext)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsCryptoHMAC::UpdateFromStream(nsIInputStream* aStream, uint32_t aLen) {
+  if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   if (!aStream) return NS_ERROR_INVALID_ARG;
 
@@ -309,8 +379,18 @@ nsCryptoHMAC::UpdateFromStream(nsIInputStream *aStream, uint32_t aLen) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCryptoHMAC::Finish(bool aASCII, nsACString &_retval) {
   if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsCryptoHMAC::Finish(bool aASCII, nsACString & _retval)
+{
+  if (!mHMACContext)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsCryptoHMAC::Finish(bool aASCII, nsACString& _retval) {
+  if (!mHMACContext) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   uint32_t hashLen = 0;
   unsigned char buffer[HASH_LENGTH_MAX];

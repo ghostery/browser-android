@@ -10,8 +10,19 @@
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
 class StunAddrsRequestParent : public PStunAddrsRequestParent {
  public:
+||||||| merged common ancestors
+class StunAddrsRequestParent : public PStunAddrsRequestParent
+{
+public:
+=======
+class StunAddrsRequestParent : public PStunAddrsRequestParent {
+  friend class PStunAddrsRequestParent;
+
+ public:
+>>>>>>> upstream-releases
   StunAddrsRequestParent();
 
   NS_IMETHOD_(MozExternalRefCountType) AddRef();

@@ -19,7 +19,14 @@ EXPORTS += [
     'PlatformEncoderModule.h',
     'ReorderQueue.h',
     'SimpleMap.h',
+<<<<<<< HEAD
     'wrappers/MediaChangeMonitor.h',
+||||||| merged common ancestors
+    'wrappers/H264Converter.h',
+=======
+    'wrappers/AudioTrimmer.h',
+    'wrappers/MediaChangeMonitor.h',
+>>>>>>> upstream-releases
     'wrappers/MediaDataDecoderProxy.h'
 ]
 
@@ -35,8 +42,16 @@ UNIFIED_SOURCES += [
     'agnostic/WAVDecoder.cpp',
     'AllocationPolicy.cpp',
     'PDMFactory.cpp',
+<<<<<<< HEAD
     'PEMFactory.cpp',
     'wrappers/MediaChangeMonitor.cpp',
+||||||| merged common ancestors
+    'wrappers/H264Converter.cpp',
+=======
+    'PEMFactory.cpp',
+    'wrappers/AudioTrimmer.cpp',
+    'wrappers/MediaChangeMonitor.cpp',
+>>>>>>> upstream-releases
     'wrappers/MediaDataDecoderProxy.cpp'
 ]
 

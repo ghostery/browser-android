@@ -11,7 +11,6 @@ const {
 } = require("./index");
 
 module.exports = {
-
   /**
    * Updates the geometry editor's enabled state.
    *
@@ -43,6 +42,13 @@ module.exports = {
       type: UPDATE_OFFSET_PARENT,
       offsetParent,
     };
+<<<<<<< HEAD
   },
 
+||||||| merged common ancestors
+  }
+
+=======
+  },
+>>>>>>> upstream-releases
 };

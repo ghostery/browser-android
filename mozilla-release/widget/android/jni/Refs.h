@@ -349,6 +349,19 @@ using ObjectArray = TypedObject<jobjectArray>;
 namespace detail {
 
 // See explanation in LocalRef.
+<<<<<<< HEAD
+template <class Cls>
+struct GenericObject {
+  using Type = Object;
+||||||| merged common ancestors
+template<class Cls> struct GenericObject { using Type = Object; };
+template<> struct GenericObject<Object>
+{
+    struct Type {
+        using Ref = jni::Ref<Type, jobject>;
+        using Context = jni::Context<Type, jobject>;
+    };
+=======
 template <class Cls>
 struct GenericObject {
   using Type = Object;
@@ -359,7 +372,27 @@ struct GenericObject<Object> {
     using Ref = jni::Ref<Type, jobject>;
     using Context = jni::Context<Type, jobject>;
   };
+>>>>>>> upstream-releases
 };
+<<<<<<< HEAD
+template <>
+struct GenericObject<Object> {
+  struct Type {
+    using Ref = jni::Ref<Type, jobject>;
+    using Context = jni::Context<Type, jobject>;
+  };
+||||||| merged common ancestors
+template<class Cls> struct GenericLocalRef
+{
+    template<class C> struct Type : jni::Object {};
+=======
+template <class Cls>
+struct GenericLocalRef {
+  template <class C>
+  struct Type : jni::Object {};
+>>>>>>> upstream-releases
+};
+<<<<<<< HEAD
 template <class Cls>
 struct GenericLocalRef {
   template <class C>
@@ -369,8 +402,177 @@ template <>
 struct GenericLocalRef<Object> {
   template <class C>
   using Type = jni::LocalRef<C>;
+||||||| merged common ancestors
+template<> struct GenericLocalRef<Object>
+{
+    template<class C> using Type = jni::LocalRef<C>;
+=======
+template <>
+struct GenericLocalRef<Object> {
+  template <class C>
+  using Type = jni::LocalRef<C>;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
+}  // namespace detail
+
+template <class Cls>
+class LocalRef : public Cls::Context {
+  template <class C>
+  friend class LocalRef;
+
+  using Ctx = typename Cls::Context;
+  using Ref = typename Cls::Ref;
+  using JNIType = typename Ref::JNIType;
+
+  // In order to be able to convert LocalRef<Object> to LocalRef<Cls>, we
+  // need constructors and copy assignment operators that take in a
+  // LocalRef<Object> argument. However, if Cls *is* Object, we would have
+  // duplicated constructors and operators with LocalRef<Object> arguments. To
+  // avoid this conflict, we use GenericObject, which is defined as Object for
+  // LocalRef<non-Object> and defined as a dummy class for LocalRef<Object>.
+  using GenericObject = typename detail::GenericObject<Cls>::Type;
+
+  // Similarly, GenericLocalRef is useed to convert LocalRef<Cls> to,
+  // LocalRef<Object>. It's defined as LocalRef<C> for Cls == Object,
+  // and defined as a dummy template class for Cls != Object.
+  template <class C>
+  using GenericLocalRef =
+      typename detail::GenericLocalRef<Cls>::template Type<C>;
+
+  static JNIType NewLocalRef(JNIEnv* env, JNIType obj) {
+    return JNIType(obj ? env->NewLocalRef(obj) : nullptr);
+  }
+
+  LocalRef(JNIEnv* env, JNIType instance) : Ctx(env, instance) {}
+
+  LocalRef& swap(LocalRef& other) {
+    auto instance = other.mInstance;
+    other.mInstance = Ctx::mInstance;
+    Ctx::mInstance = instance;
+    return *this;
+  }
+
+ public:
+  // Construct a LocalRef from a raw JNI local reference. Unlike Ref::From,
+  // LocalRef::Adopt returns a LocalRef that will delete the local reference
+  // when going out of scope.
+  static LocalRef Adopt(JNIType instance) {
+    return LocalRef(Ref::FindEnv(), instance);
+  }
+
+  static LocalRef Adopt(JNIEnv* env, JNIType instance) {
+    return LocalRef(env, instance);
+  }
+
+  // Copy constructor.
+  LocalRef(const LocalRef<Cls>& ref)
+      : Ctx(ref.mEnv, NewLocalRef(ref.mEnv, ref.mInstance)) {}
+
+  // Move constructor.
+  LocalRef(LocalRef<Cls>&& ref) : Ctx(ref.mEnv, ref.mInstance) {
+    ref.mInstance = nullptr;
+  }
+
+  explicit LocalRef(JNIEnv* env = Ref::FindEnv()) : Ctx(env, nullptr) {}
+
+  // Construct a LocalRef from any Ref,
+  // which means creating a new local reference.
+  MOZ_IMPLICIT LocalRef(const Ref& ref) : Ctx(Ref::FindEnv(), nullptr) {
+    Ctx::mInstance = NewLocalRef(Ctx::mEnv, ref.Get());
+  }
+
+  LocalRef(JNIEnv* env, const Ref& ref)
+      : Ctx(env, NewLocalRef(env, ref.Get())) {}
+
+  // Move a LocalRef<Object> into a LocalRef<Cls> without
+  // creating/deleting local references.
+  MOZ_IMPLICIT LocalRef(LocalRef<GenericObject>&& ref)
+      : Ctx(ref.mEnv, JNIType(ref.mInstance)) {
+    ref.mInstance = nullptr;
+  }
+
+  template <class C>
+  MOZ_IMPLICIT LocalRef(GenericLocalRef<C>&& ref)
+      : Ctx(ref.mEnv, ref.mInstance) {
+    ref.mInstance = nullptr;
+  }
+
+  // Implicitly converts nullptr to LocalRef.
+  MOZ_IMPLICIT LocalRef(decltype(nullptr)) : Ctx(Ref::FindEnv(), nullptr) {}
+
+  ~LocalRef() {
+    if (Ctx::mInstance) {
+      Ctx::mEnv->DeleteLocalRef(Ctx::mInstance);
+      Ctx::mInstance = nullptr;
+    }
+  }
+
+  // Get the raw JNI reference that can be used as a return value.
+  // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+  typename Ref::JNIType Forget() {
+    const auto obj = Ctx::Get();
+    Ctx::mInstance = nullptr;
+    return obj;
+  }
+
+  LocalRef<Cls>& operator=(LocalRef<Cls> ref) & { return swap(ref); }
+
+  LocalRef<Cls>& operator=(const Ref& ref) & {
+    LocalRef<Cls> newRef(Ctx::mEnv, ref);
+    return swap(newRef);
+  }
+
+  LocalRef<Cls>& operator=(LocalRef<GenericObject>&& ref) & {
+    LocalRef<Cls> newRef(std::move(ref));
+    return swap(newRef);
+  }
+
+  template <class C>
+  LocalRef<Cls>& operator=(GenericLocalRef<C>&& ref) & {
+    LocalRef<Cls> newRef(std::move(ref));
+    return swap(newRef);
+  }
+
+  LocalRef<Cls>& operator=(decltype(nullptr)) & {
+    LocalRef<Cls> newRef(Ctx::mEnv, nullptr);
+    return swap(newRef);
+  }
+};
+||||||| merged common ancestors
+} // namespace
+
+template<class Cls>
+class LocalRef : public Cls::Context
+{
+    template<class C> friend class LocalRef;
+
+    using Ctx = typename Cls::Context;
+    using Ref = typename Cls::Ref;
+    using JNIType = typename Ref::JNIType;
+
+    // In order to be able to convert LocalRef<Object> to LocalRef<Cls>, we
+    // need constructors and copy assignment operators that take in a
+    // LocalRef<Object> argument. However, if Cls *is* Object, we would have
+    // duplicated constructors and operators with LocalRef<Object> arguments. To
+    // avoid this conflict, we use GenericObject, which is defined as Object for
+    // LocalRef<non-Object> and defined as a dummy class for LocalRef<Object>.
+    using GenericObject = typename detail::GenericObject<Cls>::Type;
+
+    // Similarly, GenericLocalRef is useed to convert LocalRef<Cls> to,
+    // LocalRef<Object>. It's defined as LocalRef<C> for Cls == Object,
+    // and defined as a dummy template class for Cls != Object.
+    template<class C> using GenericLocalRef
+            = typename detail::GenericLocalRef<Cls>::template Type<C>;
+
+    static JNIType NewLocalRef(JNIEnv* env, JNIType obj)
+    {
+        return JNIType(obj ? env->NewLocalRef(obj) : nullptr);
+    }
+
+    LocalRef(JNIEnv* env, JNIType instance) : Ctx(env, instance) {}
+=======
 }  // namespace detail
 
 template <class Cls>
@@ -501,45 +703,188 @@ template <class Cls>
 class GlobalRef : public Cls::Ref {
   using Ref = typename Cls::Ref;
   using JNIType = typename Ref::JNIType;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+template <class Cls>
+class GlobalRef : public Cls::Ref {
+  using Ref = typename Cls::Ref;
+  using JNIType = typename Ref::JNIType;
+||||||| merged common ancestors
+    LocalRef& swap(LocalRef& other)
+    {
+        auto instance = other.mInstance;
+        other.mInstance = Ctx::mInstance;
+        Ctx::mInstance = instance;
+        return *this;
+    }
+=======
   static JNIType NewGlobalRef(JNIEnv* env, JNIType instance) {
     return JNIType(instance ? env->NewGlobalRef(instance) : nullptr);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static JNIType NewGlobalRef(JNIEnv* env, JNIType instance) {
+    return JNIType(instance ? env->NewGlobalRef(instance) : nullptr);
+  }
+||||||| merged common ancestors
+public:
+    // Construct a LocalRef from a raw JNI local reference. Unlike Ref::From,
+    // LocalRef::Adopt returns a LocalRef that will delete the local reference
+    // when going out of scope.
+    static LocalRef Adopt(JNIType instance)
+    {
+        return LocalRef(Ref::FindEnv(), instance);
+    }
+=======
   GlobalRef& swap(GlobalRef& other) {
     auto instance = other.mInstance;
     other.mInstance = Ref::mInstance;
     Ref::mInstance = instance;
     return *this;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  GlobalRef& swap(GlobalRef& other) {
+    auto instance = other.mInstance;
+    other.mInstance = Ref::mInstance;
+    Ref::mInstance = instance;
+    return *this;
+  }
+||||||| merged common ancestors
+    static LocalRef Adopt(JNIEnv* env, JNIType instance)
+    {
+        return LocalRef(env, instance);
+    }
+=======
  public:
   GlobalRef() : Ref(nullptr) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  GlobalRef() : Ref(nullptr) {}
+||||||| merged common ancestors
+    // Copy constructor.
+    LocalRef(const LocalRef<Cls>& ref)
+        : Ctx(ref.mEnv, NewLocalRef(ref.mEnv, ref.mInstance))
+    {}
+=======
   // Copy constructor
   GlobalRef(const GlobalRef& ref)
       : Ref(NewGlobalRef(GetEnvForThread(), ref.mInstance)) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Copy constructor
+  GlobalRef(const GlobalRef& ref)
+      : Ref(NewGlobalRef(GetEnvForThread(), ref.mInstance)) {}
+||||||| merged common ancestors
+    // Move constructor.
+    LocalRef(LocalRef<Cls>&& ref)
+        : Ctx(ref.mEnv, ref.mInstance)
+    {
+        ref.mInstance = nullptr;
+    }
+=======
   // Move constructor
   GlobalRef(GlobalRef&& ref) : Ref(ref.mInstance) { ref.mInstance = nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Move constructor
+  GlobalRef(GlobalRef&& ref) : Ref(ref.mInstance) { ref.mInstance = nullptr; }
+||||||| merged common ancestors
+    explicit LocalRef(JNIEnv* env = Ref::FindEnv())
+        : Ctx(env, nullptr)
+    {}
+=======
   MOZ_IMPLICIT GlobalRef(const Ref& ref)
       : Ref(NewGlobalRef(GetEnvForThread(), ref.Get())) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MOZ_IMPLICIT GlobalRef(const Ref& ref)
+      : Ref(NewGlobalRef(GetEnvForThread(), ref.Get())) {}
+||||||| merged common ancestors
+    // Construct a LocalRef from any Ref,
+    // which means creating a new local reference.
+    MOZ_IMPLICIT LocalRef(const Ref& ref)
+        : Ctx(Ref::FindEnv(), nullptr)
+    {
+        Ctx::mInstance = NewLocalRef(Ctx::mEnv, ref.Get());
+    }
+=======
   GlobalRef(JNIEnv* env, const Ref& ref) : Ref(NewGlobalRef(env, ref.Get())) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  GlobalRef(JNIEnv* env, const Ref& ref) : Ref(NewGlobalRef(env, ref.Get())) {}
+||||||| merged common ancestors
+    LocalRef(JNIEnv* env, const Ref& ref)
+        : Ctx(env, NewLocalRef(env, ref.Get()))
+    {}
+=======
   MOZ_IMPLICIT GlobalRef(const LocalRef<Cls>& ref)
       : Ref(NewGlobalRef(ref.Env(), ref.Get())) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MOZ_IMPLICIT GlobalRef(const LocalRef<Cls>& ref)
+      : Ref(NewGlobalRef(ref.Env(), ref.Get())) {}
+||||||| merged common ancestors
+    // Move a LocalRef<Object> into a LocalRef<Cls> without
+    // creating/deleting local references.
+    MOZ_IMPLICIT LocalRef(LocalRef<GenericObject>&& ref)
+        : Ctx(ref.mEnv, JNIType(ref.mInstance))
+    {
+        ref.mInstance = nullptr;
+    }
+=======
   // Implicitly converts nullptr to GlobalRef.
   MOZ_IMPLICIT GlobalRef(decltype(nullptr)) : Ref(nullptr) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Implicitly converts nullptr to GlobalRef.
+  MOZ_IMPLICIT GlobalRef(decltype(nullptr)) : Ref(nullptr) {}
+||||||| merged common ancestors
+    template<class C>
+    MOZ_IMPLICIT LocalRef(GenericLocalRef<C>&& ref)
+        : Ctx(ref.mEnv, ref.mInstance)
+    {
+        ref.mInstance = nullptr;
+    }
+=======
   ~GlobalRef() {
     if (Ref::mInstance) {
       Clear(GetEnvForThread());
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ~GlobalRef() {
+    if (Ref::mInstance) {
+      Clear(GetEnvForThread());
+    }
+  }
+||||||| merged common ancestors
+    // Implicitly converts nullptr to LocalRef.
+    MOZ_IMPLICIT LocalRef(decltype(nullptr))
+        : Ctx(Ref::FindEnv(), nullptr)
+    {}
+
+    ~LocalRef()
+    {
+        if (Ctx::mInstance) {
+            Ctx::mEnv->DeleteLocalRef(Ctx::mInstance);
+            Ctx::mInstance = nullptr;
+        }
+    }
+=======
   // Get the raw JNI reference that can be used as a return value.
   // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
   typename Ref::JNIType Forget() {
@@ -547,16 +892,66 @@ class GlobalRef : public Cls::Ref {
     Ref::mInstance = nullptr;
     return obj;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Get the raw JNI reference that can be used as a return value.
+  // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+  typename Ref::JNIType Forget() {
+    const auto obj = Ref::Get();
+    Ref::mInstance = nullptr;
+    return obj;
+  }
+||||||| merged common ancestors
+    // Get the raw JNI reference that can be used as a return value.
+    // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+    typename Ref::JNIType Forget()
+    {
+        const auto obj = Ctx::Get();
+        Ctx::mInstance = nullptr;
+        return obj;
+    }
+=======
   void Clear(JNIEnv* env) {
     if (Ref::mInstance) {
       env->DeleteGlobalRef(Ref::mInstance);
       Ref::mInstance = nullptr;
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void Clear(JNIEnv* env) {
+    if (Ref::mInstance) {
+      env->DeleteGlobalRef(Ref::mInstance);
+      Ref::mInstance = nullptr;
+    }
+  }
+||||||| merged common ancestors
+    LocalRef<Cls>& operator=(LocalRef<Cls> ref) &
+    {
+        return swap(ref);
+    }
+=======
   GlobalRef<Cls>& operator=(GlobalRef<Cls> ref) & { return swap(ref); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  GlobalRef<Cls>& operator=(GlobalRef<Cls> ref) & { return swap(ref); }
+||||||| merged common ancestors
+    LocalRef<Cls>& operator=(const Ref& ref) &
+    {
+        LocalRef<Cls> newRef(Ctx::mEnv, ref);
+        return swap(newRef);
+    }
+=======
+  GlobalRef<Cls>& operator=(const Ref& ref) & {
+    GlobalRef<Cls> newRef(ref);
+    return swap(newRef);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   GlobalRef<Cls>& operator=(const Ref& ref) & {
     GlobalRef<Cls> newRef(ref);
     return swap(newRef);
@@ -566,6 +961,25 @@ class GlobalRef : public Cls::Ref {
     GlobalRef<Cls> newRef(ref);
     return swap(newRef);
   }
+||||||| merged common ancestors
+    LocalRef<Cls>& operator=(LocalRef<GenericObject>&& ref) &
+    {
+        LocalRef<Cls> newRef(std::move(ref));
+        return swap(newRef);
+    }
+
+    template<class C>
+    LocalRef<Cls>& operator=(GenericLocalRef<C>&& ref) &
+    {
+        LocalRef<Cls> newRef(std::move(ref));
+        return swap(newRef);
+    }
+=======
+  GlobalRef<Cls>& operator=(const LocalRef<Cls>& ref) & {
+    GlobalRef<Cls> newRef(ref);
+    return swap(newRef);
+  }
+>>>>>>> upstream-releases
 
   GlobalRef<Cls>& operator=(decltype(nullptr)) & {
     GlobalRef<Cls> newRef(nullptr);
@@ -578,6 +992,7 @@ class WeakRef : public Ref<Cls, jweak> {
   using Ref = Ref<Cls, jweak>;
   using JNIType = typename Ref::JNIType;
 
+<<<<<<< HEAD
   static JNIType NewWeakRef(JNIEnv* env, JNIType instance) {
     return JNIType(instance ? env->NewWeakGlobalRef(instance) : nullptr);
   }
@@ -632,6 +1047,291 @@ class WeakRef : public Ref<Cls, jweak> {
   }
 
   WeakRef<Cls>& operator=(WeakRef<Cls> ref) & { return swap(ref); }
+||||||| merged common ancestors
+template<class Cls>
+class GlobalRef : public Cls::Ref
+{
+    using Ref = typename Cls::Ref;
+    using JNIType = typename Ref::JNIType;
+
+    static JNIType NewGlobalRef(JNIEnv* env, JNIType instance)
+    {
+        return JNIType(instance ? env->NewGlobalRef(instance) : nullptr);
+    }
+
+    GlobalRef& swap(GlobalRef& other)
+    {
+        auto instance = other.mInstance;
+        other.mInstance = Ref::mInstance;
+        Ref::mInstance = instance;
+        return *this;
+    }
+
+public:
+    GlobalRef()
+        : Ref(nullptr)
+    {}
+
+    // Copy constructor
+    GlobalRef(const GlobalRef& ref)
+        : Ref(NewGlobalRef(GetEnvForThread(), ref.mInstance))
+    {}
+
+    // Move constructor
+    GlobalRef(GlobalRef&& ref)
+        : Ref(ref.mInstance)
+    {
+        ref.mInstance = nullptr;
+    }
+
+    MOZ_IMPLICIT GlobalRef(const Ref& ref)
+        : Ref(NewGlobalRef(GetEnvForThread(), ref.Get()))
+    {}
+
+    GlobalRef(JNIEnv* env, const Ref& ref)
+        : Ref(NewGlobalRef(env, ref.Get()))
+    {}
+
+    MOZ_IMPLICIT GlobalRef(const LocalRef<Cls>& ref)
+        : Ref(NewGlobalRef(ref.Env(), ref.Get()))
+    {}
+
+    // Implicitly converts nullptr to GlobalRef.
+    MOZ_IMPLICIT GlobalRef(decltype(nullptr))
+        : Ref(nullptr)
+    {}
+
+    ~GlobalRef()
+    {
+        if (Ref::mInstance) {
+            Clear(GetEnvForThread());
+        }
+    }
+
+    // Get the raw JNI reference that can be used as a return value.
+    // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+    typename Ref::JNIType Forget()
+    {
+        const auto obj = Ref::Get();
+        Ref::mInstance = nullptr;
+        return obj;
+    }
+
+    void Clear(JNIEnv* env)
+    {
+        if (Ref::mInstance) {
+            env->DeleteGlobalRef(Ref::mInstance);
+            Ref::mInstance = nullptr;
+        }
+    }
+
+    GlobalRef<Cls>& operator=(GlobalRef<Cls> ref) &
+    {
+        return swap(ref);
+    }
+
+    GlobalRef<Cls>& operator=(const Ref& ref) &
+    {
+        GlobalRef<Cls> newRef(ref);
+        return swap(newRef);
+    }
+
+    GlobalRef<Cls>& operator=(const LocalRef<Cls>& ref) &
+    {
+        GlobalRef<Cls> newRef(ref);
+        return swap(newRef);
+    }
+
+    GlobalRef<Cls>& operator=(decltype(nullptr)) &
+    {
+        GlobalRef<Cls> newRef(nullptr);
+        return swap(newRef);
+    }
+};
+=======
+  static JNIType NewWeakRef(JNIEnv* env, JNIType instance) {
+    return JNIType(instance ? env->NewWeakGlobalRef(instance) : nullptr);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  WeakRef<Cls>& operator=(const Ref& ref) & {
+    WeakRef<Cls> newRef(ref);
+    return swap(newRef);
+  }
+||||||| merged common ancestors
+template<class Cls>
+class WeakRef : public Ref<Cls, jweak>
+{
+    using Ref = Ref<Cls, jweak>;
+    using JNIType = typename Ref::JNIType;
+=======
+  WeakRef& swap(WeakRef& other) {
+    auto instance = other.mInstance;
+    other.mInstance = Ref::mInstance;
+    Ref::mInstance = instance;
+    return *this;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  WeakRef<Cls>& operator=(const LocalRef<Cls>& ref) & {
+    WeakRef<Cls> newRef(ref);
+    return swap(newRef);
+  }
+||||||| merged common ancestors
+    static JNIType NewWeakRef(JNIEnv* env, JNIType instance)
+    {
+        return JNIType(instance ? env->NewWeakGlobalRef(instance) : nullptr);
+    }
+=======
+ public:
+  WeakRef() : Ref(nullptr) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  WeakRef<Cls>& operator=(decltype(nullptr)) & {
+    WeakRef<Cls> newRef(nullptr);
+    return swap(newRef);
+  }
+||||||| merged common ancestors
+    WeakRef& swap(WeakRef& other)
+    {
+        auto instance = other.mInstance;
+        other.mInstance = Ref::mInstance;
+        Ref::mInstance = instance;
+        return *this;
+    }
+=======
+  // Copy constructor
+  WeakRef(const WeakRef& ref)
+      : Ref(NewWeakRef(GetEnvForThread(), ref.mInstance)) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void operator->() const = delete;
+  void operator*() const = delete;
+||||||| merged common ancestors
+public:
+    WeakRef()
+        : Ref(nullptr)
+    {}
+
+    // Copy constructor
+    WeakRef(const WeakRef& ref)
+        : Ref(NewWeakRef(GetEnvForThread(), ref.mInstance))
+    {}
+
+    // Move constructor
+    WeakRef(WeakRef&& ref)
+        : Ref(ref.mInstance)
+    {
+        ref.mInstance = nullptr;
+    }
+
+    MOZ_IMPLICIT WeakRef(const Ref& ref)
+        : Ref(NewWeakRef(GetEnvForThread(), ref.Get()))
+    {}
+
+    WeakRef(JNIEnv* env, const Ref& ref)
+        : Ref(NewWeakRef(env, ref.Get()))
+    {}
+
+    MOZ_IMPLICIT WeakRef(const LocalRef<Cls>& ref)
+        : Ref(NewWeakRef(ref.Env(), ref.Get()))
+    {}
+
+    // Implicitly converts nullptr to WeakRef.
+    MOZ_IMPLICIT WeakRef(decltype(nullptr))
+        : Ref(nullptr)
+    {}
+
+    ~WeakRef()
+    {
+        if (Ref::mInstance) {
+            Clear(GetEnvForThread());
+        }
+    }
+
+    // Get the raw JNI reference that can be used as a return value.
+    // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+    typename Ref::JNIType Forget()
+    {
+        const auto obj = Ref::Get();
+        Ref::mInstance = nullptr;
+        return obj;
+    }
+
+    void Clear(JNIEnv* env)
+    {
+        if (Ref::mInstance) {
+            env->DeleteWeakGlobalRef(Ref::mInstance);
+            Ref::mInstance = nullptr;
+        }
+    }
+
+    WeakRef<Cls>& operator=(WeakRef<Cls> ref) &
+    {
+        return swap(ref);
+    }
+
+    WeakRef<Cls>& operator=(const Ref& ref) &
+    {
+        WeakRef<Cls> newRef(ref);
+        return swap(newRef);
+    }
+
+    WeakRef<Cls>& operator=(const LocalRef<Cls>& ref) &
+    {
+        WeakRef<Cls> newRef(ref);
+        return swap(newRef);
+    }
+
+    WeakRef<Cls>& operator=(decltype(nullptr)) &
+    {
+        WeakRef<Cls> newRef(nullptr);
+        return swap(newRef);
+    }
+
+    void operator->() const = delete;
+    void operator*() const = delete;
+=======
+  // Move constructor
+  WeakRef(WeakRef&& ref) : Ref(ref.mInstance) { ref.mInstance = nullptr; }
+
+  MOZ_IMPLICIT WeakRef(const Ref& ref)
+      : Ref(NewWeakRef(GetEnvForThread(), ref.Get())) {}
+
+  WeakRef(JNIEnv* env, const Ref& ref) : Ref(NewWeakRef(env, ref.Get())) {}
+
+  MOZ_IMPLICIT WeakRef(const LocalRef<Cls>& ref)
+      : Ref(NewWeakRef(ref.Env(), ref.Get())) {}
+
+  // Implicitly converts nullptr to WeakRef.
+  MOZ_IMPLICIT WeakRef(decltype(nullptr)) : Ref(nullptr) {}
+
+  ~WeakRef() {
+    if (Ref::mInstance) {
+      Clear(GetEnvForThread());
+    }
+  }
+
+  // Get the raw JNI reference that can be used as a return value.
+  // Returns the same JNI type (jobject, jstring, etc.) as the underlying Ref.
+  typename Ref::JNIType Forget() {
+    const auto obj = Ref::Get();
+    Ref::mInstance = nullptr;
+    return obj;
+  }
+
+  void Clear(JNIEnv* env) {
+    if (Ref::mInstance) {
+      env->DeleteWeakGlobalRef(Ref::mInstance);
+      Ref::mInstance = nullptr;
+    }
+  }
+
+  WeakRef<Cls>& operator=(WeakRef<Cls> ref) & { return swap(ref); }
 
   WeakRef<Cls>& operator=(const Ref& ref) & {
     WeakRef<Cls> newRef(ref);
@@ -650,6 +1350,7 @@ class WeakRef : public Ref<Cls, jweak> {
 
   void operator->() const = delete;
   void operator*() const = delete;
+>>>>>>> upstream-releases
 };
 
 template <class Cls>
@@ -707,12 +1408,33 @@ class StringParam : public String::Ref {
   // Not null if we should delete ref on destruction.
   JNIEnv* const mEnv;
 
+<<<<<<< HEAD
   static jstring GetString(JNIEnv* env, const nsAString& str) {
     const jstring result = env->NewString(
         reinterpret_cast<const jchar*>(str.BeginReading()), str.Length());
     MOZ_CATCH_JNI_EXCEPTION(env);
     return result;
   }
+||||||| merged common ancestors
+    static jstring GetString(JNIEnv* env, const nsAString& str)
+    {
+        const jstring result = env->NewString(
+                reinterpret_cast<const jchar*>(str.BeginReading()),
+                str.Length());
+        MOZ_CATCH_JNI_EXCEPTION(env);
+        return result;
+    }
+=======
+  static jstring GetString(JNIEnv* env, const nsAString& str) {
+    const jstring result = env->NewString(
+        reinterpret_cast<const jchar*>(str.BeginReading()), str.Length());
+    if (!result) {
+      NS_ABORT_OOM(str.Length() * sizeof(char16_t));
+    }
+    MOZ_CATCH_JNI_EXCEPTION(env);
+    return result;
+  }
+>>>>>>> upstream-releases
 
  public:
   MOZ_IMPLICIT StringParam(decltype(nullptr)) : Ref(nullptr), mEnv(nullptr) {}

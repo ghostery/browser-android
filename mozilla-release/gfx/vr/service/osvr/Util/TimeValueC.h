@@ -87,7 +87,7 @@ typedef struct OSVR_TimeValue {
 
 #ifdef OSVR_HAVE_STRUCT_TIMEVAL
 /** @brief Gets the current time in the TimeValue. Parallel to gettimeofday. */
-OSVR_UTIL_EXPORT void osvrTimeValueGetNow(OSVR_OUT OSVR_TimeValue *dest)
+OSVR_UTIL_EXPORT void osvrTimeValueGetNow(OSVR_OUT OSVR_TimeValue* dest)
     OSVR_FUNC_NONNULL((1));
 
 struct timeval; /* forward declaration */
@@ -100,8 +100,17 @@ struct timeval; /* forward declaration */
     If either parameter is NULL, the function will return without doing
    anything.
 */
+<<<<<<< HEAD
 OSVR_UTIL_EXPORT void osvrTimeValueToStructTimeval(
     OSVR_OUT struct timeval *dest, OSVR_IN_PTR const OSVR_TimeValue *src)
+||||||| merged common ancestors
+OSVR_UTIL_EXPORT void
+osvrTimeValueToStructTimeval(OSVR_OUT struct timeval *dest,
+                             OSVR_IN_PTR const OSVR_TimeValue *src)
+=======
+OSVR_UTIL_EXPORT void osvrTimeValueToStructTimeval(
+    OSVR_OUT struct timeval* dest, OSVR_IN_PTR const OSVR_TimeValue* src)
+>>>>>>> upstream-releases
     OSVR_FUNC_NONNULL((1, 2));
 
 /** @brief Converts from a TimeValue struct to your system's struct timeval.
@@ -113,8 +122,17 @@ OSVR_UTIL_EXPORT void osvrTimeValueToStructTimeval(
     If either parameter is NULL, the function will return without doing
    anything.
 */
+<<<<<<< HEAD
 OSVR_UTIL_EXPORT void osvrStructTimevalToTimeValue(
     OSVR_OUT OSVR_TimeValue *dest, OSVR_IN_PTR const struct timeval *src)
+||||||| merged common ancestors
+OSVR_UTIL_EXPORT void
+osvrStructTimevalToTimeValue(OSVR_OUT OSVR_TimeValue *dest,
+                             OSVR_IN_PTR const struct timeval *src)
+=======
+OSVR_UTIL_EXPORT void osvrStructTimevalToTimeValue(
+    OSVR_OUT OSVR_TimeValue* dest, OSVR_IN_PTR const struct timeval* src)
+>>>>>>> upstream-releases
     OSVR_FUNC_NONNULL((1, 2));
 #endif
 
@@ -125,7 +143,7 @@ OSVR_UTIL_EXPORT void osvrStructTimevalToTimeValue(
 
     If the given pointer is NULL, this function returns without doing anything.
 */
-OSVR_UTIL_EXPORT void osvrTimeValueNormalize(OSVR_INOUT_PTR OSVR_TimeValue *tv)
+OSVR_UTIL_EXPORT void osvrTimeValueNormalize(OSVR_INOUT_PTR OSVR_TimeValue* tv)
     OSVR_FUNC_NONNULL((1));
 
 /** @brief Sums two time values, replacing the first with the result.
@@ -137,8 +155,8 @@ OSVR_UTIL_EXPORT void osvrTimeValueNormalize(OSVR_INOUT_PTR OSVR_TimeValue *tv)
 
     Both parameters are expected to be in normalized form.
 */
-OSVR_UTIL_EXPORT void osvrTimeValueSum(OSVR_INOUT_PTR OSVR_TimeValue *tvA,
-                                       OSVR_IN_PTR const OSVR_TimeValue *tvB)
+OSVR_UTIL_EXPORT void osvrTimeValueSum(OSVR_INOUT_PTR OSVR_TimeValue* tvA,
+                                       OSVR_IN_PTR const OSVR_TimeValue* tvB)
     OSVR_FUNC_NONNULL((1, 2));
 
 /** @brief Computes the difference between two time values, replacing the first
@@ -153,8 +171,17 @@ OSVR_UTIL_EXPORT void osvrTimeValueSum(OSVR_INOUT_PTR OSVR_TimeValue *tvA,
 
     Both parameters are expected to be in normalized form.
 */
+<<<<<<< HEAD
 OSVR_UTIL_EXPORT void osvrTimeValueDifference(
     OSVR_INOUT_PTR OSVR_TimeValue *tvA, OSVR_IN_PTR const OSVR_TimeValue *tvB)
+||||||| merged common ancestors
+OSVR_UTIL_EXPORT void
+osvrTimeValueDifference(OSVR_INOUT_PTR OSVR_TimeValue *tvA,
+                        OSVR_IN_PTR const OSVR_TimeValue *tvB)
+=======
+OSVR_UTIL_EXPORT void osvrTimeValueDifference(
+    OSVR_INOUT_PTR OSVR_TimeValue* tvA, OSVR_IN_PTR const OSVR_TimeValue* tvB)
+>>>>>>> upstream-releases
     OSVR_FUNC_NONNULL((1, 2));
 
 /** @brief  Compares two time values (assumed to be normalized), returning
@@ -163,8 +190,8 @@ OSVR_UTIL_EXPORT void osvrTimeValueDifference(
     @return <0 if A is earlier than B, 0 if they are the same, and >0 if A
     is later than B.
 */
-OSVR_UTIL_EXPORT int osvrTimeValueCmp(OSVR_IN_PTR const OSVR_TimeValue *tvA,
-                                      OSVR_IN_PTR const OSVR_TimeValue *tvB)
+OSVR_UTIL_EXPORT int osvrTimeValueCmp(OSVR_IN_PTR const OSVR_TimeValue* tvA,
+                                      OSVR_IN_PTR const OSVR_TimeValue* tvB)
     OSVR_FUNC_NONNULL((1, 2));
 
 OSVR_EXTERN_C_END
@@ -178,6 +205,7 @@ OSVR_EXTERN_C_END
     @param tvB second source
     @return Duration of timespan in seconds (floating-point)
 */
+<<<<<<< HEAD
 OSVR_INLINE double osvrTimeValueDurationSeconds(
     OSVR_IN_PTR const OSVR_TimeValue *tvA,
     OSVR_IN_PTR const OSVR_TimeValue *tvB) {
@@ -185,10 +213,28 @@ OSVR_INLINE double osvrTimeValueDurationSeconds(
   osvrTimeValueDifference(&A, tvB);
   double dt = A.seconds + A.microseconds / 1000000.0;
   return dt;
+||||||| merged common ancestors
+OSVR_INLINE double
+osvrTimeValueDurationSeconds(OSVR_IN_PTR const OSVR_TimeValue *tvA,
+                             OSVR_IN_PTR const OSVR_TimeValue *tvB) {
+    OSVR_TimeValue A = *tvA;
+    osvrTimeValueDifference(&A, tvB);
+    double dt = A.seconds + A.microseconds / 1000000.0;
+    return dt;
+=======
+OSVR_INLINE double osvrTimeValueDurationSeconds(
+    OSVR_IN_PTR const OSVR_TimeValue* tvA,
+    OSVR_IN_PTR const OSVR_TimeValue* tvB) {
+  OSVR_TimeValue A = *tvA;
+  osvrTimeValueDifference(&A, tvB);
+  double dt = A.seconds + A.microseconds / 1000000.0;
+  return dt;
+>>>>>>> upstream-releases
 }
 
 /** @brief True if A is later than B */
 OSVR_INLINE OSVR_CBool
+<<<<<<< HEAD
 osvrTimeValueGreater(OSVR_IN_PTR const OSVR_TimeValue *tvA,
                      OSVR_IN_PTR const OSVR_TimeValue *tvB) {
   if (!tvA || !tvB) {
@@ -199,14 +245,38 @@ osvrTimeValueGreater(OSVR_IN_PTR const OSVR_TimeValue *tvA,
            tvA->microseconds > tvB->microseconds))
              ? OSVR_TRUE
              : OSVR_FALSE;
+||||||| merged common ancestors
+osvrTimeValueGreater(OSVR_IN_PTR const OSVR_TimeValue *tvA,
+                     OSVR_IN_PTR const OSVR_TimeValue *tvB) {
+    if (!tvA || !tvB) {
+        return OSVR_FALSE;
+    }
+    return ((tvA->seconds > tvB->seconds) ||
+            (tvA->seconds == tvB->seconds &&
+             tvA->microseconds > tvB->microseconds))
+               ? OSVR_TRUE
+               : OSVR_FALSE;
+=======
+osvrTimeValueGreater(OSVR_IN_PTR const OSVR_TimeValue* tvA,
+                     OSVR_IN_PTR const OSVR_TimeValue* tvB) {
+  if (!tvA || !tvB) {
+    return OSVR_FALSE;
+  }
+  return ((tvA->seconds > tvB->seconds) ||
+          (tvA->seconds == tvB->seconds &&
+           tvA->microseconds > tvB->microseconds))
+             ? OSVR_TRUE
+             : OSVR_FALSE;
+>>>>>>> upstream-releases
 }
 
 #ifdef __cplusplus
 
-#include <cmath>
-#include <cassert>
+#  include <cmath>
+#  include <cassert>
 
 /// Returns true if the time value is normalized. Typically used in assertions.
+<<<<<<< HEAD
 inline bool osvrTimeValueIsNormalized(const OSVR_TimeValue &tv) {
 #ifdef __APPLE__
   // apparently standard library used on mac only has floating-point abs?
@@ -215,9 +285,29 @@ inline bool osvrTimeValueIsNormalized(const OSVR_TimeValue &tv) {
   return std::abs(tv.microseconds) < 1000000 &&
 #endif
          ((tv.seconds > 0) == (tv.microseconds > 0));
+||||||| merged common ancestors
+inline bool osvrTimeValueIsNormalized(const OSVR_TimeValue &tv) {
+#ifdef __APPLE__
+    // apparently standard library used on mac only has floating-point abs?
+    return std::abs(double(tv.microseconds)) < 1000000 &&
+#else
+    return std::abs(tv.microseconds) < 1000000 &&
+#endif
+           ((tv.seconds > 0) == (tv.microseconds > 0));
+=======
+inline bool osvrTimeValueIsNormalized(const OSVR_TimeValue& tv) {
+#  ifdef __APPLE__
+  // apparently standard library used on mac only has floating-point abs?
+  return std::abs(double(tv.microseconds)) < 1000000 &&
+#  else
+  return std::abs(tv.microseconds) < 1000000 &&
+#  endif
+         ((tv.seconds > 0) == (tv.microseconds > 0));
+>>>>>>> upstream-releases
 }
 
 /// True if A is later than B
+<<<<<<< HEAD
 inline bool osvrTimeValueGreater(const OSVR_TimeValue &tvA,
                                  const OSVR_TimeValue &tvB) {
   assert(osvrTimeValueIsNormalized(tvA) &&
@@ -226,20 +316,58 @@ inline bool osvrTimeValueGreater(const OSVR_TimeValue &tvA,
          "Second timevalue argument to comparison was not normalized!");
   return (tvA.seconds > tvB.seconds) ||
          (tvA.seconds == tvB.seconds && tvA.microseconds > tvB.microseconds);
+||||||| merged common ancestors
+inline bool osvrTimeValueGreater(const OSVR_TimeValue &tvA,
+                                 const OSVR_TimeValue &tvB) {
+    assert(osvrTimeValueIsNormalized(tvA) &&
+           "First timevalue argument to comparison was not normalized!");
+    assert(osvrTimeValueIsNormalized(tvB) &&
+           "Second timevalue argument to comparison was not normalized!");
+    return (tvA.seconds > tvB.seconds) ||
+           (tvA.seconds == tvB.seconds && tvA.microseconds > tvB.microseconds);
+=======
+inline bool osvrTimeValueGreater(const OSVR_TimeValue& tvA,
+                                 const OSVR_TimeValue& tvB) {
+  assert(osvrTimeValueIsNormalized(tvA) &&
+         "First timevalue argument to comparison was not normalized!");
+  assert(osvrTimeValueIsNormalized(tvB) &&
+         "Second timevalue argument to comparison was not normalized!");
+  return (tvA.seconds > tvB.seconds) ||
+         (tvA.seconds == tvB.seconds && tvA.microseconds > tvB.microseconds);
+>>>>>>> upstream-releases
 }
 
 /// Operator > overload for time values
+<<<<<<< HEAD
 inline bool operator>(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
   return osvrTimeValueGreater(tvA, tvB);
+||||||| merged common ancestors
+inline bool operator>(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
+    return osvrTimeValueGreater(tvA, tvB);
+=======
+inline bool operator>(const OSVR_TimeValue& tvA, const OSVR_TimeValue& tvB) {
+  return osvrTimeValueGreater(tvA, tvB);
+>>>>>>> upstream-releases
 }
 
 /// Operator < overload for time values
+<<<<<<< HEAD
 inline bool operator<(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
   // Change the order of arguments before forwarding.
   return osvrTimeValueGreater(tvB, tvA);
+||||||| merged common ancestors
+inline bool operator<(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
+    // Change the order of arguments before forwarding.
+    return osvrTimeValueGreater(tvB, tvA);
+=======
+inline bool operator<(const OSVR_TimeValue& tvA, const OSVR_TimeValue& tvB) {
+  // Change the order of arguments before forwarding.
+  return osvrTimeValueGreater(tvB, tvA);
+>>>>>>> upstream-releases
 }
 
 /// Operator == overload for time values
+<<<<<<< HEAD
 inline bool operator==(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
   assert(osvrTimeValueIsNormalized(tvA) &&
          "First timevalue argument to equality comparison was not normalized!");
@@ -247,8 +375,28 @@ inline bool operator==(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
       osvrTimeValueIsNormalized(tvB) &&
       "Second timevalue argument to equality comparison was not normalized!");
   return (tvA.seconds == tvB.seconds) && (tvA.microseconds == tvB.microseconds);
+||||||| merged common ancestors
+inline bool operator==(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
+    assert(
+        osvrTimeValueIsNormalized(tvA) &&
+        "First timevalue argument to equality comparison was not normalized!");
+    assert(
+        osvrTimeValueIsNormalized(tvB) &&
+        "Second timevalue argument to equality comparison was not normalized!");
+    return (tvA.seconds == tvB.seconds) &&
+           (tvA.microseconds == tvB.microseconds);
+=======
+inline bool operator==(const OSVR_TimeValue& tvA, const OSVR_TimeValue& tvB) {
+  assert(osvrTimeValueIsNormalized(tvA) &&
+         "First timevalue argument to equality comparison was not normalized!");
+  assert(
+      osvrTimeValueIsNormalized(tvB) &&
+      "Second timevalue argument to equality comparison was not normalized!");
+  return (tvA.seconds == tvB.seconds) && (tvA.microseconds == tvB.microseconds);
+>>>>>>> upstream-releases
 }
 /// Operator == overload for time values
+<<<<<<< HEAD
 inline bool operator!=(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
   assert(osvrTimeValueIsNormalized(tvA) &&
          "First timevalue argument to "
@@ -259,6 +407,28 @@ inline bool operator!=(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
          "inequality comparison was not "
          "normalized!");
   return (tvA.seconds != tvB.seconds) || (tvA.microseconds != tvB.microseconds);
+||||||| merged common ancestors
+inline bool operator!=(const OSVR_TimeValue &tvA, const OSVR_TimeValue &tvB) {
+    assert(osvrTimeValueIsNormalized(tvA) && "First timevalue argument to "
+                                             "inequality comparison was not "
+                                             "normalized!");
+    assert(osvrTimeValueIsNormalized(tvB) && "Second timevalue argument to "
+                                             "inequality comparison was not "
+                                             "normalized!");
+    return (tvA.seconds != tvB.seconds) ||
+           (tvA.microseconds != tvB.microseconds);
+=======
+inline bool operator!=(const OSVR_TimeValue& tvA, const OSVR_TimeValue& tvB) {
+  assert(osvrTimeValueIsNormalized(tvA) &&
+         "First timevalue argument to "
+         "inequality comparison was not "
+         "normalized!");
+  assert(osvrTimeValueIsNormalized(tvB) &&
+         "Second timevalue argument to "
+         "inequality comparison was not "
+         "normalized!");
+  return (tvA.seconds != tvB.seconds) || (tvA.microseconds != tvB.microseconds);
+>>>>>>> upstream-releases
 }
 #endif
 

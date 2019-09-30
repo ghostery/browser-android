@@ -3,11 +3,12 @@
 #include "nsPrintfCString.h"
 #include "mozilla/gfx/GPUParent.h"
 #include "mozilla/dom/ContentChild.h"
+#include "mozilla/dom/ContentParent.h"  // For RemoteTypePrefix
 #include "mozilla/Unused.h"
 #include "mozilla/GfxMessageUtils.h"  // For ParamTraits<GeckoProcessType>
 
 #ifdef MOZ_GECKO_PROFILER
-#include "shared-libraries.h"
+#  include "shared-libraries.h"
 #endif
 
 namespace mozilla {
@@ -244,6 +245,7 @@ void nsHangDetails::Submit() {
   }
 
   RefPtr<nsHangDetails> hangDetails = this;
+<<<<<<< HEAD
   nsCOMPtr<nsIRunnable> notifyObservers =
       NS_NewRunnableFunction("NotifyBHRHangObservers", [hangDetails] {
         // The place we need to report the hang to varies depending on process.
@@ -282,6 +284,86 @@ void nsHangDetails::Submit() {
             break;
         }
       });
+||||||| merged common ancestors
+  nsCOMPtr<nsIRunnable> notifyObservers = NS_NewRunnableFunction("NotifyBHRHangObservers", [hangDetails] {
+    // The place we need to report the hang to varies depending on process.
+    //
+    // In child processes, we report the hang to our parent process, while if
+    // we're in the parent process, we report a bhr-thread-hang observer
+    // notification.
+    switch (XRE_GetProcessType()) {
+    case GeckoProcessType_Content: {
+      auto cc = dom::ContentChild::GetSingleton();
+      if (cc) {
+        hangDetails->mDetails.remoteType().Assign(cc->GetRemoteType());
+        Unused << cc->SendBHRThreadHang(hangDetails->mDetails);
+      }
+      break;
+    }
+    case GeckoProcessType_GPU: {
+      auto gp = gfx::GPUParent::GetSingleton();
+      if (gp) {
+        Unused << gp->SendBHRThreadHang(hangDetails->mDetails);
+      }
+      break;
+    }
+    case GeckoProcessType_Default: {
+      nsCOMPtr<nsIObserverService> os = mozilla::services::GetObserverService();
+      if (os) {
+        os->NotifyObservers(hangDetails, "bhr-thread-hang", nullptr);
+      }
+      break;
+    }
+    default:
+      // XXX: Consider handling GeckoProcessType_GMPlugin and
+      // GeckoProcessType_Plugin?
+      NS_WARNING("Unsupported BHR process type - discarding hang.");
+      break;
+    }
+  });
+=======
+  nsCOMPtr<nsIRunnable> notifyObservers =
+      NS_NewRunnableFunction("NotifyBHRHangObservers", [hangDetails] {
+        // The place we need to report the hang to varies depending on process.
+        //
+        // In child processes, we report the hang to our parent process, while
+        // if we're in the parent process, we report a bhr-thread-hang observer
+        // notification.
+        switch (XRE_GetProcessType()) {
+          case GeckoProcessType_Content: {
+            auto cc = dom::ContentChild::GetSingleton();
+            if (cc) {
+              // Use the prefix so we don't get URIs from Fission isolated
+              // processes.
+              hangDetails->mDetails.remoteType().Assign(
+                  dom::RemoteTypePrefix(cc->GetRemoteType()));
+              Unused << cc->SendBHRThreadHang(hangDetails->mDetails);
+            }
+            break;
+          }
+          case GeckoProcessType_GPU: {
+            auto gp = gfx::GPUParent::GetSingleton();
+            if (gp) {
+              Unused << gp->SendBHRThreadHang(hangDetails->mDetails);
+            }
+            break;
+          }
+          case GeckoProcessType_Default: {
+            nsCOMPtr<nsIObserverService> os =
+                mozilla::services::GetObserverService();
+            if (os) {
+              os->NotifyObservers(hangDetails, "bhr-thread-hang", nullptr);
+            }
+            break;
+          }
+          default:
+            // XXX: Consider handling GeckoProcessType_GMPlugin and
+            // GeckoProcessType_Plugin?
+            NS_WARNING("Unsupported BHR process type - discarding hang.");
+            break;
+        }
+      });
+>>>>>>> upstream-releases
 
   nsresult rv =
       SystemGroup::Dispatch(TaskCategory::Other, notifyObservers.forget());

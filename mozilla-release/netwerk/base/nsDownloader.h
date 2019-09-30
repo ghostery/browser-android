@@ -11,6 +11,7 @@
 class nsIFile;
 class nsIOutputStream;
 
+<<<<<<< HEAD
 class nsDownloader : public nsIDownloader {
  public:
   NS_DECL_ISUPPORTS
@@ -31,6 +32,53 @@ class nsDownloader : public nsIDownloader {
   nsCOMPtr<nsIFile> mLocation;
   nsCOMPtr<nsIOutputStream> mSink;
   bool mLocationIsTemp;
+||||||| merged common ancestors
+class nsDownloader : public nsIDownloader
+{
+public:
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIDOWNLOADER
+    NS_DECL_NSIREQUESTOBSERVER
+    NS_DECL_NSISTREAMLISTENER
+
+    nsDownloader() : mLocationIsTemp(false) {}
+
+protected:
+    virtual ~nsDownloader();
+
+    static nsresult ConsumeData(nsIInputStream *in,
+                                void           *closure,
+                                const char     *fromRawSegment,
+                                uint32_t        toOffset,
+                                uint32_t        count,
+                                uint32_t       *writeCount);
+
+    nsCOMPtr<nsIDownloadObserver> mObserver;
+    nsCOMPtr<nsIFile>             mLocation;
+    nsCOMPtr<nsIOutputStream>     mSink;
+    bool                          mLocationIsTemp;
+=======
+class nsDownloader : public nsIDownloader {
+ public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIDOWNLOADER
+  NS_DECL_NSIREQUESTOBSERVER
+  NS_DECL_NSISTREAMLISTENER
+
+  nsDownloader() : mLocationIsTemp(false) {}
+
+ protected:
+  virtual ~nsDownloader();
+
+  static nsresult ConsumeData(nsIInputStream* in, void* closure,
+                              const char* fromRawSegment, uint32_t toOffset,
+                              uint32_t count, uint32_t* writeCount);
+
+  nsCOMPtr<nsIDownloadObserver> mObserver;
+  nsCOMPtr<nsIFile> mLocation;
+  nsCOMPtr<nsIOutputStream> mSink;
+  bool mLocationIsTemp;
+>>>>>>> upstream-releases
 };
 
 #endif  // nsDownloader_h__

@@ -8,18 +8,30 @@
 #define mozilla_dom_SVGMPathElement_h
 
 #include "mozilla/dom/IDTracker.h"
-#include "nsSVGElement.h"
+#include "mozilla/dom/SVGElement.h"
 #include "nsStubMutationObserver.h"
-#include "nsSVGString.h"
+#include "SVGAnimatedString.h"
 
+<<<<<<< HEAD
 nsresult NS_NewSVGMPathElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
 typedef nsSVGElement SVGMPathElementBase;
+||||||| merged common ancestors
+nsresult NS_NewSVGMPathElement(nsIContent **aResult,
+                               already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+
+typedef nsSVGElement SVGMPathElementBase;
+=======
+nsresult NS_NewSVGMPathElement(
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
 class SVGPathElement;
+
+typedef SVGElement SVGMPathElementBase;
 
 class SVGMPathElement final : public SVGMPathElementBase,
                               public nsStubMutationObserver {
@@ -44,9 +56,8 @@ class SVGMPathElement final : public SVGMPathElementBase,
 
   // nsIContent interface
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent) override;
 
   // Element specializations
   virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
@@ -65,7 +76,7 @@ class SVGMPathElement final : public SVGMPathElementBase,
   SVGPathElement* GetReferencedPath();
 
   // WebIDL
-  already_AddRefed<SVGAnimatedString> Href();
+  already_AddRefed<DOMSVGAnimatedString> Href();
 
  protected:
   /**
@@ -110,8 +121,16 @@ class SVGMPathElement final : public SVGMPathElementBase,
   void NotifyParentOfMpathChange(nsIContent* aParent);
 
   enum { HREF, XLINK_HREF };
+<<<<<<< HEAD
   nsSVGString mStringAttributes[2];
   static StringInfo sStringInfo[2];
+||||||| merged common ancestors
+  nsSVGString        mStringAttributes[2];
+  static StringInfo  sStringInfo[2];
+=======
+  SVGAnimatedString mStringAttributes[2];
+  static StringInfo sStringInfo[2];
+>>>>>>> upstream-releases
   PathElementTracker mPathTracker;
 };
 

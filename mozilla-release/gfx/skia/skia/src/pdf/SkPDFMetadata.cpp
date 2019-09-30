@@ -126,9 +126,19 @@ static const struct {
 };
 }  // namespace
 
+<<<<<<< HEAD
 sk_sp<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
         const SkPDF::Metadata& metadata) {
     auto dict = sk_make_sp<SkPDFDict>();
+||||||| merged common ancestors
+sk_sp<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
+        const SkDocument::PDFMetadata& metadata) {
+    auto dict = sk_make_sp<SkPDFDict>();
+=======
+std::unique_ptr<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
+        const SkPDF::Metadata& metadata) {
+    auto dict = SkPDFMakeDict();
+>>>>>>> upstream-releases
     for (const auto keyValuePtr : gMetadataKeys) {
         const SkString& value = metadata.*(keyValuePtr.valuePtr);
         if (value.size() > 0) {
@@ -150,8 +160,15 @@ sk_sp<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
     return std::move(dict);
 }
 
+<<<<<<< HEAD
 SkPDFMetadata::UUID SkPDFMetadata::CreateUUID(
         const SkPDF::Metadata& metadata) {
+||||||| merged common ancestors
+SkPDFMetadata::UUID SkPDFMetadata::CreateUUID(
+        const SkDocument::PDFMetadata& metadata) {
+=======
+SkUUID SkPDFMetadata::CreateUUID(const SkPDF::Metadata& metadata) {
+>>>>>>> upstream-releases
     // The main requirement is for the UUID to be unique; the exact
     // format of the data that will be hashed is not important.
     SkMD5 md5;
@@ -177,23 +194,31 @@ SkPDFMetadata::UUID SkPDFMetadata::CreateUUID(
     // See RFC 4122, page 6-7.
     digest.data[6] = (digest.data[6] & 0x0F) | 0x30;
     digest.data[8] = (digest.data[6] & 0x3F) | 0x80;
-    static_assert(sizeof(digest) == sizeof(UUID), "uuid_size");
-    SkPDFMetadata::UUID uuid;
+    static_assert(sizeof(digest) == sizeof(SkUUID), "uuid_size");
+    SkUUID uuid;
     memcpy(&uuid, &digest, sizeof(digest));
     return uuid;
 }
 
-sk_sp<SkPDFObject> SkPDFMetadata::MakePdfId(const UUID& doc,
-                                            const UUID& instance) {
+std::unique_ptr<SkPDFObject> SkPDFMetadata::MakePdfId(const SkUUID& doc,
+                                            const SkUUID& instance) {
     // /ID [ <81b14aafa313db63dbd6f981e49f94f4>
     //       <81b14aafa313db63dbd6f981e49f94f4> ]
-    auto array = sk_make_sp<SkPDFArray>();
-    static_assert(sizeof(SkPDFMetadata::UUID) == 16, "uuid_size");
+    auto array = SkPDFMakeArray();
+    static_assert(sizeof(SkUUID) == 16, "uuid_size");
     array->appendString(
-            SkString(reinterpret_cast<const char*>(&doc), sizeof(UUID)));
+            SkString(reinterpret_cast<const char*>(&doc), sizeof(SkUUID)));
     array->appendString(
+<<<<<<< HEAD
             SkString(reinterpret_cast<const char*>(&instance), sizeof(UUID)));
     return std::move(array);
+||||||| merged common ancestors
+            SkString(reinterpret_cast<const char*>(&instance), sizeof(UUID)));
+    return array;
+=======
+            SkString(reinterpret_cast<const char*>(&instance), sizeof(SkUUID)));
+    return std::move(array);
+>>>>>>> upstream-releases
 }
 
 // Convert a block of memory to hexadecimal.  Input and output pointers will be
@@ -208,7 +233,7 @@ static void hexify(const uint8_t** inputPtr, char** outputPtr, int count) {
     }
 }
 
-static SkString uuid_to_string(const SkPDFMetadata::UUID& uuid) {
+static SkString uuid_to_string(const SkUUID& uuid) {
     //  8-4-4-4-12
     char buffer[36];  // [32 + 4]
     char* ptr = buffer;
@@ -231,12 +256,11 @@ namespace {
 class PDFXMLObject final : public SkPDFObject {
 public:
     PDFXMLObject(SkString xml) : fXML(std::move(xml)) {}
-    void emitObject(SkWStream* stream,
-                    const SkPDFObjNumMap& omap) const override {
+    void emitObject(SkWStream* stream) const override {
         SkPDFDict dict("Metadata");
         dict.insertName("Subtype", "XML");
         dict.insertInt("Length", fXML.size());
-        dict.emitObject(stream, omap);
+        dict.emitObject(stream);
         static const char streamBegin[] = " stream\n";
         stream->writeText(streamBegin);
         // Do not compress this.  The standard requires that a
@@ -305,10 +329,23 @@ const SkString escape_xml(const SkString& input,
     return output;
 }
 
+<<<<<<< HEAD
 sk_sp<SkPDFObject> SkPDFMetadata::MakeXMPObject(
         const SkPDF::Metadata& metadata,
         const UUID& doc,
         const UUID& instance) {
+||||||| merged common ancestors
+sk_sp<SkPDFObject> SkPDFMetadata::MakeXMPObject(
+        const SkDocument::PDFMetadata& metadata,
+        const UUID& doc,
+        const UUID& instance) {
+=======
+SkPDFIndirectReference SkPDFMetadata::MakeXMPObject(
+        const SkPDF::Metadata& metadata,
+        const SkUUID& doc,
+        const SkUUID& instance,
+        SkPDFDocument* docPtr) {
+>>>>>>> upstream-releases
     static const char templateString[] =
             "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n"
             "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\"\n"
@@ -393,11 +430,19 @@ sk_sp<SkPDFObject> SkPDFMetadata::MakeXMPObject(
     SkASSERT(0 == count_xml_escape_size(documentID));
     SkString instanceID = uuid_to_string(instance);
     SkASSERT(0 == count_xml_escape_size(instanceID));
-    return sk_make_sp<PDFXMLObject>(SkStringPrintf(
+
+
+    auto value = SkStringPrintf(
             templateString, modificationDate.c_str(), creationDate.c_str(),
             creator.c_str(), title.c_str(), subject.c_str(), author.c_str(),
             keywords1.c_str(), documentID.c_str(), instanceID.c_str(),
-            producer.c_str(), keywords2.c_str()));
+            producer.c_str(), keywords2.c_str());
+
+    std::unique_ptr<SkPDFDict> dict = SkPDFMakeDict("Metadata");
+    dict->insertName("Subtype", "XML");
+    return SkPDFStreamOut(std::move(dict),
+                          SkMemoryStream::MakeCopy(value.c_str(), value.size()),
+                          docPtr, false);
 }
 
 #undef SKPDF_CUSTOM_PRODUCER_KEY

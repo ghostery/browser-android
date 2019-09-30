@@ -54,10 +54,20 @@ nsresult NSSErrorsService::Init() {
 #define EXPECTED_SEC_ERROR_BASE (-0x2000)
 #define EXPECTED_SSL_ERROR_BASE (-0x3000)
 
+<<<<<<< HEAD
 #if SEC_ERROR_BASE != EXPECTED_SEC_ERROR_BASE || \
     SSL_ERROR_BASE != EXPECTED_SSL_ERROR_BASE
 #error \
     "Unexpected change of error code numbers in lib NSS, please adjust the mapping code"
+||||||| merged common ancestors
+#if SEC_ERROR_BASE != EXPECTED_SEC_ERROR_BASE || SSL_ERROR_BASE != EXPECTED_SSL_ERROR_BASE
+#error "Unexpected change of error code numbers in lib NSS, please adjust the mapping code"
+=======
+#if SEC_ERROR_BASE != EXPECTED_SEC_ERROR_BASE || \
+    SSL_ERROR_BASE != EXPECTED_SSL_ERROR_BASE
+#  error \
+      "Unexpected change of error code numbers in lib NSS, please adjust the mapping code"
+>>>>>>> upstream-releases
 /*
  * Please ensure the NSS error codes are mapped into the positive range 0x1000
  * to 0xf000 Search for NS_ERROR_MODULE_SECURITY to ensure there are no
@@ -82,7 +92,14 @@ nsresult GetXPCOMFromNSSError(PRErrorCode code) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 NSSErrorsService::IsNSSErrorCode(int32_t aNSPRCode, bool *_retval) {
+||||||| merged common ancestors
+NSSErrorsService::IsNSSErrorCode(int32_t aNSPRCode, bool *_retval)
+{
+=======
+NSSErrorsService::IsNSSErrorCode(int32_t aNSPRCode, bool* _retval) {
+>>>>>>> upstream-releases
   if (!_retval) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -92,8 +109,16 @@ NSSErrorsService::IsNSSErrorCode(int32_t aNSPRCode, bool *_retval) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 NSSErrorsService::GetXPCOMFromNSSError(int32_t aNSPRCode,
                                        nsresult *aXPCOMErrorCode) {
+||||||| merged common ancestors
+NSSErrorsService::GetXPCOMFromNSSError(int32_t aNSPRCode, nsresult *aXPCOMErrorCode)
+{
+=======
+NSSErrorsService::GetXPCOMFromNSSError(int32_t aNSPRCode,
+                                       nsresult* aXPCOMErrorCode) {
+>>>>>>> upstream-releases
   if (!aXPCOMErrorCode) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -108,8 +133,16 @@ NSSErrorsService::GetXPCOMFromNSSError(int32_t aNSPRCode,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 NSSErrorsService::GetErrorClass(nsresult aXPCOMErrorCode,
                                 uint32_t *aErrorClass) {
+||||||| merged common ancestors
+NSSErrorsService::GetErrorClass(nsresult aXPCOMErrorCode, uint32_t *aErrorClass)
+{
+=======
+NSSErrorsService::GetErrorClass(nsresult aXPCOMErrorCode,
+                                uint32_t* aErrorClass) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aErrorClass);
 
   if (NS_ERROR_GET_MODULE(aXPCOMErrorCode) != NS_ERROR_MODULE_SECURITY ||
@@ -158,7 +191,15 @@ bool ErrorIsOverridable(PRErrorCode code) {
   }
 }
 
+<<<<<<< HEAD
 static const char *getOverrideErrorStringName(PRErrorCode aErrorCode) {
+||||||| merged common ancestors
+static const char*
+getOverrideErrorStringName(PRErrorCode aErrorCode)
+{
+=======
+static const char* getOverrideErrorStringName(PRErrorCode aErrorCode) {
+>>>>>>> upstream-releases
   switch (aErrorCode) {
     case SSL_ERROR_SSL_DISABLED:
       return "PSMERR_SSL_Disabled";
@@ -174,8 +215,16 @@ static const char *getOverrideErrorStringName(PRErrorCode aErrorCode) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 NSSErrorsService::GetErrorMessage(nsresult aXPCOMErrorCode,
                                   nsAString &aErrorMessage) {
+||||||| merged common ancestors
+NSSErrorsService::GetErrorMessage(nsresult aXPCOMErrorCode, nsAString &aErrorMessage)
+{
+=======
+NSSErrorsService::GetErrorMessage(nsresult aXPCOMErrorCode,
+                                  nsAString& aErrorMessage) {
+>>>>>>> upstream-releases
   if (NS_ERROR_GET_MODULE(aXPCOMErrorCode) != NS_ERROR_MODULE_SECURITY ||
       NS_ERROR_GET_SEVERITY(aXPCOMErrorCode) != NS_ERROR_SEVERITY_ERROR) {
     return NS_ERROR_FAILURE;

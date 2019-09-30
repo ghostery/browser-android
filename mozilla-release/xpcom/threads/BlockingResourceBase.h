@@ -8,6 +8,7 @@
 #define mozilla_BlockingResourceBase_h
 
 #include "mozilla/Logging.h"
+#include "mozilla/ThreadLocal.h"
 
 #include "nscore.h"
 #include "nsDebug.h"
@@ -17,17 +18,17 @@
 #ifdef DEBUG
 
 // NB: Comment this out to enable callstack tracking.
-#define MOZ_CALLSTACK_DISABLED
+#  define MOZ_CALLSTACK_DISABLED
 
-#include "prinit.h"
+#  include "prinit.h"
 
-#include "nsString.h"
+#  include "nsString.h"
 
-#ifndef MOZ_CALLSTACK_DISABLED
-#include "nsTArray.h"
-#endif
+#  ifndef MOZ_CALLSTACK_DISABLED
+#    include "nsTArray.h"
+#  endif
 
-#include "nsXPCOM.h"
+#  include "nsXPCOM.h"
 #endif
 
 //
@@ -96,12 +97,25 @@ class BlockingResourceBase {
   // ``DDT'' = ``Deadlock Detector Type''
   typedef DeadlockDetector<BlockingResourceBase> DDT;
 
+<<<<<<< HEAD
  protected:
 #ifdef MOZ_CALLSTACK_DISABLED
+||||||| merged common ancestors
+protected:
+#ifdef MOZ_CALLSTACK_DISABLED
+=======
+ protected:
+#  ifdef MOZ_CALLSTACK_DISABLED
+>>>>>>> upstream-releases
   typedef bool AcquisitionState;
-#else
-  typedef AutoTArray<void*, 24> AcquisitionState;
-#endif
+#  else
+  // Using maybe to use emplacement as the acquisition state flag; we may not
+  // always get a stack trace because of possible stack walk suppression or
+  // errors, hence can't use !IsEmpty() on the array itself as indication.
+  static size_t const kAcquisitionStateStackSize = 24;
+  typedef Maybe<AutoTArray<void*, kAcquisitionStateStackSize> >
+      AcquisitionState;
+#  endif
 
   /**
    * BlockingResourceBase
@@ -151,9 +165,19 @@ class BlockingResourceBase {
    * @return the front of the resource acquisition chain, i.e., the last
    *         resource acquired.
    */
+<<<<<<< HEAD
   static BlockingResourceBase* ResourceChainFront() {
     return (BlockingResourceBase*)PR_GetThreadPrivate(
         sResourceAcqnChainFrontTPI);
+||||||| merged common ancestors
+  static BlockingResourceBase* ResourceChainFront()
+  {
+    return
+      (BlockingResourceBase*)PR_GetThreadPrivate(sResourceAcqnChainFrontTPI);
+=======
+  static BlockingResourceBase* ResourceChainFront() {
+    return sResourceAcqnChainFront.get();
+>>>>>>> upstream-releases
   }
 
   /**
@@ -175,8 +199,16 @@ class BlockingResourceBase {
    */
   void ResourceChainAppend(BlockingResourceBase* aPrev) {
     mChainPrev = aPrev;
+<<<<<<< HEAD
     PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, this);
   }  // NS_NEEDS_RESOURCE(this)
+||||||| merged common ancestors
+    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, this);
+  } //NS_NEEDS_RESOURCE(this)
+=======
+    sResourceAcqnChainFront.set(this);
+  }  // NS_NEEDS_RESOURCE(this)
+>>>>>>> upstream-releases
 
   /**
    * ResourceChainRemove
@@ -186,8 +218,16 @@ class BlockingResourceBase {
    */
   void ResourceChainRemove() {
     NS_ASSERTION(this == ResourceChainFront(), "not at chain front");
+<<<<<<< HEAD
     PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, mChainPrev);
   }  // NS_NEEDS_RESOURCE(this)
+||||||| merged common ancestors
+    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, mChainPrev);
+  } //NS_NEEDS_RESOURCE(this)
+=======
+    sResourceAcqnChainFront.set(mChainPrev);
+  }  // NS_NEEDS_RESOURCE(this)
+>>>>>>> upstream-releases
 
   /**
    * GetAcquisitionState
@@ -213,12 +253,21 @@ class BlockingResourceBase {
    *
    * *NOT* thread safe.  Requires ownership of underlying resource.
    */
+<<<<<<< HEAD
   void ClearAcquisitionState() {
 #ifdef MOZ_CALLSTACK_DISABLED
+||||||| merged common ancestors
+  void ClearAcquisitionState()
+  {
+#ifdef MOZ_CALLSTACK_DISABLED
+=======
+  void ClearAcquisitionState() {
+#  ifdef MOZ_CALLSTACK_DISABLED
+>>>>>>> upstream-releases
     mAcquired = false;
-#else
-    mAcquired.Clear();
-#endif
+#  else
+    mAcquired.reset();
+#  endif
   }
 
   /**
@@ -227,6 +276,7 @@ class BlockingResourceBase {
    *
    * *NOT* thread safe.  Requires ownership of underlying resource.
    */
+<<<<<<< HEAD
   bool IsAcquired() const {
 #ifdef MOZ_CALLSTACK_DISABLED
     return mAcquired;
@@ -234,6 +284,18 @@ class BlockingResourceBase {
     return !mAcquired.IsEmpty();
 #endif
   }
+||||||| merged common ancestors
+  bool IsAcquired() const
+  {
+#ifdef MOZ_CALLSTACK_DISABLED
+    return mAcquired;
+#else
+    return !mAcquired.IsEmpty();
+#endif
+  }
+=======
+  bool IsAcquired() const { return (bool)mAcquired; }
+>>>>>>> upstream-releases
 
   /**
    * mChainPrev
@@ -264,13 +326,13 @@ class BlockingResourceBase {
    */
   AcquisitionState mAcquired;
 
-#ifndef MOZ_CALLSTACK_DISABLED
+#  ifndef MOZ_CALLSTACK_DISABLED
   /**
    * mFirstSeen
    * Inidicates where this resource was first acquired.
    */
   AcquisitionState mFirstSeen;
-#endif
+#  endif
 
   /**
    * sCallOnce
@@ -280,11 +342,10 @@ class BlockingResourceBase {
   static PRCallOnceType sCallOnce;
 
   /**
-   * sResourceAcqnChainFrontTPI
-   * Thread-private index to the front of each thread's resource
+   * Thread-private pointer to the front of each thread's resource
    * acquisition chain.
    */
-  static unsigned sResourceAcqnChainFrontTPI;
+  static MOZ_THREAD_LOCAL(BlockingResourceBase*) sResourceAcqnChainFront;
 
   /**
    * sDeadlockDetector

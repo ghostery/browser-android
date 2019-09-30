@@ -9,6 +9,7 @@ test(() => {
   assert_idl_attribute(navigator.mediaDevices, 'getDisplayMedia');
 }, "getDisplayMedia in navigator.mediaDevices");
 
+<<<<<<< HEAD
 promise_test(async t => {
   const stream = await navigator.mediaDevices.getDisplayMedia({video: true});
   const [track] = stream.getTracks();
@@ -17,7 +18,80 @@ promise_test(async t => {
   assert_equals(stream.getVideoTracks().length, 1);
   assert_equals(stream.getAudioTracks().length, 0);
 }, 'getDisplayMedia() with video true');
+||||||| merged common ancestors
+// Constraint parameter has a default value of {audio:false, video: false}.
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
 
+  return navigator.getDisplayMedia()
+      .then(function(s) {
+        fail('getDisplayMedia should have failed');
+      })
+      .catch(function(e) {
+        assert_equals(e.name, 'TypeError');
+      });
+}, 'getDisplayMedia() with no constraints');
+
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+
+  return navigator.getDisplayMedia({video: true}).then(function(s) {
+    assert_equals(s.getVideoTracks().length, 1);
+    assert_equals(s.getAudioTracks().length, 0);
+  });
+}, 'getDisplayMedia() with video true');
+=======
+const stopTracks = stream => stream.getTracks().forEach(track => track.stop());
+const j = obj => JSON.stringify(obj);
+
+[
+ {video: true},
+ {video: true, audio: false},
+ {audio: false},
+ {},
+ undefined
+].forEach(constraints => promise_test(async t => {
+  const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+  t.add_cleanup(() => stopTracks(stream));
+  assert_equals(stream.getTracks().length, 1);
+  assert_equals(stream.getVideoTracks().length, 1);
+  assert_equals(stream.getAudioTracks().length, 0);
+}, `getDisplayMedia(${j(constraints)}) must succeed with video`));
+
+[
+ {video: false},
+ {video: {advanced: [{width: 320}]}},
+ {video: {width: {min: 320}}},
+ {video: {width: {exact: 320}}},
+ {video: {height: {min: 240}}},
+ {video: {height: {exact: 240}}},
+ {video: {frameRate: {min: 4}}},
+ {video: {frameRate: {exact: 4}}},
+ {audio: true},
+ {video: false, audio: true},
+].forEach(constraints => promise_test(async t => {
+  try {
+    stopTracks(await navigator.mediaDevices.getDisplayMedia(constraints));
+  } catch (err) {
+    assert_equals(err.name, 'TypeError', err.message);
+    return;
+  }
+  assert_unreached('getDisplayMedia should have failed');
+}, `getDisplayMedia(${j(constraints)}) must fail with TypeError`));
+
+[
+ {video: true, audio: true},
+].forEach(constraints => promise_test(async t => {
+  const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+  t.add_cleanup(() => stopTracks(stream));
+  assert_greater_than_equal(stream.getTracks().length, 1);
+  assert_less_than_equal(stream.getTracks().length, 2);
+  assert_equals(stream.getVideoTracks().length, 1);
+  assert_less_than_equal(stream.getAudioTracks().length, 1);
+}, `getDisplayMedia(${j(constraints)}) must succeed with video maybe audio`));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 // Empty constraint parameter and boolean values of false defaults to
 // {video: true}. This is described in items 3-4 of section 5.1, see
 // https://w3c.github.io/mediacapture-screen-share/#navigator-additions.
@@ -31,7 +105,38 @@ promise_test(async t => {
   assert_equals(stream.getVideoTracks().length, 1);
   assert_equals(stream.getAudioTracks().length, 0);
 }, 'getDisplayMedia() with no constraints');
+||||||| merged common ancestors
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+=======
+[
+ {video: {width: {max: 360}}},
+ {video: {height: {max: 240}}},
+ {video: {width: {max: 360}, height: {max: 240}}},
+ {video: {frameRate: {max: 4}}},
+ {video: {frameRate: {max: 4}, width: {max: 360}}},
+ {video: {frameRate: {max: 4}, height: {max: 240}}},
+ {video: {frameRate: {max: 4}, width: {max: 360}, height: {max: 240}}},
+].forEach(constraints => promise_test(async t => {
+  const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+  t.add_cleanup(() => stopTracks(stream));
+  const {width, height, frameRate} = stream.getTracks()[0].getSettings();
+  assert_greater_than_equal(width, 1);
+  assert_greater_than_equal(height, 1);
+  assert_greater_than_equal(frameRate, 1);
+  if (constraints.width) {
+    assert_less_than_equal(width, constraints.width.max);
+  }
+  if (constraints.height) {
+    assert_less_than_equal(height, constraints.height.max);
+  }
+  if (constraints.frameRate) {
+    assert_less_than_equal(frameRate, constraints.frameRate.max);
+  }
+}, `getDisplayMedia(${j(constraints)}) must be constrained`));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 promise_test(async t => {
   const stream = await navigator.mediaDevices.getDisplayMedia({video: false});
   const [track] = stream.getTracks();
@@ -103,7 +208,69 @@ promise_test(async t => {
   assert_less_than_equal(
       stream.getVideoTracks()[0].getSettings().width, maxWidth);
 }, 'getDisplayMedia() with max constraint');
+||||||| merged common ancestors
+  return navigator.getDisplayMedia({video: false})
+      .then(function(s) {
+        fail('getDisplayMedia should have failed');
+      })
+      .catch(function(e) {
+        assert_equals(e.name, 'TypeError');
+      });
+}, 'getDisplayMedia() with video false');
 
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+
+  return navigator.getDisplayMedia({audio: true}).then(function(s) {
+    assert_equals(s.getVideoTracks().length, 0);
+    assert_equals(s.getAudioTracks().length, 1);
+  });
+}, 'getDisplayMedia() with audio true');
+
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+
+  return navigator.getDisplayMedia({audio: false})
+      .then(function(s) {
+        fail('getDisplayMedia should have failed');
+      })
+      .catch(function(e) {
+        assert_equals(e.name, 'TypeError');
+      });
+}, 'getDisplayMedia() with audio false');
+
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+
+  return navigator
+      .getDisplayMedia({audio: false, video: {width: 1280, height: 720}})
+      .then(function(s) {
+        fail('getDisplayMedia should have failed');
+      })
+      .catch(function(e) {
+        assert_equals(e.name, 'InvalidAccessError');
+      });
+}, 'getDisplayMedia() call with non-bool constraint');
+=======
+[
+ {video: {width: {max: 0}}},
+ {video: {height: {max: 0}}},
+ {video: {frameRate: {max: 0}}},
+ {video: {width: {max: -1}}},
+ {video: {height: {max: -1}}},
+ {video: {frameRate: {max: -1}}},
+].forEach(constraints => promise_test(async t => {
+  try {
+    stopTracks(await navigator.mediaDevices.getDisplayMedia(constraints));
+  } catch (err) {
+    assert_equals(err.name, 'OverconstrainedError', err.message);
+    return;
+  }
+  assert_unreached('getDisplayMedia should have failed');
+}, `getDisplayMedia(${j(constraints)}) must fail with OverconstrainedError`));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 promise_test(async t => {
   const maxWidth = 360;
   const maxFrameRate = 4;
@@ -142,6 +309,31 @@ promise_test(async t => {
       ['monitor', 'window', 'application', 'browser']);
   assert_any(assert_equals, settings.logicalSurface, [true, false]);
   assert_any(assert_equals, settings.cursor, ['never', 'always', 'motion']);
+||||||| merged common ancestors
+// Content shell picks a fake desktop device by default.
+promise_test(function() {
+  assert_idl_attribute(navigator, 'getDisplayMedia');
+
+  return navigator.getDisplayMedia({video: true}).then(function(s) {
+    assert_equals(s.getVideoTracks().length, 1);
+    assert_equals(s.getAudioTracks().length, 0);
+    var settings = s.getVideoTracks()[0].getSettings();
+    assert_equals(settings.displaySurface, "monitor");
+    assert_equals(settings.logicalSurface, true);
+    assert_equals(settings.cursor, "never");
+  });
+=======
+// Content shell picks a fake desktop device by default.
+promise_test(async t => {
+  const stream = await navigator.mediaDevices.getDisplayMedia({video: true});
+  t.add_cleanup(() => stopTracks(stream));
+  const settings = stream.getVideoTracks()[0].getSettings();
+  assert_any(
+      assert_equals, settings.displaySurface,
+      ['monitor', 'window', 'application', 'browser']);
+  assert_any(assert_equals, settings.logicalSurface, [true, false]);
+  assert_any(assert_equals, settings.cursor, ['never', 'always', 'motion']);
+>>>>>>> upstream-releases
 }, 'getDisplayMedia() with getSettings');
 
 </script>

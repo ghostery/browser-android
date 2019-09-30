@@ -5,9 +5,15 @@
  * found in the LICENSE file.
  */
 
+<<<<<<< HEAD
 #include "SkWebpCodec.h"
 
 #include "../jumper/SkJumper.h"
+||||||| merged common ancestors
+=======
+#include "SkWebpCodec.h"
+
+>>>>>>> upstream-releases
 #include "SkBitmap.h"
 #include "SkCanvas.h"
 #include "SkCodecAnimation.h"
@@ -333,6 +339,7 @@ static bool is_8888(SkColorType colorType) {
     }
 }
 
+<<<<<<< HEAD
 static void pick_memory_stages(SkColorType ct, SkRasterPipeline::StockStage* load,
                                                SkRasterPipeline::StockStage* store) {
     switch(ct) {
@@ -371,41 +378,105 @@ static void pick_memory_stages(SkColorType ct, SkRasterPipeline::StockStage* loa
     }
 }
 
+||||||| merged common ancestors
+static void pick_memory_stages(SkColorType ct, SkRasterPipeline::StockStage* load,
+                                               SkRasterPipeline::StockStage* store) {
+    switch(ct) {
+        case kUnknown_SkColorType:
+        case kAlpha_8_SkColorType:
+        case kARGB_4444_SkColorType:
+        case kGray_8_SkColorType:
+        case kRGB_888x_SkColorType:
+        case kRGB_101010x_SkColorType:
+            SkASSERT(false);
+            break;
+        case kRGB_565_SkColorType:
+            if (load) *load = SkRasterPipeline::load_565;
+            if (store) *store = SkRasterPipeline::store_565;
+            break;
+        case kRGBA_8888_SkColorType:
+            if (load) *load = SkRasterPipeline::load_8888;
+            if (store) *store = SkRasterPipeline::store_8888;
+            break;
+        case kBGRA_8888_SkColorType:
+            if (load) *load = SkRasterPipeline::load_bgra;
+            if (store) *store = SkRasterPipeline::store_bgra;
+            break;
+        case kRGBA_1010102_SkColorType:
+            if (load) *load = SkRasterPipeline::load_1010102;
+            if (store) *store = SkRasterPipeline::store_1010102;
+            break;
+        case kRGBA_F16_SkColorType:
+            if (load) *load = SkRasterPipeline::load_f16;
+            if (store) *store = SkRasterPipeline::store_f16;
+            break;
+    }
+}
+
+=======
+>>>>>>> upstream-releases
 // Requires that the src input be unpremultiplied (or opaque).
 static void blend_line(SkColorType dstCT, void* dst,
                        SkColorType srcCT, const void* src,
                        SkAlphaType dstAt,
                        bool srcHasAlpha,
                        int width) {
-    SkJumper_MemoryCtx dst_ctx = { (void*)dst, 0 },
-                       src_ctx = { (void*)src, 0 };
+    SkRasterPipeline_MemoryCtx dst_ctx = { (void*)dst, 0 },
+                               src_ctx = { (void*)src, 0 };
 
     SkRasterPipeline_<256> p;
-    SkRasterPipeline::StockStage load_dst, store_dst;
-    pick_memory_stages(dstCT, &load_dst, &store_dst);
 
+<<<<<<< HEAD
     // Load the final dst.
     p.append(load_dst, &dst_ctx);
-    if (kUnpremul_SkAlphaType == dstAt) {
-        p.append(SkRasterPipeline::premul);
+||||||| merged common ancestors
+    // Load the final dst.
+    p.append(load_dst, &dst_ctx);
+    if (needsSrgbToLinear) {
+        p.append(SkRasterPipeline::from_srgb);
     }
-    p.append(SkRasterPipeline::move_src_dst);
+=======
+    p.append_load_dst(dstCT, &dst_ctx);
+>>>>>>> upstream-releases
+    if (kUnpremul_SkAlphaType == dstAt) {
+        p.append(SkRasterPipeline::premul_dst);
+    }
 
+<<<<<<< HEAD
     // Load the src.
     SkRasterPipeline::StockStage load_src;
     pick_memory_stages(srcCT, &load_src, nullptr);
     p.append(load_src, &src_ctx);
+||||||| merged common ancestors
+    // Load the src.
+    SkRasterPipeline::StockStage load_src;
+    pick_memory_stages(srcCT, &load_src, nullptr);
+    p.append(load_src, &src_ctx);
+    if (needsSrgbToLinear) {
+        p.append(SkRasterPipeline::from_srgb);
+    }
+=======
+    p.append_load(srcCT, &src_ctx);
+>>>>>>> upstream-releases
     if (srcHasAlpha) {
         p.append(SkRasterPipeline::premul);
     }
 
     p.append(SkRasterPipeline::srcover);
 
-    // Convert back to dst.
     if (kUnpremul_SkAlphaType == dstAt) {
         p.append(SkRasterPipeline::unpremul);
     }
+<<<<<<< HEAD
     p.append(store_dst, &dst_ctx);
+||||||| merged common ancestors
+    if (needsSrgbToLinear) {
+        p.append(SkRasterPipeline::to_srgb);
+    }
+    p.append(store_dst, &dst_ctx);
+=======
+    p.append_store(dstCT, &dst_ctx);
+>>>>>>> upstream-releases
 
     p.run(0,0, width,1);
 }

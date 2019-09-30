@@ -265,20 +265,29 @@ typedef struct _BPSupportedMIMETypes {
   Handle typeStrings;   /* STR# formated handle, allocated by plug-in */
   Handle infoStrings;   /* STR# formated handle, allocated by plug-in */
 } BPSupportedMIMETypes;
+<<<<<<< HEAD
 OSErr BP_GetSupportedMIMETypes(BPSupportedMIMETypes* mimeInfo, UInt32 flags);
 #define NP_GETMIMEDESCRIPTION_NAME "NP_GetMIMEDescription"
+||||||| merged common ancestors
+OSErr BP_GetSupportedMIMETypes(BPSupportedMIMETypes *mimeInfo, UInt32 flags);
+#define NP_GETMIMEDESCRIPTION_NAME "NP_GetMIMEDescription"
+=======
+OSErr BP_GetSupportedMIMETypes(BPSupportedMIMETypes* mimeInfo, UInt32 flags);
+#  define NP_GETMIMEDESCRIPTION_NAME "NP_GetMIMEDescription"
+>>>>>>> upstream-releases
 typedef const char* (*NP_GetMIMEDescriptionProcPtr)(void);
 typedef OSErr (*BP_GetSupportedMIMETypesProcPtr)(BPSupportedMIMETypes*, UInt32);
 #endif
 
 #if defined(_WIN32)
-#define OSCALL WINAPI
+#  define OSCALL WINAPI
 #else
-#define OSCALL
+#  define OSCALL
 #endif
 
 #if defined(XP_UNIX)
 /* GCC 3.3 and later support the visibility attribute. */
+<<<<<<< HEAD
 #if defined(__GNUC__) && \
     ((__GNUC__ >= 4) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
 #define NP_VISIBILITY_DEFAULT __attribute__((visibility("default")))
@@ -288,12 +297,32 @@ typedef OSErr (*BP_GetSupportedMIMETypesProcPtr)(BPSupportedMIMETypes*, UInt32);
 #define NP_VISIBILITY_DEFAULT
 #endif
 #define NP_EXPORT(__type) NP_VISIBILITY_DEFAULT __type
+||||||| merged common ancestors
+#if defined(__GNUC__) && ((__GNUC__ >= 4) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
+#define NP_VISIBILITY_DEFAULT __attribute__((visibility("default")))
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#define NP_VISIBILITY_DEFAULT __global
+#else
+#define NP_VISIBILITY_DEFAULT
+#endif
+#define NP_EXPORT(__type) NP_VISIBILITY_DEFAULT __type
+=======
+#  if defined(__GNUC__) && \
+      ((__GNUC__ >= 4) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
+#    define NP_VISIBILITY_DEFAULT __attribute__((visibility("default")))
+#  elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#    define NP_VISIBILITY_DEFAULT __global
+#  else
+#    define NP_VISIBILITY_DEFAULT
+#  endif
+#  define NP_EXPORT(__type) NP_VISIBILITY_DEFAULT __type
+>>>>>>> upstream-releases
 #endif
 
 #if defined(_WIN32)
-#ifdef __cplusplus
+#  ifdef __cplusplus
 extern "C" {
-#endif
+#  endif
 /* plugin meta member functions */
 typedef NPError(OSCALL* NP_GetEntryPointsFunc)(NPPluginFuncs*);
 NPError OSCALL NP_GetEntryPoints(NPPluginFuncs* pFuncs);
@@ -302,20 +331,41 @@ NPError OSCALL NP_Initialize(NPNetscapeFuncs* bFuncs);
 typedef NPError(OSCALL* NP_ShutdownFunc)(void);
 NPError OSCALL NP_Shutdown(void);
 typedef const char* (*NP_GetMIMEDescriptionFunc)(void);
+<<<<<<< HEAD
 const char* NP_GetMIMEDescription(void);
 #ifdef __cplusplus
+||||||| merged common ancestors
+const char*         NP_GetMIMEDescription(void);
+#ifdef __cplusplus
+=======
+const char* NP_GetMIMEDescription(void);
+#  ifdef __cplusplus
+>>>>>>> upstream-releases
 }
-#endif
+#  endif
 #endif
 
 #ifdef XP_UNIX
-#ifdef __cplusplus
+#  ifdef __cplusplus
 extern "C" {
+<<<<<<< HEAD
 #endif
 typedef char* (*NP_GetPluginVersionFunc)(void);
 NP_EXPORT(char*) NP_GetPluginVersion(void);
 typedef const char* (*NP_GetMIMEDescriptionFunc)(void);
+||||||| merged common ancestors
+#endif
+typedef char*          (*NP_GetPluginVersionFunc)(void);
+NP_EXPORT(char*)       NP_GetPluginVersion(void);
+typedef const char*    (*NP_GetMIMEDescriptionFunc)(void);
+=======
+#  endif
+typedef char* (*NP_GetPluginVersionFunc)(void);
+NP_EXPORT(char*) NP_GetPluginVersion(void);
+typedef const char* (*NP_GetMIMEDescriptionFunc)(void);
+>>>>>>> upstream-releases
 NP_EXPORT(const char*) NP_GetMIMEDescription(void);
+<<<<<<< HEAD
 #ifdef XP_MACOSX
 typedef NPError (*NP_InitializeFunc)(NPNetscapeFuncs*);
 NP_EXPORT(NPError) NP_Initialize(NPNetscapeFuncs* bFuncs);
@@ -332,8 +382,41 @@ typedef NPError (*NP_GetValueFunc)(void*, NPPVariable, void*);
 NP_EXPORT(NPError)
 NP_GetValue(void* future, NPPVariable aVariable, void* aValue);
 #ifdef __cplusplus
-}
+||||||| merged common ancestors
+#ifdef XP_MACOSX
+typedef NPError        (*NP_InitializeFunc)(NPNetscapeFuncs*);
+NP_EXPORT(NPError)     NP_Initialize(NPNetscapeFuncs* bFuncs);
+typedef NPError        (*NP_GetEntryPointsFunc)(NPPluginFuncs*);
+NP_EXPORT(NPError)     NP_GetEntryPoints(NPPluginFuncs* pFuncs);
+#else
+typedef NPError    (*NP_InitializeFunc)(NPNetscapeFuncs*, NPPluginFuncs*);
+NP_EXPORT(NPError) NP_Initialize(NPNetscapeFuncs* bFuncs, NPPluginFuncs* pFuncs);
 #endif
+typedef NPError        (*NP_ShutdownFunc)(void);
+NP_EXPORT(NPError)     NP_Shutdown(void);
+typedef NPError        (*NP_GetValueFunc)(void *, NPPVariable, void *);
+NP_EXPORT(NPError)     NP_GetValue(void *future, NPPVariable aVariable, void *aValue);
+#ifdef __cplusplus
+=======
+#  ifdef XP_MACOSX
+typedef NPError (*NP_InitializeFunc)(NPNetscapeFuncs*);
+NP_EXPORT(NPError) NP_Initialize(NPNetscapeFuncs* bFuncs);
+typedef NPError (*NP_GetEntryPointsFunc)(NPPluginFuncs*);
+NP_EXPORT(NPError) NP_GetEntryPoints(NPPluginFuncs* pFuncs);
+#  else
+typedef NPError (*NP_InitializeFunc)(NPNetscapeFuncs*, NPPluginFuncs*);
+NP_EXPORT(NPError)
+NP_Initialize(NPNetscapeFuncs* bFuncs, NPPluginFuncs* pFuncs);
+#  endif
+typedef NPError (*NP_ShutdownFunc)(void);
+NP_EXPORT(NPError) NP_Shutdown(void);
+typedef NPError (*NP_GetValueFunc)(void*, NPPVariable, void*);
+NP_EXPORT(NPError)
+NP_GetValue(void* future, NPPVariable aVariable, void* aValue);
+#  ifdef __cplusplus
+>>>>>>> upstream-releases
+}
+#  endif
 #endif
 
 // clang-format off

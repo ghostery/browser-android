@@ -75,8 +75,16 @@ typedef struct OSVR_ImagingMetadata {
 } OSVR_ImagingMetadata;
 
 typedef struct OSVR_ImagingState {
+<<<<<<< HEAD
   OSVR_ImagingMetadata metadata;
   OSVR_ImageBufferElement *data;
+||||||| merged common ancestors
+    OSVR_ImagingMetadata metadata;
+    OSVR_ImageBufferElement *data;
+=======
+  OSVR_ImagingMetadata metadata;
+  OSVR_ImageBufferElement* data;
+>>>>>>> upstream-releases
 } OSVR_ImagingState;
 
 typedef struct OSVR_ImagingReport {

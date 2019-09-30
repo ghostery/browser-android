@@ -271,6 +271,10 @@ class ImageResource : public Image {
   explicit ImageResource(nsIURI* aURI);
   ~ImageResource();
 
+  layers::ContainerProducerID GetImageProducerId() const {
+    return mImageProducerID;
+  }
+
   bool GetSpecTruncatedTo1k(nsCString& aSpec) const;
 
   // Shared functionality for implementors of imgIContainer. Every
@@ -368,7 +372,18 @@ class ImageResource : public Image {
                                       uint32_t aFlags,
                                       layers::ImageContainer** aContainer);
 
+<<<<<<< HEAD
   void UpdateImageContainer(const Maybe<gfx::IntRect>& aDirtyRect);
+||||||| merged common ancestors
+  void UpdateImageContainer();
+=======
+  /**
+   * Re-requests the appropriate frames for each image container using
+   * GetFrameInternal.
+   * @returns True if any image containers were updated, else false.
+   */
+  bool UpdateImageContainer(const Maybe<gfx::IntRect>& aDirtyRect);
+>>>>>>> upstream-releases
 
   void ReleaseImageContainer();
 

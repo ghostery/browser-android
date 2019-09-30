@@ -6,7 +6,7 @@
 #include "mozilla/dom/PGamepadEventChannelParent.h"
 
 #ifndef mozilla_dom_GamepadEventChannelParent_h_
-#define mozilla_dom_GamepadEventChannelParent_h_
+#  define mozilla_dom_GamepadEventChannelParent_h_
 
 namespace mozilla {
 namespace dom {
@@ -16,6 +16,7 @@ class GamepadEventChannelParent final : public PGamepadEventChannelParent {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GamepadEventChannelParent)
   GamepadEventChannelParent();
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvGamepadListenerAdded() override;
   virtual mozilla::ipc::IPCResult RecvGamepadListenerRemoved() override;
   virtual mozilla::ipc::IPCResult RecvVibrateHaptic(
@@ -24,6 +25,30 @@ class GamepadEventChannelParent final : public PGamepadEventChannelParent {
       const uint32_t& aPromiseID) override;
   virtual mozilla::ipc::IPCResult RecvStopVibrateHaptic(
       const uint32_t& aGamepadIndex) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvGamepadListenerAdded() override;
+  virtual mozilla::ipc::IPCResult RecvGamepadListenerRemoved() override;
+  virtual mozilla::ipc::IPCResult RecvVibrateHaptic(const uint32_t& aControllerIdx,
+                                                    const uint32_t& aHapticIndex,
+                                                    const double& aIntensity,
+                                                    const double& aDuration,
+                                                    const uint32_t& aPromiseID) override;
+  virtual mozilla::ipc::IPCResult RecvStopVibrateHaptic(
+                                    const uint32_t& aGamepadIndex) override;
+=======
+  mozilla::ipc::IPCResult RecvGamepadListenerAdded();
+  mozilla::ipc::IPCResult RecvGamepadListenerRemoved();
+  mozilla::ipc::IPCResult RecvVibrateHaptic(const uint32_t& aControllerIdx,
+                                            const uint32_t& aHapticIndex,
+                                            const double& aIntensity,
+                                            const double& aDuration,
+                                            const uint32_t& aPromiseID);
+  mozilla::ipc::IPCResult RecvStopVibrateHaptic(const uint32_t& aControllerIdx);
+  mozilla::ipc::IPCResult RecvLightIndicatorColor(
+      const uint32_t& aControllerIdx, const uint32_t& aLightColorIndex,
+      const uint8_t& aRed, const uint8_t& aGreen, const uint8_t& aBlue,
+      const uint32_t& aPromiseID);
+>>>>>>> upstream-releases
   void DispatchUpdateEvent(const GamepadChangeEvent& aEvent);
   bool HasGamepadListener() const { return mHasGamepadListener; }
 

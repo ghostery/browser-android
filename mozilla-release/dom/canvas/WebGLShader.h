@@ -7,6 +7,7 @@
 #define WEBGL_SHADER_H_
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,7 @@
 namespace mozilla {
 
 namespace webgl {
+<<<<<<< HEAD
 class ShaderValidator;
 }  // namespace webgl
 
@@ -102,6 +104,161 @@ class WebGLShader final : public nsWrapperCache,
 
   bool mCompilationSuccessful;
   nsCString mCompilationLog;
+||||||| merged common ancestors
+class ShaderValidator;
+} // namespace webgl
+
+class WebGLShader final
+    : public nsWrapperCache
+    , public WebGLRefCountedObject<WebGLShader>
+    , public LinkedListElement<WebGLShader>
+{
+    friend class WebGLContext;
+    friend class WebGLProgram;
+
+public:
+    WebGLShader(WebGLContext* webgl, GLenum type);
+
+protected:
+    ~WebGLShader();
+
+public:
+    // GL funcs
+    void CompileShader();
+    JS::Value GetShaderParameter(GLenum pname) const;
+    void GetShaderInfoLog(nsAString* out) const;
+    void GetShaderSource(nsAString* out) const;
+    void GetShaderTranslatedSource(nsAString* out) const;
+    void ShaderSource(const nsAString& source);
+
+    // Util funcs
+    bool CanLinkTo(const WebGLShader* prev, nsCString* const out_log) const;
+    size_t CalcNumSamplerUniforms() const;
+    size_t NumAttributes() const;
+    bool FindAttribUserNameByMappedName(const nsACString& mappedName,
+                                        nsCString* const out_userName) const;
+    bool FindVaryingByMappedName(const nsACString& mappedName,
+                                 nsCString* const out_userName,
+                                 bool* const out_isArray) const;
+    bool FindUniformByMappedName(const nsACString& mappedName,
+                                 nsCString* const out_userName,
+                                 bool* const out_isArray) const;
+    bool UnmapUniformBlockName(const nsACString& baseMappedName,
+                               nsCString* const out_baseUserName) const;
+
+    void EnumerateFragOutputs(std::map<nsCString, const nsCString> &out_FragOutputs) const;
+
+    bool IsCompiled() const {
+        return mTranslationSuccessful && mCompilationSuccessful;
+    }
+
+private:
+    void BindAttribLocation(GLuint prog, const nsCString& userName, GLuint index) const;
+    void MapTransformFeedbackVaryings(const std::vector<nsString>& varyings,
+                                      std::vector<std::string>* out_mappedVaryings) const;
+
+public:
+    // Other funcs
+    size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
+    void Delete();
+
+    WebGLContext* GetParentObject() const { return mContext; }
+
+    virtual JSObject* WrapObject(JSContext* js, JS::Handle<JSObject*> givenProto) override;
+
+    NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(WebGLShader)
+    NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(WebGLShader)
+
+public:
+    const GLuint mGLName;
+    const GLenum mType;
+
+protected:
+    nsString mSource;
+    nsCString mCleanSource;
+
+    UniquePtr<webgl::ShaderValidator> mValidator;
+    nsCString mValidationLog;
+    bool mTranslationSuccessful;
+    nsCString mTranslatedSource;
+
+    bool mCompilationSuccessful;
+    nsCString mCompilationLog;
+=======
+class ShaderValidatorResults;
+}  // namespace webgl
+
+class WebGLShader final : public nsWrapperCache,
+                          public WebGLRefCountedObject<WebGLShader>,
+                          public LinkedListElement<WebGLShader> {
+  friend class WebGLContext;
+  friend class WebGLProgram;
+
+ public:
+  WebGLShader(WebGLContext* webgl, GLenum type);
+
+ protected:
+  ~WebGLShader();
+
+ public:
+  // GL funcs
+  void CompileShader();
+  JS::Value GetShaderParameter(GLenum pname) const;
+  void GetShaderInfoLog(nsAString* out) const;
+  void GetShaderSource(nsAString* out) const;
+  void GetShaderTranslatedSource(nsAString* out) const;
+  void ShaderSource(const nsAString& source);
+
+  // Util funcs
+  size_t CalcNumSamplerUniforms() const;
+  size_t NumAttributes() const;
+  bool FindAttribUserNameByMappedName(const nsACString& mappedName,
+                                      nsCString* const out_userName) const;
+  bool FindVaryingByMappedName(const nsACString& mappedName,
+                               nsCString* const out_userName,
+                               bool* const out_isArray) const;
+  bool FindUniformByMappedName(const nsACString& mappedName,
+                               nsCString* const out_userName,
+                               bool* const out_isArray) const;
+  bool UnmapUniformBlockName(const nsACString& baseMappedName,
+                             nsCString* const out_baseUserName) const;
+
+  bool IsCompiled() const { return mCompilationSuccessful; }
+  const auto& CompileResults() const { return mCompileResults; }
+
+ private:
+  void BindAttribLocation(GLuint prog, const std::string& userName,
+                          GLuint index) const;
+  void MapTransformFeedbackVaryings(
+      const std::vector<nsString>& varyings,
+      std::vector<std::string>* out_mappedVaryings) const;
+
+ public:
+  // Other funcs
+  size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
+  void Delete();
+
+  WebGLContext* GetParentObject() const { return mContext; }
+
+  virtual JSObject* WrapObject(JSContext* js,
+                               JS::Handle<JSObject*> givenProto) override;
+
+  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(WebGLShader)
+  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(WebGLShader)
+
+ public:
+  const GLuint mGLName;
+  const GLenum mType;
+
+ protected:
+  nsString mSource;
+  nsCString mCleanSource;
+
+  std::unique_ptr<const webgl::ShaderValidatorResults>
+      mCompileResults;  // Never null.
+  bool mCompilationSuccessful = false;
+  nsCString mCompilationLog;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

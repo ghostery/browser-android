@@ -31,6 +31,7 @@
 ))]
 use simd_funcs::*;
 
+<<<<<<< HEAD
 cfg_if!{
     if #[cfg(feature = "simd-accel")] {
         #[allow(unused_imports)]
@@ -53,6 +54,31 @@ cfg_if!{
     }
 }
 
+||||||| merged common ancestors
+=======
+cfg_if! {
+    if #[cfg(feature = "simd-accel")] {
+        #[allow(unused_imports)]
+        use ::std::intrinsics::unlikely;
+        #[allow(unused_imports)]
+        use ::std::intrinsics::likely;
+    } else {
+        #[allow(dead_code)]
+        #[inline(always)]
+        // Unsafe to match the intrinsic, which is needlessly unsafe.
+        unsafe fn unlikely(b: bool) -> bool {
+            b
+        }
+        #[allow(dead_code)]
+        #[inline(always)]
+        // Unsafe to match the intrinsic, which is needlessly unsafe.
+        unsafe fn likely(b: bool) -> bool {
+            b
+        }
+    }
+}
+
+>>>>>>> upstream-releases
 // `as` truncates, so works on 32-bit, too.
 #[allow(dead_code)]
 pub const ASCII_MASK: usize = 0x8080_8080_8080_8080u64 as usize;
@@ -89,6 +115,7 @@ macro_rules! ascii_alu {
     ($name:ident,
      $src_unit:ty,
      $dst_unit:ty,
+<<<<<<< HEAD
      $stride_fn:ident) => {
         #[cfg_attr(
             feature = "cargo-clippy",
@@ -112,6 +139,76 @@ macro_rules! ascii_alu {
                     let dst_alignment = (dst as usize) & ALU_ALIGNMENT_MASK;
                     if src_alignment != dst_alignment {
                         break;
+||||||| merged common ancestors
+     $stride_fn:ident) => (
+    #[cfg_attr(feature = "cargo-clippy", allow(never_loop))]
+    #[inline(always)]
+    pub unsafe fn $name(src: *const $src_unit, dst: *mut $dst_unit, len: usize) -> Option<($src_unit, usize)> {
+        let mut offset = 0usize;
+        // This loop is only broken out of as a `goto` forward
+        loop {
+            let mut until_alignment = {
+                // Check if the other unit aligns if we move the narrower unit
+                // to alignment.
+                //               if ::std::mem::size_of::<$src_unit>() == ::std::mem::size_of::<$dst_unit>() {
+                // ascii_to_ascii
+                let src_alignment = (src as usize) & ALU_ALIGNMENT_MASK;
+                let dst_alignment = (dst as usize) & ALU_ALIGNMENT_MASK;
+                if src_alignment != dst_alignment {
+                    break;
+                }
+                (ALU_ALIGNMENT - src_alignment) & ALU_ALIGNMENT_MASK
+                //               } else if ::std::mem::size_of::<$src_unit>() < ::std::mem::size_of::<$dst_unit>() {
+                // ascii_to_basic_latin
+                //                   let src_until_alignment = (ALIGNMENT - ((src as usize) & ALIGNMENT_MASK)) & ALIGNMENT_MASK;
+                //                   if (dst.offset(src_until_alignment as isize) as usize) & ALIGNMENT_MASK != 0 {
+                //                       break;
+                //                   }
+                //                   src_until_alignment
+                //               } else {
+                // basic_latin_to_ascii
+                //                   let dst_until_alignment = (ALIGNMENT - ((dst as usize) & ALIGNMENT_MASK)) & ALIGNMENT_MASK;
+                //                   if (src.offset(dst_until_alignment as isize) as usize) & ALIGNMENT_MASK != 0 {
+                //                       break;
+                //                   }
+                //                   dst_until_alignment
+                //               }
+            };
+            if until_alignment + ALU_STRIDE_SIZE <= len {
+                // Moving pointers to alignment seems to be a pessimization on
+                // x86_64 for operations that have UTF-16 as the internal
+                // Unicode representation. However, since it seems to be a win
+                // on ARM (tested ARMv7 code running on ARMv8 [rpi3]), except
+                // mixed results when encoding from UTF-16 and since x86 and
+                // x86_64 should be using SSE2 in due course, keeping the move
+                // to alignment here. It would be good to test on more ARM CPUs
+                // and on real MIPS and POWER hardware.
+                while until_alignment != 0 {
+                    let code_unit = *(src.offset(offset as isize));
+                    if code_unit > 127 {
+                        return Some((code_unit, offset));
+=======
+     $stride_fn:ident) => {
+        #[cfg_attr(feature = "cargo-clippy", allow(never_loop, cast_ptr_alignment))]
+        #[inline(always)]
+        pub unsafe fn $name(
+            src: *const $src_unit,
+            dst: *mut $dst_unit,
+            len: usize,
+        ) -> Option<($src_unit, usize)> {
+            let mut offset = 0usize;
+            // This loop is only broken out of as a `goto` forward
+            loop {
+                let mut until_alignment = {
+                    // Check if the other unit aligns if we move the narrower unit
+                    // to alignment.
+                    //               if ::std::mem::size_of::<$src_unit>() == ::std::mem::size_of::<$dst_unit>() {
+                    // ascii_to_ascii
+                    let src_alignment = (src as usize) & ALU_ALIGNMENT_MASK;
+                    let dst_alignment = (dst as usize) & ALU_ALIGNMENT_MASK;
+                    if src_alignment != dst_alignment {
+                        break;
+>>>>>>> upstream-releases
                     }
                     (ALU_ALIGNMENT - src_alignment) & ALU_ALIGNMENT_MASK
                     //               } else if ::std::mem::size_of::<$src_unit>() < ::std::mem::size_of::<$dst_unit>() {
@@ -183,6 +280,7 @@ macro_rules! basic_latin_alu {
     ($name:ident,
      $src_unit:ty,
      $dst_unit:ty,
+<<<<<<< HEAD
      $stride_fn:ident) => {
         #[cfg_attr(
             feature = "cargo-clippy",
@@ -231,6 +329,101 @@ macro_rules! basic_latin_alu {
                             break;
                         }
                         dst_until_alignment
+||||||| merged common ancestors
+     $stride_fn:ident) => (
+    #[cfg_attr(feature = "cargo-clippy", allow(never_loop))]
+    #[inline(always)]
+    pub unsafe fn $name(src: *const $src_unit, dst: *mut $dst_unit, len: usize) -> Option<($src_unit, usize)> {
+        let mut offset = 0usize;
+        // This loop is only broken out of as a `goto` forward
+        loop {
+            let mut until_alignment = {
+                // Check if the other unit aligns if we move the narrower unit
+                // to alignment.
+                //               if ::std::mem::size_of::<$src_unit>() == ::std::mem::size_of::<$dst_unit>() {
+                // ascii_to_ascii
+                //                   let src_alignment = (src as usize) & ALIGNMENT_MASK;
+                //                   let dst_alignment = (dst as usize) & ALIGNMENT_MASK;
+                //                   if src_alignment != dst_alignment {
+                //                       break;
+                //                   }
+                //                   (ALIGNMENT - src_alignment) & ALIGNMENT_MASK
+                //               } else
+                if ::std::mem::size_of::<$src_unit>() < ::std::mem::size_of::<$dst_unit>() {
+                    // ascii_to_basic_latin
+                    let src_until_alignment = (ALU_ALIGNMENT - ((src as usize) & ALU_ALIGNMENT_MASK)) & ALU_ALIGNMENT_MASK;
+                    if (dst.offset(src_until_alignment as isize) as usize) & ALU_ALIGNMENT_MASK != 0 {
+                        break;
+                    }
+                    src_until_alignment
+                } else {
+                    // basic_latin_to_ascii
+                    let dst_until_alignment = (ALU_ALIGNMENT - ((dst as usize) & ALU_ALIGNMENT_MASK)) & ALU_ALIGNMENT_MASK;
+                    if (src.offset(dst_until_alignment as isize) as usize) & ALU_ALIGNMENT_MASK != 0 {
+                        break;
+                    }
+                    dst_until_alignment
+                }
+            };
+            if until_alignment + ALU_STRIDE_SIZE <= len {
+                // Moving pointers to alignment seems to be a pessimization on
+                // x86_64 for operations that have UTF-16 as the internal
+                // Unicode representation. However, since it seems to be a win
+                // on ARM (tested ARMv7 code running on ARMv8 [rpi3]), except
+                // mixed results when encoding from UTF-16 and since x86 and
+                // x86_64 should be using SSE2 in due course, keeping the move
+                // to alignment here. It would be good to test on more ARM CPUs
+                // and on real MIPS and POWER hardware.
+                while until_alignment != 0 {
+                    let code_unit = *(src.offset(offset as isize));
+                    if code_unit > 127 {
+                        return Some((code_unit, offset));
+=======
+     $stride_fn:ident) => {
+        #[cfg_attr(
+            feature = "cargo-clippy",
+            allow(never_loop, cast_ptr_alignment, cast_lossless)
+        )]
+        #[inline(always)]
+        pub unsafe fn $name(
+            src: *const $src_unit,
+            dst: *mut $dst_unit,
+            len: usize,
+        ) -> Option<($src_unit, usize)> {
+            let mut offset = 0usize;
+            // This loop is only broken out of as a `goto` forward
+            loop {
+                let mut until_alignment = {
+                    // Check if the other unit aligns if we move the narrower unit
+                    // to alignment.
+                    //               if ::std::mem::size_of::<$src_unit>() == ::std::mem::size_of::<$dst_unit>() {
+                    // ascii_to_ascii
+                    //                   let src_alignment = (src as usize) & ALIGNMENT_MASK;
+                    //                   let dst_alignment = (dst as usize) & ALIGNMENT_MASK;
+                    //                   if src_alignment != dst_alignment {
+                    //                       break;
+                    //                   }
+                    //                   (ALIGNMENT - src_alignment) & ALIGNMENT_MASK
+                    //               } else
+                    if ::std::mem::size_of::<$src_unit>() < ::std::mem::size_of::<$dst_unit>() {
+                        // ascii_to_basic_latin
+                        let src_until_alignment = (ALU_ALIGNMENT
+                            - ((src as usize) & ALU_ALIGNMENT_MASK))
+                            & ALU_ALIGNMENT_MASK;
+                        if (dst.add(src_until_alignment) as usize) & ALU_ALIGNMENT_MASK != 0 {
+                            break;
+                        }
+                        src_until_alignment
+                    } else {
+                        // basic_latin_to_ascii
+                        let dst_until_alignment = (ALU_ALIGNMENT
+                            - ((dst as usize) & ALU_ALIGNMENT_MASK))
+                            & ALU_ALIGNMENT_MASK;
+                        if (src.add(dst_until_alignment) as usize) & ALU_ALIGNMENT_MASK != 0 {
+                            break;
+                        }
+                        dst_until_alignment
+>>>>>>> upstream-releases
                     }
                 };
                 if until_alignment + ALU_STRIDE_SIZE <= len {
@@ -283,6 +476,7 @@ macro_rules! basic_latin_alu {
 #[allow(unused_macros)]
 macro_rules! latin1_alu {
     ($name:ident, $src_unit:ty, $dst_unit:ty, $stride_fn:ident) => {
+<<<<<<< HEAD
         #[cfg_attr(
             feature = "cargo-clippy",
             allow(
@@ -291,6 +485,14 @@ macro_rules! latin1_alu {
                 cast_lossless
             )
         )]
+||||||| merged common ancestors
+        #[cfg_attr(feature = "cargo-clippy", allow(never_loop))]
+=======
+        #[cfg_attr(
+            feature = "cargo-clippy",
+            allow(never_loop, cast_ptr_alignment, cast_lossless)
+        )]
+>>>>>>> upstream-releases
         #[inline(always)]
         pub unsafe fn $name(src: *const $src_unit, dst: *mut $dst_unit, len: usize) {
             let mut offset = 0usize;

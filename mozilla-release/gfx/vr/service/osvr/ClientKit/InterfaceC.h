@@ -53,8 +53,17 @@ OSVR_EXTERN_C_BEGIN
     @param[out] iface The interface object. May be freed when no longer needed,
    otherwise it will be freed when the context is closed.
 */
+<<<<<<< HEAD
 OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode osvrClientGetInterface(
     OSVR_ClientContext ctx, const char path[], OSVR_ClientInterface *iface);
+||||||| merged common ancestors
+OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode
+osvrClientGetInterface(OSVR_ClientContext ctx, const char path[],
+                       OSVR_ClientInterface *iface);
+=======
+OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode osvrClientGetInterface(
+    OSVR_ClientContext ctx, const char path[], OSVR_ClientInterface* iface);
+>>>>>>> upstream-releases
 
 /** @brief Free an interface object before context closure.
 

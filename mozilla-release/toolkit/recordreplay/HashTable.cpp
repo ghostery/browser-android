@@ -105,6 +105,7 @@ class StableHashTableInfo {
 
  public:
   StableHashTableInfo()
+<<<<<<< HEAD
       : mLastKey(nullptr),
         mLastNewHash(0),
         mHashGenerator(0),
@@ -113,6 +114,22 @@ class StableHashTableInfo {
         mTable(nullptr),
         mCallbackHash(0)
   {
+||||||| merged common ancestors
+    : mMagic(MagicNumber)
+    , mLastKey(nullptr)
+    , mLastNewHash(0)
+    , mHashGenerator(0)
+    , mCallbackStorage(nullptr)
+  {
+=======
+      : mLastKey(nullptr),
+        mLastNewHash(0),
+        mHashGenerator(0),
+        mCallbackStorage(nullptr),
+        mDestroyed(false),
+        mTable(nullptr),
+        mCallbackHash(0) {
+>>>>>>> upstream-releases
     // Use AllocateMemory, as the result will have RWX permissions.
     mCallbackStorage =
         (uint8_t*)AllocateMemory(CallbackStorageCapacity, MemoryKind::Tracked);
@@ -128,6 +145,7 @@ class StableHashTableInfo {
     UnmarkValid();
   }
 
+<<<<<<< HEAD
   bool IsDestroyed() { return mDestroyed; }
 
   void MarkDestroyed() {
@@ -144,6 +162,28 @@ class StableHashTableInfo {
       MOZ_RELEASE_ASSERT(mTable == aTable);
       MOZ_RELEASE_ASSERT(mCallbackHash == HashBytes(mCallbackStorage, mCallbackStorageSize));
     }
+||||||| merged common ancestors
+  bool AppearsValid() {
+    return mMagic == MagicNumber;
+=======
+  bool IsDestroyed() { return mDestroyed; }
+
+  void MarkDestroyed() {
+    MOZ_RELEASE_ASSERT(!IsDestroyed());
+    mDestroyed = true;
+  }
+
+  void CheckIntegrity(void* aTable) {
+    MOZ_RELEASE_ASSERT(aTable);
+    if (!mTable) {
+      mTable = aTable;
+      mCallbackHash = HashBytes(mCallbackStorage, mCallbackStorageSize);
+    } else {
+      MOZ_RELEASE_ASSERT(mTable == aTable);
+      MOZ_RELEASE_ASSERT(mCallbackHash ==
+                         HashBytes(mCallbackStorage, mCallbackStorageSize));
+    }
+>>>>>>> upstream-releases
   }
 
   void AddKey(HashNumber aOriginalHash, const void* aKey, HashNumber aNewHash) {
@@ -210,6 +250,7 @@ class StableHashTableInfo {
     StableHashTableInfo& mInfo;
 
     explicit Assembler(StableHashTableInfo& aInfo)
+<<<<<<< HEAD
         : recordreplay::Assembler(aInfo.mCallbackStorage,
                                   CallbackStorageCapacity),
           mInfo(aInfo)
@@ -218,6 +259,18 @@ class StableHashTableInfo {
     ~Assembler() {
       mInfo.mCallbackStorageSize = Current() - mInfo.mCallbackStorage;
     }
+||||||| merged common ancestors
+      : recordreplay::Assembler(aInfo.mCallbackStorage, CallbackStorageCapacity)
+    {}
+=======
+        : recordreplay::Assembler(aInfo.mCallbackStorage,
+                                  CallbackStorageCapacity),
+          mInfo(aInfo) {}
+
+    ~Assembler() {
+      mInfo.mCallbackStorageSize = Current() - mInfo.mCallbackStorage;
+    }
+>>>>>>> upstream-releases
   };
 
   // Use the callback storage buffer to create a new function T which has one
@@ -397,11 +450,25 @@ static uint32_t PLHashComputeHash(void* aKey, PLHashTableInfo* aInfo) {
   MOZ_RELEASE_ASSERT(!aInfo->IsDestroyed());
   uint32_t originalHash = aInfo->mKeyHash(aKey);
   HashNumber newHash;
+<<<<<<< HEAD
   if (aInfo->HasMatchingKey(originalHash,
                             [=](const void* aExistingKey) {
                               return aInfo->mKeyCompare(aKey, aExistingKey);
                             },
                             &newHash)) {
+||||||| merged common ancestors
+  if (aInfo->HasMatchingKey(originalHash,
+                            [=](const void* aExistingKey) {
+                              return aInfo->mKeyCompare(aKey, aExistingKey);
+                            }, &newHash)) {
+=======
+  if (aInfo->HasMatchingKey(
+          originalHash,
+          [=](const void* aExistingKey) {
+            return aInfo->mKeyCompare(aKey, aExistingKey);
+          },
+          &newHash)) {
+>>>>>>> upstream-releases
     return newHash;
   }
   return aInfo->SetLastKey(aKey);
@@ -420,6 +487,7 @@ void GeneratePLHashTableCallbacks(PLHashFunction* aKeyHash,
   *aAllocPrivate = info;
 }
 
+<<<<<<< HEAD
 void DestroyPLHashTableCallbacks(void* aAllocPrivate) {
   PLHashTableInfo* info = PLHashTableInfo::MaybeFromPrivate(aAllocPrivate);
   if (info) {
@@ -433,6 +501,27 @@ void CheckPLHashTable(PLHashTable* aTable) {
   if (info) {
     info->CheckIntegrity(aTable);
   }
+||||||| merged common ancestors
+void
+DestroyPLHashTableCallbacks(void* aAllocPrivate)
+{
+  PLHashTableInfo* info = PLHashTableInfo::FromPrivate(aAllocPrivate);
+  delete info;
+=======
+void DestroyPLHashTableCallbacks(void* aAllocPrivate) {
+  PLHashTableInfo* info = PLHashTableInfo::MaybeFromPrivate(aAllocPrivate);
+  if (info) {
+    info->MarkDestroyed();
+    // delete info;
+  }
+}
+
+void CheckPLHashTable(PLHashTable* aTable) {
+  PLHashTableInfo* info = PLHashTableInfo::MaybeFromPrivate(aTable->allocPriv);
+  if (info) {
+    info->CheckIntegrity(aTable);
+  }
+>>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -481,12 +570,27 @@ static PLDHashNumber PLDHashTableComputeHash(const void* aKey,
   MOZ_RELEASE_ASSERT(!aInfo->IsDestroyed());
   uint32_t originalHash = aInfo->mOps->hashKey(aKey);
   HashNumber newHash;
+<<<<<<< HEAD
   if (aInfo->HasMatchingKey(originalHash,
                             [=](const void* aExistingKey) {
                               return aInfo->mOps->matchEntry(
                                   (PLDHashEntryHdr*)aExistingKey, aKey);
                             },
                             &newHash)) {
+||||||| merged common ancestors
+  if (aInfo->HasMatchingKey(originalHash,
+                            [=](const void* aExistingKey) {
+                              return aInfo->mOps->matchEntry((PLDHashEntryHdr*) aExistingKey, aKey);
+                            }, &newHash)) {
+=======
+  if (aInfo->HasMatchingKey(
+          originalHash,
+          [=](const void* aExistingKey) {
+            return aInfo->mOps->matchEntry((PLDHashEntryHdr*)aExistingKey,
+                                           aKey);
+          },
+          &newHash)) {
+>>>>>>> upstream-releases
     return newHash;
   }
   return aInfo->SetLastKey(aKey);

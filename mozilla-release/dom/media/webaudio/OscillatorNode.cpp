@@ -171,7 +171,7 @@ class OscillatorNodeEngine final : public AudioNodeEngine {
       detune = mDetune.GetValueAtTime(ticks, count);
     }
 
-    float finalFrequency = frequency * pow(2., detune / 1200.);
+    float finalFrequency = frequency * exp2(detune / 1200.);
     float signalPeriod = mSource->SampleRate() / finalFrequency;
     mRecomputeParameters = false;
 
@@ -368,6 +368,7 @@ class OscillatorNodeEngine final : public AudioNodeEngine {
 };
 
 OscillatorNode::OscillatorNode(AudioContext* aContext)
+<<<<<<< HEAD
     : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
                                ChannelInterpretation::Speakers),
       mType(OscillatorType::Sine),
@@ -379,6 +380,32 @@ OscillatorNode::OscillatorNode(AudioContext* aContext)
       mStartCalled(false) {
   OscillatorNodeEngine* engine =
       new OscillatorNodeEngine(this, aContext->Destination());
+||||||| merged common ancestors
+  : AudioScheduledSourceNode(aContext,
+                             2,
+                             ChannelCountMode::Max,
+                             ChannelInterpretation::Speakers)
+  , mType(OscillatorType::Sine)
+  , mFrequency(
+    new AudioParam(this, OscillatorNodeEngine::FREQUENCY, "frequency", 440.0f,
+                   -(aContext->SampleRate() / 2), aContext->SampleRate() / 2))
+  , mDetune(new AudioParam(this, OscillatorNodeEngine::DETUNE, "detune", 0.0f))
+  , mStartCalled(false)
+{
+
+  OscillatorNodeEngine* engine = new OscillatorNodeEngine(this, aContext->Destination());
+=======
+    : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
+                               ChannelInterpretation::Speakers),
+      mType(OscillatorType::Sine),
+      mStartCalled(false) {
+  CreateAudioParam(mFrequency, OscillatorNodeEngine::FREQUENCY, "frequency",
+                   440.0f, -(aContext->SampleRate() / 2),
+                   aContext->SampleRate() / 2);
+  CreateAudioParam(mDetune, OscillatorNodeEngine::DETUNE, "detune", 0.0f);
+  OscillatorNodeEngine* engine =
+      new OscillatorNodeEngine(this, aContext->Destination());
+>>>>>>> upstream-releases
   mStream = AudioNodeStream::Create(aContext, engine,
                                     AudioNodeStream::NEED_MAIN_THREAD_FINISHED,
                                     aContext->Graph());
@@ -386,6 +413,7 @@ OscillatorNode::OscillatorNode(AudioContext* aContext)
   mStream->AddMainThreadListener(this);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<OscillatorNode> OscillatorNode::Create(
     AudioContext& aAudioContext, const OscillatorOptions& aOptions,
     ErrorResult& aRv) {
@@ -393,14 +421,25 @@ OscillatorNode::OscillatorNode(AudioContext* aContext)
     return nullptr;
   }
 
-  RefPtr<OscillatorNode> audioNode = new OscillatorNode(&aAudioContext);
-
-  audioNode->Initialize(aOptions, aRv);
-  if (NS_WARN_IF(aRv.Failed())) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<OscillatorNode>
+OscillatorNode::Create(AudioContext& aAudioContext,
+                       const OscillatorOptions& aOptions,
+                       ErrorResult& aRv)
+{
+  if (aAudioContext.CheckClosed(aRv)) {
     return nullptr;
   }
 
-  audioNode->SetType(aOptions.mType, aRv);
+=======
+/* static */
+already_AddRefed<OscillatorNode> OscillatorNode::Create(
+    AudioContext& aAudioContext, const OscillatorOptions& aOptions,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
+  RefPtr<OscillatorNode> audioNode = new OscillatorNode(&aAudioContext);
+
+  audioNode->Initialize(aOptions, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return nullptr;
   }
@@ -410,6 +449,11 @@ OscillatorNode::OscillatorNode(AudioContext* aContext)
 
   if (aOptions.mPeriodicWave.WasPassed()) {
     audioNode->SetPeriodicWave(aOptions.mPeriodicWave.Value());
+  } else {
+    audioNode->SetType(aOptions.mType, aRv);
+    if (NS_WARN_IF(aRv.Failed())) {
+      return nullptr;
+    }
   }
 
   return audioNode.forget();
@@ -488,7 +532,12 @@ void OscillatorNode::Start(double aWhen, ErrorResult& aRv) {
                                   aWhen);
 
   MarkActive();
+<<<<<<< HEAD
   Context()->NotifyScheduledSourceNodeStarted();
+||||||| merged common ancestors
+=======
+  Context()->StartBlockedAudioContextIfAllowed();
+>>>>>>> upstream-releases
 }
 
 void OscillatorNode::Stop(double aWhen, ErrorResult& aRv) {

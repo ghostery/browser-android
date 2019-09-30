@@ -13,6 +13,7 @@
 #include "mozilla/DefineEnum.h"  // for MOZ_DEFINE_ENUM
 #include "mozilla/gfx/Point.h"   // for IntPoint
 #include "mozilla/Maybe.h"
+#include "mozilla/TimeStamp.h"  // for TimeStamp
 #include "mozilla/TypedEnumBits.h"
 #include "nsRegion.h"
 #include "nsStyleConsts.h"
@@ -37,6 +38,7 @@
 //#define ENABLE_FRAME_LATENCY_LOG
 
 namespace IPC {
+<<<<<<< HEAD
 template <typename T>
 struct ParamTraits;
 }  // namespace IPC
@@ -44,6 +46,18 @@ struct ParamTraits;
 namespace android {
 class MOZ_EXPORT GraphicBuffer;
 }  // namespace android
+||||||| merged common ancestors
+template <typename T> struct ParamTraits;
+} // namespace IPC
+
+namespace android {
+class MOZ_EXPORT GraphicBuffer;
+} // namespace android
+=======
+template <typename T>
+struct ParamTraits;
+}  // namespace IPC
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -158,9 +172,37 @@ enum class LayersBackend : int8_t {
   LAYERS_LAST
 };
 
+<<<<<<< HEAD
+enum class BufferMode : int8_t { BUFFER_NONE, BUFFERED };
+||||||| merged common ancestors
+enum class BufferMode : int8_t {
+  BUFFER_NONE,
+  BUFFERED
+};
+=======
+enum class TextureType : int8_t {
+  Unknown = 0,
+  D3D11,
+  DIB,
+  X11,
+  MacIOSurface,
+  AndroidNativeWindow,
+  Last
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+enum class DrawRegionClip : int8_t { DRAW, NONE };
+||||||| merged common ancestors
+enum class DrawRegionClip : int8_t {
+  DRAW,
+  NONE
+};
+=======
 enum class BufferMode : int8_t { BUFFER_NONE, BUFFERED };
 
 enum class DrawRegionClip : int8_t { DRAW, NONE };
+>>>>>>> upstream-releases
 
 enum class SurfaceMode : int8_t {
   SURFACE_NONE = 0,
@@ -362,9 +404,20 @@ typedef Array<StyleBorderStyle, 4> BorderStyles;
 typedef Maybe<LayerRect> MaybeLayerRect;
 
 // This is used to communicate Layers across IPC channels. The Handle is valid
+<<<<<<< HEAD
 // for layers in the same PLayerTransaction. Handles are created by
 // ClientLayerManager, and are cached in LayerTransactionParent on first use.
 class LayerHandle {
+||||||| merged common ancestors
+// for layers in the same PLayerTransaction. Handles are created by ClientLayerManager,
+// and are cached in LayerTransactionParent on first use.
+class LayerHandle
+{
+=======
+// for layers in the same PLayerTransaction. Handles are created by
+// ClientLayerManager, and are cached in LayerTransactionParent on first use.
+class LayerHandle final {
+>>>>>>> upstream-releases
   friend struct IPC::ParamTraits<mozilla::layers::LayerHandle>;
 
  public:
@@ -382,11 +435,26 @@ class LayerHandle {
   uint64_t mHandle;
 };
 
+<<<<<<< HEAD
 // This is used to communicate Compositables across IPC channels. The Handle is
 // valid for layers in the same PLayerTransaction or PImageBridge. Handles are
 // created by ClientLayerManager or ImageBridgeChild, and are cached in the
 // parent side on first use.
 class CompositableHandle {
+||||||| merged common ancestors
+// This is used to communicate Compositables across IPC channels. The Handle is valid
+// for layers in the same PLayerTransaction or PImageBridge. Handles are created by
+// ClientLayerManager or ImageBridgeChild, and are cached in the parent side on first
+// use.
+class CompositableHandle
+{
+=======
+// This is used to communicate Compositables across IPC channels. The Handle is
+// valid for layers in the same PLayerTransaction or PImageBridge. Handles are
+// created by ClientLayerManager or ImageBridgeChild, and are cached in the
+// parent side on first use.
+class CompositableHandle final {
+>>>>>>> upstream-releases
   friend struct IPC::ParamTraits<mozilla::layers::CompositableHandle>;
 
  public:
@@ -412,7 +480,53 @@ MOZ_DEFINE_ENUM_CLASS_WITH_BASE(ScrollDirection, uint32_t, (
 ));
 // clang-format on
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+MOZ_DEFINE_ENUM_CLASS_WITH_BASE(CompositionPayloadType, uint8_t, (
+  /**
+   * A |CompositionPayload| with this type indicates a key press happened
+   * before composition and will be used to determine latency between key press
+   * and presentation in |mozilla::Telemetry::KEYPRESS_PRESENT_LATENCY|
+   */
+  eKeyPress,
+
+  /**
+   * A |CompositionPayload| with this type indicates that an APZ scroll event
+   * occurred that will be included in the composition.
+   */
+  eAPZScroll,
+
+  /**
+   * A |CompositionPayload| with this type indicates that an APZ pinch-to-zoom
+   * event occurred that will be included in the composition.
+   */
+  eAPZPinchZoom,
+
+  /**
+   * A |CompositionPayload| with this type indicates that content was painted
+   * that will be included in the composition.
+   */
+  eContentPaint
+));
+// clang-format on
+
+struct CompositionPayload {
+  bool operator==(const CompositionPayload& aOther) const {
+    return mType == aOther.mType && mTimeStamp == aOther.mTimeStamp;
+  }
+  /* The type of payload that is in this composition */
+  CompositionPayloadType mType;
+  /* When this payload was generated */
+  TimeStamp mTimeStamp;
+};
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif /* GFX_LAYERSTYPES_H */

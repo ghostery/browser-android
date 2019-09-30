@@ -100,6 +100,7 @@ class U_I18N_API SimpleModifier : public Modifier, public UMemory {
      * @return The number of characters (UTF-16 code points) that were added to the StringBuilder.
      */
     int32_t
+<<<<<<< HEAD
     formatAsPrefixSuffix(NumberStringBuilder& result, int32_t startIndex, int32_t endIndex, Field field,
                          UErrorCode& status) const;
 
@@ -118,6 +119,29 @@ class U_I18N_API SimpleModifier : public Modifier, public UMemory {
     formatTwoArgPattern(const SimpleFormatter& compiled, NumberStringBuilder& result,
                         int32_t index, int32_t* outPrefixLength, int32_t* outSuffixLength,
                         Field field, UErrorCode& status);
+||||||| merged common ancestors
+    formatAsPrefixSuffix(NumberStringBuilder &result, int32_t startIndex, int32_t endIndex, Field field,
+                         UErrorCode &status) const;
+=======
+    formatAsPrefixSuffix(NumberStringBuilder& result, int32_t startIndex, int32_t endIndex,
+                         UErrorCode& status) const;
+
+    /**
+     * TODO: Like above, this belongs with the rest of the SimpleFormatterImpl code.
+     * I put it here so that the SimpleFormatter uses in NumberStringBuilder are near each other.
+     *
+     * <p>
+     * Applies the compiled two-argument pattern to the NumberStringBuilder.
+     *
+     * <p>
+     * This method is optimized for the case where the prefix and suffix are often empty, such as
+     * in the range pattern like "{0}-{1}".
+     */
+    static int32_t
+    formatTwoArgPattern(const SimpleFormatter& compiled, NumberStringBuilder& result,
+                        int32_t index, int32_t* outPrefixLength, int32_t* outSuffixLength,
+                        Field field, UErrorCode& status);
+>>>>>>> upstream-releases
 
   private:
     UnicodeString fCompiledPattern;

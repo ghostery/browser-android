@@ -18,10 +18,9 @@
 #include "nsContentCreatorFunctions.h"
 #include "nsError.h"
 #include "nsGkAtoms.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIFormControlFrame.h"
 #include "nsIForm.h"
-#include "nsIFormProcessor.h"
 #include "nsLayoutUtils.h"
 #include "nsMappedAttributes.h"
 #include "nsServiceManagerUtils.h"
@@ -133,13 +132,32 @@ void HTMLOptionsCollection::IndexedSetter(uint32_t aIndex,
   parent->ReplaceChild(*aOption, *refChild, aError);
 }
 
+<<<<<<< HEAD
 int32_t HTMLOptionsCollection::GetSelectedIndex(ErrorResult& aError) {
+||||||| merged common ancestors
+int32_t
+HTMLOptionsCollection::GetSelectedIndex(ErrorResult& aError)
+{
+=======
+int32_t HTMLOptionsCollection::SelectedIndex() {
+>>>>>>> upstream-releases
   return mSelect->SelectedIndex();
 }
 
+<<<<<<< HEAD
 void HTMLOptionsCollection::SetSelectedIndex(int32_t aSelectedIndex,
                                              ErrorResult& aError) {
   mSelect->SetSelectedIndex(aSelectedIndex, aError);
+||||||| merged common ancestors
+void
+HTMLOptionsCollection::SetSelectedIndex(int32_t aSelectedIndex,
+                                        ErrorResult& aError)
+{
+  mSelect->SetSelectedIndex(aSelectedIndex, aError);
+=======
+void HTMLOptionsCollection::SetSelectedIndex(int32_t aSelectedIndex) {
+  mSelect->SetSelectedIndex(aSelectedIndex);
+>>>>>>> upstream-releases
 }
 
 Element* HTMLOptionsCollection::GetElementAt(uint32_t aIndex) {
@@ -206,9 +224,19 @@ void HTMLOptionsCollection::Add(const HTMLOptionOrOptGroupElement& aElement,
   mSelect->Add(aElement, aBefore, aError);
 }
 
+<<<<<<< HEAD
 void HTMLOptionsCollection::Remove(int32_t aIndex, ErrorResult& aError) {
   mSelect->Remove(aIndex);
 }
+||||||| merged common ancestors
+void
+HTMLOptionsCollection::Remove(int32_t aIndex, ErrorResult& aError)
+{
+  mSelect->Remove(aIndex);
+}
+=======
+void HTMLOptionsCollection::Remove(int32_t aIndex) { mSelect->Remove(aIndex); }
+>>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

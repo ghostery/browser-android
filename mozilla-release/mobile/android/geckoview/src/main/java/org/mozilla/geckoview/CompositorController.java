@@ -10,20 +10,31 @@ import org.mozilla.gecko.util.ThreadUtils;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+@UiThread
 public final class CompositorController {
+<<<<<<< HEAD:mozilla-release/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CompositorController.java
     private final GeckoSession.Compositor mCompositor;
 
     public interface GetPixelsCallback {
         void onPixelsResult(int width, int height, IntBuffer pixels);
     }
+||||||| merged common ancestors
+    private final LayerSession.Compositor mCompositor;
+
+    public interface GetPixelsCallback {
+        void onPixelsResult(int width, int height, IntBuffer pixels);
+    }
+=======
+    private final GeckoSession.Compositor mCompositor;
+>>>>>>> upstream-releases:mozilla-release/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CompositorController.java
 
     private List<Runnable> mDrawCallbacks;
-    private GetPixelsCallback mGetPixelsCallback;
     private int mDefaultClearColor = Color.WHITE;
     private Runnable mFirstPaintCallback;
 
@@ -89,32 +100,6 @@ public final class CompositorController {
         }
     }
 
-    /* package */ void recvScreenPixels(final int width, final int height,
-                                        final int[] pixels) {
-        if (mGetPixelsCallback != null) {
-            mGetPixelsCallback.onPixelsResult(width, height, IntBuffer.wrap(pixels));
-            mGetPixelsCallback = null;
-        }
-    }
-
-    /**
-     * Request current pixel values from the compositor. May be called on any thread. Must
-     * not be called again until the callback is invoked.
-     *
-     * @param callback Callback for getting pixels.
-     */
-    @RobocopTarget
-    public void getPixels(final @NonNull GetPixelsCallback callback) {
-        ThreadUtils.assertOnUiThread();
-
-        if (mCompositor.isReady()) {
-            mGetPixelsCallback = callback;
-            mCompositor.requestScreenPixels();
-        } else {
-            callback.onPixelsResult(0, 0, null);
-        }
-    }
-
     /**
      * Get the current clear color when drawing.
      *
@@ -144,7 +129,7 @@ public final class CompositorController {
      *
      * @return Current first paint callback or null if not set.
      */
-    public Runnable getFirstPaintCallback() {
+    public @Nullable Runnable getFirstPaintCallback() {
         ThreadUtils.assertOnUiThread();
         return mFirstPaintCallback;
     }
@@ -154,7 +139,7 @@ public final class CompositorController {
      *
      * @param callback First paint callback.
      */
-    public void setFirstPaintCallback(final Runnable callback) {
+    public void setFirstPaintCallback(final @Nullable Runnable callback) {
         ThreadUtils.assertOnUiThread();
         mFirstPaintCallback = callback;
     }

@@ -42,8 +42,8 @@ NS_INTERFACE_MAP_BEGIN(CacheFileInputStream)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIInputStream)
 NS_INTERFACE_MAP_END
 
-CacheFileInputStream::CacheFileInputStream(CacheFile *aFile,
-                                           nsISupports *aEntry,
+CacheFileInputStream::CacheFileInputStream(CacheFile* aFile,
+                                           nsISupports* aEntry,
                                            bool aAlternativeData)
     : mFile(aFile),
       mPos(0),
@@ -75,7 +75,14 @@ CacheFileInputStream::Close() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::Available(uint64_t *_retval) {
+||||||| merged common ancestors
+CacheFileInputStream::Available(uint64_t *_retval)
+{
+=======
+CacheFileInputStream::Available(uint64_t* _retval) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   if (mClosed) {
@@ -117,14 +124,30 @@ CacheFileInputStream::Available(uint64_t *_retval) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::Read(char *aBuf, uint32_t aCount, uint32_t *_retval) {
+||||||| merged common ancestors
+CacheFileInputStream::Read(char *aBuf, uint32_t aCount, uint32_t *_retval)
+{
+=======
+CacheFileInputStream::Read(char* aBuf, uint32_t aCount, uint32_t* _retval) {
+>>>>>>> upstream-releases
   LOG(("CacheFileInputStream::Read() [this=%p, count=%d]", this, aCount));
   return ReadSegments(NS_CopySegmentToBuffer, aBuf, aCount, _retval);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure,
                                    uint32_t aCount, uint32_t *_retval) {
+||||||| merged common ancestors
+CacheFileInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure,
+                                   uint32_t aCount, uint32_t *_retval)
+{
+=======
+CacheFileInputStream::ReadSegments(nsWriteSegmentFun aWriter, void* aClosure,
+                                   uint32_t aCount, uint32_t* _retval) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(("CacheFileInputStream::ReadSegments() [this=%p, count=%d]", this,
@@ -183,7 +206,7 @@ CacheFileInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure,
     } else if (canRead > 0) {
       uint32_t toRead = std::min(static_cast<uint32_t>(canRead), aCount);
       uint32_t read;
-      const char *buf = hnd.Buf() + (mPos - hnd.Offset());
+      const char* buf = hnd.Buf() + (mPos - hnd.Offset());
 
       mInReadSegments = true;
       lock.Unlock();
@@ -237,7 +260,14 @@ CacheFileInputStream::ReadSegments(nsWriteSegmentFun aWriter, void *aClosure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::IsNonBlocking(bool *_retval) {
+||||||| merged common ancestors
+CacheFileInputStream::IsNonBlocking(bool *_retval)
+{
+=======
+CacheFileInputStream::IsNonBlocking(bool* _retval) {
+>>>>>>> upstream-releases
   *_retval = true;
   return NS_OK;
 }
@@ -296,9 +326,21 @@ void CacheFileInputStream::CleanUp() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::AsyncWait(nsIInputStreamCallback *aCallback,
                                 uint32_t aFlags, uint32_t aRequestedCount,
                                 nsIEventTarget *aEventTarget) {
+||||||| merged common ancestors
+CacheFileInputStream::AsyncWait(nsIInputStreamCallback *aCallback,
+                                uint32_t aFlags,
+                                uint32_t aRequestedCount,
+                                nsIEventTarget *aEventTarget)
+{
+=======
+CacheFileInputStream::AsyncWait(nsIInputStreamCallback* aCallback,
+                                uint32_t aFlags, uint32_t aRequestedCount,
+                                nsIEventTarget* aEventTarget) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(
@@ -396,7 +438,14 @@ CacheFileInputStream::SetEOF() {
 
 // nsITellableStream
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileInputStream::Tell(int64_t *_retval) {
+||||||| merged common ancestors
+CacheFileInputStream::Tell(int64_t *_retval)
+{
+=======
+CacheFileInputStream::Tell(int64_t* _retval) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   if (mClosed) {
@@ -416,21 +465,50 @@ CacheFileInputStream::Tell(int64_t *_retval) {
 }
 
 // CacheFileChunkListener
+<<<<<<< HEAD
 nsresult CacheFileInputStream::OnChunkRead(nsresult aResult,
                                            CacheFileChunk *aChunk) {
+||||||| merged common ancestors
+nsresult
+CacheFileInputStream::OnChunkRead(nsresult aResult, CacheFileChunk *aChunk)
+{
+=======
+nsresult CacheFileInputStream::OnChunkRead(nsresult aResult,
+                                           CacheFileChunk* aChunk) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheFileInputStream::OnChunkRead should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileInputStream::OnChunkWritten(nsresult aResult,
                                               CacheFileChunk *aChunk) {
+||||||| merged common ancestors
+nsresult
+CacheFileInputStream::OnChunkWritten(nsresult aResult, CacheFileChunk *aChunk)
+{
+=======
+nsresult CacheFileInputStream::OnChunkWritten(nsresult aResult,
+                                              CacheFileChunk* aChunk) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheFileInputStream::OnChunkWritten should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileInputStream::OnChunkAvailable(nsresult aResult,
                                                 uint32_t aChunkIdx,
                                                 CacheFileChunk *aChunk) {
+||||||| merged common ancestors
+nsresult
+CacheFileInputStream::OnChunkAvailable(nsresult aResult, uint32_t aChunkIdx,
+                                       CacheFileChunk *aChunk)
+{
+=======
+nsresult CacheFileInputStream::OnChunkAvailable(nsresult aResult,
+                                                uint32_t aChunkIdx,
+                                                CacheFileChunk* aChunk) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(("CacheFileInputStream::OnChunkAvailable() [this=%p, result=0x%08" PRIx32
@@ -484,7 +562,15 @@ nsresult CacheFileInputStream::OnChunkAvailable(nsresult aResult,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileInputStream::OnChunkUpdated(CacheFileChunk *aChunk) {
+||||||| merged common ancestors
+nsresult
+CacheFileInputStream::OnChunkUpdated(CacheFileChunk *aChunk)
+{
+=======
+nsresult CacheFileInputStream::OnChunkUpdated(CacheFileChunk* aChunk) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(("CacheFileInputStream::OnChunkUpdated() [this=%p, idx=%d]", this,
@@ -597,7 +683,15 @@ void CacheFileInputStream::EnsureCorrectChunk(bool aReleaseOnly) {
   MaybeNotifyListener();
 }
 
+<<<<<<< HEAD
 int64_t CacheFileInputStream::CanRead(CacheFileChunkReadHandle *aHandle) {
+||||||| merged common ancestors
+int64_t
+CacheFileInputStream::CanRead(CacheFileChunkReadHandle *aHandle)
+{
+=======
+int64_t CacheFileInputStream::CanRead(CacheFileChunkReadHandle* aHandle) {
+>>>>>>> upstream-releases
   mFile->AssertOwnsLock();
 
   MOZ_ASSERT(mChunk);

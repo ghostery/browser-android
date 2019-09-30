@@ -18,8 +18,8 @@
 
 // Printing Progress Includes
 #if !defined(XP_MACOSX)
-#include "nsPrintProgress.h"
-#include "nsPrintProgressParams.h"
+#  include "nsPrintProgress.h"
+#  include "nsPrintProgressParams.h"
 
 static const char* kPrintProgressDialogURL =
     "chrome://global/content/printProgress.xul";
@@ -34,8 +34,18 @@ NS_IMPL_ISUPPORTS(nsPrintingPromptService, nsIPrintingPromptService,
 
 StaticRefPtr<nsPrintingPromptService> sSingleton;
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<nsPrintingPromptService>
 nsPrintingPromptService::GetSingleton() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<nsPrintingPromptService>
+nsPrintingPromptService::GetSingleton()
+{
+=======
+/* static */
+already_AddRefed<nsPrintingPromptService>
+nsPrintingPromptService::GetSingleton() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess(),
              "The content process must use nsPrintingProxy");
 
@@ -79,6 +89,7 @@ nsPrintingPromptService::ShowPrintDialog(mozIDOMWindowProxy* parent,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPrintingPromptService::ShowProgress(
     mozIDOMWindowProxy* parent,
     nsIWebBrowserPrint* webBrowserPrint,  // ok to be null
@@ -86,6 +97,26 @@ nsPrintingPromptService::ShowProgress(
     nsIObserver* openDialogObserver,      // ok to be null
     bool isForPrinting, nsIWebProgressListener** webProgressListener,
     nsIPrintProgressParams** printProgressParams, bool* notifyOnOpen) {
+||||||| merged common ancestors
+nsPrintingPromptService::ShowProgress(
+  mozIDOMWindowProxy* parent,
+  nsIWebBrowserPrint* webBrowserPrint, // ok to be null
+  nsIPrintSettings* printSettings,     // ok to be null
+  nsIObserver* openDialogObserver,     // ok to be null
+  bool isForPrinting,
+  nsIWebProgressListener** webProgressListener,
+  nsIPrintProgressParams** printProgressParams,
+  bool* notifyOnOpen)
+{
+=======
+nsPrintingPromptService::ShowPrintProgressDialog(
+    mozIDOMWindowProxy* parent,
+    nsIWebBrowserPrint* webBrowserPrint,  // ok to be null
+    nsIPrintSettings* printSettings,      // ok to be null
+    nsIObserver* openDialogObserver,      // ok to be null
+    bool isForPrinting, nsIWebProgressListener** webProgressListener,
+    nsIPrintProgressParams** printProgressParams, bool* notifyOnOpen) {
+>>>>>>> upstream-releases
 #if !defined(XP_MACOSX)
   NS_ENSURE_ARG(webProgressListener);
   NS_ENSURE_ARG(printProgressParams);
@@ -128,8 +159,17 @@ nsPrintingPromptService::ShowProgress(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPrintingPromptService::ShowPageSetup(mozIDOMWindowProxy* parent,
                                        nsIPrintSettings* printSettings) {
+||||||| merged common ancestors
+nsPrintingPromptService::ShowPageSetup(mozIDOMWindowProxy* parent,
+                                       nsIPrintSettings* printSettings)
+{
+=======
+nsPrintingPromptService::ShowPageSetupDialog(mozIDOMWindowProxy* parent,
+                                             nsIPrintSettings* printSettings) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(printSettings);
 
   nsCOMPtr<nsIPrintDialogService> dlgPrint(
@@ -205,11 +245,42 @@ nsPrintingPromptService::OnStatusChange(nsIWebProgress* aWebProgress,
 NS_IMETHODIMP
 nsPrintingPromptService::OnSecurityChange(nsIWebProgress* aWebProgress,
                                           nsIRequest* aRequest,
+<<<<<<< HEAD
                                           uint32_t state) {
+||||||| merged common ancestors
+                                          uint32_t aOldState,
+                                          uint32_t aState,
+                                          const nsAString& aContentBlockingLogJSON)
+{
+=======
+                                          uint32_t aState) {
 #if !defined(XP_MACOSX)
   if (mWebProgressListener) {
     return mWebProgressListener->OnSecurityChange(aWebProgress, aRequest,
+                                                  aState);
+  }
+#endif
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsPrintingPromptService::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
+                                                nsIRequest* aRequest,
+                                                uint32_t aEvent) {
+>>>>>>> upstream-releases
+#if !defined(XP_MACOSX)
+  if (mWebProgressListener) {
+<<<<<<< HEAD
+    return mWebProgressListener->OnSecurityChange(aWebProgress, aRequest,
                                                   state);
+||||||| merged common ancestors
+    return mWebProgressListener->OnSecurityChange(
+      aWebProgress, aRequest, aOldState, aState,
+      aContentBlockingLogJSON);
+=======
+    return mWebProgressListener->OnContentBlockingEvent(aWebProgress, aRequest,
+                                                        aEvent);
+>>>>>>> upstream-releases
   }
 #endif
   return NS_OK;

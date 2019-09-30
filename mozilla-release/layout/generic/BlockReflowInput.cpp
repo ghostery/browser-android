@@ -20,7 +20,7 @@
 #include "TextOverflow.h"
 
 #ifdef DEBUG
-#include "nsBlockDebugFlags.h"
+#  include "nsBlockDebugFlags.h"
 #endif
 
 using namespace mozilla;
@@ -97,7 +97,15 @@ BlockReflowInput::BlockReflowInput(const ReflowInput& aReflowInput,
   if (aBlockNeedsFloatManager) {
     mFlags.mBlockNeedsFloatManager = true;
   }
-  mFlags.mCanHaveTextOverflow = css::TextOverflow::CanHaveTextOverflow(mBlock);
+
+  // We need to check mInsideLineClamp here since we are here before the block
+  // has been reflowed, and CanHaveOverflowMarkers() relies on the block's
+  // NS_BLOCK_HAS_LINE_CLAMP_ELLIPSIS state bit to know if a -webkit-line-clamp
+  // ellipsis is set on one of the block's lines.  And that state bit is only
+  // set after we do the bsize measuring reflow of the flex item.
+  mFlags.mCanHaveOverflowMarkers =
+      aReflowInput.mFlags.mInsideLineClamp ||
+      css::TextOverflow::CanHaveOverflowMarkers(mBlock);
 
   MOZ_ASSERT(FloatManager(),
              "Float manager should be valid when creating BlockReflowInput!");
@@ -141,8 +149,18 @@ BlockReflowInput::BlockReflowInput(const ReflowInput& aReflowInput,
   mMinLineHeight = aReflowInput.CalcLineHeight();
 }
 
+<<<<<<< HEAD
 nscoord BlockReflowInput::ConsumedBSize() {
   if (mConsumedBSize == NS_INTRINSICSIZE) {
+||||||| merged common ancestors
+nscoord
+BlockReflowInput::ConsumedBSize()
+{
+  if (mConsumedBSize == NS_INTRINSICSIZE) {
+=======
+nscoord BlockReflowInput::ConsumedBSize() {
+  if (mConsumedBSize == NS_UNCONSTRAINEDSIZE) {
+>>>>>>> upstream-releases
     mConsumedBSize = mBlock->ConsumedBSize(mReflowInput.GetWritingMode());
   }
 
@@ -206,11 +224,28 @@ static nscoord GetBEndMarginClone(nsIFrame* aFrame,
 }
 
 // Compute the amount of available space for reflowing a block frame
+<<<<<<< HEAD
 // at the current Y coordinate. This method assumes that
 // GetAvailableSpace has already been called.
 void BlockReflowInput::ComputeBlockAvailSpace(
     nsIFrame* aFrame, const nsFlowAreaRect& aFloatAvailableSpace,
     bool aBlockAvoidsFloats, LogicalRect& aResult) {
+||||||| merged common ancestors
+// at the current Y coordinate. This method assumes that
+// GetAvailableSpace has already been called.
+void
+BlockReflowInput::ComputeBlockAvailSpace(nsIFrame* aFrame,
+                                         const nsFlowAreaRect& aFloatAvailableSpace,
+                                         bool aBlockAvoidsFloats,
+                                         LogicalRect& aResult)
+{
+=======
+// at the current block-direction coordinate. This method assumes that
+// GetFloatAvailableSpace has already been called.
+void BlockReflowInput::ComputeBlockAvailSpace(
+    nsIFrame* aFrame, const nsFlowAreaRect& aFloatAvailableSpace,
+    bool aBlockAvoidsFloats, LogicalRect& aResult) {
+>>>>>>> upstream-releases
 #ifdef REALLY_NOISY_REFLOW
   printf("CBAS frame=%p has floats %d\n", aFrame,
          aFloatAvailableSpace.HasFloats());
@@ -383,7 +418,7 @@ nsFlowAreaRect BlockReflowInput::GetFloatAvailableSpaceForBSize(
  *
  * The reconstruction involves walking backward through the line list to
  * find any collapsed margins preceding the line that would have been in
- * the reflow state's |mPrevBEndMargin| when we reflowed that line in
+ * the reflow input's |mPrevBEndMargin| when we reflowed that line in
  * a full reflow (under the rule in CSS2 that all adjacent vertical
  * margins of blocks collapse).
  */
@@ -469,6 +504,7 @@ void BlockReflowInput::RecoverFloats(nsLineList::iterator aLine,
         nscoord tI, tB;
         FloatManager()->GetTranslation(tI, tB);
         nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
+<<<<<<< HEAD
         printf("RecoverFloats: tIB=%d,%d (%d,%d) ", tI, tB, mFloatManagerI,
                mFloatManagerB);
         nsFrame::ListTag(stdout, floatFrame);
@@ -477,6 +513,25 @@ void BlockReflowInput::RecoverFloats(nsLineList::iterator aLine,
         printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n", aDeltaBCoord,
                region.IStart(wm), region.BStart(wm), region.ISize(wm),
                region.BSize(wm));
+||||||| merged common ancestors
+        printf("RecoverFloats: tIB=%d,%d (%d,%d) ",
+               tI, tB, mFloatManagerI, mFloatManagerB);
+        nsFrame::ListTag(stdout, floatFrame);
+        LogicalRect region = nsFloatManager::GetRegionFor(wm, floatFrame,
+                                                          ContainerSize());
+        printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n",
+               aDeltaBCoord, region.IStart(wm), region.BStart(wm),
+               region.ISize(wm), region.BSize(wm));
+=======
+        printf("RecoverFloats: tIB=%d,%d (%d,%d) ", tI, tB, mFloatManagerI,
+               mFloatManagerB);
+        floatFrame->ListTag(stdout);
+        LogicalRect region =
+            nsFloatManager::GetRegionFor(wm, floatFrame, ContainerSize());
+        printf(" aDeltaBCoord=%d region={%d,%d,%d,%d}\n", aDeltaBCoord,
+               region.IStart(wm), region.BStart(wm), region.ISize(wm),
+               region.BSize(wm));
+>>>>>>> upstream-releases
       }
 #endif
       FloatManager()->AddFloat(
@@ -538,7 +593,7 @@ bool BlockReflowInput::AddFloat(nsLineLayout* aLineLayout, nsIFrame* aFloat,
              "aFloat must be an out-of-flow frame");
 
   MOZ_ASSERT(aFloat->GetParent(), "float must have parent");
-  MOZ_ASSERT(aFloat->GetParent()->IsFrameOfType(nsIFrame::eBlockFrame),
+  MOZ_ASSERT(aFloat->GetParent()->IsBlockFrameOrSubclass(),
              "float's parent must be block");
   if (aFloat->HasAnyStateBits(NS_FRAME_IS_PUSHED_FLOAT) ||
       aFloat->GetParent() != mBlock) {
@@ -686,7 +741,7 @@ static nscoord FloatMarginISize(const ReflowInput& aCBReflowInput,
 struct ShapeInvalidationData {
   StyleShapeSource mShapeOutside;
   float mShapeImageThreshold = 0.0;
-  nsStyleCoord mShapeMargin;
+  mozilla::LengthPercentage mShapeMargin;
 
   ShapeInvalidationData() = default;
 
@@ -1023,7 +1078,7 @@ bool BlockReflowInput::FlowAndPlaceFloat(nsIFrame* aFloat) {
   if (nsBlockFrame::gNoisyFloatManager) {
     nscoord tI, tB;
     FloatManager()->GetTranslation(tI, tB);
-    nsIFrame::ListTag(stdout, mBlock);
+    mBlock->ListTag(stdout);
     printf(": FlowAndPlaceFloat: AddFloat: tIB=%d,%d (%d,%d) {%d,%d,%d,%d}\n",
            tI, tB, mFloatManagerI, mFloatManagerB, region.IStart(wm),
            region.BStart(wm), region.ISize(wm), region.BSize(wm));
@@ -1033,7 +1088,7 @@ bool BlockReflowInput::FlowAndPlaceFloat(nsIFrame* aFloat) {
     nsRect r = aFloat->GetRect();
     nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
     printf("placed float: ");
-    nsFrame::ListTag(stdout, aFloat);
+    aFloat->ListTag(stdout);
     printf(" %d,%d,%d,%d\n", r.x, r.y, r.width, r.height);
   }
 #endif
@@ -1074,7 +1129,7 @@ void BlockReflowInput::PlaceBelowCurrentLineFloats(nsLineBox* aLine) {
     if (nsBlockFrame::gNoisyReflow) {
       nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
       printf("placing bcl float: ");
-      nsFrame::ListTag(stdout, fc->mFloat);
+      fc->mFloat->ListTag(stdout);
       printf("\n");
     }
 #endif

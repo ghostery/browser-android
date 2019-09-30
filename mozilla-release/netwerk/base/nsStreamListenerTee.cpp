@@ -12,6 +12,7 @@ NS_IMPL_ISUPPORTS(nsStreamListenerTee, nsIStreamListener, nsIRequestObserver,
                   nsIStreamListenerTee, nsIThreadRetargetableStreamListener)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamListenerTee::OnStartRequest(nsIRequest *request, nsISupports *context) {
   NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
   nsresult rv1 = mListener->OnStartRequest(request, context);
@@ -20,9 +21,32 @@ nsStreamListenerTee::OnStartRequest(nsIRequest *request, nsISupports *context) {
 
   // Preserve NS_SUCCESS_XXX in rv1 in case mObserver didn't throw
   return (NS_FAILED(rv2) && NS_SUCCEEDED(rv1)) ? rv2 : rv1;
+||||||| merged common ancestors
+nsStreamListenerTee::OnStartRequest(nsIRequest *request,
+                                    nsISupports *context)
+{
+    NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+    nsresult rv1 = mListener->OnStartRequest(request, context);
+    nsresult rv2 = NS_OK;
+    if (mObserver)
+        rv2 = mObserver->OnStartRequest(request, context);
+
+    // Preserve NS_SUCCESS_XXX in rv1 in case mObserver didn't throw
+    return (NS_FAILED(rv2) && NS_SUCCEEDED(rv1)) ? rv2 : rv1;
+=======
+nsStreamListenerTee::OnStartRequest(nsIRequest* request) {
+  NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+  nsresult rv1 = mListener->OnStartRequest(request);
+  nsresult rv2 = NS_OK;
+  if (mObserver) rv2 = mObserver->OnStartRequest(request);
+
+  // Preserve NS_SUCCESS_XXX in rv1 in case mObserver didn't throw
+  return (NS_FAILED(rv2) && NS_SUCCEEDED(rv1)) ? rv2 : rv1;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamListenerTee::OnStopRequest(nsIRequest *request, nsISupports *context,
                                    nsresult status) {
   NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
@@ -43,9 +67,57 @@ nsStreamListenerTee::OnStopRequest(nsIRequest *request, nsISupports *context,
   if (mObserver) mObserver->OnStopRequest(request, context, status);
   mObserver = nullptr;
   return rv;
+||||||| merged common ancestors
+nsStreamListenerTee::OnStopRequest(nsIRequest *request,
+                                   nsISupports *context,
+                                   nsresult status)
+{
+    NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+    // it is critical that we close out the input stream tee
+    if (mInputTee) {
+        mInputTee->SetSink(nullptr);
+        mInputTee = nullptr;
+    }
+
+    // release sink on the same thread where the data was written (bug 716293)
+    if (mEventTarget) {
+      NS_ProxyRelease(
+        "nsStreamListenerTee::mSink", mEventTarget, mSink.forget());
+    }
+    else {
+        mSink = nullptr;
+    }
+
+    nsresult rv = mListener->OnStopRequest(request, context, status);
+    if (mObserver)
+        mObserver->OnStopRequest(request, context, status);
+    mObserver = nullptr;
+    return rv;
+=======
+nsStreamListenerTee::OnStopRequest(nsIRequest* request, nsresult status) {
+  NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+  // it is critical that we close out the input stream tee
+  if (mInputTee) {
+    mInputTee->SetSink(nullptr);
+    mInputTee = nullptr;
+  }
+
+  // release sink on the same thread where the data was written (bug 716293)
+  if (mEventTarget) {
+    NS_ProxyRelease("nsStreamListenerTee::mSink", mEventTarget, mSink.forget());
+  } else {
+    mSink = nullptr;
+  }
+
+  nsresult rv = mListener->OnStopRequest(request, status);
+  if (mObserver) mObserver->OnStopRequest(request, status);
+  mObserver = nullptr;
+  return rv;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamListenerTee::OnDataAvailable(nsIRequest *request, nsISupports *context,
                                      nsIInputStream *input, uint64_t offset,
                                      uint32_t count) {
@@ -74,6 +146,68 @@ nsStreamListenerTee::OnDataAvailable(nsIRequest *request, nsISupports *context,
   }
 
   return mListener->OnDataAvailable(request, context, tee, offset, count);
+||||||| merged common ancestors
+nsStreamListenerTee::OnDataAvailable(nsIRequest *request,
+                                     nsISupports *context,
+                                     nsIInputStream *input,
+                                     uint64_t offset,
+                                     uint32_t count)
+{
+    NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+    NS_ENSURE_TRUE(mSink, NS_ERROR_NOT_INITIALIZED);
+
+    nsCOMPtr<nsIInputStream> tee;
+    nsresult rv;
+
+    if (!mInputTee) {
+        if (mEventTarget)
+            rv = NS_NewInputStreamTeeAsync(getter_AddRefs(tee), input,
+                                           mSink, mEventTarget);
+        else
+            rv = NS_NewInputStreamTee(getter_AddRefs(tee), input, mSink);
+        if (NS_FAILED(rv)) return rv;
+
+        mInputTee = do_QueryInterface(tee, &rv);
+        if (NS_FAILED(rv)) return rv;
+    }
+    else {
+        // re-initialize the input tee since the input stream may have changed.
+        rv = mInputTee->SetSource(input);
+        if (NS_FAILED(rv)) return rv;
+
+        tee = mInputTee;
+    }
+
+    return mListener->OnDataAvailable(request, context, tee, offset, count);
+=======
+nsStreamListenerTee::OnDataAvailable(nsIRequest* request, nsIInputStream* input,
+                                     uint64_t offset, uint32_t count) {
+  NS_ENSURE_TRUE(mListener, NS_ERROR_NOT_INITIALIZED);
+  NS_ENSURE_TRUE(mSink, NS_ERROR_NOT_INITIALIZED);
+
+  nsCOMPtr<nsIInputStream> tee;
+  nsresult rv;
+
+  if (!mInputTee) {
+    if (mEventTarget)
+      rv = NS_NewInputStreamTeeAsync(getter_AddRefs(tee), input, mSink,
+                                     mEventTarget);
+    else
+      rv = NS_NewInputStreamTee(getter_AddRefs(tee), input, mSink);
+    if (NS_FAILED(rv)) return rv;
+
+    mInputTee = do_QueryInterface(tee, &rv);
+    if (NS_FAILED(rv)) return rv;
+  } else {
+    // re-initialize the input tee since the input stream may have changed.
+    rv = mInputTee->SetSource(input);
+    if (NS_FAILED(rv)) return rv;
+
+    tee = mInputTee;
+  }
+
+  return mListener->OnDataAvailable(request, tee, offset, count);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -99,6 +233,7 @@ nsStreamListenerTee::CheckListenerChain() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamListenerTee::Init(nsIStreamListener *listener, nsIOutputStream *sink,
                           nsIRequestObserver *requestObserver) {
   NS_ENSURE_ARG_POINTER(listener);
@@ -107,9 +242,31 @@ nsStreamListenerTee::Init(nsIStreamListener *listener, nsIOutputStream *sink,
   mSink = sink;
   mObserver = requestObserver;
   return NS_OK;
+||||||| merged common ancestors
+nsStreamListenerTee::Init(nsIStreamListener *listener,
+                          nsIOutputStream *sink,
+                          nsIRequestObserver *requestObserver)
+{
+    NS_ENSURE_ARG_POINTER(listener);
+    NS_ENSURE_ARG_POINTER(sink);
+    mListener = listener;
+    mSink = sink;
+    mObserver = requestObserver;
+    return NS_OK;
+=======
+nsStreamListenerTee::Init(nsIStreamListener* listener, nsIOutputStream* sink,
+                          nsIRequestObserver* requestObserver) {
+  NS_ENSURE_ARG_POINTER(listener);
+  NS_ENSURE_ARG_POINTER(sink);
+  mListener = listener;
+  mSink = sink;
+  mObserver = requestObserver;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamListenerTee::InitAsync(nsIStreamListener *listener,
                                nsIEventTarget *eventTarget,
                                nsIOutputStream *sink,
@@ -117,6 +274,24 @@ nsStreamListenerTee::InitAsync(nsIStreamListener *listener,
   NS_ENSURE_ARG_POINTER(eventTarget);
   mEventTarget = eventTarget;
   return Init(listener, sink, requestObserver);
+||||||| merged common ancestors
+nsStreamListenerTee::InitAsync(nsIStreamListener *listener,
+                               nsIEventTarget *eventTarget,
+                               nsIOutputStream *sink,
+                               nsIRequestObserver *requestObserver)
+{
+    NS_ENSURE_ARG_POINTER(eventTarget);
+    mEventTarget = eventTarget;
+    return Init(listener, sink, requestObserver);
+=======
+nsStreamListenerTee::InitAsync(nsIStreamListener* listener,
+                               nsIEventTarget* eventTarget,
+                               nsIOutputStream* sink,
+                               nsIRequestObserver* requestObserver) {
+  NS_ENSURE_ARG_POINTER(eventTarget);
+  mEventTarget = eventTarget;
+  return Init(listener, sink, requestObserver);
+>>>>>>> upstream-releases
 }
 
 }  // namespace net

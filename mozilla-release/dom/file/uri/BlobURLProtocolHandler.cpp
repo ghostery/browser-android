@@ -17,7 +17,6 @@
 #include "mozilla/dom/MediaSource.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
 #include "mozilla/LoadInfo.h"
-#include "mozilla/ModuleUtils.h"
 #include "mozilla/NullPrincipal.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/SystemGroup.h"
@@ -74,6 +73,14 @@ struct DataInfo {
   bool mRevoked;
 };
 
+// The mutex is locked whenever gDataTable is changed, or if gDataTable
+// is accessed off-main-thread.
+static StaticMutex sMutex;
+
+// All changes to gDataTable must happen on the main thread, while locking
+// sMutex. Reading from gDataTable on the main thread may happen without
+// locking, since no changes are possible. Reading it from another thread
+// must also lock sMutex to prevent data races.
 static nsClassHashtable<nsCStringHashKey, DataInfo>* gDataTable;
 
 static DataInfo* GetDataInfo(const nsACString& aUri,
@@ -166,7 +173,16 @@ class BlobURLsReporter final : public nsIMemoryReporter {
   NS_DECL_ISUPPORTS
 
   NS_IMETHOD CollectReports(nsIHandleReportCallback* aCallback,
+<<<<<<< HEAD
                             nsISupports* aData, bool aAnonymize) override {
+||||||| merged common ancestors
+                            nsISupports* aData, bool aAnonymize) override
+  {
+=======
+                            nsISupports* aData, bool aAnonymize) override {
+    MOZ_ASSERT(NS_IsMainThread(),
+               "without locking gDataTable is main-thread only");
+>>>>>>> upstream-releases
     if (!gDataTable) {
       return NS_OK;
     }
@@ -462,8 +478,17 @@ class ReleasingTimerHolder final : public Runnable,
       phase->RemoveBlocker(this);
     }
 
+<<<<<<< HEAD
     DataInfo* info =
         GetDataInfo(mURI, true /* We care about revoked dataInfo */);
+||||||| merged common ancestors
+    DataInfo* info = GetDataInfo(mURI, true /* We care about revoked dataInfo */);
+=======
+    MOZ_ASSERT(NS_IsMainThread(),
+               "without locking gDataTable is main-thread only");
+    DataInfo* info =
+        GetDataInfo(mURI, true /* We care about revoked dataInfo */);
+>>>>>>> upstream-releases
     if (!info) {
       // Already gone!
       return;
@@ -471,6 +496,7 @@ class ReleasingTimerHolder final : public Runnable,
 
     MOZ_ASSERT(info->mRevoked);
 
+    StaticMutexAutoLock lock(sMutex);
     gDataTable->Remove(mURI);
     if (gDataTable->Count() == 0) {
       delete gDataTable;
@@ -505,9 +531,23 @@ class ReleasingTimerHolder final : public Runnable,
 NS_IMPL_ISUPPORTS_INHERITED(ReleasingTimerHolder, Runnable, nsITimerCallback,
                             nsIAsyncShutdownBlocker)
 
+<<<<<<< HEAD
 template <typename T>
 static nsresult AddDataEntryInternal(const nsACString& aURI, T aObject,
                                      nsIPrincipal* aPrincipal) {
+||||||| merged common ancestors
+template<typename T>
+static nsresult
+AddDataEntryInternal(const nsACString& aURI, T aObject,
+                     nsIPrincipal* aPrincipal)
+{
+=======
+template <typename T>
+static nsresult AddDataEntryInternal(const nsACString& aURI, T aObject,
+                                     nsIPrincipal* aPrincipal) {
+  MOZ_ASSERT(NS_IsMainThread(), "changing gDataTable is main-thread only");
+  StaticMutexAutoLock lock(sMutex);
+>>>>>>> upstream-releases
   if (!gDataTable) {
     gDataTable = new nsClassHashtable<nsCStringHashKey, DataInfo>;
   }
@@ -532,8 +572,21 @@ BlobURLProtocolHandler::BlobURLProtocolHandler() { Init(); }
 
 BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
 
+<<<<<<< HEAD
 /* static */ nsresult BlobURLProtocolHandler::AddDataEntry(
     BlobImpl* aBlobImpl, nsIPrincipal* aPrincipal, nsACString& aUri) {
+||||||| merged common ancestors
+/* static */ nsresult
+BlobURLProtocolHandler::AddDataEntry(BlobImpl* aBlobImpl,
+                                     nsIPrincipal* aPrincipal,
+                                     nsACString& aUri)
+{
+=======
+/* static */
+nsresult BlobURLProtocolHandler::AddDataEntry(BlobImpl* aBlobImpl,
+                                              nsIPrincipal* aPrincipal,
+                                              nsACString& aUri) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aBlobImpl);
   MOZ_ASSERT(aPrincipal);
 
@@ -549,8 +602,21 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ nsresult BlobURLProtocolHandler::AddDataEntry(
     MediaSource* aMediaSource, nsIPrincipal* aPrincipal, nsACString& aUri) {
+||||||| merged common ancestors
+/* static */ nsresult
+BlobURLProtocolHandler::AddDataEntry(MediaSource* aMediaSource,
+                                     nsIPrincipal* aPrincipal,
+                                     nsACString& aUri)
+{
+=======
+/* static */
+nsresult BlobURLProtocolHandler::AddDataEntry(MediaSource* aMediaSource,
+                                              nsIPrincipal* aPrincipal,
+                                              nsACString& aUri) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aMediaSource);
   MOZ_ASSERT(aPrincipal);
 
@@ -565,17 +631,43 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ nsresult BlobURLProtocolHandler::AddDataEntry(
     const nsACString& aURI, nsIPrincipal* aPrincipal, BlobImpl* aBlobImpl) {
+||||||| merged common ancestors
+/* static */ nsresult
+BlobURLProtocolHandler::AddDataEntry(const nsACString& aURI,
+                                     nsIPrincipal* aPrincipal,
+                                     BlobImpl* aBlobImpl)
+{
+=======
+/* static */
+nsresult BlobURLProtocolHandler::AddDataEntry(const nsACString& aURI,
+                                              nsIPrincipal* aPrincipal,
+                                              BlobImpl* aBlobImpl) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aPrincipal);
   MOZ_ASSERT(aBlobImpl);
 
   return AddDataEntryInternal(aURI, aBlobImpl, aPrincipal);
 }
 
+<<<<<<< HEAD
 /* static */ bool BlobURLProtocolHandler::GetAllBlobURLEntries(
     nsTArray<BlobURLRegistrationData>& aRegistrations, ContentParent* aCP) {
+||||||| merged common ancestors
+/* static */ bool
+BlobURLProtocolHandler::GetAllBlobURLEntries(nsTArray<BlobURLRegistrationData>& aRegistrations,
+                                             ContentParent* aCP)
+{
+=======
+/* static */
+bool BlobURLProtocolHandler::GetAllBlobURLEntries(
+    nsTArray<BlobURLRegistrationData>& aRegistrations, ContentParent* aCP) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCP);
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
 
   if (!gDataTable) {
     return true;
@@ -605,18 +697,32 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   return true;
 }
 
+<<<<<<< HEAD
 /*static */ void BlobURLProtocolHandler::RemoveDataEntry(
     const nsACString& aUri, bool aBroadcastToOtherProcesses) {
+||||||| merged common ancestors
+/*static */ void
+BlobURLProtocolHandler::RemoveDataEntry(const nsACString& aUri,
+                                        bool aBroadcastToOtherProcesses)
+{
+=======
+/*static */
+void BlobURLProtocolHandler::RemoveDataEntry(const nsACString& aUri,
+                                             bool aBroadcastToOtherProcesses) {
+  MOZ_ASSERT(NS_IsMainThread(), "changing gDataTable is main-thread only");
+>>>>>>> upstream-releases
   if (!gDataTable) {
     return;
   }
-
   DataInfo* info = GetDataInfo(aUri);
   if (!info) {
     return;
   }
 
-  info->mRevoked = true;
+  {
+    StaticMutexAutoLock lock(sMutex);
+    info->mRevoked = true;
+  }
 
   if (aBroadcastToOtherProcesses && info->mObjectType == DataInfo::eBlobImpl) {
     BroadcastBlobURLUnregistration(nsCString(aUri));
@@ -628,7 +734,18 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   ReleasingTimerHolder::Create(aUri);
 }
 
+<<<<<<< HEAD
 /* static */ void BlobURLProtocolHandler::RemoveDataEntries() {
+||||||| merged common ancestors
+/* static */ void
+BlobURLProtocolHandler::RemoveDataEntries()
+{
+=======
+/* static */
+void BlobURLProtocolHandler::RemoveDataEntries() {
+  MOZ_ASSERT(NS_IsMainThread(), "changing gDataTable is main-thread only");
+  StaticMutexAutoLock lock(sMutex);
+>>>>>>> upstream-releases
   if (!gDataTable) {
     return;
   }
@@ -638,12 +755,34 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   gDataTable = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ bool BlobURLProtocolHandler::HasDataEntry(const nsACString& aUri) {
+||||||| merged common ancestors
+/* static */ bool
+BlobURLProtocolHandler::HasDataEntry(const nsACString& aUri)
+{
+=======
+/* static */
+bool BlobURLProtocolHandler::HasDataEntry(const nsACString& aUri) {
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
+>>>>>>> upstream-releases
   return !!GetDataInfo(aUri);
 }
 
+<<<<<<< HEAD
 /* static */ nsresult BlobURLProtocolHandler::GenerateURIString(
     nsIPrincipal* aPrincipal, nsACString& aUri) {
+||||||| merged common ancestors
+/* static */ nsresult
+BlobURLProtocolHandler::GenerateURIString(nsIPrincipal* aPrincipal,
+                                          nsACString& aUri)
+{
+=======
+/* static */
+nsresult BlobURLProtocolHandler::GenerateURIString(nsIPrincipal* aPrincipal,
+                                                   nsACString& aUri) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIUUIDGenerator> uuidgen =
       do_GetService("@mozilla.org/uuid-generator;1", &rv);
@@ -675,8 +814,20 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ nsIPrincipal* BlobURLProtocolHandler::GetDataEntryPrincipal(
     const nsACString& aUri) {
+||||||| merged common ancestors
+/* static */ nsIPrincipal*
+BlobURLProtocolHandler::GetDataEntryPrincipal(const nsACString& aUri)
+{
+=======
+/* static */
+nsIPrincipal* BlobURLProtocolHandler::GetDataEntryPrincipal(
+    const nsACString& aUri) {
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
+>>>>>>> upstream-releases
   if (!gDataTable) {
     return nullptr;
   }
@@ -690,8 +841,21 @@ BlobURLProtocolHandler::~BlobURLProtocolHandler() = default;
   return res->mPrincipal;
 }
 
+<<<<<<< HEAD
 /* static */ void BlobURLProtocolHandler::Traverse(
     const nsACString& aUri, nsCycleCollectionTraversalCallback& aCallback) {
+||||||| merged common ancestors
+/* static */ void
+BlobURLProtocolHandler::Traverse(const nsACString& aUri,
+                                 nsCycleCollectionTraversalCallback& aCallback)
+{
+=======
+/* static */
+void BlobURLProtocolHandler::Traverse(
+    const nsACString& aUri, nsCycleCollectionTraversalCallback& aCallback) {
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
+>>>>>>> upstream-releases
   if (!gDataTable) {
     return;
   }
@@ -737,22 +901,51 @@ BlobURLProtocolHandler::GetFlagsForURI(nsIURI* aURI, uint32_t* aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 BlobURLProtocolHandler::NewURI(const nsACString& aSpec, const char* aCharset,
                                nsIURI* aBaseURI, nsIURI** aResult) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+BlobURLProtocolHandler::NewURI(const nsACString& aSpec,
+                               const char *aCharset,
+                               nsIURI *aBaseURI,
+                               nsIURI **aResult)
+{
+=======
+/* static */ nsresult BlobURLProtocolHandler::CreateNewURI(
+    const nsACString& aSpec, const char* aCharset, nsIURI* aBaseURI,
+    nsIURI** aResult) {
+>>>>>>> upstream-releases
   *aResult = nullptr;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIURI> uri;
   nsresult rv =
       NS_MutateURI(new BlobURL::Mutator()).SetSpec(aSpec).Finalize(uri);
   NS_ENSURE_SUCCESS(rv, rv);
 
+||||||| merged common ancestors
+  nsCOMPtr<nsIURI> uri;
+  nsresult rv = NS_MutateURI(new BlobURL::Mutator())
+                  .SetSpec(aSpec)
+                  .Finalize(uri);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+=======
+  // This method can be called on any thread, which is why we lock the mutex
+  // for read access to gDataTable.
+>>>>>>> upstream-releases
   bool revoked = true;
-  DataInfo* info = GetDataInfo(aSpec);
-  if (info && info->mObjectType == DataInfo::eBlobImpl) {
-    revoked = info->mRevoked;
+  {
+    StaticMutexAutoLock lock(sMutex);
+    DataInfo* info = GetDataInfo(aSpec);
+    if (info && info->mObjectType == DataInfo::eBlobImpl) {
+      revoked = info->mRevoked;
+    }
   }
 
+<<<<<<< HEAD
   RefPtr<BlobURL> blobURL;
   rv = uri->QueryInterface(kHOSTOBJECTURICID, getter_AddRefs(blobURL));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -762,11 +955,38 @@ BlobURLProtocolHandler::NewURI(const nsACString& aSpec, const char* aCharset,
 
   uri.forget(aResult);
   return NS_OK;
+||||||| merged common ancestors
+  RefPtr<BlobURL> blobURL;
+  rv = uri->QueryInterface(kHOSTOBJECTURICID,
+                           getter_AddRefs(blobURL));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  MOZ_ASSERT(blobURL);
+  blobURL->mRevoked = revoked;
+
+  uri.forget(aResult);
+  return NS_OK;
+=======
+  return NS_MutateURI(new BlobURL::Mutator())
+      .SetSpec(aSpec)
+      .Apply(NS_MutatorMethod(&nsIBlobURLMutator::SetRevoked, revoked))
+      .Finalize(aResult);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BlobURLProtocolHandler::NewChannel2(nsIURI* aURI, nsILoadInfo* aLoadInfo,
                                     nsIChannel** aResult) {
+||||||| merged common ancestors
+BlobURLProtocolHandler::NewChannel2(nsIURI* aURI,
+                                    nsILoadInfo* aLoadInfo,
+                                    nsIChannel** aResult)
+{
+=======
+BlobURLProtocolHandler::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+                                   nsIChannel** aResult) {
+>>>>>>> upstream-releases
   RefPtr<BlobURLChannel> channel = new BlobURLChannel(aURI, aLoadInfo);
 
   auto raii = MakeScopeExit([&] {
@@ -781,6 +1001,8 @@ BlobURLProtocolHandler::NewChannel2(nsIURI* aURI, nsILoadInfo* aLoadInfo,
     return NS_OK;
   }
 
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
   DataInfo* info = GetDataInfoFromURI(aURI, true /*aAlsoIfRevoked */);
   if (!info || info->mObjectType != DataInfo::eBlobImpl || !info->mBlobImpl) {
     return NS_OK;
@@ -815,6 +1037,7 @@ BlobURLProtocolHandler::NewChannel2(nsIURI* aURI, nsILoadInfo* aLoadInfo,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BlobURLProtocolHandler::NewChannel(nsIURI* uri, nsIChannel** result) {
   return NewChannel2(uri, nullptr, result);
 }
@@ -822,6 +1045,20 @@ BlobURLProtocolHandler::NewChannel(nsIURI* uri, nsIChannel** result) {
 NS_IMETHODIMP
 BlobURLProtocolHandler::AllowPort(int32_t port, const char* scheme,
                                   bool* _retval) {
+||||||| merged common ancestors
+BlobURLProtocolHandler::NewChannel(nsIURI* uri, nsIChannel* *result)
+{
+  return NewChannel2(uri, nullptr, result);
+}
+
+NS_IMETHODIMP
+BlobURLProtocolHandler::AllowPort(int32_t port, const char *scheme,
+                                  bool *_retval)
+{
+=======
+BlobURLProtocolHandler::AllowPort(int32_t port, const char* scheme,
+                                  bool* _retval) {
+>>>>>>> upstream-releases
   // don't override anything.
   *_retval = false;
   return NS_OK;
@@ -833,8 +1070,19 @@ BlobURLProtocolHandler::GetScheme(nsACString& result) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ bool BlobURLProtocolHandler::GetBlobURLPrincipal(
     nsIURI* aURI, nsIPrincipal** aPrincipal) {
+||||||| merged common ancestors
+/* static */ bool
+BlobURLProtocolHandler::GetBlobURLPrincipal(nsIURI* aURI,
+                                            nsIPrincipal** aPrincipal)
+{
+=======
+/* static */
+bool BlobURLProtocolHandler::GetBlobURLPrincipal(nsIURI* aURI,
+                                                 nsIPrincipal** aPrincipal) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aURI);
   MOZ_ASSERT(aPrincipal);
 
@@ -845,6 +1093,8 @@ BlobURLProtocolHandler::GetScheme(nsACString& result) {
     return false;
   }
 
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
   DataInfo* info = GetDataInfoFromURI(aURI, true /*aAlsoIfRevoked */);
   if (!info || info->mObjectType != DataInfo::eBlobImpl || !info->mBlobImpl) {
     return false;
@@ -868,7 +1118,8 @@ BlobURLProtocolHandler::GetScheme(nsACString& result) {
 
 nsresult NS_GetBlobForBlobURI(nsIURI* aURI, BlobImpl** aBlob) {
   *aBlob = nullptr;
-
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
   DataInfo* info = GetDataInfoFromURI(aURI, false /* aAlsoIfRevoked */);
   if (!info || info->mObjectType != DataInfo::eBlobImpl) {
     return NS_ERROR_DOM_BAD_URI;
@@ -881,6 +1132,8 @@ nsresult NS_GetBlobForBlobURI(nsIURI* aURI, BlobImpl** aBlob) {
 
 nsresult NS_GetBlobForBlobURISpec(const nsACString& aSpec, BlobImpl** aBlob) {
   *aBlob = nullptr;
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
 
   DataInfo* info = GetDataInfo(aSpec);
   if (!info || info->mObjectType != DataInfo::eBlobImpl) {
@@ -895,6 +1148,8 @@ nsresult NS_GetBlobForBlobURISpec(const nsACString& aSpec, BlobImpl** aBlob) {
 nsresult NS_GetSourceForMediaSourceURI(nsIURI* aURI, MediaSource** aSource) {
   *aSource = nullptr;
 
+  MOZ_ASSERT(NS_IsMainThread(),
+             "without locking gDataTable is main-thread only");
   DataInfo* info = GetDataInfoFromURI(aURI);
   if (!info || info->mObjectType != DataInfo::eMediaSource) {
     return NS_ERROR_DOM_BAD_URI;
@@ -908,6 +1163,7 @@ nsresult NS_GetSourceForMediaSourceURI(nsIURI* aURI, MediaSource** aSource) {
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 #define NS_BLOBPROTOCOLHANDLER_CID                   \
   {                                                  \
     0xb43964aa, 0xa078, 0x44b2, {                    \
@@ -936,6 +1192,40 @@ static const Module kBlobURLProtocolHandlerModule = {
 NSMODULE_DEFN(BlobURLProtocolHandler) = &kBlobURLProtocolHandlerModule;
 
 bool IsType(nsIURI* aUri, DataInfo::ObjectType aType) {
+||||||| merged common ancestors
+#define NS_BLOBPROTOCOLHANDLER_CID \
+{ 0xb43964aa, 0xa078, 0x44b2, \
+  { 0xb0, 0x6b, 0xfd, 0x4d, 0x1b, 0x17, 0x2e, 0x66 } }
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(BlobURLProtocolHandler)
+
+NS_DEFINE_NAMED_CID(NS_BLOBPROTOCOLHANDLER_CID);
+
+static const Module::CIDEntry kBlobURLProtocolHandlerCIDs[] = {
+  { &kNS_BLOBPROTOCOLHANDLER_CID, false, nullptr, BlobURLProtocolHandlerConstructor },
+  { nullptr }
+};
+
+static const Module::ContractIDEntry kBlobURLProtocolHandlerContracts[] = {
+  { NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX BLOBURI_SCHEME, &kNS_BLOBPROTOCOLHANDLER_CID },
+  { nullptr }
+};
+
+static const Module kBlobURLProtocolHandlerModule = {
+  Module::kVersion,
+  kBlobURLProtocolHandlerCIDs,
+  kBlobURLProtocolHandlerContracts
+};
+
+NSMODULE_DEFN(BlobURLProtocolHandler) = &kBlobURLProtocolHandlerModule;
+
+bool IsType(nsIURI* aUri, DataInfo::ObjectType aType)
+{
+=======
+bool IsType(nsIURI* aUri, DataInfo::ObjectType aType) {
+  // We lock because this may be called off-main-thread
+  StaticMutexAutoLock lock(sMutex);
+>>>>>>> upstream-releases
   DataInfo* info = GetDataInfoFromURI(aUri);
   if (!info) {
     return false;

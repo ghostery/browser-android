@@ -169,8 +169,16 @@ class TiledContentHost : public ContentHost {
  public:
   explicit TiledContentHost(const TextureInfo& aTextureInfo);
 
+<<<<<<< HEAD
  protected:
   ~TiledContentHost();
+||||||| merged common ancestors
+protected:
+  ~TiledContentHost();
+=======
+ protected:
+  virtual ~TiledContentHost();
+>>>>>>> upstream-releases
 
  public:
   // Generate effect for layerscope when using hwc.
@@ -192,8 +200,15 @@ class TiledContentHost : public ContentHost {
     return mTiledBuffer.GetValidRegion();
   }
 
+<<<<<<< HEAD
   virtual void SetTextureSourceProvider(
       TextureSourceProvider* aProvider) override {
+||||||| merged common ancestors
+  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override
+  {
+=======
+  void SetTextureSourceProvider(TextureSourceProvider* aProvider) override {
+>>>>>>> upstream-releases
     CompositableHost::SetTextureSourceProvider(aProvider);
     mTiledBuffer.SetTextureSourceProvider(aProvider);
     mLowPrecisionTiledBuffer.SetTextureSourceProvider(aProvider);
@@ -202,6 +217,7 @@ class TiledContentHost : public ContentHost {
   bool UseTiledLayerBuffer(ISurfaceAllocator* aAllocator,
                            const SurfaceDescriptorTiles& aTiledDescriptor);
 
+<<<<<<< HEAD
   virtual void Composite(
       Compositor* aCompositor, LayerComposite* aLayer,
       EffectChain& aEffectChain, float aOpacity,
@@ -209,26 +225,76 @@ class TiledContentHost : public ContentHost {
       const gfx::SamplingFilter aSamplingFilter, const gfx::IntRect& aClipRect,
       const nsIntRegion* aVisibleRegion = nullptr,
       const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
+||||||| merged common ancestors
+  virtual void Composite(Compositor* aCompositor,
+                         LayerComposite* aLayer,
+                         EffectChain& aEffectChain,
+                         float aOpacity,
+                         const gfx::Matrix4x4& aTransform,
+                         const gfx::SamplingFilter aSamplingFilter,
+                         const gfx::IntRect& aClipRect,
+                         const nsIntRegion* aVisibleRegion = nullptr,
+                         const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
+=======
+  void Composite(Compositor* aCompositor, LayerComposite* aLayer,
+                 EffectChain& aEffectChain, float aOpacity,
+                 const gfx::Matrix4x4& aTransform,
+                 const gfx::SamplingFilter aSamplingFilter,
+                 const gfx::IntRect& aClipRect,
+                 const nsIntRegion* aVisibleRegion = nullptr,
+                 const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual CompositableType GetType() override {
     return CompositableType::CONTENT_TILED;
   }
+||||||| merged common ancestors
+  virtual CompositableType GetType() override { return CompositableType::CONTENT_TILED; }
+=======
+  CompositableType GetType() override {
+    return CompositableType::CONTENT_TILED;
+  }
+>>>>>>> upstream-releases
 
-  virtual TiledContentHost* AsTiledContentHost() override { return this; }
+  TiledContentHost* AsTiledContentHost() override { return this; }
 
+<<<<<<< HEAD
   virtual void Attach(Layer* aLayer, TextureSourceProvider* aProvider,
                       AttachFlags aFlags = NO_FLAGS) override;
-
-  virtual void Detach(Layer* aLayer = nullptr,
+||||||| merged common ancestors
+  virtual void Attach(Layer* aLayer,
+                      TextureSourceProvider* aProvider,
                       AttachFlags aFlags = NO_FLAGS) override;
+=======
+  void Attach(Layer* aLayer, TextureSourceProvider* aProvider,
+              AttachFlags aFlags = NO_FLAGS) override;
+>>>>>>> upstream-releases
 
+  void Detach(Layer* aLayer = nullptr, AttachFlags aFlags = NO_FLAGS) override;
+
+<<<<<<< HEAD
   virtual void Dump(std::stringstream& aStream, const char* aPrefix = "",
                     bool aDumpHtml = false) override;
+||||||| merged common ancestors
+  virtual void Dump(std::stringstream& aStream,
+                    const char* aPrefix="",
+                    bool aDumpHtml=false) override;
+=======
+  void Dump(std::stringstream& aStream, const char* aPrefix = "",
+            bool aDumpHtml = false) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
-  virtual void AddAnimationInvalidation(nsIntRegion& aRegion) override;
+  void AddAnimationInvalidation(nsIntRegion& aRegion) override;
 
   TiledLayerBufferComposite& GetLowResBuffer() {
     return mLowPrecisionTiledBuffer;

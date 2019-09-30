@@ -19,7 +19,7 @@ class RemoteCompositorSession final : public CompositorSession {
                           CompositorWidgetDelegate* aWidgetDelegate,
                           APZCTreeManagerChild* aAPZ,
                           const LayersId& aRootLayerTreeId);
-  ~RemoteCompositorSession() override;
+  virtual ~RemoteCompositorSession();
 
   CompositorBridgeParent* GetInProcessBridge() const override;
   void SetContentController(GeckoContentController* aController) override;
@@ -30,8 +30,15 @@ class RemoteCompositorSession final : public CompositorSession {
 
   void NotifySessionLost();
 
+<<<<<<< HEAD
  private:
   nsBaseWidget* mWidget;
+||||||| merged common ancestors
+private:
+  nsBaseWidget* mWidget;
+=======
+ private:
+>>>>>>> upstream-releases
   RefPtr<APZCTreeManagerChild> mAPZ;
   RefPtr<GeckoContentController> mContentController;
 };

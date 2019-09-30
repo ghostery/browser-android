@@ -8,7 +8,7 @@
 #include "mozilla/dom/SVGFEMergeElementBinding.h"
 #include "mozilla/dom/SVGFEMergeNodeElement.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEMerge)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEMerge)
 
 using namespace mozilla::gfx;
 
@@ -20,8 +20,18 @@ JSObject* SVGFEMergeElement::WrapNode(JSContext* aCx,
   return SVGFEMergeElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] = {
     {nsGkAtoms::result, kNameSpaceID_None, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] =
+{
+  { nsGkAtoms::result, kNameSpaceID_None, true }
+};
+=======
+SVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] = {
+    {nsGkAtoms::result, kNameSpaceID_None, true}};
+>>>>>>> upstream-releases
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEMergeElement)
 
@@ -32,21 +42,40 @@ FilterPrimitiveDescription SVGFEMergeElement::GetPrimitiveDescription(
   return FilterPrimitiveDescription(AsVariant(MergeAttributes()));
 }
 
+<<<<<<< HEAD
 void SVGFEMergeElement::GetSourceImageNames(
     nsTArray<nsSVGStringInfo>& aSources) {
   for (nsIContent* child = nsINode::GetFirstChild(); child;
+||||||| merged common ancestors
+void
+SVGFEMergeElement::GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources)
+{
+  for (nsIContent* child = nsINode::GetFirstChild();
+       child;
+=======
+void SVGFEMergeElement::GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) {
+  for (nsIContent* child = nsINode::GetFirstChild(); child;
+>>>>>>> upstream-releases
        child = child->GetNextSibling()) {
     if (child->IsSVGElement(nsGkAtoms::feMergeNode)) {
       SVGFEMergeNodeElement* node = static_cast<SVGFEMergeNodeElement*>(child);
-      aSources.AppendElement(nsSVGStringInfo(node->GetIn1(), node));
+      aSources.AppendElement(SVGStringInfo(node->GetIn1(), node));
     }
   }
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGFEMergeElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGFEMergeElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGFEMergeElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

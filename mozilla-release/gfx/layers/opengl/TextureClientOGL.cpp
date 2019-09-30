@@ -13,9 +13,9 @@
 #include "GLLibraryEGL.h"
 
 #ifdef MOZ_WIDGET_ANDROID
-#include <jni.h>
-#include <android/native_window.h>
-#include <android/native_window_jni.h>
+#  include <jni.h>
+#  include <android/native_window.h>
+#  include <android/native_window_jni.h>
 #endif
 
 using namespace mozilla::gl;
@@ -30,22 +30,64 @@ class CompositableForwarder;
 
 #ifdef MOZ_WIDGET_ANDROID
 
+<<<<<<< HEAD
 already_AddRefed<TextureClient> AndroidSurfaceTextureData::CreateTextureClient(
     AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
     gl::OriginPos aOriginPos, LayersIPCChannel* aAllocator,
     TextureFlags aFlags) {
+||||||| merged common ancestors
+already_AddRefed<TextureClient>
+AndroidSurfaceTextureData::CreateTextureClient(AndroidSurfaceTextureHandle aHandle,
+                                               gfx::IntSize aSize,
+                                               bool aContinuous,
+                                               gl::OriginPos aOriginPos,
+                                               LayersIPCChannel* aAllocator,
+                                               TextureFlags aFlags)
+{
+=======
+already_AddRefed<TextureClient> AndroidSurfaceTextureData::CreateTextureClient(
+    AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
+    gl::OriginPos aOriginPos, bool aHasAlpha, LayersIPCChannel* aAllocator,
+    TextureFlags aFlags) {
+>>>>>>> upstream-releases
   if (aOriginPos == gl::OriginPos::BottomLeft) {
     aFlags |= TextureFlags::ORIGIN_BOTTOM_LEFT;
   }
 
   return TextureClient::CreateWithData(
+<<<<<<< HEAD
       new AndroidSurfaceTextureData(aHandle, aSize, aContinuous), aFlags,
       aAllocator);
+||||||| merged common ancestors
+    new AndroidSurfaceTextureData(aHandle, aSize, aContinuous),
+    aFlags, aAllocator
+  );
+=======
+      new AndroidSurfaceTextureData(aHandle, aSize, aContinuous, aHasAlpha),
+      aFlags, aAllocator);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 AndroidSurfaceTextureData::AndroidSurfaceTextureData(
     AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous)
     : mHandle(aHandle), mSize(aSize), mContinuous(aContinuous) {
+||||||| merged common ancestors
+AndroidSurfaceTextureData::AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle,
+                                                     gfx::IntSize aSize, bool aContinuous)
+  : mHandle(aHandle)
+  , mSize(aSize)
+  , mContinuous(aContinuous)
+{
+=======
+AndroidSurfaceTextureData::AndroidSurfaceTextureData(
+    AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
+    bool aHasAlpha)
+    : mHandle(aHandle),
+      mSize(aSize),
+      mContinuous(aContinuous),
+      mHasAlpha(aHasAlpha) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mHandle);
 }
 
@@ -60,10 +102,27 @@ void AndroidSurfaceTextureData::FillInfo(TextureData::Info& aInfo) const {
   aInfo.canExposeMappedData = false;
 }
 
+<<<<<<< HEAD
 bool AndroidSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
   aOutDescriptor = SurfaceTextureDescriptor(
       mHandle, mSize, gfx::SurfaceFormat::R8G8B8A8, mContinuous,
       false /* do not ignore transform */);
+||||||| merged common ancestors
+bool
+AndroidSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor)
+{
+  aOutDescriptor = SurfaceTextureDescriptor(mHandle,
+                                            mSize,
+                                            gfx::SurfaceFormat::R8G8B8A8,
+                                            mContinuous,
+                                            false /* do not ignore transform */);
+=======
+bool AndroidSurfaceTextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
+  aOutDescriptor = SurfaceTextureDescriptor(
+      mHandle, mSize,
+      mHasAlpha ? gfx::SurfaceFormat::R8G8B8A8 : gfx::SurfaceFormat::R8G8B8X8,
+      mContinuous, false /* do not ignore transform */);
+>>>>>>> upstream-releases
   return true;
 }
 

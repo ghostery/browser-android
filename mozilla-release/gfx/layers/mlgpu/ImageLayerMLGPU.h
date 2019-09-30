@@ -35,8 +35,16 @@ class ImageLayerMLGPU final : public ImageLayer, public TexturedLayerMLGPU {
 
   MOZ_LAYER_DECL_NAME("ImageLayerMLGPU", TYPE_IMAGE)
 
+<<<<<<< HEAD
  protected:
   ~ImageLayerMLGPU() override;
+||||||| merged common ancestors
+protected:
+  ~ImageLayerMLGPU() override;
+=======
+ protected:
+  virtual ~ImageLayerMLGPU();
+>>>>>>> upstream-releases
 
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
   void CleanupResources();

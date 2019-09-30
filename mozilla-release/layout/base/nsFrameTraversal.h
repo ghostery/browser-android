@@ -12,10 +12,25 @@
 
 class nsIFrame;
 
+<<<<<<< HEAD
 nsresult NS_NewFrameTraversal(nsIFrameEnumerator **aEnumerator,
                               nsPresContext *aPresContext, nsIFrame *aStart,
                               nsIteratorType aType, bool aVisual,
                               bool aLockInScrollView, bool aFollowOOFs,
+||||||| merged common ancestors
+nsresult NS_NewFrameTraversal(nsIFrameEnumerator **aEnumerator,
+                              nsPresContext* aPresContext,
+                              nsIFrame *aStart,
+                              nsIteratorType aType,
+                              bool aVisual,
+                              bool aLockInScrollView,
+                              bool aFollowOOFs,
+=======
+nsresult NS_NewFrameTraversal(nsIFrameEnumerator** aEnumerator,
+                              nsPresContext* aPresContext, nsIFrame* aStart,
+                              nsIteratorType aType, bool aVisual,
+                              bool aLockInScrollView, bool aFollowOOFs,
+>>>>>>> upstream-releases
                               bool aSkipPopupChecks);
 
 nsresult NS_CreateFrameTraversal(nsIFrameTraversal **aResult);
@@ -26,10 +41,25 @@ class nsFrameTraversal final : public nsIFrameTraversal {
 
   NS_DECL_ISUPPORTS
 
+<<<<<<< HEAD
   NS_IMETHOD NewFrameTraversal(nsIFrameEnumerator **aEnumerator,
                                nsPresContext *aPresContext, nsIFrame *aStart,
                                int32_t aType, bool aVisual,
                                bool aLockInScrollView, bool aFollowOOFs,
+||||||| merged common ancestors
+  NS_IMETHOD NewFrameTraversal(nsIFrameEnumerator **aEnumerator,
+                               nsPresContext* aPresContext,
+                               nsIFrame *aStart,
+                               int32_t aType,
+                               bool aVisual,
+                               bool aLockInScrollView,
+                               bool aFollowOOFs,
+=======
+  NS_IMETHOD NewFrameTraversal(nsIFrameEnumerator** aEnumerator,
+                               nsPresContext* aPresContext, nsIFrame* aStart,
+                               int32_t aType, bool aVisual,
+                               bool aLockInScrollView, bool aFollowOOFs,
+>>>>>>> upstream-releases
                                bool aSkipPopupChecks) override;
 
  protected:

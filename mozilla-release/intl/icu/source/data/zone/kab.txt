@@ -1,5 +1,11 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 kab{
+<<<<<<< HEAD
     Version{"2.1.43.94"}
+||||||| merged common ancestors
+    Version{"2.1.41.97"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
 }

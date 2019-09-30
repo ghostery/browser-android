@@ -15,6 +15,13 @@ template <class>
 struct already_AddRefed;
 
 namespace mozilla {
+
+namespace net {
+
+class SocketProcessBridgeParent;
+
+}  // namespace net
+
 namespace dom {
 
 class BlobImpl;
@@ -38,6 +45,7 @@ class BackgroundParent final {
   typedef mozilla::dom::BlobImpl BlobImpl;
   typedef mozilla::dom::ContentParent ContentParent;
   typedef mozilla::ipc::Transport Transport;
+  friend class mozilla::net::SocketProcessBridgeParent;
 
  public:
   // This function allows the caller to determine if the given parent actor
@@ -71,8 +79,20 @@ class BackgroundParent final {
 
  private:
   // Only called by ContentParent for cross-process actors.
+<<<<<<< HEAD
   static bool Alloc(ContentParent* aContent,
                     Endpoint<PBackgroundParent>&& aEndpoint);
+||||||| merged common ancestors
+  static bool
+  Alloc(ContentParent* aContent,
+        Endpoint<PBackgroundParent>&& aEndpoint);
+=======
+  static bool Alloc(ContentParent* aContent,
+                    Endpoint<PBackgroundParent>&& aEndpoint);
+
+  // Only called by SocketProcessBridgeParent for cross-process actors.
+  static bool Alloc(Endpoint<PBackgroundParent>&& aEndpoint);
+>>>>>>> upstream-releases
 };
 
 // Implemented in BackgroundImpl.cpp.
@@ -85,11 +105,39 @@ void AssertIsOnBackgroundThread();
 
 #else
 
+<<<<<<< HEAD
+inline void AssertIsOnBackgroundThread() {}
+||||||| merged common ancestors
+inline void
+AssertIsOnBackgroundThread()
+{ }
+=======
 inline void AssertIsOnBackgroundThread() {}
 
 #endif  // DEBUG
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+#endif  // DEBUG
+||||||| merged common ancestors
+#endif // DEBUG
+=======
 inline void AssertIsInMainProcess() { MOZ_ASSERT(XRE_IsParentProcess()); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+inline void AssertIsInMainProcess() { MOZ_ASSERT(XRE_IsParentProcess()); }
+||||||| merged common ancestors
+inline void
+AssertIsInMainProcess()
+{
+  MOZ_ASSERT(XRE_IsParentProcess());
+}
+=======
+inline void AssertIsInMainOrSocketProcess() {
+  MOZ_ASSERT(XRE_IsParentProcess() || XRE_IsSocketProcess());
+}
+>>>>>>> upstream-releases
 
 }  // namespace ipc
 }  // namespace mozilla

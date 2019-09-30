@@ -4,18 +4,31 @@
 
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+var { DelayedInit } = ChromeUtils.import(
+  "resource://gre/modules/DelayedInit.jsm"
+);
+var { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   E10SUtils: "resource://gre/modules/E10SUtils.jsm",
   EventDispatcher: "resource://gre/modules/Messaging.jsm",
   GeckoViewUtils: "resource://gre/modules/GeckoViewUtils.jsm",
+<<<<<<< HEAD
   HistogramStopwatch: "resource://gre/modules/GeckoViewTelemetry.jsm",
   Services: "resource://gre/modules/Services.jsm",
+||||||| merged common ancestors
+  Services: "resource://gre/modules/Services.jsm",
+=======
+  HistogramStopwatch: "resource://gre/modules/GeckoViewTelemetry.jsm",
+>>>>>>> upstream-releases
 });
 
-XPCOMUtils.defineLazyGetter(this, "WindowEventDispatcher",
-  () => EventDispatcher.for(window));
+XPCOMUtils.defineLazyGetter(this, "WindowEventDispatcher", () =>
+  EventDispatcher.for(window)
+);
 
 /**
  * ModuleManager creates and manages GeckoView modules. Each GeckoView module
@@ -32,29 +45,42 @@ var ModuleManager = {
   },
 
   init(aBrowser, aModules) {
+<<<<<<< HEAD
     const MODULES_INIT_PROBE =
       new HistogramStopwatch("GV_STARTUP_MODULES_MS", aBrowser);
 
     MODULES_INIT_PROBE.start();
 
+||||||| merged common ancestors
+=======
+    const MODULES_INIT_PROBE = new HistogramStopwatch(
+      "GV_STARTUP_MODULES_MS",
+      aBrowser
+    );
+
+    MODULES_INIT_PROBE.start();
+
+>>>>>>> upstream-releases
     const initData = this._initData;
     this._browser = aBrowser;
     this._settings = initData.settings;
     this._frozenSettings = Object.freeze(Object.assign({}, this._settings));
 
     const self = this;
-    this._modules = new Map((function* () {
-      for (const module of aModules) {
-        yield [
-          module.name,
-          new ModuleInfo({
-            enabled: !!initData.modules[module.name],
-            manager: self,
-            ...module,
-          }),
-        ];
-      }
-    })());
+    this._modules = new Map(
+      (function*() {
+        for (const module of aModules) {
+          yield [
+            module.name,
+            new ModuleInfo({
+              enabled: !!initData.modules[module.name],
+              manager: self,
+              ...module,
+            }),
+          ];
+        }
+      })()
+    );
 
     window.document.documentElement.appendChild(aBrowser);
 
@@ -64,11 +90,14 @@ var ModuleManager = {
       "GeckoView:UpdateSettings",
     ]);
 
-    this.messageManager.addMessageListener("GeckoView:ContentModuleLoaded",
-                                           this);
+    this.messageManager.addMessageListener(
+      "GeckoView:ContentModuleLoaded",
+      this
+    );
 
     this.forEach(module => {
       module.onInit();
+      module.loadInitFrameScript();
     });
 
     window.addEventListener("unload", () => {
@@ -107,6 +136,7 @@ var ModuleManager = {
     this._modules.forEach(aCallback, this);
   },
 
+<<<<<<< HEAD
   updateRemoteTypeForURI(aURI) {
     const currentType =
         this.browser.getAttribute("remoteType") || E10SUtils.NOT_REMOTE;
@@ -170,6 +200,82 @@ var ModuleManager = {
     return true;
   },
 
+||||||| merged common ancestors
+=======
+  updateRemoteTypeForURI(aURI) {
+    const currentType = this.browser.remoteType || E10SUtils.NOT_REMOTE;
+    const remoteType = E10SUtils.getRemoteTypeForURI(
+      aURI,
+      this.settings.useMultiprocess,
+      /* useRemoteSubframes */ false,
+      currentType,
+      this.browser.currentURI
+    );
+
+    debug`updateRemoteType: uri=${aURI} currentType=${currentType}
+                             remoteType=${remoteType}`;
+
+    if (currentType === remoteType) {
+      // We're already using a child process of the correct type.
+      return false;
+    }
+
+    if (remoteType !== E10SUtils.NOT_REMOTE && !this.settings.useMultiprocess) {
+      warn`Tried to create a remote browser in non-multiprocess mode`;
+      return false;
+    }
+
+    // Now we're switching the remoteness (value of "remote" attr).
+
+    let disabledModules = [];
+    this.forEach(module => {
+      if (module.enabled) {
+        module.enabled = false;
+        disabledModules.push(module);
+      }
+    });
+
+    this.forEach(module => {
+      module.onDestroyBrowser();
+    });
+
+    const parent = this.browser.parentNode;
+    this.browser.remove();
+    if (remoteType) {
+      this.browser.setAttribute("remote", "true");
+      this.browser.setAttribute("remoteType", remoteType);
+    } else {
+      this.browser.setAttribute("remote", "false");
+      this.browser.removeAttribute("remoteType");
+    }
+
+    this.forEach(module => {
+      if (module.impl) {
+        module.impl.onInitBrowser();
+      }
+    });
+
+    parent.appendChild(this.browser);
+
+    this.messageManager.addMessageListener(
+      "GeckoView:ContentModuleLoaded",
+      this
+    );
+
+    this.forEach(module => {
+      // We're attaching a new browser so we have to reload the frame scripts
+      module.loadInitFrameScript();
+    });
+
+    disabledModules.forEach(module => {
+      module.enabled = true;
+    });
+
+    this.browser.focus();
+    return true;
+  },
+
+>>>>>>> upstream-releases
   _updateSettings(aSettings) {
     Object.assign(this._settings, aSettings);
     this._frozenSettings = Object.freeze(Object.assign({}, this._settings));
@@ -180,12 +286,14 @@ var ModuleManager = {
       }
     });
 
-    this._browser.messageManager.sendAsyncMessage("GeckoView:UpdateSettings",
-                                                  aSettings);
+    this._browser.messageManager.sendAsyncMessage(
+      "GeckoView:UpdateSettings",
+      aSettings
+    );
   },
 
   onEvent(aEvent, aData, aCallback) {
-    debug `onEvent ${aEvent} ${aData}`;
+    debug`onEvent ${aEvent} ${aData}`;
     switch (aEvent) {
       case "GeckoView:UpdateModuleState": {
         const module = this._modules.get(aData.module);
@@ -221,7 +329,7 @@ var ModuleManager = {
   },
 
   receiveMessage(aMsg) {
-    debug `receiveMessage ${aMsg.name} ${aMsg.data}`;
+    debug`receiveMessage ${aMsg.name} ${aMsg.data}`;
     switch (aMsg.name) {
       case "GeckoView:ContentModuleLoaded": {
         const module = this._modules.get(aMsg.data.module);
@@ -251,7 +359,7 @@ class ModuleInfo {
    * @param onEnable Phase object for the enable phase, when the module is first
    *                 enabled by setting a delegate in Java.
    */
-  constructor({manager, name, enabled, onInit, onEnable}) {
+  constructor({ manager, name, enabled, onInit, onEnable }) {
     this._manager = manager;
     this._name = name;
 
@@ -264,12 +372,9 @@ class ModuleInfo {
     // For init, load resource _before_ initializing browser to support the
     // onInitBrowser() override. However, load content module after initializing
     // browser, because we don't have a message manager before then.
-    this._loadPhase({
-      resource: onInit && onInit.resource,
-    });
-    this._onInitPhase = {
-      frameScript: onInit && onInit.frameScript,
-    };
+    this._loadResource(onInit);
+
+    this._onInitPhase = onInit;
     this._onEnablePhase = onEnable;
   }
 
@@ -278,10 +383,15 @@ class ModuleInfo {
       this._impl.onInit();
       this._impl.onSettingsUpdate();
     }
-    this._loadPhase(this._onInitPhase);
-    this._onInitPhase = null;
 
     this.enabled = this._enabledOnInit;
+  }
+
+  /**
+   * Loads the onInit frame script
+   */
+  loadInitFrameScript() {
+    this._loadFrameScript(this._onInitPhase);
   }
 
   onDestroy() {
@@ -291,31 +401,45 @@ class ModuleInfo {
   }
 
   /**
-   * Load resources according to a phase object that contains possible keys,
+   * Called before the browser is removed
+   */
+  onDestroyBrowser() {
+    if (this._impl) {
+      this._impl.onDestroyBrowser();
+    }
+    this._contentModuleLoaded = false;
+  }
+
+  /**
+   * Load resource according to a phase object that contains possible keys,
    *
    * "resource": specify the JSM resource to load for this module.
    * "frameScript": specify a content JS frame script to load for this module.
    */
-  _loadPhase(aPhase) {
-    if (!aPhase) {
+  _loadResource(aPhase) {
+    if (!aPhase || !aPhase.resource || this._impl) {
       return;
     }
 
-    if (aPhase.resource && !this._impl) {
-      const scope = {};
-      const global = ChromeUtils.import(aPhase.resource, scope);
-      const tag = this._name.replace("GeckoView", "");
-      GeckoViewUtils.initLogging(tag, global);
-      this._impl = new scope[this._name](this);
+    const exports = ChromeUtils.import(aPhase.resource);
+    this._impl = new exports[this._name](this);
+  }
+
+  /**
+   * Load frameScript according to a phase object that contains possible keys,
+   *
+   * "frameScript": specify a content JS frame script to load for this module.
+   */
+  _loadFrameScript(aPhase) {
+    if (!aPhase || !aPhase.frameScript || this._contentModuleLoaded) {
+      return;
     }
 
-    if (aPhase.frameScript && !this._contentModuleLoaded) {
-      if (this._impl) {
-        this._impl.onLoadContentModule();
-      }
-      this._manager.messageManager.loadFrameScript(aPhase.frameScript, true);
-      this._contentModuleLoaded = true;
+    if (this._impl) {
+      this._impl.onLoadContentModule();
     }
+    this._manager.messageManager.loadFrameScript(aPhase.frameScript, true);
+    this._contentModuleLoaded = true;
   }
 
   get manager() {
@@ -346,8 +470,8 @@ class ModuleInfo {
     this._enabled = aEnabled;
 
     if (aEnabled) {
-      this._loadPhase(this._onEnablePhase);
-      this._onEnablePhase = null;
+      this._loadResource(this._onEnablePhase);
+      this._loadFrameScript(this._onEnablePhase);
       if (this._impl) {
         this._impl.onEnable();
         this._impl.onSettingsUpdate();
@@ -366,19 +490,26 @@ class ModuleInfo {
   }
 
   _updateContentModuleState(aIncludeSettings) {
-    this._manager.messageManager.sendAsyncMessage("GeckoView:UpdateModuleState", {
-      module: this._name,
-      enabled: this.enabled,
-      settings: aIncludeSettings ? this._manager.settings : null,
-    });
+    this._manager.messageManager.sendAsyncMessage(
+      "GeckoView:UpdateModuleState",
+      {
+        module: this._name,
+        enabled: this.enabled,
+        settings: aIncludeSettings ? this._manager.settings : null,
+      }
+    );
   }
 }
 
 function createBrowser() {
-  const browser = window.browser = document.createElement("browser");
+  const browser = (window.browser = document.createXULElement("browser"));
+  // Identify this `<browser>` element uniquely to Marionette, devtools, etc.
+  browser.permanentKey = {};
+
   browser.setAttribute("type", "content");
   browser.setAttribute("primary", "true");
   browser.setAttribute("flex", "1");
+<<<<<<< HEAD
 
   const settings = window.arguments[0].QueryInterface(Ci.nsIAndroidView).initData.settings;
   if (settings.useMultiprocess) {
@@ -386,18 +517,50 @@ function createBrowser() {
     browser.setAttribute("remoteType", E10SUtils.DEFAULT_REMOTE_TYPE);
   }
 
+||||||| merged common ancestors
+=======
+
+  const settings = window.arguments[0].QueryInterface(Ci.nsIAndroidView)
+    .initData.settings;
+  if (settings.useMultiprocess) {
+    browser.setAttribute("remote", "true");
+    browser.setAttribute("remoteType", E10SUtils.DEFAULT_REMOTE_TYPE);
+  }
+
+>>>>>>> upstream-releases
   return browser;
+}
+
+function InitLater(fn, object, name) {
+  return DelayedInit.schedule(fn, object, name, 15000 /* 15s max wait */);
 }
 
 function startup() {
   GeckoViewUtils.initLogging("XUL", window);
 
   const browser = createBrowser();
-  ModuleManager.init(browser, [{
-    name: "GeckoViewAccessibility",
-    onInit: {
-      resource: "resource://gre/modules/GeckoViewAccessibility.jsm",
+  ModuleManager.init(browser, [
+    {
+      name: "GeckoViewAccessibility",
+      onInit: {
+        resource: "resource://gre/modules/GeckoViewAccessibility.jsm",
+      },
     },
+    {
+      name: "GeckoViewContent",
+      onInit: {
+        resource: "resource://gre/modules/GeckoViewContent.jsm",
+        frameScript: "chrome://geckoview/content/GeckoViewContentChild.js",
+      },
+    },
+    {
+      name: "GeckoViewMedia",
+      onEnable: {
+        resource: "resource://gre/modules/GeckoViewMedia.jsm",
+        frameScript: "chrome://geckoview/content/GeckoViewMediaChild.js",
+      },
+    },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewContent",
     onInit: {
@@ -409,46 +572,161 @@ function startup() {
     onEnable: {
       resource: "resource://gre/modules/GeckoViewMedia.jsm",
       frameScript: "chrome://geckoview/content/GeckoViewMediaChild.js",
+||||||| merged common ancestors
+  }, {
+    name: "GeckoViewContent",
+    onInit: {
+      resource: "resource://gre/modules/GeckoViewContent.jsm",
+      frameScript: "chrome://geckoview/content/GeckoViewContent.js",
+=======
+    {
+      name: "GeckoViewNavigation",
+      onInit: {
+        resource: "resource://gre/modules/GeckoViewNavigation.jsm",
+        frameScript: "chrome://geckoview/content/GeckoViewNavigationChild.js",
+      },
+>>>>>>> upstream-releases
     },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewNavigation",
     onInit: {
       resource: "resource://gre/modules/GeckoViewNavigation.jsm",
       frameScript: "chrome://geckoview/content/GeckoViewNavigationChild.js",
+||||||| merged common ancestors
+  }, {
+    name: "GeckoViewNavigation",
+    onInit: {
+      resource: "resource://gre/modules/GeckoViewNavigation.jsm",
+      frameScript: "chrome://geckoview/content/GeckoViewNavigationContent.js",
+=======
+    {
+      name: "GeckoViewProgress",
+      onEnable: {
+        resource: "resource://gre/modules/GeckoViewProgress.jsm",
+        frameScript: "chrome://geckoview/content/GeckoViewProgressChild.js",
+      },
+>>>>>>> upstream-releases
     },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewProgress",
     onEnable: {
       resource: "resource://gre/modules/GeckoViewProgress.jsm",
       frameScript: "chrome://geckoview/content/GeckoViewProgressChild.js",
+||||||| merged common ancestors
+  }, {
+    name: "GeckoViewProgress",
+    onEnable: {
+      resource: "resource://gre/modules/GeckoViewProgress.jsm",
+      frameScript: "chrome://geckoview/content/GeckoViewProgressContent.js",
+=======
+    {
+      name: "GeckoViewScroll",
+      onEnable: {
+        frameScript: "chrome://geckoview/content/GeckoViewScrollChild.js",
+      },
+>>>>>>> upstream-releases
     },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewScroll",
     onEnable: {
       frameScript: "chrome://geckoview/content/GeckoViewScrollChild.js",
+||||||| merged common ancestors
+  }, {
+    name: "GeckoViewScroll",
+    onEnable: {
+      frameScript: "chrome://geckoview/content/GeckoViewScrollContent.js",
+=======
+    {
+      name: "GeckoViewSelectionAction",
+      onEnable: {
+        frameScript:
+          "chrome://geckoview/content/GeckoViewSelectionActionChild.js",
+      },
+>>>>>>> upstream-releases
     },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewSelectionAction",
     onEnable: {
       frameScript: "chrome://geckoview/content/GeckoViewSelectionActionChild.js",
+||||||| merged common ancestors
+  }, {
+    name: "GeckoViewSelectionAction",
+    onEnable: {
+      frameScript: "chrome://geckoview/content/GeckoViewSelectionActionContent.js",
+=======
+    {
+      name: "GeckoViewSettings",
+      onInit: {
+        resource: "resource://gre/modules/GeckoViewSettings.jsm",
+        frameScript: "chrome://geckoview/content/GeckoViewSettingsChild.js",
+      },
+>>>>>>> upstream-releases
     },
+<<<<<<< HEAD
   }, {
     name: "GeckoViewSettings",
     onInit: {
       resource: "resource://gre/modules/GeckoViewSettings.jsm",
       frameScript: "chrome://geckoview/content/GeckoViewSettingsChild.js",
-    },
+||||||| merged common ancestors
   }, {
-    name: "GeckoViewTab",
+    name: "GeckoViewSettings",
     onInit: {
-      resource: "resource://gre/modules/GeckoViewTab.jsm",
+      resource: "resource://gre/modules/GeckoViewSettings.jsm",
+      frameScript: "chrome://geckoview/content/GeckoViewContentSettings.js",
+=======
+    {
+      name: "GeckoViewTab",
+      onInit: {
+        resource: "resource://gre/modules/GeckoViewTab.jsm",
+      },
+>>>>>>> upstream-releases
     },
-  }, {
-    name: "GeckoViewTrackingProtection",
-    onEnable: {
-      resource: "resource://gre/modules/GeckoViewTrackingProtection.jsm",
+    {
+      name: "GeckoViewContentBlocking",
+      onEnable: {
+        resource: "resource://gre/modules/GeckoViewContentBlocking.jsm",
+      },
     },
-  }]);
+    {
+      name: "SessionStateAggregator",
+      onInit: {
+        frameScript: "chrome://geckoview/content/SessionStateAggregator.js",
+      },
+    },
+  ]);
+
+  Services.tm.dispatchToMainThread(() => {
+    // This should always be the first thing we do here - any additional delayed
+    // initialisation tasks should be added between "browser-delayed-startup-finished"
+    // and "browser-idle-startup-tasks-finished".
+
+    // Bug 1496684: Various bits of platform stuff depend on this notification
+    // to learn when a browser window has finished its initial (chrome)
+    // initialisation, especially with regards to the very first window that is
+    // created. Therefore, GeckoView "windows" need to send this, too.
+    InitLater(() =>
+      Services.obs.notifyObservers(window, "browser-delayed-startup-finished")
+    );
+
+    // This should always go last, since the idle tasks (except for the ones with
+    // timeouts) should execute in order. Note that this observer notification is
+    // not guaranteed to fire, since the window could close before we get here.
+
+    // This notification in particular signals the ScriptPreloader that we have
+    // finished startup, so it can now stop recording script usage and start
+    // updating the startup cache for faster script loading.
+    InitLater(() =>
+      Services.obs.notifyObservers(
+        window,
+        "browser-idle-startup-tasks-finished"
+      )
+    );
+  });
 
   // Move focus to the content window at the end of startup,
   // so things like text selection can work properly.

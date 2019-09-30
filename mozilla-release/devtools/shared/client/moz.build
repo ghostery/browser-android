@@ -5,17 +5,31 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DevToolsModules(
+<<<<<<< HEAD
     'array-buffer-client.js',
     'breakpoint-client.js',
+||||||| merged common ancestors
+    'addon-client.js',
+    'array-buffer-client.js',
+    'breakpoint-client.js',
+=======
+>>>>>>> upstream-releases
     'connection-manager.js',
     'constants.js',
     'debugger-client.js',
+    'deprecated-thread-client.js',
     'environment-client.js',
     'event-source.js',
     'long-string-client.js',
     'object-client.js',
     'property-iterator-client.js',
+<<<<<<< HEAD
     'source-client.js',
+||||||| merged common ancestors
+    'root-client.js',
+    'source-client.js',
+=======
+>>>>>>> upstream-releases
     'symbol-iterator-client.js',
     'thread-client.js',
 )

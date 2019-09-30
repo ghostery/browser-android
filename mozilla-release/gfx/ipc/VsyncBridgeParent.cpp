@@ -70,7 +70,17 @@ void VsyncBridgeParent::ActorDestroy(ActorDestroyReason aWhy) {
   mCompositorThreadRef = nullptr;
 }
 
+<<<<<<< HEAD
 void VsyncBridgeParent::DeallocPVsyncBridgeParent() { Release(); }
+||||||| merged common ancestors
+void
+VsyncBridgeParent::DeallocPVsyncBridgeParent()
+{
+  Release();
+}
+=======
+void VsyncBridgeParent::ActorDealloc() { Release(); }
+>>>>>>> upstream-releases
 
 }  // namespace gfx
 }  // namespace mozilla

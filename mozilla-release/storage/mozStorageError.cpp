@@ -12,8 +12,20 @@ namespace storage {
 ////////////////////////////////////////////////////////////////////////////////
 //// Error
 
+<<<<<<< HEAD
 Error::Error(int aResult, const char *aMessage)
     : mResult(aResult), mMessage(aMessage) {}
+||||||| merged common ancestors
+Error::Error(int aResult,
+             const char *aMessage)
+: mResult(aResult)
+, mMessage(aMessage)
+{
+}
+=======
+Error::Error(int aResult, const char* aMessage)
+    : mResult(aResult), mMessage(aMessage) {}
+>>>>>>> upstream-releases
 
 /**
  * Note:  This object is only ever accessed on one thread at a time.  It it not
@@ -25,13 +37,27 @@ NS_IMPL_ISUPPORTS(Error, mozIStorageError)
 //// mozIStorageError
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Error::GetResult(int32_t *_result) {
+||||||| merged common ancestors
+Error::GetResult(int32_t *_result)
+{
+=======
+Error::GetResult(int32_t* _result) {
+>>>>>>> upstream-releases
   *_result = mResult;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 Error::GetMessage(nsACString &_message) {
+||||||| merged common ancestors
+Error::GetMessage(nsACString &_message)
+{
+=======
+Error::GetMessage(nsACString& _message) {
+>>>>>>> upstream-releases
   _message = mMessage;
   return NS_OK;
 }

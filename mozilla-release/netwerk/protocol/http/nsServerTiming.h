@@ -18,11 +18,27 @@ class nsServerTiming final : public nsIServerTiming {
 
   nsServerTiming() = default;
 
+<<<<<<< HEAD
   void SetName(const nsACString &aName) { mName = aName; }
+||||||| merged common ancestors
+  void SetName(const nsACString &aName)
+  {
+    mName = aName;
+  }
+=======
+  void SetName(const nsACString& aName) { mName = aName; }
+>>>>>>> upstream-releases
 
   void SetDuration(double aDuration) { mDuration = aDuration; }
 
+<<<<<<< HEAD
   void SetDescription(const nsACString &aDescription) {
+||||||| merged common ancestors
+  void SetDescription(const nsACString &aDescription)
+  {
+=======
+  void SetDescription(const nsACString& aDescription) {
+>>>>>>> upstream-releases
     mDescription = aDescription;
   }
 
@@ -37,9 +53,22 @@ class nsServerTiming final : public nsIServerTiming {
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
 class ServerTimingParser {
  public:
   explicit ServerTimingParser(const nsCString &value) : mValue(value) {}
+||||||| merged common ancestors
+class ServerTimingParser
+{
+public:
+  explicit ServerTimingParser(const nsCString &value)
+    : mValue(value)
+  {}
+=======
+class ServerTimingParser {
+ public:
+  explicit ServerTimingParser(const nsCString& value) : mValue(value) {}
+>>>>>>> upstream-releases
   void Parse();
   nsTArray<nsCOMPtr<nsIServerTiming>> &&TakeServerTimingHeaders();
 

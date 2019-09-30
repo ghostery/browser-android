@@ -13,11 +13,13 @@
 
 #include "mozilla/Maybe.h"
 #include "mozilla/Variant.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "mozilla/extensions/MatchGlob.h"
 #include "mozilla/extensions/MatchPattern.h"
 #include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsISupports.h"
+#include "nsIDocShell.h"
 #include "nsWrapperCache.h"
 
 class nsILoadInfo;
@@ -67,7 +69,25 @@ class MOZ_STACK_CLASS DocInfo final {
     return nullptr;
   }
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  already_AddRefed<nsILoadContext> GetLoadContext() const {
+    nsCOMPtr<nsILoadContext> loadContext;
+    if (nsPIDOMWindowOuter* window = GetWindow()) {
+      nsIDocShell* docShell = window->GetDocShell();
+      loadContext = do_QueryInterface(docShell);
+    } else if (nsILoadInfo* loadInfo = GetLoadInfo()) {
+      nsCOMPtr<nsISupports> requestingContext = loadInfo->GetLoadingContext();
+      loadContext = do_QueryInterface(requestingContext);
+    }
+    return loadContext.forget();
+  }
+
+ private:
+>>>>>>> upstream-releases
   void SetURL(const URLInfo& aURL);
 
   const URLInfo mURL;
@@ -100,8 +120,17 @@ class MozDocumentMatcher : public nsISupports, public nsWrapperCache {
   bool MatchesLoadInfo(const URLInfo& aURL, nsILoadInfo* aLoadInfo) const {
     return Matches({aURL, aLoadInfo});
   }
+<<<<<<< HEAD
   bool MatchesWindow(nsPIDOMWindowOuter* aWindow) const {
     return Matches(aWindow);
+||||||| merged common ancestors
+  bool MatchesWindow(nsPIDOMWindowOuter* aWindow) const
+  {
+    return Matches(aWindow);
+=======
+  bool MatchesWindow(const dom::WindowProxyHolder& aWindow) const {
+    return Matches(aWindow.get()->GetDOMWindow());
+>>>>>>> upstream-releases
   }
 
   WebExtensionPolicy* GetExtension() { return mExtension; }

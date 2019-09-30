@@ -6,6 +6,7 @@
  */
 
 #include "SkPDFMakeCIDGlyphWidthsArray.h"
+<<<<<<< HEAD
 
 #include "SkBitSet.h"
 #include "SkGlyphCache.h"
@@ -13,6 +14,18 @@
 #include "SkTo.h"
 
 #include <vector>
+||||||| merged common ancestors
+#include "SkPaint.h"
+#include "SkGlyphCache.h"
+=======
+
+#include "SkPDFGlyphUse.h"
+#include "SkPaint.h"
+#include "SkStrike.h"
+#include "SkTo.h"
+
+#include <vector>
+>>>>>>> upstream-releases
 
 // TODO(halcanary): Write unit tests for SkPDFMakeCIDGlyphWidthsArray().
 
@@ -121,8 +134,16 @@ static void compose_advance_data(const AdvanceMetric& range,
             break;
         }
         case AdvanceMetric::kRange: {
+<<<<<<< HEAD
             auto advanceArray = sk_make_sp<SkPDFArray>();
             for (size_t j = 0; j < range.fAdvance.size(); j++)
+||||||| merged common ancestors
+            auto advanceArray = sk_make_sp<SkPDFArray>();
+            for (int j = 0; j < range.fAdvance.count(); j++)
+=======
+            auto advanceArray = SkPDFMakeArray();
+            for (size_t j = 0; j < range.fAdvance.size(); j++)
+>>>>>>> upstream-releases
                 advanceArray->appendScalar(
                         scale_from_font_units(range.fAdvance[j], emSize));
             result->appendInt(range.fStartId);
@@ -143,15 +164,15 @@ static void compose_advance_data(const AdvanceMetric& range,
 /** Retrieve advance data for glyphs. Used by the PDF backend. */
 // TODO(halcanary): this function is complex enough to need its logic
 // tested with unit tests.
-sk_sp<SkPDFArray> SkPDFMakeCIDGlyphWidthsArray(SkGlyphCache* cache,
-                                               const SkBitSet* subset,
-                                               uint16_t emSize,
-                                               int16_t* defaultAdvance) {
+std::unique_ptr<SkPDFArray> SkPDFMakeCIDGlyphWidthsArray(SkStrike* cache,
+                                                         const SkPDFGlyphUse* subset,
+                                                         uint16_t emSize,
+                                                         int16_t* defaultAdvance) {
     // Assuming that on average, the ASCII representation of an advance plus
     // a space is 8 characters and the ASCII representation of a glyph id is 3
     // characters, then the following cut offs for using different range types
     // apply:
-    // The cost of stopping and starting the range is 7 characers
+    // The cost of stopping and starting the range is 7 characters
     //  a. Removing 4 0's or don't care's is a win
     // The cost of stopping and starting the range plus a run is 22
     // characters
@@ -162,7 +183,7 @@ sk_sp<SkPDFArray> SkPDFMakeCIDGlyphWidthsArray(SkGlyphCache* cache,
     //  d. Removing a leading 0/don't cares is a win because it is omitted
     //  e. Removing 2 repeating advances is a win
 
-    auto result = sk_make_sp<SkPDFArray>();
+    auto result = SkPDFMakeArray();
     int num_glyphs = SkToInt(cache->getGlyphCount());
 
     bool prevRange = false;

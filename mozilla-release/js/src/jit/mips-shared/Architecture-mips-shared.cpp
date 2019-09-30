@@ -26,12 +26,41 @@ static uint32_t get_mips_flags() {
   flags |= HWCAP_FPU;
   flags |= HWCAP_R2;
 #else
+<<<<<<< HEAD
 #ifdef __linux__
   FILE* fp = fopen("/proc/cpuinfo", "r");
   if (!fp) {
+||||||| merged common ancestors
+# ifdef __linux__
+    FILE* fp = fopen("/proc/cpuinfo", "r");
+    if (!fp) {
+        return flags;
+    }
+
+    char buf[1024];
+    memset(buf, 0, sizeof(buf));
+    (void)fread(buf, sizeof(char), sizeof(buf) - 1, fp);
+    fclose(fp);
+    if (strstr(buf, "FPU")) {
+        flags |= HWCAP_FPU;
+    }
+    if (strstr(buf, "Loongson")) {
+        flags |= HWCAP_LOONGSON;
+    }
+    if (strstr(buf, "mips32r2") || strstr(buf, "mips64r2")) {
+        flags |= HWCAP_R2;
+    }
+# endif
+#endif // JS_SIMULATOR_MIPS32 || JS_SIMULATOR_MIPS64
+=======
+#  ifdef __linux__
+  FILE* fp = fopen("/proc/cpuinfo", "r");
+  if (!fp) {
+>>>>>>> upstream-releases
     return flags;
   }
 
+<<<<<<< HEAD
   char buf[1024];
   memset(buf, 0, sizeof(buf));
   (void)fread(buf, sizeof(char), sizeof(buf) - 1, fp);
@@ -48,6 +77,28 @@ static uint32_t get_mips_flags() {
 #endif
 #endif  // JS_SIMULATOR_MIPS32 || JS_SIMULATOR_MIPS64
   return flags;
+||||||| merged common ancestors
+static bool check_fpu()
+{
+    return mips_private::Flags & HWCAP_FPU;
+=======
+  char buf[1024];
+  memset(buf, 0, sizeof(buf));
+  (void)fread(buf, sizeof(char), sizeof(buf) - 1, fp);
+  fclose(fp);
+  if (strstr(buf, "FPU")) {
+    flags |= HWCAP_FPU;
+  }
+  if (strstr(buf, "Loongson")) {
+    flags |= HWCAP_LOONGSON;
+  }
+  if (strstr(buf, "mips32r2") || strstr(buf, "mips64r2")) {
+    flags |= HWCAP_R2;
+  }
+#  endif
+#endif  // JS_SIMULATOR_MIPS32 || JS_SIMULATOR_MIPS64
+  return flags;
+>>>>>>> upstream-releases
 }
 
 static bool check_fpu() { return mips_private::Flags & HWCAP_FPU; }

@@ -10,9 +10,11 @@
 #include "mozilla/dom/PositionBinding.h"
 #include "mozilla/dom/CoordinatesBinding.h"
 
+using mozilla::EqualOrBothNaN;
 using mozilla::IsNaN;
 
 // NaN() is a more convenient function name.
+<<<<<<< HEAD
 inline double NaN() { return mozilla::UnspecifiedNaN<double>(); }
 
 #ifdef DEBUG
@@ -20,6 +22,23 @@ static bool EqualOrNaN(double a, double b) {
   return (a == b) || (IsNaN(a) && IsNaN(b));
 }
 #endif
+||||||| merged common ancestors
+inline
+double NaN()
+{
+  return mozilla::UnspecifiedNaN<double>();
+}
+
+#ifdef DEBUG
+static
+bool EqualOrNaN(double a, double b)
+{
+  return (a == b) || (IsNaN(a) && IsNaN(b));
+}
+#endif
+=======
+inline double NaN() { return mozilla::UnspecifiedNaN<double>(); }
+>>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////
 // nsGeoPositionCoords
@@ -49,11 +68,11 @@ nsGeoPositionCoords::nsGeoPositionCoords(double aLat, double aLong, double aAlt,
   MOZ_ASSERT(aLong >= -180 && aLong <= 180);
   MOZ_ASSERT(!(aLat == 0 && aLong == 0));  // valid but probably a bug
 
-  MOZ_ASSERT(EqualOrNaN(mAlt, aAlt));
+  MOZ_ASSERT(EqualOrBothNaN(mAlt, aAlt));
   MOZ_ASSERT(mHError == aHError);
-  MOZ_ASSERT(EqualOrNaN(mVError, aVError));
-  MOZ_ASSERT(EqualOrNaN(mHeading, aHeading));
-  MOZ_ASSERT(EqualOrNaN(mSpeed, aSpeed));
+  MOZ_ASSERT(EqualOrBothNaN(mVError, aVError));
+  MOZ_ASSERT(EqualOrBothNaN(mHeading, aHeading));
+  MOZ_ASSERT(EqualOrBothNaN(mSpeed, aSpeed));
 }
 
 nsGeoPositionCoords::~nsGeoPositionCoords() {}

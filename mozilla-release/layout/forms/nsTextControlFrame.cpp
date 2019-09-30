@@ -23,7 +23,6 @@
 #include "nsPresContext.h"
 #include "nsGkAtoms.h"
 #include "nsLayoutUtils.h"
-#include "nsIPresShell.h"
 
 #include <algorithm>
 #include "nsRange.h"  //for selection setting helper func
@@ -33,6 +32,7 @@
 #include "nsILayoutHistoryState.h"
 
 #include "nsFocusManager.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/PresState.h"
 #include "nsAttrValueInlines.h"
 #include "mozilla/dom/Selection.h"
@@ -51,9 +51,20 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewTextControlFrame(nsIPresShell* aPresShell,
                                  ComputedStyle* aStyle) {
   return new (aPresShell) nsTextControlFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewTextControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTextControlFrame(aStyle);
+=======
+nsIFrame* NS_NewTextControlFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsTextControlFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTextControlFrame)
@@ -109,11 +120,26 @@ class nsTextControlFrame::nsAnonDivObserver final
   nsTextControlFrame& mFrame;
 };
 
+<<<<<<< HEAD
 nsTextControlFrame::nsTextControlFrame(ComputedStyle* aStyle)
     : nsContainerFrame(aStyle, kClassID),
       mFirstBaseline(NS_INTRINSIC_WIDTH_UNKNOWN),
       mEditorHasBeenInitialized(false),
       mIsProcessing(false)
+||||||| merged common ancestors
+nsTextControlFrame::nsTextControlFrame(ComputedStyle* aStyle)
+  : nsContainerFrame(aStyle, kClassID)
+  , mFirstBaseline(NS_INTRINSIC_WIDTH_UNKNOWN)
+  , mEditorHasBeenInitialized(false)
+  , mIsProcessing(false)
+=======
+nsTextControlFrame::nsTextControlFrame(ComputedStyle* aStyle,
+                                       nsPresContext* aPresContext)
+    : nsContainerFrame(aStyle, aPresContext, kClassID),
+      mFirstBaseline(NS_INTRINSIC_ISIZE_UNKNOWN),
+      mEditorHasBeenInitialized(false),
+      mIsProcessing(false)
+>>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mInEditorInitialization(false)
@@ -161,10 +187,27 @@ LogicalSize nsTextControlFrame::CalcIntrinsicSize(
   nscoord charMaxAdvance = 0;
 
   RefPtr<nsFontMetrics> fontMet =
+<<<<<<< HEAD
       nsLayoutUtils::GetFontMetricsForFrame(this, aFontSizeInflation);
 
   lineHeight = ReflowInput::CalcLineHeight(GetContent(), Style(), PresContext(),
                                            NS_AUTOHEIGHT, aFontSizeInflation);
+||||||| merged common ancestors
+    nsLayoutUtils::GetFontMetricsForFrame(this, aFontSizeInflation);
+
+  lineHeight =
+    ReflowInput::CalcLineHeight(GetContent(),
+                                Style(),
+                                PresContext(),
+                                NS_AUTOHEIGHT,
+                                aFontSizeInflation);
+=======
+      nsLayoutUtils::GetFontMetricsForFrame(this, aFontSizeInflation);
+
+  lineHeight =
+      ReflowInput::CalcLineHeight(GetContent(), Style(), PresContext(),
+                                  NS_UNCONSTRAINEDSIZE, aFontSizeInflation);
+>>>>>>> upstream-releases
   charWidth = fontMet->AveCharWidth();
   charMaxAdvance = fontMet->MaxAdvance();
 
@@ -199,12 +242,9 @@ LogicalSize nsTextControlFrame::CalcIntrinsicSize(
 
   // Increment width with cols * letter-spacing.
   {
-    const nsStyleCoord& lsCoord = StyleText()->mLetterSpacing;
-    if (eStyleUnit_Coord == lsCoord.GetUnit()) {
-      nscoord letterSpacing = lsCoord.GetCoordValue();
-      if (letterSpacing != 0) {
-        intrinsicSize.ISize(aWM) += cols * letterSpacing;
-      }
+    const StyleLength& letterSpacing = StyleText()->mLetterSpacing;
+    if (!letterSpacing.IsZero()) {
+      intrinsicSize.ISize(aWM) += cols * letterSpacing.ToAppUnits();
     }
   }
 
@@ -246,7 +286,7 @@ nsresult nsTextControlFrame::EnsureEditorInitialized() {
 
   if (mEditorHasBeenInitialized) return NS_OK;
 
-  nsIDocument* doc = mContent->GetComposedDoc();
+  Document* doc = mContent->GetComposedDoc();
   NS_ENSURE_TRUE(doc, NS_ERROR_FAILURE);
 
   AutoWeakFrame weakFrame(this);
@@ -324,11 +364,28 @@ nsresult nsTextControlFrame::EnsureEditorInitialized() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static already_AddRefed<Element> CreateEmptyDiv(
     const nsTextControlFrame& aOwnerFrame) {
   nsIDocument* doc = aOwnerFrame.PresContext()->Document();
   RefPtr<mozilla::dom::NodeInfo> nodeInfo = doc->NodeInfoManager()->GetNodeInfo(
       nsGkAtoms::div, nullptr, kNameSpaceID_XHTML, nsINode::ELEMENT_NODE);
+||||||| merged common ancestors
+static already_AddRefed<Element>
+CreateEmptyDiv(const nsTextControlFrame& aOwnerFrame)
+{
+  nsIDocument* doc = aOwnerFrame.PresContext()->Document();
+  RefPtr<mozilla::dom::NodeInfo> nodeInfo =
+    doc->NodeInfoManager()->GetNodeInfo(nsGkAtoms::div, nullptr,
+                                        kNameSpaceID_XHTML,
+                                        nsINode::ELEMENT_NODE);
+=======
+static already_AddRefed<Element> CreateEmptyDiv(
+    const nsTextControlFrame& aOwnerFrame) {
+  Document* doc = aOwnerFrame.PresContext()->Document();
+  RefPtr<mozilla::dom::NodeInfo> nodeInfo = doc->NodeInfoManager()->GetNodeInfo(
+      nsGkAtoms::div, nullptr, kNameSpaceID_XHTML, nsINode::ELEMENT_NODE);
+>>>>>>> upstream-releases
 
   RefPtr<Element> element = NS_NewHTMLDivElement(nodeInfo.forget());
   return element.forget();
@@ -443,14 +500,13 @@ nsresult nsTextControlFrame::CreateRootNode() {
   if (!IsSingleLineTextControl()) {
     // We can't just inherit the overflow because setting visible overflow will
     // crash when the number of lines exceeds the height of the textarea and
-    // setting -moz-hidden-unscrollable overflow (NS_STYLE_OVERFLOW_CLIP)
-    // doesn't paint the caret for some reason.
+    // setting -moz-hidden-unscrollable overflow doesn't paint the caret for
+    // some reason.
     const nsStyleDisplay* disp = StyleDisplay();
-    if (disp->mOverflowX != NS_STYLE_OVERFLOW_VISIBLE &&
-        disp->mOverflowX != NS_STYLE_OVERFLOW_CLIP) {
+    if (disp->mOverflowX != StyleOverflow::Visible &&
+        disp->mOverflowX != StyleOverflow::MozHiddenUnscrollable) {
       classValue.AppendLiteral(" inherit-overflow");
     }
-    classValue.AppendLiteral(" inherit-scroll-behavior");
   }
   nsresult rv = mRootNode->SetAttr(kNameSpaceID_None, nsGkAtoms::_class,
                                    classValue, false);
@@ -478,7 +534,7 @@ void nsTextControlFrame::CreatePlaceholderIfNeeded() {
 
   mPlaceholderDiv = CreateEmptyDivWithTextNode(*this);
   // Associate ::placeholder pseudo-element with the placeholder node.
-  mPlaceholderDiv->SetPseudoElementType(CSSPseudoElementType::placeholder);
+  mPlaceholderDiv->SetPseudoElementType(PseudoStyleType::placeholder);
   mPlaceholderDiv->GetFirstChild()->AsText()->SetText(placeholderTxt, false);
 }
 
@@ -533,8 +589,8 @@ LogicalSize nsTextControlFrame::ComputeAutoSize(
 
   // Note: nsContainerFrame::ComputeAutoSize only computes the inline-size (and
   // only for 'auto'), the block-size it returns is always NS_UNCONSTRAINEDSIZE.
-  const nsStyleCoord& iSizeCoord = StylePosition()->ISize(aWM);
-  if (iSizeCoord.GetUnit() == eStyleUnit_Auto) {
+  const auto& iSizeCoord = StylePosition()->ISize(aWM);
+  if (iSizeCoord.IsAuto()) {
     if (aFlags & ComputeSizeFlags::eIClampMarginBoxMinSize) {
       // CalcIntrinsicSize isn't aware of grid-item margin-box clamping, so we
       // fall back to nsContainerFrame's ComputeAutoSize to handle that.
@@ -584,6 +640,7 @@ void nsTextControlFrame::Reflow(nsPresContext* aPresContext,
           aReflowInput.ComputedLogicalBorderPadding().BStartEnd(wm));
   aDesiredSize.SetSize(wm, finalSize);
 
+<<<<<<< HEAD
   // Calculate the baseline and store it in mFirstBaseline.
   nscoord lineHeight = aReflowInput.ComputedBSize();
   float inflation = nsLayoutUtils::FontSizeInflationFor(this);
@@ -597,6 +654,42 @@ void nsTextControlFrame::Reflow(nsPresContext* aPresContext,
                                                           wm.IsLineInverted()) +
                    aReflowInput.ComputedLogicalBorderPadding().BStart(wm);
   aDesiredSize.SetBlockStartAscent(mFirstBaseline);
+||||||| merged common ancestors
+  // Calculate the baseline and store it in mFirstBaseline.
+  nscoord lineHeight = aReflowInput.ComputedBSize();
+  float inflation = nsLayoutUtils::FontSizeInflationFor(this);
+  if (!IsSingleLineTextControl()) {
+    lineHeight = ReflowInput::CalcLineHeight(GetContent(),
+                                             Style(),
+                                             PresContext(),
+                                             NS_AUTOHEIGHT,
+                                             inflation);
+  }
+  RefPtr<nsFontMetrics> fontMet =
+    nsLayoutUtils::GetFontMetricsForFrame(this, inflation);
+  mFirstBaseline =
+    nsLayoutUtils::GetCenteredFontBaseline(fontMet, lineHeight,
+                                           wm.IsLineInverted()) +
+    aReflowInput.ComputedLogicalBorderPadding().BStart(wm);
+  aDesiredSize.SetBlockStartAscent(mFirstBaseline);
+=======
+  if (!aReflowInput.mStyleDisplay->IsContainLayout()) {
+    // Calculate the baseline and store it in mFirstBaseline.
+    nscoord lineHeight = aReflowInput.ComputedBSize();
+    float inflation = nsLayoutUtils::FontSizeInflationFor(this);
+    if (!IsSingleLineTextControl()) {
+      lineHeight =
+          ReflowInput::CalcLineHeight(GetContent(), Style(), PresContext(),
+                                      NS_UNCONSTRAINEDSIZE, inflation);
+    }
+    RefPtr<nsFontMetrics> fontMet =
+        nsLayoutUtils::GetFontMetricsForFrame(this, inflation);
+    mFirstBaseline = nsLayoutUtils::GetCenteredFontBaseline(
+                         fontMet, lineHeight, wm.IsLineInverted()) +
+                     aReflowInput.ComputedLogicalBorderPadding().BStart(wm);
+    aDesiredSize.SetBlockStartAscent(mFirstBaseline);
+  }  // else: we're layout-contained, and so we have no baseline.
+>>>>>>> upstream-releases
 
   // overflow handling
   aDesiredSize.SetOverflowAreasToDesiredBounds();
@@ -624,12 +717,27 @@ void nsTextControlFrame::ReflowTextControlChild(
   LogicalSize availSize = aReflowInput.ComputedSizeWithPadding(wm);
   availSize.BSize(wm) = NS_UNCONSTRAINEDSIZE;
 
+<<<<<<< HEAD
   ReflowInput kidReflowInput(aPresContext, aReflowInput, aKid, availSize,
                              nullptr, ReflowInput::CALLER_WILL_INIT);
   // Override padding with our computed padding in case we got it from theming
   // or percentage
   kidReflowInput.Init(aPresContext, nullptr, nullptr,
                       &aReflowInput.ComputedPhysicalPadding());
+||||||| merged common ancestors
+  ReflowInput kidReflowInput(aPresContext, aReflowInput,
+                                   aKid, availSize, nullptr,
+                                   ReflowInput::CALLER_WILL_INIT);
+  // Override padding with our computed padding in case we got it from theming or percentage
+  kidReflowInput.Init(aPresContext, nullptr, nullptr, &aReflowInput.ComputedPhysicalPadding());
+=======
+  ReflowInput kidReflowInput(aPresContext, aReflowInput, aKid, availSize,
+                             Nothing(), ReflowInput::CALLER_WILL_INIT);
+  // Override padding with our computed padding in case we got it from theming
+  // or percentage
+  kidReflowInput.Init(aPresContext, Nothing(), nullptr,
+                      &aReflowInput.ComputedPhysicalPadding());
+>>>>>>> upstream-releases
 
   // Set computed width and computed height for the child
   kidReflowInput.SetComputedWidth(aReflowInput.ComputedWidth());
@@ -711,7 +819,7 @@ void nsTextControlFrame::SetFocus(bool aOn, bool aRepaint) {
     return;
   }
 
-  nsIPresShell* presShell = PresContext()->GetPresShell();
+  mozilla::PresShell* presShell = PresContext()->GetPresShell();
   RefPtr<nsCaret> caret = presShell->GetCaret();
   if (!caret) {
     return;
@@ -723,7 +831,7 @@ void nsTextControlFrame::SetFocus(bool aOn, bool aRepaint) {
   if (!isFocusedRightNow) {
     // Don't scroll the current selection if we've been focused using the mouse.
     uint32_t lastFocusMethod = 0;
-    nsIDocument* doc = GetContent()->GetComposedDoc();
+    Document* doc = GetContent()->GetComposedDoc();
     if (doc) {
       nsIFocusManager* fm = nsFocusManager::GetFocusManager();
       if (fm) {
@@ -747,9 +855,14 @@ void nsTextControlFrame::SetFocus(bool aOn, bool aRepaint) {
   // document or by the text input/area. Clear any selection in the
   // document since the focus is now on our independent selection.
 
-  nsCOMPtr<nsISelectionController> selcon = do_QueryInterface(presShell);
   RefPtr<Selection> docSel =
+<<<<<<< HEAD
       selcon->GetSelection(nsISelectionController::SELECTION_NORMAL);
+||||||| merged common ancestors
+    selcon->GetSelection(nsISelectionController::SELECTION_NORMAL);
+=======
+      presShell->GetSelection(nsISelectionController::SELECTION_NORMAL);
+>>>>>>> upstream-releases
   if (!docSel) {
     return;
   }
@@ -838,7 +951,8 @@ nsresult nsTextControlFrame::SetSelectionInternal(
     return err.StealNSResult();
   }
 
-  selection->AddRange(*range, err);  // NOTE: can destroy the world
+  selection->AddRangeAndSelectFramesAndNotifyListeners(
+      *range, err);  // NOTE: can destroy the world
   if (NS_WARN_IF(err.Failed())) {
     return err.StealNSResult();
   }
@@ -892,8 +1006,7 @@ nsresult nsTextControlFrame::SelectAllOrCollapseToEndOfText(bool aSelect) {
       child = child->GetPreviousSibling();
       if (child && child->IsText()) {
         rootNode = child;
-        const nsTextFragment* fragment = child->GetText();
-        numChildren = fragment ? fragment->GetLength() : 0;
+        numChildren = child->AsText()->TextDataLength();
       }
     }
   }
@@ -1334,12 +1447,23 @@ nsTextControlFrame::EditorInitializer::Run() {
   // Need to block script to avoid bug 669767.
   nsAutoScriptBlocker scriptBlocker;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> shell = mFrame->PresContext()->GetPresShell();
   bool observes = shell->ObservesNativeAnonMutationsForPrint();
   shell->ObserveNativeAnonMutationsForPrint(true);
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> shell =
+    mFrame->PresContext()->GetPresShell();
+  bool observes = shell->ObservesNativeAnonMutationsForPrint();
+  shell->ObserveNativeAnonMutationsForPrint(true);
+=======
+  RefPtr<mozilla::PresShell> presShell = mFrame->PresShell();
+  bool observes = presShell->ObservesNativeAnonMutationsForPrint();
+  presShell->ObserveNativeAnonMutationsForPrint(true);
+>>>>>>> upstream-releases
   // This can cause the frame to be destroyed (and call Revoke()).
   mFrame->EnsureEditorInitialized();
-  shell->ObserveNativeAnonMutationsForPrint(observes);
+  presShell->ObserveNativeAnonMutationsForPrint(observes);
 
   // The frame can *still* be destroyed even though we have a scriptblocker,
   // bug 682684.

@@ -27,8 +27,17 @@ class VP8TrackEncoder : public VideoTrackEncoder {
     SKIP_FRAME,           // Skip the next frame.
   };
 
+<<<<<<< HEAD
  public:
   VP8TrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
+||||||| merged common ancestors
+public:
+  VP8TrackEncoder(TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
+=======
+ public:
+  VP8TrackEncoder(RefPtr<DriftCompensator> aDriftCompensator,
+                  TrackRate aTrackRate, FrameDroppingMode aFrameDroppingMode);
+>>>>>>> upstream-releases
   virtual ~VP8TrackEncoder();
 
   already_AddRefed<TrackMetadataBase> GetMetadata() final;
@@ -45,8 +54,10 @@ class VP8TrackEncoder : public VideoTrackEncoder {
                                          StreamTime aProcessedDuration);
 
   // Get the encoded data from encoder to aData.
-  // Return value: false if the vpx_codec_get_cx_data returns null
-  //               for EOS detection.
+  // Return value: NS_ERROR_NOT_AVAILABABLE if the vpx_codec_get_cx_data returns
+  //                                        null for EOS detection.
+  //               NS_OK if some data was appended to aData.
+  //               An error nsresult otherwise.
   nsresult GetEncodedPartitions(EncodedFrameContainer& aData);
 
   // Prepare the input data to the mVPXImageWrapper for encoding.

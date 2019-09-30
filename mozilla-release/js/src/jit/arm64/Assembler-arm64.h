@@ -31,26 +31,76 @@ static const Scale ScalePointer = TimesEight;
 // The MacroAssembler uses scratch registers extensively and unexpectedly.
 // For safety, scratch registers should always be acquired using
 // vixl::UseScratchRegisterScope.
+<<<<<<< HEAD
+static constexpr Register ScratchReg{Registers::ip0};
+static constexpr ARMRegister ScratchReg64 = {ScratchReg, 64};
+
+static constexpr Register ScratchReg2{Registers::ip1};
+static constexpr ARMRegister ScratchReg2_64 = {ScratchReg2, 64};
+||||||| merged common ancestors
+static constexpr Register ScratchReg { Registers::ip0 };
+static constexpr ARMRegister ScratchReg64 = { ScratchReg, 64 };
+
+static constexpr Register ScratchReg2 { Registers::ip1 };
+static constexpr ARMRegister ScratchReg2_64 = { ScratchReg2, 64 };
+=======
 static constexpr Register ScratchReg{Registers::ip0};
 static constexpr ARMRegister ScratchReg64 = {ScratchReg, 64};
 
 static constexpr Register ScratchReg2{Registers::ip1};
 static constexpr ARMRegister ScratchReg2_64 = {ScratchReg2, 64};
 
+static constexpr FloatRegister ReturnDoubleReg = {FloatRegisters::d0,
+                                                  FloatRegisters::Double};
+static constexpr FloatRegister ScratchDoubleReg = {FloatRegisters::d31,
+                                                   FloatRegisters::Double};
+struct ScratchDoubleScope : public AutoFloatRegisterScope {
+  explicit ScratchDoubleScope(MacroAssembler& masm)
+      : AutoFloatRegisterScope(masm, ScratchDoubleReg) {}
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 static constexpr FloatRegister ScratchDoubleReg = {FloatRegisters::d31,
                                                    FloatRegisters::Double};
 static constexpr FloatRegister ReturnDoubleReg = {FloatRegisters::d0,
                                                   FloatRegisters::Double};
-
+||||||| merged common ancestors
+static constexpr FloatRegister ScratchDoubleReg = { FloatRegisters::d31, FloatRegisters::Double };
+static constexpr FloatRegister ReturnDoubleReg = { FloatRegisters::d0, FloatRegisters::Double };
+=======
 static constexpr FloatRegister ReturnFloat32Reg = {FloatRegisters::s0,
                                                    FloatRegisters::Single};
 static constexpr FloatRegister ScratchFloat32Reg = {FloatRegisters::s31,
                                                     FloatRegisters::Single};
+struct ScratchFloat32Scope : public AutoFloatRegisterScope {
+  explicit ScratchFloat32Scope(MacroAssembler& masm)
+      : AutoFloatRegisterScope(masm, ScratchFloat32Reg) {}
+};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static constexpr FloatRegister ReturnFloat32Reg = {FloatRegisters::s0,
+                                                   FloatRegisters::Single};
+static constexpr FloatRegister ScratchFloat32Reg = {FloatRegisters::s31,
+                                                    FloatRegisters::Single};
+||||||| merged common ancestors
+static constexpr FloatRegister ReturnFloat32Reg = { FloatRegisters::s0, FloatRegisters::Single };
+static constexpr FloatRegister ScratchFloat32Reg = { FloatRegisters::s31, FloatRegisters::Single };
+=======
 static constexpr Register InvalidReg{Registers::invalid_reg};
 static constexpr FloatRegister InvalidFloatReg = {FloatRegisters::invalid_fpreg,
                                                   FloatRegisters::Single};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static constexpr Register InvalidReg{Registers::invalid_reg};
+static constexpr FloatRegister InvalidFloatReg = {FloatRegisters::invalid_fpreg,
+                                                  FloatRegisters::Single};
+||||||| merged common ancestors
+static constexpr Register InvalidReg { Registers::invalid_reg };
+static constexpr FloatRegister InvalidFloatReg = { FloatRegisters::invalid_fpreg, FloatRegisters::Single };
+=======
 static constexpr Register OsrFrameReg{Registers::x3};
 static constexpr Register CallTempReg0{Registers::x9};
 static constexpr Register CallTempReg1{Registers::x10};
@@ -58,8 +108,35 @@ static constexpr Register CallTempReg2{Registers::x11};
 static constexpr Register CallTempReg3{Registers::x12};
 static constexpr Register CallTempReg4{Registers::x13};
 static constexpr Register CallTempReg5{Registers::x14};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static constexpr Register OsrFrameReg{Registers::x3};
+static constexpr Register CallTempReg0{Registers::x9};
+static constexpr Register CallTempReg1{Registers::x10};
+static constexpr Register CallTempReg2{Registers::x11};
+static constexpr Register CallTempReg3{Registers::x12};
+static constexpr Register CallTempReg4{Registers::x13};
+static constexpr Register CallTempReg5{Registers::x14};
+||||||| merged common ancestors
+static constexpr Register OsrFrameReg { Registers::x3 };
+static constexpr Register CallTempReg0 { Registers::x9 };
+static constexpr Register CallTempReg1 { Registers::x10 };
+static constexpr Register CallTempReg2 { Registers::x11 };
+static constexpr Register CallTempReg3 { Registers::x12 };
+static constexpr Register CallTempReg4 { Registers::x13 };
+static constexpr Register CallTempReg5 { Registers::x14 };
+=======
 static constexpr Register PreBarrierReg{Registers::x1};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+static constexpr Register PreBarrierReg{Registers::x1};
+||||||| merged common ancestors
+static constexpr Register PreBarrierReg { Registers::x1 };
+=======
+static constexpr Register InterpreterPCReg{Registers::x9};
+>>>>>>> upstream-releases
 
 static constexpr Register ReturnReg{Registers::x0};
 static constexpr Register64 ReturnReg64(ReturnReg);
@@ -180,6 +257,7 @@ static constexpr bool SupportsUint8x16Compares = false;
 static constexpr bool SupportsUint16x8Compares = false;
 static constexpr bool SupportsUint32x4Compares = false;
 
+<<<<<<< HEAD
 class Assembler : public vixl::Assembler {
  public:
   Assembler() : vixl::Assembler() {}
@@ -221,7 +299,143 @@ class Assembler : public vixl::Assembler {
   void copyJumpRelocationTable(uint8_t* dest) const {
     if (jumpRelocations_.length()) {
       memcpy(dest, jumpRelocations_.buffer(), jumpRelocations_.length());
+||||||| merged common ancestors
+class Assembler : public vixl::Assembler
+{
+  public:
+    Assembler()
+      : vixl::Assembler()
+    { }
+
+    typedef vixl::Condition Condition;
+
+    void finish();
+    bool appendRawCode(const uint8_t* code, size_t numBytes);
+    bool reserve(size_t size);
+    bool swapBuffer(wasm::Bytes& bytes);
+
+    // Emit the jump table, returning the BufferOffset to the first entry in the table.
+    BufferOffset emitExtendedJumpTable();
+    BufferOffset ExtendedJumpTable_;
+    void executableCopy(uint8_t* buffer, bool flushICache = true);
+
+    BufferOffset immPool(ARMRegister dest, uint8_t* value, vixl::LoadLiteralOp op,
+                         const LiteralDoc& doc, ARMBuffer::PoolEntry* pe = nullptr);
+    BufferOffset immPool64(ARMRegister dest, uint64_t value, ARMBuffer::PoolEntry* pe = nullptr);
+    BufferOffset immPool64Branch(RepatchLabel* label, ARMBuffer::PoolEntry* pe, vixl::Condition c);
+    BufferOffset fImmPool(ARMFPRegister dest, uint8_t* value, vixl::LoadLiteralOp op,
+                          const LiteralDoc& doc);
+    BufferOffset fImmPool64(ARMFPRegister dest, double value);
+    BufferOffset fImmPool32(ARMFPRegister dest, float value);
+
+    void bind(Label* label) { bind(label, nextOffset()); }
+    void bind(Label* label, BufferOffset boff);
+    void bind(RepatchLabel* label);
+
+    bool oom() const {
+        return AssemblerShared::oom() ||
+            armbuffer_.oom() ||
+            jumpRelocations_.oom() ||
+            dataRelocations_.oom();
+=======
+class Assembler : public vixl::Assembler {
+ public:
+  Assembler() : vixl::Assembler() {}
+
+  typedef vixl::Condition Condition;
+
+  void finish();
+  bool appendRawCode(const uint8_t* code, size_t numBytes);
+  bool reserve(size_t size);
+  bool swapBuffer(wasm::Bytes& bytes);
+
+  // Emit the jump table, returning the BufferOffset to the first entry in the
+  // table.
+  BufferOffset emitExtendedJumpTable();
+  BufferOffset ExtendedJumpTable_;
+  void executableCopy(uint8_t* buffer, bool flushICache = true);
+
+  BufferOffset immPool(ARMRegister dest, uint8_t* value, vixl::LoadLiteralOp op,
+                       const LiteralDoc& doc,
+                       ARMBuffer::PoolEntry* pe = nullptr);
+  BufferOffset immPool64(ARMRegister dest, uint64_t value,
+                         ARMBuffer::PoolEntry* pe = nullptr);
+  BufferOffset immPool64Branch(RepatchLabel* label, ARMBuffer::PoolEntry* pe,
+                               vixl::Condition c);
+  BufferOffset fImmPool(ARMFPRegister dest, uint8_t* value,
+                        vixl::LoadLiteralOp op, const LiteralDoc& doc);
+  BufferOffset fImmPool64(ARMFPRegister dest, double value);
+  BufferOffset fImmPool32(ARMFPRegister dest, float value);
+
+  uint32_t currentOffset() const { return nextOffset().getOffset(); }
+
+  void bind(Label* label) { bind(label, nextOffset()); }
+  void bind(Label* label, BufferOffset boff);
+  void bind(RepatchLabel* label);
+  void bind(CodeLabel* label) { label->target()->bind(currentOffset()); }
+
+  void setUnlimitedBuffer() { armbuffer_.setUnlimited(); }
+  bool oom() const {
+    return AssemblerShared::oom() || armbuffer_.oom() ||
+           jumpRelocations_.oom() || dataRelocations_.oom();
+  }
+
+  void copyJumpRelocationTable(uint8_t* dest) const {
+    if (jumpRelocations_.length()) {
+      memcpy(dest, jumpRelocations_.buffer(), jumpRelocations_.length());
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
+  }
+  void copyDataRelocationTable(uint8_t* dest) const {
+    if (dataRelocations_.length()) {
+      memcpy(dest, dataRelocations_.buffer(), dataRelocations_.length());
+    }
+  }
+
+  size_t jumpRelocationTableBytes() const { return jumpRelocations_.length(); }
+  size_t dataRelocationTableBytes() const { return dataRelocations_.length(); }
+  size_t bytesNeeded() const {
+    return SizeOfCodeGenerated() + jumpRelocationTableBytes() +
+           dataRelocationTableBytes();
+  }
+
+  void processCodeLabels(uint8_t* rawCode) {
+    for (const CodeLabel& label : codeLabels_) {
+      Bind(rawCode, label);
+    }
+  }
+||||||| merged common ancestors
+
+    void copyJumpRelocationTable(uint8_t* dest) const {
+        if (jumpRelocations_.length()) {
+            memcpy(dest, jumpRelocations_.buffer(), jumpRelocations_.length());
+        }
+    }
+    void copyDataRelocationTable(uint8_t* dest) const {
+        if (dataRelocations_.length()) {
+            memcpy(dest, dataRelocations_.buffer(), dataRelocations_.length());
+        }
+    }
+
+    size_t jumpRelocationTableBytes() const {
+        return jumpRelocations_.length();
+    }
+    size_t dataRelocationTableBytes() const {
+        return dataRelocations_.length();
+    }
+    size_t bytesNeeded() const {
+        return SizeOfCodeGenerated() +
+            jumpRelocationTableBytes() +
+            dataRelocationTableBytes();
+    }
+
+    void processCodeLabels(uint8_t* rawCode) {
+        for (const CodeLabel& label : codeLabels_) {
+            Bind(rawCode, label);
+        }
+    }
+=======
   }
   void copyDataRelocationTable(uint8_t* dest) const {
     if (dataRelocations_.length()) {
@@ -242,12 +456,37 @@ class Assembler : public vixl::Assembler {
     }
   }
 
+  static void UpdateLoad64Value(Instruction* inst0, uint64_t value);
+
+  static void Bind(uint8_t* rawCode, const CodeLabel& label) {
+    auto mode = label.linkMode();
+    size_t patchAtOffset = label.patchAt().offset();
+    size_t targetOffset = label.target().offset();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static void Bind(uint8_t* rawCode, const CodeLabel& label) {
     size_t patchAtOffset = label.patchAt().offset();
     size_t targetOffset = label.target().offset();
     *reinterpret_cast<const void**>(rawCode + patchAtOffset) =
         rawCode + targetOffset;
   }
+||||||| merged common ancestors
+    static void Bind(uint8_t* rawCode, const CodeLabel& label) {
+        size_t patchAtOffset = label.patchAt().offset();
+        size_t targetOffset = label.target().offset();
+        *reinterpret_cast<const void**>(rawCode + patchAtOffset) = rawCode + targetOffset;
+    }
+=======
+    if (mode == CodeLabel::MoveImmediate) {
+      Instruction* inst = (Instruction*)(rawCode + patchAtOffset);
+      Assembler::UpdateLoad64Value(inst, (uint64_t)(rawCode + targetOffset));
+    } else {
+      *reinterpret_cast<const void**>(rawCode + patchAtOffset) =
+          rawCode + targetOffset;
+    }
+  }
+>>>>>>> upstream-releases
 
   void retarget(Label* cur, Label* next);
 
@@ -273,6 +512,7 @@ class Assembler : public vixl::Assembler {
 #ifdef JS_DISASM_ARM64
     spew_.setPrinter(sp);
 #endif
+<<<<<<< HEAD
   }
 
   static bool SupportsFloatingPoint() { return true; }
@@ -338,7 +578,140 @@ class Assembler : public vixl::Assembler {
                                    CompactBufferReader& reader);
 
   void assertNoGCThings() const {
+||||||| merged common ancestors
+    }
+
+    static bool SupportsFloatingPoint() { return true; }
+    static bool SupportsUnalignedAccesses() { return true; }
+    static bool SupportsSimd() { return js::jit::SupportsSimd; }
+
+    static bool HasRoundInstruction(RoundingMode mode) { return false; }
+
+    // Tracks a jump that is patchable after finalization.
+    void addJumpRelocation(BufferOffset src, RelocationKind reloc);
+
+  protected:
+    // Add a jump whose target is unknown until finalization.
+    // The jump may not be patched at runtime.
+    void addPendingJump(BufferOffset src, ImmPtr target, RelocationKind kind);
+
+    // Add a jump whose target is unknown until finalization, and may change
+    // thereafter. The jump is patchable at runtime.
+    size_t addPatchableJump(BufferOffset src, RelocationKind kind);
+
+  public:
+    static uint32_t PatchWrite_NearCallSize() {
+        return 4;
+    }
+
+    static uint32_t NopSize() {
+        return 4;
+    }
+
+    static void PatchWrite_NearCall(CodeLocationLabel start, CodeLocationLabel toCall) {
+        Instruction* dest = (Instruction*)start.raw();
+        //printf("patching %p with call to %p\n", start.raw(), toCall.raw());
+        bl(dest, ((Instruction*)toCall.raw() - dest)>>2);
+
+    }
+    static void PatchDataWithValueCheck(CodeLocationLabel label,
+                                        PatchedImmPtr newValue,
+                                        PatchedImmPtr expected);
+
+    static void PatchDataWithValueCheck(CodeLocationLabel label,
+                                        ImmPtr newValue,
+                                        ImmPtr expected);
+
+    static void PatchWrite_Imm32(CodeLocationLabel label, Imm32 imm) {
+        // Raw is going to be the return address.
+        uint32_t* raw = (uint32_t*)label.raw();
+        // Overwrite the 4 bytes before the return address, which will end up being
+        // the call instruction.
+        *(raw - 1) = imm.value;
+    }
+    static uint32_t AlignDoubleArg(uint32_t offset) {
+        MOZ_CRASH("AlignDoubleArg()");
+    }
+    static uintptr_t GetPointer(uint8_t* ptr) {
+        Instruction* i = reinterpret_cast<Instruction*>(ptr);
+        uint64_t ret = i->Literal64();
+        return ret;
+    }
+
+    // Toggle a jmp or cmp emitted by toggledJump().
+    static void ToggleToJmp(CodeLocationLabel inst_);
+    static void ToggleToCmp(CodeLocationLabel inst_);
+    static void ToggleCall(CodeLocationLabel inst_, bool enabled);
+
+    static void TraceJumpRelocations(JSTracer* trc, JitCode* code, CompactBufferReader& reader);
+    static void TraceDataRelocations(JSTracer* trc, JitCode* code, CompactBufferReader& reader);
+
+    void assertNoGCThings() const {
+=======
+  }
+
+  static bool SupportsFloatingPoint() { return true; }
+  static bool SupportsUnalignedAccesses() { return true; }
+  static bool SupportsSimd() { return js::jit::SupportsSimd; }
+
+  static bool HasRoundInstruction(RoundingMode mode) { return false; }
+
+  // Tracks a jump that is patchable after finalization.
+  void addJumpRelocation(BufferOffset src, RelocationKind reloc);
+
+ protected:
+  // Add a jump whose target is unknown until finalization.
+  // The jump may not be patched at runtime.
+  void addPendingJump(BufferOffset src, ImmPtr target, RelocationKind kind);
+
+  // Add a jump whose target is unknown until finalization, and may change
+  // thereafter. The jump is patchable at runtime.
+  size_t addPatchableJump(BufferOffset src, RelocationKind kind);
+
+ public:
+  static uint32_t PatchWrite_NearCallSize() { return 4; }
+
+  static uint32_t NopSize() { return 4; }
+
+  static void PatchWrite_NearCall(CodeLocationLabel start,
+                                  CodeLocationLabel toCall);
+  static void PatchDataWithValueCheck(CodeLocationLabel label,
+                                      PatchedImmPtr newValue,
+                                      PatchedImmPtr expected);
+
+  static void PatchDataWithValueCheck(CodeLocationLabel label, ImmPtr newValue,
+                                      ImmPtr expected);
+
+  static void PatchWrite_Imm32(CodeLocationLabel label, Imm32 imm) {
+    // Raw is going to be the return address.
+    uint32_t* raw = (uint32_t*)label.raw();
+    // Overwrite the 4 bytes before the return address, which will end up being
+    // the call instruction.
+    *(raw - 1) = imm.value;
+  }
+  static uint32_t AlignDoubleArg(uint32_t offset) {
+    MOZ_CRASH("AlignDoubleArg()");
+  }
+  static uintptr_t GetPointer(uint8_t* ptr) {
+    Instruction* i = reinterpret_cast<Instruction*>(ptr);
+    uint64_t ret = i->Literal64();
+    return ret;
+  }
+
+  // Toggle a jmp or cmp emitted by toggledJump().
+  static void ToggleToJmp(CodeLocationLabel inst_);
+  static void ToggleToCmp(CodeLocationLabel inst_);
+  static void ToggleCall(CodeLocationLabel inst_, bool enabled);
+
+  static void TraceJumpRelocations(JSTracer* trc, JitCode* code,
+                                   CompactBufferReader& reader);
+  static void TraceDataRelocations(JSTracer* trc, JitCode* code,
+                                   CompactBufferReader& reader);
+
+  void assertNoGCThings() const {
+>>>>>>> upstream-releases
 #ifdef DEBUG
+<<<<<<< HEAD
     MOZ_ASSERT(dataRelocations_.length() == 0);
     for (auto& j : pendingJumps_) {
       MOZ_ASSERT(j.kind == RelocationKind::HARDCODED);
@@ -406,6 +779,151 @@ class Assembler : public vixl::Assembler {
   // Final output formatters.
   CompactBufferWriter jumpRelocations_;
   CompactBufferWriter dataRelocations_;
+||||||| merged common ancestors
+        MOZ_ASSERT(dataRelocations_.length() == 0);
+        for (auto& j : pendingJumps_) {
+            MOZ_ASSERT(j.kind == RelocationKind::HARDCODED);
+        }
+#endif
+    }
+
+  public:
+    // A Jump table entry is 2 instructions, with 8 bytes of raw data
+    static const size_t SizeOfJumpTableEntry = 16;
+
+    struct JumpTableEntry
+    {
+        uint32_t ldr;
+        uint32_t br;
+        void* data;
+
+        Instruction* getLdr() {
+            return reinterpret_cast<Instruction*>(&ldr);
+        }
+    };
+
+    // Offset of the patchable target for the given entry.
+    static const size_t OffsetOfJumpTableEntryPointer = 8;
+
+  public:
+    void writeCodePointer(CodeLabel* label) {
+        uintptr_t x = uintptr_t(-1);
+        BufferOffset off = EmitData(&x, sizeof(uintptr_t));
+        label->patchAt()->bind(off.getOffset());
+    }
+
+
+    void verifyHeapAccessDisassembly(uint32_t begin, uint32_t end,
+                                     const Disassembler::HeapAccess& heapAccess)
+    {
+        MOZ_CRASH("verifyHeapAccessDisassembly");
+    }
+
+  protected:
+    // Because jumps may be relocated to a target inaccessible by a short jump,
+    // each relocatable jump must have a unique entry in the extended jump table.
+    // Valid relocatable targets are of type RelocationKind::JITCODE.
+    struct JumpRelocation
+    {
+        BufferOffset jump; // Offset to the short jump, from the start of the code buffer.
+        uint32_t extendedTableIndex; // Unique index within the extended jump table.
+
+        JumpRelocation(BufferOffset jump, uint32_t extendedTableIndex)
+          : jump(jump), extendedTableIndex(extendedTableIndex)
+        { }
+    };
+
+    // Structure for fixing up pc-relative loads/jumps when the machine
+    // code gets moved (executable copy, gc, etc.).
+    struct RelativePatch
+    {
+        BufferOffset offset;
+        void* target;
+        RelocationKind kind;
+
+        RelativePatch(BufferOffset offset, void* target, RelocationKind kind)
+          : offset(offset), target(target), kind(kind)
+        { }
+    };
+
+    // List of jumps for which the target is either unknown until finalization,
+    // or cannot be known due to GC. Each entry here requires a unique entry
+    // in the extended jump table, and is patched at finalization.
+    js::Vector<RelativePatch, 8, SystemAllocPolicy> pendingJumps_;
+
+    // Final output formatters.
+    CompactBufferWriter jumpRelocations_;
+    CompactBufferWriter dataRelocations_;
+=======
+    MOZ_ASSERT(dataRelocations_.length() == 0);
+    for (auto& j : pendingJumps_) {
+      MOZ_ASSERT(j.kind == RelocationKind::HARDCODED);
+    }
+#endif
+  }
+
+ public:
+  // A Jump table entry is 2 instructions, with 8 bytes of raw data
+  static const size_t SizeOfJumpTableEntry = 16;
+
+  struct JumpTableEntry {
+    uint32_t ldr;
+    uint32_t br;
+    void* data;
+
+    Instruction* getLdr() { return reinterpret_cast<Instruction*>(&ldr); }
+  };
+
+  // Offset of the patchable target for the given entry.
+  static const size_t OffsetOfJumpTableEntryPointer = 8;
+
+ public:
+  void writeCodePointer(CodeLabel* label) {
+    armbuffer_.assertNoPoolAndNoNops();
+    uintptr_t x = uintptr_t(-1);
+    BufferOffset off = EmitData(&x, sizeof(uintptr_t));
+    label->patchAt()->bind(off.getOffset());
+  }
+
+  void verifyHeapAccessDisassembly(uint32_t begin, uint32_t end,
+                                   const Disassembler::HeapAccess& heapAccess) {
+    MOZ_CRASH("verifyHeapAccessDisassembly");
+  }
+
+ protected:
+  // Because jumps may be relocated to a target inaccessible by a short jump,
+  // each relocatable jump must have a unique entry in the extended jump table.
+  // Valid relocatable targets are of type RelocationKind::JITCODE.
+  struct JumpRelocation {
+    BufferOffset
+        jump;  // Offset to the short jump, from the start of the code buffer.
+    uint32_t
+        extendedTableIndex;  // Unique index within the extended jump table.
+
+    JumpRelocation(BufferOffset jump, uint32_t extendedTableIndex)
+        : jump(jump), extendedTableIndex(extendedTableIndex) {}
+  };
+
+  // Structure for fixing up pc-relative loads/jumps when the machine
+  // code gets moved (executable copy, gc, etc.).
+  struct RelativePatch {
+    BufferOffset offset;
+    void* target;
+    RelocationKind kind;
+
+    RelativePatch(BufferOffset offset, void* target, RelocationKind kind)
+        : offset(offset), target(target), kind(kind) {}
+  };
+
+  // List of jumps for which the target is either unknown until finalization,
+  // or cannot be known due to GC. Each entry here requires a unique entry
+  // in the extended jump table, and is patched at finalization.
+  js::Vector<RelativePatch, 8, SystemAllocPolicy> pendingJumps_;
+
+  // Final output formatters.
+  CompactBufferWriter jumpRelocations_;
+  CompactBufferWriter dataRelocations_;
+>>>>>>> upstream-releases
 };
 
 static const uint32_t NumIntArgRegs = 8;
@@ -506,6 +1024,7 @@ inline Imm32 Imm64::secondHalf() const { return hi(); }
 
 void PatchJump(CodeLocationJump& jump_, CodeLocationLabel label);
 
+<<<<<<< HEAD
 // Forbids pool generation during a specified interval. Not nestable.
 class AutoForbidPools {
   Assembler* asm_;
@@ -515,8 +1034,33 @@ class AutoForbidPools {
     asm_->enterNoPool(maxInst);
   }
   ~AutoForbidPools() { asm_->leaveNoPool(); }
+||||||| merged common ancestors
+// Forbids pool generation during a specified interval. Not nestable.
+class AutoForbidPools
+{
+    Assembler* asm_;
+  public:
+    AutoForbidPools(Assembler* asm_, size_t maxInst)
+      : asm_(asm_)
+    {
+        asm_->enterNoPool(maxInst);
+    }
+    ~AutoForbidPools() {
+        asm_->leaveNoPool();
+    }
+=======
+// Forbids nop filling for testing purposes. Not nestable.
+class AutoForbidNops {
+ protected:
+  Assembler* asm_;
+
+ public:
+  explicit AutoForbidNops(Assembler* asm_) : asm_(asm_) { asm_->enterNoNops(); }
+  ~AutoForbidNops() { asm_->leaveNoNops(); }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 // Forbids nop filling for testing purposes. Not nestable.
 class AutoForbidNops {
   Assembler* asm_;
@@ -524,6 +1068,30 @@ class AutoForbidNops {
  public:
   explicit AutoForbidNops(Assembler* asm_) : asm_(asm_) { asm_->enterNoNops(); }
   ~AutoForbidNops() { asm_->leaveNoNops(); }
+||||||| merged common ancestors
+// Forbids nop filling for testing purposes. Not nestable.
+class AutoForbidNops
+{
+    Assembler* asm_;
+  public:
+    explicit AutoForbidNops(Assembler* asm_)
+      : asm_(asm_)
+    {
+        asm_->enterNoNops();
+    }
+    ~AutoForbidNops() {
+        asm_->leaveNoNops();
+    }
+=======
+// Forbids pool generation during a specified interval. Not nestable.
+class AutoForbidPoolsAndNops : public AutoForbidNops {
+ public:
+  AutoForbidPoolsAndNops(Assembler* asm_, size_t maxInst)
+      : AutoForbidNops(asm_) {
+    asm_->enterNoPool(maxInst);
+  }
+  ~AutoForbidPoolsAndNops() { asm_->leaveNoPool(); }
+>>>>>>> upstream-releases
 };
 
 }  // namespace jit

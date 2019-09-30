@@ -49,18 +49,25 @@ class SensorEvent final : public ISensorEvents {
 
   // ISensorEvents interface
 
+<<<<<<< HEAD
   STDMETHODIMP OnEvent(ISensor *aSensor, REFGUID aId,
                        IPortableDeviceValues *aData) {
+||||||| merged common ancestors
+  STDMETHODIMP OnEvent(ISensor *aSensor, REFGUID aId, IPortableDeviceValues *aData) {
+=======
+  STDMETHODIMP OnEvent(ISensor* aSensor, REFGUID aId,
+                       IPortableDeviceValues* aData) {
+>>>>>>> upstream-releases
     return S_OK;
   }
 
   STDMETHODIMP OnLeave(REFSENSOR_ID aId) { return S_OK; }
 
-  STDMETHODIMP OnStateChanged(ISensor *aSensor, SensorState state) {
+  STDMETHODIMP OnStateChanged(ISensor* aSensor, SensorState state) {
     return S_OK;
   }
 
-  STDMETHODIMP OnDataUpdated(ISensor *aSensor, ISensorDataReport *aReport) {
+  STDMETHODIMP OnDataUpdated(ISensor* aSensor, ISensorDataReport* aReport) {
     PROPVARIANT v;
     HRESULT hr;
     InfallibleTArray<float> values;

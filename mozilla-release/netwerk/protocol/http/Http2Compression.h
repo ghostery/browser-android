@@ -22,10 +22,25 @@ struct HuffmanIncomingTable;
 
 void Http2CompressionCleanup();
 
+<<<<<<< HEAD
 class nvPair {
  public:
   nvPair(const nsACString &name, const nsACString &value)
       : mName(name), mValue(value) {}
+||||||| merged common ancestors
+class nvPair
+{
+public:
+nvPair(const nsACString &name, const nsACString &value)
+  : mName(name)
+  , mValue(value)
+  { }
+=======
+class nvPair {
+ public:
+  nvPair(const nsACString& name, const nsACString& value)
+      : mName(name), mValue(value) {}
+>>>>>>> upstream-releases
 
   uint32_t Size() const { return mName.Length() + mValue.Length() + 32; }
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const;
@@ -39,15 +54,21 @@ class nvFIFO {
  public:
   nvFIFO();
   ~nvFIFO();
-  void AddElement(const nsCString &name, const nsCString &value);
-  void AddElement(const nsCString &name);
+  void AddElement(const nsCString& name, const nsCString& value);
+  void AddElement(const nsCString& name);
   void RemoveElement();
   uint32_t ByteCount() const;
   uint32_t Length() const;
   uint32_t VariableLength() const;
   size_t StaticLength() const;
   void Clear();
+<<<<<<< HEAD
   const nvPair *operator[](size_t index) const;
+||||||| merged common ancestors
+  const nvPair *operator[] (size_t index) const;
+=======
+  const nvPair* operator[](size_t index) const;
+>>>>>>> upstream-releases
 
  private:
   uint32_t mByteCount;
@@ -68,11 +89,19 @@ class Http2BaseCompressor {
   const static uint32_t kDefaultMaxBuffer = 4096;
 
   virtual void ClearHeaderTable();
+<<<<<<< HEAD
   virtual void MakeRoom(uint32_t amount, const char *direction);
   virtual void DumpState(const char *);
+||||||| merged common ancestors
+  virtual void MakeRoom(uint32_t amount, const char *direction);
+  virtual void DumpState();
+=======
+  virtual void MakeRoom(uint32_t amount, const char* direction);
+  virtual void DumpState(const char*);
+>>>>>>> upstream-releases
   virtual void SetMaxBufferSizeInternal(uint32_t maxBufferSize);
 
-  nsACString *mOutput;
+  nsACString* mOutput;
   nvFIFO mHeaderTable;
 
   uint32_t mMaxBuffer;
@@ -108,25 +137,35 @@ class Http2Decompressor final : public Http2BaseCompressor {
   virtual ~Http2Decompressor() = default;
 
   // NS_OK: Produces the working set of HTTP/1 formatted headers
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult DecodeHeaderBlock(const uint8_t *data, uint32_t datalen,
                                           nsACString &output, bool isPush);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult DecodeHeaderBlock(const uint8_t *data,
+                                          uint32_t datalen, nsACString &output,
+                                          bool isPush);
+=======
+  MOZ_MUST_USE nsresult DecodeHeaderBlock(const uint8_t* data, uint32_t datalen,
+                                          nsACString& output, bool isPush);
+>>>>>>> upstream-releases
 
-  void GetStatus(nsACString &hdr) { hdr = mHeaderStatus; }
-  void GetHost(nsACString &hdr) { hdr = mHeaderHost; }
-  void GetScheme(nsACString &hdr) { hdr = mHeaderScheme; }
-  void GetPath(nsACString &hdr) { hdr = mHeaderPath; }
-  void GetMethod(nsACString &hdr) { hdr = mHeaderMethod; }
+  void GetStatus(nsACString& hdr) { hdr = mHeaderStatus; }
+  void GetHost(nsACString& hdr) { hdr = mHeaderHost; }
+  void GetScheme(nsACString& hdr) { hdr = mHeaderScheme; }
+  void GetPath(nsACString& hdr) { hdr = mHeaderPath; }
+  void GetMethod(nsACString& hdr) { hdr = mHeaderMethod; }
 
  private:
   MOZ_MUST_USE nsresult DoIndexed();
   MOZ_MUST_USE nsresult DoLiteralWithoutIndex();
   MOZ_MUST_USE nsresult DoLiteralWithIncremental();
-  MOZ_MUST_USE nsresult DoLiteralInternal(nsACString &, nsACString &, uint32_t);
+  MOZ_MUST_USE nsresult DoLiteralInternal(nsACString&, nsACString&, uint32_t);
   MOZ_MUST_USE nsresult DoLiteralNeverIndexed();
   MOZ_MUST_USE nsresult DoContextUpdate();
 
-  MOZ_MUST_USE nsresult DecodeInteger(uint32_t prefixLen, uint32_t &result);
+  MOZ_MUST_USE nsresult DecodeInteger(uint32_t prefixLen, uint32_t& result);
   MOZ_MUST_USE nsresult OutputHeader(uint32_t index);
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult OutputHeader(const nsACString &name,
                                      const nsACString &value);
 
@@ -135,11 +174,41 @@ class Http2Decompressor final : public Http2BaseCompressor {
   uint8_t ExtractByte(uint8_t bitsLeft, uint32_t &bytesConsumed);
   MOZ_MUST_USE nsresult CopyHuffmanStringFromInput(uint32_t index,
                                                    nsACString &val);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult OutputHeader(const nsACString &name, const nsACString &value);
+
+  MOZ_MUST_USE nsresult CopyHeaderString(uint32_t index, nsACString &name);
+  MOZ_MUST_USE nsresult CopyStringFromInput(uint32_t index, nsACString &val);
+  uint8_t ExtractByte(uint8_t bitsLeft, uint32_t &bytesConsumed);
+  MOZ_MUST_USE nsresult CopyHuffmanStringFromInput(uint32_t index, nsACString &val);
+=======
+  MOZ_MUST_USE nsresult OutputHeader(const nsACString& name,
+                                     const nsACString& value);
+
+  MOZ_MUST_USE nsresult CopyHeaderString(uint32_t index, nsACString& name);
+  MOZ_MUST_USE nsresult CopyStringFromInput(uint32_t index, nsACString& val);
+  uint8_t ExtractByte(uint8_t bitsLeft, uint32_t& bytesConsumed);
+  MOZ_MUST_USE nsresult CopyHuffmanStringFromInput(uint32_t index,
+                                                   nsACString& val);
+>>>>>>> upstream-releases
   MOZ_MUST_USE nsresult
+<<<<<<< HEAD
   DecodeHuffmanCharacter(const HuffmanIncomingTable *table, uint8_t &c,
                          uint32_t &bytesConsumed, uint8_t &bitsLeft);
   MOZ_MUST_USE nsresult DecodeFinalHuffmanCharacter(
       const HuffmanIncomingTable *table, uint8_t &c, uint8_t &bitsLeft);
+||||||| merged common ancestors
+  DecodeHuffmanCharacter(const HuffmanIncomingTable *table, uint8_t &c,
+                         uint32_t &bytesConsumed, uint8_t &bitsLeft);
+  MOZ_MUST_USE nsresult
+  DecodeFinalHuffmanCharacter(const HuffmanIncomingTable *table, uint8_t &c,
+                              uint8_t &bitsLeft);
+=======
+  DecodeHuffmanCharacter(const HuffmanIncomingTable* table, uint8_t& c,
+                         uint32_t& bytesConsumed, uint8_t& bitsLeft);
+  MOZ_MUST_USE nsresult DecodeFinalHuffmanCharacter(
+      const HuffmanIncomingTable* table, uint8_t& c, uint8_t& bitsLeft);
+>>>>>>> upstream-releases
 
   nsCString mHeaderStatus;
   nsCString mHeaderHost;
@@ -149,7 +218,7 @@ class Http2Decompressor final : public Http2BaseCompressor {
 
   // state variables when DecodeBlock() is on the stack
   uint32_t mOffset;
-  const uint8_t *mData;
+  const uint8_t* mData;
   uint32_t mDataLen;
   bool mSeenNonColonHeader;
   bool mIsPush;
@@ -168,10 +237,25 @@ class Http2Compressor final : public Http2BaseCompressor {
 
   // HTTP/1 formatted header block as input - HTTP/2 formatted
   // header block as output
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult EncodeHeaderBlock(
       const nsCString &nvInput, const nsACString &method,
       const nsACString &path, const nsACString &host, const nsACString &scheme,
       const nsACString &protocol, bool simpleConnectForm, nsACString &output);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult EncodeHeaderBlock(const nsCString &nvInput,
+                                          const nsACString &method,
+                                          const nsACString &path,
+                                          const nsACString &host,
+                                          const nsACString &scheme,
+                                          bool connectForm,
+                                          nsACString &output);
+=======
+  MOZ_MUST_USE nsresult EncodeHeaderBlock(
+      const nsCString& nvInput, const nsACString& method,
+      const nsACString& path, const nsACString& host, const nsACString& scheme,
+      const nsACString& protocol, bool simpleConnectForm, nsACString& output);
+>>>>>>> upstream-releases
 
   int64_t GetParsedContentLength() {
     return mParsedContentLength;
@@ -187,12 +271,20 @@ class Http2Compressor final : public Http2BaseCompressor {
     kIndex
   };
 
+<<<<<<< HEAD
   void DoOutput(Http2Compressor::outputCode code, const class nvPair *pair,
                 uint32_t index);
+||||||| merged common ancestors
+  void DoOutput(Http2Compressor::outputCode code,
+                const class nvPair *pair, uint32_t index);
+=======
+  void DoOutput(Http2Compressor::outputCode code, const class nvPair* pair,
+                uint32_t index);
+>>>>>>> upstream-releases
   void EncodeInteger(uint32_t prefixLen, uint32_t val);
   void ProcessHeader(const nvPair inputPair, bool noLocalIndex,
                      bool neverIndex);
-  void HuffmanAppend(const nsCString &value);
+  void HuffmanAppend(const nsCString& value);
   void EncodeTableSizeChange(uint32_t newMaxSize);
 
   int64_t mParsedContentLength;

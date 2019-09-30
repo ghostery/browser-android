@@ -20,9 +20,20 @@ enum RDFTransformType {
 
 extern "C" {
 
+<<<<<<< HEAD
 typedef RDFTContext *(*AvRdftInitFn)(int nbits, enum RDFTransformType trans);
 typedef void (*AvRdftCalcFn)(RDFTContext *s, FFTSample *data);
 typedef void (*AvRdftEndFn)(RDFTContext *s);
+||||||| merged common ancestors
+  typedef RDFTContext* (*AvRdftInitFn)(int nbits, enum RDFTransformType trans);
+  typedef void (*AvRdftCalcFn)(RDFTContext *s, FFTSample *data);
+  typedef void (*AvRdftEndFn)(RDFTContext *s);
+
+=======
+typedef RDFTContext* (*AvRdftInitFn)(int nbits, enum RDFTransformType trans);
+typedef void (*AvRdftCalcFn)(RDFTContext* s, FFTSample* data);
+typedef void (*AvRdftEndFn)(RDFTContext* s);
+>>>>>>> upstream-releases
 }
 
 struct FFmpegRDFTFuncs {

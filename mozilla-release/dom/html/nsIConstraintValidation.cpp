@@ -46,6 +46,7 @@ void nsIConstraintValidation::GetValidationMessage(
   aValidationMessage.Truncate();
 
   if (IsCandidateForConstraintValidation() && !IsValid()) {
+<<<<<<< HEAD
     nsCOMPtr<Element> element = do_QueryInterface(this);
     NS_ASSERTION(element,
                  "This class should be inherited by HTML elements only!");
@@ -60,6 +61,23 @@ void nsIConstraintValidation::GetValidationMessage(
         aValidationMessage.Truncate(sContentSpecifiedMaxLengthMessage);
       }
     } else if (GetValidityState(VALIDITY_STATE_CUSTOM_ERROR)) {
+||||||| merged common ancestors
+    nsCOMPtr<Element> element = do_QueryInterface(this);
+    NS_ASSERTION(element, "This class should be inherited by HTML elements only!");
+
+    nsAutoString authorMessage;
+    element->GetAttr(kNameSpaceID_None, nsGkAtoms::x_moz_errormessage,
+                     authorMessage);
+
+    if (!authorMessage.IsEmpty()) {
+      aValidationMessage.Assign(authorMessage);
+      if (aValidationMessage.Length() > sContentSpecifiedMaxLengthMessage) {
+        aValidationMessage.Truncate(sContentSpecifiedMaxLengthMessage);
+      }
+    } else if (GetValidityState(VALIDITY_STATE_CUSTOM_ERROR)) {
+=======
+    if (GetValidityState(VALIDITY_STATE_CUSTOM_ERROR)) {
+>>>>>>> upstream-releases
       aValidationMessage.Assign(mCustomValidity);
       if (aValidationMessage.Length() > sContentSpecifiedMaxLengthMessage) {
         aValidationMessage.Truncate(sContentSpecifiedMaxLengthMessage);

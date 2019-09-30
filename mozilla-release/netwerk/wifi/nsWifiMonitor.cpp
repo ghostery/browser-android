@@ -36,8 +36,17 @@ nsWifiMonitor::nsWifiMonitor()
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWifiMonitor::Observe(nsISupports *subject, const char *topic,
                        const char16_t *data) {
+||||||| merged common ancestors
+nsWifiMonitor::Observe(nsISupports *subject, const char *topic,
+                     const char16_t *data)
+{
+=======
+nsWifiMonitor::Observe(nsISupports* subject, const char* topic,
+                       const char16_t* data) {
+>>>>>>> upstream-releases
   if (!strcmp(topic, "xpcom-shutdown")) {
     LOG(("Shutting down\n"));
 
@@ -49,9 +58,21 @@ nsWifiMonitor::Observe(nsISupports *subject, const char *topic,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsWifiMonitor::StartWatching(nsIWifiListener *aListener) {
   LOG(("nsWifiMonitor::StartWatching %p thread %p listener %p\n", this,
        mThread.get(), aListener));
+||||||| merged common ancestors
+
+NS_IMETHODIMP nsWifiMonitor::StartWatching(nsIWifiListener *aListener)
+{
+  LOG(("nsWifiMonitor::StartWatching %p thread %p listener %p\n",
+       this, mThread.get(), aListener));
+=======
+NS_IMETHODIMP nsWifiMonitor::StartWatching(nsIWifiListener* aListener) {
+  LOG(("nsWifiMonitor::StartWatching %p thread %p listener %p\n", this,
+       mThread.get(), aListener));
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aListener) return NS_ERROR_NULL_POINTER;
@@ -85,9 +106,20 @@ NS_IMETHODIMP nsWifiMonitor::StartWatching(nsIWifiListener *aListener) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsWifiMonitor::StopWatching(nsIWifiListener *aListener) {
   LOG(("nsWifiMonitor::StopWatching %p thread %p listener %p\n", this,
        mThread.get(), aListener));
+||||||| merged common ancestors
+NS_IMETHODIMP nsWifiMonitor::StopWatching(nsIWifiListener *aListener)
+{
+  LOG(("nsWifiMonitor::StopWatching %p thread %p listener %p\n",
+       this, mThread.get(), aListener));
+=======
+NS_IMETHODIMP nsWifiMonitor::StopWatching(nsIWifiListener* aListener) {
+  LOG(("nsWifiMonitor::StopWatching %p thread %p listener %p\n", this,
+       mThread.get(), aListener));
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aListener) return NS_ERROR_NULL_POINTER;
@@ -104,7 +136,7 @@ NS_IMETHODIMP nsWifiMonitor::StopWatching(nsIWifiListener *aListener) {
   return NS_OK;
 }
 
-typedef nsTArray<nsMainThreadPtrHandle<nsIWifiListener> > WifiListenerArray;
+typedef nsTArray<nsMainThreadPtrHandle<nsIWifiListener>> WifiListenerArray;
 
 class nsPassErrorToWifiListeners final : public nsIRunnable {
  public:
@@ -172,59 +204,158 @@ class nsCallWifiListeners final : public nsIRunnable {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIRUNNABLE
 
+<<<<<<< HEAD
   nsCallWifiListeners(nsAutoPtr<WifiListenerArray> aListeners,
                       nsAutoPtr<nsTArray<nsIWifiAccessPoint *> > aAccessPoints)
       : mListeners(aListeners), mAccessPoints(aAccessPoints) {}
+||||||| merged common ancestors
+  nsCallWifiListeners(nsAutoPtr<WifiListenerArray> aListeners,
+                      nsAutoPtr<nsTArray<nsIWifiAccessPoint*> > aAccessPoints)
+  : mListeners(aListeners),
+    mAccessPoints(aAccessPoints)
+  {}
+=======
+  nsCallWifiListeners(WifiListenerArray&& aListeners,
+                      nsTArray<RefPtr<nsIWifiAccessPoint>>&& aAccessPoints)
+      : mListeners(std::move(aListeners)),
+        mAccessPoints(std::move(aAccessPoints)) {}
+>>>>>>> upstream-releases
 
  private:
   ~nsCallWifiListeners() = default;
+<<<<<<< HEAD
   nsAutoPtr<WifiListenerArray> mListeners;
   nsAutoPtr<nsTArray<nsIWifiAccessPoint *> > mAccessPoints;
+||||||| merged common ancestors
+  nsAutoPtr<WifiListenerArray> mListeners;
+  nsAutoPtr<nsTArray<nsIWifiAccessPoint*> > mAccessPoints;
+=======
+  const WifiListenerArray mListeners;
+  const nsTArray<RefPtr<nsIWifiAccessPoint>> mAccessPoints;
+>>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(nsCallWifiListeners, nsIRunnable)
 
 NS_IMETHODIMP nsCallWifiListeners::Run() {
   LOG(("About to send data to the wifi listeners\n"));
+<<<<<<< HEAD
   for (size_t i = 0; i < mListeners->Length(); i++) {
     (*mListeners)[i]->OnChange(mAccessPoints->Elements(),
                                mAccessPoints->Length());
+||||||| merged common ancestors
+  for (size_t i = 0; i < mListeners->Length(); i++) {
+    (*mListeners)[i]->OnChange(mAccessPoints->Elements(), mAccessPoints->Length());
+=======
+  for (auto& listener : mListeners) {
+    listener->OnChange(mAccessPoints);
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsWifiMonitor::CallWifiListeners(
     const nsCOMArray<nsWifiAccessPoint> &aAccessPoints,
     bool aAccessPointsChanged) {
   nsAutoPtr<WifiListenerArray> currentListeners;
   {
     ReentrantMonitorAutoEnter mon(mReentrantMonitor);
+||||||| merged common ancestors
+nsresult
+nsWifiMonitor::CallWifiListeners(const nsCOMArray<nsWifiAccessPoint> &aAccessPoints,
+                                 bool aAccessPointsChanged)
+{
+    nsAutoPtr<WifiListenerArray> currentListeners;
+    {
+      ReentrantMonitorAutoEnter mon(mReentrantMonitor);
+=======
+nsresult nsWifiMonitor::CallWifiListeners(
+    const nsCOMArray<nsWifiAccessPoint>& aAccessPoints,
+    bool aAccessPointsChanged) {
+  WifiListenerArray currentListeners;
+  {
+    ReentrantMonitorAutoEnter mon(mReentrantMonitor);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     currentListeners = new WifiListenerArray(mListeners.Length());
+||||||| merged common ancestors
+      currentListeners = new WifiListenerArray(mListeners.Length());
+=======
+    currentListeners.SetCapacity(mListeners.Length());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     for (uint32_t i = 0; i < mListeners.Length(); i++) {
       if (!mListeners[i].mHasSentData || aAccessPointsChanged) {
         mListeners[i].mHasSentData = true;
         currentListeners->AppendElement(mListeners[i].mListener);
+||||||| merged common ancestors
+      for (uint32_t i = 0; i < mListeners.Length(); i++) {
+        if (!mListeners[i].mHasSentData || aAccessPointsChanged) {
+          mListeners[i].mHasSentData = true;
+          currentListeners->AppendElement(mListeners[i].mListener);
+        }
+=======
+    for (auto& listener : mListeners) {
+      if (!listener.mHasSentData || aAccessPointsChanged) {
+        listener.mHasSentData = true;
+        currentListeners.AppendElement(listener.mListener);
+>>>>>>> upstream-releases
       }
     }
   }
 
+<<<<<<< HEAD
   if (currentListeners->Length() > 0) {
     uint32_t resultCount = aAccessPoints.Count();
     nsAutoPtr<nsTArray<nsIWifiAccessPoint *> > accessPoints(
         new nsTArray<nsIWifiAccessPoint *>(resultCount));
     if (!accessPoints) return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+    if (currentListeners->Length() > 0)
+    {
+      uint32_t resultCount = aAccessPoints.Count();
+      nsAutoPtr<nsTArray<nsIWifiAccessPoint*> > accessPoints(
+                               new nsTArray<nsIWifiAccessPoint *>(resultCount));
+      if (!accessPoints)
+        return NS_ERROR_OUT_OF_MEMORY;
+=======
+  if (!currentListeners.IsEmpty()) {
+    uint32_t resultCount = aAccessPoints.Count();
+    nsTArray<RefPtr<nsIWifiAccessPoint>> accessPoints(resultCount);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     for (uint32_t i = 0; i < resultCount; i++)
       accessPoints->AppendElement(aAccessPoints[i]);
+||||||| merged common ancestors
+      for (uint32_t i = 0; i < resultCount; i++)
+        accessPoints->AppendElement(aAccessPoints[i]);
+=======
+    for (uint32_t i = 0; i < resultCount; i++) {
+      accessPoints.AppendElement(aAccessPoints[i]);
+    }
+>>>>>>> upstream-releases
 
     nsCOMPtr<nsIThread> thread = do_GetMainThread();
     if (!thread) return NS_ERROR_UNEXPECTED;
 
+<<<<<<< HEAD
     nsCOMPtr<nsIRunnable> runnable(
         new nsCallWifiListeners(currentListeners, accessPoints));
     if (!runnable) return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+      nsCOMPtr<nsIRunnable> runnable(
+                      new nsCallWifiListeners(currentListeners, accessPoints));
+      if (!runnable)
+        return NS_ERROR_OUT_OF_MEMORY;
+=======
+    nsCOMPtr<nsIRunnable> runnable(new nsCallWifiListeners(
+        std::move(currentListeners), std::move(accessPoints)));
+    if (!runnable) return NS_ERROR_OUT_OF_MEMORY;
+>>>>>>> upstream-releases
 
     thread->Dispatch(runnable, NS_DISPATCH_SYNC);
   }

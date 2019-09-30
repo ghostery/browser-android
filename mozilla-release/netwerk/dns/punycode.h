@@ -43,11 +43,26 @@ typedef unsigned int punycode_uint;
 typedef unsigned long punycode_uint;
 #endif
 
+<<<<<<< HEAD
 enum punycode_status punycode_encode(punycode_uint input_length,
                                      const punycode_uint input[],
                                      const unsigned char case_flags[],
                                      punycode_uint *output_length,
                                      char output[]);
+||||||| merged common ancestors
+enum punycode_status punycode_encode(
+  punycode_uint input_length,
+  const punycode_uint input[],
+  const unsigned char case_flags[],
+  punycode_uint *output_length,
+  char output[] );
+=======
+enum punycode_status punycode_encode(punycode_uint input_length,
+                                     const punycode_uint input[],
+                                     const unsigned char case_flags[],
+                                     punycode_uint* output_length,
+                                     char output[]);
+>>>>>>> upstream-releases
 
 /* punycode_encode() converts Unicode to Punycode.  The input     */
 /* is represented as an array of Unicode code points (not code    */
@@ -74,11 +89,26 @@ enum punycode_status punycode_encode(punycode_uint input_length,
 /* except punycode_bad_input; if not punycode_success, then       */
 /* output_size and output might contain garbage.                  */
 
+<<<<<<< HEAD
 enum punycode_status punycode_decode(punycode_uint input_length,
                                      const char input[],
                                      punycode_uint *output_length,
                                      punycode_uint output[],
                                      unsigned char case_flags[]);
+||||||| merged common ancestors
+enum punycode_status punycode_decode(
+  punycode_uint input_length,
+  const char input[],
+  punycode_uint *output_length,
+  punycode_uint output[],
+  unsigned char case_flags[] );
+=======
+enum punycode_status punycode_decode(punycode_uint input_length,
+                                     const char input[],
+                                     punycode_uint* output_length,
+                                     punycode_uint output[],
+                                     unsigned char case_flags[]);
+>>>>>>> upstream-releases
 
 /* punycode_decode() converts Punycode to Unicode.  The input is  */
 /* represented as an array of ASCII code points, and the output   */

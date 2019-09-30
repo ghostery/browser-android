@@ -30,6 +30,9 @@ SkPathRef::Editor::Editor(sk_sp<SkPathRef>* pathRef,
                           int incReserveVerbs,
                           int incReservePoints)
 {
+    SkASSERT(incReserveVerbs >= 0);
+    SkASSERT(incReservePoints >= 0);
+
     if ((*pathRef)->unique()) {
         (*pathRef)->incReserve(incReserveVerbs, incReservePoints);
     } else {
@@ -40,8 +43,55 @@ SkPathRef::Editor::Editor(sk_sp<SkPathRef>* pathRef,
     fPathRef = pathRef->get();
     fPathRef->callGenIDChangeListeners();
     fPathRef->fGenerationID = 0;
+<<<<<<< HEAD
     fPathRef->fBoundsIsDirty = true;
     SkDEBUGCODE(sk_atomic_inc(&fPathRef->fEditorsAttached);)
+||||||| merged common ancestors
+    SkDEBUGCODE(sk_atomic_inc(&fPathRef->fEditorsAttached);)
+=======
+    fPathRef->fBoundsIsDirty = true;
+    SkDEBUGCODE(fPathRef->fEditorsAttached++;)
+}
+
+// Sort of like makeSpace(0) but the the additional requirement that we actively shrink the
+// allocations to just fit the current needs. makeSpace() will only grow, but never shrinks.
+//
+void SkPath::shrinkToFit() {
+    const size_t kMinFreeSpaceForShrink = 8;    // just made up a small number
+
+    if (fPathRef->fFreeSpace <= kMinFreeSpaceForShrink) {
+        return;
+    }
+
+    if (fPathRef->unique()) {
+        int pointCount = fPathRef->fPointCnt;
+        int verbCount = fPathRef->fVerbCnt;
+
+        size_t ptsSize = sizeof(SkPoint) * pointCount;
+        size_t vrbSize = sizeof(uint8_t) * verbCount;
+        size_t minSize = ptsSize + vrbSize;
+
+        void* newAlloc = sk_malloc_canfail(minSize);
+        if (!newAlloc) {
+            return; // couldn't allocate the smaller buffer, but that's ok
+        }
+
+        sk_careful_memcpy(newAlloc, fPathRef->fPoints, ptsSize);
+        sk_careful_memcpy((char*)newAlloc + minSize - vrbSize, fPathRef->verbsMemBegin(), vrbSize);
+
+        sk_free(fPathRef->fPoints);
+        fPathRef->fPoints = static_cast<SkPoint*>(newAlloc);
+        fPathRef->fVerbs = (uint8_t*)newAlloc + minSize;
+        fPathRef->fFreeSpace = 0;
+        fPathRef->fConicWeights.shrinkToFit();
+    } else {
+        sk_sp<SkPathRef> pr(new SkPathRef);
+        pr->copy(*fPathRef, 0, 0);
+        fPathRef = std::move(pr);
+    }
+
+    SkDEBUGCODE(fPathRef->validate();)
+>>>>>>> upstream-releases
 }
 
 // Sort of like makeSpace(0) but the the additional requirement that we actively shrink the
@@ -90,6 +140,7 @@ SkPathRef::~SkPathRef() {
     // Deliberately don't validate() this path ref, otherwise there's no way
     // to read one that's not valid and then free its memory without asserting.
     this->callGenIDChangeListeners();
+    SkASSERT(fGenIDChangeListeners.empty());  // These are raw ptrs.
     sk_free(fPoints);
 
     SkDEBUGCODE(fPoints = nullptr;)
@@ -98,7 +149,7 @@ SkPathRef::~SkPathRef() {
     SkDEBUGCODE(fPointCnt = 0xAAAAAAA;)
     SkDEBUGCODE(fPointCnt = 0xBBBBBBB;)
     SkDEBUGCODE(fGenerationID = 0xEEEEEEEE;)
-    SkDEBUGCODE(fEditorsAttached = 0x7777777;)
+    SkDEBUGCODE(fEditorsAttached.store(0x7777777);)
 }
 
 static SkPathRef* gEmpty = nullptr;
@@ -694,18 +745,17 @@ SkPoint* SkPathRef::growForVerb(int /* SkPath::Verb*/ verb, SkScalar weight) {
 }
 
 uint32_t SkPathRef::genID() const {
-    SkASSERT(!fEditorsAttached);
+    SkASSERT(fEditorsAttached.load() == 0);
     static const uint32_t kMask = (static_cast<int64_t>(1) << SkPathPriv::kPathRefGenIDBitCnt) - 1;
-    if (!fGenerationID) {
-        if (0 == fPointCnt && 0 == fVerbCnt) {
+
+    if (fGenerationID == 0) {
+        if (fPointCnt == 0 && fVerbCnt == 0) {
             fGenerationID = kEmptyGenID;
         } else {
-            static int32_t  gPathRefGenerationID;
-            // do a loop in case our global wraps around, as we never want to return a 0 or the
-            // empty ID
+            static std::atomic<uint32_t> nextID{kEmptyGenID + 1};
             do {
-                fGenerationID = (sk_atomic_inc(&gPathRefGenerationID) + 1) & kMask;
-            } while (fGenerationID <= kEmptyGenID);
+                fGenerationID = nextID.fetch_add(1, std::memory_order_relaxed) & kMask;
+            } while (fGenerationID == 0 || fGenerationID == kEmptyGenID);
         }
     }
     return fGenerationID;
@@ -715,19 +765,57 @@ void SkPathRef::addGenIDChangeListener(sk_sp<GenIDChangeListener> listener) {
     if (nullptr == listener || this == gEmpty) {
         return;
     }
+<<<<<<< HEAD
     SkAutoMutexAcquire lock(fGenIDChangeListenersMutex);
     *fGenIDChangeListeners.append() = listener.release();
+||||||| merged common ancestors
+    *fGenIDChangeListeners.append() = listener;
+=======
+
+    SkAutoMutexAcquire lock(fGenIDChangeListenersMutex);
+
+    // Clean out any stale listeners before we append the new one.
+    for (int i = 0; i < fGenIDChangeListeners.count(); ++i) {
+        if (fGenIDChangeListeners[i]->shouldUnregisterFromPath()) {
+            fGenIDChangeListeners[i]->unref();
+            fGenIDChangeListeners.removeShuffle(i--);  // No need to preserve the order after i.
+        }
+    }
+
+    SkASSERT(!listener->shouldUnregisterFromPath());
+    *fGenIDChangeListeners.append() = listener.release();
+>>>>>>> upstream-releases
 }
 
 // we need to be called *before* the genID gets changed or zerod
 void SkPathRef::callGenIDChangeListeners() {
+<<<<<<< HEAD
     SkAutoMutexAcquire lock(fGenIDChangeListenersMutex);
     for (int i = 0; i < fGenIDChangeListeners.count(); i++) {
         fGenIDChangeListeners[i]->onChange();
+||||||| merged common ancestors
+    for (int i = 0; i < fGenIDChangeListeners.count(); i++) {
+        fGenIDChangeListeners[i]->onChange();
+=======
+    SkAutoMutexAcquire lock(fGenIDChangeListenersMutex);
+    for (GenIDChangeListener* listener : fGenIDChangeListeners) {
+        if (!listener->shouldUnregisterFromPath()) {
+            listener->onChange();
+        }
+        // Listeners get at most one shot, so whether these triggered or not, blow them away.
+        listener->unref();
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     // Listeners get at most one shot, so whether these triggered or not, blow them away.
     fGenIDChangeListeners.unrefAll();
+||||||| merged common ancestors
+    // Listeners get at most one shot, so whether these triggered or not, blow them away.
+    fGenIDChangeListeners.deleteAll();
+=======
+    fGenIDChangeListeners.reset();
+>>>>>>> upstream-releases
 }
 
 SkRRect SkPathRef::getRRect() const {
@@ -804,7 +892,11 @@ void SkPathRef::Iter::setPathRef(const SkPathRef& path) {
 
 uint8_t SkPathRef::Iter::next(SkPoint pts[4]) {
     SkASSERT(pts);
+
+    SkDEBUGCODE(unsigned peekResult = this->peek();)
+
     if (fVerbs == fVerbStop) {
+        SkASSERT(peekResult == SkPath::kDone_Verb);
         return (uint8_t) SkPath::kDone_Verb;
     }
 
@@ -845,12 +937,13 @@ uint8_t SkPathRef::Iter::next(SkPoint pts[4]) {
             break;
     }
     fPts = srcPts;
+    SkASSERT(peekResult == verb);
     return (uint8_t) verb;
 }
 
 uint8_t SkPathRef::Iter::peek() const {
-    const uint8_t* next = fVerbs - 1;
-    return next <= fVerbStop ? (uint8_t) SkPath::kDone_Verb : *next;
+    const uint8_t* next = fVerbs;
+    return next <= fVerbStop ? (uint8_t) SkPath::kDone_Verb : next[-1];
 }
 
 

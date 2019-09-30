@@ -8,7 +8,13 @@
 #include "GrColorSpaceXform.h"
 #include "SkColorSpace.h"
 #include "SkColorSpacePriv.h"
+<<<<<<< HEAD
 #include "SkMatrix44.h"
+||||||| merged common ancestors
+#include "SkMatrix44.h"
+#include "SkSpinlock.h"
+=======
+>>>>>>> upstream-releases
 #include "glsl/GrGLSLColorSpaceXformHelper.h"
 #include "glsl/GrGLSLFragmentProcessor.h"
 #include "glsl/GrGLSLFragmentShaderBuilder.h"
@@ -25,26 +31,49 @@ bool GrColorSpaceXform::Equals(const GrColorSpaceXform* a, const GrColorSpaceXfo
         return true;
     }
 
+<<<<<<< HEAD
     if (!a || !b || a->fSteps.flags.mask() != b->fSteps.flags.mask()) {
         return false;
     }
 
     if (a->fSteps.flags.linearize &&
         0 != memcmp(&a->fSteps.srcTF, &b->fSteps.srcTF, sizeof(a->fSteps.srcTF))) {
+||||||| merged common ancestors
+    if (!a || !b || a->fFlags != b->fFlags) {
+=======
+    if (!a || !b || a->fSteps.flags.mask() != b->fSteps.flags.mask()) {
+>>>>>>> upstream-releases
         return false;
     }
 
+<<<<<<< HEAD
     if (a->fSteps.flags.gamut_transform &&
         0 != memcmp(&a->fSteps.src_to_dst_matrix, &b->fSteps.src_to_dst_matrix,
                     sizeof(a->fSteps.src_to_dst_matrix))) {
+||||||| merged common ancestors
+    if (SkToBool(a->fFlags & kApplyTransferFn_Flag) &&
+        0 != memcmp(&a->fSrcTransferFn, &b->fSrcTransferFn, sizeof(SkColorSpaceTransferFn))) {
+=======
+    if (a->fSteps.flags.linearize &&
+        0 != memcmp(&a->fSteps.srcTF, &b->fSteps.srcTF, sizeof(a->fSteps.srcTF))) {
+>>>>>>> upstream-releases
         return false;
     }
 
+<<<<<<< HEAD
     if (a->fSteps.flags.encode &&
         0 != memcmp(&a->fSteps.dstTFInv, &b->fSteps.dstTFInv, sizeof(a->fSteps.dstTFInv))) {
+||||||| merged common ancestors
+    if (SkToBool(a->fFlags & kApplyGamutXform_Flag) && a->fGamutXform != b->fGamutXform) {
+=======
+    if (a->fSteps.flags.gamut_transform &&
+        0 != memcmp(&a->fSteps.src_to_dst_matrix, &b->fSteps.src_to_dst_matrix,
+                    sizeof(a->fSteps.src_to_dst_matrix))) {
+>>>>>>> upstream-releases
         return false;
     }
 
+<<<<<<< HEAD
     return true;
 }
 
@@ -52,6 +81,33 @@ GrColor4f GrColorSpaceXform::apply(const GrColor4f& srcColor) {
     GrColor4f result = srcColor;
     fSteps.apply(result.fRGBA);
     return result;
+||||||| merged common ancestors
+    return true;
+}
+
+GrColor4f GrColorSpaceXform::unclampedXform(const GrColor4f& srcColor) {
+    // This transform step should only happen with textures (not CPU xform of individual values)
+    SkASSERT(!SkToBool(fFlags & kApplyInverseSRGB_Flag));
+
+    GrColor4f result = srcColor;
+    if (fFlags & kApplyTransferFn_Flag) {
+        // Only transform RGB (not alpha)
+        for (int i = 0; i < 3; ++i) {
+            result.fRGBA[i] = fSrcTransferFn(result.fRGBA[i]);
+        }
+    }
+    if (fFlags & kApplyGamutXform_Flag) {
+        fGamutXform.mapScalars(result.fRGBA, result.fRGBA);
+    }
+    return result;
+=======
+    if (a->fSteps.flags.encode &&
+        0 != memcmp(&a->fSteps.dstTFInv, &b->fSteps.dstTFInv, sizeof(a->fSteps.dstTFInv))) {
+        return false;
+    }
+
+    return true;
+>>>>>>> upstream-releases
 }
 
 SkColor4f GrColorSpaceXform::apply(const SkColor4f& srcColor) {
@@ -174,7 +230,27 @@ std::unique_ptr<GrFragmentProcessor> GrColorSpaceXformEffect::Make(
     if (!xform) {
         return child;
     }
+<<<<<<< HEAD
 
     return std::unique_ptr<GrFragmentProcessor>(new GrColorSpaceXformEffect(std::move(child),
                                                                             std::move(xform)));
+||||||| merged common ancestors
+=======
+
+    return std::unique_ptr<GrFragmentProcessor>(new GrColorSpaceXformEffect(std::move(child),
+                                                                            std::move(xform)));
+}
+
+std::unique_ptr<GrFragmentProcessor> GrColorSpaceXformEffect::Make(
+        std::unique_ptr<GrFragmentProcessor> child, sk_sp<GrColorSpaceXform> colorXform) {
+    if (!child) {
+        return nullptr;
+    }
+    if (!colorXform) {
+        return child;
+    }
+
+    return std::unique_ptr<GrFragmentProcessor>(new GrColorSpaceXformEffect(std::move(child),
+                                                                            std::move(colorXform)));
+>>>>>>> upstream-releases
 }

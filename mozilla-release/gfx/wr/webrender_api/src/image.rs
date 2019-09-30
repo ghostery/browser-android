@@ -4,20 +4,30 @@
 
 #![deny(missing_docs)]
 
-extern crate serde_bytes;
-
-use font::{FontInstanceKey, FontInstanceData, FontKey, FontTemplate};
+use euclid::{size2, TypedRect, num::Zero};
+use std::ops::{Add, Sub};
 use std::sync::Arc;
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/image.rs
 use {DeviceIntPoint, DeviceIntRect, DeviceIntSize, LayoutIntRect};
 use {BlobDirtyRect, IdNamespace, TileOffset, TileSize};
 use euclid::{size2, TypedRect, num::Zero};
 use std::ops::{Add, Sub};
+||||||| merged common ancestors
+use {DevicePoint, DeviceUintPoint, DeviceUintRect, DeviceUintSize};
+use {IdNamespace, TileOffset, TileSize};
+use euclid::size2;
+=======
+// local imports
+use crate::api::{IdNamespace, TileSize};
+use crate::font::{FontInstanceKey, FontInstanceData, FontKey, FontTemplate};
+use crate::units::*;
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/image.rs
 
 /// An opaque identifier describing an image registered with WebRender.
 /// This is used as a handle to reference images, and is used as the
 /// hash map key for the actual image storage in the `ResourceCache`.
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, MallocSizeOf, PartialEq, Serialize)]
 pub struct ImageKey(pub IdNamespace, pub u32);
 
 impl ImageKey {
@@ -52,6 +62,7 @@ impl BlobImageKey {
 pub struct ExternalImageId(pub u64);
 
 /// Specifies the type of texture target in driver terms.
+#[repr(u8)]
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 pub enum TextureTarget {
     /// Standard texture. This maps to GL_TEXTURE_2D in OpenGL.
@@ -60,7 +71,7 @@ pub enum TextureTarget {
     /// https://www.khronos.org/opengl/wiki/Array_Texture for background
     /// on Array textures.
     Array = 1,
-    /// Rectange texture. This maps to GL_TEXTURE_RECTANGLE in OpenGL. This
+    /// Rectangle texture. This maps to GL_TEXTURE_RECTANGLE in OpenGL. This
     /// is similar to a standard texture, with a few subtle differences
     /// (no mipmaps, non-power-of-two dimensions, different coordinate space)
     /// that make it useful for representing the kinds of textures we use
@@ -75,7 +86,7 @@ pub enum TextureTarget {
 }
 
 /// Storage format identifier for externally-managed images.
-#[repr(u32)]
+#[repr(u8)]
 #[derive(Debug, Copy, Clone, Eq, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ExternalImageType {
     /// The image is texture-backed.
@@ -98,7 +109,7 @@ pub struct ExternalImageData {
 }
 
 /// Specifies the format of a series of pixels, in driver terms.
-#[repr(u32)]
+#[repr(u8)]
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum ImageFormat {
     /// One-channel, byte storage. The "red" doesn't map to the color
@@ -114,10 +125,22 @@ pub enum ImageFormat {
     /// Two-channels, byte storage. Similar to `R8`, this just means
     /// "two channels" rather than "red and green".
     RG8 = 5,
+    /// Two-channels, byte storage. Similar to `R16`, this just means
+    /// "two channels" rather than "red and green".
+    RG16 = 6,
+
     /// Four channels, signed integer storage.
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/image.rs
     RGBAI32 = 6,
     /// Four channels, byte storage.
     RGBA8 = 7,
+||||||| merged common ancestors
+    RGBAI32 = 6,
+=======
+    RGBAI32 = 7,
+    /// Four channels, byte storage.
+    RGBA8 = 8,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/image.rs
 }
 
 impl ImageFormat {
@@ -129,6 +152,7 @@ impl ImageFormat {
             ImageFormat::BGRA8 => 4,
             ImageFormat::RGBAF32 => 16,
             ImageFormat::RG8 => 2,
+            ImageFormat::RG16 => 4,
             ImageFormat::RGBAI32 => 16,
             ImageFormat::RGBA8 => 4,
         }
@@ -137,7 +161,7 @@ impl ImageFormat {
 
 /// Specifies the color depth of an image. Currently only used for YUV images.
 #[repr(u8)]
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, MallocSizeOf, PartialEq, Serialize)]
 pub enum ColorDepth {
     /// 8 bits image (most common)
     Color8,
@@ -293,13 +317,13 @@ pub trait BlobImageResources {
 /// and creating the rasterizer objects, but isn't expected to do any rasterization itself.
 pub trait BlobImageHandler: Send {
     /// Creates a snapshot of the current state of blob images in the handler.
-    fn create_blob_rasterizer(&mut self) -> Box<AsyncBlobImageRasterizer>;
+    fn create_blob_rasterizer(&mut self) -> Box<dyn AsyncBlobImageRasterizer>;
 
     /// A hook to let the blob image handler update any state related to resources that
     /// are not bundled in the blob recording itself.
     fn prepare_resources(
         &mut self,
-        services: &BlobImageResources,
+        services: &dyn BlobImageResources,
         requests: &[BlobImageParams],
     );
 
@@ -350,6 +374,7 @@ pub struct BlobImageParams {
     /// the entire image when only a portion is updated.
     ///
     /// If set to None the entire image is rasterized.
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/image.rs
     pub dirty_rect: BlobDirtyRect,
 }
 
@@ -444,6 +469,104 @@ impl<T: Copy, U> From<TypedRect<T, U>> for DirtyRect<T, U> {
     fn from(rect: TypedRect<T, U>) -> Self {
         DirtyRect::Partial(rect)
     }
+||||||| merged common ancestors
+    pub dirty_rect: Option<DeviceUintRect>,
+=======
+    pub dirty_rect: BlobDirtyRect,
+}
+
+/// The possible states of a Dirty rect.
+///
+/// This exists because people kept getting confused with `Option<Rect>`.
+#[derive(Debug, Serialize, Deserialize)]
+pub enum DirtyRect<T: Copy, U> {
+    /// Everything is Dirty, equivalent to Partial(image_bounds)
+    All,
+    /// Some specific amount is dirty
+    Partial(TypedRect<T, U>)
+}
+
+impl<T, U> DirtyRect<T, U>
+where
+    T: Copy + Clone
+        + PartialOrd + PartialEq
+        + Add<T, Output = T>
+        + Sub<T, Output = T>
+        + Zero
+{
+    /// Creates an empty DirtyRect (indicating nothing is invalid)
+    pub fn empty() -> Self {
+        DirtyRect::Partial(TypedRect::zero())
+    }
+
+    /// Returns whether the dirty rect is empty
+    pub fn is_empty(&self) -> bool {
+        match self {
+            DirtyRect::All => false,
+            DirtyRect::Partial(rect) => rect.is_empty(),
+        }
+    }
+
+    /// Replaces self with the empty rect and returns the old value.
+    pub fn replace_with_empty(&mut self) -> Self {
+        ::std::mem::replace(self, DirtyRect::empty())
+    }
+
+    /// Maps over the contents of Partial.
+    pub fn map<F>(self, func: F) -> Self
+        where F: FnOnce(TypedRect<T, U>) -> TypedRect<T, U>,
+    {
+        use crate::DirtyRect::*;
+
+        match self {
+            All        => All,
+            Partial(rect) => Partial(func(rect)),
+        }
+    }
+
+    /// Unions the dirty rects.
+    pub fn union(&self, other: &Self) -> Self {
+        use crate::DirtyRect::*;
+
+        match (*self, *other) {
+            (All, _) | (_, All)        => All,
+            (Partial(rect1), Partial(rect2)) => Partial(rect1.union(&rect2)),
+        }
+    }
+
+    /// Intersects the dirty rects.
+    pub fn intersection(&self, other: &Self) -> Self {
+        use crate::DirtyRect::*;
+
+        match (*self, *other) {
+            (All, rect) | (rect, All)  => rect,
+            (Partial(rect1), Partial(rect2)) => Partial(rect1.intersection(&rect2)
+                                                                   .unwrap_or_else(TypedRect::zero))
+        }
+    }
+
+    /// Converts the dirty rect into a subrect of the given one via intersection.
+    pub fn to_subrect_of(&self, rect: &TypedRect<T, U>) -> TypedRect<T, U> {
+        use crate::DirtyRect::*;
+
+        match *self {
+            All              => *rect,
+            Partial(dirty_rect) => dirty_rect.intersection(rect)
+                                               .unwrap_or_else(TypedRect::zero),
+        }
+    }
+}
+
+impl<T: Copy, U> Copy for DirtyRect<T, U> {}
+impl<T: Copy, U> Clone for DirtyRect<T, U> {
+    fn clone(&self) -> Self { *self }
+}
+
+impl<T: Copy, U> From<TypedRect<T, U>> for DirtyRect<T, U> {
+    fn from(rect: TypedRect<T, U>) -> Self {
+        DirtyRect::Partial(rect)
+    }
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/image.rs
 }
 
 /// Backing store for blob image command streams.

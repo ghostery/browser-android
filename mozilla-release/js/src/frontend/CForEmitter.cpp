@@ -6,11 +6,12 @@
 
 #include "frontend/CForEmitter.h"
 
-#include "frontend/BytecodeEmitter.h"
-#include "frontend/EmitterScope.h"
-#include "frontend/SourceNotes.h"
-#include "vm/Opcodes.h"
-#include "vm/Scope.h"
+#include "frontend/BytecodeEmitter.h"  // BytecodeEmitter
+#include "frontend/EmitterScope.h"     // EmitterScope
+#include "frontend/SourceNotes.h"      // SRC_*, SrcNote
+#include "vm/JSScript.h"               // JSTRY_LOOP
+#include "vm/Opcodes.h"                // JSOP_*
+#include "vm/Scope.h"                  // ScopeKind
 
 using namespace js;
 using namespace js::frontend;
@@ -75,7 +76,18 @@ bool CForEmitter::emitBody(Cond cond, const Maybe<uint32_t>& bodyPos) {
     return false;
   }
 
+<<<<<<< HEAD
   biasedTop_ = bce_->offset();
+||||||| merged common ancestors
+    if (cond_ == Cond::Present) {
+        // Goto the loop condition, which branches back to iterate.
+        if (!loopInfo_->emitEntryJump(bce_)) {
+            return false;
+        }
+    }
+=======
+  biasedTop_ = bce_->bytecodeSection().offset();
+>>>>>>> upstream-releases
 
   if (cond_ == Cond::Present) {
     // Goto the loop condition, which branches back to iterate.
@@ -160,16 +172,51 @@ bool CForEmitter::emitCond(const Maybe<uint32_t>& forPos,
       return false;
     }
 
+<<<<<<< HEAD
     // Restore the absolute line number for source note readers.
     if (endPos) {
       uint32_t lineNum = bce_->parser->errorReporter().lineAt(*endPos);
       if (bce_->currentLine() != lineNum) {
         if (!bce_->newSrcNote2(SRC_SETLINE, ptrdiff_t(lineNum))) {
           return false;
+||||||| merged common ancestors
+    if (update_ == Update::Present) {
+        tdzCache_.reset();
+    }
+
+    condOffset_ = bce_->offset();
+
+    if (cond_ == Cond::Present) {
+        if (!loopInfo_->emitLoopEntry(bce_, condPos)) {
+            return false;
         }
+    } else if (update_ == Update::Missing) {
+        // If there is no condition clause and no update clause, mark
+        // the loop-ending "goto" with the location of the "for".
+        // This ensures that the debugger will stop on each loop
+        // iteration.
+        if (forPos) {
+            if (!bce_->updateSourceCoordNotes(*forPos)) {
+                return false;
+            }
+=======
+    // Restore the absolute line number for source note readers.
+    if (endPos) {
+      uint32_t lineNum = bce_->parser->errorReporter().lineAt(*endPos);
+      if (bce_->bytecodeSection().currentLine() != lineNum) {
+        if (!bce_->newSrcNote2(SRC_SETLINE, ptrdiff_t(lineNum))) {
+          return false;
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
         bce_->current->currentLine = lineNum;
         bce_->current->lastColumn = 0;
       }
+||||||| merged common ancestors
+=======
+        bce_->bytecodeSection().setCurrentLine(lineNum);
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -177,7 +224,15 @@ bool CForEmitter::emitCond(const Maybe<uint32_t>& forPos,
     tdzCache_.reset();
   }
 
+<<<<<<< HEAD
   condOffset_ = bce_->offset();
+||||||| merged common ancestors
+    // The third note offset helps us find the loop-closing jump.
+    if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::For::BackJumpOffset,
+                                loopInfo_->loopEndOffset() - biasedTop_))
+=======
+  condOffset_ = bce_->bytecodeSection().offset();
+>>>>>>> upstream-releases
 
   if (cond_ == Cond::Present) {
     if (!loopInfo_->emitLoopEntry(bce_, condPos)) {
@@ -202,6 +257,7 @@ bool CForEmitter::emitCond(const Maybe<uint32_t>& forPos,
   return true;
 }
 
+<<<<<<< HEAD
 bool CForEmitter::emitEnd() {
   MOZ_ASSERT(state_ == State::Cond);
   // Set the first note offset so we can find the loop condition.
@@ -240,6 +296,49 @@ bool CForEmitter::emitEnd() {
   }
 
   loopInfo_.reset();
+||||||| merged common ancestors
+    loopInfo_.reset();
+=======
+bool CForEmitter::emitEnd() {
+  MOZ_ASSERT(state_ == State::Cond);
+  // Set the first note offset so we can find the loop condition.
+  if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::For::CondOffset,
+                              condOffset_ - biasedTop_)) {
+    return false;
+  }
+  if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::For::UpdateOffset,
+                              loopInfo_->continueTargetOffset() - biasedTop_)) {
+    return false;
+  }
+
+  // If no loop condition, just emit a loop-closing jump.
+  if (!loopInfo_->emitLoopEnd(bce_,
+                              cond_ == Cond::Present ? JSOP_IFNE : JSOP_GOTO)) {
+    //              [stack]
+    return false;
+  }
+
+  // The third note offset helps us find the loop-closing jump.
+  if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::For::BackJumpOffset,
+                              loopInfo_->loopEndOffset() - biasedTop_))
+
+  {
+    return false;
+  }
+
+  if (!bce_->addTryNote(JSTRY_LOOP, bce_->bytecodeSection().stackDepth(),
+                        loopInfo_->headOffset(),
+                        loopInfo_->breakTargetOffset())) {
+    return false;
+  }
+
+  if (!loopInfo_->patchBreaksAndContinues(bce_)) {
+    //              [stack]
+    return false;
+  }
+
+  loopInfo_.reset();
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::End;

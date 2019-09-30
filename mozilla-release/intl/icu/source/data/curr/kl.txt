@@ -17,5 +17,11 @@ kl{
             other{"euro"}
         }
     }
+<<<<<<< HEAD
     Version{"2.1.45.12"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
 }

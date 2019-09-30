@@ -58,13 +58,43 @@ static const SnapshotOffset INVALID_SNAPSHOT_OFFSET = uint32_t(-1);
 
 // Different kinds of bailouts. When extending this enum, make sure to check
 // the bits reserved for bailout kinds in Bailouts.h
+<<<<<<< HEAD
+enum BailoutKind {
+  // Normal bailouts, that don't need to be handled specially when restarting
+  // in baseline.
+||||||| merged common ancestors
+enum BailoutKind
+{
+    // Normal bailouts, that don't need to be handled specially when restarting
+    // in baseline.
+
+    // An inevitable bailout (MBail instruction or type barrier that always bails)
+    Bailout_Inevitable,
+=======
 enum BailoutKind {
   // Normal bailouts, that don't need to be handled specially when restarting
   // in baseline.
 
   // An inevitable bailout (MBail instruction or type barrier that always bails)
   Bailout_Inevitable,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // An inevitable bailout (MBail instruction or type barrier that always bails)
+  Bailout_Inevitable,
+||||||| merged common ancestors
+    // Bailing out during a VM call. Many possible causes that are hard
+    // to distinguish statically at snapshot construction time.
+    // We just lump them together.
+    Bailout_DuringVMCall,
+=======
+  // Bailing out during a VM call. Many possible causes that are hard
+  // to distinguish statically at snapshot construction time.
+  // We just lump them together.
+  Bailout_DuringVMCall,
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Bailing out during a VM call. Many possible causes that are hard
   // to distinguish statically at snapshot construction time.
   // We just lump them together.
@@ -72,6 +102,13 @@ enum BailoutKind {
 
   // Call to a non-JSFunction (problem for |apply|)
   Bailout_NonJSFunctionCallee,
+||||||| merged common ancestors
+    // Call to a non-JSFunction (problem for |apply|)
+    Bailout_NonJSFunctionCallee,
+=======
+  // Call to a non-JSFunction (problem for |apply|)
+  Bailout_NonJSFunctionCallee,
+>>>>>>> upstream-releases
 
   // Dynamic scope chain lookup produced |undefined|
   Bailout_DynamicNameNotFound,
@@ -109,6 +146,7 @@ enum BailoutKind {
   // Array access with negative index
   Bailout_NegativeIndex,
 
+<<<<<<< HEAD
   // Pretty specific case:
   //  - need a type barrier on a property write
   //  - all but one of the observed types have property types that reflect
@@ -116,7 +154,19 @@ enum BailoutKind {
   //  - we need to guard that we're not given an object of that one other type
   //    also used for the unused GuardClass instruction
   Bailout_ObjectIdentityOrTypeGuard,
+||||||| merged common ancestors
+    // Pretty specific case:
+    //  - need a type barrier on a property write
+    //  - all but one of the observed types have property types that reflect the value
+    //  - we need to guard that we're not given an object of that one other type
+    // also used for the unused GuardClass instruction
+    Bailout_ObjectIdentityOrTypeGuard,
+=======
+  // Array access with non integer index
+  Bailout_NonIntegerIndex,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Unbox expects a given type, bails out if it doesn't get it.
   Bailout_NonInt32Input,
   Bailout_NonNumericInput,  // unboxing a double works with int32 too
@@ -124,60 +174,222 @@ enum BailoutKind {
   Bailout_NonObjectInput,
   Bailout_NonStringInput,
   Bailout_NonSymbolInput,
+||||||| merged common ancestors
+    // Unbox expects a given type, bails out if it doesn't get it.
+    Bailout_NonInt32Input,
+    Bailout_NonNumericInput, // unboxing a double works with int32 too
+    Bailout_NonBooleanInput,
+    Bailout_NonObjectInput,
+    Bailout_NonStringInput,
+    Bailout_NonSymbolInput,
+=======
+  // Pretty specific case:
+  //  - need a type barrier on a property write
+  //  - all but one of the observed types have property types that reflect
+  //    the value
+  //  - we need to guard that we're not given an object of that one other type
+  //    also used for the unused GuardClass instruction
+  Bailout_ObjectIdentityOrTypeGuard,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Atomic operations require shared memory, bail out if the typed array
   // maps unshared memory.
   Bailout_NonSharedTypedArrayInput,
+||||||| merged common ancestors
+    // Atomic operations require shared memory, bail out if the typed array
+    // maps unshared memory.
+    Bailout_NonSharedTypedArrayInput,
+=======
+  // Unbox expects a given type, bails out if it doesn't get it.
+  Bailout_NonInt32Input,
+  Bailout_NonNumericInput,  // unboxing a double works with int32 too
+  Bailout_NonBooleanInput,
+  Bailout_NonObjectInput,
+  Bailout_NonStringInput,
+  Bailout_NonSymbolInput,
+  Bailout_NonBigIntInput,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // We hit a |debugger;| statement.
   Bailout_Debugger,
+||||||| merged common ancestors
+    // We hit a |debugger;| statement.
+    Bailout_Debugger,
+=======
+  // Atomic operations require shared memory, bail out if the typed array
+  // maps unshared memory.
+  Bailout_NonSharedTypedArrayInput,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // |this| used uninitialized in a derived constructor
   Bailout_UninitializedThis,
+||||||| merged common ancestors
+    // |this| used uninitialized in a derived constructor
+    Bailout_UninitializedThis,
+=======
+  // We hit a |debugger;| statement.
+  Bailout_Debugger,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Derived constructors must return object or undefined
   Bailout_BadDerivedConstructorReturn,
+||||||| merged common ancestors
+    // Derived constructors must return object or undefined
+    Bailout_BadDerivedConstructorReturn,
+=======
+  // |this| used uninitialized in a derived constructor
+  Bailout_UninitializedThis,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // We hit this code for the first time.
   Bailout_FirstExecution,
+||||||| merged common ancestors
+    // We hit this code for the first time.
+    Bailout_FirstExecution,
+=======
+  // Derived constructors must return object or undefined
+  Bailout_BadDerivedConstructorReturn,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // END Normal bailouts
+||||||| merged common ancestors
+    // END Normal bailouts
+=======
+  // We hit this code for the first time.
+  Bailout_FirstExecution,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Bailouts caused by invalid assumptions based on Baseline code.
   // Causes immediate invalidation.
+||||||| merged common ancestors
+    // Bailouts caused by invalid assumptions based on Baseline code.
+    // Causes immediate invalidation.
+=======
+  // END Normal bailouts
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Like Bailout_Overflow, but causes immediate invalidation.
   Bailout_OverflowInvalidate,
+||||||| merged common ancestors
+    // Like Bailout_Overflow, but causes immediate invalidation.
+    Bailout_OverflowInvalidate,
+=======
+  // Bailouts caused by invalid assumptions based on Baseline code.
+  // Causes immediate invalidation.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Used for integer division, multiplication and modulo.
   // If there's a remainder, bails to return a double.
   // Can also signal overflow or result of -0.
   // Can also signal division by 0 (returns inf, a double).
   Bailout_DoubleOutput,
+||||||| merged common ancestors
+    // Used for integer division, multiplication and modulo.
+    // If there's a remainder, bails to return a double.
+    // Can also signal overflow or result of -0.
+    // Can also signal division by 0 (returns inf, a double).
+    Bailout_DoubleOutput,
+=======
+  // Like Bailout_Overflow, but causes immediate invalidation.
+  Bailout_OverflowInvalidate,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // END Invalid assumptions bailouts
+||||||| merged common ancestors
+    // END Invalid assumptions bailouts
+=======
+  // Used for integer division, multiplication and modulo.
+  // If there's a remainder, bails to return a double.
+  // Can also signal overflow or result of -0.
+  // Can also signal division by 0 (returns inf, a double).
+  Bailout_DoubleOutput,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // A bailout at the very start of a function indicates that there may be
   // a type mismatch in the arguments that necessitates a reflow.
   Bailout_ArgumentCheck,
+||||||| merged common ancestors
+=======
+  // END Invalid assumptions bailouts
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // A bailout triggered by a bounds-check failure.
   Bailout_BoundsCheck,
   // A bailout triggered by a typed object whose backing buffer was detached.
   Bailout_Detached,
+||||||| merged common ancestors
+    // A bailout at the very start of a function indicates that there may be
+    // a type mismatch in the arguments that necessitates a reflow.
+    Bailout_ArgumentCheck,
+=======
+  // A bailout at the very start of a function indicates that there may be
+  // a type mismatch in the arguments that necessitates a reflow.
+  Bailout_ArgumentCheck,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // A shape guard based on TI information failed.
   // (We saw an object whose shape does not match that / any of those observed
   // by the baseline IC.)
   Bailout_ShapeGuard,
+||||||| merged common ancestors
+    // A bailout triggered by a bounds-check failure.
+    Bailout_BoundsCheck,
+    // A bailout triggered by a typed object whose backing buffer was detached.
+    Bailout_Detached,
+=======
+  // A bailout triggered by a bounds-check failure.
+  Bailout_BoundsCheck,
+  // A bailout triggered by a typed object whose backing buffer was detached.
+  Bailout_Detached,
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // When we're trying to use an uninitialized lexical.
+  Bailout_UninitializedLexical,
+||||||| merged common ancestors
+    // A shape guard based on TI information failed.
+    // (We saw an object whose shape does not match that / any of those observed
+    // by the baseline IC.)
+    Bailout_ShapeGuard,
+=======
+  // A shape guard based on TI information failed.
+  // (We saw an object whose shape does not match that / any of those observed
+  // by the baseline IC.)
+  Bailout_ShapeGuard,
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // A bailout to baseline from Ion on exception to handle Debugger hooks.
+  Bailout_IonExceptionDebugMode
+||||||| merged common ancestors
+    // When we're trying to use an uninitialized lexical.
+    Bailout_UninitializedLexical,
+
+    // A bailout to baseline from Ion on exception to handle Debugger hooks.
+    Bailout_IonExceptionDebugMode
+=======
   // When we're trying to use an uninitialized lexical.
   Bailout_UninitializedLexical,
 
   // A bailout to baseline from Ion on exception to handle Debugger hooks.
   Bailout_IonExceptionDebugMode
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 inline const char* BailoutKindString(BailoutKind kind) {
   switch (kind) {
     // Normal bailouts.
@@ -256,6 +468,171 @@ inline const char* BailoutKindString(BailoutKind kind) {
     default:
       MOZ_CRASH("Invalid BailoutKind");
   }
+||||||| merged common ancestors
+inline const char*
+BailoutKindString(BailoutKind kind)
+{
+    switch (kind) {
+      // Normal bailouts.
+      case Bailout_Inevitable:
+        return "Bailout_Inevitable";
+      case Bailout_DuringVMCall:
+        return "Bailout_DuringVMCall";
+      case Bailout_NonJSFunctionCallee:
+        return "Bailout_NonJSFunctionCallee";
+      case Bailout_DynamicNameNotFound:
+        return "Bailout_DynamicNameNotFound";
+      case Bailout_StringArgumentsEval:
+        return "Bailout_StringArgumentsEval";
+      case Bailout_Overflow:
+        return "Bailout_Overflow";
+      case Bailout_Round:
+        return "Bailout_Round";
+      case Bailout_NonPrimitiveInput:
+        return "Bailout_NonPrimitiveInput";
+      case Bailout_PrecisionLoss:
+        return "Bailout_PrecisionLoss";
+      case Bailout_TypeBarrierO:
+        return "Bailout_TypeBarrierO";
+      case Bailout_TypeBarrierV:
+        return "Bailout_TypeBarrierV";
+      case Bailout_MonitorTypes:
+        return "Bailout_MonitorTypes";
+      case Bailout_Hole:
+        return "Bailout_Hole";
+      case Bailout_NegativeIndex:
+        return "Bailout_NegativeIndex";
+      case Bailout_ObjectIdentityOrTypeGuard:
+        return "Bailout_ObjectIdentityOrTypeGuard";
+      case Bailout_NonInt32Input:
+        return "Bailout_NonInt32Input";
+      case Bailout_NonNumericInput:
+        return "Bailout_NonNumericInput";
+      case Bailout_NonBooleanInput:
+        return "Bailout_NonBooleanInput";
+      case Bailout_NonObjectInput:
+        return "Bailout_NonObjectInput";
+      case Bailout_NonStringInput:
+        return "Bailout_NonStringInput";
+      case Bailout_NonSymbolInput:
+        return "Bailout_NonSymbolInput";
+      case Bailout_NonSharedTypedArrayInput:
+        return "Bailout_NonSharedTypedArrayInput";
+      case Bailout_Debugger:
+        return "Bailout_Debugger";
+      case Bailout_UninitializedThis:
+        return "Bailout_UninitializedThis";
+      case Bailout_BadDerivedConstructorReturn:
+        return "Bailout_BadDerivedConstructorReturn";
+      case Bailout_FirstExecution:
+        return "Bailout_FirstExecution";
+
+      // Bailouts caused by invalid assumptions.
+      case Bailout_OverflowInvalidate:
+        return "Bailout_OverflowInvalidate";
+      case Bailout_DoubleOutput:
+        return "Bailout_DoubleOutput";
+
+      // Other bailouts.
+      case Bailout_ArgumentCheck:
+        return "Bailout_ArgumentCheck";
+      case Bailout_BoundsCheck:
+        return "Bailout_BoundsCheck";
+      case Bailout_Detached:
+        return "Bailout_Detached";
+      case Bailout_ShapeGuard:
+        return "Bailout_ShapeGuard";
+      case Bailout_UninitializedLexical:
+        return "Bailout_UninitializedLexical";
+      case Bailout_IonExceptionDebugMode:
+        return "Bailout_IonExceptionDebugMode";
+      default:
+        MOZ_CRASH("Invalid BailoutKind");
+    }
+=======
+inline const char* BailoutKindString(BailoutKind kind) {
+  switch (kind) {
+    // Normal bailouts.
+    case Bailout_Inevitable:
+      return "Bailout_Inevitable";
+    case Bailout_DuringVMCall:
+      return "Bailout_DuringVMCall";
+    case Bailout_NonJSFunctionCallee:
+      return "Bailout_NonJSFunctionCallee";
+    case Bailout_DynamicNameNotFound:
+      return "Bailout_DynamicNameNotFound";
+    case Bailout_StringArgumentsEval:
+      return "Bailout_StringArgumentsEval";
+    case Bailout_Overflow:
+      return "Bailout_Overflow";
+    case Bailout_Round:
+      return "Bailout_Round";
+    case Bailout_NonPrimitiveInput:
+      return "Bailout_NonPrimitiveInput";
+    case Bailout_PrecisionLoss:
+      return "Bailout_PrecisionLoss";
+    case Bailout_TypeBarrierO:
+      return "Bailout_TypeBarrierO";
+    case Bailout_TypeBarrierV:
+      return "Bailout_TypeBarrierV";
+    case Bailout_MonitorTypes:
+      return "Bailout_MonitorTypes";
+    case Bailout_Hole:
+      return "Bailout_Hole";
+    case Bailout_NegativeIndex:
+      return "Bailout_NegativeIndex";
+    case Bailout_NonIntegerIndex:
+      return "Bailout_NonIntegerIndex";
+    case Bailout_ObjectIdentityOrTypeGuard:
+      return "Bailout_ObjectIdentityOrTypeGuard";
+    case Bailout_NonInt32Input:
+      return "Bailout_NonInt32Input";
+    case Bailout_NonNumericInput:
+      return "Bailout_NonNumericInput";
+    case Bailout_NonBooleanInput:
+      return "Bailout_NonBooleanInput";
+    case Bailout_NonObjectInput:
+      return "Bailout_NonObjectInput";
+    case Bailout_NonStringInput:
+      return "Bailout_NonStringInput";
+    case Bailout_NonSymbolInput:
+      return "Bailout_NonSymbolInput";
+    case Bailout_NonBigIntInput:
+      return "Bailout_NonBigIntInput";
+    case Bailout_NonSharedTypedArrayInput:
+      return "Bailout_NonSharedTypedArrayInput";
+    case Bailout_Debugger:
+      return "Bailout_Debugger";
+    case Bailout_UninitializedThis:
+      return "Bailout_UninitializedThis";
+    case Bailout_BadDerivedConstructorReturn:
+      return "Bailout_BadDerivedConstructorReturn";
+    case Bailout_FirstExecution:
+      return "Bailout_FirstExecution";
+
+    // Bailouts caused by invalid assumptions.
+    case Bailout_OverflowInvalidate:
+      return "Bailout_OverflowInvalidate";
+    case Bailout_DoubleOutput:
+      return "Bailout_DoubleOutput";
+
+    // Other bailouts.
+    case Bailout_ArgumentCheck:
+      return "Bailout_ArgumentCheck";
+    case Bailout_BoundsCheck:
+      return "Bailout_BoundsCheck";
+    case Bailout_Detached:
+      return "Bailout_Detached";
+    case Bailout_ShapeGuard:
+      return "Bailout_ShapeGuard";
+    case Bailout_UninitializedLexical:
+      return "Bailout_UninitializedLexical";
+    case Bailout_IonExceptionDebugMode:
+      return "Bailout_IonExceptionDebugMode";
+    default:
+      MOZ_CRASH("Invalid BailoutKind");
+  }
+>>>>>>> upstream-releases
 }
 
 static const uint32_t ELEMENT_TYPE_BITS = 5;
@@ -416,6 +793,7 @@ class SimdConstant {
 };
 
 enum class IntConversionBehavior {
+<<<<<<< HEAD
   // These two try to convert the input to an int32 using ToNumber and
   // will fail if the resulting int32 isn't strictly equal to the input.
   Normal,
@@ -423,6 +801,23 @@ enum class IntConversionBehavior {
   // These two will convert the input to an int32 with loss of precision.
   Truncate,
   ClampToUint8,
+||||||| merged common ancestors
+    // These two try to convert the input to an int32 using ToNumber and
+    // will fail if the resulting int32 isn't strictly equal to the input.
+    Normal,
+    NegativeZeroCheck,
+    // These two will convert the input to an int32 with loss of precision.
+    Truncate,
+    ClampToUint8,
+=======
+  // These two try to convert the input to an int32 using ToNumber and
+  // will fail if the resulting int32 isn't strictly equal to the input.
+  Normal,             // Succeeds on -0: converts to 0.
+  NegativeZeroCheck,  // Fails on -0.
+  // These two will convert the input to an int32 with loss of precision.
+  Truncate,
+  ClampToUint8,
+>>>>>>> upstream-releases
 };
 
 enum class IntConversionInputKind { NumbersOnly, NumbersOrBoolsOnly, Any };
@@ -430,6 +825,7 @@ enum class IntConversionInputKind { NumbersOnly, NumbersOrBoolsOnly, Any };
 // The ordering of this enumeration is important: Anything < Value is a
 // specialized type. Furthermore, anything < String has trivial conversion to
 // a number.
+<<<<<<< HEAD
 enum class MIRType : uint8_t {
   Undefined,
   Null,
@@ -468,12 +864,94 @@ enum class MIRType : uint8_t {
   Bool16x8 = Boolean | (3 << VECTOR_SCALE_SHIFT),
   Bool32x4 = Boolean | (2 << VECTOR_SCALE_SHIFT),
   Doublex2 = Double | (1 << VECTOR_SCALE_SHIFT)
+||||||| merged common ancestors
+enum class MIRType: uint8_t
+{
+    Undefined,
+    Null,
+    Boolean,
+    Int32,
+    Int64,
+    Double,
+    Float32,
+    // Types above have trivial conversion to a number.
+    String,
+    Symbol,
+    // Types above are primitive (including undefined and null).
+    Object,
+    MagicOptimizedArguments,   // JS_OPTIMIZED_ARGUMENTS magic value.
+    MagicOptimizedOut,         // JS_OPTIMIZED_OUT magic value.
+    MagicHole,                 // JS_ELEMENTS_HOLE magic value.
+    MagicIsConstructing,       // JS_IS_CONSTRUCTING magic value.
+    MagicUninitializedLexical, // JS_UNINITIALIZED_LEXICAL magic value.
+    // Types above are specialized.
+    Value,
+    SinCosDouble,              // Optimizing a sin/cos to sincos.
+    ObjectOrNull,
+    None,                      // Invalid, used as a placeholder.
+    Slots,                     // A slots vector
+    Elements,                  // An elements vector
+    Pointer,                   // An opaque pointer that receives no special treatment
+    Shape,                     // A Shape pointer.
+    ObjectGroup,               // An ObjectGroup pointer.
+    Last = ObjectGroup,
+    // Representing both SIMD.IntBxN and SIMD.UintBxN.
+    Int8x16   = Int32   | (4 << VECTOR_SCALE_SHIFT),
+    Int16x8   = Int32   | (3 << VECTOR_SCALE_SHIFT),
+    Int32x4   = Int32   | (2 << VECTOR_SCALE_SHIFT),
+    Float32x4 = Float32 | (2 << VECTOR_SCALE_SHIFT),
+    Bool8x16  = Boolean | (4 << VECTOR_SCALE_SHIFT),
+    Bool16x8  = Boolean | (3 << VECTOR_SCALE_SHIFT),
+    Bool32x4  = Boolean | (2 << VECTOR_SCALE_SHIFT),
+    Doublex2  = Double  | (1 << VECTOR_SCALE_SHIFT)
+=======
+enum class MIRType : uint8_t {
+  Undefined,
+  Null,
+  Boolean,
+  Int32,
+  Int64,
+  Double,
+  Float32,
+  // Types above have trivial conversion to a number.
+  String,
+  Symbol,
+  BigInt,
+  // Types above are primitive (including undefined and null).
+  Object,
+  MagicOptimizedArguments,    // JS_OPTIMIZED_ARGUMENTS magic value.
+  MagicOptimizedOut,          // JS_OPTIMIZED_OUT magic value.
+  MagicHole,                  // JS_ELEMENTS_HOLE magic value.
+  MagicIsConstructing,        // JS_IS_CONSTRUCTING magic value.
+  MagicUninitializedLexical,  // JS_UNINITIALIZED_LEXICAL magic value.
+  // Types above are specialized.
+  Value,
+  ObjectOrNull,
+  None,         // Invalid, used as a placeholder.
+  Slots,        // A slots vector
+  Elements,     // An elements vector
+  Pointer,      // An opaque pointer that receives no special treatment
+  RefOrNull,    // Wasm Ref/AnyRef/NullRef: a raw JSObject* or a raw (void*)0
+  Shape,        // A Shape pointer.
+  ObjectGroup,  // An ObjectGroup pointer.
+  Last = ObjectGroup,
+  // Representing both SIMD.IntBxN and SIMD.UintBxN.
+  Int8x16 = Int32 | (4 << VECTOR_SCALE_SHIFT),
+  Int16x8 = Int32 | (3 << VECTOR_SCALE_SHIFT),
+  Int32x4 = Int32 | (2 << VECTOR_SCALE_SHIFT),
+  Float32x4 = Float32 | (2 << VECTOR_SCALE_SHIFT),
+  Bool8x16 = Boolean | (4 << VECTOR_SCALE_SHIFT),
+  Bool16x8 = Boolean | (3 << VECTOR_SCALE_SHIFT),
+  Bool32x4 = Boolean | (2 << VECTOR_SCALE_SHIFT),
+  Doublex2 = Double | (1 << VECTOR_SCALE_SHIFT)
+>>>>>>> upstream-releases
 };
 
 static inline bool IsSimdType(MIRType type) {
   return ((uint8_t(type) >> VECTOR_SCALE_SHIFT) & VECTOR_SCALE_MASK) != 0;
 }
 
+<<<<<<< HEAD
 static inline MIRType MIRTypeFromValueType(JSValueType type) {
   // This function does not deal with magic types. Magic constants should be
   // filtered out in MIRTypeFromValue.
@@ -499,6 +977,63 @@ static inline MIRType MIRTypeFromValueType(JSValueType type) {
     default:
       MOZ_CRASH("unexpected jsval type");
   }
+||||||| merged common ancestors
+static inline MIRType
+MIRTypeFromValueType(JSValueType type)
+{
+    // This function does not deal with magic types. Magic constants should be
+    // filtered out in MIRTypeFromValue.
+    switch (type) {
+      case JSVAL_TYPE_DOUBLE:
+        return MIRType::Double;
+      case JSVAL_TYPE_INT32:
+        return MIRType::Int32;
+      case JSVAL_TYPE_UNDEFINED:
+        return MIRType::Undefined;
+      case JSVAL_TYPE_STRING:
+        return MIRType::String;
+      case JSVAL_TYPE_SYMBOL:
+        return MIRType::Symbol;
+      case JSVAL_TYPE_BOOLEAN:
+        return MIRType::Boolean;
+      case JSVAL_TYPE_NULL:
+        return MIRType::Null;
+      case JSVAL_TYPE_OBJECT:
+        return MIRType::Object;
+      case JSVAL_TYPE_UNKNOWN:
+        return MIRType::Value;
+      default:
+        MOZ_CRASH("unexpected jsval type");
+    }
+=======
+static inline MIRType MIRTypeFromValueType(JSValueType type) {
+  // This function does not deal with magic types. Magic constants should be
+  // filtered out in MIRTypeFromValue.
+  switch (type) {
+    case JSVAL_TYPE_DOUBLE:
+      return MIRType::Double;
+    case JSVAL_TYPE_INT32:
+      return MIRType::Int32;
+    case JSVAL_TYPE_UNDEFINED:
+      return MIRType::Undefined;
+    case JSVAL_TYPE_STRING:
+      return MIRType::String;
+    case JSVAL_TYPE_SYMBOL:
+      return MIRType::Symbol;
+    case JSVAL_TYPE_BIGINT:
+      return MIRType::BigInt;
+    case JSVAL_TYPE_BOOLEAN:
+      return MIRType::Boolean;
+    case JSVAL_TYPE_NULL:
+      return MIRType::Null;
+    case JSVAL_TYPE_OBJECT:
+      return MIRType::Object;
+    case JSVAL_TYPE_UNKNOWN:
+      return MIRType::Value;
+    default:
+      MOZ_CRASH("unexpected jsval type");
+  }
+>>>>>>> upstream-releases
 }
 
 static inline JSValueType ValueTypeFromMIRType(MIRType type) {
@@ -518,6 +1053,8 @@ static inline JSValueType ValueTypeFromMIRType(MIRType type) {
       return JSVAL_TYPE_STRING;
     case MIRType::Symbol:
       return JSVAL_TYPE_SYMBOL;
+    case MIRType::BigInt:
+      return JSVAL_TYPE_BIGINT;
     case MIRType::MagicOptimizedArguments:
     case MIRType::MagicOptimizedOut:
     case MIRType::MagicHole:
@@ -534,6 +1071,7 @@ static inline JSValueTag MIRTypeToTag(MIRType type) {
   return JSVAL_TYPE_TO_TAG(ValueTypeFromMIRType(type));
 }
 
+<<<<<<< HEAD
 static inline size_t MIRTypeToSize(MIRType type) {
   switch (type) {
     case MIRType::Int32:
@@ -549,6 +1087,42 @@ static inline size_t MIRTypeToSize(MIRType type) {
     default:
       MOZ_CRASH("MIRTypeToSize - unhandled case");
   }
+||||||| merged common ancestors
+static inline size_t
+MIRTypeToSize(MIRType type)
+{
+    switch (type) {
+      case MIRType::Int32:
+        return 4;
+      case MIRType::Int64:
+        return 8;
+      case MIRType::Float32:
+        return 4;
+      case MIRType::Double:
+        return 8;
+      case MIRType::Pointer:
+        return sizeof(uintptr_t);
+      default:
+        MOZ_CRASH("MIRTypeToSize - unhandled case");
+    }
+=======
+static inline size_t MIRTypeToSize(MIRType type) {
+  switch (type) {
+    case MIRType::Int32:
+      return 4;
+    case MIRType::Int64:
+      return 8;
+    case MIRType::Float32:
+      return 4;
+    case MIRType::Double:
+      return 8;
+    case MIRType::Pointer:
+    case MIRType::RefOrNull:
+      return sizeof(uintptr_t);
+    default:
+      MOZ_CRASH("MIRTypeToSize - unhandled case");
+  }
+>>>>>>> upstream-releases
 }
 
 static inline const char* StringFromMIRType(MIRType type) {
@@ -571,6 +1145,8 @@ static inline const char* StringFromMIRType(MIRType type) {
       return "String";
     case MIRType::Symbol:
       return "Symbol";
+    case MIRType::BigInt:
+      return "BigInt";
     case MIRType::Object:
       return "Object";
     case MIRType::MagicOptimizedArguments:
@@ -585,8 +1161,6 @@ static inline const char* StringFromMIRType(MIRType type) {
       return "MagicUninitializedLexical";
     case MIRType::Value:
       return "Value";
-    case MIRType::SinCosDouble:
-      return "SinCosDouble";
     case MIRType::ObjectOrNull:
       return "ObjectOrNull";
     case MIRType::None:
@@ -597,6 +1171,8 @@ static inline const char* StringFromMIRType(MIRType type) {
       return "Elements";
     case MIRType::Pointer:
       return "Pointer";
+    case MIRType::RefOrNull:
+      return "RefOrNull";
     case MIRType::Shape:
       return "Shape";
     case MIRType::ObjectGroup:
@@ -630,30 +1206,88 @@ static inline bool IsNumberType(MIRType type) {
          type == MIRType::Float32 || type == MIRType::Int64;
 }
 
+<<<<<<< HEAD
 static inline bool IsTypeRepresentableAsDouble(MIRType type) {
   return type == MIRType::Int32 || type == MIRType::Double ||
          type == MIRType::Float32;
+||||||| merged common ancestors
+static inline bool
+IsTypeRepresentableAsDouble(MIRType type)
+{
+    return type == MIRType::Int32 ||
+           type == MIRType::Double ||
+           type == MIRType::Float32;
+=======
+static inline bool IsNumericType(MIRType type) {
+  return IsNumberType(type) || type == MIRType::BigInt;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool IsFloatType(MIRType type) {
   return type == MIRType::Int32 || type == MIRType::Float32;
+||||||| merged common ancestors
+static inline bool
+IsFloatType(MIRType type)
+{
+    return type == MIRType::Int32 || type == MIRType::Float32;
+=======
+static inline bool IsTypeRepresentableAsDouble(MIRType type) {
+  return type == MIRType::Int32 || type == MIRType::Double ||
+         type == MIRType::Float32;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool IsFloatingPointType(MIRType type) {
   return type == MIRType::Double || type == MIRType::Float32;
+||||||| merged common ancestors
+static inline bool
+IsFloatingPointType(MIRType type)
+{
+    return type == MIRType::Double || type == MIRType::Float32;
+=======
+static inline bool IsFloatType(MIRType type) {
+  return type == MIRType::Int32 || type == MIRType::Float32;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool IsNullOrUndefined(MIRType type) {
   return type == MIRType::Null || type == MIRType::Undefined;
+||||||| merged common ancestors
+static inline bool
+IsNullOrUndefined(MIRType type)
+{
+    return type == MIRType::Null || type == MIRType::Undefined;
+=======
+static inline bool IsFloatingPointType(MIRType type) {
+  return type == MIRType::Double || type == MIRType::Float32;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool IsMagicType(MIRType type) {
   return type == MIRType::MagicHole || type == MIRType::MagicOptimizedOut ||
          type == MIRType::MagicIsConstructing ||
          type == MIRType::MagicOptimizedArguments ||
          type == MIRType::MagicUninitializedLexical;
+||||||| merged common ancestors
+static inline bool
+IsMagicType(MIRType type)
+{
+    return type == MIRType::MagicHole ||
+           type == MIRType::MagicOptimizedOut ||
+           type == MIRType::MagicIsConstructing ||
+           type == MIRType::MagicOptimizedArguments ||
+           type == MIRType::MagicUninitializedLexical;
+=======
+static inline bool IsNullOrUndefined(MIRType type) {
+  return type == MIRType::Null || type == MIRType::Undefined;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline MIRType ScalarTypeToMIRType(Scalar::Type type) {
   switch (type) {
     case Scalar::Int8:
@@ -674,8 +1308,39 @@ static inline MIRType ScalarTypeToMIRType(Scalar::Type type) {
       break;
   }
   MOZ_CRASH("unexpected kind");
+||||||| merged common ancestors
+static inline MIRType
+ScalarTypeToMIRType(Scalar::Type type)
+{
+    switch (type) {
+      case Scalar::Int8:
+      case Scalar::Uint8:
+      case Scalar::Int16:
+      case Scalar::Uint16:
+      case Scalar::Int32:
+      case Scalar::Uint32:
+      case Scalar::Uint8Clamped:
+        return MIRType::Int32;
+      case Scalar::Int64:
+        return MIRType::Int64;
+      case Scalar::Float32:
+        return MIRType::Float32;
+      case Scalar::Float64:
+        return MIRType::Double;
+      case Scalar::MaxTypedArrayViewType:
+        break;
+    }
+    MOZ_CRASH("unexpected kind");
+=======
+static inline bool IsMagicType(MIRType type) {
+  return type == MIRType::MagicHole || type == MIRType::MagicOptimizedOut ||
+         type == MIRType::MagicIsConstructing ||
+         type == MIRType::MagicOptimizedArguments ||
+         type == MIRType::MagicUninitializedLexical;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline unsigned ScalarTypeToLength(Scalar::Type type) {
   switch (type) {
     case Scalar::Int8:
@@ -693,6 +1358,51 @@ static inline unsigned ScalarTypeToLength(Scalar::Type type) {
       break;
   }
   MOZ_CRASH("unexpected kind");
+||||||| merged common ancestors
+static inline unsigned
+ScalarTypeToLength(Scalar::Type type)
+{
+    switch (type) {
+      case Scalar::Int8:
+      case Scalar::Uint8:
+      case Scalar::Int16:
+      case Scalar::Uint16:
+      case Scalar::Int32:
+      case Scalar::Uint32:
+      case Scalar::Int64:
+      case Scalar::Float32:
+      case Scalar::Float64:
+      case Scalar::Uint8Clamped:
+        return 1;
+      case Scalar::MaxTypedArrayViewType:
+        break;
+    }
+    MOZ_CRASH("unexpected kind");
+=======
+static inline MIRType ScalarTypeToMIRType(Scalar::Type type) {
+  switch (type) {
+    case Scalar::Int8:
+    case Scalar::Uint8:
+    case Scalar::Int16:
+    case Scalar::Uint16:
+    case Scalar::Int32:
+    case Scalar::Uint32:
+    case Scalar::Uint8Clamped:
+      return MIRType::Int32;
+    case Scalar::Int64:
+      return MIRType::Int64;
+    case Scalar::Float32:
+      return MIRType::Float32;
+    case Scalar::Float64:
+      return MIRType::Double;
+    case Scalar::BigInt64:
+    case Scalar::BigUint64:
+      MOZ_CRASH("NYI");
+    case Scalar::MaxTypedArrayViewType:
+      break;
+  }
+  MOZ_CRASH("unexpected kind");
+>>>>>>> upstream-releases
 }
 
 static inline const char* PropertyNameToExtraName(PropertyName* name) {
@@ -706,11 +1416,11 @@ static inline const char* PropertyNameToExtraName(PropertyName* name) {
 #ifdef DEBUG
 
 // Track the pipeline of opcodes which has produced a snapshot.
-#define TRACK_SNAPSHOTS 1
+#  define TRACK_SNAPSHOTS 1
 
 // Make sure registers are not modified between an instruction and
 // its OsiPoint.
-#define CHECK_OSIPOINT_REGISTERS 1
+#  define CHECK_OSIPOINT_REGISTERS 1
 
 #endif  // DEBUG
 
@@ -725,6 +1435,7 @@ enum ABIArgType {
   ArgType_Mask = 0x7
 };
 
+<<<<<<< HEAD
 enum ABIFunctionType {
   // VM functions that take 0-9 non-double arguments
   // and return a non-double value.
@@ -821,6 +1532,199 @@ enum ABIFunctionType {
                                       (ArgType_General << (ArgType_Shift * 2)) |
                                       (ArgType_Int64 << (ArgType_Shift * 3)) |
                                       (ArgType_Int64 << (ArgType_Shift * 4))
+||||||| merged common ancestors
+enum ABIFunctionType
+{
+    // VM functions that take 0-9 non-double arguments
+    // and return a non-double value.
+    Args_General0 = ArgType_General << RetType_Shift,
+    Args_General1 = Args_General0 | (ArgType_General << (ArgType_Shift * 1)),
+    Args_General2 = Args_General1 | (ArgType_General << (ArgType_Shift * 2)),
+    Args_General3 = Args_General2 | (ArgType_General << (ArgType_Shift * 3)),
+    Args_General4 = Args_General3 | (ArgType_General << (ArgType_Shift * 4)),
+    Args_General5 = Args_General4 | (ArgType_General << (ArgType_Shift * 5)),
+    Args_General6 = Args_General5 | (ArgType_General << (ArgType_Shift * 6)),
+    Args_General7 = Args_General6 | (ArgType_General << (ArgType_Shift * 7)),
+    Args_General8 = Args_General7 | (ArgType_General << (ArgType_Shift * 8)),
+
+    // int64 f(double)
+    Args_Int64_Double = (ArgType_Int64 << RetType_Shift) | (ArgType_Double << ArgType_Shift),
+
+    // double f()
+    Args_Double_None = ArgType_Double << RetType_Shift,
+
+    // int f(double)
+    Args_Int_Double = Args_General0 | (ArgType_Double << ArgType_Shift),
+
+    // float f(float)
+    Args_Float32_Float32 = (ArgType_Float32 << RetType_Shift) | (ArgType_Float32 << ArgType_Shift),
+
+    // float f(int, int)
+    Args_Float32_IntInt = (ArgType_Float32 << RetType_Shift) |
+        (ArgType_General << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)),
+
+    // double f(double)
+    Args_Double_Double = Args_Double_None | (ArgType_Double << ArgType_Shift),
+
+    // double f(int)
+    Args_Double_Int = Args_Double_None | (ArgType_General << ArgType_Shift),
+
+    // double f(int, int)
+    Args_Double_IntInt = Args_Double_Int | (ArgType_General << (ArgType_Shift * 2)),
+
+    // double f(double, int)
+    Args_Double_DoubleInt = Args_Double_None |
+        (ArgType_General << (ArgType_Shift * 1)) |
+        (ArgType_Double << (ArgType_Shift * 2)),
+
+    // double f(double, double)
+    Args_Double_DoubleDouble = Args_Double_Double | (ArgType_Double << (ArgType_Shift * 2)),
+
+    // float f(float, float)
+    Args_Float32_Float32Float32 = Args_Float32_Float32 | (ArgType_Float32 << (ArgType_Shift * 2)),
+
+    // double f(int, double)
+    Args_Double_IntDouble = Args_Double_None |
+        (ArgType_Double << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)),
+
+    // int f(int, double)
+    Args_Int_IntDouble = Args_General0 |
+        (ArgType_Double << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)),
+
+    // double f(double, double, double)
+    Args_Double_DoubleDoubleDouble = Args_Double_DoubleDouble | (ArgType_Double << (ArgType_Shift * 3)),
+
+    // double f(double, double, double, double)
+    Args_Double_DoubleDoubleDoubleDouble = Args_Double_DoubleDoubleDouble | (ArgType_Double << (ArgType_Shift * 4)),
+
+    // int f(double, int, int)
+    Args_Int_DoubleIntInt = Args_General0 |
+       (ArgType_General << (ArgType_Shift * 1)) |
+       (ArgType_General << (ArgType_Shift * 2)) |
+       (ArgType_Double  << (ArgType_Shift * 3)),
+
+    // int f(int, double, int, int)
+    Args_Int_IntDoubleIntInt = Args_General0 |
+        (ArgType_General << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)) |
+        (ArgType_Double  << (ArgType_Shift * 3)) |
+        (ArgType_General << (ArgType_Shift * 4)),
+
+    Args_Int_GeneralGeneralGeneralInt64 = Args_General0 |
+        (ArgType_General << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)) |
+        (ArgType_General << (ArgType_Shift * 3)) |
+        (ArgType_Int64 << (ArgType_Shift * 4)),
+
+    Args_Int_GeneralGeneralInt64Int64 = Args_General0 |
+        (ArgType_General << (ArgType_Shift * 1)) |
+        (ArgType_General << (ArgType_Shift * 2)) |
+        (ArgType_Int64 << (ArgType_Shift * 3)) |
+        (ArgType_Int64 << (ArgType_Shift * 4))
+=======
+enum ABIFunctionType {
+  // VM functions that take 0-9 non-double arguments
+  // and return a non-double value.
+  Args_General0 = ArgType_General << RetType_Shift,
+  Args_General1 = Args_General0 | (ArgType_General << (ArgType_Shift * 1)),
+  Args_General2 = Args_General1 | (ArgType_General << (ArgType_Shift * 2)),
+  Args_General3 = Args_General2 | (ArgType_General << (ArgType_Shift * 3)),
+  Args_General4 = Args_General3 | (ArgType_General << (ArgType_Shift * 4)),
+  Args_General5 = Args_General4 | (ArgType_General << (ArgType_Shift * 5)),
+  Args_General6 = Args_General5 | (ArgType_General << (ArgType_Shift * 6)),
+  Args_General7 = Args_General6 | (ArgType_General << (ArgType_Shift * 7)),
+  Args_General8 = Args_General7 | (ArgType_General << (ArgType_Shift * 8)),
+
+  // int64 f(double)
+  Args_Int64_Double =
+      (ArgType_Int64 << RetType_Shift) | (ArgType_Double << ArgType_Shift),
+
+  // double f()
+  Args_Double_None = ArgType_Double << RetType_Shift,
+
+  // int f(double)
+  Args_Int_Double = Args_General0 | (ArgType_Double << ArgType_Shift),
+
+  // int f(float32)
+  Args_Int_Float32 = Args_General0 | (ArgType_Float32 << ArgType_Shift),
+
+  // float f(float)
+  Args_Float32_Float32 =
+      (ArgType_Float32 << RetType_Shift) | (ArgType_Float32 << ArgType_Shift),
+
+  // float f(int, int)
+  Args_Float32_IntInt = (ArgType_Float32 << RetType_Shift) |
+                        (ArgType_General << (ArgType_Shift * 1)) |
+                        (ArgType_General << (ArgType_Shift * 2)),
+
+  // double f(double)
+  Args_Double_Double = Args_Double_None | (ArgType_Double << ArgType_Shift),
+
+  // double f(int)
+  Args_Double_Int = Args_Double_None | (ArgType_General << ArgType_Shift),
+
+  // double f(int, int)
+  Args_Double_IntInt =
+      Args_Double_Int | (ArgType_General << (ArgType_Shift * 2)),
+
+  // double f(double, int)
+  Args_Double_DoubleInt = Args_Double_None |
+                          (ArgType_General << (ArgType_Shift * 1)) |
+                          (ArgType_Double << (ArgType_Shift * 2)),
+
+  // double f(double, double)
+  Args_Double_DoubleDouble =
+      Args_Double_Double | (ArgType_Double << (ArgType_Shift * 2)),
+
+  // float f(float, float)
+  Args_Float32_Float32Float32 =
+      Args_Float32_Float32 | (ArgType_Float32 << (ArgType_Shift * 2)),
+
+  // double f(int, double)
+  Args_Double_IntDouble = Args_Double_None |
+                          (ArgType_Double << (ArgType_Shift * 1)) |
+                          (ArgType_General << (ArgType_Shift * 2)),
+
+  // int f(int, double)
+  Args_Int_IntDouble = Args_General0 | (ArgType_Double << (ArgType_Shift * 1)) |
+                       (ArgType_General << (ArgType_Shift * 2)),
+
+  // double f(double, double, double)
+  Args_Double_DoubleDoubleDouble =
+      Args_Double_DoubleDouble | (ArgType_Double << (ArgType_Shift * 3)),
+
+  // double f(double, double, double, double)
+  Args_Double_DoubleDoubleDoubleDouble =
+      Args_Double_DoubleDoubleDouble | (ArgType_Double << (ArgType_Shift * 4)),
+
+  // int f(double, int, int)
+  Args_Int_DoubleIntInt = Args_General0 |
+                          (ArgType_General << (ArgType_Shift * 1)) |
+                          (ArgType_General << (ArgType_Shift * 2)) |
+                          (ArgType_Double << (ArgType_Shift * 3)),
+
+  // int f(int, double, int, int)
+  Args_Int_IntDoubleIntInt = Args_General0 |
+                             (ArgType_General << (ArgType_Shift * 1)) |
+                             (ArgType_General << (ArgType_Shift * 2)) |
+                             (ArgType_Double << (ArgType_Shift * 3)) |
+                             (ArgType_General << (ArgType_Shift * 4)),
+
+  Args_Int_GeneralGeneralGeneralInt64 =
+      Args_General0 | (ArgType_General << (ArgType_Shift * 1)) |
+      (ArgType_General << (ArgType_Shift * 2)) |
+      (ArgType_General << (ArgType_Shift * 3)) |
+      (ArgType_Int64 << (ArgType_Shift * 4)),
+
+  Args_Int_GeneralGeneralInt64Int64 = Args_General0 |
+                                      (ArgType_General << (ArgType_Shift * 1)) |
+                                      (ArgType_General << (ArgType_Shift * 2)) |
+                                      (ArgType_Int64 << (ArgType_Shift * 3)) |
+                                      (ArgType_Int64 << (ArgType_Shift * 4))
+>>>>>>> upstream-releases
 };
 
 enum class BarrierKind : uint32_t {

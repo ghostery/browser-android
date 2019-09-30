@@ -179,6 +179,14 @@ class SimpleLayerAttributes final {
     return true;
   }
 
+  bool SetIsAsyncZoomContainer(const Maybe<FrameMetrics::ViewID>& aViewId) {
+    if (mIsAsyncZoomContainerForViewId == aViewId) {
+      return false;
+    }
+    mIsAsyncZoomContainerForViewId = aViewId;
+    return true;
+  }
+
   bool SetScrollbarData(const ScrollbarData& aScrollbarData) {
     if (mScrollbarData == aScrollbarData) {
       return false;
@@ -292,19 +300,77 @@ class SimpleLayerAttributes final {
 
   bool IsFixedPosition() const { return mIsFixedPosition; }
 
+<<<<<<< HEAD
   const ScrollbarData& GetScrollbarData() const { return mScrollbarData; }
+||||||| merged common ancestors
+  const ScrollbarData& GetScrollbarData() const {
+    return mScrollbarData;
+  }
+=======
+  Maybe<FrameMetrics::ViewID> IsAsyncZoomContainer() const {
+    return mIsAsyncZoomContainerForViewId;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gfx::CompositionOp GetMixBlendMode() const { return mMixBlendMode; }
+||||||| merged common ancestors
+  gfx::CompositionOp GetMixBlendMode() const {
+    return mMixBlendMode;
+  }
+=======
+  const ScrollbarData& GetScrollbarData() const { return mScrollbarData; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetForceIsolatedGroup() const { return mForceIsolatedGroup; }
+||||||| merged common ancestors
+  bool GetForceIsolatedGroup() const {
+    return mForceIsolatedGroup;
+  }
+=======
+  gfx::CompositionOp GetMixBlendMode() const { return mMixBlendMode; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const gfx::Matrix4x4& GetTransform() const { return mTransform; }
+||||||| merged common ancestors
+  const gfx::Matrix4x4& GetTransform() const {
+    return mTransform;
+  }
+=======
+  bool GetForceIsolatedGroup() const { return mForceIsolatedGroup; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool GetTransformIsPerspective() const { return mTransformIsPerspective; }
+||||||| merged common ancestors
+  bool GetTransformIsPerspective() const {
+    return mTransformIsPerspective;
+  }
+=======
+  const gfx::Matrix4x4& GetTransform() const { return mTransform; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const Maybe<LayerClip>& GetScrolledClip() const { return mScrolledClip; }
+||||||| merged common ancestors
+  const Maybe<LayerClip>& GetScrolledClip() const {
+    return mScrolledClip;
+  }
+=======
+  bool GetTransformIsPerspective() const { return mTransformIsPerspective; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ScrollableLayerGuid::ViewID GetFixedPositionScrollContainerId() const {
+||||||| merged common ancestors
+  FrameMetrics::ViewID GetFixedPositionScrollContainerId() const {
+=======
   const Maybe<LayerClip>& GetScrolledClip() const { return mScrolledClip; }
 
   ScrollableLayerGuid::ViewID GetFixedPositionScrollContainerId() const {
+>>>>>>> upstream-releases
     return (mIsFixedPosition && mFixedPositionData)
                ? mFixedPositionData->mScrollId
                : ScrollableLayerGuid::NULL_SCROLL_ID;
@@ -341,6 +407,8 @@ class SimpleLayerAttributes final {
            mContentFlags == aOther.mContentFlags &&
            mOpacity == aOther.mOpacity &&
            mIsFixedPosition == aOther.mIsFixedPosition &&
+           mIsAsyncZoomContainerForViewId ==
+               aOther.mIsAsyncZoomContainerForViewId &&
            mScrollbarData == aOther.mScrollbarData &&
            mMixBlendMode == aOther.mMixBlendMode &&
            mForceIsolatedGroup == aOther.mForceIsolatedGroup;
@@ -355,6 +423,7 @@ class SimpleLayerAttributes final {
   uint32_t mContentFlags;
   float mOpacity;
   bool mIsFixedPosition;
+  Maybe<FrameMetrics::ViewID> mIsAsyncZoomContainerForViewId;
   ScrollbarData mScrollbarData;
   gfx::CompositionOp mMixBlendMode;
   bool mForceIsolatedGroup;

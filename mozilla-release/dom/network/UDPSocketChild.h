@@ -22,8 +22,16 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class UDPSocketChildBase : public nsIUDPSocketChild {
  public:
+||||||| merged common ancestors
+class UDPSocketChildBase : public nsIUDPSocketChild {
+public:
+=======
+class UDPSocketChildBase : public nsISupports {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
 
   void AddIPDLReference();
@@ -36,15 +44,28 @@ class UDPSocketChildBase : public nsIUDPSocketChild {
   bool mIPCOpen;
 };
 
+<<<<<<< HEAD
 class UDPSocketChild : public mozilla::net::PUDPSocketChild,
                        public UDPSocketChildBase {
  public:
   NS_DECL_NSIUDPSOCKETCHILD
+||||||| merged common ancestors
+class UDPSocketChild : public mozilla::net::PUDPSocketChild
+                     , public UDPSocketChildBase
+{
+public:
+  NS_DECL_NSIUDPSOCKETCHILD
+=======
+class UDPSocketChild : public mozilla::net::PUDPSocketChild,
+                       public UDPSocketChildBase {
+ public:
+>>>>>>> upstream-releases
   NS_IMETHOD_(MozExternalRefCountType) Release() override;
 
   UDPSocketChild();
   virtual ~UDPSocketChild();
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvCallbackOpened(
       const UDPAddressInfo& aAddressInfo) override;
   virtual mozilla::ipc::IPCResult RecvCallbackConnected(
@@ -59,6 +80,72 @@ class UDPSocketChild : public mozilla::net::PUDPSocketChild,
 
  private:
   nsresult SendDataInternal(const UDPSocketAddr& aAddr, const uint8_t* aData,
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvCallbackOpened(const UDPAddressInfo& aAddressInfo) override;
+  virtual mozilla::ipc::IPCResult RecvCallbackConnected(const UDPAddressInfo& aAddressInfo) override;
+  virtual mozilla::ipc::IPCResult RecvCallbackClosed() override;
+  virtual mozilla::ipc::IPCResult RecvCallbackReceivedData(const UDPAddressInfo& aAddressInfo,
+                                                           InfallibleTArray<uint8_t>&& aData) override;
+  virtual mozilla::ipc::IPCResult RecvCallbackError(const nsCString& aMessage,
+                                                    const nsCString& aFilename,
+                                                    const uint32_t& aLineNumber) override;
+
+private:
+  nsresult SendDataInternal(const UDPSocketAddr& aAddr,
+                            const uint8_t* aData,
+=======
+  uint16_t LocalPort() const { return mLocalPort; }
+  // Local address as UTF-8.
+  const nsACString& LocalAddress() const { return mLocalAddress; }
+
+  nsresult SetFilterName(const nsACString& aFilterName);
+
+  // Allow hosting this over PBackground instead of PNecko
+  nsresult SetBackgroundSpinsEvents();
+
+  // Tell the chrome process to bind the UDP socket to a given local host and
+  // port
+  nsresult Bind(nsIUDPSocketInternal* aSocket, nsIPrincipal* aPrincipal,
+                const nsACString& aHost, uint16_t aPort, bool aAddressReuse,
+                bool aLoopback, uint32_t recvBufferSize,
+                uint32_t sendBufferSize,
+                nsIEventTarget* aMainThreadEventTarget);
+
+  // Tell the chrome process to connect the UDP socket to a given remote host
+  // and port
+  void Connect(nsIUDPSocketInternal* aSocket, const nsACString& aHost,
+               uint16_t aPort);
+
+  // Send the given data to the given address.
+  nsresult SendWithAddress(const NetAddr* aAddr, const uint8_t* aData,
+                           uint32_t aByteLength);
+
+  // Send input stream. This must be a buffered stream implementation.
+  nsresult SendBinaryStream(const nsACString& aHost, uint16_t aPort,
+                            nsIInputStream* aStream);
+
+  void Close();
+
+  // Address and interface are both UTF-8.
+  void JoinMulticast(const nsACString& aMulticastAddress,
+                     const nsACString& aInterface);
+  void LeaveMulticast(const nsACString& aMulticastAddress,
+                      const nsACString& aInterface);
+
+  mozilla::ipc::IPCResult RecvCallbackOpened(
+      const UDPAddressInfo& aAddressInfo);
+  mozilla::ipc::IPCResult RecvCallbackConnected(
+      const UDPAddressInfo& aAddressInfo);
+  mozilla::ipc::IPCResult RecvCallbackClosed();
+  mozilla::ipc::IPCResult RecvCallbackReceivedData(
+      const UDPAddressInfo& aAddressInfo, InfallibleTArray<uint8_t>&& aData);
+  mozilla::ipc::IPCResult RecvCallbackError(const nsCString& aMessage,
+                                            const nsCString& aFilename,
+                                            const uint32_t& aLineNumber);
+
+ private:
+  nsresult SendDataInternal(const UDPSocketAddr& aAddr, const uint8_t* aData,
+>>>>>>> upstream-releases
                             const uint32_t aByteLength);
 
   mozilla::ipc::PBackgroundChild* mBackgroundManager;

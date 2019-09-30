@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MediaSourceDemuxer_h_)
+<<<<<<< HEAD
 #define MediaSourceDemuxer_h_
 
 #include "MediaDataDemuxer.h"
@@ -16,6 +17,33 @@
 #include "mozilla/Monitor.h"
 #include "mozilla/TaskQueue.h"
 
+||||||| merged common ancestors
+#define MediaSourceDemuxer_h_
+
+#include "MediaDataDemuxer.h"
+#include "MediaResource.h"
+#include "MediaSource.h"
+#include "TrackBuffersManager.h"
+#include "mozilla/Atomics.h"
+#include "mozilla/Maybe.h"
+#include "mozilla/Monitor.h"
+#include "mozilla/TaskQueue.h"
+
+
+=======
+#  define MediaSourceDemuxer_h_
+
+#  include "MediaDataDemuxer.h"
+#  include "MediaResource.h"
+#  include "MediaSource.h"
+#  include "TrackBuffersManager.h"
+#  include "mozilla/Atomics.h"
+#  include "mozilla/Maybe.h"
+#  include "mozilla/Monitor.h"
+#  include "mozilla/TaskQueue.h"
+#  include "mozilla/dom/MediaDebugInfoBinding.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
 
 class AbstractThread;
@@ -49,9 +77,9 @@ class MediaSourceDemuxer : public MediaDataDemuxer,
   TaskQueue* GetTaskQueue() { return mTaskQueue; }
   void NotifyInitDataArrived();
 
-  // Returns a string describing the state of the MediaSource internal
+  // Returns a structure describing the state of the MediaSource internal
   // buffered data. Used for debugging purposes.
-  void GetMozDebugReaderData(nsACString& aString);
+  void GetDebugInfo(dom::MediaSourceDemuxerDebugInfo& aInfo);
 
   void AddSizeOfResources(MediaSourceDecoder::ResourceSizes* aSizes);
 

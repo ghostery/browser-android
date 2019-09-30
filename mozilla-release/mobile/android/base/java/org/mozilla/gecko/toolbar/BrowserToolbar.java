@@ -100,7 +100,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     public interface OnCommitListener {
-        public void onCommitByKey();
+        public void onCommit(CommitEventSource eventSource);
+    }
+
+    public enum CommitEventSource {
+        KEY_EVENT,
+        PRE_IME_KEY_EVENT
     }
 
     public interface OnDismissListener {
@@ -322,6 +327,10 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 }
             }
         });
+    }
+
+    public void launchVoiceRecognizer() {
+        urlEditLayout.launchVoiceRecognizer();
     }
 
     @Override
@@ -590,6 +599,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                     break;
 
                 case SECURITY_CHANGE:
+                case TRACKING_CHANGE:
                     flags.add(UpdateFlags.SITE_IDENTITY);
                     break;
             }

@@ -9,6 +9,7 @@ add_task(async function test_toolbar_field_hover() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
+<<<<<<< HEAD
       "theme": {
         "colors": {
           "frame": "#FF0000",
@@ -18,6 +19,27 @@ add_task(async function test_toolbar_field_hover() {
           "toolbar_field_focus": TOOLBAR_FOCUS_BACKGROUND,
           "toolbar_field_text_focus": TOOLBAR_FOCUS_TEXT,
           "toolbar_field_border_focus": TOOLBAR_FOCUS_BORDER,
+||||||| merged common ancestors
+      "theme": {
+        "colors": {
+          "accentcolor": "#FF0000",
+          "textcolor": "#ffffff",
+          "toolbar_field": TOOLBAR_FIELD_BACKGROUND,
+          "toolbar_field_text": TOOLBAR_FIELD_COLOR,
+          "toolbar_field_focus": TOOLBAR_FOCUS_BACKGROUND,
+          "toolbar_field_text_focus": TOOLBAR_FOCUS_TEXT,
+          "toolbar_field_border_focus": TOOLBAR_FOCUS_BORDER,
+=======
+      theme: {
+        colors: {
+          frame: "#FF0000",
+          tab_background_color: "#ffffff",
+          toolbar_field: TOOLBAR_FIELD_BACKGROUND,
+          toolbar_field_text: TOOLBAR_FIELD_COLOR,
+          toolbar_field_focus: TOOLBAR_FOCUS_BACKGROUND,
+          toolbar_field_text_focus: TOOLBAR_FOCUS_TEXT,
+          toolbar_field_border_focus: TOOLBAR_FOCUS_BORDER,
+>>>>>>> upstream-releases
         },
       },
     },
@@ -34,22 +56,30 @@ add_task(async function test_toolbar_field_hover() {
 
   let urlBar = document.getElementById("urlbar");
   urlBar.setAttribute("focused", "true");
-  Assert.equal(window.getComputedStyle(urlBar).backgroundColor,
-               `rgb(${hexToRGB(TOOLBAR_FOCUS_BACKGROUND).join(", ")})`,
-               "Background Color is changed");
+  Assert.equal(
+    window.getComputedStyle(urlBar).backgroundColor,
+    `rgb(${hexToRGB(TOOLBAR_FOCUS_BACKGROUND).join(", ")})`,
+    "Background Color is changed"
+  );
 
-  Assert.equal(window.getComputedStyle(urlBar).color,
-               `rgb(${hexToRGB(TOOLBAR_FOCUS_TEXT).join(", ")})`,
-               "Text Color is changed");
+  Assert.equal(
+    window.getComputedStyle(urlBar).color,
+    `rgb(${hexToRGB(TOOLBAR_FOCUS_TEXT).join(", ")})`,
+    "Text Color is changed"
+  );
   testBorderColor(urlBar, TOOLBAR_FOCUS_BORDER);
 
   urlBar.removeAttribute("focused");
 
-  Assert.equal(window.getComputedStyle(urlBar).backgroundColor,
-               `rgb(${hexToRGB(TOOLBAR_FIELD_BACKGROUND).join(", ")})`,
-               "Background Color is set back to initial");
-  Assert.equal(window.getComputedStyle(urlBar).color,
-               `rgb(${hexToRGB(TOOLBAR_FIELD_COLOR).join(", ")})`,
-               "Text Color is set back to initial");
+  Assert.equal(
+    window.getComputedStyle(urlBar).backgroundColor,
+    `rgb(${hexToRGB(TOOLBAR_FIELD_BACKGROUND).join(", ")})`,
+    "Background Color is set back to initial"
+  );
+  Assert.equal(
+    window.getComputedStyle(urlBar).color,
+    `rgb(${hexToRGB(TOOLBAR_FIELD_COLOR).join(", ")})`,
+    "Text Color is set back to initial"
+  );
   await extension.unload();
 });

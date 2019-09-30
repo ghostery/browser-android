@@ -14,10 +14,25 @@ BEGIN_TEST(testJSEvaluateScript) {
 
   static const char16_t src[] = u"var x = 5;";
 
+<<<<<<< HEAD
   JS::RootedValue retval(cx);
   JS::CompileOptions opts(cx);
   JS::AutoObjectVector scopeChain(cx);
   CHECK(scopeChain.append(obj));
+||||||| merged common ancestors
+    JS::RootedValue retval(cx);
+    JS::CompileOptions opts(cx);
+    JS::AutoObjectVector scopeChain(cx);
+    CHECK(scopeChain.append(obj));
+    JS::SourceBufferHolder srcBuf(src, ArrayLength(src) - 1, JS::SourceBufferHolder::NoOwnership);
+    CHECK(JS::Evaluate(cx, scopeChain, opts.setFileAndLine(__FILE__, __LINE__),
+                       srcBuf, &retval));
+=======
+  JS::RootedValue retval(cx);
+  JS::CompileOptions opts(cx);
+  JS::RootedObjectVector scopeChain(cx);
+  CHECK(scopeChain.append(obj));
+>>>>>>> upstream-releases
 
   JS::SourceText<char16_t> srcBuf;
   CHECK(srcBuf.init(cx, src, ArrayLength(src) - 1,

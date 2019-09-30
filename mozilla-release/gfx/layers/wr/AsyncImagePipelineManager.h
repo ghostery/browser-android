@@ -38,7 +38,8 @@ class AsyncImagePipelineManager final {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(AsyncImagePipelineManager)
 
-  explicit AsyncImagePipelineManager(already_AddRefed<wr::WebRenderAPI>&& aApi);
+  explicit AsyncImagePipelineManager(
+      nsTArray<RefPtr<wr::WebRenderAPI>>&& aApis);
 
  protected:
   ~AsyncImagePipelineManager();
@@ -46,6 +47,7 @@ class AsyncImagePipelineManager final {
  public:
   void Destroy();
 
+<<<<<<< HEAD
   void AddPipeline(const wr::PipelineId& aPipelineId,
                    WebRenderBridgeParent* aWrBridge);
   void RemovePipeline(const wr::PipelineId& aPipelineId,
@@ -61,6 +63,29 @@ class AsyncImagePipelineManager final {
   void HoldExternalImage(const wr::PipelineId& aPipelineId,
                          const wr::Epoch& aEpoch,
                          const wr::ExternalImageId& aImageId);
+||||||| merged common ancestors
+  void AddPipeline(const wr::PipelineId& aPipelineId);
+  void RemovePipeline(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch);
+
+  void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, WebRenderTextureHost* aTexture);
+  void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, WebRenderTextureHostWrapper* aWrTextureWrapper);
+  void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, const wr::ExternalImageId& aImageId);
+=======
+  void AddPipeline(const wr::PipelineId& aPipelineId,
+                   WebRenderBridgeParent* aWrBridge);
+  void RemovePipeline(const wr::PipelineId& aPipelineId,
+                      const wr::Epoch& aEpoch);
+  WebRenderBridgeParent* GetWrBridge(const wr::PipelineId& aPipelineId);
+
+  void HoldExternalImage(const wr::PipelineId& aPipelineId,
+                         const wr::Epoch& aEpoch, TextureHost* aTexture);
+  void HoldExternalImage(const wr::PipelineId& aPipelineId,
+                         const wr::Epoch& aEpoch,
+                         WebRenderTextureHostWrapper* aWrTextureWrapper);
+  void HoldExternalImage(const wr::PipelineId& aPipelineId,
+                         const wr::Epoch& aEpoch,
+                         const wr::ExternalImageId& aImageId);
+>>>>>>> upstream-releases
 
   // This is called from the Renderer thread to notify this class about the
   // pipelines in the most recently completed render. A copy of the update
@@ -87,8 +112,16 @@ class AsyncImagePipelineManager final {
   }
   TimeStamp GetCompositeUntilTime() const { return mCompositeUntilTime; }
 
+<<<<<<< HEAD
   void AddAsyncImagePipeline(const wr::PipelineId& aPipelineId,
                              WebRenderImageHost* aImageHost);
+||||||| merged common ancestors
+  void AddAsyncImagePipeline(const wr::PipelineId& aPipelineId, WebRenderImageHost* aImageHost);
+=======
+  void AddAsyncImagePipeline(const wr::PipelineId& aPipelineId,
+                             WebRenderImageHost* aImageHost,
+                             wr::RenderRoot aRenderRoot);
+>>>>>>> upstream-releases
   void RemoveAsyncImagePipeline(const wr::PipelineId& aPipelineId,
                                 wr::TransactionBuilder& aTxn);
 
@@ -98,11 +131,24 @@ class AsyncImagePipelineManager final {
                                 const gfx::MaybeIntSize& aScaleToSize,
                                 const wr::ImageRendering& aFilter,
                                 const wr::MixBlendMode& aMixBlendMode);
+<<<<<<< HEAD
   void ApplyAsyncImagesOfImageBridge(wr::TransactionBuilder& aSceneBuilderTxn,
                                      wr::TransactionBuilder& aFastTxn);
   void ApplyAsyncImageForPipeline(const wr::PipelineId& aPipelineId,
                                   wr::TransactionBuilder& aTxn,
                                   wr::TransactionBuilder& aTxnForImageBridge);
+||||||| merged common ancestors
+  void ApplyAsyncImagesOfImageBridge(wr::TransactionBuilder& aSceneBuilderTxn, wr::TransactionBuilder& aFastTxn);
+  void ApplyAsyncImageForPipeline(const wr::PipelineId& aPipelineId, wr::TransactionBuilder& aTxn, wr::TransactionBuilder& aTxnForImageBridge);
+=======
+  void ApplyAsyncImagesOfImageBridge(
+      wr::RenderRootArray<Maybe<wr::TransactionBuilder>>& aSceneBuilderTxns,
+      wr::RenderRootArray<Maybe<wr::TransactionBuilder>>& aFastTxns);
+  void ApplyAsyncImageForPipeline(const wr::PipelineId& aPipelineId,
+                                  wr::TransactionBuilder& aTxn,
+                                  wr::TransactionBuilder& aTxnForImageBridge,
+                                  wr::RenderRoot aRenderRoot);
+>>>>>>> upstream-releases
 
   void SetEmptyDisplayList(const wr::PipelineId& aPipelineId,
                            wr::TransactionBuilder& aTxn,
@@ -118,17 +164,31 @@ class AsyncImagePipelineManager final {
     aNotifications->AppendElements(std::move(mImageCompositeNotifications));
   }
 
-  void SetWillGenerateFrame();
-  bool GetAndResetWillGenerateFrame();
+  void SetWillGenerateFrameAllRenderRoots();
+  void SetWillGenerateFrame(wr::RenderRoot aRenderRoot);
+  bool GetAndResetWillGenerateFrame(wr::RenderRoot aRenderRoot);
 
   wr::ExternalImageId GetNextExternalImageId();
 
+<<<<<<< HEAD
  private:
   void ProcessPipelineRendered(const wr::PipelineId& aPipelineId,
                                const wr::Epoch& aEpoch,
                                const uint64_t aUpdatesCount);
   void ProcessPipelineRemoved(const wr::PipelineId& aPipelineId,
                               const uint64_t aUpdatesCount);
+||||||| merged common ancestors
+private:
+  void ProcessPipelineRendered(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch);
+  void ProcessPipelineRemoved(const wr::PipelineId& aPipelineId);
+=======
+ private:
+  void ProcessPipelineRendered(const wr::PipelineId& aPipelineId,
+                               const wr::Epoch& aEpoch,
+                               const uint64_t aUpdatesCount);
+  void ProcessPipelineRemoved(const wr::RemovedPipeline& aRemovedPipeline,
+                              const uint64_t aUpdatesCount);
+>>>>>>> upstream-releases
 
   wr::Epoch GetNextImageEpoch();
   uint32_t GetNextResourceId() { return ++mResourceId; }
@@ -192,6 +252,7 @@ class AsyncImagePipelineManager final {
     }
 
     bool mInitialised;
+    wr::RenderRoot mRenderRoot;
     bool mIsChanged;
     bool mUseExternalImage;
     LayoutDeviceRect mScBounds;
@@ -210,6 +271,7 @@ class AsyncImagePipelineManager final {
                                   AsyncImagePipeline* aPipeline,
                                   wr::TransactionBuilder& aSceneBuilderTxn,
                                   wr::TransactionBuilder& aMaybeFastTxn);
+<<<<<<< HEAD
   Maybe<TextureHost::ResourceUpdateOp> UpdateImageKeys(
       const wr::Epoch& aEpoch, const wr::PipelineId& aPipelineId,
       AsyncImagePipeline* aPipeline, nsTArray<wr::ImageKey>& aKeys,
@@ -227,13 +289,48 @@ class AsyncImagePipelineManager final {
   RefPtr<wr::WebRenderAPI> mApi;
   const wr::IdNamespace mIdNamespace;
   const bool mUseTripleBuffering;
+||||||| merged common ancestors
+  Maybe<TextureHost::ResourceUpdateOp>
+  UpdateImageKeys(const wr::Epoch& aEpoch,
+                  const wr::PipelineId& aPipelineId,
+                  AsyncImagePipeline* aPipeline,
+                  nsTArray<wr::ImageKey>& aKeys,
+                  wr::TransactionBuilder& aSceneBuilderTxn,
+                  wr::TransactionBuilder& aMaybeFastTxn);
+  Maybe<TextureHost::ResourceUpdateOp>
+  UpdateWithoutExternalImage(TextureHost* aTexture,
+                             wr::ImageKey aKey,
+                             TextureHost::ResourceUpdateOp,
+                             wr::TransactionBuilder& aTxn);
+
+  RefPtr<wr::WebRenderAPI> mApi;
+  wr::IdNamespace mIdNamespace;
+=======
+  Maybe<TextureHost::ResourceUpdateOp> UpdateImageKeys(
+      const wr::Epoch& aEpoch, const wr::PipelineId& aPipelineId,
+      AsyncImagePipeline* aPipeline, nsTArray<wr::ImageKey>& aKeys,
+      wr::TransactionBuilder& aSceneBuilderTxn,
+      wr::TransactionBuilder& aMaybeFastTxn);
+  Maybe<TextureHost::ResourceUpdateOp> UpdateWithoutExternalImage(
+      TextureHost* aTexture, wr::ImageKey aKey, TextureHost::ResourceUpdateOp,
+      wr::TransactionBuilder& aTxn);
+
+  // If texture is direct binding texture, keep it until it is not used by GPU.
+  void HoldUntilNotUsedByGPU(const CompositableTextureHostRef& aTextureHost,
+                             uint64_t aUpdatesCount);
+  void CheckForTextureHostsNotUsedByGPU();
+
+  nsTArray<RefPtr<wr::WebRenderAPI>> mApis;
+  const wr::IdNamespace mIdNamespace;
+  const bool mUseTripleBuffering;
+>>>>>>> upstream-releases
   uint32_t mResourceId;
 
   nsClassHashtable<nsUint64HashKey, PipelineTexturesHolder>
       mPipelineTexturesHolders;
   nsClassHashtable<nsUint64HashKey, AsyncImagePipeline> mAsyncImagePipelines;
   wr::Epoch mAsyncImageEpoch;
-  bool mWillGenerateFrame;
+  wr::RenderRootArray<bool> mWillGenerateFrame;
   bool mDestroyed;
 
   // Render time for the current composition.

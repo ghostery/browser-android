@@ -49,11 +49,26 @@ class BaseDOMProxyHandler : public js::BaseProxyHandler {
 
   // Implementations of methods that can be implemented in terms of
   // other lower-level methods.
+<<<<<<< HEAD
   bool getOwnPropertyDescriptor(
       JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
       JS::MutableHandle<JS::PropertyDescriptor> desc) const override;
   virtual bool ownPropertyKeys(JSContext* cx, JS::Handle<JSObject*> proxy,
                                JS::AutoIdVector& props) const override;
+||||||| merged common ancestors
+  bool getOwnPropertyDescriptor(JSContext* cx, JS::Handle<JSObject*> proxy,
+                                JS::Handle<jsid> id,
+                                JS::MutableHandle<JS::PropertyDescriptor> desc) const override;
+  virtual bool ownPropertyKeys(JSContext* cx, JS::Handle<JSObject*> proxy,
+                               JS::AutoIdVector &props) const override;
+=======
+  bool getOwnPropertyDescriptor(
+      JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
+      JS::MutableHandle<JS::PropertyDescriptor> desc) const override;
+  virtual bool ownPropertyKeys(
+      JSContext* cx, JS::Handle<JSObject*> proxy,
+      JS::MutableHandleVector<jsid> props) const override;
+>>>>>>> upstream-releases
 
   virtual bool getPrototypeIfOrdinary(
       JSContext* cx, JS::Handle<JSObject*> proxy, bool* isOrdinary,
@@ -63,9 +78,18 @@ class BaseDOMProxyHandler : public js::BaseProxyHandler {
   // instead of using the default implementation, which would call
   // ownPropertyKeys and then filter out the non-enumerable ones. This avoids
   // unnecessary work during enumeration.
+<<<<<<< HEAD
   virtual bool getOwnEnumerablePropertyKeys(
       JSContext* cx, JS::Handle<JSObject*> proxy,
       JS::AutoIdVector& props) const override;
+||||||| merged common ancestors
+  virtual bool getOwnEnumerablePropertyKeys(JSContext* cx, JS::Handle<JSObject*> proxy,
+                                            JS::AutoIdVector &props) const override;
+=======
+  virtual bool getOwnEnumerablePropertyKeys(
+      JSContext* cx, JS::Handle<JSObject*> proxy,
+      JS::MutableHandleVector<jsid> props) const override;
+>>>>>>> upstream-releases
 
  protected:
   // Hook for subclasses to implement shared ownPropertyKeys()/keys()
@@ -73,7 +97,15 @@ class BaseDOMProxyHandler : public js::BaseProxyHandler {
   // or JSITER_OWNONLY | JSITER_HIDDEN | JSITER_SYMBOLS (for
   // ownPropertyKeys()).
   virtual bool ownPropNames(JSContext* cx, JS::Handle<JSObject*> proxy,
+<<<<<<< HEAD
                             unsigned flags, JS::AutoIdVector& props) const = 0;
+||||||| merged common ancestors
+                            unsigned flags,
+                            JS::AutoIdVector& props) const = 0;
+=======
+                            unsigned flags,
+                            JS::MutableHandleVector<jsid> props) const = 0;
+>>>>>>> upstream-releases
 
   // Hook for subclasses to allow set() to ignore named props while other things
   // that look at property descriptors see them.  This is intentionally not
@@ -165,7 +197,15 @@ extern jsid s_length_id;
 
 // A return value of UINT32_MAX indicates "not an array index".  Note, in
 // particular, that UINT32_MAX itself is not a valid array index in general.
+<<<<<<< HEAD
 inline uint32_t GetArrayIndexFromId(JSContext* cx, JS::Handle<jsid> id) {
+||||||| merged common ancestors
+inline uint32_t
+GetArrayIndexFromId(JSContext* cx, JS::Handle<jsid> id)
+{
+=======
+inline uint32_t GetArrayIndexFromId(JS::Handle<jsid> id) {
+>>>>>>> upstream-releases
   // Much like js::IdIsIndex, except with a fast path for "length" and another
   // fast path for starting with a lowercase ascii char.  Is that second one
   // really needed?  I guess it is because StringIsArrayIndex is out of line...

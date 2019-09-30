@@ -11,14 +11,16 @@ var gChecking;
 var gBroken;
 var gNeedReset;
 var gSecHistogram;
-var gNsISecTel;
 
-ChromeUtils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+const { PrivateBrowsingUtils } = ChromeUtils.import(
+  "resource://gre/modules/PrivateBrowsingUtils.jsm"
+);
 
 function initExceptionDialog() {
   gNeedReset = false;
   gDialog = document.documentElement;
   gSecHistogram = Services.telemetry.getHistogramById("SECURITY_UI");
+<<<<<<< HEAD
   gNsISecTel = Ci.nsISecurityUITelemetry;
   let warningText = document.getElementById("warningText");
   document.l10n.setAttributes(warningText, "add-exception-branded-warning");
@@ -28,6 +30,21 @@ function initExceptionDialog() {
     warningText,
   ];
   confirmButton.disabled = true;
+||||||| merged common ancestors
+  gNsISecTel = Ci.nsISecurityUITelemetry;
+
+  var brandName = gBundleBrand.getString("brandShortName");
+  setText("warningText",
+          gPKIBundle.getFormattedString("addExceptionBrandedWarning2",
+                                        [brandName]));
+  gDialog.getButton("extra1").disabled = true;
+=======
+  let warningText = document.getElementById("warningText");
+  document.l10n.setAttributes(warningText, "add-exception-branded-warning");
+  let confirmButton = gDialog.getButton("extra1");
+  let l10nUpdatedElements = [confirmButton, warningText];
+  confirmButton.disabled = true;
+>>>>>>> upstream-releases
 
   var args = window.arguments;
   if (args && args[0]) {
@@ -59,6 +76,7 @@ function initExceptionDialog() {
     // Set out parameter to false by default
     args[0].exceptionAdded = false;
   }
+<<<<<<< HEAD
 
   for (let id of [
     "warningSupplemental",
@@ -74,6 +92,30 @@ function initExceptionDialog() {
   }
 
   document.l10n.translateElements(l10nUpdatedElements).then(() => window.sizeToContent());
+||||||| merged common ancestors
+  window.sizeToContent();
+=======
+
+  for (let id of [
+    "warningSupplemental",
+    "certLocationLabel",
+    "checkCertButton",
+    "statusDescription",
+    "statusLongDescription",
+    "viewCertButton",
+    "permanent",
+  ]) {
+    let element = document.getElementById(id);
+    l10nUpdatedElements.push(element);
+  }
+
+  document.l10n
+    .translateElements(l10nUpdatedElements)
+    .then(() => window.sizeToContent());
+
+  document.addEventListener("dialogextra1", addException);
+  document.addEventListener("dialogextra2", checkCert);
+>>>>>>> upstream-releases
 }
 
 /**
@@ -88,13 +130,22 @@ function initExceptionDialog() {
  */
 function grabCert(req, evt) {
   if (req.channel && req.channel.securityInfo) {
-    gSecInfo = req.channel.securityInfo
-                  .QueryInterface(Ci.nsITransportSecurityInfo);
+    gSecInfo = req.channel.securityInfo.QueryInterface(
+      Ci.nsITransportSecurityInfo
+    );
     gCert = gSecInfo ? gSecInfo.serverCert : null;
   }
   gBroken = evt.type == "error";
   gChecking = false;
+<<<<<<< HEAD
   document.l10n.translateElements(updateCertStatus()).then(() => window.sizeToContent());
+||||||| merged common ancestors
+  updateCertStatus();
+=======
+  document.l10n
+    .translateElements(updateCertStatus())
+    .then(() => window.sizeToContent());
+>>>>>>> upstream-releases
 }
 
 /**
@@ -106,10 +157,17 @@ async function checkCert() {
   gSecInfo = null;
   gChecking = true;
   gBroken = false;
+<<<<<<< HEAD
   await document.l10n.translateElements(updateCertStatus());
   window.sizeToContent();
 
   updateCertStatus();
+||||||| merged common ancestors
+  updateCertStatus();
+=======
+  await document.l10n.translateElements(updateCertStatus());
+  window.sizeToContent();
+>>>>>>> upstream-releases
 
   let uri = getURI();
 
@@ -176,8 +234,7 @@ function resetDialog() {
  */
 function handleTextChange() {
   var checkCertButton = document.getElementById("checkCertButton");
-  checkCertButton.disabled =
-                    !(document.getElementById("locationTextBox").value);
+  checkCertButton.disabled = !document.getElementById("locationTextBox").value;
   if (gNeedReset) {
     gNeedReset = false;
     resetDialog();
@@ -190,8 +247,16 @@ function updateCertStatus() {
   var shortDesc3, longDesc3;
   var use2 = false;
   var use3 = false;
+<<<<<<< HEAD
   let bucketId = gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
   let l10nUpdatedElements = [];
+||||||| merged common ancestors
+  let bucketId = gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
+=======
+  let bucketId =
+    Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
+  let l10nUpdatedElements = [];
+>>>>>>> upstream-releases
   if (gCert) {
     if (gBroken) {
       var mms = "add-exception-domain-mismatch-short";
@@ -202,38 +267,43 @@ function updateCertStatus() {
       var utl = "add-exception-unverified-or-bad-signature-long";
       var use1 = false;
       if (gSecInfo.isDomainMismatch) {
-        bucketId += gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_DOMAIN;
+        bucketId +=
+          Ci.nsISecurityUITelemetry
+            .WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_DOMAIN;
         use1 = true;
         shortDesc = mms;
-        longDesc  = mml;
+        longDesc = mml;
       }
       if (gSecInfo.isNotValidAtThisTime) {
-        bucketId += gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_TIME;
+        bucketId +=
+          Ci.nsISecurityUITelemetry
+            .WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_TIME;
         if (!use1) {
           use1 = true;
           shortDesc = exs;
-          longDesc  = exl;
+          longDesc = exl;
         } else {
           use2 = true;
           shortDesc2 = exs;
-          longDesc2  = exl;
+          longDesc2 = exl;
         }
       }
       if (gSecInfo.isUntrusted) {
         bucketId +=
-          gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_UNTRUSTED;
+          Ci.nsISecurityUITelemetry
+            .WARNING_BAD_CERT_TOP_ADD_EXCEPTION_FLAG_UNTRUSTED;
         if (!use1) {
           use1 = true;
           shortDesc = uts;
-          longDesc  = utl;
+          longDesc = utl;
         } else if (!use2) {
           use2 = true;
           shortDesc2 = uts;
-          longDesc2  = utl;
+          longDesc2 = utl;
         } else {
           use3 = true;
           shortDesc3 = uts;
-          longDesc3  = utl;
+          longDesc3 = utl;
         }
       }
       gSecHistogram.add(bucketId);
@@ -249,12 +319,32 @@ function updateCertStatus() {
       pe.disabled = inPrivateBrowsing;
       pe.checked = !inPrivateBrowsing;
 
+<<<<<<< HEAD
       let headerDescription = document.getElementById("headerDescription");
       document.l10n.setAttributes(headerDescription, "add-exception-invalid-header");
       l10nUpdatedElements.push(headerDescription);
+||||||| merged common ancestors
+      setText("headerDescription",
+              gPKIBundle.getString("addExceptionInvalidHeader"));
+=======
+      let headerDescription = document.getElementById("headerDescription");
+      document.l10n.setAttributes(
+        headerDescription,
+        "add-exception-invalid-header"
+      );
+      l10nUpdatedElements.push(headerDescription);
+>>>>>>> upstream-releases
     } else {
+<<<<<<< HEAD
       shortDesc = "add-exception-valid-short";
       longDesc  = "add-exception-valid-long";
+||||||| merged common ancestors
+      shortDesc = "addExceptionValidShort";
+      longDesc  = "addExceptionValidLong";
+=======
+      shortDesc = "add-exception-valid-short";
+      longDesc = "add-exception-valid-long";
+>>>>>>> upstream-releases
       gDialog.getButton("extra1").disabled = true;
       document.getElementById("permanent").disabled = true;
     }
@@ -266,8 +356,16 @@ function updateCertStatus() {
     // Notify observers about the availability of the certificate
     Services.obs.notifyObservers(null, "cert-exception-ui-ready");
   } else if (gChecking) {
+<<<<<<< HEAD
     shortDesc = "add-exception-checking-short";
     longDesc  = "add-exception-checking-long";
+||||||| merged common ancestors
+    shortDesc = "addExceptionCheckingShort";
+    longDesc  = "addExceptionCheckingLong2";
+=======
+    shortDesc = "add-exception-checking-short";
+    longDesc = "add-exception-checking-long";
+>>>>>>> upstream-releases
     // We're checking the certificate, so we disable the Get Certificate
     // button to make sure that the user can't interrupt the process and
     // trigger another certificate fetch.
@@ -276,8 +374,16 @@ function updateCertStatus() {
     gDialog.getButton("extra1").disabled = true;
     document.getElementById("permanent").disabled = true;
   } else {
+<<<<<<< HEAD
     shortDesc = "add-exception-no-cert-short";
     longDesc  = "add-exception-no-cert-long";
+||||||| merged common ancestors
+    shortDesc = "addExceptionNoCertShort";
+    longDesc  = "addExceptionNoCertLong2";
+=======
+    shortDesc = "add-exception-no-cert-short";
+    longDesc = "add-exception-no-cert-long";
+>>>>>>> upstream-releases
     // We're done checking the certificate, so allow the user to check it again.
     document.getElementById("checkCertButton").disabled = false;
     document.getElementById("viewCertButton").disabled = true;
@@ -292,21 +398,49 @@ function updateCertStatus() {
   l10nUpdatedElements.push(statusLongDescription);
 
   if (use2) {
+<<<<<<< HEAD
     let status2Description = document.getElementById("status2Description");
     let status2LongDescription = document.getElementById("status2LongDescription");
     document.l10n.setAttributes(status2Description, shortDesc2);
     document.l10n.setAttributes(status2LongDescription, longDesc2);
     l10nUpdatedElements.push(status2Description);
     l10nUpdatedElements.push(status2LongDescription);
+||||||| merged common ancestors
+    setText("status2Description", gPKIBundle.getString(shortDesc2));
+    setText("status2LongDescription", gPKIBundle.getString(longDesc2));
+=======
+    let status2Description = document.getElementById("status2Description");
+    let status2LongDescription = document.getElementById(
+      "status2LongDescription"
+    );
+    document.l10n.setAttributes(status2Description, shortDesc2);
+    document.l10n.setAttributes(status2LongDescription, longDesc2);
+    l10nUpdatedElements.push(status2Description);
+    l10nUpdatedElements.push(status2LongDescription);
+>>>>>>> upstream-releases
   }
 
   if (use3) {
+<<<<<<< HEAD
     let status3Description = document.getElementById("status3Description");
     let status3LongDescription = document.getElementById("status3LongDescription");
     document.l10n.setAttributes(status3Description, shortDesc3);
     document.l10n.setAttributes(status3LongDescription, longDesc3);
     l10nUpdatedElements.push(status3Description);
     l10nUpdatedElements.push(status3LongDescription);
+||||||| merged common ancestors
+    setText("status3Description", gPKIBundle.getString(shortDesc3));
+    setText("status3LongDescription", gPKIBundle.getString(longDesc3));
+=======
+    let status3Description = document.getElementById("status3Description");
+    let status3LongDescription = document.getElementById(
+      "status3LongDescription"
+    );
+    document.l10n.setAttributes(status3Description, shortDesc3);
+    document.l10n.setAttributes(status3LongDescription, longDesc3);
+    l10nUpdatedElements.push(status3Description);
+    l10nUpdatedElements.push(status3LongDescription);
+>>>>>>> upstream-releases
   }
 
   gNeedReset = true;
@@ -317,7 +451,9 @@ function updateCertStatus() {
  * Handle user request to display certificate details
  */
 function viewCertButtonClick() {
-  gSecHistogram.add(gNsISecTel.WARNING_BAD_CERT_TOP_CLICK_VIEW_CERT);
+  gSecHistogram.add(
+    Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_CLICK_VIEW_CERT
+  );
   if (gCert) {
     viewCertHelper(this, gCert);
   }
@@ -331,41 +467,49 @@ function addException() {
     return;
   }
 
-  var overrideService = Cc["@mozilla.org/security/certoverride;1"]
-                          .getService(Ci.nsICertOverrideService);
+  var overrideService = Cc["@mozilla.org/security/certoverride;1"].getService(
+    Ci.nsICertOverrideService
+  );
   var flags = 0;
   let confirmBucketId =
-        gNsISecTel.WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_BASE;
+    Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_BASE;
   if (gSecInfo.isUntrusted) {
     flags |= overrideService.ERROR_UNTRUSTED;
     confirmBucketId +=
-        gNsISecTel.WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_UNTRUSTED;
+      Ci.nsISecurityUITelemetry
+        .WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_UNTRUSTED;
   }
   if (gSecInfo.isDomainMismatch) {
     flags |= overrideService.ERROR_MISMATCH;
     confirmBucketId +=
-           gNsISecTel.WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_DOMAIN;
+      Ci.nsISecurityUITelemetry
+        .WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_DOMAIN;
   }
   if (gSecInfo.isNotValidAtThisTime) {
     flags |= overrideService.ERROR_TIME;
     confirmBucketId +=
-           gNsISecTel.WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_TIME;
+      Ci.nsISecurityUITelemetry
+        .WARNING_BAD_CERT_TOP_CONFIRM_ADD_EXCEPTION_FLAG_TIME;
   }
 
   var permanentCheckbox = document.getElementById("permanent");
-  var shouldStorePermanently = permanentCheckbox.checked &&
-                               !inPrivateBrowsingMode();
+  var shouldStorePermanently =
+    permanentCheckbox.checked && !inPrivateBrowsingMode();
   if (!permanentCheckbox.checked) {
-    gSecHistogram.add(gNsISecTel.WARNING_BAD_CERT_TOP_DONT_REMEMBER_EXCEPTION);
+    gSecHistogram.add(
+      Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_DONT_REMEMBER_EXCEPTION
+    );
   }
 
   gSecHistogram.add(confirmBucketId);
   var uri = getURI();
   overrideService.rememberValidityOverride(
-    uri.asciiHost, uri.port,
+    uri.asciiHost,
+    uri.port,
     gCert,
     flags,
-    !shouldStorePermanently);
+    !shouldStorePermanently
+  );
 
   let args = window.arguments;
   if (args && args[0]) {

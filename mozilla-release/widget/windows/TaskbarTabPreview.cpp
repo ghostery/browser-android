@@ -18,6 +18,7 @@ namespace widget {
 
 NS_IMPL_ISUPPORTS(TaskbarTabPreview, nsITaskbarTabPreview)
 
+<<<<<<< HEAD
 const wchar_t *const kWindowClass = L"MozillaTaskbarPreviewClass";
 
 TaskbarTabPreview::TaskbarTabPreview(ITaskbarList4 *aTaskbar,
@@ -28,6 +29,28 @@ TaskbarTabPreview::TaskbarTabPreview(ITaskbarList4 *aTaskbar,
       mIcon(nullptr),
       mRegistered(false) {
   WindowHook &hook = GetWindowHook();
+||||||| merged common ancestors
+const wchar_t *const kWindowClass = L"MozillaTaskbarPreviewClass";
+
+TaskbarTabPreview::TaskbarTabPreview(ITaskbarList4 *aTaskbar, nsITaskbarPreviewController *aController, HWND aHWND, nsIDocShell *aShell)
+  : TaskbarPreview(aTaskbar, aController, aHWND, aShell),
+    mProxyWindow(nullptr),
+    mIcon(nullptr),
+    mRegistered(false)
+{
+  WindowHook &hook = GetWindowHook();
+=======
+const wchar_t* const kWindowClass = L"MozillaTaskbarPreviewClass";
+
+TaskbarTabPreview::TaskbarTabPreview(ITaskbarList4* aTaskbar,
+                                     nsITaskbarPreviewController* aController,
+                                     HWND aHWND, nsIDocShell* aShell)
+    : TaskbarPreview(aTaskbar, aController, aHWND, aShell),
+      mProxyWindow(nullptr),
+      mIcon(nullptr),
+      mRegistered(false) {
+  WindowHook& hook = GetWindowHook();
+>>>>>>> upstream-releases
   hook.AddMonitor(WM_WINDOWPOSCHANGED, MainWindowHook, this);
 }
 
@@ -59,7 +82,16 @@ nsresult TaskbarTabPreview::ShowActive(bool active) {
              : NS_OK;
 }
 
+<<<<<<< HEAD
 HWND &TaskbarTabPreview::PreviewWindow() { return mProxyWindow; }
+||||||| merged common ancestors
+HWND &
+TaskbarTabPreview::PreviewWindow() {
+  return mProxyWindow;
+}
+=======
+HWND& TaskbarTabPreview::PreviewWindow() { return mProxyWindow; }
+>>>>>>> upstream-releases
 
 nativeWindow TaskbarTabPreview::GetHWND() { return mProxyWindow; }
 
@@ -71,25 +103,35 @@ void TaskbarTabPreview::EnsureRegistration() {
 }
 
 NS_IMETHODIMP
-TaskbarTabPreview::GetTitle(nsAString &aTitle) {
+TaskbarTabPreview::GetTitle(nsAString& aTitle) {
   aTitle = mTitle;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-TaskbarTabPreview::SetTitle(const nsAString &aTitle) {
+TaskbarTabPreview::SetTitle(const nsAString& aTitle) {
   mTitle = aTitle;
   return mVisible ? UpdateTitle() : NS_OK;
 }
 
 NS_IMETHODIMP
-TaskbarTabPreview::SetIcon(imgIContainer *icon) {
+TaskbarTabPreview::SetIcon(imgIContainer* icon) {
   HICON hIcon = nullptr;
   if (icon) {
     nsresult rv;
+<<<<<<< HEAD
     rv = nsWindowGfx::CreateIcon(
         icon, false, 0, 0, nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon),
         &hIcon);
+||||||| merged common ancestors
+    rv = nsWindowGfx::CreateIcon(icon, false, 0, 0,
+                                 nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon),
+                                 &hIcon);
+=======
+    rv = nsWindowGfx::CreateIcon(
+        icon, false, LayoutDeviceIntPoint(),
+        nsWindowGfx::GetIconMetrics(nsWindowGfx::kSmallIcon), &hIcon);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -100,14 +142,23 @@ TaskbarTabPreview::SetIcon(imgIContainer *icon) {
 }
 
 NS_IMETHODIMP
-TaskbarTabPreview::GetIcon(imgIContainer **icon) {
+TaskbarTabPreview::GetIcon(imgIContainer** icon) {
   NS_IF_ADDREF(*icon = mIconImage);
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TaskbarTabPreview::Move(nsITaskbarTabPreview *aNext) {
   if (aNext == this) return NS_ERROR_INVALID_ARG;
+||||||| merged common ancestors
+TaskbarTabPreview::Move(nsITaskbarTabPreview *aNext) {
+  if (aNext == this)
+    return NS_ERROR_INVALID_ARG;
+=======
+TaskbarTabPreview::Move(nsITaskbarTabPreview* aNext) {
+  if (aNext == this) return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
   mNext = aNext;
   return CanMakeTaskbarCalls() ? UpdateNext() : NS_OK;
 }
@@ -144,7 +195,13 @@ TaskbarTabPreview::WndProc(UINT nMsg, WPARAM wParam, LPARAM lParam) {
         if (NS_SUCCEEDED(rv) && activateWindow) {
           nsWindow *win = WinUtils::GetNSWindowPtr(mWnd);
           if (win) {
+<<<<<<< HEAD
             nsWindow *parent = win->GetTopLevelWindow(true);
+||||||| merged common ancestors
+            nsWindow * parent = win->GetTopLevelWindow(true);
+=======
+            nsWindow* parent = win->GetTopLevelWindow(true);
+>>>>>>> upstream-releases
             if (parent) {
               parent->Show(true);
             }
@@ -180,20 +237,49 @@ TaskbarTabPreview::WndProc(UINT nMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 /* static */
+<<<<<<< HEAD
 LRESULT CALLBACK TaskbarTabPreview::GlobalWndProc(HWND hWnd, UINT nMsg,
                                                   WPARAM wParam,
                                                   LPARAM lParam) {
   TaskbarTabPreview *preview(nullptr);
+||||||| merged common ancestors
+LRESULT CALLBACK
+TaskbarTabPreview::GlobalWndProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam) {
+  TaskbarTabPreview *preview(nullptr);
+=======
+LRESULT CALLBACK TaskbarTabPreview::GlobalWndProc(HWND hWnd, UINT nMsg,
+                                                  WPARAM wParam,
+                                                  LPARAM lParam) {
+  TaskbarTabPreview* preview(nullptr);
+>>>>>>> upstream-releases
   if (nMsg == WM_CREATE) {
+<<<<<<< HEAD
     CREATESTRUCT *cs = reinterpret_cast<CREATESTRUCT *>(lParam);
     preview = reinterpret_cast<TaskbarTabPreview *>(cs->lpCreateParams);
+||||||| merged common ancestors
+    CREATESTRUCT *cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+    preview = reinterpret_cast<TaskbarTabPreview*>(cs->lpCreateParams);
+=======
+    CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+    preview = reinterpret_cast<TaskbarTabPreview*>(cs->lpCreateParams);
+>>>>>>> upstream-releases
     if (!::SetPropW(hWnd, TASKBARPREVIEW_HWNDID, preview))
       NS_ERROR("Could not associate native window with tab preview");
     preview->mProxyWindow = hWnd;
   } else {
+<<<<<<< HEAD
     preview = reinterpret_cast<TaskbarTabPreview *>(
         ::GetPropW(hWnd, TASKBARPREVIEW_HWNDID));
     if (nMsg == WM_DESTROY) ::RemovePropW(hWnd, TASKBARPREVIEW_HWNDID);
+||||||| merged common ancestors
+    preview = reinterpret_cast<TaskbarTabPreview*>(::GetPropW(hWnd, TASKBARPREVIEW_HWNDID));
+    if (nMsg == WM_DESTROY)
+      ::RemovePropW(hWnd, TASKBARPREVIEW_HWNDID);
+=======
+    preview = reinterpret_cast<TaskbarTabPreview*>(
+        ::GetPropW(hWnd, TASKBARPREVIEW_HWNDID));
+    if (nMsg == WM_DESTROY) ::RemovePropW(hWnd, TASKBARPREVIEW_HWNDID);
+>>>>>>> upstream-releases
   }
 
   if (preview) return preview->WndProc(nMsg, wParam, lParam);
@@ -251,22 +337,53 @@ nsresult TaskbarTabPreview::Disable() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void TaskbarTabPreview::DetachFromNSWindow() {
   (void)SetVisible(false);
   WindowHook &hook = GetWindowHook();
+||||||| merged common ancestors
+void
+TaskbarTabPreview::DetachFromNSWindow() {
+  (void) SetVisible(false);
+  WindowHook &hook = GetWindowHook();
+=======
+void TaskbarTabPreview::DetachFromNSWindow() {
+  (void)SetVisible(false);
+  WindowHook& hook = GetWindowHook();
+>>>>>>> upstream-releases
   hook.RemoveMonitor(WM_WINDOWPOSCHANGED, MainWindowHook, this);
 
   TaskbarPreview::DetachFromNSWindow();
 }
 
 /* static */
+<<<<<<< HEAD
 bool TaskbarTabPreview::MainWindowHook(void *aContext, HWND hWnd, UINT nMsg,
                                        WPARAM wParam, LPARAM lParam,
                                        LRESULT *aResult) {
+||||||| merged common ancestors
+bool
+TaskbarTabPreview::MainWindowHook(void *aContext,
+                                  HWND hWnd, UINT nMsg,
+                                  WPARAM wParam, LPARAM lParam,
+                                  LRESULT *aResult) {
+=======
+bool TaskbarTabPreview::MainWindowHook(void* aContext, HWND hWnd, UINT nMsg,
+                                       WPARAM wParam, LPARAM lParam,
+                                       LRESULT* aResult) {
+>>>>>>> upstream-releases
   if (nMsg == WM_WINDOWPOSCHANGED) {
+<<<<<<< HEAD
     TaskbarTabPreview *preview =
         reinterpret_cast<TaskbarTabPreview *>(aContext);
     WINDOWPOS *pos = reinterpret_cast<WINDOWPOS *>(lParam);
+||||||| merged common ancestors
+    TaskbarTabPreview *preview = reinterpret_cast<TaskbarTabPreview*>(aContext);
+    WINDOWPOS *pos = reinterpret_cast<WINDOWPOS*>(lParam);
+=======
+    TaskbarTabPreview* preview = reinterpret_cast<TaskbarTabPreview*>(aContext);
+    WINDOWPOS* pos = reinterpret_cast<WINDOWPOS*>(lParam);
+>>>>>>> upstream-releases
     if (SWP_FRAMECHANGED == (pos->flags & SWP_FRAMECHANGED))
       preview->UpdateProxyWindowStyle();
   } else {

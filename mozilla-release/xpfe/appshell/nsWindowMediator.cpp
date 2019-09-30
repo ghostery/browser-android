@@ -237,8 +237,31 @@ nsWindowMediator::GetMostRecentWindow(const char16_t* inType,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsWindowMediator::GetMostRecentNonPBWindow(const char16_t* aType,
                                            mozIDOMWindowProxy** aWindow) {
+||||||| merged common ancestors
+nsWindowMediator::GetMostRecentNonPBWindow(const char16_t* aType, mozIDOMWindowProxy** aWindow)
+{
+=======
+nsWindowMediator::GetMostRecentBrowserWindow(mozIDOMWindowProxy** outWindow) {
+  nsresult rv = GetMostRecentWindow(u"navigator:browser", outWindow);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+#ifdef MOZ_WIDGET_ANDROID
+  if (!*outWindow) {
+    rv = GetMostRecentWindow(u"navigator:geckoview", outWindow);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+#endif
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsWindowMediator::GetMostRecentNonPBWindow(const char16_t* aType,
+                                           mozIDOMWindowProxy** aWindow) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG_POINTER(aWindow);
   *aWindow = nullptr;
@@ -303,11 +326,24 @@ nsWindowInfo* nsWindowMediator::MostRecentWindowInfo(
 
 NS_IMETHODIMP
 nsWindowMediator::GetOuterWindowWithId(uint64_t aWindowID,
+<<<<<<< HEAD
                                        mozIDOMWindowProxy** aWindow) {
   RefPtr<nsGlobalWindowOuter> window =
       nsGlobalWindowOuter::GetOuterWindowWithId(aWindowID);
   nsCOMPtr<nsPIDOMWindowOuter> outer = window ? window->AsOuter() : nullptr;
   outer.forget(aWindow);
+||||||| merged common ancestors
+                                       mozIDOMWindowProxy** aWindow)
+{
+  RefPtr<nsGlobalWindowOuter> window = nsGlobalWindowOuter::GetOuterWindowWithId(aWindowID);
+  nsCOMPtr<nsPIDOMWindowOuter> outer = window ? window->AsOuter() : nullptr;
+  outer.forget(aWindow);
+=======
+                                       mozIDOMWindowProxy** aWindow) {
+  RefPtr<nsGlobalWindowOuter> window =
+      nsGlobalWindowOuter::GetOuterWindowWithId(aWindowID);
+  window.forget(aWindow);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -320,14 +356,20 @@ nsWindowMediator::GetCurrentInnerWindowWithId(uint64_t aWindowID,
   // not found
   if (!window) return NS_OK;
 
-  nsCOMPtr<nsPIDOMWindowInner> inner = window->AsInner();
-  nsCOMPtr<nsPIDOMWindowOuter> outer = inner->GetOuterWindow();
+  nsCOMPtr<nsPIDOMWindowOuter> outer = window->GetOuterWindow();
   NS_ENSURE_TRUE(outer, NS_ERROR_UNEXPECTED);
 
   // outer is already using another inner, so it's same as not found
+<<<<<<< HEAD
   if (outer->GetCurrentInnerWindow() != inner) return NS_OK;
+||||||| merged common ancestors
+  if (outer->GetCurrentInnerWindow() != inner)
+    return NS_OK;
+=======
+  if (outer->GetCurrentInnerWindow() != window) return NS_OK;
+>>>>>>> upstream-releases
 
-  inner.forget(aWindow);
+  window.forget(aWindow);
   return NS_OK;
 }
 

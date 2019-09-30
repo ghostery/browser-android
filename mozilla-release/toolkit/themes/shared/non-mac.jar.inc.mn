@@ -15,8 +15,6 @@
   skin/classic/global/tabprompts.css                       (../../windows/global/tabprompts.css)
   skin/classic/global/wizard.css                           (../../windows/global/wizard.css)
 
-  skin/classic/global/arrow/arrow-dn.gif                   (../../windows/global/arrow/arrow-dn.gif)
-  skin/classic/global/arrow/arrow-up.gif                   (../../windows/global/arrow/arrow-up.gif)
   skin/classic/global/arrow/panelarrow-horizontal.svg      (../../windows/global/arrow/panelarrow-horizontal.svg)
   skin/classic/global/arrow/panelarrow-vertical.svg        (../../windows/global/arrow/panelarrow-vertical.svg)
 
@@ -25,8 +23,18 @@
   skin/classic/global/icons/question-16.png                (../../windows/global/icons/question-16.png)
   skin/classic/global/icons/question-64.png                (../../windows/global/icons/question-64.png)
   skin/classic/global/icons/search-textbox.svg             (../../windows/global/icons/search-textbox.svg)
+<<<<<<< HEAD
   skin/classic/global/tree/columnpicker.gif                (../../windows/global/tree/columnpicker.gif)
   skin/classic/global/plugins/pluginHelp-16.png            (../../windows/global/plugins/pluginHelp-16.png)
+||||||| merged common ancestors
+  skin/classic/global/tree/columnpicker.gif                (../../windows/global/tree/columnpicker.gif)
+  skin/classic/global/tree/sort-asc.png                    (../../windows/global/tree/sort-asc.png)
+  skin/classic/global/tree/sort-dsc.png                    (../../windows/global/tree/sort-dsc.png)
+  skin/classic/global/tree/sort-asc-classic.png            (../../windows/global/tree/sort-asc-classic.png)
+  skin/classic/global/tree/sort-dsc-classic.png            (../../windows/global/tree/sort-dsc-classic.png)
+=======
+  skin/classic/global/plugins/pluginHelp-16.png            (../../windows/global/plugins/pluginHelp-16.png)
+>>>>>>> upstream-releases
 
   skin/classic/mozapps/downloads/downloadButtons.png         (../../windows/mozapps/downloads/downloadButtons.png)
   skin/classic/mozapps/downloads/unknownContentType.css      (../../windows/mozapps/downloads/unknownContentType.css)
@@ -37,6 +45,5 @@
   skin/classic/mozapps/extensions/cancel.png                 (../../windows/mozapps/extensions/cancel.png)
   skin/classic/mozapps/handling/handling.css                 (../../windows/mozapps/handling/handling.css)
   skin/classic/mozapps/profile/profileSelection.css          (../../windows/mozapps/profile/profileSelection.css)
-  skin/classic/mozapps/update/downloadButtons.png            (../../windows/mozapps/update/downloadButtons.png)
 
 % override chrome://mozapps/skin/xpinstall/xpinstallItemGeneric.png       chrome://mozapps/skin/extensions/extensionGeneric.svg

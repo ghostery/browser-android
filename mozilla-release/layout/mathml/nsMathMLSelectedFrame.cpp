@@ -133,8 +133,21 @@ void nsMathMLSelectedFrame::Reflow(nsPresContext* aPresContext,
 }
 
 // Only place the selected child ...
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLSelectedFrame::Place(
     DrawTarget* aDrawTarget, bool aPlaceOrigin, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLSelectedFrame::Place(DrawTarget*          aDrawTarget,
+                             bool                 aPlaceOrigin,
+                             ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLSelectedFrame::Place(DrawTarget* aDrawTarget,
+                                      bool aPlaceOrigin,
+                                      ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   nsIFrame* childFrame = GetSelectedFrame();
 
   if (mInvalidMarkup) {

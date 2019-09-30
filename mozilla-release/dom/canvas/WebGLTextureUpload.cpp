@@ -8,9 +8,9 @@
 #include <algorithm>
 
 #include "CanvasUtils.h"
-#include "gfxPrefs.h"
 #include "GLBlitHelper.h"
 #include "GLContext.h"
+#include "mozilla/Casting.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/dom/HTMLCanvasElement.h"
 #include "mozilla/dom/HTMLVideoElement.h"
@@ -18,6 +18,7 @@
 #include "mozilla/dom/ImageData.h"
 #include "mozilla/MathAlgorithms.h"
 #include "mozilla/Scoped.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Unused.h"
 #include "ScopedGLHelpers.h"
 #include "TexUnpackBlob.h"
@@ -160,6 +161,7 @@ static bool ValidateUnpackInfo(WebGLContext* webgl,
 
 ////////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 static UniquePtr<webgl::TexUnpackBytes> FromView(
     WebGLContext* webgl, TexImageTarget target, uint32_t width, uint32_t height,
     uint32_t depth, const dom::ArrayBufferView* view, GLuint viewElemOffset,
@@ -172,6 +174,38 @@ static UniquePtr<webgl::TexUnpackBytes> FromView(
             *view, viewElemOffset, viewElemLengthOverride,
             const_cast<uint8_t**>(&bytes), &availByteCount)) {
       return nullptr;
+||||||| merged common ancestors
+static UniquePtr<webgl::TexUnpackBytes>
+FromView(WebGLContext* webgl, TexImageTarget target,
+         uint32_t width, uint32_t height, uint32_t depth,
+         const dom::ArrayBufferView* view, GLuint viewElemOffset,
+         GLuint viewElemLengthOverride)
+{
+    const bool isClientData = true;
+    const uint8_t* bytes = nullptr;
+    size_t availByteCount = 0;
+    if (view) {
+        if (!webgl->ValidateArrayBufferView(*view, viewElemOffset,
+                                            viewElemLengthOverride,
+                                            const_cast<uint8_t**>(&bytes),
+                                            &availByteCount))
+        {
+            return nullptr;
+        }
+=======
+static UniquePtr<webgl::TexUnpackBytes> FromView(
+    WebGLContext* webgl, TexImageTarget target, uint32_t width, uint32_t height,
+    uint32_t depth, const dom::ArrayBufferView* view, GLuint viewElemOffset,
+    GLuint viewElemLengthOverride, const GLenum errorVal) {
+  const bool isClientData = true;
+  const uint8_t* bytes = nullptr;
+  size_t availByteCount = 0;
+  if (view) {
+    if (!webgl->ValidateArrayBufferView(
+            *view, viewElemOffset, viewElemLengthOverride, errorVal,
+            const_cast<uint8_t**>(&bytes), &availByteCount)) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
   }
   return MakeUnique<webgl::TexUnpackBytes>(webgl, target, width, height, depth,
@@ -324,6 +358,7 @@ UniquePtr<webgl::TexUnpackBlob> WebGLContext::FromDomElem(
 
   //////
 
+<<<<<<< HEAD
   uint32_t elemWidth = 0;
   uint32_t elemHeight = 0;
   layers::Image* layersImage = nullptr;
@@ -332,6 +367,18 @@ UniquePtr<webgl::TexUnpackBlob> WebGLContext::FromDomElem(
     elemWidth = layersImage->GetSize().width;
     elemHeight = layersImage->GetSize().height;
   }
+||||||| merged common ancestors
+    ////
+=======
+  uint32_t elemWidth = 0;
+  uint32_t elemHeight = 0;
+  layers::Image* layersImage = nullptr;
+  if (!StaticPrefs::webgl_disable_DOM_blit_uploads() && sfer.mLayersImage) {
+    layersImage = sfer.mLayersImage;
+    elemWidth = layersImage->GetSize().width;
+    elemHeight = layersImage->GetSize().height;
+  }
+>>>>>>> upstream-releases
 
   RefPtr<gfx::DataSourceSurface> dataSurf;
   if (!layersImage && sfer.GetSourceSurface()) {
@@ -402,6 +449,7 @@ UniquePtr<webgl::TexUnpackBlob> WebGLContext::FromDomElem(
 
 ////////////////////////////////////////
 
+<<<<<<< HEAD
 UniquePtr<webgl::TexUnpackBlob> WebGLContext::From(
     TexImageTarget target, GLsizei rawWidth, GLsizei rawHeight,
     GLsizei rawDepth, GLint border, const TexImageSource& src,
@@ -439,6 +487,49 @@ UniquePtr<webgl::TexUnpackBlob> WebGLContext::From(
 
   return FromView(this, target, width, height, depth, src.mView,
                   src.mViewElemOffset, src.mViewElemLengthOverride);
+||||||| merged common ancestors
+    return FromView(this, target, width, height, depth, src.mView,
+                    src.mViewElemOffset, src.mViewElemLengthOverride);
+=======
+UniquePtr<webgl::TexUnpackBlob> WebGLContext::From(
+    TexImageTarget target, GLsizei rawWidth, GLsizei rawHeight,
+    GLsizei rawDepth, GLint border, const TexImageSource& src,
+    dom::Uint8ClampedArray* const scopedArr) {
+  uint32_t width, height, depth;
+  if (!ValidateExtents(this, rawWidth, rawHeight, rawDepth, border, &width,
+                       &height, &depth)) {
+    return nullptr;
+  }
+
+  if (src.mPboOffset) {
+    return FromPboOffset(this, target, width, height, depth, *(src.mPboOffset),
+                         Nothing());
+  }
+
+  if (mBoundPixelUnpackBuffer) {
+    ErrorInvalidOperation("PIXEL_UNPACK_BUFFER must be null.");
+    return nullptr;
+  }
+
+  if (src.mImageBitmap) {
+    return FromImageBitmap(this, target, width, height, depth,
+                           *(src.mImageBitmap), src.mOut_error);
+  }
+
+  if (src.mImageData) {
+    return FromImageData(this, target, width, height, depth, *(src.mImageData),
+                         scopedArr);
+  }
+
+  if (src.mDomElem) {
+    return FromDomElem(target, width, height, depth, *(src.mDomElem),
+                       src.mOut_error);
+  }
+
+  return FromView(this, target, width, height, depth, src.mView,
+                  src.mViewElemOffset, src.mViewElemLengthOverride,
+                  LOCAL_GL_INVALID_OPERATION);
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -923,6 +1014,27 @@ static inline GLenum DoCopyTexSubImage(gl::GLContext* gl, TexImageTarget target,
 //////////////////////////////////////////////////////////////////////////////////////////
 // Actual (mostly generic) function implementations
 
+<<<<<<< HEAD
+static bool ValidateCompressedTexImageRestrictions(
+    WebGLContext* webgl, TexImageTarget target, uint32_t level,
+    const webgl::FormatInfo* format, uint32_t width, uint32_t height,
+    uint32_t depth) {
+  const auto fnIsDimValid_S3TC = [level](uint32_t size, uint32_t blockSize) {
+    if (size % blockSize == 0) return true;
+||||||| merged common ancestors
+static bool
+ValidateCompressedTexImageRestrictions(WebGLContext* webgl,
+                                       TexImageTarget target, uint32_t level,
+                                       const webgl::FormatInfo* format, uint32_t width,
+                                       uint32_t height, uint32_t depth)
+{
+    const auto fnIsDimValid_S3TC = [level](uint32_t size, uint32_t blockSize) {
+        if (size % blockSize == 0)
+            return true;
+
+        if (level == 0)
+            return false;
+=======
 static bool ValidateCompressedTexImageRestrictions(
     WebGLContext* webgl, TexImageTarget target, uint32_t level,
     const webgl::FormatInfo* format, uint32_t width, uint32_t height,
@@ -931,11 +1043,28 @@ static bool ValidateCompressedTexImageRestrictions(
     if (size % blockSize == 0) return true;
 
     if (level == 0) return false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    if (level == 0) return false;
+||||||| merged common ancestors
+        return (size == 0 || size == 1 || size == 2);
+    };
+=======
+    return (size == 0 || size == 1 || size == 2);
+  };
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     return (size == 0 || size == 1 || size == 2);
   };
 
   switch (format->compression->family) {
+||||||| merged common ancestors
+    switch (format->compression->family) {
+=======
+  switch (format->compression->family) {
+>>>>>>> upstream-releases
     case webgl::CompressionFamily::ASTC:
       if (target == LOCAL_GL_TEXTURE_3D &&
           !webgl->gl->IsExtensionSupported(
@@ -1006,6 +1135,7 @@ static bool ValidateTargetForFormat(WebGLContext* webgl, TexImageTarget target,
       }
     }
     return true;
+<<<<<<< HEAD
   }();
   if (!ok) {
     webgl->ErrorInvalidOperation("Format %s cannot be used with target %s.",
@@ -1115,18 +1245,256 @@ void WebGLTexture::TexStorage(TexTarget target, GLsizei levels,
 
     ImageInfoAtFace(0, 0) = newInfo;
     PopulateMipChain(levels - 1);
+||||||| merged common ancestors
+}
+
+void
+WebGLTexture::TexStorage(TexTarget target, GLsizei levels,
+                         GLenum sizedFormat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // Check levels
+    if (levels < 1) {
+        mContext->ErrorInvalidValue("`levels` must be >= 1.");
+        return;
+    }
+
+    if (!width || !height || !depth) {
+        mContext->ErrorInvalidValue("Dimensions must be non-zero.");
+        return;
+    }
+
+    const TexImageTarget testTarget = IsCubeMap() ? LOCAL_GL_TEXTURE_CUBE_MAP_POSITIVE_X
+                                                  : target.get();
+    webgl::ImageInfo* baseImageInfo;
+    if (!ValidateTexImageSpecification(testTarget, 0, width, height, depth,
+                                       &baseImageInfo))
+    {
+        return;
+    }
+    MOZ_ALWAYS_TRUE(baseImageInfo);
+
+    auto dstUsage = mContext->mFormatUsage->GetSizedTexUsage(sizedFormat);
+    if (!dstUsage) {
+        mContext->ErrorInvalidEnumInfo("internalformat", sizedFormat);
+        return;
+    }
+    auto dstFormat = dstUsage->format;
+
+    if (!ValidateTargetForFormat(mContext, testTarget, dstFormat))
+        return;
+
+    if (dstFormat->compression) {
+        if (!ValidateCompressedTexImageRestrictions(mContext, testTarget, 0,
+                                                    dstFormat, width, height, depth))
+        {
+            return;
+        }
+    }
+
+    ////////////////////////////////////
+
+    const bool levelsOk = [&]() {
+        // Right-shift is only defined for bits-1, which is too large anyways.
+        const auto lastLevel = uint32_t(levels - 1);
+        if (lastLevel > 31)
+            return false;
+
+        const auto lastLevelWidth = uint32_t(width) >> lastLevel;
+        const auto lastLevelHeight = uint32_t(height) >> lastLevel;
+
+        // If these are all zero, then some earlier level was the final 1x1(x1) level.
+        bool ok = lastLevelWidth || lastLevelHeight;
+        if (target == LOCAL_GL_TEXTURE_3D) {
+            const auto lastLevelDepth = uint32_t(depth) >> lastLevel;
+            ok |= bool(lastLevelDepth);
+        }
+        return ok;
+    }();
+    if (!levelsOk) {
+        mContext->ErrorInvalidOperation("Too many levels requested for the given"
+                                        " dimensions. (levels: %u, width: %u, height: %u,"
+                                        " depth: %u)",
+                                        levels, width, height, depth);
+        return;
+    }
+
+    ////////////////////////////////////
+    // Do the thing!
+
+    GLenum error = DoTexStorage(mContext->gl, target.get(), levels, sizedFormat, width,
+                                height, depth);
+
+    mContext->OnDataAllocCall();
+
+    if (error == LOCAL_GL_OUT_OF_MEMORY) {
+        mContext->ErrorOutOfMemory("Ran out of memory during texture allocation.");
+        return;
+    }
+    if (error) {
+        MOZ_RELEASE_ASSERT(false, "GFX: We should have caught all other errors.");
+        mContext->ErrorInvalidOperation("Unexpected error during texture allocation.");
+        return;
+    }
+
+    ////////////////////////////////////
+    // Update our specification data.
+
+    const bool isDataInitialized = false;
+    const webgl::ImageInfo newInfo { dstUsage, uint32_t(width), uint32_t(height),
+                                     uint32_t(depth), isDataInitialized };
+
+    {
+        const auto base_level = mBaseMipmapLevel;
+        mBaseMipmapLevel = 0;
+
+        ImageInfoAtFace(0, 0) = newInfo;
+        PopulateMipChain(levels-1);
+=======
+  }();
+  if (!ok) {
+    webgl->ErrorInvalidOperation("Format %s cannot be used with target %s.",
+                                 format->name, GetEnumName(target.get()));
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    mBaseMipmapLevel = base_level;
+  }
+||||||| merged common ancestors
+        mBaseMipmapLevel = base_level;
+    }
+=======
+  return true;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  mImmutable = true;
+  mImmutableLevelCount = levels;
+  ClampLevelBaseAndMax();
+||||||| merged common ancestors
+    mImmutable = true;
+    mImmutableLevelCount = levels;
+    ClampLevelBaseAndMax();
+=======
+void WebGLTexture::TexStorage(TexTarget target, GLsizei levels,
+                              GLenum sizedFormat, GLsizei width, GLsizei height,
+                              GLsizei depth) {
+  // Check levels
+  if (levels < 1) {
+    mContext->ErrorInvalidValue("`levels` must be >= 1.");
+    return;
+  }
+
+  if (!width || !height || !depth) {
+    mContext->ErrorInvalidValue("Dimensions must be non-zero.");
+    return;
+  }
+
+  const TexImageTarget testTarget =
+      IsCubeMap() ? LOCAL_GL_TEXTURE_CUBE_MAP_POSITIVE_X : target.get();
+  webgl::ImageInfo* baseImageInfo;
+  if (!ValidateTexImageSpecification(testTarget, 0, width, height, depth,
+                                     &baseImageInfo)) {
+    return;
+  }
+  MOZ_ALWAYS_TRUE(baseImageInfo);
+
+  auto dstUsage = mContext->mFormatUsage->GetSizedTexUsage(sizedFormat);
+  if (!dstUsage) {
+    mContext->ErrorInvalidEnumInfo("internalformat", sizedFormat);
+    return;
+  }
+  auto dstFormat = dstUsage->format;
+
+  if (!ValidateTargetForFormat(mContext, testTarget, dstFormat)) return;
+
+  if (dstFormat->compression) {
+    if (!ValidateCompressedTexImageRestrictions(
+            mContext, testTarget, 0, dstFormat, width, height, depth)) {
+      return;
+    }
+  }
+
+  ////////////////////////////////////
+
+  const bool levelsOk = [&]() {
+    // Right-shift is only defined for bits-1, which is too large anyways.
+    const auto lastLevel = uint32_t(levels - 1);
+    if (lastLevel > 31) return false;
+
+    const auto lastLevelWidth = uint32_t(width) >> lastLevel;
+    const auto lastLevelHeight = uint32_t(height) >> lastLevel;
+
+    // If these are all zero, then some earlier level was the final 1x1(x1)
+    // level.
+    bool ok = lastLevelWidth || lastLevelHeight;
+    if (target == LOCAL_GL_TEXTURE_3D) {
+      const auto lastLevelDepth = uint32_t(depth) >> lastLevel;
+      ok |= bool(lastLevelDepth);
+    }
+    return ok;
+  }();
+  if (!levelsOk) {
+    mContext->ErrorInvalidOperation(
+        "Too many levels requested for the given"
+        " dimensions. (levels: %u, width: %u, height: %u,"
+        " depth: %u)",
+        levels, width, height, depth);
+    return;
+  }
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  GLenum error = DoTexStorage(mContext->gl, target.get(), levels, sizedFormat,
+                              width, height, depth);
+
+  mContext->OnDataAllocCall();
+
+  if (error == LOCAL_GL_OUT_OF_MEMORY) {
+    mContext->ErrorOutOfMemory("Ran out of memory during texture allocation.");
+    Truncate();
+    return;
+  }
+  if (error) {
+    mContext->GenerateError(error, "Unexpected error from driver.");
+    const nsPrintfCString call(
+        "DoTexStorage(0x%04x, %i, 0x%04x, %i,%i,%i) -> 0x%04x", target.get(),
+        levels, sizedFormat, width, height, depth, error);
+    gfxCriticalError() << "Unexpected error from driver: "
+                       << call.BeginReading();
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data.
+
+  const bool isDataInitialized = false;
+  const webgl::ImageInfo newInfo{dstUsage, uint32_t(width), uint32_t(height),
+                                 uint32_t(depth), isDataInitialized};
+
+  {
+    const auto base_level = mBaseMipmapLevel;
+    mBaseMipmapLevel = 0;
+
+    ImageInfoAtFace(0, 0) = newInfo;
+    PopulateMipChain(levels - 1);
 
     mBaseMipmapLevel = base_level;
   }
 
   mImmutable = true;
-  mImmutableLevelCount = levels;
+  mImmutableLevelCount = AutoAssertCast(levels);
   ClampLevelBaseAndMax();
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////
 // Tex(Sub)Image
 
+<<<<<<< HEAD
 void WebGLTexture::TexImage(TexImageTarget target, GLint level,
                             GLenum internalFormat, const webgl::PackingInfo& pi,
                             const webgl::TexUnpackBlob* blob) {
@@ -1246,8 +1614,254 @@ void WebGLTexture::TexImage(TexImageTarget target, GLint level,
 
   *imageInfo = newImageInfo;
   InvalidateCaches();
+||||||| merged common ancestors
+void
+WebGLTexture::TexImage(TexImageTarget target, GLint level,
+                       GLenum internalFormat, const webgl::PackingInfo& pi,
+                       const webgl::TexUnpackBlob* blob)
+{
+    ////////////////////////////////////
+    // Get dest info
+
+    webgl::ImageInfo* imageInfo;
+    if (!ValidateTexImageSpecification(target, level, blob->mWidth,
+                                       blob->mHeight, blob->mDepth, &imageInfo))
+    {
+        return;
+    }
+    MOZ_ASSERT(imageInfo);
+
+    const auto& fua = mContext->mFormatUsage;
+    if (!fua->IsInternalFormatEnumValid(internalFormat)) {
+        mContext->ErrorInvalidValue("Invalid internalformat: 0x%04x",
+                                    internalFormat);
+        return;
+    }
+
+    auto dstUsage = fua->GetSizedTexUsage(internalFormat);
+    if (!dstUsage) {
+        if (internalFormat != pi.format) {
+            /* GL ES Version 3.0.4 - 3.8.3 Texture Image Specification
+             *   "Specifying a combination of values for format, type, and
+             *   internalformat that is not listed as a valid combination
+             *   in tables 3.2 or 3.3 generates the error INVALID_OPERATION."
+             */
+            mContext->ErrorInvalidOperation("Unsized internalFormat must match"
+                                            " unpack format.");
+            return;
+        }
+
+        dstUsage = fua->GetUnsizedTexUsage(pi);
+    }
+
+    if (!dstUsage) {
+        mContext->ErrorInvalidOperation("Invalid internalformat/format/type:"
+                                        " 0x%04x/0x%04x/0x%04x",
+                                        internalFormat, pi.format, pi.type);
+        return;
+    }
+
+    const webgl::DriverUnpackInfo* driverUnpackInfo;
+    if (!dstUsage->IsUnpackValid(pi, &driverUnpackInfo)) {
+        mContext->ErrorInvalidOperation("Mismatched internalFormat and format/type:"
+                                        " 0x%04x and 0x%04x/0x%04x",
+                                        internalFormat, pi.format, pi.type);
+        return;
+    }
+
+    ////////////////////////////////////
+    // Check that source and dest info are compatible
+    auto dstFormat = dstUsage->format;
+
+    if (!ValidateTargetForFormat(mContext, target, dstFormat))
+        return;
+
+    if (!mContext->IsWebGL2() && dstFormat->d) {
+        if (target != LOCAL_GL_TEXTURE_2D ||
+            blob->HasData() ||
+            level != 0)
+        {
+            mContext->ErrorInvalidOperation("With format %s, this function may only"
+                                            " be called with target=TEXTURE_2D,"
+                                            " data=null, and level=0.",
+                                            dstFormat->name);
+            return;
+        }
+    }
+
+    ////////////////////////////////////
+    // Do the thing!
+
+    // It's tempting to do allocation first, and TexSubImage second, but this is generally
+    // slower.
+
+    const webgl::ImageInfo newImageInfo { dstUsage, blob->mWidth, blob->mHeight,
+                                          blob->mDepth, blob->HasData() };
+
+    const bool isSubImage = false;
+    const bool needsRespec = (imageInfo->mWidth  != newImageInfo.mWidth ||
+                              imageInfo->mHeight != newImageInfo.mHeight ||
+                              imageInfo->mDepth  != newImageInfo.mDepth ||
+                              imageInfo->mFormat != newImageInfo.mFormat);
+    const GLint xOffset = 0;
+    const GLint yOffset = 0;
+    const GLint zOffset = 0;
+
+    GLenum glError;
+    if (!blob->TexOrSubImage(isSubImage, needsRespec, this, target, level,
+                             driverUnpackInfo, xOffset, yOffset, zOffset, pi, &glError))
+    {
+        return;
+    }
+
+    mContext->OnDataAllocCall();
+
+    if (glError == LOCAL_GL_OUT_OF_MEMORY) {
+        mContext->ErrorOutOfMemory("Driver ran out of memory during upload.");
+        return;
+    }
+
+    if (glError) {
+        const auto enumStr = EnumString(glError);
+        const nsPrintfCString dui("Unexpected error %s during upload. (dui: %x/%x/%x)",
+                                  enumStr.c_str(), driverUnpackInfo->internalFormat,
+                                  driverUnpackInfo->unpackFormat,
+                                  driverUnpackInfo->unpackType);
+        mContext->ErrorInvalidOperation("%s", dui.BeginReading());
+        gfxCriticalError() << mContext->FuncName() << ": " << dui.BeginReading();
+        return;
+    }
+
+    ////////////////////////////////////
+    // Update our specification data.
+
+    *imageInfo = newImageInfo;
+    InvalidateCaches();
+=======
+void WebGLTexture::TexImage(TexImageTarget target, GLint level,
+                            GLenum internalFormat, const webgl::PackingInfo& pi,
+                            const webgl::TexUnpackBlob* blob) {
+  ////////////////////////////////////
+  // Get dest info
+
+  webgl::ImageInfo* imageInfo;
+  if (!ValidateTexImageSpecification(target, level, blob->mWidth, blob->mHeight,
+                                     blob->mDepth, &imageInfo)) {
+    return;
+  }
+  MOZ_ASSERT(imageInfo);
+
+  const auto& fua = mContext->mFormatUsage;
+  if (!fua->IsInternalFormatEnumValid(internalFormat)) {
+    mContext->ErrorInvalidValue("Invalid internalformat: 0x%04x",
+                                internalFormat);
+    return;
+  }
+
+  auto dstUsage = fua->GetSizedTexUsage(internalFormat);
+  if (!dstUsage) {
+    if (internalFormat != pi.format) {
+      /* GL ES Version 3.0.4 - 3.8.3 Texture Image Specification
+       *   "Specifying a combination of values for format, type, and
+       *   internalformat that is not listed as a valid combination
+       *   in tables 3.2 or 3.3 generates the error INVALID_OPERATION."
+       */
+      mContext->ErrorInvalidOperation(
+          "Unsized internalFormat must match"
+          " unpack format.");
+      return;
+    }
+
+    dstUsage = fua->GetUnsizedTexUsage(pi);
+  }
+
+  if (!dstUsage) {
+    mContext->ErrorInvalidOperation(
+        "Invalid internalformat/format/type:"
+        " 0x%04x/0x%04x/0x%04x",
+        internalFormat, pi.format, pi.type);
+    return;
+  }
+
+  const webgl::DriverUnpackInfo* driverUnpackInfo;
+  if (!dstUsage->IsUnpackValid(pi, &driverUnpackInfo)) {
+    mContext->ErrorInvalidOperation(
+        "Mismatched internalFormat and format/type:"
+        " 0x%04x and 0x%04x/0x%04x",
+        internalFormat, pi.format, pi.type);
+    return;
+  }
+
+  ////////////////////////////////////
+  // Check that source and dest info are compatible
+  auto dstFormat = dstUsage->format;
+
+  if (!ValidateTargetForFormat(mContext, target, dstFormat)) return;
+
+  if (!mContext->IsWebGL2() && dstFormat->d) {
+    if (target != LOCAL_GL_TEXTURE_2D || blob->HasData() || level != 0) {
+      mContext->ErrorInvalidOperation(
+          "With format %s, this function may only"
+          " be called with target=TEXTURE_2D,"
+          " data=null, and level=0.",
+          dstFormat->name);
+      return;
+    }
+  }
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  // It's tempting to do allocation first, and TexSubImage second, but this is
+  // generally slower.
+
+  const webgl::ImageInfo newImageInfo{dstUsage, blob->mWidth, blob->mHeight,
+                                      blob->mDepth, blob->HasData()};
+
+  const bool isSubImage = false;
+  const bool needsRespec = (imageInfo->mWidth != newImageInfo.mWidth ||
+                            imageInfo->mHeight != newImageInfo.mHeight ||
+                            imageInfo->mDepth != newImageInfo.mDepth ||
+                            imageInfo->mFormat != newImageInfo.mFormat);
+  const GLint xOffset = 0;
+  const GLint yOffset = 0;
+  const GLint zOffset = 0;
+
+  GLenum glError;
+  if (!blob->TexOrSubImage(isSubImage, needsRespec, this, target, level,
+                           driverUnpackInfo, xOffset, yOffset, zOffset, pi,
+                           &glError)) {
+    return;
+  }
+
+  mContext->OnDataAllocCall();
+
+  if (glError == LOCAL_GL_OUT_OF_MEMORY) {
+    mContext->ErrorOutOfMemory("Driver ran out of memory during upload.");
+    Truncate();
+    return;
+  }
+
+  if (glError) {
+    const auto enumStr = EnumString(glError);
+    const nsPrintfCString dui(
+        "Unexpected error %s during upload. (dui: %x/%x/%x)", enumStr.c_str(),
+        driverUnpackInfo->internalFormat, driverUnpackInfo->unpackFormat,
+        driverUnpackInfo->unpackType);
+    mContext->ErrorInvalidOperation("%s", dui.BeginReading());
+    gfxCriticalError() << mContext->FuncName() << ": " << dui.BeginReading();
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data.
+
+  *imageInfo = newImageInfo;
+  InvalidateCaches();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebGLTexture::TexSubImage(TexImageTarget target, GLint level,
                                GLint xOffset, GLint yOffset, GLint zOffset,
                                const webgl::PackingInfo& pi,
@@ -1325,11 +1939,170 @@ void WebGLTexture::TexSubImage(TexImageTarget target, GLint level,
   // Update our specification data?
 
   imageInfo->mHasData = true;
+||||||| merged common ancestors
+void
+WebGLTexture::TexSubImage(TexImageTarget target, GLint level,
+                          GLint xOffset, GLint yOffset, GLint zOffset,
+                          const webgl::PackingInfo& pi, const webgl::TexUnpackBlob* blob)
+{
+    ////////////////////////////////////
+    // Get dest info
+
+    webgl::ImageInfo* imageInfo;
+    if (!ValidateTexImageSelection(target, level, xOffset, yOffset, zOffset,
+                                   blob->mWidth, blob->mHeight, blob->mDepth, &imageInfo))
+    {
+        return;
+    }
+    MOZ_ASSERT(imageInfo);
+
+    auto dstUsage = imageInfo->mFormat;
+    auto dstFormat = dstUsage->format;
+
+    if (!mContext->IsWebGL2() && dstFormat->d) {
+        mContext->ErrorInvalidOperation("Function may not be called on a texture of"
+                                        " format %s.",
+                                        dstFormat->name);
+        return;
+    }
+
+    ////////////////////////////////////
+    // Get source info
+
+    const webgl::DriverUnpackInfo* driverUnpackInfo;
+    if (!dstUsage->IsUnpackValid(pi, &driverUnpackInfo)) {
+        mContext->ErrorInvalidOperation("Mismatched internalFormat and format/type:"
+                                        " %s and 0x%04x/0x%04x",
+                                        dstFormat->name, pi.format, pi.type);
+        return;
+    }
+
+    ////////////////////////////////////
+    // Do the thing!
+
+    if (!EnsureImageDataInitializedForUpload(this, target, level, xOffset,
+                                             yOffset, zOffset, blob->mWidth,
+                                             blob->mHeight, blob->mDepth, imageInfo))
+    {
+        return;
+    }
+
+    const bool isSubImage = true;
+    const bool needsRespec = false;
+
+    GLenum glError;
+    if (!blob->TexOrSubImage(isSubImage, needsRespec, this, target, level,
+                             driverUnpackInfo, xOffset, yOffset, zOffset, pi, &glError))
+    {
+        return;
+    }
+
+    if (glError == LOCAL_GL_OUT_OF_MEMORY) {
+        mContext->ErrorOutOfMemory("Driver ran out of memory during upload.");
+        return;
+    }
+
+    if (glError) {
+        const auto enumStr = EnumString(glError);
+        const nsPrintfCString dui("Unexpected error %s during upload. (dui: %x/%x/%x)",
+                                  enumStr.c_str(), driverUnpackInfo->internalFormat,
+                                  driverUnpackInfo->unpackFormat,
+                                  driverUnpackInfo->unpackType);
+        mContext->ErrorInvalidOperation("%s", dui.BeginReading());
+        gfxCriticalError() << mContext->FuncName() << ": " << dui.BeginReading();
+        return;
+    }
+
+    ////////////////////////////////////
+    // Update our specification data?
+
+    imageInfo->mHasData = true;
+=======
+void WebGLTexture::TexSubImage(TexImageTarget target, GLint level,
+                               GLint xOffset, GLint yOffset, GLint zOffset,
+                               const webgl::PackingInfo& pi,
+                               const webgl::TexUnpackBlob* blob) {
+  ////////////////////////////////////
+  // Get dest info
+
+  webgl::ImageInfo* imageInfo;
+  if (!ValidateTexImageSelection(target, level, xOffset, yOffset, zOffset,
+                                 blob->mWidth, blob->mHeight, blob->mDepth,
+                                 &imageInfo)) {
+    return;
+  }
+  MOZ_ASSERT(imageInfo);
+
+  auto dstUsage = imageInfo->mFormat;
+  auto dstFormat = dstUsage->format;
+
+  if (!mContext->IsWebGL2() && dstFormat->d) {
+    mContext->ErrorInvalidOperation(
+        "Function may not be called on a texture of"
+        " format %s.",
+        dstFormat->name);
+    return;
+  }
+
+  ////////////////////////////////////
+  // Get source info
+
+  const webgl::DriverUnpackInfo* driverUnpackInfo;
+  if (!dstUsage->IsUnpackValid(pi, &driverUnpackInfo)) {
+    mContext->ErrorInvalidOperation(
+        "Mismatched internalFormat and format/type:"
+        " %s and 0x%04x/0x%04x",
+        dstFormat->name, pi.format, pi.type);
+    return;
+  }
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  if (!EnsureImageDataInitializedForUpload(
+          this, target, level, xOffset, yOffset, zOffset, blob->mWidth,
+          blob->mHeight, blob->mDepth, imageInfo)) {
+    return;
+  }
+
+  const bool isSubImage = true;
+  const bool needsRespec = false;
+
+  GLenum glError;
+  if (!blob->TexOrSubImage(isSubImage, needsRespec, this, target, level,
+                           driverUnpackInfo, xOffset, yOffset, zOffset, pi,
+                           &glError)) {
+    return;
+  }
+
+  if (glError == LOCAL_GL_OUT_OF_MEMORY) {
+    mContext->ErrorOutOfMemory("Driver ran out of memory during upload.");
+    Truncate();
+    return;
+  }
+
+  if (glError) {
+    const auto enumStr = EnumString(glError);
+    const nsPrintfCString dui(
+        "Unexpected error %s during upload. (dui: %x/%x/%x)", enumStr.c_str(),
+        driverUnpackInfo->internalFormat, driverUnpackInfo->unpackFormat,
+        driverUnpackInfo->unpackType);
+    mContext->ErrorInvalidOperation("%s", dui.BeginReading());
+    gfxCriticalError() << mContext->FuncName() << ": " << dui.BeginReading();
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data?
+
+  imageInfo->mHasData = true;
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////
 // CompressedTex(Sub)Image
 
+<<<<<<< HEAD
 UniquePtr<webgl::TexUnpackBytes> WebGLContext::FromCompressed(
     TexImageTarget target, GLsizei rawWidth, GLsizei rawHeight,
     GLsizei rawDepth, GLint border, const TexImageSource& src,
@@ -1352,8 +2125,60 @@ UniquePtr<webgl::TexUnpackBytes> WebGLContext::FromCompressed(
 
   return FromView(this, target, width, height, depth, src.mView,
                   src.mViewElemOffset, src.mViewElemLengthOverride);
+||||||| merged common ancestors
+UniquePtr<webgl::TexUnpackBytes>
+WebGLContext::FromCompressed(TexImageTarget target,
+                             GLsizei rawWidth, GLsizei rawHeight, GLsizei rawDepth,
+                             GLint border, const TexImageSource& src,
+                             const Maybe<GLsizei>& expectedImageSize)
+{
+    uint32_t width, height, depth;
+    if (!ValidateExtents(this, rawWidth, rawHeight, rawDepth, border, &width,
+                         &height, &depth))
+    {
+        return nullptr;
+    }
+
+    if (src.mPboOffset) {
+        return FromPboOffset(this, target, width, height, depth,
+                             *(src.mPboOffset), expectedImageSize);
+    }
+
+    if (mBoundPixelUnpackBuffer) {
+        ErrorInvalidOperation("PIXEL_UNPACK_BUFFER must be null.");
+        return nullptr;
+    }
+
+    return FromView(this, target, width, height, depth, src.mView,
+                    src.mViewElemOffset, src.mViewElemLengthOverride);
+=======
+UniquePtr<webgl::TexUnpackBytes> WebGLContext::FromCompressed(
+    TexImageTarget target, GLsizei rawWidth, GLsizei rawHeight,
+    GLsizei rawDepth, GLint border, const TexImageSource& src,
+    const Maybe<GLsizei>& expectedImageSize) {
+  uint32_t width, height, depth;
+  if (!ValidateExtents(this, rawWidth, rawHeight, rawDepth, border, &width,
+                       &height, &depth)) {
+    return nullptr;
+  }
+
+  if (src.mPboOffset) {
+    return FromPboOffset(this, target, width, height, depth, *(src.mPboOffset),
+                         expectedImageSize);
+  }
+
+  if (mBoundPixelUnpackBuffer) {
+    ErrorInvalidOperation("PIXEL_UNPACK_BUFFER must be null.");
+    return nullptr;
+  }
+
+  return FromView(this, target, width, height, depth, src.mView,
+                  src.mViewElemOffset, src.mViewElemLengthOverride,
+                  LOCAL_GL_INVALID_VALUE);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebGLTexture::CompressedTexImage(TexImageTarget target, GLint level,
                                       GLenum internalFormat, GLsizei rawWidth,
                                       GLsizei rawHeight, GLsizei rawDepth,
@@ -1431,6 +2256,171 @@ void WebGLTexture::CompressedTexImage(TexImageTarget target, GLint level,
                                       blob->mDepth, isDataInitialized};
   *imageInfo = newImageInfo;
   InvalidateCaches();
+||||||| merged common ancestors
+void
+WebGLTexture::CompressedTexImage(TexImageTarget target, GLint level,
+                                 GLenum internalFormat, GLsizei rawWidth,
+                                 GLsizei rawHeight, GLsizei rawDepth, GLint border,
+                                 const TexImageSource& src, const Maybe<GLsizei>& expectedImageSize)
+{
+    const auto blob = mContext->FromCompressed(target, rawWidth, rawHeight,
+                                               rawDepth, border, src, expectedImageSize);
+    if (!blob)
+        return;
+
+    ////////////////////////////////////
+    // Get dest info
+
+    webgl::ImageInfo* imageInfo;
+    if (!ValidateTexImageSpecification(target, level, blob->mWidth,
+                                       blob->mHeight, blob->mDepth, &imageInfo))
+    {
+        return;
+    }
+    MOZ_ASSERT(imageInfo);
+
+    auto usage = mContext->mFormatUsage->GetSizedTexUsage(internalFormat);
+    if (!usage || !usage->format->compression) {
+        mContext->ErrorInvalidEnumArg("internalFormat", internalFormat);
+        return;
+    }
+    auto format = usage->format;
+
+    if (!ValidateTargetForFormat(mContext, target, format))
+        return;
+
+    ////////////////////////////////////
+    // Get source info
+
+    if (!ValidateCompressedTexUnpack(mContext, blob->mWidth, blob->mHeight,
+                                     blob->mDepth, format, blob->mAvailBytes))
+    {
+        return;
+    }
+
+    ////////////////////////////////////
+    // Check that source is compatible with dest
+
+    if (!ValidateCompressedTexImageRestrictions(mContext, target, level, format,
+                                                blob->mWidth, blob->mHeight,
+                                                blob->mDepth))
+    {
+        return;
+    }
+
+    ////////////////////////////////////
+    // Do the thing!
+
+    const ScopedLazyBind bindPBO(mContext->gl, LOCAL_GL_PIXEL_UNPACK_BUFFER,
+                                 mContext->mBoundPixelUnpackBuffer);
+
+    // Warning: Possibly shared memory.  See bug 1225033.
+    GLenum error = DoCompressedTexImage(mContext->gl, target, level, internalFormat,
+                                        blob->mWidth, blob->mHeight, blob->mDepth,
+                                        blob->mAvailBytes, blob->mPtr);
+    mContext->OnDataAllocCall();
+    if (error == LOCAL_GL_OUT_OF_MEMORY) {
+        mContext->ErrorOutOfMemory("Ran out of memory during upload.");
+        return;
+    }
+    if (error) {
+        MOZ_RELEASE_ASSERT(false, "GFX: We should have caught all other errors.");
+        mContext->GenerateWarning("Unexpected error during texture upload. Context"
+                                  " lost.");
+        mContext->ForceLoseContext();
+        return;
+    }
+
+    ////////////////////////////////////
+    // Update our specification data.
+
+    const bool isDataInitialized = true;
+    const webgl::ImageInfo newImageInfo { usage, blob->mWidth, blob->mHeight,
+                                          blob->mDepth, isDataInitialized };
+    *imageInfo = newImageInfo;
+    InvalidateCaches();
+=======
+void WebGLTexture::CompressedTexImage(TexImageTarget target, GLint level,
+                                      GLenum internalFormat, GLsizei rawWidth,
+                                      GLsizei rawHeight, GLsizei rawDepth,
+                                      GLint border, const TexImageSource& src,
+                                      const Maybe<GLsizei>& expectedImageSize) {
+  const auto blob = mContext->FromCompressed(
+      target, rawWidth, rawHeight, rawDepth, border, src, expectedImageSize);
+  if (!blob) return;
+
+  ////////////////////////////////////
+  // Get dest info
+
+  webgl::ImageInfo* imageInfo;
+  if (!ValidateTexImageSpecification(target, level, blob->mWidth, blob->mHeight,
+                                     blob->mDepth, &imageInfo)) {
+    return;
+  }
+  MOZ_ASSERT(imageInfo);
+
+  auto usage = mContext->mFormatUsage->GetSizedTexUsage(internalFormat);
+  if (!usage || !usage->format->compression) {
+    mContext->ErrorInvalidEnumArg("internalFormat", internalFormat);
+    return;
+  }
+  auto format = usage->format;
+
+  if (!ValidateTargetForFormat(mContext, target, format)) return;
+
+  ////////////////////////////////////
+  // Get source info
+
+  if (!ValidateCompressedTexUnpack(mContext, blob->mWidth, blob->mHeight,
+                                   blob->mDepth, format, blob->mAvailBytes)) {
+    return;
+  }
+
+  ////////////////////////////////////
+  // Check that source is compatible with dest
+
+  if (!ValidateCompressedTexImageRestrictions(mContext, target, level, format,
+                                              blob->mWidth, blob->mHeight,
+                                              blob->mDepth)) {
+    return;
+  }
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  const ScopedLazyBind bindPBO(mContext->gl, LOCAL_GL_PIXEL_UNPACK_BUFFER,
+                               mContext->mBoundPixelUnpackBuffer);
+
+  // Warning: Possibly shared memory.  See bug 1225033.
+  const auto error = DoCompressedTexImage(
+      mContext->gl, target, level, internalFormat, blob->mWidth, blob->mHeight,
+      blob->mDepth, blob->mAvailBytes, blob->mPtr);
+  mContext->OnDataAllocCall();
+  if (error == LOCAL_GL_OUT_OF_MEMORY) {
+    mContext->ErrorOutOfMemory("Ran out of memory during upload.");
+    Truncate();
+    return;
+  }
+  if (error) {
+    mContext->GenerateError(error, "Unexpected error from driver.");
+    const nsPrintfCString call(
+        "DoCompressedTexImage(0x%04x, %i, 0x%04x, %u,%u,%u, %u) -> 0x%04x",
+        target.get(), level, internalFormat, blob->mWidth, blob->mHeight,
+        blob->mDepth, uint32_t(blob->mAvailBytes), error);
+    gfxCriticalError() << "Unexpected error from driver: "
+                       << call.BeginReading();
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data.
+
+  const bool isDataInitialized = true;
+  const webgl::ImageInfo newImageInfo{usage, blob->mWidth, blob->mHeight,
+                                      blob->mDepth, isDataInitialized};
+  *imageInfo = newImageInfo;
+  InvalidateCaches();
+>>>>>>> upstream-releases
 }
 
 static inline bool IsSubImageBlockAligned(
@@ -1533,6 +2523,7 @@ void WebGLTexture::CompressedTexSubImage(
             "Format does not allow partial sub-image"
             " updates.");
         return;
+<<<<<<< HEAD
       }
       break;
   }
@@ -1571,6 +2562,58 @@ void WebGLTexture::CompressedTexSubImage(
   // Update our specification data?
 
   imageInfo->mHasData = true;
+||||||| merged common ancestors
+    }
+
+    ////////////////////////////////////
+    // Update our specification data?
+
+    imageInfo->mHasData = true;
+=======
+      }
+      break;
+  }
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  if (!EnsureImageDataInitializedForUpload(
+          this, target, level, xOffset, yOffset, zOffset, blob->mWidth,
+          blob->mHeight, blob->mDepth, imageInfo)) {
+    return;
+  }
+
+  const ScopedLazyBind bindPBO(mContext->gl, LOCAL_GL_PIXEL_UNPACK_BUFFER,
+                               mContext->mBoundPixelUnpackBuffer);
+
+  // Warning: Possibly shared memory.  See bug 1225033.
+  const auto error = DoCompressedTexSubImage(
+      mContext->gl, target, level, xOffset, yOffset, zOffset, blob->mWidth,
+      blob->mHeight, blob->mDepth, sizedUnpackFormat, blob->mAvailBytes,
+      blob->mPtr);
+  if (error == LOCAL_GL_OUT_OF_MEMORY) {
+    mContext->ErrorOutOfMemory("Ran out of memory during upload.");
+    Truncate();
+    return;
+  }
+  if (error) {
+    mContext->GenerateError(error, "Unexpected error from driver.");
+    const nsPrintfCString call(
+        "DoCompressedTexSubImage(0x%04x, %i, %i,%i,%i, %u,%u,%u, 0x%04x, %u) "
+        "-> 0x%04x",
+        target.get(), level, xOffset, yOffset, zOffset, blob->mWidth,
+        blob->mHeight, blob->mDepth, sizedUnpackFormat,
+        uint32_t(blob->mAvailBytes), error);
+    gfxCriticalError() << "Unexpected error from driver: "
+                       << call.BeginReading();
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data?
+
+  imageInfo->mHasData = true;
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////
@@ -1692,6 +2735,7 @@ ScopedCopyTexImageSource::ScopedCopyTexImageSource(
       break;
 
     default:
+<<<<<<< HEAD
       MOZ_CRASH("GFX: Unhandled unsizedFormat.");
   }
 
@@ -1744,6 +2788,104 @@ ScopedCopyTexImageSource::ScopedCopyTexImageSource(
   // Leave RB and FB alive, and FB bound.
   mRB = rgbaRB;
   mFB = rgbaFB;
+||||||| merged common ancestors
+        MOZ_CRASH("GFX: Unhandled unsizedFormat.");
+    }
+
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_R, blitSwizzle[0]);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_G, blitSwizzle[1]);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_B, blitSwizzle[2]);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_A, blitSwizzle[3]);
+
+    gl->fCopyTexImage2D(LOCAL_GL_TEXTURE_2D, 0, sizedFormat, 0, 0, srcWidth,
+                        srcHeight, 0);
+
+    // Now create the swizzled FB we'll be exposing.
+
+    GLuint rgbaRB = 0;
+    gl->fGenRenderbuffers(1, &rgbaRB);
+    gl::ScopedBindRenderbuffer scopedRB(gl, rgbaRB);
+    gl->fRenderbufferStorage(LOCAL_GL_RENDERBUFFER, sizedFormat, srcWidth, srcHeight);
+
+    GLuint rgbaFB = 0;
+    gl->fGenFramebuffers(1, &rgbaFB);
+    gl->fBindFramebuffer(LOCAL_GL_FRAMEBUFFER, rgbaFB);
+    gl->fFramebufferRenderbuffer(LOCAL_GL_FRAMEBUFFER, LOCAL_GL_COLOR_ATTACHMENT0,
+                                 LOCAL_GL_RENDERBUFFER, rgbaRB);
+
+    const GLenum status = gl->fCheckFramebufferStatus(LOCAL_GL_FRAMEBUFFER);
+    if (status != LOCAL_GL_FRAMEBUFFER_COMPLETE) {
+        MOZ_CRASH("GFX: Temp framebuffer is not complete.");
+    }
+
+    // Restore RB binding.
+    scopedRB.Unwrap(); // This function should really have a better name.
+
+    // Draw-blit rgbaTex into rgbaFB.
+    const gfx::IntSize srcSize(srcWidth, srcHeight);
+    {
+        const gl::ScopedBindFramebuffer bindFB(gl, rgbaFB);
+        gl->BlitHelper()->DrawBlitTextureToFramebuffer(scopedTex.Texture(), srcSize,
+                                                       srcSize);
+    }
+
+    // Restore Tex2D binding and destroy the temp tex.
+    scopedBindTex.Unwrap();
+    scopedTex.Unwrap();
+
+    // Leave RB and FB alive, and FB bound.
+    mRB = rgbaRB;
+    mFB = rgbaFB;
+=======
+      MOZ_CRASH("GFX: Unhandled unsizedFormat.");
+  }
+
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_R,
+                     blitSwizzle[0]);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_G,
+                     blitSwizzle[1]);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_B,
+                     blitSwizzle[2]);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_2D, LOCAL_GL_TEXTURE_SWIZZLE_A,
+                     blitSwizzle[3]);
+
+  gl->fCopyTexImage2D(LOCAL_GL_TEXTURE_2D, 0, sizedFormat, 0, 0, srcWidth,
+                      srcHeight, 0);
+
+  // Now create the swizzled FB we'll be exposing.
+
+  GLuint rgbaRB = 0;
+  GLuint rgbaFB = 0;
+  {
+    gl->fGenRenderbuffers(1, &rgbaRB);
+    gl::ScopedBindRenderbuffer scopedRB(gl, rgbaRB);
+    gl->fRenderbufferStorage(LOCAL_GL_RENDERBUFFER, sizedFormat, srcWidth,
+                             srcHeight);
+
+    gl->fGenFramebuffers(1, &rgbaFB);
+    gl->fBindFramebuffer(LOCAL_GL_FRAMEBUFFER, rgbaFB);
+    gl->fFramebufferRenderbuffer(LOCAL_GL_FRAMEBUFFER,
+                                 LOCAL_GL_COLOR_ATTACHMENT0,
+                                 LOCAL_GL_RENDERBUFFER, rgbaRB);
+
+    const GLenum status = gl->fCheckFramebufferStatus(LOCAL_GL_FRAMEBUFFER);
+    if (status != LOCAL_GL_FRAMEBUFFER_COMPLETE) {
+      MOZ_CRASH("GFX: Temp framebuffer is not complete.");
+    }
+  }
+
+  // Draw-blit rgbaTex into rgbaFB.
+  const gfx::IntSize srcSize(srcWidth, srcHeight);
+  {
+    const gl::ScopedBindFramebuffer bindFB(gl, rgbaFB);
+    gl->BlitHelper()->DrawBlitTextureToFramebuffer(scopedTex.Texture(), srcSize,
+                                                   srcSize);
+  }
+
+  // Leave RB and FB alive, and FB bound.
+  mRB = rgbaRB;
+  mFB = rgbaFB;
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1805,6 +2947,7 @@ static bool GetUnsizedFormatForCopy(GLenum internalFormat,
   return true;
 }
 
+<<<<<<< HEAD
 static const webgl::FormatUsageInfo* ValidateCopyDestUsage(
     WebGLContext* webgl, const webgl::FormatInfo* srcFormat,
     GLenum internalFormat) {
@@ -1817,6 +2960,82 @@ static const webgl::FormatUsageInfo* ValidateCopyDestUsage(
     if (!GetUnsizedFormatForCopy(internalFormat, &unsizedFormat)) {
       webgl->ErrorInvalidEnumInfo("internalFormat", internalFormat);
       return nullptr;
+||||||| merged common ancestors
+static const webgl::FormatUsageInfo*
+ValidateCopyDestUsage(WebGLContext* webgl,
+                      const webgl::FormatInfo* srcFormat, GLenum internalFormat)
+{
+    const auto& fua = webgl->mFormatUsage;
+
+    auto dstUsage = fua->GetSizedTexUsage(internalFormat);
+    if (!dstUsage) {
+        // Ok, maybe it's unsized.
+        webgl::UnsizedFormat unsizedFormat;
+        if (!GetUnsizedFormatForCopy(internalFormat, &unsizedFormat)) {
+            webgl->ErrorInvalidEnumInfo("internalFormat", internalFormat);
+            return nullptr;
+        }
+
+        const auto dstFormat = srcFormat->GetCopyDecayFormat(unsizedFormat);
+        if (dstFormat) {
+            dstUsage = fua->GetUsage(dstFormat->effectiveFormat);
+        }
+        if (!dstUsage) {
+            webgl->ErrorInvalidOperation("0x%04x is not a valid unsized format for"
+                                         " source format %s.",
+                                         internalFormat, srcFormat->name);
+            return nullptr;
+        }
+
+        return dstUsage;
+    }
+    // Alright, it's sized.
+
+    const auto dstFormat = dstUsage->format;
+
+    const auto fnNarrowType = [&](webgl::ComponentType type) {
+        switch (type) {
+        case webgl::ComponentType::NormInt:
+        case webgl::ComponentType::NormUInt:
+            // These both count as "fixed-point".
+            return webgl::ComponentType::NormInt;
+
+        default:
+            return type;
+        }
+    };
+
+    const auto srcType = fnNarrowType(srcFormat->componentType);
+    const auto dstType = fnNarrowType(dstFormat->componentType);
+    if (dstType != srcType) {
+        webgl->ErrorInvalidOperation("For sized internalFormats, source and dest"
+                                     " component types must match. (source: %s, dest:"
+                                     " %s)",
+                                     srcFormat->name, dstFormat->name);
+        return nullptr;
+=======
+static const webgl::FormatUsageInfo* ValidateCopyDestUsage(
+    WebGLContext* webgl, const webgl::FormatInfo* srcFormat,
+    GLenum internalFormat) {
+  const auto& fua = webgl->mFormatUsage;
+
+  switch (internalFormat) {
+    case LOCAL_GL_R8_SNORM:
+    case LOCAL_GL_RG8_SNORM:
+    case LOCAL_GL_RGB8_SNORM:
+    case LOCAL_GL_RGBA8_SNORM:
+      webgl->ErrorInvalidEnum("SNORM formats are invalid for CopyTexImage.");
+      return nullptr;
+  }
+
+  auto dstUsage = fua->GetSizedTexUsage(internalFormat);
+  if (!dstUsage) {
+    // Ok, maybe it's unsized.
+    webgl::UnsizedFormat unsizedFormat;
+    if (!GetUnsizedFormatForCopy(internalFormat, &unsizedFormat)) {
+      webgl->ErrorInvalidEnumInfo("internalFormat", internalFormat);
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
     const auto dstFormat = srcFormat->GetCopyDecayFormat(unsizedFormat);
@@ -1872,6 +3091,7 @@ static const webgl::FormatUsageInfo* ValidateCopyDestUsage(
   return dstUsage;
 }
 
+<<<<<<< HEAD
 bool WebGLTexture::ValidateCopyTexImageForFeedback(uint32_t level,
                                                    GLint layer) const {
   const auto& fb = mContext->mBoundReadFramebuffer;
@@ -1892,8 +3112,58 @@ bool WebGLTexture::ValidateCopyTexImageForFeedback(uint32_t level,
     }
   }
   return true;
+||||||| merged common ancestors
+bool
+WebGLTexture::ValidateCopyTexImageForFeedback(uint32_t level, GLint layer) const
+{
+    const auto& fb = mContext->mBoundReadFramebuffer;
+    if (fb) {
+        const auto& attach = fb->ColorReadBuffer();
+        MOZ_ASSERT(attach);
+
+        if (attach->Texture() == this &&
+            attach->Layer() == layer &&
+            uint32_t(attach->MipLevel()) == level)
+        {
+            // Note that the TexImageTargets *don't* have to match for this to be
+            // undefined per GLES 3.0.4 p211, thus an INVALID_OP in WebGL.
+            mContext->ErrorInvalidOperation("Feedback loop detected, as this texture"
+                                            " is already attached to READ_FRAMEBUFFER's"
+                                            " READ_BUFFER-selected COLOR_ATTACHMENT%u.",
+                                            attach->mAttachmentPoint);
+            return false;
+        }
+    }
+    return true;
+=======
+static bool ValidateCopyTexImageForFeedback(const WebGLContext& webgl,
+                                            const WebGLTexture& tex,
+                                            const uint8_t mipLevel,
+                                            const uint32_t zLayer) {
+  const auto& fb = webgl.BoundReadFb();
+  if (fb) {
+    MOZ_ASSERT(fb->ColorReadBuffer());
+    const auto& attach = *fb->ColorReadBuffer();
+    MOZ_ASSERT(attach.ZLayerCount() ==
+               1);  // Multiview invalid for copyTexImage.
+
+    if (attach.Texture() == &tex && attach.Layer() == zLayer &&
+        attach.MipLevel() == mipLevel) {
+      // Note that the TexImageTargets *don't* have to match for this to be
+      // undefined per GLES 3.0.4 p211, thus an INVALID_OP in WebGL.
+      webgl.ErrorInvalidOperation(
+          "Feedback loop detected, as this texture"
+          " is already attached to READ_FRAMEBUFFER's"
+          " READ_BUFFER-selected COLOR_ATTACHMENT%u.",
+          attach.mAttachmentPoint);
+      return false;
+    }
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
                                 const WebGLTexture* tex, TexImageTarget target,
                                 GLint level, GLint xWithinSrc, GLint yWithinSrc,
@@ -1919,25 +3189,203 @@ static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
 
   writeX += xOffset;
   writeY += yOffset;
+||||||| merged common ancestors
+static bool
+DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
+                    const WebGLTexture* tex, TexImageTarget target, GLint level,
+                    GLint xWithinSrc, GLint yWithinSrc,
+                    uint32_t srcTotalWidth, uint32_t srcTotalHeight,
+                    const webgl::FormatUsageInfo* srcUsage,
+                    GLint xOffset, GLint yOffset, GLint zOffset,
+                    uint32_t dstWidth, uint32_t dstHeight,
+                    const webgl::FormatUsageInfo* dstUsage)
+{
+    const auto& gl = webgl->gl;
+
+    ////
+
+    int32_t readX, readY;
+    int32_t writeX, writeY;
+    int32_t rwWidth, rwHeight;
+    if (!Intersect(srcTotalWidth, xWithinSrc, dstWidth, &readX, &writeX, &rwWidth) ||
+        !Intersect(srcTotalHeight, yWithinSrc, dstHeight, &readY, &writeY, &rwHeight))
+    {
+        webgl->ErrorOutOfMemory("Bad subrect selection.");
+        return false;
+    }
+
+    writeX += xOffset;
+    writeY += yOffset;
+
+    ////
+
+    GLenum error = 0;
+    do {
+        const auto& idealUnpack = dstUsage->idealUnpack;
+        if (!isSubImage) {
+            UniqueBuffer buffer;
+
+            if (uint32_t(rwWidth) != dstWidth || uint32_t(rwHeight) != dstHeight) {
+                const auto& pi = idealUnpack->ToPacking();
+                CheckedUint32 byteCount = BytesPerPixel(pi);
+                byteCount *= dstWidth;
+                byteCount *= dstHeight;
+
+                if (byteCount.isValid()) {
+                    buffer = calloc(1, byteCount.value());
+                }
+
+                if (!buffer.get()) {
+                    webgl->ErrorOutOfMemory("Ran out of memory allocating zeros.");
+                    return false;
+                }
+            }
+
+            const ScopedUnpackReset unpackReset(webgl);
+            gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT, 1);
+            error = DoTexImage(gl, target, level, idealUnpack, dstWidth, dstHeight, 1,
+                               buffer.get());
+            if (error)
+                break;
+        }
+
+        if (!rwWidth || !rwHeight) {
+            // There aren't any pixels to copy, so we're 'done'.
+            return true;
+        }
+
+        const auto& srcFormat = srcUsage->format;
+        ScopedCopyTexImageSource maybeSwizzle(webgl, srcTotalWidth,
+                                              srcTotalHeight, srcFormat, dstUsage);
+=======
+static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
+                                WebGLTexture* const tex,
+                                const TexImageTarget target, GLint level,
+                                GLint xWithinSrc, GLint yWithinSrc,
+                                uint32_t srcTotalWidth, uint32_t srcTotalHeight,
+                                const webgl::FormatUsageInfo* srcUsage,
+                                GLint xOffset, GLint yOffset, GLint zOffset,
+                                uint32_t dstWidth, uint32_t dstHeight,
+                                const webgl::FormatUsageInfo* dstUsage) {
+  const auto& gl = webgl->gl;
 
   ////
 
+  int32_t readX, readY;
+  int32_t writeX, writeY;
+  int32_t rwWidth, rwHeight;
+  if (!Intersect(srcTotalWidth, xWithinSrc, dstWidth, &readX, &writeX,
+                 &rwWidth) ||
+      !Intersect(srcTotalHeight, yWithinSrc, dstHeight, &readY, &writeY,
+                 &rwHeight)) {
+    webgl->ErrorOutOfMemory("Bad subrect selection.");
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+        error = DoCopyTexSubImage(gl, target, level, writeX, writeY, zOffset, readX,
+                                  readY, rwWidth, rwHeight);
+        if (error)
+            break;
+=======
+  writeX += xOffset;
+  writeY += yOffset;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   GLenum error = 0;
   do {
     const auto& idealUnpack = dstUsage->idealUnpack;
     if (!isSubImage) {
       UniqueBuffer buffer;
+||||||| merged common ancestors
+        return true;
+    } while (false);
+=======
+  ////
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       if (uint32_t(rwWidth) != dstWidth || uint32_t(rwHeight) != dstHeight) {
         const auto& pi = idealUnpack->ToPacking();
         CheckedUint32 byteCount = BytesPerPixel(pi);
         byteCount *= dstWidth;
         byteCount *= dstHeight;
+||||||| merged common ancestors
+    if (error == LOCAL_GL_OUT_OF_MEMORY) {
+        webgl->ErrorOutOfMemory("Ran out of memory during texture copy.");
+        return false;
+    }
+=======
+  GLenum error = 0;
+  nsCString errorText;
+  do {
+    const auto& idealUnpack = dstUsage->idealUnpack;
+    if (!isSubImage) {
+      UniqueBuffer buffer;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (byteCount.isValid()) {
           buffer = calloc(1, byteCount.value());
         }
+||||||| merged common ancestors
+    if (gl->IsANGLE() && error == LOCAL_GL_INVALID_OPERATION) {
+        webgl->ErrorImplementationBug("ANGLE is particular about CopyTexSubImage"
+                                      " formats matching exactly.");
+        return false;
+    }
+=======
+      if (uint32_t(rwWidth) != dstWidth || uint32_t(rwHeight) != dstHeight) {
+        const auto& pi = idealUnpack->ToPacking();
+        CheckedInt<size_t> byteCount = BytesPerPixel(pi);
+        byteCount *= dstWidth;
+        byteCount *= dstHeight;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (!buffer.get()) {
+          webgl->ErrorOutOfMemory("Ran out of memory allocating zeros.");
+          return false;
+        }
+      }
+||||||| merged common ancestors
+    MOZ_RELEASE_ASSERT(false, "GFX: We should have caught all other errors.");
+    webgl->GenerateWarning("Unexpected error during texture copy. Context lost.");
+    webgl->ForceLoseContext();
+    return false;
+}
+=======
+        if (byteCount.isValid()) {
+          buffer = calloc(1u, byteCount.value());
+        }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      const ScopedUnpackReset unpackReset(webgl);
+      gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT, 1);
+      error = DoTexImage(gl, target, level, idealUnpack, dstWidth, dstHeight, 1,
+                         buffer.get());
+      if (error) break;
+||||||| merged common ancestors
+// There is no CopyTexImage3D.
+void
+WebGLTexture::CopyTexImage2D(TexImageTarget target, GLint level, GLenum internalFormat,
+                             GLint x, GLint y, GLsizei rawWidth, GLsizei rawHeight,
+                             GLint border)
+{
+    ////////////////////////////////////
+    // Get dest info
+
+    uint32_t width, height, depth;
+    if (!ValidateExtents(mContext, rawWidth, rawHeight, 1, border, &width,
+                         &height, &depth))
+    {
+        return;
+=======
         if (!buffer.get()) {
           webgl->ErrorOutOfMemory("Ran out of memory allocating zeros.");
           return false;
@@ -1948,7 +3396,16 @@ static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
       gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT, 1);
       error = DoTexImage(gl, target, level, idealUnpack, dstWidth, dstHeight, 1,
                          buffer.get());
-      if (error) break;
+      if (error) {
+        errorText = nsPrintfCString(
+            "DoTexImage(0x%04x, %i, {0x%04x, 0x%04x, 0x%04x}, %u,%u,1) -> "
+            "0x%04x",
+            target.get(), level, idealUnpack->internalFormat,
+            idealUnpack->unpackFormat, idealUnpack->unpackType, dstWidth,
+            dstHeight, error);
+        break;
+      }
+>>>>>>> upstream-releases
     }
 
     if (!rwWidth || !rwHeight) {
@@ -1960,17 +3417,49 @@ static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
     ScopedCopyTexImageSource maybeSwizzle(webgl, srcTotalWidth, srcTotalHeight,
                                           srcFormat, dstUsage);
 
+<<<<<<< HEAD
     error = DoCopyTexSubImage(gl, target, level, writeX, writeY, zOffset, readX,
                               readY, rwWidth, rwHeight);
     if (error) break;
+||||||| merged common ancestors
+    const auto& dstFormat = dstUsage->format;
+    if (!ValidateTargetForFormat(mContext, target, dstFormat))
+        return;
+
+    if (!mContext->IsWebGL2() && dstFormat->d) {
+        mContext->ErrorInvalidOperation("Function may not be called with format %s.",
+                                        dstFormat->name);
+        return;
+    }
+=======
+    error = DoCopyTexSubImage(gl, target, level, writeX, writeY, zOffset, readX,
+                              readY, rwWidth, rwHeight);
+    if (error) {
+      errorText = nsPrintfCString(
+          "DoCopyTexSubImage(0x%04x, %i, %i,%i,%i, %i,%i, %u,%u) -> 0x%04x",
+          target.get(), level, writeX, writeY, zOffset, readX, readY, rwWidth,
+          rwHeight, error);
+      break;
+    }
+>>>>>>> upstream-releases
 
     return true;
   } while (false);
 
+<<<<<<< HEAD
   if (error == LOCAL_GL_OUT_OF_MEMORY) {
     webgl->ErrorOutOfMemory("Ran out of memory during texture copy.");
     return false;
   }
+||||||| merged common ancestors
+    mContext->OnDataAllocCall();
+=======
+  if (error == LOCAL_GL_OUT_OF_MEMORY) {
+    webgl->ErrorOutOfMemory("Ran out of memory during texture copy.");
+    tex->Truncate();
+    return false;
+  }
+>>>>>>> upstream-releases
 
   if (gl->IsANGLE() && error == LOCAL_GL_INVALID_OPERATION) {
     webgl->ErrorImplementationBug(
@@ -1979,12 +3468,26 @@ static bool DoCopyTexOrSubImage(WebGLContext* webgl, bool isSubImage,
     return false;
   }
 
+<<<<<<< HEAD
   MOZ_RELEASE_ASSERT(false, "GFX: We should have caught all other errors.");
   webgl->GenerateWarning("Unexpected error during texture copy. Context lost.");
   webgl->ForceLoseContext();
   return false;
+||||||| merged common ancestors
+    const bool isDataInitialized = true;
+    const webgl::ImageInfo newImageInfo { dstUsage, width, height, depth,
+                                          isDataInitialized };
+    *imageInfo = newImageInfo;
+    InvalidateCaches();
+=======
+  webgl->GenerateError(error, "Unexpected error from driver.");
+  gfxCriticalError() << "Unexpected error from driver: "
+                     << errorText.BeginReading();
+  return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 // There is no CopyTexImage3D.
 void WebGLTexture::CopyTexImage2D(TexImageTarget target, GLint level,
                                   GLenum internalFormat, GLint x, GLint y,
@@ -2058,7 +3561,163 @@ void WebGLTexture::CopyTexImage2D(TexImageTarget target, GLint level,
   *imageInfo = newImageInfo;
   InvalidateCaches();
 }
+||||||| merged common ancestors
+void
+WebGLTexture::CopyTexSubImage(TexImageTarget target, GLint level,
+                              GLint xOffset, GLint yOffset, GLint zOffset, GLint x,
+                              GLint y, GLsizei rawWidth, GLsizei rawHeight)
+{
+    uint32_t width, height, depth;
+    if (!ValidateExtents(mContext, rawWidth, rawHeight, 1, 0, &width,
+                         &height, &depth))
+    {
+        return;
+    }
 
+    ////////////////////////////////////
+    // Get dest info
+
+    webgl::ImageInfo* imageInfo;
+    if (!ValidateTexImageSelection(target, level, xOffset, yOffset, zOffset,
+                                   width, height, depth, &imageInfo))
+    {
+        return;
+    }
+    MOZ_ASSERT(imageInfo);
+
+    auto dstUsage = imageInfo->mFormat;
+    MOZ_ASSERT(dstUsage);
+
+    auto dstFormat = dstUsage->format;
+    if (!mContext->IsWebGL2() && dstFormat->d) {
+        mContext->ErrorInvalidOperation("Function may not be called on a texture of"
+                                        " format %s.",
+                                        dstFormat->name);
+        return;
+    }
+
+    ////////////////////////////////////
+    // Get source info
+
+    const webgl::FormatUsageInfo* srcUsage;
+    uint32_t srcTotalWidth;
+    uint32_t srcTotalHeight;
+    if (!mContext->BindCurFBForColorRead(&srcUsage, &srcTotalWidth,
+                                         &srcTotalHeight))
+    {
+        return;
+    }
+
+    if (!ValidateCopyTexImageForFeedback(level, zOffset))
+        return;
+
+    ////////////////////////////////////
+    // Check that source and dest info are compatible
+
+    auto srcFormat = srcUsage->format;
+    if (!ValidateCopyTexImageFormats(mContext, srcFormat, dstFormat))
+        return;
+
+    ////////////////////////////////////
+    // Do the thing!
+
+    if (!EnsureImageDataInitializedForUpload(this, target, level, xOffset,
+                                             yOffset, zOffset, width, height, depth,
+                                             imageInfo))
+    {
+        return;
+    }
+
+    const bool isSubImage = true;
+    if (!DoCopyTexOrSubImage(mContext, isSubImage, this, target, level, x, y,
+                             srcTotalWidth, srcTotalHeight, srcUsage, xOffset, yOffset,
+                             zOffset, width, height, dstUsage))
+    {
+        return;
+    }
+
+    ////////////////////////////////////
+    // Update our specification data?
+=======
+// There is no CopyTexImage3D.
+void WebGLTexture::CopyTexImage2D(TexImageTarget target, GLint level,
+                                  GLenum internalFormat, GLint x, GLint y,
+                                  GLsizei rawWidth, GLsizei rawHeight,
+                                  GLint border) {
+  ////////////////////////////////////
+  // Get dest info
+
+  uint32_t width, height, depth;
+  if (!ValidateExtents(mContext, rawWidth, rawHeight, 1, border, &width,
+                       &height, &depth)) {
+    return;
+  }
+
+  webgl::ImageInfo* imageInfo;
+  if (!ValidateTexImageSpecification(target, level, width, height, depth,
+                                     &imageInfo))
+    return;
+  MOZ_ASSERT(imageInfo);
+
+  ////////////////////////////////////
+  // Get source info
+
+  const webgl::FormatUsageInfo* srcUsage;
+  uint32_t srcTotalWidth;
+  uint32_t srcTotalHeight;
+  if (!mContext->BindCurFBForColorRead(&srcUsage, &srcTotalWidth,
+                                       &srcTotalHeight)) {
+    return;
+  }
+
+  const uint32_t zOffset = 0;
+  if (!ValidateCopyTexImageForFeedback(*mContext, *this,
+                                       AssertedCast<uint8_t>(level), zOffset))
+    return;
+
+  ////////////////////////////////////
+  // Check that source and dest info are compatible
+
+  const auto& srcFormat = srcUsage->format;
+  const auto dstUsage =
+      ValidateCopyDestUsage(mContext, srcFormat, internalFormat);
+  if (!dstUsage) return;
+
+  const auto& dstFormat = dstUsage->format;
+  if (!ValidateTargetForFormat(mContext, target, dstFormat)) return;
+
+  if (!mContext->IsWebGL2() && dstFormat->d) {
+    mContext->ErrorInvalidOperation(
+        "Function may not be called with format %s.", dstFormat->name);
+    return;
+  }
+
+  if (!ValidateCopyTexImageFormats(mContext, srcFormat, dstFormat)) return;
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  const bool isSubImage = false;
+  if (!DoCopyTexOrSubImage(mContext, isSubImage, this, target, level, x, y,
+                           srcTotalWidth, srcTotalHeight, srcUsage, 0, 0, 0,
+                           width, height, dstUsage)) {
+    return;
+  }
+
+  mContext->OnDataAllocCall();
+
+  ////////////////////////////////////
+  // Update our specification data.
+
+  const bool isDataInitialized = true;
+  const webgl::ImageInfo newImageInfo{dstUsage, width, height, depth,
+                                      isDataInitialized};
+  *imageInfo = newImageInfo;
+  InvalidateCaches();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void WebGLTexture::CopyTexSubImage(TexImageTarget target, GLint level,
                                    GLint xOffset, GLint yOffset, GLint zOffset,
                                    GLint x, GLint y, GLsizei rawWidth,
@@ -2130,6 +3789,84 @@ void WebGLTexture::CopyTexSubImage(TexImageTarget target, GLint level,
   // Update our specification data?
 
   imageInfo->mHasData = true;
+||||||| merged common ancestors
+    imageInfo->mHasData = true;
+=======
+void WebGLTexture::CopyTexSubImage(TexImageTarget target, GLint level,
+                                   GLint xOffset, GLint yOffset, GLint zOffset,
+                                   GLint x, GLint y, GLsizei rawWidth,
+                                   GLsizei rawHeight) {
+  uint32_t width, height, depth;
+  if (!ValidateExtents(mContext, rawWidth, rawHeight, 1, 0, &width, &height,
+                       &depth)) {
+    return;
+  }
+
+  ////////////////////////////////////
+  // Get dest info
+
+  webgl::ImageInfo* imageInfo;
+  if (!ValidateTexImageSelection(target, level, xOffset, yOffset, zOffset,
+                                 width, height, depth, &imageInfo)) {
+    return;
+  }
+  MOZ_ASSERT(imageInfo);
+
+  auto dstUsage = imageInfo->mFormat;
+  MOZ_ASSERT(dstUsage);
+
+  auto dstFormat = dstUsage->format;
+  if (!mContext->IsWebGL2() && dstFormat->d) {
+    mContext->ErrorInvalidOperation(
+        "Function may not be called on a texture of"
+        " format %s.",
+        dstFormat->name);
+    return;
+  }
+
+  ////////////////////////////////////
+  // Get source info
+
+  const webgl::FormatUsageInfo* srcUsage;
+  uint32_t srcTotalWidth;
+  uint32_t srcTotalHeight;
+  if (!mContext->BindCurFBForColorRead(&srcUsage, &srcTotalWidth,
+                                       &srcTotalHeight)) {
+    return;
+  }
+
+  if (!ValidateCopyTexImageForFeedback(*mContext, *this,
+                                       AssertedCast<uint8_t>(level),
+                                       AssertedCast<uint32_t>(zOffset)))
+    return;
+
+  ////////////////////////////////////
+  // Check that source and dest info are compatible
+
+  auto srcFormat = srcUsage->format;
+  if (!ValidateCopyTexImageFormats(mContext, srcFormat, dstFormat)) return;
+
+  ////////////////////////////////////
+  // Do the thing!
+
+  if (!EnsureImageDataInitializedForUpload(this, target, level, xOffset,
+                                           yOffset, zOffset, width, height,
+                                           depth, imageInfo)) {
+    return;
+  }
+
+  const bool isSubImage = true;
+  if (!DoCopyTexOrSubImage(mContext, isSubImage, this, target, level, x, y,
+                           srcTotalWidth, srcTotalHeight, srcUsage, xOffset,
+                           yOffset, zOffset, width, height, dstUsage)) {
+    return;
+  }
+
+  ////////////////////////////////////
+  // Update our specification data?
+
+  imageInfo->mHasData = true;
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

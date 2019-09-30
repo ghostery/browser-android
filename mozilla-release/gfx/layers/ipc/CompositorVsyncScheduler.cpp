@@ -12,14 +12,36 @@
 #include "base/thread.h"  // for Thread
 #include "gfxPlatform.h"  // for gfxPlatform
 #ifdef MOZ_WIDGET_GTK
+<<<<<<< HEAD
 #include "gfxPlatformGtk.h"  // for gfxPlatform
+||||||| merged common ancestors
+#include "gfxPlatformGtk.h"             // for gfxPlatform
+=======
+#  include "gfxPlatformGtk.h"  // for gfxPlatform
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
 #include "gfxPrefs.h"             // for gfxPrefs
 #include "mozilla/AutoRestore.h"  // for AutoRestore
 #include "mozilla/DebugOnly.h"    // for DebugOnly
 #include "mozilla/gfx/2D.h"       // for DrawTarget
 #include "mozilla/gfx/Point.h"    // for IntSize
 #include "mozilla/gfx/Rect.h"     // for IntSize
+||||||| merged common ancestors
+#include "gfxPrefs.h"                   // for gfxPrefs
+#include "mozilla/AutoRestore.h"        // for AutoRestore
+#include "mozilla/DebugOnly.h"          // for DebugOnly
+#include "mozilla/gfx/2D.h"             // for DrawTarget
+#include "mozilla/gfx/Point.h"          // for IntSize
+#include "mozilla/gfx/Rect.h"           // for IntSize
+=======
+#include "mozilla/AutoRestore.h"  // for AutoRestore
+#include "mozilla/DebugOnly.h"    // for DebugOnly
+#include "mozilla/StaticPrefs.h"  // for StaticPrefs
+#include "mozilla/gfx/2D.h"       // for DrawTarget
+#include "mozilla/gfx/Point.h"    // for IntSize
+#include "mozilla/gfx/Rect.h"     // for IntSize
+>>>>>>> upstream-releases
 #include "mozilla/layers/CompositorThread.h"
 #include "mozilla/layers/CompositorVsyncSchedulerOwner.h"
 #include "mozilla/mozalloc.h"  // for operator new, etc
@@ -31,7 +53,7 @@
 #include "mozilla/Telemetry.h"
 #include "mozilla/VsyncDispatcher.h"
 #if defined(XP_WIN) || defined(MOZ_WIDGET_GTK)
-#include "VsyncSource.h"
+#  include "VsyncSource.h"
 #endif
 #include "mozilla/widget/CompositorWidget.h"
 #include "VRManager.h"
@@ -61,6 +83,7 @@ void CompositorVsyncScheduler::Observer::Destroy() {
   mOwner = nullptr;
 }
 
+<<<<<<< HEAD
 CompositorVsyncScheduler::CompositorVsyncScheduler(
     CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
     widget::CompositorWidget* aWidget)
@@ -73,13 +96,42 @@ CompositorVsyncScheduler::CompositorVsyncScheduler(
       mCurrentCompositeTask(nullptr),
       mCurrentVRTaskMonitor("CurrentVRTaskMonitor"),
       mCurrentVRTask(nullptr) {
+||||||| merged common ancestors
+CompositorVsyncScheduler::CompositorVsyncScheduler(CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
+                                                   widget::CompositorWidget* aWidget)
+  : mVsyncSchedulerOwner(aVsyncSchedulerOwner)
+  , mLastCompose(TimeStamp::Now())
+  , mIsObservingVsync(false)
+  , mVsyncNotificationsSkipped(0)
+  , mWidget(aWidget)
+  , mCurrentCompositeTaskMonitor("CurrentCompositeTaskMonitor")
+  , mCurrentCompositeTask(nullptr)
+  , mCurrentVRTaskMonitor("CurrentVRTaskMonitor")
+  , mCurrentVRTask(nullptr)
+{
+=======
+CompositorVsyncScheduler::CompositorVsyncScheduler(
+    CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
+    widget::CompositorWidget* aWidget)
+    : mVsyncSchedulerOwner(aVsyncSchedulerOwner),
+      mLastCompose(TimeStamp::Now()),
+      mLastVsync(TimeStamp::Now()),
+      mIsObservingVsync(false),
+      mVsyncNotificationsSkipped(0),
+      mWidget(aWidget),
+      mCurrentCompositeTaskMonitor("CurrentCompositeTaskMonitor"),
+      mCurrentCompositeTask(nullptr),
+      mCurrentVRTaskMonitor("CurrentVRTaskMonitor"),
+      mCurrentVRTask(nullptr) {
+>>>>>>> upstream-releases
   mVsyncObserver = new Observer(this);
 
   // mAsapScheduling is set on the main thread during init,
   // but is only accessed after on the compositor thread.
-  mAsapScheduling = gfxPrefs::LayersCompositionFrameRate() == 0 ||
-                    gfxPlatform::IsInLayoutAsapMode() ||
-                    recordreplay::IsRecordingOrReplaying();
+  mAsapScheduling =
+      StaticPrefs::layers_offmainthreadcomposition_frame_rate() == 0 ||
+      gfxPlatform::IsInLayoutAsapMode() ||
+      recordreplay::IsRecordingOrReplaying();
 }
 
 CompositorVsyncScheduler::~CompositorVsyncScheduler() {
@@ -103,6 +155,7 @@ void CompositorVsyncScheduler::Destroy() {
 
   mCompositeRequestedAt = TimeStamp();
   CancelCurrentCompositeTask();
+  CancelCurrentVRTask();
 }
 
 void CompositorVsyncScheduler::PostCompositeTask(
@@ -121,9 +174,21 @@ void CompositorVsyncScheduler::PostCompositeTask(
 void CompositorVsyncScheduler::PostVRTask(TimeStamp aTimestamp) {
   MonitorAutoLock lockVR(mCurrentVRTaskMonitor);
   if (mCurrentVRTask == nullptr && CompositorThreadHolder::Loop()) {
+<<<<<<< HEAD
     RefPtr<Runnable> task = NewRunnableMethod<TimeStamp>(
         "layers::CompositorVsyncScheduler::DispatchVREvents", this,
         &CompositorVsyncScheduler::DispatchVREvents, aTimestamp);
+||||||| merged common ancestors
+    RefPtr<Runnable> task = NewRunnableMethod<TimeStamp>(
+      "layers::CompositorVsyncScheduler::DispatchVREvents",
+      this,
+      &CompositorVsyncScheduler::DispatchVREvents,
+      aTimestamp);
+=======
+    RefPtr<CancelableRunnable> task = NewCancelableRunnableMethod<TimeStamp>(
+        "layers::CompositorVsyncScheduler::DispatchVREvents", this,
+        &CompositorVsyncScheduler::DispatchVREvents, aTimestamp);
+>>>>>>> upstream-releases
     mCurrentVRTask = task;
     CompositorThreadHolder::Loop()->PostDelayedTask(task.forget(), 0);
   }
@@ -175,14 +240,52 @@ bool CompositorVsyncScheduler::NotifyVsync(const VsyncEvent& aVsync) {
   MOZ_ASSERT_IF(XRE_GetProcessType() == GeckoProcessType_GPU,
                 CompositorThreadHolder::IsInCompositorThread());
   MOZ_ASSERT(!NS_IsMainThread());
+<<<<<<< HEAD
   PostCompositeTask(aVsync.mId, aVsync.mTime);
   PostVRTask(aVsync.mTime);
+||||||| merged common ancestors
+  PostCompositeTask(aVsyncTimestamp);
+  PostVRTask(aVsyncTimestamp);
+=======
+
+#if defined(MOZ_WIDGET_ANDROID)
+  gfx::VRManager* vm = gfx::VRManager::Get();
+  if (!vm->IsPresenting()) {
+    PostCompositeTask(aVsync.mId, aVsync.mTime);
+  }
+#else
+  PostCompositeTask(aVsync.mId, aVsync.mTime);
+#endif  // defined(MOZ_WIDGET_ANDROID)
+
+  PostVRTask(aVsync.mTime);
+>>>>>>> upstream-releases
   return true;
+}
+
+<<<<<<< HEAD
+void CompositorVsyncScheduler::CancelCurrentCompositeTask() {
+  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() ||
+             NS_IsMainThread());
+||||||| merged common ancestors
+void
+CompositorVsyncScheduler::CancelCurrentCompositeTask()
+{
+  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() || NS_IsMainThread());
+=======
+void CompositorVsyncScheduler::CancelCurrentVRTask() {
+  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() ||
+             NS_IsMainThread());
+  MonitorAutoLock lock(mCurrentVRTaskMonitor);
+  if (mCurrentVRTask) {
+    mCurrentVRTask->Cancel();
+    mCurrentVRTask = nullptr;
+  }
 }
 
 void CompositorVsyncScheduler::CancelCurrentCompositeTask() {
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread() ||
              NS_IsMainThread());
+>>>>>>> upstream-releases
   MonitorAutoLock lock(mCurrentCompositeTaskMonitor);
   if (mCurrentCompositeTask) {
     mCurrentCompositeTask->Cancel();
@@ -199,6 +302,9 @@ void CompositorVsyncScheduler::Composite(VsyncId aId,
     MonitorAutoLock lock(mCurrentCompositeTaskMonitor);
     mCurrentCompositeTask = nullptr;
   }
+
+  mLastVsync = aVsyncTimestamp;
+  mLastVsyncId = aId;
 
   if (!mAsapScheduling) {
     // Some early exit conditions if we're not in ASAP mode
@@ -227,11 +333,23 @@ void CompositorVsyncScheduler::Composite(VsyncId aId,
     mVsyncNotificationsSkipped = 0;
 
     TimeDuration compositeFrameTotal = TimeStamp::Now() - aVsyncTimestamp;
+<<<<<<< HEAD
     mozilla::Telemetry::Accumulate(
         mozilla::Telemetry::COMPOSITE_FRAME_ROUNDTRIP_TIME,
         compositeFrameTotal.ToMilliseconds());
   } else if (mVsyncNotificationsSkipped++ >
              gfxPrefs::CompositorUnobserveCount()) {
+||||||| merged common ancestors
+    mozilla::Telemetry::Accumulate(mozilla::Telemetry::COMPOSITE_FRAME_ROUNDTRIP_TIME,
+                                   compositeFrameTotal.ToMilliseconds());
+  } else if (mVsyncNotificationsSkipped++ > gfxPrefs::CompositorUnobserveCount()) {
+=======
+    mozilla::Telemetry::Accumulate(
+        mozilla::Telemetry::COMPOSITE_FRAME_ROUNDTRIP_TIME,
+        compositeFrameTotal.ToMilliseconds());
+  } else if (mVsyncNotificationsSkipped++ >
+             StaticPrefs::gfx_vsync_compositor_unobserve_count()) {
+>>>>>>> upstream-releases
     UnobserveVsync();
   }
 }
@@ -316,7 +434,25 @@ const TimeStamp& CompositorVsyncScheduler::GetLastComposeTime() const {
   return mLastCompose;
 }
 
+<<<<<<< HEAD
 void CompositorVsyncScheduler::UpdateLastComposeTime() {
+||||||| merged common ancestors
+void
+CompositorVsyncScheduler::UpdateLastComposeTime()
+{
+=======
+const TimeStamp& CompositorVsyncScheduler::GetLastVsyncTime() const {
+  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
+  return mLastVsync;
+}
+
+const VsyncId& CompositorVsyncScheduler::GetLastVsyncId() const {
+  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
+  return mLastVsyncId;
+}
+
+void CompositorVsyncScheduler::UpdateLastComposeTime() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   mLastCompose = TimeStamp::Now();
 }

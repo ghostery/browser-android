@@ -14,9 +14,21 @@ enum {
   MIPS_FLAG_LOONGSON3 = 1,
 };
 
+<<<<<<< HEAD
 static unsigned get_mips_cpu_flags(void) {
   unsigned flags = 0;
   FILE *fin;
+||||||| merged common ancestors
+static unsigned
+get_mips_cpu_flags(void)
+{
+  unsigned  flags = 0;
+  FILE     *fin;
+=======
+static unsigned get_mips_cpu_flags(void) {
+  unsigned flags = 0;
+  FILE* fin;
+>>>>>>> upstream-releases
 
   fin = fopen("/proc/cpuinfo", "r");
   if (fin != nullptr) {

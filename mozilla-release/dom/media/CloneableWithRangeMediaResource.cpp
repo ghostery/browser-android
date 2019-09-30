@@ -164,9 +164,34 @@ CloneableWithRangeMediaResource::GetCurrentPrincipal() {
   return principal.forget();
 }
 
+<<<<<<< HEAD
 nsresult CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer,
                                                         int64_t aOffset,
                                                         uint32_t aCount) {
+||||||| merged common ancestors
+nsresult
+CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
+                                               uint32_t aCount)
+{
+=======
+bool CloneableWithRangeMediaResource::HadCrossOriginRedirects() {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  nsCOMPtr<nsITimedChannel> timedChannel = do_QueryInterface(mChannel);
+  if (!timedChannel) {
+    return false;
+  }
+
+  bool allRedirectsSameOrigin = false;
+  return NS_SUCCEEDED(timedChannel->GetAllRedirectsSameOrigin(
+             &allRedirectsSameOrigin)) &&
+         !allRedirectsSameOrigin;
+}
+
+nsresult CloneableWithRangeMediaResource::ReadFromCache(char* aBuffer,
+                                                        int64_t aOffset,
+                                                        uint32_t aCount) {
+>>>>>>> upstream-releases
   MaybeInitialize();
   if (!aCount) {
     return NS_OK;

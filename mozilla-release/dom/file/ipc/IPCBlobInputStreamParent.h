@@ -4,10 +4,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef mozilla_dom_ipc_IPCBlobInputStreamParent_h
-#define mozilla_dom_ipc_IPCBlobInputStreamParent_h
+#ifndef mozilla_dom_IPCBlobInputStreamParent_h
+#define mozilla_dom_IPCBlobInputStreamParent_h
 
-#include "mozilla/ipc/PIPCBlobInputStreamParent.h"
+#include "mozilla/dom/PIPCBlobInputStreamParent.h"
 
 class nsIInputStream;
 
@@ -24,9 +24,19 @@ class NS_NO_VTABLE IPCBlobInputStreamParentCallback {
   virtual ~IPCBlobInputStreamParentCallback() {}
 };
 
+<<<<<<< HEAD
 class IPCBlobInputStreamParent final
     : public mozilla::ipc::PIPCBlobInputStreamParent {
  public:
+||||||| merged common ancestors
+class IPCBlobInputStreamParent final
+  : public mozilla::ipc::PIPCBlobInputStreamParent
+{
+public:
+=======
+class IPCBlobInputStreamParent final : public PIPCBlobInputStreamParent {
+ public:
+>>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(IPCBlobInputStreamParent)
 
   // The size of the inputStream must be passed as argument in order to avoid
@@ -49,11 +59,32 @@ class IPCBlobInputStreamParent final
 
   void SetCallback(IPCBlobInputStreamParentCallback* aCallback);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvStreamNeeded() override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvStreamNeeded() override;
+=======
+  mozilla::ipc::IPCResult RecvStreamNeeded();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvLengthNeeded() override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvLengthNeeded() override;
+=======
+  mozilla::ipc::IPCResult RecvLengthNeeded();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvClose() override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvClose() override;
+=======
+  mozilla::ipc::IPCResult RecvClose();
+>>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult Recv__delete__() override;
 
@@ -61,7 +92,7 @@ class IPCBlobInputStreamParent final
 
  private:
   IPCBlobInputStreamParent(const nsID& aID, uint64_t aSize,
-                           nsIContentParent* aManager);
+                           ContentParent* aManager);
 
   IPCBlobInputStreamParent(const nsID& aID, uint64_t aSize,
                            mozilla::ipc::PBackgroundParent* aManager);
@@ -73,7 +104,7 @@ class IPCBlobInputStreamParent final
 
   // Only 1 of these 2 is set. Raw pointer because these 2 managers are keeping
   // the parent actor alive. The pointers will be nullified in ActorDestroyed.
-  nsIContentParent* mContentManager;
+  ContentParent* mContentManager;
   mozilla::ipc::PBackgroundParent* mPBackgroundManager;
 
   RefPtr<IPCBlobInputStreamParentCallback> mCallback;
@@ -84,4 +115,10 @@ class IPCBlobInputStreamParent final
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 #endif  // mozilla_dom_ipc_IPCBlobInputStreamParent_h
+||||||| merged common ancestors
+#endif // mozilla_dom_ipc_IPCBlobInputStreamParent_h
+=======
+#endif  // mozilla_dom_IPCBlobInputStreamParent_h
+>>>>>>> upstream-releases

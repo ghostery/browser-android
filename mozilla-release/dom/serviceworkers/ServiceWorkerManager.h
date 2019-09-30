@@ -231,6 +231,7 @@ class ServiceWorkerManager final : public nsIServiceWorkerManager,
 
   // Always consumes the error by reporting to consoles of all controlled
   // documents.
+<<<<<<< HEAD
   void HandleError(JSContext* aCx, nsIPrincipal* aPrincipal,
                    const nsCString& aScope, const nsString& aWorkerURL,
                    const nsString& aMessage, const nsString& aFilename,
@@ -254,6 +255,65 @@ class ServiceWorkerManager final : public nsIServiceWorkerManager,
 
   void LoadRegistrations(
       const nsTArray<ServiceWorkerRegistrationData>& aRegistrations);
+||||||| merged common ancestors
+  void
+  HandleError(JSContext* aCx,
+              nsIPrincipal* aPrincipal,
+              const nsCString& aScope,
+              const nsString& aWorkerURL,
+              const nsString& aMessage,
+              const nsString& aFilename,
+              const nsString& aLine,
+              uint32_t aLineNumber,
+              uint32_t aColumnNumber,
+              uint32_t aFlags,
+              JSExnType aExnType);
+
+  already_AddRefed<GenericPromise>
+  MaybeClaimClient(const ClientInfo& aClientInfo,
+                   ServiceWorkerRegistrationInfo* aWorkerRegistration);
+
+  already_AddRefed<GenericPromise>
+  MaybeClaimClient(const ClientInfo& aClientInfo,
+                   const ServiceWorkerDescriptor& aServiceWorker);
+
+  void
+  SetSkipWaitingFlag(nsIPrincipal* aPrincipal, const nsCString& aScope,
+                     uint64_t aServiceWorkerID);
+
+  static already_AddRefed<ServiceWorkerManager>
+  GetInstance();
+
+  void
+  LoadRegistration(const ServiceWorkerRegistrationData& aRegistration);
+
+  void
+  LoadRegistrations(const nsTArray<ServiceWorkerRegistrationData>& aRegistrations);
+=======
+  void HandleError(JSContext* aCx, nsIPrincipal* aPrincipal,
+                   const nsCString& aScope, const nsString& aWorkerURL,
+                   const nsString& aMessage, const nsString& aFilename,
+                   const nsString& aLine, uint32_t aLineNumber,
+                   uint32_t aColumnNumber, uint32_t aFlags, JSExnType aExnType);
+
+  MOZ_MUST_USE RefPtr<GenericPromise> MaybeClaimClient(
+      const ClientInfo& aClientInfo,
+      ServiceWorkerRegistrationInfo* aWorkerRegistration);
+
+  MOZ_MUST_USE RefPtr<GenericPromise> MaybeClaimClient(
+      const ClientInfo& aClientInfo,
+      const ServiceWorkerDescriptor& aServiceWorker);
+
+  void SetSkipWaitingFlag(nsIPrincipal* aPrincipal, const nsCString& aScope,
+                          uint64_t aServiceWorkerID);
+
+  static already_AddRefed<ServiceWorkerManager> GetInstance();
+
+  void LoadRegistration(const ServiceWorkerRegistrationData& aRegistration);
+
+  void LoadRegistrations(
+      const nsTArray<ServiceWorkerRegistrationData>& aRegistrations);
+>>>>>>> upstream-releases
 
   // Used by remove() and removeAll() when clearing history.
   // MUST ONLY BE CALLED FROM UnregisterIfMatchesHost!
@@ -328,11 +388,24 @@ class ServiceWorkerManager final : public nsIServiceWorkerManager,
   GetServiceWorkerRegistrationInfo(const nsACString& aScopeKey,
                                    nsIURI* aURI) const;
 
+<<<<<<< HEAD
   // This method generates a key using appId and isInElementBrowser from the
   // principal. We don't use the origin because it can change during the
   // loading.
   static nsresult PrincipalToScopeKey(nsIPrincipal* aPrincipal,
                                       nsACString& aKey);
+||||||| merged common ancestors
+  // This method generates a key using appId and isInElementBrowser from the
+  // principal. We don't use the origin because it can change during the
+  // loading.
+  static nsresult
+  PrincipalToScopeKey(nsIPrincipal* aPrincipal, nsACString& aKey);
+=======
+  // This method generates a key using isInElementBrowser from the principal. We
+  // don't use the origin because it can change during the loading.
+  static nsresult PrincipalToScopeKey(nsIPrincipal* aPrincipal,
+                                      nsACString& aKey);
+>>>>>>> upstream-releases
 
   static nsresult PrincipalInfoToScopeKey(
       const mozilla::ipc::PrincipalInfo& aPrincipalInfo, nsACString& aKey);

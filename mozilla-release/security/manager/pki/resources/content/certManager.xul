@@ -10,18 +10,33 @@
 <dialog id="certmanager"
 	windowtype="mozilla:certmanager"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+<<<<<<< HEAD
         data-l10n-id="certmgr-title"
+||||||| merged common ancestors
+        title="&certmgr.title;"
+=======
+  xmlns:html="http://www.w3.org/1999/xhtml"
+        data-l10n-id="certmgr-title"
+>>>>>>> upstream-releases
         onload="LoadCerts();"
         buttons="accept"
-        style="width: 63em; height: 32em;"
+        style="width: 40em; height: 32em;"
         persist="screenX screenY width height">
 
+<<<<<<< HEAD
   <linkset>
     <link rel="localization" href="security/certificates/certManager.ftl"/>
   </linkset>
+||||||| merged common ancestors
+  <stringbundle id="pippki_bundle" src="chrome://pippki/locale/pippki.properties"/>
+=======
+  <linkset>
+    <html:link rel="localization" href="security/certificates/certManager.ftl"/>
+  </linkset>
+>>>>>>> upstream-releases
 
-  <script type="application/javascript" src="chrome://pippki/content/pippki.js"/>
-  <script type="application/javascript" src="chrome://pippki/content/certManager.js"/>
+  <script src="chrome://pippki/content/pippki.js"/>
+  <script src="chrome://pippki/content/certManager.js"/>
 
   <vbox flex="1">
     <tabbox id="certmanagertabs" flex="1" style="margin:5px" persist="selectedIndex">

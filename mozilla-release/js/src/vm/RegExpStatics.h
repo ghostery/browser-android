@@ -18,6 +18,7 @@ namespace js {
 class GlobalObject;
 class RegExpStaticsObject;
 
+<<<<<<< HEAD
 class RegExpStatics {
   /* The latest RegExp output, set after execution. */
   VectorMatchPairs matches;
@@ -73,6 +74,94 @@ class RegExpStatics {
     pendingInput = newInput;
     checkInvariants();
   }
+||||||| merged common ancestors
+class RegExpStatics
+{
+    /* The latest RegExp output, set after execution. */
+    VectorMatchPairs        matches;
+    HeapPtr<JSLinearString*>  matchesInput;
+
+    /*
+     * The previous RegExp input, used to resolve lazy state.
+     * A raw RegExpShared cannot be stored because it may be in
+     * a different compartment via evalcx().
+     */
+    HeapPtr<JSAtom*>          lazySource;
+    RegExpFlag              lazyFlags;
+    size_t                  lazyIndex;
+
+    /* The latest RegExp input, set before execution. */
+    HeapPtr<JSString*>        pendingInput;
+
+    /*
+     * If non-zero, |matchesInput| and the |lazy*| fields may be used
+     * to replay the last executed RegExp, and |matches| is invalid.
+     */
+    int32_t                 pendingLazyEvaluation;
+
+  public:
+    RegExpStatics() { clear(); }
+    static RegExpStaticsObject* create(JSContext* cx);
+
+  private:
+    bool executeLazy(JSContext* cx);
+=======
+class RegExpStatics {
+  /* The latest RegExp output, set after execution. */
+  VectorMatchPairs matches;
+  HeapPtr<JSLinearString*> matchesInput;
+
+  /*
+   * The previous RegExp input, used to resolve lazy state.
+   * A raw RegExpShared cannot be stored because it may be in
+   * a different compartment via evalcx().
+   */
+  HeapPtr<JSAtom*> lazySource;
+  JS::RegExpFlags lazyFlags;
+  size_t lazyIndex;
+
+  /* The latest RegExp input, set before execution. */
+  HeapPtr<JSString*> pendingInput;
+
+  /*
+   * If non-zero, |matchesInput| and the |lazy*| fields may be used
+   * to replay the last executed RegExp, and |matches| is invalid.
+   */
+  int32_t pendingLazyEvaluation;
+
+ public:
+  RegExpStatics() { clear(); }
+  static RegExpStaticsObject* create(JSContext* cx);
+
+ private:
+  bool executeLazy(JSContext* cx);
+
+  inline void checkInvariants();
+
+  /*
+   * Check whether a match for pair |pairNum| occurred.  If so, allocate and
+   * store the match string in |*out|; otherwise place |undefined| in |*out|.
+   */
+  bool makeMatch(JSContext* cx, size_t pairNum, MutableHandleValue out);
+  bool createDependent(JSContext* cx, size_t start, size_t end,
+                       MutableHandleValue out);
+
+ public:
+  /* Mutators. */
+  inline void updateLazily(JSContext* cx, JSLinearString* input,
+                           RegExpShared* shared, size_t lastIndex);
+  inline bool updateFromMatchPairs(JSContext* cx, JSLinearString* input,
+                                   VectorMatchPairs& newPairs);
+
+  inline void clear();
+
+  /* Corresponds to JSAPI functionality to set the pending RegExp input. */
+  void reset(JSString* newInput) {
+    clear();
+    pendingInput = newInput;
+    checkInvariants();
+  }
+>>>>>>> upstream-releases
 
   inline void setPendingInput(JSString* newInput);
 
@@ -270,6 +359,7 @@ inline bool RegExpStatics::updateFromMatchPairs(JSContext* cx,
   return true;
 }
 
+<<<<<<< HEAD
 inline void RegExpStatics::clear() {
   matches.forgetArray();
   matchesInput = nullptr;
@@ -278,6 +368,27 @@ inline void RegExpStatics::clear() {
   lazyIndex = size_t(-1);
   pendingInput = nullptr;
   pendingLazyEvaluation = false;
+||||||| merged common ancestors
+inline void
+RegExpStatics::clear()
+{
+    matches.forgetArray();
+    matchesInput = nullptr;
+    lazySource = nullptr;
+    lazyFlags = RegExpFlag(0);
+    lazyIndex = size_t(-1);
+    pendingInput = nullptr;
+    pendingLazyEvaluation = false;
+=======
+inline void RegExpStatics::clear() {
+  matches.forgetArray();
+  matchesInput = nullptr;
+  lazySource = nullptr;
+  lazyFlags = JS::RegExpFlag::NoFlags;
+  lazyIndex = size_t(-1);
+  pendingInput = nullptr;
+  pendingLazyEvaluation = false;
+>>>>>>> upstream-releases
 }
 
 inline void RegExpStatics::setPendingInput(JSString* newInput) {

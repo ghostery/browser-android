@@ -202,6 +202,7 @@ class nsCacheEntryDescriptor final : public PRCList,
   };
 
  private:
+<<<<<<< HEAD
   /**
    * nsCacheEntryDescriptor data members
    */
@@ -213,6 +214,33 @@ class nsCacheEntryDescriptor final : public PRCList,
   bool mAsyncDoomPending;
   bool mDoomedOnClose;
   bool mClosingDescriptor;
+||||||| merged common ancestors
+     /**
+      * nsCacheEntryDescriptor data members
+      */
+     nsCacheEntry          * mCacheEntry; // we are a child of the entry
+     nsCacheAccessMode       mAccessGranted;
+     nsTArray<nsInputStreamWrapper*> mInputWrappers;
+     nsOutputStreamWrapper * mOutputWrapper;
+     mozilla::Mutex          mLock;
+     bool                    mAsyncDoomPending;
+     bool                    mDoomedOnClose;
+     bool                    mClosingDescriptor;
+=======
+  /**
+   * nsCacheEntryDescriptor data members
+   */
+
+  nsCOMPtr<nsICacheServiceInternal> mCacheService;
+  nsCacheEntry* mCacheEntry;  // we are a child of the entry
+  nsCacheAccessMode mAccessGranted;
+  nsTArray<nsInputStreamWrapper*> mInputWrappers;
+  nsOutputStreamWrapper* mOutputWrapper;
+  mozilla::Mutex mLock;
+  bool mAsyncDoomPending;
+  bool mDoomedOnClose;
+  bool mClosingDescriptor;
+>>>>>>> upstream-releases
 };
 
 #endif  // _nsCacheEntryDescriptor_h_

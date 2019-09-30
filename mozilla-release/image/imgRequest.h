@@ -197,7 +197,15 @@ class imgRequest final : public nsIStreamListener,
 
   bool HasConsumers() const;
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  bool ImageAvailable() const;
+
+ private:
+>>>>>>> upstream-releases
   friend class FinishPreparingForNewPartRunnable;
 
   virtual ~imgRequest();
@@ -269,6 +277,9 @@ class imgRequest final : public nsIStreamListener,
 
   // The categories of prioritization strategy that have been requested.
   uint32_t mBoostCategoriesRequested = 0;
+
+  // If we've called OnImageAvailable.
+  bool mImageAvailable;
 
   mutable mozilla::Mutex mMutex;
 

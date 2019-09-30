@@ -23,14 +23,29 @@ class FilterNodeCapture final : public FilterNode {
   explicit FilterNodeCapture(FilterType aType)
       : mType{aType}, mInputsChanged{true} {}
 
+<<<<<<< HEAD
   virtual FilterBackend GetBackendType() override {
     return FILTER_BACKEND_CAPTURE;
   }
+||||||| merged common ancestors
+  virtual FilterBackend GetBackendType() override { return FILTER_BACKEND_CAPTURE; }
+=======
+  FilterBackend GetBackendType() override { return FILTER_BACKEND_CAPTURE; }
+>>>>>>> upstream-releases
 
   RefPtr<FilterNode> Validate(DrawTarget *aDT);
 
+<<<<<<< HEAD
   template <typename T, typename C>
   void Replace(uint32_t aIndex, const T &aValue, C &aContainer) {
+||||||| merged common ancestors
+  template<typename T, typename C>
+  void Replace(uint32_t aIndex, const T& aValue, C& aContainer)
+  {
+=======
+  template <typename T, typename C>
+  void Replace(uint32_t aIndex, const T& aValue, C& aContainer) {
+>>>>>>> upstream-releases
     // This replace function avoids generating the hash twice.
     auto result = aContainer.insert({aIndex, typename C::mapped_type(aValue)});
     if (!result.second) {
@@ -38,15 +53,30 @@ class FilterNodeCapture final : public FilterNode {
     }
   }
 
+<<<<<<< HEAD
   virtual void SetInput(uint32_t aIndex, SourceSurface *aSurface) override {
+||||||| merged common ancestors
+  virtual void SetInput(uint32_t aIndex, SourceSurface *aSurface) override
+  {
+=======
+  void SetInput(uint32_t aIndex, SourceSurface* aSurface) override {
+>>>>>>> upstream-releases
     mInputsChanged = true;
     Replace(aIndex, RefPtr<SourceSurface>(aSurface), mInputs);
   }
+<<<<<<< HEAD
   virtual void SetInput(uint32_t aIndex, FilterNode *aFilter) override {
+||||||| merged common ancestors
+  virtual void SetInput(uint32_t aIndex, FilterNode *aFilter) override
+  {
+=======
+  void SetInput(uint32_t aIndex, FilterNode* aFilter) override {
+>>>>>>> upstream-releases
     mInputsChanged = true;
     Replace(aIndex, RefPtr<FilterNode>(aFilter), mInputs);
   }
 
+<<<<<<< HEAD
   using AttributeValue =
       Variant<uint32_t, Float, Point, Matrix5x4, Point3D, Size, IntSize, Color,
               Rect, IntRect, bool, std::vector<Float>, IntPoint, Matrix>;
@@ -94,6 +124,89 @@ class FilterNodeCapture final : public FilterNode {
   }
 
  private:
+||||||| merged common ancestors
+  using AttributeValue = Variant<
+    uint32_t,
+    Float,
+    Point,
+    Matrix5x4,
+    Point3D,
+    Size,
+    IntSize,
+    Color,
+    Rect,
+    IntRect,
+    bool,
+    std::vector<Float>,
+    IntPoint,
+    Matrix
+  >;
+
+  virtual void SetAttribute(uint32_t aIndex, uint32_t aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, Float aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Point &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Matrix5x4 &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Point3D &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Size &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const IntSize &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Color &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Rect &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const IntRect &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, bool aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Float *aValues, uint32_t aSize) override;
+  virtual void SetAttribute(uint32_t aIndex, const IntPoint &aValue) override { Replace(aIndex, aValue, mAttributes); }
+  virtual void SetAttribute(uint32_t aIndex, const Matrix &aValue) override { Replace(aIndex, aValue, mAttributes); }
+
+private:
+=======
+  using AttributeValue =
+      Variant<uint32_t, Float, Point, Matrix5x4, Point3D, Size, IntSize, Color,
+              Rect, IntRect, bool, std::vector<Float>, IntPoint, Matrix>;
+
+  void SetAttribute(uint32_t aIndex, uint32_t aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, Float aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Point& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Matrix5x4& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Point3D& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Size& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const IntSize& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Color& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Rect& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const IntRect& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, bool aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  virtual void SetAttribute(uint32_t aIndex, const Float* aValues,
+                            uint32_t aSize) override;
+  void SetAttribute(uint32_t aIndex, const IntPoint& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+  void SetAttribute(uint32_t aIndex, const Matrix& aValue) override {
+    Replace(aIndex, aValue, mAttributes);
+  }
+
+ private:
+>>>>>>> upstream-releases
   FilterType mType;
   RefPtr<FilterNode> mFilterNodeInternal;
 

@@ -6,9 +6,18 @@
 
 #include "TextureHostOGL.h"
 
+<<<<<<< HEAD
 #include "EGLUtils.h"
 #include "GLContext.h"     // for GLContext, etc
 #include "GLLibraryEGL.h"  // for GLLibraryEGL
+||||||| merged common ancestors
+#include "EGLUtils.h"
+#include "GLContext.h"                  // for GLContext, etc
+#include "GLLibraryEGL.h"               // for GLLibraryEGL
+=======
+#include "GLContextEGL.h"  // for GLContext, etc
+#include "GLLibraryEGL.h"  // for GLLibraryEGL
+>>>>>>> upstream-releases
 #include "GLUploadHelpers.h"
 #include "GLReadTexImageHelper.h"
 #include "gfx2DGlue.h"             // for ContentForFormat, etc
@@ -16,15 +25,27 @@
 #include "mozilla/gfx/BaseSize.h"  // for BaseSize
 #include "mozilla/gfx/Logging.h"   // for gfxCriticalError
 #include "mozilla/layers/ISurfaceAllocator.h"
+<<<<<<< HEAD
 #include "mozilla/webrender/WebRenderAPI.h"
 #include "nsRegion.h"  // for nsIntRegion
+||||||| merged common ancestors
+#include "nsRegion.h"                   // for nsIntRegion
+=======
+#include "mozilla/webrender/RenderEGLImageTextureHost.h"
+#include "mozilla/webrender/WebRenderAPI.h"
+#include "nsRegion.h"  // for nsIntRegion
+>>>>>>> upstream-releases
 #include "AndroidSurfaceTexture.h"
 #include "GfxTexturesReporter.h"  // for GfxTexturesReporter
 #include "GLBlitTextureImageHelper.h"
 #include "GeckoProfiler.h"
 
 #ifdef XP_MACOSX
-#include "mozilla/layers/MacIOSurfaceTextureHostOGL.h"
+#  include "mozilla/layers/MacIOSurfaceTextureHostOGL.h"
+#endif
+
+#ifdef MOZ_WIDGET_ANDROID
+#  include "mozilla/webrender/RenderAndroidSurfaceTextureHostOGL.h"
 #endif
 
 #ifdef MOZ_WIDGET_ANDROID
@@ -39,9 +60,33 @@ namespace layers {
 
 class Compositor;
 
+<<<<<<< HEAD
 already_AddRefed<TextureHost> CreateTextureHostOGL(
     const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
     LayersBackend aBackend, TextureFlags aFlags) {
+||||||| merged common ancestors
+already_AddRefed<TextureHost>
+CreateTextureHostOGL(const SurfaceDescriptor& aDesc,
+                     ISurfaceAllocator* aDeallocator,
+                     LayersBackend aBackend,
+                     TextureFlags aFlags)
+{
+=======
+void ApplySamplingFilterToBoundTexture(gl::GLContext* aGL,
+                                       gfx::SamplingFilter aSamplingFilter,
+                                       GLuint aTarget) {
+  GLenum filter =
+      (aSamplingFilter == gfx::SamplingFilter::POINT ? LOCAL_GL_NEAREST
+                                                     : LOCAL_GL_LINEAR);
+
+  aGL->fTexParameteri(aTarget, LOCAL_GL_TEXTURE_MIN_FILTER, filter);
+  aGL->fTexParameteri(aTarget, LOCAL_GL_TEXTURE_MAG_FILTER, filter);
+}
+
+already_AddRefed<TextureHost> CreateTextureHostOGL(
+    const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
+    LayersBackend aBackend, TextureFlags aFlags) {
+>>>>>>> upstream-releases
   RefPtr<TextureHost> result;
   switch (aDesc.type()) {
 #ifdef MOZ_WIDGET_ANDROID
@@ -103,10 +148,48 @@ static gl::TextureImage::Flags FlagsToGLFlags(TextureFlags aFlags) {
   return static_cast<gl::TextureImage::Flags>(result);
 }
 
+<<<<<<< HEAD
 bool TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
                                           nsIntRegion* aDestRegion,
                                           gfx::IntPoint* aSrcOffset) {
   GLContext* gl = mGL;
+||||||| merged common ancestors
+bool
+TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
+                                     nsIntRegion* aDestRegion,
+                                     gfx::IntPoint* aSrcOffset)
+{
+  GLContext *gl = mGL;
+=======
+TextureImageTextureSourceOGL::TextureImageTextureSourceOGL(
+    CompositorOGL* aCompositor, TextureFlags aFlags)
+    : mGL(aCompositor->gl()),
+      mCompositor(aCompositor),
+      mFlags(aFlags),
+      mIterating(false) {
+  if (mCompositor) {
+    mCompositor->RegisterTextureSource(this);
+  }
+}
+
+TextureImageTextureSourceOGL::~TextureImageTextureSourceOGL() {
+  DeallocateDeviceData();
+}
+
+void TextureImageTextureSourceOGL::DeallocateDeviceData() {
+  mTexImage = nullptr;
+  mGL = nullptr;
+  if (mCompositor) {
+    mCompositor->UnregisterTextureSource(this);
+  }
+  SetUpdateSerial(0);
+}
+
+bool TextureImageTextureSourceOGL::Update(gfx::DataSourceSurface* aSurface,
+                                          nsIntRegion* aDestRegion,
+                                          gfx::IntPoint* aSrcOffset) {
+  GLContext* gl = mGL;
+>>>>>>> upstream-releases
   MOZ_ASSERT(gl);
   if (!gl || !gl->MakeCurrent()) {
     NS_WARNING(
@@ -180,6 +263,18 @@ void TextureImageTextureSourceOGL::SetTextureSourceProvider(
     DeallocateDeviceData();
   }
   mGL = newGL;
+
+  CompositorOGL* compositor =
+      aProvider ? aProvider->AsCompositorOGL() : nullptr;
+  if (mCompositor != compositor) {
+    if (mCompositor) {
+      mCompositor->UnregisterTextureSource(this);
+    }
+    if (compositor) {
+      compositor->RegisterTextureSource(this);
+    }
+    mCompositor = compositor;
+  }
 }
 
 gfx::IntSize TextureImageTextureSourceOGL::GetSize() const {
@@ -557,6 +652,9 @@ void SurfaceTextureHost::SetTextureSourceProvider(
 
 void SurfaceTextureHost::NotifyNotUsed() {
   if (mSurfTex && mSurfTex->IsSingleBuffer()) {
+    if (!EnsureAttached()) {
+      return;
+    }
     mSurfTex->ReleaseTexImage();
   }
 
@@ -576,6 +674,7 @@ void SurfaceTextureHost::DeallocateDeviceData() {
   }
 }
 
+<<<<<<< HEAD
 void SurfaceTextureHost::CreateRenderTexture(
     const wr::ExternalImageId& aExternalImageId) {
   RefPtr<wr::RenderTextureHost> texture =
@@ -630,6 +729,69 @@ void SurfaceTextureHost::PushDisplayItems(
 }
 
 #endif  // MOZ_WIDGET_ANDROID
+||||||| merged common ancestors
+#endif // MOZ_WIDGET_ANDROID
+=======
+void SurfaceTextureHost::CreateRenderTexture(
+    const wr::ExternalImageId& aExternalImageId) {
+  RefPtr<wr::RenderTextureHost> texture =
+      new wr::RenderAndroidSurfaceTextureHostOGL(mSurfTex, mSize, mFormat,
+                                                 mContinuousUpdate);
+  wr::RenderThread::Get()->RegisterExternalImage(wr::AsUint64(aExternalImageId),
+                                                 texture.forget());
+}
+
+void SurfaceTextureHost::PushResourceUpdates(
+    wr::TransactionBuilder& aResources, ResourceUpdateOp aOp,
+    const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
+  auto method = aOp == TextureHost::ADD_IMAGE
+                    ? &wr::TransactionBuilder::AddExternalImage
+                    : &wr::TransactionBuilder::UpdateExternalImage;
+  auto imageType =
+      wr::ExternalImageType::TextureHandle(wr::TextureTarget::External);
+
+  switch (GetFormat()) {
+    case gfx::SurfaceFormat::R8G8B8X8:
+    case gfx::SurfaceFormat::R8G8B8A8: {
+      MOZ_ASSERT(aImageKeys.length() == 1);
+
+      // XXX Add RGBA handling. Temporary hack to avoid crash
+      // With BGRA format setting, rendering works without problem.
+      auto format = GetFormat() == gfx::SurfaceFormat::R8G8B8A8
+                        ? gfx::SurfaceFormat::B8G8R8A8
+                        : gfx::SurfaceFormat::B8G8R8X8;
+      wr::ImageDescriptor descriptor(GetSize(), format);
+      (aResources.*method)(aImageKeys[0], descriptor, aExtID, imageType, 0);
+      break;
+    }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+    }
+  }
+}
+
+void SurfaceTextureHost::PushDisplayItems(
+    wr::DisplayListBuilder& aBuilder, const wr::LayoutRect& aBounds,
+    const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
+    const Range<wr::ImageKey>& aImageKeys) {
+  switch (GetFormat()) {
+    case gfx::SurfaceFormat::R8G8B8X8:
+    case gfx::SurfaceFormat::R8G8B8A8:
+    case gfx::SurfaceFormat::B8G8R8A8:
+    case gfx::SurfaceFormat::B8G8R8X8: {
+      MOZ_ASSERT(aImageKeys.length() == 1);
+      aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
+                         !(mFlags & TextureFlags::NON_PREMULTIPLIED));
+      break;
+    }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+    }
+  }
+}
+
+#endif  // MOZ_WIDGET_ANDROID
+>>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -658,8 +820,16 @@ void EGLImageTextureSource::BindTexture(GLenum aTextureUnit,
     return;
   }
 
-  MOZ_ASSERT(DoesEGLContextSupportSharingWithEGLImage(gl),
-             "EGLImage not supported or disabled in runtime");
+#ifdef DEBUG
+  const bool supportsEglImage = [&]() {
+    const auto& gle = GLContextEGL::Cast(gl);
+    const auto& egl = gle->mEgl;
+
+    return egl->HasKHRImageBase() && egl->HasKHRImageTexture2D() &&
+           gl->IsExtensionSupported(GLContext::OES_EGL_image);
+  }();
+  MOZ_ASSERT(supportsEglImage, "EGLImage not supported or disabled in runtime");
+#endif
 
   GLuint tex = mCompositor->GetTemporaryTexture(mTextureTarget, aTextureUnit);
 
@@ -724,7 +894,7 @@ bool EGLImageTextureHost::Lock() {
 
   if (mSync) {
     MOZ_ASSERT(egl->IsExtensionSupported(GLLibraryEGL::KHR_fence_sync));
-    status = egl->fClientWaitSync(EGL_DISPLAY(), mSync, 0, LOCAL_EGL_FOREVER);
+    status = egl->fClientWaitSync(egl->Display(), mSync, 0, LOCAL_EGL_FOREVER);
   }
 
   if (status != LOCAL_EGL_CONDITION_SATISFIED) {
@@ -766,8 +936,54 @@ void EGLImageTextureHost::SetTextureSourceProvider(
 
 gfx::SurfaceFormat EGLImageTextureHost::GetFormat() const {
   MOZ_ASSERT(mTextureSource);
+<<<<<<< HEAD
   return mTextureSource ? mTextureSource->GetFormat()
                         : gfx::SurfaceFormat::UNKNOWN;
+||||||| merged common ancestors
+  return mTextureSource ? mTextureSource->GetFormat() : gfx::SurfaceFormat::UNKNOWN;
+=======
+  return mTextureSource ? mTextureSource->GetFormat()
+                        : gfx::SurfaceFormat::UNKNOWN;
+}
+
+void EGLImageTextureHost::CreateRenderTexture(
+    const wr::ExternalImageId& aExternalImageId) {
+  RefPtr<wr::RenderTextureHost> texture =
+      new wr::RenderEGLImageTextureHost(mImage, mSync, mSize);
+  wr::RenderThread::Get()->RegisterExternalImage(wr::AsUint64(aExternalImageId),
+                                                 texture.forget());
+}
+
+void EGLImageTextureHost::PushResourceUpdates(
+    wr::TransactionBuilder& aResources, ResourceUpdateOp aOp,
+    const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
+  auto method = aOp == TextureHost::ADD_IMAGE
+                    ? &wr::TransactionBuilder::AddExternalImage
+                    : &wr::TransactionBuilder::UpdateExternalImage;
+  auto imageType =
+      wr::ExternalImageType::TextureHandle(wr::TextureTarget::External);
+
+  gfx::SurfaceFormat format =
+      mHasAlpha ? gfx::SurfaceFormat::R8G8B8A8 : gfx::SurfaceFormat::R8G8B8X8;
+
+  MOZ_ASSERT(aImageKeys.length() == 1);
+  // XXX Add RGBA handling. Temporary hack to avoid crash
+  // With BGRA format setting, rendering works without problem.
+  auto formatTmp = format == gfx::SurfaceFormat::R8G8B8A8
+                       ? gfx::SurfaceFormat::B8G8R8A8
+                       : gfx::SurfaceFormat::B8G8R8X8;
+  wr::ImageDescriptor descriptor(GetSize(), formatTmp);
+  (aResources.*method)(aImageKeys[0], descriptor, aExtID, imageType, 0);
+}
+
+void EGLImageTextureHost::PushDisplayItems(
+    wr::DisplayListBuilder& aBuilder, const wr::LayoutRect& aBounds,
+    const wr::LayoutRect& aClip, wr::ImageRendering aFilter,
+    const Range<wr::ImageKey>& aImageKeys) {
+  MOZ_ASSERT(aImageKeys.length() == 1);
+  aBuilder.PushImage(aBounds, aClip, true, aFilter, aImageKeys[0],
+                     !(mFlags & TextureFlags::NON_PREMULTIPLIED));
+>>>>>>> upstream-releases
 }
 
 //

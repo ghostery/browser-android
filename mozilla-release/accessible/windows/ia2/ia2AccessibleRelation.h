@@ -19,42 +19,69 @@
 namespace mozilla {
 namespace a11y {
 
+<<<<<<< HEAD
 class ia2AccessibleRelation final : public IAccessibleRelation {
  public:
   ia2AccessibleRelation(RelationType aType, Relation *aRel);
+||||||| merged common ancestors
+class ia2AccessibleRelation final : public IAccessibleRelation
+{
+public:
+  ia2AccessibleRelation(RelationType aType, Relation* aRel);
+=======
+class ia2AccessibleRelation final : public IAccessibleRelation {
+ public:
+  ia2AccessibleRelation(RelationType aType, Relation* aRel);
+>>>>>>> upstream-releases
 
   ia2AccessibleRelation(RelationType aType,
+<<<<<<< HEAD
                         nsTArray<RefPtr<Accessible>> &&aTargets)
       : mType(aType), mTargets(std::move(aTargets)) {}
+||||||| merged common ancestors
+                        nsTArray<RefPtr<Accessible>>&& aTargets) :
+    mType(aType), mTargets(std::move(aTargets)) {}
+=======
+                        nsTArray<RefPtr<Accessible>>&& aTargets)
+      : mType(aType), mTargets(std::move(aTargets)) {}
+>>>>>>> upstream-releases
 
   // IUnknown
   DECL_IUNKNOWN
 
   // IAccessibleRelation
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_relationType(
-      /* [retval][out] */ BSTR *relationType);
+      /* [retval][out] */ BSTR* relationType);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_localizedRelationType(
-      /* [retval][out] */ BSTR *localizedRelationType);
+      /* [retval][out] */ BSTR* localizedRelationType);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_nTargets(
-      /* [retval][out] */ long *nTargets);
+      /* [retval][out] */ long* nTargets);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_target(
       /* [in] */ long targetIndex,
-      /* [retval][out] */ IUnknown **target);
+      /* [retval][out] */ IUnknown** target);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_targets(
       /* [in] */ long maxTargets,
-      /* [length_is][size_is][out] */ IUnknown **target,
-      /* [retval][out] */ long *nTargets);
+      /* [length_is][size_is][out] */ IUnknown** target,
+      /* [retval][out] */ long* nTargets);
 
   inline bool HasTargets() const { return mTargets.Length(); }
 
  private:
   ia2AccessibleRelation();
+<<<<<<< HEAD
   ia2AccessibleRelation(const ia2AccessibleRelation &);
   ia2AccessibleRelation &operator=(const ia2AccessibleRelation &);
+||||||| merged common ancestors
+  ia2AccessibleRelation(const ia2AccessibleRelation&);
+  ia2AccessibleRelation& operator = (const ia2AccessibleRelation&);
+=======
+  ia2AccessibleRelation(const ia2AccessibleRelation&);
+  ia2AccessibleRelation& operator=(const ia2AccessibleRelation&);
+>>>>>>> upstream-releases
 
   RelationType mType;
   nsTArray<RefPtr<Accessible>> mTargets;
@@ -64,13 +91,20 @@ class ia2AccessibleRelation final : public IAccessibleRelation {
  * Gecko to IAccessible2 relation types map.
  */
 
-const WCHAR *const IA2_RELATION_NULL = L"";
+const WCHAR* const IA2_RELATION_NULL = L"";
 
 #define RELATIONTYPE(geckoType, name, atkType, msaaType, ia2Type) \
-  std::pair<RelationType, const WCHAR *const>(RelationType::geckoType, ia2Type),
+  std::pair<RelationType, const WCHAR* const>(RelationType::geckoType, ia2Type),
 
+<<<<<<< HEAD
 static const std::pair<RelationType, const WCHAR *const> sRelationTypePairs[] =
     {
+||||||| merged common ancestors
+static const std::pair<RelationType, const WCHAR *const> sRelationTypePairs[] = {
+=======
+static const std::pair<RelationType, const WCHAR* const> sRelationTypePairs[] =
+    {
+>>>>>>> upstream-releases
 #include "RelationTypeMap.h"
 };
 

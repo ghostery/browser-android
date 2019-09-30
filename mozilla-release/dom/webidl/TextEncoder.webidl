@@ -10,7 +10,19 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
+<<<<<<< HEAD
 [Constructor, Exposed=(Window,Worker)]
+||||||| merged common ancestors
+[Constructor,
+ Exposed=(Window,Worker,System)]
+=======
+dictionary TextEncoderEncodeIntoResult {
+  unsigned long long read;
+  unsigned long long written;
+};
+
+[Constructor, Exposed=(Window,Worker)]
+>>>>>>> upstream-releases
 interface TextEncoder {
   [Constant]
   readonly attribute DOMString encoding;
@@ -24,4 +36,9 @@ interface TextEncoder {
    */
   [NewObject]
   Uint8Array encode(optional DOMString input = "");
+
+  /*
+   * The same comment about USVString as above applies here.
+   */
+  TextEncoderEncodeIntoResult encodeInto(DOMString source, Uint8Array destination);
 };

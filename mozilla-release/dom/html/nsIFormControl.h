@@ -107,7 +107,13 @@ class nsIFormControl : public nsISupports {
    * Get the form for this form control.
    * @return the form
    */
+<<<<<<< HEAD
   virtual mozilla::dom::Element* GetFormElement() = 0;
+||||||| merged common ancestors
+  virtual mozilla::dom::Element *GetFormElement() = 0;
+=======
+  virtual mozilla::dom::HTMLFormElement* GetFormElement() = 0;
+>>>>>>> upstream-releases
 
   /**
    * Set the form for this form control.
@@ -222,7 +228,22 @@ class nsIFormControl : public nsISupports {
     return false;
   }
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+=======
+  // Returns a number for this form control that is unique within its
+  // owner document.  This is used by nsContentUtils::GenerateStateKey
+  // to identify form controls that are inserted into the document by
+  // the parser.  -1 is returned for form controls with no state or
+  // which were inserted into the document by some other means than
+  // the parser from the network.
+  virtual int32_t GetParserInsertedControlNumberForStateKey() const {
+    return -1;
+  };
+
+ protected:
+>>>>>>> upstream-releases
   /**
    * Returns whether mType corresponds to a single line text control type.
    * @param aExcludePassword to have NS_FORM_INPUT_PASSWORD ignored.
@@ -280,13 +301,35 @@ bool nsIFormControl::IsSingleLineTextControl(bool aExcludePassword,
          (!aExcludePassword && aType == NS_FORM_INPUT_PASSWORD);
 }
 
+<<<<<<< HEAD
 bool nsIFormControl::IsSubmittableControl() const {
   // TODO: keygen should be in that list, see bug 101019.
+||||||| merged common ancestors
+bool
+nsIFormControl::IsSubmittableControl() const
+{
+  // TODO: keygen should be in that list, see bug 101019.
+=======
+bool nsIFormControl::IsSubmittableControl() const {
+>>>>>>> upstream-releases
   uint32_t type = ControlType();
+<<<<<<< HEAD
   return type == NS_FORM_OBJECT || type == NS_FORM_TEXTAREA ||
          type == NS_FORM_SELECT ||
          // type == NS_FORM_KEYGEN ||
          type & NS_FORM_BUTTON_ELEMENT || type & NS_FORM_INPUT_ELEMENT;
+||||||| merged common ancestors
+  return type == NS_FORM_OBJECT ||
+         type == NS_FORM_TEXTAREA ||
+         type == NS_FORM_SELECT ||
+         // type == NS_FORM_KEYGEN ||
+         type & NS_FORM_BUTTON_ELEMENT ||
+         type & NS_FORM_INPUT_ELEMENT;
+=======
+  return type == NS_FORM_OBJECT || type == NS_FORM_TEXTAREA ||
+         type == NS_FORM_SELECT || type & NS_FORM_BUTTON_ELEMENT ||
+         type & NS_FORM_INPUT_ELEMENT;
+>>>>>>> upstream-releases
 }
 
 bool nsIFormControl::AllowDraggableChildren() const {

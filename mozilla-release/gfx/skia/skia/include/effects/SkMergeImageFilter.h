@@ -25,8 +25,15 @@ public:
         return Make(array, 2, cropRect);
     }
 
+<<<<<<< HEAD
     Factory getFactory() const override { return CreateProc; }
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkMergeImageFilter)
+
+=======
+>>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
@@ -35,6 +42,8 @@ protected:
     bool onCanHandleComplexCTM() const override { return true; }
 
 private:
+    SK_FLATTENABLE_HOOKS(SkMergeImageFilter)
+
     SkMergeImageFilter(sk_sp<SkImageFilter>* const filters, int count, const CropRect* cropRect);
     static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
     friend class SkFlattenable::PrivateInitializer;

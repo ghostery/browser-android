@@ -32,8 +32,9 @@ module.exports = async function() {
   const { jsterm } = hud;
 
   // Wait for all the logs to be displayed.
-  await waitFor(() =>
-    hud.ui.outputNode.querySelectorAll(".message").length >= LOGS_NUMBER);
+  await waitFor(
+    () => hud.ui.outputNode.querySelectorAll(".message").length >= LOGS_NUMBER
+  );
 
   jsterm.focus();
 
@@ -43,8 +44,18 @@ module.exports = async function() {
   for (const char of Array.from(input)) {
     const onPopupOpened = jsterm.autocompletePopup.once("popup-opened");
     jsterm.insertStringAtCursor(char);
+<<<<<<< HEAD
     // We need to trigger autocompletion update to show the popup.
     jsterm.fetchAutocompletionProperties();
+||||||| merged common ancestors
+    // We need to remove the lastInputValue set by setInputValue(called by
+    // insertStringAtCursor), and trigger autocompletion update to show the popup.
+    jsterm.lastInputValue = null;
+    jsterm.updateAutocompletion();
+=======
+    // We need to trigger autocompletion update to show the popup.
+    jsterm.props.autocompleteUpdate();
+>>>>>>> upstream-releases
     await onPopupOpened;
   }
 
@@ -55,8 +66,9 @@ module.exports = async function() {
   await onPopupClosed;
 
   // Let's clear the output as it looks like not doing it could impact the next tests.
-  const onMessagesCleared = waitFor(() =>
-    hud.ui.outputNode.querySelectorAll(".message").length === 0);
+  const onMessagesCleared = waitFor(
+    () => hud.ui.outputNode.querySelectorAll(".message").length === 0
+  );
   hud.ui.clearOutput();
   await onMessagesCleared;
 

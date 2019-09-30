@@ -6,7 +6,6 @@
 
 #include "APZCBasicTester.h"
 #include "APZTestCommon.h"
-#include "gfxPrefs.h"
 
 class APZCGestureDetectorTester : public APZCBasicTester {
  public:
@@ -28,7 +27,7 @@ class APZCGestureDetectorTester : public APZCBasicTester {
 };
 
 TEST_F(APZCGestureDetectorTester, Pan_After_Pinch) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, false);
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", false);
 
   FrameMetrics originalMetrics = GetPinchableFrameMetrics();
   apzc->SetFrameMetrics(originalMetrics);
@@ -42,34 +41,76 @@ TEST_F(APZCGestureDetectorTester, Pan_After_Pinch) {
   int focusX = 250;
   int focusY = 300;
   int panDistance = 20;
+  const TimeDuration TIME_BETWEEN_TOUCH_EVENT =
+      TimeDuration::FromMilliseconds(50);
 
   int firstFingerId = 0;
   int secondFingerId = firstFingerId + 1;
 
   // Put fingers down
+<<<<<<< HEAD
   MultiTouchInput mti =
       MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX, focusY));
   mti.mTouches.AppendElement(
       CreateSingleTouchData(secondFingerId, focusX, focusY));
+||||||| merged common ancestors
+  MultiTouchInput mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX, focusY));
+  mti.mTouches.AppendElement(CreateSingleTouchData(secondFingerId, focusX, focusY));
+=======
+  MultiTouchInput mti =
+      MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX, focusY));
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(secondFingerId, focusX, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // Spread fingers out to enter the pinch state
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX - pinchLength, focusY));
   mti.mTouches.AppendElement(
       CreateSingleTouchData(secondFingerId, focusX + pinchLength, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX - pinchLength, focusY));
+  mti.mTouches.AppendElement(CreateSingleTouchData(secondFingerId, focusX + pinchLength, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX - pinchLength, focusY));
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(secondFingerId, focusX + pinchLength, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // Do the actual pinch of 1.25x
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
   mti.mTouches.AppendElement(CreateSingleTouchData(
       secondFingerId, focusX + pinchLengthScaled, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+  mti.mTouches.AppendElement(CreateSingleTouchData(secondFingerId, focusX + pinchLengthScaled, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+  mti.mTouches.AppendElement(CreateSingleTouchData(
+      secondFingerId, focusX + pinchLengthScaled, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // Verify that the zoom changed, just to make sure our code above did what it
   // was supposed to.
@@ -79,31 +120,71 @@ TEST_F(APZCGestureDetectorTester, Pan_After_Pinch) {
             newZoom);
 
   // Now we lift one finger...
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(CreateSingleTouchData(
       secondFingerId, focusX + pinchLengthScaled, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(secondFingerId, focusX + pinchLengthScaled, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(
+      secondFingerId, focusX + pinchLengthScaled, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // ... and pan with the remaining finger. This pan just breaks through the
   // distance threshold.
   focusY += 40;
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // This one does an actual pan of 20 pixels
   focusY += panDistance;
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // Lift the remaining finger
+<<<<<<< HEAD
   mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
   mti.mTouches.AppendElement(
       CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+||||||| merged common ancestors
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
+  mti.mTouches.AppendElement(CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+=======
+  mti = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, mcc->Time(), 0);
+  mti.mTouches.AppendElement(
+      CreateSingleTouchData(firstFingerId, focusX - pinchLengthScaled, focusY));
+>>>>>>> upstream-releases
   apzc->ReceiveInputEvent(mti, nullptr);
+  mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
   // Verify that we scrolled
   FrameMetrics finalMetrics = apzc->GetFrameMetrics();
@@ -118,7 +199,7 @@ TEST_F(APZCGestureDetectorTester, Pan_After_Pinch) {
 }
 
 TEST_F(APZCGestureDetectorTester, Pan_With_Tap) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, false);
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", false);
 
   FrameMetrics originalMetrics = GetPinchableFrameMetrics();
   apzc->SetFrameMetrics(originalMetrics);
@@ -308,22 +389,22 @@ class APZCFlingStopTester : public APZCGestureDetectorTester {
 };
 
 TEST_F(APZCFlingStopTester, FlingStop) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
+  SCOPED_GFX_PREF_FLOAT("apz.fling_min_velocity_threshold", 0.0f);
   DoFlingStopTest(false);
 }
 
 TEST_F(APZCFlingStopTester, FlingStopTap) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
+  SCOPED_GFX_PREF_FLOAT("apz.fling_min_velocity_threshold", 0.0f);
   DoFlingStopTest(true);
 }
 
 TEST_F(APZCFlingStopTester, FlingStopSlowListener) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
+  SCOPED_GFX_PREF_FLOAT("apz.fling_min_velocity_threshold", 0.0f);
   DoFlingStopWithSlowListener(false);
 }
 
 TEST_F(APZCFlingStopTester, FlingStopPreventDefault) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
+  SCOPED_GFX_PREF_FLOAT("apz.fling_min_velocity_threshold", 0.0f);
   DoFlingStopWithSlowListener(true);
 }
 
@@ -384,8 +465,15 @@ class APZCLongPressTester : public APZCGestureDetectorTester {
         TouchDown(apzc, ScreenIntPoint(10, 10), mcc->Time(), &blockId);
     EXPECT_EQ(nsEventStatus_eConsumeDoDefault, status);
 
+<<<<<<< HEAD
     if (gfxPrefs::TouchActionEnabled() &&
         status != nsEventStatus_eConsumeNoDefault) {
+||||||| merged common ancestors
+    if (gfxPrefs::TouchActionEnabled() && status != nsEventStatus_eConsumeNoDefault) {
+=======
+    if (StaticPrefs::layout_css_touch_action_enabled() &&
+        status != nsEventStatus_eConsumeNoDefault) {
+>>>>>>> upstream-releases
       // SetAllowedTouchBehavior() must be called after sending touch-start.
       nsTArray<uint32_t> allowedTouchBehaviors;
       allowedTouchBehaviors.AppendElement(aBehavior);
@@ -450,8 +538,15 @@ class APZCLongPressTester : public APZCGestureDetectorTester {
                                      mcc->Time(), &blockId);
     EXPECT_EQ(nsEventStatus_eConsumeDoDefault, status);
 
+<<<<<<< HEAD
     if (gfxPrefs::TouchActionEnabled() &&
         status != nsEventStatus_eConsumeNoDefault) {
+||||||| merged common ancestors
+    if (gfxPrefs::TouchActionEnabled() && status != nsEventStatus_eConsumeNoDefault) {
+=======
+    if (StaticPrefs::layout_css_touch_action_enabled() &&
+        status != nsEventStatus_eConsumeNoDefault) {
+>>>>>>> upstream-releases
       // SetAllowedTouchBehavior() must be called after sending touch-start.
       nsTArray<uint32_t> allowedTouchBehaviors;
       allowedTouchBehaviors.AppendElement(aBehavior);
@@ -513,28 +608,53 @@ class APZCLongPressTester : public APZCGestureDetectorTester {
 };
 
 TEST_F(APZCLongPressTester, LongPress) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, false);
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", false);
   DoLongPressTest(mozilla::layers::AllowedTouchBehavior::NONE);
 }
 
 TEST_F(APZCLongPressTester, LongPressWithTouchAction) {
+<<<<<<< HEAD
   SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
   DoLongPressTest(mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN |
                   mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN |
                   mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+||||||| merged common ancestors
+  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
+  DoLongPressTest(mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN
+                  | mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN
+                  | mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+=======
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
+  DoLongPressTest(mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN |
+                  mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN |
+                  mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+>>>>>>> upstream-releases
 }
 
 TEST_F(APZCLongPressTester, LongPressPreventDefault) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, false);
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", false);
   DoLongPressPreventDefaultTest(mozilla::layers::AllowedTouchBehavior::NONE);
 }
 
 TEST_F(APZCLongPressTester, LongPressPreventDefaultWithTouchAction) {
+<<<<<<< HEAD
   SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
   DoLongPressPreventDefaultTest(
       mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN |
       mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN |
       mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+||||||| merged common ancestors
+  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
+  DoLongPressPreventDefaultTest(mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN
+                                | mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN
+                                | mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+=======
+  SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
+  DoLongPressPreventDefaultTest(
+      mozilla::layers::AllowedTouchBehavior::HORIZONTAL_PAN |
+      mozilla::layers::AllowedTouchBehavior::VERTICAL_PAN |
+      mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
+>>>>>>> upstream-releases
 }
 
 TEST_F(APZCGestureDetectorTester, DoubleTap) {
@@ -696,10 +816,20 @@ TEST_F(APZCGestureDetectorTester, LongPressInterruptedByWheel) {
 
   uint64_t touchBlockId = 0;
   uint64_t wheelBlockId = 0;
+<<<<<<< HEAD
   nsEventStatus status =
       TouchDown(apzc, ScreenIntPoint(10, 10), mcc->Time(), &touchBlockId);
   if (gfxPrefs::TouchActionEnabled() &&
       status != nsEventStatus_eConsumeNoDefault) {
+||||||| merged common ancestors
+  nsEventStatus status = TouchDown(apzc, ScreenIntPoint(10, 10), mcc->Time(), &touchBlockId);
+  if (gfxPrefs::TouchActionEnabled() && status != nsEventStatus_eConsumeNoDefault) {
+=======
+  nsEventStatus status =
+      TouchDown(apzc, ScreenIntPoint(10, 10), mcc->Time(), &touchBlockId);
+  if (StaticPrefs::layout_css_touch_action_enabled() &&
+      status != nsEventStatus_eConsumeNoDefault) {
+>>>>>>> upstream-releases
     SetDefaultAllowedTouchBehavior(apzc, touchBlockId);
   }
   mcc->AdvanceByMillis(10);

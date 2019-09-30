@@ -9,9 +9,9 @@
 #include "prsystem.h"
 
 #ifdef XP_MACOSX
-#include <sys/resource.h>
-#include <mach/clock.h>
-#include <mach/mach_host.h>
+#  include <sys/resource.h>
+#  include <mach/clock.h>
+#  include <mach/mach_host.h>
 #endif
 
 namespace mozilla {
@@ -32,23 +32,51 @@ struct CPUStats {
   uint64_t updateTime;
 };
 
-#ifdef XP_MACOSX
+#  ifdef XP_MACOSX
 
 static const uint64_t kMicrosecondsPerSecond = 1000000LL;
 static const uint64_t kNanosecondsPerMicrosecond = 1000LL;
 static const uint64_t kCPUCheckInterval = kMicrosecondsPerSecond / 2LL;
 
+<<<<<<< HEAD
 uint64_t GetMicroseconds(timeval time) {
   return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
          (uint64_t)time.tv_usec;
+||||||| merged common ancestors
+uint64_t GetMicroseconds(timeval time) {
+    return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
+           (uint64_t)time.tv_usec;
+=======
+static uint64_t GetMicroseconds(timeval time) {
+  return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
+         (uint64_t)time.tv_usec;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 uint64_t GetMicroseconds(mach_timespec_t time) {
   return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
          ((uint64_t)time.tv_nsec) / kNanosecondsPerMicrosecond;
+||||||| merged common ancestors
+uint64_t GetMicroseconds(mach_timespec_t time) {
+    return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
+           ((uint64_t)time.tv_nsec) / kNanosecondsPerMicrosecond;
+=======
+static uint64_t GetMicroseconds(mach_timespec_t time) {
+  return ((uint64_t)time.tv_sec) * kMicrosecondsPerSecond +
+         ((uint64_t)time.tv_nsec) / kNanosecondsPerMicrosecond;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 Result<CPUStats, CPUUsageWatcherError> GetProcessCPUStats(int32_t numCPUs) {
+||||||| merged common ancestors
+Result<CPUStats, CPUUsageWatcherError>
+GetProcessCPUStats(int32_t numCPUs) {
+=======
+static Result<CPUStats, CPUUsageWatcherError> GetProcessCPUStats(
+    int32_t numCPUs) {
+>>>>>>> upstream-releases
   CPUStats result = {};
   rusage usage;
   int32_t rusageResult = getrusage(RUSAGE_SELF, &usage);
@@ -77,7 +105,14 @@ Result<CPUStats, CPUUsageWatcherError> GetProcessCPUStats(int32_t numCPUs) {
   return result;
 }
 
+<<<<<<< HEAD
 Result<CPUStats, CPUUsageWatcherError> GetGlobalCPUStats() {
+||||||| merged common ancestors
+Result<CPUStats, CPUUsageWatcherError>
+GetGlobalCPUStats() {
+=======
+static Result<CPUStats, CPUUsageWatcherError> GetGlobalCPUStats() {
+>>>>>>> upstream-releases
   CPUStats result = {};
   host_cpu_load_info_data_t loadInfo;
   mach_msg_type_number_t loadInfoCount = HOST_CPU_LOAD_INFO_COUNT;
@@ -95,9 +130,15 @@ Result<CPUStats, CPUUsageWatcherError> GetGlobalCPUStats() {
   return result;
 }
 
+<<<<<<< HEAD
 #endif  // XP_MACOSX
+||||||| merged common ancestors
+#endif // XP_MACOSX
+=======
+#  endif  // XP_MACOSX
+>>>>>>> upstream-releases
 
-#ifdef XP_WIN
+#  ifdef XP_WIN
 
 // A FILETIME represents the number of 100-nanosecond ticks since 1/1/1601 UTC
 static const uint64_t kFILETIMETicksPerSecond = 10000000;
@@ -150,7 +191,13 @@ Result<CPUStats, CPUUsageWatcherError> GetGlobalCPUStats() {
   return result;
 }
 
+<<<<<<< HEAD
 #endif  // XP_WIN
+||||||| merged common ancestors
+#endif // XP_WIN
+=======
+#  endif  // XP_WIN
+>>>>>>> upstream-releases
 
 Result<Ok, CPUUsageWatcherError> CPUUsageWatcher::Init() {
   mNumCPUs = PR_GetNumberOfProcessors();

@@ -13,6 +13,7 @@
  */
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <windows.h>
 #undef assert
 #undef GetProp
@@ -23,6 +24,29 @@
 #undef LEGACY
 #undef THIS
 #undef PASSTHROUGH
+||||||| merged common ancestors
+# include <windows.h>
+# undef assert
+# undef GetProp
+# undef MemoryBarrier
+# undef SetProp
+# undef CONST
+# undef STRICT
+# undef LEGACY
+# undef THIS
+# undef PASSTHROUGH
+=======
+#  include <windows.h>
+#  undef assert
+#  undef GetProp
+#  undef MemoryBarrier
+#  undef SetProp
+#  undef CONST
+#  undef STRICT
+#  undef LEGACY
+#  undef THIS
+#  undef PASSTHROUGH
+>>>>>>> upstream-releases
 #endif
 
 #endif /* util_Windows_h */

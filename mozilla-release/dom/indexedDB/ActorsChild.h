@@ -347,6 +347,7 @@ class BackgroundDatabaseChild final : public PBackgroundIDBDatabaseChild {
   virtual PBackgroundMutableFileChild* AllocPBackgroundMutableFileChild(
       const nsString& aName, const nsString& aType) override;
 
+<<<<<<< HEAD
   virtual bool DeallocPBackgroundMutableFileChild(
       PBackgroundMutableFileChild* aActor) override;
 
@@ -354,6 +355,18 @@ class BackgroundDatabaseChild final : public PBackgroundIDBDatabaseChild {
       const uint64_t& aOldVersion, const NullableVersion& aNewVersion) override;
 
   virtual mozilla::ipc::IPCResult RecvInvalidate() override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvCloseAfterInvalidationComplete() override;
+=======
+  virtual bool DeallocPBackgroundMutableFileChild(
+      PBackgroundMutableFileChild* aActor) override;
+
+  virtual mozilla::ipc::IPCResult RecvVersionChange(
+      const uint64_t& aOldVersion, const Maybe<uint64_t>& aNewVersion) override;
+
+  virtual mozilla::ipc::IPCResult RecvInvalidate() override;
+>>>>>>> upstream-releases
 
   virtual mozilla::ipc::IPCResult RecvCloseAfterInvalidationComplete() override;
 

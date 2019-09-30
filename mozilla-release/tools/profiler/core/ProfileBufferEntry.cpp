@@ -4,90 +4,273 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 #include <ostream>
 #include "platform.h"
 #include "mozilla/HashFunctions.h"
 #include "mozilla/Sprintf.h"
 #include "mozilla/Logging.h"
+||||||| merged common ancestors
+#include <ostream>
+#include "platform.h"
+#include "mozilla/HashFunctions.h"
+#include "mozilla/Sprintf.h"
+=======
+#include "ProfileBufferEntry.h"
+>>>>>>> upstream-releases
 
+#include "platform.h"
+#include "ProfileBuffer.h"
+
+#include "js/TrackedOptimizationInfo.h"
+#include "jsapi.h"
+#include "jsfriendapi.h"
+#include "mozilla/Logging.h"
+#include "mozilla/Sprintf.h"
+#include "mozilla/StackWalk.h"
 #include "nsThreadUtils.h"
 #include "nsXULAppAPI.h"
 
-// JS
-#include "jsapi.h"
-#include "jsfriendapi.h"
-#include "js/TrackedOptimizationInfo.h"
-
-// Self
-#include "ProfileBufferEntry.h"
+#include <ostream>
 
 using namespace mozilla;
 
 ////////////////////////////////////////////////////////////////////////
 // BEGIN ProfileBufferEntry
 
+<<<<<<< HEAD
 ProfileBufferEntry::ProfileBufferEntry() : mKind(Kind::INVALID) {
   u.mString = nullptr;
 }
+||||||| merged common ancestors
+ProfileBufferEntry::ProfileBufferEntry()
+  : mKind(Kind::INVALID)
+{
+  u.mString = nullptr;
+}
+=======
+ProfileBufferEntry::ProfileBufferEntry()
+    : mKind(Kind::INVALID), mStorage{0, 0, 0, 0, 0, 0, 0, 0} {}
+>>>>>>> upstream-releases
 
 // aString must be a static string.
+<<<<<<< HEAD
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char* aString)
     : mKind(aKind) {
   u.mString = aString;
+||||||| merged common ancestors
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char *aString)
+  : mKind(aKind)
+{
+  u.mString = aString;
+=======
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, const char* aString)
+    : mKind(aKind) {
+  memcpy(mStorage, &aString, sizeof(aString));
+>>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, char aChars[kNumChars])
+<<<<<<< HEAD
     : mKind(aKind) {
   memcpy(u.mChars, aChars, kNumChars);
+||||||| merged common ancestors
+  : mKind(aKind)
+{
+  memcpy(u.mChars, aChars, kNumChars);
+=======
+    : mKind(aKind) {
+  memcpy(mStorage, aChars, kNumChars);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr) : mKind(aKind) {
   u.mPtr = aPtr;
+||||||| merged common ancestors
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr)
+  : mKind(aKind)
+{
+  u.mPtr = aPtr;
+=======
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, void* aPtr) : mKind(aKind) {
+  memcpy(mStorage, &aPtr, sizeof(aPtr));
+>>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, ProfilerMarker* aMarker)
+<<<<<<< HEAD
     : mKind(aKind) {
   u.mMarker = aMarker;
+||||||| merged common ancestors
+  : mKind(aKind)
+{
+  u.mMarker = aMarker;
+=======
+    : mKind(aKind) {
+  memcpy(mStorage, &aMarker, sizeof(aMarker));
+>>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, double aDouble)
+<<<<<<< HEAD
     : mKind(aKind) {
   u.mDouble = aDouble;
+||||||| merged common ancestors
+  : mKind(aKind)
+{
+  u.mDouble = aDouble;
+=======
+    : mKind(aKind) {
+  memcpy(mStorage, &aDouble, sizeof(aDouble));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt) : mKind(aKind) {
   u.mInt = aInt;
+||||||| merged common ancestors
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt)
+  : mKind(aKind)
+{
+  u.mInt = aInt;
+=======
+ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int aInt) : mKind(aKind) {
+  memcpy(mStorage, &aInt, sizeof(aInt));
+>>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, int64_t aInt64)
+<<<<<<< HEAD
     : mKind(aKind) {
   u.mInt64 = aInt64;
+||||||| merged common ancestors
+  : mKind(aKind)
+{
+  u.mInt64 = aInt64;
+=======
+    : mKind(aKind) {
+  memcpy(mStorage, &aInt64, sizeof(aInt64));
+>>>>>>> upstream-releases
 }
 
 ProfileBufferEntry::ProfileBufferEntry(Kind aKind, uint64_t aUint64)
+<<<<<<< HEAD
     : mKind(aKind) {
   u.mUint64 = aUint64;
+||||||| merged common ancestors
+  : mKind(aKind)
+{
+  u.mUint64 = aUint64;
+=======
+    : mKind(aKind) {
+  memcpy(mStorage, &aUint64, sizeof(aUint64));
+>>>>>>> upstream-releases
 }
 
-// END ProfileBufferEntry
-////////////////////////////////////////////////////////////////////////
+const char* ProfileBufferEntry::GetString() const {
+  const char* result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
 
+<<<<<<< HEAD
 class JSONSchemaWriter {
   JSONWriter& mWriter;
   uint32_t mIndex;
+||||||| merged common ancestors
+class JSONSchemaWriter
+{
+  JSONWriter& mWriter;
+  uint32_t mIndex;
+=======
+void* ProfileBufferEntry::GetPtr() const {
+  void* result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   explicit JSONSchemaWriter(JSONWriter& aWriter) : mWriter(aWriter), mIndex(0) {
     aWriter.StartObjectProperty("schema",
                                 SpliceableJSONWriter::SingleLineStyle);
   }
+||||||| merged common ancestors
+public:
+  explicit JSONSchemaWriter(JSONWriter& aWriter)
+   : mWriter(aWriter)
+   , mIndex(0)
+  {
+    aWriter.StartObjectProperty("schema",
+                                SpliceableJSONWriter::SingleLineStyle);
+  }
+=======
+ProfilerMarker* ProfileBufferEntry::GetMarker() const {
+  ProfilerMarker* result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void WriteField(const char* aName) { mWriter.IntProperty(aName, mIndex++); }
+||||||| merged common ancestors
+  void WriteField(const char* aName) {
+    mWriter.IntProperty(aName, mIndex++);
+  }
+=======
+double ProfileBufferEntry::GetDouble() const {
+  double result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ~JSONSchemaWriter() { mWriter.EndObject(); }
 };
+||||||| merged common ancestors
+  ~JSONSchemaWriter() {
+    mWriter.EndObject();
+  }
+};
+=======
+int ProfileBufferEntry::GetInt() const {
+  int result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+struct TypeInfo {
+||||||| merged common ancestors
+struct TypeInfo
+{
+=======
+int64_t ProfileBufferEntry::GetInt64() const {
+  int64_t result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+
+uint64_t ProfileBufferEntry::GetUint64() const {
+  uint64_t result;
+  memcpy(&result, mStorage, sizeof(result));
+  return result;
+}
+
+void ProfileBufferEntry::CopyCharsInto(char (&aOutArray)[kNumChars]) const {
+  memcpy(aOutArray, mStorage, kNumChars);
+}
+
+// END ProfileBufferEntry
+////////////////////////////////////////////////////////////////////////
 
 struct TypeInfo {
+>>>>>>> upstream-releases
   Maybe<nsCString> mKeyedBy;
   Maybe<nsCString> mName;
   Maybe<nsCString> mLocation;
@@ -125,11 +308,24 @@ class ForEachTrackedOptimizationTypeInfoLambdaOp
   LambdaT mLambda;
 };
 
+<<<<<<< HEAD
 template <typename LambdaT>
 ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
 MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda) {
   return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(
       std::move(aLambda));
+||||||| merged common ancestors
+template<typename LambdaT> ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
+MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda)
+{
+  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(std::move(aLambda));
+=======
+template <typename LambdaT>
+ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
+MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda) {
+  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(
+      std::forward<LambdaT>(aLambda));
+>>>>>>> upstream-releases
 }
 
 // As mentioned in ProfileBufferEntry.h, the JSON format contains many
@@ -176,9 +372,12 @@ class MOZ_RAII AutoArraySchemaWriter {
 
   ~AutoArraySchemaWriter() { mJSONWriter.EndArray(); }
 
-  void IntElement(uint64_t aIndex, uint64_t aValue) {
+  template <typename T>
+  void IntElement(uint32_t aIndex, T aValue) {
+    static_assert(!IsSame<T, uint64_t>::value,
+                  "Narrowing uint64 -> int64 conversion not allowed");
     FillUpTo(aIndex);
-    mJSONWriter.IntElement(aValue);
+    mJSONWriter.IntElement(static_cast<int64_t>(aValue));
   }
 
   void DoubleElement(uint32_t aIndex, double aValue) {
@@ -244,10 +443,25 @@ UniqueJSONStrings::UniqueJSONStrings() { mStringTableWriter.StartBareList(); }
 
 UniqueJSONStrings::UniqueJSONStrings(const UniqueJSONStrings& aOther) {
   mStringTableWriter.StartBareList();
+<<<<<<< HEAD
   if (aOther.mStringToIndexMap.Count() > 0) {
     for (auto iter = aOther.mStringToIndexMap.ConstIter(); !iter.Done();
          iter.Next()) {
       mStringToIndexMap.Put(iter.Key(), iter.Data());
+||||||| merged common ancestors
+  if (aOther.mStringToIndexMap.Count() > 0) {
+    for (auto iter = aOther.mStringToIndexMap.ConstIter();
+         !iter.Done(); iter.Next()) {
+      mStringToIndexMap.Put(iter.Key(), iter.Data());
+=======
+  uint32_t count = mStringHashToIndexMap.count();
+  if (count != 0) {
+    MOZ_RELEASE_ASSERT(mStringHashToIndexMap.reserve(count));
+    for (auto iter = aOther.mStringHashToIndexMap.iter(); !iter.done();
+         iter.next()) {
+      mStringHashToIndexMap.putNewInfallible(iter.get().key(),
+                                             iter.get().value());
+>>>>>>> upstream-releases
     }
     UniquePtr<char[]> stringTableJSON =
         aOther.mStringTableWriter.WriteFunc()->CopyData();
@@ -255,17 +469,38 @@ UniqueJSONStrings::UniqueJSONStrings(const UniqueJSONStrings& aOther) {
   }
 }
 
+<<<<<<< HEAD
 uint32_t UniqueJSONStrings::GetOrAddIndex(const char* aStr) {
   nsDependentCString str(aStr);
 
   uint32_t count = mStringToIndexMap.Count();
   auto entry = mStringToIndexMap.LookupForAdd(str);
+||||||| merged common ancestors
+uint32_t
+UniqueJSONStrings::GetOrAddIndex(const char* aStr)
+{
+  nsDependentCString str(aStr);
+
+  uint32_t count = mStringToIndexMap.Count();
+  auto entry = mStringToIndexMap.LookupForAdd(str);
+=======
+uint32_t UniqueJSONStrings::GetOrAddIndex(const char* aStr) {
+  uint32_t count = mStringHashToIndexMap.count();
+  HashNumber hash = HashString(aStr);
+  auto entry = mStringHashToIndexMap.lookupForAdd(hash);
+>>>>>>> upstream-releases
   if (entry) {
-    MOZ_ASSERT(entry.Data() < count);
-    return entry.Data();
+    MOZ_ASSERT(entry->value() < count);
+    return entry->value();
   }
 
+<<<<<<< HEAD
   entry.OrInsert([&] { return count; });
+||||||| merged common ancestors
+  entry.OrInsert([&]{ return count; });
+=======
+  MOZ_RELEASE_ASSERT(mStringHashToIndexMap.add(entry, hash, count));
+>>>>>>> upstream-releases
   mStringTableWriter.StringElement(aStr);
   return count;
 }
@@ -274,6 +509,7 @@ UniqueStacks::StackKey UniqueStacks::BeginStack(const FrameKey& aFrame) {
   return StackKey(GetOrAddFrameIndex(aFrame));
 }
 
+<<<<<<< HEAD
 UniqueStacks::StackKey UniqueStacks::AppendFrame(const StackKey& aStack,
                                                  const FrameKey& aFrame) {
   return StackKey(aStack, GetOrAddStackIndex(aStack),
@@ -285,23 +521,82 @@ uint32_t JITFrameInfoForBufferRange::JITFrameKey::Hash() const {
   hash = AddToHash(hash, mCanonicalAddress);
   hash = AddToHash(hash, mDepth);
   return hash;
+||||||| merged common ancestors
+UniqueStacks::StackKey
+UniqueStacks::AppendFrame(const StackKey& aStack, const FrameKey& aFrame)
+{
+  return StackKey(aStack, GetOrAddStackIndex(aStack), GetOrAddFrameIndex(aFrame));
 }
 
+uint32_t
+JITFrameInfoForBufferRange::JITFrameKey::Hash() const
+{
+  uint32_t hash = 0;
+  hash = AddToHash(hash, mCanonicalAddress);
+  hash = AddToHash(hash, mDepth);
+  return hash;
+=======
+UniqueStacks::StackKey UniqueStacks::AppendFrame(const StackKey& aStack,
+                                                 const FrameKey& aFrame) {
+  return StackKey(aStack, GetOrAddStackIndex(aStack),
+                  GetOrAddFrameIndex(aFrame));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool JITFrameInfoForBufferRange::JITFrameKey::operator==(
     const JITFrameKey& aOther) const {
   return mCanonicalAddress == aOther.mCanonicalAddress &&
          mDepth == aOther.mDepth;
 }
+||||||| merged common ancestors
+bool
+JITFrameInfoForBufferRange::JITFrameKey::operator==(const JITFrameKey& aOther) const
+{
+  return mCanonicalAddress == aOther.mCanonicalAddress &&
+         mDepth == aOther.mDepth;
+}
+=======
+JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
+  JITFrameInfoForBufferRange::JITAddressToJITFramesMap jitAddressToJITFramesMap;
+  MOZ_RELEASE_ASSERT(
+      jitAddressToJITFramesMap.reserve(mJITAddressToJITFramesMap.count()));
+  for (auto iter = mJITAddressToJITFramesMap.iter(); !iter.done();
+       iter.next()) {
+    const mozilla::Vector<JITFrameKey>& srcKeys = iter.get().value();
+    mozilla::Vector<JITFrameKey> destKeys;
+    MOZ_RELEASE_ASSERT(destKeys.appendAll(srcKeys));
+    jitAddressToJITFramesMap.putNewInfallible(iter.get().key(),
+                                              std::move(destKeys));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 template <class KeyClass, class T>
 void CopyClassHashtable(nsClassHashtable<KeyClass, T>& aDest,
                         const nsClassHashtable<KeyClass, T>& aSrc) {
   for (auto iter = aSrc.ConstIter(); !iter.Done(); iter.Next()) {
     const T& objRef = *iter.Data();
     aDest.LookupOrAdd(iter.Key(), objRef);
+||||||| merged common ancestors
+template<class KeyClass, class T> void
+CopyClassHashtable(nsClassHashtable<KeyClass, T>& aDest,
+                   const nsClassHashtable<KeyClass, T>& aSrc)
+{
+  for (auto iter = aSrc.ConstIter(); !iter.Done(); iter.Next()) {
+    const T& objRef = *iter.Data();
+    aDest.LookupOrAdd(iter.Key(), objRef);
+=======
+  JITFrameInfoForBufferRange::JITFrameToFrameJSONMap jitFrameToFrameJSONMap;
+  MOZ_RELEASE_ASSERT(
+      jitFrameToFrameJSONMap.reserve(mJITFrameToFrameJSONMap.count()));
+  for (auto iter = mJITFrameToFrameJSONMap.iter(); !iter.done(); iter.next()) {
+    jitFrameToFrameJSONMap.putNewInfallible(iter.get().key(),
+                                            iter.get().value());
+>>>>>>> upstream-releases
   }
-}
 
+<<<<<<< HEAD
 JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
   nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
       jitAddressToJITFramesMap;
@@ -312,25 +607,51 @@ JITFrameInfoForBufferRange JITFrameInfoForBufferRange::Clone() const {
   return JITFrameInfoForBufferRange{mRangeStart, mRangeEnd,
                                     std::move(jitAddressToJITFramesMap),
                                     std::move(jitFrameToFrameJSONMap)};
+||||||| merged common ancestors
+JITFrameInfoForBufferRange
+JITFrameInfoForBufferRange::Clone() const
+{
+  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> jitAddressToJITFramesMap;
+  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> jitFrameToFrameJSONMap;
+  CopyClassHashtable(jitAddressToJITFramesMap, mJITAddressToJITFramesMap);
+  CopyClassHashtable(jitFrameToFrameJSONMap, mJITFrameToFrameJSONMap);
+  return JITFrameInfoForBufferRange{
+    mRangeStart, mRangeEnd,
+    std::move(jitAddressToJITFramesMap), std::move(jitFrameToFrameJSONMap) };
+=======
+  return JITFrameInfoForBufferRange{mRangeStart, mRangeEnd,
+                                    std::move(jitAddressToJITFramesMap),
+                                    std::move(jitFrameToFrameJSONMap)};
+>>>>>>> upstream-releases
 }
 
 JITFrameInfo::JITFrameInfo(const JITFrameInfo& aOther)
     : mUniqueStrings(MakeUnique<UniqueJSONStrings>(*aOther.mUniqueStrings)) {
   for (const JITFrameInfoForBufferRange& range : aOther.mRanges) {
-    mRanges.AppendElement(range.Clone());
+    MOZ_RELEASE_ASSERT(mRanges.append(range.Clone()));
   }
 }
 
 bool UniqueStacks::FrameKey::NormalFrameData::operator==(
     const NormalFrameData& aOther) const {
   return mLocation == aOther.mLocation &&
+<<<<<<< HEAD
          mRelevantForJS == aOther.mRelevantForJS && mLine == aOther.mLine &&
          mColumn == aOther.mColumn && mCategory == aOther.mCategory;
+||||||| merged common ancestors
+         mLine == aOther.mLine &&
+         mColumn == aOther.mColumn &&
+         mCategory == aOther.mCategory;
+=======
+         mRelevantForJS == aOther.mRelevantForJS && mLine == aOther.mLine &&
+         mColumn == aOther.mColumn && mCategoryPair == aOther.mCategoryPair;
+>>>>>>> upstream-releases
 }
 
 bool UniqueStacks::FrameKey::JITFrameData::operator==(
     const JITFrameData& aOther) const {
   return mCanonicalAddress == aOther.mCanonicalAddress &&
+<<<<<<< HEAD
          mDepth == aOther.mDepth && mRangeIndex == aOther.mRangeIndex;
 }
 
@@ -358,6 +679,39 @@ uint32_t UniqueStacks::FrameKey::Hash() const {
     hash = AddToHash(hash, data.mRangeIndex);
   }
   return hash;
+||||||| merged common ancestors
+         mDepth == aOther.mDepth &&
+         mRangeIndex == aOther.mRangeIndex;
+}
+
+uint32_t
+UniqueStacks::FrameKey::Hash() const
+{
+  uint32_t hash = 0;
+  if (mData.is<NormalFrameData>()) {
+    const NormalFrameData& data = mData.as<NormalFrameData>();
+    if (!data.mLocation.IsEmpty()) {
+      hash = AddToHash(hash, HashString(data.mLocation.get()));
+    }
+    if (data.mLine.isSome()) {
+      hash = AddToHash(hash, *data.mLine);
+    }
+    if (data.mColumn.isSome()) {
+      hash = AddToHash(hash, *data.mColumn);
+    }
+    if (data.mCategory.isSome()) {
+      hash = AddToHash(hash, *data.mCategory);
+    }
+  } else {
+    const JITFrameData& data = mData.as<JITFrameData>();
+    hash = AddToHash(hash, data.mCanonicalAddress);
+    hash = AddToHash(hash, data.mDepth);
+    hash = AddToHash(hash, data.mRangeIndex);
+  }
+  return hash;
+=======
+         mDepth == aOther.mDepth && mRangeIndex == aOther.mRangeIndex;
+>>>>>>> upstream-releases
 }
 
 // Consume aJITFrameInfo by stealing its string table and its JIT frame info
@@ -371,15 +725,32 @@ UniqueStacks::UniqueStacks(JITFrameInfo&& aJITFrameInfo)
   mStackTableWriter.StartBareList();
 }
 
+<<<<<<< HEAD
 uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack) {
   uint32_t count = mStackToIndexMap.Count();
   auto entry = mStackToIndexMap.LookupForAdd(aStack);
+||||||| merged common ancestors
+uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack)
+{
+  uint32_t count = mStackToIndexMap.Count();
+  auto entry = mStackToIndexMap.LookupForAdd(aStack);
+=======
+uint32_t UniqueStacks::GetOrAddStackIndex(const StackKey& aStack) {
+  uint32_t count = mStackToIndexMap.count();
+  auto entry = mStackToIndexMap.lookupForAdd(aStack);
+>>>>>>> upstream-releases
   if (entry) {
-    MOZ_ASSERT(entry.Data() < count);
-    return entry.Data();
+    MOZ_ASSERT(entry->value() < count);
+    return entry->value();
   }
 
+<<<<<<< HEAD
   entry.OrInsert([&] { return count; });
+||||||| merged common ancestors
+  entry.OrInsert([&]{ return count; });
+=======
+  MOZ_RELEASE_ASSERT(mStackToIndexMap.add(entry, aStack, count));
+>>>>>>> upstream-releases
   StreamStack(aStack);
   return count;
 }
@@ -395,8 +766,9 @@ struct PositionInRangeComparator final {
   }
 };
 
-Maybe<nsTArray<UniqueStacks::FrameKey>>
+Maybe<Vector<UniqueStacks::FrameKey>>
 UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
+<<<<<<< HEAD
                                                      uint64_t aBufferPos) {
   size_t rangeIndex = mJITInfoRanges.BinaryIndexOf(
       aBufferPos,
@@ -404,49 +776,120 @@ UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
   MOZ_RELEASE_ASSERT(
       rangeIndex != mJITInfoRanges.NoIndex,
       "Buffer position of jit address needs to be in one of the ranges");
+||||||| merged common ancestors
+                                                     uint64_t aBufferPos)
+{
+  size_t rangeIndex = mJITInfoRanges.BinaryIndexOf(aBufferPos,
+    PositionInRangeComparator<JITFrameInfoForBufferRange, uint64_t>());
+  MOZ_RELEASE_ASSERT(rangeIndex != mJITInfoRanges.NoIndex,
+                     "Buffer position of jit address needs to be in one of the ranges");
+=======
+                                                     uint64_t aBufferPos) {
+  JITFrameInfoForBufferRange* rangeIter =
+      std::lower_bound(mJITInfoRanges.begin(), mJITInfoRanges.end(), aBufferPos,
+                       [](const JITFrameInfoForBufferRange& aRange,
+                          uint64_t aPos) { return aRange.mRangeEnd < aPos; });
+  MOZ_RELEASE_ASSERT(
+      rangeIter != mJITInfoRanges.end() &&
+          rangeIter->mRangeStart <= aBufferPos &&
+          aBufferPos < rangeIter->mRangeEnd,
+      "Buffer position of jit address needs to be in one of the ranges");
+>>>>>>> upstream-releases
 
   using JITFrameKey = JITFrameInfoForBufferRange::JITFrameKey;
 
+<<<<<<< HEAD
   const JITFrameInfoForBufferRange& jitFrameInfoRange =
       mJITInfoRanges[rangeIndex];
   const nsTArray<JITFrameKey>* jitFrameKeys =
       jitFrameInfoRange.mJITAddressToJITFramesMap.Get(aJITAddress);
+||||||| merged common ancestors
+  const JITFrameInfoForBufferRange& jitFrameInfoRange = mJITInfoRanges[rangeIndex];
+  const nsTArray<JITFrameKey>* jitFrameKeys =
+    jitFrameInfoRange.mJITAddressToJITFramesMap.Get(aJITAddress);
+=======
+  const JITFrameInfoForBufferRange& jitFrameInfoRange = *rangeIter;
+  auto jitFrameKeys =
+      jitFrameInfoRange.mJITAddressToJITFramesMap.lookup(aJITAddress);
+>>>>>>> upstream-releases
   if (!jitFrameKeys) {
     return Nothing();
   }
 
   // Map the array of JITFrameKeys to an array of FrameKeys, and ensure that
   // each of the FrameKeys exists in mFrameToIndexMap.
+<<<<<<< HEAD
   nsTArray<FrameKey> frameKeys;
   for (const JITFrameKey& jitFrameKey : *jitFrameKeys) {
     FrameKey frameKey(jitFrameKey.mCanonicalAddress, jitFrameKey.mDepth,
                       rangeIndex);
     uint32_t index = mFrameToIndexMap.Count();
     auto entry = mFrameToIndexMap.LookupForAdd(frameKey);
+||||||| merged common ancestors
+  nsTArray<FrameKey> frameKeys;
+  for (const JITFrameKey& jitFrameKey : *jitFrameKeys) {
+    FrameKey frameKey(jitFrameKey.mCanonicalAddress, jitFrameKey.mDepth, rangeIndex);
+    uint32_t index = mFrameToIndexMap.Count();
+    auto entry = mFrameToIndexMap.LookupForAdd(frameKey);
+=======
+  Vector<FrameKey> frameKeys;
+  MOZ_RELEASE_ASSERT(frameKeys.initCapacity(jitFrameKeys->value().length()));
+  for (const JITFrameKey& jitFrameKey : jitFrameKeys->value()) {
+    FrameKey frameKey(jitFrameKey.mCanonicalAddress, jitFrameKey.mDepth,
+                      rangeIter - mJITInfoRanges.begin());
+    uint32_t index = mFrameToIndexMap.count();
+    auto entry = mFrameToIndexMap.lookupForAdd(frameKey);
+>>>>>>> upstream-releases
     if (!entry) {
       // We need to add this frame to our frame table. The JSON for this frame
       // already exists in jitFrameInfoRange, we just need to splice it into
       // the frame table and give it an index.
+<<<<<<< HEAD
       const nsCString* frameJSON =
           jitFrameInfoRange.mJITFrameToFrameJSONMap.Get(jitFrameKey);
+||||||| merged common ancestors
+      const nsCString* frameJSON =
+        jitFrameInfoRange.mJITFrameToFrameJSONMap.Get(jitFrameKey);
+=======
+      auto frameJSON =
+          jitFrameInfoRange.mJITFrameToFrameJSONMap.lookup(jitFrameKey);
+>>>>>>> upstream-releases
       MOZ_RELEASE_ASSERT(frameJSON, "Should have cached JSON for this frame");
-      mFrameTableWriter.Splice(frameJSON->get());
-      entry.OrInsert([&] { return index; });
+      mFrameTableWriter.Splice(frameJSON->value().get());
+      MOZ_RELEASE_ASSERT(mFrameToIndexMap.add(entry, frameKey, index));
     }
-    frameKeys.AppendElement(std::move(frameKey));
+    MOZ_RELEASE_ASSERT(frameKeys.append(std::move(frameKey)));
   }
   return Some(std::move(frameKeys));
 }
 
+<<<<<<< HEAD
 uint32_t UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame) {
   uint32_t count = mFrameToIndexMap.Count();
   auto entry = mFrameToIndexMap.LookupForAdd(aFrame);
+||||||| merged common ancestors
+uint32_t
+UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame)
+{
+  uint32_t count = mFrameToIndexMap.Count();
+  auto entry = mFrameToIndexMap.LookupForAdd(aFrame);
+=======
+uint32_t UniqueStacks::GetOrAddFrameIndex(const FrameKey& aFrame) {
+  uint32_t count = mFrameToIndexMap.count();
+  auto entry = mFrameToIndexMap.lookupForAdd(aFrame);
+>>>>>>> upstream-releases
   if (entry) {
-    MOZ_ASSERT(entry.Data() < count);
-    return entry.Data();
+    MOZ_ASSERT(entry->value() < count);
+    return entry->value();
   }
 
+<<<<<<< HEAD
   entry.OrInsert([&] { return count; });
+||||||| merged common ancestors
+  entry.OrInsert([&]{ return count; });
+=======
+  MOZ_RELEASE_ASSERT(mFrameToIndexMap.add(entry, aFrame, count));
+>>>>>>> upstream-releases
   StreamNonJITFrame(aFrame);
   return count;
 }
@@ -476,12 +919,28 @@ void UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame) {
 
   enum Schema : uint32_t {
     LOCATION = 0,
+<<<<<<< HEAD
     RELEVANT_FOR_JS = 1,
     IMPLEMENTATION = 2,
     OPTIMIZATIONS = 3,
     LINE = 4,
     COLUMN = 5,
     CATEGORY = 6
+||||||| merged common ancestors
+    IMPLEMENTATION = 1,
+    OPTIMIZATIONS = 2,
+    LINE = 3,
+    COLUMN = 4,
+    CATEGORY = 5
+=======
+    RELEVANT_FOR_JS = 1,
+    IMPLEMENTATION = 2,
+    OPTIMIZATIONS = 3,
+    LINE = 4,
+    COLUMN = 5,
+    CATEGORY = 6,
+    SUBCATEGORY = 7
+>>>>>>> upstream-releases
   };
 
   AutoArraySchemaWriter writer(mFrameTableWriter, *mUniqueStrings);
@@ -495,8 +954,11 @@ void UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame) {
   if (data.mColumn.isSome()) {
     writer.IntElement(COLUMN, *data.mColumn);
   }
-  if (data.mCategory.isSome()) {
-    writer.IntElement(CATEGORY, *data.mCategory);
+  if (data.mCategoryPair.isSome()) {
+    const JS::ProfilingCategoryPairInfo& info =
+        JS::GetProfilingCategoryPairInfo(*data.mCategoryPair);
+    writer.IntElement(CATEGORY, uint32_t(info.mCategory));
+    writer.IntElement(SUBCATEGORY, info.mSubcategoryIndex);
   }
 }
 
@@ -593,12 +1055,28 @@ static void StreamJITFrame(JSContext* aContext, SpliceableJSONWriter& aWriter,
                            const JS::ProfiledFrameHandle& aJITFrame) {
   enum Schema : uint32_t {
     LOCATION = 0,
+<<<<<<< HEAD
     RELEVANT_FOR_JS = 1,
     IMPLEMENTATION = 2,
     OPTIMIZATIONS = 3,
     LINE = 4,
     COLUMN = 5,
     CATEGORY = 6
+||||||| merged common ancestors
+    IMPLEMENTATION = 1,
+    OPTIMIZATIONS = 2,
+    LINE = 3,
+    COLUMN = 4,
+    CATEGORY = 5
+=======
+    RELEVANT_FOR_JS = 1,
+    IMPLEMENTATION = 2,
+    OPTIMIZATIONS = 3,
+    LINE = 4,
+    COLUMN = 5,
+    CATEGORY = 6,
+    SUBCATEGORY = 7
+>>>>>>> upstream-releases
   };
 
   AutoArraySchemaWriter writer(aWriter, aUniqueStrings);
@@ -621,6 +1099,11 @@ static void StreamJITFrame(JSContext* aContext, SpliceableJSONWriter& aWriter,
                                       aJITFrame);
         });
   }
+
+  const JS::ProfilingCategoryPairInfo& info =
+      JS::GetProfilingCategoryPairInfo(JS::ProfilingCategoryPair::JS);
+  writer.IntElement(CATEGORY, uint32_t(info.mCategory));
+  writer.IntElement(SUBCATEGORY, info.mSubcategoryIndex);
 }
 
 struct CStringWriteFunc : public JSONWriteFunc {
@@ -649,21 +1132,30 @@ void JITFrameInfo::AddInfoForRange(
 
   MOZ_RELEASE_ASSERT(aRangeStart < aRangeEnd);
 
-  if (!mRanges.IsEmpty()) {
-    const JITFrameInfoForBufferRange& prevRange = mRanges.LastElement();
+  if (!mRanges.empty()) {
+    const JITFrameInfoForBufferRange& prevRange = mRanges.back();
     MOZ_RELEASE_ASSERT(prevRange.mRangeEnd <= aRangeStart,
                        "Ranges must be non-overlapping and added in-order.");
   }
 
   using JITFrameKey = JITFrameInfoForBufferRange::JITFrameKey;
 
+<<<<<<< HEAD
   nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
       jitAddressToJITFrameMap;
   nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString>
       jitFrameToFrameJSONMap;
+||||||| merged common ancestors
+  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> jitAddressToJITFrameMap;
+  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> jitFrameToFrameJSONMap;
+=======
+  JITFrameInfoForBufferRange::JITAddressToJITFramesMap jitAddressToJITFrameMap;
+  JITFrameInfoForBufferRange::JITFrameToFrameJSONMap jitFrameToFrameJSONMap;
+>>>>>>> upstream-releases
 
   aJITAddressProvider([&](void* aJITAddress) {
     // Make sure that we have cached data for aJITAddress.
+<<<<<<< HEAD
     if (!jitAddressToJITFrameMap.Contains(aJITAddress)) {
       nsTArray<JITFrameKey>& jitFrameKeys =
           *jitAddressToJITFrameMap.LookupOrAdd(aJITAddress);
@@ -674,15 +1166,52 @@ void JITFrameInfo::AddInfoForRange(
         if (!jitFrameToFrameJSONMap.Contains(jitFrameKey)) {
           nsCString& json = *jitFrameToFrameJSONMap.LookupOrAdd(jitFrameKey);
           json = JSONForJITFrame(aCx, handle, *mUniqueStrings);
+||||||| merged common ancestors
+    if (!jitAddressToJITFrameMap.Contains(aJITAddress)) {
+      nsTArray<JITFrameKey>& jitFrameKeys =
+        *jitAddressToJITFrameMap.LookupOrAdd(aJITAddress);
+      for (JS::ProfiledFrameHandle handle : JS::GetProfiledFrames(aCx, aJITAddress)) {
+        uint32_t depth = jitFrameKeys.Length();
+        JITFrameKey jitFrameKey{ handle.canonicalAddress(), depth };
+        if (!jitFrameToFrameJSONMap.Contains(jitFrameKey)) {
+          nsCString& json = *jitFrameToFrameJSONMap.LookupOrAdd(jitFrameKey);
+          json = JSONForJITFrame(aCx, handle, *mUniqueStrings);
+=======
+    auto addressEntry = jitAddressToJITFrameMap.lookupForAdd(aJITAddress);
+    if (!addressEntry) {
+      Vector<JITFrameKey> jitFrameKeys;
+      for (JS::ProfiledFrameHandle handle :
+           JS::GetProfiledFrames(aCx, aJITAddress)) {
+        uint32_t depth = jitFrameKeys.length();
+        JITFrameKey jitFrameKey{handle.canonicalAddress(), depth};
+        auto frameEntry = jitFrameToFrameJSONMap.lookupForAdd(jitFrameKey);
+        if (!frameEntry) {
+          MOZ_RELEASE_ASSERT(jitFrameToFrameJSONMap.add(
+              frameEntry, jitFrameKey,
+              JSONForJITFrame(aCx, handle, *mUniqueStrings)));
+>>>>>>> upstream-releases
         }
-        jitFrameKeys.AppendElement(jitFrameKey);
+        MOZ_RELEASE_ASSERT(jitFrameKeys.append(jitFrameKey));
       }
+      MOZ_RELEASE_ASSERT(jitAddressToJITFrameMap.add(addressEntry, aJITAddress,
+                                                     std::move(jitFrameKeys)));
     }
   });
 
+<<<<<<< HEAD
   mRanges.AppendElement(JITFrameInfoForBufferRange{
       aRangeStart, aRangeEnd, std::move(jitAddressToJITFrameMap),
       std::move(jitFrameToFrameJSONMap)});
+||||||| merged common ancestors
+  mRanges.AppendElement(JITFrameInfoForBufferRange{
+    aRangeStart, aRangeEnd,
+    std::move(jitAddressToJITFrameMap), std::move(jitFrameToFrameJSONMap)
+  });
+=======
+  MOZ_RELEASE_ASSERT(mRanges.append(JITFrameInfoForBufferRange{
+      aRangeStart, aRangeEnd, std::move(jitAddressToJITFrameMap),
+      std::move(jitFrameToFrameJSONMap)}));
+>>>>>>> upstream-releases
 }
 
 struct ProfileSample {
@@ -753,7 +1282,13 @@ class EntryGetter {
 //     ThreadId
 //     Time
 //     ( NativeLeafAddr
+<<<<<<< HEAD
 //     | Label FrameFlags? DynamicStringFragment* LineNumber? Category?
+||||||| merged common ancestors
+//     | Label DynamicStringFragment* LineNumber? Category?
+=======
+//     | Label FrameFlags? DynamicStringFragment* LineNumber? CategoryPair?
+>>>>>>> upstream-releases
 //     | JitReturnAddr
 //     )+
 //     Marker*
@@ -775,6 +1310,12 @@ class EntryGetter {
 //   | CollectionEnd
 //   | Pause
 //   | Resume
+//   | ( ProfilerOverheadTime /* Sampling start timestamp */
+//       ProfilerOverheadDuration /* Lock acquisition */
+//       ProfilerOverheadDuration /* Expired markers cleaning */
+//       ProfilerOverheadDuration /* Counters */
+//       ProfilerOverheadDuration /* Threads */
+//     )
 // )*
 //
 // The most complicated part is the stack entry sequence that begins with
@@ -783,15 +1324,15 @@ class EntryGetter {
 // - ProfilingStack frames without a dynamic string:
 //
 //     Label("js::RunScript")
-//     Category(ProfilingStackFrame::Category::JS)
+//     CategoryPair(JS::ProfilingCategoryPair::JS)
 //
 //     Label("XREMain::XRE_main")
 //     LineNumber(4660)
-//     Category(ProfilingStackFrame::Category::OTHER)
+//     CategoryPair(JS::ProfilingCategoryPair::OTHER)
 //
 //     Label("ElementRestyler::ComputeStyleChangeFor")
 //     LineNumber(3003)
-//     Category(ProfilingStackFrame::Category::CSS)
+//     CategoryPair(JS::ProfilingCategoryPair::CSS)
 //
 // - ProfilingStack frames with a dynamic string:
 //
@@ -800,7 +1341,7 @@ class EntryGetter {
 //     DynamicStringFragment("domwindo")
 //     DynamicStringFragment("wopened")
 //     LineNumber(291)
-//     Category(ProfilingStackFrame::Category::OTHER)
+//     CategoryPair(JS::ProfilingCategoryPair::OTHER)
 //
 //     Label("")
 //     FrameFlags(uint64_t(ProfilingStackFrame::Flags::IS_JS_FRAME))
@@ -813,7 +1354,7 @@ class EntryGetter {
 //     DynamicStringFragment("ay.js:5)")
 //     DynamicStringFragment("")          # this string holds the closing '\0'
 //     LineNumber(25)
-//     Category(ProfilingStackFrame::Category::JS)
+//     CategoryPair(JS::ProfilingCategoryPair::JS)
 //
 //     Label("")
 //     FrameFlags(uint64_t(ProfilingStackFrame::Flags::IS_JS_FRAME))
@@ -821,7 +1362,7 @@ class EntryGetter {
 //     DynamicStringFragment("elf-host")
 //     DynamicStringFragment("ed:914)")
 //     LineNumber(945)
-//     Category(ProfilingStackFrame::Category::JS)
+//     CategoryPair(JS::ProfilingCategoryPair::JS)
 //
 // - A profiling stack frame with a dynamic string, but with privacy enabled:
 //
@@ -830,7 +1371,7 @@ class EntryGetter {
 //     DynamicStringFragment("(private")
 //     DynamicStringFragment(")")
 //     LineNumber(291)
-//     Category(ProfilingStackFrame::Category::OTHER)
+//     CategoryPair(JS::ProfilingCategoryPair::OTHER)
 //
 // - A profiling stack frame with an overly long dynamic string:
 //
@@ -839,7 +1380,7 @@ class EntryGetter {
 //     DynamicStringFragment("(too lon")
 //     DynamicStringFragment("g)")
 //     LineNumber(100)
-//     Category(ProfilingStackFrame::Category::NETWORK)
+//     CategoryPair(JS::ProfilingCategoryPair::NETWORK)
 //
 // - A wasm JIT frame:
 //
@@ -913,7 +1454,7 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
     }
 
     if (e.Get().IsThreadId()) {
-      int threadId = e.Get().u.mInt;
+      int threadId = e.Get().GetInt();
       e.Next();
 
       // Ignore samples that are for the wrong thread.
@@ -929,7 +1470,7 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
     ProfileSample sample;
 
     if (e.Has() && e.Get().IsTime()) {
-      sample.mTime = e.Get().u.mDouble;
+      sample.mTime = e.Get().GetDouble();
       e.Next();
 
       // Ignore samples that are too old.
@@ -948,20 +1489,57 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
       if (e.Get().IsNativeLeafAddr()) {
         numFrames++;
 
+        void* pc = e.Get().GetPtr();
+        e.Next();
+
+        static const uint32_t BUF_SIZE = 256;
+        char buf[BUF_SIZE];
+
         // Bug 753041: We need a double cast here to tell GCC that we don't
         // want to sign extend 32-bit addresses starting with 0xFXXXXXX.
-        unsigned long long pc = (unsigned long long)(uintptr_t)e.Get().u.mPtr;
-        char buf[20];
-        SprintfLiteral(buf, "%#llx", pc);
+        unsigned long long pcULL = (unsigned long long)(uintptr_t)pc;
+        SprintfLiteral(buf, "%#llx", pcULL);
+
+        // If the "MOZ_PROFILER_SYMBOLICATE" env-var is set, we add a local
+        // symbolication description to the PC address. This is off by default,
+        // and mainly intended for local development.
+        static const bool preSymbolicate = []() {
+          const char* symbolicate = getenv("MOZ_PROFILER_SYMBOLICATE");
+          return symbolicate && symbolicate[0] != '\0';
+        }();
+        if (preSymbolicate) {
+          MozCodeAddressDetails details;
+          if (MozDescribeCodeAddress(pc, &details)) {
+            // Replace \0 terminator with space.
+            const uint32_t pcLen = strlen(buf);
+            buf[pcLen] = ' ';
+            // Add description after space. Note: Using a frame number of 0,
+            // as using `numFrames` wouldn't help here, and would prevent
+            // combining same function calls that happen at different depths.
+            // TODO: Remove unsightly "#00: " if too annoying. :-)
+            MozFormatCodeAddressDetails(buf + pcLen + 1, BUF_SIZE - (pcLen + 1),
+                                        0, pc, &details);
+          }
+        }
+
         stack = aUniqueStacks.AppendFrame(stack, UniqueStacks::FrameKey(buf));
-        e.Next();
 
       } else if (e.Get().IsLabel()) {
         numFrames++;
 
+<<<<<<< HEAD
         const char* label = e.Get().u.mString;
+||||||| merged common ancestors
+        // Copy the label into strbuf.
+        const char* label = e.Get().u.mString;
+        strncpy(strbuf.get(), label, kMaxFrameKeyLength);
+        size_t i = strlen(label);
+=======
+        const char* label = e.Get().GetString();
+>>>>>>> upstream-releases
         e.Next();
 
+<<<<<<< HEAD
         using FrameFlags = js::ProfilingStackFrame::Flags;
         uint32_t frameFlags = 0;
         if (e.Has() && e.Get().IsFrameFlags()) {
@@ -975,12 +1553,55 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
         // dynStrBuf will then contain the entire dynamic string.
         size_t i = 0;
         dynStrBuf[0] = '\0';
+||||||| merged common ancestors
+        bool seenFirstDynamicStringFragment = false;
+=======
+        using FrameFlags = js::ProfilingStackFrame::Flags;
+        uint32_t frameFlags = 0;
+        if (e.Has() && e.Get().IsFrameFlags()) {
+          frameFlags = uint32_t(e.Get().GetUint64());
+          e.Next();
+        }
+
+        bool relevantForJS = frameFlags & uint32_t(FrameFlags::RELEVANT_FOR_JS);
+
+        // Copy potential dynamic string fragments into dynStrBuf, so that
+        // dynStrBuf will then contain the entire dynamic string.
+        size_t i = 0;
+        dynStrBuf[0] = '\0';
+>>>>>>> upstream-releases
         while (e.Has()) {
           if (e.Get().IsDynamicStringFragment()) {
+<<<<<<< HEAD
             for (size_t j = 0; j < ProfileBufferEntry::kNumChars; j++) {
               const char* chars = e.Get().u.mChars;
+||||||| merged common ancestors
+            // If this is the first dynamic string fragment and we have a
+            // non-empty label, insert a ' ' after the label and before the
+            // dynamic string.
+            if (!seenFirstDynamicStringFragment) {
+              if (i > 0 && i < kMaxFrameKeyLength) {
+                strbuf[i] = ' ';
+                i++;
+              }
+              seenFirstDynamicStringFragment = true;
+            }
+
+            for (size_t j = 0; j < ProfileBufferEntry::kNumChars; j++) {
+              const char* chars = e.Get().u.mChars;
+=======
+            char chars[ProfileBufferEntry::kNumChars];
+            e.Get().CopyCharsInto(chars);
+            for (char c : chars) {
+>>>>>>> upstream-releases
               if (i < kMaxFrameKeyLength) {
+<<<<<<< HEAD
                 dynStrBuf[i] = chars[j];
+||||||| merged common ancestors
+                strbuf[i] = chars[j];
+=======
+                dynStrBuf[i] = c;
+>>>>>>> upstream-releases
                 i++;
               }
             }
@@ -1013,34 +1634,53 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
 
         Maybe<unsigned> line;
         if (e.Has() && e.Get().IsLineNumber()) {
-          line = Some(unsigned(e.Get().u.mInt));
+          line = Some(unsigned(e.Get().GetInt()));
           e.Next();
         }
 
         Maybe<unsigned> column;
         if (e.Has() && e.Get().IsColumnNumber()) {
-          column = Some(unsigned(e.Get().u.mInt));
+          column = Some(unsigned(e.Get().GetInt()));
           e.Next();
         }
 
-        Maybe<unsigned> category;
-        if (e.Has() && e.Get().IsCategory()) {
-          category = Some(unsigned(e.Get().u.mInt));
+        Maybe<JS::ProfilingCategoryPair> categoryPair;
+        if (e.Has() && e.Get().IsCategoryPair()) {
+          categoryPair =
+              Some(JS::ProfilingCategoryPair(uint32_t(e.Get().GetInt())));
           e.Next();
         }
 
         stack = aUniqueStacks.AppendFrame(
+<<<<<<< HEAD
             stack, UniqueStacks::FrameKey(std::move(frameLabel), relevantForJS,
                                           line, column, category));
+||||||| merged common ancestors
+          stack, UniqueStacks::FrameKey(strbuf.get(), line, column, category));
+=======
+            stack, UniqueStacks::FrameKey(std::move(frameLabel), relevantForJS,
+                                          line, column, categoryPair));
+>>>>>>> upstream-releases
 
       } else if (e.Get().IsJitReturnAddr()) {
         numFrames++;
 
         // A JIT frame may expand to multiple frames due to inlining.
+<<<<<<< HEAD
         void* pc = e.Get().u.mPtr;
         const Maybe<nsTArray<UniqueStacks::FrameKey>>& frameKeys =
             aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc,
                                                                  e.CurPos());
+||||||| merged common ancestors
+        void* pc = e.Get().u.mPtr;
+        const Maybe<nsTArray<UniqueStacks::FrameKey>>& frameKeys =
+          aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc, e.CurPos());
+=======
+        void* pc = e.Get().GetPtr();
+        const Maybe<Vector<UniqueStacks::FrameKey>>& frameKeys =
+            aUniqueStacks.LookupFramesForJITAddressFromBufferPos(pc,
+                                                                 e.CurPos());
+>>>>>>> upstream-releases
         MOZ_RELEASE_ASSERT(frameKeys,
                            "Attempting to stream samples for a buffer range "
                            "for which we don't have JITFrameInfo?");
@@ -1074,17 +1714,17 @@ void ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter,
     }
 
     if (e.Has() && e.Get().IsResponsiveness()) {
-      sample.mResponsiveness = Some(e.Get().u.mDouble);
+      sample.mResponsiveness = Some(e.Get().GetDouble());
       e.Next();
     }
 
     if (e.Has() && e.Get().IsResidentMemory()) {
-      sample.mRSS = Some(e.Get().u.mDouble);
+      sample.mRSS = Some(e.Get().GetDouble());
       e.Next();
     }
 
     if (e.Has() && e.Get().IsUnsharedMemory()) {
-      sample.mUSS = Some(e.Get().u.mDouble);
+      sample.mUSS = Some(e.Get().GetDouble());
       e.Next();
     }
 
@@ -1115,20 +1755,42 @@ void ProfileBuffer::AddJITInfoForRange(uint64_t aRangeStart, int aThreadId,
             break;
           }
 
+<<<<<<< HEAD
           MOZ_ASSERT(e.Get().IsThreadId());
           int threadId = e.Get().u.mInt;
           e.Next();
+||||||| merged common ancestors
+        MOZ_ASSERT(e.Get().IsThreadId());
+        int threadId = e.Get().u.mInt;
+        e.Next();
+=======
+          MOZ_ASSERT(e.Get().IsThreadId());
+          int threadId = e.Get().GetInt();
+          e.Next();
+>>>>>>> upstream-releases
 
           // Ignore samples that are for a different thread.
           if (threadId != aThreadId) {
             continue;
           }
 
+<<<<<<< HEAD
           while (e.Has() && !e.Get().IsThreadId()) {
             if (e.Get().IsJitReturnAddr()) {
               aJITAddressConsumer(e.Get().u.mPtr);
             }
             e.Next();
+||||||| merged common ancestors
+        while (e.Has() && !e.Get().IsThreadId()) {
+          if (e.Get().IsJitReturnAddr()) {
+            aJITAddressConsumer(e.Get().u.mPtr);
+=======
+          while (e.Has() && !e.Get().IsThreadId()) {
+            if (e.Get().IsJitReturnAddr()) {
+              aJITAddressConsumer(e.Get().GetPtr());
+            }
+            e.Next();
+>>>>>>> upstream-releases
           }
         }
       });
@@ -1149,7 +1811,7 @@ void ProfileBuffer::StreamMarkersToJSON(SpliceableJSONWriter& aWriter,
   // samples.
   while (e.Has()) {
     if (e.Get().IsMarker()) {
-      const ProfilerMarker* marker = e.Get().u.mMarker;
+      const ProfilerMarker* marker = e.Get().GetMarker();
       if (marker->GetTime() >= aSinceTime &&
           marker->GetThreadId() == aThreadId) {
         marker->StreamJSON(aWriter, aProcessStartTime, aUniqueStacks);
@@ -1159,17 +1821,175 @@ void ProfileBuffer::StreamMarkersToJSON(SpliceableJSONWriter& aWriter,
   }
 }
 
+<<<<<<< HEAD
 struct CounterKeyedSample {
+||||||| merged common ancestors
+
+struct CounterKeyedSample
+{
+=======
+void ProfileBuffer::StreamProfilerOverheadToJSON(
+    SpliceableJSONWriter& aWriter, const TimeStamp& aProcessStartTime,
+    double aSinceTime) const {
+  enum Schema : uint32_t {
+    TIME = 0,
+    LOCKING = 1,
+    MARKER_CLEANING = 2,
+    COUNTERS = 3,
+    THREADS = 4
+  };
+
+  EntryGetter e(*this);
+
+  aWriter.StartObjectProperty("profilerOverhead_UNSTABLE");
+  // Stream all sampling overhead data. We skip other entries, because we
+  // process them in StreamSamplesToJSON()/etc.
+  {
+    JSONSchemaWriter schema(aWriter);
+    schema.WriteField("time");
+    schema.WriteField("locking");
+    schema.WriteField("expiredMarkerCleaning");
+    schema.WriteField("counters");
+    schema.WriteField("threads");
+  }
+
+  aWriter.StartArrayProperty("data");
+  double firstTime = 0.0;
+  double lastTime = 0.0;
+  struct Stats {
+    unsigned n = 0;
+    double sum = 0;
+    double min = std::numeric_limits<double>::max();
+    double max = 0;
+    void Count(double v) {
+      ++n;
+      sum += v;
+      if (v < min) {
+        min = v;
+      }
+      if (v > max) {
+        max = v;
+      }
+    }
+  };
+  Stats intervals, overheads, lockings, cleanings, counters, threads;
+  while (e.Has()) {
+    // valid sequence: ProfilerOverheadTime, ProfilerOverheadDuration * 4
+    if (e.Get().IsProfilerOverheadTime()) {
+      double time = e.Get().GetDouble();
+      if (time >= aSinceTime) {
+        e.Next();
+        if (!e.Has() || !e.Get().IsProfilerOverheadDuration()) {
+          ERROR_AND_CONTINUE(
+              "expected a ProfilerOverheadDuration entry after "
+              "ProfilerOverheadTime");
+        }
+        double locking = e.Get().GetDouble();
+        e.Next();
+        if (!e.Has() || !e.Get().IsProfilerOverheadDuration()) {
+          ERROR_AND_CONTINUE(
+              "expected a ProfilerOverheadDuration entry after "
+              "ProfilerOverheadTime,ProfilerOverheadDuration");
+        }
+        double cleaning = e.Get().GetDouble();
+        e.Next();
+        if (!e.Has() || !e.Get().IsProfilerOverheadDuration()) {
+          ERROR_AND_CONTINUE(
+              "expected a ProfilerOverheadDuration entry after "
+              "ProfilerOverheadTime,ProfilerOverheadDuration*2");
+        }
+        double counter = e.Get().GetDouble();
+        e.Next();
+        if (!e.Has() || !e.Get().IsProfilerOverheadDuration()) {
+          ERROR_AND_CONTINUE(
+              "expected a ProfilerOverheadDuration entry after "
+              "ProfilerOverheadTime,ProfilerOverheadDuration*3");
+        }
+        double thread = e.Get().GetDouble();
+
+        if (firstTime == 0.0) {
+          firstTime = time;
+        } else {
+          // Note that we'll have 1 fewer interval than other numbers (because
+          // we need both ends of an interval to know its duration). The final
+          // difference should be insignificant over the expected many thousands
+          // of iterations.
+          intervals.Count(time - lastTime);
+        }
+        lastTime = time;
+        overheads.Count(locking + cleaning + counter + thread);
+        lockings.Count(locking);
+        cleanings.Count(cleaning);
+        counters.Count(counter);
+        threads.Count(thread);
+
+        AutoArraySchemaWriter writer(aWriter);
+        writer.DoubleElement(TIME, time);
+        writer.DoubleElement(LOCKING, locking);
+        writer.DoubleElement(MARKER_CLEANING, cleaning);
+        writer.DoubleElement(COUNTERS, counter);
+        writer.DoubleElement(THREADS, thread);
+      }
+    }
+    e.Next();
+  }
+  aWriter.EndArray();  // data
+
+  // Only output statistics if there is at least one full interval (and
+  // therefore at least two samplings.)
+  if (intervals.n > 0) {
+    aWriter.StartObjectProperty("statistics");
+    aWriter.DoubleProperty("profiledDuration", lastTime - firstTime);
+    aWriter.IntProperty("samplingCount", overheads.n);
+    aWriter.DoubleProperty("overheadDurations", overheads.sum);
+    aWriter.DoubleProperty("overheadPercentage",
+                           overheads.sum / (lastTime - firstTime));
+#define PROFILER_STATS(name, var)                           \
+  aWriter.DoubleProperty("mean" name, (var).sum / (var).n); \
+  aWriter.DoubleProperty("min" name, (var).min);            \
+  aWriter.DoubleProperty("max" name, (var).max);
+    PROFILER_STATS("Interval", intervals);
+    PROFILER_STATS("Overhead", overheads);
+    PROFILER_STATS("Lockings", lockings);
+    PROFILER_STATS("Cleaning", cleanings);
+    PROFILER_STATS("Counter", counters);
+    PROFILER_STATS("Thread", threads);
+#undef PROFILER_STATS
+    aWriter.EndObject();  // statistics
+  }
+  aWriter.EndObject();  // profilerOverhead
+}
+
+struct CounterKeyedSample {
+>>>>>>> upstream-releases
   double mTime;
   uint64_t mNumber;
   int64_t mCount;
 };
 
-typedef nsTArray<CounterKeyedSample> CounterKeyedSamples;
+using CounterKeyedSamples = Vector<CounterKeyedSample>;
 
 static LazyLogModule sFuzzyfoxLog("Fuzzyfox");
 
-typedef nsDataHashtable<nsUint64HashKey, CounterKeyedSamples> CounterMap;
+<<<<<<< HEAD
+static LazyLogModule sFuzzyfoxLog("Fuzzyfox");
+||||||| merged common ancestors
+=======
+using CounterMap = HashMap<uint64_t, CounterKeyedSamples>;
+>>>>>>> upstream-releases
+
+// HashMap lookup, if not found, a default value is inserted.
+// Returns reference to (existing or new) value inside the HashMap.
+template <typename HashM, typename Key>
+static auto& LookupOrAdd(HashM& aMap, Key&& aKey) {
+  auto addPtr = aMap.lookupForAdd(aKey);
+  if (!addPtr) {
+    MOZ_RELEASE_ASSERT(aMap.add(addPtr, std::forward<Key>(aKey),
+                                typename HashM::Entry::ValueType{}));
+    MOZ_ASSERT(!!addPtr);
+  }
+  return addPtr->value();
+}
 
 void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
                                          const TimeStamp& aProcessStartTime,
@@ -1215,37 +2035,37 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
   // },
 
   // Build the map of counters and populate it
-  nsDataHashtable<nsVoidPtrHashKey, CounterMap> counters;
+  HashMap<void*, CounterMap> counters;
 
   while (e.Has()) {
     // skip all non-Counters, including if we start in the middle of a counter
     if (e.Get().IsCounterId()) {
-      void* id = e.Get().u.mPtr;
-      CounterMap& counter = counters.GetOrInsert(id);
+      void* id = e.Get().GetPtr();
+      CounterMap& counter = LookupOrAdd(counters, id);
       e.Next();
       if (!e.Has() || !e.Get().IsTime()) {
         ERROR_AND_CONTINUE("expected a Time entry");
       }
-      double time = e.Get().u.mDouble;
+      double time = e.Get().GetDouble();
       if (time >= aSinceTime) {
         e.Next();
         while (e.Has() && e.Get().IsCounterKey()) {
-          uint64_t key = e.Get().u.mUint64;
-          CounterKeyedSamples& data = counter.GetOrInsert(key);
+          uint64_t key = e.Get().GetUint64();
+          CounterKeyedSamples& data = LookupOrAdd(counter, key);
           e.Next();
           if (!e.Has() || !e.Get().IsCount()) {
             ERROR_AND_CONTINUE("expected a Count entry");
           }
-          int64_t count = e.Get().u.mUint64;
+          int64_t count = e.Get().GetUint64();
           e.Next();
           uint64_t number;
           if (!e.Has() || !e.Get().IsNumber()) {
             number = 0;
           } else {
-            number = e.Get().u.mInt64;
+            number = e.Get().GetInt64();
           }
           CounterKeyedSample sample = {time, number, count};
-          data.AppendElement(sample);
+          MOZ_RELEASE_ASSERT(data.append(sample));
         }
       } else {
         // skip counter sample - only need to skip the initial counter
@@ -1255,15 +2075,26 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
     e.Next();
   }
   // we have a map of a map of counter entries; dump them to JSON
-  if (counters.Count() == 0) {
+  if (counters.count() == 0) {
     return;
   }
 
   aWriter.StartArrayProperty("counters");
+<<<<<<< HEAD
   for (auto iter = counters.Iter(); !iter.Done(); iter.Next()) {
     CounterMap& counter = iter.Data();
     const BaseProfilerCount* base_counter =
         static_cast<const BaseProfilerCount*>(iter.Key());
+||||||| merged common ancestors
+  for (auto iter = counters.Iter(); !iter.Done(); iter.Next()) {
+    CounterMap& counter = iter.Data();
+    const BaseProfilerCount* base_counter = static_cast<const BaseProfilerCount*>(iter.Key());
+=======
+  for (auto iter = counters.iter(); !iter.done(); iter.next()) {
+    CounterMap& counter = iter.get().value();
+    const BaseProfilerCount* base_counter =
+        static_cast<const BaseProfilerCount*>(iter.get().key());
+>>>>>>> upstream-releases
 
     aWriter.Start();
     aWriter.StringProperty("name", base_counter->mLabel);
@@ -1271,12 +2102,23 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
     aWriter.StringProperty("description", base_counter->mDescription);
 
     aWriter.StartObjectProperty("sample_groups");
+<<<<<<< HEAD
     for (auto counter_iter = counter.Iter(); !counter_iter.Done();
          counter_iter.Next()) {
       CounterKeyedSamples& samples = counter_iter.Data();
       uint64_t key = counter_iter.Key();
+||||||| merged common ancestors
+    for (auto counter_iter = counter.Iter(); !counter_iter.Done(); counter_iter.Next()) {
+      CounterKeyedSamples& samples = counter_iter.Data();
+      uint64_t key = counter_iter.Key();
+=======
+    for (auto counter_iter = counter.iter(); !counter_iter.done();
+         counter_iter.next()) {
+      CounterKeyedSamples& samples = counter_iter.get().value();
+      uint64_t key = counter_iter.get().key();
+>>>>>>> upstream-releases
 
-      size_t size = samples.Length();
+      size_t size = samples.length();
       if (size == 0) {
         continue;
       }
@@ -1304,12 +2146,30 @@ void ProfileBuffer::StreamCountersToJSON(SpliceableJSONWriter& aWriter,
           }
           MOZ_ASSERT(i == 0 || samples[i].mTime >= samples[i - 1].mTime);
           MOZ_ASSERT(samples[i].mNumber >= previousNumber);
+<<<<<<< HEAD
 
           aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
           aWriter.DoubleElement(samples[i].mTime);
           aWriter.IntElement(samples[i].mNumber - previousNumber);  // uint64_t
           aWriter.IntElement(samples[i].mCount - previousCount);    // int64_t
           aWriter.EndArray();
+||||||| merged common ancestors
+
+          aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
+          aWriter.DoubleElement(samples[i].mTime);
+          aWriter.IntElement(samples[i].mNumber - previousNumber); // uint64_t
+          aWriter.IntElement(samples[i].mCount - previousCount); // int64_t
+          aWriter.EndArray();
+=======
+          MOZ_ASSERT(samples[i].mNumber - previousNumber <=
+                     uint64_t(std::numeric_limits<int64_t>::max()));
+
+          AutoArraySchemaWriter writer(aWriter);
+          writer.DoubleElement(TIME, samples[i].mTime);
+          writer.IntElement(NUMBER, static_cast<int64_t>(samples[i].mNumber -
+                                                         previousNumber));
+          writer.IntElement(COUNT, samples[i].mCount - previousCount);
+>>>>>>> upstream-releases
           previousNumber = samples[i].mNumber;
           previousCount = samples[i].mCount;
         }
@@ -1348,28 +2208,43 @@ void ProfileBuffer::StreamMemoryToJSON(SpliceableJSONWriter& aWriter,
   while (e.Has()) {
     // valid sequence: Resident, Unshared?, Time
     if (e.Get().IsResidentMemory()) {
-      int64_t rss = e.Get().u.mInt64;
+      int64_t rss = e.Get().GetInt64();
       int64_t uss = 0;
       e.Next();
       if (e.Has()) {
         if (e.Get().IsUnsharedMemory()) {
-          uss = e.Get().u.mDouble;
+          uss = e.Get().GetDouble();
           e.Next();
           if (!e.Has()) {
             break;
           }
         }
         if (e.Get().IsTime()) {
-          double time = e.Get().u.mDouble;
+          double time = e.Get().GetDouble();
           if (time >= aSinceTime &&
               (previous_rss != rss || previous_uss != uss)) {
+<<<<<<< HEAD
             aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
             aWriter.DoubleElement(time);
             aWriter.IntElement(rss);  // int64_t
+||||||| merged common ancestors
+            aWriter.StartArrayElement(SpliceableJSONWriter::SingleLineStyle);
+            aWriter.DoubleElement(time);
+            aWriter.IntElement(rss); // int64_t
+=======
+            AutoArraySchemaWriter writer(aWriter);
+            writer.DoubleElement(TIME, time);
+            writer.IntElement(RSS, rss);
+>>>>>>> upstream-releases
             if (uss != 0) {
+<<<<<<< HEAD
               aWriter.IntElement(uss);  // int64_t
+||||||| merged common ancestors
+              aWriter.IntElement(uss); // int64_t
+=======
+              writer.IntElement(USS, uss);
+>>>>>>> upstream-releases
             }
-            aWriter.EndArray();
             previous_rss = rss;
             previous_uss = uss;
           }
@@ -1413,16 +2288,32 @@ void ProfileBuffer::StreamPausedRangesToJSON(SpliceableJSONWriter& aWriter,
 
   while (e.Has()) {
     if (e.Get().IsPause()) {
-      currentPauseStartTime = Some(e.Get().u.mDouble);
+      currentPauseStartTime = Some(e.Get().GetDouble());
     } else if (e.Get().IsResume()) {
+<<<<<<< HEAD
       AddPausedRange(aWriter, "profiler-paused", currentPauseStartTime,
                      Some(e.Get().u.mDouble));
+||||||| merged common ancestors
+      AddPausedRange(aWriter, "profiler-paused",
+                     currentPauseStartTime, Some(e.Get().u.mDouble));
+=======
+      AddPausedRange(aWriter, "profiler-paused", currentPauseStartTime,
+                     Some(e.Get().GetDouble()));
+>>>>>>> upstream-releases
       currentPauseStartTime = Nothing();
     } else if (e.Get().IsCollectionStart()) {
-      currentCollectionStartTime = Some(e.Get().u.mDouble);
+      currentCollectionStartTime = Some(e.Get().GetDouble());
     } else if (e.Get().IsCollectionEnd()) {
+<<<<<<< HEAD
       AddPausedRange(aWriter, "collecting", currentCollectionStartTime,
                      Some(e.Get().u.mDouble));
+||||||| merged common ancestors
+      AddPausedRange(aWriter, "collecting",
+                     currentCollectionStartTime, Some(e.Get().u.mDouble));
+=======
+      AddPausedRange(aWriter, "collecting", currentCollectionStartTime,
+                     Some(e.Get().GetDouble()));
+>>>>>>> upstream-releases
       currentCollectionStartTime = Nothing();
     }
     e.Next();
@@ -1454,7 +2345,7 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
   uint64_t lastSampleStartPos = *aLastSample;
 
   MOZ_RELEASE_ASSERT(GetEntry(lastSampleStartPos).IsThreadId() &&
-                     GetEntry(lastSampleStartPos).u.mInt == aThreadId);
+                     GetEntry(lastSampleStartPos).GetInt() == aThreadId);
 
   aLastSample = Some(AddThreadIdEntry(aThreadId));
 
@@ -1473,7 +2364,13 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
       case ProfileBufferEntry::Kind::Time:
         // Copy with new time
         AddEntry(ProfileBufferEntry::Time(
+<<<<<<< HEAD
             (TimeStamp::Now() - aProcessStartTime).ToMilliseconds()));
+||||||| merged common ancestors
+          (TimeStamp::Now() - aProcessStartTime).ToMilliseconds()));
+=======
+            (TimeStamp::NowUnfuzzed() - aProcessStartTime).ToMilliseconds()));
+>>>>>>> upstream-releases
         break;
       case ProfileBufferEntry::Kind::Marker:
       case ProfileBufferEntry::Kind::ResidentMemory:
@@ -1498,6 +2395,35 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
         }
         // we've skipped Time
         break;
+      case ProfileBufferEntry::Kind::ProfilerOverheadTime:
+        // ProfilerOverheadTime is normally followed by
+        // ProfilerOverheadDuration*4 - if so, we'd like to skip it. Don't
+        // duplicate, as we are in the middle of a sampling and will soon
+        // capture its own overhead.
+        e.Next();
+        // A missing Time would only happen if there was an invalid sequence
+        // in the buffer. Don't skip unexpected entry.
+        if (e.Has() && e.Get().GetKind() !=
+                           ProfileBufferEntry::Kind::ProfilerOverheadDuration) {
+          continue;
+        }
+        e.Next();
+        if (e.Has() && e.Get().GetKind() !=
+                           ProfileBufferEntry::Kind::ProfilerOverheadDuration) {
+          continue;
+        }
+        e.Next();
+        if (e.Has() && e.Get().GetKind() !=
+                           ProfileBufferEntry::Kind::ProfilerOverheadDuration) {
+          continue;
+        }
+        e.Next();
+        if (e.Has() && e.Get().GetKind() !=
+                           ProfileBufferEntry::Kind::ProfilerOverheadDuration) {
+          continue;
+        }
+        // we've skipped ProfilerOverheadTime and ProfilerOverheadDuration*4.
+        break;
       default: {
         // Copy anything else we don't know about.
         ProfileBufferEntry entry = e.Get();
@@ -1510,6 +2436,7 @@ bool ProfileBuffer::DuplicateLastSample(int aThreadId,
   return true;
 }
 
+<<<<<<< HEAD
 void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
   EntryGetter e(*this);
   for (;;) {
@@ -1553,5 +2480,51 @@ void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
   }
 }
 
+||||||| merged common ancestors
+=======
+void ProfileBuffer::DiscardSamplesBeforeTime(double aTime) {
+  EntryGetter e(*this);
+  for (;;) {
+    // This block skips entries until we find the start of the next sample.
+    // This is useful in three situations.
+    //
+    // - The circular buffer overwrites old entries, so when we start parsing
+    //   we might be in the middle of a sample, and we must skip forward to the
+    //   start of the next sample.
+    //
+    // - We skip samples that don't have an appropriate ThreadId or Time.
+    //
+    // - We skip range Pause, Resume, CollectionStart, Marker, and CollectionEnd
+    //   entries between samples.
+    while (e.Has()) {
+      if (e.Get().IsThreadId()) {
+        break;
+      } else {
+        e.Next();
+      }
+    }
+
+    if (!e.Has()) {
+      break;
+    }
+
+    MOZ_RELEASE_ASSERT(e.Get().IsThreadId());
+    uint64_t sampleStartPos = e.CurPos();
+    e.Next();
+
+    if (e.Has() && e.Get().IsTime()) {
+      double sampleTime = e.Get().GetDouble();
+
+      if (sampleTime >= aTime) {
+        // This is the first sample within the window of time that we want to
+        // keep. Throw away all samples before sampleStartPos and return.
+        mRangeStart = sampleStartPos;
+        return;
+      }
+    }
+  }
+}
+
+>>>>>>> upstream-releases
 // END ProfileBuffer
 ////////////////////////////////////////////////////////////////////////

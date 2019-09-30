@@ -7,7 +7,7 @@
 #include "nsCOMPtr.h"
 #include "nsTitleBarFrame.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsGkAtoms.h"
 #include "nsIWidget.h"
 #include "nsMenuPopupFrame.h"
@@ -17,6 +17,7 @@
 #include "nsDisplayList.h"
 #include "nsContentUtils.h"
 #include "mozilla/MouseEvents.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/MouseEventBinding.h"
 
 using namespace mozilla;
@@ -26,14 +27,34 @@ using namespace mozilla;
 //
 // Creates a new TitleBar frame and returns it
 //
+<<<<<<< HEAD
 nsIFrame* NS_NewTitleBarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsTitleBarFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewTitleBarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsTitleBarFrame(aStyle);
+=======
+nsIFrame* NS_NewTitleBarFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsTitleBarFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsTitleBarFrame)
 
+<<<<<<< HEAD
 nsTitleBarFrame::nsTitleBarFrame(ComputedStyle* aStyle, ClassID aID)
     : nsBoxFrame(aStyle, aID, false) {
+||||||| merged common ancestors
+nsTitleBarFrame::nsTitleBarFrame(ComputedStyle* aStyle, ClassID aID)
+  : nsBoxFrame(aStyle, aID, false)
+{
+=======
+nsTitleBarFrame::nsTitleBarFrame(ComputedStyle* aStyle,
+                                 nsPresContext* aPresContext, ClassID aID)
+    : nsBoxFrame(aStyle, aPresContext, aID, false) {
+>>>>>>> upstream-releases
   mTrackingMouseMove = false;
   UpdateMouseThrough();
 }
@@ -61,6 +82,7 @@ nsresult nsTitleBarFrame::HandleEvent(nsPresContext* aPresContext,
   bool doDefault = true;
 
   switch (aEvent->mMessage) {
+<<<<<<< HEAD
     case eMouseDown: {
       if (aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
         // titlebar has no effect in non-chrome shells
@@ -92,7 +114,42 @@ nsresult nsTitleBarFrame::HandleEvent(nsPresContext* aPresContext,
 
         // end capture
         nsIPresShell::SetCapturingContent(nullptr, 0);
+||||||| merged common ancestors
+=======
+    case eMouseDown: {
+      if (aEvent->AsMouseEvent()->mButton == MouseButton::eLeft) {
+        // titlebar has no effect in non-chrome shells
+        nsCOMPtr<nsIDocShellTreeItem> dsti = aPresContext->GetDocShell();
+        if (dsti) {
+          if (dsti->ItemType() == nsIDocShellTreeItem::typeChrome) {
+            // we're tracking.
+            mTrackingMouseMove = true;
 
+            // start capture.
+            PresShell::SetCapturingContent(GetContent(),
+                                           CaptureFlags::IgnoreAllowedState);
+
+            // remember current mouse coordinates.
+            mLastPoint = aEvent->mRefPoint;
+          }
+        }
+
+        *aEventStatus = nsEventStatus_eConsumeNoDefault;
+        doDefault = false;
+      }
+    } break;
+
+    case eMouseUp: {
+      if (mTrackingMouseMove &&
+          aEvent->AsMouseEvent()->mButton == MouseButton::eLeft) {
+        // we're done tracking.
+        mTrackingMouseMove = false;
+
+        // end capture
+        PresShell::ReleaseCapturingContent();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         *aEventStatus = nsEventStatus_eConsumeNoDefault;
         doDefault = false;
       }
@@ -133,6 +190,126 @@ nsresult nsTitleBarFrame::HandleEvent(nsPresContext* aPresContext,
         doDefault = false;
       }
     } break;
+||||||| merged common ancestors
+   case eMouseDown: {
+       if (aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
+         // titlebar has no effect in non-chrome shells
+         nsCOMPtr<nsIDocShellTreeItem> dsti = aPresContext->GetDocShell();
+         if (dsti) {
+           if (dsti->ItemType() == nsIDocShellTreeItem::typeChrome) {
+             // we're tracking.
+             mTrackingMouseMove = true;
+
+             // start capture.
+             nsIPresShell::SetCapturingContent(GetContent(), CAPTURE_IGNOREALLOWED);
+
+             // remember current mouse coordinates.
+             mLastPoint = aEvent->mRefPoint;
+           }
+         }
+
+         *aEventStatus = nsEventStatus_eConsumeNoDefault;
+         doDefault = false;
+       }
+     }
+     break;
+
+
+   case eMouseUp: {
+       if (mTrackingMouseMove &&
+           aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
+         // we're done tracking.
+         mTrackingMouseMove = false;
+
+         // end capture
+         nsIPresShell::SetCapturingContent(nullptr, 0);
+
+         *aEventStatus = nsEventStatus_eConsumeNoDefault;
+         doDefault = false;
+       }
+     }
+     break;
+
+   case eMouseMove: {
+       if(mTrackingMouseMove)
+       {
+         LayoutDeviceIntPoint nsMoveBy = aEvent->mRefPoint - mLastPoint;
+
+         nsIFrame* parent = GetParent();
+         while (parent) {
+           nsMenuPopupFrame* popupFrame = do_QueryFrame(parent);
+           if (popupFrame)
+             break;
+           parent = parent->GetParent();
+         }
+
+         // if the titlebar is in a popup, move the popup frame, otherwise
+         // move the widget associated with the window
+         if (parent) {
+           nsMenuPopupFrame* menuPopupFrame = static_cast<nsMenuPopupFrame*>(parent);
+           nsCOMPtr<nsIWidget> widget = menuPopupFrame->GetWidget();
+           LayoutDeviceIntRect bounds = widget->GetScreenBounds();
+
+           CSSPoint cssPos = (bounds.TopLeft() + nsMoveBy)
+                           / aPresContext->CSSToDevPixelScale();
+           menuPopupFrame->MoveTo(RoundedToInt(cssPos), false);
+         }
+         else {
+           nsIPresShell* presShell = aPresContext->PresShell();
+           nsPIDOMWindowOuter *window = presShell->GetDocument()->GetWindow();
+           if (window) {
+             window->MoveBy(nsMoveBy.x, nsMoveBy.y);
+           }
+         }
+
+         *aEventStatus = nsEventStatus_eConsumeNoDefault;
+
+         doDefault = false;
+       }
+     }
+     break;
+=======
+        *aEventStatus = nsEventStatus_eConsumeNoDefault;
+        doDefault = false;
+      }
+    } break;
+
+    case eMouseMove: {
+      if (mTrackingMouseMove) {
+        LayoutDeviceIntPoint nsMoveBy = aEvent->mRefPoint - mLastPoint;
+
+        nsIFrame* parent = GetParent();
+        while (parent) {
+          nsMenuPopupFrame* popupFrame = do_QueryFrame(parent);
+          if (popupFrame) break;
+          parent = parent->GetParent();
+        }
+
+        // if the titlebar is in a popup, move the popup frame, otherwise
+        // move the widget associated with the window
+        if (parent) {
+          nsMenuPopupFrame* menuPopupFrame =
+              static_cast<nsMenuPopupFrame*>(parent);
+          nsCOMPtr<nsIWidget> widget = menuPopupFrame->GetWidget();
+          LayoutDeviceIntRect bounds = widget->GetScreenBounds();
+
+          CSSPoint cssPos = (bounds.TopLeft() + nsMoveBy) /
+                            aPresContext->CSSToDevPixelScale();
+          menuPopupFrame->MoveTo(RoundedToInt(cssPos), false);
+        } else {
+          mozilla::PresShell* presShell = aPresContext->PresShell();
+          nsPIDOMWindowOuter* window = presShell->GetDocument()->GetWindow();
+          if (window) {
+            window->MoveBy(nsMoveBy.x, nsMoveBy.y);
+          }
+        }
+
+        *aEventStatus = nsEventStatus_eConsumeNoDefault;
+
+        doDefault = false;
+      }
+    } break;
+>>>>>>> upstream-releases
 
     case eMouseClick: {
       WidgetMouseEvent* mouseEvent = aEvent->AsMouseEvent();
@@ -154,7 +331,19 @@ nsresult nsTitleBarFrame::HandleEvent(nsPresContext* aPresContext,
 
 void nsTitleBarFrame::MouseClicked(WidgetMouseEvent* aEvent) {
   // Execute the oncommand event handler.
+<<<<<<< HEAD
   nsContentUtils::DispatchXULCommand(
       mContent, false, nullptr, nullptr, aEvent->IsControl(), aEvent->IsAlt(),
       aEvent->IsShift(), aEvent->IsMeta(), aEvent->inputSource);
+||||||| merged common ancestors
+  nsContentUtils::DispatchXULCommand(mContent, false, nullptr,
+                                     nullptr, aEvent->IsControl(),
+                                     aEvent->IsAlt(), aEvent->IsShift(),
+                                     aEvent->IsMeta(), aEvent->inputSource);
+=======
+  nsCOMPtr<nsIContent> content = mContent;
+  nsContentUtils::DispatchXULCommand(
+      content, false, nullptr, nullptr, aEvent->IsControl(), aEvent->IsAlt(),
+      aEvent->IsShift(), aEvent->IsMeta(), aEvent->mInputSource);
+>>>>>>> upstream-releases
 }

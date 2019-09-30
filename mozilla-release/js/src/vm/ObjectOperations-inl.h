@@ -62,6 +62,7 @@ inline bool GetPrototype(JSContext* cx, JS::Handle<JSObject*> obj,
  * them. Inextensible objects can't, and their [[Prototype]] slot is fixed as
  * well.
  */
+<<<<<<< HEAD
 inline bool IsExtensible(JSContext* cx, JS::Handle<JSObject*> obj,
                          bool* extensible) {
   if (obj->is<ProxyObject>()) {
@@ -78,6 +79,42 @@ inline bool IsExtensible(JSContext* cx, JS::Handle<JSObject*> obj,
                 obj->as<NativeObject>().getDenseInitializedLength() ==
                     obj->as<NativeObject>().getDenseCapacity());
   return true;
+||||||| merged common ancestors
+inline bool
+IsExtensible(JSContext* cx, JS::Handle<JSObject*> obj, bool* extensible)
+{
+    if (obj->is<ProxyObject>()) {
+        MOZ_ASSERT(!cx->helperThread());
+        return Proxy::isExtensible(cx, obj, extensible);
+    }
+
+    *extensible = obj->nonProxyIsExtensible();
+
+    // If the following assertion fails, there's somewhere else a missing
+    // call to shrinkCapacityToInitializedLength() which needs to be found and
+    // fixed.
+    MOZ_ASSERT_IF(obj->isNative() && !*extensible,
+                  obj->as<NativeObject>().getDenseInitializedLength() ==
+                  obj->as<NativeObject>().getDenseCapacity());
+    return true;
+=======
+inline bool IsExtensible(JSContext* cx, JS::Handle<JSObject*> obj,
+                         bool* extensible) {
+  if (obj->is<ProxyObject>()) {
+    MOZ_ASSERT(!cx->isHelperThreadContext());
+    return Proxy::isExtensible(cx, obj, extensible);
+  }
+
+  *extensible = obj->nonProxyIsExtensible();
+
+  // If the following assertion fails, there's somewhere else a missing
+  // call to shrinkCapacityToInitializedLength() which needs to be found and
+  // fixed.
+  MOZ_ASSERT_IF(obj->isNative() && !*extensible,
+                obj->as<NativeObject>().getDenseInitializedLength() ==
+                    obj->as<NativeObject>().getDenseCapacity());
+  return true;
+>>>>>>> upstream-releases
 }
 
 /*

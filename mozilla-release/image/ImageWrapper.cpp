@@ -12,6 +12,7 @@
 
 namespace mozilla {
 
+using dom::Document;
 using gfx::DataSourceSurface;
 using gfx::IntSize;
 using gfx::SamplingFilter;
@@ -119,16 +120,40 @@ ImageWrapper::GetIntrinsicSize(nsSize* aSize) {
   return mInnerImage->GetIntrinsicSize(aSize);
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 ImageWrapper::GetIntrinsicRatio(nsSize* aSize) {
   return mInnerImage->GetIntrinsicRatio(aSize);
+||||||| merged common ancestors
+NS_IMETHODIMP
+ImageWrapper::GetIntrinsicRatio(nsSize* aSize)
+{
+  return mInnerImage->GetIntrinsicRatio(aSize);
+=======
+Maybe<AspectRatio> ImageWrapper::GetIntrinsicRatio() {
+  return mInnerImage->GetIntrinsicRatio();
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP_(Orientation)
 ImageWrapper::GetOrientation() { return mInnerImage->GetOrientation(); }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ImageWrapper::GetType(uint16_t* aType) { return mInnerImage->GetType(aType); }
+||||||| merged common ancestors
+ImageWrapper::GetType(uint16_t* aType)
+{
+  return mInnerImage->GetType(aType);
+}
+=======
+ImageWrapper::GetType(uint16_t* aType) { return mInnerImage->GetType(aType); }
+
+NS_IMETHODIMP
+ImageWrapper::GetProducerId(uint32_t* aId) {
+  return mInnerImage->GetProducerId(aId);
+}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 ImageWrapper::GetAnimated(bool* aAnimated) {
@@ -188,17 +213,52 @@ ImageWrapper::Draw(gfxContext* aContext, const nsIntSize& aSize,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ImageWrapper::StartDecoding(uint32_t aFlags) {
   return mInnerImage->StartDecoding(aFlags);
+||||||| merged common ancestors
+ImageWrapper::StartDecoding(uint32_t aFlags)
+{
+  return mInnerImage->StartDecoding(aFlags);
+=======
+ImageWrapper::StartDecoding(uint32_t aFlags, uint32_t aWhichFrame) {
+  return mInnerImage->StartDecoding(aFlags, aWhichFrame);
 }
 
+bool ImageWrapper::StartDecodingWithResult(uint32_t aFlags,
+                                           uint32_t aWhichFrame) {
+  return mInnerImage->StartDecodingWithResult(aFlags, aWhichFrame);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool ImageWrapper::StartDecodingWithResult(uint32_t aFlags) {
   return mInnerImage->StartDecodingWithResult(aFlags);
+||||||| merged common ancestors
+bool
+ImageWrapper::StartDecodingWithResult(uint32_t aFlags)
+{
+  return mInnerImage->StartDecodingWithResult(aFlags);
+=======
+bool ImageWrapper::RequestDecodeWithResult(uint32_t aFlags,
+                                           uint32_t aWhichFrame) {
+  return mInnerImage->RequestDecodeWithResult(aFlags, aWhichFrame);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ImageWrapper::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags) {
   return mInnerImage->RequestDecodeForSize(aSize, aFlags);
+||||||| merged common ancestors
+ImageWrapper::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags)
+{
+  return mInnerImage->RequestDecodeForSize(aSize, aFlags);
+=======
+ImageWrapper::RequestDecodeForSize(const nsIntSize& aSize, uint32_t aFlags,
+                                   uint32_t aWhichFrame) {
+  return mInnerImage->RequestDecodeForSize(aSize, aFlags, aWhichFrame);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -249,7 +309,15 @@ ImageWrapper::SetAnimationStartTime(const TimeStamp& aTime) {
   mInnerImage->SetAnimationStartTime(aTime);
 }
 
+<<<<<<< HEAD
 void ImageWrapper::PropagateUseCounters(nsIDocument* aParentDocument) {
+||||||| merged common ancestors
+void
+ImageWrapper::PropagateUseCounters(nsIDocument* aParentDocument)
+{
+=======
+void ImageWrapper::PropagateUseCounters(Document* aParentDocument) {
+>>>>>>> upstream-releases
   mInnerImage->PropagateUseCounters(aParentDocument);
 }
 

@@ -162,6 +162,7 @@ bool BytecodeAnalysis::init(TempAllocator& alloc, GSNCache& gsn) {
             infos_[offset].loopEntryInCatchOrFinally = true;
           }
         }
+<<<<<<< HEAD
         break;
 
       case JSOP_GETNAME:
@@ -190,6 +191,39 @@ bool BytecodeAnalysis::init(TempAllocator& alloc, GSNCache& gsn) {
           usesEnvironmentChain_ = true;
         }
         break;
+||||||| merged common ancestors
+=======
+        break;
+
+      case JSOP_GETNAME:
+      case JSOP_BINDNAME:
+      case JSOP_BINDVAR:
+      case JSOP_SETNAME:
+      case JSOP_STRICTSETNAME:
+      case JSOP_DELNAME:
+      case JSOP_GETALIASEDVAR:
+      case JSOP_SETALIASEDVAR:
+      case JSOP_LAMBDA:
+      case JSOP_LAMBDA_ARROW:
+      case JSOP_DEFFUN:
+      case JSOP_DEFVAR:
+      case JSOP_DEFLET:
+      case JSOP_DEFCONST:
+      case JSOP_PUSHLEXICALENV:
+      case JSOP_POPLEXICALENV:
+      case JSOP_IMPLICITTHIS:
+        usesEnvironmentChain_ = true;
+        break;
+
+      case JSOP_GETGNAME:
+      case JSOP_SETGNAME:
+      case JSOP_STRICTSETGNAME:
+      case JSOP_GIMPLICITTHIS:
+        if (script_->hasNonSyntacticScope()) {
+          usesEnvironmentChain_ = true;
+        }
+        break;
+>>>>>>> upstream-releases
 
       default:
         break;

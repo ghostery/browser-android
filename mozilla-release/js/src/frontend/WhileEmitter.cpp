@@ -50,10 +50,22 @@ bool WhileEmitter::emitBody(const Maybe<uint32_t>& whilePos,
     }
   }
 
+<<<<<<< HEAD
   JumpTarget top = {-1};
   if (!bce_->emitJumpTarget(&top)) {
     return false;
   }
+||||||| merged common ancestors
+    JumpTarget top = { -1 };
+    if (!bce_->emitJumpTarget(&top)) {
+        return false;
+    }
+=======
+  JumpTarget top = {BytecodeOffset::invalidOffset()};
+  if (!bce_->emitJumpTarget(&top)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   loopInfo_.emplace(bce_, StatementKind::WhileLoop);
   loopInfo_->setContinueTarget(top.offset);
@@ -100,10 +112,24 @@ bool WhileEmitter::emitEnd() {
     return false;
   }
 
+<<<<<<< HEAD
   if (!bce_->addTryNote(JSTRY_LOOP, bce_->stackDepth, loopInfo_->headOffset(),
                         loopInfo_->breakTargetOffset())) {
     return false;
   }
+||||||| merged common ancestors
+    if (!bce_->tryNoteList.append(JSTRY_LOOP, bce_->stackDepth, loopInfo_->headOffset(),
+                                  loopInfo_->breakTargetOffset()))
+    {
+        return false;
+    }
+=======
+  if (!bce_->addTryNote(JSTRY_LOOP, bce_->bytecodeSection().stackDepth(),
+                        loopInfo_->headOffset(),
+                        loopInfo_->breakTargetOffset())) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::While::BackJumpOffset,
                               loopInfo_->loopEndOffsetFromEntryJump())) {

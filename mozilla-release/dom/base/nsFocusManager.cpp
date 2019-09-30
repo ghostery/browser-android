@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 
 #include "nsFocusManager.h"
 
@@ -13,16 +13,13 @@
 #include "nsGkAtoms.h"
 #include "nsGlobalWindow.h"
 #include "nsContentUtils.h"
-#include "nsDocument.h"
-#include "nsIContentParent.h"
+#include "ContentParent.h"
 #include "nsPIDOMWindow.h"
 #include "nsIDOMChromeWindow.h"
-#include "nsIHTMLDocument.h"
 #include "nsIDocShell.h"
 #include "nsIDocShellTreeOwner.h"
 #include "nsIFormControl.h"
 #include "nsLayoutUtils.h"
-#include "nsIPresShell.h"
 #include "nsFrameTraversal.h"
 #include "nsIWebNavigation.h"
 #include "nsCaret.h"
@@ -30,6 +27,7 @@
 #include "nsIXULWindow.h"
 #include "nsViewManager.h"
 #include "nsFrameSelection.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Selection.h"
 #include "nsXULPopupManager.h"
 #include "nsMenuPopupFrame.h"
@@ -38,9 +36,9 @@
 #include "nsIObserverService.h"
 #include "nsIObjectFrame.h"
 #include "nsBindingManager.h"
-#include "nsStyleCoord.h"
-#include "TabChild.h"
+#include "BrowserChild.h"
 #include "nsFrameLoader.h"
+#include "nsHTMLDocument.h"
 #include "nsNumberControlFrame.h"
 #include "nsNetUtil.h"
 #include "nsRange.h"
@@ -48,9 +46,11 @@
 #include "mozilla/AccessibleCaretEventHub.h"
 #include "mozilla/ContentEvents.h"
 #include "mozilla/dom/Element.h"
+#include "mozilla/dom/ElementBinding.h"
 #include "mozilla/dom/HTMLImageElement.h"
 #include "mozilla/dom/HTMLInputElement.h"
 #include "mozilla/dom/HTMLSlotElement.h"
+#include "mozilla/dom/BrowserBridgeChild.h"
 #include "mozilla/dom/Text.h"
 #include "mozilla/EventDispatcher.h"
 #include "mozilla/EventStateManager.h"
@@ -59,20 +59,21 @@
 #include "mozilla/IMEStateManager.h"
 #include "mozilla/LookAndFeel.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Services.h"
 #include "mozilla/Unused.h"
 #include <algorithm>
 
 #ifdef MOZ_XUL
-#include "nsIDOMXULMenuListElement.h"
+#  include "nsIDOMXULMenuListElement.h"
 #endif
 
 #ifdef ACCESSIBILITY
-#include "nsAccessibilityService.h"
+#  include "nsAccessibilityService.h"
 #endif
 
 #ifndef XP_MACOSX
-#include "nsIScriptError.h"
+#  include "nsIScriptError.h"
 #endif
 
 using namespace mozilla;
@@ -99,6 +100,7 @@ LazyLogModule gFocusNavigationLog("FocusNavigation");
   }
 
 #define LOGCONTENT(format, content) LOGTAG(gFocusLog, format, content)
+<<<<<<< HEAD
 #define LOGCONTENTNAVIGATION(format, content) \
   LOGTAG(gFocusNavigationLog, format, content)
 
@@ -111,6 +113,37 @@ struct nsDelayedBlurOrFocusEvent {
         mTarget(aTarget),
         mEventMessage(aEventMessage),
         mRelatedTarget(aRelatedTarget) {}
+||||||| merged common ancestors
+#define LOGCONTENTNAVIGATION(format, content) LOGTAG(gFocusNavigationLog, format, content)
+
+struct nsDelayedBlurOrFocusEvent
+{
+  nsDelayedBlurOrFocusEvent(EventMessage aEventMessage,
+                            nsIPresShell* aPresShell,
+                            nsIDocument* aDocument,
+                            EventTarget* aTarget,
+                            EventTarget* aRelatedTarget)
+    : mPresShell(aPresShell)
+    , mDocument(aDocument)
+    , mTarget(aTarget)
+    , mEventMessage(aEventMessage)
+    , mRelatedTarget(aRelatedTarget)
+ {
+ }
+=======
+#define LOGCONTENTNAVIGATION(format, content) \
+  LOGTAG(gFocusNavigationLog, format, content)
+
+struct nsDelayedBlurOrFocusEvent {
+  nsDelayedBlurOrFocusEvent(EventMessage aEventMessage, PresShell* aPresShell,
+                            Document* aDocument, EventTarget* aTarget,
+                            EventTarget* aRelatedTarget)
+      : mPresShell(aPresShell),
+        mDocument(aDocument),
+        mTarget(aTarget),
+        mEventMessage(aEventMessage),
+        mRelatedTarget(aRelatedTarget) {}
+>>>>>>> upstream-releases
 
   nsDelayedBlurOrFocusEvent(const nsDelayedBlurOrFocusEvent& aOther)
       : mPresShell(aOther.mPresShell),
@@ -118,8 +151,8 @@ struct nsDelayedBlurOrFocusEvent {
         mTarget(aOther.mTarget),
         mEventMessage(aOther.mEventMessage) {}
 
-  nsCOMPtr<nsIPresShell> mPresShell;
-  nsCOMPtr<nsIDocument> mDocument;
+  RefPtr<PresShell> mPresShell;
+  nsCOMPtr<Document> mDocument;
   nsCOMPtr<EventTarget> mTarget;
   EventMessage mEventMessage;
   nsCOMPtr<EventTarget> mRelatedTarget;
@@ -132,10 +165,27 @@ inline void ImplCycleCollectionUnlink(nsDelayedBlurOrFocusEvent& aField) {
   aField.mRelatedTarget = nullptr;
 }
 
+<<<<<<< HEAD
 inline void ImplCycleCollectionTraverse(
     nsCycleCollectionTraversalCallback& aCallback,
     nsDelayedBlurOrFocusEvent& aField, const char* aName, uint32_t aFlags = 0) {
   CycleCollectionNoteChild(aCallback, aField.mPresShell.get(), aName, aFlags);
+||||||| merged common ancestors
+inline void
+ImplCycleCollectionTraverse(nsCycleCollectionTraversalCallback& aCallback,
+                            nsDelayedBlurOrFocusEvent& aField,
+                            const char* aName,
+                            uint32_t aFlags = 0)
+{
+  CycleCollectionNoteChild(aCallback, aField.mPresShell.get(), aName, aFlags);
+=======
+inline void ImplCycleCollectionTraverse(
+    nsCycleCollectionTraversalCallback& aCallback,
+    nsDelayedBlurOrFocusEvent& aField, const char* aName, uint32_t aFlags = 0) {
+  CycleCollectionNoteChild(
+      aCallback, static_cast<nsIDocumentObserver*>(aField.mPresShell.get()),
+      aName, aFlags);
+>>>>>>> upstream-releases
   CycleCollectionNoteChild(aCallback, aField.mDocument.get(), aName, aFlags);
   CycleCollectionNoteChild(aCallback, aField.mTarget.get(), aName, aFlags);
   CycleCollectionNoteChild(aCallback, aField.mRelatedTarget.get(), aName,
@@ -241,11 +291,30 @@ nsFocusManager::Observe(nsISupports* aSubject, const char* aTopic,
 }
 
 // given a frame content node, retrieve the nsIDOMWindow displayed in it
+<<<<<<< HEAD
 static nsPIDOMWindowOuter* GetContentWindow(nsIContent* aContent) {
   nsIDocument* doc = aContent->GetComposedDoc();
+||||||| merged common ancestors
+static nsPIDOMWindowOuter*
+GetContentWindow(nsIContent* aContent)
+{
+  nsIDocument* doc = aContent->GetComposedDoc();
+=======
+static nsPIDOMWindowOuter* GetContentWindow(nsIContent* aContent) {
+  Document* doc = aContent->GetComposedDoc();
+>>>>>>> upstream-releases
   if (doc) {
+<<<<<<< HEAD
     nsIDocument* subdoc = doc->GetSubDocumentFor(aContent);
     if (subdoc) return subdoc->GetWindow();
+||||||| merged common ancestors
+    nsIDocument* subdoc = doc->GetSubDocumentFor(aContent);
+    if (subdoc)
+      return subdoc->GetWindow();
+=======
+    Document* subdoc = doc->GetSubDocumentFor(aContent);
+    if (subdoc) return subdoc->GetWindow();
+>>>>>>> upstream-releases
   }
 
   return nullptr;
@@ -261,8 +330,18 @@ bool nsFocusManager::IsFocused(nsIContent* aContent) {
 bool nsFocusManager::IsTestMode() { return sTestMode; }
 
 // get the current window for the given content node
+<<<<<<< HEAD
 static nsPIDOMWindowOuter* GetCurrentWindow(nsIContent* aContent) {
   nsIDocument* doc = aContent->GetComposedDoc();
+||||||| merged common ancestors
+static nsPIDOMWindowOuter*
+GetCurrentWindow(nsIContent* aContent)
+{
+  nsIDocument* doc = aContent->GetComposedDoc();
+=======
+static nsPIDOMWindowOuter* GetCurrentWindow(nsIContent* aContent) {
+  Document* doc = aContent->GetComposedDoc();
+>>>>>>> upstream-releases
   return doc ? doc->GetWindow() : nullptr;
 }
 
@@ -300,8 +379,7 @@ Element* nsFocusManager::GetFocusedDescendant(
     if (!docShell) {
       break;
     }
-    nsIPresShell* presShell = docShell->GetPresShell();
-    if (!presShell) {
+    if (!docShell->GetPresShell()) {
       break;
     }
   }
@@ -334,10 +412,24 @@ Element* nsFocusManager::GetRedirectedFocus(nsIContent* aContent) {
 #ifdef MOZ_XUL
   if (aContent->IsXULElement()) {
     if (aContent->IsXULElement(nsGkAtoms::textbox)) {
+<<<<<<< HEAD
       return aContent->OwnerDoc()->GetAnonymousElementByAttribute(
           aContent, nsGkAtoms::anonid, NS_LITERAL_STRING("input"));
     } else {
       nsCOMPtr<nsIDOMXULMenuListElement> menulist = do_QueryInterface(aContent);
+||||||| merged common ancestors
+      return aContent->OwnerDoc()->
+        GetAnonymousElementByAttribute(aContent, nsGkAtoms::anonid, NS_LITERAL_STRING("input"));
+    }
+    else {
+      nsCOMPtr<nsIDOMXULMenuListElement> menulist = do_QueryInterface(aContent);
+=======
+      return aContent->OwnerDoc()->GetAnonymousElementByAttribute(
+          aContent, nsGkAtoms::anonid, NS_LITERAL_STRING("input"));
+    } else {
+      nsCOMPtr<nsIDOMXULMenuListElement> menulist =
+          aContent->AsElement()->AsXULMenuList();
+>>>>>>> upstream-releases
       if (menulist) {
         RefPtr<Element> inputField;
         menulist->GetInputField(getter_AddRefs(inputField));
@@ -359,6 +451,8 @@ InputContextAction::Cause nsFocusManager::GetFocusMoveActionCause(
     return InputContextAction::CAUSE_MOUSE;
   } else if (aFlags & nsIFocusManager::FLAG_BYKEY) {
     return InputContextAction::CAUSE_KEY;
+  } else if (aFlags & nsIFocusManager::FLAG_BYLONGPRESS) {
+    return InputContextAction::CAUSE_LONGPRESS;
   }
   return InputContextAction::CAUSE_UNKNOWN;
 }
@@ -367,6 +461,12 @@ NS_IMETHODIMP
 nsFocusManager::GetActiveWindow(mozIDOMWindowProxy** aWindow) {
   NS_IF_ADDREF(*aWindow = mActiveWindow);
   return NS_OK;
+}
+
+void nsFocusManager::FocusWindow(nsPIDOMWindowOuter* aWindow) {
+  if (RefPtr<nsFocusManager> fm = sInstance) {
+    fm->SetFocusedWindow(aWindow);
+  }
 }
 
 NS_IMETHODIMP
@@ -394,8 +494,6 @@ NS_IMETHODIMP nsFocusManager::SetFocusedWindow(
   nsCOMPtr<nsPIDOMWindowOuter> windowToFocus =
       nsPIDOMWindowOuter::From(aWindowToFocus);
   NS_ENSURE_TRUE(windowToFocus, NS_ERROR_FAILURE);
-
-  windowToFocus = windowToFocus->GetOuterWindow();
 
   nsCOMPtr<Element> frameElement = windowToFocus->GetFrameElementInternal();
   if (frameElement) {
@@ -464,7 +562,7 @@ nsFocusManager::ElementIsFocusable(Element* aElement, uint32_t aFlags,
                                    bool* aIsFocusable) {
   NS_ENSURE_TRUE(aElement, NS_ERROR_INVALID_ARG);
 
-  *aIsFocusable = CheckIfFocusable(aElement, aFlags) != nullptr;
+  *aIsFocusable = FlushAndCheckIfFocusable(aElement, aFlags) != nullptr;
 
   return NS_OK;
 }
@@ -477,7 +575,7 @@ nsFocusManager::MoveFocus(mozIDOMWindowProxy* aWindow, Element* aStartElement,
   LOGFOCUS(("<<MoveFocus begin Type: %d Flags: %x>>", aType, aFlags));
 
   if (MOZ_LOG_TEST(gFocusLog, LogLevel::Debug) && mFocusedWindow) {
-    nsIDocument* doc = mFocusedWindow->GetExtantDoc();
+    Document* doc = mFocusedWindow->GetExtantDoc();
     if (doc && doc->GetDocumentURI()) {
       LOGFOCUS((" Focused Window: %p %s", mFocusedWindow.get(),
                 doc->GetDocumentURI()->GetSpecOrDefault().get()));
@@ -521,8 +619,8 @@ nsFocusManager::MoveFocus(mozIDOMWindowProxy* aWindow, Element* aStartElement,
     // otherwise the caret will end up moving to the focus position. This
     // would be a problem because the caret would move to the beginning of the
     // focused link making it impossible to navigate the caret over a link.
-    SetFocusInner(newFocus->AsElement(), aFlags, aType != MOVEFOCUS_CARET,
-                  true);
+    SetFocusInner(MOZ_KnownLive(newFocus->AsElement()), aFlags,
+                  aType != MOVEFOCUS_CARET, true);
     *aElement = do_AddRef(newFocus->AsElement()).take();
   } else if (aType == MOVEFOCUS_ROOT || aType == MOVEFOCUS_CARET) {
     // no content was found, so clear the focus for these two types.
@@ -599,12 +697,21 @@ nsFocusManager::MoveCaretToFocus(mozIDOMWindowProxy* aWindow) {
       docShell->GetEditable(&isEditable);
       if (isEditable) return NS_OK;
 
-      nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+      RefPtr<PresShell> presShell = docShell->GetPresShell();
       NS_ENSURE_TRUE(presShell, NS_ERROR_FAILURE);
 
       nsCOMPtr<nsPIDOMWindowOuter> window = nsPIDOMWindowOuter::From(aWindow);
       nsCOMPtr<nsIContent> content = window->GetFocusedElement();
+<<<<<<< HEAD
       if (content) MoveCaretToFocus(presShell, content);
+||||||| merged common ancestors
+      if (content)
+        MoveCaretToFocus(presShell, content);
+=======
+      if (content) {
+        MoveCaretToFocus(presShell, content);
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -617,9 +724,18 @@ nsFocusManager::WindowRaised(mozIDOMWindowProxy* aWindow) {
   nsCOMPtr<nsPIDOMWindowOuter> window = nsPIDOMWindowOuter::From(aWindow);
 
   if (MOZ_LOG_TEST(gFocusLog, LogLevel::Debug)) {
+<<<<<<< HEAD
     LOGFOCUS(("Window %p Raised [Currently: %p %p]", aWindow,
               mActiveWindow.get(), mFocusedWindow.get()));
     nsIDocument* doc = window->GetExtantDoc();
+||||||| merged common ancestors
+    LOGFOCUS(("Window %p Raised [Currently: %p %p]", aWindow, mActiveWindow.get(), mFocusedWindow.get()));
+    nsIDocument* doc = window->GetExtantDoc();
+=======
+    LOGFOCUS(("Window %p Raised [Currently: %p %p]", aWindow,
+              mActiveWindow.get(), mFocusedWindow.get()));
+    Document* doc = window->GetExtantDoc();
+>>>>>>> upstream-releases
     if (doc && doc->GetDocumentURI()) {
       LOGFOCUS(("  Raised Window: %p %s", aWindow,
                 doc->GetDocumentURI()->GetSpecOrDefault().get()));
@@ -673,6 +789,9 @@ nsFocusManager::WindowRaised(mozIDOMWindowProxy* aWindow) {
   // Events for child process windows will be sent when ParentActivated
   // is called.
   if (XRE_IsParentProcess()) {
+    // Popping upon lowering was inhibited to accommodate ATOK,
+    // so we need to do it here.
+    BrowserParent::PopFocusAll();
     ActivateOrDeactivate(window, true);
   }
 
@@ -698,9 +817,18 @@ nsFocusManager::WindowLowered(mozIDOMWindowProxy* aWindow) {
   nsCOMPtr<nsPIDOMWindowOuter> window = nsPIDOMWindowOuter::From(aWindow);
 
   if (MOZ_LOG_TEST(gFocusLog, LogLevel::Debug)) {
+<<<<<<< HEAD
     LOGFOCUS(("Window %p Lowered [Currently: %p %p]", aWindow,
               mActiveWindow.get(), mFocusedWindow.get()));
     nsIDocument* doc = window->GetExtantDoc();
+||||||| merged common ancestors
+    LOGFOCUS(("Window %p Lowered [Currently: %p %p]", aWindow, mActiveWindow.get(), mFocusedWindow.get()));
+    nsIDocument* doc = window->GetExtantDoc();
+=======
+    LOGFOCUS(("Window %p Lowered [Currently: %p %p]", aWindow,
+              mActiveWindow.get(), mFocusedWindow.get()));
+    Document* doc = window->GetExtantDoc();
+>>>>>>> upstream-releases
     if (doc && doc->GetDocumentURI()) {
       LOGFOCUS(("  Lowered Window: %s",
                 doc->GetDocumentURI()->GetSpecOrDefault().get()));
@@ -717,15 +845,14 @@ nsFocusManager::WindowLowered(mozIDOMWindowProxy* aWindow) {
   if (mActiveWindow != window) return NS_OK;
 
   // clear the mouse capture as the active window has changed
-  nsIPresShell::SetCapturingContent(nullptr, 0);
+  PresShell::ReleaseCapturingContent();
 
   // In addition, reset the drag state to ensure that we are no longer in
   // drag-select mode.
   if (mFocusedWindow) {
     nsCOMPtr<nsIDocShell> docShell = mFocusedWindow->GetDocShell();
     if (docShell) {
-      nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
-      if (presShell) {
+      if (PresShell* presShell = docShell->GetPresShell()) {
         RefPtr<nsFrameSelection> frameSelection = presShell->FrameSelection();
         frameSelection->SetDragState(false);
       }
@@ -752,8 +879,17 @@ nsFocusManager::WindowLowered(mozIDOMWindowProxy* aWindow) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsFocusManager::ContentRemoved(nsIDocument* aDocument,
                                         nsIContent* aContent) {
+||||||| merged common ancestors
+nsresult
+nsFocusManager::ContentRemoved(nsIDocument* aDocument, nsIContent* aContent)
+{
+=======
+nsresult nsFocusManager::ContentRemoved(Document* aDocument,
+                                        nsIContent* aContent) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aDocument);
   NS_ENSURE_ARG(aContent);
 
@@ -779,7 +915,7 @@ nsresult nsFocusManager::ContentRemoved(nsIDocument* aDocument,
       // and its descendants will be going away. We will need to move the
       // focus somewhere else, so just clear the focus in the toplevel window
       // so that no element is focused.
-      nsIDocument* subdoc = aDocument->GetSubDocumentFor(content);
+      Document* subdoc = aDocument->GetSubDocumentFor(content);
       if (subdoc) {
         nsCOMPtr<nsIDocShell> docShell = subdoc->GetDocShell();
         if (docShell) {
@@ -818,9 +954,18 @@ nsFocusManager::WindowShown(mozIDOMWindowProxy* aWindow, bool aNeedsFocus) {
   nsCOMPtr<nsPIDOMWindowOuter> window = nsPIDOMWindowOuter::From(aWindow);
 
   if (MOZ_LOG_TEST(gFocusLog, LogLevel::Debug)) {
+<<<<<<< HEAD
     LOGFOCUS(("Window %p Shown [Currently: %p %p]", window.get(),
               mActiveWindow.get(), mFocusedWindow.get()));
     nsIDocument* doc = window->GetExtantDoc();
+||||||| merged common ancestors
+    LOGFOCUS(("Window %p Shown [Currently: %p %p]", window.get(), mActiveWindow.get(), mFocusedWindow.get()));
+    nsIDocument* doc = window->GetExtantDoc();
+=======
+    LOGFOCUS(("Window %p Shown [Currently: %p %p]", window.get(),
+              mActiveWindow.get(), mFocusedWindow.get()));
+    Document* doc = window->GetExtantDoc();
+>>>>>>> upstream-releases
     if (doc && doc->GetDocumentURI()) {
       LOGFOCUS(("Shown Window: %s",
                 doc->GetDocumentURI()->GetSpecOrDefault().get()));
@@ -836,8 +981,8 @@ nsFocusManager::WindowShown(mozIDOMWindowProxy* aWindow, bool aNeedsFocus) {
   }
 
   if (nsIDocShell* docShell = window->GetDocShell()) {
-    if (nsCOMPtr<nsITabChild> child = docShell->GetTabChild()) {
-      bool active = static_cast<TabChild*>(child.get())->ParentIsActive();
+    if (nsCOMPtr<nsIBrowserChild> child = docShell->GetBrowserChild()) {
+      bool active = static_cast<BrowserChild*>(child.get())->ParentIsActive();
       ActivateOrDeactivate(window, active);
     }
   }
@@ -873,7 +1018,7 @@ nsFocusManager::WindowHidden(mozIDOMWindowProxy* aWindow) {
     LOGFOCUS(("Window %p Hidden [Currently: %p %p]", window.get(),
               mActiveWindow.get(), mFocusedWindow.get()));
     nsAutoCString spec;
-    nsIDocument* doc = window->GetExtantDoc();
+    Document* doc = window->GetExtantDoc();
     if (doc && doc->GetDocumentURI()) {
       LOGFOCUS(("  Hide Window: %s",
                 doc->GetDocumentURI()->GetSpecOrDefault().get()));
@@ -905,7 +1050,7 @@ nsFocusManager::WindowHidden(mozIDOMWindowProxy* aWindow) {
   RefPtr<Element> oldFocusedElement = mFocusedElement.forget();
 
   nsCOMPtr<nsIDocShell> focusedDocShell = mFocusedWindow->GetDocShell();
-  nsCOMPtr<nsIPresShell> presShell = focusedDocShell->GetPresShell();
+  RefPtr<PresShell> presShell = focusedDocShell->GetPresShell();
 
   if (oldFocusedElement && oldFocusedElement->IsInComposedDoc()) {
     NotifyFocusStateChange(oldFocusedElement, nullptr,
@@ -974,7 +1119,14 @@ nsFocusManager::WindowHidden(mozIDOMWindowProxy* aWindow) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFocusManager::FireDelayedEvents(nsIDocument* aDocument) {
+||||||| merged common ancestors
+nsFocusManager::FireDelayedEvents(nsIDocument* aDocument)
+{
+=======
+nsFocusManager::FireDelayedEvents(Document* aDocument) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aDocument);
 
   // fire any delayed focus and blur events in the same order that they were
@@ -985,16 +1137,25 @@ nsFocusManager::FireDelayedEvents(nsIDocument* aDocument) {
           !aDocument->GetInnerWindow()->IsCurrentInnerWindow()) {
         // If the document was navigated away from or is defunct, don't bother
         // firing events on it. Note the symmetry between this condition and
-        // the similar one in nsDocument.cpp:FireOrClearDelayedEvents.
+        // the similar one in Document.cpp:FireOrClearDelayedEvents.
         mDelayedBlurFocusEvents.RemoveElementAt(i);
         --i;
       } else if (!aDocument->EventHandlingSuppressed()) {
         EventMessage message = mDelayedBlurFocusEvents[i].mEventMessage;
         nsCOMPtr<EventTarget> target = mDelayedBlurFocusEvents[i].mTarget;
+<<<<<<< HEAD
         nsCOMPtr<nsIPresShell> presShell =
             mDelayedBlurFocusEvents[i].mPresShell;
         nsCOMPtr<EventTarget> relatedTarget =
             mDelayedBlurFocusEvents[i].mRelatedTarget;
+||||||| merged common ancestors
+        nsCOMPtr<nsIPresShell> presShell = mDelayedBlurFocusEvents[i].mPresShell;
+        nsCOMPtr<EventTarget> relatedTarget = mDelayedBlurFocusEvents[i].mRelatedTarget;
+=======
+        RefPtr<PresShell> presShell = mDelayedBlurFocusEvents[i].mPresShell;
+        nsCOMPtr<EventTarget> relatedTarget =
+            mDelayedBlurFocusEvents[i].mRelatedTarget;
+>>>>>>> upstream-releases
         mDelayedBlurFocusEvents.RemoveElementAt(i);
 
         FireFocusOrBlurEvent(message, presShell, target, false, false,
@@ -1075,6 +1236,7 @@ void nsFocusManager::EnsureCurrentWidgetFocused() {
   // get the main child widget for the focused window and ensure that the
   // platform knows that this widget is focused.
   nsCOMPtr<nsIDocShell> docShell = mFocusedWindow->GetDocShell();
+<<<<<<< HEAD
   if (docShell) {
     nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
     if (presShell) {
@@ -1085,10 +1247,48 @@ void nsFocusManager::EnsureCurrentWidgetFocused() {
         if (widget) widget->SetFocus(false);
       }
     }
+||||||| merged common ancestors
+  if (docShell) {
+    nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+    if (presShell) {
+      nsViewManager* vm = presShell->GetViewManager();
+      if (vm) {
+        nsCOMPtr<nsIWidget> widget;
+        vm->GetRootWidget(getter_AddRefs(widget));
+        if (widget)
+          widget->SetFocus(false);
+      }
+    }
+=======
+  if (!docShell) {
+    return;
   }
+  RefPtr<PresShell> presShell = docShell->GetPresShell();
+  if (!presShell) {
+    return;
+  }
+  nsViewManager* vm = presShell->GetViewManager();
+  if (!vm) {
+    return;
+  }
+  nsCOMPtr<nsIWidget> widget;
+  vm->GetRootWidget(getter_AddRefs(widget));
+  if (!widget) {
+    return;
+>>>>>>> upstream-releases
+  }
+  widget->SetFocus(nsIWidget::Raise::No);
 }
 
+<<<<<<< HEAD
 bool ActivateOrDeactivateChild(TabParent* aParent, void* aArg) {
+||||||| merged common ancestors
+bool
+ActivateOrDeactivateChild(TabParent* aParent, void* aArg)
+{
+=======
+bool ActivateOrDeactivateChild(BrowserParent* aParent, void* aArg) {
+>>>>>>> upstream-releases
   bool active = static_cast<bool>(aArg);
   Unused << aParent->SendParentActivated(active);
   return false;
@@ -1122,7 +1322,8 @@ void nsFocusManager::ActivateOrDeactivate(nsPIDOMWindowOuter* aWindow,
 void nsFocusManager::SetFocusInner(Element* aNewContent, int32_t aFlags,
                                    bool aFocusChanged, bool aAdjustWidget) {
   // if the element is not focusable, just return and leave the focus as is
-  RefPtr<Element> elementToFocus = CheckIfFocusable(aNewContent, aFlags);
+  RefPtr<Element> elementToFocus =
+      FlushAndCheckIfFocusable(aNewContent, aFlags);
   if (!elementToFocus) {
     return;
   }
@@ -1218,11 +1419,26 @@ void nsFocusManager::SetFocusInner(Element* aNewContent, int32_t aFlags,
       nsContentUtils::GetRootDocument(elementToFocus->OwnerDoc())
           ->GetFullscreenElement() &&
       nsContentUtils::HasPluginWithUncontrolledEventDispatch(elementToFocus)) {
+<<<<<<< HEAD
     nsContentUtils::ReportToConsole(
         nsIScriptError::warningFlag, NS_LITERAL_CSTRING("DOM"),
         elementToFocus->OwnerDoc(), nsContentUtils::eDOM_PROPERTIES,
         "FocusedWindowedPluginWhileFullscreen");
     nsIDocument::AsyncExitFullscreen(elementToFocus->OwnerDoc());
+||||||| merged common ancestors
+    nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
+                                    NS_LITERAL_CSTRING("DOM"),
+                                    elementToFocus->OwnerDoc(),
+                                    nsContentUtils::eDOM_PROPERTIES,
+                                    "FocusedWindowedPluginWhileFullscreen");
+    nsIDocument::AsyncExitFullscreen(elementToFocus->OwnerDoc());
+=======
+    nsContentUtils::ReportToConsole(
+        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("DOM"),
+        elementToFocus->OwnerDoc(), nsContentUtils::eDOM_PROPERTIES,
+        "FocusedWindowedPluginWhileFullscreen");
+    Document::AsyncExitFullscreen(elementToFocus->OwnerDoc());
+>>>>>>> upstream-releases
   }
 #endif
 
@@ -1313,9 +1529,10 @@ void nsFocusManager::SetFocusInner(Element* aNewContent, int32_t aFlags,
     if (aFocusChanged) {
       nsCOMPtr<nsIDocShell> docShell = newWindow->GetDocShell();
 
-      nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
-      if (presShell && presShell->DidInitialize())
+      RefPtr<PresShell> presShell = docShell->GetPresShell();
+      if (presShell && presShell->DidInitialize()) {
         ScrollIntoView(presShell, elementToFocus, aFlags);
+      }
     }
 
     // update the commands even when inactive so that the attributes for that
@@ -1451,24 +1668,29 @@ bool nsFocusManager::IsNonFocusableRoot(nsIContent* aContent) {
   // Also, if aContent is not editable but it isn't in designMode, it's not
   // focusable.
   // And in userfocusignored context nothing is focusable.
-  nsIDocument* doc = aContent->GetComposedDoc();
+  Document* doc = aContent->GetComposedDoc();
   NS_ASSERTION(doc, "aContent must have current document");
   return aContent == doc->GetRootElement() &&
          (doc->HasFlag(NODE_IS_EDITABLE) || !aContent->IsEditable() ||
           nsContentUtils::IsUserFocusIgnored(aContent));
 }
 
+<<<<<<< HEAD
 Element* nsFocusManager::CheckIfFocusable(Element* aElement, uint32_t aFlags) {
   if (!aElement) return nullptr;
+||||||| merged common ancestors
+Element*
+nsFocusManager::CheckIfFocusable(Element* aElement, uint32_t aFlags)
+{
+  if (!aElement)
+    return nullptr;
+=======
+Element* nsFocusManager::FlushAndCheckIfFocusable(Element* aElement,
+                                                  uint32_t aFlags) {
+  if (!aElement) return nullptr;
+>>>>>>> upstream-releases
 
-  // this is a special case for some XUL elements or input number, where an
-  // anonymous child is actually focusable and not the element itself.
-  RefPtr<Element> redirectedFocus = GetRedirectedFocus(aElement);
-  if (redirectedFocus) {
-    return CheckIfFocusable(redirectedFocus, aFlags);
-  }
-
-  nsCOMPtr<nsIDocument> doc = aElement->GetComposedDoc();
+  nsCOMPtr<Document> doc = aElement->GetComposedDoc();
   // can't focus elements that are not in documents
   if (!doc) {
     LOGCONTENT("Cannot focus %s because content not in document", aElement)
@@ -1480,8 +1702,26 @@ Element* nsFocusManager::CheckIfFocusable(Element* aElement, uint32_t aFlags) {
   mEventHandlingNeedsFlush = false;
   doc->FlushPendingNotifications(FlushType::EnsurePresShellInitAndFrames);
 
+<<<<<<< HEAD
   nsIPresShell* shell = doc->GetShell();
   if (!shell) return nullptr;
+||||||| merged common ancestors
+  nsIPresShell *shell = doc->GetShell();
+  if (!shell)
+    return nullptr;
+=======
+  // this is a special case for some XUL elements or input number, where an
+  // anonymous child is actually focusable and not the element itself.
+  RefPtr<Element> redirectedFocus = GetRedirectedFocus(aElement);
+  if (redirectedFocus) {
+    return FlushAndCheckIfFocusable(redirectedFocus, aFlags);
+  }
+
+  PresShell* presShell = doc->GetPresShell();
+  if (!presShell) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   // the root content can always be focused,
   // except in userfocusignored context.
@@ -1490,9 +1730,18 @@ Element* nsFocusManager::CheckIfFocusable(Element* aElement, uint32_t aFlags) {
   }
 
   // cannot focus content in print preview mode. Only the root can be focused.
+<<<<<<< HEAD
   nsPresContext* presContext = shell->GetPresContext();
   if (presContext &&
       presContext->Type() == nsPresContext::eContext_PrintPreview) {
+||||||| merged common ancestors
+  nsPresContext* presContext = shell->GetPresContext();
+  if (presContext && presContext->Type() == nsPresContext::eContext_PrintPreview) {
+=======
+  nsPresContext* presContext = presShell->GetPresContext();
+  if (presContext &&
+      presContext->Type() == nsPresContext::eContext_PrintPreview) {
+>>>>>>> upstream-releases
     LOGCONTENT("Cannot focus %s while in print preview", aElement)
     return nullptr;
   }
@@ -1516,7 +1765,7 @@ Element* nsFocusManager::CheckIfFocusable(Element* aElement, uint32_t aFlags) {
   // call the content node's IsFocusable method instead of the frame's
   // IsFocusable method. This skips checking the style system and ensures that
   // offscreen browsers can still be focused.
-  nsIDocument* subdoc = doc->GetSubDocumentFor(aElement);
+  Document* subdoc = doc->GetSubDocumentFor(aElement);
   if (subdoc && IsWindowVisible(subdoc->GetWindow())) {
     const nsStyleUI* ui = frame->StyleUI();
     int32_t tabIndex = (ui->mUserFocus == StyleUserFocus::Ignore ||
@@ -1563,7 +1812,7 @@ bool nsFocusManager::Blur(nsPIDOMWindowOuter* aWindowToClear,
 
   // Keep a ref to presShell since dispatching the DOM event may cause
   // the document to be destroyed.
-  nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+  RefPtr<PresShell> presShell = docShell->GetPresShell();
   if (!presShell) {
     mFocusedElement = nullptr;
     mFocusedWindow = nullptr;
@@ -1608,32 +1857,77 @@ bool nsFocusManager::Blur(nsPIDOMWindowOuter* aWindowToClear,
       if (aAdjustWidgets && objectFrame && !sTestMode) {
         if (XRE_IsContentProcess()) {
           // set focus to the top level window via the chrome process.
+<<<<<<< HEAD
           nsCOMPtr<nsITabChild> tabChild = docShell->GetTabChild();
           if (tabChild) {
             static_cast<TabChild*>(tabChild.get())
                 ->SendDispatchFocusToTopLevelWindow();
+||||||| merged common ancestors
+          nsCOMPtr<nsITabChild> tabChild = docShell->GetTabChild();
+          if (tabChild) {
+            static_cast<TabChild*>(tabChild.get())->SendDispatchFocusToTopLevelWindow();
+=======
+          nsCOMPtr<nsIBrowserChild> browserChild = docShell->GetBrowserChild();
+          if (browserChild) {
+            static_cast<BrowserChild*>(browserChild.get())
+                ->SendDispatchFocusToTopLevelWindow();
+>>>>>>> upstream-releases
           }
         } else {
+<<<<<<< HEAD
           // note that the presshell's widget is being retrieved here, not the
           // one for the object frame.
           nsViewManager* vm = presShell->GetViewManager();
           if (vm) {
+||||||| merged common ancestors
+          // note that the presshell's widget is being retrieved here, not the one
+          // for the object frame.
+          nsViewManager* vm = presShell->GetViewManager();
+          if (vm) {
+=======
+          // note that the presshell's widget is being retrieved here, not the
+          // one for the object frame.
+          if (nsViewManager* vm = presShell->GetViewManager()) {
+>>>>>>> upstream-releases
             nsCOMPtr<nsIWidget> widget;
             vm->GetRootWidget(getter_AddRefs(widget));
             if (widget) {
               // set focus to the top level window but don't raise it.
-              widget->SetFocus(false);
+              widget->SetFocus(nsIWidget::Raise::No);
             }
           }
         }
       }
     }
 
+<<<<<<< HEAD
     // if the object being blurred is a remote browser, deactivate remote
     // content
     if (TabParent* remote = TabParent::GetFrom(element)) {
       remote->Deactivate();
       LOGFOCUS(("Remote browser deactivated"));
+||||||| merged common ancestors
+      // if the object being blurred is a remote browser, deactivate remote content
+    if (TabParent* remote = TabParent::GetFrom(element)) {
+      remote->Deactivate();
+      LOGFOCUS(("Remote browser deactivated"));
+=======
+    bool windowBeingLowered = !aWindowToClear && !aAncestorWindowToFocus &&
+                              aIsLeavingDocument && aAdjustWidgets;
+    // if the object being blurred is a remote browser, deactivate remote
+    // content
+    if (BrowserParent* remote = BrowserParent::GetFrom(element)) {
+      remote->Deactivate(windowBeingLowered);
+      LOGFOCUS(
+          ("Remote browser deactivated %p, %d", remote, windowBeingLowered));
+    }
+
+    // Same as above but for out-of-process iframes
+    if (BrowserBridgeChild* bbc = BrowserBridgeChild::GetFrom(element)) {
+      bbc->Deactivate(windowBeingLowered);
+      LOGFOCUS(("Out-of-process iframe deactivated %p, %d", bbc,
+                windowBeingLowered));
+>>>>>>> upstream-releases
     }
   }
 
@@ -1685,8 +1979,18 @@ bool nsFocusManager::Blur(nsPIDOMWindowOuter* aWindowToClear,
     // pass 1 for the focus method when calling SendFocusOrBlurEvent just so
     // that the check is made for suppressed documents. Check to ensure that
     // the document isn't null in case someone closed it during the blur above
+<<<<<<< HEAD
     nsIDocument* doc = window->GetExtantDoc();
     if (doc) SendFocusOrBlurEvent(eBlur, presShell, doc, doc, 1, false);
+||||||| merged common ancestors
+    nsIDocument* doc = window->GetExtantDoc();
+    if (doc)
+      SendFocusOrBlurEvent(eBlur, presShell, doc, doc, 1, false);
+=======
+    Document* doc = window->GetExtantDoc();
+    if (doc)
+      SendFocusOrBlurEvent(eBlur, presShell, doc, ToSupports(doc), 1, false);
+>>>>>>> upstream-releases
     if (mFocusedWindow == nullptr)
       SendFocusOrBlurEvent(eBlur, presShell, doc,
                            window->GetCurrentInnerWindow(), 1, false);
@@ -1707,10 +2011,42 @@ bool nsFocusManager::Blur(nsPIDOMWindowOuter* aWindowToClear,
   return result;
 }
 
+<<<<<<< HEAD
 void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
                            uint32_t aFlags, bool aIsNewDocument,
                            bool aFocusChanged, bool aWindowRaised,
                            bool aAdjustWidgets, nsIContent* aContentLostFocus) {
+||||||| merged common ancestors
+void
+nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow,
+                      Element* aElement,
+                      uint32_t aFlags,
+                      bool aIsNewDocument,
+                      bool aFocusChanged,
+                      bool aWindowRaised,
+                      bool aAdjustWidgets,
+                      nsIContent* aContentLostFocus)
+{
+=======
+void nsFocusManager::ActivateRemoteFrameIfNeeded(Element& aElement) {
+  MOZ_DIAGNOSTIC_ASSERT(mFocusedElement == &aElement);
+  if (BrowserParent* remote = BrowserParent::GetFrom(&aElement)) {
+    remote->Activate();
+    LOGFOCUS(("Remote browser activated %p", remote));
+  }
+
+  // Same as above but for out-of-process iframes
+  if (BrowserBridgeChild* bbc = BrowserBridgeChild::GetFrom(&aElement)) {
+    bbc->Activate();
+    LOGFOCUS(("Out-of-process iframe activated %p", bbc));
+  }
+}
+
+void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
+                           uint32_t aFlags, bool aIsNewDocument,
+                           bool aFocusChanged, bool aWindowRaised,
+                           bool aAdjustWidgets, nsIContent* aContentLostFocus) {
+>>>>>>> upstream-releases
   LOGFOCUS(("<<Focus begin>>"));
 
   if (!aWindow) return;
@@ -1723,8 +2059,19 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
   nsCOMPtr<nsIDocShell> docShell = aWindow->GetDocShell();
   if (!docShell) return;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
   if (!presShell) return;
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+  if (!presShell)
+    return;
+=======
+  RefPtr<PresShell> presShell = docShell->GetPresShell();
+  if (!presShell) {
+    return;
+  }
+>>>>>>> upstream-releases
 
   // If the focus actually changed, set the focus method (mouse, keyboard, etc).
   // Otherwise, just get the current focus method and use that. This ensures
@@ -1735,11 +2082,29 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
 
   if (!IsWindowVisible(aWindow)) {
     // if the window isn't visible, for instance because it is a hidden tab,
+<<<<<<< HEAD
     // update the current focus and scroll it into view but don't do anything
     // else
     if (CheckIfFocusable(aElement, aFlags)) {
+||||||| merged common ancestors
+    // update the current focus and scroll it into view but don't do anything else
+    if (CheckIfFocusable(aElement, aFlags)) {
+=======
+    // update the current focus and scroll it into view but don't do anything
+    // else
+    if (FlushAndCheckIfFocusable(aElement, aFlags)) {
+>>>>>>> upstream-releases
       aWindow->SetFocusedElement(aElement, focusMethod);
+<<<<<<< HEAD
       if (aFocusChanged) ScrollIntoView(presShell, aElement, aFlags);
+||||||| merged common ancestors
+      if (aFocusChanged)
+        ScrollIntoView(presShell, aElement, aFlags);
+=======
+      if (aFocusChanged) {
+        ScrollIntoView(presShell, aElement, aFlags);
+      }
+>>>>>>> upstream-releases
     }
     return;
   }
@@ -1753,7 +2118,7 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
   LOGCONTENT("Element %s has been focused", aElement);
 
   if (MOZ_LOG_TEST(gFocusLog, LogLevel::Debug)) {
-    nsIDocument* docm = aWindow->GetExtantDoc();
+    Document* docm = aWindow->GetExtantDoc();
     if (docm) {
       LOGCONTENT(" from %s", docm->GetRootElement());
     }
@@ -1783,18 +2148,24 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
     if (objectFrame) objectFrameWidget = objectFrame->GetWidget();
   }
   if (aAdjustWidgets && !objectFrameWidget && !sTestMode) {
-    nsViewManager* vm = presShell->GetViewManager();
-    if (vm) {
+    if (nsViewManager* vm = presShell->GetViewManager()) {
       nsCOMPtr<nsIWidget> widget;
       vm->GetRootWidget(getter_AddRefs(widget));
+<<<<<<< HEAD
       if (widget) widget->SetFocus(false);
+||||||| merged common ancestors
+      if (widget)
+        widget->SetFocus(false);
+=======
+      if (widget) widget->SetFocus(nsIWidget::Raise::No);
+>>>>>>> upstream-releases
     }
   }
 
   // if switching to a new document, first fire the focus event on the
   // document and then the window.
   if (aIsNewDocument) {
-    nsIDocument* doc = aWindow->GetExtantDoc();
+    Document* doc = aWindow->GetExtantDoc();
     // The focus change should be notified to IMEStateManager from here if
     // the focused element is a designMode editor since any content won't
     // receive focus event.
@@ -1803,8 +2174,16 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
                                      GetFocusMoveActionCause(aFlags));
     }
     if (doc) {
+<<<<<<< HEAD
       SendFocusOrBlurEvent(eFocus, presShell, doc, doc,
                            aFlags & FOCUSMETHOD_MASK, aWindowRaised);
+||||||| merged common ancestors
+      SendFocusOrBlurEvent(eFocus, presShell, doc,
+                           doc, aFlags & FOCUSMETHOD_MASK, aWindowRaised);
+=======
+      SendFocusOrBlurEvent(eFocus, presShell, doc, ToSupports(doc),
+                           aFlags & FOCUSMETHOD_MASK, aWindowRaised);
+>>>>>>> upstream-releases
     }
     if (mFocusedWindow == aWindow && mFocusedElement == nullptr) {
       SendFocusOrBlurEvent(eFocus, presShell, doc,
@@ -1815,8 +2194,16 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
 
   // check to ensure that the element is still focusable, and that nothing
   // else was focused during the events above.
+<<<<<<< HEAD
   if (CheckIfFocusable(aElement, aFlags) && mFocusedWindow == aWindow &&
       mFocusedElement == nullptr) {
+||||||| merged common ancestors
+  if (CheckIfFocusable(aElement, aFlags) &&
+      mFocusedWindow == aWindow && mFocusedElement == nullptr) {
+=======
+  if (FlushAndCheckIfFocusable(aElement, aFlags) && mFocusedWindow == aWindow &&
+      mFocusedElement == nullptr) {
+>>>>>>> upstream-releases
     mFocusedElement = aElement;
 
     nsIContent* focusedNode = aWindow->GetFocusedElement();
@@ -1840,6 +2227,7 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
       // that we might no longer be in the same document, due to the events we
       // fired above when aIsNewDocument.
       if (presShell->GetDocument() == aElement->GetComposedDoc()) {
+<<<<<<< HEAD
         if (aAdjustWidgets && objectFrameWidget && !sTestMode)
           objectFrameWidget->SetFocus(false);
 
@@ -1848,7 +2236,23 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
         if (TabParent* remote = TabParent::GetFrom(aElement)) {
           remote->Activate();
           LOGFOCUS(("Remote browser activated"));
+||||||| merged common ancestors
+        if (aAdjustWidgets && objectFrameWidget && !sTestMode)
+          objectFrameWidget->SetFocus(false);
+
+        // if the object being focused is a remote browser, activate remote content
+        if (TabParent* remote = TabParent::GetFrom(aElement)) {
+          remote->Activate();
+          LOGFOCUS(("Remote browser activated"));
+=======
+        if (aAdjustWidgets && objectFrameWidget && !sTestMode) {
+          objectFrameWidget->SetFocus(nsIWidget::Raise::No);
+>>>>>>> upstream-releases
         }
+
+        // if the object being focused is a remote browser, activate remote
+        // content
+        ActivateRemoteFrameIfNeeded(*aElement);
       }
 
       IMEStateManager::OnChangeFocus(presContext, aElement,
@@ -1874,13 +2278,34 @@ void nsFocusManager::Focus(nsPIDOMWindowOuter* aWindow, Element* aElement,
     // If the window focus event (fired above when aIsNewDocument) caused
     // the plugin not to be focusable, update the system focus by focusing
     // the root widget.
+<<<<<<< HEAD
     if (aAdjustWidgets && objectFrameWidget && mFocusedWindow == aWindow &&
         mFocusedElement == nullptr && !sTestMode) {
       nsViewManager* vm = presShell->GetViewManager();
       if (vm) {
+||||||| merged common ancestors
+    if (aAdjustWidgets && objectFrameWidget &&
+        mFocusedWindow == aWindow && mFocusedElement == nullptr &&
+        !sTestMode) {
+      nsViewManager* vm = presShell->GetViewManager();
+      if (vm) {
+=======
+    if (aAdjustWidgets && objectFrameWidget && mFocusedWindow == aWindow &&
+        mFocusedElement == nullptr && !sTestMode) {
+      if (nsViewManager* vm = presShell->GetViewManager()) {
+>>>>>>> upstream-releases
         nsCOMPtr<nsIWidget> widget;
         vm->GetRootWidget(getter_AddRefs(widget));
+<<<<<<< HEAD
         if (widget) widget->SetFocus(false);
+||||||| merged common ancestors
+        if (widget)
+          widget->SetFocus(false);
+=======
+        if (widget) {
+          widget->SetFocus(nsIWidget::Raise::No);
+        }
+>>>>>>> upstream-releases
       }
     }
 
@@ -1980,7 +2405,15 @@ class FocusInOutEvent : public Runnable {
   nsCOMPtr<EventTarget> mRelatedTarget;
 };
 
+<<<<<<< HEAD
 static nsIDocument* GetDocumentHelper(EventTarget* aTarget) {
+||||||| merged common ancestors
+static nsIDocument*
+GetDocumentHelper(EventTarget* aTarget)
+{
+=======
+static Document* GetDocumentHelper(EventTarget* aTarget) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsINode> node = do_QueryInterface(aTarget);
   if (!node) {
     nsCOMPtr<nsPIDOMWindowInner> win = do_QueryInterface(aTarget);
@@ -1990,10 +2423,25 @@ static nsIDocument* GetDocumentHelper(EventTarget* aTarget) {
   return node->OwnerDoc();
 }
 
+<<<<<<< HEAD
 void nsFocusManager::FireFocusInOrOutEvent(
     EventMessage aEventMessage, nsIPresShell* aPresShell, nsISupports* aTarget,
     nsPIDOMWindowOuter* aCurrentFocusedWindow,
     nsIContent* aCurrentFocusedContent, EventTarget* aRelatedTarget) {
+||||||| merged common ancestors
+void nsFocusManager::FireFocusInOrOutEvent(EventMessage aEventMessage,
+                                     nsIPresShell* aPresShell,
+                                     nsISupports* aTarget,
+                                     nsPIDOMWindowOuter* aCurrentFocusedWindow,
+                                     nsIContent* aCurrentFocusedContent,
+                                     EventTarget* aRelatedTarget)
+{
+=======
+void nsFocusManager::FireFocusInOrOutEvent(
+    EventMessage aEventMessage, PresShell* aPresShell, nsISupports* aTarget,
+    nsPIDOMWindowOuter* aCurrentFocusedWindow,
+    nsIContent* aCurrentFocusedContent, EventTarget* aRelatedTarget) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aEventMessage == eFocusIn || aEventMessage == eFocusOut,
                "Wrong event type for FireFocusInOrOutEvent");
 
@@ -2002,16 +2450,34 @@ void nsFocusManager::FireFocusInOrOutEvent(
       aCurrentFocusedWindow, aCurrentFocusedContent, aRelatedTarget));
 }
 
+<<<<<<< HEAD
 void nsFocusManager::SendFocusOrBlurEvent(
     EventMessage aEventMessage, nsIPresShell* aPresShell,
     nsIDocument* aDocument, nsISupports* aTarget, uint32_t aFocusMethod,
     bool aWindowRaised, bool aIsRefocus, EventTarget* aRelatedTarget) {
+||||||| merged common ancestors
+void
+nsFocusManager::SendFocusOrBlurEvent(EventMessage aEventMessage,
+                                     nsIPresShell* aPresShell,
+                                     nsIDocument* aDocument,
+                                     nsISupports* aTarget,
+                                     uint32_t aFocusMethod,
+                                     bool aWindowRaised,
+                                     bool aIsRefocus,
+                                     EventTarget* aRelatedTarget)
+{
+=======
+void nsFocusManager::SendFocusOrBlurEvent(
+    EventMessage aEventMessage, PresShell* aPresShell, Document* aDocument,
+    nsISupports* aTarget, uint32_t aFocusMethod, bool aWindowRaised,
+    bool aIsRefocus, EventTarget* aRelatedTarget) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aEventMessage == eFocus || aEventMessage == eBlur,
                "Wrong event type for SendFocusOrBlurEvent");
 
   nsCOMPtr<EventTarget> eventTarget = do_QueryInterface(aTarget);
-  nsCOMPtr<nsIDocument> eventTargetDoc = GetDocumentHelper(eventTarget);
-  nsCOMPtr<nsIDocument> relatedTargetDoc = GetDocumentHelper(aRelatedTarget);
+  nsCOMPtr<Document> eventTargetDoc = GetDocumentHelper(eventTarget);
+  nsCOMPtr<Document> relatedTargetDoc = GetDocumentHelper(aRelatedTarget);
 
   // set aRelatedTarget to null if it's not in the same document as eventTarget
   if (eventTargetDoc != relatedTargetDoc) {
@@ -2049,18 +2515,45 @@ void nsFocusManager::SendFocusOrBlurEvent(
                        aIsRefocus, aRelatedTarget);
 }
 
+<<<<<<< HEAD
 void nsFocusManager::FireFocusOrBlurEvent(EventMessage aEventMessage,
                                           nsIPresShell* aPresShell,
                                           nsISupports* aTarget,
                                           bool aWindowRaised, bool aIsRefocus,
                                           EventTarget* aRelatedTarget) {
+||||||| merged common ancestors
+void
+nsFocusManager::FireFocusOrBlurEvent(EventMessage aEventMessage,
+                                     nsIPresShell* aPresShell,
+                                     nsISupports* aTarget,
+                                     bool aWindowRaised,
+                                     bool aIsRefocus,
+                                     EventTarget* aRelatedTarget)
+{
+=======
+void nsFocusManager::FireFocusOrBlurEvent(EventMessage aEventMessage,
+                                          PresShell* aPresShell,
+                                          nsISupports* aTarget,
+                                          bool aWindowRaised, bool aIsRefocus,
+                                          EventTarget* aRelatedTarget) {
+>>>>>>> upstream-releases
   nsCOMPtr<EventTarget> eventTarget = do_QueryInterface(aTarget);
-  nsCOMPtr<nsIDocument> eventTargetDoc = GetDocumentHelper(eventTarget);
+  nsCOMPtr<Document> eventTargetDoc = GetDocumentHelper(eventTarget);
   nsCOMPtr<nsPIDOMWindowOuter> currentWindow = mFocusedWindow;
   nsCOMPtr<nsPIDOMWindowInner> targetWindow = do_QueryInterface(aTarget);
+<<<<<<< HEAD
   nsCOMPtr<nsIDocument> targetDocument = do_QueryInterface(aTarget);
   nsCOMPtr<nsIContent> currentFocusedContent =
       currentWindow ? currentWindow->GetFocusedElement() : nullptr;
+||||||| merged common ancestors
+  nsCOMPtr<nsIDocument> targetDocument = do_QueryInterface(aTarget);
+  nsCOMPtr<nsIContent> currentFocusedContent = currentWindow ?
+      currentWindow->GetFocusedElement() : nullptr;
+=======
+  nsCOMPtr<Document> targetDocument = do_QueryInterface(aTarget);
+  nsCOMPtr<nsIContent> currentFocusedContent =
+      currentWindow ? currentWindow->GetFocusedElement() : nullptr;
+>>>>>>> upstream-releases
 
   bool dontDispatchEvent =
       eventTargetDoc && nsContentUtils::IsUserFocusIgnored(eventTargetDoc);
@@ -2098,9 +2591,21 @@ void nsFocusManager::FireFocusOrBlurEvent(EventMessage aEventMessage,
   }
 }
 
+<<<<<<< HEAD
 void nsFocusManager::ScrollIntoView(nsIPresShell* aPresShell,
                                     nsIContent* aContent, uint32_t aFlags) {
+||||||| merged common ancestors
+void
+nsFocusManager::ScrollIntoView(nsIPresShell* aPresShell,
+                               nsIContent* aContent,
+                               uint32_t aFlags)
+{
+=======
+void nsFocusManager::ScrollIntoView(PresShell* aPresShell, nsIContent* aContent,
+                                    uint32_t aFlags) {
+>>>>>>> upstream-releases
   // if the noscroll flag isn't set, scroll the newly focused element into view
+<<<<<<< HEAD
   if (!(aFlags & FLAG_NOSCROLL))
     aPresShell->ScrollContentIntoView(
         aContent,
@@ -2109,6 +2614,27 @@ void nsFocusManager::ScrollIntoView(nsIPresShell* aPresShell,
         nsIPresShell::ScrollAxis(nsIPresShell::SCROLL_MINIMUM,
                                  nsIPresShell::SCROLL_IF_NOT_VISIBLE),
         nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
+||||||| merged common ancestors
+  if (!(aFlags & FLAG_NOSCROLL))
+    aPresShell->ScrollContentIntoView(aContent,
+                                      nsIPresShell::ScrollAxis(
+                                        nsIPresShell::SCROLL_MINIMUM,
+                                        nsIPresShell::SCROLL_IF_NOT_VISIBLE),
+                                      nsIPresShell::ScrollAxis(
+                                        nsIPresShell::SCROLL_MINIMUM,
+                                        nsIPresShell::SCROLL_IF_NOT_VISIBLE),
+                                      nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
+=======
+  if (!(aFlags & FLAG_NOSCROLL)) {
+    ScrollFlags scrollFlags = ScrollFlags::ScrollOverflowHidden;
+    if (!(aFlags & FLAG_BYELEMENTFOCUS)) {
+      scrollFlags |= ScrollFlags::IgnoreMarginAndPadding;
+    }
+    aPresShell->ScrollContentIntoView(
+        aContent, ScrollAxis(kScrollMinimum, WhenToScroll::IfNotVisible),
+        ScrollAxis(kScrollMinimum, WhenToScroll::IfNotVisible), scrollFlags);
+  }
+>>>>>>> upstream-releases
 }
 
 void nsFocusManager::RaiseWindow(nsPIDOMWindowOuter* aWindow) {
@@ -2148,14 +2674,31 @@ void nsFocusManager::RaiseWindow(nsPIDOMWindowOuter* aWindow) {
   nsCOMPtr<nsIDocShell> docShell = aWindow->GetDocShell();
   if (!docShell) return;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
   if (!presShell) return;
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+  if (!presShell)
+    return;
+=======
+  PresShell* presShell = docShell->GetPresShell();
+  if (!presShell) {
+    return;
+  }
+>>>>>>> upstream-releases
 
-  nsViewManager* vm = presShell->GetViewManager();
-  if (vm) {
+  if (nsViewManager* vm = presShell->GetViewManager()) {
     nsCOMPtr<nsIWidget> widget;
     vm->GetRootWidget(getter_AddRefs(widget));
+<<<<<<< HEAD
     if (widget) widget->SetFocus(true);
+||||||| merged common ancestors
+    if (widget)
+      widget->SetFocus(true);
+=======
+    if (widget) widget->SetFocus(nsIWidget::Raise::Yes);
+>>>>>>> upstream-releases
   }
 #else
   nsCOMPtr<nsIBaseWindow> treeOwnerAsWin =
@@ -2163,7 +2706,14 @@ void nsFocusManager::RaiseWindow(nsPIDOMWindowOuter* aWindow) {
   if (treeOwnerAsWin) {
     nsCOMPtr<nsIWidget> widget;
     treeOwnerAsWin->GetMainWidget(getter_AddRefs(widget));
+<<<<<<< HEAD
     if (widget) widget->SetFocus(true);
+||||||| merged common ancestors
+    if (widget)
+      widget->SetFocus(true);
+=======
+    if (widget) widget->SetFocus(nsIWidget::Raise::Yes);
+>>>>>>> upstream-releases
   }
 #endif
 }
@@ -2191,8 +2741,19 @@ void nsFocusManager::UpdateCaret(bool aMoveCaretToFocus, bool aUpdateVisibility,
 
   bool browseWithCaret = Preferences::GetBool("accessibility.browsewithcaret");
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> presShell = focusedDocShell->GetPresShell();
   if (!presShell) return;
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> presShell = focusedDocShell->GetPresShell();
+  if (!presShell)
+    return;
+=======
+  RefPtr<PresShell> presShell = focusedDocShell->GetPresShell();
+  if (!presShell) {
+    return;
+  }
+>>>>>>> upstream-releases
 
   // If this is an editable document which isn't contentEditable, or a
   // contentEditable document and the node to focus is contentEditable,
@@ -2201,16 +2762,39 @@ void nsFocusManager::UpdateCaret(bool aMoveCaretToFocus, bool aUpdateVisibility,
   focusedDocShell->GetEditable(&isEditable);
 
   if (isEditable) {
+<<<<<<< HEAD
     nsCOMPtr<nsIHTMLDocument> doc = do_QueryInterface(presShell->GetDocument());
+||||||| merged common ancestors
+    nsCOMPtr<nsIHTMLDocument> doc =
+      do_QueryInterface(presShell->GetDocument());
+=======
+    Document* doc = presShell->GetDocument();
+>>>>>>> upstream-releases
 
     bool isContentEditableDoc =
+<<<<<<< HEAD
         doc && doc->GetEditingState() == nsIHTMLDocument::eContentEditable;
+||||||| merged common ancestors
+      doc && doc->GetEditingState() == nsIHTMLDocument::eContentEditable;
+=======
+        doc &&
+        doc->GetEditingState() == Document::EditingState::eContentEditable;
+>>>>>>> upstream-releases
 
     bool isFocusEditable = aContent && aContent->HasFlag(NODE_IS_EDITABLE);
     if (!isContentEditableDoc || isFocusEditable) return;
   }
 
+<<<<<<< HEAD
   if (!isEditable && aMoveCaretToFocus) MoveCaretToFocus(presShell, aContent);
+||||||| merged common ancestors
+  if (!isEditable && aMoveCaretToFocus)
+    MoveCaretToFocus(presShell, aContent);
+=======
+  if (!isEditable && aMoveCaretToFocus) {
+    MoveCaretToFocus(presShell, aContent);
+  }
+>>>>>>> upstream-releases
 
   if (!aUpdateVisibility) return;
 
@@ -2228,9 +2812,20 @@ void nsFocusManager::UpdateCaret(bool aMoveCaretToFocus, bool aUpdateVisibility,
   SetCaretVisible(presShell, browseWithCaret, aContent);
 }
 
+<<<<<<< HEAD
 void nsFocusManager::MoveCaretToFocus(nsIPresShell* aPresShell,
                                       nsIContent* aContent) {
   nsCOMPtr<nsIDocument> doc = aPresShell->GetDocument();
+||||||| merged common ancestors
+void
+nsFocusManager::MoveCaretToFocus(nsIPresShell* aPresShell, nsIContent* aContent)
+{
+  nsCOMPtr<nsIDocument> doc = aPresShell->GetDocument();
+=======
+void nsFocusManager::MoveCaretToFocus(PresShell* aPresShell,
+                                      nsIContent* aContent) {
+  nsCOMPtr<Document> doc = aPresShell->GetDocument();
+>>>>>>> upstream-releases
   if (doc) {
     RefPtr<nsFrameSelection> frameSelection = aPresShell->FrameSelection();
     RefPtr<Selection> domSelection =
@@ -2259,15 +2854,27 @@ void nsFocusManager::MoveCaretToFocus(nsIPresShell* aPresShell,
           newRange->SetStartBefore(*aContent, IgnoreErrors());
           newRange->SetEndBefore(*aContent, IgnoreErrors());
         }
-        domSelection->AddRange(*newRange, IgnoreErrors());
+        domSelection->AddRangeAndSelectFramesAndNotifyListeners(*newRange,
+                                                                IgnoreErrors());
         domSelection->CollapseToStart(IgnoreErrors());
       }
     }
   }
 }
 
+<<<<<<< HEAD
 nsresult nsFocusManager::SetCaretVisible(nsIPresShell* aPresShell,
                                          bool aVisible, nsIContent* aContent) {
+||||||| merged common ancestors
+nsresult
+nsFocusManager::SetCaretVisible(nsIPresShell* aPresShell,
+                                bool aVisible,
+                                nsIContent* aContent)
+{
+=======
+nsresult nsFocusManager::SetCaretVisible(PresShell* aPresShell, bool aVisible,
+                                         nsIContent* aContent) {
+>>>>>>> upstream-releases
   // When browsing with caret, make sure caret is visible after new focus
   // Return early if there is no caret. This can happen for the testcase
   // for bug 308025 where a window is closed in a blur handler.
@@ -2292,6 +2899,7 @@ nsresult nsFocusManager::SetCaretVisible(nsIPresShell* aPresShell,
     Selection* domSelection =
         docFrameSelection->GetSelection(SelectionType::eNormal);
     if (domSelection) {
+<<<<<<< HEAD
       nsCOMPtr<nsISelectionController> selCon(do_QueryInterface(aPresShell));
       if (!selCon) {
         return NS_ERROR_FAILURE;
@@ -2299,6 +2907,18 @@ nsresult nsFocusManager::SetCaretVisible(nsIPresShell* aPresShell,
       // First, hide the caret to prevent attempting to show it in
       // SetCaretDOMSelection
       selCon->SetCaretEnabled(false);
+||||||| merged common ancestors
+      nsCOMPtr<nsISelectionController> selCon(do_QueryInterface(aPresShell));
+      if (!selCon) {
+        return NS_ERROR_FAILURE;
+      }
+      // First, hide the caret to prevent attempting to show it in SetCaretDOMSelection
+      selCon->SetCaretEnabled(false);
+=======
+      // First, hide the caret to prevent attempting to show it in
+      // SetCaretDOMSelection
+      aPresShell->SetCaretEnabled(false);
+>>>>>>> upstream-releases
 
       // Caret must blink on non-editable elements
       caret->SetIgnoreUserModify(true);
@@ -2309,18 +2929,32 @@ nsresult nsFocusManager::SetCaretVisible(nsIPresShell* aPresShell,
       // fields, which have a different frame selection from the document.
       // They will take care of making the caret visible themselves.
 
-      selCon->SetCaretReadOnly(false);
-      selCon->SetCaretEnabled(aVisible);
+      aPresShell->SetCaretReadOnly(false);
+      aPresShell->SetCaretEnabled(aVisible);
     }
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsFocusManager::GetSelectionLocation(nsIDocument* aDocument,
                                               nsIPresShell* aPresShell,
                                               nsIContent** aStartContent,
                                               nsIContent** aEndContent) {
+||||||| merged common ancestors
+nsresult
+nsFocusManager::GetSelectionLocation(nsIDocument* aDocument,
+                                     nsIPresShell* aPresShell,
+                                     nsIContent **aStartContent,
+                                     nsIContent **aEndContent)
+{
+=======
+nsresult nsFocusManager::GetSelectionLocation(Document* aDocument,
+                                              PresShell* aPresShell,
+                                              nsIContent** aStartContent,
+                                              nsIContent** aEndContent) {
+>>>>>>> upstream-releases
   *aStartContent = *aEndContent = nullptr;
   nsPresContext* presContext = aPresShell->GetPresContext();
   NS_ASSERTION(presContext, "mPresContent is null!!");
@@ -2483,7 +3117,7 @@ nsresult nsFocusManager::DetermineElementToMoveFocus(
     }
   }
 
-  nsCOMPtr<nsIDocument> doc;
+  nsCOMPtr<Document> doc;
   if (startContent)
     doc = startContent->GetComposedDoc();
   else
@@ -2514,7 +3148,7 @@ nsresult nsFocusManager::DetermineElementToMoveFocus(
   Element* rootContent = doc->GetRootElement();
   NS_ENSURE_TRUE(rootContent, NS_OK);
 
-  nsIPresShell* presShell = doc->GetShell();
+  PresShell* presShell = doc->GetPresShell();
   NS_ENSURE_TRUE(presShell, NS_OK);
 
   if (aType == MOVEFOCUS_FIRST) {
@@ -2577,7 +3211,7 @@ nsresult nsFocusManager::DetermineElementToMoveFocus(
       if (startContent == rootContent) {
         doNavigation = false;
       } else {
-        nsIDocument* doc = startContent->GetComposedDoc();
+        Document* doc = startContent->GetComposedDoc();
         if (startContent ==
             nsLayoutUtils::GetEditableRootContentByContentEditable(doc)) {
           doNavigation = false;
@@ -2761,7 +3395,7 @@ nsresult nsFocusManager::DetermineElementToMoveFocus(
       NS_ENSURE_TRUE(doc, NS_ERROR_FAILURE);
 
       rootContent = doc->GetRootElement();
-      presShell = doc->GetShell();
+      presShell = doc->GetPresShell();
 
       // We can focus the root element now that we have moved to another
       // document.
@@ -2841,6 +3475,16 @@ nsresult nsFocusManager::DetermineElementToMoveFocus(
   return NS_OK;
 }
 
+uint32_t nsFocusManager::FocusOptionsToFocusManagerFlags(
+    const mozilla::dom::FocusOptions& aOptions) {
+  return aOptions.mPreventScroll ? nsIFocusManager::FLAG_NOSCROLL : 0;
+}
+
+static bool IsHostOrSlot(const nsIContent* aContent) {
+  return aContent && (aContent->GetShadowRoot() ||
+                      aContent->IsHTMLElement(nsGkAtoms::slot));
+}
+
 // Helper class to iterate contents in scope by traversing flattened tree
 // in tree order
 class MOZ_STACK_CLASS ScopedContentTraversal {
@@ -2855,7 +3499,16 @@ class MOZ_STACK_CLASS ScopedContentTraversal {
 
   void Reset() { SetCurrent(mOwner); }
 
+<<<<<<< HEAD
   nsIContent* GetCurrent() { return mCurrent; }
+||||||| merged common ancestors
+  nsIContent* GetCurrent()
+  {
+    return mCurrent;
+  }
+=======
+  nsIContent* GetCurrent() const { return mCurrent; }
+>>>>>>> upstream-releases
 
  private:
   void SetCurrent(nsIContent* aContent) { mCurrent = aContent; }
@@ -2868,10 +3521,19 @@ void ScopedContentTraversal::Next() {
   MOZ_ASSERT(mCurrent);
 
   // Get mCurrent's first child if it's in the same scope.
+<<<<<<< HEAD
   if (!(mCurrent->GetShadowRoot() ||
         mCurrent->IsHTMLElement(nsGkAtoms::slot)) ||
       mCurrent == mOwner) {
     StyleChildrenIterator iter(mCurrent);
+||||||| merged common ancestors
+  if (!(mCurrent->GetShadowRoot() || mCurrent->IsHTMLElement(nsGkAtoms::slot)) ||
+      mCurrent == mOwner) {
+    FlattenedChildIterator iter(mCurrent);
+=======
+  if (!IsHostOrSlot(mCurrent) || mCurrent == mOwner) {
+    StyleChildrenIterator iter(mCurrent);
+>>>>>>> upstream-releases
     nsIContent* child = iter.GetNextChild();
     if (child) {
       SetCurrent(child);
@@ -2931,7 +3593,14 @@ void ScopedContentTraversal::Prev() {
 
   while (last) {
     parent = last;
+<<<<<<< HEAD
     if (parent->GetShadowRoot() || parent->IsHTMLElement(nsGkAtoms::slot)) {
+||||||| merged common ancestors
+    if (parent->GetShadowRoot() ||
+        parent->IsHTMLElement(nsGkAtoms::slot)) {
+=======
+    if (IsHostOrSlot(parent)) {
+>>>>>>> upstream-releases
       // Skip contents in other scopes
       break;
     }
@@ -2945,19 +3614,22 @@ void ScopedContentTraversal::Prev() {
   SetCurrent(parent == mOwner ? nullptr : parent);
 }
 
+<<<<<<< HEAD
 nsIContent* nsFocusManager::FindOwner(nsIContent* aContent) {
+||||||| merged common ancestors
+nsIContent*
+nsFocusManager::FindOwner(nsIContent* aContent)
+{
+=======
+/**
+ * Returns scope owner of aContent.
+ * A scope owner is either a document root, shadow host, or slot.
+ */
+static nsIContent* FindOwner(nsIContent* aContent) {
+>>>>>>> upstream-releases
   nsIContent* currentContent = aContent;
   while (currentContent) {
     nsIContent* parent = currentContent->GetFlattenedTreeParent();
-    if (!parent) {
-      // Document root
-      nsIDocument* doc = currentContent->GetUncomposedDoc();
-      if (doc && doc->GetRootElement() == currentContent) {
-        return currentContent;
-      }
-
-      break;
-    }
 
     // Shadow host / Slot
     if (IsHostOrSlot(parent)) {
@@ -2970,6 +3642,7 @@ nsIContent* nsFocusManager::FindOwner(nsIContent* aContent) {
   return nullptr;
 }
 
+<<<<<<< HEAD
 bool nsFocusManager::IsHostOrSlot(nsIContent* aContent) {
   return aContent->GetShadowRoot() ||               // shadow host
          aContent->IsHTMLElement(nsGkAtoms::slot);  // slot
@@ -2977,6 +3650,28 @@ bool nsFocusManager::IsHostOrSlot(nsIContent* aContent) {
 
 int32_t nsFocusManager::HostOrSlotTabIndexValue(nsIContent* aContent,
                                                 bool* aIsFocusable) {
+||||||| merged common ancestors
+bool
+nsFocusManager::IsHostOrSlot(nsIContent* aContent)
+{
+  return aContent->GetShadowRoot() || // shadow host
+         aContent->IsHTMLElement(nsGkAtoms::slot); // slot
+}
+
+int32_t
+nsFocusManager::HostOrSlotTabIndexValue(nsIContent* aContent,
+                                        bool* aIsFocusable)
+{
+=======
+/**
+ * Host and Slot elements need to be handled as if they had tabindex 0 even
+ * when they don't have the attribute. This is a helper method to get the
+ * right value for focus navigation. If aIsFocusable is passed, it is set to
+ * true if the element itself is focusable.
+ */
+static int32_t HostOrSlotTabIndexValue(const nsIContent* aContent,
+                                       bool* aIsFocusable = nullptr) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsHostOrSlot(aContent));
 
   if (aIsFocusable) {
@@ -3002,6 +3697,7 @@ int32_t nsFocusManager::HostOrSlotTabIndexValue(nsIContent* aContent,
   return -1;
 }
 
+<<<<<<< HEAD
 nsIContent* nsFocusManager::GetNextTabbableContentInScope(
     nsIContent* aOwner, nsIContent* aStartContent,
     nsIContent* aOriginalStartContent, bool aForward, int32_t aCurrentTabIndex,
@@ -3013,6 +3709,36 @@ nsIContent* nsFocusManager::GetNextTabbableContentInScope(
     int32_t tabIndex = 0;
     aOwner->IsFocusable(&tabIndex);
     if (tabIndex >= 0) {
+||||||| merged common ancestors
+nsIContent*
+nsFocusManager::GetNextTabbableContentInScope(nsIContent* aOwner,
+                                              nsIContent* aStartContent,
+                                              nsIContent* aOriginalStartContent,
+                                              bool aForward,
+                                              int32_t aCurrentTabIndex,
+                                              bool aIgnoreTabIndex,
+                                              bool aForDocumentNavigation,
+                                              bool aSkipOwner)
+{
+  // Return shadow host at first for forward navigation if its tabindex
+  // is non-negative
+  bool skipOwner = aSkipOwner || !aOwner->GetShadowRoot();
+  if (!skipOwner && (aForward && aOwner == aStartContent)) {
+    int32_t tabIndex = 0;
+    aOwner->IsFocusable(&tabIndex);
+    if (tabIndex >= 0) {
+=======
+nsIContent* nsFocusManager::GetNextTabbableContentInScope(
+    nsIContent* aOwner, nsIContent* aStartContent,
+    nsIContent* aOriginalStartContent, bool aForward, int32_t aCurrentTabIndex,
+    bool aIgnoreTabIndex, bool aForDocumentNavigation, bool aSkipOwner) {
+  MOZ_ASSERT(IsHostOrSlot(aOwner), "Scope owner should be host or slot");
+
+  if (!aSkipOwner && (aForward && aOwner == aStartContent)) {
+    int32_t tabIndex = -1;
+    nsIFrame* frame = aOwner->GetPrimaryFrame();
+    if (frame && frame->IsFocusable(&tabIndex, false) && tabIndex >= 0) {
+>>>>>>> upstream-releases
       return aOwner;
     }
   }
@@ -3037,7 +3763,7 @@ nsIContent* nsFocusManager::GetNextTabbableContentInScope(
       iterContent = contentTraversal.GetCurrent();
 
       if (firstNonChromeOnly && firstNonChromeOnly == iterContent) {
-        // We just broke out from the native anonynous content, so move
+        // We just broke out from the native anonymous content, so move
         // to the previous/next node of the native anonymous owner.
         if (aForward) {
           contentTraversal.Next();
@@ -3106,17 +3832,23 @@ nsIContent* nsFocusManager::GetNextTabbableContentInScope(
       break;
     }
 
+    // We've been just trying to find some focusable element, and haven't, so
+    // bail out.
+    if (aIgnoreTabIndex) {
+      break;
+    }
+
     // Continue looking for next highest priority tabindex
     aCurrentTabIndex = GetNextTabIndex(aOwner, aCurrentTabIndex, aForward);
     contentTraversal.Reset();
   }
 
-  // Return shadow host at last for backward navigation if its tabindex
+  // Return scope owner at last for backward navigation if its tabindex
   // is non-negative
-  if (!skipOwner && !aForward) {
-    int32_t tabIndex = 0;
-    aOwner->IsFocusable(&tabIndex);
-    if (tabIndex >= 0) {
+  if (!aSkipOwner && !aForward) {
+    int32_t tabIndex = -1;
+    nsIFrame* frame = aOwner->GetPrimaryFrame();
+    if (frame && frame->IsFocusable(&tabIndex, false) && tabIndex >= 0) {
       return aOwner;
     }
   }
@@ -3124,6 +3856,7 @@ nsIContent* nsFocusManager::GetNextTabbableContentInScope(
   return nullptr;
 }
 
+<<<<<<< HEAD
 nsIContent* nsFocusManager::GetNextTabbableContentInAncestorScopes(
     nsIContent** aStartContent, nsIContent* aOriginalStartContent,
     bool aForward, int32_t* aCurrentTabIndex, bool aIgnoreTabIndex,
@@ -3132,10 +3865,38 @@ nsIContent* nsFocusManager::GetNextTabbableContentInAncestorScopes(
   while (1) {
     nsIContent* owner = FindOwner(startContent);
     MOZ_ASSERT(owner, "focus navigation scope owner not in document");
+||||||| merged common ancestors
+nsIContent*
+nsFocusManager::GetNextTabbableContentInAncestorScopes(
+  nsIContent** aStartContent,
+  nsIContent* aOriginalStartContent,
+  bool aForward,
+  int32_t* aCurrentTabIndex,
+  bool aIgnoreTabIndex,
+  bool aForDocumentNavigation)
+{
+  nsIContent* startContent = *aStartContent;
+  while (1) {
+    nsIContent* owner = FindOwner(startContent);
+    MOZ_ASSERT(owner, "focus navigation scope owner not in document");
+=======
+nsIContent* nsFocusManager::GetNextTabbableContentInAncestorScopes(
+    nsIContent* aStartOwner, nsIContent** aStartContent,
+    nsIContent* aOriginalStartContent, bool aForward, int32_t* aCurrentTabIndex,
+    bool aIgnoreTabIndex, bool aForDocumentNavigation) {
+  MOZ_ASSERT(aStartOwner == FindOwner(*aStartContent),
+             "aStartOWner should be the scope owner of aStartContent");
+  MOZ_ASSERT(IsHostOrSlot(aStartOwner), "scope owner should be host or slot");
+>>>>>>> upstream-releases
 
+  nsIContent* owner = aStartOwner;
+  nsIContent* startContent = *aStartContent;
+  while (IsHostOrSlot(owner)) {
     int32_t tabIndex = 0;
     if (IsHostOrSlot(startContent)) {
       tabIndex = HostOrSlotTabIndexValue(startContent);
+    } else if (nsIFrame* frame = startContent->GetPrimaryFrame()) {
+      frame->IsFocusable(&tabIndex);
     } else {
       startContent->IsFocusable(&tabIndex);
     }
@@ -3146,48 +3907,78 @@ nsIContent* nsFocusManager::GetNextTabbableContentInAncestorScopes(
       return contentToFocus;
     }
 
-    // If not found in shadow DOM, search from the shadow host in light DOM
-    if (!owner->IsInShadowTree()) {
-      MOZ_ASSERT(owner->GetShadowRoot());
-
-      *aStartContent = owner;
-      *aCurrentTabIndex = HostOrSlotTabIndexValue(owner);
-      break;
-    }
-
     startContent = owner;
+    owner = FindOwner(startContent);
   }
+
+  // If not found in shadow DOM, search from the top level shadow host in light
+  // DOM
+  *aStartContent = startContent;
+  *aCurrentTabIndex = HostOrSlotTabIndexValue(startContent);
 
   return nullptr;
 }
 
+<<<<<<< HEAD
 static nsIContent* GetTopLevelHost(nsIContent* aContent) {
   nsIContent* topLevelhost = nullptr;
+||||||| merged common ancestors
+static nsIContent*
+GetTopLevelHost(nsIContent* aContent)
+{
+  nsIContent* topLevelhost = nullptr;
+=======
+static nsIContent* GetTopLevelScopeOwner(nsIContent* aContent) {
+  nsIContent* topLevelScopeOwner = nullptr;
+>>>>>>> upstream-releases
   while (aContent) {
     if (HTMLSlotElement* slot = aContent->GetAssignedSlot()) {
       aContent = slot;
     } else if (ShadowRoot* shadowRoot = aContent->GetContainingShadow()) {
       aContent = shadowRoot->Host();
-      topLevelhost = aContent;
+      topLevelScopeOwner = aContent;
     } else {
+      if (HTMLSlotElement::FromNode(aContent)) {
+        topLevelScopeOwner = aContent;
+      }
       aContent = aContent->GetParent();
     }
   }
 
-  return topLevelhost;
+  return topLevelScopeOwner;
 }
 
+<<<<<<< HEAD
 nsresult nsFocusManager::GetNextTabbableContent(
     nsIPresShell* aPresShell, nsIContent* aRootContent,
     nsIContent* aOriginalStartContent, nsIContent* aStartContent, bool aForward,
     int32_t aCurrentTabIndex, bool aIgnoreTabIndex, bool aForDocumentNavigation,
     nsIContent** aResultContent) {
+||||||| merged common ancestors
+nsresult
+nsFocusManager::GetNextTabbableContent(nsIPresShell* aPresShell,
+                                       nsIContent* aRootContent,
+                                       nsIContent* aOriginalStartContent,
+                                       nsIContent* aStartContent,
+                                       bool aForward,
+                                       int32_t aCurrentTabIndex,
+                                       bool aIgnoreTabIndex,
+                                       bool aForDocumentNavigation,
+                                       nsIContent** aResultContent)
+{
+=======
+nsresult nsFocusManager::GetNextTabbableContent(
+    PresShell* aPresShell, nsIContent* aRootContent,
+    nsIContent* aOriginalStartContent, nsIContent* aStartContent, bool aForward,
+    int32_t aCurrentTabIndex, bool aIgnoreTabIndex, bool aForDocumentNavigation,
+    nsIContent** aResultContent) {
+>>>>>>> upstream-releases
   *aResultContent = nullptr;
 
   nsCOMPtr<nsIContent> startContent = aStartContent;
   if (!startContent) return NS_OK;
 
-  nsIContent* currentTopLevelHost = GetTopLevelHost(aStartContent);
+  nsIContent* currentTopLevelScopeOwner = GetTopLevelScopeOwner(aStartContent);
 
   LOGCONTENTNAVIGATION("GetNextTabbable: %s", aStartContent);
   LOGFOCUSNAVIGATION(("  tabindex: %d", aCurrentTabIndex));
@@ -3205,6 +3996,7 @@ nsresult nsFocusManager::GetNextTabbableContent(
     }
   }
 
+<<<<<<< HEAD
   // If aStartContent is not in a scope owned by the root element
   // (i.e. aStartContent is already in shadow DOM),
   // search from scope including aStartContent
@@ -3217,42 +4009,127 @@ nsresult nsFocusManager::GetNextTabbableContent(
     if (contentToFocus) {
       NS_ADDREF(*aResultContent = contentToFocus);
       return NS_OK;
+||||||| merged common ancestors
+    // If aStartContent is not in a scope owned by the root element
+    // (i.e. aStartContent is already in shadow DOM),
+    // search from scope including aStartContent
+    nsIContent* rootElement = aRootContent->OwnerDoc()->GetRootElement();
+    nsIContent* owner = FindOwner(aStartContent);
+    if (owner && rootElement != owner) {
+      nsIContent* contentToFocus =
+        GetNextTabbableContentInAncestorScopes(&aStartContent,
+                                               aOriginalStartContent,
+                                               aForward,
+                                               &aCurrentTabIndex,
+                                               aIgnoreTabIndex,
+                                               aForDocumentNavigation);
+      if (contentToFocus) {
+        NS_ADDREF(*aResultContent = contentToFocus);
+        return NS_OK;
+      }
+=======
+  // If aStartContent is in a scope owned by Shadow DOM search from scope
+  // including aStartContent
+  if (nsIContent* owner = FindOwner(aStartContent)) {
+    nsIContent* contentToFocus = GetNextTabbableContentInAncestorScopes(
+        owner, &aStartContent, aOriginalStartContent, aForward,
+        &aCurrentTabIndex, aIgnoreTabIndex, aForDocumentNavigation);
+    if (contentToFocus) {
+      NS_ADDREF(*aResultContent = contentToFocus);
+      return NS_OK;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // If we reach here, it means no next tabbable content in shadow DOM.
   // We need to continue searching in light DOM, starting at the shadow host
   // in light DOM (updated aStartContent) and its tabindex
   // (updated aCurrentTabIndex).
 
+||||||| merged common ancestors
+=======
+  // If we reach here, it means no next tabbable content in shadow DOM.
+  // We need to continue searching in light DOM, starting at the top level
+  // shadow host in light DOM (updated aStartContent) and its tabindex
+  // (updated aCurrentTabIndex).
+  MOZ_ASSERT(!FindOwner(aStartContent),
+             "aStartContent should not be owned by Shadow DOM at this point");
+
+>>>>>>> upstream-releases
   nsPresContext* presContext = aPresShell->GetPresContext();
 
   bool getNextFrame = true;
   nsCOMPtr<nsIContent> iterStartContent = aStartContent;
+  // Iterate tab index to find corresponding contents
   while (1) {
-    nsIFrame* startFrame = iterStartContent->GetPrimaryFrame();
+    nsIFrame* frame = iterStartContent->GetPrimaryFrame();
     // if there is no frame, look for another content node that has a frame
-    if (!startFrame) {
+    while (!frame) {
       // if the root content doesn't have a frame, just return
+<<<<<<< HEAD
       if (iterStartContent == aRootContent) return NS_OK;
+||||||| merged common ancestors
+      if (iterStartContent == aRootContent)
+        return NS_OK;
+=======
+      if (iterStartContent == aRootContent) {
+        return NS_OK;
+      }
+>>>>>>> upstream-releases
 
       // look for the next or previous content node in tree order
+<<<<<<< HEAD
       iterStartContent = aForward ? iterStartContent->GetNextNode()
                                   : iterStartContent->GetPreviousContent();
+||||||| merged common ancestors
+      iterStartContent = aForward ? iterStartContent->GetNextNode() : iterStartContent->GetPreviousContent();
+=======
+      iterStartContent = aForward ? iterStartContent->GetNextNode()
+                                  : iterStartContent->GetPreviousContent();
+      if (!iterStartContent) {
+        break;
+      }
+
+      frame = iterStartContent->GetPrimaryFrame();
+      // Host without frame, enter its scope.
+      if (!frame && iterStartContent->GetShadowRoot()) {
+        int32_t tabIndex = HostOrSlotTabIndexValue(iterStartContent);
+        if (tabIndex >= 0 &&
+            (aIgnoreTabIndex || aCurrentTabIndex == tabIndex)) {
+          nsIContent* contentToFocus = GetNextTabbableContentInScope(
+              iterStartContent, iterStartContent, aOriginalStartContent,
+              aForward, aForward ? 1 : 0, aIgnoreTabIndex,
+              aForDocumentNavigation, true /* aSkipOwner */);
+          if (contentToFocus) {
+            NS_ADDREF(*aResultContent = contentToFocus);
+            return NS_OK;
+          }
+        }
+      }
+>>>>>>> upstream-releases
       // we've already skipped over the initial focused content, so we
       // don't want to traverse frames.
       getNextFrame = false;
+<<<<<<< HEAD
       if (iterStartContent) continue;
 
       // otherwise, as a last attempt, just look at the root content
       iterStartContent = aRootContent;
       continue;
+||||||| merged common ancestors
+      if (iterStartContent)
+        continue;
+
+      // otherwise, as a last attempt, just look at the root content
+      iterStartContent = aRootContent;
+      continue;
+=======
+>>>>>>> upstream-releases
     }
 
-    // For tab navigation, pass false for aSkipPopupChecks so that we don't
-    // iterate into or out of a popup. For document naviation pass true to
-    // ignore these boundaries.
     nsCOMPtr<nsIFrameEnumerator> frameTraversal;
+<<<<<<< HEAD
     nsresult rv = NS_NewFrameTraversal(
         getter_AddRefs(frameTraversal), presContext, startFrame, ePreOrder,
         false,                  // aVisual
@@ -3267,7 +4144,59 @@ nsresult nsFocusManager::GetNextTabbableContent(
         frameTraversal->Last();
       } else if (aRootContent->IsFocusable()) {
         frameTraversal->Next();
+||||||| merged common ancestors
+    nsresult rv = NS_NewFrameTraversal(getter_AddRefs(frameTraversal),
+                                       presContext, startFrame,
+                                       ePreOrder,
+                                       false, // aVisual
+                                       false, // aLockInScrollView
+                                       true,  // aFollowOOFs
+                                       aForDocumentNavigation  // aSkipPopupChecks
+                                       );
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    if (iterStartContent == aRootContent) {
+      if (!aForward) {
+        frameTraversal->Last();
+      } else if (aRootContent->IsFocusable()) {
+        frameTraversal->Next();
+=======
+    if (frame) {
+      // For tab navigation, pass false for aSkipPopupChecks so that we don't
+      // iterate into or out of a popup. For document naviation pass true to
+      // ignore these boundaries.
+      nsresult rv = NS_NewFrameTraversal(
+          getter_AddRefs(frameTraversal), presContext, frame, ePreOrder,
+          false,                  // aVisual
+          false,                  // aLockInScrollView
+          true,                   // aFollowOOFs
+          aForDocumentNavigation  // aSkipPopupChecks
+      );
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (iterStartContent == aRootContent) {
+        if (!aForward) {
+          frameTraversal->Last();
+        } else if (aRootContent->IsFocusable()) {
+          frameTraversal->Next();
+        }
+        frame = static_cast<nsIFrame*>(frameTraversal->CurrentItem());
+      } else if (getNextFrame &&
+                 (!iterStartContent ||
+                  !iterStartContent->IsHTMLElement(nsGkAtoms::area))) {
+        // Need to do special check in case we're in an imagemap which has
+        // multiple content nodes per frame, so don't skip over the starting
+        // frame.
+        if (aForward) {
+          frameTraversal->Next();
+        } else {
+          frameTraversal->Prev();
+        }
+
+        frame = static_cast<nsIFrame*>(frameTraversal->CurrentItem());
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     } else if (getNextFrame &&
                (!iterStartContent ||
                 !iterStartContent->IsHTMLElement(nsGkAtoms::area))) {
@@ -3279,35 +4208,47 @@ nsresult nsFocusManager::GetNextTabbableContent(
       else
         frameTraversal->Prev();
     }
+||||||| merged common ancestors
+    }
+    else if (getNextFrame &&
+             (!iterStartContent ||
+              !iterStartContent->IsHTMLElement(nsGkAtoms::area))) {
+      // Need to do special check in case we're in an imagemap which has multiple
+      // content nodes per frame, so don't skip over the starting frame.
+      if (aForward)
+        frameTraversal->Next();
+      else
+        frameTraversal->Prev();
+    }
+=======
+    }
+>>>>>>> upstream-releases
 
-    // Walk frames to find something tabbable matching mCurrentTabIndex
-    nsIFrame* frame = static_cast<nsIFrame*>(frameTraversal->CurrentItem());
+    // Walk frames to find something tabbable matching aCurrentTabIndex
     while (frame) {
-      // Try to find the topmost Shadow DOM host, since we want to
-      // skip Shadow DOM in frame traversal.
+      // Try to find the topmost scope owner, since we want to skip the node
+      // that is not owned by document in frame traversal.
       nsIContent* currentContent = frame->GetContent();
-      nsIContent* oldTopLevelHost = currentTopLevelHost;
-      if (oldTopLevelHost != currentContent) {
-        currentTopLevelHost = GetTopLevelHost(currentContent);
+      nsIContent* oldTopLevelScopeOwner = currentTopLevelScopeOwner;
+      if (!aForward || oldTopLevelScopeOwner != currentContent) {
+        currentTopLevelScopeOwner = GetTopLevelScopeOwner(currentContent);
       } else {
-        currentTopLevelHost = currentContent;
+        currentTopLevelScopeOwner = currentContent;
       }
-      if (currentTopLevelHost) {
-        if (currentTopLevelHost == oldTopLevelHost) {
-          // We're within Shadow DOM, continue.
-          do {
-            if (aForward) {
-              frameTraversal->Next();
-            } else {
-              frameTraversal->Prev();
-            }
-            frame = static_cast<nsIFrame*>(frameTraversal->CurrentItem());
-            // For the usage of GetPrevContinuation, see the comment
-            // at the end of while (frame) loop.
-          } while (frame && frame->GetPrevContinuation());
-          continue;
-        }
-        currentContent = currentTopLevelHost;
+      if (currentTopLevelScopeOwner &&
+          currentTopLevelScopeOwner == oldTopLevelScopeOwner) {
+        // We're within non-document scope, continue.
+        do {
+          if (aForward) {
+            frameTraversal->Next();
+          } else {
+            frameTraversal->Prev();
+          }
+          frame = static_cast<nsIFrame*>(frameTraversal->CurrentItem());
+          // For the usage of GetPrevContinuation, see the comment
+          // at the end of while (frame) loop.
+        } while (frame && frame->GetPrevContinuation());
+        continue;
       }
 
       // For document navigation, check if this element is an open panel. Since
@@ -3342,9 +4283,20 @@ nsresult nsFocusManager::GetNextTabbableContent(
             // and root content, so that we only find content within the panel.
             // Note also that we pass false for aForDocumentNavigation since we
             // want to locate the first content, not the first document.
+<<<<<<< HEAD
             rv = GetNextTabbableContent(aPresShell, currentContent, nullptr,
                                         currentContent, true, 1, false, false,
                                         aResultContent);
+||||||| merged common ancestors
+            rv = GetNextTabbableContent(aPresShell, currentContent,
+                                        nullptr, currentContent,
+                                        true, 1, false, false,
+                                        aResultContent);
+=======
+            nsresult rv = GetNextTabbableContent(
+                aPresShell, currentContent, nullptr, currentContent, true, 1,
+                false, false, aResultContent);
+>>>>>>> upstream-releases
             if (NS_SUCCEEDED(rv) && *aResultContent) {
               return rv;
             }
@@ -3359,17 +4311,52 @@ nsresult nsFocusManager::GetNextTabbableContent(
       //  append ELEMENT to NAVIGATION-ORDER."
       // and later in "For each element ELEMENT in NAVIGATION-ORDER: "
       // hosts and slots are handled before other elements.
+<<<<<<< HEAD
       if (currentContent && IsHostOrSlot(currentContent)) {
+||||||| merged common ancestors
+      if (currentContent && nsDocument::IsShadowDOMEnabled(currentContent) &&
+          IsHostOrSlot(currentContent)) {
+=======
+      if (IsHostOrSlot(currentTopLevelScopeOwner)) {
+>>>>>>> upstream-releases
         bool focusableHostSlot;
+<<<<<<< HEAD
         int32_t tabIndex =
             HostOrSlotTabIndexValue(currentContent, &focusableHostSlot);
         // Host or slot itself isn't focusable or going backwards, enter its scope.
         if ((!aForward || !focusableHostSlot) && tabIndex >= 0 &&
+||||||| merged common ancestors
+        int32_t tabIndex = HostOrSlotTabIndexValue(currentContent,
+                                                   &focusableHostSlot);
+        // Host or slot itself isn't focusable, enter its scope.
+        if (!focusableHostSlot &&
+            tabIndex >= 0 &&
+=======
+        int32_t tabIndex = HostOrSlotTabIndexValue(currentTopLevelScopeOwner,
+                                                   &focusableHostSlot);
+        // Host or slot itself isn't focusable or going backwards, enter its
+        // scope.
+        if ((!aForward || !focusableHostSlot) && tabIndex >= 0 &&
+>>>>>>> upstream-releases
             (aIgnoreTabIndex || aCurrentTabIndex == tabIndex)) {
+<<<<<<< HEAD
           nsIContent* contentToFocus = GetNextTabbableContentInScope(
               currentContent, currentContent, aOriginalStartContent, aForward,
               aForward ? 1 : 0, aIgnoreTabIndex, aForDocumentNavigation,
               true /* aSkipOwner */);
+||||||| merged common ancestors
+          nsIContent* contentToFocus =
+            GetNextTabbableContentInScope(currentContent, currentContent,
+                                          aOriginalStartContent, aForward,
+                                          aForward ? 1 : 0, aIgnoreTabIndex,
+                                          aForDocumentNavigation,
+                                          true /* aSkipOwner */);
+=======
+          nsIContent* contentToFocus = GetNextTabbableContentInScope(
+              currentTopLevelScopeOwner, currentTopLevelScopeOwner,
+              aOriginalStartContent, aForward, aForward ? 1 : 0,
+              aIgnoreTabIndex, aForDocumentNavigation, true /* aSkipOwner */);
+>>>>>>> upstream-releases
           if (contentToFocus) {
             NS_ADDREF(*aResultContent = contentToFocus);
             return NS_OK;
@@ -3422,14 +4409,28 @@ nsresult nsFocusManager::GetNextTabbableContent(
           // code to have the caller return early. If the child ends up not
           // being focusable in some way, the child process will call back
           // into document navigation again by calling MoveFocus.
-          TabParent* remote = TabParent::GetFrom(currentContent);
+          BrowserParent* remote = BrowserParent::GetFrom(currentContent);
           if (remote) {
             remote->NavigateByKey(aForward, aForDocumentNavigation);
             return NS_SUCCESS_DOM_NO_OPERATION;
           }
 
+<<<<<<< HEAD
           // Next, for document navigation, check if this a non-remote child
           // document.
+||||||| merged common ancestors
+          // Next, for document navigation, check if this a non-remote child document.
+=======
+          // Same as above but for out-of-process iframes
+          BrowserBridgeChild* bbc = BrowserBridgeChild::GetFrom(currentContent);
+          if (bbc) {
+            bbc->NavigateByKey(aForward, aForDocumentNavigation);
+            return NS_SUCCESS_DOM_NO_OPERATION;
+          }
+
+          // Next, for document navigation, check if this a non-remote child
+          // document.
+>>>>>>> upstream-releases
           bool checkSubDocument = true;
           if (aForDocumentNavigation &&
               TryDocumentNavigation(currentContent, &checkSubDocument,
@@ -3541,12 +4542,28 @@ bool nsFocusManager::TryDocumentNavigation(nsIContent* aCurrentContent,
   return false;
 }
 
+<<<<<<< HEAD
 bool nsFocusManager::TryToMoveFocusToSubDocument(
     nsIContent* aCurrentContent, nsIContent* aOriginalStartContent,
     bool aForward, bool aForDocumentNavigation, nsIContent** aResultContent) {
   nsIDocument* doc = aCurrentContent->GetComposedDoc();
+||||||| merged common ancestors
+bool
+nsFocusManager::TryToMoveFocusToSubDocument(nsIContent* aCurrentContent,
+                                            nsIContent* aOriginalStartContent,
+                                            bool aForward,
+                                            bool aForDocumentNavigation,
+                                            nsIContent** aResultContent)
+{
+  nsIDocument* doc = aCurrentContent->GetComposedDoc();
+=======
+bool nsFocusManager::TryToMoveFocusToSubDocument(
+    nsIContent* aCurrentContent, nsIContent* aOriginalStartContent,
+    bool aForward, bool aForDocumentNavigation, nsIContent** aResultContent) {
+  Document* doc = aCurrentContent->GetComposedDoc();
+>>>>>>> upstream-releases
   NS_ASSERTION(doc, "content not in document");
-  nsIDocument* subdoc = doc->GetSubDocumentFor(aCurrentContent);
+  Document* subdoc = doc->GetSubDocumentFor(aCurrentContent);
   if (subdoc && !subdoc->EventHandlingSuppressed()) {
     if (aForward) {
       // When tabbing forward into a frame, return the root
@@ -3561,11 +4578,28 @@ bool nsFocusManager::TryToMoveFocusToSubDocument(
       }
     }
     Element* rootElement = subdoc->GetRootElement();
+<<<<<<< HEAD
     nsIPresShell* subShell = subdoc->GetShell();
     if (rootElement && subShell) {
       nsresult rv = GetNextTabbableContent(
           subShell, rootElement, aOriginalStartContent, rootElement, aForward,
           (aForward ? 1 : 0), false, aForDocumentNavigation, aResultContent);
+||||||| merged common ancestors
+    nsIPresShell* subShell = subdoc->GetShell();
+    if (rootElement && subShell) {
+      nsresult rv = GetNextTabbableContent(subShell, rootElement,
+                                           aOriginalStartContent, rootElement,
+                                           aForward, (aForward ? 1 : 0),
+                                           false, aForDocumentNavigation,
+                                           aResultContent);
+=======
+    PresShell* subPresShell = subdoc->GetPresShell();
+    if (rootElement && subPresShell) {
+      nsresult rv = GetNextTabbableContent(
+          subPresShell, rootElement, aOriginalStartContent, rootElement,
+          aForward, (aForward ? 1 : 0), false, aForDocumentNavigation,
+          aResultContent);
+>>>>>>> upstream-releases
       NS_ENSURE_SUCCESS(rv, false);
       if (*aResultContent) {
         return true;
@@ -3684,7 +4718,7 @@ nsresult nsFocusManager::FocusFirst(Element* aRootElement,
     return NS_OK;
   }
 
-  nsIDocument* doc = aRootElement->GetComposedDoc();
+  Document* doc = aRootElement->GetComposedDoc();
   if (doc) {
     if (nsContentUtils::IsChromeDoc(doc)) {
       // If the redirectdocumentfocus attribute is set, redirect the focus to a
@@ -3695,7 +4729,15 @@ nsresult nsFocusManager::FocusFirst(Element* aRootElement,
       if (aRootElement->GetAttr(kNameSpaceID_None,
                                 nsGkAtoms::retargetdocumentfocus, retarget)) {
         nsCOMPtr<Element> element = doc->GetElementById(retarget);
+<<<<<<< HEAD
         nsCOMPtr<nsIContent> retargetElement = CheckIfFocusable(element, 0);
+||||||| merged common ancestors
+        nsCOMPtr<nsIContent> retargetElement =
+          CheckIfFocusable(element, 0);
+=======
+        nsCOMPtr<nsIContent> retargetElement =
+            FlushAndCheckIfFocusable(element, 0);
+>>>>>>> upstream-releases
         if (retargetElement) {
           retargetElement.forget(aNextContent);
           return NS_OK;
@@ -3708,7 +4750,7 @@ nsresult nsFocusManager::FocusFirst(Element* aRootElement,
       // If the found content is in a chrome shell, navigate forward one
       // tabbable item so that the first item is focused. Note that we
       // always go forward and not back here.
-      nsIPresShell* presShell = doc->GetShell();
+      PresShell* presShell = doc->GetPresShell();
       if (presShell) {
         return GetNextTabbableContent(presShell, aRootElement, nullptr,
                                       aRootElement, true, 1, false, false,
@@ -3721,10 +4763,24 @@ nsresult nsFocusManager::FocusFirst(Element* aRootElement,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 Element* nsFocusManager::GetRootForFocus(nsPIDOMWindowOuter* aWindow,
                                          nsIDocument* aDocument,
                                          bool aForDocumentNavigation,
                                          bool aCheckVisibility) {
+||||||| merged common ancestors
+Element*
+nsFocusManager::GetRootForFocus(nsPIDOMWindowOuter* aWindow,
+                                nsIDocument* aDocument,
+                                bool aForDocumentNavigation,
+                                bool aCheckVisibility)
+{
+=======
+Element* nsFocusManager::GetRootForFocus(nsPIDOMWindowOuter* aWindow,
+                                         Document* aDocument,
+                                         bool aForDocumentNavigation,
+                                         bool aCheckVisibility) {
+>>>>>>> upstream-releases
   if (!aForDocumentNavigation) {
     nsCOMPtr<nsIDocShell> docShell = aWindow->GetDocShell();
     if (docShell->ItemType() == nsIDocShellTreeItem::typeChrome) {
@@ -3750,8 +4806,7 @@ Element* nsFocusManager::GetRootForFocus(nsPIDOMWindowOuter* aWindow,
   }
 
   // Finally, check if this is a frameset
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(aDocument);
-  if (htmlDoc) {
+  if (aDocument && aDocument->IsHTMLOrXHTML()) {
     Element* htmlChild = aDocument->GetHtmlChildElement(nsGkAtoms::frameset);
     if (htmlChild) {
       // In document navigation mode, return the frameset so that navigation
@@ -3773,12 +4828,12 @@ Element* nsFocusManager::GetRootForChildDocument(nsIContent* aContent) {
     return nullptr;
   }
 
-  nsIDocument* doc = aContent->GetComposedDoc();
+  Document* doc = aContent->GetComposedDoc();
   if (!doc) {
     return nullptr;
   }
 
-  nsIDocument* subdoc = doc->GetSubDocumentFor(aContent);
+  Document* subdoc = doc->GetSubDocumentFor(aContent);
   if (!subdoc || subdoc->EventHandlingSuppressed()) {
     return nullptr;
   }
@@ -3899,11 +4954,26 @@ class PointerUnlocker : public Runnable {
     }
     NS_ENSURE_STATE(nsFocusManager::GetFocusManager());
     nsPIDOMWindowOuter* focused =
+<<<<<<< HEAD
         nsFocusManager::GetFocusManager()->GetFocusedWindow();
     nsCOMPtr<nsIDocument> pointerLockedDoc =
         do_QueryReferent(EventStateManager::sPointerLockedDoc);
     if (pointerLockedDoc && !nsContentUtils::IsInPointerLockContext(focused)) {
       nsIDocument::UnlockPointer();
+||||||| merged common ancestors
+      nsFocusManager::GetFocusManager()->GetFocusedWindow();
+    nsCOMPtr<nsIDocument> pointerLockedDoc =
+      do_QueryReferent(EventStateManager::sPointerLockedDoc);
+    if (pointerLockedDoc &&
+        !nsContentUtils::IsInPointerLockContext(focused)) {
+      nsIDocument::UnlockPointer();
+=======
+        nsFocusManager::GetFocusManager()->GetFocusedWindow();
+    nsCOMPtr<Document> pointerLockedDoc =
+        do_QueryReferent(EventStateManager::sPointerLockedDoc);
+    if (pointerLockedDoc && !nsContentUtils::IsInPointerLockContext(focused)) {
+      Document::UnlockPointer();
+>>>>>>> upstream-releases
     }
     return NS_OK;
   }
@@ -3924,7 +4994,14 @@ void nsFocusManager::SetFocusedWindowInternal(nsPIDOMWindowOuter* aWindow) {
   // Update the last focus time on any affected documents
   if (aWindow && aWindow != mFocusedWindow) {
     const TimeStamp now(TimeStamp::Now());
+<<<<<<< HEAD
     for (nsIDocument* doc = aWindow->GetExtantDoc(); doc;
+||||||| merged common ancestors
+    for (nsIDocument* doc = aWindow->GetExtantDoc();
+         doc;
+=======
+    for (Document* doc = aWindow->GetExtantDoc(); doc;
+>>>>>>> upstream-releases
          doc = doc->GetParentDocument()) {
       doc->SetLastFocusTime(now);
     }

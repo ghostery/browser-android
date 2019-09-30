@@ -183,6 +183,7 @@ class CompileInfo {
         hadOverflowBailout_(script->hadOverflowBailout()),
         hadFrequentBailouts_(script->hadFrequentBailouts()),
         mayReadFrameArgsDirectly_(script->mayReadFrameArgsDirectly()),
+<<<<<<< HEAD
         inlineScriptTree_(inlineScriptTree) {
     MOZ_ASSERT_IF(osrPc, JSOp(*osrPc) == JSOP_LOOPENTRY);
 
@@ -217,6 +218,55 @@ class CompileInfo {
       for (BindingIter bi(script); bi; bi++) {
         if (bi.name() != runtime->names().dotThis) {
           continue;
+||||||| merged common ancestors
+        inlineScriptTree_(inlineScriptTree)
+    {
+        MOZ_ASSERT_IF(osrPc, JSOp(*osrPc) == JSOP_LOOPENTRY);
+
+        // The function here can flow in from anywhere so look up the canonical
+        // function to ensure that we do not try to embed a nursery pointer in
+        // jit-code. Precisely because it can flow in from anywhere, it's not
+        // guaranteed to be non-lazy. Hence, don't access its script!
+        if (fun_) {
+            fun_ = fun_->nonLazyScript()->functionNonDelazifying();
+            MOZ_ASSERT(fun_->isTenured());
+=======
+        trackRecordReplayProgress_(script->trackRecordReplayProgress()),
+        inlineScriptTree_(inlineScriptTree) {
+    MOZ_ASSERT_IF(osrPc, JSOp(*osrPc) == JSOP_LOOPENTRY);
+
+    // The function here can flow in from anywhere so look up the canonical
+    // function to ensure that we do not try to embed a nursery pointer in
+    // jit-code. Precisely because it can flow in from anywhere, it's not
+    // guaranteed to be non-lazy. Hence, don't access its script!
+    if (fun_) {
+      fun_ = fun_->nonLazyScript()->functionNonDelazifying();
+      MOZ_ASSERT(fun_->isTenured());
+    }
+
+    nimplicit_ = StartArgSlot(script) /* env chain and argument obj */
+                 + (fun ? 1 : 0);     /* this */
+    nargs_ = fun ? fun->nargs() : 0;
+    nlocals_ = script->nfixed();
+
+    // An extra slot is needed for global scopes because INITGLEXICAL (stack
+    // depth 1) is compiled as a SETPROP (stack depth 2) on the global lexical
+    // scope.
+    uint32_t extra = script->isGlobalCode() ? 1 : 0;
+    nstack_ =
+        Max<unsigned>(script->nslots() - script->nfixed(), MinJITStackSize) +
+        extra;
+    nslots_ = nimplicit_ + nargs_ + nlocals_ + nstack_;
+
+    // For derived class constructors, find and cache the frame slot for
+    // the .this binding. This slot is assumed to be always
+    // observable. See isObservableFrameSlot.
+    if (script->isDerivedClassConstructor()) {
+      MOZ_ASSERT(script->functionHasThisBinding());
+      for (BindingIter bi(script); bi; bi++) {
+        if (bi.name() != runtime->names().dotThis) {
+          continue;
+>>>>>>> upstream-releases
         }
         BindingLocation loc = bi.location();
         if (loc.kind() == BindingLocation::Kind::Frame) {
@@ -224,6 +274,7 @@ class CompileInfo {
               mozilla::Some(localSlot(loc.slot()));
           break;
         }
+<<<<<<< HEAD
       }
     }
 
@@ -431,12 +482,253 @@ class CompileInfo {
     if (thisSlotForDerivedClassConstructor_ &&
         *thisSlotForDerivedClassConstructor_ == slot) {
       return true;
+||||||| merged common ancestors
+
+        // If the script uses an environment in body, the environment chain
+        // will need to be observable.
+        needsBodyEnvironmentObject_ = script->needsBodyEnvironment();
+        funNeedsSomeEnvironmentObject_ = fun ? fun->needsSomeEnvironmentObject() : false;
+=======
+      }
+    }
+
+    // If the script uses an environment in body, the environment chain
+    // will need to be observable.
+    needsBodyEnvironmentObject_ = script->needsBodyEnvironment();
+    funNeedsSomeEnvironmentObject_ =
+        fun ? fun->needsSomeEnvironmentObject() : false;
+  }
+
+  explicit CompileInfo(unsigned nlocals)
+      : script_(nullptr),
+        fun_(nullptr),
+        osrPc_(nullptr),
+        analysisMode_(Analysis_None),
+        scriptNeedsArgsObj_(false),
+        hadOverflowBailout_(false),
+        hadFrequentBailouts_(false),
+        mayReadFrameArgsDirectly_(false),
+        trackRecordReplayProgress_(false),
+        inlineScriptTree_(nullptr),
+        needsBodyEnvironmentObject_(false),
+        funNeedsSomeEnvironmentObject_(false) {
+    nimplicit_ = 0;
+    nargs_ = 0;
+    nlocals_ = nlocals;
+    nstack_ = 1; /* For FunctionCompiler::pushPhiInput/popPhiOutput */
+    nslots_ = nlocals_ + nstack_;
+  }
+
+  JSScript* script() const { return script_; }
+  bool compilingWasm() const { return script() == nullptr; }
+  JSFunction* funMaybeLazy() const { return fun_; }
+  ModuleObject* module() const { return script_->module(); }
+  jsbytecode* osrPc() const { return osrPc_; }
+  InlineScriptTree* inlineScriptTree() const { return inlineScriptTree_; }
+
+  bool hasOsrAt(jsbytecode* pc) const {
+    MOZ_ASSERT(JSOp(*pc) == JSOP_LOOPENTRY);
+    return pc == osrPc();
+  }
+
+  jsbytecode* startPC() const { return script_->code(); }
+  jsbytecode* limitPC() const { return script_->codeEnd(); }
+
+  const char* filename() const { return script_->filename(); }
+
+  unsigned lineno() const { return script_->lineno(); }
+  unsigned lineno(jsbytecode* pc) const { return PCToLineNumber(script_, pc); }
+
+  // Script accessors based on PC.
+
+  JSAtom* getAtom(jsbytecode* pc) const {
+    return script_->getAtom(GET_UINT32_INDEX(pc));
+  }
+
+  PropertyName* getName(jsbytecode* pc) const {
+    return script_->getName(GET_UINT32_INDEX(pc));
+  }
+
+  inline RegExpObject* getRegExp(jsbytecode* pc) const;
+
+  JSObject* getObject(jsbytecode* pc) const {
+    return script_->getObject(GET_UINT32_INDEX(pc));
+  }
+
+  inline JSFunction* getFunction(jsbytecode* pc) const;
+
+  BigInt* getBigInt(jsbytecode* pc) const { return script_->getBigInt(pc); }
+
+  jssrcnote* getNote(GSNCache& gsn, jsbytecode* pc) const {
+    return GetSrcNote(gsn, script(), pc);
+  }
+
+  // Total number of slots: args, locals, and stack.
+  unsigned nslots() const { return nslots_; }
+
+  // Number of slots needed for env chain, return value,
+  // maybe argumentsobject and this value.
+  unsigned nimplicit() const { return nimplicit_; }
+  // Number of arguments (without counting this value).
+  unsigned nargs() const { return nargs_; }
+  // Number of slots needed for all local variables.  This includes "fixed
+  // vars" (see above) and also block-scoped locals.
+  unsigned nlocals() const { return nlocals_; }
+  unsigned ninvoke() const { return nslots_ - nstack_; }
+
+  uint32_t environmentChainSlot() const {
+    MOZ_ASSERT(script());
+    return 0;
+  }
+  uint32_t returnValueSlot() const {
+    MOZ_ASSERT(script());
+    return 1;
+  }
+  uint32_t argsObjSlot() const {
+    MOZ_ASSERT(hasArguments());
+    return 2;
+  }
+  uint32_t thisSlot() const {
+    MOZ_ASSERT(funMaybeLazy());
+    MOZ_ASSERT(nimplicit_ > 0);
+    return nimplicit_ - 1;
+  }
+  uint32_t firstArgSlot() const { return nimplicit_; }
+  uint32_t argSlotUnchecked(uint32_t i) const {
+    // During initialization, some routines need to get at arg
+    // slots regardless of how regular argument access is done.
+    MOZ_ASSERT(i < nargs_);
+    return nimplicit_ + i;
+  }
+  uint32_t argSlot(uint32_t i) const {
+    // This should only be accessed when compiling functions for
+    // which argument accesses don't need to go through the
+    // argument object.
+    MOZ_ASSERT(!argsObjAliasesFormals());
+    return argSlotUnchecked(i);
+  }
+  uint32_t firstLocalSlot() const { return nimplicit_ + nargs_; }
+  uint32_t localSlot(uint32_t i) const { return firstLocalSlot() + i; }
+  uint32_t firstStackSlot() const { return firstLocalSlot() + nlocals(); }
+  uint32_t stackSlot(uint32_t i) const { return firstStackSlot() + i; }
+
+  uint32_t startArgSlot() const {
+    MOZ_ASSERT(script());
+    return StartArgSlot(script());
+  }
+  uint32_t endArgSlot() const {
+    MOZ_ASSERT(script());
+    return CountArgSlots(script(), funMaybeLazy());
+  }
+
+  uint32_t totalSlots() const {
+    MOZ_ASSERT(script() && funMaybeLazy());
+    return nimplicit() + nargs() + nlocals();
+  }
+
+  bool isSlotAliased(uint32_t index) const {
+    MOZ_ASSERT(index >= startArgSlot());
+    uint32_t arg = index - firstArgSlot();
+    if (arg < nargs()) {
+      return script()->formalIsAliased(arg);
+    }
+    return false;
+  }
+
+  bool hasArguments() const { return script()->argumentsHasVarBinding(); }
+  bool argumentsAliasesFormals() const {
+    return script()->argumentsAliasesFormals();
+  }
+  bool needsArgsObj() const { return scriptNeedsArgsObj_; }
+  bool argsObjAliasesFormals() const {
+    return scriptNeedsArgsObj_ && script()->hasMappedArgsObj();
+  }
+
+  AnalysisMode analysisMode() const { return analysisMode_; }
+
+  bool isAnalysis() const { return analysisMode_ != Analysis_None; }
+
+  bool needsBodyEnvironmentObject() const {
+    return needsBodyEnvironmentObject_;
+  }
+
+  // Returns true if a slot can be observed out-side the current frame while
+  // the frame is active on the stack.  This implies that these definitions
+  // would have to be executed and that they cannot be removed even if they
+  // are unused.
+  inline bool isObservableSlot(uint32_t slot) const {
+    if (slot >= firstLocalSlot()) {
+      // The |this| slot for a derived class constructor is a local slot.
+      if (thisSlotForDerivedClassConstructor_) {
+        return *thisSlotForDerivedClassConstructor_ == slot;
+      }
+      return false;
+    }
+
+    if (slot < firstArgSlot()) {
+      return isObservableFrameSlot(slot);
+    }
+
+    return isObservableArgumentSlot(slot);
+  }
+
+  bool isObservableFrameSlot(uint32_t slot) const {
+    // The |envChain| value must be preserved if environments are added
+    // after the prologue.
+    if (needsBodyEnvironmentObject() && slot == environmentChainSlot()) {
+      return true;
+    }
+
+    if (!funMaybeLazy()) {
+      return false;
+    }
+
+    // The |this| value must always be observable.
+    if (slot == thisSlot()) {
+      return true;
+    }
+
+    // The |this| frame slot in derived class constructors should never be
+    // optimized out, as a Debugger might need to perform TDZ checks on it
+    // via, e.g., an exceptionUnwind handler. The TDZ check is required
+    // for correctness if the handler decides to continue execution.
+    if (thisSlotForDerivedClassConstructor_ &&
+        *thisSlotForDerivedClassConstructor_ == slot) {
+      return true;
     }
 
     if (funNeedsSomeEnvironmentObject_ && slot == environmentChainSlot()) {
       return true;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
+    if (funNeedsSomeEnvironmentObject_ && slot == environmentChainSlot()) {
+      return true;
+||||||| merged common ancestors
+    explicit CompileInfo(unsigned nlocals)
+      : script_(nullptr), fun_(nullptr), osrPc_(nullptr),
+        analysisMode_(Analysis_None), scriptNeedsArgsObj_(false), hadOverflowBailout_(false),
+        mayReadFrameArgsDirectly_(false), inlineScriptTree_(nullptr),
+        needsBodyEnvironmentObject_(false), funNeedsSomeEnvironmentObject_(false)
+    {
+        nimplicit_ = 0;
+        nargs_ = 0;
+        nlocals_ = nlocals;
+        nstack_ = 1;  /* For FunctionCompiler::pushPhiInput/popPhiOutput */
+        nslots_ = nlocals_ + nstack_;
+=======
+    // If the function may need an arguments object, then make sure to
+    // preserve the env chain, because it may be needed to construct the
+    // arguments object during bailout. If we've already created an
+    // arguments object (or got one via OSR), preserve that as well.
+    if (hasArguments() &&
+        (slot == environmentChainSlot() || slot == argsObjSlot())) {
+      return true;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     // If the function may need an arguments object, then make sure to
     // preserve the env chain, because it may be needed to construct the
     // arguments object during bailout. If we've already created an
@@ -445,15 +737,62 @@ class CompileInfo {
         (slot == environmentChainSlot() || slot == argsObjSlot())) {
       return true;
     }
-
+||||||| merged common ancestors
+    JSScript* script() const {
+        return script_;
+    }
+    bool compilingWasm() const {
+        return script() == nullptr;
+    }
+    JSFunction* funMaybeLazy() const {
+        return fun_;
+    }
+    ModuleObject* module() const {
+        return script_->module();
+    }
+    jsbytecode* osrPc() const {
+        return osrPc_;
+    }
+    InlineScriptTree* inlineScriptTree() const {
+        return inlineScriptTree_;
+    }
+=======
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    return false;
+  }
+||||||| merged common ancestors
+    bool hasOsrAt(jsbytecode* pc) const {
+        MOZ_ASSERT(JSOp(*pc) == JSOP_LOOPENTRY);
+        return pc == osrPc();
+    }
+=======
   bool isObservableArgumentSlot(uint32_t slot) const {
     if (!funMaybeLazy()) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool isObservableArgumentSlot(uint32_t slot) const {
+    if (!funMaybeLazy()) {
+      return false;
+    }
+||||||| merged common ancestors
+    jsbytecode* startPC() const {
+        return script_->code();
+    }
+    jsbytecode* limitPC() const {
+        return script_->codeEnd();
+    }
+
+    const char* filename() const {
+        return script_->filename();
+    }
+=======
     // Function.arguments can be used to access all arguments in non-strict
     // scripts, so we can't optimize out any arguments.
     if ((hasArguments() || !script()->strict()) && firstArgSlot() <= slot &&
@@ -463,7 +802,28 @@ class CompileInfo {
 
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Function.arguments can be used to access all arguments in non-strict
+    // scripts, so we can't optimize out any arguments.
+    if ((hasArguments() || !script()->strict()) && firstArgSlot() <= slot &&
+        slot - firstArgSlot() < nargs()) {
+      return true;
+    }
+
+    return false;
+  }
+||||||| merged common ancestors
+    unsigned lineno() const {
+        return script_->lineno();
+    }
+    unsigned lineno(jsbytecode* pc) const {
+        return PCToLineNumber(script_, pc);
+    }
+
+    // Script accessors based on PC.
+=======
   // Returns true if a slot can be recovered before or during a bailout.  A
   // definition which can be observed and recovered, implies that this
   // definition can be optimized away as long as we can compute its values.
@@ -473,33 +833,123 @@ class CompileInfo {
     if (needsBodyEnvironmentObject() && slot == environmentChainSlot()) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Returns true if a slot can be recovered before or during a bailout.  A
+  // definition which can be observed and recovered, implies that this
+  // definition can be optimized away as long as we can compute its values.
+  bool isRecoverableOperand(uint32_t slot) const {
+    // The |envChain| value cannot be recovered if environments can be
+    // added in body (after the prologue).
+    if (needsBodyEnvironmentObject() && slot == environmentChainSlot()) {
+      return false;
+||||||| merged common ancestors
+    JSAtom* getAtom(jsbytecode* pc) const {
+        return script_->getAtom(GET_UINT32_INDEX(pc));
+=======
     if (!funMaybeLazy()) {
       return true;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
+    if (!funMaybeLazy()) {
+      return true;
+||||||| merged common ancestors
+    PropertyName* getName(jsbytecode* pc) const {
+        return script_->getName(GET_UINT32_INDEX(pc));
+=======
     // The |this| and the |envChain| values can be recovered.
     if (slot == thisSlot() || slot == environmentChainSlot()) {
       return true;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
+    // The |this| and the |envChain| values can be recovered.
+    if (slot == thisSlot() || slot == environmentChainSlot()) {
+      return true;
+||||||| merged common ancestors
+    inline RegExpObject* getRegExp(jsbytecode* pc) const;
+
+    JSObject* getObject(jsbytecode* pc) const {
+        return script_->getObject(GET_UINT32_INDEX(pc));
+=======
     if (isObservableFrameSlot(slot)) {
       return false;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
+    if (isObservableFrameSlot(slot)) {
+      return false;
+||||||| merged common ancestors
+    inline JSFunction* getFunction(jsbytecode* pc) const;
+
+    const Value& getConst(jsbytecode* pc) const {
+        return script_->getConst(GET_UINT32_INDEX(pc));
+=======
+    if (needsArgsObj() && isObservableArgumentSlot(slot)) {
+      return false;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     if (needsArgsObj() && isObservableArgumentSlot(slot)) {
       return false;
     }
-
+||||||| merged common ancestors
+    jssrcnote* getNote(GSNCache& gsn, jsbytecode* pc) const {
+        return GetSrcNote(gsn, script(), pc);
+    }
+=======
     return true;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    return true;
+  }
+||||||| merged common ancestors
+    // Total number of slots: args, locals, and stack.
+    unsigned nslots() const {
+        return nslots_;
+    }
+=======
   // Check previous bailout states to prevent doing the same bailout in the
   // next compilation.
   bool hadOverflowBailout() const { return hadOverflowBailout_; }
   bool hadFrequentBailouts() const { return hadFrequentBailouts_; }
   bool mayReadFrameArgsDirectly() const { return mayReadFrameArgsDirectly_; }
+  bool trackRecordReplayProgress() const { return trackRecordReplayProgress_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Check previous bailout states to prevent doing the same bailout in the
+  // next compilation.
+  bool hadOverflowBailout() const { return hadOverflowBailout_; }
+  bool hadFrequentBailouts() const { return hadFrequentBailouts_; }
+  bool mayReadFrameArgsDirectly() const { return mayReadFrameArgsDirectly_; }
+||||||| merged common ancestors
+    // Number of slots needed for env chain, return value,
+    // maybe argumentsobject and this value.
+    unsigned nimplicit() const {
+        return nimplicit_;
+    }
+    // Number of arguments (without counting this value).
+    unsigned nargs() const {
+        return nargs_;
+    }
+    // Number of slots needed for all local variables.  This includes "fixed
+    // vars" (see above) and also block-scoped locals.
+    unsigned nlocals() const {
+        return nlocals_;
+    }
+    unsigned ninvoke() const {
+        return nslots_ - nstack_;
+    }
+=======
  private:
   unsigned nimplicit_;
   unsigned nargs_;
@@ -511,20 +961,264 @@ class CompileInfo {
   JSFunction* fun_;
   jsbytecode* osrPc_;
   AnalysisMode analysisMode_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ private:
+  unsigned nimplicit_;
+  unsigned nargs_;
+  unsigned nlocals_;
+  unsigned nstack_;
+  unsigned nslots_;
+  mozilla::Maybe<unsigned> thisSlotForDerivedClassConstructor_;
+  JSScript* script_;
+  JSFunction* fun_;
+  jsbytecode* osrPc_;
+  AnalysisMode analysisMode_;
+||||||| merged common ancestors
+    uint32_t environmentChainSlot() const {
+        MOZ_ASSERT(script());
+        return 0;
+    }
+    uint32_t returnValueSlot() const {
+        MOZ_ASSERT(script());
+        return 1;
+    }
+    uint32_t argsObjSlot() const {
+        MOZ_ASSERT(hasArguments());
+        return 2;
+    }
+    uint32_t thisSlot() const {
+        MOZ_ASSERT(funMaybeLazy());
+        MOZ_ASSERT(nimplicit_ > 0);
+        return nimplicit_ - 1;
+    }
+    uint32_t firstArgSlot() const {
+        return nimplicit_;
+    }
+    uint32_t argSlotUnchecked(uint32_t i) const {
+        // During initialization, some routines need to get at arg
+        // slots regardless of how regular argument access is done.
+        MOZ_ASSERT(i < nargs_);
+        return nimplicit_ + i;
+    }
+    uint32_t argSlot(uint32_t i) const {
+        // This should only be accessed when compiling functions for
+        // which argument accesses don't need to go through the
+        // argument object.
+        MOZ_ASSERT(!argsObjAliasesFormals());
+        return argSlotUnchecked(i);
+    }
+    uint32_t firstLocalSlot() const {
+        return nimplicit_ + nargs_;
+    }
+    uint32_t localSlot(uint32_t i) const {
+        return firstLocalSlot() + i;
+    }
+    uint32_t firstStackSlot() const {
+        return firstLocalSlot() + nlocals();
+    }
+    uint32_t stackSlot(uint32_t i) const {
+        return firstStackSlot() + i;
+    }
+=======
   // Whether a script needs an arguments object is unstable over compilation
   // since the arguments optimization could be marked as failed on the active
   // thread, so cache a value here and use it throughout for consistency.
   bool scriptNeedsArgsObj_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Whether a script needs an arguments object is unstable over compilation
+  // since the arguments optimization could be marked as failed on the active
+  // thread, so cache a value here and use it throughout for consistency.
+  bool scriptNeedsArgsObj_;
+||||||| merged common ancestors
+    uint32_t startArgSlot() const {
+        MOZ_ASSERT(script());
+        return StartArgSlot(script());
+    }
+    uint32_t endArgSlot() const {
+        MOZ_ASSERT(script());
+        return CountArgSlots(script(), funMaybeLazy());
+    }
+=======
   // Record the state of previous bailouts in order to prevent compiling the
   // same function identically the next time.
   bool hadOverflowBailout_;
   bool hadFrequentBailouts_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Record the state of previous bailouts in order to prevent compiling the
+  // same function identically the next time.
+  bool hadOverflowBailout_;
+  bool hadFrequentBailouts_;
+||||||| merged common ancestors
+    uint32_t totalSlots() const {
+        MOZ_ASSERT(script() && funMaybeLazy());
+        return nimplicit() + nargs() + nlocals();
+    }
+=======
+  bool mayReadFrameArgsDirectly_;
+  bool trackRecordReplayProgress_;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool mayReadFrameArgsDirectly_;
 
   InlineScriptTree* inlineScriptTree_;
+||||||| merged common ancestors
+    bool isSlotAliased(uint32_t index) const {
+        MOZ_ASSERT(index >= startArgSlot());
+        uint32_t arg = index - firstArgSlot();
+        if (arg < nargs()) {
+            return script()->formalIsAliased(arg);
+        }
+        return false;
+    }
+
+    bool hasArguments() const {
+        return script()->argumentsHasVarBinding();
+    }
+    bool argumentsAliasesFormals() const {
+        return script()->argumentsAliasesFormals();
+    }
+    bool needsArgsObj() const {
+        return scriptNeedsArgsObj_;
+    }
+    bool argsObjAliasesFormals() const {
+        return scriptNeedsArgsObj_ && script()->hasMappedArgsObj();
+    }
+
+    AnalysisMode analysisMode() const {
+        return analysisMode_;
+    }
+
+    bool isAnalysis() const {
+        return analysisMode_ != Analysis_None;
+    }
+
+    bool needsBodyEnvironmentObject() const {
+        return needsBodyEnvironmentObject_;
+    }
+
+    // Returns true if a slot can be observed out-side the current frame while
+    // the frame is active on the stack.  This implies that these definitions
+    // would have to be executed and that they cannot be removed even if they
+    // are unused.
+    inline bool isObservableSlot(uint32_t slot) const {
+        if (slot >= firstLocalSlot()) {
+            // The |this| slot for a derived class constructor is a local slot.
+            if (thisSlotForDerivedClassConstructor_) {
+                return *thisSlotForDerivedClassConstructor_ == slot;
+            }
+            return false;
+        }
+
+        if (slot < firstArgSlot()) {
+            return isObservableFrameSlot(slot);
+        }
+
+        return isObservableArgumentSlot(slot);
+    }
+
+    bool isObservableFrameSlot(uint32_t slot) const {
+        // The |envChain| value must be preserved if environments are added
+        // after the prologue.
+        if (needsBodyEnvironmentObject() && slot == environmentChainSlot()) {
+            return true;
+        }
+
+        if (!funMaybeLazy()) {
+            return false;
+        }
+
+        // The |this| value must always be observable.
+        if (slot == thisSlot()) {
+            return true;
+        }
+
+        // The |this| frame slot in derived class constructors should never be
+        // optimized out, as a Debugger might need to perform TDZ checks on it
+        // via, e.g., an exceptionUnwind handler. The TDZ check is required
+        // for correctness if the handler decides to continue execution.
+        if (thisSlotForDerivedClassConstructor_ && *thisSlotForDerivedClassConstructor_ == slot) {
+            return true;
+        }
+
+        if (funNeedsSomeEnvironmentObject_ && slot == environmentChainSlot()) {
+            return true;
+        }
+
+        // If the function may need an arguments object, then make sure to
+        // preserve the env chain, because it may be needed to construct the
+        // arguments object during bailout. If we've already created an
+        // arguments object (or got one via OSR), preserve that as well.
+        if (hasArguments() && (slot == environmentChainSlot() || slot == argsObjSlot())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isObservableArgumentSlot(uint32_t slot) const {
+        if (!funMaybeLazy()) {
+            return false;
+        }
+
+        // Function.arguments can be used to access all arguments in non-strict
+        // scripts, so we can't optimize out any arguments.
+        if ((hasArguments() || !script()->strict()) &&
+            firstArgSlot() <= slot && slot - firstArgSlot() < nargs())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Returns true if a slot can be recovered before or during a bailout.  A
+    // definition which can be observed and recovered, implies that this
+    // definition can be optimized away as long as we can compute its values.
+    bool isRecoverableOperand(uint32_t slot) const {
+        // The |envChain| value cannot be recovered if environments can be
+        // added in body (after the prologue).
+        if (needsBodyEnvironmentObject() && slot == environmentChainSlot()) {
+            return false;
+        }
+
+        if (!funMaybeLazy()) {
+            return true;
+        }
+
+        // The |this| and the |envChain| values can be recovered.
+        if (slot == thisSlot() || slot == environmentChainSlot()) {
+            return true;
+        }
+
+        if (isObservableFrameSlot(slot)) {
+            return false;
+        }
+
+        if (needsArgsObj() && isObservableArgumentSlot(slot)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Check previous bailout states to prevent doing the same bailout in the
+    // next compilation.
+    bool hadOverflowBailout() const {
+        return hadOverflowBailout_;
+    }
+    bool mayReadFrameArgsDirectly() const {
+        return mayReadFrameArgsDirectly_;
+    }
+=======
+  InlineScriptTree* inlineScriptTree_;
+>>>>>>> upstream-releases
 
   // Whether a script needs environments within its body. This informs us
   // that the environment chain is not easy to reconstruct.

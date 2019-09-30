@@ -9,7 +9,7 @@
 #include "mozilla/layers/CompositorBridgeChild.h"
 #include "mozilla/layers/ImageClient.h"
 #include "mozilla/layers/WebRenderBridgeChild.h"
-#include "mozilla/layers/WebRenderLayerManager.h"
+#include "mozilla/layers/RenderRootStateManager.h"
 #include "mozilla/layers/WebRenderMessages.h"
 #include "mozilla/layers/IpcResourceUpdateQueue.h"
 #include "mozilla/layers/SharedSurfacesChild.h"
@@ -25,7 +25,16 @@ void WebRenderBackgroundData::AddWebRenderCommands(
   aBuilder.PushRect(mBounds, mBounds, true, mColor);
 }
 
+<<<<<<< HEAD
 /* static */ bool WebRenderUserData::SupportsAsyncUpdate(nsIFrame* aFrame) {
+||||||| merged common ancestors
+/* static */ bool
+WebRenderUserData::SupportsAsyncUpdate(nsIFrame* aFrame)
+{
+=======
+/* static */
+bool WebRenderUserData::SupportsAsyncUpdate(nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   if (!aFrame) {
     return false;
   }
@@ -38,10 +47,27 @@ void WebRenderBackgroundData::AddWebRenderCommands(
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ bool WebRenderUserData::ProcessInvalidateForImage(
     nsIFrame* aFrame, DisplayItemType aType) {
   MOZ_ASSERT(aFrame);
+||||||| merged common ancestors
+WebRenderUserData::WebRenderUserData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
+  : mWRManager(aWRManager)
+  , mFrame(aItem->Frame())
+  , mDisplayItemKey(aItem->GetPerFrameKey())
+  , mTable(aWRManager->GetWebRenderUserDataTable())
+  , mUsed(false)
+{
+}
+=======
+/* static */
+bool WebRenderUserData::ProcessInvalidateForImage(
+    nsIFrame* aFrame, DisplayItemType aType, ContainerProducerID aProducerId) {
+  MOZ_ASSERT(aFrame);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!aFrame->HasProperty(WebRenderUserDataProperty::Key())) {
     return false;
   }
@@ -60,11 +86,44 @@ void WebRenderBackgroundData::AddWebRenderCommands(
   if (image && image->IsAsyncAnimatedImage()) {
     return true;
   }
+||||||| merged common ancestors
+WebRenderUserData::~WebRenderUserData()
+{
+}
+=======
+  if (!aFrame->HasProperty(WebRenderUserDataProperty::Key())) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   aFrame->SchedulePaint();
   return false;
 }
+||||||| merged common ancestors
+void
+WebRenderUserData::RemoveFromTable()
+{
+  mTable->RemoveEntry(this);
+}
+=======
+  auto type = static_cast<uint32_t>(aType);
+  RefPtr<WebRenderFallbackData> fallback =
+      GetWebRenderUserData<WebRenderFallbackData>(aFrame, type);
+  if (fallback) {
+    fallback->SetInvalid(true);
+    aFrame->SchedulePaint();
+    return true;
+  }
 
+  RefPtr<WebRenderImageData> image =
+      GetWebRenderUserData<WebRenderImageData>(aFrame, type);
+  if (image && image->UsingSharedSurface(aProducerId)) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 WebRenderUserData::WebRenderUserData(WebRenderLayerManager* aWRManager,
                                      nsDisplayItem* aItem)
     : mWRManager(aWRManager),
@@ -79,32 +138,113 @@ void WebRenderUserData::RemoveFromTable() { mTable->RemoveEntry(this); }
 
 WebRenderBridgeChild* WebRenderUserData::WrBridge() const {
   return mWRManager->WrBridge();
+||||||| merged common ancestors
+WebRenderBridgeChild*
+WebRenderUserData::WrBridge() const
+{
+  return mWRManager->WrBridge();
+=======
+  aFrame->SchedulePaint();
+  return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 WebRenderImageData::WebRenderImageData(WebRenderLayerManager* aWRManager,
                                        nsDisplayItem* aItem)
     : WebRenderUserData(aWRManager, aItem), mOwnsKey(false) {}
+||||||| merged common ancestors
+WebRenderImageData::WebRenderImageData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
+  : WebRenderUserData(aWRManager, aItem)
+  , mOwnsKey(false)
+{
+}
+=======
+WebRenderUserData::WebRenderUserData(RenderRootStateManager* aManager,
+                                     uint32_t aDisplayItemKey, nsIFrame* aFrame)
+    : mManager(aManager),
+      mFrame(aFrame),
+      mDisplayItemKey(aDisplayItemKey),
+      mTable(aManager->GetWebRenderUserDataTable()),
+      mUsed(false) {}
+
+WebRenderUserData::WebRenderUserData(RenderRootStateManager* aManager,
+                                     nsDisplayItem* aItem)
+    : mManager(aManager),
+      mFrame(aItem->Frame()),
+      mDisplayItemKey(aItem->GetPerFrameKey()),
+      mTable(aManager->GetWebRenderUserDataTable()),
+      mUsed(false) {}
+
+WebRenderUserData::~WebRenderUserData() {}
+
+void WebRenderUserData::RemoveFromTable() { mTable->RemoveEntry(this); }
+
+WebRenderBridgeChild* WebRenderUserData::WrBridge() const {
+  return mManager->WrBridge();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+WebRenderImageData::~WebRenderImageData() {
+||||||| merged common ancestors
+WebRenderImageData::~WebRenderImageData()
+{
+=======
+WebRenderImageData::WebRenderImageData(RenderRootStateManager* aManager,
+                                       nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem), mOwnsKey(false) {}
+
+WebRenderImageData::WebRenderImageData(RenderRootStateManager* aManager,
+                                       uint32_t aDisplayItemKey,
+                                       nsIFrame* aFrame)
+    : WebRenderUserData(aManager, aDisplayItemKey, aFrame), mOwnsKey(false) {}
 
 WebRenderImageData::~WebRenderImageData() {
+>>>>>>> upstream-releases
   ClearImageKey();
 
   if (mPipelineId) {
-    WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref());
+    mManager->RemovePipelineIdForCompositable(mPipelineId.ref());
   }
 }
 
+<<<<<<< HEAD
 bool WebRenderImageData::IsAsyncAnimatedImage() const {
   return mContainer && mContainer->GetSharedSurfacesAnimation();
 }
 
 void WebRenderImageData::ClearImageKey() {
+||||||| merged common ancestors
+void
+WebRenderImageData::ClearImageKey()
+{
+=======
+bool WebRenderImageData::UsingSharedSurface(
+    ContainerProducerID aProducerId) const {
+  if (!mContainer || !mKey || mOwnsKey) {
+    return false;
+  }
+
+  // If this is just an update with the same image key, then we know that the
+  // share request initiated an asynchronous update so that we don't need to
+  // rebuild the scene.
+  wr::ImageKey key;
+  nsresult rv = SharedSurfacesChild::Share(
+      mContainer, mManager, mManager->AsyncResourceUpdates(), key, aProducerId);
+  return NS_SUCCEEDED(rv) && mKey.ref() == key;
+}
+
+void WebRenderImageData::ClearImageKey() {
+>>>>>>> upstream-releases
   if (mKey) {
     // If we don't own the key, then the owner is responsible for discarding the
     // key when appropriate.
     if (mOwnsKey) {
-      mWRManager->AddImageKeyForDiscard(mKey.value());
+      mManager->AddImageKeyForDiscard(mKey.value());
       if (mTextureOfImage) {
-        WrBridge()->ReleaseTextureOfImage(mKey.value());
+        WrBridge()->ReleaseTextureOfImage(mKey.value(),
+                                          mManager->GetRenderRoot());
         mTextureOfImage = nullptr;
       }
     }
@@ -125,8 +265,15 @@ Maybe<wr::ImageKey> WebRenderImageData::UpdateImageKey(
 
   wr::WrImageKey key;
   if (!aFallback) {
+<<<<<<< HEAD
     nsresult rv =
         SharedSurfacesChild::Share(aContainer, mWRManager, aResources, key);
+||||||| merged common ancestors
+    nsresult rv = SharedSurfacesChild::Share(aContainer, mWRManager, aResources, key);
+=======
+    nsresult rv = SharedSurfacesChild::Share(aContainer, mManager, aResources,
+                                             key, kContainerProducerID_Invalid);
+>>>>>>> upstream-releases
     if (NS_SUCCEEDED(rv)) {
       // Ensure that any previously owned keys are released before replacing. We
       // don't own this key, the surface itself owns it, so that it can be
@@ -153,7 +300,14 @@ Maybe<wr::ImageKey> WebRenderImageData::UpdateImageKey(
   ImageClientSingle* imageClient = mImageClient->AsImageClientSingle();
   uint32_t oldCounter = imageClient->GetLastUpdateGenerationCounter();
 
+<<<<<<< HEAD
   bool ret = imageClient->UpdateImage(aContainer, /* unused */ 0);
+||||||| merged common ancestors
+  bool ret = imageClient->UpdateImage(aContainer, /* unused */0);
+=======
+  bool ret = imageClient->UpdateImage(aContainer, /* unused */ 0,
+                                      Some(mManager->GetRenderRoot()));
+>>>>>>> upstream-releases
   RefPtr<TextureClient> currentTexture = imageClient->GetForwardedTexture();
   if (!ret || !currentTexture) {
     // Delete old key
@@ -211,16 +365,29 @@ void WebRenderImageData::CreateAsyncImageWebRenderCommands(
   if (mPipelineId.isSome() && mContainer != aContainer) {
     // In this case, we need to remove the existed pipeline and create new one
     // because the ImageContainer is changed.
-    WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref());
+    WrBridge()->RemovePipelineIdForCompositable(mPipelineId.ref(),
+                                                mManager->GetRenderRoot());
     mPipelineId.reset();
   }
 
   if (!mPipelineId) {
     // Alloc async image pipeline id.
+<<<<<<< HEAD
     mPipelineId =
         Some(WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
     WrBridge()->AddPipelineIdForAsyncCompositable(
         mPipelineId.ref(), aContainer->GetAsyncContainerHandle());
+||||||| merged common ancestors
+    mPipelineId = Some(WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
+    WrBridge()->AddPipelineIdForAsyncCompositable(mPipelineId.ref(),
+                                                  aContainer->GetAsyncContainerHandle());
+=======
+    mPipelineId =
+        Some(WrBridge()->GetCompositorBridgeChild()->GetNextPipelineId());
+    WrBridge()->AddPipelineIdForAsyncCompositable(
+        mPipelineId.ref(), aContainer->GetAsyncContainerHandle(),
+        mManager->GetRenderRoot());
+>>>>>>> upstream-releases
     mContainer = aContainer;
   }
   MOZ_ASSERT(!mImageClient);
@@ -234,12 +401,31 @@ void WebRenderImageData::CreateAsyncImageWebRenderCommands(
   // where it will be done when we build the display list for the iframe.
   // That happens in AsyncImagePipelineManager.
   wr::LayoutRect r = wr::ToRoundedLayoutRect(aBounds);
+<<<<<<< HEAD
   aBuilder.PushIFrame(r, aIsBackfaceVisible, mPipelineId.ref(),
                       /*ignoreMissingPipelines*/ false);
 
   WrBridge()->AddWebRenderParentCommand(
       OpUpdateAsyncImagePipeline(mPipelineId.value(), aSCBounds, aSCTransform,
                                  aScaleToSize, aFilter, aMixBlendMode));
+||||||| merged common ancestors
+  aBuilder.PushIFrame(r, aIsBackfaceVisible, mPipelineId.ref(), /*ignoreMissingPipelines*/ false);
+
+  WrBridge()->AddWebRenderParentCommand(OpUpdateAsyncImagePipeline(mPipelineId.value(),
+                                                                   aSCBounds,
+                                                                   aSCTransform,
+                                                                   aScaleToSize,
+                                                                   aFilter,
+                                                                   aMixBlendMode));
+=======
+  aBuilder.PushIFrame(r, aIsBackfaceVisible, mPipelineId.ref(),
+                      /*ignoreMissingPipelines*/ false);
+
+  WrBridge()->AddWebRenderParentCommand(
+      OpUpdateAsyncImagePipeline(mPipelineId.value(), aSCBounds, aSCTransform,
+                                 aScaleToSize, aFilter, aMixBlendMode),
+      mManager->GetRenderRoot());
+>>>>>>> upstream-releases
 }
 
 void WebRenderImageData::CreateImageClientIfNeeded() {
@@ -254,21 +440,83 @@ void WebRenderImageData::CreateImageClientIfNeeded() {
   }
 }
 
+<<<<<<< HEAD
 WebRenderFallbackData::WebRenderFallbackData(WebRenderLayerManager* aWRManager,
                                              nsDisplayItem* aItem)
     : WebRenderImageData(aWRManager, aItem), mInvalid(false) {}
+||||||| merged common ancestors
+WebRenderFallbackData::WebRenderFallbackData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
+  : WebRenderImageData(aWRManager, aItem)
+  , mInvalid(false)
+{
+}
+=======
+WebRenderFallbackData::WebRenderFallbackData(RenderRootStateManager* aManager,
+                                             nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem), mInvalid(false) {}
 
 WebRenderFallbackData::~WebRenderFallbackData() { ClearImageKey(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+WebRenderFallbackData::~WebRenderFallbackData() { ClearImageKey(); }
+||||||| merged common ancestors
+WebRenderFallbackData::~WebRenderFallbackData()
+{
+}
+=======
+void WebRenderFallbackData::SetBlobImageKey(const wr::BlobImageKey& aKey) {
+  ClearImageKey();
+  mBlobKey = Some(aKey);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 nsDisplayItemGeometry* WebRenderFallbackData::GetGeometry() {
   return mGeometry.get();
+||||||| merged common ancestors
+nsDisplayItemGeometry*
+WebRenderFallbackData::GetGeometry()
+{
+  return mGeometry.get();
+=======
+Maybe<wr::ImageKey> WebRenderFallbackData::GetImageKey() {
+  if (mBlobKey) {
+    return Some(wr::AsImageKey(mBlobKey.value()));
+  }
+
+  if (mImageData) {
+    return mImageData->GetImageKey();
+  }
+
+  return Nothing();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderFallbackData::SetGeometry(
     nsAutoPtr<nsDisplayItemGeometry> aGeometry) {
   mGeometry = aGeometry;
+||||||| merged common ancestors
+void
+WebRenderFallbackData::SetGeometry(nsAutoPtr<nsDisplayItemGeometry> aGeometry)
+{
+  mGeometry = aGeometry;
+=======
+void WebRenderFallbackData::ClearImageKey() {
+  if (mImageData) {
+    mImageData->ClearImageKey();
+    mImageData = nullptr;
+  }
+
+  if (mBlobKey) {
+    mManager->AddBlobImageKeyForDiscard(mBlobKey.value());
+    mBlobKey.reset();
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebRenderFallbackData::SetBlobImageKey(const wr::BlobImageKey& aKey) {
   ClearImageKey();
   mBlobKey = Some(aKey);
@@ -290,26 +538,69 @@ void WebRenderFallbackData::ClearImageKey() {
   mBlobKey.reset();
 
   WebRenderImageData::ClearImageKey();
+||||||| merged common ancestors
+WebRenderAnimationData::WebRenderAnimationData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
+  : WebRenderUserData(aWRManager, aItem)
+  , mAnimationInfo(aWRManager)
+{
+=======
+WebRenderImageData* WebRenderFallbackData::PaintIntoImage() {
+  if (mBlobKey) {
+    mManager->AddBlobImageKeyForDiscard(mBlobKey.value());
+    mBlobKey.reset();
+  }
+
+  if (mImageData) {
+    return mImageData.get();
+  }
+
+  mImageData = MakeAndAddRef<WebRenderImageData>(mManager.get(),
+                                                 mDisplayItemKey, mFrame);
+
+  return mImageData.get();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 WebRenderAnimationData::WebRenderAnimationData(
     WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
     : WebRenderUserData(aWRManager, aItem) {}
 
 WebRenderAnimationData::~WebRenderAnimationData() {
+||||||| merged common ancestors
+WebRenderAnimationData::~WebRenderAnimationData()
+{
+=======
+WebRenderAnimationData::WebRenderAnimationData(RenderRootStateManager* aManager,
+                                               nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem) {}
+
+WebRenderAnimationData::~WebRenderAnimationData() {
+>>>>>>> upstream-releases
   // It may be the case that nsDisplayItem that created this WebRenderUserData
   // gets destroyed without getting a chance to discard the compositor animation
   // id, so we should do it as part of cleanup here.
   uint64_t animationId = mAnimationInfo.GetCompositorAnimationsId();
   // animationId might be 0 if mAnimationInfo never held any active animations.
   if (animationId) {
-    mWRManager->AddCompositorAnimationsIdForDiscard(animationId);
+    mManager->AddCompositorAnimationsIdForDiscard(animationId);
   }
 }
 
+<<<<<<< HEAD
 WebRenderCanvasData::WebRenderCanvasData(WebRenderLayerManager* aWRManager,
                                          nsDisplayItem* aItem)
     : WebRenderUserData(aWRManager, aItem) {}
+||||||| merged common ancestors
+WebRenderCanvasData::WebRenderCanvasData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem)
+  : WebRenderUserData(aWRManager, aItem)
+{
+}
+=======
+WebRenderCanvasData::WebRenderCanvasData(RenderRootStateManager* aManager,
+                                         nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem) {}
+>>>>>>> upstream-releases
 
 WebRenderCanvasData::~WebRenderCanvasData() {
   if (mCanvasRenderer) {
@@ -323,12 +614,56 @@ WebRenderCanvasRendererAsync* WebRenderCanvasData::GetCanvasRenderer() {
   return mCanvasRenderer.get();
 }
 
+<<<<<<< HEAD
 WebRenderCanvasRendererAsync* WebRenderCanvasData::CreateCanvasRenderer() {
   mCanvasRenderer = MakeUnique<WebRenderCanvasRendererAsync>(mWRManager);
+||||||| merged common ancestors
+WebRenderCanvasRendererAsync*
+WebRenderCanvasData::CreateCanvasRenderer()
+{
+  mCanvasRenderer = MakeUnique<WebRenderCanvasRendererAsync>(mWRManager);
+=======
+WebRenderCanvasRendererAsync* WebRenderCanvasData::CreateCanvasRenderer() {
+  mCanvasRenderer = MakeUnique<WebRenderCanvasRendererAsync>(mManager);
+>>>>>>> upstream-releases
   return mCanvasRenderer.get();
 }
 
+<<<<<<< HEAD
 void DestroyWebRenderUserDataTable(WebRenderUserDataTable* aTable) {
+||||||| merged common ancestors
+void
+DestroyWebRenderUserDataTable(WebRenderUserDataTable* aTable)
+{
+=======
+WebRenderRemoteData::WebRenderRemoteData(RenderRootStateManager* aManager,
+                                         nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem) {}
+
+WebRenderRemoteData::~WebRenderRemoteData() {
+  if (mRemoteBrowser) {
+    mRemoteBrowser->UpdateEffects(mozilla::dom::EffectsInfo::FullyHidden());
+  }
+}
+
+WebRenderRenderRootData::WebRenderRenderRootData(
+    RenderRootStateManager* aManager, nsDisplayItem* aItem)
+    : WebRenderUserData(aManager, aItem) {}
+
+RenderRootBoundary& WebRenderRenderRootData::EnsureHasBoundary(
+    wr::RenderRoot aChildType) {
+  if (mBoundary) {
+    MOZ_ASSERT(mBoundary->GetChildType() == aChildType);
+  } else {
+    mBoundary.emplace(aChildType);
+  }
+  return mBoundary.ref();
+}
+
+WebRenderRenderRootData::~WebRenderRenderRootData() {}
+
+void DestroyWebRenderUserDataTable(WebRenderUserDataTable* aTable) {
+>>>>>>> upstream-releases
   for (auto iter = aTable->Iter(); !iter.Done(); iter.Next()) {
     iter.UserData()->RemoveFromTable();
   }

@@ -18,7 +18,7 @@
 #include "nsRFPService.h"
 #include "RuntimeService.h"
 
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 
 #include "WorkerPrivate.h"
 #include "WorkerRunnable.h"
@@ -43,8 +43,17 @@ WorkerNavigator::WorkerNavigator(const NavigatorProperties& aProperties,
 
 WorkerNavigator::~WorkerNavigator() {}
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<WorkerNavigator> WorkerNavigator::Create(
     bool aOnLine) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<WorkerNavigator>
+WorkerNavigator::Create(bool aOnLine)
+{
+=======
+/* static */
+already_AddRefed<WorkerNavigator> WorkerNavigator::Create(bool aOnLine) {
+>>>>>>> upstream-releases
   RuntimeService* rts = RuntimeService::GetService();
   MOZ_ASSERT(rts);
 
@@ -141,7 +150,8 @@ class GetUserAgentRunnable final : public WorkerMainThreadRunnable {
     nsCOMPtr<nsPIDOMWindowInner> window = mWorkerPrivate->GetWindow();
 
     bool isCallerChrome = mWorkerPrivate->UsesSystemPrincipal();
-    nsresult rv = dom::Navigator::GetUserAgent(window, isCallerChrome, mUA);
+    nsresult rv = dom::Navigator::GetUserAgent(
+        window, mWorkerPrivate->GetPrincipal(), isCallerChrome, mUA);
     if (NS_FAILED(rv)) {
       NS_WARNING("Failed to retrieve user-agent from the worker thread.");
     }

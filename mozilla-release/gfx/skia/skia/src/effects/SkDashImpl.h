@@ -14,12 +14,30 @@ class SkDashImpl : public SkPathEffect {
 public:
     SkDashImpl(const SkScalar intervals[], int count, SkScalar phase);
 
+<<<<<<< HEAD
     Factory getFactory() const override { return CreateProc; }
 
 #ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
     bool exposedInAndroidJavaAPI() const override { return true; }
 #endif
 
+||||||| merged common ancestors
+    bool filterPath(SkPath* dst, const SkPath& src, SkStrokeRec*, const SkRect*) const override;
+
+    bool asPoints(PointData* results, const SkPath& src, const SkStrokeRec&, const SkMatrix&,
+                  const SkRect*) const override;
+
+    DashType asADash(DashInfo* info) const override;
+
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkDashImpl)
+
+#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
+    bool exposedInAndroidJavaAPI() const override { return true; }
+#endif
+
+=======
+>>>>>>> upstream-releases
 protected:
     ~SkDashImpl() override;
     void flatten(SkWriteBuffer&) const override;
@@ -31,9 +49,15 @@ protected:
     DashType onAsADash(DashInfo* info) const override;
 
 private:
+<<<<<<< HEAD
     static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
     friend class SkFlattenable::PrivateInitializer;
 
+||||||| merged common ancestors
+=======
+    SK_FLATTENABLE_HOOKS(SkDashImpl)
+
+>>>>>>> upstream-releases
     SkScalar*   fIntervals;
     int32_t     fCount;
     SkScalar    fPhase;

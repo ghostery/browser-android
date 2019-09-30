@@ -6,8 +6,15 @@
 
 #![deny(missing_docs)]
 
+<<<<<<< HEAD
 use crate::stylesheets::UrlExtraData;
+||||||| merged common ancestors
+=======
+use crate::selector_parser::SelectorImpl;
+use crate::stylesheets::UrlExtraData;
+>>>>>>> upstream-releases
 use cssparser::{BasicParseErrorKind, ParseErrorKind, SourceLocation, Token};
+use selectors::SelectorList;
 use std::fmt;
 use style_traits::ParseError;
 
@@ -15,7 +22,11 @@ use style_traits::ParseError;
 #[derive(Debug)]
 pub enum ContextualParseError<'a> {
     /// A property declaration was not recognized.
-    UnsupportedPropertyDeclaration(&'a str, ParseError<'a>),
+    UnsupportedPropertyDeclaration(
+        &'a str,
+        ParseError<'a>,
+        Option<&'a SelectorList<SelectorImpl>>,
+    ),
     /// A font face descriptor was not recognized.
     UnsupportedFontFaceDescriptor(&'a str, ParseError<'a>),
     /// A font feature values descriptor was not recognized.
@@ -121,7 +132,7 @@ impl<'a> fmt::Display for ContextualParseError<'a> {
         }
 
         match *self {
-            ContextualParseError::UnsupportedPropertyDeclaration(decl, ref err) => {
+            ContextualParseError::UnsupportedPropertyDeclaration(decl, ref err, _selectors) => {
                 write!(f, "Unsupported property declaration: '{}', ", decl)?;
                 parse_error_to_str(err, f)
             },
@@ -239,7 +250,6 @@ impl ParseErrorReporter for RustLogReporter {
         location: SourceLocation,
         error: ContextualParseError,
     ) {
-        use log;
         if log_enabled!(log::Level::Info) {
             info!(
                 "Url:\t{}\n{}:{} {}",

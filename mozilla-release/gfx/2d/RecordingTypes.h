@@ -8,27 +8,105 @@
 #define MOZILLA_GFX_RECORDINGTYPES_H_
 
 #include <ostream>
+#include <vector>
+
+#include "Logging.h"
 
 namespace mozilla {
 namespace gfx {
 
+<<<<<<< HEAD
 template <class S, class T>
 struct ElementStreamFormat {
   static void Write(S &aStream, const T &aElement) {
     aStream.write(reinterpret_cast<const char *>(&aElement), sizeof(T));
+||||||| merged common ancestors
+template<class S, class T>
+struct ElementStreamFormat
+{
+  static void Write(S &aStream, const T &aElement)
+  {
+    aStream.write(reinterpret_cast<const char*>(&aElement), sizeof(T));
+=======
+template <class S, class T>
+struct ElementStreamFormat {
+  static void Write(S& aStream, const T& aElement) {
+    aStream.write(reinterpret_cast<const char*>(&aElement), sizeof(T));
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   static void Read(S &aStream, T &aElement) {
     aStream.read(reinterpret_cast<char *>(&aElement), sizeof(T));
+||||||| merged common ancestors
+  static void Read(S &aStream, T &aElement)
+  {
+    aStream.read(reinterpret_cast<char *>(&aElement), sizeof(T));
+=======
+  static void Read(S& aStream, T& aElement) {
+    aStream.read(reinterpret_cast<char*>(&aElement), sizeof(T));
+>>>>>>> upstream-releases
   }
 };
 
+<<<<<<< HEAD
 template <class S, class T>
 void WriteElement(S &aStream, const T &aElement) {
+||||||| merged common ancestors
+template<class S, class T>
+void WriteElement(S &aStream, const T &aElement)
+{
+=======
+template <class S, class T>
+void WriteElement(S& aStream, const T& aElement) {
+>>>>>>> upstream-releases
   ElementStreamFormat<S, T>::Write(aStream, aElement);
 }
+<<<<<<< HEAD
 template <class S, class T>
 void ReadElement(S &aStream, T &aElement) {
+||||||| merged common ancestors
+template<class S, class T>
+void ReadElement(S &aStream, T &aElement)
+{
+=======
+template <class S, class T>
+void WriteVector(S& aStream, const std::vector<T>& aVector) {
+  size_t size = aVector.size();
+  WriteElement(aStream, size);
+  if (size) {
+    aStream.write(reinterpret_cast<const char*>(aVector.data()),
+                  sizeof(T) * size);
+  }
+}
+
+// ReadElement is disabled for enum types. Use ReadElementConstrained instead.
+template <class S, class T,
+          typename = typename std::enable_if<!std::is_enum<T>::value>::type>
+void ReadElement(S& aStream, T& aElement) {
+>>>>>>> upstream-releases
   ElementStreamFormat<S, T>::Read(aStream, aElement);
+}
+template <class S, class T>
+void ReadElementConstrained(S& aStream, T& aElement, const T& aMinValue,
+                            const T& aMaxValue) {
+  ElementStreamFormat<S, T>::Read(aStream, aElement);
+  if (aElement < aMinValue || aElement > aMaxValue) {
+    gfxDevCrash(LogReason::InvalidConstrainedValueRead)
+        << "Invalid constrained value read: value: " << int(aElement)
+        << ", min: " << int(aMinValue) << ", max: " << int(aMaxValue);
+    aStream.SetIsBad();
+  }
+}
+template <class S, class T>
+void ReadVector(S& aStream, std::vector<T>& aVector) {
+  size_t size;
+  ReadElement(aStream, size);
+  if (size) {
+    aVector.resize(size);
+    aStream.read(reinterpret_cast<char*>(aVector.data()), sizeof(T) * size);
+  } else {
+    aVector.clear();
+  }
 }
 
 }  // namespace gfx

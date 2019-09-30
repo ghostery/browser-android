@@ -7,7 +7,6 @@
 
 #include "TouchManager.h"
 
-#include "gfxPrefs.h"
 #include "mozilla/dom/EventTarget.h"
 #include "mozilla/PresShell.h"
 #include "nsIFrame.h"
@@ -21,19 +20,45 @@ namespace mozilla {
 nsDataHashtable<nsUint32HashKey, TouchManager::TouchInfo>*
     TouchManager::sCaptureTouchList;
 
+<<<<<<< HEAD
 /*static*/ void TouchManager::InitializeStatics() {
+||||||| merged common ancestors
+/*static*/ void
+TouchManager::InitializeStatics()
+{
+=======
+/*static*/
+void TouchManager::InitializeStatics() {
+>>>>>>> upstream-releases
   NS_ASSERTION(!sCaptureTouchList, "InitializeStatics called multiple times!");
   sCaptureTouchList =
       new nsDataHashtable<nsUint32HashKey, TouchManager::TouchInfo>;
 }
 
+<<<<<<< HEAD
 /*static*/ void TouchManager::ReleaseStatics() {
+||||||| merged common ancestors
+/*static*/ void
+TouchManager::ReleaseStatics()
+{
+=======
+/*static*/
+void TouchManager::ReleaseStatics() {
+>>>>>>> upstream-releases
   NS_ASSERTION(sCaptureTouchList, "ReleaseStatics called without Initialize!");
   delete sCaptureTouchList;
   sCaptureTouchList = nullptr;
 }
 
+<<<<<<< HEAD
 void TouchManager::Init(PresShell* aPresShell, nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+TouchManager::Init(PresShell* aPresShell, nsIDocument* aDocument)
+{
+=======
+void TouchManager::Init(PresShell* aPresShell, Document* aDocument) {
+>>>>>>> upstream-releases
   mPresShell = aPresShell;
   mDocument = aDocument;
 }
@@ -52,13 +77,24 @@ static nsIContent* GetNonAnonymousAncestor(EventTarget* aTarget) {
   return content;
 }
 
+<<<<<<< HEAD
 /*static*/ void TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
                                               nsIDocument* aLimitToDocument) {
+||||||| merged common ancestors
+/*static*/ void
+TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
+                              nsIDocument* aLimitToDocument)
+{
+=======
+/*static*/
+void TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
+                                   Document* aLimitToDocument) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsINode> node(do_QueryInterface(aTouch->mOriginalTarget));
   if (node) {
-    nsIDocument* doc = node->GetComposedDoc();
+    Document* doc = node->GetComposedDoc();
     if (doc && (!aLimitToDocument || aLimitToDocument == doc)) {
-      nsIPresShell* presShell = doc->GetShell();
+      PresShell* presShell = doc->GetPresShell();
       if (presShell) {
         nsIFrame* frame = presShell->GetRootFrame();
         if (frame) {
@@ -80,9 +116,22 @@ static nsIContent* GetNonAnonymousAncestor(EventTarget* aTarget) {
   }
 }
 
+<<<<<<< HEAD
 /*static*/ void TouchManager::AppendToTouchList(
     WidgetTouchEvent::TouchArray* aTouchList) {
   for (auto iter = sCaptureTouchList->Iter(); !iter.Done(); iter.Next()) {
+||||||| merged common ancestors
+/*static*/ void
+TouchManager::AppendToTouchList(WidgetTouchEvent::TouchArray* aTouchList)
+{
+  for (auto iter = sCaptureTouchList->Iter();
+       !iter.Done();
+       iter.Next()) {
+=======
+/*static*/
+void TouchManager::AppendToTouchList(WidgetTouchEvent::TouchArray* aTouchList) {
+  for (auto iter = sCaptureTouchList->Iter(); !iter.Done(); iter.Next()) {
+>>>>>>> upstream-releases
     RefPtr<Touch>& touch = iter.Data().mTouch;
     touch->mChanged = false;
     aTouchList->AppendElement(touch);
@@ -97,8 +146,18 @@ void TouchManager::EvictTouches() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ nsIFrame* TouchManager::SetupTarget(WidgetTouchEvent* aEvent,
                                                  nsIFrame* aFrame) {
+||||||| merged common ancestors
+/* static */ nsIFrame*
+TouchManager::SetupTarget(WidgetTouchEvent* aEvent, nsIFrame* aFrame)
+{
+=======
+/* static */
+nsIFrame* TouchManager::SetupTarget(WidgetTouchEvent* aEvent,
+                                    nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aEvent);
 
   if (!aEvent || aEvent->mMessage != eTouchStart) {
@@ -110,7 +169,8 @@ void TouchManager::EvictTouches() {
   // Setting this flag will skip the scrollbars on the root frame from
   // participating in hit-testing, and we only want that to happen on
   // zoomable platforms (for now).
-  if (gfxPrefs::APZAllowZooming()) {
+  dom::Document* doc = aFrame->PresContext()->Document();
+  if (nsLayoutUtils::AllowZoomingForDocument(doc)) {
     flags |= INPUT_IGNORE_ROOT_SCROLL_FRAME;
   }
 
@@ -148,8 +208,18 @@ void TouchManager::EvictTouches() {
   return target;
 }
 
+<<<<<<< HEAD
 /* static */ nsIFrame* TouchManager::SuppressInvalidPointsAndGetTargetedFrame(
     WidgetTouchEvent* aEvent) {
+||||||| merged common ancestors
+/* static */ nsIFrame*
+TouchManager::SuppressInvalidPointsAndGetTargetedFrame(WidgetTouchEvent* aEvent)
+{
+=======
+/* static */
+nsIFrame* TouchManager::SuppressInvalidPointsAndGetTargetedFrame(
+    WidgetTouchEvent* aEvent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aEvent);
 
   if (!aEvent || aEvent->mMessage != eTouchStart) {
@@ -214,12 +284,29 @@ void TouchManager::EvictTouches() {
   return frame;
 }
 
+<<<<<<< HEAD
 bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
                                   bool& aTouchIsNew, bool& aIsHandlingUserInput,
                                   nsCOMPtr<nsIContent>& aCurrentEventContent) {
+||||||| merged common ancestors
+bool
+TouchManager::PreHandleEvent(WidgetEvent* aEvent,
+                             nsEventStatus* aStatus,
+                             bool& aTouchIsNew,
+                             bool& aIsHandlingUserInput,
+                             nsCOMPtr<nsIContent>& aCurrentEventContent)
+{
+=======
+bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
+                                  bool& aTouchIsNew,
+                                  nsCOMPtr<nsIContent>& aCurrentEventContent) {
+  MOZ_DIAGNOSTIC_ASSERT(aEvent->IsTrusted());
+
+  // NOTE: If you need to handle new event messages here, you need to add new
+  //       cases in PresShell::EventHandler::PrepareToDispatchEvent().
+>>>>>>> upstream-releases
   switch (aEvent->mMessage) {
     case eTouchStart: {
-      aIsHandlingUserInput = true;
       WidgetTouchEvent* touchEvent = aEvent->AsTouchEvent();
       // if there is only one touch in this touchstart event, assume that it is
       // the start of a new touch session and evict any old touches in the
@@ -273,8 +360,8 @@ bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
           touches.RemoveElementAt(i);
           continue;
         }
-        RefPtr<Touch> oldTouch = info.mTouch;
-        if (!touch->Equals(oldTouch)) {
+        const RefPtr<Touch> oldTouch = info.mTouch;
+        if (!oldTouch->Equals(touch)) {
           touch->mChanged = true;
           haveChanged = true;
         }
@@ -326,9 +413,6 @@ bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
       break;
     }
     case eTouchEnd:
-      aIsHandlingUserInput = true;
-      // Fall through to touchcancel code
-      MOZ_FALLTHROUGH;
     case eTouchCancel: {
       // Remove the changed touches
       // need to make sure we only remove touches that are ending here
@@ -392,8 +476,17 @@ bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
   return true;
 }
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<nsIContent>
 TouchManager::GetAnyCapturedTouchTarget() {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<nsIContent>
+TouchManager::GetAnyCapturedTouchTarget()
+{
+=======
+/*static*/
+already_AddRefed<nsIContent> TouchManager::GetAnyCapturedTouchTarget() {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIContent> result = nullptr;
   if (sCaptureTouchList->Count() == 0) {
     return result.forget();
@@ -411,11 +504,29 @@ TouchManager::GetAnyCapturedTouchTarget() {
   return result.forget();
 }
 
+<<<<<<< HEAD
 /*static*/ bool TouchManager::HasCapturedTouch(int32_t aId) {
+||||||| merged common ancestors
+/*static*/ bool
+TouchManager::HasCapturedTouch(int32_t aId)
+{
+=======
+/*static*/
+bool TouchManager::HasCapturedTouch(int32_t aId) {
+>>>>>>> upstream-releases
   return sCaptureTouchList->Contains(aId);
 }
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<Touch> TouchManager::GetCapturedTouch(int32_t aId) {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<Touch>
+TouchManager::GetCapturedTouch(int32_t aId)
+{
+=======
+/*static*/
+already_AddRefed<Touch> TouchManager::GetCapturedTouch(int32_t aId) {
+>>>>>>> upstream-releases
   RefPtr<Touch> touch;
   TouchInfo info;
   if (sCaptureTouchList->Get(aId, &info)) {
@@ -424,8 +535,19 @@ TouchManager::GetAnyCapturedTouchTarget() {
   return touch.forget();
 }
 
+<<<<<<< HEAD
 /*static*/ bool TouchManager::ShouldConvertTouchToPointer(
     const Touch* aTouch, const WidgetTouchEvent* aEvent) {
+||||||| merged common ancestors
+/*static*/ bool
+TouchManager::ShouldConvertTouchToPointer(const Touch* aTouch,
+                                          const WidgetTouchEvent* aEvent)
+{
+=======
+/*static*/
+bool TouchManager::ShouldConvertTouchToPointer(const Touch* aTouch,
+                                               const WidgetTouchEvent* aEvent) {
+>>>>>>> upstream-releases
   if (!aTouch || !aTouch->convertToPointer) {
     return false;
   }
@@ -439,7 +561,25 @@ TouchManager::GetAnyCapturedTouchTarget() {
     // pre-handling touch events.
     return aEvent->mMessage == eTouchStart;
   }
-  return info.mConvertToPointer;
+
+  if (!info.mConvertToPointer) {
+    return false;
+  }
+
+  switch (aEvent->mMessage) {
+    case eTouchStart: {
+      // We don't want to fire duplicated pointerdown.
+      return false;
+    }
+    case eTouchMove: {
+      // Always fire first pointermove event.
+      return info.mTouch->mMessage != eTouchMove ||
+             !aTouch->Equals(info.mTouch);
+    }
+    default:
+      break;
+  }
+  return true;
 }
 
 }  // namespace mozilla

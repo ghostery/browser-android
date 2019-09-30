@@ -319,12 +319,31 @@ void gfxPlatformMac::GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh,
   aFontList.AppendElement(kFontArialUnicodeMS);
 }
 
+<<<<<<< HEAD
 /*static*/ void gfxPlatformMac::LookupSystemFont(
     mozilla::LookAndFeel::FontID aSystemFontID, nsACString& aSystemFontName,
     gfxFontStyle& aFontStyle, float aDevPixPerCSSPixel) {
   gfxMacPlatformFontList* pfl = gfxMacPlatformFontList::PlatformFontList();
   return pfl->LookupSystemFont(aSystemFontID, aSystemFontName, aFontStyle,
                                aDevPixPerCSSPixel);
+||||||| merged common ancestors
+/*static*/ void
+gfxPlatformMac::LookupSystemFont(mozilla::LookAndFeel::FontID aSystemFontID,
+                                 nsACString& aSystemFontName,
+                                 gfxFontStyle& aFontStyle,
+                                 float aDevPixPerCSSPixel)
+{
+    gfxMacPlatformFontList* pfl = gfxMacPlatformFontList::PlatformFontList();
+    return pfl->LookupSystemFont(aSystemFontID, aSystemFontName, aFontStyle,
+                                 aDevPixPerCSSPixel);
+=======
+/*static*/
+void gfxPlatformMac::LookupSystemFont(
+    mozilla::LookAndFeel::FontID aSystemFontID, nsACString& aSystemFontName,
+    gfxFontStyle& aFontStyle) {
+  gfxMacPlatformFontList* pfl = gfxMacPlatformFontList::PlatformFontList();
+  return pfl->LookupSystemFont(aSystemFontID, aSystemFontName, aFontStyle);
+>>>>>>> upstream-releases
 }
 
 uint32_t gfxPlatformMac::ReadAntiAliasingThreshold() {
@@ -375,7 +394,16 @@ class OSXVsyncSource final : public VsyncSource {
       mTimer = NS_NewTimer();
     }
 
+<<<<<<< HEAD
     ~OSXDisplay() override { MOZ_ASSERT(NS_IsMainThread()); }
+||||||| merged common ancestors
+    ~OSXDisplay() override
+    {
+      MOZ_ASSERT(NS_IsMainThread());
+    }
+=======
+    virtual ~OSXDisplay() { MOZ_ASSERT(NS_IsMainThread()); }
+>>>>>>> upstream-releases
 
     static void RetryEnableVsync(nsITimer* aTimer, void* aOsxDisplay) {
       MOZ_ASSERT(NS_IsMainThread());
@@ -492,8 +520,16 @@ class OSXVsyncSource final : public VsyncSource {
     TimeDuration mVsyncRate;
   };  // OSXDisplay
 
+<<<<<<< HEAD
  private:
   ~OSXVsyncSource() override = default;
+||||||| merged common ancestors
+private:
+  ~OSXVsyncSource() override = default;
+=======
+ private:
+  virtual ~OSXVsyncSource() = default;
+>>>>>>> upstream-releases
 
   OSXDisplay mGlobalDisplay;
 };  // OSXVsyncSource

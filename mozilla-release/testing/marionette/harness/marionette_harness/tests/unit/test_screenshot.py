@@ -67,10 +67,7 @@ class ScreenCaptureTestCase(MarionetteTestCase):
 
     @property
     def viewport_dimensions(self):
-        return self.marionette.execute_script("""
-            return [arguments[0].clientWidth,
-                    arguments[0].clientHeight];
-            """, script_args=[self.document_element])
+        return self.marionette.execute_script("return [window.innerWidth, window.innerHeight];")
 
     def assert_png(self, screenshot):
         """Test that screenshot is a Base64 encoded PNG file."""
@@ -167,8 +164,7 @@ class TestScreenCaptureChrome(WindowManagerMixin, ScreenCaptureTestCase):
         self.marionette.close_chrome_window()
         self.marionette.switch_to_window(self.start_window)
 
-    # @skip_if_mobile("Fennec doesn't support other chrome windows")
-    @skip("Bug 1329424 - AssertionError: u'iVBORw0KGgoA... (images unexpectedly equal)")
+    @skip_if_mobile("Fennec doesn't support other chrome windows")
     def test_capture_flags(self):
         dialog = self.open_dialog()
         self.marionette.switch_to_window(dialog)
@@ -256,7 +252,8 @@ class TestScreenCaptureChrome(WindowManagerMixin, ScreenCaptureTestCase):
 
         chrome_document_element = self.document_element
         with self.marionette.using_context('content'):
-            self.assertRaisesRegexp(NoSuchElementException, "Web element reference not seen before",
+            self.assertRaisesRegexp(NoSuchElementException,
+                                    "Web element reference not seen before",
                                     self.marionette.screenshot,
                                     highlights=[chrome_document_element])
 
@@ -277,10 +274,9 @@ class TestScreenCaptureContent(WindowManagerMixin, ScreenCaptureTestCase):
             return [document.body.scrollWidth, document.body.scrollHeight]
             """))
 
-    @skip_if_mobile("Needs application independent method to open a new tab")
     def test_capture_tab_already_closed(self):
-        tab = self.open_tab()
-        self.marionette.switch_to_window(tab)
+        new_tab = self.open_tab()
+        self.marionette.switch_to_window(new_tab)
         self.marionette.close()
 
         self.assertRaises(NoSuchWindowException, self.marionette.screenshot)
@@ -310,7 +306,6 @@ class TestScreenCaptureContent(WindowManagerMixin, ScreenCaptureTestCase):
                          self.get_image_dimensions(screenshot))
         self.assertGreater(self.page_y_offset, 0)
 
-    @skip("Bug 1330560 - AssertionError: u'iVBORw0KGgoA... (images unexpectedly equal)")
     def test_capture_flags(self):
         self.marionette.navigate(input)
 
@@ -323,7 +318,6 @@ class TestScreenCaptureContent(WindowManagerMixin, ScreenCaptureTestCase):
 
         self.assertNotEqual(screenshot_focus, screenshot_no_focus)
 
-    @skip_if_mobile("Bug 1330642 - Tuples differ: (1960, 11130) != (1960, 11129)")
     def test_capture_html_document_element(self):
         self.marionette.navigate(long)
         screenshot = self.marionette.screenshot()

@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/Components.h"
 #include "nsCRT.h"
 #include "nsIHttpChannel.h"
 #include "nsIObserverService.h"
@@ -14,8 +15,8 @@
 #include "nsNetUtil.h"
 #include "nsStreamUtils.h"
 #include "nsStringStream.h"
-#include "nsToolkitCompsCID.h"
 #include "nsUrlClassifierStreamUpdater.h"
+#include "nsUrlClassifierUtils.h"
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/ErrorNames.h"
 #include "mozilla/Logging.h"
@@ -59,7 +60,14 @@ static mozilla::LazyLogModule gUrlClassifierStreamUpdaterLog(
 
 // Calls nsIURLFormatter::TrimSensitiveURLs to remove sensitive
 // info from the logging message.
+<<<<<<< HEAD
 static MOZ_FORMAT_PRINTF(1, 2) void TrimAndLog(const char *aFmt, ...) {
+||||||| merged common ancestors
+static MOZ_FORMAT_PRINTF(1, 2) void TrimAndLog(const char* aFmt, ...)
+{
+=======
+static MOZ_FORMAT_PRINTF(1, 2) void TrimAndLog(const char* aFmt, ...) {
+>>>>>>> upstream-releases
   nsString raw;
 
   va_list ap;
@@ -117,21 +125,50 @@ void nsUrlClassifierStreamUpdater::DownloadDone() {
 ///////////////////////////////////////////////////////////////////////////////
 // nsIUrlClassifierStreamUpdater implementation
 
+<<<<<<< HEAD
 nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
     nsIURI *aUpdateUrl, const nsACString &aRequestPayload, bool aIsPostRequest,
     const nsACString &aStreamTable) {
+||||||| merged common ancestors
+nsresult
+nsUrlClassifierStreamUpdater::FetchUpdate(nsIURI *aUpdateUrl,
+                                          const nsACString & aRequestPayload,
+                                          bool aIsPostRequest,
+                                          const nsACString & aStreamTable)
+{
+
+=======
+nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
+    nsIURI* aUpdateUrl, const nsACString& aRequestPayload, bool aIsPostRequest,
+    const nsACString& aStreamTable) {
+>>>>>>> upstream-releases
 #ifdef DEBUG
   LOG(("Fetching update %s from %s", aRequestPayload.Data(),
        aUpdateUrl->GetSpecOrDefault().get()));
 #endif
 
+  // SafeBrowsing update request should never be classified to make sure
+  // we can recover from a bad SafeBrowsing database.
   nsresult rv;
+<<<<<<< HEAD
   uint32_t loadFlags =
       nsIChannel::INHIBIT_CACHING | nsIChannel::LOAD_BYPASS_CACHE;
   rv = NS_NewChannel(getter_AddRefs(mChannel), aUpdateUrl,
+||||||| merged common ancestors
+  uint32_t loadFlags = nsIChannel::INHIBIT_CACHING |
+                       nsIChannel::LOAD_BYPASS_CACHE;
+  rv = NS_NewChannel(getter_AddRefs(mChannel),
+                     aUpdateUrl,
+=======
+  uint32_t loadFlags = nsIChannel::INHIBIT_CACHING |
+                       nsIChannel::LOAD_BYPASS_CACHE |
+                       nsIChannel::LOAD_BYPASS_URL_CLASSIFIER;
+  rv = NS_NewChannel(getter_AddRefs(mChannel), aUpdateUrl,
+>>>>>>> upstream-releases
                      nsContentUtils::GetSystemPrincipal(),
                      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                      nsIContentPolicy::TYPE_OTHER,
+                     nullptr,  // nsICookieSettings
                      nullptr,  // aPerformanceStorage
                      nullptr,  // aLoadGroup
                      this,     // aInterfaceRequestor
@@ -139,12 +176,10 @@ nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
 
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsILoadInfo> loadInfo = mChannel->GetLoadInfo();
+  nsCOMPtr<nsILoadInfo> loadInfo = mChannel->LoadInfo();
   mozilla::OriginAttributes attrs;
   attrs.mFirstPartyDomain.AssignLiteral(NECKO_SAFEBROWSING_FIRST_PARTY_DOMAIN);
-  if (loadInfo) {
-    loadInfo->SetOriginAttributes(attrs);
-  }
+  loadInfo->SetOriginAttributes(attrs);
 
   mBeganStream = false;
 
@@ -191,7 +226,7 @@ nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
   }
 
   // Make the request.
-  rv = mChannel->AsyncOpen2(this);
+  rv = mChannel->AsyncOpen(this);
   NS_ENSURE_SUCCESS(rv, rv);
 
   mTelemetryClockStart = PR_IntervalNow();
@@ -229,11 +264,27 @@ nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
     const nsACString &aUpdateUrl, const nsACString &aRequestPayload,
     bool aIsPostRequest, const nsACString &aStreamTable) {
   LOG(("(pre) Fetching update from %s\n",
        PromiseFlatCString(aUpdateUrl).get()));
+||||||| merged common ancestors
+nsresult
+nsUrlClassifierStreamUpdater::FetchUpdate(const nsACString & aUpdateUrl,
+                                          const nsACString & aRequestPayload,
+                                          bool aIsPostRequest,
+                                          const nsACString & aStreamTable)
+{
+  LOG(("(pre) Fetching update from %s\n", PromiseFlatCString(aUpdateUrl).get()));
+=======
+nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
+    const nsACString& aUpdateUrl, const nsACString& aRequestPayload,
+    bool aIsPostRequest, const nsACString& aStreamTable) {
+  LOG(("(pre) Fetching update from %s\n",
+       PromiseFlatCString(aUpdateUrl).get()));
+>>>>>>> upstream-releases
 
   nsCString updateUrl(aUpdateUrl);
   if (!aIsPostRequest) {
@@ -254,11 +305,29 @@ nsresult nsUrlClassifierStreamUpdater::FetchUpdate(
 
 NS_IMETHODIMP
 nsUrlClassifierStreamUpdater::DownloadUpdates(
+<<<<<<< HEAD
     const nsACString &aRequestTables, const nsACString &aRequestPayload,
     bool aIsPostRequest, const nsACString &aUpdateUrl,
     nsIUrlClassifierCallback *aSuccessCallback,
     nsIUrlClassifierCallback *aUpdateErrorCallback,
     nsIUrlClassifierCallback *aDownloadErrorCallback, bool *_retval) {
+||||||| merged common ancestors
+  const nsACString &aRequestTables,
+  const nsACString &aRequestPayload,
+  bool aIsPostRequest,
+  const nsACString &aUpdateUrl,
+  nsIUrlClassifierCallback *aSuccessCallback,
+  nsIUrlClassifierCallback *aUpdateErrorCallback,
+  nsIUrlClassifierCallback *aDownloadErrorCallback,
+  bool *_retval)
+{
+=======
+    const nsACString& aRequestTables, const nsACString& aRequestPayload,
+    bool aIsPostRequest, const nsACString& aUpdateUrl,
+    nsIUrlClassifierCallback* aSuccessCallback,
+    nsIUrlClassifierCallback* aUpdateErrorCallback,
+    nsIUrlClassifierCallback* aDownloadErrorCallback, bool* _retval) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aSuccessCallback);
   NS_ENSURE_ARG(aUpdateErrorCallback);
   NS_ENSURE_ARG(aDownloadErrorCallback);
@@ -267,7 +336,7 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
     LOG(("Already updating, queueing update %s from %s", aRequestPayload.Data(),
          aUpdateUrl.Data()));
     *_retval = false;
-    UpdateRequest *request = mPendingRequests.AppendElement(fallible);
+    UpdateRequest* request = mPendingRequests.AppendElement(fallible);
     if (!request) {
       return NS_ERROR_OUT_OF_MEMORY;
     }
@@ -294,7 +363,7 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
 
     observerService->AddObserver(this, gQuitApplicationMessage, false);
 
-    mDBService = do_GetService(NS_URLCLASSIFIERDBSERVICE_CONTRACTID, &rv);
+    mDBService = mozilla::components::UrlClassifierDB::Service(&rv);
     NS_ENSURE_SUCCESS(rv, rv);
 
     mInitialized = true;
@@ -305,7 +374,7 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
     LOG(("Service busy, already updating, queuing update %s from %s",
          aRequestPayload.Data(), aUpdateUrl.Data()));
     *_retval = false;
-    UpdateRequest *request = mPendingRequests.AppendElement(fallible);
+    UpdateRequest* request = mPendingRequests.AppendElement(fallible);
     if (!request) {
       return NS_ERROR_OUT_OF_MEMORY;
     }
@@ -326,8 +395,18 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
     return rv;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
       do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+||||||| merged common ancestors
+  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
+    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
+=======
+  nsUrlClassifierUtils* urlUtil = nsUrlClassifierUtils::GetInstance();
+  if (NS_WARN_IF(!urlUtil)) {
+    return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   nsTArray<nsCString> tables;
   mozilla::safebrowsing::Classifier::SplitTables(aRequestTables, tables);
@@ -352,11 +431,20 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
 // nsIUrlClassifierUpdateObserver implementation
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::UpdateUrlRequested(const nsACString &aUrl,
                                                  const nsACString &aTable) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::UpdateUrlRequested(const nsACString &aUrl,
+                                                 const nsACString &aTable)
+{
+=======
+nsUrlClassifierStreamUpdater::UpdateUrlRequested(const nsACString& aUrl,
+                                                 const nsACString& aTable) {
+>>>>>>> upstream-releases
   LOG(("Queuing requested update from %s\n", PromiseFlatCString(aUrl).get()));
 
-  PendingUpdate *update = mPendingUpdates.AppendElement(fallible);
+  PendingUpdate* update = mPendingUpdates.AppendElement(fallible);
   if (!update) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -385,7 +473,7 @@ nsresult nsUrlClassifierStreamUpdater::FetchNext() {
     return NS_OK;
   }
 
-  PendingUpdate &update = mPendingUpdates[0];
+  PendingUpdate& update = mPendingUpdates[0];
   LOG(("Fetching update url: %s\n", update.mUrl.get()));
   nsresult rv =
       FetchUpdate(update.mUrl, EmptyCString(),
@@ -426,12 +514,33 @@ nsresult nsUrlClassifierStreamUpdater::FetchNextRequest() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsUrlClassifierStreamUpdater::BuildUpdateRequest(
     const nsACString &aRequestTables, const nsACString &aRequestPayload,
     bool aIsPostRequest, const nsACString &aUpdateUrl,
     nsIUrlClassifierCallback *aSuccessCallback,
     nsIUrlClassifierCallback *aUpdateErrorCallback,
     nsIUrlClassifierCallback *aDownloadErrorCallback, UpdateRequest *aRequest) {
+||||||| merged common ancestors
+void
+nsUrlClassifierStreamUpdater::BuildUpdateRequest(
+  const nsACString &aRequestTables,
+  const nsACString &aRequestPayload,
+  bool aIsPostRequest,
+  const nsACString &aUpdateUrl,
+  nsIUrlClassifierCallback *aSuccessCallback,
+  nsIUrlClassifierCallback *aUpdateErrorCallback,
+  nsIUrlClassifierCallback *aDownloadErrorCallback,
+  UpdateRequest* aRequest)
+{
+=======
+void nsUrlClassifierStreamUpdater::BuildUpdateRequest(
+    const nsACString& aRequestTables, const nsACString& aRequestPayload,
+    bool aIsPostRequest, const nsACString& aUpdateUrl,
+    nsIUrlClassifierCallback* aSuccessCallback,
+    nsIUrlClassifierCallback* aUpdateErrorCallback,
+    nsIUrlClassifierCallback* aDownloadErrorCallback, UpdateRequest* aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aRequest);
 
   aRequest->mTables = aRequestTables;
@@ -537,8 +646,17 @@ nsUrlClassifierStreamUpdater::UpdateError(nsresult result) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsUrlClassifierStreamUpdater::AddRequestBody(
     const nsACString &aRequestBody) {
+||||||| merged common ancestors
+nsresult
+nsUrlClassifierStreamUpdater::AddRequestBody(const nsACString &aRequestBody)
+{
+=======
+nsresult nsUrlClassifierStreamUpdater::AddRequestBody(
+    const nsACString& aRequestBody) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIStringInputStream> strStream =
       do_CreateInstance(NS_STRINGINPUTSTREAM_CONTRACTID, &rv);
@@ -567,8 +685,16 @@ nsresult nsUrlClassifierStreamUpdater::AddRequestBody(
 // nsIStreamListenerObserver implementation
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::OnStartRequest(nsIRequest *request,
                                              nsISupports *context) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::OnStartRequest(nsIRequest *request,
+                                             nsISupports* context)
+{
+=======
+nsUrlClassifierStreamUpdater::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   nsresult rv;
   bool downloadError = false;
   nsAutoCString strStatus;
@@ -662,9 +788,18 @@ nsUrlClassifierStreamUpdater::OnStartRequest(nsIRequest *request,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::OnDataAvailable(nsIRequest *request,
                                               nsISupports *context,
                                               nsIInputStream *aIStream,
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::OnDataAvailable(nsIRequest *request,
+                                              nsISupports* context,
+                                              nsIInputStream *aIStream,
+=======
+nsUrlClassifierStreamUpdater::OnDataAvailable(nsIRequest* request,
+                                              nsIInputStream* aIStream,
+>>>>>>> upstream-releases
                                               uint64_t aSourceOffset,
                                               uint32_t aLength) {
   if (!mDBService) return NS_ERROR_NOT_INITIALIZED;
@@ -694,10 +829,22 @@ nsUrlClassifierStreamUpdater::OnDataAvailable(nsIRequest *request,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::OnStopRequest(nsIRequest *request,
                                             nsISupports *context,
                                             nsresult aStatus) {
   if (!mDBService) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::OnStopRequest(nsIRequest *request, nsISupports* context,
+                                            nsresult aStatus)
+{
+  if (!mDBService)
+    return NS_ERROR_NOT_INITIALIZED;
+=======
+nsUrlClassifierStreamUpdater::OnStopRequest(nsIRequest* request,
+                                            nsresult aStatus) {
+  if (!mDBService) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   if (LOG_ENABLED()) {
     nsAutoCString errorName;
@@ -755,8 +902,17 @@ nsUrlClassifierStreamUpdater::OnStopRequest(nsIRequest *request,
 // nsIObserver implementation
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::Observe(nsISupports *aSubject, const char *aTopic,
                                       const char16_t *aData) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::Observe(nsISupports *aSubject, const char *aTopic,
+                                      const char16_t *aData)
+{
+=======
+nsUrlClassifierStreamUpdater::Observe(nsISupports* aSubject, const char* aTopic,
+                                      const char16_t* aData) {
+>>>>>>> upstream-releases
   if (nsCRT::strcmp(aTopic, gQuitApplicationMessage) == 0) {
     if (mIsUpdating && mChannel) {
       LOG(("Cancel download"));
@@ -791,15 +947,30 @@ nsUrlClassifierStreamUpdater::Observe(nsISupports *aSubject, const char *aTopic,
 // nsIInterfaceRequestor implementation
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::GetInterface(const nsIID &eventSinkIID,
                                            void **_retval) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::GetInterface(const nsIID & eventSinkIID, void* *_retval)
+{
+=======
+nsUrlClassifierStreamUpdater::GetInterface(const nsIID& eventSinkIID,
+                                           void** _retval) {
+>>>>>>> upstream-releases
   return QueryInterface(eventSinkIID, _retval);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // nsITimerCallback implementation
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::Notify(nsITimer *timer) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::Notify(nsITimer *timer)
+{
+=======
+nsUrlClassifierStreamUpdater::Notify(nsITimer* timer) {
+>>>>>>> upstream-releases
   LOG(("nsUrlClassifierStreamUpdater::Notify [%p]", this));
 
   if (timer == mFetchNextRequestTimer) {
@@ -870,7 +1041,14 @@ nsUrlClassifierStreamUpdater::Notify(nsITimer *timer) {
 //// nsINamed
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUrlClassifierStreamUpdater::GetName(nsACString &aName) {
+||||||| merged common ancestors
+nsUrlClassifierStreamUpdater::GetName(nsACString& aName)
+{
+=======
+nsUrlClassifierStreamUpdater::GetName(nsACString& aName) {
+>>>>>>> upstream-releases
   aName.AssignLiteral("nsUrlClassifierStreamUpdater");
   return NS_OK;
 }

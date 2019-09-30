@@ -42,19 +42,33 @@ class ClientTiledPaintedLayer : public PaintedLayer, public ClientLayer {
                                    ClientLayerManager::PaintedLayerCreationHint
                                        aCreationHint = LayerManager::NONE);
 
+<<<<<<< HEAD
  protected:
   ~ClientTiledPaintedLayer();
+||||||| merged common ancestors
+protected:
+  ~ClientTiledPaintedLayer();
+=======
+ protected:
+  virtual ~ClientTiledPaintedLayer();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
  public:
   // Override name to distinguish it from ClientPaintedLayer in layer dumps
-  virtual const char* Name() const override { return "TiledPaintedLayer"; }
+  const char* Name() const override { return "TiledPaintedLayer"; }
 
   // PaintedLayer
-  virtual Layer* AsLayer() override { return this; }
-  virtual void InvalidateRegion(const nsIntRegion& aRegion) override {
+  Layer* AsLayer() override { return this; }
+  void InvalidateRegion(const nsIntRegion& aRegion) override {
     mInvalidRegion.Add(aRegion);
     UpdateValidRegionAfterInvalidRegionChanged();
     if (!mLowPrecisionValidRegion.IsEmpty()) {
@@ -65,14 +79,21 @@ class ClientTiledPaintedLayer : public PaintedLayer, public ClientLayer {
   }
 
   // Shadow methods
-  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
+  void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
+  ShadowableLayer* AsShadowableLayer() override { return this; }
 
-  virtual void RenderLayer() override;
+  void RenderLayer() override;
 
-  virtual void ClearCachedResources() override;
+  void ClearCachedResources() override;
 
+<<<<<<< HEAD
   virtual void HandleMemoryPressure() override {
+||||||| merged common ancestors
+  virtual void HandleMemoryPressure() override
+  {
+=======
+  void HandleMemoryPressure() override {
+>>>>>>> upstream-releases
     if (mContentClient) {
       mContentClient->HandleMemoryPressure();
     }
@@ -87,8 +108,15 @@ class ClientTiledPaintedLayer : public PaintedLayer, public ClientLayer {
                          LayerMetricsWrapper* aOutDisplayPortAncestor,
                          bool* aOutHasTransformAnimation);
 
+<<<<<<< HEAD
   virtual bool IsOptimizedFor(
       LayerManager::PaintedLayerCreationHint aCreationHint) override;
+||||||| merged common ancestors
+  virtual bool IsOptimizedFor(LayerManager::PaintedLayerCreationHint aCreationHint) override;
+=======
+  bool IsOptimizedFor(
+      LayerManager::PaintedLayerCreationHint aCreationHint) override;
+>>>>>>> upstream-releases
 
  private:
   ClientLayerManager* ClientManager() {

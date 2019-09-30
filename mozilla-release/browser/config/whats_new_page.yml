@@ -18,8 +18,118 @@
       # This is done by taskgraph.
       versions: ["<{version.major_number}.0"]
       locales:
+<<<<<<< HEAD
           - ar
           - az
+          - be
+          - cak
+          - cs
+          - cy
+          - da
+||||||| merged common ancestors
+=======
+          - be
+          - cs
+          - cy
+          - da
+>>>>>>> upstream-releases
+          - de
+<<<<<<< HEAD
+          - dsb
+          - en-CA
+||||||| merged common ancestors
+=======
+          - en-CA
+>>>>>>> upstream-releases
+          - en-GB
+          - en-US
+<<<<<<< HEAD
+          - es-AR
+          - es-CL
+||||||| merged common ancestors
+=======
+          - es-AR
+>>>>>>> upstream-releases
+          - es-ES
+<<<<<<< HEAD
+          - es-MX
+          - et
+||||||| merged common ancestors
+=======
+          - es-MX
+>>>>>>> upstream-releases
+          - fr
+<<<<<<< HEAD
+          - fy-NL
+          - gl
+          - gn
+          - gu-IN
+          - hi-IN
+          - hsb
+          - hu
+          - ia
+||||||| merged common ancestors
+=======
+          - fy-NL
+          - hu
+          - ia
+>>>>>>> upstream-releases
+          - id
+<<<<<<< HEAD
+          - it
+          - ka
+          - ko
+          - lij
+          - lt
+          - ms
+          - nb-NO
+          - nl
+          - nn-NO
+||||||| merged common ancestors
+=======
+          - it
+          - ka
+          - lt
+          - nl
+          - nn-NO
+>>>>>>> upstream-releases
+          - pl
+          - pt-BR
+          - pt-PT
+          - rm
+          - ro
+          - ru
+<<<<<<< HEAD
+          - sk
+          - sl
+          - sq
+          - sv-SE
+          - th
+          - tr
+          - uk
+          - vi
+          - zh-CN
+||||||| merged common ancestors
+=======
+          - sk
+          - sl
+          - sv-SE
+          - tr
+          - vi
+          - zh-CN
+          - zh-TW
+- type: show-url
+  # yamllint disable-line rule:line-length
+  url: "https://www.mozilla.org/%LOCALE%/{product}/{version.major_number}.0beta/whatsnew/?oldversion=%OLD_VERSION%"
+  conditions:
+      blob-types: [wnp]
+      release-types: [beta, release-rc]
+      products: [firefox]
+      update-channel: beta
+      # e.g.: ["<61.0"]. {version.major_number} reflects the current version.
+      # This is done by taskgraph.
+      versions: ["<{version.major_number}.0"]
+      locales:
           - be
           - cak
           - cs
@@ -34,24 +144,16 @@
           - es-CL
           - es-ES
           - es-MX
-          - et
           - fr
           - fy-NL
-          - gl
           - gn
-          - gu-IN
-          - hi-IN
           - hsb
           - hu
           - ia
           - id
           - it
           - ka
-          - ko
           - lij
-          - lt
-          - ms
-          - nb-NO
           - nl
           - nn-NO
           - pl
@@ -64,9 +166,62 @@
           - sl
           - sq
           - sv-SE
-          - th
           - tr
           - uk
           - vi
           - zh-CN
+          - zh-TW
+- type: show-url
+  # yamllint disable-line rule:line-length
+  url: "https://www.mozilla.org/%LOCALE%/{product}/{version.major_number}.0a2/whatsnew/?oldversion=%OLD_VERSION%"
+  conditions:
+      blob-types: [wnp]
+      release-types: [beta]
+      products: [firefox]
+      update-channel: aurora
+      # e.g.: ["<61.0"]. {version.major_number} reflects the current version.
+      # This is done by taskgraph.
+      versions: ["<{version.major_number}.0"]
+      locales:
+          - be
+          - cak
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - en-CA
+          - en-GB
+          - en-US
+          - es-AR
+          - es-CL
+          - es-ES
+          - es-MX
+          - fr
+          - fy-NL
+          - gn
+          - hsb
+          - hu
+          - ia
+          - id
+          - it
+          - ka
+          - lij
+          - nl
+          - nn-NO
+          - pl
+          - pt-BR
+          - pt-PT
+          - rm
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sv-SE
+          - tr
+          - uk
+          - vi
+          - zh-CN
+>>>>>>> upstream-releases
           - zh-TW

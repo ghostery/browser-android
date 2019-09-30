@@ -26,7 +26,7 @@
 #include "nsHashKeys.h"
 
 #ifdef XP_MACOSX
-#include "PluginInterposeOSX.h"
+#  include "PluginInterposeOSX.h"
 #else
 namespace mac_plugin_interposing {
 class NSCursorInfo {};
@@ -51,11 +51,11 @@ std::string UnmungePluginDsoPath(const std::string& munged);
 extern mozilla::LogModule* GetPluginLog();
 
 #if defined(_MSC_VER)
-#define FULLFUNCTION __FUNCSIG__
+#  define FULLFUNCTION __FUNCSIG__
 #elif defined(__GNUC__)
-#define FULLFUNCTION __PRETTY_FUNCTION__
+#  define FULLFUNCTION __PRETTY_FUNCTION__
 #else
-#define FULLFUNCTION __FUNCTION__
+#  define FULLFUNCTION __FUNCTION__
 #endif
 
 #define PLUGIN_LOG_DEBUG(args) \
@@ -118,7 +118,7 @@ typedef XID NativeWindowHandle;
 #elif defined(XP_DARWIN) || defined(ANDROID)
 typedef intptr_t NativeWindowHandle;  // never actually used, will always be 0
 #else
-#error Need NativeWindowHandle for this platform
+#  error Need NativeWindowHandle for this platform
 #endif
 
 #ifdef XP_WIN
@@ -384,7 +384,14 @@ struct ParamTraits<mozilla::plugins::NPRemoteWindow> {
 
 #ifdef XP_MACOSX
 template <>
+<<<<<<< HEAD
 struct ParamTraits<NPNSString> {
+||||||| merged common ancestors
+struct ParamTraits<NPNSString>
+{
+=======
+struct ParamTraits<NPNSString*> {
+>>>>>>> upstream-releases
   // Empty string writes a length of 0 and no buffer.
   // We don't write a nullptr terminating character in buffers.
   static void Write(Message* aMsg, NPNSString* aParam) {
@@ -516,13 +523,13 @@ struct ParamTraits<NSCursorInfo> {
     const char* typeName = aParam.GetTypeName();
     nsPoint hotSpot = aParam.GetHotSpot();
     int hotSpotX, hotSpotY;
-#ifdef NS_COORD_IS_FLOAT
+#  ifdef NS_COORD_IS_FLOAT
     hotSpotX = rint(hotSpot.x);
     hotSpotY = rint(hotSpot.y);
-#else
+#  else
     hotSpotX = hotSpot.x;
     hotSpotY = hotSpot.y;
-#endif
+#  endif
     uint32_t dataLength = aParam.GetCustomImageDataLength();
     uint8_t* data = aParam.GetCustomImageData();
 
@@ -572,6 +579,7 @@ struct ParamTraits<NPNVariable>
                                       NPNVariable::NPNVLast> {};
 
 // The only accepted value is NPNURLVariable::NPNURLVProxy
+<<<<<<< HEAD
 template <>
 struct ParamTraits<NPNURLVariable>
     : public ContiguousEnumSerializerInclusive<NPNURLVariable,
@@ -583,9 +591,43 @@ struct ParamTraits<NPCoordinateSpace>
     : public ContiguousEnumSerializerInclusive<
           NPCoordinateSpace, NPCoordinateSpace::NPCoordinateSpacePlugin,
           NPCoordinateSpace::NPCoordinateSpaceFlippedScreen> {};
+||||||| merged common ancestors
+template<>
+struct ParamTraits<NPNURLVariable> :
+  public ContiguousEnumSerializerInclusive<NPNURLVariable,
+                                           NPNURLVariable::NPNURLVProxy,
+                                           NPNURLVariable::NPNURLVProxy>
+{};
+
+template<>
+struct ParamTraits<NPCoordinateSpace> :
+  public ContiguousEnumSerializerInclusive<NPCoordinateSpace,
+                                           NPCoordinateSpace::NPCoordinateSpacePlugin,
+                                           NPCoordinateSpace::NPCoordinateSpaceFlippedScreen>
+{};
+=======
+template <>
+struct ParamTraits<NPNURLVariable>
+    : public ContiguousEnumSerializerInclusive<NPNURLVariable,
+                                               NPNURLVariable::NPNURLVProxy,
+                                               NPNURLVariable::NPNURLVProxy> {};
+>>>>>>> upstream-releases
+
+template <>
+<<<<<<< HEAD
+struct ParamTraits<mozilla::plugins::NPAudioDeviceChangeDetailsIPC> {
+||||||| merged common ancestors
+struct ParamTraits<mozilla::plugins::NPAudioDeviceChangeDetailsIPC>
+{
+=======
+struct ParamTraits<NPCoordinateSpace>
+    : public ContiguousEnumSerializerInclusive<
+          NPCoordinateSpace, NPCoordinateSpace::NPCoordinateSpacePlugin,
+          NPCoordinateSpace::NPCoordinateSpaceFlippedScreen> {};
 
 template <>
 struct ParamTraits<mozilla::plugins::NPAudioDeviceChangeDetailsIPC> {
+>>>>>>> upstream-releases
   typedef mozilla::plugins::NPAudioDeviceChangeDetailsIPC paramType;
 
   static void Write(Message* aMsg, const paramType& aParam) {

@@ -40,6 +40,7 @@ inline void BaselineFrame::replaceInnermostEnvironment(EnvironmentObject& env) {
   envChain_ = &env;
 }
 
+<<<<<<< HEAD
 inline bool BaselineFrame::pushLexicalEnvironment(JSContext* cx,
                                                   Handle<LexicalScope*> scope) {
   LexicalEnvironmentObject* env =
@@ -48,6 +49,25 @@ inline bool BaselineFrame::pushLexicalEnvironment(JSContext* cx,
     return false;
   }
   pushOnEnvironmentChain(*env);
+||||||| merged common ancestors
+inline bool
+BaselineFrame::pushLexicalEnvironment(JSContext* cx, Handle<LexicalScope*> scope)
+{
+    LexicalEnvironmentObject* env = LexicalEnvironmentObject::create(cx, scope, this);
+    if (!env) {
+        return false;
+    }
+    pushOnEnvironmentChain(*env);
+=======
+inline bool BaselineFrame::pushLexicalEnvironment(JSContext* cx,
+                                                  Handle<LexicalScope*> scope) {
+  LexicalEnvironmentObject* env =
+      LexicalEnvironmentObject::createForFrame(cx, scope, this);
+  if (!env) {
+    return false;
+  }
+  pushOnEnvironmentChain(*env);
+>>>>>>> upstream-releases
 
   return true;
 }

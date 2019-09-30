@@ -7,10 +7,10 @@
 
 #include "cairo.h"
 #ifdef CAIRO_HAS_QUARTZ_SURFACE
-#include "cairo-quartz.h"
+#  include "cairo-quartz.h"
 #endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
-#include "cairo-win32.h"
+#  include "cairo-win32.h"
 #endif
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/HelpersCairo.h"
@@ -163,9 +163,20 @@ void PrintTarget::AdjustPrintJobNameForIPP(const nsAString& aJobName,
   CopyUTF8toUTF16(jobName, aAdjustedJobName);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DrawTarget>
 PrintTarget::CreateWrapAndRecordDrawTarget(DrawEventRecorder* aRecorder,
                                            DrawTarget* aDrawTarget) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DrawTarget>
+PrintTarget::CreateWrapAndRecordDrawTarget(DrawEventRecorder* aRecorder,
+                                       DrawTarget* aDrawTarget)
+{
+=======
+/* static */
+already_AddRefed<DrawTarget> PrintTarget::CreateWrapAndRecordDrawTarget(
+    DrawEventRecorder* aRecorder, DrawTarget* aDrawTarget) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aRecorder);
   MOZ_ASSERT(aDrawTarget);
 

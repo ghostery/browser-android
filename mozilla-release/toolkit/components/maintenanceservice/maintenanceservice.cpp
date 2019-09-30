@@ -29,9 +29,17 @@ bool gServiceControlStopping = false;
 // logs are pretty small, about 20 lines, so 10 seems reasonable.
 #define LOGS_TO_KEEP 10
 
-BOOL GetLogDirectoryPath(WCHAR *path);
+BOOL GetLogDirectoryPath(WCHAR* path);
 
+<<<<<<< HEAD
 int wmain(int argc, WCHAR **argv) {
+||||||| merged common ancestors
+int
+wmain(int argc, WCHAR **argv)
+{
+=======
+int wmain(int argc, WCHAR** argv) {
+>>>>>>> upstream-releases
   // If command-line parameter is "install", install the service
   // or upgrade if already installed
   // If command line parameter is "forceinstall", install the service
@@ -125,7 +133,15 @@ int wmain(int argc, WCHAR **argv) {
  * @param  path The out buffer for the backup log path of size MAX_PATH + 1
  * @return TRUE if successful.
  */
+<<<<<<< HEAD
 BOOL GetLogDirectoryPath(WCHAR *path) {
+||||||| merged common ancestors
+BOOL
+GetLogDirectoryPath(WCHAR *path)
+{
+=======
+BOOL GetLogDirectoryPath(WCHAR* path) {
+>>>>>>> upstream-releases
   if (!GetModuleFileNameW(nullptr, path, MAX_PATH)) {
     return FALSE;
   }
@@ -224,7 +240,15 @@ void StartTerminationThread() {
 /**
  * Main entry point when running as a service.
  */
+<<<<<<< HEAD
 void WINAPI SvcMain(DWORD argc, LPWSTR *argv) {
+||||||| merged common ancestors
+void WINAPI
+SvcMain(DWORD argc, LPWSTR *argv)
+{
+=======
+void WINAPI SvcMain(DWORD argc, LPWSTR* argv) {
+>>>>>>> upstream-releases
   // Setup logging, and backup the old logs
   WCHAR updatePath[MAX_PATH + 1];
   if (GetLogDirectoryPath(updatePath)) {

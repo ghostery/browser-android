@@ -6,21 +6,28 @@
 
 DIRS += [
     'addon',
+    'inspector',
     'targets',
+    'worker',
 ]
 
 DevToolsModules(
     'accessibility.js',
     'actor-registry.js',
     'animation.js',
+<<<<<<< HEAD
     'canvas.js',
     'changes.js',
+||||||| merged common ancestors
+    'canvas.js',
+=======
+    'array-buffer.js',
+    'changes.js',
+>>>>>>> upstream-releases
     'css-properties.js',
-    'csscoverage.js',
     'device.js',
     'emulation.js',
     'framerate.js',
-    'function-call.js',
     'highlighters.js',
     'inspector.js',
     'layout.js',
@@ -34,10 +41,20 @@ DevToolsModules(
     'reflow.js',
     'root.js',
     'screenshot.js',
+    'source.js',
     'storage.js',
     'string.js',
     'styles.js',
     'stylesheets.js',
+<<<<<<< HEAD
     'webaudio.js',
     'webgl.js'
+||||||| merged common ancestors
+    'timeline.js',
+    'webaudio.js',
+    'webgl.js'
+=======
+    'webconsole.js',
+    'websocket.js',
+>>>>>>> upstream-releases
 )

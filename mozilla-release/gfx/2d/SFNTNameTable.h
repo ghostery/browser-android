@@ -20,8 +20,19 @@ struct NameHeader;
 struct NameRecord;
 enum ENameDecoder : int;
 
+<<<<<<< HEAD
 typedef Vector<std::function<ENameDecoder(const NameRecord *)>>
     NameRecordMatchers;
+||||||| merged common ancestors
+typedef Vector<std::function<ENameDecoder(const NameRecord*)>> NameRecordMatchers;
+
+class SFNTNameTable final
+{
+public:
+=======
+typedef Vector<std::function<ENameDecoder(const NameRecord*)>>
+    NameRecordMatchers;
+>>>>>>> upstream-releases
 
 class SFNTNameTable final {
  public:
@@ -33,7 +44,7 @@ class SFNTNameTable final {
    * @param aDataLength length
    * @return UniquePtr to a SFNTNameTable or nullptr if the header is invalid.
    */
-  static UniquePtr<SFNTNameTable> Create(const uint8_t *aNameData,
+  static UniquePtr<SFNTNameTable> Create(const uint8_t* aNameData,
                                          uint32_t aDataLength);
 
   /**
@@ -44,26 +55,62 @@ class SFNTNameTable final {
    * @param aU16FullName string to be populated with the full name.
    * @return true if the full name is successfully read.
    */
+<<<<<<< HEAD
   bool GetU16FullName(mozilla::u16string &aU16FullName);
 
  private:
   SFNTNameTable(const NameHeader *aNameHeader, const uint8_t *aNameData,
+||||||| merged common ancestors
+  bool GetU16FullName(mozilla::u16string& aU16FullName);
+
+private:
+
+  SFNTNameTable(const NameHeader *aNameHeader, const uint8_t *aNameData,
+=======
+  bool GetU16FullName(mozilla::u16string& aU16FullName);
+
+ private:
+  SFNTNameTable(const NameHeader* aNameHeader, const uint8_t* aNameData,
+>>>>>>> upstream-releases
                 uint32_t aDataLength);
 
+<<<<<<< HEAD
   bool ReadU16Name(const NameRecordMatchers &aMatchers,
                    mozilla::u16string &aU16Name);
+||||||| merged common ancestors
+  bool ReadU16Name(const NameRecordMatchers& aMatchers, mozilla::u16string& aU16Name);
+=======
+  bool ReadU16Name(const NameRecordMatchers& aMatchers,
+                   mozilla::u16string& aU16Name);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool ReadU16NameFromU16Record(const NameRecord *aNameRecord,
                                 mozilla::u16string &aU16Name);
+||||||| merged common ancestors
+  bool ReadU16NameFromU16Record(const NameRecord *aNameRecord,
+                                mozilla::u16string& aU16Name);
+=======
+  bool ReadU16NameFromU16Record(const NameRecord* aNameRecord,
+                                mozilla::u16string& aU16Name);
+>>>>>>> upstream-releases
 
 #if defined(XP_MACOSX)
+<<<<<<< HEAD
   bool ReadU16NameFromMacRomanRecord(const NameRecord *aNameRecord,
                                      mozilla::u16string &aU16Name);
+||||||| merged common ancestors
+  bool ReadU16NameFromMacRomanRecord(const NameRecord *aNameRecord,
+                                     mozilla::u16string& aU16Name);
+=======
+  bool ReadU16NameFromMacRomanRecord(const NameRecord* aNameRecord,
+                                     mozilla::u16string& aU16Name);
+>>>>>>> upstream-releases
 #endif
 
-  const NameRecord *mFirstRecord;
-  const NameRecord *mEndOfRecords;
-  const uint8_t *mStringData;
+  const NameRecord* mFirstRecord;
+  const NameRecord* mEndOfRecords;
+  const uint8_t* mStringData;
   const uint32_t mStringDataLength;
 };
 

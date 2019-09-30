@@ -5,37 +5,73 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if defined(MOZILLA_INTERNAL_API)
+<<<<<<< HEAD
 #error This code is NOT for internal Gecko use!
 #endif  // defined(MOZILLA_INTERNAL_API)
+||||||| merged common ancestors
+#error This code is NOT for internal Gecko use!
+#endif // defined(MOZILLA_INTERNAL_API)
+=======
+#  error This code is NOT for internal Gecko use!
+#endif  // defined(MOZILLA_INTERNAL_API)
+>>>>>>> upstream-releases
 
 #ifndef mozilla_a11y_HandlerTextLeaf_h
-#define mozilla_a11y_HandlerTextLeaf_h
+#  define mozilla_a11y_HandlerTextLeaf_h
 
-#include "AccessibleHandler.h"
-#include "IUnknownImpl.h"
-#include "mozilla/RefPtr.h"
+#  include "AccessibleHandler.h"
+#  include "IUnknownImpl.h"
+#  include "mozilla/RefPtr.h"
 
 namespace mozilla {
 namespace a11y {
 
+<<<<<<< HEAD
 class HandlerTextLeaf final : public IAccessible2, public IServiceProvider {
  public:
   explicit HandlerTextLeaf(IDispatch *aParent, long aIndexInParent, HWND aHwnd,
                            AccChildData &aData);
+||||||| merged common ancestors
+class HandlerTextLeaf final : public IAccessible2
+                              , public IServiceProvider
+{
+public:
+  explicit HandlerTextLeaf(IDispatch* aParent, long aIndexInParent,
+                           HWND aHwnd, AccChildData& aData);
+=======
+class HandlerTextLeaf final : public IAccessible2, public IServiceProvider {
+ public:
+  explicit HandlerTextLeaf(IDispatch* aParent, long aIndexInParent, HWND aHwnd,
+                           AccChildData& aData);
+>>>>>>> upstream-releases
 
   DECL_IUNKNOWN
 
   // IDispatch
+<<<<<<< HEAD
   STDMETHODIMP GetTypeInfoCount(UINT *pctinfo) override;
   STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid,
                            ITypeInfo **ppTInfo) override;
   STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
                              LCID lcid, DISPID *rgDispId) override;
+||||||| merged common ancestors
+  STDMETHODIMP GetTypeInfoCount(UINT *pctinfo) override;
+  STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo) override;
+  STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames,
+                             LCID lcid, DISPID *rgDispId) override;
+=======
+  STDMETHODIMP GetTypeInfoCount(UINT* pctinfo) override;
+  STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid,
+                           ITypeInfo** ppTInfo) override;
+  STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames,
+                             LCID lcid, DISPID* rgDispId) override;
+>>>>>>> upstream-releases
   STDMETHODIMP Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags,
-                      DISPPARAMS *pDispParams, VARIANT *pVarResult,
-                      EXCEPINFO *pExcepInfo, UINT *puArgErr) override;
+                      DISPPARAMS* pDispParams, VARIANT* pVarResult,
+                      EXCEPINFO* pExcepInfo, UINT* puArgErr) override;
 
   // IAccessible
+<<<<<<< HEAD
   STDMETHODIMP get_accParent(IDispatch **ppdispParent) override;
   STDMETHODIMP get_accChildCount(long *pcountChildren) override;
   STDMETHODIMP get_accChild(VARIANT varChild, IDispatch **ppdispChild) override;
@@ -48,18 +84,52 @@ class HandlerTextLeaf final : public IAccessible2, public IServiceProvider {
   STDMETHODIMP get_accHelp(VARIANT varChild, BSTR *pszHelp) override;
   STDMETHODIMP get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild,
                                 long *pidTopic) override;
+||||||| merged common ancestors
+  STDMETHODIMP get_accParent(IDispatch **ppdispParent) override;
+  STDMETHODIMP get_accChildCount(long *pcountChildren) override;
+  STDMETHODIMP get_accChild(VARIANT varChild, IDispatch **ppdispChild) override;
+  STDMETHODIMP get_accName(VARIANT varChild, BSTR *pszName) override;
+  STDMETHODIMP get_accValue(VARIANT varChild, BSTR *pszValue) override;
+  STDMETHODIMP get_accDescription(VARIANT varChild, BSTR *pszDescription) override;
+  STDMETHODIMP get_accRole(VARIANT varChild, VARIANT *pvarRole) override;
+  STDMETHODIMP get_accState(VARIANT varChild, VARIANT *pvarState) override;
+  STDMETHODIMP get_accHelp(VARIANT varChild, BSTR *pszHelp) override;
+  STDMETHODIMP get_accHelpTopic(BSTR *pszHelpFile, VARIANT varChild,
+                                long *pidTopic) override;
+=======
+  STDMETHODIMP get_accParent(IDispatch** ppdispParent) override;
+  STDMETHODIMP get_accChildCount(long* pcountChildren) override;
+  STDMETHODIMP get_accChild(VARIANT varChild, IDispatch** ppdispChild) override;
+  STDMETHODIMP get_accName(VARIANT varChild, BSTR* pszName) override;
+  STDMETHODIMP get_accValue(VARIANT varChild, BSTR* pszValue) override;
+  STDMETHODIMP get_accDescription(VARIANT varChild,
+                                  BSTR* pszDescription) override;
+  STDMETHODIMP get_accRole(VARIANT varChild, VARIANT* pvarRole) override;
+  STDMETHODIMP get_accState(VARIANT varChild, VARIANT* pvarState) override;
+  STDMETHODIMP get_accHelp(VARIANT varChild, BSTR* pszHelp) override;
+  STDMETHODIMP get_accHelpTopic(BSTR* pszHelpFile, VARIANT varChild,
+                                long* pidTopic) override;
+>>>>>>> upstream-releases
   STDMETHODIMP get_accKeyboardShortcut(VARIANT varChild,
-                                       BSTR *pszKeyboardShortcut) override;
-  STDMETHODIMP get_accFocus(VARIANT *pvarChild) override;
-  STDMETHODIMP get_accSelection(VARIANT *pvarChildren) override;
+                                       BSTR* pszKeyboardShortcut) override;
+  STDMETHODIMP get_accFocus(VARIANT* pvarChild) override;
+  STDMETHODIMP get_accSelection(VARIANT* pvarChildren) override;
   STDMETHODIMP get_accDefaultAction(VARIANT varChild,
-                                    BSTR *pszDefaultAction) override;
+                                    BSTR* pszDefaultAction) override;
   STDMETHODIMP accSelect(long flagsSelect, VARIANT varChild) override;
-  STDMETHODIMP accLocation(long *pxLeft, long *pyTop, long *pcxWidth,
-                           long *pcyHeight, VARIANT varChild) override;
+  STDMETHODIMP accLocation(long* pxLeft, long* pyTop, long* pcxWidth,
+                           long* pcyHeight, VARIANT varChild) override;
   STDMETHODIMP accNavigate(long navDir, VARIANT varStart,
+<<<<<<< HEAD
                            VARIANT *pvarEndUpAt) override;
   STDMETHODIMP accHitTest(long xLeft, long yTop, VARIANT *pvarChild) override;
+||||||| merged common ancestors
+                           VARIANT *pvarEndUpAt) override;
+  STDMETHODIMP accHitTest( long xLeft, long yTop, VARIANT *pvarChild) override;
+=======
+                           VARIANT* pvarEndUpAt) override;
+  STDMETHODIMP accHitTest(long xLeft, long yTop, VARIANT* pvarChild) override;
+>>>>>>> upstream-releases
   STDMETHODIMP accDoDefaultAction(VARIANT varChild) override;
   STDMETHODIMP put_accName(VARIANT varChild, BSTR szName) override;
   STDMETHODIMP put_accValue(VARIANT varChild, BSTR szValue) override;
@@ -74,6 +144,7 @@ class HandlerTextLeaf final : public IAccessible2, public IServiceProvider {
   STDMETHODIMP scrollTo(IA2ScrollType scrollType) override;
   STDMETHODIMP scrollToPoint(IA2CoordinateType coordinateType, long x,
                              long y) override;
+<<<<<<< HEAD
   STDMETHODIMP get_groupPosition(long *groupLevel, long *similarItemsInGroup,
                                  long *positionInGroup) override;
   STDMETHODIMP get_states(AccessibleStates *states) override;
@@ -90,6 +161,41 @@ class HandlerTextLeaf final : public IAccessible2, public IServiceProvider {
   STDMETHODIMP get_indexInParent(long *indexInParent) override;
   STDMETHODIMP get_locale(IA2Locale *locale) override;
   STDMETHODIMP get_attributes(BSTR *attributes) override;
+||||||| merged common ancestors
+  STDMETHODIMP get_groupPosition(long* groupLevel, long* similarItemsInGroup,
+                                 long* positionInGroup) override;
+  STDMETHODIMP get_states(AccessibleStates* states) override;
+  STDMETHODIMP get_extendedRole(BSTR* extendedRole) override;
+  STDMETHODIMP get_localizedExtendedRole(BSTR* localizedExtendedRole) override;
+  STDMETHODIMP get_nExtendedStates(long* nExtendedStates) override;
+  STDMETHODIMP get_extendedStates(long maxExtendedStates, BSTR** extendedStates,
+                                  long* nExtendedStates) override;
+  STDMETHODIMP get_localizedExtendedStates(long maxLocalizedExtendedStates,
+                                           BSTR** localizedExtendedStates,
+                                           long* nLocalizedExtendedStates) override;
+  STDMETHODIMP get_uniqueID(long* uniqueID) override;
+  STDMETHODIMP get_windowHandle(HWND* windowHandle) override;
+  STDMETHODIMP get_indexInParent(long* indexInParent) override;
+  STDMETHODIMP get_locale(IA2Locale* locale) override;
+  STDMETHODIMP get_attributes(BSTR* attributes) override;
+=======
+  STDMETHODIMP get_groupPosition(long* groupLevel, long* similarItemsInGroup,
+                                 long* positionInGroup) override;
+  STDMETHODIMP get_states(AccessibleStates* states) override;
+  STDMETHODIMP get_extendedRole(BSTR* extendedRole) override;
+  STDMETHODIMP get_localizedExtendedRole(BSTR* localizedExtendedRole) override;
+  STDMETHODIMP get_nExtendedStates(long* nExtendedStates) override;
+  STDMETHODIMP get_extendedStates(long maxExtendedStates, BSTR** extendedStates,
+                                  long* nExtendedStates) override;
+  STDMETHODIMP get_localizedExtendedStates(
+      long maxLocalizedExtendedStates, BSTR** localizedExtendedStates,
+      long* nLocalizedExtendedStates) override;
+  STDMETHODIMP get_uniqueID(long* uniqueID) override;
+  STDMETHODIMP get_windowHandle(HWND* windowHandle) override;
+  STDMETHODIMP get_indexInParent(long* indexInParent) override;
+  STDMETHODIMP get_locale(IA2Locale* locale) override;
+  STDMETHODIMP get_attributes(BSTR* attributes) override;
+>>>>>>> upstream-releases
 
   // IServiceProvider
   STDMETHODIMP QueryService(REFGUID aServiceId, REFIID aIid,

@@ -13,11 +13,25 @@
 #include "RootAccessible.h"
 
 namespace mozilla {
+
+class PresShell;
+
 namespace a11y {
 
+<<<<<<< HEAD
 class RootAccessibleWrap : public RootAccessible {
  public:
   RootAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class RootAccessibleWrap : public RootAccessible
+{
+public:
+  RootAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+=======
+class RootAccessibleWrap : public RootAccessible {
+ public:
+  RootAccessibleWrap(dom::Document* aDocument, PresShell* aPresShell);
+>>>>>>> upstream-releases
   virtual ~RootAccessibleWrap();
 
   Class GetNativeType();

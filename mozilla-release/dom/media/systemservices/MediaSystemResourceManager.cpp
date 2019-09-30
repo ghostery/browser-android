@@ -6,7 +6,6 @@
 
 #include "mozilla/TaskQueue.h"
 
-#include "gfxPrefs.h"
 #include "MediaSystemResourceManagerChild.h"
 #include "mozilla/layers/ImageBridgeChild.h"
 
@@ -17,10 +16,26 @@ namespace mozilla {
 using namespace mozilla::ipc;
 using namespace mozilla::layers;
 
+<<<<<<< HEAD
 /* static */ StaticRefPtr<MediaSystemResourceManager>
     MediaSystemResourceManager::sSingleton;
+||||||| merged common ancestors
+/* static */ StaticRefPtr<MediaSystemResourceManager> MediaSystemResourceManager::sSingleton;
+=======
+/* static */
+StaticRefPtr<MediaSystemResourceManager> MediaSystemResourceManager::sSingleton;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ MediaSystemResourceManager* MediaSystemResourceManager::Get() {
+||||||| merged common ancestors
+/* static */ MediaSystemResourceManager*
+MediaSystemResourceManager::Get()
+{
+=======
+/* static */
+MediaSystemResourceManager* MediaSystemResourceManager::Get() {
+>>>>>>> upstream-releases
   if (sSingleton) {
     return sSingleton;
   }
@@ -28,7 +43,16 @@ using namespace mozilla::layers;
   return sSingleton;
 }
 
+<<<<<<< HEAD
 /* static */ void MediaSystemResourceManager::Shutdown() {
+||||||| merged common ancestors
+/* static */ void
+MediaSystemResourceManager::Shutdown()
+{
+=======
+/* static */
+void MediaSystemResourceManager::Shutdown() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(InImageBridgeChildThread());
   if (sSingleton) {
     sSingleton->CloseIPC();
@@ -36,7 +60,16 @@ using namespace mozilla::layers;
   }
 }
 
+<<<<<<< HEAD
 /* static */ void MediaSystemResourceManager::Init() {
+||||||| merged common ancestors
+/* static */ void
+MediaSystemResourceManager::Init()
+{
+=======
+/* static */
+void MediaSystemResourceManager::Init() {
+>>>>>>> upstream-releases
   RefPtr<ImageBridgeChild> imageBridge = ImageBridgeChild::GetSingleton();
   if (!imageBridge) {
     NS_WARNING("ImageBridge does not exist");

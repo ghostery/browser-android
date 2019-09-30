@@ -9,11 +9,25 @@
 
 #include "mozilla/gfx/RectAbsolute.h"
 #include "nsCoord.h"
+#include "nsPoint.h"
 #include "nsRect.h"
 
+<<<<<<< HEAD
 struct nsRectAbsolute
     : public mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsRect> {
   typedef mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsRect> Super;
+||||||| merged common ancestors
+struct nsRectAbsolute :
+  public mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsRect> {
+  typedef mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsRect> Super;
+=======
+struct nsRectAbsolute
+    : public mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsPoint,
+                                            nsRect> {
+  typedef mozilla::gfx::BaseRectAbsolute<nscoord, nsRectAbsolute, nsPoint,
+                                         nsRect>
+      Super;
+>>>>>>> upstream-releases
 
   nsRectAbsolute() : Super() {}
   nsRectAbsolute(nscoord aX1, nscoord aY1, nscoord aX2, nscoord aY2)
@@ -40,6 +54,7 @@ struct nsRectAbsolute
     return Super::Union(aRect);
   }
 
+<<<<<<< HEAD
   MOZ_ALWAYS_INLINE void MoveBy(const nsPoint& aPoint) {
     left += aPoint.x;
     right += aPoint.x;
@@ -48,6 +63,14 @@ struct nsRectAbsolute
   }
 
   void Inflate(const nsMargin& aMargin) {
+||||||| merged common ancestors
+  MOZ_ALWAYS_INLINE void MoveBy(const nsPoint& aPoint) { left += aPoint.x; right += aPoint.x; top += aPoint.y; bottom += aPoint.y; }
+
+  void Inflate(const nsMargin& aMargin)
+  {
+=======
+  void Inflate(const nsMargin& aMargin) {
+>>>>>>> upstream-releases
     left -= aMargin.left;
     top -= aMargin.top;
     right += aMargin.right;

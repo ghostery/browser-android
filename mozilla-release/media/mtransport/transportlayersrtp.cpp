@@ -52,7 +52,53 @@ bool TransportLayerSrtp::Setup() {
   return true;
 }
 
+<<<<<<< HEAD
 TransportResult TransportLayerSrtp::SendPacket(MediaPacket& packet) {
+||||||| merged common ancestors
+static bool IsRtp(const unsigned char* data, size_t len)
+{
+  if (len < 2)
+    return false;
+
+  // Check if this is a RTCP packet. Logic based on the types listed in
+  // media/webrtc/trunk/src/modules/rtp_rtcp/source/rtp_utility.cc
+
+  // Anything outside this range is RTP.
+  if ((data[1] < 192) || (data[1] > 207))
+    return true;
+
+  if (data[1] == 192) // FIR
+    return false;
+
+  if (data[1] == 193) // NACK, but could also be RTP. This makes us sad
+    return true;      // but it's how webrtc.org behaves.
+
+  if (data[1] == 194)
+    return true;
+
+  if (data[1] == 195) // IJ.
+    return false;
+
+  if ((data[1] > 195) && (data[1] < 200)) // the > 195 is redundant
+    return true;
+
+  if ((data[1] >= 200) && (data[1] <= 207)) // SR, RR, SDES, BYE,
+    return false;                           // APP, RTPFB, PSFB, XR
+
+  MOZ_ASSERT(false); // Not reached, belt and suspenders.
+  return true;
+}
+
+TransportResult
+TransportLayerSrtp::SendPacket(MediaPacket& packet)
+{
+=======
+TransportResult TransportLayerSrtp::SendPacket(MediaPacket& packet) {
+  if (state() != TS_OPEN) {
+    return TE_ERROR;
+  }
+
+>>>>>>> upstream-releases
   if (packet.len() < 4) {
     MOZ_ASSERT(false);
     return TE_ERROR;
@@ -104,8 +150,18 @@ TransportResult TransportLayerSrtp::SendPacket(MediaPacket& packet) {
   return TE_ERROR;
 }
 
+<<<<<<< HEAD
 void TransportLayerSrtp::StateChange(TransportLayer* layer, State state) {
   if (state == TS_OPEN) {
+||||||| merged common ancestors
+void
+TransportLayerSrtp::StateChange(TransportLayer* layer, State state)
+{
+  if (state == TS_OPEN) {
+=======
+void TransportLayerSrtp::StateChange(TransportLayer* layer, State state) {
+  if (state == TS_OPEN && !mSendSrtp) {
+>>>>>>> upstream-releases
     TransportLayerDtls* dtls = static_cast<TransportLayerDtls*>(layer);
     MOZ_ASSERT(dtls);  // DTLS is mandatory
 

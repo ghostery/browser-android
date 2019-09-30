@@ -13,11 +13,28 @@ namespace mozilla {
 namespace dom {
 
 ServiceWorkerRegisterJob::ServiceWorkerRegisterJob(
+<<<<<<< HEAD
     nsIPrincipal* aPrincipal, const nsACString& aScope,
     const nsACString& aScriptSpec, nsILoadGroup* aLoadGroup,
     ServiceWorkerUpdateViaCache aUpdateViaCache)
     : ServiceWorkerUpdateJob(Type::Register, aPrincipal, aScope, aScriptSpec,
                              aLoadGroup, aUpdateViaCache) {}
+||||||| merged common ancestors
+    nsIPrincipal* aPrincipal,
+    const nsACString& aScope,
+    const nsACString& aScriptSpec,
+    nsILoadGroup* aLoadGroup,
+    ServiceWorkerUpdateViaCache aUpdateViaCache)
+  : ServiceWorkerUpdateJob(Type::Register, aPrincipal, aScope, aScriptSpec,
+                           aLoadGroup, aUpdateViaCache)
+{
+}
+=======
+    nsIPrincipal* aPrincipal, const nsACString& aScope,
+    const nsACString& aScriptSpec, ServiceWorkerUpdateViaCache aUpdateViaCache)
+    : ServiceWorkerUpdateJob(Type::Register, aPrincipal, aScope, aScriptSpec,
+                             aUpdateViaCache) {}
+>>>>>>> upstream-releases
 
 void ServiceWorkerRegisterJob::AsyncExecute() {
   MOZ_ASSERT(NS_IsMainThread());

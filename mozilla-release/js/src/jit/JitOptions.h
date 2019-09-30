@@ -15,11 +15,6 @@
 namespace js {
 namespace jit {
 
-// Longer scripts can only be compiled off thread, as these compilations
-// can be expensive and stall the main thread for too long.
-static const uint32_t MAX_MAIN_THREAD_SCRIPT_SIZE = 2 * 1000;
-static const uint32_t MAX_MAIN_THREAD_LOCALS_AND_ARGS = 256;
-
 // Possible register allocators which may be used.
 enum IonRegisterAllocator {
   RegisterAllocator_Backtracking,
@@ -46,6 +41,7 @@ struct DefaultJitOptions {
 #ifdef CHECK_OSIPOINT_REGISTERS
   bool checkOsiPointRegisters;
 #endif
+<<<<<<< HEAD
   bool checkRangeAnalysis;
   bool runExtraChecks;
   bool disableInlineBacktracking;
@@ -73,9 +69,78 @@ struct DefaultJitOptions {
   bool osr;
   bool wasmFoldOffsets;
   bool wasmDelayTier2;
+||||||| merged common ancestors
+    bool checkRangeAnalysis;
+    bool runExtraChecks;
+    bool disableInlineBacktracking;
+    bool disableAma;
+    bool disableEaa;
+    bool disableEdgeCaseAnalysis;
+    bool disableGvn;
+    bool disableInlining;
+    bool disableLicm;
+    bool disableLoopUnrolling;
+    bool disableOptimizationTracking;
+    bool disablePgo;
+    bool disableInstructionReordering;
+    bool disableRangeAnalysis;
+    bool disableRecoverIns;
+    bool disableScalarReplacement;
+    bool disableCacheIR;
+    bool disableCacheIRBinaryArith;
+    bool disableSincos;
+    bool disableSink;
+    bool eagerCompilation;
+    bool forceInlineCaches;
+    bool fullDebugChecks;
+    bool limitScriptSize;
+    bool osr;
+    bool wasmFoldOffsets;
+    bool wasmDelayTier2;
+=======
+  bool checkRangeAnalysis;
+  bool runExtraChecks;
+  bool disableInlineBacktracking;
+  bool disableAma;
+  bool disableEaa;
+  bool disableEdgeCaseAnalysis;
+  bool disableGvn;
+  bool disableInlining;
+  bool disableLicm;
+  bool disableOptimizationTracking;
+  bool disablePgo;
+  bool disableInstructionReordering;
+  bool disableRangeAnalysis;
+  bool disableRecoverIns;
+  bool disableScalarReplacement;
+  bool disableCacheIR;
+  bool disableSink;
+  bool disableOptimizationLevels;
+  bool baselineInterpreter;
+  bool forceInlineCaches;
+  bool fullDebugChecks;
+  bool limitScriptSize;
+  bool osr;
+  bool wasmFoldOffsets;
+  bool wasmDelayTier2;
+>>>>>>> upstream-releases
 #ifdef JS_TRACE_LOGGING
+<<<<<<< HEAD
+  bool enableTraceLogger;
+||||||| merged common ancestors
+    bool enableTraceLogger;
+=======
   bool enableTraceLogger;
 #endif
+  bool enableWasmJitExit;
+  bool enableWasmJitEntry;
+  bool enableWasmIonFastCalls;
+#ifdef WASM_CODEGEN_DEBUG
+  bool enableWasmImportCallSpew;
+  bool enableWasmFuncCallSpew;
+>>>>>>> upstream-releases
+#endif
+<<<<<<< HEAD
   uint32_t baselineWarmUpThreshold;
   uint32_t exceptionBailoutThreshold;
   uint32_t frequentBailoutThreshold;
@@ -93,6 +158,48 @@ struct DefaultJitOptions {
   mozilla::Maybe<uint32_t> forcedDefaultIonWarmUpThreshold;
   mozilla::Maybe<uint32_t> forcedDefaultIonSmallFunctionWarmUpThreshold;
   mozilla::Maybe<IonRegisterAllocator> forcedRegisterAllocator;
+||||||| merged common ancestors
+    uint32_t baselineWarmUpThreshold;
+    uint32_t exceptionBailoutThreshold;
+    uint32_t frequentBailoutThreshold;
+    uint32_t maxStackArgs;
+    uint32_t osrPcMismatchesBeforeRecompile;
+    uint32_t smallFunctionMaxBytecodeLength_;
+    uint32_t jumpThreshold;
+    uint32_t branchPruningHitCountFactor;
+    uint32_t branchPruningInstFactor;
+    uint32_t branchPruningBlockSpanFactor;
+    uint32_t branchPruningEffectfulInstFactor;
+    uint32_t branchPruningThreshold;
+    uint32_t wasmBatchIonThreshold;
+    uint32_t wasmBatchBaselineThreshold;
+    mozilla::Maybe<uint32_t> forcedDefaultIonWarmUpThreshold;
+    mozilla::Maybe<uint32_t> forcedDefaultIonSmallFunctionWarmUpThreshold;
+    mozilla::Maybe<IonRegisterAllocator> forcedRegisterAllocator;
+=======
+  uint32_t baselineInterpreterWarmUpThreshold;
+  uint32_t baselineWarmUpThreshold;
+  uint32_t normalIonWarmUpThreshold;
+  uint32_t fullIonWarmUpThreshold;
+  uint32_t exceptionBailoutThreshold;
+  uint32_t frequentBailoutThreshold;
+  uint32_t maxStackArgs;
+  uint32_t osrPcMismatchesBeforeRecompile;
+  uint32_t smallFunctionMaxBytecodeLength_;
+  uint32_t jumpThreshold;
+  uint32_t branchPruningHitCountFactor;
+  uint32_t branchPruningInstFactor;
+  uint32_t branchPruningBlockSpanFactor;
+  uint32_t branchPruningEffectfulInstFactor;
+  uint32_t branchPruningThreshold;
+  uint32_t ionMaxScriptSize;
+  uint32_t ionMaxScriptSizeMainThread;
+  uint32_t ionMaxLocalsAndArgs;
+  uint32_t ionMaxLocalsAndArgsMainThread;
+  uint32_t wasmBatchIonThreshold;
+  uint32_t wasmBatchBaselineThreshold;
+  mozilla::Maybe<IonRegisterAllocator> forcedRegisterAllocator;
+>>>>>>> upstream-releases
 
   // Spectre mitigation flags. Each mitigation has its own flag in order to
   // measure the effectiveness of each mitigation with various proof of
@@ -104,15 +211,40 @@ struct DefaultJitOptions {
   bool spectreValueMasking;
   bool spectreJitToCxxCalls;
 
+<<<<<<< HEAD
   // The options below affect the rest of the VM, and not just the JIT.
   bool disableUnboxedObjects;
+||||||| merged common ancestors
+    // The options below affect the rest of the VM, and not just the JIT.
+    bool disableUnboxedObjects;
+=======
+  DefaultJitOptions();
+  bool isSmallFunction(JSScript* script) const;
+  void setEagerIonCompilation();
+  void setNormalIonWarmUpThreshold(uint32_t warmUpThreshold);
+  void setFullIonWarmUpThreshold(uint32_t warmUpThreshold);
+  void resetNormalIonWarmUpThreshold();
+  void resetFullIonWarmUpThreshold();
+  void enableGvn(bool val);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   DefaultJitOptions();
   bool isSmallFunction(JSScript* script) const;
   void setEagerCompilation();
   void setCompilerWarmUpThreshold(uint32_t warmUpThreshold);
   void resetCompilerWarmUpThreshold();
   void enableGvn(bool val);
+||||||| merged common ancestors
+    DefaultJitOptions();
+    bool isSmallFunction(JSScript* script) const;
+    void setEagerCompilation();
+    void setCompilerWarmUpThreshold(uint32_t warmUpThreshold);
+    void resetCompilerWarmUpThreshold();
+    void enableGvn(bool val);
+=======
+  bool eagerIonCompilation() const { return normalIonWarmUpThreshold == 0; }
+>>>>>>> upstream-releases
 };
 
 extern DefaultJitOptions JitOptions;

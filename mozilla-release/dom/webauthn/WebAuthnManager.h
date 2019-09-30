@@ -7,6 +7,7 @@
 #ifndef mozilla_dom_WebAuthnManager_h
 #define mozilla_dom_WebAuthnManager_h
 
+#include "mozilla/Maybe.h"
 #include "mozilla/MozPromise.h"
 #include "mozilla/dom/PWebAuthnTransaction.h"
 #include "mozilla/dom/WebAuthnManagerBase.h"
@@ -47,7 +48,15 @@ namespace dom {
 class WebAuthnTransaction {
  public:
   explicit WebAuthnTransaction(const RefPtr<Promise>& aPromise)
+<<<<<<< HEAD
       : mPromise(aPromise), mId(NextId()) {
+||||||| merged common ancestors
+    : mPromise(aPromise)
+    , mId(NextId())
+  {
+=======
+      : mPromise(aPromise), mId(NextId()), mVisibilityChanged(false) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mId > 0);
   }
 
@@ -57,7 +66,17 @@ class WebAuthnTransaction {
   // Unique transaction id.
   uint64_t mId;
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  // Whether or not visibility has changed for the window during this
+  // transaction
+  bool mVisibilityChanged;
+
+ private:
+>>>>>>> upstream-releases
   // Generates a unique id for new transactions. This doesn't have to be unique
   // forever, it's sufficient to differentiate between temporally close
   // transactions, where messages can intersect. Can overflow.
@@ -67,9 +86,22 @@ class WebAuthnTransaction {
   }
 };
 
+<<<<<<< HEAD
 class WebAuthnManager final : public WebAuthnManagerBase, public AbortFollower {
  public:
   NS_DECL_ISUPPORTS
+||||||| merged common ancestors
+class WebAuthnManager final : public WebAuthnManagerBase
+                            , public AbortFollower
+{
+public:
+  NS_DECL_ISUPPORTS
+=======
+class WebAuthnManager final : public WebAuthnManagerBase, public AbortFollower {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(WebAuthnManager, WebAuthnManagerBase)
+>>>>>>> upstream-releases
 
   explicit WebAuthnManager(nsPIDOMWindowInner* aParent)
       : WebAuthnManagerBase(aParent) {}
@@ -103,21 +135,42 @@ class WebAuthnManager final : public WebAuthnManagerBase, public AbortFollower {
  protected:
   // Cancels the current transaction (by sending a Cancel message to the
   // parent) and rejects it by calling RejectTransaction().
-  void CancelTransaction(const nsresult& aError) override;
+  void CancelTransaction(const nsresult& aError);
+  // Upon a visibility change, makes note of it in the current transaction.
+  void HandleVisibilityChange() override;
 
  private:
   virtual ~WebAuthnManager();
 
-  // Clears all information we have about the current transaction.
-  void ClearTransaction();
   // Rejects the current transaction and calls ClearTransaction().
   void RejectTransaction(const nsresult& aError);
+
+  // Clears all information we have about the current transaction.
+  void ClearTransaction();
 
   // The current transaction, if any.
   Maybe<WebAuthnTransaction> mTransaction;
 };
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+inline void ImplCycleCollectionTraverse(
+    nsCycleCollectionTraversalCallback& aCallback,
+    WebAuthnTransaction& aTransaction, const char* aName, uint32_t aFlags = 0) {
+  ImplCycleCollectionTraverse(aCallback, aTransaction.mPromise, aName, aFlags);
+}
+
+inline void ImplCycleCollectionUnlink(WebAuthnTransaction& aTransaction) {
+  ImplCycleCollectionUnlink(aTransaction.mPromise);
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // mozilla_dom_WebAuthnManager_h

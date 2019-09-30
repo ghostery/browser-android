@@ -22,16 +22,39 @@ NS_IMPL_ISUPPORTS(nsSimpleStreamListener, nsISimpleStreamListener,
 //----------------------------------------------------------------------------
 //
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSimpleStreamListener::OnStartRequest(nsIRequest *aRequest,
                                        nsISupports *aContext) {
   return mObserver ? mObserver->OnStartRequest(aRequest, aContext) : NS_OK;
+||||||| merged common ancestors
+nsSimpleStreamListener::OnStartRequest(nsIRequest *aRequest,
+                                       nsISupports *aContext)
+{
+    return mObserver ?
+        mObserver->OnStartRequest(aRequest, aContext) : NS_OK;
+=======
+nsSimpleStreamListener::OnStartRequest(nsIRequest* aRequest) {
+  return mObserver ? mObserver->OnStartRequest(aRequest) : NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSimpleStreamListener::OnStopRequest(nsIRequest *request,
                                       nsISupports *aContext, nsresult aStatus) {
   return mObserver ? mObserver->OnStopRequest(request, aContext, aStatus)
                    : NS_OK;
+||||||| merged common ancestors
+nsSimpleStreamListener::OnStopRequest(nsIRequest* request,
+                                      nsISupports *aContext,
+                                      nsresult aStatus)
+{
+    return mObserver ?
+        mObserver->OnStopRequest(request, aContext, aStatus) : NS_OK;
+=======
+nsSimpleStreamListener::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+  return mObserver ? mObserver->OnStopRequest(request, aStatus) : NS_OK;
+>>>>>>> upstream-releases
 }
 
 //
@@ -40,6 +63,7 @@ nsSimpleStreamListener::OnStopRequest(nsIRequest *request,
 //----------------------------------------------------------------------------
 //
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSimpleStreamListener::OnDataAvailable(nsIRequest *request,
                                         nsISupports *aContext,
                                         nsIInputStream *aSource,
@@ -51,6 +75,33 @@ nsSimpleStreamListener::OnDataAvailable(nsIRequest *request,
   //
   if (NS_SUCCEEDED(rv) && (writeCount == 0)) return NS_BASE_STREAM_CLOSED;
   return rv;
+||||||| merged common ancestors
+nsSimpleStreamListener::OnDataAvailable(nsIRequest* request,
+                                        nsISupports *aContext,
+                                        nsIInputStream *aSource,
+                                        uint64_t aOffset,
+                                        uint32_t aCount)
+{
+    uint32_t writeCount;
+    nsresult rv = mSink->WriteFrom(aSource, aCount, &writeCount);
+    //
+    // Equate zero bytes read and NS_SUCCEEDED to stopping the read.
+    //
+    if (NS_SUCCEEDED(rv) && (writeCount == 0))
+        return NS_BASE_STREAM_CLOSED;
+    return rv;
+=======
+nsSimpleStreamListener::OnDataAvailable(nsIRequest* request,
+                                        nsIInputStream* aSource,
+                                        uint64_t aOffset, uint32_t aCount) {
+  uint32_t writeCount;
+  nsresult rv = mSink->WriteFrom(aSource, aCount, &writeCount);
+  //
+  // Equate zero bytes read and NS_SUCCEEDED to stopping the read.
+  //
+  if (NS_SUCCEEDED(rv) && (writeCount == 0)) return NS_BASE_STREAM_CLOSED;
+  return rv;
+>>>>>>> upstream-releases
 }
 
 //
@@ -59,9 +110,20 @@ nsSimpleStreamListener::OnDataAvailable(nsIRequest *request,
 //----------------------------------------------------------------------------
 //
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSimpleStreamListener::Init(nsIOutputStream *aSink,
                              nsIRequestObserver *aObserver) {
   MOZ_ASSERT(aSink, "null output stream");
+||||||| merged common ancestors
+nsSimpleStreamListener::Init(nsIOutputStream *aSink,
+                             nsIRequestObserver *aObserver)
+{
+    MOZ_ASSERT(aSink, "null output stream");
+=======
+nsSimpleStreamListener::Init(nsIOutputStream* aSink,
+                             nsIRequestObserver* aObserver) {
+  MOZ_ASSERT(aSink, "null output stream");
+>>>>>>> upstream-releases
 
   mSink = aSink;
   mObserver = aObserver;

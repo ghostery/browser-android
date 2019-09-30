@@ -12,8 +12,16 @@
 #include "mozilla/Mutex.h"
 
 #ifdef MOZILLA_INTERNAL_API
+<<<<<<< HEAD
 #include "GeckoProfiler.h"
 #endif  // MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+#include "GeckoProfiler.h"
+#endif //MOZILLA_INTERNAL_API
+=======
+#  include "GeckoProfiler.h"
+#endif  // MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -50,17 +58,47 @@ class OffTheBooksCondVar : BlockingResourceBase {
    * @see prcvar.h
    **/
 #ifndef DEBUG
+<<<<<<< HEAD
   void Wait() {
 #ifdef MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+  void Wait()
+  {
+#ifdef MOZILLA_INTERNAL_API
+=======
+  void Wait() {
+#  ifdef MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
     AUTO_PROFILER_THREAD_SLEEP;
+<<<<<<< HEAD
 #endif  // MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+#endif //MOZILLA_INTERNAL_API
+=======
+#  endif  // MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
     mImpl.wait(*mLock);
   }
 
+<<<<<<< HEAD
   CVStatus Wait(TimeDuration aDuration) {
 #ifdef MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+  CVStatus Wait(TimeDuration aDuration)
+  {
+#ifdef MOZILLA_INTERNAL_API
+=======
+  CVStatus Wait(TimeDuration aDuration) {
+#  ifdef MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
     AUTO_PROFILER_THREAD_SLEEP;
+<<<<<<< HEAD
 #endif  // MOZILLA_INTERNAL_API
+||||||| merged common ancestors
+#endif //MOZILLA_INTERNAL_API
+=======
+#  endif  // MOZILLA_INTERNAL_API
+>>>>>>> upstream-releases
     return mImpl.wait_for(*mLock, aDuration);
   }
 #else

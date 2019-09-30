@@ -3,8 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+=======
+const { AppConstants } = ChromeUtils.import(
+  "resource://gre/modules/AppConstants.jsm"
+);
+const { Preferences } = ChromeUtils.import(
+  "resource://gre/modules/Preferences.jsm"
+);
+>>>>>>> upstream-releases
 
 const ACTIVITY_STREAM_PREF_BRANCH = "browser.newtabpage.activity-stream.";
 
@@ -14,7 +27,14 @@ this.Prefs = class Prefs extends Preferences {
    *         ACTIVITY_STREAM_PREF_BRANCH
    */
   constructor(branch = ACTIVITY_STREAM_PREF_BRANCH) {
+<<<<<<< HEAD
     super({branch});
+||||||| merged common ancestors
+    super({branch});
+    this._branchName = branch;
+=======
+    super({ branch });
+>>>>>>> upstream-releases
     this._branchObservers = new Map();
   }
 

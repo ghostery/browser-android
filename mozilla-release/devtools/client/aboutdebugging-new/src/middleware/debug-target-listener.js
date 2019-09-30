@@ -28,6 +28,7 @@ function debugTargetListenerMiddleware(store) {
   return next => action => {
     switch (action.type) {
       case WATCH_RUNTIME_SUCCESS: {
+<<<<<<< HEAD
         const { runtime } = action;
         const { clientWrapper } = runtime.runtimeDetails;
 
@@ -47,9 +48,32 @@ function debugTargetListenerMiddleware(store) {
           clientWrapper.addListener("registration-changed", onWorkersUpdated);
           clientWrapper.addListener("push-subscription-modified", onWorkersUpdated);
         }
+||||||| merged common ancestors
+        const { client } = action.runtime.connection;
+        client.addListener("tabListChanged", onTabsUpdated);
+        AddonManager.addAddonListener(extensionsListener);
+        client.addListener("workerListChanged", onWorkersUpdated);
+        client.addListener("serviceWorkerRegistrationListChanged", onWorkersUpdated);
+        client.addListener("processListChanged", onWorkersUpdated);
+        client.addListener("registration-changed", onWorkersUpdated);
+        client.addListener("push-subscription-modified", onWorkersUpdated);
+=======
+        const { runtime } = action;
+        const { clientWrapper } = runtime.runtimeDetails;
+
+        // Tabs
+        clientWrapper.on("tabListChanged", onTabsUpdated);
+
+        // Addons
+        clientWrapper.on("addonListChanged", onExtensionsUpdated);
+
+        // Workers
+        clientWrapper.on("workersUpdated", onWorkersUpdated);
+>>>>>>> upstream-releases
         break;
       }
       case UNWATCH_RUNTIME_START: {
+<<<<<<< HEAD
         const { runtime } = action;
         const { clientWrapper } = runtime.runtimeDetails;
 
@@ -69,6 +93,28 @@ function debugTargetListenerMiddleware(store) {
           clientWrapper.removeListener("registration-changed", onWorkersUpdated);
           clientWrapper.removeListener("push-subscription-modified", onWorkersUpdated);
         }
+||||||| merged common ancestors
+        const { client } = action.runtime.connection;
+        client.removeListener("tabListChanged", onTabsUpdated);
+        AddonManager.removeAddonListener(extensionsListener);
+        client.removeListener("workerListChanged", onWorkersUpdated);
+        client.removeListener("serviceWorkerRegistrationListChanged", onWorkersUpdated);
+        client.removeListener("processListChanged", onWorkersUpdated);
+        client.removeListener("registration-changed", onWorkersUpdated);
+        client.removeListener("push-subscription-modified", onWorkersUpdated);
+=======
+        const { runtime } = action;
+        const { clientWrapper } = runtime.runtimeDetails;
+
+        // Tabs
+        clientWrapper.off("tabListChanged", onTabsUpdated);
+
+        // Addons
+        clientWrapper.off("addonListChanged", onExtensionsUpdated);
+
+        // Workers
+        clientWrapper.off("workersUpdated", onWorkersUpdated);
+>>>>>>> upstream-releases
         break;
       }
     }

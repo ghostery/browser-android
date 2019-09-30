@@ -115,9 +115,19 @@ void DIBTextureData::FillInfo(TextureData::Info& aInfo) const {
   aInfo.canExposeMappedData = false;
 }
 
+<<<<<<< HEAD
 already_AddRefed<gfx::DrawTarget> DIBTextureData::BorrowDrawTarget() {
   return gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(mSurface,
                                                                 mSize);
+||||||| merged common ancestors
+already_AddRefed<gfx::DrawTarget>
+DIBTextureData::BorrowDrawTarget()
+{
+  return gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(mSurface, mSize);
+=======
+already_AddRefed<gfx::DrawTarget> DIBTextureData::BorrowDrawTarget() {
+  return gfxPlatform::CreateDrawTargetForSurface(mSurface, mSize);
+>>>>>>> upstream-releases
 }
 
 DIBTextureData* DIBTextureData::Create(gfx::IntSize aSize,

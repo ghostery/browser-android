@@ -26,6 +26,8 @@ class nsITreeView;
 
 namespace mozilla {
 
+class PresShell;
+
 namespace dom {
 class DOMStringList;
 }
@@ -108,7 +110,7 @@ class nsAccessibilityService final : public mozilla::a11y::DocManager,
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSIOBSERVER
 
-  Accessible* GetRootDocumentAccessible(nsIPresShell* aPresShell,
+  Accessible* GetRootDocumentAccessible(mozilla::PresShell* aPresShell,
                                         bool aCanCreate);
   already_AddRefed<Accessible> CreatePluginAccessible(nsPluginFrame* aFrame,
                                                       nsIContent* aContent,
@@ -156,39 +158,57 @@ class nsAccessibilityService final : public mozilla::a11y::DocManager,
    * Notification used to update the accessible tree when deck panel is
    * switched.
    */
-  void DeckPanelSwitched(nsIPresShell* aPresShell, nsIContent* aDeckNode,
+  void DeckPanelSwitched(mozilla::PresShell* aPresShell, nsIContent* aDeckNode,
                          nsIFrame* aPrevBoxFrame, nsIFrame* aCurrentBoxFrame);
 
   /**
    * Notification used to update the accessible tree when new content is
    * inserted.
    */
+<<<<<<< HEAD
   void ContentRangeInserted(nsIPresShell* aPresShell, nsIContent* aStartChild,
                             nsIContent* aEndChild);
+||||||| merged common ancestors
+  void ContentRangeInserted(nsIPresShell* aPresShell,
+                            nsIContent* aStartChild,
+                            nsIContent* aEndChild);
+=======
+  void ContentRangeInserted(mozilla::PresShell* aPresShell,
+                            nsIContent* aStartChild, nsIContent* aEndChild);
+>>>>>>> upstream-releases
 
   /**
    * Notification used to update the accessible tree when content is removed.
    */
-  void ContentRemoved(nsIPresShell* aPresShell, nsIContent* aChild);
+  void ContentRemoved(mozilla::PresShell* aPresShell, nsIContent* aChild);
 
-  void UpdateText(nsIPresShell* aPresShell, nsIContent* aContent);
+  void UpdateText(mozilla::PresShell* aPresShell, nsIContent* aContent);
 
   /**
    * Update XUL:tree accessible tree when treeview is changed.
    */
-  void TreeViewChanged(nsIPresShell* aPresShell, nsIContent* aContent,
+  void TreeViewChanged(mozilla::PresShell* aPresShell, nsIContent* aContent,
                        nsITreeView* aView);
 
   /**
    * Notify of input@type="element" value change.
    */
-  void RangeValueChanged(nsIPresShell* aPresShell, nsIContent* aContent);
+  void RangeValueChanged(mozilla::PresShell* aPresShell, nsIContent* aContent);
 
   /**
    * Update list bullet accessible.
    */
+<<<<<<< HEAD
   void UpdateListBullet(nsIPresShell* aPresShell,
                         nsIContent* aHTMLListItemContent, bool aHasBullet);
+||||||| merged common ancestors
+  void UpdateListBullet(nsIPresShell* aPresShell,
+                        nsIContent* aHTMLListItemContent,
+                        bool aHasBullet);
+=======
+  void UpdateListBullet(mozilla::PresShell* aPresShell,
+                        nsIContent* aHTMLListItemContent, bool aHasBullet);
+>>>>>>> upstream-releases
 
   /**
    * Update the image map.
@@ -198,7 +218,7 @@ class nsAccessibilityService final : public mozilla::a11y::DocManager,
   /**
    * Update the label accessible tree when rendered @value is changed.
    */
-  void UpdateLabelValue(nsIPresShell* aPresShell, nsIContent* aLabelElm,
+  void UpdateLabelValue(mozilla::PresShell* aPresShell, nsIContent* aLabelElm,
                         const nsString& aNewValue);
 
   /**
@@ -210,12 +230,12 @@ class nsAccessibilityService final : public mozilla::a11y::DocManager,
   /**
    * Notify that presshell is activated.
    */
-  void PresShellActivated(nsIPresShell* aPresShell);
+  void PresShellActivated(mozilla::PresShell* aPresShell);
 
   /**
    * Recreate an accessible for the given content node in the presshell.
    */
-  void RecreateAccessible(nsIPresShell* aPresShell, nsIContent* aContent);
+  void RecreateAccessible(mozilla::PresShell* aPresShell, nsIContent* aContent);
 
   void FireAccessibleEvent(uint32_t aEvent, Accessible* aTarget);
 
@@ -376,6 +396,7 @@ inline bool IPCAccessibilityActive() { return XRE_IsContentProcess(); }
  * nsAccessibilityService::GetStringEventType() method.
  */
 static const char kEventTypeNames[][40] = {
+<<<<<<< HEAD
     "unknown",                           //
     "show",                              // EVENT_SHOW
     "hide",                              // EVENT_HIDE
@@ -465,6 +486,188 @@ static const char kEventTypeNames[][40] = {
     "virtual cursor changed",           // EVENT_VIRTUALCURSOR_CHANGED
     "text value change",                // EVENT_TEXT_VALUE_CHANGE
     "scrolling",                        // EVENT_SCROLLING
+||||||| merged common ancestors
+  "unknown",                                 //
+  "show",                                    // EVENT_SHOW
+  "hide",                                    // EVENT_HIDE
+  "reorder",                                 // EVENT_REORDER
+  "active decendent change",                 // EVENT_ACTIVE_DECENDENT_CHANGED
+  "focus",                                   // EVENT_FOCUS
+  "state change",                            // EVENT_STATE_CHANGE
+  "location change",                         // EVENT_LOCATION_CHANGE
+  "name changed",                            // EVENT_NAME_CHANGE
+  "description change",                      // EVENT_DESCRIPTION_CHANGE
+  "value change",                            // EVENT_VALUE_CHANGE
+  "help change",                             // EVENT_HELP_CHANGE
+  "default action change",                   // EVENT_DEFACTION_CHANGE
+  "action change",                           // EVENT_ACTION_CHANGE
+  "accelerator change",                      // EVENT_ACCELERATOR_CHANGE
+  "selection",                               // EVENT_SELECTION
+  "selection add",                           // EVENT_SELECTION_ADD
+  "selection remove",                        // EVENT_SELECTION_REMOVE
+  "selection within",                        // EVENT_SELECTION_WITHIN
+  "alert",                                   // EVENT_ALERT
+  "foreground",                              // EVENT_FOREGROUND
+  "menu start",                              // EVENT_MENU_START
+  "menu end",                                // EVENT_MENU_END
+  "menupopup start",                         // EVENT_MENUPOPUP_START
+  "menupopup end",                           // EVENT_MENUPOPUP_END
+  "capture start",                           // EVENT_CAPTURE_START
+  "capture end",                             // EVENT_CAPTURE_END
+  "movesize start",                          // EVENT_MOVESIZE_START
+  "movesize end",                            // EVENT_MOVESIZE_END
+  "contexthelp start",                       // EVENT_CONTEXTHELP_START
+  "contexthelp end",                         // EVENT_CONTEXTHELP_END
+  "dragdrop start",                          // EVENT_DRAGDROP_START
+  "dragdrop end",                            // EVENT_DRAGDROP_END
+  "dialog start",                            // EVENT_DIALOG_START
+  "dialog end",                              // EVENT_DIALOG_END
+  "scrolling start",                         // EVENT_SCROLLING_START
+  "scrolling end",                           // EVENT_SCROLLING_END
+  "minimize start",                          // EVENT_MINIMIZE_START
+  "minimize end",                            // EVENT_MINIMIZE_END
+  "document load complete",                  // EVENT_DOCUMENT_LOAD_COMPLETE
+  "document reload",                         // EVENT_DOCUMENT_RELOAD
+  "document load stopped",                   // EVENT_DOCUMENT_LOAD_STOPPED
+  "document attributes changed",             // EVENT_DOCUMENT_ATTRIBUTES_CHANGED
+  "document content changed",                // EVENT_DOCUMENT_CONTENT_CHANGED
+  "property changed",                        // EVENT_PROPERTY_CHANGED
+  "page changed",                           // EVENT_PAGE_CHANGED
+  "text attribute changed",                  // EVENT_TEXT_ATTRIBUTE_CHANGED
+  "text caret moved",                        // EVENT_TEXT_CARET_MOVED
+  "text changed",                            // EVENT_TEXT_CHANGED
+  "text inserted",                           // EVENT_TEXT_INSERTED
+  "text removed",                            // EVENT_TEXT_REMOVED
+  "text updated",                            // EVENT_TEXT_UPDATED
+  "text selection changed",                  // EVENT_TEXT_SELECTION_CHANGED
+  "visible data changed",                    // EVENT_VISIBLE_DATA_CHANGED
+  "text column changed",                     // EVENT_TEXT_COLUMN_CHANGED
+  "section changed",                         // EVENT_SECTION_CHANGED
+  "table caption changed",                   // EVENT_TABLE_CAPTION_CHANGED
+  "table model changed",                     // EVENT_TABLE_MODEL_CHANGED
+  "table summary changed",                   // EVENT_TABLE_SUMMARY_CHANGED
+  "table row description changed",           // EVENT_TABLE_ROW_DESCRIPTION_CHANGED
+  "table row header changed",                // EVENT_TABLE_ROW_HEADER_CHANGED
+  "table row insert",                        // EVENT_TABLE_ROW_INSERT
+  "table row delete",                        // EVENT_TABLE_ROW_DELETE
+  "table row reorder",                       // EVENT_TABLE_ROW_REORDER
+  "table column description changed",        // EVENT_TABLE_COLUMN_DESCRIPTION_CHANGED
+  "table column header changed",             // EVENT_TABLE_COLUMN_HEADER_CHANGED
+  "table column insert",                     // EVENT_TABLE_COLUMN_INSERT
+  "table column delete",                     // EVENT_TABLE_COLUMN_DELETE
+  "table column reorder",                    // EVENT_TABLE_COLUMN_REORDER
+  "window activate",                         // EVENT_WINDOW_ACTIVATE
+  "window create",                           // EVENT_WINDOW_CREATE
+  "window deactivate",                       // EVENT_WINDOW_DEACTIVATE
+  "window destroy",                          // EVENT_WINDOW_DESTROY
+  "window maximize",                         // EVENT_WINDOW_MAXIMIZE
+  "window minimize",                         // EVENT_WINDOW_MINIMIZE
+  "window resize",                           // EVENT_WINDOW_RESIZE
+  "window restore",                          // EVENT_WINDOW_RESTORE
+  "hyperlink end index changed",             // EVENT_HYPERLINK_END_INDEX_CHANGED
+  "hyperlink number of anchors changed",     // EVENT_HYPERLINK_NUMBER_OF_ANCHORS_CHANGED
+  "hyperlink selected link changed",         // EVENT_HYPERLINK_SELECTED_LINK_CHANGED
+  "hypertext link activated",                // EVENT_HYPERTEXT_LINK_ACTIVATED
+  "hypertext link selected",                 // EVENT_HYPERTEXT_LINK_SELECTED
+  "hyperlink start index changed",           // EVENT_HYPERLINK_START_INDEX_CHANGED
+  "hypertext changed",                       // EVENT_HYPERTEXT_CHANGED
+  "hypertext links count changed",           // EVENT_HYPERTEXT_NLINKS_CHANGED
+  "object attribute changed",                // EVENT_OBJECT_ATTRIBUTE_CHANGED
+  "virtual cursor changed",                   // EVENT_VIRTUALCURSOR_CHANGED
+  "text value change",                       // EVENT_TEXT_VALUE_CHANGE
+  "scrolling",                               // EVENT_SCROLLING
+=======
+    "unknown",                           //
+    "show",                              // EVENT_SHOW
+    "hide",                              // EVENT_HIDE
+    "reorder",                           // EVENT_REORDER
+    "active decendent change",           // EVENT_ACTIVE_DECENDENT_CHANGED
+    "focus",                             // EVENT_FOCUS
+    "state change",                      // EVENT_STATE_CHANGE
+    "location change",                   // EVENT_LOCATION_CHANGE
+    "name changed",                      // EVENT_NAME_CHANGE
+    "description change",                // EVENT_DESCRIPTION_CHANGE
+    "value change",                      // EVENT_VALUE_CHANGE
+    "help change",                       // EVENT_HELP_CHANGE
+    "default action change",             // EVENT_DEFACTION_CHANGE
+    "action change",                     // EVENT_ACTION_CHANGE
+    "accelerator change",                // EVENT_ACCELERATOR_CHANGE
+    "selection",                         // EVENT_SELECTION
+    "selection add",                     // EVENT_SELECTION_ADD
+    "selection remove",                  // EVENT_SELECTION_REMOVE
+    "selection within",                  // EVENT_SELECTION_WITHIN
+    "alert",                             // EVENT_ALERT
+    "foreground",                        // EVENT_FOREGROUND
+    "menu start",                        // EVENT_MENU_START
+    "menu end",                          // EVENT_MENU_END
+    "menupopup start",                   // EVENT_MENUPOPUP_START
+    "menupopup end",                     // EVENT_MENUPOPUP_END
+    "capture start",                     // EVENT_CAPTURE_START
+    "capture end",                       // EVENT_CAPTURE_END
+    "movesize start",                    // EVENT_MOVESIZE_START
+    "movesize end",                      // EVENT_MOVESIZE_END
+    "contexthelp start",                 // EVENT_CONTEXTHELP_START
+    "contexthelp end",                   // EVENT_CONTEXTHELP_END
+    "dragdrop start",                    // EVENT_DRAGDROP_START
+    "dragdrop end",                      // EVENT_DRAGDROP_END
+    "dialog start",                      // EVENT_DIALOG_START
+    "dialog end",                        // EVENT_DIALOG_END
+    "scrolling start",                   // EVENT_SCROLLING_START
+    "scrolling end",                     // EVENT_SCROLLING_END
+    "minimize start",                    // EVENT_MINIMIZE_START
+    "minimize end",                      // EVENT_MINIMIZE_END
+    "document load complete",            // EVENT_DOCUMENT_LOAD_COMPLETE
+    "document reload",                   // EVENT_DOCUMENT_RELOAD
+    "document load stopped",             // EVENT_DOCUMENT_LOAD_STOPPED
+    "document attributes changed",       // EVENT_DOCUMENT_ATTRIBUTES_CHANGED
+    "document content changed",          // EVENT_DOCUMENT_CONTENT_CHANGED
+    "property changed",                  // EVENT_PROPERTY_CHANGED
+    "page changed",                      // EVENT_PAGE_CHANGED
+    "text attribute changed",            // EVENT_TEXT_ATTRIBUTE_CHANGED
+    "text caret moved",                  // EVENT_TEXT_CARET_MOVED
+    "text changed",                      // EVENT_TEXT_CHANGED
+    "text inserted",                     // EVENT_TEXT_INSERTED
+    "text removed",                      // EVENT_TEXT_REMOVED
+    "text updated",                      // EVENT_TEXT_UPDATED
+    "text selection changed",            // EVENT_TEXT_SELECTION_CHANGED
+    "visible data changed",              // EVENT_VISIBLE_DATA_CHANGED
+    "text column changed",               // EVENT_TEXT_COLUMN_CHANGED
+    "section changed",                   // EVENT_SECTION_CHANGED
+    "table caption changed",             // EVENT_TABLE_CAPTION_CHANGED
+    "table model changed",               // EVENT_TABLE_MODEL_CHANGED
+    "table summary changed",             // EVENT_TABLE_SUMMARY_CHANGED
+    "table row description changed",     // EVENT_TABLE_ROW_DESCRIPTION_CHANGED
+    "table row header changed",          // EVENT_TABLE_ROW_HEADER_CHANGED
+    "table row insert",                  // EVENT_TABLE_ROW_INSERT
+    "table row delete",                  // EVENT_TABLE_ROW_DELETE
+    "table row reorder",                 // EVENT_TABLE_ROW_REORDER
+    "table column description changed",  // EVENT_TABLE_COLUMN_DESCRIPTION_CHANGED
+    "table column header changed",       // EVENT_TABLE_COLUMN_HEADER_CHANGED
+    "table column insert",               // EVENT_TABLE_COLUMN_INSERT
+    "table column delete",               // EVENT_TABLE_COLUMN_DELETE
+    "table column reorder",              // EVENT_TABLE_COLUMN_REORDER
+    "window activate",                   // EVENT_WINDOW_ACTIVATE
+    "window create",                     // EVENT_WINDOW_CREATE
+    "window deactivate",                 // EVENT_WINDOW_DEACTIVATE
+    "window destroy",                    // EVENT_WINDOW_DESTROY
+    "window maximize",                   // EVENT_WINDOW_MAXIMIZE
+    "window minimize",                   // EVENT_WINDOW_MINIMIZE
+    "window resize",                     // EVENT_WINDOW_RESIZE
+    "window restore",                    // EVENT_WINDOW_RESTORE
+    "hyperlink end index changed",       // EVENT_HYPERLINK_END_INDEX_CHANGED
+    "hyperlink number of anchors changed",  // EVENT_HYPERLINK_NUMBER_OF_ANCHORS_CHANGED
+    "hyperlink selected link changed",  // EVENT_HYPERLINK_SELECTED_LINK_CHANGED
+    "hypertext link activated",         // EVENT_HYPERTEXT_LINK_ACTIVATED
+    "hypertext link selected",          // EVENT_HYPERTEXT_LINK_SELECTED
+    "hyperlink start index changed",    // EVENT_HYPERLINK_START_INDEX_CHANGED
+    "hypertext changed",                // EVENT_HYPERTEXT_CHANGED
+    "hypertext links count changed",    // EVENT_HYPERTEXT_NLINKS_CHANGED
+    "object attribute changed",         // EVENT_OBJECT_ATTRIBUTE_CHANGED
+    "virtual cursor changed",           // EVENT_VIRTUALCURSOR_CHANGED
+    "text value change",                // EVENT_TEXT_VALUE_CHANGE
+    "scrolling",                        // EVENT_SCROLLING
+    "announcement",                     // EVENT_ANNOUNCEMENT
+>>>>>>> upstream-releases
 };
 
 #endif

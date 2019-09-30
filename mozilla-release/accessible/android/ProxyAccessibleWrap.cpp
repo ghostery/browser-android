@@ -80,16 +80,36 @@ void ProxyAccessibleWrap::ScrollTo(uint32_t aHow) const {
   Proxy()->ScrollTo(aHow);
 }
 
+<<<<<<< HEAD
 uint8_t
 ProxyAccessibleWrap::ActionCount() const
 {
   return Proxy()->ActionCount();
+||||||| merged common ancestors
+nsIntRect
+ProxyAccessibleWrap::Bounds() const
+{
+  return Proxy()->Bounds();
+=======
+uint8_t ProxyAccessibleWrap::ActionCount() const {
+  return Proxy()->ActionCount();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool
 ProxyAccessibleWrap::DoAction(uint8_t aIndex) const
 {
   return Proxy()->DoAction(aIndex);
+||||||| merged common ancestors
+void
+ProxyAccessibleWrap::ScrollTo(uint32_t aHow) const
+{
+  Proxy()->ScrollTo(aHow);
+=======
+bool ProxyAccessibleWrap::DoAction(uint8_t aIndex) const {
+  return Proxy()->DoAction(aIndex);
+>>>>>>> upstream-releases
 }
 
 // Other

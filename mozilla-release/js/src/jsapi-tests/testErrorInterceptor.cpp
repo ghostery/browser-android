@@ -10,6 +10,7 @@ namespace {
 static JS::PersistentRootedString gLatestMessage;
 
 // An interceptor that stores the error in `gLatestMessage`.
+<<<<<<< HEAD
 struct SimpleInterceptor : JSErrorInterceptor {
   virtual void interceptError(JSContext* cx, JS::HandleValue val) override {
     js::StringBuffer buffer(cx);
@@ -19,6 +20,28 @@ struct SimpleInterceptor : JSErrorInterceptor {
     gLatestMessage = buffer.finishString();
     if (!gLatestMessage) {
       MOZ_CRASH("Could not convert to string");
+||||||| merged common ancestors
+struct SimpleInterceptor: JSErrorInterceptor {
+    virtual void interceptError(JSContext* cx, const JS::Value& val) override {
+        js::StringBuffer buffer(cx);
+        if (!ValueToStringBuffer(cx, val, buffer)) {
+            MOZ_CRASH("Could not convert to string buffer");
+        }
+        gLatestMessage = buffer.finishString();
+        if (!gLatestMessage) {
+            MOZ_CRASH("Could not convert to string");
+        }
+=======
+struct SimpleInterceptor : JSErrorInterceptor {
+  virtual void interceptError(JSContext* cx, JS::HandleValue val) override {
+    js::JSStringBuilder buffer(cx);
+    if (!ValueToStringBuffer(cx, val, buffer)) {
+      MOZ_CRASH("Could not convert to string buffer");
+    }
+    gLatestMessage = buffer.finishString();
+    if (!gLatestMessage) {
+      MOZ_CRASH("Could not convert to string");
+>>>>>>> upstream-releases
     }
   }
 };
@@ -103,10 +126,21 @@ BEGIN_TEST(testErrorInterceptor) {
     CHECK(JS_GetPendingException(cx, &exn));
     JS_ClearPendingException(cx);
 
+<<<<<<< HEAD
     js::StringBuffer buffer(cx);
     CHECK(ValueToStringBuffer(cx, exn, buffer));
     JS::Rooted<JSFlatString*> flat(cx, buffer.finishString());
     CHECK(equalStrings(cx, flat, gLatestMessage));
+||||||| merged common ancestors
+    // This shouldn't cause any error.
+    EXEC("function bar() {}");
+    CHECK(gLatestMessage == nullptr);
+=======
+    js::JSStringBuilder buffer(cx);
+    CHECK(ValueToStringBuffer(cx, exn, buffer));
+    JS::Rooted<JSFlatString*> flat(cx, buffer.finishString());
+    CHECK(equalStrings(cx, flat, gLatestMessage));
+>>>>>>> upstream-releases
 
     // Cleanup.
     gLatestMessage = nullptr;
@@ -128,6 +162,7 @@ BEGIN_TEST(testErrorInterceptor) {
     CHECK(JS_GetPendingException(cx, &exn));
     JS_ClearPendingException(cx);
 
+<<<<<<< HEAD
     js::StringBuffer buffer(cx);
     CHECK(ValueToStringBuffer(cx, exn, buffer));
     JS::Rooted<JSFlatString*> flat(cx, buffer.finishString());
@@ -143,5 +178,24 @@ BEGIN_TEST(testErrorInterceptor) {
   JS_ClearPendingException(cx);
 
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+    js::JSStringBuilder buffer(cx);
+    CHECK(ValueToStringBuffer(cx, exn, buffer));
+    JS::Rooted<JSFlatString*> flat(cx, buffer.finishString());
+    CHECK(js::StringEqualsAscii(flat, TO_STRING[i]));
+
+    // Cleanup.
+    gLatestMessage = nullptr;
+  }
+
+  // Cleanup
+  JS_SetErrorInterceptorCallback(cx->runtime(), original);
+  gLatestMessage = nullptr;
+  JS_ClearPendingException(cx);
+
+  return true;
+>>>>>>> upstream-releases
 }
 END_TEST(testErrorInterceptor)

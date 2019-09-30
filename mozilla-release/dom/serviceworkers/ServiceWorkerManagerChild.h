@@ -28,27 +28,73 @@ class ServiceWorkerManagerChild final : public PServiceWorkerManagerChild {
 
   void ManagerShuttingDown() { mShuttingDown = true; }
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyRegister(
       const ServiceWorkerRegistrationData& aData) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvNotifyRegister(const ServiceWorkerRegistrationData& aData)
+                                                                       override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyRegister(
+      const ServiceWorkerRegistrationData& aData);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifySoftUpdate(
       const OriginAttributes& aOriginAttributes,
       const nsString& aScope) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvNotifySoftUpdate(const OriginAttributes& aOriginAttributes,
+                                                       const nsString& aScope) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifySoftUpdate(
+      const OriginAttributes& aOriginAttributes, const nsString& aScope);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyUnregister(
       const PrincipalInfo& aPrincipalInfo, const nsString& aScope) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvNotifyUnregister(const PrincipalInfo& aPrincipalInfo,
+                                                       const nsString& aScope) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyUnregister(
+      const PrincipalInfo& aPrincipalInfo, const nsString& aScope);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyRemove(
       const nsCString& aHost) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvNotifyRemove(const nsCString& aHost) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyRemove(const nsCString& aHost);
+>>>>>>> upstream-releases
 
-  virtual mozilla::ipc::IPCResult RecvNotifyRemoveAll() override;
+  mozilla::ipc::IPCResult RecvNotifyRemoveAll();
 
+<<<<<<< HEAD
   virtual PServiceWorkerUpdaterChild* AllocPServiceWorkerUpdaterChild(
       const OriginAttributes& originAttributes,
       const nsCString& scope) override;
+||||||| merged common ancestors
+  virtual PServiceWorkerUpdaterChild*
+  AllocPServiceWorkerUpdaterChild(const OriginAttributes& originAttributes,
+                                  const nsCString& scope) override;
+=======
+  PServiceWorkerUpdaterChild* AllocPServiceWorkerUpdaterChild(
+      const OriginAttributes& originAttributes, const nsCString& scope);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPServiceWorkerUpdaterChild(
       PServiceWorkerUpdaterChild* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPServiceWorkerUpdaterChild(PServiceWorkerUpdaterChild* aActor) override;
+=======
+  bool DeallocPServiceWorkerUpdaterChild(PServiceWorkerUpdaterChild* aActor);
+>>>>>>> upstream-releases
 
  private:
   ServiceWorkerManagerChild() : mShuttingDown(false) {}

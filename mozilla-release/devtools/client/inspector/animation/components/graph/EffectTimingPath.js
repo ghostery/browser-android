@@ -52,19 +52,35 @@ class EffectTimingPath extends TimingPath {
       }
 
       simulatedAnimation.currentTime = time < endTime ? time : endTime;
-      return Math.max(simulatedAnimation.effect.getComputedTiming().progress, 0);
+      return Math.max(
+        simulatedAnimation.effect.getComputedTiming().progress,
+        0
+      );
     };
 
-    const toPathStringFunc =
-      createSummaryGraphPathStringFunction(endTime, state.playbackRate);
-    const helper = new SummaryGraphHelper(state, null,
-                                          totalDuration, durationPerPixel,
-                                          getValueFunc, toPathStringFunc);
+    const toPathStringFunc = createSummaryGraphPathStringFunction(
+      endTime,
+      state.playbackRate
+    );
+    const helper = new SummaryGraphHelper(
+      state,
+      null,
+      totalDuration,
+      durationPerPixel,
+      getValueFunc,
+      toPathStringFunc
+    );
 
     return dom.g(
       {
         className: "animation-effect-timing-path",
+<<<<<<< HEAD
         transform: `translate(${ offset })`,
+||||||| merged common ancestors
+        transform: `translate(${ offset })`
+=======
+        transform: `translate(${offset})`,
+>>>>>>> upstream-releases
       },
       super.renderGraph(state, helper)
     );

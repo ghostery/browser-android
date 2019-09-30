@@ -15,7 +15,7 @@
 #include "mozilla/Services.h"
 #include "mozilla/SystemGroup.h"
 #include "nsIConsoleService.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDocShell.h"
 #include "nsIFactory.h"
 #include "nsINode.h"
@@ -29,6 +29,7 @@
 
 using namespace mozilla;
 using namespace mozilla::css;
+using namespace mozilla::dom;
 
 namespace {
 class ShortTermURISpecCache : public Runnable {
@@ -110,7 +111,16 @@ void ErrorReporter::InitGlobals() {
 namespace mozilla {
 namespace css {
 
+<<<<<<< HEAD
 /* static */ void ErrorReporter::ReleaseGlobals() {
+||||||| merged common ancestors
+/* static */ void
+ErrorReporter::ReleaseGlobals()
+{
+=======
+/* static */
+void ErrorReporter::ReleaseGlobals() {
+>>>>>>> upstream-releases
   NS_IF_RELEASE(sConsoleService);
   NS_IF_RELEASE(sScriptErrorFactory);
   NS_IF_RELEASE(sStringBundle);
@@ -124,7 +134,7 @@ static uint64_t FindInnerWindowID(const StyleSheet* aSheet,
     innerWindowID = aSheet->FindOwningWindowInnerID();
   }
   if (innerWindowID == 0 && aLoader) {
-    if (nsIDocument* doc = aLoader->GetDocument()) {
+    if (Document* doc = aLoader->GetDocument()) {
       innerWindowID = doc->InnerWindowID();
     }
   }
@@ -160,7 +170,15 @@ ErrorReporter::~ErrorReporter() {
   }
 }
 
+<<<<<<< HEAD
 bool ErrorReporter::ShouldReportErrors(const nsIDocument& aDoc) {
+||||||| merged common ancestors
+bool
+ErrorReporter::ShouldReportErrors(const nsIDocument& aDoc)
+{
+=======
+bool ErrorReporter::ShouldReportErrors(const Document& aDoc) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   nsIDocShell* shell = aDoc.GetDocShell();
   if (!shell) {
@@ -232,11 +250,29 @@ void ErrorReporter::OutputError() {
   if (NS_SUCCEEDED(rv)) {
     // It is safe to used InitWithSanitizedSource because mFileName is
     // an already anonymized uri spec.
+<<<<<<< HEAD
     rv = errorObject->InitWithSanitizedSource(
         mError, mFileName, mErrorLine, mErrorLineNumber, mErrorColNumber,
         nsIScriptError::warningFlag, "CSS Parser",
         FindInnerWindowID(mSheet, mLoader));
+||||||| merged common ancestors
+    rv = errorObject->InitWithSanitizedSource(mError,
+                                              mFileName,
+                                              mErrorLine,
+                                              mErrorLineNumber,
+                                              mErrorColNumber,
+                                              nsIScriptError::warningFlag,
+                                              "CSS Parser",
+                                              FindInnerWindowID(mSheet, mLoader));
+=======
+    rv = errorObject->InitWithSanitizedSource(
+        mError, mFileName, mErrorLine, mErrorLineNumber, mErrorColNumber,
+        nsIScriptError::warningFlag, "CSS Parser",
+        FindInnerWindowID(mSheet, mLoader));
+
+>>>>>>> upstream-releases
     if (NS_SUCCEEDED(rv)) {
+      errorObject->SetCssSelectors(mSelectors);
       sConsoleService->LogMessage(errorObject);
     }
   }
@@ -250,8 +286,20 @@ void ErrorReporter::OutputError() {
 // - the column number of the error
 // - the complete source line containing the invalid CSS
 
+<<<<<<< HEAD
 void ErrorReporter::OutputError(uint32_t aLineNumber, uint32_t aColNumber,
                                 const nsACString& aSourceLine) {
+||||||| merged common ancestors
+void
+ErrorReporter::OutputError(uint32_t aLineNumber,
+                           uint32_t aColNumber,
+                           const nsACString& aSourceLine)
+{
+=======
+void ErrorReporter::OutputError(uint32_t aLineNumber, uint32_t aColNumber,
+                                const nsACString& aSourceLine,
+                                const nsACString& aSelectors) {
+>>>>>>> upstream-releases
   mErrorLineNumber = aLineNumber;
   mErrorColNumber = aColNumber;
 
@@ -267,6 +315,10 @@ void ErrorReporter::OutputError(uint32_t aLineNumber, uint32_t aColNumber,
     }
 
     mPrevErrorLineNumber = aLineNumber;
+  }
+
+  if (!AppendUTF8toUTF16(aSelectors, mSelectors, fallible)) {
+    mSelectors.Truncate();
   }
 
   OutputError();
@@ -293,15 +345,30 @@ void ErrorReporter::ReportUnexpected(const char* aMessage) {
   AddToError(str);
 }
 
+<<<<<<< HEAD
 void ErrorReporter::ReportUnexpectedUnescaped(const char* aMessage,
                                               const nsAutoString& aParam) {
+||||||| merged common ancestors
+void
+ErrorReporter::ReportUnexpectedUnescaped(const char *aMessage,
+                                         const nsAutoString& aParam)
+{
+=======
+void ErrorReporter::ReportUnexpectedUnescaped(
+    const char* aMessage, const nsTArray<nsString>& aParam) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(ShouldReportErrors(mSheet, mLoader));
 
+<<<<<<< HEAD
   const char16_t* params[1] = {aParam.get()};
 
+||||||| merged common ancestors
+  const char16_t *params[1] = { aParam.get() };
+
+=======
+>>>>>>> upstream-releases
   nsAutoString str;
-  sStringBundle->FormatStringFromName(aMessage, params, ArrayLength(params),
-                                      str);
+  sStringBundle->FormatStringFromName(aMessage, aParam, str);
   AddToError(str);
 }
 

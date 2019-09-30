@@ -33,9 +33,19 @@ class CSSStyleRuleDeclaration final : public nsDOMCSSDeclaration {
       Operation aOperation, mozilla::DeclarationBlock** aCreated) final;
   nsresult SetCSSDeclaration(DeclarationBlock* aDecl,
                              MutationClosureData* aClosureData) final;
+<<<<<<< HEAD
   nsIDocument* DocToUpdate() final;
   ParsingEnvironment GetParsingEnvironment(
       nsIPrincipal* aSubjectPrincipal) const final;
+||||||| merged common ancestors
+  nsIDocument* DocToUpdate() final;
+  ParsingEnvironment
+  GetParsingEnvironment(nsIPrincipal* aSubjectPrincipal) const final;
+=======
+  Document* DocToUpdate() final;
+  ParsingEnvironment GetParsingEnvironment(
+      nsIPrincipal* aSubjectPrincipal) const final;
+>>>>>>> upstream-releases
 
  private:
   // For accessing the constructor.

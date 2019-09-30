@@ -15,7 +15,7 @@
 #include "chrome/common/mach_ipc_mac.h"
 
 #ifdef FUZZING
-#include "SharedMemoryFuzzer.h"
+#  include "SharedMemoryFuzzer.h"
 #endif
 
 //
@@ -70,7 +70,7 @@ class SharedMemoryBasic final : public SharedMemoryCommon<mach_port_t> {
 
   virtual bool Create(size_t aNbytes) override;
 
-  virtual bool Map(size_t nBytes) override;
+  virtual bool Map(size_t nBytes, void* fixed_address = nullptr) override;
 
   virtual void CloseHandle() override;
 
@@ -82,9 +82,30 @@ class SharedMemoryBasic final : public SharedMemoryCommon<mach_port_t> {
 #endif
   }
 
+<<<<<<< HEAD
+  virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
+||||||| merged common ancestors
+  virtual SharedMemoryType Type() const override
+  {
+    return TYPE_BASIC;
+  }
+
+  static Handle NULLHandle()
+  {
+    return Handle();
+  }
+=======
   virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
 
   static Handle NULLHandle() { return Handle(); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static Handle NULLHandle() { return Handle(); }
+||||||| merged common ancestors
+=======
+  static void* FindFreeAddressSpace(size_t aSize);
+>>>>>>> upstream-releases
 
   virtual bool IsHandleValid(const Handle& aHandle) const override;
 

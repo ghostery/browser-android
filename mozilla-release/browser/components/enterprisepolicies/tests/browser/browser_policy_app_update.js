@@ -2,10 +2,24 @@
  * http://creativecommons.org/publicdomain/zero/1.0/ */
 
 "use strict";
+<<<<<<< HEAD
 ChromeUtils.defineModuleGetter(this, "UpdateUtils",
                                "resource://gre/modules/UpdateUtils.jsm");
 var updateService = Cc["@mozilla.org/updates/update-service;1"].
                     getService(Ci.nsIApplicationUpdateService);
+||||||| merged common ancestors
+var updateService = Cc["@mozilla.org/updates/update-service;1"].
+                    getService(Ci.nsIApplicationUpdateService);
+=======
+ChromeUtils.defineModuleGetter(
+  this,
+  "UpdateUtils",
+  "resource://gre/modules/UpdateUtils.jsm"
+);
+var updateService = Cc["@mozilla.org/updates/update-service;1"].getService(
+  Ci.nsIApplicationUpdateService
+);
+>>>>>>> upstream-releases
 
 // This test is intended to ensure that nsIUpdateService::canCheckForUpdates
 // is true before the "DisableAppUpdate" policy is applied. Testing that
@@ -13,6 +27,7 @@ var updateService = Cc["@mozilla.org/updates/update-service;1"].
 // policy is applied needs to occur in a different test since the policy does
 // not properly take effect unless it is applied during application startup.
 add_task(async function test_updates_pre_policy() {
+<<<<<<< HEAD
   // Turn off automatic update before we set app.update.disabledForTesting to
   // false so that we don't cause an actual update.
   let originalUpdateAutoValue = await UpdateUtils.getAppUpdateAutoEnabled();
@@ -22,10 +37,31 @@ add_task(async function test_updates_pre_policy() {
   });
 
   await SpecialPowers.pushPrefEnv({"set": [["app.update.disabledForTesting", false]]});
+||||||| merged common ancestors
+  await SpecialPowers.pushPrefEnv({"set": [["app.update.disabledForTesting", false]]});
+=======
+  // Turn off automatic update before we set app.update.disabledForTesting to
+  // false so that we don't cause an actual update.
+  let originalUpdateAutoValue = await UpdateUtils.getAppUpdateAutoEnabled();
+  await UpdateUtils.setAppUpdateAutoEnabled(false);
+  registerCleanupFunction(async () => {
+    await UpdateUtils.setAppUpdateAutoEnabled(originalUpdateAutoValue);
+  });
+>>>>>>> upstream-releases
 
-  is(Services.policies.isAllowed("appUpdate"), true,
-     "Since no policies have been set, appUpdate should be allowed by default");
+  await SpecialPowers.pushPrefEnv({
+    set: [["app.update.disabledForTesting", false]],
+  });
 
-  is(updateService.canCheckForUpdates, true,
-     "Should be able to check for updates before any policies are in effect.");
+  is(
+    Services.policies.isAllowed("appUpdate"),
+    true,
+    "Since no policies have been set, appUpdate should be allowed by default"
+  );
+
+  is(
+    updateService.canCheckForUpdates,
+    true,
+    "Should be able to check for updates before any policies are in effect."
+  );
 });

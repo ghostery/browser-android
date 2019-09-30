@@ -55,6 +55,7 @@ enum class SkBlendMode {
     kLastMode          = kLuminosity, //!< last valid value
 };
 
+<<<<<<< HEAD
 /** Returns name of blendMode as null-terminated C string.
 
     @param blendMode  one of:
@@ -71,5 +72,28 @@ enum class SkBlendMode {
     @return           C string
 */
 SK_API const char* SkBlendMode_Name(SkBlendMode blendMode);
+||||||| merged common ancestors
+/**
+ *  Return the (c-string) name of the blendmode.
+ */
+SK_API const char* SkBlendMode_Name(SkBlendMode);
+=======
+/** Returns name of blendMode as null-terminated C string.
+
+    @param blendMode  one of:
+                      SkBlendMode::kClear, SkBlendMode::kSrc, SkBlendMode::kDst,
+                      SkBlendMode::kSrcOver, SkBlendMode::kDstOver, SkBlendMode::kSrcIn,
+                      SkBlendMode::kDstIn, SkBlendMode::kSrcOut, SkBlendMode::kDstOut,
+                      SkBlendMode::kSrcATop, SkBlendMode::kDstATop, SkBlendMode::kXor,
+                      SkBlendMode::kPlus, SkBlendMode::kModulate, SkBlendMode::kScreen,
+                      SkBlendMode::kOverlay, SkBlendMode::kDarken, SkBlendMode::kLighten,
+                      SkBlendMode::kColorDodge, SkBlendMode::kColorBurn, SkBlendMode::kHardLight,
+                      SkBlendMode::kSoftLight, SkBlendMode::kDifference, SkBlendMode::kExclusion,
+                      SkBlendMode::kMultiply, SkBlendMode::kHue, SkBlendMode::kSaturation,
+                      SkBlendMode::kColor, SkBlendMode::kLuminosity
+    @return           C string
+*/
+SK_API const char* SkBlendMode_Name(SkBlendMode blendMode);
+>>>>>>> upstream-releases
 
 #endif

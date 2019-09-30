@@ -67,16 +67,28 @@ class JsepCodecDescription {
     return true;
   }
 
+<<<<<<< HEAD
   virtual bool Negotiate(const std::string& pt,
                          const SdpMediaSection& remoteMsection) {
     mDefaultPt = pt;
+||||||| merged common ancestors
+  virtual bool
+  Negotiate(const std::string& pt, const SdpMediaSection& remoteMsection)
+  {
+    mDefaultPt = pt;
+=======
+  virtual bool Negotiate(const std::string& pt,
+                         const SdpMediaSection& remoteMsection, bool isOffer) {
+    if (mDirection == sdp::kSend || isOffer) {
+      mDefaultPt = pt;
+    }
+>>>>>>> upstream-releases
     return true;
   }
 
   virtual void AddToMediaSection(SdpMediaSection& msection) const {
     if (mEnabled && msection.GetMediaType() == mType) {
-      // Both send and recv codec will have the same pt, so don't add twice
-      if (!msection.HasFormat(mDefaultPt)) {
+      if (mDirection == sdp::kRecv) {
         msection.AddCodec(mDefaultPt, mName, mClock, mChannels);
       }
 
@@ -167,9 +179,21 @@ class JsepAudioCodecDescription : public JsepCodecDescription {
     }
   }
 
+<<<<<<< HEAD
   bool Negotiate(const std::string& pt,
                  const SdpMediaSection& remoteMsection) override {
     JsepCodecDescription::Negotiate(pt, remoteMsection);
+||||||| merged common ancestors
+  bool
+  Negotiate(const std::string& pt,
+            const SdpMediaSection& remoteMsection) override
+  {
+    JsepCodecDescription::Negotiate(pt, remoteMsection);
+=======
+  bool Negotiate(const std::string& pt, const SdpMediaSection& remoteMsection,
+                 bool isOffer) override {
+    JsepCodecDescription::Negotiate(pt, remoteMsection, isOffer);
+>>>>>>> upstream-releases
     if (mName == "opus" && mDirection == sdp::kSend) {
       SdpFmtpAttributeList::OpusParameters opusParams(
           GetOpusParameters(mDefaultPt, remoteMsection));
@@ -403,9 +427,22 @@ class JsepVideoCodecDescription : public JsepCodecDescription {
     NegotiateRtcpFb(remote, &mOtherFbTypes);
   }
 
+<<<<<<< HEAD
   virtual bool Negotiate(const std::string& pt,
                          const SdpMediaSection& remoteMsection) override {
     JsepCodecDescription::Negotiate(pt, remoteMsection);
+||||||| merged common ancestors
+  virtual bool
+  Negotiate(const std::string& pt,
+            const SdpMediaSection& remoteMsection) override
+  {
+    JsepCodecDescription::Negotiate(pt, remoteMsection);
+=======
+  virtual bool Negotiate(const std::string& pt,
+                         const SdpMediaSection& remoteMsection,
+                         bool isOffer) override {
+    JsepCodecDescription::Negotiate(pt, remoteMsection, isOffer);
+>>>>>>> upstream-releases
     if (mName == "H264") {
       SdpFmtpAttributeList::H264Parameters h264Params(
           GetH264Parameters(mDefaultPt, remoteMsection));
@@ -727,7 +764,7 @@ class JsepApplicationCodecDescription : public JsepCodecDescription {
 
   virtual void AddToMediaSection(SdpMediaSection& msection) const override {
     if (mEnabled && msection.GetMediaType() == mType) {
-      if (msection.GetFormats().empty()) {
+      if (mDirection == sdp::kRecv) {
         msection.AddDataChannel(mName, mLocalPort, mChannels,
                                 mLocalMaxMessageSize);
       }
@@ -736,9 +773,20 @@ class JsepApplicationCodecDescription : public JsepCodecDescription {
     }
   }
 
+<<<<<<< HEAD
   bool Negotiate(const std::string& pt,
                  const SdpMediaSection& remoteMsection) override {
     JsepCodecDescription::Negotiate(pt, remoteMsection);
+||||||| merged common ancestors
+  bool
+  Negotiate(const std::string& pt, const SdpMediaSection& remoteMsection) override
+  {
+    JsepCodecDescription::Negotiate(pt, remoteMsection);
+=======
+  bool Negotiate(const std::string& pt, const SdpMediaSection& remoteMsection,
+                 bool isOffer) override {
+    JsepCodecDescription::Negotiate(pt, remoteMsection, isOffer);
+>>>>>>> upstream-releases
 
     uint32_t message_size;
     mRemoteMMSSet = remoteMsection.GetMaxMessageSize(&message_size);

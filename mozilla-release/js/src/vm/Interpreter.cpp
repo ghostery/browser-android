@@ -35,11 +35,10 @@
 #include "util/StringBuffer.h"
 #include "vm/AsyncFunction.h"
 #include "vm/AsyncIteration.h"
-#ifdef ENABLE_BIGINT
 #include "vm/BigIntType.h"
-#endif
 #include "vm/BytecodeUtil.h"
 #include "vm/Debugger.h"
+#include "vm/EqualityOperations.h"  // js::StrictlyEqual
 #include "vm/GeneratorObject.h"
 #include "vm/Iteration.h"
 #include "vm/JSAtom.h"
@@ -48,9 +47,9 @@
 #include "vm/JSObject.h"
 #include "vm/JSScript.h"
 #include "vm/Opcodes.h"
+#include "vm/PIC.h"
 #include "vm/Scope.h"
 #include "vm/Shape.h"
-#include "vm/Stopwatch.h"
 #include "vm/StringType.h"
 #include "vm/TraceLogging.h"
 
@@ -71,6 +70,8 @@ using namespace js;
 
 using mozilla::DebugOnly;
 using mozilla::NumberEqualsInt32;
+
+using js::jit::JitScript;
 
 template <bool Eq>
 static MOZ_ALWAYS_INLINE bool LooseEqualityOp(JSContext* cx,
@@ -98,12 +99,42 @@ bool js::BoxNonStrictThis(JSContext* cx, HandleValue thisv,
   if (thisv.isNullOrUndefined()) {
     vp.set(cx->global()->lexicalEnvironment().thisValue());
     return true;
+<<<<<<< HEAD
   }
 
   if (thisv.isObject()) {
     vp.set(thisv);
     return true;
   }
+||||||| merged common ancestors
+}
+
+bool
+js::BoxNonStrictThis(JSContext* cx, HandleValue thisv, MutableHandleValue vp)
+{
+    /*
+     * Check for SynthesizeFrame poisoning and fast constructors which
+     * didn't check their callee properly.
+     */
+    MOZ_ASSERT(!thisv.isMagic());
+
+    if (thisv.isNullOrUndefined()) {
+        vp.set(cx->global()->lexicalEnvironment().thisValue());
+        return true;
+    }
+
+    if (thisv.isObject()) {
+        vp.set(thisv);
+        return true;
+    }
+=======
+  }
+
+  if (thisv.isObject()) {
+    vp.set(thisv);
+    return true;
+  }
+>>>>>>> upstream-releases
 
   JSObject* obj = PrimitiveToObject(cx, thisv);
   if (!obj) {
@@ -119,6 +150,7 @@ bool js::GetFunctionThis(JSContext* cx, AbstractFramePtr frame,
   MOZ_ASSERT(frame.isFunctionFrame());
   MOZ_ASSERT(!frame.callee()->isArrow());
 
+<<<<<<< HEAD
   if (frame.thisArgument().isObject() || frame.callee()->strict() ||
       frame.callee()->isSelfHostedBuiltin()) {
     res.set(frame.thisArgument());
@@ -139,6 +171,36 @@ bool js::GetFunctionThis(JSContext* cx, AbstractFramePtr frame,
     while (true) {
       if (IsNSVOLexicalEnvironment(env) || IsGlobalLexicalEnvironment(env)) {
         res.set(GetThisValueOfLexical(env));
+||||||| merged common ancestors
+    if (frame.thisArgument().isObject() ||
+        frame.callee()->strict() ||
+        frame.callee()->isSelfHostedBuiltin())
+    {
+        res.set(frame.thisArgument());
+=======
+  if (frame.thisArgument().isObject() || frame.callee()->strict()) {
+    res.set(frame.thisArgument());
+    return true;
+  }
+
+  MOZ_ASSERT(!frame.callee()->isSelfHostedBuiltin(),
+             "Self-hosted builtins must be strict");
+
+  RootedValue thisv(cx, frame.thisArgument());
+
+  // If there is a NSVO on environment chain, use it as basis for fallback
+  // global |this|. This gives a consistent definition of global lexical
+  // |this| between function and global contexts.
+  //
+  // NOTE: If only non-syntactic WithEnvironments are on the chain, we use the
+  // global lexical |this| value. This is for compatibility with the Subscript
+  // Loader.
+  if (frame.script()->hasNonSyntacticScope() && thisv.isNullOrUndefined()) {
+    RootedObject env(cx, frame.environmentChain());
+    while (true) {
+      if (IsNSVOLexicalEnvironment(env) || IsGlobalLexicalEnvironment(env)) {
+        res.set(GetThisValueOfLexical(env));
+>>>>>>> upstream-releases
         return true;
       }
       if (!env->enclosingEnvironment()) {
@@ -205,6 +267,7 @@ static inline bool GetPropertyOperation(JSContext* cx, InterpreterFrame* fp,
 
   RootedPropertyName name(cx, script->getName(pc));
 
+<<<<<<< HEAD
   if (name == cx->names().callee && IsOptimizedArguments(fp, lval)) {
     vp.setObject(fp->callee());
     return true;
@@ -261,6 +324,92 @@ static bool SetPropertyOperation(JSContext* cx, JSOp op, HandleValue lval,
   if (!obj) {
     return false;
   }
+||||||| merged common ancestors
+static inline bool
+GetNameOperation(JSContext* cx, InterpreterFrame* fp, jsbytecode* pc, MutableHandleValue vp)
+{
+    RootedObject envChain(cx, fp->environmentChain());
+    RootedPropertyName name(cx, fp->script()->getName(pc));
+
+    /*
+     * Skip along the env chain to the enclosing global object. This is
+     * used for GNAME opcodes where the bytecode emitter has determined a
+     * name access must be on the global. It also insulates us from bugs
+     * in the emitter: type inference will assume that GNAME opcodes are
+     * accessing the global object, and the inferred behavior should match
+     * the actual behavior even if the id could be found on the env chain
+     * before the global object.
+     */
+    if (IsGlobalOp(JSOp(*pc)) && !fp->script()->hasNonSyntacticScope()) {
+        envChain = &cx->global()->lexicalEnvironment();
+    }
+
+    /* Kludge to allow (typeof foo == "undefined") tests. */
+    JSOp op2 = JSOp(pc[JSOP_GETNAME_LENGTH]);
+    if (op2 == JSOP_TYPEOF) {
+        return GetEnvironmentName<GetNameMode::TypeOf>(cx, envChain, name, vp);
+    }
+    return GetEnvironmentName<GetNameMode::Normal>(cx, envChain, name, vp);
+}
+=======
+  if (name == cx->names().callee && IsOptimizedArguments(fp, lval)) {
+    vp.setObject(fp->callee());
+    return true;
+  }
+
+  // Copy lval, because it might alias vp.
+  RootedValue v(cx, lval);
+  return GetProperty(cx, v, name, vp);
+}
+
+static inline bool GetNameOperation(JSContext* cx, InterpreterFrame* fp,
+                                    jsbytecode* pc, MutableHandleValue vp) {
+  RootedObject envChain(cx, fp->environmentChain());
+  RootedPropertyName name(cx, fp->script()->getName(pc));
+
+  /*
+   * Skip along the env chain to the enclosing global object. This is
+   * used for GNAME opcodes where the bytecode emitter has determined a
+   * name access must be on the global. It also insulates us from bugs
+   * in the emitter: type inference will assume that GNAME opcodes are
+   * accessing the global object, and the inferred behavior should match
+   * the actual behavior even if the id could be found on the env chain
+   * before the global object.
+   */
+  if (IsGlobalOp(JSOp(*pc)) && !fp->script()->hasNonSyntacticScope()) {
+    envChain = &cx->global()->lexicalEnvironment();
+  }
+
+  /* Kludge to allow (typeof foo == "undefined") tests. */
+  JSOp op2 = JSOp(pc[JSOP_GETNAME_LENGTH]);
+  if (op2 == JSOP_TYPEOF) {
+    return GetEnvironmentName<GetNameMode::TypeOf>(cx, envChain, name, vp);
+  }
+  return GetEnvironmentName<GetNameMode::Normal>(cx, envChain, name, vp);
+}
+
+bool js::GetImportOperation(JSContext* cx, HandleObject envChain,
+                            HandleScript script, jsbytecode* pc,
+                            MutableHandleValue vp) {
+  RootedObject env(cx), pobj(cx);
+  RootedPropertyName name(cx, script->getName(pc));
+  Rooted<PropertyResult> prop(cx);
+
+  MOZ_ALWAYS_TRUE(LookupName(cx, name, envChain, &env, &pobj, &prop));
+  MOZ_ASSERT(env && env->is<ModuleEnvironmentObject>());
+  MOZ_ASSERT(env->as<ModuleEnvironmentObject>().hasImportBinding(name));
+  return FetchName<GetNameMode::Normal>(cx, env, pobj, name, prop, vp);
+}
+
+static bool SetPropertyOperation(JSContext* cx, JSOp op, HandleValue lval,
+                                 HandleId id, HandleValue rval) {
+  MOZ_ASSERT(op == JSOP_SETPROP || op == JSOP_STRICTSETPROP);
+
+  RootedObject obj(cx, ToObjectFromStack(cx, lval));
+  if (!obj) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   ObjectOpResult result;
   return SetProperty(cx, obj, id, rval, lval, result) &&
@@ -275,37 +424,119 @@ JSFunction* js::MakeDefaultConstructor(JSContext* cx, HandleScript script,
   bool derived = op == JSOP_DERIVEDCONSTRUCTOR;
   MOZ_ASSERT(derived == !!proto);
 
+<<<<<<< HEAD
+  jssrcnote* classNote = GetSrcNote(cx, script, pc);
+  MOZ_ASSERT(classNote && SN_TYPE(classNote) == SRC_CLASS_SPAN);
+||||||| merged common ancestors
+    RootedObject obj(cx, ToObjectFromStack(cx, lval));
+    if (!obj) {
+        return false;
+    }
+
+    ObjectOpResult result;
+    return SetProperty(cx, obj, id, rval, lval, result) &&
+           result.checkStrictErrorOrWarning(cx, obj, id, op == JSOP_STRICTSETPROP);
+}
+=======
   jssrcnote* classNote = GetSrcNote(cx, script, pc);
   MOZ_ASSERT(classNote && SN_TYPE(classNote) == SRC_CLASS_SPAN);
 
   PropertyName* lookup = derived ? cx->names().DefaultDerivedClassConstructor
                                  : cx->names().DefaultBaseClassConstructor;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  PropertyName* lookup = derived ? cx->names().DefaultDerivedClassConstructor
+                                 : cx->names().DefaultBaseClassConstructor;
+||||||| merged common ancestors
+JSFunction*
+js::MakeDefaultConstructor(JSContext* cx, HandleScript script, jsbytecode* pc, HandleObject proto)
+{
+    JSOp op = JSOp(*pc);
+    JSAtom* atom = script->getAtom(pc);
+    bool derived = op == JSOP_DERIVEDCONSTRUCTOR;
+    MOZ_ASSERT(derived == !!proto);
+=======
   RootedPropertyName selfHostedName(cx, lookup);
   RootedAtom name(cx, atom == cx->names().empty ? nullptr : atom);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedPropertyName selfHostedName(cx, lookup);
+  RootedAtom name(cx, atom == cx->names().empty ? nullptr : atom);
+||||||| merged common ancestors
+    jssrcnote* classNote = GetSrcNote(cx, script, pc);
+    MOZ_ASSERT(classNote && SN_TYPE(classNote) == SRC_CLASS_SPAN);
+=======
   RootedFunction ctor(cx);
   if (!cx->runtime()->createLazySelfHostedFunctionClone(
           cx, selfHostedName, name,
           /* nargs = */ !!derived, proto, TenuredObject, &ctor)) {
     return nullptr;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedFunction ctor(cx);
+  if (!cx->runtime()->createLazySelfHostedFunctionClone(
+          cx, selfHostedName, name,
+          /* nargs = */ !!derived, proto, TenuredObject, &ctor)) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+    PropertyName* lookup = derived ? cx->names().DefaultDerivedClassConstructor
+                                   : cx->names().DefaultBaseClassConstructor;
+=======
   ctor->setIsConstructor();
   ctor->setIsClassConstructor();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ctor->setIsConstructor();
+  ctor->setIsClassConstructor();
+||||||| merged common ancestors
+    RootedPropertyName selfHostedName(cx, lookup);
+    RootedAtom name(cx, atom == cx->names().empty ? nullptr : atom);
+=======
+  // Create the script now, so we can fix up its source span below.
+  RootedScript ctorScript(cx, JSFunction::getOrCreateScript(cx, ctor));
+  if (!ctorScript) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Create the script now, so we can fix up its source span below.
   JSScript* ctorScript = JSFunction::getOrCreateScript(cx, ctor);
   if (!ctorScript) {
     return nullptr;
   }
-
+||||||| merged common ancestors
+    RootedFunction ctor(cx);
+    if (!cx->runtime()->createLazySelfHostedFunctionClone(cx, selfHostedName, name,
+                                                          /* nargs = */ !!derived,
+                                                          proto, TenuredObject, &ctor))
+    {
+        return nullptr;
+    }
+=======
   // This function's frames are fine to expose to JS; it should not be treated
   // as an opaque self-hosted builtin. But the script cloning code naturally
   // expects to be applied to self-hosted functions, so do the clone first,
   // and clear this afterwards.
   ctor->clearIsSelfHosted();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // This function's frames are fine to expose to JS; it should not be treated
+  // as an opaque self-hosted builtin. But the script cloning code naturally
+  // expects to be applied to self-hosted functions, so do the clone first,
+  // and clear this afterwards.
+  ctor->clearIsSelfHosted();
+||||||| merged common ancestors
+    ctor->setIsConstructor();
+    ctor->setIsClassConstructor();
+=======
   // Override the source span needs for toString. Calling toString on a class
   // constructor should return the class declaration, not the source for the
   // (self-hosted) constructor function.
@@ -315,6 +546,27 @@ JSFunction* js::MakeDefaultConstructor(JSContext* cx, HandleScript script,
   unsigned line = PCToLineNumber(script, pc, &column);
   ctorScript->setDefaultClassConstructorSpan(
       script->sourceObject(), classStartOffset, classEndOffset, line, column);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Override the source span needs for toString. Calling toString on a class
+  // constructor should return the class declaration, not the source for the
+  // (self-hosted) constructor function.
+  uint32_t classStartOffset = GetSrcNoteOffset(classNote, 0);
+  uint32_t classEndOffset = GetSrcNoteOffset(classNote, 1);
+  unsigned column;
+  unsigned line = PCToLineNumber(script, pc, &column);
+  ctorScript->setDefaultClassConstructorSpan(
+      script->sourceObject(), classStartOffset, classEndOffset, line, column);
+||||||| merged common ancestors
+    // Create the script now, so we can fix up its source span below.
+    JSScript *ctorScript = JSFunction::getOrCreateScript(cx, ctor);
+    if (!ctorScript) {
+        return nullptr;
+    }
+=======
+  Debugger::onNewScript(cx, ctorScript);
+>>>>>>> upstream-releases
 
   return ctor;
 }
@@ -345,9 +597,19 @@ static bool MaybeCreateThisForConstructor(JSContext* cx, JSScript* calleeScript,
     return true;
   }
 
+<<<<<<< HEAD
   RootedObject callee(cx, &args.callee());
   RootedObject newTarget(cx, &args.newTarget().toObject());
   NewObjectKind newKind = createSingleton ? SingletonObject : GenericObject;
+||||||| merged common ancestors
+    RootedObject callee(cx, &args.callee());
+    RootedObject newTarget(cx, &args.newTarget().toObject());
+    NewObjectKind newKind = createSingleton ? SingletonObject : GenericObject;
+=======
+  RootedFunction callee(cx, &args.callee().as<JSFunction>());
+  RootedObject newTarget(cx, &args.newTarget().toObject());
+  NewObjectKind newKind = createSingleton ? SingletonObject : GenericObject;
+>>>>>>> upstream-releases
 
   return CreateThis(cx, callee, calleeScript, newTarget, newKind,
                     args.mutableThisv());
@@ -376,8 +638,15 @@ InterpreterFrame* RunState::pushInterpreterFrame(JSContext* cx) {
 // stack frames and stack overflow issues, see bug 1167883. Turn off PGO to
 // avoid this.
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma optimize("g", off)
+||||||| merged common ancestors
+# pragma optimize("g", off)
+=======
+#  pragma optimize("g", off)
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
 bool js::RunScript(JSContext* cx, RunState& state) {
   if (!CheckRecursionLimit(cx)) {
     return false;
@@ -385,21 +654,77 @@ bool js::RunScript(JSContext* cx, RunState& state) {
 
   // Since any script can conceivably GC, make sure it's safe to do so.
   cx->verifyIsSafeToGC();
+||||||| merged common ancestors
+bool
+js::RunScript(JSContext* cx, RunState& state)
+{
+    if (!CheckRecursionLimit(cx)) {
+        return false;
+    }
 
+    // Since any script can conceivably GC, make sure it's safe to do so.
+    cx->verifyIsSafeToGC();
+=======
+bool js::RunScript(JSContext* cx, RunState& state) {
+  if (!CheckRecursionLimit(cx)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   MOZ_ASSERT(cx->realm() == state.script()->realm());
+||||||| merged common ancestors
+    MOZ_ASSERT(cx->realm() == state.script()->realm());
+=======
+  // Since any script can conceivably GC, make sure it's safe to do so.
+  cx->verifyIsSafeToGC();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_DIAGNOSTIC_ASSERT(cx->realm()->isSystem() ||
                         cx->runtime()->allowContentJS());
+||||||| merged common ancestors
+    MOZ_DIAGNOSTIC_ASSERT(cx->realm()->isSystem() ||
+                          cx->runtime()->allowContentJS());
+=======
+  MOZ_ASSERT(cx->realm() == state.script()->realm());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(!cx->enableAccessValidation || cx->realm()->isAccessValid());
+||||||| merged common ancestors
+    MOZ_ASSERT(!cx->enableAccessValidation ||
+               cx->realm()->isAccessValid());
+=======
+  MOZ_DIAGNOSTIC_ASSERT(cx->realm()->isSystem() ||
+                        cx->runtime()->allowContentJS());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!Debugger::checkNoExecute(cx, state.script())) {
     return false;
   }
+||||||| merged common ancestors
+    if (!Debugger::checkNoExecute(cx, state.script())) {
+        return false;
+    }
+=======
+  MOZ_ASSERT(!cx->enableAccessValidation || cx->realm()->isAccessValid());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #if defined(MOZ_HAVE_RDTSC)
   js::AutoStopwatch stopwatch(cx);
 #endif  // defined(MOZ_HAVE_RDTSC)
+||||||| merged common ancestors
+#if defined(MOZ_HAVE_RDTSC)
+    js::AutoStopwatch stopwatch(cx);
+#endif // defined(MOZ_HAVE_RDTSC)
+=======
+  if (!Debugger::checkNoExecute(cx, state.script())) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   GeckoProfilerEntryMarker marker(cx, state.script());
 
@@ -423,15 +748,39 @@ bool js::RunScript(JSContext* cx, RunState& state) {
   return Interpret(cx, state);
 }
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma optimize("", on)
+||||||| merged common ancestors
+# pragma optimize("", on)
+=======
+#  pragma optimize("", on)
+>>>>>>> upstream-releases
 #endif
 
 STATIC_PRECONDITION_ASSUME(ubound(args.argv_) >= argc)
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool CallJSNative(JSContext* cx, Native native,
                                     const CallArgs& args) {
   if (!CheckRecursionLimit(cx)) {
     return false;
   }
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+CallJSNative(JSContext* cx, Native native, const CallArgs& args)
+{
+    if (!CheckRecursionLimit(cx)) {
+        return false;
+    }
+=======
+MOZ_ALWAYS_INLINE bool CallJSNative(JSContext* cx, Native native,
+                                    const CallArgs& args) {
+  TraceLoggerThread* logger = TraceLoggerForCurrentThread(cx);
+  AutoTraceLog traceLog(logger, TraceLogger_Call);
+
+  if (!CheckRecursionLimit(cx)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   bool alreadyThrowing = cx->isExceptionPending();
@@ -486,6 +835,7 @@ MOZ_ALWAYS_INLINE bool CallJSNativeConstructor(JSContext* cx, Native native,
  *       necessary.  The caller (usually the interpreter) must have performed
  *       this step already!
  */
+<<<<<<< HEAD
 bool js::InternalCallOrConstruct(JSContext* cx, const CallArgs& args,
                                  MaybeConstruct construct) {
   MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
@@ -495,10 +845,54 @@ bool js::InternalCallOrConstruct(JSContext* cx, const CallArgs& args,
   if (args.calleev().isPrimitive()) {
     return ReportIsNotFunction(cx, args.calleev(), skipForCallee, construct);
   }
+||||||| merged common ancestors
+bool
+js::InternalCallOrConstruct(JSContext* cx, const CallArgs& args, MaybeConstruct construct)
+{
+    MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
+    MOZ_ASSERT(!cx->zone()->types.activeAnalysis);
+
+    unsigned skipForCallee = args.length() + 1 + (construct == CONSTRUCT);
+    if (args.calleev().isPrimitive()) {
+        return ReportIsNotFunction(cx, args.calleev(), skipForCallee, construct);
+    }
+
+    /* Invoke non-functions. */
+    if (MOZ_UNLIKELY(!args.callee().is<JSFunction>())) {
+        MOZ_ASSERT_IF(construct, !args.callee().isConstructor());
+=======
+bool js::InternalCallOrConstruct(JSContext* cx, const CallArgs& args,
+                                 MaybeConstruct construct) {
+  MOZ_ASSERT(args.length() <= ARGS_LENGTH_MAX);
+  MOZ_ASSERT(!cx->zone()->types.activeAnalysis);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  /* Invoke non-functions. */
+  if (MOZ_UNLIKELY(!args.callee().is<JSFunction>())) {
+    MOZ_ASSERT_IF(construct, !args.callee().isConstructor());
+||||||| merged common ancestors
+        if (!args.callee().isCallable()) {
+            return ReportIsNotFunction(cx, args.calleev(), skipForCallee, construct);
+        }
+
+        if (args.callee().is<ProxyObject>()) {
+            RootedObject proxy(cx, &args.callee());
+            return Proxy::call(cx, proxy, args);
+        }
+
+        JSNative call = args.callee().callHook();
+        MOZ_ASSERT(call, "isCallable without a callHook?");
+=======
+  unsigned skipForCallee = args.length() + 1 + (construct == CONSTRUCT);
+  if (args.calleev().isPrimitive()) {
+    return ReportIsNotFunction(cx, args.calleev(), skipForCallee, construct);
+  }
 
   /* Invoke non-functions. */
   if (MOZ_UNLIKELY(!args.callee().is<JSFunction>())) {
     MOZ_ASSERT_IF(construct, !args.callee().isConstructor());
+>>>>>>> upstream-releases
 
     if (!args.callee().isCallable()) {
       return ReportIsNotFunction(cx, args.calleev(), skipForCallee, construct);
@@ -637,6 +1031,7 @@ static bool InternalConstruct(JSContext* cx, const AnyConstructArgs& args) {
       return false;
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(args.CallArgs::rval().isObject());
     return true;
   }
@@ -648,8 +1043,30 @@ static bool InternalConstruct(JSContext* cx, const AnyConstructArgs& args) {
 
   JSNative construct = callee.constructHook();
   MOZ_ASSERT(construct != nullptr, "IsConstructor without a construct hook?");
+||||||| merged common ancestors
+    JSNative construct = callee.constructHook();
+    MOZ_ASSERT(construct != nullptr, "IsConstructor without a construct hook?");
+=======
+    MOZ_ASSERT(args.CallArgs::rval().isObject());
+    return true;
+  }
+
+  if (callee.is<ProxyObject>()) {
+    RootedObject proxy(cx, &callee);
+    return Proxy::construct(cx, proxy, args);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return CallJSNativeConstructor(cx, construct, args);
+||||||| merged common ancestors
+    return CallJSNativeConstructor(cx, construct, args);
+=======
+  JSNative construct = callee.constructHook();
+  MOZ_ASSERT(construct != nullptr, "IsConstructor without a construct hook?");
 
   return CallJSNativeConstructor(cx, construct, args);
+>>>>>>> upstream-releases
 }
 
 // Check that |callee|, the callee in a |new| expression, is a constructor.
@@ -840,6 +1257,18 @@ extern bool JS::InstanceofOperator(JSContext* cx, HandleObject obj,
     if (!Call(cx, hasInstance, obj, v, &rval)) {
       return false;
     }
+<<<<<<< HEAD
+    *bp = ToBoolean(rval);
+    return true;
+  }
+
+  /* Step 4. */
+  if (!obj->isCallable()) {
+    RootedValue val(cx, ObjectValue(*obj));
+    return ReportIsNotFunction(cx, val);
+  }
+||||||| merged common ancestors
+=======
     *bp = ToBoolean(rval);
     return true;
   }
@@ -863,10 +1292,100 @@ bool js::HasInstance(JSContext* cx, HandleObject obj, HandleValue v, bool* bp) {
   return JS::InstanceofOperator(cx, obj, local, bp);
 }
 
+JSType js::TypeOfObject(JSObject* obj) {
+  if (EmulatesUndefined(obj)) {
+    return JSTYPE_UNDEFINED;
+  }
+  if (obj->isCallable()) {
+    return JSTYPE_FUNCTION;
+  }
+  return JSTYPE_OBJECT;
+}
+
+JSType js::TypeOfValue(const Value& v) {
+  switch (v.type()) {
+    case ValueType::Double:
+    case ValueType::Int32:
+      return JSTYPE_NUMBER;
+    case ValueType::String:
+      return JSTYPE_STRING;
+    case ValueType::Null:
+      return JSTYPE_OBJECT;
+    case ValueType::Undefined:
+      return JSTYPE_UNDEFINED;
+    case ValueType::Object:
+      return TypeOfObject(&v.toObject());
+    case ValueType::Boolean:
+      return JSTYPE_BOOLEAN;
+    case ValueType::BigInt:
+      return JSTYPE_BIGINT;
+    case ValueType::Symbol:
+      return JSTYPE_SYMBOL;
+    case ValueType::Magic:
+    case ValueType::PrivateGCThing:
+      break;
+  }
+
+  MOZ_CRASH("unexpected type");
+}
+
+bool js::CheckClassHeritageOperation(JSContext* cx, HandleValue heritage) {
+  if (IsConstructor(heritage)) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  /* Step 5. */
+  return OrdinaryHasInstance(cx, obj, v, bp);
+}
+
+bool js::HasInstance(JSContext* cx, HandleObject obj, HandleValue v, bool* bp) {
+  const Class* clasp = obj->getClass();
+  RootedValue local(cx, v);
+  if (JSHasInstanceOp hasInstance = clasp->getHasInstance()) {
+    return hasInstance(cx, obj, &local, bp);
+  }
+  return JS::InstanceofOperator(cx, obj, local, bp);
+}
+||||||| merged common ancestors
+    /* Step 5. */
+    return OrdinaryHasInstance(cx, obj, v, bp);
+}
+
+bool
+js::HasInstance(JSContext* cx, HandleObject obj, HandleValue v, bool* bp)
+{
+    const Class* clasp = obj->getClass();
+    RootedValue local(cx, v);
+    if (JSHasInstanceOp hasInstance = clasp->getHasInstance()) {
+        return hasInstance(cx, obj, &local, bp);
+    }
+    return js::InstanceOfOperator(cx, obj, local, bp);
+}
+=======
+  if (heritage.isNull()) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 static inline bool EqualGivenSameType(JSContext* cx, HandleValue lval,
                                       HandleValue rval, bool* equal) {
   MOZ_ASSERT(SameType(lval, rval));
+||||||| merged common ancestors
+static inline bool
+EqualGivenSameType(JSContext* cx, HandleValue lval, HandleValue rval, bool* equal)
+{
+    MOZ_ASSERT(SameType(lval, rval));
+=======
+  if (heritage.isObject()) {
+    ReportIsNotFunction(cx, heritage, 0, CONSTRUCT);
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (lval.isString()) {
     return EqualStrings(cx, lval.toString(), rval.toString(), equal);
   }
@@ -887,13 +1406,54 @@ static inline bool EqualGivenSameType(JSContext* cx, HandleValue lval,
   *equal = lval.get().payloadAsRawUint32() == rval.get().payloadAsRawUint32();
   MOZ_ASSERT_IF(lval.isUndefined() || lval.isNull(), *equal);
   return true;
+||||||| merged common ancestors
+    if (lval.isString()) {
+        return EqualStrings(cx, lval.toString(), rval.toString(), equal);
+    }
+    if (lval.isDouble()) {
+        *equal = (lval.toDouble() == rval.toDouble());
+        return true;
+    }
+#ifdef ENABLE_BIGINT
+    if (lval.isBigInt()) {
+        *equal = BigInt::equal(lval.toBigInt(), rval.toBigInt());
+        return true;
+    }
+#endif
+    if (lval.isGCThing()) {  // objects or symbols
+        *equal = (lval.toGCThing() == rval.toGCThing());
+        return true;
+    }
+    *equal = lval.get().payloadAsRawUint32() == rval.get().payloadAsRawUint32();
+    MOZ_ASSERT_IF(lval.isUndefined() || lval.isNull(), *equal);
+    return true;
+=======
+  ReportValueError(cx, JSMSG_BAD_HERITAGE, -1, heritage, nullptr,
+                   "not an object or null");
+  return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool LooselyEqualBooleanAndOther(JSContext* cx, HandleValue lval,
                                                HandleValue rval, bool* result) {
   MOZ_ASSERT(!rval.isBoolean());
   RootedValue lvalue(cx, Int32Value(lval.toBoolean() ? 1 : 0));
+||||||| merged common ancestors
+static inline bool
+LooselyEqualBooleanAndOther(JSContext* cx, HandleValue lval, HandleValue rval, bool* result)
+{
+    MOZ_ASSERT(!rval.isBoolean());
+    RootedValue lvalue(cx, Int32Value(lval.toBoolean() ? 1 : 0));
+=======
+JSObject* js::ObjectWithProtoOperation(JSContext* cx, HandleValue val) {
+  if (!val.isObjectOrNull()) {
+    ReportValueError(cx, JSMSG_NOT_OBJORNULL, -1, val, nullptr);
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // The tail-call would end up in Step 3.
   if (rval.isNumber()) {
     *result = (lvalue.toNumber() == rval.toNumber());
@@ -908,10 +1468,39 @@ static inline bool LooselyEqualBooleanAndOther(JSContext* cx, HandleValue lval,
     *result = (lvalue.toNumber() == num);
     return true;
   }
+||||||| merged common ancestors
+    // The tail-call would end up in Step 3.
+    if (rval.isNumber()) {
+        *result = (lvalue.toNumber() == rval.toNumber());
+        return true;
+    }
+    // The tail-call would end up in Step 6.
+    if (rval.isString()) {
+        double num;
+        if (!StringToNumber(cx, rval.toString(), &num)) {
+            return false;
+        }
+        *result = (lvalue.toNumber() == num);
+        return true;
+    }
+=======
+  RootedObject proto(cx, val.toObjectOrNull());
+  return NewObjectWithGivenProto<PlainObject>(cx, proto);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return LooselyEqual(cx, lvalue, rval, result);
+||||||| merged common ancestors
+    return LooselyEqual(cx, lvalue, rval, result);
+=======
+JSObject* js::FunWithProtoOperation(JSContext* cx, HandleFunction fun,
+                                    HandleObject parent, HandleObject proto) {
+  return CloneFunctionObjectIfNotSingleton(cx, fun, parent, proto);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 // ES6 draft rev32 7.2.12 Abstract Equality Comparison
 bool js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
                       bool* result) {
@@ -934,14 +1523,178 @@ bool js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
               (rval.isObject() && EmulatesUndefined(&rval.toObject()));
     return true;
   }
+||||||| merged common ancestors
+// ES6 draft rev32 7.2.12 Abstract Equality Comparison
+bool
+js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval, bool* result)
+{
+    // Step 3.
+    if (SameType(lval, rval)) {
+        return EqualGivenSameType(cx, lval, rval, result);
+    }
 
+    // Handle int32 x double.
+    if (lval.isNumber() && rval.isNumber()) {
+        *result = (lval.toNumber() == rval.toNumber());
+        return true;
+    }
+
+    // Step 4. This a bit more complex, because of the undefined emulating object.
+    if (lval.isNullOrUndefined()) {
+        // We can return early here, because null | undefined is only equal to the same set.
+        *result = rval.isNullOrUndefined() ||
+                  (rval.isObject() && EmulatesUndefined(&rval.toObject()));
+        return true;
+    }
+
+    // Step 5.
+    if (rval.isNullOrUndefined()) {
+        MOZ_ASSERT(!lval.isNullOrUndefined());
+        *result = lval.isObject() && EmulatesUndefined(&lval.toObject());
+        return true;
+    }
+
+    // Step 6.
+    if (lval.isNumber() && rval.isString()) {
+        double num;
+        if (!StringToNumber(cx, rval.toString(), &num)) {
+            return false;
+        }
+        *result = (lval.toNumber() == num);
+        return true;
+    }
+
+    // Step 7.
+    if (lval.isString() && rval.isNumber()) {
+        double num;
+        if (!StringToNumber(cx, lval.toString(), &num)) {
+            return false;
+        }
+        *result = (num == rval.toNumber());
+        return true;
+    }
+=======
+/*
+ * Enter the new with environment using an object at sp[-1] and associate the
+ * depth of the with block with sp + stackIndex.
+ */
+bool js::EnterWithOperation(JSContext* cx, AbstractFramePtr frame,
+                            HandleValue val, Handle<WithScope*> scope) {
+  RootedObject obj(cx);
+  if (val.isObject()) {
+    obj = &val.toObject();
+  } else {
+    obj = ToObject(cx, val);
+    if (!obj) {
+      return false;
+    }
+  }
+
+  RootedObject envChain(cx, frame.environmentChain());
+  WithEnvironmentObject* withobj =
+      WithEnvironmentObject::create(cx, obj, envChain, scope);
+  if (!withobj) {
+    return false;
+  }
+
+  frame.pushOnEnvironmentChain(*withobj);
+  return true;
+}
+
+static void PopEnvironment(JSContext* cx, EnvironmentIter& ei) {
+  switch (ei.scope().kind()) {
+    case ScopeKind::Lexical:
+    case ScopeKind::SimpleCatch:
+    case ScopeKind::Catch:
+    case ScopeKind::NamedLambda:
+    case ScopeKind::StrictNamedLambda:
+      if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+        DebugEnvironments::onPopLexical(cx, ei);
+      }
+      if (ei.scope().hasEnvironment()) {
+        ei.initialFrame().popOffEnvironmentChain<LexicalEnvironmentObject>();
+      }
+      break;
+    case ScopeKind::With:
+      if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+        DebugEnvironments::onPopWith(ei.initialFrame());
+      }
+      ei.initialFrame().popOffEnvironmentChain<WithEnvironmentObject>();
+      break;
+    case ScopeKind::Function:
+      if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+        DebugEnvironments::onPopCall(cx, ei.initialFrame());
+      }
+      if (ei.scope().hasEnvironment()) {
+        ei.initialFrame().popOffEnvironmentChain<CallObject>();
+      }
+      break;
+    case ScopeKind::FunctionBodyVar:
+    case ScopeKind::ParameterExpressionVar:
+    case ScopeKind::StrictEval:
+      if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+        DebugEnvironments::onPopVar(cx, ei);
+      }
+      if (ei.scope().hasEnvironment()) {
+        ei.initialFrame().popOffEnvironmentChain<VarEnvironmentObject>();
+      }
+      break;
+    case ScopeKind::Module:
+      if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+        DebugEnvironments::onPopModule(cx, ei);
+      }
+      break;
+    case ScopeKind::Eval:
+    case ScopeKind::Global:
+    case ScopeKind::NonSyntactic:
+      break;
+    case ScopeKind::WasmInstance:
+    case ScopeKind::WasmFunction:
+      MOZ_CRASH("wasm is not interpreted");
+      break;
+  }
+}
+
+// Unwind environment chain and iterator to match the env corresponding to
+// the given bytecode position.
+void js::UnwindEnvironment(JSContext* cx, EnvironmentIter& ei, jsbytecode* pc) {
+  if (!ei.withinInitialFrame()) {
+    return;
+  }
+
+  RootedScope scope(cx, ei.initialFrame().script()->innermostScope(pc));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Step 5.
   if (rval.isNullOrUndefined()) {
     MOZ_ASSERT(!lval.isNullOrUndefined());
     *result = lval.isObject() && EmulatesUndefined(&lval.toObject());
     return true;
   }
+||||||| merged common ancestors
+    // Step 8.
+    if (lval.isBoolean()) {
+        return LooselyEqualBooleanAndOther(cx, lval, rval, result);
+    }
+=======
+#ifdef DEBUG
+  // A frame's environment chain cannot be unwound to anything enclosing the
+  // body scope of a script.  This includes the parameter defaults
+  // environment and the decl env object. These environments, once pushed
+  // onto the environment chain, are expected to be there for the duration
+  // of the frame.
+  //
+  // Attempting to unwind to the parameter defaults code in a script is a
+  // bug; that section of code has no try-catch blocks.
+  JSScript* script = ei.initialFrame().script();
+  for (uint32_t i = 0; i < script->bodyScopeIndex(); i++) {
+    MOZ_ASSERT(scope != script->getScope(i));
+  }
+#endif
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 6.
   if (lval.isNumber() && rval.isString()) {
     double num;
@@ -951,7 +1704,19 @@ bool js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
     *result = (lval.toNumber() == num);
     return true;
   }
+||||||| merged common ancestors
+    // Step 9.
+    if (rval.isBoolean()) {
+        return LooselyEqualBooleanAndOther(cx, rval, lval, result);
+    }
+=======
+  for (; ei.maybeScope() != scope; ei++) {
+    PopEnvironment(cx, ei);
+  }
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Step 7.
   if (lval.isString() && rval.isNumber()) {
     double num;
@@ -991,7 +1756,91 @@ bool js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
     }
     return LooselyEqual(cx, lvalue, rval, result);
   }
+||||||| merged common ancestors
+    // Step 10.
+    if ((lval.isString() || lval.isNumber() || lval.isSymbol()) && rval.isObject()) {
+        RootedValue rvalue(cx, rval);
+        if (!ToPrimitive(cx, &rvalue)) {
+            return false;
+        }
+        return LooselyEqual(cx, lval, rvalue, result);
+    }
 
+    // Step 11.
+    if (lval.isObject() && (rval.isString() || rval.isNumber() || rval.isSymbol())) {
+        RootedValue lvalue(cx, lval);
+        if (!ToPrimitive(cx, &lvalue)) {
+            return false;
+        }
+        return LooselyEqual(cx, lvalue, rval, result);
+    }
+=======
+// Unwind all environments. This is needed because block scopes may cover the
+// first bytecode at a script's main(). e.g.,
+//
+//     function f() { { let i = 0; } }
+//
+// will have no pc location distinguishing the first block scope from the
+// outermost function scope.
+void js::UnwindAllEnvironmentsInFrame(JSContext* cx, EnvironmentIter& ei) {
+  for (; ei.withinInitialFrame(); ei++) {
+    PopEnvironment(cx, ei);
+  }
+}
+
+// Compute the pc needed to unwind the environment to the beginning of a try
+// block. We cannot unwind to *after* the JSOP_TRY, because that might be the
+// first opcode of an inner scope, with the same problem as above. e.g.,
+//
+// try { { let x; } }
+//
+// will have no pc location distinguishing the try block scope from the inner
+// let block scope.
+jsbytecode* js::UnwindEnvironmentToTryPc(JSScript* script,
+                                         const JSTryNote* tn) {
+  jsbytecode* pc = script->offsetToPC(tn->start);
+  if (tn->kind == JSTRY_CATCH || tn->kind == JSTRY_FINALLY) {
+    pc -= JSOP_TRY_LENGTH;
+    MOZ_ASSERT(*pc == JSOP_TRY);
+  } else if (tn->kind == JSTRY_DESTRUCTURING) {
+    pc -= JSOP_TRY_DESTRUCTURING_LENGTH;
+    MOZ_ASSERT(*pc == JSOP_TRY_DESTRUCTURING);
+  }
+  return pc;
+}
+
+static bool ForcedReturn(JSContext* cx, InterpreterRegs& regs) {
+  bool ok = Debugger::onLeaveFrame(cx, regs.fp(), regs.pc, true);
+  // Point the frame to the end of the script, regardless of error. The
+  // caller must jump to the correct continuation depending on 'ok'.
+  regs.setToEndOfScript();
+  return ok;
+}
+
+static void SettleOnTryNote(JSContext* cx, const JSTryNote* tn,
+                            EnvironmentIter& ei, InterpreterRegs& regs) {
+  // Unwind the environment to the beginning of the JSOP_TRY.
+  UnwindEnvironment(cx, ei, UnwindEnvironmentToTryPc(regs.fp()->script(), tn));
+
+  // Set pc to the first bytecode after the the try note to point
+  // to the beginning of catch or finally.
+  regs.pc = regs.fp()->script()->offsetToPC(tn->start + tn->length);
+  regs.sp = regs.spForStackDepth(tn->stackDepth);
+}
+
+class InterpreterTryNoteFilter {
+  const InterpreterRegs& regs_;
+
+ public:
+  explicit InterpreterTryNoteFilter(const InterpreterRegs& regs)
+      : regs_(regs) {}
+  bool operator()(const JSTryNote* note) {
+    return note->stackDepth <= regs_.stackDepth();
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (lval.isBigInt()) {
     RootedBigInt lbi(cx, lval.toBigInt());
@@ -1015,8 +1864,56 @@ bool js::LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
   // Step 12.
   *result = false;
   return true;
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (lval.isBigInt()) {
+        RootedBigInt lbi(cx, lval.toBigInt());
+        bool tmpResult;
+        JS_TRY_VAR_OR_RETURN_FALSE(cx, tmpResult, BigInt::looselyEqual(cx, lbi, rval));
+        *result = tmpResult;
+        return true;
+    }
+
+    if (rval.isBigInt()) {
+        RootedBigInt rbi(cx, rval.toBigInt());
+        bool tmpResult;
+        JS_TRY_VAR_OR_RETURN_FALSE(cx, tmpResult, BigInt::looselyEqual(cx, rbi, lval));
+        *result = tmpResult;
+        return true;
+    }
+#endif
+
+    // Step 12.
+    *result = false;
+    return true;
+=======
+class TryNoteIterInterpreter : public TryNoteIter<InterpreterTryNoteFilter> {
+ public:
+  TryNoteIterInterpreter(JSContext* cx, const InterpreterRegs& regs)
+      : TryNoteIter(cx, regs.fp()->script(), regs.pc,
+                    InterpreterTryNoteFilter(regs)) {}
+};
+
+static void UnwindIteratorsForUncatchableException(
+    JSContext* cx, const InterpreterRegs& regs) {
+  // c.f. the regular (catchable) TryNoteIterInterpreter loop in
+  // ProcessTryNotes.
+  for (TryNoteIterInterpreter tni(cx, regs); !tni.done(); ++tni) {
+    const JSTryNote* tn = *tni;
+    switch (tn->kind) {
+      case JSTRY_FOR_IN: {
+        Value* sp = regs.spForStackDepth(tn->stackDepth);
+        UnwindIteratorForUncatchableException(&sp[-1].toObject());
+        break;
+      }
+      default:
+        break;
+    }
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::StrictlyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
                        bool* equal) {
   if (SameType(lval, rval)) {
@@ -1143,7 +2040,174 @@ bool js::EnterWithOperation(JSContext* cx, AbstractFramePtr frame,
       return false;
     }
   }
+||||||| merged common ancestors
+bool
+js::StrictlyEqual(JSContext* cx, HandleValue lval, HandleValue rval, bool* equal)
+{
+    if (SameType(lval, rval)) {
+        return EqualGivenSameType(cx, lval, rval, equal);
+    }
 
+    if (lval.isNumber() && rval.isNumber()) {
+        *equal = (lval.toNumber() == rval.toNumber());
+        return true;
+    }
+
+    *equal = false;
+    return true;
+}
+
+static inline bool
+IsNegativeZero(const Value& v)
+{
+    return v.isDouble() && mozilla::IsNegativeZero(v.toDouble());
+}
+
+static inline bool
+IsNaN(const Value& v)
+{
+    return v.isDouble() && mozilla::IsNaN(v.toDouble());
+}
+
+bool
+js::SameValue(JSContext* cx, HandleValue v1, HandleValue v2, bool* same)
+{
+    if (IsNegativeZero(v1)) {
+        *same = IsNegativeZero(v2);
+        return true;
+    }
+    if (IsNegativeZero(v2)) {
+        *same = false;
+        return true;
+    }
+    if (IsNaN(v1) && IsNaN(v2)) {
+        *same = true;
+        return true;
+    }
+    return StrictlyEqual(cx, v1, v2, same);
+}
+
+JSType
+js::TypeOfObject(JSObject* obj)
+{
+    if (EmulatesUndefined(obj)) {
+        return JSTYPE_UNDEFINED;
+    }
+    if (obj->isCallable()) {
+        return JSTYPE_FUNCTION;
+    }
+    return JSTYPE_OBJECT;
+}
+
+JSType
+js::TypeOfValue(const Value& v)
+{
+    if (v.isNumber()) {
+        return JSTYPE_NUMBER;
+    }
+    if (v.isString()) {
+        return JSTYPE_STRING;
+    }
+    if (v.isNull()) {
+        return JSTYPE_OBJECT;
+    }
+    if (v.isUndefined()) {
+        return JSTYPE_UNDEFINED;
+    }
+    if (v.isObject()) {
+        return TypeOfObject(&v.toObject());
+    }
+    if (v.isBoolean()) {
+        return JSTYPE_BOOLEAN;
+    }
+#ifdef ENABLE_BIGINT
+    if (v.isBigInt()) {
+        return JSTYPE_BIGINT;
+    }
+#endif
+    MOZ_ASSERT(v.isSymbol());
+    return JSTYPE_SYMBOL;
+}
+
+bool
+js::CheckClassHeritageOperation(JSContext* cx, HandleValue heritage)
+{
+    if (IsConstructor(heritage)) {
+        return true;
+    }
+
+    if (heritage.isNull()) {
+        return true;
+    }
+
+    if (heritage.isObject()) {
+        ReportIsNotFunction(cx, heritage, 0, CONSTRUCT);
+        return false;
+    }
+
+    ReportValueError(cx, JSMSG_BAD_HERITAGE, -1, heritage, nullptr, "not an object or null");
+    return false;
+}
+
+JSObject*
+js::ObjectWithProtoOperation(JSContext* cx, HandleValue val)
+{
+    if (!val.isObjectOrNull()) {
+        ReportValueError(cx, JSMSG_NOT_OBJORNULL, -1, val, nullptr);
+        return nullptr;
+    }
+
+    RootedObject proto(cx, val.toObjectOrNull());
+    return NewObjectWithGivenProto<PlainObject>(cx, proto);
+}
+
+JSObject*
+js::FunWithProtoOperation(JSContext* cx, HandleFunction fun, HandleObject parent,
+                          HandleObject proto)
+{
+    return CloneFunctionObjectIfNotSingleton(cx, fun, parent, proto);
+}
+
+/*
+ * Enter the new with environment using an object at sp[-1] and associate the
+ * depth of the with block with sp + stackIndex.
+ */
+bool
+js::EnterWithOperation(JSContext* cx, AbstractFramePtr frame, HandleValue val,
+                       Handle<WithScope*> scope)
+{
+    RootedObject obj(cx);
+    if (val.isObject()) {
+        obj = &val.toObject();
+    } else {
+        obj = ToObject(cx, val);
+        if (!obj) {
+            return false;
+        }
+    }
+=======
+enum HandleErrorContinuation {
+  SuccessfulReturnContinuation,
+  ErrorReturnContinuation,
+  CatchContinuation,
+  FinallyContinuation
+};
+
+static HandleErrorContinuation ProcessTryNotes(JSContext* cx,
+                                               EnvironmentIter& ei,
+                                               InterpreterRegs& regs) {
+  for (TryNoteIterInterpreter tni(cx, regs); !tni.done(); ++tni) {
+    const JSTryNote* tn = *tni;
+
+    switch (tn->kind) {
+      case JSTRY_CATCH:
+        /* Catch cannot intercept the closing of a generator. */
+        if (cx->isClosingGenerator()) {
+          break;
+        }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   RootedObject envChain(cx, frame.environmentChain());
   WithEnvironmentObject* withobj =
       WithEnvironmentObject::create(cx, obj, envChain, scope);
@@ -1389,7 +2453,285 @@ static HandleErrorContinuation ProcessTryNotes(JSContext* cx,
         }
         SettleOnTryNote(cx, tn, ei, regs);
         return CatchContinuation;
+||||||| merged common ancestors
+    RootedObject envChain(cx, frame.environmentChain());
+    WithEnvironmentObject* withobj = WithEnvironmentObject::create(cx, obj, envChain, scope);
+    if (!withobj) {
+        return false;
+    }
 
+    frame.pushOnEnvironmentChain(*withobj);
+    return true;
+}
+
+static void
+PopEnvironment(JSContext* cx, EnvironmentIter& ei)
+{
+    switch (ei.scope().kind()) {
+      case ScopeKind::Lexical:
+      case ScopeKind::SimpleCatch:
+      case ScopeKind::Catch:
+      case ScopeKind::NamedLambda:
+      case ScopeKind::StrictNamedLambda:
+        if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+            DebugEnvironments::onPopLexical(cx, ei);
+        }
+        if (ei.scope().hasEnvironment()) {
+            ei.initialFrame().popOffEnvironmentChain<LexicalEnvironmentObject>();
+        }
+        break;
+      case ScopeKind::With:
+        if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+            DebugEnvironments::onPopWith(ei.initialFrame());
+        }
+        ei.initialFrame().popOffEnvironmentChain<WithEnvironmentObject>();
+        break;
+      case ScopeKind::Function:
+        if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+            DebugEnvironments::onPopCall(cx, ei.initialFrame());
+        }
+        if (ei.scope().hasEnvironment()) {
+            ei.initialFrame().popOffEnvironmentChain<CallObject>();
+        }
+        break;
+      case ScopeKind::FunctionBodyVar:
+      case ScopeKind::ParameterExpressionVar:
+      case ScopeKind::StrictEval:
+        if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+            DebugEnvironments::onPopVar(cx, ei);
+        }
+        if (ei.scope().hasEnvironment()) {
+            ei.initialFrame().popOffEnvironmentChain<VarEnvironmentObject>();
+        }
+        break;
+      case ScopeKind::Module:
+        if (MOZ_UNLIKELY(cx->realm()->isDebuggee())) {
+            DebugEnvironments::onPopModule(cx, ei);
+        }
+        break;
+      case ScopeKind::Eval:
+      case ScopeKind::Global:
+      case ScopeKind::NonSyntactic:
+        break;
+      case ScopeKind::WasmInstance:
+      case ScopeKind::WasmFunction:
+        MOZ_CRASH("wasm is not interpreted");
+        break;
+    }
+}
+
+// Unwind environment chain and iterator to match the env corresponding to
+// the given bytecode position.
+void
+js::UnwindEnvironment(JSContext* cx, EnvironmentIter& ei, jsbytecode* pc)
+{
+    if (!ei.withinInitialFrame()) {
+        return;
+    }
+
+    RootedScope scope(cx, ei.initialFrame().script()->innermostScope(pc));
+
+#ifdef DEBUG
+    // A frame's environment chain cannot be unwound to anything enclosing the
+    // body scope of a script.  This includes the parameter defaults
+    // environment and the decl env object. These environments, once pushed
+    // onto the environment chain, are expected to be there for the duration
+    // of the frame.
+    //
+    // Attempting to unwind to the parameter defaults code in a script is a
+    // bug; that section of code has no try-catch blocks.
+    JSScript* script = ei.initialFrame().script();
+    for (uint32_t i = 0; i < script->bodyScopeIndex(); i++) {
+        MOZ_ASSERT(scope != script->getScope(i));
+    }
+#endif
+
+    for (; ei.maybeScope() != scope; ei++) {
+        PopEnvironment(cx, ei);
+    }
+}
+
+// Unwind all environments. This is needed because block scopes may cover the
+// first bytecode at a script's main(). e.g.,
+//
+//     function f() { { let i = 0; } }
+//
+// will have no pc location distinguishing the first block scope from the
+// outermost function scope.
+void
+js::UnwindAllEnvironmentsInFrame(JSContext* cx, EnvironmentIter& ei)
+{
+    for (; ei.withinInitialFrame(); ei++) {
+        PopEnvironment(cx, ei);
+    }
+}
+
+// Compute the pc needed to unwind the environment to the beginning of a try
+// block. We cannot unwind to *after* the JSOP_TRY, because that might be the
+// first opcode of an inner scope, with the same problem as above. e.g.,
+//
+// try { { let x; } }
+//
+// will have no pc location distinguishing the try block scope from the inner
+// let block scope.
+jsbytecode*
+js::UnwindEnvironmentToTryPc(JSScript* script, const JSTryNote* tn)
+{
+    jsbytecode* pc = script->main() + tn->start;
+    if (tn->kind == JSTRY_CATCH || tn->kind == JSTRY_FINALLY) {
+        pc -= JSOP_TRY_LENGTH;
+        MOZ_ASSERT(*pc == JSOP_TRY);
+    } else if (tn->kind == JSTRY_DESTRUCTURING_ITERCLOSE) {
+        pc -= JSOP_TRY_DESTRUCTURING_ITERCLOSE_LENGTH;
+        MOZ_ASSERT(*pc == JSOP_TRY_DESTRUCTURING_ITERCLOSE);
+    }
+    return pc;
+}
+
+static bool
+ForcedReturn(JSContext* cx, InterpreterRegs& regs)
+{
+    bool ok = Debugger::onLeaveFrame(cx, regs.fp(), regs.pc, true);
+    // Point the frame to the end of the script, regardless of error. The
+    // caller must jump to the correct continuation depending on 'ok'.
+    regs.setToEndOfScript();
+    return ok;
+}
+
+static void
+SettleOnTryNote(JSContext* cx, const JSTryNote* tn, EnvironmentIter& ei, InterpreterRegs& regs)
+{
+    // Unwind the environment to the beginning of the JSOP_TRY.
+    UnwindEnvironment(cx, ei, UnwindEnvironmentToTryPc(regs.fp()->script(), tn));
+
+    // Set pc to the first bytecode after the the try note to point
+    // to the beginning of catch or finally.
+    regs.pc = regs.fp()->script()->main() + tn->start + tn->length;
+    regs.sp = regs.spForStackDepth(tn->stackDepth);
+}
+
+class InterpreterFrameStackDepthOp
+{
+    const InterpreterRegs& regs_;
+  public:
+    explicit InterpreterFrameStackDepthOp(const InterpreterRegs& regs)
+      : regs_(regs)
+    { }
+    uint32_t operator()() { return regs_.stackDepth(); }
+};
+
+class TryNoteIterInterpreter : public TryNoteIter<InterpreterFrameStackDepthOp>
+{
+  public:
+    TryNoteIterInterpreter(JSContext* cx, const InterpreterRegs& regs)
+      : TryNoteIter(cx, regs.fp()->script(), regs.pc, InterpreterFrameStackDepthOp(regs))
+    { }
+};
+
+static void
+UnwindIteratorsForUncatchableException(JSContext* cx, const InterpreterRegs& regs)
+{
+    // c.f. the regular (catchable) TryNoteIterInterpreter loop in
+    // ProcessTryNotes.
+    bool inForOfIterClose = false;
+    for (TryNoteIterInterpreter tni(cx, regs); !tni.done(); ++tni) {
+        const JSTryNote* tn = *tni;
+        switch (tn->kind) {
+          case JSTRY_FOR_IN: {
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+
+            Value* sp = regs.spForStackDepth(tn->stackDepth);
+            UnwindIteratorForUncatchableException(&sp[-1].toObject());
+            break;
+          }
+
+          case JSTRY_FOR_OF_ITERCLOSE:
+            inForOfIterClose = true;
+            break;
+
+          case JSTRY_FOR_OF:
+            inForOfIterClose = false;
+            break;
+
+          default:
+            break;
+        }
+    }
+}
+
+enum HandleErrorContinuation
+{
+    SuccessfulReturnContinuation,
+    ErrorReturnContinuation,
+    CatchContinuation,
+    FinallyContinuation
+};
+
+static HandleErrorContinuation
+ProcessTryNotes(JSContext* cx, EnvironmentIter& ei, InterpreterRegs& regs)
+{
+    bool inForOfIterClose = false;
+    for (TryNoteIterInterpreter tni(cx, regs); !tni.done(); ++tni) {
+        const JSTryNote* tn = *tni;
+
+        switch (tn->kind) {
+          case JSTRY_CATCH:
+            /* Catch cannot intercept the closing of a generator. */
+            if (cx->isClosingGenerator()) {
+                break;
+            }
+
+            // If IteratorClose due to abnormal completion threw inside a
+            // for-of loop, it is not catchable by try statements inside of
+            // the for-of loop.
+            //
+            // This is handled by this weirdness in the exception handler
+            // instead of in bytecode because it is hard to do so in bytecode:
+            //
+            //   1. IteratorClose emitted due to abnormal completion (break,
+            //   throw, return) are emitted inline, at the source location of
+            //   the break, throw, or return statement. For example:
+            //
+            //     for (x of iter) {
+            //       try { return; } catch (e) { }
+            //     }
+            //
+            //   From the try-note nesting's perspective, the IteratorClose
+            //   resulting from |return| is covered by the inner try, when it
+            //   should not be.
+            //
+            //   2. Try-catch notes cannot be disjoint. That is, we can't have
+            //   multiple notes with disjoint pc ranges jumping to the same
+            //   catch block.
+            if (inForOfIterClose) {
+                break;
+            }
+            SettleOnTryNote(cx, tn, ei, regs);
+            return CatchContinuation;
+=======
+        SettleOnTryNote(cx, tn, ei, regs);
+        return CatchContinuation;
+
+      case JSTRY_FINALLY:
+        SettleOnTryNote(cx, tn, ei, regs);
+        return FinallyContinuation;
+
+      case JSTRY_FOR_IN: {
+        /* This is similar to JSOP_ENDITER in the interpreter loop. */
+        DebugOnly<jsbytecode*> pc =
+            regs.fp()->script()->offsetToPC(tn->start + tn->length);
+        MOZ_ASSERT(JSOp(*pc) == JSOP_ENDITER);
+        Value* sp = regs.spForStackDepth(tn->stackDepth);
+        JSObject* obj = &sp[-1].toObject();
+        CloseIterator(obj);
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       case JSTRY_FINALLY:
         // See note above.
         if (inForOfIterClose) {
@@ -1456,6 +2798,241 @@ static HandleErrorContinuation ProcessTryNotes(JSContext* cx,
 
   return SuccessfulReturnContinuation;
 }
+||||||| merged common ancestors
+          case JSTRY_FINALLY:
+            // See note above.
+            if (inForOfIterClose) {
+                break;
+            }
+            SettleOnTryNote(cx, tn, ei, regs);
+            return FinallyContinuation;
+
+          case JSTRY_FOR_IN: {
+            // Don't let (extra) values pushed on the stack while closing a
+            // for-of iterator confuse us into thinking we still have to close
+            // an inner for-in iterator.
+            if (inForOfIterClose) {
+                break;
+            }
+
+            /* This is similar to JSOP_ENDITER in the interpreter loop. */
+            DebugOnly<jsbytecode*> pc = regs.fp()->script()->main() + tn->start + tn->length;
+            MOZ_ASSERT(JSOp(*pc) == JSOP_ENDITER);
+            Value* sp = regs.spForStackDepth(tn->stackDepth);
+            JSObject* obj = &sp[-1].toObject();
+            CloseIterator(obj);
+            break;
+          }
+
+          case JSTRY_DESTRUCTURING_ITERCLOSE: {
+            // See note above.
+            if (inForOfIterClose) {
+                break;
+            }
+
+            // Whether the destructuring iterator is done is at the top of the
+            // stack. The iterator object is second from the top.
+            MOZ_ASSERT(tn->stackDepth > 1);
+            Value* sp = regs.spForStackDepth(tn->stackDepth);
+            RootedValue doneValue(cx, sp[-1]);
+            bool done = ToBoolean(doneValue);
+            if (!done) {
+                RootedObject iterObject(cx, &sp[-2].toObject());
+                if (!IteratorCloseForException(cx, iterObject)) {
+                    SettleOnTryNote(cx, tn, ei, regs);
+                    return ErrorReturnContinuation;
+                }
+            }
+            break;
+          }
+
+          case JSTRY_FOR_OF_ITERCLOSE:
+            inForOfIterClose = true;
+            break;
+
+          case JSTRY_FOR_OF:
+            inForOfIterClose = false;
+            break;
+
+          case JSTRY_LOOP:
+            break;
+
+          default:
+            MOZ_CRASH("Invalid try note");
+        }
+    }
+
+    return SuccessfulReturnContinuation;
+}
+
+bool
+js::HandleClosingGeneratorReturn(JSContext* cx, AbstractFramePtr frame, bool ok)
+{
+    /*
+     * Propagate the exception or error to the caller unless the exception
+     * is an asynchronous return from a generator.
+     */
+    if (cx->isClosingGenerator()) {
+        cx->clearPendingException();
+        ok = true;
+        SetGeneratorClosed(cx, frame);
+    }
+    return ok;
+}
+=======
+      case JSTRY_DESTRUCTURING: {
+        // Whether the destructuring iterator is done is at the top of the
+        // stack. The iterator object is second from the top.
+        MOZ_ASSERT(tn->stackDepth > 1);
+        Value* sp = regs.spForStackDepth(tn->stackDepth);
+        RootedValue doneValue(cx, sp[-1]);
+        bool done = ToBoolean(doneValue);
+        if (!done) {
+          RootedObject iterObject(cx, &sp[-2].toObject());
+          if (!IteratorCloseForException(cx, iterObject)) {
+            SettleOnTryNote(cx, tn, ei, regs);
+            return ErrorReturnContinuation;
+          }
+        }
+        break;
+      }
+
+      case JSTRY_FOR_OF:
+      case JSTRY_LOOP:
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool js::HandleClosingGeneratorReturn(JSContext* cx, AbstractFramePtr frame,
+                                      bool ok) {
+  /*
+   * Propagate the exception or error to the caller unless the exception
+   * is an asynchronous return from a generator.
+   */
+  if (cx->isClosingGenerator()) {
+    cx->clearPendingException();
+    ok = true;
+    SetGeneratorClosed(cx, frame);
+  }
+  return ok;
+}
+
+static HandleErrorContinuation HandleError(JSContext* cx,
+                                           InterpreterRegs& regs) {
+  MOZ_ASSERT(regs.fp()->script()->containsPC(regs.pc));
+  MOZ_ASSERT(cx->realm() == regs.fp()->script()->realm());
+
+  if (regs.fp()->script()->hasScriptCounts()) {
+    PCCounts* counts = regs.fp()->script()->getThrowCounts(regs.pc);
+    // If we failed to allocate, then skip the increment and continue to
+    // handle the exception.
+    if (counts) {
+      counts->numExec()++;
+    }
+  }
+
+  EnvironmentIter ei(cx, regs.fp(), regs.pc);
+  bool ok = false;
+
+again:
+  if (cx->isExceptionPending()) {
+    /* Call debugger throw hooks. */
+    if (!cx->isClosingGenerator()) {
+      ResumeMode mode = Debugger::onExceptionUnwind(cx, regs.fp());
+      switch (mode) {
+        case ResumeMode::Terminate:
+          goto again;
+
+        case ResumeMode::Continue:
+        case ResumeMode::Throw:
+          break;
+
+        case ResumeMode::Return:
+          UnwindIteratorsForUncatchableException(cx, regs);
+          if (!ForcedReturn(cx, regs)) {
+            return ErrorReturnContinuation;
+          }
+          return SuccessfulReturnContinuation;
+||||||| merged common ancestors
+static HandleErrorContinuation
+HandleError(JSContext* cx, InterpreterRegs& regs)
+{
+    MOZ_ASSERT(regs.fp()->script()->containsPC(regs.pc));
+    MOZ_ASSERT(cx->realm() == regs.fp()->script()->realm());
+
+    if (regs.fp()->script()->hasScriptCounts()) {
+        PCCounts* counts = regs.fp()->script()->getThrowCounts(regs.pc);
+        // If we failed to allocate, then skip the increment and continue to
+        // handle the exception.
+        if (counts) {
+            counts->numExec()++;
+        }
+    }
+
+    EnvironmentIter ei(cx, regs.fp(), regs.pc);
+    bool ok = false;
+
+  again:
+    if (cx->isExceptionPending()) {
+        /* Call debugger throw hooks. */
+        if (!cx->isClosingGenerator()) {
+            ResumeMode mode = Debugger::onExceptionUnwind(cx, regs.fp());
+            switch (mode) {
+              case ResumeMode::Terminate:
+                goto again;
+
+              case ResumeMode::Continue:
+              case ResumeMode::Throw:
+                break;
+
+              case ResumeMode::Return:
+                UnwindIteratorsForUncatchableException(cx, regs);
+                if (!ForcedReturn(cx, regs)) {
+                    return ErrorReturnContinuation;
+                }
+                return SuccessfulReturnContinuation;
+
+              default:
+                MOZ_CRASH("bad Debugger::onExceptionUnwind resume mode");
+            }
+        }
+
+        HandleErrorContinuation res = ProcessTryNotes(cx, ei, regs);
+        switch (res) {
+          case SuccessfulReturnContinuation:
+            break;
+          case ErrorReturnContinuation:
+            goto again;
+          case CatchContinuation:
+          case FinallyContinuation:
+            // No need to increment the PCCounts number of execution here, as
+            // the interpreter increments any PCCounts if present.
+            MOZ_ASSERT_IF(regs.fp()->script()->hasScriptCounts(),
+                          regs.fp()->script()->maybeGetPCCounts(regs.pc));
+            return res;
+        }
+
+        ok = HandleClosingGeneratorReturn(cx, regs.fp(), ok);
+        ok = Debugger::onLeaveFrame(cx, regs.fp(), regs.pc, ok);
+    } else {
+        // We may be propagating a forced return from the interrupt
+        // callback, which cannot easily force a return.
+        if (MOZ_UNLIKELY(cx->isPropagatingForcedReturn())) {
+            cx->clearPropagatingForcedReturn();
+            if (!ForcedReturn(cx, regs)) {
+                return ErrorReturnContinuation;
+            }
+            return SuccessfulReturnContinuation;
+        }
+=======
+      // JSTRY_FOR_OF_ITERCLOSE is handled internally by the try note iterator.
+      default:
+        MOZ_CRASH("Invalid try note");
+    }
+  }
+
+  return SuccessfulReturnContinuation;
+}
 
 bool js::HandleClosingGeneratorReturn(JSContext* cx, AbstractFramePtr frame,
                                       bool ok) {
@@ -1507,12 +3084,14 @@ again:
             return ErrorReturnContinuation;
           }
           return SuccessfulReturnContinuation;
+>>>>>>> upstream-releases
 
         default:
           MOZ_CRASH("bad Debugger::onExceptionUnwind resume mode");
       }
     }
 
+<<<<<<< HEAD
     HandleErrorContinuation res = ProcessTryNotes(cx, ei, regs);
     switch (res) {
       case SuccessfulReturnContinuation:
@@ -1589,6 +3168,116 @@ again:
     obj = ToObjectFromStack((cx), (val));    \
     if (!obj) goto error;                    \
   JS_END_MACRO
+||||||| merged common ancestors
+    // After this point, we will pop the frame regardless. Settle the frame on
+    // the end of the script.
+    regs.setToEndOfScript();
+
+    return ok ? SuccessfulReturnContinuation : ErrorReturnContinuation;
+}
+
+#define REGS                     (activation.regs())
+#define PUSH_COPY(v)             do { *REGS.sp++ = (v); cx->debugOnlyCheck(REGS.sp[-1]); } while (0)
+#define PUSH_COPY_SKIP_CHECK(v)  *REGS.sp++ = (v)
+#define PUSH_NULL()              REGS.sp++->setNull()
+#define PUSH_UNDEFINED()         REGS.sp++->setUndefined()
+#define PUSH_BOOLEAN(b)          REGS.sp++->setBoolean(b)
+#define PUSH_DOUBLE(d)           REGS.sp++->setDouble(d)
+#define PUSH_INT32(i)            REGS.sp++->setInt32(i)
+#define PUSH_SYMBOL(s)           REGS.sp++->setSymbol(s)
+#define PUSH_STRING(s)           do { REGS.sp++->setString(s); cx->debugOnlyCheck(REGS.sp[-1]); } while (0)
+#define PUSH_OBJECT(obj)         do { REGS.sp++->setObject(obj); cx->debugOnlyCheck(REGS.sp[-1]); } while (0)
+#define PUSH_OBJECT_OR_NULL(obj) do { REGS.sp++->setObjectOrNull(obj); cx->debugOnlyCheck(REGS.sp[-1]); } while (0)
+#define PUSH_MAGIC(magic)        REGS.sp++->setMagic(magic)
+#define POP_COPY_TO(v)           (v) = *--REGS.sp
+#define POP_RETURN_VALUE()       REGS.fp()->setReturnValue(*--REGS.sp)
+
+#define FETCH_OBJECT(cx, n, obj)                                              \
+    JS_BEGIN_MACRO                                                            \
+        HandleValue val = REGS.stackHandleAt(n);                              \
+        obj = ToObjectFromStack((cx), (val));                                 \
+        if (!obj)                                                             \
+            goto error;                                                       \
+    JS_END_MACRO
+=======
+    HandleErrorContinuation res = ProcessTryNotes(cx, ei, regs);
+    switch (res) {
+      case SuccessfulReturnContinuation:
+        break;
+      case ErrorReturnContinuation:
+        goto again;
+      case CatchContinuation:
+      case FinallyContinuation:
+        // No need to increment the PCCounts number of execution here, as
+        // the interpreter increments any PCCounts if present.
+        MOZ_ASSERT_IF(regs.fp()->script()->hasScriptCounts(),
+                      regs.fp()->script()->maybeGetPCCounts(regs.pc));
+        return res;
+    }
+
+    ok = HandleClosingGeneratorReturn(cx, regs.fp(), ok);
+    ok = Debugger::onLeaveFrame(cx, regs.fp(), regs.pc, ok);
+  } else {
+    // We may be propagating a forced return from the interrupt
+    // callback, which cannot easily force a return.
+    if (MOZ_UNLIKELY(cx->isPropagatingForcedReturn())) {
+      cx->clearPropagatingForcedReturn();
+      if (!ForcedReturn(cx, regs)) {
+        return ErrorReturnContinuation;
+      }
+      return SuccessfulReturnContinuation;
+    }
+
+    UnwindIteratorsForUncatchableException(cx, regs);
+  }
+
+  // After this point, we will pop the frame regardless. Settle the frame on
+  // the end of the script.
+  regs.setToEndOfScript();
+
+  return ok ? SuccessfulReturnContinuation : ErrorReturnContinuation;
+}
+
+#define REGS (activation.regs())
+#define PUSH_COPY(v)                 \
+  do {                               \
+    *REGS.sp++ = (v);                \
+    cx->debugOnlyCheck(REGS.sp[-1]); \
+  } while (0)
+#define PUSH_COPY_SKIP_CHECK(v) *REGS.sp++ = (v)
+#define PUSH_NULL() REGS.sp++->setNull()
+#define PUSH_UNDEFINED() REGS.sp++->setUndefined()
+#define PUSH_BOOLEAN(b) REGS.sp++->setBoolean(b)
+#define PUSH_DOUBLE(d) REGS.sp++->setDouble(d)
+#define PUSH_INT32(i) REGS.sp++->setInt32(i)
+#define PUSH_SYMBOL(s) REGS.sp++->setSymbol(s)
+#define PUSH_BIGINT(b) REGS.sp++->setBigInt(b)
+#define PUSH_STRING(s)               \
+  do {                               \
+    REGS.sp++->setString(s);         \
+    cx->debugOnlyCheck(REGS.sp[-1]); \
+  } while (0)
+#define PUSH_OBJECT(obj)             \
+  do {                               \
+    REGS.sp++->setObject(obj);       \
+    cx->debugOnlyCheck(REGS.sp[-1]); \
+  } while (0)
+#define PUSH_OBJECT_OR_NULL(obj)     \
+  do {                               \
+    REGS.sp++->setObjectOrNull(obj); \
+    cx->debugOnlyCheck(REGS.sp[-1]); \
+  } while (0)
+#define PUSH_MAGIC(magic) REGS.sp++->setMagic(magic)
+#define POP_COPY_TO(v) (v) = *--REGS.sp
+#define POP_RETURN_VALUE() REGS.fp()->setReturnValue(*--REGS.sp)
+
+#define FETCH_OBJECT(cx, n, obj)             \
+  JS_BEGIN_MACRO                             \
+    HandleValue val = REGS.stackHandleAt(n); \
+    obj = ToObjectFromStack((cx), (val));    \
+    if (!obj) goto error;                    \
+  JS_END_MACRO
+>>>>>>> upstream-releases
 
 /*
  * Same for JSOP_SETNAME and JSOP_SETPROP, which differ only slightly but
@@ -1617,6 +3306,7 @@ static inline Value ComputeImplicitThis(JSObject* env) {
   // Fast-path for GlobalObject
   if (env->is<GlobalObject>()) {
     return UndefinedValue();
+<<<<<<< HEAD
   }
 
   // WithEnvironmentObjects have an actual implicit |this|
@@ -1685,6 +3375,74 @@ static MOZ_ALWAYS_INLINE bool AddOperation(JSContext* cx,
       RootedString nlstr(cx, lstr), nrstr(cx, rstr);
       str = ConcatStrings<CanGC>(cx, nlstr, nrstr);
       if (!str) {
+||||||| merged common ancestors
+}
+
+static MOZ_ALWAYS_INLINE bool
+AddOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    if (lhs.isInt32() && rhs.isInt32()) {
+        int32_t l = lhs.toInt32(), r = rhs.toInt32();
+        int32_t t;
+        if (MOZ_LIKELY(SafeAdd(l, r, &t))) {
+            res.setInt32(t);
+            return true;
+        }
+    }
+
+    if (!ToPrimitive(cx, lhs)) {
+        return false;
+    }
+    if (!ToPrimitive(cx, rhs)) {
+=======
+  }
+
+  // WithEnvironmentObjects have an actual implicit |this|
+  if (env->is<WithEnvironmentObject>()) {
+    return GetThisValueOfWith(env);
+  }
+
+  // Debugger environments need special casing, as despite being
+  // non-syntactic, they wrap syntactic environments and should not be
+  // treated like other embedding-specific non-syntactic environments.
+  if (env->is<DebugEnvironmentProxy>()) {
+    return ComputeImplicitThis(&env->as<DebugEnvironmentProxy>().environment());
+  }
+
+  MOZ_ASSERT(env->is<EnvironmentObject>());
+  return UndefinedValue();
+}
+
+static MOZ_ALWAYS_INLINE bool AddOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  if (lhs.isInt32() && rhs.isInt32()) {
+    int32_t l = lhs.toInt32(), r = rhs.toInt32();
+    int32_t t;
+    if (MOZ_LIKELY(SafeAdd(l, r, &t))) {
+      res.setInt32(t);
+      return true;
+    }
+  }
+
+  if (!ToPrimitive(cx, lhs)) {
+    return false;
+  }
+  if (!ToPrimitive(cx, rhs)) {
+    return false;
+  }
+
+  bool lIsString = lhs.isString();
+  bool rIsString = rhs.isString();
+  if (lIsString || rIsString) {
+    JSString* lstr;
+    if (lIsString) {
+      lstr = lhs.toString();
+    } else {
+      lstr = ToString<CanGC>(cx, lhs);
+      if (!lstr) {
+>>>>>>> upstream-releases
         return false;
       }
     }
@@ -1692,6 +3450,7 @@ static MOZ_ALWAYS_INLINE bool AddOperation(JSContext* cx,
     return true;
   }
 
+<<<<<<< HEAD
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
@@ -1723,7 +3482,101 @@ static MOZ_ALWAYS_INLINE bool SubOperation(JSContext* cx,
   res.setNumber(lhs.toNumber() - rhs.toNumber());
   return true;
 }
+||||||| merged common ancestors
+    bool lIsString = lhs.isString();
+    bool rIsString = rhs.isString();
+    if (lIsString || rIsString) {
+        JSString* lstr;
+        if (lIsString) {
+            lstr = lhs.toString();
+        } else {
+            lstr = ToString<CanGC>(cx, lhs);
+            if (!lstr) {
+                return false;
+            }
+        }
 
+        JSString* rstr;
+        if (rIsString) {
+            rstr = rhs.toString();
+        } else {
+            // Save/restore lstr in case of GC activity under ToString.
+            lhs.setString(lstr);
+            rstr = ToString<CanGC>(cx, rhs);
+            if (!rstr) {
+                return false;
+            }
+            lstr = lhs.toString();
+        }
+        JSString* str = ConcatStrings<NoGC>(cx, lstr, rstr);
+        if (!str) {
+            RootedString nlstr(cx, lstr), nrstr(cx, rstr);
+            str = ConcatStrings<CanGC>(cx, nlstr, nrstr);
+            if (!str) {
+                return false;
+            }
+        }
+        res.setString(str);
+        return true;
+    }
+
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::add(cx, lhs, rhs, res);
+    }
+#endif
+
+    res.setNumber(lhs.toNumber() + rhs.toNumber());
+    return true;
+}
+
+static MOZ_ALWAYS_INLINE bool
+SubOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::sub(cx, lhs, rhs, res);
+    }
+#endif
+
+    res.setNumber(lhs.toNumber() - rhs.toNumber());
+    return true;
+}
+=======
+    JSString* rstr;
+    if (rIsString) {
+      rstr = rhs.toString();
+    } else {
+      // Save/restore lstr in case of GC activity under ToString.
+      lhs.setString(lstr);
+      rstr = ToString<CanGC>(cx, rhs);
+      if (!rstr) {
+        return false;
+      }
+      lstr = lhs.toString();
+    }
+    JSString* str = ConcatStrings<NoGC>(cx, lstr, rstr);
+    if (!str) {
+      RootedString nlstr(cx, lstr), nrstr(cx, rstr);
+      str = ConcatStrings<CanGC>(cx, nlstr, nrstr);
+      if (!str) {
+        return false;
+      }
+    }
+    res.setString(str);
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE bool MulOperation(JSContext* cx,
                                            MutableHandleValue lhs,
                                            MutableHandleValue rhs,
@@ -1731,17 +3584,50 @@ static MOZ_ALWAYS_INLINE bool MulOperation(JSContext* cx,
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE bool
+MulOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+=======
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::mul(cx, lhs, rhs, res);
   }
 #endif
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::mul(cx, lhs, rhs, res);
+    }
+#endif
+=======
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::add(cx, lhs, rhs, res);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   res.setNumber(lhs.toNumber() * rhs.toNumber());
   return true;
+||||||| merged common ancestors
+    res.setNumber(lhs.toNumber() * rhs.toNumber());
+    return true;
+=======
+  res.setNumber(lhs.toNumber() + rhs.toNumber());
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE bool DivOperation(JSContext* cx,
                                            MutableHandleValue lhs,
                                            MutableHandleValue rhs,
@@ -1749,17 +3635,54 @@ static MOZ_ALWAYS_INLINE bool DivOperation(JSContext* cx,
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE bool
+DivOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+=======
+static MOZ_ALWAYS_INLINE bool SubOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::div(cx, lhs, rhs, res);
   }
 #endif
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::div(cx, lhs, rhs, res);
+    }
+#endif
+=======
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::sub(cx, lhs, rhs, res);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   res.setNumber(NumberDiv(lhs.toNumber(), rhs.toNumber()));
   return true;
+||||||| merged common ancestors
+    res.setNumber(NumberDiv(lhs.toNumber(), rhs.toNumber()));
+    return true;
+=======
+  res.setNumber(lhs.toNumber() - rhs.toNumber());
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE bool ModOperation(JSContext* cx,
                                            MutableHandleValue lhs,
                                            MutableHandleValue rhs,
@@ -1775,17 +3698,62 @@ static MOZ_ALWAYS_INLINE bool ModOperation(JSContext* cx,
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE bool
+ModOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    int32_t l, r;
+    if (lhs.isInt32() && rhs.isInt32() &&
+        (l = lhs.toInt32()) >= 0 && (r = rhs.toInt32()) > 0) {
+        int32_t mod = l % r;
+        res.setInt32(mod);
+        return true;
+    }
 
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+=======
+static MOZ_ALWAYS_INLINE bool MulOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::mod(cx, lhs, rhs, res);
   }
 #endif
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::mod(cx, lhs, rhs, res);
+    }
+#endif
+=======
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::mul(cx, lhs, rhs, res);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   res.setNumber(NumberMod(lhs.toNumber(), rhs.toNumber()));
   return true;
+||||||| merged common ancestors
+    res.setNumber(NumberMod(lhs.toNumber(), rhs.toNumber()));
+    return true;
+=======
+  res.setNumber(lhs.toNumber() * rhs.toNumber());
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE bool PowOperation(JSContext* cx,
                                            MutableHandleValue lhs,
                                            MutableHandleValue rhs,
@@ -1793,13 +3761,42 @@ static MOZ_ALWAYS_INLINE bool PowOperation(JSContext* cx,
   if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
     return false;
   }
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE bool
+PowOperation(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+        return false;
+    }
+=======
+static MOZ_ALWAYS_INLINE bool DivOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (lhs.isBigInt() || rhs.isBigInt()) {
     return BigInt::pow(cx, lhs, rhs, res);
   }
 #endif
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (lhs.isBigInt() || rhs.isBigInt()) {
+        return BigInt::pow(cx, lhs, rhs, res);
+    }
+#endif
+=======
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::div(cx, lhs, rhs, res);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   res.setNumber(ecmaPow(lhs.toNumber(), rhs.toNumber()));
   return true;
 }
@@ -1823,6 +3820,164 @@ static MOZ_ALWAYS_INLINE bool SetObjectElementOperation(
       }
     }
   }
+||||||| merged common ancestors
+    res.setNumber(ecmaPow(lhs.toNumber(), rhs.toNumber()));
+    return true;
+}
+
+static MOZ_ALWAYS_INLINE bool
+SetObjectElementOperation(JSContext* cx, HandleObject obj, HandleId id, HandleValue value,
+                          HandleValue receiver, bool strict,
+                          JSScript* script = nullptr, jsbytecode* pc = nullptr)
+{
+    // receiver != obj happens only at super[expr], where we expect to find the property
+    // People probably aren't building hashtables with |super| anyway.
+    TypeScript::MonitorAssign(cx, obj, id);
+
+    if (obj->isNative() && JSID_IS_INT(id)) {
+        uint32_t length = obj->as<NativeObject>().getDenseInitializedLength();
+        int32_t i = JSID_TO_INT(id);
+        if ((uint32_t)i >= length) {
+            // Annotate script if provided with information (e.g. baseline)
+            if (script && script->hasBaselineScript() && IsSetElemPC(pc)) {
+                script->baselineScript()->noteHasDenseAdd(script->pcToOffset(pc));
+            }
+        }
+    }
+=======
+  res.setNumber(NumberDiv(lhs.toNumber(), rhs.toNumber()));
+  return true;
+}
+
+static MOZ_ALWAYS_INLINE bool ModOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  int32_t l, r;
+  if (lhs.isInt32() && rhs.isInt32() && (l = lhs.toInt32()) >= 0 &&
+      (r = rhs.toInt32()) > 0) {
+    int32_t mod = l % r;
+    res.setInt32(mod);
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Set the HadElementsAccess flag on the object if needed. This flag is
+  // used to do more eager dictionary-mode conversion for objects that are
+  // used as hashmaps. Set this flag only for objects with many properties,
+  // to avoid unnecessary Shape changes.
+  if (obj->isNative() && JSID_IS_ATOM(id) &&
+      !obj->as<NativeObject>().inDictionaryMode() &&
+      !obj->as<NativeObject>().hadElementsAccess() &&
+      obj->as<NativeObject>().slotSpan() >
+          PropertyTree::MAX_HEIGHT_WITH_ELEMENTS_ACCESS / 3) {
+    if (!NativeObject::setHadElementsAccess(cx, obj.as<NativeObject>())) {
+      return false;
+    }
+  }
+||||||| merged common ancestors
+    // Set the HadElementsAccess flag on the object if needed. This flag is
+    // used to do more eager dictionary-mode conversion for objects that are
+    // used as hashmaps. Set this flag only for objects with many properties,
+    // to avoid unnecessary Shape changes.
+    if (obj->isNative() &&
+        JSID_IS_ATOM(id) &&
+        !obj->as<NativeObject>().inDictionaryMode() &&
+        !obj->as<NativeObject>().hadElementsAccess() &&
+        obj->as<NativeObject>().slotSpan() > PropertyTree::MAX_HEIGHT_WITH_ELEMENTS_ACCESS / 3)
+    {
+        if (!NativeObject::setHadElementsAccess(cx, obj.as<NativeObject>())) {
+            return false;
+        }
+    }
+=======
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::mod(cx, lhs, rhs, res);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ObjectOpResult result;
+  return SetProperty(cx, obj, id, value, receiver, result) &&
+         result.checkStrictErrorOrWarning(cx, obj, id, strict);
+||||||| merged common ancestors
+    ObjectOpResult result;
+    return SetProperty(cx, obj, id, value, receiver, result) &&
+           result.checkStrictErrorOrWarning(cx, obj, id, strict);
+}
+
+/*
+ * Get the innermost enclosing function that has a 'this' binding.
+ *
+ * Implements ES6 12.3.5.2 GetSuperConstructor() steps 1-3, including
+ * the loop in ES6 8.3.2 GetThisEnvironment(). Our implementation of
+ * ES6 12.3.5.3 MakeSuperPropertyReference() also uses this code.
+ */
+static JSFunction&
+GetSuperEnvFunction(JSContext* cx, InterpreterRegs& regs)
+{
+    JSObject* env = regs.fp()->environmentChain();
+    Scope* scope = regs.fp()->script()->innermostScope(regs.pc);
+    for (EnvironmentIter ei(cx, env, scope); ei; ei++) {
+        if (ei.hasSyntacticEnvironment() && ei.scope().is<FunctionScope>()) {
+            JSFunction& callee = ei.environment().as<CallObject>().callee();
+
+            // Arrow functions don't have the information we're looking for,
+            // their enclosing scopes do. Nevertheless, they might have call
+            // objects. Skip them to find what we came for.
+            if (callee.isArrow()) {
+                continue;
+            }
+
+            return callee;
+        }
+    }
+    MOZ_CRASH("unexpected env chain for GetSuperEnvFunction");
+=======
+  res.setNumber(NumberMod(lhs.toNumber(), rhs.toNumber()));
+  return true;
+}
+
+static MOZ_ALWAYS_INLINE bool PowOperation(JSContext* cx,
+                                           MutableHandleValue lhs,
+                                           MutableHandleValue rhs,
+                                           MutableHandleValue res) {
+  if (!ToNumeric(cx, lhs) || !ToNumeric(cx, rhs)) {
+    return false;
+  }
+
+  if (lhs.isBigInt() || rhs.isBigInt()) {
+    return BigInt::pow(cx, lhs, rhs, res);
+  }
+
+  res.setNumber(ecmaPow(lhs.toNumber(), rhs.toNumber()));
+  return true;
+}
+
+static MOZ_ALWAYS_INLINE bool SetObjectElementOperation(
+    JSContext* cx, HandleObject obj, HandleId id, HandleValue value,
+    HandleValue receiver, bool strict, JSScript* script = nullptr,
+    jsbytecode* pc = nullptr) {
+  // receiver != obj happens only at super[expr], where we expect to find the
+  // property. People probably aren't building hashtables with |super|
+  // anyway.
+  JitScript::MonitorAssign(cx, obj, id);
+
+  if (obj->isNative() && JSID_IS_INT(id)) {
+    uint32_t length = obj->as<NativeObject>().getDenseInitializedLength();
+    int32_t i = JSID_TO_INT(id);
+    if ((uint32_t)i >= length) {
+      // Annotate script if provided with information (e.g. baseline)
+      if (script && script->hasJitScript() && IsSetElemPC(pc)) {
+        script->jitScript()->noteHasDenseAdd(script->pcToOffset(pc));
+      }
+    }
+  }
 
   // Set the HadElementsAccess flag on the object if needed. This flag is
   // used to do more eager dictionary-mode conversion for objects that are
@@ -1841,6 +3996,7 @@ static MOZ_ALWAYS_INLINE bool SetObjectElementOperation(
   ObjectOpResult result;
   return SetProperty(cx, obj, id, value, receiver, result) &&
          result.checkStrictErrorOrWarning(cx, obj, id, strict);
+>>>>>>> upstream-releases
 }
 
 /*
@@ -1879,6 +4035,7 @@ class ReservedRooted : public RootedBase<T, ReservedRooted<T>> {
   DECLARE_POINTER_ASSIGN_OPS(ReservedRooted, T)
 };
 
+<<<<<<< HEAD
 void js::ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
                                 HandleValue rref, int rindex) {
   auto uniqueCharsFromString = [](JSContext* cx,
@@ -1900,6 +4057,52 @@ void js::ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
     }
     return StringToNewUTF8CharsZ(cx, *str);
   };
+||||||| merged common ancestors
+void
+js::ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
+                           HandleValue rref, int rindex)
+{
+    auto uniqueCharsFromString = [](JSContext* cx, HandleValue ref) -> UniqueChars {
+        static const size_t MaxStringLength = 16;
+        RootedString str(cx, ref.toString());
+        if (str->length() > MaxStringLength) {
+            StringBuffer buf(cx);
+            if (!buf.appendSubstring(str, 0, MaxStringLength)) {
+                return nullptr;
+            }
+            if (!buf.append("...")) {
+                return nullptr;
+            }
+            str = buf.finishString();
+            if (!str) {
+                return nullptr;
+            }
+        }
+        return StringToNewUTF8CharsZ(cx, *str);
+    };
+=======
+void js::ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
+                                HandleValue rref, int rindex) {
+  auto uniqueCharsFromString = [](JSContext* cx,
+                                  HandleValue ref) -> UniqueChars {
+    static const size_t MaxStringLength = 16;
+    RootedString str(cx, ref.toString());
+    if (str->length() > MaxStringLength) {
+      JSStringBuilder buf(cx);
+      if (!buf.appendSubstring(str, 0, MaxStringLength)) {
+        return nullptr;
+      }
+      if (!buf.append("...")) {
+        return nullptr;
+      }
+      str = buf.finishString();
+      if (!str) {
+        return nullptr;
+      }
+    }
+    return StringToNewUTF8CharsZ(cx, *str);
+  };
+>>>>>>> upstream-releases
 
   if (lref.isString() && rref.isString()) {
     UniqueChars lbytes = uniqueCharsFromString(cx, lref);
@@ -1933,6 +4136,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 #if (defined(__GNUC__) || (__IBMC__ >= 700 && defined __IBM_COMPUTED_GOTO) || \
      __SUNPRO_C >= 0x570)
 // Non-standard but faster indirect-goto-based dispatch.
+<<<<<<< HEAD
 #define INTERPRETER_LOOP()
 #define CASE(OP) label_##OP:
 #define DEFAULT() \
@@ -1953,8 +4157,52 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
           FOR_EACH_TRAILING_UNUSED_OPCODE(TRAILING_LABEL)
 #undef TRAILING_LABEL
   };
+||||||| merged common ancestors
+# define INTERPRETER_LOOP()
+# define CASE(OP)                 label_##OP:
+# define DEFAULT()                label_default:
+# define DISPATCH_TO(OP)          goto* addresses[(OP)]
+
+# define LABEL(X)                 (&&label_##X)
+
+    // Use addresses instead of offsets to optimize for runtime speed over
+    // load-time relocation overhead.
+    static const void* const addresses[EnableInterruptsPseudoOpcode + 1] = {
+# define OPCODE_LABEL(op, ...)  LABEL(op),
+        FOR_EACH_OPCODE(OPCODE_LABEL)
+# undef OPCODE_LABEL
+# define TRAILING_LABEL(v)                                                    \
+    ((v) == EnableInterruptsPseudoOpcode                                      \
+     ? LABEL(EnableInterruptsPseudoOpcode)                                    \
+     : LABEL(default)),
+        FOR_EACH_TRAILING_UNUSED_OPCODE(TRAILING_LABEL)
+# undef TRAILING_LABEL
+    };
+=======
+#  define INTERPRETER_LOOP()
+#  define CASE(OP) label_##OP:
+#  define DEFAULT() \
+  label_default:
+#  define DISPATCH_TO(OP) goto* addresses[(OP)]
+
+#  define LABEL(X) (&&label_##X)
+
+  // Use addresses instead of offsets to optimize for runtime speed over
+  // load-time relocation overhead.
+  static const void* const addresses[EnableInterruptsPseudoOpcode + 1] = {
+#  define OPCODE_LABEL(op, ...) LABEL(op),
+      FOR_EACH_OPCODE(OPCODE_LABEL)
+#  undef OPCODE_LABEL
+#  define TRAILING_LABEL(v)                                                    \
+    ((v) == EnableInterruptsPseudoOpcode ? LABEL(EnableInterruptsPseudoOpcode) \
+                                         : LABEL(default)),
+          FOR_EACH_TRAILING_UNUSED_OPCODE(TRAILING_LABEL)
+#  undef TRAILING_LABEL
+  };
+>>>>>>> upstream-releases
 #else
 // Portable switch-based dispatch.
+<<<<<<< HEAD
 #define INTERPRETER_LOOP() \
   the_switch:              \
   switch (switchOp)
@@ -1968,8 +4216,36 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
   // This variable is effectively a parameter to the_switch.
   jsbytecode switchOp;
+||||||| merged common ancestors
+# define INTERPRETER_LOOP()       the_switch: switch (switchOp)
+# define CASE(OP)                 case OP:
+# define DEFAULT()                default:
+# define DISPATCH_TO(OP)                                                      \
+    JS_BEGIN_MACRO                                                            \
+        switchOp = (OP);                                                      \
+        goto the_switch;                                                      \
+    JS_END_MACRO
+
+    // This variable is effectively a parameter to the_switch.
+    jsbytecode switchOp;
+=======
+#  define INTERPRETER_LOOP() \
+  the_switch:                \
+    switch (switchOp)
+#  define CASE(OP) case OP:
+#  define DEFAULT() default:
+#  define DISPATCH_TO(OP) \
+    JS_BEGIN_MACRO        \
+      switchOp = (OP);    \
+      goto the_switch;    \
+    JS_END_MACRO
+
+  // This variable is effectively a parameter to the_switch.
+  jsbytecode switchOp;
+>>>>>>> upstream-releases
 #endif
 
+<<<<<<< HEAD
   /*
    * Increment REGS.pc by N, load the opcode at that position,
    * and jump to the code to execute it.
@@ -2123,6 +4399,321 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       break;
     case ResumeMode::Return:
       if (!ForcedReturn(cx, REGS)) {
+||||||| merged common ancestors
+    /*
+     * Increment REGS.pc by N, load the opcode at that position,
+     * and jump to the code to execute it.
+     *
+     * When Debugger puts a script in single-step mode, all js::Interpret
+     * invocations that might be presently running that script must have
+     * interrupts enabled. It's not practical to simply check
+     * script->stepModeEnabled() at each point some callee could have changed
+     * it, because there are so many places js::Interpret could possibly cause
+     * JavaScript to run: each place an object might be coerced to a primitive
+     * or a number, for example. So instead, we expose a simple mechanism to
+     * let Debugger tweak the affected js::Interpret frames when an onStep
+     * handler is added: calling activation.enableInterruptsUnconditionally()
+     * will enable interrupts, and activation.opMask() is or'd with the opcode
+     * to implement a simple alternate dispatch.
+     */
+#define ADVANCE_AND_DISPATCH(N)                                               \
+    JS_BEGIN_MACRO                                                            \
+        REGS.pc += (N);                                                       \
+        SANITY_CHECKS();                                                      \
+        DISPATCH_TO(*REGS.pc | activation.opMask());                          \
+    JS_END_MACRO
+
+   /*
+    * Shorthand for the common sequence at the end of a fixed-size opcode.
+    */
+#define END_CASE(OP)              ADVANCE_AND_DISPATCH(OP##_LENGTH);
+
+    /*
+     * Prepare to call a user-supplied branch handler, and abort the script
+     * if it returns false.
+     */
+#define CHECK_BRANCH()                                                        \
+    JS_BEGIN_MACRO                                                            \
+        if (!CheckForInterrupt(cx))                                           \
+            goto error;                                                       \
+    JS_END_MACRO
+
+    /*
+     * This is a simple wrapper around ADVANCE_AND_DISPATCH which also does
+     * a CHECK_BRANCH() if n is not positive, which possibly indicates that it
+     * is the backedge of a loop.
+     */
+#define BRANCH(n)                                                             \
+    JS_BEGIN_MACRO                                                            \
+        int32_t nlen = (n);                                                   \
+        if (nlen <= 0)                                                        \
+            CHECK_BRANCH();                                                   \
+        ADVANCE_AND_DISPATCH(nlen);                                           \
+    JS_END_MACRO
+
+    /*
+     * Initialize code coverage vectors.
+     */
+#define INIT_COVERAGE()                                                       \
+    JS_BEGIN_MACRO                                                            \
+        if (!script->hasScriptCounts()) {                                     \
+            if (cx->realm()->collectCoverageForDebug()) {                     \
+                if (!script->initScriptCounts(cx))                            \
+                    goto error;                                               \
+            }                                                                 \
+        }                                                                     \
+    JS_END_MACRO
+
+    /*
+     * Increment the code coverage counter associated with the given pc.
+     */
+#define COUNT_COVERAGE_PC(PC)                                                 \
+    JS_BEGIN_MACRO                                                            \
+        if (script->hasScriptCounts()) {                                      \
+            PCCounts* counts = script->maybeGetPCCounts(PC);                  \
+            MOZ_ASSERT(counts);                                               \
+            counts->numExec()++;                                              \
+        }                                                                     \
+    JS_END_MACRO
+
+#define COUNT_COVERAGE_MAIN()                                                 \
+    JS_BEGIN_MACRO                                                            \
+        jsbytecode* main = script->main();                                    \
+        if (!BytecodeIsJumpTarget(JSOp(*main)))                               \
+            COUNT_COVERAGE_PC(main);                                          \
+    JS_END_MACRO
+
+#define COUNT_COVERAGE()                                                      \
+    JS_BEGIN_MACRO                                                            \
+        MOZ_ASSERT(BytecodeIsJumpTarget(JSOp(*REGS.pc)));                     \
+        COUNT_COVERAGE_PC(REGS.pc);                                           \
+    JS_END_MACRO
+
+#define LOAD_DOUBLE(PCOFF, dbl)                                               \
+    ((dbl) = script->getConst(GET_UINT32_INDEX(REGS.pc + (PCOFF))).toDouble())
+
+#define SET_SCRIPT(s)                                                         \
+    JS_BEGIN_MACRO                                                            \
+        script = (s);                                                         \
+        MOZ_ASSERT(cx->realm() == script->realm());                           \
+        if (script->hasAnyBreakpointsOrStepMode() || script->hasScriptCounts()) \
+            activation.enableInterruptsUnconditionally();                     \
+    JS_END_MACRO
+
+#define SANITY_CHECKS()                                                       \
+    JS_BEGIN_MACRO                                                            \
+        js::gc::MaybeVerifyBarriers(cx);                                      \
+    JS_END_MACRO
+
+    gc::MaybeVerifyBarriers(cx, true);
+    MOZ_ASSERT(!cx->zone()->types.activeAnalysis);
+
+    InterpreterFrame* entryFrame = state.pushInterpreterFrame(cx);
+    if (!entryFrame) {
+        return false;
+    }
+
+    ActivationEntryMonitor entryMonitor(cx, entryFrame);
+    InterpreterActivation activation(state, cx, entryFrame);
+
+    /* The script is used frequently, so keep a local copy. */
+    RootedScript script(cx);
+    SET_SCRIPT(REGS.fp()->script());
+
+    TraceLoggerThread* logger = TraceLoggerForCurrentThread(cx);
+    TraceLoggerEvent scriptEvent(TraceLogger_Scripts, script);
+    TraceLogStartEvent(logger, scriptEvent);
+    TraceLogStartEvent(logger, TraceLogger_Interpreter);
+
+    /*
+     * Pool of rooters for use in this interpreter frame. References to these
+     * are used for local variables within interpreter cases. This avoids
+     * creating new rooters each time an interpreter case is entered, and also
+     * correctness pitfalls due to incorrect compilation of destructor calls
+     * around computed gotos.
+     */
+    RootedValue rootValue0(cx), rootValue1(cx);
+    RootedString rootString0(cx), rootString1(cx);
+    RootedObject rootObject0(cx), rootObject1(cx), rootObject2(cx);
+    RootedNativeObject rootNativeObject0(cx);
+    RootedFunction rootFunction0(cx);
+    RootedPropertyName rootName0(cx);
+    RootedId rootId0(cx);
+    RootedShape rootShape0(cx);
+    RootedScript rootScript0(cx);
+    Rooted<Scope*> rootScope0(cx);
+    DebugOnly<uint32_t> blockDepth;
+
+    /* State communicated between non-local jumps: */
+    bool interpReturnOK;
+    bool frameHalfInitialized;
+
+    if (!activation.entryFrame()->prologue(cx)) {
+        goto prologue_error;
+    }
+
+    switch (Debugger::onEnterFrame(cx, activation.entryFrame())) {
+      case ResumeMode::Continue:
+        break;
+      case ResumeMode::Return:
+        if (!ForcedReturn(cx, REGS)) {
+            goto error;
+        }
+        goto successful_return_continuation;
+      case ResumeMode::Throw:
+      case ResumeMode::Terminate:
+=======
+  /*
+   * Increment REGS.pc by N, load the opcode at that position,
+   * and jump to the code to execute it.
+   *
+   * When Debugger puts a script in single-step mode, all js::Interpret
+   * invocations that might be presently running that script must have
+   * interrupts enabled. It's not practical to simply check
+   * script->stepModeEnabled() at each point some callee could have changed
+   * it, because there are so many places js::Interpret could possibly cause
+   * JavaScript to run: each place an object might be coerced to a primitive
+   * or a number, for example. So instead, we expose a simple mechanism to
+   * let Debugger tweak the affected js::Interpret frames when an onStep
+   * handler is added: calling activation.enableInterruptsUnconditionally()
+   * will enable interrupts, and activation.opMask() is or'd with the opcode
+   * to implement a simple alternate dispatch.
+   */
+#define ADVANCE_AND_DISPATCH(N)                  \
+  JS_BEGIN_MACRO                                 \
+    REGS.pc += (N);                              \
+    SANITY_CHECKS();                             \
+    DISPATCH_TO(*REGS.pc | activation.opMask()); \
+  JS_END_MACRO
+
+  /*
+   * Shorthand for the common sequence at the end of a fixed-size opcode.
+   */
+#define END_CASE(OP) ADVANCE_AND_DISPATCH(OP##_LENGTH);
+
+  /*
+   * Prepare to call a user-supplied branch handler, and abort the script
+   * if it returns false.
+   */
+#define CHECK_BRANCH()                      \
+  JS_BEGIN_MACRO                            \
+    if (!CheckForInterrupt(cx)) goto error; \
+  JS_END_MACRO
+
+  /*
+   * This is a simple wrapper around ADVANCE_AND_DISPATCH which also does
+   * a CHECK_BRANCH() if n is not positive, which possibly indicates that it
+   * is the backedge of a loop.
+   */
+#define BRANCH(n)                  \
+  JS_BEGIN_MACRO                   \
+    int32_t nlen = (n);            \
+    if (nlen <= 0) CHECK_BRANCH(); \
+    ADVANCE_AND_DISPATCH(nlen);    \
+  JS_END_MACRO
+
+  /*
+   * Initialize code coverage vectors.
+   */
+#define INIT_COVERAGE()                                \
+  JS_BEGIN_MACRO                                       \
+    if (!script->hasScriptCounts()) {                  \
+      if (cx->realm()->collectCoverageForDebug()) {    \
+        if (!script->initScriptCounts(cx)) goto error; \
+      }                                                \
+    }                                                  \
+  JS_END_MACRO
+
+  /*
+   * Increment the code coverage counter associated with the given pc.
+   */
+#define COUNT_COVERAGE_PC(PC)                          \
+  JS_BEGIN_MACRO                                       \
+    if (script->hasScriptCounts()) {                   \
+      PCCounts* counts = script->maybeGetPCCounts(PC); \
+      MOZ_ASSERT(counts);                              \
+      counts->numExec()++;                             \
+    }                                                  \
+  JS_END_MACRO
+
+#define COUNT_COVERAGE_MAIN()                                        \
+  JS_BEGIN_MACRO                                                     \
+    jsbytecode* main = script->main();                               \
+    if (!BytecodeIsJumpTarget(JSOp(*main))) COUNT_COVERAGE_PC(main); \
+  JS_END_MACRO
+
+#define COUNT_COVERAGE()                              \
+  JS_BEGIN_MACRO                                      \
+    MOZ_ASSERT(BytecodeIsJumpTarget(JSOp(*REGS.pc))); \
+    COUNT_COVERAGE_PC(REGS.pc);                       \
+  JS_END_MACRO
+
+#define SET_SCRIPT(s)                                                       \
+  JS_BEGIN_MACRO                                                            \
+    script = (s);                                                           \
+    MOZ_ASSERT(cx->realm() == script->realm());                             \
+    if (script->hasAnyBreakpointsOrStepMode() || script->hasScriptCounts()) \
+      activation.enableInterruptsUnconditionally();                         \
+  JS_END_MACRO
+
+#define SANITY_CHECKS()              \
+  JS_BEGIN_MACRO                     \
+    js::gc::MaybeVerifyBarriers(cx); \
+  JS_END_MACRO
+
+  gc::MaybeVerifyBarriers(cx, true);
+  MOZ_ASSERT(!cx->zone()->types.activeAnalysis);
+
+  InterpreterFrame* entryFrame = state.pushInterpreterFrame(cx);
+  if (!entryFrame) {
+    return false;
+  }
+
+  ActivationEntryMonitor entryMonitor(cx, entryFrame);
+  InterpreterActivation activation(state, cx, entryFrame);
+
+  /* The script is used frequently, so keep a local copy. */
+  RootedScript script(cx);
+  SET_SCRIPT(REGS.fp()->script());
+
+  TraceLoggerThread* logger = TraceLoggerForCurrentThread(cx);
+  TraceLoggerEvent scriptEvent(TraceLogger_Scripts, script);
+  TraceLogStartEvent(logger, scriptEvent);
+  TraceLogStartEvent(logger, TraceLogger_Interpreter);
+
+  /*
+   * Pool of rooters for use in this interpreter frame. References to these
+   * are used for local variables within interpreter cases. This avoids
+   * creating new rooters each time an interpreter case is entered, and also
+   * correctness pitfalls due to incorrect compilation of destructor calls
+   * around computed gotos.
+   */
+  RootedValue rootValue0(cx), rootValue1(cx);
+  RootedString rootString0(cx), rootString1(cx);
+  RootedObject rootObject0(cx), rootObject1(cx), rootObject2(cx);
+  RootedNativeObject rootNativeObject0(cx);
+  RootedFunction rootFunction0(cx);
+  RootedPropertyName rootName0(cx);
+  RootedId rootId0(cx);
+  RootedShape rootShape0(cx);
+  RootedScript rootScript0(cx);
+  Rooted<Scope*> rootScope0(cx);
+  DebugOnly<uint32_t> blockDepth;
+
+  /* State communicated between non-local jumps: */
+  bool interpReturnOK;
+  bool frameHalfInitialized;
+
+  if (!activation.entryFrame()->prologue(cx)) {
+    goto prologue_error;
+  }
+
+  switch (Debugger::onEnterFrame(cx, activation.entryFrame())) {
+    case ResumeMode::Continue:
+      break;
+    case ResumeMode::Return:
+      if (!ForcedReturn(cx, REGS)) {
+>>>>>>> upstream-releases
         goto error;
       }
       goto successful_return_continuation;
@@ -2165,6 +4756,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
               REGS.fp()->setReturnValue(rval);
               if (!ForcedReturn(cx, REGS)) {
                 goto error;
+<<<<<<< HEAD
               }
               goto successful_return_continuation;
             case ResumeMode::Throw:
@@ -2173,6 +4765,20 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
             default:;
           }
           moreInterrupts = true;
+||||||| merged common ancestors
+              default:;
+            }
+            moreInterrupts = true;
+=======
+              }
+              goto successful_return_continuation;
+            case ResumeMode::Throw:
+              cx->setPendingExceptionAndCaptureStack(rval);
+              goto error;
+            default:;
+          }
+          moreInterrupts = true;
+>>>>>>> upstream-releases
         }
 
         if (script->hasAnyBreakpointsOrStepMode()) {
@@ -2189,6 +4795,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
               REGS.fp()->setReturnValue(rval);
               if (!ForcedReturn(cx, REGS)) {
                 goto error;
+<<<<<<< HEAD
               }
               goto successful_return_continuation;
             case ResumeMode::Throw:
@@ -2199,12 +4806,40 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
           }
           MOZ_ASSERT(mode == ResumeMode::Continue);
           MOZ_ASSERT(rval.isInt32() && rval.toInt32() == op);
+||||||| merged common ancestors
+              case ResumeMode::Return:
+                REGS.fp()->setReturnValue(rval);
+                if (!ForcedReturn(cx, REGS)) {
+                    goto error;
+                }
+                goto successful_return_continuation;
+              case ResumeMode::Throw:
+                cx->setPendingException(rval);
+                goto error;
+              default:
+                break;
+            }
+            MOZ_ASSERT(mode == ResumeMode::Continue);
+            MOZ_ASSERT(rval.isInt32() && rval.toInt32() == op);
+=======
+              }
+              goto successful_return_continuation;
+            case ResumeMode::Throw:
+              cx->setPendingExceptionAndCaptureStack(rval);
+              goto error;
+            default:
+              break;
+          }
+          MOZ_ASSERT(mode == ResumeMode::Continue);
+          MOZ_ASSERT(rval.isInt32() && rval.toInt32() == op);
+>>>>>>> upstream-releases
         }
       }
 
       MOZ_ASSERT(activation.opMask() == EnableInterruptsPseudoOpcode);
       if (!moreInterrupts) {
         activation.clearInterruptsMask();
+<<<<<<< HEAD
       }
 
       /* Commence executing the actual opcode. */
@@ -2232,12 +4867,96 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
     CASE(JSOP_LABEL)
     END_CASE(JSOP_LABEL)
+||||||| merged common ancestors
+    }
 
+    /* Commence executing the actual opcode. */
+    SANITY_CHECKS();
+    DISPATCH_TO(op);
+}
+
+/* Various 1-byte no-ops. */
+CASE(JSOP_NOP)
+CASE(JSOP_NOP_DESTRUCTURING)
+CASE(JSOP_TRY_DESTRUCTURING_ITERCLOSE)
+CASE(JSOP_UNUSED126)
+CASE(JSOP_UNUSED206)
+CASE(JSOP_CONDSWITCH)
+{
+    MOZ_ASSERT(CodeSpec[*REGS.pc].length == 1);
+    ADVANCE_AND_DISPATCH(1);
+}
+
+CASE(JSOP_TRY)
+CASE(JSOP_JUMPTARGET)
+CASE(JSOP_LOOPHEAD)
+{
+    MOZ_ASSERT(CodeSpec[*REGS.pc].length == 1);
+    COUNT_COVERAGE();
+    ADVANCE_AND_DISPATCH(1);
+}
+
+CASE(JSOP_LABEL)
+END_CASE(JSOP_LABEL)
+=======
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_LOOPENTRY) {
       COUNT_COVERAGE();
       // Attempt on-stack replacement with Baseline code.
       if (jit::IsBaselineEnabled(cx)) {
         jit::MethodStatus status = jit::CanEnterBaselineAtBranch(cx, REGS.fp());
+||||||| merged common ancestors
+CASE(JSOP_LOOPENTRY)
+    COUNT_COVERAGE();
+    // Attempt on-stack replacement with Baseline code.
+    if (jit::IsBaselineEnabled(cx)) {
+        jit::MethodStatus status = jit::CanEnterBaselineAtBranch(cx, REGS.fp());
+=======
+      /* Commence executing the actual opcode. */
+      SANITY_CHECKS();
+      DISPATCH_TO(op);
+    }
+
+    /* Various 1-byte no-ops. */
+    CASE(JSOP_NOP)
+    CASE(JSOP_NOP_DESTRUCTURING)
+    CASE(JSOP_TRY_DESTRUCTURING)
+    CASE(JSOP_UNUSED71)
+    CASE(JSOP_UNUSED149)
+    CASE(JSOP_TRY)
+    CASE(JSOP_CONDSWITCH) {
+      MOZ_ASSERT(CodeSpec[*REGS.pc].length == 1);
+      ADVANCE_AND_DISPATCH(1);
+    }
+
+    CASE(JSOP_JUMPTARGET)
+    CASE(JSOP_LOOPHEAD) {
+      MOZ_ASSERT(CodeSpec[*REGS.pc].length == JSOP_JUMPTARGET_LENGTH);
+      COUNT_COVERAGE();
+      ADVANCE_AND_DISPATCH(JSOP_JUMPTARGET_LENGTH);
+    }
+
+    CASE(JSOP_LABEL)
+    END_CASE(JSOP_LABEL)
+
+    CASE(JSOP_LOOPENTRY) {
+      COUNT_COVERAGE();
+      // Attempt on-stack replacement with Baseline code.
+      if (jit::IsBaselineEnabled(cx)) {
+        script->incWarmUpCounter();
+
+        using Tier = jit::BaselineTier;
+        bool tryBaselineInterpreter = (jit::JitOptions.baselineInterpreter &&
+                                       !script->hasBaselineScript());
+        jit::MethodStatus status =
+            tryBaselineInterpreter
+                ? jit::CanEnterBaselineAtBranch<Tier::Interpreter>(cx,
+                                                                   REGS.fp())
+                : jit::CanEnterBaselineAtBranch<Tier::Compiler>(cx, REGS.fp());
+>>>>>>> upstream-releases
         if (status == jit::Method_Error) {
           goto error;
         }
@@ -2257,12 +4976,28 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
           interpReturnOK = (maybeOsr == jit::JitExec_Ok);
 
+<<<<<<< HEAD
           // Pop the profiler frame pushed by the interpreter.  (The compiled
           // version of the function popped a copy of the frame pushed by the
           // OSR trampoline.)
           if (wasProfiler) {
             cx->geckoProfiler().exit(script, script->functionNonDelazifying());
           }
+||||||| merged common ancestors
+            // Pop the profiler frame pushed by the interpreter.  (The compiled
+            // version of the function popped a copy of the frame pushed by the
+            // OSR trampoline.)
+            if (wasProfiler) {
+                cx->geckoProfiler().exit(script, script->functionNonDelazifying());
+            }
+=======
+          // Pop the profiler frame pushed by the interpreter.  (The compiled
+          // version of the function popped a copy of the frame pushed by the
+          // OSR trampoline.)
+          if (wasProfiler) {
+            cx->geckoProfiler().exit(cx, script);
+          }
+>>>>>>> upstream-releases
 
           if (activation.entryFrame() != REGS.fp()) {
             goto jit_return_pop_frame;
@@ -2320,12 +5055,32 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         goto error;
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_ENTERWITH)
 
     CASE(JSOP_LEAVEWITH) {
       REGS.fp()->popOffEnvironmentChain<WithEnvironmentObject>();
     }
     END_CASE(JSOP_LEAVEWITH)
+||||||| merged common ancestors
+}
+END_CASE(JSOP_ENTERWITH)
+
+CASE(JSOP_LEAVEWITH)
+    REGS.fp()->popOffEnvironmentChain<WithEnvironmentObject>();
+END_CASE(JSOP_LEAVEWITH)
+
+CASE(JSOP_RETURN)
+    POP_RETURN_VALUE();
+    /* FALL THROUGH */
+=======
+    END_CASE(JSOP_ENTERWITH)
+
+    CASE(JSOP_LEAVEWITH) {
+      REGS.fp()->popOffEnvironmentChain<WithEnvironmentObject>();
+    }
+    END_CASE(JSOP_LEAVEWITH)
+>>>>>>> upstream-releases
 
     CASE(JSOP_RETURN) {
       POP_RETURN_VALUE();
@@ -2377,16 +5132,46 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
         /* Resume execution in the calling frame. */
         if (MOZ_LIKELY(interpReturnOK)) {
+<<<<<<< HEAD
           TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
+||||||| merged common ancestors
+            TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
+=======
+          if (JSOp(*REGS.pc) == JSOP_RESUME) {
+            ADVANCE_AND_DISPATCH(JSOP_RESUME_LENGTH);
+          }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
           ADVANCE_AND_DISPATCH(JSOP_CALL_LENGTH);
+||||||| merged common ancestors
+            ADVANCE_AND_DISPATCH(JSOP_CALL_LENGTH);
+=======
+          JitScript::MonitorBytecodeType(cx, script, REGS.pc, REGS.sp[-1]);
+          MOZ_ASSERT(CodeSpec[*REGS.pc].length == JSOP_CALL_LENGTH);
+          ADVANCE_AND_DISPATCH(JSOP_CALL_LENGTH);
+>>>>>>> upstream-releases
         }
 
         goto error;
+<<<<<<< HEAD
       } else {
         MOZ_ASSERT(REGS.stackDepth() == 0);
       }
       goto exit;
+||||||| merged common ancestors
+    } else {
+        MOZ_ASSERT(REGS.stackDepth() == 0);
+=======
+      } else {
+        // Stack should be empty for the outer frame, unless we executed the
+        // first |await| expression in an async function.
+        MOZ_ASSERT(
+            REGS.stackDepth() == 0 ||
+            (*REGS.pc == JSOP_AWAIT && !REGS.fp()->isResumedGenerator()));
+      }
+      goto exit;
+>>>>>>> upstream-releases
     }
 
     CASE(JSOP_DEFAULT) {
@@ -2493,6 +5278,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       }
       REGS.sp[-1].setObject(*iter);
     }
+<<<<<<< HEAD
     END_CASE(JSOP_ITER)
 
     CASE(JSOP_MOREITER) {
@@ -2503,6 +5289,28 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       if (!IteratorMore(cx, obj, REGS.stackHandleAt(-1))) {
         goto error;
       }
+||||||| merged common ancestors
+    REGS.sp[-1].setObject(*iter);
+}
+END_CASE(JSOP_ITER)
+
+CASE(JSOP_MOREITER)
+{
+    MOZ_ASSERT(REGS.stackDepth() >= 1);
+    MOZ_ASSERT(REGS.sp[-1].isObject());
+    PUSH_NULL();
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-2].toObject());
+    if (!IteratorMore(cx, obj, REGS.stackHandleAt(-1))) {
+        goto error;
+=======
+    END_CASE(JSOP_ITER)
+
+    CASE(JSOP_MOREITER) {
+      MOZ_ASSERT(REGS.stackDepth() >= 1);
+      MOZ_ASSERT(REGS.sp[-1].isObject());
+      Value v = IteratorMore(&REGS.sp[-1].toObject());
+      PUSH_COPY(v);
+>>>>>>> upstream-releases
     }
     END_CASE(JSOP_MOREITER)
 
@@ -2512,6 +5320,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_ISNOITER)
 
+<<<<<<< HEAD
     CASE(JSOP_ENDITER) {
       MOZ_ASSERT(REGS.stackDepth() >= 1);
       COUNT_COVERAGE();
@@ -2519,6 +5328,21 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       REGS.sp--;
     }
     END_CASE(JSOP_ENDITER)
+||||||| merged common ancestors
+CASE(JSOP_ISGENCLOSING)
+{
+    bool b = REGS.sp[-1].isMagic(JS_GENERATOR_CLOSING);
+    PUSH_BOOLEAN(b);
+}
+END_CASE(JSOP_ISGENCLOSING)
+=======
+    CASE(JSOP_ENDITER) {
+      MOZ_ASSERT(REGS.stackDepth() >= 1);
+      CloseIterator(&REGS.sp[-1].toObject());
+      REGS.sp--;
+    }
+    END_CASE(JSOP_ENDITER)
+>>>>>>> upstream-releases
 
     CASE(JSOP_ISGENCLOSING) {
       bool b = REGS.sp[-1].isMagic(JS_GENERATOR_CLOSING);
@@ -2598,6 +5422,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_BINDNAME)
 
+<<<<<<< HEAD
     CASE(JSOP_BINDVAR) { PUSH_OBJECT(REGS.fp()->varObj()); }
     END_CASE(JSOP_BINDVAR)
 
@@ -2606,6 +5431,32 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       MutableHandleValue rhs = REGS.stackHandleAt(-1);
       MutableHandleValue res = REGS.stackHandleAt(-2);
       if (!BitOr(cx, lhs, rhs, res)) {
+||||||| merged common ancestors
+CASE(JSOP_BINDVAR)
+{
+    PUSH_OBJECT(REGS.fp()->varObj());
+}
+END_CASE(JSOP_BINDVAR)
+
+CASE(JSOP_BITOR)
+{
+    MutableHandleValue lhs = REGS.stackHandleAt(-2);
+    MutableHandleValue rhs = REGS.stackHandleAt(-1);
+    MutableHandleValue res = REGS.stackHandleAt(-2);
+    if (!BitOr(cx, lhs, rhs, res)) {
+=======
+    CASE(JSOP_BINDVAR) {
+      JSObject* varObj = BindVarOperation(cx, REGS.fp()->environmentChain());
+      PUSH_OBJECT(*varObj);
+    }
+    END_CASE(JSOP_BINDVAR)
+
+    CASE(JSOP_BITOR) {
+      MutableHandleValue lhs = REGS.stackHandleAt(-2);
+      MutableHandleValue rhs = REGS.stackHandleAt(-1);
+      MutableHandleValue res = REGS.stackHandleAt(-2);
+      if (!BitOr(cx, lhs, rhs, res)) {
+>>>>>>> upstream-releases
         goto error;
       }
       REGS.sp--;
@@ -2646,8 +5497,46 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         goto error;
       }
     }
+<<<<<<< HEAD
+    END_CASE(JSOP_NE)
+||||||| merged common ancestors
+END_CASE(JSOP_NE)
+
+#define STRICT_EQUALITY_OP(OP, COND)                                          \
+    JS_BEGIN_MACRO                                                            \
+        HandleValue lval = REGS.stackHandleAt(-2);                            \
+        HandleValue rval = REGS.stackHandleAt(-1);                            \
+        bool equal;                                                           \
+        if (!StrictlyEqual(cx, lval, rval, &equal))                           \
+            goto error;                                                       \
+        (COND) = equal OP true;                                               \
+        REGS.sp--;                                                            \
+    JS_END_MACRO
+
+CASE(JSOP_STRICTEQ)
+{
+    bool cond;
+    STRICT_EQUALITY_OP(==, cond);
+    REGS.sp[-1].setBoolean(cond);
+}
+END_CASE(JSOP_STRICTEQ)
+=======
     END_CASE(JSOP_NE)
 
+#define STRICT_EQUALITY_OP(OP, COND)                  \
+  JS_BEGIN_MACRO                                      \
+    HandleValue lval = REGS.stackHandleAt(-2);        \
+    HandleValue rval = REGS.stackHandleAt(-1);        \
+    bool equal;                                       \
+    if (!js::StrictlyEqual(cx, lval, rval, &equal)) { \
+      goto error;                                     \
+    }                                                 \
+    (COND) = equal OP true;                           \
+    REGS.sp--;                                        \
+  JS_END_MACRO
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #define STRICT_EQUALITY_OP(OP, COND)                        \
   JS_BEGIN_MACRO                                            \
     HandleValue lval = REGS.stackHandleAt(-2);              \
@@ -2657,12 +5546,44 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     (COND) = equal OP true;                                 \
     REGS.sp--;                                              \
   JS_END_MACRO
-
+||||||| merged common ancestors
+CASE(JSOP_STRICTNE)
+{
+    bool cond;
+    STRICT_EQUALITY_OP(!=, cond);
+    REGS.sp[-1].setBoolean(cond);
+}
+END_CASE(JSOP_STRICTNE)
+=======
     CASE(JSOP_STRICTEQ) {
       bool cond;
       STRICT_EQUALITY_OP(==, cond);
       REGS.sp[-1].setBoolean(cond);
     }
+    END_CASE(JSOP_STRICTEQ)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_STRICTEQ) {
+      bool cond;
+      STRICT_EQUALITY_OP(==, cond);
+      REGS.sp[-1].setBoolean(cond);
+||||||| merged common ancestors
+CASE(JSOP_CASE)
+{
+    bool cond;
+    STRICT_EQUALITY_OP(==, cond);
+    if (cond) {
+        REGS.sp--;
+        BRANCH(GET_JUMP_OFFSET(REGS.pc));
+=======
+    CASE(JSOP_STRICTNE) {
+      bool cond;
+      STRICT_EQUALITY_OP(!=, cond);
+      REGS.sp[-1].setBoolean(cond);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     END_CASE(JSOP_STRICTEQ)
 
     CASE(JSOP_STRICTNE) {
@@ -2671,6 +5592,12 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       REGS.sp[-1].setBoolean(cond);
     }
     END_CASE(JSOP_STRICTNE)
+||||||| merged common ancestors
+}
+END_CASE(JSOP_CASE)
+=======
+    END_CASE(JSOP_STRICTNE)
+>>>>>>> upstream-releases
 
 #undef STRICT_EQUALITY_OP
 
@@ -3020,10 +5947,18 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       MutableHandleValue lval = REGS.stackHandleAt(-1);
       if (!GetPropertyOperation(cx, REGS.fp(), script, REGS.pc, lval, lval)) {
         goto error;
+<<<<<<< HEAD
       }
 
       TypeScript::Monitor(cx, script, REGS.pc, lval);
       cx->debugOnlyCheck(lval);
+||||||| merged common ancestors
+=======
+      }
+
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, lval);
+      cx->debugOnlyCheck(lval);
+>>>>>>> upstream-releases
     }
     END_CASE(JSOP_GETPROP)
 
@@ -3036,9 +5971,33 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         goto error;
       }
 
+<<<<<<< HEAD
       TypeScript::Monitor(cx, script, REGS.pc, rref);
       cx->debugOnlyCheck(rref);
 
+      REGS.sp--;
+    }
+    END_CASE(JSOP_GETPROP_SUPER)
+||||||| merged common ancestors
+CASE(JSOP_GETPROP_SUPER)
+{
+    ReservedRooted<Value> receiver(&rootValue0, REGS.sp[-2]);
+    ReservedRooted<JSObject*> obj(&rootObject1, &REGS.sp[-1].toObject());
+    MutableHandleValue rref = REGS.stackHandleAt(-2);
+=======
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, rref);
+      cx->debugOnlyCheck(rref);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_GETBOUNDNAME) {
+      ReservedRooted<JSObject*> env(&rootObject0, &REGS.sp[-1].toObject());
+      ReservedRooted<jsid> id(&rootId0, NameToId(script->getName(REGS.pc)));
+      MutableHandleValue rval = REGS.stackHandleAt(-1);
+      if (!GetNameBoundInEnvironment(cx, env, id, rval)) {
+||||||| merged common ancestors
+    if (!GetProperty(cx, obj, receiver, script->getName(REGS.pc), rref)) {
+=======
       REGS.sp--;
     }
     END_CASE(JSOP_GETPROP_SUPER)
@@ -3048,11 +6007,20 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       ReservedRooted<jsid> id(&rootId0, NameToId(script->getName(REGS.pc)));
       MutableHandleValue rval = REGS.stackHandleAt(-1);
       if (!GetNameBoundInEnvironment(cx, env, id, rval)) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
 
       TypeScript::Monitor(cx, script, REGS.pc, rval);
       cx->debugOnlyCheck(rval);
+||||||| merged common ancestors
+=======
+      }
+
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, rval);
+      cx->debugOnlyCheck(rval);
+>>>>>>> upstream-releases
     }
     END_CASE(JSOP_GETBOUNDNAME)
 
@@ -3144,10 +6112,22 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         }
       }
 
+<<<<<<< HEAD
       TypeScript::Monitor(cx, script, REGS.pc, res);
       REGS.sp--;
     }
     END_CASE(JSOP_GETELEM)
+||||||| merged common ancestors
+    TypeScript::Monitor(cx, script, REGS.pc, res);
+    REGS.sp--;
+}
+END_CASE(JSOP_GETELEM)
+=======
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, res);
+      REGS.sp--;
+    }
+    END_CASE(JSOP_GETELEM)
+>>>>>>> upstream-releases
 
     CASE(JSOP_GETELEM_SUPER) {
       ReservedRooted<Value> receiver(&rootValue1, REGS.sp[-3]);
@@ -3162,10 +6142,18 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       if (!GetObjectElementOperation(cx, JSOp(*REGS.pc), obj, receiver, rval,
                                      res)) {
         goto error;
+<<<<<<< HEAD
       }
 
       TypeScript::Monitor(cx, script, REGS.pc, res);
       REGS.sp -= 2;
+||||||| merged common ancestors
+=======
+      }
+
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, res);
+      REGS.sp -= 2;
+>>>>>>> upstream-releases
     }
     END_CASE(JSOP_GETELEM_SUPER)
 
@@ -3202,8 +6190,17 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       ReservedRooted<JSObject*> obj(&rootObject1, &REGS.sp[-2].toObject());
       HandleValue value = REGS.stackHandleAt(-1);
 
+<<<<<<< HEAD
       bool strict = JSOp(*REGS.pc) == JSOP_STRICTSETELEM_SUPER;
       if (!SetObjectElement(cx, obj, index, value, receiver, strict)) {
+||||||| merged common ancestors
+    bool strict = JSOp(*REGS.pc) == JSOP_STRICTSETELEM_SUPER;
+    if (!SetObjectElement(cx, obj, index, value, receiver, strict)) {
+=======
+      bool strict = JSOp(*REGS.pc) == JSOP_STRICTSETELEM_SUPER;
+      if (!SetObjectElementWithReceiver(cx, obj, index, value, receiver,
+                                        strict)) {
+>>>>>>> upstream-releases
         goto error;
       }
       REGS.sp[-4] = value;
@@ -3227,10 +6224,22 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         }
       }
 
+<<<<<<< HEAD
       REGS.sp = args.spAfterCall();
       TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
     }
     END_CASE(JSOP_EVAL)
+||||||| merged common ancestors
+    REGS.sp = args.spAfterCall();
+    TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
+}
+END_CASE(JSOP_EVAL)
+=======
+      REGS.sp = args.spAfterCall();
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, REGS.sp[-1]);
+    }
+    END_CASE(JSOP_EVAL)
+>>>>>>> upstream-releases
 
     CASE(JSOP_SPREADNEW)
     CASE(JSOP_SPREADCALL)
@@ -3266,12 +6275,65 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       if (!SpreadCallOperation(cx, script, REGS.pc, thisv, callee, arr,
                                newTarget, ret)) {
         goto error;
+<<<<<<< HEAD
       }
 
       REGS.sp -= 2 + construct;
     }
     END_CASE(JSOP_SPREADCALL)
+||||||| merged common ancestors
+    }
 
+    REGS.sp -= 2 + construct;
+}
+END_CASE(JSOP_SPREADCALL)
+=======
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_FUNAPPLY) {
+      CallArgs args = CallArgsFromSp(GET_ARGC(REGS.pc), REGS.sp);
+      if (!GuardFunApplyArgumentsOptimization(cx, REGS.fp(), args)) {
+        goto error;
+      }
+      /* FALL THROUGH */
+||||||| merged common ancestors
+CASE(JSOP_FUNAPPLY)
+{
+    CallArgs args = CallArgsFromSp(GET_ARGC(REGS.pc), REGS.sp);
+    if (!GuardFunApplyArgumentsOptimization(cx, REGS.fp(), args)) {
+        goto error;
+=======
+      REGS.sp -= 2 + construct;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+||||||| merged common ancestors
+    /* FALL THROUGH */
+}
+=======
+    END_CASE(JSOP_SPREADCALL)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_NEW)
+    CASE(JSOP_CALL)
+    CASE(JSOP_CALL_IGNORES_RV)
+    CASE(JSOP_CALLITER)
+    CASE(JSOP_SUPERCALL)
+    CASE(JSOP_FUNCALL) {
+      if (REGS.fp()->hasPushedGeckoProfilerFrame()) {
+||||||| merged common ancestors
+CASE(JSOP_NEW)
+CASE(JSOP_CALL)
+CASE(JSOP_CALL_IGNORES_RV)
+CASE(JSOP_CALLITER)
+CASE(JSOP_SUPERCALL)
+CASE(JSOP_FUNCALL)
+{
+    if (REGS.fp()->hasPushedGeckoProfilerFrame()) {
+=======
     CASE(JSOP_FUNAPPLY) {
       CallArgs args = CallArgsFromSp(GET_ARGC(REGS.pc), REGS.sp);
       if (!GuardFunApplyArgumentsOptimization(cx, REGS.fp(), args)) {
@@ -3286,7 +6348,21 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     CASE(JSOP_CALLITER)
     CASE(JSOP_SUPERCALL)
     CASE(JSOP_FUNCALL) {
+      static_assert(JSOP_CALL_LENGTH == JSOP_NEW_LENGTH,
+                    "call and new must be the same size");
+      static_assert(JSOP_CALL_LENGTH == JSOP_CALL_IGNORES_RV_LENGTH,
+                    "call and call-ignores-rv must be the same size");
+      static_assert(JSOP_CALL_LENGTH == JSOP_CALLITER_LENGTH,
+                    "call and calliter must be the same size");
+      static_assert(JSOP_CALL_LENGTH == JSOP_SUPERCALL_LENGTH,
+                    "call and supercall must be the same size");
+      static_assert(JSOP_CALL_LENGTH == JSOP_FUNCALL_LENGTH,
+                    "call and funcall must be the same size");
+      static_assert(JSOP_CALL_LENGTH == JSOP_FUNAPPLY_LENGTH,
+                    "call and funapply must be the same size");
+
       if (REGS.fp()->hasPushedGeckoProfilerFrame()) {
+>>>>>>> upstream-releases
         cx->geckoProfiler().updatePC(cx, script, REGS.pc);
       }
 
@@ -3322,7 +6398,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
           }
         }
         Value* newsp = args.spAfterCall();
-        TypeScript::Monitor(cx, script, REGS.pc, newsp[-1]);
+        JitScript::MonitorBytecodeType(cx, script, REGS.pc, newsp[-1]);
         REGS.sp = newsp;
         ADVANCE_AND_DISPATCH(JSOP_CALL_LENGTH);
       }
@@ -3471,23 +6547,63 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         goto error;
       }
 
+<<<<<<< HEAD
       PUSH_COPY(rval);
       TypeScript::Monitor(cx, script, REGS.pc, rval);
       static_assert(JSOP_GETNAME_LENGTH == JSOP_GETGNAME_LENGTH,
                     "We're sharing the END_CASE so the lengths better match");
     }
     END_CASE(JSOP_GETNAME)
+||||||| merged common ancestors
+    PUSH_COPY(rval);
+    TypeScript::Monitor(cx, script, REGS.pc, rval);
+    static_assert(JSOP_GETNAME_LENGTH == JSOP_GETGNAME_LENGTH,
+                  "We're sharing the END_CASE so the lengths better match");
+}
+END_CASE(JSOP_GETNAME)
+=======
+      PUSH_COPY(rval);
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, rval);
+      static_assert(JSOP_GETNAME_LENGTH == JSOP_GETGNAME_LENGTH,
+                    "We're sharing the END_CASE so the lengths better match");
+    }
+    END_CASE(JSOP_GETNAME)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_GETIMPORT) {
       PUSH_NULL();
       MutableHandleValue rval = REGS.stackHandleAt(-1);
       if (!GetImportOperation(cx, REGS.fp(), REGS.pc, rval)) {
+||||||| merged common ancestors
+CASE(JSOP_GETIMPORT)
+{
+    PUSH_NULL();
+    MutableHandleValue rval = REGS.stackHandleAt(-1);
+    if (!GetImportOperation(cx, REGS.fp(), REGS.pc, rval)) {
+=======
+    CASE(JSOP_GETIMPORT) {
+      PUSH_NULL();
+      MutableHandleValue rval = REGS.stackHandleAt(-1);
+      HandleObject envChain = REGS.fp()->environmentChain();
+      if (!GetImportOperation(cx, envChain, script, REGS.pc, rval)) {
+>>>>>>> upstream-releases
         goto error;
       }
 
+<<<<<<< HEAD
       TypeScript::Monitor(cx, script, REGS.pc, rval);
     }
     END_CASE(JSOP_GETIMPORT)
+||||||| merged common ancestors
+    TypeScript::Monitor(cx, script, REGS.pc, rval);
+}
+END_CASE(JSOP_GETIMPORT)
+=======
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, rval);
+    }
+    END_CASE(JSOP_GETIMPORT)
+>>>>>>> upstream-releases
 
     CASE(JSOP_GETINTRINSIC) {
       ReservedRooted<Value> rval(&rootValue0);
@@ -3495,10 +6611,22 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         goto error;
       }
 
+<<<<<<< HEAD
       PUSH_COPY(rval);
       TypeScript::Monitor(cx, script, REGS.pc, rval);
     }
     END_CASE(JSOP_GETINTRINSIC)
+||||||| merged common ancestors
+    PUSH_COPY(rval);
+    TypeScript::Monitor(cx, script, REGS.pc, rval);
+}
+END_CASE(JSOP_GETINTRINSIC)
+=======
+      PUSH_COPY(rval);
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, rval);
+    }
+    END_CASE(JSOP_GETINTRINSIC)
+>>>>>>> upstream-releases
 
     CASE(JSOP_UINT16) { PUSH_INT32((int32_t)GET_UINT16(REGS.pc)); }
     END_CASE(JSOP_UINT16)
@@ -3513,12 +6641,25 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     CASE(JSOP_INT32) { PUSH_INT32(GET_INT32(REGS.pc)); }
     END_CASE(JSOP_INT32)
 
+<<<<<<< HEAD
     CASE(JSOP_DOUBLE) {
       double dbl;
       LOAD_DOUBLE(0, dbl);
       PUSH_DOUBLE(dbl);
     }
     END_CASE(JSOP_DOUBLE)
+||||||| merged common ancestors
+CASE(JSOP_DOUBLE)
+{
+    double dbl;
+    LOAD_DOUBLE(0, dbl);
+    PUSH_DOUBLE(dbl);
+}
+END_CASE(JSOP_DOUBLE)
+=======
+    CASE(JSOP_DOUBLE) { PUSH_COPY(GET_INLINE_VALUE(REGS.pc)); }
+    END_CASE(JSOP_DOUBLE)
+>>>>>>> upstream-releases
 
     CASE(JSOP_STRING) { PUSH_STRING(script->getAtom(REGS.pc)); }
     END_CASE(JSOP_STRING)
@@ -3534,13 +6675,25 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         oper.setString(operString);
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_TOSTRING)
 
     CASE(JSOP_SYMBOL) {
       PUSH_SYMBOL(cx->wellKnownSymbols().get(GET_UINT8(REGS.pc)));
     }
     END_CASE(JSOP_SYMBOL)
+||||||| merged common ancestors
+}
+END_CASE(JSOP_TOSTRING)
 
+CASE(JSOP_SYMBOL)
+    PUSH_SYMBOL(cx->wellKnownSymbols().get(GET_UINT8(REGS.pc)));
+END_CASE(JSOP_SYMBOL)
+=======
+    END_CASE(JSOP_TOSTRING)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_OBJECT) {
       ReservedRooted<JSObject*> ref(&rootObject0, script->getObject(REGS.pc));
       if (cx->realm()->creationOptions().cloneSingletons()) {
@@ -3553,18 +6706,99 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         cx->realm()->behaviors().setSingletonsAsValues();
         PUSH_OBJECT(*ref);
       }
+||||||| merged common ancestors
+CASE(JSOP_OBJECT)
+{
+    ReservedRooted<JSObject*> ref(&rootObject0, script->getObject(REGS.pc));
+    if (cx->realm()->creationOptions().cloneSingletons()) {
+        JSObject* obj = DeepCloneObjectLiteral(cx, ref, TenuredObject);
+        if (!obj) {
+            goto error;
+        }
+        PUSH_OBJECT(*obj);
+    } else {
+        cx->realm()->behaviors().setSingletonsAsValues();
+        PUSH_OBJECT(*ref);
+=======
+    CASE(JSOP_SYMBOL) {
+      PUSH_SYMBOL(cx->wellKnownSymbols().get(GET_UINT8(REGS.pc)));
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     END_CASE(JSOP_OBJECT)
 
     CASE(JSOP_CALLSITEOBJ) {
       ReservedRooted<JSObject*> cso(&rootObject0, script->getObject(REGS.pc));
       ReservedRooted<JSObject*> raw(
           &rootObject1, script->getObject(GET_UINT32_INDEX(REGS.pc) + 1));
+||||||| merged common ancestors
+}
+END_CASE(JSOP_OBJECT)
 
+CASE(JSOP_CALLSITEOBJ)
+{
+    ReservedRooted<JSObject*> cso(&rootObject0, script->getObject(REGS.pc));
+    ReservedRooted<JSObject*> raw(&rootObject1, script->getObject(GET_UINT32_INDEX(REGS.pc) + 1));
+=======
+    END_CASE(JSOP_SYMBOL)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       if (!ProcessCallSiteObjOperation(cx, cso, raw)) {
+||||||| merged common ancestors
+    if (!ProcessCallSiteObjOperation(cx, cso, raw)) {
+=======
+    CASE(JSOP_OBJECT) {
+      JSObject* obj = SingletonObjectLiteralOperation(cx, script, REGS.pc);
+      if (!obj) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
 
+      PUSH_OBJECT(*cso);
+||||||| merged common ancestors
+=======
+      }
+      PUSH_OBJECT(*obj);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    END_CASE(JSOP_CALLSITEOBJ)
+||||||| merged common ancestors
+=======
+    END_CASE(JSOP_OBJECT)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_REGEXP) {
+      /*
+       * Push a regexp object cloned from the regexp literal object mapped by
+       * the bytecode at pc.
+       */
+      ReservedRooted<JSObject*> re(&rootObject0, script->getRegExp(REGS.pc));
+      JSObject* obj = CloneRegExpObject(cx, re.as<RegExpObject>());
+      if (!obj) {
+||||||| merged common ancestors
+    PUSH_OBJECT(*cso);
+}
+END_CASE(JSOP_CALLSITEOBJ)
+
+CASE(JSOP_REGEXP)
+{
+    /*
+     * Push a regexp object cloned from the regexp literal object mapped by the
+     * bytecode at pc.
+     */
+    ReservedRooted<JSObject*> re(&rootObject0, script->getRegExp(REGS.pc));
+    JSObject* obj = CloneRegExpObject(cx, re.as<RegExpObject>());
+    if (!obj) {
+=======
+    CASE(JSOP_CALLSITEOBJ) {
+      JSObject* cso = ProcessCallSiteObjOperation(cx, script, REGS.pc);
+      if (!cso) {
+        goto error;
+      }
       PUSH_OBJECT(*cso);
     }
     END_CASE(JSOP_CALLSITEOBJ)
@@ -3577,6 +6811,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       ReservedRooted<JSObject*> re(&rootObject0, script->getRegExp(REGS.pc));
       JSObject* obj = CloneRegExpObject(cx, re.as<RegExpObject>());
       if (!obj) {
+>>>>>>> upstream-releases
         goto error;
       }
       PUSH_OBJECT(*obj);
@@ -3645,6 +6880,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         PUSH_COPY(MagicValue(JS_OPTIMIZED_ARGUMENTS));
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_ARGUMENTS)
 
     CASE(JSOP_RUNONCE) {
@@ -3653,6 +6889,19 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       }
     }
     END_CASE(JSOP_RUNONCE)
+||||||| merged common ancestors
+END_CASE(JSOP_ARGUMENTS)
+
+CASE(JSOP_RUNONCE)
+{
+    if (!RunOnceScriptPrologue(cx, script)) {
+        goto error;
+    }
+}
+END_CASE(JSOP_RUNONCE)
+=======
+    END_CASE(JSOP_ARGUMENTS)
+>>>>>>> upstream-releases
 
     CASE(JSOP_REST) {
       ReservedRooted<JSObject*> rest(&rootObject0,
@@ -3669,20 +6918,43 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       ReservedRooted<Value> val(
           &rootValue0, REGS.fp()->aliasedEnvironment(ec).aliasedBinding(ec));
 #ifdef DEBUG
+<<<<<<< HEAD
       // Only the .this slot can hold the TDZ MagicValue.
       if (IsUninitializedLexical(val)) {
         PropertyName* name = EnvironmentCoordinateName(
             cx->caches().envCoordinateNameCache, script, REGS.pc);
+||||||| merged common ancestors
+    // Only the .this slot can hold the TDZ MagicValue.
+    if (IsUninitializedLexical(val)) {
+        PropertyName* name = EnvironmentCoordinateName(cx->caches().envCoordinateNameCache,
+                                                       script, REGS.pc);
+=======
+      // Only the .this slot can hold the TDZ MagicValue.
+      if (IsUninitializedLexical(val)) {
+        PropertyName* name = EnvironmentCoordinateNameSlow(script, REGS.pc);
+>>>>>>> upstream-releases
         MOZ_ASSERT(name == cx->names().dotThis);
         JSOp next = JSOp(*GetNextPc(REGS.pc));
         MOZ_ASSERT(next == JSOP_CHECKTHIS || next == JSOP_CHECKRETURN ||
                    next == JSOP_CHECKTHISREINIT);
       }
 #endif
+<<<<<<< HEAD
       PUSH_COPY(val);
       TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
     }
     END_CASE(JSOP_GETALIASEDVAR)
+||||||| merged common ancestors
+    PUSH_COPY(val);
+    TypeScript::Monitor(cx, script, REGS.pc, REGS.sp[-1]);
+}
+END_CASE(JSOP_GETALIASEDVAR)
+=======
+      PUSH_COPY(val);
+      JitScript::MonitorBytecodeType(cx, script, REGS.pc, REGS.sp[-1]);
+    }
+    END_CASE(JSOP_GETALIASEDVAR)
+>>>>>>> upstream-releases
 
     CASE(JSOP_SETALIASEDVAR) {
       EnvironmentCoordinate ec = EnvironmentCoordinate(REGS.pc);
@@ -3793,32 +7065,85 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         cx->debugOnlyCheck(REGS.sp[-1]);
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_GETLOCAL)
 
     CASE(JSOP_SETLOCAL) {
       uint32_t i = GET_LOCALNO(REGS.pc);
+||||||| merged common ancestors
+}
+END_CASE(JSOP_GETLOCAL)
 
+CASE(JSOP_SETLOCAL)
+{
+    uint32_t i = GET_LOCALNO(REGS.pc);
+=======
+    END_CASE(JSOP_GETLOCAL)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       MOZ_ASSERT(!IsUninitializedLexical(REGS.fp()->unaliasedLocal(i)));
+||||||| merged common ancestors
+    MOZ_ASSERT(!IsUninitializedLexical(REGS.fp()->unaliasedLocal(i)));
+=======
+    CASE(JSOP_SETLOCAL) {
+      uint32_t i = GET_LOCALNO(REGS.pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       REGS.fp()->unaliasedLocal(i) = REGS.sp[-1];
     }
     END_CASE(JSOP_SETLOCAL)
+||||||| merged common ancestors
+    REGS.fp()->unaliasedLocal(i) = REGS.sp[-1];
+}
+END_CASE(JSOP_SETLOCAL)
+=======
+      MOZ_ASSERT(!IsUninitializedLexical(REGS.fp()->unaliasedLocal(i)));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_DEFVAR) {
       /* ES5 10.5 step 8 (with subsequent errata). */
       unsigned attrs = JSPROP_ENUMERATE;
       if (!REGS.fp()->isEvalFrame()) {
         attrs |= JSPROP_PERMANENT;
       }
+||||||| merged common ancestors
+CASE(JSOP_DEFVAR)
+{
+    /* ES5 10.5 step 8 (with subsequent errata). */
+    unsigned attrs = JSPROP_ENUMERATE;
+    if (!REGS.fp()->isEvalFrame()) {
+        attrs |= JSPROP_PERMANENT;
+    }
+=======
+      REGS.fp()->unaliasedLocal(i) = REGS.sp[-1];
+    }
+    END_CASE(JSOP_SETLOCAL)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       /* Step 8b. */
       ReservedRooted<JSObject*> obj(&rootObject0, &REGS.fp()->varObj());
       ReservedRooted<PropertyName*> name(&rootName0, script->getName(REGS.pc));
 
       if (!DefVarOperation(cx, obj, name, attrs)) {
+||||||| merged common ancestors
+    /* Step 8b. */
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.fp()->varObj());
+    ReservedRooted<PropertyName*> name(&rootName0, script->getName(REGS.pc));
+
+    if (!DefVarOperation(cx, obj, name, attrs)) {
+=======
+    CASE(JSOP_DEFVAR) {
+      HandleObject env = REGS.fp()->environmentChain();
+      if (!DefVarOperation(cx, env, script, REGS.pc)) {
+>>>>>>> upstream-releases
         goto error;
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_DEFVAR)
 
     CASE(JSOP_DEFCONST)
@@ -3833,6 +7158,31 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         varObj = cx->global();
       }
       if (!DefLexicalOperation(cx, lexicalEnv, varObj, script, REGS.pc)) {
+||||||| merged common ancestors
+}
+END_CASE(JSOP_DEFVAR)
+
+CASE(JSOP_DEFCONST)
+CASE(JSOP_DEFLET)
+{
+    LexicalEnvironmentObject* lexicalEnv;
+    JSObject* varObj;
+    if (script->hasNonSyntacticScope()) {
+        lexicalEnv = &REGS.fp()->extensibleLexicalEnvironment();
+        varObj = &REGS.fp()->varObj();
+    } else {
+        lexicalEnv = &cx->global()->lexicalEnvironment();
+        varObj = cx->global();
+    }
+    if (!DefLexicalOperation(cx, lexicalEnv, varObj, script, REGS.pc)) {
+=======
+    END_CASE(JSOP_DEFVAR)
+
+    CASE(JSOP_DEFCONST)
+    CASE(JSOP_DEFLET) {
+      HandleObject env = REGS.fp()->environmentChain();
+      if (!DefLexicalOperation(cx, env, script, REGS.pc)) {
+>>>>>>> upstream-releases
         goto error;
       }
     }
@@ -3861,13 +7211,20 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       JSObject* obj = Lambda(cx, fun, REGS.fp()->environmentChain());
       if (!obj) {
         goto error;
+<<<<<<< HEAD
       }
 
       MOZ_ASSERT(obj->staticPrototype());
       PUSH_OBJECT(*obj);
     }
     END_CASE(JSOP_LAMBDA)
+||||||| merged common ancestors
+    }
+=======
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_LAMBDA_ARROW) {
       /* Load the specified function object literal. */
       ReservedRooted<JSFunction*> fun(
@@ -3881,21 +7238,74 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
       MOZ_ASSERT(obj->staticPrototype());
       REGS.sp[-1].setObject(*obj);
-    }
-    END_CASE(JSOP_LAMBDA_ARROW)
+||||||| merged common ancestors
+    MOZ_ASSERT(obj->staticPrototype());
+    PUSH_OBJECT(*obj);
+}
+END_CASE(JSOP_LAMBDA)
 
+CASE(JSOP_LAMBDA_ARROW)
+{
+    /* Load the specified function object literal. */
+    ReservedRooted<JSFunction*> fun(&rootFunction0, script->getFunction(GET_UINT32_INDEX(REGS.pc)));
+    ReservedRooted<Value> newTarget(&rootValue1, REGS.sp[-1]);
+    JSObject* obj = LambdaArrow(cx, fun, REGS.fp()->environmentChain(), newTarget);
+    if (!obj) {
+        goto error;
+=======
+      MOZ_ASSERT(obj->staticPrototype());
+      PUSH_OBJECT(*obj);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    END_CASE(JSOP_LAMBDA_ARROW)
+||||||| merged common ancestors
+=======
+    END_CASE(JSOP_LAMBDA)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_TOASYNC) {
       ReservedRooted<JSFunction*> unwrapped(
           &rootFunction0, &REGS.sp[-1].toObject().as<JSFunction>());
       JSObject* wrapped = WrapAsyncFunction(cx, unwrapped);
       if (!wrapped) {
+||||||| merged common ancestors
+    MOZ_ASSERT(obj->staticPrototype());
+    REGS.sp[-1].setObject(*obj);
+}
+END_CASE(JSOP_LAMBDA_ARROW)
+
+CASE(JSOP_TOASYNC)
+{
+    ReservedRooted<JSFunction*> unwrapped(&rootFunction0,
+                                          &REGS.sp[-1].toObject().as<JSFunction>());
+    JSObject* wrapped = WrapAsyncFunction(cx, unwrapped);
+    if (!wrapped) {
+=======
+    CASE(JSOP_LAMBDA_ARROW) {
+      /* Load the specified function object literal. */
+      ReservedRooted<JSFunction*> fun(
+          &rootFunction0, script->getFunction(GET_UINT32_INDEX(REGS.pc)));
+      ReservedRooted<Value> newTarget(&rootValue1, REGS.sp[-1]);
+      JSObject* obj =
+          LambdaArrow(cx, fun, REGS.fp()->environmentChain(), newTarget);
+      if (!obj) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
 
       REGS.sp[-1].setObject(*wrapped);
     }
     END_CASE(JSOP_TOASYNC)
+||||||| merged common ancestors
+    }
+=======
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_TOASYNCGEN) {
       ReservedRooted<JSFunction*> unwrapped(
           &rootFunction0, &REGS.sp[-1].toObject().as<JSFunction>());
@@ -3905,8 +7315,29 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       }
 
       REGS.sp[-1].setObject(*wrapped);
+||||||| merged common ancestors
+    REGS.sp[-1].setObject(*wrapped);
+}
+END_CASE(JSOP_TOASYNC)
+
+CASE(JSOP_TOASYNCGEN)
+{
+    ReservedRooted<JSFunction*> unwrapped(&rootFunction0,
+                                          &REGS.sp[-1].toObject().as<JSFunction>());
+    JSObject* wrapped = WrapAsyncGenerator(cx, unwrapped);
+    if (!wrapped) {
+        goto error;
+=======
+      MOZ_ASSERT(obj->staticPrototype());
+      REGS.sp[-1].setObject(*obj);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     END_CASE(JSOP_TOASYNCGEN)
+||||||| merged common ancestors
+=======
+    END_CASE(JSOP_LAMBDA_ARROW)
+>>>>>>> upstream-releases
 
     CASE(JSOP_TOASYNCITER) {
       ReservedRooted<Value> nextMethod(&rootValue0, REGS.sp[-1]);
@@ -3937,6 +7368,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         PUSH_BOOLEAN(false);
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_TRYSKIPAWAIT)
 
     CASE(JSOP_SETFUNNAME) {
@@ -3948,53 +7380,272 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       if (!SetFunctionNameIfNoOwnName(cx, fun, name, prefixKind)) {
         goto error;
       }
+||||||| merged common ancestors
+}
+END_CASE(JSOP_TRYSKIPAWAIT)
 
+CASE(JSOP_SETFUNNAME)
+{
+    MOZ_ASSERT(REGS.stackDepth() >= 2);
+    FunctionPrefixKind prefixKind = FunctionPrefixKind(GET_UINT8(REGS.pc));
+    ReservedRooted<Value> name(&rootValue0, REGS.sp[-1]);
+    ReservedRooted<JSFunction*> fun(&rootFunction0, &REGS.sp[-2].toObject().as<JSFunction>());
+    if (!SetFunctionNameIfNoOwnName(cx, fun, name, prefixKind)) {
+        goto error;
+    }
+=======
+    END_CASE(JSOP_TRYSKIPAWAIT)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       REGS.sp--;
     }
     END_CASE(JSOP_SETFUNNAME)
+||||||| merged common ancestors
+    REGS.sp--;
+}
+END_CASE(JSOP_SETFUNNAME)
+=======
+    CASE(JSOP_ASYNCAWAIT) {
+      MOZ_ASSERT(REGS.stackDepth() >= 2);
+      ReservedRooted<JSObject*> gen(&rootObject1, &REGS.sp[-1].toObject());
+      ReservedRooted<Value> value(&rootValue0, REGS.sp[-2]);
+      JSObject* promise =
+          AsyncFunctionAwait(cx, gen.as<AsyncFunctionGeneratorObject>(), value);
+      if (!promise) {
+        goto error;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_CALLEE) {
       MOZ_ASSERT(REGS.fp()->isFunctionFrame());
       PUSH_COPY(REGS.fp()->calleev());
     }
     END_CASE(JSOP_CALLEE)
+||||||| merged common ancestors
+CASE(JSOP_CALLEE)
+    MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+    PUSH_COPY(REGS.fp()->calleev());
+END_CASE(JSOP_CALLEE)
+=======
+      REGS.sp--;
+      REGS.sp[-1].setObject(*promise);
+    }
+    END_CASE(JSOP_ASYNCAWAIT)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_INITPROP_GETTER)
     CASE(JSOP_INITHIDDENPROP_GETTER)
     CASE(JSOP_INITPROP_SETTER)
     CASE(JSOP_INITHIDDENPROP_SETTER) {
       MOZ_ASSERT(REGS.stackDepth() >= 2);
+||||||| merged common ancestors
+CASE(JSOP_INITPROP_GETTER)
+CASE(JSOP_INITHIDDENPROP_GETTER)
+CASE(JSOP_INITPROP_SETTER)
+CASE(JSOP_INITHIDDENPROP_SETTER)
+{
+    MOZ_ASSERT(REGS.stackDepth() >= 2);
+=======
+    CASE(JSOP_ASYNCRESOLVE) {
+      MOZ_ASSERT(REGS.stackDepth() >= 2);
+      auto resolveKind = AsyncFunctionResolveKind(GET_UINT8(REGS.pc));
+      ReservedRooted<JSObject*> gen(&rootObject1, &REGS.sp[-1].toObject());
+      ReservedRooted<Value> valueOrReason(&rootValue0, REGS.sp[-2]);
+      JSObject* promise =
+          AsyncFunctionResolve(cx, gen.as<AsyncFunctionGeneratorObject>(),
+                               valueOrReason, resolveKind);
+      if (!promise) {
+        goto error;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-2].toObject());
       ReservedRooted<PropertyName*> name(&rootName0, script->getName(REGS.pc));
       ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+||||||| merged common ancestors
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-2].toObject());
+    ReservedRooted<PropertyName*> name(&rootName0, script->getName(REGS.pc));
+    ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+=======
+      REGS.sp--;
+      REGS.sp[-1].setObject(*promise);
+    }
+    END_CASE(JSOP_ASYNCRESOLVE)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       if (!InitGetterSetterOperation(cx, REGS.pc, obj, name, val)) {
+||||||| merged common ancestors
+    if (!InitGetterSetterOperation(cx, REGS.pc, obj, name, val)) {
+=======
+    CASE(JSOP_SETFUNNAME) {
+      MOZ_ASSERT(REGS.stackDepth() >= 2);
+      FunctionPrefixKind prefixKind = FunctionPrefixKind(GET_UINT8(REGS.pc));
+      ReservedRooted<Value> name(&rootValue0, REGS.sp[-1]);
+      ReservedRooted<JSFunction*> fun(&rootFunction0,
+                                      &REGS.sp[-2].toObject().as<JSFunction>());
+      if (!SetFunctionName(cx, fun, name, prefixKind)) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
+      }
+||||||| merged common ancestors
+    }
+=======
       }
 
       REGS.sp--;
     }
-    END_CASE(JSOP_INITPROP_GETTER)
+    END_CASE(JSOP_SETFUNNAME)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      REGS.sp--;
+    }
+    END_CASE(JSOP_INITPROP_GETTER)
+||||||| merged common ancestors
+    REGS.sp--;
+}
+END_CASE(JSOP_INITPROP_GETTER)
+=======
+    CASE(JSOP_CALLEE) {
+      MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+      PUSH_COPY(REGS.fp()->calleev());
+    }
+    END_CASE(JSOP_CALLEE)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_INITELEM_GETTER)
     CASE(JSOP_INITHIDDENELEM_GETTER)
     CASE(JSOP_INITELEM_SETTER)
     CASE(JSOP_INITHIDDENELEM_SETTER) {
       MOZ_ASSERT(REGS.stackDepth() >= 3);
+||||||| merged common ancestors
+CASE(JSOP_INITELEM_GETTER)
+CASE(JSOP_INITHIDDENELEM_GETTER)
+CASE(JSOP_INITELEM_SETTER)
+CASE(JSOP_INITHIDDENELEM_SETTER)
+{
+    MOZ_ASSERT(REGS.stackDepth() >= 3);
+=======
+    CASE(JSOP_INITPROP_GETTER)
+    CASE(JSOP_INITHIDDENPROP_GETTER)
+    CASE(JSOP_INITPROP_SETTER)
+    CASE(JSOP_INITHIDDENPROP_SETTER) {
+      MOZ_ASSERT(REGS.stackDepth() >= 2);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-3].toObject());
       ReservedRooted<Value> idval(&rootValue0, REGS.sp[-2]);
       ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+||||||| merged common ancestors
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-3].toObject());
+    ReservedRooted<Value> idval(&rootValue0, REGS.sp[-2]);
+    ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+=======
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-2].toObject());
+      ReservedRooted<PropertyName*> name(&rootName0, script->getName(REGS.pc));
+      ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       if (!InitGetterSetterOperation(cx, REGS.pc, obj, idval, val)) {
+||||||| merged common ancestors
+    if (!InitGetterSetterOperation(cx, REGS.pc, obj, idval, val)) {
+=======
+      if (!InitPropGetterSetterOperation(cx, REGS.pc, obj, name, val)) {
+>>>>>>> upstream-releases
         goto error;
       }
 
+<<<<<<< HEAD
       REGS.sp -= 2;
     }
     END_CASE(JSOP_INITELEM_GETTER)
+||||||| merged common ancestors
+    REGS.sp -= 2;
+}
+END_CASE(JSOP_INITELEM_GETTER)
+=======
+      REGS.sp--;
+    }
+    END_CASE(JSOP_INITPROP_GETTER)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    CASE(JSOP_HOLE) { PUSH_MAGIC(JS_ELEMENTS_HOLE); }
+    END_CASE(JSOP_HOLE)
+||||||| merged common ancestors
+CASE(JSOP_HOLE)
+    PUSH_MAGIC(JS_ELEMENTS_HOLE);
+END_CASE(JSOP_HOLE)
+=======
+    CASE(JSOP_INITELEM_GETTER)
+    CASE(JSOP_INITHIDDENELEM_GETTER)
+    CASE(JSOP_INITELEM_SETTER)
+    CASE(JSOP_INITHIDDENELEM_SETTER) {
+      MOZ_ASSERT(REGS.stackDepth() >= 3);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_NEWINIT) {
+      JSObject* obj = NewObjectOperation(cx, script, REGS.pc);
+||||||| merged common ancestors
+CASE(JSOP_NEWINIT)
+{
+    JSObject* obj = NewObjectOperation(cx, script, REGS.pc);
+=======
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-3].toObject());
+      ReservedRooted<Value> idval(&rootValue0, REGS.sp[-2]);
+      ReservedRooted<JSObject*> val(&rootObject1, &REGS.sp[-1].toObject());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      if (!obj) {
+||||||| merged common ancestors
+    if (!obj) {
+=======
+      if (!InitElemGetterSetterOperation(cx, REGS.pc, obj, idval, val)) {
+>>>>>>> upstream-releases
+        goto error;
+<<<<<<< HEAD
+      }
+      PUSH_OBJECT(*obj);
+||||||| merged common ancestors
+=======
+      }
+
+      REGS.sp -= 2;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    END_CASE(JSOP_NEWINIT)
+||||||| merged common ancestors
+    PUSH_OBJECT(*obj);
+}
+END_CASE(JSOP_NEWINIT)
+=======
+    END_CASE(JSOP_INITELEM_GETTER)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CASE(JSOP_NEWARRAY) {
+      uint32_t length = GET_UINT32(REGS.pc);
+      JSObject* obj = NewArrayOperation(cx, script, REGS.pc, length);
+      if (!obj) {
+||||||| merged common ancestors
+CASE(JSOP_NEWARRAY)
+{
+    uint32_t length = GET_UINT32(REGS.pc);
+    JSObject* obj = NewArrayOperation(cx, script, REGS.pc, length);
+    if (!obj) {
+=======
     CASE(JSOP_HOLE) { PUSH_MAGIC(JS_ELEMENTS_HOLE); }
     END_CASE(JSOP_HOLE)
 
@@ -4002,35 +7653,64 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       JSObject* obj = NewObjectOperation(cx, script, REGS.pc);
 
       if (!obj) {
+>>>>>>> upstream-releases
         goto error;
       }
       PUSH_OBJECT(*obj);
     }
-    END_CASE(JSOP_NEWINIT)
-
-    CASE(JSOP_NEWARRAY) {
-      uint32_t length = GET_UINT32(REGS.pc);
-      JSObject* obj = NewArrayOperation(cx, script, REGS.pc, length);
-      if (!obj) {
-        goto error;
-      }
-      PUSH_OBJECT(*obj);
-    }
+<<<<<<< HEAD
     END_CASE(JSOP_NEWARRAY)
+||||||| merged common ancestors
+    PUSH_OBJECT(*obj);
+}
+END_CASE(JSOP_NEWARRAY)
+=======
+    END_CASE(JSOP_NEWINIT)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_NEWARRAY_COPYONWRITE) {
       ReservedRooted<JSObject*> baseobj(
           &rootObject0,
           ObjectGroup::getOrFixupCopyOnWriteObject(cx, script, REGS.pc));
       if (!baseobj) {
+||||||| merged common ancestors
+CASE(JSOP_NEWARRAY_COPYONWRITE)
+{
+    ReservedRooted<JSObject*> baseobj(&rootObject0, ObjectGroup::getOrFixupCopyOnWriteObject(cx, script, REGS.pc));
+    if (!baseobj) {
+=======
+    CASE(JSOP_NEWARRAY) {
+      uint32_t length = GET_UINT32(REGS.pc);
+      JSObject* obj = NewArrayOperation(cx, script, REGS.pc, length);
+      if (!obj) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
+||||||| merged common ancestors
+    }
+=======
+      }
+      PUSH_OBJECT(*obj);
+    }
+    END_CASE(JSOP_NEWARRAY)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       ReservedRooted<JSObject*> obj(
           &rootObject1, NewDenseCopyOnWriteArray(
                             cx, ((RootedObject&)(baseobj)).as<ArrayObject>(),
                             gc::DefaultHeap));
       if (!obj) {
+||||||| merged common ancestors
+    ReservedRooted<JSObject*> obj(&rootObject1, NewDenseCopyOnWriteArray(cx, ((RootedObject&)(baseobj)).as<ArrayObject>(), gc::DefaultHeap));
+    if (!obj) {
+=======
+    CASE(JSOP_NEWARRAY_COPYONWRITE) {
+      JSObject* obj = NewArrayCopyOnWriteOperation(cx, script, REGS.pc);
+      if (!obj) {
+>>>>>>> upstream-releases
         goto error;
       }
 
@@ -4105,6 +7785,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_INITELEM)
 
+<<<<<<< HEAD
     CASE(JSOP_INITELEM_ARRAY) {
       MOZ_ASSERT(REGS.stackDepth() >= 2);
       HandleValue val = REGS.stackHandleAt(-1);
@@ -4119,7 +7800,51 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       REGS.sp--;
     }
     END_CASE(JSOP_INITELEM_ARRAY)
+||||||| merged common ancestors
+    REGS.sp--;
+}
+END_CASE(JSOP_INITELEM_ARRAY)
+=======
+    CASE(JSOP_INITELEM_ARRAY) {
+      MOZ_ASSERT(REGS.stackDepth() >= 2);
+      HandleValue val = REGS.stackHandleAt(-1);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    CASE(JSOP_INITELEM_INC) {
+      MOZ_ASSERT(REGS.stackDepth() >= 3);
+      HandleValue val = REGS.stackHandleAt(-1);
+||||||| merged common ancestors
+CASE(JSOP_INITELEM_INC)
+{
+    MOZ_ASSERT(REGS.stackDepth() >= 3);
+    HandleValue val = REGS.stackHandleAt(-1);
+=======
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-2].toObject());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-3].toObject());
+||||||| merged common ancestors
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-3].toObject());
+=======
+      uint32_t index = GET_UINT32(REGS.pc);
+      if (!InitArrayElemOperation(cx, REGS.pc, obj, index, val)) {
+        goto error;
+      }
+
+      REGS.sp--;
+    }
+    END_CASE(JSOP_INITELEM_ARRAY)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      uint32_t index = REGS.sp[-2].toInt32();
+      if (!InitArrayElemOperation(cx, REGS.pc, obj, index, val)) {
+||||||| merged common ancestors
+    uint32_t index = REGS.sp[-2].toInt32();
+    if (!InitArrayElemOperation(cx, REGS.pc, obj, index, val)) {
+=======
     CASE(JSOP_INITELEM_INC) {
       MOZ_ASSERT(REGS.stackDepth() >= 3);
       HandleValue val = REGS.stackHandleAt(-1);
@@ -4128,6 +7853,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
       uint32_t index = REGS.sp[-2].toInt32();
       if (!InitArrayElemOperation(cx, REGS.pc, obj, index, val)) {
+>>>>>>> upstream-releases
         goto error;
       }
 
@@ -4155,7 +7881,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
          * 350509, due to Igor Bukanov.
          */
         ReservedRooted<Value> v(&rootValue0, rval);
-        cx->setPendingException(v);
+        cx->setPendingExceptionAndCaptureStack(v);
         goto error;
       }
 
@@ -4178,6 +7904,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     CASE(JSOP_FINALLY) { CHECK_BRANCH(); }
     END_CASE(JSOP_FINALLY)
 
+<<<<<<< HEAD
     CASE(JSOP_THROW) {
       CHECK_BRANCH();
       ReservedRooted<Value> v(&rootValue0);
@@ -4186,6 +7913,34 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       /* let the code at error try to catch the exception. */
       goto error;
     }
+||||||| merged common ancestors
+CASE(JSOP_THROWING)
+{
+    ReservedRooted<Value> v(&rootValue0);
+    POP_COPY_TO(v);
+    MOZ_ALWAYS_TRUE(ThrowingOperation(cx, v));
+}
+END_CASE(JSOP_THROWING)
+
+CASE(JSOP_THROW)
+{
+    CHECK_BRANCH();
+    ReservedRooted<Value> v(&rootValue0);
+    POP_COPY_TO(v);
+    MOZ_ALWAYS_FALSE(Throw(cx, v));
+    /* let the code at error try to catch the exception. */
+    goto error;
+}
+=======
+    CASE(JSOP_THROW) {
+      CHECK_BRANCH();
+      ReservedRooted<Value> v(&rootValue0);
+      POP_COPY_TO(v);
+      MOZ_ALWAYS_FALSE(ThrowOperation(cx, v));
+      /* let the code at error try to catch the exception. */
+      goto error;
+    }
+>>>>>>> upstream-releases
 
     CASE(JSOP_INSTANCEOF) {
       ReservedRooted<Value> rref(&rootValue0, REGS.sp[-1]);
@@ -4312,12 +8067,28 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_POPVARENV)
 
+<<<<<<< HEAD
     CASE(JSOP_GENERATOR) {
       MOZ_ASSERT(!cx->isExceptionPending());
       MOZ_ASSERT(REGS.stackDepth() == 0);
       JSObject* obj = GeneratorObject::create(cx, REGS.fp());
       if (!obj) {
+||||||| merged common ancestors
+CASE(JSOP_GENERATOR)
+{
+    MOZ_ASSERT(!cx->isExceptionPending());
+    MOZ_ASSERT(REGS.stackDepth() == 0);
+    JSObject* obj = GeneratorObject::create(cx, REGS.fp());
+    if (!obj) {
+=======
+    CASE(JSOP_GENERATOR) {
+      MOZ_ASSERT(!cx->isExceptionPending());
+      MOZ_ASSERT(REGS.stackDepth() == 0);
+      JSObject* obj = AbstractGeneratorObject::create(cx, REGS.fp());
+      if (!obj) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
       PUSH_OBJECT(*obj);
     }
@@ -4330,11 +8101,41 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       POP_RETURN_VALUE();
       MOZ_ASSERT(REGS.stackDepth() == 0);
       if (!GeneratorObject::initialSuspend(cx, obj, REGS.fp(), REGS.pc)) {
+||||||| merged common ancestors
+    }
+    PUSH_OBJECT(*obj);
+}
+END_CASE(JSOP_GENERATOR)
+
+CASE(JSOP_INITIALYIELD)
+{
+    MOZ_ASSERT(!cx->isExceptionPending());
+    MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
+    POP_RETURN_VALUE();
+    MOZ_ASSERT(REGS.stackDepth() == 0);
+    if (!GeneratorObject::initialSuspend(cx, obj, REGS.fp(), REGS.pc)) {
+=======
+      }
+      PUSH_OBJECT(*obj);
+    }
+    END_CASE(JSOP_GENERATOR)
+
+    CASE(JSOP_INITIALYIELD) {
+      MOZ_ASSERT(!cx->isExceptionPending());
+      MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
+      POP_RETURN_VALUE();
+      MOZ_ASSERT(REGS.stackDepth() == 0);
+      if (!AbstractGeneratorObject::initialSuspend(cx, obj, REGS.fp(),
+                                                   REGS.pc)) {
+>>>>>>> upstream-releases
         goto error;
       }
       goto successful_return_continuation;
     }
 
+<<<<<<< HEAD
     CASE(JSOP_YIELD)
     CASE(JSOP_AWAIT) {
       MOZ_ASSERT(!cx->isExceptionPending());
@@ -4343,6 +8144,26 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       if (!GeneratorObject::normalSuspend(cx, obj, REGS.fp(), REGS.pc,
                                           REGS.spForStackDepth(0),
                                           REGS.stackDepth() - 2)) {
+||||||| merged common ancestors
+CASE(JSOP_YIELD)
+CASE(JSOP_AWAIT)
+{
+    MOZ_ASSERT(!cx->isExceptionPending());
+    MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+    ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
+    if (!GeneratorObject::normalSuspend(cx, obj, REGS.fp(), REGS.pc,
+                                        REGS.spForStackDepth(0), REGS.stackDepth() - 2))
+    {
+=======
+    CASE(JSOP_YIELD)
+    CASE(JSOP_AWAIT) {
+      MOZ_ASSERT(!cx->isExceptionPending());
+      MOZ_ASSERT(REGS.fp()->isFunctionFrame());
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
+      if (!AbstractGeneratorObject::normalSuspend(cx, obj, REGS.fp(), REGS.pc,
+                                                  REGS.spForStackDepth(0),
+                                                  REGS.stackDepth() - 2)) {
+>>>>>>> upstream-releases
         goto error;
       }
 
@@ -4352,18 +8173,40 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       goto successful_return_continuation;
     }
 
+<<<<<<< HEAD
     CASE(JSOP_RESUME) {
       {
         Rooted<GeneratorObject*> gen(
             cx, &REGS.sp[-2].toObject().as<GeneratorObject>());
+||||||| merged common ancestors
+CASE(JSOP_RESUME)
+{
+    {
+        Rooted<GeneratorObject*> gen(cx, &REGS.sp[-2].toObject().as<GeneratorObject>());
+=======
+    CASE(JSOP_RESUME) {
+      {
+        Rooted<AbstractGeneratorObject*> gen(
+            cx, &REGS.sp[-2].toObject().as<AbstractGeneratorObject>());
+>>>>>>> upstream-releases
         ReservedRooted<Value> val(&rootValue0, REGS.sp[-1]);
         // popInlineFrame expects there to be an additional value on the stack
         // to pop off, so leave "gen" on the stack.
 
+<<<<<<< HEAD
         GeneratorObject::ResumeKind resumeKind =
             GeneratorObject::getResumeKind(REGS.pc);
         if (!GeneratorObject::resume(cx, activation, gen, val)) {
           goto error;
+||||||| merged common ancestors
+        GeneratorObject::ResumeKind resumeKind = GeneratorObject::getResumeKind(REGS.pc);
+        if (!GeneratorObject::resume(cx, activation, gen, val)) {
+            goto error;
+=======
+        auto resumeKind = AbstractGeneratorObject::getResumeKind(REGS.pc);
+        if (!AbstractGeneratorObject::resume(cx, activation, gen, val)) {
+          goto error;
+>>>>>>> upstream-releases
         }
 
         JSScript* generatorScript = REGS.fp()->script();
@@ -4396,12 +8239,24 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
         }
 
         switch (resumeKind) {
-          case GeneratorObject::NEXT:
+          case GeneratorResumeKind::Next:
             break;
+<<<<<<< HEAD
           case GeneratorObject::THROW:
           case GeneratorObject::RETURN:
             MOZ_ALWAYS_FALSE(GeneratorThrowOrReturn(cx, activation.regs().fp(),
                                                     gen, val, resumeKind));
+||||||| merged common ancestors
+          case GeneratorObject::THROW:
+          case GeneratorObject::RETURN:
+            MOZ_ALWAYS_FALSE(GeneratorThrowOrReturn(cx, activation.regs().fp(), gen, val,
+                                                    resumeKind));
+=======
+          case GeneratorResumeKind::Throw:
+          case GeneratorResumeKind::Return:
+            MOZ_ALWAYS_FALSE(GeneratorThrowOrReturn(cx, activation.regs().fp(),
+                                                    gen, val, resumeKind));
+>>>>>>> upstream-releases
             goto error;
           default:
             MOZ_CRASH("bad resumeKind");
@@ -4410,13 +8265,47 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       ADVANCE_AND_DISPATCH(0);
     }
 
+<<<<<<< HEAD
     CASE(JSOP_DEBUGAFTERYIELD) {
       // No-op in the interpreter, as GeneratorObject::resume takes care of
       // fixing up InterpreterFrames.
       MOZ_ASSERT_IF(REGS.fp()->script()->isDebuggee(), REGS.fp()->isDebuggee());
     }
     END_CASE(JSOP_DEBUGAFTERYIELD)
+||||||| merged common ancestors
+CASE(JSOP_DEBUGAFTERYIELD)
+{
+    // No-op in the interpreter, as GeneratorObject::resume takes care of
+    // fixing up InterpreterFrames.
+    MOZ_ASSERT_IF(REGS.fp()->script()->isDebuggee(), REGS.fp()->isDebuggee());
+}
+END_CASE(JSOP_DEBUGAFTERYIELD)
 
+CASE(JSOP_FINALYIELDRVAL)
+{
+    ReservedRooted<JSObject*> gen(&rootObject0, &REGS.sp[-1].toObject());
+    REGS.sp--;
+    GeneratorObject::finalSuspend(gen);
+    goto successful_return_continuation;
+}
+=======
+    CASE(JSOP_AFTERYIELD) {
+      // AbstractGeneratorObject::resume takes care of setting the frame's
+      // debuggee flag.
+      MOZ_ASSERT_IF(REGS.fp()->script()->isDebuggee(), REGS.fp()->isDebuggee());
+      COUNT_COVERAGE();
+    }
+    END_CASE(JSOP_AFTERYIELD)
+
+    CASE(JSOP_FINALYIELDRVAL) {
+      ReservedRooted<JSObject*> gen(&rootObject0, &REGS.sp[-1].toObject());
+      REGS.sp--;
+      AbstractGeneratorObject::finalSuspend(gen);
+      goto successful_return_continuation;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_FINALYIELDRVAL) {
       ReservedRooted<JSObject*> gen(&rootObject0, &REGS.sp[-1].toObject());
       REGS.sp--;
@@ -4426,11 +8315,20 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
     CASE(JSOP_CHECKCLASSHERITAGE) {
       HandleValue heritage = REGS.stackHandleAt(-1);
+||||||| merged common ancestors
+CASE(JSOP_CHECKCLASSHERITAGE)
+{
+    HandleValue heritage = REGS.stackHandleAt(-1);
+=======
+    CASE(JSOP_CHECKCLASSHERITAGE) {
+      HandleValue heritage = REGS.stackHandleAt(-1);
+>>>>>>> upstream-releases
 
       if (!CheckClassHeritageOperation(cx, heritage)) {
         goto error;
       }
     }
+<<<<<<< HEAD
     END_CASE(JSOP_CHECKCLASSHERITAGE)
 
     CASE(JSOP_BUILTINPROTO) {
@@ -4438,6 +8336,23 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       JSProtoKey key = static_cast<JSProtoKey>(GET_UINT8(REGS.pc));
       JSObject* builtin = GlobalObject::getOrCreatePrototype(cx, key);
       if (!builtin) {
+||||||| merged common ancestors
+}
+END_CASE(JSOP_CHECKCLASSHERITAGE)
+
+CASE(JSOP_BUILTINPROTO)
+{
+    MOZ_ASSERT(GET_UINT8(REGS.pc) < JSProto_LIMIT);
+    JSProtoKey key = static_cast<JSProtoKey>(GET_UINT8(REGS.pc));
+    JSObject* builtin = GlobalObject::getOrCreatePrototype(cx, key);
+    if (!builtin) {
+=======
+    END_CASE(JSOP_CHECKCLASSHERITAGE)
+
+    CASE(JSOP_BUILTINPROTO) {
+      JSObject* builtin = BuiltinProtoOperation(cx, REGS.pc);
+      if (!builtin) {
+>>>>>>> upstream-releases
         goto error;
       }
       PUSH_OBJECT(*builtin);
@@ -4479,10 +8394,21 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
           &rootFunction0, &REGS.sp[-2].toObject().as<JSFunction>());
       MOZ_ASSERT(func->allowSuperProperty());
 
+<<<<<<< HEAD
       /* Load the home object */
       ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
       MOZ_ASSERT(obj->is<PlainObject>() || obj->is<UnboxedPlainObject>() ||
                  obj->is<JSFunction>());
+||||||| merged common ancestors
+    /* Load the home object */
+    ReservedRooted<JSObject*> obj(&rootObject0);
+    obj = &REGS.sp[int(-2 - skipOver)].toObject();
+    MOZ_ASSERT(obj->is<PlainObject>() || obj->is<UnboxedPlainObject>() || obj->is<JSFunction>());
+=======
+      /* Load the home object */
+      ReservedRooted<JSObject*> obj(&rootObject0, &REGS.sp[-1].toObject());
+      MOZ_ASSERT(obj->is<PlainObject>() || obj->is<JSFunction>());
+>>>>>>> upstream-releases
 
       func->setExtendedSlot(FunctionExtended::METHOD_HOMEOBJECT_SLOT,
                             ObjectValue(*obj));
@@ -4513,6 +8439,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_NEWTARGET)
 
+<<<<<<< HEAD
     CASE(JSOP_IMPORTMETA) {
       ReservedRooted<JSObject*> module(&rootObject0,
                                        GetModuleObjectForScript(script));
@@ -4520,6 +8447,22 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
 
       JSObject* metaObject = GetOrCreateModuleMetaObject(cx, module);
       if (!metaObject) {
+||||||| merged common ancestors
+    PUSH_OBJECT(*metaObject);
+}
+END_CASE(JSOP_NEWTARGET)
+
+CASE(JSOP_SUPERFUN)
+{
+    ReservedRooted<JSObject*> superEnvFunc(&rootObject0, &GetSuperEnvFunction(cx, REGS));
+    ReservedRooted<JSObject*> superFun(&rootObject1);
+    superFun = SuperFunOperation(cx, superEnvFunc);
+    if (!superFun) {
+=======
+    CASE(JSOP_IMPORTMETA) {
+      JSObject* metaObject = ImportMetaOperation(cx, script);
+      if (!metaObject) {
+>>>>>>> upstream-releases
         goto error;
       }
 
@@ -4527,6 +8470,7 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     }
     END_CASE(JSOP_IMPORTMETA)
 
+<<<<<<< HEAD
     CASE(JSOP_DYNAMIC_IMPORT) {
       ReservedRooted<Value> referencingPrivate(&rootValue0);
       referencingPrivate = FindScriptOrModulePrivateForScript(script);
@@ -4541,7 +8485,17 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       PUSH_OBJECT(*promise);
     }
     END_CASE(JSOP_DYNAMIC_IMPORT)
+||||||| merged common ancestors
+    PUSH_OBJECT(*superFun);
+}
+END_CASE(JSOP_SUPERFUN)
+=======
+    CASE(JSOP_DYNAMIC_IMPORT) {
+      ReservedRooted<Value> specifier(&rootValue1);
+      POP_COPY_TO(specifier);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_ENVCALLEE) {
       uint8_t numHops = GET_UINT8(REGS.pc);
       JSObject* env = &REGS.fp()->environmentChain()->as<EnvironmentObject>();
@@ -4551,7 +8505,17 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       PUSH_OBJECT(env->as<CallObject>().callee());
     }
     END_CASE(JSOP_ENVCALLEE)
+||||||| merged common ancestors
+CASE(JSOP_DERIVEDCONSTRUCTOR)
+{
+    MOZ_ASSERT(REGS.sp[-1].isObject());
+    ReservedRooted<JSObject*> proto(&rootObject0, &REGS.sp[-1].toObject());
+=======
+      JSObject* promise = StartDynamicModuleImport(cx, script, specifier);
+      if (!promise) goto error;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_SUPERFUN) {
       ReservedRooted<JSObject*> superEnvFunc(&rootObject0,
                                              &REGS.sp[-1].toObject());
@@ -4561,9 +8525,22 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       }
 
       REGS.sp[-1].setObject(*superFun);
+||||||| merged common ancestors
+    JSFunction* constructor = MakeDefaultConstructor(cx, script, REGS.pc, proto);
+    if (!constructor) {
+        goto error;
+=======
+      PUSH_OBJECT(*promise);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     END_CASE(JSOP_SUPERFUN)
+||||||| merged common ancestors
+=======
+    END_CASE(JSOP_DYNAMIC_IMPORT)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_DERIVEDCONSTRUCTOR) {
       MOZ_ASSERT(REGS.sp[-1].isObject());
       ReservedRooted<JSObject*> proto(&rootObject0, &REGS.sp[-1].toObject());
@@ -4575,19 +8552,68 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
       }
 
       REGS.sp[-1].setObject(*constructor);
-    }
-    END_CASE(JSOP_DERIVEDCONSTRUCTOR)
+||||||| merged common ancestors
+    REGS.sp[-1].setObject(*constructor);
+}
+END_CASE(JSOP_DERIVEDCONSTRUCTOR)
 
+CASE(JSOP_CLASSCONSTRUCTOR)
+{
+    JSFunction* constructor = MakeDefaultConstructor(cx, script, REGS.pc, nullptr);
+    if (!constructor) {
+        goto error;
+=======
+    CASE(JSOP_ENVCALLEE) {
+      uint8_t numHops = GET_UINT8(REGS.pc);
+      JSObject* env = &REGS.fp()->environmentChain()->as<EnvironmentObject>();
+      for (unsigned i = 0; i < numHops; i++) {
+        env = &env->as<EnvironmentObject>().enclosingEnvironment();
+      }
+      PUSH_OBJECT(env->as<CallObject>().callee());
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    END_CASE(JSOP_DERIVEDCONSTRUCTOR)
+||||||| merged common ancestors
+    PUSH_OBJECT(*constructor);
+}
+END_CASE(JSOP_CLASSCONSTRUCTOR)
+=======
+    END_CASE(JSOP_ENVCALLEE)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     CASE(JSOP_CLASSCONSTRUCTOR) {
       JSFunction* constructor =
           MakeDefaultConstructor(cx, script, REGS.pc, nullptr);
       if (!constructor) {
+||||||| merged common ancestors
+CASE(JSOP_CHECKOBJCOERCIBLE)
+{
+    ReservedRooted<Value> checkVal(&rootValue0, REGS.sp[-1]);
+    if (checkVal.isNullOrUndefined() && !ToObjectFromStack(cx, checkVal)) {
+=======
+    CASE(JSOP_SUPERFUN) {
+      ReservedRooted<JSObject*> superEnvFunc(&rootObject0,
+                                             &REGS.sp[-1].toObject());
+      JSObject* superFun = SuperFunOperation(cx, superEnvFunc);
+      if (!superFun) {
+>>>>>>> upstream-releases
         goto error;
+<<<<<<< HEAD
       }
       PUSH_OBJECT(*constructor);
     }
     END_CASE(JSOP_CLASSCONSTRUCTOR)
+||||||| merged common ancestors
+    }
+}
+END_CASE(JSOP_CHECKOBJCOERCIBLE)
+=======
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     CASE(JSOP_CHECKOBJCOERCIBLE) {
       ReservedRooted<Value> checkVal(&rootValue0, REGS.sp[-1]);
       if (checkVal.isNullOrUndefined() && !ToObjectFromStack(cx, checkVal)) {
@@ -4613,10 +8639,41 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
     CASE(JSOP_BIGINT) {
       PUSH_COPY(script->getConst(GET_UINT32_INDEX(REGS.pc)));
       MOZ_ASSERT(REGS.sp[-1].isBigInt());
+||||||| merged common ancestors
+CASE(JSOP_DEBUGCHECKSELFHOSTED)
+{
+#ifdef DEBUG
+    ReservedRooted<Value> checkVal(&rootValue0, REGS.sp[-1]);
+    if (!Debug_CheckSelfHosted(cx, checkVal)) {
+        goto error;
+=======
+      REGS.sp[-1].setObject(*superFun);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     END_CASE(JSOP_BIGINT)
 #endif
+||||||| merged common ancestors
+#endif
+}
+END_CASE(JSOP_DEBUGCHECKSELFHOSTED)
 
+CASE(JSOP_IS_CONSTRUCTING)
+    PUSH_MAGIC(JS_IS_CONSTRUCTING);
+END_CASE(JSOP_IS_CONSTRUCTING)
+
+DEFAULT()
+{
+    char numBuf[12];
+    SprintfLiteral(numBuf, "%d", *REGS.pc);
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_BYTECODE, numBuf);
+    goto error;
+}
+=======
+    END_CASE(JSOP_SUPERFUN)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     DEFAULT() {
       char numBuf[12];
       SprintfLiteral(numBuf, "%d", *REGS.pc);
@@ -4624,23 +8681,98 @@ static MOZ_NEVER_INLINE JS_HAZ_JSNATIVE_CALLER bool Interpret(JSContext* cx,
                                 JSMSG_BAD_BYTECODE, numBuf);
       goto error;
     }
+||||||| merged common ancestors
+} /* interpreter loop */
+=======
+    CASE(JSOP_DERIVEDCONSTRUCTOR) {
+      MOZ_ASSERT(REGS.sp[-1].isObject());
+      ReservedRooted<JSObject*> proto(&rootObject0, &REGS.sp[-1].toObject());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   } /* interpreter loop */
 
   MOZ_CRASH("Interpreter loop exited via fallthrough");
+||||||| merged common ancestors
+    MOZ_CRASH("Interpreter loop exited via fallthrough");
 
+  error:
+    switch (HandleError(cx, REGS)) {
+      case SuccessfulReturnContinuation:
+        goto successful_return_continuation;
+=======
+      JSFunction* constructor =
+          MakeDefaultConstructor(cx, script, REGS.pc, proto);
+      if (!constructor) {
+        goto error;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 error:
   switch (HandleError(cx, REGS)) {
     case SuccessfulReturnContinuation:
       goto successful_return_continuation;
+||||||| merged common ancestors
+      case ErrorReturnContinuation:
+        interpReturnOK = false;
+        goto return_continuation;
+=======
+      REGS.sp[-1].setObject(*constructor);
+    }
+    END_CASE(JSOP_DERIVEDCONSTRUCTOR)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     case ErrorReturnContinuation:
       interpReturnOK = false;
       goto return_continuation;
+||||||| merged common ancestors
+      case CatchContinuation:
+        ADVANCE_AND_DISPATCH(0);
+=======
+    CASE(JSOP_CLASSCONSTRUCTOR) {
+      JSFunction* constructor =
+          MakeDefaultConstructor(cx, script, REGS.pc, nullptr);
+      if (!constructor) {
+        goto error;
+      }
+      PUSH_OBJECT(*constructor);
+    }
+    END_CASE(JSOP_CLASSCONSTRUCTOR)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     case CatchContinuation:
       ADVANCE_AND_DISPATCH(0);
+||||||| merged common ancestors
+      case FinallyContinuation: {
+        /*
+         * Push (true, exception) pair for finally to indicate that [retsub]
+         * should rethrow the exception.
+         */
+        ReservedRooted<Value> exception(&rootValue0);
+        if (!cx->getPendingException(&exception)) {
+            interpReturnOK = false;
+            goto return_continuation;
+        }
+        PUSH_BOOLEAN(true);
+        PUSH_COPY(exception);
+        cx->clearPendingException();
+      }
+      ADVANCE_AND_DISPATCH(0);
+    }
+=======
+    CASE(JSOP_CHECKOBJCOERCIBLE) {
+      ReservedRooted<Value> checkVal(&rootValue0, REGS.sp[-1]);
+      if (checkVal.isNullOrUndefined() && !ToObjectFromStack(cx, checkVal)) {
+        goto error;
+      }
+    }
+    END_CASE(JSOP_CHECKOBJCOERCIBLE)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     case FinallyContinuation: {
       /*
        * Push (true, exception) pair for finally to indicate that [retsub]
@@ -4657,55 +8789,224 @@ error:
     }
       ADVANCE_AND_DISPATCH(0);
   }
+||||||| merged common ancestors
+    MOZ_CRASH("Invalid HandleError continuation");
+=======
+    CASE(JSOP_DEBUGCHECKSELFHOSTED) {
+#ifdef DEBUG
+      ReservedRooted<Value> checkVal(&rootValue0, REGS.sp[-1]);
+      if (!Debug_CheckSelfHosted(cx, checkVal)) {
+        goto error;
+      }
+#endif
+    }
+    END_CASE(JSOP_DEBUGCHECKSELFHOSTED)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_CRASH("Invalid HandleError continuation");
+||||||| merged common ancestors
+  exit:
+    if (MOZ_LIKELY(!frameHalfInitialized)) {
+        interpReturnOK = Debugger::onLeaveFrame(cx, REGS.fp(), REGS.pc, interpReturnOK);
+=======
+    CASE(JSOP_IS_CONSTRUCTING) { PUSH_MAGIC(JS_IS_CONSTRUCTING); }
+    END_CASE(JSOP_IS_CONSTRUCTING)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 exit:
   if (MOZ_LIKELY(!frameHalfInitialized)) {
     interpReturnOK =
         Debugger::onLeaveFrame(cx, REGS.fp(), REGS.pc, interpReturnOK);
+||||||| merged common ancestors
+        REGS.fp()->epilogue(cx, REGS.pc);
+    }
+=======
+    CASE(JSOP_INC) {
+      ReservedRooted<Value> val(&rootValue0, REGS.sp[-1]);
+      MutableHandleValue res = REGS.stackHandleAt(-1);
+      if (!IncOperation(cx, &val, res)) {
+        goto error;
+      }
+    }
+    END_CASE(JSOP_INC)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     REGS.fp()->epilogue(cx, REGS.pc);
   }
+||||||| merged common ancestors
+    gc::MaybeVerifyBarriers(cx, true);
+=======
+    CASE(JSOP_DEC) {
+      ReservedRooted<Value> val(&rootValue0, REGS.sp[-1]);
+      MutableHandleValue res = REGS.stackHandleAt(-1);
+      if (!DecOperation(cx, &val, res)) {
+        goto error;
+      }
+    }
+    END_CASE(JSOP_DEC)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gc::MaybeVerifyBarriers(cx, true);
+||||||| merged common ancestors
+    TraceLogStopEvent(logger, TraceLogger_Engine);
+    TraceLogStopEvent(logger, scriptEvent);
+=======
+    CASE(JSOP_TONUMERIC) {
+      if (!ToNumeric(cx, REGS.stackHandleAt(-1))) {
+        goto error;
+      }
+    }
+    END_CASE(JSOP_TONUMERIC)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   TraceLogStopEvent(logger, TraceLogger_Engine);
   TraceLogStopEvent(logger, scriptEvent);
+||||||| merged common ancestors
+    /*
+     * This path is used when it's guaranteed the method can be finished
+     * inside the JIT.
+     */
+  leave_on_safe_point:
+=======
+    CASE(JSOP_BIGINT) { PUSH_BIGINT(script->getBigInt(REGS.pc)); }
+    END_CASE(JSOP_BIGINT)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /*
    * This path is used when it's guaranteed the method can be finished
    * inside the JIT.
    */
 leave_on_safe_point:
+||||||| merged common ancestors
+    if (interpReturnOK) {
+        state.setReturnValue(activation.entryFrame()->returnValue());
+    }
+=======
+    DEFAULT() {
+      char numBuf[12];
+      SprintfLiteral(numBuf, "%d", *REGS.pc);
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_BAD_BYTECODE, numBuf);
+      goto error;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (interpReturnOK) {
     state.setReturnValue(activation.entryFrame()->returnValue());
   }
+||||||| merged common ancestors
+    return interpReturnOK;
+=======
+  } /* interpreter loop */
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return interpReturnOK;
+||||||| merged common ancestors
+  prologue_error:
+    interpReturnOK = false;
+    frameHalfInitialized = true;
+    goto prologue_return_continuation;
+}
+=======
+  MOZ_CRASH("Interpreter loop exited via fallthrough");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 prologue_error:
   interpReturnOK = false;
   frameHalfInitialized = true;
   goto prologue_return_continuation;
 }
+||||||| merged common ancestors
+bool
+js::Throw(JSContext* cx, HandleValue v)
+{
+    MOZ_ASSERT(!cx->isExceptionPending());
+    cx->setPendingException(v);
+    return false;
+}
+=======
+error:
+  switch (HandleError(cx, REGS)) {
+    case SuccessfulReturnContinuation:
+      goto successful_return_continuation;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::Throw(JSContext* cx, HandleValue v) {
   MOZ_ASSERT(!cx->isExceptionPending());
   cx->setPendingException(v);
   return false;
 }
+||||||| merged common ancestors
+bool
+js::ThrowingOperation(JSContext* cx, HandleValue v)
+{
+    // Like js::Throw, but returns |true| instead of |false| to continue
+    // execution instead of calling the (JIT) exception handler.
 
+    MOZ_ASSERT(!cx->isExceptionPending());
+    cx->setPendingException(v);
+    return true;
+}
+=======
+    case ErrorReturnContinuation:
+      interpReturnOK = false;
+      goto return_continuation;
+
+    case CatchContinuation:
+      ADVANCE_AND_DISPATCH(0);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool js::GetProperty(JSContext* cx, HandleValue v, HandlePropertyName name,
                      MutableHandleValue vp) {
   if (name == cx->names().length) {
     // Fast path for strings, arrays and arguments.
     if (GetLengthProperty(v, vp)) {
       return true;
+||||||| merged common ancestors
+bool
+js::GetProperty(JSContext* cx, HandleValue v, HandlePropertyName name, MutableHandleValue vp)
+{
+    if (name == cx->names().length) {
+        // Fast path for strings, arrays and arguments.
+        if (GetLengthProperty(v, vp)) {
+            return true;
+        }
+=======
+    case FinallyContinuation: {
+      /*
+       * Push (true, exception) pair for finally to indicate that [retsub]
+       * should rethrow the exception.
+       */
+      ReservedRooted<Value> exception(&rootValue0);
+      if (!cx->getPendingException(&exception)) {
+        interpReturnOK = false;
+        goto return_continuation;
+      }
+      PUSH_BOOLEAN(true);
+      PUSH_COPY(exception);
+      cx->clearPendingException();
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   }
+||||||| merged common ancestors
+=======
+      ADVANCE_AND_DISPATCH(0);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Optimize common cases like (2).toString() or "foo".valueOf() to not
   // create a wrapper object.
   if (v.isPrimitive() && !v.isNullOrUndefined() &&
@@ -4724,12 +9025,55 @@ bool js::GetProperty(JSContext* cx, HandleValue v, HandlePropertyName name,
     if (!proto) {
       return false;
     }
+||||||| merged common ancestors
+    // Optimize common cases like (2).toString() or "foo".valueOf() to not
+    // create a wrapper object.
+    if (v.isPrimitive() &&
+        !v.isNullOrUndefined() &&
+        IF_BIGINT(!v.isBigInt(), true))
+    {
+        NativeObject* proto;
+        if (v.isNumber()) {
+            proto = GlobalObject::getOrCreateNumberPrototype(cx, cx->global());
+        } else if (v.isString()) {
+            proto = GlobalObject::getOrCreateStringPrototype(cx, cx->global());
+        } else if (v.isBoolean()) {
+            proto = GlobalObject::getOrCreateBooleanPrototype(cx, cx->global());
+        } else {
+            MOZ_ASSERT(v.isSymbol());
+            proto = GlobalObject::getOrCreateSymbolPrototype(cx, cx->global());
+        }
+        if (!proto) {
+            return false;
+        }
 
+        if (GetPropertyPure(cx, proto, NameToId(name), vp.address())) {
+            return true;
+        }
+    }
+=======
+  MOZ_CRASH("Invalid HandleError continuation");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     if (GetPropertyPure(cx, proto, NameToId(name), vp.address())) {
       return true;
     }
   }
+||||||| merged common ancestors
+    RootedValue receiver(cx, v);
+    RootedObject obj(cx, ToObjectFromStack(cx, v));
+    if (!obj) {
+        return false;
+    }
+=======
+exit:
+  if (MOZ_LIKELY(!frameHalfInitialized)) {
+    interpReturnOK =
+        Debugger::onLeaveFrame(cx, REGS.fp(), REGS.pc, interpReturnOK);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedValue receiver(cx, v);
   RootedObject obj(cx, ToObjectFromStack(cx, v));
   if (!obj) {
@@ -4738,10 +9082,27 @@ bool js::GetProperty(JSContext* cx, HandleValue v, HandlePropertyName name,
 
   return GetProperty(cx, obj, receiver, name, vp);
 }
+||||||| merged common ancestors
+    return GetProperty(cx, obj, receiver, name, vp);
+}
+=======
+    REGS.fp()->epilogue(cx, REGS.pc);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* js::Lambda(JSContext* cx, HandleFunction fun, HandleObject parent) {
   MOZ_ASSERT(!fun->isArrow());
+||||||| merged common ancestors
+JSObject*
+js::Lambda(JSContext* cx, HandleFunction fun, HandleObject parent)
+{
+    MOZ_ASSERT(!fun->isArrow());
+=======
+  gc::MaybeVerifyBarriers(cx, true);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JSFunction* clone;
   if (fun->isNative()) {
     MOZ_ASSERT(IsAsmJSModule(fun));
@@ -4752,27 +9113,96 @@ JSObject* js::Lambda(JSContext* cx, HandleFunction fun, HandleObject parent) {
   if (!clone) {
     return nullptr;
   }
+||||||| merged common ancestors
+    JSFunction* clone;
+    if (fun->isNative()) {
+        MOZ_ASSERT(IsAsmJSModule(fun));
+        clone = CloneAsmJSModuleFunction(cx, fun);
+    } else {
+        clone = CloneFunctionObjectIfNotSingleton(cx, fun, parent);
+    }
+    if (!clone) {
+        return nullptr;
+    }
+=======
+  TraceLogStopEvent(logger, TraceLogger_Engine);
+  TraceLogStopEvent(logger, scriptEvent);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(fun->global() == clone->global());
   return clone;
 }
+||||||| merged common ancestors
+    MOZ_ASSERT(fun->global() == clone->global());
+    return clone;
+}
+=======
+  /*
+   * This path is used when it's guaranteed the method can be finished
+   * inside the JIT.
+   */
+leave_on_safe_point:
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* js::LambdaArrow(JSContext* cx, HandleFunction fun,
                           HandleObject parent, HandleValue newTargetv) {
   MOZ_ASSERT(fun->isArrow());
+||||||| merged common ancestors
+JSObject*
+js::LambdaArrow(JSContext* cx, HandleFunction fun, HandleObject parent, HandleValue newTargetv)
+{
+    MOZ_ASSERT(fun->isArrow());
+=======
+  if (interpReturnOK) {
+    state.setReturnValue(activation.entryFrame()->returnValue());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JSFunction* clone = CloneFunctionObjectIfNotSingleton(cx, fun, parent);
   if (!clone) {
     return nullptr;
   }
+||||||| merged common ancestors
+    JSFunction* clone = CloneFunctionObjectIfNotSingleton(cx, fun, parent);
+    if (!clone) {
+        return nullptr;
+    }
+=======
+  return interpReturnOK;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(clone->isArrow());
   clone->setExtendedSlot(0, newTargetv);
+||||||| merged common ancestors
+    MOZ_ASSERT(clone->isArrow());
+    clone->setExtendedSlot(0, newTargetv);
+=======
+prologue_error:
+  interpReturnOK = false;
+  frameHalfInitialized = true;
+  goto prologue_return_continuation;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(fun->global() == clone->global());
   return clone;
+||||||| merged common ancestors
+    MOZ_ASSERT(fun->global() == clone->global());
+    return clone;
+=======
+bool js::ThrowOperation(JSContext* cx, HandleValue v) {
+  MOZ_ASSERT(!cx->isExceptionPending());
+  cx->setPendingExceptionAndCaptureStack(v);
+  return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::DefFunOperation(JSContext* cx, HandleScript script,
                          HandleObject envChain, HandleFunction fun) {
   /*
@@ -4784,7 +9214,41 @@ bool js::DefFunOperation(JSContext* cx, HandleScript script,
   while (!parent->isQualifiedVarObj()) {
     parent = parent->enclosingEnvironment();
   }
+||||||| merged common ancestors
+bool
+js::DefFunOperation(JSContext* cx, HandleScript script, HandleObject envChain,
+                    HandleFunction fun)
+{
+    /*
+     * We define the function as a property of the variable object and not the
+     * current scope chain even for the case of function expression statements
+     * and functions defined by eval inside let or with blocks.
+     */
+    RootedObject parent(cx, envChain);
+    while (!parent->isQualifiedVarObj()) {
+        parent = parent->enclosingEnvironment();
+    }
 
+    /* ES5 10.5 (NB: with subsequent errata). */
+    RootedPropertyName name(cx, fun->explicitName()->asPropertyName());
+
+    Rooted<PropertyResult> prop(cx);
+    RootedObject pobj(cx);
+    if (!LookupProperty(cx, parent, name, &pobj, &prop)) {
+        return false;
+    }
+=======
+bool js::GetProperty(JSContext* cx, HandleValue v, HandlePropertyName name,
+                     MutableHandleValue vp) {
+  if (name == cx->names().length) {
+    // Fast path for strings, arrays and arguments.
+    if (GetLengthProperty(v, vp)) {
+      return true;
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   /* ES5 10.5 (NB: with subsequent errata). */
   RootedPropertyName name(cx, fun->explicitName()->asPropertyName());
 
@@ -4793,7 +9257,24 @@ bool js::DefFunOperation(JSContext* cx, HandleScript script,
   if (!LookupProperty(cx, parent, name, &pobj, &prop)) {
     return false;
   }
+||||||| merged common ancestors
+    RootedValue rval(cx, ObjectValue(*fun));
 
+    /*
+     * ECMA requires functions defined when entering Eval code to be
+     * impermanent.
+     */
+    unsigned attrs = script->isActiveEval()
+                     ? JSPROP_ENUMERATE
+                     : JSPROP_ENUMERATE | JSPROP_PERMANENT;
+=======
+  // Optimize common cases like (2).toString() or "foo".valueOf() to not
+  // create a wrapper object.
+  if (v.isPrimitive() && !v.isNullOrUndefined()) {
+    NativeObject* proto;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   RootedValue rval(cx, ObjectValue(*fun));
 
   /*
@@ -4807,12 +9288,78 @@ bool js::DefFunOperation(JSContext* cx, HandleScript script,
   if (!prop || pobj != parent) {
     if (!DefineDataProperty(cx, parent, name, rval, attrs)) {
       return false;
+||||||| merged common ancestors
+    /* Steps 5d, 5f. */
+    if (!prop || pobj != parent) {
+        if (!DefineDataProperty(cx, parent, name, rval, attrs)) {
+            return false;
+        }
+
+        if (parent->is<GlobalObject>()) {
+            return parent->as<GlobalObject>().realm()->addToVarNames(cx, name);
+        }
+
+        return true;
+=======
+    switch (v.type()) {
+      case ValueType::Double:
+      case ValueType::Int32:
+        proto = GlobalObject::getOrCreateNumberPrototype(cx, cx->global());
+        break;
+      case ValueType::Boolean:
+        proto = GlobalObject::getOrCreateBooleanPrototype(cx, cx->global());
+        break;
+      case ValueType::String:
+        proto = GlobalObject::getOrCreateStringPrototype(cx, cx->global());
+        break;
+      case ValueType::Symbol:
+        proto = GlobalObject::getOrCreateSymbolPrototype(cx, cx->global());
+        break;
+      case ValueType::BigInt:
+        proto = GlobalObject::getOrCreateBigIntPrototype(cx, cx->global());
+        break;
+      case ValueType::Undefined:
+      case ValueType::Null:
+      case ValueType::Magic:
+      case ValueType::PrivateGCThing:
+      case ValueType::Object:
+        MOZ_CRASH("unexpected type");
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (parent->is<GlobalObject>()) {
       return parent->as<GlobalObject>().realm()->addToVarNames(cx, name);
     }
+||||||| merged common ancestors
+    /*
+     * Step 5e.
+     *
+     * A DebugEnvironmentProxy is okay here, and sometimes necessary. If
+     * Debugger.Frame.prototype.eval defines a function with the same name as an
+     * extant variable in the frame, the DebugEnvironmentProxy takes care of storing
+     * the function in the stack frame (for non-aliased variables) or on the
+     * scope object (for aliased).
+     */
+    MOZ_ASSERT(parent->isNative() || parent->is<DebugEnvironmentProxy>());
+    if (parent->is<GlobalObject>()) {
+        Shape* shape = prop.shape();
+        if (shape->configurable()) {
+            if (!DefineDataProperty(cx, parent, name, rval, attrs)) {
+                return false;
+            }
+        } else {
+            MOZ_ASSERT(shape->isDataDescriptor());
+            MOZ_ASSERT(shape->writable());
+            MOZ_ASSERT(shape->enumerable());
+        }
+=======
+    if (!proto) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     return true;
   }
 
@@ -4842,36 +9389,114 @@ bool js::DefFunOperation(JSContext* cx, HandleScript script,
     // a variable declaration, doesn't mean it's in [[VarNames]].
     if (!parent->as<GlobalObject>().realm()->addToVarNames(cx, name)) {
       return false;
+||||||| merged common ancestors
+        // Careful: the presence of a shape, even one appearing to derive from
+        // a variable declaration, doesn't mean it's in [[VarNames]].
+        if (!parent->as<GlobalObject>().realm()->addToVarNames(cx, name)) {
+            return false;
+        }
+=======
+    if (GetPropertyPure(cx, proto, NameToId(name), vp.address())) {
+      return true;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   /*
    * Non-global properties, and global properties which we aren't simply
    * redefining, must be set.  First, this preserves their attributes.
    * Second, this will produce warnings and/or errors as necessary if the
    * specified Call object property is not writable (const).
    */
+||||||| merged common ancestors
+    /*
+     * Non-global properties, and global properties which we aren't simply
+     * redefining, must be set.  First, this preserves their attributes.
+     * Second, this will produce warnings and/or errors as necessary if the
+     * specified Call object property is not writable (const).
+     */
+=======
+  RootedValue receiver(cx, v);
+  RootedObject obj(cx, ToObjectFromStack(cx, v));
+  if (!obj) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* Step 5f. */
   RootedId id(cx, NameToId(name));
   return PutProperty(cx, parent, id, rval, script->strict());
+||||||| merged common ancestors
+    /* Step 5f. */
+    RootedId id(cx, NameToId(name));
+    return PutProperty(cx, parent, id, rval, script->strict());
+=======
+  return GetProperty(cx, obj, receiver, name, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::ThrowMsgOperation(JSContext* cx, const unsigned errorNum) {
   JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, errorNum);
   return false;
+||||||| merged common ancestors
+bool
+js::ThrowMsgOperation(JSContext* cx, const unsigned errorNum)
+{
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, errorNum);
+    return false;
+=======
+bool js::GetValueProperty(JSContext* cx, HandleValue value,
+                          HandlePropertyName name, MutableHandleValue vp) {
+  return GetProperty(cx, value, name, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::GetAndClearException(JSContext* cx, MutableHandleValue res) {
   if (!cx->getPendingException(res)) {
     return false;
   }
   cx->clearPendingException();
+||||||| merged common ancestors
+bool
+js::GetAndClearException(JSContext* cx, MutableHandleValue res)
+{
+    if (!cx->getPendingException(res)) {
+        return false;
+    }
+    cx->clearPendingException();
+=======
+JSObject* js::Lambda(JSContext* cx, HandleFunction fun, HandleObject parent) {
+  MOZ_ASSERT(!fun->isArrow());
 
+  JSFunction* clone;
+  if (fun->isNative()) {
+    MOZ_ASSERT(IsAsmJSModule(fun));
+    clone = CloneAsmJSModuleFunction(cx, fun);
+  } else {
+    clone = CloneFunctionObjectIfNotSingleton(cx, fun, parent);
+  }
+  if (!clone) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Allow interrupting deeply nested exception handling.
   return CheckForInterrupt(cx);
+||||||| merged common ancestors
+    // Allow interrupting deeply nested exception handling.
+    return CheckForInterrupt(cx);
+=======
+  MOZ_ASSERT(fun->global() == clone->global());
+  return clone;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template <bool strict>
 bool js::DeletePropertyJit(JSContext* cx, HandleValue v,
                            HandlePropertyName name, bool* bp) {
@@ -4879,13 +9504,41 @@ bool js::DeletePropertyJit(JSContext* cx, HandleValue v,
   if (!obj) {
     return false;
   }
+||||||| merged common ancestors
+template <bool strict>
+bool
+js::DeletePropertyJit(JSContext* cx, HandleValue v, HandlePropertyName name, bool* bp)
+{
+    RootedObject obj(cx, ToObjectFromStack(cx, v));
+    if (!obj) {
+        return false;
+    }
+=======
+JSObject* js::LambdaArrow(JSContext* cx, HandleFunction fun,
+                          HandleObject parent, HandleValue newTargetv) {
+  MOZ_ASSERT(fun->isArrow());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedId id(cx, NameToId(name));
   ObjectOpResult result;
   if (!DeleteProperty(cx, obj, id, result)) {
     return false;
   }
+||||||| merged common ancestors
+    RootedId id(cx, NameToId(name));
+    ObjectOpResult result;
+    if (!DeleteProperty(cx, obj, id, result)) {
+        return false;
+    }
+=======
+  JSFunction* clone = CloneFunctionObjectIfNotSingleton(cx, fun, parent);
+  if (!clone) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (strict) {
     if (!result) {
       return result.reportError(cx, obj, id);
@@ -4895,13 +9548,44 @@ bool js::DeletePropertyJit(JSContext* cx, HandleValue v,
     *bp = result.ok();
   }
   return true;
+||||||| merged common ancestors
+    if (strict) {
+        if (!result) {
+            return result.reportError(cx, obj, id);
+        }
+        *bp = true;
+    } else {
+        *bp = result.ok();
+    }
+    return true;
+=======
+  MOZ_ASSERT(clone->isArrow());
+  clone->setExtendedSlot(0, newTargetv);
+
+  MOZ_ASSERT(fun->global() == clone->global());
+  return clone;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template bool js::DeletePropertyJit<true>(JSContext* cx, HandleValue val,
                                           HandlePropertyName name, bool* bp);
 template bool js::DeletePropertyJit<false>(JSContext* cx, HandleValue val,
                                            HandlePropertyName name, bool* bp);
+||||||| merged common ancestors
+template bool js::DeletePropertyJit<true> (JSContext* cx, HandleValue val, HandlePropertyName name,
+                                           bool* bp);
+template bool js::DeletePropertyJit<false>(JSContext* cx, HandleValue val, HandlePropertyName name,
+                                           bool* bp);
+=======
+JSObject* js::BindVarOperation(JSContext* cx, JSObject* envChain) {
+  // Note: BindVarOperation has an unused cx argument because the JIT callVM
+  // machinery requires this.
+  return &GetVariablesObject(envChain);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 template <bool strict>
 bool js::DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
                           bool* bp) {
@@ -4909,7 +9593,22 @@ bool js::DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
   if (!obj) {
     return false;
   }
+||||||| merged common ancestors
+template <bool strict>
+bool
+js::DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index, bool* bp)
+{
+    RootedObject obj(cx, ToObjectFromStack(cx, val));
+    if (!obj) {
+        return false;
+    }
+=======
+bool js::DefVarOperation(JSContext* cx, HandleObject envChain,
+                         HandleScript script, jsbytecode* pc) {
+  MOZ_ASSERT(JSOp(*pc) == JSOP_DEFVAR);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedId id(cx);
   if (!ToPropertyKey(cx, index, &id)) {
     return false;
@@ -4918,33 +9617,137 @@ bool js::DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
   if (!DeleteProperty(cx, obj, id, result)) {
     return false;
   }
+||||||| merged common ancestors
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, index, &id)) {
+        return false;
+    }
+    ObjectOpResult result;
+    if (!DeleteProperty(cx, obj, id, result)) {
+        return false;
+    }
+=======
+  RootedObject varobj(cx, &GetVariablesObject(envChain));
+  MOZ_ASSERT(varobj->isQualifiedVarObj());
 
+  RootedPropertyName name(cx, script->getName(pc));
+
+  unsigned attrs = JSPROP_ENUMERATE;
+  if (!script->isForEval()) {
+    attrs |= JSPROP_PERMANENT;
+  }
+
+#ifdef DEBUG
+  // Per spec, it is an error to redeclare a lexical binding. This should
+  // have already been checked.
+  if (JS_HasExtensibleLexicalEnvironment(varobj)) {
+    Rooted<LexicalEnvironmentObject*> lexicalEnv(cx);
+    lexicalEnv = &JS_ExtensibleLexicalEnvironment(varobj)
+                      ->as<LexicalEnvironmentObject>();
+    MOZ_ASSERT(CheckVarNameConflict(cx, lexicalEnv, name));
+  }
+#endif
+
+  Rooted<PropertyResult> prop(cx);
+  RootedObject obj2(cx);
+  if (!LookupProperty(cx, varobj, name, &obj2, &prop)) {
+    return false;
+  }
+
+  /* Steps 8c, 8d. */
+  if (!prop || (obj2 != varobj && varobj->is<GlobalObject>())) {
+    if (!DefineDataProperty(cx, varobj, name, UndefinedHandleValue, attrs)) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (strict) {
     if (!result) {
       return result.reportError(cx, obj, id);
+||||||| merged common ancestors
+    if (strict) {
+        if (!result) {
+            return result.reportError(cx, obj, id);
+        }
+        *bp = true;
+    } else {
+        *bp = result.ok();
+=======
+  if (varobj->is<GlobalObject>()) {
+    if (!varobj->as<GlobalObject>().realm()->addToVarNames(cx, name)) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     *bp = true;
   } else {
     *bp = result.ok();
   }
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template bool js::DeleteElementJit<true>(JSContext*, HandleValue, HandleValue,
                                          bool* succeeded);
 template bool js::DeleteElementJit<false>(JSContext*, HandleValue, HandleValue,
                                           bool* succeeded);
+||||||| merged common ancestors
+template bool js::DeleteElementJit<true> (JSContext*, HandleValue, HandleValue, bool* succeeded);
+template bool js::DeleteElementJit<false>(JSContext*, HandleValue, HandleValue, bool* succeeded);
+=======
+bool js::DefLexicalOperation(JSContext* cx, HandleObject envChain,
+                             HandleScript script, jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_DEFLET || *pc == JSOP_DEFCONST);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::GetElement(JSContext* cx, MutableHandleValue lref, HandleValue rref,
                     MutableHandleValue vp) {
   return GetElementOperation(cx, JSOP_GETELEM, lref, rref, vp);
 }
+||||||| merged common ancestors
+bool
+js::GetElement(JSContext* cx, MutableHandleValue lref, HandleValue rref, MutableHandleValue vp)
+{
+    return GetElementOperation(cx, JSOP_GETELEM, lref, rref, vp);
+}
+=======
+  unsigned attrs = JSPROP_ENUMERATE | JSPROP_PERMANENT;
+  if (*pc == JSOP_DEFCONST) {
+    attrs |= JSPROP_READONLY;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::CallElement(JSContext* cx, MutableHandleValue lref, HandleValue rref,
                      MutableHandleValue res) {
   return GetElementOperation(cx, JSOP_CALLELEM, lref, rref, res);
 }
+||||||| merged common ancestors
+bool
+js::CallElement(JSContext* cx, MutableHandleValue lref, HandleValue rref, MutableHandleValue res)
+{
+    return GetElementOperation(cx, JSOP_CALLELEM, lref, rref, res);
+}
+=======
+  Rooted<LexicalEnvironmentObject*> lexicalEnv(cx);
+  if (script->hasNonSyntacticScope()) {
+    lexicalEnv = &NearestEnclosingExtensibleLexicalEnvironment(envChain);
+  } else {
+    lexicalEnv = &cx->global()->lexicalEnvironment();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                           HandleValue value, bool strict) {
   RootedId id(cx);
@@ -4954,7 +9757,79 @@ bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
   RootedValue receiver(cx, ObjectValue(*obj));
   return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
 }
+||||||| merged common ancestors
+bool
+js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                     bool strict)
+{
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, index, &id)) {
+        return false;
+    }
+    RootedValue receiver(cx, ObjectValue(*obj));
+    return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
+}
+=======
+#ifdef DEBUG
+  RootedObject varObj(cx);
+  if (script->hasNonSyntacticScope()) {
+    varObj = &GetVariablesObject(envChain);
+  } else {
+    varObj = cx->global();
+  }
 
+  MOZ_ASSERT_IF(!script->hasNonSyntacticScope(),
+                lexicalEnv == &cx->global()->lexicalEnvironment() &&
+                    varObj == cx->global());
+
+  // Redeclaration checks should have already been done.
+  RootedPropertyName name(cx, script->getName(pc));
+  MOZ_ASSERT(CheckLexicalNameConflict(cx, lexicalEnv, varObj, name));
+#endif
+
+  RootedId id(cx, NameToId(script->getName(pc)));
+  RootedValue uninitialized(cx, MagicValue(JS_UNINITIALIZED_LEXICAL));
+  return NativeDefineDataProperty(cx, lexicalEnv, id, uninitialized, attrs);
+}
+
+bool js::DefFunOperation(JSContext* cx, HandleScript script,
+                         HandleObject envChain, HandleFunction fun) {
+  /*
+   * We define the function as a property of the variable object and not the
+   * current scope chain even for the case of function expression statements
+   * and functions defined by eval inside let or with blocks.
+   */
+  RootedObject parent(cx, envChain);
+  while (!parent->isQualifiedVarObj()) {
+    parent = parent->enclosingEnvironment();
+  }
+
+  /* ES5 10.5 (NB: with subsequent errata). */
+  RootedPropertyName name(cx, fun->explicitName()->asPropertyName());
+
+  Rooted<PropertyResult> prop(cx);
+  RootedObject pobj(cx);
+  if (!LookupProperty(cx, parent, name, &pobj, &prop)) {
+    return false;
+  }
+
+  RootedValue rval(cx, ObjectValue(*fun));
+
+  /*
+   * ECMA requires functions defined when entering Eval code to be
+   * impermanent.
+   */
+  unsigned attrs = script->isForEval() ? JSPROP_ENUMERATE
+                                       : JSPROP_ENUMERATE | JSPROP_PERMANENT;
+
+  /* Steps 5d, 5f. */
+  if (!prop || pobj != parent) {
+    if (!DefineDataProperty(cx, parent, name, rval, attrs)) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                           HandleValue value, bool strict, HandleScript script,
                           jsbytecode* pc) {
@@ -4967,7 +9842,26 @@ bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
   return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script,
                                    pc);
 }
+||||||| merged common ancestors
+bool
+js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                     bool strict, HandleScript script, jsbytecode* pc)
+{
+    MOZ_ASSERT(pc);
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, index, &id)) {
+        return false;
+    }
+    RootedValue receiver(cx, ObjectValue(*obj));
+    return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script, pc);
+}
+=======
+    if (parent->is<GlobalObject>()) {
+      return parent->as<GlobalObject>().realm()->addToVarNames(cx, name);
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                           HandleValue value, HandleValue receiver,
                           bool strict) {
@@ -4977,7 +9871,45 @@ bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
   }
   return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
 }
+||||||| merged common ancestors
+bool
+js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                     HandleValue receiver, bool strict)
+{
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, index, &id)) {
+        return false;
+    }
+    return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
+}
+=======
+    return true;
+  }
 
+  /*
+   * Step 5e.
+   *
+   * A DebugEnvironmentProxy is okay here, and sometimes necessary. If
+   * Debugger.Frame.prototype.eval defines a function with the same name as an
+   * extant variable in the frame, the DebugEnvironmentProxy takes care of
+   * storing the function in the stack frame (for non-aliased variables) or on
+   * the scope object (for aliased).
+   */
+  MOZ_ASSERT(parent->isNative() || parent->is<DebugEnvironmentProxy>());
+  if (parent->is<GlobalObject>()) {
+    Shape* shape = prop.shape();
+    if (shape->configurable()) {
+      if (!DefineDataProperty(cx, parent, name, rval, attrs)) {
+        return false;
+      }
+    } else {
+      MOZ_ASSERT(shape->isDataDescriptor());
+      MOZ_ASSERT(shape->writable());
+      MOZ_ASSERT(shape->enumerable());
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                           HandleValue value, HandleValue receiver, bool strict,
                           HandleScript script, jsbytecode* pc) {
@@ -4989,47 +9921,164 @@ bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
   return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script,
                                    pc);
 }
+||||||| merged common ancestors
+bool
+js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                     HandleValue receiver, bool strict, HandleScript script, jsbytecode* pc)
+{
+    MOZ_ASSERT(pc);
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, index, &id)) {
+        return false;
+    }
+    return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script, pc);
+}
+=======
+    // Careful: the presence of a shape, even one appearing to derive from
+    // a variable declaration, doesn't mean it's in [[VarNames]].
+    if (!parent->as<GlobalObject>().realm()->addToVarNames(cx, name)) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::InitElementArray(JSContext* cx, jsbytecode* pc, HandleObject obj,
                           uint32_t index, HandleValue value) {
   return InitArrayElemOperation(cx, pc, obj, index, value);
 }
+||||||| merged common ancestors
+bool
+js::InitElementArray(JSContext* cx, jsbytecode* pc, HandleObject obj, uint32_t index, HandleValue value)
+{
+    return InitArrayElemOperation(cx, pc, obj, index, value);
+}
+=======
+  /*
+   * Non-global properties, and global properties which we aren't simply
+   * redefining, must be set.  First, this preserves their attributes.
+   * Second, this will produce warnings and/or errors as necessary if the
+   * specified Call object property is not writable (const).
+   */
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::AddValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return AddOperation(cx, lhs, rhs, res);
+||||||| merged common ancestors
+bool
+js::AddValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return AddOperation(cx, lhs, rhs, res);
+=======
+  /* Step 5f. */
+  RootedId id(cx, NameToId(name));
+  return PutProperty(cx, parent, id, rval, script->strict());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::SubValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return SubOperation(cx, lhs, rhs, res);
 }
+||||||| merged common ancestors
+bool
+js::SubValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return SubOperation(cx, lhs, rhs, res);
+}
+=======
+JSObject* js::SingletonObjectLiteralOperation(JSContext* cx,
+                                              HandleScript script,
+                                              jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_OBJECT);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::MulValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return MulOperation(cx, lhs, rhs, res);
 }
+||||||| merged common ancestors
+bool
+js::MulValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return MulOperation(cx, lhs, rhs, res);
+}
+=======
+  RootedObject obj(cx, script->getObject(pc));
+  if (cx->realm()->creationOptions().cloneSingletons()) {
+    return DeepCloneObjectLiteral(cx, obj, TenuredObject);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::DivValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return DivOperation(cx, lhs, rhs, res);
+||||||| merged common ancestors
+bool
+js::DivValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return DivOperation(cx, lhs, rhs, res);
+=======
+  cx->realm()->behaviors().setSingletonsAsValues();
+  return obj;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::ModValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return ModOperation(cx, lhs, rhs, res);
+||||||| merged common ancestors
+bool
+js::ModValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return ModOperation(cx, lhs, rhs, res);
+=======
+JSObject* js::ImportMetaOperation(JSContext* cx, HandleScript script) {
+  RootedObject module(cx, GetModuleObjectForScript(script));
+  MOZ_ASSERT(module);
+  return GetOrCreateModuleMetaObject(cx, module);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::PowValues(JSContext* cx, MutableHandleValue lhs,
                    MutableHandleValue rhs, MutableHandleValue res) {
   return PowOperation(cx, lhs, rhs, res);
 }
+||||||| merged common ancestors
+bool
+js::PowValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return PowOperation(cx, lhs, rhs, res);
+}
+=======
+JSObject* js::BuiltinProtoOperation(JSContext* cx, jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_BUILTINPROTO);
+  MOZ_ASSERT(GET_UINT8(pc) < JSProto_LIMIT);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool js::UrshValues(JSContext* cx, MutableHandleValue lhs,
                     MutableHandleValue rhs, MutableHandleValue res) {
   return UrshOperation(cx, lhs, rhs, res);
+||||||| merged common ancestors
+bool
+js::UrshValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res)
+{
+    return UrshOperation(cx, lhs, rhs, res);
+=======
+  JSProtoKey key = static_cast<JSProtoKey>(GET_UINT8(pc));
+  return GlobalObject::getOrCreatePrototype(cx, key);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::AtomicIsLockFree(JSContext* cx, HandleValue in, int* out) {
   int i;
   if (!ToInt32(cx, in, &i)) {
@@ -5037,8 +10086,24 @@ bool js::AtomicIsLockFree(JSContext* cx, HandleValue in, int* out) {
   }
   *out = js::jit::AtomicOperations::isLockfreeJS(i);
   return true;
+||||||| merged common ancestors
+bool
+js::AtomicIsLockFree(JSContext* cx, HandleValue in, int* out)
+{
+    int i;
+    if (!ToInt32(cx, in, &i)) {
+        return false;
+    }
+    *out = js::jit::AtomicOperations::isLockfreeJS(i);
+    return true;
+=======
+bool js::ThrowMsgOperation(JSContext* cx, const unsigned errorNum) {
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, errorNum);
+  return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::DeleteNameOperation(JSContext* cx, HandlePropertyName name,
                              HandleObject scopeObj, MutableHandleValue res) {
   RootedObject scope(cx), pobj(cx);
@@ -5068,10 +10133,59 @@ bool js::DeleteNameOperation(JSContext* cx, HandlePropertyName name,
       scope->as<GlobalObject>().realm()->removeFromVarNames(name);
     }
   }
+||||||| merged common ancestors
+bool
+js::DeleteNameOperation(JSContext* cx, HandlePropertyName name, HandleObject scopeObj,
+                        MutableHandleValue res)
+{
+    RootedObject scope(cx), pobj(cx);
+    Rooted<PropertyResult> prop(cx);
+    if (!LookupName(cx, name, scopeObj, &scope, &pobj, &prop)) {
+        return false;
+    }
 
+    if (!scope) {
+        // Return true for non-existent names.
+        res.setBoolean(true);
+        return true;
+    }
+
+    ObjectOpResult result;
+    RootedId id(cx, NameToId(name));
+    if (!DeleteProperty(cx, scope, id, result)) {
+        return false;
+    }
+
+    bool status = result.ok();
+    res.setBoolean(status);
+
+    if (status) {
+        // Deleting a name from the global object removes it from [[VarNames]].
+        if (pobj == scope && scope->is<GlobalObject>()) {
+            scope->as<GlobalObject>().realm()->removeFromVarNames(name);
+        }
+    }
+=======
+bool js::GetAndClearExceptionAndStack(JSContext* cx, MutableHandleValue res,
+                                      MutableHandleSavedFrame stack) {
+  if (!cx->getPendingException(res)) {
+    return false;
+  }
+  stack.set(cx->getPendingExceptionStack());
+  cx->clearPendingException();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+  // Allow interrupting deeply nested exception handling.
+  return CheckForInterrupt(cx);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::ImplicitThisOperation(JSContext* cx, HandleObject scopeObj,
                                HandlePropertyName name,
                                MutableHandleValue res) {
@@ -5082,8 +10196,26 @@ bool js::ImplicitThisOperation(JSContext* cx, HandleObject scopeObj,
 
   res.set(ComputeImplicitThis(obj));
   return true;
+||||||| merged common ancestors
+bool
+js::ImplicitThisOperation(JSContext* cx, HandleObject scopeObj, HandlePropertyName name,
+                          MutableHandleValue res)
+{
+    RootedObject obj(cx);
+    if (!LookupNameWithGlobalDefault(cx, name, scopeObj, &obj)) {
+        return false;
+    }
+
+    res.set(ComputeImplicitThis(obj));
+    return true;
+=======
+bool js::GetAndClearException(JSContext* cx, MutableHandleValue res) {
+  RootedSavedFrame stack(cx);
+  return GetAndClearExceptionAndStack(cx, res, &stack);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool js::RunOnceScriptPrologue(JSContext* cx, HandleScript script) {
   MOZ_ASSERT(script->treatAsRunOnce());
 
@@ -5091,7 +10223,78 @@ bool js::RunOnceScriptPrologue(JSContext* cx, HandleScript script) {
     script->setHasRunOnce();
     return true;
   }
+||||||| merged common ancestors
+bool
+js::RunOnceScriptPrologue(JSContext* cx, HandleScript script)
+{
+    MOZ_ASSERT(script->treatAsRunOnce());
 
+    if (!script->hasRunOnce()) {
+        script->setHasRunOnce();
+        return true;
+    }
+
+    // Force instantiation of the script's function's group to ensure the flag
+    // is preserved in type information.
+    RootedFunction fun(cx, script->functionNonDelazifying());
+    if (!JSObject::getGroup(cx, fun)) {
+        return false;
+    }
+
+    MarkObjectGroupFlags(cx, script->functionNonDelazifying(), OBJECT_FLAG_RUNONCE_INVALIDATED);
+    return true;
+}
+
+unsigned
+js::GetInitDataPropAttrs(JSOp op)
+{
+    switch (op) {
+      case JSOP_INITPROP:
+      case JSOP_INITELEM:
+        return JSPROP_ENUMERATE;
+      case JSOP_INITLOCKEDPROP:
+        return JSPROP_PERMANENT | JSPROP_READONLY;
+      case JSOP_INITHIDDENPROP:
+      case JSOP_INITHIDDENELEM:
+        // Non-enumerable, but writable and configurable
+        return 0;
+      default:;
+    }
+    MOZ_CRASH("Unknown data initprop");
+}
+=======
+template <bool strict>
+bool js::DeletePropertyJit(JSContext* cx, HandleValue v,
+                           HandlePropertyName name, bool* bp) {
+  RootedObject obj(cx, ToObjectFromStack(cx, v));
+  if (!obj) {
+    return false;
+  }
+
+  RootedId id(cx, NameToId(name));
+  ObjectOpResult result;
+  if (!DeleteProperty(cx, obj, id, result)) {
+    return false;
+  }
+
+  if (strict) {
+    if (!result) {
+      return result.reportError(cx, obj, id);
+    }
+    *bp = true;
+  } else {
+    *bp = result.ok();
+  }
+  return true;
+}
+
+template bool js::DeletePropertyJit<true>(JSContext* cx, HandleValue val,
+                                          HandlePropertyName name, bool* bp);
+template bool js::DeletePropertyJit<false>(JSContext* cx, HandleValue val,
+                                           HandlePropertyName name, bool* bp);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Force instantiation of the script's function's group to ensure the flag
   // is preserved in type information.
   RootedFunction fun(cx, script->functionNonDelazifying());
@@ -5194,6 +10397,562 @@ bool js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
     return ReportIsNotFunction(cx, callee, 2 + constructing,
                                constructing ? CONSTRUCT : NO_CONSTRUCT);
   }
+||||||| merged common ancestors
+bool
+js::InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj, HandleId id,
+                              HandleObject val)
+{
+    MOZ_ASSERT(val->isCallable());
+=======
+template <bool strict>
+bool js::DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
+                          bool* bp) {
+  RootedObject obj(cx, ToObjectFromStack(cx, val));
+  if (!obj) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#ifdef DEBUG
+  // The object must be an array with dense elements and no holes. Baseline's
+  // optimized spread call stubs rely on this.
+  MOZ_ASSERT(!aobj->isIndexed());
+  MOZ_ASSERT(aobj->getDenseInitializedLength() == aobj->length());
+  for (size_t i = 0; i < aobj->length(); i++) {
+    MOZ_ASSERT(!aobj->getDenseElement(i).isMagic(JS_ELEMENTS_HOLE));
+  }
+#endif
+||||||| merged common ancestors
+    JSOp op = JSOp(*pc);
+=======
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, index, &id)) {
+    return false;
+  }
+  ObjectOpResult result;
+  if (!DeleteProperty(cx, obj, id, result)) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (constructing) {
+    if (!StackCheckIsConstructorCalleeNewTarget(cx, callee, newTarget)) {
+      return false;
+||||||| merged common ancestors
+    unsigned attrs = 0;
+    if (!IsHiddenInitOp(op)) {
+        attrs |= JSPROP_ENUMERATE;
+=======
+  if (strict) {
+    if (!result) {
+      return result.reportError(cx, obj, id);
+>>>>>>> upstream-releases
+    }
+    *bp = true;
+  } else {
+    *bp = result.ok();
+  }
+  return true;
+}
+
+<<<<<<< HEAD
+    ConstructArgs cargs(cx);
+    if (!cargs.init(cx, length)) {
+      return false;
+    }
+||||||| merged common ancestors
+    if (op == JSOP_INITPROP_GETTER || op == JSOP_INITELEM_GETTER ||
+        op == JSOP_INITHIDDENPROP_GETTER || op == JSOP_INITHIDDENELEM_GETTER)
+    {
+        attrs |= JSPROP_GETTER;
+        return DefineAccessorProperty(cx, obj, id, val, nullptr, attrs);
+    }
+=======
+template bool js::DeleteElementJit<true>(JSContext*, HandleValue, HandleValue,
+                                         bool* succeeded);
+template bool js::DeleteElementJit<false>(JSContext*, HandleValue, HandleValue,
+                                          bool* succeeded);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (!GetElements(cx, aobj, length, cargs.array())) {
+      return false;
+    }
+
+    RootedObject obj(cx);
+    if (!Construct(cx, callee, cargs, newTarget, &obj)) {
+      return false;
+    }
+    res.setObject(*obj);
+  } else {
+    InvokeArgs args(cx);
+    if (!args.init(cx, length)) {
+      return false;
+    }
+||||||| merged common ancestors
+    MOZ_ASSERT(op == JSOP_INITPROP_SETTER || op == JSOP_INITELEM_SETTER ||
+               op == JSOP_INITHIDDENPROP_SETTER || op == JSOP_INITHIDDENELEM_SETTER);
+    attrs |= JSPROP_SETTER;
+    return DefineAccessorProperty(cx, obj, id, nullptr, val, attrs);
+}
+
+bool
+js::InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj,
+                              HandlePropertyName name, HandleObject val)
+{
+    RootedId id(cx, NameToId(name));
+    return InitGetterSetterOperation(cx, pc, obj, id, val);
+}
+
+bool
+js::InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj, HandleValue idval,
+                              HandleObject val)
+{
+    RootedId id(cx);
+    if (!ToPropertyKey(cx, idval, &id)) {
+        return false;
+    }
+
+    return InitGetterSetterOperation(cx, pc, obj, id, val);
+}
+
+bool
+js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc, HandleValue thisv,
+                        HandleValue callee, HandleValue arr, HandleValue newTarget, MutableHandleValue res)
+{
+    RootedArrayObject aobj(cx, &arr.toObject().as<ArrayObject>());
+    uint32_t length = aobj->length();
+    JSOp op = JSOp(*pc);
+    bool constructing = op == JSOP_SPREADNEW || op == JSOP_SPREADSUPERCALL;
+
+    // {Construct,Invoke}Args::init does this too, but this gives us a better
+    // error message.
+    if (length > ARGS_LENGTH_MAX) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  constructing ? JSMSG_TOO_MANY_CON_SPREADARGS
+                                               : JSMSG_TOO_MANY_FUN_SPREADARGS);
+        return false;
+    }
+
+    // Do our own checks for the callee being a function, as Invoke uses the
+    // expression decompiler to decompile the callee stack operand based on
+    // the number of arguments. Spread operations have the callee at sp - 3
+    // when not constructing, and sp - 4 when constructing.
+    if (callee.isPrimitive()) {
+        return ReportIsNotFunction(cx, callee, 2 + constructing,
+                                   constructing ? CONSTRUCT : NO_CONSTRUCT);
+    }
+
+    if (!callee.toObject().isCallable()) {
+        return ReportIsNotFunction(cx, callee, 2 + constructing,
+                                   constructing ? CONSTRUCT : NO_CONSTRUCT);
+    }
+=======
+bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                          HandleValue value, bool strict) {
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, index, &id)) {
+    return false;
+  }
+  RootedValue receiver(cx, ObjectValue(*obj));
+  return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
+}
+
+bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                          HandleValue value, bool strict, HandleScript script,
+                          jsbytecode* pc) {
+  MOZ_ASSERT(pc);
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, index, &id)) {
+    return false;
+  }
+  RootedValue receiver(cx, ObjectValue(*obj));
+  return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script,
+                                   pc);
+}
+
+bool js::SetObjectElementWithReceiver(JSContext* cx, HandleObject obj,
+                                      HandleValue index, HandleValue value,
+                                      HandleValue receiver, bool strict) {
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, index, &id)) {
+    return false;
+  }
+  return SetObjectElementOperation(cx, obj, id, value, receiver, strict);
+}
+
+bool js::SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                          HandleValue value, HandleValue receiver, bool strict,
+                          HandleScript script, jsbytecode* pc) {
+  MOZ_ASSERT(pc);
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, index, &id)) {
+    return false;
+  }
+  return SetObjectElementOperation(cx, obj, id, value, receiver, strict, script,
+                                   pc);
+}
+
+bool js::InitElementArray(JSContext* cx, jsbytecode* pc, HandleObject obj,
+                          uint32_t index, HandleValue value) {
+  return InitArrayElemOperation(cx, pc, obj, index, value);
+}
+
+bool js::AddValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return AddOperation(cx, lhs, rhs, res);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (!GetElements(cx, aobj, length, args.array())) {
+      return false;
+    }
+||||||| merged common ancestors
+#ifdef DEBUG
+    // The object must be an array with dense elements and no holes. Baseline's
+    // optimized spread call stubs rely on this.
+    MOZ_ASSERT(!aobj->isIndexed());
+    MOZ_ASSERT(aobj->getDenseInitializedLength() == aobj->length());
+    for (size_t i = 0; i < aobj->length(); i++) {
+        MOZ_ASSERT(!aobj->getDenseElement(i).isMagic(JS_ELEMENTS_HOLE));
+    }
+#endif
+=======
+bool js::SubValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return SubOperation(cx, lhs, rhs, res);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if ((op == JSOP_SPREADEVAL || op == JSOP_STRICTSPREADEVAL) &&
+        cx->global()->valueIsEval(callee)) {
+      if (!DirectEval(cx, args.get(0), res)) {
+        return false;
+      }
+    } else {
+      MOZ_ASSERT(op == JSOP_SPREADCALL || op == JSOP_SPREADEVAL ||
+                     op == JSOP_STRICTSPREADEVAL,
+                 "bad spread opcode");
+||||||| merged common ancestors
+    if (constructing) {
+        if (!StackCheckIsConstructorCalleeNewTarget(cx, callee, newTarget)) {
+            return false;
+        }
+
+        ConstructArgs cargs(cx);
+        if (!cargs.init(cx, length)) {
+            return false;
+        }
+
+        if (!GetElements(cx, aobj, length, cargs.array())) {
+            return false;
+        }
+
+        RootedObject obj(cx);
+        if (!Construct(cx, callee, cargs, newTarget, &obj)) {
+            return false;
+        }
+        res.setObject(*obj);
+    } else {
+        InvokeArgs args(cx);
+        if (!args.init(cx, length)) {
+            return false;
+        }
+
+        if (!GetElements(cx, aobj, length, args.array())) {
+            return false;
+        }
+=======
+bool js::MulValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return MulOperation(cx, lhs, rhs, res);
+}
+
+bool js::DivValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return DivOperation(cx, lhs, rhs, res);
+}
+
+bool js::ModValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return ModOperation(cx, lhs, rhs, res);
+}
+
+bool js::PowValues(JSContext* cx, MutableHandleValue lhs,
+                   MutableHandleValue rhs, MutableHandleValue res) {
+  return PowOperation(cx, lhs, rhs, res);
+}
+
+bool js::UrshValues(JSContext* cx, MutableHandleValue lhs,
+                    MutableHandleValue rhs, MutableHandleValue res) {
+  return UrshOperation(cx, lhs, rhs, res);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      if (!Call(cx, callee, thisv, args, res)) {
+        return false;
+      }
+||||||| merged common ancestors
+        if ((op == JSOP_SPREADEVAL || op == JSOP_STRICTSPREADEVAL) &&
+            cx->global()->valueIsEval(callee))
+        {
+            if (!DirectEval(cx, args.get(0), res)) {
+                return false;
+            }
+        } else {
+            MOZ_ASSERT(op == JSOP_SPREADCALL ||
+                       op == JSOP_SPREADEVAL ||
+                       op == JSOP_STRICTSPREADEVAL,
+                       "bad spread opcode");
+
+            if (!Call(cx, callee, thisv, args, res)) {
+                return false;
+            }
+        }
+    }
+
+    TypeScript::Monitor(cx, script, pc, res);
+    return true;
+}
+
+bool
+js::OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized)
+{
+    // Optimize spread call by skipping spread operation when following
+    // conditions are met:
+    //   * the argument is an array
+    //   * the array has no hole
+    //   * array[@@iterator] is not modified
+    //   * the array's prototype is Array.prototype
+    //   * Array.prototype[@@iterator] is not modified
+    //   * %ArrayIteratorPrototype%.next is not modified
+    if (!arg.isObject()) {
+        *optimized = false;
+        return true;
+    }
+
+    RootedObject obj(cx, &arg.toObject());
+    if (!IsPackedArray(obj)) {
+        *optimized = false;
+        return true;
+    }
+
+    ForOfPIC::Chain* stubChain = ForOfPIC::getOrCreate(cx);
+    if (!stubChain) {
+        return false;
+=======
+bool js::AtomicIsLockFree(JSContext* cx, HandleValue in, int* out) {
+  int i;
+  if (!ToInt32(cx, in, &i)) {
+    return false;
+  }
+  *out = js::jit::AtomicOperations::isLockfreeJS(i);
+  return true;
+}
+
+bool js::DeleteNameOperation(JSContext* cx, HandlePropertyName name,
+                             HandleObject scopeObj, MutableHandleValue res) {
+  RootedObject scope(cx), pobj(cx);
+  Rooted<PropertyResult> prop(cx);
+  if (!LookupName(cx, name, scopeObj, &scope, &pobj, &prop)) {
+    return false;
+  }
+
+  if (!scope) {
+    // Return true for non-existent names.
+    res.setBoolean(true);
+    return true;
+  }
+
+  ObjectOpResult result;
+  RootedId id(cx, NameToId(name));
+  if (!DeleteProperty(cx, scope, id, result)) {
+    return false;
+  }
+
+  bool status = result.ok();
+  res.setBoolean(status);
+
+  if (status) {
+    // Deleting a name from the global object removes it from [[VarNames]].
+    if (pobj == scope && scope->is<GlobalObject>()) {
+      scope->as<GlobalObject>().realm()->removeFromVarNames(name);
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  TypeScript::Monitor(cx, script, pc, res);
+  return true;
+||||||| merged common ancestors
+    return stubChain->tryOptimizeArray(cx, obj.as<ArrayObject>(), optimized);
+=======
+  return true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+bool js::OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized) {
+  // Optimize spread call by skipping spread operation when following
+  // conditions are met:
+  //   * the argument is an array
+  //   * the array has no hole
+  //   * array[@@iterator] is not modified
+  //   * the array's prototype is Array.prototype
+  //   * Array.prototype[@@iterator] is not modified
+  //   * %ArrayIteratorPrototype%.next is not modified
+  if (!arg.isObject()) {
+    *optimized = false;
+    return true;
+  }
+||||||| merged common ancestors
+JSObject*
+js::NewObjectOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                       NewObjectKind newKind /* = GenericObject */)
+{
+    MOZ_ASSERT(newKind != SingletonObject);
+
+    RootedObjectGroup group(cx);
+    if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Object)) {
+        newKind = SingletonObject;
+    } else {
+        group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Object);
+        if (!group) {
+            return nullptr;
+        }
+
+        bool isUnboxed;
+        {
+            AutoSweepObjectGroup sweep(group);
+            if (group->maybePreliminaryObjects(sweep)) {
+                group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
+                if (group->maybeUnboxedLayout(sweep)) {
+                    // This sets the allocation site so that the template object
+                    // can be read back but if op is NEWINIT, then the template
+                    // is null. 
+                    MOZ_ASSERT(JSOp(*pc) != JSOP_NEWINIT);
+                    group->maybeUnboxedLayout(sweep)->setAllocationSite(script, pc);
+                }
+            }
+
+            if (group->shouldPreTenure(sweep) || group->maybePreliminaryObjects(sweep)) {
+                newKind = TenuredObject;
+            }
+            isUnboxed = group->maybeUnboxedLayout(sweep);
+        }
+        if (isUnboxed) {
+            return UnboxedPlainObject::create(cx, group, newKind);
+        }
+    }
+=======
+bool js::ImplicitThisOperation(JSContext* cx, HandleObject scopeObj,
+                               HandlePropertyName name,
+                               MutableHandleValue res) {
+  RootedObject obj(cx);
+  if (!LookupNameWithGlobalDefault(cx, name, scopeObj, &obj)) {
+    return false;
+  }
+
+  res.set(ComputeImplicitThis(obj));
+  return true;
+}
+
+unsigned js::GetInitDataPropAttrs(JSOp op) {
+  switch (op) {
+    case JSOP_INITPROP:
+    case JSOP_INITELEM:
+      return JSPROP_ENUMERATE;
+    case JSOP_INITLOCKEDPROP:
+      return JSPROP_PERMANENT | JSPROP_READONLY;
+    case JSOP_INITHIDDENPROP:
+    case JSOP_INITHIDDENELEM:
+      // Non-enumerable, but writable and configurable
+      return 0;
+    default:;
+  }
+  MOZ_CRASH("Unknown data initprop");
+}
+
+static bool InitGetterSetterOperation(JSContext* cx, jsbytecode* pc,
+                                      HandleObject obj, HandleId id,
+                                      HandleObject val) {
+  MOZ_ASSERT(val->isCallable());
+
+  JSOp op = JSOp(*pc);
+
+  unsigned attrs = 0;
+  if (!IsHiddenInitOp(op)) {
+    attrs |= JSPROP_ENUMERATE;
+  }
+
+  if (op == JSOP_INITPROP_GETTER || op == JSOP_INITELEM_GETTER ||
+      op == JSOP_INITHIDDENPROP_GETTER || op == JSOP_INITHIDDENELEM_GETTER) {
+    attrs |= JSPROP_GETTER;
+    return DefineAccessorProperty(cx, obj, id, val, nullptr, attrs);
+  }
+
+  MOZ_ASSERT(op == JSOP_INITPROP_SETTER || op == JSOP_INITELEM_SETTER ||
+             op == JSOP_INITHIDDENPROP_SETTER ||
+             op == JSOP_INITHIDDENELEM_SETTER);
+  attrs |= JSPROP_SETTER;
+  return DefineAccessorProperty(cx, obj, id, nullptr, val, attrs);
+}
+
+bool js::InitPropGetterSetterOperation(JSContext* cx, jsbytecode* pc,
+                                       HandleObject obj,
+                                       HandlePropertyName name,
+                                       HandleObject val) {
+  RootedId id(cx, NameToId(name));
+  return InitGetterSetterOperation(cx, pc, obj, id, val);
+}
+
+bool js::InitElemGetterSetterOperation(JSContext* cx, jsbytecode* pc,
+                                       HandleObject obj, HandleValue idval,
+                                       HandleObject val) {
+  RootedId id(cx);
+  if (!ToPropertyKey(cx, idval, &id)) {
+    return false;
+  }
+
+  return InitGetterSetterOperation(cx, pc, obj, id, val);
+}
+
+bool js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                             HandleValue thisv, HandleValue callee,
+                             HandleValue arr, HandleValue newTarget,
+                             MutableHandleValue res) {
+  RootedArrayObject aobj(cx, &arr.toObject().as<ArrayObject>());
+  uint32_t length = aobj->length();
+  JSOp op = JSOp(*pc);
+  bool constructing = op == JSOP_SPREADNEW || op == JSOP_SPREADSUPERCALL;
+
+  // {Construct,Invoke}Args::init does this too, but this gives us a better
+  // error message.
+  if (length > ARGS_LENGTH_MAX) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              constructing ? JSMSG_TOO_MANY_CON_SPREADARGS
+                                           : JSMSG_TOO_MANY_FUN_SPREADARGS);
+    return false;
+  }
+
+  // Do our own checks for the callee being a function, as Invoke uses the
+  // expression decompiler to decompile the callee stack operand based on
+  // the number of arguments. Spread operations have the callee at sp - 3
+  // when not constructing, and sp - 4 when constructing.
+  if (callee.isPrimitive()) {
+    return ReportIsNotFunction(cx, callee, 2 + constructing,
+                               constructing ? CONSTRUCT : NO_CONSTRUCT);
+  }
+
+  if (!callee.toObject().isCallable()) {
+    return ReportIsNotFunction(cx, callee, 2 + constructing,
+                               constructing ? CONSTRUCT : NO_CONSTRUCT);
+  }
 
 #ifdef DEBUG
   // The object must be an array with dense elements and no holes. Baseline's
@@ -5214,11 +10973,36 @@ bool js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
     if (!cargs.init(cx, length)) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedObject obj(cx, &arg.toObject());
+  if (!IsPackedArray(obj)) {
+    *optimized = false;
+    return true;
+  }
+||||||| merged common ancestors
+    RootedPlainObject obj(cx);
+=======
     if (!GetElements(cx, aobj, length, cargs.array())) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ForOfPIC::Chain* stubChain = ForOfPIC::getOrCreate(cx);
+  if (!stubChain) {
+    return false;
+  }
+||||||| merged common ancestors
+    if (*pc == JSOP_NEWOBJECT) {
+        RootedPlainObject baseObject(cx, &script->getObject(pc)->as<PlainObject>());
+        obj = CopyInitializerObject(cx, baseObject, newKind);
+    } else {
+        MOZ_ASSERT(*pc == JSOP_NEWINIT);
+        obj = NewBuiltinClassInstance<PlainObject>(cx, newKind);
+    }
+=======
     RootedObject obj(cx);
     if (!Construct(cx, callee, cargs, newTarget, &obj)) {
       return false;
@@ -5229,11 +11013,34 @@ bool js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
     if (!args.init(cx, length)) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return stubChain->tryOptimizeArray(cx, obj.as<ArrayObject>(), optimized);
+}
+||||||| merged common ancestors
+    if (!obj) {
+        return nullptr;
+    }
+=======
     if (!GetElements(cx, aobj, length, args.array())) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JSObject* js::NewObjectOperation(JSContext* cx, HandleScript script,
+                                 jsbytecode* pc,
+                                 NewObjectKind newKind /* = GenericObject */) {
+  MOZ_ASSERT(newKind != SingletonObject);
+||||||| merged common ancestors
+    if (newKind == SingletonObject) {
+        if (!JSObject::setSingleton(cx, obj)) {
+            return nullptr;
+        }
+    } else {
+        obj->setGroup(group);
+=======
     if ((op == JSOP_SPREADEVAL || op == JSOP_STRICTSPREADEVAL) &&
         cx->global()->valueIsEval(callee)) {
       if (!DirectEval(cx, args.get(0), res)) {
@@ -5243,14 +11050,85 @@ bool js::SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
       MOZ_ASSERT(op == JSOP_SPREADCALL || op == JSOP_SPREADEVAL ||
                      op == JSOP_STRICTSPREADEVAL,
                  "bad spread opcode");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedObjectGroup group(cx);
+  if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Object)) {
+    newKind = SingletonObject;
+  } else {
+    group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Object);
+    if (!group) {
+      return nullptr;
+||||||| merged common ancestors
+        AutoSweepObjectGroup sweep(group);
+        if (PreliminaryObjectArray* preliminaryObjects = group->maybePreliminaryObjects(sweep)) {
+            preliminaryObjects->registerNewObject(obj);
+        }
+=======
       if (!Call(cx, callee, thisv, args, res)) {
         return false;
       }
+>>>>>>> upstream-releases
     }
   }
 
-  TypeScript::Monitor(cx, script, pc, res);
+<<<<<<< HEAD
+    bool isUnboxed;
+    {
+      AutoSweepObjectGroup sweep(group);
+      if (group->maybePreliminaryObjects(sweep)) {
+        group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
+        if (group->maybeUnboxedLayout(sweep)) {
+          // This sets the allocation site so that the template object
+          // can be read back but if op is NEWINIT, then the template
+          // is null.
+          MOZ_ASSERT(JSOp(*pc) != JSOP_NEWINIT);
+          group->maybeUnboxedLayout(sweep)->setAllocationSite(script, pc);
+        }
+      }
+
+      if (group->shouldPreTenure(sweep) ||
+          group->maybePreliminaryObjects(sweep)) {
+        newKind = TenuredObject;
+      }
+      isUnboxed = group->maybeUnboxedLayout(sweep);
+    }
+    if (isUnboxed) {
+      return UnboxedPlainObject::create(cx, group, newKind);
+    }
+  }
+||||||| merged common ancestors
+    return obj;
+}
+
+JSObject*
+js::NewObjectOperationWithTemplate(JSContext* cx, HandleObject templateObject)
+{
+    // This is an optimized version of NewObjectOperation for use when the
+    // object is not a singleton and has had its preliminary objects analyzed,
+    // with the template object a copy of the object to create.
+    MOZ_ASSERT(!templateObject->isSingleton());
+
+    NewObjectKind newKind;
+    bool isUnboxed;
+    {
+        ObjectGroup* group = templateObject->group();
+        AutoSweepObjectGroup sweep(group);
+        newKind = group->shouldPreTenure(sweep) ? TenuredObject : GenericObject;
+        isUnboxed = group->maybeUnboxedLayout(sweep);
+    }
+    if (isUnboxed) {
+        RootedObjectGroup group(cx, templateObject->group());
+        return UnboxedPlainObject::create(cx, group, newKind);
+    }
+
+    JSObject* obj = CopyInitializerObject(cx, templateObject.as<PlainObject>(), newKind);
+    if (!obj) {
+        return nullptr;
+    }
+=======
+  JitScript::MonitorBytecodeType(cx, script, pc, res);
   return true;
 }
 
@@ -5278,49 +11156,9 @@ bool js::OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized) {
   if (!stubChain) {
     return false;
   }
+>>>>>>> upstream-releases
 
-  return stubChain->tryOptimizeArray(cx, obj.as<ArrayObject>(), optimized);
-}
-
-JSObject* js::NewObjectOperation(JSContext* cx, HandleScript script,
-                                 jsbytecode* pc,
-                                 NewObjectKind newKind /* = GenericObject */) {
-  MOZ_ASSERT(newKind != SingletonObject);
-
-  RootedObjectGroup group(cx);
-  if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Object)) {
-    newKind = SingletonObject;
-  } else {
-    group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Object);
-    if (!group) {
-      return nullptr;
-    }
-
-    bool isUnboxed;
-    {
-      AutoSweepObjectGroup sweep(group);
-      if (group->maybePreliminaryObjects(sweep)) {
-        group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
-        if (group->maybeUnboxedLayout(sweep)) {
-          // This sets the allocation site so that the template object
-          // can be read back but if op is NEWINIT, then the template
-          // is null.
-          MOZ_ASSERT(JSOp(*pc) != JSOP_NEWINIT);
-          group->maybeUnboxedLayout(sweep)->setAllocationSite(script, pc);
-        }
-      }
-
-      if (group->shouldPreTenure(sweep) ||
-          group->maybePreliminaryObjects(sweep)) {
-        newKind = TenuredObject;
-      }
-      isUnboxed = group->maybeUnboxedLayout(sweep);
-    }
-    if (isUnboxed) {
-      return UnboxedPlainObject::create(cx, group, newKind);
-    }
-  }
-
+<<<<<<< HEAD
   RootedPlainObject obj(cx);
 
   if (*pc == JSOP_NEWOBJECT) {
@@ -5330,7 +11168,40 @@ JSObject* js::NewObjectOperation(JSContext* cx, HandleScript script,
     MOZ_ASSERT(*pc == JSOP_NEWINIT);
     obj = NewBuiltinClassInstance<PlainObject>(cx, newKind);
   }
+||||||| merged common ancestors
+    obj->setGroup(templateObject->group());
+    return obj;
+}
 
+JSObject*
+js::NewArrayOperation(JSContext* cx, HandleScript script, jsbytecode* pc, uint32_t length,
+                      NewObjectKind newKind /* = GenericObject */)
+{
+    MOZ_ASSERT(newKind != SingletonObject);
+
+    RootedObjectGroup group(cx);
+    if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Array)) {
+        newKind = SingletonObject;
+    } else {
+        group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Array);
+        if (!group) {
+            return nullptr;
+        }
+        AutoSweepObjectGroup sweep(group);
+        if (group->maybePreliminaryObjects(sweep)) {
+            group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
+        }
+=======
+  return stubChain->tryOptimizeArray(cx, obj.as<ArrayObject>(), optimized);
+}
+
+JSObject* js::NewObjectOperation(JSContext* cx, HandleScript script,
+                                 jsbytecode* pc,
+                                 NewObjectKind newKind /* = GenericObject */) {
+  MOZ_ASSERT(newKind != SingletonObject);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (!obj) {
     return nullptr;
   }
@@ -5377,16 +11248,78 @@ JSObject* js::NewObjectOperationWithTemplate(JSContext* cx,
   if (!obj) {
     return nullptr;
   }
+||||||| merged common ancestors
+        if (group->shouldPreTenure(sweep) || group->maybePreliminaryObjects(sweep)) {
+            newKind = TenuredObject;
+        }
+    }
 
+    ArrayObject* obj = NewDenseFullyAllocatedArray(cx, length, nullptr, newKind);
+    if (!obj) {
+        return nullptr;
+    }
+
+    if (newKind == SingletonObject) {
+        MOZ_ASSERT(obj->isSingleton());
+    } else {
+        obj->setGroup(group);
+    }
+=======
+  RootedObjectGroup group(cx);
+  if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Object)) {
+    newKind = SingletonObject;
+  } else {
+    group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Object);
+    if (!group) {
+      return nullptr;
+    }
+
+    {
+      AutoSweepObjectGroup sweep(group);
+      if (group->maybePreliminaryObjects(sweep)) {
+        group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
+      }
+
+      if (group->shouldPreTenure(sweep) ||
+          group->maybePreliminaryObjects(sweep)) {
+        newKind = TenuredObject;
+      }
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   obj->setGroup(templateObject->group());
   return obj;
 }
+||||||| merged common ancestors
+    return obj;
+}
+=======
+  RootedPlainObject obj(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* js::NewArrayOperation(JSContext* cx, HandleScript script,
                                 jsbytecode* pc, uint32_t length,
                                 NewObjectKind newKind /* = GenericObject */) {
   MOZ_ASSERT(newKind != SingletonObject);
+||||||| merged common ancestors
+JSObject*
+js::NewArrayOperationWithTemplate(JSContext* cx, HandleObject templateObject)
+{
+    MOZ_ASSERT(!templateObject->isSingleton());
+=======
+  if (*pc == JSOP_NEWOBJECT) {
+    RootedPlainObject baseObject(cx, &script->getObject(pc)->as<PlainObject>());
+    obj = CopyInitializerObject(cx, baseObject, newKind);
+  } else {
+    MOZ_ASSERT(*pc == JSOP_NEWINIT);
+    obj = NewBuiltinClassInstance<PlainObject>(cx, newKind);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedObjectGroup group(cx);
   if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Array)) {
     newKind = SingletonObject;
@@ -5398,15 +11331,19 @@ JSObject* js::NewArrayOperation(JSContext* cx, HandleScript script,
     AutoSweepObjectGroup sweep(group);
     if (group->maybePreliminaryObjects(sweep)) {
       group->maybePreliminaryObjects(sweep)->maybeAnalyze(cx, group);
+||||||| merged common ancestors
+    NewObjectKind newKind;
+    {
+        AutoSweepObjectGroup sweep(templateObject->group());
+        newKind =
+            templateObject->group()->shouldPreTenure(sweep) ? TenuredObject : GenericObject;
     }
 
-    if (group->shouldPreTenure(sweep) ||
-        group->maybePreliminaryObjects(sweep)) {
-      newKind = TenuredObject;
-    }
-  }
-
-  ArrayObject* obj = NewDenseFullyAllocatedArray(cx, length, nullptr, newKind);
+    ArrayObject* obj = NewDenseFullyAllocatedArray(cx, templateObject->as<ArrayObject>().length(),
+                                                   nullptr, newKind);
+    if (!obj) {
+        return nullptr;
+=======
   if (!obj) {
     return nullptr;
   }
@@ -5415,22 +11352,199 @@ JSObject* js::NewArrayOperation(JSContext* cx, HandleScript script,
     MOZ_ASSERT(obj->isSingleton());
   } else {
     obj->setGroup(group);
+
+    AutoSweepObjectGroup sweep(group);
+    if (PreliminaryObjectArray* preliminaryObjects =
+            group->maybePreliminaryObjects(sweep)) {
+      preliminaryObjects->registerNewObject(obj);
+>>>>>>> upstream-releases
+    }
   }
 
+<<<<<<< HEAD
+    if (group->shouldPreTenure(sweep) ||
+        group->maybePreliminaryObjects(sweep)) {
+      newKind = TenuredObject;
+    }
+  }
+||||||| merged common ancestors
+    MOZ_ASSERT(obj->lastProperty() == templateObject->as<ArrayObject>().lastProperty());
+    obj->setGroup(templateObject->group());
+    return obj;
+}
+
+void
+js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber, HandleId id)
+{
+    MOZ_ASSERT(errorNumber == JSMSG_UNINITIALIZED_LEXICAL ||
+               errorNumber == JSMSG_BAD_CONST_ASSIGN);
+    if (UniqueChars printable = IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsIdentifier)) {
+        JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, errorNumber, printable.get());
+    }
+}
+=======
   return obj;
 }
 
+JSObject* js::NewObjectOperationWithTemplate(JSContext* cx,
+                                             HandleObject templateObject) {
+  // This is an optimized version of NewObjectOperation for use when the
+  // object is not a singleton and has had its preliminary objects analyzed,
+  // with the template object a copy of the object to create.
+  MOZ_ASSERT(!templateObject->isSingleton());
+  MOZ_ASSERT(cx->realm() == templateObject->nonCCWRealm());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ArrayObject* obj = NewDenseFullyAllocatedArray(cx, length, nullptr, newKind);
+  if (!obj) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+void
+js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber, HandlePropertyName name)
+{
+    RootedId id(cx, NameToId(name));
+    ReportRuntimeLexicalError(cx, errorNumber, id);
+}
+=======
+  NewObjectKind newKind;
+  {
+    ObjectGroup* group = templateObject->group();
+    AutoSweepObjectGroup sweep(group);
+    newKind = group->shouldPreTenure(sweep) ? TenuredObject : GenericObject;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (newKind == SingletonObject) {
+    MOZ_ASSERT(obj->isSingleton());
+  } else {
+    obj->setGroup(group);
+  }
+||||||| merged common ancestors
+void
+js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                              HandleScript script, jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    MOZ_ASSERT(op == JSOP_CHECKLEXICAL ||
+               op == JSOP_CHECKALIASEDLEXICAL ||
+               op == JSOP_THROWSETCONST ||
+               op == JSOP_THROWSETALIASEDCONST ||
+               op == JSOP_THROWSETCALLEE ||
+               op == JSOP_GETIMPORT);
+
+    RootedPropertyName name(cx);
+
+    if (op == JSOP_THROWSETCALLEE) {
+        name = script->functionNonDelazifying()->explicitName()->asPropertyName();
+    } else if (IsLocalOp(op)) {
+        name = FrameSlotName(script, pc)->asPropertyName();
+    } else if (IsAtomOp(op)) {
+        name = script->getName(pc);
+    } else {
+        MOZ_ASSERT(IsAliasedVarOp(op));
+        name = EnvironmentCoordinateName(cx->caches().envCoordinateNameCache, script, pc);
+    }
+=======
+  JSObject* obj =
+      CopyInitializerObject(cx, templateObject.as<PlainObject>(), newKind);
+  if (!obj) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return obj;
+||||||| merged common ancestors
+    ReportRuntimeLexicalError(cx, errorNumber, name);
+=======
+  obj->setGroup(templateObject->group());
+  return obj;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JSObject* js::NewArrayOperationWithTemplate(JSContext* cx,
                                             HandleObject templateObject) {
   MOZ_ASSERT(!templateObject->isSingleton());
+||||||| merged common ancestors
+void
+js::ReportRuntimeRedeclaration(JSContext* cx, HandlePropertyName name, const char* redeclKind)
+{
+    if (UniqueChars printable = AtomToPrintableString(cx, name)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_REDECLARED_VAR, redeclKind,
+                                  printable.get());
+    }
+}
+=======
+JSObject* js::CreateThisWithTemplate(JSContext* cx,
+                                     HandleObject templateObject) {
+  mozilla::Maybe<AutoRealm> ar;
+  if (cx->realm() != templateObject->nonCCWRealm()) {
+    MOZ_ASSERT(cx->compartment() == templateObject->compartment());
+    ar.emplace(cx, templateObject);
+  }
 
+  return NewObjectOperationWithTemplate(cx, templateObject);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   NewObjectKind newKind;
   {
     AutoSweepObjectGroup sweep(templateObject->group());
     newKind = templateObject->group()->shouldPreTenure(sweep) ? TenuredObject
                                                               : GenericObject;
   }
+||||||| merged common ancestors
+bool
+js::ThrowCheckIsObject(JSContext* cx, CheckIsObjectKind kind)
+{
+    switch (kind) {
+      case CheckIsObjectKind::IteratorNext:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "next");
+        break;
+      case CheckIsObjectKind::IteratorReturn:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "return");
+        break;
+      case CheckIsObjectKind::IteratorThrow:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "throw");
+        break;
+      case CheckIsObjectKind::GetIterator:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_GET_ITER_RETURNED_PRIMITIVE);
+        break;
+      case CheckIsObjectKind::GetAsyncIterator:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  JSMSG_GET_ASYNC_ITER_RETURNED_PRIMITIVE);
+        break;
+      default:
+        MOZ_CRASH("Unknown kind");
+    }
+    return false;
+}
+=======
+JSObject* js::NewArrayOperation(JSContext* cx, HandleScript script,
+                                jsbytecode* pc, uint32_t length,
+                                NewObjectKind newKind /* = GenericObject */) {
+  MOZ_ASSERT(*pc == JSOP_NEWARRAY);
+  MOZ_ASSERT(newKind != SingletonObject);
 
+  RootedObjectGroup group(cx);
+  if (ObjectGroup::useSingletonForAllocationSite(script, pc, JSProto_Array)) {
+    newKind = SingletonObject;
+  } else {
+    group = ObjectGroup::allocationSiteGroup(cx, script, pc, JSProto_Array);
+    if (!group) {
+      return nullptr;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   ArrayObject* obj = NewDenseFullyAllocatedArray(
       cx, templateObject->as<ArrayObject>().length(), nullptr, newKind);
   if (!obj) {
@@ -5552,7 +11666,68 @@ bool js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame) {
       MOZ_ASSERT(frame.script()->isDirectEvalInFunction());
       startingScope = frame.script()->enclosingScope();
     }
+||||||| merged common ancestors
+bool
+js::ThrowCheckIsCallable(JSContext* cx, CheckIsCallableKind kind)
+{
+    switch (kind) {
+      case CheckIsCallableKind::IteratorReturn:
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_RETURN_NOT_CALLABLE);
+        break;
+      default:
+        MOZ_CRASH("Unknown kind");
+    }
+    return false;
+}
 
+bool
+js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame)
+{
+    RootedFunction fun(cx);
+    if (frame.isFunctionFrame()) {
+        fun = frame.callee();
+    } else {
+        Scope* startingScope;
+        if (frame.isDebuggerEvalFrame()) {
+            AbstractFramePtr evalInFramePrev = frame.asInterpreterFrame()->evalInFramePrev();
+            while (evalInFramePrev.isDebuggerEvalFrame()) {
+                evalInFramePrev = evalInFramePrev.asInterpreterFrame()->evalInFramePrev();
+            }
+            startingScope = evalInFramePrev.script()->bodyScope();
+        } else {
+            MOZ_ASSERT(frame.isEvalFrame());
+            MOZ_ASSERT(frame.script()->isDirectEvalInFunction());
+            startingScope = frame.script()->enclosingScope();
+        }
+
+        for (ScopeIter si(startingScope); si; si++) {
+            if (si.scope()->is<FunctionScope>()) {
+                fun = si.scope()->as<FunctionScope>().canonicalFunction();
+                break;
+            }
+        }
+        MOZ_ASSERT(fun);
+    }
+=======
+    AutoSweepObjectGroup sweep(group);
+    if (group->shouldPreTenure(sweep)) {
+      newKind = TenuredObject;
+    }
+  }
+
+  ArrayObject* obj = NewDenseFullyAllocatedArray(cx, length, nullptr, newKind);
+  if (!obj) {
+    return nullptr;
+  }
+
+  if (newKind == SingletonObject) {
+    MOZ_ASSERT(obj->isSingleton());
+  } else {
+    obj->setGroup(group);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     for (ScopeIter si(startingScope); si; si++) {
       if (si.scope()->is<FunctionScope>()) {
         fun = si.scope()->as<FunctionScope>().canonicalFunction();
@@ -5561,7 +11736,23 @@ bool js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame) {
     }
     MOZ_ASSERT(fun);
   }
+||||||| merged common ancestors
+    if (fun->isDerivedClassConstructor()) {
+        const char* name = "anonymous";
+        UniqueChars str;
+        if (fun->explicitName()) {
+            str = AtomToPrintableString(cx, fun->explicitName());
+            if (!str) {
+                return false;
+            }
+            name = str.get();
+        }
+=======
+  return obj;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (fun->isDerivedClassConstructor()) {
     const char* name = "anonymous";
     UniqueChars str;
@@ -5572,7 +11763,17 @@ bool js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame) {
       }
       name = str.get();
     }
+||||||| merged common ancestors
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_UNINITIALIZED_THIS, name);
+        return false;
+    }
+=======
+JSObject* js::NewArrayOperationWithTemplate(JSContext* cx,
+                                            HandleObject templateObject) {
+  MOZ_ASSERT(!templateObject->isSingleton());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                               JSMSG_UNINITIALIZED_THIS, name);
     return false;
@@ -5582,6 +11783,157 @@ bool js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame) {
   JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                             JSMSG_UNINITIALIZED_THIS_ARROW);
   return false;
+||||||| merged common ancestors
+    MOZ_ASSERT(fun->isArrow());
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_UNINITIALIZED_THIS_ARROW);
+    return false;
+=======
+  NewObjectKind newKind;
+  {
+    AutoSweepObjectGroup sweep(templateObject->group());
+    newKind = templateObject->group()->shouldPreTenure(sweep) ? TenuredObject
+                                                              : GenericObject;
+  }
+
+  ArrayObject* obj = NewDenseFullyAllocatedArray(
+      cx, templateObject->as<ArrayObject>().length(), nullptr, newKind);
+  if (!obj) {
+    return nullptr;
+  }
+
+  MOZ_ASSERT(obj->lastProperty() ==
+             templateObject->as<ArrayObject>().lastProperty());
+  obj->setGroup(templateObject->group());
+  return obj;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+JSObject* js::HomeObjectSuperBase(JSContext* cx, HandleObject homeObj) {
+  RootedObject superBase(cx);
+||||||| merged common ancestors
+JSObject*
+js::HomeObjectSuperBase(JSContext* cx, HandleObject homeObj)
+{
+    RootedObject superBase(cx);
+=======
+ArrayObject* js::NewArrayCopyOnWriteOperation(JSContext* cx,
+                                              HandleScript script,
+                                              jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_NEWARRAY_COPYONWRITE);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!GetPrototype(cx, homeObj, &superBase)) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+    if (!GetPrototype(cx, homeObj, &superBase)) {
+        return nullptr;
+    }
+=======
+  RootedArrayObject baseobj(
+      cx, ObjectGroup::getOrFixupCopyOnWriteObject(cx, script, pc));
+  if (!baseobj) {
+    return nullptr;
+  }
+
+  return NewDenseCopyOnWriteArray(cx, baseobj);
+}
+
+void js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                                   HandleId id) {
+  MOZ_ASSERT(errorNumber == JSMSG_UNINITIALIZED_LEXICAL ||
+             errorNumber == JSMSG_BAD_CONST_ASSIGN);
+  if (UniqueChars printable =
+          IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsIdentifier)) {
+    JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, errorNumber,
+                             printable.get());
+  }
+}
+
+void js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                                   HandlePropertyName name) {
+  RootedId id(cx, NameToId(name));
+  ReportRuntimeLexicalError(cx, errorNumber, id);
+}
+
+void js::ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                                   HandleScript script, jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  MOZ_ASSERT(op == JSOP_CHECKLEXICAL || op == JSOP_CHECKALIASEDLEXICAL ||
+             op == JSOP_THROWSETCONST || op == JSOP_THROWSETALIASEDCONST ||
+             op == JSOP_THROWSETCALLEE || op == JSOP_GETIMPORT);
+
+  RootedPropertyName name(cx);
+
+  if (op == JSOP_THROWSETCALLEE) {
+    name = script->functionNonDelazifying()->explicitName()->asPropertyName();
+  } else if (IsLocalOp(op)) {
+    name = FrameSlotName(script, pc)->asPropertyName();
+  } else if (IsAtomOp(op)) {
+    name = script->getName(pc);
+  } else {
+    MOZ_ASSERT(IsAliasedVarOp(op));
+    name = EnvironmentCoordinateNameSlow(script, pc);
+  }
+
+  ReportRuntimeLexicalError(cx, errorNumber, name);
+}
+
+void js::ReportRuntimeRedeclaration(JSContext* cx, HandlePropertyName name,
+                                    const char* redeclKind) {
+  if (UniqueChars printable = AtomToPrintableString(cx, name)) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_REDECLARED_VAR, redeclKind,
+                              printable.get());
+  }
+}
+
+bool js::ThrowCheckIsObject(JSContext* cx, CheckIsObjectKind kind) {
+  switch (kind) {
+    case CheckIsObjectKind::IteratorNext:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "next");
+      break;
+    case CheckIsObjectKind::IteratorReturn:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "return");
+      break;
+    case CheckIsObjectKind::IteratorThrow:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_ITER_METHOD_RETURNED_PRIMITIVE, "throw");
+      break;
+    case CheckIsObjectKind::GetIterator:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_GET_ITER_RETURNED_PRIMITIVE);
+      break;
+    case CheckIsObjectKind::GetAsyncIterator:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_GET_ASYNC_ITER_RETURNED_PRIMITIVE);
+      break;
+    default:
+      MOZ_CRASH("Unknown kind");
+  }
+  return false;
+}
+
+bool js::ThrowCheckIsCallable(JSContext* cx, CheckIsCallableKind kind) {
+  switch (kind) {
+    case CheckIsCallableKind::IteratorReturn:
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_RETURN_NOT_CALLABLE);
+      break;
+    default:
+      MOZ_CRASH("Unknown kind");
+  }
+  return false;
+}
+
+bool js::ThrowUninitializedThis(JSContext* cx, AbstractFramePtr frame) {
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                            JSMSG_UNINITIALIZED_THIS);
+  return false;
 }
 
 JSObject* js::HomeObjectSuperBase(JSContext* cx, HandleObject homeObj) {
@@ -5590,6 +11942,7 @@ JSObject* js::HomeObjectSuperBase(JSContext* cx, HandleObject homeObj) {
   if (!GetPrototype(cx, homeObj, &superBase)) {
     return nullptr;
   }
+>>>>>>> upstream-releases
 
   if (!superBase) {
     JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,

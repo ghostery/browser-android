@@ -9,6 +9,7 @@
 #define GrSurface_DEFINED
 
 #include "GrTypes.h"
+#include "GrBackendSurface.h"
 #include "GrGpuResource.h"
 #include "SkImageInfo.h"
 #include "SkRect.h"
@@ -42,6 +43,22 @@ public:
      */
     GrPixelConfig config() const { return fConfig; }
 
+    virtual GrBackendFormat backendFormat() const = 0;
+
+    void setRelease(sk_sp<GrRefCntedCallback> releaseHelper) {
+        this->onSetRelease(releaseHelper);
+        fReleaseHelper = std::move(releaseHelper);
+    }
+
+    // These match the definitions in SkImage, from whence they came.
+    // TODO: Remove Chrome's need to call this on a GrTexture
+    typedef void* ReleaseCtx;
+    typedef void (*ReleaseProc)(ReleaseCtx);
+    void setRelease(ReleaseProc proc, ReleaseCtx ctx) {
+        sk_sp<GrRefCntedCallback> helper(new GrRefCntedCallback(proc, ctx));
+        this->setRelease(std::move(helper));
+    }
+
     /**
      * @return the texture associated with the surface, may be null.
      */
@@ -62,7 +79,14 @@ public:
     static size_t ComputeSize(GrPixelConfig config, int width, int height, int colorSamplesPerPixel,
                               GrMipMapped, bool useNextPow2 = false);
 
+    /**
+     * The pixel values of this surface cannot be modified (e.g. doesn't support write pixels or
+     * MIP map level regen).
+     */
+    bool readOnly() const { return fSurfaceFlags & GrInternalSurfaceFlags::kReadOnly; }
+
 protected:
+<<<<<<< HEAD
     void setHasMixedSamples() {
         SkASSERT(this->asRenderTarget());
         fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
@@ -85,6 +109,28 @@ protected:
         return fSurfaceFlags & GrInternalSurfaceFlags::kGLRTFBOIDIs0;
     }
 
+||||||| merged common ancestors
+=======
+    void setHasMixedSamples() {
+        SkASSERT(this->asRenderTarget());
+        fSurfaceFlags |= GrInternalSurfaceFlags::kMixedSampled;
+    }
+    bool hasMixedSamples() const { return fSurfaceFlags & GrInternalSurfaceFlags::kMixedSampled; }
+
+    void setGLRTFBOIDIs0() {
+        SkASSERT(this->asRenderTarget());
+        fSurfaceFlags |= GrInternalSurfaceFlags::kGLRTFBOIDIs0;
+    }
+    bool glRTFBOIDis0() const {
+        return fSurfaceFlags & GrInternalSurfaceFlags::kGLRTFBOIDIs0;
+    }
+
+    void setReadOnly() {
+        SkASSERT(!this->asRenderTarget());
+        fSurfaceFlags |= GrInternalSurfaceFlags::kReadOnly;
+    }
+
+>>>>>>> upstream-releases
     // Methods made available via GrSurfacePriv
     bool hasPendingRead() const;
     bool hasPendingWrite() const;
@@ -97,23 +143,60 @@ protected:
             : INHERITED(gpu)
             , fConfig(desc.fConfig)
             , fWidth(desc.fWidth)
+<<<<<<< HEAD
             , fHeight(desc.fHeight)
             , fSurfaceFlags(GrInternalSurfaceFlags::kNone) {
     }
 
     ~GrSurface() override {}
+||||||| merged common ancestors
+            , fHeight(desc.fHeight) {}
+    ~GrSurface() override {}
+=======
+            , fHeight(desc.fHeight)
+            , fSurfaceFlags(GrInternalSurfaceFlags::kNone) {
+    }
+>>>>>>> upstream-releases
 
+    ~GrSurface() override {
+        // check that invokeReleaseProc has been called (if needed)
+        SkASSERT(!fReleaseHelper);
+    }
 
     void onRelease() override;
     void onAbandon() override;
 
 private:
+<<<<<<< HEAD
     const char* getResourceType() const override { return "Surface"; }
 
     GrPixelConfig          fConfig;
     int                    fWidth;
     int                    fHeight;
     GrInternalSurfaceFlags fSurfaceFlags;
+||||||| merged common ancestors
+    GrPixelConfig        fConfig;
+    int                  fWidth;
+    int                  fHeight;
+=======
+    const char* getResourceType() const override { return "Surface"; }
+
+    // Unmanaged backends (e.g. Vulkan) may want to specially handle the release proc in order to
+    // ensure it isn't called until GPU work related to the resource is completed.
+    virtual void onSetRelease(sk_sp<GrRefCntedCallback>) {}
+
+    void invokeReleaseProc() {
+        // Depending on the ref count of fReleaseHelper this may or may not actually trigger the
+        // ReleaseProc to be called.
+        fReleaseHelper.reset();
+    }
+
+    GrPixelConfig              fConfig;
+    int                        fWidth;
+    int                        fHeight;
+    GrInternalSurfaceFlags     fSurfaceFlags;
+    sk_sp<GrRefCntedCallback>  fReleaseHelper;
+>>>>>>> upstream-releases
 
     typedef GrGpuResource INHERITED;
 };

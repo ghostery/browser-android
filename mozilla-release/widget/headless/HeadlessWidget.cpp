@@ -24,20 +24,30 @@ using mozilla::LogLevel;
 
 #ifdef MOZ_LOGGING
 
-#include "mozilla/Logging.h"
+#  include "mozilla/Logging.h"
 static mozilla::LazyLogModule sWidgetLog("Widget");
 static mozilla::LazyLogModule sWidgetFocusLog("WidgetFocus");
-#define LOG(args) MOZ_LOG(sWidgetLog, mozilla::LogLevel::Debug, args)
-#define LOGFOCUS(args) MOZ_LOG(sWidgetFocusLog, mozilla::LogLevel::Debug, args)
+#  define LOG(args) MOZ_LOG(sWidgetLog, mozilla::LogLevel::Debug, args)
+#  define LOGFOCUS(args) \
+    MOZ_LOG(sWidgetFocusLog, mozilla::LogLevel::Debug, args)
 
 #else
 
-#define LOG(args)
-#define LOGFOCUS(args)
+#  define LOG(args)
+#  define LOGFOCUS(args)
 
 #endif /* MOZ_LOGGING */
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<nsIWidget> nsIWidget::CreateHeadlessWidget() {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<nsIWidget>
+nsIWidget::CreateHeadlessWidget()
+{
+=======
+/*static*/
+already_AddRefed<nsIWidget> nsIWidget::CreateHeadlessWidget() {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIWidget> widget = new mozilla::widget::HeadlessWidget();
   return widget.forget();
 }
@@ -45,6 +55,7 @@ static mozilla::LazyLogModule sWidgetFocusLog("WidgetFocus");
 namespace mozilla {
 namespace widget {
 
+<<<<<<< HEAD
 already_AddRefed<gfxContext> CreateDefaultTarget(IntSize aSize) {
   // Always use at least a 1x1 draw target to avoid gfx issues
   // with 0x0 targets.
@@ -56,6 +67,20 @@ already_AddRefed<gfxContext> CreateDefaultTarget(IntSize aSize) {
   return ctx.forget();
 }
 
+||||||| merged common ancestors
+already_AddRefed<gfxContext>
+CreateDefaultTarget(IntSize aSize)
+{
+  // Always use at least a 1x1 draw target to avoid gfx issues
+  // with 0x0 targets.
+  IntSize size = (aSize.width <= 0 || aSize.height <= 0) ? gfx::IntSize(1, 1) : aSize;
+  RefPtr<DrawTarget> target = Factory::CreateDrawTarget(gfxVars::ContentBackend(), size, SurfaceFormat::B8G8R8A8);
+  RefPtr<gfxContext> ctx = gfxContext::CreatePreservingTransformOrNull(target);
+  return ctx.forget();
+}
+
+=======
+>>>>>>> upstream-releases
 StaticAutoPtr<nsTArray<HeadlessWidget*>> HeadlessWidget::sActiveWindows;
 
 already_AddRefed<HeadlessWidget> HeadlessWidget::GetActiveWindow() {
@@ -209,18 +234,37 @@ void HeadlessWidget::Show(bool aState) {
 
 bool HeadlessWidget::IsVisible() const { return mVisible; }
 
+<<<<<<< HEAD
 nsresult HeadlessWidget::SetFocus(bool aRaise) {
   LOGFOCUS(("  SetFocus %d [%p]\n", aRaise, (void*)this));
+||||||| merged common ancestors
+nsresult
+HeadlessWidget::SetFocus(bool aRaise)
+{
+  LOGFOCUS(("  SetFocus %d [%p]\n", aRaise, (void *)this));
+=======
+void HeadlessWidget::SetFocus(Raise aRaise) {
+  LOGFOCUS(("  SetFocus %d [%p]\n", aRaise == Raise::Yes, (void*)this));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // aRaise == true means we request activation of our toplevel window.
   if (aRaise) {
     HeadlessWidget* topLevel = (HeadlessWidget*)GetTopLevelWidget();
+||||||| merged common ancestors
+  // aRaise == true means we request activation of our toplevel window.
+  if (aRaise) {
+    HeadlessWidget* topLevel = (HeadlessWidget*) GetTopLevelWidget();
+=======
+  // This means we request activation of our toplevel window.
+  if (aRaise == Raise::Yes) {
+    HeadlessWidget* topLevel = (HeadlessWidget*)GetTopLevelWidget();
+>>>>>>> upstream-releases
 
     // The toplevel only becomes active if it's currently visible; otherwise, it
     // will be activated anyway when it's shown.
     if (topLevel->IsVisible()) topLevel->RaiseWindow();
   }
-  return NS_OK;
 }
 
 void HeadlessWidget::Enable(bool aState) { mEnabled = aState; }
@@ -355,6 +399,9 @@ void HeadlessWidget::ApplySizeModeSideEffects() {
   }
 
   mEffectiveSizeMode = mSizeMode;
+  if (mWidgetListener) {
+    mWidgetListener->SizeModeChanged(mSizeMode);
+  }
 }
 
 nsresult HeadlessWidget::MakeFullScreen(bool aFullScreen,
@@ -448,7 +495,7 @@ nsresult HeadlessWidget::SynthesizeNativeMouseEvent(LayoutDeviceIntPoint aPoint,
   WidgetMouseEvent event(true, msg, this, WidgetMouseEvent::eReal);
   event.mRefPoint = aPoint - WidgetToScreenOffset();
   if (msg == eMouseDown || msg == eMouseUp) {
-    event.button = WidgetMouseEvent::eLeftButton;
+    event.mButton = MouseButton::eLeft;
   }
   if (msg == eMouseDown) {
     event.mClickCount = 1;

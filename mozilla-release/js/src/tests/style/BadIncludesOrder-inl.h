@@ -2,6 +2,7 @@
 
 // These are in reverse order!
 #if A
+<<<<<<< HEAD
 #include "vm/JSScript-inl.h"
 #include "vm/Interpreter-inl.h"
 #include "js/Value.h"
@@ -9,10 +10,28 @@
 #include "jsapi.h"
 #include <stdio.h>
 #include "mozilla/HashFunctions.h"
+||||||| merged common ancestors
+# include "vm/JSScript-inl.h"
+# include "vm/Interpreter-inl.h"
+# include "js/Value.h"
+# include "ds/LifoAlloc.h"
+# include "jsapi.h"
+# include <stdio.h>
+# include "mozilla/HashFunctions.h"
+=======
+#  include "vm/JSScript-inl.h"
+#  include "vm/Interpreter-inl.h"
+#  include "js/Value.h"
+#  include "ds/LifoAlloc.h"
+#  include "jsapi.h"
+#  include <stdio.h>
+#  include "mozilla/HashFunctions.h"
+>>>>>>> upstream-releases
 #endif
 
 // These are in reverse order, but it's ok due to the #if scopes.
 #if B
+<<<<<<< HEAD
 #include "vm/Interpreter-inl.h"
 #if C
 #include "js/Value.h"
@@ -22,6 +41,27 @@
 #include <stdio.h>
 #endif
 #include "mozilla/HashFunctions.h"
+||||||| merged common ancestors
+# include "vm/Interpreter-inl.h"
+# if C
+#  include "js/Value.h"
+#  if D
+#   include "jsapi.h"
+#  endif
+#  include <stdio.h>
+# endif
+# include "mozilla/HashFunctions.h"
+=======
+#  include "vm/Interpreter-inl.h"
+#  if C
+#    include "js/Value.h"
+#    if D
+#      include "jsapi.h"
+#    endif
+#    include <stdio.h>
+#  endif
+#  include "mozilla/HashFunctions.h"
+>>>>>>> upstream-releases
 #endif
 
 #include "jstypes.h"

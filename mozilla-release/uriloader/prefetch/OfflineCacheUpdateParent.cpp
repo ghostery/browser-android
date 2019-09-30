@@ -8,7 +8,7 @@
 #include "BackgroundUtils.h"
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "mozilla/Unused.h"
 #include "nsContentUtils.h"
@@ -20,7 +20,7 @@
 using namespace mozilla::ipc;
 using mozilla::BasePrincipal;
 using mozilla::OriginAttributes;
-using mozilla::dom::TabParent;
+using mozilla::dom::BrowserParent;
 
 //
 // To enable logging (see mozilla/Logging.h for full details):
@@ -90,15 +90,33 @@ nsresult OfflineCacheUpdateParent::Schedule(
 
   bool offlinePermissionAllowed = false;
 
+<<<<<<< HEAD
   rv = service->OfflineAppAllowed(mLoadingPrincipal, nullptr,
                                   &offlinePermissionAllowed);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (!offlinePermissionAllowed) return NS_ERROR_DOM_SECURITY_ERR;
+||||||| merged common ancestors
+    rv = service->OfflineAppAllowed(
+        mLoadingPrincipal, nullptr, &offlinePermissionAllowed);
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+  rv = service->OfflineAppAllowed(mLoadingPrincipal, nullptr,
+                                  &offlinePermissionAllowed);
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsCOMPtr<nsIURI> documentURI = DeserializeURI(aDocumentURI);
   if (!documentURI) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+    if (!offlinePermissionAllowed)
+        return NS_ERROR_DOM_SECURITY_ERR;
+=======
+  if (!offlinePermissionAllowed) return NS_ERROR_DOM_SECURITY_ERR;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!NS_SecurityCompareURIs(manifestURI, documentURI, false))
     return NS_ERROR_DOM_SECURITY_ERR;
 
@@ -116,7 +134,87 @@ nsresult OfflineCacheUpdateParent::Schedule(
     rv = update->Init(manifestURI, documentURI, mLoadingPrincipal, nullptr,
                       nullptr);
     NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+    nsCOMPtr<nsIURI> documentURI = DeserializeURI(aDocumentURI);
+    if (!documentURI)
+        return NS_ERROR_FAILURE;
+=======
+  nsCOMPtr<nsIURI> documentURI = DeserializeURI(aDocumentURI);
+  if (!documentURI) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // Must add before Schedule() call otherwise we would miss
+    // oncheck event notification.
+    update->AddObserver(this, false);
+||||||| merged common ancestors
+    if (!NS_SecurityCompareURIs(manifestURI, documentURI, false))
+        return NS_ERROR_DOM_SECURITY_ERR;
+=======
+  if (!NS_SecurityCompareURIs(manifestURI, documentURI, false))
+    return NS_ERROR_DOM_SECURITY_ERR;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    rv = update->Schedule();
+||||||| merged common ancestors
+    nsAutoCString originSuffix;
+    rv = mLoadingPrincipal->GetOriginSuffix(originSuffix);
+=======
+  nsAutoCString originSuffix;
+  rv = mLoadingPrincipal->GetOriginSuffix(originSuffix);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  service->FindUpdate(manifestURI, originSuffix, nullptr,
+                      getter_AddRefs(update));
+  if (!update) {
+    update = new nsOfflineCacheUpdate();
+
+    // Leave aDocument argument null. Only glues and children keep
+    // document instances.
+    rv = update->Init(manifestURI, documentURI, mLoadingPrincipal, nullptr,
+                      nullptr);
+>>>>>>> upstream-releases
+    NS_ENSURE_SUCCESS(rv, rv);
+  } else {
+    update->AddObserver(this, false);
+  }
+
+<<<<<<< HEAD
+  if (stickDocument) {
+    update->StickDocument(documentURI);
+  }
+
+  return NS_OK;
+||||||| merged common ancestors
+    service->FindUpdate(manifestURI,
+                        originSuffix,
+                        nullptr,
+                        getter_AddRefs(update));
+    if (!update) {
+        update = new nsOfflineCacheUpdate();
+
+        // Leave aDocument argument null. Only glues and children keep
+        // document instances.
+        rv = update->Init(manifestURI, documentURI, mLoadingPrincipal, nullptr, nullptr);
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        // Must add before Schedule() call otherwise we would miss
+        // oncheck event notification.
+        update->AddObserver(this, false);
+
+        rv = update->Schedule();
+        NS_ENSURE_SUCCESS(rv, rv);
+    } else {
+        update->AddObserver(this, false);
+    }
+
+    if (stickDocument) {
+        update->StickDocument(documentURI);
+    }
+
+    return NS_OK;
+=======
     // Must add before Schedule() call otherwise we would miss
     // oncheck event notification.
     update->AddObserver(this, false);
@@ -132,6 +230,7 @@ nsresult OfflineCacheUpdateParent::Schedule(
   }
 
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -231,6 +330,47 @@ OfflineCacheUpdateParent::SetRemoteTabs(bool aUseRemoteTabs) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+OfflineCacheUpdateParent::GetIsInIsolatedMozBrowserElement(
+    bool* aIsInIsolatedMozBrowserElement) {
+  NS_ENSURE_TRUE(mLoadingPrincipal, NS_ERROR_UNEXPECTED);
+  return mLoadingPrincipal->GetIsInIsolatedMozBrowserElement(
+      aIsInIsolatedMozBrowserElement);
+||||||| merged common ancestors
+OfflineCacheUpdateParent::GetIsInIsolatedMozBrowserElement(bool* aIsInIsolatedMozBrowserElement)
+{
+    NS_ENSURE_TRUE(mLoadingPrincipal, NS_ERROR_UNEXPECTED);
+    return mLoadingPrincipal->GetIsInIsolatedMozBrowserElement(aIsInIsolatedMozBrowserElement);
+=======
+OfflineCacheUpdateParent::GetUseRemoteSubframes(bool* aUseRemoteSubframes) {
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+OfflineCacheUpdateParent::GetScriptableOriginAttributes(
+    JSContext* aCx, JS::MutableHandleValue aAttrs) {
+  NS_ENSURE_TRUE(mLoadingPrincipal, NS_ERROR_UNEXPECTED);
+||||||| merged common ancestors
+OfflineCacheUpdateParent::GetScriptableOriginAttributes(JSContext* aCx,
+                                                        JS::MutableHandleValue aAttrs)
+{
+    NS_ENSURE_TRUE(mLoadingPrincipal, NS_ERROR_UNEXPECTED);
+=======
+OfflineCacheUpdateParent::SetRemoteSubframes(bool aUseRemoteSubframes) {
+  return NS_ERROR_NOT_IMPLEMENTED;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsresult rv = mLoadingPrincipal->GetOriginAttributes(aCx, aAttrs);
+  NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+    nsresult rv = mLoadingPrincipal->GetOriginAttributes(aCx, aAttrs);
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+NS_IMETHODIMP
 OfflineCacheUpdateParent::GetIsInIsolatedMozBrowserElement(
     bool* aIsInIsolatedMozBrowserElement) {
   NS_ENSURE_TRUE(mLoadingPrincipal, NS_ERROR_UNEXPECTED);
@@ -245,6 +385,7 @@ OfflineCacheUpdateParent::GetScriptableOriginAttributes(
 
   nsresult rv = mLoadingPrincipal->GetOriginAttributes(aCx, aAttrs);
   NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }

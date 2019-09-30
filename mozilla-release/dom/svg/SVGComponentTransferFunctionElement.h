@@ -7,11 +7,18 @@
 #ifndef mozilla_dom_SVGComponentTransferFunctionElement_h
 #define mozilla_dom_SVGComponentTransferFunctionElement_h
 
-#include "nsSVGEnum.h"
-#include "nsSVGFilters.h"
-#include "nsSVGNumber2.h"
+#include "SVGAnimatedEnumeration.h"
+#include "SVGAnimatedNumber.h"
 #include "SVGAnimatedNumberList.h"
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+
+=======
+#include "SVGFilters.h"
+
+>>>>>>> upstream-releases
 #define NS_SVG_FE_COMPONENT_TRANSFER_FUNCTION_ELEMENT_CID \
   {                                                       \
     0xafab106d, 0xbc18, 0x4f7f, {                         \
@@ -21,9 +28,9 @@
 
 namespace mozilla {
 
-class DOMSVGAnimatedNumberList;
-
 namespace dom {
+
+class DOMSVGAnimatedNumberList;
 
 typedef SVGFEUnstyledElement SVGComponentTransferFunctionElementBase;
 
@@ -34,7 +41,7 @@ class SVGComponentTransferFunctionElement
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
       : SVGComponentTransferFunctionElementBase(std::move(aNodeInfo)) {}
 
-  virtual ~SVGComponentTransferFunctionElement() {}
+  virtual ~SVGComponentTransferFunctionElement() = default;
 
  public:
   typedef gfx::ComponentTransferAttributes ComponentTransferAttributes;
@@ -54,15 +61,24 @@ class SVGComponentTransferFunctionElement
                          ComponentTransferAttributes& aAttributes);
 
   // WebIDL
+<<<<<<< HEAD
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override = 0;
   already_AddRefed<SVGAnimatedEnumeration> Type();
+||||||| merged common ancestors
+  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override = 0;
+  already_AddRefed<SVGAnimatedEnumeration> Type();
+=======
+  virtual JSObject* WrapNode(JSContext* aCx,
+                             JS::Handle<JSObject*> aGivenProto) override = 0;
+  already_AddRefed<DOMSVGAnimatedEnumeration> Type();
+>>>>>>> upstream-releases
   already_AddRefed<DOMSVGAnimatedNumberList> TableValues();
-  already_AddRefed<SVGAnimatedNumber> Slope();
-  already_AddRefed<SVGAnimatedNumber> Intercept();
-  already_AddRefed<SVGAnimatedNumber> Amplitude();
-  already_AddRefed<SVGAnimatedNumber> Exponent();
-  already_AddRefed<SVGAnimatedNumber> Offset();
+  already_AddRefed<DOMSVGAnimatedNumber> Slope();
+  already_AddRefed<DOMSVGAnimatedNumber> Intercept();
+  already_AddRefed<DOMSVGAnimatedNumber> Amplitude();
+  already_AddRefed<DOMSVGAnimatedNumber> Exponent();
+  already_AddRefed<DOMSVGAnimatedNumber> Offset();
 
  protected:
   virtual NumberAttributesInfo GetNumberInfo() override;
@@ -74,12 +90,12 @@ class SVGComponentTransferFunctionElement
   static NumberListInfo sNumberListInfo[1];
 
   enum { SLOPE, INTERCEPT, AMPLITUDE, EXPONENT, OFFSET };
-  nsSVGNumber2 mNumberAttributes[5];
+  SVGAnimatedNumber mNumberAttributes[5];
   static NumberInfo sNumberInfo[5];
 
   enum { TYPE };
-  nsSVGEnum mEnumAttributes[1];
-  static nsSVGEnumMapping sTypeMap[];
+  SVGAnimatedEnumeration mEnumAttributes[1];
+  static SVGEnumMapping sTypeMap[];
   static EnumInfo sEnumInfo[1];
 };
 
@@ -151,6 +167,7 @@ nsresult NS_NewSVGFEFuncBElement(
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class SVGFEFuncBElement : public SVGComponentTransferFunctionElement {
   friend nsresult(::NS_NewSVGFEFuncBElement(
       nsIContent** aResult,
@@ -160,8 +177,33 @@ class SVGFEFuncBElement : public SVGComponentTransferFunctionElement {
   explicit SVGFEFuncBElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
       : SVGComponentTransferFunctionElement(std::move(aNodeInfo)) {}
+||||||| merged common ancestors
+class SVGFEFuncBElement : public SVGComponentTransferFunctionElement
+{
+  friend nsresult (::NS_NewSVGFEFuncBElement(
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+protected:
+  explicit SVGFEFuncBElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : SVGComponentTransferFunctionElement(std::move(aNodeInfo)) {}
+=======
+class SVGFEFuncBElement : public SVGComponentTransferFunctionElement {
+  friend nsresult(::NS_NewSVGFEFuncBElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit SVGFEFuncBElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+      : SVGComponentTransferFunctionElement(std::move(aNodeInfo)) {}
 
  public:
+>>>>>>> upstream-releases
   virtual int32_t GetChannel() override { return 2; }
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;

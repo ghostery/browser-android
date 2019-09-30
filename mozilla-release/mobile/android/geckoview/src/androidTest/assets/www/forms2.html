@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
     <head><title>Forms2</title></head>
     <body>
@@ -17,3 +18,27 @@
     </script>
     </body>
 </html>
+||||||| merged common ancestors
+=======
+<html>
+    <head><title>Forms2</title></head>
+    <body>
+        <form>
+            <fieldset>
+                <input type="text" id="firstname">
+                <input type="text" id="lastname">
+                <input type="text" id="user1" value="foo">
+                <input type="password" id="pass1" value="foo" autofocus>
+            </fieldset>
+        </form>
+        <iframe id="iframe"></iframe>
+    <script>
+        addEventListener("load", function(e) {
+            if (window.parent === window) {
+                document.getElementById("iframe").contentWindow.location.href = window.location.href;
+            }
+        });
+    </script>
+    </body>
+</html>
+>>>>>>> upstream-releases

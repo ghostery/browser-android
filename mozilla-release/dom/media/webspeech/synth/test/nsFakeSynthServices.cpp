@@ -10,6 +10,7 @@
 #include "SharedBuffer.h"
 #include "nsISimpleEnumerator.h"
 
+#include "mozilla/ClearOnShutdown.h"
 #include "mozilla/dom/nsSynthVoiceRegistry.h"
 #include "mozilla/dom/nsSpeechTask.h"
 
@@ -273,6 +274,7 @@ nsFakeSynthServices* nsFakeSynthServices::GetInstance() {
 
   if (!sSingleton) {
     sSingleton = new nsFakeSynthServices();
+    ClearOnShutdown(&sSingleton);
   }
 
   return sSingleton;
@@ -284,6 +286,7 @@ nsFakeSynthServices::GetInstanceForService() {
   return picoService.forget();
 }
 
+<<<<<<< HEAD
 void nsFakeSynthServices::Shutdown() {
   if (!sSingleton) {
     return;
@@ -294,3 +297,20 @@ void nsFakeSynthServices::Shutdown() {
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+void
+nsFakeSynthServices::Shutdown()
+{
+  if (!sSingleton) {
+    return;
+  }
+
+  sSingleton = nullptr;
+}
+
+} // namespace dom
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

@@ -26,9 +26,19 @@ namespace recordreplay {
 
 static MOZ_THREAD_LOCAL(Thread*) gTlsThreadKey;
 
-/* static */ Monitor* Thread::gMonitor;
+/* static */
+Monitor* Thread::gMonitor;
 
+<<<<<<< HEAD
 /* static */ Thread* Thread::Current() {
+||||||| merged common ancestors
+/* static */ Thread*
+Thread::Current()
+{
+=======
+/* static */
+Thread* Thread::Current() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsRecordingOrReplaying());
   Thread* thread = gTlsThreadKey.get();
   if (!thread && IsReplaying()) {
@@ -38,7 +48,16 @@ static MOZ_THREAD_LOCAL(Thread*) gTlsThreadKey;
   return thread;
 }
 
+<<<<<<< HEAD
 /* static */ bool Thread::CurrentIsMainThread() {
+||||||| merged common ancestors
+/* static */ bool
+Thread::CurrentIsMainThread()
+{
+=======
+/* static */
+bool Thread::CurrentIsMainThread() {
+>>>>>>> upstream-releases
   Thread* thread = Current();
   return thread && thread->IsMainThread();
 }
@@ -71,13 +90,31 @@ void Thread::BindToCurrent() {
 // All threads, indexed by the thread ID.
 static Thread* gThreads;
 
+<<<<<<< HEAD
 /* static */ Thread* Thread::GetById(size_t aId) {
+||||||| merged common ancestors
+/* static */ Thread*
+Thread::GetById(size_t aId)
+{
+=======
+/* static */
+Thread* Thread::GetById(size_t aId) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aId);
   MOZ_ASSERT(aId <= MaxThreadId);
   return &gThreads[aId];
 }
 
+<<<<<<< HEAD
 /* static */ Thread* Thread::GetByNativeId(NativeThreadId aNativeId) {
+||||||| merged common ancestors
+/* static */ Thread*
+Thread::GetByNativeId(NativeThreadId aNativeId)
+{
+=======
+/* static */
+Thread* Thread::GetByNativeId(NativeThreadId aNativeId) {
+>>>>>>> upstream-releases
   for (size_t id = MainThreadId; id <= MaxRecordedThreadId; id++) {
     Thread* thread = GetById(id);
     if (thread->mNativeId == aNativeId) {
@@ -87,7 +124,16 @@ static Thread* gThreads;
   return nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ Thread* Thread::GetByStackPointer(void* aSp) {
+||||||| merged common ancestors
+/* static */ Thread*
+Thread::GetByStackPointer(void* aSp)
+{
+=======
+/* static */
+Thread* Thread::GetByStackPointer(void* aSp) {
+>>>>>>> upstream-releases
   if (!gThreads) {
     return nullptr;
   }
@@ -100,7 +146,16 @@ static Thread* gThreads;
   return nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::InitializeThreads() {
+||||||| merged common ancestors
+/* static */ void
+Thread::InitializeThreads()
+{
+=======
+/* static */
+void Thread::InitializeThreads() {
+>>>>>>> upstream-releases
   gThreads = new Thread[MaxThreadId + 1];
   for (size_t i = MainThreadId; i <= MaxThreadId; i++) {
     Thread* thread = &gThreads[i];
@@ -121,14 +176,32 @@ static Thread* gThreads;
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::WaitUntilInitialized(Thread* aThread) {
+||||||| merged common ancestors
+/* static */ void
+Thread::WaitUntilInitialized(Thread* aThread)
+{
+=======
+/* static */
+void Thread::WaitUntilInitialized(Thread* aThread) {
+>>>>>>> upstream-releases
   MonitorAutoLock lock(*gMonitor);
   while (!aThread->mStackBase) {
     gMonitor->Wait();
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::ThreadMain(void* aArgument) {
+||||||| merged common ancestors
+/* static */ void
+Thread::ThreadMain(void* aArgument)
+{
+=======
+/* static */
+void Thread::ThreadMain(void* aArgument) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsRecordingOrReplaying());
 
   Thread* thread = (Thread*)aArgument;
@@ -166,7 +239,16 @@ static Thread* gThreads;
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::SpawnAllThreads() {
+||||||| merged common ancestors
+/* static */ void
+Thread::SpawnAllThreads()
+{
+=======
+/* static */
+void Thread::SpawnAllThreads() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(AreThreadEventsPassedThrough());
 
   InitializeThreadSnapshots(MaxRecordedThreadId + 1);
@@ -185,8 +267,17 @@ static Thread* gThreads;
 static Atomic<size_t, SequentiallyConsistent, Behavior::DontPreserve>
     gNumNonRecordedThreads;
 
+<<<<<<< HEAD
 /* static */ Thread* Thread::SpawnNonRecordedThread(Callback aStart,
                                                     void* aArgument) {
+||||||| merged common ancestors
+/* static */ Thread*
+Thread::SpawnNonRecordedThread(Callback aStart, void* aArgument)
+{
+=======
+/* static */
+Thread* Thread::SpawnNonRecordedThread(Callback aStart, void* aArgument) {
+>>>>>>> upstream-releases
   if (IsMiddleman()) {
     DirectSpawnThread(aStart, aArgument);
     return nullptr;
@@ -203,14 +294,33 @@ static Atomic<size_t, SequentiallyConsistent, Behavior::DontPreserve>
   return thread;
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::SpawnThread(Thread* aThread) {
+||||||| merged common ancestors
+/* static */ void
+Thread::SpawnThread(Thread* aThread)
+{
+=======
+/* static */
+void Thread::SpawnThread(Thread* aThread) {
+>>>>>>> upstream-releases
   DirectSpawnThread(ThreadMain, aThread);
   WaitUntilInitialized(aThread);
 }
 
+<<<<<<< HEAD
 /* static */ NativeThreadId Thread::StartThread(Callback aStart,
                                                 void* aArgument,
                                                 bool aNeedsJoin) {
+||||||| merged common ancestors
+/* static */ NativeThreadId
+Thread::StartThread(Callback aStart, void* aArgument, bool aNeedsJoin)
+{
+=======
+/* static */
+NativeThreadId Thread::StartThread(Callback aStart, void* aArgument,
+                                   bool aNeedsJoin) {
+>>>>>>> upstream-releases
   Thread* thread = Thread::Current();
   RecordingEventSection res(thread);
   if (!res.CanAccessEvents()) {
@@ -326,7 +436,22 @@ MOZ_EXPORT bool RecordReplayInterface_InternalAreThreadEventsDisallowed() {
 // Thread Coordination
 ///////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 /* static */ void Thread::WaitForIdleThreads() {
+||||||| merged common ancestors
+// Whether all threads should attempt to idle.
+static Atomic<bool, SequentiallyConsistent, Behavior::DontPreserve> gThreadsShouldIdle;
+
+// Whether all threads are considered to be idle.
+static Atomic<bool, SequentiallyConsistent, Behavior::DontPreserve> gThreadsAreIdle;
+
+/* static */ void
+Thread::WaitForIdleThreads()
+{
+=======
+/* static */
+void Thread::WaitForIdleThreads() {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CurrentIsMainThread());
 
   MonitorAutoLock lock(*gMonitor);
@@ -379,12 +504,30 @@ MOZ_EXPORT bool RecordReplayInterface_InternalAreThreadEventsDisallowed() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::ResumeSingleIdleThread(size_t aId) {
   GetById(aId)->mShouldIdle = false;
   Notify(aId);
+||||||| merged common ancestors
+  gThreadsAreIdle = true;
+=======
+/* static */
+void Thread::ResumeSingleIdleThread(size_t aId) {
+  GetById(aId)->mShouldIdle = false;
+  Notify(aId);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::ResumeIdleThreads() {
+||||||| merged common ancestors
+/* static */ void
+Thread::ResumeIdleThreads()
+{
+=======
+/* static */
+void Thread::ResumeIdleThreads() {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(CurrentIsMainThread());
   for (size_t i = MainThreadId + 1; i <= MaxRecordedThreadId; i++) {
     ResumeSingleIdleThread(i);
@@ -434,14 +577,49 @@ bool Thread::MaybeWaitForCheckpointSave(
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::WaitNoIdle() {
+||||||| merged common ancestors
+extern "C" {
+
+MOZ_EXPORT void
+RecordReplayInterface_NotifyUnrecordedWait(const std::function<void()>& aCallback,
+                                           bool aOnlyWhenDiverged)
+{
+  Thread::Current()->NotifyUnrecordedWait(aCallback, aOnlyWhenDiverged);
+}
+
+MOZ_EXPORT void
+RecordReplayInterface_MaybeWaitForCheckpointSave()
+{
+  Thread::MaybeWaitForCheckpointSave();
+}
+
+} // extern "C"
+
+/* static */ void
+Thread::WaitNoIdle()
+{
+=======
+/* static */
+void Thread::WaitNoIdle() {
+>>>>>>> upstream-releases
   Thread* thread = Current();
   uint8_t data = 0;
   size_t read = DirectRead(thread->mIdlefd, &data, 1);
   MOZ_RELEASE_ASSERT(read == 1);
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::Wait() {
+||||||| merged common ancestors
+/* static */ void
+Thread::Wait()
+{
+=======
+/* static */
+void Thread::Wait() {
+>>>>>>> upstream-releases
   Thread* thread = Current();
   MOZ_ASSERT(!thread->mIdle);
   MOZ_ASSERT(thread->IsRecordedThread() && !thread->PassThroughEvents());
@@ -486,14 +664,32 @@ bool Thread::MaybeWaitForCheckpointSave(
   thread->SetPassThrough(false);
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::WaitForever() {
+||||||| merged common ancestors
+/* static */ void
+Thread::WaitForever()
+{
+=======
+/* static */
+void Thread::WaitForever() {
+>>>>>>> upstream-releases
   while (true) {
     Wait();
   }
   Unreachable();
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::WaitForeverNoIdle() {
+||||||| merged common ancestors
+/* static */ void
+Thread::WaitForeverNoIdle()
+{
+=======
+/* static */
+void Thread::WaitForeverNoIdle() {
+>>>>>>> upstream-releases
   FileHandle writeFd, readFd;
   DirectCreatePipe(&writeFd, &readFd);
   while (true) {
@@ -502,7 +698,16 @@ bool Thread::MaybeWaitForCheckpointSave(
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Thread::Notify(size_t aId) {
+||||||| merged common ancestors
+/* static */ void
+Thread::Notify(size_t aId)
+{
+=======
+/* static */
+void Thread::Notify(size_t aId) {
+>>>>>>> upstream-releases
   uint8_t data = 0;
   DirectWrite(GetById(aId)->mNotifyfd, &data, 1);
 }

@@ -9,7 +9,7 @@
 #include "mozilla/dom/HTMLTitleElementBinding.h"
 #include "mozilla/ErrorResult.h"
 #include "nsStyleConsts.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsContentUtils.h"
 
 NS_IMPL_NS_NEW_HTML_ELEMENT(Title)
@@ -63,12 +63,29 @@ void HTMLTitleElement::ContentRemoved(nsIContent* aChild,
   SendTitleChangeEvent(false);
 }
 
+<<<<<<< HEAD
 nsresult HTMLTitleElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
                                       nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+HTMLTitleElement::BindToTree(nsIDocument *aDocument,
+                             nsIContent *aParent,
+                             nsIContent *aBindingParent)
+{
+=======
+nsresult HTMLTitleElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+>>>>>>> upstream-releases
   // Let this fall through.
+<<<<<<< HEAD
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   SendTitleChangeEvent(true);
@@ -76,11 +93,19 @@ nsresult HTMLTitleElement::BindToTree(nsIDocument* aDocument,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void HTMLTitleElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+HTMLTitleElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void HTMLTitleElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   SendTitleChangeEvent(false);
 
   // Let this fall through.
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 }
 
 void HTMLTitleElement::DoneAddingChildren(bool aHaveNotified) {
@@ -89,8 +114,18 @@ void HTMLTitleElement::DoneAddingChildren(bool aHaveNotified) {
   }
 }
 
+<<<<<<< HEAD
 void HTMLTitleElement::SendTitleChangeEvent(bool aBound) {
   nsIDocument* doc = GetUncomposedDoc();
+||||||| merged common ancestors
+void
+HTMLTitleElement::SendTitleChangeEvent(bool aBound)
+{
+  nsIDocument* doc = GetUncomposedDoc();
+=======
+void HTMLTitleElement::SendTitleChangeEvent(bool aBound) {
+  Document* doc = GetUncomposedDoc();
+>>>>>>> upstream-releases
   if (doc) {
     doc->NotifyPossibleTitleChange(aBound);
   }

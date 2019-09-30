@@ -6,7 +6,6 @@
 
 #include "PerformanceEntry.h"
 #include "MainThreadUtils.h"
-#include "mozilla/dom/PerformanceEntryBinding.h"
 #include "nsIURI.h"
 
 using namespace mozilla::dom;
@@ -23,14 +22,38 @@ NS_INTERFACE_MAP_END
 
 PerformanceEntry::PerformanceEntry(nsISupports* aParent, const nsAString& aName,
                                    const nsAString& aEntryType)
+<<<<<<< HEAD
     : mParent(aParent), mName(aName), mEntryType(aEntryType) {}
 
 PerformanceEntry::~PerformanceEntry() {}
+||||||| merged common ancestors
+: mParent(aParent),
+  mName(aName),
+  mEntryType(aEntryType)
+{
+}
 
+PerformanceEntry::~PerformanceEntry()
+{
+}
+=======
+    : mParent(aParent), mName(aName), mEntryType(aEntryType) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JSObject* PerformanceEntry::WrapObject(JSContext* aCx,
                                        JS::Handle<JSObject*> aGivenProto) {
   return mozilla::dom::PerformanceEntry_Binding::Wrap(aCx, this, aGivenProto);
 }
+||||||| merged common ancestors
+JSObject*
+PerformanceEntry::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+  return mozilla::dom::PerformanceEntry_Binding::Wrap(aCx, this, aGivenProto);
+}
+=======
+PerformanceEntry::~PerformanceEntry() {}
+>>>>>>> upstream-releases
 
 size_t PerformanceEntry::SizeOfExcludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {

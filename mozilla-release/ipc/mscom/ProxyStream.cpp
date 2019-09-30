@@ -6,10 +6,22 @@
 
 #include "mozilla/Move.h"
 #if defined(ACCESSIBILITY)
+<<<<<<< HEAD
 #include "HandlerData.h"
 #include "mozilla/a11y/Platform.h"
 #include "mozilla/mscom/ActivationContext.h"
 #endif  // defined(ACCESSIBILITY)
+||||||| merged common ancestors
+#include "HandlerData.h"
+#include "mozilla/a11y/Platform.h"
+#include "mozilla/mscom/ActivationContext.h"
+#endif // defined(ACCESSIBILITY)
+=======
+#  include "HandlerData.h"
+#  include "mozilla/a11y/Platform.h"
+#  include "mozilla/mscom/ActivationContext.h"
+#endif  // defined(ACCESSIBILITY)
+>>>>>>> upstream-releases
 #include "mozilla/mscom/EnsureMTA.h"
 #include "mozilla/mscom/ProxyStream.h"
 #include "mozilla/mscom/Utils.h"
@@ -101,7 +113,10 @@ ProxyStream::ProxyStream(REFIID aIID, const BYTE* aInitBuf,
         return;
       }
 
-      bool popOk = aEnv->Pop();
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+      bool popOk =
+#endif
+          aEnv->Pop();
       MOZ_DIAGNOSTIC_ASSERT(popOk);
     });
 
@@ -299,7 +314,10 @@ ProxyStream::ProxyStream(REFIID aIID, IUnknown* aObject, Environment* aEnv,
         return;
       }
 
-      bool popOk = aEnv->Pop();
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+      bool popOk =
+#endif
+          aEnv->Pop();
       MOZ_DIAGNOSTIC_ASSERT(popOk);
     });
 

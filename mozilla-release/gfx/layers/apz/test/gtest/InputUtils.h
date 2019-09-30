@@ -13,7 +13,6 @@
  */
 
 #include "APZTestCommon.h"
-#include "gfxPrefs.h"
 
 /* The InputReceiver template parameter used in the helper functions below needs
  * to be a class that implements functions with the signatures:
@@ -28,6 +27,7 @@
  * code to dispatch input events.
  */
 
+<<<<<<< HEAD
 PinchGestureInput CreatePinchGestureInput(
     PinchGestureInput::PinchGestureType aType, const ScreenPoint& aFocus,
     float aCurrentSpan, float aPreviousSpan) {
@@ -42,6 +42,31 @@ template <class InputReceiver>
 void SetDefaultAllowedTouchBehavior(const RefPtr<InputReceiver>& aTarget,
                                     uint64_t aInputBlockId,
                                     int touchPoints = 1) {
+||||||| merged common ancestors
+PinchGestureInput
+CreatePinchGestureInput(PinchGestureInput::PinchGestureType aType,
+                        const ScreenPoint& aFocus,
+                        float aCurrentSpan, float aPreviousSpan)
+{
+  ParentLayerPoint localFocus(aFocus.x, aFocus.y);
+  PinchGestureInput result(aType, 0, TimeStamp(), localFocus,
+                           aCurrentSpan, aPreviousSpan, 0);
+  result.mFocusPoint = aFocus;
+  return result;
+}
+
+template<class InputReceiver>
+void
+SetDefaultAllowedTouchBehavior(const RefPtr<InputReceiver>& aTarget,
+                               uint64_t aInputBlockId,
+                               int touchPoints = 1)
+{
+=======
+template <class InputReceiver>
+void SetDefaultAllowedTouchBehavior(const RefPtr<InputReceiver>& aTarget,
+                                    uint64_t aInputBlockId,
+                                    int touchPoints = 1) {
+>>>>>>> upstream-releases
   nsTArray<uint32_t> defaultBehaviors;
   // use the default value where everything is allowed
   for (int i = 0; i < touchPoints; i++) {
@@ -54,8 +79,18 @@ void SetDefaultAllowedTouchBehavior(const RefPtr<InputReceiver>& aTarget,
   aTarget->SetAllowedTouchBehavior(aInputBlockId, defaultBehaviors);
 }
 
+<<<<<<< HEAD
 MultiTouchInput CreateMultiTouchInput(MultiTouchInput::MultiTouchType aType,
                                       TimeStamp aTime) {
+||||||| merged common ancestors
+
+MultiTouchInput
+CreateMultiTouchInput(MultiTouchInput::MultiTouchType aType, TimeStamp aTime)
+{
+=======
+inline MultiTouchInput CreateMultiTouchInput(
+    MultiTouchInput::MultiTouchType aType, TimeStamp aTime) {
+>>>>>>> upstream-releases
   return MultiTouchInput(aType, MillisecondsSinceStartup(aTime), aTime, 0);
 }
 
@@ -87,6 +122,7 @@ nsEventStatus TouchUp(const RefPtr<InputReceiver>& aTarget,
   return aTarget->ReceiveInputEvent(mti, nullptr, nullptr);
 }
 
+<<<<<<< HEAD
 template <class InputReceiver>
 void PinchWithPinchInput(const RefPtr<InputReceiver>& aTarget,
                          const ScreenIntPoint& aFocus,
@@ -135,6 +171,65 @@ template <class InputReceiver>
 nsEventStatus Wheel(const RefPtr<InputReceiver>& aTarget,
                     const ScreenIntPoint& aPoint, const ScreenPoint& aDelta,
                     TimeStamp aTime, uint64_t* aOutInputBlockId = nullptr) {
+||||||| merged common ancestors
+template<class InputReceiver>
+void
+PinchWithPinchInput(const RefPtr<InputReceiver>& aTarget,
+                    const ScreenIntPoint& aFocus,
+                    const ScreenIntPoint& aSecondFocus, float aScale,
+                    nsEventStatus (*aOutEventStatuses)[3] = nullptr)
+{
+  nsEventStatus actualStatus = aTarget->ReceiveInputEvent(
+      CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START,
+                              aFocus, 10.0, 10.0),
+      nullptr);
+  if (aOutEventStatuses) {
+    (*aOutEventStatuses)[0] = actualStatus;
+  }
+  actualStatus = aTarget->ReceiveInputEvent(
+      CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE,
+                              aSecondFocus, 10.0 * aScale, 10.0),
+      nullptr);
+  if (aOutEventStatuses) {
+    (*aOutEventStatuses)[1] = actualStatus;
+  }
+  actualStatus = aTarget->ReceiveInputEvent(
+      CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_END,
+                              PinchGestureInput::BothFingersLifted<ScreenPixel>(),
+                              10.0 * aScale, 10.0 * aScale),
+      nullptr);
+  if (aOutEventStatuses) {
+    (*aOutEventStatuses)[2] = actualStatus;
+  }
+}
+
+template<class InputReceiver>
+void
+PinchWithPinchInputAndCheckStatus(const RefPtr<InputReceiver>& aTarget,
+                                  const ScreenIntPoint& aFocus, float aScale,
+                                  bool aShouldTriggerPinch)
+{
+  nsEventStatus statuses[3];  // scalebegin, scale, scaleend
+  PinchWithPinchInput(aTarget, aFocus, aFocus, aScale, &statuses);
+
+  nsEventStatus expectedStatus = aShouldTriggerPinch
+      ? nsEventStatus_eConsumeNoDefault
+      : nsEventStatus_eIgnore;
+  EXPECT_EQ(expectedStatus, statuses[0]);
+  EXPECT_EQ(expectedStatus, statuses[1]);
+}
+
+template<class InputReceiver>
+nsEventStatus
+Wheel(const RefPtr<InputReceiver>& aTarget, const ScreenIntPoint& aPoint,
+      const ScreenPoint& aDelta, TimeStamp aTime, uint64_t* aOutInputBlockId = nullptr)
+{
+=======
+template <class InputReceiver>
+nsEventStatus Wheel(const RefPtr<InputReceiver>& aTarget,
+                    const ScreenIntPoint& aPoint, const ScreenPoint& aDelta,
+                    TimeStamp aTime, uint64_t* aOutInputBlockId = nullptr) {
+>>>>>>> upstream-releases
   ScrollWheelInput input(MillisecondsSinceStartup(aTime), aTime, 0,
                          ScrollWheelInput::SCROLLMODE_INSTANT,
                          ScrollWheelInput::SCROLLDELTA_PIXEL, aPoint, aDelta.x,
@@ -181,4 +276,26 @@ nsEventStatus MouseUp(const RefPtr<InputReceiver>& aTarget,
   return aTarget->ReceiveInputEvent(input, nullptr, aOutInputBlockId);
 }
 
+<<<<<<< HEAD
 #endif  // mozilla_layers_InputUtils_h
+||||||| merged common ancestors
+
+#endif // mozilla_layers_InputUtils_h
+=======
+template <class InputReceiver>
+nsEventStatus PanGesture(PanGestureInput::PanGestureType aType,
+                         const RefPtr<InputReceiver>& aTarget,
+                         const ScreenIntPoint& aPoint,
+                         const ScreenPoint& aDelta, TimeStamp aTime,
+                         uint64_t* aOutInputBlockId = nullptr) {
+  PanGestureInput input(aType, MillisecondsSinceStartup(aTime), aTime, aPoint,
+                        aDelta, 0 /* Modifiers */);
+  if (aType == PanGestureInput::PANGESTURE_END) {
+    input.mFollowedByMomentum = true;
+  }
+
+  return aTarget->ReceiveInputEvent(input, nullptr, aOutInputBlockId);
+}
+
+#endif  // mozilla_layers_InputUtils_h
+>>>>>>> upstream-releases

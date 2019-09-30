@@ -31,16 +31,25 @@ void CanvasRenderingContextHelper::ToBlob(
         : mGlobal(aGlobal), mBlobCallback(aCallback) {}
 
     // This is called on main thread.
+<<<<<<< HEAD
     nsresult ReceiveBlob(already_AddRefed<Blob> aBlob) override {
+||||||| merged common ancestors
+    nsresult ReceiveBlob(already_AddRefed<Blob> aBlob) override
+    {
+=======
+    MOZ_CAN_RUN_SCRIPT
+    nsresult ReceiveBlob(already_AddRefed<Blob> aBlob) override {
+>>>>>>> upstream-releases
       RefPtr<Blob> blob = aBlob;
 
       RefPtr<Blob> newBlob = Blob::Create(mGlobal, blob->Impl());
 
+      RefPtr<BlobCallback> callback(mBlobCallback.forget());
       ErrorResult rv;
-      mBlobCallback->Call(newBlob, rv);
+      callback->Call(newBlob, rv);
 
       mGlobal = nullptr;
-      mBlobCallback = nullptr;
+      MOZ_ASSERT(!mBlobCallback);
 
       return rv.StealNSResult();
     }

@@ -134,7 +134,7 @@ nsresult nsClipboard::CreateNativeDataObject(nsITransferable* aTransferable,
   if (NS_OK == res) {
     *aDataObj = dataObj;
   } else {
-    delete dataObj;
+    dataObj->Release();
   }
   return res;
 }
@@ -286,6 +286,7 @@ nsresult nsClipboard::GetGlobalData(HGLOBAL aHGBL, void** aData,
   // a full NUL char16_t when |*aLen| is odd.
   nsresult result = NS_ERROR_FAILURE;
   if (aHGBL != nullptr) {
+<<<<<<< HEAD
     LPSTR lpStr = (LPSTR)GlobalLock(aHGBL);
     DWORD allocSize = GlobalSize(aHGBL);
     char* data = static_cast<char*>(malloc(allocSize + 3));
@@ -293,10 +294,31 @@ nsresult nsClipboard::GetGlobalData(HGLOBAL aHGBL, void** aData,
       memcpy(data, lpStr, allocSize);
       data[allocSize] = data[allocSize + 1] = data[allocSize + 2] =
           '\0';  // null terminate for safety
+||||||| merged common ancestors
+    LPSTR lpStr = (LPSTR) GlobalLock(aHGBL);
+    DWORD allocSize = GlobalSize(aHGBL);
+    char* data = static_cast<char*>(malloc(allocSize + sizeof(char16_t)));
+    if ( data ) {    
+      memcpy ( data, lpStr, allocSize );
+      data[allocSize] = data[allocSize + 1] = '\0';     // null terminate for safety
+=======
+    LPSTR lpStr = (LPSTR)GlobalLock(aHGBL);
+    CheckedInt<uint32_t> allocSize =
+        CheckedInt<uint32_t>(GlobalSize(aHGBL)) + 3;
+    if (!allocSize.isValid()) {
+      return NS_ERROR_INVALID_ARG;
+    }
+    char* data = static_cast<char*>(malloc(allocSize.value()));
+    if (data) {
+      uint32_t size = allocSize.value() - 3;
+      memcpy(data, lpStr, size);
+      // null terminate for safety
+      data[size] = data[size + 1] = data[size + 2] = '\0';
+>>>>>>> upstream-releases
 
       GlobalUnlock(aHGBL);
       *aData = data;
-      *aLen = allocSize;
+      *aLen = size;
 
       result = NS_OK;
     }
@@ -1032,28 +1054,51 @@ nsClipboard::EmptyClipboard(int32_t aWhichClipboard) {
 }
 
 //-------------------------------------------------------------------------
+<<<<<<< HEAD
 NS_IMETHODIMP nsClipboard::HasDataMatchingFlavors(const char** aFlavorList,
                                                   uint32_t aLength,
                                                   int32_t aWhichClipboard,
                                                   bool* _retval) {
+||||||| merged common ancestors
+NS_IMETHODIMP nsClipboard::HasDataMatchingFlavors(const char** aFlavorList,
+                                                  uint32_t aLength,
+                                                  int32_t aWhichClipboard,
+                                                  bool *_retval)
+{
+=======
+NS_IMETHODIMP nsClipboard::HasDataMatchingFlavors(
+    const nsTArray<nsCString>& aFlavorList, int32_t aWhichClipboard,
+    bool* _retval) {
+>>>>>>> upstream-releases
   *_retval = false;
-  if (aWhichClipboard != kGlobalClipboard || !aFlavorList) {
+  if (aWhichClipboard != kGlobalClipboard) {
     return NS_OK;
   }
 
-  for (uint32_t i = 0; i < aLength; ++i) {
+  for (auto& flavor : aFlavorList) {
 #ifdef DEBUG
+<<<<<<< HEAD
     if (strcmp(aFlavorList[i], kTextMime) == 0) {
       NS_WARNING(
           "DO NOT USE THE text/plain DATA FLAVOR ANY MORE. USE text/unicode "
           "INSTEAD");
+||||||| merged common ancestors
+    if (strcmp(aFlavorList[i], kTextMime) == 0) {
+      NS_WARNING("DO NOT USE THE text/plain DATA FLAVOR ANY MORE. USE text/unicode INSTEAD");
+=======
+    if (flavor.EqualsLiteral(kTextMime)) {
+      NS_WARNING(
+          "DO NOT USE THE text/plain DATA FLAVOR ANY MORE. USE text/unicode "
+          "INSTEAD");
+>>>>>>> upstream-releases
     }
 #endif
 
-    UINT format = GetFormat(aFlavorList[i]);
+    UINT format = GetFormat(flavor.get());
     if (IsClipboardFormatAvailable(format)) {
       *_retval = true;
       break;
+<<<<<<< HEAD
     } else {
       // We haven't found the exact flavor the client asked for, but maybe we
       // can still find it from something else that's on the clipboard...
@@ -1061,8 +1106,26 @@ NS_IMETHODIMP nsClipboard::HasDataMatchingFlavors(const char** aFlavorList,
         // client asked for unicode and it wasn't present, check if we have
         // CF_TEXT. We'll handle the actual data substitution in the data
         // object.
+||||||| merged common ancestors
+    }
+    else {
+      // We haven't found the exact flavor the client asked for, but maybe we can
+      // still find it from something else that's on the clipboard...
+      if (strcmp(aFlavorList[i], kUnicodeMime) == 0) {
+        // client asked for unicode and it wasn't present, check if we have CF_TEXT.
+        // We'll handle the actual data substitution in the data object.
+=======
+    } else {
+      // We haven't found the exact flavor the client asked for, but maybe we
+      // can still find it from something else that's on the clipboard...
+      if (flavor.EqualsLiteral(kUnicodeMime)) {
+        // client asked for unicode and it wasn't present, check if we have
+        // CF_TEXT. We'll handle the actual data substitution in the data
+        // object.
+>>>>>>> upstream-releases
         if (IsClipboardFormatAvailable(GetFormat(kTextMime))) {
           *_retval = true;
+          break;
         }
       }
     }

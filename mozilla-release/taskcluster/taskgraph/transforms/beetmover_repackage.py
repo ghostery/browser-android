@@ -12,14 +12,30 @@ from taskgraph.transforms.base import TransformSequence
 from taskgraph.transforms.beetmover import craft_release_properties
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
 from taskgraph.util.partials import (get_balrog_platform_name,
+<<<<<<< HEAD
                                      get_partials_artifacts,
                                      get_partials_artifact_map)
 from taskgraph.util.scriptworker import (get_beetmover_bucket_scope,
+||||||| merged common ancestors
+                                     get_partials_artifacts,
+                                     get_partials_artifact_map)
+from taskgraph.util.schema import validate_schema, Schema
+from taskgraph.util.scriptworker import (get_beetmover_bucket_scope,
+=======
+                                     get_partials_artifacts_from_params,
+                                     get_partials_info_from_params)
+from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
+                                         generate_beetmover_upstream_artifacts,
+                                         generate_beetmover_partials_artifact_map,
+                                         get_beetmover_bucket_scope,
+>>>>>>> upstream-releases
                                          get_beetmover_action_scope,
-                                         get_worker_type_for_scope)
+                                         get_worker_type_for_scope,
+                                         should_use_artifact_map)
 from taskgraph.util.taskcluster import get_artifact_prefix
+from taskgraph.util.treeherder import replace_group
 from taskgraph.transforms.task import task_description_schema
-from voluptuous import Any, Required, Optional
+from voluptuous import Required, Optional
 
 import logging
 import re
@@ -27,6 +43,7 @@ import re
 logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
 def _compile_regex_mapping(mapping):
     return {re.compile(regex): value for regex, value in mapping.iteritems()}
 
@@ -37,6 +54,18 @@ _WINDOWS_BUILD_PLATFORMS = [
     'win64-devedition-nightly',
     'win32-devedition-nightly',
 ]
+||||||| merged common ancestors
+_WINDOWS_BUILD_PLATFORMS = [
+    'win64-nightly',
+    'win32-nightly',
+    'win64-devedition-nightly',
+    'win32-devedition-nightly',
+]
+=======
+def _compile_regex_mapping(mapping):
+    return {re.compile(regex): value for regex, value in mapping.iteritems()}
+
+>>>>>>> upstream-releases
 
 # Until bug 1331141 is fixed, if you are adding any new artifacts here that
 # need to be transfered to S3, please be aware you also need to follow-up
@@ -80,8 +109,16 @@ _DESKTOP_UPSTREAM_ARTIFACTS_UNSIGNED_L10N = [
 # need to be transfered to S3, please be aware you also need to follow-up
 # with a beetmover patch in https://github.com/mozilla-releng/beetmoverscript/.
 # See example in bug 1348286
+<<<<<<< HEAD
 UPSTREAM_ARTIFACT_UNSIGNED_PATHS = _compile_regex_mapping({
     r'^(linux(|64)|macosx64)(|-devedition)-nightly$':
+||||||| merged common ancestors
+UPSTREAM_ARTIFACT_UNSIGNED_PATHS = {
+    r'^(linux(|64)|macosx64)(|-devedition)-nightly$':
+=======
+UPSTREAM_ARTIFACT_UNSIGNED_PATHS = _compile_regex_mapping({
+    r'^(linux(|64)|macosx64)(|-devedition)-(nightly|shippable)$':
+>>>>>>> upstream-releases
         _DESKTOP_UPSTREAM_ARTIFACTS_UNSIGNED_EN_US + [
             'host/bin/mar',
             'host/bin/mbsdiff',
@@ -98,12 +135,12 @@ UPSTREAM_ARTIFACT_UNSIGNED_PATHS = _compile_regex_mapping({
                     "host/bin/mar.exe",
                     "host/bin/mbsdiff.exe",
                 ]),
-    r'^win(32|64)(|-devedition)-nightly$':
+    r'^win(32|64(|-aarch64))(|-devedition)-(nightly|shippable)$':
         _DESKTOP_UPSTREAM_ARTIFACTS_UNSIGNED_EN_US + [
             'host/bin/mar.exe',
             'host/bin/mbsdiff.exe',
         ],
-    r'^(linux(|64)|macosx64|win(32|64))(|-devedition)-nightly-l10n$':
+    r'^(linux(|64)|macosx64|win(32|64))(|-devedition)-(nightly|shippable)-l10n$':
         _DESKTOP_UPSTREAM_ARTIFACTS_UNSIGNED_L10N,
 })
 
@@ -111,11 +148,28 @@ UPSTREAM_ARTIFACT_UNSIGNED_PATHS = _compile_regex_mapping({
 # need to be transfered to S3, please be aware you also need to follow-up
 # with a beetmover patch in https://github.com/mozilla-releng/beetmoverscript/.
 # See example in bug 1348286
+<<<<<<< HEAD
 UPSTREAM_ARTIFACT_SIGNED_PATHS = _compile_regex_mapping({
     r'^linux(|64)(|-devedition|-asan-reporter)-nightly(|-l10n)$':
+||||||| merged common ancestors
+UPSTREAM_ARTIFACT_SIGNED_PATHS = {
+    r'^linux(|64)(|-devedition|-asan-reporter)-nightly(|-l10n)$':
+=======
+UPSTREAM_ARTIFACT_SIGNED_PATHS = _compile_regex_mapping({
+    r'^linux(|64)(|-devedition|-asan-reporter)-(nightly|shippable)(|-l10n)$':
+>>>>>>> upstream-releases
         ['target.tar.bz2', 'target.tar.bz2.asc'],
+<<<<<<< HEAD
     r'^win(32|64)(|-devedition|-asan-reporter)-nightly(|-l10n)$': ['target.zip'],
 })
+||||||| merged common ancestors
+    r'^win(32|64)(|-devedition|-asan-reporter)-nightly(|-l10n)$': ['target.zip'],
+}
+=======
+    r'^win(32|64)(|-aarch64)(|-devedition|-asan-reporter)-(nightly|shippable)(|-l10n)$':
+        ['target.zip'],
+})
+>>>>>>> upstream-releases
 
 # Until bug 1331141 is fixed, if you are adding any new artifacts here that
 # need to be transfered to S3, please be aware you also need to follow-up
@@ -133,6 +187,7 @@ UPSTREAM_ARTIFACT_SIGNED_REPACKAGE_PATHS = [
     'target.stub-installer.exe',
 ]
 
+<<<<<<< HEAD
 UPSTREAM_ARTIFACT_SIGNED_MSI_PATHS = [
     'target.installer.msi',
 ]
@@ -152,6 +207,45 @@ taskref_or_string = Any(
     {Required('task-reference'): basestring})
 
 beetmover_description_schema = schema.extend({
+||||||| merged common ancestors
+# Compile every regex once at import time
+for dict_ in (
+    UPSTREAM_ARTIFACT_UNSIGNED_PATHS, UPSTREAM_ARTIFACT_SIGNED_PATHS,
+):
+    for uncompiled_regex, value in dict_.iteritems():
+        compiled_regex = re.compile(uncompiled_regex)
+        del dict_[uncompiled_regex]
+        dict_[compiled_regex] = value
+
+# Voluptuous uses marker objects as dictionary *keys*, but they are not
+# comparable, so we cast all of the keys back to regular strings
+task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
+
+transforms = TransformSequence()
+
+# shortcut for a string where task references are allowed
+taskref_or_string = Any(
+    basestring,
+    {Required('task-reference'): basestring})
+
+beetmover_description_schema = Schema({
+    # the dependent task (object) for this beetmover job, used to inform beetmover.
+    Required('dependent-task'): object,
+
+    Required('grandparent-tasks'): object,
+
+=======
+UPSTREAM_ARTIFACT_SIGNED_MSI_PATHS = [
+    'target.installer.msi',
+]
+
+UPSTREAM_ARTIFACT_SIGNED_MAR_PATHS = [
+    'target.complete.mar',
+    'target.bz2.complete.mar',
+]
+
+beetmover_description_schema = schema.extend({
+>>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the unsigned things
     Required('depname', default='build'): basestring,
 
@@ -183,7 +277,13 @@ def make_task_description(config, jobs):
         attributes = dep_job.attributes
 
         treeherder = job.get('treeherder', {})
-        treeherder.setdefault('symbol', 'BM-R')
+        upstream_symbol = dep_job.task['extra']['treeherder']['symbol']
+        if 'build' in job['dependent-tasks']:
+            upstream_symbol = job['dependent-tasks']['build'].task['extra']['treeherder']['symbol']
+        treeherder.setdefault(
+            'symbol',
+            replace_group(upstream_symbol, 'BMR')
+        )
         dep_th_platform = dep_job.task.get('extra', {}).get(
             'treeherder', {}).get('machine', {}).get('platform', '')
         treeherder.setdefault('platform',
@@ -251,7 +351,9 @@ def make_task_description(config, jobs):
         yield task
 
 
-def generate_upstream_artifacts(job, dependencies, platform, locale=None, project=None):
+def generate_upstream_artifacts(
+    config, job, dependencies, platform, locale=None, project=None
+):
 
     build_mapping = UPSTREAM_ARTIFACT_UNSIGNED_PATHS
     build_signing_mapping = UPSTREAM_ARTIFACT_SIGNED_PATHS
@@ -360,16 +462,25 @@ def make_task_worker(config, jobs):
         locale = job["attributes"].get("locale")
         platform = job["attributes"]["build_platform"]
 
-        upstream_artifacts = generate_upstream_artifacts(
-            job, job['dependencies'], platform, locale,
-            project=config.params['project']
-        )
+        if should_use_artifact_map(platform):
+            upstream_artifacts = generate_beetmover_upstream_artifacts(
+                config, job, platform, locale)
+        else:
+            upstream_artifacts = generate_upstream_artifacts(
+                config, job, job['dependencies'], platform, locale,
+                project=config.params['project']
+            )
 
         worker = {
             'implementation': 'beetmover',
             'release-properties': craft_release_properties(config, job),
             'upstream-artifacts': upstream_artifacts,
         }
+
+        if should_use_artifact_map(platform):
+            worker['artifact-map'] = generate_beetmover_artifact_map(
+                config, job, platform=platform, locale=locale)
+
         if locale:
             worker["locale"] = locale
         job["worker"] = worker
@@ -384,20 +495,49 @@ def make_partials_artifacts(config, jobs):
         if not locale:
             locale = 'en-US'
 
-        # Remove when proved reliable
-        # job['treeherder']['tier'] = 3
-
         platform = job["attributes"]["build_platform"]
 
+<<<<<<< HEAD
         if 'partials-signing' not in job['dependencies']:
             logger.debug("beetmover-repackage partials finished, no partials")
             yield job
             continue
+||||||| merged common ancestors
+        balrog_platform = get_balrog_platform_name(platform)
+=======
+        if 'partials-signing' not in job['dependencies']:
+            yield job
+            continue
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         balrog_platform = get_balrog_platform_name(platform)
         artifacts = get_partials_artifacts(config.params.get('release_history'),
                                            balrog_platform, locale)
 
+||||||| merged common ancestors
+        artifacts = get_partials_artifacts(config.params.get('release_history'),
+                                           balrog_platform, locale)
+
+        # Dependency:        | repackage-signing | partials-signing
+        # Partials artifacts |              Skip | Populate & yield
+        # No partials        |             Yield |         continue
+        if len(artifacts) == 0:
+            if 'partials-signing' in job['dependencies']:
+                continue
+            else:
+                yield job
+                continue
+        else:
+            if 'partials-signing' not in job['dependencies']:
+                continue
+
+=======
+        balrog_platform = get_balrog_platform_name(platform)
+        artifacts = get_partials_artifacts_from_params(config.params.get('release_history'),
+                                                       balrog_platform, locale)
+
+>>>>>>> upstream-releases
         upstream_artifacts = generate_partials_upstream_artifacts(
             job, artifacts, balrog_platform, locale
         )
@@ -406,18 +546,24 @@ def make_partials_artifacts(config, jobs):
 
         extra = list()
 
-        artifact_map = get_partials_artifact_map(
+        partials_info = get_partials_info_from_params(
             config.params.get('release_history'), balrog_platform, locale)
-        for artifact in artifact_map:
+
+        if should_use_artifact_map(platform):
+            job['worker']['artifact-map'].extend(
+                generate_beetmover_partials_artifact_map(
+                    config, job, partials_info, platform=platform, locale=locale))
+
+        for artifact in partials_info:
             artifact_extra = {
                 'locale': locale,
                 'artifact_name': artifact,
-                'buildid': artifact_map[artifact]['buildid'],
+                'buildid': partials_info[artifact]['buildid'],
                 'platform': balrog_platform,
             }
             for rel_attr in ('previousBuildNumber', 'previousVersion'):
-                if artifact_map[artifact].get(rel_attr):
-                    artifact_extra[rel_attr] = artifact_map[artifact][rel_attr]
+                if partials_info[artifact].get(rel_attr):
+                    artifact_extra[rel_attr] = partials_info[artifact][rel_attr]
             extra.append(artifact_extra)
 
         job.setdefault('extra', {})

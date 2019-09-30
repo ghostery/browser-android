@@ -4,20 +4,26 @@
 
 #ifndef __GNUC__
 // disable warnings about pointer <-> DWORD conversions
+<<<<<<< HEAD
 #pragma warning(disable : 4311 4312)
+||||||| merged common ancestors
+#pragma warning( disable : 4311 4312 )
+=======
+#  pragma warning(disable : 4311 4312)
+>>>>>>> upstream-releases
 #endif
 
 #ifdef _WIN64
-#define POINTER_TYPE ULONGLONG
+#  define POINTER_TYPE ULONGLONG
 #else
-#define POINTER_TYPE DWORD
+#  define POINTER_TYPE DWORD
 #endif
 
 #include <windows.h>
 #include <winnt.h>
 #include <stdlib.h>
 #ifdef DEBUG_OUTPUT
-#include <stdio.h>
+#  include <stdio.h>
 #endif
 
 #include "nsWindowsHelpers.h"
@@ -37,35 +43,67 @@ class nsAutoRefTraits<FileView> {
 
 #ifndef IMAGE_SIZEOF_BASE_RELOCATION
 // Vista SDKs no longer define IMAGE_SIZEOF_BASE_RELOCATION!?
-#define IMAGE_SIZEOF_BASE_RELOCATION (sizeof(IMAGE_BASE_RELOCATION))
+#  define IMAGE_SIZEOF_BASE_RELOCATION (sizeof(IMAGE_BASE_RELOCATION))
 #endif
 
 #include "LoadLibraryRemote.h"
 
 typedef struct {
   PIMAGE_NT_HEADERS headers;
-  unsigned char *localCodeBase;
-  unsigned char *remoteCodeBase;
-  HMODULE *modules;
+  unsigned char* localCodeBase;
+  unsigned char* remoteCodeBase;
+  HMODULE* modules;
   int numModules;
 } MEMORYMODULE, *PMEMORYMODULE;
 
+<<<<<<< HEAD
 typedef BOOL(WINAPI *DllEntryProc)(HINSTANCE hinstDLL, DWORD fdwReason,
                                    LPVOID lpReserved);
+||||||| merged common ancestors
+typedef BOOL (WINAPI *DllEntryProc)(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved);
+=======
+typedef BOOL(WINAPI* DllEntryProc)(HINSTANCE hinstDLL, DWORD fdwReason,
+                                   LPVOID lpReserved);
+>>>>>>> upstream-releases
 
 #define GET_HEADER_DICTIONARY(module, idx) \
   &(module)->headers->OptionalHeader.DataDirectory[idx]
 
 #ifdef DEBUG_OUTPUT
+<<<<<<< HEAD
 static void OutputLastError(const char *msg) {
   char *tmp;
   char *tmpmsg;
   FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
                      FORMAT_MESSAGE_IGNORE_INSERTS,
+||||||| merged common ancestors
+static void
+OutputLastError(const char *msg)
+{
+  char* tmp;
+  char *tmpmsg;
+  FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+=======
+static void OutputLastError(const char* msg) {
+  char* tmp;
+  char* tmpmsg;
+  FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+                     FORMAT_MESSAGE_IGNORE_INSERTS,
+>>>>>>> upstream-releases
                  nullptr, GetLastError(),
+<<<<<<< HEAD
                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&tmp, 0,
                  nullptr);
   tmpmsg = (char *)LocalAlloc(LPTR, strlen(msg) + strlen(tmp) + 3);
+||||||| merged common ancestors
+                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                 (LPSTR) &tmp, 0, nullptr);
+  tmpmsg = (char *)LocalAlloc(LPTR, strlen(msg) + strlen(tmp) + 3);
+=======
+                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&tmp, 0,
+                 nullptr);
+  tmpmsg = (char*)LocalAlloc(LPTR, strlen(msg) + strlen(tmp) + 3);
+>>>>>>> upstream-releases
   sprintf(tmpmsg, "%s: %s", msg, tmp);
   OutputDebugStringA(tmpmsg);
   LocalFree(tmpmsg);
@@ -73,11 +111,20 @@ static void OutputLastError(const char *msg) {
 }
 #endif
 
+<<<<<<< HEAD
 static void CopySections(const unsigned char *data,
                          PIMAGE_NT_HEADERS old_headers, PMEMORYMODULE module) {
+||||||| merged common ancestors
+static void
+CopySections(const unsigned char *data, PIMAGE_NT_HEADERS old_headers, PMEMORYMODULE module)
+{
+=======
+static void CopySections(const unsigned char* data,
+                         PIMAGE_NT_HEADERS old_headers, PMEMORYMODULE module) {
+>>>>>>> upstream-releases
   int i;
-  unsigned char *codeBase = module->localCodeBase;
-  unsigned char *dest;
+  unsigned char* codeBase = module->localCodeBase;
+  unsigned char* dest;
   PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(module->headers);
   for (i = 0; i < module->headers->FileHeader.NumberOfSections;
        i++, section++) {
@@ -91,8 +138,17 @@ static void CopySections(const unsigned char *data,
   }
 }
 
+<<<<<<< HEAD
 static bool CopyRegion(HANDLE hRemoteProcess, void *remoteAddress,
                        void *localAddress, DWORD size, DWORD protect) {
+||||||| merged common ancestors
+static bool
+CopyRegion(HANDLE hRemoteProcess, void* remoteAddress, void* localAddress, DWORD size, DWORD protect)
+{
+=======
+static bool CopyRegion(HANDLE hRemoteProcess, void* remoteAddress,
+                       void* localAddress, DWORD size, DWORD protect) {
+>>>>>>> upstream-releases
   if (size > 0) {
     // Copy the data from local->remote and set the memory protection
     if (!VirtualAllocEx(hRemoteProcess, remoteAddress, size, MEM_COMMIT,
@@ -183,11 +239,12 @@ static bool FinalizeSections(PMEMORYMODULE module, HANDLE hRemoteProcess) {
 
 static void PerformBaseRelocation(PMEMORYMODULE module, SIZE_T delta) {
   DWORD i;
-  unsigned char *codeBase = module->localCodeBase;
+  unsigned char* codeBase = module->localCodeBase;
 
   PIMAGE_DATA_DIRECTORY directory =
       GET_HEADER_DICTIONARY(module, IMAGE_DIRECTORY_ENTRY_BASERELOC);
   if (directory->Size > 0) {
+<<<<<<< HEAD
     PIMAGE_BASE_RELOCATION relocation =
         (PIMAGE_BASE_RELOCATION)(codeBase + directory->VirtualAddress);
     for (; relocation->VirtualAddress > 0;) {
@@ -199,8 +256,27 @@ static void PerformBaseRelocation(PMEMORYMODULE module, SIZE_T delta) {
            i < ((relocation->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION) / 2);
            i++, relInfo++) {
         DWORD *patchAddrHL;
+||||||| merged common ancestors
+    PIMAGE_BASE_RELOCATION relocation = (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
+    for (; relocation->VirtualAddress > 0; ) {
+      unsigned char *dest = codeBase + relocation->VirtualAddress;
+      unsigned short *relInfo = (unsigned short *)((unsigned char *)relocation + IMAGE_SIZEOF_BASE_RELOCATION);
+      for (i=0; i<((relocation->SizeOfBlock-IMAGE_SIZEOF_BASE_RELOCATION) / 2); i++, relInfo++) {
+        DWORD *patchAddrHL;
+=======
+    PIMAGE_BASE_RELOCATION relocation =
+        (PIMAGE_BASE_RELOCATION)(codeBase + directory->VirtualAddress);
+    for (; relocation->VirtualAddress > 0;) {
+      unsigned char* dest = codeBase + relocation->VirtualAddress;
+      unsigned short* relInfo = (unsigned short*)((unsigned char*)relocation +
+                                                  IMAGE_SIZEOF_BASE_RELOCATION);
+      for (i = 0;
+           i < ((relocation->SizeOfBlock - IMAGE_SIZEOF_BASE_RELOCATION) / 2);
+           i++, relInfo++) {
+        DWORD* patchAddrHL;
+>>>>>>> upstream-releases
 #ifdef _WIN64
-        ULONGLONG *patchAddr64;
+        ULONGLONG* patchAddr64;
 #endif
         int type, offset;
 
@@ -214,17 +290,43 @@ static void PerformBaseRelocation(PMEMORYMODULE module, SIZE_T delta) {
             // skip relocation
             break;
 
+<<<<<<< HEAD
           case IMAGE_REL_BASED_HIGHLOW:
             // change complete 32 bit address
             patchAddrHL = (DWORD *)(dest + offset);
             *patchAddrHL += delta;
             break;
+||||||| merged common ancestors
+        case IMAGE_REL_BASED_HIGHLOW:
+          // change complete 32 bit address
+          patchAddrHL = (DWORD *) (dest + offset);
+          *patchAddrHL += delta;
+          break;
+=======
+          case IMAGE_REL_BASED_HIGHLOW:
+            // change complete 32 bit address
+            patchAddrHL = (DWORD*)(dest + offset);
+            *patchAddrHL += delta;
+            break;
+>>>>>>> upstream-releases
 
 #ifdef _WIN64
+<<<<<<< HEAD
           case IMAGE_REL_BASED_DIR64:
             patchAddr64 = (ULONGLONG *)(dest + offset);
             *patchAddr64 += delta;
             break;
+||||||| merged common ancestors
+        case IMAGE_REL_BASED_DIR64:
+          patchAddr64 = (ULONGLONG *) (dest + offset);
+          *patchAddr64 += delta;
+          break;
+=======
+          case IMAGE_REL_BASED_DIR64:
+            patchAddr64 = (ULONGLONG*)(dest + offset);
+            *patchAddr64 += delta;
+            break;
+>>>>>>> upstream-releases
 #endif
 
           default:
@@ -234,15 +336,34 @@ static void PerformBaseRelocation(PMEMORYMODULE module, SIZE_T delta) {
       }
 
       // advance to next relocation block
+<<<<<<< HEAD
       relocation = (PIMAGE_BASE_RELOCATION)(((char *)relocation) +
                                             relocation->SizeOfBlock);
+||||||| merged common ancestors
+      relocation = (PIMAGE_BASE_RELOCATION) (((char *) relocation) + relocation->SizeOfBlock);
+=======
+      relocation = (PIMAGE_BASE_RELOCATION)(((char*)relocation) +
+                                            relocation->SizeOfBlock);
+>>>>>>> upstream-releases
     }
   }
 }
 
+<<<<<<< HEAD
 static int BuildImportTable(PMEMORYMODULE module) {
   int result = 1;
   unsigned char *codeBase = module->localCodeBase;
+||||||| merged common ancestors
+static int
+BuildImportTable(PMEMORYMODULE module)
+{
+  int result=1;
+  unsigned char *codeBase = module->localCodeBase;
+=======
+static int BuildImportTable(PMEMORYMODULE module) {
+  int result = 1;
+  unsigned char* codeBase = module->localCodeBase;
+>>>>>>> upstream-releases
 
   PIMAGE_DATA_DIRECTORY directory =
       GET_HEADER_DICTIONARY(module, IMAGE_DIRECTORY_ENTRY_IMPORT);
@@ -253,9 +374,19 @@ static int BuildImportTable(PMEMORYMODULE module) {
         codeBase + directory->VirtualAddress + directory->Size);
 
     for (; importDesc < importEnd && importDesc->Name; importDesc++) {
+<<<<<<< HEAD
       POINTER_TYPE *thunkRef;
       FARPROC *funcRef;
       HMODULE handle = GetModuleHandleA((LPCSTR)(codeBase + importDesc->Name));
+||||||| merged common ancestors
+      POINTER_TYPE *thunkRef;
+      FARPROC *funcRef;
+      HMODULE handle = GetModuleHandleA((LPCSTR) (codeBase + importDesc->Name));
+=======
+      POINTER_TYPE* thunkRef;
+      FARPROC* funcRef;
+      HMODULE handle = GetModuleHandleA((LPCSTR)(codeBase + importDesc->Name));
+>>>>>>> upstream-releases
       if (handle == nullptr) {
 #if DEBUG_OUTPUT
         OutputLastError("Can't load library");
@@ -264,8 +395,15 @@ static int BuildImportTable(PMEMORYMODULE module) {
         break;
       }
 
+<<<<<<< HEAD
       module->modules = (HMODULE *)realloc(
           module->modules, (module->numModules + 1) * (sizeof(HMODULE)));
+||||||| merged common ancestors
+      module->modules = (HMODULE *)realloc(module->modules, (module->numModules+1)*(sizeof(HMODULE)));
+=======
+      module->modules = (HMODULE*)realloc(
+          module->modules, (module->numModules + 1) * (sizeof(HMODULE)));
+>>>>>>> upstream-releases
       if (module->modules == nullptr) {
         result = 0;
         break;
@@ -273,12 +411,28 @@ static int BuildImportTable(PMEMORYMODULE module) {
 
       module->modules[module->numModules++] = handle;
       if (importDesc->OriginalFirstThunk) {
+<<<<<<< HEAD
         thunkRef = (POINTER_TYPE *)(codeBase + importDesc->OriginalFirstThunk);
         funcRef = (FARPROC *)(codeBase + importDesc->FirstThunk);
+||||||| merged common ancestors
+        thunkRef = (POINTER_TYPE *) (codeBase + importDesc->OriginalFirstThunk);
+        funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
+=======
+        thunkRef = (POINTER_TYPE*)(codeBase + importDesc->OriginalFirstThunk);
+        funcRef = (FARPROC*)(codeBase + importDesc->FirstThunk);
+>>>>>>> upstream-releases
       } else {
         // no hint table
+<<<<<<< HEAD
         thunkRef = (POINTER_TYPE *)(codeBase + importDesc->FirstThunk);
         funcRef = (FARPROC *)(codeBase + importDesc->FirstThunk);
+||||||| merged common ancestors
+        thunkRef = (POINTER_TYPE *) (codeBase + importDesc->FirstThunk);
+        funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
+=======
+        thunkRef = (POINTER_TYPE*)(codeBase + importDesc->FirstThunk);
+        funcRef = (FARPROC*)(codeBase + importDesc->FirstThunk);
+>>>>>>> upstream-releases
       }
       for (; *thunkRef; thunkRef++, funcRef++) {
         if (IMAGE_SNAP_BY_ORDINAL(*thunkRef)) {
@@ -304,10 +458,26 @@ static int BuildImportTable(PMEMORYMODULE module) {
   return result;
 }
 
+<<<<<<< HEAD
 static void *MemoryGetProcAddress(PMEMORYMODULE module, const char *name);
+||||||| merged common ancestors
+static void* MemoryGetProcAddress(PMEMORYMODULE module, const char *name);
+=======
+static void* MemoryGetProcAddress(PMEMORYMODULE module, const char* name);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void *LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
                                      const WCHAR *library, const char *symbol) {
+||||||| merged common ancestors
+void* LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
+                                     const WCHAR* library,
+                                     const char* symbol)
+{
+=======
+void* LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
+                                     const WCHAR* library, const char* symbol) {
+>>>>>>> upstream-releases
   // Map the DLL into memory
   nsAutoHandle hLibrary(CreateFile(library, GENERIC_READ, FILE_SHARE_READ,
                                    nullptr, OPEN_EXISTING,
@@ -329,7 +499,13 @@ void *LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
   }
 
   nsAutoRef<FileView> data(
+<<<<<<< HEAD
       (const unsigned char *)MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, 0));
+||||||| merged common ancestors
+    (const unsigned char*) MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, 0));
+=======
+      (const unsigned char*)MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, 0));
+>>>>>>> upstream-releases
   if (!data) {
 #if DEBUG_OUTPUT
     OutputLastError("Couldn't MapViewOfFile.\n");
@@ -357,18 +533,40 @@ void *LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
   }
 
   // reserve memory for image of library in this process and the target process
+<<<<<<< HEAD
   unsigned char *localCode = (unsigned char *)VirtualAlloc(
       nullptr, old_header->OptionalHeader.SizeOfImage, MEM_RESERVE | MEM_COMMIT,
       PAGE_READWRITE);
+||||||| merged common ancestors
+  unsigned char* localCode = (unsigned char*) VirtualAlloc(nullptr,
+    old_header->OptionalHeader.SizeOfImage,
+    MEM_RESERVE | MEM_COMMIT,
+    PAGE_READWRITE);
+=======
+  unsigned char* localCode = (unsigned char*)VirtualAlloc(
+      nullptr, old_header->OptionalHeader.SizeOfImage, MEM_RESERVE | MEM_COMMIT,
+      PAGE_READWRITE);
+>>>>>>> upstream-releases
   if (!localCode) {
 #if DEBUG_OUTPUT
     OutputLastError("Can't reserve local memory.");
 #endif
   }
 
+<<<<<<< HEAD
   unsigned char *remoteCode = (unsigned char *)VirtualAllocEx(
       hRemoteProcess, nullptr, old_header->OptionalHeader.SizeOfImage,
       MEM_RESERVE, PAGE_EXECUTE_READ);
+||||||| merged common ancestors
+  unsigned char* remoteCode = (unsigned char*) VirtualAllocEx(hRemoteProcess, nullptr,
+    old_header->OptionalHeader.SizeOfImage,
+    MEM_RESERVE,
+    PAGE_EXECUTE_READ);
+=======
+  unsigned char* remoteCode = (unsigned char*)VirtualAllocEx(
+      hRemoteProcess, nullptr, old_header->OptionalHeader.SizeOfImage,
+      MEM_RESERVE, PAGE_EXECUTE_READ);
+>>>>>>> upstream-releases
   if (!remoteCode) {
 #if DEBUG_OUTPUT
     OutputLastError("Can't reserve remote memory.");
@@ -413,11 +611,22 @@ void *LoadRemoteLibraryAndGetAddress(HANDLE hRemoteProcess,
   return MemoryGetProcAddress(&result, symbol);
 }
 
+<<<<<<< HEAD
 static void *MemoryGetProcAddress(PMEMORYMODULE module, const char *name) {
   unsigned char *localCodeBase = module->localCodeBase;
   int idx = -1;
+||||||| merged common ancestors
+static void* MemoryGetProcAddress(PMEMORYMODULE module, const char *name)
+{
+  unsigned char *localCodeBase = module->localCodeBase;
+  int idx=-1;
+=======
+static void* MemoryGetProcAddress(PMEMORYMODULE module, const char* name) {
+  unsigned char* localCodeBase = module->localCodeBase;
+  int idx = -1;
+>>>>>>> upstream-releases
   DWORD i, *nameRef;
-  WORD *ordinal;
+  WORD* ordinal;
   PIMAGE_EXPORT_DIRECTORY exports;
   PIMAGE_DATA_DIRECTORY directory =
       GET_HEADER_DICTIONARY(module, IMAGE_DIRECTORY_ENTRY_EXPORT);
@@ -434,10 +643,22 @@ static void *MemoryGetProcAddress(PMEMORYMODULE module, const char *name) {
   }
 
   // search function name in list of exported names
+<<<<<<< HEAD
   nameRef = (DWORD *)(localCodeBase + exports->AddressOfNames);
   ordinal = (WORD *)(localCodeBase + exports->AddressOfNameOrdinals);
   for (i = 0; i < exports->NumberOfNames; i++, nameRef++, ordinal++) {
     if (stricmp(name, (const char *)(localCodeBase + (*nameRef))) == 0) {
+||||||| merged common ancestors
+  nameRef = (DWORD *) (localCodeBase + exports->AddressOfNames);
+  ordinal = (WORD *) (localCodeBase + exports->AddressOfNameOrdinals);
+  for (i=0; i<exports->NumberOfNames; i++, nameRef++, ordinal++) {
+    if (stricmp(name, (const char *) (localCodeBase + (*nameRef))) == 0) {
+=======
+  nameRef = (DWORD*)(localCodeBase + exports->AddressOfNames);
+  ordinal = (WORD*)(localCodeBase + exports->AddressOfNameOrdinals);
+  for (i = 0; i < exports->NumberOfNames; i++, nameRef++, ordinal++) {
+    if (stricmp(name, (const char*)(localCodeBase + (*nameRef))) == 0) {
+>>>>>>> upstream-releases
       idx = *ordinal;
       break;
     }
@@ -454,6 +675,13 @@ static void *MemoryGetProcAddress(PMEMORYMODULE module, const char *name) {
   }
 
   // AddressOfFunctions contains the RVAs to the "real" functions
+<<<<<<< HEAD
   return module->remoteCodeBase +
          (*(DWORD *)(localCodeBase + exports->AddressOfFunctions + (idx * 4)));
+||||||| merged common ancestors
+  return module->remoteCodeBase + (*(DWORD *) (localCodeBase + exports->AddressOfFunctions + (idx*4)));
+=======
+  return module->remoteCodeBase +
+         (*(DWORD*)(localCodeBase + exports->AddressOfFunctions + (idx * 4)));
+>>>>>>> upstream-releases
 }

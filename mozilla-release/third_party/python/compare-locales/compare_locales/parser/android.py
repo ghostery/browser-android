@@ -61,6 +61,9 @@ class AndroidEntity(Entity):
     def raw_val(self):
         return self._raw_val_literal
 
+    def position(self, offset=0):
+        return (0, offset)
+
     def value_position(self, offset=0):
         return (0, offset)
 
@@ -109,15 +112,33 @@ class XMLComment(NodeMixin, Comment):
     def val(self):
         return self._val_literal
 
+<<<<<<< HEAD
     @property
     def key(self):
         return None
 
+||||||| merged common ancestors
+=======
+    @property
+    def key(self):
+        return None
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+# DocumentWrapper is sticky in serialization.
+# Always keep the one from the reference document.
+class DocumentWrapper(NodeMixin, StickyEntry):
+    def __init__(self, key, all):
+||||||| merged common ancestors
+class DocumentWrapper(NodeMixin, EntityBase):
+    def __init__(self, all):
+=======
 
 # DocumentWrapper is sticky in serialization.
 # Always keep the one from the reference document.
 class DocumentWrapper(NodeMixin, StickyEntry):
     def __init__(self, key, all):
+>>>>>>> upstream-releases
         self._all_literal = all
         self._val_literal = all
         self._key_literal = key
@@ -178,10 +199,11 @@ class AndroidParser(Parser):
         except Exception:
             yield XMLJunk(contents)
             return
-        if doc.documentElement.nodeName != 'resources':
+        docElement = doc.documentElement
+        if docElement.nodeName != 'resources':
             yield XMLJunk(doc.toxml())
             return
-        root_children = doc.documentElement.childNodes
+        root_children = docElement.childNodes
         if not only_localizable:
             attributes = ''.join(
                 ' {}="{}"'.format(attr_name, attr_value)
@@ -189,14 +211,41 @@ class AndroidParser(Parser):
                 doc.documentElement.attributes.items()
             )
             yield DocumentWrapper(
+<<<<<<< HEAD
                 '<?xml?><resources>',
                 '<?xml version="1.0" encoding="utf-8"?>\n<resources{}>'.format(
                     attributes
                 )
+||||||| merged common ancestors
+                '<?xml version="1.0" encoding="utf-8"?>\n<resources>'
+=======
+                '<?xml?><resources>',
+                '<?xml version="1.0" encoding="utf-8"?>\n<resources'
+>>>>>>> upstream-releases
             )
+<<<<<<< HEAD
         child_num = 0
         while child_num < len(root_children):
             node = root_children[child_num]
+||||||| merged common ancestors
+        for node in root_children:
+            if node.nodeType == Node.ELEMENT_NODE:
+                yield self.handleElement(node)
+                self.last_comment = None
+            if node.nodeType in (Node.TEXT_NODE, Node.CDATA_SECTION_NODE):
+                if not only_localizable:
+                    yield XMLWhitespace(node.toxml(), node.nodeValue)
+=======
+            for attr_name, attr_value in docElement.attributes.items():
+                yield DocumentWrapper(
+                    attr_name,
+                    ' {}="{}"'.format(attr_name, attr_value)
+                )
+            yield DocumentWrapper('>', '>')
+        child_num = 0
+        while child_num < len(root_children):
+            node = root_children[child_num]
+>>>>>>> upstream-releases
             if node.nodeType == Node.COMMENT_NODE:
                 current_comment, child_num = self.handleComment(
                     node, root_children, child_num

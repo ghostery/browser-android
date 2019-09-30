@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include "GLContext.h"
+#include "mozilla/Casting.h"
 #include "mozilla/dom/WebGLRenderingContextBinding.h"
 #include "mozilla/gfx/Logging.h"
 #include "mozilla/MathAlgorithms.h"
@@ -257,11 +258,21 @@ Maybe<const WebGLTexture::CompletenessInfo> WebGLTexture::CalcCompletenessInfo(
   if (!IsMipAndCubeComplete(maxLevel, ensureInit, &initFailed)) {
     if (initFailed) return {};
 
+<<<<<<< HEAD
     ret->incompleteReason = "Bad mipmap dimension or format.";
     return ret;
   }
   ret->levels = maxLevel - mBaseMipmapLevel + 1;
   ret->mipmapComplete = true;
+||||||| merged common ancestors
+    ret->incompleteReason = completeness->incompleteReason;
+=======
+    ret->incompleteReason = "Bad mipmap dimension or format.";
+    return ret;
+  }
+  ret->levels = AutoAssertCast(maxLevel - mBaseMipmapLevel + 1);
+  ret->mipmapComplete = true;
+>>>>>>> upstream-releases
 
   // -
 
@@ -447,11 +458,25 @@ void WebGLTexture::RefreshSwizzle() const {
   const auto& imageInfo = BaseImageInfo();
   const auto& swizzle = imageInfo.mFormat->textureSwizzleRGBA;
 
+<<<<<<< HEAD
   if (swizzle != mCurSwizzle) {
     const gl::ScopedBindTexture scopeBindTexture(mContext->gl, mGLName, mTarget.get());
     SetSwizzle(mContext->gl, mTarget, swizzle);
     mCurSwizzle = swizzle;
   }
+||||||| merged common ancestors
+    if (swizzle != mCurSwizzle) {
+        SetSwizzle(mContext->gl, mTarget, swizzle);
+        mCurSwizzle = swizzle;
+    }
+=======
+  if (swizzle != mCurSwizzle) {
+    const gl::ScopedBindTexture scopeBindTexture(mContext->gl, mGLName,
+                                                 mTarget.get());
+    SetSwizzle(mContext->gl, mTarget, swizzle);
+    mCurSwizzle = swizzle;
+  }
+>>>>>>> upstream-releases
 }
 
 bool WebGLTexture::EnsureImageDataInitialized(const TexImageTarget target,
@@ -585,8 +610,15 @@ static bool ZeroTextureData(const WebGLContext* webgl, GLuint tex,
 
     const size_t byteCount = checkedByteCount.value();
 
+<<<<<<< HEAD
     UniqueBuffer zeros = calloc(1, byteCount);
     if (!zeros) return false;
+||||||| merged common ancestors
+        const size_t byteCount = checkedByteCount.value();
+=======
+    UniqueBuffer zeros = calloc(1u, byteCount);
+    if (!zeros) return false;
+>>>>>>> upstream-releases
 
     ScopedUnpackReset scopedReset(webgl);
     gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT, 1);  // Don't bother with
@@ -620,11 +652,28 @@ static bool ZeroTextureData(const WebGLContext* webgl, GLuint tex,
 
   if (!checkedByteCount.isValid()) return false;
 
+<<<<<<< HEAD
+  const size_t byteCount = checkedByteCount.value();
+||||||| merged common ancestors
+    if (!checkedByteCount.isValid())
+        return false;
+
+    const size_t byteCount = checkedByteCount.value();
+=======
   const size_t byteCount = checkedByteCount.value();
 
+  UniqueBuffer zeros = calloc(1u, byteCount);
+  if (!zeros) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   UniqueBuffer zeros = calloc(1, byteCount);
   if (!zeros) return false;
-
+||||||| merged common ancestors
+    UniqueBuffer zeros = calloc(1, byteCount);
+    if (!zeros)
+        return false;
+=======
   ScopedUnpackReset scopedReset(webgl);
   gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT,
                    1);  // Don't bother with striding it well.
@@ -632,7 +681,40 @@ static bool ZeroTextureData(const WebGLContext* webgl, GLuint tex,
                                    depth, packing, zeros.get());
   return !error;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ScopedUnpackReset scopedReset(webgl);
+  gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT,
+                   1);  // Don't bother with striding it well.
+  const auto error = DoTexSubImage(gl, target, level, 0, 0, 0, width, height,
+                                   depth, packing, zeros.get());
+  return !error;
+||||||| merged common ancestors
+    ScopedUnpackReset scopedReset(webgl);
+    gl->fPixelStorei(LOCAL_GL_UNPACK_ALIGNMENT, 1); // Don't bother with striding it well.
+    const auto error = DoTexSubImage(gl, target, level, 0, 0, 0, width, height, depth,
+                                     packing, zeros.get());
+    return !error;
+=======
+template <typename T, typename R>
+static R Clamp(const T val, const R min, const R max) {
+  if (val < min) return min;
+  if (val > max) return max;
+  return static_cast<R>(val);
+}
+
+template <typename T, typename A, typename B>
+static void ClampSelf(T* const out, const A min, const B max) {
+  if (*out < min) {
+    *out = T{min};
+  } else if (*out > max) {
+    *out = T{max};
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void WebGLTexture::ClampLevelBaseAndMax() {
   if (!mImmutable) return;
 
@@ -647,6 +729,37 @@ void WebGLTexture::ClampLevelBaseAndMax() {
                                     mImmutableLevelCount - 1);
 
   // Note: This means that immutable textures are *always* texture-complete!
+||||||| merged common ancestors
+void
+WebGLTexture::ClampLevelBaseAndMax()
+{
+    if (!mImmutable)
+        return;
+
+    // GLES 3.0.4, p158:
+    // "For immutable-format textures, `level_base` is clamped to the range
+    //  `[0, levels-1]`, `level_max` is then clamped to the range `
+    //  `[level_base, levels-1]`, where `levels` is the parameter passed to
+    //   TexStorage* for the texture object."
+    mBaseMipmapLevel = Clamp<uint32_t>(mBaseMipmapLevel, 0, mImmutableLevelCount - 1);
+    mMaxMipmapLevel = Clamp<uint32_t>(mMaxMipmapLevel, mBaseMipmapLevel,
+                                      mImmutableLevelCount - 1);
+
+    // Note: This means that immutable textures are *always* texture-complete!
+=======
+void WebGLTexture::ClampLevelBaseAndMax() {
+  if (!mImmutable) return;
+
+  // GLES 3.0.4, p158:
+  // "For immutable-format textures, `level_base` is clamped to the range
+  //  `[0, levels-1]`, `level_max` is then clamped to the range `
+  //  `[level_base, levels-1]`, where `levels` is the parameter passed to
+  //   TexStorage* for the texture object."
+  ClampSelf(&mBaseMipmapLevel, 0u, mImmutableLevelCount - 1u);
+  ClampSelf(&mMaxMipmapLevel, mBaseMipmapLevel, mImmutableLevelCount - 1u);
+
+  // Note: This means that immutable textures are *always* texture-complete!
+>>>>>>> upstream-releases
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -956,6 +1069,32 @@ void WebGLTexture::TexParameter(TexTarget texTarget, GLenum pname,
       mContext->ErrorInvalidEnum("pname 0x%04x: Invalid param %g.", pname,
                                  param.f);
     }
+<<<<<<< HEAD
+    return;
+  }
+
+  if (paramBadValue) {
+    if (!param.isFloat) {
+      mContext->ErrorInvalidValue(
+          "pname 0x%04x: Invalid param %i"
+          " (0x%x).",
+          pname, param.i, param.i);
+    } else {
+      mContext->ErrorInvalidValue("pname 0x%04x: Invalid param %g.", pname,
+                                  param.f);
+||||||| merged common ancestors
+
+    if (paramBadValue) {
+        if (!param.isFloat) {
+            mContext->ErrorInvalidValue("pname 0x%04x: Invalid param %i"
+                                        " (0x%x).",
+                                        pname, param.i, param.i);
+        } else {
+            mContext->ErrorInvalidValue("pname 0x%04x: Invalid param %g.",
+                                        pname, param.f);
+        }
+        return;
+=======
     return;
   }
 
@@ -978,6 +1117,25 @@ void WebGLTexture::TexParameter(TexTarget texTarget, GLenum pname,
   FloatOrInt clamped = param;
   bool invalidate = true;
   switch (pname) {
+    case LOCAL_GL_TEXTURE_BASE_LEVEL: {
+      mBaseMipmapLevel = clamped.i;
+      ClampLevelBaseAndMax();
+      const auto forDriver =
+          Clamp(mBaseMipmapLevel, uint8_t{0}, kMaxLevelCount);
+      clamped = FloatOrInt(forDriver);
+      break;
+>>>>>>> upstream-releases
+    }
+    return;
+  }
+
+<<<<<<< HEAD
+  ////////////////
+  // Store any needed values
+
+  FloatOrInt clamped = param;
+  bool invalidate = true;
+  switch (pname) {
     case LOCAL_GL_TEXTURE_BASE_LEVEL:
       mBaseMipmapLevel = clamped.i;
       ClampLevelBaseAndMax();
@@ -989,6 +1147,33 @@ void WebGLTexture::TexParameter(TexTarget texTarget, GLenum pname,
       ClampLevelBaseAndMax();
       clamped = FloatOrInt(GLint(mMaxMipmapLevel));
       break;
+||||||| merged common ancestors
+    ////////////////
+    // Store any needed values
+
+    FloatOrInt clamped = param;
+    bool invalidate = true;
+    switch (pname) {
+    case LOCAL_GL_TEXTURE_BASE_LEVEL:
+        mBaseMipmapLevel = clamped.i;
+        ClampLevelBaseAndMax();
+        clamped = FloatOrInt(GLint(mBaseMipmapLevel));
+        break;
+
+    case LOCAL_GL_TEXTURE_MAX_LEVEL:
+        mMaxMipmapLevel = clamped.i;
+        ClampLevelBaseAndMax();
+        clamped = FloatOrInt(GLint(mMaxMipmapLevel));
+        break;
+=======
+    case LOCAL_GL_TEXTURE_MAX_LEVEL: {
+      mMaxMipmapLevel = clamped.i;
+      ClampLevelBaseAndMax();
+      const auto forDriver = Clamp(mMaxMipmapLevel, uint8_t{0}, kMaxLevelCount);
+      clamped = FloatOrInt(forDriver);
+      break;
+    }
+>>>>>>> upstream-releases
 
     case LOCAL_GL_TEXTURE_MIN_FILTER:
       mSamplingState.minFilter = clamped.i;
@@ -1019,12 +1204,37 @@ void WebGLTexture::TexParameter(TexTarget texTarget, GLenum pname,
     InvalidateCaches();
   }
 
+<<<<<<< HEAD
+  ////////////////
+||||||| merged common ancestors
+    ////////////////
+=======
   ////////////////
 
   if (!clamped.isFloat)
     mContext->gl->fTexParameteri(texTarget.get(), pname, clamped.i);
   else
     mContext->gl->fTexParameterf(texTarget.get(), pname, clamped.f);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!clamped.isFloat)
+    mContext->gl->fTexParameteri(texTarget.get(), pname, clamped.i);
+  else
+    mContext->gl->fTexParameterf(texTarget.get(), pname, clamped.f);
+||||||| merged common ancestors
+    if (!clamped.isFloat)
+        mContext->gl->fTexParameteri(texTarget.get(), pname, clamped.i);
+    else
+        mContext->gl->fTexParameterf(texTarget.get(), pname, clamped.f);
+=======
+void WebGLTexture::Truncate() {
+  for (auto& cur : mImageInfoArr) {
+    cur = {};
+  }
+  InvalidateCaches();
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////

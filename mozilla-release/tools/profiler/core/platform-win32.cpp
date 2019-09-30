@@ -36,7 +36,17 @@
 #include "mozilla/StackWalk_windows.h"
 #include "mozilla/WindowsVersion.h"
 
+<<<<<<< HEAD
 /* static */ int Thread::GetCurrentId() {
+||||||| merged common ancestors
+/* static */ int
+Thread::GetCurrentId()
+{
+=======
+int profiler_current_process_id() { return _getpid(); }
+
+int profiler_current_thread_id() {
+>>>>>>> upstream-releases
   DWORD threadId = GetCurrentThreadId();
   MOZ_ASSERT(threadId <= INT32_MAX, "native thread ID is > INT32_MAX");
   return int(threadId);
@@ -61,7 +71,13 @@ static void PopulateRegsFromContext(Registers& aRegs, CONTEXT* aContext) {
   aRegs.mSP = reinterpret_cast<Address>(aContext->Sp);
   aRegs.mFP = reinterpret_cast<Address>(aContext->Fp);
 #else
+<<<<<<< HEAD
 #error "bad arch"
+||||||| merged common ancestors
+ #error "bad arch"
+=======
+#  error "bad arch"
+>>>>>>> upstream-releases
 #endif
   aRegs.mLR = 0;
 }
@@ -94,8 +110,19 @@ class PlatformData {
   HANDLE mProfiledThread;
 };
 
+#if defined(USE_MOZ_STACK_WALK)
 HANDLE
+<<<<<<< HEAD
 GetThreadHandle(PlatformData* aData) { return aData->ProfiledThread(); }
+||||||| merged common ancestors
+GetThreadHandle(PlatformData* aData)
+{
+  return aData->ProfiledThread();
+}
+=======
+GetThreadHandle(PlatformData* aData) { return aData->ProfiledThread(); }
+#endif
+>>>>>>> upstream-releases
 
 static const HANDLE kNoThread = INVALID_HANDLE_VALUE;
 
@@ -220,7 +247,7 @@ void SamplerThread::SleepMicro(uint32_t aMicroseconds) {
   if (mIntervalMicroseconds >= 1000) {
     ::Sleep(std::max(1u, aMicroseconds / 1000));
   } else {
-    TimeStamp start = TimeStamp::Now();
+    TimeStamp start = TimeStamp::NowUnfuzzed();
     TimeStamp end = start + TimeDuration::FromMicroseconds(aMicroseconds);
 
     // First, sleep for as many whole milliseconds as possible.
@@ -229,7 +256,7 @@ void SamplerThread::SleepMicro(uint32_t aMicroseconds) {
     }
 
     // Then, spin until enough time has passed.
-    while (TimeStamp::Now() < end) {
+    while (TimeStamp::NowUnfuzzed() < end) {
       YieldProcessor();
     }
   }
@@ -265,6 +292,10 @@ void Registers::SyncPopulate() {
 #endif
 
 #if defined(GP_PLAT_amd64_windows)
+
+#  ifndef MOZ_BASE_PROFILER
+// If MOZ_BASE_PROFILER is *not* #defined, we need to implement this here, as
+// the one in mozglue/baseprofiler will not even be built.
 static WindowsDllInterceptor NtDllIntercept;
 
 typedef NTSTATUS(NTAPI* LdrUnloadDll_func)(HMODULE module);
@@ -304,4 +335,25 @@ void InitializeWin64ProfilerHooks() {
                                       &patched_LdrResolveDelayLoadedAPI);
   }
 }
+<<<<<<< HEAD
 #endif  // defined(GP_PLAT_amd64_windows)
+||||||| merged common ancestors
+#endif // defined(GP_PLAT_amd64_windows)
+
+=======
+
+#  else  // ndef MOZ_BASE_PROFILER
+// If MOZ_BASE_PROFILER is #defined, we just use InitializeWin64ProfilerHooks
+// that it implements.
+
+namespace mozilla {
+namespace baseprofiler {
+MFBT_API void InitializeWin64ProfilerHooks();
+}  // namespace baseprofiler
+}  // namespace mozilla
+
+using mozilla::baseprofiler::InitializeWin64ProfilerHooks;
+
+#  endif  // ndef MOZ_BASE_PROFILER else
+#endif    // defined(GP_PLAT_amd64_windows)
+>>>>>>> upstream-releases

@@ -3,6 +3,7 @@
 
 "use strict";
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://services-common/async.js");
@@ -12,10 +13,38 @@ ChromeUtils.import("resource://services-sync/service.js");
 ChromeUtils.import("resource://services-sync/util.js");
 ChromeUtils.import("resource://testing-common/AddonTestUtils.jsm");
 ChromeUtils.defineModuleGetter(this, "Preferences", "resource://gre/modules/Preferences.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
+ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://services-common/async.js");
+ChromeUtils.import("resource://services-sync/addonsreconciler.js");
+ChromeUtils.import("resource://services-sync/engines/addons.js");
+ChromeUtils.import("resource://services-sync/service.js");
+ChromeUtils.import("resource://services-sync/util.js");
+ChromeUtils.import("resource://testing-common/AddonTestUtils.jsm");
+ChromeUtils.defineModuleGetter(this, "Preferences", "resource://gre/modules/Preferences.jsm");
+=======
+const { AddonManager } = ChromeUtils.import(
+  "resource://gre/modules/AddonManager.jsm"
+);
+const { CHANGE_INSTALLED } = ChromeUtils.import(
+  "resource://services-sync/addonsreconciler.js"
+);
+const { AddonsEngine } = ChromeUtils.import(
+  "resource://services-sync/engines/addons.js"
+);
+const { Service } = ChromeUtils.import("resource://services-sync/service.js");
+const { Preferences } = ChromeUtils.import(
+  "resource://gre/modules/Preferences.jsm"
+);
+>>>>>>> upstream-releases
 
 const prefs = new Preferences();
-prefs.set("extensions.getAddons.get.url",
-          "http://localhost:8888/search/guid:%IDS%");
+prefs.set(
+  "extensions.getAddons.get.url",
+  "http://localhost:8888/search/guid:%IDS%"
+);
 prefs.set("extensions.install.requireSecureOrigin", false);
 
 let engine;
@@ -25,6 +54,7 @@ let tracker;
 
 AddonTestUtils.init(this);
 
+<<<<<<< HEAD
 const ADDON_ID = "addon1@tests.mozilla.org";
 const XPI = AddonTestUtils.createTempWebExtensionFile({
   manifest: {
@@ -33,6 +63,59 @@ const XPI = AddonTestUtils.createTempWebExtensionFile({
     applications: { gecko: { id: ADDON_ID } },
   },
 });
+||||||| merged common ancestors
+const ADDONS = {
+  test_install1: {
+    "install.rdf": {
+      id: "addon1@tests.mozilla.org",
+      version: "1.0",
+      name: "Test 1",
+      description: "Test Description",
+      bootstrap: true,
+
+      targetApplications: [{
+          id: "xpcshell@tests.mozilla.org",
+          minVersion: "1",
+          maxVersion: "1"}],
+    },
+    "icon.png": "Fake icon image",
+    "icon64.png": "Fake icon image",
+  },
+  test_bootstrap1_1: {
+    "install.rdf": {
+      id: "bootstrap1@tests.mozilla.org",
+      version: "1.0",
+      bootstrap: "true",
+      multiprocessCompatible: "true",
+      name: "Test Bootstrap 1",
+      description: "Test Description",
+
+      iconURL: "chrome://foo/skin/icon.png",
+      aboutURL: "chrome://foo/content/about.xul",
+      optionsURL: "chrome://foo/content/options.xul",
+
+      targetApplications: [{
+          id: "xpcshell@tests.mozilla.org",
+          minVersion: "1",
+          maxVersion: "1"}],
+    },
+  },
+};
+
+const XPIS = {};
+for (let [name, files] of Object.entries(ADDONS)) {
+  XPIS[name] = AddonTestUtils.createTempXPIFile(files);
+}
+=======
+const ADDON_ID = "addon1@tests.mozilla.org";
+const XPI = AddonTestUtils.createTempWebExtensionFile({
+  manifest: {
+    name: "Test 1",
+    description: "Test Description",
+    applications: { gecko: { id: ADDON_ID } },
+  },
+});
+>>>>>>> upstream-releases
 
 async function resetReconciler() {
   reconciler._addons = {};
@@ -44,7 +127,12 @@ async function resetReconciler() {
 }
 
 add_task(async function setup() {
-  AddonTestUtils.createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
+  AddonTestUtils.createAppInfo(
+    "xpcshell@tests.mozilla.org",
+    "XPCShell",
+    "1",
+    "1.9.2"
+  );
   AddonTestUtils.overrideCertDB();
   await AddonTestUtils.promiseStartupManager();
 
@@ -86,11 +174,21 @@ add_task(async function test_find_dupe() {
   let addon = await installAddon(XPI, reconciler);
 
   let record = {
+<<<<<<< HEAD
     id:            Utils.makeGUID(),
     addonID:       ADDON_ID,
     enabled:       true,
+||||||| merged common ancestors
+    id:            Utils.makeGUID(),
+    addonID:       addon.id,
+    enabled:       true,
+=======
+    id: Utils.makeGUID(),
+    addonID: ADDON_ID,
+    enabled: true,
+>>>>>>> upstream-releases
     applicationID: Services.appinfo.ID,
-    source:        "amo",
+    source: "amo",
   };
 
   let dupe = await engine._findDupe(record);
@@ -116,7 +214,7 @@ add_task(async function test_get_changed_ids() {
 
   _("Ensure getChangedIDs() returns an empty object by default.");
   let changes = await engine.getChangedIDs();
-  Assert.equal("object", typeof(changes));
+  Assert.equal("object", typeof changes);
   Assert.equal(0, Object.keys(changes).length);
 
   _("Ensure tracker changes are populated.");
@@ -126,7 +224,7 @@ add_task(async function test_get_changed_ids() {
   await tracker.addChangedID(guid1, changeTime);
 
   changes = await engine.getChangedIDs();
-  Assert.equal("object", typeof(changes));
+  Assert.equal("object", typeof changes);
   Assert.equal(1, Object.keys(changes).length);
   Assert.ok(guid1 in changes);
   Assert.equal(changeTime, changes[guid1]);
@@ -137,10 +235,12 @@ add_task(async function test_get_changed_ids() {
   let addon = await installAddon(XPI, reconciler);
   await tracker.clearChangedIDs(); // Just in case.
   changes = await engine.getChangedIDs();
-  Assert.equal("object", typeof(changes));
+  Assert.equal("object", typeof changes);
   Assert.equal(1, Object.keys(changes).length);
   Assert.ok(addon.syncGUID in changes);
-  _("Change time: " + changeTime + ", addon change: " + changes[addon.syncGUID]);
+  _(
+    "Change time: " + changeTime + ", addon change: " + changes[addon.syncGUID]
+  );
   Assert.ok(changes[addon.syncGUID] >= changeTime);
 
   let oldTime = changes[addon.syncGUID];
@@ -152,16 +252,16 @@ add_task(async function test_get_changed_ids() {
   Assert.ok(changes[guid2] > oldTime);
 
   _("Ensure non-syncable add-ons aren't picked up by reconciler changes.");
-  reconciler._addons  = {};
+  reconciler._addons = {};
   reconciler._changes = [];
   let record = {
-    id:             "DUMMY",
-    guid:           Utils.makeGUID(),
-    enabled:        true,
-    installed:      true,
-    modified:       new Date(),
-    type:           "UNSUPPORTED",
-    scope:          0,
+    id: "DUMMY",
+    guid: Utils.makeGUID(),
+    enabled: true,
+    installed: true,
+    modified: new Date(),
+    type: "UNSUPPORTED",
+    scope: 0,
     foreignInstall: false,
   };
   reconciler.addons.DUMMY = record;
@@ -180,8 +280,17 @@ add_task(async function test_disabled_install_semantics() {
   // This is essentially a test for bug 712542, which snuck into the original
   // add-on sync drop. It ensures that when an add-on is installed that the
   // disabled state and incoming syncGUID is preserved, even on the next sync.
+<<<<<<< HEAD
   const USER       = "foo";
   const PASSWORD   = "password";
+||||||| merged common ancestors
+  const USER       = "foo";
+  const PASSWORD   = "password";
+  const ADDON_ID   = "addon1@tests.mozilla.org";
+=======
+  const USER = "foo";
+  const PASSWORD = "password";
+>>>>>>> upstream-releases
 
   let server = new SyncServer();
   server.start();
@@ -190,7 +299,9 @@ add_task(async function test_disabled_install_semantics() {
   await generateNewKeys(Service.collectionKeys);
 
   let contents = {
-    meta: {global: {engines: {addons: {version: engine.version, syncID}}}},
+    meta: {
+      global: { engines: { addons: { version: engine.version, syncID } } },
+    },
     crypto: {},
     addons: {},
   };
@@ -199,8 +310,10 @@ add_task(async function test_disabled_install_semantics() {
   server.createContents(USER, contents);
 
   let amoServer = new HttpServer();
-  amoServer.registerFile("/search/guid:addon1%40tests.mozilla.org",
-                         do_get_file("addon1-search.json"));
+  amoServer.registerFile(
+    "/search/guid:addon1%40tests.mozilla.org",
+    do_get_file("addon1-search.json")
+  );
 
   amoServer.registerFile("/addon1.xpi", XPI);
   amoServer.start(8888);
@@ -212,10 +325,10 @@ add_task(async function test_disabled_install_semantics() {
   let record = encryptPayload({
     id,
     applicationID: Services.appinfo.ID,
-    addonID:       ADDON_ID,
-    enabled:       false,
-    deleted:       false,
-    source:        "amo",
+    addonID: ADDON_ID,
+    enabled: false,
+    deleted: false,
+    source: "amo",
   });
   let wbo = new ServerWBO(id, record, now - 2);
   server.insertWBO(USER, "addons", wbo);

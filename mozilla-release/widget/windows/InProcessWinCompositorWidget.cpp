@@ -14,6 +14,7 @@
 namespace mozilla {
 namespace widget {
 
+<<<<<<< HEAD
 /* static */ RefPtr<CompositorWidget> CompositorWidget::CreateLocal(
     const CompositorWidgetInitData& aInitData,
     const layers::CompositorOptions& aOptions, nsIWidget* aWidget) {
@@ -22,6 +23,26 @@ namespace widget {
     return new HeadlessCompositorWidget(
         aInitData.get_HeadlessCompositorWidgetInitData(), aOptions,
         static_cast<HeadlessWidget*>(aWidget));
+||||||| merged common ancestors
+/* static */ RefPtr<CompositorWidget>
+CompositorWidget::CreateLocal(const CompositorWidgetInitData& aInitData,
+                              const layers::CompositorOptions& aOptions,
+                              nsIWidget* aWidget)
+{
+  if (aInitData.type() == CompositorWidgetInitData::THeadlessCompositorWidgetInitData) {
+    return new HeadlessCompositorWidget(aInitData.get_HeadlessCompositorWidgetInitData(),
+                                        aOptions, static_cast<HeadlessWidget*>(aWidget));
+=======
+/* static */
+RefPtr<CompositorWidget> CompositorWidget::CreateLocal(
+    const CompositorWidgetInitData& aInitData,
+    const layers::CompositorOptions& aOptions, nsIWidget* aWidget) {
+  if (aInitData.type() ==
+      CompositorWidgetInitData::THeadlessCompositorWidgetInitData) {
+    return new HeadlessCompositorWidget(
+        aInitData.get_HeadlessCompositorWidgetInitData(), aOptions,
+        static_cast<HeadlessWidget*>(aWidget));
+>>>>>>> upstream-releases
   } else {
     return new InProcessWinCompositorWidget(
         aInitData.get_WinCompositorWidgetInitData(), aOptions,

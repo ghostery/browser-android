@@ -6,7 +6,8 @@
 
 #include "mozilla/dom/SVGTests.h"
 #include "DOMSVGStringList.h"
-#include "nsSVGFeatures.h"
+#include "nsIContent.h"
+#include "nsIContentInlines.h"
 #include "mozilla/dom/SVGSwitchElement.h"
 #include "nsCharSeparatedTokenizer.h"
 #include "nsStyleUtil.h"
@@ -15,34 +16,100 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 nsStaticAtom* const SVGTests::sStringListNames[3] = {
     nsGkAtoms::requiredFeatures,
     nsGkAtoms::requiredExtensions,
     nsGkAtoms::systemLanguage,
+||||||| merged common ancestors
+nsStaticAtom* const SVGTests::sStringListNames[3] =
+{
+  nsGkAtoms::requiredFeatures,
+  nsGkAtoms::requiredExtensions,
+  nsGkAtoms::systemLanguage,
+=======
+nsStaticAtom* const SVGTests::sStringListNames[2] = {
+    nsGkAtoms::requiredExtensions,
+    nsGkAtoms::systemLanguage,
+>>>>>>> upstream-releases
 };
 
 SVGTests::SVGTests() {
   mStringListAttributes[LANGUAGE].SetIsCommaSeparated(true);
 }
 
+<<<<<<< HEAD
 already_AddRefed<DOMSVGStringList> SVGTests::RequiredFeatures() {
   return DOMSVGStringList::GetDOMWrapper(&mStringListAttributes[FEATURES],
                                          AsSVGElement(), true, FEATURES);
-}
-
+||||||| merged common ancestors
+already_AddRefed<DOMSVGStringList>
+SVGTests::RequiredFeatures()
+{
+  return DOMSVGStringList::GetDOMWrapper(
+           &mStringListAttributes[FEATURES], AsSVGElement(), true, FEATURES);
+=======
 already_AddRefed<DOMSVGStringList> SVGTests::RequiredExtensions() {
   return DOMSVGStringList::GetDOMWrapper(&mStringListAttributes[EXTENSIONS],
                                          AsSVGElement(), true, EXTENSIONS);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+already_AddRefed<DOMSVGStringList> SVGTests::RequiredExtensions() {
+  return DOMSVGStringList::GetDOMWrapper(&mStringListAttributes[EXTENSIONS],
+                                         AsSVGElement(), true, EXTENSIONS);
+||||||| merged common ancestors
+already_AddRefed<DOMSVGStringList>
+SVGTests::RequiredExtensions()
+{
+  return DOMSVGStringList::GetDOMWrapper(
+           &mStringListAttributes[EXTENSIONS], AsSVGElement(), true, EXTENSIONS);
+=======
+already_AddRefed<DOMSVGStringList> SVGTests::SystemLanguage() {
+  return DOMSVGStringList::GetDOMWrapper(&mStringListAttributes[LANGUAGE],
+                                         AsSVGElement(), true, LANGUAGE);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 already_AddRefed<DOMSVGStringList> SVGTests::SystemLanguage() {
   return DOMSVGStringList::GetDOMWrapper(&mStringListAttributes[LANGUAGE],
                                          AsSVGElement(), true, LANGUAGE);
 }
+||||||| merged common ancestors
+already_AddRefed<DOMSVGStringList>
+SVGTests::SystemLanguage()
+{
+  return DOMSVGStringList::GetDOMWrapper(
+           &mStringListAttributes[LANGUAGE], AsSVGElement(), true, LANGUAGE);
+}
+=======
+bool SVGTests::HasExtension(const nsAString& aExtension) const {
+#define SVG_SUPPORTED_EXTENSION(str) \
+  if (aExtension.EqualsLiteral(str)) return true;
+  SVG_SUPPORTED_EXTENSION("http://www.w3.org/1999/xhtml")
+  nsNameSpaceManager* nameSpaceManager = nsNameSpaceManager::GetInstance();
+  if (AsSVGElement()->IsInChromeDocument() ||
+      !nameSpaceManager->mMathMLDisabled) {
+    SVG_SUPPORTED_EXTENSION("http://www.w3.org/1998/Math/MathML")
+  }
+#undef SVG_SUPPORTED_EXTENSION
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool SVGTests::HasExtension(const nsAString& aExtension) {
   return nsSVGFeatures::HasExtension(aExtension,
                                      AsSVGElement()->IsInChromeDocument());
+||||||| merged common ancestors
+bool
+SVGTests::HasExtension(const nsAString& aExtension)
+{
+  return nsSVGFeatures::HasExtension(aExtension,
+                                     AsSVGElement()->IsInChromeDocument());
+=======
+  return false;
+>>>>>>> upstream-releases
 }
 
 bool SVGTests::IsConditionalProcessingAttribute(
@@ -107,8 +174,7 @@ bool SVGTests::PassesConditionalProcessingTests(
       return false;
     }
     for (uint32_t i = 0; i < mStringListAttributes[EXTENSIONS].Length(); i++) {
-      if (!nsSVGFeatures::HasExtension(mStringListAttributes[EXTENSIONS][i],
-                                       AsSVGElement()->IsInChromeDocument())) {
+      if (!HasExtension(mStringListAttributes[EXTENSIONS][i])) {
         return false;
       }
     }

@@ -12,6 +12,7 @@
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
 class CacheControlParser final : Tokenizer {
  public:
   explicit CacheControlParser(nsACString const &header);
@@ -19,13 +20,31 @@ class CacheControlParser final : Tokenizer {
   MOZ_MUST_USE bool MaxAge(uint32_t *seconds);
   MOZ_MUST_USE bool MaxStale(uint32_t *seconds);
   MOZ_MUST_USE bool MinFresh(uint32_t *seconds);
+||||||| merged common ancestors
+class CacheControlParser final : Tokenizer
+{
+public:
+  explicit CacheControlParser(nsACString const &header);
+
+  MOZ_MUST_USE bool MaxAge(uint32_t *seconds);
+  MOZ_MUST_USE bool MaxStale(uint32_t *seconds);
+  MOZ_MUST_USE bool MinFresh(uint32_t *seconds);
+=======
+class CacheControlParser final : Tokenizer {
+ public:
+  explicit CacheControlParser(nsACString const& header);
+
+  MOZ_MUST_USE bool MaxAge(uint32_t* seconds);
+  MOZ_MUST_USE bool MaxStale(uint32_t* seconds);
+  MOZ_MUST_USE bool MinFresh(uint32_t* seconds);
+>>>>>>> upstream-releases
   bool NoCache();
   bool NoStore();
 
  private:
   void Directive();
   void IgnoreDirective();
-  MOZ_MUST_USE bool SecondsValue(uint32_t *seconds, uint32_t defaultVal = 0);
+  MOZ_MUST_USE bool SecondsValue(uint32_t* seconds, uint32_t defaultVal = 0);
 
   bool mMaxAgeSet;
   uint32_t mMaxAge;

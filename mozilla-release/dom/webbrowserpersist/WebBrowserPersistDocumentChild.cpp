@@ -8,7 +8,7 @@
 
 #include "mozilla/dom/ContentChild.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIInputStream.h"
 #include "WebBrowserPersistLocalDocument.h"
 #include "WebBrowserPersistResourcesChild.h"
@@ -20,12 +20,30 @@ WebBrowserPersistDocumentChild::WebBrowserPersistDocumentChild() {}
 
 WebBrowserPersistDocumentChild::~WebBrowserPersistDocumentChild() = default;
 
+<<<<<<< HEAD
 void WebBrowserPersistDocumentChild::Start(nsIDocument* aDocument) {
   RefPtr<WebBrowserPersistLocalDocument> doc;
   if (aDocument) {
     doc = new WebBrowserPersistLocalDocument(aDocument);
   }
   Start(doc);
+||||||| merged common ancestors
+void
+WebBrowserPersistDocumentChild::Start(nsIDocument* aDocument)
+{
+    RefPtr<WebBrowserPersistLocalDocument> doc;
+    if (aDocument) {
+        doc = new WebBrowserPersistLocalDocument(aDocument);
+    }
+    Start(doc);
+=======
+void WebBrowserPersistDocumentChild::Start(dom::Document* aDocument) {
+  RefPtr<WebBrowserPersistLocalDocument> doc;
+  if (aDocument) {
+    doc = new WebBrowserPersistLocalDocument(aDocument);
+  }
+  Start(doc);
+>>>>>>> upstream-releases
 }
 
 void WebBrowserPersistDocumentChild::Start(

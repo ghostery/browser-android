@@ -22,7 +22,26 @@ WebAuthnManagerBase::WebAuthnManagerBase(nsPIDOMWindowInner* aParent)
   MOZ_ASSERT(aParent);
 }
 
+<<<<<<< HEAD
 WebAuthnManagerBase::~WebAuthnManagerBase() { MOZ_ASSERT(NS_IsMainThread()); }
+||||||| merged common ancestors
+WebAuthnManagerBase::~WebAuthnManagerBase()
+{
+  MOZ_ASSERT(NS_IsMainThread());
+}
+=======
+WebAuthnManagerBase::~WebAuthnManagerBase() { MOZ_ASSERT(NS_IsMainThread()); }
+
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(WebAuthnManagerBase)
+  NS_INTERFACE_MAP_ENTRY(nsISupports)
+  NS_INTERFACE_MAP_ENTRY(nsIDOMEventListener)
+NS_INTERFACE_MAP_END
+
+NS_IMPL_CYCLE_COLLECTION(WebAuthnManagerBase, mParent)
+
+NS_IMPL_CYCLE_COLLECTING_ADDREF(WebAuthnManagerBase)
+NS_IMPL_CYCLE_COLLECTING_RELEASE(WebAuthnManagerBase)
+>>>>>>> upstream-releases
 
 /***********************************************************************
  * IPC Protocol Implementation
@@ -120,7 +139,7 @@ WebAuthnManagerBase::HandleEvent(Event* aEvent) {
   // The "deactivate" event on the root window has no
   // "current inner window" and thus GetTarget() is always null.
   if (type.Equals(kVisibilityChange)) {
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aEvent->GetTarget());
+    nsCOMPtr<Document> doc = do_QueryInterface(aEvent->GetTarget());
     if (NS_WARN_IF(!doc) || !doc->Hidden()) {
       return NS_OK;
     }
@@ -131,7 +150,7 @@ WebAuthnManagerBase::HandleEvent(Event* aEvent) {
     }
   }
 
-  CancelTransaction(NS_ERROR_DOM_ABORT_ERR);
+  HandleVisibilityChange();
   return NS_OK;
 }
 

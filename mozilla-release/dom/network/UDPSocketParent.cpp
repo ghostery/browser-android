@@ -36,8 +36,18 @@ UDPSocketParent::UDPSocketParent(PNeckoParent* aManager)
 
 UDPSocketParent::~UDPSocketParent() {}
 
+<<<<<<< HEAD
 bool UDPSocketParent::Init(const IPC::Principal& aPrincipal,
                            const nsACString& aFilter) {
+||||||| merged common ancestors
+bool
+UDPSocketParent::Init(const IPC::Principal& aPrincipal,
+                      const nsACString& aFilter)
+{
+=======
+bool UDPSocketParent::Init(nsIPrincipal* aPrincipal,
+                           const nsACString& aFilter) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_IF(mBackgroundManager, !aPrincipal);
   // will be used once we move all UDPSocket to PBackground, or
   // if we add in Principal checking for mtransport
@@ -53,8 +63,8 @@ bool UDPSocketParent::Init(const IPC::Principal& aPrincipal,
     }
 
     uint32_t permission = nsIPermissionManager::DENY_ACTION;
-    permMgr->TestExactPermissionFromPrincipal(mPrincipal, "udp-socket",
-                                              &permission);
+    permMgr->TestExactPermissionFromPrincipal(
+        mPrincipal, NS_LITERAL_CSTRING("udp-socket"), &permission);
     if (permission != nsIPermissionManager::ALLOW_ACTION) {
       return false;
     }
@@ -373,14 +383,28 @@ void UDPSocketParent::Send(const InfallibleTArray<uint8_t>& aData,
   switch (aAddr.type()) {
     case UDPSocketAddr::TUDPAddressInfo: {
       const UDPAddressInfo& addrInfo(aAddr.get_UDPAddressInfo());
+<<<<<<< HEAD
       rv = mSocket->Send(addrInfo.addr(), addrInfo.port(), aData.Elements(),
                          aData.Length(), &count);
+||||||| merged common ancestors
+      rv = mSocket->Send(addrInfo.addr(), addrInfo.port(),
+                         aData.Elements(), aData.Length(), &count);
+=======
+      rv = mSocket->Send(addrInfo.addr(), addrInfo.port(), aData, &count);
+>>>>>>> upstream-releases
       break;
     }
     case UDPSocketAddr::TNetAddr: {
       const NetAddr& addr(aAddr.get_NetAddr());
+<<<<<<< HEAD
       rv = mSocket->SendWithAddress(&addr, aData.Elements(), aData.Length(),
                                     &count);
+||||||| merged common ancestors
+      rv = mSocket->SendWithAddress(&addr, aData.Elements(),
+                                    aData.Length(), &count);
+=======
+      rv = mSocket->SendWithAddress(&addr, aData, &count);
+>>>>>>> upstream-releases
       break;
     }
     default:

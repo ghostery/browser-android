@@ -29,6 +29,7 @@
 class nsConverterInputStream : public nsIConverterInputStream,
                                public nsIUnicharLineInputStream {
  public:
+<<<<<<< HEAD
   NS_DECL_ISUPPORTS
   NS_DECL_NSIUNICHARINPUTSTREAM
   NS_DECL_NSIUNICHARLINEINPUTSTREAM
@@ -59,6 +60,71 @@ class nsConverterInputStream : public nsIConverterInputStream,
   bool mErrorsAreFatal;
 
   nsAutoPtr<nsLineBuffer<char16_t> > mLineBuffer;
+||||||| merged common ancestors
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIUNICHARINPUTSTREAM
+    NS_DECL_NSIUNICHARLINEINPUTSTREAM
+    NS_DECL_NSICONVERTERINPUTSTREAM
+
+    nsConverterInputStream()
+      : mLastErrorCode(NS_OK)
+      , mLeftOverBytes(0)
+      , mUnicharDataOffset(0)
+      , mUnicharDataLength(0)
+      , mErrorsAreFatal(false)
+      , mLineBuffer(nullptr)
+    {
+    }
+
+  private:
+    virtual ~nsConverterInputStream() { Close(); }
+
+    uint32_t Fill(nsresult *aErrorCode);
+
+    mozilla::UniquePtr<mozilla::Decoder> mConverter;
+    FallibleTArray<char> mByteData;
+    FallibleTArray<char16_t> mUnicharData;
+    nsCOMPtr<nsIInputStream> mInput;
+
+    nsresult  mLastErrorCode;
+    uint32_t  mLeftOverBytes;
+    uint32_t  mUnicharDataOffset;
+    uint32_t  mUnicharDataLength;
+    bool mErrorsAreFatal;
+
+    nsAutoPtr<nsLineBuffer<char16_t> > mLineBuffer;
+=======
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIUNICHARINPUTSTREAM
+  NS_DECL_NSIUNICHARLINEINPUTSTREAM
+  NS_DECL_NSICONVERTERINPUTSTREAM
+
+  nsConverterInputStream()
+      : mLastErrorCode(NS_OK),
+        mLeftOverBytes(0),
+        mUnicharDataOffset(0),
+        mUnicharDataLength(0),
+        mErrorsAreFatal(false),
+        mLineBuffer(nullptr) {}
+
+ private:
+  virtual ~nsConverterInputStream() { Close(); }
+
+  uint32_t Fill(nsresult* aErrorCode);
+
+  mozilla::UniquePtr<mozilla::Decoder> mConverter;
+  FallibleTArray<char> mByteData;
+  FallibleTArray<char16_t> mUnicharData;
+  nsCOMPtr<nsIInputStream> mInput;
+
+  nsresult mLastErrorCode;
+  uint32_t mLeftOverBytes;
+  uint32_t mUnicharDataOffset;
+  uint32_t mUnicharDataLength;
+  bool mErrorsAreFatal;
+
+  nsAutoPtr<nsLineBuffer<char16_t> > mLineBuffer;
+>>>>>>> upstream-releases
 };
 
 #endif

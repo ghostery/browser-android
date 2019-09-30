@@ -26,15 +26,35 @@ class MemoryBlobImpl final : public BaseBlobImpl {
 
   MemoryBlobImpl(void* aMemoryBuffer, uint64_t aLength, const nsAString& aName,
                  const nsAString& aContentType, int64_t aLastModifiedDate)
+<<<<<<< HEAD
       : BaseBlobImpl(aName, aContentType, aLength, aLastModifiedDate),
         mDataOwner(new DataOwner(aMemoryBuffer, aLength)) {
+||||||| merged common ancestors
+    : BaseBlobImpl(aName, aContentType, aLength, aLastModifiedDate)
+    , mDataOwner(new DataOwner(aMemoryBuffer, aLength))
+  {
+=======
+      : BaseBlobImpl(NS_LITERAL_STRING("MemoryBlobImpl"), aName, aContentType,
+                     aLength, aLastModifiedDate),
+        mDataOwner(new DataOwner(aMemoryBuffer, aLength)) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mDataOwner && mDataOwner->mData, "must have data");
   }
 
   MemoryBlobImpl(void* aMemoryBuffer, uint64_t aLength,
                  const nsAString& aContentType)
+<<<<<<< HEAD
       : BaseBlobImpl(aContentType, aLength),
         mDataOwner(new DataOwner(aMemoryBuffer, aLength)) {
+||||||| merged common ancestors
+    : BaseBlobImpl(aContentType, aLength)
+    , mDataOwner(new DataOwner(aMemoryBuffer, aLength))
+  {
+=======
+      : BaseBlobImpl(NS_LITERAL_STRING("MemoryBlobImpl"), aContentType,
+                     aLength),
+        mDataOwner(new DataOwner(aMemoryBuffer, aLength)) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mDataOwner && mDataOwner->mData, "must have data");
   }
 
@@ -142,8 +162,18 @@ class MemoryBlobImpl final : public BaseBlobImpl {
   // Create slice
   MemoryBlobImpl(const MemoryBlobImpl* aOther, uint64_t aStart,
                  uint64_t aLength, const nsAString& aContentType)
+<<<<<<< HEAD
       : BaseBlobImpl(aContentType, aOther->mStart + aStart, aLength),
         mDataOwner(aOther->mDataOwner) {
+||||||| merged common ancestors
+    : BaseBlobImpl(aContentType, aOther->mStart + aStart, aLength)
+    , mDataOwner(aOther->mDataOwner)
+  {
+=======
+      : BaseBlobImpl(NS_LITERAL_STRING("MemoryBlobImpl"), aContentType,
+                     aOther->mStart + aStart, aLength),
+        mDataOwner(aOther->mDataOwner) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mDataOwner && mDataOwner->mData, "must have data");
     mImmutable = aOther->mImmutable;
   }

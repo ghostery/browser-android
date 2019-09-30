@@ -36,6 +36,7 @@ class nsBrowserStatusFilter : public nsIWebProgress,
  protected:
   virtual ~nsBrowserStatusFilter();
 
+<<<<<<< HEAD
  private:
   nsresult StartDelayTimer();
   void ProcessTimeout();
@@ -43,8 +44,31 @@ class nsBrowserStatusFilter : public nsIWebProgress,
   void MaybeSendStatus();
   void ResetMembers();
   bool DelayInEffect() { return mDelayedStatus || mDelayedProgress; }
+||||||| merged common ancestors
+private:
+    nsresult StartDelayTimer();
+    void ProcessTimeout();
+    void MaybeSendProgress();
+    void MaybeSendStatus();
+    void ResetMembers();
+    bool DelayInEffect() { return mDelayedStatus || mDelayedProgress; }
+=======
+ private:
+  nsresult StartDelayTimer();
+  void CallDelayedProgressListeners();
+  void MaybeSendProgress();
+  void MaybeSendStatus();
+  void ResetMembers();
+  bool DelayInEffect() { return mDelayedStatus || mDelayedProgress; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void TimeoutHandler(nsITimer *aTimer, void *aClosure);
+||||||| merged common ancestors
+    static void TimeoutHandler(nsITimer *aTimer, void *aClosure);
+=======
+  static void TimeoutHandler(nsITimer* aTimer, void* aClosure);
+>>>>>>> upstream-releases
 
  private:
   nsCOMPtr<nsIWebProgressListener> mListener;

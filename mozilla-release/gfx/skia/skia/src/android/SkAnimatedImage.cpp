@@ -22,14 +22,24 @@ sk_sp<SkAnimatedImage> SkAnimatedImage::Make(std::unique_ptr<SkAndroidCodec> cod
     if (!codec) {
         return nullptr;
     }
+    auto info = codec->getInfo().makeWH(scaledSize.width(), scaledSize.height());
+    return Make(std::move(codec), info, cropRect, std::move(postProcess));
+}
 
-    SkISize decodeSize = scaledSize;
-    auto decodeInfo = codec->getInfo();
-    if (codec->getEncodedFormat() == SkEncodedImageFormat::kWEBP
-            && scaledSize.width()  < decodeInfo.width()
-            && scaledSize.height() < decodeInfo.height()) {
-        // libwebp can decode to arbitrary smaller sizes.
-        decodeInfo = decodeInfo.makeWH(decodeSize.width(), decodeSize.height());
+sk_sp<SkAnimatedImage> SkAnimatedImage::Make(std::unique_ptr<SkAndroidCodec> codec,
+        const SkImageInfo& requestedInfo, SkIRect cropRect, sk_sp<SkPicture> postProcess) {
+    if (!codec) {
+        return nullptr;
+    }
+
+    auto scaledSize = requestedInfo.dimensions();
+    auto decodeInfo = requestedInfo;
+    if (codec->getEncodedFormat() != SkEncodedImageFormat::kWEBP
+            || scaledSize.width()  >= decodeInfo.width()
+            || scaledSize.height() >= decodeInfo.height()) {
+        // Only libwebp can decode to arbitrary smaller sizes.
+        auto dims = codec->getInfo().dimensions();
+        decodeInfo = decodeInfo.makeWH(dims.width(), dims.height());
     }
 
     auto image = sk_sp<SkAnimatedImage>(new SkAnimatedImage(std::move(codec), scaledSize,
@@ -139,10 +149,31 @@ bool SkAnimatedImage::Frame::copyTo(Frame* dst) const {
 void SkAnimatedImage::reset() {
     fFinished = false;
     fRepetitionsCompleted = 0;
+<<<<<<< HEAD
     if (fDisplayFrame.fIndex != 0) {
         fDisplayFrame.fIndex = SkCodec::kNoFrame;
         this->decodeNextFrame();
     }
+||||||| merged common ancestors
+    if (fActiveFrame.fIndex == 0) {
+        // Already showing the first frame.
+        return;
+    }
+
+    if (fRestoreFrame.fIndex == 0) {
+        SkTSwap(fActiveFrame, fRestoreFrame);
+        // Now we're showing the first frame.
+        return;
+    }
+
+    fActiveFrame.fIndex = SkCodec::kNone;
+    this->decodeNextFrame();
+=======
+    if (fDisplayFrame.fIndex != 0) {
+        fDisplayFrame.fIndex = SkCodec::kNoFrame;
+        this->decodeNextFrame();
+    }
+>>>>>>> upstream-releases
 }
 
 static bool is_restore_previous(SkCodecAnimation::DisposalMethod dispose) {
@@ -257,6 +288,11 @@ int SkAnimatedImage::decodeNextFrame() {
             if (is_restore_previous(frameInfo.fDisposalMethod)) {
                 // fDecodingFrame is a good frame to use for this one, but we
                 // don't want to overwrite it.
+<<<<<<< HEAD
+                fDecodingFrame.copyTo(&fRestoreFrame);
+||||||| merged common ancestors
+                fActiveFrame.copyTo(&fRestoreFrame);
+=======
                 fDecodingFrame.copyTo(&fRestoreFrame);
             }
             options.fPriorFrame = fDecodingFrame.fIndex;
@@ -264,8 +300,21 @@ int SkAnimatedImage::decodeNextFrame() {
             if (!fDisplayFrame.copyTo(&fDecodingFrame)) {
                 SkCodecPrintf("Failed to allocate pixels for frame\n");
                 return this->finish();
+>>>>>>> upstream-releases
+            }
+<<<<<<< HEAD
+            options.fPriorFrame = fDecodingFrame.fIndex;
+        } else if (validPriorFrame(fDisplayFrame)) {
+            if (!fDisplayFrame.copyTo(&fDecodingFrame)) {
+                SkCodecPrintf("Failed to allocate pixels for frame\n");
+                return this->finish();
             }
             options.fPriorFrame = fDecodingFrame.fIndex;
+||||||| merged common ancestors
+            options.fPriorFrame = fActiveFrame.fIndex;
+=======
+            options.fPriorFrame = fDecodingFrame.fIndex;
+>>>>>>> upstream-releases
         } else if (validPriorFrame(fRestoreFrame)) {
             if (!is_restore_previous(frameInfo.fDisposalMethod)) {
                 using std::swap;

@@ -15,9 +15,14 @@
 #include "mozilla/PodOperations.h"
 #include "mozilla/Sprintf.h"
 
-#include <ctype.h>
 #ifdef __linux__
+<<<<<<< HEAD
 #include <dlfcn.h>
+||||||| merged common ancestors
+# include <dlfcn.h>
+=======
+#  include <dlfcn.h>
+>>>>>>> upstream-releases
 #endif
 #include <stdarg.h>
 #include <string.h>
@@ -37,12 +42,19 @@
 #include "builtin/JSON.h"
 #include "builtin/MapObject.h"
 #include "builtin/Promise.h"
-#include "builtin/RegExp.h"
 #include "builtin/Stream.h"
 #include "builtin/String.h"
 #include "builtin/Symbol.h"
+<<<<<<< HEAD
 #ifdef ENABLE_BINARYDATA
 #include "builtin/TypedObject.h"
+||||||| merged common ancestors
+#ifdef ENABLE_BINARYDATA
+# include "builtin/TypedObject.h"
+=======
+#ifdef ENABLE_TYPED_OBJECTS
+#  include "builtin/TypedObject.h"
+>>>>>>> upstream-releases
 #endif
 #include "frontend/BytecodeCompiler.h"
 #include "gc/FreeOp.h"
@@ -55,12 +67,19 @@
 #include "js/CharacterEncoding.h"
 #include "js/CompilationAndEvaluation.h"
 #include "js/CompileOptions.h"
+#include "js/ContextOptions.h"  // JS::ContextOptions{,Ref}
 #include "js/Conversions.h"
 #include "js/Date.h"
 #include "js/Initialization.h"
 #include "js/JSON.h"
 #include "js/LocaleSensitive.h"
+<<<<<<< HEAD
 #include "js/MemoryFunctions.h"
+||||||| merged common ancestors
+=======
+#include "js/MemoryFunctions.h"
+#include "js/PropertySpec.h"
+>>>>>>> upstream-releases
 #include "js/Proxy.h"
 #include "js/SliceBudget.h"
 #include "js/SourceText.h"
@@ -86,7 +105,6 @@
 #include "vm/JSFunction.h"
 #include "vm/JSObject.h"
 #include "vm/JSScript.h"
-#include "vm/RegExpStatics.h"
 #include "vm/Runtime.h"
 #include "vm/SavedStacks.h"
 #include "vm/SelfHosting.h"
@@ -95,7 +113,6 @@
 #include "vm/SymbolType.h"
 #include "vm/WrapperObject.h"
 #include "vm/Xdr.h"
-#include "wasm/AsmJS.h"
 #include "wasm/WasmModule.h"
 
 #include "vm/Compartment-inl.h"
@@ -119,11 +136,12 @@ using JS::ReadOnlyCompileOptions;
 using JS::SourceText;
 
 #ifdef HAVE_VA_LIST_AS_ARRAY
-#define JS_ADDRESSOF_VA_LIST(ap) ((va_list*)(ap))
+#  define JS_ADDRESSOF_VA_LIST(ap) ((va_list*)(ap))
 #else
-#define JS_ADDRESSOF_VA_LIST(ap) (&(ap))
+#  define JS_ADDRESSOF_VA_LIST(ap) (&(ap))
 #endif
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::CallArgs::requireAtLeast(JSContext* cx,
                                                 const char* fnname,
                                                 unsigned required) const {
@@ -145,6 +163,68 @@ static bool ErrorTakesArguments(unsigned msg) {
   MOZ_ASSERT(argCount <= 2);
   return argCount == 1 || argCount == 2;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::CallArgs::requireAtLeast(JSContext* cx, const char* fnname, unsigned required) const
+{
+    if (length() < required) {
+        char numArgsStr[40];
+        SprintfLiteral(numArgsStr, "%u", required - 1);
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_MORE_ARGS_NEEDED,
+                                  fnname, numArgsStr, required == 2 ? "" : "s");
+        return false;
+    }
+
+    return true;
+}
+
+static bool
+ErrorTakesArguments(unsigned msg)
+{
+    MOZ_ASSERT(msg < JSErr_Limit);
+    unsigned argCount = js_ErrorFormatString[msg].argCount;
+    MOZ_ASSERT(argCount <= 2);
+    return argCount == 1 || argCount == 2;
+}
+
+static bool
+ErrorTakesObjectArgument(unsigned msg)
+{
+    MOZ_ASSERT(msg < JSErr_Limit);
+    unsigned argCount = js_ErrorFormatString[msg].argCount;
+    MOZ_ASSERT(argCount <= 2);
+    return argCount == 2;
+}
+
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::reportStrictErrorOrWarning(JSContext* cx, HandleObject obj, HandleId id,
+                                               bool strict)
+{
+    static_assert(unsigned(OkCode) == unsigned(JSMSG_NOT_AN_ERROR),
+                  "unsigned value of OkCode must not be an error code");
+    MOZ_ASSERT(code_ != Uninitialized);
+    MOZ_ASSERT(!ok());
+    cx->check(obj);
+=======
+JS_PUBLIC_API void JS::CallArgs::reportMoreArgsNeeded(JSContext* cx,
+                                                      const char* fnname,
+                                                      unsigned required,
+                                                      unsigned actual) {
+  char requiredArgsStr[40];
+  SprintfLiteral(requiredArgsStr, "%u", required);
+  char actualArgsStr[40];
+  SprintfLiteral(actualArgsStr, "%u", actual);
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                            JSMSG_MORE_ARGS_NEEDED, fnname, requiredArgsStr,
+                            required == 1 ? "" : "s", actualArgsStr);
+}
+
+static bool ErrorTakesArguments(unsigned msg) {
+  MOZ_ASSERT(msg < JSErr_Limit);
+  unsigned argCount = js_ErrorFormatString[msg].argCount;
+  MOZ_ASSERT(argCount <= 2);
+  return argCount == 1 || argCount == 2;
+}
 
 static bool ErrorTakesObjectArgument(unsigned msg) {
   MOZ_ASSERT(msg < JSErr_Limit);
@@ -153,6 +233,47 @@ static bool ErrorTakesObjectArgument(unsigned msg) {
   return argCount == 2;
 }
 
+JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
+    JSContext* cx, HandleObject obj, HandleId id, bool strict) {
+  static_assert(unsigned(OkCode) == unsigned(JSMSG_NOT_AN_ERROR),
+                "unsigned value of OkCode must not be an error code");
+  MOZ_ASSERT(code_ != Uninitialized);
+  MOZ_ASSERT(!ok());
+  cx->check(obj);
+
+  unsigned flags =
+      strict ? JSREPORT_ERROR : (JSREPORT_WARNING | JSREPORT_STRICT);
+  if (code_ == JSMSG_OBJECT_NOT_EXTENSIBLE) {
+    RootedValue val(cx, ObjectValue(*obj));
+    return ReportValueErrorFlags(cx, flags, code_, JSDVG_IGNORE_STACK, val,
+                                 nullptr, nullptr, nullptr);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+static bool ErrorTakesObjectArgument(unsigned msg) {
+  MOZ_ASSERT(msg < JSErr_Limit);
+  unsigned argCount = js_ErrorFormatString[msg].argCount;
+  MOZ_ASSERT(argCount <= 2);
+  return argCount == 2;
+}
+||||||| merged common ancestors
+    unsigned flags = strict ? JSREPORT_ERROR : (JSREPORT_WARNING | JSREPORT_STRICT);
+    if (code_ == JSMSG_OBJECT_NOT_EXTENSIBLE) {
+        RootedValue val(cx, ObjectValue(*obj));
+        return ReportValueErrorFlags(cx, flags, code_, JSDVG_IGNORE_STACK, val,
+                                     nullptr, nullptr, nullptr);
+    }
+=======
+  if (ErrorTakesArguments(code_)) {
+    UniqueChars propName =
+        IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsPropertyKey);
+    if (!propName) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
     JSContext* cx, HandleObject obj, HandleId id, bool strict) {
   static_assert(unsigned(OkCode) == unsigned(JSMSG_NOT_AN_ERROR),
@@ -192,7 +313,46 @@ JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
       return JS_ReportErrorFlagsAndNumberUTF8(
           cx, flags, GetErrorMessage, nullptr, code_, obj->getClass()->name,
           propName.get());
+||||||| merged common ancestors
+    if (ErrorTakesArguments(code_)) {
+        UniqueChars propName = IdToPrintableUTF8(cx, id, IdToPrintableBehavior::IdIsPropertyKey);
+        if (!propName) {
+            return false;
+        }
+
+        if (code_ == JSMSG_SET_NON_OBJECT_RECEIVER) {
+            // We know that the original receiver was a primitive, so unbox it.
+            RootedValue val(cx, ObjectValue(*obj));
+            if (!obj->is<ProxyObject>()) {
+                if (!Unbox(cx, obj, &val)) {
+                    return false;
+                }
+            }
+            return ReportValueErrorFlags(cx, flags, code_, JSDVG_IGNORE_STACK, val,
+                                         nullptr, propName.get(), nullptr);
+        }
+
+        if (ErrorTakesObjectArgument(code_)) {
+            return JS_ReportErrorFlagsAndNumberUTF8(cx, flags, GetErrorMessage, nullptr, code_,
+                                                    obj->getClass()->name, propName.get());
+        }
+
+        return JS_ReportErrorFlagsAndNumberUTF8(cx, flags, GetErrorMessage, nullptr, code_,
+                                                propName.get());
+=======
+    if (code_ == JSMSG_SET_NON_OBJECT_RECEIVER) {
+      // We know that the original receiver was a primitive, so unbox it.
+      RootedValue val(cx, ObjectValue(*obj));
+      if (!obj->is<ProxyObject>()) {
+        if (!Unbox(cx, obj, &val)) {
+          return false;
+        }
+      }
+      return ReportValueErrorFlags(cx, flags, code_, JSDVG_IGNORE_STACK, val,
+                                   nullptr, propName.get(), nullptr);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     return JS_ReportErrorFlagsAndNumberUTF8(cx, flags, GetErrorMessage, nullptr,
                                             code_, propName.get());
@@ -200,89 +360,298 @@ JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
   return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr,
                                            code_);
 }
+||||||| merged common ancestors
+    return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr, code_);
+}
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
     JSContext* cx, HandleObject obj, bool strict) {
   MOZ_ASSERT(code_ != Uninitialized);
   MOZ_ASSERT(!ok());
   MOZ_ASSERT(!ErrorTakesArguments(code_));
   cx->check(obj);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::reportStrictErrorOrWarning(JSContext* cx, HandleObject obj, bool strict)
+{
+    MOZ_ASSERT(code_ != Uninitialized);
+    MOZ_ASSERT(!ok());
+    MOZ_ASSERT(!ErrorTakesArguments(code_));
+    cx->check(obj);
+=======
+    if (ErrorTakesObjectArgument(code_)) {
+      return JS_ReportErrorFlagsAndNumberUTF8(
+          cx, flags, GetErrorMessage, nullptr, code_, obj->getClass()->name,
+          propName.get());
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   unsigned flags =
       strict ? JSREPORT_ERROR : (JSREPORT_WARNING | JSREPORT_STRICT);
   return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr,
                                            code_);
+||||||| merged common ancestors
+    unsigned flags = strict ? JSREPORT_ERROR : (JSREPORT_WARNING | JSREPORT_STRICT);
+    return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr, code_);
+=======
+    return JS_ReportErrorFlagsAndNumberUTF8(cx, flags, GetErrorMessage, nullptr,
+                                            code_, propName.get());
+  }
+  return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr,
+                                           code_);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantRedefineProp() {
   return fail(JSMSG_CANT_REDEFINE_PROP);
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantRedefineProp()
+{
+    return fail(JSMSG_CANT_REDEFINE_PROP);
+}
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::reportStrictErrorOrWarning(
+    JSContext* cx, HandleObject obj, bool strict) {
+  MOZ_ASSERT(code_ != Uninitialized);
+  MOZ_ASSERT(!ok());
+  MOZ_ASSERT(!ErrorTakesArguments(code_));
+  cx->check(obj);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failReadOnly() {
   return fail(JSMSG_READ_ONLY);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failReadOnly()
+{
+    return fail(JSMSG_READ_ONLY);
+=======
+  unsigned flags =
+      strict ? JSREPORT_ERROR : (JSREPORT_WARNING | JSREPORT_STRICT);
+  return JS_ReportErrorFlagsAndNumberASCII(cx, flags, GetErrorMessage, nullptr,
+                                           code_);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failGetterOnly() {
   return fail(JSMSG_GETTER_ONLY);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failGetterOnly()
+{
+    return fail(JSMSG_GETTER_ONLY);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantRedefineProp() {
+  return fail(JSMSG_CANT_REDEFINE_PROP);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantDelete() {
   return fail(JSMSG_CANT_DELETE);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantDelete()
+{
+    return fail(JSMSG_CANT_DELETE);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failReadOnly() {
+  return fail(JSMSG_READ_ONLY);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantSetInterposed() {
   return fail(JSMSG_CANT_SET_INTERPOSED);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantSetInterposed()
+{
+    return fail(JSMSG_CANT_SET_INTERPOSED);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failGetterOnly() {
+  return fail(JSMSG_GETTER_ONLY);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantDefineWindowElement() {
   return fail(JSMSG_CANT_DEFINE_WINDOW_ELEMENT);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantDefineWindowElement()
+{
+    return fail(JSMSG_CANT_DEFINE_WINDOW_ELEMENT);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantDelete() {
+  return fail(JSMSG_CANT_DELETE);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantDeleteWindowElement() {
   return fail(JSMSG_CANT_DELETE_WINDOW_ELEMENT);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantDeleteWindowElement()
+{
+    return fail(JSMSG_CANT_DELETE_WINDOW_ELEMENT);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantSetInterposed() {
+  return fail(JSMSG_CANT_SET_INTERPOSED);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantDeleteWindowNamedProperty() {
   return fail(JSMSG_CANT_DELETE_WINDOW_NAMED_PROPERTY);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantDeleteWindowNamedProperty()
+{
+    return fail(JSMSG_CANT_DELETE_WINDOW_NAMED_PROPERTY);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantDefineWindowElement() {
+  return fail(JSMSG_CANT_DEFINE_WINDOW_ELEMENT);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantDefineWindowNonConfigurable() {
   return fail(JSMSG_CANT_DEFINE_WINDOW_NC);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantPreventExtensions()
+{
+    return fail(JSMSG_CANT_PREVENT_EXTENSIONS);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantDeleteWindowElement() {
+  return fail(JSMSG_CANT_DELETE_WINDOW_ELEMENT);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantPreventExtensions() {
   return fail(JSMSG_CANT_PREVENT_EXTENSIONS);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failCantSetProto()
+{
+    return fail(JSMSG_CANT_SET_PROTO);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantDeleteWindowNamedProperty() {
+  return fail(JSMSG_CANT_DELETE_WINDOW_NAMED_PROPERTY);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failCantSetProto() {
   return fail(JSMSG_CANT_SET_PROTO);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failNoNamedSetter()
+{
+    return fail(JSMSG_NO_NAMED_SETTER);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantDefineWindowNonConfigurable() {
+  return fail(JSMSG_CANT_DEFINE_WINDOW_NC);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failNoNamedSetter() {
   return fail(JSMSG_NO_NAMED_SETTER);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failNoIndexedSetter()
+{
+    return fail(JSMSG_NO_INDEXED_SETTER);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantPreventExtensions() {
+  return fail(JSMSG_CANT_PREVENT_EXTENSIONS);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failNoIndexedSetter() {
   return fail(JSMSG_NO_INDEXED_SETTER);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ObjectOpResult::failNotDataDescriptor()
+{
+    return fail(JSMSG_NOT_DATA_DESCRIPTOR);
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failCantSetProto() {
+  return fail(JSMSG_CANT_SET_PROTO);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ObjectOpResult::failNotDataDescriptor() {
   return fail(JSMSG_NOT_DATA_DESCRIPTOR);
+||||||| merged common ancestors
+JS_PUBLIC_API(int64_t)
+JS_Now()
+{
+    return PRMJ_Now();
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failNoNamedSetter() {
+  return fail(JSMSG_NO_NAMED_SETTER);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API int64_t JS_Now() { return PRMJ_Now(); }
 
 JS_PUBLIC_API Value JS_GetNaNValue(JSContext* cx) {
   return cx->runtime()->NaNValue;
+||||||| merged common ancestors
+JS_PUBLIC_API(Value)
+JS_GetNaNValue(JSContext* cx)
+{
+    return cx->runtime()->NaNValue;
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failNoIndexedSetter() {
+  return fail(JSMSG_NO_INDEXED_SETTER);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API Value JS_GetNegativeInfinityValue(JSContext* cx) {
   return cx->runtime()->negativeInfinityValue;
+||||||| merged common ancestors
+JS_PUBLIC_API(Value)
+JS_GetNegativeInfinityValue(JSContext* cx)
+{
+    return cx->runtime()->negativeInfinityValue;
+=======
+JS_PUBLIC_API bool JS::ObjectOpResult::failNotDataDescriptor() {
+  return fail(JSMSG_NOT_DATA_DESCRIPTOR);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API Value JS_GetPositiveInfinityValue(JSContext* cx) {
   return cx->runtime()->positiveInfinityValue;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(Value)
+JS_GetPositiveInfinityValue(JSContext* cx)
+{
+    return cx->runtime()->positiveInfinityValue;
+}
+=======
+JS_PUBLIC_API int64_t JS_Now() { return PRMJ_Now(); }
+>>>>>>> upstream-releases
 
 JS_PUBLIC_API Value JS_GetEmptyStringValue(JSContext* cx) {
   return StringValue(cx->runtime()->emptyString);
@@ -328,6 +697,7 @@ JS_PUBLIC_API bool JS_ValueToObject(JSContext* cx, HandleValue value,
   return true;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSFunction* JS_ValueToFunction(JSContext* cx, HandleValue value) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
@@ -352,15 +722,72 @@ JS_PUBLIC_API JSString* JS_ValueToSource(JSContext* cx, HandleValue value) {
 
 JS_PUBLIC_API bool JS_DoubleIsInt32(double d, int32_t* ip) {
   return mozilla::NumberIsInt32(d, ip);
+||||||| merged common ancestors
+JS_PUBLIC_API(JSFunction*)
+JS_ValueToFunction(JSContext* cx, HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    return ReportIfNotFunction(cx, value);
 }
 
+JS_PUBLIC_API(JSFunction*)
+JS_ValueToConstructor(JSContext* cx, HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    return ReportIfNotFunction(cx, value);
+}
+
+JS_PUBLIC_API(JSString*)
+JS_ValueToSource(JSContext* cx, HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    return ValueToSource(cx, value);
+}
+
+JS_PUBLIC_API(bool)
+JS_DoubleIsInt32(double d, int32_t* ip)
+{
+    return mozilla::NumberIsInt32(d, ip);
+=======
+JS_PUBLIC_API JSFunction* JS_ValueToFunction(JSContext* cx, HandleValue value) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(value);
+  return ReportIfNotFunction(cx, value);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API JSType JS_TypeOfValue(JSContext* cx, HandleValue value) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   cx->check(value);
   return TypeOfValue(value);
+||||||| merged common ancestors
+JS_PUBLIC_API(JSType)
+JS_TypeOfValue(JSContext* cx, HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    return TypeOfValue(value);
+=======
+JS_PUBLIC_API JSFunction* JS_ValueToConstructor(JSContext* cx,
+                                                HandleValue value) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(value);
+  return ReportIfNotFunction(cx, value);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_StrictlyEqual(JSContext* cx, HandleValue value1,
                                     HandleValue value2, bool* equal) {
   AssertHeapIsIdle();
@@ -368,8 +795,25 @@ JS_PUBLIC_API bool JS_StrictlyEqual(JSContext* cx, HandleValue value1,
   cx->check(value1, value2);
   MOZ_ASSERT(equal);
   return StrictlyEqual(cx, value1, value2, equal);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_StrictlyEqual(JSContext* cx, HandleValue value1, HandleValue value2, bool* equal)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value1, value2);
+    MOZ_ASSERT(equal);
+    return StrictlyEqual(cx, value1, value2, equal);
+=======
+JS_PUBLIC_API JSString* JS_ValueToSource(JSContext* cx, HandleValue value) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(value);
+  return ValueToSource(cx, value);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_LooselyEqual(JSContext* cx, HandleValue value1,
                                    HandleValue value2, bool* equal) {
   AssertHeapIsIdle();
@@ -377,8 +821,22 @@ JS_PUBLIC_API bool JS_LooselyEqual(JSContext* cx, HandleValue value1,
   cx->check(value1, value2);
   MOZ_ASSERT(equal);
   return LooselyEqual(cx, value1, value2, equal);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_LooselyEqual(JSContext* cx, HandleValue value1, HandleValue value2, bool* equal)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value1, value2);
+    MOZ_ASSERT(equal);
+    return LooselyEqual(cx, value1, value2, equal);
+=======
+JS_PUBLIC_API bool JS_DoubleIsInt32(double d, int32_t* ip) {
+  return mozilla::NumberIsInt32(d, ip);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_SameValue(JSContext* cx, HandleValue value1,
                                 HandleValue value2, bool* same) {
   AssertHeapIsIdle();
@@ -386,6 +844,22 @@ JS_PUBLIC_API bool JS_SameValue(JSContext* cx, HandleValue value1,
   cx->check(value1, value2);
   MOZ_ASSERT(same);
   return SameValue(cx, value1, value2, same);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_SameValue(JSContext* cx, HandleValue value1, HandleValue value2, bool* same)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value1, value2);
+    MOZ_ASSERT(same);
+    return SameValue(cx, value1, value2, same);
+=======
+JS_PUBLIC_API JSType JS_TypeOfValue(JSContext* cx, HandleValue value) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(value);
+  return TypeOfValue(value);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_IsBuiltinEvalFunction(JSFunction* fun) {
@@ -468,9 +942,19 @@ JS_PUBLIC_API bool JS::InitSelfHostedCode(JSContext* cx) {
   }
 
 #ifndef JS_CODEGEN_NONE
+<<<<<<< HEAD
   if (!rt->getJitRuntime(cx)) {
     return false;
   }
+||||||| merged common ancestors
+    if (!rt->getJitRuntime(cx)) {
+        return false;
+    }
+=======
+  if (!rt->createJitRuntime(cx)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 #endif
 
   if (!rt->initSelfHosting(cx)) {
@@ -704,6 +1188,7 @@ static void ReleaseAssertObjectHasNoWrappers(JSContext* cx,
  * we intentionally crash instead.
  */
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_TransplantObject(JSContext* cx, HandleObject origobj,
                                             HandleObject target) {
   AssertHeapIsIdle();
@@ -749,6 +1234,105 @@ JS_PUBLIC_API JSObject* JS_TransplantObject(JSContext* cx, HandleObject origobj,
     // Otherwise, we use |target| for the new identity object.
     newIdentity = target;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS_TransplantObject(JSContext* cx, HandleObject origobj, HandleObject target)
+{
+    AssertHeapIsIdle();
+    MOZ_ASSERT(origobj != target);
+    MOZ_ASSERT(!origobj->is<CrossCompartmentWrapperObject>());
+    MOZ_ASSERT(!target->is<CrossCompartmentWrapperObject>());
+    MOZ_ASSERT(origobj->getClass() == target->getClass());
+    ReleaseAssertObjectHasNoWrappers(cx, target);
+    MOZ_ASSERT(JS::CellIsNotGray(target));
+
+    RootedValue origv(cx, ObjectValue(*origobj));
+    RootedObject newIdentity(cx);
+
+    // Don't allow a compacting GC to observe any intermediate state.
+    AutoDisableCompactingGC nocgc(cx);
+
+    AutoDisableProxyCheck adpc;
+
+    JS::Compartment* destination = target->compartment();
+
+    if (origobj->compartment() == destination) {
+        // If the original object is in the same compartment as the
+        // destination, then we know that we won't find a wrapper in the
+        // destination's cross compartment map and that the same
+        // object will continue to work.
+        AutoRealmUnchecked ar(cx, origobj->nonCCWRealm());
+        if (!JSObject::swap(cx, origobj, target)) {
+            MOZ_CRASH();
+        }
+        newIdentity = origobj;
+    } else if (WrapperMap::Ptr p = destination->lookupWrapper(origv)) {
+        // There might already be a wrapper for the original object in
+        // the new compartment. If there is, we use its identity and swap
+        // in the contents of |target|.
+        newIdentity = &p->value().get().toObject();
+
+        // When we remove origv from the wrapper map, its wrapper, newIdentity,
+        // must immediately cease to be a cross-compartment wrapper. Nuke it.
+        destination->removeWrapper(p);
+        NukeCrossCompartmentWrapper(cx, newIdentity);
+
+        AutoRealm ar(cx, newIdentity);
+        if (!JSObject::swap(cx, newIdentity, target)) {
+            MOZ_CRASH();
+        }
+    } else {
+        // Otherwise, we use |target| for the new identity object.
+        newIdentity = target;
+    }
+=======
+JS_PUBLIC_API JSObject* JS_TransplantObject(JSContext* cx, HandleObject origobj,
+                                            HandleObject target) {
+  AssertHeapIsIdle();
+  MOZ_ASSERT(origobj != target);
+  MOZ_ASSERT(!origobj->is<CrossCompartmentWrapperObject>());
+  MOZ_ASSERT(!target->is<CrossCompartmentWrapperObject>());
+  MOZ_ASSERT(origobj->getClass() == target->getClass());
+  ReleaseAssertObjectHasNoWrappers(cx, target);
+  JS::AssertCellIsNotGray(origobj);
+  JS::AssertCellIsNotGray(target);
+
+  RootedValue origv(cx, ObjectValue(*origobj));
+  RootedObject newIdentity(cx);
+
+  // Don't allow a compacting GC to observe any intermediate state.
+  AutoDisableCompactingGC nocgc(cx);
+
+  AutoDisableProxyCheck adpc;
+
+  JS::Compartment* destination = target->compartment();
+
+  if (origobj->compartment() == destination) {
+    // If the original object is in the same compartment as the
+    // destination, then we know that we won't find a wrapper in the
+    // destination's cross compartment map and that the same
+    // object will continue to work.
+    AutoRealm ar(cx, origobj);
+    JSObject::swap(cx, origobj, target);
+    newIdentity = origobj;
+  } else if (WrapperMap::Ptr p = destination->lookupWrapper(origv)) {
+    // There might already be a wrapper for the original object in
+    // the new compartment. If there is, we use its identity and swap
+    // in the contents of |target|.
+    newIdentity = &p->value().get().toObject();
+
+    // When we remove origv from the wrapper map, its wrapper, newIdentity,
+    // must immediately cease to be a cross-compartment wrapper. Nuke it.
+    destination->removeWrapper(p);
+    NukeCrossCompartmentWrapper(cx, newIdentity);
+
+    AutoRealm ar(cx, newIdentity);
+    JSObject::swap(cx, newIdentity, target);
+  } else {
+    // Otherwise, we use |target| for the new identity object.
+    newIdentity = target;
+  }
+>>>>>>> upstream-releases
 
   // Now, iterate through other scopes looking for references to the old
   // object, and update the relevant cross-compartment wrappers. We do this
@@ -759,6 +1343,7 @@ JS_PUBLIC_API JSObject* JS_TransplantObject(JSContext* cx, HandleObject origobj,
     MOZ_CRASH();
   }
 
+<<<<<<< HEAD
   // Lastly, update the original object to point to the new one.
   if (origobj->compartment() != destination) {
     RootedObject newIdentityWrapper(cx, newIdentity);
@@ -771,13 +1356,54 @@ JS_PUBLIC_API JSObject* JS_TransplantObject(JSContext* cx, HandleObject origobj,
     if (!origobj->compartment()->putWrapper(
             cx, CrossCompartmentKey(newIdentity), origv)) {
       MOZ_CRASH();
+||||||| merged common ancestors
+    // Lastly, update the original object to point to the new one.
+    if (origobj->compartment() != destination) {
+        RootedObject newIdentityWrapper(cx, newIdentity);
+        AutoRealmUnchecked ar(cx, origobj->nonCCWRealm());
+        if (!JS_WrapObject(cx, &newIdentityWrapper)) {
+            MOZ_CRASH();
+        }
+        MOZ_ASSERT(Wrapper::wrappedObject(newIdentityWrapper) == newIdentity);
+        if (!JSObject::swap(cx, origobj, newIdentityWrapper)) {
+            MOZ_CRASH();
+        }
+        if (!origobj->compartment()->putWrapper(cx, CrossCompartmentKey(newIdentity), origv)) {
+            MOZ_CRASH();
+        }
+=======
+  // Lastly, update the original object to point to the new one.
+  if (origobj->compartment() != destination) {
+    RootedObject newIdentityWrapper(cx, newIdentity);
+    AutoRealm ar(cx, origobj);
+    if (!JS_WrapObject(cx, &newIdentityWrapper)) {
+      MOZ_CRASH();
+    }
+    MOZ_ASSERT(Wrapper::wrappedObject(newIdentityWrapper) == newIdentity);
+    JSObject::swap(cx, origobj, newIdentityWrapper);
+    if (!origobj->compartment()->putWrapper(
+            cx, CrossCompartmentKey(newIdentity), origv)) {
+      MOZ_CRASH();
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // The new identity object might be one of several things. Return it to avoid
   // ambiguity.
   MOZ_ASSERT(JS::CellIsNotGray(newIdentity));
   return newIdentity;
+||||||| merged common ancestors
+    // The new identity object might be one of several things. Return it to avoid
+    // ambiguity.
+    MOZ_ASSERT(JS::CellIsNotGray(newIdentity));
+    return newIdentity;
+=======
+  // The new identity object might be one of several things. Return it to avoid
+  // ambiguity.
+  JS::AssertCellIsNotGray(newIdentity);
+  return newIdentity;
+>>>>>>> upstream-releases
 }
 
 /*
@@ -839,6 +1465,35 @@ static const JSStdName builtin_property_names[] = {
     {NAME_OFFSET(parseInt), JSProto_Number},
 
     /* String global functions. */
+<<<<<<< HEAD
+    {NAME_OFFSET(escape), JSProto_String},
+    {NAME_OFFSET(unescape), JSProto_String},
+    {NAME_OFFSET(decodeURI), JSProto_String},
+    {NAME_OFFSET(encodeURI), JSProto_String},
+    {NAME_OFFSET(decodeURIComponent), JSProto_String},
+    {NAME_OFFSET(encodeURIComponent), JSProto_String},
+    {NAME_OFFSET(uneval), JSProto_String},
+||||||| merged common ancestors
+    { NAME_OFFSET(escape), JSProto_String },
+    { NAME_OFFSET(unescape), JSProto_String },
+    { NAME_OFFSET(decodeURI), JSProto_String },
+    { NAME_OFFSET(encodeURI), JSProto_String },
+    { NAME_OFFSET(decodeURIComponent), JSProto_String },
+    { NAME_OFFSET(encodeURIComponent), JSProto_String },
+    { NAME_OFFSET(uneval), JSProto_String },
+
+    { 0, JSProto_LIMIT }
+};
+
+JS_PUBLIC_API(bool)
+JS_ResolveStandardClass(JSContext* cx, HandleObject obj, HandleId id, bool* resolved)
+{
+    const JSStdName* stdnm;
+
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj, id);
+=======
     {NAME_OFFSET(escape), JSProto_String},
     {NAME_OFFSET(unescape), JSProto_String},
     {NAME_OFFSET(decodeURI), JSProto_String},
@@ -852,18 +1507,58 @@ static const JSStdName builtin_property_names[] = {
 JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
                                            HandleId id, bool* resolved) {
   const JSStdName* stdnm;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    {0, JSProto_LIMIT}};
+||||||| merged common ancestors
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+    *resolved = false;
+=======
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   cx->check(obj, id);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
+                                           HandleId id, bool* resolved) {
+  const JSStdName* stdnm;
+||||||| merged common ancestors
+    if (!JSID_IS_ATOM(id)) {
+        return true;
+    }
+=======
   Handle<GlobalObject*> global = obj.as<GlobalObject>();
   *resolved = false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj, id);
+||||||| merged common ancestors
+    /* Check whether we're resolving 'undefined', and define it if so. */
+    JSAtom* idAtom = JSID_TO_ATOM(id);
+    JSAtom* undefinedAtom = cx->names().undefined;
+    if (idAtom == undefinedAtom) {
+        *resolved = true;
+        return DefineDataProperty(cx, global, id, UndefinedHandleValue,
+                                  JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING);
+    }
+=======
   if (!JSID_IS_ATOM(id)) {
     return true;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Handle<GlobalObject*> global = obj.as<GlobalObject>();
+  *resolved = false;
+||||||| merged common ancestors
+    /* Try for class constructors/prototypes named by well-known atoms. */
+    stdnm = LookupStdName(cx->names(), idAtom, standard_class_names);
+=======
   /* Check whether we're resolving 'undefined', and define it if so. */
   JSAtom* idAtom = JSID_TO_ATOM(id);
   if (idAtom == cx->names().undefined) {
@@ -872,15 +1567,63 @@ JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
         cx, global, id, UndefinedHandleValue,
         JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!JSID_IS_ATOM(id)) {
+    return true;
+  }
+||||||| merged common ancestors
+    /* Try less frequently used top-level functions and constants. */
+    if (!stdnm) {
+        stdnm = LookupStdName(cx->names(), idAtom, builtin_property_names);
+    }
+=======
   // Resolve a "globalThis" self-referential property if necessary.
   if (idAtom == cx->names().globalThis) {
     return GlobalObject::maybeResolveGlobalThis(cx, global, resolved);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  /* Check whether we're resolving 'undefined', and define it if so. */
+  JSAtom* idAtom = JSID_TO_ATOM(id);
+  if (idAtom == cx->names().undefined) {
+    *resolved = true;
+    return DefineDataProperty(
+        cx, global, id, UndefinedHandleValue,
+        JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING);
+  }
+||||||| merged common ancestors
+    if (stdnm && GlobalObject::skipDeselectedConstructor(cx, stdnm->key)) {
+        stdnm = nullptr;
+    }
+=======
   /* Try for class constructors/prototypes named by well-known atoms. */
   stdnm = LookupStdName(cx->names(), idAtom, standard_class_names);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Resolve a "globalThis" self-referential property if necessary.
+  if (idAtom == cx->names().globalThis) {
+    return GlobalObject::maybeResolveGlobalThis(cx, global, resolved);
+  }
+||||||| merged common ancestors
+    // If this class is anonymous, then it doesn't exist as a global
+    // property, so we won't resolve anything.
+    JSProtoKey key = stdnm ? stdnm->key : JSProto_Null;
+    if (key != JSProto_Null) {
+        const Class* clasp = ProtoKeyToClass(key);
+        if (!clasp || !(clasp->flags & JSCLASS_IS_ANONYMOUS)) {
+            if (!GlobalObject::ensureConstructor(cx, global, key)) {
+                return false;
+            }
+
+            *resolved = true;
+            return true;
+        }
+    }
+=======
   /* Try less frequently used top-level functions and constants. */
   if (!stdnm) {
     stdnm = LookupStdName(cx->names(), idAtom, builtin_property_names);
@@ -895,7 +1638,7 @@ JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
   JSProtoKey key = stdnm ? stdnm->key : JSProto_Null;
   if (key != JSProto_Null) {
     const Class* clasp = ProtoKeyToClass(key);
-    if (!clasp || !(clasp->flags & JSCLASS_IS_ANONYMOUS)) {
+    if (!clasp || clasp->specShouldDefineConstructor()) {
       if (!GlobalObject::ensureConstructor(cx, global, key)) {
         return false;
       }
@@ -904,7 +1647,20 @@ JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
       return true;
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  /* Try for class constructors/prototypes named by well-known atoms. */
+  stdnm = LookupStdName(cx->names(), idAtom, standard_class_names);
+||||||| merged common ancestors
+    // There is no such property to resolve. An ordinary resolve hook would
+    // just return true at this point. But the global object is special in one
+    // more way: its prototype chain is lazily initialized. That is,
+    // global->getProto() might be null right now because we haven't created
+    // Object.prototype yet. Force it now.
+    return GlobalObject::getOrCreateObjectPrototype(cx, global);
+}
+=======
   // There is no such property to resolve. An ordinary resolve hook would
   // just return true at this point. But the global object is special in one
   // more way: its prototype chain is lazily initialized. That is,
@@ -912,32 +1668,124 @@ JS_PUBLIC_API bool JS_ResolveStandardClass(JSContext* cx, HandleObject obj,
   // Object.prototype yet. Force it now.
   return GlobalObject::getOrCreateObjectPrototype(cx, global);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  /* Try less frequently used top-level functions and constants. */
+  if (!stdnm) {
+    stdnm = LookupStdName(cx->names(), idAtom, builtin_property_names);
+  }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_MayResolveStandardClass(const JSAtomState& names, jsid id, JSObject* maybeObj)
+{
+    MOZ_ASSERT_IF(maybeObj, maybeObj->is<GlobalObject>());
+=======
 JS_PUBLIC_API bool JS_MayResolveStandardClass(const JSAtomState& names, jsid id,
                                               JSObject* maybeObj) {
   MOZ_ASSERT_IF(maybeObj, maybeObj->is<GlobalObject>());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (stdnm && GlobalObject::skipDeselectedConstructor(cx, stdnm->key)) {
+    stdnm = nullptr;
+  }
+||||||| merged common ancestors
+    // The global object's resolve hook is special: JS_ResolveStandardClass
+    // initializes the prototype chain lazily. Only attempt to optimize here
+    // if we know the prototype chain has been initialized.
+    if (!maybeObj || !maybeObj->staticPrototype()) {
+        return true;
+    }
+=======
   // The global object's resolve hook is special: JS_ResolveStandardClass
   // initializes the prototype chain lazily. Only attempt to optimize here
   // if we know the prototype chain has been initialized.
   if (!maybeObj || !maybeObj->staticPrototype()) {
     return true;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // If this class is anonymous, then it doesn't exist as a global
+  // property, so we won't resolve anything.
+  JSProtoKey key = stdnm ? stdnm->key : JSProto_Null;
+  if (key != JSProto_Null) {
+    const Class* clasp = ProtoKeyToClass(key);
+    if (!clasp || !(clasp->flags & JSCLASS_IS_ANONYMOUS)) {
+      if (!GlobalObject::ensureConstructor(cx, global, key)) {
+        return false;
+      }
+||||||| merged common ancestors
+    if (!JSID_IS_ATOM(id)) {
+        return false;
+    }
+
+    JSAtom* atom = JSID_TO_ATOM(id);
+=======
   if (!JSID_IS_ATOM(id)) {
     return false;
   }
 
   JSAtom* atom = JSID_TO_ATOM(id);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      *resolved = true;
+      return true;
+    }
+  }
+||||||| merged common ancestors
+    // This will return true even for deselected constructors.  (To do
+    // better, we need a JSContext here; it's fine as it is.)
+=======
   // This will return true even for deselected constructors.  (To do
   // better, we need a JSContext here; it's fine as it is.)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // There is no such property to resolve. An ordinary resolve hook would
+  // just return true at this point. But the global object is special in one
+  // more way: its prototype chain is lazily initialized. That is,
+  // global->getProto() might be null right now because we haven't created
+  // Object.prototype yet. Force it now.
+  return GlobalObject::getOrCreateObjectPrototype(cx, global);
+||||||| merged common ancestors
+    return atom == names.undefined ||
+           LookupStdName(names, atom, standard_class_names) ||
+           LookupStdName(names, atom, builtin_property_names);
+=======
   return atom == names.undefined || atom == names.globalThis ||
          LookupStdName(names, atom, standard_class_names) ||
          LookupStdName(names, atom, builtin_property_names);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_MayResolveStandardClass(const JSAtomState& names, jsid id,
+                                              JSObject* maybeObj) {
+  MOZ_ASSERT_IF(maybeObj, maybeObj->is<GlobalObject>());
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_EnumerateStandardClasses(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+    return GlobalObject::initStandardClasses(cx, global);
+}
+
+static bool
+EnumerateStandardClassesInTable(JSContext* cx, Handle<GlobalObject*> global,
+                                AutoIdVector& properties, const JSStdName* table,
+                                bool includeResolved)
+{
+    for (unsigned i = 0; !table[i].isSentinel(); i++) {
+        if (table[i].isDummy()) {
+            continue;
+        }
+=======
 JS_PUBLIC_API bool JS_EnumerateStandardClasses(JSContext* cx,
                                                HandleObject obj) {
   AssertHeapIsIdle();
@@ -946,7 +1794,116 @@ JS_PUBLIC_API bool JS_EnumerateStandardClasses(JSContext* cx,
   Handle<GlobalObject*> global = obj.as<GlobalObject>();
   return GlobalObject::initStandardClasses(cx, global);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // The global object's resolve hook is special: JS_ResolveStandardClass
+  // initializes the prototype chain lazily. Only attempt to optimize here
+  // if we know the prototype chain has been initialized.
+  if (!maybeObj || !maybeObj->staticPrototype()) {
+    return true;
+  }
+||||||| merged common ancestors
+        JSProtoKey key = table[i].key;
+=======
+static bool EnumerateStandardClassesInTable(JSContext* cx,
+                                            Handle<GlobalObject*> global,
+                                            MutableHandleIdVector properties,
+                                            const JSStdName* table,
+                                            bool includeResolved) {
+  for (unsigned i = 0; !table[i].isSentinel(); i++) {
+    if (table[i].isDummy()) {
+      continue;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!JSID_IS_ATOM(id)) {
+    return false;
+  }
+||||||| merged common ancestors
+        // If the standard class has been resolved, the properties have been
+        // defined on the global so we don't need to add them here.
+        if (!includeResolved && global->isStandardClassResolved(key)) {
+            continue;
+        }
+=======
+    JSProtoKey key = table[i].key;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSAtom* atom = JSID_TO_ATOM(id);
+||||||| merged common ancestors
+        if (GlobalObject::skipDeselectedConstructor(cx, key)) {
+            continue;
+        }
+=======
+    // If the standard class has been resolved, the properties have been
+    // defined on the global so we don't need to add them here.
+    if (!includeResolved && global->isStandardClassResolved(key)) {
+      continue;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // This will return true even for deselected constructors.  (To do
+  // better, we need a JSContext here; it's fine as it is.)
+||||||| merged common ancestors
+        if (const Class* clasp = ProtoKeyToClass(key)) {
+            if (clasp->flags & JSCLASS_IS_ANONYMOUS) {
+                continue;
+            }
+            if (!clasp->specShouldDefineConstructor()) {
+                continue;
+            }
+        }
+=======
+    if (GlobalObject::skipDeselectedConstructor(cx, key)) {
+      continue;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return atom == names.undefined || atom == names.globalThis ||
+         LookupStdName(names, atom, standard_class_names) ||
+         LookupStdName(names, atom, builtin_property_names);
+}
+||||||| merged common ancestors
+        jsid id = NameToId(AtomStateOffsetToName(cx->names(), table[i].atomOffset));
+        if (!properties.append(id)) {
+            return false;
+        }
+    }
+=======
+    if (const Class* clasp = ProtoKeyToClass(key)) {
+      if (!clasp->specShouldDefineConstructor()) {
+        continue;
+      }
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_EnumerateStandardClasses(JSContext* cx,
+                                               HandleObject obj) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+  Handle<GlobalObject*> global = obj.as<GlobalObject>();
+  return GlobalObject::initStandardClasses(cx, global);
+||||||| merged common ancestors
+    return true;
+=======
+    jsid id = NameToId(AtomStateOffsetToName(cx->names(), table[i].atomOffset));
+    if (!properties.append(id)) {
+      return false;
+    }
+  }
+
+  return true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 static bool EnumerateStandardClassesInTable(JSContext* cx,
                                             Handle<GlobalObject*> global,
                                             AutoIdVector& properties,
@@ -956,15 +1913,57 @@ static bool EnumerateStandardClassesInTable(JSContext* cx,
     if (table[i].isDummy()) {
       continue;
     }
+||||||| merged common ancestors
+static bool
+EnumerateStandardClasses(JSContext* cx, JS::HandleObject obj, JS::AutoIdVector& properties,
+                         bool enumerableOnly, bool includeResolved)
+{
+    if (enumerableOnly) {
+        // There are no enumerable standard classes and "undefined" is
+        // not enumerable.
+        return true;
+    }
+=======
+static bool EnumerateStandardClasses(JSContext* cx, JS::HandleObject obj,
+                                     JS::MutableHandleIdVector properties,
+                                     bool enumerableOnly,
+                                     bool includeResolved) {
+  if (enumerableOnly) {
+    // There are no enumerable standard classes and "undefined" is
+    // not enumerable.
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     JSProtoKey key = table[i].key;
+||||||| merged common ancestors
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+=======
+  Handle<GlobalObject*> global = obj.as<GlobalObject>();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // If the standard class has been resolved, the properties have been
     // defined on the global so we don't need to add them here.
     if (!includeResolved && global->isStandardClassResolved(key)) {
       continue;
     }
+||||||| merged common ancestors
+    // It's fine to always append |undefined| here, it's non-configurable and
+    // the enumeration code filters duplicates.
+    if (!properties.append(NameToId(cx->names().undefined))) {
+        return false;
+    }
+=======
+  // It's fine to always append |undefined| here, it's non-configurable and
+  // the enumeration code filters duplicates.
+  if (!properties.append(NameToId(cx->names().undefined))) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (GlobalObject::skipDeselectedConstructor(cx, key)) {
       continue;
     }
@@ -981,12 +1980,35 @@ static bool EnumerateStandardClassesInTable(JSContext* cx,
     jsid id = NameToId(AtomStateOffsetToName(cx->names(), table[i].atomOffset));
     if (!properties.append(id)) {
       return false;
+||||||| merged common ancestors
+    if (!EnumerateStandardClassesInTable(cx, global, properties, standard_class_names,
+                                         includeResolved)) {
+        return false;
     }
+    if (!EnumerateStandardClassesInTable(cx, global, properties, builtin_property_names,
+                                         includeResolved)) {
+        return false;
+=======
+  bool resolved = false;
+  if (!GlobalObject::maybeResolveGlobalThis(cx, global, &resolved)) {
+    return false;
+  }
+  if (resolved || includeResolved) {
+    if (!properties.append(NameToId(cx->names().globalThis))) {
+      return false;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
   }
 
   return true;
 }
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static bool EnumerateStandardClasses(JSContext* cx, JS::HandleObject obj,
                                      JS::AutoIdVector& properties,
                                      bool enumerableOnly,
@@ -1015,19 +2037,60 @@ static bool EnumerateStandardClasses(JSContext* cx, JS::HandleObject obj,
   }
 
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+  if (!EnumerateStandardClassesInTable(cx, global, properties,
+                                       standard_class_names, includeResolved)) {
+    return false;
+  }
+  if (!EnumerateStandardClassesInTable(
+          cx, global, properties, builtin_property_names, includeResolved)) {
+    return false;
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_NewEnumerateStandardClasses(JSContext* cx,
                                                   JS::HandleObject obj,
                                                   JS::AutoIdVector& properties,
                                                   bool enumerableOnly) {
   return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, false);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_NewEnumerateStandardClasses(JSContext* cx, JS::HandleObject obj, JS::AutoIdVector& properties,
+                               bool enumerableOnly)
+{
+    return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, false);
+=======
+JS_PUBLIC_API bool JS_NewEnumerateStandardClasses(
+    JSContext* cx, JS::HandleObject obj, JS::MutableHandleIdVector properties,
+    bool enumerableOnly) {
+  return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, false);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_NewEnumerateStandardClassesIncludingResolved(
     JSContext* cx, JS::HandleObject obj, JS::AutoIdVector& properties,
     bool enumerableOnly) {
   return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, true);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_NewEnumerateStandardClassesIncludingResolved(JSContext* cx, JS::HandleObject obj,
+                                                JS::AutoIdVector& properties,
+                                                bool enumerableOnly)
+{
+    return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, true);
+=======
+JS_PUBLIC_API bool JS_NewEnumerateStandardClassesIncludingResolved(
+    JSContext* cx, JS::HandleObject obj, JS::MutableHandleIdVector properties,
+    bool enumerableOnly) {
+  return EnumerateStandardClasses(cx, obj, properties, enumerableOnly, true);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_GetClassObject(JSContext* cx, JSProtoKey key,
@@ -1142,36 +2205,152 @@ JS_PUBLIC_API bool JS::detail::ComputeThis(JSContext* cx, Value* vp,
 
 static bool gProfileTimelineRecordingEnabled = false;
 
+<<<<<<< HEAD
+JS_PUBLIC_API void JS::SetProfileTimelineRecordingEnabled(bool enabled) {
+  gProfileTimelineRecordingEnabled = enabled;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetProfileTimelineRecordingEnabled(bool enabled)
+{
+    gProfileTimelineRecordingEnabled = enabled;
+=======
 JS_PUBLIC_API void JS::SetProfileTimelineRecordingEnabled(bool enabled) {
   gProfileTimelineRecordingEnabled = enabled;
 }
 
 JS_PUBLIC_API bool JS::IsProfileTimelineRecordingEnabled() {
   return gProfileTimelineRecordingEnabled;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS::IsProfileTimelineRecordingEnabled() {
+  return gProfileTimelineRecordingEnabled;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::IsProfileTimelineRecordingEnabled()
+{
+    return gProfileTimelineRecordingEnabled;
+=======
 JS_PUBLIC_API void* JS_malloc(JSContext* cx, size_t nbytes) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return static_cast<void*>(cx->maybe_pod_malloc<uint8_t>(nbytes));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API void* JS_malloc(JSContext* cx, size_t nbytes) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return static_cast<void*>(cx->maybe_pod_malloc<uint8_t>(nbytes));
+||||||| merged common ancestors
+JS_PUBLIC_API(void*)
+JS_malloc(JSContext* cx, size_t nbytes)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return static_cast<void*>(cx->maybe_pod_malloc<uint8_t>(nbytes));
+=======
 JS_PUBLIC_API void* JS_realloc(JSContext* cx, void* p, size_t oldBytes,
                                size_t newBytes) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return static_cast<void*>(cx->maybe_pod_realloc<uint8_t>(
       static_cast<uint8_t*>(p), oldBytes, newBytes));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API void* JS_realloc(JSContext* cx, void* p, size_t oldBytes,
+                               size_t newBytes) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return static_cast<void*>(cx->maybe_pod_realloc<uint8_t>(
+      static_cast<uint8_t*>(p), oldBytes, newBytes));
+||||||| merged common ancestors
+JS_PUBLIC_API(void*)
+JS_realloc(JSContext* cx, void* p, size_t oldBytes, size_t newBytes)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return static_cast<void*>(cx->maybe_pod_realloc<uint8_t>(static_cast<uint8_t*>(p),
+                                                             oldBytes, newBytes));
+=======
 JS_PUBLIC_API void JS_free(JSContext* cx, void* p) { return js_free(p); }
+
+JS_PUBLIC_API void* JS_string_malloc(JSContext* cx, size_t nbytes) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return static_cast<void*>(
+      cx->maybe_pod_malloc<uint8_t>(nbytes, js::StringBufferArena));
+}
+
+JS_PUBLIC_API void* JS_string_realloc(JSContext* cx, void* p, size_t oldBytes,
+                                      size_t newBytes) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return static_cast<void*>(cx->maybe_pod_realloc<uint8_t>(
+      static_cast<uint8_t*>(p), oldBytes, newBytes, js::StringBufferArena));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+JS_PUBLIC_API void JS_free(JSContext* cx, void* p) { return js_free(p); }
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_free(JSContext* cx, void* p)
+{
+    return js_free(p);
+}
+=======
+JS_PUBLIC_API void JS_string_free(JSContext* cx, void* p) { return js_free(p); }
 
 JS_PUBLIC_API void JS_freeop(JSFreeOp* fop, void* p) {
   return FreeOp::get(fop)->free_(p);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JS_PUBLIC_API void JS_freeop(JSFreeOp* fop, void* p) {
+  return FreeOp::get(fop)->free_(p);
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_freeop(JSFreeOp* fop, void* p)
+{
+    return FreeOp::get(fop)->free_(p);
+=======
+JS_PUBLIC_API void JS::AddAssociatedMemory(JSObject* obj, size_t nbytes,
+                                           JS::MemoryUse use) {
+  MOZ_ASSERT(obj);
+  if (!nbytes) {
+    return;
+  }
+
+  Zone* zone = obj->zone();
+  zone->addCellMemory(obj, nbytes, js::MemoryUse(use));
+  zone->maybeMallocTriggerZoneGC();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_updateMallocCounter(JSContext* cx, size_t nbytes) {
   return cx->updateMallocCounter(nbytes);
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_updateMallocCounter(JSContext* cx, size_t nbytes)
+{
+    return cx->updateMallocCounter(nbytes);
+=======
+JS_PUBLIC_API void JS::RemoveAssociatedMemory(JSObject* obj, size_t nbytes,
+                                              JS::MemoryUse use) {
+  MOZ_ASSERT(obj);
+  if (!nbytes) {
+    return;
+  }
+
+  obj->zoneFromAnyThread()->removeCellMemory(obj, nbytes, js::MemoryUse(use));
+>>>>>>> upstream-releases
 }
 
 #undef JS_AddRoot
@@ -1189,20 +2368,34 @@ JS_PUBLIC_API void JS_RemoveExtraGCRootsTracer(JSContext* cx,
 
 JS_PUBLIC_API bool JS::IsIdleGCTaskNeeded(JSRuntime* rt) {
   // Currently, we only collect nursery during idle time.
-  return rt->gc.nursery().needIdleTimeCollection();
+  return rt->gc.nursery().shouldCollect();
 }
 
 JS_PUBLIC_API void JS::RunIdleTimeGCTask(JSRuntime* rt) {
   gc::GCRuntime& gc = rt->gc;
-  if (gc.nursery().needIdleTimeCollection()) {
-    gc.minorGC(JS::gcreason::IDLE_TIME_COLLECTION);
+  if (gc.nursery().shouldCollect()) {
+    gc.minorGC(JS::GCReason::IDLE_TIME_COLLECTION);
   }
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_GC(JSContext* cx) {
   AssertHeapIsIdle();
   JS::PrepareForFullGC(cx);
   cx->runtime()->gc.gc(GC_NORMAL, JS::gcreason::API);
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_GC(JSContext* cx)
+{
+    AssertHeapIsIdle();
+    JS::PrepareForFullGC(cx);
+    cx->runtime()->gc.gc(GC_NORMAL, JS::gcreason::API);
+=======
+JS_PUBLIC_API void JS_GC(JSContext* cx, JS::GCReason reason) {
+  AssertHeapIsIdle();
+  JS::PrepareForFullGC(cx);
+  cx->runtime()->gc.gc(GC_NORMAL, reason);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API void JS_MaybeGC(JSContext* cx) {
@@ -1285,6 +2478,7 @@ JS_PUBLIC_API uint32_t JS_GetGCParameter(JSContext* cx, JSGCParamKey key) {
   return cx->runtime()->gc.getParameter(key, lock);
 }
 
+<<<<<<< HEAD
 static const size_t NumGCConfigs = 14;
 struct JSGCConfig {
   JSGCParamKey key;
@@ -1327,7 +2521,103 @@ JS_PUBLIC_API void JS_SetGCParametersBasedOnAvailableMemory(JSContext* cx,
 
     config = nominal;
   }
+||||||| merged common ancestors
+static const size_t NumGCConfigs = 14;
+struct JSGCConfig {
+    JSGCParamKey key;
+    uint32_t value;
+};
 
+JS_PUBLIC_API(void)
+JS_SetGCParametersBasedOnAvailableMemory(JSContext* cx, uint32_t availMem)
+{
+    static const JSGCConfig minimal[NumGCConfigs] = {
+        {JSGC_MAX_MALLOC_BYTES, 6 * 1024 * 1024},
+        {JSGC_SLICE_TIME_BUDGET, 30},
+        {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+        {JSGC_HIGH_FREQUENCY_HIGH_LIMIT, 40},
+        {JSGC_HIGH_FREQUENCY_LOW_LIMIT, 0},
+        {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX, 300},
+        {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN, 120},
+        {JSGC_LOW_FREQUENCY_HEAP_GROWTH, 120},
+        {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+        {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+        {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+        {JSGC_ALLOCATION_THRESHOLD, 1},
+        {JSGC_MODE, JSGC_MODE_INCREMENTAL}
+    };
+
+    const JSGCConfig* config = minimal;
+    if (availMem > 512) {
+        static const JSGCConfig nominal[NumGCConfigs] = {
+            {JSGC_MAX_MALLOC_BYTES, 6 * 1024 * 1024},
+            {JSGC_SLICE_TIME_BUDGET, 30},
+            {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1000},
+            {JSGC_HIGH_FREQUENCY_HIGH_LIMIT, 500},
+            {JSGC_HIGH_FREQUENCY_LOW_LIMIT, 100},
+            {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX, 300},
+            {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN, 150},
+            {JSGC_LOW_FREQUENCY_HEAP_GROWTH, 150},
+            {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+            {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+            {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+            {JSGC_ALLOCATION_THRESHOLD, 30},
+            {JSGC_MODE, JSGC_MODE_ZONE}
+        };
+
+        config = nominal;
+    }
+
+    for (size_t i = 0; i < NumGCConfigs; i++) {
+        JS_SetGCParameter(cx, config[i].key, config[i].value);
+    }
+}
+=======
+JS_PUBLIC_API void JS_SetGCParametersBasedOnAvailableMemory(JSContext* cx,
+                                                            uint32_t availMem) {
+  struct JSGCConfig {
+    JSGCParamKey key;
+    uint32_t value;
+  };
+
+  static const JSGCConfig minimal[] = {
+      {JSGC_MAX_MALLOC_BYTES, 6 * 1024 * 1024},
+      {JSGC_SLICE_TIME_BUDGET_MS, 30},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_HIGH_FREQUENCY_HIGH_LIMIT, 40},
+      {JSGC_HIGH_FREQUENCY_LOW_LIMIT, 0},
+      {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX, 300},
+      {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN, 120},
+      {JSGC_LOW_FREQUENCY_HEAP_GROWTH, 120},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_ALLOCATION_THRESHOLD, 1},
+      {JSGC_MODE, JSGC_MODE_ZONE_INCREMENTAL}};
+
+  static const JSGCConfig nominal[] = {
+      {JSGC_MAX_MALLOC_BYTES, 6 * 1024 * 1024},
+      {JSGC_SLICE_TIME_BUDGET_MS, 30},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1000},
+      {JSGC_HIGH_FREQUENCY_HIGH_LIMIT, 500},
+      {JSGC_HIGH_FREQUENCY_LOW_LIMIT, 100},
+      {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MAX, 300},
+      {JSGC_HIGH_FREQUENCY_HEAP_GROWTH_MIN, 150},
+      {JSGC_LOW_FREQUENCY_HEAP_GROWTH, 150},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_HIGH_FREQUENCY_TIME_LIMIT, 1500},
+      {JSGC_ALLOCATION_THRESHOLD, 30},
+      {JSGC_MODE, JSGC_MODE_ZONE}};
+
+  const auto& configSet = availMem > 512 ? nominal : minimal;
+  for (const auto& config : configSet) {
+    JS_SetGCParameter(cx, config.key, config.value);
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   for (size_t i = 0; i < NumGCConfigs; i++) {
     JS_SetGCParameter(cx, config[i].key, config[i].value);
   }
@@ -1341,6 +2631,26 @@ JS_PUBLIC_API JSString* JS_NewExternalString(JSContext* cx,
   CHECK_THREAD(cx);
   JSString* s = JSExternalString::new_(cx, chars, length, fin);
   return s;
+||||||| merged common ancestors
+
+JS_PUBLIC_API(JSString*)
+JS_NewExternalString(JSContext* cx, const char16_t* chars, size_t length,
+                     const JSStringFinalizer* fin)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    JSString* s = JSExternalString::new_(cx, chars, length, fin);
+    return s;
+=======
+JS_PUBLIC_API JSString* JS_NewExternalString(JSContext* cx,
+                                             const char16_t* chars,
+                                             size_t length,
+                                             const JSStringFinalizer* fin) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  JSString* s = JSExternalString::new_(cx, chars, length, fin);
+  return s;
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JSString* JS_NewMaybeExternalString(JSContext* cx,
@@ -1362,10 +2672,21 @@ extern JS_PUBLIC_API const JSStringFinalizer* JS_GetExternalStringFinalizer(
   return str->asExternal().externalFinalizer();
 }
 
+<<<<<<< HEAD
 static void SetNativeStackQuotaAndLimit(JSContext* cx, JS::StackKind kind,
                                         size_t stackSize) {
   cx->nativeStackQuota[kind] = stackSize;
 
+||||||| merged common ancestors
+static void
+SetNativeStackQuotaAndLimit(JSContext* cx, JS::StackKind kind, size_t stackSize)
+{
+    cx->nativeStackQuota[kind] = stackSize;
+
+=======
+static void SetNativeStackLimit(JSContext* cx, JS::StackKind kind,
+                                size_t stackSize) {
+>>>>>>> upstream-releases
 #if JS_STACK_GROWTH_DIRECTION > 0
   if (stackSize == 0) {
     cx->nativeStackLimit[kind] = UINTPTR_MAX;
@@ -1401,11 +2722,22 @@ JS_PUBLIC_API void JS_SetNativeStackQuota(JSContext* cx,
     MOZ_ASSERT(untrustedScriptStackSize < trustedScriptStackSize);
   }
 
+<<<<<<< HEAD
   SetNativeStackQuotaAndLimit(cx, JS::StackForSystemCode, systemCodeStackSize);
   SetNativeStackQuotaAndLimit(cx, JS::StackForTrustedScript,
                               trustedScriptStackSize);
   SetNativeStackQuotaAndLimit(cx, JS::StackForUntrustedScript,
                               untrustedScriptStackSize);
+||||||| merged common ancestors
+    SetNativeStackQuotaAndLimit(cx, JS::StackForSystemCode, systemCodeStackSize);
+    SetNativeStackQuotaAndLimit(cx, JS::StackForTrustedScript, trustedScriptStackSize);
+    SetNativeStackQuotaAndLimit(cx, JS::StackForUntrustedScript, untrustedScriptStackSize);
+=======
+  SetNativeStackLimit(cx, JS::StackForSystemCode, systemCodeStackSize);
+  SetNativeStackLimit(cx, JS::StackForTrustedScript, trustedScriptStackSize);
+  SetNativeStackLimit(cx, JS::StackForUntrustedScript,
+                      untrustedScriptStackSize);
+>>>>>>> upstream-releases
 
   if (cx->isMainThreadContext()) {
     cx->initJitStackLimit();
@@ -1540,10 +2872,20 @@ JS_PUBLIC_API bool JS_InstanceOf(JSContext* cx, HandleObject obj,
     if (args) {
       ReportIncompatibleMethod(cx, *args, Valueify(clasp));
     }
+<<<<<<< HEAD
     return false;
   }
   return true;
 }
+||||||| merged common ancestors
+    return true;
+}
+=======
+    return false;
+  }
+  return true;
+}
+>>>>>>> upstream-releases
 
 JS_PUBLIC_API bool JS_HasInstance(JSContext* cx, HandleObject obj,
                                   HandleValue value, bool* bp) {
@@ -1613,22 +2955,77 @@ JS::RealmCreationOptions& JS::RealmCreationOptions::setExistingCompartment(
   return *this;
 }
 
+<<<<<<< HEAD
 JS::RealmCreationOptions& JS::RealmCreationOptions::setNewCompartmentAndZone() {
   compSpec_ = CompartmentSpecifier::NewCompartmentAndZone;
   comp_ = nullptr;
   return *this;
+||||||| merged common ancestors
+JS::RealmCreationOptions&
+JS::RealmCreationOptions::setNewCompartmentAndZone()
+{
+    compSpec_ = CompartmentSpecifier::NewCompartmentAndZone;
+    comp_ = nullptr;
+    return *this;
+=======
+JS::RealmCreationOptions& JS::RealmCreationOptions::setExistingCompartment(
+    JS::Compartment* compartment) {
+  compSpec_ = CompartmentSpecifier::ExistingCompartment;
+  comp_ = compartment;
+  return *this;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 const JS::RealmCreationOptions& JS::RealmCreationOptionsRef(Realm* realm) {
   return realm->creationOptions();
+||||||| merged common ancestors
+const JS::RealmCreationOptions&
+JS::RealmCreationOptionsRef(Realm* realm)
+{
+    return realm->creationOptions();
+=======
+JS::RealmCreationOptions& JS::RealmCreationOptions::setNewCompartmentAndZone() {
+  compSpec_ = CompartmentSpecifier::NewCompartmentAndZone;
+  comp_ = nullptr;
+  return *this;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+const JS::RealmCreationOptions& JS::RealmCreationOptionsRef(JSContext* cx) {
+  return cx->realm()->creationOptions();
+||||||| merged common ancestors
+const JS::RealmCreationOptions&
+JS::RealmCreationOptionsRef(JSContext* cx)
+{
+    return cx->realm()->creationOptions();
+=======
+const JS::RealmCreationOptions& JS::RealmCreationOptionsRef(Realm* realm) {
+  return realm->creationOptions();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+bool JS::RealmCreationOptions::getSharedMemoryAndAtomicsEnabled() const {
+  return sharedMemoryAndAtomics_;
+||||||| merged common ancestors
+bool
+JS::RealmCreationOptions::getSharedMemoryAndAtomicsEnabled() const
+{
+#if defined(ENABLE_SHARED_ARRAY_BUFFER)
+    return sharedMemoryAndAtomics_;
+#else
+    return false;
+#endif
+=======
 const JS::RealmCreationOptions& JS::RealmCreationOptionsRef(JSContext* cx) {
   return cx->realm()->creationOptions();
 }
 
 bool JS::RealmCreationOptions::getSharedMemoryAndAtomicsEnabled() const {
   return sharedMemoryAndAtomics_;
+>>>>>>> upstream-releases
 }
 
 JS::RealmCreationOptions&
@@ -1685,6 +3082,7 @@ JS_PUBLIC_API void JS_GlobalObjectTraceHook(JSTracer* trc, JSObject* global) {
   }
 }
 
+<<<<<<< HEAD
 const JSClassOps JS::DefaultGlobalClassOps = {nullptr,  // addProperty
                                               nullptr,  // deleteProperty
                                               nullptr,  // enumerate
@@ -1717,6 +3115,65 @@ JS_PUBLIC_API JSObject* JS_NewObject(JSContext* cx, const JSClass* jsclasp) {
   if (!clasp) {
     clasp = &PlainObject::class_; /* default class is Object */
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_FireOnNewGlobalObject(JSContext* cx, JS::HandleObject global)
+{
+    // This hook is infallible, because we don't really want arbitrary script
+    // to be able to throw errors during delicate global creation routines.
+    // This infallibility will eat OOM and slow script, but if that happens
+    // we'll likely run up into them again soon in a fallible context.
+    cx->check(global);
+    Rooted<js::GlobalObject*> globalObject(cx, &global->as<GlobalObject>());
+    Debugger::onNewGlobalObject(cx, globalObject);
+}
+
+JS_PUBLIC_API(JSObject*)
+JS_NewObject(JSContext* cx, const JSClass* jsclasp)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    const Class* clasp = Valueify(jsclasp);
+    if (!clasp) {
+        clasp = &PlainObject::class_;    /* default class is Object */
+    }
+=======
+const JSClassOps JS::DefaultGlobalClassOps = {nullptr,  // addProperty
+                                              nullptr,  // deleteProperty
+                                              nullptr,  // enumerate
+                                              JS_NewEnumerateStandardClasses,
+                                              JS_ResolveStandardClass,
+                                              JS_MayResolveStandardClass,
+                                              nullptr,  // finalize
+                                              nullptr,  // call
+                                              nullptr,  // hasInstance
+                                              nullptr,  // construct
+                                              JS_GlobalObjectTraceHook};
+
+JS_PUBLIC_API void JS_FireOnNewGlobalObject(JSContext* cx,
+                                            JS::HandleObject global) {
+  // This hook is infallible, because we don't really want arbitrary script
+  // to be able to throw errors during delicate global creation routines.
+  // This infallibility will eat OOM and slow script, but if that happens
+  // we'll likely run up into them again soon in a fallible context.
+  cx->check(global);
+  Rooted<js::GlobalObject*> globalObject(cx, &global->as<GlobalObject>());
+  Debugger::onNewGlobalObject(cx, globalObject);
+  cx->runtime()->ensureRealmIsRecordingAllocations(globalObject);
+}
+
+JS_PUBLIC_API JSObject* JS_NewObject(JSContext* cx, const JSClass* jsclasp) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+
+  const Class* clasp = Valueify(jsclasp);
+  if (!clasp) {
+    clasp = &PlainObject::class_; /* default class is Object */
+  }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(clasp != &JSFunction::class_);
   MOZ_ASSERT(!(clasp->flags & JSCLASS_IS_GLOBAL));
@@ -1757,25 +3214,89 @@ JS_PUBLIC_API JSObject* JS_NewObjectForConstructor(JSContext* cx,
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
 
+<<<<<<< HEAD
   Value callee = args.calleev();
   cx->check(callee);
   RootedObject obj(cx, &callee.toObject());
   return CreateThis(cx, Valueify(clasp), obj);
 }
+||||||| merged common ancestors
+    Value callee = args.calleev();
+    cx->check(callee);
+    RootedObject obj(cx, &callee.toObject());
+    return CreateThis(cx, Valueify(clasp), obj);
+}
+=======
+  if (!ThrowIfNotConstructing(cx, args, clasp->name)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_IsNative(JSObject* obj) { return obj->isNative(); }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_IsNative(JSObject* obj)
+{
+    return obj->isNative();
+}
+=======
+  RootedObject newTarget(cx, &args.newTarget().toObject());
+  cx->check(newTarget);
+  return CreateThis(cx, Valueify(clasp), newTarget);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+JS_PUBLIC_API void JS::AssertObjectBelongsToCurrentThread(JSObject* obj) {
+  JSRuntime* rt = obj->compartment()->runtimeFromAnyThread();
+  MOZ_RELEASE_ASSERT(CurrentThreadCanAccessRuntime(rt));
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::AssertObjectBelongsToCurrentThread(JSObject* obj)
+{
+    JSRuntime* rt = obj->compartment()->runtimeFromAnyThread();
+    MOZ_RELEASE_ASSERT(CurrentThreadCanAccessRuntime(rt));
+=======
 JS_PUBLIC_API bool JS_IsNative(JSObject* obj) { return obj->isNative(); }
 
 JS_PUBLIC_API void JS::AssertObjectBelongsToCurrentThread(JSObject* obj) {
   JSRuntime* rt = obj->compartment()->runtimeFromAnyThread();
   MOZ_RELEASE_ASSERT(CurrentThreadCanAccessRuntime(rt));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+/*** Standard internal methods **********************************************/
+||||||| merged common ancestors
+=======
+JS_PUBLIC_API void SetHelperThreadTaskCallback(
+    void (*callback)(js::RunnableTask*)) {
+  HelperThreadTaskCallback = callback;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_GetPrototype(JSContext* cx, HandleObject obj,
+                                   MutableHandleObject result) {
+  cx->check(obj);
+  return GetPrototype(cx, obj, result);
+||||||| merged common ancestors
+/*** Standard internal methods *******************************************************************/
+
+JS_PUBLIC_API(bool)
+JS_GetPrototype(JSContext* cx, HandleObject obj, MutableHandleObject result)
+{
+    cx->check(obj);
+    return GetPrototype(cx, obj, result);
+=======
 /*** Standard internal methods **********************************************/
 
 JS_PUBLIC_API bool JS_GetPrototype(JSContext* cx, HandleObject obj,
                                    MutableHandleObject result) {
   cx->check(obj);
   return GetPrototype(cx, obj, result);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_SetPrototype(JSContext* cx, HandleObject obj,
@@ -1925,6 +3446,7 @@ static bool DefineAccessorPropertyById(JSContext* cx, HandleObject obj,
                                        unsigned attrs) {
   // Getter/setter are both possibly-null JSNatives. Wrap them in JSFunctions.
 
+<<<<<<< HEAD
   MOZ_ASSERT(!(attrs & (JSPROP_GETTER | JSPROP_SETTER)));
 
   RootedFunction getter(cx);
@@ -1937,6 +3459,37 @@ static bool DefineAccessorPropertyById(JSContext* cx, HandleObject obj,
     if (!getter) {
       return false;
     }
+||||||| merged common ancestors
+    MOZ_ASSERT(!(attrs & (JSPROP_GETTER | JSPROP_SETTER)));
+
+    RootedFunction getter(cx);
+    if (get.op) {
+        RootedAtom atom(cx, IdToFunctionName(cx, id, FunctionPrefixKind::Get));
+        if (!atom) {
+            return false;
+        }
+        getter = NewNativeFunction(cx, get.op, 0, atom);
+        if (!getter) {
+            return false;
+        }
+
+        if (get.info) {
+            getter->setJitInfo(get.info);
+        }
+=======
+  MOZ_ASSERT(!(attrs & (JSPROP_GETTER | JSPROP_SETTER)));
+
+  RootedFunction getter(cx);
+  if (get.op) {
+    RootedAtom atom(cx, IdToFunctionName(cx, id, FunctionPrefixKind::Get));
+    if (!atom) {
+      return false;
+    }
+    getter = NewNativeFunction(cx, get.op, 0, atom);
+    if (!getter) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
     if (get.info) {
       getter->setJitInfo(get.info);
@@ -2007,6 +3560,7 @@ JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
   return DefineAccessorPropertyById(cx, obj, id, getter, setter, attrs);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
                                          HandleId id, HandleObject valueArg,
                                          unsigned attrs) {
@@ -2020,31 +3574,92 @@ JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
   RootedValue value(cx, StringValue(valueArg));
   return DefineDataPropertyById(cx, obj, id, value, attrs);
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, HandleObject getter,
+                  HandleObject setter, unsigned attrs)
+{
+    JSAtom* atom = Atomize(cx, name, strlen(name));
+    if (!atom) {
+        return false;
+    }
+    RootedId id(cx, AtomToId(atom));
+=======
+JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
+                                         HandleId id, HandleObject valueArg,
+                                         unsigned attrs) {
+  RootedValue value(cx, ObjectValue(*valueArg));
+  return DefineDataPropertyById(cx, obj, id, value, attrs);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
                                          HandleId id, int32_t valueArg,
                                          unsigned attrs) {
   Value value = Int32Value(valueArg);
   return DefineDataPropertyById(cx, obj, id,
                                 HandleValue::fromMarkedLocation(&value), attrs);
+||||||| merged common ancestors
+    return DefineAccessorPropertyById(cx, obj, id, getter, setter, attrs);
+=======
+JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
+                                         HandleId id, HandleString valueArg,
+                                         unsigned attrs) {
+  RootedValue value(cx, StringValue(valueArg));
+  return DefineDataPropertyById(cx, obj, id, value, attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
                                          HandleId id, uint32_t valueArg,
                                          unsigned attrs) {
   Value value = NumberValue(valueArg);
   return DefineDataPropertyById(cx, obj, id,
                                 HandleValue::fromMarkedLocation(&value), attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, HandleObject valueArg,
+                  unsigned attrs)
+{
+    RootedValue value(cx, ObjectValue(*valueArg));
+    return DefineDataProperty(cx, obj, name, value, attrs);
+=======
+JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
+                                         HandleId id, int32_t valueArg,
+                                         unsigned attrs) {
+  Value value = Int32Value(valueArg);
+  return DefineDataPropertyById(cx, obj, id,
+                                HandleValue::fromMarkedLocation(&value), attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
                                          HandleId id, double valueArg,
                                          unsigned attrs) {
   Value value = NumberValue(valueArg);
   return DefineDataPropertyById(cx, obj, id,
                                 HandleValue::fromMarkedLocation(&value), attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, HandleString valueArg,
+                  unsigned attrs)
+{
+    RootedValue value(cx, StringValue(valueArg));
+    return DefineDataProperty(cx, obj, name, value, attrs);
+=======
+JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
+                                         HandleId id, uint32_t valueArg,
+                                         unsigned attrs) {
+  Value value = NumberValue(valueArg);
+  return DefineDataPropertyById(cx, obj, id,
+                                HandleValue::fromMarkedLocation(&value), attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static bool DefineDataProperty(JSContext* cx, HandleObject obj,
                                const char* name, HandleValue value,
                                unsigned attrs) {
@@ -2055,14 +3670,87 @@ static bool DefineDataProperty(JSContext* cx, HandleObject obj,
   RootedId id(cx, AtomToId(atom));
 
   return DefineDataPropertyById(cx, obj, id, value, attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, int32_t valueArg,
+                  unsigned attrs)
+{
+    Value value = Int32Value(valueArg);
+    return DefineDataProperty(cx, obj, name, HandleValue::fromMarkedLocation(&value), attrs);
+=======
+JS_PUBLIC_API bool JS_DefinePropertyById(JSContext* cx, HandleObject obj,
+                                         HandleId id, double valueArg,
+                                         unsigned attrs) {
+  Value value = NumberValue(valueArg);
+  return DefineDataPropertyById(cx, obj, id,
+                                HandleValue::fromMarkedLocation(&value), attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
                                      const char* name, HandleValue value,
                                      unsigned attrs) {
   return DefineDataProperty(cx, obj, name, value, attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, uint32_t valueArg,
+                  unsigned attrs)
+{
+    Value value = NumberValue(valueArg);
+    return DefineDataProperty(cx, obj, name, HandleValue::fromMarkedLocation(&value), attrs);
+=======
+static bool DefineDataProperty(JSContext* cx, HandleObject obj,
+                               const char* name, HandleValue value,
+                               unsigned attrs) {
+  JSAtom* atom = Atomize(cx, name, strlen(name));
+  if (!atom) {
+    return false;
+  }
+  RootedId id(cx, AtomToId(atom));
+
+  return DefineDataPropertyById(cx, obj, id, value, attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
+                                     const char* name, Native getter,
+                                     Native setter, unsigned attrs) {
+  JSAtom* atom = Atomize(cx, name, strlen(name));
+  if (!atom) {
+    return false;
+  }
+  RootedId id(cx, AtomToId(atom));
+  return DefineAccessorPropertyById(cx, obj, id, NativeOpWrapper(getter),
+                                    NativeOpWrapper(setter), attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineProperty(JSContext* cx, HandleObject obj, const char* name, double valueArg,
+                  unsigned attrs)
+{
+    Value value = NumberValue(valueArg);
+    return DefineDataProperty(cx, obj, name, HandleValue::fromMarkedLocation(&value), attrs);
+=======
+JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
+                                     const char* name, HandleValue value,
+                                     unsigned attrs) {
+  return DefineDataProperty(cx, obj, name, value, attrs);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
+                                     const char* name, HandleObject getter,
+                                     HandleObject setter, unsigned attrs) {
+  JSAtom* atom = Atomize(cx, name, strlen(name));
+  if (!atom) {
+    return false;
+  }
+  RootedId id(cx, AtomToId(atom));
+||||||| merged common ancestors
+#define AUTO_NAMELEN(s,n)   (((n) == (size_t)-1) ? js_strlen(s) : (n))
+=======
 JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
                                      const char* name, Native getter,
                                      Native setter, unsigned attrs) {
@@ -2074,7 +3762,23 @@ JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
   return DefineAccessorPropertyById(cx, obj, id, NativeOpWrapper(getter),
                                     NativeOpWrapper(setter), attrs);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return DefineAccessorPropertyById(cx, obj, id, getter, setter, attrs);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DefineUCProperty(JSContext* cx, HandleObject obj, const char16_t* name, size_t namelen,
+                    Handle<PropertyDescriptor> desc,
+                    ObjectOpResult& result)
+{
+    JSAtom* atom = AtomizeChars(cx, name, AUTO_NAMELEN(name, namelen));
+    if (!atom) {
+        return false;
+    }
+    RootedId id(cx, AtomToId(atom));
+    return DefinePropertyByDescriptor(cx, obj, id, desc, result);
+=======
 JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
                                      const char* name, HandleObject getter,
                                      HandleObject setter, unsigned attrs) {
@@ -2085,6 +3789,7 @@ JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
   RootedId id(cx, AtomToId(atom));
 
   return DefineAccessorPropertyById(cx, obj, id, getter, setter, attrs);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_DefineProperty(JSContext* cx, HandleObject obj,
@@ -2549,6 +4254,7 @@ JS_PUBLIC_API bool JS_DeleteElement(JSContext* cx, HandleObject obj,
   return JS_DeleteElement(cx, obj, index, ignored);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_Enumerate(JSContext* cx, HandleObject obj,
                                 JS::MutableHandle<IdVector> props) {
   AssertHeapIsIdle();
@@ -2562,6 +4268,26 @@ JS_PUBLIC_API bool JS_Enumerate(JSContext* cx, HandleObject obj,
   }
 
   return props.append(ids.begin(), ids.end());
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::IsCallable(JSObject* obj)
+{
+    return obj->isCallable();
+=======
+JS_PUBLIC_API bool JS_Enumerate(JSContext* cx, HandleObject obj,
+                                JS::MutableHandle<IdVector> props) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj, props);
+  MOZ_ASSERT(props.empty());
+
+  RootedIdVector ids(cx);
+  if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY, &ids)) {
+    return false;
+  }
+
+  return props.append(ids.begin(), ids.end());
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS::IsCallable(JSObject* obj) { return obj->isCallable(); }
@@ -2767,6 +4493,47 @@ static bool DeepFreezeSlot(JSContext* cx, const Value& v) {
   return JS_DeepFreezeObject(cx, obj);
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_DeepFreezeObject(JSContext* cx, HandleObject obj) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DeepFreezeObject(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+
+    /* Assume that non-extensible objects are already deep-frozen, to avoid divergence. */
+    bool extensible;
+    if (!IsExtensible(cx, obj, &extensible)) {
+        return false;
+    }
+    if (!extensible) {
+        return true;
+    }
+
+    if (!FreezeObject(cx, obj)) {
+        return false;
+    }
+
+    /* Walk slots in obj and if any value is a non-null object, seal it. */
+    if (obj->isNative()) {
+        RootedNativeObject nobj(cx, &obj->as<NativeObject>());
+        for (uint32_t i = 0, n = nobj->slotSpan(); i < n; ++i) {
+            if (!DeepFreezeSlot(cx, nobj->getSlot(i))) {
+                return false;
+            }
+        }
+        for (uint32_t i = 0, n = nobj->getDenseInitializedLength(); i < n; ++i) {
+            if (!DeepFreezeSlot(cx, nobj->getDenseElement(i))) {
+                return false;
+            }
+        }
+    }
+=======
 JS_PUBLIC_API bool JS_DeepFreezeObject(JSContext* cx, HandleObject obj) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
@@ -2800,10 +4567,42 @@ JS_PUBLIC_API bool JS_DeepFreezeObject(JSContext* cx, HandleObject obj) {
       }
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Assume that non-extensible objects are already deep-frozen, to avoid
+  // divergence.
+  bool extensible;
+  if (!IsExtensible(cx, obj, &extensible)) {
+    return false;
+  }
+  if (!extensible) {
+    return true;
+  }
+||||||| merged common ancestors
+    return true;
+}
+=======
   return true;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!FreezeObject(cx, obj)) {
+    return false;
+  }
+||||||| merged common ancestors
+static bool
+DefineSelfHostedProperty(JSContext* cx, HandleObject obj, HandleId id,
+                         const char* getterName, const char* setterName,
+                         unsigned attrs)
+{
+    JSAtom* getterNameAtom = Atomize(cx, getterName, strlen(getterName));
+    if (!getterNameAtom) {
+        return false;
+    }
+    RootedPropertyName getterNameName(cx, getterNameAtom->asPropertyName());
+=======
 static bool DefineSelfHostedProperty(JSContext* cx, HandleObject obj,
                                      HandleId id, const char* getterName,
                                      const char* setterName, unsigned attrs) {
@@ -2812,7 +4611,33 @@ static bool DefineSelfHostedProperty(JSContext* cx, HandleObject obj,
     return false;
   }
   RootedPropertyName getterNameName(cx, getterNameAtom->asPropertyName());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Walk slots in obj and if any value is a non-null object, seal it.
+  if (obj->isNative()) {
+    RootedNativeObject nobj(cx, &obj->as<NativeObject>());
+    for (uint32_t i = 0, n = nobj->slotSpan(); i < n; ++i) {
+      if (!DeepFreezeSlot(cx, nobj->getSlot(i))) {
+        return false;
+      }
+    }
+    for (uint32_t i = 0, n = nobj->getDenseInitializedLength(); i < n; ++i) {
+      if (!DeepFreezeSlot(cx, nobj->getDenseElement(i))) {
+        return false;
+      }
+||||||| merged common ancestors
+    RootedAtom name(cx, IdToFunctionName(cx, id));
+    if (!name) {
+        return false;
+    }
+
+    RootedValue getterValue(cx);
+    if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), getterNameName, name, 0,
+                                             &getterValue))
+    {
+        return false;
+=======
   RootedAtom name(cx, IdToFunctionName(cx, id));
   if (!name) {
     return false;
@@ -2831,7 +4656,32 @@ static bool DefineSelfHostedProperty(JSContext* cx, HandleObject obj,
     JSAtom* setterNameAtom = Atomize(cx, setterName, strlen(setterName));
     if (!setterNameAtom) {
       return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+    MOZ_ASSERT(getterValue.isObject() && getterValue.toObject().is<JSFunction>());
+    RootedFunction getterFunc(cx, &getterValue.toObject().as<JSFunction>());
+
+    RootedFunction setterFunc(cx);
+    if (setterName) {
+        JSAtom* setterNameAtom = Atomize(cx, setterName, strlen(setterName));
+        if (!setterNameAtom) {
+            return false;
+        }
+        RootedPropertyName setterNameName(cx, setterNameAtom->asPropertyName());
+
+        RootedValue setterValue(cx);
+        if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), setterNameName, name, 0,
+                                                 &setterValue))
+        {
+            return false;
+        }
+        MOZ_ASSERT(setterValue.isObject() && setterValue.toObject().is<JSFunction>());
+        setterFunc = &setterValue.toObject().as<JSFunction>();
+    }
+=======
     RootedPropertyName setterNameName(cx, setterNameAtom->asPropertyName());
 
     RootedValue setterValue(cx);
@@ -2843,10 +4693,121 @@ static bool DefineSelfHostedProperty(JSContext* cx, HandleObject obj,
                setterValue.toObject().is<JSFunction>());
     setterFunc = &setterValue.toObject().as<JSFunction>();
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return true;
+||||||| merged common ancestors
+    return DefineAccessorPropertyById(cx, obj, id, getterFunc, setterFunc, attrs);
+=======
   return DefineAccessorPropertyById(cx, obj, id, getterFunc, setterFunc, attrs);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+static bool DefineSelfHostedProperty(JSContext* cx, HandleObject obj,
+                                     HandleId id, const char* getterName,
+                                     const char* setterName, unsigned attrs) {
+  JSAtom* getterNameAtom = Atomize(cx, getterName, strlen(getterName));
+  if (!getterNameAtom) {
+    return false;
+  }
+  RootedPropertyName getterNameName(cx, getterNameAtom->asPropertyName());
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS_DefineObject(JSContext* cx, HandleObject obj, const char* name, const JSClass* jsclasp,
+                unsigned attrs)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+=======
+JS_PUBLIC_API JSObject* JS_DefineObject(JSContext* cx, HandleObject obj,
+                                        const char* name,
+                                        const JSClass* jsclasp,
+                                        unsigned attrs) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedAtom name(cx, IdToFunctionName(cx, id));
+  if (!name) {
+    return false;
+  }
+
+  RootedValue getterValue(cx);
+  if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), getterNameName,
+                                           name, 0, &getterValue)) {
+    return false;
+  }
+  MOZ_ASSERT(getterValue.isObject() && getterValue.toObject().is<JSFunction>());
+  RootedFunction getterFunc(cx, &getterValue.toObject().as<JSFunction>());
+||||||| merged common ancestors
+    const Class* clasp = Valueify(jsclasp);
+    if (!clasp) {
+        clasp = &PlainObject::class_;    /* default class is Object */
+    }
+=======
+  const Class* clasp = Valueify(jsclasp);
+  if (!clasp) {
+    clasp = &PlainObject::class_; /* default class is Object */
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedFunction setterFunc(cx);
+  if (setterName) {
+    JSAtom* setterNameAtom = Atomize(cx, setterName, strlen(setterName));
+    if (!setterNameAtom) {
+      return false;
+    }
+    RootedPropertyName setterNameName(cx, setterNameAtom->asPropertyName());
+||||||| merged common ancestors
+    RootedObject nobj(cx, NewBuiltinClassInstance(cx, clasp));
+    if (!nobj) {
+        return nullptr;
+    }
+=======
+  RootedObject nobj(cx, NewBuiltinClassInstance(cx, clasp));
+  if (!nobj) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    RootedValue setterValue(cx);
+    if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), setterNameName,
+                                             name, 0, &setterValue)) {
+      return false;
+    }
+    MOZ_ASSERT(setterValue.isObject() &&
+               setterValue.toObject().is<JSFunction>());
+    setterFunc = &setterValue.toObject().as<JSFunction>();
+  }
+||||||| merged common ancestors
+    RootedValue nobjValue(cx, ObjectValue(*nobj));
+    if (!DefineDataProperty(cx, obj, name, nobjValue, attrs)) {
+        return nullptr;
+    }
+=======
+  RootedValue nobjValue(cx, ObjectValue(*nobj));
+  if (!DefineDataProperty(cx, obj, name, nobjValue, attrs)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return DefineAccessorPropertyById(cx, obj, id, getterFunc, setterFunc, attrs);
+||||||| merged common ancestors
+    return nobj;
+=======
+  return nobj;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_DefineObject(JSContext* cx, HandleObject obj,
                                         const char* name,
                                         const JSClass* jsclasp,
@@ -2872,7 +4833,23 @@ JS_PUBLIC_API JSObject* JS_DefineObject(JSContext* cx, HandleObject obj,
 
   return nobj;
 }
+||||||| merged common ancestors
+static inline Value
+ValueFromScalar(double x)
+{
+    return DoubleValue(x);
+}
+static inline Value
+ValueFromScalar(int32_t x)
+{
+    return Int32Value(x);
+}
+=======
+static inline Value ValueFromScalar(double x) { return DoubleValue(x); }
+static inline Value ValueFromScalar(int32_t x) { return Int32Value(x); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static inline Value ValueFromScalar(double x) { return DoubleValue(x); }
 static inline Value ValueFromScalar(int32_t x) { return Int32Value(x); }
 
@@ -2886,6 +4863,31 @@ static bool DefineConstScalar(JSContext* cx, HandleObject obj,
     RootedValue value(cx, ValueFromScalar(cds->val));
     if (!DefineDataProperty(cx, obj, cds->name, value, attrs)) {
       return false;
+||||||| merged common ancestors
+template<typename T>
+static bool
+DefineConstScalar(JSContext* cx, HandleObject obj, const JSConstScalarSpec<T>* cds)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    unsigned attrs = JSPROP_READONLY | JSPROP_PERMANENT;
+    for (; cds->name; cds++) {
+        RootedValue value(cx, ValueFromScalar(cds->val));
+        if (!DefineDataProperty(cx, obj, cds->name, value, attrs)) {
+            return false;
+        }
+=======
+template <typename T>
+static bool DefineConstScalar(JSContext* cx, HandleObject obj,
+                              const JSConstScalarSpec<T>* cds) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  unsigned attrs = JSPROP_READONLY | JSPROP_PERMANENT;
+  for (; cds->name; cds++) {
+    RootedValue value(cx, ValueFromScalar(cds->val));
+    if (!DefineDataProperty(cx, obj, cds->name, value, attrs)) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
   return true;
@@ -2904,17 +4906,44 @@ JS_PUBLIC_API bool JSPropertySpec::getValue(JSContext* cx,
                                             MutableHandleValue vp) const {
   MOZ_ASSERT(!isAccessor());
 
+<<<<<<< HEAD
   if (value.type == JSVAL_TYPE_STRING) {
     RootedAtom atom(cx, Atomize(cx, value.string, strlen(value.string)));
     if (!atom) {
       return false;
+||||||| merged common ancestors
+    if (value.type == JSVAL_TYPE_STRING) {
+        RootedAtom atom(cx, Atomize(cx, value.string, strlen(value.string)));
+        if (!atom) {
+            return false;
+        }
+        vp.setString(atom);
+    } else {
+        MOZ_ASSERT(value.type == JSVAL_TYPE_INT32);
+        vp.setInt32(value.int32);
+=======
+  if (u.value.type == JSVAL_TYPE_STRING) {
+    RootedAtom atom(cx, Atomize(cx, u.value.string, strlen(u.value.string)));
+    if (!atom) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     vp.setString(atom);
   } else {
     MOZ_ASSERT(value.type == JSVAL_TYPE_INT32);
     vp.setInt32(value.int32);
   }
+||||||| merged common ancestors
+=======
+    vp.setString(atom);
+  } else {
+    MOZ_ASSERT(u.value.type == JSVAL_TYPE_INT32);
+    vp.setInt32(u.value.int32);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return true;
 }
 
@@ -2922,8 +4951,22 @@ static JS::SymbolCode PropertySpecNameToSymbolCode(const char* name) {
   MOZ_ASSERT(JS::PropertySpecNameIsSymbol(name));
   uintptr_t u = reinterpret_cast<uintptr_t>(name);
   return JS::SymbolCode(u - 1);
+||||||| merged common ancestors
+    return true;
 }
 
+static JS::SymbolCode
+PropertySpecNameToSymbolCode(const char* name)
+{
+    MOZ_ASSERT(JS::PropertySpecNameIsSymbol(name));
+    uintptr_t u = reinterpret_cast<uintptr_t>(name);
+    return JS::SymbolCode(u - 1);
+=======
+  return true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool PropertySpecNameToId(JSContext* cx, const char* name, MutableHandleId id,
                           js::PinningBehavior pin = js::DoNotPinAtom) {
   if (JS::PropertySpecNameIsSymbol(name)) {
@@ -2933,12 +4976,38 @@ bool PropertySpecNameToId(JSContext* cx, const char* name, MutableHandleId id,
     JSAtom* atom = Atomize(cx, name, strlen(name), pin);
     if (!atom) {
       return false;
+||||||| merged common ancestors
+bool
+PropertySpecNameToId(JSContext* cx, const char* name, MutableHandleId id,
+                     js::PinningBehavior pin = js::DoNotPinAtom)
+{
+    if (JS::PropertySpecNameIsSymbol(name)) {
+        JS::SymbolCode which = PropertySpecNameToSymbolCode(name);
+        id.set(SYMBOL_TO_JSID(cx->wellKnownSymbols().get(which)));
+    } else {
+        JSAtom* atom = Atomize(cx, name, strlen(name), pin);
+        if (!atom) {
+            return false;
+        }
+        id.set(AtomToId(atom));
+=======
+bool PropertySpecNameToId(JSContext* cx, JSPropertySpec::Name name,
+                          MutableHandleId id,
+                          js::PinningBehavior pin = js::DoNotPinAtom) {
+  if (name.isSymbol()) {
+    id.set(SYMBOL_TO_JSID(cx->wellKnownSymbols().get(name.symbol())));
+  } else {
+    JSAtom* atom = Atomize(cx, name.string(), strlen(name.string()), pin);
+    if (!atom) {
+      return false;
+>>>>>>> upstream-releases
     }
     id.set(AtomToId(atom));
   }
   return true;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::PropertySpecNameToPermanentId(JSContext* cx,
                                                      const char* name,
                                                      jsid* idp) {
@@ -2948,6 +5017,27 @@ JS_PUBLIC_API bool JS::PropertySpecNameToPermanentId(JSContext* cx,
   // marked.
   return PropertySpecNameToId(
       cx, name, MutableHandleId::fromMarkedLocation(idp), js::PinAtom);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::PropertySpecNameToPermanentId(JSContext* cx, const char* name, jsid* idp)
+{
+    // We are calling fromMarkedLocation(idp) even though idp points to a
+    // location that will never be marked. This is OK because the whole point
+    // of this API is to populate *idp with a jsid that does not need to be
+    // marked.
+    return PropertySpecNameToId(cx, name, MutableHandleId::fromMarkedLocation(idp),
+                                js::PinAtom);
+=======
+JS_PUBLIC_API bool JS::PropertySpecNameToPermanentId(JSContext* cx,
+                                                     JSPropertySpec::Name name,
+                                                     jsid* idp) {
+  // We are calling fromMarkedLocation(idp) even though idp points to a
+  // location that will never be marked. This is OK because the whole point
+  // of this API is to populate *idp with a jsid that does not need to be
+  // marked.
+  return PropertySpecNameToId(
+      cx, name, MutableHandleId::fromMarkedLocation(idp), js::PinAtom);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_DefineProperties(JSContext* cx, HandleObject obj,
@@ -2959,13 +5049,51 @@ JS_PUBLIC_API bool JS_DefineProperties(JSContext* cx, HandleObject obj,
       return false;
     }
 
+<<<<<<< HEAD
     if (ps->isAccessor()) {
       if (ps->isSelfHosted()) {
         if (!DefineSelfHostedProperty(
                 cx, obj, id, ps->accessors.getter.selfHosted.funname,
                 ps->accessors.setter.selfHosted.funname, ps->flags)) {
           return false;
+||||||| merged common ancestors
+        if (ps->isAccessor()) {
+            if (ps->isSelfHosted()) {
+                if (!DefineSelfHostedProperty(cx, obj, id,
+                                              ps->accessors.getter.selfHosted.funname,
+                                              ps->accessors.setter.selfHosted.funname,
+                                              ps->flags))
+                {
+                    return false;
+                }
+            } else {
+                if (!DefineAccessorPropertyById(cx, obj, id,
+                                                ps->accessors.getter.native,
+                                                ps->accessors.setter.native,
+                                                ps->flags))
+                {
+                    return false;
+                }
+            }
+        } else {
+            RootedValue v(cx);
+            if (!ps->getValue(cx, &v)) {
+                return false;
+            }
+
+            if (!DefineDataPropertyById(cx, obj, id, v, ps->flags & ~JSPROP_INTERNAL_USE_BIT)) {
+                return false;
+            }
+=======
+    if (ps->isAccessor()) {
+      if (ps->isSelfHosted()) {
+        if (!DefineSelfHostedProperty(
+                cx, obj, id, ps->u.accessors.getter.selfHosted.funname,
+                ps->u.accessors.setter.selfHosted.funname, ps->flags)) {
+          return false;
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
       } else {
         if (!DefineAccessorPropertyById(
                 cx, obj, id, ps->accessors.getter.native,
@@ -2978,6 +5106,24 @@ JS_PUBLIC_API bool JS_DefineProperties(JSContext* cx, HandleObject obj,
       if (!ps->getValue(cx, &v)) {
         return false;
       }
+||||||| merged common ancestors
+    }
+    return true;
+}
+=======
+      } else {
+        if (!DefineAccessorPropertyById(
+                cx, obj, id, ps->u.accessors.getter.native,
+                ps->u.accessors.setter.native, ps->flags)) {
+          return false;
+        }
+      }
+    } else {
+      RootedValue v(cx);
+      if (!ps->getValue(cx, &v)) {
+        return false;
+      }
+>>>>>>> upstream-releases
 
       if (!DefineDataPropertyById(cx, obj, id, v,
                                   ps->flags & ~JSPROP_INTERNAL_USE_BIT)) {
@@ -3002,13 +5148,25 @@ JS_PUBLIC_API bool JS::ObjectToCompletePropertyDescriptor(
   return true;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_SetAllNonReservedSlotsToUndefined(JSContext* cx,
                                                         JSObject* objArg) {
   RootedObject obj(cx, objArg);
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   cx->check(obj);
+||||||| merged common ancestors
+    if (!obj->isNative()) {
+        return;
+    }
+=======
+JS_PUBLIC_API void JS_SetAllNonReservedSlotsToUndefined(JS::HandleObject obj) {
+  if (!obj->isNative()) {
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!obj->isNative()) {
     return;
   }
@@ -3019,6 +5177,21 @@ JS_PUBLIC_API void JS_SetAllNonReservedSlotsToUndefined(JSContext* cx,
   for (unsigned i = numReserved; i < numSlots; i++) {
     obj->as<NativeObject>().setSlot(i, UndefinedValue());
   }
+||||||| merged common ancestors
+    const Class* clasp = obj->getClass();
+    unsigned numReserved = JSCLASS_RESERVED_SLOTS(clasp);
+    unsigned numSlots = obj->as<NativeObject>().slotSpan();
+    for (unsigned i = numReserved; i < numSlots; i++) {
+        obj->as<NativeObject>().setSlot(i, UndefinedValue());
+    }
+=======
+  const Class* clasp = obj->getClass();
+  unsigned numReserved = JSCLASS_RESERVED_SLOTS(clasp);
+  unsigned numSlots = obj->as<NativeObject>().slotSpan();
+  for (unsigned i = numReserved; i < numSlots; i++) {
+    obj->as<NativeObject>().setSlot(i, UndefinedValue());
+  }
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API Value JS_GetReservedSlot(JSObject* obj, uint32_t index) {
@@ -3030,24 +5203,108 @@ JS_PUBLIC_API void JS_SetReservedSlot(JSObject* obj, uint32_t index,
   obj->as<NativeObject>().setReservedSlot(index, value);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_NewArrayObject(
     JSContext* cx, const JS::HandleValueArray& contents) {
   MOZ_ASSERT(!cx->zone()->isAtomsZone());
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS_NewArrayObject(JSContext* cx, const JS::HandleValueArray& contents)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+JS_PUBLIC_API void JS_InitReservedSlot(JSObject* obj, uint32_t index, void* ptr,
+                                       size_t nbytes, JS::MemoryUse use) {
+  InitReservedSlot(&obj->as<NativeObject>(), index, ptr, nbytes,
+                   js::MemoryUse(use));
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   cx->check(contents);
   return NewDenseCopiedArray(cx, contents.length(), contents.begin());
+||||||| merged common ancestors
+    cx->check(contents);
+    return NewDenseCopiedArray(cx, contents.length(), contents.begin());
+=======
+JS_PUBLIC_API void JS_InitPrivate(JSObject* obj, void* data, size_t nbytes,
+                                  JS::MemoryUse use) {
+  InitObjectPrivate(&obj->as<NativeObject>(), data, nbytes, js::MemoryUse(use));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_NewArrayObject(JSContext* cx, size_t length) {
   MOZ_ASSERT(!cx->zone()->isAtomsZone());
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS_NewArrayObject(JSContext* cx, size_t length)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+JS_PUBLIC_API JSObject* JS_NewArrayObject(
+    JSContext* cx, const JS::HandleValueArray& contents) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return NewDenseFullyAllocatedArray(cx, length);
+||||||| merged common ancestors
+    return NewDenseFullyAllocatedArray(cx, length);
+=======
+  cx->check(contents);
+  return NewDenseCopiedArray(cx, contents.length(), contents.begin());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+inline bool IsGivenTypeObject(JSContext* cx, JS::HandleObject obj,
+                              const ESClass& typeClass, bool* isType) {
+  cx->check(obj);
+||||||| merged common ancestors
+inline bool
+IsGivenTypeObject(JSContext* cx, JS::HandleObject obj, const ESClass& typeClass, bool* isType)
+{
+    cx->check(obj);
+=======
+JS_PUBLIC_API JSObject* JS_NewArrayObject(JSContext* cx, size_t length) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ESClass cls;
+  if (!GetBuiltinClass(cx, obj, &cls)) {
+    return false;
+  }
+||||||| merged common ancestors
+    ESClass cls;
+    if (!GetBuiltinClass(cx, obj, &cls)) {
+        return false;
+    }
+=======
+  return NewDenseFullyAllocatedArray(cx, length);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  *isType = cls == typeClass;
+  return true;
+||||||| merged common ancestors
+    *isType = cls == typeClass;
+    return true;
+=======
 inline bool IsGivenTypeObject(JSContext* cx, JS::HandleObject obj,
                               const ESClass& typeClass, bool* isType) {
   cx->check(obj);
@@ -3059,6 +5316,7 @@ inline bool IsGivenTypeObject(JSContext* cx, JS::HandleObject obj,
 
   *isType = cls == typeClass;
   return true;
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_IsArrayObject(JSContext* cx, JS::HandleObject obj,
@@ -3176,11 +5434,52 @@ JS_PUBLIC_API JSFunction* JS::GetSelfHostedFunction(JSContext* cx,
   CHECK_THREAD(cx);
   cx->check(id);
 
+<<<<<<< HEAD
+  RootedAtom name(cx, IdToFunctionName(cx, id));
+  if (!name) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+    RootedAtom name(cx, IdToFunctionName(cx, id));
+    if (!name) {
+        return nullptr;
+    }
+=======
   RootedAtom name(cx, IdToFunctionName(cx, id));
   if (!name) {
     return nullptr;
   }
 
+  JSAtom* shAtom = Atomize(cx, selfHostedName, strlen(selfHostedName));
+  if (!shAtom) {
+    return nullptr;
+  }
+  RootedPropertyName shName(cx, shAtom->asPropertyName());
+  RootedValue funVal(cx);
+  if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), shName, name,
+                                           nargs, &funVal)) {
+    return nullptr;
+  }
+  return &funVal.toObject().as<JSFunction>();
+}
+
+JS_PUBLIC_API JSFunction* JS::NewFunctionFromSpec(JSContext* cx,
+                                                  const JSFunctionSpec* fs,
+                                                  HandleId id) {
+  cx->check(id);
+
+#ifdef DEBUG
+  if (fs->name.isSymbol()) {
+    MOZ_ASSERT(SYMBOL_TO_JSID(cx->wellKnownSymbols().get(fs->name.symbol())) ==
+               id);
+  } else {
+    MOZ_ASSERT(JSID_IS_STRING(id) &&
+               StringEqualsAscii(JSID_TO_FLAT_STRING(id), fs->name.string()));
+  }
+#endif
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JSAtom* shAtom = Atomize(cx, selfHostedName, strlen(selfHostedName));
   if (!shAtom) {
     return nullptr;
@@ -3209,6 +5508,20 @@ JS_PUBLIC_API JSFunction* JS::NewFunctionFromSpec(JSContext* cx,
 
     JSAtom* shAtom =
         Atomize(cx, fs->selfHostedName, strlen(fs->selfHostedName));
+||||||| merged common ancestors
+    JSAtom* shAtom = Atomize(cx, selfHostedName, strlen(selfHostedName));
+=======
+  // Delay cloning self-hosted functions until they are called. This is
+  // achieved by passing DefineFunction a nullptr JSNative which produces an
+  // interpreted JSFunction where !hasScript. Interpreted call paths then
+  // call InitializeLazyFunctionScript if !hasScript.
+  if (fs->selfHostedName) {
+    MOZ_ASSERT(!fs->call.op);
+    MOZ_ASSERT(!fs->call.info);
+
+    JSAtom* shAtom =
+        Atomize(cx, fs->selfHostedName, strlen(fs->selfHostedName));
+>>>>>>> upstream-releases
     if (!shAtom) {
       return nullptr;
     }
@@ -3223,6 +5536,24 @@ JS_PUBLIC_API JSFunction* JS::NewFunctionFromSpec(JSContext* cx,
       return nullptr;
     }
     return &funVal.toObject().as<JSFunction>();
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+}
+
+JS_PUBLIC_API(JSFunction*)
+JS::NewFunctionFromSpec(JSContext* cx, const JSFunctionSpec* fs, HandleId id)
+{
+    cx->check(id);
+
+    // Delay cloning self-hosted functions until they are called. This is
+    // achieved by passing DefineFunction a nullptr JSNative which produces an
+    // interpreted JSFunction where !hasScript. Interpreted call paths then
+    // call InitializeLazyFunctionScript if !hasScript.
+    if (fs->selfHostedName) {
+        MOZ_ASSERT(!fs->call.op);
+        MOZ_ASSERT(!fs->call.info);
+=======
   }
 
   RootedAtom atom(cx, IdToFunctionName(cx, id));
@@ -3242,12 +5573,88 @@ JS_PUBLIC_API JSFunction* JS::NewFunctionFromSpec(JSContext* cx,
   if (!fun) {
     return nullptr;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  RootedAtom atom(cx, IdToFunctionName(cx, id));
+  if (!atom) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+        JSAtom* shAtom = Atomize(cx, fs->selfHostedName, strlen(fs->selfHostedName));
+        if (!shAtom) {
+            return nullptr;
+        }
+        RootedPropertyName shName(cx, shAtom->asPropertyName());
+        RootedAtom name(cx, IdToFunctionName(cx, id));
+        if (!name) {
+            return nullptr;
+        }
+        RootedValue funVal(cx);
+        if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), shName, name, fs->nargs,
+                                                 &funVal))
+        {
+            return nullptr;
+        }
+        return &funVal.toObject().as<JSFunction>();
+    }
+=======
   if (fs->call.info) {
     fun->setJitInfo(fs->call.info);
   }
   return fun;
 }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSFunction* fun;
+  if (!fs->call.op) {
+    fun =
+        NewScriptedFunction(cx, fs->nargs, JSFunction::INTERPRETED_LAZY, atom);
+  } else if (fs->flags & JSFUN_CONSTRUCTOR) {
+    fun = NewNativeConstructor(cx, fs->call.op, fs->nargs, atom);
+  } else {
+    fun = NewNativeFunction(cx, fs->call.op, fs->nargs, atom);
+  }
+  if (!fun) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+    RootedAtom atom(cx, IdToFunctionName(cx, id));
+    if (!atom) {
+        return nullptr;
+    }
+=======
+JS_PUBLIC_API JSFunction* JS::NewFunctionFromSpec(JSContext* cx,
+                                                  const JSFunctionSpec* fs) {
+  RootedId id(cx);
+  if (!PropertySpecNameToId(cx, fs->name, &id)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (fs->call.info) {
+    fun->setJitInfo(fs->call.info);
+  }
+  return fun;
+}
+||||||| merged common ancestors
+    JSFunction* fun;
+    if (!fs->call.op) {
+        fun = NewScriptedFunction(cx, fs->nargs, JSFunction::INTERPRETED_LAZY, atom);
+    } else if (fs->flags & JSFUN_CONSTRUCTOR) {
+        fun = NewNativeConstructor(cx, fs->call.op, fs->nargs, atom);
+    } else {
+        fun = NewNativeFunction(cx, fs->call.op, fs->nargs, atom);
+    }
+    if (!fun) {
+        return nullptr;
+    }
+=======
+  return NewFunctionFromSpec(cx, fs, id);
+}
+>>>>>>> upstream-releases
 
 static bool IsFunctionCloneable(HandleFunction fun) {
   // If a function was compiled with non-global syntactic environments on
@@ -3282,6 +5689,7 @@ static JSObject* CloneFunctionObject(JSContext* cx, HandleObject funobj,
     return nullptr;
   }
 
+<<<<<<< HEAD
   RootedFunction fun(cx, &funobj->as<JSFunction>());
   if (fun->isInterpretedLazy()) {
     AutoRealm ar(cx, fun);
@@ -3289,7 +5697,29 @@ static JSObject* CloneFunctionObject(JSContext* cx, HandleObject funobj,
       return nullptr;
     }
   }
+||||||| merged common ancestors
+    // Only allow cloning normal, interpreted functions.
+    if (fun->isNative() ||
+        fun->isBoundFunction() ||
+        fun->kind() != JSFunction::NormalFunction ||
+        fun->isExtended())
+    {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_CANT_CLONE_OBJECT);
+        return nullptr;
+    }
+=======
+  // Only allow cloning normal, interpreted functions.
+  RootedFunction fun(cx, &funobj->as<JSFunction>());
+  if (fun->isNative() || fun->isBoundFunction() ||
+      fun->kind() != JSFunction::NormalFunction || fun->isExtended() ||
+      fun->isSelfHostedBuiltin()) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_CANT_CLONE_OBJECT);
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Only allow cloning normal, interpreted functions.
   if (fun->isNative() || fun->isBoundFunction() ||
       fun->kind() != JSFunction::NormalFunction || fun->isExtended()) {
@@ -3297,7 +5727,22 @@ static JSObject* CloneFunctionObject(JSContext* cx, HandleObject funobj,
                               JSMSG_CANT_CLONE_OBJECT);
     return nullptr;
   }
+||||||| merged common ancestors
+    if (!IsFunctionCloneable(fun)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_CLONE_FUNOBJ_SCOPE);
+        return nullptr;
+    }
+=======
+  if (fun->isInterpretedLazy()) {
+    AutoRealm ar(cx, fun);
+    if (!JSFunction::getOrCreateScript(cx, fun)) {
+      return nullptr;
+    }
+  }
+  RootedScript script(cx, fun->nonLazyScript());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!IsFunctionCloneable(fun)) {
     JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                               JSMSG_BAD_CLONE_FUNOBJ_SCOPE);
@@ -3320,9 +5765,52 @@ static JSObject* CloneFunctionObject(JSContext* cx, HandleObject funobj,
 #endif
     return CloneFunctionReuseScript(cx, fun, env, fun->getAllocKind());
   }
+||||||| merged common ancestors
+    if (CanReuseScriptForClone(cx->realm(), fun, env)) {
+        // If the script is to be reused, either the script can already handle
+        // non-syntactic scopes, or there is only the standard global lexical
+        // scope.
+#ifdef DEBUG
+        // Fail here if we OOM during debug asserting.
+        // CloneFunctionReuseScript will delazify the script anyways, so we
+        // are not creating an extra failure condition for DEBUG builds.
+        if (!JSFunction::getOrCreateScript(cx, fun)) {
+            return nullptr;
+        }
+        MOZ_ASSERT(scope->as<GlobalScope>().isSyntactic() ||
+                   fun->nonLazyScript()->hasNonSyntacticScope());
+#endif
+        return CloneFunctionReuseScript(cx, fun, env, fun->getAllocKind());
+    }
+=======
+  if (!IsFunctionCloneable(fun)) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_BAD_CLONE_FUNOBJ_SCOPE);
+    return nullptr;
+  }
 
+  if (CanReuseScriptForClone(cx->realm(), fun, env)) {
+    return CloneFunctionReuseScript(cx, fun, env, fun->getAllocKind());
+  }
+
+  Rooted<ScriptSourceObject*> sourceObject(cx, script->sourceObject());
+  if (cx->compartment() != sourceObject->compartment()) {
+    sourceObject = ScriptSourceObject::clone(cx, sourceObject);
+    if (!sourceObject) {
+      return nullptr;
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JSFunction* clone =
       CloneFunctionAndScript(cx, fun, env, scope, fun->getAllocKind());
+||||||| merged common ancestors
+    JSFunction* clone = CloneFunctionAndScript(cx, fun, env, scope, fun->getAllocKind());
+=======
+  JSFunction* clone = CloneFunctionAndScript(cx, fun, env, scope, sourceObject,
+                                             fun->getAllocKind());
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   // The cloned function should itself be cloneable.
@@ -3340,6 +5828,7 @@ JS_PUBLIC_API JSObject* JS::CloneFunctionObject(JSContext* cx,
   return CloneFunctionObject(cx, funobj, globalLexical, emptyGlobalScope);
 }
 
+<<<<<<< HEAD
 extern JS_PUBLIC_API JSObject* JS::CloneFunctionObject(
     JSContext* cx, HandleObject funobj, AutoObjectVector& envChain) {
   RootedObject env(cx);
@@ -3348,6 +5837,26 @@ extern JS_PUBLIC_API JSObject* JS::CloneFunctionObject(
     return nullptr;
   }
   return CloneFunctionObject(cx, funobj, env, scope);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(JSObject*)
+JS::CloneFunctionObject(JSContext* cx, HandleObject funobj, AutoObjectVector& envChain)
+{
+    RootedObject env(cx);
+    RootedScope scope(cx);
+    if (!CreateNonSyntacticEnvironmentChain(cx, envChain, &env, &scope)) {
+        return nullptr;
+    }
+    return CloneFunctionObject(cx, funobj, env, scope);
+=======
+extern JS_PUBLIC_API JSObject* JS::CloneFunctionObject(
+    JSContext* cx, HandleObject funobj, HandleObjectVector envChain) {
+  RootedObject env(cx);
+  RootedScope scope(cx);
+  if (!CreateNonSyntacticEnvironmentChain(cx, envChain, &env, &scope)) {
+    return nullptr;
+  }
+  return CloneFunctionObject(cx, funobj, env, scope);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JSObject* JS_GetFunctionObject(JSFunction* fun) { return fun; }
@@ -3370,8 +5879,18 @@ JS_PUBLIC_API bool JS_GetFunctionLength(JSContext* cx, HandleFunction fun,
   return JSFunction::getLength(cx, fun, length);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ObjectIsFunction(JSContext* cx, JSObject* obj) {
   return obj->is<JSFunction>();
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_ObjectIsFunction(JSContext* cx, JSObject* obj)
+{
+    return obj->is<JSFunction>();
+=======
+JS_PUBLIC_API bool JS_ObjectIsFunction(JSObject* obj) {
+  return obj->is<JSFunction>();
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_IsNativeFunction(JSObject* funobj, JSNative call) {
@@ -3396,6 +5915,7 @@ JS_PUBLIC_API bool JS_DefineFunctions(JSContext* cx, HandleObject obj,
   return DefineFunctions(cx, obj, fs, NotIntrinsic);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSFunction* JS_DefineFunction(JSContext* cx, HandleObject obj,
                                             const char* name, JSNative call,
                                             unsigned nargs, unsigned attrs) {
@@ -3455,6 +5975,134 @@ void JS::TransitiveCompileOptions::copyPODTransitiveOptions(
   hasIntroductionInfo = rhs.hasIntroductionInfo;
   isProbablySystemCode = rhs.isProbablySystemCode;
   hideScriptFromDebugger = rhs.hideScriptFromDebugger;
+||||||| merged common ancestors
+JS_PUBLIC_API(JSFunction*)
+JS_DefineFunction(JSContext* cx, HandleObject obj, const char* name, JSNative call,
+                  unsigned nargs, unsigned attrs)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+    JSAtom* atom = Atomize(cx, name, strlen(name));
+    if (!atom) {
+        return nullptr;
+    }
+    Rooted<jsid> id(cx, AtomToId(atom));
+    return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+JS_PUBLIC_API(JSFunction*)
+JS_DefineUCFunction(JSContext* cx, HandleObject obj,
+                    const char16_t* name, size_t namelen, JSNative call,
+                    unsigned nargs, unsigned attrs)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+    JSAtom* atom = AtomizeChars(cx, name, AUTO_NAMELEN(name, namelen));
+    if (!atom) {
+        return nullptr;
+    }
+    Rooted<jsid> id(cx, AtomToId(atom));
+    return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+extern JS_PUBLIC_API(JSFunction*)
+JS_DefineFunctionById(JSContext* cx, HandleObject obj, HandleId id, JSNative call,
+                      unsigned nargs, unsigned attrs)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj, id);
+    return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+void
+JS::TransitiveCompileOptions::copyPODTransitiveOptions(const TransitiveCompileOptions& rhs)
+{
+    mutedErrors_ = rhs.mutedErrors_;
+    selfHostingMode = rhs.selfHostingMode;
+    canLazilyParse = rhs.canLazilyParse;
+    strictOption = rhs.strictOption;
+    extraWarningsOption = rhs.extraWarningsOption;
+    werrorOption = rhs.werrorOption;
+    asmJSOption = rhs.asmJSOption;
+    throwOnAsmJSValidationFailureOption = rhs.throwOnAsmJSValidationFailureOption;
+    forceAsync = rhs.forceAsync;
+    sourceIsLazy = rhs.sourceIsLazy;
+    introductionType = rhs.introductionType;
+    introductionLineno = rhs.introductionLineno;
+    introductionOffset = rhs.introductionOffset;
+    hasIntroductionInfo = rhs.hasIntroductionInfo;
+    isProbablySystemCode = rhs.isProbablySystemCode;
+    hideScriptFromDebugger = rhs.hideScriptFromDebugger;
+=======
+JS_PUBLIC_API JSFunction* JS_DefineFunction(JSContext* cx, HandleObject obj,
+                                            const char* name, JSNative call,
+                                            unsigned nargs, unsigned attrs) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+  JSAtom* atom = Atomize(cx, name, strlen(name));
+  if (!atom) {
+    return nullptr;
+  }
+  Rooted<jsid> id(cx, AtomToId(atom));
+  return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+JS_PUBLIC_API JSFunction* JS_DefineUCFunction(JSContext* cx, HandleObject obj,
+                                              const char16_t* name,
+                                              size_t namelen, JSNative call,
+                                              unsigned nargs, unsigned attrs) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+  JSAtom* atom = AtomizeChars(cx, name, AUTO_NAMELEN(name, namelen));
+  if (!atom) {
+    return nullptr;
+  }
+  Rooted<jsid> id(cx, AtomToId(atom));
+  return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+extern JS_PUBLIC_API JSFunction* JS_DefineFunctionById(
+    JSContext* cx, HandleObject obj, HandleId id, JSNative call, unsigned nargs,
+    unsigned attrs) {
+  MOZ_ASSERT(!cx->zone()->isAtomsZone());
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj, id);
+  return DefineFunction(cx, obj, id, call, nargs, attrs);
+}
+
+void JS::TransitiveCompileOptions::copyPODTransitiveOptions(
+    const TransitiveCompileOptions& rhs) {
+  mutedErrors_ = rhs.mutedErrors_;
+  forceFullParse_ = rhs.forceFullParse_;
+  selfHostingMode = rhs.selfHostingMode;
+  canLazilyParse = rhs.canLazilyParse;
+  strictOption = rhs.strictOption;
+  extraWarningsOption = rhs.extraWarningsOption;
+  werrorOption = rhs.werrorOption;
+  asmJSOption = rhs.asmJSOption;
+  throwOnAsmJSValidationFailureOption = rhs.throwOnAsmJSValidationFailureOption;
+  forceAsync = rhs.forceAsync;
+  discardSource = rhs.discardSource;
+  sourceIsLazy = rhs.sourceIsLazy;
+  introductionType = rhs.introductionType;
+  introductionLineno = rhs.introductionLineno;
+  introductionOffset = rhs.introductionOffset;
+  hasIntroductionInfo = rhs.hasIntroductionInfo;
+  hideScriptFromDebugger = rhs.hideScriptFromDebugger;
+  bigIntEnabledOption = rhs.bigIntEnabledOption;
+  fieldsEnabledOption = rhs.fieldsEnabledOption;
+>>>>>>> upstream-releases
 };
 
 void JS::ReadOnlyCompileOptions::copyPODOptions(
@@ -3472,25 +6120,73 @@ JS::OwningCompileOptions::OwningCompileOptions(JSContext* cx)
     : ReadOnlyCompileOptions(),
       elementRoot(cx),
       elementAttributeNameRoot(cx),
+<<<<<<< HEAD
       introductionScriptRoot(cx) {}
+||||||| merged common ancestors
+      introductionScriptRoot(cx)
+{
+}
+=======
+      introductionScriptRoot(cx),
+      scriptOrModuleRoot(cx) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS::OwningCompileOptions::~OwningCompileOptions() {
   // OwningCompileOptions always owns these, so these casts are okay.
   js_free(const_cast<char*>(filename_));
   js_free(const_cast<char16_t*>(sourceMapURL_));
   js_free(const_cast<char*>(introducerFilename_));
 }
+||||||| merged common ancestors
+JS::OwningCompileOptions::~OwningCompileOptions()
+{
+    // OwningCompileOptions always owns these, so these casts are okay.
+    js_free(const_cast<char*>(filename_));
+    js_free(const_cast<char16_t*>(sourceMapURL_));
+    js_free(const_cast<char*>(introducerFilename_));
+}
+=======
+void JS::OwningCompileOptions::release() {
+  // OwningCompileOptions always owns these, so these casts are okay.
+  js_free(const_cast<char*>(filename_));
+  js_free(const_cast<char16_t*>(sourceMapURL_));
+  js_free(const_cast<char*>(introducerFilename_));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 size_t JS::OwningCompileOptions::sizeOfExcludingThis(
     mozilla::MallocSizeOf mallocSizeOf) const {
   return mallocSizeOf(filename_) + mallocSizeOf(sourceMapURL_) +
          mallocSizeOf(introducerFilename_);
+||||||| merged common ancestors
+size_t
+JS::OwningCompileOptions::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
+{
+    return mallocSizeOf(filename_) +
+           mallocSizeOf(sourceMapURL_) +
+           mallocSizeOf(introducerFilename_);
+=======
+  filename_ = nullptr;
+  sourceMapURL_ = nullptr;
+  introducerFilename_ = nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool JS::OwningCompileOptions::copy(JSContext* cx,
                                     const ReadOnlyCompileOptions& rhs) {
   copyPODOptions(rhs);
+||||||| merged common ancestors
+bool
+JS::OwningCompileOptions::copy(JSContext* cx, const ReadOnlyCompileOptions& rhs)
+{
+    copyPODOptions(rhs);
+=======
+JS::OwningCompileOptions::~OwningCompileOptions() { release(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   setElement(rhs.element());
   setElementAttributeName(rhs.elementAttributeName());
   setIntroductionScript(rhs.introductionScript());
@@ -3498,8 +6194,23 @@ bool JS::OwningCompileOptions::copy(JSContext* cx,
   return setFileAndLine(cx, rhs.filename(), rhs.lineno) &&
          setSourceMapURL(cx, rhs.sourceMapURL()) &&
          setIntroducerFilename(cx, rhs.introducerFilename());
+||||||| merged common ancestors
+    setElement(rhs.element());
+    setElementAttributeName(rhs.elementAttributeName());
+    setIntroductionScript(rhs.introductionScript());
+
+    return setFileAndLine(cx, rhs.filename(), rhs.lineno) &&
+           setSourceMapURL(cx, rhs.sourceMapURL()) &&
+           setIntroducerFilename(cx, rhs.introducerFilename());
+=======
+size_t JS::OwningCompileOptions::sizeOfExcludingThis(
+    mozilla::MallocSizeOf mallocSizeOf) const {
+  return mallocSizeOf(filename_) + mallocSizeOf(sourceMapURL_) +
+         mallocSizeOf(introducerFilename_);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool JS::OwningCompileOptions::setFile(JSContext* cx, const char* f) {
   char* copy = nullptr;
   if (f) {
@@ -3508,20 +6219,72 @@ bool JS::OwningCompileOptions::setFile(JSContext* cx, const char* f) {
       return false;
     }
   }
+||||||| merged common ancestors
+bool
+JS::OwningCompileOptions::setFile(JSContext* cx, const char* f)
+{
+    char* copy = nullptr;
+    if (f) {
+        copy = DuplicateString(cx, f).release();
+        if (!copy) {
+            return false;
+        }
+    }
+=======
+bool JS::OwningCompileOptions::copy(JSContext* cx,
+                                    const ReadOnlyCompileOptions& rhs) {
+  // Release existing string allocations.
+  release();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // OwningCompileOptions always owns filename_, so this cast is okay.
   js_free(const_cast<char*>(filename_));
+||||||| merged common ancestors
+    // OwningCompileOptions always owns filename_, so this cast is okay.
+    js_free(const_cast<char*>(filename_));
+=======
+  copyPODOptions(rhs);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   filename_ = copy;
   return true;
 }
+||||||| merged common ancestors
+    filename_ = copy;
+    return true;
+}
+=======
+  elementRoot = rhs.element();
+  elementAttributeNameRoot = rhs.elementAttributeName();
+  introductionScriptRoot = rhs.introductionScript();
+  scriptOrModuleRoot = rhs.scriptOrModule();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool JS::OwningCompileOptions::setFileAndLine(JSContext* cx, const char* f,
                                               unsigned l) {
   if (!setFile(cx, f)) {
     return false;
   }
+||||||| merged common ancestors
+bool
+JS::OwningCompileOptions::setFileAndLine(JSContext* cx, const char* f, unsigned l)
+{
+    if (!setFile(cx, f)) {
+        return false;
+    }
+=======
+  if (rhs.filename()) {
+    filename_ = DuplicateString(cx, rhs.filename()).release();
+    if (!filename_) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   lineno = l;
   return true;
 }
@@ -3533,9 +6296,30 @@ bool JS::OwningCompileOptions::setSourceMapURL(JSContext* cx,
     copy = DuplicateString(cx, s);
     if (!copy) {
       return false;
+||||||| merged common ancestors
+    lineno = l;
+    return true;
+}
+
+bool
+JS::OwningCompileOptions::setSourceMapURL(JSContext* cx, const char16_t* s)
+{
+    UniqueTwoByteChars copy;
+    if (s) {
+        copy = DuplicateString(cx, s);
+        if (!copy) {
+            return false;
+        }
+=======
+  if (rhs.sourceMapURL()) {
+    sourceMapURL_ = DuplicateString(cx, rhs.sourceMapURL()).release();
+    if (!sourceMapURL_) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // OwningCompileOptions always owns sourceMapURL_, so this cast is okay.
   js_free(const_cast<char16_t*>(sourceMapURL_));
 
@@ -3550,17 +6334,52 @@ bool JS::OwningCompileOptions::setIntroducerFilename(JSContext* cx,
     copy = DuplicateString(cx, s).release();
     if (!copy) {
       return false;
+||||||| merged common ancestors
+    // OwningCompileOptions always owns sourceMapURL_, so this cast is okay.
+    js_free(const_cast<char16_t*>(sourceMapURL_));
+
+    sourceMapURL_ = copy.release();
+    return true;
+}
+
+bool
+JS::OwningCompileOptions::setIntroducerFilename(JSContext* cx, const char* s)
+{
+    char* copy = nullptr;
+    if (s) {
+        copy = DuplicateString(cx, s).release();
+        if (!copy) {
+            return false;
+        }
+=======
+  if (rhs.introducerFilename()) {
+    introducerFilename_ =
+        DuplicateString(cx, rhs.introducerFilename()).release();
+    if (!introducerFilename_) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // OwningCompileOptions always owns introducerFilename_, so this cast is okay.
   js_free(const_cast<char*>(introducerFilename_));
 
   introducerFilename_ = copy;
   return true;
+||||||| merged common ancestors
+    // OwningCompileOptions always owns introducerFilename_, so this cast is okay.
+    js_free(const_cast<char*>(introducerFilename_));
+
+    introducerFilename_ = copy;
+    return true;
+=======
+  return true;
+>>>>>>> upstream-releases
 }
 
 JS::CompileOptions::CompileOptions(JSContext* cx)
+<<<<<<< HEAD
     : ReadOnlyCompileOptions(),
       elementRoot(cx),
       elementAttributeNameRoot(cx),
@@ -3578,6 +6397,68 @@ JS::CompileOptions::CompileOptions(JSContext* cx)
   }
   throwOnAsmJSValidationFailureOption =
       cx->options().throwOnAsmJSValidationFailure();
+||||||| merged common ancestors
+    : ReadOnlyCompileOptions(), elementRoot(cx), elementAttributeNameRoot(cx),
+      introductionScriptRoot(cx)
+{
+    strictOption = cx->options().strictMode();
+    extraWarningsOption = cx->realm()->behaviors().extraWarnings(cx);
+    isProbablySystemCode = cx->realm()->isProbablySystemCode();
+    werrorOption = cx->options().werror();
+    if (!cx->options().asmJS()) {
+        asmJSOption = AsmJSOption::Disabled;
+    } else if (cx->realm()->debuggerObservesAsmJS()) {
+        asmJSOption = AsmJSOption::DisabledByDebugger;
+    } else {
+        asmJSOption = AsmJSOption::Enabled;
+    }
+    throwOnAsmJSValidationFailureOption = cx->options().throwOnAsmJSValidationFailure();
+=======
+    : ReadOnlyCompileOptions(),
+      elementRoot(cx),
+      elementAttributeNameRoot(cx),
+      introductionScriptRoot(cx),
+      scriptOrModuleRoot(cx) {
+  strictOption = cx->options().strictMode();
+  extraWarningsOption = cx->realm()->behaviors().extraWarnings(cx);
+  discardSource = cx->realm()->behaviors().discardSource();
+  werrorOption = cx->options().werror();
+  if (!cx->options().asmJS()) {
+    asmJSOption = AsmJSOption::Disabled;
+  } else if (cx->realm()->debuggerObservesAsmJS()) {
+    asmJSOption = AsmJSOption::DisabledByDebugger;
+  } else {
+    asmJSOption = AsmJSOption::Enabled;
+  }
+  throwOnAsmJSValidationFailureOption =
+      cx->options().throwOnAsmJSValidationFailure();
+  bigIntEnabledOption = cx->realm()->creationOptions().getBigIntEnabled();
+  fieldsEnabledOption = cx->realm()->creationOptions().getFieldsEnabled();
+
+  // Certain modes of operation disallow syntax parsing in general. The replay
+  // debugger requires scripts to be constructed in a consistent order, which
+  // might not happen with lazy parsing.
+  forceFullParse_ = cx->realm()->behaviors().disableLazyParsing() ||
+                    coverage::IsLCovEnabled() ||
+                    mozilla::recordreplay::IsRecordingOrReplaying();
+}
+
+CompileOptions& CompileOptions::setIntroductionInfoToCaller(
+    JSContext* cx, const char* introductionType) {
+  RootedScript maybeScript(cx);
+  const char* filename;
+  unsigned lineno;
+  uint32_t pcOffset;
+  bool mutedErrors;
+  DescribeScriptedCallerForCompilation(cx, &maybeScript, &filename, &lineno,
+                                       &pcOffset, &mutedErrors);
+  if (filename) {
+    return setIntroductionInfo(filename, introductionType, lineno, maybeScript,
+                               pcOffset);
+  } else {
+    return setIntroductionType(introductionType);
+  }
+>>>>>>> upstream-releases
 }
 
 #if defined(JS_BUILD_BINAST)
@@ -3617,9 +6498,20 @@ JS_PUBLIC_API JSScript* JS::FinishOffThreadBinASTDecode(
 }
 #endif
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_GetGlobalFromScript(JSScript* script) {
   MOZ_ASSERT(!script->isCachedEval());
   return &script->global();
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS_GetGlobalFromScript(JSScript* script)
+{
+    MOZ_ASSERT(!script->isCachedEval());
+    return &script->global();
+=======
+JS_PUBLIC_API JSObject* JS_GetGlobalFromScript(JSScript* script) {
+  return &script->global();
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API const char* JS_GetScriptFilename(JSScript* script) {
@@ -3653,6 +6545,7 @@ JS_PUBLIC_API JSScript* JS_GetFunctionScript(JSContext* cx,
 JS_PUBLIC_API JSString* JS_DecompileScript(JSContext* cx, HandleScript script) {
   MOZ_ASSERT(!cx->zone()->isAtomsZone());
 
+<<<<<<< HEAD
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   script->ensureNonLazyCanonicalFunction();
@@ -3667,6 +6560,35 @@ JS_PUBLIC_API JSString* JS_DecompileScript(JSContext* cx, HandleScript script) {
   }
   return haveSource ? JSScript::sourceData(cx, script)
                     : NewStringCopyZ<CanGC>(cx, "[no source]");
+||||||| merged common ancestors
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    script->ensureNonLazyCanonicalFunction();
+    RootedFunction fun(cx, script->functionNonDelazifying());
+    if (fun) {
+        return JS_DecompileFunction(cx, fun);
+    }
+    bool haveSource = script->scriptSource()->hasSourceText();
+    if (!haveSource && !JSScript::loadSource(cx, script->scriptSource(), &haveSource)) {
+        return nullptr;
+    }
+    return haveSource ? JSScript::sourceData(cx, script)
+                      : NewStringCopyZ<CanGC>(cx, "[no source]");
+=======
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  script->ensureNonLazyCanonicalFunction();
+  RootedFunction fun(cx, script->functionNonDelazifying());
+  if (fun) {
+    return JS_DecompileFunction(cx, fun);
+  }
+  bool haveSource;
+  if (!ScriptSource::loadSource(cx, script->scriptSource(), &haveSource)) {
+    return nullptr;
+  }
+  return haveSource ? JSScript::sourceData(cx, script)
+                    : NewStringCopyZ<CanGC>(cx, "[no source]");
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JSString* JS_DecompileFunction(JSContext* cx,
@@ -3678,40 +6600,128 @@ JS_PUBLIC_API JSString* JS_DecompileFunction(JSContext* cx,
   return FunctionToString(cx, fun, /* isToSource = */ false);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::ModuleResolveHook JS::GetModuleResolveHook(JSRuntime* rt) {
   AssertHeapIsIdle();
   return rt->moduleResolveHook;
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::ModuleResolveHook)
+JS::GetModuleResolveHook(JSRuntime* rt)
+{
+    AssertHeapIsIdle();
+    return rt->moduleResolveHook;
+=======
+JS_PUBLIC_API void JS::SetScriptPrivate(JSScript* script,
+                                        const JS::Value& value) {
+  JSRuntime* rt = script->zone()->runtimeFromMainThread();
+  script->sourceObject()->setPrivate(rt, value);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetModuleResolveHook(JSRuntime* rt,
                                             JS::ModuleResolveHook func) {
   AssertHeapIsIdle();
   rt->moduleResolveHook = func;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetModuleResolveHook(JSRuntime* rt, JS::ModuleResolveHook func)
+{
+    AssertHeapIsIdle();
+    rt->moduleResolveHook = func;
+=======
+JS_PUBLIC_API JS::Value JS::GetScriptPrivate(JSScript* script) {
+  return script->sourceObject()->canonicalPrivate();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::ModuleMetadataHook JS::GetModuleMetadataHook(JSRuntime* rt) {
   AssertHeapIsIdle();
   return rt->moduleMetadataHook;
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::ModuleMetadataHook)
+JS::GetModuleMetadataHook(JSRuntime* rt)
+{
+    AssertHeapIsIdle();
+    return rt->moduleMetadataHook;
+=======
+JS_PUBLIC_API JS::Value JS::GetScriptedCallerPrivate(JSContext* cx) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+
+  NonBuiltinFrameIter iter(cx, cx->realm()->principals());
+  if (iter.done() || !iter.hasScript()) {
+    return UndefinedValue();
+  }
+
+  return iter.script()->sourceObject()->canonicalPrivate();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetModuleMetadataHook(JSRuntime* rt,
                                              JS::ModuleMetadataHook func) {
   AssertHeapIsIdle();
   rt->moduleMetadataHook = func;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetModuleMetadataHook(JSRuntime* rt, JS::ModuleMetadataHook func)
+{
+    AssertHeapIsIdle();
+    rt->moduleMetadataHook = func;
+=======
+JS_PUBLIC_API void JS::SetScriptPrivateReferenceHooks(
+    JSRuntime* rt, JS::ScriptPrivateReferenceHook addRefHook,
+    JS::ScriptPrivateReferenceHook releaseHook) {
+  AssertHeapIsIdle();
+  rt->scriptPrivateAddRefHook = addRefHook;
+  rt->scriptPrivateReleaseHook = releaseHook;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::ModuleDynamicImportHook JS::GetModuleDynamicImportHook(
     JSRuntime* rt) {
   AssertHeapIsIdle();
   return rt->moduleDynamicImportHook;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::CompileModule(JSContext* cx, const ReadOnlyCompileOptions& options,
+                  SourceBufferHolder& srcBuf, JS::MutableHandleObject module)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+JS_PUBLIC_API JSObject* JS_New(JSContext* cx, HandleObject ctor,
+                               const JS::HandleValueArray& inputArgs) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(ctor, inputArgs);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetModuleDynamicImportHook(
     JSRuntime* rt, JS::ModuleDynamicImportHook func) {
   AssertHeapIsIdle();
   rt->moduleDynamicImportHook = func;
 }
+||||||| merged common ancestors
+    module.set(frontend::CompileModule(cx, options, srcBuf));
+    return !!module;
+}
+=======
+  RootedValue ctorVal(cx, ObjectValue(*ctor));
+  if (!IsConstructor(ctorVal)) {
+    ReportValueError(cx, JSMSG_NOT_CONSTRUCTOR, JSDVG_IGNORE_STACK, ctorVal,
+                     nullptr);
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::FinishDynamicModuleImport(JSContext* cx,
                                                  HandleValue referencingPrivate,
                                                  HandleString specifier,
@@ -3723,7 +6733,20 @@ JS_PUBLIC_API bool JS::FinishDynamicModuleImport(JSContext* cx,
   return js::FinishDynamicModuleImport(cx, referencingPrivate, specifier,
                                        promise);
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetModulePrivate(JSObject* module, const JS::Value& value)
+{
+    module->as<ModuleObject>().scriptSourceObject()->setPrivate(value);
+}
+=======
+  ConstructArgs args(cx);
+  if (!FillArgumentsFromArraylike(cx, args, inputArgs)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::CompileModule(JSContext* cx,
                                      const ReadOnlyCompileOptions& options,
                                      SourceText<char16_t>& srcBuf,
@@ -3735,25 +6758,86 @@ JS_PUBLIC_API bool JS::CompileModule(JSContext* cx,
   module.set(frontend::CompileModule(cx, options, srcBuf));
   return !!module;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::Value)
+JS::GetModulePrivate(JSObject* module)
+{
+    return module->as<ModuleObject>().scriptSourceObject()->getPrivate();
+}
+=======
+  RootedObject obj(cx);
+  if (!js::Construct(cx, ctorVal, args, ctorVal, &obj)) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetModulePrivate(JSObject* module,
                                         const JS::Value& value) {
   module->as<ModuleObject>().scriptSourceObject()->setPrivate(value);
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetScriptPrivate(JSScript* script, const JS::Value& value)
+{
+    script->scriptSourceUnwrap().setPrivate(value);
+=======
+  return obj;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::Value JS::GetModulePrivate(JSObject* module) {
   return module->as<ModuleObject>().scriptSourceObject()->getPrivate();
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::Value)
+JS::GetScriptPrivate(JSScript* script)
+{
+    return script->scriptSourceUnwrap().getPrivate();
+=======
+JS_PUBLIC_API bool JS_CheckForInterrupt(JSContext* cx) {
+  return js::CheckForInterrupt(cx);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetScriptPrivate(JSScript* script,
                                         const JS::Value& value) {
   script->scriptSourceUnwrap().setPrivate(value);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ModuleInstantiate(JSContext* cx, JS::HandleObject moduleArg)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(moduleArg);
+    return ModuleObject::Instantiate(cx, moduleArg.as<ModuleObject>());
+=======
+JS_PUBLIC_API bool JS_AddInterruptCallback(JSContext* cx,
+                                           JSInterruptCallback callback) {
+  return cx->interruptCallbacks().append(callback);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::Value JS::GetScriptPrivate(JSScript* script) {
   return script->scriptSourceUnwrap().getPrivate();
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ModuleEvaluate(JSContext* cx, JS::HandleObject moduleArg)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(moduleArg);
+    return ModuleObject::Evaluate(cx, moduleArg.as<ModuleObject>());
+=======
+JS_PUBLIC_API bool JS_DisableInterruptCallback(JSContext* cx) {
+  bool result = cx->interruptCallbackDisabled;
+  cx->interruptCallbackDisabled = true;
+  return result;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::ModuleInstantiate(JSContext* cx,
                                          JS::HandleObject moduleArg) {
   AssertHeapIsIdle();
@@ -3849,6 +6933,101 @@ JS_PUBLIC_API bool JS_DisableInterruptCallback(JSContext* cx) {
 
 JS_PUBLIC_API void JS_ResetInterruptCallback(JSContext* cx, bool enable) {
   cx->interruptCallbackDisabled = enable;
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS::GetRequestedModules(JSContext* cx, JS::HandleObject moduleArg)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(moduleArg);
+    return &moduleArg->as<ModuleObject>().requestedModules();
+}
+
+JS_PUBLIC_API(JSString*)
+JS::GetRequestedModuleSpecifier(JSContext* cx, JS::HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    JSObject* obj = &value.toObject();
+    return obj->as<RequestedModuleObject>().moduleSpecifier();
+}
+
+JS_PUBLIC_API(void)
+JS::GetRequestedModuleSourcePos(JSContext* cx, JS::HandleValue value,
+                                uint32_t* lineNumber, uint32_t* columnNumber)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    MOZ_ASSERT(lineNumber);
+    MOZ_ASSERT(columnNumber);
+    auto& requested = value.toObject().as<RequestedModuleObject>();
+    *lineNumber = requested.lineNumber();
+    *columnNumber = requested.columnNumber();
+}
+
+JS_PUBLIC_API(JSScript*)
+JS::GetModuleScript(JS::HandleObject moduleRecord)
+{
+    AssertHeapIsIdle();
+    return moduleRecord->as<ModuleObject>().script();
+}
+
+JS_PUBLIC_API(JSObject*)
+JS_New(JSContext* cx, HandleObject ctor, const JS::HandleValueArray& inputArgs)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(ctor, inputArgs);
+
+    RootedValue ctorVal(cx, ObjectValue(*ctor));
+    if (!IsConstructor(ctorVal)) {
+        ReportValueError(cx, JSMSG_NOT_CONSTRUCTOR, JSDVG_IGNORE_STACK, ctorVal, nullptr);
+        return nullptr;
+    }
+
+    ConstructArgs args(cx);
+    if (!FillArgumentsFromArraylike(cx, args, inputArgs)) {
+        return nullptr;
+    }
+
+    RootedObject obj(cx);
+    if (!js::Construct(cx, ctorVal, args, ctorVal, &obj)) {
+        return nullptr;
+    }
+
+    return obj;
+}
+
+JS_PUBLIC_API(bool)
+JS_CheckForInterrupt(JSContext* cx)
+{
+    return js::CheckForInterrupt(cx);
+}
+
+JS_PUBLIC_API(bool)
+JS_AddInterruptCallback(JSContext* cx, JSInterruptCallback callback)
+{
+    return cx->interruptCallbacks().append(callback);
+}
+
+JS_PUBLIC_API(bool)
+JS_DisableInterruptCallback(JSContext* cx)
+{
+    bool result = cx->interruptCallbackDisabled;
+    cx->interruptCallbackDisabled = true;
+    return result;
+}
+
+JS_PUBLIC_API(void)
+JS_ResetInterruptCallback(JSContext* cx, bool enable)
+{
+    cx->interruptCallbackDisabled = enable;
+=======
+JS_PUBLIC_API void JS_ResetInterruptCallback(JSContext* cx, bool enable) {
+  cx->interruptCallbackDisabled = enable;
+>>>>>>> upstream-releases
 }
 
 /************************************************************************/
@@ -3856,6 +7035,7 @@ JS_PUBLIC_API void JS_ResetInterruptCallback(JSContext* cx, bool enable) {
 /*
  * Promises.
  */
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetGetIncumbentGlobalCallback(
     JSContext* cx, JSGetIncumbentGlobalCallback callback) {
   cx->getIncumbentGlobalCallback = callback;
@@ -3866,13 +7046,45 @@ JS_PUBLIC_API void JS::SetEnqueuePromiseJobCallback(
     void* data /* = nullptr */) {
   cx->enqueuePromiseJobCallback = callback;
   cx->enqueuePromiseJobCallbackData = data;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetGetIncumbentGlobalCallback(JSContext* cx, JSGetIncumbentGlobalCallback callback)
+{
+    cx->getIncumbentGlobalCallback = callback;
 }
 
+JS_PUBLIC_API(void)
+JS::SetEnqueuePromiseJobCallback(JSContext* cx, JSEnqueuePromiseJobCallback callback,
+                                 void* data /* = nullptr */)
+{
+    cx->enqueuePromiseJobCallback = callback;
+    cx->enqueuePromiseJobCallbackData = data;
+=======
+JS_PUBLIC_API void JS::SetJobQueue(JSContext* cx, JobQueue* queue) {
+  cx->jobQueue = queue;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 extern JS_PUBLIC_API void JS::SetPromiseRejectionTrackerCallback(
     JSContext* cx, JSPromiseRejectionTrackerCallback callback,
     void* data /* = nullptr */) {
   cx->promiseRejectionTrackerCallback = callback;
   cx->promiseRejectionTrackerCallbackData = data;
+||||||| merged common ancestors
+extern JS_PUBLIC_API(void)
+JS::SetPromiseRejectionTrackerCallback(JSContext* cx, JSPromiseRejectionTrackerCallback callback,
+                                       void* data /* = nullptr */)
+{
+    cx->promiseRejectionTrackerCallback = callback;
+    cx->promiseRejectionTrackerCallbackData = data;
+=======
+extern JS_PUBLIC_API void JS::SetPromiseRejectionTrackerCallback(
+    JSContext* cx, PromiseRejectionTrackerCallback callback,
+    void* data /* = nullptr */) {
+  cx->promiseRejectionTrackerCallback = callback;
+  cx->promiseRejectionTrackerCallbackData = data;
+>>>>>>> upstream-releases
 }
 
 extern JS_PUBLIC_API void JS::JobQueueIsEmpty(JSContext* cx) {
@@ -3914,14 +7126,37 @@ JS_PUBLIC_API JSObject* JS::GetPromisePrototype(JSContext* cx) {
   return GlobalObject::getOrCreatePromisePrototype(cx, global);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::PromiseState JS::GetPromiseState(
     JS::HandleObject promiseObj_) {
   JSObject* promiseObj = CheckedUnwrap(promiseObj_);
   if (!promiseObj || !promiseObj->is<PromiseObject>()) {
     return JS::PromiseState::Pending;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::PromiseState)
+JS::GetPromiseState(JS::HandleObject promiseObj_)
+{
+    JSObject* promiseObj = CheckedUnwrap(promiseObj_);
+    if (!promiseObj || !promiseObj->is<PromiseObject>()) {
+        return JS::PromiseState::Pending;
+    }
+=======
+JS_PUBLIC_API JS::PromiseState JS::GetPromiseState(
+    JS::HandleObject promiseObj_) {
+  PromiseObject* promiseObj = promiseObj_->maybeUnwrapIf<PromiseObject>();
+  if (!promiseObj) {
+    return JS::PromiseState::Pending;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return promiseObj->as<PromiseObject>().state();
+||||||| merged common ancestors
+    return promiseObj->as<PromiseObject>().state();
+=======
+  return promiseObj->state();
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API uint64_t JS::GetPromiseID(JS::HandleObject promise) {
@@ -3970,6 +7205,7 @@ JS_PUBLIC_API void JS::DumpPromiseResolutionSite(JSContext* cx,
 }
 #endif
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS::CallOriginalPromiseResolve(
     JSContext* cx, JS::HandleValue resolutionValue) {
   AssertHeapIsIdle();
@@ -4018,6 +7254,105 @@ static bool ResolveOrRejectPromise(JSContext* cx, JS::HandleObject promiseObj,
   } else {
     promise = promiseObj.as<PromiseObject>();
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS::CallOriginalPromiseResolve(JSContext* cx, JS::HandleValue resolutionValue)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(resolutionValue);
+
+    RootedObject promise(cx, PromiseObject::unforgeableResolve(cx, resolutionValue));
+    MOZ_ASSERT_IF(promise, CheckedUnwrap(promise)->is<PromiseObject>());
+    return promise;
+}
+
+JS_PUBLIC_API(JSObject*)
+JS::CallOriginalPromiseReject(JSContext* cx, JS::HandleValue rejectionValue)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(rejectionValue);
+
+    RootedObject promise(cx, PromiseObject::unforgeableReject(cx, rejectionValue));
+    MOZ_ASSERT_IF(promise, CheckedUnwrap(promise)->is<PromiseObject>());
+    return promise;
+}
+
+static bool
+ResolveOrRejectPromise(JSContext* cx, JS::HandleObject promiseObj, JS::HandleValue resultOrReason_,
+                       bool reject)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(promiseObj, resultOrReason_);
+
+    mozilla::Maybe<AutoRealm> ar;
+    Rooted<PromiseObject*> promise(cx);
+    RootedValue resultOrReason(cx, resultOrReason_);
+    if (IsWrapper(promiseObj)) {
+        JSObject* unwrappedPromiseObj = CheckedUnwrap(promiseObj);
+        if (!unwrappedPromiseObj) {
+            ReportAccessDenied(cx);
+            return false;
+        }
+        promise = &unwrappedPromiseObj->as<PromiseObject>();
+        ar.emplace(cx, promise);
+        if (!cx->compartment()->wrap(cx, &resultOrReason)) {
+            return false;
+        }
+    } else {
+        promise = promiseObj.as<PromiseObject>();
+    }
+=======
+JS_PUBLIC_API JSObject* JS::CallOriginalPromiseResolve(
+    JSContext* cx, JS::HandleValue resolutionValue) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(resolutionValue);
+
+  RootedObject promise(cx,
+                       PromiseObject::unforgeableResolve(cx, resolutionValue));
+  MOZ_ASSERT_IF(promise, promise->canUnwrapAs<PromiseObject>());
+  return promise;
+}
+
+JS_PUBLIC_API JSObject* JS::CallOriginalPromiseReject(
+    JSContext* cx, JS::HandleValue rejectionValue) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(rejectionValue);
+
+  RootedObject promise(cx,
+                       PromiseObject::unforgeableReject(cx, rejectionValue));
+  MOZ_ASSERT_IF(promise, promise->canUnwrapAs<PromiseObject>());
+  return promise;
+}
+
+static bool ResolveOrRejectPromise(JSContext* cx, JS::HandleObject promiseObj,
+                                   JS::HandleValue resultOrReason_,
+                                   bool reject) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(promiseObj, resultOrReason_);
+
+  mozilla::Maybe<AutoRealm> ar;
+  Rooted<PromiseObject*> promise(cx);
+  RootedValue resultOrReason(cx, resultOrReason_);
+  if (IsWrapper(promiseObj)) {
+    promise = promiseObj->maybeUnwrapAs<PromiseObject>();
+    if (!promise) {
+      ReportAccessDenied(cx);
+      return false;
+    }
+    ar.emplace(cx, promise);
+    if (!cx->compartment()->wrap(cx, &resultOrReason)) {
+      return false;
+    }
+  } else {
+    promise = promiseObj.as<PromiseObject>();
+  }
+>>>>>>> upstream-releases
 
   return reject ? PromiseObject::reject(cx, promise, resultOrReason)
                 : PromiseObject::resolve(cx, promise, resultOrReason);
@@ -4051,6 +7386,7 @@ static MOZ_MUST_USE bool CallOriginalPromiseThenImpl(
                              createDependent);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS::CallOriginalPromiseThen(
     JSContext* cx, JS::HandleObject promiseObj, JS::HandleObject onResolvedObj,
     JS::HandleObject onRejectedObj) {
@@ -4081,7 +7417,49 @@ JS::GetPromiseUserInputEventHandlingState(JS::HandleObject promiseObj_) {
   if (!promiseObj || !promiseObj->is<PromiseObject>()) {
     return JS::PromiseUserInputEventHandlingState::DontCare;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::SetPromiseUserInputEventHandlingState(JS::HandleObject promiseObj_,
+                                          JS::PromiseUserInputEventHandlingState state)
+{
+    JSObject* promiseObj = CheckedUnwrap(promiseObj_);
+    if (!promiseObj || !promiseObj->is<PromiseObject>()) {
+        return false;
+    }
+=======
+JS_PUBLIC_API JSObject* JS::CallOriginalPromiseThen(
+    JSContext* cx, JS::HandleObject promiseObj, JS::HandleObject onResolvedObj,
+    JS::HandleObject onRejectedObj) {
+  RootedObject resultPromise(cx);
+  if (!CallOriginalPromiseThenImpl(cx, promiseObj, onResolvedObj, onRejectedObj,
+                                   &resultPromise,
+                                   CreateDependentPromise::Always)) {
+    return nullptr;
+  }
+  return resultPromise;
+}
 
+JS_PUBLIC_API bool JS::AddPromiseReactions(JSContext* cx,
+                                           JS::HandleObject promiseObj,
+                                           JS::HandleObject onResolvedObj,
+                                           JS::HandleObject onRejectedObj) {
+  RootedObject resultPromise(cx);
+  bool result = CallOriginalPromiseThenImpl(cx, promiseObj, onResolvedObj,
+                                            onRejectedObj, &resultPromise,
+                                            CreateDependentPromise::Never);
+  MOZ_ASSERT(!resultPromise);
+  return result;
+}
+
+JS_PUBLIC_API JS::PromiseUserInputEventHandlingState
+JS::GetPromiseUserInputEventHandlingState(JS::HandleObject promiseObj_) {
+  PromiseObject* promise = promiseObj_->maybeUnwrapIf<PromiseObject>();
+  if (!promise) {
+    return JS::PromiseUserInputEventHandlingState::DontCare;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   auto& promise = promiseObj->as<PromiseObject>();
   if (!promise.requiresUserInteractionHandling()) {
     return JS::PromiseUserInputEventHandlingState::DontCare;
@@ -4092,7 +7470,21 @@ JS::GetPromiseUserInputEventHandlingState(JS::HandleObject promiseObj_) {
   return JS::PromiseUserInputEventHandlingState::
       DidntHaveUserInteractionAtCreation;
 }
+||||||| merged common ancestors
+    auto& promise = promiseObj->as<PromiseObject>();
+=======
+  if (!promise->requiresUserInteractionHandling()) {
+    return JS::PromiseUserInputEventHandlingState::DontCare;
+  }
+  if (promise->hadUserInteractionUponCreation()) {
+    return JS::PromiseUserInputEventHandlingState::HadUserInteractionAtCreation;
+  }
+  return JS::PromiseUserInputEventHandlingState::
+      DidntHaveUserInteractionAtCreation;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::SetPromiseUserInputEventHandlingState(
     JS::HandleObject promiseObj_,
     JS::PromiseUserInputEventHandlingState state) {
@@ -4122,6 +7514,53 @@ JS_PUBLIC_API bool JS::SetPromiseUserInputEventHandlingState(
       return false;
   }
   return true;
+||||||| merged common ancestors
+    switch (state) {
+      case JS::PromiseUserInputEventHandlingState::DontCare:
+        promise.setRequiresUserInteractionHandling(false);
+        break;
+      case JS::PromiseUserInputEventHandlingState::HadUserInteractionAtCreation:
+        promise.setRequiresUserInteractionHandling(true);
+        promise.setHadUserInteractionUponCreation(true);
+        break;
+      case JS::PromiseUserInputEventHandlingState::DidntHaveUserInteractionAtCreation:
+        promise.setRequiresUserInteractionHandling(true);
+        promise.setHadUserInteractionUponCreation(false);
+        break;
+      default:
+        MOZ_ASSERT_UNREACHABLE("Invalid PromiseUserInputEventHandlingState enum value");
+        return false;
+    }
+    return true;
+=======
+JS_PUBLIC_API bool JS::SetPromiseUserInputEventHandlingState(
+    JS::HandleObject promiseObj_,
+    JS::PromiseUserInputEventHandlingState state) {
+  PromiseObject* promise = promiseObj_->maybeUnwrapIf<PromiseObject>();
+  if (!promise) {
+    return false;
+  }
+
+  switch (state) {
+    case JS::PromiseUserInputEventHandlingState::DontCare:
+      promise->setRequiresUserInteractionHandling(false);
+      break;
+    case JS::PromiseUserInputEventHandlingState::HadUserInteractionAtCreation:
+      promise->setRequiresUserInteractionHandling(true);
+      promise->setHadUserInteractionUponCreation(true);
+      break;
+    case JS::PromiseUserInputEventHandlingState::
+        DidntHaveUserInteractionAtCreation:
+      promise->setRequiresUserInteractionHandling(true);
+      promise->setHadUserInteractionUponCreation(false);
+      break;
+    default:
+      MOZ_ASSERT_UNREACHABLE(
+          "Invalid PromiseUserInputEventHandlingState enum value");
+      return false;
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
 /**
@@ -4134,14 +7573,162 @@ JS_PUBLIC_API bool JS::SetPromiseUserInputEventHandlingState(
  *
  * Asserts that the array is dense and all entries are Promise objects.
  */
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS::GetWaitForAllPromise(
     JSContext* cx, const JS::AutoObjectVector& promises) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
+||||||| merged common ancestors
+JS_PUBLIC_API(JSObject*)
+JS::GetWaitForAllPromise(JSContext* cx, const JS::AutoObjectVector& promises)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    return js::GetWaitForAllPromise(cx, promises);
+}
+
+extern JS_PUBLIC_API(void)
+JS::SetReadableStreamCallbacks(JSContext* cx,
+                               JS::RequestReadableStreamDataCallback dataRequestCallback,
+                               JS::WriteIntoReadRequestBufferCallback writeIntoReadRequestCallback,
+                               JS::CancelReadableStreamCallback cancelCallback,
+                               JS::ReadableStreamClosedCallback closedCallback,
+                               JS::ReadableStreamErroredCallback erroredCallback,
+                               JS::ReadableStreamFinalizeCallback finalizeCallback)
+{
+    MOZ_ASSERT(dataRequestCallback);
+    MOZ_ASSERT(writeIntoReadRequestCallback);
+    MOZ_ASSERT(cancelCallback);
+    MOZ_ASSERT(closedCallback);
+    MOZ_ASSERT(erroredCallback);
+    MOZ_ASSERT(finalizeCallback);
+
+    JSRuntime* rt = cx->runtime();
+
+    MOZ_ASSERT(!rt->readableStreamDataRequestCallback);
+    MOZ_ASSERT(!rt->readableStreamWriteIntoReadRequestCallback);
+    MOZ_ASSERT(!rt->readableStreamCancelCallback);
+    MOZ_ASSERT(!rt->readableStreamClosedCallback);
+    MOZ_ASSERT(!rt->readableStreamErroredCallback);
+    MOZ_ASSERT(!rt->readableStreamFinalizeCallback);
+
+    rt->readableStreamDataRequestCallback = dataRequestCallback;
+    rt->readableStreamWriteIntoReadRequestCallback = writeIntoReadRequestCallback;
+    rt->readableStreamCancelCallback = cancelCallback;
+    rt->readableStreamClosedCallback = closedCallback;
+    rt->readableStreamErroredCallback = erroredCallback;
+    rt->readableStreamFinalizeCallback = finalizeCallback;
+}
+
+JS_PUBLIC_API(bool)
+JS::HasReadableStreamCallbacks(JSContext* cx)
+{
+    return cx->runtime()->readableStreamDataRequestCallback;
+}
+
+JS_PUBLIC_API(JSObject*)
+JS::NewReadableDefaultStreamObject(JSContext* cx,
+                                   JS::HandleObject underlyingSource /* = nullptr */,
+                                   JS::HandleFunction size /* = nullptr */,
+                                   double highWaterMark /* = 1 */,
+                                   JS::HandleObject proto /* = nullptr */)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    RootedObject source(cx, underlyingSource);
+    if (!source) {
+        source = NewBuiltinClassInstance<PlainObject>(cx);
+        if (!source)
+            return nullptr;
+    }
+    RootedValue sourceVal(cx, ObjectValue(*source));
+    RootedValue sizeVal(cx, size ? ObjectValue(*size) : UndefinedValue());
+    RootedValue highWaterMarkVal(cx, NumberValue(highWaterMark));
+    return ReadableStream::createDefaultStream(cx, sourceVal, sizeVal, highWaterMarkVal, proto);
+}
+
+JS_PUBLIC_API(JSObject*)
+JS::NewReadableExternalSourceStreamObject(JSContext* cx, void* underlyingSource,
+                                          uint8_t flags /* = 0 */,
+                                          HandleObject proto /* = nullptr */)
+{
+    MOZ_ASSERT(!cx->zone()->isAtomsZone());
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    MOZ_ASSERT((uintptr_t(underlyingSource) & 1) == 0,
+               "external underlying source pointers must be aligned");
+#ifdef DEBUG
+    JSRuntime* rt = cx->runtime();
+    MOZ_ASSERT(rt->readableStreamDataRequestCallback);
+    MOZ_ASSERT(rt->readableStreamWriteIntoReadRequestCallback);
+    MOZ_ASSERT(rt->readableStreamCancelCallback);
+    MOZ_ASSERT(rt->readableStreamClosedCallback);
+    MOZ_ASSERT(rt->readableStreamErroredCallback);
+    MOZ_ASSERT(rt->readableStreamFinalizeCallback);
+#endif // DEBUG
+
+    return ReadableStream::createExternalSourceStream(cx, underlyingSource, flags, proto);
+}
+
+JS_PUBLIC_API(bool)
+JS::IsReadableStream(const JSObject* obj)
+{
+    if (IsWrapper(const_cast<JSObject*>(obj)))
+        obj = CheckedUnwrap(const_cast<JSObject*>(obj));
+    return obj && obj->is<ReadableStream>();
+}
+
+JS_PUBLIC_API(bool)
+JS::IsReadableStreamReader(const JSObject* obj)
+{
+    if (IsWrapper(const_cast<JSObject*>(obj)))
+        obj = CheckedUnwrap(const_cast<JSObject*>(obj));
+    return obj && obj->is<ReadableStreamDefaultReader>();
+}
+
+JS_PUBLIC_API(bool)
+JS::IsReadableStreamDefaultReader(const JSObject* obj)
+{
+    if (IsWrapper(const_cast<JSObject*>(obj)))
+        obj = CheckedUnwrap(const_cast<JSObject*>(obj));
+    return obj && obj->is<ReadableStreamDefaultReader>();
+}
+
+template<class T>
+static MOZ_MUST_USE T*
+ToUnwrapped(JSContext* cx, JSObject* obj)
+{
+    cx->check(obj);
+    if (IsWrapper(obj)) {
+        obj = CheckedUnwrap(obj);
+        if (!obj) {
+            ReportAccessDenied(cx);
+            return nullptr;
+        }
+    }
+    return &obj->as<T>();
+}
+
+JS_PUBLIC_API(bool)
+JS::ReadableStreamIsReadable(JSContext* cx, const JSObject* streamObj, bool* result)
+{
+    ReadableStream* stream = ToUnwrapped<ReadableStream>(cx, const_cast<JSObject*>(streamObj));
+    if (!stream)
+        return false;
+=======
+JS_PUBLIC_API JSObject* JS::GetWaitForAllPromise(
+    JSContext* cx, JS::HandleObjectVector promises) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+>>>>>>> upstream-releases
 
   return js::GetWaitForAllPromise(cx, promises);
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::InitDispatchToEventLoop(
     JSContext* cx, JS::DispatchToEventLoopCallback callback, void* closure) {
   cx->runtime()->offThreadPromiseState.ref().init(callback, closure);
@@ -4149,12 +7736,40 @@ JS_PUBLIC_API void JS::InitDispatchToEventLoop(
 
 JS_PUBLIC_API void JS::ShutdownAsyncTasks(JSContext* cx) {
   cx->runtime()->offThreadPromiseState.ref().shutdown(cx);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ReadableStreamIsLocked(JSContext* cx, const JSObject* streamObj, bool* result)
+{
+    ReadableStream* stream = ToUnwrapped<ReadableStream>(cx, const_cast<JSObject*>(streamObj));
+    if (!stream)
+        return false;
+
+    *result = stream->locked();
+    return true;
+=======
+JS_PUBLIC_API void JS::InitDispatchToEventLoop(
+    JSContext* cx, JS::DispatchToEventLoopCallback callback, void* closure) {
+  cx->runtime()->offThreadPromiseState.ref().init(callback, closure);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::GetOptimizedEncodingBuildId(
     JS::BuildIdCharVector* buildId) {
   return wasm::GetOptimizedEncodingBuildId(buildId);
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ReadableStreamIsDisturbed(JSContext* cx, const JSObject* streamObj, bool* result)
+{
+    ReadableStream* stream = ToUnwrapped<ReadableStream>(cx, const_cast<JSObject*>(streamObj));
+    if (!stream)
+        return false;
+=======
+JS_PUBLIC_API void JS::ShutdownAsyncTasks(JSContext* cx) {
+  cx->runtime()->offThreadPromiseState.ref().shutdown(cx);
+}
+>>>>>>> upstream-releases
 
 JS_PUBLIC_API void JS::InitConsumeStreamCallback(
     JSContext* cx, ConsumeStreamCallback consume,
@@ -4283,26 +7898,66 @@ JS_PUBLIC_API JSString* JS_AtomizeAndPinStringN(JSContext* cx, const char* s,
   return atom;
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSString* JS_NewLatin1String(JSContext* cx, JS::Latin1Char* chars,
                                            size_t length) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return NewString(cx, chars, length);
+||||||| merged common ancestors
+    return true;
+=======
+JS_PUBLIC_API JSString* JS_NewLatin1String(
+    JSContext* cx, js::UniquePtr<JS::Latin1Char[], JS::FreePolicy> chars,
+    size_t length) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return NewString(cx, std::move(chars), length);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSString* JS_NewUCString(JSContext* cx, char16_t* chars,
                                        size_t length) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return NewString(cx, chars, length);
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::ReadableStreamGetDesiredSize(JSContext* cx, JSObject* streamObj, bool* hasValue, double* value)
+{
+    ReadableStream* stream = ToUnwrapped<ReadableStream>(cx, streamObj);
+    if (!stream)
+        return false;
+=======
+JS_PUBLIC_API JSString* JS_NewUCString(JSContext* cx,
+                                       JS::UniqueTwoByteChars chars,
+                                       size_t length) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return NewString(cx, std::move(chars), length);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSString* JS_NewUCStringDontDeflate(JSContext* cx,
                                                   char16_t* chars,
                                                   size_t length) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return NewStringDontDeflate(cx, chars, length);
+||||||| merged common ancestors
+    stream->desiredSize(hasValue, value);
+    return true;
+=======
+JS_PUBLIC_API JSString* JS_NewUCStringDontDeflate(JSContext* cx,
+                                                  JS::UniqueTwoByteChars chars,
+                                                  size_t length) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return NewStringDontDeflate(cx, std::move(chars), length);
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JSString* JS_NewUCStringCopyN(JSContext* cx, const char16_t* s,
@@ -4642,6 +8297,7 @@ JS_PUBLIC_API JS::Symbol* JS::GetWellKnownSymbol(JSContext* cx,
   return cx->wellKnownSymbols().get(which);
 }
 
+<<<<<<< HEAD
 #ifdef DEBUG
 static bool PropertySpecNameIsDigits(const char* s) {
   if (JS::PropertySpecNameIsSymbol(s)) {
@@ -4653,24 +8309,101 @@ static bool PropertySpecNameIsDigits(const char* s) {
   for (; *s; s++) {
     if (*s < '0' || *s > '9') {
       return false;
+||||||| merged common ancestors
+JS_PUBLIC_API(const JS::Latin1Char*)
+JS_GetLatin1StringCharsAndLength(JSContext* cx, const JS::AutoRequireNoGC& nogc, JSString* str,
+                                 size_t* plength)
+{
+    MOZ_ASSERT(plength);
+    AssertHeapIsIdleOrStringIsFlat(str);
+    CHECK_THREAD(cx);
+    cx->check(str);
+    JSLinearString* linear = str->ensureLinear(cx);
+    if (!linear) {
+        return nullptr;
+    }
+    *plength = linear->length();
+    return linear->latin1Chars(nogc);
+}
+
+JS_PUBLIC_API(const char16_t*)
+JS_GetTwoByteStringCharsAndLength(JSContext* cx, const JS::AutoRequireNoGC& nogc, JSString* str,
+                                  size_t* plength)
+{
+    MOZ_ASSERT(plength);
+    AssertHeapIsIdleOrStringIsFlat(str);
+    CHECK_THREAD(cx);
+    cx->check(str);
+    JSLinearString* linear = str->ensureLinear(cx);
+    if (!linear) {
+        return nullptr;
+=======
+#ifdef DEBUG
+static bool PropertySpecNameIsDigits(JSPropertySpec::Name name) {
+  if (name.isSymbol()) {
+    return false;
+  }
+  const char* s = name.string();
+  if (!*s) {
+    return false;
+  }
+  for (; *s; s++) {
+    if (*s < '0' || *s > '9') {
+      return false;
+>>>>>>> upstream-releases
     }
   }
   return true;
 }
 #endif  // DEBUG
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::PropertySpecNameEqualsId(const char* name, HandleId id) {
   if (JS::PropertySpecNameIsSymbol(name)) {
     if (!JSID_IS_SYMBOL(id)) {
       return false;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_GetStringCharAt(JSContext* cx, JSString* str, size_t index, char16_t* res)
+{
+    AssertHeapIsIdleOrStringIsFlat(str);
+    CHECK_THREAD(cx);
+    cx->check(str);
+
+    JSLinearString* linear = str->ensureLinear(cx);
+    if (!linear) {
+        return false;
+=======
+JS_PUBLIC_API bool JS::PropertySpecNameEqualsId(JSPropertySpec::Name name,
+                                                HandleId id) {
+  if (name.isSymbol()) {
+    if (!JSID_IS_SYMBOL(id)) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     Symbol* sym = JSID_TO_SYMBOL(id);
     return sym->isWellKnownSymbol() &&
            sym->code() == PropertySpecNameToSymbolCode(name);
   }
+||||||| merged common ancestors
+=======
+    Symbol* sym = JSID_TO_SYMBOL(id);
+    return sym->isWellKnownSymbol() && sym->code() == name.symbol();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(!PropertySpecNameIsDigits(name));
   return JSID_IS_ATOM(id) && JS_FlatStringEqualsAscii(JSID_TO_ATOM(id), name);
+||||||| merged common ancestors
+    *res = linear->latin1OrTwoByteChar(index);
+    return true;
+=======
+  MOZ_ASSERT(!PropertySpecNameIsDigits(name));
+  return JSID_IS_ATOM(id) &&
+         JS_FlatStringEqualsAscii(JSID_TO_ATOM(id), name.string());
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API bool JS_Stringify(JSContext* cx, MutableHandleValue vp,
@@ -4709,26 +8442,94 @@ JS_PUBLIC_API bool JS::ToJSONMaybeSafely(JSContext* cx, JS::HandleObject input,
                  StringifyBehavior::RestrictedSafe))
     return false;
 
+<<<<<<< HEAD
+  if (sb.empty() && !sb.append(cx->names().null)) {
+    return false;
+  }
+||||||| merged common ancestors
+JS_PUBLIC_API(const Latin1Char*)
+JS_GetLatin1InternedStringChars(const JS::AutoRequireNoGC& nogc, JSString* str)
+{
+    MOZ_ASSERT(str->isAtom());
+    JSFlatString* flat = str->ensureFlat(nullptr);
+    if (!flat) {
+        return nullptr;
+    }
+    return flat->latin1Chars(nogc);
+}
+=======
   if (sb.empty() && !sb.append(cx->names().null)) {
     return false;
   }
 
   return callback(sb.rawTwoByteBegin(), sb.length(), data);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return callback(sb.rawTwoByteBegin(), sb.length(), data);
+||||||| merged common ancestors
+JS_PUBLIC_API(const char16_t*)
+JS_GetTwoByteInternedStringChars(const JS::AutoRequireNoGC& nogc, JSString* str)
+{
+    MOZ_ASSERT(str->isAtom());
+    JSFlatString* flat = str->ensureFlat(nullptr);
+    if (!flat) {
+        return nullptr;
+    }
+    return flat->twoByteChars(nogc);
+}
+
+extern JS_PUBLIC_API(JSFlatString*)
+JS_FlattenString(JSContext* cx, JSString* str)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(str);
+    JSFlatString* flat = str->ensureFlat(cx);
+    if (!flat) {
+        return nullptr;
+    }
+    return flat;
+=======
 JS_PUBLIC_API bool JS_ParseJSON(JSContext* cx, const char16_t* chars,
                                 uint32_t len, MutableHandleValue vp) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len),
                               NullHandleValue, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_ParseJSON(JSContext* cx, const char16_t* chars,
+                                uint32_t len, MutableHandleValue vp) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len),
+                              NullHandleValue, vp);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(const Latin1Char*)
+JS_GetLatin1FlatStringChars(const JS::AutoRequireNoGC& nogc, JSFlatString* str)
+{
+    return str->latin1Chars(nogc);
+=======
 JS_PUBLIC_API bool JS_ParseJSON(JSContext* cx, HandleString str,
                                 MutableHandleValue vp) {
   return JS_ParseJSONWithReviver(cx, str, NullHandleValue, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_ParseJSON(JSContext* cx, HandleString str,
+                                MutableHandleValue vp) {
+  return JS_ParseJSONWithReviver(cx, str, NullHandleValue, vp);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(const char16_t*)
+JS_GetTwoByteFlatStringChars(const JS::AutoRequireNoGC& nogc, JSFlatString* str)
+{
+    return str->twoByteChars(nogc);
+=======
 JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, const char16_t* chars,
                                            uint32_t len, HandleValue reviver,
                                            MutableHandleValue vp) {
@@ -4736,8 +8537,26 @@ JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, const char16_t* chars,
   CHECK_THREAD(cx);
   return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len),
                               reviver, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, const char16_t* chars,
+                                           uint32_t len, HandleValue reviver,
+                                           MutableHandleValue vp) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len),
+                              reviver, vp);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_CompareStrings(JSContext* cx, JSString* str1, JSString* str2, int32_t* result)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    return CompareStrings(cx, str1, str2, result);
+=======
 JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, HandleString str,
                                            HandleValue reviver,
                                            MutableHandleValue vp) {
@@ -4754,10 +8573,257 @@ JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, HandleString str,
              ? ParseJSONWithReviver(cx, stableChars.latin1Range(), reviver, vp)
              : ParseJSONWithReviver(cx, stableChars.twoByteRange(), reviver,
                                     vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS_ParseJSONWithReviver(JSContext* cx, HandleString str,
+                                           HandleValue reviver,
+                                           MutableHandleValue vp) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(str);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_StringEqualsAscii(JSContext* cx, JSString* str, const char* asciiBytes, bool* match)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+/************************************************************************/
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  AutoStableStringChars stableChars(cx);
+  if (!stableChars.init(cx, str)) {
+    return false;
+  }
+||||||| merged common ancestors
+    JSLinearString* linearStr = str->ensureLinear(cx);
+    if (!linearStr) {
+        return false;
+    }
+    *match = StringEqualsAscii(linearStr, asciiBytes);
+    return true;
+}
+=======
+JS_PUBLIC_API void JS_ReportErrorASCII(JSContext* cx, const char* format, ...) {
+  va_list ap;
+
+  AssertHeapIsIdle();
+  va_start(ap, format);
+  ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreASCII, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorLatin1(JSContext* cx, const char* format,
+                                        ...) {
+  va_list ap;
+
+  AssertHeapIsIdle();
+  va_start(ap, format);
+  ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreLatin1, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorUTF8(JSContext* cx, const char* format, ...) {
+  va_list ap;
+
+  AssertHeapIsIdle();
+  va_start(ap, format);
+  ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreUTF8, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberASCII(JSContext* cx,
+                                             JSErrorCallback errorCallback,
+                                             void* userRef,
+                                             const unsigned errorNumber, ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  JS_ReportErrorNumberASCIIVA(cx, errorCallback, userRef, errorNumber, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberASCIIVA(JSContext* cx,
+                                               JSErrorCallback errorCallback,
+                                               void* userRef,
+                                               const unsigned errorNumber,
+                                               va_list ap) {
+  AssertHeapIsIdle();
+  ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef, errorNumber,
+                      ArgumentsAreASCII, ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberLatin1(JSContext* cx,
+                                              JSErrorCallback errorCallback,
+                                              void* userRef,
+                                              const unsigned errorNumber, ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  JS_ReportErrorNumberLatin1VA(cx, errorCallback, userRef, errorNumber, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberLatin1VA(JSContext* cx,
+                                                JSErrorCallback errorCallback,
+                                                void* userRef,
+                                                const unsigned errorNumber,
+                                                va_list ap) {
+  AssertHeapIsIdle();
+  ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef, errorNumber,
+                      ArgumentsAreLatin1, ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberUTF8(JSContext* cx,
+                                            JSErrorCallback errorCallback,
+                                            void* userRef,
+                                            const unsigned errorNumber, ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  JS_ReportErrorNumberUTF8VA(cx, errorCallback, userRef, errorNumber, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberUTF8VA(JSContext* cx,
+                                              JSErrorCallback errorCallback,
+                                              void* userRef,
+                                              const unsigned errorNumber,
+                                              va_list ap) {
+  AssertHeapIsIdle();
+  ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef, errorNumber,
+                      ArgumentsAreUTF8, ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberUC(JSContext* cx,
+                                          JSErrorCallback errorCallback,
+                                          void* userRef,
+                                          const unsigned errorNumber, ...) {
+  va_list ap;
+
+  AssertHeapIsIdle();
+  va_start(ap, errorNumber);
+  ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef, errorNumber,
+                      ArgumentsAreUnicode, ap);
+  va_end(ap);
+}
+
+JS_PUBLIC_API void JS_ReportErrorNumberUCArray(JSContext* cx,
+                                               JSErrorCallback errorCallback,
+                                               void* userRef,
+                                               const unsigned errorNumber,
+                                               const char16_t** args) {
+  AssertHeapIsIdle();
+  ReportErrorNumberUCArray(cx, JSREPORT_ERROR, errorCallback, userRef,
+                           errorNumber, args);
+}
+
+JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberASCII(
+    JSContext* cx, unsigned flags, JSErrorCallback errorCallback, void* userRef,
+    const unsigned errorNumber, ...) {
+  va_list ap;
+  bool ok;
+
+  AssertHeapIsIdle();
+  va_start(ap, errorNumber);
+  ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
+                           ArgumentsAreASCII, ap);
+  va_end(ap);
+  return ok;
+}
+
+JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberLatin1(
+    JSContext* cx, unsigned flags, JSErrorCallback errorCallback, void* userRef,
+    const unsigned errorNumber, ...) {
+  va_list ap;
+  bool ok;
+
+  AssertHeapIsIdle();
+  va_start(ap, errorNumber);
+  ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
+                           ArgumentsAreLatin1, ap);
+  va_end(ap);
+  return ok;
+}
+
+JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUTF8(
+    JSContext* cx, unsigned flags, JSErrorCallback errorCallback, void* userRef,
+    const unsigned errorNumber, ...) {
+  va_list ap;
+  bool ok;
+
+  AssertHeapIsIdle();
+  va_start(ap, errorNumber);
+  ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
+                           ArgumentsAreUTF8, ap);
+  va_end(ap);
+  return ok;
+}
+
+JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUC(JSContext* cx, unsigned flags,
+                                                  JSErrorCallback errorCallback,
+                                                  void* userRef,
+                                                  const unsigned errorNumber,
+                                                  ...) {
+  va_list ap;
+  bool ok;
+
+  AssertHeapIsIdle();
+  va_start(ap, errorNumber);
+  ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
+                           ArgumentsAreUnicode, ap);
+  va_end(ap);
+  return ok;
+}
+
+JS_PUBLIC_API void JS_ReportOutOfMemory(JSContext* cx) {
+  ReportOutOfMemory(cx);
+}
+
+JS_PUBLIC_API void JS_ReportAllocationOverflow(JSContext* cx) {
+  ReportAllocationOverflow(cx);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return stableChars.isLatin1()
+             ? ParseJSONWithReviver(cx, stableChars.latin1Range(), reviver, vp)
+             : ParseJSONWithReviver(cx, stableChars.twoByteRange(), reviver,
+                                    vp);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_FlatStringEqualsAscii(JSFlatString* str, const char* asciiBytes)
+{
+    return StringEqualsAscii(str, asciiBytes);
+=======
 /************************************************************************/
 
+JS_PUBLIC_API bool JS_SetDefaultLocale(JSRuntime* rt, const char* locale) {
+  AssertHeapIsIdle();
+  return rt->setDefaultLocale(locale);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+/************************************************************************/
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS_PutEscapedFlatString(char* buffer, size_t size, JSFlatString* str, char quote)
+{
+    return PutEscapedString(buffer, size, str, quote);
+}
+=======
+JS_PUBLIC_API UniqueChars JS_GetDefaultLocale(JSContext* cx) {
+  AssertHeapIsIdle();
+  if (const char* locale = cx->runtime()->getDefaultLocale()) {
+    return DuplicateString(cx, locale);
+  }
+
+  return nullptr;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_ReportErrorASCII(JSContext* cx, const char* format, ...) {
   va_list ap;
 
@@ -4903,8 +8969,24 @@ JS_PUBLIC_API bool JS_ReportWarningUTF8(JSContext* cx, const char* format,
   ok = ReportErrorVA(cx, JSREPORT_WARNING, format, ArgumentsAreUTF8, ap);
   va_end(ap);
   return ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS_PutEscapedString(JSContext* cx, char* buffer, size_t size, JSString* str, char quote)
+{
+    AssertHeapIsIdle();
+    JSLinearString* linearStr = str->ensureLinear(cx);
+    if (!linearStr) {
+        return size_t(-1);
+    }
+    return PutEscapedString(buffer, size, linearStr, quote);
+=======
+JS_PUBLIC_API void JS_ResetDefaultLocale(JSRuntime* rt) {
+  AssertHeapIsIdle();
+  rt->resetDefaultLocale();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberASCII(
     JSContext* cx, unsigned flags, JSErrorCallback errorCallback, void* userRef,
     const unsigned errorNumber, ...) {
@@ -4924,21 +9006,60 @@ JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberLatin1(
     const unsigned errorNumber, ...) {
   va_list ap;
   bool ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(JSString*)
+JS_NewDependentString(JSContext* cx, HandleString str, size_t start, size_t length)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return NewDependentString(cx, str, start, length);
+}
+=======
+JS_PUBLIC_API void JS_SetLocaleCallbacks(JSRuntime* rt,
+                                         const JSLocaleCallbacks* callbacks) {
+  AssertHeapIsIdle();
+  rt->localeCallbacks = callbacks;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   AssertHeapIsIdle();
   va_start(ap, errorNumber);
   ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
                            ArgumentsAreLatin1, ap);
   va_end(ap);
   return ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(JSString*)
+JS_ConcatStrings(JSContext* cx, HandleString left, HandleString right)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return ConcatStrings<CanGC>(cx, left, right);
+=======
+JS_PUBLIC_API const JSLocaleCallbacks* JS_GetLocaleCallbacks(JSRuntime* rt) {
+  /* This function can be called by a finalizer. */
+  return rt->localeCallbacks;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUTF8(
     JSContext* cx, unsigned flags, JSErrorCallback errorCallback, void* userRef,
     const unsigned errorNumber, ...) {
   va_list ap;
   bool ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_DecodeBytes(JSContext* cx, const char* src, size_t srclen, char16_t* dst, size_t* dstlenp)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+/************************************************************************/
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   AssertHeapIsIdle();
   va_start(ap, errorNumber);
   ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
@@ -4946,7 +9067,19 @@ JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUTF8(
   va_end(ap);
   return ok;
 }
+||||||| merged common ancestors
+    if (!dst) {
+        *dstlenp = srclen;
+        return true;
+    }
+=======
+JS_PUBLIC_API bool JS_IsExceptionPending(JSContext* cx) {
+  /* This function can be called by a finalizer. */
+  return (bool)cx->isExceptionPending();
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUC(JSContext* cx, unsigned flags,
                                                   JSErrorCallback errorCallback,
                                                   void* userRef,
@@ -4954,7 +9087,21 @@ JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUC(JSContext* cx, unsigned flags,
                                                   ...) {
   va_list ap;
   bool ok;
+||||||| merged common ancestors
+    size_t dstlen = *dstlenp;
+=======
+JS_PUBLIC_API bool JS_GetPendingException(JSContext* cx,
+                                          MutableHandleValue vp) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  if (!cx->isExceptionPending()) {
+    return false;
+  }
+  return cx->getPendingException(vp);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   AssertHeapIsIdle();
   va_start(ap, errorNumber);
   ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef, errorNumber,
@@ -4962,26 +9109,87 @@ JS_PUBLIC_API bool JS_ReportErrorFlagsAndNumberUC(JSContext* cx, unsigned flags,
   va_end(ap);
   return ok;
 }
+||||||| merged common ancestors
+    if (srclen > dstlen) {
+        CopyAndInflateChars(dst, src, dstlen);
+=======
+JS_PUBLIC_API void JS_SetPendingException(JSContext* cx, HandleValue value,
+                                          JS::ExceptionStackBehavior behavior) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->releaseCheck(value);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_ReportOutOfMemory(JSContext* cx) {
   ReportOutOfMemory(cx);
 }
+||||||| merged common ancestors
+        gc::AutoSuppressGC suppress(cx);
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BUFFER_TOO_SMALL);
+        return false;
+    }
+=======
+  if (behavior == JS::ExceptionStackBehavior::Capture) {
+    cx->setPendingExceptionAndCaptureStack(value);
+  } else {
+    cx->setPendingException(value, nullptr);
+  }
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_ReportAllocationOverflow(JSContext* cx) {
   ReportAllocationOverflow(cx);
+||||||| merged common ancestors
+    CopyAndInflateChars(dst, src, srclen);
+    *dstlenp = srclen;
+    return true;
+=======
+JS_PUBLIC_API void JS_ClearPendingException(JSContext* cx) {
+  AssertHeapIsIdle();
+  cx->clearPendingException();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::WarningReporter JS::GetWarningReporter(JSContext* cx) {
   return cx->runtime()->warningReporter;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::UniqueChars)
+JS_EncodeStringToASCII(JSContext* cx, JSString* str)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+JS_PUBLIC_API void JS::SetPendingExceptionAndStack(JSContext* cx,
+                                                   HandleValue value,
+                                                   HandleObject stack) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->releaseCheck(value);
+  cx->releaseCheck(stack);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::WarningReporter JS::SetWarningReporter(
     JSContext* cx, JS::WarningReporter reporter) {
   WarningReporter older = cx->runtime()->warningReporter;
   cx->runtime()->warningReporter = reporter;
   return older;
+||||||| merged common ancestors
+    return js::EncodeAscii(cx, str);
+=======
+  RootedSavedFrame nstack(cx);
+  if (stack) {
+    nstack = &UncheckedUnwrap(stack)->as<SavedFrame>();
+  }
+  cx->setPendingException(value, nstack);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /************************************************************************/
 
 /*
@@ -4992,18 +9200,91 @@ JS_PUBLIC_API JSObject* JS_NewDateObject(JSContext* cx, int year, int mon,
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return NewDateObject(cx, year, mon, mday, hour, min, sec);
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::UniqueChars)
+JS_EncodeStringToLatin1(JSContext* cx, JSString* str)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    return js::EncodeLatin1(cx, str);
+=======
+JS_PUBLIC_API JSObject* JS::GetPendingExceptionStack(JSContext* cx) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  return cx->getPendingExceptionStack();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS::NewDateObject(JSContext* cx, JS::ClippedTime time) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   return NewDateObjectMsec(cx, time);
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::UniqueChars)
+JS_EncodeStringToUTF8(JSContext* cx, HandleString str)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    return StringToNewUTF8CharsZ(cx, *str);
+=======
+JS::AutoSaveExceptionState::AutoSaveExceptionState(JSContext* cx)
+    : context(cx),
+      wasPropagatingForcedReturn(cx->propagatingForcedReturn_),
+      wasOverRecursed(cx->overRecursed_),
+      wasThrowing(cx->throwing),
+      exceptionValue(cx),
+      exceptionStack(cx) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  if (wasPropagatingForcedReturn) {
+    cx->clearPropagatingForcedReturn();
+  }
+  if (wasOverRecursed) {
+    cx->overRecursed_ = false;
+  }
+  if (wasThrowing) {
+    exceptionValue = cx->unwrappedException();
+    exceptionStack = cx->unwrappedExceptionStack();
+    cx->clearPendingException();
+  }
 }
 
+void JS::AutoSaveExceptionState::drop() {
+  wasPropagatingForcedReturn = false;
+  wasOverRecursed = false;
+  wasThrowing = false;
+  exceptionValue.setUndefined();
+  exceptionStack = nullptr;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ObjectIsDate(JSContext* cx, HandleObject obj,
                                    bool* isDate) {
   cx->check(obj);
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS_GetStringEncodingLength(JSContext* cx, JSString* str)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+void JS::AutoSaveExceptionState::restore() {
+  context->propagatingForcedReturn_ = wasPropagatingForcedReturn;
+  context->overRecursed_ = wasOverRecursed;
+  context->throwing = wasThrowing;
+  context->unwrappedException() = exceptionValue;
+  if (exceptionStack) {
+    context->unwrappedExceptionStack() = &exceptionStack->as<SavedFrame>();
+  }
+  drop();
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ESClass cls;
   if (!GetBuiltinClass(cx, obj, &cls)) {
     return false;
@@ -5011,10 +9292,46 @@ JS_PUBLIC_API bool JS_ObjectIsDate(JSContext* cx, HandleObject obj,
 
   *isDate = cls == ESClass::Date;
   return true;
+||||||| merged common ancestors
+    if (!str->ensureLinear(cx)) {
+        return size_t(-1);
+    }
+    return str->length();
+=======
+JS::AutoSaveExceptionState::~AutoSaveExceptionState() {
+  if (!context->isExceptionPending()) {
+    if (wasPropagatingForcedReturn) {
+      context->setPropagatingForcedReturn();
+    }
+    if (wasThrowing) {
+      context->overRecursed_ = wasOverRecursed;
+      context->throwing = true;
+      context->unwrappedException() = exceptionValue;
+      if (exceptionStack) {
+        context->unwrappedExceptionStack() = &exceptionStack->as<SavedFrame>();
+      }
+    }
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /************************************************************************/
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_EncodeStringToBuffer(JSContext* cx, JSString* str, char* buffer, size_t length)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+=======
+struct JSExceptionState {
+  explicit JSExceptionState(JSContext* cx) : throwing(false), exception(cx) {}
+  bool throwing;
+  PersistentRootedValue exception;
+};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /*
  * Regular Expressions.
  */
@@ -5022,7 +9339,17 @@ JS_PUBLIC_API JSObject* JS_NewRegExpObject(JSContext* cx, const char* bytes,
                                            size_t length, unsigned flags) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
+||||||| merged common ancestors
+    JSLinearString* linear = str->ensureLinear(cx);
+    if (!linear) {
+        return false;
+    }
+=======
+JS_PUBLIC_API JSExceptionState* JS_SaveExceptionState(JSContext* cx) {
+  JSExceptionState* state;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   UniqueTwoByteChars chars(InflateString(cx, bytes, length));
   if (!chars) {
     return nullptr;
@@ -5030,8 +9357,31 @@ JS_PUBLIC_API JSObject* JS_NewRegExpObject(JSContext* cx, const char* bytes,
 
   return RegExpObject::create(cx, chars.get(), length, RegExpFlag(flags),
                               GenericObject);
+||||||| merged common ancestors
+    JS::AutoCheckCannotGC nogc;
+    size_t writeLength = Min(linear->length(), length);
+    if (linear->hasLatin1Chars()) {
+        mozilla::PodCopy(reinterpret_cast<Latin1Char*>(buffer), linear->latin1Chars(nogc),
+                         writeLength);
+    } else {
+        const char16_t* src = linear->twoByteChars(nogc);
+        for (size_t i = 0; i < writeLength; i++) {
+            buffer[i] = char(src[i]);
+        }
+    }
+    return true;
+=======
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  state = cx->new_<JSExceptionState>(cx);
+  if (state) {
+    state->throwing = JS_GetPendingException(cx, &state->exception);
+  }
+  return state;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSObject* JS_NewUCRegExpObject(JSContext* cx,
                                              const char16_t* chars,
                                              size_t length, unsigned flags) {
@@ -5040,8 +9390,34 @@ JS_PUBLIC_API JSObject* JS_NewUCRegExpObject(JSContext* cx,
 
   return RegExpObject::create(cx, chars, length, RegExpFlag(flags),
                               GenericObject);
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::Symbol*)
+JS::NewSymbol(JSContext* cx, HandleString description)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    if (description) {
+        cx->check(description);
+    }
+
+    return Symbol::new_(cx, SymbolCode::UniqueSymbol, description);
+=======
+JS_PUBLIC_API void JS_RestoreExceptionState(JSContext* cx,
+                                            JSExceptionState* state) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  if (state) {
+    if (state->throwing) {
+      JS_SetPendingException(cx, state->exception);
+    } else {
+      JS_ClearPendingException(cx);
+    }
+    JS_DropExceptionState(cx, state);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_SetRegExpInput(JSContext* cx, HandleObject obj,
                                      HandleString input) {
   AssertHeapIsIdle();
@@ -5053,22 +9429,83 @@ JS_PUBLIC_API bool JS_SetRegExpInput(JSContext* cx, HandleObject obj,
   if (!res) {
     return false;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::Symbol*)
+JS::GetSymbolFor(JSContext* cx, HandleString key)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(key);
 
+    return Symbol::for_(cx, key);
+}
+=======
+JS_PUBLIC_API void JS_DropExceptionState(JSContext* cx,
+                                         JSExceptionState* state) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  js_delete(state);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   res->reset(input);
   return true;
+||||||| merged common ancestors
+JS_PUBLIC_API(JSString*)
+JS::GetSymbolDescription(HandleSymbol symbol)
+{
+    return symbol->description();
+=======
+JS_PUBLIC_API JSErrorReport* JS_ErrorFromException(JSContext* cx,
+                                                   HandleObject obj) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  cx->check(obj);
+  return ErrorFromException(cx, obj);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_ClearRegExpStatics(JSContext* cx, HandleObject obj) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   MOZ_ASSERT(obj);
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::SymbolCode)
+JS::GetSymbolCode(Handle<Symbol*> symbol)
+{
+    return symbol->code();
+}
+=======
+void JSErrorReport::initBorrowedLinebuf(const char16_t* linebufArg,
+                                        size_t linebufLengthArg,
+                                        size_t tokenOffsetArg) {
+  MOZ_ASSERT(linebufArg);
+  MOZ_ASSERT(tokenOffsetArg <= linebufLengthArg);
+  MOZ_ASSERT(linebufArg[linebufLengthArg] == '\0');
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Handle<GlobalObject*> global = obj.as<GlobalObject>();
   RegExpStatics* res = GlobalObject::getRegExpStatics(cx, global);
   if (!res) {
     return false;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::Symbol*)
+JS::GetWellKnownSymbol(JSContext* cx, JS::SymbolCode which)
+{
+    return cx->wellKnownSymbols().get(which);
+}
+=======
+  linebuf_ = linebufArg;
+  linebufLength_ = linebufLengthArg;
+  tokenOffset_ = tokenOffsetArg;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   res->clear();
   return true;
 }
@@ -5119,22 +9556,152 @@ JS_PUBLIC_API bool JS_ObjectIsRegExp(JSContext* cx, HandleObject obj,
   if (!GetBuiltinClass(cx, obj, &cls)) {
     return false;
   }
+||||||| merged common ancestors
+#ifdef DEBUG
+static bool
+PropertySpecNameIsDigits(const char* s) {
+    if (JS::PropertySpecNameIsSymbol(s)) {
+        return false;
+    }
+    if (!*s) {
+        return false;
+    }
+    for (; *s; s++) {
+        if (*s < '0' || *s > '9') {
+            return false;
+        }
+    }
+    return true;
+}
+#endif // DEBUG
 
+JS_PUBLIC_API(bool)
+JS::PropertySpecNameEqualsId(const char* name, HandleId id)
+{
+    if (JS::PropertySpecNameIsSymbol(name)) {
+        if (!JSID_IS_SYMBOL(id)) {
+            return false;
+        }
+        Symbol* sym = JSID_TO_SYMBOL(id);
+        return sym->isWellKnownSymbol() && sym->code() == PropertySpecNameToSymbolCode(name);
+    }
+
+    MOZ_ASSERT(!PropertySpecNameIsDigits(name));
+    return JSID_IS_ATOM(id) && JS_FlatStringEqualsAscii(JSID_TO_ATOM(id), name);
+}
+
+JS_PUBLIC_API(bool)
+JS_Stringify(JSContext* cx, MutableHandleValue vp, HandleObject replacer,
+             HandleValue space, JSONWriteCallback callback, void* data)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(replacer, space);
+    StringBuffer sb(cx);
+    if (!sb.ensureTwoByteChars()) {
+        return false;
+    }
+    if (!Stringify(cx, vp, replacer, space, sb, StringifyBehavior::Normal)) {
+        return false;
+    }
+    if (sb.empty() && !sb.append(cx->names().null)) {
+        return false;
+    }
+    return callback(sb.rawTwoByteBegin(), sb.length(), data);
+}
+
+JS_PUBLIC_API(bool)
+JS::ToJSONMaybeSafely(JSContext* cx, JS::HandleObject input,
+                      JSONWriteCallback callback, void* data)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(input);
+
+    StringBuffer sb(cx);
+    if (!sb.ensureTwoByteChars()) {
+        return false;
+    }
+
+    RootedValue inputValue(cx, ObjectValue(*input));
+    if (!Stringify(cx, &inputValue, nullptr, NullHandleValue, sb,
+                   StringifyBehavior::RestrictedSafe))
+        return false;
+
+    if (sb.empty() && !sb.append(cx->names().null)) {
+        return false;
+    }
+
+    return callback(sb.rawTwoByteBegin(), sb.length(), data);
+}
+=======
+void JSErrorReport::freeLinebuf() {
+  if (ownsLinebuf_ && linebuf_) {
+    js_free((void*)linebuf_);
+    ownsLinebuf_ = false;
+  }
+  linebuf_ = nullptr;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   *isRegExp = cls == ESClass::RegExp;
   return true;
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_ParseJSON(JSContext* cx, const char16_t* chars, uint32_t len, MutableHandleValue vp)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len), NullHandleValue, vp);
+}
+=======
+JSString* JSErrorBase::newMessageString(JSContext* cx) {
+  if (!message_) {
+    return cx->runtime()->emptyString;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JS_PUBLIC_API unsigned JS_GetRegExpFlags(JSContext* cx, HandleObject obj) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_ParseJSON(JSContext* cx, HandleString str, MutableHandleValue vp)
+{
+    return JS_ParseJSONWithReviver(cx, str, NullHandleValue, vp);
+}
+=======
+  return JS_NewStringCopyUTF8Z(cx, message_);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RegExpShared* shared = RegExpToShared(cx, obj);
   if (!shared) {
     return false;
   }
   return shared->getFlags();
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_ParseJSONWithReviver(JSContext* cx, const char16_t* chars, uint32_t len, HandleValue reviver, MutableHandleValue vp)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return ParseJSONWithReviver(cx, mozilla::Range<const char16_t>(chars, len), reviver, vp);
+=======
+void JSErrorBase::freeMessage() {
+  if (ownsMessage_) {
+    js_free((void*)message_.get());
+    ownsMessage_ = false;
+  }
+  message_ = JS::ConstUTF8CharsZ();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API JSString* JS_GetRegExpSource(JSContext* cx, HandleObject obj) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
@@ -5145,9 +9712,30 @@ JS_PUBLIC_API JSString* JS_GetRegExpSource(JSContext* cx, HandleObject obj) {
   }
   return shared->getSource();
 }
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS_ParseJSONWithReviver(JSContext* cx, HandleString str, HandleValue reviver, MutableHandleValue vp)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(str);
 
-/************************************************************************/
+    AutoStableStringChars stableChars(cx);
+    if (!stableChars.init(cx, str)) {
+        return false;
+    }
 
+    return stableChars.isLatin1()
+           ? ParseJSONWithReviver(cx, stableChars.latin1Range(), reviver, vp)
+           : ParseJSONWithReviver(cx, stableChars.twoByteRange(), reviver, vp);
+}
+=======
+JSErrorNotes::JSErrorNotes() : notes_() {}
+>>>>>>> upstream-releases
+
+JSErrorNotes::~JSErrorNotes() {}
+
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS_SetDefaultLocale(JSRuntime* rt, const char* locale) {
   AssertHeapIsIdle();
   return rt->setDefaultLocale(locale);
@@ -5344,11 +9932,697 @@ static UniquePtr<JSErrorNotes::Note> CreateErrorNoteVA(
     ReportOutOfMemory(cx);
     return nullptr;
   }
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_ReportErrorASCII(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
 
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreASCII, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorLatin1(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
+
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreLatin1, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorUTF8(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
+
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ReportErrorVA(cx, JSREPORT_ERROR, format, ArgumentsAreUTF8, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberASCII(JSContext* cx, JSErrorCallback errorCallback,
+                          void* userRef, const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    JS_ReportErrorNumberASCIIVA(cx, errorCallback, userRef, errorNumber, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberASCIIVA(JSContext* cx, JSErrorCallback errorCallback,
+                            void* userRef, const unsigned errorNumber,
+                            va_list ap)
+{
+    AssertHeapIsIdle();
+    ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef,
+                        errorNumber, ArgumentsAreASCII, ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberLatin1(JSContext* cx, JSErrorCallback errorCallback,
+                           void* userRef, const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    JS_ReportErrorNumberLatin1VA(cx, errorCallback, userRef, errorNumber, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberLatin1VA(JSContext* cx, JSErrorCallback errorCallback,
+                             void* userRef, const unsigned errorNumber,
+                             va_list ap)
+{
+    AssertHeapIsIdle();
+    ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef,
+                        errorNumber, ArgumentsAreLatin1, ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberUTF8(JSContext* cx, JSErrorCallback errorCallback,
+                         void* userRef, const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    JS_ReportErrorNumberUTF8VA(cx, errorCallback, userRef, errorNumber, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberUTF8VA(JSContext* cx, JSErrorCallback errorCallback,
+                           void* userRef, const unsigned errorNumber,
+                           va_list ap)
+{
+    AssertHeapIsIdle();
+    ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef,
+                        errorNumber, ArgumentsAreUTF8, ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberUC(JSContext* cx, JSErrorCallback errorCallback,
+                       void* userRef, const unsigned errorNumber, ...)
+{
+    va_list ap;
+
+    AssertHeapIsIdle();
+    va_start(ap, errorNumber);
+    ReportErrorNumberVA(cx, JSREPORT_ERROR, errorCallback, userRef,
+                        errorNumber, ArgumentsAreUnicode, ap);
+    va_end(ap);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportErrorNumberUCArray(JSContext* cx, JSErrorCallback errorCallback,
+                            void* userRef, const unsigned errorNumber,
+                            const char16_t** args)
+{
+    AssertHeapIsIdle();
+    ReportErrorNumberUCArray(cx, JSREPORT_ERROR, errorCallback, userRef,
+                             errorNumber, args);
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportWarningASCII(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ok = ReportErrorVA(cx, JSREPORT_WARNING, format, ArgumentsAreASCII, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportWarningLatin1(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ok = ReportErrorVA(cx, JSREPORT_WARNING, format, ArgumentsAreLatin1, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportWarningUTF8(JSContext* cx, const char* format, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, format);
+    ok = ReportErrorVA(cx, JSREPORT_WARNING, format, ArgumentsAreUTF8, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportErrorFlagsAndNumberASCII(JSContext* cx, unsigned flags,
+                                  JSErrorCallback errorCallback, void* userRef,
+                                  const unsigned errorNumber, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, errorNumber);
+    ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef,
+                             errorNumber, ArgumentsAreASCII, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportErrorFlagsAndNumberLatin1(JSContext* cx, unsigned flags,
+                                   JSErrorCallback errorCallback, void* userRef,
+                                   const unsigned errorNumber, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, errorNumber);
+    ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef,
+                             errorNumber, ArgumentsAreLatin1, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportErrorFlagsAndNumberUTF8(JSContext* cx, unsigned flags,
+                                 JSErrorCallback errorCallback, void* userRef,
+                                 const unsigned errorNumber, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, errorNumber);
+    ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef,
+                             errorNumber, ArgumentsAreUTF8, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(bool)
+JS_ReportErrorFlagsAndNumberUC(JSContext* cx, unsigned flags,
+                               JSErrorCallback errorCallback, void* userRef,
+                               const unsigned errorNumber, ...)
+{
+    va_list ap;
+    bool ok;
+
+    AssertHeapIsIdle();
+    va_start(ap, errorNumber);
+    ok = ReportErrorNumberVA(cx, flags, errorCallback, userRef,
+                             errorNumber, ArgumentsAreUnicode, ap);
+    va_end(ap);
+    return ok;
+}
+
+JS_PUBLIC_API(void)
+JS_ReportOutOfMemory(JSContext* cx)
+{
+    ReportOutOfMemory(cx);
+}
+
+JS_PUBLIC_API(void)
+JS_ReportAllocationOverflow(JSContext* cx)
+{
+    ReportAllocationOverflow(cx);
+}
+
+JS_PUBLIC_API(JS::WarningReporter)
+JS::GetWarningReporter(JSContext* cx)
+{
+    return cx->runtime()->warningReporter;
+}
+
+JS_PUBLIC_API(JS::WarningReporter)
+JS::SetWarningReporter(JSContext* cx, JS::WarningReporter reporter)
+{
+    WarningReporter older = cx->runtime()->warningReporter;
+    cx->runtime()->warningReporter = reporter;
+    return older;
+}
+
+/************************************************************************/
+
+/*
+ * Dates.
+ */
+JS_PUBLIC_API(JSObject*)
+JS_NewDateObject(JSContext* cx, int year, int mon, int mday, int hour, int min, int sec)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return NewDateObject(cx, year, mon, mday, hour, min, sec);
+}
+
+JS_PUBLIC_API(JSObject*)
+JS::NewDateObject(JSContext* cx, JS::ClippedTime time)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    return NewDateObjectMsec(cx, time);
+}
+
+JS_PUBLIC_API(bool)
+JS_ObjectIsDate(JSContext* cx, HandleObject obj, bool* isDate)
+{
+    cx->check(obj);
+
+    ESClass cls;
+    if (!GetBuiltinClass(cx, obj, &cls)) {
+        return false;
+    }
+
+    *isDate = cls == ESClass::Date;
+    return true;
+}
+
+/************************************************************************/
+
+/*
+ * Regular Expressions.
+ */
+JS_PUBLIC_API(JSObject*)
+JS_NewRegExpObject(JSContext* cx, const char* bytes, size_t length, unsigned flags)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    UniqueTwoByteChars chars(InflateString(cx, bytes, length));
+    if (!chars) {
+        return nullptr;
+    }
+
+    return RegExpObject::create(cx, chars.get(), length, RegExpFlag(flags), cx->tempLifoAlloc(),
+                                GenericObject);
+}
+
+JS_PUBLIC_API(JSObject*)
+JS_NewUCRegExpObject(JSContext* cx, const char16_t* chars, size_t length, unsigned flags)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    return RegExpObject::create(cx, chars, length, RegExpFlag(flags), cx->tempLifoAlloc(),
+                                GenericObject);
+}
+
+JS_PUBLIC_API(bool)
+JS_SetRegExpInput(JSContext* cx, HandleObject obj, HandleString input)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(input);
+
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+    RegExpStatics* res = GlobalObject::getRegExpStatics(cx, global);
+    if (!res) {
+        return false;
+    }
+
+    res->reset(input);
+    return true;
+}
+
+JS_PUBLIC_API(bool)
+JS_ClearRegExpStatics(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    MOZ_ASSERT(obj);
+
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+    RegExpStatics* res = GlobalObject::getRegExpStatics(cx, global);
+    if (!res) {
+        return false;
+    }
+
+    res->clear();
+    return true;
+}
+
+JS_PUBLIC_API(bool)
+JS_ExecuteRegExp(JSContext* cx, HandleObject obj, HandleObject reobj, char16_t* chars,
+                 size_t length, size_t* indexp, bool test, MutableHandleValue rval)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    Handle<GlobalObject*> global = obj.as<GlobalObject>();
+    RegExpStatics* res = GlobalObject::getRegExpStatics(cx, global);
+    if (!res) {
+        return false;
+    }
+
+    RootedLinearString input(cx, NewStringCopyN<CanGC>(cx, chars, length));
+    if (!input) {
+        return false;
+    }
+
+    return ExecuteRegExpLegacy(cx, res, reobj.as<RegExpObject>(), input, indexp, test, rval);
+}
+
+JS_PUBLIC_API(bool)
+JS_ExecuteRegExpNoStatics(JSContext* cx, HandleObject obj, char16_t* chars, size_t length,
+                          size_t* indexp, bool test, MutableHandleValue rval)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    RootedLinearString input(cx, NewStringCopyN<CanGC>(cx, chars, length));
+    if (!input) {
+        return false;
+    }
+
+    return ExecuteRegExpLegacy(cx, nullptr, obj.as<RegExpObject>(), input, indexp, test,
+                               rval);
+}
+
+JS_PUBLIC_API(bool)
+JS_ObjectIsRegExp(JSContext* cx, HandleObject obj, bool* isRegExp)
+{
+    cx->check(obj);
+
+    ESClass cls;
+    if (!GetBuiltinClass(cx, obj, &cls)) {
+        return false;
+    }
+
+    *isRegExp = cls == ESClass::RegExp;
+    return true;
+}
+
+JS_PUBLIC_API(unsigned)
+JS_GetRegExpFlags(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    RegExpShared* shared = RegExpToShared(cx, obj);
+    if (!shared) {
+        return false;
+    }
+    return shared->getFlags();
+}
+
+JS_PUBLIC_API(JSString*)
+JS_GetRegExpSource(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+
+    RegExpShared* shared = RegExpToShared(cx, obj);
+    if (!shared) {
+        return nullptr;
+    }
+    return shared->getSource();
+}
+
+/************************************************************************/
+
+JS_PUBLIC_API(bool)
+JS_SetDefaultLocale(JSRuntime* rt, const char* locale)
+{
+    AssertHeapIsIdle();
+    return rt->setDefaultLocale(locale);
+}
+
+JS_PUBLIC_API(UniqueChars)
+JS_GetDefaultLocale(JSContext* cx)
+{
+    AssertHeapIsIdle();
+    if (const char* locale = cx->runtime()->getDefaultLocale()) {
+        return DuplicateString(cx, locale);
+    }
+
+    return nullptr;
+}
+
+JS_PUBLIC_API(void)
+JS_ResetDefaultLocale(JSRuntime* rt)
+{
+    AssertHeapIsIdle();
+    rt->resetDefaultLocale();
+}
+
+JS_PUBLIC_API(void)
+JS_SetLocaleCallbacks(JSRuntime* rt, const JSLocaleCallbacks* callbacks)
+{
+    AssertHeapIsIdle();
+    rt->localeCallbacks = callbacks;
+}
+
+JS_PUBLIC_API(const JSLocaleCallbacks*)
+JS_GetLocaleCallbacks(JSRuntime* rt)
+{
+    /* This function can be called by a finalizer. */
+    return rt->localeCallbacks;
+}
+
+/************************************************************************/
+
+JS_PUBLIC_API(bool)
+JS_IsExceptionPending(JSContext* cx)
+{
+    /* This function can be called by a finalizer. */
+    return (bool) cx->isExceptionPending();
+}
+
+JS_PUBLIC_API(bool)
+JS_GetPendingException(JSContext* cx, MutableHandleValue vp)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    if (!cx->isExceptionPending()) {
+        return false;
+    }
+    return cx->getPendingException(vp);
+}
+
+JS_PUBLIC_API(void)
+JS_SetPendingException(JSContext* cx, HandleValue value)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(value);
+    cx->setPendingException(value);
+}
+
+JS_PUBLIC_API(void)
+JS_ClearPendingException(JSContext* cx)
+{
+    AssertHeapIsIdle();
+    cx->clearPendingException();
+}
+
+JS::AutoSaveExceptionState::AutoSaveExceptionState(JSContext* cx)
+  : context(cx),
+    wasPropagatingForcedReturn(cx->propagatingForcedReturn_),
+    wasOverRecursed(cx->overRecursed_),
+    wasThrowing(cx->throwing),
+    exceptionValue(cx)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    if (wasPropagatingForcedReturn) {
+        cx->clearPropagatingForcedReturn();
+    }
+    if (wasOverRecursed) {
+        cx->overRecursed_ = false;
+    }
+    if (wasThrowing) {
+        exceptionValue = cx->unwrappedException();
+        cx->clearPendingException();
+    }
+}
+
+void
+JS::AutoSaveExceptionState::restore()
+{
+    context->propagatingForcedReturn_ = wasPropagatingForcedReturn;
+    context->overRecursed_ = wasOverRecursed;
+    context->throwing = wasThrowing;
+    context->unwrappedException() = exceptionValue;
+    drop();
+}
+
+JS::AutoSaveExceptionState::~AutoSaveExceptionState()
+{
+    if (!context->isExceptionPending()) {
+        if (wasPropagatingForcedReturn) {
+            context->setPropagatingForcedReturn();
+        }
+        if (wasThrowing) {
+            context->overRecursed_ = wasOverRecursed;
+            context->throwing = true;
+            context->unwrappedException() = exceptionValue;
+        }
+    }
+}
+
+struct JSExceptionState {
+    explicit JSExceptionState(JSContext* cx)
+      : throwing(false),
+        exception(cx)
+    {}
+    bool throwing;
+    PersistentRootedValue exception;
+};
+
+JS_PUBLIC_API(JSExceptionState*)
+JS_SaveExceptionState(JSContext* cx)
+{
+    JSExceptionState* state;
+
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    state = cx->new_<JSExceptionState>(cx);
+    if (state) {
+        state->throwing = JS_GetPendingException(cx, &state->exception);
+    }
+    return state;
+}
+
+JS_PUBLIC_API(void)
+JS_RestoreExceptionState(JSContext* cx, JSExceptionState* state)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    if (state) {
+        if (state->throwing) {
+            JS_SetPendingException(cx, state->exception);
+        } else {
+            JS_ClearPendingException(cx);
+        }
+        JS_DropExceptionState(cx, state);
+    }
+}
+
+JS_PUBLIC_API(void)
+JS_DropExceptionState(JSContext* cx, JSExceptionState* state)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    js_delete(state);
+}
+
+JS_PUBLIC_API(JSErrorReport*)
+JS_ErrorFromException(JSContext* cx, HandleObject obj)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    cx->check(obj);
+    return ErrorFromException(cx, obj);
+}
+
+void
+JSErrorReport::initBorrowedLinebuf(const char16_t* linebufArg, size_t linebufLengthArg,
+                                   size_t tokenOffsetArg)
+{
+    MOZ_ASSERT(linebufArg);
+    MOZ_ASSERT(tokenOffsetArg <= linebufLengthArg);
+    MOZ_ASSERT(linebufArg[linebufLengthArg] == '\0');
+
+    linebuf_ = linebufArg;
+    linebufLength_ = linebufLengthArg;
+    tokenOffset_ = tokenOffsetArg;
+}
+
+void
+JSErrorReport::freeLinebuf()
+{
+    if (ownsLinebuf_ && linebuf_) {
+        js_free((void*)linebuf_);
+        ownsLinebuf_ = false;
+    }
+    linebuf_ = nullptr;
+}
+
+JSString*
+JSErrorBase::newMessageString(JSContext* cx)
+{
+    if (!message_) {
+        return cx->runtime()->emptyString;
+    }
+
+    return JS_NewStringCopyUTF8Z(cx, message_);
+}
+
+void
+JSErrorBase::freeMessage()
+{
+    if (ownsMessage_) {
+        js_free((void*)message_.get());
+        ownsMessage_ = false;
+    }
+    message_ = JS::ConstUTF8CharsZ();
+}
+
+JSErrorNotes::JSErrorNotes()
+  : notes_()
+{}
+
+JSErrorNotes::~JSErrorNotes()
+{
+}
+
+static UniquePtr<JSErrorNotes::Note>
+CreateErrorNoteVA(JSContext* cx,
+                  const char* filename, unsigned lineno, unsigned column,
+                  JSErrorCallback errorCallback, void* userRef,
+                  const unsigned errorNumber,
+                  ErrorArgumentsType argumentsType, va_list ap)
+{
+    auto note = MakeUnique<JSErrorNotes::Note>();
+    if (!note) {
+        ReportOutOfMemory(cx);
+        return nullptr;
+    }
+=======
+static UniquePtr<JSErrorNotes::Note> CreateErrorNoteVA(
+    JSContext* cx, const char* filename, unsigned sourceId, unsigned lineno,
+    unsigned column, JSErrorCallback errorCallback, void* userRef,
+    const unsigned errorNumber, ErrorArgumentsType argumentsType, va_list ap) {
+  auto note = MakeUnique<JSErrorNotes::Note>();
+  if (!note) {
+    ReportOutOfMemory(cx);
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   note->errorNumber = errorNumber;
   note->filename = filename;
   note->lineno = lineno;
   note->column = column;
+||||||| merged common ancestors
+    note->errorNumber = errorNumber;
+    note->filename = filename;
+    note->lineno = lineno;
+    note->column = column;
+=======
+  note->errorNumber = errorNumber;
+  note->filename = filename;
+  note->sourceId = sourceId;
+  note->lineno = lineno;
+  note->column = column;
+>>>>>>> upstream-releases
 
   if (!ExpandErrorArgumentsVA(cx, errorCallback, userRef, errorNumber, nullptr,
                               argumentsType, note.get(), ap)) {
@@ -5358,6 +10632,7 @@ static UniquePtr<JSErrorNotes::Note> CreateErrorNoteVA(
   return note;
 }
 
+<<<<<<< HEAD
 bool JSErrorNotes::addNoteASCII(JSContext* cx, const char* filename,
                                 unsigned lineno, unsigned column,
                                 JSErrorCallback errorCallback, void* userRef,
@@ -5367,7 +10642,51 @@ bool JSErrorNotes::addNoteASCII(JSContext* cx, const char* filename,
   auto note = CreateErrorNoteVA(cx, filename, lineno, column, errorCallback,
                                 userRef, errorNumber, ArgumentsAreASCII, ap);
   va_end(ap);
+||||||| merged common ancestors
+bool
+JSErrorNotes::addNoteASCII(JSContext* cx,
+                           const char* filename, unsigned lineno, unsigned column,
+                           JSErrorCallback errorCallback, void* userRef,
+                           const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    auto note = CreateErrorNoteVA(cx, filename, lineno, column, errorCallback, userRef,
+                                  errorNumber, ArgumentsAreASCII, ap);
+    va_end(ap);
+=======
+bool JSErrorNotes::addNoteASCII(JSContext* cx, const char* filename,
+                                unsigned sourceId, unsigned lineno,
+                                unsigned column, JSErrorCallback errorCallback,
+                                void* userRef, const unsigned errorNumber,
+                                ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  auto note =
+      CreateErrorNoteVA(cx, filename, sourceId, lineno, column, errorCallback,
+                        userRef, errorNumber, ArgumentsAreASCII, ap);
+  va_end(ap);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!note) {
+    return false;
+  }
+  if (!notes_.append(std::move(note))) {
+    ReportOutOfMemory(cx);
+    return false;
+  }
+  return true;
+||||||| merged common ancestors
+    if (!note) {
+        return false;
+    }
+    if (!notes_.append(std::move(note))) {
+        ReportOutOfMemory(cx);
+        return false;
+    }
+    return true;
+=======
   if (!note) {
     return false;
   }
@@ -5378,6 +10697,30 @@ bool JSErrorNotes::addNoteASCII(JSContext* cx, const char* filename,
   return true;
 }
 
+bool JSErrorNotes::addNoteLatin1(JSContext* cx, const char* filename,
+                                 unsigned sourceId, unsigned lineno,
+                                 unsigned column, JSErrorCallback errorCallback,
+                                 void* userRef, const unsigned errorNumber,
+                                 ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  auto note =
+      CreateErrorNoteVA(cx, filename, sourceId, lineno, column, errorCallback,
+                        userRef, errorNumber, ArgumentsAreLatin1, ap);
+  va_end(ap);
+
+  if (!note) {
+    return false;
+  }
+  if (!notes_.append(std::move(note))) {
+    ReportOutOfMemory(cx);
+    return false;
+  }
+  return true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool JSErrorNotes::addNoteLatin1(JSContext* cx, const char* filename,
                                  unsigned lineno, unsigned column,
                                  JSErrorCallback errorCallback, void* userRef,
@@ -5396,8 +10739,51 @@ bool JSErrorNotes::addNoteLatin1(JSContext* cx, const char* filename,
     return false;
   }
   return true;
+||||||| merged common ancestors
+bool
+JSErrorNotes::addNoteLatin1(JSContext* cx,
+                            const char* filename, unsigned lineno, unsigned column,
+                            JSErrorCallback errorCallback, void* userRef,
+                            const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    auto note = CreateErrorNoteVA(cx, filename, lineno, column, errorCallback, userRef,
+                                  errorNumber, ArgumentsAreLatin1, ap);
+    va_end(ap);
+
+    if (!note) {
+        return false;
+    }
+    if (!notes_.append(std::move(note))) {
+        ReportOutOfMemory(cx);
+        return false;
+    }
+    return true;
+=======
+bool JSErrorNotes::addNoteUTF8(JSContext* cx, const char* filename,
+                               unsigned sourceId, unsigned lineno,
+                               unsigned column, JSErrorCallback errorCallback,
+                               void* userRef, const unsigned errorNumber, ...) {
+  va_list ap;
+  va_start(ap, errorNumber);
+  auto note =
+      CreateErrorNoteVA(cx, filename, sourceId, lineno, column, errorCallback,
+                        userRef, errorNumber, ArgumentsAreUTF8, ap);
+  va_end(ap);
+
+  if (!note) {
+    return false;
+  }
+  if (!notes_.append(std::move(note))) {
+    ReportOutOfMemory(cx);
+    return false;
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool JSErrorNotes::addNoteUTF8(JSContext* cx, const char* filename,
                                unsigned lineno, unsigned column,
                                JSErrorCallback errorCallback, void* userRef,
@@ -5419,6 +10805,36 @@ bool JSErrorNotes::addNoteUTF8(JSContext* cx, const char* filename,
 }
 
 JS_PUBLIC_API size_t JSErrorNotes::length() { return notes_.length(); }
+||||||| merged common ancestors
+bool
+JSErrorNotes::addNoteUTF8(JSContext* cx,
+                          const char* filename, unsigned lineno, unsigned column,
+                          JSErrorCallback errorCallback, void* userRef,
+                          const unsigned errorNumber, ...)
+{
+    va_list ap;
+    va_start(ap, errorNumber);
+    auto note = CreateErrorNoteVA(cx, filename, lineno, column, errorCallback, userRef,
+                                  errorNumber, ArgumentsAreUTF8, ap);
+    va_end(ap);
+
+    if (!note) {
+        return false;
+    }
+    if (!notes_.append(std::move(note))) {
+        ReportOutOfMemory(cx);
+        return false;
+    }
+    return true;
+}
+
+JS_PUBLIC_API(size_t)
+JSErrorNotes::length()
+{
+    return notes_.length();
+}
+=======
+JS_PUBLIC_API size_t JSErrorNotes::length() { return notes_.length(); }
 
 UniquePtr<JSErrorNotes> JSErrorNotes::copy(JSContext* cx) {
   auto copiedNotes = MakeUnique<JSErrorNotes>();
@@ -5426,7 +10842,33 @@ UniquePtr<JSErrorNotes> JSErrorNotes::copy(JSContext* cx) {
     ReportOutOfMemory(cx);
     return nullptr;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+UniquePtr<JSErrorNotes> JSErrorNotes::copy(JSContext* cx) {
+  auto copiedNotes = MakeUnique<JSErrorNotes>();
+  if (!copiedNotes) {
+    ReportOutOfMemory(cx);
+    return nullptr;
+  }
+||||||| merged common ancestors
+UniquePtr<JSErrorNotes>
+JSErrorNotes::copy(JSContext* cx)
+{
+    auto copiedNotes = MakeUnique<JSErrorNotes>();
+    if (!copiedNotes) {
+        ReportOutOfMemory(cx);
+        return nullptr;
+    }
+=======
+  for (auto&& note : *this) {
+    UniquePtr<JSErrorNotes::Note> copied = CopyErrorNote(cx, note.get());
+    if (!copied) {
+      return nullptr;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   for (auto&& note : *this) {
     UniquePtr<JSErrorNotes::Note> copied = CopyErrorNote(cx, note.get());
     if (!copied) {
@@ -5435,6 +10877,20 @@ UniquePtr<JSErrorNotes> JSErrorNotes::copy(JSContext* cx) {
 
     if (!copiedNotes->notes_.append(std::move(copied))) {
       return nullptr;
+||||||| merged common ancestors
+    for (auto&& note : *this) {
+        UniquePtr<JSErrorNotes::Note> copied = CopyErrorNote(cx, note.get());
+        if (!copied) {
+            return nullptr;
+        }
+
+        if (!copiedNotes->notes_.append(std::move(copied))) {
+            return nullptr;
+        }
+=======
+    if (!copiedNotes->notes_.append(std::move(copied))) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
   }
 
@@ -5480,6 +10936,7 @@ JS_PUBLIC_API void JS_ScheduleGC(JSContext* cx, uint32_t count) {
 }
 #endif
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS_SetParallelParsingEnabled(JSContext* cx, bool enabled) {
   cx->runtime()->setParallelParsingEnabled(enabled);
 }
@@ -5504,7 +10961,172 @@ JS_PUBLIC_API void JS_SetGlobalJitCompilerOption(JSContext* cx,
     case JSJITCOMPILER_ION_WARMUP_TRIGGER:
       if (value == uint32_t(-1)) {
         jit::JitOptions.resetCompilerWarmUpThreshold();
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS_SetParallelParsingEnabled(JSContext* cx, bool enabled)
+{
+    cx->runtime()->setParallelParsingEnabled(enabled);
+}
+
+JS_PUBLIC_API(void)
+JS_SetOffthreadIonCompilationEnabled(JSContext* cx, bool enabled)
+{
+    cx->runtime()->setOffthreadIonCompilationEnabled(enabled);
+}
+
+JS_PUBLIC_API(void)
+JS_SetGlobalJitCompilerOption(JSContext* cx, JSJitCompilerOption opt, uint32_t value)
+{
+    JSRuntime* rt = cx->runtime();
+    switch (opt) {
+      case JSJITCOMPILER_BASELINE_WARMUP_TRIGGER:
+        if (value == uint32_t(-1)) {
+            jit::DefaultJitOptions defaultValues;
+            value = defaultValues.baselineWarmUpThreshold;
+        }
+        jit::JitOptions.baselineWarmUpThreshold = value;
         break;
+      case JSJITCOMPILER_ION_WARMUP_TRIGGER:
+        if (value == uint32_t(-1)) {
+            jit::JitOptions.resetCompilerWarmUpThreshold();
+            break;
+        }
+        jit::JitOptions.setCompilerWarmUpThreshold(value);
+        if (value == 0) {
+            jit::JitOptions.setEagerCompilation();
+        }
+        break;
+      case JSJITCOMPILER_ION_GVN_ENABLE:
+        if (value == 0) {
+            jit::JitOptions.enableGvn(false);
+            JitSpew(js::jit::JitSpew_IonScripts, "Disable ion's GVN");
+        } else {
+            jit::JitOptions.enableGvn(true);
+            JitSpew(js::jit::JitSpew_IonScripts, "Enable ion's GVN");
+        }
+        break;
+      case JSJITCOMPILER_ION_FORCE_IC:
+        if (value == 0) {
+            jit::JitOptions.forceInlineCaches = false;
+            JitSpew(js::jit::JitSpew_IonScripts, "IonBuilder: Enable non-IC optimizations.");
+        } else {
+            jit::JitOptions.forceInlineCaches = true;
+            JitSpew(js::jit::JitSpew_IonScripts, "IonBuilder: Disable non-IC optimizations.");
+        }
+        break;
+      case JSJITCOMPILER_ION_CHECK_RANGE_ANALYSIS:
+        if (value == 0) {
+            jit::JitOptions.checkRangeAnalysis = false;
+            JitSpew(js::jit::JitSpew_IonScripts, "IonBuilder: Enable range analysis checks.");
+        } else {
+            jit::JitOptions.checkRangeAnalysis = true;
+            JitSpew(js::jit::JitSpew_IonScripts, "IonBuilder: Disable range analysis checks.");
+        }
+        break;
+      case JSJITCOMPILER_ION_ENABLE:
+        if (value == 1) {
+            JS::ContextOptionsRef(cx).setIon(true);
+            JitSpew(js::jit::JitSpew_IonScripts, "Enable ion");
+        } else if (value == 0) {
+            JS::ContextOptionsRef(cx).setIon(false);
+            JitSpew(js::jit::JitSpew_IonScripts, "Disable ion");
+        }
+        break;
+        case JSJITCOMPILER_ION_FREQUENT_BAILOUT_THRESHOLD:
+            if (value == uint32_t(-1)) {
+                jit::DefaultJitOptions defaultValues;
+                value = defaultValues.frequentBailoutThreshold;
+            }
+            jit::JitOptions.frequentBailoutThreshold = value;
+        break;
+      case JSJITCOMPILER_BASELINE_ENABLE:
+        if (value == 1) {
+            JS::ContextOptionsRef(cx).setBaseline(true);
+            ReleaseAllJITCode(rt->defaultFreeOp());
+            JitSpew(js::jit::JitSpew_BaselineScripts, "Enable baseline");
+        } else if (value == 0) {
+            JS::ContextOptionsRef(cx).setBaseline(false);
+            ReleaseAllJITCode(rt->defaultFreeOp());
+            JitSpew(js::jit::JitSpew_BaselineScripts, "Disable baseline");
+        }
+        break;
+      case JSJITCOMPILER_OFFTHREAD_COMPILATION_ENABLE:
+        if (value == 1) {
+            rt->setOffthreadIonCompilationEnabled(true);
+            JitSpew(js::jit::JitSpew_IonScripts, "Enable offthread compilation");
+        } else if (value == 0) {
+            rt->setOffthreadIonCompilationEnabled(false);
+            JitSpew(js::jit::JitSpew_IonScripts, "Disable offthread compilation");
+        }
+        break;
+      case JSJITCOMPILER_JUMP_THRESHOLD:
+        if (value == uint32_t(-1)) {
+            jit::DefaultJitOptions defaultValues;
+            value = defaultValues.jumpThreshold;
+        }
+        jit::JitOptions.jumpThreshold = value;
+        break;
+      case JSJITCOMPILER_TRACK_OPTIMIZATIONS:
+        jit::JitOptions.disableOptimizationTracking = !value;
+        break;
+      case JSJITCOMPILER_SPECTRE_INDEX_MASKING:
+        jit::JitOptions.spectreIndexMasking = !!value;
+        break;
+      case JSJITCOMPILER_SPECTRE_OBJECT_MITIGATIONS_BARRIERS:
+        jit::JitOptions.spectreObjectMitigationsBarriers = !!value;
+        break;
+      case JSJITCOMPILER_SPECTRE_OBJECT_MITIGATIONS_MISC:
+        jit::JitOptions.spectreObjectMitigationsMisc = !!value;
+        break;
+      case JSJITCOMPILER_SPECTRE_STRING_MITIGATIONS:
+        jit::JitOptions.spectreStringMitigations = !!value;
+        break;
+      case JSJITCOMPILER_SPECTRE_VALUE_MASKING:
+        jit::JitOptions.spectreValueMasking = !!value;
+        break;
+      case JSJITCOMPILER_SPECTRE_JIT_TO_CXX_CALLS:
+        jit::JitOptions.spectreJitToCxxCalls = !!value;
+        break;
+      case JSJITCOMPILER_WASM_FOLD_OFFSETS:
+        jit::JitOptions.wasmFoldOffsets = !!value;
+        break;
+      case JSJITCOMPILER_WASM_DELAY_TIER2:
+        jit::JitOptions.wasmDelayTier2 = !!value;
+=======
+JS_PUBLIC_API void JS_SetParallelParsingEnabled(JSContext* cx, bool enabled) {
+  cx->runtime()->setParallelParsingEnabled(enabled);
+}
+
+JS_PUBLIC_API void JS_SetOffthreadIonCompilationEnabled(JSContext* cx,
+                                                        bool enabled) {
+  cx->runtime()->setOffthreadIonCompilationEnabled(enabled);
+}
+
+JS_PUBLIC_API void JS_SetGlobalJitCompilerOption(JSContext* cx,
+                                                 JSJitCompilerOption opt,
+                                                 uint32_t value) {
+  JSRuntime* rt = cx->runtime();
+  switch (opt) {
+    case JSJITCOMPILER_BASELINE_WARMUP_TRIGGER:
+      if (value == uint32_t(-1)) {
+        jit::DefaultJitOptions defaultValues;
+        value = defaultValues.baselineWarmUpThreshold;
+      }
+      jit::JitOptions.baselineWarmUpThreshold = value;
+      break;
+    case JSJITCOMPILER_ION_NORMAL_WARMUP_TRIGGER:
+      if (value == uint32_t(-1)) {
+        jit::JitOptions.resetNormalIonWarmUpThreshold();
+        break;
+      }
+      jit::JitOptions.setNormalIonWarmUpThreshold(value);
+      break;
+    case JSJITCOMPILER_ION_FULL_WARMUP_TRIGGER:
+      if (value == uint32_t(-1)) {
+        jit::JitOptions.resetFullIonWarmUpThreshold();
+>>>>>>> upstream-releases
+        break;
+<<<<<<< HEAD
       }
       jit::JitOptions.setCompilerWarmUpThreshold(value);
       if (value == 0) {
@@ -5612,6 +11234,113 @@ JS_PUBLIC_API void JS_SetGlobalJitCompilerOption(JSContext* cx,
     case JSJITCOMPILER_WASM_DELAY_TIER2:
       jit::JitOptions.wasmDelayTier2 = !!value;
       break;
+||||||| merged common ancestors
+=======
+      }
+      jit::JitOptions.setFullIonWarmUpThreshold(value);
+      break;
+    case JSJITCOMPILER_ION_GVN_ENABLE:
+      if (value == 0) {
+        jit::JitOptions.enableGvn(false);
+        JitSpew(js::jit::JitSpew_IonScripts, "Disable ion's GVN");
+      } else {
+        jit::JitOptions.enableGvn(true);
+        JitSpew(js::jit::JitSpew_IonScripts, "Enable ion's GVN");
+      }
+      break;
+    case JSJITCOMPILER_ION_FORCE_IC:
+      if (value == 0) {
+        jit::JitOptions.forceInlineCaches = false;
+        JitSpew(js::jit::JitSpew_IonScripts,
+                "IonBuilder: Enable non-IC optimizations.");
+      } else {
+        jit::JitOptions.forceInlineCaches = true;
+        JitSpew(js::jit::JitSpew_IonScripts,
+                "IonBuilder: Disable non-IC optimizations.");
+      }
+      break;
+    case JSJITCOMPILER_ION_CHECK_RANGE_ANALYSIS:
+      if (value == 0) {
+        jit::JitOptions.checkRangeAnalysis = false;
+        JitSpew(js::jit::JitSpew_IonScripts,
+                "IonBuilder: Enable range analysis checks.");
+      } else {
+        jit::JitOptions.checkRangeAnalysis = true;
+        JitSpew(js::jit::JitSpew_IonScripts,
+                "IonBuilder: Disable range analysis checks.");
+      }
+      break;
+    case JSJITCOMPILER_ION_ENABLE:
+      if (value == 1) {
+        JS::ContextOptionsRef(cx).setIon(true);
+        JitSpew(js::jit::JitSpew_IonScripts, "Enable ion");
+      } else if (value == 0) {
+        JS::ContextOptionsRef(cx).setIon(false);
+        JitSpew(js::jit::JitSpew_IonScripts, "Disable ion");
+      }
+      break;
+    case JSJITCOMPILER_ION_FREQUENT_BAILOUT_THRESHOLD:
+      if (value == uint32_t(-1)) {
+        jit::DefaultJitOptions defaultValues;
+        value = defaultValues.frequentBailoutThreshold;
+      }
+      jit::JitOptions.frequentBailoutThreshold = value;
+      break;
+    case JSJITCOMPILER_BASELINE_ENABLE:
+      if (value == 1) {
+        JS::ContextOptionsRef(cx).setBaseline(true);
+        ReleaseAllJITCode(rt->defaultFreeOp());
+        JitSpew(js::jit::JitSpew_BaselineScripts, "Enable baseline");
+      } else if (value == 0) {
+        JS::ContextOptionsRef(cx).setBaseline(false);
+        ReleaseAllJITCode(rt->defaultFreeOp());
+        JitSpew(js::jit::JitSpew_BaselineScripts, "Disable baseline");
+      }
+      break;
+    case JSJITCOMPILER_OFFTHREAD_COMPILATION_ENABLE:
+      if (value == 1) {
+        rt->setOffthreadIonCompilationEnabled(true);
+        JitSpew(js::jit::JitSpew_IonScripts, "Enable offthread compilation");
+      } else if (value == 0) {
+        rt->setOffthreadIonCompilationEnabled(false);
+        JitSpew(js::jit::JitSpew_IonScripts, "Disable offthread compilation");
+      }
+      break;
+    case JSJITCOMPILER_JUMP_THRESHOLD:
+      if (value == uint32_t(-1)) {
+        jit::DefaultJitOptions defaultValues;
+        value = defaultValues.jumpThreshold;
+      }
+      jit::JitOptions.jumpThreshold = value;
+      break;
+    case JSJITCOMPILER_TRACK_OPTIMIZATIONS:
+      jit::JitOptions.disableOptimizationTracking = !value;
+      break;
+    case JSJITCOMPILER_SPECTRE_INDEX_MASKING:
+      jit::JitOptions.spectreIndexMasking = !!value;
+      break;
+    case JSJITCOMPILER_SPECTRE_OBJECT_MITIGATIONS_BARRIERS:
+      jit::JitOptions.spectreObjectMitigationsBarriers = !!value;
+      break;
+    case JSJITCOMPILER_SPECTRE_OBJECT_MITIGATIONS_MISC:
+      jit::JitOptions.spectreObjectMitigationsMisc = !!value;
+      break;
+    case JSJITCOMPILER_SPECTRE_STRING_MITIGATIONS:
+      jit::JitOptions.spectreStringMitigations = !!value;
+      break;
+    case JSJITCOMPILER_SPECTRE_VALUE_MASKING:
+      jit::JitOptions.spectreValueMasking = !!value;
+      break;
+    case JSJITCOMPILER_SPECTRE_JIT_TO_CXX_CALLS:
+      jit::JitOptions.spectreJitToCxxCalls = !!value;
+      break;
+    case JSJITCOMPILER_WASM_FOLD_OFFSETS:
+      jit::JitOptions.wasmFoldOffsets = !!value;
+      break;
+    case JSJITCOMPILER_WASM_DELAY_TIER2:
+      jit::JitOptions.wasmDelayTier2 = !!value;
+      break;
+>>>>>>> upstream-releases
 #ifdef DEBUG
     case JSJITCOMPILER_FULL_DEBUG_CHECKS:
       jit::JitOptions.fullDebugChecks = !!value;
@@ -5627,6 +11356,7 @@ JS_PUBLIC_API bool JS_GetGlobalJitCompilerOption(JSContext* cx,
                                                  uint32_t* valueOut) {
   MOZ_ASSERT(valueOut);
 #ifndef JS_CODEGEN_NONE
+<<<<<<< HEAD
   JSRuntime* rt = cx->runtime();
   switch (opt) {
     case JSJITCOMPILER_BASELINE_WARMUP_TRIGGER:
@@ -5665,6 +11395,87 @@ JS_PUBLIC_API bool JS_GetGlobalJitCompilerOption(JSContext* cx,
     default:
       return false;
   }
+||||||| merged common ancestors
+    JSRuntime* rt = cx->runtime();
+    switch (opt) {
+      case JSJITCOMPILER_BASELINE_WARMUP_TRIGGER:
+        *valueOut = jit::JitOptions.baselineWarmUpThreshold;
+        break;
+      case JSJITCOMPILER_ION_WARMUP_TRIGGER:
+        *valueOut = jit::JitOptions.forcedDefaultIonWarmUpThreshold
+            .valueOr(jit::OptimizationInfo::CompilerWarmupThreshold);
+        break;
+      case JSJITCOMPILER_ION_FORCE_IC:
+        *valueOut = jit::JitOptions.forceInlineCaches;
+        break;
+      case JSJITCOMPILER_ION_CHECK_RANGE_ANALYSIS:
+        *valueOut = jit::JitOptions.checkRangeAnalysis;
+        break;
+      case JSJITCOMPILER_ION_ENABLE:
+        *valueOut = JS::ContextOptionsRef(cx).ion();
+        break;
+      case JSJITCOMPILER_ION_FREQUENT_BAILOUT_THRESHOLD:
+        *valueOut = jit::JitOptions.frequentBailoutThreshold;
+        break;
+      case JSJITCOMPILER_BASELINE_ENABLE:
+        *valueOut = JS::ContextOptionsRef(cx).baseline();
+        break;
+      case JSJITCOMPILER_OFFTHREAD_COMPILATION_ENABLE:
+        *valueOut = rt->canUseOffthreadIonCompilation();
+        break;
+      case JSJITCOMPILER_WASM_FOLD_OFFSETS:
+        *valueOut = jit::JitOptions.wasmFoldOffsets ? 1 : 0;
+        break;
+#ifdef DEBUG
+      case JSJITCOMPILER_FULL_DEBUG_CHECKS:
+        *valueOut = jit::JitOptions.fullDebugChecks ? 1 : 0;
+        break;
+#endif
+      default:
+        return false;
+    }
+=======
+  JSRuntime* rt = cx->runtime();
+  switch (opt) {
+    case JSJITCOMPILER_BASELINE_WARMUP_TRIGGER:
+      *valueOut = jit::JitOptions.baselineWarmUpThreshold;
+      break;
+    case JSJITCOMPILER_ION_NORMAL_WARMUP_TRIGGER:
+      *valueOut = jit::JitOptions.normalIonWarmUpThreshold;
+      break;
+    case JSJITCOMPILER_ION_FULL_WARMUP_TRIGGER:
+      *valueOut = jit::JitOptions.fullIonWarmUpThreshold;
+      break;
+    case JSJITCOMPILER_ION_FORCE_IC:
+      *valueOut = jit::JitOptions.forceInlineCaches;
+      break;
+    case JSJITCOMPILER_ION_CHECK_RANGE_ANALYSIS:
+      *valueOut = jit::JitOptions.checkRangeAnalysis;
+      break;
+    case JSJITCOMPILER_ION_ENABLE:
+      *valueOut = JS::ContextOptionsRef(cx).ion();
+      break;
+    case JSJITCOMPILER_ION_FREQUENT_BAILOUT_THRESHOLD:
+      *valueOut = jit::JitOptions.frequentBailoutThreshold;
+      break;
+    case JSJITCOMPILER_BASELINE_ENABLE:
+      *valueOut = JS::ContextOptionsRef(cx).baseline();
+      break;
+    case JSJITCOMPILER_OFFTHREAD_COMPILATION_ENABLE:
+      *valueOut = rt->canUseOffthreadIonCompilation();
+      break;
+    case JSJITCOMPILER_WASM_FOLD_OFFSETS:
+      *valueOut = jit::JitOptions.wasmFoldOffsets ? 1 : 0;
+      break;
+#  ifdef DEBUG
+    case JSJITCOMPILER_FULL_DEBUG_CHECKS:
+      *valueOut = jit::JitOptions.fullDebugChecks ? 1 : 0;
+      break;
+#  endif
+    default:
+      return false;
+  }
+>>>>>>> upstream-releases
 #else
   *valueOut = 0;
 #endif
@@ -5676,7 +11487,7 @@ JS_PUBLIC_API bool JS_GetGlobalJitCompilerOption(JSContext* cx,
 #if !defined(STATIC_EXPORTABLE_JS_API) && !defined(STATIC_JS_API) && \
     defined(XP_WIN)
 
-#include "util/Windows.h"
+#  include "util/Windows.h"
 
 /*
  * Initialization routine for the JS DLL.
@@ -5860,6 +11671,48 @@ static bool GetScriptedCallerActivationRealmFast(JSContext* cx,
         return true;
       }
 
+<<<<<<< HEAD
+      if (iter.isJSJit() && iter.asJSJit().isIonScripted()) {
+        // Ion might have inlined non-self-hosted scripts in this
+        // self-hosted script.
+        return false;
+      }
+
+      ++iter;
+||||||| merged common ancestors
+    if (activationIter->isJit()) {
+        jit::JitActivation* act = activationIter->asJit();
+        JitFrameIter iter(act);
+        while (true) {
+            iter.skipNonScriptedJSFrames();
+            if (iter.done()) {
+                break;
+            }
+
+            if (!iter.isSelfHostedIgnoringInlining()) {
+                *activation = act;
+                *realm = iter.realm();
+                return true;
+            }
+
+            if (iter.isJSJit() && iter.asJSJit().isIonScripted()) {
+                // Ion might have inlined non-self-hosted scripts in this
+                // self-hosted script.
+                return false;
+            }
+
+            ++iter;
+        }
+    } else if (activationIter->isInterpreter()) {
+        InterpreterActivation* act = activationIter->asInterpreter();
+        for (InterpreterFrameIterator iter(act); !iter.done(); ++iter) {
+            if (!iter.frame()->script()->selfHosted()) {
+                *activation = act;
+                *realm = iter.frame()->script()->realm();
+                return true;
+            }
+        }
+=======
       if (iter.isJSJit() && iter.asJSJit().isIonScripted()) {
         // Ion might have inlined non-self-hosted scripts in this
         // self-hosted script.
@@ -5876,8 +11729,23 @@ static bool GetScriptedCallerActivationRealmFast(JSContext* cx,
         *realm = iter.frame()->script()->realm();
         return true;
       }
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  } else if (activationIter->isInterpreter()) {
+    InterpreterActivation* act = activationIter->asInterpreter();
+    for (InterpreterFrameIterator iter(act); !iter.done(); ++iter) {
+      if (!iter.frame()->script()->selfHosted()) {
+        *activation = act;
+        *realm = iter.frame()->script()->realm();
+        return true;
+      }
     }
   }
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
   return false;
 }
@@ -5946,6 +11814,7 @@ JS_PUBLIC_API void JS::detail::AssertArgumentsAreSane(JSContext* cx,
 }
 #endif /* JS_DEBUG */
 
+<<<<<<< HEAD
 JS_PUBLIC_API JS::TranscodeResult JS::EncodeScript(JSContext* cx,
                                                    TranscodeBuffer& buffer,
                                                    HandleScript scriptArg) {
@@ -5995,8 +11864,114 @@ JS_PUBLIC_API JS::TranscodeResult JS::DecodeScript(
     return res.unwrapErr();
   }
   return JS::TranscodeResult_Ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(JS::TranscodeResult)
+JS::EncodeScript(JSContext* cx, TranscodeBuffer& buffer, HandleScript scriptArg)
+{
+    XDREncoder encoder(cx, buffer, buffer.length());
+    RootedScript script(cx, scriptArg);
+    XDRResult res = encoder.codeScript(&script);
+    if (res.isErr()) {
+        buffer.clearAndFree();
+        return res.unwrapErr();
+    }
+    MOZ_ASSERT(!buffer.empty());
+    return JS::TranscodeResult_Ok;
 }
 
+JS_PUBLIC_API(JS::TranscodeResult)
+JS::EncodeInterpretedFunction(JSContext* cx, TranscodeBuffer& buffer, HandleObject funobjArg)
+{
+    XDREncoder encoder(cx, buffer, buffer.length());
+    RootedFunction funobj(cx, &funobjArg->as<JSFunction>());
+    XDRResult res = encoder.codeFunction(&funobj);
+    if (res.isErr()) {
+        buffer.clearAndFree();
+        return res.unwrapErr();
+    }
+    MOZ_ASSERT(!buffer.empty());
+    return JS::TranscodeResult_Ok;
+}
+
+JS_PUBLIC_API(JS::TranscodeResult)
+JS::DecodeScript(JSContext* cx, TranscodeBuffer& buffer, JS::MutableHandleScript scriptp,
+                 size_t cursorIndex)
+{
+    XDRDecoder decoder(cx, buffer, cursorIndex);
+    XDRResult res = decoder.codeScript(scriptp);
+    MOZ_ASSERT(bool(scriptp) == res.isOk());
+    if (res.isErr()) {
+        return res.unwrapErr();
+    }
+    return JS::TranscodeResult_Ok;
+}
+
+JS_PUBLIC_API(JS::TranscodeResult)
+JS::DecodeScript(JSContext* cx, const TranscodeRange& range, JS::MutableHandleScript scriptp)
+{
+    XDRDecoder decoder(cx, range);
+    XDRResult res = decoder.codeScript(scriptp);
+    MOZ_ASSERT(bool(scriptp) == res.isOk());
+    if (res.isErr()) {
+        return res.unwrapErr();
+    }
+    return JS::TranscodeResult_Ok;
+}
+
+JS_PUBLIC_API(JS::TranscodeResult)
+JS::DecodeInterpretedFunction(JSContext* cx, TranscodeBuffer& buffer,
+                              JS::MutableHandleFunction funp,
+                              size_t cursorIndex)
+{
+    XDRDecoder decoder(cx, buffer, cursorIndex);
+    XDRResult res = decoder.codeFunction(funp);
+    MOZ_ASSERT(bool(funp) == res.isOk());
+    if (res.isErr()) {
+        return res.unwrapErr();
+    }
+    return JS::TranscodeResult_Ok;
+=======
+JS_PUBLIC_API JS::TranscodeResult JS::EncodeScript(JSContext* cx,
+                                                   TranscodeBuffer& buffer,
+                                                   HandleScript scriptArg) {
+  XDREncoder encoder(cx, buffer, buffer.length());
+  RootedScript script(cx, scriptArg);
+  XDRResult res = encoder.codeScript(&script);
+  if (res.isErr()) {
+    buffer.clearAndFree();
+    return res.unwrapErr();
+  }
+  MOZ_ASSERT(!buffer.empty());
+  return JS::TranscodeResult_Ok;
+}
+
+JS_PUBLIC_API JS::TranscodeResult JS::EncodeInterpretedFunction(
+    JSContext* cx, TranscodeBuffer& buffer, HandleObject funobjArg) {
+  XDREncoder encoder(cx, buffer, buffer.length());
+  RootedFunction funobj(cx, &funobjArg->as<JSFunction>());
+  XDRResult res = encoder.codeFunction(&funobj);
+  if (res.isErr()) {
+    buffer.clearAndFree();
+    return res.unwrapErr();
+  }
+  MOZ_ASSERT(!buffer.empty());
+  return JS::TranscodeResult_Ok;
+}
+
+JS_PUBLIC_API JS::TranscodeResult JS::DecodeScript(
+    JSContext* cx, TranscodeBuffer& buffer, JS::MutableHandleScript scriptp,
+    size_t cursorIndex) {
+  XDRDecoder decoder(cx, buffer, cursorIndex);
+  XDRResult res = decoder.codeScript(scriptp);
+  MOZ_ASSERT(bool(scriptp) == res.isOk());
+  if (res.isErr()) {
+    return res.unwrapErr();
+  }
+  return JS::TranscodeResult_Ok;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API JS::TranscodeResult JS::DecodeInterpretedFunction(
     JSContext* cx, TranscodeBuffer& buffer, JS::MutableHandleFunction funp,
     size_t cursorIndex) {
@@ -6007,8 +11982,32 @@ JS_PUBLIC_API JS::TranscodeResult JS::DecodeInterpretedFunction(
     return res.unwrapErr();
   }
   return JS::TranscodeResult_Ok;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::StartIncrementalEncoding(JSContext* cx, JS::HandleScript script)
+{
+    if (!script) {
+        return false;
+    }
+    if (!script->scriptSource()->xdrEncodeTopLevel(cx, script)) {
+        return false;
+    }
+    return true;
+=======
+JS_PUBLIC_API JS::TranscodeResult JS::DecodeScript(
+    JSContext* cx, const TranscodeRange& range,
+    JS::MutableHandleScript scriptp) {
+  XDRDecoder decoder(cx, range);
+  XDRResult res = decoder.codeScript(scriptp);
+  MOZ_ASSERT(bool(scriptp) == res.isOk());
+  if (res.isErr()) {
+    return res.unwrapErr();
+  }
+  return JS::TranscodeResult_Ok;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::StartIncrementalEncoding(JSContext* cx,
                                                 JS::HandleScript script) {
   if (!script) {
@@ -6018,8 +12017,32 @@ JS_PUBLIC_API bool JS::StartIncrementalEncoding(JSContext* cx,
     return false;
   }
   return true;
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::FinishIncrementalEncoding(JSContext* cx, JS::HandleScript script, TranscodeBuffer& buffer)
+{
+    if (!script) {
+        return false;
+    }
+    if (!script->scriptSource()->xdrFinalizeEncoder(buffer)) {
+        return false;
+    }
+    return true;
+=======
+JS_PUBLIC_API JS::TranscodeResult JS::DecodeInterpretedFunction(
+    JSContext* cx, TranscodeBuffer& buffer, JS::MutableHandleFunction funp,
+    size_t cursorIndex) {
+  XDRDecoder decoder(cx, buffer, cursorIndex);
+  XDRResult res = decoder.codeFunction(funp);
+  MOZ_ASSERT(bool(funp) == res.isOk());
+  if (res.isErr()) {
+    return res.unwrapErr();
+  }
+  return JS::TranscodeResult_Ok;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API bool JS::FinishIncrementalEncoding(JSContext* cx,
                                                  JS::HandleScript script,
                                                  TranscodeBuffer& buffer) {
@@ -6030,61 +12053,218 @@ JS_PUBLIC_API bool JS::FinishIncrementalEncoding(JSContext* cx,
     return false;
   }
   return true;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetProcessBuildIdOp(JS::BuildIdOp buildIdOp)
+{
+    GetBuildId = buildIdOp;
+=======
+JS_PUBLIC_API bool JS::StartIncrementalEncoding(JSContext* cx,
+                                                JS::HandleScript script) {
+  if (!script) {
+    return false;
+  }
+  if (!script->scriptSource()->xdrEncodeTopLevel(cx, script)) {
+    return false;
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetProcessBuildIdOp(JS::BuildIdOp buildIdOp) {
   GetBuildId = buildIdOp;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetAsmJSCacheOps(JSContext* cx, const JS::AsmJSCacheOps* ops)
+{
+    cx->runtime()->asmJSCacheOps = *ops;
+=======
+JS_PUBLIC_API bool JS::FinishIncrementalEncoding(JSContext* cx,
+                                                 JS::HandleScript script,
+                                                 TranscodeBuffer& buffer) {
+  if (!script) {
+    return false;
+  }
+  if (!script->scriptSource()->xdrFinalizeEncoder(buffer)) {
+    return false;
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetAsmJSCacheOps(JSContext* cx,
                                         const JS::AsmJSCacheOps* ops) {
   cx->runtime()->asmJSCacheOps = *ops;
+||||||| merged common ancestors
+bool
+JS::IsWasmModuleObject(HandleObject obj)
+{
+    JSObject* unwrapped = CheckedUnwrap(obj);
+    if (!unwrapped) {
+        return false;
+    }
+    return unwrapped->is<WasmModuleObject>();
+=======
+bool JS::IsWasmModuleObject(HandleObject obj) {
+  return obj->canUnwrapAs<WasmModuleObject>();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool JS::IsWasmModuleObject(HandleObject obj) {
   JSObject* unwrapped = CheckedUnwrap(obj);
   if (!unwrapped) {
     return false;
   }
   return unwrapped->is<WasmModuleObject>();
+||||||| merged common ancestors
+JS_PUBLIC_API(RefPtr<JS::WasmModule>)
+JS::GetWasmModule(HandleObject obj)
+{
+    MOZ_ASSERT(JS::IsWasmModuleObject(obj));
+    return const_cast<wasm::Module*>(&CheckedUnwrap(obj)->as<WasmModuleObject>().module());
+=======
+JS_PUBLIC_API RefPtr<JS::WasmModule> JS::GetWasmModule(HandleObject obj) {
+  MOZ_ASSERT(JS::IsWasmModuleObject(obj));
+  WasmModuleObject& mobj = obj->unwrapAs<WasmModuleObject>();
+  return const_cast<wasm::Module*>(&mobj.module());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API RefPtr<JS::WasmModule> JS::GetWasmModule(HandleObject obj) {
   MOZ_ASSERT(JS::IsWasmModuleObject(obj));
   return const_cast<wasm::Module*>(
       &CheckedUnwrap(obj)->as<WasmModuleObject>().module());
+||||||| merged common ancestors
+JS_PUBLIC_API(RefPtr<JS::WasmModule>)
+JS::DeserializeWasmModule(PRFileDesc* bytecode, UniqueChars filename, unsigned line)
+{
+    return wasm::DeserializeModule(bytecode, std::move(filename), line);
+=======
+JS_PUBLIC_API RefPtr<JS::WasmModule> JS::DeserializeWasmModule(
+    const uint8_t* bytecode, size_t bytecodeLength) {
+  return wasm::DeserializeModule(bytecode, bytecodeLength);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_PUBLIC_API RefPtr<JS::WasmModule> JS::DeserializeWasmModule(
     PRFileDesc* bytecode, UniqueChars filename, unsigned line) {
   return wasm::DeserializeModule(bytecode, std::move(filename), line);
-}
-
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetProcessLargeAllocationFailureCallback(JS::LargeAllocationFailureCallback lafc)
+{
+    MOZ_ASSERT(!OnLargeAllocationFailure);
+    OnLargeAllocationFailure = lafc;
+=======
 JS_PUBLIC_API void JS::SetProcessLargeAllocationFailureCallback(
     JS::LargeAllocationFailureCallback lafc) {
   MOZ_ASSERT(!OnLargeAllocationFailure);
   OnLargeAllocationFailure = lafc;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API void JS::SetProcessLargeAllocationFailureCallback(
+    JS::LargeAllocationFailureCallback lafc) {
+  MOZ_ASSERT(!OnLargeAllocationFailure);
+  OnLargeAllocationFailure = lafc;
+||||||| merged common ancestors
+JS_PUBLIC_API(void)
+JS::SetOutOfMemoryCallback(JSContext* cx, OutOfMemoryCallback cb, void* data)
+{
+    cx->runtime()->oomCallback = cb;
+    cx->runtime()->oomCallbackData = data;
+=======
+JS_PUBLIC_API void JS::SetOutOfMemoryCallback(JSContext* cx,
+                                              OutOfMemoryCallback cb,
+                                              void* data) {
+  cx->runtime()->oomCallback = cb;
+  cx->runtime()->oomCallbackData = data;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::SetOutOfMemoryCallback(JSContext* cx,
                                               OutOfMemoryCallback cb,
                                               void* data) {
   cx->runtime()->oomCallback = cb;
   cx->runtime()->oomCallbackData = data;
 }
+||||||| merged common ancestors
+JS::FirstSubsumedFrame::FirstSubsumedFrame(JSContext* cx,
+                                           bool ignoreSelfHostedFrames /* = true */)
+  : JS::FirstSubsumedFrame(cx, cx->realm()->principals(), ignoreSelfHostedFrames)
+{ }
 
+JS_PUBLIC_API(bool)
+JS::CaptureCurrentStack(JSContext* cx, JS::MutableHandleObject stackp,
+                        JS::StackCapture&& capture /* = JS::StackCapture(JS::AllFrames()) */)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    MOZ_RELEASE_ASSERT(cx->realm());
+
+    Realm* realm = cx->realm();
+    Rooted<SavedFrame*> frame(cx);
+    if (!realm->savedStacks().saveCurrentStack(cx, &frame, std::move(capture))) {
+        return false;
+    }
+    stackp.set(frame.get());
+    return true;
+}
+=======
 JS::FirstSubsumedFrame::FirstSubsumedFrame(
     JSContext* cx, bool ignoreSelfHostedFrames /* = true */)
     : JS::FirstSubsumedFrame(cx, cx->realm()->principals(),
                              ignoreSelfHostedFrames) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JS::FirstSubsumedFrame::FirstSubsumedFrame(
+    JSContext* cx, bool ignoreSelfHostedFrames /* = true */)
+    : JS::FirstSubsumedFrame(cx, cx->realm()->principals(),
+                             ignoreSelfHostedFrames) {}
+||||||| merged common ancestors
+JS_PUBLIC_API(bool)
+JS::CopyAsyncStack(JSContext* cx, JS::HandleObject asyncStack,
+                   JS::HandleString asyncCause, JS::MutableHandleObject stackp,
+                   const Maybe<size_t>& maxFrameCount)
+{
+    AssertHeapIsIdle();
+    CHECK_THREAD(cx);
+    MOZ_RELEASE_ASSERT(cx->realm());
+=======
 JS_PUBLIC_API bool JS::CaptureCurrentStack(
     JSContext* cx, JS::MutableHandleObject stackp,
     JS::StackCapture&& capture /* = JS::StackCapture(JS::AllFrames()) */) {
   AssertHeapIsIdle();
   CHECK_THREAD(cx);
   MOZ_RELEASE_ASSERT(cx->realm());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+JS_PUBLIC_API bool JS::CaptureCurrentStack(
+    JSContext* cx, JS::MutableHandleObject stackp,
+    JS::StackCapture&& capture /* = JS::StackCapture(JS::AllFrames()) */) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  MOZ_RELEASE_ASSERT(cx->realm());
+||||||| merged common ancestors
+    js::AssertObjectIsSavedFrameOrWrapper(cx, asyncStack);
+    Realm* realm = cx->realm();
+    Rooted<SavedFrame*> frame(cx);
+    if (!realm->savedStacks().copyAsyncStack(cx, asyncStack, asyncCause, &frame, maxFrameCount)) {
+        return false;
+    }
+    stackp.set(frame.get());
+    return true;
+}
+=======
   Realm* realm = cx->realm();
   Rooted<SavedFrame*> frame(cx);
   if (!realm->savedStacks().saveCurrentStack(cx, &frame, std::move(capture))) {
@@ -6113,12 +12293,64 @@ JS_PUBLIC_API bool JS::CopyAsyncStack(JSContext* cx,
   stackp.set(frame.get());
   return true;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Realm* realm = cx->realm();
+  Rooted<SavedFrame*> frame(cx);
+  if (!realm->savedStacks().saveCurrentStack(cx, &frame, std::move(capture))) {
+    return false;
+  }
+  stackp.set(frame.get());
+  return true;
+}
+
+JS_PUBLIC_API bool JS::CopyAsyncStack(JSContext* cx,
+                                      JS::HandleObject asyncStack,
+                                      JS::HandleString asyncCause,
+                                      JS::MutableHandleObject stackp,
+                                      const Maybe<size_t>& maxFrameCount) {
+  AssertHeapIsIdle();
+  CHECK_THREAD(cx);
+  MOZ_RELEASE_ASSERT(cx->realm());
+
+  js::AssertObjectIsSavedFrameOrWrapper(cx, asyncStack);
+  Realm* realm = cx->realm();
+  Rooted<SavedFrame*> frame(cx);
+  if (!realm->savedStacks().copyAsyncStack(cx, asyncStack, asyncCause, &frame,
+                                           maxFrameCount)) {
+    return false;
+  }
+  stackp.set(frame.get());
+  return true;
+}
+||||||| merged common ancestors
+JS_PUBLIC_API(Zone*)
+JS::GetObjectZone(JSObject* obj)
+{
+    return obj->zone();
+}
+=======
+JS_PUBLIC_API Zone* JS::GetObjectZone(JSObject* obj) { return obj->zone(); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JS_PUBLIC_API Zone* JS::GetObjectZone(JSObject* obj) { return obj->zone(); }
 
 JS_PUBLIC_API Zone* JS::GetNurseryStringZone(JSString* str) {
   MOZ_ASSERT(!str->isTenured());
   return str->zone();
+||||||| merged common ancestors
+JS_PUBLIC_API(Zone*)
+JS::GetNurseryStringZone(JSString* str)
+{
+    MOZ_ASSERT(!str->isTenured());
+    return str->zone();
+=======
+JS_PUBLIC_API Zone* JS::GetNurseryStringZone(JSString* str) {
+  MOZ_ASSERT(!str->isTenured());
+  return str->zone();
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JS::TraceKind JS::GCThingTraceKind(void* thing) {

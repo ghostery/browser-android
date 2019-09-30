@@ -8,6 +8,7 @@
 
 #include "MessageEvent.h"
 #include "mozilla/dom/BlobBinding.h"
+#include "mozilla/dom/DocumentInlines.h"
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/FileList.h"
 #include "mozilla/dom/FileListBinding.h"
@@ -18,21 +19,23 @@
 #include "mozilla/dom/StructuredCloneTags.h"
 #include "mozilla/dom/UnionConversions.h"
 #include "mozilla/EventDispatcher.h"
-#include "nsContentUtils.h"
+#include "nsDocShell.h"
 #include "nsGlobalWindow.h"
-#include "nsIPresShell.h"
+#include "nsIConsoleService.h"
 #include "nsIPrincipal.h"
 #include "nsIScriptError.h"
+#include "nsNetUtil.h"
 #include "nsPresContext.h"
 #include "nsQueryObject.h"
 
 namespace mozilla {
 namespace dom {
 
-PostMessageEvent::PostMessageEvent(nsGlobalWindowOuter* aSource,
+PostMessageEvent::PostMessageEvent(BrowsingContext* aSource,
                                    const nsAString& aCallerOrigin,
                                    nsGlobalWindowOuter* aTargetWindow,
                                    nsIPrincipal* aProvidedPrincipal,
+<<<<<<< HEAD
                                    nsIDocument* aSourceDocument)
     : Runnable("dom::PostMessageEvent"),
       StructuredCloneHolder(CloningSupported, TransferringSupported,
@@ -44,6 +47,40 @@ PostMessageEvent::PostMessageEvent(nsGlobalWindowOuter* aSource,
       mSourceDocument(aSourceDocument) {}
 
 PostMessageEvent::~PostMessageEvent() {}
+||||||| merged common ancestors
+                                   nsIDocument* aSourceDocument,
+                                   bool aTrustedCaller)
+  : Runnable("dom::PostMessageEvent")
+  , StructuredCloneHolder(CloningSupported,
+                          TransferringSupported,
+                          StructuredCloneScope::SameProcessSameThread)
+  , mSource(aSource)
+  , mCallerOrigin(aCallerOrigin)
+  , mTargetWindow(aTargetWindow)
+  , mProvidedPrincipal(aProvidedPrincipal)
+  , mSourceDocument(aSourceDocument)
+  , mTrustedCaller(aTrustedCaller)
+{
+}
+
+PostMessageEvent::~PostMessageEvent()
+{
+}
+=======
+                                   const Maybe<uint64_t>& aCallerWindowID,
+                                   nsIURI* aCallerDocumentURI,
+                                   bool aIsFromPrivateWindow)
+    : Runnable("dom::PostMessageEvent"),
+      mSource(aSource),
+      mCallerOrigin(aCallerOrigin),
+      mTargetWindow(aTargetWindow),
+      mProvidedPrincipal(aProvidedPrincipal),
+      mCallerWindowID(aCallerWindowID),
+      mCallerDocumentURI(aCallerDocumentURI),
+      mIsFromPrivateWindow(aIsFromPrivateWindow) {}
+
+PostMessageEvent::~PostMessageEvent() {}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 PostMessageEvent::Run() {
@@ -54,11 +91,10 @@ PostMessageEvent::Run() {
   jsapi.Init();
   JSContext* cx = jsapi.cx();
 
-  // The document is just used for the principal mismatch error message below.
-  // Use a stack variable so mSourceDocument is not held onto after this method
-  // finishes, regardless of the method outcome.
-  nsCOMPtr<nsIDocument> sourceDocument;
-  sourceDocument.swap(mSourceDocument);
+  // The document URI is just used for the principal mismatch error message
+  // below. Use a stack variable so mCallerDocumentURI is not held onto after
+  // this method finishes, regardless of the method outcome.
+  nsCOMPtr<nsIURI> callerDocumentURI = mCallerDocumentURI.forget();
 
   // If we bailed before this point we're going to leak mMessage, but
   // that's probably better than crashing.
@@ -68,6 +104,22 @@ PostMessageEvent::Run() {
       !(targetWindow = mTargetWindow->GetCurrentInnerWindowInternal()) ||
       targetWindow->IsDying())
     return NS_OK;
+
+  // If the window's document has suppressed event handling, hand off this event
+  // for running later. We check the top window's document so that when multiple
+  // same-origin windows exist in the same top window, postMessage events will
+  // be delivered in the same order they were posted, regardless of which window
+  // they were posted to.
+  if (nsCOMPtr<nsPIDOMWindowOuter> topWindow =
+          targetWindow->GetOuterWindow()->GetTop()) {
+    if (nsCOMPtr<nsPIDOMWindowInner> topInner =
+            topWindow->GetCurrentInnerWindow()) {
+      if (topInner->GetExtantDoc() &&
+          topInner->GetExtantDoc()->SuspendPostMessageEvent(this)) {
+        return NS_OK;
+      }
+    }
+  }
 
   JSAutoRealm ar(cx, targetWindow->GetWrapper());
 
@@ -95,6 +147,7 @@ PostMessageEvent::Run() {
       OriginAttributes sourceAttrs = mProvidedPrincipal->OriginAttributesRef();
       OriginAttributes targetAttrs = targetPrin->OriginAttributesRef();
 
+<<<<<<< HEAD
       MOZ_DIAGNOSTIC_ASSERT(
           sourceAttrs.mAppId == targetAttrs.mAppId,
           "Target and source should have the same mAppId attribute.");
@@ -105,6 +158,29 @@ PostMessageEvent::Run() {
                                 targetAttrs.mInIsolatedMozBrowser,
                             "Target and source should have the same "
                             "inIsolatedMozBrowser attribute.");
+||||||| merged common ancestors
+      MOZ_DIAGNOSTIC_ASSERT(sourceAttrs.mAppId == targetAttrs.mAppId,
+        "Target and source should have the same mAppId attribute.");
+      MOZ_DIAGNOSTIC_ASSERT(sourceAttrs.mUserContextId == targetAttrs.mUserContextId,
+        "Target and source should have the same userContextId attribute.");
+      MOZ_DIAGNOSTIC_ASSERT(sourceAttrs.mInIsolatedMozBrowser == targetAttrs.mInIsolatedMozBrowser,
+        "Target and source should have the same inIsolatedMozBrowser attribute.");
+
+      if (!nsContentUtils::IsSystemOrExpandedPrincipal(targetPrin) &&
+          !nsContentUtils::IsSystemOrExpandedPrincipal(mProvidedPrincipal) &&
+          !mTrustedCaller) {
+        MOZ_DIAGNOSTIC_ASSERT(sourceAttrs.mPrivateBrowsingId == targetAttrs.mPrivateBrowsingId,
+          "Target and source should have the same mPrivateBrowsingId attribute.");
+      }
+=======
+      MOZ_DIAGNOSTIC_ASSERT(
+          sourceAttrs.mUserContextId == targetAttrs.mUserContextId,
+          "Target and source should have the same userContextId attribute.");
+      MOZ_DIAGNOSTIC_ASSERT(sourceAttrs.mInIsolatedMozBrowser ==
+                                targetAttrs.mInIsolatedMozBrowser,
+                            "Target and source should have the same "
+                            "inIsolatedMozBrowser attribute.");
+>>>>>>> upstream-releases
 
       nsAutoString providedOrigin, targetOrigin;
       nsresult rv = nsContentUtils::GetUTFOrigin(targetPrin, targetOrigin);
@@ -112,23 +188,84 @@ PostMessageEvent::Run() {
       rv = nsContentUtils::GetUTFOrigin(mProvidedPrincipal, providedOrigin);
       NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
       const char16_t* params[] = {providedOrigin.get(), targetOrigin.get()};
+||||||| merged common ancestors
+      const char16_t* params[] = { providedOrigin.get(), targetOrigin.get() };
+=======
+      nsAutoString errorText;
+      nsContentUtils::FormatLocalizedString(
+          errorText, nsContentUtils::eDOM_PROPERTIES,
+          "TargetPrincipalDoesNotMatch", providedOrigin, targetOrigin);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       nsContentUtils::ReportToConsole(
           nsIScriptError::errorFlag, NS_LITERAL_CSTRING("DOM Window"),
           sourceDocument, nsContentUtils::eDOM_PROPERTIES,
           "TargetPrincipalDoesNotMatch", params, ArrayLength(params));
+||||||| merged common ancestors
+      nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
+        NS_LITERAL_CSTRING("DOM Window"), sourceDocument,
+        nsContentUtils::eDOM_PROPERTIES,
+        "TargetPrincipalDoesNotMatch",
+        params, ArrayLength(params));
+=======
+      nsCOMPtr<nsIScriptError> errorObject =
+          do_CreateInstance(NS_SCRIPTERROR_CONTRACTID, &rv);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
-      return NS_OK;
+      if (mCallerWindowID.isSome()) {
+        rv = errorObject->InitWithSourceURI(
+            errorText, callerDocumentURI, EmptyString(), 0, 0,
+            nsIScriptError::errorFlag, "DOM Window", mCallerWindowID.value());
+      } else {
+        nsString uriSpec;
+        rv = NS_GetSanitizedURIStringFromURI(callerDocumentURI, uriSpec);
+        NS_ENSURE_SUCCESS(rv, rv);
+
+        rv = errorObject->Init(
+            errorText, uriSpec, EmptyString(), 0, 0, nsIScriptError::errorFlag,
+            "DOM Window", mIsFromPrivateWindow,
+            nsContentUtils::IsSystemPrincipal(mProvidedPrincipal));
+      }
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      nsCOMPtr<nsIConsoleService> consoleService =
+          do_GetService(NS_CONSOLESERVICE_CONTRACTID, &rv);
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      return consoleService->LogMessage(errorObject);
     }
   }
 
   IgnoredErrorResult rv;
   JS::Rooted<JS::Value> messageData(cx);
+<<<<<<< HEAD
   nsCOMPtr<mozilla::dom::EventTarget> eventTarget =
       do_QueryObject(targetWindow);
 
   Read(targetWindow->AsInner(), cx, &messageData, rv);
+||||||| merged common ancestors
+  nsCOMPtr<mozilla::dom::EventTarget> eventTarget = do_QueryObject(targetWindow);
+
+  Read(targetWindow->AsInner(), cx, &messageData, rv);
+=======
+  nsCOMPtr<mozilla::dom::EventTarget> eventTarget =
+      do_QueryObject(targetWindow);
+
+  StructuredCloneHolder* holder;
+  if (mHolder.constructed<StructuredCloneHolder>()) {
+    mHolder.ref<StructuredCloneHolder>().Read(ToSupports(targetWindow), cx,
+                                              &messageData, rv);
+    holder = &mHolder.ref<StructuredCloneHolder>();
+  } else {
+    MOZ_ASSERT(mHolder.constructed<ipc::StructuredCloneData>());
+    mHolder.ref<ipc::StructuredCloneData>().Read(cx, &messageData, rv);
+    holder = &mHolder.ref<ipc::StructuredCloneData>();
+  }
+>>>>>>> upstream-releases
   if (NS_WARN_IF(rv.Failed())) {
     DispatchError(cx, targetWindow, eventTarget);
     return NS_OK;
@@ -138,10 +275,12 @@ PostMessageEvent::Run() {
   RefPtr<MessageEvent> event = new MessageEvent(eventTarget, nullptr, nullptr);
 
   Nullable<WindowProxyOrMessagePortOrServiceWorker> source;
-  source.SetValue().SetAsWindowProxy() = mSource ? mSource->AsOuter() : nullptr;
+  if (mSource) {
+    source.SetValue().SetAsWindowProxy() = mSource;
+  }
 
   Sequence<OwningNonNull<MessagePort>> ports;
-  if (!TakeTransferredPortsAsSequence(ports)) {
+  if (!holder->TakeTransferredPortsAsSequence(ports)) {
     DispatchError(cx, targetWindow, eventTarget);
     return NS_OK;
   }
@@ -163,7 +302,7 @@ void PostMessageEvent::DispatchError(JSContext* aCx,
   init.mOrigin = mCallerOrigin;
 
   if (mSource) {
-    init.mSource.SetValue().SetAsWindowProxy() = mSource->AsOuter();
+    init.mSource.SetValue().SetAsWindowProxy() = mSource;
   }
 
   RefPtr<Event> event = MessageEvent::Constructor(
@@ -185,8 +324,19 @@ void PostMessageEvent::Dispatch(nsGlobalWindowInner* aTargetWindow,
   WidgetEvent* internalEvent = aEvent->WidgetEventPtr();
 
   nsEventStatus status = nsEventStatus_eIgnore;
+<<<<<<< HEAD
   EventDispatcher::Dispatch(aTargetWindow->AsInner(), presContext,
                             internalEvent, aEvent, &status);
+||||||| merged common ancestors
+  EventDispatcher::Dispatch(aTargetWindow->AsInner(),
+                            presContext,
+                            internalEvent,
+                            aEvent,
+                            &status);
+=======
+  EventDispatcher::Dispatch(ToSupports(aTargetWindow), presContext,
+                            internalEvent, aEvent, &status);
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

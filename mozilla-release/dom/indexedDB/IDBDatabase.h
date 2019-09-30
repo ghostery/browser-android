@@ -10,17 +10,16 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/dom/IDBTransactionBinding.h"
 #include "mozilla/dom/StorageTypeBinding.h"
-#include "mozilla/dom/IDBWrapperCache.h"
 #include "mozilla/dom/quota/PersistenceType.h"
+#include "mozilla/DOMEventTargetHelper.h"
 #include "nsAutoPtr.h"
 #include "nsDataHashtable.h"
 #include "nsHashKeys.h"
 #include "nsString.h"
 #include "nsTHashtable.h"
 
-class nsIDocument;
 class nsIEventTarget;
-class nsPIDOMWindowInner;
+class nsIGlobalObject;
 
 namespace mozilla {
 
@@ -48,7 +47,15 @@ class DatabaseSpec;
 class PBackgroundIDBDatabaseFileChild;
 }  // namespace indexedDB
 
+<<<<<<< HEAD
 class IDBDatabase final : public IDBWrapperCache {
+||||||| merged common ancestors
+class IDBDatabase final
+  : public IDBWrapperCache
+{
+=======
+class IDBDatabase final : public DOMEventTargetHelper {
+>>>>>>> upstream-releases
   typedef mozilla::dom::indexedDB::DatabaseSpec DatabaseSpec;
   typedef mozilla::dom::StorageType StorageType;
   typedef mozilla::dom::quota::PersistenceType PersistenceType;
@@ -113,7 +120,14 @@ class IDBDatabase final : public IDBWrapperCache {
 
   uint64_t Version() const;
 
+<<<<<<< HEAD
   already_AddRefed<nsIDocument> GetOwnerDocument() const;
+||||||| merged common ancestors
+  already_AddRefed<nsIDocument>
+  GetOwnerDocument() const;
+=======
+  already_AddRefed<Document> GetOwnerDocument() const;
+>>>>>>> upstream-releases
 
   void Close() {
     AssertIsOnOwningThread();
@@ -173,13 +187,40 @@ class IDBDatabase final : public IDBWrapperCache {
   //     serialization and should be removed or fixed someday.
   nsresult GetQuotaInfo(nsACString& aOrigin, PersistenceType* aPersistenceType);
 
+<<<<<<< HEAD
   bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
 
   void NoteLiveMutableFile(IDBMutableFile* aMutableFile);
+||||||| merged common ancestors
+  bool
+  IsFileHandleDisabled() const
+  {
+    return mFileHandleDisabled;
+  }
 
+  void
+  NoteLiveMutableFile(IDBMutableFile* aMutableFile);
+=======
+  bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
+||||||| merged common ancestors
+  void
+  NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
+=======
+  void NoteLiveMutableFile(IDBMutableFile* aMutableFile);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsPIDOMWindowInner* GetParentObject() const;
+||||||| merged common ancestors
+  nsPIDOMWindowInner*
+  GetParentObject() const;
+=======
+  void NoteFinishedMutableFile(IDBMutableFile* aMutableFile);
+>>>>>>> upstream-releases
 
   already_AddRefed<DOMStringList> ObjectStoreNames() const;
 
@@ -229,7 +270,7 @@ class IDBDatabase final : public IDBWrapperCache {
   const DatabaseSpec* Spec() const { return mSpec; }
 
   NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(IDBDatabase, IDBWrapperCache)
+  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(IDBDatabase, DOMEventTargetHelper)
 
   // DOMEventTargetHelper
   void DisconnectFromOwner() override;

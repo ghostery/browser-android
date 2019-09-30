@@ -8,6 +8,7 @@
 
 interface nsIPrincipal;
 interface nsIQuotaRequest;
+interface nsIQuotaCallback;
 interface nsIQuotaUsageCallback;
 interface nsIQuotaUsageRequest;
 
@@ -86,6 +87,16 @@ interface nsIQuotaManagerService : nsISupports
                        [optional] in boolean aGetGroupUsage);
 
   /**
+   * Schedules an asynchronous callback that will inspect all origins and
+   * just returns the origin strings of initialized origins.
+   *
+   * @param aCallback
+   *        The callback that will be called when the origin is collected.
+   */
+  [must_use] nsIQuotaRequest
+  listInitializedOrigins(in nsIQuotaCallback aCallback);
+
+  /**
    * Removes all storages. The files may not be deleted immediately depending
    * on prohibitive concurrent operations.
    * Be careful, this removes *all* the data that has ever been stored!
@@ -97,6 +108,7 @@ interface nsIQuotaManagerService : nsISupports
   clear();
 
   /**
+<<<<<<< HEAD
    * Removes all storages stored for the given pattern. The files may not be
    * deleted immediately depending on prohibitive concurrent operations.
    * In terms of locks, it will get an exclusive multi directory lock for given
@@ -114,6 +126,28 @@ interface nsIQuotaManagerService : nsISupports
   clearStoragesForOriginAttributesPattern(in AString aPattern);
 
   /**
+||||||| merged common ancestors
+=======
+   * Removes all storages stored for the given pattern. The files may not be
+   * deleted immediately depending on prohibitive concurrent operations.  In
+   * terms of locks, it will get an exclusive multi directory lock for given
+   * pattern.  For example, given pattern {"userContextId":1007} and set of 3
+   * origins ["http://www.mozilla.org^userContextId=1007",
+   * "http://www.example.org^userContextId=1007",
+   * "http://www.example.org^userContextId=1008"], the method will only lock 2
+   * origins ["http://www.mozilla.org^userContextId=1007",
+   * "http://www.example.org^userContextId=1007"].
+   *
+   * @param aPattern
+   *        A pattern for the origins whose storages are to be cleared.
+   *        Currently this is expected to be a JSON representation of the
+   *        OriginAttributesPatternDictionary defined in ChromeUtils.webidl.
+   */
+  [must_use] nsIQuotaRequest
+  clearStoragesForOriginAttributesPattern(in AString aPattern);
+
+  /**
+>>>>>>> upstream-releases
    * Removes all storages stored for the given principal. The files may not be
    * deleted immediately depending on prohibitive concurrent operations.
    *

@@ -66,7 +66,7 @@ void TransportLayerNSPRAdapter::PacketReceived(MediaPacket &packet) {
   }
 }
 
-int32_t TransportLayerNSPRAdapter::Recv(void *buf, int32_t buflen) {
+int32_t TransportLayerNSPRAdapter::Recv(void* buf, int32_t buflen) {
   if (input_.empty()) {
     PR_SetError(PR_WOULD_BLOCK_ERROR, 0);
     return -1;
@@ -89,7 +89,7 @@ int32_t TransportLayerNSPRAdapter::Recv(void *buf, int32_t buflen) {
   return count;
 }
 
-int32_t TransportLayerNSPRAdapter::Write(const void *buf, int32_t length) {
+int32_t TransportLayerNSPRAdapter::Write(const void* buf, int32_t length) {
   if (!enabled_) {
     MOZ_MTLOG(ML_WARNING, "Writing to disabled transport layer");
     return -1;
@@ -97,8 +97,15 @@ int32_t TransportLayerNSPRAdapter::Write(const void *buf, int32_t length) {
 
   MediaPacket packet;
   // Copies. Oh well.
+<<<<<<< HEAD
   packet.Copy(static_cast<const uint8_t *>(buf), static_cast<size_t>(length));
   packet.SetType(MediaPacket::DTLS);
+||||||| merged common ancestors
+  packet.Copy(static_cast<const uint8_t*>(buf), static_cast<size_t>(length));
+=======
+  packet.Copy(static_cast<const uint8_t*>(buf), static_cast<size_t>(length));
+  packet.SetType(MediaPacket::DTLS);
+>>>>>>> upstream-releases
 
   TransportResult r = output_->SendPacket(packet);
   if (r >= 0) {
@@ -115,100 +122,117 @@ int32_t TransportLayerNSPRAdapter::Write(const void *buf, int32_t length) {
 }
 
 // Implementation of NSPR methods
-static PRStatus TransportLayerClose(PRFileDesc *f) {
+static PRStatus TransportLayerClose(PRFileDesc* f) {
   f->dtor(f);
   return PR_SUCCESS;
 }
 
-static int32_t TransportLayerRead(PRFileDesc *f, void *buf, int32_t length) {
+static int32_t TransportLayerRead(PRFileDesc* f, void* buf, int32_t length) {
   UNIMPLEMENTED;
   return -1;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerWrite(PRFileDesc *f, const void *buf,
                                    int32_t length) {
   TransportLayerNSPRAdapter *io =
       reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+||||||| merged common ancestors
+static int32_t TransportLayerWrite(PRFileDesc *f, const void *buf, int32_t length) {
+  TransportLayerNSPRAdapter *io = reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+=======
+static int32_t TransportLayerWrite(PRFileDesc* f, const void* buf,
+                                   int32_t length) {
+  TransportLayerNSPRAdapter* io =
+      reinterpret_cast<TransportLayerNSPRAdapter*>(f->secret);
+>>>>>>> upstream-releases
   return io->Write(buf, length);
 }
 
-static int32_t TransportLayerAvailable(PRFileDesc *f) {
+static int32_t TransportLayerAvailable(PRFileDesc* f) {
   UNIMPLEMENTED;
   return -1;
 }
 
-int64_t TransportLayerAvailable64(PRFileDesc *f) {
+int64_t TransportLayerAvailable64(PRFileDesc* f) {
   UNIMPLEMENTED;
   return -1;
 }
 
-static PRStatus TransportLayerSync(PRFileDesc *f) {
+static PRStatus TransportLayerSync(PRFileDesc* f) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static int32_t TransportLayerSeek(PRFileDesc *f, int32_t offset,
+static int32_t TransportLayerSeek(PRFileDesc* f, int32_t offset,
                                   PRSeekWhence how) {
   UNIMPLEMENTED;
   return -1;
 }
 
-static int64_t TransportLayerSeek64(PRFileDesc *f, int64_t offset,
+static int64_t TransportLayerSeek64(PRFileDesc* f, int64_t offset,
                                     PRSeekWhence how) {
   UNIMPLEMENTED;
   return -1;
 }
 
-static PRStatus TransportLayerFileInfo(PRFileDesc *f, PRFileInfo *info) {
+static PRStatus TransportLayerFileInfo(PRFileDesc* f, PRFileInfo* info) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static PRStatus TransportLayerFileInfo64(PRFileDesc *f, PRFileInfo64 *info) {
+static PRStatus TransportLayerFileInfo64(PRFileDesc* f, PRFileInfo64* info) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static int32_t TransportLayerWritev(PRFileDesc *f, const PRIOVec *iov,
+static int32_t TransportLayerWritev(PRFileDesc* f, const PRIOVec* iov,
                                     int32_t iov_size, PRIntervalTime to) {
   UNIMPLEMENTED;
   return -1;
 }
 
-static PRStatus TransportLayerConnect(PRFileDesc *f, const PRNetAddr *addr,
+static PRStatus TransportLayerConnect(PRFileDesc* f, const PRNetAddr* addr,
                                       PRIntervalTime to) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static PRFileDesc *TransportLayerAccept(PRFileDesc *sd, PRNetAddr *addr,
+static PRFileDesc* TransportLayerAccept(PRFileDesc* sd, PRNetAddr* addr,
                                         PRIntervalTime to) {
   UNIMPLEMENTED;
   return nullptr;
 }
 
-static PRStatus TransportLayerBind(PRFileDesc *f, const PRNetAddr *addr) {
+static PRStatus TransportLayerBind(PRFileDesc* f, const PRNetAddr* addr) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static PRStatus TransportLayerListen(PRFileDesc *f, int32_t depth) {
+static PRStatus TransportLayerListen(PRFileDesc* f, int32_t depth) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static PRStatus TransportLayerShutdown(PRFileDesc *f, int32_t how) {
+static PRStatus TransportLayerShutdown(PRFileDesc* f, int32_t how) {
   // This is only called from NSS when we are the server and the client refuses
   // to provide a certificate.  In this case, the handshake is destined for
   // failure, so we will just let this pass.
+<<<<<<< HEAD
   TransportLayerNSPRAdapter *io =
       reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+||||||| merged common ancestors
+  TransportLayerNSPRAdapter *io = reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+=======
+  TransportLayerNSPRAdapter* io =
+      reinterpret_cast<TransportLayerNSPRAdapter*>(f->secret);
+>>>>>>> upstream-releases
   io->SetEnabled(false);
   return PR_SUCCESS;
 }
 
 // This function does not support peek, or waiting until `to`
-static int32_t TransportLayerRecv(PRFileDesc *f, void *buf, int32_t buflen,
+static int32_t TransportLayerRecv(PRFileDesc* f, void* buf, int32_t buflen,
                                   int32_t flags, PRIntervalTime to) {
   MOZ_ASSERT(flags == 0);
   if (flags != 0) {
@@ -216,55 +240,117 @@ static int32_t TransportLayerRecv(PRFileDesc *f, void *buf, int32_t buflen,
     return -1;
   }
 
+<<<<<<< HEAD
   TransportLayerNSPRAdapter *io =
       reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+||||||| merged common ancestors
+  TransportLayerNSPRAdapter *io = reinterpret_cast<TransportLayerNSPRAdapter *>(f->secret);
+=======
+  TransportLayerNSPRAdapter* io =
+      reinterpret_cast<TransportLayerNSPRAdapter*>(f->secret);
+>>>>>>> upstream-releases
   return io->Recv(buf, buflen);
 }
 
 // Note: this is always nonblocking and assumes a zero timeout.
+<<<<<<< HEAD
 static int32_t TransportLayerSend(PRFileDesc *f, const void *buf,
                                   int32_t amount, int32_t flags,
                                   PRIntervalTime to) {
+||||||| merged common ancestors
+static int32_t TransportLayerSend(PRFileDesc *f, const void *buf, int32_t amount,
+                                  int32_t flags, PRIntervalTime to) {
+=======
+static int32_t TransportLayerSend(PRFileDesc* f, const void* buf,
+                                  int32_t amount, int32_t flags,
+                                  PRIntervalTime to) {
+>>>>>>> upstream-releases
   int32_t written = TransportLayerWrite(f, buf, amount);
   return written;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerRecvfrom(PRFileDesc *f, void *buf, int32_t amount,
                                       int32_t flags, PRNetAddr *addr,
                                       PRIntervalTime to) {
+||||||| merged common ancestors
+static int32_t TransportLayerRecvfrom(PRFileDesc *f, void *buf, int32_t amount,
+                                      int32_t flags, PRNetAddr *addr, PRIntervalTime to) {
+=======
+static int32_t TransportLayerRecvfrom(PRFileDesc* f, void* buf, int32_t amount,
+                                      int32_t flags, PRNetAddr* addr,
+                                      PRIntervalTime to) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerSendto(PRFileDesc *f, const void *buf,
                                     int32_t amount, int32_t flags,
                                     const PRNetAddr *addr, PRIntervalTime to) {
+||||||| merged common ancestors
+static int32_t TransportLayerSendto(PRFileDesc *f, const void *buf, int32_t amount,
+                                    int32_t flags, const PRNetAddr *addr, PRIntervalTime to) {
+=======
+static int32_t TransportLayerSendto(PRFileDesc* f, const void* buf,
+                                    int32_t amount, int32_t flags,
+                                    const PRNetAddr* addr, PRIntervalTime to) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
+<<<<<<< HEAD
 static int16_t TransportLayerPoll(PRFileDesc *f, int16_t in_flags,
                                   int16_t *out_flags) {
+||||||| merged common ancestors
+static int16_t TransportLayerPoll(PRFileDesc *f, int16_t in_flags, int16_t *out_flags) {
+=======
+static int16_t TransportLayerPoll(PRFileDesc* f, int16_t in_flags,
+                                  int16_t* out_flags) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerAcceptRead(PRFileDesc *sd, PRFileDesc **nd,
                                         PRNetAddr **raddr, void *buf,
                                         int32_t amount, PRIntervalTime t) {
+||||||| merged common ancestors
+static int32_t TransportLayerAcceptRead(PRFileDesc *sd, PRFileDesc **nd,
+                                        PRNetAddr **raddr,
+                                        void *buf, int32_t amount, PRIntervalTime t) {
+=======
+static int32_t TransportLayerAcceptRead(PRFileDesc* sd, PRFileDesc** nd,
+                                        PRNetAddr** raddr, void* buf,
+                                        int32_t amount, PRIntervalTime t) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerTransmitFile(PRFileDesc *sd, PRFileDesc *f,
                                           const void *headers, int32_t hlen,
                                           PRTransmitFileFlags flags,
                                           PRIntervalTime t) {
+||||||| merged common ancestors
+static int32_t TransportLayerTransmitFile(PRFileDesc *sd, PRFileDesc *f,
+                                          const void *headers, int32_t hlen,
+                                          PRTransmitFileFlags flags, PRIntervalTime t) {
+=======
+static int32_t TransportLayerTransmitFile(PRFileDesc* sd, PRFileDesc* f,
+                                          const void* headers, int32_t hlen,
+                                          PRTransmitFileFlags flags,
+                                          PRIntervalTime t) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
-static PRStatus TransportLayerGetpeername(PRFileDesc *f, PRNetAddr *addr) {
+static PRStatus TransportLayerGetpeername(PRFileDesc* f, PRNetAddr* addr) {
   // TODO: Modify to return unique names for each channel
   // somehow, as opposed to always the same static address. The current
   // implementation messes up the session cache, which is why it's off
@@ -276,13 +362,20 @@ static PRStatus TransportLayerGetpeername(PRFileDesc *f, PRNetAddr *addr) {
   return PR_SUCCESS;
 }
 
-static PRStatus TransportLayerGetsockname(PRFileDesc *f, PRNetAddr *addr) {
+static PRStatus TransportLayerGetsockname(PRFileDesc* f, PRNetAddr* addr) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
+<<<<<<< HEAD
 static PRStatus TransportLayerGetsockoption(PRFileDesc *f,
                                             PRSocketOptionData *opt) {
+||||||| merged common ancestors
+static PRStatus TransportLayerGetsockoption(PRFileDesc *f, PRSocketOptionData *opt) {
+=======
+static PRStatus TransportLayerGetsockoption(PRFileDesc* f,
+                                            PRSocketOptionData* opt) {
+>>>>>>> upstream-releases
   switch (opt->option) {
     case PR_SockOpt_Nonblocking:
       opt->value.non_blocking = PR_TRUE;
@@ -296,8 +389,8 @@ static PRStatus TransportLayerGetsockoption(PRFileDesc *f,
 }
 
 // Imitate setting socket options. These are mostly noops.
-static PRStatus TransportLayerSetsockoption(PRFileDesc *f,
-                                            const PRSocketOptionData *opt) {
+static PRStatus TransportLayerSetsockoption(PRFileDesc* f,
+                                            const PRSocketOptionData* opt) {
   switch (opt->option) {
     case PR_SockOpt_Nonblocking:
       return PR_SUCCESS;
@@ -311,19 +404,28 @@ static PRStatus TransportLayerSetsockoption(PRFileDesc *f,
   return PR_FAILURE;
 }
 
+<<<<<<< HEAD
 static int32_t TransportLayerSendfile(PRFileDesc *out, PRSendFileData *in,
                                       PRTransmitFileFlags flags,
                                       PRIntervalTime to) {
+||||||| merged common ancestors
+static int32_t TransportLayerSendfile(PRFileDesc *out, PRSendFileData *in,
+                                      PRTransmitFileFlags flags, PRIntervalTime to) {
+=======
+static int32_t TransportLayerSendfile(PRFileDesc* out, PRSendFileData* in,
+                                      PRTransmitFileFlags flags,
+                                      PRIntervalTime to) {
+>>>>>>> upstream-releases
   UNIMPLEMENTED;
   return -1;
 }
 
-static PRStatus TransportLayerConnectContinue(PRFileDesc *f, int16_t flags) {
+static PRStatus TransportLayerConnectContinue(PRFileDesc* f, int16_t flags) {
   UNIMPLEMENTED;
   return PR_FAILURE;
 }
 
-static int32_t TransportLayerReserved(PRFileDesc *f) {
+static int32_t TransportLayerReserved(PRFileDesc* f) {
   UNIMPLEMENTED;
   return -1;
 }
@@ -409,8 +511,18 @@ void TransportLayerDtls::WasInserted() {
 // if ALPN is not negotiated.
 // Note: we only support Unicode strings here, which are encoded into UTF-8,
 // even though ALPN ostensibly allows arbitrary octet sequences.
+<<<<<<< HEAD
 nsresult TransportLayerDtls::SetAlpn(const std::set<std::string> &alpn_allowed,
                                      const std::string &alpn_default) {
+||||||| merged common ancestors
+nsresult TransportLayerDtls::SetAlpn(
+  const std::set<std::string>& alpn_allowed,
+  const std::string& alpn_default) {
+
+=======
+nsresult TransportLayerDtls::SetAlpn(const std::set<std::string>& alpn_allowed,
+                                     const std::string& alpn_default) {
+>>>>>>> upstream-releases
   alpn_allowed_ = alpn_allowed;
   alpn_default_ = alpn_default;
 
@@ -426,15 +538,25 @@ nsresult TransportLayerDtls::SetVerificationAllowAll() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult TransportLayerDtls::SetVerificationDigest(
     const std::string digest_algorithm, const unsigned char *digest_value,
     size_t digest_len) {
+||||||| merged common ancestors
+nsresult
+TransportLayerDtls::SetVerificationDigest(const std::string digest_algorithm,
+                                          const unsigned char *digest_value,
+                                          size_t digest_len) {
+=======
+nsresult TransportLayerDtls::SetVerificationDigest(const DtlsDigest& digest) {
+>>>>>>> upstream-releases
   // Defensive programming
   if (verification_mode_ != VERIFY_UNSET &&
       verification_mode_ != VERIFY_DIGEST) {
     return NS_ERROR_ALREADY_INITIALIZED;
   }
 
+<<<<<<< HEAD
   // Note that we do not sanity check these values for length.
   // We merely ensure they will fit into the buffer.
   // TODO: is there a Data construct we could use?
@@ -443,8 +565,20 @@ nsresult TransportLayerDtls::SetVerificationDigest(
   digests_.push_back(
       new VerificationDigest(digest_algorithm, digest_value, digest_len));
 
-  verification_mode_ = VERIFY_DIGEST;
+||||||| merged common ancestors
+  // Note that we do not sanity check these values for length.
+  // We merely ensure they will fit into the buffer.
+  // TODO: is there a Data construct we could use?
+  if (digest_len > kMaxDigestLength)
+    return NS_ERROR_INVALID_ARG;
 
+  digests_.push_back(new VerificationDigest(
+      digest_algorithm, digest_value, digest_len));
+
+=======
+  digests_.push_back(digest);
+>>>>>>> upstream-releases
+  verification_mode_ = VERIFY_DIGEST;
   return NS_OK;
 }
 
@@ -483,8 +617,17 @@ bool TransportLayerDtls::Setup() {
   UniquePRFileDesc pr_fd(
       PR_CreateIOLayerStub(transport_layer_identity, &TransportLayerMethods));
   MOZ_ASSERT(pr_fd != nullptr);
+<<<<<<< HEAD
   if (!pr_fd) return false;
   pr_fd->secret = reinterpret_cast<PRFilePrivate *>(nspr_io_adapter_.get());
+||||||| merged common ancestors
+  if (!pr_fd)
+    return false;
+  pr_fd->secret = reinterpret_cast<PRFilePrivate *>(nspr_io_adapter_.get());
+=======
+  if (!pr_fd) return false;
+  pr_fd->secret = reinterpret_cast<PRFilePrivate*>(nspr_io_adapter_.get());
+>>>>>>> upstream-releases
 
   UniquePRFileDesc ssl_fd(DTLS_ImportFD(nullptr, pr_fd.get()));
   MOZ_ASSERT(ssl_fd != nullptr);  // This should never happen
@@ -600,7 +743,7 @@ bool TransportLayerDtls::Setup() {
 
   // Certificate validation
   rv = SSL_AuthCertificateHook(ssl_fd.get(), AuthCertificateHook,
-                               reinterpret_cast<void *>(this));
+                               reinterpret_cast<void*>(this));
   if (rv != SECSuccess) {
     MOZ_MTLOG(ML_ERROR, "Couldn't set certificate validation hook");
     return false;
@@ -811,18 +954,16 @@ std::vector<uint16_t> TransportLayerDtls::GetDefaultSrtpCiphers() {
   // we don't really enough entropy to prefer this over 128 bit
   ciphers.push_back(kDtlsSrtpAeadAes256Gcm);
   ciphers.push_back(kDtlsSrtpAes128CmHmacSha1_80);
+#ifndef NIGHTLY_BUILD
+  // To support bug 1491583 lets try to find out if we get bug reports if we no
+  // longer offer this in Nightly builds.
   ciphers.push_back(kDtlsSrtpAes128CmHmacSha1_32);
+#endif
 
   return ciphers;
 }
 
-void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
-  if (state <= state_) {
-    MOZ_MTLOG(ML_ERROR, "Lower layer state is going backwards from ours");
-    TL_SET_STATE(TS_ERROR);
-    return;
-  }
-
+void TransportLayerDtls::StateChange(TransportLayer* layer, State state) {
   switch (state) {
     case TS_NONE:
       MOZ_ASSERT(false);  // Can't happen
@@ -839,6 +980,7 @@ void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
       break;
 
     case TS_OPEN:
+<<<<<<< HEAD
       MOZ_MTLOG(ML_INFO, LAYER_INFO << "Lower layer is now open; starting TLS");
       // Async, since the ICE layer might need to send a STUN response, and we
       // don't want the handshake to start until that is sent.
@@ -848,6 +990,37 @@ void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
       timer_->InitWithNamedFuncCallback(TimerCallback, this, 0,
                                         nsITimer::TYPE_ONE_SHOT,
                                         "TransportLayerDtls::TimerCallback");
+||||||| merged common ancestors
+      MOZ_MTLOG(ML_INFO,
+                LAYER_INFO << "Lower layer is now open; starting TLS");
+      // Async, since the ICE layer might need to send a STUN response, and we
+      // don't want the handshake to start until that is sent.
+      TL_SET_STATE(TS_CONNECTING);
+      timer_->Cancel();
+      timer_->SetTarget(target_);
+      timer_->InitWithNamedFuncCallback(TimerCallback,
+                                        this,
+                                        0,
+                                        nsITimer::TYPE_ONE_SHOT,
+                                        "TransportLayerDtls::TimerCallback");
+=======
+      if (timer_) {
+        MOZ_MTLOG(ML_INFO,
+                  LAYER_INFO << "Lower layer is now open; starting TLS");
+        timer_->Cancel();
+        timer_->SetTarget(target_);
+        // Async, since the ICE layer might need to send a STUN response, and we
+        // don't want the handshake to start until that is sent.
+        timer_->InitWithNamedFuncCallback(TimerCallback, this, 0,
+                                          nsITimer::TYPE_ONE_SHOT,
+                                          "TransportLayerDtls::TimerCallback");
+        TL_SET_STATE(TS_CONNECTING);
+      } else {
+        // We have already completed DTLS. Can happen if the ICE layer failed
+        // due to a loss of network, and then recovered.
+        TL_SET_STATE(TS_OPEN);
+      }
+>>>>>>> upstream-releases
       break;
 
     case TS_CLOSED:
@@ -863,6 +1036,11 @@ void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
 }
 
 void TransportLayerDtls::Handshake() {
+  if (!timer_) {
+    // We are done with DTLS, regardless of the state changes of lower layers
+    return;
+  }
+
   // Clear the retransmit timer
   timer_->Cancel();
 
@@ -888,7 +1066,14 @@ void TransportLayerDtls::Handshake() {
 
     TL_SET_STATE(TS_OPEN);
 
+<<<<<<< HEAD
     RecordTlsTelemetry();
+||||||| merged common ancestors
+    RecordCipherTelemetry();
+=======
+    RecordTlsTelemetry();
+    timer_ = nullptr;
+>>>>>>> upstream-releases
   } else {
     int32_t err = PR_GetError();
     switch (err) {
@@ -913,7 +1098,7 @@ void TransportLayerDtls::Handshake() {
         }
         break;
       default:
-        const char *err_msg = PR_ErrorToName(err);
+        const char* err_msg = PR_ErrorToName(err);
         MOZ_MTLOG(ML_ERROR, LAYER_INFO << "DTLS handshake error " << err << " ("
                                        << err_msg << ")");
         TL_SET_STATE(TS_ERROR);
@@ -982,8 +1167,17 @@ bool TransportLayerDtls::CheckAlpn() {
   return true;
 }
 
+<<<<<<< HEAD
 void TransportLayerDtls::PacketReceived(TransportLayer *layer,
                                         MediaPacket &packet) {
+||||||| merged common ancestors
+
+void TransportLayerDtls::PacketReceived(TransportLayer* layer,
+                                        MediaPacket& packet) {
+=======
+void TransportLayerDtls::PacketReceived(TransportLayer* layer,
+                                        MediaPacket& packet) {
+>>>>>>> upstream-releases
   CheckThread();
   MOZ_MTLOG(ML_DEBUG, LAYER_INFO << "PacketReceived(" << packet.len() << ")");
 
@@ -1047,9 +1241,16 @@ void TransportLayerDtls::GetDecryptedPackets() {
   }
 }
 
+<<<<<<< HEAD
 void TransportLayerDtls::SetState(State state, const char *file,
+||||||| merged common ancestors
+void TransportLayerDtls::SetState(State state,
+                                  const char *file,
+=======
+void TransportLayerDtls::SetState(State state, const char* file,
+>>>>>>> upstream-releases
                                   unsigned line) {
-  if (state > state_) {
+  if (timer_) {
     switch (state) {
       case TS_NONE:
       case TS_INIT:
@@ -1067,8 +1268,6 @@ void TransportLayerDtls::SetState(State state, const char *file,
         }
         break;
     }
-  } else {
-    MOZ_ASSERT(false, "Invalid state transition");
   }
 
   TransportLayer::SetState(state, file, line);
@@ -1109,12 +1308,23 @@ TransportResult TransportLayerDtls::SendPacket(MediaPacket &packet) {
   return TE_ERROR;
 }
 
+<<<<<<< HEAD
 SECStatus TransportLayerDtls::GetClientAuthDataHook(
     void *arg, PRFileDesc *fd, CERTDistNames *caNames,
     CERTCertificate **pRetCert, SECKEYPrivateKey **pRetKey) {
+||||||| merged common ancestors
+SECStatus TransportLayerDtls::GetClientAuthDataHook(void *arg, PRFileDesc *fd,
+                                                    CERTDistNames *caNames,
+                                                    CERTCertificate **pRetCert,
+                                                    SECKEYPrivateKey **pRetKey) {
+=======
+SECStatus TransportLayerDtls::GetClientAuthDataHook(
+    void* arg, PRFileDesc* fd, CERTDistNames* caNames,
+    CERTCertificate** pRetCert, SECKEYPrivateKey** pRetKey) {
+>>>>>>> upstream-releases
   MOZ_MTLOG(ML_DEBUG, "Server requested client auth");
 
-  TransportLayerDtls *stream = reinterpret_cast<TransportLayerDtls *>(arg);
+  TransportLayerDtls* stream = reinterpret_cast<TransportLayerDtls*>(arg);
   stream->CheckThread();
 
   if (!stream->identity_) {
@@ -1140,13 +1350,20 @@ SECStatus TransportLayerDtls::GetClientAuthDataHook(
   return SECSuccess;
 }
 
+<<<<<<< HEAD
 nsresult TransportLayerDtls::SetSrtpCiphers(
     const std::vector<uint16_t> &ciphers) {
+||||||| merged common ancestors
+nsresult TransportLayerDtls::SetSrtpCiphers(const std::vector<uint16_t>& ciphers) {
+=======
+nsresult TransportLayerDtls::SetSrtpCiphers(
+    const std::vector<uint16_t>& ciphers) {
+>>>>>>> upstream-releases
   enabled_srtp_ciphers_ = std::move(ciphers);
   return NS_OK;
 }
 
-nsresult TransportLayerDtls::GetSrtpCipher(uint16_t *cipher) const {
+nsresult TransportLayerDtls::GetSrtpCipher(uint16_t* cipher) const {
   CheckThread();
   if (srtp_cipher_ == 0) {
     return NS_ERROR_NOT_AVAILABLE;
@@ -1173,10 +1390,24 @@ static SSLHandshakeType SrtpXtnServerMessage(PRFileDesc *fd) {
              : ssl_hs_server_hello;
 }
 
+<<<<<<< HEAD
 /* static */ PRBool TransportLayerDtls::WriteSrtpXtn(
     PRFileDesc *fd, SSLHandshakeType message, uint8_t *data, unsigned int *len,
     unsigned int max_len, void *arg) {
   auto self = reinterpret_cast<TransportLayerDtls *>(arg);
+||||||| merged common ancestors
+/* static */ PRBool TransportLayerDtls::WriteSrtpXtn(
+    PRFileDesc* fd, SSLHandshakeType message, uint8_t* data,
+    unsigned int* len, unsigned int max_len, void* arg) {
+  auto self = reinterpret_cast<TransportLayerDtls*>(arg);
+=======
+/* static */
+PRBool TransportLayerDtls::WriteSrtpXtn(PRFileDesc* fd,
+                                        SSLHandshakeType message, uint8_t* data,
+                                        unsigned int* len, unsigned int max_len,
+                                        void* arg) {
+  auto self = reinterpret_cast<TransportLayerDtls*>(arg);
+>>>>>>> upstream-releases
 
   // ClientHello: send all supported versions.
   if (message == ssl_hs_client_hello) {
@@ -1208,7 +1439,13 @@ static SSLHandshakeType SrtpXtnServerMessage(PRFileDesc *fd) {
       return false;
     }
 
+<<<<<<< HEAD
     uint8_t *cursor = WriteUint16(data, 2);  // Length = 2.
+||||||| merged common ancestors
+    uint8_t* cursor = WriteUint16(data, 2); // Length = 2.
+=======
+    uint8_t* cursor = WriteUint16(data, 2);  // Length = 2.
+>>>>>>> upstream-releases
     cursor = WriteUint16(cursor, self->srtp_cipher_);
     *cursor++ = 0;  // No MKI
     *len = cursor - data;
@@ -1220,16 +1457,36 @@ static SSLHandshakeType SrtpXtnServerMessage(PRFileDesc *fd) {
 
 class TlsParser {
  public:
+<<<<<<< HEAD
   TlsParser(const uint8_t *data, size_t len) : cursor_(data), remaining_(len) {}
+||||||| merged common ancestors
+  TlsParser(const uint8_t* data, size_t len)
+      : cursor_(data), remaining_(len) {}
+=======
+  TlsParser(const uint8_t* data, size_t len) : cursor_(data), remaining_(len) {}
+>>>>>>> upstream-releases
 
   bool error() const { return error_; }
   size_t remaining() const { return remaining_; }
 
+<<<<<<< HEAD
   template <typename T,
             class = typename std::enable_if<std::is_unsigned<T>::value>::type>
   void Read(T *v, size_t sz = sizeof(T)) {
     MOZ_ASSERT(sz <= sizeof(T),
                "Type is too small to hold the value requested");
+||||||| merged common ancestors
+  template<typename T,
+           class = typename std::enable_if<std::is_unsigned<T>::value>::type>
+  void Read(T* v, size_t sz = sizeof(T)) {
+    MOZ_ASSERT(sz <= sizeof(T), "Type is too small to hold the value requested");
+=======
+  template <typename T,
+            class = typename std::enable_if<std::is_unsigned<T>::value>::type>
+  void Read(T* v, size_t sz = sizeof(T)) {
+    MOZ_ASSERT(sz <= sizeof(T),
+               "Type is too small to hold the value requested");
+>>>>>>> upstream-releases
     if (remaining_ < sz) {
       error_ = true;
       return;
@@ -1243,9 +1500,19 @@ class TlsParser {
     *v = result;
   }
 
+<<<<<<< HEAD
   template <typename T,
             class = typename std::enable_if<std::is_unsigned<T>::value>::type>
   void ReadVector(std::vector<T> *v, size_t w) {
+||||||| merged common ancestors
+  template<typename T,
+           class = typename std::enable_if<std::is_unsigned<T>::value>::type>
+  void ReadVector(std::vector<T>* v, size_t w) {
+=======
+  template <typename T,
+            class = typename std::enable_if<std::is_unsigned<T>::value>::type>
+  void ReadVector(std::vector<T>* v, size_t w) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(v->empty(), "vector needs to be empty");
 
     uint32_t len;
@@ -1288,9 +1555,20 @@ class TlsParser {
   bool error_ = false;
 };
 
+<<<<<<< HEAD
 /* static */ SECStatus TransportLayerDtls::HandleSrtpXtn(
     PRFileDesc *fd, SSLHandshakeType message, const uint8_t *data,
     unsigned int len, SSLAlertDescription *alert, void *arg) {
+||||||| merged common ancestors
+/* static */ SECStatus TransportLayerDtls::HandleSrtpXtn(
+    PRFileDesc* fd, SSLHandshakeType message, const uint8_t* data,
+    unsigned int len, SSLAlertDescription* alert, void* arg) {
+=======
+/* static */
+SECStatus TransportLayerDtls::HandleSrtpXtn(
+    PRFileDesc* fd, SSLHandshakeType message, const uint8_t* data,
+    unsigned int len, SSLAlertDescription* alert, void* arg) {
+>>>>>>> upstream-releases
   static const uint8_t kTlsAlertHandshakeFailure = 40;
   static const uint8_t kTlsAlertIllegalParameter = 47;
   static const uint8_t kTlsAlertDecodeError = 50;
@@ -1346,18 +1624,43 @@ class TlsParser {
 
 nsresult TransportLayerDtls::ExportKeyingMaterial(const std::string &label,
                                                   bool use_context,
+<<<<<<< HEAD
                                                   const std::string &context,
                                                   unsigned char *out,
+||||||| merged common ancestors
+                                                  const std::string& context,
+                                                  unsigned char *out,
+=======
+                                                  const std::string& context,
+                                                  unsigned char* out,
+>>>>>>> upstream-releases
                                                   unsigned int outlen) {
   CheckThread();
   if (state_ != TS_OPEN) {
     MOZ_ASSERT(false, "Transport must be open for ExportKeyingMaterial");
     return NS_ERROR_NOT_AVAILABLE;
   }
+<<<<<<< HEAD
   SECStatus rv = SSL_ExportKeyingMaterial(
       ssl_fd_.get(), label.c_str(), label.size(), use_context,
       reinterpret_cast<const unsigned char *>(context.c_str()), context.size(),
       out, outlen);
+||||||| merged common ancestors
+  SECStatus rv = SSL_ExportKeyingMaterial(ssl_fd_.get(),
+                                          label.c_str(),
+                                          label.size(),
+                                          use_context,
+                                          reinterpret_cast<const unsigned char *>(
+                                              context.c_str()),
+                                          context.size(),
+                                          out,
+                                          outlen);
+=======
+  SECStatus rv = SSL_ExportKeyingMaterial(
+      ssl_fd_.get(), label.c_str(), label.size(), use_context,
+      reinterpret_cast<const unsigned char*>(context.c_str()), context.size(),
+      out, outlen);
+>>>>>>> upstream-releases
   if (rv != SECSuccess) {
     MOZ_MTLOG(ML_ERROR, "Couldn't export SSL keying material");
     return NS_ERROR_FAILURE;
@@ -1366,14 +1669,22 @@ nsresult TransportLayerDtls::ExportKeyingMaterial(const std::string &label,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 SECStatus TransportLayerDtls::AuthCertificateHook(void *arg, PRFileDesc *fd,
+||||||| merged common ancestors
+SECStatus TransportLayerDtls::AuthCertificateHook(void *arg,
+                                                  PRFileDesc *fd,
+=======
+SECStatus TransportLayerDtls::AuthCertificateHook(void* arg, PRFileDesc* fd,
+>>>>>>> upstream-releases
                                                   PRBool checksig,
                                                   PRBool isServer) {
-  TransportLayerDtls *stream = reinterpret_cast<TransportLayerDtls *>(arg);
+  TransportLayerDtls* stream = reinterpret_cast<TransportLayerDtls*>(arg);
   stream->CheckThread();
   return stream->AuthCertificateHook(fd, checksig, isServer);
 }
 
+<<<<<<< HEAD
 SECStatus TransportLayerDtls::CheckDigest(
     const RefPtr<VerificationDigest> &digest,
     UniqueCERTCertificate &peer_cert) const {
@@ -1385,14 +1696,47 @@ SECStatus TransportLayerDtls::CheckDigest(
   nsresult res = DtlsIdentity::ComputeFingerprint(
       peer_cert, digest->algorithm_, computed_digest, sizeof(computed_digest),
       &computed_digest_len);
+||||||| merged common ancestors
+SECStatus
+TransportLayerDtls::CheckDigest(const RefPtr<VerificationDigest>& digest,
+                                UniqueCERTCertificate& peer_cert) const {
+  unsigned char computed_digest[kMaxDigestLength];
+  size_t computed_digest_len;
+
+  MOZ_MTLOG(ML_DEBUG, LAYER_INFO << "Checking digest, algorithm="
+            << digest->algorithm_);
+  nsresult res =
+      DtlsIdentity::ComputeFingerprint(peer_cert,
+                                       digest->algorithm_,
+                                       computed_digest,
+                                       sizeof(computed_digest),
+                                       &computed_digest_len);
+=======
+SECStatus TransportLayerDtls::CheckDigest(
+    const DtlsDigest& digest, UniqueCERTCertificate& peer_cert) const {
+  DtlsDigest computed_digest(digest.algorithm_);
+
+  MOZ_MTLOG(ML_DEBUG,
+            LAYER_INFO << "Checking digest, algorithm=" << digest.algorithm_);
+  nsresult res = DtlsIdentity::ComputeFingerprint(peer_cert, &computed_digest);
+>>>>>>> upstream-releases
   if (NS_FAILED(res)) {
+<<<<<<< HEAD
     MOZ_MTLOG(ML_ERROR, "Could not compute peer fingerprint for digest "
                             << digest->algorithm_);
+||||||| merged common ancestors
+    MOZ_MTLOG(ML_ERROR, "Could not compute peer fingerprint for digest " <<
+              digest->algorithm_);
+=======
+    MOZ_MTLOG(ML_ERROR, "Could not compute peer fingerprint for digest "
+                            << digest.algorithm_);
+>>>>>>> upstream-releases
     // Go to end
     PR_SetError(SSL_ERROR_BAD_CERTIFICATE, 0);
     return SECFailure;
   }
 
+<<<<<<< HEAD
   if (computed_digest_len != digest->len_) {
     MOZ_MTLOG(ML_ERROR, "Digest is wrong length "
                             << digest->len_ << " should be "
@@ -1403,6 +1747,19 @@ SECStatus TransportLayerDtls::CheckDigest(
   }
 
   if (memcmp(digest->value_, computed_digest, computed_digest_len) != 0) {
+||||||| merged common ancestors
+  if (computed_digest_len != digest->len_) {
+    MOZ_MTLOG(ML_ERROR, "Digest is wrong length " << digest->len_ <<
+              " should be " << computed_digest_len << " for algorithm " <<
+              digest->algorithm_);
+    PR_SetError(SSL_ERROR_BAD_CERTIFICATE, 0);
+    return SECFailure;
+  }
+
+  if (memcmp(digest->value_, computed_digest, computed_digest_len) != 0) {
+=======
+  if (computed_digest != digest) {
+>>>>>>> upstream-releases
     MOZ_MTLOG(ML_ERROR, "Digest does not match");
     PR_SetError(SSL_ERROR_BAD_CERTIFICATE, 0);
     return SECFailure;
@@ -1411,7 +1768,14 @@ SECStatus TransportLayerDtls::CheckDigest(
   return SECSuccess;
 }
 
+<<<<<<< HEAD
 SECStatus TransportLayerDtls::AuthCertificateHook(PRFileDesc *fd,
+||||||| merged common ancestors
+
+SECStatus TransportLayerDtls::AuthCertificateHook(PRFileDesc *fd,
+=======
+SECStatus TransportLayerDtls::AuthCertificateHook(PRFileDesc* fd,
+>>>>>>> upstream-releases
                                                   PRBool checksig,
                                                   PRBool isServer) {
   CheckThread();
@@ -1461,8 +1825,8 @@ SECStatus TransportLayerDtls::AuthCertificateHook(PRFileDesc *fd,
   return SECFailure;
 }
 
-void TransportLayerDtls::TimerCallback(nsITimer *timer, void *arg) {
-  TransportLayerDtls *dtls = reinterpret_cast<TransportLayerDtls *>(arg);
+void TransportLayerDtls::TimerCallback(nsITimer* timer, void* arg) {
+  TransportLayerDtls* dtls = reinterpret_cast<TransportLayerDtls*>(arg);
 
   MOZ_MTLOG(ML_DEBUG, "DTLS timer expired");
 

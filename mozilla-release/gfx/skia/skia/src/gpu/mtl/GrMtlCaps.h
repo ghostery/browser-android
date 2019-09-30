@@ -33,8 +33,14 @@ public:
     int getRenderTargetSampleCount(int requestedCount, GrPixelConfig) const override;
     int maxRenderTargetSampleCount(GrPixelConfig) const override;
 
+<<<<<<< HEAD
     bool surfaceSupportsWritePixels(const GrSurface*) const override { return true; }
     bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
+||||||| merged common ancestors
+    bool surfaceSupportsWritePixels(const GrSurface* surface) const override { return true; }
+=======
+    bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
+>>>>>>> upstream-releases
 
     bool isConfigCopyable(GrPixelConfig config) const override {
         return true;
@@ -46,6 +52,7 @@ public:
     const StencilFormat& preferredStencilFormat() const {
         return fPreferredStencilFormat;
     }
+<<<<<<< HEAD
 
     bool canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCount, GrSurfaceOrigin dstOrigin,
                        GrPixelConfig srcConfig, int srcSampleCount, GrSurfaceOrigin srcOrigin,
@@ -62,23 +69,37 @@ public:
                         const SkIRect& srcRect, const SkIPoint& dstPoint) const override;
 
     bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
+||||||| merged common ancestors
+#endif
+    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
+=======
+
+    bool canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCount, GrSurfaceOrigin dstOrigin,
+                       GrPixelConfig srcConfig, int srcSampleCount, GrSurfaceOrigin srcOrigin,
+                       const SkIRect& srcRect, const SkIPoint& dstPoint,
+                       bool areDstSrcSameObj) const;
+
+    bool canCopyAsDraw(GrPixelConfig dstConfig, bool dstIsRenderable,
+                       GrPixelConfig srcConfig, bool srcIsTextureable) const;
+
+    bool canCopyAsDrawThenBlit(GrPixelConfig dstConfig, GrPixelConfig srcConfig,
+                               bool srcIsTextureable) const;
+
+    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
+>>>>>>> upstream-releases
                             bool* rectsMustMatch, bool* disallowSubrect) const override {
         return false;
     }
 
-    bool validateBackendTexture(const GrBackendTexture&, SkColorType,
-                                GrPixelConfig*) const override {
-        return false;
-    }
-    bool validateBackendRenderTarget(const GrBackendRenderTarget&, SkColorType,
-                                     GrPixelConfig*) const override {
-        return false;
-    }
+    GrPixelConfig validateBackendRenderTarget(const GrBackendRenderTarget&,
+                                              SkColorType) const override;
 
-    bool getConfigFromBackendFormat(const GrBackendFormat&, SkColorType,
-                                    GrPixelConfig*) const override {
-        return false;
-    }
+    GrPixelConfig getConfigFromBackendFormat(const GrBackendFormat&, SkColorType) const override;
+
+    GrPixelConfig getYUVAConfigFromBackendFormat(const GrBackendFormat&) const override;
+
+    GrBackendFormat getBackendFormatFromGrColorType(GrColorType ct,
+                                                    GrSRGBEncoded srgbEncoded) const override;
 
 private:
     void initFeatureSet(MTLFeatureSet featureSet);
@@ -87,12 +108,21 @@ private:
 
     void initGrCaps(const id<MTLDevice> device);
     void initShaderCaps();
+<<<<<<< HEAD
 
 #ifdef GR_TEST_UTILS
     GrBackendFormat onCreateFormatFromBackendTexture(const GrBackendTexture&) const override;
 #endif
 
+||||||| merged common ancestors
+=======
+
+>>>>>>> upstream-releases
     void initConfigTable();
+
+    bool onSurfaceSupportsWritePixels(const GrSurface*) const override { return true; }
+    bool onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
+                          const SkIRect& srcRect, const SkIPoint& dstPoint) const override;
 
     struct ConfigInfo {
         ConfigInfo() : fFlags(0) {}

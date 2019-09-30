@@ -17,11 +17,20 @@ from taskgraph.util.schema import (
     resolve_keyed_by,
 )
 from taskgraph.util.taskcluster import get_artifact_prefix
-from taskgraph.util.platforms import archive_format, executable_extension
+from taskgraph.util.platforms import archive_format, executable_extension, architecture
 from taskgraph.util.workertypes import worker_type_implementation
+<<<<<<< HEAD
 from taskgraph.transforms.job import job_description_schema
 from voluptuous import Any, Required, Optional
+||||||| merged common ancestors
+from taskgraph.transforms.task import task_description_schema
+from voluptuous import Any, Required, Optional
+=======
+from taskgraph.transforms.job import job_description_schema
+from voluptuous import Required, Optional
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 # Voluptuous uses marker objects as dictionary *keys*, but they are not
 # comparable, so we cast all of the keys back to regular strings
 job_description_schema = {str(k): v for k, v in job_description_schema.schema.iteritems()}
@@ -33,6 +42,27 @@ taskref_or_string = Any(
     {Required('task-reference'): basestring})
 
 packaging_description_schema = schema.extend({
+||||||| merged common ancestors
+transforms = TransformSequence()
+
+# Voluptuous uses marker objects as dictionary *keys*, but they are not
+# comparable, so we cast all of the keys back to regular strings
+task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
+
+
+# shortcut for a string where task references are allowed
+taskref_or_string = Any(
+    basestring,
+    {Required('task-reference'): basestring})
+
+packaging_description_schema = Schema({
+    # the dependant task (object) for this  job, used to inform repackaging.
+    Required('dependent-task'): object,
+
+=======
+
+packaging_description_schema = schema.extend({
+>>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the signed things
     Required('depname', default='build'): basestring,
 
@@ -60,7 +90,8 @@ packaging_description_schema = schema.extend({
     Optional('shipping-product'): job_description_schema['shipping-product'],
     Optional('shipping-phase'): job_description_schema['shipping-phase'],
 
-    Required('package-formats'): optionally_keyed_by('build-platform', 'project', [basestring]),
+    Required('package-formats'): optionally_keyed_by(
+        'build-platform', 'release-type', [basestring]),
 
     # All l10n jobs use mozharness
     Required('mozharness'): {
@@ -89,7 +120,10 @@ packaging_description_schema = schema.extend({
 #   directory.
 PACKAGE_FORMATS = {
     'mar': {
-        'args': ['mar'],
+        'args': [
+            'mar',
+            '--arch', '{architecture}',
+        ],
         'inputs': {
             'input': 'target{archive_format}',
             'mar': 'mar{executable_extension}',
@@ -97,13 +131,17 @@ PACKAGE_FORMATS = {
         'output': "target.complete.mar",
     },
     'mar-bz2': {
-        'args': ['mar', "--format", "bz2"],
+        'args': [
+            'mar', "--format", "bz2",
+            '--arch', '{architecture}',
+        ],
         'inputs': {
             'input': 'target{archive_format}',
             'mar': 'mar{executable_extension}',
         },
         'output': "target.bz2.complete.mar",
     },
+<<<<<<< HEAD
     'msi': {
         'args': ['msi', '--wsx', '{wsx-stub}',
                  '--version', '{version_display}',
@@ -116,6 +154,21 @@ PACKAGE_FORMATS = {
         },
         'output': 'target.installer.msi',
     },
+||||||| merged common ancestors
+=======
+    'msi': {
+        'args': ['msi', '--wsx', '{wsx-stub}',
+                 '--version', '{version_display}',
+                 '--locale', '{_locale}',
+                 '--arch', '{architecture}',
+                 '--candle', '{fetch-dir}/candle.exe',
+                 '--light', '{fetch-dir}/light.exe'],
+        'inputs': {
+            'setupexe': 'target.installer.exe',
+        },
+        'output': 'target.installer.msi',
+    },
+>>>>>>> upstream-releases
     'dmg': {
         'args': ['dmg'],
         'inputs': {
@@ -178,8 +231,10 @@ def handle_keyed_by(config, jobs):
         for field in fields:
             resolve_keyed_by(
                 item=job, field=field,
-                project=config.params['project'],
                 item_name="?",
+                **{
+                    'release-type': config.params['release_type'],
+                }
             )
         yield job
 
@@ -222,9 +277,8 @@ def make_job_description(config, jobs):
             treeherder.setdefault('symbol', 'Nr')
         else:
             treeherder.setdefault('symbol', 'Rpk')
-        dep_th_platform = dep_job.task.get('extra', {}).get(
-            'treeherder', {}).get('machine', {}).get('platform', '')
-        treeherder.setdefault('platform', "{}/opt".format(dep_th_platform))
+        dep_th_platform = dep_job.task.get('extra', {}).get('treeherder-platform')
+        treeherder.setdefault('platform', dep_th_platform)
         treeherder.setdefault('tier', 1)
         treeherder.setdefault('kind', 'build')
 
@@ -251,9 +305,25 @@ def make_job_description(config, jobs):
             dependencies['build'] = "build-{}/opt".format(
                 dependencies[build_task][13:dependencies[build_task].rfind('-')])
             build_task = 'build'
+<<<<<<< HEAD
             _fetch_subst_locale = locale
 
         level = config.params['level']
+||||||| merged common ancestors
+
+        attributes = copy_attributes_from_dependent_job(dep_job)
+        attributes['repackage_type'] = 'repackage'
+
+        locale = None
+        if job.get('locale'):
+            locale = job['locale']
+            attributes['locale'] = locale
+
+        level = config.params['level']
+=======
+            _fetch_subst_locale = locale
+
+>>>>>>> upstream-releases
         build_platform = attributes['build_platform']
 
         use_stub = attributes.get('stub-installer')
@@ -269,9 +339,16 @@ def make_job_description(config, jobs):
             substs = {
                 'archive_format': archive_format(build_platform),
                 'executable_extension': executable_extension(build_platform),
+<<<<<<< HEAD
                 '_locale': _fetch_subst_locale,
                 '_arch': _fetch_subst_arch,
                 'version_display': config.params['version'],
+||||||| merged common ancestors
+=======
+                '_locale': _fetch_subst_locale,
+                'architecture': architecture(build_platform),
+                'version_display': config.params['version'],
+>>>>>>> upstream-releases
             }
             # Allow us to replace args a well, but specifying things expanded in mozharness
             # Without breaking .format and without allowing unknown through
@@ -281,9 +358,18 @@ def make_job_description(config, jobs):
                 name: filename.format(**substs)
                 for name, filename in command['inputs'].items()
             }
+<<<<<<< HEAD
             command['args'] = [
                 arg.format(**substs) for arg in command['args']
             ]
+||||||| merged common ancestors
+=======
+            command['args'] = [
+                arg.format(**substs) for arg in command['args']
+            ]
+            if 'installer' in format and 'aarch64' not in build_platform:
+                command['args'].append('--use-upx')
+>>>>>>> upstream-releases
             repackage_config.append(command)
 
         run = job.get('mozharness', {})
@@ -310,11 +396,12 @@ def make_job_description(config, jobs):
             worker.setdefault('env', {}).update(LOCALE=locale)
 
         if build_platform.startswith('win'):
-            worker_type = 'aws-provisioner-v1/gecko-%s-b-win2012' % level
+            worker_type = 'b-win2012'
             run['use-magic-mh-args'] = False
+            run['use-caches'] = False
         else:
             if build_platform.startswith(('linux', 'macosx')):
-                worker_type = 'aws-provisioner-v1/gecko-%s-b-linux' % level
+                worker_type = 'b-linux'
             else:
                 raise NotImplementedError(
                     'Unsupported build_platform: "{}"'.format(build_platform)
@@ -324,7 +411,7 @@ def make_job_description(config, jobs):
             worker['docker-image'] = {"in-tree": "debian7-amd64-build"}
 
         worker['artifacts'] = _generate_task_output_files(
-            dep_job, worker_type_implementation(worker_type),
+            dep_job, worker_type_implementation(config.graph_config, worker_type),
             repackage_config=repackage_config,
             locale=locale,
         )

@@ -71,12 +71,28 @@ bool MIDIPort::Initialize(const MIDIPortInfo& aPortInfo, bool aSysexEnabled) {
   return true;
 }
 
+<<<<<<< HEAD
 void MIDIPort::UnsetIPCPort() { mPort = nullptr; }
 
 JSObject* MIDIPort::WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) {
   return MIDIPort_Binding::Wrap(aCx, this, aGivenProto);
 }
+||||||| merged common ancestors
+void
+MIDIPort::UnsetIPCPort()
+{
+  mPort = nullptr;
+}
+
+JSObject*
+MIDIPort::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+  return MIDIPort_Binding::Wrap(aCx, this, aGivenProto);
+}
+=======
+void MIDIPort::UnsetIPCPort() { mPort = nullptr; }
+>>>>>>> upstream-releases
 
 void MIDIPort::GetId(nsString& aRetVal) const {
   MOZ_ASSERT(mPort);

@@ -387,10 +387,22 @@ Context::QuotaInitRunnable::Run() {
 
       QuotaManager* qm = QuotaManager::Get();
       MOZ_DIAGNOSTIC_ASSERT(qm);
+<<<<<<< HEAD
       nsresult rv = qm->EnsureOriginIsInitialized(
           PERSISTENCE_TYPE_DEFAULT, mQuotaInfo.mSuffix, mQuotaInfo.mGroup,
           mQuotaInfo.mOrigin,
           /* aCreateIfNotExists */ true, getter_AddRefs(mQuotaInfo.mDir));
+||||||| merged common ancestors
+      nsresult rv = qm->EnsureOriginIsInitialized(PERSISTENCE_TYPE_DEFAULT,
+                                                  mQuotaInfo.mSuffix,
+                                                  mQuotaInfo.mGroup,
+                                                  mQuotaInfo.mOrigin,
+                                                  getter_AddRefs(mQuotaInfo.mDir));
+=======
+      nsresult rv = qm->EnsureOriginIsInitialized(
+          PERSISTENCE_TYPE_DEFAULT, mQuotaInfo.mSuffix, mQuotaInfo.mGroup,
+          mQuotaInfo.mOrigin, getter_AddRefs(mQuotaInfo.mDir));
+>>>>>>> upstream-releases
       if (NS_FAILED(rv)) {
         resolver->Resolve(rv);
         break;
@@ -437,7 +449,18 @@ Context::QuotaInitRunnable::Run() {
     }
     // -----
     case STATE_WAIT_FOR_DIRECTORY_LOCK:
+<<<<<<< HEAD
     default: { MOZ_CRASH("unexpected state in QuotaInitRunnable"); }
+||||||| merged common ancestors
+    default:
+    {
+      MOZ_CRASH("unexpected state in QuotaInitRunnable");
+    }
+=======
+    default: {
+      MOZ_CRASH("unexpected state in QuotaInitRunnable");
+    }
+>>>>>>> upstream-releases
   }
 
   if (resolver->Resolved()) {

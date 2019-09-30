@@ -54,6 +54,7 @@ struct IntMarginTyped : public BaseMargin<int32_t, IntMarginTyped<units> >,
 };
 typedef IntMarginTyped<UnknownUnits> IntMargin;
 
+<<<<<<< HEAD
 template <class units, class F = Float>
 struct MarginTyped : public BaseMargin<F, MarginTyped<units, F> >,
                      public units {
@@ -68,6 +69,45 @@ struct MarginTyped : public BaseMargin<F, MarginTyped<units, F> >,
   explicit MarginTyped(const IntMarginTyped<units>& aMargin)
       : Super(F(aMargin.top), F(aMargin.right), F(aMargin.bottom),
               F(aMargin.left)) {}
+||||||| merged common ancestors
+template<class units, class F = Float>
+struct MarginTyped:
+    public BaseMargin<F, MarginTyped<units, F> >,
+    public units {
+    static_assert(IsPixel<units>::value,
+                  "'units' must be a coordinate system tag");
+
+    typedef BaseMargin<F, MarginTyped<units, F> > Super;
+
+    MarginTyped() : Super() {}
+    MarginTyped(F aTop, F aRight, F aBottom, F aLeft) :
+        Super(aTop, aRight, aBottom, aLeft) {}
+    explicit MarginTyped(const IntMarginTyped<units>& aMargin) :
+        Super(F(aMargin.top), F(aMargin.right),
+              F(aMargin.bottom), F(aMargin.left)) {}
+=======
+template <class units, class F = Float>
+struct MarginTyped : public BaseMargin<F, MarginTyped<units, F> >,
+                     public units {
+  static_assert(IsPixel<units>::value,
+                "'units' must be a coordinate system tag");
+
+  typedef BaseMargin<F, MarginTyped<units, F> > Super;
+
+  MarginTyped() : Super() {}
+  MarginTyped(F aTop, F aRight, F aBottom, F aLeft)
+      : Super(aTop, aRight, aBottom, aLeft) {}
+  explicit MarginTyped(const IntMarginTyped<units>& aMargin)
+      : Super(F(aMargin.top), F(aMargin.right), F(aMargin.bottom),
+              F(aMargin.left)) {}
+
+  bool WithinEpsilonOf(const MarginTyped& aOther, F aEpsilon) const {
+    return fabs(this->left - aOther.left) < aEpsilon &&
+           fabs(this->top - aOther.top) < aEpsilon &&
+           fabs(this->right - aOther.right) < aEpsilon &&
+           fabs(this->bottom - aOther.bottom) < aEpsilon;
+  }
+>>>>>>> upstream-releases
 };
 typedef MarginTyped<UnknownUnits> Margin;
 typedef MarginTyped<UnknownUnits, double> MarginDouble;
@@ -80,6 +120,7 @@ IntMarginTyped<units> RoundedToInt(const MarginTyped<units>& aMargin) {
                                int32_t(floorf(aMargin.left + 0.5f)));
 }
 
+<<<<<<< HEAD
 template <class units>
 struct IntRectTyped
     : public BaseRect<int32_t, IntRectTyped<units>, IntPointTyped<units>,
@@ -111,60 +152,227 @@ struct IntRectTyped
     return IntRectTyped<units>::RoundOut(
         RectTyped<units, float>(aX, aY, aW, aH));
   }
+||||||| merged common ancestors
+template<class units>
+struct IntRectTyped :
+    public BaseRect<int32_t, IntRectTyped<units>, IntPointTyped<units>, IntSizeTyped<units>, IntMarginTyped<units> >,
+    public units {
+    static_assert(IsPixel<units>::value,
+                  "'units' must be a coordinate system tag");
 
+    typedef BaseRect<int32_t, IntRectTyped<units>, IntPointTyped<units>, IntSizeTyped<units>, IntMarginTyped<units> > Super;
+    typedef IntRectTyped<units> Self;
+    typedef IntParam<int32_t> ToInt;
+
+    IntRectTyped() : Super() {}
+    IntRectTyped(const IntPointTyped<units>& aPos, const IntSizeTyped<units>& aSize) :
+        Super(aPos, aSize) {}
+=======
+template <class units>
+struct IntRectTyped
+    : public BaseRect<int32_t, IntRectTyped<units>, IntPointTyped<units>,
+                      IntSizeTyped<units>, IntMarginTyped<units> >,
+      public units {
+  static_assert(IsPixel<units>::value,
+                "'units' must be a coordinate system tag");
+
+  typedef BaseRect<int32_t, IntRectTyped<units>, IntPointTyped<units>,
+                   IntSizeTyped<units>, IntMarginTyped<units> >
+      Super;
+  typedef IntRectTyped<units> Self;
+  typedef IntParam<int32_t> ToInt;
+
+  IntRectTyped() : Super() {}
+  IntRectTyped(const IntPointTyped<units>& aPos,
+               const IntSizeTyped<units>& aSize)
+      : Super(aPos, aSize) {}
+
+  IntRectTyped(ToInt aX, ToInt aY, ToInt aWidth, ToInt aHeight)
+      : Super(aX.value, aY.value, aWidth.value, aHeight.value) {}
+
+  static IntRectTyped<units> RoundIn(float aX, float aY, float aW, float aH) {
+    return IntRectTyped<units>::RoundIn(
+        RectTyped<units, float>(aX, aY, aW, aH));
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static IntRectTyped<units> Round(float aX, float aY, float aW, float aH) {
     return IntRectTyped<units>::Round(RectTyped<units, float>(aX, aY, aW, aH));
   }
+||||||| merged common ancestors
+    IntRectTyped(ToInt aX, ToInt aY, ToInt aWidth, ToInt aHeight) :
+        Super(aX.value, aY.value, aWidth.value, aHeight.value) {}
+=======
+  static IntRectTyped<units> RoundOut(float aX, float aY, float aW, float aH) {
+    return IntRectTyped<units>::RoundOut(
+        RectTyped<units, float>(aX, aY, aW, aH));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> Truncate(float aX, float aY, float aW, float aH) {
     return IntRectTyped<units>(IntPointTyped<units>::Truncate(aX, aY),
                                IntSizeTyped<units>::Truncate(aW, aH));
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> RoundIn(float aX, float aY, float aW, float aH) {
+      return IntRectTyped<units>::RoundIn(RectTyped<units, float>(aX, aY, aW, aH));
+    }
+=======
+  static IntRectTyped<units> Round(float aX, float aY, float aW, float aH) {
+    return IntRectTyped<units>::Round(RectTyped<units, float>(aX, aY, aW, aH));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> RoundIn(const RectTyped<units, float>& aRect) {
     auto tmp(aRect);
     tmp.RoundIn();
     return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
                         int32_t(tmp.Width()), int32_t(tmp.Height()));
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> RoundOut(float aX, float aY, float aW, float aH) {
+      return IntRectTyped<units>::RoundOut(RectTyped<units, float>(aX, aY, aW, aH));
+    }
+=======
+  static IntRectTyped<units> Truncate(float aX, float aY, float aW, float aH) {
+    return IntRectTyped<units>(IntPointTyped<units>::Truncate(aX, aY),
+                               IntSizeTyped<units>::Truncate(aW, aH));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> RoundOut(const RectTyped<units, float>& aRect) {
     auto tmp(aRect);
     tmp.RoundOut();
     return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
                         int32_t(tmp.Width()), int32_t(tmp.Height()));
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> Round(float aX, float aY, float aW, float aH) {
+      return IntRectTyped<units>::Round(RectTyped<units, float>(aX, aY, aW, aH));
+    }
+=======
+  static IntRectTyped<units> RoundIn(const RectTyped<units, float>& aRect) {
+    auto tmp(aRect);
+    tmp.RoundIn();
+    return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                        int32_t(tmp.Width()), int32_t(tmp.Height()));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> Round(const RectTyped<units, float>& aRect) {
     auto tmp(aRect);
     tmp.Round();
     return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
                         int32_t(tmp.Width()), int32_t(tmp.Height()));
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> Truncate(float aX, float aY, float aW, float aH) {
+      return IntRectTyped<units>(IntPointTyped<units>::Truncate(aX, aY),
+                                 IntSizeTyped<units>::Truncate(aW, aH));
+    }
+=======
+  static IntRectTyped<units> RoundOut(const RectTyped<units, float>& aRect) {
+    auto tmp(aRect);
+    tmp.RoundOut();
+    return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                        int32_t(tmp.Width()), int32_t(tmp.Height()));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> Truncate(const RectTyped<units, float>& aRect) {
     return IntRectTyped::Truncate(aRect.X(), aRect.Y(), aRect.Width(),
                                   aRect.Height());
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> RoundIn(const RectTyped<units, float>& aRect) {
+      auto tmp(aRect);
+      tmp.RoundIn();
+      return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                          int32_t(tmp.Width()), int32_t(tmp.Height()));
+    }
+=======
+  static IntRectTyped<units> Round(const RectTyped<units, float>& aRect) {
+    auto tmp(aRect);
+    tmp.Round();
+    return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                        int32_t(tmp.Width()), int32_t(tmp.Height()));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Rounding isn't meaningful on an integer rectangle.
   void Round() {}
   void RoundIn() {}
   void RoundOut() {}
+||||||| merged common ancestors
+    static IntRectTyped<units> RoundOut(const RectTyped<units, float>& aRect) {
+      auto tmp(aRect);
+      tmp.RoundOut();
+      return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                          int32_t(tmp.Width()), int32_t(tmp.Height()));
+    }
+=======
+  static IntRectTyped<units> Truncate(const RectTyped<units, float>& aRect) {
+    return IntRectTyped::Truncate(aRect.X(), aRect.Y(), aRect.Width(),
+                                  aRect.Height());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // XXX When all of the code is ported, the following functions to convert
   // to and from unknown types should be removed.
+||||||| merged common ancestors
+    static IntRectTyped<units> Round(const RectTyped<units, float>& aRect) {
+      auto tmp(aRect);
+      tmp.Round();
+      return IntRectTyped(int32_t(tmp.X()), int32_t(tmp.Y()),
+                          int32_t(tmp.Width()), int32_t(tmp.Height()));
+    }
+=======
+  // Rounding isn't meaningful on an integer rectangle.
+  void Round() {}
+  void RoundIn() {}
+  void RoundOut() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static IntRectTyped<units> FromUnknownRect(
       const IntRectTyped<UnknownUnits>& rect) {
     return IntRectTyped<units>(rect.X(), rect.Y(), rect.Width(), rect.Height());
   }
+||||||| merged common ancestors
+    static IntRectTyped<units> Truncate(const RectTyped<units, float>& aRect) {
+      return IntRectTyped::Truncate(aRect.X(), aRect.Y(), aRect.Width(), aRect.Height());
+    }
+=======
+  // XXX When all of the code is ported, the following functions to convert
+  // to and from unknown types should be removed.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   IntRectTyped<UnknownUnits> ToUnknownRect() const {
     return IntRectTyped<UnknownUnits>(this->X(), this->Y(), this->Width(),
                                       this->Height());
   }
+||||||| merged common ancestors
+    // Rounding isn't meaningful on an integer rectangle.
+    void Round() {}
+    void RoundIn() {}
+    void RoundOut() {}
+=======
+  static IntRectTyped<units> FromUnknownRect(
+      const IntRectTyped<UnknownUnits>& rect) {
+    return IntRectTyped<units>(rect.X(), rect.Y(), rect.Width(), rect.Height());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool Overflows() const {
     CheckedInt<int32_t> xMost = this->X();
     xMost += this->Width();
@@ -172,7 +380,17 @@ struct IntRectTyped
     yMost += this->Height();
     return !xMost.isValid() || !yMost.isValid();
   }
+||||||| merged common ancestors
+    // XXX When all of the code is ported, the following functions to convert
+    // to and from unknown types should be removed.
+=======
+  IntRectTyped<UnknownUnits> ToUnknownRect() const {
+    return IntRectTyped<UnknownUnits>(this->X(), this->Y(), this->Width(),
+                                      this->Height());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Same as Union(), but in the cases where aRect is non-empty, the union is
   // done while guarding against overflow. If an overflow is detected, Nothing
   // is returned.
@@ -184,6 +402,77 @@ struct IntRectTyped
     } else {
       return this->SafeUnionEdges(aRect);
     }
+  }
+||||||| merged common ancestors
+    static IntRectTyped<units> FromUnknownRect(const IntRectTyped<UnknownUnits>& rect) {
+      return IntRectTyped<units>(rect.X(), rect.Y(), rect.Width(), rect.Height());
+    }
+=======
+  bool Overflows() const {
+    CheckedInt<int32_t> xMost = this->X();
+    xMost += this->Width();
+    CheckedInt<int32_t> yMost = this->Y();
+    yMost += this->Height();
+    return !xMost.isValid() || !yMost.isValid();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Same as UnionEdges, but guards against overflow. If an overflow is
+  // detected, Nothing is returned.
+  MOZ_MUST_USE Maybe<Self> SafeUnionEdges(const Self& aRect) const {
+    if (this->Overflows() || aRect.Overflows()) {
+      return Nothing();
+||||||| merged common ancestors
+    IntRectTyped<UnknownUnits> ToUnknownRect() const {
+      return IntRectTyped<UnknownUnits>(this->X(), this->Y(), this->Width(), this->Height());
+=======
+  // Same as Union(), but in the cases where aRect is non-empty, the union is
+  // done while guarding against overflow. If an overflow is detected, Nothing
+  // is returned.
+  MOZ_MUST_USE Maybe<Self> SafeUnion(const Self& aRect) const {
+    if (this->IsEmpty()) {
+      return aRect.Overflows() ? Nothing() : Some(aRect);
+    } else if (aRect.IsEmpty()) {
+      return Some(*static_cast<const Self*>(this));
+    } else {
+      return this->SafeUnionEdges(aRect);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    // If neither |this| nor |aRect| overflow, then their XMost/YMost values
+    // should be safe to use.
+    CheckedInt<int32_t> newX = std::min(this->x, aRect.x);
+    CheckedInt<int32_t> newY = std::min(this->y, aRect.y);
+    CheckedInt<int32_t> newXMost = std::max(this->XMost(), aRect.XMost());
+    CheckedInt<int32_t> newYMost = std::max(this->YMost(), aRect.YMost());
+    CheckedInt<int32_t> newW = newXMost - newX;
+    CheckedInt<int32_t> newH = newYMost - newY;
+    if (!newW.isValid() || !newH.isValid()) {
+      return Nothing();
+||||||| merged common ancestors
+
+    bool Overflows() const {
+      CheckedInt<int32_t> xMost = this->X();
+      xMost += this->Width();
+      CheckedInt<int32_t> yMost = this->Y();
+      yMost += this->Height();
+      return !xMost.isValid() || !yMost.isValid();
+    }
+
+    // Same as Union(), but in the cases where aRect is non-empty, the union is
+    // done while guarding against overflow. If an overflow is detected, Nothing
+    // is returned.
+    MOZ_MUST_USE Maybe<Self> SafeUnion(const Self& aRect) const
+    {
+      if (this->IsEmpty()) {
+        return aRect.Overflows() ? Nothing() : Some(aRect);
+      } else if (aRect.IsEmpty()) {
+        return Some(*static_cast<const Self*>(this));
+      } else {
+        return this->SafeUnionEdges(aRect);
+      }
+=======
   }
 
   // Same as UnionEdges, but guards against overflow. If an overflow is
@@ -202,6 +491,7 @@ struct IntRectTyped
     CheckedInt<int32_t> newH = newYMost - newY;
     if (!newW.isValid() || !newH.isValid()) {
       return Nothing();
+>>>>>>> upstream-releases
     }
     return Some(Self(newX.value(), newY.value(), newW.value(), newH.value()));
   }
@@ -216,6 +506,7 @@ struct IntRectTyped
       return;
     }
 
+<<<<<<< HEAD
     int32_t yMost = this->YMost();
     int32_t xMost = this->XMost();
 
@@ -223,6 +514,33 @@ struct IntRectTyped
     this->y = mozilla::RoundDownToMultiple(this->y, aTileSize.height);
     xMost = mozilla::RoundUpToMultiple(xMost, aTileSize.width);
     yMost = mozilla::RoundUpToMultiple(yMost, aTileSize.height);
+||||||| merged common ancestors
+    void InflateToMultiple(const IntSizeTyped<units>& aTileSize)
+    {
+      if (this->IsEmpty()) {
+        return;
+      }
+
+      int32_t yMost = this->YMost();
+      int32_t xMost = this->XMost();
+
+      this->x = mozilla::RoundDownToMultiple(this->x, aTileSize.width);
+      this->y = mozilla::RoundDownToMultiple(this->y, aTileSize.height);
+      xMost = mozilla::RoundUpToMultiple(xMost, aTileSize.width);
+      yMost = mozilla::RoundUpToMultiple(yMost, aTileSize.height);
+
+      this->SetWidth(xMost - this->x);
+      this->SetHeight(yMost - this->y);
+    }
+=======
+    int32_t yMost = this->YMost();
+    int32_t xMost = this->XMost();
+
+    this->x = mozilla::RoundDownToMultiple(this->x, aTileSize.width);
+    this->y = mozilla::RoundDownToMultiple(this->y, aTileSize.height);
+    xMost = mozilla::RoundUpToMultiple(xMost, aTileSize.width);
+    yMost = mozilla::RoundUpToMultiple(yMost, aTileSize.height);
+>>>>>>> upstream-releases
 
     this->SetWidth(xMost - this->x);
     this->SetHeight(yMost - this->y);
@@ -277,10 +595,30 @@ struct RectTyped : public BaseRect<F, RectTyped<units, F>, PointTyped<units, F>,
                                       this->Height());
   }
 
+<<<<<<< HEAD
   // This is here only to keep IPDL-generated code happy. DO NOT USE.
   bool operator==(const RectTyped<units, F>& aRect) const {
     return RectTyped<units, F>::IsEqualEdges(aRect);
   }
+||||||| merged common ancestors
+    // This is here only to keep IPDL-generated code happy. DO NOT USE.
+    bool operator==(const RectTyped<units, F>& aRect) const
+    {
+      return RectTyped<units, F>::IsEqualEdges(aRect);
+    }
+=======
+  // This is here only to keep IPDL-generated code happy. DO NOT USE.
+  bool operator==(const RectTyped<units, F>& aRect) const {
+    return RectTyped<units, F>::IsEqualEdges(aRect);
+  }
+
+  bool WithinEpsilonOf(const RectTyped& aOther, F aEpsilon) const {
+    return fabs(this->x - aOther.x) < aEpsilon &&
+           fabs(this->y - aOther.y) < aEpsilon &&
+           fabs(this->width - aOther.width) < aEpsilon &&
+           fabs(this->height - aOther.height) < aEpsilon;
+  }
+>>>>>>> upstream-releases
 };
 typedef RectTyped<UnknownUnits> Rect;
 typedef RectTyped<UnknownUnits, double> RectDouble;
@@ -344,17 +682,27 @@ Maybe<Rect> UnionMaybeRects(const Maybe<Rect>& a, const Maybe<Rect>& b) {
   }
 }
 
-struct RectCornerRadii {
+struct RectCornerRadii final {
   Size radii[eCornerCount];
 
-  RectCornerRadii() {}
+  RectCornerRadii() = default;
 
   explicit RectCornerRadii(Float radius) {
     NS_FOR_CSS_FULL_CORNERS(i) { radii[i].SizeTo(radius, radius); }
   }
 
+<<<<<<< HEAD
   explicit RectCornerRadii(Float radiusX, Float radiusY) {
     NS_FOR_CSS_FULL_CORNERS(i) { radii[i].SizeTo(radiusX, radiusY); }
+||||||| merged common ancestors
+  explicit RectCornerRadii(Float radiusX, Float radiusY) {
+    NS_FOR_CSS_FULL_CORNERS(i) {
+      radii[i].SizeTo(radiusX, radiusY);
+    }
+=======
+  RectCornerRadii(Float radiusX, Float radiusY) {
+    NS_FOR_CSS_FULL_CORNERS(i) { radii[i].SizeTo(radiusX, radiusY); }
+>>>>>>> upstream-releases
   }
 
   RectCornerRadii(Float tl, Float tr, Float br, Float bl) {

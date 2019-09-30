@@ -1,20 +1,31 @@
-// |jit-test| skip-if: !wasmGcEnabled() || !wasmDebuggingIsSupported()
+// |jit-test| skip-if: !wasmReftypesEnabled() || !wasmDebuggingIsSupported()
 
 (function() {
-    let g = newGlobal();
+    let g = newGlobal({newCompartment: true});
     let dbg = new Debugger(g);
+<<<<<<< HEAD
     g.eval(`o = new WebAssembly.Instance(new WebAssembly.Module(wasmTextToBinary('(module (gc_feature_opt_in 2) (func (result anyref) (param anyref) get_local 0) (export "" 0))')));`);
+||||||| merged common ancestors
+    g.eval(`o = new WebAssembly.Instance(new WebAssembly.Module(wasmTextToBinary('(module (gc_feature_opt_in 1) (func (result anyref) (param anyref) get_local 0) (export "" 0))')));`);
+=======
+    g.eval(`o = new WebAssembly.Instance(new WebAssembly.Module(wasmTextToBinary('(module (func (result anyref) (param anyref) local.get 0) (export "" 0))')));`);
+>>>>>>> upstream-releases
 })();
 
 (function() {
-    var g = newGlobal();
+    var g = newGlobal({newCompartment: true});
     g.parent = this;
 
     let src = `
       (module
+<<<<<<< HEAD
         (gc_feature_opt_in 2)
+||||||| merged common ancestors
+        (gc_feature_opt_in 1)
+=======
+>>>>>>> upstream-releases
         (func (export "func") (result anyref) (param $ref anyref)
-            get_local $ref
+            local.get $ref
         )
       )
     `;

@@ -10,8 +10,17 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ bool WaveDecoder::IsSupportedType(
     const MediaContainerType& aContainerType) {
+||||||| merged common ancestors
+/* static */ bool
+WaveDecoder::IsSupportedType(const MediaContainerType& aContainerType)
+{
+=======
+/* static */
+bool WaveDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
+>>>>>>> upstream-releases
   if (!MediaDecoder::IsWaveEnabled()) {
     return false;
   }
@@ -28,8 +37,18 @@ namespace mozilla {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> WaveDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+WaveDecoder::GetTracksInfo(const MediaContainerType& aType)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> WaveDecoder::GetTracksInfo(
+    const MediaContainerType& aType) {
+>>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   if (!IsSupportedType(aType)) {
     return tracks;

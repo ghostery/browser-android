@@ -31,8 +31,23 @@ static nsresult BroadcastDomainSetChange(DomainSetType aSetType,
     return NS_OK;
   }
 
+<<<<<<< HEAD
   OptionalURIParams uri;
   SerializeURI(aDomain, uri);
+||||||| merged common ancestors
+DomainPolicy::DomainPolicy() : mBlacklist(new DomainSet(BLACKLIST))
+                             , mSuperBlacklist(new DomainSet(SUPER_BLACKLIST))
+                             , mWhitelist(new DomainSet(WHITELIST))
+                             , mSuperWhitelist(new DomainSet(SUPER_WHITELIST))
+{
+    if (XRE_IsParentProcess()) {
+        BroadcastDomainSetChange(NO_TYPE, ACTIVATE_POLICY);
+    }
+}
+=======
+  Maybe<URIParams> uri;
+  SerializeURI(aDomain, uri);
+>>>>>>> upstream-releases
 
   for (uint32_t i = 0; i < parents.Length(); i++) {
     Unused << parents[i]->SendDomainSetChanged(aSetType, aChangeType, uri);

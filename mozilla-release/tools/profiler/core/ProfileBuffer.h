@@ -6,12 +6,11 @@
 #ifndef MOZ_PROFILE_BUFFER_H
 #define MOZ_PROFILE_BUFFER_H
 
-#include "platform.h"
 #include "ProfileBufferEntry.h"
 #include "ProfilerMarker.h"
-#include "ProfileJSONWriter.h"
-#include "mozilla/RefPtr.h"
-#include "mozilla/RefCounted.h"
+
+#include "mozilla/Maybe.h"
+#include "mozilla/PowerOfTwo.h"
 
 // A fixed-capacity circular buffer.
 // This class is used as a queue of entries which, after construction, never
@@ -29,9 +28,18 @@
 class ProfileBuffer final {
  public:
   // ProfileBuffer constructor
+<<<<<<< HEAD
   // @param aCapacity The minimum capacity of the buffer. The actual buffer
   //                   capacity will be rounded up to the next power of two.
   explicit ProfileBuffer(uint32_t aCapacity);
+||||||| merged common ancestors
+  // @param aEntrySize The minimum capacity of the buffer. The actual buffer
+  //                   capacity will be rounded up to the next power of two.
+  explicit ProfileBuffer(uint32_t aEntrySize);
+=======
+  // @param aCapacity The capacity of the buffer.
+  explicit ProfileBuffer(mozilla::PowerOfTwo32 aCapacity);
+>>>>>>> upstream-releases
 
   ~ProfileBuffer();
 
@@ -43,10 +51,22 @@ class ProfileBuffer final {
   uint64_t AddThreadIdEntry(int aThreadId);
 
   void CollectCodeLocation(
+<<<<<<< HEAD
       const char* aLabel, const char* aStr, uint32_t aFrameFlags,
       const mozilla::Maybe<uint32_t>& aLineNumber,
       const mozilla::Maybe<uint32_t>& aColumnNumber,
       const mozilla::Maybe<js::ProfilingStackFrame::Category>& aCategory);
+||||||| merged common ancestors
+    const char* aLabel, const char* aStr,
+    const mozilla::Maybe<uint32_t>& aLineNumber,
+    const mozilla::Maybe<uint32_t>& aColumnNumber,
+    const mozilla::Maybe<js::ProfilingStackFrame::Category>& aCategory);
+=======
+      const char* aLabel, const char* aStr, uint32_t aFrameFlags,
+      const mozilla::Maybe<uint32_t>& aLineNumber,
+      const mozilla::Maybe<uint32_t>& aColumnNumber,
+      const mozilla::Maybe<JS::ProfilingCategoryPair>& aCategoryPair);
+>>>>>>> upstream-releases
 
   // Maximum size of a frameKey string that we'll handle.
   static const size_t kMaxFrameKeyLength = 512;
@@ -76,6 +96,9 @@ class ProfileBuffer final {
                            UniqueStacks& aUniqueStacks) const;
   void StreamPausedRangesToJSON(SpliceableJSONWriter& aWriter,
                                 double aSinceTime) const;
+  void StreamProfilerOverheadToJSON(SpliceableJSONWriter& aWriter,
+                                    const mozilla::TimeStamp& aProcessStartTime,
+                                    double aSinceTime) const;
   void StreamCountersToJSON(SpliceableJSONWriter& aWriter,
                             const mozilla::TimeStamp& aProcessStartTime,
                             double aSinceTime) const;
@@ -105,26 +128,54 @@ class ProfileBuffer final {
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
+<<<<<<< HEAD
  private:
   // The storage that backs our buffer. Holds mCapacity entries.
+||||||| merged common ancestors
+private:
+  // The storage that backs our buffer. Holds mEntrySize entries.
+=======
+ private:
+  // The storage that backs our buffer. Holds capacity entries.
+>>>>>>> upstream-releases
   // All accesses to entries in mEntries need to go through GetEntry(), which
   // translates the given buffer position from the near-infinite uint64_t space
   // into the entry storage space.
   mozilla::UniquePtr<ProfileBufferEntry[]> mEntries;
 
+<<<<<<< HEAD
   // A mask such that pos & mEntryIndexMask == pos % mCapacity.
   uint32_t mEntryIndexMask;
+||||||| merged common ancestors
+  // A mask such that pos & mEntryIndexMask == pos % mEntrySize.
+  uint32_t mEntryIndexMask;
+=======
+  // A mask such that pos & mEntryIndexMask == pos % capacity.
+  mozilla::PowerOfTwoMask32 mEntryIndexMask;
+>>>>>>> upstream-releases
 
  public:
   // mRangeStart and mRangeEnd are uint64_t values that strictly advance and
   // never wrap around. mRangeEnd is always greater than or equal to
+<<<<<<< HEAD
   // mRangeStart, but never gets more than mCapacity steps ahead of
+||||||| merged common ancestors
+  // mRangeStart, but never gets more than mEntrySize steps ahead of
+=======
+  // mRangeStart, but never gets more than capacity steps ahead of
+>>>>>>> upstream-releases
   // mRangeStart, because we can only store a fixed number of entries in the
   // buffer. Once the entire buffer is in use, adding a new entry will evict an
   // entry from the front of the buffer (and increase mRangeStart).
   // In other words, the following conditions hold true at all times:
   //  (1) mRangeStart <= mRangeEnd
+<<<<<<< HEAD
   //  (2) mRangeEnd - mRangeStart <= mCapacity
+||||||| merged common ancestors
+  //  (2) mRangeEnd - mRangeStart <= mEntrySize
+=======
+  //  (2) mRangeEnd - mRangeStart <= capacity
+>>>>>>> upstream-releases
   //
   // If there are no live entries, then mRangeStart == mRangeEnd.
   // Otherwise, mRangeStart is the first live entry and mRangeEnd is one past
@@ -134,9 +185,16 @@ class ProfileBuffer final {
   uint64_t mRangeStart;
   uint64_t mRangeEnd;
 
+<<<<<<< HEAD
   // The number of entries in our buffer. Always a power of two.
   uint32_t mCapacity;
 
+||||||| merged common ancestors
+  // The number of entries in our buffer. Always a power of two.
+  uint32_t mEntrySize;
+
+=======
+>>>>>>> upstream-releases
   // Markers that marker entries in the buffer might refer to.
   ProfilerMarkerLinkedList mStoredMarkers;
 };

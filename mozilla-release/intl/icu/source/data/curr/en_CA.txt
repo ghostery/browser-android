@@ -14,5 +14,11 @@ en_CA{
             other{"Israeli new sheqels"}
         }
     }
+<<<<<<< HEAD
     Version{"2.1.44.88"}
+||||||| merged common ancestors
+    Version{"2.1.38.73"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
 }

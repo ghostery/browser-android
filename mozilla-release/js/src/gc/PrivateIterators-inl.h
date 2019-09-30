@@ -18,22 +18,57 @@
 namespace js {
 namespace gc {
 
+<<<<<<< HEAD
 class ArenaCellIterUnderGC : public ArenaCellIterImpl {
  public:
   explicit ArenaCellIterUnderGC(Arena* arena)
       : ArenaCellIterImpl(arena, CellIterDoesntNeedBarrier) {
     MOZ_ASSERT(CurrentThreadIsPerformingGC());
   }
+||||||| merged common ancestors
+class ArenaCellIterUnderGC : public ArenaCellIterImpl
+{
+  public:
+    explicit ArenaCellIterUnderGC(Arena* arena)
+      : ArenaCellIterImpl(arena, CellIterDoesntNeedBarrier)
+    {
+        MOZ_ASSERT(CurrentThreadIsPerformingGC());
+    }
+=======
+class ArenaCellIterUnderGC : public ArenaCellIter {
+ public:
+  explicit ArenaCellIterUnderGC(Arena* arena) : ArenaCellIter(arena) {
+    MOZ_ASSERT(CurrentThreadIsPerformingGC());
+  }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class ArenaCellIterUnderFinalize : public ArenaCellIterImpl {
  public:
   explicit ArenaCellIterUnderFinalize(Arena* arena)
       : ArenaCellIterImpl(arena, CellIterDoesntNeedBarrier) {
     MOZ_ASSERT(CurrentThreadIsGCSweeping());
   }
+||||||| merged common ancestors
+class ArenaCellIterUnderFinalize : public ArenaCellIterImpl
+{
+  public:
+    explicit ArenaCellIterUnderFinalize(Arena* arena)
+      : ArenaCellIterImpl(arena, CellIterDoesntNeedBarrier)
+    {
+        MOZ_ASSERT(CurrentThreadIsGCSweeping());
+    }
+=======
+class ArenaCellIterUnderFinalize : public ArenaCellIter {
+ public:
+  explicit ArenaCellIterUnderFinalize(Arena* arena) : ArenaCellIter(arena) {
+    MOZ_ASSERT(CurrentThreadIsGCSweeping());
+  }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class ArenaCellIterUnbarriered : public ArenaCellIterImpl {
  public:
   explicit ArenaCellIterUnbarriered(Arena* arena)
@@ -52,6 +87,38 @@ class GrayObjectIter : public ZoneCellIter<js::gc::TenuredCell> {
   }
   operator JSObject*() const { return get(); }
   JSObject* operator->() const { return get(); }
+||||||| merged common ancestors
+class ArenaCellIterUnbarriered : public ArenaCellIterImpl
+{
+  public:
+    explicit ArenaCellIterUnbarriered(Arena* arena)
+      : ArenaCellIterImpl(arena, CellIterDoesntNeedBarrier)
+    {}
+};
+
+class GrayObjectIter : public ZoneCellIter<js::gc::TenuredCell> {
+  public:
+    explicit GrayObjectIter(JS::Zone* zone, AllocKind kind) : ZoneCellIter<js::gc::TenuredCell>() {
+        initForTenuredIteration(zone, kind);
+    }
+
+    JSObject* get() const { return ZoneCellIter<js::gc::TenuredCell>::get<JSObject>(); }
+    operator JSObject*() const { return get(); }
+    JSObject* operator ->() const { return get(); }
+=======
+class GrayObjectIter : public ZoneAllCellIter<js::gc::TenuredCell> {
+ public:
+  explicit GrayObjectIter(JS::Zone* zone, AllocKind kind)
+      : ZoneAllCellIter<js::gc::TenuredCell>() {
+    initForTenuredIteration(zone, kind);
+  }
+
+  JSObject* get() const {
+    return ZoneAllCellIter<js::gc::TenuredCell>::get<JSObject>();
+  }
+  operator JSObject*() const { return get(); }
+  JSObject* operator->() const { return get(); }
+>>>>>>> upstream-releases
 };
 
 class GCZonesIter {
@@ -133,7 +200,7 @@ using SweepGroupCompartmentsIter =
 using SweepGroupRealmsIter =
     CompartmentsOrRealmsIterT<SweepGroupZonesIter, RealmsInZoneIter>;
 
-// Iterate the free cells in an arena. See also ArenaCellIterImpl which iterates
+// Iterate the free cells in an arena. See also ArenaCellIter which iterates
 // the allocated cells.
 class ArenaFreeCellIter {
   Arena* arena;
@@ -146,6 +213,7 @@ class ArenaFreeCellIter {
       : arena(arena),
         thingSize(arena->getThingSize()),
         span(*arena->getFirstFreeSpan()),
+<<<<<<< HEAD
         thing(span.first) {
     MOZ_ASSERT(arena);
     MOZ_ASSERT(thing < ArenaSize);
@@ -174,6 +242,66 @@ class ArenaFreeCellIter {
 
     MOZ_ASSERT(thing < ArenaSize);
   }
+||||||| merged common ancestors
+        thing(span.first)
+    {
+        MOZ_ASSERT(arena);
+        MOZ_ASSERT(thing < ArenaSize);
+    }
+
+    bool done() const {
+        MOZ_ASSERT(thing < ArenaSize);
+        return !thing;
+    }
+
+    TenuredCell* getCell() const {
+        MOZ_ASSERT(!done());
+        return reinterpret_cast<TenuredCell*>(uintptr_t(arena) + thing);
+    }
+
+    void next() {
+        MOZ_ASSERT(!done());
+        MOZ_ASSERT(thing >= span.first && thing <= span.last);
+
+        if (thing == span.last) {
+            span = *span.nextSpan(arena);
+            thing = span.first;
+        } else {
+            thing += thingSize;
+        }
+
+        MOZ_ASSERT(thing < ArenaSize);
+    }
+=======
+        thing(span.first) {
+    MOZ_ASSERT(arena);
+    MOZ_ASSERT(thing < ArenaSize);
+  }
+
+  bool done() const {
+    MOZ_ASSERT(thing < ArenaSize);
+    return !thing;
+  }
+
+  TenuredCell* getCell() const {
+    MOZ_ASSERT(!done());
+    return reinterpret_cast<TenuredCell*>(uintptr_t(arena) + thing);
+  }
+
+  void next() {
+    MOZ_ASSERT(!done());
+    MOZ_ASSERT(thing >= span.first && thing <= span.last);
+
+    if (thing == span.last) {
+      span = *span.nextSpan(arena);
+      thing = span.first;
+    } else {
+      thing += thingSize;
+    }
+
+    MOZ_ASSERT(thing < ArenaSize);
+  }
+>>>>>>> upstream-releases
 };
 
 }  // namespace gc

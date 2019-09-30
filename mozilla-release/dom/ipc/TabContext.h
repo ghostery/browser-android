@@ -20,8 +20,8 @@ class IPCTabContext;
 /**
  * TabContext encapsulates information about an iframe that may be a mozbrowser.
  *
- * TabParent and TabChild both inherit from TabContext, and you can also have
- * standalone TabContext objects.
+ * BrowserParent and BrowserChild both inherit from TabContext, and you can also
+ * have standalone TabContext objects.
  *
  * This class is immutable except by calling one of the protected
  * SetTabContext*() methods (and those methods can only be called once).  See
@@ -80,7 +80,6 @@ class TabContext {
    */
   const nsAString& PresentationURL() const;
 
-  UIStateChangeType ShowAccelerators() const;
   UIStateChangeType ShowFocusRings() const;
 
  protected:
@@ -105,8 +104,16 @@ class TabContext {
    */
   void SetPrivateBrowsingAttributes(bool aIsPrivateBrowsing);
 
+<<<<<<< HEAD
   bool SetTabContext(bool aIsMozBrowserElement, uint64_t aChromeOuterWindowID,
                      UIStateChangeType aShowAccelerators,
+||||||| merged common ancestors
+  bool SetTabContext(bool aIsMozBrowserElement,
+                     uint64_t aChromeOuterWindowID,
+                     UIStateChangeType aShowAccelerators,
+=======
+  bool SetTabContext(bool aIsMozBrowserElement, uint64_t aChromeOuterWindowID,
+>>>>>>> upstream-releases
                      UIStateChangeType aShowFocusRings,
                      const OriginAttributes& aOriginAttributes,
                      const nsAString& aPresentationURL);
@@ -164,9 +171,8 @@ class TabContext {
   nsString mPresentationURL;
 
   /**
-   * Keyboard indicator state (focus rings, accelerators).
+   * Keyboard indicator state (focus rings).
    */
-  UIStateChangeType mShowAccelerators;
   UIStateChangeType mShowFocusRings;
 };
 
@@ -181,6 +187,7 @@ class MutableTabContext : public TabContext {
     return TabContext::SetTabContext(aContext);
   }
 
+<<<<<<< HEAD
   bool SetTabContext(bool aIsMozBrowserElement, uint64_t aChromeOuterWindowID,
                      UIStateChangeType aShowAccelerators,
                      UIStateChangeType aShowFocusRings,
@@ -189,6 +196,30 @@ class MutableTabContext : public TabContext {
     return TabContext::SetTabContext(aIsMozBrowserElement, aChromeOuterWindowID,
                                      aShowAccelerators, aShowFocusRings,
                                      aOriginAttributes, aPresentationURL);
+||||||| merged common ancestors
+  bool
+  SetTabContext(bool aIsMozBrowserElement,
+                uint64_t aChromeOuterWindowID,
+                UIStateChangeType aShowAccelerators,
+                UIStateChangeType aShowFocusRings,
+                const OriginAttributes& aOriginAttributes,
+                const nsAString& aPresentationURL = EmptyString())
+  {
+    return TabContext::SetTabContext(aIsMozBrowserElement,
+                                     aChromeOuterWindowID,
+                                     aShowAccelerators,
+                                     aShowFocusRings,
+                                     aOriginAttributes,
+                                     aPresentationURL);
+=======
+  bool SetTabContext(bool aIsMozBrowserElement, uint64_t aChromeOuterWindowID,
+                     UIStateChangeType aShowFocusRings,
+                     const OriginAttributes& aOriginAttributes,
+                     const nsAString& aPresentationURL = EmptyString()) {
+    return TabContext::SetTabContext(aIsMozBrowserElement, aChromeOuterWindowID,
+                                     aShowFocusRings, aOriginAttributes,
+                                     aPresentationURL);
+>>>>>>> upstream-releases
   }
 
   bool SetTabContextForJSPluginFrame(uint32_t aJSPluginID) {

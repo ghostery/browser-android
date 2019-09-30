@@ -15,7 +15,6 @@
 #include "mozilla/ThreadLocal.h"
 #include "mozilla/TimeStamp.h"
 #include "nsCOMPtr.h"
-#include "nsILabelableRunnable.h"
 #include "nsISupportsImpl.h"
 #include "nsThreadUtils.h"
 
@@ -97,14 +96,26 @@ class SchedulerGroup : public LinkedListElement<SchedulerGroup> {
     return mEventCount == 0 ? NoLongerQueued : StillQueued;
   }
 
+<<<<<<< HEAD
   class Runnable final : public mozilla::Runnable,
                          public nsIRunnablePriority,
                          public nsILabelableRunnable {
    public:
     Runnable(already_AddRefed<nsIRunnable>&& aRunnable, SchedulerGroup* aGroup,
+||||||| merged common ancestors
+  class Runnable final : public mozilla::Runnable
+                       , public nsIRunnablePriority
+                       , public nsILabelableRunnable
+  {
+  public:
+    Runnable(already_AddRefed<nsIRunnable>&& aRunnable,
+             SchedulerGroup* aGroup,
+=======
+  class Runnable final : public mozilla::Runnable, public nsIRunnablePriority {
+   public:
+    Runnable(already_AddRefed<nsIRunnable>&& aRunnable, SchedulerGroup* aGroup,
+>>>>>>> upstream-releases
              dom::DocGroup* aDocGroup);
-
-    bool GetAffectedSchedulerGroups(SchedulerGroupSet& aGroups) override;
 
     SchedulerGroup* Group() const { return mGroup; }
     dom::DocGroup* DocGroup() const;
@@ -173,7 +184,14 @@ class SchedulerGroup : public LinkedListElement<SchedulerGroup> {
 
   using RunnableEpochQueue = Queue<EpochQueueEntry, 32>;
 
+<<<<<<< HEAD
   RunnableEpochQueue& GetQueue(mozilla::EventPriority aPriority) {
+||||||| merged common ancestors
+  RunnableEpochQueue& GetQueue(mozilla::EventPriority aPriority)
+  {
+=======
+  RunnableEpochQueue& GetQueue(mozilla::EventQueuePriority aPriority) {
+>>>>>>> upstream-releases
     return mEventQueues[size_t(aPriority)];
   }
 
@@ -218,7 +236,7 @@ class SchedulerGroup : public LinkedListElement<SchedulerGroup> {
 
   nsCOMPtr<nsISerialEventTarget> mEventTargets[size_t(TaskCategory::Count)];
   RefPtr<AbstractThread> mAbstractThreads[size_t(TaskCategory::Count)];
-  RunnableEpochQueue mEventQueues[size_t(mozilla::EventPriority::Count)];
+  RunnableEpochQueue mEventQueues[size_t(mozilla::EventQueuePriority::Count)];
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(SchedulerGroup::Runnable,

@@ -32,6 +32,7 @@ static bool WaiveAccessors(JSContext* cx,
   return true;
 }
 
+<<<<<<< HEAD
 bool WaiveXrayWrapper::getPropertyDescriptor(
     JSContext* cx, HandleObject wrapper, HandleId id,
     MutableHandle<PropertyDescriptor> desc) const {
@@ -39,8 +40,14 @@ bool WaiveXrayWrapper::getPropertyDescriptor(
                                                         desc) &&
          WrapperFactory::WaiveXrayAndWrap(cx, desc.value()) &&
          WaiveAccessors(cx, desc);
-}
-
+||||||| merged common ancestors
+bool
+WaiveXrayWrapper::getPropertyDescriptor(JSContext* cx, HandleObject wrapper, HandleId id,
+                                        MutableHandle<PropertyDescriptor> desc) const
+{
+    return CrossCompartmentWrapper::getPropertyDescriptor(cx, wrapper, id, desc) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, desc.value()) && WaiveAccessors(cx, desc);
+=======
 bool WaiveXrayWrapper::getOwnPropertyDescriptor(
     JSContext* cx, HandleObject wrapper, HandleId id,
     MutableHandle<PropertyDescriptor> desc) const {
@@ -48,15 +55,55 @@ bool WaiveXrayWrapper::getOwnPropertyDescriptor(
                                                            desc) &&
          WrapperFactory::WaiveXrayAndWrap(cx, desc.value()) &&
          WaiveAccessors(cx, desc);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool WaiveXrayWrapper::getOwnPropertyDescriptor(
+    JSContext* cx, HandleObject wrapper, HandleId id,
+    MutableHandle<PropertyDescriptor> desc) const {
+  return CrossCompartmentWrapper::getOwnPropertyDescriptor(cx, wrapper, id,
+                                                           desc) &&
+         WrapperFactory::WaiveXrayAndWrap(cx, desc.value()) &&
+         WaiveAccessors(cx, desc);
+||||||| merged common ancestors
+bool
+WaiveXrayWrapper::getOwnPropertyDescriptor(JSContext* cx, HandleObject wrapper, HandleId id,
+                                           MutableHandle<PropertyDescriptor> desc) const
+{
+    return CrossCompartmentWrapper::getOwnPropertyDescriptor(cx, wrapper, id, desc) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, desc.value()) && WaiveAccessors(cx, desc);
+=======
 bool WaiveXrayWrapper::get(JSContext* cx, HandleObject wrapper,
                            HandleValue receiver, HandleId id,
                            MutableHandleValue vp) const {
   return CrossCompartmentWrapper::get(cx, wrapper, receiver, id, vp) &&
          WrapperFactory::WaiveXrayAndWrap(cx, vp);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool WaiveXrayWrapper::get(JSContext* cx, HandleObject wrapper,
+                           HandleValue receiver, HandleId id,
+                           MutableHandleValue vp) const {
+  return CrossCompartmentWrapper::get(cx, wrapper, receiver, id, vp) &&
+         WrapperFactory::WaiveXrayAndWrap(cx, vp);
+||||||| merged common ancestors
+bool
+WaiveXrayWrapper::get(JSContext* cx, HandleObject wrapper, HandleValue receiver, HandleId id,
+                      MutableHandleValue vp) const
+{
+    return CrossCompartmentWrapper::get(cx, wrapper, receiver, id, vp) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, vp);
+=======
+bool WaiveXrayWrapper::call(JSContext* cx, HandleObject wrapper,
+                            const JS::CallArgs& args) const {
+  return CrossCompartmentWrapper::call(cx, wrapper, args) &&
+         WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JSObject* WaiveXrayWrapper::enumerate(JSContext* cx, HandleObject proxy) const {
   RootedObject obj(cx, CrossCompartmentWrapper::enumerate(cx, proxy));
   if (!obj) {
@@ -66,20 +113,73 @@ JSObject* WaiveXrayWrapper::enumerate(JSContext* cx, HandleObject proxy) const {
     return nullptr;
   }
   return obj;
+||||||| merged common ancestors
+JSObject*
+WaiveXrayWrapper::enumerate(JSContext* cx, HandleObject proxy) const
+{
+    RootedObject obj(cx, CrossCompartmentWrapper::enumerate(cx, proxy));
+    if (!obj) {
+        return nullptr;
+    }
+    if (!WrapperFactory::WaiveXrayAndWrap(cx, &obj)) {
+        return nullptr;
+    }
+    return obj;
+=======
+bool WaiveXrayWrapper::construct(JSContext* cx, HandleObject wrapper,
+                                 const JS::CallArgs& args) const {
+  return CrossCompartmentWrapper::construct(cx, wrapper, args) &&
+         WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool WaiveXrayWrapper::call(JSContext* cx, HandleObject wrapper,
                             const JS::CallArgs& args) const {
   return CrossCompartmentWrapper::call(cx, wrapper, args) &&
          WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+||||||| merged common ancestors
+bool
+WaiveXrayWrapper::call(JSContext* cx, HandleObject wrapper, const JS::CallArgs& args) const
+{
+    return CrossCompartmentWrapper::call(cx, wrapper, args) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+=======
+// NB: This is important as the other side of a handshake with FieldGetter. See
+// nsXBLProtoImplField.cpp.
+bool WaiveXrayWrapper::nativeCall(JSContext* cx, JS::IsAcceptableThis test,
+                                  JS::NativeImpl impl,
+                                  const JS::CallArgs& args) const {
+  return CrossCompartmentWrapper::nativeCall(cx, test, impl, args) &&
+         WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool WaiveXrayWrapper::construct(JSContext* cx, HandleObject wrapper,
                                  const JS::CallArgs& args) const {
   return CrossCompartmentWrapper::construct(cx, wrapper, args) &&
          WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
 }
+||||||| merged common ancestors
+bool
+WaiveXrayWrapper::construct(JSContext* cx, HandleObject wrapper, const JS::CallArgs& args) const
+{
+    return CrossCompartmentWrapper::construct(cx, wrapper, args) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+}
+=======
+bool WaiveXrayWrapper::hasInstance(JSContext* cx, HandleObject wrapper,
+                                   MutableHandleValue v, bool* bp) const {
+  if (v.isObject() && WrapperFactory::IsXrayWrapper(&v.toObject())) {
+    // If |v| is a XrayWrapper and in the same compartment as the value
+    // wrapped by |wrapper|, then the Xrays of |v| would be waived upon
+    // calling CrossCompartmentWrapper::hasInstance. This may trigger
+    // getters and proxy traps of unwrapped |v|. To prevent that from
+    // happening, we exit early.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 // NB: This is important as the other side of a handshake with FieldGetter. See
 // nsXBLProtoImplField.cpp.
 bool WaiveXrayWrapper::nativeCall(JSContext* cx, JS::IsAcceptableThis test,
@@ -117,6 +217,36 @@ bool WaiveXrayWrapper::hasInstance(JSContext* cx, HandleObject wrapper,
 
   // Both |wrapper| and |v| have no Xrays here.
   return CrossCompartmentWrapper::hasInstance(cx, wrapper, v, bp);
+||||||| merged common ancestors
+// NB: This is important as the other side of a handshake with FieldGetter. See
+// nsXBLProtoImplField.cpp.
+bool
+WaiveXrayWrapper::nativeCall(JSContext* cx, JS::IsAcceptableThis test,
+                             JS::NativeImpl impl, const JS::CallArgs& args) const
+{
+    return CrossCompartmentWrapper::nativeCall(cx, test, impl, args) &&
+           WrapperFactory::WaiveXrayAndWrap(cx, args.rval());
+=======
+    // |wrapper| is the right operand of "instanceof", and must either be
+    // a function or an object with a @@hasInstance method. We are not going
+    // to call @@hasInstance, so only check whether it is a function.
+    // This check is here for consistency with usual "instanceof" behavior,
+    // which throws if the right operand is not a function. Without this
+    // check, the "instanceof" operator would return false and potentially
+    // hide errors in the code that uses the "instanceof" operator.
+    if (!JS::IsCallable(wrapper)) {
+      RootedValue wrapperv(cx, JS::ObjectValue(*wrapper));
+      js::ReportIsNotFunction(cx, wrapperv);
+      return false;
+    }
+
+    *bp = false;
+    return true;
+  }
+
+  // Both |wrapper| and |v| have no Xrays here.
+  return CrossCompartmentWrapper::hasInstance(cx, wrapper, v, bp);
+>>>>>>> upstream-releases
 }
 
 bool WaiveXrayWrapper::getPrototype(JSContext* cx, HandleObject wrapper,

@@ -8,17 +8,31 @@
 #define MOZILLA_DOMSVGNUMBER_H__
 
 #include "DOMSVGNumberList.h"
+#include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsTArray.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/ErrorResult.h"
+#include "mozilla/RefPtr.h"
 #include "nsWrapperCache.h"
 
+<<<<<<< HEAD
 class nsSVGElement;
 
 #define MOZ_SVG_LIST_INDEX_BIT_COUNT 27  // supports > 134 million list items
+||||||| merged common ancestors
+class nsSVGElement;
+
+#define MOZ_SVG_LIST_INDEX_BIT_COUNT 27 // supports > 134 million list items
+=======
+#define MOZ_SVG_LIST_INDEX_BIT_COUNT 27  // supports > 134 million list items
+>>>>>>> upstream-releases
 
 namespace mozilla {
+
+namespace dom {
+class SVGElement;
+class SVGSVGElement;
 
 /**
  * Class DOMSVGNumber
@@ -27,7 +41,7 @@ namespace mozilla {
  * are in an SVGNumberList. It is also used to create the objects returned by
  * SVGSVGElement.createSVGNumber().
  *
- * For the DOM wrapper classes for non-list SVGNumber, see nsSVGNumber2.h.
+ * For the DOM wrapper classes for non-list SVGNumber, see SVGAnimatedNumber.h.
  *
  * See the architecture comment in DOMSVGAnimatedNumberList.h.
  *
@@ -59,8 +73,12 @@ class DOMSVGNumber final : public nsISupports, public nsWrapperCache {
    * Ctor for creating the objects returned by SVGSVGElement.createSVGNumber(),
    * which do not initially belong to an attribute.
    */
+  explicit DOMSVGNumber(SVGSVGElement* aParent);
+
+ private:
   explicit DOMSVGNumber(nsISupports* aParent);
 
+ public:
   /**
    * Create an unowned copy. The caller is responsible for the first AddRef().
    */
@@ -116,8 +134,15 @@ class DOMSVGNumber final : public nsISupports, public nsWrapperCache {
 
   void SetValue(float aValue, ErrorResult& aRv);
 
+<<<<<<< HEAD
  private:
   nsSVGElement* Element() { return mList->Element(); }
+||||||| merged common ancestors
+private:
+=======
+ private:
+  dom::SVGElement* Element() { return mList->Element(); }
+>>>>>>> upstream-releases
 
   uint8_t AttrEnum() const { return mAttrEnum; }
 
@@ -150,7 +175,14 @@ class DOMSVGNumber final : public nsISupports, public nsWrapperCache {
   float mValue;
 };
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #undef MOZ_SVG_LIST_INDEX_BIT_COUNT
 

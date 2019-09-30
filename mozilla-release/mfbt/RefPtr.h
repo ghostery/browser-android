@@ -10,6 +10,7 @@
 #include "mozilla/AlreadyAddRefed.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/DbgMacro.h"
 
 /*****************************************************************************/
 
@@ -200,9 +201,20 @@ class MOZ_IS_REFPTR RefPtr {
   RefPtr<T>& operator=(const mozilla::mscom::AgileReference& aAgileRef);
 #endif  // defined(XP_WIN)
 
+<<<<<<< HEAD
   RefPtr<T>& operator=(RefPtr<T>&& aRefPtr) {
     assign_assuming_AddRef(aRefPtr.mRawPtr);
     aRefPtr.mRawPtr = nullptr;
+||||||| merged common ancestors
+  RefPtr<T>&
+  operator=(RefPtr<T> && aRefPtr)
+  {
+    assign_assuming_AddRef(aRefPtr.mRawPtr);
+    aRefPtr.mRawPtr = nullptr;
+=======
+  RefPtr<T>& operator=(RefPtr<T>&& aRefPtr) {
+    assign_assuming_AddRef(aRefPtr.forget().take());
+>>>>>>> upstream-releases
     return *this;
   }
 
@@ -522,6 +534,13 @@ inline bool operator!=(const RefPtr<T>& aLhs, decltype(nullptr)) {
 template <class T>
 inline bool operator!=(decltype(nullptr), const RefPtr<T>& aRhs) {
   return nullptr != aRhs.get();
+}
+
+// MOZ_DBG support
+
+template <class T>
+std::ostream& operator<<(std::ostream& aOut, const RefPtr<T>& aObj) {
+  return mozilla::DebugValue(aOut, aObj.get());
 }
 
 /*****************************************************************************/

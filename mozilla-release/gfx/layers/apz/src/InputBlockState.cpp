@@ -6,13 +6,33 @@
 
 #include "InputBlockState.h"
 
+<<<<<<< HEAD
 #include "APZUtils.h"
 #include "AsyncPanZoomController.h"  // for AsyncPanZoomController
 #include "ScrollAnimationPhysics.h"  // for kScrollSeriesTimeoutMs
 #include "gfxPrefs.h"                // for gfxPrefs
+||||||| merged common ancestors
+#include "AsyncPanZoomController.h"         // for AsyncPanZoomController
+#include "ScrollAnimationPhysics.h"         // for kScrollSeriesTimeoutMs
+#include "gfxPrefs.h"                       // for gfxPrefs
+=======
+#include "APZUtils.h"
+#include "AsyncPanZoomController.h"  // for AsyncPanZoomController
+#include "ScrollAnimationPhysics.h"  // for kScrollSeriesTimeoutMs
+
+>>>>>>> upstream-releases
 #include "mozilla/MouseEvents.h"
+<<<<<<< HEAD
 #include "mozilla/Telemetry.h"                // for Telemetry
 #include "mozilla/layers/IAPZCTreeManager.h"  // for AllowedTouchBehavior
+||||||| merged common ancestors
+#include "mozilla/Telemetry.h"              // for Telemetry
+#include "mozilla/layers/IAPZCTreeManager.h" // for AllowedTouchBehavior
+=======
+#include "mozilla/StaticPrefs.h"
+#include "mozilla/Telemetry.h"                // for Telemetry
+#include "mozilla/layers/IAPZCTreeManager.h"  // for AllowedTouchBehavior
+>>>>>>> upstream-releases
 #include "OverscrollHandoffState.h"
 #include "QueuedInput.h"
 
@@ -149,9 +169,17 @@ bool InputBlockState::IsDownchainOf(AsyncPanZoomController* aA,
 
 void InputBlockState::SetScrolledApzc(AsyncPanZoomController* aApzc) {
   // An input block should only have one scrolled APZC.
+<<<<<<< HEAD
   MOZ_ASSERT(!mScrolledApzc || (gfxPrefs::APZAllowImmediateHandoff()
                                     ? IsDownchainOf(mScrolledApzc, aApzc)
                                     : mScrolledApzc == aApzc));
+||||||| merged common ancestors
+  MOZ_ASSERT(!mScrolledApzc || (gfxPrefs::APZAllowImmediateHandoff() ? IsDownchainOf(mScrolledApzc, aApzc) : mScrolledApzc == aApzc));
+=======
+  MOZ_ASSERT(!mScrolledApzc || (StaticPrefs::apz_allow_immediate_handoff()
+                                    ? IsDownchainOf(mScrolledApzc, aApzc)
+                                    : mScrolledApzc == aApzc));
+>>>>>>> upstream-releases
 
   mScrolledApzc = aApzc;
 }
@@ -404,7 +432,8 @@ bool WheelBlockState::MaybeTimeout(const ScrollWheelInput& aEvent) {
     // If there's a recent mouse movement, we can time out the transaction
     // early.
     TimeDuration duration = TimeStamp::Now() - mLastMouseMove;
-    if (duration.ToMilliseconds() >= gfxPrefs::MouseWheelIgnoreMoveDelayMs()) {
+    if (duration.ToMilliseconds() >=
+        StaticPrefs::mousewheel_transaction_ignoremovedelay()) {
       TBS_LOG("%p wheel transaction timed out after mouse move\n", this);
       EndTransaction();
       return true;
@@ -420,13 +449,14 @@ bool WheelBlockState::MaybeTimeout(const TimeStamp& aTimeStamp) {
   // End the transaction if the event occurred > 1.5s after the most recently
   // seen wheel event.
   TimeDuration duration = aTimeStamp - mLastEventTime;
-  if (duration.ToMilliseconds() < gfxPrefs::MouseWheelTransactionTimeoutMs()) {
+  if (duration.ToMilliseconds() <
+      StaticPrefs::mousewheel_transaction_timeout()) {
     return false;
   }
 
   TBS_LOG("%p wheel transaction timed out\n", this);
 
-  if (gfxPrefs::MouseScrollTestingEnabled()) {
+  if (StaticPrefs::test_mousescroll()) {
     RefPtr<AsyncPanZoomController> apzc = GetTargetApzc();
     apzc->NotifyMozMouseScrollEvent(
         NS_LITERAL_STRING("MozMouseScrollTransactionTimeout"));
@@ -450,7 +480,8 @@ void WheelBlockState::OnMouseMove(const ScreenIntPoint& aPoint) {
     // this as the most recent mouse movement.
     TimeStamp now = TimeStamp::Now();
     TimeDuration duration = now - mLastEventTime;
-    if (duration.ToMilliseconds() >= gfxPrefs::MouseWheelIgnoreMoveDelayMs()) {
+    if (duration.ToMilliseconds() >=
+        StaticPrefs::mousewheel_transaction_ignoremovedelay()) {
       mLastMouseMove = now;
     }
   }
@@ -581,7 +612,7 @@ TouchBlockState::TouchBlockState(
       mInSlop(false),
       mTouchCounter(aCounter) {
   TBS_LOG("Creating %p\n", this);
-  if (!gfxPrefs::TouchActionEnabled()) {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
     mAllowedTouchBehaviorSet = true;
   }
 }
@@ -607,11 +638,32 @@ bool TouchBlockState::GetAllowedTouchBehaviors(
   return true;
 }
 
+<<<<<<< HEAD
 void TouchBlockState::CopyPropertiesFrom(const TouchBlockState& aOther) {
+||||||| merged common ancestors
+void
+TouchBlockState::CopyPropertiesFrom(const TouchBlockState& aOther)
+{
+=======
+bool TouchBlockState::HasAllowedTouchBehaviors() const {
+  return mAllowedTouchBehaviorSet;
+}
+
+void TouchBlockState::CopyPropertiesFrom(const TouchBlockState& aOther) {
+>>>>>>> upstream-releases
   TBS_LOG("%p copying properties from %p\n", this, &aOther);
+<<<<<<< HEAD
   if (gfxPrefs::TouchActionEnabled()) {
     MOZ_ASSERT(aOther.mAllowedTouchBehaviorSet ||
                aOther.IsContentResponseTimerExpired());
+||||||| merged common ancestors
+  if (gfxPrefs::TouchActionEnabled()) {
+    MOZ_ASSERT(aOther.mAllowedTouchBehaviorSet || aOther.IsContentResponseTimerExpired());
+=======
+  if (StaticPrefs::layout_css_touch_action_enabled()) {
+    MOZ_ASSERT(aOther.mAllowedTouchBehaviorSet ||
+               aOther.IsContentResponseTimerExpired());
+>>>>>>> upstream-releases
     SetAllowedTouchBehaviors(aOther.mAllowedTouchBehaviors);
   }
   mTransformToApzc = aOther.mTransformToApzc;
@@ -619,8 +671,17 @@ void TouchBlockState::CopyPropertiesFrom(const TouchBlockState& aOther) {
 
 bool TouchBlockState::HasReceivedAllContentNotifications() const {
   return CancelableBlockState::HasReceivedAllContentNotifications()
+<<<<<<< HEAD
          // See comment in TouchBlockState::IsReadyforHandling()
          && (!gfxPrefs::TouchActionEnabled() || mAllowedTouchBehaviorSet);
+||||||| merged common ancestors
+      // See comment in TouchBlockState::IsReadyforHandling()
+      && (!gfxPrefs::TouchActionEnabled() || mAllowedTouchBehaviorSet);
+=======
+         // See comment in TouchBlockState::IsReadyforHandling()
+         && (!StaticPrefs::layout_css_touch_action_enabled() ||
+             mAllowedTouchBehaviorSet);
+>>>>>>> upstream-releases
 }
 
 bool TouchBlockState::IsReadyForHandling() const {
@@ -628,13 +689,14 @@ bool TouchBlockState::IsReadyForHandling() const {
     return false;
   }
 
-  if (!gfxPrefs::TouchActionEnabled()) {
-    // If TouchActionEnabled() was false when this block was created, then
-    // mAllowedTouchBehaviorSet is guaranteed to the true. However, the pref
-    // may have been flipped to false after the block was created. In that case,
-    // we should eventually get the touch-behaviour notification, or expire the
-    // content response timeout, but we don't really need to wait for those,
-    // since we don't care about the touch-behaviour values any more.
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+    // If layout_css_touch_action_enabled() was false when this block was
+    // created, then mAllowedTouchBehaviorSet is guaranteed to the true.
+    // However, the pref may have been flipped to false after the block was
+    // created. In that case, we should eventually get the touch-behaviour
+    // notification, or expire the content response timeout, but we don't really
+    // need to wait for those, since we don't care about the touch-behaviour
+    // values any more.
     return true;
   }
 
@@ -665,8 +727,18 @@ void TouchBlockState::DispatchEvent(const InputData& aEvent) const {
   CancelableBlockState::DispatchEvent(aEvent);
 }
 
+<<<<<<< HEAD
 bool TouchBlockState::TouchActionAllowsPinchZoom() const {
   if (!gfxPrefs::TouchActionEnabled()) {
+||||||| merged common ancestors
+bool
+TouchBlockState::TouchActionAllowsPinchZoom() const
+{
+  if (!gfxPrefs::TouchActionEnabled()) {
+=======
+bool TouchBlockState::TouchActionAllowsPinchZoom() const {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+>>>>>>> upstream-releases
     return true;
   }
   // Pointer events specification requires that all touch points allow zoom.
@@ -678,8 +750,18 @@ bool TouchBlockState::TouchActionAllowsPinchZoom() const {
   return true;
 }
 
+<<<<<<< HEAD
 bool TouchBlockState::TouchActionAllowsDoubleTapZoom() const {
   if (!gfxPrefs::TouchActionEnabled()) {
+||||||| merged common ancestors
+bool
+TouchBlockState::TouchActionAllowsDoubleTapZoom() const
+{
+  if (!gfxPrefs::TouchActionEnabled()) {
+=======
+bool TouchBlockState::TouchActionAllowsDoubleTapZoom() const {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+>>>>>>> upstream-releases
     return true;
   }
   for (size_t i = 0; i < mAllowedTouchBehaviors.Length(); i++) {
@@ -690,8 +772,18 @@ bool TouchBlockState::TouchActionAllowsDoubleTapZoom() const {
   return true;
 }
 
+<<<<<<< HEAD
 bool TouchBlockState::TouchActionAllowsPanningX() const {
   if (!gfxPrefs::TouchActionEnabled()) {
+||||||| merged common ancestors
+bool
+TouchBlockState::TouchActionAllowsPanningX() const
+{
+  if (!gfxPrefs::TouchActionEnabled()) {
+=======
+bool TouchBlockState::TouchActionAllowsPanningX() const {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+>>>>>>> upstream-releases
     return true;
   }
   if (mAllowedTouchBehaviors.IsEmpty()) {
@@ -702,8 +794,18 @@ bool TouchBlockState::TouchActionAllowsPanningX() const {
   return (flags & AllowedTouchBehavior::HORIZONTAL_PAN);
 }
 
+<<<<<<< HEAD
 bool TouchBlockState::TouchActionAllowsPanningY() const {
   if (!gfxPrefs::TouchActionEnabled()) {
+||||||| merged common ancestors
+bool
+TouchBlockState::TouchActionAllowsPanningY() const
+{
+  if (!gfxPrefs::TouchActionEnabled()) {
+=======
+bool TouchBlockState::TouchActionAllowsPanningY() const {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+>>>>>>> upstream-releases
     return true;
   }
   if (mAllowedTouchBehaviors.IsEmpty()) {
@@ -714,8 +816,18 @@ bool TouchBlockState::TouchActionAllowsPanningY() const {
   return (flags & AllowedTouchBehavior::VERTICAL_PAN);
 }
 
+<<<<<<< HEAD
 bool TouchBlockState::TouchActionAllowsPanningXY() const {
   if (!gfxPrefs::TouchActionEnabled()) {
+||||||| merged common ancestors
+bool
+TouchBlockState::TouchActionAllowsPanningXY() const
+{
+  if (!gfxPrefs::TouchActionEnabled()) {
+=======
+bool TouchBlockState::TouchActionAllowsPanningXY() const {
+  if (!StaticPrefs::layout_css_touch_action_enabled()) {
+>>>>>>> upstream-releases
     return true;
   }
   if (mAllowedTouchBehaviors.IsEmpty()) {
@@ -762,6 +874,7 @@ bool TouchBlockState::UpdateSlopState(const MultiTouchInput& aInput,
   return mInSlop;
 }
 
+<<<<<<< HEAD
 Maybe<ScrollDirection> TouchBlockState::GetBestGuessPanDirection(
     const MultiTouchInput& aInput) {
   if (aInput.mType != MultiTouchInput::MULTITOUCH_MOVE ||
@@ -782,6 +895,33 @@ Maybe<ScrollDirection> TouchBlockState::GetBestGuessPanDirection(
     return Some(ScrollDirection::eVertical);
   }
   return Nothing();
+||||||| merged common ancestors
+uint32_t
+TouchBlockState::GetActiveTouchCount() const
+{
+  return mTouchCounter.GetActiveTouchCount();
+=======
+Maybe<ScrollDirection> TouchBlockState::GetBestGuessPanDirection(
+    const MultiTouchInput& aInput) {
+  if (aInput.mType != MultiTouchInput::MULTITOUCH_MOVE ||
+      aInput.mTouches.Length() != 1) {
+    return Nothing();
+  }
+  ScreenPoint vector = aInput.mTouches[0].mScreenPoint - mSlopOrigin;
+  double angle = atan2(vector.y, vector.x);  // range [-pi, pi]
+  angle = fabs(angle);                       // range [0, pi]
+
+  double angleThreshold = TouchActionAllowsPanningXY()
+                              ? StaticPrefs::apz_axis_lock_lock_angle()
+                              : StaticPrefs::apz_axis_lock_direct_pan_angle();
+  if (apz::IsCloseToHorizontal(angle, angleThreshold)) {
+    return Some(ScrollDirection::eHorizontal);
+  }
+  if (apz::IsCloseToVertical(angle, angleThreshold)) {
+    return Some(ScrollDirection::eVertical);
+  }
+  return Nothing();
+>>>>>>> upstream-releases
 }
 
 uint32_t TouchBlockState::GetActiveTouchCount() const {

@@ -439,8 +439,17 @@ class AudioBufferSourceNodeEngine final : public AudioNodeEngine {
     mBufferPosition += numFrames;
   }
 
+<<<<<<< HEAD
   int32_t ComputeFinalOutSampleRate(float aPlaybackRate, float aDetune) {
     float computedPlaybackRate = aPlaybackRate * pow(2, aDetune / 1200.f);
+||||||| merged common ancestors
+  int32_t ComputeFinalOutSampleRate(float aPlaybackRate, float aDetune)
+  {
+    float computedPlaybackRate = aPlaybackRate * pow(2, aDetune / 1200.f);
+=======
+  int32_t ComputeFinalOutSampleRate(float aPlaybackRate, float aDetune) {
+    float computedPlaybackRate = aPlaybackRate * exp2(aDetune / 1200.f);
+>>>>>>> upstream-releases
     // Make sure the playback rate and the doppler shift are something
     // our resampler can work with.
     int32_t rate = WebAudioUtils::TruncateFloatToInt<int32_t>(
@@ -585,6 +594,7 @@ class AudioBufferSourceNodeEngine final : public AudioNodeEngine {
 };
 
 AudioBufferSourceNode::AudioBufferSourceNode(AudioContext* aContext)
+<<<<<<< HEAD
     : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
                                ChannelInterpretation::Speakers),
       mLoopStart(0.0),
@@ -597,6 +607,33 @@ AudioBufferSourceNode::AudioBufferSourceNode(AudioContext* aContext)
       mStartCalled(false) {
   AudioBufferSourceNodeEngine* engine =
       new AudioBufferSourceNodeEngine(this, aContext->Destination());
+||||||| merged common ancestors
+  : AudioScheduledSourceNode(aContext,
+                             2,
+                             ChannelCountMode::Max,
+                             ChannelInterpretation::Speakers)
+  , mLoopStart(0.0)
+  , mLoopEnd(0.0)
+  // mOffset and mDuration are initialized in Start().
+  , mPlaybackRate(new AudioParam(this, PLAYBACKRATE, "playbackRate", 1.0f))
+  , mDetune(new AudioParam(this, DETUNE, "detune", 0.0f))
+  , mLoop(false)
+  , mStartCalled(false)
+{
+  AudioBufferSourceNodeEngine* engine = new AudioBufferSourceNodeEngine(this, aContext->Destination());
+=======
+    : AudioScheduledSourceNode(aContext, 2, ChannelCountMode::Max,
+                               ChannelInterpretation::Speakers),
+      mLoopStart(0.0),
+      mLoopEnd(0.0),
+      // mOffset and mDuration are initialized in Start().
+      mLoop(false),
+      mStartCalled(false) {
+  CreateAudioParam(mPlaybackRate, PLAYBACKRATE, "playbackRate", 1.0f);
+  CreateAudioParam(mDetune, DETUNE, "detune", 0.0f);
+  AudioBufferSourceNodeEngine* engine =
+      new AudioBufferSourceNodeEngine(this, aContext->Destination());
+>>>>>>> upstream-releases
   mStream = AudioNodeStream::Create(aContext, engine,
                                     AudioNodeStream::NEED_MAIN_THREAD_FINISHED,
                                     aContext->Graph());
@@ -604,6 +641,7 @@ AudioBufferSourceNode::AudioBufferSourceNode(AudioContext* aContext)
   mStream->AddMainThreadListener(this);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<AudioBufferSourceNode>
 AudioBufferSourceNode::Create(JSContext* aCx, AudioContext& aAudioContext,
                               const AudioBufferSourceOptions& aOptions,
@@ -614,6 +652,25 @@ AudioBufferSourceNode::Create(JSContext* aCx, AudioContext& aAudioContext,
 
   RefPtr<AudioBufferSourceNode> audioNode =
       new AudioBufferSourceNode(&aAudioContext);
+||||||| merged common ancestors
+/* static */ already_AddRefed<AudioBufferSourceNode>
+AudioBufferSourceNode::Create(JSContext* aCx, AudioContext& aAudioContext,
+                              const AudioBufferSourceOptions& aOptions,
+                              ErrorResult& aRv)
+{
+  if (aAudioContext.CheckClosed(aRv)) {
+    return nullptr;
+  }
+
+  RefPtr<AudioBufferSourceNode> audioNode = new AudioBufferSourceNode(&aAudioContext);
+=======
+/* static */
+already_AddRefed<AudioBufferSourceNode> AudioBufferSourceNode::Create(
+    JSContext* aCx, AudioContext& aAudioContext,
+    const AudioBufferSourceOptions& aOptions, ErrorResult& aRv) {
+  RefPtr<AudioBufferSourceNode> audioNode =
+      new AudioBufferSourceNode(&aAudioContext);
+>>>>>>> upstream-releases
 
   if (aOptions.mBuffer.WasPassed()) {
     MOZ_ASSERT(aCx);
@@ -704,8 +761,14 @@ void AudioBufferSourceNode::Start(double aWhen, double aOffset,
   if (aWhen > 0.0) {
     ns->SetDoubleParameter(START, aWhen);
   }
+<<<<<<< HEAD
 
   Context()->NotifyScheduledSourceNodeStarted();
+||||||| merged common ancestors
+=======
+
+  Context()->StartBlockedAudioContextIfAllowed();
+>>>>>>> upstream-releases
 }
 
 void AudioBufferSourceNode::Start(double aWhen, ErrorResult& aRv) {

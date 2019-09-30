@@ -10,6 +10,7 @@
 #include "gfxPlatform.h"
 #include "SourceSurfaceCapture.h"
 #include "FilterNodeCapture.h"
+#include "PathCapture.h"
 
 namespace mozilla {
 namespace gfx {
@@ -28,6 +29,7 @@ DrawTargetCaptureImpl::DrawTargetCaptureImpl(gfx::DrawTarget* aTarget,
       mSurfaceAllocationSize(0),
       mFlushBytes(aFlushBytes) {
   mSize = aTarget->GetSize();
+  mCurrentClipBounds.push(IntRect(IntPoint(0, 0), mSize));
   mFormat = aTarget->GetFormat();
   SetPermitSubpixelAA(aTarget->GetPermitSubpixelAA());
 
@@ -45,6 +47,7 @@ DrawTargetCaptureImpl::DrawTargetCaptureImpl(BackendType aBackend,
   RefPtr<DrawTarget> screenRefDT =
       gfxPlatform::GetPlatform()->ScreenReferenceDrawTarget();
 
+  mCurrentClipBounds.push(IntRect(IntPoint(0, 0), aSize));
   mFormat = aFormat;
   SetPermitSubpixelAA(IsOpaque(mFormat));
   if (aBackend == screenRefDT->GetBackendType()) {
@@ -76,6 +79,8 @@ bool DrawTargetCaptureImpl::Init(const IntSize& aSize, DrawTarget* aRefDT) {
   mRefDT = aRefDT;
 
   mSize = aSize;
+  mCurrentClipBounds.push(IntRect(IntPoint(0, 0), aSize));
+
   mFormat = aRefDT->GetFormat();
   SetPermitSubpixelAA(IsOpaque(mFormat));
   return true;
@@ -112,7 +117,9 @@ already_AddRefed<SourceSurface> DrawTargetCaptureImpl::OptimizeSourceSurface(
     RefPtr<SourceSurface> surface = aSurface;
     return surface.forget();
   }
-  return mRefDT->OptimizeSourceSurface(aSurface);
+  RefPtr<SourceSurfaceCapture> surface = new SourceSurfaceCapture(
+      const_cast<DrawTargetCaptureImpl*>(this), aSurface);
+  return surface.forget();
 }
 
 void DrawTargetCaptureImpl::DetachAllSnapshots() { MarkChanged(); }
@@ -188,10 +195,30 @@ void DrawTargetCaptureImpl::FillRect(const Rect& aRect, const Pattern& aPattern,
   AppendCommand(FillRectCommand)(aRect, aPattern, aOptions);
 }
 
+<<<<<<< HEAD
 void DrawTargetCaptureImpl::StrokeRect(const Rect& aRect,
                                        const Pattern& aPattern,
                                        const StrokeOptions& aStrokeOptions,
                                        const DrawOptions& aOptions) {
+||||||| merged common ancestors
+void
+DrawTargetCaptureImpl::StrokeRect(const Rect& aRect,
+                                  const Pattern& aPattern,
+                                  const StrokeOptions& aStrokeOptions,
+                                  const DrawOptions& aOptions)
+{
+=======
+void DrawTargetCaptureImpl::FillRoundedRect(const RoundedRect& aRect,
+                                            const Pattern& aPattern,
+                                            const DrawOptions& aOptions) {
+  AppendCommand(FillRoundedRectCommand)(aRect, aPattern, aOptions);
+}
+
+void DrawTargetCaptureImpl::StrokeRect(const Rect& aRect,
+                                       const Pattern& aPattern,
+                                       const StrokeOptions& aStrokeOptions,
+                                       const DrawOptions& aOptions) {
+>>>>>>> upstream-releases
   AppendCommand(StrokeRectCommand)(aRect, aPattern, aStrokeOptions, aOptions);
 }
 
@@ -235,11 +262,35 @@ void DrawTargetCaptureImpl::Mask(const Pattern& aSource, const Pattern& aMask,
   AppendCommand(MaskCommand)(aSource, aMask, aOptions);
 }
 
+<<<<<<< HEAD
 void DrawTargetCaptureImpl::PushClip(const Path* aPath) {
+||||||| merged common ancestors
+void
+DrawTargetCaptureImpl::PushClip(const Path* aPath)
+{
+=======
+void DrawTargetCaptureImpl::PushClip(const Path* aPath) {
+  // We need Pushes and Pops to match so instead of trying
+  // to compute the bounds of the path just repush the current
+  // bounds.
+  mCurrentClipBounds.push(mCurrentClipBounds.top());
+
+>>>>>>> upstream-releases
   AppendCommand(PushClipCommand)(aPath);
 }
 
+<<<<<<< HEAD
 void DrawTargetCaptureImpl::PushClipRect(const Rect& aRect) {
+||||||| merged common ancestors
+void
+DrawTargetCaptureImpl::PushClipRect(const Rect& aRect)
+{
+=======
+void DrawTargetCaptureImpl::PushClipRect(const Rect& aRect) {
+  IntRect deviceRect = RoundedOut(mTransform.TransformBounds(aRect));
+  mCurrentClipBounds.push(mCurrentClipBounds.top().Intersect(deviceRect));
+
+>>>>>>> upstream-releases
   AppendCommand(PushClipRectCommand)(aRect);
 }
 
@@ -271,7 +322,20 @@ void DrawTargetCaptureImpl::PopLayer() {
   AppendCommand(PopLayerCommand)();
 }
 
+<<<<<<< HEAD
 void DrawTargetCaptureImpl::PopClip() { AppendCommand(PopClipCommand)(); }
+||||||| merged common ancestors
+void
+DrawTargetCaptureImpl::PopClip()
+{
+  AppendCommand(PopClipCommand)();
+}
+=======
+void DrawTargetCaptureImpl::PopClip() {
+  mCurrentClipBounds.pop();
+  AppendCommand(PopClipCommand)();
+}
+>>>>>>> upstream-releases
 
 void DrawTargetCaptureImpl::SetTransform(const Matrix& aTransform) {
   // Save memory by eliminating state changes with no effect
@@ -326,14 +390,52 @@ already_AddRefed<DrawTarget> DrawTargetCaptureImpl::CreateSimilarDrawTarget(
   return MakeAndAddRef<DrawTargetCaptureImpl>(GetBackendType(), aSize, aFormat);
 }
 
+<<<<<<< HEAD
 RefPtr<DrawTarget> DrawTargetCaptureImpl::CreateSimilarRasterTarget(
     const IntSize& aSize, SurfaceFormat aFormat) const {
+||||||| merged common ancestors
+RefPtr<DrawTarget>
+DrawTargetCaptureImpl::CreateSimilarRasterTarget(const IntSize& aSize, SurfaceFormat aFormat) const
+{
+=======
+RefPtr<DrawTarget> DrawTargetCaptureImpl::CreateClippedDrawTarget(
+    const Rect& aBounds, SurfaceFormat aFormat) {
+  IntRect& bounds = mCurrentClipBounds.top();
+  auto dt = MakeRefPtr<DrawTargetCaptureImpl>(GetBackendType(), bounds.Size(),
+                                              aFormat);
+  RefPtr<DrawTarget> result =
+      gfx::Factory::CreateOffsetDrawTarget(dt, bounds.TopLeft());
+  result->SetTransform(mTransform);
+  return result;
+}
+
+RefPtr<DrawTarget> DrawTargetCaptureImpl::CreateSimilarRasterTarget(
+    const IntSize& aSize, SurfaceFormat aFormat) const {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mRefDT->IsCaptureDT());
   return mRefDT->CreateSimilarDrawTarget(aSize, aFormat);
 }
 
+<<<<<<< HEAD
 already_AddRefed<FilterNode> DrawTargetCaptureImpl::CreateFilter(
     FilterType aType) {
+||||||| merged common ancestors
+already_AddRefed<FilterNode>
+DrawTargetCaptureImpl::CreateFilter(FilterType aType)
+{
+=======
+already_AddRefed<PathBuilder> DrawTargetCaptureImpl::CreatePathBuilder(
+    FillRule aFillRule) const {
+  if (mRefDT->GetBackendType() == BackendType::DIRECT2D1_1) {
+    return MakeRefPtr<PathBuilderCapture>(aFillRule, mRefDT).forget();
+  }
+
+  return mRefDT->CreatePathBuilder(aFillRule);
+}
+
+already_AddRefed<FilterNode> DrawTargetCaptureImpl::CreateFilter(
+    FilterType aType) {
+>>>>>>> upstream-releases
   if (mRefDT->GetBackendType() == BackendType::DIRECT2D1_1) {
     return MakeRefPtr<FilterNodeCapture>(aType).forget();
   } else {
@@ -343,10 +445,20 @@ already_AddRefed<FilterNode> DrawTargetCaptureImpl::CreateFilter(
 
 bool DrawTargetCaptureImpl::IsEmpty() const { return mCommands.IsEmpty(); }
 
+<<<<<<< HEAD
 void DrawTargetCaptureImpl::Dump() {
   TreeLog output;
+||||||| merged common ancestors
+void
+DrawTargetCaptureImpl::Dump()
+{
+  TreeLog output;
+=======
+void DrawTargetCaptureImpl::Dump() {
+  TreeLog<> output;
+>>>>>>> upstream-releases
   output << "DrawTargetCapture(" << (void*)(this) << ")\n";
-  TreeAutoIndent indent(output);
+  TreeAutoIndent<> indent(output);
   mCommands.Log(output);
   output << "\n";
 }

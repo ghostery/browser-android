@@ -24,19 +24,37 @@ class FileCallbackRunnable final : public Runnable {
     MOZ_ASSERT(aFile);
   }
 
+<<<<<<< HEAD
   NS_IMETHOD
   Run() override {
+||||||| merged common ancestors
+  NS_IMETHOD
+  Run() override
+  {
+=======
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.  See
+  // bug 1535398.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
     // Here we clone the File object.
 
     RefPtr<File> file = File::Create(mFile->GetParentObject(), mFile->Impl());
     MOZ_ASSERT(file);
 
-    mCallback->HandleEvent(*file);
+    mCallback->Call(*file);
     return NS_OK;
   }
 
+<<<<<<< HEAD
  private:
   RefPtr<FileCallback> mCallback;
+||||||| merged common ancestors
+private:
+  RefPtr<FileCallback> mCallback;
+=======
+ private:
+  const RefPtr<FileCallback> mCallback;
+>>>>>>> upstream-releases
   RefPtr<File> mFile;
 };
 

@@ -43,19 +43,43 @@ static void RunColorTests() {
     nsCString tagName(kColorNames[index]);
 
     // Check that color lookup by name gets the right rgb value
+<<<<<<< HEAD
     ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb))
         << "can't find '" << tagName.get() << "'";
     ASSERT_TRUE((rgb == kColors[index]))
         << "failed at index " << index << " out of "
         << ArrayLength(kColorNames);
+||||||| merged common ancestors
+    ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb)) <<
+      "can't find '" << tagName.get() << "'";
+    ASSERT_TRUE((rgb == kColors[index])) <<
+      "failed at index " << index << " out of " << ArrayLength(kColorNames);
+=======
+    ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb))
+    << "can't find '" << tagName.get() << "'";
+    ASSERT_TRUE((rgb == kColors[index]))
+    << "failed at index " << index << " out of " << ArrayLength(kColorNames);
+>>>>>>> upstream-releases
 
     // fiddle with the case to make sure we can still find it
     tagName.SetCharAt(tagName.CharAt(0) - 32, 0);
+<<<<<<< HEAD
     ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb))
         << "can't find '" << tagName.get() << "'";
     ASSERT_TRUE((rgb == kColors[index]))
         << "failed at index " << index << " out of "
         << ArrayLength(kColorNames);
+||||||| merged common ancestors
+    ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb)) <<
+      "can't find '" << tagName.get() << "'";
+    ASSERT_TRUE((rgb == kColors[index])) <<
+      "failed at index " << index << " out of " << ArrayLength(kColorNames);
+=======
+    ASSERT_TRUE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tagName), &rgb))
+    << "can't find '" << tagName.get() << "'";
+    ASSERT_TRUE((rgb == kColors[index]))
+    << "failed at index " << index << " out of " << ArrayLength(kColorNames);
+>>>>>>> upstream-releases
 
     // Check that parsing an RGB value in hex gets the right values
     uint8_t r = NS_GET_R(rgb);
@@ -70,8 +94,16 @@ static void RunColorTests() {
     }
     nscolor hexrgb;
     ASSERT_TRUE(NS_HexToRGBA(NS_ConvertASCIItoUTF16(cbuf),
+<<<<<<< HEAD
                              nsHexColorType::AllowAlpha, &hexrgb))
         << "hex conversion to color of '" << cbuf << "'";
+||||||| merged common ancestors
+                             nsHexColorType::AllowAlpha, &hexrgb)) <<
+      "hex conversion to color of '" << cbuf << "'";
+=======
+                             nsHexColorType::AllowAlpha, &hexrgb))
+    << "hex conversion to color of '" << cbuf << "'";
+>>>>>>> upstream-releases
     ASSERT_TRUE(hexrgb == rgb);
   }
 }
@@ -81,11 +113,37 @@ static void RunJunkColorTests() {
   // Now make sure we don't find some garbage
   for (uint32_t i = 0; i < ArrayLength(kJunkNames); i++) {
     nsCString tag(kJunkNames[i]);
+<<<<<<< HEAD
     ASSERT_FALSE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tag), &rgb))
         << "Failed at junk color " << kJunkNames[i];
+||||||| merged common ancestors
+    ASSERT_FALSE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tag), &rgb)) <<
+      "Failed at junk color " << kJunkNames[i];
+=======
+    ASSERT_FALSE(NS_ColorNameToRGB(NS_ConvertASCIItoUTF16(tag), &rgb))
+    << "Failed at junk color " << kJunkNames[i];
+>>>>>>> upstream-releases
   }
 }
 
+<<<<<<< HEAD
 TEST(Gfx, ColorNames) { RunColorTests(); }
+||||||| merged common ancestors
+TEST(Gfx, ColorNames) {
+  RunColorTests();
+}
+=======
+TEST(Gfx, ColorNames)
+{ RunColorTests(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 TEST(Gfx, JunkColorNames) { RunJunkColorTests(); }
+||||||| merged common ancestors
+TEST(Gfx, JunkColorNames) {
+  RunJunkColorTests();
+}
+=======
+TEST(Gfx, JunkColorNames)
+{ RunJunkColorTests(); }
+>>>>>>> upstream-releases

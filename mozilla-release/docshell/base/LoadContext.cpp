@@ -19,25 +19,54 @@ NS_IMPL_ISUPPORTS(LoadContext, nsILoadContext, nsIInterfaceRequestor)
 
 LoadContext::LoadContext(nsIPrincipal* aPrincipal,
                          nsILoadContext* aOptionalBase)
+<<<<<<< HEAD
     : mTopFrameElement(nullptr),
       mNestedFrameId(0),
       mIsContent(true),
       mUseRemoteTabs(false),
       mUseTrackingProtection(false)
+||||||| merged common ancestors
+  : mTopFrameElement(nullptr)
+  , mNestedFrameId(0)
+  , mIsContent(true)
+  , mUseRemoteTabs(false)
+  , mUseTrackingProtection(false)
+=======
+    : mTopFrameElement(nullptr),
+      mNestedFrameId(0),
+      mIsContent(true),
+      mUseRemoteTabs(false),
+      mUseRemoteSubframes(false),
+      mUseTrackingProtection(false),
+>>>>>>> upstream-releases
 #ifdef DEBUG
+<<<<<<< HEAD
       ,
       mIsNotNull(true)
+||||||| merged common ancestors
+  , mIsNotNull(true)
+=======
+      mIsNotNull(true),
+>>>>>>> upstream-releases
 #endif
-{
-  mOriginAttributes = aPrincipal->OriginAttributesRef();
+      mOriginAttributes(aPrincipal->OriginAttributesRef()) {
   if (!aOptionalBase) {
     return;
   }
 
   MOZ_ALWAYS_SUCCEEDS(aOptionalBase->GetIsContent(&mIsContent));
   MOZ_ALWAYS_SUCCEEDS(aOptionalBase->GetUseRemoteTabs(&mUseRemoteTabs));
+<<<<<<< HEAD
   MOZ_ALWAYS_SUCCEEDS(
       aOptionalBase->GetUseTrackingProtection(&mUseTrackingProtection));
+||||||| merged common ancestors
+  MOZ_ALWAYS_SUCCEEDS(aOptionalBase->GetUseTrackingProtection(&mUseTrackingProtection));
+=======
+  MOZ_ALWAYS_SUCCEEDS(
+      aOptionalBase->GetUseRemoteSubframes(&mUseRemoteSubframes));
+  MOZ_ALWAYS_SUCCEEDS(
+      aOptionalBase->GetUseTrackingProtection(&mUseTrackingProtection));
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -129,8 +158,34 @@ LoadContext::SetRemoteTabs(bool aUseRemoteTabs) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 LoadContext::GetIsInIsolatedMozBrowserElement(
     bool* aIsInIsolatedMozBrowserElement) {
+||||||| merged common ancestors
+LoadContext::GetIsInIsolatedMozBrowserElement(bool* aIsInIsolatedMozBrowserElement)
+{
+=======
+LoadContext::GetUseRemoteSubframes(bool* aUseRemoteSubframes) {
+  MOZ_ASSERT(mIsNotNull);
+
+  NS_ENSURE_ARG_POINTER(aUseRemoteSubframes);
+
+  *aUseRemoteSubframes = mUseRemoteSubframes;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+LoadContext::SetRemoteSubframes(bool aUseRemoteSubframes) {
+  MOZ_ASSERT(mIsNotNull);
+
+  // We shouldn't need this on parent...
+  return NS_ERROR_UNEXPECTED;
+}
+
+NS_IMETHODIMP
+LoadContext::GetIsInIsolatedMozBrowserElement(
+    bool* aIsInIsolatedMozBrowserElement) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mIsNotNull);
 
   NS_ENSURE_ARG_POINTER(aIsInIsolatedMozBrowserElement);

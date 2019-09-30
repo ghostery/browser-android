@@ -69,12 +69,21 @@ class WorkletImpl {
   virtual JSObject* WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
                                 JS::Handle<JSObject*> aGivenProto);
 
+<<<<<<< HEAD
   nsresult SendControlMessage(already_AddRefed<nsIRunnable> aRunnable);
 
   void NotifyWorkletFinished();
+||||||| merged common ancestors
+  dom::WorkletThread* GetOrCreateThread();
+  void TerminateThread();
+=======
+  virtual nsresult SendControlMessage(already_AddRefed<nsIRunnable> aRunnable);
+
+  void NotifyWorkletFinished();
+>>>>>>> upstream-releases
 
   // Execution thread only.
-  already_AddRefed<dom::WorkletGlobalScope> CreateGlobalScope(JSContext* aCx);
+  dom::WorkletGlobalScope* GetGlobalScope();
 
   // Any thread.
 
@@ -92,7 +101,15 @@ class WorkletImpl {
 
   // Parent thread only.
   RefPtr<dom::WorkletThread> mWorkletThread;
+<<<<<<< HEAD
   bool mTerminated;
+||||||| merged common ancestors
+=======
+  bool mTerminated;
+
+  // Execution thread only.
+  RefPtr<dom::WorkletGlobalScope> mGlobalScope;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

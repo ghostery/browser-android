@@ -9,11 +9,19 @@
 namespace mozilla {
 namespace media {
 
+<<<<<<< HEAD
 already_AddRefed<nsIAsyncShutdownClient> GetShutdownBarrier() {
+||||||| merged common ancestors
+already_AddRefed<nsIAsyncShutdownClient>
+GetShutdownBarrier()
+{
+=======
+RefPtr<nsIAsyncShutdownClient> GetShutdownBarrier() {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIAsyncShutdownService> svc = services::GetAsyncShutdown();
   MOZ_RELEASE_ASSERT(svc);
 
-  nsCOMPtr<nsIAsyncShutdownClient> barrier;
+  RefPtr<nsIAsyncShutdownClient> barrier;
   nsresult rv = svc->GetProfileBeforeChange(getter_AddRefs(barrier));
   if (!barrier) {
     // We are probably in a content process. We need to do cleanup at
@@ -22,7 +30,7 @@ already_AddRefed<nsIAsyncShutdownClient> GetShutdownBarrier() {
   }
   MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));
   MOZ_RELEASE_ASSERT(barrier);
-  return barrier.forget();
+  return barrier;
 }
 
 NS_IMPL_ISUPPORTS(ShutdownBlocker, nsIAsyncShutdownBlocker)

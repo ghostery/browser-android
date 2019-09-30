@@ -6,6 +6,7 @@
 
 #include "nsPageFrame.h"
 
+#include "mozilla/PresShell.h"
 #include "mozilla/gfx/2D.h"
 #include "gfxContext.h"
 #include "nsDeviceContext.h"
@@ -13,11 +14,19 @@
 #include "nsLayoutUtils.h"
 #include "nsPresContext.h"
 #include "nsGkAtoms.h"
-#include "nsIPresShell.h"
 #include "nsPageContentFrame.h"
 #include "nsDisplayList.h"
+<<<<<<< HEAD
 #include "nsSimplePageSequenceFrame.h"  // for nsSharedPageData
 #include "nsTextFormatter.h"  // for page number localization formatting
+||||||| merged common ancestors
+#include "nsLayoutUtils.h" // for function BinarySearchForPosition
+#include "nsSimplePageSequenceFrame.h" // for nsSharedPageData
+#include "nsTextFormatter.h" // for page number localization formatting
+=======
+#include "nsPageSequenceFrame.h"  // for nsSharedPageData
+#include "nsTextFormatter.h"      // for page number localization formatting
+>>>>>>> upstream-releases
 #include "nsBidiUtils.h"
 #include "nsIPrintSettings.h"
 
@@ -28,8 +37,18 @@ extern mozilla::LazyLogModule gLayoutPrintingLog;
 using namespace mozilla;
 using namespace mozilla::gfx;
 
+<<<<<<< HEAD
 nsPageFrame* NS_NewPageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsPageFrame(aStyle);
+||||||| merged common ancestors
+nsPageFrame*
+NS_NewPageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsPageFrame(aStyle);
+=======
+nsPageFrame* NS_NewPageFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsPageFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPageFrame)
@@ -38,8 +57,18 @@ NS_QUERYFRAME_HEAD(nsPageFrame)
   NS_QUERYFRAME_ENTRY(nsPageFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsContainerFrame)
 
+<<<<<<< HEAD
 nsPageFrame::nsPageFrame(ComputedStyle* aStyle)
     : nsContainerFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+nsPageFrame::nsPageFrame(ComputedStyle* aStyle)
+  : nsContainerFrame(aStyle, kClassID)
+{
+}
+=======
+nsPageFrame::nsPageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+    : nsContainerFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
 nsPageFrame::~nsPageFrame() {}
 
@@ -92,11 +121,20 @@ void nsPageFrame::Reflow(nsPresContext* aPresContext,
     kidReflowInput.mFlags.mTableIsSplittable = true;
 
     // Use the margins given in the @page rule.
+<<<<<<< HEAD
     // If a margin is 'auto', use the margin from the print settings for that
     // side.
     const nsStyleSides& marginStyle = kidReflowInput.mStyleMargin->mMargin;
+||||||| merged common ancestors
+    // If a margin is 'auto', use the margin from the print settings for that side.
+    const nsStyleSides& marginStyle = kidReflowInput.mStyleMargin->mMargin;
+=======
+    // If a margin is 'auto', use the margin from the print settings for that
+    // side.
+    const auto& marginStyle = kidReflowInput.mStyleMargin->mMargin;
+>>>>>>> upstream-releases
     NS_FOR_CSS_SIDES(side) {
-      if (marginStyle.GetUnit(side) == eStyleUnit_Auto) {
+      if (marginStyle.Get(side).IsAuto()) {
         mPageContentMargin.Side(side) = mPD->mReflowMargin.Side(side);
       } else {
         mPageContentMargin.Side(side) =
@@ -360,9 +398,21 @@ void nsPageFrame::DrawHeaderFooter(gfxContext& aRenderingContext,
     aRenderingContext.Clip(NSRectToSnappedRect(
         aRect, PresContext()->AppUnitsPerDevPixel(), *drawTarget));
     aRenderingContext.SetColor(Color(0.f, 0.f, 0.f));
+<<<<<<< HEAD
     nsLayoutUtils::DrawString(this, aFontMetrics, &aRenderingContext, str.get(),
                               str.Length(), nsPoint(x, y + aAscent), nullptr,
                               DrawStringFlags::eForceHorizontal);
+||||||| merged common ancestors
+    nsLayoutUtils::DrawString(this, aFontMetrics, &aRenderingContext,
+                              str.get(), str.Length(),
+                              nsPoint(x, y + aAscent),
+                              nullptr,
+                              DrawStringFlags::eForceHorizontal);
+=======
+    nsLayoutUtils::DrawString(this, aFontMetrics, &aRenderingContext, str.get(),
+                              str.Length(), nsPoint(x, y + aAscent), nullptr,
+                              DrawStringFlags::ForceHorizontal);
+>>>>>>> upstream-releases
     aRenderingContext.Restore();
   }
 }
@@ -401,12 +451,29 @@ static void PruneDisplayListForExtraPage(nsDisplayListBuilder* aBuilder,
   aList->AppendToTop(&newList);
 }
 
+<<<<<<< HEAD
 static void BuildDisplayListForExtraPage(nsDisplayListBuilder* aBuilder,
                                          nsPageFrame* aPage,
                                          nsIFrame* aExtraPage,
                                          nsDisplayList* aList) {
   // The only content in aExtraPage we care about is out-of-flow content whose
   // placeholders have occurred in aPage. If
+||||||| merged common ancestors
+static void
+BuildDisplayListForExtraPage(nsDisplayListBuilder* aBuilder,
+                             nsPageFrame* aPage, nsIFrame* aExtraPage,
+                             nsDisplayList* aList)
+{
+  // The only content in aExtraPage we care about is out-of-flow content whose
+  // placeholders have occurred in aPage. If
+=======
+static void BuildDisplayListForExtraPage(nsDisplayListBuilder* aBuilder,
+                                         nsPageFrame* aPage,
+                                         nsIFrame* aExtraPage,
+                                         nsDisplayList* aList) {
+  // The only content in aExtraPage we care about is out-of-flow content from
+  // aPage, whose placeholders have occurred in aExtraPage. If
+>>>>>>> upstream-releases
   // NS_FRAME_FORCE_DISPLAY_LIST_DESCEND_INTO is not set, then aExtraPage has
   // no such content.
   if (!aExtraPage->HasAnyStateBits(NS_FRAME_FORCE_DISPLAY_LIST_DESCEND_INTO)) {
@@ -440,10 +507,24 @@ static gfx::Matrix4x4 ComputePageTransform(nsIFrame* aFrame,
   return gfx::Matrix4x4::Scaling(scale, scale, 1);
 }
 
+<<<<<<< HEAD
 class nsDisplayHeaderFooter final : public nsDisplayItem {
  public:
   nsDisplayHeaderFooter(nsDisplayListBuilder* aBuilder, nsPageFrame* aFrame)
       : nsDisplayItem(aBuilder, aFrame) {
+||||||| merged common ancestors
+class nsDisplayHeaderFooter final : public nsDisplayItem
+{
+public:
+  nsDisplayHeaderFooter(nsDisplayListBuilder* aBuilder, nsPageFrame *aFrame)
+    : nsDisplayItem(aBuilder, aFrame)
+  {
+=======
+class nsDisplayHeaderFooter final : public nsPaintedDisplayItem {
+ public:
+  nsDisplayHeaderFooter(nsDisplayListBuilder* aBuilder, nsPageFrame* aFrame)
+      : nsPaintedDisplayItem(aBuilder, aFrame) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayHeaderFooter);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -456,8 +537,16 @@ class nsDisplayHeaderFooter final : public nsDisplayItem {
     nsPageFrame* pageFrame = do_QueryFrame(mFrame);
     MOZ_ASSERT(pageFrame, "We should have an nsPageFrame");
 #endif
+<<<<<<< HEAD
     static_cast<nsPageFrame*>(mFrame)->PaintHeaderFooter(
         *aCtx, ToReferenceFrame(), mDisableSubpixelAA);
+||||||| merged common ancestors
+    static_cast<nsPageFrame*>(mFrame)->
+      PaintHeaderFooter(*aCtx, ToReferenceFrame(), mDisableSubpixelAA);
+=======
+    static_cast<nsPageFrame*>(mFrame)->PaintHeaderFooter(
+        *aCtx, ToReferenceFrame(), IsSubpixelAADisabled());
+>>>>>>> upstream-releases
   }
   NS_DISPLAY_DECL_NAME("HeaderFooter", TYPE_HEADER_FOOTER)
 
@@ -509,9 +598,18 @@ void nsPageFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     clipState.ClipContainingBlockDescendants(clipRect, nullptr);
 
     nsRect visibleRect = child->GetVisualOverflowRectRelativeToSelf();
+<<<<<<< HEAD
     nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
         aBuilder, child, visibleRect, visibleRect,
         aBuilder->IsAtRootOfPseudoStackingContext());
+||||||| merged common ancestors
+    nsDisplayListBuilder::AutoBuildingDisplayList
+      buildingForChild(aBuilder, child, visibleRect, visibleRect,
+                       aBuilder->IsAtRootOfPseudoStackingContext());
+=======
+    nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
+        aBuilder, child, visibleRect, visibleRect);
+>>>>>>> upstream-releases
     child->BuildDisplayListForStackingContext(aBuilder, &content);
 
     // We may need to paint out-of-flow frames whose placeholders are
@@ -521,6 +619,7 @@ void nsPageFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     // these extra pages are pruned so that only display items for the
     // page we currently care about (which we would have reached by
     // following placeholders to their out-of-flows) end up on the list.
+<<<<<<< HEAD
     nsIFrame* page = child;
     while ((page = GetNextPage(page)) != nullptr) {
       nsRect childVisible = visibleRect + child->GetOffsetTo(page);
@@ -529,13 +628,53 @@ void nsPageFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
           aBuilder, page, childVisible, childVisible,
           aBuilder->IsAtRootOfPseudoStackingContext());
       BuildDisplayListForExtraPage(aBuilder, this, page, &content);
+||||||| merged common ancestors
+    nsIFrame* page = child;
+    while ((page = GetNextPage(page)) != nullptr) {
+      nsRect childVisible = visibleRect + child->GetOffsetTo(page);
+
+      nsDisplayListBuilder::AutoBuildingDisplayList
+        buildingForChild(aBuilder, page, childVisible, childVisible,
+                         aBuilder->IsAtRootOfPseudoStackingContext());
+      BuildDisplayListForExtraPage(aBuilder, this, page, &content);
+=======
+    //
+    // Stacking context frames that wrap content on their normal page,
+    // as well as OOF content for this page will have their container
+    // items duplicated. We tell the builder to include our page number
+    // in the unique key for any extra page items so that they can be
+    // differentiated from the ones created on the normal page.
+    NS_ASSERTION(mPageNum <= 255, "Too many pages to handle OOFs");
+    if (mPageNum <= 255) {
+      uint8_t oldPageNum = aBuilder->GetBuildingExtraPagesForPageNum();
+      aBuilder->SetBuildingExtraPagesForPageNum(mPageNum);
+
+      nsIFrame* page = child;
+      while ((page = GetNextPage(page)) != nullptr) {
+        nsRect childVisible = visibleRect + child->GetOffsetTo(page);
+
+        nsDisplayListBuilder::AutoBuildingDisplayList buildingForChild(
+            aBuilder, page, childVisible, childVisible);
+        BuildDisplayListForExtraPage(aBuilder, this, page, &content);
+      }
+
+      aBuilder->SetBuildingExtraPagesForPageNum(oldPageNum);
+>>>>>>> upstream-releases
     }
 
     // Invoke AutoBuildingDisplayList to ensure that the correct visibleRect
     // is used to compute the visible rect if AddCanvasBackgroundColorItem
     // creates a display item.
+<<<<<<< HEAD
     nsDisplayListBuilder::AutoBuildingDisplayList building(
         aBuilder, child, visibleRect, visibleRect, true);
+||||||| merged common ancestors
+    nsDisplayListBuilder::AutoBuildingDisplayList
+      building(aBuilder, child, visibleRect, visibleRect, true);
+=======
+    nsDisplayListBuilder::AutoBuildingDisplayList building(
+        aBuilder, child, visibleRect, visibleRect);
+>>>>>>> upstream-releases
 
     // Add the canvas background color to the bottom of the list. This
     // happens after we've built the list so that AddCanvasBackgroundColorItem
@@ -544,18 +683,32 @@ void nsPageFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
         nsRect(aBuilder->ToReferenceFrame(child), child->GetSize());
 
     PresContext()->GetPresShell()->AddCanvasBackgroundColorItem(
+<<<<<<< HEAD
         *aBuilder, content, child, backgroundRect, NS_RGBA(0, 0, 0, 0));
+||||||| merged common ancestors
+      *aBuilder, content, child, backgroundRect, NS_RGBA(0,0,0,0));
+=======
+        aBuilder, &content, child, backgroundRect, NS_RGBA(0, 0, 0, 0));
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   content.AppendToTop(MakeDisplayItem<nsDisplayTransform>(
       aBuilder, child, &content, content.GetBuildingRect(),
       ::ComputePageTransform));
+||||||| merged common ancestors
+  content.AppendToTop(MakeDisplayItem<nsDisplayTransform>(aBuilder, child,
+      &content, content.GetBuildingRect(), ::ComputePageTransform));
+=======
+  content.AppendNewToTop<nsDisplayTransform>(aBuilder, child, &content,
+                                             content.GetBuildingRect(), 0,
+                                             ::ComputePageTransform);
+>>>>>>> upstream-releases
 
   set.Content()->AppendToTop(&content);
 
   if (PresContext()->IsRootPaginatedDocument()) {
-    set.Content()->AppendToTop(
-        MakeDisplayItem<nsDisplayHeaderFooter>(aBuilder, this));
+    set.Content()->AppendNewToTop<nsDisplayHeaderFooter>(aBuilder, this);
   }
 
   set.MoveTo(aLists);
@@ -587,6 +740,7 @@ void nsPageFrame::PaintHeaderFooter(gfxContext& aRenderingContext, nsPoint aPt,
   nsFontMetrics::Params params;
   params.userFontSet = pc->GetUserFontSet();
   params.textPerf = pc->GetTextPerfMetrics();
+  params.featureValueLookup = pc->GetFontFeatureValuesLookup();
   RefPtr<nsFontMetrics> fontMet =
       pc->DeviceContext()->GetMetricsFor(mPD->mHeadFootFont, params);
 
@@ -630,20 +784,41 @@ void nsPageFrame::AppendDirectlyOwnedAnonBoxes(
   aResult.AppendElement(mFrames.FirstChild());
 }
 
+<<<<<<< HEAD
 nsIFrame* NS_NewPageBreakFrame(nsIPresShell* aPresShell,
                                ComputedStyle* aStyle) {
+||||||| merged common ancestors
+nsIFrame*
+NS_NewPageBreakFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+=======
+nsIFrame* NS_NewPageBreakFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aPresShell, "null PresShell");
   // check that we are only creating page break frames when printing
   NS_ASSERTION(aPresShell->GetPresContext()->IsPaginated(),
                "created a page break frame while not printing");
 
-  return new (aPresShell) nsPageBreakFrame(aStyle);
+  return new (aPresShell)
+      nsPageBreakFrame(aStyle, aPresShell->GetPresContext());
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPageBreakFrame)
 
+<<<<<<< HEAD
 nsPageBreakFrame::nsPageBreakFrame(ComputedStyle* aStyle)
     : nsLeafFrame(aStyle, kClassID), mHaveReflowed(false) {}
+||||||| merged common ancestors
+nsPageBreakFrame::nsPageBreakFrame(ComputedStyle* aStyle)
+  : nsLeafFrame(aStyle, kClassID)
+  , mHaveReflowed(false)
+{
+}
+=======
+nsPageBreakFrame::nsPageBreakFrame(ComputedStyle* aStyle,
+                                   nsPresContext* aPresContext)
+    : nsLeafFrame(aStyle, aPresContext, kClassID), mHaveReflowed(false) {}
+>>>>>>> upstream-releases
 
 nsPageBreakFrame::~nsPageBreakFrame() {}
 

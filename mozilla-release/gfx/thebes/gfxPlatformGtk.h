@@ -34,20 +34,60 @@ class gfxPlatformGtk : public gfxPlatform {
   void ReadSystemFontList(
       InfallibleTArray<mozilla::dom::SystemFontListEntry>* retValue) override;
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfxASurface> CreateOffscreenSurface(
       const IntSize& aSize, gfxImageFormat aFormat) override;
+||||||| merged common ancestors
+    virtual already_AddRefed<gfxASurface>
+      CreateOffscreenSurface(const IntSize& aSize,
+                             gfxImageFormat aFormat) override;
+=======
+  already_AddRefed<gfxASurface> CreateOffscreenSurface(
+      const IntSize& aSize, gfxImageFormat aFormat) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult GetFontList(nsAtom* aLangGroup,
                                const nsACString& aGenericFamily,
                                nsTArray<nsString>& aListOfFonts) override;
+||||||| merged common ancestors
+    virtual nsresult GetFontList(nsAtom *aLangGroup,
+                                 const nsACString& aGenericFamily,
+                                 nsTArray<nsString>& aListOfFonts) override;
+=======
+  nsresult GetFontList(nsAtom* aLangGroup, const nsACString& aGenericFamily,
+                       nsTArray<nsString>& aListOfFonts) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult UpdateFontList() override;
+||||||| merged common ancestors
+    virtual nsresult UpdateFontList() override;
+=======
+  nsresult UpdateFontList() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void GetCommonFallbackFonts(
       uint32_t aCh, uint32_t aNextCh, Script aRunScript,
       nsTArray<const char*>& aFontList) override;
+||||||| merged common ancestors
+    virtual void
+    GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh,
+                           Script aRunScript,
+                           nsTArray<const char*>& aFontList) override;
+=======
+  void GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh, Script aRunScript,
+                              nsTArray<const char*>& aFontList) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual gfxPlatformFontList* CreatePlatformFontList() override;
+||||||| merged common ancestors
+    virtual gfxPlatformFontList* CreatePlatformFontList() override;
+=======
+  gfxPlatformFontList* CreatePlatformFontList() override;
+>>>>>>> upstream-releases
 
   gfxFontGroup* CreateFontGroup(const mozilla::FontFamilyList& aFontFamilyList,
                                 const gfxFontStyle* aStyle,
@@ -55,10 +95,22 @@ class gfxPlatformGtk : public gfxPlatform {
                                 gfxUserFontSet* aUserFontSet,
                                 gfxFloat aDevToCssSize) override;
 
+<<<<<<< HEAD
   /**
    * Calls XFlush if xrender is enabled.
    */
   virtual void FlushContentDrawing() override;
+||||||| merged common ancestors
+    /**
+     * Calls XFlush if xrender is enabled.
+     */
+    virtual void FlushContentDrawing() override;
+=======
+  /**
+   * Calls XFlush if xrender is enabled.
+   */
+  void FlushContentDrawing() override;
+>>>>>>> upstream-releases
 
   FT_Library GetFTLibrary() override;
 
@@ -66,15 +118,33 @@ class gfxPlatformGtk : public gfxPlatform {
   static double GetFontScaleFactor();
 
 #ifdef MOZ_X11
+<<<<<<< HEAD
   virtual void GetAzureBackendInfo(mozilla::widget::InfoObject& aObj) override {
     gfxPlatform::GetAzureBackendInfo(aObj);
     aObj.DefineProperty("CairoUseXRender", mozilla::gfx::gfxVars::UseXRender());
   }
+||||||| merged common ancestors
+    virtual void GetAzureBackendInfo(mozilla::widget::InfoObject &aObj) override {
+      gfxPlatform::GetAzureBackendInfo(aObj);
+      aObj.DefineProperty("CairoUseXRender", mozilla::gfx::gfxVars::UseXRender());
+    }
+=======
+  void GetAzureBackendInfo(mozilla::widget::InfoObject& aObj) override {
+    gfxPlatform::GetAzureBackendInfo(aObj);
+    aObj.DefineProperty("CairoUseXRender", mozilla::gfx::gfxVars::UseXRender());
+  }
+>>>>>>> upstream-releases
 #endif
 
   bool UseImageOffscreenSurfaces();
 
+<<<<<<< HEAD
   virtual gfxImageFormat GetOffscreenFormat() override;
+||||||| merged common ancestors
+    virtual gfxImageFormat GetOffscreenFormat() override;
+=======
+  gfxImageFormat GetOffscreenFormat() override;
+>>>>>>> upstream-releases
 
   bool SupportsApzWheelInput() const override { return true; }
 
@@ -107,13 +177,31 @@ class gfxPlatformGtk : public gfxPlatform {
   int64_t GetWaylandFrameDelay() { return mWaylandFrameDelay; }
 #endif
 
+<<<<<<< HEAD
  protected:
   bool CheckVariationFontSupport() override;
+||||||| merged common ancestors
+protected:
+    bool CheckVariationFontSupport() override;
+=======
+ protected:
+  void InitPlatformGPUProcessPrefs() override;
+  bool CheckVariationFontSupport() override;
+>>>>>>> upstream-releases
 
   int8_t mMaxGenericSubstitutions;
 
+<<<<<<< HEAD
  private:
   virtual void GetPlatformCMSOutputProfile(void*& mem, size_t& size) override;
+||||||| merged common ancestors
+private:
+    virtual void GetPlatformCMSOutputProfile(void *&mem,
+                                             size_t &size) override;
+=======
+ private:
+  void GetPlatformCMSOutputProfile(void*& mem, size_t& size) override;
+>>>>>>> upstream-releases
 
 #ifdef MOZ_X11
   Display* mCompositorDisplay;

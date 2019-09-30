@@ -33,8 +33,18 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(PresentationReceiver)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PresentationReceiver>
 PresentationReceiver::Create(nsPIDOMWindowInner* aWindow) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PresentationReceiver>
+PresentationReceiver::Create(nsPIDOMWindowInner* aWindow)
+{
+=======
+/* static */
+already_AddRefed<PresentationReceiver> PresentationReceiver::Create(
+    nsPIDOMWindowInner* aWindow) {
+>>>>>>> upstream-releases
   RefPtr<PresentationReceiver> receiver = new PresentationReceiver(aWindow);
   return NS_WARN_IF(!receiver->Init()) ? nullptr : receiver.forget();
 }
@@ -73,8 +83,19 @@ void PresentationReceiver::Shutdown() {
       NS_FAILED(service->UnregisterRespondingListener(mWindowId)));
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* PresentationReceiver::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+PresentationReceiver::WrapObject(JSContext* aCx,
+                                 JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* PresentationReceiver::WrapObject(JSContext* aCx,
+                                           JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return PresentationReceiver_Binding::Wrap(aCx, this, aGivenProto);
 }
 

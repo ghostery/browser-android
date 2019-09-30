@@ -8,7 +8,7 @@
 #define mozilla_Preferences_h
 
 #ifndef MOZILLA_INTERNAL_API
-#error "This header is only usable from within libxul (MOZILLA_INTERNAL_API)."
+#  error "This header is only usable from within libxul (MOZILLA_INTERNAL_API)."
 #endif
 
 #include "mozilla/Atomics.h"
@@ -22,6 +22,7 @@
 #include "nsString.h"
 #include "nsTArray.h"
 #include "nsWeakReference.h"
+#include <atomic>
 
 class nsIFile;
 
@@ -32,6 +33,10 @@ typedef void (*PrefChangedFunc)(const char* aPref, void* aData);
 class nsPrefBranch;
 
 namespace mozilla {
+
+struct RegisterCallbacksInternal;
+
+void UnloadPrefsModule();
 
 // A typesafe version of PrefChangeFunc, with its data argument type deduced
 // from the type of the argument passed to RegisterCallback.
@@ -223,6 +228,7 @@ class Preferences final : public nsIPrefService,
   // Infallible getters of user or default values, with fallback results on
   // failure. When `aKind` is `User` they will get the user value if possible,
   // and fall back to the default value otherwise.
+<<<<<<< HEAD
   static bool GetBool(const char* aPrefName, bool aFallback = false,
                       PrefValueKind aKind = PrefValueKind::User) {
     bool result = aFallback;
@@ -247,6 +253,49 @@ class Preferences final : public nsIPrefService,
     GetFloat(aPrefName, &result, aKind);
     return result;
   }
+||||||| merged common ancestors
+  static bool GetBool(const char* aPrefName,
+                      bool aFallback = false,
+                      PrefValueKind aKind = PrefValueKind::User)
+  {
+    bool result = aFallback;
+    GetBool(aPrefName, &result, aKind);
+    return result;
+  }
+  static int32_t GetInt(const char* aPrefName,
+                        int32_t aFallback = 0,
+                        PrefValueKind aKind = PrefValueKind::User)
+  {
+    int32_t result = aFallback;
+    GetInt(aPrefName, &result, aKind);
+    return result;
+  }
+  static uint32_t GetUint(const char* aPrefName,
+                          uint32_t aFallback = 0,
+                          PrefValueKind aKind = PrefValueKind::User)
+  {
+    uint32_t result = aFallback;
+    GetUint(aPrefName, &result, aKind);
+    return result;
+  }
+  static float GetFloat(const char* aPrefName,
+                        float aFallback = 0.0f,
+                        PrefValueKind aKind = PrefValueKind::User)
+  {
+    float result = aFallback;
+    GetFloat(aPrefName, &result, aKind);
+    return result;
+  }
+=======
+  static bool GetBool(const char* aPrefName, bool aFallback = false,
+                      PrefValueKind aKind = PrefValueKind::User);
+  static int32_t GetInt(const char* aPrefName, int32_t aFallback = 0,
+                        PrefValueKind aKind = PrefValueKind::User);
+  static uint32_t GetUint(const char* aPrefName, uint32_t aFallback = 0,
+                          PrefValueKind aKind = PrefValueKind::User);
+  static float GetFloat(const char* aPrefName, float aFallback = 0.0f,
+                        PrefValueKind aKind = PrefValueKind::User);
+>>>>>>> upstream-releases
 
   // Value setters. These fail if run outside the parent process.
 
@@ -503,8 +552,22 @@ class Preferences final : public nsIPrefService,
                                    float aDefault = 0.0f,
                                    bool aSkipAssignment = false);
 
+<<<<<<< HEAD
   template <int N>
   static nsresult AddBoolVarCache(bool* aVariable, const char (&aPref)[N],
+||||||| merged common ancestors
+  template<int N>
+  static nsresult AddBoolVarCache(bool* aVariable,
+                                  const char (&aPref)[N],
+=======
+  static nsresult AddAtomicFloatVarCache(std::atomic<float>* aVariable,
+                                         const nsACString& aPref,
+                                         float aDefault = 0.0f,
+                                         bool aSkipAssignment = false);
+
+  template <int N>
+  static nsresult AddBoolVarCache(bool* aVariable, const char (&aPref)[N],
+>>>>>>> upstream-releases
                                   bool aDefault = false,
                                   bool aSkipAssignment = false) {
     return AddBoolVarCache(aVariable, nsLiteralCString(aPref), aDefault,
@@ -551,9 +614,29 @@ class Preferences final : public nsIPrefService,
   template <int N>
   static nsresult AddFloatVarCache(float* aVariable, const char (&aPref)[N],
                                    float aDefault = 0.0f,
+<<<<<<< HEAD
                                    bool aSkipAssignment = false) {
     return AddFloatVarCache(aVariable, nsLiteralCString(aPref), aDefault,
                             aSkipAssignment);
+||||||| merged common ancestors
+                                   bool aSkipAssignment = false)
+  {
+    return AddFloatVarCache(
+      aVariable, nsLiteralCString(aPref), aDefault, aSkipAssignment);
+=======
+                                   bool aSkipAssignment = false) {
+    return AddFloatVarCache(aVariable, nsLiteralCString(aPref), aDefault,
+                            aSkipAssignment);
+  }
+
+  template <int N>
+  static nsresult AddAtomicFloatVarCache(std::atomic<float>* aVariable,
+                                         const char (&aPref)[N],
+                                         float aDefault = 0.0f,
+                                         bool aSkipAssignment = false) {
+    return AddAtomicFloatVarCache(aVariable, nsLiteralCString(aPref), aDefault,
+                                  aSkipAssignment);
+>>>>>>> upstream-releases
   }
 
   // When a content process is created these methods are used to pass changed
@@ -621,7 +704,15 @@ class Preferences final : public nsIPrefService,
  private:
   static void SetupTelemetryPref();
   static mozilla::Result<mozilla::Ok, const char*> InitInitialObjects(
+<<<<<<< HEAD
       bool aIsStartup);
+||||||| merged common ancestors
+    bool aIsStartup);
+=======
+      bool aIsStartup);
+
+  friend struct PreferencesInternalMethods;
+>>>>>>> upstream-releases
 
   static nsresult RegisterCallback(PrefChangedFunc aCallback,
                                    const nsACString& aPref, void* aClosure,

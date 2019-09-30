@@ -16,8 +16,16 @@ class ClientNavigateOpChild final : public PClientNavigateOpChild {
   MozPromiseRequestHolder<ClientOpPromise> mPromiseRequestHolder;
   nsCOMPtr<nsISerialEventTarget> mSerialEventTarget;
 
+<<<<<<< HEAD
   already_AddRefed<ClientOpPromise> DoNavigate(
       const ClientNavigateOpConstructorArgs& aArgs);
+||||||| merged common ancestors
+  already_AddRefed<ClientOpPromise>
+  DoNavigate(const ClientNavigateOpConstructorArgs& aArgs);
+=======
+  MOZ_MUST_USE RefPtr<ClientOpPromise> DoNavigate(
+      const ClientNavigateOpConstructorArgs& aArgs);
+>>>>>>> upstream-releases
 
   // PClientNavigateOpChild interface
   void ActorDestroy(ActorDestroyReason aReason) override;

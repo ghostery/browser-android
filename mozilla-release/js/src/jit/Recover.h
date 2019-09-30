@@ -175,14 +175,35 @@ class MOZ_NON_PARAM RInstruction {
   uint32_t numOperands() const override { return numOp; }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define RINSTRUCTION_HEADER_NUM_OP_(op, numOp)                                \
   RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)                                  \
   static_assert(M##op::staticNumOperands == numOp,                            \
                 "The recover instructions's numOperands should equal to the " \
                 "MIR's numOperands");
+||||||| merged common ancestors
+# define RINSTRUCTION_HEADER_NUM_OP_(op, numOp)                         \
+    RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)                          \
+    static_assert(M##op::staticNumOperands == numOp, "The recover instructions's numOperands should equal to the MIR's numOperands");
+=======
+#  define RINSTRUCTION_HEADER_NUM_OP_(op, numOp)                      \
+    RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)                        \
+    static_assert(                                                    \
+        M##op::staticNumOperands == numOp,                            \
+        "The recover instructions's numOperands should equal to the " \
+        "MIR's numOperands");
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define RINSTRUCTION_HEADER_NUM_OP_(op, numOp) \
   RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)
+||||||| merged common ancestors
+# define RINSTRUCTION_HEADER_NUM_OP_(op, numOp)                         \
+    RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)
+=======
+#  define RINSTRUCTION_HEADER_NUM_OP_(op, numOp) \
+    RINSTRUCTION_HEADER_NUM_OP_MAIN(op, numOp)
+>>>>>>> upstream-releases
 #endif
 
 class RResumePoint final : public RInstruction {
@@ -604,9 +625,21 @@ class RNewTypedArray final : public RInstruction {
                             SnapshotIterator& iter) const override;
 };
 
+<<<<<<< HEAD
 class RNewArray final : public RInstruction {
  private:
   uint32_t count_;
+||||||| merged common ancestors
+class RNewArray final : public RInstruction
+{
+  private:
+    uint32_t count_;
+=======
+class RNewArray final : public RInstruction {
+ private:
+  uint32_t count_;
+  bool convertDoubleElements_;
+>>>>>>> upstream-releases
 
  public:
   RINSTRUCTION_HEADER_NUM_OP_(NewArray, 1)
@@ -615,12 +648,26 @@ class RNewArray final : public RInstruction {
                             SnapshotIterator& iter) const override;
 };
 
+<<<<<<< HEAD
 class RNewArrayCopyOnWrite final : public RInstruction {
  private:
   gc::InitialHeap initialHeap_;
 
  public:
   RINSTRUCTION_HEADER_NUM_OP_(NewArrayCopyOnWrite, 1)
+||||||| merged common ancestors
+class RNewArrayCopyOnWrite final : public RInstruction
+{
+  private:
+    gc::InitialHeap initialHeap_;
+
+  public:
+    RINSTRUCTION_HEADER_NUM_OP_(NewArrayCopyOnWrite, 1)
+=======
+class RNewArrayCopyOnWrite final : public RInstruction {
+ public:
+  RINSTRUCTION_HEADER_NUM_OP_(NewArrayCopyOnWrite, 1)
+>>>>>>> upstream-releases
 
   MOZ_MUST_USE bool recover(JSContext* cx,
                             SnapshotIterator& iter) const override;

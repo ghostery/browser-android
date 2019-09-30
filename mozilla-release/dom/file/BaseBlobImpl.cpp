@@ -26,16 +26,37 @@ void BaseBlobImpl::SetDOMPath(const nsAString& aPath) {
   mPath = aPath;
 }
 
+<<<<<<< HEAD
 void BaseBlobImpl::GetMozFullPath(nsAString& aFileName,
                                   SystemCallerGuarantee /* unused */,
                                   ErrorResult& aRv) const {
+||||||| merged common ancestors
+void
+BaseBlobImpl::GetMozFullPath(nsAString& aFileName,
+                             SystemCallerGuarantee /* unused */,
+                             ErrorResult& aRv) const
+{
+=======
+void BaseBlobImpl::GetMozFullPath(nsAString& aFileName,
+                                  SystemCallerGuarantee /* unused */,
+                                  ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mIsFile, "Should only be called on files");
 
   GetMozFullPathInternal(aFileName, aRv);
 }
 
+<<<<<<< HEAD
 void BaseBlobImpl::GetMozFullPathInternal(nsAString& aFileName,
                                           ErrorResult& aRv) const {
+||||||| merged common ancestors
+void
+BaseBlobImpl::GetMozFullPathInternal(nsAString& aFileName, ErrorResult& aRv) const
+{
+=======
+void BaseBlobImpl::GetMozFullPathInternal(nsAString& aFileName,
+                                          ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (!mIsFile) {
     aRv.Throw(NS_ERROR_FAILURE);
     return;
@@ -124,7 +145,16 @@ nsresult BaseBlobImpl::SetMutable(bool aMutable) {
   return rv;
 }
 
+<<<<<<< HEAD
 /* static */ uint64_t BaseBlobImpl::NextSerialNumber() {
+||||||| merged common ancestors
+/* static */ uint64_t
+BaseBlobImpl::NextSerialNumber()
+{
+=======
+/* static */
+uint64_t BaseBlobImpl::NextSerialNumber() {
+>>>>>>> upstream-releases
   static Atomic<uint64_t> nextSerialNumber;
   return nextSerialNumber++;
 }

@@ -44,7 +44,15 @@ nsresult GetPermissionState(nsIPrincipal* aPrincipal,
   }
   uint32_t permission = nsIPermissionManager::UNKNOWN_ACTION;
   nsresult rv = permManager->TestExactPermissionFromPrincipal(
+<<<<<<< HEAD
       aPrincipal, "desktop-notification", &permission);
+||||||| merged common ancestors
+                  aPrincipal,
+                  "desktop-notification",
+                  &permission);
+=======
+      aPrincipal, NS_LITERAL_CSTRING("desktop-notification"), &permission);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -61,6 +69,7 @@ nsresult GetPermissionState(nsIPrincipal* aPrincipal,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 // A helper class that frees an `nsIPushSubscription` key buffer when it
 // goes out of scope.
 class MOZ_RAII AutoFreeKeyBuffer final {
@@ -98,6 +107,61 @@ nsresult GetSubscriptionParams(nsIPushSubscription* aSubscription,
                                nsTArray<uint8_t>& aRawP256dhKey,
                                nsTArray<uint8_t>& aAuthSecret,
                                nsTArray<uint8_t>& aAppServerKey) {
+||||||| merged common ancestors
+// A helper class that frees an `nsIPushSubscription` key buffer when it
+// goes out of scope.
+class MOZ_RAII AutoFreeKeyBuffer final
+{
+  uint8_t** mKeyBuffer;
+
+public:
+  explicit AutoFreeKeyBuffer(uint8_t** aKeyBuffer)
+    : mKeyBuffer(aKeyBuffer)
+  {
+    MOZ_ASSERT(mKeyBuffer);
+  }
+
+  ~AutoFreeKeyBuffer()
+  {
+    free(*mKeyBuffer);
+  }
+};
+
+// Copies a subscription key buffer into an array.
+nsresult
+CopySubscriptionKeyToArray(nsIPushSubscription* aSubscription,
+                           const nsAString& aKeyName,
+                           nsTArray<uint8_t>& aKey)
+{
+  uint8_t* keyBuffer = nullptr;
+  AutoFreeKeyBuffer autoFree(&keyBuffer);
+
+  uint32_t keyLen;
+  nsresult rv = aSubscription->GetKey(aKeyName, &keyLen, &keyBuffer);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  if (!aKey.SetCapacity(keyLen, fallible) ||
+      !aKey.InsertElementsAt(0, keyBuffer, keyLen, fallible)) {
+    return NS_ERROR_OUT_OF_MEMORY;
+  }
+  return NS_OK;
+}
+
+nsresult
+GetSubscriptionParams(nsIPushSubscription* aSubscription,
+                      nsAString& aEndpoint,
+                      nsTArray<uint8_t>& aRawP256dhKey,
+                      nsTArray<uint8_t>& aAuthSecret,
+                      nsTArray<uint8_t>& aAppServerKey)
+{
+=======
+nsresult GetSubscriptionParams(nsIPushSubscription* aSubscription,
+                               nsAString& aEndpoint,
+                               nsTArray<uint8_t>& aRawP256dhKey,
+                               nsTArray<uint8_t>& aAuthSecret,
+                               nsTArray<uint8_t>& aAppServerKey) {
+>>>>>>> upstream-releases
   if (!aSubscription) {
     return NS_OK;
   }
@@ -107,18 +171,15 @@ nsresult GetSubscriptionParams(nsIPushSubscription* aSubscription,
     return rv;
   }
 
-  rv = CopySubscriptionKeyToArray(aSubscription, NS_LITERAL_STRING("p256dh"),
-                                  aRawP256dhKey);
+  rv = aSubscription->GetKey(NS_LITERAL_STRING("p256dh"), aRawP256dhKey);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
-  rv = CopySubscriptionKeyToArray(aSubscription, NS_LITERAL_STRING("auth"),
-                                  aAuthSecret);
+  rv = aSubscription->GetKey(NS_LITERAL_STRING("auth"), aAuthSecret);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
-  rv = CopySubscriptionKeyToArray(aSubscription, NS_LITERAL_STRING("appServer"),
-                                  aAppServerKey);
+  rv = aSubscription->GetKey(NS_LITERAL_STRING("appServer"), aAppServerKey);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -290,9 +351,18 @@ class GetSubscriptionRunnable final : public Runnable {
       if (mAppServerKey.IsEmpty()) {
         rv = service->Subscribe(mScope, principal, callback);
       } else {
+<<<<<<< HEAD
         rv =
             service->SubscribeWithKey(mScope, principal, mAppServerKey.Length(),
                                       mAppServerKey.Elements(), callback);
+||||||| merged common ancestors
+        rv = service->SubscribeWithKey(mScope, principal,
+                                       mAppServerKey.Length(),
+                                       mAppServerKey.Elements(), callback);
+=======
+        rv = service->SubscribeWithKey(mScope, principal, mAppServerKey,
+                                       callback);
+>>>>>>> upstream-releases
       }
     } else {
       MOZ_ASSERT(mAction == PushManager::GetSubscriptionAction);
@@ -335,7 +405,7 @@ class PermissionResultRunnable final : public WorkerRunnable {
     if (NS_SUCCEEDED(mStatus)) {
       promise->MaybeResolve(mState);
     } else {
-      promise->MaybeReject(aCx, JS::UndefinedHandleValue);
+      promise->MaybeRejectWithUndefined();
     }
 
     mProxy->CleanUp();
@@ -473,7 +543,7 @@ already_AddRefed<Promise> PushManager::PermissionState(
 
   RefPtr<PromiseWorkerProxy> proxy = PromiseWorkerProxy::Create(worker, p);
   if (!proxy) {
-    p->MaybeReject(worker->GetJSContext(), JS::UndefinedHandleValue);
+    p->MaybeRejectWithUndefined();
     return p.forget();
   }
 

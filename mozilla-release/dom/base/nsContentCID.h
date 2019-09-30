@@ -16,6 +16,7 @@
   }
 
 // {FC886801-E768-11d4-9885-00C04FA0CF4B}
+<<<<<<< HEAD
 #define NS_CONTENT_DOCUMENT_LOADER_FACTORY_CID      \
   {                                                 \
     0xfc886801, 0xe768, 0x11d4, {                   \
@@ -50,6 +51,49 @@
       0x93, 0x2e, 0x00, 0x80, 0x5f, 0x8a, 0xdd, 0x32 \
     }                                                \
   }
+||||||| merged common ancestors
+#define NS_CONTENT_DOCUMENT_LOADER_FACTORY_CID \
+ { 0xfc886801, 0xe768, 0x11d4, { 0x98, 0x85, 0x0, 0xc0, 0x4f, 0xa0, 0xcf, 0x4b } }
+
+// {e7ba1480-1dea-11d3-830f-00104bed045e}
+#define NS_TEXT_ENCODER_CID \
+{ 0xe7ba1480, 0x1dea, 0x11d3, {0x83, 0x0f, 0x00, 0x10, 0x4b, 0xed, 0x04, 0x5e} }
+
+ // {7f915b01-98fc-11d4-8eb0-a803f80ff1bc}
+#define NS_HTMLCOPY_TEXT_ENCODER_CID \
+{ 0x7f915b01, 0x98fc, 0x11d4, { 0x8e, 0xb0, 0xa8, 0x03, 0xf8, 0x0f, 0xf1, 0xbc } }
+
+#define NS_NAMESPACEMANAGER_CID                   \
+{ /* d9783472-8fe9-11d2-9d3c-0060088f9ff7 */      \
+ 0xd9783472, 0x8fe9, 0x11d2,                      \
+ {0x9d, 0x3c, 0x00, 0x60, 0x08, 0x8f, 0x9f, 0xf7}}
+
+#define NS_CONTENTITERATOR_CID \
+{/* {a6cf90e3-15b3-11d2-932e-00805f8add32}*/ \
+ 0xa6cf90e3, 0x15b3, 0x11d2, {0x93, 0x2e, 0x00, 0x80, 0x5f, 0x8a, 0xdd, 0x32 } }
+
+#define NS_PRECONTENTITERATOR_CID \
+{/* {80D7E247-D4B8-45d7-BB59-6F1DD56F384C} */ \
+ 0x80d7e247, 0xd4b8, 0x45d7, { 0xbb, 0x59, 0x6f, 0x1d, 0xd5, 0x6f, 0x38, 0x4c } }
+
+#define NS_SUBTREEITERATOR_CID \
+{/* {a6cf90e5-15b3-11d2-932e-00805f8add32}*/ \
+ 0xa6cf90e5, 0x15b3, 0x11d2, {0x93, 0x2e, 0x00, 0x80, 0x5f, 0x8a, 0xdd, 0x32 } }
+=======
+#define NS_CONTENT_DOCUMENT_LOADER_FACTORY_CID      \
+  {                                                 \
+    0xfc886801, 0xe768, 0x11d4, {                   \
+      0x98, 0x85, 0x0, 0xc0, 0x4f, 0xa0, 0xcf, 0x4b \
+    }                                               \
+  }
+
+#define NS_NAMESPACEMANAGER_CID                      \
+  { /* d9783472-8fe9-11d2-9d3c-0060088f9ff7 */       \
+    0xd9783472, 0x8fe9, 0x11d2, {                    \
+      0x9d, 0x3c, 0x00, 0x60, 0x08, 0x8f, 0x9f, 0xf7 \
+    }                                                \
+  }
+>>>>>>> upstream-releases
 
 // {09F689E0-B4DA-11d2-A68B-00104BDE6048}
 #define NS_EVENTLISTENERMANAGER_CID                 \

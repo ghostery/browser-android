@@ -66,7 +66,7 @@ namespace gc {
     D(FAT_INLINE_ATOM,     String,       js::FatInlineAtom, js::FatInlineAtom, true,   false,  true) \
     D(ATOM,                String,       js::NormalAtom,    js::NormalAtom,    true,   false,  true) \
     D(SYMBOL,              Symbol,       JS::Symbol,        JS::Symbol,        true,   false,  false) \
-    IF_BIGINT(D(BIGINT,    BigInt,       JS::BigInt,        JS::BigInt,        true,   false,  false),) \
+    D(BIGINT,              BigInt,       JS::BigInt,        JS::BigInt,        true,   false,  true) \
     D(JITCODE,             JitCode,      js::jit::JitCode,  js::jit::JitCode,  false,  false,  false) \
     D(SCOPE,               Scope,        js::Scope,         js::Scope,         true,   false,  true) \
     D(REGEXP_SHARED,       RegExpShared, js::RegExpShared,  js::RegExpShared,  true,   false,  true)
@@ -128,23 +128,45 @@ inline bool IsShapeAllocKind(AllocKind kind) {
 
 // Returns a sequence for use in a range-based for loop,
 // to iterate over all alloc kinds.
+<<<<<<< HEAD
 inline decltype(mozilla::MakeEnumeratedRange(AllocKind::FIRST,
                                              AllocKind::LIMIT))
 AllAllocKinds() {
   return mozilla::MakeEnumeratedRange(AllocKind::FIRST, AllocKind::LIMIT);
+||||||| merged common ancestors
+inline decltype(mozilla::MakeEnumeratedRange(AllocKind::FIRST, AllocKind::LIMIT))
+AllAllocKinds()
+{
+    return mozilla::MakeEnumeratedRange(AllocKind::FIRST, AllocKind::LIMIT);
+=======
+inline auto AllAllocKinds() {
+  return mozilla::MakeEnumeratedRange(AllocKind::FIRST, AllocKind::LIMIT);
+>>>>>>> upstream-releases
 }
 
 // Returns a sequence for use in a range-based for loop,
 // to iterate over all object alloc kinds.
+<<<<<<< HEAD
 inline decltype(mozilla::MakeEnumeratedRange(AllocKind::OBJECT_FIRST,
                                              AllocKind::OBJECT_LIMIT))
 ObjectAllocKinds() {
   return mozilla::MakeEnumeratedRange(AllocKind::OBJECT_FIRST,
                                       AllocKind::OBJECT_LIMIT);
+||||||| merged common ancestors
+inline decltype(mozilla::MakeEnumeratedRange(AllocKind::OBJECT_FIRST, AllocKind::OBJECT_LIMIT))
+ObjectAllocKinds()
+{
+    return mozilla::MakeEnumeratedRange(AllocKind::OBJECT_FIRST, AllocKind::OBJECT_LIMIT);
+=======
+inline auto ObjectAllocKinds() {
+  return mozilla::MakeEnumeratedRange(AllocKind::OBJECT_FIRST,
+                                      AllocKind::OBJECT_LIMIT);
+>>>>>>> upstream-releases
 }
 
 // Returns a sequence for use in a range-based for loop,
 // to iterate over alloc kinds from |first| to |limit|, exclusive.
+<<<<<<< HEAD
 inline decltype(mozilla::MakeEnumeratedRange(AllocKind::FIRST,
                                              AllocKind::LIMIT))
 SomeAllocKinds(AllocKind first = AllocKind::FIRST,
@@ -152,6 +174,20 @@ SomeAllocKinds(AllocKind first = AllocKind::FIRST,
   MOZ_ASSERT(IsAllocKind(first), "|first| is not a valid AllocKind!");
   MOZ_ASSERT(IsAllocKind(limit), "|limit| is not a valid AllocKind!");
   return mozilla::MakeEnumeratedRange(first, limit);
+||||||| merged common ancestors
+inline decltype(mozilla::MakeEnumeratedRange(AllocKind::FIRST, AllocKind::LIMIT))
+SomeAllocKinds(AllocKind first = AllocKind::FIRST, AllocKind limit = AllocKind::LIMIT)
+{
+    MOZ_ASSERT(IsAllocKind(first), "|first| is not a valid AllocKind!");
+    MOZ_ASSERT(IsAllocKind(limit), "|limit| is not a valid AllocKind!");
+    return mozilla::MakeEnumeratedRange(first, limit);
+=======
+inline auto SomeAllocKinds(AllocKind first = AllocKind::FIRST,
+                           AllocKind limit = AllocKind::LIMIT) {
+  MOZ_ASSERT(IsAllocKind(first), "|first| is not a valid AllocKind!");
+  MOZ_ASSERT(IsAllocKind(limit), "|limit| is not a valid AllocKind!");
+  return mozilla::MakeEnumeratedRange(first, limit);
+>>>>>>> upstream-releases
 }
 
 // AllAllocKindArray<ValueType> gives an enumerated array of ValueTypes,

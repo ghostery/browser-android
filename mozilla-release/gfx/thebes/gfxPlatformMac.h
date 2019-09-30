@@ -29,8 +29,17 @@ class gfxPlatformMac : public gfxPlatform {
   bool UsesTiling() const override;
   bool ContentUsesTiling() const override;
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfxASurface> CreateOffscreenSurface(
       const IntSize& aSize, gfxImageFormat aFormat) override;
+||||||| merged common ancestors
+    virtual already_AddRefed<gfxASurface>
+      CreateOffscreenSurface(const IntSize& aSize,
+                             gfxImageFormat aFormat) override;
+=======
+  already_AddRefed<gfxASurface> CreateOffscreenSurface(
+      const IntSize& aSize, gfxImageFormat aFormat) override;
+>>>>>>> upstream-releases
 
   gfxFontGroup* CreateFontGroup(const mozilla::FontFamilyList& aFontFamilyList,
                                 const gfxFontStyle* aStyle,
@@ -38,25 +47,64 @@ class gfxPlatformMac : public gfxPlatform {
                                 gfxUserFontSet* aUserFontSet,
                                 gfxFloat aDevToCssSize) override;
 
+<<<<<<< HEAD
   virtual gfxPlatformFontList* CreatePlatformFontList() override;
+||||||| merged common ancestors
+    virtual gfxPlatformFontList* CreatePlatformFontList() override;
+=======
+  gfxPlatformFontList* CreatePlatformFontList() override;
+>>>>>>> upstream-releases
 
   void ReadSystemFontList(
       InfallibleTArray<mozilla::dom::SystemFontListEntry>* aFontList) override;
 
   bool IsFontFormatSupported(uint32_t aFormatFlags) override;
 
+<<<<<<< HEAD
   virtual void GetCommonFallbackFonts(
       uint32_t aCh, uint32_t aNextCh, Script aRunScript,
       nsTArray<const char*>& aFontList) override;
+||||||| merged common ancestors
+    virtual void GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh,
+                                        Script aRunScript,
+                                        nsTArray<const char*>& aFontList) override;
+=======
+  void GetCommonFallbackFonts(uint32_t aCh, uint32_t aNextCh, Script aRunScript,
+                              nsTArray<const char*>& aFontList) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // lookup the system font for a particular system font type and set
   // the name and style characteristics
   static void LookupSystemFont(mozilla::LookAndFeel::FontID aSystemFontID,
                                nsACString& aSystemFontName,
                                gfxFontStyle& aFontStyle,
                                float aDevPixPerCSSPixel);
+||||||| merged common ancestors
+    // lookup the system font for a particular system font type and set
+    // the name and style characteristics
+    static void
+    LookupSystemFont(mozilla::LookAndFeel::FontID aSystemFontID,
+                     nsACString& aSystemFontName,
+                     gfxFontStyle &aFontStyle,
+                     float aDevPixPerCSSPixel);
+=======
+  // lookup the system font for a particular system font type and set
+  // the name and style characteristics
+  static void LookupSystemFont(mozilla::LookAndFeel::FontID aSystemFontID,
+                               nsACString& aSystemFontName,
+                               gfxFontStyle& aFontStyle);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool SupportsApzWheelInput() const override { return true; }
+||||||| merged common ancestors
+    virtual bool SupportsApzWheelInput() const override {
+      return true;
+    }
+=======
+  bool SupportsApzWheelInput() const override { return true; }
+>>>>>>> upstream-releases
 
   bool RespectsFontStyleSmoothing() const override {
     // gfxMacFont respects the font smoothing hint.
@@ -70,8 +118,15 @@ class gfxPlatformMac : public gfxPlatform {
     return true;
   }
 
+<<<<<<< HEAD
   virtual already_AddRefed<mozilla::gfx::VsyncSource>
   CreateHardwareVsyncSource() override;
+||||||| merged common ancestors
+    virtual already_AddRefed<mozilla::gfx::VsyncSource> CreateHardwareVsyncSource() override;
+=======
+  already_AddRefed<mozilla::gfx::VsyncSource> CreateHardwareVsyncSource()
+      override;
+>>>>>>> upstream-releases
 
   // lower threshold on font anti-aliasing
   uint32_t GetAntiAliasingThreshold() { return mFontAntiAliasingThreshold; }
@@ -83,8 +138,16 @@ class gfxPlatformMac : public gfxPlatform {
 
   bool CheckVariationFontSupport() override;
 
+<<<<<<< HEAD
  private:
   virtual void GetPlatformCMSOutputProfile(void*& mem, size_t& size) override;
+||||||| merged common ancestors
+private:
+    virtual void GetPlatformCMSOutputProfile(void* &mem, size_t &size) override;
+=======
+ private:
+  void GetPlatformCMSOutputProfile(void*& mem, size_t& size) override;
+>>>>>>> upstream-releases
 
   // read in the pref value for the lower threshold on font anti-aliasing
   static uint32_t ReadAntiAliasingThreshold();

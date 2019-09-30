@@ -5,6 +5,7 @@
 "use strict";
 
 const { Cu } = require("chrome");
+const Services = require("Services");
 const { Actor, ActorClassWithSpec } = require("devtools/shared/protocol");
 const {
   flexboxSpec,
@@ -12,6 +13,7 @@ const {
   gridSpec,
   layoutSpec,
 } = require("devtools/shared/specs/layout");
+<<<<<<< HEAD
 const { SHOW_ELEMENT } = require("devtools/shared/dom-node-filter-constants");
 const { getStringifiableFragments } =
   require("devtools/server/actors/utils/css-grid-utils");
@@ -21,6 +23,59 @@ loader.lazyRequireGetter(this, "getCSSStyleRules", "devtools/shared/inspector/cs
 loader.lazyRequireGetter(this, "isCssPropertyKnown", "devtools/server/actors/css-properties", true);
 loader.lazyRequireGetter(this, "parseDeclarations", "devtools/shared/css/parsing-utils", true);
 loader.lazyRequireGetter(this, "nodeConstants", "devtools/shared/dom-node-constants");
+||||||| merged common ancestors
+const { SHOW_ELEMENT } = require("devtools/shared/dom-node-filter-constants");
+const { getStringifiableFragments } =
+  require("devtools/server/actors/utils/css-grid-utils");
+
+loader.lazyRequireGetter(this, "getCSSStyleRules", "devtools/shared/inspector/css-logic", true);
+loader.lazyRequireGetter(this, "CssLogic", "devtools/server/actors/inspector/css-logic", true);
+loader.lazyRequireGetter(this, "nodeConstants", "devtools/shared/dom-node-constants");
+=======
+const {
+  getStringifiableFragments,
+} = require("devtools/server/actors/utils/css-grid-utils");
+
+loader.lazyRequireGetter(
+  this,
+  "CssLogic",
+  "devtools/server/actors/inspector/css-logic",
+  true
+);
+loader.lazyRequireGetter(
+  this,
+  "findGridParentContainerForNode",
+  "devtools/server/actors/inspector/utils",
+  true
+);
+loader.lazyRequireGetter(
+  this,
+  "getCSSStyleRules",
+  "devtools/shared/inspector/css-logic",
+  true
+);
+loader.lazyRequireGetter(
+  this,
+  "isCssPropertyKnown",
+  "devtools/server/actors/css-properties",
+  true
+);
+loader.lazyRequireGetter(
+  this,
+  "parseDeclarations",
+  "devtools/shared/css/parsing-utils",
+  true
+);
+loader.lazyRequireGetter(
+  this,
+  "nodeConstants",
+  "devtools/shared/dom-node-constants"
+);
+
+const SUBGRID_ENABLED = Services.prefs.getBoolPref(
+  "layout.css.grid-template-subgrid-value.enabled"
+);
+>>>>>>> upstream-releases
 
 /**
  * Set of actors the expose the CSS layout information to the devtools protocol clients.
@@ -56,11 +111,7 @@ const FlexboxActor = ActorClassWithSpec(flexboxSpec, {
     this.walker = null;
   },
 
-  form(detail) {
-    if (detail === "actorid") {
-      return this.actorID;
-    }
-
+  form() {
     const styles = CssLogic.getComputedStyle(this.containerEl);
 
     const form = {
@@ -107,6 +158,7 @@ const FlexboxActor = ActorClassWithSpec(flexboxSpec, {
 
     for (const line of flex.getLines()) {
       for (const item of line.getItems()) {
+<<<<<<< HEAD
         flexItemActors.push(new FlexItemActor(this, item.node, {
           crossAxisDirection,
           mainAxisDirection,
@@ -119,6 +171,32 @@ const FlexboxActor = ActorClassWithSpec(flexboxSpec, {
           lineGrowthState: line.growthState,
           clampState: item.clampState,
         }));
+||||||| merged common ancestors
+        flexItemActors.push(new FlexItemActor(this, item.node, {
+          crossMaxSize: item.crossMaxSize,
+          crossMinSize: item.crossMinSize,
+          mainBaseSize: item.mainBaseSize,
+          mainDeltaSize: item.mainDeltaSize,
+          mainMaxSize: item.mainMaxSize,
+          mainMinSize: item.mainMinSize,
+          lineGrowthState: line.growthState,
+        }));
+=======
+        flexItemActors.push(
+          new FlexItemActor(this, item.node, {
+            crossAxisDirection,
+            mainAxisDirection,
+            crossMaxSize: item.crossMaxSize,
+            crossMinSize: item.crossMinSize,
+            mainBaseSize: item.mainBaseSize,
+            mainDeltaSize: item.mainDeltaSize,
+            mainMaxSize: item.mainMaxSize,
+            mainMinSize: item.mainMinSize,
+            lineGrowthState: line.growthState,
+            clampState: item.clampState,
+          })
+        );
+>>>>>>> upstream-releases
       }
     }
 
@@ -156,6 +234,7 @@ const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
     this.walker = null;
   },
 
+<<<<<<< HEAD
   form(detail) {
     if (detail === "actorid") {
       return this.actorID;
@@ -163,6 +242,21 @@ const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
 
     const { mainAxisDirection } = this.flexItemSizing;
     const dimension = mainAxisDirection.startsWith("horizontal") ? "width" : "height";
+||||||| merged common ancestors
+  form(detail) {
+    if (detail === "actorid") {
+      return this.actorID;
+    }
+
+    const { flexDirection } = CssLogic.getComputedStyle(this.containerEl);
+    const dimension = flexDirection.startsWith("row") ? "width" : "height";
+=======
+  form() {
+    const { mainAxisDirection } = this.flexItemSizing;
+    const dimension = mainAxisDirection.startsWith("horizontal")
+      ? "width"
+      : "height";
+>>>>>>> upstream-releases
 
     // Find the authored sizing properties for this item.
     const properties = {
@@ -178,6 +272,7 @@ const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
 
     if (isElementNode) {
       for (const name in properties) {
+<<<<<<< HEAD
         const values = [];
         const cssRules = getCSSStyleRules(this.element);
 
@@ -190,10 +285,46 @@ const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
           for (const declaration of declarations) {
             if (declaration.name === name && declaration.value !== "auto") {
               values.push({ value: declaration.value, priority: declaration.priority });
+||||||| merged common ancestors
+        let value = "";
+        // Look first on the element style.
+        if (this.element.style &&
+            this.element.style[name] && this.element.style[name] !== "auto") {
+          value = this.element.style[name];
+        } else {
+          // And then on the rules that apply to the element.
+          // getCSSStyleRules returns rules from least to most specific, so override
+          // values as we find them.
+          const cssRules = getCSSStyleRules(this.element);
+          for (const rule of cssRules) {
+            const rulePropertyValue = rule.style.getPropertyValue(name);
+            if (rulePropertyValue && rulePropertyValue !== "auto") {
+              value = rulePropertyValue;
+=======
+        const values = [];
+        const cssRules = getCSSStyleRules(this.element);
+
+        for (const rule of cssRules) {
+          // For each rule, go through *all* properties, because there may be several of
+          // them in the same rule and some with !important flags (which would be more
+          // important even if placed before another property with the same name)
+          const declarations = parseDeclarations(
+            isCssPropertyKnown,
+            rule.style.cssText
+          );
+
+          for (const declaration of declarations) {
+            if (declaration.name === name && declaration.value !== "auto") {
+              values.push({
+                value: declaration.value,
+                priority: declaration.priority,
+              });
+>>>>>>> upstream-releases
             }
           }
         }
 
+<<<<<<< HEAD
         // Then go through the element style because it's usually more important, but
         // might not be if there is a prior !important property
         if (this.element.style && this.element.style[name] &&
@@ -221,6 +352,40 @@ const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
         }
 
         properties[name] = rulePropertyValue;
+||||||| merged common ancestors
+        properties[name] = value;
+=======
+        // Then go through the element style because it's usually more important, but
+        // might not be if there is a prior !important property
+        if (
+          this.element.style &&
+          this.element.style[name] &&
+          this.element.style[name] !== "auto"
+        ) {
+          values.push({
+            value: this.element.style.getPropertyValue(name),
+            priority: this.element.style.getPropertyPriority(name),
+          });
+        }
+
+        // Now that we have a list of all the property's rule values, go through all the
+        // values and show the property value with the highest priority. Therefore, show
+        // the last !important value. Otherwise, show the last value stored.
+        let rulePropertyValue = "";
+
+        if (values.length) {
+          const lastValueIndex = values.length - 1;
+          rulePropertyValue = values[lastValueIndex].value;
+
+          for (const { priority, value } of values) {
+            if (priority === "important") {
+              rulePropertyValue = `${value} !important`;
+            }
+          }
+        }
+
+        properties[name] = rulePropertyValue;
+>>>>>>> upstream-releases
       }
     }
 
@@ -276,18 +441,19 @@ const GridActor = ActorClassWithSpec(gridSpec, {
     this.walker = null;
   },
 
-  form(detail) {
-    if (detail === "actorid") {
-      return this.actorID;
-    }
-
+  form() {
     // Seralize the grid fragment data into JSON so protocol.js knows how to write
     // and read the data.
     const gridFragments = this.containerEl.getGridFragments();
     this.gridFragments = getStringifiableFragments(gridFragments);
 
     // Record writing mode and text direction for use by the grid outline.
-    const { direction, writingMode } = CssLogic.getComputedStyle(this.containerEl);
+    const {
+      direction,
+      gridTemplateColumns,
+      gridTemplateRows,
+      writingMode,
+    } = CssLogic.getComputedStyle(this.containerEl);
 
     const form = {
       actor: this.actorID,
@@ -301,6 +467,11 @@ const GridActor = ActorClassWithSpec(gridSpec, {
     // cases.
     if (this.walker.hasNode(this.containerEl)) {
       form.containerNodeActorID = this.walker.getNode(this.containerEl).actorID;
+    }
+
+    if (SUBGRID_ENABLED) {
+      form.isSubgrid =
+        gridTemplateRows === "subgrid" || gridTemplateColumns === "subgrid";
     }
 
     return form;
@@ -362,6 +533,7 @@ const LayoutActor = ActorClassWithSpec(layoutSpec, {
         return null;
       }
 
+<<<<<<< HEAD
       if (flexType && displayType.includes("flex")) {
         if (!onlyLookAtContainer) {
           return new FlexboxActor(this, node);
@@ -371,6 +543,22 @@ const LayoutActor = ActorClassWithSpec(layoutSpec, {
 
         if (container) {
           return new FlexboxActor(this, container);
+||||||| merged common ancestors
+      if (type == "flex") {
+        if (displayType == "inline-flex" || displayType == "flex") {
+          return new FlexboxActor(this, currentNode);
+        } else if (onlyLookAtCurrentNode) {
+          return null;
+=======
+      if (flexType && displayType.includes("flex")) {
+        if (!onlyLookAtContainer) {
+          return new FlexboxActor(this, node);
+        }
+
+        const container = node.parentFlexElement;
+        if (container) {
+          return new FlexboxActor(this, container);
+>>>>>>> upstream-releases
         }
 
         return null;
@@ -384,12 +572,42 @@ const LayoutActor = ActorClassWithSpec(layoutSpec, {
     // Note that text nodes that are children of flex/grid containers are wrapped in
     // anonymous containers, so even if their displayType getter returns null we still
     // want to walk up the chain to find their container.
+<<<<<<< HEAD
     const container = findFlexOrGridParentContainerForNode(node, type, this.walker);
     if (container && flexType) {
       return new FlexboxActor(this, container);
     }
     if (container && gridType) {
       return new GridActor(this, container);
+||||||| merged common ancestors
+    while ((currentNode = treeWalker.parentNode())) {
+      if (!currentNode) {
+        break;
+      }
+
+      displayType = this.walker.getNode(currentNode).displayType;
+
+      if (type == "flex" &&
+          (displayType == "inline-flex" || displayType == "flex")) {
+        return new FlexboxActor(this, currentNode);
+      } else if (type == "grid" &&
+                 (displayType == "inline-grid" || displayType == "grid")) {
+        return new GridActor(this, currentNode);
+      } else if (displayType == "contents") {
+        // Continue walking up the tree since the parent node is a content element.
+        continue;
+      }
+
+      break;
+=======
+    const parentFlexElement = node.parentFlexElement;
+    if (parentFlexElement && flexType) {
+      return new FlexboxActor(this, parentFlexElement);
+    }
+    const container = findGridParentContainerForNode(node);
+    if (container && gridType) {
+      return new GridActor(this, container);
+>>>>>>> upstream-releases
     }
 
     return null;

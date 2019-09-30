@@ -1,23 +1,36 @@
+<<<<<<< HEAD
 use proc_macro2::TokenStream;
 use quote::{TokenStreamExt, ToTokens};
+||||||| merged common ancestors
+use quote::{Tokens, ToTokens};
+=======
+//! Types for "shape" validation. This allows types deriving `FromDeriveInput` etc. to declare
+//! that they only work on - for example - structs with named fields, or newtype enum variants.
+
+use proc_macro2::TokenStream;
+use quote::{ToTokens, TokenStreamExt};
+>>>>>>> upstream-releases
 use syn::{Meta, NestedMeta};
 
 use {Error, FromMeta, Result};
 
+/// Receiver struct for shape validation. Shape validation allows a deriving type
+/// to declare that it only accepts - for example - named structs, or newtype enum
+/// variants.
+///
+/// # Usage
+/// Because `Shape` implements `FromMeta`, the name of the field where it appears is
+/// controlled by the struct that declares `Shape` as a member. That field name is
+/// shown as `ignore` below.
+///
+/// ```rust,ignore
+/// #[ignore(any, struct_named, enum_newtype)]
+/// ```
 #[derive(Debug, Clone)]
 pub struct Shape {
     enum_values: DataShape,
     struct_values: DataShape,
     any: bool,
-}
-
-impl Shape {
-    pub fn all() -> Self {
-        Shape {
-            any: true,
-            ..Default::default()
-        }
-    }
 }
 
 impl Default for Shape {
@@ -39,15 +52,28 @@ impl FromMeta for Shape {
                 let word = word.as_str();
                 if word == "any" {
                     new.any = true;
+<<<<<<< HEAD
                 } else if word.starts_with("enum_") {
                     new.enum_values.set_word(word)?;
+||||||| merged common ancestors
+                }
+                else if word.starts_with("enum_") {
+                    new.enum_values.set_word(word)?;
+=======
+                } else if word.starts_with("enum_") {
+                    new.enum_values
+                        .set_word(word)
+                        .map_err(|e| e.with_span(ident))?;
+>>>>>>> upstream-releases
                 } else if word.starts_with("struct_") {
-                    new.struct_values.set_word(word)?;
+                    new.struct_values
+                        .set_word(word)
+                        .map_err(|e| e.with_span(ident))?;
                 } else {
-                    return Err(Error::unknown_value(word));
+                    return Err(Error::unknown_value(word).with_span(ident));
                 }
             } else {
-                return Err(Error::unsupported_format("non-word"));
+                return Err(Error::unsupported_format("non-word").with_span(item));
             }
         }
 
@@ -56,8 +82,16 @@ impl FromMeta for Shape {
 }
 
 impl ToTokens for Shape {
+<<<<<<< HEAD
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let fn_body = if self.any == true {
+||||||| merged common ancestors
+    fn to_tokens(&self, tokens: &mut Tokens) {
+        let fn_body = if self.any == true {
+=======
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        let fn_body = if self.any {
+>>>>>>> upstream-releases
             quote!(::darling::export::Ok(()))
         } else {
             let en = &self.enum_values;
@@ -84,24 +118,29 @@ impl ToTokens for Shape {
             }
         };
 
-        // FIXME: Remove the &[]
-        tokens.append_all(&[quote!{
+        tokens.append_all(quote! {
             #[allow(unused_variables)]
             fn __validate_body(__body: &::syn::Data) -> ::darling::Result<()> {
                 #fn_body
             }
-        }]);
+        });
     }
 }
 
+/// Receiver for shape information within a struct or enum context. See `Shape` for more information
+/// on valid uses of shape validation.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct DataShape {
+    /// The kind of shape being described. This can be `struct_` or `enum_`.
     prefix: &'static str,
     newtype: bool,
     named: bool,
     tuple: bool,
     unit: bool,
     any: bool,
+    /// Control whether the emitted code should be inside a function or not.
+    /// This is `true` when creating a `Shape` for `FromDeriveInput`, but false
+    /// when deriving `FromVariant`.
     embedded: bool,
 }
 
@@ -147,16 +186,30 @@ impl DataShape {
 
 impl FromMeta for DataShape {
     fn from_list(items: &[NestedMeta]) -> Result<Self> {
+        let mut errors = Vec::new();
         let mut new = DataShape::default();
+
         for item in items {
             if let NestedMeta::Meta(Meta::Word(ref ident)) = *item {
+<<<<<<< HEAD
                 new.set_word(ident.to_string().as_str())?;
+||||||| merged common ancestors
+                new.set_word(ident.as_ref())?;
+=======
+                if let Err(e) = new.set_word(&ident.to_string()) {
+                    errors.push(e.with_span(ident));
+                }
+>>>>>>> upstream-releases
             } else {
-                return Err(Error::unsupported_format("non-word"));
+                errors.push(Error::unsupported_format("non-word").with_span(item));
             }
         }
 
-        Ok(new)
+        if !errors.is_empty() {
+            Err(Error::multiple(errors))
+        } else {
+            Ok(new)
+        }
     }
 }
 
@@ -165,8 +218,16 @@ impl ToTokens for DataShape {
         let body = if self.any {
             quote!(::darling::export::Ok(()))
         } else if self.supports_none() {
+<<<<<<< HEAD
             let ty = self.prefix.trim_right_matches("_");
             quote!(::darling::export::Err(::darling::Error::unsupported_shape(#ty)))
+||||||| merged common ancestors
+            let ty = self.prefix.trim_right_matches("_");
+            quote!(::darling::export::Err(::darling::Error::unsupported_format(#ty)))
+=======
+            let ty = self.prefix.trim_right_matches('_');
+            quote!(::darling::export::Err(::darling::Error::unsupported_shape(#ty)))
+>>>>>>> upstream-releases
         } else {
             let unit = match_arm("unit", self.unit);
             let newtype = match_arm("newtype", self.newtype);
@@ -183,15 +244,13 @@ impl ToTokens for DataShape {
         };
 
         if self.embedded {
-            // FIXME: Remove the &[]
-            tokens.append_all(&[body]);
+            body.to_tokens(tokens);
         } else {
-            // FIXME: Remove the &[]
-            tokens.append_all(&[quote! {
+            tokens.append_all(quote! {
                 fn __validate_data(data: &::syn::Fields) -> ::darling::Result<()> {
                     #body
                 }
-            }]);
+            });
         }
     }
 }
@@ -215,7 +274,7 @@ mod tests {
     /// parse a string as a syn::Meta instance.
     fn pm(tokens: TokenStream) -> ::std::result::Result<syn::Meta, String> {
         let attribute: syn::Attribute = parse_quote!(#[#tokens]);
-        attribute.interpret_meta().ok_or("Unable to parse".into())
+        attribute.parse_meta().or(Err("Unable to parse".into()))
     }
 
     fn fm<T: FromMeta>(tokens: TokenStream) -> T {

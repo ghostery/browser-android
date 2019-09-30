@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 1 function with some indirect sub-type change:
 
@@ -16,3 +17,10 @@
 
 
 
+||||||| merged common ancestors
+=======
+
+1 Added function:
+
+  'function SECStatus PK11_FindRawCertsWithSubject(PK11SlotInfo*, SECItem*, CERTCertificateList**)'    {PK11_FindRawCertsWithSubject@@NSS_3.45}
+>>>>>>> upstream-releases

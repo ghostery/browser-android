@@ -11,21 +11,19 @@
 #include "nsTArray.h"
 #include "nsAutoPtr.h"
 #include "nsXULAppAPI.h"
-#include "LabeledEventQueue.h"
 #include "MainThreadQueue.h"
 #include "mozilla/AbstractThread.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/EventQueue.h"
 #include "mozilla/Preferences.h"
-#include "mozilla/Scheduler.h"
 #include "mozilla/SystemGroup.h"
 #include "mozilla/StaticPtr.h"
 #include "mozilla/ThreadEventQueue.h"
 #include "mozilla/ThreadLocal.h"
 #include "PrioritizedEventQueue.h"
 #ifdef MOZ_CANARY
-#include <fcntl.h>
-#include <unistd.h>
+#  include <fcntl.h>
+#  include <unistd.h>
 #endif
 
 #include "MainThreadIdlePeriod.h"
@@ -38,7 +36,21 @@ static MOZ_THREAD_LOCAL(PRThread*) gTlsCurrentVirtualThread;
 
 bool NS_IsMainThreadTLSInitialized() { return sTLSIsMainThread.initialized(); }
 
+<<<<<<< HEAD
 bool NS_IsMainThread() { return sTLSIsMainThread.get(); }
+||||||| merged common ancestors
+bool
+NS_IsMainThread()
+{
+  return sTLSIsMainThread.get();
+}
+=======
+extern "C" {
+// This uses the C language linkage because it's exposed to Rust
+// via the xpcom/rust/moz_task crate.
+bool NS_IsMainThread() { return sTLSIsMainThread.get(); }
+}
+>>>>>>> upstream-releases
 
 void NS_SetMainThread() {
   if (!sTLSIsMainThread.init()) {
@@ -48,17 +60,37 @@ void NS_SetMainThread() {
   MOZ_ASSERT(NS_IsMainThread());
 }
 
+<<<<<<< HEAD
 void NS_SetMainThread(PRThread* aVirtualThread) {
   MOZ_ASSERT(Scheduler::IsCooperativeThread());
 
+||||||| merged common ancestors
+void
+NS_SetMainThread(PRThread* aVirtualThread)
+{
+  MOZ_ASSERT(Scheduler::IsCooperativeThread());
+
+=======
+void NS_SetMainThread(PRThread* aVirtualThread) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!gTlsCurrentVirtualThread.get());
   gTlsCurrentVirtualThread.set(aVirtualThread);
   NS_SetMainThread();
 }
 
+<<<<<<< HEAD
 void NS_UnsetMainThread() {
   MOZ_ASSERT(Scheduler::IsCooperativeThread());
 
+||||||| merged common ancestors
+void
+NS_UnsetMainThread()
+{
+  MOZ_ASSERT(Scheduler::IsCooperativeThread());
+
+=======
+void NS_UnsetMainThread() {
+>>>>>>> upstream-releases
   sTLSIsMainThread.set(false);
   MOZ_ASSERT(!NS_IsMainThread());
   gTlsCurrentVirtualThread.set(nullptr);
@@ -80,7 +112,16 @@ static bool sShutdownComplete;
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 /* static */ void nsThreadManager::ReleaseThread(void* aData) {
+||||||| merged common ancestors
+/* static */ void
+nsThreadManager::ReleaseThread(void* aData)
+{
+=======
+/* static */
+void nsThreadManager::ReleaseThread(void* aData) {
+>>>>>>> upstream-releases
   if (sShutdownComplete) {
     // We've already completed shutdown and released the references to all or
     // our TLS wrappers. Don't try to release them again.
@@ -181,7 +222,16 @@ StaticRefPtr<ShutdownObserveHelper> gShutdownObserveHelper;
   return sInstance;
 }
 
+<<<<<<< HEAD
 /* static */ void nsThreadManager::InitializeShutdownObserver() {
+||||||| merged common ancestors
+/* static */ void
+nsThreadManager::InitializeShutdownObserver()
+{
+=======
+/* static */
+void nsThreadManager::InitializeShutdownObserver() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!gShutdownObserveHelper);
 
   RefPtr<ShutdownObserveHelper> observer;
@@ -206,8 +256,6 @@ nsresult nsThreadManager::Init() {
     return NS_ERROR_UNEXPECTED;
   }
 
-  Scheduler::EventLoopActivation::Init();
-
   if (PR_NewThreadPrivateIndex(&mCurThreadIndex, ReleaseThread) == PR_FAILURE) {
     return NS_ERROR_FAILURE;
   }
@@ -224,6 +272,7 @@ nsresult nsThreadManager::Init() {
 
   nsCOMPtr<nsIIdlePeriod> idlePeriod = new MainThreadIdlePeriod();
 
+<<<<<<< HEAD
   bool startScheduler = false;
   if (XRE_IsContentProcess() && Scheduler::IsSchedulerEnabled()) {
     mMainThread = Scheduler::Init(idlePeriod);
@@ -239,6 +288,22 @@ nsresult nsThreadManager::Init() {
                            EventQueue>(idlePeriod);
     }
   }
+||||||| merged common ancestors
+  bool startScheduler = false;
+  if (XRE_IsContentProcess() && Scheduler::IsSchedulerEnabled()) {
+    mMainThread = Scheduler::Init(idlePeriod);
+    startScheduler = true;
+  } else {
+    if (XRE_IsContentProcess() && Scheduler::UseMultipleQueues()) {
+      mMainThread = CreateMainThread<ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>, LabeledEventQueue>(idlePeriod);
+    } else {
+      mMainThread = CreateMainThread<ThreadEventQueue<PrioritizedEventQueue<EventQueue>>, EventQueue>(idlePeriod);
+    }
+  }
+=======
+  mMainThread =
+      CreateMainThread<ThreadEventQueue<PrioritizedEventQueue>>(idlePeriod);
+>>>>>>> upstream-releases
 
   nsresult rv = mMainThread->InitCurrentThread();
   if (NS_FAILED(rv)) {
@@ -256,9 +321,6 @@ nsresult nsThreadManager::Init() {
 
   mInitialized = true;
 
-  if (startScheduler) {
-    Scheduler::Start();
-  }
   return NS_OK;
 }
 
@@ -454,7 +516,12 @@ nsThreadManager::NewNamedThread(const nsACString& aName, uint32_t aStackSize,
 NS_IMETHODIMP
 nsThreadManager::GetMainThread(nsIThread** aResult) {
   // Keep this functioning during Shutdown
-  if (NS_WARN_IF(!mMainThread)) {
+  if (!mMainThread) {
+    if (!NS_IsMainThread()) {
+      NS_WARNING(
+          "Called GetMainThread but there isn't a main thread and "
+          "we're not the main thread.");
+    }
     return NS_ERROR_NOT_INITIALIZED;
   }
   NS_ADDREF(*aResult = mMainThread);
@@ -585,19 +652,43 @@ void nsThreadManager::ResumeInputEventPrioritization() {
   mMainThread->ResumeInputEventPrioritization();
 }
 
+// static
+bool nsThreadManager::MainThreadHasPendingHighPriorityEvents() {
+  MOZ_ASSERT(NS_IsMainThread());
+  bool retVal = false;
+  if (get().mMainThread) {
+    get().mMainThread->HasPendingHighPriorityEvents(&retVal);
+  }
+  return retVal;
+}
+
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThreadManager::IdleDispatchToMainThread(nsIRunnable* aEvent,
                                           uint32_t aTimeout) {
   // Note: C++ callers should instead use NS_IdleDispatchToThread or
   // NS_IdleDispatchToCurrentThread.
+||||||| merged common ancestors
+nsThreadManager::IdleDispatchToMainThread(nsIRunnable *aEvent, uint32_t aTimeout)
+{
+  // Note: C++ callers should instead use NS_IdleDispatchToThread or
+  // NS_IdleDispatchToCurrentThread.
+=======
+nsThreadManager::IdleDispatchToMainThread(nsIRunnable* aEvent,
+                                          uint32_t aTimeout) {
+  // Note: C++ callers should instead use NS_DispatchToThreadQueue or
+  // NS_DispatchToCurrentThreadQueue.
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIRunnable> event(aEvent);
   if (aTimeout) {
-    return NS_IdleDispatchToThread(event.forget(), aTimeout, mMainThread);
+    return NS_DispatchToThreadQueue(event.forget(), aTimeout, mMainThread,
+                                    EventQueuePriority::Idle);
   }
 
-  return NS_IdleDispatchToThread(event.forget(), mMainThread);
+  return NS_DispatchToThreadQueue(event.forget(), mMainThread,
+                                  EventQueuePriority::Idle);
 }
 
 namespace mozilla {

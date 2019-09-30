@@ -40,7 +40,6 @@ StaticPresData::StaticPresData() {
 // clang-format off
 static const char* const kGenericFont[] = {
   ".variable.",
-  ".fixed.",
   ".serif.",
   ".sans-serif.",
   ".monospace.",
@@ -52,7 +51,6 @@ static const char* const kGenericFont[] = {
 // These are private, use the list in nsFont.h if you want a public list.
 enum {
   eDefaultFont_Variable,
-  eDefaultFont_Fixed,
   eDefaultFont_Serif,
   eDefaultFont_SansSerif,
   eDefaultFont_Monospace,
@@ -61,7 +59,15 @@ enum {
   eDefaultFont_COUNT
 };
 
+<<<<<<< HEAD
 void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
+||||||| merged common ancestors
+void
+LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom)
+{
+=======
+void LangGroupFontPrefs::Initialize(nsStaticAtom* aLangGroupAtom) {
+>>>>>>> upstream-releases
   mLangGroup = aLangGroupAtom;
 
   /* Fetch the font prefs to be used -- see bug 61883 for details.
@@ -93,7 +99,7 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
   aLangGroupAtom->ToUTF8String(langGroup);
 
   mDefaultVariableFont.size = nsPresContext::CSSPixelsToAppUnits(16);
-  mDefaultFixedFont.size = nsPresContext::CSSPixelsToAppUnits(13);
+  mDefaultMonospaceFont.size = nsPresContext::CSSPixelsToAppUnits(13);
 
   nsAutoCString pref;
 
@@ -107,7 +113,6 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
   // clang-format off
   nsFont* fontTypes[] = {
     &mDefaultVariableFont,
-    &mDefaultFixedFont,
     &mDefaultSerifFont,
     &mDefaultSansSerifFont,
     &mDefaultMonospaceFont,
@@ -141,10 +146,22 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
       Preferences::GetCString(pref.get(), value);
       if (!value.IsEmpty()) {
         FontFamilyName defaultVariableName = FontFamilyName::Convert(value);
+<<<<<<< HEAD
         FontFamilyType defaultType = defaultVariableName.mType;
         NS_ASSERTION(
             defaultType == eFamily_serif || defaultType == eFamily_sans_serif,
             "default type must be serif or sans-serif");
+||||||| merged common ancestors
+        FontFamilyType defaultType = defaultVariableName.mType;
+        NS_ASSERTION(defaultType == eFamily_serif ||
+                     defaultType == eFamily_sans_serif,
+                     "default type must be serif or sans-serif");
+=======
+        StyleGenericFontFamily defaultType = defaultVariableName.mGeneric;
+        NS_ASSERTION(defaultType == StyleGenericFontFamily::Serif ||
+                         defaultType == StyleGenericFontFamily::SansSerif,
+                     "default type must be serif or sans-serif");
+>>>>>>> upstream-releases
         mDefaultVariableFont.fontlist = FontFamilyList();
         mDefaultVariableFont.fontlist.SetDefaultFontType(defaultType);
         // We create mDefaultVariableFont.fontlist with defaultType as the
@@ -155,10 +172,22 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
         Preferences::GetCString(pref.get(), value);
         if (!value.IsEmpty()) {
           FontFamilyName defaultVariableName = FontFamilyName::Convert(value);
+<<<<<<< HEAD
           FontFamilyType defaultType = defaultVariableName.mType;
           NS_ASSERTION(
               defaultType == eFamily_serif || defaultType == eFamily_sans_serif,
               "default type must be serif or sans-serif");
+||||||| merged common ancestors
+          FontFamilyType defaultType = defaultVariableName.mType;
+          NS_ASSERTION(defaultType == eFamily_serif ||
+                       defaultType == eFamily_sans_serif,
+                       "default type must be serif or sans-serif");
+=======
+          StyleGenericFontFamily defaultType = defaultVariableName.mGeneric;
+          NS_ASSERTION(defaultType == StyleGenericFontFamily::Serif ||
+                           defaultType == StyleGenericFontFamily::SansSerif,
+                       "default type must be serif or sans-serif");
+>>>>>>> upstream-releases
           mDefaultVariableFont.fontlist = FontFamilyList();
           mDefaultVariableFont.fontlist.SetDefaultFontType(defaultType);
           // We create mDefaultVariableFont.fontlist with defaultType as the
@@ -166,6 +195,7 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
           // it can be overwritten should there be a language change.
         }
       }
+<<<<<<< HEAD
     } else {
       if (eType == eDefaultFont_Monospace) {
         // This takes care of the confusion whereby people often expect
@@ -175,6 +205,21 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
         // below)
         mDefaultMonospaceFont.size = mDefaultFixedFont.size;
       } else if (eType != eDefaultFont_Fixed) {
+||||||| merged common ancestors
+    }
+    else {
+      if (eType == eDefaultFont_Monospace) {
+        // This takes care of the confusion whereby people often expect "monospace"
+        // to have the same default font-size as "-moz-fixed" (this tentative
+        // size may be overwritten with the specific value for "monospace" when
+        // "font.size.monospace.[langGroup]" is read -- see below)
+        mDefaultMonospaceFont.size = mDefaultFixedFont.size;
+      }
+      else if (eType != eDefaultFont_Fixed) {
+=======
+    } else {
+      if (eType != eDefaultFont_Monospace) {
+>>>>>>> upstream-releases
         // all the other generic fonts are initialized with the size of the
         // variable font, but their specific size can supersede later -- see
         // below
@@ -214,6 +259,7 @@ void LangGroupFontPrefs::Initialize(nsAtom* aLangGroupAtom) {
   }
 }
 
+<<<<<<< HEAD
 nsAtom* StaticPresData::GetLangGroup(nsAtom* aLanguage,
                                      bool* aNeedsToCache) const {
   nsAtom* langGroupAtom = nullptr;
@@ -222,8 +268,28 @@ nsAtom* StaticPresData::GetLangGroup(nsAtom* aLanguage,
     langGroupAtom = nsGkAtoms::x_western;  // Assume x-western is safe...
   }
   return langGroupAtom;
+||||||| merged common ancestors
+nsAtom*
+StaticPresData::GetLangGroup(nsAtom* aLanguage,
+                             bool* aNeedsToCache) const
+{
+  nsAtom* langGroupAtom = nullptr;
+  langGroupAtom = mLangService->GetLanguageGroup(aLanguage, aNeedsToCache);
+  if (!langGroupAtom) {
+    langGroupAtom = nsGkAtoms::x_western; // Assume x-western is safe...
+  }
+  return langGroupAtom;
+=======
+nsStaticAtom* StaticPresData::GetLangGroup(nsAtom* aLanguage,
+                                           bool* aNeedsToCache) const {
+  nsStaticAtom* langGroupAtom =
+      mLangService->GetLanguageGroup(aLanguage, aNeedsToCache);
+  // Assume x-western is safe...
+  return langGroupAtom ? langGroupAtom : nsGkAtoms::x_western;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsAtom> StaticPresData::GetUncachedLangGroup(
     nsAtom* aLanguage) const {
   RefPtr<nsAtom> langGroupAtom =
@@ -232,27 +298,62 @@ already_AddRefed<nsAtom> StaticPresData::GetUncachedLangGroup(
     langGroupAtom = nsGkAtoms::x_western;  // Assume x-western is safe...
   }
   return langGroupAtom.forget();
+||||||| merged common ancestors
+already_AddRefed<nsAtom>
+StaticPresData::GetUncachedLangGroup(nsAtom* aLanguage) const
+{
+  RefPtr<nsAtom> langGroupAtom = mLangService->GetUncachedLanguageGroup(aLanguage);
+  if (!langGroupAtom) {
+    langGroupAtom = nsGkAtoms::x_western; // Assume x-western is safe...
+  }
+  return langGroupAtom.forget();
+=======
+nsStaticAtom* StaticPresData::GetUncachedLangGroup(nsAtom* aLanguage) const {
+  nsStaticAtom* langGroupAtom =
+      mLangService->GetUncachedLanguageGroup(aLanguage);
+  return langGroupAtom ? langGroupAtom : nsGkAtoms::x_western;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 const LangGroupFontPrefs* StaticPresData::GetFontPrefsForLangHelper(
     nsAtom* aLanguage, const LangGroupFontPrefs* aPrefs,
     bool* aNeedsToCache) const {
+||||||| merged common ancestors
+const LangGroupFontPrefs*
+StaticPresData::GetFontPrefsForLangHelper(nsAtom* aLanguage,
+                                          const LangGroupFontPrefs* aPrefs,
+                                          bool* aNeedsToCache) const
+{
+=======
+const LangGroupFontPrefs* StaticPresData::GetFontPrefsForLang(
+    nsAtom* aLanguage, bool* aNeedsToCache) {
+>>>>>>> upstream-releases
   // Get language group for aLanguage:
   MOZ_ASSERT(aLanguage);
   MOZ_ASSERT(mLangService);
-  MOZ_ASSERT(aPrefs);
 
-  nsAtom* langGroupAtom = GetLangGroup(aLanguage, aNeedsToCache);
-
+  nsStaticAtom* langGroupAtom = GetLangGroup(aLanguage, aNeedsToCache);
   if (aNeedsToCache && *aNeedsToCache) {
     return nullptr;
   }
 
+<<<<<<< HEAD
   LangGroupFontPrefs* prefs = const_cast<LangGroupFontPrefs*>(aPrefs);
   if (prefs->mLangGroup) {  // if initialized
+||||||| merged common ancestors
+  LangGroupFontPrefs* prefs = const_cast<LangGroupFontPrefs*>(aPrefs);
+  if (prefs->mLangGroup) { // if initialized
+=======
+  if (!aNeedsToCache) {
+    AssertIsMainThreadOrServoFontMetricsLocked();
+  }
+
+  LangGroupFontPrefs* prefs = &mLangGroupFontPrefs;
+  if (prefs->mLangGroup) {  // if initialized
+>>>>>>> upstream-releases
     DebugOnly<uint32_t> count = 0;
     for (;;) {
-      NS_ASSERTION(++count < 35, "Lang group count exceeded!!!");
       if (prefs->mLangGroup == langGroupAtom) {
         return prefs;
       }
@@ -265,7 +366,6 @@ const LangGroupFontPrefs* StaticPresData::GetFontPrefsForLangHelper(
       *aNeedsToCache = true;
       return nullptr;
     }
-    AssertIsMainThreadOrServoFontMetricsLocked();
     // nothing cached, so go on and fetch the prefs for this lang group:
     prefs->mNext = MakeUnique<LangGroupFontPrefs>();
     prefs = prefs->mNext.get();
@@ -282,6 +382,7 @@ const LangGroupFontPrefs* StaticPresData::GetFontPrefsForLangHelper(
   return prefs;
 }
 
+<<<<<<< HEAD
 const nsFont* StaticPresData::GetDefaultFontHelper(
     uint8_t aFontID, nsAtom* aLanguage,
     const LangGroupFontPrefs* aPrefs) const {
@@ -322,3 +423,49 @@ const nsFont* StaticPresData::GetDefaultFontHelper(
 }
 
 }  // namespace mozilla
+||||||| merged common ancestors
+const nsFont*
+StaticPresData::GetDefaultFontHelper(uint8_t aFontID, nsAtom *aLanguage,
+                                     const LangGroupFontPrefs* aPrefs) const
+{
+  MOZ_ASSERT(aLanguage);
+  MOZ_ASSERT(aPrefs);
+
+  const nsFont *font;
+  switch (aFontID) {
+    // Special (our default variable width font and fixed width font)
+    case kPresContext_DefaultVariableFont_ID:
+      font = &aPrefs->mDefaultVariableFont;
+      break;
+    case kPresContext_DefaultFixedFont_ID:
+      font = &aPrefs->mDefaultFixedFont;
+      break;
+    // CSS
+    case kGenericFont_serif:
+      font = &aPrefs->mDefaultSerifFont;
+      break;
+    case kGenericFont_sans_serif:
+      font = &aPrefs->mDefaultSansSerifFont;
+      break;
+    case kGenericFont_monospace:
+      font = &aPrefs->mDefaultMonospaceFont;
+      break;
+    case kGenericFont_cursive:
+      font = &aPrefs->mDefaultCursiveFont;
+      break;
+    case kGenericFont_fantasy:
+      font = &aPrefs->mDefaultFantasyFont;
+      break;
+    default:
+      font = nullptr;
+      NS_ERROR("invalid arg");
+      break;
+  }
+  return font;
+}
+
+
+} // namespace mozilla
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases

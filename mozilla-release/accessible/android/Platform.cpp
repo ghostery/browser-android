@@ -104,6 +104,7 @@ void a11y::ProxyTextChangeEvent(ProxyAccessible* aTarget, const nsString& aStr,
   }
 }
 
+<<<<<<< HEAD
 void a11y::ProxyShowHideEvent(ProxyAccessible* aTarget,
                               ProxyAccessible* aParent, bool aInsert,
                               bool aFromUser) {
@@ -112,6 +113,25 @@ void a11y::ProxyShowHideEvent(ProxyAccessible* aTarget,
   if (sessionAcc) {
     sessionAcc->SendWindowContentChangedEvent(WrapperFor(aParent));
   }
+||||||| merged common ancestors
+void
+a11y::ProxyShowHideEvent(ProxyAccessible* aTarget,
+                         ProxyAccessible* aParent,
+                         bool aInsert,
+                         bool aFromUser)
+{
+  SessionAccessibility* sessionAcc =
+    SessionAccessibility::GetInstanceFor(aTarget);
+  if (sessionAcc) {
+    sessionAcc->SendWindowContentChangedEvent(WrapperFor(aParent));
+  }
+=======
+void a11y::ProxyShowHideEvent(ProxyAccessible* aTarget,
+                              ProxyAccessible* aParent, bool aInsert,
+                              bool aFromUser) {
+  // We rely on the window content changed events to be dispatched
+  // after the viewport cache is refreshed.
+>>>>>>> upstream-releases
 }
 
 void a11y::ProxySelectionEvent(ProxyAccessible*, ProxyAccessible*, uint32_t) {}
@@ -126,8 +146,16 @@ void a11y::ProxyVirtualCursorChangeEvent(
     return;
   }
 
+<<<<<<< HEAD
   SessionAccessibility* sessionAcc =
       SessionAccessibility::GetInstanceFor(aTarget);
+||||||| merged common ancestors
+  SessionAccessibility* sessionAcc =
+    SessionAccessibility::GetInstanceFor(aTarget);
+=======
+  RefPtr<SessionAccessibility> sessionAcc =
+      SessionAccessibility::GetInstanceFor(aTarget);
+>>>>>>> upstream-releases
 
   if (!sessionAcc) {
     return;
@@ -137,7 +165,8 @@ void a11y::ProxyVirtualCursorChangeEvent(
     if (aReason == nsIAccessiblePivot::REASON_POINT) {
       sessionAcc->SendHoverEnterEvent(WrapperFor(aNewPosition));
     } else {
-      sessionAcc->SendAccessibilityFocusedEvent(WrapperFor(aNewPosition));
+      RefPtr<AccessibleWrap> wrapperForNewPosition = WrapperFor(aNewPosition);
+      sessionAcc->SendAccessibilityFocusedEvent(wrapperForNewPosition);
     }
   }
 
@@ -161,9 +190,34 @@ void a11y::ProxyScrollingEvent(ProxyAccessible* aTarget, uint32_t aEventType,
   }
 }
 
+<<<<<<< HEAD
 void a11y::ProxyBatch(ProxyAccessible* aDocument, const uint64_t aBatchType,
                       const nsTArray<ProxyAccessible*>& aAccessibles,
                       const nsTArray<BatchData>& aData) {
+||||||| merged common ancestors
+void
+a11y::ProxyBatch(ProxyAccessible* aDocument,
+                 const uint64_t aBatchType,
+                 const nsTArray<ProxyAccessible*>& aAccessibles,
+                 const nsTArray<BatchData>& aData)
+{
+=======
+void a11y::ProxyAnnouncementEvent(ProxyAccessible* aTarget,
+                                  const nsString& aAnnouncement,
+                                  uint16_t aPriority) {
+  SessionAccessibility* sessionAcc =
+      SessionAccessibility::GetInstanceFor(aTarget);
+
+  if (sessionAcc) {
+    sessionAcc->SendAnnouncementEvent(WrapperFor(aTarget), aAnnouncement,
+                                      aPriority);
+  }
+}
+
+void a11y::ProxyBatch(ProxyAccessible* aDocument, const uint64_t aBatchType,
+                      const nsTArray<ProxyAccessible*>& aAccessibles,
+                      const nsTArray<BatchData>& aData) {
+>>>>>>> upstream-releases
   SessionAccessibility* sessionAcc =
       SessionAccessibility::GetInstanceFor(aDocument);
   if (!sessionAcc) {

@@ -18,7 +18,15 @@ namespace mozilla {
 namespace gmp {
 
 class GMPTimerParent : public PGMPTimerParent {
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  friend class PGMPTimerParent;
+
+ public:
+>>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(GMPTimerParent)
   explicit GMPTimerParent(nsISerialEventTarget* aGMPEventTarget);
 
@@ -26,7 +34,7 @@ class GMPTimerParent : public PGMPTimerParent {
 
  protected:
   mozilla::ipc::IPCResult RecvSetTimer(const uint32_t& aTimerId,
-                                       const uint32_t& aTimeoutMs) override;
+                                       const uint32_t& aTimeoutMs);
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
  private:

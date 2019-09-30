@@ -14,7 +14,9 @@ class nsPIDOMWindowOuter;
 class nsIControllers;
 class nsIController;
 class nsINode;
+class nsIRemoteTab;
 
+<<<<<<< HEAD
 namespace mozilla {
 namespace dom {
 class TabParent;
@@ -30,6 +32,31 @@ class TabParent;
 
 class nsPIWindowRoot : public mozilla::dom::EventTarget {
  public:
+||||||| merged common ancestors
+namespace mozilla {
+namespace dom {
+class TabParent;
+} // namespace dom
+} // namespace mozilla
+
+#define NS_IWINDOWROOT_IID \
+{ 0xb8724c49, 0xc398, 0x4f9b, \
+  { 0x82, 0x59, 0x87, 0x27, 0xa6, 0x47, 0xdd, 0x0f } }
+
+class nsPIWindowRoot : public mozilla::dom::EventTarget
+{
+public:
+=======
+#define NS_IWINDOWROOT_IID                           \
+  {                                                  \
+    0xb8724c49, 0xc398, 0x4f9b, {                    \
+      0x82, 0x59, 0x87, 0x27, 0xa6, 0x47, 0xdd, 0x0f \
+    }                                                \
+  }
+
+class nsPIWindowRoot : public mozilla::dom::EventTarget {
+ public:
+>>>>>>> upstream-releases
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IWINDOWROOT_IID)
 
   virtual nsPIDOMWindowOuter* GetWindow() = 0;
@@ -61,17 +88,15 @@ class nsPIWindowRoot : public mozilla::dom::EventTarget {
   virtual mozilla::dom::EventTarget* GetParentTarget() = 0;
 
   // Stores a weak reference to the browser.
-  virtual void AddBrowser(mozilla::dom::TabParent* aBrowser) = 0;
-  virtual void RemoveBrowser(mozilla::dom::TabParent* aBrowser) = 0;
+  virtual void AddBrowser(nsIRemoteTab* aBrowser) = 0;
+  virtual void RemoveBrowser(nsIRemoteTab* aBrowser) = 0;
 
-  typedef void (*BrowserEnumerator)(mozilla::dom::TabParent* aTab, void* aArg);
+  typedef void (*BrowserEnumerator)(nsIRemoteTab* aTab, void* aArg);
 
   // Enumerate all stored browsers that for which the weak reference is valid.
   virtual void EnumerateBrowsers(BrowserEnumerator aEnumFunc, void* aArg) = 0;
 
-  virtual bool ShowAccelerators() = 0;
   virtual bool ShowFocusRings() = 0;
-  virtual void SetShowAccelerators(bool aEnable) = 0;
   virtual void SetShowFocusRings(bool aEnable) = 0;
 };
 

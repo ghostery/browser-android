@@ -32,12 +32,34 @@ class nsProxyInfo final : public nsIProxyInfo {
   NS_DECL_NSIPROXYINFO
 
   // Cheap accessors for use within Necko
+<<<<<<< HEAD
   const nsCString &Host() { return mHost; }
   int32_t Port() { return mPort; }
   const char *Type() { return mType; }
   uint32_t Flags() { return mFlags; }
   const nsCString &Username() { return mUsername; }
   const nsCString &Password() { return mPassword; }
+||||||| merged common ancestors
+  const nsCString &Host()  { return mHost; }
+  int32_t          Port()  { return mPort; }
+  const char      *Type()  { return mType; }
+  uint32_t         Flags() { return mFlags; }
+  const nsCString &Username()  { return mUsername; }
+  const nsCString &Password()  { return mPassword; }
+=======
+  const nsCString& Host() const { return mHost; }
+  int32_t Port() const { return mPort; }
+  const char* Type() const { return mType; }
+  uint32_t Flags() const { return mFlags; }
+  const nsCString& Username() const { return mUsername; }
+  const nsCString& Password() const { return mPassword; }
+  const nsCString& ProxyAuthorizationHeader() const {
+    return mProxyAuthorizationHeader;
+  }
+  const nsCString& ConnectionIsolationKey() const {
+    return mConnectionIsolationKey;
+  }
+>>>>>>> upstream-releases
 
   bool IsDirect();
   bool IsHTTP();
@@ -47,6 +69,7 @@ class nsProxyInfo final : public nsIProxyInfo {
  private:
   friend class nsProtocolProxyService;
 
+<<<<<<< HEAD
   explicit nsProxyInfo(const char *type = nullptr)
       : mType(type),
         mPort(-1),
@@ -54,9 +77,28 @@ class nsProxyInfo final : public nsIProxyInfo {
         mResolveFlags(0),
         mTimeout(UINT32_MAX),
         mNext(nullptr) {}
+||||||| merged common ancestors
+  explicit nsProxyInfo(const char *type = nullptr)
+    : mType(type)
+    , mPort(-1)
+    , mFlags(0)
+    , mResolveFlags(0)
+    , mTimeout(UINT32_MAX)
+    , mNext(nullptr)
+  {}
+=======
+  explicit nsProxyInfo(const char* type = nullptr)
+      : mType(type),
+        mPort(-1),
+        mFlags(0),
+        mResolveFlags(0),
+        mTimeout(UINT32_MAX),
+        mNext(nullptr) {}
+>>>>>>> upstream-releases
 
   ~nsProxyInfo() { NS_IF_RELEASE(mNext); }
 
+<<<<<<< HEAD
   const char *mType;  // pointer to statically allocated value
   nsCString mHost;
   nsCString mUsername;
@@ -66,6 +108,29 @@ class nsProxyInfo final : public nsIProxyInfo {
   uint32_t mResolveFlags;
   uint32_t mTimeout;
   nsProxyInfo *mNext;
+||||||| merged common ancestors
+  const char  *mType;  // pointer to statically allocated value
+  nsCString    mHost;
+  nsCString    mUsername;
+  nsCString    mPassword;
+  int32_t      mPort;
+  uint32_t     mFlags;
+  uint32_t     mResolveFlags;
+  uint32_t     mTimeout;
+  nsProxyInfo *mNext;
+=======
+  const char* mType;  // pointer to statically allocated value
+  nsCString mHost;
+  nsCString mUsername;
+  nsCString mPassword;
+  nsCString mProxyAuthorizationHeader;
+  nsCString mConnectionIsolationKey;
+  int32_t mPort;
+  uint32_t mFlags;
+  uint32_t mResolveFlags;
+  uint32_t mTimeout;
+  nsProxyInfo* mNext;
+>>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsProxyInfo, NS_PROXYINFO_IID)

@@ -5,14 +5,28 @@
 DIRS += [
     'connect',
     'debugtarget',
+    'shared',
     'sidebar',
 ]
 
 DevToolsModules(
     'App.css',
     'App.js',
+<<<<<<< HEAD
     'ConnectionPromptSetting.js',
+||||||| merged common ancestors
+    'RuntimeInfo.css',
+=======
+    'CompatibilityWarning.js',
+    'ConnectionPromptSetting.js',
+    'ProfilerDialog.css',
+    'ProfilerDialog.js',
+    'RuntimeActions.css',
+    'RuntimeActions.js',
+    'RuntimeInfo.css',
+>>>>>>> upstream-releases
     'RuntimeInfo.js',
     'RuntimePage.css',
     'RuntimePage.js',
+    'ServiceWorkersWarning.js',
 )

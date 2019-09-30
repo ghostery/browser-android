@@ -10,6 +10,7 @@ use crate::dom::{TElement, TShadowRoot};
 use crate::element_state::{DocumentState, ElementState};
 use crate::font_metrics::FontMetricsProvider;
 #[cfg(feature = "gecko")]
+<<<<<<< HEAD
 use crate::gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
 use crate::invalidation::element::invalidation_map::InvalidationMap;
 use crate::invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
@@ -28,16 +29,67 @@ use crate::stylesheets::keyframes_rule::KeyframesAnimation;
 use crate::stylesheets::viewport_rule::{self, MaybeNew, ViewportRule};
 use crate::stylesheets::StyleRule;
 use crate::stylesheets::StylesheetInDocument;
+||||||| merged common ancestors
+use gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
+use hashglobe::FailedAllocationError;
+use invalidation::element::invalidation_map::InvalidationMap;
+use invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
+=======
+use crate::gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
+use crate::invalidation::element::invalidation_map::InvalidationMap;
+use crate::invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
+use crate::media_queries::Device;
+use crate::properties::{self, CascadeMode, ComputedValues};
+use crate::properties::{AnimationRules, PropertyDeclarationBlock};
+use crate::rule_cache::{RuleCache, RuleCacheConditions};
+use crate::rule_collector::{containing_shadow_ignoring_svg_use, RuleCollector};
+use crate::rule_tree::{CascadeLevel, RuleTree, ShadowCascadeOrder, StrongRuleNode, StyleSource};
+use crate::selector_map::{PrecomputedHashMap, PrecomputedHashSet, SelectorMap, SelectorMapEntry};
+use crate::selector_parser::{PerPseudoElementMap, PseudoElement, SelectorImpl, SnapshotMap};
+use crate::shared_lock::{Locked, SharedRwLockReadGuard, StylesheetGuards};
+use crate::stylesheet_set::{DataValidity, DocumentStylesheetSet, SheetRebuildKind};
+use crate::stylesheet_set::{DocumentStylesheetFlusher, SheetCollectionFlusher};
+use crate::stylesheets::keyframes_rule::KeyframesAnimation;
+use crate::stylesheets::viewport_rule::{self, MaybeNew, ViewportRule};
+use crate::stylesheets::StyleRule;
+use crate::stylesheets::StylesheetInDocument;
+>>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
+<<<<<<< HEAD
 use crate::stylesheets::{CounterStyleRule, FontFaceRule, FontFeatureValuesRule, PageRule};
 use crate::stylesheets::{CssRule, Origin, OriginSet, PerOrigin, PerOriginIter};
 use crate::thread_state::{self, ThreadState};
 use crate::{Atom, LocalName, Namespace, WeakAtom};
 use hashglobe::FailedAllocationError;
+||||||| merged common ancestors
+use malloc_size_of::{MallocShallowSizeOf, MallocSizeOf, MallocSizeOfOps};
+=======
+use crate::stylesheets::{CounterStyleRule, FontFaceRule, FontFeatureValuesRule, PageRule};
+use crate::stylesheets::{CssRule, Origin, OriginSet, PerOrigin, PerOriginIter};
+use crate::thread_state::{self, ThreadState};
+use crate::{Atom, LocalName, Namespace, WeakAtom};
+use fallible::FallibleVec;
+use hashglobe::FailedAllocationError;
+use malloc_size_of::MallocSizeOf;
+>>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
+<<<<<<< HEAD
 use malloc_size_of::MallocUnconditionalShallowSizeOf;
 #[cfg(feature = "gecko")]
 use malloc_size_of::{MallocShallowSizeOf, MallocSizeOf, MallocSizeOfOps};
+||||||| merged common ancestors
+use malloc_size_of::MallocUnconditionalShallowSizeOf;
+use media_queries::Device;
+use properties::{self, CascadeMode, ComputedValues};
+use properties::{AnimationRules, PropertyDeclarationBlock};
+use rule_cache::{RuleCache, RuleCacheConditions};
+use rule_tree::{CascadeLevel, RuleTree, ShadowCascadeOrder, StrongRuleNode, StyleSource};
+use selector_map::{PrecomputedHashMap, PrecomputedHashSet, SelectorMap, SelectorMapEntry};
+use selector_parser::{PerPseudoElementMap, PseudoElement, SelectorImpl, SnapshotMap};
+use selectors::NthIndexCache;
+=======
+use malloc_size_of::{MallocShallowSizeOf, MallocSizeOfOps, MallocUnconditionalShallowSizeOf};
+>>>>>>> upstream-releases
 use selectors::attr::{CaseSensitivity, NamespaceConstraint};
 use selectors::bloom::BloomFilter;
 use selectors::matching::VisitedHandlingMode;
@@ -48,8 +100,16 @@ use selectors::visitor::SelectorVisitor;
 use selectors::NthIndexCache;
 use servo_arc::{Arc, ArcBorrow};
 use smallbitvec::SmallBitVec;
+<<<<<<< HEAD
 use std::ops;
+||||||| merged common ancestors
+use smallvec::SmallVec;
+use std::ops;
+=======
+use smallvec::SmallVec;
+>>>>>>> upstream-releases
 use std::sync::Mutex;
+use std::{mem, ops};
 use style_traits::viewport::ViewportConstraints;
 
 /// The type of the stylesheets that the stylist contains.
@@ -60,8 +120,8 @@ pub type StylistSheet = crate::stylesheets::DocumentStyleSheet;
 #[cfg(feature = "gecko")]
 pub type StylistSheet = crate::gecko::data::GeckoStyleSheet;
 
-/// A cache of computed user-agent data, to be shared across documents.
 lazy_static! {
+    /// A cache of computed user-agent data, to be shared across documents.
     static ref UA_CASCADE_DATA_CACHE: Mutex<UserAgentCascadeDataCache> =
         Mutex::new(UserAgentCascadeDataCache::new());
 }
@@ -128,12 +188,28 @@ impl UserAgentCascadeDataCache {
         Ok(new_data)
     }
 
-    fn expire_unused(&mut self) {
-        self.entries.retain(|e| !e.is_unique())
+    /// Returns all the cascade datas that are not being used (that is, that are
+    /// held alive just by this cache).
+    ///
+    /// We return them instead of dropping in place because some of them may
+    /// keep alive some other documents (like the SVG documents kept alive by
+    /// URL references), and thus we don't want to drop them while locking the
+    /// cache to not deadlock.
+    fn take_unused(&mut self) -> SmallVec<[Arc<UserAgentCascadeData>; 3]> {
+        let mut unused = SmallVec::new();
+        for i in (0..self.entries.len()).rev() {
+            // is_unique() returns false for static references, but we never
+            // have static references to UserAgentCascadeDatas.  If we did, it
+            // may not make sense to put them in the cache in the first place.
+            if self.entries[i].is_unique() {
+                unused.push(self.entries.remove(i));
+            }
+        }
+        unused
     }
 
-    fn clear(&mut self) {
-        self.entries.clear();
+    fn take_all(&mut self) -> Vec<Arc<UserAgentCascadeData>> {
+        mem::replace(&mut self.entries, Vec::new())
     }
 
     #[cfg(feature = "gecko")]
@@ -251,13 +327,14 @@ impl DocumentCascadeData {
         // First do UA sheets.
         {
             if flusher.flush_origin(Origin::UserAgent).dirty() {
-                let mut ua_cache = UA_CASCADE_DATA_CACHE.lock().unwrap();
                 let origin_sheets = flusher.origin_sheets(Origin::UserAgent);
-                let ua_cascade_data =
-                    ua_cache.lookup(origin_sheets, device, quirks_mode, guards.ua_or_user)?;
-                ua_cache.expire_unused();
-                debug!("User agent data cache size {:?}", ua_cache.len());
-                self.user_agent = ua_cascade_data;
+                let _unused_cascade_datas = {
+                    let mut ua_cache = UA_CASCADE_DATA_CACHE.lock().unwrap();
+                    self.user_agent =
+                        ua_cache.lookup(origin_sheets, device, quirks_mode, guards.ua_or_user)?;
+                    debug!("User agent data cache size {:?}", ua_cache.len());
+                    ua_cache.take_unused()
+                };
             }
         }
 
@@ -355,10 +432,7 @@ pub struct Stylist {
     stylesheets: StylistStylesheetSet,
 
     /// If true, the quirks-mode stylesheet is applied.
-    #[cfg_attr(
-        feature = "servo",
-        ignore_malloc_size_of = "defined in selectors"
-    )]
+    #[cfg_attr(feature = "servo", ignore_malloc_size_of = "defined in selectors")]
     quirks_mode: QuirksMode,
 
     /// Selector maps for all of the style sheets in the stylist, after
@@ -585,16 +659,22 @@ impl Stylist {
             .append_stylesheet(Some(&self.device), sheet, guard)
     }
 
-    /// Appends a new stylesheet to the current set.
-    pub fn prepend_stylesheet(&mut self, sheet: StylistSheet, guard: &SharedRwLockReadGuard) {
-        self.stylesheets
-            .prepend_stylesheet(Some(&self.device), sheet, guard)
-    }
-
     /// Remove a given stylesheet to the current set.
     pub fn remove_stylesheet(&mut self, sheet: StylistSheet, guard: &SharedRwLockReadGuard) {
         self.stylesheets
             .remove_stylesheet(Some(&self.device), sheet, guard)
+    }
+
+    /// Appends a new stylesheet to the current set.
+    #[inline]
+    pub fn sheet_count(&self, origin: Origin) -> usize {
+        self.stylesheets.sheet_count(origin)
+    }
+
+    /// Appends a new stylesheet to the current set.
+    #[inline]
+    pub fn sheet_at(&self, origin: Origin, index: usize) -> Option<&StylistSheet> {
+        self.stylesheets.get(origin, index)
     }
 
     /// Returns whether for any of the applicable style rule data a given
@@ -611,7 +691,7 @@ impl Stylist {
         let mut maybe = false;
 
         let doc_author_rules_apply =
-            element.each_applicable_non_document_style_rule_data(|data, _, _| {
+            element.each_applicable_non_document_style_rule_data(|data, _| {
                 maybe = maybe || f(&*data);
             });
 
@@ -629,7 +709,7 @@ impl Stylist {
         guards: &StylesheetGuards,
         pseudo: &PseudoElement,
         parent: Option<&ComputedValues>,
-        font_metrics: &FontMetricsProvider,
+        font_metrics: &dyn FontMetricsProvider,
     ) -> Arc<ComputedValues>
     where
         E: TElement,
@@ -657,7 +737,7 @@ impl Stylist {
         guards: &StylesheetGuards,
         pseudo: &PseudoElement,
         parent: Option<&ComputedValues>,
-        font_metrics: &FontMetricsProvider,
+        font_metrics: &dyn FontMetricsProvider,
         rules: StrongRuleNode,
     ) -> Arc<ComputedValues>
     where
@@ -752,8 +832,8 @@ impl Stylist {
         rule_inclusion: RuleInclusion,
         parent_style: &ComputedValues,
         is_probe: bool,
-        font_metrics: &FontMetricsProvider,
-        matching_fn: Option<&Fn(&PseudoElement) -> bool>,
+        font_metrics: &dyn FontMetricsProvider,
+        matching_fn: Option<&dyn Fn(&PseudoElement) -> bool>,
     ) -> Option<Arc<ComputedValues>>
     where
         E: TElement,
@@ -788,7 +868,7 @@ impl Stylist {
         pseudo: &PseudoElement,
         guards: &StylesheetGuards,
         parent_style: Option<&ComputedValues>,
-        font_metrics: &FontMetricsProvider,
+        font_metrics: &dyn FontMetricsProvider,
         element: Option<E>,
     ) -> Arc<ComputedValues>
     where
@@ -841,7 +921,7 @@ impl Stylist {
         parent_style: Option<&ComputedValues>,
         parent_style_ignoring_first_line: Option<&ComputedValues>,
         layout_parent_style: Option<&ComputedValues>,
-        font_metrics: &FontMetricsProvider,
+        font_metrics: &dyn FontMetricsProvider,
         rule_cache: Option<&RuleCache>,
         rule_cache_conditions: &mut RuleCacheConditions,
     ) -> Arc<ComputedValues>
@@ -898,7 +978,7 @@ impl Stylist {
         pseudo: &PseudoElement,
         is_probe: bool,
         rule_inclusion: RuleInclusion,
-        matching_fn: Option<&Fn(&PseudoElement) -> bool>,
+        matching_fn: Option<&dyn Fn(&PseudoElement) -> bool>,
     ) -> Option<CascadeInputs>
     where
         E: TElement,
@@ -1024,7 +1104,7 @@ impl Stylist {
 
                 ViewportRule {
                     declarations: viewport_rule::Cascade::from_stylesheets(
-                        stylesheets.clone(),
+                        stylesheets,
                         guards,
                         &device,
                     )
@@ -1047,12 +1127,6 @@ impl Stylist {
     /// Returns whether, given a media feature change, any previously-applicable
     /// style has become non-applicable, or vice-versa for each origin, using
     /// `device`.
-    ///
-    /// Passing `device` is needed because this is used for XBL in Gecko, which
-    /// can be stale in various ways, so we need to pass the device of the
-    /// document itself, which is what is kept up-to-date.
-    ///
-    /// Arguably XBL should use something more lightweight than a Stylist.
     pub fn media_features_change_changed_style(
         &self,
         guards: &StylesheetGuards,
@@ -1180,6 +1254,10 @@ impl Stylist {
         // See [3] for the bug to implement whatever gets resolved, and related
         // bugs for a bit more context.
         //
+        // FIXME(emilio): This should probably work for pseudo-elements (i.e.,
+        // use rule_hash_target().shadow_root() instead of
+        // element.shadow_root()).
+        //
         // [1]: https://cs.chromium.org/chromium/src/third_party/blink/renderer/
         //        core/css/resolver/style_resolver.cc?l=1267&rcl=90f9f8680ebb4a87d177f3b0833372ae4e0c88d8
         // [2]: https://github.com/w3c/csswg-drafts/issues/1995
@@ -1234,6 +1312,7 @@ impl Stylist {
         // the lookups, which means that the bitvecs are comparable. We verify
         // this in the caller by asserting that the bitvecs are same-length.
         let mut results = SmallBitVec::new();
+<<<<<<< HEAD
 
         let matches_document_rules =
             element.each_applicable_non_document_style_rule_data(|data, quirks_mode, host| {
@@ -1261,6 +1340,37 @@ impl Stylist {
                 continue;
             }
 
+||||||| merged common ancestors
+        for (data, _) in self.cascade_data.iter_origins() {
+=======
+
+        let matches_document_rules =
+            element.each_applicable_non_document_style_rule_data(|data, host| {
+                matching_context.with_shadow_host(Some(host), |matching_context| {
+                    data.selectors_for_cache_revalidation.lookup(
+                        element,
+                        self.quirks_mode,
+                        |selector_and_hashes| {
+                            results.push(matches_selector(
+                                &selector_and_hashes.selector,
+                                selector_and_hashes.selector_offset,
+                                Some(&selector_and_hashes.hashes),
+                                &element,
+                                matching_context,
+                                flags_setter,
+                            ));
+                            true
+                        },
+                    );
+                })
+            });
+
+        for (data, origin) in self.cascade_data.iter_origins() {
+            if origin == Origin::Author && !matches_document_rules {
+                continue;
+            }
+
+>>>>>>> upstream-releases
             data.selectors_for_cache_revalidation.lookup(
                 element,
                 self.quirks_mode,
@@ -1362,7 +1472,7 @@ impl Stylist {
 
     /// Shutdown the static data that this module stores.
     pub fn shutdown() {
-        UA_CASCADE_DATA_CACHE.lock().unwrap().clear()
+        let _entries = UA_CASCADE_DATA_CACHE.lock().unwrap().take_all();
     }
 }
 
@@ -1572,9 +1682,8 @@ impl<'a> SelectorVisitor for StylistSelectorVisitor<'a> {
         // Also, note that this call happens before we visit any of the simple
         // selectors in the next ComplexSelector, so we can use this to skip
         // looking at them.
-        self.passed_rightmost_selector =
-            self.passed_rightmost_selector ||
-                !matches!(combinator, None | Some(Combinator::PseudoElement));
+        self.passed_rightmost_selector = self.passed_rightmost_selector ||
+            !matches!(combinator, None | Some(Combinator::PseudoElement));
 
         true
     }
@@ -1591,9 +1700,8 @@ impl<'a> SelectorVisitor for StylistSelectorVisitor<'a> {
     }
 
     fn visit_simple_selector(&mut self, s: &Component<SelectorImpl>) -> bool {
-        self.needs_revalidation =
-            self.needs_revalidation ||
-                component_needs_revalidation(s, self.passed_rightmost_selector);
+        self.needs_revalidation = self.needs_revalidation ||
+            component_needs_revalidation(s, self.passed_rightmost_selector);
 
         match *s {
             Component::NonTSPseudoClass(ref p) => {
@@ -1624,9 +1732,9 @@ impl<'a> SelectorVisitor for StylistSelectorVisitor<'a> {
 
 /// A set of rules for element and pseudo-elements.
 #[derive(Debug, Default, MallocSizeOf)]
-struct ElementAndPseudoRules {
+struct GenericElementAndPseudoRules<Map> {
     /// Rules from stylesheets at this `CascadeData`'s origin.
-    element_map: SelectorMap<Rule>,
+    element_map: Map,
 
     /// Rules from stylesheets at this `CascadeData`'s origin that correspond
     /// to a given pseudo-element.
@@ -1634,39 +1742,30 @@ struct ElementAndPseudoRules {
     /// FIXME(emilio): There are a bunch of wasted entries here in practice.
     /// Figure out a good way to do a `PerNonAnonBox` and `PerAnonBox` (for
     /// `precomputed_values_for_pseudo`) without duplicating a lot of code.
-    pseudos_map: PerPseudoElementMap<Box<SelectorMap<Rule>>>,
+    pseudos_map: PerPseudoElementMap<Box<Map>>,
 }
 
-impl ElementAndPseudoRules {
+impl<Map: Default + MallocSizeOf> GenericElementAndPseudoRules<Map> {
     #[inline(always)]
-    fn insert(
-        &mut self,
-        rule: Rule,
-        pseudo_element: Option<&PseudoElement>,
-        quirks_mode: QuirksMode,
-    ) -> Result<(), FailedAllocationError> {
+    fn for_insertion(&mut self, pseudo_element: Option<&PseudoElement>) -> &mut Map {
         debug_assert!(
-            pseudo_element.map_or(true, |pseudo| !pseudo.is_precomputed() &&
-                !pseudo.is_unknown_webkit_pseudo_element())
+            pseudo_element.map_or(true, |pseudo| {
+                !pseudo.is_precomputed() && !pseudo.is_unknown_webkit_pseudo_element()
+            }),
+            "Precomputed pseudos should end up in precomputed_pseudo_element_decls, \
+             and unknown webkit pseudos should be discarded before getting here"
         );
 
-        let map = match pseudo_element {
+        match pseudo_element {
             None => &mut self.element_map,
             Some(pseudo) => self
                 .pseudos_map
-                .get_or_insert_with(pseudo, || Box::new(SelectorMap::new())),
-        };
-
-        map.insert(rule, quirks_mode)
-    }
-
-    fn clear(&mut self) {
-        self.element_map.clear();
-        self.pseudos_map.clear();
+                .get_or_insert_with(pseudo, || Box::new(Default::default())),
+        }
     }
 
     #[inline]
-    fn rules(&self, pseudo: Option<&PseudoElement>) -> Option<&SelectorMap<Rule>> {
+    fn rules(&self, pseudo: Option<&PseudoElement>) -> Option<&Map> {
         match pseudo {
             Some(pseudo) => self.pseudos_map.get(pseudo).map(|p| &**p),
             None => Some(&self.element_map),
@@ -1683,6 +1782,26 @@ impl ElementAndPseudoRules {
                 sizes.mElementAndPseudosMaps += <Box<_> as MallocSizeOf>::size_of(elem, ops);
             }
         }
+    }
+}
+
+type ElementAndPseudoRules = GenericElementAndPseudoRules<SelectorMap<Rule>>;
+type PartMap = PrecomputedHashMap<Atom, SmallVec<[Rule; 1]>>;
+type PartElementAndPseudoRules = GenericElementAndPseudoRules<PartMap>;
+
+impl ElementAndPseudoRules {
+    // TODO(emilio): Should we retain storage of these?
+    fn clear(&mut self) {
+        self.element_map.clear();
+        self.pseudos_map.clear();
+    }
+}
+
+impl PartElementAndPseudoRules {
+    // TODO(emilio): Should we retain storage of these?
+    fn clear(&mut self) {
+        self.element_map.clear();
+        self.pseudos_map.clear();
     }
 }
 
@@ -1709,6 +1828,12 @@ pub struct CascadeData {
     /// In particular, we need to go through all the style data in all the
     /// containing style scopes starting from the closest assigned slot.
     slotted_rules: Option<Box<ElementAndPseudoRules>>,
+
+    /// The data coming from ::part() pseudo-element rules.
+    ///
+    /// We need to store them separately because an element needs to match
+    /// ::part() pseudo-element rules in different shadow roots.
+    part_rules: Option<Box<PartElementAndPseudoRules>>,
 
     /// The invalidation map for these rules.
     invalidation_map: InvalidationMap,
@@ -1769,6 +1894,7 @@ impl CascadeData {
             normal_rules: ElementAndPseudoRules::default(),
             host_rules: None,
             slotted_rules: None,
+            part_rules: None,
             invalidation_map: InvalidationMap::new(),
             attribute_dependencies: PrecomputedHashSet::default(),
             state_dependencies: ElementState::empty(),
@@ -1857,6 +1983,12 @@ impl CascadeData {
     #[inline]
     pub fn slotted_rules(&self, pseudo: Option<&PseudoElement>) -> Option<&SelectorMap<Rule>> {
         self.slotted_rules.as_ref().and_then(|d| d.rules(pseudo))
+    }
+
+    /// Returns the parts rule map for a given pseudo-element.
+    #[inline]
+    pub fn part_rules(&self, pseudo: Option<&PseudoElement>) -> Option<&PartMap> {
+        self.part_rules.as_ref().and_then(|d| d.rules(pseudo))
     }
 
     /// Collects all the applicable media query results into `results`.
@@ -1988,20 +2120,33 @@ impl CascadeData {
                             }
                         }
 
-                        // NOTE(emilio): It's fine to look at :host and then at
-                        // ::slotted(..), since :host::slotted(..) could never
-                        // possibly match, as <slot> is not a valid shadow host.
-                        let rules = if selector.is_featureless_host_selector_or_pseudo_element() {
-                            self.host_rules
+                        // Part is special, since given it doesn't have any
+                        // selectors inside, it's not worth using a whole
+                        // SelectorMap for it.
+                        if let Some(part) = selector.part() {
+                            self.part_rules
                                 .get_or_insert_with(|| Box::new(Default::default()))
-                        } else if selector.is_slotted() {
-                            self.slotted_rules
-                                .get_or_insert_with(|| Box::new(Default::default()))
+                                .for_insertion(pseudo_element)
+                                .try_entry(part.clone())?
+                                .or_insert_with(SmallVec::new)
+                                .try_push(rule)?;
                         } else {
-                            &mut self.normal_rules
-                        };
-
-                        rules.insert(rule, pseudo_element, quirks_mode)?;
+                            // NOTE(emilio): It's fine to look at :host and then at
+                            // ::slotted(..), since :host::slotted(..) could never
+                            // possibly match, as <slot> is not a valid shadow host.
+                            let rules =
+                                if selector.is_featureless_host_selector_or_pseudo_element() {
+                                    self.host_rules
+                                        .get_or_insert_with(|| Box::new(Default::default()))
+                                } else if selector.is_slotted() {
+                                    self.slotted_rules
+                                        .get_or_insert_with(|| Box::new(Default::default()))
+                                } else {
+                                    &mut self.normal_rules
+                                }
+                                .for_insertion(pseudo_element);
+                            rules.insert(rule, quirks_mode)?;
+                        }
                     }
                     self.rules_source_order += 1;
                 },
@@ -2026,10 +2171,10 @@ impl CascadeData {
                     debug!("Found valid keyframes rule: {:?}", *keyframes_rule);
 
                     // Don't let a prefixed keyframes animation override a non-prefixed one.
-                    let needs_insertion = keyframes_rule.vendor_prefix.is_none() || self
-                        .animations
-                        .get(keyframes_rule.name.as_atom())
-                        .map_or(true, |rule| rule.vendor_prefix.is_some());
+                    let needs_insertion = keyframes_rule.vendor_prefix.is_none() ||
+                        self.animations
+                            .get(keyframes_rule.name.as_atom())
+                            .map_or(true, |rule| rule.vendor_prefix.is_some());
                     if needs_insertion {
                         let animation = KeyframesAnimation::from_keyframes(
                             &keyframes_rule.keyframes,
@@ -2167,6 +2312,9 @@ impl CascadeData {
         if let Some(ref mut slotted_rules) = self.slotted_rules {
             slotted_rules.clear();
         }
+        if let Some(ref mut part_rules) = self.part_rules {
+            part_rules.clear();
+        }
         if let Some(ref mut host_rules) = self.host_rules {
             host_rules.clear();
         }
@@ -2194,6 +2342,9 @@ impl CascadeData {
         self.normal_rules.add_size_of(ops, sizes);
         if let Some(ref slotted_rules) = self.slotted_rules {
             slotted_rules.add_size_of(ops, sizes);
+        }
+        if let Some(ref part_rules) = self.part_rules {
+            part_rules.add_size_of(ops, sizes);
         }
         if let Some(ref host_rules) = self.host_rules {
             host_rules.add_size_of(ops, sizes);

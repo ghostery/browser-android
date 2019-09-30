@@ -1,3 +1,9 @@
+<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/top-level-import-catch-eval-rqstd-abrupt-typeerror.js
+||||||| merged common ancestors
+// |reftest| skip -- dynamic-import is not supported
+=======
+// |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
+>>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/catch/top-level-import-catch-eval-rqstd-abrupt-typeerror.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/eval-rqstd-abrupt-typeerror.case
 // - src/dynamic-import/catch/top-level.template

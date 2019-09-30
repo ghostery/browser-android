@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>Test for events while the form history popup is open</title>
-  <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
-  <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
   <script type="text/javascript" src="satchel_common.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
 </head>
@@ -35,12 +35,28 @@ function handleSubmit() { // eslint-disable-line no-unused-vars
 function handleInput(aEvent) {
   info("Input");
   is(input.value, expectedValue, "Check input value");
+<<<<<<< HEAD
   ok(aEvent instanceof InputEvent,
      '"input" event should be dispatched with InputEvent interface');
   is(aEvent.cancelable, false,
      '"input" event should be never cancelable');
   is(aEvent.bubbles, true,
      '"input" event should always bubble');
+||||||| merged common ancestors
+=======
+  ok(aEvent instanceof InputEvent,
+     '"input" event should be dispatched with InputEvent interface');
+  is(aEvent.cancelable, false,
+     '"input" event should be never cancelable');
+  is(aEvent.bubbles, true,
+     '"input" event should always bubble');
+  is(aEvent.inputType, "insertReplacementText",
+     'inputType should be "insertReplacementText"');
+  is(aEvent.data, expectedValue,
+     `data should be "${expectedValue}"`);
+  is(aEvent.dataTransfer, null,
+     "dataTransfer should be null");
+>>>>>>> upstream-releases
   input.removeEventListener("input", handleInput, true);
   SimpleTest.finish();
 }

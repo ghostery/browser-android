@@ -1,6 +1,12 @@
 [package]
 name = "serde_derive"
+<<<<<<< HEAD
 version = "1.0.80" # remember to update html_root_url
+||||||| merged common ancestors
+version = "1.0.66" # remember to update html_root_url
+=======
+version = "1.0.88" # remember to update html_root_url
+>>>>>>> upstream-releases
 authors = ["Erick Tryzelaar <erick.tryzelaar@gmail.com>", "David Tolnay <dtolnay@gmail.com>"]
 license = "MIT/Apache-2.0"
 description = "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]"
@@ -25,8 +31,16 @@ proc-macro = true
 
 [dependencies]
 proc-macro2 = "0.4"
+<<<<<<< HEAD
 quote = "0.6.3"
 syn = { version = "0.15", features = ["visit", "extra-traits"] }
+||||||| merged common ancestors
+quote = "0.6"
+syn = { version = "0.14", features = ["visit", "extra-traits"] }
+=======
+quote = "0.6.3"
+syn = { version = "0.15.22", features = ["visit", "extra-traits"] }
+>>>>>>> upstream-releases
 
 [dev-dependencies]
 serde = { version = "1.0", path = "../serde" }

@@ -1,4 +1,4 @@
-// |jit-test| skip-if: !wasmGcEnabled()
+// |jit-test| skip-if: !wasmGcEnabled() || wasmCompileMode() != 'baseline'
 
 // Basic private-to-module functionality.  At the moment all we have is null
 // pointers, not very exciting.
@@ -6,7 +6,13 @@
 {
     let bin = wasmTextToBinary(
         `(module
+<<<<<<< HEAD
           (gc_feature_opt_in 2)
+||||||| merged common ancestors
+          (gc_feature_opt_in 1)
+=======
+          (gc_feature_opt_in 3)
+>>>>>>> upstream-releases
 
           (type $point (struct
                         (field $x f64)
@@ -20,14 +26,22 @@
           ;; as a return value.  See ref-restrict.js.
 
           (func (export "get") (result anyref)
-           (get_global $g1))
+           (global.get $g1))
 
           (func (export "copy")
-           (set_global $g2 (get_global $g1)))
+           (global.set $g2 (global.get $g1)))
 
           (func (export "clear")
+<<<<<<< HEAD
            (set_global $g1 (get_global $g3))
            (set_global $g2 (ref.null))))`);
+||||||| merged common ancestors
+           (set_global $g1 (get_global $g3))
+           (set_global $g2 (ref.null (ref $point)))))`);
+=======
+           (global.set $g1 (global.get $g3))
+           (global.set $g2 (ref.null))))`);
+>>>>>>> upstream-releases
 
     let mod = new WebAssembly.Module(bin);
     let ins = new WebAssembly.Instance(mod).exports;
@@ -42,7 +56,13 @@
 {
     let bin = wasmTextToBinary(
         `(module
+<<<<<<< HEAD
           (gc_feature_opt_in 2)
+||||||| merged common ancestors
+          (gc_feature_opt_in 1)
+=======
+          (gc_feature_opt_in 3)
+>>>>>>> upstream-releases
 
           (type $point (struct
                         (field $x f64)
@@ -51,19 +71,25 @@
           (global $glob (mut (ref $point)) (ref.null))
 
           (func (export "init")
-           (set_global $glob (struct.new $point (f64.const 0.5) (f64.const 2.75))))
+           (global.set $glob (struct.new $point (f64.const 0.5) (f64.const 2.75))))
 
           (func (export "change")
-           (set_global $glob (struct.new $point (f64.const 3.5) (f64.const 37.25))))
+           (global.set $glob (struct.new $point (f64.const 3.5) (f64.const 37.25))))
 
           (func (export "clear")
+<<<<<<< HEAD
            (set_global $glob (ref.null)))
+||||||| merged common ancestors
+           (set_global $glob (ref.null (ref $point))))
+=======
+           (global.set $glob (ref.null)))
+>>>>>>> upstream-releases
 
           (func (export "x") (result f64)
-           (struct.get $point 0 (get_global $glob)))
+           (struct.get $point 0 (global.get $glob)))
 
           (func (export "y") (result f64)
-           (struct.get $point 1 (get_global $glob))))`);
+           (struct.get $point 1 (global.get $glob))))`);
 
     let mod = new WebAssembly.Module(bin);
     let ins = new WebAssembly.Instance(mod).exports;
@@ -87,11 +113,17 @@
 {
     let bin = wasmTextToBinary(
         `(module
+<<<<<<< HEAD
           (gc_feature_opt_in 2)
+||||||| merged common ancestors
+          (gc_feature_opt_in 1)
+=======
+          (gc_feature_opt_in 3)
+>>>>>>> upstream-releases
           (import $g "" "g" (global anyref))
-          (global $glob anyref (get_global $g))
+          (global $glob anyref (global.get $g))
           (func (export "get") (result anyref)
-           (get_global $glob)))`);
+           (global.get $glob)))`);
 
     let mod = new WebAssembly.Module(bin);
     let obj = {zappa:37};
@@ -105,7 +137,13 @@
 {
     let bin = wasmTextToBinary(
         `(module
+<<<<<<< HEAD
           (gc_feature_opt_in 2)
+||||||| merged common ancestors
+          (gc_feature_opt_in 1)
+=======
+          (gc_feature_opt_in 3)
+>>>>>>> upstream-releases
           (type $box (struct (field $val i32)))
           (import "m" "g" (global (mut (ref $box)))))`);
 
@@ -120,7 +158,13 @@
 {
     let bin = wasmTextToBinary(
         `(module
+<<<<<<< HEAD
           (gc_feature_opt_in 2)
+||||||| merged common ancestors
+          (gc_feature_opt_in 1)
+=======
+          (gc_feature_opt_in 3)
+>>>>>>> upstream-releases
           (type $box (struct (field $val i32)))
           (global $boxg (export "box") (mut (ref $box)) (ref.null)))`);
 

@@ -241,6 +241,7 @@ class imgLoader final : public imgILoader,
   imgLoader();
   nsresult Init();
 
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult
   LoadImage(nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
             ReferrerPolicy aReferrerPolicy, nsIPrincipal* aLoadingPrincipal,
@@ -250,6 +251,34 @@ class imgLoader final : public imgILoader,
             nsISupports* aCacheKey, nsContentPolicyType aContentPolicyType,
             const nsAString& initiatorType, bool aUseUrgentStartForChannel,
             imgRequestProxy** _retval);
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult LoadImage(nsIURI* aURI,
+                                  nsIURI* aInitialDocumentURI,
+                                  nsIURI* aReferrerURI,
+                                  ReferrerPolicy aReferrerPolicy,
+                                  nsIPrincipal* aLoadingPrincipal,
+                                  uint64_t aRequestContextID,
+                                  nsILoadGroup* aLoadGroup,
+                                  imgINotificationObserver* aObserver,
+                                  nsINode* aContext,
+                                  nsIDocument* aLoadingDocument,
+                                  nsLoadFlags aLoadFlags,
+                                  nsISupports* aCacheKey,
+                                  nsContentPolicyType aContentPolicyType,
+                                  const nsAString& initiatorType,
+                                  bool aUseUrgentStartForChannel,
+                                  imgRequestProxy** _retval);
+=======
+  MOZ_MUST_USE nsresult
+  LoadImage(nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
+            ReferrerPolicy aReferrerPolicy, nsIPrincipal* aLoadingPrincipal,
+            uint64_t aRequestContextID, nsILoadGroup* aLoadGroup,
+            imgINotificationObserver* aObserver, nsINode* aContext,
+            mozilla::dom::Document* aLoadingDocument, nsLoadFlags aLoadFlags,
+            nsISupports* aCacheKey, nsContentPolicyType aContentPolicyType,
+            const nsAString& initiatorType, bool aUseUrgentStartForChannel,
+            imgRequestProxy** _retval);
+>>>>>>> upstream-releases
 
   MOZ_MUST_USE nsresult
   LoadImageWithChannel(nsIChannel* channel, imgINotificationObserver* aObserver,
@@ -344,14 +373,25 @@ class imgLoader final : public imgILoader,
  private:  // methods
   static already_AddRefed<imgLoader> CreateImageLoader();
 
+  bool PreferLoadFromCache(nsIURI* aURI) const;
+
   bool ValidateEntry(imgCacheEntry* aEntry, nsIURI* aKey,
                      nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
                      ReferrerPolicy aReferrerPolicy, nsILoadGroup* aLoadGroup,
                      imgINotificationObserver* aObserver, nsISupports* aCX,
+<<<<<<< HEAD
                      nsIDocument* aLoadingDocument, nsLoadFlags aLoadFlags,
+||||||| merged common ancestors
+                     nsIDocument* aLoadingDocument,
+                     nsLoadFlags aLoadFlags,
+=======
+                     mozilla::dom::Document* aLoadingDocument,
+                     nsLoadFlags aLoadFlags,
+>>>>>>> upstream-releases
                      nsContentPolicyType aContentPolicyType,
                      bool aCanMakeNewChannel, bool* aNewChannelCreated,
                      imgRequestProxy** aProxyRequest,
+<<<<<<< HEAD
                      nsIPrincipal* aLoadingPrincipal, int32_t aCORSMode);
 
   bool ValidateRequestWithNewChannel(
@@ -362,10 +402,40 @@ class imgLoader final : public imgILoader,
       nsContentPolicyType aContentPolicyType, imgRequestProxy** aProxyRequest,
       nsIPrincipal* aLoadingPrincipal, int32_t aCORSMode,
       bool* aNewChannelCreated);
+||||||| merged common ancestors
+                     nsIPrincipal* aLoadingPrincipal,
+                     int32_t aCORSMode);
+
+  bool ValidateRequestWithNewChannel(imgRequest* request, nsIURI* aURI,
+                                     nsIURI* aInitialDocumentURI,
+                                     nsIURI* aReferrerURI,
+                                     ReferrerPolicy aReferrerPolicy,
+                                     nsILoadGroup* aLoadGroup,
+                                     imgINotificationObserver* aObserver,
+                                     nsISupports* aCX,
+                                     nsIDocument* aLoadingDocument,
+                                     nsLoadFlags aLoadFlags,
+                                     nsContentPolicyType aContentPolicyType,
+                                     imgRequestProxy** aProxyRequest,
+                                     nsIPrincipal* aLoadingPrincipal,
+                                     int32_t aCORSMode,
+                                     bool* aNewChannelCreated);
+=======
+                     nsIPrincipal* aLoadingPrincipal, int32_t aCORSMode);
+
+  bool ValidateRequestWithNewChannel(
+      imgRequest* request, nsIURI* aURI, nsIURI* aInitialDocumentURI,
+      nsIURI* aReferrerURI, ReferrerPolicy aReferrerPolicy,
+      nsILoadGroup* aLoadGroup, imgINotificationObserver* aObserver,
+      nsISupports* aCX, mozilla::dom::Document* aLoadingDocument,
+      nsLoadFlags aLoadFlags, nsContentPolicyType aContentPolicyType,
+      imgRequestProxy** aProxyRequest, nsIPrincipal* aLoadingPrincipal,
+      int32_t aCORSMode, bool* aNewChannelCreated);
+>>>>>>> upstream-releases
 
   nsresult CreateNewProxyForRequest(imgRequest* aRequest,
                                     nsILoadGroup* aLoadGroup,
-                                    nsIDocument* aLoadingDocument,
+                                    mozilla::dom::Document* aLoadingDocument,
                                     imgINotificationObserver* aObserver,
                                     nsLoadFlags aLoadFlags,
                                     imgRequestProxy** _retval);

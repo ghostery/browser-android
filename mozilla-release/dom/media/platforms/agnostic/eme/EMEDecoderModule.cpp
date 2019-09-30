@@ -101,6 +101,7 @@ class EMEDecryptor : public MediaDataDecoder,
       RefPtr<DecodePromise> p = mDecodePromise.Ensure(__func__);
 
       mSamplesWaitingForKey->WaitIfKeyNotUsable(sample)
+<<<<<<< HEAD
           ->Then(mTaskQueue, __func__,
                  [self](const RefPtr<MediaRawData>& aSample) {
                    self->mKeyRequest.Complete();
@@ -108,6 +109,25 @@ class EMEDecryptor : public MediaDataDecoder,
                  },
                  [self]() { self->mKeyRequest.Complete(); })
           ->Track(mKeyRequest);
+||||||| merged common ancestors
+        ->Then(mTaskQueue,
+               __func__,
+               [self](const RefPtr<MediaRawData>& aSample) {
+                 self->mKeyRequest.Complete();
+                 self->ThrottleDecode(aSample);
+               },
+               [self]() { self->mKeyRequest.Complete(); })
+        ->Track(mKeyRequest);
+=======
+          ->Then(
+              mTaskQueue, __func__,
+              [self](const RefPtr<MediaRawData>& aSample) {
+                self->mKeyRequest.Complete();
+                self->ThrottleDecode(aSample);
+              },
+              [self]() { self->mKeyRequest.Complete(); })
+          ->Track(mKeyRequest);
+>>>>>>> upstream-releases
 
       return p;
     });
@@ -118,6 +138,7 @@ class EMEDecryptor : public MediaDataDecoder,
 
     RefPtr<EMEDecryptor> self = this;
     mThroughputLimiter.Throttle(aSample)
+<<<<<<< HEAD
         ->Then(mTaskQueue, __func__,
                [self](RefPtr<MediaRawData> aSample) {
                  self->mThrottleRequest.Complete();
@@ -125,6 +146,26 @@ class EMEDecryptor : public MediaDataDecoder,
                },
                [self]() { self->mThrottleRequest.Complete(); })
         ->Track(mThrottleRequest);
+||||||| merged common ancestors
+      ->Then(mTaskQueue, __func__,
+             [self] (RefPtr<MediaRawData> aSample) {
+               self->mThrottleRequest.Complete();
+               self->AttemptDecode(aSample);
+             },
+             [self]() {
+               self->mThrottleRequest.Complete();
+             })
+      ->Track(mThrottleRequest);
+=======
+        ->Then(
+            mTaskQueue, __func__,
+            [self](RefPtr<MediaRawData> aSample) {
+              self->mThrottleRequest.Complete();
+              self->AttemptDecode(aSample);
+            },
+            [self]() { self->mThrottleRequest.Complete(); })
+        ->Track(mThrottleRequest);
+>>>>>>> upstream-releases
   }
 
   void AttemptDecode(MediaRawData* aSample) {
@@ -251,6 +292,7 @@ class EMEDecryptor : public MediaDataDecoder,
     return InvokeAsync(mTaskQueue, __func__, [self, this]() {
       MOZ_ASSERT(!mIsShutdown);
       mIsShutdown = true;
+      mSamplesWaitingForKey->BreakCycles();
       mSamplesWaitingForKey = nullptr;
       RefPtr<MediaDataDecoder> decoder = mDecoder.forget();
       mProxy = nullptr;
@@ -310,6 +352,7 @@ RefPtr<MediaDataDecoder::DecodePromise> EMEMediaDataDecoderProxy::Decode(
   return InvokeAsync(mThread, __func__, [self, this, sample]() {
     RefPtr<DecodePromise> p = mDecodePromise.Ensure(__func__);
     mSamplesWaitingForKey->WaitIfKeyNotUsable(sample)
+<<<<<<< HEAD
         ->Then(mThread, __func__,
                [self, this](RefPtr<MediaRawData> aSample) {
                  mKeyRequest.Complete();
@@ -329,6 +372,52 @@ RefPtr<MediaDataDecoder::DecodePromise> EMEMediaDataDecoderProxy::Decode(
                  MOZ_CRASH("Should never get here");
                })
         ->Track(mKeyRequest);
+||||||| merged common ancestors
+      ->Then(mTaskQueue,
+             __func__,
+             [self, this](RefPtr<MediaRawData> aSample) {
+               mKeyRequest.Complete();
+
+               MediaDataDecoderProxy::Decode(aSample)
+                 ->Then(mTaskQueue,
+                        __func__,
+                        [self, this](const DecodedData& aResults) {
+                          mDecodeRequest.Complete();
+                          mDecodePromise.Resolve(aResults, __func__);
+                        },
+                        [self, this](const MediaResult& aError) {
+                          mDecodeRequest.Complete();
+                          mDecodePromise.Reject(aError, __func__);
+                        })
+                 ->Track(mDecodeRequest);
+             },
+             [self]() {
+               self->mKeyRequest.Complete();
+               MOZ_CRASH("Should never get here");
+             })
+      ->Track(mKeyRequest);
+=======
+        ->Then(
+            mThread, __func__,
+            [self, this](RefPtr<MediaRawData> aSample) {
+              mKeyRequest.Complete();
+
+              MediaDataDecoderProxy::Decode(aSample)
+                  ->Then(mThread, __func__,
+                         [self,
+                          this](DecodePromise::ResolveOrRejectValue&& aValue) {
+                           mDecodeRequest.Complete();
+                           mDecodePromise.ResolveOrReject(std::move(aValue),
+                                                          __func__);
+                         })
+                  ->Track(mDecodeRequest);
+            },
+            [self]() {
+              self->mKeyRequest.Complete();
+              MOZ_CRASH("Should never get here");
+            })
+        ->Track(mKeyRequest);
+>>>>>>> upstream-releases
 
     return p;
   });
@@ -346,7 +435,14 @@ RefPtr<MediaDataDecoder::FlushPromise> EMEMediaDataDecoderProxy::Flush() {
 
 RefPtr<ShutdownPromise> EMEMediaDataDecoderProxy::Shutdown() {
   RefPtr<EMEMediaDataDecoderProxy> self = this;
+<<<<<<< HEAD
   return InvokeAsync(mThread, __func__, [self, this]() {
+||||||| merged common ancestors
+  return InvokeAsync(mTaskQueue, __func__, [self, this]() {
+=======
+  return InvokeAsync(mThread, __func__, [self, this]() {
+    mSamplesWaitingForKey->BreakCycles();
+>>>>>>> upstream-releases
     mSamplesWaitingForKey = nullptr;
     mProxy = nullptr;
     return MediaDataDecoderProxy::Shutdown();
@@ -374,11 +470,22 @@ static already_AddRefed<MediaDataDecoderProxy> CreateDecoderWrapper(
   return decoder.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<MediaDataDecoder> EMEDecoderModule::CreateVideoDecoder(
     const CreateDecoderParams& aParams) {
   MOZ_ASSERT(aParams.mConfig.mCrypto.mValid);
+||||||| merged common ancestors
+already_AddRefed<MediaDataDecoder>
+EMEDecoderModule::CreateVideoDecoder(const CreateDecoderParams& aParams)
+{
+  MOZ_ASSERT(aParams.mConfig.mCrypto.mValid);
+=======
+already_AddRefed<MediaDataDecoder> EMEDecoderModule::CreateVideoDecoder(
+    const CreateDecoderParams& aParams) {
+  MOZ_ASSERT(aParams.mConfig.mCrypto.IsEncrypted());
+>>>>>>> upstream-releases
 
-  if (StaticPrefs::MediaEmeVideoBlank()) {
+  if (StaticPrefs::media_eme_video_blank()) {
     EME_LOG("EMEDecoderModule::CreateVideoDecoder() creating a blank decoder.");
     RefPtr<PlatformDecoderModule> m(CreateBlankDecoderModule());
     return m->CreateVideoDecoder(aParams);
@@ -405,15 +512,26 @@ already_AddRefed<MediaDataDecoder> EMEDecoderModule::CreateVideoDecoder(
   return emeDecoder.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<MediaDataDecoder> EMEDecoderModule::CreateAudioDecoder(
     const CreateDecoderParams& aParams) {
   MOZ_ASSERT(aParams.mConfig.mCrypto.mValid);
+||||||| merged common ancestors
+already_AddRefed<MediaDataDecoder>
+EMEDecoderModule::CreateAudioDecoder(const CreateDecoderParams& aParams)
+{
+  MOZ_ASSERT(aParams.mConfig.mCrypto.mValid);
+=======
+already_AddRefed<MediaDataDecoder> EMEDecoderModule::CreateAudioDecoder(
+    const CreateDecoderParams& aParams) {
+  MOZ_ASSERT(aParams.mConfig.mCrypto.IsEncrypted());
+>>>>>>> upstream-releases
 
   // We don't support using the GMP to decode audio.
   MOZ_ASSERT(!SupportsMimeType(aParams.mConfig.mMimeType, nullptr));
   MOZ_ASSERT(mPDM);
 
-  if (StaticPrefs::MediaEmeAudioBlank()) {
+  if (StaticPrefs::media_eme_audio_blank()) {
     EME_LOG("EMEDecoderModule::CreateAudioDecoder() creating a blank decoder.");
     RefPtr<PlatformDecoderModule> m(CreateBlankDecoderModule());
     return m->CreateAudioDecoder(aParams);

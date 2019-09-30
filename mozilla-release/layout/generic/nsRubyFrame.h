@@ -12,11 +12,15 @@
 #include "nsInlineFrame.h"
 #include "RubyUtils.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 /**
  * Factory function.
  * @return a newly allocated nsRubyFrame (infallible)
  */
-nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
+nsContainerFrame* NS_NewRubyFrame(mozilla::PresShell* aPresShell,
                                   mozilla::ComputedStyle* aStyle);
 
 class nsRubyFrame final : public nsInlineFrame {
@@ -40,11 +44,28 @@ class nsRubyFrame final : public nsInlineFrame {
 
   mozilla::RubyBlockLeadings GetBlockLeadings() const { return mLeadings; }
 
+<<<<<<< HEAD
  protected:
   friend nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+protected:
+  friend nsContainerFrame* NS_NewRubyFrame(nsIPresShell* aPresShell,
+=======
+ protected:
+  friend nsContainerFrame* NS_NewRubyFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                            ComputedStyle* aStyle);
+<<<<<<< HEAD
   explicit nsRubyFrame(ComputedStyle* aStyle)
       : nsInlineFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsRubyFrame(ComputedStyle* aStyle)
+    : nsInlineFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsRubyFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsInlineFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   void ReflowSegment(nsPresContext* aPresContext,
                      const ReflowInput& aReflowInput,

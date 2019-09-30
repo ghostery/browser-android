@@ -28,8 +28,9 @@ class FormatUsageAuthority;
 }  // namespace webgl
 
 class WebGLContext;
-class WebGLShader;
 class WebGLQuery;
+class WebGLShader;
+class WebGLTexture;
 class WebGLVertexArray;
 
 class WebGLExtensionBase : public nsWrapperCache,
@@ -64,6 +65,19 @@ class WebGLExtensionBase : public nsWrapperCache,
 
 ////
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureASTC : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureASTC(WebGLContext* webgl);
+  virtual ~WebGLExtensionCompressedTextureASTC();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureASTC
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureASTC(WebGLContext* webgl);
+    virtual ~WebGLExtensionCompressedTextureASTC();
+=======
 class WebGLExtensionCompressedTextureASTC : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureASTC(WebGLContext* webgl);
@@ -75,16 +89,34 @@ class WebGLExtensionCompressedTextureASTC : public WebGLExtensionBase {
 
   DECL_WEBGL_EXTENSION_GOOP
 };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void GetSupportedProfiles(dom::Nullable<nsTArray<nsString> >& retval) const;
+||||||| merged common ancestors
+    void GetSupportedProfiles(dom::Nullable< nsTArray<nsString> >& retval) const;
+=======
 class WebGLExtensionCompressedTextureBPTC final : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureBPTC(WebGLContext* webgl);
+>>>>>>> upstream-releases
 
   static bool IsSupported(const WebGLContext* webgl);
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureBPTC final : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureBPTC(WebGLContext* webgl);
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureBPTC final
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureBPTC(WebGLContext* webgl);
+=======
 class WebGLExtensionCompressedTextureES3 : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureES3(WebGLContext*);
@@ -92,57 +124,149 @@ class WebGLExtensionCompressedTextureES3 : public WebGLExtensionBase {
 
   DECL_WEBGL_EXTENSION_GOOP
 };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool IsSupported(const WebGLContext* webgl);
+||||||| merged common ancestors
+    static bool IsSupported(const WebGLContext* webgl);
+=======
 class WebGLExtensionCompressedTextureETC1 : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureETC1(WebGLContext*);
   virtual ~WebGLExtensionCompressedTextureETC1();
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureES3 : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureES3(WebGLContext*);
+  virtual ~WebGLExtensionCompressedTextureES3();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureES3
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureES3(WebGLContext*);
+    virtual ~WebGLExtensionCompressedTextureES3();
+=======
 class WebGLExtensionCompressedTexturePVRTC : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTexturePVRTC(WebGLContext*);
   virtual ~WebGLExtensionCompressedTexturePVRTC();
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureETC1 : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureETC1(WebGLContext*);
+  virtual ~WebGLExtensionCompressedTextureETC1();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureETC1
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureETC1(WebGLContext*);
+    virtual ~WebGLExtensionCompressedTextureETC1();
+=======
 class WebGLExtensionCompressedTextureRGTC final : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureRGTC(WebGLContext* webgl);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  DECL_WEBGL_EXTENSION_GOOP
+||||||| merged common ancestors
+    DECL_WEBGL_EXTENSION_GOOP
+=======
   static bool IsSupported(const WebGLContext* webgl);
 
   DECL_WEBGL_EXTENSION_GOOP
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTexturePVRTC : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTexturePVRTC(WebGLContext*);
+  virtual ~WebGLExtensionCompressedTexturePVRTC();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTexturePVRTC
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTexturePVRTC(WebGLContext*);
+    virtual ~WebGLExtensionCompressedTexturePVRTC();
+=======
 class WebGLExtensionCompressedTextureS3TC : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureS3TC(WebGLContext*);
   virtual ~WebGLExtensionCompressedTextureS3TC();
 
   static bool IsSupported(const WebGLContext*);
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureRGTC final : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureRGTC(WebGLContext* webgl);
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureRGTC final
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureRGTC(WebGLContext* webgl);
+=======
 class WebGLExtensionCompressedTextureS3TC_SRGB : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionCompressedTextureS3TC_SRGB(WebGLContext*);
   virtual ~WebGLExtensionCompressedTextureS3TC_SRGB();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool IsSupported(const WebGLContext* webgl);
+||||||| merged common ancestors
+    static bool IsSupported(const WebGLContext* webgl);
+=======
   static bool IsSupported(const WebGLContext*);
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureS3TC : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureS3TC(WebGLContext*);
+  virtual ~WebGLExtensionCompressedTextureS3TC();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureS3TC
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureS3TC(WebGLContext*);
+    virtual ~WebGLExtensionCompressedTextureS3TC();
+=======
 class WebGLExtensionDebugRendererInfo : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionDebugRendererInfo(WebGLContext*);
   virtual ~WebGLExtensionDebugRendererInfo();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool IsSupported(const WebGLContext*);
+||||||| merged common ancestors
+    static bool IsSupported(const WebGLContext*);
+=======
   DECL_WEBGL_EXTENSION_GOOP
 };
 
@@ -153,30 +277,167 @@ class WebGLExtensionDebugShaders : public WebGLExtensionBase {
 
   void GetTranslatedShaderSource(const WebGLShader& shader,
                                  nsAString& retval) const;
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionCompressedTextureS3TC_SRGB : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionCompressedTextureS3TC_SRGB(WebGLContext*);
+  virtual ~WebGLExtensionCompressedTextureS3TC_SRGB();
+||||||| merged common ancestors
+class WebGLExtensionCompressedTextureS3TC_SRGB
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionCompressedTextureS3TC_SRGB(WebGLContext*);
+    virtual ~WebGLExtensionCompressedTextureS3TC_SRGB();
+=======
 class WebGLExtensionDepthTexture : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionDepthTexture(WebGLContext*);
   virtual ~WebGLExtensionDepthTexture();
+>>>>>>> upstream-releases
+
+  static bool IsSupported(const WebGLContext*);
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionDebugRendererInfo : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionDebugRendererInfo(WebGLContext*);
+  virtual ~WebGLExtensionDebugRendererInfo();
+||||||| merged common ancestors
+class WebGLExtensionDebugRendererInfo
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionDebugRendererInfo(WebGLContext*);
+    virtual ~WebGLExtensionDebugRendererInfo();
+=======
 class WebGLExtensionElementIndexUint : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionElementIndexUint(WebGLContext*);
   virtual ~WebGLExtensionElementIndexUint();
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionDebugShaders : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionDebugShaders(WebGLContext*);
+  virtual ~WebGLExtensionDebugShaders();
+||||||| merged common ancestors
+class WebGLExtensionDebugShaders
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionDebugShaders(WebGLContext*);
+    virtual ~WebGLExtensionDebugShaders();
+=======
+class WebGLExtensionExplicitPresent : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionExplicitPresent(WebGLContext*);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void GetTranslatedShaderSource(const WebGLShader& shader,
+                                 nsAString& retval) const;
+||||||| merged common ancestors
+    void GetTranslatedShaderSource(const WebGLShader& shader, nsAString& retval) const;
+=======
+  static bool IsSupported(const WebGLContext*);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  DECL_WEBGL_EXTENSION_GOOP
+||||||| merged common ancestors
+    DECL_WEBGL_EXTENSION_GOOP
+=======
+  void Present() const;
+
+  DECL_WEBGL_EXTENSION_GOOP
+>>>>>>> upstream-releases
+};
+
+<<<<<<< HEAD
+class WebGLExtensionDepthTexture : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionDepthTexture(WebGLContext*);
+  virtual ~WebGLExtensionDepthTexture();
+||||||| merged common ancestors
+class WebGLExtensionDepthTexture
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionDepthTexture(WebGLContext*);
+    virtual ~WebGLExtensionDepthTexture();
+=======
 class WebGLExtensionEXTColorBufferFloat : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionEXTColorBufferFloat(WebGLContext*);
   virtual ~WebGLExtensionEXTColorBufferFloat() {}
+
+  static bool IsSupported(const WebGLContext*);
+>>>>>>> upstream-releases
+
+  DECL_WEBGL_EXTENSION_GOOP
+};
+
+<<<<<<< HEAD
+class WebGLExtensionElementIndexUint : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionElementIndexUint(WebGLContext*);
+  virtual ~WebGLExtensionElementIndexUint();
+||||||| merged common ancestors
+class WebGLExtensionElementIndexUint
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionElementIndexUint(WebGLContext*);
+    virtual ~WebGLExtensionElementIndexUint();
+=======
+class WebGLExtensionFBORenderMipmap : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionFBORenderMipmap(WebGLContext* webgl);
+  virtual ~WebGLExtensionFBORenderMipmap();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  DECL_WEBGL_EXTENSION_GOOP
+||||||| merged common ancestors
+    DECL_WEBGL_EXTENSION_GOOP
+=======
+  static bool IsSupported(const WebGLContext*);
+
+  DECL_WEBGL_EXTENSION_GOOP
+>>>>>>> upstream-releases
+};
+
+<<<<<<< HEAD
+class WebGLExtensionEXTColorBufferFloat : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionEXTColorBufferFloat(WebGLContext*);
+  virtual ~WebGLExtensionEXTColorBufferFloat() {}
+||||||| merged common ancestors
+class WebGLExtensionEXTColorBufferFloat
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionEXTColorBufferFloat(WebGLContext*);
+    virtual ~WebGLExtensionEXTColorBufferFloat() { }
+=======
+class WebGLExtensionFloatBlend : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionFloatBlend(WebGLContext* webgl);
+  virtual ~WebGLExtensionFloatBlend();
+>>>>>>> upstream-releases
 
   static bool IsSupported(const WebGLContext*);
 
@@ -351,6 +612,19 @@ class WebGLExtensionBlendMinMax : public WebGLExtensionBase {
   DECL_WEBGL_EXTENSION_GOOP
 };
 
+<<<<<<< HEAD
+class WebGLExtensionDisjointTimerQuery : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionDisjointTimerQuery(WebGLContext* webgl);
+  virtual ~WebGLExtensionDisjointTimerQuery();
+||||||| merged common ancestors
+class WebGLExtensionDisjointTimerQuery
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionDisjointTimerQuery(WebGLContext* webgl);
+    virtual ~WebGLExtensionDisjointTimerQuery();
+=======
 class WebGLExtensionDisjointTimerQuery : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionDisjointTimerQuery(WebGLContext* webgl);
@@ -371,14 +645,81 @@ class WebGLExtensionDisjointTimerQuery : public WebGLExtensionBase {
 
   DECL_WEBGL_EXTENSION_GOOP
 };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  already_AddRefed<WebGLQuery> CreateQueryEXT() const;
+  void DeleteQueryEXT(WebGLQuery* query) const;
+  bool IsQueryEXT(const WebGLQuery* query) const;
+  void BeginQueryEXT(GLenum target, WebGLQuery& query) const;
+  void EndQueryEXT(GLenum target) const;
+  void QueryCounterEXT(WebGLQuery& query, GLenum target) const;
+  void GetQueryEXT(JSContext* cx, GLenum target, GLenum pname,
+                   JS::MutableHandleValue retval) const;
+  void GetQueryObjectEXT(JSContext* cx, const WebGLQuery& query, GLenum pname,
+                         JS::MutableHandleValue retval) const;
+||||||| merged common ancestors
+    already_AddRefed<WebGLQuery> CreateQueryEXT() const;
+    void DeleteQueryEXT(WebGLQuery* query) const;
+    bool IsQueryEXT(const WebGLQuery* query) const;
+    void BeginQueryEXT(GLenum target, WebGLQuery& query) const;
+    void EndQueryEXT(GLenum target) const;
+    void QueryCounterEXT(WebGLQuery& query, GLenum target) const;
+    void GetQueryEXT(JSContext* cx, GLenum target, GLenum pname,
+                     JS::MutableHandleValue retval) const;
+    void GetQueryObjectEXT(JSContext* cx, const WebGLQuery& query,
+                           GLenum pname, JS::MutableHandleValue retval) const;
+=======
 class WebGLExtensionMOZDebug final : public WebGLExtensionBase {
  public:
   explicit WebGLExtensionMOZDebug(WebGLContext* webgl);
   virtual ~WebGLExtensionMOZDebug();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static bool IsSupported(const WebGLContext*);
+||||||| merged common ancestors
+    static bool IsSupported(const WebGLContext*);
+=======
   void GetParameter(JSContext* cx, GLenum pname,
                     JS::MutableHandle<JS::Value> retval, ErrorResult& er) const;
+>>>>>>> upstream-releases
+
+  DECL_WEBGL_EXTENSION_GOOP
+};
+
+<<<<<<< HEAD
+class WebGLExtensionMOZDebug final : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionMOZDebug(WebGLContext* webgl);
+  virtual ~WebGLExtensionMOZDebug();
+||||||| merged common ancestors
+class WebGLExtensionMOZDebug final
+    : public WebGLExtensionBase
+{
+public:
+    explicit WebGLExtensionMOZDebug(WebGLContext* webgl);
+    virtual ~WebGLExtensionMOZDebug();
+=======
+class WebGLExtensionMultiview : public WebGLExtensionBase {
+ public:
+  explicit WebGLExtensionMultiview(WebGLContext*);
+  virtual ~WebGLExtensionMultiview();
+  static bool IsSupported(const WebGLContext*);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void GetParameter(JSContext* cx, GLenum pname,
+                    JS::MutableHandle<JS::Value> retval, ErrorResult& er) const;
+||||||| merged common ancestors
+    void GetParameter(JSContext* cx, GLenum pname,
+                      JS::MutableHandle<JS::Value> retval, ErrorResult& er) const;
+=======
+  void FramebufferTextureMultiviewOVR(GLenum target, GLenum attachment,
+                                      WebGLTexture* texture, GLint level,
+                                      GLint baseViewIndex,
+                                      GLsizei numViews) const;
+>>>>>>> upstream-releases
 
   DECL_WEBGL_EXTENSION_GOOP
 };

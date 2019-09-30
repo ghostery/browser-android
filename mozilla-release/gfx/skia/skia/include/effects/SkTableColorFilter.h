@@ -36,7 +36,13 @@ public:
                                          const uint8_t tableG[256],
                                          const uint8_t tableB[256]);
 
+<<<<<<< HEAD
     static void InitializeFlattenables();
+||||||| merged common ancestors
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
+=======
+    static void RegisterFlattenables();
+>>>>>>> upstream-releases
 };
 
 #endif

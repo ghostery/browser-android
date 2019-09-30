@@ -69,9 +69,19 @@ template <>
 struct ParamTraits<mozilla::ipc::ByteBuf> {
   typedef mozilla::ipc::ByteBuf paramType;
 
+<<<<<<< HEAD
   // this is where we transfer the memory from the ByteBuf to IPDL, avoiding a
   // copy
   static void Write(Message* aMsg, paramType& aParam) {
+||||||| merged common ancestors
+  // this is where we transfer the memory from the ByteBuf to IPDL, avoiding a copy
+  static void Write(Message* aMsg, paramType& aParam)
+  {
+=======
+  // this is where we transfer the memory from the ByteBuf to IPDL, avoiding a
+  // copy
+  static void Write(Message* aMsg, paramType&& aParam) {
+>>>>>>> upstream-releases
     WriteParam(aMsg, aParam.mLen);
     // hand over ownership of the buffer to the Message
     aMsg->WriteBytesZeroCopy(aParam.mData, aParam.mLen, aParam.mCapacity);

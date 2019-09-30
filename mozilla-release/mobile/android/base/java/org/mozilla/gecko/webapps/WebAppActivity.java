@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.json.JSONObject;
 import org.mozilla.gecko.ActivityHandlerHelper;
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BrowserApp;
@@ -43,7 +44,13 @@ import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoSessionSettings;
 import org.mozilla.geckoview.GeckoView;
+<<<<<<< HEAD
 import org.mozilla.geckoview.WebRequestError;
+||||||| merged common ancestors
+=======
+import org.mozilla.geckoview.GeckoViewBridge;
+import org.mozilla.geckoview.WebRequestError;
+>>>>>>> upstream-releases
 
 public class WebAppActivity extends AppCompatActivity
                             implements ActionModePresenter,
@@ -98,8 +105,9 @@ public class WebAppActivity extends AppCompatActivity
         setContentView(R.layout.webapp_activity);
         mGeckoView = (GeckoView) findViewById(R.id.pwa_gecko_view);
 
-        final GeckoSessionSettings settings = new GeckoSessionSettings();
-        settings.setBoolean(GeckoSessionSettings.USE_MULTIPROCESS, false);
+        final GeckoSessionSettings settings = new GeckoSessionSettings.Builder()
+                .useMultiprocess(false)
+                .build();
         mGeckoSession = new GeckoSession(settings);
         mGeckoView.setSession(mGeckoSession, GeckoApplication.ensureRuntime(this));
 
@@ -156,8 +164,9 @@ public class WebAppActivity extends AppCompatActivity
             }
         });
 
-        mPromptService = new PromptService(this, mGeckoView.getEventDispatcher());
-        mDoorHangerPopup = new DoorHangerPopup(this, mGeckoView.getEventDispatcher());
+        mPromptService = new PromptService(this, GeckoViewBridge.getEventDispatcher(mGeckoView));
+        mDoorHangerPopup = new DoorHangerPopup(this,
+                                               GeckoViewBridge.getEventDispatcher(mGeckoView));
 
         mFormAssistPopup = (FormAssistPopup) findViewById(R.id.pwa_form_assist_popup);
         mFormAssistPopup.create(mGeckoView);
@@ -319,24 +328,12 @@ public class WebAppActivity extends AppCompatActivity
                 break;
         }
 
-        mGeckoSession.getSettings().setInt(GeckoSessionSettings.DISPLAY_MODE, mode);
-    }
-
-    @Override // GeckoSession.NavigationDelegate
-    public void onLocationChange(GeckoSession session, String url) {
+        mGeckoSession.getSettings().setDisplayMode(mode);
     }
 
     @Override // GeckoSession.NavigationDelegate
     public void onCanGoBack(GeckoSession session, boolean canGoBack) {
         mCanGoBack = canGoBack;
-    }
-
-    @Override // GeckoSession.NavigationDelegate
-    public void onCanGoForward(GeckoSession session, boolean canGoForward) {
-    }
-
-    @Override // GeckoSession.ContentDelegate
-    public void onTitleChange(GeckoSession session, String title) {
     }
 
     @Override // GeckoSession.ContentDelegate
@@ -347,6 +344,7 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override // GeckoSession.ContentDelegate
+<<<<<<< HEAD
     public void onCloseRequest(GeckoSession session) {
         // Ignore
     }
@@ -358,6 +356,23 @@ public class WebAppActivity extends AppCompatActivity
         final String content = element.linkUri != null
                                ? element.linkUri
                                : element.srcUri != null ? element.srcUri : "";
+||||||| merged common ancestors
+    public void onCloseRequest(GeckoSession session) {
+        // Ignore
+    }
+
+    @Override // GeckoSession.ContentDelegate
+    public void onContextMenu(GeckoSession session, int screenX, int screenY,
+                              String uri, int elementType, String elementSrc) {
+        final String content = uri != null ? uri : elementSrc != null ? elementSrc : "";
+=======
+    public void onContextMenu(final GeckoSession session,
+                              int screenX, int screenY,
+                              final ContextElement element) {
+        final String content = element.linkUri != null
+                               ? element.linkUri
+                               : element.srcUri != null ? element.srcUri : "";
+>>>>>>> upstream-releases
         final Uri validUri = WebApps.getValidURL(content);
         if (validUri == null) {
             return;
@@ -367,6 +382,7 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override // GeckoSession.ContentDelegate
+<<<<<<< HEAD
     public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
         // Won't happen, as we don't use the GeckoView download support in Fennec
     }
@@ -381,6 +397,19 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override // GeckoSession.ContentDelegate
+||||||| merged common ancestors
+    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
+        // Won't happen, as we don't use the GeckoView download support in Fennec
+    }
+
+    @Override // GeckoSession.ContentDelegate
+    public void onCrash(final GeckoSession session) {
+        // Won't happen, as we don't use e10s in Fennec
+    }
+
+    @Override // GeckoSession.ContentDelegate
+=======
+>>>>>>> upstream-releases
     public void onFullScreen(GeckoSession session, boolean fullScreen) {
         updateFullScreenContent(fullScreen);
     }

@@ -7,6 +7,7 @@
 #include "ImageMemoryReporter.h"
 #include "Image.h"
 #include "mozilla/layers/SharedSurfacesParent.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsIMemoryReporter.h"
 #include "nsISupportsImpl.h"
 
@@ -36,7 +37,16 @@ class ImageMemoryReporter::WebRenderReporter final : public nsIMemoryReporter {
 
 NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::InitForWebRender() {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::InitForWebRender()
+{
+=======
+/* static */
+void ImageMemoryReporter::InitForWebRender() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() || XRE_IsGPUProcess());
   if (!sWrReporter) {
     sWrReporter = new WebRenderReporter();
@@ -44,7 +54,16 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
   }
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::ShutdownForWebRender() {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::ShutdownForWebRender()
+{
+=======
+/* static */
+void ImageMemoryReporter::ShutdownForWebRender() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() || XRE_IsGPUProcess());
   if (sWrReporter) {
     UnregisterStrongMemoryReporter(sWrReporter);
@@ -52,17 +71,45 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
   }
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::ReportSharedSurfaces(
     nsIHandleReportCallback* aHandleReport, nsISupports* aData,
     const layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::ReportSharedSurfaces(nsIHandleReportCallback* aHandleReport,
+                                          nsISupports* aData,
+                                          const layers::SharedSurfacesMemoryReport& aSharedSurfaces)
+{
+=======
+/* static */
+void ImageMemoryReporter::ReportSharedSurfaces(
+    nsIHandleReportCallback* aHandleReport, nsISupports* aData,
+    const layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+>>>>>>> upstream-releases
   ReportSharedSurfaces(aHandleReport, aData,
                        /* aIsForCompositor */ false, aSharedSurfaces);
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::ReportSharedSurfaces(
     nsIHandleReportCallback* aHandleReport, nsISupports* aData,
     bool aIsForCompositor,
     const layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::ReportSharedSurfaces(nsIHandleReportCallback* aHandleReport,
+                                          nsISupports* aData,
+                                          bool aIsForCompositor,
+                                          const layers::SharedSurfacesMemoryReport& aSharedSurfaces)
+{
+=======
+/* static */
+void ImageMemoryReporter::ReportSharedSurfaces(
+    nsIHandleReportCallback* aHandleReport, nsISupports* aData,
+    bool aIsForCompositor,
+    const layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_IF(aIsForCompositor, XRE_IsParentProcess() || XRE_IsGPUProcess());
   MOZ_ASSERT_IF(!aIsForCompositor,
                 XRE_IsParentProcess() || XRE_IsContentProcess());
@@ -74,10 +121,26 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
   }
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::ReportSharedSurface(
     nsIHandleReportCallback* aHandleReport, nsISupports* aData,
     bool aIsForCompositor, uint64_t aExternalId,
     const layers::SharedSurfacesMemoryReport::SurfaceEntry& aEntry) {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::ReportSharedSurface(nsIHandleReportCallback* aHandleReport,
+                                         nsISupports* aData,
+                                         bool aIsForCompositor,
+                                         uint64_t aExternalId,
+                                         const layers::SharedSurfacesMemoryReport::SurfaceEntry& aEntry)
+{
+=======
+/* static */
+void ImageMemoryReporter::ReportSharedSurface(
+    nsIHandleReportCallback* aHandleReport, nsISupports* aData,
+    bool aIsForCompositor, uint64_t aExternalId,
+    const layers::SharedSurfacesMemoryReport::SurfaceEntry& aEntry) {
+>>>>>>> upstream-releases
   nsAutoCString path;
   if (aIsForCompositor) {
     path.AppendLiteral("gfx/webrender/images/mapped_from_owner/");
@@ -91,7 +154,7 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
     path.AppendLiteral("/");
   }
 
-  if (gfxPrefs::ImageMemDebugReporting()) {
+  if (StaticPrefs::image_mem_debug_reporting()) {
     path.AppendInt(aExternalId, 16);
     path.AppendLiteral("/");
   }
@@ -123,14 +186,27 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
                           aData);
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::AppendSharedSurfacePrefix(
     nsACString& aPathPrefix, const SurfaceMemoryCounter& aCounter,
     layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::AppendSharedSurfacePrefix(nsACString& aPathPrefix,
+                                               const SurfaceMemoryCounter& aCounter,
+                                               layers::SharedSurfacesMemoryReport& aSharedSurfaces)
+{
+=======
+/* static */
+void ImageMemoryReporter::AppendSharedSurfacePrefix(
+    nsACString& aPathPrefix, const SurfaceMemoryCounter& aCounter,
+    layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+>>>>>>> upstream-releases
   uint64_t extId = aCounter.Values().ExternalId();
   if (extId) {
     auto gpuEntry = aSharedSurfaces.mSurfaces.find(extId);
 
-    if (gfxPrefs::ImageMemDebugReporting()) {
+    if (StaticPrefs::image_mem_debug_reporting()) {
       aPathPrefix.AppendLiteral(", external_id:");
       aPathPrefix.AppendInt(extId, 16);
       if (gpuEntry != aSharedSurfaces.mSurfaces.end()) {
@@ -148,9 +224,21 @@ NS_IMPL_ISUPPORTS(ImageMemoryReporter::WebRenderReporter, nsIMemoryReporter)
   }
 }
 
+<<<<<<< HEAD
 /* static */ void ImageMemoryReporter::TrimSharedSurfaces(
     const ImageMemoryCounter& aCounter,
     layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+||||||| merged common ancestors
+/* static */ void
+ImageMemoryReporter::TrimSharedSurfaces(const ImageMemoryCounter& aCounter,
+                                        layers::SharedSurfacesMemoryReport& aSharedSurfaces)
+{
+=======
+/* static */
+void ImageMemoryReporter::TrimSharedSurfaces(
+    const ImageMemoryCounter& aCounter,
+    layers::SharedSurfacesMemoryReport& aSharedSurfaces) {
+>>>>>>> upstream-releases
   if (aSharedSurfaces.mSurfaces.empty()) {
     return;
   }

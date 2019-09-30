@@ -43,11 +43,28 @@ class TransportLayerIce : public TransportLayer {
   TransportResult SendPacket(MediaPacket &packet) override;
 
   // Slots for ICE
+<<<<<<< HEAD
   void IceCandidate(NrIceMediaStream *stream, const std::string &);
   void IceReady(NrIceMediaStream *stream);
   void IceFailed(NrIceMediaStream *stream);
   void IcePacketReceived(NrIceMediaStream *stream, int component,
                          const unsigned char *data, int len);
+||||||| merged common ancestors
+  void IceCandidate(NrIceMediaStream *stream, const std::string&);
+  void IceReady(NrIceMediaStream *stream);
+  void IceFailed(NrIceMediaStream *stream);
+  void IcePacketReceived(NrIceMediaStream *stream, int component,
+                         const unsigned char *data, int len);
+=======
+  void IceCandidate(NrIceMediaStream* stream, const std::string&);
+  void IceReady(NrIceMediaStream* stream);
+  void IceFailed(NrIceMediaStream* stream);
+  void IcePacketReceived(NrIceMediaStream* stream, int component,
+                         const unsigned char* data, int len);
+
+  // Useful for capturing encrypted packets
+  sigslot::signal2<TransportLayer*, MediaPacket&> SignalPacketSending;
+>>>>>>> upstream-releases
 
   // Useful for capturing encrypted packets
   sigslot::signal2<TransportLayer *, MediaPacket &> SignalPacketSending;

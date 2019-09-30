@@ -7,6 +7,7 @@
 #define _mozilla_dom_Client_h
 
 #include "mozilla/dom/ClientBinding.h"
+#include "mozilla/StorageAccess.h"
 #include "nsCOMPtr.h"
 #include "nsContentUtils.h"
 #include "nsISupports.h"
@@ -44,7 +45,14 @@ class Client final : public nsISupports, public nsWrapperCache {
 
   TimeStamp LastFocusTime() const;
 
+<<<<<<< HEAD
   nsContentUtils::StorageAccess GetStorageAccess() const;
+||||||| merged common ancestors
+  nsContentUtils::StorageAccess
+  GetStorageAccess() const;
+=======
+  StorageAccess GetStorageAccess() const;
+>>>>>>> upstream-releases
 
   // nsWrapperCache interface methods
   JSObject* WrapObject(JSContext* aCx,

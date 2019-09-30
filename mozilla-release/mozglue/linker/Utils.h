@@ -49,20 +49,56 @@ class le_to_cpu {
 
   operator Type() const { return (b << (sizeof(T) * 8)) | a; }
 
+<<<<<<< HEAD
   const le_to_cpu &operator=(const Type &v) {
+||||||| merged common ancestors
+  const le_to_cpu& operator =(const Type &v)
+  {
+=======
+  const le_to_cpu& operator=(const Type& v) {
+>>>>>>> upstream-releases
     a = v & ((1 << (sizeof(T) * 8)) - 1);
     b = v >> (sizeof(T) * 8);
     return *this;
   }
 
+<<<<<<< HEAD
   le_to_cpu() {}
   explicit le_to_cpu(const Type &v) { operator=(v); }
+||||||| merged common ancestors
+  le_to_cpu() { }
+  explicit le_to_cpu(const Type &v)
+  {
+    operator =(v);
+  }
+=======
+  le_to_cpu() {}
+  explicit le_to_cpu(const Type& v) { operator=(v); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const le_to_cpu &operator+=(const Type &v) {
     return operator=(operator Type() + v);
+||||||| merged common ancestors
+  const le_to_cpu& operator +=(const Type &v)
+  {
+    return operator =(operator Type() + v);
+=======
+  const le_to_cpu& operator+=(const Type& v) {
+    return operator=(operator Type() + v);
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   const le_to_cpu &operator++(int) { return operator=(operator Type() + 1); }
+||||||| merged common ancestors
+  const le_to_cpu& operator ++(int)
+  {
+    return operator =(operator Type() + 1);
+  }
+=======
+  const le_to_cpu& operator++(int) { return operator=(operator Type() + 1); }
+>>>>>>> upstream-releases
 
  private:
   T a, b;
@@ -90,12 +126,27 @@ typedef mozilla::Scoped<AutoCloseFDTraits> AutoCloseFD;
 /**
  * AutoCloseFILE is a RAII wrapper for POSIX streams
  */
+<<<<<<< HEAD
 struct AutoCloseFILETraits {
   typedef FILE *type;
   static FILE *empty() { return nullptr; }
   static void release(FILE *f) {
     if (f) fclose(f);
   }
+||||||| merged common ancestors
+struct AutoCloseFILETraits
+{
+  typedef FILE *type;
+  static FILE *empty() { return nullptr; }
+  static void release(FILE *f) { if (f) fclose(f); }
+=======
+struct AutoCloseFILETraits {
+  typedef FILE* type;
+  static FILE* empty() { return nullptr; }
+  static void release(FILE* f) {
+    if (f) fclose(f);
+  }
+>>>>>>> upstream-releases
 };
 typedef mozilla::Scoped<AutoCloseFILETraits> AutoCloseFILE;
 
@@ -117,9 +168,20 @@ static inline uintptr_t AlignedPtr(uintptr_t ptr, size_t alignment) {
 }
 
 template <typename T>
+<<<<<<< HEAD
 static inline T *AlignedPtr(T *ptr, size_t alignment) {
   return reinterpret_cast<T *>(
       AlignedPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+||||||| merged common ancestors
+static inline T *AlignedPtr(T *ptr, size_t alignment)
+{
+  return reinterpret_cast<T *>(
+         AlignedPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+=======
+static inline T* AlignedPtr(T* ptr, size_t alignment) {
+  return reinterpret_cast<T*>(
+      AlignedPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -132,9 +194,20 @@ static inline uintptr_t AlignedEndPtr(uintptr_t ptr, size_t alignment) {
 }
 
 template <typename T>
+<<<<<<< HEAD
 static inline T *AlignedEndPtr(T *ptr, size_t alignment) {
   return reinterpret_cast<T *>(
       AlignedEndPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+||||||| merged common ancestors
+static inline T *AlignedEndPtr(T *ptr, size_t alignment)
+{
+  return reinterpret_cast<T *>(
+         AlignedEndPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+=======
+static inline T* AlignedEndPtr(T* ptr, size_t alignment) {
+  return reinterpret_cast<T*>(
+      AlignedEndPtr(reinterpret_cast<uintptr_t>(ptr), alignment));
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -155,7 +228,14 @@ static inline bool IsAlignedPtr(uintptr_t ptr, size_t alignment) {
 }
 
 template <typename T>
+<<<<<<< HEAD
 static inline bool IsAlignedPtr(T *ptr, size_t alignment) {
+||||||| merged common ancestors
+static inline bool IsAlignedPtr(T *ptr, size_t alignment)
+{
+=======
+static inline bool IsAlignedPtr(T* ptr, size_t alignment) {
+>>>>>>> upstream-releases
   return IsAlignedPtr(reinterpret_cast<uintptr_t>(ptr), alignment);
 }
 
@@ -179,11 +259,22 @@ static inline size_t PageNumber(size_t size) {
 /**
  * MemoryRange stores a pointer, size pair.
  */
+<<<<<<< HEAD
 class MemoryRange {
  public:
   MemoryRange(void *buf, size_t length) : buf(buf), length(length) {}
+||||||| merged common ancestors
+class MemoryRange
+{
+public:
+  MemoryRange(void *buf, size_t length): buf(buf), length(length) { }
+=======
+class MemoryRange {
+ public:
+  MemoryRange(void* buf, size_t length) : buf(buf), length(length) {}
+>>>>>>> upstream-releases
 
-  void Assign(void *b, size_t len) {
+  void Assign(void* b, size_t len) {
     buf = b;
     length = len;
   }
@@ -193,27 +284,88 @@ class MemoryRange {
     length = other.length;
   }
 
+<<<<<<< HEAD
   void *get() const { return buf; }
+||||||| merged common ancestors
+  void *get() const
+  {
+    return buf;
+  }
+=======
+  void* get() const { return buf; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   operator void *() const { return buf; }
+||||||| merged common ancestors
+  operator void *() const
+  {
+    return buf;
+  }
+=======
+  operator void*() const { return buf; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   operator unsigned char *() const {
     return reinterpret_cast<unsigned char *>(buf);
+||||||| merged common ancestors
+  operator unsigned char *() const
+  {
+    return reinterpret_cast<unsigned char *>(buf);
+=======
+  operator unsigned char*() const {
+    return reinterpret_cast<unsigned char*>(buf);
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   bool operator==(void *ptr) const { return buf == ptr; }
+||||||| merged common ancestors
+  bool operator ==(void *ptr) const {
+    return buf == ptr;
+  }
+=======
+  bool operator==(void* ptr) const { return buf == ptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool operator==(unsigned char *ptr) const { return buf == ptr; }
+||||||| merged common ancestors
+  bool operator ==(unsigned char *ptr) const {
+    return buf == ptr;
+  }
+=======
+  bool operator==(unsigned char* ptr) const { return buf == ptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void *operator+(off_t offset) const {
     return reinterpret_cast<char *>(buf) + offset;
+||||||| merged common ancestors
+  void *operator +(off_t offset) const
+  {
+    return reinterpret_cast<char *>(buf) + offset;
+=======
+  void* operator+(off_t offset) const {
+    return reinterpret_cast<char*>(buf) + offset;
+>>>>>>> upstream-releases
   }
 
   /**
    * Returns whether the given address is within the mapped range
    */
+<<<<<<< HEAD
   bool Contains(void *ptr) const {
     return (ptr >= buf) && (ptr < reinterpret_cast<char *>(buf) + length);
+||||||| merged common ancestors
+  bool Contains(void *ptr) const
+  {
+    return (ptr >= buf) && (ptr < reinterpret_cast<char *>(buf) + length);
+=======
+  bool Contains(void* ptr) const {
+    return (ptr >= buf) && (ptr < reinterpret_cast<char*>(buf) + length);
+>>>>>>> upstream-releases
   }
 
   /**
@@ -221,13 +373,21 @@ class MemoryRange {
    */
   size_t GetLength() const { return length; }
 
-  static MemoryRange mmap(void *addr, size_t length, int prot, int flags,
+  static MemoryRange mmap(void* addr, size_t length, int prot, int flags,
                           int fd, off_t offset) {
     return MemoryRange(::mmap(addr, length, prot, flags, fd, offset), length);
   }
 
+<<<<<<< HEAD
  private:
   void *buf;
+||||||| merged common ancestors
+private:
+  void *buf;
+=======
+ private:
+  void* buf;
+>>>>>>> upstream-releases
   size_t length;
 };
 
@@ -239,6 +399,7 @@ class MemoryRange {
  * different unmapping strategy.
  */
 template <typename T>
+<<<<<<< HEAD
 class GenericMappedPtr : public MemoryRange {
  public:
   GenericMappedPtr(void *buf, size_t length) : MemoryRange(buf, length) {}
@@ -247,6 +408,27 @@ class GenericMappedPtr : public MemoryRange {
 
   void Assign(void *b, size_t len) {
     if (get() != MAP_FAILED) static_cast<T *>(this)->munmap(get(), GetLength());
+||||||| merged common ancestors
+class GenericMappedPtr: public MemoryRange
+{
+public:
+  GenericMappedPtr(void *buf, size_t length): MemoryRange(buf, length) { }
+  explicit GenericMappedPtr(const MemoryRange& other): MemoryRange(other) { }
+  GenericMappedPtr(): MemoryRange(MAP_FAILED, 0) { }
+
+  void Assign(void *b, size_t len) {
+    if (get() != MAP_FAILED)
+      static_cast<T *>(this)->munmap(get(), GetLength());
+=======
+class GenericMappedPtr : public MemoryRange {
+ public:
+  GenericMappedPtr(void* buf, size_t length) : MemoryRange(buf, length) {}
+  explicit GenericMappedPtr(const MemoryRange& other) : MemoryRange(other) {}
+  GenericMappedPtr() : MemoryRange(MAP_FAILED, 0) {}
+
+  void Assign(void* b, size_t len) {
+    if (get() != MAP_FAILED) static_cast<T*>(this)->munmap(get(), GetLength());
+>>>>>>> upstream-releases
     MemoryRange::Assign(b, len);
   }
 
@@ -254,23 +436,59 @@ class GenericMappedPtr : public MemoryRange {
     Assign(other.get(), other.GetLength());
   }
 
+<<<<<<< HEAD
   ~GenericMappedPtr() {
     if (get() != MAP_FAILED) static_cast<T *>(this)->munmap(get(), GetLength());
+||||||| merged common ancestors
+  ~GenericMappedPtr()
+  {
+    if (get() != MAP_FAILED)
+      static_cast<T *>(this)->munmap(get(), GetLength());
+=======
+  ~GenericMappedPtr() {
+    if (get() != MAP_FAILED) static_cast<T*>(this)->munmap(get(), GetLength());
+>>>>>>> upstream-releases
   }
 
   void release() { MemoryRange::Assign(MAP_FAILED, 0); }
 };
 
+<<<<<<< HEAD
 struct MappedPtr : public GenericMappedPtr<MappedPtr> {
   MappedPtr(void *buf, size_t length)
       : GenericMappedPtr<MappedPtr>(buf, length) {}
   MOZ_IMPLICIT MappedPtr(const MemoryRange &other)
       : GenericMappedPtr<MappedPtr>(other) {}
   MappedPtr() : GenericMappedPtr<MappedPtr>() {}
+||||||| merged common ancestors
+struct MappedPtr: public GenericMappedPtr<MappedPtr>
+{
+  MappedPtr(void *buf, size_t length)
+  : GenericMappedPtr<MappedPtr>(buf, length) { }
+  MOZ_IMPLICIT MappedPtr(const MemoryRange& other)
+  : GenericMappedPtr<MappedPtr>(other) { }
+  MappedPtr(): GenericMappedPtr<MappedPtr>() { }
+=======
+struct MappedPtr : public GenericMappedPtr<MappedPtr> {
+  MappedPtr(void* buf, size_t length)
+      : GenericMappedPtr<MappedPtr>(buf, length) {}
+  MOZ_IMPLICIT MappedPtr(const MemoryRange& other)
+      : GenericMappedPtr<MappedPtr>(other) {}
+  MappedPtr() : GenericMappedPtr<MappedPtr>() {}
+>>>>>>> upstream-releases
 
  private:
   friend class GenericMappedPtr<MappedPtr>;
+<<<<<<< HEAD
   void munmap(void *buf, size_t length) { ::munmap(buf, length); }
+||||||| merged common ancestors
+  void munmap(void *buf, size_t length)
+  {
+    ::munmap(buf, length);
+  }
+=======
+  void munmap(void* buf, size_t length) { ::munmap(buf, length); }
+>>>>>>> upstream-releases
 };
 
 /**
@@ -295,31 +513,77 @@ class UnsizedArray {
   /**
    * Constructors and Initializers
    */
+<<<<<<< HEAD
   UnsizedArray() : contents(nullptr) {}
   explicit UnsizedArray(const void *buf)
       : contents(reinterpret_cast<const T *>(buf)) {}
+||||||| merged common ancestors
+  UnsizedArray(): contents(nullptr) { }
+  explicit UnsizedArray(const void *buf): contents(reinterpret_cast<const T *>(buf)) { }
+=======
+  UnsizedArray() : contents(nullptr) {}
+  explicit UnsizedArray(const void* buf)
+      : contents(reinterpret_cast<const T*>(buf)) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void Init(const void *buf) {
+||||||| merged common ancestors
+  void Init(const void *buf)
+  {
+=======
+  void Init(const void* buf) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(contents == nullptr);
-    contents = reinterpret_cast<const T *>(buf);
+    contents = reinterpret_cast<const T*>(buf);
   }
 
   /**
    * Returns the nth element of the array
    */
+<<<<<<< HEAD
   const T &operator[](const idx_t index) const {
+||||||| merged common ancestors
+  const T &operator[](const idx_t index) const
+  {
+=======
+  const T& operator[](const idx_t index) const {
+>>>>>>> upstream-releases
     MOZ_ASSERT(contents);
     return contents[index];
   }
 
+<<<<<<< HEAD
   operator const T *() const { return contents; }
+||||||| merged common ancestors
+  operator const T *() const
+  {
+    return contents;
+  }
+=======
+  operator const T*() const { return contents; }
+>>>>>>> upstream-releases
   /**
    * Returns whether the array points somewhere
    */
+<<<<<<< HEAD
   explicit operator bool() const { return contents != nullptr; }
 
  private:
   const T *contents;
+||||||| merged common ancestors
+  explicit operator bool() const
+  {
+    return contents != nullptr;
+  }
+private:
+  const T *contents;
+=======
+  explicit operator bool() const { return contents != nullptr; }
+
+ private:
+  const T* contents;
+>>>>>>> upstream-releases
 };
 
 /**
@@ -352,11 +616,30 @@ class Array : public UnsizedArray<T> {
   /**
    * Constructors and Initializers
    */
+<<<<<<< HEAD
   Array() : UnsizedArray<T>(), length(0) {}
   Array(const void *buf, const idx_t length)
       : UnsizedArray<T>(buf), length(length) {}
+||||||| merged common ancestors
+  Array(): UnsizedArray<T>(), length(0) { }
+  Array(const void *buf, const idx_t length)
+  : UnsizedArray<T>(buf), length(length) { }
+=======
+  Array() : UnsizedArray<T>(), length(0) {}
+  Array(const void* buf, const idx_t length)
+      : UnsizedArray<T>(buf), length(length) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void Init(const void *buf) { UnsizedArray<T>::Init(buf); }
+||||||| merged common ancestors
+  void Init(const void *buf)
+  {
+    UnsizedArray<T>::Init(buf);
+  }
+=======
+  void Init(const void* buf) { UnsizedArray<T>::Init(buf); }
+>>>>>>> upstream-releases
 
   void Init(const idx_t len) {
     MOZ_ASSERT(length == 0);
@@ -365,12 +648,26 @@ class Array : public UnsizedArray<T> {
 
   void InitSize(const idx_t size) { Init(size / sizeof(T)); }
 
+<<<<<<< HEAD
   void Init(const void *buf, const idx_t len) {
+||||||| merged common ancestors
+  void Init(const void *buf, const idx_t len)
+  {
+=======
+  void Init(const void* buf, const idx_t len) {
+>>>>>>> upstream-releases
     UnsizedArray<T>::Init(buf);
     Init(len);
   }
 
+<<<<<<< HEAD
   void InitSize(const void *buf, const idx_t size) {
+||||||| merged common ancestors
+  void InitSize(const void *buf, const idx_t size)
+  {
+=======
+  void InitSize(const void* buf, const idx_t size) {
+>>>>>>> upstream-releases
     UnsizedArray<T>::Init(buf);
     InitSize(size);
   }
@@ -378,7 +675,14 @@ class Array : public UnsizedArray<T> {
   /**
    * Returns the nth element of the array
    */
+<<<<<<< HEAD
   const T &operator[](const idx_t index) const {
+||||||| merged common ancestors
+  const T &operator[](const idx_t index) const
+  {
+=======
+  const T& operator[](const idx_t index) const {
+>>>>>>> upstream-releases
     MOZ_ASSERT(index < length);
     MOZ_ASSERT(operator bool());
     return UnsizedArray<T>::operator[](index);
@@ -409,23 +713,67 @@ class Array : public UnsizedArray<T> {
    public:
     iterator() : item(nullptr) {}
 
+<<<<<<< HEAD
     const T &operator*() const { return *item; }
+||||||| merged common ancestors
+    const T *operator ->() const
+    {
+      return item;
+    }
+=======
+    const T& operator*() const { return *item; }
 
+    const T* operator->() const { return item; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     const T *operator->() const { return item; }
 
     iterator &operator++() {
+||||||| merged common ancestors
+    iterator &operator ++()
+    {
+=======
+    iterator& operator++() {
+>>>>>>> upstream-releases
       ++item;
       return *this;
     }
 
+<<<<<<< HEAD
     bool operator<(const iterator &other) const { return item < other.item; }
 
    protected:
-    friend class Array<T>;
-    explicit iterator(const T &item) : item(&item) {}
+||||||| merged common ancestors
+    bool operator<(const iterator &other) const
+    {
+      return item < other.item;
+    }
+  protected:
+=======
+    bool operator<(const iterator& other) const { return item < other.item; }
 
+   protected:
+>>>>>>> upstream-releases
+    friend class Array<T>;
+<<<<<<< HEAD
+    explicit iterator(const T &item) : item(&item) {}
+||||||| merged common ancestors
+    explicit iterator(const T &item): item(&item) { }
+=======
+    explicit iterator(const T& item) : item(&item) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
    private:
     const T *item;
+||||||| merged common ancestors
+  private:
+    const T *item;
+=======
+   private:
+    const T* item;
+>>>>>>> upstream-releases
   };
 
   /**
@@ -454,32 +802,87 @@ class Array : public UnsizedArray<T> {
    *     // Do something with *it.
    *   }
    */
+<<<<<<< HEAD
   class reverse_iterator {
    public:
     reverse_iterator() : item(nullptr) {}
 
     const T &operator*() const {
       const T *tmp = item;
+||||||| merged common ancestors
+  class reverse_iterator
+  {
+  public:
+    reverse_iterator(): item(nullptr) { }
+
+    const T &operator *() const
+    {
+      const T *tmp = item;
+=======
+  class reverse_iterator {
+   public:
+    reverse_iterator() : item(nullptr) {}
+
+    const T& operator*() const {
+      const T* tmp = item;
+>>>>>>> upstream-releases
       return *--tmp;
     }
 
+<<<<<<< HEAD
     const T *operator->() const { return &operator*(); }
+||||||| merged common ancestors
+    const T *operator ->() const
+    {
+      return &operator*();
+    }
+=======
+    const T* operator->() const { return &operator*(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     reverse_iterator &operator++() {
+||||||| merged common ancestors
+    reverse_iterator &operator ++()
+    {
+=======
+    reverse_iterator& operator++() {
+>>>>>>> upstream-releases
       --item;
       return *this;
     }
 
+<<<<<<< HEAD
     bool operator<(const reverse_iterator &other) const {
+||||||| merged common ancestors
+    bool operator<(const reverse_iterator &other) const
+    {
+=======
+    bool operator<(const reverse_iterator& other) const {
+>>>>>>> upstream-releases
       return item > other.item;
     }
 
    protected:
     friend class Array<T>;
+<<<<<<< HEAD
     explicit reverse_iterator(const T &item) : item(&item) {}
+||||||| merged common ancestors
+    explicit reverse_iterator(const T &item): item(&item) { }
+=======
+    explicit reverse_iterator(const T& item) : item(&item) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
    private:
     const T *item;
+||||||| merged common ancestors
+  private:
+    const T *item;
+=======
+   private:
+    const T* item;
+>>>>>>> upstream-releases
   };
 
   /**
@@ -507,9 +910,16 @@ class Array : public UnsizedArray<T> {
  * same address.
  */
 template <typename T>
+<<<<<<< HEAD
 void *FunctionPtr(T func) {
+||||||| merged common ancestors
+void *FunctionPtr(T func)
+{
+=======
+void* FunctionPtr(T func) {
+>>>>>>> upstream-releases
   union {
-    void *ptr;
+    void* ptr;
     T func;
   } f;
   f.func = func;
@@ -517,16 +927,37 @@ void *FunctionPtr(T func) {
 }
 
 class AutoLock {
+<<<<<<< HEAD
  public:
   explicit AutoLock(pthread_mutex_t *mutex) : mutex(mutex) {
     if (pthread_mutex_lock(mutex)) MOZ_CRASH("pthread_mutex_lock failed");
+||||||| merged common ancestors
+public:
+  explicit AutoLock(pthread_mutex_t *mutex): mutex(mutex)
+  {
+    if (pthread_mutex_lock(mutex))
+      MOZ_CRASH("pthread_mutex_lock failed");
+=======
+ public:
+  explicit AutoLock(pthread_mutex_t* mutex) : mutex(mutex) {
+    if (pthread_mutex_lock(mutex)) MOZ_CRASH("pthread_mutex_lock failed");
+>>>>>>> upstream-releases
   }
   ~AutoLock() {
     if (pthread_mutex_unlock(mutex)) MOZ_CRASH("pthread_mutex_unlock failed");
   }
+<<<<<<< HEAD
 
  private:
   pthread_mutex_t *mutex;
+||||||| merged common ancestors
+private:
+  pthread_mutex_t *mutex;
+=======
+
+ private:
+  pthread_mutex_t* mutex;
+>>>>>>> upstream-releases
 };
 
 #endif /* Utils_h */

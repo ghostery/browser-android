@@ -63,24 +63,50 @@ class HttpBackgroundChannelParent final : public PHttpBackgroundChannelParent {
   // over background channel.
   bool OnDiversion();
 
-  // To send NotifyTrackingProtectionDisabled message over background channel.
-  bool OnNotifyTrackingProtectionDisabled();
+  // To send NotifyChannelClassifierProtectionDisabled message over background
+  // channel.
+  bool OnNotifyChannelClassifierProtectionDisabled(uint32_t aAcceptedReason);
 
+<<<<<<< HEAD
   // To send NotifyCookieAllowed message over background channel.
   bool OnNotifyCookieAllowed();
 
   // To send NotifyTrackingCookieBlocked message over background channel.
   bool OnNotifyTrackingCookieBlocked(uint32_t aRejectedReason);
+||||||| merged common ancestors
+  // To send NotifyTrackingCookieBlocked message over background channel.
+  bool OnNotifyTrackingCookieBlocked(uint32_t aRejectedReason);
+=======
+  // To send NotifyCookieAllowed message over background channel.
+  bool OnNotifyCookieAllowed();
+>>>>>>> upstream-releases
 
-  // To send NotifyTrackingResource message over background channel.
-  bool OnNotifyTrackingResource(bool aIsThirdParty);
+  // To send NotifyCookieBlocked message over background channel.
+  bool OnNotifyCookieBlocked(uint32_t aRejectedReason);
+
+  // To send NotifyClassificationFlags message over background channel.
+  bool OnNotifyClassificationFlags(uint32_t aClassificationFlags,
+                                   bool aIsThirdParty);
+
+  // To send NotifyFlashPluginStateChanged message over background channel.
+  bool OnNotifyFlashPluginStateChanged(nsIHttpChannel::FlashPluginState aState);
 
   // To send SetClassifierMatchedInfo message over background channel.
   bool OnSetClassifierMatchedInfo(const nsACString& aList,
                                   const nsACString& aProvider,
                                   const nsACString& aFullHash);
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  // To send SetClassifierMatchedTrackingInfo message over background channel.
+  bool OnSetClassifierMatchedTrackingInfo(const nsACString& aLists,
+                                          const nsACString& aFullHashes);
+
+ protected:
+>>>>>>> upstream-releases
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
  private:

@@ -29,6 +29,19 @@ uint32_t GrResourceAllocator::Interval::CreateUniqueID() {
 }
 #endif
 
+#if GR_TRACK_INTERVAL_CREATION
+    #include <atomic>
+
+    uint32_t GrResourceAllocator::Interval::CreateUniqueID() {
+        static std::atomic<uint32_t> nextID{1};
+        uint32_t id;
+        do {
+            id = nextID++;
+        } while (id == SK_InvalidUniqueID);
+        return id;
+    }
+#endif
+
 void GrResourceAllocator::Interval::assign(sk_sp<GrSurface> s) {
     SkASSERT(!fAssignedSurface);
     fAssignedSurface = s;
@@ -58,25 +71,45 @@ void GrResourceAllocator::addInterval(GrSurfaceProxy* proxy, unsigned int start,
     SkASSERT(start <= end);
     SkASSERT(!fAssigned);      // We shouldn't be adding any intervals after (or during) assignment
 
-    if (Interval* intvl = fIntvlHash.find(proxy->uniqueID().asUInt())) {
-        // Revise the interval for an existing use
+    // If a proxy is read only it must refer to a texture with specific content that cannot be
+    // recycled. We don't need to assign a texture to it and no other proxy can be instantiated
+    // with the same texture.
+    if (proxy->readOnly()) {
+        // Since we aren't going to add an interval we won't revisit this proxy in assign(). So it
+        // must already be instantiated or it must be a lazy proxy that we will instantiate below.
+        SkASSERT(proxy->isInstantiated() ||
+                 GrSurfaceProxy::LazyState::kNot != proxy->lazyInstantiationState());
+    } else {
+        if (Interval* intvl = fIntvlHash.find(proxy->uniqueID().asUInt())) {
+            // Revise the interval for an existing use
 #ifdef SK_DEBUG
-        if (0 == start && 0 == end) {
-            // This interval is for the initial upload to a deferred proxy. Due to the vagaries
-            // of how deferred proxies are collected they can appear as uploads multiple times in a
-            // single opLists' list and as uploads in several opLists.
-            SkASSERT(0 == intvl->start());
-        } else if (isDirectDstRead) {
-            // Direct reads from the render target itself should occur w/in the existing interval
-            SkASSERT(intvl->start() <= start && intvl->end() >= end);
-        } else {
-            SkASSERT(intvl->end() <= start && intvl->end() <= end);
-        }
+            if (0 == start && 0 == end) {
+                // This interval is for the initial upload to a deferred proxy. Due to the vagaries
+                // of how deferred proxies are collected they can appear as uploads multiple times
+                // in a single opLists' list and as uploads in several opLists.
+                SkASSERT(0 == intvl->start());
+            } else if (isDirectDstRead) {
+                // Direct reads from the render target itself should occur w/in the existing
+                // interval
+                SkASSERT(intvl->start() <= start && intvl->end() >= end);
+            } else {
+                SkASSERT(intvl->end() <= start && intvl->end() <= end);
+            }
 #endif
-        intvl->extendEnd(end);
-        return;
-    }
+            intvl->extendEnd(end);
+            return;
+        }
+        Interval* newIntvl;
+        if (fFreeIntervalList) {
+            newIntvl = fFreeIntervalList;
+            fFreeIntervalList = newIntvl->next();
+            newIntvl->setNext(nullptr);
+            newIntvl->resetTo(proxy, start, end);
+        } else {
+            newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
+        }
 
+<<<<<<< HEAD
     Interval* newIntvl;
     if (fFreeIntervalList) {
         newIntvl = fFreeIntervalList;
@@ -85,12 +118,23 @@ void GrResourceAllocator::addInterval(GrSurfaceProxy* proxy, unsigned int start,
         newIntvl->resetTo(proxy, start, end);
     } else {
         newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
+||||||| merged common ancestors
+    Interval* newIntvl;
+    if (fFreeIntervalList) {
+        newIntvl = fFreeIntervalList;
+        fFreeIntervalList = newIntvl->next();
+        newIntvl->resetTo(proxy, start, end);
+    } else {
+        newIntvl = fIntervalAllocator.make<Interval>(proxy, start, end);
+=======
+        fIntvlList.insertByIncreasingStart(newIntvl);
+        fIntvlHash.add(newIntvl);
+>>>>>>> upstream-releases
     }
 
-    fIntvlList.insertByIncreasingStart(newIntvl);
-    fIntvlHash.add(newIntvl);
-
-    if (!fResourceProvider->explicitlyAllocateGPUResources()) {
+    // Because readOnly proxies do not get a usage interval we must instantiate them here (since it
+    // won't occur in GrResourceAllocator::assign)
+    if (proxy->readOnly() || !fResourceProvider->explicitlyAllocateGPUResources()) {
         // FIXME: remove this once we can do the lazy instantiation from assign instead.
         if (GrSurfaceProxy::LazyState::kNot != proxy->lazyInstantiationState()) {
             proxy->priv().doLazyInstantiation(fResourceProvider);
@@ -247,9 +291,9 @@ sk_sp<GrSurface> GrResourceAllocator::findSurfaceFor(const GrSurfaceProxy* proxy
     sk_sp<GrSurface> surface(fFreePool.findAndRemove(key, filter));
     if (surface) {
         if (SkBudgeted::kYes == proxy->isBudgeted() &&
-            SkBudgeted::kNo == surface->resourcePriv().isBudgeted()) {
+            GrBudgetedType::kBudgeted != surface->resourcePriv().budgetedType()) {
             // This gets the job done but isn't quite correct. It would be better to try to
-            // match budgeted proxies w/ budgeted surface and unbudgeted w/ unbudgeted.
+            // match budgeted proxies w/ budgeted surfaces and unbudgeted w/ unbudgeted.
             surface->resourcePriv().makeBudgeted();
         }
 

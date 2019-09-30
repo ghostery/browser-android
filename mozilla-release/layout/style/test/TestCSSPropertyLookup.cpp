@@ -83,8 +83,18 @@ bool TestKeywords() {
   return success;
 }
 
+<<<<<<< HEAD
 int main(void) {
   nsresult rv = NS_InitXPCOM2(nullptr, nullptr, nullptr);
+||||||| merged common ancestors
+int
+main(void)
+{
+  nsresult rv = NS_InitXPCOM2(nullptr, nullptr, nullptr);
+=======
+int main(void) {
+  nsresult rv = NS_InitXPCOM(nullptr, nullptr, nullptr);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, 2);
 
   bool testOK = true;

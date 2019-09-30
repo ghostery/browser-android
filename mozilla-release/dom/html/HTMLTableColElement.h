@@ -20,8 +20,20 @@ class HTMLTableColElement final : public nsGenericHTMLElement {
     SetHasWeirdParserInsertionMode();
   }
 
+<<<<<<< HEAD
   uint32_t Span() const { return GetIntAttr(nsGkAtoms::span, 1); }
   void SetSpan(uint32_t aSpan, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t Span() const
+  {
+    return GetIntAttr(nsGkAtoms::span, 1);
+  }
+  void SetSpan(uint32_t aSpan, ErrorResult& aError)
+  {
+=======
+  uint32_t Span() const { return GetUnsignedIntAttr(nsGkAtoms::span, 1); }
+  void SetSpan(uint32_t aSpan, ErrorResult& aError) {
+>>>>>>> upstream-releases
     SetUnsignedIntAttr(nsGkAtoms::span, aSpan, 1, aError);
   }
 

@@ -75,21 +75,39 @@ a `std::io::Read`, decode it into UTF-8 and presenting the result via
 `std::io::Read`. The [`encoding_rs_io`](https://crates.io/crates/encoding_rs_io)
 crate provides that capability.
 
+<<<<<<< HEAD
 ## Decoding Email
 
 For decoding character encodings that occur in email, use the
 [`charset`](https://crates.io/crates/charset) crate instead of using this
 one directly. (It wraps this crate and adds UTF-7 decoding.)
 
+||||||| merged common ancestors
+=======
+## Decoding Email
+
+For decoding character encodings that occur in email, use the
+[`charset`](https://crates.io/crates/charset) crate instead of using this
+one directly. (It wraps this crate and adds UTF-7 decoding.)
+
+## Windows Code Page Identifier Mappings
+
+For mappings to and from Windows code page identifiers, use the
+[`codepage`](https://crates.io/crates/codepage) crate.
+
+>>>>>>> upstream-releases
 ## Licensing
 
 Please see the file named
 [COPYRIGHT](https://github.com/hsivonen/encoding_rs/blob/master/COPYRIGHT).
 
-## API Documentation
+## Documentation
 
 Generated [API documentation](https://docs.rs/encoding_rs/) is available
 online.
+
+There is a [long-form write-up](https://hsivonen.fi/encoding_rs/) about the
+design and internals of the crate.
 
 ## C and C++ bindings
 
@@ -103,6 +121,9 @@ For the Gecko context, there's a
 
 These bindings do not cover the `mem` module.
 
+There's a [write-up](https://hsivonen.fi/modern-cpp-in-rust/) about the C++
+wrappers.
+
 ## Sample programs
 
 * [Rust](https://github.com/hsivonen/recode_rs)
@@ -115,17 +136,41 @@ There are currently these optional cargo features:
 
 ### `simd-accel`
 
-Enables SSE2 acceleration on x86 and x86_64 and NEON acceleration on Aarch64
-and ARMv7. _Enabling this cargo feature is recommended when building for x86,
-x86_64, ARMv7 or Aarch64._ The intention is for the functionality enabled by
-this feature to become the normal on-by-default behavior once
-[portable SIMD](https://github.com/rust-lang/rfcs/pull/2366) becames part of
-stable Rust.
+Enables SIMD acceleration using the nightly-dependent `packed_simd` crate.
 
-Enabling this feature breaks the build unless the target is x86 with SSE2
-(Rust's default 32-bit x86 target, `i686`, has SSE2, but Linux distros may
-use an x86 target without SSE2, i.e. `i586` in `rustup` terms), ARMv7 or
-thumbv7 with NEON (`-C target_feature=+neon`), x86_64 or Aarch64.
+This is an opt-in feature, because enabling this feature _opts out_ of Rust's
+guarantees of future compilers compiling old code (aka. "stability story").
+
+Currently, this has not been tested to be an improvement except for these
+targets:
+
+* x86_64
+* i686
+* aarch64
+* thumbv7neon
+
+If you use nightly Rust, you use targets whose first component is one of the
+above, and you are prepared _to have to revise your configuration when updating
+Rust_, you should enable this feature. Otherwise, please _do not_ enable this
+feature.
+
+_Note!_ If you are compiling for a target that does not have 128-bit SIMD
+enabled as part of the target definition and you are enabling 128-bit SIMD
+using `-C target_feature`, you need to enable the `core_arch` Cargo feature
+for `packed_simd` to compile a crates.io snapshot of `core_arch` instead of
+using the standard-library copy of `core::arch`, because the `core::arch`
+module of the pre-compiled standard library has been compiled with the
+assumption that the CPU doesn't have 128-bit SIMD. At present this applies
+mainly to 32-bit ARM targets whose first component does not include the
+substring `neon`.
+
+The encoding_rs side of things has not been properly set up for POWER,
+PowerPC, MIPS, etc., SIMD at this time, so even if you were to follow
+the advice from the previous paragraph, you probably shouldn't use
+the `simd-accel` option on the less mainstream architectures at this
+time.
+
+Used by Firefox.
 
 Used by Firefox.
 
@@ -319,6 +364,7 @@ encoding_rs is
 written with the assuption that Firefox would need it, but it is not currently
 used in Firefox.
 
+<<<<<<< HEAD
 ## Regenerating Generated Code
 
 To regenerate the generated code:
@@ -332,6 +378,24 @@ To regenerate the generated code:
  * With the `encoding_rs` directory as the working directory, run
    `python generate-encoding-data.py`.
 
+||||||| merged common ancestors
+=======
+## Regenerating Generated Code
+
+To regenerate the generated code:
+
+ * Have Python 2 installed.
+ * Clone [`https://github.com/hsivonen/encoding_c`](https://github.com/hsivonen/encoding_c)
+   next to the `encoding_rs` directory.
+ * Clone [`https://github.com/hsivonen/codepage`](https://github.com/hsivonen/codepage)
+   next to the `encoding_rs` directory.
+ * Clone [`https://github.com/whatwg/encoding`](https://github.com/whatwg/encoding)
+   next to the `encoding_rs` directory.
+ * Checkout revision `f381389` of the `encoding` repo.
+ * With the `encoding_rs` directory as the working directory, run
+   `python generate-encoding-data.py`.
+
+>>>>>>> upstream-releases
 ## Roadmap
 
 - [x] Design the low-level API.
@@ -362,13 +426,25 @@ To regenerate the generated code:
 - [x] Implement the rust-encoding API in terms of encoding_rs.
 - [x] Add SIMD acceleration for Aarch64.
 - [x] Investigate the use of NEON on 32-bit ARM.
+<<<<<<< HEAD
 - [ ] ~Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
       adapted to Rust in rust-encoding.~
 - [x] Add actually fast CJK encode options.
 - [ ] Investigate [Bob Steagall's lookup table acceleration for UTF-8](https://github.com/BobSteagall/CppNow2018/blob/master/FastConversionFromUTF-8/Fast%20Conversion%20From%20UTF-8%20with%20C%2B%2B%2C%20DFAs%2C%20and%20SSE%20Intrinsics%20-%20Bob%20Steagall%20-%20C%2B%2BNow%202018.pdf).
+||||||| merged common ancestors
+- [ ] Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
+      adapted to Rust in rust-encoding.
+- [ ] Add actually fast CJK encode options.
+=======
+- [ ] ~Investigate Björn Höhrmann's lookup table acceleration for UTF-8 as
+      adapted to Rust in rust-encoding.~
+- [x] Add actually fast CJK encode options.
+- [ ] ~Investigate [Bob Steagall's lookup table acceleration for UTF-8](https://github.com/BobSteagall/CppNow2018/blob/master/FastConversionFromUTF-8/Fast%20Conversion%20From%20UTF-8%20with%20C%2B%2B%2C%20DFAs%2C%20and%20SSE%20Intrinsics%20-%20Bob%20Steagall%20-%20C%2B%2BNow%202018.pdf).~
+>>>>>>> upstream-releases
 
 ## Release Notes
 
+<<<<<<< HEAD
 ### 0.8.13
 
 * Made the UTF-8 to UTF-16 compare the number of code units written with the
@@ -409,6 +485,66 @@ To regenerate the generated code:
 * Disabled a unit test that tests a panic condition when the assertion
   being tested is disabled.
 
+||||||| merged common ancestors
+=======
+### 0.8.17
+
+* Update `bincode` (dev dependency) version requirement to 1.0.
+
+### 0.8.16
+
+* Switch from the `simd` crate to `packed_simd`.
+
+### 0.8.15
+
+* Adjust documentation for `simd-accel` (README-only release).
+
+### 0.8.14
+
+* Made UTF-16 to UTF-8 encode conversion fill the output buffer as
+  closely as possible.
+
+### 0.8.13
+
+* Made the UTF-8 to UTF-16 decoder compare the number of code units written
+  with the length of the right slice (the output slice) to fix a panic
+  introduced in 0.8.11.
+
+### 0.8.12
+
+* Removed the `clippy::` prefix from clippy lint names.
+
+### 0.8.11
+
+* Changed minimum Rust requirement to 1.29.0 (for the ability to refer
+  to the interior of a `static` when defining another `static`).
+* Explicitly aligned the lookup tables for single-byte encodings and
+  UTF-8 to cache lines in the hope of freeing up one cache line for
+  other data. (Perhaps the tables were already aligned and this is
+  placebo.)
+* Added 32 bits of encode-oriented data for each single-byte encoding.
+  The change was performance-neutral for non-Latin1-ish Latin legacy
+  encodings, improved Latin1-ish and Arabic legacy encode speed
+  somewhat (new speed is 2.4x the old speed for German, 2.3x for
+  Arabic, 1.7x for Portuguese and 1.4x for French) and improved
+  non-Latin1, non-Arabic legacy single-byte encode a lot (7.2x for
+  Thai, 6x for Greek, 5x for Russian, 4x for Hebrew).
+* Added compile-time options for fast CJK legacy encode options (at
+  the cost of binary size (up to 176 KB) and run-time memory usage).
+  These options still retain the overall code structure instead of
+  rewriting the CJK encoders totally, so the speed isn't as good as
+  what could be achieved by using even more memory / making the
+  binary even langer.
+* Made UTF-8 decode and validation faster.
+* Added method `is_single_byte()` on `Encoding`.
+* Added `mem::decode_latin1()` and `mem::encode_latin1_lossy()`.
+
+### 0.8.10
+
+* Disabled a unit test that tests a panic condition when the assertion
+  being tested is disabled.
+
+>>>>>>> upstream-releases
 ### 0.8.9
 
 * Made `--features simd-accel` work with stable-channel compiler to

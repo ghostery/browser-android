@@ -18,6 +18,7 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<URLMainThread> URLMainThread::Constructor(
     const GlobalObject& aGlobal, const nsAString& aURL,
     const Optional<nsAString>& aBase, ErrorResult& aRv) {
@@ -68,6 +69,65 @@ namespace dom {
                                                  Blob& aBlob,
                                                  nsAString& aResult,
                                                  ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<URLMainThread>
+URLMainThread::Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
+                           const Optional<nsAString>& aBase, ErrorResult& aRv)
+{
+  if (aBase.WasPassed()) {
+    return Constructor(aGlobal.GetAsSupports(), aURL, aBase.Value(), aRv);
+  }
+
+  return Constructor(aGlobal.GetAsSupports(), aURL, nullptr, aRv);
+}
+
+/* static */ already_AddRefed<URLMainThread>
+URLMainThread::Constructor(nsISupports* aParent, const nsAString& aURL,
+                           const nsAString& aBase, ErrorResult& aRv)
+{
+  MOZ_ASSERT(NS_IsMainThread());
+
+  nsCOMPtr<nsIURI> baseUri;
+  nsresult rv = NS_NewURI(getter_AddRefs(baseUri), aBase, nullptr, nullptr,
+                          nsContentUtils::GetIOService());
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    aRv.ThrowTypeError<MSG_INVALID_URL>(aBase);
+    return nullptr;
+  }
+
+  return Constructor(aParent, aURL, baseUri, aRv);
+}
+
+/* static */ already_AddRefed<URLMainThread>
+URLMainThread::Constructor(nsISupports* aParent, const nsAString& aURL,
+                           nsIURI* aBase, ErrorResult& aRv)
+{
+  MOZ_ASSERT(NS_IsMainThread());
+
+  nsCOMPtr<nsIURI> uri;
+  nsresult rv = NS_NewURI(getter_AddRefs(uri), aURL, nullptr, aBase,
+                          nsContentUtils::GetIOService());
+  if (NS_FAILED(rv)) {
+    // No need to warn in this case. It's common to use the URL constructor
+    // to determine if a URL is valid and an exception will be propagated.
+    aRv.ThrowTypeError<MSG_INVALID_URL>(aURL);
+    return nullptr;
+  }
+
+  RefPtr<URLMainThread> url = new URLMainThread(aParent);
+  url->SetURI(uri.forget());
+  return url.forget();
+}
+
+/* static */ void
+URLMainThread::CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                               nsAString& aResult, ErrorResult& aRv)
+{
+=======
+/* static */
+void URLMainThread::CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
+                                    nsAString& aResult, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
@@ -89,10 +149,23 @@ namespace dom {
   CopyASCIItoUTF16(url, aResult);
 }
 
+<<<<<<< HEAD
 /* static */ void URLMainThread::CreateObjectURL(const GlobalObject& aGlobal,
                                                  MediaSource& aSource,
                                                  nsAString& aResult,
                                                  ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+URLMainThread::CreateObjectURL(const GlobalObject& aGlobal,
+                               MediaSource& aSource,
+                               nsAString& aResult, ErrorResult& aRv)
+{
+=======
+/* static */
+void URLMainThread::CreateObjectURL(const GlobalObject& aGlobal,
+                                    MediaSource& aSource, nsAString& aResult,
+                                    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIPrincipal> principal =
@@ -113,9 +186,20 @@ namespace dom {
   CopyASCIItoUTF16(url, aResult);
 }
 
+<<<<<<< HEAD
 /* static */ void URLMainThread::RevokeObjectURL(const GlobalObject& aGlobal,
                                                  const nsAString& aURL,
                                                  ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+URLMainThread::RevokeObjectURL(const GlobalObject& aGlobal,
+                               const nsAString& aURL, ErrorResult& aRv)
+{
+=======
+/* static */
+void URLMainThread::RevokeObjectURL(const GlobalObject& aGlobal,
+                                    const nsAString& aURL, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   if (!global) {
@@ -136,6 +220,7 @@ namespace dom {
   }
 }
 
+<<<<<<< HEAD
 URLMainThread::URLMainThread(nsISupports* aParent) : URL(aParent) {
   MOZ_ASSERT(NS_IsMainThread());
 }
@@ -145,11 +230,33 @@ URLMainThread::~URLMainThread() { MOZ_ASSERT(NS_IsMainThread()); }
 /* static */ bool URLMainThread::IsValidURL(const GlobalObject& aGlobal,
                                             const nsAString& aURL,
                                             ErrorResult& aRv) {
+||||||| merged common ancestors
+URLMainThread::URLMainThread(nsISupports* aParent)
+  : URL(aParent)
+{
+  MOZ_ASSERT(NS_IsMainThread());
+}
+
+URLMainThread::~URLMainThread()
+{
+  MOZ_ASSERT(NS_IsMainThread());
+}
+
+/* static */ bool
+URLMainThread::IsValidURL(const GlobalObject& aGlobal, const nsAString& aURL,
+                          ErrorResult& aRv)
+{
+=======
+/* static */
+bool URLMainThread::IsValidURL(const GlobalObject& aGlobal,
+                               const nsAString& aURL, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_LossyConvertUTF16toASCII asciiurl(aURL);
   return BlobURLProtocolHandler::HasDataEntry(asciiurl);
 }
 
+<<<<<<< HEAD
 void URLMainThread::SetHref(const nsAString& aHref, ErrorResult& aRv) {
   NS_ConvertUTF16toUTF8 href(aHref);
 
@@ -211,3 +318,75 @@ void URLMainThread::SetProtocol(const nsAString& aProtocol, ErrorResult& aRv) {
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+void
+URLMainThread::SetHref(const nsAString& aHref, ErrorResult& aRv)
+{
+  NS_ConvertUTF16toUTF8 href(aHref);
+
+  nsresult rv;
+  nsCOMPtr<nsIIOService> ioService(do_GetService(NS_IOSERVICE_CONTRACTID, &rv));
+  if (NS_FAILED(rv)) {
+    aRv.Throw(rv);
+    return;
+  }
+
+  nsCOMPtr<nsIURI> uri;
+  rv = ioService->NewURI(href, nullptr, nullptr, getter_AddRefs(uri));
+  if (NS_FAILED(rv)) {
+    aRv.ThrowTypeError<MSG_INVALID_URL>(aHref);
+    return;
+  }
+
+  SetURI(uri.forget());
+  UpdateURLSearchParams();
+}
+
+void
+URLMainThread::GetOrigin(nsAString& aOrigin, ErrorResult& aRv) const
+{
+  nsContentUtils::GetUTFOrigin(GetURI(), aOrigin);
+}
+
+void
+URLMainThread::SetProtocol(const nsAString& aProtocol, ErrorResult& aRv)
+{
+  nsAString::const_iterator start, end;
+  aProtocol.BeginReading(start);
+  aProtocol.EndReading(end);
+  nsAString::const_iterator iter(start);
+
+  FindCharInReadable(':', iter, end);
+
+  // Changing the protocol of a URL, changes the "nature" of the URI
+  // implementation. In order to do this properly, we have to serialize the
+  // existing URL and reparse it in a new object.
+  nsCOMPtr<nsIURI> clone;
+  nsresult rv = NS_MutateURI(GetURI())
+                  .SetScheme(NS_ConvertUTF16toUTF8(Substring(start, iter)))
+                  .Finalize(clone);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return;
+  }
+
+  nsAutoCString href;
+  rv = clone->GetSpec(href);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return;
+  }
+
+  nsCOMPtr<nsIURI> uri;
+  rv = NS_NewURI(getter_AddRefs(uri), href);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return;
+  }
+
+  SetURI(uri.forget());
+}
+
+} // namespace dom
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

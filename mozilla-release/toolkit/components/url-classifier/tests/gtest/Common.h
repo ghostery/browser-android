@@ -9,9 +9,20 @@ using namespace mozilla::safebrowsing;
 
 namespace mozilla {
 namespace safebrowsing {
+<<<<<<< HEAD
 class Classifier;
 }
 }  // namespace mozilla
+||||||| merged common ancestors
+    class Classifier;
+}
+}
+=======
+class Classifier;
+class LookupCacheV4;
+}  // namespace safebrowsing
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 typedef nsCString _Fragment;
 typedef nsTArray<nsCString> _PrefixArray;
@@ -42,6 +53,9 @@ nsresult PrefixArrayToAddPrefixArrayV2(const nsTArray<nsCString>& prefixArray,
 
 // Generate a hash prefix from string
 nsCString GeneratePrefix(const nsCString& aFragment, uint8_t aLength);
+
+// To test if the content is equal
+void CheckContent(LookupCacheV4* cache, PrefixStringMap& expected);
 
 // Create a LookupCacheV4 object with sepecified prefix array.
 template <typename T>

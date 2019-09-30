@@ -9,6 +9,7 @@
 #include "nscore.h"
 #include "nsTArray.h"
 #include "MediaData.h"
+#include "MediaSpan.h"
 #include "mozilla/Logging.h"
 #include "mozilla/Result.h"
 
@@ -31,11 +32,30 @@ class MOZ_RAII BufferReader {
         mRemaining(aData.Length()),
         mLength(aData.Length()) {}
   explicit BufferReader(const mozilla::MediaByteBuffer* aData)
+<<<<<<< HEAD
       : mPtr(aData->Elements()),
         mRemaining(aData->Length()),
         mLength(aData->Length()) {}
 
   void SetData(const nsTArray<uint8_t>& aData) {
+||||||| merged common ancestors
+    : mPtr(aData->Elements()), mRemaining(aData->Length()), mLength(aData->Length())
+  {
+  }
+
+  void SetData(const nsTArray<uint8_t>& aData)
+  {
+=======
+      : mPtr(aData->Elements()),
+        mRemaining(aData->Length()),
+        mLength(aData->Length()) {}
+  explicit BufferReader(const mozilla::MediaSpan& aData)
+      : mPtr(aData.Elements()),
+        mRemaining(aData.Length()),
+        mLength(aData.Length()) {}
+
+  void SetData(const nsTArray<uint8_t>& aData) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(!mPtr && !mRemaining);
     mPtr = aData.Elements();
     mRemaining = aData.Length();
@@ -148,6 +168,7 @@ class MOZ_RAII BufferReader {
 
   const uint8_t* Read(size_t aCount) {
     if (aCount > mRemaining) {
+      mPtr += mRemaining;
       mRemaining = 0;
       return nullptr;
     }

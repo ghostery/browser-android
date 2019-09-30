@@ -22,7 +22,7 @@ class nsCSSPropertyIDSet;
 
 namespace mozilla {
 class ComputedStyle;
-enum class CSSPseudoElementType : uint8_t;
+enum class PseudoStyleType : uint8_t;
 struct Keyframe;
 struct StyleTransition;
 }  // namespace mozilla
@@ -33,8 +33,17 @@ struct StyleTransition;
 
 namespace mozilla {
 
+<<<<<<< HEAD
 struct ElementPropertyTransition : public dom::KeyframeEffect {
   ElementPropertyTransition(nsIDocument* aDocument,
+||||||| merged common ancestors
+struct ElementPropertyTransition : public dom::KeyframeEffect
+{
+  ElementPropertyTransition(nsIDocument* aDocument,
+=======
+struct ElementPropertyTransition : public dom::KeyframeEffect {
+  ElementPropertyTransition(dom::Document* aDocument,
+>>>>>>> upstream-releases
                             Maybe<OwningAnimationTarget>& aTarget,
                             TimingParams&& aTiming,
                             AnimationValue aStartForReversingTest,
@@ -142,7 +151,14 @@ class CSSTransition final : public Animation {
     MOZ_ASSERT(!rv.Failed(), "Unexpected exception playing transition");
   }
 
+<<<<<<< HEAD
   void CancelFromStyle() override {
+||||||| merged common ancestors
+  void CancelFromStyle() override
+  {
+=======
+  void CancelFromStyle(PostRestyleMode aPostRestyle) {
+>>>>>>> upstream-releases
     // The animation index to use for compositing will be established when
     // this transition next transitions out of the idle state but we still
     // update it now so that the sort order of this transition remains
@@ -152,10 +168,10 @@ class CSSTransition final : public Animation {
     mAnimationIndex = sNextAnimationIndex++;
     mNeedsNewAnimationIndexWhenRun = true;
 
-    Animation::CancelFromStyle();
+    Animation::Cancel(aPostRestyle);
 
-    // It is important we do this *after* calling CancelFromStyle().
-    // This is because CancelFromStyle() will end up posting a restyle and
+    // It is important we do this *after* calling Cancel().
+    // This is because Cancel() will end up posting a restyle and
     // that restyle should target the *transitions* level of the cascade.
     // However, once we clear the owning element, CascadeLevel() will begin
     // returning CascadeLevel::Animations.
@@ -276,6 +292,9 @@ struct AnimationTypeTraits<dom::CSSTransition> {
   static nsAtom* AfterPropertyAtom() {
     return nsGkAtoms::transitionsOfAfterProperty;
   }
+  static nsAtom* MarkerPropertyAtom() {
+    return nsGkAtoms::transitionsOfMarkerProperty;
+  }
 };
 
 }  // namespace mozilla
@@ -295,10 +314,25 @@ class nsTransitionManager final
   /**
    * Update transitions for stylo.
    */
+<<<<<<< HEAD
   bool UpdateTransitions(mozilla::dom::Element* aElement,
                          mozilla::CSSPseudoElementType aPseudoType,
                          const mozilla::ComputedStyle& aOldStyle,
                          const mozilla::ComputedStyle& aNewStyle);
+||||||| merged common ancestors
+  bool UpdateTransitions(
+    mozilla::dom::Element *aElement,
+    mozilla::CSSPseudoElementType aPseudoType,
+    const mozilla::ComputedStyle& aOldStyle,
+    const mozilla::ComputedStyle& aNewStyle);
+
+protected:
+=======
+  bool UpdateTransitions(mozilla::dom::Element* aElement,
+                         mozilla::PseudoStyleType aPseudoType,
+                         const mozilla::ComputedStyle& aOldStyle,
+                         const mozilla::ComputedStyle& aNewStyle);
+>>>>>>> upstream-releases
 
  protected:
   typedef nsTArray<RefPtr<mozilla::dom::CSSTransition>>
@@ -311,12 +345,13 @@ class nsTransitionManager final
   // could be a nullptr if we don't have any transitions.
   bool DoUpdateTransitions(const nsStyleDisplay& aDisp,
                            mozilla::dom::Element* aElement,
-                           mozilla::CSSPseudoElementType aPseudoType,
+                           mozilla::PseudoStyleType aPseudoType,
                            CSSTransitionCollection*& aElementTransitions,
                            const mozilla::ComputedStyle& aOldStyle,
                            const mozilla::ComputedStyle& aNewStyle);
 
   // Returns whether the transition actually started.
+<<<<<<< HEAD
   bool ConsiderInitiatingTransition(
       nsCSSPropertyID aProperty, const nsStyleDisplay& aStyleDisplay,
       uint32_t transitionIdx, mozilla::dom::Element* aElement,
@@ -325,6 +360,26 @@ class nsTransitionManager final
       const mozilla::ComputedStyle& aOldStyle,
       const mozilla::ComputedStyle& aNewStyle,
       nsCSSPropertyIDSet& aPropertiesChecked);
+||||||| merged common ancestors
+  bool ConsiderInitiatingTransition(nsCSSPropertyID aProperty,
+                                    const nsStyleDisplay& aStyleDisplay,
+                                    uint32_t transitionIdx,
+                                    mozilla::dom::Element* aElement,
+                                    mozilla::CSSPseudoElementType aPseudoType,
+                                    CSSTransitionCollection*& aElementTransitions,
+                                    const mozilla::ComputedStyle& aOldStyle,
+                                    const mozilla::ComputedStyle& aNewStyle,
+                                    nsCSSPropertyIDSet& aPropertiesChecked);
+=======
+  bool ConsiderInitiatingTransition(
+      nsCSSPropertyID aProperty, const nsStyleDisplay& aStyleDisplay,
+      uint32_t transitionIdx, mozilla::dom::Element* aElement,
+      mozilla::PseudoStyleType aPseudoType,
+      CSSTransitionCollection*& aElementTransitions,
+      const mozilla::ComputedStyle& aOldStyle,
+      const mozilla::ComputedStyle& aNewStyle,
+      nsCSSPropertyIDSet& aPropertiesChecked);
+>>>>>>> upstream-releases
 };
 
 #endif /* !defined(nsTransitionManager_h_) */

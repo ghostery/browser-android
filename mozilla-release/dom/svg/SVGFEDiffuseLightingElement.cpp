@@ -9,7 +9,7 @@
 #include "nsSVGUtils.h"
 #include "nsSVGFilterInstance.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEDiffuseLighting)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEDiffuseLighting)
 
 using namespace mozilla::gfx;
 
@@ -28,30 +28,86 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEDiffuseLightingElement)
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGFEDiffuseLightingElement::In1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGFEDiffuseLightingElement::In1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGFEDiffuseLightingElement::In1() {
+>>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFEDiffuseLightingElement::SurfaceScale() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFEDiffuseLightingElement::SurfaceScale()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFEDiffuseLightingElement::SurfaceScale() {
+>>>>>>> upstream-releases
   return mNumberAttributes[SURFACE_SCALE].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFEDiffuseLightingElement::DiffuseConstant() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFEDiffuseLightingElement::DiffuseConstant()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFEDiffuseLightingElement::DiffuseConstant() {
+>>>>>>> upstream-releases
   return mNumberAttributes[DIFFUSE_CONSTANT].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFEDiffuseLightingElement::KernelUnitLengthX() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFEDiffuseLightingElement::KernelUnitLengthX()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFEDiffuseLightingElement::KernelUnitLengthX() {
+>>>>>>> upstream-releases
   return mNumberPairAttributes[KERNEL_UNIT_LENGTH].ToDOMAnimatedNumber(
+<<<<<<< HEAD
       nsSVGNumberPair::eFirst, this);
+||||||| merged common ancestors
+    nsSVGNumberPair::eFirst, this);
+=======
+      SVGAnimatedNumberPair::eFirst, this);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFEDiffuseLightingElement::KernelUnitLengthY() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFEDiffuseLightingElement::KernelUnitLengthY()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFEDiffuseLightingElement::KernelUnitLengthY() {
+>>>>>>> upstream-releases
   return mNumberPairAttributes[KERNEL_UNIT_LENGTH].ToDOMAnimatedNumber(
+<<<<<<< HEAD
       nsSVGNumberPair::eSecond, this);
+||||||| merged common ancestors
+    nsSVGNumberPair::eSecond, this);
+=======
+      SVGAnimatedNumberPair::eSecond, this);
+>>>>>>> upstream-releases
 }
 
 FilterPrimitiveDescription SVGFEDiffuseLightingElement::GetPrimitiveDescription(

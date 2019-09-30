@@ -6,21 +6,33 @@
  */
 
 #include "SkVertices.h"
+<<<<<<< HEAD
 
 #include "SkAtomics.h"
+||||||| merged common ancestors
+=======
+
+>>>>>>> upstream-releases
 #include "SkData.h"
 #include "SkReader32.h"
 #include "SkSafeMath.h"
 #include "SkSafeRange.h"
 #include "SkTo.h"
 #include "SkWriter32.h"
+<<<<<<< HEAD
 #include <new>
+||||||| merged common ancestors
+=======
+#include <atomic>
+#include <new>
+>>>>>>> upstream-releases
 
-static int32_t gNextID = 1;
 static int32_t next_id() {
+    static std::atomic<int32_t> nextID{1};
+
     int32_t id;
     do {
-        id = sk_atomic_inc(&gNextID);
+        id = nextID++;
     } while (id == SK_InvalidGenID);
     return id;
 }

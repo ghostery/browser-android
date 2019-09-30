@@ -12,6 +12,10 @@
 #include "nsIDOMEventListener.h"
 #include "mozilla/Attributes.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <maction> -- bind actions to a subexpression
 //
@@ -20,8 +24,15 @@ class nsMathMLmactionFrame final : public nsMathMLSelectedFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmactionFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmactionFrame(nsIPresShell* aPresShell,
                                             ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmactionFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLmactionFrame(mozilla::PresShell* aPresShell,
+                                            ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;
@@ -52,9 +63,20 @@ class nsMathMLmactionFrame final : public nsMathMLSelectedFrame {
     nsMathMLmactionFrame* mOwner;
   };
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmactionFrame(ComputedStyle* aStyle)
       : nsMathMLSelectedFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmactionFrame(ComputedStyle* aStyle) :
+    nsMathMLSelectedFrame(aStyle, kClassID) {}
+=======
+ protected:
+  explicit nsMathMLmactionFrame(ComputedStyle* aStyle,
+                                nsPresContext* aPresContext)
+      : nsMathMLSelectedFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
   virtual ~nsMathMLmactionFrame();
 
  private:

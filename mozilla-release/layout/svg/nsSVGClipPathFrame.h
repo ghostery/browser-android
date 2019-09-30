@@ -15,17 +15,46 @@
 class gfxContext;
 class nsSVGDisplayableFrame;
 
+<<<<<<< HEAD
 class nsSVGClipPathFrame final : public nsSVGContainerFrame {
   friend nsIFrame* NS_NewSVGClipPathFrame(nsIPresShell* aPresShell,
                                           ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGClipPathFrame final : public nsSVGContainerFrame
+{
+  friend nsIFrame*
+  NS_NewSVGClipPathFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsSVGClipPathFrame final : public nsSVGContainerFrame {
+  friend nsIFrame* NS_NewSVGClipPathFrame(mozilla::PresShell* aPresShell,
+                                          ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   typedef mozilla::gfx::Matrix Matrix;
   typedef mozilla::gfx::SourceSurface SourceSurface;
   typedef mozilla::image::imgDrawingParams imgDrawingParams;
 
+<<<<<<< HEAD
  protected:
   explicit nsSVGClipPathFrame(ComputedStyle* aStyle)
       : nsSVGContainerFrame(aStyle, kClassID), mIsBeingProcessed(false) {
+||||||| merged common ancestors
+protected:
+  explicit nsSVGClipPathFrame(ComputedStyle* aStyle)
+    : nsSVGContainerFrame(aStyle, kClassID)
+    , mIsBeingProcessed(false)
+  {
+=======
+ protected:
+  explicit nsSVGClipPathFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext)
+      : nsSVGContainerFrame(aStyle, aPresContext, kClassID),
+        mIsBeingProcessed(false) {
+>>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -35,6 +64,9 @@ class nsSVGClipPathFrame final : public nsSVGContainerFrame {
   // nsIFrame methods:
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                 const nsDisplayListSet& aLists) override {}
+
+  virtual bool IsSVGTransformed(Matrix* aOwnTransforms,
+                                Matrix* aFromParentTransforms) const override;
 
   // nsSVGClipPathFrame methods:
 
@@ -66,18 +98,29 @@ class nsSVGClipPathFrame final : public nsSVGContainerFrame {
    *   clipPath that is currently being processed.
    * @param aMatrix The transform from aClippedFrame's user space to aContext's
    *   current transform.
-   * @param [out] aMaskTransform The transform to use with the returned
-   *   surface.
    * @param [in, optional] aExtraMask An extra surface that the returned
    *   surface should be masked with.
    * @param [in, optional] aExtraMasksTransform The transform to use with
    *   aExtraMask. Should be passed when aExtraMask is passed.
    */
+<<<<<<< HEAD
   already_AddRefed<SourceSurface> GetClipMask(
       gfxContext& aReferenceContext, nsIFrame* aClippedFrame,
       const gfxMatrix& aMatrix, Matrix* aMaskTransform,
       SourceSurface* aExtraMask = nullptr,
       const Matrix& aExtraMasksTransform = Matrix());
+||||||| merged common ancestors
+  already_AddRefed<SourceSurface>
+  GetClipMask(gfxContext& aReferenceContext, nsIFrame* aClippedFrame,
+              const gfxMatrix& aMatrix, Matrix* aMaskTransform,
+              SourceSurface* aExtraMask = nullptr,
+              const Matrix& aExtraMasksTransform = Matrix());
+=======
+  already_AddRefed<SourceSurface> GetClipMask(
+      gfxContext& aReferenceContext, nsIFrame* aClippedFrame,
+      const gfxMatrix& aMatrix, SourceSurface* aExtraMask = nullptr,
+      const Matrix& aExtraMasksTransform = Matrix());
+>>>>>>> upstream-releases
 
   /**
    * Paint mask directly onto a given context(aMaskContext).
@@ -87,17 +130,26 @@ class nsSVGClipPathFrame final : public nsSVGContainerFrame {
    *   clipPath that is currently being processed.
    * @param aMatrix The transform from aClippedFrame's user space to
    *   current transform.
-   * @param [out] aMaskTransform The transform to use with the returned
-   *   surface.
    * @param [in, optional] aExtraMask An extra surface that the returned
    *   surface should be masked with.
    * @param [in, optional] aExtraMasksTransform The transform to use with
    *   aExtraMask. Should be passed when aExtraMask is passed.
    */
+<<<<<<< HEAD
   void PaintClipMask(gfxContext& aMaskContext, nsIFrame* aClippedFrame,
                      const gfxMatrix& aMatrix, Matrix* aMaskTransform,
                      SourceSurface* aExtraMask,
                      const Matrix& aExtraMasksTransform);
+||||||| merged common ancestors
+  void
+  PaintClipMask(gfxContext& aMaskContext, nsIFrame* aClippedFrame,
+                const gfxMatrix& aMatrix, Matrix* aMaskTransform,
+                SourceSurface* aExtraMask, const Matrix& aExtraMasksTransform);
+=======
+  void PaintClipMask(gfxContext& aMaskContext, nsIFrame* aClippedFrame,
+                     const gfxMatrix& aMatrix, SourceSurface* aExtraMask,
+                     const Matrix& aExtraMasksTransform);
+>>>>>>> upstream-releases
 
   /**
    * aPoint is expected to be in aClippedFrame's SVG user space.
@@ -142,8 +194,16 @@ class nsSVGClipPathFrame final : public nsSVGContainerFrame {
   already_AddRefed<DrawTarget> CreateClipMask(gfxContext& aReferenceContext,
                                               mozilla::gfx::IntPoint& aOffset);
 
+<<<<<<< HEAD
   void PaintFrameIntoMask(nsIFrame* aFrame, nsIFrame* aClippedFrame,
                           gfxContext& aTarget, const gfxMatrix& aMatrix);
+||||||| merged common ancestors
+  void PaintFrameIntoMask(nsIFrame *aFrame, nsIFrame* aClippedFrame,
+                          gfxContext& aTarget, const gfxMatrix& aMatrix);
+=======
+  void PaintFrameIntoMask(nsIFrame* aFrame, nsIFrame* aClippedFrame,
+                          gfxContext& aTarget);
+>>>>>>> upstream-releases
 
   // Set, during a GetClipMask() call, to the transform that still needs to be
   // concatenated to the transform of the DrawTarget that was passed to

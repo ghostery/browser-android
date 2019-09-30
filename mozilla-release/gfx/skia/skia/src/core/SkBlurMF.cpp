@@ -20,9 +20,16 @@
 
 #if SK_SUPPORT_GPU
 #include "GrClip.h"
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 #include "GrContext.h"
 #include "GrContextPriv.h"
+||||||| merged common ancestors
+#include "GrContext.h"
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 #include "GrFragmentProcessor.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
 #include "GrRenderTargetContext.h"
 #include "GrResourceProvider.h"
 #include "GrShaderCaps.h"
@@ -54,14 +61,39 @@ public:
                           const SkIRect& devSpaceShapeBounds,
                           const SkIRect& clipBounds,
                           const SkMatrix& ctm,
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
                           SkIRect* maskRect) const override;
     bool directFilterMaskGPU(GrContext*,
+||||||| merged common ancestors
+                          SkRect* maskRect) const override;
+    bool directFilterMaskGPU(GrContext*,
+=======
+                          SkIRect* maskRect) const override;
+    bool directFilterMaskGPU(GrRecordingContext*,
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
                              GrRenderTargetContext* renderTargetContext,
                              GrPaint&&,
                              const GrClip&,
                              const SkMatrix& viewMatrix,
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
                              const GrShape& shape) const override;
     sk_sp<GrTextureProxy> filterMaskGPU(GrContext*,
+||||||| merged common ancestors
+                             const SkStrokeRec& strokeRec,
+                             const SkPath& path) const override;
+    bool directFilterRRectMaskGPU(GrContext*,
+                                  GrRenderTargetContext* renderTargetContext,
+                                  GrPaint&&,
+                                  const GrClip&,
+                                  const SkMatrix& viewMatrix,
+                                  const SkStrokeRec& strokeRec,
+                                  const SkRRect& rrect,
+                                  const SkRRect& devRRect) const override;
+    sk_sp<GrTextureProxy> filterMaskGPU(GrContext*,
+=======
+                             const GrShape& shape) const override;
+    sk_sp<GrTextureProxy> filterMaskGPU(GrRecordingContext*,
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
                                         sk_sp<GrTextureProxy> srcProxy,
                                         const SkMatrix& ctm,
                                         const SkIRect& maskRect) const override;
@@ -70,7 +102,13 @@ public:
     void computeFastBounds(const SkRect&, SkRect*) const override;
     bool asABlur(BlurRec*) const override;
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkBlurMaskFilterImpl)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkBlurMaskFilterImpl)
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 
 protected:
     FilterReturn filterRectsToNine(const SkRect[], int count, const SkMatrix&,
@@ -89,6 +127,7 @@ protected:
     bool ignoreXform() const { return !fRespectCTM; }
 
 private:
+    SK_FLATTENABLE_HOOKS(SkBlurMaskFilterImpl)
     // To avoid unseemly allocation requests (esp. for finite platforms like
     // handset) we limit the radius so something manageable. (as opposed to
     // a request like 10,000)
@@ -420,12 +459,7 @@ static SkCachedData* add_cached_rects(SkMask* mask, SkScalar sigma, SkBlurStyle 
     return cache;
 }
 
-#ifdef SK_IGNORE_FAST_RRECT_BLUR
-  // Use the faster analytic blur approach for ninepatch round rects
-  static const bool c_analyticBlurRRect{false};
-#else
-  static const bool c_analyticBlurRRect{true};
-#endif
+static const bool c_analyticBlurRRect{true};
 
 SkMaskFilterBase::FilterReturn
 SkBlurMaskFilterImpl::filterRRectToNine(const SkRRect& rrect, const SkMatrix& matrix,
@@ -701,6 +735,13 @@ sk_sp<SkFlattenable> SkBlurMaskFilterImpl::CreateProc(SkReadBuffer& buffer) {
     const SkScalar sigma = buffer.readScalar();
     SkBlurStyle style = buffer.read32LE(kLastEnum_SkBlurStyle);
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
+    uint32_t flags = buffer.read32LE(0x3);  // historically we only recorded 2 bits
+    bool respectCTM = !(flags & 1); // historically we stored ignoreCTM in low bit
+||||||| merged common ancestors
+    SkRect occluder;
+    buffer.readRect(&occluder);
+=======
     uint32_t flags = buffer.read32LE(0x3);  // historically we only recorded 2 bits
     bool respectCTM = !(flags & 1); // historically we stored ignoreCTM in low bit
 
@@ -708,8 +749,20 @@ sk_sp<SkFlattenable> SkBlurMaskFilterImpl::CreateProc(SkReadBuffer& buffer) {
         SkRect unused;
         buffer.readRect(&unused);
     }
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
+
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
+    if (buffer.isVersionLT(SkReadBuffer::kRemoveOccluderFromBlurMaskFilter)) {
+        SkRect unused;
+        buffer.readRect(&unused);
+    }
 
     return SkMaskFilter::MakeBlur((SkBlurStyle)style, sigma, respectCTM);
+||||||| merged common ancestors
+    return SkBlurMaskFilter::Make((SkBlurStyle)style, sigma, occluder, flags);
+=======
+    return SkMaskFilter::MakeBlur((SkBlurStyle)style, sigma, respectCTM);
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 }
 
 void SkBlurMaskFilterImpl::flatten(SkWriteBuffer& buffer) const {
@@ -721,7 +774,7 @@ void SkBlurMaskFilterImpl::flatten(SkWriteBuffer& buffer) const {
 
 #if SK_SUPPORT_GPU
 
-bool SkBlurMaskFilterImpl::directFilterMaskGPU(GrContext* context,
+bool SkBlurMaskFilterImpl::directFilterMaskGPU(GrRecordingContext* context,
                                                GrRenderTargetContext* renderTargetContext,
                                                GrPaint&& paint,
                                                const GrClip& clip,
@@ -762,16 +815,31 @@ bool SkBlurMaskFilterImpl::directFilterMaskGPU(GrContext* context,
         return false;
     }
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
     GrProxyProvider* proxyProvider = context->contextPriv().proxyProvider();
     std::unique_ptr<GrFragmentProcessor> fp;
+||||||| merged common ancestors
+    GrProxyProvider* proxyProvider = context->contextPriv().proxyProvider();
+    SkScalar xformedSigma = this->computeXformedSigma(viewMatrix);
+=======
+    GrProxyProvider* proxyProvider = context->priv().proxyProvider();
+    std::unique_ptr<GrFragmentProcessor> fp;
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 
     if (devRRect.isRect() || SkRRectPriv::IsCircle(devRRect)) {
         if (devRRect.isRect()) {
             SkScalar pad = 3.0f * xformedSigma;
             const SkRect dstCoverageRect = devRRect.rect().makeOutset(pad, pad);
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
             fp = GrRectBlurEffect::Make(proxyProvider, *context->contextPriv().caps()->shaderCaps(),
                                         dstCoverageRect, xformedSigma);
+||||||| merged common ancestors
+            fp = GrRectBlurEffect::Make(proxyProvider, dstCoverageRect, xformedSigma);
+=======
+            fp = GrRectBlurEffect::Make(proxyProvider, *context->priv().caps()->shaderCaps(),
+                                        dstCoverageRect, xformedSigma);
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
         } else {
             fp = GrCircleBlurFragmentProcessor::Make(proxyProvider, devRRect.rect(), xformedSigma);
         }
@@ -788,8 +856,8 @@ bool SkBlurMaskFilterImpl::directFilterMaskGPU(GrContext* context,
             // When we're ignoring the CTM the padding added to the source rect also needs to ignore
             // the CTM. The matrix passed in here is guaranteed to be just scale and translate so we
             // can just grab the X and Y scales off the matrix and pre-undo the scale.
-            outsetX /= viewMatrix.getScaleX();
-            outsetY /= viewMatrix.getScaleY();
+            outsetX /= SkScalarAbs(viewMatrix.getScaleX());
+            outsetY /= SkScalarAbs(viewMatrix.getScaleY());
         }
         srcProxyRect.outset(outsetX, outsetY);
 
@@ -873,7 +941,7 @@ bool SkBlurMaskFilterImpl::canFilterMaskGPU(const GrShape& shape,
     return true;
 }
 
-sk_sp<GrTextureProxy> SkBlurMaskFilterImpl::filterMaskGPU(GrContext* context,
+sk_sp<GrTextureProxy> SkBlurMaskFilterImpl::filterMaskGPU(GrRecordingContext* context,
                                                           sk_sp<GrTextureProxy> srcProxy,
                                                           const SkMatrix& ctm,
                                                           const SkIRect& maskRect) const {
@@ -929,9 +997,14 @@ sk_sp<GrTextureProxy> SkBlurMaskFilterImpl::filterMaskGPU(GrContext* context,
 
 #endif // SK_SUPPORT_GPU
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 void sk_register_blur_maskfilter_createproc() {
     SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkBlurMaskFilterImpl)
 }
+||||||| merged common ancestors
+=======
+void sk_register_blur_maskfilter_createproc() { SK_REGISTER_FLATTENABLE(SkBlurMaskFilterImpl); }
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/core/SkBlurMF.cpp
 
 sk_sp<SkMaskFilter> SkMaskFilter::MakeBlur(SkBlurStyle style, SkScalar sigma, bool respectCTM) {
     if (SkScalarIsFinite(sigma) && sigma > 0) {

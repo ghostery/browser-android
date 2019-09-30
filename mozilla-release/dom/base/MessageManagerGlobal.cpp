@@ -6,21 +6,31 @@
 
 #include "mozilla/dom/MessageManagerGlobal.h"
 #include "mozilla/IntentionalCrash.h"
-#include "mozilla/dom/DOMPrefs.h"
 #include "nsContentUtils.h"
+#include "nsJSUtils.h"
 
 #ifdef ANDROID
-#include <android/log.h>
+#  include <android/log.h>
 #endif
 #ifdef XP_WIN
-#include <windows.h>
+#  include <windows.h>
 #endif
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 void MessageManagerGlobal::Dump(const nsAString& aStr) {
   if (!DOMPrefs::DumpEnabled()) {
+||||||| merged common ancestors
+void
+MessageManagerGlobal::Dump(const nsAString& aStr)
+{
+  if (!DOMPrefs::DumpEnabled()) {
+=======
+void MessageManagerGlobal::Dump(const nsAString& aStr) {
+  if (!nsJSUtils::DumpEnabled()) {
+>>>>>>> upstream-releases
     return;
   }
 

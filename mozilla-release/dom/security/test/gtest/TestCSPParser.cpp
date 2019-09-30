@@ -21,7 +21,7 @@
  * parser functionality directly in compiled code tests.
  * All the tests (except the fuzzy tests at the end) follow the same schemata:
  *   a) create an nsIContentSecurityPolicy object
- *   b) set the selfURI in SetRequestContext
+ *   b) set the selfURI in SetRequestContextWithPrincipal
  *   c) append one or more policies by calling AppendPolicy
  *   d) check if the policy count is correct by calling GetPolicyCount
  *   e) compare the result of the policy with the expected output
@@ -90,7 +90,8 @@ nsresult runTest(
 
   // for testing the parser we only need to set a principal which is needed
   // to translate the keyword 'self' into an actual URI.
-  rv = csp->SetRequestContext(nullptr, selfURIPrincipal);
+  rv = csp->SetRequestContextWithPrincipal(selfURIPrincipal, selfURI,
+                                           EmptyString(), 0);
   NS_ENSURE_SUCCESS(rv, rv);
 
   // append a policy
@@ -176,9 +177,21 @@ nsresult runTestSuite(const PolicyTest* aPolicies, uint32_t aPolicyCount,
 
 // ============================= TestDirectives ========================
 
+<<<<<<< HEAD
 TEST(CSPParser, Directives) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, Directives)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, Directives)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "connect-src xn--mnchen-3ya.de",
       "connect-src http://xn--mnchen-3ya.de"},
     { "default-src http://www.example.com",
@@ -209,8 +222,6 @@ TEST(CSPParser, Directives) {
       "script-src 'sha256-a'" },
     { "script-src 'sha256-siVR8vAcqP06h2ppeNwqgjr0yZ6yned4X2VF84j4GmI='",
       "script-src 'sha256-siVR8vAcqP06h2ppeNwqgjr0yZ6yned4X2VF84j4GmI='" },
-    { "require-sri-for script style",
-      "require-sri-for script style"},
     { "script-src 'nonce-foo' 'unsafe-inline' ",
       "script-src 'nonce-foo' 'unsafe-inline'" },
     { "script-src 'nonce-foo' 'strict-dynamic' 'unsafe-inline' https:  ",
@@ -230,9 +241,21 @@ TEST(CSPParser, Directives) {
 
 // ============================= TestKeywords ========================
 
+<<<<<<< HEAD
 TEST(CSPParser, Keywords) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, Keywords)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, Keywords)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "script-src 'self'",
       "script-src 'self'" },
     { "script-src 'unsafe-inline'",
@@ -254,9 +277,21 @@ TEST(CSPParser, Keywords) {
 
 // =================== TestIgnoreUpperLowerCasePolicies ==============
 
+<<<<<<< HEAD
 TEST(CSPParser, IgnoreUpperLowerCasePolicies) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, IgnoreUpperLowerCasePolicies)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, IgnoreUpperLowerCasePolicies)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "script-src 'SELF'",
       "script-src 'self'" },
     { "sCriPt-src 'Unsafe-Inline'",
@@ -287,9 +322,16 @@ TEST(CSPParser, IgnoreUpperLowerCasePolicies) {
       "upgrade-insecure-requests" },
     { "sanDBox alloW-foRMs",
       "sandbox allow-forms"},
+<<<<<<< HEAD
     { "require-SRI-for sCript stYle",
       "require-sri-for script style"},
       // clang-format on
+||||||| merged common ancestors
+    { "require-SRI-for sCript stYle",
+      "require-sri-for script style"},
+=======
+      // clang-format on
+>>>>>>> upstream-releases
   };
 
   uint32_t policyCount = sizeof(policies) / sizeof(PolicyTest);
@@ -298,9 +340,21 @@ TEST(CSPParser, IgnoreUpperLowerCasePolicies) {
 
 // ========================= TestPaths ===============================
 
+<<<<<<< HEAD
 TEST(CSPParser, Paths) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, Paths)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, Paths)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "script-src http://www.example.com",
       "script-src http://www.example.com" },
     { "script-src http://www.example.com/",
@@ -396,9 +450,21 @@ TEST(CSPParser, Paths) {
 
 // ======================== TestSimplePolicies =======================
 
+<<<<<<< HEAD
 TEST(CSPParser, SimplePolicies) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, SimplePolicies)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, SimplePolicies)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "default-src *",
       "default-src *" },
     { "default-src https:",
@@ -472,9 +538,21 @@ TEST(CSPParser, SimplePolicies) {
 
 // =================== TestPoliciesWithInvalidSrc ====================
 
+<<<<<<< HEAD
 TEST(CSPParser, PoliciesWithInvalidSrc) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, PoliciesWithInvalidSrc)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, PoliciesWithInvalidSrc)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "script-src 'self'; SCRIPT-SRC http://www.example.com",
       "script-src 'self'" },
     { "script-src 'none' test.com; script-src example.com",
@@ -553,8 +631,6 @@ TEST(CSPParser, PoliciesWithInvalidSrc) {
       "connect-src 'none'" },
     { "script-src https://foo.com/%$",
       "script-src 'none'" },
-    { "require-SRI-for script elephants",
-      "require-sri-for script"},
     { "sandbox    foo",
       "sandbox"},
       // clang-format on
@@ -567,20 +643,37 @@ TEST(CSPParser, PoliciesWithInvalidSrc) {
 
 // ============================= TestBadPolicies =======================
 
+<<<<<<< HEAD
 TEST(CSPParser, BadPolicies) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, BadPolicies)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, BadPolicies)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "script-sr 'self", "" },
     { "", "" },
     { "; ; ; ; ; ; ;", "" },
     { "defaut-src asdf", "" },
     { "default-src: aaa", "" },
     { "asdf http://test.com", ""},
-    { "require-sri-for", ""},
-    { "require-sri-for foo", ""},
     { "report-uri", ""},
     { "report-uri http://:foo", ""},
+<<<<<<< HEAD
       // clang-format on
+||||||| merged common ancestors
+=======
+    { "require-sri-for", ""},
+    { "require-sri-for style", ""},
+      // clang-format on
+>>>>>>> upstream-releases
   };
 
   uint32_t policyCount = sizeof(policies) / sizeof(PolicyTest);
@@ -589,9 +682,21 @@ TEST(CSPParser, BadPolicies) {
 
 // ======================= TestGoodGeneratedPolicies =================
 
+<<<<<<< HEAD
 TEST(CSPParser, GoodGeneratedPolicies) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, GoodGeneratedPolicies)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, GoodGeneratedPolicies)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "default-src 'self'; img-src *",
       "default-src 'self'; img-src *" },
     { "report-uri /policy",
@@ -817,9 +922,21 @@ TEST(CSPParser, GoodGeneratedPolicies) {
 
 // ==================== TestBadGeneratedPolicies ====================
 
+<<<<<<< HEAD
 TEST(CSPParser, BadGeneratedPolicies) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, BadGeneratedPolicies)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, BadGeneratedPolicies)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "foo.*.bar", ""},
     { "foo!bar.com", ""},
     { "x.*.a.com", ""},
@@ -966,9 +1083,21 @@ TEST(CSPParser, GoodGeneratedPoliciesForPathHandling) {
 
 // ============== TestBadGeneratedPoliciesForPathHandling ============
 
+<<<<<<< HEAD
 TEST(CSPParser, BadGeneratedPoliciesForPathHandling) {
   static const PolicyTest policies[] = {
       // clang-format off
+||||||| merged common ancestors
+TEST(CSPParser, BadGeneratedPoliciesForPathHandling)
+{
+  static const PolicyTest policies[] =
+  {
+=======
+TEST(CSPParser, BadGeneratedPoliciesForPathHandling)
+{
+  static const PolicyTest policies[] = {
+      // clang-format off
+>>>>>>> upstream-releases
     { "img-src test1.example.com:88path-1/",
       "img-src 'none'" },
     { "img-src test1.example.com:80.js",
@@ -995,10 +1124,22 @@ TEST(CSPParser, BadGeneratedPoliciesForPathHandling) {
 // Use a policy, eliminate one character at a time,
 // and feed it as input to the parser.
 
+<<<<<<< HEAD
 TEST(CSPParser, ShorteningPolicies) {
   char pol[] =
       "default-src http://www.sub1.sub2.example.com:88/path1/path2/ "
       "'unsafe-inline' 'none'";
+||||||| merged common ancestors
+TEST(CSPParser, ShorteningPolicies)
+{
+  char pol[] = "default-src http://www.sub1.sub2.example.com:88/path1/path2/ 'unsafe-inline' 'none'";
+=======
+TEST(CSPParser, ShorteningPolicies)
+{
+  char pol[] =
+      "default-src http://www.sub1.sub2.example.com:88/path1/path2/ "
+      "'unsafe-inline' 'none'";
+>>>>>>> upstream-releases
   uint32_t len = static_cast<uint32_t>(sizeof(pol));
 
   PolicyTest testPol[1];
@@ -1092,12 +1233,29 @@ TEST(CSPParser, FuzzyPoliciesIncDir) {
 
 #if RUN_OFFLINE_TESTS
 
+<<<<<<< HEAD
 TEST(CSPParser, FuzzyPoliciesIncDirLimASCII) {
   char input[] =
       "1234567890"
       "abcdefghijklmnopqrstuvwxyz"
       "ABCDEFGHIJKLMNOPQRSTUVWZYZ"
       "!@#^&*()-+_=";
+||||||| merged common ancestors
+TEST(CSPParser, FuzzyPoliciesIncDirLimASCII)
+{
+  char input[] = "1234567890" \
+                 "abcdefghijklmnopqrstuvwxyz" \
+                 "ABCDEFGHIJKLMNOPQRSTUVWZYZ" \
+                 "!@#^&*()-+_=";
+=======
+TEST(CSPParser, FuzzyPoliciesIncDirLimASCII)
+{
+  char input[] =
+      "1234567890"
+      "abcdefghijklmnopqrstuvwxyz"
+      "ABCDEFGHIJKLMNOPQRSTUVWZYZ"
+      "!@#^&*()-+_=";
+>>>>>>> upstream-releases
 
   // init srand with 0 so we get same results
   srand(0);

@@ -20,14 +20,40 @@ class StreamBlobImpl final : public BaseBlobImpl, public nsIMemoryReporter {
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSIMEMORYREPORTER
 
+<<<<<<< HEAD
   static already_AddRefed<StreamBlobImpl> Create(
       already_AddRefed<nsIInputStream> aInputStream,
       const nsAString& aContentType, uint64_t aLength);
+||||||| merged common ancestors
+  static already_AddRefed<StreamBlobImpl>
+  Create(already_AddRefed<nsIInputStream> aInputStream,
+         const nsAString& aContentType,
+         uint64_t aLength);
+=======
+  static already_AddRefed<StreamBlobImpl> Create(
+      already_AddRefed<nsIInputStream> aInputStream,
+      const nsAString& aContentType, uint64_t aLength,
+      const nsAString& aBlobImplType);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<StreamBlobImpl> Create(
       already_AddRefed<nsIInputStream> aInputStream, const nsAString& aName,
       const nsAString& aContentType, int64_t aLastModifiedDate,
       uint64_t aLength);
+||||||| merged common ancestors
+  static already_AddRefed<StreamBlobImpl>
+  Create(already_AddRefed<nsIInputStream> aInputStream,
+         const nsAString& aName,
+         const nsAString& aContentType,
+         int64_t aLastModifiedDate,
+         uint64_t aLength);
+=======
+  static already_AddRefed<StreamBlobImpl> Create(
+      already_AddRefed<nsIInputStream> aInputStream, const nsAString& aName,
+      const nsAString& aContentType, int64_t aLastModifiedDate,
+      uint64_t aLength, const nsAString& aBlobImplType);
+>>>>>>> upstream-releases
 
   virtual void CreateInputStream(nsIInputStream** aStream,
                                  ErrorResult& aRv) override;
@@ -45,8 +71,16 @@ class StreamBlobImpl final : public BaseBlobImpl, public nsIMemoryReporter {
 
   void SetFullPath(const nsAString& aFullPath) { mFullPath = aFullPath; }
 
+<<<<<<< HEAD
   void GetMozFullPathInternal(nsAString& aFullPath,
                               ErrorResult& aRv) const override {
+||||||| merged common ancestors
+  void GetMozFullPathInternal(nsAString& aFullPath,
+                              ErrorResult& aRv) const override
+  {
+=======
+  void GetMozFullPathInternal(nsAString& aFullPath, ErrorResult& aRv) override {
+>>>>>>> upstream-releases
     aFullPath = mFullPath;
   }
 
@@ -61,13 +95,40 @@ class StreamBlobImpl final : public BaseBlobImpl, public nsIMemoryReporter {
     return GetAllocationSize();
   }
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  void GetBlobImplType(nsAString& aBlobImplType) const override;
+
+ private:
+>>>>>>> upstream-releases
   StreamBlobImpl(already_AddRefed<nsIInputStream> aInputStream,
+<<<<<<< HEAD
                  const nsAString& aContentType, uint64_t aLength);
+||||||| merged common ancestors
+                 const nsAString& aContentType,
+                 uint64_t aLength);
+=======
+                 const nsAString& aContentType, uint64_t aLength,
+                 const nsAString& aBlobImplType);
+>>>>>>> upstream-releases
 
   StreamBlobImpl(already_AddRefed<nsIInputStream> aInputStream,
+<<<<<<< HEAD
                  const nsAString& aName, const nsAString& aContentType,
                  int64_t aLastModifiedDate, uint64_t aLength);
+||||||| merged common ancestors
+                 const nsAString& aName,
+                 const nsAString& aContentType,
+                 int64_t aLastModifiedDate,
+                 uint64_t aLength);
+=======
+                 const nsAString& aName, const nsAString& aContentType,
+                 int64_t aLastModifiedDate, uint64_t aLength,
+                 const nsAString& aBlobImplType);
+>>>>>>> upstream-releases
 
   ~StreamBlobImpl();
 

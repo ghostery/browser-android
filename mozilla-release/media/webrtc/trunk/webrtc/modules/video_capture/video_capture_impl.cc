@@ -133,6 +133,7 @@ int32_t VideoCaptureImpl::DeliverCapturedFrame(VideoFrame& captureFrame) {
   return 0;
 }
 
+<<<<<<< HEAD
 int32_t VideoCaptureImpl::IncomingFrame(uint8_t* videoFrame,
                                         size_t videoFrameLength,
                                         const VideoCaptureCapability& frameInfo,
@@ -190,6 +191,148 @@ int32_t VideoCaptureImpl::IncomingFrame(uint8_t* videoFrame,
       case kVideoRotation_270:
         rotation_mode = libyuv::kRotate270;
         break;
+||||||| merged common ancestors
+int32_t VideoCaptureImpl::IncomingFrame(
+    uint8_t* videoFrame,
+    size_t videoFrameLength,
+    const VideoCaptureCapability& frameInfo,
+    int64_t captureTime/*=0*/)
+{
+    CriticalSectionScoped cs(&_apiCs);
+
+    const int32_t width = frameInfo.width;
+    const int32_t height = frameInfo.height;
+
+    TRACE_EVENT1("webrtc", "VC::IncomingFrame", "capture_time", captureTime);
+
+    if (frameInfo.codecType == kVideoCodecUnknown)
+    {
+        // Not encoded, convert to I420.
+        const VideoType commonVideoType =
+                  RawVideoTypeToCommonVideoVideoType(frameInfo.rawType);
+
+        if (frameInfo.rawType != kVideoMJPEG &&
+            CalcBufferSize(commonVideoType, width,
+                           abs(height)) != videoFrameLength)
+        {
+            LOG(LS_ERROR) << "Wrong incoming frame length.";
+            return -1;
+        }
+
+        // SetApplyRotation doesn't take any lock. Make a local copy here.
+        bool apply_rotation = apply_rotation_;
+        int target_width;
+        int target_height;
+        
+        if (apply_rotation &&
+            (_rotateFrame == kVideoRotation_90 ||
+             _rotateFrame == kVideoRotation_270)) {
+          target_width = abs(height);
+          target_height = width;
+        } else {
+          target_width = width;
+          target_height = height;
+        }
+
+        int stride_y = target_width;
+        int stride_uv = (target_width + 1) / 2;
+
+        // Setting absolute height (in case it was negative).
+        // In Windows, the image starts bottom left, instead of top left.
+        // Setting a negative source height, inverts the image (within LibYuv).
+
+        // TODO(nisse): Use a pool?
+        rtc::scoped_refptr<I420Buffer> buffer = I420Buffer::Create(
+            target_width, abs(target_height), stride_y, stride_uv, stride_uv);
+        const int conversionResult = ConvertToI420(
+            commonVideoType, videoFrame, 0, 0,  // No cropping
+            width, height, videoFrameLength,
+            apply_rotation ? _rotateFrame : kVideoRotation_0, buffer.get());
+        if (conversionResult != 0)
+        {
+          LOG(LS_ERROR) << "Failed to convert capture frame from type "
+                        << frameInfo.rawType << "to I420.";
+            return -1;
+        }
+
+        VideoFrame captureFrame(
+            buffer, 0, rtc::TimeMillis(),
+            !apply_rotation ? _rotateFrame : kVideoRotation_0);
+        captureFrame.set_ntp_time_ms(captureTime);
+
+        // This is one ugly hack to let CamerasParent know what rotation
+        // the frame was captured at. Note that this goes against the intended
+        // meaning of rotation of the frame (how to rotate it before rendering).
+        // We do this so CamerasChild can scale to the proper dimensions
+        // later on in the pipe.
+        captureFrame.set_rotation(_rotateFrame);
+
+        DeliverCapturedFrame(captureFrame);
+    }
+    else // Encoded format
+    {
+        assert(false);
+        return -1;
+=======
+int32_t VideoCaptureImpl::IncomingFrame(uint8_t* videoFrame,
+                                        size_t videoFrameLength,
+                                        const VideoCaptureCapability& frameInfo,
+                                        int64_t captureTime /*=0*/) {
+  rtc::CritScope cs(&_apiCs);
+
+  const int32_t width = frameInfo.width;
+  const int32_t height = frameInfo.height;
+
+  TRACE_EVENT1("webrtc", "VC::IncomingFrame", "capture_time", captureTime);
+
+  // Not encoded, convert to I420.
+  if (frameInfo.videoType != VideoType::kMJPEG &&
+      CalcBufferSize(frameInfo.videoType, width, abs(height)) !=
+          videoFrameLength) {
+    RTC_LOG(LS_ERROR) << "Wrong incoming frame length.";
+    return -1;
+  }
+
+  int target_width = width;
+  int target_height = height;
+
+  // SetApplyRotation doesn't take any lock. Make a local copy here.
+  bool apply_rotation = apply_rotation_;
+
+  if (apply_rotation &&
+      (_rotateFrame == kVideoRotation_90 ||
+       _rotateFrame == kVideoRotation_270)) {
+    target_width = abs(height);
+    target_height = width;
+  }
+
+  int stride_y = target_width;
+  int stride_uv = (target_width + 1) / 2;
+
+  // Setting absolute height (in case it was negative).
+  // In Windows, the image starts bottom left, instead of top left.
+  // Setting a negative source height, inverts the image (within LibYuv).
+
+  // TODO(nisse): Use a pool?
+  rtc::scoped_refptr<I420Buffer> buffer = I420Buffer::Create(
+      target_width, abs(target_height), stride_y, stride_uv, stride_uv);
+
+  libyuv::RotationMode rotation_mode = libyuv::kRotate0;
+  if (apply_rotation) {
+    switch (_rotateFrame) {
+      case kVideoRotation_0:
+        rotation_mode = libyuv::kRotate0;
+        break;
+      case kVideoRotation_90:
+        rotation_mode = libyuv::kRotate90;
+        break;
+      case kVideoRotation_180:
+        rotation_mode = libyuv::kRotate180;
+        break;
+      case kVideoRotation_270:
+        rotation_mode = libyuv::kRotate270;
+        break;
+>>>>>>> upstream-releases
     }
   }
 

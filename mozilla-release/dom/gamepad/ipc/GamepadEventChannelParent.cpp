@@ -76,20 +76,55 @@ mozilla::ipc::IPCResult GamepadEventChannelParent::RecvVibrateHaptic(
     const uint32_t& aPromiseID) {
   // TODO: Bug 680289, implement for standard gamepads
 
-  if (SendReplyGamepadVibrateHaptic(aPromiseID)) {
+  if (SendReplyGamepadPromise(aPromiseID)) {
     return IPC_OK();
   }
 
-  return IPC_FAIL(this, "SendReplyGamepadVibrateHaptic fail.");
+  return IPC_FAIL(this, "SendReplyGamepadPromise fail.");
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult GamepadEventChannelParent::RecvStopVibrateHaptic(
     const uint32_t& aGamepadIndex) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+GamepadEventChannelParent::RecvStopVibrateHaptic(const uint32_t& aGamepadIndex)
+{
+=======
+mozilla::ipc::IPCResult GamepadEventChannelParent::RecvStopVibrateHaptic(
+    const uint32_t& aControllerIdx) {
+>>>>>>> upstream-releases
   // TODO: Bug 680289, implement for standard gamepads
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 void GamepadEventChannelParent::ActorDestroy(ActorDestroyReason aWhy) {
+||||||| merged common ancestors
+void
+GamepadEventChannelParent::ActorDestroy(ActorDestroyReason aWhy)
+{
+=======
+mozilla::ipc::IPCResult GamepadEventChannelParent::RecvLightIndicatorColor(
+    const uint32_t& aControllerIdx, const uint32_t& aLightColorIndex,
+    const uint8_t& aRed, const uint8_t& aGreen, const uint8_t& aBlue,
+    const uint32_t& aPromiseID) {
+  // It may be called because IPDL child side crashed, we'll
+  // not receive RecvGamepadListenerRemoved in that case
+  if (mHasGamepadListener) {
+    SetGamepadLightIndicatorColor(aControllerIdx, aLightColorIndex, aRed,
+                                  aGreen, aBlue);
+  }
+
+  if (SendReplyGamepadPromise(aPromiseID)) {
+    return IPC_OK();
+  }
+
+  return IPC_FAIL(this, "SendReplyGamepadPromise fail.");
+}
+
+void GamepadEventChannelParent::ActorDestroy(ActorDestroyReason aWhy) {
+>>>>>>> upstream-releases
   AssertIsOnBackgroundThread();
 
   // It may be called because IPDL child side crashed, we'll

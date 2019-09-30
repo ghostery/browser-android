@@ -1,8 +1,6 @@
 // nsDoTestsForEditorWithAutoComplete tests basic functions of editor with autocomplete.
 // Users must include SimpleTest.js and EventUtils.js, and register "Mozilla" to the autocomplete for the target.
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
 async function waitForCondition(condition) {
   return new Promise(resolve => {
     var tries = 0;
@@ -12,10 +10,14 @@ async function waitForCondition(condition) {
       }
       tries++;
     }, 100);
-    var moveOn = function() { clearInterval(interval); resolve(); };
+    var moveOn = function() {
+      clearInterval(interval);
+      resolve();
+    };
   });
 }
 
+<<<<<<< HEAD
 function nsDoTestsForEditorWithAutoComplete(aDescription,
                                                   aWindow,
                                                   aTarget,
@@ -23,6 +25,24 @@ function nsDoTestsForEditorWithAutoComplete(aDescription,
                                                   aIsFunc,
                                                   aTodoIsFunc,
                                                   aGetTargetValueFunc) {
+||||||| merged common ancestors
+function nsDoTestsForEditorWithAutoComplete(aDescription,
+                                                  aWindow,
+                                                  aTarget,
+                                                  aAutoCompleteController,
+                                                  aIsFunc,
+                                                  aGetTargetValueFunc) {
+=======
+function nsDoTestsForEditorWithAutoComplete(
+  aDescription,
+  aWindow,
+  aTarget,
+  aAutoCompleteController,
+  aIsFunc,
+  aTodoIsFunc,
+  aGetTargetValueFunc
+) {
+>>>>>>> upstream-releases
   this._description = aDescription;
   this._window = aWindow;
   this._target = aTarget;
@@ -34,8 +54,7 @@ function nsDoTestsForEditorWithAutoComplete(aDescription,
 
   this._target.focus();
 
-  this._DefaultCompleteDefaultIndex =
-    this._controller.input.completeDefaultIndex;
+  this._DefaultCompleteDefaultIndex = this._controller.input.completeDefaultIndex;
 }
 
 nsDoTestsForEditorWithAutoComplete.prototype = {
@@ -46,11 +65,15 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
   _description: "",
 
   _is: null,
-  _getTargetValue() { return "not initialized"; },
+  _getTargetValue() {
+    return "not initialized";
+  },
 
   run: async function runTestsImpl() {
     for (let test of this._tests) {
-      if (this._controller.input.completeDefaultIndex != test.completeDefaultIndex) {
+      if (
+        this._controller.input.completeDefaultIndex != test.completeDefaultIndex
+      ) {
         this._controller.input.completeDefaultIndex = test.completeDefaultIndex;
       }
 
@@ -66,8 +89,10 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       }
 
       await waitForCondition(() => {
-        return this._controller.searchStatus >=
-               Ci.nsIAutoCompleteController.STATUS_COMPLETE_NO_MATCH;
+        return (
+          this._controller.searchStatus >=
+          Ci.nsIAutoCompleteController.STATUS_COMPLETE_NO_MATCH
+        );
       });
       this._target.removeEventListener("input", onInput);
       this._checkResult(test, inputEvents);
@@ -75,6 +100,7 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
     this._controller.input.completeDefaultIndex = this._DefaultCompleteDefaultIndex;
   },
 
+<<<<<<< HEAD
   _checkResult(aTest, aInputEvents) {
     this._is(this._getTargetValue(), aTest.value,
              this._description + ", " + aTest.description + ": value");
@@ -99,161 +125,439 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
       this._is(aInputEvents[i].bubbles, true,
                this._description + ", " + aTest.description + ': "input" event should always bubble');
     }
+||||||| merged common ancestors
+  _checkResult(aTest) {
+    this._is(this._getTargetValue(), aTest.value,
+             this._description + ", " + aTest.description + ": value");
+    this._is(this._controller.searchString, aTest.searchString,
+             this._description + ", " + aTest.description + ": searchString");
+    this._is(this._controller.input.popupOpen, aTest.popup,
+             this._description + ", " + aTest.description + ": popupOpen");
+    this._is(this._controller.searchStatus, Ci.nsIAutoCompleteController.STATUS_COMPLETE_MATCH,
+             this._description + ", " + aTest.description + ": status");
+=======
+  _checkResult(aTest, aInputEvents) {
+    this._is(
+      this._getTargetValue(),
+      aTest.value,
+      this._description + ", " + aTest.description + ": value"
+    );
+    this._is(
+      this._controller.searchString,
+      aTest.searchString,
+      this._description + ", " + aTest.description + ": searchString"
+    );
+    this._is(
+      this._controller.input.popupOpen,
+      aTest.popup,
+      this._description + ", " + aTest.description + ": popupOpen"
+    );
+    this._is(
+      this._controller.searchStatus,
+      Ci.nsIAutoCompleteController.STATUS_COMPLETE_MATCH,
+      this._description + ", " + aTest.description + ": status"
+    );
+    this._is(
+      aInputEvents.length,
+      aTest.inputEvents.length,
+      this._description +
+        ", " +
+        aTest.description +
+        ": number of input events wrong"
+    );
+    for (let i = 0; i < aInputEvents.length; i++) {
+      if (aTest.inputEvents[i] === undefined) {
+        this._is(
+          true,
+          false,
+          this._description +
+            ", " +
+            aTest.description +
+            ': "input" event shouldn\'t be dispatched anymore'
+        );
+        return;
+      }
+      this._is(
+        aInputEvents[i] instanceof this._window.InputEvent,
+        true,
+        this._description +
+          ", " +
+          aTest.description +
+          ': "input" event should be dispatched with InputEvent interface'
+      );
+      this._is(
+        aInputEvents[i].cancelable,
+        false,
+        this._description +
+          ", " +
+          aTest.description +
+          ': "input" event should be never cancelable'
+      );
+      this._is(
+        aInputEvents[i].bubbles,
+        true,
+        this._description +
+          ", " +
+          aTest.description +
+          ': "input" event should always bubble'
+      );
+      this._is(
+        aInputEvents[i].inputType,
+        aTest.inputEvents[i].inputType,
+        this._description +
+          ", " +
+          aTest.description +
+          ': inputType of "input" event should be "${aTest.inputEvents[i].inputType}"'
+      );
+      this._is(
+        aInputEvents[i].data,
+        aTest.inputEvents[i].data,
+        this._description +
+          ", " +
+          aTest.description +
+          ': data of "input" event should be ${aTest.inputEvents[i].data}'
+      );
+      this._is(
+        aInputEvents[i].dataTransfer,
+        null,
+        this._description +
+          ", " +
+          aTest.description +
+          ': dataTransfer of "input" event should be null'
+      );
+    }
+>>>>>>> upstream-releases
   },
 
   _tests: [
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: type 'Mo'",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: type 'Mo'",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("M", { shiftKey: true }, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mo", searchString: "Mo",
       inputEvents: [
         {inputType: "insertText"},
         {inputType: "insertText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mo", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mo",
+      searchString: "Mo",
+      inputEvents: [
+        { inputType: "insertText", data: "M" },
+        { inputType: "insertText", data: "o" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: select 'Mozilla' to complete the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: select 'Mozilla' to complete the word",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: false,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: undo the word, but typed text shouldn't be canceled",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: undo the word, but typed text shouldn't be canceled",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mo", searchString: "Mo",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mo", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mo",
+      searchString: "Mo",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: undo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: undo the typed text",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: redo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: redo the typed text",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mo", searchString: "Mo",
       inputEvents: [
         {inputType: "historyRedo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mo", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mo",
+      searchString: "Mo",
+      inputEvents: [{ inputType: "historyRedo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: redo the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: redo the word",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
         {inputType: "historyRedo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: true,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [{ inputType: "historyRedo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case: removing all text for next test...",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case: removing all text for next test...",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "deleteContentBackward"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "deleteContentBackward", data: null }],
+>>>>>>> upstream-releases
     },
 
-    { description: "Undo/Redo behavior check when typed text does not match the case: type 'mo'",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: type 'mo'",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("m", {}, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mo", searchString: "mo",
       inputEvents: [
         {inputType: "insertText"},
         {inputType: "insertText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mo", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mo",
+      searchString: "mo",
+      inputEvents: [
+        { inputType: "insertText", data: "m" },
+        { inputType: "insertText", data: "o" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: select 'Mozilla' to complete the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: select 'Mozilla' to complete the word",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: false,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: undo the word, but typed text shouldn't be canceled",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: undo the word, but typed text shouldn't be canceled",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mo", searchString: "mo",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mo", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mo",
+      searchString: "mo",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: undo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: undo the typed text",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: redo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: redo the typed text",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mo", searchString: "mo",
       inputEvents: [
         {inputType: "historyRedo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mo", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mo",
+      searchString: "mo",
+      inputEvents: [{ inputType: "historyRedo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: redo the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: redo the word",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
         {inputType: "historyRedo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: true,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [{ inputType: "historyRedo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case: removing all text for next test...",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case: removing all text for next test...",
       completeDefaultIndex: false,
       execute(aWindow, aTarget) {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "deleteContentBackward"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "deleteContentBackward", data: null }],
+>>>>>>> upstream-releases
     },
 
     // Testing for nsIAutoCompleteInput.completeDefaultIndex being true.
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): type 'Mo'",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): type 'Mo'",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -263,14 +567,30 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("M", { shiftKey: true }, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mozilla", searchString: "Mo",
       inputEvents: [
         {inputType: "insertText"},
         {inputType: "insertText"},
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mozilla", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mozilla",
+      searchString: "Mo",
+      inputEvents: [
+        { inputType: "insertText", data: "M" },
+        { inputType: "insertText", data: "o" },
+        { inputType: "insertReplacementText", data: "Mozilla" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): select 'Mozilla' to complete the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): select 'Mozilla' to complete the word",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -280,11 +600,23 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: false,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): undo the word, but typed text shouldn't be canceled",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): undo the word, but typed text shouldn't be canceled",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -293,12 +625,24 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mo", searchString: "Mo",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mo", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mo",
+      searchString: "Mo",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): undo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): undo the typed text",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -307,12 +651,24 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): redo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): redo the typed text",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -321,13 +677,28 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mozilla", searchString: "Mo",
       inputEvents: [
         {inputType: "historyRedo"},
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mozilla", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mozilla",
+      searchString: "Mo",
+      inputEvents: [
+        { inputType: "historyRedo", data: null },
+        { inputType: "insertReplacementText", data: "Mozilla" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): redo the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): redo the word",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -336,11 +707,23 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "Mozilla", searchString: "Mo",
       inputEvents: [
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "Mozilla", searchString: "Mo",
+=======
+      },
+      popup: true,
+      value: "Mozilla",
+      searchString: "Mo",
+      inputEvents: [],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): removing all text for next test...",
+    {
+      description:
+        "Undo/Redo behavior check when typed text exactly matches the case (completeDefaultIndex is true): removing all text for next test...",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -350,13 +733,25 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "deleteContentBackward"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "deleteContentBackward", data: null }],
+>>>>>>> upstream-releases
     },
 
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): type 'mo'",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): type 'mo'",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -366,14 +761,30 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("m", {}, aWindow);
         synthesizeKey("o", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mozilla", searchString: "mo",
       inputEvents: [
         {inputType: "insertText"},
         {inputType: "insertText"},
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mozilla", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mozilla",
+      searchString: "mo",
+      inputEvents: [
+        { inputType: "insertText", data: "m" },
+        { inputType: "insertText", data: "o" },
+        { inputType: "insertReplacementText", data: "mozilla" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): select 'Mozilla' to complete the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): select 'Mozilla' to complete the word",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -383,14 +794,26 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("KEY_ArrowDown", {}, aWindow);
         synthesizeKey("KEY_Enter", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "Mozilla", searchString: "Mozilla",
       inputEvents: [
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "Mozilla", searchString: "Mozilla",
+=======
+      },
+      popup: false,
+      value: "Mozilla",
+      searchString: "Mozilla",
+      inputEvents: [{ inputType: "insertReplacementText", data: "Mozilla" }],
+>>>>>>> upstream-releases
     },
     // Different from "exactly matches the case" case, modifying the case causes one additional transaction.
     // Although we could make this transaction ignored.
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the selected word, but typed text shouldn't be canceled",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the selected word, but typed text shouldn't be canceled",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -399,12 +822,24 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mozilla", searchString: "mozilla",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mozilla", searchString: "mozilla",
+=======
+      },
+      popup: true,
+      value: "mozilla",
+      searchString: "mozilla",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the word, but typed text shouldn't be canceled",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the word, but typed text shouldn't be canceled",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -413,12 +848,24 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mo", searchString: "mo",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mo", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mo",
+      searchString: "mo",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): undo the typed text",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -427,16 +874,28 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("z", { accelKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "historyUndo"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "historyUndo", data: null }],
+>>>>>>> upstream-releases
     },
     // XXX This is odd case.  Consistency with undo behavior, this should restore "mo".
     //     However, looks like that autocomplete automatically restores "mozilla".
     //     Additionally, looks like that it causes clearing the redo stack.
     //     Therefore, the following redo operations do nothing.
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the typed text",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the typed text",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -445,13 +904,28 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mozilla", searchString: "mo",
       inputEvents: [
         {inputType: "historyRedo"},
         {inputType: "insertReplacementText"},
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mozilla", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mozilla",
+      searchString: "mo",
+      inputEvents: [
+        { inputType: "historyRedo", data: null },
+        { inputType: "insertReplacementText", data: "mozilla" },
+      ],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the default index word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the default index word",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -460,11 +934,23 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mozilla", searchString: "mo",
       inputEvents: [
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mozilla", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mozilla",
+      searchString: "mo",
+      inputEvents: [],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the word",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): redo the word",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -473,11 +959,23 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         }
         synthesizeKey("Z", { accelKey: true, shiftKey: true }, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: true, value: "mozilla", searchString: "mo",
       inputEvents: [
       ],
+||||||| merged common ancestors
+      }, popup: true, value: "mozilla", searchString: "mo",
+=======
+      },
+      popup: true,
+      value: "mozilla",
+      searchString: "mo",
+      inputEvents: [],
+>>>>>>> upstream-releases
     },
-    { description: "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): removing all text for next test...",
+    {
+      description:
+        "Undo/Redo behavior check when typed text does not match the case (completeDefaultIndex is true): removing all text for next test...",
       completeDefaultIndex: true,
       execute(aWindow, aTarget) {
         // Undo/Redo behavior on XUL <textbox> with completeDefaultIndex is set to true is unstable. Skip it now.
@@ -487,10 +985,20 @@ nsDoTestsForEditorWithAutoComplete.prototype = {
         synthesizeKey("a", { accelKey: true }, aWindow);
         synthesizeKey("KEY_Backspace", {}, aWindow);
         return true;
+<<<<<<< HEAD
       }, popup: false, value: "", searchString: "",
       inputEvents: [
         {inputType: "deleteContentBackward"},
       ],
+||||||| merged common ancestors
+      }, popup: false, value: "", searchString: "",
+=======
+      },
+      popup: false,
+      value: "",
+      searchString: "",
+      inputEvents: [{ inputType: "deleteContentBackward", data: null }],
+>>>>>>> upstream-releases
     },
   ],
 };

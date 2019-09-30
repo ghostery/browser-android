@@ -16,10 +16,12 @@ from taskgraph.util.schema import (
 from taskgraph.util.scriptworker import (
     get_balrog_server_scope, get_worker_type_for_scope
 )
+from taskgraph.util.treeherder import replace_group
 from taskgraph.transforms.task import task_description_schema
-from voluptuous import Any, Required, Optional
+from voluptuous import Optional
 
 
+<<<<<<< HEAD
 # Voluptuous uses marker objects as dictionary *keys*, but they are not
 # comparable, so we cast all of the keys back to regular strings
 task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
@@ -30,6 +32,25 @@ taskref_or_string = Any(
     {Required('task-reference'): basestring})
 
 balrog_description_schema = schema.extend({
+||||||| merged common ancestors
+# Voluptuous uses marker objects as dictionary *keys*, but they are not
+# comparable, so we cast all of the keys back to regular strings
+task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
+
+transforms = TransformSequence()
+
+# shortcut for a string where task references are allowed
+taskref_or_string = Any(
+    basestring,
+    {Required('task-reference'): basestring})
+
+balrog_description_schema = Schema({
+    # the dependent task (object) for this balrog job, used to inform balrogworker.
+    Required('dependent-task'): object,
+
+=======
+balrog_description_schema = schema.extend({
+>>>>>>> upstream-releases
     # unique label to describe this balrog task, defaults to balrog-{dep.label}
     Optional('label'): basestring,
 
@@ -94,10 +115,10 @@ def make_task_description(config, jobs):
 
         attributes = copy_attributes_from_dependent_job(dep_job)
 
-        treeherder_job_symbol = dep_job.attributes.get('locale', 'N')
+        treeherder_job_symbol = dep_job.task['extra']['treeherder']['symbol']
+        treeherder['symbol'] = replace_group(treeherder_job_symbol, 'c-Up')
 
         if dep_job.attributes.get('locale'):
-            treeherder['symbol'] = 'c-Up({})'.format(treeherder_job_symbol)
             attributes['locale'] = dep_job.attributes.get('locale')
 
         label = job['label']

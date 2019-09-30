@@ -21,8 +21,16 @@ class ASpdySession : public nsAHttpTransaction {
   ASpdySession() = default;
   virtual ~ASpdySession() = default;
 
+<<<<<<< HEAD
   virtual MOZ_MUST_USE bool AddStream(nsAHttpTransaction *, int32_t, bool, bool,
                                       nsIInterfaceRequestor *) = 0;
+||||||| merged common ancestors
+  virtual MOZ_MUST_USE bool
+  AddStream(nsAHttpTransaction *, int32_t, bool, nsIInterfaceRequestor *) = 0;
+=======
+  virtual MOZ_MUST_USE bool AddStream(nsAHttpTransaction*, int32_t, bool, bool,
+                                      nsIInterfaceRequestor*) = 0;
+>>>>>>> upstream-releases
   virtual bool CanReuse() = 0;
   virtual bool RoomForMoreStreams() = 0;
   virtual PRIntervalTime IdleTime() = 0;
@@ -30,11 +38,18 @@ class ASpdySession : public nsAHttpTransaction {
   virtual void DontReuse() = 0;
   virtual enum SpdyVersion SpdyVersion() = 0;
 
+<<<<<<< HEAD
   static ASpdySession *NewSpdySession(net::SpdyVersion version,
                                       nsISocketTransport *, bool);
+||||||| merged common ancestors
+  static ASpdySession *NewSpdySession(net::SpdyVersion version, nsISocketTransport *, bool);
+=======
+  static ASpdySession* NewSpdySession(net::SpdyVersion version,
+                                      nsISocketTransport*, bool);
+>>>>>>> upstream-releases
 
-  virtual bool TestJoinConnection(const nsACString &hostname, int32_t port) = 0;
-  virtual bool JoinConnection(const nsACString &hostname, int32_t port) = 0;
+  virtual bool TestJoinConnection(const nsACString& hostname, int32_t port) = 0;
+  virtual bool JoinConnection(const nsACString& hostname, int32_t port) = 0;
 
   // MaybeReTunnel() is called by the connection manager when it cannot
   // dispatch a tunneled transaction. That might be because the tunnels it
@@ -43,9 +58,15 @@ class ASpdySession : public nsAHttpTransaction {
   //
   // return true if the session takes back ownership of the transaction from
   // the connection manager.
-  virtual bool MaybeReTunnel(nsAHttpTransaction *) = 0;
+  virtual bool MaybeReTunnel(nsAHttpTransaction*) = 0;
 
+<<<<<<< HEAD
   virtual void PrintDiagnostics(nsCString &log) = 0;
+||||||| merged common ancestors
+  virtual void PrintDiagnostics (nsCString &log) = 0;
+=======
+  virtual void PrintDiagnostics(nsCString& log) = 0;
+>>>>>>> upstream-releases
 
   bool ResponseTimeoutEnabled() const final { return true; }
 
@@ -90,7 +111,13 @@ class ASpdySession : public nsAHttpTransaction {
   virtual bool CanAcceptWebsocket() = 0;
 };
 
+<<<<<<< HEAD
 typedef bool (*ALPNCallback)(nsISupports *);  // nsISSLSocketControl is typical
+||||||| merged common ancestors
+typedef bool (*ALPNCallback) (nsISupports *); // nsISSLSocketControl is typical
+=======
+typedef bool (*ALPNCallback)(nsISupports*);  // nsISSLSocketControl is typical
+>>>>>>> upstream-releases
 
 // this is essentially a single instantiation as a member of nsHttpHandler.
 // It could be all static except using static ctors of XPCOM objects is a
@@ -104,8 +131,15 @@ class SpdyInformation {
 
   // determine the index (0..kCount-1) of the spdy information that
   // correlates to the npn string. NS_FAILED() if no match is found.
+<<<<<<< HEAD
   MOZ_MUST_USE nsresult GetNPNIndex(const nsACString &npnString,
                                     uint32_t *result) const;
+||||||| merged common ancestors
+  MOZ_MUST_USE nsresult GetNPNIndex(const nsACString &npnString, uint32_t *result) const;
+=======
+  MOZ_MUST_USE nsresult GetNPNIndex(const nsACString& npnString,
+                                    uint32_t* result) const;
+>>>>>>> upstream-releases
 
   // determine if a version of the protocol is enabled for index < kCount
   bool ProtocolEnabled(uint32_t index) const;

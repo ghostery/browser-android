@@ -8,19 +8,23 @@
  */
 
 const { treeMapState } = require("devtools/client/memory/constants");
-const TEST_URL = "http://example.com/browser/devtools/client/memory/test/browser/doc_steady_allocation.html";
+const TEST_URL =
+  "http://example.com/browser/devtools/client/memory/test/browser/doc_steady_allocation.html";
 
 this.test = makeMemoryTest(TEST_URL, async function({ tab, panel }) {
   const { gStore, document } = panel.panelWin;
   const { getState } = gStore;
 
-  let snapshotEls = document.querySelectorAll("#memory-tool-container .list li");
+  let snapshotEls = document.querySelectorAll(
+    "#memory-tool-container .list li"
+  );
   is(getState().snapshots.length, 0, "Starts with no snapshots in store");
   is(snapshotEls.length, 0, "No snapshots visible");
 
   info("Take two snapshots");
   takeSnapshot(panel.panelWin);
   takeSnapshot(panel.panelWin);
+<<<<<<< HEAD
   takeSnapshot(panel.panelWin);
   await waitUntilState(gStore, state =>
     state.snapshots.length === 3 &&
@@ -29,8 +33,29 @@ this.test = makeMemoryTest(TEST_URL, async function({ tab, panel }) {
     state.snapshots[0].treeMap.state === treeMapState.SAVED &&
     state.snapshots[1].treeMap.state === treeMapState.SAVED &&
     state.snapshots[2].treeMap.state === treeMapState.SAVED);
+||||||| merged common ancestors
+  await waitUntilState(gStore, state =>
+  state.snapshots.length === 2 &&
+  state.snapshots[0].treeMap && state.snapshots[1].treeMap &&
+  state.snapshots[0].treeMap.state === treeMapState.SAVED &&
+  state.snapshots[1].treeMap.state === treeMapState.SAVED);
+=======
+  takeSnapshot(panel.panelWin);
+  await waitUntilState(
+    gStore,
+    state =>
+      state.snapshots.length === 3 &&
+      state.snapshots[0].treeMap &&
+      state.snapshots[1].treeMap &&
+      state.snapshots[2].treeMap &&
+      state.snapshots[0].treeMap.state === treeMapState.SAVED &&
+      state.snapshots[1].treeMap.state === treeMapState.SAVED &&
+      state.snapshots[2].treeMap.state === treeMapState.SAVED
+  );
+>>>>>>> upstream-releases
 
   snapshotEls = document.querySelectorAll("#memory-tool-container .list li");
+<<<<<<< HEAD
   is(snapshotEls.length, 3, "Three snapshots visible");
   is(document.querySelectorAll(".selected").length, 1, "One selected snapshot visible");
   ok(snapshotEls[2].classList.contains("selected"), "Third snapshot selected");
@@ -45,10 +70,45 @@ this.test = makeMemoryTest(TEST_URL, async function({ tab, panel }) {
     state.snapshots[1].treeMap.state === treeMapState.SAVED);
 
   snapshotEls = document.querySelectorAll(".snapshot-list-item");
+||||||| merged common ancestors
+=======
+  is(snapshotEls.length, 3, "Three snapshots visible");
+  is(
+    document.querySelectorAll(".selected").length,
+    1,
+    "One selected snapshot visible"
+  );
+  ok(snapshotEls[2].classList.contains("selected"), "Third snapshot selected");
+
+  info("Clicking on first snapshot delete button");
+  document.querySelectorAll(".delete")[0].click();
+
+  await waitUntilState(
+    gStore,
+    state =>
+      state.snapshots.length === 2 &&
+      state.snapshots[0].treeMap &&
+      state.snapshots[1].treeMap &&
+      state.snapshots[0].treeMap.state === treeMapState.SAVED &&
+      state.snapshots[1].treeMap.state === treeMapState.SAVED
+  );
+
+  snapshotEls = document.querySelectorAll(".snapshot-list-item");
+>>>>>>> upstream-releases
   is(snapshotEls.length, 2, "Two snapshots visible");
+<<<<<<< HEAD
   // Bug 1476289
   ok(!snapshotEls[0].classList.contains("selected"), "First snapshot not selected");
   ok(snapshotEls[1].classList.contains("selected"), "Second snapshot selected");
+||||||| merged common ancestors
+=======
+  // Bug 1476289
+  ok(
+    !snapshotEls[0].classList.contains("selected"),
+    "First snapshot not selected"
+  );
+  ok(snapshotEls[1].classList.contains("selected"), "Second snapshot selected");
+>>>>>>> upstream-releases
 
   info("Click on Clear Snapshots");
   await clearSnapshots(panel.panelWin);

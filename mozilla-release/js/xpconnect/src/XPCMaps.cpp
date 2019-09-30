@@ -20,8 +20,20 @@ using namespace mozilla;
 // Note this is returning the hash of the bit pattern of the first part of the
 // nsID, not the hash of the pointer to the nsID.
 
+<<<<<<< HEAD
 static PLDHashNumber HashIIDPtrKey(const void* key) {
   return HashGeneric(*((uintptr_t*)key));
+||||||| merged common ancestors
+static PLDHashNumber
+HashIIDPtrKey(const void* key)
+{
+    return HashGeneric(*((uintptr_t*)key));
+=======
+static PLDHashNumber HashIIDPtrKey(const void* key) {
+  uintptr_t v;
+  memcpy(&v, key, sizeof(v));
+  return HashGeneric(v);
+>>>>>>> upstream-releases
 }
 
 static bool MatchIIDPtrKey(const PLDHashEntryHdr* entry, const void* key) {
@@ -101,6 +113,7 @@ Native2WrappedNativeMap* Native2WrappedNativeMap::newMap(int length) {
 }
 
 Native2WrappedNativeMap::Native2WrappedNativeMap(int length)
+<<<<<<< HEAD
     : mTable(PLDHashTable::StubOps(), sizeof(Entry), length) {}
 
 size_t Native2WrappedNativeMap::SizeOfIncludingThis(
@@ -128,6 +141,59 @@ IID2WrappedJSClassMap* IID2WrappedJSClassMap::newMap(int length) {
 
 IID2WrappedJSClassMap::IID2WrappedJSClassMap(int length)
     : mTable(&Entry::sOps, sizeof(Entry), length) {}
+||||||| merged common ancestors
+  : mTable(PLDHashTable::StubOps(), sizeof(Entry), length)
+{
+}
+
+size_t
+Native2WrappedNativeMap::SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const
+{
+    size_t n = mallocSizeOf(this);
+    n += mTable.ShallowSizeOfExcludingThis(mallocSizeOf);
+    for (auto iter = mTable.ConstIter(); !iter.Done(); iter.Next()) {
+        auto entry = static_cast<Native2WrappedNativeMap::Entry*>(iter.Get());
+        n += mallocSizeOf(entry->value);
+    }
+    return n;
+}
+
+/***************************************************************************/
+// implement IID2WrappedJSClassMap...
+
+const struct PLDHashTableOps IID2WrappedJSClassMap::Entry::sOps =
+{
+    HashIIDPtrKey,
+    MatchIIDPtrKey,
+    PLDHashTable::MoveEntryStub,
+    PLDHashTable::ClearEntryStub
+};
+
+// static
+IID2WrappedJSClassMap*
+IID2WrappedJSClassMap::newMap(int length)
+{
+    return new IID2WrappedJSClassMap(length);
+}
+
+IID2WrappedJSClassMap::IID2WrappedJSClassMap(int length)
+  : mTable(&Entry::sOps, sizeof(Entry), length)
+{
+}
+=======
+    : mTable(PLDHashTable::StubOps(), sizeof(Entry), length) {}
+
+size_t Native2WrappedNativeMap::SizeOfIncludingThis(
+    mozilla::MallocSizeOf mallocSizeOf) const {
+  size_t n = mallocSizeOf(this);
+  n += mTable.ShallowSizeOfExcludingThis(mallocSizeOf);
+  for (auto iter = mTable.ConstIter(); !iter.Done(); iter.Next()) {
+    auto entry = static_cast<Native2WrappedNativeMap::Entry*>(iter.Get());
+    n += mallocSizeOf(entry->value);
+  }
+  return n;
+}
+>>>>>>> upstream-releases
 
 /***************************************************************************/
 // implement IID2NativeInterfaceMap...
@@ -220,6 +286,7 @@ size_t ClassInfo2WrappedNativeProtoMap::SizeOfIncludingThis(
 /***************************************************************************/
 // implement NativeSetMap...
 
+<<<<<<< HEAD
 bool NativeSetMap::Entry::Match(const PLDHashEntryHdr* entry, const void* key) {
   auto Key = static_cast<const XPCNativeSetKey*>(key);
   XPCNativeSet* SetInTable = ((Entry*)entry)->key_value;
@@ -259,6 +326,89 @@ bool NativeSetMap::Entry::Match(const PLDHashEntryHdr* entry, const void* key) {
     }
   }
   return !Addition || Addition == *(CurrentInTable++);
+||||||| merged common ancestors
+bool
+NativeSetMap::Entry::Match(const PLDHashEntryHdr* entry, const void* key)
+{
+    auto Key = static_cast<const XPCNativeSetKey*>(key);
+    XPCNativeSet*       SetInTable = ((Entry*)entry)->key_value;
+    XPCNativeSet*       Set        = Key->GetBaseSet();
+    XPCNativeInterface* Addition   = Key->GetAddition();
+
+    if (!Set) {
+        // This is a special case to deal with the invariant that says:
+        // "All sets have exactly one nsISupports interface and it comes first."
+        // See XPCNativeSet::NewInstance for details.
+        //
+        // Though we might have a key that represents only one interface, we
+        // know that if that one interface were contructed into a set then
+        // it would end up really being a set with two interfaces (except for
+        // the case where the one interface happened to be nsISupports).
+
+        return (SetInTable->GetInterfaceCount() == 1 &&
+                SetInTable->GetInterfaceAt(0) == Addition) ||
+               (SetInTable->GetInterfaceCount() == 2 &&
+                SetInTable->GetInterfaceAt(1) == Addition);
+    }
+
+    if (!Addition && Set == SetInTable) {
+        return true;
+    }
+
+    uint16_t count = Set->GetInterfaceCount();
+    if (count + (Addition ? 1 : 0) != SetInTable->GetInterfaceCount()) {
+        return false;
+    }
+
+    XPCNativeInterface** CurrentInTable = SetInTable->GetInterfaceArray();
+    XPCNativeInterface** Current = Set->GetInterfaceArray();
+    for (uint16_t i = 0; i < count; i++) {
+        if (*(Current++) != *(CurrentInTable++)) {
+            return false;
+        }
+    }
+    return !Addition || Addition == *(CurrentInTable++);
+=======
+bool NativeSetMap::Entry::Match(const PLDHashEntryHdr* entry, const void* key) {
+  auto Key = static_cast<const XPCNativeSetKey*>(key);
+  XPCNativeSet* SetInTable = ((Entry*)entry)->key_value;
+  XPCNativeSet* Set = Key->GetBaseSet();
+  XPCNativeInterface* Addition = Key->GetAddition();
+
+  if (!Set) {
+    // This is a special case to deal with the invariant that says:
+    // "All sets have exactly one nsISupports interface and it comes first."
+    // See XPCNativeSet::NewInstance for details.
+    //
+    // Though we might have a key that represents only one interface, we
+    // know that if that one interface were contructed into a set then
+    // it would end up really being a set with two interfaces (except for
+    // the case where the one interface happened to be nsISupports).
+
+    return (SetInTable->GetInterfaceCount() == 1 &&
+            SetInTable->GetInterfaceAt(0) == Addition) ||
+           (SetInTable->GetInterfaceCount() == 2 &&
+            SetInTable->GetInterfaceAt(1) == Addition);
+  }
+
+  if (!Addition && Set == SetInTable) {
+    return true;
+  }
+
+  uint16_t count = Set->GetInterfaceCount();
+  if (count + (Addition ? 1 : 0) != SetInTable->GetInterfaceCount()) {
+    return false;
+  }
+
+  XPCNativeInterface** CurrentInTable = SetInTable->GetInterfaceArray();
+  XPCNativeInterface** Current = Set->GetInterfaceArray();
+  for (uint16_t i = 0; i < count; i++) {
+    if (*(Current++) != *(CurrentInTable++)) {
+      return false;
+    }
+  }
+  return !Addition || Addition == *(CurrentInTable++);
+>>>>>>> upstream-releases
 }
 
 const struct PLDHashTableOps NativeSetMap::Entry::sOps = {

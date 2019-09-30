@@ -6,11 +6,23 @@
  */
 
 #include "GrCopySurfaceOp.h"
+<<<<<<< HEAD
 
 #include "GrContext.h"
 #include "GrContextPriv.h"
+||||||| merged common ancestors
+=======
+
+>>>>>>> upstream-releases
 #include "GrGpu.h"
+<<<<<<< HEAD
 #include "GrMemoryPool.h"
+||||||| merged common ancestors
+=======
+#include "GrMemoryPool.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
+>>>>>>> upstream-releases
 
 // returns true if the read/written rect intersects the src/dst and false if not.
 static bool clip_src_rect_and_dst_point(const GrSurfaceProxy* dst,
@@ -63,9 +75,17 @@ static bool clip_src_rect_and_dst_point(const GrSurfaceProxy* dst,
     return !clippedSrcRect->isEmpty();
 }
 
+<<<<<<< HEAD
 std::unique_ptr<GrOp> GrCopySurfaceOp::Make(GrContext* context,
                                             GrSurfaceProxy* dstProxy,
                                             GrSurfaceProxy* srcProxy,
+||||||| merged common ancestors
+std::unique_ptr<GrOp> GrCopySurfaceOp::Make(GrSurfaceProxy* dstProxy, GrSurfaceProxy* srcProxy,
+=======
+std::unique_ptr<GrOp> GrCopySurfaceOp::Make(GrRecordingContext* context,
+                                            GrSurfaceProxy* dstProxy,
+                                            GrSurfaceProxy* srcProxy,
+>>>>>>> upstream-releases
                                             const SkIRect& srcRect,
                                             const SkIPoint& dstPoint) {
     SkASSERT(dstProxy);
@@ -77,13 +97,25 @@ std::unique_ptr<GrOp> GrCopySurfaceOp::Make(GrContext* context,
                                      &clippedSrcRect, &clippedDstPoint)) {
         return nullptr;
     }
+    if (GrPixelConfigIsCompressed(dstProxy->config())) {
+        return nullptr;
+    }
 
+    GrOpMemoryPool* pool = context->priv().opMemoryPool();
+
+<<<<<<< HEAD
     GrOpMemoryPool* pool = context->contextPriv().opMemoryPool();
 
     return pool->allocate<GrCopySurfaceOp>(dstProxy, srcProxy, clippedSrcRect, clippedDstPoint);
+||||||| merged common ancestors
+    return std::unique_ptr<GrOp>(new GrCopySurfaceOp(dstProxy, srcProxy,
+                                                     clippedSrcRect, clippedDstPoint));
+=======
+    return pool->allocate<GrCopySurfaceOp>(dstProxy, srcProxy, clippedSrcRect, clippedDstPoint);
+>>>>>>> upstream-releases
 }
 
-void GrCopySurfaceOp::onExecute(GrOpFlushState* state) {
+void GrCopySurfaceOp::onExecute(GrOpFlushState* state, const SkRect& chainBounds) {
     if (!fSrc.get()->instantiate(state->resourceProvider())) {
         return;
     }

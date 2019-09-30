@@ -8,4 +8,10 @@ WINDOWS_CLANG = 'win64-clang-cl'
 WINDOWS_CBINDGEN = 'win64-cbindgen'
 LINUX_CLANG = 'linux64-clang'
 LINUX_CBINDGEN = 'linux64-cbindgen'
+<<<<<<< HEAD
 MACOS_CBINDGEN = 'macosx64-cbindgen'
+||||||| merged common ancestors
+=======
+MACOS_CLANG = 'macosx64-clang'
+MACOS_CBINDGEN = 'macosx64-cbindgen'
+>>>>>>> upstream-releases

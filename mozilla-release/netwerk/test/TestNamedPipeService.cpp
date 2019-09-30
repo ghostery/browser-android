@@ -251,8 +251,21 @@ static nsresult CreateNamedPipe(LPHANDLE aServer, LPHANDLE aClient) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 TEST(TestNamedPipeService, Test) {
   nsCOMPtr<nsINamedPipeService> svc = net::NamedPipeService::GetOrCreate();
+||||||| merged common ancestors
+TEST(TestNamedPipeService,Test)
+{
+  nsresult rv;
+  nsCOMPtr<nsINamedPipeService> svc =
+    do_GetService(NS_NAMEDPIPESERVICE_CONTRACTID, &rv);
+  ASSERT_TRUE(NS_SUCCEEDED(rv));
+=======
+TEST(TestNamedPipeService, Test)
+{
+  nsCOMPtr<nsINamedPipeService> svc = net::NamedPipeService::GetOrCreate();
+>>>>>>> upstream-releases
 
   HANDLE readPipe, writePipe;
   nsresult rv = CreateNamedPipe(&readPipe, &writePipe);

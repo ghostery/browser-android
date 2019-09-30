@@ -4,10 +4,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "jsfriendapi.h"
-#include "builtin/String.h"
+#include "mozilla/ArrayUtils.h"  // mozilla::ArrayLength
+#include "mozilla/Utf8.h"        // mozilla::Utf8Unit
 
-#include "js/CompilationAndEvaluation.h"
+#include "jsfriendapi.h"
+
+#include "builtin/String.h"
+#include "js/BuildId.h"  // JS::BuildIdCharVector, JS::SetProcessBuildIdOp
+#include "js/CompilationAndEvaluation.h"  // JS::CompileDontInflate
+#include "js/SourceText.h"                // JS::Source{Ownership,Text}
 #include "js/Transcoding.h"
 #include "jsapi-tests/tests.h"
 #include "vm/JSScript.h"
@@ -46,6 +51,7 @@ enum TestCase {
   TEST_END
 };
 
+<<<<<<< HEAD
 BEGIN_TEST(testXDR_bug506491) {
   const char* s =
       "function makeClosure(s, name, value) {\n"
@@ -114,16 +120,115 @@ BEGIN_TEST(testXDR_source) {
       "x + x + x + x + x + x + x + x + x + x + x + x }",
       "short", nullptr};
   for (const char** s = samples; *s; s++) {
+||||||| merged common ancestors
+BEGIN_TEST(testXDR_bug506491)
+{
+    const char* s =
+        "function makeClosure(s, name, value) {\n"
+        "    eval(s);\n"
+        "    Math.sin(value);\n"
+        "    let n = name, v = value;\n"
+        "    return function () { return String(v); };\n"
+        "}\n"
+        "var f = makeClosure('0;', 'status', 'ok');\n";
+
+    // compile
+=======
+BEGIN_TEST(testXDR_bug506491) {
+  static const char s[] =
+      "function makeClosure(s, name, value) {\n"
+      "    eval(s);\n"
+      "    Math.sin(value);\n"
+      "    let n = name, v = value;\n"
+      "    return function () { return String(v); };\n"
+      "}\n"
+      "var f = makeClosure('0;', 'status', 'ok');\n";
+
+  // compile
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, __LINE__);
+
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, s, mozilla::ArrayLength(s) - 1,
+                    JS::SourceOwnership::Borrowed));
+
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
+
+  script = FreezeThaw(cx, script);
+  CHECK(script);
+
+  // execute
+  JS::RootedValue v2(cx);
+  CHECK(JS_ExecuteScript(cx, script, &v2));
+
+  // try to break the Block object that is the parent of f
+  JS_GC(cx);
+
+  // confirm
+  EVAL("f() === 'ok';\n", &v2);
+  JS::RootedValue trueval(cx, JS::TrueValue());
+  CHECK_SAME(v2, trueval);
+  return true;
+}
+END_TEST(testXDR_bug506491)
+
+BEGIN_TEST(testXDR_bug516827) {
+  // compile an empty script
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, __LINE__);
+
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, "", 0, JS::SourceOwnership::Borrowed));
+
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
+
+  script = FreezeThaw(cx, script);
+  CHECK(script);
+
+  // execute with null result meaning no result wanted
+  CHECK(JS_ExecuteScript(cx, script));
+  return true;
+}
+END_TEST(testXDR_bug516827)
+
+BEGIN_TEST(testXDR_source) {
+  const char* samples[] = {
+      // This can't possibly fail to compress well, can it?
+      "function f(x) { return x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + "
+      "x + x + x + x + x + x + x + x + x + x + x + x }",
+      "short", nullptr};
+  for (const char** s = samples; *s; s++) {
+>>>>>>> upstream-releases
     JS::CompileOptions options(cx);
     options.setFileAndLine(__FILE__, __LINE__);
 
+<<<<<<< HEAD
     JS::RootedScript script(cx);
     CHECK(JS::CompileUtf8(cx, options, *s, strlen(*s), &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, s, strlen(s), &script));
+=======
+    JS::SourceText<mozilla::Utf8Unit> srcBuf;
+    CHECK(srcBuf.init(cx, *s, strlen(*s), JS::SourceOwnership::Borrowed));
+
+    JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+>>>>>>> upstream-releases
     CHECK(script);
 
     script = FreezeThaw(cx, script);
     CHECK(script);
 
+<<<<<<< HEAD
     JSString* out = JS_DecompileScript(cx, script);
     CHECK(out);
 
@@ -132,6 +237,29 @@ BEGIN_TEST(testXDR_source) {
     CHECK(equal);
   }
   return true;
+||||||| merged common ancestors
+    // execute
+    JS::RootedValue v2(cx);
+    CHECK(JS_ExecuteScript(cx, script, &v2));
+
+    // try to break the Block object that is the parent of f
+    JS_GC(cx);
+
+    // confirm
+    EVAL("f() === 'ok';\n", &v2);
+    JS::RootedValue trueval(cx, JS::TrueValue());
+    CHECK_SAME(v2, trueval);
+    return true;
+=======
+    JSString* out = JS_DecompileScript(cx, script);
+    CHECK(out);
+
+    bool equal;
+    CHECK(JS_StringEqualsAscii(cx, out, *s, &equal));
+    CHECK(equal);
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 END_TEST(testXDR_source)
 
@@ -143,7 +271,17 @@ BEGIN_TEST(testXDR_sourceMap) {
     JS::CompileOptions options(cx);
     options.setFileAndLine(__FILE__, __LINE__);
 
+<<<<<<< HEAD
     CHECK(JS::CompileUtf8(cx, options, "", 0, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, "", 0, &script));
+=======
+    JS::SourceText<mozilla::Utf8Unit> srcBuf;
+    CHECK(srcBuf.init(cx, "", 0, JS::SourceOwnership::Borrowed));
+
+    script = JS::CompileDontInflate(cx, options, srcBuf);
+>>>>>>> upstream-releases
     CHECK(script);
 
     size_t len = strlen(*sm);

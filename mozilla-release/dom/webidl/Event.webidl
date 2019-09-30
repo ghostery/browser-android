@@ -10,8 +10,16 @@
  * liability, trademark and document use rules apply.
  */
 
+<<<<<<< HEAD
 [Constructor(DOMString type, optional EventInit eventInitDict),
  Exposed=(Window,Worker), ProbablyShortLivingWrapper]
+||||||| merged common ancestors
+[Constructor(DOMString type, optional EventInit eventInitDict),
+ Exposed=(Window,Worker,System), ProbablyShortLivingWrapper]
+=======
+[Constructor(DOMString type, optional EventInit eventInitDict = {}),
+ Exposed=(Window,Worker), ProbablyShortLivingWrapper]
+>>>>>>> upstream-releases
 interface Event {
   [Pure]
   readonly attribute DOMString type;
@@ -36,8 +44,7 @@ interface Event {
   readonly attribute boolean bubbles;
   [Pure]
   readonly attribute boolean cancelable;
-  [NeedsCallerType,
-   Func="mozilla::dom::DOMPrefs::dom_event_returnValue_enabled"]
+  [NeedsCallerType]
   attribute boolean returnValue;
   [NeedsCallerType]
   void preventDefault();

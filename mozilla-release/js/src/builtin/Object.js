@@ -196,7 +196,7 @@ function ObjectGetOwnPropertyDescriptor(obj, propertyKey) {
 function ObjectOrReflectDefineProperty(obj, propertyKey, attributes, strict) {
     // Step 1.
     if (!IsObject(obj))
-        ThrowTypeError(JSMSG_NOT_NONNULL_OBJECT, DecompileArg(0, obj));
+        ThrowTypeError(JSMSG_OBJECT_REQUIRED, DecompileArg(0, obj));
 
     // Step 2.
     propertyKey = TO_PROPERTY_KEY(propertyKey);
@@ -281,10 +281,19 @@ function ObjectOrReflectDefineProperty(obj, propertyKey, attributes, strict) {
 // 19.1.2.4 Object.defineProperty ( O, P, Attributes )
 function ObjectDefineProperty(obj, propertyKey, attributes) {
     // Steps 1-4.
+<<<<<<< HEAD
     if (!ObjectOrReflectDefineProperty(obj, propertyKey, attributes, true)) {
         // Not standardized yet: https://github.com/tc39/ecma262/pull/688
         return false;
     }
+||||||| merged common ancestors
+    ObjectOrReflectDefineProperty(obj, propertyKey, attributes, true);
+=======
+    if (!ObjectOrReflectDefineProperty(obj, propertyKey, attributes, true)) {
+        // Not standardized yet: https://github.com/tc39/ecma262/pull/688
+        return null;
+    }
+>>>>>>> upstream-releases
 
     // Step 5.
     return obj;

@@ -11,8 +11,10 @@
 
 var EXPORTED_SYMBOLS = ["UrlbarPrefs"];
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   PlacesUtils: "resource://gre/modules/PlacesUtils.jsm",
@@ -44,10 +46,24 @@ const PREF_URLBAR_DEFAULTS = new Map([
   // on systems that support it.
   ["clickSelectsAll", false],
 
+<<<<<<< HEAD
   // Whether copying the entire URL from the location bar will put a human
   // readable (percent-decoded) URL on the clipboard.
   ["decodeURLsOnCopy", false],
 
+||||||| merged common ancestors
+=======
+  // Whether using `ctrl` when hitting return/enter in the URL bar
+  // (or clicking 'go') should prefix 'www.' and suffix
+  // browser.fixup.alternate.suffix to the URL bar value prior to
+  // navigating.
+  ["ctrlCanonizesURLs", true],
+
+  // Whether copying the entire URL from the location bar will put a human
+  // readable (percent-decoded) URL on the clipboard.
+  ["decodeURLsOnCopy", false],
+
+>>>>>>> upstream-releases
   // The amount of time (ms) to wait after the user has stopped typing before
   // fetching results.  However, we ignore this for the very first result (the
   // "heuristic" result).  We fetch it as fast as possible.
@@ -57,6 +73,9 @@ const PREF_URLBAR_DEFAULTS = new Map([
   // portion of it. This also copies the urlbar value to the selection
   // clipboard on systems that support it.
   ["doubleClickSelectsAll", false],
+
+  // Whether telemetry events should be recorded.
+  ["eventTelemetry.enabled", false],
 
   // When true, `javascript:` URLs are not included in search results.
   ["filter.javascript", true],
@@ -86,6 +105,22 @@ const PREF_URLBAR_DEFAULTS = new Map([
 
   // The maximum number of results in the urlbar popup.
   ["maxRichResults", 10],
+
+  // One-off search buttons enabled status.
+  ["oneOffSearches", false],
+
+  // Whether addresses and search results typed into the address bar
+  // should be opened in new tabs by default.
+  ["openintab", false],
+
+  // Whether to open the urlbar view when the input field is focused by the user.
+  ["openViewOnFocus", false],
+
+  // Whether the quantum bar is enabled.
+  ["quantumbar", false],
+
+  // Whether speculative connections should be enabled.
+  ["speculativeConnect.enabled", true],
 
   // Results will include the user's bookmarks when this is true.
   ["suggest.bookmark", true],
@@ -120,6 +155,8 @@ const PREF_URLBAR_DEFAULTS = new Map([
 ]);
 const PREF_OTHER_DEFAULTS = new Map([
   ["keyword.enabled", true],
+  ["browser.search.suggest.enabled", true],
+  ["ui.popup.disable_autohide", false],
 ]);
 
 // Maps preferences under browser.urlbar.suggest to behavior names, as defined
@@ -137,26 +174,29 @@ const PREF_TYPES = new Map([
   ["number", "Int"],
 ]);
 
-// Buckets for match insertion.
-// Every time a new match is returned, we go through each bucket in array order,
-// and look for the first one having available space for the given match type.
+// Buckets for result insertion.
+// Every time a new result is returned, we go through each bucket in array order,
+// and look for the first one having available space for the given result type.
 // Each bucket is an array containing the following indices:
-//   0: The match type of the acceptable entries.
+//   0: The result type of the acceptable entries.
 //   1: available number of slots in this bucket.
 // There are different matchBuckets definition for different contexts, currently
 // a general one (matchBuckets) and a search one (matchBucketsSearch).
 //
 // First buckets. Anything with an Infinity frecency ends up here.
 const DEFAULT_BUCKETS_BEFORE = [
-  [UrlbarUtils.MATCH_GROUP.HEURISTIC, 1],
-  [UrlbarUtils.MATCH_GROUP.EXTENSION, UrlbarUtils.MAXIMUM_ALLOWED_EXTENSION_MATCHES - 1],
+  [UrlbarUtils.RESULT_GROUP.HEURISTIC, 1],
+  [
+    UrlbarUtils.RESULT_GROUP.EXTENSION,
+    UrlbarUtils.MAXIMUM_ALLOWED_EXTENSION_MATCHES - 1,
+  ],
 ];
 // => USER DEFINED BUCKETS WILL BE INSERTED HERE <=
 //
 // Catch-all buckets. Anything remaining ends up here.
 const DEFAULT_BUCKETS_AFTER = [
-  [UrlbarUtils.MATCH_GROUP.SUGGESTION, Infinity],
-  [UrlbarUtils.MATCH_GROUP.GENERAL, Infinity],
+  [UrlbarUtils.RESULT_GROUP.SUGGESTION, Infinity],
+  [UrlbarUtils.RESULT_GROUP.GENERAL, Infinity],
 ];
 
 /**
@@ -168,9 +208,23 @@ class Preferences {
    */
   constructor() {
     this._map = new Map();
-
+    this.QueryInterface = ChromeUtils.generateQI([
+      Ci.nsIObserver,
+      Ci.nsISupportsWeakReference,
+    ]);
     Services.prefs.addObserver(PREF_URLBAR_BRANCH, this, true);
+<<<<<<< HEAD
     Services.prefs.addObserver("keyword.enabled", this, true);
+||||||| merged common ancestors
+    Services.prefs.addObserver("keyword.enabled", this, true);
+
+    // On startup we must check that some prefs are linked.
+    this._updateLinkedPrefs();
+=======
+    for (let pref of PREF_OTHER_DEFAULTS.keys()) {
+      Services.prefs.addObserver(pref, this, true);
+    }
+>>>>>>> upstream-releases
   }
 
   /**
@@ -181,8 +235,9 @@ class Preferences {
    * @returns {*} The preference value.
    */
   get(pref) {
-    if (!this._map.has(pref))
+    if (!this._map.has(pref)) {
       this._map.set(pref, this._getPrefValue(pref));
+    }
     return this._map.get(pref);
   }
 
@@ -195,8 +250,9 @@ class Preferences {
    */
   observe(subject, topic, data) {
     let pref = data.replace(PREF_URLBAR_BRANCH, "");
-    if (!PREF_URLBAR_DEFAULTS.has(pref) && !PREF_OTHER_DEFAULTS.has(pref))
+    if (!PREF_URLBAR_DEFAULTS.has(pref) && !PREF_OTHER_DEFAULTS.has(pref)) {
       return;
+    }
     this._map.delete(pref);
     // Some prefs may influence others.
     if (pref == "matchBuckets") {
@@ -222,8 +278,9 @@ class Preferences {
       prefs = Services.prefs;
       def = PREF_OTHER_DEFAULTS.get(pref);
     }
-    if (def === undefined)
+    if (def === undefined) {
       throw new Error("Trying to access an unknown pref " + pref);
+    }
     let getterName;
     if (!Array.isArray(def)) {
       getterName = `get${PREF_TYPES.get(typeof def)}Pref`;
@@ -249,7 +306,7 @@ class Preferences {
    *        The name of the preference to get.
    * @returns {*} The validated and/or fixed-up preference value.
    */
-   _getPrefValue(pref) {
+  _getPrefValue(pref) {
     switch (pref) {
       case "matchBuckets": {
         // Convert from pref char format to an array and add the default
@@ -258,11 +315,11 @@ class Preferences {
         try {
           val = PlacesUtils.convertMatchBucketsStringToArray(val);
         } catch (ex) {
-          val = PlacesUtils.convertMatchBucketsStringToArray(PREF_URLBAR_DEFAULTS.get(pref));
+          val = PlacesUtils.convertMatchBucketsStringToArray(
+            PREF_URLBAR_DEFAULTS.get(pref)
+          );
         }
-        return [ ...DEFAULT_BUCKETS_BEFORE,
-                ...val,
-                ...DEFAULT_BUCKETS_AFTER ];
+        return [...DEFAULT_BUCKETS_BEFORE, ...val, ...DEFAULT_BUCKETS_AFTER];
       }
       case "matchBucketsSearch": {
         // Convert from pref char format to an array and add the default
@@ -273,18 +330,36 @@ class Preferences {
           // buckets.
           try {
             val = PlacesUtils.convertMatchBucketsStringToArray(val);
-            return [ ...DEFAULT_BUCKETS_BEFORE,
-                    ...val,
-                    ...DEFAULT_BUCKETS_AFTER ];
-          } catch (ex) { /* invalid format, will just return matchBuckets */ }
+            return [
+              ...DEFAULT_BUCKETS_BEFORE,
+              ...val,
+              ...DEFAULT_BUCKETS_AFTER,
+            ];
+          } catch (ex) {
+            /* invalid format, will just return matchBuckets */
+          }
         }
         return this.get("matchBuckets");
       }
       case "defaultBehavior": {
         let val = 0;
+<<<<<<< HEAD
         for (let type of Object.keys(SUGGEST_PREF_TO_BEHAVIOR)) {
           let behavior = `BEHAVIOR_${SUGGEST_PREF_TO_BEHAVIOR[type].toUpperCase()}`;
           val |= this.get("suggest." + type) && Ci.mozIPlacesAutoComplete[behavior];
+||||||| merged common ancestors
+        for (let type of [...TYPES, "history.onlyTyped"]) {
+          let behavior = type == "history.onlyTyped" ? "TYPED" : type.toUpperCase();
+          val |= this.get("suggest." + type) &&
+                 Ci.mozIPlacesAutoComplete["BEHAVIOR_" + behavior];
+=======
+        for (let type of Object.keys(SUGGEST_PREF_TO_BEHAVIOR)) {
+          let behavior = `BEHAVIOR_${SUGGEST_PREF_TO_BEHAVIOR[
+            type
+          ].toUpperCase()}`;
+          val |=
+            this.get("suggest." + type) && Ci.mozIPlacesAutoComplete[behavior];
+>>>>>>> upstream-releases
         }
         return val;
       }
@@ -306,6 +381,7 @@ class Preferences {
     }
     return this._readPref(pref);
   }
+<<<<<<< HEAD
 
   /**
    * QueryInterface
@@ -326,6 +402,69 @@ class Preferences {
     }
     throw Cr.NS_ERROR_NO_INTERFACE;
   }
+||||||| merged common ancestors
+
+  /**
+   * Used to keep some pref values linked.
+   * TODO: remove autocomplete.enabled and rely only on suggest.* prefs once we
+   * can drop legacy add-ons compatibility.
+   *
+   * @param {string} changedPref
+   *        The name of the preference that changed.
+   */
+  _updateLinkedPrefs(changedPref = "") {
+    // Avoid re-entrance.
+    if (this._linkingPrefs) {
+      return;
+    }
+    this._linkingPrefs = true;
+    try {
+      let branch = Services.prefs.getBranch(PREF_URLBAR_BRANCH);
+      if (changedPref.startsWith("suggest.")) {
+        // A suggest pref changed, fix autocomplete.enabled.
+        branch.setBoolPref("autocomplete.enabled",
+                          TYPES.some(type => this.get("suggest." + type)));
+      } else if (this.get("autocomplete.enabled")) {
+        // If autocomplete is enabled and all of the suggest.* prefs are
+        // disabled, reset the suggest.* prefs to their default value.
+        if (TYPES.every(type => !this.get("suggest." + type))) {
+          for (let type of TYPES) {
+            let def = PREF_URLBAR_DEFAULTS.get("suggest." + type);
+            branch.setBoolPref("suggest." + type, def);
+          }
+        }
+      } else {
+        // If autocomplete is disabled, deactivate all suggest preferences.
+        for (let type of TYPES) {
+          branch.setBoolPref("suggest." + type, false);
+        }
+      }
+    } finally {
+      delete this._linkingPrefs;
+    }
+  }
+
+  /**
+   * QueryInterface
+   *
+   * @param {IID} qiIID
+   * @returns {Preferences} this
+   */
+  QueryInterface(qiIID) {
+    let supportedIIDs = [
+      Ci.nsISupports,
+      Ci.nsIObserver,
+      Ci.nsISupportsWeakReference,
+    ];
+    for (let iid of supportedIIDs) {
+      if (Ci[iid].equals(qiIID)) {
+        return this;
+      }
+    }
+    throw Cr.NS_ERROR_NO_INTERFACE;
+  }
+=======
+>>>>>>> upstream-releases
 }
 
 var UrlbarPrefs = new Preferences();

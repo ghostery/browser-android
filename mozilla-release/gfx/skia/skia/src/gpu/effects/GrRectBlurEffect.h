@@ -13,8 +13,16 @@
 #include "SkTypes.h"
 
 #include "GrProxyProvider.h"
+<<<<<<< HEAD
 #include "SkBlurMask.h"
 #include "SkScalar.h"
+||||||| merged common ancestors
+#include "../effects/SkBlurMask.h"
+=======
+#include "GrShaderCaps.h"
+#include "SkBlurMask.h"
+#include "SkScalar.h"
+>>>>>>> upstream-releases
 #include "GrFragmentProcessor.h"
 #include "GrCoordTransform.h"
 class GrRectBlurEffect : public GrFragmentProcessor {

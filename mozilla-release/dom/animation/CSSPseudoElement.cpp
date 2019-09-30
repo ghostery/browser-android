@@ -13,30 +13,71 @@
 namespace mozilla {
 namespace dom {
 
-NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(CSSPseudoElement, mParentElement)
+NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(CSSPseudoElement, mOriginatingElement)
 
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(CSSPseudoElement, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(CSSPseudoElement, Release)
 
+<<<<<<< HEAD
 CSSPseudoElement::CSSPseudoElement(Element* aElement,
                                    CSSPseudoElementType aType)
     : mParentElement(aElement), mPseudoType(aType) {
+||||||| merged common ancestors
+CSSPseudoElement::CSSPseudoElement(Element* aElement,
+                                   CSSPseudoElementType aType)
+  : mParentElement(aElement)
+  , mPseudoType(aType)
+{
+=======
+CSSPseudoElement::CSSPseudoElement(dom::Element* aElement,
+                                   PseudoStyleType aType)
+    : mOriginatingElement(aElement), mPseudoType(aType) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aElement);
+<<<<<<< HEAD
   MOZ_ASSERT(aType == CSSPseudoElementType::after ||
                  aType == CSSPseudoElementType::before,
+||||||| merged common ancestors
+  MOZ_ASSERT(aType == CSSPseudoElementType::after ||
+             aType == CSSPseudoElementType::before,
+=======
+  MOZ_ASSERT(aType == PseudoStyleType::after ||
+                 aType == PseudoStyleType::before ||
+                 aType == PseudoStyleType::marker,
+>>>>>>> upstream-releases
              "Unexpected Pseudo Type");
 }
 
 CSSPseudoElement::~CSSPseudoElement() {
   // Element might have been unlinked already, so we have to do null check.
+<<<<<<< HEAD
   if (mParentElement) {
     mParentElement->DeleteProperty(
         GetCSSPseudoElementPropertyAtom(mPseudoType));
+||||||| merged common ancestors
+  if (mParentElement) {
+    mParentElement->DeleteProperty(
+      GetCSSPseudoElementPropertyAtom(mPseudoType));
+=======
+  if (mOriginatingElement) {
+    mOriginatingElement->DeleteProperty(
+        GetCSSPseudoElementPropertyAtom(mPseudoType));
+>>>>>>> upstream-releases
   }
 }
 
+<<<<<<< HEAD
 ParentObject CSSPseudoElement::GetParentObject() const {
   return mParentElement->GetParentObject();
+||||||| merged common ancestors
+ParentObject
+CSSPseudoElement::GetParentObject() const
+{
+  return mParentElement->GetParentObject();
+=======
+ParentObject CSSPseudoElement::GetParentObject() const {
+  return mOriginatingElement->GetParentObject();
+>>>>>>> upstream-releases
 }
 
 JSObject* CSSPseudoElement::WrapObject(JSContext* aCx,
@@ -44,9 +85,21 @@ JSObject* CSSPseudoElement::WrapObject(JSContext* aCx,
   return CSSPseudoElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 void CSSPseudoElement::GetAnimations(const AnimationFilter& filter,
                                      nsTArray<RefPtr<Animation>>& aRetVal) {
   nsIDocument* doc = mParentElement->GetComposedDoc();
+||||||| merged common ancestors
+void
+CSSPseudoElement::GetAnimations(const AnimationFilter& filter,
+                                nsTArray<RefPtr<Animation>>& aRetVal)
+{
+  nsIDocument* doc = mParentElement->GetComposedDoc();
+=======
+void CSSPseudoElement::GetAnimations(const GetAnimationsOptions& aOptions,
+                                     nsTArray<RefPtr<Animation>>& aRetVal) {
+  Document* doc = mOriginatingElement->GetComposedDoc();
+>>>>>>> upstream-releases
   if (doc) {
     // We don't need to explicitly flush throttled animations here, since
     // updating the animation style of (pseudo-)elements will never affect the
@@ -56,7 +109,7 @@ void CSSPseudoElement::GetAnimations(const AnimationFilter& filter,
         ChangesToFlush(FlushType::Style, false /* flush animations */));
   }
 
-  Element::GetAnimationsUnsorted(mParentElement, mPseudoType, aRetVal);
+  Element::GetAnimationsUnsorted(mOriginatingElement, mPseudoType, aRetVal);
   aRetVal.Sort(AnimationPtrComparator<RefPtr<Animation>>());
 }
 
@@ -69,9 +122,20 @@ already_AddRefed<Animation> CSSPseudoElement::Animate(
   return Element::Animate(target, aContext, aKeyframes, aOptions, aError);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<CSSPseudoElement>
 CSSPseudoElement::GetCSSPseudoElement(Element* aElement,
                                       CSSPseudoElementType aType) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<CSSPseudoElement>
+CSSPseudoElement::GetCSSPseudoElement(Element* aElement,
+                                      CSSPseudoElementType aType)
+{
+=======
+/* static */
+already_AddRefed<CSSPseudoElement> CSSPseudoElement::GetCSSPseudoElement(
+    dom::Element* aElement, PseudoStyleType aType) {
+>>>>>>> upstream-releases
   if (!aElement) {
     return nullptr;
   }
@@ -96,19 +160,41 @@ CSSPseudoElement::GetCSSPseudoElement(Element* aElement,
   return pseudo.forget();
 }
 
+<<<<<<< HEAD
 /* static */ nsAtom* CSSPseudoElement::GetCSSPseudoElementPropertyAtom(
     CSSPseudoElementType aType) {
+||||||| merged common ancestors
+/* static */ nsAtom*
+CSSPseudoElement::GetCSSPseudoElementPropertyAtom(CSSPseudoElementType aType)
+{
+=======
+/* static */
+nsAtom* CSSPseudoElement::GetCSSPseudoElementPropertyAtom(
+    PseudoStyleType aType) {
+>>>>>>> upstream-releases
   switch (aType) {
-    case CSSPseudoElementType::before:
+    case PseudoStyleType::before:
       return nsGkAtoms::cssPseudoElementBeforeProperty;
 
-    case CSSPseudoElementType::after:
+    case PseudoStyleType::after:
       return nsGkAtoms::cssPseudoElementAfterProperty;
 
+    case PseudoStyleType::marker:
+      return nsGkAtoms::cssPseudoElementMarkerProperty;
+
     default:
+<<<<<<< HEAD
       MOZ_ASSERT_UNREACHABLE(
           "Should not try to get CSSPseudoElement "
           "other than ::before or ::after");
+||||||| merged common ancestors
+      MOZ_ASSERT_UNREACHABLE("Should not try to get CSSPseudoElement "
+                             "other than ::before or ::after");
+=======
+      MOZ_ASSERT_UNREACHABLE(
+          "Should not try to get CSSPseudoElement "
+          "other than ::before, ::after or ::marker");
+>>>>>>> upstream-releases
       return nullptr;
   }
 }

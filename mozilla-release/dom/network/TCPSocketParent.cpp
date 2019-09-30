@@ -12,7 +12,7 @@
 #include "mozilla/net/NeckoCommon.h"
 #include "mozilla/net/PNeckoParent.h"
 #include "mozilla/dom/ScriptSettings.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 #include "mozilla/HoldDropJSObjects.h"
 #include "nsISocketTransportService.h"
 #include "nsISocketTransport.h"
@@ -43,6 +43,7 @@ using namespace net;
 
 namespace dom {
 
+<<<<<<< HEAD
 static void FireInteralError(mozilla::net::PTCPSocketParent* aActor,
                              uint32_t aLineNo) {
   mozilla::Unused << aActor->SendCallback(
@@ -50,6 +51,24 @@ static void FireInteralError(mozilla::net::PTCPSocketParent* aActor,
       TCPError(NS_LITERAL_STRING("InvalidStateError"),
                NS_LITERAL_STRING("Internal error")),
       static_cast<uint32_t>(TCPReadyState::Connecting));
+||||||| merged common ancestors
+static void
+FireInteralError(mozilla::net::PTCPSocketParent* aActor, uint32_t aLineNo)
+{
+  mozilla::Unused <<
+      aActor->SendCallback(NS_LITERAL_STRING("onerror"),
+                           TCPError(NS_LITERAL_STRING("InvalidStateError"), NS_LITERAL_STRING("Internal error")),
+                           static_cast<uint32_t>(TCPReadyState::Connecting));
+=======
+static void FireInteralError(TCPSocketParent* aActor, uint32_t aLineNo) {
+  MOZ_ASSERT(aActor->IPCOpen());
+
+  mozilla::Unused << aActor->SendCallback(
+      NS_LITERAL_STRING("onerror"),
+      TCPError(NS_LITERAL_STRING("InvalidStateError"),
+               NS_LITERAL_STRING("Internal error")),
+      static_cast<uint32_t>(TCPReadyState::Connecting));
+>>>>>>> upstream-releases
 }
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(TCPSocketParentBase)
@@ -109,13 +128,34 @@ mozilla::ipc::IPCResult TCPSocketParent::RecvOpenBind(
 
   nsCOMPtr<nsISocketTransport> socketTransport;
   if (aUseSSL) {
+<<<<<<< HEAD
     const char* socketTypes[1];
     socketTypes[0] = "ssl";
     rv = sts->CreateTransport(socketTypes, 1, aRemoteHost, aRemotePort, nullptr,
                               getter_AddRefs(socketTransport));
+||||||| merged common ancestors
+    const char* socketTypes[1];
+    socketTypes[0] = "ssl";
+    rv = sts->CreateTransport(socketTypes, 1,
+                              aRemoteHost, aRemotePort,
+                              nullptr, getter_AddRefs(socketTransport));
+=======
+    AutoTArray<nsCString, 1> socketTypes = {NS_LITERAL_CSTRING("ssl")};
+    rv = sts->CreateTransport(socketTypes, aRemoteHost, aRemotePort, nullptr,
+                              getter_AddRefs(socketTransport));
+>>>>>>> upstream-releases
   } else {
+<<<<<<< HEAD
     rv = sts->CreateTransport(nullptr, 0, aRemoteHost, aRemotePort, nullptr,
                               getter_AddRefs(socketTransport));
+||||||| merged common ancestors
+    rv = sts->CreateTransport(nullptr, 0,
+                              aRemoteHost, aRemotePort,
+                              nullptr, getter_AddRefs(socketTransport));
+=======
+    rv = sts->CreateTransport(nsTArray<nsCString>(), aRemoteHost, aRemotePort,
+                              nullptr, getter_AddRefs(socketTransport));
+>>>>>>> upstream-releases
   }
 
   if (NS_FAILED(rv)) {
@@ -228,7 +268,10 @@ mozilla::ipc::IPCResult TCPSocketParent::RecvData(
       bool ok = IPC::DeserializeArrayBuffer(autoCx, buffer, &val);
       NS_ENSURE_TRUE(ok, IPC_OK());
       RootedSpiderMonkeyInterface<ArrayBuffer> data(autoCx);
-      data.Init(&val.toObject());
+      if (!data.Init(&val.toObject())) {
+        TCPSOCKET_LOG(("%s: Failed to allocate memory", __FUNCTION__));
+        return IPC_FAIL_NO_REASON(this);
+      }
       Optional<uint32_t> byteLength(buffer.Length());
       mSocket->SendWithTrackingNumber(autoCx, data, 0, byteLength,
                                       aTrackingNumber, rv);

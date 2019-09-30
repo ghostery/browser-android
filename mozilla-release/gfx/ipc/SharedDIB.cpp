@@ -45,9 +45,21 @@ nsresult SharedDIB::Attach(Handle aHandle, uint32_t aSize) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult SharedDIB::ShareToProcess(base::ProcessId aTargetPid,
                                    Handle *aNewHandle) {
   if (!mShMem) return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+nsresult
+SharedDIB::ShareToProcess(base::ProcessId aTargetPid, Handle *aNewHandle)
+{
+  if (!mShMem)
+    return NS_ERROR_UNEXPECTED;
+=======
+nsresult SharedDIB::ShareToProcess(base::ProcessId aTargetPid,
+                                   Handle* aNewHandle) {
+  if (!mShMem) return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 
   if (!mShMem->ShareToProcess(aTargetPid, aNewHandle))
     return NS_ERROR_UNEXPECTED;

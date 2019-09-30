@@ -12,7 +12,7 @@
 #include "prmem.h"
 #include "prlink.h"
 #ifdef XP_WIN
-#include <windows.h>
+#  include <windows.h>
 #endif
 
 // We use a known symbol located in lgpllibs to determine its location.
@@ -53,7 +53,16 @@ static PRLibrary* MozAVLink(nsIFile* aFile) {
   return lib;
 }
 
+<<<<<<< HEAD
 /* static */ bool FFVPXRuntimeLinker::Init() {
+||||||| merged common ancestors
+/* static */ bool
+FFVPXRuntimeLinker::Init()
+{
+=======
+/* static */
+bool FFVPXRuntimeLinker::Init() {
+>>>>>>> upstream-releases
   if (sLinkStatus) {
     return sLinkStatus == LinkStatus_SUCCEEDED;
   }
@@ -107,15 +116,34 @@ static PRLibrary* MozAVLink(nsIFile* aFile) {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PlatformDecoderModule>
 FFVPXRuntimeLinker::CreateDecoderModule() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PlatformDecoderModule>
+FFVPXRuntimeLinker::CreateDecoderModule()
+{
+=======
+/* static */
+already_AddRefed<PlatformDecoderModule>
+FFVPXRuntimeLinker::CreateDecoderModule() {
+>>>>>>> upstream-releases
   if (!Init()) {
     return nullptr;
   }
   return FFmpegDecoderModule<FFVPX_VERSION>::Create(&sFFVPXLib);
 }
 
+<<<<<<< HEAD
 /* static */ void FFVPXRuntimeLinker::GetRDFTFuncs(FFmpegRDFTFuncs* aOutFuncs) {
+||||||| merged common ancestors
+/* static */ void
+FFVPXRuntimeLinker::GetRDFTFuncs(FFmpegRDFTFuncs* aOutFuncs)
+{
+=======
+/* static */
+void FFVPXRuntimeLinker::GetRDFTFuncs(FFmpegRDFTFuncs* aOutFuncs) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(sLinkStatus != LinkStatus_INIT);
   if (sFFVPXLib.av_rdft_init && sFFVPXLib.av_rdft_calc &&
       sFFVPXLib.av_rdft_end) {

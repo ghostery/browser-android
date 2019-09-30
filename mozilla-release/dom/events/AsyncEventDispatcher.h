@@ -12,7 +12,7 @@
 #include "mozilla/RefPtr.h"
 #include "mozilla/dom/Event.h"
 #include "nsCOMPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsString.h"
 #include "nsThreadUtils.h"
 
@@ -152,8 +152,16 @@ class LoadBlockingAsyncEventDispatcher final : public AsyncEventDispatcher {
 
   ~LoadBlockingAsyncEventDispatcher();
 
+<<<<<<< HEAD
  private:
   nsCOMPtr<nsIDocument> mBlockedDoc;
+||||||| merged common ancestors
+private:
+  nsCOMPtr<nsIDocument> mBlockedDoc;
+=======
+ private:
+  RefPtr<dom::Document> mBlockedDoc;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

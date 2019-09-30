@@ -13,14 +13,30 @@
 
 #include <stdint.h>
 
+#include "js/MemoryFunctions.h"  // JS_FOR_EACH_PUBLIC_MEMORY_USE
+
 namespace js {
 namespace gc {
 
+<<<<<<< HEAD
 // Mark colors to pass to markIfUnmarked.
 enum class MarkColor : uint32_t { Black = 0, Gray };
+||||||| merged common ancestors
+// Mark colors to pass to markIfUnmarked.
+enum class MarkColor : uint32_t
+{
+    Black = 0,
+    Gray
+};
+=======
+// Mark colors. Order is important here: the greater value the 'more marked' a
+// cell is.
+enum class MarkColor : uint8_t { Gray = 1, Black = 2 };
+>>>>>>> upstream-releases
 
 // The phases of an incremental GC.
 #define GCSTATES(D) \
+<<<<<<< HEAD
   D(NotActive)      \
   D(MarkRoots)      \
   D(Mark)           \
@@ -28,6 +44,24 @@ enum class MarkColor : uint32_t { Black = 0, Gray };
   D(Finalize)       \
   D(Compact)        \
   D(Decommit)
+||||||| merged common ancestors
+    D(NotActive) \
+    D(MarkRoots) \
+    D(Mark) \
+    D(Sweep) \
+    D(Finalize) \
+    D(Compact) \
+    D(Decommit)
+=======
+  D(NotActive)      \
+  D(MarkRoots)      \
+  D(Mark)           \
+  D(Sweep)          \
+  D(Finalize)       \
+  D(Compact)        \
+  D(Decommit)       \
+  D(Finish)
+>>>>>>> upstream-releases
 enum class State {
 #define MAKE_STATE(name) name,
   GCSTATES(MAKE_STATE)
@@ -53,6 +87,7 @@ enum class AbortReason {
 #undef MAKE_REASON
 };
 
+<<<<<<< HEAD
 #define JS_FOR_EACH_ZEAL_MODE(D)       \
   D(RootsChange, 1)                    \
   D(Alloc, 2)                          \
@@ -74,6 +109,53 @@ enum class AbortReason {
   D(YieldBeforeSweepingObjects, 21)    \
   D(YieldBeforeSweepingNonObjects, 22) \
   D(YieldBeforeSweepingShapeTrees, 23)
+||||||| merged common ancestors
+#define JS_FOR_EACH_ZEAL_MODE(D)         \
+    D(RootsChange, 1)                    \
+    D(Alloc, 2)                          \
+    D(VerifierPre, 4)                    \
+    D(GenerationalGC, 7)                 \
+    D(YieldBeforeMarking, 8)             \
+    D(YieldBeforeSweeping, 9)            \
+    D(IncrementalMultipleSlices, 10)     \
+    D(IncrementalMarkingValidator, 11)   \
+    D(ElementsBarrier, 12)               \
+    D(CheckHashTablesOnMinorGC, 13)      \
+    D(Compact, 14)                       \
+    D(CheckHeapAfterGC, 15)              \
+    D(CheckNursery, 16)                  \
+    D(YieldBeforeSweepingAtoms, 17)      \
+    D(CheckGrayMarking, 18)              \
+    D(YieldBeforeSweepingCaches, 19)     \
+    D(YieldBeforeSweepingTypes, 20)      \
+    D(YieldBeforeSweepingObjects, 21)    \
+    D(YieldBeforeSweepingNonObjects, 22) \
+    D(YieldBeforeSweepingShapeTrees, 23)
+=======
+#define JS_FOR_EACH_ZEAL_MODE(D)       \
+  D(RootsChange, 1)                    \
+  D(Alloc, 2)                          \
+  D(VerifierPre, 4)                    \
+  D(GenerationalGC, 7)                 \
+  D(YieldBeforeMarking, 8)             \
+  D(YieldBeforeSweeping, 9)            \
+  D(IncrementalMultipleSlices, 10)     \
+  D(IncrementalMarkingValidator, 11)   \
+  D(ElementsBarrier, 12)               \
+  D(CheckHashTablesOnMinorGC, 13)      \
+  D(Compact, 14)                       \
+  D(CheckHeapAfterGC, 15)              \
+  D(CheckNursery, 16)                  \
+  D(YieldBeforeSweepingAtoms, 17)      \
+  D(CheckGrayMarking, 18)              \
+  D(YieldBeforeSweepingCaches, 19)     \
+  D(YieldBeforeSweepingTypes, 20)      \
+  D(YieldBeforeSweepingObjects, 21)    \
+  D(YieldBeforeSweepingNonObjects, 22) \
+  D(YieldBeforeSweepingShapeTrees, 23) \
+  D(CheckWeakMapMarking, 24)           \
+  D(YieldWhileGrayMarking, 25)
+>>>>>>> upstream-releases
 
 enum class ZealMode {
 #define ZEAL_MODE(name, value) name = value,
@@ -84,6 +166,57 @@ enum class ZealMode {
 };
 
 } /* namespace gc */
+
+#define JS_FOR_EACH_INTERNAL_MEMORY_USE(_) \
+  _(ArrayBufferContents)                   \
+  _(StringContents)                        \
+  _(ObjectElements)                        \
+  _(ObjectSlots)                           \
+  _(ScriptPrivateData)                     \
+  _(LazyScriptData)                        \
+  _(MapObjectTable)                        \
+  _(BigIntDigits)                          \
+  _(ScopeData)                             \
+  _(WeakMapObject)                         \
+  _(ShapeKids)                             \
+  _(ShapeCache)                            \
+  _(ModuleBindingMap)                      \
+  _(BaselineScript)                        \
+  _(IonScript)                             \
+  _(ArgumentsData)                         \
+  _(RareArgumentsData)                     \
+  _(RegExpStatics)                         \
+  _(RegExpSharedBytecode)                  \
+  _(TypedArrayElements)                    \
+  _(TypeDescrTraceList)                    \
+  _(NativeIterator)                        \
+  _(JitScript)                             \
+  _(ObjectGroupAddendum)                   \
+  _(ScriptDebugScript)                     \
+  _(BreakpointSite)                        \
+  _(ForOfPIC)                              \
+  _(ForOfPICStub)                          \
+  _(WasmInstanceExports)                   \
+  _(WasmInstanceScopes)                    \
+  _(WasmInstanceGlobals)                   \
+  _(WasmInstanceInstance)                  \
+  _(WasmMemoryObservers)                   \
+  _(WasmGlobalCell)                        \
+  _(WasmResolveResponseClosure)            \
+  _(WasmModule)                            \
+  _(WasmTableTable)                        \
+  _(FileObjectFile)
+
+#define JS_FOR_EACH_MEMORY_USE(_)  \
+  JS_FOR_EACH_PUBLIC_MEMORY_USE(_) \
+  JS_FOR_EACH_INTERNAL_MEMORY_USE(_)
+
+enum class MemoryUse : uint8_t {
+#define DEFINE_MEMORY_USE(Name) Name,
+  JS_FOR_EACH_MEMORY_USE(DEFINE_MEMORY_USE)
+#undef DEFINE_MEMORY_USE
+};
+
 } /* namespace js */
 
 #endif /* gc_GCEnum_h */

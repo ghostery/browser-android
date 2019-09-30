@@ -24,6 +24,7 @@ NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(GamepadHapticActuator, mParent)
 GamepadHapticActuator::GamepadHapticActuator(nsISupports* aParent,
                                              uint32_t aGamepadId,
                                              uint32_t aIndex)
+<<<<<<< HEAD
     : mParent(aParent),
       mGamepadId(aGamepadId),
       mType(GamepadHapticActuatorType::Vibration),
@@ -31,6 +32,26 @@ GamepadHapticActuator::GamepadHapticActuator(nsISupports* aParent,
 
 /* virtual */ JSObject* GamepadHapticActuator::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+  : mParent(aParent), mGamepadId(aGamepadId),
+    mType(GamepadHapticActuatorType::Vibration), mIndex(aIndex)
+{
+
+}
+
+/* virtual */ JSObject*
+GamepadHapticActuator::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+    : mParent(aParent),
+      mGamepadId(aGamepadId),
+      mType(GamepadHapticActuatorType::Vibration),
+      mIndex(aIndex) {}
+
+/* virtual */
+JSObject* GamepadHapticActuator::WrapObject(JSContext* aCx,
+                                            JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return GamepadHapticActuator_Binding::Wrap(aCx, this, aGivenProto);
 }
 

@@ -1,25 +1,38 @@
 import os
-import signal
-import sys
 import tempfile
-import traceback
 
 import moznetwork
 from mozprocess import ProcessHandler
 from mozprofile import FirefoxProfile
 from mozrunner import FennecEmulatorRunner
 
-from serve.serve import make_hosts_file
+from tools.serve.serve import make_hosts_file
 
 from .base import (get_free_port,
                    cmd_arg,
                    browser_command)
+<<<<<<< HEAD
 from ..executors.executormarionette import (MarionetteTestharnessExecutor,  # noqa: F401
                                             MarionetteRefTestExecutor)  # noqa: F401
 from .firefox import (get_timeout_multiplier,
                       update_properties,
                       executor_kwargs,
                       FirefoxBrowser)
+||||||| merged common ancestors
+from ..executors.executormarionette import MarionetteTestharnessExecutor # noqa: F401
+from .firefox import (get_timeout_multiplier,
+                      update_properties,
+                      executor_kwargs,
+                      FirefoxBrowser)
+=======
+from ..executors.executormarionette import (MarionetteTestharnessExecutor,  # noqa: F401
+                                            MarionetteRefTestExecutor)  # noqa: F401
+from .firefox import (get_timeout_multiplier,  # noqa: F401
+                      run_info_browser_version,
+                      update_properties,  # noqa: F401
+                      executor_kwargs,  # noqa: F401
+                      FirefoxBrowser)  # noqa: F401
+>>>>>>> upstream-releases
 
 
 __wptrunner__ = {"product": "fennec",
@@ -32,8 +45,68 @@ __wptrunner__ = {"product": "fennec",
                  "env_extras": "env_extras",
                  "env_options": "env_options",
                  "run_info_extras": "run_info_extras",
+<<<<<<< HEAD
                  "update_properties": "update_properties"}
 
+||||||| merged common ancestors
+                 "update_properties": "update_properties"}
+
+class FennecProfile(FirefoxProfile):
+    # WPT-specific prefs are set in FennecBrowser.start()
+    FirefoxProfile.preferences.update({
+        # Make sure Shield doesn't hit the network.
+        "app.normandy.api_url": "",
+        # Increase the APZ content response timeout in tests to 1 minute.
+        "apz.content_response_timeout": 60000,
+        # Enable output of dump()
+        "browser.dom.window.dump.enabled": True,
+        # Disable safebrowsing components
+        "browser.safebrowsing.blockedURIs.enabled": False,
+        "browser.safebrowsing.downloads.enabled": False,
+        "browser.safebrowsing.passwords.enabled": False,
+        "browser.safebrowsing.malware.enabled": False,
+        "browser.safebrowsing.phishing.enabled": False,
+        # Do not restore the last open set of tabs if the browser has crashed
+        "browser.sessionstore.resume_from_crash": False,
+        # Disable Android snippets
+        "browser.snippets.enabled": False,
+        "browser.snippets.syncPromo.enabled": False,
+        "browser.snippets.firstrunHomepage.enabled": False,
+        # Do not allow background tabs to be zombified, otherwise for tests that
+        # open additional tabs, the test harness tab itself might get unloaded
+        "browser.tabs.disableBackgroundZombification": True,
+        # Disable e10s by default
+        "browser.tabs.remote.autostart": False,
+        # Don't warn when exiting the browser
+        "browser.warnOnQuit": False,
+        # Don't send Firefox health reports to the production server
+        "datareporting.healthreport.about.reportUrl": "http://%(server)s/dummy/abouthealthreport/",
+        # Automatically unload beforeunload alerts
+        "dom.disable_beforeunload": True,
+        # Disable the ProcessHangMonitor
+        "dom.ipc.reportProcessHangs": False,
+        # No slow script dialogs
+        "dom.max_chrome_script_run_time": 0,
+        "dom.max_script_run_time": 0,
+        # Make sure opening about:addons won"t hit the network
+        "extensions.webservice.discoverURL": "http://%(server)s/dummy/discoveryURL",
+        # No hang monitor
+        "hangmonitor.timeout": 0,
+
+        "javascript.options.showInConsole": True,
+        # Ensure blocklist updates don't hit the network
+        "services.settings.server": "http://%(server)s/dummy/blocklist/",
+        # Disable password capture, so that tests that include forms aren"t
+        # influenced by the presence of the persistent doorhanger notification
+        "signon.rememberSignons": False,
+    })
+
+=======
+                 "update_properties": "update_properties",
+                 "timeout_multiplier": "get_timeout_multiplier"}
+
+
+>>>>>>> upstream-releases
 
 def check_args(**kwargs):
     pass
@@ -50,6 +123,7 @@ def browser_kwargs(test_type, run_info_data, config, **kwargs):
             "stackwalk_binary": kwargs["stackwalk_binary"],
             "certutil_binary": kwargs["certutil_binary"],
             "ca_certificate_path": config.ssl_config["ca_cert_path"],
+            "enable_webrender": kwargs["enable_webrender"],
             "stackfix_dir": kwargs["stackfix_dir"],
             "binary_args": kwargs["binary_args"],
             "timeout_multiplier": get_timeout_multiplier(test_type,
@@ -68,9 +142,21 @@ def env_extras(**kwargs):
 
 
 def run_info_extras(**kwargs):
+<<<<<<< HEAD
     return {"e10s": False,
             "headless": False,
             "sw-e10s": False}
+||||||| merged common ancestors
+    return {"e10s": False,
+            "headless": False}
+=======
+    package = kwargs["package_name"]
+    rv = {"e10s": True if package is not None and "geckoview" in package else False,
+          "headless": False,
+          "sw-e10s": False}
+    rv.update(run_info_browser_version(kwargs["binary"]))
+    return rv
+>>>>>>> upstream-releases
 
 
 def env_options():
@@ -97,7 +183,6 @@ def write_hosts_file(config, device):
 
 
 class FennecBrowser(FirefoxBrowser):
-    used_ports = set()
     init_timeout = 300
     shutdown_timeout = 60
 
@@ -106,8 +191,15 @@ class FennecBrowser(FirefoxBrowser):
         FirefoxBrowser.__init__(self, logger, None, prefs_root, test_type, **kwargs)
         self._package_name = package_name
         self.device_serial = device_serial
+<<<<<<< HEAD
         self.tests_root = kwargs["tests_root"]
         self.install_fonts = kwargs["install_fonts"]
+||||||| merged common ancestors
+=======
+        self.tests_root = kwargs["tests_root"]
+        self.install_fonts = kwargs["install_fonts"]
+        self.stackwalk_binary = kwargs["stackwalk_binary"]
+>>>>>>> upstream-releases
 
     @property
     def package_name(self):
@@ -123,8 +215,7 @@ class FennecBrowser(FirefoxBrowser):
 
     def start(self, **kwargs):
         if self.marionette_port is None:
-            self.marionette_port = get_free_port(2828, exclude=self.used_ports)
-            self.used_ports.add(self.marionette_port)
+            self.marionette_port = get_free_port()
 
         env = {}
         env["MOZ_CRASHREPORTER"] = "1"
@@ -133,6 +224,10 @@ class FennecBrowser(FirefoxBrowser):
         env["STYLO_THREADS"] = str(self.stylo_threads)
         if self.chaos_mode_flags is not None:
             env["MOZ_CHAOSMODE"] = str(self.chaos_mode_flags)
+        if self.enable_webrender:
+            env["MOZ_WEBRENDER"] = "1"
+        else:
+            env["MOZ_WEBRENDER"] = "0"
 
         preferences = self.load_prefs()
 
@@ -142,6 +237,7 @@ class FennecBrowser(FirefoxBrowser):
                                       "places.history.enabled": False,
                                       "dom.send_after_paint_to_content": True,
                                       "network.preload": True})
+<<<<<<< HEAD
         if self.test_type == "reftest":
             self.logger.info("Setting android reftest preferences")
             self.profile.set_preferences({"browser.viewport.desktopWidth": 600,
@@ -162,6 +258,29 @@ class FennecBrowser(FirefoxBrowser):
             with open(os.path.join(self.tests_root, "fonts", "Ahem.ttf"), "rb") as src:
                 with open(os.path.join(font_dir, "Ahem.ttf"), "wb") as dest:
                     dest.write(src.read())
+||||||| merged common ancestors
+=======
+        if self.test_type == "reftest":
+            self.logger.info("Setting android reftest preferences")
+            self.profile.set_preferences({"browser.viewport.desktopWidth": 800,
+                                          # Disable high DPI
+                                          "layout.css.devPixelsPerPx": "1.0",
+                                          # Ensure that the full browser element
+                                          # appears in the screenshot
+                                          "apz.allow_zooming": False,
+                                          "android.widget_paints_background": False,
+                                          # Ensure that scrollbars are always painted
+                                          "layout.testing.overlay-scrollbars.always-visible": True})
+
+        if self.install_fonts:
+            self.logger.debug("Copying Ahem font to profile")
+            font_dir = os.path.join(self.profile.profile, "fonts")
+            if not os.path.exists(font_dir):
+                os.makedirs(font_dir)
+            with open(os.path.join(self.tests_root, "fonts", "Ahem.ttf"), "rb") as src:
+                with open(os.path.join(font_dir, "Ahem.ttf"), "wb") as dest:
+                    dest.write(src.read())
+>>>>>>> upstream-releases
 
         if self.leak_check and kwargs.get("check_leaks", True):
             self.leak_report_file = os.path.join(self.profile.profile, "runtests_leaks.log")
@@ -218,3 +337,8 @@ class FennecBrowser(FirefoxBrowser):
             # browser to shut down. This allows the leak log to be written
             self.runner.stop()
         self.logger.debug("stopped")
+
+    def check_crash(self, process, test):
+        if not os.environ.get("MINIDUMP_STACKWALK", "") and self.stackwalk_binary:
+            os.environ["MINIDUMP_STACKWALK"] = self.stackwalk_binary
+        return self.runner.check_for_crashes()

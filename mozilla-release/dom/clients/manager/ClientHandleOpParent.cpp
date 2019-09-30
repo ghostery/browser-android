@@ -62,6 +62,7 @@ void ClientHandleOpParent::Init(const ClientOpConstructorArgs& aArgs) {
   // Capturing 'this' is safe here because we disconnect the promise in
   // ActorDestroy() which ensures neither lambda is called if the actor
   // is destroyed before the source operation completes.
+<<<<<<< HEAD
   p->Then(GetCurrentThreadSerialEventTarget(), __func__,
           [this](const ClientOpResult& aResult) {
             mPromiseRequestHolder.Complete();
@@ -72,6 +73,29 @@ void ClientHandleOpParent::Init(const ClientOpConstructorArgs& aArgs) {
             Unused << PClientHandleOpParent::Send__delete__(this, aRv);
           })
       ->Track(mPromiseRequestHolder);
+||||||| merged common ancestors
+  p->Then(GetCurrentThreadSerialEventTarget(), __func__,
+    [this] (const ClientOpResult& aResult) {
+      mPromiseRequestHolder.Complete();
+      Unused << PClientHandleOpParent::Send__delete__(this, aResult);
+    },
+    [this] (nsresult aRv) {
+      mPromiseRequestHolder.Complete();
+      Unused << PClientHandleOpParent::Send__delete__(this, aRv);
+    })->Track(mPromiseRequestHolder);
+=======
+  p->Then(
+       GetCurrentThreadSerialEventTarget(), __func__,
+       [this](const ClientOpResult& aResult) {
+         mPromiseRequestHolder.Complete();
+         Unused << PClientHandleOpParent::Send__delete__(this, aResult);
+       },
+       [this](nsresult aRv) {
+         mPromiseRequestHolder.Complete();
+         Unused << PClientHandleOpParent::Send__delete__(this, aRv);
+       })
+      ->Track(mPromiseRequestHolder);
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

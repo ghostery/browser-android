@@ -18,10 +18,26 @@ XPCOMUtils.defineLazyGetter(this, "PREPATH", function() {
 
 var srv, srv2;
 
+<<<<<<< HEAD
 function run_test() {
   if (mozinfo.os == "win") {
     dumpn("*** not running test_start_stop.js on Windows for now, because " +
           "Windows is dumb");
+||||||| merged common ancestors
+function run_test()
+{
+  if (mozinfo.os == "win")
+  {
+    dumpn("*** not running test_start_stop.js on Windows for now, because " +
+          "Windows is dumb");
+=======
+function run_test() {
+  if (mozinfo.os == "win") {
+    dumpn(
+      "*** not running test_start_stop.js on Windows for now, because " +
+        "Windows is dumb"
+    );
+>>>>>>> upstream-releases
     return;
   }
 
@@ -64,6 +80,7 @@ function run_test_2() {
   }
 
   do_test_pending();
+<<<<<<< HEAD
   try {
     srv.stop({onStopped() {
                 try {
@@ -75,6 +92,39 @@ function run_test_2() {
               },
              });
   } catch (e) {
+||||||| merged common ancestors
+  try
+  {
+    srv.stop({onStopped: function()
+              {
+                try
+                {
+                  do_test_pending();
+                  run_test_3();
+                }
+                finally
+                {
+                  do_test_finished();
+                }
+              }
+             });
+  }
+  catch (e)
+  {
+=======
+  try {
+    srv.stop({
+      onStopped() {
+        try {
+          do_test_pending();
+          run_test_3();
+        } finally {
+          do_test_finished();
+        }
+      },
+    });
+  } catch (e) {
+>>>>>>> upstream-releases
     do_throw("error stopping with an object: " + e);
   }
 }
@@ -123,10 +173,10 @@ function run_test_5() {
   dumpn("*** run_test_5");
 
   testsComplete = true;
-  if (stopped)
+  if (stopped) {
     do_test_finished();
+  }
 }
-
 
 const INTERVAL = 500;
 
@@ -157,6 +207,7 @@ var stopped = false;
 function serverStopped() {
   dumpn("*** server really, fully shut down now");
   stopped = true;
-  if (testsComplete)
+  if (testsComplete) {
     do_test_finished();
+  }
 }

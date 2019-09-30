@@ -78,10 +78,24 @@ class ContentClient : public CompositableClient {
    */
   enum BufferSizePolicy { SizedToVisibleBounds, ContainsVisibleBounds };
 
+<<<<<<< HEAD
   explicit ContentClient(CompositableForwarder* aForwarder,
                          BufferSizePolicy aBufferSizePolicy)
       : CompositableClient(aForwarder), mBufferSizePolicy(aBufferSizePolicy) {}
   virtual ~ContentClient() {}
+||||||| merged common ancestors
+  explicit ContentClient(CompositableForwarder* aForwarder,
+                         BufferSizePolicy aBufferSizePolicy)
+  : CompositableClient(aForwarder)
+  , mBufferSizePolicy(aBufferSizePolicy)
+  {}
+  virtual ~ContentClient()
+  {}
+=======
+  ContentClient(CompositableForwarder* aForwarder,
+                BufferSizePolicy aBufferSizePolicy)
+      : CompositableClient(aForwarder), mBufferSizePolicy(aBufferSizePolicy) {}
+>>>>>>> upstream-releases
 
   virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix);
 
@@ -225,14 +239,33 @@ class ContentClientBasic final : public ContentClient {
               gfx::CompositionOp aOp, gfx::SourceSurface* aMask,
               const gfx::Matrix* aMaskTransform);
 
+<<<<<<< HEAD
   virtual TextureInfo GetTextureInfo() const override {
+||||||| merged common ancestors
+  virtual TextureInfo GetTextureInfo() const override
+  {
+=======
+  TextureInfo GetTextureInfo() const override {
+>>>>>>> upstream-releases
     MOZ_CRASH("GFX: Should not be called on non-remote ContentClient");
   }
 
+<<<<<<< HEAD
  protected:
   virtual RefPtr<RotatedBuffer> CreateBuffer(gfxContentType aType,
                                              const gfx::IntRect& aRect,
                                              uint32_t aFlags) override;
+||||||| merged common ancestors
+protected:
+  virtual RefPtr<RotatedBuffer> CreateBuffer(gfxContentType aType,
+                                             const gfx::IntRect& aRect,
+                                             uint32_t aFlags) override;
+=======
+ protected:
+  RefPtr<RotatedBuffer> CreateBuffer(gfxContentType aType,
+                                     const gfx::IntRect& aRect,
+                                     uint32_t aFlags) override;
+>>>>>>> upstream-releases
 
  private:
   gfx::BackendType mBackend;
@@ -258,19 +291,45 @@ class ContentClientRemoteBuffer : public ContentClient {
   explicit ContentClientRemoteBuffer(CompositableForwarder* aForwarder)
       : ContentClient(aForwarder, ContainsVisibleBounds), mIsNewBuffer(false) {}
 
+<<<<<<< HEAD
   virtual void Dump(
       std::stringstream& aStream, const char* aPrefix = "",
       bool aDumpHtml = false,
       TextureDumpMode aCompress = TextureDumpMode::Compress) override;
+||||||| merged common ancestors
+  virtual void Dump(std::stringstream& aStream,
+                    const char* aPrefix="",
+                    bool aDumpHtml=false,
+                    TextureDumpMode aCompress=TextureDumpMode::Compress) override;
+=======
+  void Dump(std::stringstream& aStream, const char* aPrefix = "",
+            bool aDumpHtml = false,
+            TextureDumpMode aCompress = TextureDumpMode::Compress) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void EndPaint(
       PaintState& aPaintState,
       nsTArray<ReadbackProcessor::Update>* aReadbackUpdates = nullptr) override;
+||||||| merged common ancestors
+  virtual void EndPaint(PaintState& aPaintState, nsTArray<ReadbackProcessor::Update>* aReadbackUpdates = nullptr) override;
+=======
+  void EndPaint(
+      PaintState& aPaintState,
+      nsTArray<ReadbackProcessor::Update>* aReadbackUpdates = nullptr) override;
+>>>>>>> upstream-releases
 
-  virtual void Updated(const nsIntRegion& aRegionToDraw,
-                       const nsIntRegion& aVisibleRegion);
+  void Updated(const nsIntRegion& aRegionToDraw,
+               const nsIntRegion& aVisibleRegion);
 
+<<<<<<< HEAD
   virtual TextureFlags ExtraTextureFlags() const {
+||||||| merged common ancestors
+  virtual TextureFlags ExtraTextureFlags() const
+  {
+=======
+  TextureFlags ExtraTextureFlags() const {
+>>>>>>> upstream-releases
     return TextureFlags::IMMEDIATE_UPLOAD;
   }
 
@@ -284,9 +343,9 @@ class ContentClientRemoteBuffer : public ContentClient {
   virtual nsIntRegion GetUpdatedRegion(const nsIntRegion& aRegionToDraw,
                                        const nsIntRegion& aVisibleRegion);
 
-  virtual RefPtr<RotatedBuffer> CreateBuffer(gfxContentType aType,
-                                             const gfx::IntRect& aRect,
-                                             uint32_t aFlags) override;
+  RefPtr<RotatedBuffer> CreateBuffer(gfxContentType aType,
+                                     const gfx::IntRect& aRect,
+                                     uint32_t aFlags) override;
 
   RefPtr<RotatedBuffer> CreateBufferInternal(const gfx::IntRect& aRect,
                                              gfx::SurfaceFormat aFormat,
@@ -313,26 +372,49 @@ class ContentClientDoubleBuffered : public ContentClientRemoteBuffer {
   explicit ContentClientDoubleBuffered(CompositableForwarder* aFwd)
       : ContentClientRemoteBuffer(aFwd), mFrontAndBackBufferDiffer(false) {}
 
-  virtual ~ContentClientDoubleBuffered() {}
+  void Dump(std::stringstream& aStream, const char* aPrefix = "",
+            bool aDumpHtml = false,
+            TextureDumpMode aCompress = TextureDumpMode::Compress) override;
 
+<<<<<<< HEAD
   virtual void Dump(
       std::stringstream& aStream, const char* aPrefix = "",
       bool aDumpHtml = false,
       TextureDumpMode aCompress = TextureDumpMode::Compress) override;
+||||||| merged common ancestors
+  virtual void Dump(std::stringstream& aStream,
+                    const char* aPrefix="",
+                    bool aDumpHtml=false,
+                    TextureDumpMode aCompress=TextureDumpMode::Compress) override;
+=======
+  void Clear() override;
+>>>>>>> upstream-releases
 
-  virtual void Clear() override;
+  void SwapBuffers(const nsIntRegion& aFrontUpdatedRegion) override;
 
-  virtual void SwapBuffers(const nsIntRegion& aFrontUpdatedRegion) override;
+  PaintState BeginPaint(PaintedLayer* aLayer, uint32_t aFlags) override;
 
-  virtual PaintState BeginPaint(PaintedLayer* aLayer, uint32_t aFlags) override;
+  void FinalizeFrame(PaintState& aPaintState) override;
 
-  virtual void FinalizeFrame(PaintState& aPaintState) override;
+  RefPtr<RotatedBuffer> GetFrontBuffer() const override { return mFrontBuffer; }
 
+<<<<<<< HEAD
   virtual RefPtr<RotatedBuffer> GetFrontBuffer() const override {
     return mFrontBuffer;
   }
 
   virtual TextureInfo GetTextureInfo() const override {
+||||||| merged common ancestors
+  virtual RefPtr<RotatedBuffer> GetFrontBuffer() const override
+  {
+    return mFrontBuffer;
+  }
+
+  virtual TextureInfo GetTextureInfo() const override
+  {
+=======
+  TextureInfo GetTextureInfo() const override {
+>>>>>>> upstream-releases
     return TextureInfo(CompositableType::CONTENT_DOUBLE, mTextureFlags);
   }
 
@@ -355,12 +437,31 @@ class ContentClientDoubleBuffered : public ContentClientRemoteBuffer {
 class ContentClientSingleBuffered : public ContentClientRemoteBuffer {
  public:
   explicit ContentClientSingleBuffered(CompositableForwarder* aFwd)
+<<<<<<< HEAD
       : ContentClientRemoteBuffer(aFwd) {}
   virtual ~ContentClientSingleBuffered() {}
+||||||| merged common ancestors
+    : ContentClientRemoteBuffer(aFwd)
+  {
+  }
+  virtual ~ContentClientSingleBuffered() {}
+=======
+      : ContentClientRemoteBuffer(aFwd) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual TextureInfo GetTextureInfo() const override {
     return TextureInfo(CompositableType::CONTENT_SINGLE,
                        mTextureFlags | ExtraTextureFlags());
+||||||| merged common ancestors
+  virtual TextureInfo GetTextureInfo() const override
+  {
+    return TextureInfo(CompositableType::CONTENT_SINGLE, mTextureFlags | ExtraTextureFlags());
+=======
+  TextureInfo GetTextureInfo() const override {
+    return TextureInfo(CompositableType::CONTENT_SINGLE,
+                       mTextureFlags | ExtraTextureFlags());
+>>>>>>> upstream-releases
   }
 };
 

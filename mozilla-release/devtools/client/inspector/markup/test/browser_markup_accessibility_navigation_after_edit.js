@@ -31,72 +31,136 @@ const TESTS = [
     focused: "root.elt",
     activedescendant: "div.tagLine",
     key: "VK_DOWN",
+<<<<<<< HEAD
     options: { },
     waitFor: "inspector-updated",
+||||||| merged common ancestors
+    options: { },
+    waitFor: "inspector-updated"
+=======
+    options: {},
+    waitFor: "inspector-updated",
+>>>>>>> upstream-releases
   },
   {
     desc: "Focus on header tag",
     focused: "div.focusableElms.0",
     activedescendant: "div.tagLine",
     key: "VK_RETURN",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Activate header tag editor",
     focused: "div.editor.tag.inplaceEditor.input",
     activedescendant: "div.tagLine",
     key: "VK_RETURN",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Activate header id attribute editor",
     focused: "div.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "div.tagLine",
     key: "VK_TAB",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Deselect text in header id attribute editor",
     focused: "div.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "div.tagLine",
     key: "VK_TAB",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Move the cursor to the left",
     focused: "div.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "div.tagLine",
     key: "VK_LEFT",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Modify the attribute",
     focused: "div.editor.attrList.children.0.children.1.inplaceEditor.input",
     activedescendant: "div.tagLine",
     key: "A",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Commit the attribute change",
     focused: "div.focusableElms.1",
     activedescendant: "div.tagLine",
     key: "VK_RETURN",
+<<<<<<< HEAD
     options: { },
     waitFor: "inspector-updated",
+||||||| merged common ancestors
+    options: { },
+    waitFor: "inspector-updated"
+=======
+    options: {},
+    waitFor: "inspector-updated",
+>>>>>>> upstream-releases
   },
   {
     desc: "Tab and focus on header class attribute",
     focused: "div.focusableElms.2",
     activedescendant: "div.tagLine",
     key: "VK_TAB",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
   {
     desc: "Tab and focus on header new attribute node",
     focused: "div.focusableElms.3",
     activedescendant: "div.tagLine",
     key: "VK_TAB",
+<<<<<<< HEAD
     options: { },
+||||||| merged common ancestors
+    options: { }
+=======
+    options: {},
+>>>>>>> upstream-releases
   },
 ];
 

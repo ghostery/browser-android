@@ -177,16 +177,43 @@ class BasicTextureImage : public TextureImage {
                     GLContext* aContext,
                     TextureImage::Flags aFlags = TextureImage::NoFlags);
 
+<<<<<<< HEAD
   virtual void BindTexture(GLenum aTextureUnit) override;
+||||||| merged common ancestors
+    virtual void BindTexture(GLenum aTextureUnit) override;
+=======
+  void BindTexture(GLenum aTextureUnit) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DirectUpdate(
       gfx::DataSourceSurface* aSurf, const nsIntRegion& aRegion,
       const gfx::IntPoint& aFrom = gfx::IntPoint(0, 0)) override;
   virtual GLuint GetTextureID() override { return mTexture; }
+||||||| merged common ancestors
+    virtual bool DirectUpdate(gfx::DataSourceSurface* aSurf, const nsIntRegion& aRegion, const gfx::IntPoint& aFrom = gfx::IntPoint(0,0)) override;
+    virtual GLuint GetTextureID() override { return mTexture; }
+=======
+  bool DirectUpdate(gfx::DataSourceSurface* aSurf, const nsIntRegion& aRegion,
+                    const gfx::IntPoint& aFrom = gfx::IntPoint(0, 0)) override;
+  GLuint GetTextureID() override { return mTexture; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void MarkValid() override { mTextureState = Valid; }
+||||||| merged common ancestors
+    virtual void MarkValid() override { mTextureState = Valid; }
+=======
+  void MarkValid() override { mTextureState = Valid; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void Resize(const gfx::IntSize& aSize) override;
+||||||| merged common ancestors
+    virtual void Resize(const gfx::IntSize& aSize) override;
+=======
+  void Resize(const gfx::IntSize& aSize) override;
+>>>>>>> upstream-releases
 
  protected:
   GLuint mTexture;
@@ -199,6 +226,7 @@ class BasicTextureImage : public TextureImage {
  * TextureImage. Aims to behave just like the real thing.
  */
 
+<<<<<<< HEAD
 class TiledTextureImage final : public TextureImage {
  public:
   TiledTextureImage(
@@ -234,6 +262,79 @@ class TiledTextureImage final : public TextureImage {
   GLContext* mGL;
   TextureState mTextureState;
   TextureImage::ImageFormat mImageFormat;
+||||||| merged common ancestors
+class TiledTextureImage final
+    : public TextureImage
+{
+public:
+    TiledTextureImage(GLContext* aGL,
+                      gfx::IntSize aSize,
+                      TextureImage::ContentType,
+                      TextureImage::Flags aFlags = TextureImage::NoFlags,
+                      TextureImage::ImageFormat aImageFormat = gfx::SurfaceFormat::UNKNOWN);
+    ~TiledTextureImage();
+    void DumpDiv();
+    virtual void Resize(const gfx::IntSize& aSize) override;
+    virtual uint32_t GetTileCount() override;
+    virtual void BeginBigImageIteration() override;
+    virtual bool NextTile() override;
+    virtual void SetIterationCallback(BigImageIterationCallback aCallback,
+                                      void* aCallbackData) override;
+    virtual gfx::IntRect GetTileRect() override;
+    virtual GLuint GetTextureID() override {
+        return mImages[mCurrentImage]->GetTextureID();
+    }
+    virtual bool DirectUpdate(gfx::DataSourceSurface* aSurf, const nsIntRegion& aRegion, const gfx::IntPoint& aFrom = gfx::IntPoint(0,0)) override;
+    virtual void BindTexture(GLenum) override;
+
+protected:
+    virtual gfx::IntRect GetSrcTileRect() override;
+
+    unsigned int mCurrentImage;
+    BigImageIterationCallback mIterationCallback;
+    void* mIterationCallbackData;
+    nsTArray< RefPtr<TextureImage> > mImages;
+    unsigned int mTileSize;
+    unsigned int mRows, mColumns;
+    GLContext* mGL;
+    TextureState mTextureState;
+    TextureImage::ImageFormat mImageFormat;
+=======
+class TiledTextureImage final : public TextureImage {
+ public:
+  TiledTextureImage(
+      GLContext* aGL, gfx::IntSize aSize, TextureImage::ContentType,
+      TextureImage::Flags aFlags = TextureImage::NoFlags,
+      TextureImage::ImageFormat aImageFormat = gfx::SurfaceFormat::UNKNOWN);
+  virtual ~TiledTextureImage();
+  void DumpDiv();
+  void Resize(const gfx::IntSize& aSize) override;
+  uint32_t GetTileCount() override;
+  void BeginBigImageIteration() override;
+  bool NextTile() override;
+  void SetIterationCallback(BigImageIterationCallback aCallback,
+                            void* aCallbackData) override;
+  gfx::IntRect GetTileRect() override;
+  GLuint GetTextureID() override {
+    return mImages[mCurrentImage]->GetTextureID();
+  }
+  bool DirectUpdate(gfx::DataSourceSurface* aSurf, const nsIntRegion& aRegion,
+                    const gfx::IntPoint& aFrom = gfx::IntPoint(0, 0)) override;
+  void BindTexture(GLenum) override;
+
+ protected:
+  gfx::IntRect GetSrcTileRect() override;
+
+  unsigned int mCurrentImage;
+  BigImageIterationCallback mIterationCallback;
+  void* mIterationCallbackData;
+  nsTArray<RefPtr<TextureImage> > mImages;
+  unsigned int mTileSize;
+  unsigned int mRows, mColumns;
+  GLContext* mGL;
+  TextureState mTextureState;
+  TextureImage::ImageFormat mImageFormat;
+>>>>>>> upstream-releases
 };
 
 /**

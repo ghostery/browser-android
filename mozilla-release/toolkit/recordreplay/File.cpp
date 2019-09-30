@@ -270,7 +270,16 @@ void Stream::Flush(bool aTakeLock) {
   mBufferPos = 0;
 }
 
+<<<<<<< HEAD
 /* static */ size_t Stream::BallastMaxSize() {
+||||||| merged common ancestors
+/* static */ size_t
+Stream::BallastMaxSize()
+{
+=======
+/* static */
+size_t Stream::BallastMaxSize() {
+>>>>>>> upstream-releases
   return Compression::LZ4::maxCompressedSize(BUFFER_MAX);
 }
 

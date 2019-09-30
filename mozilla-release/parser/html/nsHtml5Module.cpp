@@ -60,12 +60,21 @@ void nsHtml5Module::ReleaseStatics() {
 }
 
 // static
+<<<<<<< HEAD
 already_AddRefed<nsIParser> nsHtml5Module::NewHtml5Parser() {
+||||||| merged common ancestors
+already_AddRefed<nsIParser>
+nsHtml5Module::NewHtml5Parser()
+{
+=======
+already_AddRefed<nsHtml5Parser> nsHtml5Module::NewHtml5Parser() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(sNsHtml5ModuleInitialized, "nsHtml5Module not initialized.");
-  nsCOMPtr<nsIParser> rv = new nsHtml5Parser();
+  RefPtr<nsHtml5Parser> rv = new nsHtml5Parser();
   return rv.forget();
 }
 
+<<<<<<< HEAD
 // static
 nsresult nsHtml5Module::Initialize(nsIParser* aParser, nsIDocument* aDoc,
                                    nsIURI* aURI, nsISupports* aContainer,
@@ -77,6 +86,27 @@ nsresult nsHtml5Module::Initialize(nsIParser* aParser, nsIDocument* aDoc,
 
 class nsHtml5ParserThreadTerminator final : public nsIObserver {
  public:
+||||||| merged common ancestors
+// static
+nsresult
+nsHtml5Module::Initialize(nsIParser* aParser,
+                          nsIDocument* aDoc,
+                          nsIURI* aURI,
+                          nsISupports* aContainer,
+                          nsIChannel* aChannel)
+{
+  MOZ_ASSERT(sNsHtml5ModuleInitialized, "nsHtml5Module not initialized.");
+  nsHtml5Parser* parser = static_cast<nsHtml5Parser*>(aParser);
+  return parser->Initialize(aDoc, aURI, aContainer, aChannel);
+}
+
+class nsHtml5ParserThreadTerminator final : public nsIObserver
+{
+public:
+=======
+class nsHtml5ParserThreadTerminator final : public nsIObserver {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   explicit nsHtml5ParserThreadTerminator(nsIThread* aThread)
       : mThread(aThread) {}

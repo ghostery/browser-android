@@ -13,7 +13,7 @@
 #include "SkTypes.h"
 #include "SkXfermodePriv.h"
 
-struct ProcCoeff;
+struct SkBitmapProcState;
 
 namespace SkOpts {
     // Call to replace pointers to portable functions with pointers to CPU-specific functions.
@@ -25,9 +25,6 @@ namespace SkOpts {
 
     // May return nullptr if we haven't specialized the given Mode.
     extern SkXfermode* (*create_xfermode)(SkBlendMode);
-
-    typedef void (*Morph)(const SkPMColor*, SkPMColor*, int, int, int, int, int);
-    extern Morph dilate_x, dilate_y, erode_x, erode_y;
 
     extern void (*blit_mask_d32_a8)(SkPMColor*, size_t, const SkAlpha*, size_t, SkColor, int, int);
     extern void (*blit_row_color32)(SkPMColor*, const SkPMColor*, int, SkPMColor);
@@ -58,6 +55,7 @@ namespace SkOpts {
         return hash_fn(data, bytes, seed);
     }
 
+<<<<<<< HEAD
 #define M(st) +1
     // We can't necessarily express the type of SkJumper stage functions here,
     // so we just use this void(*)(void) as a stand-in.
@@ -69,6 +67,25 @@ namespace SkOpts {
     extern void (*start_pipeline_lowp )(size_t,size_t,size_t,size_t, void**);
 #undef M
 
+||||||| merged common ancestors
+=======
+    // SkBitmapProcState optimized Shader, Sample, or Matrix procs.
+    // This is the only one that can use anything past SSE2/NEON.
+    extern void (*S32_alpha_D32_filter_DX)(const SkBitmapProcState&,
+                                           const uint32_t* xy, int count, SkPMColor*);
+
+#define M(st) +1
+    // We can't necessarily express the type of SkJumper stage functions here,
+    // so we just use this void(*)(void) as a stand-in.
+    using StageFn = void(*)(void);
+    extern StageFn stages_highp[SK_RASTER_PIPELINE_STAGES(M)], just_return_highp;
+    extern StageFn stages_lowp [SK_RASTER_PIPELINE_STAGES(M)], just_return_lowp;
+
+    extern void (*start_pipeline_highp)(size_t,size_t,size_t,size_t, void**);
+    extern void (*start_pipeline_lowp )(size_t,size_t,size_t,size_t, void**);
+#undef M
+
+>>>>>>> upstream-releases
     extern void (*convolve_vertically)(const SkConvolutionFilter1D::ConvolutionFixed* filter_values,
                                        int filter_length, unsigned char* const* source_data_rows,
                                        int pixel_width, unsigned char* out_row, bool has_alpha);

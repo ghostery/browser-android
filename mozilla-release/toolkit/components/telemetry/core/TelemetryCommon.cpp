@@ -14,6 +14,7 @@
 #include "nsThreadUtils.h"
 #include "nsVersionComparator.h"
 #include "TelemetryProcessData.h"
+#include "Telemetry.h"
 
 namespace mozilla {
 namespace Telemetry {
@@ -34,8 +35,8 @@ bool IsInDataset(uint32_t aDataset, uint32_t aContainingDataset) {
 
   // The "optin on release channel" dataset is a superset of the
   // "optout on release channel one".
-  if (aContainingDataset == nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN &&
-      aDataset == nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT) {
+  if (aContainingDataset == nsITelemetry::DATASET_PRERELEASE_CHANNELS &&
+      aDataset == nsITelemetry::DATASET_ALL_CHANNELS) {
     return true;
   }
 
@@ -53,8 +54,16 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
   // If base telemetry data is enabled and we're trying to record base
   // telemetry, allow it.
   if (aCanRecordBase &&
+<<<<<<< HEAD
       IsInDataset(aDataset, nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT)) {
     return true;
+||||||| merged common ancestors
+      IsInDataset(aDataset, nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT)) {
+      return true;
+=======
+      IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
+    return true;
+>>>>>>> upstream-releases
   }
 
   // We're not recording extended telemetry or this is not the base
@@ -62,16 +71,28 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
   return false;
 }
 
+<<<<<<< HEAD
 bool CanRecordInProcess(RecordedProcessType processes,
                         GeckoProcessType processType) {
   bool recordAllChildren = !!(processes & RecordedProcessType::AllChildren);
   // We can use (1 << ProcessType) due to the way RecordedProcessType is
   // defined.
+||||||| merged common ancestors
+bool
+CanRecordInProcess(RecordedProcessType processes, GeckoProcessType processType)
+{
+  bool recordAllChildren = !!(processes & RecordedProcessType::AllChildren);
+  // We can use (1 << ProcessType) due to the way RecordedProcessType is defined.
+=======
+bool CanRecordInProcess(RecordedProcessType processes,
+                        GeckoProcessType processType) {
+  // We can use (1 << ProcessType) due to the way RecordedProcessType is
+  // defined.
+>>>>>>> upstream-releases
   bool canRecordProcess =
       !!(processes & static_cast<RecordedProcessType>(1 << processType));
 
-  return canRecordProcess ||
-         ((processType != GeckoProcessType_Default) && recordAllChildren);
+  return canRecordProcess;
 }
 
 bool CanRecordInProcess(RecordedProcessType processes, ProcessID processId) {
@@ -82,12 +103,34 @@ bool CanRecordProduct(SupportedProduct aProducts) {
   return !!(aProducts & GetCurrentProduct());
 }
 
+<<<<<<< HEAD
 nsresult MsSinceProcessStart(double* aResult) {
   bool error;
   *aResult = (TimeStamp::NowLoRes() - TimeStamp::ProcessCreation(&error))
                  .ToMilliseconds();
   if (error) {
     return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsresult
+MsSinceProcessStart(double* aResult)
+{
+  bool error;
+  *aResult = (TimeStamp::NowLoRes() -
+              TimeStamp::ProcessCreation(&error)).ToMilliseconds();
+  if (error) {
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsresult MsSinceProcessStart(double* aResult) {
+  bool isInconsistent = false;
+  *aResult =
+      (TimeStamp::NowLoRes() - TimeStamp::ProcessCreation(&isInconsistent))
+          .ToMilliseconds();
+
+  if (isInconsistent) {
+    Telemetry::ScalarAdd(
+        Telemetry::ScalarID::TELEMETRY_PROCESS_CREATION_TIMESTAMP_INCONSISTENT,
+        1);
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -111,7 +154,8 @@ void LogToBrowserConsole(uint32_t aLogLevel, const nsAString& aMsg) {
 
   nsCOMPtr<nsIScriptError> error(do_CreateInstance(NS_SCRIPTERROR_CONTRACTID));
   error->Init(aMsg, EmptyString(), EmptyString(), 0, 0, aLogLevel,
-              "chrome javascript", false /* from private window */);
+              "chrome javascript", false /* from private window */,
+              true /* from chrome context */);
   console->LogMessage(error);
 }
 

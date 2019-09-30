@@ -1,15 +1,28 @@
-import {actionCreators as ac, actionTypes as at} from "common/Actions.jsm";
-import {mountWithIntl} from "test/unit/utils";
+import { actionCreators as ac, actionTypes as at } from "common/Actions.jsm";
+import { mount } from "enzyme";
 import React from "react";
+<<<<<<< HEAD
 import {_StartupOverlay as StartupOverlay} from "content-src/asrouter/templates/StartupOverlay/StartupOverlay";
+||||||| merged common ancestors
+import {_StartupOverlay as StartupOverlay} from "content-src/components/StartupOverlay/StartupOverlay";
+=======
+import { StartupOverlay } from "content-src/asrouter/templates/StartupOverlay/StartupOverlay";
+>>>>>>> upstream-releases
 
 describe("<StartupOverlay>", () => {
   let wrapper;
   let dispatch;
+<<<<<<< HEAD
   let onReady;
   let onBlock;
   let sandbox;
+||||||| merged common ancestors
+=======
+  let onBlock;
+  let sandbox;
+>>>>>>> upstream-releases
   beforeEach(() => {
+<<<<<<< HEAD
     sandbox = sinon.sandbox.create();
     dispatch = sandbox.stub();
     onReady = sandbox.stub();
@@ -20,11 +33,37 @@ describe("<StartupOverlay>", () => {
 
   afterEach(() => {
     sandbox.restore();
+||||||| merged common ancestors
+    dispatch = sinon.stub();
+    wrapper = mountWithIntl(<StartupOverlay dispatch={dispatch} />);
+=======
+    sandbox = sinon.createSandbox();
+    dispatch = sandbox.stub();
+    onBlock = sandbox.stub();
+
+    wrapper = mount(<StartupOverlay onBlock={onBlock} dispatch={dispatch} />);
   });
 
-  it("should not render if state.show is false", () => {
-    wrapper.setState({overlayRemoved: true});
-    assert.isTrue(wrapper.isEmptyRender());
+  afterEach(() => {
+    sandbox.restore();
+>>>>>>> upstream-releases
+  });
+
+  it("should add show class after mount and timeout", async () => {
+    const clock = sandbox.useFakeTimers();
+    wrapper = mount(<StartupOverlay onBlock={onBlock} dispatch={dispatch} />);
+    assert.isFalse(
+      wrapper.find(".overlay-wrapper").hasClass("show"),
+      ".overlay-wrapper does not have .show class"
+    );
+
+    clock.tick(10);
+    wrapper.update();
+
+    assert.isTrue(
+      wrapper.find(".overlay-wrapper").hasClass("show"),
+      ".overlay-wrapper has .show class"
+    );
   });
 
   it("should call prop.onReady after mount + timeout", async () => {
@@ -44,7 +83,13 @@ describe("<StartupOverlay>", () => {
 
     assert.calledOnce(dispatch);
     assert.isUserEventAction(dispatch.firstCall.args[0]);
-    assert.calledWith(dispatch, ac.UserEvent({event: at.SKIPPED_SIGNIN, value: {has_flow_params: false}}));
+    assert.calledWith(
+      dispatch,
+      ac.UserEvent({
+        event: at.SKIPPED_SIGNIN,
+        value: { has_flow_params: false },
+      })
+    );
   });
 
   it("should emit UserEvent SUBMIT_EMAIL when you submit the form", () => {
@@ -54,6 +99,12 @@ describe("<StartupOverlay>", () => {
 
     assert.calledOnce(dispatch);
     assert.isUserEventAction(dispatch.firstCall.args[0]);
-    assert.calledWith(dispatch, ac.UserEvent({event: at.SUBMIT_EMAIL, value: {has_flow_params: false}}));
+    assert.calledWith(
+      dispatch,
+      ac.UserEvent({
+        event: at.SUBMIT_EMAIL,
+        value: { has_flow_params: false },
+      })
+    );
   });
 });

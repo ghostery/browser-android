@@ -15,10 +15,30 @@ WebGLExtensionBlendMinMax::WebGLExtensionBlendMinMax(WebGLContext* webgl)
   MOZ_ASSERT(IsSupported(webgl), "Don't construct extension if unsupported.");
 }
 
+<<<<<<< HEAD
+WebGLExtensionBlendMinMax::~WebGLExtensionBlendMinMax() {}
+||||||| merged common ancestors
+WebGLExtensionBlendMinMax::~WebGLExtensionBlendMinMax()
+{
+}
+=======
 WebGLExtensionBlendMinMax::~WebGLExtensionBlendMinMax() {}
 
 bool WebGLExtensionBlendMinMax::IsSupported(const WebGLContext* webgl) {
+  if (webgl->IsWebGL2()) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool WebGLExtensionBlendMinMax::IsSupported(const WebGLContext* webgl) {
   return webgl->GL()->IsSupported(gl::GLFeature::blend_minmax);
+||||||| merged common ancestors
+bool
+WebGLExtensionBlendMinMax::IsSupported(const WebGLContext* webgl)
+{
+    return webgl->GL()->IsSupported(gl::GLFeature::blend_minmax);
+=======
+  return webgl->GL()->IsSupported(gl::GLFeature::blend_minmax);
+>>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionBlendMinMax, EXT_blend_minmax)

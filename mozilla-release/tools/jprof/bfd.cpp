@@ -6,6 +6,7 @@
 #include "leaky.h"
 
 #ifdef USE_BFD
+<<<<<<< HEAD
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
@@ -15,6 +16,28 @@
 #include <cxxabi.h>
 
 static bfd *try_debug_file(const char *filename, unsigned long crc32) {
+||||||| merged common ancestors
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <bfd.h>
+#include <cxxabi.h>
+
+static bfd *try_debug_file(const char *filename, unsigned long crc32)
+{
+=======
+#  include <stdio.h>
+#  include <string.h>
+#  include <fcntl.h>
+#  include <unistd.h>
+#  include <libgen.h>
+#  include <bfd.h>
+#  include <cxxabi.h>
+
+static bfd* try_debug_file(const char* filename, unsigned long crc32) {
+>>>>>>> upstream-releases
   int fd = open(filename, O_RDONLY);
   if (fd < 0) return nullptr;
 
@@ -32,7 +55,7 @@ static bfd *try_debug_file(const char *filename, unsigned long crc32) {
 
   if (crc != crc32) return nullptr;
 
-  bfd *object = bfd_openr(filename, nullptr);
+  bfd* object = bfd_openr(filename, nullptr);
   if (!bfd_check_format(object, bfd_object)) {
     bfd_close(object);
     return nullptr;
@@ -41,15 +64,22 @@ static bfd *try_debug_file(const char *filename, unsigned long crc32) {
   return object;
 }
 
+<<<<<<< HEAD
 static bfd *find_debug_file(bfd *lib, const char *aFileName) {
+||||||| merged common ancestors
+static bfd *find_debug_file(bfd *lib, const char *aFileName)
+{
+=======
+static bfd* find_debug_file(bfd* lib, const char* aFileName) {
+>>>>>>> upstream-releases
   // check for a separate debug file with symbols
-  asection *sect = bfd_get_section_by_name(lib, ".gnu_debuglink");
+  asection* sect = bfd_get_section_by_name(lib, ".gnu_debuglink");
 
   if (!sect) return nullptr;
 
   bfd_size_type debuglinkSize = bfd_section_size(objfile->obfd, sect);
 
-  char *debuglink = new char[debuglinkSize];
+  char* debuglink = new char[debuglinkSize];
   bfd_get_section_contents(lib, sect, debuglink, 0, debuglinkSize);
 
   // crc checksum is aligned to 4 bytes, and after the NUL.
@@ -57,20 +87,28 @@ static bfd *find_debug_file(bfd *lib, const char *aFileName) {
   unsigned long crc32 = bfd_get_32(lib, debuglink + crc_offset);
 
   // directory component
-  char *dirbuf = strdup(aFileName);
-  const char *dir = dirname(dirbuf);
+  char* dirbuf = strdup(aFileName);
+  const char* dir = dirname(dirbuf);
 
   static const char debug_subdir[] = ".debug";
   // This is gdb's default global debugging info directory, but gdb can
   // be instructed to use a different directory.
   static const char global_debug_dir[] = "/usr/lib/debug";
 
+<<<<<<< HEAD
   char *filename =
       new char[strlen(global_debug_dir) + strlen(dir) + crc_offset + 3];
+||||||| merged common ancestors
+  char *filename =
+    new char[strlen(global_debug_dir) + strlen(dir) + crc_offset + 3];
+=======
+  char* filename =
+      new char[strlen(global_debug_dir) + strlen(dir) + crc_offset + 3];
+>>>>>>> upstream-releases
 
   // /path/debuglink
   sprintf(filename, "%s/%s", dir, debuglink);
-  bfd *debugFile = try_debug_file(filename, crc32);
+  bfd* debugFile = try_debug_file(filename, crc32);
   if (!debugFile) {
     // /path/.debug/debuglink
     sprintf(filename, "%s/%s/%s", dir, debug_subdir, debuglink);
@@ -90,21 +128,40 @@ static bfd *find_debug_file(bfd *lib, const char *aFileName) {
 }
 
 // Use an indirect array to avoid copying tons of objects
+<<<<<<< HEAD
 Symbol **leaky::ExtendSymbols(int num) {
+||||||| merged common ancestors
+Symbol ** leaky::ExtendSymbols(int num)
+{
+=======
+Symbol** leaky::ExtendSymbols(int num) {
+>>>>>>> upstream-releases
   long n = numExternalSymbols + num;
 
+<<<<<<< HEAD
   externalSymbols = (Symbol **)realloc(
       externalSymbols, (size_t)(sizeof(externalSymbols[0]) * n));
   Symbol *new_array = new Symbol[n];
+||||||| merged common ancestors
+  externalSymbols = (Symbol**)
+                    realloc(externalSymbols,
+                            (size_t) (sizeof(externalSymbols[0]) * n));
+  Symbol *new_array = new Symbol[n];
+=======
+  externalSymbols = (Symbol**)realloc(externalSymbols,
+                                      (size_t)(sizeof(externalSymbols[0]) * n));
+  Symbol* new_array = new Symbol[n];
+>>>>>>> upstream-releases
   for (int i = 0; i < num; i++) {
     externalSymbols[i + numExternalSymbols] = &new_array[i];
   }
   lastSymbol = externalSymbols + n;
-  Symbol **sp = externalSymbols + numExternalSymbols;
+  Symbol** sp = externalSymbols + numExternalSymbols;
   numExternalSymbols = n;
   return sp;
 }
 
+<<<<<<< HEAD
 #define NEXT_SYMBOL              \
   do {                           \
     sp++;                        \
@@ -112,12 +169,42 @@ Symbol **leaky::ExtendSymbols(int num) {
       sp = ExtendSymbols(16384); \
     }                            \
   } while (0)
+||||||| merged common ancestors
+#define NEXT_SYMBOL do { sp++; \
+                         if (sp >= lastSymbol) { \
+                           sp = ExtendSymbols(16384); \
+                         } \
+                       } while (0)
+=======
+#  define NEXT_SYMBOL              \
+    do {                           \
+      sp++;                        \
+      if (sp >= lastSymbol) {      \
+        sp = ExtendSymbols(16384); \
+      }                            \
+    } while (0)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void leaky::ReadSymbols(const char *aFileName, u_long aBaseAddress) {
+||||||| merged common ancestors
+void leaky::ReadSymbols(const char *aFileName, u_long aBaseAddress)
+{
+=======
+void leaky::ReadSymbols(const char* aFileName, u_long aBaseAddress) {
+>>>>>>> upstream-releases
   int initialSymbols = usefulSymbols;
   if (nullptr == externalSymbols) {
+<<<<<<< HEAD
     externalSymbols = (Symbol **)calloc(sizeof(Symbol *), 10000);
     Symbol *new_array = new Symbol[10000];
+||||||| merged common ancestors
+    externalSymbols = (Symbol**) calloc(sizeof(Symbol*),10000);
+    Symbol *new_array = new Symbol[10000];
+=======
+    externalSymbols = (Symbol**)calloc(sizeof(Symbol*), 10000);
+    Symbol* new_array = new Symbol[10000];
+>>>>>>> upstream-releases
     for (int i = 0; i < 10000; i++) {
       externalSymbols[i] = &new_array[i];
     }
@@ -148,7 +235,7 @@ void leaky::ReadSymbols(const char *aFileName, u_long aBaseAddress) {
     return;
   }
 
-  bfd *symbolFile = find_debug_file(lib, aFileName);
+  bfd* symbolFile = find_debug_file(lib, aFileName);
 
   // read mini symbols
   PTR minisyms;
@@ -178,15 +265,35 @@ void leaky::ReadSymbols(const char *aFileName, u_long aBaseAddress) {
 
   // Scan symbols
   size_t demangle_buffer_size = 128;
+<<<<<<< HEAD
   char *demangle_buffer = (char *)malloc(demangle_buffer_size);
   bfd_byte *from = (bfd_byte *)minisyms;
   bfd_byte *fromend = from + symcount * size;
+||||||| merged common ancestors
+  char *demangle_buffer = (char*) malloc(demangle_buffer_size);
+  bfd_byte* from = (bfd_byte *) minisyms;
+  bfd_byte* fromend = from + symcount * size;
+=======
+  char* demangle_buffer = (char*)malloc(demangle_buffer_size);
+  bfd_byte* from = (bfd_byte*)minisyms;
+  bfd_byte* fromend = from + symcount * size;
+>>>>>>> upstream-releases
   for (; from < fromend; from += size) {
+<<<<<<< HEAD
     asymbol *sym;
     sym =
         bfd_minisymbol_to_symbol(symbolFile, kDynamic, (const PTR)from, store);
+||||||| merged common ancestors
+    asymbol *sym;
+    sym = bfd_minisymbol_to_symbol(symbolFile, kDynamic, (const PTR) from, store);
+=======
+    asymbol* sym;
+    sym =
+        bfd_minisymbol_to_symbol(symbolFile, kDynamic, (const PTR)from, store);
+>>>>>>> upstream-releases
 
     symbol_info syminfo;
+<<<<<<< HEAD
     bfd_get_symbol_info(symbolFile, sym, &syminfo);
 
     //    if ((syminfo.type == 'T') || (syminfo.type == 't')) {
@@ -195,6 +302,25 @@ void leaky::ReadSymbols(const char *aFileName, u_long aBaseAddress) {
       char *dnm = nullptr;
       if (strncmp("__thunk", nm, 7)) {
         dnm =
+||||||| merged common ancestors
+    bfd_get_symbol_info (symbolFile, sym, &syminfo);
+
+//    if ((syminfo.type == 'T') || (syminfo.type == 't')) {
+      const char* nm = bfd_asymbol_name(sym);
+      if (nm && nm[0]) {
+        char* dnm = nullptr;
+        if (strncmp("__thunk", nm, 7)) {
+          dnm =
+=======
+    bfd_get_symbol_info(symbolFile, sym, &syminfo);
+
+    //    if ((syminfo.type == 'T') || (syminfo.type == 't')) {
+    const char* nm = bfd_asymbol_name(sym);
+    if (nm && nm[0]) {
+      char* dnm = nullptr;
+      if (strncmp("__thunk", nm, 7)) {
+        dnm =
+>>>>>>> upstream-releases
             abi::__cxa_demangle(nm, demangle_buffer, &demangle_buffer_size, 0);
         if (dnm) {
           demangle_buffer = dnm;

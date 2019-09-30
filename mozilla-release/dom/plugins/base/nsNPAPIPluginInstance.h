@@ -24,6 +24,7 @@
 #include "mozilla/PluginLibrary.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/WeakPtr.h"
+#include "mozilla/dom/PopupBlocker.h"
 
 class nsPluginStreamListenerPeer;   // browser-initiated stream class
 class nsNPAPIPluginStreamListener;  // plugin-initiated stream class
@@ -42,12 +43,23 @@ const NPDrawingModel kDefaultDrawingModel = NPDrawingModelSyncWin;
 #elif defined(MOZ_X11)
 const NPDrawingModel kDefaultDrawingModel = NPDrawingModelSyncX;
 #elif defined(XP_MACOSX)
+<<<<<<< HEAD
 #ifndef NP_NO_QUICKDRAW
 const NPDrawingModel kDefaultDrawingModel =
     NPDrawingModelQuickDraw;  // Not supported
 #else
+||||||| merged common ancestors
+#ifndef NP_NO_QUICKDRAW
+const NPDrawingModel kDefaultDrawingModel = NPDrawingModelQuickDraw; // Not supported
+#else
+=======
+#  ifndef NP_NO_QUICKDRAW
+const NPDrawingModel kDefaultDrawingModel =
+    NPDrawingModelQuickDraw;  // Not supported
+#  else
+>>>>>>> upstream-releases
 const NPDrawingModel kDefaultDrawingModel = NPDrawingModelCoreGraphics;
-#endif
+#  endif
 #else
 const NPDrawingModel kDefaultDrawingModel = static_cast<NPDrawingModel>(0);
 #endif
@@ -193,6 +205,7 @@ class nsNPAPIPluginInstance final
   nsresult GetDOMElement(mozilla::dom::Element** result);
 
   nsNPAPITimer* TimerWithID(uint32_t id, uint32_t* index);
+<<<<<<< HEAD
   uint32_t ScheduleTimer(uint32_t interval, NPBool repeat,
                          void (*timerFunc)(NPP npp, uint32_t timerID));
   void UnscheduleTimer(uint32_t timerID);
@@ -201,8 +214,31 @@ class nsNPAPIPluginInstance final
                       double* destY, NPCoordinateSpace destSpace);
 
   nsTArray<nsNPAPIPluginStreamListener*>* StreamListeners();
+||||||| merged common ancestors
+  uint32_t      ScheduleTimer(uint32_t interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32_t timerID));
+  void          UnscheduleTimer(uint32_t timerID);
+  NPBool        ConvertPoint(double sourceX, double sourceY, NPCoordinateSpace sourceSpace, double *destX, double *destY, NPCoordinateSpace destSpace);
+
+=======
+  uint32_t ScheduleTimer(uint32_t interval, NPBool repeat,
+                         void (*timerFunc)(NPP npp, uint32_t timerID));
+  void UnscheduleTimer(uint32_t timerID);
+  NPBool ConvertPoint(double sourceX, double sourceY,
+                      NPCoordinateSpace sourceSpace, double* destX,
+                      double* destY, NPCoordinateSpace destSpace);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsTArray<nsPluginStreamListenerPeer*>* FileCachedStreamListeners();
+||||||| merged common ancestors
+  nsTArray<nsNPAPIPluginStreamListener*> *StreamListeners();
+
+  nsTArray<nsPluginStreamListenerPeer*> *FileCachedStreamListeners();
+=======
+  nsTArray<nsNPAPIPluginStreamListener*>* StreamListeners();
 
   nsTArray<nsPluginStreamListenerPeer*>* FileCachedStreamListeners();
+>>>>>>> upstream-releases
 
   nsresult AsyncSetWindow(NPWindow& window);
 
@@ -269,7 +305,7 @@ class nsNPAPIPluginInstance final
 
   nsTArray<nsPluginStreamListenerPeer*> mFileCachedStreamListeners;
 
-  nsTArray<PopupControlState> mPopupStates;
+  nsTArray<mozilla::dom::PopupBlocker::PopupControlState> mPopupStates;
 
   char* mMIMEType;
 

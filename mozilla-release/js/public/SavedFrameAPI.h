@@ -60,10 +60,31 @@ enum class SavedFrameSelfHosted { Include, Exclude };
  * Given a SavedFrame JSObject, get its source property. Defaults to the empty
  * string.
  */
+<<<<<<< HEAD
 extern JS_PUBLIC_API SavedFrameResult GetSavedFrameSource(
     JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
     MutableHandle<JSString*> sourcep,
     SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(SavedFrameResult)
+GetSavedFrameSource(JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
+                    MutableHandle<JSString*> sourcep,
+                    SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+=======
+extern JS_PUBLIC_API SavedFrameResult GetSavedFrameSource(
+    JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
+    MutableHandle<JSString*> sourcep,
+    SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+
+/**
+ * Given a SavedFrame JSObject, get an ID identifying its ScriptSource.
+ * Defaults to 0.
+ */
+extern JS_PUBLIC_API SavedFrameResult GetSavedFrameSourceId(
+    JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
+    uint32_t* sourceIdp,
+    SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+>>>>>>> upstream-releases
 
 /**
  * Given a SavedFrame JSObject, get its line property. Defaults to 0.
@@ -114,10 +135,33 @@ extern JS_PUBLIC_API SavedFrameResult GetSavedFrameAsyncParent(
  * it is the oldest frame in the stack. The `parentp` out parameter is _NOT_
  * guaranteed to be in the cx's compartment. Defaults to nullptr.
  */
+<<<<<<< HEAD
 extern JS_PUBLIC_API SavedFrameResult GetSavedFrameParent(
     JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
     MutableHandle<JSObject*> parentp,
     SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(SavedFrameResult)
+GetSavedFrameParent(JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
+                    MutableHandle<JSObject*> parentp,
+                    SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+=======
+extern JS_PUBLIC_API SavedFrameResult GetSavedFrameParent(
+    JSContext* cx, JSPrincipals* principals, Handle<JSObject*> savedFrame,
+    MutableHandle<JSObject*> parentp,
+    SavedFrameSelfHosted selfHosted = SavedFrameSelfHosted::Include);
+
+/**
+ * Given a SavedFrame object, convert it and its transitive parents to plain
+ * objects. Because SavedFrame objects store their properties on the prototype,
+ * they cannot be usefully stringified to JSON. Assigning their properties to
+ * plain objects allow those objects to be stringified and the saved frame stack
+ * can be encoded as a string.
+ */
+JS_PUBLIC_API JSObject* ConvertSavedFrameToPlainObject(
+    JSContext* cx, JS::HandleObject savedFrame,
+    JS::SavedFrameSelfHosted selfHosted);
+>>>>>>> upstream-releases
 
 }  // namespace JS
 

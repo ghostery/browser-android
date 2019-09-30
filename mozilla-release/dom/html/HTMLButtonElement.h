@@ -51,7 +51,15 @@ class HTMLButtonElement final : public nsGenericHTMLFormElementWithState,
 
   // EventTarget
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
+<<<<<<< HEAD
   virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
+||||||| merged common ancestors
+  virtual nsresult PostHandleEvent(
+                     EventChainPostVisitor& aVisitor) override;
+=======
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
+>>>>>>> upstream-releases
 
   // nsINode
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
@@ -59,10 +67,8 @@ class HTMLButtonElement final : public nsGenericHTMLFormElementWithState,
                              JS::Handle<JSObject*> aGivenProto) override;
 
   // nsIContent
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
   virtual void DoneCreatingElement() override;
 
   void UpdateBarredFromConstraintValidation();

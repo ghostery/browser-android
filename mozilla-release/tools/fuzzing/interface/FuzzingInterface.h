@@ -15,9 +15,31 @@
 #include "FuzzerRegistry.h"
 #include "mozilla/Assertions.h"
 
+#ifndef JS_STANDALONE
+#  include "mozilla/Logging.h"
+#endif
+
 namespace mozilla {
 
+<<<<<<< HEAD
 typedef int (*FuzzingTestFuncRaw)(const uint8_t*, size_t);
+||||||| merged common ancestors
+typedef int(*FuzzingTestFuncRaw)(const uint8_t*, size_t);
+=======
+#ifdef JS_STANDALONE
+void fuzzing_log(const char* aFmt, ...);
+#  define MOZ_LOG_EXPAND_ARGS(...) __VA_ARGS__
+
+#  define FUZZING_LOG(args) fuzzing_log(MOZ_LOG_EXPAND_ARGS args);
+#else
+extern LazyLogModule gFuzzingLog;
+
+#  define FUZZING_LOG(args) \
+    MOZ_LOG(mozilla::gFuzzingLog, mozilla::LogLevel::Verbose, args)
+#endif  // JS_STANDALONE
+
+typedef int (*FuzzingTestFuncRaw)(const uint8_t*, size_t);
+>>>>>>> upstream-releases
 
 #ifdef __AFL_COMPILER
 
@@ -48,6 +70,7 @@ static int afl_interface_raw(const char* testFile,
   return 0;
 }
 
+<<<<<<< HEAD
 #define MOZ_AFL_INTERFACE_COMMON()                                             \
   char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                             \
   if (!testFilePtr) {                                                          \
@@ -70,19 +93,95 @@ static int afl_interface_raw(const char* testFile,
     ::mozilla::FuzzerRegistry::getInstance().registerModule(           \
         #moduleName, initFunc, afl_fuzz_##moduleName);                 \
   }
+||||||| merged common ancestors
+#define MOZ_AFL_INTERFACE_COMMON()                                                            \
+  char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                                            \
+  if (!testFilePtr) {                                                                         \
+    fprintf(stderr, "Must specify testfile in MOZ_FUZZ_TESTFILE environment variable.\n");    \
+    return 1;                                                                                 \
+  }                                                                                           \
+  /* Make a copy of testFilePtr so the testing function can safely call getenv */             \
+  std::string testFile(testFilePtr);
+
+#define MOZ_AFL_INTERFACE_RAW(initFunc, testFunc, moduleName)            \
+  static int afl_fuzz_##moduleName(const uint8_t *data, size_t size) {   \
+    MOZ_RELEASE_ASSERT(data == NULL && size == 0);                       \
+    MOZ_AFL_INTERFACE_COMMON();                                          \
+    return ::mozilla::afl_interface_raw(testFile.c_str(), testFunc);     \
+  }                                                                      \
+  static void __attribute__ ((constructor)) AFLRegister##moduleName() {  \
+    ::mozilla::FuzzerRegistry::getInstance().registerModule(             \
+      #moduleName, initFunc, afl_fuzz_##moduleName                       \
+    );                                                                   \
+  }
+=======
+#  define MOZ_AFL_INTERFACE_COMMON()                                      \
+    char* testFilePtr = getenv("MOZ_FUZZ_TESTFILE");                      \
+    if (!testFilePtr) {                                                   \
+      fprintf(stderr,                                                     \
+              "Must specify testfile in MOZ_FUZZ_TESTFILE environment "   \
+              "variable.\n");                                             \
+      return 1;                                                           \
+    }                                                                     \
+    /* Make a copy of testFilePtr so the testing function can safely call \
+     * getenv                                                             \
+     */                                                                   \
+    std::string testFile(testFilePtr);
+
+#  define MOZ_AFL_INTERFACE_RAW(initFunc, testFunc, moduleName)          \
+    static int afl_fuzz_##moduleName(const uint8_t* data, size_t size) { \
+      MOZ_RELEASE_ASSERT(data == NULL && size == 0);                     \
+      MOZ_AFL_INTERFACE_COMMON();                                        \
+      return ::mozilla::afl_interface_raw(testFile.c_str(), testFunc);   \
+    }                                                                    \
+    static void __attribute__((constructor)) AFLRegister##moduleName() { \
+      ::mozilla::FuzzerRegistry::getInstance().registerModule(           \
+          #moduleName, initFunc, afl_fuzz_##moduleName);                 \
+    }
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define MOZ_AFL_INTERFACE_RAW(initFunc, testFunc, moduleName) /* Nothing */
 #endif                                                        // __AFL_COMPILER
+||||||| merged common ancestors
+#define MOZ_AFL_INTERFACE_RAW(initFunc, testFunc, moduleName)    /* Nothing */
+#endif // __AFL_COMPILER
+=======
+#  define MOZ_AFL_INTERFACE_RAW(initFunc, testFunc, moduleName) /* Nothing */
+#endif  // __AFL_COMPILER
+>>>>>>> upstream-releases
 
 #ifdef LIBFUZZER
+<<<<<<< HEAD
 #define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, moduleName)          \
   static void __attribute__((constructor)) LibFuzzerRegister##moduleName() { \
     ::mozilla::FuzzerRegistry::getInstance().registerModule(                 \
         #moduleName, initFunc, testFunc);                                    \
   }
+||||||| merged common ancestors
+#define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, moduleName)            \
+  static void __attribute__ ((constructor)) LibFuzzerRegister##moduleName() {  \
+    ::mozilla::FuzzerRegistry::getInstance().registerModule(                   \
+      #moduleName, initFunc, testFunc                                          \
+    );                                                                         \
+  }
+=======
+#  define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, moduleName)          \
+    static void __attribute__((constructor)) LibFuzzerRegister##moduleName() { \
+      ::mozilla::FuzzerRegistry::getInstance().registerModule(                 \
+          #moduleName, initFunc, testFunc);                                    \
+    }
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, \
                                     moduleName) /* Nothing */
+||||||| merged common ancestors
+#define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, moduleName)    /* Nothing */
+=======
+#  define MOZ_LIBFUZZER_INTERFACE_RAW(initFunc, testFunc, \
+                                      moduleName) /* Nothing */
+>>>>>>> upstream-releases
 #endif
 
 #define MOZ_FUZZING_INTERFACE_RAW(initFunc, testFunc, moduleName) \

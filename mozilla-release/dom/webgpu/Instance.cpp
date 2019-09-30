@@ -13,8 +13,19 @@
 namespace mozilla {
 namespace webgpu {
 
+<<<<<<< HEAD
 /*static*/ RefPtr<Instance> Instance::Create(nsIGlobalObject* parent) {
   return new Instance(parent);
+||||||| merged common ancestors
+/*static*/ RefPtr<Instance>
+Instance::Create(nsIGlobalObject* parent)
+{
+    return new Instance(parent);
+=======
+/*static*/
+RefPtr<Instance> Instance::Create(nsIGlobalObject* parent) {
+  return new Instance(parent);
+>>>>>>> upstream-releases
 }
 
 Instance::Instance(nsIGlobalObject* parent) : mParent(parent) {}

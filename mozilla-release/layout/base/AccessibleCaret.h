@@ -19,13 +19,11 @@
 #include "mozilla/RefPtr.h"
 #include "nsString.h"
 
-class nsIDocument;
 class nsIFrame;
-class nsIPresShell;
 struct nsPoint;
 
 namespace mozilla {
-
+class PresShell;
 namespace dom {
 class Event;
 }  // namespace dom
@@ -45,9 +43,20 @@ class Event;
 // Please see the wiki page for more information.
 // https://wiki.mozilla.org/AccessibleCaret
 //
+<<<<<<< HEAD
 class AccessibleCaret {
  public:
   explicit AccessibleCaret(nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class AccessibleCaret
+{
+public:
+  explicit AccessibleCaret(nsIPresShell* aPresShell);
+=======
+class AccessibleCaret {
+ public:
+  explicit AccessibleCaret(PresShell* aPresShell);
+>>>>>>> upstream-releases
   virtual ~AccessibleCaret();
 
   // This enumeration representing the visibility and visual style of an
@@ -162,14 +171,20 @@ class AccessibleCaret {
   // Transform Appearance to CSS id used in ua.css.
   static nsAutoString AppearanceString(Appearance aAppearance);
 
+<<<<<<< HEAD
   already_AddRefed<dom::Element> CreateCaretElement(
       nsIDocument* aDocument) const;
+||||||| merged common ancestors
+  already_AddRefed<dom::Element> CreateCaretElement(nsIDocument* aDocument) const;
+=======
+  already_AddRefed<dom::Element> CreateCaretElement(dom::Document*) const;
+>>>>>>> upstream-releases
 
   // Inject caret element into custom content container.
-  void InjectCaretElement(nsIDocument* aDocument);
+  void InjectCaretElement(dom::Document*);
 
   // Remove caret element from custom content container.
-  void RemoveCaretElement(nsIDocument* aDocument);
+  void RemoveCaretElement(dom::Document*);
 
   // The top-center of the imaginary caret to which this AccessibleCaret is
   // attached.
@@ -195,7 +210,13 @@ class AccessibleCaret {
   // AccessibleCaretEventHub::Terminate() which is called in
   // PresShell::Destroy(), it frees us automatically. No need to worry if we
   // outlive mPresShell.
+<<<<<<< HEAD
   nsIPresShell* const MOZ_NON_OWNING_REF mPresShell = nullptr;
+||||||| merged common ancestors
+  nsIPresShell* MOZ_NON_OWNING_REF const mPresShell = nullptr;
+=======
+  PresShell* const MOZ_NON_OWNING_REF mPresShell = nullptr;
+>>>>>>> upstream-releases
 
   RefPtr<dom::AnonymousContent> mCaretElementHolder;
 

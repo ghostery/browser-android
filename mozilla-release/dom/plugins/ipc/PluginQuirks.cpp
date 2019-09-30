@@ -21,6 +21,7 @@ int GetQuirksFromMimeTypeAndFilename(const nsCString& aMimeType,
   if (specialType == nsPluginHost::eSpecialType_Flash) {
     quirks |= QUIRK_FLASH_RETURN_EMPTY_DOCUMENT_ORIGIN;
 #ifdef OS_WIN
+<<<<<<< HEAD
     quirks |= QUIRK_WINLESS_TRACKPOPUP_HOOK;
     quirks |= QUIRK_FLASH_THROTTLE_WMUSER_EVENTS;
     quirks |= QUIRK_FLASH_HOOK_SETLONGPTR;
@@ -32,9 +33,42 @@ int GetQuirksFromMimeTypeAndFilename(const nsCString& aMimeType,
     quirks |= QUIRK_FLASH_HOOK_PRINTDLGW;
     quirks |= QUIRK_FLASH_HOOK_SSL;
     quirks |= QUIRK_FLASH_HOOK_CREATEMUTEXW;
+||||||| merged common ancestors
+        quirks |= QUIRK_WINLESS_TRACKPOPUP_HOOK;
+        quirks |= QUIRK_FLASH_THROTTLE_WMUSER_EVENTS;
+        quirks |= QUIRK_FLASH_HOOK_SETLONGPTR;
+        quirks |= QUIRK_FLASH_HOOK_GETWINDOWINFO;
+        quirks |= QUIRK_FLASH_FIXUP_MOUSE_CAPTURE;
+        quirks |= QUIRK_WINLESS_HOOK_IME;
+#if defined(_M_X64) || defined(__x86_64__)
+        quirks |= QUIRK_FLASH_HOOK_GETKEYSTATE;
+        quirks |= QUIRK_FLASH_HOOK_PRINTDLGW;
+        quirks |= QUIRK_FLASH_HOOK_SSL;
+        quirks |= QUIRK_FLASH_HOOK_CREATEMUTEXW;
+=======
+    quirks |= QUIRK_WINLESS_TRACKPOPUP_HOOK;
+    quirks |= QUIRK_FLASH_THROTTLE_WMUSER_EVENTS;
+    quirks |= QUIRK_FLASH_HOOK_SETLONGPTR;
+    quirks |= QUIRK_FLASH_HOOK_GETWINDOWINFO;
+    quirks |= QUIRK_FLASH_FIXUP_MOUSE_CAPTURE;
+    quirks |= QUIRK_WINLESS_HOOK_IME;
+#  if defined(_M_X64) || defined(__x86_64__)
+    quirks |= QUIRK_FLASH_HOOK_GETKEYSTATE;
+    quirks |= QUIRK_FLASH_HOOK_PRINTDLGW;
+    quirks |= QUIRK_FLASH_HOOK_SSL;
+    quirks |= QUIRK_FLASH_HOOK_CREATEMUTEXW;
+#  endif
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
 #endif
   }
+||||||| merged common ancestors
+#endif
+    }
+=======
+  }
+>>>>>>> upstream-releases
 
 #ifdef XP_MACOSX
   // Whitelist Flash to support offline renderer.

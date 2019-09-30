@@ -26,10 +26,23 @@ using namespace mozilla::dom::indexedDB;
 
 IDBFileRequest::IDBFileRequest(IDBFileHandle* aFileHandle,
                                bool aWrapAsDOMRequest)
+<<<<<<< HEAD
     : DOMRequest(aFileHandle->GetOwner()),
       mFileHandle(aFileHandle),
       mWrapAsDOMRequest(aWrapAsDOMRequest),
       mHasEncoding(false) {
+||||||| merged common ancestors
+  : DOMRequest(aFileHandle->GetOwner())
+  , mFileHandle(aFileHandle)
+  , mWrapAsDOMRequest(aWrapAsDOMRequest)
+  , mHasEncoding(false)
+{
+=======
+    : DOMRequest(aFileHandle->GetOwnerGlobal()),
+      mFileHandle(aFileHandle),
+      mWrapAsDOMRequest(aWrapAsDOMRequest),
+      mHasEncoding(false) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aFileHandle);
   aFileHandle->AssertIsOnOwningThread();
 }
@@ -51,7 +64,7 @@ already_AddRefed<IDBFileRequest> IDBFileRequest::Create(
 void IDBFileRequest::FireProgressEvent(uint64_t aLoaded, uint64_t aTotal) {
   AssertIsOnOwningThread();
 
-  if (NS_FAILED(CheckInnerWindowCorrectness())) {
+  if (NS_FAILED(CheckCurrentGlobalCorrectness())) {
     return;
   }
 
@@ -72,7 +85,7 @@ void IDBFileRequest::SetResultCallback(ResultCallback* aCallback) {
   MOZ_ASSERT(aCallback);
 
   AutoJSAPI autoJS;
-  if (NS_WARN_IF(!autoJS.Init(GetOwner()))) {
+  if (NS_WARN_IF(!autoJS.Init(GetOwnerGlobal()))) {
     FireError(NS_ERROR_DOM_FILEHANDLE_UNKNOWN_ERR);
     return;
   }

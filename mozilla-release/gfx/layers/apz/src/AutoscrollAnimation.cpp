@@ -75,8 +75,18 @@ bool AutoscrollAnimation::DoSample(FrameMetrics& aFrameMetrics,
   return true;
 }
 
+<<<<<<< HEAD
 void AutoscrollAnimation::Cancel(CancelAnimationFlags aFlags) {
   // The cancellation was initiated by browser.xml, so there's no need to
+||||||| merged common ancestors
+void
+AutoscrollAnimation::Cancel(CancelAnimationFlags aFlags)
+{
+  // The cancellation was initiated by browser.xml, so there's no need to
+=======
+void AutoscrollAnimation::Cancel(CancelAnimationFlags aFlags) {
+  // The cancellation was initiated by browser.js, so there's no need to
+>>>>>>> upstream-releases
   // notify it.
   if (aFlags & TriggeredExternally) {
     return;

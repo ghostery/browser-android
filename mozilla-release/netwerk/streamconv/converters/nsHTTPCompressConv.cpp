@@ -79,12 +79,24 @@ nsHTTPCompressConv::~nsHTTPCompressConv() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::GetDecodedDataLength(uint64_t *aDecodedDataLength) {
   *aDecodedDataLength = mDecodedDataLength;
   return NS_OK;
+||||||| merged common ancestors
+nsHTTPCompressConv::GetDecodedDataLength(uint64_t *aDecodedDataLength)
+{
+    *aDecodedDataLength = mDecodedDataLength;
+    return NS_OK;
+=======
+nsHTTPCompressConv::GetDecodedDataLength(uint64_t* aDecodedDataLength) {
+  *aDecodedDataLength = mDecodedDataLength;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::AsyncConvertData(const char *aFromType, const char *aToType,
                                      nsIStreamListener *aListener,
                                      nsISupports *aCtxt) {
@@ -92,6 +104,23 @@ nsHTTPCompressConv::AsyncConvertData(const char *aFromType, const char *aToType,
                       sizeof(HTTP_COMPRESS_TYPE) - 1) ||
       !PL_strncasecmp(aFromType, HTTP_X_COMPRESS_TYPE,
                       sizeof(HTTP_X_COMPRESS_TYPE) - 1)) {
+||||||| merged common ancestors
+nsHTTPCompressConv::AsyncConvertData(const char *aFromType,
+                                     const char *aToType,
+                                     nsIStreamListener *aListener,
+                                     nsISupports *aCtxt)
+{
+  if (!PL_strncasecmp(aFromType, HTTP_COMPRESS_TYPE, sizeof(HTTP_COMPRESS_TYPE)-1) ||
+      !PL_strncasecmp(aFromType, HTTP_X_COMPRESS_TYPE, sizeof(HTTP_X_COMPRESS_TYPE)-1)) {
+=======
+nsHTTPCompressConv::AsyncConvertData(const char* aFromType, const char* aToType,
+                                     nsIStreamListener* aListener,
+                                     nsISupports* aCtxt) {
+  if (!PL_strncasecmp(aFromType, HTTP_COMPRESS_TYPE,
+                      sizeof(HTTP_COMPRESS_TYPE) - 1) ||
+      !PL_strncasecmp(aFromType, HTTP_X_COMPRESS_TYPE,
+                      sizeof(HTTP_X_COMPRESS_TYPE) - 1)) {
+>>>>>>> upstream-releases
     mMode = HTTP_COMPRESS_COMPRESS;
   } else if (!PL_strncasecmp(aFromType, HTTP_GZIP_TYPE,
                              sizeof(HTTP_GZIP_TYPE) - 1) ||
@@ -116,19 +145,34 @@ nsHTTPCompressConv::AsyncConvertData(const char *aFromType, const char *aToType,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::OnStartRequest(nsIRequest *request, nsISupports *aContext) {
+||||||| merged common ancestors
+nsHTTPCompressConv::OnStartRequest(nsIRequest* request, nsISupports *aContext)
+{
+=======
+nsHTTPCompressConv::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   LOG(("nsHttpCompresssConv %p onstart\n", this));
   nsCOMPtr<nsIStreamListener> listener;
   {
     MutexAutoLock lock(mMutex);
     listener = mListener;
   }
-  return listener->OnStartRequest(request, aContext);
+  return listener->OnStartRequest(request);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::OnStopRequest(nsIRequest *request, nsISupports *aContext,
                                   nsresult aStatus) {
+||||||| merged common ancestors
+nsHTTPCompressConv::OnStopRequest(nsIRequest* request, nsISupports *aContext,
+                                  nsresult aStatus)
+{
+=======
+nsHTTPCompressConv::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+>>>>>>> upstream-releases
   nsresult status = aStatus;
   LOG(("nsHttpCompresssConv %p onstop %" PRIx32 "\n", this,
        static_cast<uint32_t>(aStatus)));
@@ -167,18 +211,40 @@ nsHTTPCompressConv::OnStopRequest(nsIRequest *request, nsISupports *aContext,
     MutexAutoLock lock(mMutex);
     listener = mListener;
   }
-  return listener->OnStopRequest(request, aContext, status);
+  return listener->OnStopRequest(request, status);
 }
 
+<<<<<<< HEAD
 /* static */ nsresult nsHTTPCompressConv::BrotliHandler(
     nsIInputStream *stream, void *closure, const char *dataIn, uint32_t,
     uint32_t aAvail, uint32_t *countRead) {
+||||||| merged common ancestors
+
+/* static */ nsresult
+nsHTTPCompressConv::BrotliHandler(nsIInputStream *stream, void *closure, const char *dataIn,
+                                  uint32_t, uint32_t aAvail, uint32_t *countRead)
+{
+=======
+/* static */
+nsresult nsHTTPCompressConv::BrotliHandler(nsIInputStream* stream,
+                                           void* closure, const char* dataIn,
+                                           uint32_t, uint32_t aAvail,
+                                           uint32_t* countRead) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(stream);
-  nsHTTPCompressConv *self = static_cast<nsHTTPCompressConv *>(closure);
+  nsHTTPCompressConv* self = static_cast<nsHTTPCompressConv*>(closure);
   *countRead = 0;
 
+<<<<<<< HEAD
   const size_t kOutSize = 128 * 1024;  // just a chunk size, we call in a loop
   uint8_t *outPtr;
+||||||| merged common ancestors
+  const size_t kOutSize = 128 * 1024; // just a chunk size, we call in a loop
+  uint8_t *outPtr;
+=======
+  const size_t kOutSize = 128 * 1024;  // just a chunk size, we call in a loop
+  uint8_t* outPtr;
+>>>>>>> upstream-releases
   size_t outSize;
   size_t avail = aAvail;
   BrotliDecoderResult res;
@@ -202,9 +268,19 @@ nsHTTPCompressConv::OnStopRequest(nsIRequest *request, nsISupports *aContext,
     LOG(("nsHttpCompresssConv %p brotlihandler decompress %zu\n", self, avail));
     size_t totalOut = self->mBrotli->mTotalOut;
     res = ::BrotliDecoderDecompressStream(
+<<<<<<< HEAD
         &self->mBrotli->mState, &avail,
         reinterpret_cast<const unsigned char **>(&dataIn), &outSize, &outPtr,
         &totalOut);
+||||||| merged common ancestors
+      &self->mBrotli->mState,
+      &avail, reinterpret_cast<const unsigned char **>(&dataIn),
+      &outSize, &outPtr, &totalOut);
+=======
+        &self->mBrotli->mState, &avail,
+        reinterpret_cast<const unsigned char**>(&dataIn), &outSize, &outPtr,
+        &totalOut);
+>>>>>>> upstream-releases
     outSize = kOutSize - outSize;
     self->mBrotli->mTotalOut = totalOut;
     self->mBrotli->mBrotliStateIsStreamEnd =
@@ -230,12 +306,28 @@ nsHTTPCompressConv::OnStopRequest(nsIRequest *request, nsISupports *aContext,
       }
     }
     if (outSize > 0) {
+<<<<<<< HEAD
       nsresult rv = self->do_OnDataAvailable(
           self->mBrotli->mRequest, self->mBrotli->mContext,
           self->mBrotli->mSourceOffset,
           reinterpret_cast<const char *>(outBuffer.get()), outSize);
       LOG(("nsHttpCompressConv %p BrotliHandler ODA rv=%" PRIx32, self,
            static_cast<uint32_t>(rv)));
+||||||| merged common ancestors
+      nsresult rv = self->do_OnDataAvailable(self->mBrotli->mRequest,
+                                             self->mBrotli->mContext,
+                                             self->mBrotli->mSourceOffset,
+                                             reinterpret_cast<const char *>(outBuffer.get()),
+                                             outSize);
+      LOG(("nsHttpCompressConv %p BrotliHandler ODA rv=%" PRIx32, self, static_cast<uint32_t>(rv)));
+=======
+      nsresult rv = self->do_OnDataAvailable(
+          self->mBrotli->mRequest, self->mBrotli->mContext,
+          self->mBrotli->mSourceOffset,
+          reinterpret_cast<const char*>(outBuffer.get()), outSize);
+      LOG(("nsHttpCompressConv %p BrotliHandler ODA rv=%" PRIx32, self,
+           static_cast<uint32_t>(rv)));
+>>>>>>> upstream-releases
       if (NS_FAILED(rv)) {
         self->mBrotli->mStatus = rv;
         return self->mBrotli->mStatus;
@@ -255,9 +347,21 @@ nsHTTPCompressConv::OnStopRequest(nsIRequest *request, nsISupports *aContext,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
                                     nsIInputStream *iStr,
                                     uint64_t aSourceOffset, uint32_t aCount) {
+||||||| merged common ancestors
+nsHTTPCompressConv::OnDataAvailable(nsIRequest* request,
+                                    nsISupports *aContext,
+                                    nsIInputStream *iStr,
+                                    uint64_t aSourceOffset,
+                                    uint32_t aCount)
+{
+=======
+nsHTTPCompressConv::OnDataAvailable(nsIRequest* request, nsIInputStream* iStr,
+                                    uint64_t aSourceOffset, uint32_t aCount) {
+>>>>>>> upstream-releases
   nsresult rv = NS_ERROR_INVALID_CONTENT_ENCODING;
   uint32_t streamLen = aCount;
   LOG(("nsHttpCompressConv %p OnDataAvailable %d", this, aCount));
@@ -291,6 +395,7 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
 
     case HTTP_COMPRESS_DEFLATE:
 
+<<<<<<< HEAD
       if (mInpBuffer != nullptr && streamLen > mInpBufferLen) {
         unsigned char *originalInpBuffer = mInpBuffer;
         if (!(mInpBuffer = (unsigned char *)realloc(
@@ -305,26 +410,75 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
             free(originalOutBuffer);
           }
         }
+||||||| merged common ancestors
+    if (mInpBuffer != nullptr && streamLen > mInpBufferLen) {
+      unsigned char* originalInpBuffer = mInpBuffer;
+      if (!(mInpBuffer = (unsigned char *) realloc(originalInpBuffer, mInpBufferLen = streamLen))) {
+        free(originalInpBuffer);
+      }
+=======
+      if (mInpBuffer != nullptr && streamLen > mInpBufferLen) {
+        unsigned char* originalInpBuffer = mInpBuffer;
+        if (!(mInpBuffer = (unsigned char*)realloc(
+                  originalInpBuffer, mInpBufferLen = streamLen))) {
+          free(originalInpBuffer);
+        }
+
+        if (mOutBufferLen < streamLen * 2) {
+          unsigned char* originalOutBuffer = mOutBuffer;
+          if (!(mOutBuffer = (unsigned char*)realloc(
+                    mOutBuffer, mOutBufferLen = streamLen * 3))) {
+            free(originalOutBuffer);
+          }
+        }
+>>>>>>> upstream-releases
 
         if (mInpBuffer == nullptr || mOutBuffer == nullptr) {
           return NS_ERROR_OUT_OF_MEMORY;
         }
       }
 
+<<<<<<< HEAD
       if (mInpBuffer == nullptr) {
         mInpBuffer = (unsigned char *)malloc(mInpBufferLen = streamLen);
+||||||| merged common ancestors
+      if (mInpBuffer == nullptr || mOutBuffer == nullptr) {
+        return NS_ERROR_OUT_OF_MEMORY;
+=======
+      if (mInpBuffer == nullptr) {
+        mInpBuffer = (unsigned char*)malloc(mInpBufferLen = streamLen);
+>>>>>>> upstream-releases
       }
 
+<<<<<<< HEAD
       if (mOutBuffer == nullptr) {
         mOutBuffer = (unsigned char *)malloc(mOutBufferLen = streamLen * 3);
       }
+||||||| merged common ancestors
+    if (mInpBuffer == nullptr) {
+      mInpBuffer = (unsigned char *) malloc(mInpBufferLen = streamLen);
+    }
+=======
+      if (mOutBuffer == nullptr) {
+        mOutBuffer = (unsigned char*)malloc(mOutBufferLen = streamLen * 3);
+      }
+>>>>>>> upstream-releases
 
       if (mInpBuffer == nullptr || mOutBuffer == nullptr) {
         return NS_ERROR_OUT_OF_MEMORY;
       }
 
+<<<<<<< HEAD
       uint32_t unused;
       iStr->Read((char *)mInpBuffer, streamLen, &unused);
+||||||| merged common ancestors
+    if (mInpBuffer == nullptr || mOutBuffer == nullptr) {
+      return NS_ERROR_OUT_OF_MEMORY;
+    }
+=======
+      uint32_t unused;
+      iStr->Read((char*)mInpBuffer, streamLen, &unused);
+>>>>>>> upstream-releases
 
       if (mMode == HTTP_COMPRESS_DEFLATE) {
         if (!mStreamInitialized) {
@@ -336,6 +490,7 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
 
           mStreamInitialized = true;
         }
+<<<<<<< HEAD
         d_stream.next_in = mInpBuffer;
         d_stream.avail_in = (uInt)streamLen;
 
@@ -354,8 +509,49 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+
+        mStreamInitialized = true;
+      }
+      d_stream.next_in = mInpBuffer;
+      d_stream.avail_in = (uInt)streamLen;
+
+      mDummyStreamInitialised = false;
+      for (;;) {
+        d_stream.next_out = mOutBuffer;
+        d_stream.avail_out = (uInt)mOutBufferLen;
+
+        int code = inflate(&d_stream, Z_NO_FLUSH);
+        unsigned bytesWritten = (uInt)mOutBufferLen - d_stream.avail_out;
+
+        if (code == Z_STREAM_END) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+        d_stream.next_in = mInpBuffer;
+        d_stream.avail_in = (uInt)streamLen;
+
+        mDummyStreamInitialised = false;
+        for (;;) {
+          d_stream.next_out = mOutBuffer;
+          d_stream.avail_out = (uInt)mOutBufferLen;
+
+          int code = inflate(&d_stream, Z_NO_FLUSH);
+          unsigned bytesWritten = (uInt)mOutBufferLen - d_stream.avail_out;
+
+          if (code == Z_STREAM_END) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
 
+<<<<<<< HEAD
             inflateEnd(&d_stream);
             mStreamEnded = true;
             break;
@@ -366,7 +562,29 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+          inflateEnd(&d_stream);
+          mStreamEnded = true;
+          break;
+        } else if (code == Z_OK) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+            inflateEnd(&d_stream);
+            mStreamEnded = true;
+            break;
+          } else if (code == Z_OK) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
           } else if (code == Z_BUF_ERROR) {
             if (bytesWritten) {
               rv = do_OnDataAvailable(request, aContext, aSourceOffset,
@@ -374,6 +592,22 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+          }
+        } else if (code == Z_BUF_ERROR) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+          } else if (code == Z_BUF_ERROR) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
             break;
           } else if (code == Z_DATA_ERROR) {
@@ -383,9 +617,19 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
                 0x8 + 0x7 * 0x10,
                 (((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) & 0xFF,
             };
+<<<<<<< HEAD
             inflateReset(&d_stream);
             d_stream.next_in = (Bytef *)dummy_head;
             d_stream.avail_in = sizeof(dummy_head);
+||||||| merged common ancestors
+          inflateReset(&d_stream);
+          d_stream.next_in = (Bytef*) dummy_head;
+          d_stream.avail_in = sizeof(dummy_head);
+=======
+            inflateReset(&d_stream);
+            d_stream.next_in = (Bytef*)dummy_head;
+            d_stream.avail_in = sizeof(dummy_head);
+>>>>>>> upstream-releases
 
             code = inflate(&d_stream, Z_NO_FLUSH);
             if (code != Z_OK) {
@@ -429,6 +673,7 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
           int code = inflate(&d_stream, Z_NO_FLUSH);
           unsigned bytesWritten = (uInt)mOutBufferLen - d_stream.avail_out;
 
+<<<<<<< HEAD
           if (code == Z_STREAM_END) {
             if (bytesWritten) {
               rv = do_OnDataAvailable(request, aContext, aSourceOffset,
@@ -436,8 +681,24 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+        if (code == Z_STREAM_END) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+          if (code == Z_STREAM_END) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
 
+<<<<<<< HEAD
             inflateEnd(&d_stream);
             mStreamEnded = true;
             break;
@@ -448,7 +709,29 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+          inflateEnd(&d_stream);
+          mStreamEnded = true;
+          break;
+        } else if (code == Z_OK) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+            inflateEnd(&d_stream);
+            mStreamEnded = true;
+            break;
+          } else if (code == Z_OK) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
           } else if (code == Z_BUF_ERROR) {
             if (bytesWritten) {
               rv = do_OnDataAvailable(request, aContext, aSourceOffset,
@@ -456,6 +739,22 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
               if (NS_FAILED(rv)) {
                 return rv;
               }
+||||||| merged common ancestors
+          }
+        } else if (code == Z_BUF_ERROR) {
+          if (bytesWritten) {
+            rv = do_OnDataAvailable(request, aContext, aSourceOffset, (char *)mOutBuffer, bytesWritten);
+            if (NS_FAILED (rv)) {
+              return rv;
+=======
+          } else if (code == Z_BUF_ERROR) {
+            if (bytesWritten) {
+              rv = do_OnDataAvailable(request, nullptr, aSourceOffset,
+                                      (char*)mOutBuffer, bytesWritten);
+              if (NS_FAILED(rv)) {
+                return rv;
+              }
+>>>>>>> upstream-releases
             }
             break;
           } else {
@@ -470,9 +769,19 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
         mBrotli = new BrotliWrapper();
       }
 
+<<<<<<< HEAD
       mBrotli->mRequest = request;
       mBrotli->mContext = aContext;
       mBrotli->mSourceOffset = aSourceOffset;
+||||||| merged common ancestors
+    mBrotli->mRequest = request;
+    mBrotli->mContext = aContext;
+    mBrotli->mSourceOffset = aSourceOffset;
+=======
+      mBrotli->mRequest = request;
+      mBrotli->mContext = nullptr;
+      mBrotli->mSourceOffset = aSourceOffset;
+>>>>>>> upstream-releases
 
       uint32_t countRead;
       rv = iStr->ReadSegments(BrotliHandler, this, streamLen, &countRead);
@@ -484,6 +793,7 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
       }
     } break;
 
+<<<<<<< HEAD
     default:
       nsCOMPtr<nsIStreamListener> listener;
       {
@@ -495,6 +805,29 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
       if (NS_FAILED(rv)) {
         return rv;
       }
+||||||| merged common ancestors
+  default:
+    nsCOMPtr<nsIStreamListener> listener;
+    {
+      MutexAutoLock lock(mMutex);
+      listener = mListener;
+    }
+    rv = listener->OnDataAvailable(request, aContext, iStr, aSourceOffset, aCount);
+    if (NS_FAILED (rv)) {
+      return rv;
+    }
+=======
+    default:
+      nsCOMPtr<nsIStreamListener> listener;
+      {
+        MutexAutoLock lock(mMutex);
+        listener = mListener;
+      }
+      rv = listener->OnDataAvailable(request, iStr, aSourceOffset, aCount);
+      if (NS_FAILED(rv)) {
+        return rv;
+      }
+>>>>>>> upstream-releases
   } /* switch */
 
   return NS_OK;
@@ -503,17 +836,44 @@ nsHTTPCompressConv::OnDataAvailable(nsIRequest *request, nsISupports *aContext,
 // XXX/ruslan: need to implement this too
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHTTPCompressConv::Convert(nsIInputStream *aFromStream, const char *aFromType,
                             const char *aToType, nsISupports *aCtxt,
                             nsIInputStream **_retval) {
+||||||| merged common ancestors
+nsHTTPCompressConv::Convert(nsIInputStream *aFromStream,
+                            const char *aFromType,
+                            const char *aToType,
+                            nsISupports *aCtxt,
+                            nsIInputStream **_retval)
+{
+=======
+nsHTTPCompressConv::Convert(nsIInputStream* aFromStream, const char* aFromType,
+                            const char* aToType, nsISupports* aCtxt,
+                            nsIInputStream** _retval) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 nsresult nsHTTPCompressConv::do_OnDataAvailable(nsIRequest *request,
                                                 nsISupports *context,
                                                 uint64_t offset,
                                                 const char *buffer,
                                                 uint32_t count) {
+||||||| merged common ancestors
+nsresult
+nsHTTPCompressConv::do_OnDataAvailable(nsIRequest* request,
+                                       nsISupports *context, uint64_t offset,
+                                       const char *buffer, uint32_t count)
+{
+=======
+nsresult nsHTTPCompressConv::do_OnDataAvailable(nsIRequest* request,
+                                                nsISupports* context,
+                                                uint64_t offset,
+                                                const char* buffer,
+                                                uint32_t count) {
+>>>>>>> upstream-releases
   if (!mStream) {
     mStream = do_CreateInstance(NS_STRINGINPUTSTREAM_CONTRACTID);
     NS_ENSURE_STATE(mStream);
@@ -526,8 +886,15 @@ nsresult nsHTTPCompressConv::do_OnDataAvailable(nsIRequest *request,
     MutexAutoLock lock(mMutex);
     listener = mListener;
   }
+<<<<<<< HEAD
   nsresult rv =
       listener->OnDataAvailable(request, context, mStream, offset, count);
+||||||| merged common ancestors
+  nsresult rv = listener->OnDataAvailable(request, context, mStream,
+                                          offset, count);
+=======
+  nsresult rv = listener->OnDataAvailable(request, mStream, offset, count);
+>>>>>>> upstream-releases
 
   // Make sure the stream no longer references |buffer| in case our listener
   // is crazy enough to try to read from |mStream| after ODA.
@@ -546,6 +913,7 @@ nsresult nsHTTPCompressConv::do_OnDataAvailable(nsIRequest *request,
 
 static unsigned gz_magic[2] = {0x1f, 0x8b}; /* gzip magic header */
 
+<<<<<<< HEAD
 uint32_t nsHTTPCompressConv::check_header(nsIInputStream *iStr,
                                           uint32_t streamLen, nsresult *rs) {
   enum {
@@ -558,6 +926,25 @@ uint32_t nsHTTPCompressConv::check_header(nsIInputStream *iStr,
     GZIP_COMMENT,
     GZIP_CRC
   };
+||||||| merged common ancestors
+uint32_t
+nsHTTPCompressConv::check_header(nsIInputStream *iStr, uint32_t streamLen, nsresult *rs)
+{
+  enum  { GZIP_INIT = 0, GZIP_OS, GZIP_EXTRA0, GZIP_EXTRA1, GZIP_EXTRA2, GZIP_ORIG, GZIP_COMMENT, GZIP_CRC };
+=======
+uint32_t nsHTTPCompressConv::check_header(nsIInputStream* iStr,
+                                          uint32_t streamLen, nsresult* rs) {
+  enum {
+    GZIP_INIT = 0,
+    GZIP_OS,
+    GZIP_EXTRA0,
+    GZIP_EXTRA1,
+    GZIP_EXTRA2,
+    GZIP_ORIG,
+    GZIP_COMMENT,
+    GZIP_CRC
+  };
+>>>>>>> upstream-releases
   char c;
 
   *rs = NS_OK;
@@ -700,8 +1087,17 @@ nsHTTPCompressConv::CheckListenerChain() {
 }  // namespace net
 }  // namespace mozilla
 
+<<<<<<< HEAD
 nsresult NS_NewHTTPCompressConv(
     mozilla::net::nsHTTPCompressConv **aHTTPCompressConv) {
+||||||| merged common ancestors
+nsresult
+NS_NewHTTPCompressConv(mozilla::net::nsHTTPCompressConv **aHTTPCompressConv)
+{
+=======
+nsresult NS_NewHTTPCompressConv(
+    mozilla::net::nsHTTPCompressConv** aHTTPCompressConv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aHTTPCompressConv != nullptr, "null ptr");
   if (!aHTTPCompressConv) {
     return NS_ERROR_NULL_POINTER;

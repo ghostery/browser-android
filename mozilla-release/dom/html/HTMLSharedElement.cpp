@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/HTMLSharedElement.h"
+#include "mozilla/dom/BindContext.h"
 #include "mozilla/dom/HTMLBaseElementBinding.h"
 #include "mozilla/dom/HTMLDirectoryElementBinding.h"
 #include "mozilla/dom/HTMLHeadElementBinding.h"
@@ -39,9 +40,19 @@ void HTMLSharedElement::GetHref(nsAString& aValue) {
   GetAttr(kNameSpaceID_None, nsGkAtoms::href, href);
 
   nsCOMPtr<nsIURI> uri;
+<<<<<<< HEAD
   nsIDocument* doc = OwnerDoc();
   nsContentUtils::NewURIWithDocumentCharset(getter_AddRefs(uri), href, doc,
                                             doc->GetFallbackBaseURI());
+||||||| merged common ancestors
+  nsIDocument* doc = OwnerDoc();
+  nsContentUtils::NewURIWithDocumentCharset(
+    getter_AddRefs(uri), href, doc, doc->GetFallbackBaseURI());
+=======
+  Document* doc = OwnerDoc();
+  nsContentUtils::NewURIWithDocumentCharset(getter_AddRefs(uri), href, doc,
+                                            doc->GetFallbackBaseURI());
+>>>>>>> upstream-releases
 
   if (!uri) {
     aValue = href;
@@ -55,7 +66,7 @@ void HTMLSharedElement::GetHref(nsAString& aValue) {
 
 void HTMLSharedElement::DoneAddingChildren(bool aHaveNotified) {
   if (mNodeInfo->Equals(nsGkAtoms::head)) {
-    nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
+    nsCOMPtr<Document> doc = GetUncomposedDoc();
     if (doc) {
       doc->OnL10nResourceContainerParsed();
     }
@@ -125,8 +136,17 @@ HTMLSharedElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return nsGenericHTMLElement::IsAttributeMapped(aAttribute);
 }
 
+<<<<<<< HEAD
 static void SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument,
                                              nsIContent* aMustMatch) {
+||||||| merged common ancestors
+static void
+SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument, nsIContent* aMustMatch)
+{
+=======
+static void SetBaseURIUsingFirstBaseWithHref(Document* aDocument,
+                                             nsIContent* aMustMatch) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDocument, "Need a document!");
 
   for (nsIContent* child = aDocument->GetFirstChild(); child;
@@ -148,14 +168,8 @@ static void SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument,
           aDocument->GetFallbackBaseURI());
 
       // Check if CSP allows this base-uri
-      nsCOMPtr<nsIContentSecurityPolicy> csp;
-      nsresult rv = aDocument->NodePrincipal()->GetCsp(getter_AddRefs(csp));
-      NS_ASSERTION(NS_SUCCEEDED(rv), "Getting CSP Failed");
-      // For all the different error cases we assign a nullptr to
-      // newBaseURI, so we basically call aDocument->SetBaseURI(nullptr);
-      if (NS_FAILED(rv)) {
-        newBaseURI = nullptr;
-      }
+      nsresult rv = NS_OK;
+      nsCOMPtr<nsIContentSecurityPolicy> csp = aDocument->GetCsp();
       if (csp && newBaseURI) {
         // base-uri is only enforced if explicitly defined in the
         // policy - do *not* consult default-src, see:
@@ -178,8 +192,18 @@ static void SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument,
   aDocument->SetBaseURI(nullptr);
 }
 
+<<<<<<< HEAD
 static void SetBaseTargetUsingFirstBaseWithTarget(nsIDocument* aDocument,
                                                   nsIContent* aMustMatch) {
+||||||| merged common ancestors
+static void
+SetBaseTargetUsingFirstBaseWithTarget(nsIDocument* aDocument,
+                                      nsIContent* aMustMatch)
+{
+=======
+static void SetBaseTargetUsingFirstBaseWithTarget(Document* aDocument,
+                                                  nsIContent* aMustMatch) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDocument, "Need a document!");
 
   for (nsIContent* child = aDocument->GetFirstChild(); child;
@@ -230,31 +254,61 @@ nsresult HTMLSharedElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
       aNamespaceID, aName, aValue, aOldValue, aSubjectPrincipal, aNotify);
 }
 
+<<<<<<< HEAD
 nsresult HTMLSharedElement::BindToTree(nsIDocument* aDocument,
                                        nsIContent* aParent,
                                        nsIContent* aBindingParent) {
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLSharedElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                              nsIContent* aBindingParent)
+{
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+nsresult HTMLSharedElement::BindToTree(BindContext& aContext,
+                                       nsINode& aParent) {
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // The document stores a pointer to its base URI and base target, which we may
   // need to update here.
+<<<<<<< HEAD
   if (mNodeInfo->Equals(nsGkAtoms::base) && aDocument) {
+||||||| merged common ancestors
+  if (mNodeInfo->Equals(nsGkAtoms::base) &&
+      aDocument) {
+=======
+  if (mNodeInfo->Equals(nsGkAtoms::base) && IsInUncomposedDoc()) {
+>>>>>>> upstream-releases
     if (HasAttr(kNameSpaceID_None, nsGkAtoms::href)) {
-      SetBaseURIUsingFirstBaseWithHref(aDocument, this);
+      SetBaseURIUsingFirstBaseWithHref(&aContext.OwnerDoc(), this);
     }
     if (HasAttr(kNameSpaceID_None, nsGkAtoms::target)) {
-      SetBaseTargetUsingFirstBaseWithTarget(aDocument, this);
+      SetBaseTargetUsingFirstBaseWithTarget(&aContext.OwnerDoc(), this);
     }
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void HTMLSharedElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsIDocument* doc = GetUncomposedDoc();
+||||||| merged common ancestors
+void
+HTMLSharedElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsIDocument* doc = GetUncomposedDoc();
+=======
+void HTMLSharedElement::UnbindFromTree(bool aNullParent) {
+  Document* doc = GetUncomposedDoc();
+>>>>>>> upstream-releases
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 
   // If we're removing a <base> from a document, we may need to update the
   // document's base URI and base target

@@ -24,6 +24,9 @@ struct IDXGIFactory2;
 struct IDXGISwapChain;
 
 namespace mozilla {
+namespace gl {
+class GLLibraryEGL;
+}  // namespace gl
 
 namespace wr {
 
@@ -50,8 +53,14 @@ class RenderCompositorANGLE : public RenderCompositor {
 
   bool UseDComp() const override { return !!mCompositionDevice; }
 
+<<<<<<< HEAD
   bool UseTripleBuffering() const { return mUseTripleBuffering; }
 
+||||||| merged common ancestors
+=======
+  bool UseTripleBuffering() const override { return mUseTripleBuffering; }
+
+>>>>>>> upstream-releases
   LayoutDeviceIntSize GetBufferSize() override;
 
  protected:

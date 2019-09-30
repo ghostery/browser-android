@@ -24,8 +24,17 @@ SamplesWaitingForKey::SamplesWaitingForKey(
 SamplesWaitingForKey::~SamplesWaitingForKey() { Flush(); }
 
 RefPtr<SamplesWaitingForKey::WaitForKeyPromise>
+<<<<<<< HEAD
 SamplesWaitingForKey::WaitIfKeyNotUsable(MediaRawData* aSample) {
   if (!aSample || !aSample->mCrypto.mValid || !mProxy) {
+||||||| merged common ancestors
+SamplesWaitingForKey::WaitIfKeyNotUsable(MediaRawData* aSample)
+{
+  if (!aSample || !aSample->mCrypto.mValid || !mProxy) {
+=======
+SamplesWaitingForKey::WaitIfKeyNotUsable(MediaRawData* aSample) {
+  if (!aSample || !aSample->mCrypto.IsEncrypted() || !mProxy) {
+>>>>>>> upstream-releases
     return WaitForKeyPromise::CreateAndResolve(aSample, __func__);
   }
   auto caps = mProxy->Capabilites().Lock();
@@ -69,4 +78,15 @@ void SamplesWaitingForKey::Flush() {
   mSamples.Clear();
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+void SamplesWaitingForKey::BreakCycles() {
+  MutexAutoLock lock(mMutex);
+  mProxy = nullptr;
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

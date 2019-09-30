@@ -7,7 +7,13 @@
 
 #include "SkRWBuffer.h"
 
+<<<<<<< HEAD
 #include "SkAtomics.h"
+||||||| merged common ancestors
+#include "SkAtomics.h"
+#include "SkMalloc.h"
+=======
+>>>>>>> upstream-releases
 #include "SkMakeUnique.h"
 #include "SkMalloc.h"
 #include "SkStream.h"

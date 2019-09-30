@@ -1,13 +1,13 @@
 //! A simple GVN pass.
 
-use cursor::{Cursor, FuncCursor};
-use dominator_tree::DominatorTree;
-use ir::{Function, Inst, InstructionData, Opcode, Type};
-use scoped_hash_map::ScopedHashMap;
-use std::cell::{Ref, RefCell};
-use std::hash::{Hash, Hasher};
+use crate::cursor::{Cursor, FuncCursor};
+use crate::dominator_tree::DominatorTree;
+use crate::ir::{Function, Inst, InstructionData, Opcode, Type};
+use crate::scoped_hash_map::ScopedHashMap;
+use crate::timing;
+use core::cell::{Ref, RefCell};
+use core::hash::{Hash, Hasher};
 use std::vec::Vec;
-use timing;
 
 /// Test whether the given opcode is unsafe to even consider for GVN.
 fn trivially_unsafe_for_gvn(opcode: Opcode) -> bool {
@@ -121,8 +121,17 @@ pub fn do_simple_gvn(func: &mut Function, domtree: &mut DominatorTree) {
                 ty: ctrl_typevar,
                 pos: &pos,
             };
+<<<<<<< HEAD
             use scoped_hash_map::Entry::*;
             match visible_values.entry(key) {
+||||||| merged common ancestors
+            let entry = visible_values.entry(key);
+            use scoped_hash_map::Entry::*;
+            match entry {
+=======
+            use crate::scoped_hash_map::Entry::*;
+            match visible_values.entry(key) {
+>>>>>>> upstream-releases
                 Occupied(entry) => {
                     debug_assert!(domtree.dominates(*entry.get(), inst, &func.layout));
                     // If the redundant instruction is representing the current

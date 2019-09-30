@@ -11,5 +11,11 @@ az_Cyrl{
     Currencies%variant{
         AZN{"ман."}
     }
+<<<<<<< HEAD
     Version{"2.1.44.53"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
 }

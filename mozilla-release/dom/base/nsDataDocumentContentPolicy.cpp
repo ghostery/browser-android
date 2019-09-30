@@ -10,22 +10,35 @@
  * via XMLHttpRequest).
  */
 
+#include "nsContentPolicyUtils.h"
 #include "nsContentUtils.h"
+#include "nsContentPolicyUtils.h"
 #include "nsDataDocumentContentPolicy.h"
 #include "nsNetUtil.h"
 #include "nsIProtocolHandler.h"
 #include "nsScriptSecurityManager.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
+#include "mozilla/ScopeExit.h"
 #include "nsINode.h"
 #include "nsIDOMWindow.h"
 #include "nsIURI.h"
+
+using namespace mozilla;
 
 NS_IMPL_ISUPPORTS(nsDataDocumentContentPolicy, nsIContentPolicy)
 
 // Helper method for ShouldLoad()
 // Checks a URI for the given flags.  Returns true if the URI has the flags,
 // and false if not (or if we weren't able to tell).
+<<<<<<< HEAD
 static bool HasFlags(nsIURI *aURI, uint32_t aURIFlags) {
+||||||| merged common ancestors
+static bool
+HasFlags(nsIURI* aURI, uint32_t aURIFlags)
+{
+=======
+static bool HasFlags(nsIURI* aURI, uint32_t aURIFlags) {
+>>>>>>> upstream-releases
   bool hasFlags;
   nsresult rv = NS_URIChainHasFlags(aURI, aURIFlags, &hasFlags);
   return NS_SUCCEEDED(rv) && hasFlags;
@@ -35,10 +48,30 @@ static bool HasFlags(nsIURI *aURI, uint32_t aURIFlags) {
 // CHECK_PRINCIPAL_AND_DATA in nsContentPolicyUtils is still valid.
 // nsContentPolicyUtils may not pass all the parameters to ShouldLoad.
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDataDocumentContentPolicy::ShouldLoad(nsIURI *aContentLocation,
                                         nsILoadInfo *aLoadInfo,
                                         const nsACString &aMimeGuess,
                                         int16_t *aDecision) {
+||||||| merged common ancestors
+nsDataDocumentContentPolicy::ShouldLoad(nsIURI *aContentLocation,
+                                        nsILoadInfo* aLoadInfo,
+                                        const nsACString &aMimeGuess,
+                                        int16_t *aDecision)
+{
+=======
+nsDataDocumentContentPolicy::ShouldLoad(nsIURI* aContentLocation,
+                                        nsILoadInfo* aLoadInfo,
+                                        const nsACString& aMimeGuess,
+                                        int16_t* aDecision) {
+  auto setBlockingReason = mozilla::MakeScopeExit([&]() {
+    if (NS_CP_REJECTED(*aDecision)) {
+      NS_SetRequestBlockingReason(
+          aLoadInfo, nsILoadInfo::BLOCKING_REASON_CONTENT_POLICY_DATA_DOCUMENT);
+    }
+  });
+
+>>>>>>> upstream-releases
   uint32_t contentType = aLoadInfo->GetExternalContentPolicyType();
   nsCOMPtr<nsISupports> requestingContext = aLoadInfo->GetLoadingContext();
 
@@ -48,7 +81,7 @@ nsDataDocumentContentPolicy::ShouldLoad(nsIURI *aContentLocation,
 
   *aDecision = nsIContentPolicy::ACCEPT;
   // Look for the document.  In most cases, requestingContext is a node.
-  nsCOMPtr<nsIDocument> doc;
+  nsCOMPtr<mozilla::dom::Document> doc;
   nsCOMPtr<nsINode> node = do_QueryInterface(requestingContext);
   if (node) {
     doc = node->OwnerDoc();
@@ -74,7 +107,13 @@ nsDataDocumentContentPolicy::ShouldLoad(nsIURI *aContentLocation,
     }
   }
 
+<<<<<<< HEAD
   nsIDocument *docToCheckForImage = doc->GetDisplayDocument();
+||||||| merged common ancestors
+  nsIDocument* docToCheckForImage = doc->GetDisplayDocument();
+=======
+  mozilla::dom::Document* docToCheckForImage = doc->GetDisplayDocument();
+>>>>>>> upstream-releases
   if (!docToCheckForImage) {
     docToCheckForImage = doc;
   }
@@ -145,9 +184,22 @@ nsDataDocumentContentPolicy::ShouldLoad(nsIURI *aContentLocation,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDataDocumentContentPolicy::ShouldProcess(nsIURI *aContentLocation,
                                            nsILoadInfo *aLoadInfo,
                                            const nsACString &aMimeGuess,
                                            int16_t *aDecision) {
+||||||| merged common ancestors
+nsDataDocumentContentPolicy::ShouldProcess(nsIURI *aContentLocation,
+                                           nsILoadInfo *aLoadInfo,
+                                           const nsACString &aMimeGuess,
+                                           int16_t *aDecision)
+{
+=======
+nsDataDocumentContentPolicy::ShouldProcess(nsIURI* aContentLocation,
+                                           nsILoadInfo* aLoadInfo,
+                                           const nsACString& aMimeGuess,
+                                           int16_t* aDecision) {
+>>>>>>> upstream-releases
   return ShouldLoad(aContentLocation, aLoadInfo, aMimeGuess, aDecision);
 }

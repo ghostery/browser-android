@@ -23,9 +23,24 @@ const TEST_URL = `data:text/html;charset=utf-8,
   </script>`;
 
 add_task(async function() {
+<<<<<<< HEAD
   const {inspector} = await openInspectorForURL(TEST_URL);
   const {markup} = inspector;
   const breadcrumbs = inspector.panelDoc.getElementById("inspector-breadcrumbs");
+||||||| merged common ancestors
+  await pushPref("dom.webcomponents.shadowdom.enabled", true);
+  await pushPref("dom.webcomponents.customelements.enabled", true);
+
+  const {inspector} = await openInspectorForURL(TEST_URL);
+  const {markup} = inspector;
+  const breadcrumbs = inspector.panelDoc.getElementById("inspector-breadcrumbs");
+=======
+  const { inspector } = await openInspectorForURL(TEST_URL);
+  const { markup } = inspector;
+  const breadcrumbs = inspector.panelDoc.getElementById(
+    "inspector-breadcrumbs"
+  );
+>>>>>>> upstream-releases
 
   info("Find and expand the test-component shadow DOM host.");
   const hostFront = await getNodeFront("test-component", inspector);
@@ -44,8 +59,13 @@ add_task(async function() {
   inspector.selection.setNodeFront(slotNodeFront);
   await onBreadcrumbsUpdated;
 
-  checkBreadcrumbsContent(breadcrumbs,
-    ["html", "body", "test-component", "#shadow-root", "slot.slot-class"]);
+  checkBreadcrumbsContent(breadcrumbs, [
+    "html",
+    "body",
+    "test-component",
+    "#shadow-root",
+    "slot.slot-class",
+  ]);
 
   info("Expand the slot");
   await expandContainer(inspector, slotContainer);
@@ -59,25 +79,43 @@ add_task(async function() {
   inspector.selection.setNodeFront(slottedNodeFront);
   await onBreadcrumbsUpdated;
 
-  checkBreadcrumbsContent(breadcrumbs, ["html", "body", "test-component", "div#el1"]);
+  checkBreadcrumbsContent(breadcrumbs, [
+    "html",
+    "body",
+    "test-component",
+    "div#el1",
+  ]);
 
-  info("Update the classname of the real element and wait for the breadcrumbs update");
+  info(
+    "Update the classname of the real element and wait for the breadcrumbs update"
+  );
   onBreadcrumbsUpdated = inspector.once("breadcrumbs-updated");
   await ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
     content.document.getElementById("el1").setAttribute("class", "test");
   });
   await onBreadcrumbsUpdated;
 
-  checkBreadcrumbsContent(breadcrumbs,
-    ["html", "body", "test-component", "div#el1.test"]);
+  checkBreadcrumbsContent(breadcrumbs, [
+    "html",
+    "body",
+    "test-component",
+    "div#el1.test",
+  ]);
 });
 
 function checkBreadcrumbsContent(breadcrumbs, selectors) {
   info("Check the output of the breadcrumbs widget");
   const container = breadcrumbs.querySelector(".html-arrowscrollbox-inner");
-  is(container.childNodes.length, selectors.length, "Correct number of buttons");
+  is(
+    container.childNodes.length,
+    selectors.length,
+    "Correct number of buttons"
+  );
   for (let i = 0; i < container.childNodes.length; i++) {
-    is(container.childNodes[i].textContent, selectors[i],
-      "Text content for button " + i + " is correct");
+    is(
+      container.childNodes[i].textContent,
+      selectors[i],
+      "Text content for button " + i + " is correct"
+    );
   }
 }

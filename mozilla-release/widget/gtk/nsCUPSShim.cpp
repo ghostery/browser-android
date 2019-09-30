@@ -23,12 +23,37 @@ bool nsCUPSShim::Init() {
   mCupsLib = PR_LoadLibrary("libcups.so.2");
   if (!mCupsLib) return false;
 
+<<<<<<< HEAD
   // List of symbol pointers. Must match gSymName[] defined above.
   void **symAddr[] = {
       (void **)&mCupsAddOption, (void **)&mCupsFreeDests,
       (void **)&mCupsGetDest,   (void **)&mCupsGetDests,
       (void **)&mCupsPrintFile, (void **)&mCupsTempFd,
   };
+||||||| merged common ancestors
+bool
+nsCUPSShim::Init()
+{
+    mCupsLib = PR_LoadLibrary("libcups.so.2");
+    if (!mCupsLib)
+        return false;
+
+    // List of symbol pointers. Must match gSymName[] defined above.
+    void **symAddr[] = {
+        (void **)&mCupsAddOption,
+        (void **)&mCupsFreeDests,
+        (void **)&mCupsGetDest,
+        (void **)&mCupsGetDests,
+        (void **)&mCupsPrintFile,
+        (void **)&mCupsTempFd,
+    };
+=======
+  // List of symbol pointers. Must match gSymName[] defined above.
+  void** symAddr[] = {
+      (void**)&mCupsAddOption, (void**)&mCupsFreeDests, (void**)&mCupsGetDest,
+      (void**)&mCupsGetDests,  (void**)&mCupsPrintFile, (void**)&mCupsTempFd,
+  };
+>>>>>>> upstream-releases
 
   for (int i = gSymNameCt; i--;) {
     *(symAddr[i]) = PR_FindSymbol(mCupsLib, gSymName[i]);

@@ -21,11 +21,23 @@ class HTMLEditorEventListener final : public EditorEventListener {
         mListeningToMouseMoveEventForGrabber(false),
         mListeningToResizeEvent(false) {}
 
+<<<<<<< HEAD
   virtual ~HTMLEditorEventListener() {}
 
   // nsIDOMEventListener
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD HandleEvent(dom::Event* aEvent) override;
+||||||| merged common ancestors
+  virtual ~HTMLEditorEventListener()
+  {
+  }
+=======
+  virtual ~HTMLEditorEventListener() {}
+
+  // nsIDOMEventListener
+  MOZ_CAN_RUN_SCRIPT
+  NS_IMETHOD HandleEvent(dom::Event* aEvent) override;
+>>>>>>> upstream-releases
 
   /**
    * Connect() fails if aEditorBase isn't an HTMLEditor instance.
@@ -74,6 +86,7 @@ class HTMLEditorEventListener final : public EditorEventListener {
  protected:
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult MouseDown(dom::MouseEvent* aMouseEvent) override;
+  MOZ_CAN_RUN_SCRIPT
   virtual nsresult MouseUp(dom::MouseEvent* aMouseEvent) override;
   MOZ_CAN_RUN_SCRIPT
   virtual nsresult MouseClick(WidgetMouseEvent* aMouseClickEvent) override;

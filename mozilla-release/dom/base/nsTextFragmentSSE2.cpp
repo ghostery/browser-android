@@ -20,7 +20,15 @@ static inline bool is_zero(__m128i x) {
   return _mm_movemask_epi8(_mm_cmpeq_epi8(x, _mm_setzero_si128())) == 0xffff;
 }
 
+<<<<<<< HEAD
 int32_t FirstNon8Bit(const char16_t *str, const char16_t *end) {
+||||||| merged common ancestors
+int32_t
+FirstNon8Bit(const char16_t *str, const char16_t *end)
+{
+=======
+int32_t FirstNon8Bit(const char16_t* str, const char16_t* end) {
+>>>>>>> upstream-releases
   const uint32_t numUnicharsPerVector = 8;
   typedef Non8BitParameters<sizeof(size_t)> p;
   const size_t mask = p::mask();
@@ -41,17 +49,42 @@ int32_t FirstNon8Bit(const char16_t *str, const char16_t *end) {
       ((len - i) / numUnicharsPerVector) * numUnicharsPerVector;
   const uint16_t shortMask = 0xff00;
   __m128i vectmask = _mm_set1_epi16(static_cast<int16_t>(shortMask));
+<<<<<<< HEAD
   for (; i < vectWalkEnd; i += numUnicharsPerVector) {
     const __m128i vect = *reinterpret_cast<const __m128i *>(str + i);
     if (!is_zero(_mm_and_si128(vect, vectmask))) return i;
+||||||| merged common ancestors
+  for(; i < vectWalkEnd; i += numUnicharsPerVector) {
+    const __m128i vect = *reinterpret_cast<const __m128i*>(str + i);
+    if (!is_zero(_mm_and_si128(vect, vectmask)))
+      return i;
+=======
+  for (; i < vectWalkEnd; i += numUnicharsPerVector) {
+    const __m128i vect = *reinterpret_cast<const __m128i*>(str + i);
+    if (!is_zero(_mm_and_si128(vect, vectmask))) return i;
+>>>>>>> upstream-releases
   }
 
   // Check one word at a time.
+<<<<<<< HEAD
   const int32_t wordWalkEnd =
       ((len - i) / numUnicharsPerWord) * numUnicharsPerWord;
   for (; i < wordWalkEnd; i += numUnicharsPerWord) {
     const size_t word = *reinterpret_cast<const size_t *>(str + i);
     if (word & mask) return i;
+||||||| merged common ancestors
+  const int32_t wordWalkEnd = ((len - i) / numUnicharsPerWord) * numUnicharsPerWord;
+  for(; i < wordWalkEnd; i += numUnicharsPerWord) {
+    const size_t word = *reinterpret_cast<const size_t*>(str + i);
+    if (word & mask)
+      return i;
+=======
+  const int32_t wordWalkEnd =
+      ((len - i) / numUnicharsPerWord) * numUnicharsPerWord;
+  for (; i < wordWalkEnd; i += numUnicharsPerWord) {
+    const size_t word = *reinterpret_cast<const size_t*>(str + i);
+    if (word & mask) return i;
+>>>>>>> upstream-releases
   }
 
   // Take care of the remainder one character at a time.

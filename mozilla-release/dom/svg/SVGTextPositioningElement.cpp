@@ -4,9 +4,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/ArrayUtils.h"
-
 #include "mozilla/dom/SVGTextPositioningElement.h"
+
+#include "mozilla/ArrayUtils.h"
 #include "SVGAnimatedLengthList.h"
 #include "DOMSVGAnimatedLengthList.h"
 #include "DOMSVGAnimatedNumberList.h"
@@ -15,23 +15,66 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 nsSVGElement::LengthListInfo SVGTextPositioningElement::sLengthListInfo[4] = {
     {nsGkAtoms::x, SVGContentUtils::X, false},
     {nsGkAtoms::y, SVGContentUtils::Y, false},
     {nsGkAtoms::dx, SVGContentUtils::X, true},
     {nsGkAtoms::dy, SVGContentUtils::Y, true}};
+||||||| merged common ancestors
+nsSVGElement::LengthListInfo SVGTextPositioningElement::sLengthListInfo[4] =
+{
+  { nsGkAtoms::x,  SVGContentUtils::X, false },
+  { nsGkAtoms::y,  SVGContentUtils::Y, false },
+  { nsGkAtoms::dx, SVGContentUtils::X, true },
+  { nsGkAtoms::dy, SVGContentUtils::Y, true }
+};
+=======
+SVGElement::LengthListInfo SVGTextPositioningElement::sLengthListInfo[4] = {
+    {nsGkAtoms::x, SVGContentUtils::X, false},
+    {nsGkAtoms::y, SVGContentUtils::Y, false},
+    {nsGkAtoms::dx, SVGContentUtils::X, true},
+    {nsGkAtoms::dy, SVGContentUtils::Y, true}};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsSVGElement::LengthListAttributesInfo
 SVGTextPositioningElement::GetLengthListInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthListAttributesInfo
+SVGTextPositioningElement::GetLengthListInfo()
+{
+=======
+SVGElement::LengthListAttributesInfo
+SVGTextPositioningElement::GetLengthListInfo() {
+>>>>>>> upstream-releases
   return LengthListAttributesInfo(mLengthListAttributes, sLengthListInfo,
                                   ArrayLength(sLengthListInfo));
 }
 
+<<<<<<< HEAD
 nsSVGElement::NumberListInfo SVGTextPositioningElement::sNumberListInfo[1] = {
     {nsGkAtoms::rotate}};
 
 nsSVGElement::NumberListAttributesInfo
 SVGTextPositioningElement::GetNumberListInfo() {
+||||||| merged common ancestors
+
+nsSVGElement::NumberListInfo SVGTextPositioningElement::sNumberListInfo[1] =
+{
+  { nsGkAtoms::rotate }
+};
+
+nsSVGElement::NumberListAttributesInfo
+SVGTextPositioningElement::GetNumberListInfo()
+{
+=======
+SVGElement::NumberListInfo SVGTextPositioningElement::sNumberListInfo[1] = {
+    {nsGkAtoms::rotate}};
+
+SVGElement::NumberListAttributesInfo
+SVGTextPositioningElement::GetNumberListInfo() {
+>>>>>>> upstream-releases
   return NumberListAttributesInfo(mNumberListAttributes, sNumberListInfo,
                                   ArrayLength(sNumberListInfo));
 }

@@ -24,7 +24,7 @@ if CONFIG['INTEL_ARCHITECTURE']:
     SOURCES['yuv_convert_sse2.cpp'].flags += CONFIG['SSE2_FLAGS']
 
     # MSVC doesn't support MMX when targeting AMD64.
-    if CONFIG['CC_TYPE'] in ('msvc', 'clang-cl'):
+    if CONFIG['CC_TYPE'] == 'clang-cl':
         if CONFIG['CPU_ARCH'] == 'x86':
             SOURCES += [
                 'yuv_convert_mmx.cpp',
@@ -33,9 +33,18 @@ if CONFIG['INTEL_ARCHITECTURE']:
         SOURCES += ['yuv_convert_mmx.cpp']
         SOURCES['yuv_convert_mmx.cpp'].flags += CONFIG['MMX_FLAGS']
 
+<<<<<<< HEAD
 if CONFIG['CC_TYPE'] in ('msvc', 'clang-cl'):
     if CONFIG['CPU_ARCH'] == 'x86_64' or \
        (CONFIG['CPU_ARCH'] == 'x86' and CONFIG['CC_TYPE'] == 'clang-cl'):
+||||||| merged common ancestors
+if CONFIG['CC_TYPE'] in ('msvc', 'clang-cl'):
+    if CONFIG['CPU_ARCH'] == 'x86_64' or CONFIG['CC_TYPE'] == 'clang-cl':
+=======
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    if CONFIG['CPU_ARCH'] == 'x86_64' or \
+       (CONFIG['CPU_ARCH'] == 'x86' and CONFIG['CC_TYPE'] == 'clang-cl'):
+>>>>>>> upstream-releases
         SOURCES += [
             'yuv_row_win64.cpp',
         ]

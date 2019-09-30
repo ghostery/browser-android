@@ -7,7 +7,7 @@
 #ifndef mozilla_dom_SVGFEFloodElement_h
 #define mozilla_dom_SVGFEFloodElement_h
 
-#include "nsSVGFilters.h"
+#include "SVGFilters.h"
 
 nsresult NS_NewSVGFEFloodElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
@@ -15,7 +15,7 @@ nsresult NS_NewSVGFEFloodElement(
 namespace mozilla {
 namespace dom {
 
-typedef nsSVGFE SVGFEFloodElementBase;
+typedef SVGFE SVGFEFloodElementBase;
 
 class SVGFEFloodElement : public SVGFEFloodElementBase {
   friend nsresult(::NS_NewSVGFEFloodElement(
@@ -32,6 +32,7 @@ class SVGFEFloodElement : public SVGFEFloodElementBase {
  public:
   virtual bool SubregionIsUnionOfRegions() override { return false; }
 
+<<<<<<< HEAD
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
       const nsTArray<bool>& aInputsAreTainted,
@@ -39,6 +40,22 @@ class SVGFEFloodElement : public SVGFEFloodElementBase {
   virtual nsSVGString& GetResultImageName() override {
     return mStringAttributes[RESULT];
   }
+||||||| merged common ancestors
+  virtual FilterPrimitiveDescription
+    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
+                            const IntRect& aFilterSubregion,
+                            const nsTArray<bool>& aInputsAreTainted,
+                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
+=======
+  virtual FilterPrimitiveDescription GetPrimitiveDescription(
+      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
+      const nsTArray<bool>& aInputsAreTainted,
+      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual SVGAnimatedString& GetResultImageName() override {
+    return mStringAttributes[RESULT];
+  }
+>>>>>>> upstream-releases
 
   // nsIContent interface
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
@@ -51,7 +68,7 @@ class SVGFEFloodElement : public SVGFEFloodElementBase {
   virtual StringAttributesInfo GetStringInfo() override;
 
   enum { RESULT };
-  nsSVGString mStringAttributes[1];
+  SVGAnimatedString mStringAttributes[1];
   static StringInfo sStringInfo[1];
 };
 

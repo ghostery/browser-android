@@ -19,6 +19,7 @@ namespace net {
  *  This algorithm is used to check the data integrity.
  */
 
+<<<<<<< HEAD
 static inline void hashmix(uint32_t &a, uint32_t &b, uint32_t &c) {
   a -= b;
   a -= c;
@@ -47,11 +48,64 @@ static inline void hashmix(uint32_t &a, uint32_t &b, uint32_t &c) {
   c -= a;
   c -= b;
   c ^= (b >> 15);
+||||||| merged common ancestors
+static inline void hashmix(uint32_t& a, uint32_t& b, uint32_t& c)
+{
+  a -= b; a -= c; a ^= (c>>13);
+  b -= c; b -= a; b ^= (a<<8);
+  c -= a; c -= b; c ^= (b>>13);
+  a -= b; a -= c; a ^= (c>>12);
+  b -= c; b -= a; b ^= (a<<16);
+  c -= a; c -= b; c ^= (b>>5);
+  a -= b; a -= c; a ^= (c>>3);
+  b -= c; b -= a; b ^= (a<<10);
+  c -= a; c -= b; c ^= (b>>15);
+=======
+static inline void hashmix(uint32_t& a, uint32_t& b, uint32_t& c) {
+  a -= b;
+  a -= c;
+  a ^= (c >> 13);
+  b -= c;
+  b -= a;
+  b ^= (a << 8);
+  c -= a;
+  c -= b;
+  c ^= (b >> 13);
+  a -= b;
+  a -= c;
+  a ^= (c >> 12);
+  b -= c;
+  b -= a;
+  b ^= (a << 16);
+  c -= a;
+  c -= b;
+  c ^= (b >> 5);
+  a -= b;
+  a -= c;
+  a ^= (c >> 3);
+  b -= c;
+  b -= a;
+  b ^= (a << 10);
+  c -= a;
+  c -= b;
+  c ^= (b >> 15);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 CacheHash::Hash32_t CacheHash::Hash(const char *aData, uint32_t aSize,
                                     uint32_t aInitval) {
   const uint8_t *k = reinterpret_cast<const uint8_t *>(aData);
+||||||| merged common ancestors
+CacheHash::Hash32_t
+CacheHash::Hash(const char *aData, uint32_t aSize, uint32_t aInitval)
+{
+  const uint8_t *k = reinterpret_cast<const uint8_t*>(aData);
+=======
+CacheHash::Hash32_t CacheHash::Hash(const char* aData, uint32_t aSize,
+                                    uint32_t aInitval) {
+  const uint8_t* k = reinterpret_cast<const uint8_t*>(aData);
+>>>>>>> upstream-releases
   uint32_t a, b, c, len;
 
   /* Set up the internal state */
@@ -115,8 +169,17 @@ CacheHash::Hash32_t CacheHash::Hash(const char *aData, uint32_t aSize,
   return c;
 }
 
+<<<<<<< HEAD
 CacheHash::Hash16_t CacheHash::Hash16(const char *aData, uint32_t aSize,
                                       uint32_t aInitval) {
+||||||| merged common ancestors
+CacheHash::Hash16_t
+CacheHash::Hash16(const char *aData, uint32_t aSize, uint32_t aInitval)
+{
+=======
+CacheHash::Hash16_t CacheHash::Hash16(const char* aData, uint32_t aSize,
+                                      uint32_t aInitval) {
+>>>>>>> upstream-releases
   Hash32_t hash = Hash(aData, aSize, aInitval);
   return (hash & 0xFFFF);
 }
@@ -158,8 +221,18 @@ void CacheHash::Feed(uint32_t aVal, uint8_t aLen) {
   mLength += aLen;
 }
 
+<<<<<<< HEAD
 void CacheHash::Update(const char *aData, uint32_t aLen) {
   const uint8_t *data = reinterpret_cast<const uint8_t *>(aData);
+||||||| merged common ancestors
+void
+CacheHash::Update(const char *aData, uint32_t aLen)
+{
+  const uint8_t *data = reinterpret_cast<const uint8_t*>(aData);
+=======
+void CacheHash::Update(const char* aData, uint32_t aLen) {
+  const uint8_t* data = reinterpret_cast<const uint8_t*>(aData);
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(!mFinalized);
 
@@ -219,7 +292,15 @@ CacheHash::Hash16_t CacheHash::GetHash16() {
   return (hash & 0xFFFF);
 }
 
+<<<<<<< HEAD
 OriginAttrsHash GetOriginAttrsHash(const mozilla::OriginAttributes &aOA) {
+||||||| merged common ancestors
+OriginAttrsHash
+GetOriginAttrsHash(const mozilla::OriginAttributes &aOA)
+{
+=======
+OriginAttrsHash GetOriginAttrsHash(const mozilla::OriginAttributes& aOA) {
+>>>>>>> upstream-releases
   nsAutoCString suffix;
   aOA.CreateSuffix(suffix);
 

@@ -9,25 +9,50 @@
 #include "content_decryption_module.h"
 
 #ifdef ENABLE_WMF
-#include "WMFUtils.h"
-#include "VideoDecoder.h"
+#  include "WMFUtils.h"
+#  include "VideoDecoder.h"
 #endif
 
+<<<<<<< HEAD
 class ClearKeyCDM : public cdm::ContentDecryptionModule_9 {
  private:
+||||||| merged common ancestors
+class ClearKeyCDM : public cdm::ContentDecryptionModule_9
+{
+private:
+=======
+class ClearKeyCDM : public cdm::ContentDecryptionModule_10 {
+ private:
+>>>>>>> upstream-releases
   RefPtr<ClearKeySessionManager> mSessionManager;
 #ifdef ENABLE_WMF
   RefPtr<VideoDecoder> mVideoDecoder;
 #endif
 
+<<<<<<< HEAD
  protected:
   cdm::Host_9* mHost;
+||||||| merged common ancestors
+protected:
+  cdm::Host_9* mHost;
+=======
+ protected:
+  cdm::Host_10* mHost;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   explicit ClearKeyCDM(cdm::Host_9* mHost);
+||||||| merged common ancestors
+public:
+  explicit ClearKeyCDM(cdm::Host_9* mHost);
+=======
+ public:
+  explicit ClearKeyCDM(cdm::Host_10* aHost);
+>>>>>>> upstream-releases
 
-  void Initialize(bool aAllowDistinctiveIdentifier,
-                  bool aAllowPersistentState) override;
+  void Initialize(bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
+                  bool aUseHardwareSecureCodecs) override;
 
   void GetStatusForPolicy(uint32_t aPromiseId,
                           const cdm::Policy& aPolicy) override;
@@ -57,25 +82,45 @@ class ClearKeyCDM : public cdm::ContentDecryptionModule_9 {
 
   void TimerExpired(void* aContext) override;
 
-  cdm::Status Decrypt(const cdm::InputBuffer_1& aEncryptedBuffer,
+  cdm::Status Decrypt(const cdm::InputBuffer_2& aEncryptedBuffer,
                       cdm::DecryptedBlock* aDecryptedBuffer) override;
 
   cdm::Status InitializeAudioDecoder(
+<<<<<<< HEAD
       const cdm::AudioDecoderConfig_1& aAudioDecoderConfig) override;
+||||||| merged common ancestors
+    const cdm::AudioDecoderConfig_1& aAudioDecoderConfig) override;
+=======
+      const cdm::AudioDecoderConfig_2& aAudioDecoderConfig) override;
+>>>>>>> upstream-releases
 
   cdm::Status InitializeVideoDecoder(
+<<<<<<< HEAD
       const cdm::VideoDecoderConfig_1& aVideoDecoderConfig) override;
+||||||| merged common ancestors
+    const cdm::VideoDecoderConfig_1& aVideoDecoderConfig) override;
+=======
+      const cdm::VideoDecoderConfig_2& aVideoDecoderConfig) override;
+>>>>>>> upstream-releases
 
   void DeinitializeDecoder(cdm::StreamType aDecoderType) override;
 
   void ResetDecoder(cdm::StreamType aDecoderType) override;
 
-  cdm::Status DecryptAndDecodeFrame(const cdm::InputBuffer_1& aEncryptedBuffer,
+  cdm::Status DecryptAndDecodeFrame(const cdm::InputBuffer_2& aEncryptedBuffer,
                                     cdm::VideoFrame* aVideoFrame) override;
 
   cdm::Status DecryptAndDecodeSamples(
+<<<<<<< HEAD
       const cdm::InputBuffer_1& aEncryptedBuffer,
       cdm::AudioFrames* aAudioFrame) override;
+||||||| merged common ancestors
+    const cdm::InputBuffer_1& aEncryptedBuffer,
+    cdm::AudioFrames* aAudioFrame) override;
+=======
+      const cdm::InputBuffer_2& aEncryptedBuffer,
+      cdm::AudioFrames* aAudioFrame) override;
+>>>>>>> upstream-releases
 
   void OnPlatformChallengeResponse(
       const cdm::PlatformChallengeResponse& aResponse) override;

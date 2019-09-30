@@ -69,9 +69,8 @@ class NumberFormat;
  * if the pattern has named arguments (see {@link #usesNamedArguments()}).
  *
  * <p>An argument might not specify any format type. In this case,
- * a Number value is formatted with a default (for the locale) NumberFormat,
- * a Date value is formatted with a default (for the locale) DateFormat,
- * and for any other value its toString() value is used.
+ * a numeric value is formatted with a default (for the locale) NumberFormat,
+ * and a date/time value is formatted with a default (for the locale) DateFormat.
  *
  * <p>An argument might specify a "simple" type for which the specified
  * Format object is created, cached and used.
@@ -202,7 +201,16 @@ class NumberFormat;
  *       <td><code>DateFormat.createDateInstance(kFull, getLocale(), status)</code>
  *    <tr>
  *       <td><i>argStyleText</i>
+<<<<<<< HEAD
  *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)</code>
+||||||| merged common ancestors
+ *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)
+=======
+ *       <td><code>new SimpleDateFormat(argStyleText, getLocale(), status)</code>
+ *    <tr>
+ *       <td><i>argSkeletonText</i>
+ *       <td><code>DateFormat::createInstanceForSkeleton(argSkeletonText, getLocale(), status)</code>
+>>>>>>> upstream-releases
  *    <tr>
  *       <td rowspan=6><code>time</code>
  *       <td><i>(none)</i>
@@ -240,6 +248,19 @@ class NumberFormat;
  * </table>
  * <p>
  *
+ * <h4>Argument formatting</h4>
+ *
+ * <p>Arguments are formatted according to their type, using the default
+ * ICU formatters for those types, unless otherwise specified.</p>
+ *
+ * <p>There are also several ways to control the formatting.</p>
+ *
+ * <p>We recommend you use default styles, predefined style values, skeletons,
+ * or preformatted values, but not pattern strings or custom format objects.</p>
+ *
+ * <p>For more details, see the
+ * <a href="http://userguide.icu-project.org/formatparse/messages">ICU User Guide</a>.</p>
+ *
  * <h4>Usage Information</h4>
  *
  * <p>Here are some examples of usage:
@@ -257,11 +278,11 @@ class NumberFormat;
  *
  *     UnicodeString result;
  *     MessageFormat::format(
- *          "At {1,time} on {1,date}, there was {2} on planet {0,number}.",
+ *          "At {1,time,::jmm} on {1,date,::dMMMM}, there was {2} on planet {0,number}.",
  *          arguments, 3, result, success );
  *
  *     cout << "result: " << result << endl;
- *     //<output>: At 4:34:20 PM on 23-Mar-98, there was a disturbance
+ *     //<output>: At 4:34 PM on March 23, there was a disturbance
  *     //             in the Force on planet 7.
  * \endcode
  * </pre>
@@ -993,6 +1014,8 @@ private:
     UBool argNameMatches(int32_t partIndex, const UnicodeString& argName, int32_t argNumber);
 
     void cacheExplicitFormats(UErrorCode& status);
+
+    int32_t skipLeadingSpaces(UnicodeString& style);
 
     Format* createAppropriateFormat(UnicodeString& type,
                                     UnicodeString& style,

@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/AbstractThread.h"
+#include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/Clipboard.h"
 #include "mozilla/dom/ClipboardBinding.h"
 #include "mozilla/dom/Promise.h"
@@ -125,8 +126,16 @@ already_AddRefed<Promise> Clipboard::Write(JSContext* aCx, DataTransfer& aData,
   }
 
   nsPIDOMWindowInner* owner = GetOwner();
+<<<<<<< HEAD
   nsIDocument* doc = owner ? owner->GetDoc() : nullptr;
   nsILoadContext* context = doc ? doc->GetLoadContext() : nullptr;
+||||||| merged common ancestors
+  nsIDocument* doc          = owner ? owner->GetDoc() : nullptr;
+  nsILoadContext* context   = doc ? doc->GetLoadContext() : nullptr;
+=======
+  Document* doc = owner ? owner->GetDoc() : nullptr;
+  nsILoadContext* context = doc ? doc->GetLoadContext() : nullptr;
+>>>>>>> upstream-releases
   if (!context) {
     p->MaybeRejectWithUndefined();
     return p.forget();
@@ -177,16 +186,54 @@ JSObject* Clipboard::WrapObject(JSContext* aCx,
   return Clipboard_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ LogModule* Clipboard::GetClipboardLog() { return gClipboardLog; }
+||||||| merged common ancestors
+/* static */ LogModule*
+Clipboard::GetClipboardLog()
+{
+  return gClipboardLog;
+}
+=======
+/* static */
+LogModule* Clipboard::GetClipboardLog() { return gClipboardLog; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ bool Clipboard::ReadTextEnabled(JSContext* aCx,
                                              JSObject* aGlobal) {
+||||||| merged common ancestors
+/* static */ bool
+Clipboard::ReadTextEnabled(JSContext* aCx, JSObject* aGlobal)
+{
+=======
+/* static */
+bool Clipboard::ReadTextEnabled(JSContext* aCx, JSObject* aGlobal) {
+>>>>>>> upstream-releases
   nsIPrincipal* prin = nsContentUtils::SubjectPrincipal(aCx);
+<<<<<<< HEAD
   return IsTestingPrefEnabled() || prin->GetIsAddonOrExpandedAddonPrincipal() ||
          prin->GetIsSystemPrincipal();
+||||||| merged common ancestors
+  return IsTestingPrefEnabled() ||
+    prin->GetIsAddonOrExpandedAddonPrincipal() ||
+    prin->GetIsSystemPrincipal();
+=======
+  return IsTestingPrefEnabled() || prin->GetIsAddonOrExpandedAddonPrincipal() ||
+         prin->IsSystemPrincipal();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ bool Clipboard::IsTestingPrefEnabled() {
+||||||| merged common ancestors
+/* static */ bool
+Clipboard::IsTestingPrefEnabled()
+{
+=======
+/* static */
+bool Clipboard::IsTestingPrefEnabled() {
+>>>>>>> upstream-releases
   static bool sPrefCached = false;
   static bool sPrefCacheValue = false;
 

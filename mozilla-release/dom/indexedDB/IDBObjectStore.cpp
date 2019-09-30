@@ -923,68 +923,106 @@ already_AddRefed<IDBObjectStore> IDBObjectStore::Create(
 }
 
 // static
+<<<<<<< HEAD
 nsresult IDBObjectStore::AppendIndexUpdateInfo(
     int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
     const nsCString& aLocale, JSContext* aCx, JS::Handle<JS::Value> aVal,
     nsTArray<IndexUpdateInfo>& aUpdateInfoArray) {
   nsresult rv;
 
+||||||| merged common ancestors
+nsresult
+IDBObjectStore::AppendIndexUpdateInfo(
+                                    int64_t aIndexID,
+                                    const KeyPath& aKeyPath,
+                                    bool aUnique,
+                                    bool aMultiEntry,
+                                    const nsCString& aLocale,
+                                    JSContext* aCx,
+                                    JS::Handle<JS::Value> aVal,
+                                    nsTArray<IndexUpdateInfo>& aUpdateInfoArray)
+{
+  nsresult rv;
+
+=======
+void IDBObjectStore::AppendIndexUpdateInfo(
+    int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
+    const nsCString& aLocale, JSContext* aCx, JS::Handle<JS::Value> aVal,
+    nsTArray<IndexUpdateInfo>& aUpdateInfoArray, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   const bool localeAware = !aLocale.IsEmpty();
 
   if (!aMultiEntry) {
     Key key;
-    rv = aKeyPath.ExtractKey(aCx, aVal, key);
+    aRv = aKeyPath.ExtractKey(aCx, aVal, key);
 
     // If an index's keyPath doesn't match an object, we ignore that object.
-    if (rv == NS_ERROR_DOM_INDEXEDDB_DATA_ERR || key.IsUnset()) {
-      return NS_OK;
+    if (aRv.ErrorCodeIs(NS_ERROR_DOM_INDEXEDDB_DATA_ERR) || key.IsUnset()) {
+      aRv.SuppressException();
+      return;
     }
 
-    if (NS_FAILED(rv)) {
-      return rv;
+    if (aRv.Failed()) {
+      return;
     }
 
     IndexUpdateInfo* updateInfo = aUpdateInfoArray.AppendElement();
     updateInfo->indexId() = aIndexID;
     updateInfo->value() = key;
     if (localeAware) {
-      rv = key.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+      auto result =
+          key.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale, aRv);
+      if (NS_WARN_IF(!result.Is(Ok, aRv))) {
+        if (result.Is(Invalid, aRv)) {
+          aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+        }
+        return;
       }
     }
 
-    return NS_OK;
+    return;
   }
 
   JS::Rooted<JS::Value> val(aCx);
   if (NS_FAILED(aKeyPath.ExtractKeyAsJSVal(aCx, aVal, val.address()))) {
-    return NS_OK;
+    return;
   }
 
   bool isArray;
   if (!JS_IsArrayObject(aCx, val, &isArray)) {
     IDB_REPORT_INTERNAL_ERR();
-    return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+    aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+    return;
   }
   if (isArray) {
     JS::Rooted<JSObject*> array(aCx, &val.toObject());
     uint32_t arrayLength;
     if (NS_WARN_IF(!JS_GetArrayLength(aCx, array, &arrayLength))) {
       IDB_REPORT_INTERNAL_ERR();
-      return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+      aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+      return;
     }
 
     for (uint32_t arrayIndex = 0; arrayIndex < arrayLength; arrayIndex++) {
       JS::Rooted<JS::Value> arrayItem(aCx);
       if (NS_WARN_IF(!JS_GetElement(aCx, array, arrayIndex, &arrayItem))) {
         IDB_REPORT_INTERNAL_ERR();
-        return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+        aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+        return;
       }
 
       Key value;
+<<<<<<< HEAD
       if (NS_FAILED(value.SetFromJSVal(aCx, arrayItem)) || value.IsUnset()) {
+||||||| merged common ancestors
+      if (NS_FAILED(value.SetFromJSVal(aCx, arrayItem)) ||
+          value.IsUnset()) {
+=======
+      auto result = value.SetFromJSVal(aCx, arrayItem, aRv);
+      if (!result.Is(Ok, aRv) || value.IsUnset()) {
+>>>>>>> upstream-releases
         // Not a value we can do anything with, ignore it.
+        aRv.SuppressException();
         continue;
       }
 
@@ -992,31 +1030,46 @@ nsresult IDBObjectStore::AppendIndexUpdateInfo(
       updateInfo->indexId() = aIndexID;
       updateInfo->value() = value;
       if (localeAware) {
-        rv = value.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale);
-        if (NS_WARN_IF(NS_FAILED(rv))) {
-          return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+        auto result =
+            value.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale, aRv);
+        if (NS_WARN_IF(!result.Is(Ok, aRv))) {
+          if (result.Is(Invalid, aRv)) {
+            aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+          }
+          return;
         }
       }
     }
   } else {
     Key value;
+<<<<<<< HEAD
     if (NS_FAILED(value.SetFromJSVal(aCx, val)) || value.IsUnset()) {
+||||||| merged common ancestors
+    if (NS_FAILED(value.SetFromJSVal(aCx, val)) ||
+        value.IsUnset()) {
+=======
+    auto result = value.SetFromJSVal(aCx, val, aRv);
+    if (!result.Is(Ok, aRv) || value.IsUnset()) {
+>>>>>>> upstream-releases
       // Not a value we can do anything with, ignore it.
-      return NS_OK;
+      aRv.SuppressException();
+      return;
     }
 
     IndexUpdateInfo* updateInfo = aUpdateInfoArray.AppendElement();
     updateInfo->indexId() = aIndexID;
     updateInfo->value() = value;
     if (localeAware) {
-      rv = value.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR;
+      auto result =
+          value.ToLocaleBasedKey(updateInfo->localizedValue(), aLocale, aRv);
+      if (NS_WARN_IF(!result.Is(Ok, aRv))) {
+        if (result.Is(Invalid, aRv)) {
+          aRv.Throw(NS_ERROR_DOM_INDEXEDDB_UNKNOWN_ERR);
+        }
+        return;
       }
     }
   }
-
-  return NS_OK;
 }
 
 // static
@@ -1123,6 +1176,7 @@ class DeserializeIndexValueHelper final : public Runnable {
                               const nsCString& aLocale,
                               StructuredCloneReadInfo& aCloneReadInfo,
                               nsTArray<IndexUpdateInfo>& aUpdateInfoArray)
+<<<<<<< HEAD
       : Runnable("DeserializeIndexValueHelper"),
         mMonitor("DeserializeIndexValueHelper::mMonitor"),
         mIndexID(aIndexID),
@@ -1135,6 +1189,36 @@ class DeserializeIndexValueHelper final : public Runnable {
         mStatus(NS_ERROR_FAILURE) {}
 
   nsresult DispatchAndWait() {
+||||||| merged common ancestors
+    : Runnable("DeserializeIndexValueHelper")
+    , mMonitor("DeserializeIndexValueHelper::mMonitor")
+    , mIndexID(aIndexID)
+    , mKeyPath(aKeyPath)
+    , mUnique(aUnique)
+    , mMultiEntry(aMultiEntry)
+    , mLocale(aLocale)
+    , mCloneReadInfo(aCloneReadInfo)
+    , mUpdateInfoArray(aUpdateInfoArray)
+    , mStatus(NS_ERROR_FAILURE)
+  {}
+
+  nsresult
+  DispatchAndWait()
+  {
+=======
+      : Runnable("DeserializeIndexValueHelper"),
+        mMonitor("DeserializeIndexValueHelper::mMonitor"),
+        mIndexID(aIndexID),
+        mKeyPath(aKeyPath),
+        mUnique(aUnique),
+        mMultiEntry(aMultiEntry),
+        mLocale(aLocale),
+        mCloneReadInfo(aCloneReadInfo),
+        mUpdateInfoArray(aUpdateInfoArray),
+        mStatus(NS_ERROR_FAILURE) {}
+
+  void DispatchAndWait(ErrorResult& aRv) {
+>>>>>>> upstream-releases
     // We don't need to go to the main-thread and use the sandbox. Let's create
     // the updateInfo data here.
     if (!mCloneReadInfo.mData.Size()) {
@@ -1144,9 +1228,21 @@ class DeserializeIndexValueHelper final : public Runnable {
       JS::Rooted<JS::Value> value(jsapi.cx());
       value.setUndefined();
 
+<<<<<<< HEAD
       return IDBObjectStore::AppendIndexUpdateInfo(
           mIndexID, mKeyPath, mUnique, mMultiEntry, mLocale, jsapi.cx(), value,
           mUpdateInfoArray);
+||||||| merged common ancestors
+      return IDBObjectStore::AppendIndexUpdateInfo(mIndexID, mKeyPath, mUnique,
+                                                   mMultiEntry, mLocale,
+                                                   jsapi.cx(), value,
+                                                   mUpdateInfoArray);
+=======
+      IDBObjectStore::AppendIndexUpdateInfo(mIndexID, mKeyPath, mUnique,
+                                            mMultiEntry, mLocale, jsapi.cx(),
+                                            value, mUpdateInfoArray, aRv);
+      return;
+>>>>>>> upstream-releases
     }
 
     // The operation will continue on the main-thread.
@@ -1156,13 +1252,15 @@ class DeserializeIndexValueHelper final : public Runnable {
     MonitorAutoLock lock(mMonitor);
 
     RefPtr<Runnable> self = this;
-    nsresult rv = SystemGroup::Dispatch(TaskCategory::Other, self.forget());
+    const nsresult rv =
+        SystemGroup::Dispatch(TaskCategory::Other, self.forget());
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      aRv.Throw(rv);
+      return;
     }
 
     lock.Wait();
-    return mStatus;
+    aRv = mStatus;
   }
 
   NS_IMETHOD
@@ -1182,17 +1280,32 @@ class DeserializeIndexValueHelper final : public Runnable {
     JSAutoRealm ar(cx, global);
 
     JS::Rooted<JS::Value> value(cx);
-    nsresult rv = DeserializeIndexValue(cx, &value);
+    const nsresult rv = DeserializeIndexValue(cx, &value);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       OperationCompleted(rv);
       return NS_OK;
     }
 
+<<<<<<< HEAD
     rv = IDBObjectStore::AppendIndexUpdateInfo(mIndexID, mKeyPath, mUnique,
                                                mMultiEntry, mLocale, cx, value,
                                                mUpdateInfoArray);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       OperationCompleted(rv);
+||||||| merged common ancestors
+    rv = IDBObjectStore::AppendIndexUpdateInfo(mIndexID, mKeyPath, mUnique,
+                                               mMultiEntry, mLocale, cx,
+                                               value, mUpdateInfoArray);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      OperationCompleted(rv);
+=======
+    ErrorResult errorResult;
+    IDBObjectStore::AppendIndexUpdateInfo(mIndexID, mKeyPath, mUnique,
+                                          mMultiEntry, mLocale, cx, value,
+                                          mUpdateInfoArray, errorResult);
+    if (NS_WARN_IF(errorResult.Failed())) {
+      OperationCompleted(errorResult.StealNSResult());
+>>>>>>> upstream-releases
       return NS_OK;
     }
 
@@ -1358,16 +1471,45 @@ class DeserializeUpgradeValueHelper final : public Runnable {
 }  // namespace
 
 // static
+<<<<<<< HEAD
 nsresult IDBObjectStore::DeserializeIndexValueToUpdateInfos(
     int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
     const nsCString& aLocale, StructuredCloneReadInfo& aCloneReadInfo,
     nsTArray<IndexUpdateInfo>& aUpdateInfoArray) {
+||||||| merged common ancestors
+nsresult
+IDBObjectStore::DeserializeIndexValueToUpdateInfos(int64_t aIndexID,
+                                                   const KeyPath& aKeyPath,
+                                                   bool aUnique,
+                                                   bool aMultiEntry,
+                                                   const nsCString& aLocale,
+                                                   StructuredCloneReadInfo& aCloneReadInfo,
+                                                   nsTArray<IndexUpdateInfo>& aUpdateInfoArray)
+{
+=======
+void IDBObjectStore::DeserializeIndexValueToUpdateInfos(
+    int64_t aIndexID, const KeyPath& aKeyPath, bool aUnique, bool aMultiEntry,
+    const nsCString& aLocale, StructuredCloneReadInfo& aCloneReadInfo,
+    nsTArray<IndexUpdateInfo>& aUpdateInfoArray, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!NS_IsMainThread());
 
+<<<<<<< HEAD
   RefPtr<DeserializeIndexValueHelper> helper = new DeserializeIndexValueHelper(
       aIndexID, aKeyPath, aUnique, aMultiEntry, aLocale, aCloneReadInfo,
       aUpdateInfoArray);
   return helper->DispatchAndWait();
+||||||| merged common ancestors
+  RefPtr<DeserializeIndexValueHelper> helper =
+    new DeserializeIndexValueHelper(aIndexID, aKeyPath, aUnique, aMultiEntry,
+                                    aLocale, aCloneReadInfo, aUpdateInfoArray);
+  return helper->DispatchAndWait();
+=======
+  RefPtr<DeserializeIndexValueHelper> helper = new DeserializeIndexValueHelper(
+      aIndexID, aKeyPath, aUnique, aMultiEntry, aLocale, aCloneReadInfo,
+      aUpdateInfoArray);
+  helper->DispatchAndWait(aRv);
+>>>>>>> upstream-releases
 }
 
 // static
@@ -1389,47 +1531,70 @@ void IDBObjectStore::AssertIsOnOwningThread() const {
 
 #endif  // DEBUG
 
+<<<<<<< HEAD
 nsresult IDBObjectStore::GetAddInfo(
     JSContext* aCx, ValueWrapper& aValueWrapper, JS::Handle<JS::Value> aKeyVal,
     StructuredCloneWriteInfo& aCloneWriteInfo, Key& aKey,
     nsTArray<IndexUpdateInfo>& aUpdateInfoArray) {
+||||||| merged common ancestors
+nsresult
+IDBObjectStore::GetAddInfo(JSContext* aCx,
+                           ValueWrapper& aValueWrapper,
+                           JS::Handle<JS::Value> aKeyVal,
+                           StructuredCloneWriteInfo& aCloneWriteInfo,
+                           Key& aKey,
+                           nsTArray<IndexUpdateInfo>& aUpdateInfoArray)
+{
+=======
+void IDBObjectStore::GetAddInfo(JSContext* aCx, ValueWrapper& aValueWrapper,
+                                JS::Handle<JS::Value> aKeyVal,
+                                StructuredCloneWriteInfo& aCloneWriteInfo,
+                                Key& aKey,
+                                nsTArray<IndexUpdateInfo>& aUpdateInfoArray,
+                                ErrorResult& aRv) {
+>>>>>>> upstream-releases
   // Return DATA_ERR if a key was passed in and this objectStore uses inline
   // keys.
   if (!aKeyVal.isUndefined() && HasValidKeyPath()) {
-    return NS_ERROR_DOM_INDEXEDDB_DATA_ERR;
+    aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    return;
   }
 
   bool isAutoIncrement = AutoIncrement();
 
-  nsresult rv;
-
   if (!HasValidKeyPath()) {
     // Out-of-line keys must be passed in.
-    rv = aKey.SetFromJSVal(aCx, aKeyVal);
-    if (NS_FAILED(rv)) {
-      return rv;
+    auto result = aKey.SetFromJSVal(aCx, aKeyVal, aRv);
+    if (!result.Is(Ok, aRv)) {
+      if (result.Is(Invalid, aRv)) {
+        aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+      }
+      return;
     }
   } else if (!isAutoIncrement) {
     if (!aValueWrapper.Clone(aCx)) {
-      return NS_ERROR_DOM_DATA_CLONE_ERR;
+      aRv.Throw(NS_ERROR_DOM_DATA_CLONE_ERR);
+      return;
     }
 
-    rv = GetKeyPath().ExtractKey(aCx, aValueWrapper.Value(), aKey);
-    if (NS_FAILED(rv)) {
-      return rv;
+    aRv = GetKeyPath().ExtractKey(aCx, aValueWrapper.Value(), aKey);
+    if (aRv.Failed()) {
+      return;
     }
   }
 
   // Return DATA_ERR if no key was specified this isn't an autoIncrement
   // objectStore.
   if (aKey.IsUnset() && !isAutoIncrement) {
-    return NS_ERROR_DOM_INDEXEDDB_DATA_ERR;
+    aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    return;
   }
 
   // Figure out indexes and the index values to update here.
 
   if (mSpec->indexes().Length() && !aValueWrapper.Clone(aCx)) {
-    return NS_ERROR_DOM_DATA_CLONE_ERR;
+    aRv.Throw(NS_ERROR_DOM_DATA_CLONE_ERR);
+    return;
   }
 
   {
@@ -1441,34 +1606,44 @@ nsresult IDBObjectStore::GetAddInfo(
     for (uint32_t idxIndex = 0; idxIndex < idxCount; idxIndex++) {
       const IndexMetadata& metadata = indexes[idxIndex];
 
-      rv = AppendIndexUpdateInfo(metadata.id(), metadata.keyPath(),
-                                 metadata.unique(), metadata.multiEntry(),
-                                 metadata.locale(), aCx, aValueWrapper.Value(),
-                                 aUpdateInfoArray);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
+      AppendIndexUpdateInfo(metadata.id(), metadata.keyPath(),
+                            metadata.unique(), metadata.multiEntry(),
+                            metadata.locale(), aCx, aValueWrapper.Value(),
+                            aUpdateInfoArray, aRv);
+      if (NS_WARN_IF(aRv.Failed())) {
+        return;
       }
     }
   }
 
   if (isAutoIncrement && HasValidKeyPath()) {
     if (!aValueWrapper.Clone(aCx)) {
-      return NS_ERROR_DOM_DATA_CLONE_ERR;
+      aRv.Throw(NS_ERROR_DOM_DATA_CLONE_ERR);
+      return;
     }
 
     GetAddInfoClosure data(aCloneWriteInfo, aValueWrapper.Value());
 
     MOZ_ASSERT(aKey.IsUnset());
 
+<<<<<<< HEAD
     rv = GetKeyPath().ExtractOrCreateKey(aCx, aValueWrapper.Value(), aKey,
                                          &GetAddInfoCallback, &data);
+||||||| merged common ancestors
+    rv = GetKeyPath().ExtractOrCreateKey(aCx,
+                                         aValueWrapper.Value(),
+                                         aKey,
+                                         &GetAddInfoCallback,
+                                         &data);
+=======
+    aRv = GetKeyPath().ExtractOrCreateKey(aCx, aValueWrapper.Value(), aKey,
+                                          &GetAddInfoCallback, &data);
+>>>>>>> upstream-releases
   } else {
     GetAddInfoClosure data(aCloneWriteInfo, aValueWrapper.Value());
 
-    rv = GetAddInfoCallback(aCx, &data);
+    aRv = GetAddInfoCallback(aCx, &data);
   }
-
-  return rv;
 }
 
 already_AddRefed<IDBRequest> IDBObjectStore::AddOrPut(
@@ -1497,7 +1672,7 @@ already_AddRefed<IDBRequest> IDBObjectStore::AddOrPut(
   StructuredCloneWriteInfo cloneWriteInfo(mTransaction->Database());
   nsTArray<IndexUpdateInfo> updateInfo;
 
-  aRv = GetAddInfo(aCx, aValueWrapper, aKey, cloneWriteInfo, key, updateInfo);
+  GetAddInfo(aCx, aValueWrapper, aKey, cloneWriteInfo, key, updateInfo, aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -1682,20 +1857,18 @@ already_AddRefed<IDBRequest> IDBObjectStore::GetAllInternal(
   }
 
   RefPtr<IDBKeyRange> keyRange;
-  aRv = IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange));
+  IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange), aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return nullptr;
   }
 
   const int64_t id = Id();
 
-  OptionalKeyRange optionalKeyRange;
+  Maybe<SerializedKeyRange> optionalKeyRange;
   if (keyRange) {
     SerializedKeyRange serializedKeyRange;
     keyRange->ToSerialized(serializedKeyRange);
-    optionalKeyRange = serializedKeyRange;
-  } else {
-    optionalKeyRange = void_t();
+    optionalKeyRange.emplace(serializedKeyRange);
   }
 
   const uint32_t limit = aLimit.WasPassed() ? aLimit.Value() : 0;
@@ -1871,7 +2044,15 @@ JSObject* IDBObjectStore::WrapObject(JSContext* aCx,
   return IDBObjectStore_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsPIDOMWindowInner* IDBObjectStore::GetParentObject() const {
+||||||| merged common ancestors
+nsPIDOMWindowInner*
+IDBObjectStore::GetParentObject() const
+{
+=======
+nsIGlobalObject* IDBObjectStore::GetParentObject() const {
+>>>>>>> upstream-releases
   return mTransaction->GetParentObject();
 }
 
@@ -1931,7 +2112,7 @@ already_AddRefed<IDBRequest> IDBObjectStore::GetInternal(
   }
 
   RefPtr<IDBKeyRange> keyRange;
-  aRv = IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange));
+  IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -1993,7 +2174,7 @@ already_AddRefed<IDBRequest> IDBObjectStore::DeleteInternal(
   }
 
   RefPtr<IDBKeyRange> keyRange;
-  aRv = IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange));
+  IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange), aRv);
   if (NS_WARN_IF((aRv.Failed()))) {
     return nullptr;
   }
@@ -2220,7 +2401,7 @@ already_AddRefed<IDBRequest> IDBObjectStore::Count(JSContext* aCx,
   }
 
   RefPtr<IDBKeyRange> keyRange;
-  aRv = IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange));
+  IDBKeyRange::FromJSVal(aCx, aKey, getter_AddRefs(keyRange), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -2231,9 +2412,7 @@ already_AddRefed<IDBRequest> IDBObjectStore::Count(JSContext* aCx,
   if (keyRange) {
     SerializedKeyRange serializedKeyRange;
     keyRange->ToSerialized(serializedKeyRange);
-    params.optionalKeyRange() = serializedKeyRange;
-  } else {
-    params.optionalKeyRange() = void_t();
+    params.optionalKeyRange().emplace(serializedKeyRange);
   }
 
   RefPtr<IDBRequest> request = GenerateRequest(aCx, this);
@@ -2271,22 +2450,20 @@ already_AddRefed<IDBRequest> IDBObjectStore::OpenCursorInternal(
   }
 
   RefPtr<IDBKeyRange> keyRange;
-  aRv = IDBKeyRange::FromJSVal(aCx, aRange, getter_AddRefs(keyRange));
+  IDBKeyRange::FromJSVal(aCx, aRange, getter_AddRefs(keyRange), aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return nullptr;
   }
 
   int64_t objectStoreId = Id();
 
-  OptionalKeyRange optionalKeyRange;
+  Maybe<SerializedKeyRange> optionalKeyRange;
 
   if (keyRange) {
     SerializedKeyRange serializedKeyRange;
     keyRange->ToSerialized(serializedKeyRange);
 
-    optionalKeyRange = std::move(serializedKeyRange);
-  } else {
-    optionalKeyRange = void_t();
+    optionalKeyRange.emplace(std::move(serializedKeyRange));
   }
 
   IDBCursor::Direction direction = IDBCursor::ConvertDirection(aDirection);

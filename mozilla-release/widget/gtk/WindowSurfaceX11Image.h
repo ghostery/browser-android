@@ -9,10 +9,21 @@
 
 #ifdef MOZ_X11
 
+<<<<<<< HEAD
 #include <glib.h>
 #include "WindowSurfaceX11.h"
 #include "gfxXlibSurface.h"
 #include "gfxImageSurface.h"
+||||||| merged common ancestors
+#include "WindowSurfaceX11.h"
+#include "gfxXlibSurface.h"
+#include "gfxImageSurface.h"
+=======
+#  include <glib.h>
+#  include "WindowSurfaceX11.h"
+#  include "gfxXlibSurface.h"
+#  include "gfxImageSurface.h"
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace widget {

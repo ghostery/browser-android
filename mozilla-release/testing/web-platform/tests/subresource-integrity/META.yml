@@ -1,6 +1,12 @@
 spec: https://w3c.github.io/webappsec-subresource-integrity/
 suggested_reviewers:
   - metromoxie
+<<<<<<< HEAD
   - jonathanKingston
+||||||| merged common ancestors
+  - fmarier
+  - jonathanKingston
+=======
+>>>>>>> upstream-releases
   - mikewest
   - hillbrad

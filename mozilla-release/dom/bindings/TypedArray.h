@@ -7,6 +7,11 @@
 #ifndef mozilla_dom_TypedArray_h
 #define mozilla_dom_TypedArray_h
 
+#include "jsfriendapi.h"  // js::Scalar
+#include "js/ArrayBuffer.h"
+#include "js/SharedArrayBuffer.h"
+#include "js/GCAPI.h"       // JS::AutoCheckCannotGC
+#include "js/RootingAPI.h"  // JS::Rooted
 #include "mozilla/Attributes.h"
 #include "mozilla/Move.h"
 #include "mozilla/dom/BindingDeclarations.h"
@@ -72,7 +77,7 @@ struct TypedArray_base : public SpiderMonkeyInterfaceObjectStorage,
   // value if the view may not have been computed and if the value is
   // known to represent a JS TypedArray.
   //
-  // (Just use JS_IsSharedArrayBuffer() to test if any object is of
+  // (Just use JS::IsSharedArrayBuffer() to test if any object is of
   // that type.)
   //
   // Code that elects to allow views that map shared memory to be used
@@ -256,15 +261,38 @@ typedef TypedArray<double, js::UnwrapFloat64Array, JS_GetFloat64ArrayData,
 typedef ArrayBufferView_base<js::UnwrapArrayBufferView,
                              js::GetArrayBufferViewLengthAndData,
                              JS_GetArrayBufferViewType>
+<<<<<<< HEAD
     ArrayBufferView;
 typedef TypedArray<uint8_t, js::UnwrapArrayBuffer, JS_GetArrayBufferData,
                    js::GetArrayBufferLengthAndData, JS_NewArrayBuffer>
     ArrayBuffer;
+||||||| merged common ancestors
+        ArrayBufferView;
+typedef TypedArray<uint8_t, js::UnwrapArrayBuffer, JS_GetArrayBufferData,
+                   js::GetArrayBufferLengthAndData, JS_NewArrayBuffer>
+        ArrayBuffer;
+=======
+    ArrayBufferView;
+typedef TypedArray<uint8_t, JS::UnwrapArrayBuffer, JS::GetArrayBufferData,
+                   JS::GetArrayBufferLengthAndData, JS::NewArrayBuffer>
+    ArrayBuffer;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 typedef TypedArray<
     uint8_t, js::UnwrapSharedArrayBuffer, JS_GetSharedArrayBufferData,
     js::GetSharedArrayBufferLengthAndData, JS_NewSharedArrayBuffer>
     SharedArrayBuffer;
+||||||| merged common ancestors
+typedef TypedArray<uint8_t, js::UnwrapSharedArrayBuffer, JS_GetSharedArrayBufferData,
+                   js::GetSharedArrayBufferLengthAndData, JS_NewSharedArrayBuffer>
+        SharedArrayBuffer;
+=======
+typedef TypedArray<
+    uint8_t, JS::UnwrapSharedArrayBuffer, JS::GetSharedArrayBufferData,
+    JS::GetSharedArrayBufferLengthAndData, JS::NewSharedArrayBuffer>
+    SharedArrayBuffer;
+>>>>>>> upstream-releases
 
 // A class for converting an nsTArray to a TypedArray
 // Note: A TypedArrayCreator must not outlive the nsTArray it was created from.

@@ -14,7 +14,7 @@
 #include "mozilla/NotNull.h"
 #include "nsCOMPtr.h"
 #include "nsAtom.h"
-#include "nsRefPtrHashtable.h"
+#include "nsDataHashtable.h"
 
 namespace mozilla {
 class Encoding;
@@ -28,7 +28,13 @@ class nsLanguageAtomService final {
  public:
   static nsLanguageAtomService* GetService();
 
+<<<<<<< HEAD
   nsAtom* LookupLanguage(const nsACString& aLanguage);
+||||||| merged common ancestors
+  nsAtom* LookupLanguage(const nsACString &aLanguage);
+=======
+  nsStaticAtom* LookupLanguage(const nsACString& aLanguage);
+>>>>>>> upstream-releases
   already_AddRefed<nsAtom> LookupCharSet(NotNull<const Encoding*> aCharSet);
   nsAtom* GetLocaleLanguage();
 
@@ -47,11 +53,20 @@ class nsLanguageAtomService final {
   // get a true *aNeedsToCache outparam value should make an effort
   // to re-call GetLanguageGroup when it is safe to cache, to avoid
   // recomputing the language group again later.
-  nsAtom* GetLanguageGroup(nsAtom* aLanguage, bool* aNeedsToCache = nullptr);
-  already_AddRefed<nsAtom> GetUncachedLanguageGroup(nsAtom* aLanguage) const;
+  nsStaticAtom* GetLanguageGroup(nsAtom* aLanguage,
+                                 bool* aNeedsToCache = nullptr);
+  nsStaticAtom* GetUncachedLanguageGroup(nsAtom* aLanguage) const;
 
+<<<<<<< HEAD
  private:
   nsRefPtrHashtable<nsRefPtrHashKey<nsAtom>, nsAtom> mLangToGroup;
+||||||| merged common ancestors
+private:
+  nsRefPtrHashtable<nsRefPtrHashKey<nsAtom>, nsAtom> mLangToGroup;
+=======
+ private:
+  nsDataHashtable<nsRefPtrHashKey<nsAtom>, nsStaticAtom*> mLangToGroup;
+>>>>>>> upstream-releases
   RefPtr<nsAtom> mLocaleLanguage;
 };
 

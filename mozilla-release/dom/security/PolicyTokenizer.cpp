@@ -27,12 +27,31 @@ PolicyTokenizer::~PolicyTokenizer() {
 
 void PolicyTokenizer::generateNextToken() {
   skipWhiteSpaceAndSemicolon();
+<<<<<<< HEAD
   while (!atEnd() && !nsContentUtils::IsHTMLWhitespace(*mCurChar) &&
+||||||| merged common ancestors
+  while (!atEnd() &&
+         !nsContentUtils::IsHTMLWhitespace(*mCurChar) &&
+=======
+  MOZ_ASSERT(mCurToken.Length() == 0);
+  const char16_t* const start = mCurChar;
+  while (!atEnd() && !nsContentUtils::IsHTMLWhitespace(*mCurChar) &&
+>>>>>>> upstream-releases
          *mCurChar != SEMICOL) {
-    mCurToken.Append(*mCurChar++);
+    mCurChar++;
+  }
+<<<<<<< HEAD
+  POLICYTOKENIZERLOG(("PolicyTokenizer::generateNextToken: %s",
+                      NS_ConvertUTF16toUTF8(mCurToken).get()));
+||||||| merged common ancestors
+  POLICYTOKENIZERLOG(("PolicyTokenizer::generateNextToken: %s", NS_ConvertUTF16toUTF8(mCurToken).get()));
+=======
+  if (start != mCurChar) {
+    mCurToken.Append(start, mCurChar - start);
   }
   POLICYTOKENIZERLOG(("PolicyTokenizer::generateNextToken: %s",
                       NS_ConvertUTF16toUTF8(mCurToken).get()));
+>>>>>>> upstream-releases
 }
 
 void PolicyTokenizer::generateTokens(policyTokens& outTokens) {
@@ -46,8 +65,8 @@ void PolicyTokenizer::generateTokens(policyTokens& outTokens) {
     dirAndSrcs.AppendElement(mCurToken);
     skipWhiteSpace();
     if (atEnd() || accept(SEMICOL)) {
-      outTokens.AppendElement(dirAndSrcs);
-      dirAndSrcs.Clear();
+      outTokens.AppendElement(std::move(dirAndSrcs));
+      dirAndSrcs.ClearAndRetainStorage();
     }
   }
 }

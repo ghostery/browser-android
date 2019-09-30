@@ -39,8 +39,15 @@ NS_IMPL_ISUPPORTS(MutableBlobStreamListener, nsIStreamListener,
                   nsIThreadRetargetableStreamListener, nsIRequestObserver)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MutableBlobStreamListener::OnStartRequest(nsIRequest* aRequest,
                                           nsISupports* aContext) {
+||||||| merged common ancestors
+MutableBlobStreamListener::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
+{
+=======
+MutableBlobStreamListener::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!mStorage);
   MOZ_ASSERT(mEventTarget);
@@ -50,9 +57,18 @@ MutableBlobStreamListener::OnStartRequest(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MutableBlobStreamListener::OnStopRequest(nsIRequest* aRequest,
                                          nsISupports* aContext,
                                          nsresult aStatus) {
+||||||| merged common ancestors
+MutableBlobStreamListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
+                                         nsresult aStatus)
+{
+=======
+MutableBlobStreamListener::OnStopRequest(nsIRequest* aRequest,
+                                         nsresult aStatus) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mStorage);
 
@@ -72,7 +88,6 @@ MutableBlobStreamListener::OnStopRequest(nsIRequest* aRequest,
 
 NS_IMETHODIMP
 MutableBlobStreamListener::OnDataAvailable(nsIRequest* aRequest,
-                                           nsISupports* aContext,
                                            nsIInputStream* aStream,
                                            uint64_t aSourceOffset,
                                            uint32_t aCount) {

@@ -12,7 +12,13 @@
 
 [package]
 name = "darling_core"
+<<<<<<< HEAD
 version = "0.8.0"
+||||||| merged common ancestors
+version = "0.4.0"
+=======
+version = "0.9.0"
+>>>>>>> upstream-releases
 authors = ["Ted Driggs <ted.driggs@outlook.com>"]
 description = "Helper crate for proc-macro library for reading attributes into structs when\nimplementing custom derives. Use https://crates.io/crates/darling in your code.\n"
 license = "MIT"
@@ -24,14 +30,39 @@ version = "1.0.6"
 version = "1.0.0"
 
 [dependencies.proc-macro2]
+<<<<<<< HEAD
 version = "0.4.2"
+||||||| merged common ancestors
+version = "0.3"
+=======
+version = "0.4.26"
+>>>>>>> upstream-releases
 
 [dependencies.quote]
+<<<<<<< HEAD
+version = "0.6"
+||||||| merged common ancestors
+version = "0.5"
+=======
 version = "0.6"
 
+[dependencies.strsim]
+version = "0.7.0"
+optional = true
+>>>>>>> upstream-releases
+
 [dependencies.syn]
+<<<<<<< HEAD
 version = "0.15"
 features = ["extra-traits"]
+||||||| merged common ancestors
+version = "0.13"
+features = ["extra-traits"]
+=======
+version = "0.15.26"
+features = ["full", "extra-traits"]
+>>>>>>> upstream-releases
 
 [features]
-default = ["syn/full"]
+diagnostics = []
+suggestions = ["strsim"]

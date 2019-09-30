@@ -12,19 +12,17 @@
 #include "NamespaceImports.h"
 
 #include "gc/GCInternals.h"
-#include "gc/Marking.h"
 #include "gc/PublicIterators.h"
 #include "gc/Zone.h"
 #include "util/Text.h"
-#ifdef ENABLE_BIGINT
 #include "vm/BigIntType.h"
-#endif
 #include "vm/JSFunction.h"
 #include "vm/JSScript.h"
 #include "vm/Shape.h"
 #include "vm/SymbolType.h"
 
 #include "gc/GC-inl.h"
+#include "gc/Marking-inl.h"
 #include "vm/ObjectGroup-inl.h"
 #include "vm/Realm-inl.h"
 #include "vm/TypeInference-inl.h"
@@ -41,17 +39,42 @@ void CheckTracedThing(JSTracer* trc, T thing);
 /*** Callback Tracer Dispatch ***********************************************/
 
 template <typename T>
+<<<<<<< HEAD
 T DoCallback(JS::CallbackTracer* trc, T* thingp, const char* name) {
   CheckTracedThing(trc, *thingp);
   JS::AutoTracingName ctx(trc, name);
   trc->dispatchToOnEdge(thingp);
   return *thingp;
+||||||| merged common ancestors
+T
+DoCallback(JS::CallbackTracer* trc, T* thingp, const char* name)
+{
+    CheckTracedThing(trc, *thingp);
+    JS::AutoTracingName ctx(trc, name);
+    trc->dispatchToOnEdge(thingp);
+    return *thingp;
+=======
+T* DoCallback(JS::CallbackTracer* trc, T** thingp, const char* name) {
+  CheckTracedThing(trc, *thingp);
+  JS::AutoTracingName ctx(trc, name);
+  trc->dispatchToOnEdge(thingp);
+  return *thingp;
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 #define INSTANTIATE_ALL_VALID_TRACE_FUNCTIONS(name, type, _) \
   template type* DoCallback<type*>(JS::CallbackTracer*, type**, const char*);
+||||||| merged common ancestors
+#define INSTANTIATE_ALL_VALID_TRACE_FUNCTIONS(name, type, _) \
+    template type* DoCallback<type*>(JS::CallbackTracer*, type**, const char*);
+=======
+#define INSTANTIATE_ALL_VALID_TRACE_FUNCTIONS(name, type, _, _1) \
+  template type* DoCallback<type>(JS::CallbackTracer*, type**, const char*);
+>>>>>>> upstream-releases
 JS_FOR_EACH_TRACEKIND(INSTANTIATE_ALL_VALID_TRACE_FUNCTIONS);
 #undef INSTANTIATE_ALL_VALID_TRACE_FUNCTIONS
 
+<<<<<<< HEAD
 template <typename S>
 struct DoCallbackFunctor : public IdentityDefaultAdaptor<S> {
   template <typename T>
@@ -70,7 +93,42 @@ Value DoCallback<Value>(JS::CallbackTracer* trc, Value* vp, const char* name) {
     *vp = v;
   }
   return v;
+||||||| merged common ancestors
+template <typename S>
+struct DoCallbackFunctor : public IdentityDefaultAdaptor<S> {
+    template <typename T> S operator()(T* t, JS::CallbackTracer* trc, const char* name) {
+        return js::gc::RewrapTaggedPointer<S, T>::wrap(DoCallback(trc, &t, name));
+    }
+};
+
+template <>
+Value
+DoCallback<Value>(JS::CallbackTracer* trc, Value* vp, const char* name)
+{
+    // Only update *vp if the value changed, to avoid TSan false positives for
+    // template objects when using DumpHeapTracer or UbiNode tracers while Ion
+    // compiling off-thread.
+    Value v = DispatchTyped(DoCallbackFunctor<Value>(), *vp, trc, name);
+    if (*vp != v) {
+        *vp = v;
+    }
+    return v;
+=======
+template <typename T>
+T DoCallback(JS::CallbackTracer* trc, T* thingp, const char* name) {
+  auto thing = MapGCThingTyped(*thingp, [trc, name](auto t) {
+    return TaggedPtr<T>::wrap(DoCallback(trc, &t, name));
+  });
+  // Only update *thingp if the value changed, to avoid TSan false positives for
+  // template objects when using DumpHeapTracer or UbiNode tracers while Ion
+  // compiling off-thread.
+  if (thing.isSome() && thing.value() != *thingp) {
+    *thingp = thing.value();
+  }
+  return *thingp;
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 
 template <>
 jsid DoCallback<jsid>(JS::CallbackTracer* trc, jsid* idp, const char* name) {
@@ -79,18 +137,25 @@ jsid DoCallback<jsid>(JS::CallbackTracer* trc, jsid* idp, const char* name) {
     *idp = id;
   }
   return id;
-}
+||||||| merged common ancestors
 
 template <>
-TaggedProto DoCallback<TaggedProto>(JS::CallbackTracer* trc,
-                                    TaggedProto* protop, const char* name) {
-  TaggedProto proto =
-      DispatchTyped(DoCallbackFunctor<TaggedProto>(), *protop, trc, name);
-  if (*protop != proto) {
-    *protop = proto;
-  }
-  return proto;
-}
+jsid
+DoCallback<jsid>(JS::CallbackTracer* trc, jsid* idp, const char* name)
+{
+    jsid id = DispatchTyped(DoCallbackFunctor<jsid>(), *idp, trc, name);
+    if (*idp != id) {
+        *idp = id;
+    }
+    return id;
+=======
+template JS::Value DoCallback<JS::Value>(JS::CallbackTracer*, JS::Value*,
+                                         const char*);
+template JS::PropertyKey DoCallback<JS::PropertyKey>(JS::CallbackTracer*,
+                                                     JS::PropertyKey*,
+                                                     const char*);
+template TaggedProto DoCallback<TaggedProto>(JS::CallbackTracer*, TaggedProto*,
+                                             const char*);
 
 void JS::CallbackTracer::getTracingEdgeName(char* buffer, size_t bufferSize) {
   MOZ_ASSERT(bufferSize > 0);
@@ -103,14 +168,93 @@ void JS::CallbackTracer::getTracingEdgeName(char* buffer, size_t bufferSize) {
     return;
   }
   snprintf(buffer, bufferSize, "%s", contextName_);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+template <>
+TaggedProto DoCallback<TaggedProto>(JS::CallbackTracer* trc,
+                                    TaggedProto* protop, const char* name) {
+  TaggedProto proto =
+      DispatchTyped(DoCallbackFunctor<TaggedProto>(), *protop, trc, name);
+  if (*protop != proto) {
+    *protop = proto;
+  }
+  return proto;
+}
+||||||| merged common ancestors
+template <>
+TaggedProto
+DoCallback<TaggedProto>(JS::CallbackTracer* trc, TaggedProto* protop, const char* name)
+{
+    TaggedProto proto = DispatchTyped(DoCallbackFunctor<TaggedProto>(), *protop, trc, name);
+    if (*protop != proto) {
+        *protop = proto;
+    }
+    return proto;
+}
+=======
+/*** Public Tracing API *****************************************************/
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void JS::CallbackTracer::getTracingEdgeName(char* buffer, size_t bufferSize) {
+  MOZ_ASSERT(bufferSize > 0);
+  if (contextFunctor_) {
+    (*contextFunctor_)(this, buffer, bufferSize);
+    return;
+  }
+  if (contextIndex_ != InvalidIndex) {
+    snprintf(buffer, bufferSize, "%s[%zu]", contextName_, contextIndex_);
+    return;
+  }
+  snprintf(buffer, bufferSize, "%s", contextName_);
+||||||| merged common ancestors
+void
+JS::CallbackTracer::getTracingEdgeName(char* buffer, size_t bufferSize)
+{
+    MOZ_ASSERT(bufferSize > 0);
+    if (contextFunctor_) {
+        (*contextFunctor_)(this, buffer, bufferSize);
+        return;
+    }
+    if (contextIndex_ != InvalidIndex) {
+        snprintf(buffer, bufferSize, "%s[%zu]", contextName_, contextIndex_);
+        return;
+    }
+    snprintf(buffer, bufferSize, "%s", contextName_);
+=======
+JS_PUBLIC_API void JS::TraceChildren(JSTracer* trc, GCCellPtr thing) {
+  js::TraceChildren(trc, thing.asCell(), thing.kind());
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 /*** Public Tracing API *****************************************************/
 
 JS_PUBLIC_API void JS::TraceChildren(JSTracer* trc, GCCellPtr thing) {
   js::TraceChildren(trc, thing.asCell(), thing.kind());
+||||||| merged common ancestors
+
+/*** Public Tracing API **************************************************************************/
+
+JS_PUBLIC_API(void)
+JS::TraceChildren(JSTracer* trc, GCCellPtr thing)
+{
+    js::TraceChildren(trc, thing.asCell(), thing.kind());
+=======
+void js::TraceChildren(JSTracer* trc, void* thing, JS::TraceKind kind) {
+  MOZ_ASSERT(thing);
+  ApplyGCThingTyped(thing, kind, [trc](auto t) {
+    MOZ_ASSERT_IF(t->runtimeFromAnyThread() != trc->runtime(),
+                  ThingIsPermanentAtomOrWellKnownSymbol(t) ||
+                      t->zoneFromAnyThread()->isSelfHostingZone());
+    t->traceChildren(trc);
+  });
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 struct TraceChildrenFunctor {
   template <typename T>
   void operator()(JSTracer* trc, void* thingArg) {
@@ -139,7 +283,49 @@ struct TraceIncomingFunctor {
   void operator()(T tp) {
     if (!compartments_.has((*tp)->compartment())) {
       return;
+||||||| merged common ancestors
+struct TraceChildrenFunctor {
+    template <typename T>
+    void operator()(JSTracer* trc, void* thingArg) {
+        T* thing = static_cast<T*>(thingArg);
+        MOZ_ASSERT_IF(thing->runtimeFromAnyThread() != trc->runtime(),
+            ThingIsPermanentAtomOrWellKnownSymbol(thing) ||
+            thing->zoneFromAnyThread()->isSelfHostingZone());
+
+        thing->traceChildren(trc);
     }
+};
+
+void
+js::TraceChildren(JSTracer* trc, void* thing, JS::TraceKind kind)
+{
+    MOZ_ASSERT(thing);
+    TraceChildrenFunctor f;
+    DispatchTraceKindTyped(f, kind, trc, thing);
+}
+
+namespace {
+struct TraceIncomingFunctor {
+    JSTracer* trc_;
+    const JS::CompartmentSet& compartments_;
+    TraceIncomingFunctor(JSTracer* trc, const JS::CompartmentSet& compartments)
+      : trc_(trc), compartments_(compartments)
+    {}
+    template <typename T>
+    void operator()(T tp) {
+        if (!compartments_.has((*tp)->compartment())) {
+            return;
+        }
+        TraceManuallyBarrieredEdge(trc_, tp, "cross-compartment wrapper");
+=======
+JS_PUBLIC_API void JS::TraceIncomingCCWs(
+    JSTracer* trc, const JS::CompartmentSet& compartments) {
+  for (js::CompartmentsIter comp(trc->runtime()); !comp.done(); comp.next()) {
+    if (compartments.has(comp)) {
+      continue;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     TraceManuallyBarrieredEdge(trc_, tp, "cross-compartment wrapper");
   }
   // StringWrappers are just used to avoid copying strings
@@ -148,7 +334,25 @@ struct TraceIncomingFunctor {
   void operator()(JSString** tp) {}
 };
 }  // namespace
+||||||| merged common ancestors
+    // StringWrappers are just used to avoid copying strings
+    // across zones multiple times, and don't hold a strong
+    // reference.
+    void operator()(JSString** tp) {}
+};
+} // namespace (anonymous)
 
+JS_PUBLIC_API(void)
+JS::TraceIncomingCCWs(JSTracer* trc, const JS::CompartmentSet& compartments)
+{
+    for (js::CompartmentsIter comp(trc->runtime()); !comp.done(); comp.next()) {
+        if (compartments.has(comp)) {
+            continue;
+        }
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JS_PUBLIC_API void JS::TraceIncomingCCWs(
     JSTracer* trc, const JS::CompartmentSet& compartments) {
   for (js::CompartmentsIter comp(trc->runtime()); !comp.done(); comp.next()) {
@@ -161,6 +365,23 @@ JS_PUBLIC_API void JS::TraceIncomingCCWs(
       e.front().mutableKey().applyToWrapped(
           TraceIncomingFunctor(trc, compartments));
       MOZ_ASSERT(e.front().key() == prior);
+||||||| merged common ancestors
+        for (Compartment::WrapperEnum e(comp); !e.empty(); e.popFront()) {
+            mozilla::DebugOnly<const CrossCompartmentKey> prior = e.front().key();
+            e.front().mutableKey().applyToWrapped(TraceIncomingFunctor(trc, compartments));
+            MOZ_ASSERT(e.front().key() == prior);
+        }
+=======
+    for (Compartment::WrapperEnum e(comp); !e.empty(); e.popFront()) {
+      mozilla::DebugOnly<const CrossCompartmentKey> prior = e.front().key();
+      e.front().mutableKey().applyToWrapped([trc, &compartments](auto tp) {
+        Compartment* comp = (*tp)->maybeCompartment();
+        if (comp && compartments.has(comp)) {
+          TraceManuallyBarrieredEdge(trc, tp, "cross-compartment wrapper");
+        }
+      });
+      MOZ_ASSERT(e.front().key() == prior);
+>>>>>>> upstream-releases
     }
   }
 }
@@ -184,6 +405,7 @@ void gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc, Shape* shape) {
     MOZ_ASSERT(shape->base());
     shape->base()->assertConsistency();
 
+<<<<<<< HEAD
     // Don't trace the propid because the CC doesn't care about jsid.
 
     if (shape->hasGetterObject()) {
@@ -201,7 +423,21 @@ void gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc, Shape* shape) {
     shape = shape->previous();
   } while (shape);
 }
+||||||| merged common ancestors
+        if (shape->hasSetterObject()) {
+            JSObject* tmp = shape->setterObject();
+            DoCallback(trc, &tmp, "setter");
+            MOZ_ASSERT(tmp == shape->setterObject());
+        }
 
+        shape = shape->previous();
+    } while (shape);
+}
+=======
+    // Don't trace the propid because the CC doesn't care about jsid.
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 // Object groups can point to other object groups via an UnboxedLayout or the
 // the original unboxed group link. There can potentially be deep or cyclic
 // chains of such groups to trace through without going through a thing that
@@ -253,8 +489,81 @@ void ObjectGroupCycleCollectorTracer::onChild(const JS::GCCellPtr& thing) {
   }
 
   TraceChildren(this, thing.asCell(), thing.kind());
+||||||| merged common ancestors
+// Object groups can point to other object groups via an UnboxedLayout or the
+// the original unboxed group link. There can potentially be deep or cyclic
+// chains of such groups to trace through without going through a thing that
+// participates in cycle collection. These need to be handled iteratively to
+// avoid blowing the stack when running the cycle collector's callback tracer.
+struct ObjectGroupCycleCollectorTracer : public JS::CallbackTracer
+{
+    explicit ObjectGroupCycleCollectorTracer(JS::CallbackTracer* innerTracer)
+        : JS::CallbackTracer(innerTracer->runtime(), DoNotTraceWeakMaps),
+          innerTracer(innerTracer)
+    {}
+
+    void onChild(const JS::GCCellPtr& thing) override;
+
+    JS::CallbackTracer* innerTracer;
+    Vector<ObjectGroup*, 4, SystemAllocPolicy> seen, worklist;
+};
+
+void
+ObjectGroupCycleCollectorTracer::onChild(const JS::GCCellPtr& thing)
+{
+    if (thing.is<BaseShape>()) {
+        // The CC does not care about BaseShapes, and no additional GC things
+        // will be reached by following this edge.
+        return;
+    }
+
+    if (thing.is<JSObject>() || thing.is<JSScript>()) {
+        // Invoke the inner cycle collector callback on this child. It will not
+        // recurse back into TraceChildren.
+        innerTracer->onChild(thing);
+        return;
+    }
+
+    if (thing.is<ObjectGroup>()) {
+        // If this group is required to be in an ObjectGroup chain, trace it
+        // via the provided worklist rather than continuing to recurse.
+        ObjectGroup& group = thing.as<ObjectGroup>();
+        AutoSweepObjectGroup sweep(&group);
+        if (group.maybeUnboxedLayout(sweep)) {
+            for (size_t i = 0; i < seen.length(); i++) {
+                if (seen[i] == &group) {
+                    return;
+                }
+            }
+            if (seen.append(&group) && worklist.append(&group)) {
+                return;
+            } else {
+                // If append fails, keep tracing normally. The worst that will
+                // happen is we end up overrecursing.
+            }
+        }
+    }
+
+    TraceChildren(this, thing.asCell(), thing.kind());
+=======
+    if (shape->hasGetterObject()) {
+      JSObject* tmp = shape->getterObject();
+      DoCallback(trc, &tmp, "getter");
+      MOZ_ASSERT(tmp == shape->getterObject());
+    }
+
+    if (shape->hasSetterObject()) {
+      JSObject* tmp = shape->setterObject();
+      DoCallback(trc, &tmp, "setter");
+      MOZ_ASSERT(tmp == shape->setterObject());
+    }
+
+    shape = shape->previous();
+  } while (shape);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc,
                                      ObjectGroup* group) {
   MOZ_ASSERT(trc->isCallbackTracer());
@@ -267,11 +576,39 @@ void gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc,
 
   ObjectGroupCycleCollectorTracer groupTracer(trc->asCallbackTracer());
   group->traceChildren(&groupTracer);
+||||||| merged common ancestors
+void
+gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc, ObjectGroup* group)
+{
+    MOZ_ASSERT(trc->isCallbackTracer());
 
+    // Early return if this group is not required to be in an ObjectGroup chain.
+    AutoSweepObjectGroup sweep(group);
+    if (!group->maybeUnboxedLayout(sweep)) {
+        return group->traceChildren(trc);
+    }
+
+    ObjectGroupCycleCollectorTracer groupTracer(trc->asCallbackTracer());
+    group->traceChildren(&groupTracer);
+=======
+void gc::TraceCycleCollectorChildren(JS::CallbackTracer* trc,
+                                     ObjectGroup* group) {
+  MOZ_ASSERT(trc->isCallbackTracer());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   while (!groupTracer.worklist.empty()) {
     ObjectGroup* innerGroup = groupTracer.worklist.popCopy();
     innerGroup->traceChildren(&groupTracer);
   }
+||||||| merged common ancestors
+    while (!groupTracer.worklist.empty()) {
+        ObjectGroup* innerGroup = groupTracer.worklist.popCopy();
+        innerGroup->traceChildren(&groupTracer);
+    }
+=======
+  group->traceChildren(trc);
+>>>>>>> upstream-releases
 }
 
 /*** Traced Edge Printer ****************************************************/
@@ -348,11 +685,49 @@ JS_PUBLIC_API void JS_GetTraceThingInfo(char* buf, size_t bufsize,
       name = "null_pointer";
       break;
 
+<<<<<<< HEAD
     case JS::TraceKind::Object: {
       name = static_cast<JSObject*>(thing)->getClass()->name;
       break;
     }
 
+    case JS::TraceKind::ObjectGroup:
+      name = "object_group";
+      break;
+
+    case JS::TraceKind::RegExpShared:
+      name = "reg_exp_shared";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::Object:
+      {
+        name = static_cast<JSObject*>(thing)->getClass()->name;
+        break;
+      }
+
+      case JS::TraceKind::ObjectGroup:
+        name = "object_group";
+        break;
+
+      case JS::TraceKind::RegExpShared:
+        name = "reg_exp_shared";
+        break;
+=======
+    case JS::TraceKind::Object: {
+      name = static_cast<JSObject*>(thing)->getClass()->name;
+      break;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::Scope:
+      name = "scope";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::Scope:
+        name = "scope";
+        break;
+=======
     case JS::TraceKind::ObjectGroup:
       name = "object_group";
       break;
@@ -381,11 +756,9 @@ JS_PUBLIC_API void JS_GetTraceThingInfo(char* buf, size_t bufsize,
       name = "symbol";
       break;
 
-#ifdef ENABLE_BIGINT
     case JS::TraceKind::BigInt:
       name = "BigInt";
       break;
-#endif
 
     default:
       name = "INVALID";
@@ -418,6 +791,161 @@ JS_PUBLIC_API void JS_GetTraceThingInfo(char* buf, size_t bufsize,
           snprintf(buf, bufsize, " <no private>");
         }
         break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::Script:
+      name = "script";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::Script:
+        name = "script";
+        break;
+=======
+      case JS::TraceKind::Script: {
+        JSScript* script = static_cast<JSScript*>(thing);
+        snprintf(buf, bufsize, " %s:%u", script->filename(), script->lineno());
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::Shape:
+      name = "shape";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::Shape:
+        name = "shape";
+        break;
+=======
+      case JS::TraceKind::LazyScript: {
+        LazyScript* script = static_cast<LazyScript*>(thing);
+        snprintf(buf, bufsize, " %s:%u", script->filename(), script->lineno());
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::String:
+      name = ((JSString*)thing)->isDependent() ? "substring" : "string";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::String:
+        name = ((JSString*)thing)->isDependent()
+               ? "substring"
+               : "string";
+        break;
+=======
+      case JS::TraceKind::String: {
+        *buf++ = ' ';
+        bufsize--;
+        JSString* str = (JSString*)thing;
+
+        if (str->isLinear()) {
+          const char* header = StringKindHeader(str);
+          bool willFit = str->length() + strlen("<length > ") + strlen(header) +
+                             CountDecimalDigits(str->length()) <
+                         bufsize;
+
+          n = snprintf(buf, bufsize, "<%slength %zu%s> ", header, str->length(),
+                       willFit ? "" : " (truncated)");
+          buf += n;
+          bufsize -= n;
+
+          PutEscapedString(buf, bufsize, &str->asLinear(), 0);
+        } else {
+          snprintf(buf, bufsize, "<rope: length %zu>", str->length());
+        }
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::Symbol:
+      name = "symbol";
+      break;
+||||||| merged common ancestors
+      case JS::TraceKind::Symbol:
+        name = "symbol";
+        break;
+=======
+      case JS::TraceKind::Symbol: {
+        JS::Symbol* sym = static_cast<JS::Symbol*>(thing);
+        if (JSString* desc = sym->description()) {
+          if (desc->isLinear()) {
+            *buf++ = ' ';
+            bufsize--;
+            PutEscapedString(buf, bufsize, &desc->asLinear(), 0);
+          } else {
+            snprintf(buf, bufsize, "<nonlinear desc>");
+          }
+        } else {
+          snprintf(buf, bufsize, "<null>");
+        }
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#ifdef ENABLE_BIGINT
+    case JS::TraceKind::BigInt:
+      name = "BigInt";
+      break;
+#endif
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+      case JS::TraceKind::BigInt:
+        name = "BigInt";
+        break;
+#endif
+=======
+      case JS::TraceKind::Scope: {
+        js::Scope* scope = static_cast<js::Scope*>(thing);
+        snprintf(buf, bufsize, " %s", js::ScopeKindString(scope->kind()));
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    default:
+      name = "INVALID";
+      break;
+  }
+
+  n = strlen(name);
+  if (n > bufsize - 1) {
+    n = bufsize - 1;
+  }
+  js_memcpy(buf, name, n + 1);
+  buf += n;
+  bufsize -= n;
+  *buf = '\0';
+
+  if (details && bufsize > 2) {
+    switch (kind) {
+      case JS::TraceKind::Object: {
+        JSObject* obj = (JSObject*)thing;
+        if (obj->is<JSFunction>()) {
+          JSFunction* fun = &obj->as<JSFunction>();
+          if (fun->displayAtom()) {
+            *buf++ = ' ';
+            bufsize--;
+            PutEscapedString(buf, bufsize, fun->displayAtom(), 0);
+          }
+        } else if (obj->getClass()->flags & JSCLASS_HAS_PRIVATE) {
+          snprintf(buf, bufsize, " %p", obj->as<NativeObject>().getPrivate());
+        } else {
+          snprintf(buf, bufsize, " <no private>");
+        }
+||||||| merged common ancestors
+      default:
+        name = "INVALID";
+=======
+      default:
+>>>>>>> upstream-releases
+        break;
+<<<<<<< HEAD
       }
 
       case JS::TraceKind::Script: {
@@ -482,6 +1010,110 @@ JS_PUBLIC_API void JS_GetTraceThingInfo(char* buf, size_t bufsize,
     }
   }
   buf[bufsize - 1] = '\0';
+||||||| merged common ancestors
+    }
+
+    n = strlen(name);
+    if (n > bufsize - 1) {
+        n = bufsize - 1;
+    }
+    js_memcpy(buf, name, n + 1);
+    buf += n;
+    bufsize -= n;
+    *buf = '\0';
+
+    if (details && bufsize > 2) {
+        switch (kind) {
+          case JS::TraceKind::Object:
+          {
+            JSObject* obj = (JSObject*)thing;
+            if (obj->is<JSFunction>()) {
+                JSFunction* fun = &obj->as<JSFunction>();
+                if (fun->displayAtom()) {
+                    *buf++ = ' ';
+                    bufsize--;
+                    PutEscapedString(buf, bufsize, fun->displayAtom(), 0);
+                }
+            } else if (obj->getClass()->flags & JSCLASS_HAS_PRIVATE) {
+                snprintf(buf, bufsize, " %p", obj->as<NativeObject>().getPrivate());
+            } else {
+                snprintf(buf, bufsize, " <no private>");
+            }
+            break;
+          }
+
+          case JS::TraceKind::Script:
+          {
+            JSScript* script = static_cast<JSScript*>(thing);
+            snprintf(buf, bufsize, " %s:%u", script->filename(), script->lineno());
+            break;
+          }
+
+          case JS::TraceKind::LazyScript:
+          {
+            LazyScript* script = static_cast<LazyScript*>(thing);
+            snprintf(buf, bufsize, " %s:%u", script->filename(), script->lineno());
+            break;
+          }
+
+          case JS::TraceKind::String:
+          {
+            *buf++ = ' ';
+            bufsize--;
+            JSString* str = (JSString*)thing;
+
+            if (str->isLinear()) {
+                const char* header = StringKindHeader(str);
+                bool willFit = str->length() + strlen("<length > ") + strlen(header) +
+                               CountDecimalDigits(str->length()) < bufsize;
+
+                n = snprintf(buf, bufsize, "<%slength %zu%s> ",
+                             header, str->length(),
+                             willFit ? "" : " (truncated)");
+                buf += n;
+                bufsize -= n;
+
+                PutEscapedString(buf, bufsize, &str->asLinear(), 0);
+            } else {
+                snprintf(buf, bufsize, "<rope: length %zu>", str->length());
+            }
+            break;
+          }
+
+          case JS::TraceKind::Symbol:
+          {
+            JS::Symbol* sym = static_cast<JS::Symbol*>(thing);
+            if (JSString* desc = sym->description()) {
+                if (desc->isLinear()) {
+                    *buf++ = ' ';
+                    bufsize--;
+                    PutEscapedString(buf, bufsize, &desc->asLinear(), 0);
+                } else {
+                    snprintf(buf, bufsize, "<nonlinear desc>");
+                }
+            } else {
+                snprintf(buf, bufsize, "<null>");
+            }
+            break;
+          }
+
+          case JS::TraceKind::Scope:
+          {
+            js::Scope* scope = static_cast<js::Scope*>(thing);
+            snprintf(buf, bufsize, " %s", js::ScopeKindString(scope->kind()));
+            break;
+          }
+
+          default:
+            break;
+        }
+    }
+    buf[bufsize - 1] = '\0';
+=======
+    }
+  }
+  buf[bufsize - 1] = '\0';
+>>>>>>> upstream-releases
 }
 
 JS::CallbackTracer::CallbackTracer(JSContext* cx,

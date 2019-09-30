@@ -21,7 +21,7 @@
 namespace mozilla {
 namespace net {
 
-CacheObserver* CacheObserver::sSelf = nullptr;
+StaticRefPtr<CacheObserver> CacheObserver::sSelf;
 
 static float const kDefaultHalfLifeHours = 24.0F;  // 24 hours
 float CacheObserver::sHalfLifeHours = kDefaultHalfLifeHours;
@@ -37,7 +37,7 @@ uint32_t CacheObserver::sMetadataMemoryLimit = kDefaultMetadataMemoryLimit;
 
 static int32_t const kDefaultMemoryCacheCapacity = -1;  // autodetect
 int32_t CacheObserver::sMemoryCacheCapacity = kDefaultMemoryCacheCapacity;
-// Cache of the calculated memory capacity based on the system memory size
+// Cache of the calculated memory capacity based on the system memory size in KB
 int32_t CacheObserver::sAutoMemoryCacheCapacity = -1;
 
 static uint32_t const kDefaultDiskCacheCapacity = 250 * 1024;  // 250 MB
@@ -53,7 +53,8 @@ uint32_t CacheObserver::sDiskFreeSpaceHardLimit =
     kDefaultDiskFreeSpaceHardLimit;
 
 static bool const kDefaultSmartCacheSizeEnabled = false;
-bool CacheObserver::sSmartCacheSizeEnabled = kDefaultSmartCacheSizeEnabled;
+Atomic<bool, Relaxed> CacheObserver::sSmartCacheSizeEnabled(
+    kDefaultSmartCacheSizeEnabled);
 
 static uint32_t const kDefaultPreloadChunkCount = 4;
 uint32_t CacheObserver::sPreloadChunkCount = kDefaultPreloadChunkCount;
@@ -95,7 +96,23 @@ Atomic<uint32_t, Relaxed> CacheObserver::sMaxShutdownIOLag(
 Atomic<PRIntervalTime> CacheObserver::sShutdownDemandedTime(
     PR_INTERVAL_NO_TIMEOUT);
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(CacheObserver, nsIObserver, nsISupportsWeakReference)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(CacheObserver,
+                  nsIObserver,
+                  nsISupportsWeakReference)
+=======
+static uint32_t const kDefaultTelemetryReportID = 0;
+Atomic<uint32_t, Relaxed> CacheObserver::sTelemetryReportID(
+    kDefaultTelemetryReportID);
+
+static uint32_t const kDefaultCacheAmountWritten = 0;
+Atomic<uint32_t, Relaxed> CacheObserver::sCacheAmountWritten(
+    kDefaultCacheAmountWritten);
+
+NS_IMPL_ISUPPORTS(CacheObserver, nsIObserver, nsISupportsWeakReference)
+>>>>>>> upstream-releases
 
 // static
 nsresult CacheObserver::Init() {
@@ -113,7 +130,6 @@ nsresult CacheObserver::Init() {
   }
 
   sSelf = new CacheObserver();
-  NS_ADDREF(sSelf);
 
   obs->AddObserver(sSelf, "prefservice:after-app-defaults", true);
   obs->AddObserver(sSelf, "profile-do-change", true);
@@ -133,7 +149,7 @@ nsresult CacheObserver::Shutdown() {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
-  NS_RELEASE(sSelf);
+  sSelf = nullptr;
   return NS_OK;
 }
 
@@ -144,6 +160,7 @@ void CacheObserver::AttachToPreferences() {
       &sUseMemoryCache, "browser.cache.memory.enable", kDefaultUseMemoryCache);
 
   mozilla::Preferences::AddUintVarCache(
+<<<<<<< HEAD
       &sMetadataMemoryLimit, "browser.cache.disk.metadata_memory_limit",
       kDefaultMetadataMemoryLimit);
 
@@ -156,6 +173,29 @@ void CacheObserver::AttachToPreferences() {
   mozilla::Preferences::AddIntVarCache(&sMemoryCacheCapacity,
                                        "browser.cache.memory.capacity",
                                        kDefaultMemoryCacheCapacity);
+||||||| merged common ancestors
+    &sMetadataMemoryLimit, "browser.cache.disk.metadata_memory_limit", kDefaultMetadataMemoryLimit);
+
+  mozilla::Preferences::AddAtomicUintVarCache(
+    &sDiskCacheCapacity, "browser.cache.disk.capacity", kDefaultDiskCacheCapacity);
+  mozilla::Preferences::AddBoolVarCache(
+    &sSmartCacheSizeEnabled, "browser.cache.disk.smart_size.enabled", kDefaultSmartCacheSizeEnabled);
+  mozilla::Preferences::AddIntVarCache(
+    &sMemoryCacheCapacity, "browser.cache.memory.capacity", kDefaultMemoryCacheCapacity);
+=======
+      &sMetadataMemoryLimit, "browser.cache.disk.metadata_memory_limit",
+      kDefaultMetadataMemoryLimit);
+
+  mozilla::Preferences::AddAtomicUintVarCache(&sDiskCacheCapacity,
+                                              "browser.cache.disk.capacity",
+                                              kDefaultDiskCacheCapacity);
+  mozilla::Preferences::AddAtomicBoolVarCache(
+      &sSmartCacheSizeEnabled, "browser.cache.disk.smart_size.enabled",
+      kDefaultSmartCacheSizeEnabled);
+  mozilla::Preferences::AddIntVarCache(&sMemoryCacheCapacity,
+                                       "browser.cache.memory.capacity",
+                                       kDefaultMemoryCacheCapacity);
+>>>>>>> upstream-releases
 
   mozilla::Preferences::AddUintVarCache(
       &sDiskFreeSpaceSoftLimit, "browser.cache.disk.free_space_soft_limit",
@@ -197,6 +237,19 @@ void CacheObserver::AttachToPreferences() {
                                    "browser.cache.frecency_half_life_hours",
                                    kDefaultHalfLifeHours)));
 
+<<<<<<< HEAD
+  mozilla::Preferences::AddBoolVarCache(&sSanitizeOnShutdown,
+                                        "privacy.sanitize.sanitizeOnShutdown",
+                                        kDefaultSanitizeOnShutdown);
+  mozilla::Preferences::AddBoolVarCache(&sClearCacheOnShutdown,
+                                        "privacy.clearOnShutdown.cache",
+                                        kDefaultClearCacheOnShutdown);
+||||||| merged common ancestors
+  mozilla::Preferences::AddBoolVarCache(
+    &sSanitizeOnShutdown, "privacy.sanitize.sanitizeOnShutdown", kDefaultSanitizeOnShutdown);
+  mozilla::Preferences::AddBoolVarCache(
+    &sClearCacheOnShutdown, "privacy.clearOnShutdown.cache", kDefaultClearCacheOnShutdown);
+=======
   mozilla::Preferences::AddBoolVarCache(&sSanitizeOnShutdown,
                                         "privacy.sanitize.sanitizeOnShutdown",
                                         kDefaultSanitizeOnShutdown);
@@ -207,11 +260,37 @@ void CacheObserver::AttachToPreferences() {
   mozilla::Preferences::AddAtomicUintVarCache(
       &sMaxShutdownIOLag, "browser.cache.max_shutdown_io_lag",
       kDefaultMaxShutdownIOLag);
+
+  mozilla::Preferences::AddAtomicUintVarCache(
+      &sTelemetryReportID, "browser.cache.disk.telemetry_report_ID",
+      kDefaultTelemetryReportID);
+>>>>>>> upstream-releases
+
+  mozilla::Preferences::AddAtomicUintVarCache(
+<<<<<<< HEAD
+      &sMaxShutdownIOLag, "browser.cache.max_shutdown_io_lag",
+      kDefaultMaxShutdownIOLag);
+||||||| merged common ancestors
+    &sMaxShutdownIOLag, "browser.cache.max_shutdown_io_lag", kDefaultMaxShutdownIOLag);
+=======
+      &sCacheAmountWritten, "browser.cache.disk.amount_written",
+      kDefaultCacheAmountWritten);
+>>>>>>> upstream-releases
 }
 
 // static
+<<<<<<< HEAD
 uint32_t CacheObserver::MemoryCacheCapacity() {
   if (sMemoryCacheCapacity >= 0) return sMemoryCacheCapacity << 10;
+||||||| merged common ancestors
+uint32_t CacheObserver::MemoryCacheCapacity()
+{
+  if (sMemoryCacheCapacity >= 0)
+    return sMemoryCacheCapacity << 10;
+=======
+uint32_t CacheObserver::MemoryCacheCapacity() {
+  if (sMemoryCacheCapacity >= 0) return sMemoryCacheCapacity;
+>>>>>>> upstream-releases
 
   if (sAutoMemoryCacheCapacity != -1) return sAutoMemoryCacheCapacity;
 
@@ -232,18 +311,39 @@ uint32_t CacheObserver::MemoryCacheCapacity() {
 
   int32_t capacity = 0;
   if (x > 0) {
+<<<<<<< HEAD
     capacity = (int32_t)(x * x / 3.0 + x + 2.0 / 3 + 0.1);  // 0.1 for rounding
     if (capacity > 32) capacity = 32;
     capacity <<= 20;
+||||||| merged common ancestors
+    capacity = (int32_t)(x * x / 3.0 + x + 2.0 / 3 + 0.1); // 0.1 for rounding
+    if (capacity > 32)
+      capacity = 32;
+    capacity <<= 20;
+=======
+    capacity = (int32_t)(x * x / 3.0 + x + 2.0 / 3 + 0.1);  // 0.1 for rounding
+    if (capacity > 32) capacity = 32;
+    capacity <<= 10;
+>>>>>>> upstream-releases
   }
 
-  // Result is in bytes.
+  // Result is in kilobytes.
   return sAutoMemoryCacheCapacity = capacity;
 }
 
 // static
+<<<<<<< HEAD
 void CacheObserver::SetDiskCacheCapacity(uint32_t aCapacity) {
   sDiskCacheCapacity = aCapacity >> 10;
+||||||| merged common ancestors
+void
+CacheObserver::SetDiskCacheCapacity(uint32_t aCapacity)
+{
+  sDiskCacheCapacity = aCapacity >> 10;
+=======
+void CacheObserver::SetDiskCacheCapacity(uint32_t aCapacity) {
+  sDiskCacheCapacity = aCapacity;
+>>>>>>> upstream-releases
 
   if (!sSelf) {
     return;
@@ -253,8 +353,17 @@ void CacheObserver::SetDiskCacheCapacity(uint32_t aCapacity) {
     sSelf->StoreDiskCacheCapacity();
   } else {
     nsCOMPtr<nsIRunnable> event =
+<<<<<<< HEAD
         NewRunnableMethod("net::CacheObserver::StoreDiskCacheCapacity", sSelf,
                           &CacheObserver::StoreDiskCacheCapacity);
+||||||| merged common ancestors
+      NewRunnableMethod("net::CacheObserver::StoreDiskCacheCapacity",
+                        sSelf,
+                        &CacheObserver::StoreDiskCacheCapacity);
+=======
+        NewRunnableMethod("net::CacheObserver::StoreDiskCacheCapacity",
+                          sSelf.get(), &CacheObserver::StoreDiskCacheCapacity);
+>>>>>>> upstream-releases
     NS_DispatchToMainThread(event);
   }
 }
@@ -276,8 +385,17 @@ void CacheObserver::SetCacheFSReported() {
     sSelf->StoreCacheFSReported();
   } else {
     nsCOMPtr<nsIRunnable> event =
+<<<<<<< HEAD
         NewRunnableMethod("net::CacheObserver::StoreCacheFSReported", sSelf,
                           &CacheObserver::StoreCacheFSReported);
+||||||| merged common ancestors
+      NewRunnableMethod("net::CacheObserver::StoreCacheFSReported",
+                        sSelf,
+                        &CacheObserver::StoreCacheFSReported);
+=======
+        NewRunnableMethod("net::CacheObserver::StoreCacheFSReported",
+                          sSelf.get(), &CacheObserver::StoreCacheFSReported);
+>>>>>>> upstream-releases
     NS_DispatchToMainThread(event);
   }
 }
@@ -299,8 +417,17 @@ void CacheObserver::SetHashStatsReported() {
     sSelf->StoreHashStatsReported();
   } else {
     nsCOMPtr<nsIRunnable> event =
+<<<<<<< HEAD
         NewRunnableMethod("net::CacheObserver::StoreHashStatsReported", sSelf,
                           &CacheObserver::StoreHashStatsReported);
+||||||| merged common ancestors
+      NewRunnableMethod("net::CacheObserver::StoreHashStatsReported",
+                        sSelf,
+                        &CacheObserver::StoreHashStatsReported);
+=======
+        NewRunnableMethod("net::CacheObserver::StoreHashStatsReported",
+                          sSelf.get(), &CacheObserver::StoreHashStatsReported);
+>>>>>>> upstream-releases
     NS_DispatchToMainThread(event);
   }
 }
@@ -311,6 +438,71 @@ void CacheObserver::StoreHashStatsReported() {
 }
 
 // static
+<<<<<<< HEAD
+void CacheObserver::ParentDirOverride(nsIFile** aDir) {
+  if (NS_WARN_IF(!aDir)) return;
+||||||| merged common ancestors
+void CacheObserver::ParentDirOverride(nsIFile** aDir)
+{
+  if (NS_WARN_IF(!aDir))
+    return;
+=======
+void CacheObserver::SetTelemetryReportID(uint32_t aTelemetryReportID) {
+  sTelemetryReportID = aTelemetryReportID;
+
+  if (!sSelf) {
+    return;
+  }
+>>>>>>> upstream-releases
+
+  if (NS_IsMainThread()) {
+    sSelf->StoreTelemetryReportID();
+  } else {
+    nsCOMPtr<nsIRunnable> event =
+        NewRunnableMethod("net::CacheObserver::StoreTelemetryReportID",
+                          sSelf.get(), &CacheObserver::StoreTelemetryReportID);
+    NS_DispatchToMainThread(event);
+  }
+}
+
+<<<<<<< HEAD
+  if (!sSelf) return;
+  if (!sSelf->mCacheParentDirectoryOverride) return;
+||||||| merged common ancestors
+  if (!sSelf)
+    return;
+  if (!sSelf->mCacheParentDirectoryOverride)
+    return;
+=======
+void CacheObserver::StoreTelemetryReportID() {
+  mozilla::Preferences::SetInt("browser.cache.disk.telemetry_report_ID",
+                               sTelemetryReportID);
+}
+
+// static
+void CacheObserver::SetCacheAmountWritten(uint32_t aCacheAmountWritten) {
+  sCacheAmountWritten = aCacheAmountWritten;
+
+  if (!sSelf) {
+    return;
+  }
+
+  if (NS_IsMainThread()) {
+    sSelf->StoreCacheAmountWritten();
+  } else {
+    nsCOMPtr<nsIRunnable> event =
+        NewRunnableMethod("net::CacheObserver::StoreCacheAmountWritten",
+                          sSelf.get(), &CacheObserver::StoreCacheAmountWritten);
+    NS_DispatchToMainThread(event);
+  }
+}
+
+void CacheObserver::StoreCacheAmountWritten() {
+  mozilla::Preferences::SetInt("browser.cache.disk.amount_written",
+                               sCacheAmountWritten);
+}
+
+// static
 void CacheObserver::ParentDirOverride(nsIFile** aDir) {
   if (NS_WARN_IF(!aDir)) return;
 
@@ -318,6 +510,7 @@ void CacheObserver::ParentDirOverride(nsIFile** aDir) {
 
   if (!sSelf) return;
   if (!sSelf->mCacheParentDirectoryOverride) return;
+>>>>>>> upstream-releases
 
   sSelf->mCacheParentDirectoryOverride->Clone(aDir);
 }
@@ -383,10 +576,22 @@ bool CacheObserver::EntryIsTooBig(int64_t aSize, bool aUsingDisk) {
   if (preferredLimit != -1 && aSize > preferredLimit) return true;
 
   // Otherwise (or when in the custom limit), check limit based on the global
+<<<<<<< HEAD
   // limit.  It's 1/8 (>> 3) of the respective capacity.
   int64_t derivedLimit =
       aUsingDisk ? (static_cast<int64_t>(DiskCacheCapacity() >> 3))
                  : (static_cast<int64_t>(MemoryCacheCapacity() >> 3));
+||||||| merged common ancestors
+  // limit.  It's 1/8 (>> 3) of the respective capacity.
+  int64_t derivedLimit = aUsingDisk
+    ? (static_cast<int64_t>(DiskCacheCapacity() >> 3))
+    : (static_cast<int64_t>(MemoryCacheCapacity() >> 3));
+=======
+  // limit. It's 1/8 of the respective capacity.
+  int64_t derivedLimit =
+      aUsingDisk ? DiskCacheCapacity() : MemoryCacheCapacity();
+  derivedLimit <<= (10 - 3);
+>>>>>>> upstream-releases
 
   if (aSize > derivedLimit) return true;
 

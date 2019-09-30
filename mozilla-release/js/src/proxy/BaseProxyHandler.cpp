@@ -46,6 +46,7 @@ bool BaseProxyHandler::has(JSContext* cx, HandleObject proxy, HandleId id,
     return false;
   }
 
+<<<<<<< HEAD
   // Step 5.,5.a.
   if (proto) {
     return HasProperty(cx, proto, id, bp);
@@ -60,7 +61,19 @@ bool BaseProxyHandler::getPropertyDescriptor(
     JSContext* cx, HandleObject proxy, HandleId id,
     MutableHandle<PropertyDescriptor> desc) const {
   assertEnteredPolicy(cx, proxy, id, GET | SET | GET_PROPERTY_DESCRIPTOR);
+||||||| merged common ancestors
+    // Step 5.,5.a.
+    if (proto) {
+        return HasProperty(cx, proto, id, bp);
+    }
+=======
+  // Step 5.,5.a.
+  if (proto) {
+    return HasProperty(cx, proto, id, bp);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!getOwnPropertyDescriptor(cx, proxy, id, desc)) {
     return false;
   }
@@ -77,6 +90,14 @@ bool BaseProxyHandler::getPropertyDescriptor(
     return true;
   }
   return GetPropertyDescriptor(cx, proto, id, desc);
+||||||| merged common ancestors
+    // Step 6.
+    *bp = false;
+    return true;
+=======
+  // Step 6.
+  *bp = false;
+  return true;
 }
 
 bool BaseProxyHandler::hasOwn(JSContext* cx, HandleObject proxy, HandleId id,
@@ -88,8 +109,34 @@ bool BaseProxyHandler::hasOwn(JSContext* cx, HandleObject proxy, HandleId id,
   }
   *bp = !!desc.object();
   return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool BaseProxyHandler::hasOwn(JSContext* cx, HandleObject proxy, HandleId id,
+                              bool* bp) const {
+  assertEnteredPolicy(cx, proxy, id, GET);
+  Rooted<PropertyDescriptor> desc(cx);
+  if (!getOwnPropertyDescriptor(cx, proxy, id, &desc)) {
+    return false;
+  }
+  *bp = !!desc.object();
+  return true;
+}
+||||||| merged common ancestors
+bool
+BaseProxyHandler::getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
+                                        MutableHandle<PropertyDescriptor> desc) const
+{
+    assertEnteredPolicy(cx, proxy, id, GET | SET | GET_PROPERTY_DESCRIPTOR);
+=======
+bool BaseProxyHandler::get(JSContext* cx, HandleObject proxy,
+                           HandleValue receiver, HandleId id,
+                           MutableHandleValue vp) const {
+  assertEnteredPolicy(cx, proxy, id, GET);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool BaseProxyHandler::get(JSContext* cx, HandleObject proxy,
                            HandleValue receiver, HandleId id,
                            MutableHandleValue vp) const {
@@ -97,7 +144,26 @@ bool BaseProxyHandler::get(JSContext* cx, HandleObject proxy,
 
   // This method is not covered by any spec, but we follow ES 2016
   // (January 21, 2016) 9.1.8 fairly closely.
+||||||| merged common ancestors
+    if (!getOwnPropertyDescriptor(cx, proxy, id, desc)) {
+        return false;
+    }
+    if (desc.object()) {
+        return true;
+    }
+=======
+  // This method is not covered by any spec, but we follow ES 2016
+  // (January 21, 2016) 9.1.8 fairly closely.
 
+  // Step 2. (Step 1 is a superfluous assertion.)
+  Rooted<PropertyDescriptor> desc(cx);
+  if (!getOwnPropertyDescriptor(cx, proxy, id, &desc)) {
+    return false;
+  }
+  desc.assertCompleteIfFound();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Step 2. (Step 1 is a superfluous assertion.)
   Rooted<PropertyDescriptor> desc(cx);
   if (!getOwnPropertyDescriptor(cx, proxy, id, &desc)) {
@@ -110,6 +176,14 @@ bool BaseProxyHandler::get(JSContext* cx, HandleObject proxy,
     // The spec calls this variable "parent", but that word has weird
     // connotations in SpiderMonkey, so let's go with "proto".
     // Step 3.a.
+||||||| merged common ancestors
+=======
+  // Step 3.
+  if (!desc.object()) {
+    // The spec calls this variable "parent", but that word has weird
+    // connotations in SpiderMonkey, so let's go with "proto".
+    // Step 3.a.
+>>>>>>> upstream-releases
     RootedObject proto(cx);
     if (!GetPrototype(cx, proxy, &proto)) {
       return false;
@@ -251,11 +325,25 @@ bool js::SetPropertyIgnoringNamedGetter(JSContext* cx, HandleObject obj,
   return result.succeed();
 }
 
+<<<<<<< HEAD
 bool BaseProxyHandler::getOwnEnumerablePropertyKeys(JSContext* cx,
                                                     HandleObject proxy,
                                                     AutoIdVector& props) const {
   assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
   MOZ_ASSERT(props.length() == 0);
+||||||| merged common ancestors
+bool
+BaseProxyHandler::getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
+                                               AutoIdVector& props) const
+{
+    assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
+    MOZ_ASSERT(props.length() == 0);
+=======
+bool BaseProxyHandler::getOwnEnumerablePropertyKeys(
+    JSContext* cx, HandleObject proxy, MutableHandleIdVector props) const {
+  assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
+  MOZ_ASSERT(props.length() == 0);
+>>>>>>> upstream-releases
 
   if (!ownPropertyKeys(cx, proxy, props)) {
     return false;
@@ -283,6 +371,7 @@ bool BaseProxyHandler::getOwnEnumerablePropertyKeys(JSContext* cx,
     }
   }
 
+<<<<<<< HEAD
   MOZ_ASSERT(i <= props.length());
   if (!props.resize(i)) {
     return false;
@@ -290,18 +379,59 @@ bool BaseProxyHandler::getOwnEnumerablePropertyKeys(JSContext* cx,
 
   return true;
 }
+||||||| merged common ancestors
+    return true;
+}
+=======
+  MOZ_ASSERT(i <= props.length());
+  if (!props.resize(i)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* BaseProxyHandler::enumerate(JSContext* cx, HandleObject proxy) const {
   assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
+||||||| merged common ancestors
+JSObject*
+BaseProxyHandler::enumerate(JSContext* cx, HandleObject proxy) const
+{
+    assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
+=======
+  return true;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // GetPropertyKeys will invoke getOwnEnumerablePropertyKeys along the proto
   // chain for us.
   AutoIdVector props(cx);
   if (!GetPropertyKeys(cx, proxy, 0, &props)) {
     return nullptr;
   }
+||||||| merged common ancestors
+    // GetPropertyKeys will invoke getOwnEnumerablePropertyKeys along the proto
+    // chain for us.
+    AutoIdVector props(cx);
+    if (!GetPropertyKeys(cx, proxy, 0, &props)) {
+        return nullptr;
+    }
+=======
+bool BaseProxyHandler::enumerate(JSContext* cx, HandleObject proxy,
+                                 MutableHandleIdVector props) const {
+  assertEnteredPolicy(cx, proxy, JSID_VOID, ENUMERATE);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return EnumeratedIdVectorToIterator(cx, proxy, props);
+||||||| merged common ancestors
+    return EnumeratedIdVectorToIterator(cx, proxy, props);
+=======
+  // GetPropertyKeys will invoke getOwnEnumerablePropertyKeys along the proto
+  // chain for us.
+  MOZ_ASSERT(props.empty());
+  return GetPropertyKeys(cx, proxy, 0, props);
+>>>>>>> upstream-releases
 }
 
 bool BaseProxyHandler::call(JSContext* cx, HandleObject proxy,
@@ -377,15 +507,44 @@ size_t BaseProxyHandler::objectMoved(JSObject* proxy, JSObject* old) const {
   return 0;
 }
 
+<<<<<<< HEAD
 JSObject* BaseProxyHandler::weakmapKeyDelegate(JSObject* proxy) const {
   return nullptr;
-}
-
+||||||| merged common ancestors
+JSObject*
+BaseProxyHandler::weakmapKeyDelegate(JSObject* proxy) const
+{
+    return nullptr;
+=======
 bool BaseProxyHandler::getPrototype(JSContext* cx, HandleObject proxy,
                                     MutableHandleObject protop) const {
   MOZ_CRASH("must override getPrototype with dynamic prototype");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool BaseProxyHandler::getPrototype(JSContext* cx, HandleObject proxy,
+                                    MutableHandleObject protop) const {
+  MOZ_CRASH("must override getPrototype with dynamic prototype");
+||||||| merged common ancestors
+bool
+BaseProxyHandler::getPrototype(JSContext* cx, HandleObject proxy, MutableHandleObject protop) const
+{
+    MOZ_CRASH("must override getPrototype with dynamic prototype");
+=======
+bool BaseProxyHandler::setPrototype(JSContext* cx, HandleObject proxy,
+                                    HandleObject proto,
+                                    ObjectOpResult& result) const {
+  // Disallow sets of protos on proxies with dynamic prototypes but no hook.
+  // This keeps us away from the footgun of having the first proto set opt
+  // you out of having dynamic protos altogether.
+  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                            JSMSG_CANT_SET_PROTO_OF, "incompatible Proxy");
+  return false;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool BaseProxyHandler::setPrototype(JSContext* cx, HandleObject proxy,
                                     HandleObject proto,
                                     ObjectOpResult& result) const {
@@ -401,6 +560,30 @@ bool BaseProxyHandler::setImmutablePrototype(JSContext* cx, HandleObject proxy,
                                              bool* succeeded) const {
   *succeeded = false;
   return true;
+||||||| merged common ancestors
+bool
+BaseProxyHandler::setPrototype(JSContext* cx, HandleObject proxy, HandleObject proto,
+                               ObjectOpResult& result) const
+{
+    // Disallow sets of protos on proxies with dynamic prototypes but no hook.
+    // This keeps us away from the footgun of having the first proto set opt
+    // you out of having dynamic protos altogether.
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_CANT_SET_PROTO_OF,
+                              "incompatible Proxy");
+    return false;
+}
+
+bool
+BaseProxyHandler::setImmutablePrototype(JSContext* cx, HandleObject proxy, bool* succeeded) const
+{
+    *succeeded = false;
+    return true;
+=======
+bool BaseProxyHandler::setImmutablePrototype(JSContext* cx, HandleObject proxy,
+                                             bool* succeeded) const {
+  *succeeded = false;
+  return true;
+>>>>>>> upstream-releases
 }
 
 bool BaseProxyHandler::getElements(JSContext* cx, HandleObject proxy,

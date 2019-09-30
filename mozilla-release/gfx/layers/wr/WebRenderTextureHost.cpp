@@ -9,14 +9,52 @@
 #include "mozilla/layers/ImageDataSerializer.h"
 #include "mozilla/layers/LayersSurfaces.h"
 #include "mozilla/webrender/RenderThread.h"
+#include "mozilla/webrender/WebRenderAPI.h"
+
+#ifdef MOZ_WIDGET_ANDROID
+#  include "mozilla/layers/TextureHostOGL.h"
+#endif
 
 namespace mozilla {
 namespace layers {
+
+<<<<<<< HEAD
+WebRenderTextureHost::WebRenderTextureHost(
+    const SurfaceDescriptor& aDesc, TextureFlags aFlags, TextureHost* aTexture,
+    wr::ExternalImageId& aExternalImageId)
+    : TextureHost(aFlags), mExternalImageId(aExternalImageId) {
+||||||| merged common ancestors
+WebRenderTextureHost::WebRenderTextureHost(const SurfaceDescriptor& aDesc,
+                                           TextureFlags aFlags,
+                                           TextureHost* aTexture,
+                                           wr::ExternalImageId& aExternalImageId)
+  : TextureHost(aFlags)
+  , mExternalImageId(aExternalImageId)
+{
+=======
+class ScheduleNofityForUse : public wr::NotificationHandler {
+ public:
+  explicit ScheduleNofityForUse(uint64_t aExternalImageId)
+      : mExternalImageId(aExternalImageId) {}
+
+  virtual void Notify(wr::Checkpoint aCheckpoint) override {
+    if (aCheckpoint == wr::Checkpoint::FrameTexturesUpdated) {
+      MOZ_ASSERT(wr::RenderThread::IsInRenderThread());
+      wr::RenderThread::Get()->NofityForUse(mExternalImageId);
+    } else {
+      MOZ_ASSERT(aCheckpoint == wr::Checkpoint::TransactionDropped);
+    }
+  }
+
+ protected:
+  uint64_t mExternalImageId;
+};
 
 WebRenderTextureHost::WebRenderTextureHost(
     const SurfaceDescriptor& aDesc, TextureFlags aFlags, TextureHost* aTexture,
     wr::ExternalImageId& aExternalImageId)
     : TextureHost(aFlags), mExternalImageId(aExternalImageId) {
+>>>>>>> upstream-releases
   // The wrapped textureHost will be used in WebRender, and the WebRender could
   // run at another thread. It's hard to control the life-time when gecko
   // receives PTextureParent destroy message. It's possible that textureHost is
@@ -45,36 +83,133 @@ void WebRenderTextureHost::CreateRenderTextureHost(
   aTexture->CreateRenderTexture(mExternalImageId);
 }
 
+<<<<<<< HEAD
 bool WebRenderTextureHost::Lock() {
   MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+||||||| merged common ancestors
+bool
+WebRenderTextureHost::Lock()
+{
+  MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+=======
+bool WebRenderTextureHost::Lock() {
+  MOZ_ASSERT(!mWrappedTextureHost.get() ||
+             mWrappedTextureHost->AsBufferTextureHost());
+
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    return mWrappedTextureHost->Lock();
+  }
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 void WebRenderTextureHost::Unlock() {
   MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+||||||| merged common ancestors
+void
+WebRenderTextureHost::Unlock()
+{
+  MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+=======
+void WebRenderTextureHost::Unlock() {
+  MOZ_ASSERT(!mWrappedTextureHost.get() ||
+             mWrappedTextureHost->AsBufferTextureHost());
+
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    mWrappedTextureHost->Unlock();
+  }
 }
 
+void WebRenderTextureHost::PrepareTextureSource(
+    CompositableTextureSourceRef& aTexture) {
+  MOZ_ASSERT(!mWrappedTextureHost.get() ||
+             mWrappedTextureHost->AsBufferTextureHost());
+
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    mWrappedTextureHost->PrepareTextureSource(aTexture);
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool WebRenderTextureHost::BindTextureSource(
     CompositableTextureSourceRef& aTexture) {
   MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+||||||| merged common ancestors
+bool
+WebRenderTextureHost::BindTextureSource(CompositableTextureSourceRef& aTexture)
+{
+  MOZ_ASSERT_UNREACHABLE("unexpected to be called");
+=======
+bool WebRenderTextureHost::BindTextureSource(
+    CompositableTextureSourceRef& aTexture) {
+  MOZ_ASSERT(!mWrappedTextureHost.get() ||
+             mWrappedTextureHost->AsBufferTextureHost());
+
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    return mWrappedTextureHost->BindTextureSource(aTexture);
+  }
+>>>>>>> upstream-releases
   return false;
 }
 
+<<<<<<< HEAD
 already_AddRefed<gfx::DataSourceSurface> WebRenderTextureHost::GetAsSurface() {
+||||||| merged common ancestors
+already_AddRefed<gfx::DataSourceSurface>
+WebRenderTextureHost::GetAsSurface()
+{
+=======
+void WebRenderTextureHost::UnbindTextureSource() {
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    mWrappedTextureHost->UnbindTextureSource();
+  }
+  // Handle read unlock
+  TextureHost::UnbindTextureSource();
+}
+
+void WebRenderTextureHost::SetTextureSourceProvider(
+    TextureSourceProvider* aProvider) {
+  // During using WebRender, only BasicCompositor could exist
+  MOZ_ASSERT(!aProvider || aProvider->AsBasicCompositor());
+  MOZ_ASSERT(!mWrappedTextureHost.get() ||
+             mWrappedTextureHost->AsBufferTextureHost());
+
+  if (mWrappedTextureHost && mWrappedTextureHost->AsBufferTextureHost()) {
+    mWrappedTextureHost->SetTextureSourceProvider(aProvider);
+  }
+}
+
+already_AddRefed<gfx::DataSourceSurface> WebRenderTextureHost::GetAsSurface() {
+>>>>>>> upstream-releases
   if (!mWrappedTextureHost) {
     return nullptr;
   }
   return mWrappedTextureHost->GetAsSurface();
 }
 
+<<<<<<< HEAD
 void WebRenderTextureHost::SetTextureSourceProvider(
     TextureSourceProvider* aProvider) {}
 
 YUVColorSpace WebRenderTextureHost::GetYUVColorSpace() const {
+||||||| merged common ancestors
+void
+WebRenderTextureHost::SetTextureSourceProvider(TextureSourceProvider* aProvider)
+{
+}
+
+YUVColorSpace
+WebRenderTextureHost::GetYUVColorSpace() const
+{
+=======
+gfx::YUVColorSpace WebRenderTextureHost::GetYUVColorSpace() const {
+>>>>>>> upstream-releases
   if (mWrappedTextureHost) {
     return mWrappedTextureHost->GetYUVColorSpace();
   }
-  return YUVColorSpace::UNKNOWN;
+  return gfx::YUVColorSpace::UNKNOWN;
 }
 
 gfx::IntSize WebRenderTextureHost::GetSize() const {
@@ -91,7 +226,34 @@ gfx::SurfaceFormat WebRenderTextureHost::GetFormat() const {
   return mWrappedTextureHost->GetFormat();
 }
 
+<<<<<<< HEAD
 gfx::SurfaceFormat WebRenderTextureHost::GetReadFormat() const {
+||||||| merged common ancestors
+gfx::SurfaceFormat
+WebRenderTextureHost::GetReadFormat() const
+{
+=======
+void WebRenderTextureHost::NotifyNotUsed() {
+#ifdef MOZ_WIDGET_ANDROID
+  if (mWrappedTextureHost && mWrappedTextureHost->AsSurfaceTextureHost()) {
+    wr::RenderThread::Get()->NotifyNotUsed(wr::AsUint64(mExternalImageId));
+  }
+#endif
+  TextureHost::NotifyNotUsed();
+}
+
+void WebRenderTextureHost::PrepareForUse() {
+#ifdef MOZ_WIDGET_ANDROID
+  if (mWrappedTextureHost && mWrappedTextureHost->AsSurfaceTextureHost()) {
+    // Call PrepareForUse on render thread.
+    // See RenderAndroidSurfaceTextureHostOGL::PrepareForUse.
+    wr::RenderThread::Get()->PrepareForUse(wr::AsUint64(mExternalImageId));
+  }
+#endif
+}
+
+gfx::SurfaceFormat WebRenderTextureHost::GetReadFormat() const {
+>>>>>>> upstream-releases
   if (!mWrappedTextureHost) {
     return gfx::SurfaceFormat::UNKNOWN;
   }
@@ -112,12 +274,25 @@ int32_t WebRenderTextureHost::GetRGBStride() {
   return ImageDataSerializer::ComputeRGBStride(format, GetSize().width);
 }
 
+<<<<<<< HEAD
 bool WebRenderTextureHost::HasIntermediateBuffer() const {
   MOZ_ASSERT(mWrappedTextureHost);
   return mWrappedTextureHost->HasIntermediateBuffer();
 }
 
 uint32_t WebRenderTextureHost::NumSubTextures() const {
+||||||| merged common ancestors
+uint32_t
+WebRenderTextureHost::NumSubTextures() const
+{
+=======
+bool WebRenderTextureHost::HasIntermediateBuffer() const {
+  MOZ_ASSERT(mWrappedTextureHost);
+  return mWrappedTextureHost->HasIntermediateBuffer();
+}
+
+uint32_t WebRenderTextureHost::NumSubTextures() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mWrappedTextureHost);
   return mWrappedTextureHost->NumSubTextures();
 }
@@ -146,5 +321,38 @@ bool WebRenderTextureHost::SupportsWrNativeTexture() {
   return mWrappedTextureHost->SupportsWrNativeTexture();
 }
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+bool WebRenderTextureHost::NeedsYFlip() const {
+  bool yFlip = TextureHost::NeedsYFlip();
+  if (mWrappedTextureHost->AsSurfaceTextureHost()) {
+    MOZ_ASSERT(yFlip);
+    // With WebRender, SurfaceTextureHost always requests y-flip.
+    // But y-flip should not be handled, since
+    // SurfaceTexture.getTransformMatrix() is not handled yet.
+    // See Bug 1507076.
+    yFlip = false;
+  }
+  return yFlip;
+}
+
+void WebRenderTextureHost::MaybeNofityForUse(wr::TransactionBuilder& aTxn) {
+#if defined(MOZ_WIDGET_ANDROID)
+  if (!mWrappedTextureHost->AsSurfaceTextureHost()) {
+    return;
+  }
+  // SurfaceTexture of video needs NofityForUse() to detect if it is rendered
+  // on WebRender.
+  aTxn.Notify(wr::Checkpoint::FrameTexturesUpdated,
+              MakeUnique<ScheduleNofityForUse>(wr::AsUint64(mExternalImageId)));
+#endif
+}
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases

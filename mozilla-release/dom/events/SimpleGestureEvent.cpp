@@ -28,8 +28,16 @@ SimpleGestureEvent::SimpleGestureEvent(EventTarget* aOwner,
     mEventIsInternal = true;
     mEvent->mTime = PR_Now();
     mEvent->mRefPoint = LayoutDeviceIntPoint(0, 0);
+<<<<<<< HEAD
     static_cast<WidgetMouseEventBase*>(mEvent)->inputSource =
         MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+||||||| merged common ancestors
+    static_cast<WidgetMouseEventBase*>(mEvent)->inputSource =
+      MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+=======
+    static_cast<WidgetMouseEventBase*>(mEvent)->mInputSource =
+        MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+>>>>>>> upstream-releases
   }
 }
 

@@ -5,8 +5,8 @@
 "use strict";
 
 const protocol = require("devtools/shared/protocol");
-const {captureScreenshot} = require("devtools/shared/screenshot/capture");
-const {screenshotSpec} = require("devtools/shared/specs/screenshot");
+const { captureScreenshot } = require("devtools/shared/screenshot/capture");
+const { screenshotSpec } = require("devtools/shared/specs/screenshot");
 
 exports.ScreenshotActor = protocol.ActorClassWithSpec(screenshotSpec, {
   initialize: function(conn, targetActor) {
@@ -15,6 +15,7 @@ exports.ScreenshotActor = protocol.ActorClassWithSpec(screenshotSpec, {
   },
 
   capture: function(args) {
+<<<<<<< HEAD
     if (args.nodeActorID) {
       const nodeActor = this.conn.getActor(args.nodeActorID);
       if (!nodeActor) {
@@ -23,6 +24,18 @@ exports.ScreenshotActor = protocol.ActorClassWithSpec(screenshotSpec, {
       }
       args.rawNode = nodeActor.rawNode;
     }
+||||||| merged common ancestors
+=======
+    if (args.nodeActorID) {
+      const nodeActor = this.conn.getActor(args.nodeActorID);
+      if (!nodeActor) {
+        throw new Error(
+          `Screenshot actor failed to find Node actor for '${args.nodeActorID}'`
+        );
+      }
+      args.rawNode = nodeActor.rawNode;
+    }
+>>>>>>> upstream-releases
     return captureScreenshot(args, this.document);
   },
 });

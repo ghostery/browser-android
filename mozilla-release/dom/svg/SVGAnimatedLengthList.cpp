@@ -6,27 +6,42 @@
 
 #include "SVGAnimatedLengthList.h"
 
-#include "DOMSVGAnimatedLengthList.h"
 #include "mozilla/Move.h"
-#include "nsSVGElement.h"
-#include "nsSVGAttrTearoffTable.h"
-#include "nsSMILValue.h"
-#include "SVGLengthListSMILType.h"
+#include "mozilla/SMILValue.h"
+#include "mozilla/dom/SVGElement.h"
 #include "mozilla/dom/SVGLengthBinding.h"
+#include "DOMSVGAnimatedLengthList.h"
+#include "SVGLengthListSMILType.h"
 
 namespace mozilla {
 
 using namespace dom;
 
+<<<<<<< HEAD
 nsresult SVGAnimatedLengthList::SetBaseValueString(const nsAString &aValue) {
+||||||| merged common ancestors
+nsresult
+SVGAnimatedLengthList::SetBaseValueString(const nsAString& aValue)
+{
+=======
+nsresult SVGAnimatedLengthList::SetBaseValueString(const nsAString& aValue) {
+>>>>>>> upstream-releases
   SVGLengthList newBaseValue;
   nsresult rv = newBaseValue.SetValueFromString(aValue);
   if (NS_FAILED(rv)) {
     return rv;
   }
 
+<<<<<<< HEAD
   DOMSVGAnimatedLengthList *domWrapper =
       DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+  DOMSVGAnimatedLengthList *domWrapper =
+    DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+=======
+  DOMSVGAnimatedLengthList* domWrapper =
+      DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // We must send this notification *before* changing mBaseVal! If the length
     // of our baseVal is being reduced, our baseVal's DOM wrapper list may have
@@ -37,7 +52,7 @@ nsresult SVGAnimatedLengthList::SetBaseValueString(const nsAString &aValue) {
   }
 
   // We don't need to call DidChange* here - we're only called by
-  // nsSVGElement::ParseAttribute under Element::SetAttr,
+  // SVGElement::ParseAttribute under Element::SetAttr,
   // which takes care of notifying.
 
   rv = mBaseVal.CopyFrom(newBaseValue);
@@ -49,9 +64,21 @@ nsresult SVGAnimatedLengthList::SetBaseValueString(const nsAString &aValue) {
   return rv;
 }
 
+<<<<<<< HEAD
 void SVGAnimatedLengthList::ClearBaseValue(uint32_t aAttrEnum) {
   DOMSVGAnimatedLengthList *domWrapper =
       DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+void
+SVGAnimatedLengthList::ClearBaseValue(uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedLengthList *domWrapper =
+    DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+=======
+void SVGAnimatedLengthList::ClearBaseValue(uint32_t aAttrEnum) {
+  DOMSVGAnimatedLengthList* domWrapper =
+      DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // We must send this notification *before* changing mBaseVal! (See above.)
     domWrapper->InternalBaseValListWillChangeTo(SVGLengthList());
@@ -60,11 +87,27 @@ void SVGAnimatedLengthList::ClearBaseValue(uint32_t aAttrEnum) {
   // Caller notifies
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedLengthList::SetAnimValue(const SVGLengthList &aNewAnimValue,
                                              nsSVGElement *aElement,
                                              uint32_t aAttrEnum) {
   DOMSVGAnimatedLengthList *domWrapper =
       DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+nsresult
+SVGAnimatedLengthList::SetAnimValue(const SVGLengthList& aNewAnimValue,
+                                    nsSVGElement *aElement,
+                                    uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedLengthList *domWrapper =
+    DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+=======
+nsresult SVGAnimatedLengthList::SetAnimValue(const SVGLengthList& aNewAnimValue,
+                                             SVGElement* aElement,
+                                             uint32_t aAttrEnum) {
+  DOMSVGAnimatedLengthList* domWrapper =
+      DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // A new animation may totally change the number of items in the animVal
     // list, replacing what was essentially a mirror of the baseVal list, or
@@ -98,10 +141,24 @@ nsresult SVGAnimatedLengthList::SetAnimValue(const SVGLengthList &aNewAnimValue,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SVGAnimatedLengthList::ClearAnimValue(nsSVGElement *aElement,
                                            uint32_t aAttrEnum) {
   DOMSVGAnimatedLengthList *domWrapper =
       DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+||||||| merged common ancestors
+void
+SVGAnimatedLengthList::ClearAnimValue(nsSVGElement *aElement,
+                                      uint32_t aAttrEnum)
+{
+  DOMSVGAnimatedLengthList *domWrapper =
+    DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+=======
+void SVGAnimatedLengthList::ClearAnimValue(SVGElement* aElement,
+                                           uint32_t aAttrEnum) {
+  DOMSVGAnimatedLengthList* domWrapper =
+      DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(this);
+>>>>>>> upstream-releases
   if (domWrapper) {
     // When all animation ends, animVal simply mirrors baseVal, which may have
     // a different number of items to the last active animated value. We must
@@ -114,18 +171,54 @@ void SVGAnimatedLengthList::ClearAnimValue(nsSVGElement *aElement,
   aElement->DidAnimateLengthList(aAttrEnum);
 }
 
+<<<<<<< HEAD
 UniquePtr<nsISMILAttr> SVGAnimatedLengthList::ToSMILAttr(
     nsSVGElement *aSVGElement, uint8_t aAttrEnum, uint8_t aAxis,
     bool aCanZeroPadList) {
   return MakeUnique<SMILAnimatedLengthList>(this, aSVGElement, aAttrEnum, aAxis,
                                             aCanZeroPadList);
+||||||| merged common ancestors
+UniquePtr<nsISMILAttr>
+SVGAnimatedLengthList::ToSMILAttr(nsSVGElement *aSVGElement,
+                                  uint8_t aAttrEnum,
+                                  uint8_t aAxis,
+                                  bool aCanZeroPadList)
+{
+  return MakeUnique<SMILAnimatedLengthList>(this, aSVGElement, aAttrEnum,
+                                            aAxis, aCanZeroPadList);
+=======
+UniquePtr<SMILAttr> SVGAnimatedLengthList::ToSMILAttr(SVGElement* aSVGElement,
+                                                      uint8_t aAttrEnum,
+                                                      uint8_t aAxis,
+                                                      bool aCanZeroPadList) {
+  return MakeUnique<SMILAnimatedLengthList>(this, aSVGElement, aAttrEnum, aAxis,
+                                            aCanZeroPadList);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedLengthList::SMILAnimatedLengthList::ValueFromString(
     const nsAString &aStr, const dom::SVGAnimationElement * /*aSrcElement*/,
     nsSMILValue &aValue, bool &aPreventCachingOfSandwich) const {
   nsSMILValue val(&SVGLengthListSMILType::sSingleton);
   SVGLengthListAndInfo *llai = static_cast<SVGLengthListAndInfo *>(val.mU.mPtr);
+||||||| merged common ancestors
+nsresult
+SVGAnimatedLengthList::
+  SMILAnimatedLengthList::ValueFromString(const nsAString& aStr,
+                               const dom::SVGAnimationElement* /*aSrcElement*/,
+                               nsSMILValue& aValue,
+                               bool& aPreventCachingOfSandwich) const
+{
+  nsSMILValue val(&SVGLengthListSMILType::sSingleton);
+  SVGLengthListAndInfo *llai = static_cast<SVGLengthListAndInfo*>(val.mU.mPtr);
+=======
+nsresult SVGAnimatedLengthList::SMILAnimatedLengthList::ValueFromString(
+    const nsAString& aStr, const dom::SVGAnimationElement* /*aSrcElement*/,
+    SMILValue& aValue, bool& aPreventCachingOfSandwich) const {
+  SMILValue val(&SVGLengthListSMILType::sSingleton);
+  SVGLengthListAndInfo* llai = static_cast<SVGLengthListAndInfo*>(val.mU.mPtr);
+>>>>>>> upstream-releases
   nsresult rv = llai->SetValueFromString(aStr);
   if (NS_SUCCEEDED(rv)) {
     llai->SetInfo(mElement, mAxis, mCanZeroPadList);
@@ -159,15 +252,31 @@ nsresult SVGAnimatedLengthList::SMILAnimatedLengthList::ValueFromString(
   return rv;
 }
 
+<<<<<<< HEAD
 nsSMILValue SVGAnimatedLengthList::SMILAnimatedLengthList::GetBaseValue()
     const {
+||||||| merged common ancestors
+nsSMILValue
+SVGAnimatedLengthList::SMILAnimatedLengthList::GetBaseValue() const
+{
+=======
+SMILValue SVGAnimatedLengthList::SMILAnimatedLengthList::GetBaseValue() const {
+>>>>>>> upstream-releases
   // To benefit from Return Value Optimization and avoid copy constructor calls
   // due to our use of return-by-value, we must return the exact same object
   // from ALL return points. This function must only return THIS variable:
-  nsSMILValue val;
+  SMILValue val;
 
+<<<<<<< HEAD
   nsSMILValue tmp(&SVGLengthListSMILType::sSingleton);
   SVGLengthListAndInfo *llai = static_cast<SVGLengthListAndInfo *>(tmp.mU.mPtr);
+||||||| merged common ancestors
+  nsSMILValue tmp(&SVGLengthListSMILType::sSingleton);
+  SVGLengthListAndInfo *llai = static_cast<SVGLengthListAndInfo*>(tmp.mU.mPtr);
+=======
+  SMILValue tmp(&SVGLengthListSMILType::sSingleton);
+  SVGLengthListAndInfo* llai = static_cast<SVGLengthListAndInfo*>(tmp.mU.mPtr);
+>>>>>>> upstream-releases
   nsresult rv = llai->CopyFrom(mVal->mBaseVal);
   if (NS_SUCCEEDED(rv)) {
     llai->SetInfo(mElement, mAxis, mCanZeroPadList);
@@ -176,13 +285,31 @@ nsSMILValue SVGAnimatedLengthList::SMILAnimatedLengthList::GetBaseValue()
   return val;
 }
 
+<<<<<<< HEAD
 nsresult SVGAnimatedLengthList::SMILAnimatedLengthList::SetAnimValue(
     const nsSMILValue &aValue) {
+||||||| merged common ancestors
+nsresult
+SVGAnimatedLengthList::SMILAnimatedLengthList::SetAnimValue(const nsSMILValue& aValue)
+{
+=======
+nsresult SVGAnimatedLengthList::SMILAnimatedLengthList::SetAnimValue(
+    const SMILValue& aValue) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aValue.mType == &SVGLengthListSMILType::sSingleton,
                "Unexpected type to assign animated value");
   if (aValue.mType == &SVGLengthListSMILType::sSingleton) {
+<<<<<<< HEAD
     mVal->SetAnimValue(*static_cast<SVGLengthListAndInfo *>(aValue.mU.mPtr),
                        mElement, mAttrEnum);
+||||||| merged common ancestors
+    mVal->SetAnimValue(*static_cast<SVGLengthListAndInfo*>(aValue.mU.mPtr),
+                       mElement,
+                       mAttrEnum);
+=======
+    mVal->SetAnimValue(*static_cast<SVGLengthListAndInfo*>(aValue.mU.mPtr),
+                       mElement, mAttrEnum);
+>>>>>>> upstream-releases
   }
   return NS_OK;
 }

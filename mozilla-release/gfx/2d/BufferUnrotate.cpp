@@ -4,7 +4,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 #include <algorithm>  // min & max
+||||||| merged common ancestors
+#include <algorithm> // min & max
+=======
+#include "BufferUnrotate.h"
+
+#include <algorithm>  // min & max
+>>>>>>> upstream-releases
 #include <cstdlib>
 #include <stdint.h>
 #include <stdio.h>

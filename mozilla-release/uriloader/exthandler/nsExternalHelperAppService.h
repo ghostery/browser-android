@@ -66,6 +66,7 @@ class nsExternalHelperAppService : public nsIExternalHelperAppService,
    * this service is first instantiated.
    */
   MOZ_MUST_USE nsresult Init();
+<<<<<<< HEAD
 
   /**
    * Given a mimetype and an extension, looks up a mime info from the OS.
@@ -85,6 +86,28 @@ class nsExternalHelperAppService : public nsIExternalHelperAppService,
   virtual already_AddRefed<nsIMIMEInfo> GetMIMEInfoFromOS(
       const nsACString& aMIMEType, const nsACString& aFileExt,
       bool* aFound) = 0;
+||||||| merged common ancestors
+ 
+  /**
+   * Given a mimetype and an extension, looks up a mime info from the OS.
+   * The mime type is given preference. This function follows the same rules
+   * as nsIMIMEService::GetFromTypeAndExtension.
+   * This is supposed to be overridden by the platform-specific
+   * nsOSHelperAppService!
+   * @param aFileExt The file extension; may be empty. UTF-8 encoded.
+   * @param [out] aFound
+   *        Should be set to true if the os has a mapping, to
+   *        false otherwise. Must not be null.
+   * @return A MIMEInfo. This function must return a MIMEInfo object if it
+   *         can allocate one.  The only justifiable reason for not
+   *         returning one is an out-of-memory error.
+   *         If null, the value of aFound is unspecified.
+   */
+  virtual already_AddRefed<nsIMIMEInfo> GetMIMEInfoFromOS(const nsACString& aMIMEType,
+                                                          const nsACString& aFileExt,
+                                                          bool       * aFound) = 0;
+=======
+>>>>>>> upstream-releases
 
   /**
    * Given a string identifying an application, create an nsIFile representing
@@ -103,8 +126,15 @@ class nsExternalHelperAppService : public nsIExternalHelperAppService,
   virtual nsresult GetFileTokenForPath(const char16_t* platformAppPath,
                                        nsIFile** aFile);
 
+<<<<<<< HEAD
   virtual nsresult OSProtocolHandlerExists(const char* aScheme,
                                            bool* aExists) = 0;
+||||||| merged common ancestors
+  virtual nsresult OSProtocolHandlerExists(const char *aScheme,
+                                                       bool *aExists) = 0;
+=======
+  NS_IMETHOD OSProtocolHandlerExists(const char* aScheme, bool* aExists) = 0;
+>>>>>>> upstream-releases
 
   /**
    * Given an extension, get a MIME type string. If not overridden by
@@ -115,7 +145,15 @@ class nsExternalHelperAppService : public nsIExternalHelperAppService,
   virtual bool GetMIMETypeFromOSForExtension(const nsACString& aExtension,
                                              nsACString& aMIMEType);
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  static already_AddRefed<nsExternalHelperAppService> GetSingleton();
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~nsExternalHelperAppService();
 
   /**

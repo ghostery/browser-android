@@ -15,7 +15,6 @@
 #include "nsIPrefService.h"
 #include "prenv.h"
 #include "nsString.h"
-#include "nsIGConfService.h"
 #include "nsIGIOService.h"
 #include "nsIGSettingsService.h"
 #include "nsIStringBundle.h"
@@ -29,7 +28,7 @@
 #include "mozilla/Sprintf.h"
 #include "mozilla/dom/Element.h"
 #if defined(MOZ_WIDGET_GTK)
-#include "nsIImageToPixbuf.h"
+#  include "nsIImageToPixbuf.h"
 #endif
 #include "nsXULAppAPI.h"
 #include "gfxPlatform.h"
@@ -44,14 +43,34 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 struct ProtocolAssociation {
   const char *name;
+||||||| merged common ancestors
+struct ProtocolAssociation
+{
+  const char *name;
+=======
+struct ProtocolAssociation {
+  const char* name;
+>>>>>>> upstream-releases
   bool essential;
 };
 
+<<<<<<< HEAD
 struct MimeTypeAssociation {
   const char *mimeType;
   const char *extensions;
+||||||| merged common ancestors
+struct MimeTypeAssociation
+{
+  const char *mimeType;
+  const char *extensions;
+=======
+struct MimeTypeAssociation {
+  const char* mimeType;
+  const char* extensions;
+>>>>>>> upstream-releases
 };
 
 static const ProtocolAssociation appProtocols[] = {
@@ -70,14 +89,6 @@ static const MimeTypeAssociation appTypes[] = {
     // clang-format on
 };
 
-// GConf registry key constants
-#define DG_BACKGROUND "/desktop/gnome/background"
-
-#define kDesktopImageKey DG_BACKGROUND "/picture_filename"
-#define kDesktopOptionsKey DG_BACKGROUND "/picture_options"
-#define kDesktopDrawBGKey DG_BACKGROUND "/draw_background"
-#define kDesktopColorKey DG_BACKGROUND "/primary_color"
-
 #define kDesktopBGSchema "org.gnome.desktop.background"
 #define kDesktopImageGSKey "picture-uri"
 #define kDesktopOptionGSKey "picture-options"
@@ -93,15 +104,30 @@ nsresult nsGNOMEShellService::Init() {
     return NS_ERROR_NOT_AVAILABLE;
   }
 
-  // GConf, GSettings or GIO _must_ be available, or we do not allow
+  // GSettings or GIO _must_ be available, or we do not allow
   // CreateInstance to succeed.
 
+<<<<<<< HEAD
   nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+||||||| merged common ancestors
+  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
+  nsCOMPtr<nsIGIOService> giovfs =
+    do_GetService(NS_GIOSERVICE_CONTRACTID);
+=======
+  nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGSettingsService> gsettings =
       do_GetService(NS_GSETTINGSSERVICE_CONTRACTID);
 
+<<<<<<< HEAD
   if (!gconf && !giovfs && !gsettings) return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+  if (!gconf && !giovfs && !gsettings)
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+  if (!giovfs && !gsettings) return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 
   // Check G_BROKEN_FILENAMES.  If it's set, then filenames in glib use
   // the locale encoding.  If it's not set, they use UTF-8.
@@ -121,19 +147,48 @@ nsresult nsGNOMEShellService::Init() {
   return appPath->GetNativePath(mAppPath);
 }
 
-NS_IMPL_ISUPPORTS(nsGNOMEShellService, nsIGNOMEShellService, nsIShellService)
+NS_IMPL_ISUPPORTS(nsGNOMEShellService, nsIGNOMEShellService, nsIShellService,
+                  nsIToolkitShellService)
 
+<<<<<<< HEAD
 bool nsGNOMEShellService::GetAppPathFromLauncher() {
   gchar *tmp;
+||||||| merged common ancestors
+bool
+nsGNOMEShellService::GetAppPathFromLauncher()
+{
+  gchar *tmp;
+=======
+bool nsGNOMEShellService::GetAppPathFromLauncher() {
+  gchar* tmp;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const char *launcher = PR_GetEnv("MOZ_APP_LAUNCHER");
   if (!launcher) return false;
+||||||| merged common ancestors
+  const char *launcher = PR_GetEnv("MOZ_APP_LAUNCHER");
+  if (!launcher)
+    return false;
+=======
+  const char* launcher = PR_GetEnv("MOZ_APP_LAUNCHER");
+  if (!launcher) return false;
+>>>>>>> upstream-releases
 
   if (g_path_is_absolute(launcher)) {
     mAppPath = launcher;
     tmp = g_path_get_basename(launcher);
+<<<<<<< HEAD
     gchar *fullpath = g_find_program_in_path(tmp);
     if (fullpath && mAppPath.Equals(fullpath)) mAppIsInPath = true;
+||||||| merged common ancestors
+    gchar *fullpath = g_find_program_in_path(tmp);
+    if (fullpath && mAppPath.Equals(fullpath))
+      mAppIsInPath = true;
+=======
+    gchar* fullpath = g_find_program_in_path(tmp);
+    if (fullpath && mAppPath.Equals(fullpath)) mAppIsInPath = true;
+>>>>>>> upstream-releases
     g_free(fullpath);
   } else {
     tmp = g_find_program_in_path(launcher);
@@ -146,11 +201,30 @@ bool nsGNOMEShellService::GetAppPathFromLauncher() {
   return true;
 }
 
+<<<<<<< HEAD
 bool nsGNOMEShellService::KeyMatchesAppName(const char *aKeyValue) const {
   gchar *commandPath;
+||||||| merged common ancestors
+bool
+nsGNOMEShellService::KeyMatchesAppName(const char *aKeyValue) const
+{
+
+  gchar *commandPath;
+=======
+bool nsGNOMEShellService::KeyMatchesAppName(const char* aKeyValue) const {
+  gchar* commandPath;
+>>>>>>> upstream-releases
   if (mUseLocaleFilenames) {
+<<<<<<< HEAD
     gchar *nativePath =
         g_filename_from_utf8(aKeyValue, -1, nullptr, nullptr, nullptr);
+||||||| merged common ancestors
+    gchar *nativePath = g_filename_from_utf8(aKeyValue, -1,
+                                             nullptr, nullptr, nullptr);
+=======
+    gchar* nativePath =
+        g_filename_from_utf8(aKeyValue, -1, nullptr, nullptr, nullptr);
+>>>>>>> upstream-releases
     if (!nativePath) {
       NS_ERROR("Error converting path to filesystem encoding");
       return false;
@@ -169,10 +243,19 @@ bool nsGNOMEShellService::KeyMatchesAppName(const char *aKeyValue) const {
   return matches;
 }
 
+<<<<<<< HEAD
 bool nsGNOMEShellService::CheckHandlerMatchesAppName(
     const nsACString &handler) const {
+||||||| merged common ancestors
+bool
+nsGNOMEShellService::CheckHandlerMatchesAppName(const nsACString &handler) const
+{
+=======
+bool nsGNOMEShellService::CheckHandlerMatchesAppName(
+    const nsACString& handler) const {
+>>>>>>> upstream-releases
   gint argc;
-  gchar **argv;
+  gchar** argv;
   nsAutoCString command(handler);
 
   // The string will be something of the form: [/path/to/]browser "%s"
@@ -190,19 +273,45 @@ bool nsGNOMEShellService::CheckHandlerMatchesAppName(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGNOMEShellService::IsDefaultBrowser(bool aStartupCheck, bool aForAllTypes,
                                       bool *aIsDefaultBrowser) {
+||||||| merged common ancestors
+nsGNOMEShellService::IsDefaultBrowser(bool aStartupCheck,
+                                      bool aForAllTypes,
+                                      bool* aIsDefaultBrowser)
+{
+=======
+nsGNOMEShellService::IsDefaultBrowser(bool aForAllTypes,
+                                      bool* aIsDefaultBrowser) {
+>>>>>>> upstream-releases
   *aIsDefaultBrowser = false;
 
   if (IsRunningAsASnap()) {
+<<<<<<< HEAD
     const gchar *argv[] = {"xdg-settings", "check", "default-web-browser",
                            "firefox.desktop", nullptr};
+||||||| merged common ancestors
+    const gchar *argv[] = { "xdg-settings", "check", "default-web-browser",
+                            "firefox.desktop", nullptr };
+=======
+    const gchar* argv[] = {"xdg-settings", "check", "default-web-browser",
+                           "firefox.desktop", nullptr};
+>>>>>>> upstream-releases
     GSpawnFlags flags = static_cast<GSpawnFlags>(G_SPAWN_SEARCH_PATH |
                                                  G_SPAWN_STDERR_TO_DEV_NULL);
-    gchar *output = nullptr;
+    gchar* output = nullptr;
     gint exit_status = 0;
+<<<<<<< HEAD
     if (!g_spawn_sync(nullptr, (gchar **)argv, nullptr, flags, nullptr, nullptr,
                       &output, nullptr, &exit_status, nullptr)) {
+||||||| merged common ancestors
+    if (!g_spawn_sync(nullptr, (gchar **) argv, nullptr, flags, nullptr,
+                      nullptr, &output, nullptr, &exit_status, nullptr)) {
+=======
+    if (!g_spawn_sync(nullptr, (gchar**)argv, nullptr, flags, nullptr, nullptr,
+                      &output, nullptr, &exit_status, nullptr)) {
+>>>>>>> upstream-releases
       return NS_OK;
     }
     if (exit_status != 0) {
@@ -216,14 +325,12 @@ nsGNOMEShellService::IsDefaultBrowser(bool aStartupCheck, bool aForAllTypes,
     return NS_OK;
   }
 
-  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
-
-  bool enabled;
   nsAutoCString handler;
   nsCOMPtr<nsIGIOMimeApp> gioApp;
 
   for (unsigned int i = 0; i < ArrayLength(appProtocols); ++i) {
+<<<<<<< HEAD
     if (!appProtocols[i].essential) continue;
 
     if (gconf) {
@@ -234,6 +341,21 @@ nsGNOMEShellService::IsDefaultBrowser(bool aStartupCheck, bool aForAllTypes,
       if (!CheckHandlerMatchesAppName(handler) || !enabled)
         return NS_OK;  // the handler is disabled or set to another app
     }
+||||||| merged common ancestors
+    if (!appProtocols[i].essential)
+      continue;
+
+    if (gconf) {
+      handler.Truncate();
+      gconf->GetAppForProtocol(nsDependentCString(appProtocols[i].name),
+                               &enabled, handler);
+
+      if (!CheckHandlerMatchesAppName(handler) || !enabled)
+        return NS_OK; // the handler is disabled or set to another app
+    }
+=======
+    if (!appProtocols[i].essential) continue;
+>>>>>>> upstream-releases
 
     if (giovfs) {
       handler.Truncate();
@@ -264,39 +386,31 @@ nsGNOMEShellService::SetDefaultBrowser(bool aClaimAllTypes, bool aForAllUsers) {
 #endif
 
   if (IsRunningAsASnap()) {
+<<<<<<< HEAD
     const gchar *argv[] = {"xdg-settings", "set", "default-web-browser",
                            "firefox.desktop", nullptr};
+||||||| merged common ancestors
+    const gchar *argv[] = { "xdg-settings", "set", "default-web-browser",
+                            "firefox.desktop", nullptr };
+=======
+    const gchar* argv[] = {"xdg-settings", "set", "default-web-browser",
+                           "firefox.desktop", nullptr};
+>>>>>>> upstream-releases
     GSpawnFlags flags = static_cast<GSpawnFlags>(G_SPAWN_SEARCH_PATH |
                                                  G_SPAWN_STDOUT_TO_DEV_NULL |
                                                  G_SPAWN_STDERR_TO_DEV_NULL);
+<<<<<<< HEAD
     g_spawn_sync(nullptr, (gchar **)argv, nullptr, flags, nullptr, nullptr,
+||||||| merged common ancestors
+    g_spawn_sync(nullptr, (gchar **) argv, nullptr, flags, nullptr, nullptr,
+=======
+    g_spawn_sync(nullptr, (gchar**)argv, nullptr, flags, nullptr, nullptr,
+>>>>>>> upstream-releases
                  nullptr, nullptr, nullptr, nullptr);
     return NS_OK;
   }
 
-  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
-  if (gconf) {
-    nsAutoCString appKeyValue;
-    if (mAppIsInPath) {
-      // mAppPath is in the users path, so use only the basename as the launcher
-      gchar *tmp = g_path_get_basename(mAppPath.get());
-      appKeyValue = tmp;
-      g_free(tmp);
-    } else {
-      appKeyValue = mAppPath;
-    }
-
-    appKeyValue.AppendLiteral(" %s");
-
-    for (unsigned int i = 0; i < ArrayLength(appProtocols); ++i) {
-      if (appProtocols[i].essential || aClaimAllTypes) {
-        gconf->SetAppForProtocol(nsDependentCString(appProtocols[i].name),
-                                 appKeyValue);
-      }
-    }
-  }
-
   if (giovfs) {
     nsresult rv;
     nsCOMPtr<nsIStringBundleService> bundleService =
@@ -355,10 +469,31 @@ nsGNOMEShellService::SetDefaultBrowser(bool aClaimAllTypes, bool aForAllUsers) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGNOMEShellService::GetCanSetDesktopBackground(bool *aResult) {
+||||||| merged common ancestors
+nsGNOMEShellService::GetCanSetDesktopBackground(bool* aResult)
+{
+=======
+nsGNOMEShellService::GetCanSetDesktopBackground(bool* aResult) {
+>>>>>>> upstream-releases
   // setting desktop background is currently only supported
+<<<<<<< HEAD
   // for Gnome or desktops using the same GSettings and GConf keys
   const char *gnomeSession = getenv("GNOME_DESKTOP_SESSION_ID");
+||||||| merged common ancestors
+  // for Gnome or desktops using the same GSettings and GConf keys
+  const char* gnomeSession = getenv("GNOME_DESKTOP_SESSION_ID");
+=======
+  // for Gnome or desktops using the same GSettings keys
+  const char* currentDesktop = getenv("XDG_CURRENT_DESKTOP");
+  if (currentDesktop && strstr(currentDesktop, "GNOME") != nullptr) {
+    *aResult = true;
+    return NS_OK;
+  }
+
+  const char* gnomeSession = getenv("GNOME_DESKTOP_SESSION_ID");
+>>>>>>> upstream-releases
   if (gnomeSession) {
     *aResult = true;
   } else {
@@ -368,7 +503,15 @@ nsGNOMEShellService::GetCanSetDesktopBackground(bool *aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static nsresult WriteImage(const nsCString &aPath, imgIContainer *aImage) {
+||||||| merged common ancestors
+static nsresult
+WriteImage(const nsCString& aPath, imgIContainer* aImage)
+{
+=======
+static nsresult WriteImage(const nsCString& aPath, imgIContainer* aImage) {
+>>>>>>> upstream-releases
 #if !defined(MOZ_WIDGET_GTK)
   return NS_ERROR_NOT_AVAILABLE;
 #else
@@ -376,8 +519,17 @@ static nsresult WriteImage(const nsCString &aPath, imgIContainer *aImage) {
       do_GetService("@mozilla.org/widget/image-to-gdk-pixbuf;1");
   if (!imgToPixbuf) return NS_ERROR_NOT_AVAILABLE;
 
+<<<<<<< HEAD
   GdkPixbuf *pixbuf = imgToPixbuf->ConvertImageToPixbuf(aImage);
   if (!pixbuf) return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+  GdkPixbuf* pixbuf = imgToPixbuf->ConvertImageToPixbuf(aImage);
+  if (!pixbuf)
+      return NS_ERROR_NOT_AVAILABLE;
+=======
+  GdkPixbuf* pixbuf = imgToPixbuf->ConvertImageToPixbuf(aImage);
+  if (!pixbuf) return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 
   gboolean res = gdk_pixbuf_save(pixbuf, aPath.get(), "png", nullptr, nullptr);
 
@@ -389,7 +541,14 @@ static nsresult WriteImage(const nsCString &aPath, imgIContainer *aImage) {
 NS_IMETHODIMP
 nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
                                           int32_t aPosition,
+<<<<<<< HEAD
                                           const nsACString &aImageName) {
+||||||| merged common ancestors
+                                          const nsACString& aImageName)
+{
+=======
+                                          const nsACString& aImageName) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIImageLoadingContent> imageContent =
       do_QueryInterface(aElement, &rv);
@@ -414,6 +573,8 @@ nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
     options.AssignLiteral("zoom");
   else if (aPosition == BACKGROUND_FIT)
     options.AssignLiteral("scaled");
+  else if (aPosition == BACKGROUND_SPAN)
+    options.AssignLiteral("spanned");
   else
     options.AssignLiteral("centered");
 
@@ -443,10 +604,17 @@ nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
   rv = WriteImage(filePath, container);
   NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
   // Try GSettings first. If we don't have GSettings or the right schema, fall
   // back to using GConf instead. Note that if GSettings works ok, the changes
   // get mirrored to GConf by the gsettings->gconf bridge in
   // gnome-settings-daemon
+||||||| merged common ancestors
+  // Try GSettings first. If we don't have GSettings or the right schema, fall back
+  // to using GConf instead. Note that if GSettings works ok, the changes get
+  // mirrored to GConf by the gsettings->gconf bridge in gnome-settings-daemon
+=======
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGSettingsService> gsettings =
       do_GetService(NS_GSETTINGSSERVICE_CONTRACTID);
   if (gsettings) {
@@ -454,8 +622,17 @@ nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
     gsettings->GetCollectionForSchema(NS_LITERAL_CSTRING(kDesktopBGSchema),
                                       getter_AddRefs(background_settings));
     if (background_settings) {
+<<<<<<< HEAD
       gchar *file_uri = g_filename_to_uri(filePath.get(), nullptr, nullptr);
       if (!file_uri) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+      gchar *file_uri = g_filename_to_uri(filePath.get(), nullptr, nullptr);
+      if (!file_uri)
+         return NS_ERROR_FAILURE;
+=======
+      gchar* file_uri = g_filename_to_uri(filePath.get(), nullptr, nullptr);
+      if (!file_uri) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
       background_settings->SetString(NS_LITERAL_CSTRING(kDesktopOptionGSKey),
                                      options);
@@ -469,6 +646,7 @@ nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
     }
   }
 
+<<<<<<< HEAD
   // if the file was written successfully, set it as the system wallpaper
   nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
 
@@ -485,13 +663,41 @@ nsGNOMEShellService::SetDesktopBackground(dom::Element *aElement,
   }
 
   return rv;
+||||||| merged common ancestors
+  // if the file was written successfully, set it as the system wallpaper
+  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
+
+  if (gconf) {
+    gconf->SetString(NS_LITERAL_CSTRING(kDesktopOptionsKey), options);
+
+    // Set the image to an empty string first to force a refresh
+    // (since we could be writing a new image on top of an existing
+    // Firefox_wallpaper.png and nautilus doesn't monitor the file for changes)
+    gconf->SetString(NS_LITERAL_CSTRING(kDesktopImageKey),
+                     EmptyCString());
+
+    gconf->SetString(NS_LITERAL_CSTRING(kDesktopImageKey), filePath);
+    gconf->SetBool(NS_LITERAL_CSTRING(kDesktopDrawBGKey), true);
+  }
+
+  return rv;
+=======
+  return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 }
 
 #define COLOR_16_TO_8_BIT(_c) ((_c) >> 8)
 #define COLOR_8_TO_16_BIT(_c) ((_c) << 8 | (_c))
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGNOMEShellService::GetDesktopBackgroundColor(uint32_t *aColor) {
+||||||| merged common ancestors
+nsGNOMEShellService::GetDesktopBackgroundColor(uint32_t *aColor)
+{
+=======
+nsGNOMEShellService::GetDesktopBackgroundColor(uint32_t* aColor) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGSettingsService> gsettings =
       do_GetService(NS_GSETTINGSSERVICE_CONTRACTID);
   nsCOMPtr<nsIGSettingsCollection> background_settings;
@@ -504,12 +710,6 @@ nsGNOMEShellService::GetDesktopBackgroundColor(uint32_t *aColor) {
       background_settings->GetString(NS_LITERAL_CSTRING(kDesktopColorGSKey),
                                      background);
     }
-  }
-
-  if (!background_settings) {
-    nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
-    if (gconf)
-      gconf->GetString(NS_LITERAL_CSTRING(kDesktopColorKey), background);
   }
 
   if (background.IsEmpty()) {
@@ -527,11 +727,28 @@ nsGNOMEShellService::GetDesktopBackgroundColor(uint32_t *aColor) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static void ColorToCString(uint32_t aColor, nsCString &aResult) {
+||||||| merged common ancestors
+static void
+ColorToCString(uint32_t aColor, nsCString& aResult)
+{
+=======
+static void ColorToCString(uint32_t aColor, nsCString& aResult) {
+>>>>>>> upstream-releases
   // The #rrrrggggbbbb format is used to match gdk_color_to_string()
   aResult.SetLength(13);
+<<<<<<< HEAD
   char *buf = aResult.BeginWriting();
   if (!buf) return;
+||||||| merged common ancestors
+  char *buf = aResult.BeginWriting();
+  if (!buf)
+    return;
+=======
+  char* buf = aResult.BeginWriting();
+  if (!buf) return;
+>>>>>>> upstream-releases
 
   uint16_t red = COLOR_8_TO_16_BIT((aColor >> 16) & 0xff);
   uint16_t green = COLOR_8_TO_16_BIT((aColor >> 8) & 0xff);
@@ -559,13 +776,7 @@ nsGNOMEShellService::SetDesktopBackgroundColor(uint32_t aColor) {
     }
   }
 
-  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
-
-  if (gconf) {
-    gconf->SetString(NS_LITERAL_CSTRING(kDesktopColorKey), colorString);
-  }
-
-  return NS_OK;
+  return NS_ERROR_FAILURE;
 }
 
 NS_IMETHODIMP
@@ -585,6 +796,7 @@ nsGNOMEShellService::OpenApplication(int32_t aApplication) {
     if (handlerApp) return handlerApp->LaunchWithURI(nullptr, nullptr);
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
   if (!gconf) return NS_ERROR_FAILURE;
 
@@ -624,11 +836,66 @@ nsGNOMEShellService::OpenApplication(int32_t aApplication) {
   delete[] newArgv;
 
   return err ? NS_OK : NS_ERROR_FAILURE;
+||||||| merged common ancestors
+  nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
+  if (!gconf)
+    return NS_ERROR_FAILURE;
+
+  bool enabled;
+  nsAutoCString appCommand;
+  gconf->GetAppForProtocol(scheme, &enabled, appCommand);
+
+  if (!enabled)
+    return NS_ERROR_FAILURE;
+
+  // XXX we don't currently handle launching a terminal window.
+  // If the handler requires a terminal, bail.
+  bool requiresTerminal;
+  gconf->HandlerRequiresTerminal(scheme, &requiresTerminal);
+  if (requiresTerminal)
+    return NS_ERROR_FAILURE;
+
+  // Perform shell argument expansion
+  int argc;
+  char **argv;
+  if (!g_shell_parse_argv(appCommand.get(), &argc, &argv, nullptr))
+    return NS_ERROR_FAILURE;
+
+  char **newArgv = new char*[argc + 1];
+  int newArgc = 0;
+
+  // Run through the list of arguments.  Copy all of them to the new
+  // argv except for %s, which we skip.
+  for (int i = 0; i < argc; ++i) {
+    if (strcmp(argv[i], "%s") != 0)
+      newArgv[newArgc++] = argv[i];
+  }
+
+  newArgv[newArgc] = nullptr;
+
+  gboolean err = g_spawn_async(nullptr, newArgv, nullptr, G_SPAWN_SEARCH_PATH,
+                               nullptr, nullptr, nullptr, nullptr);
+
+  g_strfreev(argv);
+  delete[] newArgv;
+
+  return err ? NS_OK : NS_ERROR_FAILURE;
+=======
+  return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGNOMEShellService::OpenApplicationWithURI(nsIFile *aApplication,
                                             const nsACString &aURI) {
+||||||| merged common ancestors
+nsGNOMEShellService::OpenApplicationWithURI(nsIFile* aApplication, const nsACString& aURI)
+{
+=======
+nsGNOMEShellService::OpenApplicationWithURI(nsIFile* aApplication,
+                                            const nsACString& aURI) {
+>>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIProcess> process =
       do_CreateInstance("@mozilla.org/process/util;1", &rv);

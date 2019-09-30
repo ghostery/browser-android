@@ -1,18 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<<<<<<< HEAD
   <!-- The following import will include the 'default' configuration options for VS projects. -->
   <Import Project="..\allinone\Build.Windows.ProjectConfiguration.props" />
   <!-- The following import will include the library configuration options for VS projects. -->
   <Import Project="..\allinone\Build.Windows.Library.ProjectConfiguration.props" />
+||||||| merged common ancestors
+  <!-- The following import will include the 'default' configuration options for VS projects. -->
+  <Import Project="..\allinone\Build.Windows.ProjectConfiguration.props" />
+
+=======
+>>>>>>> upstream-releases
   <PropertyGroup Label="Globals">
     <ProjectGuid>{73C0A65B-D1F2-4DE1-B3A6-15DAD2C23F3D}</ProjectGuid>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- The following import will include the 'default' configuration options for VS projects. -->
+  <Import Project="..\allinone\Build.Windows.ProjectConfiguration.props" />
+  <!-- The following import will include the library configuration options for VS projects. -->
+  <Import Project="..\allinone\Build.Windows.Library.ProjectConfiguration.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -86,7 +97,13 @@
       <ProgramDataBaseFileName>.\x86\Release/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
+<<<<<<< HEAD
       <OutputFile>..\..\bin\icuuc63.dll</OutputFile>
+||||||| merged common ancestors
+      <OutputFile>..\..\bin\icuuc62.dll</OutputFile>
+=======
+      <OutputFile>..\..\bin\icuuc64.dll</OutputFile>
+>>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib\icuuc.pdb</ProgramDatabaseFile>
       <DataExecutionPrevention>
@@ -106,7 +123,13 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
+<<<<<<< HEAD
       <OutputFile>..\..\bin\icuuc63d.dll</OutputFile>
+||||||| merged common ancestors
+      <OutputFile>..\..\bin\icuuc62d.dll</OutputFile>
+=======
+      <OutputFile>..\..\bin\icuuc64d.dll</OutputFile>
+>>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib\icuucd.pdb</ProgramDatabaseFile>
       <DataExecutionPrevention>
@@ -125,7 +148,13 @@
       <ProgramDataBaseFileName>.\x64\Release/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
+<<<<<<< HEAD
       <OutputFile>..\..\bin64\icuuc63.dll</OutputFile>
+||||||| merged common ancestors
+      <OutputFile>..\..\bin64\icuuc62.dll</OutputFile>
+=======
+      <OutputFile>..\..\bin64\icuuc64.dll</OutputFile>
+>>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib64\icuuc.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64\icuuc.lib</ImportLibrary>
@@ -143,7 +172,13 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
+<<<<<<< HEAD
       <OutputFile>..\..\bin64\icuuc63d.dll</OutputFile>
+||||||| merged common ancestors
+      <OutputFile>..\..\bin64\icuuc62d.dll</OutputFile>
+=======
+      <OutputFile>..\..\bin64\icuuc64d.dll</OutputFile>
+>>>>>>> upstream-releases
       <AdditionalLibraryDirectories>.\..\..\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\..\lib64\icuucd.pdb</ProgramDatabaseFile>
       <ImportLibrary>..\..\lib64\icuucd.lib</ImportLibrary>
@@ -256,6 +291,7 @@
     <ClCompile Include="uresdata.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="ucurr.cpp" />
+    <ClCompile Include="localebuilder.cpp" />
     <ClCompile Include="caniter.cpp" />
     <ClCompile Include="filterednormalizer2.cpp" />
     <ClCompile Include="loadednormalizer2impl.cpp" />
@@ -425,6 +461,7 @@
     <ClInclude Include="propname.h" />
     <ClInclude Include="ruleiter.h" />
     <ClInclude Include="ucase.h" />
+    <ClInclude Include="ulayout_props.h" />
     <ClInclude Include="unisetspan.h" />
     <ClInclude Include="uprops.h" />
     <ClInclude Include="usc_impl.h" />
@@ -444,6 +481,8 @@
     <ClInclude Include="ustr_cnv.h" />
     <ClInclude Include="ustr_imp.h" />
     <ClInclude Include="static_unicode_sets.h" />
+    <ClInclude Include="capi_helper.h" />
+    <ClInclude Include="unicode\localebuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="common.rc" />

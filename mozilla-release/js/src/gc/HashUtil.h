@@ -72,6 +72,7 @@ struct DependentAddPtr {
 };
 
 template <typename T, typename Lookup>
+<<<<<<< HEAD
 inline auto MakeDependentAddPtr(const JSContext* cx, T& table,
                                 const Lookup& lookup)
     -> DependentAddPtr<
@@ -79,6 +80,20 @@ inline auto MakeDependentAddPtr(const JSContext* cx, T& table,
   using Ptr =
       DependentAddPtr<typename mozilla::RemoveReference<decltype(table)>::Type>;
   return Ptr(cx, table, lookup);
+||||||| merged common ancestors
+inline auto
+MakeDependentAddPtr(const JSContext* cx, T& table, const Lookup& lookup)
+  -> DependentAddPtr<typename mozilla::RemoveReference<decltype(table)>::Type>
+{
+    using Ptr = DependentAddPtr<typename mozilla::RemoveReference<decltype(table)>::Type>;
+    return Ptr(cx, table, lookup);
+=======
+inline auto MakeDependentAddPtr(const JSContext* cx, T& table,
+                                const Lookup& lookup) {
+  using Ptr =
+      DependentAddPtr<typename mozilla::RemoveReference<decltype(table)>::Type>;
+  return Ptr(cx, table, lookup);
+>>>>>>> upstream-releases
 }
 
 }  // namespace js

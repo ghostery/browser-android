@@ -4,42 +4,41 @@
 
 //! Specified types for CSS values related to backgrounds.
 
+<<<<<<< HEAD
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::background::BackgroundSize as GenericBackgroundSize;
 use crate::values::specified::length::NonNegativeLengthOrPercentageOrAuto;
+||||||| merged common ancestors
+=======
+use crate::parser::{Parse, ParserContext};
+use crate::values::generics::background::BackgroundSize as GenericBackgroundSize;
+use crate::values::specified::length::{
+    NonNegativeLengthPercentage, NonNegativeLengthPercentageOrAuto,
+};
+>>>>>>> upstream-releases
 use cssparser::Parser;
 use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ParseError, ToCss};
 
 /// A specified value for the `background-size` property.
-pub type BackgroundSize = GenericBackgroundSize<NonNegativeLengthOrPercentageOrAuto>;
+pub type BackgroundSize = GenericBackgroundSize<NonNegativeLengthPercentage>;
 
 impl Parse for BackgroundSize {
     fn parse<'i, 't>(
         context: &ParserContext,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self, ParseError<'i>> {
-        if let Ok(width) = input.try(|i| NonNegativeLengthOrPercentageOrAuto::parse(context, i)) {
+        if let Ok(width) = input.try(|i| NonNegativeLengthPercentageOrAuto::parse(context, i)) {
             let height = input
-                .try(|i| NonNegativeLengthOrPercentageOrAuto::parse(context, i))
-                .unwrap_or(NonNegativeLengthOrPercentageOrAuto::auto());
-            return Ok(GenericBackgroundSize::Explicit { width, height });
+                .try(|i| NonNegativeLengthPercentageOrAuto::parse(context, i))
+                .unwrap_or(NonNegativeLengthPercentageOrAuto::auto());
+            return Ok(GenericBackgroundSize::ExplicitSize { width, height });
         }
         Ok(try_match_ident_ignore_ascii_case! { input,
             "cover" => GenericBackgroundSize::Cover,
             "contain" => GenericBackgroundSize::Contain,
         })
-    }
-}
-
-impl BackgroundSize {
-    /// Returns `auto auto`.
-    pub fn auto() -> Self {
-        GenericBackgroundSize::Explicit {
-            width: NonNegativeLengthOrPercentageOrAuto::auto(),
-            height: NonNegativeLengthOrPercentageOrAuto::auto(),
-        }
     }
 }
 
@@ -55,6 +54,8 @@ impl BackgroundSize {
     SpecifiedValueInfo,
     ToComputedValue,
     ToCss,
+    ToResolvedValue,
+    ToShmem,
 )]
 #[allow(missing_docs)]
 #[value_info(other_values = "repeat-x,repeat-y")]
@@ -70,8 +71,32 @@ pub enum BackgroundRepeatKeyword {
 /// axes.
 ///
 /// https://drafts.csswg.org/css-backgrounds/#the-background-repeat
+<<<<<<< HEAD
 #[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToComputedValue)]
 pub struct BackgroundRepeat(pub BackgroundRepeatKeyword, pub BackgroundRepeatKeyword);
+||||||| merged common ancestors
+#[derive(Clone, Copy, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss)]
+pub enum BackgroundRepeat {
+    /// `repeat-x`
+    RepeatX,
+    /// `repeat-y`
+    RepeatY,
+    /// `[repeat | space | round | no-repeat]{1,2}`
+    Keywords(BackgroundRepeatKeyword, Option<BackgroundRepeatKeyword>),
+}
+=======
+#[derive(
+    Clone,
+    Debug,
+    MallocSizeOf,
+    PartialEq,
+    SpecifiedValueInfo,
+    ToComputedValue,
+    ToResolvedValue,
+    ToShmem,
+)]
+pub struct BackgroundRepeat(pub BackgroundRepeatKeyword, pub BackgroundRepeatKeyword);
+>>>>>>> upstream-releases
 
 impl BackgroundRepeat {
     /// Returns the `repeat repeat` value.

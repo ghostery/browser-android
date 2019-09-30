@@ -13,16 +13,30 @@
 /**
  * A few utility functions.
  */
+<<<<<<< HEAD
 function log(entry) {
 
 }
+||||||| merged common ancestors
+function log(entry) {
+    
+}
+=======
+function log(entry) {}
+>>>>>>> upstream-releases
 
 function startsWith(s, s2) {
   return s.indexOf(s2) == 0;
 }
 
 function trimString(s) {
+<<<<<<< HEAD
   return (s.replace(/^\s+/, "").replace(/\s+$/, ""));
+||||||| merged common ancestors
+  return(s.replace(/^\s+/,'').replace(/\s+$/,''));
+=======
+  return s.replace(/^\s+/, "").replace(/\s+$/, "");
+>>>>>>> upstream-releases
 }
 
 /**
@@ -40,10 +54,17 @@ function parseTestcase(testcase) {
     if (!line || startsWith(line, "##")) {
       continue;
     }
-    if (line == "#data")
+    if (line == "#data") {
       break;
+    }
     log(lines);
+<<<<<<< HEAD
     throw "Unknown test format.";
+||||||| merged common ancestors
+    throw "Unknown test format."
+=======
+    throw new Error("Unknown test format.");
+>>>>>>> upstream-releases
   }
 
   var input = [];
@@ -56,10 +77,14 @@ function parseTestcase(testcase) {
       todo(false, line.substring(6));
       continue;
     }
-    if (!(startsWith(line, "#error") ||
-          startsWith(line, "#document") ||
-          startsWith(line, "#document-fragment") ||
-          startsWith(line, "#data"))) {
+    if (
+      !(
+        startsWith(line, "#error") ||
+        startsWith(line, "#document") ||
+        startsWith(line, "#document-fragment") ||
+        startsWith(line, "#data")
+      )
+    ) {
       currentList.push(line);
     } else if (line == "#errors") {
       currentList = errors;
@@ -110,10 +135,23 @@ function docToTestOutput(doc) {
  * @param an element
  */
 function createFragmentWalker(elt) {
+<<<<<<< HEAD
   return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL,
     function(node) {
       return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
     });
+||||||| merged common ancestors
+  return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL,
+    function (node) {
+      return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
+    });
+=======
+  return elt.ownerDocument.createTreeWalker(elt, NodeFilter.SHOW_ALL, function(
+    node
+  ) {
+    return elt == node ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
+  });
+>>>>>>> upstream-releases
 }
 
 /**
@@ -164,20 +202,36 @@ function addLevels(walker, buf, indent) {
               valuesByName[name] = attrs[i].value;
             }
             var keys = Object.keys(valuesByName).sort();
+<<<<<<< HEAD
             for (let i = 0; i < keys.length; ++i) {
               buf += "\n" + indent + "  " + keys[i] +
                      "=\"" + valuesByName[keys[i]] + "\"";
+||||||| merged common ancestors
+            for (var i = 0; i < keys.length; ++i) {
+              buf += "\n" + indent + "  " + keys[i] + 
+                     "=\"" + valuesByName[keys[i]] +"\"";
+=======
+            for (let i = 0; i < keys.length; ++i) {
+              buf +=
+                "\n" +
+                indent +
+                "  " +
+                keys[i] +
+                '="' +
+                valuesByName[keys[i]] +
+                '"';
+>>>>>>> upstream-releases
             }
           }
           break;
         case Node.DOCUMENT_TYPE_NODE:
           buf += "<!DOCTYPE " + walker.currentNode.name;
           if (walker.currentNode.publicId || walker.currentNode.systemId) {
-            buf += " \"";
+            buf += ' "';
             buf += walker.currentNode.publicId;
-            buf += "\" \"";
+            buf += '" "';
             buf += walker.currentNode.systemId;
-            buf += "\"";
+            buf += '"';
           }
           buf += ">";
           break;
@@ -185,7 +239,7 @@ function addLevels(walker, buf, indent) {
           buf += "<!-- " + walker.currentNode.nodeValue + " -->";
           break;
         case Node.TEXT_NODE:
-          buf += "\"" + walker.currentNode.nodeValue + "\"";
+          buf += '"' + walker.currentNode.nodeValue + '"';
           break;
       }
       buf += "\n";
@@ -204,4 +258,3 @@ function addLevels(walker, buf, indent) {
   }
   return buf;
 }
-

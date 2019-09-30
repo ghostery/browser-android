@@ -14,9 +14,19 @@
 #include "mozilla/layers/APZUtils.h"
 #include "mozilla/layers/LayersTypes.h"  // for TouchBehaviorFlags
 #include "mozilla/layers/AsyncDragMetrics.h"
+<<<<<<< HEAD
 #include "mozilla/TimeStamp.h"  // for TimeStamp
 #include "nsTArray.h"           // for nsTArray
 #include "TouchCounter.h"
+||||||| merged common ancestors
+#include "mozilla/TimeStamp.h"              // for TimeStamp
+#include "nsTArray.h"                       // for nsTArray
+#include "TouchCounter.h"
+=======
+#include "mozilla/layers/TouchCounter.h"
+#include "mozilla/TimeStamp.h"  // for TimeStamp
+#include "nsTArray.h"           // for nsTArray
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -49,8 +59,8 @@ class InputBlockState : public RefCounted<InputBlockState> {
     eConfirmed
   };
 
-  explicit InputBlockState(const RefPtr<AsyncPanZoomController>& aTargetApzc,
-                           TargetConfirmationFlags aFlags);
+  InputBlockState(const RefPtr<AsyncPanZoomController>& aTargetApzc,
+                  TargetConfirmationFlags aFlags);
   virtual ~InputBlockState() = default;
 
   virtual CancelableBlockState* AsCancelableBlock() { return nullptr; }
@@ -107,9 +117,9 @@ class InputBlockState : public RefCounted<InputBlockState> {
 
   // The APZC that was actually scrolled by events in this input block.
   // This is used in configurations where a single input block is only
-  // allowed to scroll a single APZC (configurations where gfxPrefs::
-  // APZAllowImmediateHandoff() is false).
-  // Set the first time an input event in this block scrolls an APZC.
+  // allowed to scroll a single APZC (configurations where
+  // StaticPrefs::apz_allow_immediate_handoff() is false). Set the first time an
+  // input event in this block scrolls an APZC.
   RefPtr<AsyncPanZoomController> mScrolledApzc;
 
  protected:
@@ -396,8 +406,21 @@ class TouchBlockState : public CancelableBlockState {
    * If the allowed touch behaviors have been set, populate them into
    * |aOutBehaviors| and return true. Else, return false.
    */
+<<<<<<< HEAD
   bool GetAllowedTouchBehaviors(
       nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
+||||||| merged common ancestors
+  bool GetAllowedTouchBehaviors(nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
+=======
+  bool GetAllowedTouchBehaviors(
+      nsTArray<TouchBehaviorFlags>& aOutBehaviors) const;
+
+  /**
+   * Returns true if the allowed touch behaviours have been set, or if touch
+   * action is disabled.
+   */
+  bool HasAllowedTouchBehaviors() const;
+>>>>>>> upstream-releases
 
   /**
    * Copy various properties from another block.

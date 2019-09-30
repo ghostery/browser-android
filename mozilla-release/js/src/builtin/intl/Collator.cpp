@@ -18,6 +18,7 @@
 #include "builtin/intl/SharedIntlData.h"
 #include "gc/FreeOp.h"
 #include "js/CharacterEncoding.h"
+#include "js/PropertySpec.h"
 #include "js/StableStringChars.h"
 #include "js/TypeDecls.h"
 #include "vm/GlobalObject.h"
@@ -67,8 +68,18 @@ static const JSFunctionSpec collator_methods[] = {
     JS_FN(js_toSource_str, collator_toSource, 0, 0), JS_FS_END};
 
 static const JSPropertySpec collator_properties[] = {
+<<<<<<< HEAD
     JS_SELF_HOSTED_GET("compare", "Intl_Collator_compare_get", 0),
     JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
+||||||| merged common ancestors
+    JS_SELF_HOSTED_GET("compare", "Intl_Collator_compare_get", 0),
+    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY),
+    JS_PS_END
+};
+=======
+    JS_SELF_HOSTED_GET("compare", "$Intl_Collator_compare_get", 0),
+    JS_STRING_SYM_PS(toStringTag, "Object", JSPROP_READONLY), JS_PS_END};
+>>>>>>> upstream-releases
 
 /**
  * 10.1.2 Intl.Collator([ locales [, options]])
@@ -78,6 +89,7 @@ static const JSPropertySpec collator_properties[] = {
 static bool Collator(JSContext* cx, const CallArgs& args) {
   // Step 1 (Handled by OrdinaryCreateFromConstructor fallback code).
 
+<<<<<<< HEAD
   // Steps 2-5 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
   RootedObject proto(cx);
   if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
@@ -86,6 +98,17 @@ static bool Collator(JSContext* cx, const CallArgs& args) {
 
   if (!proto) {
     proto = GlobalObject::getOrCreateCollatorPrototype(cx, cx->global());
+||||||| merged common ancestors
+=======
+  // Steps 2-5 (Inlined 9.1.14, OrdinaryCreateFromConstructor).
+  RootedObject proto(cx);
+  if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Null, &proto)) {
+    return false;
+  }
+
+  if (!proto) {
+    proto = GlobalObject::getOrCreateCollatorPrototype(cx, cx->global());
+>>>>>>> upstream-releases
     if (!proto) {
       return false;
     }

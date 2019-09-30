@@ -57,6 +57,7 @@ void RemoteServiceWorkerRegistrationImpl::Update(
   }
 
   mActor->SendUpdate(
+<<<<<<< HEAD
       [successCB = std::move(aSuccessCB), aFailureCB](
           const IPCServiceWorkerRegistrationDescriptorOrCopyableErrorResult&
               aResult) {
@@ -77,6 +78,45 @@ void RemoteServiceWorkerRegistrationImpl::Update(
         // IPC layer error
         aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
       });
+||||||| merged common ancestors
+    [successCB = std::move(aSuccessCB), aFailureCB]
+    (const IPCServiceWorkerRegistrationDescriptorOrCopyableErrorResult& aResult) {
+      if (aResult.type() == IPCServiceWorkerRegistrationDescriptorOrCopyableErrorResult::TCopyableErrorResult) {
+        // application layer error
+        auto& rv = aResult.get_CopyableErrorResult();
+        MOZ_DIAGNOSTIC_ASSERT(rv.Failed());
+        aFailureCB(CopyableErrorResult(rv));
+        return;
+      }
+      // success
+      auto& ipcDesc = aResult.get_IPCServiceWorkerRegistrationDescriptor();
+      successCB(ServiceWorkerRegistrationDescriptor(ipcDesc));
+    }, [aFailureCB] (ResponseRejectReason aReason) {
+      // IPC layer error
+      aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
+    });
+=======
+      [successCB = std::move(aSuccessCB), aFailureCB](
+          const IPCServiceWorkerRegistrationDescriptorOrCopyableErrorResult&
+              aResult) {
+        if (aResult.type() ==
+            IPCServiceWorkerRegistrationDescriptorOrCopyableErrorResult::
+                TCopyableErrorResult) {
+          // application layer error
+          auto& rv = aResult.get_CopyableErrorResult();
+          MOZ_DIAGNOSTIC_ASSERT(rv.Failed());
+          aFailureCB(CopyableErrorResult(rv));
+          return;
+        }
+        // success
+        auto& ipcDesc = aResult.get_IPCServiceWorkerRegistrationDescriptor();
+        successCB(ServiceWorkerRegistrationDescriptor(ipcDesc));
+      },
+      [aFailureCB](ResponseRejectReason&& aReason) {
+        // IPC layer error
+        aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
+      });
+>>>>>>> upstream-releases
 }
 
 void RemoteServiceWorkerRegistrationImpl::Unregister(
@@ -88,6 +128,7 @@ void RemoteServiceWorkerRegistrationImpl::Unregister(
   }
 
   mActor->SendUnregister(
+<<<<<<< HEAD
       [successCB = std::move(aSuccessCB),
        aFailureCB](Tuple<bool, CopyableErrorResult>&& aResult) {
         if (Get<1>(aResult).Failed()) {
@@ -102,6 +143,36 @@ void RemoteServiceWorkerRegistrationImpl::Unregister(
         // IPC layer error
         aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
       });
+||||||| merged common ancestors
+    [successCB = std::move(aSuccessCB), aFailureCB]
+    (Tuple<bool, CopyableErrorResult>&& aResult) {
+    if (Get<1>(aResult).Failed()) {
+      // application layer error
+      aFailureCB(Get<1>(aResult));
+      return;
+    }
+    // success
+    successCB(Get<0>(aResult));
+  }, [aFailureCB] (ResponseRejectReason aReason) {
+    // IPC layer error
+    aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
+  });
+=======
+      [successCB = std::move(aSuccessCB),
+       aFailureCB](Tuple<bool, CopyableErrorResult>&& aResult) {
+        if (Get<1>(aResult).Failed()) {
+          // application layer error
+          aFailureCB(Get<1>(aResult));
+          return;
+        }
+        // success
+        successCB(Get<0>(aResult));
+      },
+      [aFailureCB](ResponseRejectReason&& aReason) {
+        // IPC layer error
+        aFailureCB(CopyableErrorResult(NS_ERROR_DOM_INVALID_STATE_ERR));
+      });
+>>>>>>> upstream-releases
 }
 
 RemoteServiceWorkerRegistrationImpl::RemoteServiceWorkerRegistrationImpl(

@@ -19,13 +19,12 @@
 #include "mozilla/LinkedList.h"
 #include "mozilla/dom/EventTarget.h"
 
-class nsIDocument;
-
 namespace mozilla {
 
 class ErrorResult;
 
 namespace dom {
+class Document;
 class Event;
 }  // namespace dom
 
@@ -128,10 +127,18 @@ class DOMEventTargetHelper : public dom::EventTarget,
     return mListenerManager && mListenerManager->HasListenersFor(aTypeWithOn);
   }
 
+<<<<<<< HEAD
   virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override {
+||||||| merged common ancestors
+  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindings() override
+  {
+=======
+  virtual nsPIDOMWindowOuter* GetOwnerGlobalForBindingsInternal() override {
+>>>>>>> upstream-releases
     return nsPIDOMWindowOuter::GetFromCurrentInner(GetOwner());
   }
 
+<<<<<<< HEAD
   nsresult CheckInnerWindowCorrectness() const {
     NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
     if (mOwnerWindow && !mOwnerWindow->IsCurrentInnerWindow()) {
@@ -139,6 +146,18 @@ class DOMEventTargetHelper : public dom::EventTarget,
     }
     return NS_OK;
   }
+||||||| merged common ancestors
+  nsresult CheckInnerWindowCorrectness() const
+  {
+    NS_ENSURE_STATE(!mHasOrHasHadOwnerWindow || mOwnerWindow);
+    if (mOwnerWindow && !mOwnerWindow->IsCurrentInnerWindow()) {
+      return NS_ERROR_FAILURE;
+    }
+    return NS_OK;
+  }
+=======
+  nsresult CheckCurrentGlobalCorrectness() const;
+>>>>>>> upstream-releases
 
   nsPIDOMWindowInner* GetOwner() const { return mOwnerWindow; }
   // Like GetOwner, but only returns non-null if the window being returned is
@@ -146,7 +165,7 @@ class DOMEventTargetHelper : public dom::EventTarget,
   nsPIDOMWindowInner* GetWindowIfCurrent() const;
   // Returns the document associated with this event target, if that document is
   // the current document of its browsing context.  Will return null otherwise.
-  nsIDocument* GetDocumentIfCurrent() const;
+  mozilla::dom::Document* GetDocumentIfCurrent() const;
 
   // DETH subclasses may override the BindToOwner(nsIGlobalObject*) method
   // to take action when dynamically binding to a new global.  This is only

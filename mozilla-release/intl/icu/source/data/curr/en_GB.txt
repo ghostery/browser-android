@@ -9,10 +9,26 @@ en_GB{
         }
     }
     CurrencyPlurals{
+<<<<<<< HEAD
+||||||| merged common ancestors
+        MKD{
+            other{"Macedonian denari"}
+        }
+=======
+        MGA{
+            one{"Malagasy ariary"}
+        }
+>>>>>>> upstream-releases
         SHP{
             one{"St Helena pound"}
             other{"St Helena pounds"}
         }
     }
+<<<<<<< HEAD
     Version{"2.1.44.18"}
+||||||| merged common ancestors
+    Version{"2.1.38.73"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
 }

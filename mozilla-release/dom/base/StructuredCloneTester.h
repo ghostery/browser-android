@@ -14,6 +14,7 @@
 
 struct JSStructuredCloneReader;
 struct JSStructuredCloneWriter;
+class nsIGlobalObject;
 
 namespace mozilla {
 
@@ -36,10 +37,27 @@ class StructuredCloneTester final : public nsISupports, public nsWrapperCache {
 
   bool Deserializable() const;
 
+<<<<<<< HEAD
   static JSObject* ReadStructuredClone(JSContext* aCx,
                                        JSStructuredCloneReader* aReader);
+||||||| merged common ancestors
+  static JSObject*
+  ReadStructuredClone(JSContext* aCx, JSStructuredCloneReader* aReader);
+=======
+  static already_AddRefed<StructuredCloneTester> ReadStructuredClone(
+      JSContext* aCx, nsIGlobalObject* aGlobal,
+      JSStructuredCloneReader* aReader);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool WriteStructuredClone(JSStructuredCloneWriter* aWriter) const;
+||||||| merged common ancestors
+  bool
+  WriteStructuredClone(JSStructuredCloneWriter* aWriter) const;
+=======
+  bool WriteStructuredClone(JSContext* aCx,
+                            JSStructuredCloneWriter* aWriter) const;
+>>>>>>> upstream-releases
 
   nsISupports* GetParentObject() const;
 

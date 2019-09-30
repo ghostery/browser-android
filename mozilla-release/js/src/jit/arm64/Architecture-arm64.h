@@ -50,6 +50,7 @@ namespace jit {
 // AArch64 does not have soft float.
 
 class Registers {
+<<<<<<< HEAD
  public:
   enum RegisterID {
     w0 = 0,
@@ -212,6 +213,302 @@ class Registers {
   static const SetType CallMask = (1 << Registers::x0);
 
   static const SetType AllocatableMask = AllMask & ~NonAllocatableMask;
+||||||| merged common ancestors
+  public:
+    enum RegisterID {
+        w0  =  0, x0  =  0,
+        w1  =  1, x1  =  1,
+        w2  =  2, x2  =  2,
+        w3  =  3, x3  =  3,
+        w4  =  4, x4  =  4,
+        w5  =  5, x5  =  5,
+        w6  =  6, x6  =  6,
+        w7  =  7, x7  =  7,
+        w8  =  8, x8  =  8,
+        w9  =  9, x9  =  9,
+        w10 = 10, x10 = 10,
+        w11 = 11, x11 = 11,
+        w12 = 12, x12 = 12,
+        w13 = 13, x13 = 13,
+        w14 = 14, x14 = 14,
+        w15 = 15, x15 = 15,
+        w16 = 16, x16 = 16, ip0 = 16, // MacroAssembler scratch register 1.
+        w17 = 17, x17 = 17, ip1 = 17, // MacroAssembler scratch register 2.
+        w18 = 18, x18 = 18, tls = 18, // Platform-specific use (TLS).
+        w19 = 19, x19 = 19,
+        w20 = 20, x20 = 20,
+        w21 = 21, x21 = 21,
+        w22 = 22, x22 = 22,
+        w23 = 23, x23 = 23,
+        w24 = 24, x24 = 24,
+        w25 = 25, x25 = 25,
+        w26 = 26, x26 = 26,
+        w27 = 27, x27 = 27,
+        w28 = 28, x28 = 28,
+        w29 = 29, x29 = 29, fp = 29,
+        w30 = 30, x30 = 30, lr = 30,
+        w31 = 31, x31 = 31, wzr = 31, xzr = 31, sp = 31, // Special: both stack pointer and a zero register.
+        invalid_reg
+    };
+    typedef uint8_t Code;
+    typedef uint32_t Encoding;
+    typedef uint32_t SetType;
+
+    union RegisterContent {
+        uintptr_t r;
+    };
+
+    static uint32_t SetSize(SetType x) {
+        static_assert(sizeof(SetType) == 4, "SetType must be 32 bits");
+        return mozilla::CountPopulation32(x);
+    }
+    static uint32_t FirstBit(SetType x) {
+        return mozilla::CountTrailingZeroes32(x);
+    }
+    static uint32_t LastBit(SetType x) {
+        return 31 - mozilla::CountLeadingZeroes32(x);
+    }
+
+    static const char* GetName(Code code) {
+        static const char* const Names[] =
+            { "x0",  "x1",  "x2",  "x3",  "x4",  "x5",  "x6",  "x7",  "x8",  "x9",
+              "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19",
+              "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x29",
+              "lr", "sp", "invalid" };
+        return Names[code];
+    }
+    static const char* GetName(uint32_t i) {
+        MOZ_ASSERT(i < Total);
+        return GetName(Code(i));
+    }
+
+    static Code FromName(const char* name);
+
+    // If SP is used as the base register for a memory load or store, then the value
+    // of the stack pointer prior to adding any offset must be quadword (16 byte) aligned,
+    // or else a stack aligment exception will be generated.
+    static const Code StackPointer = sp;
+
+    static const Code Invalid = invalid_reg;
+
+    static const uint32_t Total = 32;
+    static const uint32_t TotalPhys = 32;
+    static const uint32_t Allocatable = 27; // No named special-function registers.
+
+    static const SetType AllMask = 0xFFFFFFFF;
+    static const SetType NoneMask = 0x0;
+
+    static const SetType ArgRegMask =
+        (1 << Registers::x0) | (1 << Registers::x1) |
+        (1 << Registers::x2) | (1 << Registers::x3) |
+        (1 << Registers::x4) | (1 << Registers::x5) |
+        (1 << Registers::x6) | (1 << Registers::x7) |
+        (1 << Registers::x8);
+
+    static const SetType VolatileMask =
+        (1 << Registers::x0) | (1 << Registers::x1) |
+        (1 << Registers::x2) | (1 << Registers::x3) |
+        (1 << Registers::x4) | (1 << Registers::x5) |
+        (1 << Registers::x6) | (1 << Registers::x7) |
+        (1 << Registers::x8) | (1 << Registers::x9) |
+        (1 << Registers::x10) | (1 << Registers::x11) |
+        (1 << Registers::x11) | (1 << Registers::x12) |
+        (1 << Registers::x13) | (1 << Registers::x14) |
+        (1 << Registers::x14) | (1 << Registers::x15) |
+        (1 << Registers::x16) | (1 << Registers::x17) |
+        (1 << Registers::x18);
+
+    static const SetType NonVolatileMask =
+        (1 << Registers::x19) | (1 << Registers::x20) |
+        (1 << Registers::x21) | (1 << Registers::x22) |
+        (1 << Registers::x23) | (1 << Registers::x24) |
+        (1 << Registers::x25) | (1 << Registers::x26) |
+        (1 << Registers::x27) | (1 << Registers::x28) |
+        (1 << Registers::x29) | (1 << Registers::x30);
+
+    static const SetType SingleByteRegs = VolatileMask | NonVolatileMask;
+
+    static const SetType NonAllocatableMask =
+        (1 << Registers::x28) | // PseudoStackPointer.
+        (1 << Registers::ip0) | // First scratch register.
+        (1 << Registers::ip1) | // Second scratch register.
+        (1 << Registers::tls) |
+        (1 << Registers::lr) |
+        (1 << Registers::sp);
+
+    static const SetType WrapperMask = VolatileMask;
+
+    // Registers returned from a JS -> JS call.
+    static const SetType JSCallMask = (1 << Registers::x2);
+
+    // Registers returned from a JS -> C call.
+    static const SetType CallMask = (1 << Registers::x0);
+
+    static const SetType AllocatableMask = AllMask & ~NonAllocatableMask;
+=======
+ public:
+  enum RegisterID {
+    w0 = 0,
+    x0 = 0,
+    w1 = 1,
+    x1 = 1,
+    w2 = 2,
+    x2 = 2,
+    w3 = 3,
+    x3 = 3,
+    w4 = 4,
+    x4 = 4,
+    w5 = 5,
+    x5 = 5,
+    w6 = 6,
+    x6 = 6,
+    w7 = 7,
+    x7 = 7,
+    w8 = 8,
+    x8 = 8,
+    w9 = 9,
+    x9 = 9,
+    w10 = 10,
+    x10 = 10,
+    w11 = 11,
+    x11 = 11,
+    w12 = 12,
+    x12 = 12,
+    w13 = 13,
+    x13 = 13,
+    w14 = 14,
+    x14 = 14,
+    w15 = 15,
+    x15 = 15,
+    w16 = 16,
+    x16 = 16,
+    ip0 = 16,  // MacroAssembler scratch register 1.
+    w17 = 17,
+    x17 = 17,
+    ip1 = 17,  // MacroAssembler scratch register 2.
+    w18 = 18,
+    x18 = 18,
+    tls = 18,  // Platform-specific use (TLS).
+    w19 = 19,
+    x19 = 19,
+    w20 = 20,
+    x20 = 20,
+    w21 = 21,
+    x21 = 21,
+    w22 = 22,
+    x22 = 22,
+    w23 = 23,
+    x23 = 23,
+    w24 = 24,
+    x24 = 24,
+    w25 = 25,
+    x25 = 25,
+    w26 = 26,
+    x26 = 26,
+    w27 = 27,
+    x27 = 27,
+    w28 = 28,
+    x28 = 28,
+    w29 = 29,
+    x29 = 29,
+    fp = 29,
+    w30 = 30,
+    x30 = 30,
+    lr = 30,
+    w31 = 31,
+    x31 = 31,
+    wzr = 31,
+    xzr = 31,
+    sp = 31,  // Special: both stack pointer and a zero register.
+    invalid_reg
+  };
+  typedef uint8_t Code;
+  typedef uint32_t Encoding;
+  typedef uint32_t SetType;
+
+  union RegisterContent {
+    uintptr_t r;
+  };
+
+  static uint32_t SetSize(SetType x) {
+    static_assert(sizeof(SetType) == 4, "SetType must be 32 bits");
+    return mozilla::CountPopulation32(x);
+  }
+  static uint32_t FirstBit(SetType x) {
+    return mozilla::CountTrailingZeroes32(x);
+  }
+  static uint32_t LastBit(SetType x) {
+    return 31 - mozilla::CountLeadingZeroes32(x);
+  }
+
+  static const char* GetName(Code code) {
+    static const char* const Names[] = {
+        "x0",  "x1",  "x2",  "x3",  "x4",  "x5",     "x6",  "x7",  "x8",
+        "x9",  "x10", "x11", "x12", "x13", "x14",    "x15", "x16", "x17",
+        "x18", "x19", "x20", "x21", "x22", "x23",    "x24", "x25", "x26",
+        "x27", "x28", "x29", "lr",  "sp",  "invalid"};
+    return Names[code];
+  }
+  static const char* GetName(uint32_t i) {
+    MOZ_ASSERT(i < Total);
+    return GetName(Code(i));
+  }
+
+  static Code FromName(const char* name);
+
+  // If SP is used as the base register for a memory load or store, then the
+  // value of the stack pointer prior to adding any offset must be quadword (16
+  // byte) aligned, or else a stack aligment exception will be generated.
+  static const Code StackPointer = sp;
+
+  static const Code Invalid = invalid_reg;
+
+  static const uint32_t Total = 32;
+  static const uint32_t TotalPhys = 32;
+  static const uint32_t Allocatable =
+      27;  // No named special-function registers.
+
+  static const SetType AllMask = 0xFFFFFFFF;
+  static const SetType NoneMask = 0x0;
+
+  static const SetType ArgRegMask =
+      (1 << Registers::x0) | (1 << Registers::x1) | (1 << Registers::x2) |
+      (1 << Registers::x3) | (1 << Registers::x4) | (1 << Registers::x5) |
+      (1 << Registers::x6) | (1 << Registers::x7) | (1 << Registers::x8);
+
+  static const SetType VolatileMask =
+      (1 << Registers::x0) | (1 << Registers::x1) | (1 << Registers::x2) |
+      (1 << Registers::x3) | (1 << Registers::x4) | (1 << Registers::x5) |
+      (1 << Registers::x6) | (1 << Registers::x7) | (1 << Registers::x8) |
+      (1 << Registers::x9) | (1 << Registers::x10) | (1 << Registers::x11) |
+      (1 << Registers::x12) | (1 << Registers::x13) | (1 << Registers::x14) |
+      (1 << Registers::x15) | (1 << Registers::x16) | (1 << Registers::x17) |
+      (1 << Registers::x18);
+
+  static const SetType NonVolatileMask =
+      (1 << Registers::x19) | (1 << Registers::x20) | (1 << Registers::x21) |
+      (1 << Registers::x22) | (1 << Registers::x23) | (1 << Registers::x24) |
+      (1 << Registers::x25) | (1 << Registers::x26) | (1 << Registers::x27) |
+      (1 << Registers::x28) | (1 << Registers::x29) | (1 << Registers::x30);
+
+  static const SetType SingleByteRegs = VolatileMask | NonVolatileMask;
+
+  static const SetType NonAllocatableMask =
+      (1 << Registers::x28) |  // PseudoStackPointer.
+      (1 << Registers::ip0) |  // First scratch register.
+      (1 << Registers::ip1) |  // Second scratch register.
+      (1 << Registers::tls) | (1 << Registers::lr) | (1 << Registers::sp);
+
+  static const SetType WrapperMask = VolatileMask;
+
+  // Registers returned from a JS -> JS call.
+  static const SetType JSCallMask = (1 << Registers::x2);
+
+  // Registers returned from a JS -> C call.
+  static const SetType CallMask = (1 << Registers::x0);
+
+  static const SetType AllocatableMask = AllMask & ~NonAllocatableMask;
+>>>>>>> upstream-releases
 };
 
 // Smallest integer type that can hold a register bitmask.
@@ -394,10 +691,12 @@ static const uint32_t ION_FRAME_SLACK_SIZE = 24;
 
 static const uint32_t ShadowStackSpace = 0;
 
-// TODO:
-// This constant needs to be updated to account for whatever near/far branching
-// strategy is used by ARM64.
-static const uint32_t JumpImmediateRange = UINT32_MAX;
+// When our only strategy for far jumps is to encode the offset directly, and
+// not insert any jump islands during assembly for even further jumps, then the
+// architecture restricts us to -2^27 .. 2^27-4, to fit into a signed 28-bit
+// value.  We further reduce this range to allow the far-jump inserting code to
+// have some breathing room.
+static const uint32_t JumpImmediateRange = ((1 << 27) - (20 * 1024 * 1024));
 
 static const uint32_t ABIStackAlignment = 16;
 static const uint32_t CodeAlignment = 16;

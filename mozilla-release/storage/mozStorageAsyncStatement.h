@@ -47,8 +47,17 @@ class AsyncStatement final : public mozIStorageAsyncStatement,
    * @param aSQLStatement
    *        The SQL statement to prepare that this object will represent.
    */
+<<<<<<< HEAD
   nsresult initialize(Connection *aDBConnection, sqlite3 *aNativeConnection,
                       const nsACString &aSQLStatement);
+||||||| merged common ancestors
+  nsresult initialize(Connection *aDBConnection,
+                      sqlite3 *aNativeConnection,
+                      const nsACString &aSQLStatement);
+=======
+  nsresult initialize(Connection* aDBConnection, sqlite3* aNativeConnection,
+                      const nsACString& aSQLStatement);
+>>>>>>> upstream-releases
 
   /**
    * Obtains and transfers ownership of the array of parameters that are bound
@@ -65,7 +74,7 @@ class AsyncStatement final : public mozIStorageAsyncStatement,
    * @return a pointer to the BindingParams object to use with our Bind*
    *         method.
    */
-  mozIStorageBindingParams *getParams();
+  mozIStorageBindingParams* getParams();
 
   /**
    * The SQL string as passed by the user.  We store it because we create the

@@ -10,7 +10,13 @@ kk{
                 "&Ұ<ү<<<Ү"
                 "&[before 1]ь<і<<<І"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

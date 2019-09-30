@@ -5,20 +5,40 @@
 #include "nsWindowsHelpers.h"
 
 BOOL StartServiceUpdate(LPCWSTR installDir);
+<<<<<<< HEAD
 DWORD LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR *argv);
 BOOL GetUUIDTempFilePath(LPCWSTR basePath, LPCWSTR prefix, LPWSTR tmpPath);
 BOOL WriteStatusFailure(LPCWSTR updateDirPath, int errorCode,
                         nsAutoHandle &userToken);
+||||||| merged common ancestors
+DWORD LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR *argv);
+BOOL GetUUIDTempFilePath(LPCWSTR basePath, LPCWSTR prefix, LPWSTR tmpPath);
+BOOL WriteStatusFailure(LPCWSTR updateDirPath, int errorCode);
+=======
+DWORD LaunchServiceSoftwareUpdateCommand(int argc, LPCWSTR* argv);
+BOOL WriteStatusFailure(LPCWSTR updateDirPath, int errorCode);
+>>>>>>> upstream-releases
 DWORD WaitForServiceStop(LPCWSTR serviceName, DWORD maxWaitSeconds);
 DWORD WaitForProcessExit(LPCWSTR filename, DWORD maxSeconds);
 DWORD IsProcessRunning(LPCWSTR filename);
 BOOL DoesFallbackKeyExist();
+<<<<<<< HEAD
 BOOL IsLocalFile(LPCWSTR file, BOOL &isLocal);
 DWORD StartServiceCommand(int argc, LPCWSTR *argv);
 BOOL IsUnpromptedElevation(BOOL &isUnpromptedElevation);
+||||||| merged common ancestors
+BOOL IsLocalFile(LPCWSTR file, BOOL &isLocal);
+DWORD StartServiceCommand(int argc, LPCWSTR* argv);
+BOOL IsUnpromptedElevation(BOOL &isUnpromptedElevation);
+=======
+BOOL IsLocalFile(LPCWSTR file, BOOL& isLocal);
+DWORD StartServiceCommand(int argc, LPCWSTR* argv);
+BOOL IsUnpromptedElevation(BOOL& isUnpromptedElevation);
+>>>>>>> upstream-releases
 
 #define SVC_NAME L"MozillaMaintenance"
 
+<<<<<<< HEAD
 #define BASE_SERVICE_REG_KEY L"SOFTWARE\\Mozilla\\MaintenanceService"
 
 // Disable impersonation on release (Bug 1514898)
@@ -28,6 +48,12 @@ BOOL IsUnpromptedElevation(BOOL &isUnpromptedElevation);
 
 // Environment variable used to pass impersonation token to child
 #define USER_TOKEN_VAR_NAME "MOZ_USER_TOKEN"
+||||||| merged common ancestors
+#define BASE_SERVICE_REG_KEY \
+  L"SOFTWARE\\Mozilla\\MaintenanceService"
+=======
+#define BASE_SERVICE_REG_KEY L"SOFTWARE\\Mozilla\\MaintenanceService"
+>>>>>>> upstream-releases
 
 // The test only fallback key, as its name implies, is only present on machines
 // that will use automated tests.  Since automated tests always run from a

@@ -3,10 +3,24 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(LOCALGL_H_)
-#define LOCALGL_H_
+#  define LOCALGL_H_
 
-#include "GLTypes.h"
-#include "GLConsts.h"
+#  include "GLTypes.h"
+#  include "GLConsts.h"
+
+namespace mozilla {
+namespace gl {
+class GLContext;
+bool CheckContextLost(const GLContext* gl);
+}  // namespace gl
+}  // namespace mozilla
+
+#  define MOZ_GL_ASSERT(glContext, expr) \
+    MOZ_ASSERT((expr) || mozilla::gl::CheckContextLost(glContext))
+
+// -
+
+// clang-format off
 
 namespace mozilla {
 namespace gl {

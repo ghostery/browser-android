@@ -20,16 +20,23 @@ class ia2AccessibleValue : public IAccessibleValue {
 
   // IAccessibleValue
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_currentValue(
-      /* [retval][out] */ VARIANT *currentValue);
+      /* [retval][out] */ VARIANT* currentValue);
 
   virtual HRESULT STDMETHODCALLTYPE setCurrentValue(
       /* [in] */ VARIANT value);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_maximumValue(
-      /* [retval][out] */ VARIANT *maximumValue);
+      /* [retval][out] */ VARIANT* maximumValue);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_minimumValue(
+<<<<<<< HEAD
       /* [retval][out] */ VARIANT *minimumValue);
+||||||| merged common ancestors
+      /* [retval][out] */ VARIANT *minimumValue);
+
+=======
+      /* [retval][out] */ VARIANT* minimumValue);
+>>>>>>> upstream-releases
 };
 
 }  // namespace a11y

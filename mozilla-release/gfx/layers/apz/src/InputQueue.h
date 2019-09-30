@@ -11,10 +11,10 @@
 #include "DragTracker.h"
 #include "InputData.h"
 #include "mozilla/EventForwards.h"
+#include "mozilla/layers/TouchCounter.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/UniquePtr.h"
 #include "nsTArray.h"
-#include "TouchCounter.h"
 
 namespace mozilla {
 
@@ -51,10 +51,11 @@ class InputQueue {
    * See the documentation on APZCTreeManager::ReceiveInputEvent for info on
    * return values from this function, including |aOutInputBlockId|.
    */
-  nsEventStatus ReceiveInputEvent(const RefPtr<AsyncPanZoomController>& aTarget,
-                                  TargetConfirmationFlags aFlags,
-                                  const InputData& aEvent,
-                                  uint64_t* aOutInputBlockId);
+  nsEventStatus ReceiveInputEvent(
+      const RefPtr<AsyncPanZoomController>& aTarget,
+      TargetConfirmationFlags aFlags, const InputData& aEvent,
+      uint64_t* aOutInputBlockId,
+      const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors = Nothing());
   /**
    * This function should be invoked to notify the InputQueue when web content
    * decides whether or not it wants to cancel a block of events. The block
@@ -144,8 +145,16 @@ class InputQueue {
 
   // RAII class for automatically running a timeout task that may
   // need to be run immediately after an event has been queued.
+<<<<<<< HEAD
   class AutoRunImmediateTimeout {
    public:
+||||||| merged common ancestors
+  class AutoRunImmediateTimeout {
+  public:
+=======
+  class AutoRunImmediateTimeout final {
+   public:
+>>>>>>> upstream-releases
     explicit AutoRunImmediateTimeout(InputQueue* aQueue);
     ~AutoRunImmediateTimeout();
 
@@ -171,10 +180,11 @@ class InputQueue {
       const RefPtr<AsyncPanZoomController>& aTarget,
       CancelableBlockState* aBlock);
 
-  nsEventStatus ReceiveTouchInput(const RefPtr<AsyncPanZoomController>& aTarget,
-                                  TargetConfirmationFlags aFlags,
-                                  const MultiTouchInput& aEvent,
-                                  uint64_t* aOutInputBlockId);
+  nsEventStatus ReceiveTouchInput(
+      const RefPtr<AsyncPanZoomController>& aTarget,
+      TargetConfirmationFlags aFlags, const MultiTouchInput& aEvent,
+      uint64_t* aOutInputBlockId,
+      const Maybe<nsTArray<TouchBehaviorFlags>>& aTouchBehaviors);
   nsEventStatus ReceiveMouseInput(const RefPtr<AsyncPanZoomController>& aTarget,
                                   TargetConfirmationFlags aFlags,
                                   const MouseInput& aEvent,

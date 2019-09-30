@@ -21,13 +21,16 @@ namespace CacheFileUtils {
 // This designates the format for the "alt-data" metadata.
 // When the format changes we need to update the version.
 static uint32_t const kAltDataVersion = 1;
-const char *kAltDataKey = "alt-data";
+const char* kAltDataKey = "alt-data";
+
+static uint32_t const kBaseDomainAccessInfoVersion = 1;
 
 namespace {
 
 /**
  * A simple recursive descent parser for the mapping key.
  */
+<<<<<<< HEAD
 class KeyParser : protected Tokenizer {
  public:
   explicit KeyParser(nsACString const &aInput)
@@ -38,6 +41,31 @@ class KeyParser : protected Tokenizer {
         lastTag(0) {}
 
  private:
+||||||| merged common ancestors
+class KeyParser : protected Tokenizer
+{
+public:
+  explicit KeyParser(nsACString const& aInput)
+    : Tokenizer(aInput)
+    , isAnonymous(false)
+    // Initialize the cache key to a zero length by default
+    , lastTag(0)
+  {
+  }
+
+private:
+=======
+class KeyParser : protected Tokenizer {
+ public:
+  explicit KeyParser(nsACString const& aInput)
+      : Tokenizer(aInput),
+        isAnonymous(false)
+        // Initialize the cache key to a zero length by default
+        ,
+        lastTag(0) {}
+
+ private:
+>>>>>>> upstream-releases
   // Results
   OriginAttributes originAttribs;
   bool isAnonymous;
@@ -47,8 +75,24 @@ class KeyParser : protected Tokenizer {
   // Keeps the last tag name, used for alphabetical sort checking
   char lastTag;
 
+<<<<<<< HEAD
   // Classifier for the 'tag' character valid range
   static bool TagChar(const char aChar) { return aChar >= ' ' && aChar <= '~'; }
+||||||| merged common ancestors
+  // Classifier for the 'tag' character valid range
+  static bool TagChar(const char aChar)
+  {
+    return aChar >= ' ' && aChar <= '~';
+  }
+=======
+  // Classifier for the 'tag' character valid range.
+  // Explicitly using unsigned char as 127 is -1 when signed and it would only
+  // produce a warning.
+  static bool TagChar(const char aChar) {
+    unsigned char c = static_cast<unsigned char>(aChar);
+    return c >= ' ' && c <= '\x7f';
+  }
+>>>>>>> upstream-releases
 
   bool ParseTags() {
     // Expects to be at the tag name or at the end
@@ -81,6 +125,7 @@ class KeyParser : protected Tokenizer {
         }
         break;
       }
+<<<<<<< HEAD
       case 'p':
         originAttribs.SyncAttributesWithPrivateBrowsing(true);
         break;
@@ -97,6 +142,30 @@ class KeyParser : protected Tokenizer {
           return false;  // not a valid 32-bit integer
         }
         break;
+||||||| merged common ancestors
+      break;
+    default:
+      if (!ParseValue()) { // skip any tag values, optional
+        return false;
+=======
+      case 'p':
+        originAttribs.SyncAttributesWithPrivateBrowsing(true);
+        break;
+      case 'b':
+        // Leaving to be able to read and understand oldformatted entries
+        originAttribs.mInIsolatedMozBrowser = true;
+        break;
+      case 'a':
+        isAnonymous = true;
+        break;
+      case 'i': {
+        // Leaving to be able to read and understand oldformatted entries
+        uint32_t deprecatedAppId = 0;
+        if (!ReadInteger(&deprecatedAppId)) {
+          return false;  // not a valid 32-bit integer
+        }
+        break;
+>>>>>>> upstream-releases
       }
       case '~':
         if (!ParseValue(&idEnhance)) {
@@ -119,7 +188,14 @@ class KeyParser : protected Tokenizer {
     return ParseTags();
   }
 
+<<<<<<< HEAD
   bool ParseValue(nsACString *result = nullptr) {
+||||||| merged common ancestors
+  bool ParseValue(nsACString *result = nullptr)
+  {
+=======
+  bool ParseValue(nsACString* result = nullptr) {
+>>>>>>> upstream-releases
     // If at the end, fail since we expect a comma ; value may be empty tho
     if (CheckEOF()) {
       return false;
@@ -160,16 +236,46 @@ class KeyParser : protected Tokenizer {
     return info.forget();
   }
 
+<<<<<<< HEAD
   void URISpec(nsACString &result) { result.Assign(cacheKey); }
+||||||| merged common ancestors
+  void URISpec(nsACString &result)
+  {
+    result.Assign(cacheKey);
+  }
+=======
+  void URISpec(nsACString& result) { result.Assign(cacheKey); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void IdEnhance(nsACString &result) { result.Assign(idEnhance); }
+||||||| merged common ancestors
+  void IdEnhance(nsACString &result)
+  {
+    result.Assign(idEnhance);
+  }
+=======
+  void IdEnhance(nsACString& result) { result.Assign(idEnhance); }
+>>>>>>> upstream-releases
 };
 
 }  // namespace
 
+<<<<<<< HEAD
 already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString &aKey,
                                               nsACString *aIdEnhance,
                                               nsACString *aURISpec) {
+||||||| merged common ancestors
+already_AddRefed<nsILoadContextInfo>
+ParseKey(const nsACString& aKey,
+         nsACString* aIdEnhance,
+         nsACString* aURISpec)
+{
+=======
+already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString& aKey,
+                                              nsACString* aIdEnhance,
+                                              nsACString* aURISpec) {
+>>>>>>> upstream-releases
   KeyParser parser(aKey);
   RefPtr<LoadContextInfo> info = parser.Parse();
 
@@ -181,7 +287,15 @@ already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString &aKey,
   return info.forget();
 }
 
+<<<<<<< HEAD
 void AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval) {
+||||||| merged common ancestors
+void
+AppendKeyPrefix(nsILoadContextInfo* aInfo, nsACString &_retval)
+{
+=======
+void AppendKeyPrefix(nsILoadContextInfo* aInfo, nsACString& _retval) {
+>>>>>>> upstream-releases
   /**
    * This key is used to salt file hashes.  When form of the key is changed
    * cache entries will fail to find on disk.
@@ -190,7 +304,7 @@ void AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval) {
    * Keep the attributes list sorted according their ASCII code.
    */
 
-  OriginAttributes const *oa = aInfo->OriginAttributesPtr();
+  OriginAttributes const* oa = aInfo->OriginAttributesPtr();
   nsAutoCString suffix;
   oa->CreateSuffix(suffix);
   if (!suffix.IsEmpty()) {
@@ -206,8 +320,17 @@ void AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval) {
   }
 }
 
+<<<<<<< HEAD
 void AppendTagWithValue(nsACString &aTarget, char const aTag,
                         const nsACString &aValue) {
+||||||| merged common ancestors
+void
+AppendTagWithValue(nsACString& aTarget, char const aTag, const nsACString& aValue)
+{
+=======
+void AppendTagWithValue(nsACString& aTarget, char const aTag,
+                        const nsACString& aValue) {
+>>>>>>> upstream-releases
   aTarget.Append(aTag);
 
   // First check the value string to save some memory copying
@@ -227,8 +350,18 @@ void AppendTagWithValue(nsACString &aTarget, char const aTag,
   aTarget.Append(',');
 }
 
+<<<<<<< HEAD
 nsresult KeyMatchesLoadContextInfo(const nsACString &aKey,
                                    nsILoadContextInfo *aInfo, bool *_retval) {
+||||||| merged common ancestors
+nsresult
+KeyMatchesLoadContextInfo(const nsACString &aKey, nsILoadContextInfo *aInfo,
+                          bool *_retval)
+{
+=======
+nsresult KeyMatchesLoadContextInfo(const nsACString& aKey,
+                                   nsILoadContextInfo* aInfo, bool* _retval) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsILoadContextInfo> info = ParseKey(aKey);
 
   if (!info) {
@@ -242,7 +375,15 @@ nsresult KeyMatchesLoadContextInfo(const nsACString &aKey,
 ValidityPair::ValidityPair(uint32_t aOffset, uint32_t aLen)
     : mOffset(aOffset), mLen(aLen) {}
 
+<<<<<<< HEAD
 bool ValidityPair::CanBeMerged(const ValidityPair &aOther) const {
+||||||| merged common ancestors
+bool
+ValidityPair::CanBeMerged(const ValidityPair& aOther) const
+{
+=======
+bool ValidityPair::CanBeMerged(const ValidityPair& aOther) const {
+>>>>>>> upstream-releases
   // The pairs can be merged into a single one if the start of one of the pairs
   // is placed anywhere in the validity interval of other pair or exactly after
   // its end.
@@ -253,7 +394,15 @@ bool ValidityPair::IsInOrFollows(uint32_t aOffset) const {
   return mOffset <= aOffset && mOffset + mLen >= aOffset;
 }
 
+<<<<<<< HEAD
 bool ValidityPair::LessThan(const ValidityPair &aOther) const {
+||||||| merged common ancestors
+bool
+ValidityPair::LessThan(const ValidityPair& aOther) const
+{
+=======
+bool ValidityPair::LessThan(const ValidityPair& aOther) const {
+>>>>>>> upstream-releases
   if (mOffset < aOther.mOffset) {
     return true;
   }
@@ -265,7 +414,15 @@ bool ValidityPair::LessThan(const ValidityPair &aOther) const {
   return false;
 }
 
+<<<<<<< HEAD
 void ValidityPair::Merge(const ValidityPair &aOther) {
+||||||| merged common ancestors
+void
+ValidityPair::Merge(const ValidityPair& aOther)
+{
+=======
+void ValidityPair::Merge(const ValidityPair& aOther) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CanBeMerged(aOther));
 
   uint32_t offset = std::min(mOffset, aOther.mOffset);
@@ -341,7 +498,15 @@ size_t ValidityMap::SizeOfExcludingThis(
   return mMap.ShallowSizeOfExcludingThis(mallocSizeOf);
 }
 
+<<<<<<< HEAD
 ValidityPair &ValidityMap::operator[](uint32_t aIdx) {
+||||||| merged common ancestors
+ValidityPair&
+ValidityMap::operator[](uint32_t aIdx)
+{
+=======
+ValidityPair& ValidityMap::operator[](uint32_t aIdx) {
+>>>>>>> upstream-releases
   return mMap.ElementAt(aIdx);
 }
 
@@ -590,13 +755,30 @@ bool CachePerfStats::IsCacheSlow() {
   return false;
 }
 
+<<<<<<< HEAD
 // static
 void CachePerfStats::GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow) {
+||||||| merged common ancestors
+//static
+void
+CachePerfStats::GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow)
+{
+=======
+// static
+void CachePerfStats::GetSlowStats(uint32_t* aSlow, uint32_t* aNotSlow) {
+>>>>>>> upstream-releases
   *aSlow = sCacheSlowCnt;
   *aNotSlow = sCacheNotSlowCnt;
 }
 
+<<<<<<< HEAD
 void FreeBuffer(void *aBuf) {
+||||||| merged common ancestors
+void
+FreeBuffer(void *aBuf) {
+=======
+void FreeBuffer(void* aBuf) {
+>>>>>>> upstream-releases
 #ifndef NS_FREE_PERMANENT_DATA
   if (CacheObserver::ShuttingDown()) {
     return;
@@ -606,8 +788,17 @@ void FreeBuffer(void *aBuf) {
   free(aBuf);
 }
 
+<<<<<<< HEAD
 nsresult ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset,
                                   nsACString *_type) {
+||||||| merged common ancestors
+nsresult
+ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset, nsACString *_type)
+{
+=======
+nsresult ParseAlternativeDataInfo(const char* aInfo, int64_t* _offset,
+                                  nsACString* _type) {
+>>>>>>> upstream-releases
   // The format is: "1;12345,javascript/binary"
   //         <version>;<offset>,<type>
   mozilla::Tokenizer p(aInfo, nullptr, "/");
@@ -644,8 +835,17 @@ nsresult ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset,
                               nsACString &_retval) {
+||||||| merged common ancestors
+void
+BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset, nsACString &_retval)
+{
+=======
+void BuildAlternativeDataInfo(const char* aInfo, int64_t aOffset,
+                              nsACString& _retval) {
+>>>>>>> upstream-releases
   _retval.Truncate();
   _retval.AppendInt(kAltDataVersion);
   _retval.Append(';');
@@ -654,6 +854,78 @@ void BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset,
   _retval.Append(aInfo);
 }
 
+<<<<<<< HEAD
 }  // namespace CacheFileUtils
 }  // namespace net
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace CacheFileUtils
+} // namespace net
+} // namespace mozilla
+=======
+nsresult ParseBaseDomainAccessInfo(const char* aInfo, uint32_t aTrID,
+                                   const uint32_t* aSearchSiteID, bool* _found,
+                                   uint16_t* _count) {
+  // The format is: "1;12;339456,490536687,1964820,"
+  //         <version>;<telemetry_report_ID>;<siteID>,<siteID>,
+  mozilla::Tokenizer p(aInfo);
+  uint32_t i = 0;
+  uint16_t siteIDCnt = 0;
+
+  // Check version and telemetry report ID
+  if (!p.ReadInteger(&i) || i != kBaseDomainAccessInfoVersion ||
+      !p.CheckChar(';') || !p.ReadInteger(&i) || i != aTrID ||
+      !p.CheckChar(';')) {
+    LOG(
+        ("ParseBaseDomainAccessInfo() - cannot parse info [info=%s, version=%u,"
+         " trID=%u]",
+         aInfo, kBaseDomainAccessInfoVersion, aTrID));
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+
+  do {
+    if (!p.ReadInteger(&i) || !p.CheckChar(',')) {
+      LOG(
+          ("ParseBaseDomainAccessInfo() - cannot parse site ID [info=%s, "
+           "siteIDCnt=%d]",
+           aInfo, siteIDCnt));
+      return NS_ERROR_NOT_AVAILABLE;
+    }
+
+    // If aSearchSiteID was provided, we don't need the total count of IDs.
+    // Just return true and don't process the rest of data.
+    if (aSearchSiteID && *aSearchSiteID == i) {
+      *_found = true;
+      return NS_OK;
+    }
+
+    ++siteIDCnt;
+  } while (!p.CheckEOF());
+
+  if (_count) {
+    *_count = siteIDCnt;
+  }
+
+  return NS_OK;
+}
+
+void BuildOrAppendBaseDomainAccessInfo(const char* aOldInfo, uint32_t aTrID,
+                                       uint32_t aSiteID, nsACString& _retval) {
+  if (aOldInfo) {
+    _retval.Assign(aOldInfo);
+  } else {
+    _retval.Truncate();
+    _retval.AppendInt(kBaseDomainAccessInfoVersion);
+    _retval.Append(';');
+    _retval.AppendInt(aTrID);
+    _retval.Append(';');
+  }
+
+  _retval.AppendInt(aSiteID);
+  _retval.Append(',');
+}
+
+}  // namespace CacheFileUtils
+}  // namespace net
+}  // namespace mozilla
+>>>>>>> upstream-releases

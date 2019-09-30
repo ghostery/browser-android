@@ -13,19 +13,42 @@
  */
 typedef struct /**** Printer Options ****/
 {
+<<<<<<< HEAD
   char *name;  /* Name of option */
   char *value; /* Value of option */
+||||||| merged common ancestors
+    char          *name;                  /* Name of option */
+    char          *value;                 /* Value of option */
+=======
+  char* name;  /* Name of option */
+  char* value; /* Value of option */
+>>>>>>> upstream-releases
 } cups_option_t;
 
 typedef struct /**** Destination ****/
 {
+<<<<<<< HEAD
   char *name,             /* Printer or class name */
       *instance;          /* Local instance name or nullptr */
   int is_default;         /* Is this printer the default? */
   int num_options;        /* Number of options */
   cups_option_t *options; /* Options */
+||||||| merged common ancestors
+    char          *name,       /* Printer or class name */
+                  *instance;   /* Local instance name or nullptr */
+    int           is_default;  /* Is this printer the default? */
+    int           num_options; /* Number of options */
+    cups_option_t *options;    /* Options */
+=======
+  char *name,             /* Printer or class name */
+      *instance;          /* Local instance name or nullptr */
+  int is_default;         /* Is this printer the default? */
+  int num_options;        /* Number of options */
+  cups_option_t* options; /* Options */
+>>>>>>> upstream-releases
 } cups_dest_t;
 
+<<<<<<< HEAD
 typedef cups_dest_t *(*CupsGetDestType)(const char *printer,
                                         const char *instance, int num_dests,
                                         cups_dest_t *dests);
@@ -37,6 +60,38 @@ typedef int (*CupsPrintFileType)(const char *printer, const char *filename,
 typedef int (*CupsTempFdType)(char *filename, int length);
 typedef int (*CupsAddOptionType)(const char *name, const char *value,
                                  int num_options, cups_option_t **options);
+||||||| merged common ancestors
+typedef cups_dest_t* (*CupsGetDestType)(const char *printer,
+                                        const char *instance,
+                                        int num_dests,
+                                        cups_dest_t *dests);
+typedef int (*CupsGetDestsType)(cups_dest_t **dests);
+typedef int (*CupsFreeDestsType)(int         num_dests,
+                                 cups_dest_t *dests);
+typedef int (*CupsPrintFileType)(const char    *printer,
+                                 const char    *filename,
+                                 const char    *title,
+                                 int           num_options,
+                                 cups_option_t *options);
+typedef int (*CupsTempFdType)(char *filename,
+                              int   length);
+typedef int (*CupsAddOptionType)(const char    *name,
+                                 const char    *value,
+                                 int           num_options,
+                                 cups_option_t **options);
+=======
+typedef cups_dest_t* (*CupsGetDestType)(const char* printer,
+                                        const char* instance, int num_dests,
+                                        cups_dest_t* dests);
+typedef int (*CupsGetDestsType)(cups_dest_t** dests);
+typedef int (*CupsFreeDestsType)(int num_dests, cups_dest_t* dests);
+typedef int (*CupsPrintFileType)(const char* printer, const char* filename,
+                                 const char* title, int num_options,
+                                 cups_option_t* options);
+typedef int (*CupsTempFdType)(char* filename, int length);
+typedef int (*CupsAddOptionType)(const char* name, const char* value,
+                                 int num_options, cups_option_t** options);
+>>>>>>> upstream-releases
 
 struct PRLibrary;
 
@@ -69,8 +124,16 @@ class nsCUPSShim {
   CupsPrintFileType mCupsPrintFile;
   CupsTempFdType mCupsTempFd;
 
+<<<<<<< HEAD
  private:
   PRLibrary *mCupsLib;
+||||||| merged common ancestors
+    private:
+        PRLibrary *mCupsLib;
+=======
+ private:
+  PRLibrary* mCupsLib;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsCUPSShim_h___ */

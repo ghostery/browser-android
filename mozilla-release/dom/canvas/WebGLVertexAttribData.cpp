@@ -63,6 +63,7 @@ static webgl::AttribBaseType AttribPointerBaseType(bool integerFunc,
   }
 }
 
+<<<<<<< HEAD
 void WebGLVertexAttribData::VertexAttribPointer(bool integerFunc,
                                                 WebGLBuffer* buf, uint8_t size,
                                                 GLenum type, bool normalized,
@@ -78,8 +79,42 @@ void WebGLVertexAttribData::VertexAttribPointer(bool integerFunc,
   mStride = stride;
   mExplicitStride = (mStride ? mStride : mBytesPerVertex);
   mByteOffset = byteOffset;
+||||||| merged common ancestors
+void
+WebGLVertexAttribData::VertexAttribPointer(bool integerFunc, WebGLBuffer* buf,
+                                           uint8_t size, GLenum type, bool normalized,
+                                           uint32_t stride, uint64_t byteOffset)
+{
+    mIntegerFunc = integerFunc;
+    WebGLBuffer::SetSlot(0, buf, &mBuf);
+    mType = type;
+    mBaseType = AttribPointerBaseType(integerFunc, type);
+    mSize = size;
+    mBytesPerVertex = CalcBytesPerVertex(mType, mSize);
+    mNormalized = normalized;
+    mStride = stride;
+    mExplicitStride = (mStride ? mStride : mBytesPerVertex);
+    mByteOffset = byteOffset;
+=======
+void WebGLVertexAttribData::VertexAttribPointer(bool integerFunc,
+                                                WebGLBuffer* buf, uint8_t size,
+                                                GLenum type, bool normalized,
+                                                uint32_t stride,
+                                                uint64_t byteOffset) {
+  mIntegerFunc = integerFunc;
+  mBuf = buf;
+  mType = type;
+  mBaseType = AttribPointerBaseType(integerFunc, type);
+  mSize = size;
+  mBytesPerVertex = CalcBytesPerVertex(mType, mSize);
+  mNormalized = normalized;
+  mStride = stride;
+  mExplicitStride = (mStride ? mStride : mBytesPerVertex);
+  mByteOffset = byteOffset;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void WebGLVertexAttribData::DoVertexAttribPointer(gl::GLContext* gl,
                                                   GLuint index) const {
   if (mIntegerFunc) {
@@ -89,6 +124,29 @@ void WebGLVertexAttribData::DoVertexAttribPointer(gl::GLContext* gl,
     gl->fVertexAttribPointer(index, mSize, mType, mNormalized, mStride,
                              (const void*)mByteOffset);
   }
+||||||| merged common ancestors
+void
+WebGLVertexAttribData::DoVertexAttribPointer(gl::GLContext* gl, GLuint index) const
+{
+    if (mIntegerFunc) {
+        gl->fVertexAttribIPointer(index, mSize, mType, mStride,
+                                  (const void*)mByteOffset);
+    } else {
+        gl->fVertexAttribPointer(index, mSize, mType, mNormalized, mStride,
+                                 (const void*)mByteOffset);
+    }
+=======
+void WebGLVertexAttribData::DoVertexAttribPointer(gl::GLContext* gl,
+                                                  GLuint index) const {
+  const ScopedLazyBind lazyBind(gl, LOCAL_GL_ARRAY_BUFFER, mBuf);
+  if (mIntegerFunc) {
+    gl->fVertexAttribIPointer(index, mSize, mType, mStride,
+                              (const void*)mByteOffset);
+  } else {
+    gl->fVertexAttribPointer(index, mSize, mType, mNormalized, mStride,
+                             (const void*)mByteOffset);
+  }
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

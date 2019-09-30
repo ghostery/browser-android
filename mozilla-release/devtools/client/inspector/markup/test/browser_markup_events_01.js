@@ -19,6 +19,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "load",
         filename: TEST_URL,
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM0",
@@ -28,6 +29,22 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM0"
+        ],
+        handler: "function onload(event) {\n" +
+                 "  init();\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM0"],
+        handler: "function onload(event) {\n" + "  init();\n" + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#container",
@@ -35,6 +52,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "mouseover",
         filename: TEST_URL + ":45",
+<<<<<<< HEAD
         attributes: [
           "Capturing",
           "DOM2",
@@ -47,6 +65,31 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Capturing",
+          "DOM2"
+        ],
+        handler: "function mouseoverHandler(event) {\n" +
+                 "  if (event.target.id !== \"container\") {\n" +
+                 "    let output = document.getElementById(\"output\");\n" +
+                 "    output.textContent = event.target.textContent;\n" +
+                 "  }\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Capturing", "DOM2"],
+        handler:
+          "function mouseoverHandler(event) {\n" +
+          '  if (event.target.id !== "container") {\n' +
+          '    let output = document.getElementById("output");\n' +
+          "    output.textContent = event.target.textContent;\n" +
+          "  }\n" +
+          "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#multiple",
@@ -54,6 +97,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":52",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -62,10 +106,28 @@ const TEST_DATA = [ // eslint-disable-line
                  "  let output = document.getElementById(\"output\");\n" +
                  "  output.textContent = \"click\";\n" +
                  "}",
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function clickHandler(event) {\n" +
+                 "  let output = document.getElementById(\"output\");\n" +
+                 "  output.textContent = \"click\";\n" +
+                 "}"
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "function clickHandler(event) {\n" +
+          '  let output = document.getElementById("output");\n' +
+          '  output.textContent = "click";\n' +
+          "}",
+>>>>>>> upstream-releases
       },
       {
         type: "mouseup",
         filename: TEST_URL + ":57",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -76,6 +138,27 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function mouseupHandler(event) {\n" +
+                 "  let output = document.getElementById(\"output\");\n" +
+                 "  output.textContent = \"mouseup\";\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "function mouseupHandler(event) {\n" +
+          '  let output = document.getElementById("output");\n' +
+          '  output.textContent = "mouseup";\n' +
+          "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   // #noevents tests check that dynamically added events are properly displayed
   // in the markupview
@@ -94,6 +177,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":72",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -103,13 +187,33 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function noeventsClickHandler(event) {\n" +
+                 "  alert(\"noevents has an event listener\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "function noeventsClickHandler(event) {\n" +
+          '  alert("noevents has an event listener");\n' +
+          "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#noevents",
     beforeTest: async function(inspector, testActor) {
       const nodeMutated = inspector.once("markupmutation");
       await testActor.eval(
-        "window.wrappedJSObject.removeNoeventsClickHandler();");
+        "window.wrappedJSObject.removeNoeventsClickHandler();"
+      );
       await nodeMutated;
     },
     expected: [],
@@ -120,6 +224,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL,
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM0",
@@ -129,6 +234,22 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM0"
+        ],
+        handler: "function onclick(event) {\n" +
+                 "  alert('DOM0')\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM0"],
+        handler: "function onclick(event) {\n" + "  alert('DOM0')\n" + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#handleevent",
@@ -136,6 +257,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":67",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -146,6 +268,24 @@ const TEST_DATA = [ // eslint-disable-line
       },
     ],
   },
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function(blah) {\n" +
+                 "  alert(\"handleEvent\");\n" +
+                 "}"
+      }
+    ]
+  }
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler: "function(blah) {\n" + '  alert("handleEvent");\n' + "}",
+      },
+    ],
+  },
+>>>>>>> upstream-releases
 ];
 
 add_task(async function() {

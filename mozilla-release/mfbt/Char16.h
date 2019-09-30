@@ -17,6 +17,7 @@
  * is a 16-bit code unit of a Unicode code point, not a "character".
  */
 
+<<<<<<< HEAD
 #ifdef WIN32
 #define MOZ_USE_CHAR16_WRAPPER
 #include <cstdint>
@@ -34,6 +35,44 @@
  */
 class char16ptr_t {
  private:
+||||||| merged common ancestors
+#ifdef WIN32
+# define MOZ_USE_CHAR16_WRAPPER
+# include <cstdint>
+# include "mozilla/Attributes.h"
+  /**
+   * Win32 API extensively uses wchar_t, which is represented by a separated
+   * builtin type than char16_t per spec. It's not the case for MSVC prior to
+   * MSVC 2015, but other compilers follow the spec. We want to mix wchar_t and
+   * char16_t on Windows builds. This class is supposed to make it easier. It
+   * stores char16_t const pointer, but provides implicit casts for wchar_t as
+   * well. On other platforms, we simply use
+   * |typedef const char16_t* char16ptr_t|. Here, we want to make the class as
+   * similar to this typedef, including providing some casts that are allowed
+   * by the typedef.
+   */
+class char16ptr_t
+{
+private:
+=======
+#  ifdef WIN32
+#    define MOZ_USE_CHAR16_WRAPPER
+#    include <cstdint>
+#    include "mozilla/Attributes.h"
+/**
+ * Win32 API extensively uses wchar_t, which is represented by a separated
+ * builtin type than char16_t per spec. It's not the case for MSVC prior to
+ * MSVC 2015, but other compilers follow the spec. We want to mix wchar_t and
+ * char16_t on Windows builds. This class is supposed to make it easier. It
+ * stores char16_t const pointer, but provides implicit casts for wchar_t as
+ * well. On other platforms, we simply use
+ * |typedef const char16_t* char16ptr_t|. Here, we want to make the class as
+ * similar to this typedef, including providing some casts that are allowed
+ * by the typedef.
+ */
+class char16ptr_t {
+ private:
+>>>>>>> upstream-releases
   const char16_t* mPtr;
   static_assert(sizeof(char16_t) == sizeof(wchar_t),
                 "char16_t and wchar_t sizes differ");
@@ -131,11 +170,11 @@ inline decltype((char*)0 - (char*)0) operator-(const char16_t* aX,
   return aX - static_cast<const char16_t*>(aY);
 }
 
-#else
+#  else
 
 typedef const char16_t* char16ptr_t;
 
-#endif
+#  endif
 
 static_assert(sizeof(char16_t) == 2, "Is char16_t type 16 bits?");
 static_assert(char16_t(-1) > char16_t(0), "Is char16_t type unsigned?");

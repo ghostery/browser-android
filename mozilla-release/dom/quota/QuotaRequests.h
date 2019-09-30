@@ -100,7 +100,16 @@ class Request final : public RequestBase, public nsIQuotaRequest {
 
   explicit Request(nsIPrincipal* aPrincipal);
 
+<<<<<<< HEAD
   void SetResult(nsIVariant* aResult);
+||||||| merged common ancestors
+  void
+  SetResult(nsIVariant* aResult);
+=======
+  explicit Request(nsIQuotaCallback* aCallback);
+
+  void SetResult(nsIVariant* aResult);
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_FORWARD_NSIQUOTAREQUESTBASE(RequestBase::)

@@ -64,6 +64,7 @@ bool RelationalExpr::compareResults(txIEvalContext* aContext,
     }
 
     return false;
+<<<<<<< HEAD
   }
 
   // Neither is a NodeSet
@@ -126,6 +127,73 @@ bool RelationalExpr::compareResults(txIEvalContext* aContext,
   }
 
   return false;
+||||||| merged common ancestors
+=======
+  }
+
+  // Neither is a NodeSet
+  if (mOp == EQUAL || mOp == NOT_EQUAL) {
+    bool result;
+    const nsString *lString, *rString;
+
+    // If either is a bool, compare as bools.
+    if (ltype == txAExprResult::BOOLEAN || rtype == txAExprResult::BOOLEAN) {
+      result = aLeft->booleanValue() == aRight->booleanValue();
+    }
+
+    // If either is a number, compare as numbers.
+    else if (ltype == txAExprResult::NUMBER || rtype == txAExprResult::NUMBER) {
+      double lval = aLeft->numberValue();
+      double rval = aRight->numberValue();
+      result = (lval == rval);
+    }
+
+    // Otherwise compare as strings. Try to use the stringobject in
+    // StringResult if possible since that is a common case.
+    else if ((lString = aLeft->stringValuePointer())) {
+      if ((rString = aRight->stringValuePointer())) {
+        result = lString->Equals(*rString);
+      } else {
+        nsAutoString rStr;
+        aRight->stringValue(rStr);
+        result = lString->Equals(rStr);
+      }
+    } else if ((rString = aRight->stringValuePointer())) {
+      nsAutoString lStr;
+      aLeft->stringValue(lStr);
+      result = rString->Equals(lStr);
+    } else {
+      nsAutoString lStr, rStr;
+      aLeft->stringValue(lStr);
+      aRight->stringValue(rStr);
+      result = lStr.Equals(rStr);
+    }
+
+    return mOp == EQUAL ? result : !result;
+  }
+
+  double leftDbl = aLeft->numberValue();
+  double rightDbl = aRight->numberValue();
+  switch (mOp) {
+    case LESS_THAN: {
+      return (leftDbl < rightDbl);
+    }
+    case LESS_OR_EQUAL: {
+      return (leftDbl <= rightDbl);
+    }
+    case GREATER_THAN: {
+      return (leftDbl > rightDbl);
+    }
+    case GREATER_OR_EQUAL: {
+      return (leftDbl >= rightDbl);
+    }
+    default: {
+      MOZ_ASSERT_UNREACHABLE("We should have caught all cases");
+    }
+  }
+
+  return false;
+>>>>>>> upstream-releases
 }
 
 nsresult RelationalExpr::evaluate(txIEvalContext* aContext,

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
 use api::{ColorF, BorderStyle, DeviceIntPoint, DeviceIntRect, DeviceIntSize, DevicePixelScale};
 use api::{DocumentLayer, FilterOp, ImageFormat};
 use api::{MixBlendMode, PipelineId, DeviceRect, LayoutSize};
@@ -9,14 +10,48 @@ use batch::{AlphaBatchBuilder, AlphaBatchContainer, ClipBatcher, resolve_image};
 use clip::ClipStore;
 use clip_scroll_tree::{ClipScrollTree};
 use device::{Texture};
+||||||| merged common ancestors
+use api::{ColorF, BorderStyle, DeviceIntPoint, DeviceIntRect, DeviceIntSize, DevicePixelScale};
+use api::{DeviceUintPoint, DeviceUintRect, DeviceUintSize, DocumentLayer, FilterOp, ImageFormat};
+use api::{MixBlendMode, PipelineId, DeviceRect, LayoutSize};
+use batch::{AlphaBatchBuilder, AlphaBatchContainer, ClipBatcher, resolve_image};
+use clip::ClipStore;
+use clip_scroll_tree::{ClipScrollTree};
+use device::{FrameId, Texture};
+=======
+use api::{ColorF, BorderStyle, MixBlendMode, PipelineId, PremultipliedColorF};
+use api::{DocumentLayer, FilterData, ImageFormat, LineOrientation};
+use api::units::*;
+#[cfg(feature = "pathfinder")]
+use api::FontRenderMode;
+use crate::batch::{AlphaBatchBuilder, AlphaBatchContainer, ClipBatcher, resolve_image, BatchBuilder};
+use crate::clip::ClipStore;
+use crate::clip_scroll_tree::{ClipScrollTree, ROOT_SPATIAL_NODE_INDEX};
+use crate::debug_render::DebugItem;
+use crate::device::{Texture};
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 #[cfg(feature = "pathfinder")]
 use euclid::{TypedPoint2D, TypedVector2D};
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
 use gpu_cache::{GpuCache};
 use gpu_types::{BorderInstance, BlurDirection, BlurInstance, PrimitiveHeaders, ScalingInstance};
 use gpu_types::{TransformData, TransformPalette, ZBufferIdGenerator};
 use internal_types::{CacheTextureId, FastHashMap, SavedTargetIndex, TextureSource};
+||||||| merged common ancestors
+use gpu_cache::{GpuCache};
+use gpu_types::{BorderInstance, BlurDirection, BlurInstance, PrimitiveHeaders, ScalingInstance};
+use gpu_types::{TransformData, TransformPalette};
+use internal_types::{CacheTextureId, FastHashMap, SavedTargetIndex, TextureSource};
+=======
+use crate::frame_builder::FrameGlobalResources;
+use crate::gpu_cache::{GpuCache};
+use crate::gpu_types::{BorderInstance, BlurDirection, BlurInstance, PrimitiveHeaders, ScalingInstance};
+use crate::gpu_types::{TransformData, TransformPalette, ZBufferIdGenerator};
+use crate::internal_types::{CacheTextureId, FastHashMap, SavedTargetIndex, TextureSource, Filter};
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 #[cfg(feature = "pathfinder")]
 use pathfinder_partitioner::mesh::Mesh;
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
 use picture::SurfaceInfo;
 use prim_store::{PrimitiveStore, DeferredResolve, PrimitiveScratchBuffer};
 use profiler::FrameProfileCounters;
@@ -24,10 +59,36 @@ use render_backend::{FrameId, FrameResources};
 use render_task::{BlitSource, RenderTaskAddress, RenderTaskId, RenderTaskKind, TileBlit};
 use render_task::{BlurTask, ClearMode, GlyphTask, RenderTaskLocation, RenderTaskTree, ScalingTask};
 use resource_cache::ResourceCache;
+||||||| merged common ancestors
+use prim_store::{PrimitiveStore, DeferredResolve};
+use profiler::FrameProfileCounters;
+use render_backend::FrameResources;
+use render_task::{BlitSource, RenderTaskAddress, RenderTaskId, RenderTaskKind};
+use render_task::{BlurTask, ClearMode, GlyphTask, RenderTaskLocation, RenderTaskTree, ScalingTask};
+use resource_cache::ResourceCache;
+=======
+use crate::picture::{RecordedDirtyRegion, SurfaceInfo};
+use crate::prim_store::gradient::GRADIENT_FP_STOPS;
+use crate::prim_store::{PrimitiveStore, DeferredResolve, PrimitiveScratchBuffer, PrimitiveVisibilityMask};
+use crate::profiler::FrameProfileCounters;
+use crate::render_backend::{DataStores, FrameId};
+use crate::render_task::{BlitSource, RenderTaskAddress, RenderTaskId, RenderTaskKind};
+use crate::render_task::{BlurTask, ClearMode, GlyphTask, RenderTaskLocation, RenderTaskGraph, ScalingTask};
+use crate::resource_cache::ResourceCache;
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 use std::{cmp, usize, f32, i32, mem};
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
 use texture_allocator::{ArrayAllocationTracker, FreeRectSlice};
 #[cfg(feature = "pathfinder")]
 use webrender_api::{DevicePixel, FontRenderMode};
+||||||| merged common ancestors
+use texture_allocator::GuillotineAllocator;
+#[cfg(feature = "pathfinder")]
+use webrender_api::{DevicePixel, FontRenderMode};
+=======
+use crate::texture_allocator::{ArrayAllocationTracker, FreeRectSlice};
+
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 
 const STYLE_SOLID: i32 = ((BorderStyle::Solid as i32) << 8) | ((BorderStyle::Solid as i32) << 16);
 const STYLE_MASK: i32 = 0x00FF_FF00;
@@ -48,14 +109,67 @@ const TEXTURE_DIMENSION_MASK: i32 = 0xFF;
 pub struct RenderTargetIndex(pub usize);
 
 pub struct RenderTargetContext<'a, 'rc> {
-    pub device_pixel_scale: DevicePixelScale,
+    pub global_device_pixel_scale: DevicePixelScale,
     pub prim_store: &'a PrimitiveStore,
     pub resource_cache: &'rc mut ResourceCache,
     pub use_dual_source_blending: bool,
+    pub use_advanced_blending: bool,
+    pub break_advanced_blend_batches: bool,
+    pub batch_lookback_count: usize,
     pub clip_scroll_tree: &'a ClipScrollTree,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub resources: &'a FrameResources,
     pub surfaces: &'a [SurfaceInfo],
     pub scratch: &'a PrimitiveScratchBuffer,
+||||||| merged common ancestors
+    pub resources: &'a FrameResources,
+}
+
+#[cfg_attr(feature = "capture", derive(Serialize))]
+#[cfg_attr(feature = "replay", derive(Deserialize))]
+struct TextureAllocator {
+    // TODO(gw): Replace this with a simpler allocator for
+    // render target allocation - this use case doesn't need
+    // to deal with coalescing etc that the general texture
+    // cache allocator requires.
+    allocator: GuillotineAllocator,
+
+    // Track the used rect of the render target, so that
+    // we can set a scissor rect and only clear to the
+    // used portion of the target as an optimization.
+    used_rect: DeviceIntRect,
+}
+
+impl TextureAllocator {
+    fn new(size: DeviceUintSize) -> Self {
+        TextureAllocator {
+            allocator: GuillotineAllocator::new(size),
+            used_rect: DeviceIntRect::zero(),
+        }
+    }
+
+    fn allocate(&mut self, size: &DeviceUintSize) -> Option<DeviceUintPoint> {
+        let origin = self.allocator.allocate(size);
+
+        if let Some(origin) = origin {
+            // TODO(gw): We need to make all the device rects
+            //           be consistent in the use of the
+            //           DeviceIntRect and DeviceUintRect types!
+            let origin = DeviceIntPoint::new(origin.x as i32, origin.y as i32);
+            let size = DeviceIntSize::new(size.width as i32, size.height as i32);
+            let rect = DeviceIntRect::new(origin, size);
+            self.used_rect = rect.union(&self.used_rect);
+        }
+
+        origin
+    }
+=======
+    pub data_stores: &'a DataStores,
+    pub surfaces: &'a [SurfaceInfo],
+    pub scratch: &'a PrimitiveScratchBuffer,
+    pub screen_world_rect: WorldRect,
+    pub globals: &'a FrameGlobalResources,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 }
 
 /// Represents a number of rendering operations on a surface.
@@ -73,15 +187,36 @@ pub struct RenderTargetContext<'a, 'rc> {
 /// and sometimes on its parameters. See `RenderTask::target_kind`.
 pub trait RenderTarget {
     /// Creates a new RenderTarget of the given type.
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     fn new(screen_size: DeviceIntSize) -> Self;
 
+||||||| merged common ancestors
+    fn new(
+        size: Option<DeviceUintSize>,
+        screen_size: DeviceIntSize,
+    ) -> Self;
+
+    /// Allocates a region of the given size in this target, and returns either
+    /// the offset of that region or `None` if it won't fit.
+    ///
+    /// If a non-`None` result is returned, that value is generally stored in
+    /// a task which is then added to this target via `add_task()`.
+    fn allocate(&mut self, size: DeviceUintSize) -> Option<DeviceUintPoint>;
+
+=======
+    fn new(
+        screen_size: DeviceIntSize,
+        gpu_supports_fast_clears: bool,
+    ) -> Self;
+
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
     /// Optional hook to provide additional processing for the target at the
     /// end of the build phase.
     fn build(
         &mut self,
         _ctx: &mut RenderTargetContext,
         _gpu_cache: &mut GpuCache,
-        _render_tasks: &mut RenderTaskTree,
+        _render_tasks: &mut RenderTaskGraph,
         _deferred_resolves: &mut Vec<DeferredResolve>,
         _prim_headers: &mut PrimitiveHeaders,
         _transforms: &mut TransformPalette,
@@ -103,7 +238,7 @@ pub trait RenderTarget {
         task_id: RenderTaskId,
         ctx: &RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &RenderTaskTree,
+        render_tasks: &RenderTaskGraph,
         clip_store: &ClipStore,
         transforms: &mut TransformPalette,
         deferred_resolves: &mut Vec<DeferredResolve>,
@@ -164,13 +299,20 @@ pub struct RenderTargetList<T> {
     pub max_dynamic_size: DeviceIntSize,
     pub targets: Vec<T>,
     pub saved_index: Option<SavedTargetIndex>,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub alloc_tracker: ArrayAllocationTracker,
+||||||| merged common ancestors
+=======
+    pub alloc_tracker: ArrayAllocationTracker,
+    gpu_supports_fast_clears: bool,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 }
 
 impl<T: RenderTarget> RenderTargetList<T> {
     fn new(
         screen_size: DeviceIntSize,
         format: ImageFormat,
+        gpu_supports_fast_clears: bool,
     ) -> Self {
         RenderTargetList {
             screen_size,
@@ -178,7 +320,13 @@ impl<T: RenderTarget> RenderTargetList<T> {
             max_dynamic_size: DeviceIntSize::new(0, 0),
             targets: Vec::new(),
             saved_index: None,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
             alloc_tracker: ArrayAllocationTracker::new(),
+||||||| merged common ancestors
+=======
+            alloc_tracker: ArrayAllocationTracker::new(),
+            gpu_supports_fast_clears,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
         }
     }
 
@@ -186,7 +334,7 @@ impl<T: RenderTarget> RenderTargetList<T> {
         &mut self,
         ctx: &mut RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &mut RenderTaskTree,
+        render_tasks: &mut RenderTaskGraph,
         deferred_resolves: &mut Vec<DeferredResolve>,
         saved_index: Option<SavedTargetIndex>,
         prim_headers: &mut PrimitiveHeaders,
@@ -216,6 +364,7 @@ impl<T: RenderTarget> RenderTargetList<T> {
         let (free_rect_slice, origin) = match self.alloc_tracker.allocate(&alloc_size) {
             Some(allocation) => allocation,
             None => {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                 // Have the allocator restrict slice sizes to our max ideal
                 // dimensions, unless we've already gone bigger on a previous
                 // slice.
@@ -240,13 +389,61 @@ impl<T: RenderTarget> RenderTargetList<T> {
                 );
 
                 (slice, DeviceIntPoint::zero())
+||||||| merged common ancestors
+                let mut new_target = T::new(Some(self.max_size), self.screen_size);
+                let origin = new_target.allocate(alloc_size).expect(&format!(
+                    "Each render task must allocate <= size of one target! ({})",
+                    alloc_size
+                ));
+                self.targets.push(new_target);
+                origin
+=======
+                // Have the allocator restrict slice sizes to our max ideal
+                // dimensions, unless we've already gone bigger on a previous
+                // slice.
+                let rounded_dimensions = DeviceIntSize::new(
+                    (self.max_dynamic_size.width + TEXTURE_DIMENSION_MASK) & !TEXTURE_DIMENSION_MASK,
+                    (self.max_dynamic_size.height + TEXTURE_DIMENSION_MASK) & !TEXTURE_DIMENSION_MASK,
+                );
+                let allocator_dimensions = DeviceIntSize::new(
+                    cmp::max(IDEAL_MAX_TEXTURE_DIMENSION, rounded_dimensions.width),
+                    cmp::max(IDEAL_MAX_TEXTURE_DIMENSION, rounded_dimensions.height),
+                );
+
+                assert!(alloc_size.width <= allocator_dimensions.width &&
+                    alloc_size.height <= allocator_dimensions.height);
+                let slice = FreeRectSlice(self.targets.len() as u32);
+                self.targets.push(T::new(self.screen_size, self.gpu_supports_fast_clears));
+
+                self.alloc_tracker.extend(
+                    slice,
+                    allocator_dimensions,
+                    alloc_size,
+                );
+
+                (slice, DeviceIntPoint::zero())
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
             }
         };
+
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
+        self.targets[free_rect_slice.0 as usize]
+            .add_used(DeviceIntRect::new(origin, alloc_size));
+
+        (RenderTargetIndex(free_rect_slice.0 as usize), origin)
+||||||| merged common ancestors
+        (origin, RenderTargetIndex(self.targets.len() - 1))
+=======
+        if alloc_size.is_empty_or_negative() && self.targets.is_empty() {
+            // push an unused target here, only if we don't have any
+            self.targets.push(T::new(self.screen_size, self.gpu_supports_fast_clears));
+        }
 
         self.targets[free_rect_slice.0 as usize]
             .add_used(DeviceIntRect::new(origin, alloc_size));
 
         (RenderTargetIndex(free_rect_slice.0 as usize), origin)
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
     }
 
     pub fn needs_depth(&self) -> bool {
@@ -300,6 +497,17 @@ pub struct LineDecorationJob {
     pub orientation: i32,
 }
 
+#[cfg_attr(feature = "capture", derive(Serialize))]
+#[cfg_attr(feature = "replay", derive(Deserialize))]
+#[repr(C)]
+pub struct GradientJob {
+    pub task_rect: DeviceRect,
+    pub stops: [f32; GRADIENT_FP_STOPS],
+    pub colors: [PremultipliedColorF; GRADIENT_FP_STOPS],
+    pub axis_select: f32,
+    pub start_stop: [f32; 2],
+}
+
 #[cfg(feature = "pathfinder")]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
@@ -333,8 +541,13 @@ pub struct ColorRenderTarget {
     pub blits: Vec<BlitJob>,
     // List of frame buffer outputs for this render target.
     pub outputs: Vec<FrameOutput>,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub tile_blits: Vec<TileBlit>,
     pub color_clears: Vec<RenderTaskId>,
+||||||| merged common ancestors
+    allocator: Option<TextureAllocator>,
+=======
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
     alpha_tasks: Vec<RenderTaskId>,
     screen_size: DeviceIntSize,
     // Track the used rect of the render target, so that
@@ -344,7 +557,26 @@ pub struct ColorRenderTarget {
 }
 
 impl RenderTarget for ColorRenderTarget {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     fn new(screen_size: DeviceIntSize) -> Self {
+||||||| merged common ancestors
+    fn allocate(&mut self, size: DeviceUintSize) -> Option<DeviceUintPoint> {
+        self.allocator
+            .as_mut()
+            .expect("bug: calling allocate on framebuffer")
+            .allocate(&size)
+    }
+
+    fn new(
+        size: Option<DeviceUintSize>,
+        screen_size: DeviceIntSize,
+    ) -> Self {
+=======
+    fn new(
+        screen_size: DeviceIntSize,
+        _: bool,
+    ) -> Self {
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
         ColorRenderTarget {
             alpha_batch_containers: Vec::new(),
             vertical_blurs: Vec::new(),
@@ -365,7 +597,7 @@ impl RenderTarget for ColorRenderTarget {
         &mut self,
         ctx: &mut RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &mut RenderTaskTree,
+        render_tasks: &mut RenderTaskGraph,
         deferred_resolves: &mut Vec<DeferredResolve>,
         prim_headers: &mut PrimitiveHeaders,
         transforms: &mut TransformPalette,
@@ -376,6 +608,7 @@ impl RenderTarget for ColorRenderTarget {
         for task_id in &self.alpha_tasks {
             let task = &render_tasks[*task_id];
 
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
             match task.clear_mode {
                 ClearMode::One |
                 ClearMode::Zero => {
@@ -387,31 +620,80 @@ impl RenderTarget for ColorRenderTarget {
                 }
             }
 
+||||||| merged common ancestors
+=======
+            match task.clear_mode {
+                ClearMode::One |
+                ClearMode::Zero => {
+                    panic!("bug: invalid clear mode for color task");
+                }
+                ClearMode::DontCare |
+                ClearMode::Transparent => {}
+            }
+
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
             match task.kind {
                 RenderTaskKind::Picture(ref pic_task) => {
                     let pic = &ctx.prim_store.pictures[pic_task.pic_index.0];
 
+                    let raster_spatial_node_index = match pic.raster_config {
+                        Some(ref raster_config) => {
+                            let surface = &ctx.surfaces[raster_config.surface_index.0];
+                            surface.raster_spatial_node_index
+                        }
+                        None => {
+                            // This must be the main framebuffer
+                            ROOT_SPATIAL_NODE_INDEX
+                        }
+                    };
+
                     let (target_rect, _) = task.get_target_rect();
 
-                    let mut batch_builder = AlphaBatchBuilder::new(
+                    let scissor_rect = if pic_task.can_merge {
+                        None
+                    } else {
+                        Some(target_rect)
+                    };
+
+                    // TODO(gw): The type names of AlphaBatchBuilder and BatchBuilder
+                    //           are still confusing. Once more of the picture caching
+                    //           improvement code lands, the AlphaBatchBuilder and
+                    //           AlphaBatchList types will be collapsed into one, which
+                    //           should simplify coming up with better type names.
+                    let alpha_batch_builder = AlphaBatchBuilder::new(
                         self.screen_size,
-                        target_rect,
-                        pic_task.can_merge,
+                        ctx.break_advanced_blend_batches,
+                        ctx.batch_lookback_count,
+                        *task_id,
+                        render_tasks.get_task_address(*task_id),
+                        PrimitiveVisibilityMask::all(),
+                    );
+
+                    let mut batch_builder = BatchBuilder::new(
+                        vec![alpha_batch_builder],
                     );
 
                     batch_builder.add_pic_to_batch(
                         pic,
-                        *task_id,
                         ctx,
                         gpu_cache,
                         render_tasks,
                         deferred_resolves,
                         prim_headers,
                         transforms,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                         pic_task.root_spatial_node_index,
                         z_generator,
+||||||| merged common ancestors
+                        pic_task.root_spatial_node_index,
+=======
+                        raster_spatial_node_index,
+                        pic_task.surface_spatial_node_index,
+                        z_generator,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                     );
 
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                     for blit in &pic_task.blits {
                         self.tile_blits.push(TileBlit {
                             target: blit.target.clone(),
@@ -424,6 +706,20 @@ impl RenderTarget for ColorRenderTarget {
 
                     if let Some(batch_container) = batch_builder.build(&mut merged_batches) {
                         self.alpha_batch_containers.push(batch_container);
+||||||| merged common ancestors
+                    if let Some(batch_container) = batch_builder.build(&mut merged_batches) {
+                        self.alpha_batch_containers.push(batch_container);
+=======
+                    let alpha_batch_builders = batch_builder.finalize();
+
+                    for batcher in alpha_batch_builders {
+                        batcher.build(
+                            &mut self.alpha_batch_containers,
+                            &mut merged_batches,
+                            target_rect,
+                            scissor_rect,
+                        );
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                     }
                 }
                 _ => {
@@ -432,7 +728,9 @@ impl RenderTarget for ColorRenderTarget {
             }
         }
 
-        self.alpha_batch_containers.push(merged_batches);
+        if !merged_batches.is_empty() {
+            self.alpha_batch_containers.push(merged_batches);
+        }
     }
 
     fn add_task(
@@ -440,7 +738,7 @@ impl RenderTarget for ColorRenderTarget {
         task_id: RenderTaskId,
         ctx: &RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &RenderTaskTree,
+        render_tasks: &RenderTaskGraph,
         _: &ClipStore,
         _: &mut TransformPalette,
         deferred_resolves: &mut Vec<DeferredResolve>,
@@ -480,6 +778,7 @@ impl RenderTarget for ColorRenderTarget {
             RenderTaskKind::ClipRegion(..) |
             RenderTaskKind::Border(..) |
             RenderTaskKind::CacheMask(..) |
+            RenderTaskKind::Gradient(..) |
             RenderTaskKind::LineDecoration(..) => {
                 panic!("Should not be added to color target!");
             }
@@ -531,11 +830,17 @@ impl RenderTarget for ColorRenderTarget {
                             target_rect: target_rect.inner_rect(task_info.padding)
                         });
                     }
-                    BlitSource::RenderTask { .. } => {
-                        panic!("BUG: render task blit jobs to render tasks not supported");
+                    BlitSource::RenderTask { task_id } => {
+                        let (target_rect, _) = task.get_target_rect();
+                        self.blits.push(BlitJob {
+                            source: BlitJobSource::RenderTask(task_id),
+                            target_rect: target_rect.inner_rect(task_info.padding)
+                        });
                     }
                 }
             }
+            #[cfg(test)]
+            RenderTaskKind::Test(..) => {}
         }
     }
 
@@ -567,21 +872,54 @@ pub struct AlphaRenderTarget {
     pub horizontal_blurs: Vec<BlurInstance>,
     pub scalings: Vec<ScalingInstance>,
     pub zero_clears: Vec<RenderTaskId>,
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     // Track the used rect of the render target, so that
     // we can set a scissor rect and only clear to the
     // used portion of the target as an optimization.
     pub used_rect: DeviceIntRect,
+||||||| merged common ancestors
+    allocator: TextureAllocator,
+=======
+    pub one_clears: Vec<RenderTaskId>,
+    // Track the used rect of the render target, so that
+    // we can set a scissor rect and only clear to the
+    // used portion of the target as an optimization.
+    pub used_rect: DeviceIntRect,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
 }
 
 impl RenderTarget for AlphaRenderTarget {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     fn new(_screen_size: DeviceIntSize) -> Self {
+||||||| merged common ancestors
+    fn allocate(&mut self, size: DeviceUintSize) -> Option<DeviceUintPoint> {
+        self.allocator.allocate(&size)
+    }
+
+    fn new(
+        size: Option<DeviceUintSize>,
+        _: DeviceIntSize,
+    ) -> Self {
+=======
+    fn new(
+        _: DeviceIntSize,
+        gpu_supports_fast_clears: bool,
+    ) -> Self {
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
         AlphaRenderTarget {
-            clip_batcher: ClipBatcher::new(),
+            clip_batcher: ClipBatcher::new(gpu_supports_fast_clears),
             vertical_blurs: Vec::new(),
             horizontal_blurs: Vec::new(),
             scalings: Vec::new(),
             zero_clears: Vec::new(),
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
             used_rect: DeviceIntRect::zero(),
+||||||| merged common ancestors
+            allocator: TextureAllocator::new(size.expect("bug: alpha targets need size")),
+=======
+            one_clears: Vec::new(),
+            used_rect: DeviceIntRect::zero(),
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
         }
     }
 
@@ -590,19 +928,29 @@ impl RenderTarget for AlphaRenderTarget {
         task_id: RenderTaskId,
         ctx: &RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &RenderTaskTree,
+        render_tasks: &RenderTaskGraph,
         clip_store: &ClipStore,
         transforms: &mut TransformPalette,
         _: &mut Vec<DeferredResolve>,
     ) {
         let task = &render_tasks[task_id];
+        let (target_rect, _) = task.get_target_rect();
 
         match task.clear_mode {
             ClearMode::Zero => {
                 self.zero_clears.push(task_id);
             }
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
             ClearMode::One => {}
             ClearMode::Color(..) |
+||||||| merged common ancestors
+            ClearMode::One => {}
+=======
+            ClearMode::One => {
+                self.one_clears.push(task_id);
+            }
+            ClearMode::DontCare => {}
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
             ClearMode::Transparent => {
                 panic!("bug: invalid clear mode for alpha task");
             }
@@ -614,6 +962,7 @@ impl RenderTarget for AlphaRenderTarget {
             RenderTaskKind::Blit(..) |
             RenderTaskKind::Border(..) |
             RenderTaskKind::LineDecoration(..) |
+            RenderTaskKind::Gradient(..) |
             RenderTaskKind::Glyph(..) => {
                 panic!("BUG: should not be added to alpha target!");
             }
@@ -634,9 +983,7 @@ impl RenderTarget for AlphaRenderTarget {
                 );
             }
             RenderTaskKind::CacheMask(ref task_info) => {
-                let task_address = render_tasks.get_task_address(task_id);
                 self.clip_batcher.add(
-                    task_address,
                     task_info.clip_node_range,
                     task_info.root_spatial_node_index,
                     ctx.resource_cache,
@@ -644,15 +991,36 @@ impl RenderTarget for AlphaRenderTarget {
                     clip_store,
                     ctx.clip_scroll_tree,
                     transforms,
-                    &ctx.resources.clip_data_store,
+                    &ctx.data_stores.clip,
+                    task_info.actual_rect,
+                    &ctx.screen_world_rect,
+                    task_info.device_pixel_scale,
+                    task_info.snap_offsets,
+                    target_rect.origin.to_f32(),
+                    task_info.actual_rect.origin.to_f32(),
                 );
             }
-            RenderTaskKind::ClipRegion(ref task) => {
-                let task_address = render_tasks.get_task_address(task_id);
+            RenderTaskKind::ClipRegion(ref region_task) => {
+                let device_rect = DeviceRect::new(
+                    DevicePoint::zero(),
+                    target_rect.size.to_f32(),
+                );
                 self.clip_batcher.add_clip_region(
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                     task_address,
                     task.clip_data_address,
                     task.local_pos,
+||||||| merged common ancestors
+                    task_address,
+                    task.clip_data_address,
+=======
+                    region_task.clip_data_address,
+                    region_task.local_pos,
+                    device_rect,
+                    target_rect.origin.to_f32(),
+                    DevicePoint::zero(),
+                    region_task.device_pixel_scale.0,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                 );
             }
             RenderTaskKind::Scaling(ref info) => {
@@ -662,6 +1030,8 @@ impl RenderTarget for AlphaRenderTarget {
                     render_tasks.get_task_address(task.children[0]),
                 );
             }
+            #[cfg(test)]
+            RenderTaskKind::Test(..) => {}
         }
     }
 
@@ -680,6 +1050,15 @@ impl RenderTarget for AlphaRenderTarget {
 
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
+pub struct PictureCacheTarget {
+    pub texture: TextureSource,
+    pub layer: usize,
+    pub alpha_batch_container: AlphaBatchContainer,
+    pub clear_color: Option<ColorF>,
+}
+
+#[cfg_attr(feature = "capture", derive(Serialize))]
+#[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct TextureCacheRenderTarget {
     pub target_kind: RenderTargetKind,
     pub horizontal_blurs: Vec<BlurInstance>,
@@ -689,6 +1068,7 @@ pub struct TextureCacheRenderTarget {
     pub border_segments_solid: Vec<BorderInstance>,
     pub clears: Vec<DeviceIntRect>,
     pub line_decorations: Vec<LineDecorationJob>,
+    pub gradients: Vec<GradientJob>,
 }
 
 impl TextureCacheRenderTarget {
@@ -702,13 +1082,14 @@ impl TextureCacheRenderTarget {
             border_segments_solid: vec![],
             clears: vec![],
             line_decorations: vec![],
+            gradients: vec![],
         }
     }
 
     fn add_task(
         &mut self,
         task_id: RenderTaskId,
-        render_tasks: &mut RenderTaskTree,
+        render_tasks: &mut RenderTaskGraph,
     ) {
         let task_address = render_tasks.get_task_address(task_id);
         let src_task_address = render_tasks[task_id].children.get(0).map(|src_task_id| {
@@ -774,6 +1155,28 @@ impl TextureCacheRenderTarget {
             RenderTaskKind::Glyph(ref mut task_info) => {
                 self.add_glyph_task(task_info, target_rect.0)
             }
+            RenderTaskKind::Gradient(ref task_info) => {
+                let mut stops = [0.0; 4];
+                let mut colors = [PremultipliedColorF::BLACK; 4];
+
+                let axis_select = match task_info.orientation {
+                    LineOrientation::Horizontal => 0.0,
+                    LineOrientation::Vertical => 1.0,
+                };
+
+                for (stop, (offset, color)) in task_info.stops.iter().zip(stops.iter_mut().zip(colors.iter_mut())) {
+                    *offset = stop.offset;
+                    *color = ColorF::from(stop.color).premultiplied();
+                }
+
+                self.gradients.push(GradientJob {
+                    task_rect: target_rect.0.to_f32(),
+                    axis_select,
+                    stops,
+                    colors,
+                    start_stop: [task_info.start_point, task_info.end_point],
+                });
+            }
             RenderTaskKind::VerticalBlur(..) |
             RenderTaskKind::Picture(..) |
             RenderTaskKind::ClipRegion(..) |
@@ -782,6 +1185,8 @@ impl TextureCacheRenderTarget {
             RenderTaskKind::Scaling(..) => {
                 panic!("BUG: unexpected task kind for texture cache target");
             }
+            #[cfg(test)]
+            RenderTaskKind::Test(..) => {}
         }
     }
 
@@ -789,7 +1194,7 @@ impl TextureCacheRenderTarget {
     fn add_glyph_task(&mut self, task_info: &mut GlyphTask, target_rect: DeviceIntRect) {
         self.glyphs.push(GlyphJob {
             mesh: task_info.mesh.take().unwrap(),
-            target_rect: target_rect,
+            target_rect,
             origin: task_info.origin,
             subpixel_offset: task_info.subpixel_offset,
             render_mode: task_info.render_mode,
@@ -807,12 +1212,15 @@ impl TextureCacheRenderTarget {
 pub enum RenderPassKind {
     /// The final pass to the main frame buffer, where we have a single color
     /// target for display to the user.
-    MainFramebuffer(ColorRenderTarget),
+    MainFramebuffer {
+        main_target: ColorRenderTarget,
+    },
     /// An intermediate pass, where we may have multiple targets.
     OffScreen {
         alpha: RenderTargetList<AlphaRenderTarget>,
         color: RenderTargetList<ColorRenderTarget>,
         texture_cache: FastHashMap<(CacheTextureId, usize), TextureCacheRenderTarget>,
+        picture_cache: Vec<PictureCacheTarget>,
     },
 }
 
@@ -828,30 +1236,59 @@ pub struct RenderPass {
     /// kind of pass.
     pub kind: RenderPassKind,
     /// The set of tasks to be performed in this pass, as indices into the
-    /// `RenderTaskTree`.
-    tasks: Vec<RenderTaskId>,
+    /// `RenderTaskGraph`.
+    pub tasks: Vec<RenderTaskId>,
+    /// Screen size in device pixels - used for opaque alpha batch break threshold.
+    screen_size: DeviceIntSize,
 }
 
 impl RenderPass {
     /// Creates a pass for the main framebuffer. There is only one of these, and
     /// it is always the last pass.
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub fn new_main_framebuffer(screen_size: DeviceIntSize) -> Self {
         let target = ColorRenderTarget::new(screen_size);
+||||||| merged common ancestors
+    pub fn new_main_framebuffer(screen_size: DeviceIntSize) -> Self {
+        let target = ColorRenderTarget::new(None, screen_size);
+=======
+    pub fn new_main_framebuffer(
+        screen_size: DeviceIntSize,
+        gpu_supports_fast_clears: bool,
+    ) -> Self {
+        let main_target = ColorRenderTarget::new(screen_size, gpu_supports_fast_clears);
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
         RenderPass {
-            kind: RenderPassKind::MainFramebuffer(target),
+            kind: RenderPassKind::MainFramebuffer {
+                main_target,
+            },
             tasks: vec![],
+            screen_size,
         }
     }
 
     /// Creates an intermediate off-screen pass.
-    pub fn new_off_screen(screen_size: DeviceIntSize) -> Self {
+    pub fn new_off_screen(
+        screen_size: DeviceIntSize,
+        gpu_supports_fast_clears: bool,
+    ) -> Self {
         RenderPass {
             kind: RenderPassKind::OffScreen {
-                color: RenderTargetList::new(screen_size, ImageFormat::BGRA8),
-                alpha: RenderTargetList::new(screen_size, ImageFormat::R8),
+                color: RenderTargetList::new(
+                    screen_size,
+                    ImageFormat::BGRA8,
+                    gpu_supports_fast_clears,
+                ),
+                alpha: RenderTargetList::new(
+                    screen_size,
+                    ImageFormat::R8,
+                    gpu_supports_fast_clears,
+                ),
                 texture_cache: FastHashMap::default(),
+                picture_cache: Vec::new(),
             },
             tasks: vec![],
+            screen_size,
         }
     }
 
@@ -890,7 +1327,7 @@ impl RenderPass {
         &mut self,
         ctx: &mut RenderTargetContext,
         gpu_cache: &mut GpuCache,
-        render_tasks: &mut RenderTaskTree,
+        render_tasks: &mut RenderTaskGraph,
         deferred_resolves: &mut Vec<DeferredResolve>,
         clip_store: &ClipStore,
         transforms: &mut TransformPalette,
@@ -900,10 +1337,10 @@ impl RenderPass {
         profile_scope!("RenderPass::build");
 
         match self.kind {
-            RenderPassKind::MainFramebuffer(ref mut target) => {
+            RenderPassKind::MainFramebuffer { ref mut main_target, .. } => {
                 for &task_id in &self.tasks {
                     assert_eq!(render_tasks[task_id].target_kind(), RenderTargetKind::Color);
-                    target.add_task(
+                    main_target.add_task(
                         task_id,
                         ctx,
                         gpu_cache,
@@ -913,7 +1350,7 @@ impl RenderPass {
                         deferred_resolves,
                     );
                 }
-                target.build(
+                main_target.build(
                     ctx,
                     gpu_cache,
                     render_tasks,
@@ -923,7 +1360,12 @@ impl RenderPass {
                     z_generator,
                 );
             }
-            RenderPassKind::OffScreen { ref mut color, ref mut alpha, ref mut texture_cache } => {
+            RenderPassKind::OffScreen {
+                ref mut color,
+                ref mut alpha,
+                ref mut texture_cache,
+                ref mut picture_cache,
+            } => {
                 let saved_color = if self.tasks.iter().any(|&task_id| {
                     let t = &render_tasks[task_id];
                     t.target_kind() == RenderTargetKind::Color && t.saved_index.is_some()
@@ -941,6 +1383,11 @@ impl RenderPass {
                     None
                 };
 
+                // Collect a list of picture cache tasks, keyed by picture index.
+                // This allows us to only walk that picture root once, adding the
+                // primitives to all relevant batches at the same time.
+                let mut picture_cache_tasks = FastHashMap::default();
+
                 // Step through each task, adding to batches as appropriate.
                 for &task_id in &self.tasks {
                     let (target_kind, texture_target, layer) = {
@@ -957,12 +1404,50 @@ impl RenderPass {
                                 (None, 0)
                             }
                             RenderTaskLocation::Dynamic(ref mut origin, size) => {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
+                                let (target_index, alloc_origin) =  match target_kind {
+                                    RenderTargetKind::Color => color.allocate(size),
+                                    RenderTargetKind::Alpha => alpha.allocate(size),
+||||||| merged common ancestors
+                                let alloc_size = DeviceUintSize::new(size.width as u32, size.height as u32);
+                                let (alloc_origin, target_index) =  match target_kind {
+                                    RenderTargetKind::Color => color.allocate(alloc_size),
+                                    RenderTargetKind::Alpha => alpha.allocate(alloc_size),
+=======
                                 let (target_index, alloc_origin) =  match target_kind {
                                     RenderTargetKind::Color => color.allocate(size),
                                     RenderTargetKind::Alpha => alpha.allocate(size),
                                 };
                                 *origin = Some((alloc_origin, target_index));
                                 (None, target_index.0)
+                            }
+                            RenderTaskLocation::PictureCache { .. } => {
+                                // For picture cache tiles, just store them in the map
+                                // of picture cache tasks, to be handled below.
+                                let pic_index = match task.kind {
+                                    RenderTaskKind::Picture(ref info) => {
+                                        info.pic_index
+                                    }
+                                    _ => {
+                                        unreachable!();
+                                    }
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
+                                };
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
+                                *origin = Some((alloc_origin, target_index));
+                                (None, target_index.0)
+||||||| merged common ancestors
+                                *origin = Some((alloc_origin.to_i32(), target_index));
+                                None
+=======
+
+                                picture_cache_tasks
+                                    .entry(pic_index)
+                                    .or_insert_with(Vec::new)
+                                    .push(task_id);
+
+                                continue;
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                             }
                         };
 
@@ -985,14 +1470,23 @@ impl RenderPass {
                     match texture_target {
                         Some(texture_target) => {
                             let texture = texture_cache
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                                 .entry((texture_target, layer))
                                 .or_insert(
+||||||| merged common ancestors
+                                .entry(texture_target)
+                                .or_insert(
+=======
+                                .entry((texture_target, layer))
+                                .or_insert_with(||
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                                     TextureCacheRenderTarget::new(target_kind)
                                 );
                             texture.add_task(task_id, render_tasks);
                         }
                         None => {
                             match target_kind {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
                                 RenderTargetKind::Color => color.targets[layer].add_task(
                                     task_id,
                                     ctx,
@@ -1011,6 +1505,159 @@ impl RenderPass {
                                     transforms,
                                     deferred_resolves,
                                 ),
+||||||| merged common ancestors
+                                RenderTargetKind::Color => color.add_task(
+                                    task_id,
+                                    ctx,
+                                    gpu_cache,
+                                    render_tasks,
+                                    clip_store,
+                                    transforms,
+                                    deferred_resolves,
+                                ),
+                                RenderTargetKind::Alpha => alpha.add_task(
+                                    task_id,
+                                    ctx,
+                                    gpu_cache,
+                                    render_tasks,
+                                    clip_store,
+                                    transforms,
+                                    deferred_resolves,
+                                ),
+=======
+                                RenderTargetKind::Color => {
+                                    color.targets[layer].add_task(
+                                        task_id,
+                                        ctx,
+                                        gpu_cache,
+                                        render_tasks,
+                                        clip_store,
+                                        transforms,
+                                        deferred_resolves,
+                                    )
+                                }
+                                RenderTargetKind::Alpha => {
+                                    alpha.targets[layer].add_task(
+                                        task_id,
+                                        ctx,
+                                        gpu_cache,
+                                        render_tasks,
+                                        clip_store,
+                                        transforms,
+                                        deferred_resolves,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // For each picture in this pass that has picture cache tiles, create
+                // a batcher per task, and then build batches for each of the tasks
+                // at the same time.
+                for (pic_index, task_ids) in picture_cache_tasks {
+                    let pic = &ctx.prim_store.pictures[pic_index.0];
+                    let tile_cache = pic.tile_cache.as_ref().expect("bug");
+
+                    // Extract raster/surface spatial nodes for this surface.
+                    let (root_spatial_node_index, surface_spatial_node_index) = match pic.raster_config {
+                        Some(ref rc) => {
+                            let surface = &ctx.surfaces[rc.surface_index.0];
+                            (surface.raster_spatial_node_index, surface.surface_spatial_node_index)
+                        }
+                        None => {
+                            unreachable!();
+                        }
+                    };
+
+                    // Determine the clear color for this picture cache.
+                    // If the entire tile cache is opaque, we can skip clear completely.
+                    // If it's the first layer, clear it to white to allow subpixel AA on that
+                    // first layer even if it's technically transparent.
+                    // Otherwise, clear to transparent and composite with alpha.
+                    // TODO(gw): We can detect per-tile opacity for the clear color here
+                    //           which might be a significant win on some pages?
+                    let forced_opaque = match tile_cache.background_color {
+                        Some(color) => color.a >= 1.0,
+                        None => false,
+                    };
+                    // TODO(gw): Once we have multiple slices enabled, take advantage of
+                    //           option to skip clears if the slice is opaque.
+                    let clear_color = if forced_opaque {
+                        Some(ColorF::WHITE)
+                    } else {
+                        Some(ColorF::TRANSPARENT)
+                    };
+
+                    // Create an alpha batcher for each of the tasks of this picture.
+                    let mut batchers = Vec::new();
+                    for task_id in &task_ids {
+                        let task_id = *task_id;
+                        let vis_mask = match render_tasks[task_id].kind {
+                            RenderTaskKind::Picture(ref info) => info.vis_mask,
+                            _ => unreachable!(),
+                        };
+                        batchers.push(AlphaBatchBuilder::new(
+                            self.screen_size,
+                            ctx.break_advanced_blend_batches,
+                            ctx.batch_lookback_count,
+                            task_id,
+                            render_tasks.get_task_address(task_id),
+                            vis_mask,
+                        ));
+                    }
+
+                    // Run the batch creation code for this picture, adding items to
+                    // all relevant per-task batchers.
+                    let mut batch_builder = BatchBuilder::new(batchers);
+                    batch_builder.add_pic_to_batch(
+                        pic,
+                        ctx,
+                        gpu_cache,
+                        render_tasks,
+                        deferred_resolves,
+                        prim_headers,
+                        transforms,
+                        root_spatial_node_index,
+                        surface_spatial_node_index,
+                        z_generator,
+                    );
+
+                    // Create picture cache targets, one per render task, and assign
+                    // the correct batcher to them.
+                    let batchers = batch_builder.finalize();
+                    for (task_id, batcher) in task_ids.into_iter().zip(batchers.into_iter()) {
+                        let task = &render_tasks[task_id];
+                        let (target_rect, _) = task.get_target_rect();
+
+                        match task.location {
+                            RenderTaskLocation::PictureCache { texture, layer, .. } => {
+                                // TODO(gw): The interface here is a bit untidy since it's
+                                //           designed to support batch merging, which isn't
+                                //           relevant for picture cache targets. We
+                                //           can restructure / tidy this up a bit.
+                                let mut batch_containers = Vec::new();
+                                let mut alpha_batch_container = AlphaBatchContainer::new(None);
+                                batcher.build(
+                                    &mut batch_containers,
+                                    &mut alpha_batch_container,
+                                    target_rect,
+                                    None,
+                                );
+                                debug_assert!(batch_containers.is_empty());
+
+                                let target = PictureCacheTarget {
+                                    texture,
+                                    layer: layer as usize,
+                                    clear_color,
+                                    alpha_batch_container,
+                                };
+
+                                picture_cache.push(target);
+                            }
+                            _ => {
+                                unreachable!()
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
                             }
                         }
                     }
@@ -1044,22 +1691,34 @@ impl RenderPass {
 #[derive(Debug, Clone, Default)]
 pub struct CompositeOps {
     // Requires only a single texture as input (e.g. most filters)
-    pub filters: Vec<FilterOp>,
+    pub filters: Vec<Filter>,
+    pub filter_datas: Vec<FilterData>,
 
     // Requires two source textures (e.g. mix-blend-mode)
     pub mix_blend_mode: Option<MixBlendMode>,
 }
 
 impl CompositeOps {
-    pub fn new(filters: Vec<FilterOp>, mix_blend_mode: Option<MixBlendMode>) -> Self {
+    pub fn new(filters: Vec<Filter>,
+               filter_datas: Vec<FilterData>,
+               mix_blend_mode: Option<MixBlendMode>) -> Self {
         CompositeOps {
             filters,
+            filter_datas,
             mix_blend_mode,
         }
     }
 
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub fn is_empty(&self) -> bool {
         self.filters.is_empty() && self.mix_blend_mode.is_none()
+||||||| merged common ancestors
+    pub fn count(&self) -> usize {
+        self.filters.len() + if self.mix_blend_mode.is_some() { 1 } else { 0 }
+=======
+    pub fn is_empty(&self) -> bool {
+        self.filters.is_empty() && self.filter_datas.is_empty() && self.mix_blend_mode.is_none()
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
     }
 }
 
@@ -1068,18 +1727,28 @@ impl CompositeOps {
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct Frame {
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/tiling.rs
     //TODO: share the fields with DocumentView struct
     pub window_size: DeviceIntSize,
     pub inner_rect: DeviceIntRect,
+||||||| merged common ancestors
+    //TODO: share the fields with DocumentView struct
+    pub window_size: DeviceUintSize,
+    pub inner_rect: DeviceUintRect,
+=======
+    /// The origin on content produced by the render tasks.
+    pub content_origin: DeviceIntPoint,
+    /// The rectangle to show the frame in, on screen.
+    pub device_rect: DeviceIntRect,
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/tiling.rs
     pub background_color: Option<ColorF>,
     pub layer: DocumentLayer,
-    pub device_pixel_ratio: f32,
     pub passes: Vec<RenderPass>,
     #[cfg_attr(any(feature = "capture", feature = "replay"), serde(default = "FrameProfileCounters::new", skip))]
     pub profile_counters: FrameProfileCounters,
 
     pub transform_palette: Vec<TransformData>,
-    pub render_tasks: RenderTaskTree,
+    pub render_tasks: RenderTaskGraph,
     pub prim_headers: PrimitiveHeaders,
 
     /// The GPU cache frame that the contents of Self depend on
@@ -1098,6 +1767,14 @@ pub struct Frame {
     /// True if this frame has been drawn by the
     /// renderer.
     pub has_been_rendered: bool,
+
+    /// Dirty regions recorded when generating this frame. Empty when not in
+    /// testing.
+    #[cfg_attr(feature = "serde", serde(skip))]
+    pub recorded_dirty_regions: Vec<RecordedDirtyRegion>,
+
+    /// Debugging information to overlay for this frame.
+    pub debug_items: Vec<DebugItem>,
 }
 
 impl Frame {
@@ -1139,19 +1816,5 @@ impl ScalingTask {
         };
 
         instances.push(instance);
-    }
-}
-
-pub struct SpecialRenderPasses {
-    pub alpha_glyph_pass: RenderPass,
-    pub color_glyph_pass: RenderPass,
-}
-
-impl SpecialRenderPasses {
-    pub fn new(screen_size: &DeviceIntSize) -> SpecialRenderPasses {
-        SpecialRenderPasses {
-            alpha_glyph_pass: RenderPass::new_off_screen(*screen_size),
-            color_glyph_pass: RenderPass::new_off_screen(*screen_size),
-        }
     }
 }

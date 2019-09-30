@@ -26,6 +26,10 @@
 
 class nsOverflowContinuationTracker;
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 // Some macros for container classes to do sanity checking on
 // width/height/x/y values computed during reflow.
 // NOTE: AppUnitsPerCSSPixel value hardwired here to remove the
@@ -35,8 +39,16 @@ class nsOverflowContinuationTracker;
 // 10 million pixels, converted to app units. Note that this a bit larger
 // than 1/4 of nscoord_MAX. So, if any content gets to be this large, we're
 // definitely in danger of grazing up against nscoord_MAX; hence, it's CRAZY.
+<<<<<<< HEAD
 #define CRAZY_COORD (10000000 * 60)
 #define CRAZY_SIZE(_x) (((_x) < -CRAZY_COORD) || ((_x) > CRAZY_COORD))
+||||||| merged common ancestors
+#define CRAZY_COORD (10000000*60)
+#define CRAZY_SIZE(_x) (((_x) < -CRAZY_COORD) || ((_x) > CRAZY_COORD))
+=======
+#  define CRAZY_COORD (10000000 * 60)
+#  define CRAZY_SIZE(_x) (((_x) < -CRAZY_COORD) || ((_x) > CRAZY_COORD))
+>>>>>>> upstream-releases
 #endif
 
 /**
@@ -59,6 +71,7 @@ class nsContainerFrame : public nsSplittableFrame {
                            PostDestroyData& aPostDestroyData) override;
   virtual void ChildIsDirty(nsIFrame* aChild) override;
 
+<<<<<<< HEAD
   virtual FrameSearchResult PeekOffsetNoAmount(bool aForward,
                                                int32_t* aOffset) override;
   virtual FrameSearchResult PeekOffsetCharacter(
@@ -68,10 +81,37 @@ class nsContainerFrame : public nsSplittableFrame {
 
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
                                     int32_t aModType) override;
+||||||| merged common ancestors
+  virtual FrameSearchResult PeekOffsetNoAmount(bool aForward, int32_t* aOffset) override;
+  virtual FrameSearchResult
+  PeekOffsetCharacter(bool aForward, int32_t* aOffset,
+                      PeekOffsetCharacterOptions aOptions =
+                        PeekOffsetCharacterOptions()) override;
+
+  virtual nsresult AttributeChanged(int32_t         aNameSpaceID,
+                                    nsAtom*        aAttribute,
+                                    int32_t         aModType) override;
+=======
+  virtual FrameSearchResult PeekOffsetNoAmount(bool aForward,
+                                               int32_t* aOffset) override;
+  virtual FrameSearchResult PeekOffsetCharacter(
+      bool aForward, int32_t* aOffset,
+      PeekOffsetCharacterOptions aOptions =
+          PeekOffsetCharacterOptions()) override;
+>>>>>>> upstream-releases
 
 #ifdef DEBUG_FRAME_DUMP
+<<<<<<< HEAD
   void List(FILE* out = stderr, const char* aPrefix = "",
             uint32_t aFlags = 0) const override;
+||||||| merged common ancestors
+  void List(FILE* out = stderr, const char* aPrefix = "", uint32_t aFlags = 0) const override;
+=======
+  void List(FILE* out = stderr, const char* aPrefix = "",
+            uint32_t aFlags = 0) const override;
+  void ListWithMatchedRules(FILE* out = stderr,
+                            const char* aPrefix = "") const override;
+>>>>>>> upstream-releases
 #endif
 
   // nsContainerFrame methods
@@ -415,6 +455,7 @@ class nsContainerFrame : public nsSplittableFrame {
       nsContainerFrame::PositionChildViews(aFrame);
   }
 
+<<<<<<< HEAD
   static bool FrameStartsCounterScope(nsIFrame* aFrame);
 
   /**
@@ -458,6 +499,55 @@ class nsContainerFrame : public nsSplittableFrame {
   virtual bool RenumberChildFrames(int32_t* aOrdinal, int32_t aDepth,
                                    int32_t aIncrement, bool aForCounting);
 
+||||||| merged common ancestors
+  static bool FrameStartsCounterScope(nsIFrame* aFrame);
+
+  /**
+   * Renumber the list of the counter scope started by this frame, if any.
+   * If this returns true, the frame it's called on should get the
+   * NS_FRAME_HAS_DIRTY_CHILDREN bit set on it by the caller; either directly
+   * if it's already in reflow, or via calling FrameNeedsReflow() to schedule
+   * a reflow.
+   */
+  bool RenumberList();
+
+  /**
+   * Renumber this frame if it's a list-item, then call RenumberChildFrames.
+   * @param aOrdinal Ordinal number to start counting at.
+   *        Modifies this number for each associated list
+   *        item. Changes in the numbering due to setting
+   *        the |value| attribute are included if |aForCounting|
+   *        is false. This value is both an input and output
+   *        of this function, with the output value being the
+   *        next ordinal number to be used.
+   * @param aDepth Current depth in frame tree from root list element.
+   * @param aIncrement Amount to increase by after visiting each associated
+   *        list item, unless overridden by |value|.
+   * @param aForCounting Whether we are counting the elements or actually
+   *        restyling them. When true, this simply visits all children,
+   *        ignoring |<li value="..">| changes, effectively counting them
+   *        and storing the result in |aOrdinal|. This is useful for
+   *        |<ol reversed>|, where we need to count the number of
+   *        applicable child list elements before numbering. When false,
+   *        this will restyle all applicable descendants, and the next
+   *        ordinal value will be stored in |aOrdinal|, taking into account
+   *        any changes from |<li value="..">|.
+   */
+  bool RenumberFrameAndDescendants(int32_t* aOrdinal,
+                                   int32_t aDepth,
+                                   int32_t aIncrement,
+                                   bool aForCounting) override;
+  /**
+   * Renumber the child frames using RenumberFrameAndDescendants.
+   * See RenumberFrameAndDescendants for description of parameters.
+   */
+  virtual bool RenumberChildFrames(int32_t* aOrdinal,
+                                   int32_t aDepth,
+                                   int32_t aIncrement,
+                                   bool aForCounting);
+
+=======
+>>>>>>> upstream-releases
   /**
    * Returns a CSS Box Alignment constant which the caller can use to align
    * the absolutely-positioned child (whose ReflowInput is aChildRI) within
@@ -507,9 +597,21 @@ class nsContainerFrame : public nsSplittableFrame {
   }
 #endif
 
+<<<<<<< HEAD
  protected:
   nsContainerFrame(ComputedStyle* aStyle, ClassID aID)
       : nsSplittableFrame(aStyle, aID) {}
+||||||| merged common ancestors
+protected:
+  nsContainerFrame(ComputedStyle* aStyle, ClassID aID)
+    : nsSplittableFrame(aStyle, aID)
+  {}
+=======
+ protected:
+  nsContainerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                   ClassID aID)
+      : nsSplittableFrame(aStyle, aPresContext, aID) {}
+>>>>>>> upstream-releases
 
   ~nsContainerFrame();
 
@@ -635,8 +737,7 @@ class nsContainerFrame : public nsSplittableFrame {
    */
   static void ReparentFloatsForInlineChild(nsIFrame* aOurBlock,
                                            nsIFrame* aFrame,
-                                           bool aReparentSiblings,
-                                           ReparentingDirection aDirection);
+                                           bool aReparentSiblings);
 
   // ==========================================================================
   /*
@@ -695,7 +796,13 @@ class nsContainerFrame : public nsSplittableFrame {
    */
   void SafelyDestroyFrameListProp(nsIFrame* aDestructRoot,
                                   PostDestroyData& aPostDestroyData,
+<<<<<<< HEAD
                                   nsIPresShell* aPresShell,
+||||||| merged common ancestors
+                                  nsIPresShell*    aPresShell,
+=======
+                                  mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                   FrameListPropertyDescriptor aProp);
 
   // ==========================================================================

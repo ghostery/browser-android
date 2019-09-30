@@ -55,11 +55,20 @@
 #define DEFINED_FRAME_STATE_BIT
 #endif
 
+<<<<<<< HEAD
 // Helper macro for the common case of a single class
 #define FRAME_STATE_GROUP(name_, class_) \
   FRAME_STATE_GROUP_NAME(name_)          \
   FRAME_STATE_GROUP_CLASS(name_, class_)
 
+||||||| merged common ancestors
+=======
+// Helper macro for the common case of a single class
+#define FRAME_STATE_GROUP(name_, class_) \
+FRAME_STATE_GROUP_NAME(name_)            \
+FRAME_STATE_GROUP_CLASS(name_, class_)
+
+>>>>>>> upstream-releases
 // == Frame state bits that apply to all frames ===============================
 
 FRAME_STATE_GROUP(Generic, nsIFrame)
@@ -117,7 +126,7 @@ FRAME_STATE_BIT(Generic, 9, NS_FRAME_CAN_HAVE_ABSPOS_CHILDREN)
 // This bit is cleared by DidReflow after the required call to Reflow has
 // finished.
 // Do not set this bit yourself if you plan to pass the frame to
-// nsIPresShell::FrameNeedsReflow.  Pass the right arguments instead.
+// PresShell::FrameNeedsReflow.  Pass the right arguments instead.
 FRAME_STATE_BIT(Generic, 10, NS_FRAME_IS_DIRTY)
 
 // If this bit is set then the frame is too deep in the frame tree, and
@@ -141,7 +150,7 @@ FRAME_STATE_BIT(Generic, 11, NS_FRAME_TOO_DEEP_IN_FRAME_TREE)
 // This bit is cleared by DidReflow after the required call to Reflow has
 // finished.
 // Do not set this bit yourself if you plan to pass the frame to
-// nsIPresShell::FrameNeedsReflow.  Pass the right arguments instead.
+// PresShell::FrameNeedsReflow.  Pass the right arguments instead.
 FRAME_STATE_BIT(Generic, 12, NS_FRAME_HAS_DIRTY_CHILDREN)
 
 // If this bit is set, the frame has an associated view
@@ -237,6 +246,7 @@ FRAME_STATE_BIT(Generic, 42, NS_FRAME_FONT_INFLATION_FLOW_ROOT)
 // this does not include nsSVGOuterSVGFrame since it takes part is CSS layout.
 FRAME_STATE_BIT(Generic, 43, NS_FRAME_SVG_LAYOUT)
 
+<<<<<<< HEAD
 // This bit is set if a frame has a multi-column ancestor (i.e.
 // ColumnSetWrapperFrame) within the same block formatting context. A top-level
 // ColumnSetWrapperFrame doesn't have this bit set, whereas a
@@ -250,6 +260,25 @@ FRAME_STATE_BIT(Generic, 44, NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR)
 
 // Bits 45 is currently unused, but be kind and check with bug 1465474
 // first please :-)
+||||||| merged common ancestors
+// Bits 44 and 45 are currently unused, but be kind and check with bug 1465474
+// first please :-)
+=======
+// This bit is set if a frame has a multi-column ancestor (i.e.
+// ColumnSetWrapperFrame) within the same block formatting context. A top-level
+// ColumnSetWrapperFrame doesn't have this bit set, whereas a
+// ColumnSetWrapperFrame nested inside a column does have this bit set.
+//
+// All the children of the column-spanners or any other type of frames which
+// create their own block formatting context do not have this bit set because
+// they are not in the same block formatting context created by a multi-column
+// ancestor.
+FRAME_STATE_BIT(Generic, 44, NS_FRAME_HAS_MULTI_COLUMN_ANCESTOR)
+
+// If this bit is set, then reflow may be dispatched from the current
+// frame instead of the root frame.
+FRAME_STATE_BIT(Generic, 45, NS_FRAME_DYNAMIC_REFLOW_ROOT)
+>>>>>>> upstream-releases
 
 // This bit indicates that we're tracking visibility for this frame, and that
 // the frame has a VisibilityStateProperty property.
@@ -309,7 +338,16 @@ FRAME_STATE_BIT(Generic, 59, NS_FRAME_IS_IN_SINGLE_CHAR_MI)
 // NOTE: Bits 20-31 and 60-63 of the frame state are reserved for specific
 // frame classes.
 
+<<<<<<< HEAD
 // NOTE: Currently unused and available bit(s): 45.
+||||||| merged common ancestors
+// NOTE: Bits 44 and 45 are currently unused.
+
+=======
+// NOTE: No more unused bits. If needed, investigate removing obsolete bits by
+// adjusting logic, or moving infrequently-used bits elsewhere. If more space
+// for frame state is still needed, look for bit field gaps in nsIFrame.
+>>>>>>> upstream-releases
 
 // == Frame state bits that apply to box frames ===============================
 
@@ -346,6 +384,10 @@ FRAME_STATE_BIT(FlexContainer, 22, NS_STATE_FLEX_GENERATE_COMPUTED_VALUES)
 
 // True if the container has no flex items; may lie if there is a pending reflow
 FRAME_STATE_BIT(FlexContainer, 23, NS_STATE_FLEX_SYNTHESIZE_BASELINE)
+
+// True if any flex item in the container has a line with a
+// -webkit-line-ellipsis marker.
+FRAME_STATE_BIT(FlexContainer, 24, NS_STATE_FLEX_HAS_LINE_CLAMP_ELLIPSIS)
 
 // == Frame state bits that apply to grid container frames ====================
 
@@ -386,14 +428,25 @@ FRAME_STATE_BIT(GridContainer, 28, NS_STATE_GRID_HAS_CHILD_NIFS)
 
 // == Frame state bits that apply to SVG frames ===============================
 
+<<<<<<< HEAD
 FRAME_STATE_GROUP_NAME(SVG)
 FRAME_STATE_GROUP_CLASS(SVG, nsSVGDisplayableFrame)
 FRAME_STATE_GROUP_CLASS(SVG, nsSVGContainerFrame)
 
 FRAME_STATE_BIT(SVG, 20, NS_STATE_IS_OUTER_SVG)
+||||||| merged common ancestors
+FRAME_STATE_GROUP(SVG, nsSVGDisplayableFrame)
+FRAME_STATE_GROUP(SVG, nsSVGContainerFrame)
+
+FRAME_STATE_BIT(SVG, 20, NS_STATE_IS_OUTER_SVG)
+=======
+FRAME_STATE_GROUP_NAME(SVG)
+FRAME_STATE_GROUP_CLASS(SVG, nsSVGDisplayableFrame)
+FRAME_STATE_GROUP_CLASS(SVG, nsSVGContainerFrame)
+>>>>>>> upstream-releases
 
 // If this bit is set, we are a <clipPath> element or descendant.
-FRAME_STATE_BIT(SVG, 21, NS_STATE_SVG_CLIPPATH_CHILD)
+FRAME_STATE_BIT(SVG, 20, NS_STATE_SVG_CLIPPATH_CHILD)
 
 // For SVG text, the NS_FRAME_IS_DIRTY and NS_FRAME_HAS_DIRTY_CHILDREN bits
 // indicate that our anonymous block child needs to be reflowed, and that
@@ -403,7 +456,7 @@ FRAME_STATE_BIT(SVG, 21, NS_STATE_SVG_CLIPPATH_CHILD)
 // mPositioningDirty is used to indicate this latter "things are dirty" case
 // to allow us to avoid reflowing the anonymous block when it is not
 // necessary.
-FRAME_STATE_BIT(SVG, 22, NS_STATE_SVG_POSITIONING_DIRTY)
+FRAME_STATE_BIT(SVG, 21, NS_STATE_SVG_POSITIONING_DIRTY)
 
 // For text, whether the values from x/y/dx/dy attributes have any percentage
 // values that are used in determining the positions of glyphs.  The value will
@@ -426,14 +479,14 @@ FRAME_STATE_BIT(SVG, 22, NS_STATE_SVG_POSITIONING_DIRTY)
 // determining a completley accurate value for
 // NS_STATE_SVG_POSITIONING_MAY_USE_PERCENTAGES would require extra work that is
 // probably not worth it.
-FRAME_STATE_BIT(SVG, 23, NS_STATE_SVG_POSITIONING_MAY_USE_PERCENTAGES)
+FRAME_STATE_BIT(SVG, 22, NS_STATE_SVG_POSITIONING_MAY_USE_PERCENTAGES)
 
-FRAME_STATE_BIT(SVG, 24, NS_STATE_SVG_TEXT_IN_REFLOW)
+FRAME_STATE_BIT(SVG, 23, NS_STATE_SVG_TEXT_IN_REFLOW)
 
 // Set on SVGTextFrame frames when they need a
 // TextNodeCorrespondenceRecorder::RecordCorrespondence call
 // to update the cached nsTextNode indexes that they correspond to.
-FRAME_STATE_BIT(SVG, 25, NS_STATE_SVG_TEXT_CORRESPONDENCE_DIRTY)
+FRAME_STATE_BIT(SVG, 24, NS_STATE_SVG_TEXT_CORRESPONDENCE_DIRTY)
 
 // == Frame state bits that apply to text frames ==============================
 
@@ -538,8 +591,15 @@ FRAME_STATE_BIT(Block, 22, NS_BLOCK_MARGIN_ROOT)
 FRAME_STATE_BIT(Block, 23, NS_BLOCK_FLOAT_MGR)
 
 // For setting the relevant bits on a block formatting context:
+<<<<<<< HEAD
 #define NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS \
   (NS_BLOCK_FLOAT_MGR | NS_BLOCK_MARGIN_ROOT)
+||||||| merged common ancestors
+#define NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS (NS_BLOCK_FLOAT_MGR | NS_BLOCK_MARGIN_ROOT)
+=======
+#define NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS \
+(NS_BLOCK_FLOAT_MGR | NS_BLOCK_MARGIN_ROOT)
+>>>>>>> upstream-releases
 
 FRAME_STATE_BIT(Block, 24, NS_BLOCK_HAS_LINE_CURSOR)
 
@@ -561,10 +621,17 @@ FRAME_STATE_BIT(Block, 28, NS_BLOCK_CLIP_PAGINATED_OVERFLOW)
 // even if it has no actual first-letter frame among its descendants.
 FRAME_STATE_BIT(Block, 29, NS_BLOCK_HAS_FIRST_LETTER_STYLE)
 
-// NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET and NS_BLOCK_FRAME_HAS_INSIDE_BULLET
-// means the block has an associated bullet frame, they are mutually exclusive.
-FRAME_STATE_BIT(Block, 30, NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET)
-FRAME_STATE_BIT(Block, 31, NS_BLOCK_FRAME_HAS_INSIDE_BULLET)
+// NS_BLOCK_FRAME_HAS_OUTSIDE_MARKER and NS_BLOCK_FRAME_HAS_INSIDE_MARKER
+// means the block has an associated ::marker frame, they are mutually
+// exclusive.
+FRAME_STATE_BIT(Block, 30, NS_BLOCK_FRAME_HAS_OUTSIDE_MARKER)
+FRAME_STATE_BIT(Block, 31, NS_BLOCK_FRAME_HAS_INSIDE_MARKER)
+
+// NS_BLOCK_HAS_LINE_CLAMP_ELLIPSIS indicates that exactly one line in this
+// block has the LineClampEllipsis flag set, and that such a line must be found
+// and have that flag cleared when reflowing this element's nearest legacy box
+// container.
+FRAME_STATE_BIT(Block, 60, NS_BLOCK_HAS_LINE_CLAMP_ELLIPSIS)
 
 // This block has had a child marked dirty, so before we reflow we need
 // to look through the lines to find any such children and mark

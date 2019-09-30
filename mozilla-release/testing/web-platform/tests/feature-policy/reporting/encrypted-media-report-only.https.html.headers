@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: encrypted-media-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: encrypted-media 'none'
+>>>>>>> upstream-releases

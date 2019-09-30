@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 var idleCallbackHandle;
 
-
 function _idleCallbackHandler() {
   content.window.cancelIdleCallback(idleCallbackHandle);
   sendAsyncMessage("PageLoader:IdleCallbackReceived", {});
@@ -17,9 +16,23 @@ function setIdleCallback() {
 function contentLoadHandlerCallback(cb) {
   function _handler(e) {
     if (e.originalTarget.defaultView == content) {
+<<<<<<< HEAD
       content.wrappedJSObject.tpRecordTime = Cu.exportFunction((t, s, n) => {
         sendAsyncMessage("PageLoader:RecordTime", {time: t, startTime: s, testName: n});
       }, content);
+||||||| merged common ancestors
+      content.wrappedJSObject.tpRecordTime = function(t, s, n) {
+        sendAsyncMessage("PageLoader:RecordTime", {time: t, startTime: s, testName: n});
+      };
+=======
+      content.wrappedJSObject.tpRecordTime = Cu.exportFunction((t, s, n) => {
+        sendAsyncMessage("PageLoader:RecordTime", {
+          time: t,
+          startTime: s,
+          testName: n,
+        });
+      }, content);
+>>>>>>> upstream-releases
       content.setTimeout(cb, 0);
       content.setTimeout(setIdleCallback, 0);
     }

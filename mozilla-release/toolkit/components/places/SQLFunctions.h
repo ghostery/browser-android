@@ -69,7 +69,7 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
-  static nsresult create(mozIStorageConnection *aDBConn);
+  static nsresult create(mozIStorageConnection* aDBConn);
 
  private:
   ~MatchAutoCompleteFunction() {}
@@ -99,8 +99,8 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
   /**
    * Typedefs
    */
-  typedef bool (*searchFunctionPtr)(const nsDependentCSubstring &aToken,
-                                    const nsACString &aSourceString);
+  typedef bool (*searchFunctionPtr)(const nsDependentCSubstring& aToken,
+                                    const nsACString& aSourceString);
 
   typedef nsACString::const_char_iterator const_char_iterator;
 
@@ -123,8 +123,8 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    *        The string to search.
    * @return true if found, false otherwise.
    */
-  static bool findBeginning(const nsDependentCSubstring &aToken,
-                            const nsACString &aSourceString);
+  static bool findBeginning(const nsDependentCSubstring& aToken,
+                            const nsACString& aSourceString);
 
   /**
    * Tests if aSourceString starts with aToken in a case sensitive way.
@@ -135,8 +135,8 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    *        The string to search.
    * @return true if found, false otherwise.
    */
-  static bool findBeginningCaseSensitive(const nsDependentCSubstring &aToken,
-                                         const nsACString &aSourceString);
+  static bool findBeginningCaseSensitive(const nsDependentCSubstring& aToken,
+                                         const nsACString& aSourceString);
 
   /**
    * Searches aSourceString for aToken anywhere in the string in a case-
@@ -148,8 +148,8 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    *        The string to search.
    * @return true if found, false otherwise.
    */
-  static bool findAnywhere(const nsDependentCSubstring &aToken,
-                           const nsACString &aSourceString);
+  static bool findAnywhere(const nsDependentCSubstring& aToken,
+                           const nsACString& aSourceString);
 
   /**
    * Tests if aToken is found on a word boundary in aSourceString.
@@ -160,9 +160,20 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    *        The string to search.
    * @return true if found, false otherwise.
    */
+<<<<<<< HEAD
   static bool findOnBoundary(const nsDependentCSubstring &aToken,
                              const nsACString &aSourceString);
 
+||||||| merged common ancestors
+  static bool findOnBoundary(const nsDependentCSubstring &aToken,
+                             const nsACString &aSourceString);
+
+
+=======
+  static bool findOnBoundary(const nsDependentCSubstring& aToken,
+                             const nsACString& aSourceString);
+
+>>>>>>> upstream-releases
   /**
    * Fixes a URI's spec such that it is ready to be searched.  This includes
    * unescaping escaped characters and removing certain specs that we do not
@@ -177,9 +188,9 @@ class MatchAutoCompleteFunction final : public mozIStorageFunction {
    *        A string buffer that the returned slice can point into, if needed.
    * @return the fixed up string.
    */
-  static nsDependentCSubstring fixupURISpec(const nsACString &aURISpec,
+  static nsDependentCSubstring fixupURISpec(const nsACString& aURISpec,
                                             int32_t aMatchBehavior,
-                                            nsACString &aSpecBuf);
+                                            nsACString& aSpecBuf);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,9 +221,18 @@ class CalculateFrecencyFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~CalculateFrecencyFunction() {}
 };
 
@@ -233,9 +253,18 @@ class GenerateGUIDFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~GenerateGUIDFunction() {}
 };
 
@@ -256,9 +285,18 @@ class IsValidGUIDFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~IsValidGUIDFunction() {}
 };
 
@@ -281,9 +319,18 @@ class GetUnreversedHostFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~GetUnreversedHostFunction() {}
 };
 
@@ -310,9 +357,18 @@ class FixupURLFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~FixupURLFunction() {}
 };
 
@@ -347,9 +403,18 @@ class FrecencyNotificationFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~FrecencyNotificationFunction() {}
 };
 
@@ -376,9 +441,18 @@ class StoreLastInsertedIdFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~StoreLastInsertedIdFunction() {}
 };
 
@@ -404,9 +478,18 @@ class HashFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~HashFunction() {}
 };
 
@@ -432,9 +515,18 @@ class GetQueryParamFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~GetQueryParamFunction() {}
 };
 
@@ -462,9 +554,18 @@ class GetPrefixFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~GetPrefixFunction() {}
 };
 
@@ -492,9 +593,18 @@ class GetHostAndPortFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~GetHostAndPortFunction() {}
 };
 
@@ -523,9 +633,18 @@ class StripPrefixAndUserinfoFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~StripPrefixAndUserinfoFunction() {}
 };
 
@@ -549,9 +668,18 @@ class IsFrecencyDecayingFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~IsFrecencyDecayingFunction() {}
 };
 
@@ -572,9 +700,18 @@ class SqrtFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~SqrtFunction() {}
 };
 
@@ -597,9 +734,18 @@ class NoteSyncChangeFunction final : public mozIStorageFunction {
    * @param aDBConn
    *        The database connection to register with.
    */
+<<<<<<< HEAD
   static nsresult create(mozIStorageConnection *aDBConn);
 
  private:
+||||||| merged common ancestors
+  static nsresult create(mozIStorageConnection *aDBConn);
+private:
+=======
+  static nsresult create(mozIStorageConnection* aDBConn);
+
+ private:
+>>>>>>> upstream-releases
   ~NoteSyncChangeFunction() {}
 };
 

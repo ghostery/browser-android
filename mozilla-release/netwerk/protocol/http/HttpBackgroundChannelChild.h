@@ -22,8 +22,16 @@ class HttpChannelChild;
 
 class HttpBackgroundChannelChild final : public PHttpBackgroundChannelChild {
   friend class BackgroundChannelCreateCallback;
+<<<<<<< HEAD
 
  public:
+||||||| merged common ancestors
+public:
+=======
+  friend class PHttpBackgroundChannelChild;
+
+ public:
+>>>>>>> upstream-releases
   explicit HttpBackgroundChannelChild();
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(HttpBackgroundChannelChild)
@@ -45,34 +53,61 @@ class HttpBackgroundChannelChild final : public PHttpBackgroundChannelChild {
                                    const nsresult& aTransportStatus,
                                    const uint64_t& aOffset,
                                    const uint32_t& aCount,
-                                   const nsCString& aData) override;
+                                   const nsCString& aData);
 
+<<<<<<< HEAD
   IPCResult RecvOnStopRequest(
       const nsresult& aChannelStatus, const ResourceTimingStruct& aTiming,
       const TimeStamp& aLastActiveTabOptHit,
       const nsHttpHeaderArray& aResponseTrailers) override;
+||||||| merged common ancestors
+  IPCResult RecvOnStopRequest(const nsresult& aChannelStatus,
+                              const ResourceTimingStruct& aTiming,
+                              const TimeStamp& aLastActiveTabOptHit,
+                              const nsHttpHeaderArray& aResponseTrailers) override;
+=======
+  IPCResult RecvOnStopRequest(const nsresult& aChannelStatus,
+                              const ResourceTimingStruct& aTiming,
+                              const TimeStamp& aLastActiveTabOptHit,
+                              const nsHttpHeaderArray& aResponseTrailers);
+>>>>>>> upstream-releases
 
   IPCResult RecvOnProgress(const int64_t& aProgress,
-                           const int64_t& aProgressMax) override;
+                           const int64_t& aProgressMax);
 
-  IPCResult RecvOnStatus(const nsresult& aStatus) override;
+  IPCResult RecvOnStatus(const nsresult& aStatus);
 
-  IPCResult RecvFlushedForDiversion() override;
+  IPCResult RecvFlushedForDiversion();
 
-  IPCResult RecvDivertMessages() override;
+  IPCResult RecvDivertMessages();
 
-  IPCResult RecvOnStartRequestSent() override;
+  IPCResult RecvOnStartRequestSent();
 
-  IPCResult RecvNotifyTrackingProtectionDisabled() override;
+  IPCResult RecvNotifyChannelClassifierProtectionDisabled(
+      const uint32_t& aAcceptedReason);
 
+  IPCResult RecvNotifyCookieAllowed();
+
+  IPCResult RecvNotifyCookieBlocked(const uint32_t& aRejectedReason);
+
+  IPCResult RecvNotifyClassificationFlags(const uint32_t& aClassificationFlags,
+                                          const bool& aIsThirdParty);
+
+<<<<<<< HEAD
   IPCResult RecvNotifyCookieAllowed() override;
 
   IPCResult RecvNotifyTrackingCookieBlocked(
       const uint32_t& aRejectedReason) override;
+||||||| merged common ancestors
+  IPCResult RecvNotifyTrackingCookieBlocked(const uint32_t& aRejectedReason) override;
+=======
+  IPCResult RecvNotifyFlashPluginStateChanged(
+      const nsIHttpChannel::FlashPluginState& aState);
+>>>>>>> upstream-releases
 
-  IPCResult RecvNotifyTrackingResource(const bool& aIsThirdParty) override;
+  IPCResult RecvSetClassifierMatchedInfo(const ClassifierInfo& info);
 
-  IPCResult RecvSetClassifierMatchedInfo(const ClassifierInfo& info) override;
+  IPCResult RecvSetClassifierMatchedTrackingInfo(const ClassifierInfo& info);
 
   void ActorDestroy(ActorDestroyReason aWhy) override;
 

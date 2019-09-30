@@ -13,6 +13,7 @@
 #include "nsIWebBrowserChrome.h"
 #include "nsIInterfaceRequestorUtils.h"
 #include "nsTextFragment.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/dom/Event.h"
 
@@ -61,9 +62,21 @@ static int32_t GetActionType(nsIContent* aContent) {
   return NS_MATHML_ACTION_TYPE_UNKNOWN;
 }
 
+<<<<<<< HEAD
 nsIFrame* NS_NewMathMLmactionFrame(nsIPresShell* aPresShell,
                                    ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmactionFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMathMLmactionFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmactionFrame(aStyle);
+=======
+nsIFrame* NS_NewMathMLmactionFrame(PresShell* aPresShell,
+                                   ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmactionFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmactionFrame)
@@ -210,8 +223,16 @@ nsresult nsMathMLmactionFrame::AttributeChanged(int32_t aNameSpaceID,
   }
 
   if (needsReflow) {
+<<<<<<< HEAD
     PresShell()->FrameNeedsReflow(this, nsIPresShell::eTreeChange,
                                   NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+    PresShell()->
+      FrameNeedsReflow(this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
+=======
+    PresShell()->FrameNeedsReflow(this, IntrinsicDirty::TreeChange,
+                                  NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -305,8 +326,17 @@ void nsMathMLmactionFrame::MouseClick() {
                                      value, notify);
 
       // Now trigger a content-changed reflow...
+<<<<<<< HEAD
       PresShell()->FrameNeedsReflow(mSelectedFrame, nsIPresShell::eTreeChange,
                                     NS_FRAME_IS_DIRTY);
+||||||| merged common ancestors
+      PresShell()->
+        FrameNeedsReflow(mSelectedFrame, nsIPresShell::eTreeChange,
+                         NS_FRAME_IS_DIRTY);
+=======
+      PresShell()->FrameNeedsReflow(mSelectedFrame, IntrinsicDirty::TreeChange,
+                                    NS_FRAME_IS_DIRTY);
+>>>>>>> upstream-releases
     }
   }
 }

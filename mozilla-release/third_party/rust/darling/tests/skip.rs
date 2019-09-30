@@ -2,7 +2,10 @@
 
 #[macro_use]
 extern crate darling;
+#[macro_use]
 extern crate syn;
+#[macro_use]
+extern crate quote;
 
 use darling::FromDeriveInput;
 
@@ -34,10 +37,17 @@ pub enum Sit {
 
 #[test]
 fn verify_skipped_field_not_required() {
+<<<<<<< HEAD
     let di = syn::parse_str(
         r#"
+||||||| merged common ancestors
+    let di = syn::parse_str(r#"
+=======
+    let di = parse_quote! {
+>>>>>>> upstream-releases
         #[skip_test(ipsum = "Hello")]
         struct Baz;
+<<<<<<< HEAD
     "#,
     ).unwrap();
 
@@ -48,4 +58,22 @@ fn verify_skipped_field_not_required() {
             dolor: 0,
         }
     );
+||||||| merged common ancestors
+    "#).unwrap();
+
+    assert_eq!(Lorem::from_derive_input(&di).unwrap(), Lorem {
+        ipsum: "Hello".to_string(),
+        dolor: 0,
+    });
+=======
+    };
+
+    assert_eq!(
+        Lorem::from_derive_input(&di).unwrap(),
+        Lorem {
+            ipsum: "Hello".to_string(),
+            dolor: 0,
+        }
+    );
+>>>>>>> upstream-releases
 }

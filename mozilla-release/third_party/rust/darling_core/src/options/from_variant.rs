@@ -1,3 +1,5 @@
+use proc_macro2::TokenStream;
+use quote::ToTokens;
 use syn::{DeriveInput, Field, Ident, Meta};
 
 use codegen::FromVariantImpl;
@@ -17,8 +19,16 @@ impl FromVariantOptions {
             base: OuterFrom::start(di),
             fields: Default::default(),
             supports: Default::default(),
+<<<<<<< HEAD
         }).parse_attributes(&di.attrs)?
             .parse_body(&di.data)
+||||||| merged common ancestors
+        }).parse_attributes(&di.attrs)?.parse_body(&di.data)
+=======
+        })
+        .parse_attributes(&di.attrs)?
+        .parse_body(&di.data)
+>>>>>>> upstream-releases
     }
 }
 
@@ -64,5 +74,11 @@ impl ParseData for FromVariantOptions {
             }
             _ => self.base.parse_field(field),
         }
+    }
+}
+
+impl ToTokens for FromVariantOptions {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        FromVariantImpl::from(self).to_tokens(tokens)
     }
 }

@@ -7,7 +7,7 @@
 #include "mozilla/dom/SVGTextElement.h"
 #include "mozilla/dom/SVGTextElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Text)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Text)
 
 namespace mozilla {
 namespace dom {
@@ -24,11 +24,30 @@ SVGTextElement::SVGTextElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGTextElementBase(std::move(aNodeInfo)) {}
 
+<<<<<<< HEAD
 nsSVGElement::EnumAttributesInfo SVGTextElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+||||||| merged common ancestors
+nsSVGElement::EnumAttributesInfo
+SVGTextElement::GetEnumInfo()
+{
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
+                            ArrayLength(sEnumInfo));
+=======
+SVGElement::EnumAttributesInfo SVGTextElement::GetEnumInfo() {
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthAttributesInfo SVGTextElement::GetLengthInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthAttributesInfo
+SVGTextElement::GetLengthInfo()
+{
+=======
+SVGElement::LengthAttributesInfo SVGTextElement::GetLengthInfo() {
+>>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }

@@ -44,14 +44,25 @@ const testData = [
   },
   {
     value: "blue",
+<<<<<<< HEAD
     commitKey: "VK_TAB", modifiers: {shiftKey: true},
     expected: "blue",
   },
+||||||| merged common ancestors
+    commitKey: "VK_TAB", modifiers: {shiftKey: true},
+    expected: "blue"
+  }
+=======
+    commitKey: "VK_TAB",
+    modifiers: { shiftKey: true },
+    expected: "blue",
+  },
+>>>>>>> upstream-releases
 ];
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-  const {inspector, view} = await openRuleView();
+  const { inspector, view } = await openRuleView();
   await selectNode("#testid", inspector);
 
   for (const data of testData) {
@@ -59,15 +70,18 @@ add_task(async function() {
   }
 });
 
-async function runTestData(view, {value, commitKey, modifiers, expected}) {
+async function runTestData(view, { value, commitKey, modifiers, expected }) {
   const idRuleEditor = getRuleViewRuleEditor(view, 1);
   const propEditor = idRuleEditor.rule.textProps[0].editor;
 
   info("Focusing the inplace editor field");
 
   const editor = await focusEditableField(view, propEditor.valueSpan);
-  is(inplaceEditor(propEditor.valueSpan), editor,
-    "Focused editor should be the value span.");
+  is(
+    inplaceEditor(propEditor.valueSpan),
+    editor,
+    "Focused editor should be the value span."
+  );
 
   info("Entering test data " + value);
   let onRuleViewChanged = view.once("ruleview-changed");
@@ -83,10 +97,16 @@ async function runTestData(view, {value, commitKey, modifiers, expected}) {
   await onRuleViewChanged;
 
   if (commitKey === "VK_ESCAPE") {
-    is(propEditor.valueSpan.textContent, expected,
-      "Value is as expected: " + expected);
+    is(
+      propEditor.valueSpan.textContent,
+      expected,
+      "Value is as expected: " + expected
+    );
   } else {
-    is(propEditor.valueSpan.textContent, expected,
-      "Value is as expected: " + expected);
+    is(
+      propEditor.valueSpan.textContent,
+      expected,
+      "Value is as expected: " + expected
+    );
   }
 }

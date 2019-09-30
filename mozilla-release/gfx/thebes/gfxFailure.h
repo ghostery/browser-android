@@ -13,6 +13,7 @@
 #include "nsServiceManagerUtils.h"
 
 namespace mozilla {
+<<<<<<< HEAD
 namespace gfx {
 inline void LogFailure(const nsCString &failure) {
   nsCOMPtr<nsIGfxInfo> gfxInfo = do_GetService("@mozilla.org/gfx/info;1");
@@ -20,5 +21,23 @@ inline void LogFailure(const nsCString &failure) {
 }
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+    namespace gfx {
+        inline
+        void LogFailure(const nsCString &failure) {
+            nsCOMPtr<nsIGfxInfo> gfxInfo = do_GetService("@mozilla.org/gfx/info;1");
+            gfxInfo->LogFailure(failure);
+        }
+    } // namespace gfx
+} // namespace mozilla
+=======
+namespace gfx {
+inline void LogFailure(const nsCString& failure) {
+  nsCOMPtr<nsIGfxInfo> gfxInfo = do_GetService("@mozilla.org/gfx/info;1");
+  gfxInfo->LogFailure(failure);
+}
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // gfxFailure_h_

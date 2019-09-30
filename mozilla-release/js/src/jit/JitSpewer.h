@@ -22,6 +22,7 @@ namespace js {
 namespace jit {
 
 // New channels may be added below.
+<<<<<<< HEAD
 #define JITSPEW_CHANNEL_LIST(_)            \
   /* Information during sinking */         \
   _(Prune)                                 \
@@ -106,6 +107,175 @@ namespace jit {
   _(IonSnapshots)                          \
   /* Generated inline cache stubs */       \
   _(IonIC)
+||||||| merged common ancestors
+#define JITSPEW_CHANNEL_LIST(_)             \
+    /* Information during sinking */        \
+    _(Prune)                                \
+    /* Information during escape analysis */\
+    _(Escape)                               \
+    /* Information during alias analysis */ \
+    _(Alias)                                \
+    /* Information during alias analysis */ \
+    _(AliasSummaries)                       \
+    /* Information during GVN */            \
+    _(GVN)                                  \
+    /* Information during sincos */         \
+    _(Sincos)                               \
+    /* Information during sinking */        \
+    _(Sink)                                 \
+    /* Information during Range analysis */ \
+    _(Range)                                \
+    /* Information during loop unrolling */ \
+    _(Unrolling)                            \
+    /* Information during LICM */           \
+    _(LICM)                                 \
+    /* Info about fold linear constants */  \
+    _(FLAC)                                 \
+    /* Effective address analysis info */   \
+    _(EAA)                                  \
+    /* Information during regalloc */       \
+    _(RegAlloc)                             \
+    /* Information during inlining */       \
+    _(Inlining)                             \
+    /* Information during codegen */        \
+    _(Codegen)                              \
+    /* Debug info about safepoints */       \
+    _(Safepoints)                           \
+    /* Debug info about Pools*/             \
+    _(Pools)                                \
+    /* Profiling-related information */     \
+    _(Profiling)                            \
+    /* Information of tracked opt strats */ \
+    _(OptimizationTracking)                 \
+    _(OptimizationTrackingExtended)         \
+    /* Debug info about the I$ */           \
+    _(CacheFlush)                           \
+    /* Output a list of MIR expressions */  \
+    _(MIRExpressions)                       \
+    /* Print control flow graph */          \
+    _(CFG)                                  \
+                                            \
+    /* BASELINE COMPILER SPEW */            \
+                                            \
+    /* Aborting Script Compilation. */      \
+    _(BaselineAbort)                        \
+    /* Script Compilation. */               \
+    _(BaselineScripts)                      \
+    /* Detailed op-specific spew. */        \
+    _(BaselineOp)                           \
+    /* Inline caches. */                    \
+    _(BaselineIC)                           \
+    /* Inline cache fallbacks. */           \
+    _(BaselineICFallback)                   \
+    /* OSR from Baseline => Ion. */         \
+    _(BaselineOSR)                          \
+    /* Bailouts. */                         \
+    _(BaselineBailouts)                     \
+    /* Debug Mode On Stack Recompile . */   \
+    _(BaselineDebugModeOSR)                 \
+                                            \
+    /* ION COMPILER SPEW */                 \
+                                            \
+    /* Used to abort SSA construction */    \
+    _(IonAbort)                             \
+    /* Information about compiled scripts */\
+    _(IonScripts)                           \
+    /* Info about failing to log script */  \
+    _(IonSyncLogs)                          \
+    /* Information during MIR building */   \
+    _(IonMIR)                               \
+    /* Information during bailouts */       \
+    _(IonBailouts)                          \
+    /* Information during OSI */            \
+    _(IonInvalidate)                        \
+    /* Debug info about snapshots */        \
+    _(IonSnapshots)                         \
+    /* Generated inline cache stubs */      \
+    _(IonIC)
+=======
+#define JITSPEW_CHANNEL_LIST(_)            \
+  /* Information during sinking */         \
+  _(Prune)                                 \
+  /* Information during escape analysis */ \
+  _(Escape)                                \
+  /* Information during alias analysis */  \
+  _(Alias)                                 \
+  /* Information during alias analysis */  \
+  _(AliasSummaries)                        \
+  /* Information during GVN */             \
+  _(GVN)                                   \
+  /* Information during sinking */         \
+  _(Sink)                                  \
+  /* Information during Range analysis */  \
+  _(Range)                                 \
+  /* Information during LICM */            \
+  _(LICM)                                  \
+  /* Info about fold linear constants */   \
+  _(FLAC)                                  \
+  /* Effective address analysis info */    \
+  _(EAA)                                   \
+  /* Information during regalloc */        \
+  _(RegAlloc)                              \
+  /* Information during inlining */        \
+  _(Inlining)                              \
+  /* Information during codegen */         \
+  _(Codegen)                               \
+  /* Debug info about safepoints */        \
+  _(Safepoints)                            \
+  /* Debug info about Pools*/              \
+  _(Pools)                                 \
+  /* Profiling-related information */      \
+  _(Profiling)                             \
+  /* Information of tracked opt strats */  \
+  _(OptimizationTracking)                  \
+  _(OptimizationTrackingExtended)          \
+  /* Debug info about the I$ */            \
+  _(CacheFlush)                            \
+  /* Output a list of MIR expressions */   \
+  _(MIRExpressions)                        \
+  /* Print control flow graph */           \
+  _(CFG)                                   \
+  /* Spew Tracelogger summary stats */     \
+  _(ScriptStats)                           \
+                                           \
+  /* BASELINE COMPILER SPEW */             \
+                                           \
+  /* Aborting Script Compilation. */       \
+  _(BaselineAbort)                         \
+  /* Script Compilation. */                \
+  _(BaselineScripts)                       \
+  /* Detailed op-specific spew. */         \
+  _(BaselineOp)                            \
+  /* Inline caches. */                     \
+  _(BaselineIC)                            \
+  /* Inline cache fallbacks. */            \
+  _(BaselineICFallback)                    \
+  /* OSR from Baseline => Ion. */          \
+  _(BaselineOSR)                           \
+  /* Bailouts. */                          \
+  _(BaselineBailouts)                      \
+  /* Debug Mode On Stack Recompile . */    \
+  _(BaselineDebugModeOSR)                  \
+                                           \
+  /* ION COMPILER SPEW */                  \
+                                           \
+  /* Used to abort SSA construction */     \
+  _(IonAbort)                              \
+  /* Information about compiled scripts */ \
+  _(IonScripts)                            \
+  /* Info about failing to log script */   \
+  _(IonSyncLogs)                           \
+  /* Information during MIR building */    \
+  _(IonMIR)                                \
+  /* Information during bailouts */        \
+  _(IonBailouts)                           \
+  /* Information during OSI */             \
+  _(IonInvalidate)                         \
+  /* Debug info about snapshots */         \
+  _(IonSnapshots)                          \
+  /* Generated inline cache stubs */       \
+  _(IonIC)
+>>>>>>> upstream-releases
 
 enum JitSpewChannel {
 #define JITSPEW_CHANNEL(name) JitSpew_##name,
@@ -125,6 +295,7 @@ class TempAllocator;
 #ifdef JS_JITSPEW
 
 // Class made to hold the MIR and LIR graphs of an Wasm / Ion compilation.
+<<<<<<< HEAD
 class GraphSpewer {
  private:
   MIRGraph* graph_;
@@ -142,9 +313,53 @@ class GraphSpewer {
   void endFunction();
 
   void dump(Fprinter& json);
+||||||| merged common ancestors
+class GraphSpewer
+{
+  private:
+    MIRGraph* graph_;
+    LSprinter c1Printer_;
+    LSprinter jsonPrinter_;
+    C1Spewer c1Spewer_;
+    JSONSpewer jsonSpewer_;
+
+  public:
+    explicit GraphSpewer(TempAllocator *alloc);
+
+    bool isSpewing() const {
+        return graph_;
+    }
+    void init(MIRGraph* graph, JSScript* function);
+    void beginFunction(JSScript* function);
+    void spewPass(const char* pass);
+    void spewPass(const char* pass, BacktrackingAllocator* ra);
+    void endFunction();
+
+    void dump(Fprinter& c1, Fprinter& json);
+=======
+class GraphSpewer {
+ private:
+  MIRGraph* graph_;
+  LSprinter jsonPrinter_;
+  JSONSpewer jsonSpewer_;
+
+ public:
+  explicit GraphSpewer(TempAllocator* alloc);
+
+  bool isSpewing() const { return graph_; }
+  void init(MIRGraph* graph, JSScript* function);
+  void beginFunction(JSScript* function);
+  void beginWasmFunction(unsigned funcIndex);
+  void spewPass(const char* pass);
+  void spewPass(const char* pass, BacktrackingAllocator* ra);
+  void endFunction();
+
+  void dump(Fprinter& json);
+>>>>>>> upstream-releases
 };
 
 void SpewBeginFunction(MIRGenerator* mir, JSScript* function);
+<<<<<<< HEAD
 class AutoSpewEndFunction {
  private:
   MIRGenerator* mir_;
@@ -152,6 +367,28 @@ class AutoSpewEndFunction {
  public:
   explicit AutoSpewEndFunction(MIRGenerator* mir) : mir_(mir) {}
   ~AutoSpewEndFunction();
+||||||| merged common ancestors
+class AutoSpewEndFunction
+{
+  private:
+    MIRGenerator* mir_;
+
+  public:
+    explicit AutoSpewEndFunction(MIRGenerator* mir)
+      : mir_(mir)
+    { }
+    ~AutoSpewEndFunction();
+=======
+void SpewBeginWasmFunction(MIRGenerator* mir, unsigned funcIndex);
+
+class AutoSpewEndFunction {
+ private:
+  MIRGenerator* mir_;
+
+ public:
+  explicit AutoSpewEndFunction(MIRGenerator* mir) : mir_(mir) {}
+  ~AutoSpewEndFunction();
+>>>>>>> upstream-releases
 };
 
 void CheckLogging();
@@ -203,7 +440,16 @@ class GraphSpewer {
   void dump(Fprinter& c1, Fprinter& json) {}
 };
 
+<<<<<<< HEAD
 static inline void SpewBeginFunction(MIRGenerator* mir, JSScript* function) {}
+||||||| merged common ancestors
+static inline void SpewBeginFunction(MIRGenerator* mir, JSScript* function)
+{ }
+=======
+static inline void SpewBeginFunction(MIRGenerator* mir, JSScript* function) {}
+static inline void SpewBeginWasmFunction(MIRGenerator* mir,
+                                         unsigned funcIndex) {}
+>>>>>>> upstream-releases
 
 class AutoSpewEndFunction {
  public:
@@ -225,6 +471,7 @@ class JitSpewIndent {
 // The computation of some of the argument of the spewing functions might be
 // costly, thus we use variaidic macros to ignore any argument of these
 // functions.
+<<<<<<< HEAD
 static inline void JitSpewCheckArguments(JitSpewChannel channel,
                                          const char* fmt) {}
 
@@ -250,6 +497,64 @@ static inline void EnableChannel(JitSpewChannel) {}
 static inline void DisableChannel(JitSpewChannel) {}
 static inline void EnableIonDebugSyncLogging() {}
 static inline void EnableIonDebugAsyncLogging() {}
+||||||| merged common ancestors
+static inline void JitSpewCheckArguments(JitSpewChannel channel, const char* fmt)
+{ }
+
+#define JitSpewCheckExpandedArgs(channel, fmt, ...) JitSpewCheckArguments(channel, fmt)
+#define JitSpewCheckExpandedArgs_(ArgList) JitSpewCheckExpandedArgs ArgList /* Fix MSVC issue */
+#define JitSpew(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+#define JitSpewStart(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+#define JitSpewCont(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+
+static inline void JitSpewFin(JitSpewChannel channel)
+{ }
+
+static inline void JitSpewHeader(JitSpewChannel channel)
+{ }
+static inline bool JitSpewEnabled(JitSpewChannel channel)
+{ return false; }
+static inline MOZ_FORMAT_PRINTF(2, 0)
+void JitSpewVA(JitSpewChannel channel, const char* fmt, va_list ap)
+{ }
+static inline void JitSpewDef(JitSpewChannel channel, const char* str, MDefinition* def)
+{ }
+
+static inline void EnableChannel(JitSpewChannel)
+{ }
+static inline void DisableChannel(JitSpewChannel)
+{ }
+static inline void EnableIonDebugSyncLogging()
+{ }
+static inline void EnableIonDebugAsyncLogging()
+{ }
+=======
+static inline void JitSpewCheckArguments(JitSpewChannel channel,
+                                         const char* fmt) {}
+
+#  define JitSpewCheckExpandedArgs(channel, fmt, ...) \
+    JitSpewCheckArguments(channel, fmt)
+#  define JitSpewCheckExpandedArgs_(ArgList) \
+    JitSpewCheckExpandedArgs ArgList /* Fix MSVC issue */
+#  define JitSpew(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+#  define JitSpewStart(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+#  define JitSpewCont(...) JitSpewCheckExpandedArgs_((__VA_ARGS__))
+
+static inline void JitSpewFin(JitSpewChannel channel) {}
+
+static inline void JitSpewHeader(JitSpewChannel channel) {}
+static inline bool JitSpewEnabled(JitSpewChannel channel) { return false; }
+static inline MOZ_FORMAT_PRINTF(2, 0) void JitSpewVA(JitSpewChannel channel,
+                                                     const char* fmt,
+                                                     va_list ap) {}
+static inline void JitSpewDef(JitSpewChannel channel, const char* str,
+                              MDefinition* def) {}
+
+static inline void EnableChannel(JitSpewChannel) {}
+static inline void DisableChannel(JitSpewChannel) {}
+static inline void EnableIonDebugSyncLogging() {}
+static inline void EnableIonDebugAsyncLogging() {}
+>>>>>>> upstream-releases
 
 #endif /* JS_JITSPEW */
 

@@ -14,7 +14,7 @@ class nsNSSCertTrust {
  public:
   nsNSSCertTrust();
   nsNSSCertTrust(unsigned int ssl, unsigned int email);
-  explicit nsNSSCertTrust(CERTCertTrust *t);
+  explicit nsNSSCertTrust(CERTCertTrust* t);
   virtual ~nsNSSCertTrust();
 
   /* query */
@@ -45,9 +45,19 @@ class nsNSSCertTrust {
 
   CERTCertTrust &GetTrust() { return mTrust; }
 
+<<<<<<< HEAD
  private:
   void addTrust(unsigned int *t, unsigned int v);
   void removeTrust(unsigned int *t, unsigned int v);
+||||||| merged common ancestors
+private:
+  void addTrust(unsigned int *t, unsigned int v);
+  void removeTrust(unsigned int *t, unsigned int v);
+=======
+ private:
+  void addTrust(unsigned int* t, unsigned int v);
+  void removeTrust(unsigned int* t, unsigned int v);
+>>>>>>> upstream-releases
   bool hasTrust(unsigned int t, unsigned int v);
   CERTCertTrust mTrust;
 };

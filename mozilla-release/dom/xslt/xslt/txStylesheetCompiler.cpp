@@ -119,6 +119,7 @@ nsresult txStylesheetCompiler::startElement(const char16_t* aName,
         aAttrs[i * 2], getter_AddRefs(atts[i].mPrefix),
         getter_AddRefs(atts[i].mLocalName), &atts[i].mNamespaceID);
     NS_ENSURE_SUCCESS(rv, rv);
+<<<<<<< HEAD
     atts[i].mValue.Append(aAttrs[i * 2 + 1]);
 
     RefPtr<nsAtom> prefixToBind;
@@ -226,6 +227,128 @@ nsresult txStylesheetCompiler::startElementInternal(
         if (!mElementContext->mInstructionNamespaces.AppendElement(
                 namespaceID)) {
           return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+
+    // look for new namespace mappings
+    bool hasOwnNamespaceMap = false;
+    int32_t i;
+    for (i = 0; i < aAttrCount; ++i) {
+        txStylesheetAttr* attr = aAttributes + i;
+        if (attr->mNamespaceID == kNameSpaceID_XMLNS) {
+            rv = ensureNewElementContext();
+            NS_ENSURE_SUCCESS(rv, rv);
+
+            if (!hasOwnNamespaceMap) {
+                mElementContext->mMappings =
+                    new txNamespaceMap(*mElementContext->mMappings);
+                hasOwnNamespaceMap = true;
+            }
+
+            if (attr->mLocalName == nsGkAtoms::xmlns) {
+                mElementContext->mMappings->mapNamespace(nullptr, attr->mValue);
+            }
+            else {
+                mElementContext->mMappings->
+                    mapNamespace(attr->mLocalName, attr->mValue);
+            }
+=======
+    atts[i].mValue.Append(aAttrs[i * 2 + 1]);
+
+    RefPtr<nsAtom> prefixToBind;
+    if (atts[i].mPrefix == nsGkAtoms::xmlns) {
+      prefixToBind = atts[i].mLocalName;
+    } else if (atts[i].mNamespaceID == kNameSpaceID_XMLNS) {
+      prefixToBind = nsGkAtoms::_empty;
+    }
+
+    if (prefixToBind) {
+      rv = ensureNewElementContext();
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (!hasOwnNamespaceMap) {
+        mElementContext->mMappings =
+            new txNamespaceMap(*mElementContext->mMappings);
+        hasOwnNamespaceMap = true;
+      }
+
+      rv = mElementContext->mMappings->mapNamespace(prefixToBind,
+                                                    atts[i].mValue);
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
+  }
+
+  RefPtr<nsAtom> prefix, localname;
+  int32_t namespaceID;
+  rv = XMLUtils::splitExpatName(aName, getter_AddRefs(prefix),
+                                getter_AddRefs(localname), &namespaceID);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  return startElementInternal(namespaceID, localname, prefix, atts.get(),
+                              aAttrCount);
+}
+
+nsresult txStylesheetCompiler::startElementInternal(
+    int32_t aNamespaceID, nsAtom* aLocalName, nsAtom* aPrefix,
+    txStylesheetAttr* aAttributes, int32_t aAttrCount) {
+  nsresult rv = NS_OK;
+  int32_t i;
+  for (i = mInScopeVariables.Length() - 1; i >= 0; --i) {
+    ++mInScopeVariables[i]->mLevel;
+  }
+
+  // Update the elementcontext if we have special attributes
+  for (i = 0; i < aAttrCount; ++i) {
+    txStylesheetAttr* attr = aAttributes + i;
+
+    // id
+    if (mEmbedStatus == eNeedEmbed && attr->mLocalName == nsGkAtoms::id &&
+        attr->mNamespaceID == kNameSpaceID_None &&
+        attr->mValue.Equals(mTarget)) {
+      // We found the right ID, signal to compile the
+      // embedded stylesheet.
+      mEmbedStatus = eInEmbed;
+    }
+
+    // xml:space
+    if (attr->mNamespaceID == kNameSpaceID_XML &&
+        attr->mLocalName == nsGkAtoms::space) {
+      rv = ensureNewElementContext();
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (TX_StringEqualsAtom(attr->mValue, nsGkAtoms::preserve)) {
+        mElementContext->mPreserveWhitespace = true;
+      } else if (TX_StringEqualsAtom(attr->mValue, nsGkAtoms::_default)) {
+        mElementContext->mPreserveWhitespace = false;
+      } else {
+        return NS_ERROR_XSLT_PARSE_FAILURE;
+      }
+    }
+
+    // extension-element-prefixes
+    if ((attr->mNamespaceID == kNameSpaceID_XSLT &&
+         attr->mLocalName == nsGkAtoms::extensionElementPrefixes &&
+         aNamespaceID != kNameSpaceID_XSLT) ||
+        (attr->mNamespaceID == kNameSpaceID_None &&
+         attr->mLocalName == nsGkAtoms::extensionElementPrefixes &&
+         aNamespaceID == kNameSpaceID_XSLT &&
+         (aLocalName == nsGkAtoms::stylesheet ||
+          aLocalName == nsGkAtoms::transform))) {
+      rv = ensureNewElementContext();
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      nsWhitespaceTokenizer tok(attr->mValue);
+      while (tok.hasMoreTokens()) {
+        int32_t namespaceID =
+            mElementContext->mMappings->lookupNamespaceWithDefault(
+                tok.nextToken());
+
+        if (namespaceID == kNameSpaceID_Unknown)
+          return NS_ERROR_XSLT_PARSE_FAILURE;
+
+        if (!mElementContext->mInstructionNamespaces.AppendElement(
+                namespaceID)) {
+          return NS_ERROR_OUT_OF_MEMORY;
+>>>>>>> upstream-releases
         }
       }
 

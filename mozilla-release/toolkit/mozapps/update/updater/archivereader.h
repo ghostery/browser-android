@@ -22,22 +22,42 @@ class ArchiveReader {
   ArchiveReader() {}
   ~ArchiveReader() { Close(); }
 
-  int Open(const NS_tchar *path);
+  int Open(const NS_tchar* path);
   int VerifySignature();
-  int VerifyProductInformation(const char *MARChannelID,
-                               const char *appVersion);
+  int VerifyProductInformation(const char* MARChannelID,
+                               const char* appVersion);
   void Close();
 
-  int ExtractFile(const char *item, const NS_tchar *destination);
-  int ExtractFileToStream(const char *item, FILE *fp);
+  int ExtractFile(const char* item, const NS_tchar* destination);
+  int ExtractFileToStream(const char* item, FILE* fp);
 
+<<<<<<< HEAD
  private:
   int ExtractItemToStream(const MarItem *item, FILE *fp);
+||||||| merged common ancestors
+private:
+  int ExtractItemToStream(const MarItem *item, FILE *fp);
+=======
+ private:
+  int ExtractItemToStream(const MarItem* item, FILE* fp);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MarFile *mArchive = nullptr;
   uint8_t *mInBuf = nullptr;
   uint8_t *mOutBuf = nullptr;
   size_t mInBufSize = 262144;
+||||||| merged common ancestors
+  MarFile *mArchive = nullptr;
+  uint8_t *mInBuf = nullptr;
+  uint8_t *mOutBuf = nullptr;
+  size_t mInBufSize  = 262144;
+=======
+  MarFile* mArchive = nullptr;
+  uint8_t* mInBuf = nullptr;
+  uint8_t* mOutBuf = nullptr;
+  size_t mInBufSize = 262144;
+>>>>>>> upstream-releases
   size_t mOutBufSize = 262144;
 };
 

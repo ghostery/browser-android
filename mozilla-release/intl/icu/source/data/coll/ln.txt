@@ -16,14 +16,26 @@ ln{
                 "&S<sh<<<sH<<<Sh<<<SH"
                 "&T<ts<<<tS<<<Ts<<<TS"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
         standard{
             Sequence{
                 "&E<ɛ<<<Ɛ"
                 "&O<<ɔ<<<Ɔ"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

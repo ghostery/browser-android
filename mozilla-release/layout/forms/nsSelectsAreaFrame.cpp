@@ -4,6 +4,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "nsSelectsAreaFrame.h"
+
+#include "mozilla/PresShell.h"
 #include "nsIContent.h"
 #include "nsListControlFrame.h"
 #include "nsDisplayList.h"
@@ -11,10 +13,23 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewSelectsAreaFrame(nsIPresShell* aShell,
                                          ComputedStyle* aStyle,
                                          nsFrameState aFlags) {
   nsSelectsAreaFrame* it = new (aShell) nsSelectsAreaFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewSelectsAreaFrame(nsIPresShell* aShell, ComputedStyle* aStyle, nsFrameState aFlags)
+{
+  nsSelectsAreaFrame* it = new (aShell) nsSelectsAreaFrame(aStyle);
+=======
+nsContainerFrame* NS_NewSelectsAreaFrame(PresShell* aShell,
+                                         ComputedStyle* aStyle,
+                                         nsFrameState aFlags) {
+  nsSelectsAreaFrame* it =
+      new (aShell) nsSelectsAreaFrame(aStyle, aShell->GetPresContext());
+>>>>>>> upstream-releases
 
   // We need NS_BLOCK_FLOAT_MGR to ensure that the options inside the select
   // aren't expanded by right floats outside the select.
@@ -97,10 +112,23 @@ static nsListControlFrame* GetEnclosingListFrame(nsIFrame* aSelectsAreaFrame) {
   return nullptr;
 }
 
+<<<<<<< HEAD
 class nsDisplayListFocus : public nsDisplayItem {
  public:
   nsDisplayListFocus(nsDisplayListBuilder* aBuilder, nsSelectsAreaFrame* aFrame)
       : nsDisplayItem(aBuilder, aFrame) {
+||||||| merged common ancestors
+class nsDisplayListFocus : public nsDisplayItem {
+public:
+  nsDisplayListFocus(nsDisplayListBuilder* aBuilder,
+                     nsSelectsAreaFrame* aFrame) :
+    nsDisplayItem(aBuilder, aFrame) {
+=======
+class nsDisplayListFocus : public nsPaintedDisplayItem {
+ public:
+  nsDisplayListFocus(nsDisplayListBuilder* aBuilder, nsSelectsAreaFrame* aFrame)
+      : nsPaintedDisplayItem(aBuilder, aFrame) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayListFocus);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -149,8 +177,15 @@ void nsSelectsAreaFrame::BuildDisplayListInternal(
     // we can't just associate the display item with the list frame,
     // because then the list's scrollframe won't clip it (the scrollframe
     // only clips contained descendants).
+<<<<<<< HEAD
     aLists.Outlines()->AppendToTop(
         MakeDisplayItem<nsDisplayListFocus>(aBuilder, this));
+||||||| merged common ancestors
+    aLists.Outlines()->AppendToTop(
+      MakeDisplayItem<nsDisplayListFocus>(aBuilder, this));
+=======
+    aLists.Outlines()->AppendNewToTop<nsDisplayListFocus>(aBuilder, this);
+>>>>>>> upstream-releases
   }
 }
 

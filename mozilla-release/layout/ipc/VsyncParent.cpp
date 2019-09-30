@@ -20,7 +20,16 @@ using namespace ipc;
 
 namespace layout {
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<VsyncParent> VsyncParent::Create() {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<VsyncParent>
+VsyncParent::Create()
+{
+=======
+/*static*/
+already_AddRefed<VsyncParent> VsyncParent::Create() {
+>>>>>>> upstream-releases
   AssertIsOnBackgroundThread();
   RefPtr<gfx::VsyncSource> vsyncSource =
       gfxPlatform::GetPlatform()->GetHardwareVsync();

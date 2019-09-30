@@ -7,31 +7,25 @@
 #ifndef ProfileBufferEntry_h
 #define ProfileBufferEntry_h
 
-#include <ostream>
-#include "GeckoProfiler.h"
-#include "platform.h"
 #include "ProfileJSONWriter.h"
-#include "ProfilerBacktrace.h"
-#include "mozilla/RefPtr.h"
-#include <string>
-#include <map>
+
+#include "gtest/MozGtestFriend.h"
+#include "js/ProfilingCategory.h"
 #include "js/ProfilingFrameIterator.h"
 #include "js/TrackedOptimizationInfo.h"
-#include "nsHashKeys.h"
-#include "nsDataHashtable.h"
-#include "mozilla/Maybe.h"
-#include "mozilla/Vector.h"
-#include "gtest/MozGtestFriend.h"
 #include "mozilla/HashFunctions.h"
+#include "mozilla/HashTable.h"
+#include "mozilla/Maybe.h"
 #include "mozilla/UniquePtr.h"
-#include "nsClassHashtable.h"
 #include "mozilla/Variant.h"
-#include "nsTArray.h"
+#include "mozilla/Vector.h"
+#include "nsString.h"
 
 class ProfilerMarker;
 
 // NOTE!  If you add entries, you need to verify if they need to be added to the
 // switch statement in DuplicateLastSample!
+<<<<<<< HEAD
 #define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(MACRO)                   \
   MACRO(Category, int)                                              \
   MACRO(CollectionStart, double)                                    \
@@ -63,6 +57,69 @@ class ProfilerMarker;
 
 class ProfileBufferEntry {
  public:
+||||||| merged common ancestors
+#define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(macro) \
+  macro(Category,              int) \
+  macro(CollectionStart,       double) \
+  macro(CollectionEnd,         double) \
+  macro(Label,                 const char*) \
+  macro(DynamicStringFragment, char*) /* char[kNumChars], really */ \
+  macro(JitReturnAddr,         void*) \
+  macro(LineNumber,            int) \
+  macro(ColumnNumber,          int) \
+  macro(NativeLeafAddr,        void*) \
+  macro(Marker,                ProfilerMarker*) \
+  macro(Pause,                 double) \
+  macro(Responsiveness,        double) \
+  macro(Resume,                double) \
+  macro(ThreadId,              int) \
+  macro(Time,                  double) \
+  macro(ResidentMemory,        uint64_t) \
+  macro(UnsharedMemory,        uint64_t) \
+  macro(CounterId,             void*) \
+  macro(CounterKey,            uint64_t) \
+  macro(Number,                uint64_t) \
+  macro(Count,                 int64_t)
+
+
+// NB: Packing this structure has been shown to cause SIGBUS issues on ARM.
+#if !defined(GP_ARCH_arm)
+#pragma pack(push, 1)
+#endif
+
+class ProfileBufferEntry
+{
+public:
+=======
+#define FOR_EACH_PROFILE_BUFFER_ENTRY_KIND(MACRO)                   \
+  MACRO(CategoryPair, int)                                          \
+  MACRO(CollectionStart, double)                                    \
+  MACRO(CollectionEnd, double)                                      \
+  MACRO(Label, const char*)                                         \
+  MACRO(FrameFlags, uint64_t)                                       \
+  MACRO(DynamicStringFragment, char*) /* char[kNumChars], really */ \
+  MACRO(JitReturnAddr, void*)                                       \
+  MACRO(LineNumber, int)                                            \
+  MACRO(ColumnNumber, int)                                          \
+  MACRO(NativeLeafAddr, void*)                                      \
+  MACRO(Marker, ProfilerMarker*)                                    \
+  MACRO(Pause, double)                                              \
+  MACRO(Responsiveness, double)                                     \
+  MACRO(Resume, double)                                             \
+  MACRO(ThreadId, int)                                              \
+  MACRO(Time, double)                                               \
+  MACRO(ResidentMemory, uint64_t)                                   \
+  MACRO(UnsharedMemory, uint64_t)                                   \
+  MACRO(CounterId, void*)                                           \
+  MACRO(CounterKey, uint64_t)                                       \
+  MACRO(Number, uint64_t)                                           \
+  MACRO(Count, int64_t)                                             \
+  MACRO(ProfilerOverheadTime, double)                               \
+  MACRO(ProfilerOverheadDuration, double)
+
+class ProfileBufferEntry {
+ public:
+>>>>>>> upstream-releases
   enum class Kind : uint8_t {
     INVALID = 0,
 #define KIND(k, t) k,
@@ -112,6 +169,7 @@ class ProfileBufferEntry {
   friend class ProfileBuffer;
 
   Kind mKind;
+<<<<<<< HEAD
   union {
     const char* mString;
     char mChars[kNumChars];
@@ -122,13 +180,33 @@ class ProfileBufferEntry {
     int64_t mInt64;
     uint64_t mUint64;
   } u;
+||||||| merged common ancestors
+  union {
+    const char*     mString;
+    char            mChars[kNumChars];
+    void*           mPtr;
+    ProfilerMarker* mMarker;
+    double          mDouble;
+    int             mInt;
+    int64_t         mInt64;
+    uint64_t        mUint64;
+  } u;
+=======
+  uint8_t mStorage[kNumChars];
+
+  const char* GetString() const;
+  void* GetPtr() const;
+  ProfilerMarker* GetMarker() const;
+  double GetDouble() const;
+  int GetInt() const;
+  int64_t GetInt64() const;
+  uint64_t GetUint64() const;
+  void CopyCharsInto(char (&aOutArray)[kNumChars]) const;
+>>>>>>> upstream-releases
 };
 
-#if !defined(GP_ARCH_arm)
 // Packed layout: 1 byte for the tag + 8 bytes for the value.
 static_assert(sizeof(ProfileBufferEntry) == 9, "bad ProfileBufferEntry size");
-#pragma pack(pop)
-#endif
 
 class UniqueJSONStrings {
  public:
@@ -152,7 +230,7 @@ class UniqueJSONStrings {
 
  private:
   SpliceableChunkedJSONWriter mStringTableWriter;
-  nsDataHashtable<nsCStringHashKey, uint32_t> mStringToIndexMap;
+  mozilla::HashMap<mozilla::HashNumber, uint32_t> mStringHashToIndexMap;
 };
 
 // Contains all the information about JIT frames that is needed to stream stack
@@ -168,20 +246,68 @@ struct JITFrameInfoForBufferRange final {
   uint64_t mRangeStart;
   uint64_t mRangeEnd;  // mRangeEnd marks the first invalid index.
 
+<<<<<<< HEAD
   struct JITFrameKey {
     uint32_t Hash() const;
     bool operator==(const JITFrameKey& aOther) const;
     bool operator!=(const JITFrameKey& aOther) const {
       return !(*this == aOther);
     }
+||||||| merged common ancestors
+  struct JITFrameKey
+  {
+    uint32_t Hash() const;
+    bool operator==(const JITFrameKey& aOther) const;
+    bool operator!=(const JITFrameKey& aOther) const { return !(*this == aOther); }
+=======
+  struct JITFrameKey {
+    bool operator==(const JITFrameKey& aOther) const {
+      return mCanonicalAddress == aOther.mCanonicalAddress &&
+             mDepth == aOther.mDepth;
+    }
+    bool operator!=(const JITFrameKey& aOther) const {
+      return !(*this == aOther);
+    }
+>>>>>>> upstream-releases
 
     void* mCanonicalAddress;
     uint32_t mDepth;
   };
+<<<<<<< HEAD
   nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>>
       mJITAddressToJITFramesMap;
   nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString>
       mJITFrameToFrameJSONMap;
+||||||| merged common ancestors
+  nsClassHashtable<nsPtrHashKey<void>, nsTArray<JITFrameKey>> mJITAddressToJITFramesMap;
+  nsClassHashtable<nsGenericHashKey<JITFrameKey>, nsCString> mJITFrameToFrameJSONMap;
+=======
+  struct JITFrameKeyHasher {
+    using Lookup = JITFrameKey;
+
+    static mozilla::HashNumber hash(const JITFrameKey& aLookup) {
+      mozilla::HashNumber hash = 0;
+      hash = mozilla::AddToHash(hash, aLookup.mCanonicalAddress);
+      hash = mozilla::AddToHash(hash, aLookup.mDepth);
+      return hash;
+    }
+
+    static bool match(const JITFrameKey& aKey, const JITFrameKey& aLookup) {
+      return aKey == aLookup;
+    }
+
+    static void rekey(JITFrameKey& aKey, const JITFrameKey& aNewKey) {
+      aKey = aNewKey;
+    }
+  };
+
+  using JITAddressToJITFramesMap =
+      mozilla::HashMap<void*, mozilla::Vector<JITFrameKey>>;
+  JITAddressToJITFramesMap mJITAddressToJITFramesMap;
+  using JITFrameToFrameJSONMap =
+      mozilla::HashMap<JITFrameKey, nsCString, JITFrameKeyHasher>;
+  JITFrameToFrameJSONMap mJITFrameToFrameJSONMap;
+>>>>>>> upstream-releases
 };
 
 // Contains JITFrameInfoForBufferRange objects for multiple profiler buffer
@@ -206,20 +332,29 @@ struct JITFrameInfo final {
 
   // Returns whether the information stored in this object is still relevant
   // for any entries in the buffer.
+<<<<<<< HEAD
   bool HasExpired(uint64_t aCurrentBufferRangeStart) const {
     if (mRanges.IsEmpty()) {
+||||||| merged common ancestors
+  bool HasExpired(uint64_t aCurrentBufferRangeStart) const
+  {
+    if (mRanges.IsEmpty()) {
+=======
+  bool HasExpired(uint64_t aCurrentBufferRangeStart) const {
+    if (mRanges.empty()) {
+>>>>>>> upstream-releases
       // No information means no relevant information. Allow this object to be
       // discarded.
       return true;
     }
-    return mRanges.LastElement().mRangeEnd <= aCurrentBufferRangeStart;
+    return mRanges.back().mRangeEnd <= aCurrentBufferRangeStart;
   }
 
   // The array of ranges of JIT frame information, sorted by buffer position.
   // Ranges are non-overlapping.
   // The JSON of the cached frames can contain string indexes, which refer
   // to strings in mUniqueStrings.
-  nsTArray<JITFrameInfoForBufferRange> mRanges;
+  mozilla::Vector<JITFrameInfoForBufferRange> mRanges;
 
   // The string table which contains strings used in the frame JSON that's
   // cached in mRanges.
@@ -236,9 +371,20 @@ class UniqueStacks {
     FrameKey(nsCString&& aLocation, bool aRelevantForJS,
              const mozilla::Maybe<unsigned>& aLine,
              const mozilla::Maybe<unsigned>& aColumn,
+<<<<<<< HEAD
              const mozilla::Maybe<unsigned>& aCategory)
         : mData(NormalFrameData{aLocation, aRelevantForJS, aLine, aColumn,
                                 aCategory}) {}
+||||||| merged common ancestors
+             const mozilla::Maybe<unsigned>& aCategory)
+      : mData(NormalFrameData{ nsCString(aLocation), aLine, aColumn, aCategory })
+    {
+    }
+=======
+             const mozilla::Maybe<JS::ProfilingCategoryPair>& aCategoryPair)
+        : mData(NormalFrameData{aLocation, aRelevantForJS, aLine, aColumn,
+                                aCategoryPair}) {}
+>>>>>>> upstream-releases
 
     FrameKey(void* aJITAddress, uint32_t aJITDepth, uint32_t aRangeIndex)
         : mData(JITFrameData{aJITAddress, aJITDepth, aRangeIndex}) {}
@@ -257,7 +403,7 @@ class UniqueStacks {
       bool mRelevantForJS;
       mozilla::Maybe<unsigned> mLine;
       mozilla::Maybe<unsigned> mColumn;
-      mozilla::Maybe<unsigned> mCategory;
+      mozilla::Maybe<JS::ProfilingCategoryPair> mCategoryPair;
     };
     struct JITFrameData {
       bool operator==(const JITFrameData& aOther) const;
@@ -267,6 +413,48 @@ class UniqueStacks {
       uint32_t mRangeIndex;
     };
     mozilla::Variant<NormalFrameData, JITFrameData> mData;
+  };
+
+  struct FrameKeyHasher {
+    using Lookup = FrameKey;
+
+    static mozilla::HashNumber hash(const FrameKey& aLookup) {
+      mozilla::HashNumber hash = 0;
+      if (aLookup.mData.is<FrameKey::NormalFrameData>()) {
+        const FrameKey::NormalFrameData& data =
+            aLookup.mData.as<FrameKey::NormalFrameData>();
+        if (!data.mLocation.IsEmpty()) {
+          hash = mozilla::AddToHash(hash,
+                                    mozilla::HashString(data.mLocation.get()));
+        }
+        hash = mozilla::AddToHash(hash, data.mRelevantForJS);
+        if (data.mLine.isSome()) {
+          hash = mozilla::AddToHash(hash, *data.mLine);
+        }
+        if (data.mColumn.isSome()) {
+          hash = mozilla::AddToHash(hash, *data.mColumn);
+        }
+        if (data.mCategoryPair.isSome()) {
+          hash = mozilla::AddToHash(hash,
+                                    static_cast<uint32_t>(*data.mCategoryPair));
+        }
+      } else {
+        const FrameKey::JITFrameData& data =
+            aLookup.mData.as<FrameKey::JITFrameData>();
+        hash = mozilla::AddToHash(hash, data.mCanonicalAddress);
+        hash = mozilla::AddToHash(hash, data.mDepth);
+        hash = mozilla::AddToHash(hash, data.mRangeIndex);
+      }
+      return hash;
+    }
+
+    static bool match(const FrameKey& aKey, const FrameKey& aLookup) {
+      return aKey == aLookup;
+    }
+
+    static void rekey(FrameKey& aKey, const FrameKey& aNewKey) {
+      aKey = aNewKey;
+    }
   };
 
   struct StackKey {
@@ -282,15 +470,39 @@ class UniqueStacks {
           mFrameIndex(aFrame),
           mHash(mozilla::AddToHash(aPrefix.mHash, aFrame)) {}
 
-    uint32_t Hash() const { return mHash; }
+    mozilla::HashNumber Hash() const { return mHash; }
 
     bool operator==(const StackKey& aOther) const {
       return mPrefixStackIndex == aOther.mPrefixStackIndex &&
              mFrameIndex == aOther.mFrameIndex;
     }
 
+<<<<<<< HEAD
    private:
     uint32_t mHash;
+||||||| merged common ancestors
+  private:
+    uint32_t mHash;
+=======
+   private:
+    mozilla::HashNumber mHash;
+  };
+
+  struct StackKeyHasher {
+    using Lookup = StackKey;
+
+    static mozilla::HashNumber hash(const StackKey& aLookup) {
+      return aLookup.Hash();
+    }
+
+    static bool match(const StackKey& aKey, const StackKey& aLookup) {
+      return aKey == aLookup;
+    }
+
+    static void rekey(StackKey& aKey, const StackKey& aNewKey) {
+      aKey = aNewKey;
+    }
+>>>>>>> upstream-releases
   };
 
   explicit UniqueStacks(JITFrameInfo&& aJITFrameInfo);
@@ -307,7 +519,7 @@ class UniqueStacks {
   // is taken from mJITInfoRanges.
   // aBufferPosition is needed in order to look up the correct JIT frame info
   // object in mJITInfoRanges.
-  MOZ_MUST_USE mozilla::Maybe<nsTArray<UniqueStacks::FrameKey>>
+  MOZ_MUST_USE mozilla::Maybe<mozilla::Vector<UniqueStacks::FrameKey>>
   LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
                                          uint64_t aBufferPosition);
 
@@ -326,12 +538,12 @@ class UniqueStacks {
 
  private:
   SpliceableChunkedJSONWriter mFrameTableWriter;
-  nsDataHashtable<nsGenericHashKey<FrameKey>, uint32_t> mFrameToIndexMap;
+  mozilla::HashMap<FrameKey, uint32_t, FrameKeyHasher> mFrameToIndexMap;
 
   SpliceableChunkedJSONWriter mStackTableWriter;
-  nsDataHashtable<nsGenericHashKey<StackKey>, uint32_t> mStackToIndexMap;
+  mozilla::HashMap<StackKey, uint32_t, StackKeyHasher> mStackToIndexMap;
 
-  nsTArray<JITFrameInfoForBufferRange> mJITInfoRanges;
+  mozilla::Vector<JITFrameInfoForBufferRange> mJITInfoRanges;
 };
 
 //
@@ -400,12 +612,31 @@ class UniqueStacks {
 //   {
 //     "schema":
 //     {
+<<<<<<< HEAD
 //       "location": 0,       /* index into stringTable */
 //       "implementation": 1, /* index into stringTable */
 //       "optimizations": 2,  /* arbitrary JSON */
 //       "line": 3,           /* number */
 //       "column": 4,         /* number */
 //       "category": 5        /* number */
+||||||| merged common ancestors
+//       "location": 0,        /* index into stringTable */
+//       "implementation": 1,  /* index into stringTable */
+//       "optimizations": 2,   /* arbitrary JSON */
+//       "line": 3,            /* number */
+//       "column": 4,          /* number */
+//       "category": 5         /* number */
+=======
+//       "location": 0,       /* index into stringTable */
+//       "relevantForJS": 1,  /* bool */
+//       "implementation": 2, /* index into stringTable */
+//       "optimizations": 3,  /* arbitrary JSON */
+//       "line": 4,           /* number */
+//       "column": 5,         /* number */
+//       "category": 6        /* index into profile.meta.categories */
+//       "subcategory": 7     /* index into
+//       profile.meta.categories[category].subcategories */
+>>>>>>> upstream-releases
 //     },
 //     "data":
 //     [

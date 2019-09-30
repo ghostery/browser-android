@@ -21,13 +21,41 @@ class AudioWorkletImpl final : public WorkletImpl {
  public:
   // Methods for parent thread only:
 
+<<<<<<< HEAD
+  static already_AddRefed<dom::Worklet> CreateWorklet(
+      dom::AudioContext* aContext, ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<dom::Worklet>
+  CreateWorklet(dom::AudioContext* aContext, ErrorResult& aRv);
+=======
   static already_AddRefed<dom::Worklet> CreateWorklet(
       dom::AudioContext* aContext, ErrorResult& aRv);
 
   JSObject* WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
                         JS::Handle<JSObject*> aGivenProto) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSObject* WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
+                        JS::Handle<JSObject*> aGivenProto) override;
+||||||| merged common ancestors
+  JSObject*
+  WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
+              JS::Handle<JSObject*> aGivenProto) override;
+=======
+  nsresult SendControlMessage(already_AddRefed<nsIRunnable> aRunnable) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ protected:
+||||||| merged common ancestors
+protected:
+=======
+  // Any thread:
+  AudioNodeStream* DestinationStream() { return mDestinationStream; }
 
  protected:
+>>>>>>> upstream-releases
   // Execution thread only.
   already_AddRefed<dom::WorkletGlobalScope> ConstructGlobalScope() override;
 

@@ -94,9 +94,28 @@ void AddVarCacheFunc(float* aVar, const nsCString& aPrefName) {
   ASSERT_TRUE(NS_SUCCEEDED(rv));
 }
 
+<<<<<<< HEAD
 template <typename T, typename U = T>
 void RunTest(const nsCString& aPrefName1, const nsCString& aPrefName2,
              T aValue1, T aValue2) {
+||||||| merged common ancestors
+template<typename T, typename U = T>
+void
+RunTest(const nsCString& aPrefName1,
+        const nsCString& aPrefName2,
+        T aValue1,
+        T aValue2)
+{
+=======
+void AddVarCacheFunc(std::atomic<float>* aVar, const nsCString& aPrefName) {
+  nsresult rv = Preferences::AddAtomicFloatVarCache(aVar, aPrefName);
+  ASSERT_TRUE(NS_SUCCEEDED(rv));
+}
+
+template <typename T, typename U = T>
+void RunTest(const nsCString& aPrefName1, const nsCString& aPrefName2,
+             T aValue1, T aValue2) {
+>>>>>>> upstream-releases
   static U var1, var2;
   static Closure<T, U> closure1, closure2;
   nsresult rv;
@@ -184,7 +203,22 @@ TEST(CallbackAndVarCacheOrder, AtomicUintReleaseAcquire) {
 
 TEST(CallbackAndVarCacheOrder, Float) {
   RunTest<float>(NS_LITERAL_CSTRING("test_pref.float.1"),
+<<<<<<< HEAD
                  NS_LITERAL_CSTRING("test_pref.float.2"), -10.0f, 11.0f);
+||||||| merged common ancestors
+                 NS_LITERAL_CSTRING("test_pref.float.2"),
+                 -10.0f,
+                 11.0f);
+=======
+                 NS_LITERAL_CSTRING("test_pref.float.2"), -10.0f, 11.0f);
+}
+
+TEST(CallbackAndVarCacheOrder, AtomicFloat)
+{
+  RunTest<float, std::atomic<float>>(
+      NS_LITERAL_CSTRING("test_pref.atomic_float.1"),
+      NS_LITERAL_CSTRING("test_pref.atomic_float.2"), -12.0f, 13.0f);
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

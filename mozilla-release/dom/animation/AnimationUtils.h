@@ -14,19 +14,39 @@
 #include "nsStringFwd.h"
 
 class nsIContent;
-class nsIDocument;
 class nsIFrame;
 struct JSContext;
 
 namespace mozilla {
 
+enum class PseudoStyleType : uint8_t;
 class ComputedTimingFunction;
 class EffectSet;
 
+<<<<<<< HEAD
 class AnimationUtils {
  public:
   static dom::Nullable<double> TimeDurationToDouble(
       const dom::Nullable<TimeDuration>& aTime) {
+||||||| merged common ancestors
+class AnimationUtils
+{
+public:
+  static dom::Nullable<double>
+  TimeDurationToDouble(const dom::Nullable<TimeDuration>& aTime)
+  {
+=======
+namespace dom {
+class Document;
+}
+
+class AnimationUtils {
+ public:
+  typedef dom::Document Document;
+
+  static dom::Nullable<double> TimeDurationToDouble(
+      const dom::Nullable<TimeDuration>& aTime) {
+>>>>>>> upstream-releases
     dom::Nullable<double> result;
 
     if (!aTime.IsNull()) {
@@ -58,26 +78,52 @@ class AnimationUtils {
   /**
    * Get the document from the JS context to use when parsing CSS properties.
    */
+<<<<<<< HEAD
   static nsIDocument* GetCurrentRealmDocument(JSContext* aCx);
+||||||| merged common ancestors
+  static nsIDocument*
+  GetCurrentRealmDocument(JSContext* aCx);
+=======
+  static Document* GetCurrentRealmDocument(JSContext* aCx);
+>>>>>>> upstream-releases
 
   /**
    * Get the document from the global object, or nullptr if the document has
    * no window, to use when constructing DOM object without entering the
    * target window's compartment (see KeyframeEffect constructor).
    */
+<<<<<<< HEAD
   static nsIDocument* GetDocumentFromGlobal(JSObject* aGlobalObject);
+||||||| merged common ancestors
+  static nsIDocument*
+  GetDocumentFromGlobal(JSObject* aGlobalObject);
+=======
+  static Document* GetDocumentFromGlobal(JSObject* aGlobalObject);
+>>>>>>> upstream-releases
 
   /**
    * Checks if offscreen animation throttling is enabled.
    */
+<<<<<<< HEAD
+  static bool IsOffscreenThrottlingEnabled();
+||||||| merged common ancestors
+  static bool
+  IsOffscreenThrottlingEnabled();
+=======
   static bool IsOffscreenThrottlingEnabled();
 
   /**
-   * Returns true if the given EffectSet contains a current effect that animates
-   * scale. |aFrame| is used for calculation of scale values.
+   * Returns true if the given frame has an animated scale.
    */
-  static bool EffectSetContainsAnimatedScale(EffectSet& aEffects,
-                                             const nsIFrame* aFrame);
+  static bool FrameHasAnimatedScale(const nsIFrame* aFrame);
+>>>>>>> upstream-releases
+
+  /**
+   * Returns true if the given (pseudo-)element has any transitions that are
+   * current (playing or waiting to play) or in effect (e.g. filling forwards).
+   */
+  static bool HasCurrentTransitions(const dom::Element* aElement,
+                                    PseudoStyleType aPseudoType);
 };
 
 }  // namespace mozilla

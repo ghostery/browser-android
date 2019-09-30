@@ -25,9 +25,18 @@ namespace layers {
  * information about the severity of the checkerboarding so as to allow
  * prioritizing the debugging of some checkerboarding events over others.
  */
+<<<<<<< HEAD
 class CheckerboardEvent {
  public:
   // clang-format off
+||||||| merged common ancestors
+class CheckerboardEvent {
+public:
+=======
+class CheckerboardEvent final {
+ public:
+  // clang-format off
+>>>>>>> upstream-releases
   MOZ_DEFINE_ENUM_AT_CLASS_SCOPE(
     RendertraceProperty, (
       Page,

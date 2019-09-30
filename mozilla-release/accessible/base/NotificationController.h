@@ -16,10 +16,13 @@
 #include <utility>
 
 #ifdef A11Y_LOG
-#include "Logging.h"
+#  include "Logging.h"
 #endif
 
 namespace mozilla {
+
+class PresShell;
+
 namespace a11y {
 
 class DocAccessible;
@@ -87,9 +90,20 @@ class TNotification : public Notification {
  * Used to process notifications from core for the document accessible.
  */
 class NotificationController final : public EventQueue,
+<<<<<<< HEAD
                                      public nsARefreshObserver {
  public:
   NotificationController(DocAccessible* aDocument, nsIPresShell* aPresShell);
+||||||| merged common ancestors
+                                     public nsARefreshObserver
+{
+public:
+  NotificationController(DocAccessible* aDocument, nsIPresShell* aPresShell);
+=======
+                                     public nsARefreshObserver {
+ public:
+  NotificationController(DocAccessible* aDocument, PresShell* aPresShell);
+>>>>>>> upstream-releases
 
   NS_IMETHOD_(MozExternalRefCountType) AddRef(void) override;
   NS_IMETHOD_(MozExternalRefCountType) Release(void) override;
@@ -214,22 +228,42 @@ class NotificationController final : public EventQueue,
    * @note  The caller must guarantee that the given instance still exists when
    *        the notification is processed.
    */
+<<<<<<< HEAD
   template <class Class, class Arg>
   inline void HandleNotification(
       Class* aInstance, typename TNotification<Class, Arg>::Callback aMethod,
       Arg* aArg) {
+||||||| merged common ancestors
+  template<class Class, class Arg>
+  inline void HandleNotification(Class* aInstance,
+                                 typename TNotification<Class, Arg>::Callback aMethod,
+                                 Arg* aArg)
+  {
+=======
+  template <class Class, class... Args>
+  inline void HandleNotification(
+      Class* aInstance,
+      typename TNotification<Class, Args...>::Callback aMethod,
+      Args*... aArgs) {
+>>>>>>> upstream-releases
     if (!IsUpdatePending()) {
 #ifdef A11Y_LOG
       if (mozilla::a11y::logging::IsEnabled(
               mozilla::a11y::logging::eNotifications))
         mozilla::a11y::logging::Text("sync notification processing");
 #endif
-      (aInstance->*aMethod)(aArg);
+      (aInstance->*aMethod)(aArgs...);
       return;
     }
 
     RefPtr<Notification> notification =
+<<<<<<< HEAD
         new TNotification<Class, Arg>(aInstance, aMethod, aArg);
+||||||| merged common ancestors
+      new TNotification<Class, Arg>(aInstance, aMethod, aArg);
+=======
+        new TNotification<Class, Args...>(aInstance, aMethod, aArgs...);
+>>>>>>> upstream-releases
     if (notification && mNotifications.AppendElement(notification))
       ScheduleProcessing();
   }
@@ -333,7 +367,7 @@ class NotificationController final : public EventQueue,
   /**
    * The presshell of the document accessible.
    */
-  nsIPresShell* mPresShell;
+  PresShell* mPresShell;
 
   /**
    * Child documents that needs to be bound to the tree.

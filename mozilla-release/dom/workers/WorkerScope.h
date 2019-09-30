@@ -7,16 +7,17 @@
 #ifndef mozilla_dom_workerscope_h__
 #define mozilla_dom_workerscope_h__
 
+#include "mozilla/Attributes.h"
 #include "mozilla/dom/WorkerCommon.h"
 #include "mozilla/DOMEventTargetHelper.h"
-#include "mozilla/dom/DOMPrefs.h"
+#include "mozilla/dom/DebuggerNotificationManager.h"
 #include "mozilla/dom/Headers.h"
 #include "mozilla/dom/RequestBinding.h"
 #include "nsWeakReference.h"
 #include "mozilla/dom/ImageBitmapSource.h"
 
 #ifdef XP_WIN
-#undef PostMessage
+#  undef PostMessage
 #endif
 
 namespace mozilla {
@@ -60,6 +61,8 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
   RefPtr<IDBFactory> mIndexedDB;
   RefPtr<cache::CacheStorage> mCacheStorage;
   nsCOMPtr<nsISerialEventTarget> mSerialEventTarget;
+  RefPtr<mozilla::dom::DebuggerNotificationManager>
+      mDebuggerNotificationManager;
 
   uint32_t mWindowInteractionsAllowed;
 
@@ -69,6 +72,7 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
   explicit WorkerGlobalScope(WorkerPrivate* aWorkerPrivate);
   virtual ~WorkerGlobalScope();
 
+<<<<<<< HEAD
  public:
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
@@ -77,6 +81,42 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
                                 JS::MutableHandle<JSObject*> aReflector) = 0;
 
   virtual JSObject* GetGlobalJSObject(void) override { return GetWrapper(); }
+||||||| merged common ancestors
+public:
+  virtual JSObject*
+  WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
+
+  virtual bool
+  WrapGlobalObject(JSContext* aCx, JS::MutableHandle<JSObject*> aReflector) = 0;
+
+  virtual JSObject*
+  GetGlobalJSObject(void) override
+  {
+    return GetWrapper();
+  }
+=======
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetTimeoutOrInterval(JSContext* aCx, Function& aHandler,
+                               const int32_t aTimeout,
+                               const Sequence<JS::Value>& aArguments,
+                               bool aIsInterval, ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetTimeoutOrInterval(JSContext* aCx, const nsAString& aHandler,
+                               const int32_t aTimeout, bool aIsInterval,
+                               ErrorResult& aRv);
+
+ public:
+  virtual JSObject* WrapObject(JSContext* aCx,
+                               JS::Handle<JSObject*> aGivenProto) override;
+
+  virtual bool WrapGlobalObject(JSContext* aCx,
+                                JS::MutableHandle<JSObject*> aReflector) = 0;
+
+  JSObject* GetGlobalJSObject() override { return GetWrapper(); }
+  JSObject* GetGlobalJSObjectPreserveColor() const override {
+    return GetWrapperPreserveColor();
+  }
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(WorkerGlobalScope,
@@ -88,6 +128,21 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
 
   already_AddRefed<Console> GetConsole(ErrorResult& aRv);
 
+<<<<<<< HEAD
+  Console* GetConsoleIfExists() const { return mConsole; }
+
+  Crypto* GetCrypto(ErrorResult& aError);
+
+  already_AddRefed<WorkerLocation> Location();
+
+  already_AddRefed<WorkerNavigator> Navigator();
+||||||| merged common ancestors
+  Console*
+  GetConsoleIfExists() const
+  {
+    return mConsole;
+  }
+=======
   Console* GetConsoleIfExists() const { return mConsole; }
 
   Crypto* GetCrypto(ErrorResult& aError);
@@ -96,6 +151,10 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
 
   already_AddRefed<WorkerNavigator> Navigator();
 
+  already_AddRefed<WorkerNavigator> GetExistingNavigator() const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   already_AddRefed<WorkerNavigator> GetExistingNavigator() const;
 
   OnErrorEventHandlerNonNull* GetOnerror();
@@ -122,9 +181,91 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
 
   void Atob(const nsAString& aAtob, nsAString& aOutput, ErrorResult& aRv) const;
   void Btoa(const nsAString& aBtoa, nsAString& aOutput, ErrorResult& aRv) const;
+||||||| merged common ancestors
+  Crypto*
+  GetCrypto(ErrorResult& aError);
+
+  already_AddRefed<WorkerLocation>
+  Location();
+
+  already_AddRefed<WorkerNavigator>
+  Navigator();
+
+  already_AddRefed<WorkerNavigator>
+  GetExistingNavigator() const;
+
+  OnErrorEventHandlerNonNull*
+  GetOnerror();
+  void
+  SetOnerror(OnErrorEventHandlerNonNull* aHandler);
+
+  void
+  ImportScripts(const Sequence<nsString>& aScriptURLs, ErrorResult& aRv);
+
+  int32_t
+  SetTimeout(JSContext* aCx, Function& aHandler, const int32_t aTimeout,
+             const Sequence<JS::Value>& aArguments, ErrorResult& aRv);
+  int32_t
+  SetTimeout(JSContext* aCx, const nsAString& aHandler, const int32_t aTimeout,
+             const Sequence<JS::Value>& /* unused */, ErrorResult& aRv);
+  void
+  ClearTimeout(int32_t aHandle);
+  int32_t
+  SetInterval(JSContext* aCx, Function& aHandler,
+              const int32_t aTimeout,
+              const Sequence<JS::Value>& aArguments, ErrorResult& aRv);
+  int32_t
+  SetInterval(JSContext* aCx, const nsAString& aHandler,
+              const int32_t aTimeout,
+              const Sequence<JS::Value>& /* unused */, ErrorResult& aRv);
+  void
+  ClearInterval(int32_t aHandle);
+
+  void
+  GetOrigin(nsAString& aOrigin) const;
+
+  void
+  Atob(const nsAString& aAtob, nsAString& aOutput, ErrorResult& aRv) const;
+  void
+  Btoa(const nsAString& aBtoa, nsAString& aOutput, ErrorResult& aRv) const;
+=======
+  OnErrorEventHandlerNonNull* GetOnerror();
+  void SetOnerror(OnErrorEventHandlerNonNull* aHandler);
+
+  void ImportScripts(JSContext* aCx, const Sequence<nsString>& aScriptURLs,
+                     ErrorResult& aRv);
+
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetTimeout(JSContext* aCx, Function& aHandler, const int32_t aTimeout,
+                     const Sequence<JS::Value>& aArguments, ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetTimeout(JSContext* aCx, const nsAString& aHandler,
+                     const int32_t aTimeout,
+                     const Sequence<JS::Value>& /* unused */, ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+  void ClearTimeout(int32_t aHandle);
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetInterval(JSContext* aCx, Function& aHandler,
+                      const int32_t aTimeout,
+                      const Sequence<JS::Value>& aArguments, ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+  int32_t SetInterval(JSContext* aCx, const nsAString& aHandler,
+                      const int32_t aTimeout,
+                      const Sequence<JS::Value>& /* unused */,
+                      ErrorResult& aRv);
+  MOZ_CAN_RUN_SCRIPT
+  void ClearInterval(int32_t aHandle);
+
+  void GetOrigin(nsAString& aOrigin) const;
+
+  void Atob(const nsAString& aAtob, nsAString& aOutput, ErrorResult& aRv) const;
+  void Btoa(const nsAString& aBtoa, nsAString& aOutput, ErrorResult& aRv) const;
+>>>>>>> upstream-releases
 
   IMPL_EVENT_HANDLER(online)
   IMPL_EVENT_HANDLER(offline)
+  IMPL_EVENT_HANDLER(rejectionhandled)
+  IMPL_EVENT_HANDLER(unhandledrejection)
 
   void Dump(const Optional<nsAString>& aString) const;
 
@@ -170,25 +311,98 @@ class WorkerGlobalScope : public DOMEventTargetHelper,
 
   // Override DispatchTrait API to target the worker thread.  Dispatch may
   // return failure if the worker thread is not alive.
+<<<<<<< HEAD
+  nsresult Dispatch(TaskCategory aCategory,
+                    already_AddRefed<nsIRunnable>&& aRunnable) override;
+||||||| merged common ancestors
+  nsresult
+  Dispatch(TaskCategory aCategory,
+           already_AddRefed<nsIRunnable>&& aRunnable) override;
+=======
   nsresult Dispatch(TaskCategory aCategory,
                     already_AddRefed<nsIRunnable>&& aRunnable) override;
 
   nsISerialEventTarget* EventTargetFor(TaskCategory aCategory) const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  nsISerialEventTarget* EventTargetFor(TaskCategory aCategory) const override;
+||||||| merged common ancestors
+  nsISerialEventTarget*
+  EventTargetFor(TaskCategory aCategory) const override;
+=======
   AbstractThread* AbstractMainThreadFor(TaskCategory aCategory) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  AbstractThread* AbstractMainThreadFor(TaskCategory aCategory) override;
+||||||| merged common ancestors
+  AbstractThread*
+  AbstractMainThreadFor(TaskCategory aCategory) override;
+=======
+  mozilla::dom::DebuggerNotificationManager*
+  GetOrCreateDebuggerNotificationManager() override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   Maybe<ClientInfo> GetClientInfo() const override;
+||||||| merged common ancestors
+  Maybe<ClientInfo>
+  GetClientInfo() const override;
+=======
+  mozilla::dom::DebuggerNotificationManager*
+  GetExistingDebuggerNotificationManager() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Maybe<ClientState> GetClientState() const;
+||||||| merged common ancestors
+  Maybe<ClientState>
+  GetClientState() const;
+=======
+  mozilla::Maybe<mozilla::dom::EventCallbackDebuggerNotificationType>
+  GetDebuggerNotificationType() const override {
+    return mozilla::Some(
+        mozilla::dom::EventCallbackDebuggerNotificationType::Global);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  Maybe<ServiceWorkerDescriptor> GetController() const override;
+||||||| merged common ancestors
+  Maybe<ServiceWorkerDescriptor>
+  GetController() const override;
+=======
+  Maybe<ClientInfo> GetClientInfo() const override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RefPtr<mozilla::dom::ServiceWorkerRegistration> GetServiceWorkerRegistration(
+      const ServiceWorkerRegistrationDescriptor& aDescriptor) const override;
+||||||| merged common ancestors
+  RefPtr<mozilla::dom::ServiceWorkerRegistration>
+  GetServiceWorkerRegistration(const ServiceWorkerRegistrationDescriptor& aDescriptor) const override;
+=======
   Maybe<ClientState> GetClientState() const;
 
   Maybe<ServiceWorkerDescriptor> GetController() const override;
 
   RefPtr<mozilla::dom::ServiceWorkerRegistration> GetServiceWorkerRegistration(
       const ServiceWorkerRegistrationDescriptor& aDescriptor) const override;
+>>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::ServiceWorkerRegistration>
+<<<<<<< HEAD
   GetOrCreateServiceWorkerRegistration(
       const ServiceWorkerRegistrationDescriptor& aDescriptor) override;
+||||||| merged common ancestors
+  GetOrCreateServiceWorkerRegistration(const ServiceWorkerRegistrationDescriptor& aDescriptor) override;
+=======
+  GetOrCreateServiceWorkerRegistration(
+      const ServiceWorkerRegistrationDescriptor& aDescriptor) override;
+
+  void FirstPartyStorageAccessGranted();
+>>>>>>> upstream-releases
 };
 
 class DedicatedWorkerGlobalScope final : public WorkerGlobalScope {
@@ -299,7 +513,20 @@ class WorkerDebuggerGlobalScope final : public DOMEventTargetHelper,
   virtual bool WrapGlobalObject(JSContext* aCx,
                                 JS::MutableHandle<JSObject*> aReflector);
 
+<<<<<<< HEAD
   virtual JSObject* GetGlobalJSObject(void) override { return GetWrapper(); }
+||||||| merged common ancestors
+  virtual JSObject*
+  GetGlobalJSObject(void) override
+  {
+    return GetWrapper();
+  }
+=======
+  JSObject* GetGlobalJSObject(void) override { return GetWrapper(); }
+  JSObject* GetGlobalJSObjectPreserveColor(void) const override {
+    return GetWrapperPreserveColor();
+  }
+>>>>>>> upstream-releases
 
   void GetGlobal(JSContext* aCx, JS::MutableHandle<JSObject*> aGlobal,
                  ErrorResult& aRv);
@@ -312,7 +539,14 @@ class WorkerDebuggerGlobalScope final : public DOMEventTargetHelper,
                      const Optional<JS::Handle<JSObject*>>& aSandbox,
                      ErrorResult& aRv);
 
+<<<<<<< HEAD
   void EnterEventLoop();
+||||||| merged common ancestors
+  void
+  EnterEventLoop();
+=======
+  MOZ_CAN_RUN_SCRIPT void EnterEventLoop();
+>>>>>>> upstream-releases
 
   void LeaveEventLoop();
 
@@ -333,9 +567,29 @@ class WorkerDebuggerGlobalScope final : public DOMEventTargetHelper,
 
   already_AddRefed<Console> GetConsole(ErrorResult& aRv);
 
+<<<<<<< HEAD
+  Console* GetConsoleIfExists() const { return mConsole; }
+||||||| merged common ancestors
+  Console*
+  GetConsoleIfExists() const
+  {
+    return mConsole;
+  }
+=======
   Console* GetConsoleIfExists() const { return mConsole; }
 
   void Dump(JSContext* aCx, const Optional<nsAString>& aString) const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void Dump(JSContext* aCx, const Optional<nsAString>& aString) const;
+||||||| merged common ancestors
+  void
+  Dump(JSContext* aCx, const Optional<nsAString>& aString) const;
+=======
+  void Atob(const nsAString& aAtob, nsAString& aOutput, ErrorResult& aRv) const;
+  void Btoa(const nsAString& aBtoa, nsAString& aOutput, ErrorResult& aRv) const;
+>>>>>>> upstream-releases
 
   // Override DispatchTrait API to target the worker thread.  Dispatch may
   // return failure if the worker thread is not alive.

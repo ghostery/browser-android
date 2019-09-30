@@ -6,8 +6,9 @@
 #include <algorithm>
 #include "ArrayBufferInputStream.h"
 #include "nsStreamUtils.h"
-#include "jsapi.h"
-#include "jsfriendapi.h"
+#include "js/ArrayBuffer.h"  // JS::{GetArrayBuffer{ByteLength,Data},IsArrayBufferObject}
+#include "js/RootingAPI.h"  // JS::{Handle,Rooted}
+#include "js/Value.h"       // JS::Value
 #include "mozilla/UniquePtrExtensions.h"
 #include "mozilla/dom/ScriptSettings.h"
 
@@ -27,12 +28,12 @@ ArrayBufferInputStream::SetData(JS::Handle<JS::Value> aBuffer,
   if (!aBuffer.isObject()) {
     return NS_ERROR_FAILURE;
   }
-  JS::RootedObject arrayBuffer(RootingCx(), &aBuffer.toObject());
-  if (!JS_IsArrayBufferObject(arrayBuffer)) {
+  JS::Rooted<JSObject*> arrayBuffer(RootingCx(), &aBuffer.toObject());
+  if (!JS::IsArrayBufferObject(arrayBuffer)) {
     return NS_ERROR_FAILURE;
   }
 
-  uint32_t buflen = JS_GetArrayBufferByteLength(arrayBuffer);
+  uint32_t buflen = JS::GetArrayBufferByteLength(arrayBuffer);
   uint32_t offset = std::min(buflen, aByteOffset);
   uint32_t bufferLength = std::min(buflen - offset, aLength);
 
@@ -45,8 +46,15 @@ ArrayBufferInputStream::SetData(JS::Handle<JS::Value> aBuffer,
 
   JS::AutoCheckCannotGC nogc;
   bool isShared;
+<<<<<<< HEAD
   char *src =
       (char *)JS_GetArrayBufferData(arrayBuffer, &isShared, nogc) + offset;
+||||||| merged common ancestors
+  char* src = (char*) JS_GetArrayBufferData(arrayBuffer, &isShared, nogc) + offset;
+=======
+  char* src =
+      (char*)JS::GetArrayBufferData(arrayBuffer, &isShared, nogc) + offset;
+>>>>>>> upstream-releases
   memcpy(&mArrayBuffer[0], src, mBufferLength);
   return NS_OK;
 }
@@ -58,7 +66,14 @@ ArrayBufferInputStream::Close() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ArrayBufferInputStream::Available(uint64_t *aCount) {
+||||||| merged common ancestors
+ArrayBufferInputStream::Available(uint64_t* aCount)
+{
+=======
+ArrayBufferInputStream::Available(uint64_t* aCount) {
+>>>>>>> upstream-releases
   if (mClosed) {
     return NS_BASE_STREAM_CLOSED;
   }
@@ -71,14 +86,31 @@ ArrayBufferInputStream::Available(uint64_t *aCount) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ArrayBufferInputStream::Read(char *aBuf, uint32_t aCount,
                              uint32_t *aReadCount) {
+||||||| merged common ancestors
+ArrayBufferInputStream::Read(char* aBuf, uint32_t aCount, uint32_t *aReadCount)
+{
+=======
+ArrayBufferInputStream::Read(char* aBuf, uint32_t aCount,
+                             uint32_t* aReadCount) {
+>>>>>>> upstream-releases
   return ReadSegments(NS_CopySegmentToBuffer, aBuf, aCount, aReadCount);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ArrayBufferInputStream::ReadSegments(nsWriteSegmentFun writer, void *closure,
                                      uint32_t aCount, uint32_t *result) {
+||||||| merged common ancestors
+ArrayBufferInputStream::ReadSegments(nsWriteSegmentFun writer, void *closure,
+                                     uint32_t aCount, uint32_t *result)
+{
+=======
+ArrayBufferInputStream::ReadSegments(nsWriteSegmentFun writer, void* closure,
+                                     uint32_t aCount, uint32_t* result) {
+>>>>>>> upstream-releases
   NS_ASSERTION(result, "null ptr");
   NS_ASSERTION(mBufferLength >= mPos, "bad stream state");
 
@@ -118,7 +150,14 @@ ArrayBufferInputStream::ReadSegments(nsWriteSegmentFun writer, void *closure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ArrayBufferInputStream::IsNonBlocking(bool *aNonBlocking) {
+||||||| merged common ancestors
+ArrayBufferInputStream::IsNonBlocking(bool *aNonBlocking)
+{
+=======
+ArrayBufferInputStream::IsNonBlocking(bool* aNonBlocking) {
+>>>>>>> upstream-releases
   *aNonBlocking = true;
   return NS_OK;
 }

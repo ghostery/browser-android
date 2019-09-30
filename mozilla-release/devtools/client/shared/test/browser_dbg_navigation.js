@@ -13,22 +13,61 @@ const TAB1_URL = EXAMPLE_URL + "doc_empty-tab-01.html";
 const TAB2_FILE = "doc_empty-tab-02.html";
 const TAB2_URL = EXAMPLE_URL + TAB2_FILE;
 
+<<<<<<< HEAD
 add_task(async () => {
   const tab = await addTab(TAB1_URL);
   const target = await TargetFactory.forTab(tab);
   await target.attach();
   const targetFront = target.activeTab;
+||||||| merged common ancestors
+var gClient;
 
+function test() {
+  DebuggerServer.init();
+  DebuggerServer.registerAllActors();
+=======
+add_task(async () => {
+  const tab = await addTab(TAB1_URL);
+  const target = await TargetFactory.forTab(tab);
+  await target.attach();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   await testNavigate(targetFront);
   await testDetach(target);
 });
+||||||| merged common ancestors
+  const transport = DebuggerServer.connectPipe();
+  gClient = new DebuggerClient(transport);
+  gClient.connect().then(([aType, aTraits]) => {
+    is(aType, "browser",
+      "Root actor should identify itself as a browser.");
 
-function testNavigate(targetFront) {
+    addTab(TAB1_URL)
+      .then(() => attachTargetActorForUrl(gClient, TAB1_URL))
+      .then(testNavigate)
+      .then(testDetach)
+      .then(finish)
+      .catch(error => {
+        ok(false, "Got an error: " + error.message + "\n" + error.stack);
+      });
+  });
+}
+=======
+  await testNavigate(target);
+  await testDetach(target);
+});
+>>>>>>> upstream-releases
+
+function testNavigate(target) {
   const outstanding = [promise.defer(), promise.defer()];
 
-  targetFront.on("tabNavigated", function onTabNavigated(packet) {
-    is(packet.url.split("/").pop(), TAB2_FILE,
-      "Got a tab navigation notification.");
+  target.on("tabNavigated", function onTabNavigated(packet) {
+    is(
+      packet.url.split("/").pop(),
+      TAB2_FILE,
+      "Got a tab navigation notification."
+    );
 
     info(JSON.stringify(packet));
 
@@ -37,7 +76,7 @@ function testNavigate(targetFront) {
       outstanding[0].resolve();
     } else {
       ok(true, "Tab finished navigating.");
-      targetFront.off("tabNavigated", onTabNavigated);
+      target.off("tabNavigated", onTabNavigated);
       outstanding[1].resolve();
     }
   });

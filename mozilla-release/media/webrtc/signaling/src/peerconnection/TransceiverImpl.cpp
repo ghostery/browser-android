@@ -117,7 +117,13 @@ void TransceiverImpl::Shutdown_m() {
   mTransmitPipeline->Shutdown_m();
   mReceivePipeline = nullptr;
   mTransmitPipeline = nullptr;
+<<<<<<< HEAD
   mTransportHandler = nullptr;
+||||||| merged common ancestors
+=======
+  mTransportHandler = nullptr;
+  mReceiveTrack = nullptr;
+>>>>>>> upstream-releases
   mSendTrack = nullptr;
   if (mConduit) {
     mConduit->DeleteStreams();
@@ -136,8 +142,18 @@ nsresult TransceiverImpl::UpdateSendTrack(dom::MediaStreamTrack* aSendTrack) {
   return mTransmitPipeline->SetTrack(mSendTrack);
 }
 
+<<<<<<< HEAD
 nsresult TransceiverImpl::UpdateTransport() {
   if (!mJsepTransceiver->HasLevel()) {
+||||||| merged common ancestors
+nsresult
+TransceiverImpl::UpdateTransport(PeerConnectionMedia& aTransportManager)
+{
+  if (!mJsepTransceiver->HasLevel()) {
+=======
+nsresult TransceiverImpl::UpdateTransport() {
+  if (!mJsepTransceiver->HasLevel() || mJsepTransceiver->IsStopped()) {
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -387,20 +403,6 @@ void TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
     return;
   }
 
-  RefPtr<dom::MediaStreamTrack> sendTrack = sender->GetTrack(aRv);
-  if (aRv.Failed()) {
-    return;
-  }
-
-  std::string trackId = mJsepTransceiver->mSendTrack.GetTrackId();
-
-  if (sendTrack) {
-    nsString wideTrackId;
-    sendTrack->GetId(wideTrackId);
-    trackId = NS_ConvertUTF16toUTF8(wideTrackId).get();
-    MOZ_ASSERT(!trackId.empty());
-  }
-
   nsTArray<RefPtr<DOMMediaStream>> streams;
   sender->GetStreams(streams, aRv);
   if (aRv.Failed()) {
@@ -416,7 +418,7 @@ void TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
     streamIds.push_back(streamId);
   }
 
-  mJsepTransceiver->mSendTrack.UpdateTrackIds(streamIds, trackId);
+  mJsepTransceiver->mSendTrack.UpdateStreamIds(streamIds);
 
   // Update RTCRtpParameters
   // TODO: Both ways for things like ssrc, codecs, header extensions, etc
@@ -454,6 +456,7 @@ void TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
     }
   }
 
+<<<<<<< HEAD
   // Update webrtc track id in JS; the ids in SDP are not surfaced to content,
   // because they don't follow the rules that track/stream ids must. Our JS
   // code must be able to map the SDP ids to the actual tracks/streams, and
@@ -470,6 +473,24 @@ void TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
     return;
   }
 
+||||||| merged common ancestors
+  // Update webrtc track id in JS; the ids in SDP are not surfaced to content,
+  // because they don't follow the rules that track/stream ids must. Our JS
+  // code must be able to map the SDP ids to the actual tracks/streams, and
+  // this is how the mapping for track ids is updated.
+  nsString webrtcTrackId =
+    NS_ConvertUTF8toUTF16(mJsepTransceiver->mRecvTrack.GetTrackId().c_str());
+  MOZ_MTLOG(ML_DEBUG, mPCHandle << "[" << mMid << "]: " << __FUNCTION__
+                      << " Setting webrtc track id: "
+                      << mJsepTransceiver->mRecvTrack.GetTrackId().c_str());
+  aJsTransceiver.SetRemoteTrackId(webrtcTrackId, aRv);
+
+  if (aRv.Failed()) {
+    return;
+  }
+
+=======
+>>>>>>> upstream-releases
   // mid from JSEP
   if (mJsepTransceiver->IsAssociated()) {
     aJsTransceiver.SetMid(
@@ -523,8 +544,7 @@ void TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
     return;
   }
 
-  receiver->SetRemoteSendBit(mJsepTransceiver->mRecvTrack.GetRemoteSetSendBit(),
-                             aRv);
+  receiver->SetRecvBit(mJsepTransceiver->mRecvTrack.GetRemoteSetSendBit(), aRv);
   if (aRv.Failed()) {
     return;
   }
@@ -783,6 +803,7 @@ static nsresult NegotiatedDetailsToVideoCodecConfigs(
 
       config->mTias = aDetails.GetTias();
 
+<<<<<<< HEAD
       for (size_t i = 0; i < aDetails.GetEncodingCount(); ++i) {
         const JsepTrackEncoding& jsepEncoding(aDetails.GetEncoding(i));
         if (jsepEncoding.HasFormat(codec->mDefaultPt)) {
@@ -791,6 +812,24 @@ static nsresult NegotiatedDetailsToVideoCodecConfigs(
           encoding.constraints = jsepEncoding.mConstraints;
           config->mSimulcastEncodings.push_back(encoding);
         }
+||||||| merged common ancestors
+    for (size_t i = 0; i < aDetails.GetEncodingCount(); ++i) {
+      const JsepTrackEncoding& jsepEncoding(aDetails.GetEncoding(i));
+      if (jsepEncoding.HasFormat(codec->mDefaultPt)) {
+        VideoCodecConfig::SimulcastEncoding encoding;
+        encoding.rid = jsepEncoding.mRid;
+        encoding.constraints = jsepEncoding.mConstraints;
+        config->mSimulcastEncodings.push_back(encoding);
+=======
+      for (size_t i = 0; i < aDetails.GetEncodingCount(); ++i) {
+        const JsepTrackEncoding& jsepEncoding(aDetails.GetEncoding(i));
+        if (jsepEncoding.HasFormat(codec->mDefaultPt)) {
+          VideoCodecConfig::Encoding encoding;
+          encoding.rid = jsepEncoding.mRid;
+          encoding.constraints = jsepEncoding.mConstraints;
+          config->mEncodings.push_back(encoding);
+        }
+>>>>>>> upstream-releases
       }
 
       aConfigs->push_back(std::move(config));
@@ -917,7 +956,6 @@ nsresult TransceiverImpl::ConfigureVideoCodecMode(
   switch (source) {
     case dom::MediaSourceEnum::Browser:
     case dom::MediaSourceEnum::Screen:
-    case dom::MediaSourceEnum::Application:
     case dom::MediaSourceEnum::Window:
       mode = webrtc::kScreensharing;
       break;

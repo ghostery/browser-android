@@ -15,6 +15,7 @@
 
 namespace js {
 
+<<<<<<< HEAD
 static bool TryPreserveReflector(JSContext* cx, HandleObject obj) {
   if (obj->getClass()->isWrappedNative() || obj->getClass()->isDOMClass() ||
       (obj->is<ProxyObject>() && obj->as<ProxyObject>().handler()->family() ==
@@ -24,6 +25,29 @@ static bool TryPreserveReflector(JSContext* cx, HandleObject obj) {
       JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                                 JSMSG_BAD_WEAKMAP_KEY);
       return false;
+||||||| merged common ancestors
+static bool
+TryPreserveReflector(JSContext* cx, HandleObject obj)
+{
+    if (obj->getClass()->isWrappedNative() ||
+        obj->getClass()->isDOMClass() ||
+        (obj->is<ProxyObject>() &&
+         obj->as<ProxyObject>().handler()->family() == GetDOMProxyHandlerFamily()))
+    {
+        MOZ_ASSERT(cx->runtime()->preserveWrapperCallback);
+        if (!cx->runtime()->preserveWrapperCallback(cx, obj)) {
+            JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_WEAKMAP_KEY);
+            return false;
+        }
+=======
+static bool TryPreserveReflector(JSContext* cx, HandleObject obj) {
+  if (obj->getClass()->isDOMClass()) {
+    MOZ_ASSERT(cx->runtime()->preserveWrapperCallback);
+    if (!cx->runtime()->preserveWrapperCallback(cx, obj)) {
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_BAD_WEAKMAP_KEY);
+      return false;
+>>>>>>> upstream-releases
     }
   }
   return true;
@@ -38,21 +62,42 @@ static MOZ_ALWAYS_INLINE bool WeakCollectionPutEntryInternal(
     if (!newMap) {
       return false;
     }
+<<<<<<< HEAD
     map = newMap.release();
     obj->setPrivate(map);
   }
+||||||| merged common ancestors
+=======
+    map = newMap.release();
+    InitObjectPrivate(obj, map, MemoryUse::WeakMapObject);
+  }
+>>>>>>> upstream-releases
 
   // Preserve wrapped native keys to prevent wrapper optimization.
   if (!TryPreserveReflector(cx, key)) {
     return false;
   }
 
+<<<<<<< HEAD
   if (JSWeakmapKeyDelegateOp op = key->getClass()->extWeakmapKeyDelegateOp()) {
     RootedObject delegate(cx, op(key));
     if (delegate && !TryPreserveReflector(cx, delegate)) {
       return false;
     }
   }
+||||||| merged common ancestors
+    if (JSWeakmapKeyDelegateOp op = key->getClass()->extWeakmapKeyDelegateOp()) {
+        RootedObject delegate(cx, op(key));
+        if (delegate && !TryPreserveReflector(cx, delegate)) {
+            return false;
+        }
+    }
+=======
+  RootedObject delegate(cx, UncheckedUnwrapWithoutExpose(key));
+  if (delegate && !TryPreserveReflector(cx, delegate)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(key->compartment() == obj->compartment());
   MOZ_ASSERT_IF(value.isObject(),

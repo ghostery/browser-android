@@ -9,6 +9,7 @@
 
 #include "ImageTypes.h"
 #include "mozilla/webrender/webrender_ffi.h"
+#include "mozilla/EnumSet.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/gfx/Matrix.h"
 #include "mozilla/gfx/Types.h"
@@ -17,6 +18,7 @@
 #include "mozilla/layers/LayersTypes.h"
 #include "mozilla/PodOperations.h"
 #include "mozilla/Range.h"
+#include "mozilla/TypeTraits.h"
 #include "mozilla/Variant.h"
 #include "Units.h"
 #include "nsStyleConsts.h"
@@ -36,15 +38,16 @@ typedef uintptr_t usize;
 
 typedef wr::WrWindowId WindowId;
 typedef wr::WrPipelineId PipelineId;
+typedef wr::WrDocumentId DocumentId;
+typedef wr::WrRemovedPipeline RemovedPipeline;
 typedef wr::WrImageKey ImageKey;
 typedef wr::WrFontKey FontKey;
 typedef wr::WrFontInstanceKey FontInstanceKey;
 typedef wr::WrEpoch Epoch;
 typedef wr::WrExternalImageId ExternalImageId;
-typedef wr::WrDebugFlags DebugFlags;
 
 typedef mozilla::Maybe<mozilla::wr::IdNamespace> MaybeIdNamespace;
-typedef mozilla::Maybe<mozilla::wr::WrImageMask> MaybeImageMask;
+typedef mozilla::Maybe<mozilla::wr::ImageMask> MaybeImageMask;
 typedef Maybe<ExternalImageId> MaybeExternalImageId;
 
 typedef Maybe<FontInstanceOptions> MaybeFontInstanceOptions;
@@ -58,14 +61,101 @@ struct ExternalImageKeyPair {
 /* Generate a brand new window id and return it. */
 WindowId NewWindowId();
 
-inline DebugFlags NewDebugFlags(uint32_t aFlags) {
-  DebugFlags flags;
-  flags.mBits = aFlags;
-  return flags;
-}
+MOZ_DEFINE_ENUM_CLASS_WITH_BASE(
+    RenderRoot, uint8_t,
+    (
+        // The default render root - within the parent process, this refers
+        // to everything within the top chrome area (urlbar, tab strip, etc.).
+        // Within the content process, this refers to the content area. Any
+        // system that multiplexes data streams from different processes is
+        // responsible for converting RenderRoot::Default into
+        // RenderRoot::Content (or whatever value is appropriate)
+        Default,
+
+        // Everything below the chrome - even if it is not coming from a content
+        // process. For example. the devtools, sidebars, and status panel are
+        // traditionally part of the "chrome," but are assigned a renderroot of
+        // RenderRoot::Content because they occupy screen space in the "content"
+        // area of the browser (visually situated below the "chrome" area).
+        Content,
+
+        // Currently used for the pointerlock and fullscreen warnings. This is
+        // intended to overlay both the Content and Default render roots when
+        // we need a piece of UI that straddles their border.
+        Popover));
+
+typedef EnumSet<RenderRoot, uint8_t> RenderRootSet;
+
+// For simple iteration of all render roots
+const Array<RenderRoot, kRenderRootCount> kRenderRoots(RenderRoot::Default,
+                                                       RenderRoot::Content,
+                                                       RenderRoot::Popover);
+
+const Array<RenderRoot, kRenderRootCount - 1> kNonDefaultRenderRoots(
+    RenderRoot::Content, RenderRoot::Popover);
+
+template <typename T>
+class RenderRootArray : public Array<T, kRenderRootCount> {
+  typedef Array<T, kRenderRootCount> Super;
+
+ public:
+  RenderRootArray() {
+    if (IsPod<T>::value) {
+      // Ensure primitive types get initialized to 0/false.
+      PodArrayZero(*this);
+    }  // else C++ will default-initialize the array elements for us
+  }
+
+  T& operator[](wr::RenderRoot aIndex) {
+    return (*(Super*)this)[(size_t)aIndex];
+  }
+
+  const T& operator[](wr::RenderRoot aIndex) const {
+    return (*(Super*)this)[(size_t)aIndex];
+  }
+
+  T& operator[](size_t aIndex) = delete;
+  const T& operator[](size_t aIndex) const = delete;
+};
+
+template <typename T>
+class NonDefaultRenderRootArray : public Array<T, kRenderRootCount - 1> {
+  typedef Array<T, kRenderRootCount - 1> Super;
+
+ public:
+  NonDefaultRenderRootArray() {
+    // See RenderRootArray constructor
+    if (IsPod<T>::value) {
+      PodArrayZero(*this);
+    }
+  }
+
+  T& operator[](wr::RenderRoot aIndex) {
+    return (*(Super*)this)[(size_t)aIndex - 1];
+  }
+
+<<<<<<< HEAD
+inline Maybe<wr::ImageFormat> SurfaceFormatToImageFormat(
+    gfx::SurfaceFormat aFormat) {
+||||||| merged common ancestors
+inline Maybe<wr::ImageFormat>
+SurfaceFormatToImageFormat(gfx::SurfaceFormat aFormat) {
+=======
+  const T& operator[](wr::RenderRoot aIndex) const {
+    return (*(Super*)this)[(size_t)aIndex - 1];
+  }
+
+  T& operator[](size_t aIndex) = delete;
+  const T& operator[](size_t aIndex) const = delete;
+};
+
+RenderRoot RenderRootFromId(DocumentId id);
+
+inline DebugFlags NewDebugFlags(uint32_t aFlags) { return {aFlags}; }
 
 inline Maybe<wr::ImageFormat> SurfaceFormatToImageFormat(
     gfx::SurfaceFormat aFormat) {
+>>>>>>> upstream-releases
   switch (aFormat) {
     case gfx::SurfaceFormat::R8G8B8X8:
       // WebRender not support RGBX8. Assert here.
@@ -84,6 +174,8 @@ inline Maybe<wr::ImageFormat> SurfaceFormatToImageFormat(
       return Some(wr::ImageFormat::R16);
     case gfx::SurfaceFormat::R8G8:
       return Some(wr::ImageFormat::RG8);
+    case gfx::SurfaceFormat::R16G16:
+      return Some(wr::ImageFormat::RG16);
     case gfx::SurfaceFormat::UNKNOWN:
     default:
       return Nothing();
@@ -221,6 +313,7 @@ static inline FontRenderMode ToFontRenderMode(gfx::AntialiasMode aMode,
       return FontRenderMode::Alpha;
     case gfx::AntialiasMode::SUBPIXEL:
     default:
+<<<<<<< HEAD
       return aPermitSubpixelAA ? FontRenderMode::Subpixel
                                : FontRenderMode::Alpha;
   }
@@ -264,6 +357,97 @@ static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp) {
 }
 
 static inline wr::ColorF ToColorF(const gfx::Color& color) {
+||||||| merged common ancestors
+      return aPermitSubpixelAA ? FontRenderMode::Subpixel : FontRenderMode::Alpha;
+  }
+}
+
+static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp)
+{
+  switch (compositionOp)
+  {
+      case gfx::CompositionOp::OP_MULTIPLY:
+        return MixBlendMode::Multiply;
+      case gfx::CompositionOp::OP_SCREEN:
+        return MixBlendMode::Screen;
+      case gfx::CompositionOp::OP_OVERLAY:
+        return MixBlendMode::Overlay;
+      case gfx::CompositionOp::OP_DARKEN:
+        return MixBlendMode::Darken;
+      case gfx::CompositionOp::OP_LIGHTEN:
+        return MixBlendMode::Lighten;
+      case gfx::CompositionOp::OP_COLOR_DODGE:
+        return MixBlendMode::ColorDodge;
+      case gfx::CompositionOp::OP_COLOR_BURN:
+        return MixBlendMode::ColorBurn;
+      case gfx::CompositionOp::OP_HARD_LIGHT:
+        return MixBlendMode::HardLight;
+      case gfx::CompositionOp::OP_SOFT_LIGHT:
+        return MixBlendMode::SoftLight;
+      case gfx::CompositionOp::OP_DIFFERENCE:
+        return MixBlendMode::Difference;
+      case gfx::CompositionOp::OP_EXCLUSION:
+        return MixBlendMode::Exclusion;
+      case gfx::CompositionOp::OP_HUE:
+        return MixBlendMode::Hue;
+      case gfx::CompositionOp::OP_SATURATION:
+        return MixBlendMode::Saturation;
+      case gfx::CompositionOp::OP_COLOR:
+        return MixBlendMode::Color;
+      case gfx::CompositionOp::OP_LUMINOSITY:
+        return MixBlendMode::Luminosity;
+      default:
+        return MixBlendMode::Normal;
+  }
+}
+
+static inline wr::ColorF ToColorF(const gfx::Color& color)
+{
+=======
+      return aPermitSubpixelAA ? FontRenderMode::Subpixel
+                               : FontRenderMode::Alpha;
+  }
+}
+
+static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp) {
+  switch (compositionOp) {
+    case gfx::CompositionOp::OP_MULTIPLY:
+      return MixBlendMode::Multiply;
+    case gfx::CompositionOp::OP_SCREEN:
+      return MixBlendMode::Screen;
+    case gfx::CompositionOp::OP_OVERLAY:
+      return MixBlendMode::Overlay;
+    case gfx::CompositionOp::OP_DARKEN:
+      return MixBlendMode::Darken;
+    case gfx::CompositionOp::OP_LIGHTEN:
+      return MixBlendMode::Lighten;
+    case gfx::CompositionOp::OP_COLOR_DODGE:
+      return MixBlendMode::ColorDodge;
+    case gfx::CompositionOp::OP_COLOR_BURN:
+      return MixBlendMode::ColorBurn;
+    case gfx::CompositionOp::OP_HARD_LIGHT:
+      return MixBlendMode::HardLight;
+    case gfx::CompositionOp::OP_SOFT_LIGHT:
+      return MixBlendMode::SoftLight;
+    case gfx::CompositionOp::OP_DIFFERENCE:
+      return MixBlendMode::Difference;
+    case gfx::CompositionOp::OP_EXCLUSION:
+      return MixBlendMode::Exclusion;
+    case gfx::CompositionOp::OP_HUE:
+      return MixBlendMode::Hue;
+    case gfx::CompositionOp::OP_SATURATION:
+      return MixBlendMode::Saturation;
+    case gfx::CompositionOp::OP_COLOR:
+      return MixBlendMode::Color;
+    case gfx::CompositionOp::OP_LUMINOSITY:
+      return MixBlendMode::Luminosity;
+    default:
+      return MixBlendMode::Normal;
+  }
+}
+
+static inline wr::ColorF ToColorF(const gfx::Color& color) {
+>>>>>>> upstream-releases
   wr::ColorF c;
   c.r = color.r;
   c.g = color.g;
@@ -653,8 +837,16 @@ void Assign_WrVecU8(wr::WrVecU8& aVec, mozilla::ipc::ByteBuf&& aOther);
 template <typename T>
 struct Vec;
 
+<<<<<<< HEAD
 template <>
 struct Vec<uint8_t> {
+||||||| merged common ancestors
+template<>
+struct Vec<uint8_t> {
+=======
+template <>
+struct Vec<uint8_t> final {
+>>>>>>> upstream-releases
   wr::WrVecU8 inner;
   Vec() { SetEmpty(); }
   Vec(Vec&) = delete;
@@ -771,6 +963,7 @@ struct BuiltDisplayList {
   wr::BuiltDisplayListDescriptor dl_desc;
 };
 
+<<<<<<< HEAD
 static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
   switch (type) {
     case NS_STYLE_FILTER_BLUR:
@@ -800,13 +993,88 @@ static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
 
 extern WrClipId RootScrollNode();
 
+||||||| merged common ancestors
+static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
+  switch (type) {
+    case NS_STYLE_FILTER_BLUR:
+      return wr::WrFilterOpType::Blur;
+    case NS_STYLE_FILTER_BRIGHTNESS:
+      return wr::WrFilterOpType::Brightness;
+    case NS_STYLE_FILTER_CONTRAST:
+      return wr::WrFilterOpType::Contrast;
+    case NS_STYLE_FILTER_GRAYSCALE:
+      return wr::WrFilterOpType::Grayscale;
+    case NS_STYLE_FILTER_HUE_ROTATE:
+      return wr::WrFilterOpType::HueRotate;
+    case NS_STYLE_FILTER_INVERT:
+      return wr::WrFilterOpType::Invert;
+    case NS_STYLE_FILTER_OPACITY:
+      return wr::WrFilterOpType::Opacity;
+    case NS_STYLE_FILTER_SATURATE:
+      return wr::WrFilterOpType::Saturate;
+    case NS_STYLE_FILTER_SEPIA:
+      return wr::WrFilterOpType::Sepia;
+    case NS_STYLE_FILTER_DROP_SHADOW:
+      return wr::WrFilterOpType::DropShadow;
+  }
+  MOZ_ASSERT_UNREACHABLE("Tried to convert unknown filter type.");
+  return wr::WrFilterOpType::Grayscale;
+}
+
+// Corresponds to an "internal" webrender clip id. That is, a
+// ClipId::Clip(x,pipeline_id) maps to a WrClipId{x}. We use a struct wrapper
+// instead of a typedef so that this is a distinct type from ids generated
+// by scroll and position:sticky nodes and the compiler will catch accidental
+// conversions between them.
+struct WrClipId {
+  size_t id;
+
+  bool operator==(const WrClipId& other) const {
+    return id == other.id;
+  }
+
+  bool operator!=(const WrClipId& other) const {
+    return !(*this == other);
+  }
+
+  static WrClipId RootScrollNode();
+
+  // Helper struct that allows this class to be used as a key in
+  // std::unordered_map like so:
+  //   std::unordered_map<WrClipId, ValueType, WrClipId::HashFn> myMap;
+  struct HashFn {
+    std::size_t operator()(const WrClipId& aKey) const
+    {
+      return std::hash<size_t>{}(aKey.id);
+    }
+  };
+};
+
+=======
+>>>>>>> upstream-releases
 // Corresponds to a clip id for a clip chain in webrender. Similar to
 // WrClipId but a separate struct so we don't get them mixed up in C++.
 struct WrClipChainId {
   uint64_t id;
 
+<<<<<<< HEAD
   bool operator==(const WrClipChainId& other) const { return id == other.id; }
+||||||| merged common ancestors
+  bool operator==(const WrClipChainId& other) const {
+    return id == other.id;
+  }
+=======
+  bool operator==(const WrClipChainId& other) const { return id == other.id; }
+
+  static WrClipChainId Empty() {
+    WrClipChainId id = {0};
+    return id;
+  }
+>>>>>>> upstream-releases
 };
+
+WrSpaceAndClip RootScrollNode();
+WrSpaceAndClipChain RootScrollNodeWithChain();
 
 enum class WebRenderError : int8_t {
   INITIALIZE = 0,
@@ -816,13 +1084,22 @@ enum class WebRenderError : int8_t {
   Sentinel /* this must be last for serialization purposes. */
 };
 
+<<<<<<< HEAD
 static inline wr::WrYuvColorSpace ToWrYuvColorSpace(
     YUVColorSpace aYUVColorSpace) {
+||||||| merged common ancestors
+static inline wr::WrYuvColorSpace ToWrYuvColorSpace(YUVColorSpace aYUVColorSpace) {
+=======
+static inline wr::WrYuvColorSpace ToWrYuvColorSpace(
+    gfx::YUVColorSpace aYUVColorSpace) {
+>>>>>>> upstream-releases
   switch (aYUVColorSpace) {
-    case YUVColorSpace::BT601:
+    case gfx::YUVColorSpace::BT601:
       return wr::WrYuvColorSpace::Rec601;
-    case YUVColorSpace::BT709:
+    case gfx::YUVColorSpace::BT709:
       return wr::WrYuvColorSpace::Rec709;
+    case gfx::YUVColorSpace::BT2020:
+      return wr::WrYuvColorSpace::Rec2020;
     default:
       MOZ_ASSERT_UNREACHABLE("Tried to convert invalid YUVColorSpace.");
   }
@@ -852,6 +1129,7 @@ static inline wr::SyntheticItalics DegreesToSyntheticItalics(float aDegrees) {
   return synthetic_italics;
 }
 
+<<<<<<< HEAD
 }  // namespace wr
 }  // namespace mozilla
 
@@ -863,5 +1141,21 @@ struct hash<mozilla::wr::WrClipId> {
   }
 };
 }  // namespace std
+||||||| merged common ancestors
+} // namespace wr
+} // namespace mozilla
+=======
+}  // namespace wr
+}  // namespace mozilla
+
+namespace std {
+template <>
+struct hash<mozilla::wr::WrSpatialId> {
+  std::size_t operator()(mozilla::wr::WrSpatialId const& aKey) const noexcept {
+    return std::hash<size_t>{}(aKey.id);
+  }
+};
+}  // namespace std
+>>>>>>> upstream-releases
 
 #endif /* GFX_WEBRENDERTYPES_H */

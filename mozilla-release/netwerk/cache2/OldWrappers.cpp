@@ -1,3 +1,9 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set ts=8 sts=2 et sw=2 tw=80: */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 // Stuff to link the old imp to the new api - will go away!
 
 #include "CacheLog.h"
@@ -37,10 +43,26 @@ namespace {
 // Fires the doom callback back on the main thread
 // after the cache I/O thread is looped.
 
+<<<<<<< HEAD
 class DoomCallbackSynchronizer : public Runnable {
  public:
   explicit DoomCallbackSynchronizer(nsICacheEntryDoomCallback *cb)
       : Runnable("net::DoomCallbackSynchronizer"), mCB(cb) {}
+||||||| merged common ancestors
+class DoomCallbackSynchronizer : public Runnable
+{
+public:
+  explicit DoomCallbackSynchronizer(nsICacheEntryDoomCallback* cb)
+    : Runnable("net::DoomCallbackSynchronizer")
+    , mCB(cb)
+  {
+  }
+=======
+class DoomCallbackSynchronizer : public Runnable {
+ public:
+  explicit DoomCallbackSynchronizer(nsICacheEntryDoomCallback* cb)
+      : Runnable("net::DoomCallbackSynchronizer"), mCB(cb) {}
+>>>>>>> upstream-releases
   nsresult Dispatch();
 
  private:
@@ -82,7 +104,15 @@ class DoomCallbackWrapper : public nsICacheListener {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSICACHELISTENER
 
+<<<<<<< HEAD
   explicit DoomCallbackWrapper(nsICacheEntryDoomCallback *cb) : mCB(cb) {}
+||||||| merged common ancestors
+  explicit DoomCallbackWrapper(nsICacheEntryDoomCallback* cb) : mCB(cb)
+  {
+  }
+=======
+  explicit DoomCallbackWrapper(nsICacheEntryDoomCallback* cb) : mCB(cb) {}
+>>>>>>> upstream-releases
 
  private:
   virtual ~DoomCallbackWrapper() = default;
@@ -92,9 +122,20 @@ class DoomCallbackWrapper : public nsICacheListener {
 
 NS_IMPL_ISUPPORTS(DoomCallbackWrapper, nsICacheListener);
 
+<<<<<<< HEAD
 NS_IMETHODIMP DoomCallbackWrapper::OnCacheEntryAvailable(
     nsICacheEntryDescriptor *descriptor, nsCacheAccessMode accessGranted,
     nsresult status) {
+||||||| merged common ancestors
+NS_IMETHODIMP DoomCallbackWrapper::OnCacheEntryAvailable(nsICacheEntryDescriptor *descriptor,
+                                                         nsCacheAccessMode accessGranted,
+                                                         nsresult status)
+{
+=======
+NS_IMETHODIMP DoomCallbackWrapper::OnCacheEntryAvailable(
+    nsICacheEntryDescriptor* descriptor, nsCacheAccessMode accessGranted,
+    nsresult status) {
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -125,9 +166,22 @@ _OldVisitCallbackWrapper::~_OldVisitCallbackWrapper() {
   }
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldVisitCallbackWrapper::VisitDevice(
     const char *deviceID, nsICacheDeviceInfo *deviceInfo, bool *_retval) {
   if (!mCB) return NS_ERROR_NULL_POINTER;
+||||||| merged common ancestors
+NS_IMETHODIMP _OldVisitCallbackWrapper::VisitDevice(const char * deviceID,
+                                                    nsICacheDeviceInfo *deviceInfo,
+                                                    bool *_retval)
+{
+  if (!mCB)
+    return NS_ERROR_NULL_POINTER;
+=======
+NS_IMETHODIMP _OldVisitCallbackWrapper::VisitDevice(
+    const char* deviceID, nsICacheDeviceInfo* deviceInfo, bool* _retval) {
+  if (!mCB) return NS_ERROR_NULL_POINTER;
+>>>>>>> upstream-releases
 
   *_retval = false;
   if (strcmp(deviceID, mDeviceID)) {
@@ -174,9 +228,20 @@ NS_IMETHODIMP _OldVisitCallbackWrapper::VisitDevice(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldVisitCallbackWrapper::VisitEntry(const char *deviceID,
                                                    nsICacheEntryInfo *entryInfo,
                                                    bool *_retval) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldVisitCallbackWrapper::VisitEntry(const char * deviceID,
+                                                   nsICacheEntryInfo *entryInfo,
+                                                   bool *_retval)
+{
+=======
+NS_IMETHODIMP _OldVisitCallbackWrapper::VisitEntry(const char* deviceID,
+                                                   nsICacheEntryInfo* entryInfo,
+                                                   bool* _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!strcmp(deviceID, mDeviceID));
 
   nsresult rv;
@@ -243,9 +308,19 @@ NS_IMETHODIMP _OldVisitCallbackWrapper::VisitEntry(const char *deviceID,
 
 // _OldGetDiskConsumption
 
+<<<<<<< HEAD
 // static
 nsresult _OldGetDiskConsumption::Get(
     nsICacheStorageConsumptionObserver *aCallback) {
+||||||| merged common ancestors
+//static
+nsresult _OldGetDiskConsumption::Get(nsICacheStorageConsumptionObserver* aCallback)
+{
+=======
+// static
+nsresult _OldGetDiskConsumption::Get(
+    nsICacheStorageConsumptionObserver* aCallback) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsICacheService> serv =
@@ -270,8 +345,20 @@ nsresult _OldGetDiskConsumption::Get(
 NS_IMPL_ISUPPORTS_INHERITED(_OldGetDiskConsumption, Runnable, nsICacheVisitor)
 
 _OldGetDiskConsumption::_OldGetDiskConsumption(
+<<<<<<< HEAD
     nsICacheStorageConsumptionObserver *aCallback)
     : Runnable("net::_OldGetDiskConsumption"), mCallback(aCallback), mSize(0) {}
+||||||| merged common ancestors
+  nsICacheStorageConsumptionObserver* aCallback)
+  : Runnable("net::_OldGetDiskConsumption")
+  , mCallback(aCallback)
+  , mSize(0)
+{
+}
+=======
+    nsICacheStorageConsumptionObserver* aCallback)
+    : Runnable("net::_OldGetDiskConsumption"), mCallback(aCallback), mSize(0) {}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 _OldGetDiskConsumption::Run() {
@@ -280,9 +367,20 @@ _OldGetDiskConsumption::Run() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 _OldGetDiskConsumption::VisitDevice(const char *deviceID,
                                     nsICacheDeviceInfo *deviceInfo,
                                     bool *_retval) {
+||||||| merged common ancestors
+_OldGetDiskConsumption::VisitDevice(const char * deviceID,
+                                    nsICacheDeviceInfo *deviceInfo,
+                                    bool *_retval)
+{
+=======
+_OldGetDiskConsumption::VisitDevice(const char* deviceID,
+                                    nsICacheDeviceInfo* deviceInfo,
+                                    bool* _retval) {
+>>>>>>> upstream-releases
   if (!strcmp(deviceID, "disk")) {
     uint32_t size;
     nsresult rv = deviceInfo->GetTotalSize(&size);
@@ -294,24 +392,55 @@ _OldGetDiskConsumption::VisitDevice(const char *deviceID,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 _OldGetDiskConsumption::VisitEntry(const char *deviceID,
                                    nsICacheEntryInfo *entryInfo,
                                    bool *_retval) {
+||||||| merged common ancestors
+_OldGetDiskConsumption::VisitEntry(const char * deviceID,
+                                   nsICacheEntryInfo *entryInfo,
+                                   bool *_retval)
+{
+=======
+_OldGetDiskConsumption::VisitEntry(const char* deviceID,
+                                   nsICacheEntryInfo* entryInfo,
+                                   bool* _retval) {
+>>>>>>> upstream-releases
   MOZ_CRASH("Unexpected");
   return NS_OK;
 }
 
 // _OldCacheEntryWrapper
 
+<<<<<<< HEAD
 _OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryDescriptor *desc)
     : mOldDesc(desc), mOldInfo(desc), mCacheEntryId(CacheEntry::GetNextId()) {
+||||||| merged common ancestors
+_OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryDescriptor* desc)
+: mOldDesc(desc), mOldInfo(desc), mCacheEntryId(CacheEntry::GetNextId())
+{
+=======
+_OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryDescriptor* desc)
+    : mOldDesc(desc), mOldInfo(desc), mCacheEntryId(CacheEntry::GetNextId()) {
+>>>>>>> upstream-releases
   LOG(("Creating _OldCacheEntryWrapper %p for descriptor %p", this, desc));
 }
 
+<<<<<<< HEAD
 _OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryInfo *info)
     : mOldDesc(nullptr),
       mOldInfo(info),
       mCacheEntryId(CacheEntry::GetNextId()) {
+||||||| merged common ancestors
+_OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryInfo* info)
+: mOldDesc(nullptr), mOldInfo(info), mCacheEntryId(CacheEntry::GetNextId())
+{
+=======
+_OldCacheEntryWrapper::_OldCacheEntryWrapper(nsICacheEntryInfo* info)
+    : mOldDesc(nullptr),
+      mOldInfo(info),
+      mCacheEntryId(CacheEntry::GetNextId()) {
+>>>>>>> upstream-releases
   LOG(("Creating _OldCacheEntryWrapper %p for info %p", this, info));
 }
 
@@ -320,7 +449,14 @@ _OldCacheEntryWrapper::~_OldCacheEntryWrapper() {
        mOldInfo.get()));
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::GetIsForcedValid(bool *aIsForcedValid) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::GetIsForcedValid(bool *aIsForcedValid)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::GetIsForcedValid(bool* aIsForcedValid) {
+>>>>>>> upstream-releases
   // Unused stub
   return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -333,14 +469,34 @@ NS_IMETHODIMP _OldCacheEntryWrapper::ForceValidFor(
 
 NS_IMPL_ISUPPORTS(_OldCacheEntryWrapper, nsICacheEntry)
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::AsyncDoom(
     nsICacheEntryDoomCallback *listener) {
   RefPtr<DoomCallbackWrapper> cb =
       listener ? new DoomCallbackWrapper(listener) : nullptr;
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::AsyncDoom(nsICacheEntryDoomCallback* listener)
+{
+  RefPtr<DoomCallbackWrapper> cb = listener
+    ? new DoomCallbackWrapper(listener)
+    : nullptr;
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::AsyncDoom(
+    nsICacheEntryDoomCallback* listener) {
+  RefPtr<DoomCallbackWrapper> cb =
+      listener ? new DoomCallbackWrapper(listener) : nullptr;
+>>>>>>> upstream-releases
   return AsyncDoom(cb);
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::GetDataSize(int64_t *aSize) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::GetDataSize(int64_t *aSize)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::GetDataSize(int64_t* aSize) {
+>>>>>>> upstream-releases
   uint32_t size;
   nsresult rv = GetDataSize(&size);
   if (NS_FAILED(rv)) return rv;
@@ -349,15 +505,36 @@ NS_IMETHODIMP _OldCacheEntryWrapper::GetDataSize(int64_t *aSize) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataSize(int64_t *aSize) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataSize(int64_t *aSize)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataSize(int64_t* aSize) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataType(nsACString &aType) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataType(nsACString &aType)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::GetAltDataType(nsACString& aType) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::GetPersistent(bool *aPersistToDisk) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::GetPersistent(bool *aPersistToDisk)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::GetPersistent(bool* aPersistToDisk) {
+>>>>>>> upstream-releases
   if (!mOldDesc) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -374,7 +551,14 @@ NS_IMETHODIMP _OldCacheEntryWrapper::GetPersistent(bool *aPersistToDisk) {
 }
 
 NS_IMETHODIMP _OldCacheEntryWrapper::Recreate(bool aMemoryOnly,
+<<<<<<< HEAD
                                               nsICacheEntry **aResult) {
+||||||| merged common ancestors
+                                              nsICacheEntry** aResult)
+{
+=======
+                                              nsICacheEntry** aResult) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(mOldDesc, NS_ERROR_NOT_AVAILABLE);
 
   nsCacheAccessMode mode;
@@ -393,14 +577,37 @@ NS_IMETHODIMP _OldCacheEntryWrapper::Recreate(bool aMemoryOnly,
 }
 
 NS_IMETHODIMP _OldCacheEntryWrapper::OpenInputStream(int64_t offset,
+<<<<<<< HEAD
                                                      nsIInputStream **_retval) {
   if (offset > PR_UINT32_MAX) return NS_ERROR_INVALID_ARG;
+||||||| merged common ancestors
+                                                     nsIInputStream * *_retval)
+{
+  if (offset > PR_UINT32_MAX)
+    return NS_ERROR_INVALID_ARG;
+=======
+                                                     nsIInputStream** _retval) {
+  if (offset > PR_UINT32_MAX) return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
 
   return OpenInputStream(uint32_t(offset), _retval);
 }
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::OpenOutputStream(
     int64_t offset, int64_t predictedSize, nsIOutputStream **_retval) {
   if (offset > PR_UINT32_MAX) return NS_ERROR_INVALID_ARG;
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::OpenOutputStream(int64_t offset,
+                                                      int64_t predictedSize,
+                                                      nsIOutputStream * *_retval)
+{
+  if (offset > PR_UINT32_MAX)
+    return NS_ERROR_INVALID_ARG;
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::OpenOutputStream(
+    int64_t offset, int64_t predictedSize, nsIOutputStream** _retval) {
+  if (offset > PR_UINT32_MAX) return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
 
   return OpenOutputStream(uint32_t(offset), _retval);
 }
@@ -424,8 +631,16 @@ NS_IMETHODIMP _OldCacheEntryWrapper::MaybeMarkValid() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::HasWriteAccess(bool aWriteAllowed_unused,
                                                     bool *aWriteAccess) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::HasWriteAccess(bool aWriteAllowed_unused, bool *aWriteAccess)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::HasWriteAccess(bool aWriteAllowed_unused,
+                                                    bool* aWriteAccess) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(mOldDesc, NS_ERROR_NULL_POINTER);
   NS_ENSURE_ARG(aWriteAccess);
 
@@ -455,26 +670,60 @@ class MetaDataVisitorWrapper : public nsICacheMetaDataVisitor {
 NS_IMPL_ISUPPORTS(MetaDataVisitorWrapper, nsICacheMetaDataVisitor)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MetaDataVisitorWrapper::VisitMetaDataElement(char const *key, char const *value,
                                              bool *goon) {
+||||||| merged common ancestors
+MetaDataVisitorWrapper::VisitMetaDataElement(char const * key,
+                                             char const * value,
+                                             bool *goon)
+{
+=======
+MetaDataVisitorWrapper::VisitMetaDataElement(char const* key, char const* value,
+                                             bool* goon) {
+>>>>>>> upstream-releases
   *goon = true;
   return mCB->OnMetaDataElement(key, value);
 }
 
 }  // namespace
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldCacheEntryWrapper::VisitMetaData(
     nsICacheEntryMetaDataVisitor *cb) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldCacheEntryWrapper::VisitMetaData(nsICacheEntryMetaDataVisitor* cb)
+{
+=======
+NS_IMETHODIMP _OldCacheEntryWrapper::VisitMetaData(
+    nsICacheEntryMetaDataVisitor* cb) {
+>>>>>>> upstream-releases
   RefPtr<MetaDataVisitorWrapper> w = new MetaDataVisitorWrapper(cb);
   return mOldDesc->VisitMetaData(w);
 }
 
 namespace {
 
+<<<<<<< HEAD
 nsresult GetCacheSessionNameForStoragePolicy(
     const nsACString &scheme, nsCacheStoragePolicy storagePolicy,
     bool isPrivate, OriginAttributes const *originAttribs,
     nsACString &sessionName) {
+||||||| merged common ancestors
+nsresult
+GetCacheSessionNameForStoragePolicy(
+        const nsACString& scheme,
+        nsCacheStoragePolicy storagePolicy,
+        bool isPrivate,
+        OriginAttributes const *originAttribs,
+        nsACString& sessionName)
+{
+=======
+nsresult GetCacheSessionNameForStoragePolicy(
+    const nsACString& scheme, nsCacheStoragePolicy storagePolicy,
+    bool isPrivate, OriginAttributes const* originAttribs,
+    nsACString& sessionName) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!isPrivate || storagePolicy == nsICache::STORE_IN_MEMORY);
 
   // HTTP
@@ -495,13 +744,6 @@ nsresult GetCacheSessionNameForStoragePolicy(
         sessionName.AssignLiteral("HTTP");
         break;
     }
-  }
-  // WYCIWYG
-  else if (scheme.EqualsLiteral("wyciwyg")) {
-    if (isPrivate)
-      sessionName.AssignLiteral("wyciwyg-private");
-    else
-      sessionName.AssignLiteral("wyciwyg");
   }
   // FTP
   else if (scheme.EqualsLiteral("ftp")) {
@@ -530,10 +772,25 @@ nsresult GetCacheSessionNameForStoragePolicy(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult GetCacheSession(const nsACString &aScheme, bool aWriteToDisk,
                          nsILoadContextInfo *aLoadInfo,
                          nsIApplicationCache *aAppCache,
                          nsICacheSession **_result) {
+||||||| merged common ancestors
+nsresult
+GetCacheSession(const nsACString& aScheme,
+                bool aWriteToDisk,
+                nsILoadContextInfo* aLoadInfo,
+                nsIApplicationCache* aAppCache,
+                nsICacheSession** _result)
+{
+=======
+nsresult GetCacheSession(const nsACString& aScheme, bool aWriteToDisk,
+                         nsILoadContextInfo* aLoadInfo,
+                         nsIApplicationCache* aAppCache,
+                         nsICacheSession** _result) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   nsCacheStoragePolicy storagePolicy;
@@ -588,11 +845,26 @@ nsresult GetCacheSession(const nsACString &aScheme, bool aWriteToDisk,
 
 NS_IMPL_ISUPPORTS_INHERITED(_OldCacheLoad, Runnable, nsICacheListener)
 
+<<<<<<< HEAD
 _OldCacheLoad::_OldCacheLoad(const nsACString &aScheme,
                              const nsACString &aCacheKey,
                              nsICacheEntryOpenCallback *aCallback,
                              nsIApplicationCache *aAppCache,
                              nsILoadContextInfo *aLoadInfo, bool aWriteToDisk,
+||||||| merged common ancestors
+_OldCacheLoad::_OldCacheLoad(const nsACString& aScheme,
+                             const nsACString& aCacheKey,
+                             nsICacheEntryOpenCallback* aCallback,
+                             nsIApplicationCache* aAppCache,
+                             nsILoadContextInfo* aLoadInfo,
+                             bool aWriteToDisk,
+=======
+_OldCacheLoad::_OldCacheLoad(const nsACString& aScheme,
+                             const nsACString& aCacheKey,
+                             nsICacheEntryOpenCallback* aCallback,
+                             nsIApplicationCache* aAppCache,
+                             nsILoadContextInfo* aLoadInfo, bool aWriteToDisk,
+>>>>>>> upstream-releases
                              uint32_t aFlags)
     : Runnable("net::_OldCacheLoad"),
       mScheme(aScheme),
@@ -621,7 +893,7 @@ nsresult _OldCacheLoad::Start() {
 
   // Consumers that can invoke this code as first and off the main thread
   // are responsible for initiating these two services on the main thread.
-  // Currently this is only nsWyciwygChannel.
+  // Currently no one does that.
 
   // XXX: Start the cache service; otherwise DispatchToCacheIOThread will
   // fail.
@@ -751,7 +1023,7 @@ _OldCacheLoad::Run() {
 }
 
 NS_IMETHODIMP
-_OldCacheLoad::OnCacheEntryAvailable(nsICacheEntryDescriptor *entry,
+_OldCacheLoad::OnCacheEntryAvailable(nsICacheEntryDescriptor* entry,
                                      nsCacheAccessMode access,
                                      nsresult status) {
   LOG(
@@ -807,6 +1079,7 @@ _OldCacheLoad::OnCacheEntryDoomed(nsresult) { return NS_ERROR_NOT_IMPLEMENTED; }
 
 NS_IMPL_ISUPPORTS(_OldStorage, nsICacheStorage)
 
+<<<<<<< HEAD
 _OldStorage::_OldStorage(nsILoadContextInfo *aInfo, bool aAllowDisk,
                          bool aLookupAppCache, bool aOfflineStorage,
                          nsIApplicationCache *aAppCache)
@@ -815,13 +1088,51 @@ _OldStorage::_OldStorage(nsILoadContextInfo *aInfo, bool aAllowDisk,
       mWriteToDisk(aAllowDisk),
       mLookupAppCache(aLookupAppCache),
       mOfflineStorage(aOfflineStorage) {}
+||||||| merged common ancestors
+_OldStorage::_OldStorage(nsILoadContextInfo* aInfo,
+                         bool aAllowDisk,
+                         bool aLookupAppCache,
+                         bool aOfflineStorage,
+                         nsIApplicationCache* aAppCache)
+: mLoadInfo(GetLoadContextInfo(aInfo))
+, mAppCache(aAppCache)
+, mWriteToDisk(aAllowDisk)
+, mLookupAppCache(aLookupAppCache)
+, mOfflineStorage(aOfflineStorage)
+{
+}
+=======
+_OldStorage::_OldStorage(nsILoadContextInfo* aInfo, bool aAllowDisk,
+                         bool aLookupAppCache, bool aOfflineStorage,
+                         nsIApplicationCache* aAppCache)
+    : mLoadInfo(GetLoadContextInfo(aInfo)),
+      mAppCache(aAppCache),
+      mWriteToDisk(aAllowDisk),
+      mLookupAppCache(aLookupAppCache),
+      mOfflineStorage(aOfflineStorage) {}
+>>>>>>> upstream-releases
 
 _OldStorage::~_OldStorage() = default;
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::AsyncOpenURI(nsIURI *aURI,
                                         const nsACString &aIdExtension,
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::AsyncOpenURI(nsIURI *aURI,
+                                        const nsACString & aIdExtension,
+=======
+NS_IMETHODIMP _OldStorage::AsyncOpenURI(nsIURI* aURI,
+                                        const nsACString& aIdExtension,
+>>>>>>> upstream-releases
                                         uint32_t aFlags,
+<<<<<<< HEAD
                                         nsICacheEntryOpenCallback *aCallback) {
+||||||| merged common ancestors
+                                        nsICacheEntryOpenCallback *aCallback)
+{
+=======
+                                        nsICacheEntryOpenCallback* aCallback) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aURI);
   NS_ENSURE_ARG(aCallback);
 
@@ -857,20 +1168,49 @@ NS_IMETHODIMP _OldStorage::AsyncOpenURI(nsIURI *aURI,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::OpenTruncate(nsIURI *aURI,
                                         const nsACString &aIdExtension,
                                         nsICacheEntry **aCacheEntry) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::OpenTruncate(nsIURI *aURI, const nsACString & aIdExtension,
+                                        nsICacheEntry **aCacheEntry)
+{
+=======
+NS_IMETHODIMP _OldStorage::OpenTruncate(nsIURI* aURI,
+                                        const nsACString& aIdExtension,
+                                        nsICacheEntry** aCacheEntry) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::Exists(nsIURI *aURI, const nsACString &aIdExtension,
                                   bool *aResult) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::Exists(nsIURI *aURI, const nsACString & aIdExtension,
+                                   bool *aResult)
+{
+=======
+NS_IMETHODIMP _OldStorage::Exists(nsIURI* aURI, const nsACString& aIdExtension,
+                                  bool* aResult) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::AsyncDoomURI(nsIURI *aURI,
                                         const nsACString &aIdExtension,
                                         nsICacheEntryDoomCallback *aCallback) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::AsyncDoomURI(nsIURI *aURI, const nsACString & aIdExtension,
+                                        nsICacheEntryDoomCallback* aCallback)
+{
+=======
+NS_IMETHODIMP _OldStorage::AsyncDoomURI(nsIURI* aURI,
+                                        const nsACString& aIdExtension,
+                                        nsICacheEntryDoomCallback* aCallback) {
+>>>>>>> upstream-releases
   LOG(("_OldStorage::AsyncDoomURI"));
 
   nsresult rv;
@@ -892,8 +1232,16 @@ NS_IMETHODIMP _OldStorage::AsyncDoomURI(nsIURI *aURI,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::AsyncEvictStorage(
     nsICacheEntryDoomCallback *aCallback) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::AsyncEvictStorage(nsICacheEntryDoomCallback* aCallback)
+{
+=======
+NS_IMETHODIMP _OldStorage::AsyncEvictStorage(
+    nsICacheEntryDoomCallback* aCallback) {
+>>>>>>> upstream-releases
   LOG(("_OldStorage::AsyncEvictStorage"));
 
   nsresult rv;
@@ -923,6 +1271,7 @@ NS_IMETHODIMP _OldStorage::AsyncEvictStorage(
     rv = session->EvictEntries();
     NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
     rv = GetCacheSession(NS_LITERAL_CSTRING("wyciwyg"), mWriteToDisk, mLoadInfo,
                          mAppCache, getter_AddRefs(session));
     NS_ENSURE_SUCCESS(rv, rv);
@@ -933,6 +1282,24 @@ NS_IMETHODIMP _OldStorage::AsyncEvictStorage(
     // This clears any data from scheme other then http, wyciwyg or ftp
     rv = GetCacheSession(EmptyCString(), mWriteToDisk, mLoadInfo, mAppCache,
                          getter_AddRefs(session));
+||||||| merged common ancestors
+    rv = GetCacheSession(NS_LITERAL_CSTRING("wyciwyg"),
+                          mWriteToDisk, mLoadInfo, mAppCache,
+                          getter_AddRefs(session));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    rv = session->EvictEntries();
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // This clears any data from scheme other then http, wyciwyg or ftp
+    rv = GetCacheSession(EmptyCString(),
+                          mWriteToDisk, mLoadInfo, mAppCache,
+                          getter_AddRefs(session));
+=======
+    // This clears any data from schemes other than http or ftp.
+    rv = GetCacheSession(EmptyCString(), mWriteToDisk, mLoadInfo, mAppCache,
+                         getter_AddRefs(session));
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
 
     rv = session->EvictEntries();
@@ -949,8 +1316,17 @@ NS_IMETHODIMP _OldStorage::AsyncEvictStorage(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::AsyncVisitStorage(nsICacheStorageVisitor *aVisitor,
                                              bool aVisitEntries) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::AsyncVisitStorage(nsICacheStorageVisitor* aVisitor,
+                                             bool aVisitEntries)
+{
+=======
+NS_IMETHODIMP _OldStorage::AsyncVisitStorage(nsICacheStorageVisitor* aVisitor,
+                                             bool aVisitEntries) {
+>>>>>>> upstream-releases
   LOG(("_OldStorage::AsyncVisitStorage"));
 
   NS_ENSURE_ARG(aVisitor);
@@ -978,18 +1354,43 @@ NS_IMETHODIMP _OldStorage::AsyncVisitStorage(nsICacheStorageVisitor *aVisitor,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP _OldStorage::GetCacheIndexEntryAttrs(
     nsIURI *aURI, const nsACString &aIdExtension, bool *aHasAltData,
     uint32_t *aSizeInKB) {
+||||||| merged common ancestors
+NS_IMETHODIMP _OldStorage::GetCacheIndexEntryAttrs(nsIURI *aURI,
+                                                   const nsACString &aIdExtension,
+                                                   bool *aHasAltData,
+                                                   uint32_t *aSizeInKB)
+{
+=======
+NS_IMETHODIMP _OldStorage::GetCacheIndexEntryAttrs(
+    nsIURI* aURI, const nsACString& aIdExtension, bool* aHasAltData,
+    uint32_t* aSizeInKB) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 // Internal
 
+<<<<<<< HEAD
 nsresult _OldStorage::AssembleCacheKey(nsIURI *aURI,
                                        nsACString const &aIdExtension,
                                        nsACString &aCacheKey,
                                        nsACString &aScheme) {
+||||||| merged common ancestors
+nsresult _OldStorage::AssembleCacheKey(nsIURI *aURI,
+                                       nsACString const & aIdExtension,
+                                       nsACString & aCacheKey,
+                                       nsACString & aScheme)
+{
+=======
+nsresult _OldStorage::AssembleCacheKey(nsIURI* aURI,
+                                       nsACString const& aIdExtension,
+                                       nsACString& aCacheKey,
+                                       nsACString& aScheme) {
+>>>>>>> upstream-releases
   // Copied from nsHttpChannel::AssembleCacheKey
 
   aCacheKey.Truncate();
@@ -1019,10 +1420,21 @@ nsresult _OldStorage::AssembleCacheKey(nsIURI *aURI,
     if (!aCacheKey.IsEmpty()) {
       aCacheKey.AppendLiteral("uri=");
     }
+<<<<<<< HEAD
   } else if (aScheme.EqualsLiteral("wyciwyg")) {
     rv = aURI->GetSpec(uriSpec);
     NS_ENSURE_SUCCESS(rv, rv);
   } else {
+||||||| merged common ancestors
+  }
+  else if (aScheme.EqualsLiteral("wyciwyg")) {
+    rv = aURI->GetSpec(uriSpec);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  else {
+=======
+  } else {
+>>>>>>> upstream-releases
     rv = aURI->GetAsciiSpec(uriSpec);
     NS_ENSURE_SUCCESS(rv, rv);
   }
@@ -1032,8 +1444,17 @@ nsresult _OldStorage::AssembleCacheKey(nsIURI *aURI,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult _OldStorage::ChooseApplicationCache(const nsACString &cacheKey,
                                              nsIApplicationCache **aCache) {
+||||||| merged common ancestors
+nsresult _OldStorage::ChooseApplicationCache(const nsACString& cacheKey,
+                                             nsIApplicationCache** aCache)
+{
+=======
+nsresult _OldStorage::ChooseApplicationCache(const nsACString& cacheKey,
+                                             nsIApplicationCache** aCache) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIApplicationCacheService> appCacheService =

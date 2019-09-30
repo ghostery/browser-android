@@ -12,11 +12,15 @@
 #include "nsContainerFrame.h"
 #include "RubyUtils.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 /**
  * Factory function.
  * @return a newly allocated nsRubyBaseContainerFrame (infallible)
  */
-nsContainerFrame* NS_NewRubyBaseContainerFrame(nsIPresShell* aPresShell,
+nsContainerFrame* NS_NewRubyBaseContainerFrame(mozilla::PresShell* aPresShell,
                                                mozilla::ComputedStyle* aStyle);
 
 class nsRubyBaseContainerFrame final : public nsContainerFrame {
@@ -54,12 +58,33 @@ class nsRubyBaseContainerFrame final : public nsContainerFrame {
     return mDescendantLeadings;
   }
 
+<<<<<<< HEAD
  protected:
   friend nsContainerFrame* NS_NewRubyBaseContainerFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+protected:
+  friend nsContainerFrame*
+    NS_NewRubyBaseContainerFrame(nsIPresShell* aPresShell,
+                                 ComputedStyle* aStyle);
+=======
+ protected:
+  friend nsContainerFrame* NS_NewRubyBaseContainerFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   explicit nsRubyBaseContainerFrame(ComputedStyle* aStyle)
       : nsContainerFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsRubyBaseContainerFrame(ComputedStyle* aStyle)
+    : nsContainerFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsRubyBaseContainerFrame(ComputedStyle* aStyle,
+                                    nsPresContext* aPresContext)
+      : nsContainerFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   struct RubyReflowInput;
   nscoord ReflowColumns(const RubyReflowInput& aReflowInput,

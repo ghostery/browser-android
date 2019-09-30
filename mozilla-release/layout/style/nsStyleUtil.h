@@ -15,7 +15,6 @@
 #include "nsCRT.h"
 
 class nsCSSValue;
-class nsStyleCoord;
 class nsIContent;
 class nsIPrincipal;
 class nsIURI;
@@ -27,12 +26,22 @@ struct nsCSSValueList;
 namespace mozilla {
 class FontSlantStyle;
 namespace dom {
+class Document;
 class Element;
+<<<<<<< HEAD
 }
 }  // namespace mozilla
+||||||| merged common ancestors
+}
+}
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 // Style utility functions
 class nsStyleUtil {
+<<<<<<< HEAD
  public:
   static bool DashMatchCompare(const nsAString& aAttributeValue,
                                const nsAString& aSelectorValue,
@@ -41,6 +50,26 @@ class nsStyleUtil {
   static bool ValueIncludes(const nsAString& aValueList,
                             const nsAString& aValue,
                             const nsStringComparator& aComparator);
+||||||| merged common ancestors
+public:
+
+ static bool DashMatchCompare(const nsAString& aAttributeValue,
+                                const nsAString& aSelectorValue,
+                                const nsStringComparator& aComparator);
+
+ static bool ValueIncludes(const nsAString& aValueList,
+                           const nsAString& aValue,
+                           const nsStringComparator& aComparator);
+=======
+ public:
+  static bool DashMatchCompare(const nsAString& aAttributeValue,
+                               const nsAString& aSelectorValue,
+                               const nsStringComparator& aComparator);
+
+  static bool ValueIncludes(const nsAString& aValueList,
+                            const nsAString& aValue,
+                            const nsStringComparator& aComparator);
+>>>>>>> upstream-releases
 
   // Append a quoted (with 'quoteChar') and escaped version of aString
   // to aResult.  'quoteChar' must be ' or ".
@@ -61,10 +90,22 @@ class nsStyleUtil {
  public:
   // Append a bitmask-valued property's value(s) (space-separated) to aResult.
   static void AppendBitmaskCSSValue(const nsCSSKTableEntry aTable[],
+<<<<<<< HEAD
                                     int32_t aMaskedValue, int32_t aFirstMask,
                                     int32_t aLastMask, nsAString& aResult);
 
   static void AppendAngleValue(const nsStyleCoord& aValue, nsAString& aResult);
+||||||| merged common ancestors
+                                    int32_t aMaskedValue,
+                                    int32_t aFirstMask,
+                                    int32_t aLastMask,
+                                    nsAString& aResult);
+
+  static void AppendAngleValue(const nsStyleCoord& aValue, nsAString& aResult);
+=======
+                                    int32_t aMaskedValue, int32_t aFirstMask,
+                                    int32_t aLastMask, nsAString& aResult);
+>>>>>>> upstream-releases
 
   static void AppendPaintOrderValue(uint8_t aValue, nsAString& aResult);
 
@@ -78,7 +119,7 @@ class nsStyleUtil {
    */
   static uint8_t FloatToColorComponent(float aAlpha) {
     NS_ASSERTION(0.0 <= aAlpha && aAlpha <= 1.0, "out of range");
-    return NSToIntRound(aAlpha * 255);
+    return static_cast<uint8_t>(NSToIntRound(aAlpha * 255));
   }
 
   /*
@@ -89,6 +130,14 @@ class nsStyleUtil {
    * Should be used only by serialization code.
    */
   static float ColorComponentToFloat(uint8_t aAlpha);
+
+  /**
+   * GetSerializedColorValue() computes serialized color value of aColor and
+   * returns it with aSerializedColor.
+   * https://drafts.csswg.org/cssom/#serialize-a-css-component-value
+   */
+  static void GetSerializedColorValue(nscolor aColor,
+                                      nsAString& aSerializedColor);
 
   /*
    * Does this child count as significant for selector matching?
@@ -119,7 +168,7 @@ class nsStyleUtil {
   static bool ObjectPropsMightCauseOverflow(const nsStylePosition* aStylePos);
 
   /*
-   *  Does this principal have a CSP that blocks the application of
+   *  Does the document have a CSP that blocks the application of
    *  inline styles? Returns false if application of the style should
    *  be blocked.
    *
@@ -128,15 +177,11 @@ class nsStyleUtil {
    *      Included to check the nonce attribute if one is provided. Allowed to
    *      be null, if this is for something other than a <style> element (in
    *      which case nonces won't be checked).
-   *  @param aPrincipal
-   *      The principal of the of the document (*not* of the style sheet).
-   *      The document's principal is where any Content Security Policy that
-   *      should be used to block or allow inline styles will be located.
+   *  @param aDocument
+   *      The document containing the inline style (for querying the CSP);
    *  @param aTriggeringPrincipal
    *      The principal of the scripted caller which added the inline
    *      stylesheet, or null if no scripted caller can be identified.
-   *  @param aSourceURI
-   *      URI of document containing inline style (for reporting violations)
    *  @param aLineNumber
    *      Line number of inline style element in the containing document (for
    *      reporting violations)
@@ -151,11 +196,22 @@ class nsStyleUtil {
    *      Does CSP allow application of the specified inline style?
    */
   static bool CSPAllowsInlineStyle(mozilla::dom::Element* aContent,
-                                   nsIPrincipal* aPrincipal,
+                                   mozilla::dom::Document* aDocument,
                                    nsIPrincipal* aTriggeringPrincipal,
+<<<<<<< HEAD
                                    nsIURI* aSourceURI, uint32_t aLineNumber,
                                    uint32_t aColumnNumber,
                                    const nsAString& aStyleText, nsresult* aRv);
+||||||| merged common ancestors
+                                   nsIURI* aSourceURI,
+                                   uint32_t aLineNumber,
+                                   uint32_t aColumnNumber,
+                                   const nsAString& aStyleText,
+                                   nsresult* aRv);
+=======
+                                   uint32_t aLineNumber, uint32_t aColumnNumber,
+                                   const nsAString& aStyleText, nsresult* aRv);
+>>>>>>> upstream-releases
 
   template <size_t N>
   static bool MatchesLanguagePrefix(const char16_t* aLang, size_t aLen,

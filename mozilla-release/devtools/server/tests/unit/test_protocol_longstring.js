@@ -8,9 +8,9 @@
  * Test simple requests using the protocol helpers.
  */
 var protocol = require("devtools/shared/protocol");
-var {RetVal, Arg} = protocol;
+var { RetVal, Arg } = protocol;
 var EventEmitter = require("devtools/shared/event-emitter");
-var {LongStringActor} = require("devtools/server/actors/string");
+var { LongStringActor } = require("devtools/server/actors/string");
 
 // The test implicitly relies on this.
 require("devtools/shared/fronts/string");
@@ -23,9 +23,7 @@ function simpleHello() {
   };
 }
 
-DebuggerServer.LONG_STRING_LENGTH =
-  DebuggerServer.LONG_STRING_INITIAL_LENGTH =
-  DebuggerServer.LONG_STRING_READ_LENGTH = 5;
+DebuggerServer.LONG_STRING_LENGTH = DebuggerServer.LONG_STRING_INITIAL_LENGTH = DebuggerServer.LONG_STRING_READ_LENGTH = 5;
 
 var SHORT_STR = "abc";
 var LONG_STR = "abcdefghijklmnop";
@@ -77,27 +75,36 @@ var RootActor = protocol.ActorClassWithSpec(rootSpec, {
   },
 
   emitShortString: function() {
-    EventEmitter.emit(this, "string-event", new LongStringActor(this.conn, SHORT_STR));
+    EventEmitter.emit(
+      this,
+      "string-event",
+      new LongStringActor(this.conn, SHORT_STR)
+    );
   },
 
   emitLongString: function() {
-    EventEmitter.emit(this, "string-event", new LongStringActor(this.conn, LONG_STR));
+    EventEmitter.emit(
+      this,
+      "string-event",
+      new LongStringActor(this.conn, LONG_STR)
+    );
   },
 });
 
-var RootFront = protocol.FrontClassWithSpec(rootSpec, {
-  initialize: function(client) {
+class RootFront extends protocol.FrontClassWithSpec(rootSpec) {
+  constructor(client) {
+    super(client);
     this.actorID = "root";
-    protocol.Front.prototype.initialize.call(this, client);
+
     // Root owns itself.
     this.manage(this);
-  },
-});
+  }
+}
 
 function run_test() {
-  DebuggerServer.createRootActor = (conn => {
+  DebuggerServer.createRootActor = conn => {
     return RootActor(conn);
-  });
+  };
 
   DebuggerServer.init();
   const trace = connectPipeTracing();
@@ -112,15 +119,24 @@ function run_test() {
   };
 
   client.connect().then(([applicationType, traits]) => {
+<<<<<<< HEAD
     rootFront = RootFront(client);
+||||||| merged common ancestors
+    rootClient = RootFront(client);
+=======
+    rootFront = new RootFront(client);
+>>>>>>> upstream-releases
 
     // Root actor has no children yet.
     expectRootChildren(0);
 
-    trace.expectReceive({"from": "<actorid>",
-                         "applicationType": "xpcshell-tests",
-                         "traits": []});
+    trace.expectReceive({
+      from: "<actorid>",
+      applicationType: "xpcshell-tests",
+      traits: [],
+    });
     Assert.equal(applicationType, "xpcshell-tests");
+<<<<<<< HEAD
     rootFront.shortString().then(ret => {
       trace.expectSend({"type": "shortString", "to": "<actorid>"});
       trace.expectReceive({"value": "abc", "from": "<actorid>"});
@@ -173,11 +189,92 @@ function run_test() {
         Assert.ok(!!str);
         strfront = str;
         // Shouldn't generate any new references
+||||||| merged common ancestors
+    rootClient.shortString().then(ret => {
+      trace.expectSend({"type": "shortString", "to": "<actorid>"});
+      trace.expectReceive({"value": "abc", "from": "<actorid>"});
+
+      // Should only own the one reference (itself) at this point.
+      expectRootChildren(0);
+      strfront = ret;
+    }).then(() => {
+      return strfront.string();
+    }).then(ret => {
+      Assert.equal(ret, SHORT_STR);
+    }).then(() => {
+      return rootClient.longString();
+    }).then(ret => {
+      trace.expectSend({"type": "longString", "to": "<actorid>"});
+      trace.expectReceive({"value": {"type": "longString",
+                                     "actor": "<actorid>",
+                                     "length": 16,
+                                     "initial": "abcde"},
+                           "from": "<actorid>"});
+
+      strfront = ret;
+      // Should own a reference to itself and an extra string now.
+      expectRootChildren(1);
+    }).then(() => {
+      return strfront.string();
+    }).then(ret => {
+      trace.expectSend({"type": "substring", "start": 5, "end": 10, "to": "<actorid>"});
+      trace.expectReceive({"substring": "fghij", "from": "<actorid>"});
+      trace.expectSend({"type": "substring", "start": 10, "end": 15, "to": "<actorid>"});
+      trace.expectReceive({"substring": "klmno", "from": "<actorid>"});
+      trace.expectSend({"type": "substring", "start": 15, "end": 20, "to": "<actorid>"});
+      trace.expectReceive({"substring": "p", "from": "<actorid>"});
+
+      Assert.equal(ret, LONG_STR);
+    }).then(() => {
+      return strfront.release();
+    }).then(() => {
+      trace.expectSend({"type": "release", "to": "<actorid>"});
+      trace.expectReceive({"from": "<actorid>"});
+
+      // That reference should be removed now.
+      expectRootChildren(0);
+    }).then(() => {
+      const deferred = defer();
+      rootClient.once("string-event", (str) => {
+        trace.expectSend({"type": "emitShortString", "to": "<actorid>"});
+        trace.expectReceive({"type": "string-event", "str": "abc", "from": "<actorid>"});
+
+        Assert.ok(!!str);
+        strfront = str;
+        // Shouldn't generate any new references
+=======
+    rootFront
+      .shortString()
+      .then(ret => {
+        trace.expectSend({ type: "shortString", to: "<actorid>" });
+        trace.expectReceive({ value: "abc", from: "<actorid>" });
+
+        // Should only own the one reference (itself) at this point.
+>>>>>>> upstream-releases
         expectRootChildren(0);
-        // will generate no packets.
-        strfront.string().then((value) => {
-          deferred.resolve(value);
+        strfront = ret;
+      })
+      .then(() => {
+        return strfront.string();
+      })
+      .then(ret => {
+        Assert.equal(ret, SHORT_STR);
+      })
+      .then(() => {
+        return rootFront.longString();
+      })
+      .then(ret => {
+        trace.expectSend({ type: "longString", to: "<actorid>" });
+        trace.expectReceive({
+          value: {
+            type: "longString",
+            actor: "<actorid>",
+            length: 16,
+            initial: "abcde",
+          },
+          from: "<actorid>",
         });
+<<<<<<< HEAD
       });
       rootFront.emitShortString();
       return deferred.promise;
@@ -199,28 +296,170 @@ function run_test() {
 
         Assert.ok(!!str);
         // Should generate one new reference
-        expectRootChildren(1);
-        strfront = str;
-        strfront.string().then((value) => {
-          trace.expectSend({"type": "substring",
-                            "start": 5,
-                            "end": 10,
-                            "to": "<actorid>"});
-          trace.expectReceive({"substring": "fghij", "from": "<actorid>"});
-          trace.expectSend({"type": "substring",
-                            "start": 10,
-                            "end": 15,
-                            "to": "<actorid>"});
-          trace.expectReceive({"substring": "klmno", "from": "<actorid>"});
-          trace.expectSend({"type": "substring",
-                            "start": 15,
-                            "end": 20,
-                            "to": "<actorid>"});
-          trace.expectReceive({"substring": "p", "from": "<actorid>"});
-
-          deferred.resolve(value);
-        });
+||||||| merged common ancestors
       });
+      rootClient.emitShortString();
+      return deferred.promise;
+    }).then(value => {
+      Assert.equal(value, SHORT_STR);
+    }).then(() => {
+      // Will generate no packets
+      return strfront.release();
+    }).then(() => {
+      const deferred = defer();
+      rootClient.once("string-event", (str) => {
+        trace.expectSend({"type": "emitLongString", "to": "<actorid>"});
+        trace.expectReceive({"type": "string-event",
+                             "str": {"type": "longString",
+                                     "actor": "<actorid>",
+                                     "length": 16,
+                                     "initial": "abcde"},
+                             "from": "<actorid>"});
+
+        Assert.ok(!!str);
+        // Should generate one new reference
+=======
+
+        strfront = ret;
+        // Should own a reference to itself and an extra string now.
+>>>>>>> upstream-releases
+        expectRootChildren(1);
+      })
+      .then(() => {
+        return strfront.string();
+      })
+      .then(ret => {
+        trace.expectSend({
+          type: "substring",
+          start: 5,
+          end: 10,
+          to: "<actorid>",
+        });
+        trace.expectReceive({ substring: "fghij", from: "<actorid>" });
+        trace.expectSend({
+          type: "substring",
+          start: 10,
+          end: 15,
+          to: "<actorid>",
+        });
+        trace.expectReceive({ substring: "klmno", from: "<actorid>" });
+        trace.expectSend({
+          type: "substring",
+          start: 15,
+          end: 20,
+          to: "<actorid>",
+        });
+        trace.expectReceive({ substring: "p", from: "<actorid>" });
+
+        Assert.equal(ret, LONG_STR);
+      })
+      .then(() => {
+        return strfront.release();
+      })
+      .then(() => {
+        trace.expectSend({ type: "release", to: "<actorid>" });
+        trace.expectReceive({ from: "<actorid>" });
+
+        // That reference should be removed now.
+        expectRootChildren(0);
+      })
+      .then(() => {
+        const deferred = defer();
+        rootFront.once("string-event", str => {
+          trace.expectSend({ type: "emitShortString", to: "<actorid>" });
+          trace.expectReceive({
+            type: "string-event",
+            str: "abc",
+            from: "<actorid>",
+          });
+
+          Assert.ok(!!str);
+          strfront = str;
+          // Shouldn't generate any new references
+          expectRootChildren(0);
+          // will generate no packets.
+          strfront.string().then(value => {
+            deferred.resolve(value);
+          });
+        });
+        rootFront.emitShortString();
+        return deferred.promise;
+      })
+      .then(value => {
+        Assert.equal(value, SHORT_STR);
+      })
+      .then(() => {
+        // Will generate no packets
+        return strfront.release();
+      })
+      .then(() => {
+        const deferred = defer();
+        rootFront.once("string-event", str => {
+          trace.expectSend({ type: "emitLongString", to: "<actorid>" });
+          trace.expectReceive({
+            type: "string-event",
+            str: {
+              type: "longString",
+              actor: "<actorid>",
+              length: 16,
+              initial: "abcde",
+            },
+            from: "<actorid>",
+          });
+
+          Assert.ok(!!str);
+          // Should generate one new reference
+          expectRootChildren(1);
+          strfront = str;
+          strfront.string().then(value => {
+            trace.expectSend({
+              type: "substring",
+              start: 5,
+              end: 10,
+              to: "<actorid>",
+            });
+            trace.expectReceive({ substring: "fghij", from: "<actorid>" });
+            trace.expectSend({
+              type: "substring",
+              start: 10,
+              end: 15,
+              to: "<actorid>",
+            });
+            trace.expectReceive({ substring: "klmno", from: "<actorid>" });
+            trace.expectSend({
+              type: "substring",
+              start: 15,
+              end: 20,
+              to: "<actorid>",
+            });
+            trace.expectReceive({ substring: "p", from: "<actorid>" });
+
+            deferred.resolve(value);
+          });
+        });
+        rootFront.emitLongString();
+        return deferred.promise;
+      })
+      .then(value => {
+        Assert.equal(value, LONG_STR);
+      })
+      .then(() => {
+        return strfront.release();
+      })
+      .then(() => {
+        trace.expectSend({ type: "release", to: "<actorid>" });
+        trace.expectReceive({ from: "<actorid>" });
+        expectRootChildren(0);
+      })
+      .then(() => {
+        client.close().then(() => {
+          do_test_finished();
+        });
+      })
+      .catch(err => {
+        do_report_unexpected_exception(err, "Failure executing test");
+      });
+<<<<<<< HEAD
       rootFront.emitLongString();
       return deferred.promise;
     }).then(value => {
@@ -238,6 +477,26 @@ function run_test() {
     }).catch(err => {
       do_report_unexpected_exception(err, "Failure executing test");
     });
+||||||| merged common ancestors
+      rootClient.emitLongString();
+      return deferred.promise;
+    }).then(value => {
+      Assert.equal(value, LONG_STR);
+    }).then(() => {
+      return strfront.release();
+    }).then(() => {
+      trace.expectSend({"type": "release", "to": "<actorid>"});
+      trace.expectReceive({"from": "<actorid>"});
+      expectRootChildren(0);
+    }).then(() => {
+      client.close().then(() => {
+        do_test_finished();
+      });
+    }).catch(err => {
+      do_report_unexpected_exception(err, "Failure executing test");
+    });
+=======
+>>>>>>> upstream-releases
   });
   do_test_pending();
 }

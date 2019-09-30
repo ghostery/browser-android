@@ -49,27 +49,54 @@ class nsXBLWindowKeyHandler : public nsIDOMEventListener {
  protected:
   virtual ~nsXBLWindowKeyHandler();
 
+<<<<<<< HEAD
   nsresult WalkHandlers(KeyboardEvent* aKeyEvent);
+||||||| merged common ancestors
+  nsresult WalkHandlers(KeyboardEvent* aKeyEvent, nsAtom* aEventType);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  nsresult WalkHandlers(KeyboardEvent* aKeyEvent);
+>>>>>>> upstream-releases
 
   // walk the handlers, looking for one to handle the event
+<<<<<<< HEAD
   bool WalkHandlersInternal(KeyboardEvent* aKeyEvent, bool aExecute,
+||||||| merged common ancestors
+  bool WalkHandlersInternal(KeyboardEvent* aKeyEvent,
+                            nsAtom* aEventType,
+                            bool aExecute,
+=======
+  MOZ_CAN_RUN_SCRIPT
+  bool WalkHandlersInternal(KeyboardEvent* aKeyEvent, bool aExecute,
+>>>>>>> upstream-releases
                             bool* aOutReservedForChrome = nullptr);
 
   // walk the handlers for aEvent, aCharCode and aIgnoreModifierState. Execute
   // it if aExecute = true.
+<<<<<<< HEAD
   bool WalkHandlersAndExecute(KeyboardEvent* aKeyEvent, uint32_t aCharCode,
+||||||| merged common ancestors
+  bool WalkHandlersAndExecute(KeyboardEvent* aKeyEvent, nsAtom* aEventType,
+                              uint32_t aCharCode,
+=======
+  MOZ_CAN_RUN_SCRIPT
+  bool WalkHandlersAndExecute(KeyboardEvent* aKeyEvent, uint32_t aCharCode,
+>>>>>>> upstream-releases
                               const IgnoreModifierState& aIgnoreModifierState,
                               bool aExecute,
                               bool* aOutReservedForChrome = nullptr);
 
   // HandleEvent function for the capturing phase in the default event group.
+  MOZ_CAN_RUN_SCRIPT
   void HandleEventOnCaptureInDefaultEventGroup(KeyboardEvent* aEvent);
   // HandleEvent function for the capturing phase in the system event group.
+  MOZ_CAN_RUN_SCRIPT
   void HandleEventOnCaptureInSystemEventGroup(KeyboardEvent* aEvent);
 
   // Check if any handler would handle the given event. Optionally returns
   // whether the command handler for the event is marked with the "reserved"
   // attribute.
+  MOZ_CAN_RUN_SCRIPT
   bool HasHandlerForEvent(KeyboardEvent* aEvent,
                           bool* aOutReservedForChrome = nullptr);
 

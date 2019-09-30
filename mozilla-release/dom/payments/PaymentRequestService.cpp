@@ -178,7 +178,17 @@ nsresult PaymentRequestService::LaunchUIAction(const nsAString& aRequestId,
       rv = uiService->ClosePayment(aRequestId);
       break;
     }
+<<<<<<< HEAD
     default: { return NS_ERROR_FAILURE; }
+||||||| merged common ancestors
+    default : {
+      return NS_ERROR_FAILURE;
+    }
+=======
+    default: {
+      return NS_ERROR_FAILURE;
+    }
+>>>>>>> upstream-releases
   }
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;

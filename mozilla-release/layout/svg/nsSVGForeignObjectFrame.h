@@ -8,15 +8,16 @@
 #define NSSVGFOREIGNOBJECTFRAME_H__
 
 #include "mozilla/Attributes.h"
+#include "mozilla/PresShellForwards.h"
 #include "nsAutoPtr.h"
 #include "nsContainerFrame.h"
-#include "nsIPresShell.h"
 #include "nsSVGDisplayableFrame.h"
 #include "nsRegion.h"
 #include "nsSVGUtils.h"
 
 class gfxContext;
 
+<<<<<<< HEAD
 class nsSVGForeignObjectFrame final : public nsContainerFrame,
                                       public nsSVGDisplayableFrame {
   friend nsContainerFrame* NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell,
@@ -24,8 +25,32 @@ class nsSVGForeignObjectFrame final : public nsContainerFrame,
 
  protected:
   explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGForeignObjectFrame final : public nsContainerFrame
+                                    , public nsSVGDisplayableFrame
+{
+  friend nsContainerFrame*
+  NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle);
+=======
+class nsSVGForeignObjectFrame final : public nsContainerFrame,
+                                      public nsSVGDisplayableFrame {
+  friend nsContainerFrame* NS_NewSVGForeignObjectFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit nsSVGForeignObjectFrame(ComputedStyle* aStyle,
+                                   nsPresContext* aPresContext);
 
  public:
+>>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsSVGForeignObjectFrame)
 
@@ -84,10 +109,18 @@ class nsSVGForeignObjectFrame final : public nsContainerFrame,
   // Return our ::-moz-svg-foreign-content anonymous box.
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  virtual void DidSetComputedStyle(ComputedStyle* aOldComputedStyle) override;
+
+ protected:
+>>>>>>> upstream-releases
   // implementation helpers:
   void DoReflow();
-  void RequestReflow(nsIPresShell::IntrinsicDirty aType);
+  void RequestReflow(mozilla::IntrinsicDirty aType);
 
   // If width or height is less than or equal to zero we must disable rendering
   bool IsDisabled() const { return mRect.width <= 0 || mRect.height <= 0; }

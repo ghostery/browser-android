@@ -200,6 +200,7 @@
   }
 
 // component implementing nsIStreamLoader.
+<<<<<<< HEAD
 #define NS_STREAMLOADER_CONTRACTID "@mozilla.org/network/stream-loader;1"
 #define NS_STREAMLOADER_CID                        \
   { /* 5BA6D920-D4E9-11d3-A1A5-0050041CAF44 */     \
@@ -207,6 +208,25 @@
       0xa1, 0xa5, 0x0, 0x50, 0x4, 0x1c, 0xaf, 0x44 \
     }                                              \
   }
+||||||| merged common ancestors
+#define NS_STREAMLOADER_CONTRACTID \
+    "@mozilla.org/network/stream-loader;1"
+#define NS_STREAMLOADER_CID \
+{ /* 5BA6D920-D4E9-11d3-A1A5-0050041CAF44 */         \
+    0x5ba6d920,                                      \
+    0xd4e9,                                          \
+    0x11d3,                                          \
+    { 0xa1, 0xa5, 0x0, 0x50, 0x4, 0x1c, 0xaf, 0x44 } \
+}
+=======
+#define NS_STREAMLOADER_CONTRACTID "@mozilla.org/network/stream-loader;1"
+#define NS_STREAMLOADER_CID                          \
+  { /* 9879908a-2972-40c0-890b-a91dd7dfb954 */       \
+    0x9879908a, 0x2972, 0x40c0, {                    \
+      0x89, 0x0b, 0xa9, 0x1d, 0xd7, 0xdf, 0xb9, 0x54 \
+    }                                                \
+  }
+>>>>>>> upstream-releases
 
 // component implementing nsIStreamLoader.
 #define NS_INCREMENTALSTREAMLOADER_CONTRACTID \
@@ -432,6 +452,7 @@
  * netwerk/protocol/http/ classes
  */
 
+<<<<<<< HEAD
 #define NS_HTTPPROTOCOLHANDLER_CID                   \
   { /* 4f47e42e-4d23-4dd3-bfda-eb29255e9ea3 */       \
     0x4f47e42e, 0x4d23, 0x4dd3, {                    \
@@ -439,6 +460,113 @@
     }                                                \
   }
 
+#define NS_HTTPSPROTOCOLHANDLER_CID                  \
+  { /* dccbe7e4-7750-466b-a557-5ea36c8ff24e */       \
+    0xdccbe7e4, 0x7750, 0x466b, {                    \
+      0xa5, 0x57, 0x5e, 0xa3, 0x6c, 0x8f, 0xf2, 0x4e \
+    }                                                \
+  }
+
+#define NS_HTTPBASICAUTH_CID                         \
+  { /* fca3766a-434a-4ae7-83cf-0909e18a093a */       \
+    0xfca3766a, 0x434a, 0x4ae7, {                    \
+      0x83, 0xcf, 0x09, 0x09, 0xe1, 0x8a, 0x09, 0x3a \
+    }                                                \
+  }
+
+#define NS_HTTPDIGESTAUTH_CID                        \
+  { /* 17491ba4-1dd2-11b2-aae3-de6b92dab620 */       \
+    0x17491ba4, 0x1dd2, 0x11b2, {                    \
+      0xaa, 0xe3, 0xde, 0x6b, 0x92, 0xda, 0xb6, 0x20 \
+    }                                                \
+  }
+
+#define NS_HTTPNTLMAUTH_CID                          \
+  { /* bbef8185-c628-4cc1-b53e-e61e74c2451a */       \
+    0xbbef8185, 0xc628, 0x4cc1, {                    \
+      0xb5, 0x3e, 0xe6, 0x1e, 0x74, 0xc2, 0x45, 0x1a \
+    }                                                \
+  }
+||||||| merged common ancestors
+#define NS_HTTPPROTOCOLHANDLER_CID \
+{ /* 4f47e42e-4d23-4dd3-bfda-eb29255e9ea3 */         \
+    0x4f47e42e,                                      \
+    0x4d23,                                          \
+    0x4dd3,                                          \
+    {0xbf, 0xda, 0xeb, 0x29, 0x25, 0x5e, 0x9e, 0xa3} \
+}
+
+#define NS_HTTPSPROTOCOLHANDLER_CID \
+{ /* dccbe7e4-7750-466b-a557-5ea36c8ff24e */         \
+    0xdccbe7e4,                                      \
+    0x7750,                                          \
+    0x466b,                                          \
+    {0xa5, 0x57, 0x5e, 0xa3, 0x6c, 0x8f, 0xf2, 0x4e} \
+}
+
+#define NS_HTTPBASICAUTH_CID \
+{ /* fca3766a-434a-4ae7-83cf-0909e18a093a */         \
+    0xfca3766a,                                      \
+    0x434a,                                          \
+    0x4ae7,                                          \
+    {0x83, 0xcf, 0x09, 0x09, 0xe1, 0x8a, 0x09, 0x3a} \
+}
+
+#define NS_HTTPDIGESTAUTH_CID \
+{ /* 17491ba4-1dd2-11b2-aae3-de6b92dab620 */         \
+    0x17491ba4,                                      \
+    0x1dd2,                                          \
+    0x11b2,                                          \
+    {0xaa, 0xe3, 0xde, 0x6b, 0x92, 0xda, 0xb6, 0x20} \
+}
+
+#define NS_HTTPNTLMAUTH_CID \
+{ /* bbef8185-c628-4cc1-b53e-e61e74c2451a */         \
+    0xbbef8185,                                      \
+    0xc628,                                          \
+    0x4cc1,                                          \
+    {0xb5, 0x3e, 0xe6, 0x1e, 0x74, 0xc2, 0x45, 0x1a} \
+}
+
+#define NS_HTTPAUTHMANAGER_CONTRACTID \
+    "@mozilla.org/network/http-auth-manager;1"
+#define NS_HTTPAUTHMANAGER_CID \
+{ /* 36b63ef3-e0fa-4c49-9fd4-e065e85568f4 */         \
+    0x36b63ef3,                                      \
+    0xe0fa,                                          \
+    0x4c49,                                          \
+    {0x9f, 0xd4, 0xe0, 0x65, 0xe8, 0x55, 0x68, 0xf4} \
+}
+
+// component implementing nsIHttpPushListener.
+#define NS_HTTPPUSHLISTENER_CONTRACTID \
+    "@mozilla.org/network/push-listener;1"
+#define NS_HTTPPUSHLISTENER_CID                      \
+{                                                    \
+    0x73cf4430,                                      \
+    0x5877,                                          \
+    0x4c6b,                                          \
+    {0xb8, 0x78, 0x3e, 0xde, 0x5b, 0xc8, 0xef, 0xf1} \
+}
+=======
+#define NS_HTTPPROTOCOLHANDLER_CID                   \
+  { /* 4f47e42e-4d23-4dd3-bfda-eb29255e9ea3 */       \
+    0x4f47e42e, 0x4d23, 0x4dd3, {                    \
+      0xbf, 0xda, 0xeb, 0x29, 0x25, 0x5e, 0x9e, 0xa3 \
+    }                                                \
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#define NS_HTTPAUTHMANAGER_CONTRACTID "@mozilla.org/network/http-auth-manager;1"
+#define NS_HTTPAUTHMANAGER_CID                       \
+  { /* 36b63ef3-e0fa-4c49-9fd4-e065e85568f4 */       \
+    0x36b63ef3, 0xe0fa, 0x4c49, {                    \
+      0x9f, 0xd4, 0xe0, 0x65, 0xe8, 0x55, 0x68, 0xf4 \
+    }                                                \
+  }
+||||||| merged common ancestors
+=======
 #define NS_HTTPSPROTOCOLHANDLER_CID                  \
   { /* dccbe7e4-7750-466b-a557-5ea36c8ff24e */       \
     0xdccbe7e4, 0x7750, 0x466b, {                    \
@@ -474,6 +602,7 @@
       0x9f, 0xd4, 0xe0, 0x65, 0xe8, 0x55, 0x68, 0xf4 \
     }                                                \
   }
+>>>>>>> upstream-releases
 
 #define NS_HTTPACTIVITYDISTRIBUTOR_CONTRACTID \
   "@mozilla.org/network/http-activity-distributor;1"
@@ -529,11 +658,32 @@
   }
 
 #define NS_SUBSTITUTINGURLMUTATOR_CID                \
+<<<<<<< HEAD
   {                                                  \
     0xb3cfeb91, 0x332a, 0x46c9, {                    \
       0xad, 0x97, 0x93, 0xff, 0x39, 0x84, 0x14, 0x94 \
     }                                                \
   }
+||||||| merged common ancestors
+{ 0xb3cfeb91,                                        \
+  0x332a,                                            \
+  0x46c9,                                            \
+  { 0xad, 0x97, 0x93, 0xff, 0x39, 0x84, 0x14, 0x94 } \
+}
+=======
+  {                                                  \
+    0xb3cfeb91, 0x332a, 0x46c9, {                    \
+      0xad, 0x97, 0x93, 0xff, 0x39, 0x84, 0x14, 0x94 \
+    }                                                \
+  }
+
+#define NS_SUBSTITUTINGJARURI_CID                    \
+  { /* 50d50ddf-f16a-4652-8705-936b19c3763b */       \
+    0x50d50ddf, 0xf16a, 0x4652, {                    \
+      0x87, 0x05, 0x93, 0x6b, 0x19, 0xc3, 0x76, 0x3b \
+    }                                                \
+  }
+>>>>>>> upstream-releases
 
 /******************************************************************************
  * netwerk/protocol/file/ classes
@@ -563,6 +713,7 @@
 
 // service implementing nsIProtocolHandler
 #define NS_VIEWSOURCEHANDLER_CID                     \
+<<<<<<< HEAD
   { /* {0x9c7ec5d1-23f9-11d5-aea8-8fcc0793e97f} */   \
     0x9c7ec5d1, 0x23f9, 0x11d5, {                    \
       0xae, 0xa8, 0x8f, 0xcc, 0x07, 0x93, 0xe9, 0x7f \
@@ -579,6 +730,32 @@
       0x9d, 0x7c, 0xc3, 0xce, 0x73, 0x28, 0x4d, 0x01 \
     }                                                \
   }
+||||||| merged common ancestors
+{ /* {0x9c7ec5d1-23f9-11d5-aea8-8fcc0793e97f} */     \
+    0x9c7ec5d1,                                      \
+    0x23f9,                                          \
+    0x11d5,                                          \
+    {0xae, 0xa8, 0x8f, 0xcc, 0x07, 0x93, 0xe9, 0x7f} \
+}
+
+/******************************************************************************
+ * netwerk/protocol/wyciwyg/ classes
+ */
+
+#define NS_WYCIWYGPROTOCOLHANDLER_CID                \
+{ /* {0xe7509b46-2eB2-410a-9d7c-c3ce73284d01} */     \
+  0xe7509b46,                                        \
+  0x2eb2,                                            \
+  0x410a,                                            \
+  {0x9d, 0x7c, 0xc3, 0xce, 0x73, 0x28, 0x4d, 0x01}   \
+}
+=======
+  { /* {0x9c7ec5d1-23f9-11d5-aea8-8fcc0793e97f} */   \
+    0x9c7ec5d1, 0x23f9, 0x11d5, {                    \
+      0xae, 0xa8, 0x8f, 0xcc, 0x07, 0x93, 0xe9, 0x7f \
+    }                                                \
+  }
+>>>>>>> upstream-releases
 
 /******************************************************************************
  * netwerk/protocol/websocket/ classes
@@ -719,6 +896,7 @@
  * netwerk/wifi classes
  */
 #ifdef NECKO_WIFI
+<<<<<<< HEAD
 #define NS_WIFI_MONITOR_CONTRACTID "@mozilla.org/wifi/monitor;1"
 
 #define NS_WIFI_MONITOR_COMPONENT_CID                \
@@ -727,6 +905,25 @@
       0x89, 0xF0, 0xDA, 0xCE, 0x02, 0x42, 0xFD, 0x82 \
     }                                                \
   }
+||||||| merged common ancestors
+#define NS_WIFI_MONITOR_CONTRACTID "@mozilla.org/wifi/monitor;1"
+
+#define NS_WIFI_MONITOR_COMPONENT_CID                  \
+{  0x3FF8FB9F,                                         \
+   0xEE63,                                             \
+   0x48DF,                                             \
+   { 0x89, 0xF0, 0xDA, 0xCE, 0x02, 0x42, 0xFD, 0x82 }  \
+}
+=======
+#  define NS_WIFI_MONITOR_CONTRACTID "@mozilla.org/wifi/monitor;1"
+
+#  define NS_WIFI_MONITOR_COMPONENT_CID                \
+    {                                                  \
+      0x3FF8FB9F, 0xEE63, 0x48DF, {                    \
+        0x89, 0xF0, 0xDA, 0xCE, 0x02, 0x42, 0xFD, 0x82 \
+      }                                                \
+    }
+>>>>>>> upstream-releases
 #endif
 
 /******************************************************************************

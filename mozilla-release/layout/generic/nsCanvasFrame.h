@@ -16,7 +16,6 @@
 #include "nsIPopupContainer.h"
 #include "nsDisplayList.h"
 #include "nsIAnonymousContentCreator.h"
-#include "gfxPrefs.h"
 
 class nsPresContext;
 class gfxContext;
@@ -34,6 +33,7 @@ class nsPopupSetFrame;
 class nsCanvasFrame final : public nsContainerFrame,
                             public nsIScrollPositionListener,
                             public nsIAnonymousContentCreator,
+<<<<<<< HEAD
                             public nsIPopupContainer {
  public:
   explicit nsCanvasFrame(ComputedStyle* aStyle)
@@ -41,6 +41,25 @@ class nsCanvasFrame final : public nsContainerFrame,
         mDoPaintFocus(false),
         mAddedScrollPositionListener(false),
         mPopupSetFrame(nullptr) {}
+||||||| merged common ancestors
+                            public nsIPopupContainer
+{
+public:
+  explicit nsCanvasFrame(ComputedStyle* aStyle)
+    : nsContainerFrame(aStyle, kClassID)
+    , mDoPaintFocus(false)
+    , mAddedScrollPositionListener(false)
+    , mPopupSetFrame(nullptr)
+  {}
+=======
+                            public nsIPopupContainer {
+ public:
+  explicit nsCanvasFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsContainerFrame(aStyle, aPresContext, kClassID),
+        mDoPaintFocus(false),
+        mAddedScrollPositionListener(false),
+        mPopupSetFrame(nullptr) {}
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsCanvasFrame)
@@ -162,6 +181,7 @@ class nsDisplayCanvasBackgroundColor final : public nsDisplaySolidColorBase {
     // We need to override so we don't consider border-radius.
     aOutFrames->AppendElement(mFrame);
   }
+<<<<<<< HEAD
   virtual already_AddRefed<Layer> BuildLayer(
       nsDisplayListBuilder* aBuilder, LayerManager* aManager,
       const ContainerLayerParameters& aContainerParameters) override;
@@ -174,10 +194,37 @@ class nsDisplayCanvasBackgroundColor final : public nsDisplaySolidColorBase {
   virtual LayerState GetLayerState(
       nsDisplayListBuilder* aBuilder, LayerManager* aManager,
       const ContainerLayerParameters& aParameters) override {
+||||||| merged common ancestors
+  virtual already_AddRefed<Layer> BuildLayer(nsDisplayListBuilder* aBuilder,
+                                             LayerManager* aManager,
+                                             const ContainerLayerParameters& aContainerParameters) override;
+  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
+                                       const StackingContextHelper& aSc,
+                                       mozilla::layers::WebRenderLayerManager* aManager,
+                                       nsDisplayListBuilder* aDisplayListBuilder) override;
+  virtual LayerState GetLayerState(nsDisplayListBuilder* aBuilder,
+                                   LayerManager* aManager,
+                                   const ContainerLayerParameters& aParameters) override
+  {
+=======
+  virtual already_AddRefed<Layer> BuildLayer(
+      nsDisplayListBuilder* aBuilder, LayerManager* aManager,
+      const ContainerLayerParameters& aContainerParameters) override;
+  virtual bool CreateWebRenderCommands(
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const StackingContextHelper& aSc,
+      mozilla::layers::RenderRootStateManager* aManager,
+      nsDisplayListBuilder* aDisplayListBuilder) override;
+  virtual LayerState GetLayerState(
+      nsDisplayListBuilder* aBuilder, LayerManager* aManager,
+      const ContainerLayerParameters& aParameters) override {
+>>>>>>> upstream-releases
     if (ForceActiveLayers()) {
-      return mozilla::LAYER_ACTIVE;
+      return mozilla::LayerState::LAYER_ACTIVE;
     }
-    return mozilla::LAYER_NONE;
+    return mozilla::LayerState::LAYER_NONE;
   }
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
 
@@ -190,10 +237,24 @@ class nsDisplayCanvasBackgroundColor final : public nsDisplaySolidColorBase {
 };
 
 class nsDisplayCanvasBackgroundImage : public nsDisplayBackgroundImage {
+<<<<<<< HEAD
  public:
   explicit nsDisplayCanvasBackgroundImage(nsDisplayListBuilder* aBuilder,
                                           const InitData& aInitData)
       : nsDisplayBackgroundImage(aBuilder, aInitData) {}
+||||||| merged common ancestors
+public:
+  explicit nsDisplayCanvasBackgroundImage(nsDisplayListBuilder* aBuilder, const InitData& aInitData)
+    : nsDisplayBackgroundImage(aBuilder, aInitData)
+  {
+  }
+=======
+ public:
+  explicit nsDisplayCanvasBackgroundImage(nsDisplayListBuilder* aBuilder,
+                                          nsIFrame* aFrame,
+                                          const InitData& aInitData)
+      : nsDisplayBackgroundImage(aBuilder, aFrame, aInitData) {}
+>>>>>>> upstream-releases
 
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
 

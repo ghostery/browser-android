@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "AudioScheduledSourceNode.h"
-#include "mozilla/dom/AudioScheduledSourceNodeBinding.h"
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 AudioScheduledSourceNode::AudioScheduledSourceNode(
     AudioContext* aContext, uint32_t aChannelCount,
     ChannelCountMode aChannelCountMode,
@@ -24,3 +24,31 @@ JSObject* AudioScheduledSourceNode::WrapObject(
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+AudioScheduledSourceNode::AudioScheduledSourceNode(AudioContext* aContext,
+                                                   uint32_t aChannelCount,
+                                                   ChannelCountMode aChannelCountMode,
+                                                   ChannelInterpretation aChannelInterpretation)
+  : AudioNode(aContext, aChannelCount, aChannelCountMode,
+              aChannelInterpretation)
+{}
+
+JSObject*
+AudioScheduledSourceNode::WrapObject(JSContext* aCx,
+                                     JS::Handle<JSObject*> aGivenProto)
+{
+  return AudioScheduledSourceNode_Binding::Wrap(aCx, this, aGivenProto);
+}
+
+} // dom namespace
+} // mozilla namespace
+=======
+AudioScheduledSourceNode::AudioScheduledSourceNode(
+    AudioContext* aContext, uint32_t aChannelCount,
+    ChannelCountMode aChannelCountMode,
+    ChannelInterpretation aChannelInterpretation)
+    : AudioNode(aContext, aChannelCount, aChannelCountMode,
+                aChannelInterpretation) {}
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

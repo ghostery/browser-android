@@ -27,6 +27,7 @@ txResultRecycler::~txResultRecycler() {
   }
 }
 
+<<<<<<< HEAD
 void txResultRecycler::recycle(txAExprResult* aResult) {
   NS_ASSERTION(aResult->mRefCnt == 0, "In-use txAExprResult recycled");
   RefPtr<txResultRecycler> kungFuDeathGrip;
@@ -58,6 +59,56 @@ void txResultRecycler::recycle(txAExprResult* aResult) {
     }
     default: { delete aResult; }
   }
+||||||| merged common ancestors
+txResultRecycler::~txResultRecycler()
+{
+    txStackIterator stringIter(&mStringResults);
+    while (stringIter.hasNext()) {
+        delete static_cast<StringResult*>(stringIter.next());
+    }
+    txStackIterator nodesetIter(&mNodeSetResults);
+    while (nodesetIter.hasNext()) {
+        delete static_cast<txNodeSet*>(nodesetIter.next());
+    }
+    txStackIterator numberIter(&mNumberResults);
+    while (numberIter.hasNext()) {
+        delete static_cast<NumberResult*>(numberIter.next());
+    }
+=======
+void txResultRecycler::recycle(txAExprResult* aResult) {
+  NS_ASSERTION(aResult->mRefCnt == 0, "In-use txAExprResult recycled");
+  RefPtr<txResultRecycler> kungFuDeathGrip;
+  aResult->mRecycler.swap(kungFuDeathGrip);
+
+  nsresult rv = NS_OK;
+  switch (aResult->getResultType()) {
+    case txAExprResult::STRING: {
+      rv = mStringResults.push(static_cast<StringResult*>(aResult));
+      if (NS_FAILED(rv)) {
+        delete aResult;
+      }
+      return;
+    }
+    case txAExprResult::NODESET: {
+      static_cast<txNodeSet*>(aResult)->clear();
+      rv = mNodeSetResults.push(static_cast<txNodeSet*>(aResult));
+      if (NS_FAILED(rv)) {
+        delete aResult;
+      }
+      return;
+    }
+    case txAExprResult::NUMBER: {
+      rv = mNumberResults.push(static_cast<NumberResult*>(aResult));
+      if (NS_FAILED(rv)) {
+        delete aResult;
+      }
+      return;
+    }
+    default: {
+      delete aResult;
+    }
+  }
+>>>>>>> upstream-releases
 }
 
 nsresult txResultRecycler::getStringResult(StringResult** aResult) {

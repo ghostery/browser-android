@@ -10,6 +10,10 @@
 #include "mozilla/Attributes.h"
 #include "nsMathMLmencloseFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <msqrt> -- form a radical
 //
@@ -37,7 +41,13 @@ class nsMathMLmsqrtFrame final : public nsMathMLmencloseFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmsqrtFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmsqrtFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmsqrtFrame(nsIPresShell*   aPresShell,
+=======
+  friend nsIFrame* NS_NewMathMLmsqrtFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                           ComputedStyle* aStyle);
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
@@ -53,8 +63,17 @@ class nsMathMLmsqrtFrame final : public nsMathMLmencloseFrame {
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmsqrtFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmsqrtFrame(ComputedStyle* aStyle);
+=======
+ protected:
+  explicit nsMathMLmsqrtFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext);
+>>>>>>> upstream-releases
   virtual ~nsMathMLmsqrtFrame();
 };
 

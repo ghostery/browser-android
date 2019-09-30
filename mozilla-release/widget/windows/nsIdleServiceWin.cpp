@@ -8,10 +8,25 @@
 #include "nsIdleServiceWin.h"
 #include <windows.h>
 
+<<<<<<< HEAD
 bool nsIdleServiceWin::PollIdleTime(uint32_t *aIdleTime) {
   LASTINPUTINFO inputInfo;
   inputInfo.cbSize = sizeof(inputInfo);
   if (!::GetLastInputInfo(&inputInfo)) return false;
+||||||| merged common ancestors
+bool
+nsIdleServiceWin::PollIdleTime(uint32_t *aIdleTime)
+{
+    LASTINPUTINFO inputInfo;
+    inputInfo.cbSize = sizeof(inputInfo);
+    if (!::GetLastInputInfo(&inputInfo))
+        return false;
+=======
+bool nsIdleServiceWin::PollIdleTime(uint32_t* aIdleTime) {
+  LASTINPUTINFO inputInfo;
+  inputInfo.cbSize = sizeof(inputInfo);
+  if (!::GetLastInputInfo(&inputInfo)) return false;
+>>>>>>> upstream-releases
 
   *aIdleTime =
       SAFE_COMPARE_EVEN_WITH_WRAPPING(GetTickCount(), inputInfo.dwTime);

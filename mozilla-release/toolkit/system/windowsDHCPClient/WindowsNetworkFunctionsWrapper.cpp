@@ -7,8 +7,16 @@
 #include "WindowsNetworkFunctionsWrapper.h"
 
 #ifndef __MINGW32__
+<<<<<<< HEAD
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "dhcpcsvc.lib")
+||||||| merged common ancestors
+#pragma comment(lib, "IPHLPAPI.lib")
+#pragma comment(lib, "dhcpcsvc.lib" )
+=======
+#  pragma comment(lib, "IPHLPAPI.lib")
+#  pragma comment(lib, "dhcpcsvc.lib")
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {

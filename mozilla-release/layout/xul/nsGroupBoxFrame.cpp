@@ -9,10 +9,11 @@
 #include "nsBoxFrame.h"
 
 #include "gfxContext.h"
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/gfx/2D.h"
 #include "nsCSSRendering.h"
 #include "nsLayoutUtils.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsDisplayList.h"
 
 using namespace mozilla;
@@ -23,8 +24,16 @@ class nsGroupBoxFrame final : public nsBoxFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsGroupBoxFrame)
 
+<<<<<<< HEAD
   explicit nsGroupBoxFrame(ComputedStyle* aStyle)
       : nsBoxFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsGroupBoxFrame(ComputedStyle* aStyle):
+    nsBoxFrame(aStyle, kClassID) {}
+=======
+  explicit nsGroupBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBoxFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual nsresult GetXULBorderAndPadding(nsMargin& aBorderAndPadding) override;
 
@@ -70,8 +79,8 @@ class nsGroupBoxFrame final : public nsBoxFrame {
 class nsGroupBoxInnerFrame : public nsBoxFrame {
 public:
 
-    nsGroupBoxInnerFrame(nsIPresShell* aShell, ComputedStyle* aStyle):
-      nsBoxFrame(aShell, aContext) {}
+    nsGroupBoxInnerFrame(PresShell* aPresShell, ComputedStyle* aStyle):
+      nsBoxFrame(aPresShell, aContext) {}
 
 
 #ifdef DEBUG_FRAME_DUMP
@@ -86,17 +95,44 @@ public:
 };
 */
 
+<<<<<<< HEAD
 nsIFrame* NS_NewGroupBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsGroupBoxFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewGroupBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsGroupBoxFrame(aStyle);
+=======
+nsIFrame* NS_NewGroupBoxFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsGroupBoxFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsGroupBoxFrame)
 
+<<<<<<< HEAD
 class nsDisplayXULGroupBorder final : public nsDisplayItem {
  public:
+||||||| merged common ancestors
+class nsDisplayXULGroupBorder final : public nsDisplayItem
+{
+public:
+=======
+class nsDisplayXULGroupBorder final : public nsPaintedDisplayItem {
+ public:
+>>>>>>> upstream-releases
   nsDisplayXULGroupBorder(nsDisplayListBuilder* aBuilder,
+<<<<<<< HEAD
                           nsGroupBoxFrame* aFrame)
       : nsDisplayItem(aBuilder, aFrame) {
+||||||| merged common ancestors
+                              nsGroupBoxFrame* aFrame) :
+    nsDisplayItem(aBuilder, aFrame) {
+=======
+                          nsGroupBoxFrame* aFrame)
+      : nsPaintedDisplayItem(aBuilder, aFrame) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayXULGroupBorder);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -152,10 +188,23 @@ void nsGroupBoxFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // Paint our background and border
   if (IsVisibleForPainting()) {
     nsDisplayBackgroundImage::AppendBackgroundItemsToTop(
+<<<<<<< HEAD
         aBuilder, this, GetBackgroundRectRelativeToSelf(),
         aLists.BorderBackground());
     aLists.BorderBackground()->AppendToTop(
         MakeDisplayItem<nsDisplayXULGroupBorder>(aBuilder, this));
+||||||| merged common ancestors
+      aBuilder, this, GetBackgroundRectRelativeToSelf(),
+      aLists.BorderBackground());
+    aLists.BorderBackground()->AppendToTop(
+      MakeDisplayItem<nsDisplayXULGroupBorder>(aBuilder, this));
+=======
+        aBuilder, this,
+        GetBackgroundRectRelativeToSelf() + aBuilder->ToReferenceFrame(this),
+        aLists.BorderBackground());
+    aLists.BorderBackground()->AppendNewToTop<nsDisplayXULGroupBorder>(aBuilder,
+                                                                       this);
+>>>>>>> upstream-releases
 
     DisplayOutline(aBuilder, aLists);
   }
@@ -224,10 +273,23 @@ ImgDrawResult nsGroupBoxFrame::PaintBorder(gfxContext& aRenderingContext,
 
     aRenderingContext.Save();
     aRenderingContext.Clip(
+<<<<<<< HEAD
         NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
     result &= nsCSSRendering::PaintBorder(
         presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
         PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+||||||| merged common ancestors
+      NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &=
+      nsCSSRendering::PaintBorder(presContext, aRenderingContext, this,
+                                  aDirtyRect, rect, mComputedStyle,
+                                  PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+=======
+        NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &= nsCSSRendering::PaintBorder(
+        presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
+        PaintBorderFlags::SyncDecodeImages, skipSides);
+>>>>>>> upstream-releases
     aRenderingContext.Restore();
 
     // draw right side
@@ -238,10 +300,23 @@ ImgDrawResult nsGroupBoxFrame::PaintBorder(gfxContext& aRenderingContext,
 
     aRenderingContext.Save();
     aRenderingContext.Clip(
+<<<<<<< HEAD
         NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
     result &= nsCSSRendering::PaintBorder(
         presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
         PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+||||||| merged common ancestors
+      NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &=
+      nsCSSRendering::PaintBorder(presContext, aRenderingContext, this,
+                                  aDirtyRect, rect, mComputedStyle,
+                                  PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+=======
+        NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &= nsCSSRendering::PaintBorder(
+        presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
+        PaintBorderFlags::SyncDecodeImages, skipSides);
+>>>>>>> upstream-releases
 
     aRenderingContext.Restore();
     // draw bottom
@@ -252,17 +327,43 @@ ImgDrawResult nsGroupBoxFrame::PaintBorder(gfxContext& aRenderingContext,
 
     aRenderingContext.Save();
     aRenderingContext.Clip(
+<<<<<<< HEAD
         NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
     result &= nsCSSRendering::PaintBorder(
         presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
         PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+||||||| merged common ancestors
+      NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &=
+      nsCSSRendering::PaintBorder(presContext, aRenderingContext, this,
+                                  aDirtyRect, rect, mComputedStyle,
+                                  PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+=======
+        NSRectToSnappedRect(clipRect, appUnitsPerDevPixel, *drawTarget));
+    result &= nsCSSRendering::PaintBorder(
+        presContext, aRenderingContext, this, aDirtyRect, rect, mComputedStyle,
+        PaintBorderFlags::SyncDecodeImages, skipSides);
+>>>>>>> upstream-releases
 
     aRenderingContext.Restore();
   } else {
+<<<<<<< HEAD
     result &= nsCSSRendering::PaintBorder(
         presContext, aRenderingContext, this, aDirtyRect,
         nsRect(aPt, GetSize()), mComputedStyle,
         PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+||||||| merged common ancestors
+    result &=
+      nsCSSRendering::PaintBorder(presContext, aRenderingContext, this,
+                                  aDirtyRect, nsRect(aPt, GetSize()),
+                                  mComputedStyle,
+                                  PaintBorderFlags::SYNC_DECODE_IMAGES, skipSides);
+=======
+    result &= nsCSSRendering::PaintBorder(
+        presContext, aRenderingContext, this, aDirtyRect,
+        nsRect(aPt, GetSize()), mComputedStyle,
+        PaintBorderFlags::SyncDecodeImages, skipSides);
+>>>>>>> upstream-releases
   }
 
   return result;

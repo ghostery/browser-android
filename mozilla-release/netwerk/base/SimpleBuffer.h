@@ -37,8 +37,16 @@ class SimpleBuffer {
   SimpleBuffer();
   ~SimpleBuffer() = default;
 
+<<<<<<< HEAD
   nsresult Write(char *stc, size_t len);   // return OK or OUT_OF_MEMORY
   size_t Read(char *dest, size_t maxLen);  // return bytes read
+||||||| merged common ancestors
+  nsresult Write(char *stc, size_t len); // return OK or OUT_OF_MEMORY
+  size_t Read(char *dest, size_t maxLen); // return bytes read
+=======
+  nsresult Write(char* stc, size_t len);   // return OK or OUT_OF_MEMORY
+  size_t Read(char* dest, size_t maxLen);  // return bytes read
+>>>>>>> upstream-releases
   size_t Available();
   void Clear();
 

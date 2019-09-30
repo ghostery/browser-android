@@ -10,11 +10,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1d134c2eb450"
+||||||| merged common ancestors
+        "revision": "54d298962cc1"
+=======
+        "revision": "283e51ffe6b9"
+>>>>>>> upstream-releases
     },
     "af": {
         "platforms": [
@@ -27,11 +39,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "239e95c4eb00"
+||||||| merged common ancestors
+        "revision": "2daa1b157967"
+=======
+        "revision": "432b5ca2c2ed"
+>>>>>>> upstream-releases
     },
     "an": {
         "platforms": [
@@ -44,11 +68,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "bd646940de1c"
+||||||| merged common ancestors
+        "revision": "ec236d89eb28"
+=======
+        "revision": "df538233ebbb"
+>>>>>>> upstream-releases
     },
     "ar": {
         "platforms": [
@@ -61,10 +97,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "5558050715df"
     },
     "as": {
@@ -83,6 +126,26 @@
             "win64-devedition"
         ],
         "revision": "bcbd346a2d6b"
+||||||| merged common ancestors
+        "revision": "964bc00f6186"
+    },
+    "as": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "fed1c0d23345"
+=======
+        "revision": "8de7cc60fc6a"
+>>>>>>> upstream-releases
     },
     "ast": {
         "platforms": [
@@ -95,11 +158,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "96408ca27ca6"
+||||||| merged common ancestors
+        "revision": "23b736a157f3"
+=======
+        "revision": "2b0ce39c67b2"
+>>>>>>> upstream-releases
     },
     "az": {
         "platforms": [
@@ -112,11 +187,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "5a1c3944ae32"
+||||||| merged common ancestors
+        "revision": "c66b02f405b1"
+=======
+        "revision": "037002d300fa"
+>>>>>>> upstream-releases
     },
     "be": {
         "platforms": [
@@ -129,11 +216,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "604a3d3533c3"
+||||||| merged common ancestors
+        "revision": "678398ac238d"
+=======
+        "revision": "fbe2abe72208"
+>>>>>>> upstream-releases
     },
     "bg": {
         "platforms": [
@@ -146,13 +245,25 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "aa52e2e4e9e8"
+||||||| merged common ancestors
+        "revision": "ed6c844d69f8"
+=======
+        "revision": "98c42c1e9342"
+>>>>>>> upstream-releases
     },
-    "bn-BD": {
+    "bn": {
         "platforms": [
             "linux",
             "linux-devedition",
@@ -163,10 +274,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "5ec0dc8ba8d0"
     },
     "bn-IN": {
@@ -185,6 +303,26 @@
             "win64-devedition"
         ],
         "revision": "3f66071d250f"
+||||||| merged common ancestors
+        "revision": "a8d19a066b4b"
+    },
+    "bn-IN": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "42ebfdcd815d"
+=======
+        "revision": "e27e45641eb7"
+>>>>>>> upstream-releases
     },
     "br": {
         "platforms": [
@@ -197,11 +335,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "def1833a6c00"
+||||||| merged common ancestors
+        "revision": "228e1368f405"
+=======
+        "revision": "64c36445645f"
+>>>>>>> upstream-releases
     },
     "bs": {
         "platforms": [
@@ -214,11 +364,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "fc5e06940370"
+||||||| merged common ancestors
+        "revision": "50f26e1e31b3"
+=======
+        "revision": "49a6d69dec21"
+>>>>>>> upstream-releases
     },
     "ca": {
         "platforms": [
@@ -231,11 +393,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "0f384155e248"
+||||||| merged common ancestors
+        "revision": "59ca77968770"
+=======
+        "revision": "fed9901c8f97"
+>>>>>>> upstream-releases
     },
     "cak": {
         "platforms": [
@@ -248,11 +422,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "52c5713f7f92"
+||||||| merged common ancestors
+        "revision": "86717f451b28"
+=======
+        "revision": "7d210e01354d"
+>>>>>>> upstream-releases
     },
     "cs": {
         "platforms": [
@@ -265,11 +451,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "9f521c2ac608"
+||||||| merged common ancestors
+        "revision": "632316dc3720"
+=======
+        "revision": "4a862891859e"
+>>>>>>> upstream-releases
     },
     "cy": {
         "platforms": [
@@ -282,11 +480,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "c752e91ae4da"
+||||||| merged common ancestors
+        "revision": "cabc3feb28b0"
+=======
+        "revision": "1b9e944f37f5"
+>>>>>>> upstream-releases
     },
     "da": {
         "platforms": [
@@ -299,11 +509,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1be572feeb7e"
+||||||| merged common ancestors
+        "revision": "b3ff273f3eea"
+=======
+        "revision": "f0b4e7bf76f1"
+>>>>>>> upstream-releases
     },
     "de": {
         "platforms": [
@@ -316,11 +538,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "fccfeca15744"
+||||||| merged common ancestors
+        "revision": "3d8de7aaf36b"
+=======
+        "revision": "072dc80f435a"
+>>>>>>> upstream-releases
     },
     "dsb": {
         "platforms": [
@@ -333,11 +567,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "37a87d0cf45b"
+||||||| merged common ancestors
+        "revision": "4d038664189d"
+=======
+        "revision": "ee1d47f04f07"
+>>>>>>> upstream-releases
     },
     "el": {
         "platforms": [
@@ -350,11 +596,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "f70b1f36d00f"
+||||||| merged common ancestors
+        "revision": "86a3c77b6bb3"
+=======
+        "revision": "cc321f230c6d"
+>>>>>>> upstream-releases
     },
     "en-CA": {
         "platforms": [
@@ -367,11 +625,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1df3b5370c30"
+||||||| merged common ancestors
+        "revision": "74af9d928404"
+=======
+        "revision": "dad7b62f9dbc"
+>>>>>>> upstream-releases
     },
     "en-GB": {
         "platforms": [
@@ -384,10 +654,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "d6139f2ecbd8"
     },
     "en-ZA": {
@@ -406,6 +683,26 @@
             "win64-devedition"
         ],
         "revision": "2f133de925b2"
+||||||| merged common ancestors
+        "revision": "27c6db9a76b5"
+    },
+    "en-ZA": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "87752859e8ce"
+=======
+        "revision": "8d7c3c919497"
+>>>>>>> upstream-releases
     },
     "eo": {
         "platforms": [
@@ -418,11 +715,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "f9cc54b975e8"
+||||||| merged common ancestors
+        "revision": "979ac6e49f6f"
+=======
+        "revision": "c3df54b21746"
+>>>>>>> upstream-releases
     },
     "es-AR": {
         "platforms": [
@@ -435,11 +744,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "fb0dd94d102b"
+||||||| merged common ancestors
+        "revision": "57b14b6ebd69"
+=======
+        "revision": "39cf4ec0b778"
+>>>>>>> upstream-releases
     },
     "es-CL": {
         "platforms": [
@@ -452,11 +773,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "ff997f81eae6"
+||||||| merged common ancestors
+        "revision": "13c705a36908"
+=======
+        "revision": "09ee2d8081e2"
+>>>>>>> upstream-releases
     },
     "es-ES": {
         "platforms": [
@@ -469,11 +802,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "803bf5e03008"
+||||||| merged common ancestors
+        "revision": "a3404316cfa7"
+=======
+        "revision": "dd46a1c85278"
+>>>>>>> upstream-releases
     },
     "es-MX": {
         "platforms": [
@@ -486,11 +831,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "2ecd9961758a"
+||||||| merged common ancestors
+        "revision": "b7bf9308aa06"
+=======
+        "revision": "0b424422a300"
+>>>>>>> upstream-releases
     },
     "et": {
         "platforms": [
@@ -503,11 +860,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1afa6107b6cc"
+||||||| merged common ancestors
+        "revision": "844cfe03fb48"
+=======
+        "revision": "fd1fa5a944ab"
+>>>>>>> upstream-releases
     },
     "eu": {
         "platforms": [
@@ -520,11 +889,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "506f20acd46d"
+||||||| merged common ancestors
+        "revision": "2ac2cf8943de"
+=======
+        "revision": "9c39203cd09a"
+>>>>>>> upstream-releases
     },
     "fa": {
         "platforms": [
@@ -537,11 +918,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "b9691174183c"
+||||||| merged common ancestors
+        "revision": "32cda4e06b60"
+=======
+        "revision": "8b8fef934787"
+>>>>>>> upstream-releases
     },
     "ff": {
         "platforms": [
@@ -554,11 +947,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "96812c6261dd"
+||||||| merged common ancestors
+        "revision": "f5df5ae2ed04"
+=======
+        "revision": "60498ef096e8"
+>>>>>>> upstream-releases
     },
     "fi": {
         "platforms": [
@@ -571,11 +976,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "86532c692913"
+||||||| merged common ancestors
+        "revision": "1585d5ffd39d"
+=======
+        "revision": "d9e3a36d5803"
+>>>>>>> upstream-releases
     },
     "fr": {
         "platforms": [
@@ -588,11 +1005,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "03cce8938e38"
+||||||| merged common ancestors
+        "revision": "2f4e31bee6be"
+=======
+        "revision": "6878c4e51516"
+>>>>>>> upstream-releases
     },
     "fy-NL": {
         "platforms": [
@@ -605,11 +1034,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "29a66da6dc46"
+||||||| merged common ancestors
+        "revision": "466fb0faecd6"
+=======
+        "revision": "e76aac6f79c8"
+>>>>>>> upstream-releases
     },
     "ga-IE": {
         "platforms": [
@@ -622,11 +1063,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "7914ac3085f5"
+||||||| merged common ancestors
+        "revision": "8fdfdff5d124"
+=======
+        "revision": "2a08a48e6adf"
+>>>>>>> upstream-releases
     },
     "gd": {
         "platforms": [
@@ -639,11 +1092,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "d32ee81c1ff1"
+||||||| merged common ancestors
+        "revision": "70e9447e53aa"
+=======
+        "revision": "6de51f7d03e4"
+>>>>>>> upstream-releases
     },
     "gl": {
         "platforms": [
@@ -656,11 +1121,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "15aeb0c939f7"
+||||||| merged common ancestors
+        "revision": "91d52ebf4594"
+=======
+        "revision": "51abb035d2b0"
+>>>>>>> upstream-releases
     },
     "gn": {
         "platforms": [
@@ -673,11 +1150,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "b19bcd87794f"
+||||||| merged common ancestors
+        "revision": "c15a2dfb7b0e"
+=======
+        "revision": "79352757dec1"
+>>>>>>> upstream-releases
     },
     "gu-IN": {
         "platforms": [
@@ -690,11 +1179,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "0e5d9c61a3ec"
+||||||| merged common ancestors
+        "revision": "65395abb8d3f"
+=======
+        "revision": "f084a3d45eee"
+>>>>>>> upstream-releases
     },
     "he": {
         "platforms": [
@@ -707,11 +1208,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "d7da52242c37"
+||||||| merged common ancestors
+        "revision": "e82be8609e5c"
+=======
+        "revision": "906ed6dde59c"
+>>>>>>> upstream-releases
     },
     "hi-IN": {
         "platforms": [
@@ -724,11 +1237,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "504d2fde3fc7"
+||||||| merged common ancestors
+        "revision": "3076b2d509e7"
+=======
+        "revision": "a1e47d932903"
+>>>>>>> upstream-releases
     },
     "hr": {
         "platforms": [
@@ -741,11 +1266,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "298edd57900d"
+||||||| merged common ancestors
+        "revision": "7a5d889f1aac"
+=======
+        "revision": "5fe15a6d053c"
+>>>>>>> upstream-releases
     },
     "hsb": {
         "platforms": [
@@ -758,11 +1295,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "50009633e9ac"
+||||||| merged common ancestors
+        "revision": "091136f610b0"
+=======
+        "revision": "8e5b3f80dff0"
+>>>>>>> upstream-releases
     },
     "hu": {
         "platforms": [
@@ -775,11 +1324,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6477fd6ddf64"
+||||||| merged common ancestors
+        "revision": "f89d3894545c"
+=======
+        "revision": "dd44c146951d"
+>>>>>>> upstream-releases
     },
     "hy-AM": {
         "platforms": [
@@ -792,11 +1353,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "37cb81ff8b2c"
+||||||| merged common ancestors
+        "revision": "a7c08fc03463"
+=======
+        "revision": "b3ffe097092e"
+>>>>>>> upstream-releases
     },
     "ia": {
         "platforms": [
@@ -809,11 +1382,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "8dca825653f3"
+||||||| merged common ancestors
+        "revision": "f9b117cb81ad"
+=======
+        "revision": "62020a85aa0e"
+>>>>>>> upstream-releases
     },
     "id": {
         "platforms": [
@@ -826,11 +1411,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "0ffc1024306a"
+||||||| merged common ancestors
+        "revision": "c653179b87ca"
+=======
+        "revision": "68003cc25555"
+>>>>>>> upstream-releases
     },
     "is": {
         "platforms": [
@@ -843,11 +1440,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "e900b40750d8"
+||||||| merged common ancestors
+        "revision": "e9aeb5ac44ed"
+=======
+        "revision": "a87a390edd3e"
+>>>>>>> upstream-releases
     },
     "it": {
         "platforms": [
@@ -860,11 +1469,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "c4725037c32a"
+||||||| merged common ancestors
+        "revision": "12bd244ad87a"
+=======
+        "revision": "332f86817761"
+>>>>>>> upstream-releases
     },
     "ja": {
         "platforms": [
@@ -875,18 +1496,36 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "5d04793bb613"
+||||||| merged common ancestors
+        "revision": "6e19af081133"
+=======
+        "revision": "c8856ae0cd93"
+>>>>>>> upstream-releases
     },
     "ja-JP-mac": {
         "platforms": [
             "macosx64",
             "macosx64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "34dafc593b69"
+||||||| merged common ancestors
+        "revision": "15a157860e5e"
+=======
+        "revision": "653357fdbcc1"
+>>>>>>> upstream-releases
     },
     "ka": {
         "platforms": [
@@ -899,11 +1538,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "49e4da72e682"
+||||||| merged common ancestors
+        "revision": "f022f1156c33"
+=======
+        "revision": "e006a9f8c8da"
+>>>>>>> upstream-releases
     },
     "kab": {
         "platforms": [
@@ -916,11 +1567,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "c6644eb4bebd"
+||||||| merged common ancestors
+        "revision": "151bb4be90ab"
+=======
+        "revision": "96414bc72789"
+>>>>>>> upstream-releases
     },
     "kk": {
         "platforms": [
@@ -933,11 +1596,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "aa974415763c"
+||||||| merged common ancestors
+        "revision": "9568b77c964e"
+=======
+        "revision": "46f6e213653c"
+>>>>>>> upstream-releases
     },
     "km": {
         "platforms": [
@@ -950,11 +1625,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "66b609908bd4"
+||||||| merged common ancestors
+        "revision": "c1e0e7fbedf0"
+=======
+        "revision": "c80766ed8f7a"
+>>>>>>> upstream-releases
     },
     "kn": {
         "platforms": [
@@ -967,11 +1654,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "01a178b64721"
+||||||| merged common ancestors
+        "revision": "6dcafc758e3b"
+=======
+        "revision": "1ad904e8dd43"
+>>>>>>> upstream-releases
     },
     "ko": {
         "platforms": [
@@ -984,11 +1683,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "04c0226b5350"
+||||||| merged common ancestors
+        "revision": "6eaf0fdf1a25"
+=======
+        "revision": "937d0c129e96"
+>>>>>>> upstream-releases
     },
     "lij": {
         "platforms": [
@@ -1001,11 +1712,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "3da1a4467c53"
+||||||| merged common ancestors
+        "revision": "c23fa6752e4a"
+=======
+        "revision": "f19a1fe663a5"
+>>>>>>> upstream-releases
     },
     "lt": {
         "platforms": [
@@ -1018,11 +1741,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "65da87c92a42"
+||||||| merged common ancestors
+        "revision": "ce9ca32dd21a"
+=======
+        "revision": "a3619c6b5b63"
+>>>>>>> upstream-releases
     },
     "lv": {
         "platforms": [
@@ -1035,10 +1770,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "4f6e2df31312"
     },
     "mai": {
@@ -1057,6 +1799,26 @@
             "win64-devedition"
         ],
         "revision": "d524e539eefb"
+||||||| merged common ancestors
+        "revision": "d102a9c6cbfa"
+    },
+    "mai": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "5bffe11cc007"
+=======
+        "revision": "2b77b6b05a34"
+>>>>>>> upstream-releases
     },
     "mk": {
         "platforms": [
@@ -1069,10 +1831,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "312b74fd88e3"
     },
     "ml": {
@@ -1091,6 +1860,26 @@
             "win64-devedition"
         ],
         "revision": "da8508490cac"
+||||||| merged common ancestors
+        "revision": "302a54c71d4e"
+    },
+    "ml": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "5848b2fc2259"
+=======
+        "revision": "6e863a8d415a"
+>>>>>>> upstream-releases
     },
     "mr": {
         "platforms": [
@@ -1103,11 +1892,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "0fb8941be553"
+||||||| merged common ancestors
+        "revision": "0393b66a90e0"
+=======
+        "revision": "91cc067b4d91"
+>>>>>>> upstream-releases
     },
     "ms": {
         "platforms": [
@@ -1120,11 +1921,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1674eda84277"
+||||||| merged common ancestors
+        "revision": "447edd41851e"
+=======
+        "revision": "dca5d11f4923"
+>>>>>>> upstream-releases
     },
     "my": {
         "platforms": [
@@ -1137,11 +1950,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "ff415e2b6ed5"
+||||||| merged common ancestors
+        "revision": "5483951a9472"
+=======
+        "revision": "a8fce50522fe"
+>>>>>>> upstream-releases
     },
     "nb-NO": {
         "platforms": [
@@ -1154,11 +1979,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "d2585bc89e68"
+||||||| merged common ancestors
+        "revision": "3ea05cc325d6"
+=======
+        "revision": "61d5fbf22298"
+>>>>>>> upstream-releases
     },
     "ne-NP": {
         "platforms": [
@@ -1171,11 +2008,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6e4f54a931a0"
+||||||| merged common ancestors
+        "revision": "007654b1710d"
+=======
+        "revision": "ed5e3f5ff1e3"
+>>>>>>> upstream-releases
     },
     "nl": {
         "platforms": [
@@ -1188,11 +2037,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "800470825ac4"
+||||||| merged common ancestors
+        "revision": "e344985f0fb3"
+=======
+        "revision": "64abfab2deb6"
+>>>>>>> upstream-releases
     },
     "nn-NO": {
         "platforms": [
@@ -1205,11 +2066,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "afa08633d9f5"
+||||||| merged common ancestors
+        "revision": "43d0073c1228"
+=======
+        "revision": "06c0f31b9e20"
+>>>>>>> upstream-releases
     },
     "oc": {
         "platforms": [
@@ -1222,10 +2095,17 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "a1b0df242032"
     },
     "or": {
@@ -1244,6 +2124,26 @@
             "win64-devedition"
         ],
         "revision": "dc2bb9f38282"
+||||||| merged common ancestors
+        "revision": "396b8174110a"
+    },
+    "or": {
+        "platforms": [
+            "linux",
+            "linux-devedition",
+            "linux64",
+            "linux64-devedition",
+            "macosx64",
+            "macosx64-devedition",
+            "win32",
+            "win32-devedition",
+            "win64",
+            "win64-devedition"
+        ],
+        "revision": "9a9fb050074d"
+=======
+        "revision": "128ab0a38965"
+>>>>>>> upstream-releases
     },
     "pa-IN": {
         "platforms": [
@@ -1256,11 +2156,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "96a6b5b828b3"
+||||||| merged common ancestors
+        "revision": "f67a6eddf1b0"
+=======
+        "revision": "ba90b66cd4e8"
+>>>>>>> upstream-releases
     },
     "pl": {
         "platforms": [
@@ -1273,11 +2185,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "30def7b1330f"
+||||||| merged common ancestors
+        "revision": "b0fa22405368"
+=======
+        "revision": "99679096f2e8"
+>>>>>>> upstream-releases
     },
     "pt-BR": {
         "platforms": [
@@ -1290,11 +2214,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "9174733ea658"
+||||||| merged common ancestors
+        "revision": "f6921dd61384"
+=======
+        "revision": "3697e7f211a4"
+>>>>>>> upstream-releases
     },
     "pt-PT": {
         "platforms": [
@@ -1307,11 +2243,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "fc4e5a3aa747"
+||||||| merged common ancestors
+        "revision": "c604ae8a2e4c"
+=======
+        "revision": "c39af4c94da4"
+>>>>>>> upstream-releases
     },
     "rm": {
         "platforms": [
@@ -1324,11 +2272,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "aa546826c3f6"
+||||||| merged common ancestors
+        "revision": "9d623e715f6b"
+=======
+        "revision": "e816d90fd94a"
+>>>>>>> upstream-releases
     },
     "ro": {
         "platforms": [
@@ -1341,11 +2301,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "c792f23fe489"
+||||||| merged common ancestors
+        "revision": "ac56ad2ca3d5"
+=======
+        "revision": "835c52c9c6c7"
+>>>>>>> upstream-releases
     },
     "ru": {
         "platforms": [
@@ -1358,11 +2330,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6556a133e6f5"
+||||||| merged common ancestors
+        "revision": "109d0a53ca4b"
+=======
+        "revision": "85a82b978604"
+>>>>>>> upstream-releases
     },
     "si": {
         "platforms": [
@@ -1375,11 +2359,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "3d5cf76e6203"
+||||||| merged common ancestors
+        "revision": "819a515bf6c1"
+=======
+        "revision": "97c1e72725b6"
+>>>>>>> upstream-releases
     },
     "sk": {
         "platforms": [
@@ -1392,11 +2388,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "ba761690f323"
+||||||| merged common ancestors
+        "revision": "7324d7c44ddc"
+=======
+        "revision": "0518c1b061bb"
+>>>>>>> upstream-releases
     },
     "sl": {
         "platforms": [
@@ -1409,11 +2417,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "3466b8e688e8"
+||||||| merged common ancestors
+        "revision": "3f288cbaea3d"
+=======
+        "revision": "29f8c6a7d081"
+>>>>>>> upstream-releases
     },
     "son": {
         "platforms": [
@@ -1426,11 +2446,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "0ad47a95f1a3"
+||||||| merged common ancestors
+        "revision": "2f41bda75b44"
+=======
+        "revision": "0a65cc8e1faf"
+>>>>>>> upstream-releases
     },
     "sq": {
         "platforms": [
@@ -1443,11 +2475,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "67c40b9899b1"
+||||||| merged common ancestors
+        "revision": "22288a70d3d5"
+=======
+        "revision": "eb54b9ac7232"
+>>>>>>> upstream-releases
     },
     "sr": {
         "platforms": [
@@ -1460,11 +2504,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6959bd3bfaba"
+||||||| merged common ancestors
+        "revision": "873f1f351b2a"
+=======
+        "revision": "be009c805e18"
+>>>>>>> upstream-releases
     },
     "sv-SE": {
         "platforms": [
@@ -1477,11 +2533,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "e1409a25fa67"
+||||||| merged common ancestors
+        "revision": "529f87bf8fe6"
+=======
+        "revision": "e0d33548f40d"
+>>>>>>> upstream-releases
     },
     "ta": {
         "platforms": [
@@ -1494,11 +2562,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "047b3e205cca"
+||||||| merged common ancestors
+        "revision": "c16d3caf2931"
+=======
+        "revision": "a4a70b06dc29"
+>>>>>>> upstream-releases
     },
     "te": {
         "platforms": [
@@ -1511,11 +2591,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "915b023f1145"
+||||||| merged common ancestors
+        "revision": "b2b27ade8497"
+=======
+        "revision": "d62da0dfae08"
+>>>>>>> upstream-releases
     },
     "th": {
         "platforms": [
@@ -1528,11 +2620,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6b2f5b8f9e6f"
+||||||| merged common ancestors
+        "revision": "c008316ad61e"
+=======
+        "revision": "176155e69eac"
+>>>>>>> upstream-releases
     },
     "tr": {
         "platforms": [
@@ -1545,11 +2649,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1dee6d8c008e"
+||||||| merged common ancestors
+        "revision": "57d07e15f12f"
+=======
+        "revision": "2c5ddacf96f6"
+>>>>>>> upstream-releases
     },
     "uk": {
         "platforms": [
@@ -1562,11 +2678,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "de7742fa098e"
+||||||| merged common ancestors
+        "revision": "2057edb7ff1e"
+=======
+        "revision": "502d6e23d3a3"
+>>>>>>> upstream-releases
     },
     "ur": {
         "platforms": [
@@ -1579,11 +2707,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "03708a03f1b8"
+||||||| merged common ancestors
+        "revision": "13dc89b098eb"
+=======
+        "revision": "f1ee2d301e6b"
+>>>>>>> upstream-releases
     },
     "uz": {
         "platforms": [
@@ -1596,11 +2736,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "6c42381becf7"
+||||||| merged common ancestors
+        "revision": "21bd31fdcc47"
+=======
+        "revision": "ea19205d29b9"
+>>>>>>> upstream-releases
     },
     "vi": {
         "platforms": [
@@ -1613,11 +2765,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "18fe987ca77d"
+||||||| merged common ancestors
+        "revision": "2d7ffe5defbb"
+=======
+        "revision": "8207f57e4ca2"
+>>>>>>> upstream-releases
     },
     "xh": {
         "platforms": [
@@ -1630,11 +2794,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "1fe19625ce80"
+||||||| merged common ancestors
+        "revision": "11f1f1b7fd39"
+=======
+        "revision": "b470aa435c91"
+>>>>>>> upstream-releases
     },
     "zh-CN": {
         "platforms": [
@@ -1647,11 +2823,23 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "780ae0b6c54f"
+||||||| merged common ancestors
+        "revision": "4462a11284d9"
+=======
+        "revision": "178364c883f9"
+>>>>>>> upstream-releases
     },
     "zh-TW": {
         "platforms": [
@@ -1664,10 +2852,22 @@
             "win32",
             "win32-devedition",
             "win64",
+<<<<<<< HEAD
             "win64-aarch64-msvc",
             "win64-aarch64-msvc-devedition",
+||||||| merged common ancestors
+=======
+            "win64-aarch64",
+            "win64-aarch64-devedition",
+>>>>>>> upstream-releases
             "win64-devedition"
         ],
+<<<<<<< HEAD
         "revision": "f2b2ea4cd960"
+||||||| merged common ancestors
+        "revision": "e83f0c1dfb7c"
+=======
+        "revision": "31cdae99ca33"
+>>>>>>> upstream-releases
     }
 }

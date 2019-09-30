@@ -8,12 +8,12 @@
 #define mozilla_ComputedTimingFunction_h
 
 #include "nsDebug.h"
-#include "nsSMILKeySpline.h"  // nsSMILKeySpline
 #include "nsStringFwd.h"
 #include "nsTimingFunction.h"
 
 #include "mozilla/Assertions.h"
 #include "mozilla/Maybe.h"
+#include "mozilla/SMILKeySpline.h"
 
 namespace mozilla {
 
@@ -56,7 +56,14 @@ class ComputedTimingFunction {
   // https://drafts.csswg.org/css-easing/#before-flag
   enum class BeforeFlag { Unset, Set };
   double GetValue(double aPortion, BeforeFlag aBeforeFlag) const;
+<<<<<<< HEAD
   const nsSMILKeySpline* GetFunction() const {
+||||||| merged common ancestors
+  const nsSMILKeySpline* GetFunction() const
+  {
+=======
+  const SMILKeySpline* GetFunction() const {
+>>>>>>> upstream-releases
     NS_ASSERTION(HasSpline(), "Type mismatch");
     return &mTimingFunction;
   }
@@ -109,9 +116,19 @@ class ComputedTimingFunction {
   ComputedTimingFunction(uint32_t aSteps, StyleStepPosition aPos)
       : mType(Type::Step), mSteps{aSteps, aPos} {}
 
+<<<<<<< HEAD
   Type mType;
   nsSMILKeySpline mTimingFunction;
   StepFunc mSteps;
+||||||| merged common ancestors
+  nsTimingFunction::Type mType = nsTimingFunction::Type::Linear;
+  nsSMILKeySpline mTimingFunction;
+  uint32_t mStepsOrFrames;
+=======
+  Type mType;
+  SMILKeySpline mTimingFunction;
+  StepFunc mSteps;
+>>>>>>> upstream-releases
 };
 
 inline bool operator==(const Maybe<ComputedTimingFunction>& aLHS,

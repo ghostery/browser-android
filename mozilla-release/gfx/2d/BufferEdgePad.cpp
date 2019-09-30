@@ -15,10 +15,19 @@
 namespace mozilla {
 namespace gfx {
 
+<<<<<<< HEAD
 void PadDrawTargetOutFromRegion(DrawTarget *aDrawTarget,
                                 const nsIntRegion &aRegion) {
+||||||| merged common ancestors
+void
+PadDrawTargetOutFromRegion(DrawTarget* aDrawTarget, const nsIntRegion &aRegion)
+{
+=======
+void PadDrawTargetOutFromRegion(DrawTarget* aDrawTarget,
+                                const nsIntRegion& aRegion) {
+>>>>>>> upstream-releases
   struct LockedBits {
-    uint8_t *data;
+    uint8_t* data;
     IntSize size;
     int32_t stride;
     SurfaceFormat format;
@@ -28,6 +37,7 @@ void PadDrawTargetOutFromRegion(DrawTarget *aDrawTarget,
       return x;
     }
 
+<<<<<<< HEAD
     static void ensure_memcpy(uint8_t *dst, uint8_t *src, size_t n,
                               uint8_t *bitmap, int stride, int height) {
       if (src + n > bitmap + stride * height) {
@@ -42,12 +52,54 @@ void PadDrawTargetOutFromRegion(DrawTarget *aDrawTarget,
       if (dst < bitmap) {
         MOZ_CRASH("GFX: short dst mempcy");
       }
+||||||| merged common ancestors
+    static void ensure_memcpy(uint8_t *dst, uint8_t *src, size_t n, uint8_t *bitmap, int stride, int height)
+    {
+        if (src + n > bitmap + stride*height) {
+            MOZ_CRASH("GFX: long src memcpy");
+        }
+        if (src < bitmap) {
+            MOZ_CRASH("GFX: short src memcpy");
+        }
+        if (dst + n > bitmap + stride*height) {
+            MOZ_CRASH("GFX: long dst mempcy");
+        }
+        if (dst < bitmap) {
+            MOZ_CRASH("GFX: short dst mempcy");
+        }
+=======
+    static void ensure_memcpy(uint8_t* dst, uint8_t* src, size_t n,
+                              uint8_t* bitmap, int stride, int height) {
+      if (src + n > bitmap + stride * height) {
+        MOZ_CRASH("GFX: long src memcpy");
+      }
+      if (src < bitmap) {
+        MOZ_CRASH("GFX: short src memcpy");
+      }
+      if (dst + n > bitmap + stride * height) {
+        MOZ_CRASH("GFX: long dst mempcy");
+      }
+      if (dst < bitmap) {
+        MOZ_CRASH("GFX: short dst mempcy");
+      }
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     static void visitor(void *closure, VisitSide side, int x1, int y1, int x2,
                         int y2) {
       LockedBits *lb = static_cast<LockedBits *>(closure);
       uint8_t *bitmap = lb->data;
+||||||| merged common ancestors
+    static void visitor(void *closure, VisitSide side, int x1, int y1, int x2, int y2) {
+      LockedBits *lb = static_cast<LockedBits*>(closure);
+      uint8_t *bitmap = lb->data;
+=======
+    static void visitor(void* closure, VisitSide side, int x1, int y1, int x2,
+                        int y2) {
+      LockedBits* lb = static_cast<LockedBits*>(closure);
+      uint8_t* bitmap = lb->data;
+>>>>>>> upstream-releases
       const int bpp = gfx::BytesPerPixel(lb->format);
       const int stride = lb->stride;
       const int width = lb->size.width;

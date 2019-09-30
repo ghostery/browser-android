@@ -58,10 +58,19 @@ static bool bridgeWinding(SkOpContourHead* contourList, SkPathWriter* writer) {
                 }
                 writer->finishContour();
             } else {
+<<<<<<< HEAD
                 SkOpSpanBase* last;
                 if (!current->markAndChaseDone(start, end, &last)) {
                     return false;
                 }
+||||||| merged common ancestors
+                SkOpSpanBase* last = current->markAndChaseDone(start, end);
+=======
+                SkOpSpanBase* last;
+                 if (!current->markAndChaseDone(start, end, &last)) {
+                    return false;
+                }
+>>>>>>> upstream-releases
                 if (last && !last->chased()) {
                     last->setChased(true);
                     SkASSERT(!SkPathOpsDebug::ChaseContains(chase, last));
@@ -127,10 +136,19 @@ static bool bridgeXor(SkOpContourHead* contourList, SkPathWriter* writer) {
         if (!writer->isClosed()) {
             SkOpSpan* spanStart = start->starter(end);
             if (!spanStart->done()) {
+<<<<<<< HEAD
                 if (!current->addCurveTo(start, end, writer)) {
                     return false;
                 }
                 current->markDone(spanStart);
+||||||| merged common ancestors
+                if (!current->addCurveTo(start, end, simple)) {
+                    return false;
+                }
+                current->markDone(spanStart);
+=======
+                return false;
+>>>>>>> upstream-releases
             }
         }
         writer->finishContour();

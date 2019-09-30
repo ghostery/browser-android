@@ -34,12 +34,33 @@ const int32_t nsNavBookmarks::kGetChildrenIndex_SyncStatus = 22;
 
 using namespace mozilla::places;
 
+extern "C" {
+
+// Returns the total number of Sync changes recorded since Places startup for
+// all bookmarks. This function uses C linkage because it's called from the
+// Rust synced bookmarks mirror, on the storage thread. Using `get_service` to
+// access the bookmarks service from Rust trips a thread-safety assertion, so
+// we can't use `nsNavBookmarks::GetTotalSyncChanges`.
+int64_t NS_NavBookmarksTotalSyncChanges() {
+  return nsNavBookmarks::sTotalSyncChanges;
+}
+
+}  // extern "C"
+
 PLACES_FACTORY_SINGLETON_IMPLEMENTATION(nsNavBookmarks, gBookmarksService)
 
+<<<<<<< HEAD
 #define BOOKMARKS_ANNO_PREFIX "bookmarks/"
 #define BOOKMARKS_TOOLBAR_FOLDER_ANNO \
   NS_LITERAL_CSTRING(BOOKMARKS_ANNO_PREFIX "toolbarFolder")
 #define SYNC_PARENT_ANNO "sync/parent"
+||||||| merged common ancestors
+#define BOOKMARKS_ANNO_PREFIX "bookmarks/"
+#define BOOKMARKS_TOOLBAR_FOLDER_ANNO NS_LITERAL_CSTRING(BOOKMARKS_ANNO_PREFIX "toolbarFolder")
+#define FEED_URI_ANNO NS_LITERAL_CSTRING("livemark/feedURI")
+#define SYNC_PARENT_ANNO "sync/parent"
+=======
+>>>>>>> upstream-releases
 #define SQLITE_MAX_VARIABLE_NUMBER 999
 
 namespace {
@@ -1750,30 +1771,80 @@ nsNavBookmarks::RemoveObserver(nsINavBookmarkObserver* aObserver) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNavBookmarks::GetObservers(uint32_t* _count,
                              nsINavBookmarkObserver*** _observers) {
   NS_ENSURE_ARG_POINTER(_count);
   NS_ENSURE_ARG_POINTER(_observers);
+||||||| merged common ancestors
+nsNavBookmarks::GetObservers(uint32_t* _count,
+                             nsINavBookmarkObserver*** _observers)
+{
+  NS_ENSURE_ARG_POINTER(_count);
+  NS_ENSURE_ARG_POINTER(_observers);
+=======
+nsNavBookmarks::GetObservers(
+    nsTArray<RefPtr<nsINavBookmarkObserver>>& aObservers) {
+  aObservers.Clear();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   *_count = 0;
   *_observers = nullptr;
 
   if (!mCanNotify) return NS_OK;
 
   nsCOMArray<nsINavBookmarkObserver> observers;
+||||||| merged common ancestors
+  *_count = 0;
+  *_observers = nullptr;
+
+  if (!mCanNotify)
+    return NS_OK;
+
+  nsCOMArray<nsINavBookmarkObserver> observers;
+=======
+  if (!mCanNotify) return NS_OK;
+>>>>>>> upstream-releases
 
   for (uint32_t i = 0; i < mObservers.Length(); ++i) {
+<<<<<<< HEAD
     const nsCOMPtr<nsINavBookmarkObserver>& observer =
         mObservers.ElementAt(i).GetValue();
+||||||| merged common ancestors
+    const nsCOMPtr<nsINavBookmarkObserver> &observer = mObservers.ElementAt(i).GetValue();
+=======
+    nsCOMPtr<nsINavBookmarkObserver> observer =
+        mObservers.ElementAt(i).GetValue();
+>>>>>>> upstream-releases
     // Skip nullified weak observers.
+<<<<<<< HEAD
     if (observer) observers.AppendElement(observer);
+||||||| merged common ancestors
+    if (observer)
+      observers.AppendElement(observer);
+=======
+    if (observer) {
+      aObservers.AppendElement(observer.forget());
+    }
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   if (observers.Count() == 0) return NS_OK;
 
   *_count = observers.Count();
   observers.Forget(_observers);
 
+||||||| merged common ancestors
+  if (observers.Count() == 0)
+    return NS_OK;
+
+  *_count = observers.Count();
+  observers.Forget(_observers);
+
+=======
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -1795,7 +1866,8 @@ void nsNavBookmarks::NotifyItemVisited(const ItemVisitData& aData) {
 void nsNavBookmarks::NotifyItemChanged(const ItemChangeData& aData) {
   // A guid must always be defined.
   MOZ_ASSERT(!aData.bookmark.guid.IsEmpty());
-
+  // No more supported.
+  MOZ_ASSERT(!aData.isAnnotation, "Don't notify item annotation changes");
   PRTime lastModified = aData.bookmark.lastModified;
   if (aData.updateLastModified) {
     lastModified = RoundedPRNow();

@@ -25,6 +25,12 @@ class GrUninstantiateProxyTracker;
 // Print out information about interval creation
 #define GR_TRACK_INTERVAL_CREATION 0
 
+// Print out explicit allocation information
+#define GR_ALLOCATION_SPEW 0
+
+// Print out information about interval creation
+#define GR_TRACK_INTERVAL_CREATION 0
+
 /*
  * The ResourceAllocator explicitly distributes GPU resources at flush time. It operates by
  * being given the usage intervals of the various proxies. It keeps these intervals in a singly
@@ -43,8 +49,7 @@ class GrUninstantiateProxyTracker;
 class GrResourceAllocator {
 public:
     GrResourceAllocator(GrResourceProvider* resourceProvider)
-            : fResourceProvider(resourceProvider) {
-    }
+            : fResourceProvider(resourceProvider) {}
 
     ~GrResourceAllocator();
 
@@ -210,26 +215,26 @@ private:
         Interval* fTail = nullptr;
     };
 
-    // Gathered statistics indicate that 99% of flushes will be covered by <= 12 Intervals
-    static const int kInitialArenaSize = 12 * sizeof(Interval);
+    // Compositing use cases can create > 80 intervals.
+    static const int kInitialArenaSize = 128 * sizeof(Interval);
 
-    GrResourceProvider*    fResourceProvider;
-    FreePoolMultiMap       fFreePool;          // Recently created/used GrSurfaces
-    IntvlHash              fIntvlHash;         // All the intervals, hashed by proxyID
+    GrResourceProvider*          fResourceProvider;
+    FreePoolMultiMap             fFreePool;          // Recently created/used GrSurfaces
+    IntvlHash                    fIntvlHash;         // All the intervals, hashed by proxyID
 
-    IntervalList           fIntvlList;         // All the intervals sorted by increasing start
-    IntervalList           fActiveIntvls;      // List of live intervals during assignment
+    IntervalList                 fIntvlList;         // All the intervals sorted by increasing start
+    IntervalList                 fActiveIntvls;      // List of live intervals during assignment
                                                // (sorted by increasing end)
-    unsigned int           fNumOps = 1;        // op # 0 is reserved for uploads at the start
+    unsigned int                 fNumOps = 1;        // op # 0 is reserved for uploads at the start
                                                // of a flush
-    SkTArray<unsigned int> fEndOfOpListOpIndices;
-    int                    fCurOpListIndex = 0;
+    SkTArray<unsigned int>       fEndOfOpListOpIndices;
+    int                          fCurOpListIndex = 0;
 
-    SkDEBUGCODE(bool       fAssigned = false;)
+    SkDEBUGCODE(bool             fAssigned = false;)
 
-    char                   fStorage[kInitialArenaSize];
-    SkArenaAlloc           fIntervalAllocator { fStorage, kInitialArenaSize, 0 };
-    Interval*              fFreeIntervalList = nullptr;
+    char                         fStorage[kInitialArenaSize];
+    SkArenaAlloc                 fIntervalAllocator{fStorage, kInitialArenaSize, kInitialArenaSize};
+    Interval*                    fFreeIntervalList = nullptr;
 };
 
 #endif // GrResourceAllocator_DEFINED

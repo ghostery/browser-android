@@ -11,15 +11,44 @@
 #include "nsAtom.h"
 #include "nsBoxFrame.h"
 
+<<<<<<< HEAD
 nsIFrame* NS_NewPopupSetFrame(nsIPresShell* aPresShell,
+                              mozilla::ComputedStyle* aStyle);
+||||||| merged common ancestors
+nsIFrame* NS_NewPopupSetFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+class nsPopupSetFrame final : public nsBoxFrame {
+ public:
+||||||| merged common ancestors
+class nsPopupSetFrame final : public nsBoxFrame
+{
+public:
+=======
+nsIFrame* NS_NewPopupSetFrame(mozilla::PresShell* aPresShell,
                               mozilla::ComputedStyle* aStyle);
 
 class nsPopupSetFrame final : public nsBoxFrame {
  public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsPopupSetFrame)
 
+<<<<<<< HEAD
   explicit nsPopupSetFrame(ComputedStyle* aStyle)
       : nsBoxFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsPopupSetFrame(ComputedStyle* aStyle)
+    : nsBoxFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsPopupSetFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBoxFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   ~nsPopupSetFrame() {}
 

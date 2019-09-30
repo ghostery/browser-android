@@ -7,7 +7,7 @@
 #include "mozilla/dom/SVGFEMergeNodeElement.h"
 #include "mozilla/dom/SVGFEMergeNodeElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEMergeNode)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEMergeNode)
 
 namespace mozilla {
 namespace dom {
@@ -17,8 +17,18 @@ JSObject* SVGFEMergeNodeElement::WrapNode(JSContext* aCx,
   return SVGFEMergeNodeElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGFEMergeNodeElement::sStringInfo[1] = {
     {nsGkAtoms::in, kNameSpaceID_None, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGFEMergeNodeElement::sStringInfo[1] =
+{
+  { nsGkAtoms::in, kNameSpaceID_None, true }
+};
+=======
+SVGElement::StringInfo SVGFEMergeNodeElement::sStringInfo[1] = {
+    {nsGkAtoms::in, kNameSpaceID_None, true}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -33,14 +43,30 @@ bool SVGFEMergeNodeElement::AttributeAffectsRendering(
   return aNameSpaceID == kNameSpaceID_None && aAttribute == nsGkAtoms::in;
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGFEMergeNodeElement::In1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGFEMergeNodeElement::In1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGFEMergeNodeElement::In1() {
+>>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGFEMergeNodeElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGFEMergeNodeElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGFEMergeNodeElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

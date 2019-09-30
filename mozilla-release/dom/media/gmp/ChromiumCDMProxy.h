@@ -7,8 +7,8 @@
 #ifndef ChromiumCDMProxy_h_
 #define ChromiumCDMProxy_h_
 
-#include "mozilla/CDMProxy.h"
 #include "mozilla/AbstractThread.h"
+#include "mozilla/CDMProxy.h"
 #include "ChromiumCDMParent.h"
 
 namespace mozilla {
@@ -22,8 +22,17 @@ class ChromiumCDMProxy : public CDMProxy {
 
   ChromiumCDMProxy(dom::MediaKeys* aKeys, const nsAString& aKeySystem,
                    GMPCrashHelper* aCrashHelper,
+<<<<<<< HEAD
                    bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
                    nsIEventTarget* aMainThread);
+||||||| merged common ancestors
+                   bool aAllowDistinctiveIdentifier,
+                   bool aAllowPersistentState,
+                   nsIEventTarget* aMainThread);
+=======
+                   bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
+                   nsISerialEventTarget* aMainThread);
+>>>>>>> upstream-releases
 
   void Init(PromiseId aPromiseId, const nsAString& aOrigin,
             const nsAString& aTopLevelOrigin,
@@ -108,10 +117,15 @@ class ChromiumCDMProxy : public CDMProxy {
 
  private:
   void OnCDMCreated(uint32_t aPromiseId);
+  void ShutdownCDMIfExists();
 
   ~ChromiumCDMProxy();
 
-  GMPCrashHelper* mCrashHelper;
+  // True if Shutdown() has been called. Should only be read and written on
+  // main thread.
+  bool mIsShutdown = false;
+
+  RefPtr<GMPCrashHelper> mCrashHelper;
 
   Mutex mCDMMutex;
   RefPtr<gmp::ChromiumCDMParent> mCDM;

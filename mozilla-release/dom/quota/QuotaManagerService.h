@@ -44,8 +44,6 @@ class QuotaManagerService final : public nsIQuotaManagerService,
   class RequestInfo;
   class IdleMaintenanceInfo;
 
-  nsCOMPtr<nsIEventTarget> mBackgroundThread;
-
   QuotaChild* mBackgroundActor;
 
   bool mBackgroundActorFailed;
@@ -59,13 +57,33 @@ class QuotaManagerService final : public nsIQuotaManagerService,
   static QuotaManagerService* Get();
 
   // No one should call this but the factory.
+<<<<<<< HEAD
   static already_AddRefed<QuotaManagerService> FactoryCreate();
 
   void ClearBackgroundActor();
+||||||| merged common ancestors
+  static already_AddRefed<QuotaManagerService>
+  FactoryCreate();
 
+  void
+  ClearBackgroundActor();
+=======
+  static already_AddRefed<QuotaManagerService> FactoryCreate();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void NoteLiveManager(QuotaManager* aManager);
 
   void NoteShuttingDownManager();
+||||||| merged common ancestors
+  void
+  NoteLiveManager(QuotaManager* aManager);
+
+  void
+  NoteShuttingDownManager();
+=======
+  void ClearBackgroundActor();
+>>>>>>> upstream-releases
 
   // Called when a process is being shot down. Aborts any running operations
   // for the given process.
@@ -75,15 +93,46 @@ class QuotaManagerService final : public nsIQuotaManagerService,
   QuotaManagerService();
   ~QuotaManagerService();
 
+<<<<<<< HEAD
   nsresult Init();
 
   void Destroy();
+||||||| merged common ancestors
+  nsresult
+  Init();
 
+  void
+  Destroy();
+=======
+  nsresult Init();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   nsresult InitiateRequest(nsAutoPtr<PendingRequestInfo>& aInfo);
+||||||| merged common ancestors
+  nsresult
+  InitiateRequest(nsAutoPtr<PendingRequestInfo>& aInfo);
+=======
+  void Destroy();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult BackgroundActorCreated(PBackgroundChild* aBackgroundActor);
+||||||| merged common ancestors
+  nsresult
+  BackgroundActorCreated(PBackgroundChild* aBackgroundActor);
+=======
+  nsresult EnsureBackgroundActor();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void BackgroundActorFailed();
+||||||| merged common ancestors
+  void
+  BackgroundActorFailed();
+=======
+  nsresult InitiateRequest(nsAutoPtr<PendingRequestInfo>& aInfo);
+>>>>>>> upstream-releases
 
   void PerformIdleMaintenance();
 

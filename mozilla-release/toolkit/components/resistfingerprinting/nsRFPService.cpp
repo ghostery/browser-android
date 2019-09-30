@@ -652,6 +652,7 @@ uint32_t nsRFPService::GetSpoofedPresentedFrames(double aTime, uint32_t aWidth,
                       ((100 - boundedDroppedRatio) / 100.0));
 }
 
+<<<<<<< HEAD
 /* static */
 nsresult nsRFPService::GetSpoofedUserAgent(nsACString& userAgent) {
   // This function generates the spoofed value of User Agent.
@@ -660,40 +661,97 @@ nsresult nsRFPService::GetSpoofedUserAgent(nsACString& userAgent) {
   // Reference of the format of User Agent:
   // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorID/userAgent
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+||||||| merged common ancestors
+/* static */
+nsresult
+nsRFPService::GetSpoofedUserAgent(nsACString &userAgent)
+{
+  // This function generates the spoofed value of User Agent.
+  // We spoof the values of the platform and Firefox version, which could be
+  // used as fingerprinting sources to identify individuals.
+  // Reference of the format of User Agent:
+  // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorID/userAgent
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+=======
+static uint32_t GetSpoofedVersion() {
+  // If we can't get the current Firefox version, use a hard-coded ESR version.
+  const uint32_t kKnownEsrVersion = 60;
+>>>>>>> upstream-releases
 
   nsresult rv;
   nsCOMPtr<nsIXULAppInfo> appInfo =
+<<<<<<< HEAD
       do_GetService("@mozilla.org/xre/app-info;1", &rv);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+    do_GetService("@mozilla.org/xre/app-info;1", &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+=======
+      do_GetService("@mozilla.org/xre/app-info;1", &rv);
+  NS_ENSURE_SUCCESS(rv, kKnownEsrVersion);
+>>>>>>> upstream-releases
 
   nsAutoCString appVersion;
   rv = appInfo->GetVersion(appVersion);
-  NS_ENSURE_SUCCESS(rv, rv);
+  NS_ENSURE_SUCCESS(rv, kKnownEsrVersion);
 
   // The browser version will be spoofed as the last ESR version.
   // By doing so, the anonymity group will cover more versions instead of one
   // version.
   uint32_t firefoxVersion = appVersion.ToInteger(&rv);
-  NS_ENSURE_SUCCESS(rv, rv);
+  NS_ENSURE_SUCCESS(rv, kKnownEsrVersion);
 
+#ifdef DEBUG
   // If we are running in Firefox ESR, determine whether the formula of ESR
   // version has changed.  Once changed, we must update the formula in this
   // function.
   if (!strcmp(NS_STRINGIFY(MOZ_UPDATE_CHANNEL), "esr")) {
+<<<<<<< HEAD
     MOZ_ASSERT(((firefoxVersion % 7) == 4),
                "Please udpate ESR version formula in nsRFPService.cpp");
+||||||| merged common ancestors
+    MOZ_ASSERT(((firefoxVersion % 7) == 4),
+      "Please udpate ESR version formula in nsRFPService.cpp");
+=======
+    MOZ_ASSERT(((firefoxVersion % 8) == 4),
+               "Please update ESR version formula in nsRFPService.cpp");
+>>>>>>> upstream-releases
   }
+#endif  // DEBUG
 
-  // Starting from Firefox 10, Firefox ESR was released once every seven
-  // Firefox releases, e.g. Firefox 10, 17, 24, 31, and so on.
-  // Except we used 60 as an ESR instead of 59.
+  // Starting with Firefox 52, a new ESR version will be released every
+  // eight Firefox versions: 52, 60, 68, ...
   // We infer the last and closest ESR version based on this rule.
+<<<<<<< HEAD
   uint32_t spoofedVersion = firefoxVersion - ((firefoxVersion - 4) % 7);
   userAgent.Assign(nsPrintfCString(
       "Mozilla/5.0 (%s; rv:%d.0) Gecko/%s Firefox/%d.0", SPOOFED_UA_OS,
       spoofedVersion, LEGACY_UA_GECKO_TRAIL, spoofedVersion));
+||||||| merged common ancestors
+  uint32_t spoofedVersion = firefoxVersion - ((firefoxVersion - 4) % 7);
+  userAgent.Assign(nsPrintfCString(
+    "Mozilla/5.0 (%s; rv:%d.0) Gecko/%s Firefox/%d.0",
+    SPOOFED_UA_OS, spoofedVersion, LEGACY_UA_GECKO_TRAIL, spoofedVersion));
+=======
+  return firefoxVersion - ((firefoxVersion - 4) % 8);
+}
+>>>>>>> upstream-releases
 
-  return rv;
+/* static */
+void nsRFPService::GetSpoofedUserAgent(nsACString& userAgent,
+                                       bool isForHTTPHeader) {
+  // This function generates the spoofed value of User Agent.
+  // We spoof the values of the platform and Firefox version, which could be
+  // used as fingerprinting sources to identify individuals.
+  // Reference of the format of User Agent:
+  // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorID/userAgent
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+
+  uint32_t spoofedVersion = GetSpoofedVersion();
+  const char* spoofedOS = isForHTTPHeader ? SPOOFED_HTTP_UA_OS : SPOOFED_UA_OS;
+  userAgent.Assign(nsPrintfCString(
+      "Mozilla/5.0 (%s; rv:%d.0) Gecko/%s Firefox/%d.0", spoofedOS,
+      spoofedVersion, LEGACY_UA_GECKO_TRAIL, spoofedVersion));
 }
 
 static const char* gCallbackPrefs[] = {
@@ -927,9 +985,21 @@ void nsRFPService::GetKeyboardLangAndRegion(const nsAString& aLanguage,
 }
 
 /* static */
+<<<<<<< HEAD
 bool nsRFPService::GetSpoofedKeyCodeInfo(
     const nsIDocument* aDoc, const WidgetKeyboardEvent* aKeyboardEvent,
     SpoofingKeyboardCode& aOut) {
+||||||| merged common ancestors
+bool
+nsRFPService::GetSpoofedKeyCodeInfo(const nsIDocument* aDoc,
+                                    const WidgetKeyboardEvent* aKeyboardEvent,
+                                    SpoofingKeyboardCode& aOut)
+{
+=======
+bool nsRFPService::GetSpoofedKeyCodeInfo(
+    const dom::Document* aDoc, const WidgetKeyboardEvent* aKeyboardEvent,
+    SpoofingKeyboardCode& aOut) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aKeyboardEvent);
 
   KeyboardLangs keyboardLang = RFP_DEFAULT_SPOOFING_KEYBOARD_LANG;
@@ -979,9 +1049,22 @@ bool nsRFPService::GetSpoofedKeyCodeInfo(
 }
 
 /* static */
+<<<<<<< HEAD
 bool nsRFPService::GetSpoofedModifierStates(
     const nsIDocument* aDoc, const WidgetKeyboardEvent* aKeyboardEvent,
     const Modifiers aModifier, bool& aOut) {
+||||||| merged common ancestors
+bool
+nsRFPService::GetSpoofedModifierStates(const nsIDocument* aDoc,
+                                       const WidgetKeyboardEvent* aKeyboardEvent,
+                                       const Modifiers aModifier,
+                                       bool& aOut)
+{
+=======
+bool nsRFPService::GetSpoofedModifierStates(
+    const dom::Document* aDoc, const WidgetKeyboardEvent* aKeyboardEvent,
+    const Modifiers aModifier, bool& aOut) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aKeyboardEvent);
 
   // For modifier or control keys, we don't need to hide its modifier states.
@@ -1005,9 +1088,21 @@ bool nsRFPService::GetSpoofedModifierStates(
 }
 
 /* static */
+<<<<<<< HEAD
 bool nsRFPService::GetSpoofedCode(const nsIDocument* aDoc,
                                   const WidgetKeyboardEvent* aKeyboardEvent,
                                   nsAString& aOut) {
+||||||| merged common ancestors
+bool
+nsRFPService::GetSpoofedCode(const nsIDocument* aDoc,
+                             const WidgetKeyboardEvent* aKeyboardEvent,
+                             nsAString& aOut)
+{
+=======
+bool nsRFPService::GetSpoofedCode(const dom::Document* aDoc,
+                                  const WidgetKeyboardEvent* aKeyboardEvent,
+                                  nsAString& aOut) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aKeyboardEvent);
 
   SpoofingKeyboardCode keyCodeInfo;
@@ -1030,9 +1125,21 @@ bool nsRFPService::GetSpoofedCode(const nsIDocument* aDoc,
 }
 
 /* static */
+<<<<<<< HEAD
 bool nsRFPService::GetSpoofedKeyCode(const nsIDocument* aDoc,
                                      const WidgetKeyboardEvent* aKeyboardEvent,
                                      uint32_t& aOut) {
+||||||| merged common ancestors
+bool
+nsRFPService::GetSpoofedKeyCode(const nsIDocument* aDoc,
+                                const WidgetKeyboardEvent* aKeyboardEvent,
+                                uint32_t& aOut)
+{
+=======
+bool nsRFPService::GetSpoofedKeyCode(const dom::Document* aDoc,
+                                     const WidgetKeyboardEvent* aKeyboardEvent,
+                                     uint32_t& aOut) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aKeyboardEvent);
 
   SpoofingKeyboardCode keyCodeInfo;

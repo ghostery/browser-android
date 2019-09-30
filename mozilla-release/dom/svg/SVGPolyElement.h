@@ -22,7 +22,7 @@ class SVGPolyElement : public SVGPolyElementBase {
  protected:
   explicit SVGPolyElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
-  virtual ~SVGPolyElement();
+  virtual ~SVGPolyElement() = default;
 
  public:
   // interfaces
@@ -39,17 +39,30 @@ class SVGPolyElement : public SVGPolyElementBase {
     return nsGkAtoms::points;
   }
 
-  // nsSVGElement methods:
+  // SVGElement methods:
   virtual bool HasValidDimensions() const override;
 
   // SVGGeometryElement methods:
   virtual bool AttributeDefinesGeometry(const nsAtom* aName) override;
   virtual bool IsMarkable() override { return true; }
+<<<<<<< HEAD
   virtual void GetMarkPoints(nsTArray<nsSVGMark>* aMarks) override;
   virtual bool GetGeometryBounds(
       Rect* aBounds, const StrokeOptions& aStrokeOptions,
       const Matrix& aToBoundsSpace,
       const Matrix* aToNonScalingStrokeSpace = nullptr) override;
+||||||| merged common ancestors
+  virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks) override;
+  virtual bool GetGeometryBounds(Rect* aBounds, const StrokeOptions& aStrokeOptions,
+                                 const Matrix& aToBoundsSpace,
+                                 const Matrix* aToNonScalingStrokeSpace = nullptr) override;
+=======
+  virtual void GetMarkPoints(nsTArray<SVGMark>* aMarks) override;
+  virtual bool GetGeometryBounds(
+      Rect* aBounds, const StrokeOptions& aStrokeOptions,
+      const Matrix& aToBoundsSpace,
+      const Matrix* aToNonScalingStrokeSpace = nullptr) override;
+>>>>>>> upstream-releases
 
   // WebIDL
   already_AddRefed<mozilla::DOMSVGPointList> Points();

@@ -7,7 +7,6 @@ use nsstring::nsCString;
 use servo_arc::Arc;
 use style::context::QuirksMode;
 use style::gecko::data::GeckoStyleSheet;
-use style::gecko::global_style_data::GLOBAL_STYLE_DATA;
 use style::gecko_bindings::bindings;
 use style::gecko_bindings::bindings::Gecko_LoadStyleSheet;
 use style::gecko_bindings::structs::{Loader, LoaderReusableStyleSheets};
@@ -16,6 +15,7 @@ use style::gecko_bindings::structs::{
 };
 use style::gecko_bindings::sugar::ownership::{FFIArcHelpers, HasBoxFFI, OwnedOrNull};
 use style::gecko_bindings::sugar::refptr::RefPtr;
+use style::global_style_data::GLOBAL_STYLE_DATA;
 use style::media_queries::MediaList;
 use style::parser::ParserContext;
 use style::shared_lock::{Locked, SharedRwLock};
@@ -58,6 +58,7 @@ impl StyleStylesheetLoader for StylesheetLoader {
         // so this raw pointer will still be valid.
 
         let child_sheet = unsafe {
+<<<<<<< HEAD
             Gecko_LoadStyleSheet(
                 self.0,
                 self.1,
@@ -66,6 +67,23 @@ impl StyleStylesheetLoader for StylesheetLoader {
                 url.0.clone().into_strong(),
                 media.into_strong(),
             )
+||||||| merged common ancestors
+            Gecko_LoadStyleSheet(self.0,
+                                 self.1,
+                                 self.2,
+                                 self.3,
+                                 url.0.clone().into_strong(),
+                                 media.into_strong())
+=======
+            Gecko_LoadStyleSheet(
+                self.0,
+                self.1,
+                self.2,
+                self.3,
+                &url,
+                media.into_strong(),
+            )
+>>>>>>> upstream-releases
         };
 
         debug_assert!(
@@ -171,7 +189,7 @@ impl StyleStylesheetLoader for AsyncStylesheetParser {
         unsafe {
             bindings::Gecko_LoadStyleSheetAsync(
                 self.load_data.get(),
-                url.0.into_strong(),
+                &url,
                 media.into_strong(),
                 rule.clone().into_strong(),
             );

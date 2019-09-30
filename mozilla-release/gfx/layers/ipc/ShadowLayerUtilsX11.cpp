@@ -102,7 +102,16 @@ already_AddRefed<gfxXlibSurface> SurfaceDescriptorX11::OpenForeign() const {
   return surf->CairoStatus() ? nullptr : surf.forget();
 }
 
+<<<<<<< HEAD
 /*static*/ void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {
+||||||| merged common ancestors
+/*static*/ void
+ShadowLayerForwarder::PlatformSyncBeforeUpdate()
+{
+=======
+/*static*/
+void ShadowLayerForwarder::PlatformSyncBeforeUpdate() {
+>>>>>>> upstream-releases
   if (UsingXCompositing()) {
     // If we're using X surfaces, then we need to finish all pending
     // operations on the back buffers before handing them to the
@@ -112,7 +121,16 @@ already_AddRefed<gfxXlibSurface> SurfaceDescriptorX11::OpenForeign() const {
   }
 }
 
+<<<<<<< HEAD
 /*static*/ void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {
+||||||| merged common ancestors
+/*static*/ void
+LayerManagerComposite::PlatformSyncBeforeReplyUpdate()
+{
+=======
+/*static*/
+void LayerManagerComposite::PlatformSyncBeforeReplyUpdate() {
+>>>>>>> upstream-releases
   if (UsingXCompositing()) {
     // If we're using X surfaces, we need to finish all pending
     // operations on the *front buffers* before handing them back to
@@ -123,9 +141,20 @@ already_AddRefed<gfxXlibSurface> SurfaceDescriptorX11::OpenForeign() const {
   }
 }
 
+<<<<<<< HEAD
 /*static*/ bool LayerManagerComposite::SupportsDirectTexturing() {
   return false;
 }
+||||||| merged common ancestors
+/*static*/ bool
+LayerManagerComposite::SupportsDirectTexturing()
+{
+  return false;
+}
+=======
+/*static*/
+bool LayerManagerComposite::SupportsDirectTexturing() { return false; }
+>>>>>>> upstream-releases
 
 }  // namespace layers
 }  // namespace mozilla

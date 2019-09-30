@@ -12,6 +12,7 @@
 #include "nsReadableUtils.h"
 #include <Carbon/Carbon.h>
 
+<<<<<<< HEAD
 static nsTArray<nsCString> *gVolumeList = nullptr;
 
 static bool pathBeginsWithVolName(const nsACString &path,
@@ -20,6 +21,24 @@ static bool pathBeginsWithVolName(const nsACString &path,
   // name of a mounted volume. Return the 1st path component (unescaped) in any
   // case. This needs to be done as quickly as possible, so we cache a list of
   // volume names.
+||||||| merged common ancestors
+static nsTArray<nsCString> *gVolumeList = nullptr;
+
+static bool pathBeginsWithVolName(const nsACString& path, nsACString& firstPathComponent)
+{
+  // Return whether the 1st path component in path (escaped) is equal to the name
+  // of a mounted volume. Return the 1st path component (unescaped) in any case.
+  // This needs to be done as quickly as possible, so we cache a list of volume names.
+=======
+static nsTArray<nsCString>* gVolumeList = nullptr;
+
+static bool pathBeginsWithVolName(const nsACString& path,
+                                  nsACString& firstPathComponent) {
+  // Return whether the 1st path component in path (escaped) is equal to the
+  // name of a mounted volume. Return the 1st path component (unescaped) in any
+  // case. This needs to be done as quickly as possible, so we cache a list of
+  // volume names.
+>>>>>>> upstream-releases
   // XXX Register an event handler to detect drives being mounted/unmounted?
 
   if (!gVolumeList) {
@@ -40,9 +59,18 @@ static bool pathBeginsWithVolName(const nsACString &path,
       err = ::FSGetVolumeInfo(0, volumeIndex, nullptr, kFSVolInfoNone, nullptr,
                               &volName, &rootDirectory);
       if (err == noErr) {
+<<<<<<< HEAD
         NS_ConvertUTF16toUTF8 volNameStr(
             Substring((char16_t *)volName.unicode,
                       (char16_t *)volName.unicode + volName.length));
+||||||| merged common ancestors
+        NS_ConvertUTF16toUTF8 volNameStr(Substring((char16_t *)volName.unicode,
+                                                   (char16_t *)volName.unicode + volName.length));
+=======
+        NS_ConvertUTF16toUTF8 volNameStr(
+            Substring((char16_t*)volName.unicode,
+                      (char16_t*)volName.unicode + volName.length));
+>>>>>>> upstream-releases
         gVolumeList->AppendElement(volNameStr);
         volumeIndex++;
       }
@@ -70,8 +98,16 @@ void net_ShutdownURLHelperOSX() {
   gVolumeList = nullptr;
 }
 
+<<<<<<< HEAD
 static nsresult convertHFSPathtoPOSIX(const nsACString &hfsPath,
                                       nsACString &posixPath) {
+||||||| merged common ancestors
+static nsresult convertHFSPathtoPOSIX(const nsACString& hfsPath, nsACString& posixPath)
+{
+=======
+static nsresult convertHFSPathtoPOSIX(const nsACString& hfsPath,
+                                      nsACString& posixPath) {
+>>>>>>> upstream-releases
   // Use CFURL to do the conversion. We don't want to do this by simply
   // using SwapSlashColon - we need the charset mapped from MacRoman
   // to UTF-8, and we need "/Volumes" (or whatever - Apple says this is subject
@@ -86,9 +122,18 @@ static nsresult convertHFSPathtoPOSIX(const nsACString &hfsPath,
                                                   kCFURLHFSPathStyle, true);
   if (urlRef) {
     UInt8 pathBuf[PATH_MAX];
+<<<<<<< HEAD
     if (CFURLGetFileSystemRepresentation(urlRef, true, pathBuf,
                                          sizeof(pathBuf))) {
       posixPath = (char *)pathBuf;
+||||||| merged common ancestors
+    if (CFURLGetFileSystemRepresentation(urlRef, true, pathBuf, sizeof(pathBuf))) {
+      posixPath = (char *)pathBuf;
+=======
+    if (CFURLGetFileSystemRepresentation(urlRef, true, pathBuf,
+                                         sizeof(pathBuf))) {
+      posixPath = (char*)pathBuf;
+>>>>>>> upstream-releases
       rv = NS_OK;
     }
   }
@@ -97,7 +142,14 @@ static nsresult convertHFSPathtoPOSIX(const nsACString &hfsPath,
   return rv;
 }
 
+<<<<<<< HEAD
 static void SwapSlashColon(char *s) {
+||||||| merged common ancestors
+static void SwapSlashColon(char *s)
+{
+=======
+static void SwapSlashColon(char* s) {
+>>>>>>> upstream-releases
   while (*s) {
     if (*s == '/')
       *s = ':';
@@ -107,7 +159,15 @@ static void SwapSlashColon(char *s) {
   }
 }
 
+<<<<<<< HEAD
 nsresult net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result) {
+||||||| merged common ancestors
+nsresult
+net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result)
+{
+=======
+nsresult net_GetURLSpecFromActualFile(nsIFile* aFile, nsACString& result) {
+>>>>>>> upstream-releases
   // NOTE: This is identical to the implementation in nsURLHelperUnix.cpp
 
   nsresult rv;
@@ -136,7 +196,15 @@ nsresult net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result) {
+||||||| merged common ancestors
+nsresult
+net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result)
+{
+=======
+nsresult net_GetFileFromURLSpec(const nsACString& aURL, nsIFile** result) {
+>>>>>>> upstream-releases
   // NOTE: See also the implementation in nsURLHelperUnix.cpp
   // This matches it except for the HFS path handling.
 
@@ -168,8 +236,15 @@ nsresult net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result) {
       // directory doesn't exist, we'll assume this is an HFS path.
       FSRef testRef;
       possibleVolName.InsertLiteral("/", 0);
+<<<<<<< HEAD
       if (::FSPathMakeRef((UInt8 *)possibleVolName.get(), &testRef, nullptr) !=
           noErr)
+||||||| merged common ancestors
+      if (::FSPathMakeRef((UInt8*)possibleVolName.get(), &testRef, nullptr) != noErr)
+=======
+      if (::FSPathMakeRef((UInt8*)possibleVolName.get(), &testRef, nullptr) !=
+          noErr)
+>>>>>>> upstream-releases
         bHFSPath = true;
     }
 
@@ -178,8 +253,16 @@ nsresult net_GetFileFromURLSpec(const nsACString &aURL, nsIFile **result) {
       // become colons. If we start out by changing "%2F"s to colons, we
       // can reply on SwapSlashColon() to do what we need
       path.ReplaceSubstring("%2F", ":");
+<<<<<<< HEAD
       path.Cut(0, 1);  // directory begins with '/'
       SwapSlashColon((char *)path.get());
+||||||| merged common ancestors
+      path.Cut(0, 1); // directory begins with '/'
+      SwapSlashColon((char *)path.get());
+=======
+      path.Cut(0, 1);  // directory begins with '/'
+      SwapSlashColon((char*)path.get());
+>>>>>>> upstream-releases
       // At this point, path is an HFS path made using the same
       // algorithm as nsURLHelperMac. We'll convert to POSIX below.
     }

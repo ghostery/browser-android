@@ -47,8 +47,16 @@ class ImageBridgeParent final : public PImageBridgeParent,
  protected:
   ImageBridgeParent(MessageLoop* aLoop, ProcessId aChildProcessId);
 
+<<<<<<< HEAD
  public:
   ~ImageBridgeParent();
+||||||| merged common ancestors
+public:
+  ~ImageBridgeParent();
+=======
+ public:
+  virtual ~ImageBridgeParent();
+>>>>>>> upstream-releases
 
   /**
    * Creates the globals of ImageBridgeParent.
@@ -60,20 +68,44 @@ class ImageBridgeParent final : public PImageBridgeParent,
   static bool CreateForContent(Endpoint<PImageBridgeParent>&& aEndpoint);
   static void Shutdown();
 
-  virtual ShmemAllocator* AsShmemAllocator() override { return this; }
+  ShmemAllocator* AsShmemAllocator() override { return this; }
 
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
+  void ActorDestroy(ActorDestroyReason aWhy) override;
 
   // CompositableParentManager
+<<<<<<< HEAD
   virtual void SendAsyncMessage(
       const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
+||||||| merged common ancestors
+  virtual void SendAsyncMessage(const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
+=======
+  void SendAsyncMessage(
+      const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void NotifyNotUsed(PTextureParent* aTexture,
                              uint64_t aTransactionId) override;
+||||||| merged common ancestors
+  virtual void NotifyNotUsed(PTextureParent* aTexture, uint64_t aTransactionId) override;
+=======
+  void NotifyNotUsed(PTextureParent* aTexture,
+                     uint64_t aTransactionId) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual base::ProcessId GetChildProcessId() override { return OtherPid(); }
+||||||| merged common ancestors
+  virtual base::ProcessId GetChildProcessId() override
+  {
+    return OtherPid();
+  }
+=======
+  base::ProcessId GetChildProcessId() override { return OtherPid(); }
+>>>>>>> upstream-releases
 
   // PImageBridge
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvUpdate(
       EditArray&& aEdits, OpDestroyArray&& aToDestroy,
       const uint64_t& aFwdTransactionId) override;
@@ -95,34 +127,73 @@ class ImageBridgeParent final : public PImageBridgeParent,
       override;
   bool DeallocPMediaSystemResourceManagerParent(
       PMediaSystemResourceManagerParent* aActor) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvUpdate(EditArray&& aEdits, OpDestroyArray&& aToDestroy,
+                                          const uint64_t& aFwdTransactionId) override;
+
+  virtual PTextureParent* AllocPTextureParent(const SurfaceDescriptor& aSharedData,
+                                              const ReadLockDescriptor& aReadLock,
+                                              const LayersBackend& aLayersBackend,
+                                              const TextureFlags& aFlags,
+                                              const uint64_t& aSerial,
+                                              const wr::MaybeExternalImageId& aExternalImageId) override;
+  virtual bool DeallocPTextureParent(PTextureParent* actor) override;
+
+  virtual mozilla::ipc::IPCResult RecvNewCompositable(const CompositableHandle& aHandle,
+                                                      const TextureInfo& aInfo,
+                                                      const LayersBackend& aLayersBackend) override;
+  virtual mozilla::ipc::IPCResult RecvReleaseCompositable(const CompositableHandle& aHandle) override;
+
+  PMediaSystemResourceManagerParent* AllocPMediaSystemResourceManagerParent() override;
+  bool DeallocPMediaSystemResourceManagerParent(PMediaSystemResourceManagerParent* aActor) override;
+=======
+  mozilla::ipc::IPCResult RecvUpdate(EditArray&& aEdits,
+                                     OpDestroyArray&& aToDestroy,
+                                     const uint64_t& aFwdTransactionId);
+
+  PTextureParent* AllocPTextureParent(
+      const SurfaceDescriptor& aSharedData, const ReadLockDescriptor& aReadLock,
+      const LayersBackend& aLayersBackend, const TextureFlags& aFlags,
+      const uint64_t& aSerial,
+      const wr::MaybeExternalImageId& aExternalImageId);
+  bool DeallocPTextureParent(PTextureParent* actor);
+
+  mozilla::ipc::IPCResult RecvNewCompositable(
+      const CompositableHandle& aHandle, const TextureInfo& aInfo,
+      const LayersBackend& aLayersBackend);
+  mozilla::ipc::IPCResult RecvReleaseCompositable(
+      const CompositableHandle& aHandle);
+
+  PMediaSystemResourceManagerParent* AllocPMediaSystemResourceManagerParent();
+  bool DeallocPMediaSystemResourceManagerParent(
+      PMediaSystemResourceManagerParent* aActor);
+>>>>>>> upstream-releases
 
   // Shutdown step 1
-  virtual mozilla::ipc::IPCResult RecvWillClose() override;
+  mozilla::ipc::IPCResult RecvWillClose();
 
   MessageLoop* GetMessageLoop() const { return mMessageLoop; }
 
   // ShmemAllocator
 
-  virtual bool AllocShmem(size_t aSize,
-                          ipc::SharedMemory::SharedMemoryType aType,
-                          ipc::Shmem* aShmem) override;
+  bool AllocShmem(size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
+                  ipc::Shmem* aShmem) override;
 
-  virtual bool AllocUnsafeShmem(size_t aSize,
-                                ipc::SharedMemory::SharedMemoryType aType,
-                                ipc::Shmem* aShmem) override;
+  bool AllocUnsafeShmem(size_t aSize, ipc::SharedMemory::SharedMemoryType aType,
+                        ipc::Shmem* aShmem) override;
 
-  virtual void DeallocShmem(ipc::Shmem& aShmem) override;
+  void DeallocShmem(ipc::Shmem& aShmem) override;
 
-  virtual bool IsSameProcess() const override;
+  bool IsSameProcess() const override;
 
   static already_AddRefed<ImageBridgeParent> GetInstance(ProcessId aId);
 
   static bool NotifyImageComposites(
       nsTArray<ImageCompositeNotificationInfo>& aNotifications);
 
-  virtual bool UsesImageBridge() const override { return true; }
+  bool UsesImageBridge() const override { return true; }
 
-  virtual bool IPCOpen() const override { return !mClosed; }
+  bool IPCOpen() const override { return !mClosed; }
 
  protected:
   void Bind(Endpoint<PImageBridgeParent>&& aEndpoint);

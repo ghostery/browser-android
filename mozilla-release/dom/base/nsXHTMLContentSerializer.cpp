@@ -14,7 +14,7 @@
 
 #include "mozilla/dom/Element.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsElementTable.h"
 #include "nsNameSpaceManager.h"
 #include "nsString.h"
@@ -33,6 +33,7 @@
 #include "nsComputedDOMStyle.h"
 
 using namespace mozilla;
+using namespace mozilla::dom;
 
 static const int32_t kLongLineLen = 128;
 
@@ -385,8 +386,17 @@ void nsXHTMLContentSerializer::AfterElementEnd(nsIContent* aContent,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXHTMLContentSerializer::AppendDocumentStart(nsIDocument* aDocument,
                                               nsAString& aStr) {
+||||||| merged common ancestors
+nsXHTMLContentSerializer::AppendDocumentStart(nsIDocument *aDocument,
+                                              nsAString& aStr)
+{
+=======
+nsXHTMLContentSerializer::AppendDocumentStart(Document* aDocument,
+                                              nsAString& aStr) {
+>>>>>>> upstream-releases
   if (!mBodyOnly)
     return nsXMLContentSerializer::AppendDocumentStart(aDocument, aStr);
 
@@ -419,11 +429,26 @@ bool nsXHTMLContentSerializer::CheckElementStart(Element* aElement,
   return true;
 }
 
+<<<<<<< HEAD
 bool nsXHTMLContentSerializer::CheckElementEnd(dom::Element* aElement,
                                                bool& aForceFormat,
                                                nsAString& aStr) {
   NS_ASSERTION(!mIsHTMLSerializer,
                "nsHTMLContentSerializer shouldn't call this method !");
+||||||| merged common ancestors
+bool
+nsXHTMLContentSerializer::CheckElementEnd(dom::Element* aElement,
+                                          bool& aForceFormat,
+                                          nsAString& aStr)
+{
+  NS_ASSERTION(!mIsHTMLSerializer, "nsHTMLContentSerializer shouldn't call this method !");
+=======
+bool nsXHTMLContentSerializer::CheckElementEnd(Element* aElement,
+                                               bool& aForceFormat,
+                                               nsAString& aStr) {
+  NS_ASSERTION(!mIsHTMLSerializer,
+               "nsHTMLContentSerializer shouldn't call this method !");
+>>>>>>> upstream-releases
 
   aForceFormat = !(mFlags & nsIDocumentEncoder::OutputIgnoreMozDirty) &&
                  aElement->HasAttr(kNameSpaceID_None, nsGkAtoms::mozdirty);

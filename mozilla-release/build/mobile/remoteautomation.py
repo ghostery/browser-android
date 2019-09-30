@@ -3,14 +3,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import datetime
-import glob
 import time
 import re
-import os
 import posixpath
 import tempfile
 import shutil
-import sys
+
+import six
 
 from automation import Automation
 from mozdevice import ADBTimeoutError
@@ -28,13 +27,68 @@ class RemoteAutomation(Automation):
 
     def __init__(self, device, appName='', remoteProfile=None, remoteLog=None,
                  processArgs=None):
+<<<<<<< HEAD
+        self.device = device
+        self.appName = appName
+        self.remoteProfile = remoteProfile
+        self.remoteLog = remoteLog
+        self.processArgs = processArgs or {}
+||||||| merged common ancestors
+        self._device = device
+        self._appName = appName
+        self._remoteProfile = remoteProfile
+        self._remoteLog = remoteLog
+        self._processArgs = processArgs or {}
+
+=======
+        super(RemoteAutomation, self).__init__()
         self.device = device
         self.appName = appName
         self.remoteProfile = remoteProfile
         self.remoteLog = remoteLog
         self.processArgs = processArgs or {}
         self.lastTestSeen = "remoteautomation.py"
-        Automation.__init__(self)
+
+    def runApp(self, testURL, env, app, profileDir, extraArgs,
+               utilityPath=None, xrePath=None, debuggerInfo=None, symbolsPath=None,
+               timeout=-1, maxTime=None, e10s=True, **kwargs):
+        """
+        Run the app, log the duration it took to execute, return the status code.
+        Kills the app if it runs for longer than |maxTime| seconds, or outputs nothing
+        for |timeout| seconds.
+        """
+        if self.device.is_file(self.remoteLog):
+            self.device.rm(self.remoteLog, root=True)
+            self.log.info("remoteautomation.py | runApp deleted %s" % self.remoteLog)
+
+        if utilityPath is None:
+            utilityPath = self.DIST_BIN
+        if xrePath is None:
+            xrePath = self.DIST_BIN
+        if timeout == -1:
+            timeout = self.DEFAULT_TIMEOUT
+        self.utilityPath = utilityPath
+
+        cmd, args = self.buildCommandLine(app, debuggerInfo, profileDir, testURL, extraArgs)
+        startTime = datetime.datetime.now()
+
+>>>>>>> upstream-releases
+        self.lastTestSeen = "remoteautomation.py"
+        self.launchApp([cmd] + args,
+                       env=self.environment(env=env, crashreporter=not debuggerInfo),
+                       e10s=e10s, **self.processArgs)
+
+        self.log.info("remoteautomation.py | Application pid: %d", self.pid)
+
+        status = self.waitForFinish(timeout, maxTime)
+        self.log.info("remoteautomation.py | Application ran for: %s",
+                      str(datetime.datetime.now() - startTime))
+
+        crashed = self.checkForCrashes(symbolsPath)
+        if crashed:
+            status = 1
+
+        return status, self.lastTestSeen
 
     def runApp(self, testURL, env, app, profileDir, extraArgs,
                utilityPath=None, xrePath=None, debuggerInfo=None, symbolsPath=None,
@@ -101,9 +155,6 @@ class RemoteAutomation(Automation):
         env.setdefault('MOZ_IN_AUTOMATION', '1')
 
         # Set WebRTC logging in case it is not set yet.
-        # On Android, environment variables cannot contain ',' so the
-        # standard WebRTC setting for NSPR_LOG_MODULES is not available.
-        # env.setdefault('NSPR_LOG_MODULES', 'signaling:5,mtransport:5,datachannel:5,jsep:5,MediaPipelineFactory:5')  # NOQA: E501
         env.setdefault('R_LOG_LEVEL', '6')
         env.setdefault('R_LOG_DESTINATION', 'stderr')
         env.setdefault('R_LOG_VERBOSE', '1')
@@ -138,6 +189,7 @@ class RemoteAutomation(Automation):
 
         return status
 
+<<<<<<< HEAD
     def deleteANRs(self):
         # Remove files from the dalvik stack-trace directory.
         if not self.device.is_dir(self.device.stack_trace_dir, root=True):
@@ -203,6 +255,77 @@ class RemoteAutomation(Automation):
         self.checkForTombstones()
 
         logcat = self.device.get_logcat(
+||||||| merged common ancestors
+    def deleteANRs(self):
+        # Remove files from the dalvik stack-trace directory.
+        if not self._device.is_dir(self._device.stack_trace_dir, root=True):
+            return
+        try:
+            for trace_file in self._device.ls(self._device.stack_trace_dir, root=True):
+                trace_path = posixpath.join(self._device.stack_trace_dir, trace_file)
+                self._device.chmod(trace_path, root=True)
+                self._device.rm(trace_path, root=True)
+        except Exception as e:
+            print("Error deleting %s: %s" % (self._device.stack_trace_dir, str(e)))
+
+    def checkForANRs(self):
+        if not self._device.is_dir(self._device.stack_trace_dir):
+            print("%s not found" % self._device.stack_trace_dir)
+            return
+        try:
+            for trace_file in self._device.ls(self._device.stack_trace_dir, root=True):
+                trace_path = posixpath.join(self._device.stack_trace_dir, trace_file)
+                t = self._device.get_file(trace_path)
+                if t:
+                    stripped = t.strip()
+                    if len(stripped) > 0:
+                        print("Contents of %s:" % trace_path)
+                        print(t)
+            # Once reported, delete traces
+            self.deleteANRs()
+        except Exception as e:
+            print("Error pulling %s: %s" % (self._device.stack_trace_dir, str(e)))
+
+    def deleteTombstones(self):
+        # delete any tombstone files from device
+        self._device.rm("/data/tombstones", force=True,
+                        recursive=True, root=True)
+
+    def checkForTombstones(self):
+        # pull any tombstones from device and move to MOZ_UPLOAD_DIR
+        remoteDir = "/data/tombstones"
+        uploadDir = os.environ.get('MOZ_UPLOAD_DIR', None)
+        if uploadDir:
+            if not os.path.exists(uploadDir):
+                os.mkdir(uploadDir)
+            if self._device.is_dir(remoteDir):
+                # copy tombstone files from device to local upload directory
+                self._device.chmod(remoteDir, recursive=True, root=True)
+                self._device.pull(remoteDir, uploadDir)
+                self.deleteTombstones()
+                for f in glob.glob(os.path.join(uploadDir, "tombstone_??")):
+                    # add a unique integer to the file name, in case there are
+                    # multiple tombstones generated with the same name, for
+                    # instance, after multiple robocop tests
+                    for i in xrange(1, sys.maxint):
+                        newname = "%s.%d.txt" % (f, i)
+                        if not os.path.exists(newname):
+                            os.rename(f, newname)
+                            break
+            else:
+                print("%s does not exist; tombstone check skipped" % remoteDir)
+        else:
+            print("MOZ_UPLOAD_DIR not defined; tombstone check skipped")
+
+    def checkForCrashes(self, directory, symbolsPath):
+        self.checkForANRs()
+        self.checkForTombstones()
+
+        logcat = self._device.get_logcat(
+=======
+    def checkForCrashes(self, symbolsPath):
+        logcat = self.device.get_logcat(
+>>>>>>> upstream-releases
             filter_out_regexps=fennecLogcatFilters)
 
         javaException = mozcrash.check_for_java_exception(
@@ -299,6 +422,7 @@ class RemoteAutomation(Automation):
         # Temporarily increased to 110 minutes because no more chunks can be created.
         self.timeout = 6600
 
+<<<<<<< HEAD
         # Used to buffer log messages until we meet a line break
         self.logBuffer = ""
 
@@ -331,6 +455,76 @@ class RemoteAutomation(Automation):
             return False
 
         self.stdoutlen += len(newLogContent)
+||||||| merged common ancestors
+            if lines:
+                if self.logBuffer.endswith('\n'):
+                    # all lines are complete; no need to buffer
+                    self.logBuffer = ""
+                else:
+                    # keep the last (unfinished) line in the buffer
+                    self.logBuffer = lines[-1]
+                    del lines[-1]
+
+            if not lines:
+                return False
+
+            for line in lines:
+                # This passes the line to the logger (to be logged or buffered)
+                parsed_messages = self.messageLogger.write(line)
+                for message in parsed_messages:
+                    if isinstance(message, dict) and message.get('action') == 'test_start':
+                        self.lastTestSeen = message['test']
+                    if isinstance(message, dict) and message.get('action') == 'log':
+                        line = message['message'].strip()
+                        if self.counts:
+                            m = re.match(".*:\s*(\d*)", line)
+                            if m:
+                                try:
+                                    val = int(m.group(1))
+                                    if "Passed:" in line:
+                                        self.counts['pass'] += val
+                                    elif "Failed:" in line:
+                                        self.counts['fail'] += val
+                                    elif "Todo:" in line:
+                                        self.counts['todo'] += val
+                                except ADBTimeoutError:
+                                    raise
+                                except Exception:
+                                    pass
+=======
+        # Used to buffer log messages until we meet a line break
+        self.logBuffer = ""
+
+    @property
+    def pid(self):
+        procs = self.device.get_process_list()
+        # limit the comparison to the first 75 characters due to a
+        # limitation in processname length in android.
+        pids = [proc[0] for proc in procs if proc[1] == self.procName[:75]]
+
+        if pids is None or len(pids) < 1:
+            return 0
+        return pids[0]
+
+    def read_stdout(self):
+        """
+        Fetch the full remote log file, log any new content and return True if new
+        content processed.
+        """
+        if not self.device.is_file(self.remoteLog):
+            return False
+        try:
+            newLogContent = self.device.get_file(self.remoteLog, offset=self.stdoutlen)
+        except ADBTimeoutError:
+            raise
+        except Exception as e:
+            self.log.info("remoteautomation.py | exception reading log: %s" % str(e))
+            return False
+        if not newLogContent:
+            return False
+
+        self.stdoutlen += len(newLogContent)
+>>>>>>> upstream-releases
 
         if self.messageLogger is None:
             testStartFilenames = re.findall(r"TEST-START \| ([^\s]*)", newLogContent)
@@ -339,6 +533,7 @@ class RemoteAutomation(Automation):
             print(newLogContent)
             return True
 
+<<<<<<< HEAD
         self.logBuffer += newLogContent
         lines = self.logBuffer.split('\n')
         lines = [l for l in lines if l]
@@ -423,6 +618,142 @@ class RemoteAutomation(Automation):
                 top = self.device.get_top_activity(timeout=60)
                 if top is None:
                     print("Failed to get top activity, retrying, once...")
+||||||| merged common ancestors
+        @property
+        def getLastTestSeen(self):
+            return self.lastTestSeen
+
+        # Wait for the remote process to end (or for its activity to go to background).
+        # While waiting, periodically retrieve the process output and print it.
+        # If the process is still running after *timeout* seconds, return 1;
+        # If the process is still running but no output is received in *noOutputTimeout*
+        # seconds, return 2;
+        # Else, once the process exits/goes to background, return 0.
+        def wait(self, timeout=None, noOutputTimeout=None):
+            timer = 0
+            noOutputTimer = 0
+            interval = 10
+            if timeout is None:
+                timeout = self.timeout
+            status = 0
+            top = self.procName
+            slowLog = False
+            endTime = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+            while top == self.procName:
+                # Get log updates on each interval, but if it is taking
+                # too long, only do it every 60 seconds
+                hasOutput = False
+                if (not slowLog) or (timer % 60 == 0):
+                    startRead = datetime.datetime.now()
+                    hasOutput = self.read_stdout()
+                    if (datetime.datetime.now() - startRead) > datetime.timedelta(seconds=5):
+                        slowLog = True
+                    if hasOutput:
+                        noOutputTimer = 0
+                    if self.counts and 'pass' in self.counts and self.counts['pass'] > 0:
+                        interval = 0.5
+                time.sleep(interval)
+                timer += interval
+                noOutputTimer += interval
+                if datetime.datetime.now() > endTime:
+                    status = 1
+                    break
+                if (noOutputTimeout and noOutputTimer > noOutputTimeout):
+                    status = 2
+                    break
+                if not hasOutput:
+=======
+        self.logBuffer += newLogContent
+        lines = self.logBuffer.split('\n')
+        lines = [l for l in lines if l]
+
+        if lines:
+            if self.logBuffer.endswith('\n'):
+                # all lines are complete; no need to buffer
+                self.logBuffer = ""
+            else:
+                # keep the last (unfinished) line in the buffer
+                self.logBuffer = lines[-1]
+                del lines[-1]
+
+        if not lines:
+            return False
+
+        for line in lines:
+            # This passes the line to the logger (to be logged or buffered)
+            if isinstance(line, six.text_type):
+                # if line is unicode - let's encode it to bytes
+                parsed_messages = self.messageLogger.write(line.encode('UTF-8', 'replace'))
+            else:
+                # if line is bytes type, write it as it is
+                parsed_messages = self.messageLogger.write(line)
+
+            for message in parsed_messages:
+                if isinstance(message, dict) and message.get('action') == 'test_start':
+                    self.lastTestSeen = message['test']
+                if isinstance(message, dict) and message.get('action') == 'log':
+                    line = message['message'].strip()
+                    if self.counts:
+                        m = re.match(".*:\s*(\d*)", line)
+                        if m:
+                            try:
+                                val = int(m.group(1))
+                                if "Passed:" in line:
+                                    self.counts['pass'] += val
+                                elif "Failed:" in line:
+                                    self.counts['fail'] += val
+                                elif "Todo:" in line:
+                                    self.counts['todo'] += val
+                            except ADBTimeoutError:
+                                raise
+                            except Exception:
+                                pass
+
+        return True
+
+    # Wait for the remote process to end (or for its activity to go to background).
+    # While waiting, periodically retrieve the process output and print it.
+    # If the process is still running after *timeout* seconds, return 1;
+    # If the process is still running but no output is received in *noOutputTimeout*
+    # seconds, return 2;
+    # Else, once the process exits/goes to background, return 0.
+    def wait(self, timeout=None, noOutputTimeout=None):
+        timer = 0
+        noOutputTimer = 0
+        interval = 10
+        if timeout is None:
+            timeout = self.timeout
+        status = 0
+        top = self.procName
+        slowLog = False
+        endTime = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while top == self.procName:
+            # Get log updates on each interval, but if it is taking
+            # too long, only do it every 60 seconds
+            hasOutput = False
+            if (not slowLog) or (timer % 60 == 0):
+                startRead = datetime.datetime.now()
+                hasOutput = self.read_stdout()
+                if (datetime.datetime.now() - startRead) > datetime.timedelta(seconds=5):
+                    slowLog = True
+                if hasOutput:
+                    noOutputTimer = 0
+                if self.counts and 'pass' in self.counts and self.counts['pass'] > 0:
+                    interval = 0.5
+            time.sleep(interval)
+            timer += interval
+            noOutputTimer += interval
+            if datetime.datetime.now() > endTime:
+                status = 1
+                break
+            if (noOutputTimeout and noOutputTimer > noOutputTimeout):
+                status = 2
+                break
+            if not hasOutput:
+                top = self.device.get_top_activity(timeout=60)
+                if top is None:
+                    print("Failed to get top activity, retrying, once...")
+>>>>>>> upstream-releases
                     top = self.device.get_top_activity(timeout=60)
         # Flush anything added to stdout during the sleep
         self.read_stdout()

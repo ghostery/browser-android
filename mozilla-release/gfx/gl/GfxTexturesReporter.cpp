@@ -8,7 +8,7 @@
 #include <sstream>
 #include "nsExceptionHandler.h"
 #include "GfxTexturesReporter.h"
-#include "gfxPrefs.h"
+#include "mozilla/StaticPrefs.h"
 
 using namespace mozilla;
 using namespace mozilla::gl;
@@ -19,6 +19,7 @@ Atomic<size_t> GfxTexturesReporter::sAmount(0);
 Atomic<size_t> GfxTexturesReporter::sPeakAmount(0);
 Atomic<size_t> GfxTexturesReporter::sTileWasteAmount(0);
 
+<<<<<<< HEAD
 std::string FormatBytes(size_t amount) {
   std::stringstream stream;
   int depth = 0;
@@ -27,6 +28,27 @@ std::string FormatBytes(size_t amount) {
     val /= 1024;
     depth++;
   }
+||||||| merged common ancestors
+std::string
+FormatBytes(size_t amount)
+{
+    std::stringstream stream;
+    int depth = 0;
+    double val = amount;
+    while (val > 1024) {
+        val /= 1024;
+        depth++;
+    }
+=======
+static std::string FormatBytes(size_t amount) {
+  std::stringstream stream;
+  int depth = 0;
+  double val = amount;
+  while (val > 1024) {
+    val /= 1024;
+    depth++;
+  }
+>>>>>>> upstream-releases
 
   const char* unit;
   switch (depth) {
@@ -51,6 +73,7 @@ std::string FormatBytes(size_t amount) {
   return stream.str();
 }
 
+<<<<<<< HEAD
 /* static */ void GfxTexturesReporter::UpdateAmount(MemoryUse action,
                                                     size_t amount) {
   if (action == MemoryFreed) {
@@ -58,11 +81,46 @@ std::string FormatBytes(size_t amount) {
         amount <= sAmount,
         "GFX: Current texture usage greater than update amount.");
     sAmount -= amount;
+||||||| merged common ancestors
+/* static */ void
+GfxTexturesReporter::UpdateAmount(MemoryUse action, size_t amount)
+{
+    if (action == MemoryFreed) {
+        MOZ_RELEASE_ASSERT(amount <= sAmount, "GFX: Current texture usage greater than update amount.");
+        sAmount -= amount;
+=======
+/* static */
+void GfxTexturesReporter::UpdateAmount(MemoryUse action, size_t amount) {
+  if (action == MemoryFreed) {
+    MOZ_RELEASE_ASSERT(
+        amount <= sAmount,
+        "GFX: Current texture usage greater than update amount.");
+    sAmount -= amount;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (gfxPrefs::GfxLoggingTextureUsageEnabled()) {
       printf_stderr("Current texture usage: %s\n",
                     FormatBytes(sAmount).c_str());
+||||||| merged common ancestors
+        if (gfxPrefs::GfxLoggingTextureUsageEnabled()) {
+            printf_stderr("Current texture usage: %s\n", FormatBytes(sAmount).c_str());
+        }
+    } else {
+        sAmount += amount;
+        if (sAmount > sPeakAmount) {
+            sPeakAmount.exchange(sAmount);
+            if (gfxPrefs::GfxLoggingPeakTextureUsageEnabled()) {
+                printf_stderr("Peak texture usage: %s\n", FormatBytes(sPeakAmount).c_str());
+            }
+        }
+=======
+    if (StaticPrefs::gfx_logging_texture_usage_enabled()) {
+      printf_stderr("Current texture usage: %s\n",
+                    FormatBytes(sAmount).c_str());
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   } else {
     sAmount += amount;
     if (sAmount > sPeakAmount) {
@@ -73,6 +131,19 @@ std::string FormatBytes(size_t amount) {
       }
     }
   }
+||||||| merged common ancestors
+=======
+  } else {
+    sAmount += amount;
+    if (sAmount > sPeakAmount) {
+      sPeakAmount.exchange(sAmount);
+      if (StaticPrefs::gfx_logging_peak_texture_usage_enabled()) {
+        printf_stderr("Peak texture usage: %s\n",
+                      FormatBytes(sPeakAmount).c_str());
+      }
+    }
+  }
+>>>>>>> upstream-releases
 
   CrashReporter::AnnotateTexturesSize(sAmount);
 }

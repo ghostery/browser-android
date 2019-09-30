@@ -40,10 +40,25 @@ WebGLExtensionEXTColorBufferFloat::WebGLExtensionEXTColorBufferFloat(
 #undef FOO
 }
 
+<<<<<<< HEAD
 /*static*/ bool WebGLExtensionEXTColorBufferFloat::IsSupported(
     const WebGLContext* webgl) {
   const gl::GLContext* gl = webgl->GL();
   return gl->IsSupported(gl::GLFeature::EXT_color_buffer_float);
+||||||| merged common ancestors
+/*static*/ bool
+WebGLExtensionEXTColorBufferFloat::IsSupported(const WebGLContext* webgl)
+{
+    const gl::GLContext* gl = webgl->GL();
+    return gl->IsSupported(gl::GLFeature::EXT_color_buffer_float);
+=======
+/*static*/
+bool WebGLExtensionEXTColorBufferFloat::IsSupported(const WebGLContext* webgl) {
+  if (!webgl->IsWebGL2()) return false;
+
+  const gl::GLContext* gl = webgl->GL();
+  return gl->IsSupported(gl::GLFeature::EXT_color_buffer_float);
+>>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionEXTColorBufferFloat,

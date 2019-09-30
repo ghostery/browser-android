@@ -111,6 +111,7 @@ extern LazyLogModule gPIPNSSLog;
 
 nsNSSSocketInfo::nsNSSSocketInfo(SharedSSLState& aState, uint32_t providerFlags,
                                  uint32_t providerTlsFlags)
+<<<<<<< HEAD
     : mFd(nullptr),
       mCertVerificationState(before_cert_verification),
       mSharedState(aState),
@@ -142,6 +143,73 @@ nsNSSSocketInfo::nsNSSSocketInfo(SharedSSLState& aState, uint32_t providerFlags,
       mSocketCreationTimestamp(TimeStamp::Now()),
       mPlaintextBytesRead(0),
       mClientCert(nullptr) {
+||||||| merged common ancestors
+  : mFd(nullptr),
+    mCertVerificationState(before_cert_verification),
+    mSharedState(aState),
+    mForSTARTTLS(false),
+    mHandshakePending(true),
+    mRememberClientAuthCertificate(false),
+    mPreliminaryHandshakeDone(false),
+    mNPNCompleted(false),
+    mEarlyDataAccepted(false),
+    mDenyClientCert(false),
+    mFalseStartCallbackCalled(false),
+    mFalseStarted(false),
+    mIsFullHandshake(false),
+    mHandshakeCompleted(false),
+    mJoined(false),
+    mSentClientCert(false),
+    mNotedTimeUntilReady(false),
+    mFailedVerification(false),
+    mIsShortWritePending(false),
+    mShortWritePendingByte(0),
+    mShortWriteOriginalAmount(-1),
+    mKEAUsed(nsISSLSocketControl::KEY_EXCHANGE_UNKNOWN),
+    mKEAKeyBits(0),
+    mSSLVersionUsed(nsISSLSocketControl::SSL_VERSION_UNKNOWN),
+    mMACAlgorithmUsed(nsISSLSocketControl::SSL_MAC_UNKNOWN),
+    mBypassAuthentication(false),
+    mProviderFlags(providerFlags),
+    mProviderTlsFlags(providerTlsFlags),
+    mSocketCreationTimestamp(TimeStamp::Now()),
+    mPlaintextBytesRead(0),
+    mClientCert(nullptr)
+{
+=======
+    : mFd(nullptr),
+      mCertVerificationState(before_cert_verification),
+      mSharedState(aState),
+      mForSTARTTLS(false),
+      mHandshakePending(true),
+      mRememberClientAuthCertificate(false),
+      mPreliminaryHandshakeDone(false),
+      mNPNCompleted(false),
+      mEarlyDataAccepted(false),
+      mDenyClientCert(false),
+      mFalseStartCallbackCalled(false),
+      mFalseStarted(false),
+      mIsFullHandshake(false),
+      mHandshakeCompleted(false),
+      mJoined(false),
+      mSentClientCert(false),
+      mNotedTimeUntilReady(false),
+      mFailedVerification(false),
+      mResumed(false),
+      mIsShortWritePending(false),
+      mShortWritePendingByte(0),
+      mShortWriteOriginalAmount(-1),
+      mKEAUsed(nsISSLSocketControl::KEY_EXCHANGE_UNKNOWN),
+      mKEAKeyBits(0),
+      mSSLVersionUsed(nsISSLSocketControl::SSL_VERSION_UNKNOWN),
+      mMACAlgorithmUsed(nsISSLSocketControl::SSL_MAC_UNKNOWN),
+      mBypassAuthentication(false),
+      mProviderFlags(providerFlags),
+      mProviderTlsFlags(providerTlsFlags),
+      mSocketCreationTimestamp(TimeStamp::Now()),
+      mPlaintextBytesRead(0),
+      mClientCert(nullptr) {
+>>>>>>> upstream-releases
   mTLSVersionRange.min = 0;
   mTLSVersionRange.max = 0;
 }
@@ -286,8 +354,9 @@ void nsNSSSocketInfo::SetHandshakeCompleted() {
                                                  : NotAllowedToFalseStart;
 
     // This will include TCP and proxy tunnel wait time
-    Telemetry::AccumulateTimeDelta(Telemetry::SSL_TIME_UNTIL_HANDSHAKE_FINISHED,
-                                   mSocketCreationTimestamp, TimeStamp::Now());
+    Telemetry::AccumulateTimeDelta(
+        Telemetry::SSL_TIME_UNTIL_HANDSHAKE_FINISHED_KEYED_BY_KA, mKeaGroup,
+        mSocketCreationTimestamp, TimeStamp::Now());
 
     // If the handshake is completed for the first time from just 1 callback
     // that means that TLS session resumption must have been used.
@@ -373,9 +442,36 @@ void nsNSSSocketInfo::SetEarlyDataAccepted(bool aAccepted) {
   mEarlyDataAccepted = aAccepted;
 }
 
+<<<<<<< HEAD
+bool nsNSSSocketInfo::GetDenyClientCert() { return mDenyClientCert; }
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsNSSSocketInfo::GetDenyClientCert(bool* aDenyClientCert)
+{
+  *aDenyClientCert = mDenyClientCert;
+  return NS_OK;
+}
+=======
+NS_IMETHODIMP
+nsNSSSocketInfo::GetResumed(bool* aResumed) {
+  *aResumed = mResumed;
+  return NS_OK;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void nsNSSSocketInfo::SetDenyClientCert(bool aDenyClientCert) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsNSSSocketInfo::SetDenyClientCert(bool aDenyClientCert)
+{
+=======
+void nsNSSSocketInfo::SetResumed(bool aResumed) { mResumed = aResumed; }
+
 bool nsNSSSocketInfo::GetDenyClientCert() { return mDenyClientCert; }
 
 void nsNSSSocketInfo::SetDenyClientCert(bool aDenyClientCert) {
+>>>>>>> upstream-releases
   mDenyClientCert = aDenyClientCert;
 }
 
@@ -940,10 +1036,24 @@ nsNSSSocketInfo::GetServerRootCertIsBuiltInRoot(bool* aIsBuiltInRoot) {
 #if defined(DEBUG_SSL_VERBOSE) && defined(DUMP_BUFFER)
 // Dumps a (potentially binary) buffer using SSM_DEBUG.  (We could have used
 // the version in ssltrace.c, but that's specifically tailored to SSLTRACE.)
+<<<<<<< HEAD
 #define DUMPBUF_LINESIZE 24
 static void nsDumpBuffer(unsigned char* buf, int len) {
   char hexbuf[DUMPBUF_LINESIZE * 3 + 1];
   char chrbuf[DUMPBUF_LINESIZE + 1];
+||||||| merged common ancestors
+#define DUMPBUF_LINESIZE 24
+static void
+nsDumpBuffer(unsigned char* buf, int len)
+{
+  char hexbuf[DUMPBUF_LINESIZE*3+1];
+  char chrbuf[DUMPBUF_LINESIZE+1];
+=======
+#  define DUMPBUF_LINESIZE 24
+static void nsDumpBuffer(unsigned char* buf, int len) {
+  char hexbuf[DUMPBUF_LINESIZE * 3 + 1];
+  char chrbuf[DUMPBUF_LINESIZE + 1];
+>>>>>>> upstream-releases
   static const char* hex = "0123456789abcdef";
   int i = 0;
   int l = 0;
@@ -987,9 +1097,21 @@ static void nsDumpBuffer(unsigned char* buf, int len) {
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("%s%s\n", hexbuf, chrbuf));
 }
 
+<<<<<<< HEAD
 #define DEBUG_DUMP_BUFFER(buf, len) nsDumpBuffer(buf, len)
+||||||| merged common ancestors
+#define DEBUG_DUMP_BUFFER(buf,len) nsDumpBuffer(buf,len)
+=======
+#  define DEBUG_DUMP_BUFFER(buf, len) nsDumpBuffer(buf, len)
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define DEBUG_DUMP_BUFFER(buf, len)
+||||||| merged common ancestors
+#define DEBUG_DUMP_BUFFER(buf,len)
+=======
+#  define DEBUG_DUMP_BUFFER(buf, len)
+>>>>>>> upstream-releases
 #endif
 
 namespace {
@@ -1541,9 +1663,21 @@ nsSSLIOLayerHelpers::~nsSSLIOLayerHelpers() {
     Preferences::RemoveObserver(
         mPrefObserver, "security.ssl.treat_unsafe_negotiation_as_broken");
     Preferences::RemoveObserver(mPrefObserver,
+<<<<<<< HEAD
                                 "security.tls.version.fallback-limit");
     Preferences::RemoveObserver(mPrefObserver,
                                 "security.tls.insecure_fallback_hosts");
+||||||| merged common ancestors
+        "security.ssl.treat_unsafe_negotiation_as_broken");
+    Preferences::RemoveObserver(mPrefObserver,
+        "security.tls.version.fallback-limit");
+    Preferences::RemoveObserver(mPrefObserver,
+        "security.tls.insecure_fallback_hosts");
+=======
+                                "security.tls.version.fallback-limit");
+    Preferences::RemoveObserver(mPrefObserver,
+                                "security.tls.insecure_fallback_hosts");
+>>>>>>> upstream-releases
   }
 }
 
@@ -2474,6 +2608,13 @@ static nsresult nsSSLIOLayerSetOptions(PRFileDesc* fd, bool forSTARTTLS,
     return NS_ERROR_FAILURE;
   }
 
+  if (flags & nsISocketProvider::NO_PERMANENT_STORAGE) {
+    if (SECSuccess != SSL_OptionSet(fd, SSL_ENABLE_SESSION_TICKETS, false) ||
+        SECSuccess != SSL_OptionSet(fd, SSL_NO_CACHE, true)) {
+      return NS_ERROR_FAILURE;
+    }
+  }
+
   return NS_OK;
 }
 
@@ -2494,9 +2635,18 @@ nsresult nsSSLIOLayerAddToSocket(int32_t family, const char* host, int32_t port,
     allocatedState = new SharedSSLState(providerTlsFlags);
     sharedState = allocatedState.get();
   } else {
+<<<<<<< HEAD
     sharedState = (providerFlags & nsISocketProvider::NO_PERMANENT_STORAGE)
                       ? PrivateSSLState()
                       : PublicSSLState();
+||||||| merged common ancestors
+    sharedState = (providerFlags & nsISocketProvider::NO_PERMANENT_STORAGE) ? PrivateSSLState() : PublicSSLState();
+=======
+    bool isPrivate = providerFlags & nsISocketProvider::NO_PERMANENT_STORAGE ||
+                     originAttributes.mPrivateBrowsingId !=
+                         OriginAttributes().mPrivateBrowsingId;
+    sharedState = isPrivate ? PrivateSSLState() : PublicSSLState();
+>>>>>>> upstream-releases
   }
 
   nsNSSSocketInfo* infoObject =

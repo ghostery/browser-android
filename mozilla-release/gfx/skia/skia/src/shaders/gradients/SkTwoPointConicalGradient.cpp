@@ -10,7 +10,8 @@
 #include "SkReadBuffer.h"
 #include "SkTwoPointConicalGradient.h"
 #include "SkWriteBuffer.h"
-#include "../../jumper/SkJumper.h"
+
+#include <utility>
 
 #include <utility>
 
@@ -56,9 +57,18 @@ sk_sp<SkShader> SkTwoPointConicalGradient::Create(const SkPoint& c0, SkScalar r0
     Type     gradientType;
 
     if (SkScalarNearlyZero((c0 - c1).length())) {
+<<<<<<< HEAD
         if (SkScalarNearlyZero(SkTMax(r0, r1))) {
             return nullptr; // Degenerate case; avoid dividing by zero.
         }
+||||||| merged common ancestors
+=======
+        if (SkScalarNearlyZero(SkTMax(r0, r1)) || SkScalarNearlyEqual(r0, r1)) {
+            // Degenerate case; avoid dividing by zero. Should have been caught by caller but
+            // just in case, recheck here.
+            return nullptr;
+        }
+>>>>>>> upstream-releases
         // Concentric case: we can pretend we're radial (with a tiny twist).
         const SkScalar scale = sk_ieee_float_divide(1, SkTMax(r0, r1));
         gradientMatrix = SkMatrix::MakeTrans(-c1.x(), -c1.y());
@@ -200,7 +210,7 @@ void SkTwoPointConicalGradient::appendGradientStages(SkArenaAlloc* alloc, SkRast
     }
 
     if (fType == Type::kStrip) {
-        auto* ctx = alloc->make<SkJumper_2PtConicalCtx>();
+        auto* ctx = alloc->make<SkRasterPipeline_2PtConicalCtx>();
         SkScalar scaledR0 = fRadius1 / this->getCenterX1();
         ctx->fP0 = scaledR0 * scaledR0;
         p->append(SkRasterPipeline::xy_to_2pt_conical_strip, ctx);
@@ -209,7 +219,7 @@ void SkTwoPointConicalGradient::appendGradientStages(SkArenaAlloc* alloc, SkRast
         return;
     }
 
-    auto* ctx = alloc->make<SkJumper_2PtConicalCtx>();
+    auto* ctx = alloc->make<SkRasterPipeline_2PtConicalCtx>();
     ctx->fP0 = 1/fFocalData.fR1;
     ctx->fP1 = fFocalData.fFocalX;
 

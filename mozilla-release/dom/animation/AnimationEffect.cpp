@@ -35,8 +35,20 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(AnimationEffect)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 AnimationEffect::AnimationEffect(nsIDocument* aDocument, TimingParams&& aTiming)
     : mDocument(aDocument), mTiming(std::move(aTiming)) {}
+||||||| merged common ancestors
+AnimationEffect::AnimationEffect(nsIDocument* aDocument,
+                                 TimingParams&& aTiming)
+  : mDocument(aDocument)
+  , mTiming(std::move(aTiming))
+{
+}
+=======
+AnimationEffect::AnimationEffect(Document* aDocument, TimingParams&& aTiming)
+    : mDocument(aDocument), mTiming(std::move(aTiming)) {}
+>>>>>>> upstream-releases
 
 AnimationEffect::~AnimationEffect() = default;
 
@@ -47,8 +59,14 @@ bool AnimationEffect::IsCurrent() const {
   }
 
   ComputedTiming computedTiming = GetComputedTiming();
-  return computedTiming.mPhase == ComputedTiming::AnimationPhase::Before ||
-         computedTiming.mPhase == ComputedTiming::AnimationPhase::Active;
+  if (computedTiming.mPhase == ComputedTiming::AnimationPhase::Active) {
+    return true;
+  }
+
+  return (mAnimation->PlaybackRate() > 0 &&
+          computedTiming.mPhase == ComputedTiming::AnimationPhase::Before) ||
+         (mAnimation->PlaybackRate() < 0 &&
+          computedTiming.mPhase == ComputedTiming::AnimationPhase::After);
 }
 
 // https://drafts.csswg.org/web-animations/#in-effect

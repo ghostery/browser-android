@@ -241,9 +241,21 @@ already_AddRefed<gfx::DataSourceSurface> AsyncCanvasRenderer::GetSurface() {
   }
 }
 
+<<<<<<< HEAD
 nsresult AsyncCanvasRenderer::GetInputStream(const char* aMimeType,
                                              const char16_t* aEncoderOptions,
                                              nsIInputStream** aStream) {
+||||||| merged common ancestors
+nsresult
+AsyncCanvasRenderer::GetInputStream(const char *aMimeType,
+                                    const char16_t *aEncoderOptions,
+                                    nsIInputStream **aStream)
+{
+=======
+nsresult AsyncCanvasRenderer::GetInputStream(const char* aMimeType,
+                                             const nsAString& aEncoderOptions,
+                                             nsIInputStream** aStream) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   RefPtr<gfx::DataSourceSurface> surface = GetSurface();
   if (!surface) {

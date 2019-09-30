@@ -18,10 +18,21 @@ namespace mozilla {
 namespace dom {
 
 ChildSHistory::ChildSHistory(nsDocShell* aDocShell)
+<<<<<<< HEAD
     : mDocShell(aDocShell), mHistory(new nsSHistory()) {
   MOZ_ASSERT(mDocShell);
   mHistory->SetRootDocShell(mDocShell);
 }
+||||||| merged common ancestors
+  : mDocShell(aDocShell)
+  , mHistory(new nsSHistory())
+{
+  MOZ_ASSERT(mDocShell);
+  mHistory->SetRootDocShell(mDocShell);
+}
+=======
+    : mDocShell(aDocShell), mHistory(new nsSHistory(aDocShell)) {}
+>>>>>>> upstream-releases
 
 ChildSHistory::~ChildSHistory() {}
 
@@ -85,8 +96,18 @@ JSObject* ChildSHistory::WrapObject(JSContext* cx,
   return ChildSHistory_Binding::Wrap(cx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsISupports* ChildSHistory::GetParentObject() const {
   // We want to get the TabChildMessageManager, which is the
+||||||| merged common ancestors
+nsISupports*
+ChildSHistory::GetParentObject() const
+{
+  // We want to get the TabChildMessageManager, which is the
+=======
+nsISupports* ChildSHistory::GetParentObject() const {
+  // We want to get the BrowserChildMessageManager, which is the
+>>>>>>> upstream-releases
   // messageManager on mDocShell.
   RefPtr<ContentFrameMessageManager> mm;
   if (mDocShell) {

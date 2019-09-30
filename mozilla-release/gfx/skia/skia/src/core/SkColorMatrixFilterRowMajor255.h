@@ -25,15 +25,25 @@ public:
 
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(
-            GrContext*, const GrColorSpaceInfo&) const override;
+            GrRecordingContext*, const GrColorSpaceInfo&) const override;
 #endif
 
+<<<<<<< HEAD
     Factory getFactory() const override { return CreateProc; }
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkColorMatrixFilter)
+
+=======
+>>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
 
 private:
+    SK_FLATTENABLE_HOOKS(SkColorMatrixFilterRowMajor255)
+
     void onAppendStages(SkRasterPipeline*, SkColorSpace*, SkArenaAlloc*,
                         bool shaderIsOpaque) const override;
     static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);

@@ -19,16 +19,41 @@
 #include "nsSprocketLayout.h"
 #include "mozilla/ReflowInput.h"
 
+<<<<<<< HEAD
 nsresult NS_NewGridLayout2(nsIPresShell* aPresShell, nsBoxLayout** aNewLayout) {
   *aNewLayout = new nsGridLayout2(aPresShell);
+||||||| merged common ancestors
+nsresult
+NS_NewGridLayout2( nsIPresShell* aPresShell, nsBoxLayout** aNewLayout)
+{
+  *aNewLayout = new nsGridLayout2(aPresShell);
+=======
+nsresult NS_NewGridLayout2(nsBoxLayout** aNewLayout) {
+  *aNewLayout = new nsGridLayout2();
+>>>>>>> upstream-releases
   NS_IF_ADDREF(*aNewLayout);
 
   return NS_OK;
+<<<<<<< HEAD
 }
 
 nsGridLayout2::nsGridLayout2(nsIPresShell* aPresShell) : nsStackLayout() {}
 
 nsGridLayout2::~nsGridLayout2() {}
+||||||| merged common ancestors
+
+}
+
+nsGridLayout2::nsGridLayout2(nsIPresShell* aPresShell):nsStackLayout()
+{
+}
+
+nsGridLayout2::~nsGridLayout2()
+{
+}
+=======
+}
+>>>>>>> upstream-releases
 
 // static
 void nsGridLayout2::AddOffset(nsIFrame* aChild, nsSize& aSize) {
@@ -72,9 +97,9 @@ void nsGridLayout2::AddWidth(nsSize& aSize, nscoord aSize2,
                              bool aIsHorizontal) {
   nscoord& size = GET_WIDTH(aSize, aIsHorizontal);
 
-  if (size != NS_INTRINSICSIZE) {
-    if (aSize2 == NS_INTRINSICSIZE)
-      size = NS_INTRINSICSIZE;
+  if (size != NS_UNCONSTRAINEDSIZE) {
+    if (aSize2 == NS_UNCONSTRAINEDSIZE)
+      size = NS_UNCONSTRAINEDSIZE;
     else
       size += aSize2;
   }
@@ -155,7 +180,7 @@ nsSize nsGridLayout2::GetXULMaxSize(nsIFrame* aBox, nsBoxLayoutState& aState) {
 
   // if there are no <rows> tags that will sum up our columns,
   // sum up our columns here.
-  nsSize total(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+  nsSize total(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
   nsIFrame* rowsBox = mGrid.GetRowsBox();
   nsIFrame* columnsBox = mGrid.GetColumnsBox();
   if (!rowsBox || !columnsBox) {

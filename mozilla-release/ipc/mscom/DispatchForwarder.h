@@ -15,10 +15,23 @@
 namespace mozilla {
 namespace mscom {
 
+<<<<<<< HEAD
 class DispatchForwarder final : public IDispatch {
  public:
   static HRESULT Create(IInterceptor *aInterceptor,
                         STAUniquePtr<IDispatch> &aTarget, IUnknown **aOutput);
+||||||| merged common ancestors
+class DispatchForwarder final : public IDispatch
+{
+public:
+  static HRESULT Create(IInterceptor* aInterceptor,
+                        STAUniquePtr<IDispatch>& aTarget, IUnknown** aOutput);
+=======
+class DispatchForwarder final : public IDispatch {
+ public:
+  static HRESULT Create(IInterceptor* aInterceptor,
+                        STAUniquePtr<IDispatch>& aTarget, IUnknown** aOutput);
+>>>>>>> upstream-releases
 
   // IUnknown
   STDMETHODIMP QueryInterface(REFIID riid, void **ppv) override;
@@ -27,20 +40,36 @@ class DispatchForwarder final : public IDispatch {
 
   // IDispatch
   STDMETHODIMP GetTypeInfoCount(
-      /* [out] */ __RPC__out UINT *pctinfo) override;
+      /* [out] */ __RPC__out UINT* pctinfo) override;
 
   STDMETHODIMP GetTypeInfo(
       /* [in] */ UINT iTInfo,
       /* [in] */ LCID lcid,
-      /* [out] */ __RPC__deref_out_opt ITypeInfo **ppTInfo) override;
+      /* [out] */ __RPC__deref_out_opt ITypeInfo** ppTInfo) override;
 
   STDMETHODIMP GetIDsOfNames(
       /* [in] */ __RPC__in REFIID riid,
+<<<<<<< HEAD
       /* [size_is][in] */ __RPC__in_ecount_full(cNames) LPOLESTR *rgszNames,
       /* [range][in] */ __RPC__in_range(0, 16384) UINT cNames,
+||||||| merged common ancestors
+      /* [size_is][in] */ __RPC__in_ecount_full(cNames) LPOLESTR *rgszNames,
+      /* [range][in] */ __RPC__in_range(0,16384) UINT cNames,
+=======
+      /* [size_is][in] */ __RPC__in_ecount_full(cNames) LPOLESTR* rgszNames,
+      /* [range][in] */ __RPC__in_range(0, 16384) UINT cNames,
+>>>>>>> upstream-releases
       /* [in] */ LCID lcid,
+<<<<<<< HEAD
       /* [size_is][out] */ __RPC__out_ecount_full(cNames) DISPID *rgDispId)
       override;
+||||||| merged common ancestors
+      /* [size_is][out] */ __RPC__out_ecount_full(cNames) DISPID *rgDispId)
+    override;
+=======
+      /* [size_is][out] */ __RPC__out_ecount_full(cNames) DISPID* rgDispId)
+      override;
+>>>>>>> upstream-releases
 
   STDMETHODIMP Invoke(
       /* [annotation][in] */
@@ -52,17 +81,51 @@ class DispatchForwarder final : public IDispatch {
       /* [annotation][in] */
       _In_ WORD wFlags,
       /* [annotation][out][in] */
+<<<<<<< HEAD
       _In_ DISPPARAMS *pDispParams,
+||||||| merged common ancestors
+      _In_  DISPPARAMS *pDispParams,
+=======
+      _In_ DISPPARAMS* pDispParams,
+>>>>>>> upstream-releases
       /* [annotation][out] */
+<<<<<<< HEAD
       _Out_opt_ VARIANT *pVarResult,
+||||||| merged common ancestors
+      _Out_opt_  VARIANT *pVarResult,
+=======
+      _Out_opt_ VARIANT* pVarResult,
+>>>>>>> upstream-releases
       /* [annotation][out] */
+<<<<<<< HEAD
       _Out_opt_ EXCEPINFO *pExcepInfo,
+||||||| merged common ancestors
+      _Out_opt_  EXCEPINFO *pExcepInfo,
+=======
+      _Out_opt_ EXCEPINFO* pExcepInfo,
+>>>>>>> upstream-releases
       /* [annotation][out] */
+<<<<<<< HEAD
       _Out_opt_ UINT *puArgErr) override;
+||||||| merged common ancestors
+      _Out_opt_  UINT *puArgErr) override;
+=======
+      _Out_opt_ UINT* puArgErr) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   DispatchForwarder(IInterceptor *aInterceptor,
                     STAUniquePtr<IDispatch> &aTarget);
+||||||| merged common ancestors
+private:
+  DispatchForwarder(IInterceptor* aInterceptor,
+                    STAUniquePtr<IDispatch>& aTarget);
+=======
+ private:
+  DispatchForwarder(IInterceptor* aInterceptor,
+                    STAUniquePtr<IDispatch>& aTarget);
+>>>>>>> upstream-releases
   ~DispatchForwarder();
 
  private:

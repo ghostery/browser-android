@@ -24,15 +24,20 @@
 //! a data-structure using this library.
 
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg_attr(not(feature = "std"), feature(alloc))]
-
-#[cfg(not(feature = "std"))]
-extern crate hashmap_core;
 
 #[cfg(not(feature = "std"))]
 #[macro_use]
-extern crate alloc;
+extern crate alloc as std;
+#[cfg(feature = "std")]
+#[macro_use]
+extern crate std;
 
+#[cfg(not(feature = "std"))]
+use hashbrown::HashSet;
+#[cfg(feature = "std")]
+use std::collections::HashSet;
+
+<<<<<<< HEAD
 pub use binary_reader::BinaryReader;
 pub use binary_reader::Range;
 use binary_reader::SectionHeader;
@@ -44,7 +49,44 @@ pub use parser::ParserInput;
 pub use parser::ParserState;
 pub use parser::RelocEntry;
 pub use parser::WasmDecoder;
+||||||| merged common ancestors
+pub use parser::WasmDecoder;
+pub use parser::Parser;
+pub use parser::ParserState;
+pub use parser::ParserInput;
+pub use parser::BinaryReaderError;
+pub use parser::BinaryReader;
+pub use parser::Result;
+pub use parser::Range;
+pub use parser::SectionCode;
+pub use parser::Operator;
+pub use parser::Type;
+pub use parser::CustomSectionKind;
+pub use parser::NameType;
+pub use parser::Naming;
+pub use parser::LocalName;
+pub use parser::NameEntry;
+pub use parser::ExternalKind;
+pub use parser::FuncType;
+pub use parser::ResizableLimits;
+pub use parser::TableType;
+pub use parser::MemoryType;
+pub use parser::GlobalType;
+pub use parser::MemoryImmediate;
+pub use parser::BrTable;
+pub use parser::ImportSectionEntryType;
+pub use parser::RelocType;
+pub use parser::RelocEntry;
+pub use parser::LinkingType;
+pub use parser::Ieee32;
+pub use parser::Ieee64;
+=======
+pub use crate::binary_reader::BinaryReader;
+pub use crate::binary_reader::Range;
+use crate::binary_reader::SectionHeader;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 pub use primitives::BinaryReaderError;
 pub use primitives::BrTable;
 pub use primitives::CustomSectionKind;
@@ -71,7 +113,22 @@ pub use validator::validate;
 pub use validator::ValidatingOperatorParser;
 pub use validator::ValidatingParser;
 pub use validator::WasmModuleResources;
+||||||| merged common ancestors
+pub use validator::ValidatingParser;
+pub use validator::ValidatingOperatorParser;
+pub use validator::WasmModuleResources;
+pub use validator::validate;
+=======
+pub use crate::parser::LocalName;
+pub use crate::parser::NameEntry;
+pub use crate::parser::Parser;
+pub use crate::parser::ParserInput;
+pub use crate::parser::ParserState;
+pub use crate::parser::RelocEntry;
+pub use crate::parser::WasmDecoder;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 pub use readers::CodeSectionReader;
 pub use readers::Data;
 pub use readers::DataSectionReader;
@@ -107,11 +164,98 @@ pub use readers::TableSectionReader;
 pub use readers::TypeSectionReader;
 
 mod binary_reader;
+||||||| merged common ancestors
+mod parser;
+mod validator;
+=======
+pub use crate::primitives::BinaryReaderError;
+pub use crate::primitives::BrTable;
+pub use crate::primitives::CustomSectionKind;
+pub use crate::primitives::ExternalKind;
+pub use crate::primitives::FuncType;
+pub use crate::primitives::GlobalType;
+pub use crate::primitives::Ieee32;
+pub use crate::primitives::Ieee64;
+pub use crate::primitives::ImportSectionEntryType;
+pub use crate::primitives::LinkingType;
+pub use crate::primitives::MemoryImmediate;
+pub use crate::primitives::MemoryType;
+pub use crate::primitives::NameType;
+pub use crate::primitives::Naming;
+pub use crate::primitives::Operator;
+pub use crate::primitives::RelocType;
+pub use crate::primitives::ResizableLimits;
+pub use crate::primitives::Result;
+pub use crate::primitives::SectionCode;
+pub use crate::primitives::TableType;
+pub use crate::primitives::Type;
+pub use crate::primitives::TypeOrFuncType;
+pub use crate::primitives::V128;
+
+pub use crate::validator::validate;
+pub use crate::validator::validate_function_body;
+pub use crate::validator::ValidatingOperatorParser;
+pub use crate::validator::ValidatingParser;
+pub use crate::validator::ValidatingParserConfig;
+
+pub use crate::operators_validator::OperatorValidatorConfig;
+pub use crate::operators_validator::WasmModuleResources;
+
+pub use crate::readers::CodeSectionReader;
+pub use crate::readers::Data;
+pub use crate::readers::DataKind;
+pub use crate::readers::DataSectionReader;
+pub use crate::readers::Element;
+pub use crate::readers::ElementItems;
+pub use crate::readers::ElementItemsReader;
+pub use crate::readers::ElementKind;
+pub use crate::readers::ElementSectionReader;
+pub use crate::readers::Export;
+pub use crate::readers::ExportSectionReader;
+pub use crate::readers::FunctionBody;
+pub use crate::readers::FunctionSectionReader;
+pub use crate::readers::Global;
+pub use crate::readers::GlobalSectionReader;
+pub use crate::readers::Import;
+pub use crate::readers::ImportSectionReader;
+pub use crate::readers::InitExpr;
+pub use crate::readers::LinkingSectionReader;
+pub use crate::readers::LocalsReader;
+pub use crate::readers::MemorySectionReader;
+pub use crate::readers::ModuleReader;
+pub use crate::readers::Name;
+pub use crate::readers::NameSectionReader;
+pub use crate::readers::NamingReader;
+pub use crate::readers::OperatorsReader;
+pub use crate::readers::ProducersField;
+pub use crate::readers::ProducersFieldValue;
+pub use crate::readers::ProducersSectionReader;
+pub use crate::readers::Reloc;
+pub use crate::readers::RelocSectionReader;
+pub use crate::readers::Section;
+pub use crate::readers::SectionIterator;
+pub use crate::readers::SectionIteratorLimited;
+pub use crate::readers::SectionReader;
+pub use crate::readers::SectionWithLimitedItems;
+pub use crate::readers::TableSectionReader;
+pub use crate::readers::TypeSectionReader;
+
+mod binary_reader;
+>>>>>>> upstream-releases
 mod limits;
+<<<<<<< HEAD
 mod parser;
 mod primitives;
 mod readers;
+||||||| merged common ancestors
+=======
+mod operators_validator;
+mod parser;
+mod primitives;
+mod readers;
+>>>>>>> upstream-releases
 mod tests;
+<<<<<<< HEAD
 mod validator;
 
 #[cfg(not(feature = "std"))]
@@ -122,3 +266,16 @@ mod std {
         pub use hashmap_core::HashSet;
     }
 }
+||||||| merged common ancestors
+
+#[cfg(not(feature = "std"))]
+mod std {
+    pub use core::*;
+    pub use alloc::vec;
+    pub mod collections {
+        pub use hashmap_core::HashSet;
+    }
+}
+=======
+mod validator;
+>>>>>>> upstream-releases

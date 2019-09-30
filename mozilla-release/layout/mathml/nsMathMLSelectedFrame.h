@@ -10,7 +10,15 @@
 #include "nsMathMLContainerFrame.h"
 
 class nsMathMLSelectedFrame : public nsMathMLContainerFrame {
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+ public:
+  NS_DECL_ABSTRACT_FRAME(nsMathMLSelectedFrame)
+
+>>>>>>> upstream-releases
   NS_IMETHOD
   TransmitAutomaticData() override;
 
@@ -22,6 +30,7 @@ class nsMathMLSelectedFrame : public nsMathMLContainerFrame {
   virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                                 const nsDisplayListSet& aLists) override;
 
+<<<<<<< HEAD
   virtual nsresult Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
                          ReflowOutput& aDesiredSize) override;
 
@@ -42,15 +51,80 @@ class nsMathMLSelectedFrame : public nsMathMLContainerFrame {
       : nsMathMLContainerFrame(aStyle, aID),
         mSelectedFrame(nullptr),
         mInvalidMarkup(false) {}
+||||||| merged common ancestors
+  virtual nsresult
+  Place(DrawTarget*          aDrawTarget,
+        bool                 aPlaceOrigin,
+        ReflowOutput& aDesiredSize) override;
+
+  virtual mozilla::LogicalSize
+  ComputeSize(gfxContext *aRenderingContext,
+              mozilla::WritingMode aWritingMode,
+              const mozilla::LogicalSize& aCBSize,
+              nscoord aAvailableISize,
+              const mozilla::LogicalSize& aMargin,
+              const mozilla::LogicalSize& aBorder,
+              const mozilla::LogicalSize& aPadding,
+              ComputeSizeFlags aFlags) override;
+
+  virtual void
+  Reflow(nsPresContext*          aPresContext,
+         ReflowOutput&     aDesiredSize,
+         const ReflowInput& aReflowInput,
+         nsReflowStatus&          aStatus) override;
+
+  virtual nsQueryFrame::FrameIID GetFrameId() override = 0;
+
+protected:
+  nsMathMLSelectedFrame(ComputedStyle* aStyle, ClassID aID) :
+    nsMathMLContainerFrame(aStyle, aID),
+    mSelectedFrame(nullptr),
+    mInvalidMarkup(false) {}
+=======
+  virtual nsresult Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
+                         ReflowOutput& aDesiredSize) override;
+
+  virtual mozilla::LogicalSize ComputeSize(
+      gfxContext* aRenderingContext, mozilla::WritingMode aWritingMode,
+      const mozilla::LogicalSize& aCBSize, nscoord aAvailableISize,
+      const mozilla::LogicalSize& aMargin, const mozilla::LogicalSize& aBorder,
+      const mozilla::LogicalSize& aPadding, ComputeSizeFlags aFlags) override;
+
+  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+                      const ReflowInput& aReflowInput,
+                      nsReflowStatus& aStatus) override;
+
+ protected:
+  nsMathMLSelectedFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                        ClassID aID)
+      : nsMathMLContainerFrame(aStyle, aPresContext, aID),
+        mSelectedFrame(nullptr),
+        mInvalidMarkup(false) {}
+>>>>>>> upstream-releases
   virtual ~nsMathMLSelectedFrame();
 
   virtual nsIFrame* GetSelectedFrame() = 0;
+<<<<<<< HEAD
   nsIFrame* mSelectedFrame;
 
   bool mInvalidMarkup;
+||||||| merged common ancestors
+  nsIFrame*       mSelectedFrame;
 
+  bool            mInvalidMarkup;
+=======
+  nsIFrame* mSelectedFrame;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   void* operator new(size_t, nsIPresShell*) MOZ_MUST_OVERRIDE = delete;
+||||||| merged common ancestors
+private:
+  void* operator new(size_t, nsIPresShell*) MOZ_MUST_OVERRIDE = delete;
+=======
+  bool mInvalidMarkup;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsMathMLSelectedFrame_h___ */

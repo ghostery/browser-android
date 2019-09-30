@@ -8,13 +8,17 @@
 #include "gfxRect.h"
 #include "SVGObserverUtils.h"
 #include "nsSVGGFrame.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/SVGSwitchElement.h"
 #include "nsSVGUtils.h"
+#include "SVGTextFrame.h"
+#include "nsSVGContainerFrame.h"
 
 using namespace mozilla;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
 
+<<<<<<< HEAD
 class nsSVGSwitchFrame final : public nsSVGGFrame {
   friend nsIFrame* NS_NewSVGSwitchFrame(nsIPresShell* aPresShell,
                                         ComputedStyle* aStyle);
@@ -22,8 +26,32 @@ class nsSVGSwitchFrame final : public nsSVGGFrame {
  protected:
   explicit nsSVGSwitchFrame(ComputedStyle* aStyle)
       : nsSVGGFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+class nsSVGSwitchFrame final : public nsSVGGFrame
+{
+  friend nsIFrame*
+  NS_NewSVGSwitchFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGSwitchFrame(ComputedStyle* aStyle)
+    : nsSVGGFrame(aStyle, kClassID)
+  {}
+=======
+class nsSVGSwitchFrame final : public nsSVGGFrame {
+  friend nsIFrame* NS_NewSVGSwitchFrame(mozilla::PresShell* aPresShell,
+                                        ComputedStyle* aStyle);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit nsSVGSwitchFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsSVGGFrame(aStyle, aPresContext, kClassID) {}
 
  public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGSwitchFrame)
 
 #ifdef DEBUG
@@ -41,24 +69,54 @@ class nsSVGSwitchFrame final : public nsSVGGFrame {
                                 const nsDisplayListSet& aLists) override;
 
   // nsSVGDisplayableFrame interface:
+<<<<<<< HEAD
   virtual void PaintSVG(gfxContext& aContext, const gfxMatrix& aTransform,
                         imgDrawingParams& aPackage,
+||||||| merged common ancestors
+  virtual void PaintSVG(gfxContext& aContext,
+                        const gfxMatrix& aTransform,
+                        imgDrawingParams& aPackage,
+=======
+  virtual void PaintSVG(gfxContext& aContext, const gfxMatrix& aTransform,
+                        imgDrawingParams& aImgParams,
+>>>>>>> upstream-releases
                         const nsIntRect* aDirtyRect = nullptr) override;
   nsIFrame* GetFrameForPoint(const gfxPoint& aPoint) override;
   virtual void ReflowSVG() override;
   virtual SVGBBox GetBBoxContribution(const Matrix& aToBBoxUserspace,
                                       uint32_t aFlags) override;
 
+<<<<<<< HEAD
  private:
   nsIFrame* GetActiveChildFrame();
+||||||| merged common ancestors
+private:
+  nsIFrame *GetActiveChildFrame();
+=======
+ private:
+  nsIFrame* GetActiveChildFrame();
+  void ReflowAllSVGTextFramesInsideNonActiveChildren(nsIFrame* aActiveChild);
+  static void AlwaysReflowSVGTextFrameDoForOneKid(nsIFrame* aKid);
+>>>>>>> upstream-releases
 };
 
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGSwitchFrame(nsIPresShell* aPresShell,
                                ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGSwitchFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGSwitchFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGSwitchFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGSwitchFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsSVGSwitchFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGSwitchFrame)
@@ -98,8 +156,15 @@ void nsSVGSwitchFrame::PaintSVG(gfxContext& aContext,
   if (kid) {
     gfxMatrix tm = aTransform;
     if (kid->GetContent()->IsSVGElement()) {
+<<<<<<< HEAD
       tm = static_cast<nsSVGElement*>(kid->GetContent())
                ->PrependLocalTransformsTo(tm, eUserSpaceToParent);
+||||||| merged common ancestors
+      tm = static_cast<nsSVGElement*>(kid->GetContent())->
+             PrependLocalTransformsTo(tm, eUserSpaceToParent);
+=======
+      tm = nsSVGUtils::GetTransformMatrixInUserSpace(kid) * tm;
+>>>>>>> upstream-releases
     }
     nsSVGUtils::PaintFrameWithEffects(kid, aContext, tm, aImgParams,
                                       aDirtyRect);
@@ -118,10 +183,22 @@ nsIFrame* nsSVGSwitchFrame::GetFrameForPoint(const gfxPoint& aPoint) {
     // Transform the point from our SVG user space to our child's.
     gfxPoint point = aPoint;
     gfxMatrix m =
+<<<<<<< HEAD
         static_cast<const nsSVGElement*>(GetContent())
             ->PrependLocalTransformsTo(gfxMatrix(), eChildToUserSpace);
     m = static_cast<const nsSVGElement*>(kid->GetContent())
             ->PrependLocalTransformsTo(m, eUserSpaceToParent);
+||||||| merged common ancestors
+      static_cast<const nsSVGElement*>(GetContent())->
+        PrependLocalTransformsTo(gfxMatrix(), eChildToUserSpace);
+    m = static_cast<const nsSVGElement*>(kid->GetContent())->
+          PrependLocalTransformsTo(m, eUserSpaceToParent);
+=======
+        static_cast<const SVGElement*>(GetContent())
+            ->PrependLocalTransformsTo(gfxMatrix(), eChildToUserSpace);
+    m = static_cast<const SVGElement*>(kid->GetContent())
+            ->PrependLocalTransformsTo(m, eUserSpaceToParent);
+>>>>>>> upstream-releases
     if (!m.IsIdentity()) {
       if (!m.Invert()) {
         return nullptr;
@@ -134,7 +211,59 @@ nsIFrame* nsSVGSwitchFrame::GetFrameForPoint(const gfxPoint& aPoint) {
   return nullptr;
 }
 
+<<<<<<< HEAD
 void nsSVGSwitchFrame::ReflowSVG() {
+||||||| merged common ancestors
+void
+nsSVGSwitchFrame::ReflowSVG()
+{
+=======
+static bool shouldReflowSVGTextFrameInside(nsIFrame* aFrame) {
+  return aFrame->IsFrameOfType(nsIFrame::eSVG | nsIFrame::eSVGContainer) ||
+         aFrame->IsSVGForeignObjectFrame() ||
+         !aFrame->IsFrameOfType(nsIFrame::eSVG);
+}
+
+void nsSVGSwitchFrame::AlwaysReflowSVGTextFrameDoForOneKid(nsIFrame* aKid) {
+  if (!NS_SUBTREE_DIRTY(aKid)) {
+    return;
+  }
+
+  if (aKid->IsSVGTextFrame()) {
+    MOZ_ASSERT(!aKid->HasAnyStateBits(NS_FRAME_IS_NONDISPLAY),
+               "A non-display SVGTextFrame directly contained in a display "
+               "container?");
+    static_cast<SVGTextFrame*>(aKid)->ReflowSVG();
+  } else if (shouldReflowSVGTextFrameInside(aKid)) {
+    if (!aKid->HasAnyStateBits(NS_FRAME_IS_NONDISPLAY)) {
+      for (nsIFrame* kid : aKid->PrincipalChildList()) {
+        AlwaysReflowSVGTextFrameDoForOneKid(kid);
+      }
+    } else {
+      // This child is in a nondisplay context, something like:
+      // <switch>
+      //   ...
+      //   <g><mask><text></text></mask></g>
+      // </switch>
+      // We should not call ReflowSVG on it.
+      nsSVGContainerFrame::ReflowSVGNonDisplayText(aKid);
+    }
+  }
+}
+
+void nsSVGSwitchFrame::ReflowAllSVGTextFramesInsideNonActiveChildren(
+    nsIFrame* aActiveChild) {
+  for (nsIFrame* kid = mFrames.FirstChild(); kid; kid = kid->GetNextSibling()) {
+    if (aActiveChild == kid) {
+      continue;
+    }
+
+    AlwaysReflowSVGTextFrameDoForOneKid(kid);
+  }
+}
+
+void nsSVGSwitchFrame::ReflowSVG() {
+>>>>>>> upstream-releases
   NS_ASSERTION(nsSVGUtils::OuterSVGIsCallingReflowSVG(this),
                "This call is probably a wasteful mistake");
 
@@ -163,7 +292,15 @@ void nsSVGSwitchFrame::ReflowSVG() {
 
   nsOverflowAreas overflowRects;
 
+<<<<<<< HEAD
   nsIFrame* child = GetActiveChildFrame();
+||||||| merged common ancestors
+  nsIFrame *child = GetActiveChildFrame();
+=======
+  nsIFrame* child = GetActiveChildFrame();
+  ReflowAllSVGTextFramesInsideNonActiveChildren(child);
+
+>>>>>>> upstream-releases
   nsSVGDisplayableFrame* svgChild = do_QueryFrame(child);
   if (svgChild) {
     MOZ_ASSERT(!(child->GetStateBits() & NS_FRAME_IS_NONDISPLAY),
@@ -174,6 +311,10 @@ void nsSVGSwitchFrame::ReflowSVG() {
     // nsLayoutUtils::UnionChildOverflow since SVG frame's all use the same
     // frame list, and we're iterating over that list now anyway.
     ConsiderChildOverflow(overflowRects, child);
+  } else if (child && shouldReflowSVGTextFrameInside(child)) {
+    MOZ_ASSERT(child->HasAnyStateBits(NS_FRAME_IS_NONDISPLAY),
+               "Check for this explicitly in the |if|, then");
+    ReflowSVGNonDisplayText(child);
   }
 
   if (isFirstReflow) {
@@ -199,8 +340,17 @@ SVGBBox nsSVGSwitchFrame::GetBBoxContribution(const Matrix& aToBBoxUserspace,
     nsIContent* content = kid->GetContent();
     gfxMatrix transform = ThebesMatrix(aToBBoxUserspace);
     if (content->IsSVGElement()) {
+<<<<<<< HEAD
       transform = static_cast<nsSVGElement*>(content)->PrependLocalTransformsTo(
           transform);
+||||||| merged common ancestors
+      transform = static_cast<nsSVGElement*>(content)->
+                    PrependLocalTransformsTo(transform);
+=======
+      transform = static_cast<SVGElement*>(content)->PrependLocalTransformsTo(
+                      {}, eChildToUserSpace) *
+                  nsSVGUtils::GetTransformMatrixInUserSpace(kid) * transform;
+>>>>>>> upstream-releases
     }
     return svgKid->GetBBoxContribution(ToMatrix(transform), aFlags);
   }

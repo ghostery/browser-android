@@ -22,8 +22,8 @@
 #include "mozilla/dom/FakePluginTagInitBinding.h"
 
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
-#include "mozilla/SandboxSettings.h"
-#include "nsCocoaFeatures.h"
+#  include "mozilla/SandboxSettings.h"
+#  include "nsCocoaFeatures.h"
 #endif
 
 using mozilla::dom::FakePluginTagInit;
@@ -122,6 +122,7 @@ static nsCString MakePrefNameForPlugin(const char* const subname,
   return pref;
 }
 
+<<<<<<< HEAD
 static nsresult CStringArrayToXPCArray(nsTArray<nsCString>& aArray,
                                        uint32_t* aCount, char16_t*** aResults) {
   uint32_t count = aArray.Length();
@@ -142,6 +143,36 @@ static nsresult CStringArrayToXPCArray(nsTArray<nsCString>& aArray,
 }
 
 static nsCString GetStatePrefNameForPlugin(nsIInternalPluginTag* aTag) {
+||||||| merged common ancestors
+static nsresult
+CStringArrayToXPCArray(nsTArray<nsCString> & aArray,
+                       uint32_t* aCount,
+                       char16_t*** aResults)
+{
+  uint32_t count = aArray.Length();
+  if (!count) {
+    *aResults = nullptr;
+    *aCount = 0;
+    return NS_OK;
+  }
+
+  *aResults =
+    static_cast<char16_t**>(moz_xmalloc(count * sizeof(**aResults)));
+  *aCount = count;
+
+  for (uint32_t i = 0; i < count; i++) {
+    (*aResults)[i] = ToNewUnicode(NS_ConvertUTF8toUTF16(aArray[i]));
+  }
+
+  return NS_OK;
+}
+
+static nsCString
+GetStatePrefNameForPlugin(nsIInternalPluginTag* aTag)
+{
+=======
+static nsCString GetStatePrefNameForPlugin(nsIInternalPluginTag* aTag) {
+>>>>>>> upstream-releases
   return MakePrefNameForPlugin("state", aTag);
 }
 
@@ -370,14 +401,14 @@ void nsPluginTag::InitSandboxLevel() {
         Preferences::GetInt("dom.ipc.plugins.sandbox-level.default");
   }
 
-#if defined(_AMD64_)
+#  if defined(_AMD64_)
   // Level 3 is now the default NPAPI sandbox level for 64-bit flash.
   // We permit the user to drop the sandbox level by at most 1.  This should
   // be kept up to date with the default value in the firefox.js pref file.
   if (mIsFlashPlugin && mSandboxLevel < 2) {
     mSandboxLevel = 2;
   }
-#endif /* defined(_AMD64_) */
+#  endif /* defined(_AMD64_) */
 
 #elif defined(XP_MACOSX) && defined(MOZ_SANDBOX)
   if (mIsFlashPlugin) {
@@ -462,7 +493,20 @@ nsPluginTag::GetDescription(nsACString& aDescription) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPluginTag::GetFilename(nsACString& aFileName) {
+||||||| merged common ancestors
+nsPluginTag::GetFilename(nsACString& aFileName)
+{
+=======
+nsPluginTag::GetIsFlashPlugin(bool* aIsFlash) {
+  *aIsFlash = mIsFlashPlugin;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsPluginTag::GetFilename(nsACString& aFileName) {
+>>>>>>> upstream-releases
   aFileName = mFileName;
   return NS_OK;
 }
@@ -533,9 +577,23 @@ nsPluginTag::GetClicktoplay(bool* aClicktoplay) {
 NS_IMETHODIMP
 nsPluginTag::GetEnabledState(uint32_t* aEnabledState) {
   int32_t enabledState;
+<<<<<<< HEAD
   nsresult rv =
       Preferences::GetInt(GetStatePrefNameForPlugin(this).get(), &enabledState);
   if (NS_SUCCEEDED(rv) && enabledState >= nsIPluginTag::STATE_DISABLED &&
+||||||| merged common ancestors
+  nsresult rv = Preferences::GetInt(GetStatePrefNameForPlugin(this).get(),
+                                    &enabledState);
+  if (NS_SUCCEEDED(rv) &&
+      enabledState >= nsIPluginTag::STATE_DISABLED &&
+=======
+  nsresult rv =
+      Preferences::GetInt(GetStatePrefNameForPlugin(this).get(), &enabledState);
+  if (enabledState == nsIPluginTag::STATE_ENABLED && mIsFlashPlugin) {
+    enabledState = nsIPluginTag::STATE_CLICKTOPLAY;
+  }
+  if (NS_SUCCEEDED(rv) && enabledState >= nsIPluginTag::STATE_DISABLED &&
+>>>>>>> upstream-releases
       enabledState <= nsIPluginTag::STATE_ENABLED) {
     *aEnabledState = (uint32_t)enabledState;
     return rv;
@@ -545,6 +603,9 @@ nsPluginTag::GetEnabledState(uint32_t* aEnabledState) {
       mIsFromExtension ? kPrefDefaultEnabledStateXpi : kPrefDefaultEnabledState;
 
   enabledState = Preferences::GetInt(pref, nsIPluginTag::STATE_ENABLED);
+  if (enabledState == nsIPluginTag::STATE_ENABLED && mIsFlashPlugin) {
+    enabledState = nsIPluginTag::STATE_CLICKTOPLAY;
+  }
   if (enabledState >= nsIPluginTag::STATE_DISABLED &&
       enabledState <= nsIPluginTag::STATE_ENABLED) {
     *aEnabledState = (uint32_t)enabledState;
@@ -555,8 +616,21 @@ nsPluginTag::GetEnabledState(uint32_t* aEnabledState) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPluginTag::SetEnabledState(uint32_t aEnabledState) {
   if (aEnabledState >= ePluginState_MaxValue) return NS_ERROR_ILLEGAL_VALUE;
+||||||| merged common ancestors
+nsPluginTag::SetEnabledState(uint32_t aEnabledState)
+{
+  if (aEnabledState >= ePluginState_MaxValue)
+    return NS_ERROR_ILLEGAL_VALUE;
+=======
+nsPluginTag::SetEnabledState(uint32_t aEnabledState) {
+  if (aEnabledState >= ePluginState_MaxValue) return NS_ERROR_ILLEGAL_VALUE;
+  if (aEnabledState == nsIPluginTag::STATE_ENABLED && mIsFlashPlugin) {
+    aEnabledState = nsIPluginTag::STATE_CLICKTOPLAY;
+  }
+>>>>>>> upstream-releases
   uint32_t oldState = nsIPluginTag::STATE_DISABLED;
   GetEnabledState(&oldState);
   if (oldState != aEnabledState) {
@@ -591,18 +665,48 @@ void nsPluginTag::SetPluginState(PluginState state) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPluginTag::GetMimeTypes(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mMimeTypes, aCount, aResults);
+||||||| merged common ancestors
+nsPluginTag::GetMimeTypes(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mMimeTypes, aCount, aResults);
+=======
+nsPluginTag::GetMimeTypes(nsTArray<nsCString>& aResults) {
+  aResults = mMimeTypes;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPluginTag::GetMimeDescriptions(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mMimeDescriptions, aCount, aResults);
+||||||| merged common ancestors
+nsPluginTag::GetMimeDescriptions(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mMimeDescriptions, aCount, aResults);
+=======
+nsPluginTag::GetMimeDescriptions(nsTArray<nsCString>& aResults) {
+  aResults = mMimeDescriptions;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsPluginTag::GetExtensions(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mExtensions, aCount, aResults);
+||||||| merged common ancestors
+nsPluginTag::GetExtensions(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mExtensions, aCount, aResults);
+=======
+nsPluginTag::GetExtensions(nsTArray<nsCString>& aResults) {
+  aResults = mExtensions;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 bool nsPluginTag::HasSameNameAndMimes(const nsPluginTag* aPluginTag) const {
@@ -773,7 +877,20 @@ nsFakePluginTag::GetDescription(/* utf-8 */ nsACString& aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFakePluginTag::GetFilename(/* utf-8 */ nsACString& aResult) {
+||||||| merged common ancestors
+nsFakePluginTag::GetFilename(/* utf-8 */ nsACString& aResult)
+{
+=======
+nsFakePluginTag::GetIsFlashPlugin(bool* aIsFlash) {
+  *aIsFlash = false;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsFakePluginTag::GetFilename(/* utf-8 */ nsACString& aResult) {
+>>>>>>> upstream-releases
   aResult = mFileName;
   return NS_OK;
 }
@@ -864,18 +981,48 @@ nsFakePluginTag::SetEnabledState(uint32_t aEnabledState) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFakePluginTag::GetMimeTypes(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mMimeTypes, aCount, aResults);
+||||||| merged common ancestors
+nsFakePluginTag::GetMimeTypes(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mMimeTypes, aCount, aResults);
+=======
+nsFakePluginTag::GetMimeTypes(nsTArray<nsCString>& aResults) {
+  aResults = mMimeTypes;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFakePluginTag::GetMimeDescriptions(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mMimeDescriptions, aCount, aResults);
+||||||| merged common ancestors
+nsFakePluginTag::GetMimeDescriptions(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mMimeDescriptions, aCount, aResults);
+=======
+nsFakePluginTag::GetMimeDescriptions(nsTArray<nsCString>& aResults) {
+  aResults = mMimeDescriptions;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFakePluginTag::GetExtensions(uint32_t* aCount, char16_t*** aResults) {
   return CStringArrayToXPCArray(mExtensions, aCount, aResults);
+||||||| merged common ancestors
+nsFakePluginTag::GetExtensions(uint32_t* aCount, char16_t*** aResults)
+{
+  return CStringArrayToXPCArray(mExtensions, aCount, aResults);
+=======
+nsFakePluginTag::GetExtensions(nsTArray<nsCString>& aResults) {
+  aResults = mExtensions;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

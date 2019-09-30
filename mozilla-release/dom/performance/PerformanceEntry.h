@@ -29,16 +29,54 @@ class PerformanceEntry : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(PerformanceEntry)
 
+<<<<<<< HEAD
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
-
+||||||| merged common ancestors
+  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
+=======
   nsISupports* GetParentObject() const { return mParent; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  nsISupports* GetParentObject() const { return mParent; }
+||||||| merged common ancestors
+  nsISupports* GetParentObject() const
+  {
+    return mParent;
+  }
+=======
   void GetName(nsAString& aName) const { aName = mName; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void GetName(nsAString& aName) const { aName = mName; }
+||||||| merged common ancestors
+  void GetName(nsAString& aName) const
+  {
+    aName = mName;
+  }
+=======
+  const nsAString& GetName() const { return mName; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   const nsAString& GetName() const { return mName; }
 
   void SetName(const nsAString& aName) { mName = aName; }
+||||||| merged common ancestors
+  const nsAString& GetName() const
+  {
+    return mName;
+  }
+
+  void SetName(const nsAString& aName)
+  {
+    mName = aName;
+  }
+=======
+  void SetName(const nsAString& aName) { mName = aName; }
+>>>>>>> upstream-releases
 
   void GetEntryType(nsAString& aEntryType) const { aEntryType = mEntryType; }
 

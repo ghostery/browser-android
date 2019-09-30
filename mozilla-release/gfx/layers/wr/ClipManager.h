@@ -60,26 +60,66 @@ class ClipManager {
   void BeginList(const StackingContextHelper& aStackingContext);
   void EndList(const StackingContextHelper& aStackingContext);
 
-  void BeginItem(nsDisplayItem* aItem,
-                 const StackingContextHelper& aStackingContext);
+  wr::WrSpaceAndClipChain SwitchItem(nsDisplayItem* aItem);
   ~ClipManager();
 
   void PushOverrideForASR(const ActiveScrolledRoot* aASR,
+<<<<<<< HEAD
                           const wr::WrClipId& aClipId);
+||||||| merged common ancestors
+                          const Maybe<wr::WrClipId>& aClipId);
+=======
+                          const wr::WrSpatialId& aSpatialId);
+>>>>>>> upstream-releases
   void PopOverrideForASR(const ActiveScrolledRoot* aASR);
 
+<<<<<<< HEAD
  private:
   Maybe<wr::WrClipId> ClipIdAfterOverride(const Maybe<wr::WrClipId>& aClipId);
+||||||| merged common ancestors
+private:
+  Maybe<wr::WrClipId> ClipIdAfterOverride(const Maybe<wr::WrClipId>& aClipId);
+=======
+ private:
+  wr::WrSpatialId SpatialIdAfterOverride(const wr::WrSpatialId& aSpatialId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Maybe<wr::WrClipId> GetScrollLayer(const ActiveScrolledRoot* aASR);
+||||||| merged common ancestors
+  Maybe<wr::WrClipId>
+  GetScrollLayer(const ActiveScrolledRoot* aASR);
+=======
+  Maybe<wr::WrSpaceAndClip> GetScrollLayer(const ActiveScrolledRoot* aASR);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Maybe<wr::WrClipId> DefineScrollLayers(const ActiveScrolledRoot* aASR,
                                          nsDisplayItem* aItem,
                                          const StackingContextHelper& aSc);
+||||||| merged common ancestors
+  Maybe<wr::WrClipId>
+  DefineScrollLayers(const ActiveScrolledRoot* aASR,
+                     nsDisplayItem* aItem,
+                     const StackingContextHelper& aSc);
+=======
+  Maybe<wr::WrSpaceAndClip> DefineScrollLayers(const ActiveScrolledRoot* aASR,
+                                               nsDisplayItem* aItem);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Maybe<wr::WrClipChainId> DefineClipChain(const DisplayItemClipChain* aChain,
                                            int32_t aAppUnitsPerDevPixel,
                                            const StackingContextHelper& aSc);
+||||||| merged common ancestors
+  Maybe<wr::WrClipChainId>
+  DefineClipChain(const DisplayItemClipChain* aChain,
+                  int32_t aAppUnitsPerDevPixel,
+                  const StackingContextHelper& aSc);
+=======
+  Maybe<wr::WrClipChainId> DefineClipChain(const DisplayItemClipChain* aChain,
+                                           int32_t aAppUnitsPerDevPixel);
+>>>>>>> upstream-releases
 
   WebRenderLayerManager* MOZ_NON_OWNING_REF mManager;
   wr::DisplayListBuilder* mBuilder;
@@ -116,7 +156,15 @@ class ClipManager {
   // ClipManager to do the necessary lookup. Note that there theoretically might
   // be multiple different "Y" clips (in case of nested cache overrides), which
   // is why we need a stack.
+<<<<<<< HEAD
   std::unordered_map<wr::WrClipId, std::stack<wr::WrClipId>> mASROverride;
+||||||| merged common ancestors
+  std::unordered_map<wr::WrClipId,
+                     std::stack<Maybe<wr::WrClipId>>,
+                     wr::WrClipId::HashFn> mASROverride;
+=======
+  std::unordered_map<wr::WrSpatialId, std::stack<wr::WrSpatialId>> mASROverride;
+>>>>>>> upstream-releases
 
   // This holds some clip state for a single nsDisplayItem
   struct ItemClips {
@@ -129,16 +177,29 @@ class ClipManager {
     bool mSeparateLeaf;
 
     // These are the "outputs" - they are pushed to WR as needed
-    Maybe<wr::WrClipId> mScrollId;
+    wr::WrSpatialId mScrollId;
     Maybe<wr::WrClipChainId> mClipChainId;
 
+<<<<<<< HEAD
     // State tracking
     bool mApplied;
 
     void Apply(wr::DisplayListBuilder* aBuilder, int32_t aAppUnitsPerDevPixel);
     void Unapply(wr::DisplayListBuilder* aBuilder);
+||||||| merged common ancestors
+    // State tracking
+    bool mApplied;
+
+    void Apply(wr::DisplayListBuilder* aBuilder,
+               int32_t aAppUnitsPerDevPixel);
+    void Unapply(wr::DisplayListBuilder* aBuilder);
+=======
+    void UpdateSeparateLeaf(wr::DisplayListBuilder& aBuilder,
+                            int32_t aAppUnitsPerDevPixel);
+>>>>>>> upstream-releases
     bool HasSameInputs(const ItemClips& aOther);
     void CopyOutputsFrom(const ItemClips& aOther);
+    wr::WrSpaceAndClipChain GetSpaceAndClipChain() const;
   };
 
   // A stack of ItemClips corresponding to the nsDisplayItem ancestry. Each

@@ -7,7 +7,14 @@
 //! registering fonts found in the blob (see `prepare_request`).
 
 use webrender::api::*;
+<<<<<<< HEAD
 use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8, gecko_profiler_start_marker, gecko_profiler_end_marker};
+||||||| merged common ancestors
+use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8};
+=======
+use webrender::api::units::{BlobDirtyRect, BlobToDeviceTranslation};
+use bindings::{ByteSlice, MutByteSlice, wr_moz2d_render_cb, ArcVecU8, gecko_profiler_start_marker, gecko_profiler_end_marker};
+>>>>>>> upstream-releases
 use rayon::ThreadPool;
 use rayon::prelude::*;
 
@@ -30,6 +37,8 @@ use foreign_types::ForeignType;
 
 #[cfg(not(any(target_os = "macos", target_os = "windows")))]
 use std::ffi::CString;
+#[cfg(not(any(target_os = "macos", target_os = "windows")))]
+use std::os::unix::ffi::OsStrExt;
 
 /// Local print-debugging utility
 macro_rules! dlog {
@@ -466,7 +475,7 @@ impl Drop for GeckoProfilerMarker {
 }
 
 impl AsyncBlobImageRasterizer for Moz2dBlobRasterizer {
-   
+
     fn rasterize(&mut self, requests: &[BlobImageParams], low_priority: bool) -> Vec<(BlobImageRequest, BlobImageResult)> {
         // All we do here is spin up our workers to callback into gecko to replay the drawing commands.
         let _marker = GeckoProfilerMarker::new(b"BlobRasterization\0");
@@ -474,6 +483,7 @@ impl AsyncBlobImageRasterizer for Moz2dBlobRasterizer {
         let requests: Vec<Job> = requests.into_iter().map(|params| {
             let command = &self.blob_commands[&params.request.key];
             let blob = Arc::clone(&command.data);
+            assert!(params.descriptor.rect.size.width > 0 && params.descriptor.rect.size.height  > 0);
             Job {
                 request: params.request,
                 descriptor: params.descriptor,
@@ -515,11 +525,21 @@ fn rasterize_blob(job: Job) -> (BlobImageRequest, BlobImageResult) {
 
     let mut output = vec![0u8; buf_size];
 
+<<<<<<< HEAD
     let dirty_rect = match job.dirty_rect {
         DirtyRect::Partial(rect) => Some(rect),
         DirtyRect::All => None,
     };
 
+||||||| merged common ancestors
+=======
+    let dirty_rect = match job.dirty_rect {
+        DirtyRect::Partial(rect) => Some(rect),
+        DirtyRect::All => None,
+    };
+    assert!(descriptor.rect.size.width > 0 && descriptor.rect.size.height  > 0);
+
+>>>>>>> upstream-releases
     let result = unsafe {
         if wr_moz2d_render_cb(
             ByteSlice::new(&job.commands[..]),
@@ -546,7 +566,7 @@ fn rasterize_blob(job: Job) -> (BlobImageRequest, BlobImageResult) {
         }
     };
 
-    (job.request, result)    
+    (job.request, result)
 }
 
 impl BlobImageHandler for Moz2dBlobImageHandler {
@@ -587,7 +607,7 @@ impl BlobImageHandler for Moz2dBlobImageHandler {
         self.blob_commands.remove(&key);
     }
 
-    fn create_blob_rasterizer(&mut self) -> Box<AsyncBlobImageRasterizer> {
+    fn create_blob_rasterizer(&mut self) -> Box<dyn AsyncBlobImageRasterizer> {
         Box::new(Moz2dBlobRasterizer {
             workers: Arc::clone(&self.workers),
             blob_commands: self.blob_commands.clone(),
@@ -608,7 +628,7 @@ impl BlobImageHandler for Moz2dBlobImageHandler {
 
     fn prepare_resources(
         &mut self,
-        resources: &BlobImageResources,
+        resources: &dyn BlobImageResources,
         requests: &[BlobImageParams]
     ) {
         for params in requests {
@@ -652,12 +672,11 @@ impl Moz2dBlobImageHandler {
     /// Does early preprocessing of a blob's resources.
     ///
     /// Currently just sets up fonts found in the blob.
-    fn prepare_request(&self, blob: &[u8], resources: &BlobImageResources) {
+    fn prepare_request(&self, blob: &[u8], resources: &dyn BlobImageResources) {
         #[cfg(target_os = "windows")]
         fn process_native_font_handle(key: FontKey, handle: &NativeFontHandle) {
-            let system_fc = dwrote::FontCollection::system();
-            let font = system_fc.get_font_from_descriptor(handle).unwrap();
-            let face = font.create_font_face();
+            let file = dwrote::FontFile::new_from_path(&handle.path).unwrap();
+            let face = file.create_face(handle.index, dwrote::DWRITE_FONT_SIMULATIONS_NONE).unwrap();
             unsafe { AddNativeFontHandle(key, face.as_ptr() as *mut c_void, 0) };
         }
 
@@ -668,13 +687,13 @@ impl Moz2dBlobImageHandler {
 
         #[cfg(not(any(target_os = "macos", target_os = "windows")))]
         fn process_native_font_handle(key: FontKey, handle: &NativeFontHandle) {
-            let cstr = CString::new(handle.pathname.clone()).unwrap();
+            let cstr = CString::new(handle.path.as_os_str().as_bytes()).unwrap();
             unsafe { AddNativeFontHandle(key, cstr.as_ptr() as *mut c_void, handle.index) };
         }
 
         fn process_fonts(
             mut extra_data: BufReader,
-            resources: &BlobImageResources,
+            resources: &dyn BlobImageResources,
             unscaled_fonts: &mut Vec<FontKey>,
             scaled_fonts: &mut Vec<FontInstanceKey>,
         ) {

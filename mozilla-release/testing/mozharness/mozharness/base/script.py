@@ -55,8 +55,8 @@ from io import BytesIO
 import mozinfo
 from mozprocess import ProcessHandler
 from mozharness.base.config import BaseConfig
-from mozharness.base.log import SimpleFileLogger, MultiFileLogger, \
-    LogMixin, OutputParser, DEBUG, INFO, ERROR, FATAL
+from mozharness.base.log import MultiFileLogger, SimpleFileLogger, ConsoleLogger, \
+    LogMixin, OutputParser, DEBUG, INFO, ERROR, FATAL, WARNING
 
 
 class ContentLengthMismatch(Exception):
@@ -820,8 +820,10 @@ class ScriptMixin(PlatformMixin):
                      level=error_level, exit_code=exit_code)
             return -1
         except shutil.Error, e:
+            # ERROR level ends up reporting the failure to treeherder &
+            # pollutes the failure summary list.
             self.log("shutil error: %s" % str(e),
-                     level=error_level, exit_code=exit_code)
+                     level=WARNING, exit_code=exit_code)
             return -1
         return 0
 
@@ -1456,6 +1458,14 @@ class ScriptMixin(PlatformMixin):
                             break
                         parser.add_lines(line)
                 returncode = p.returncode
+        except KeyboardInterrupt:
+            level = error_level
+            if halt_on_failure:
+                level = FATAL
+            self.log("Process interrupted by the user, killing process with pid %s" % p.pid,
+                     level=level)
+            p.kill()
+            return -1
         except OSError, e:
             level = error_level
             if halt_on_failure:
@@ -2173,15 +2183,17 @@ class BaseScript(ScriptMixin, LogMixin, object):
             "log_to_console": True,
             "append_to_log": False,
         }
-        log_type = self.config.get("log_type", "multi")
+        log_type = self.config.get("log_type", "console")
         for key in log_config.keys():
             value = self.config.get(key, None)
             if value is not None:
                 log_config[key] = value
         if log_type == "multi":
             self.log_obj = MultiFileLogger(**log_config)
-        else:
+        elif log_type == "simple":
             self.log_obj = SimpleFileLogger(**log_config)
+        else:
+            self.log_obj = ConsoleLogger(**log_config)
 
     def action_message(self, message):
         self.info("[mozharness: %sZ] %s" % (

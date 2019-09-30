@@ -12,12 +12,13 @@
 #include "mozilla/dom/ImageDocumentBinding.h"
 #include "mozilla/dom/HTMLImageElement.h"
 #include "mozilla/dom/MouseEvent.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/StaticPrefs.h"
 #include "nsRect.h"
 #include "nsIImageLoadingContent.h"
 #include "nsGenericHTMLElement.h"
 #include "nsDocShell.h"
-#include "nsIDocumentInlines.h"
+#include "DocumentInlines.h"
 #include "nsDOMTokenList.h"
 #include "nsIDOMEventListener.h"
 #include "nsIFrame.h"
@@ -26,7 +27,6 @@
 #include "imgILoader.h"
 #include "imgIContainer.h"
 #include "imgINotificationObserver.h"
-#include "nsIPresShell.h"
 #include "nsPresContext.h"
 #include "nsIChannel.h"
 #include "nsIContentPolicy.h"
@@ -68,7 +68,14 @@ ImageListener::ImageListener(ImageDocument* aDocument)
 ImageListener::~ImageListener() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ImageListener::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
+||||||| merged common ancestors
+ImageListener::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
+{
+=======
+ImageListener::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(mDocument, NS_ERROR_FAILURE);
 
   ImageDocument* imgDoc = static_cast<ImageDocument*>(mDocument.get());
@@ -87,7 +94,7 @@ ImageListener::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
   nsAutoCString mimeType;
   channel->GetContentType(mimeType);
 
-  nsCOMPtr<nsILoadInfo> loadInfo = channel->GetLoadInfo();
+  nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
   // query the corresponding arguments for the channel loadinfo and pass
   // it on to the temporary loadinfo used for content policy checks.
   nsCOMPtr<nsINode> requestingNode = domWindow->GetFrameElementInternal();
@@ -99,10 +106,24 @@ ImageListener::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
         channel, getter_AddRefs(loadingPrincipal));
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsILoadInfo> secCheckLoadInfo = new net::LoadInfo(
       loadingPrincipal, loadInfo ? loadInfo->TriggeringPrincipal() : nullptr,
       requestingNode, nsILoadInfo::SEC_ONLY_FOR_EXPLICIT_CONTENTSEC_CHECK,
       nsIContentPolicy::TYPE_INTERNAL_IMAGE);
+||||||| merged common ancestors
+  nsCOMPtr<nsILoadInfo> secCheckLoadInfo =
+    new net::LoadInfo(loadingPrincipal,
+                      loadInfo ? loadInfo->TriggeringPrincipal() : nullptr,
+                      requestingNode,
+                      nsILoadInfo::SEC_ONLY_FOR_EXPLICIT_CONTENTSEC_CHECK,
+                      nsIContentPolicy::TYPE_INTERNAL_IMAGE);
+=======
+  nsCOMPtr<nsILoadInfo> secCheckLoadInfo = new net::LoadInfo(
+      loadingPrincipal, loadInfo->TriggeringPrincipal(), requestingNode,
+      nsILoadInfo::SEC_ONLY_FOR_EXPLICIT_CONTENTSEC_CHECK,
+      nsIContentPolicy::TYPE_INTERNAL_IMAGE);
+>>>>>>> upstream-releases
 
   int16_t decision = nsIContentPolicy::ACCEPT;
   nsresult rv = NS_CheckContentProcessPolicy(
@@ -124,17 +145,24 @@ ImageListener::OnStartRequest(nsIRequest* request, nsISupports* ctxt) {
     imageLoader->LoadImageWithChannel(channel, getter_AddRefs(mNextStream));
   }
 
-  return MediaDocumentStreamListener::OnStartRequest(request, ctxt);
+  return MediaDocumentStreamListener::OnStartRequest(request);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ImageListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aCtxt,
                              nsresult aStatus) {
+||||||| merged common ancestors
+ImageListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aCtxt, nsresult aStatus)
+{
+=======
+ImageListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
+>>>>>>> upstream-releases
   ImageDocument* imgDoc = static_cast<ImageDocument*>(mDocument.get());
-  nsContentUtils::DispatchChromeEvent(imgDoc, static_cast<nsIDocument*>(imgDoc),
+  nsContentUtils::DispatchChromeEvent(imgDoc, ToSupports(imgDoc),
                                       NS_LITERAL_STRING("ImageContentLoaded"),
                                       CanBubble::eYes, Cancelable::eYes);
-  return MediaDocumentStreamListener::OnStopRequest(aRequest, aCtxt, aStatus);
+  return MediaDocumentStreamListener::OnStopRequest(aRequest, aStatus);
 }
 
 ImageDocument::ImageDocument()
@@ -403,12 +431,12 @@ void ImageDocument::ScrollImageTo(int32_t aX, int32_t aY, bool restoreImage) {
     FlushPendingNotifications(FlushType::Layout);
   }
 
-  nsCOMPtr<nsIPresShell> shell = GetShell();
-  if (!shell) {
+  RefPtr<PresShell> presShell = GetPresShell();
+  if (!presShell) {
     return;
   }
 
-  nsIScrollableFrame* sf = shell->GetRootScrollFrameAsScrollable();
+  nsIScrollableFrame* sf = presShell->GetRootScrollFrameAsScrollable();
   if (!sf) {
     return;
   }
@@ -420,11 +448,23 @@ void ImageDocument::ScrollImageTo(int32_t aX, int32_t aY, bool restoreImage) {
     return;
   }
   nsRect portRect = sf->GetScrollPortRect();
+<<<<<<< HEAD
   sf->ScrollTo(
       nsPoint(
           nsPresContext::CSSPixelsToAppUnits(aX / ratio) - portRect.width / 2,
           nsPresContext::CSSPixelsToAppUnits(aY / ratio) - portRect.height / 2),
       nsIScrollableFrame::INSTANT);
+||||||| merged common ancestors
+  sf->ScrollTo(nsPoint(nsPresContext::CSSPixelsToAppUnits(aX/ratio) - portRect.width/2,
+                       nsPresContext::CSSPixelsToAppUnits(aY/ratio) - portRect.height/2),
+               nsIScrollableFrame::INSTANT);
+=======
+  sf->ScrollTo(
+      nsPoint(
+          nsPresContext::CSSPixelsToAppUnits(aX / ratio) - portRect.width / 2,
+          nsPresContext::CSSPixelsToAppUnits(aY / ratio) - portRect.height / 2),
+      ScrollMode::Instant);
+>>>>>>> upstream-releases
 }
 
 void ImageDocument::RestoreImage() {
@@ -475,6 +515,7 @@ ImageDocument::DOMToggleImageSize() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void ImageDocument::NotifyPossibleTitleChange(bool aBoundTitleElement) {
   if (!mHasCustomTitle && !mTitleUpdateInProgress) {
     mHasCustomTitle = true;
@@ -483,6 +524,17 @@ void ImageDocument::NotifyPossibleTitleChange(bool aBoundTitleElement) {
   nsIDocument::NotifyPossibleTitleChange(aBoundTitleElement);
 }
 
+||||||| merged common ancestors
+=======
+void ImageDocument::NotifyPossibleTitleChange(bool aBoundTitleElement) {
+  if (!mHasCustomTitle && !mTitleUpdateInProgress) {
+    mHasCustomTitle = true;
+  }
+
+  Document::NotifyPossibleTitleChange(aBoundTitleElement);
+}
+
+>>>>>>> upstream-releases
 NS_IMETHODIMP
 ImageDocument::Notify(imgIRequest* aRequest, int32_t aType,
                       const nsIntRect* aData) {
@@ -581,11 +633,18 @@ nsresult ImageDocument::OnLoadComplete(imgIRequest* aRequest,
   if (NS_FAILED(aStatus) && mStringBundle && mImageContent) {
     nsAutoCString src;
     mDocumentURI->GetSpec(src);
+<<<<<<< HEAD
     NS_ConvertUTF8toUTF16 srcString(src);
     const char16_t* formatString[] = {srcString.get()};
+||||||| merged common ancestors
+    NS_ConvertUTF8toUTF16 srcString(src);
+    const char16_t* formatString[] = { srcString.get() };
+=======
+    AutoTArray<nsString, 1> formatString;
+    CopyUTF8toUTF16(src, *formatString.AppendElement());
+>>>>>>> upstream-releases
     nsAutoString errorMsg;
-    mStringBundle->FormatStringFromName("InvalidImage", formatString, 1,
-                                        errorMsg);
+    mStringBundle->FormatStringFromName("InvalidImage", formatString, errorMsg);
 
     mImageContent->SetAttr(kNameSpaceID_None, nsGkAtoms::alt, errorMsg, false);
   }
@@ -640,13 +699,29 @@ void ImageDocument::UpdateSizeFromLayout() {
   nsIntSize oldSize(mImageWidth, mImageHeight);
   IntrinsicSize newSize = contentFrame->GetIntrinsicSize();
 
+<<<<<<< HEAD
   if (newSize.width.GetUnit() == eStyleUnit_Coord) {
     mImageWidth =
         nsPresContext::AppUnitsToFloatCSSPixels(newSize.width.GetCoordValue());
+||||||| merged common ancestors
+  if (newSize.width.GetUnit() == eStyleUnit_Coord) {
+    mImageWidth = nsPresContext::AppUnitsToFloatCSSPixels(newSize.width.GetCoordValue());
+=======
+  if (newSize.width) {
+    mImageWidth = nsPresContext::AppUnitsToFloatCSSPixels(*newSize.width);
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   if (newSize.height.GetUnit() == eStyleUnit_Coord) {
     mImageHeight =
         nsPresContext::AppUnitsToFloatCSSPixels(newSize.height.GetCoordValue());
+||||||| merged common ancestors
+  if (newSize.height.GetUnit() == eStyleUnit_Coord) {
+    mImageHeight = nsPresContext::AppUnitsToFloatCSSPixels(newSize.height.GetCoordValue());
+=======
+  if (newSize.height) {
+    mImageHeight = nsPresContext::AppUnitsToFloatCSSPixels(*newSize.height);
+>>>>>>> upstream-releases
   }
 
   // Ensure that our information about overflow is up-to-date if needed.
@@ -661,7 +736,7 @@ nsresult ImageDocument::CreateSyntheticDocument() {
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Add the image element
-  Element* body = GetBodyElement();
+  RefPtr<Element> body = GetBodyElement();
   if (!body) {
     NS_WARNING("no body on image document!");
     return NS_ERROR_FAILURE;
@@ -787,11 +862,18 @@ void ImageDocument::UpdateTitleAndCharset() {
 
   nsAutoString status;
   if (mImageIsResized) {
-    nsAutoString ratioStr;
-    ratioStr.AppendInt(NSToCoordFloor(GetRatio() * 100));
+    AutoTArray<nsString, 1> formatString;
+    formatString.AppendElement()->AppendInt(NSToCoordFloor(GetRatio() * 100));
 
+<<<<<<< HEAD
     const char16_t* formatString[1] = {ratioStr.get()};
     mStringBundle->FormatStringFromName("ScaledImage", formatString, 1, status);
+||||||| merged common ancestors
+    const char16_t* formatString[1] = { ratioStr.get() };
+    mStringBundle->FormatStringFromName("ScaledImage", formatString, 1, status);
+=======
+    mStringBundle->FormatStringFromName("ScaledImage", formatString, status);
+>>>>>>> upstream-releases
   }
 
   static const char* const formatNames[4] = {
@@ -836,9 +918,9 @@ float ImageDocument::GetZoomLevel() {
 #if defined(MOZ_WIDGET_ANDROID)
 float ImageDocument::GetResolution() {
   float resolution = mOriginalResolution;
-  nsCOMPtr<nsIPresShell> shell = GetShell();
-  if (shell) {
-    resolution = shell->GetResolution();
+  RefPtr<PresShell> presShell = GetPresShell();
+  if (presShell) {
+    resolution = presShell->GetResolution();
   }
   return resolution;
 }
@@ -847,8 +929,18 @@ float ImageDocument::GetResolution() {
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 nsresult NS_NewImageDocument(nsIDocument** aResult) {
   mozilla::dom::ImageDocument* doc = new mozilla::dom::ImageDocument();
+||||||| merged common ancestors
+nsresult
+NS_NewImageDocument(nsIDocument** aResult)
+{
+  mozilla::dom::ImageDocument* doc = new mozilla::dom::ImageDocument();
+=======
+nsresult NS_NewImageDocument(mozilla::dom::Document** aResult) {
+  auto* doc = new mozilla::dom::ImageDocument();
+>>>>>>> upstream-releases
   NS_ADDREF(doc);
 
   nsresult rv = doc->Init();

@@ -24,27 +24,45 @@ already_AddRefed<DOMRect> nsDOMCaretPosition::GetClientRect() const {
     return nullptr;
   }
 
-  RefPtr<DOMRect> rect;
-  RefPtr<nsRange> domRange;
   nsCOMPtr<nsINode> node;
-
   if (mAnonymousContentNode) {
     node = mAnonymousContentNode;
   } else {
     node = mOffsetNode;
   }
 
+<<<<<<< HEAD
   nsresult creationRv = nsRange::CreateRange(node, mOffset, node, mOffset,
                                              getter_AddRefs<nsRange>(domRange));
   if (!NS_SUCCEEDED(creationRv)) {
+||||||| merged common ancestors
+  nsresult creationRv = nsRange::CreateRange(node, mOffset, node,
+                                             mOffset,
+                                             getter_AddRefs<nsRange>(domRange));
+  if (!NS_SUCCEEDED(creationRv)) {
+=======
+  RefPtr<nsRange> range =
+      nsRange::Create(node, mOffset, node, mOffset, IgnoreErrors());
+  if (!range) {
+>>>>>>> upstream-releases
     return nullptr;
   }
+<<<<<<< HEAD
 
   NS_ASSERTION(domRange,
                "unable to retrieve valid dom range from CaretPosition");
 
   rect = domRange->GetBoundingClientRect(false);
 
+||||||| merged common ancestors
+
+  NS_ASSERTION(domRange, "unable to retrieve valid dom range from CaretPosition");
+
+  rect = domRange->GetBoundingClientRect(false);
+
+=======
+  RefPtr<DOMRect> rect = range->GetBoundingClientRect(false);
+>>>>>>> upstream-releases
   return rect.forget();
 }
 

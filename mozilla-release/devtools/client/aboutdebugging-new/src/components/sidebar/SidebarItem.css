@@ -11,11 +11,42 @@
 .sidebar-item {
   color: var(--sidebar-text-color);
   border-radius: 2px;
+<<<<<<< HEAD
   height: var(--category-height);
   padding-inline-end: var(--category-padding);
   padding-inline-start: var(--category-padding);
   transition: background-color var(--category-transition-duration);
+||||||| merged common ancestors
+  padding-inline-end: 10px;
+  padding-inline-start: 10px;
+  transition: background-color 150ms;
+=======
+  padding-inline-end: var(--category-padding);
+  padding-inline-start: var(--category-padding);
+  transition: background-color var(--category-transition-duration);
+>>>>>>> upstream-releases
   -moz-user-select: none;
+}
+
+<<<<<<< HEAD
+.sidebar-item__link {
+  display: block;
+  height: 100%;
+}
+
+.sidebar-item__link,
+.sidebar-item__link:hover {
+  color: inherit; /* do not apply usual link colors, but grab this element parent's */
+}
+
+||||||| merged common ancestors
+=======
+.sidebar-item--tall {
+  height: var(--category-height);
+}
+
+.sidebar-item--condensed {
+  height: calc(var(--base-unit) * 9);
 }
 
 .sidebar-item__link {
@@ -28,8 +59,15 @@
   color: inherit; /* do not apply usual link colors, but grab this element parent's */
 }
 
+>>>>>>> upstream-releases
 .sidebar-item:not(.sidebar-item--selectable) {
+<<<<<<< HEAD
   color: var(--grey-40);
+||||||| merged common ancestors
+  opacity: 0.5;
+=======
+  color: var(--grey-50);
+>>>>>>> upstream-releases
 }
 
 .sidebar-item--selectable:hover {
@@ -39,8 +77,17 @@
 .sidebar-item--selected {
   color: var(--sidebar-selected-color);
 }
+<<<<<<< HEAD
 
 .sidebar-item--breathe {
   margin-block-start: calc(2 * var(--base-distance));
   margin-block-end: calc(2 * var(--base-distance));
 }
+||||||| merged common ancestors
+=======
+
+.sidebar-item--breathe {
+  margin-block-start: calc(6 * var(--base-unit));
+  margin-block-end: calc(2 * var(--base-unit));
+}
+>>>>>>> upstream-releases

@@ -44,6 +44,7 @@ NS_INTERFACE_MAP_BEGIN(CacheFileOutputStream)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIOutputStream)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 CacheFileOutputStream::CacheFileOutputStream(
     CacheFile *aFile, CacheOutputCloseListener *aCloseListener,
     bool aAlternativeData)
@@ -54,6 +55,30 @@ CacheFileOutputStream::CacheFileOutputStream(
       mAlternativeData(aAlternativeData),
       mStatus(NS_OK),
       mCallbackFlags(0) {
+||||||| merged common ancestors
+CacheFileOutputStream::CacheFileOutputStream(CacheFile *aFile,
+                                             CacheOutputCloseListener *aCloseListener,
+                                             bool aAlternativeData)
+  : mFile(aFile)
+  , mCloseListener(aCloseListener)
+  , mPos(0)
+  , mClosed(false)
+  , mAlternativeData(aAlternativeData)
+  , mStatus(NS_OK)
+  , mCallbackFlags(0)
+{
+=======
+CacheFileOutputStream::CacheFileOutputStream(
+    CacheFile* aFile, CacheOutputCloseListener* aCloseListener,
+    bool aAlternativeData)
+    : mFile(aFile),
+      mCloseListener(aCloseListener),
+      mPos(0),
+      mClosed(false),
+      mAlternativeData(aAlternativeData),
+      mStatus(NS_OK),
+      mCallbackFlags(0) {
+>>>>>>> upstream-releases
   LOG(("CacheFileOutputStream::CacheFileOutputStream() [this=%p]", this));
 
   if (mAlternativeData) {
@@ -80,8 +105,17 @@ CacheFileOutputStream::Flush() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::Write(const char *aBuf, uint32_t aCount,
                              uint32_t *_retval) {
+||||||| merged common ancestors
+CacheFileOutputStream::Write(const char * aBuf, uint32_t aCount,
+                             uint32_t *_retval)
+{
+=======
+CacheFileOutputStream::Write(const char* aBuf, uint32_t aCount,
+                             uint32_t* _retval) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(("CacheFileOutputStream::Write() [this=%p, count=%d]", this, aCount));
@@ -154,29 +188,66 @@ CacheFileOutputStream::Write(const char *aBuf, uint32_t aCount,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::WriteFrom(nsIInputStream *aFromStream, uint32_t aCount,
                                  uint32_t *_retval) {
   LOG(
       ("CacheFileOutputStream::WriteFrom() - NOT_IMPLEMENTED [this=%p, from=%p"
        ", count=%d]",
        this, aFromStream, aCount));
+||||||| merged common ancestors
+CacheFileOutputStream::WriteFrom(nsIInputStream *aFromStream, uint32_t aCount,
+                                 uint32_t *_retval)
+{
+  LOG(("CacheFileOutputStream::WriteFrom() - NOT_IMPLEMENTED [this=%p, from=%p"
+       ", count=%d]", this, aFromStream, aCount));
+=======
+CacheFileOutputStream::WriteFrom(nsIInputStream* aFromStream, uint32_t aCount,
+                                 uint32_t* _retval) {
+  LOG(
+      ("CacheFileOutputStream::WriteFrom() - NOT_IMPLEMENTED [this=%p, from=%p"
+       ", count=%d]",
+       this, aFromStream, aCount));
+>>>>>>> upstream-releases
 
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::WriteSegments(nsReadSegmentFun aReader, void *aClosure,
                                      uint32_t aCount, uint32_t *_retval) {
   LOG(
       ("CacheFileOutputStream::WriteSegments() - NOT_IMPLEMENTED [this=%p, "
        "count=%d]",
        this, aCount));
+||||||| merged common ancestors
+CacheFileOutputStream::WriteSegments(nsReadSegmentFun aReader, void *aClosure,
+                                     uint32_t aCount, uint32_t *_retval)
+{
+  LOG(("CacheFileOutputStream::WriteSegments() - NOT_IMPLEMENTED [this=%p, "
+       "count=%d]", this, aCount));
+=======
+CacheFileOutputStream::WriteSegments(nsReadSegmentFun aReader, void* aClosure,
+                                     uint32_t aCount, uint32_t* _retval) {
+  LOG(
+      ("CacheFileOutputStream::WriteSegments() - NOT_IMPLEMENTED [this=%p, "
+       "count=%d]",
+       this, aCount));
+>>>>>>> upstream-releases
 
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::IsNonBlocking(bool *_retval) {
+||||||| merged common ancestors
+CacheFileOutputStream::IsNonBlocking(bool *_retval)
+{
+=======
+CacheFileOutputStream::IsNonBlocking(bool* _retval) {
+>>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }
@@ -221,9 +292,21 @@ nsresult CacheFileOutputStream::CloseWithStatusLocked(nsresult aStatus) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::AsyncWait(nsIOutputStreamCallback *aCallback,
                                  uint32_t aFlags, uint32_t aRequestedCount,
                                  nsIEventTarget *aEventTarget) {
+||||||| merged common ancestors
+CacheFileOutputStream::AsyncWait(nsIOutputStreamCallback *aCallback,
+                                 uint32_t aFlags,
+                                 uint32_t aRequestedCount,
+                                 nsIEventTarget *aEventTarget)
+{
+=======
+CacheFileOutputStream::AsyncWait(nsIOutputStreamCallback* aCallback,
+                                 uint32_t aFlags, uint32_t aRequestedCount,
+                                 nsIEventTarget* aEventTarget) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   LOG(
@@ -295,7 +378,14 @@ CacheFileOutputStream::SetEOF() {
 
 // nsITellableStream
 NS_IMETHODIMP
+<<<<<<< HEAD
 CacheFileOutputStream::Tell(int64_t *_retval) {
+||||||| merged common ancestors
+CacheFileOutputStream::Tell(int64_t *_retval)
+{
+=======
+CacheFileOutputStream::Tell(int64_t* _retval) {
+>>>>>>> upstream-releases
   CacheFileAutoLock lock(mFile);
 
   if (mClosed) {
@@ -315,27 +405,74 @@ CacheFileOutputStream::Tell(int64_t *_retval) {
 }
 
 // CacheFileChunkListener
+<<<<<<< HEAD
 nsresult CacheFileOutputStream::OnChunkRead(nsresult aResult,
                                             CacheFileChunk *aChunk) {
+||||||| merged common ancestors
+nsresult
+CacheFileOutputStream::OnChunkRead(nsresult aResult, CacheFileChunk *aChunk)
+{
+=======
+nsresult CacheFileOutputStream::OnChunkRead(nsresult aResult,
+                                            CacheFileChunk* aChunk) {
+>>>>>>> upstream-releases
   MOZ_CRASH("CacheFileOutputStream::OnChunkRead should not be called!");
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileOutputStream::OnChunkWritten(nsresult aResult,
                                                CacheFileChunk *aChunk) {
   MOZ_CRASH("CacheFileOutputStream::OnChunkWritten should not be called!");
+||||||| merged common ancestors
+nsresult
+CacheFileOutputStream::OnChunkWritten(nsresult aResult, CacheFileChunk *aChunk)
+{
+  MOZ_CRASH(
+    "CacheFileOutputStream::OnChunkWritten should not be called!");
+=======
+nsresult CacheFileOutputStream::OnChunkWritten(nsresult aResult,
+                                               CacheFileChunk* aChunk) {
+  MOZ_CRASH("CacheFileOutputStream::OnChunkWritten should not be called!");
+>>>>>>> upstream-releases
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileOutputStream::OnChunkAvailable(nsresult aResult,
                                                  uint32_t aChunkIdx,
                                                  CacheFileChunk *aChunk) {
   MOZ_CRASH("CacheFileOutputStream::OnChunkAvailable should not be called!");
+||||||| merged common ancestors
+nsresult
+CacheFileOutputStream::OnChunkAvailable(nsresult aResult,
+                                        uint32_t aChunkIdx,
+                                        CacheFileChunk *aChunk)
+{
+  MOZ_CRASH(
+    "CacheFileOutputStream::OnChunkAvailable should not be called!");
+=======
+nsresult CacheFileOutputStream::OnChunkAvailable(nsresult aResult,
+                                                 uint32_t aChunkIdx,
+                                                 CacheFileChunk* aChunk) {
+  MOZ_CRASH("CacheFileOutputStream::OnChunkAvailable should not be called!");
+>>>>>>> upstream-releases
   return NS_ERROR_UNEXPECTED;
 }
 
+<<<<<<< HEAD
 nsresult CacheFileOutputStream::OnChunkUpdated(CacheFileChunk *aChunk) {
   MOZ_CRASH("CacheFileOutputStream::OnChunkUpdated should not be called!");
+||||||| merged common ancestors
+nsresult
+CacheFileOutputStream::OnChunkUpdated(CacheFileChunk *aChunk)
+{
+  MOZ_CRASH(
+    "CacheFileOutputStream::OnChunkUpdated should not be called!");
+=======
+nsresult CacheFileOutputStream::OnChunkUpdated(CacheFileChunk* aChunk) {
+  MOZ_CRASH("CacheFileOutputStream::OnChunkUpdated should not be called!");
+>>>>>>> upstream-releases
   return NS_ERROR_UNEXPECTED;
 }
 

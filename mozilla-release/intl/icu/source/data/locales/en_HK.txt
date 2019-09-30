@@ -2,7 +2,13 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en_HK{
     %%Parent{"en_001"}
+<<<<<<< HEAD
     Version{"2.1.43.65"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -105,6 +111,13 @@ en_HK{
                     d{"d/M/y – d/M/y"}
                     y{"d/M/y – d/M/y"}
                 }
+            }
+        }
+    }
+    fields{
+        week{
+            relative{
+                "1"{"next week"}
             }
         }
     }

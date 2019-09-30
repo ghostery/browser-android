@@ -75,13 +75,22 @@ private:
         void invalidate() {
             fVertexBufferUniqueID.makeInvalid();
             fDivisor = kInvalidDivisor;
+            fUsingCpuBuffer = false;
         }
 
         GrGpuResource::UniqueID   fVertexBufferUniqueID;
+<<<<<<< HEAD
         GrVertexAttribType        fCPUType;
         GrSLType                  fGPUType;
+||||||| merged common ancestors
+        GrVertexAttribType        fType;
+=======
+        bool                      fUsingCpuBuffer;
+        GrVertexAttribType        fCPUType;
+        GrSLType                  fGPUType;
+>>>>>>> upstream-releases
         GrGLsizei                 fStride;
-        size_t                    fOffset;
+        const GrGLvoid*           fOffset;
         int                       fDivisor;
     };
 

@@ -422,5 +422,11 @@ uz_Cyrl{
         one{"{0} {1}"}
         other{"{0} {1}"}
     }
+<<<<<<< HEAD
     Version{"2.1.43.2"}
+||||||| merged common ancestors
+    Version{"2.1.41.97"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
 }

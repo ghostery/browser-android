@@ -8,6 +8,7 @@
 #define xpcpublic_h
 
 #include "jsapi.h"
+#include "js/BuildId.h"  // JS::BuildIdCharVector
 #include "js/HeapAPI.h"
 #include "js/GCAPI.h"
 #include "js/Proxy.h"
@@ -18,7 +19,6 @@
 #include "nsIURI.h"
 #include "nsIPrincipal.h"
 #include "nsIGlobalObject.h"
-#include "nsPIDOMWindow.h"
 #include "nsWrapperCache.h"
 #include "nsString.h"
 #include "nsTArray.h"
@@ -30,14 +30,26 @@
 #include "mozilla/Preferences.h"
 
 class nsGlobalWindowInner;
+class nsIGlobalObject;
 class nsIPrincipal;
 class nsIHandleReportCallback;
+struct nsXPTInterfaceInfo;
 
 namespace mozilla {
+class BasePrincipal;
+
 namespace dom {
 class Exception;
+<<<<<<< HEAD
 }
 }  // namespace mozilla
+||||||| merged common ancestors
+}
+}
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 typedef void (*xpcGCCallback)(JSGCStatus status);
 
@@ -90,8 +102,6 @@ bool IsUAWidgetCompartment(JS::Compartment* compartment);
 bool IsUAWidgetScope(JS::Realm* realm);
 bool IsInUAWidgetScope(JSObject* obj);
 
-bool IsInSandboxCompartment(JSObject* obj);
-
 bool MightBeWebContentCompartment(JS::Compartment* compartment);
 
 void SetCompartmentChangedDocumentDomain(JS::Compartment* compartment);
@@ -125,6 +135,7 @@ inline JSObject* GetXBLScopeOrGlobal(JSContext* cx, JSObject* obj) {
 
 // Returns whether XBL scopes have been explicitly disabled for code running
 // in this compartment. See the comment around mAllowContentXBLScope.
+<<<<<<< HEAD
 bool AllowContentXBLScope(JS::Realm* realm);
 
 // Returns whether we will use an XBL scope for this realm. This is
@@ -132,14 +143,49 @@ bool AllowContentXBLScope(JS::Realm* realm);
 // does not have the side-effect of eagerly creating the XBL scope if it does
 // not already exist.
 bool UseContentXBLScope(JS::Realm* realm);
+||||||| merged common ancestors
+bool
+AllowContentXBLScope(JS::Realm* realm);
 
+// Returns whether we will use an XBL scope for this realm. This is
+// semantically equivalent to comparing global != GetXBLScope(global), but it
+// does not have the side-effect of eagerly creating the XBL scope if it does
+// not already exist.
+bool
+UseContentXBLScope(JS::Realm* realm);
+=======
+bool AllowContentXBLScope(JS::Realm* realm);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 // Clear out the content XBL scope (if any) on the given global.  This will
 // force creation of a new one if one is needed again.
 void ClearContentXBLScope(JSObject* global);
+||||||| merged common ancestors
+// Clear out the content XBL scope (if any) on the given global.  This will
+// force creation of a new one if one is needed again.
+void
+ClearContentXBLScope(JSObject* global);
+=======
+// Get the scope for creating reflectors for native anonymous content
+// whose normal global would be the given global.
+JSObject* NACScope(JSObject* global);
+>>>>>>> upstream-releases
 
 bool IsSandboxPrototypeProxy(JSObject* obj);
 
+<<<<<<< HEAD
 bool IsReflector(JSObject* obj);
+||||||| merged common ancestors
+bool
+IsReflector(JSObject* obj);
+=======
+// The JSContext argument represents the Realm that's asking the question.  This
+// is needed to properly answer without exposing information unnecessarily
+// from behind security wrappers.  There will be no exceptions thrown on this
+// JSContext.
+bool IsReflector(JSObject* obj, JSContext* cx);
+>>>>>>> upstream-releases
 
 bool IsXrayWrapper(JSObject* obj);
 
@@ -286,6 +332,7 @@ class XPCStringConvert {
     return true;
   }
 
+<<<<<<< HEAD
   static MOZ_ALWAYS_INLINE bool IsLiteral(JSString* str) {
     return JS_IsExternalString(str) &&
            JS_GetExternalStringFinalizer(str) == &sLiteralFinalizer;
@@ -295,19 +342,72 @@ class XPCStringConvert {
     return JS_IsExternalString(str) &&
            JS_GetExternalStringFinalizer(str) == &sDOMStringFinalizer;
   }
+||||||| merged common ancestors
+    static MOZ_ALWAYS_INLINE bool IsDOMString(JSString* str)
+    {
+        return JS_IsExternalString(str) &&
+               JS_GetExternalStringFinalizer(str) == &sDOMStringFinalizer;
+    }
+=======
+  static MOZ_ALWAYS_INLINE bool IsLiteral(JSString* str) {
+    return JS_IsExternalString(str) &&
+           JS_GetExternalStringFinalizer(str) == &sLiteralFinalizer;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   static const JSStringFinalizer sLiteralFinalizer, sDOMStringFinalizer,
       sDynamicAtomFinalizer;
+||||||| merged common ancestors
+private:
+    static const JSStringFinalizer
+      sLiteralFinalizer, sDOMStringFinalizer, sDynamicAtomFinalizer;
+=======
+  static MOZ_ALWAYS_INLINE bool IsDOMString(JSString* str) {
+    return JS_IsExternalString(str) &&
+           JS_GetExternalStringFinalizer(str) == &sDOMStringFinalizer;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void FinalizeLiteral(const JSStringFinalizer* fin, char16_t* chars);
+||||||| merged common ancestors
+    static void FinalizeLiteral(const JSStringFinalizer* fin, char16_t* chars);
+=======
+ private:
+  static const JSStringFinalizer sLiteralFinalizer, sDOMStringFinalizer,
+      sDynamicAtomFinalizer;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void FinalizeDOMString(const JSStringFinalizer* fin, char16_t* chars);
+||||||| merged common ancestors
+    static void FinalizeDOMString(const JSStringFinalizer* fin, char16_t* chars);
+=======
+  static void FinalizeLiteral(const JSStringFinalizer* fin, char16_t* chars);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static void FinalizeDynamicAtom(const JSStringFinalizer* fin,
+                                  char16_t* chars);
+||||||| merged common ancestors
+    static void FinalizeDynamicAtom(const JSStringFinalizer* fin,
+                                    char16_t* chars);
+=======
+  static void FinalizeDOMString(const JSStringFinalizer* fin, char16_t* chars);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  XPCStringConvert() = delete;
+||||||| merged common ancestors
+    XPCStringConvert() = delete;
+=======
   static void FinalizeDynamicAtom(const JSStringFinalizer* fin,
                                   char16_t* chars);
 
   XPCStringConvert() = delete;
+>>>>>>> upstream-releases
 };
 
 class nsIAddonInterposition;
@@ -405,13 +505,21 @@ bool StringToJsval(JSContext* cx, mozilla::dom::DOMString& str,
   return NonVoidStringToJsval(cx, str, rval);
 }
 
-nsIPrincipal* GetCompartmentPrincipal(JS::Compartment* compartment);
-nsIPrincipal* GetRealmPrincipal(JS::Realm* realm);
+mozilla::BasePrincipal* GetRealmPrincipal(JS::Realm* realm);
 
+<<<<<<< HEAD
 void NukeAllWrappersForCompartment(
     JSContext* cx, JS::Compartment* compartment,
     js::NukeReferencesToWindow nukeReferencesToWindow =
         js::NukeWindowReferences);
+||||||| merged common ancestors
+void NukeAllWrappersForCompartment(JSContext* cx, JS::Compartment* compartment,
+                                   js::NukeReferencesToWindow nukeReferencesToWindow = js::NukeWindowReferences);
+=======
+void NukeAllWrappersForRealm(JSContext* cx, JS::Realm* realm,
+                             js::NukeReferencesToWindow nukeReferencesToWindow =
+                                 js::NukeWindowReferences);
+>>>>>>> upstream-releases
 
 void SetLocationForGlobal(JSObject* global, const nsACString& location);
 void SetLocationForGlobal(JSObject* global, nsIURI* locationURI);
@@ -461,9 +569,31 @@ bool Throw(JSContext* cx, nsresult rv);
 
 /**
  * Returns the nsISupports native behind a given reflector (either DOM or
- * XPCWN).
+ * XPCWN).  If a non-reflector object is passed in, null will be returned.
+ *
+ * This function will not correctly handle Window or Location objects behind
+ * cross-compartment wrappers: it will return null.  If you care about getting
+ * non-null for Window or Location, use ReflectorToISupportsDynamic.
  */
+<<<<<<< HEAD
 already_AddRefed<nsISupports> UnwrapReflectorToISupports(JSObject* reflector);
+||||||| merged common ancestors
+already_AddRefed<nsISupports>
+UnwrapReflectorToISupports(JSObject* reflector);
+=======
+already_AddRefed<nsISupports> ReflectorToISupportsStatic(JSObject* reflector);
+
+/**
+ * Returns the nsISupports native behind a given reflector (either DOM or
+ * XPCWN).  If a non-reflector object is passed in, null will be returned.
+ *
+ * The JSContext argument represents the Realm that's asking for the
+ * nsISupports.  This is needed to properly handle Window and Location objects,
+ * which do dynamic security checks.
+ */
+already_AddRefed<nsISupports> ReflectorToISupportsDynamic(JSObject* reflector,
+                                                          JSContext* cx);
+>>>>>>> upstream-releases
 
 /**
  * Singleton scopes for stuff that really doesn't fit anywhere else.
@@ -536,13 +666,36 @@ void SetPrefableRealmOptions(JS::RealmOptions& options);
 bool ExtraWarningsForSystemJS();
 
 class ErrorBase {
+<<<<<<< HEAD
  public:
   nsString mErrorMsg;
   nsString mFileName;
   uint32_t mLineNumber;
   uint32_t mColumn;
+||||||| merged common ancestors
+  public:
+    nsString mErrorMsg;
+    nsString mFileName;
+    uint32_t mLineNumber;
+    uint32_t mColumn;
+=======
+ public:
+  nsString mErrorMsg;
+  nsString mFileName;
+  uint32_t mSourceId;
+  uint32_t mLineNumber;
+  uint32_t mColumn;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ErrorBase() : mLineNumber(0), mColumn(0) {}
+||||||| merged common ancestors
+    ErrorBase() : mLineNumber(0)
+                , mColumn(0)
+    {}
+=======
+  ErrorBase() : mSourceId(0), mLineNumber(0), mColumn(0) {}
+>>>>>>> upstream-releases
 
   void Init(JSErrorBase* aReport);
 
@@ -609,14 +762,27 @@ class ErrorReport : public ErrorBase {
   ~ErrorReport() {}
 };
 
+<<<<<<< HEAD
 void DispatchScriptErrorEvent(nsPIDOMWindowInner* win,
                               JS::RootingContext* rootingCx,
                               xpc::ErrorReport* xpcReport,
                               JS::Handle<JS::Value> exception);
+||||||| merged common ancestors
+void
+DispatchScriptErrorEvent(nsPIDOMWindowInner* win, JS::RootingContext* rootingCx,
+                         xpc::ErrorReport* xpcReport, JS::Handle<JS::Value> exception);
+=======
+void DispatchScriptErrorEvent(nsPIDOMWindowInner* win,
+                              JS::RootingContext* rootingCx,
+                              xpc::ErrorReport* xpcReport,
+                              JS::Handle<JS::Value> exception,
+                              JS::Handle<JSObject*> exceptionStack);
+>>>>>>> upstream-releases
 
 // Get a stack (as stackObj outparam) of the sort that can be passed to
 // xpc::ErrorReport::LogToConsoleWithStack from the given exception value.  Can
-// be nullptr if the exception value doesn't have an associated stack.  The
+// be nullptr if the exception value doesn't have an associated stack, and if
+// there is no stack supplied by the JS engine in exceptionStack.  The
 // returned stack, if any, may also not be in the same compartment as
 // exceptionValue.
 //
@@ -630,10 +796,24 @@ void DispatchScriptErrorEvent(nsPIDOMWindowInner* win,
 // either the JS exception object's global or the global of the SavedFrame we
 // got from a DOM or XPConnect exception. In all cases, stackGlobal is an
 // unwrapped global object and is same-compartment with stackObj.
+<<<<<<< HEAD
 void FindExceptionStackForConsoleReport(nsPIDOMWindowInner* win,
                                         JS::HandleValue exceptionValue,
                                         JS::MutableHandleObject stackObj,
                                         JS::MutableHandleObject stackGlobal);
+||||||| merged common ancestors
+void
+FindExceptionStackForConsoleReport(nsPIDOMWindowInner* win,
+                                   JS::HandleValue exceptionValue,
+                                   JS::MutableHandleObject stackObj,
+                                   JS::MutableHandleObject stackGlobal);
+=======
+void FindExceptionStackForConsoleReport(nsPIDOMWindowInner* win,
+                                        JS::HandleValue exceptionValue,
+                                        JS::HandleObject exceptionStack,
+                                        JS::MutableHandleObject stackObj,
+                                        JS::MutableHandleObject stackGlobal);
+>>>>>>> upstream-releases
 
 // Return a name for the realm.
 // This function makes reasonable efforts to make this name both mostly
@@ -679,9 +859,75 @@ void DestroyCooperativeContext();
 void YieldCooperativeContext();
 
 // Please see JS_ResumeCooperativeContext in jsapi.h.
+<<<<<<< HEAD
+void ResumeCooperativeContext();
+||||||| merged common ancestors
+void
+ResumeCooperativeContext();
+=======
 void ResumeCooperativeContext();
 
+/**
+ * Extract the native nsID object from a JS ID, IfaceID, ClassID, or ContractID
+ * value.
+ *
+ * Returns 'Nothing()' if 'aVal' does is not one of the supported ID types.
+ */
+mozilla::Maybe<nsID> JSValue2ID(JSContext* aCx, JS::HandleValue aVal);
+
+/**
+ * Reflect an ID into JS
+ */
+bool ID2JSValue(JSContext* aCx, const nsID& aId, JS::MutableHandleValue aVal);
+
+/**
+ * Reflect an IfaceID into JS
+ *
+ * This object will expose constants from the selected interface, and support
+ * 'instanceof', in addition to the other methods available on JS ID objects.
+ *
+ * Use 'xpc::JSValue2ID' to unwrap JS::Values created with this function.
+ */
+bool IfaceID2JSValue(JSContext* aCx, const nsXPTInterfaceInfo& aInfo,
+                     JS::MutableHandleValue aVal);
+
+/**
+ * Reflect a ContractID into JS
+ *
+ * This object will expose 'getService' and 'createInstance' methods in addition
+ * to the other methods available on nsID objects.
+ *
+ * Use 'xpc::JSValue2ID' to unwrap JS::Values created with this function.
+ */
+bool ContractID2JSValue(JSContext* aCx, JSString* aContract,
+                        JS::MutableHandleValue aVal);
+
+class JSStackFrameBase {
+ public:
+  virtual void Clear() = 0;
+};
+
+void RegisterJSStackFrame(JS::Realm* aRealm, JSStackFrameBase* aStackFrame);
+void UnregisterJSStackFrame(JS::Realm* aRealm, JSStackFrameBase* aStackFrame);
+void NukeJSStackFrames(JS::Realm* aRealm);
+
+// Check whether the given jsid is a property name (string or symbol) whose
+// value can be gotten cross-origin.  Cross-origin gets always return undefined
+// as the value, unless the Xray actually provides a different value.
+bool IsCrossOriginWhitelistedProp(JSContext* cx, JS::HandleId id);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 }  // namespace xpc
+||||||| merged common ancestors
+} // namespace xpc
+=======
+// Appends to props the jsids for property names (strings or symbols) whose
+// value can be gotten cross-origin.
+bool AppendCrossOriginWhitelistedPropNames(JSContext* cx,
+                                           JS::MutableHandleIdVector props);
+}  // namespace xpc
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {

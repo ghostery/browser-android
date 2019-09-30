@@ -26,8 +26,16 @@ class AsyncStatementJSHelper : public nsIXPCScriptable {
   NS_DECL_ISUPPORTS
   NS_DECL_NSIXPCSCRIPTABLE
 
+<<<<<<< HEAD
  private:
   nsresult getParams(AsyncStatement *, JSContext *, JSObject *, JS::Value *);
+||||||| merged common ancestors
+private:
+  nsresult getParams(AsyncStatement *, JSContext *, JSObject *, JS::Value *);
+=======
+ private:
+  nsresult getParams(AsyncStatement*, JSContext*, JSObject*, JS::Value*);
+>>>>>>> upstream-releases
 };
 
 /**
@@ -39,8 +47,18 @@ class AsyncStatementParamsHolder final : public nsISupports {
  public:
   NS_DECL_ISUPPORTS
 
+<<<<<<< HEAD
   explicit AsyncStatementParamsHolder(AsyncStatementParams *aParams)
       : mParams(aParams) {}
+||||||| merged common ancestors
+  explicit AsyncStatementParamsHolder(AsyncStatementParams* aParams)
+    : mParams(aParams)
+  {
+  }
+=======
+  explicit AsyncStatementParamsHolder(AsyncStatementParams* aParams)
+      : mParams(aParams) {}
+>>>>>>> upstream-releases
 
   AsyncStatementParams *Get() const {
     MOZ_ASSERT(mParams);

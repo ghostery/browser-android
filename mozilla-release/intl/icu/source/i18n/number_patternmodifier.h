@@ -21,10 +21,26 @@ U_NAMESPACE_BEGIN
 // data member of AdoptingModifierStore.
 // (When building DLLs for Windows this is required.)
 #if U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
+#if defined(_MSC_VER)
 // Ignore warning 4661 as LocalPointerBase does not use operator== or operator!=
+<<<<<<< HEAD
 #pragma warning(suppress: 4661)
 template class U_I18N_API LocalPointerBase<number::impl::AdoptingModifierStore>;
 template class U_I18N_API LocalPointer<number::impl::AdoptingModifierStore>;
+||||||| merged common ancestors
+#pragma warning(suppress: 4661)
+template class U_I18N_API LocalPointerBase<number::impl::ParameterizedModifier>;
+template class U_I18N_API LocalPointer<number::impl::ParameterizedModifier>;
+=======
+#pragma warning(push)
+#pragma warning(disable : 4661)
+#endif
+template class U_I18N_API LocalPointerBase<number::impl::AdoptingModifierStore>;
+template class U_I18N_API LocalPointer<number::impl::AdoptingModifierStore>;
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+>>>>>>> upstream-releases
 #endif
 
 namespace number {
@@ -40,7 +56,7 @@ class U_I18N_API ImmutablePatternModifier : public MicroPropsGenerator, public U
 
     void processQuantity(DecimalQuantity&, MicroProps& micros, UErrorCode& status) const U_OVERRIDE;
 
-    void applyToMicros(MicroProps& micros, DecimalQuantity& quantity) const;
+    void applyToMicros(MicroProps& micros, const DecimalQuantity& quantity, UErrorCode& status) const;
 
     const Modifier* getModifier(int8_t signum, StandardPlural::Form plural) const;
 
@@ -95,8 +111,11 @@ class U_I18N_API MutablePatternModifier
      * Sets a reference to the parsed decimal format pattern, usually obtained from
      * {@link PatternStringParser#parseToPatternInfo(String)}, but any implementation of {@link AffixPatternProvider} is
      * accepted.
+     *
+     * @param field
+     *            Which field to use for literal characters in the pattern.
      */
-    void setPatternInfo(const AffixPatternProvider *patternInfo);
+    void setPatternInfo(const AffixPatternProvider *patternInfo, Field field);
 
     /**
      * Sets attributes that imply changes to the literal interpretation of the pattern string affixes.
@@ -202,9 +221,20 @@ class U_I18N_API MutablePatternModifier
     const bool fStrong;
 
     // Pattern details (initialized in setPatternInfo and setPatternAttributes)
+<<<<<<< HEAD
     const AffixPatternProvider *fPatternInfo;
     UNumberSignDisplay fSignDisplay;
     bool perMilleReplacesPercent;
+||||||| merged common ancestors
+    const AffixPatternProvider *patternInfo;
+    UNumberSignDisplay signDisplay;
+    bool perMilleReplacesPercent;
+=======
+    const AffixPatternProvider *fPatternInfo;
+    Field fField;
+    UNumberSignDisplay fSignDisplay;
+    bool fPerMilleReplacesPercent;
+>>>>>>> upstream-releases
 
     // Symbol details (initialized in setSymbols)
     const DecimalFormatSymbols *fSymbols;

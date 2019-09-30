@@ -20,15 +20,35 @@ class EventQueue final : public AbstractEventQueue {
   static const bool SupportsPrioritization = false;
 
   EventQueue() {}
-  explicit EventQueue(EventPriority aPriority);
+  explicit EventQueue(EventQueuePriority aPriority);
 
+<<<<<<< HEAD
   void PutEvent(already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority,
+||||||| merged common ancestors
+  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                EventPriority aPriority,
+=======
+  void PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                EventQueuePriority aPriority,
+>>>>>>> upstream-releases
                 const MutexAutoLock& aProofOfLock) final;
+<<<<<<< HEAD
   already_AddRefed<nsIRunnable> GetEvent(
       EventPriority* aPriority, const MutexAutoLock& aProofOfLock) final;
+||||||| merged common ancestors
+  already_AddRefed<nsIRunnable> GetEvent(EventPriority* aPriority,
+                                         const MutexAutoLock& aProofOfLock) final;
+=======
+  already_AddRefed<nsIRunnable> GetEvent(
+      EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) final;
+>>>>>>> upstream-releases
 
   bool IsEmpty(const MutexAutoLock& aProofOfLock) final;
   bool HasReadyEvent(const MutexAutoLock& aProofOfLock) final;
+  bool HasPendingHighPriorityEvents(const MutexAutoLock& aProofOfLock) final {
+    // EventQueue doesn't support any prioritization.
+    return false;
+  }
 
   size_t Count(const MutexAutoLock& aProofOfLock) const final;
   already_AddRefed<nsIRunnable> PeekEvent(const MutexAutoLock& aProofOfLock);

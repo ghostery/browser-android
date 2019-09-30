@@ -32,7 +32,13 @@ rw{
         }
         minimumGroupingDigits{"1"}
     }
+<<<<<<< HEAD
     Version{"2.1.44.88"}
+||||||| merged common ancestors
+    Version{"2.1.38.72"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -103,7 +109,7 @@ rw{
                 MMM{"LLL"}
                 MMMEd{"MMM d, E"}
                 MMMMW{
-                    other{"'week' W 'of' MMM"}
+                    other{"'week' W 'of' MMMM"}
                 }
                 MMMMd{"MMMM d"}
                 MMMd{"MMM d"}

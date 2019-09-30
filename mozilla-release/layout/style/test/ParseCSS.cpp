@@ -24,19 +24,50 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 static already_AddRefed<nsIURI> FileToURI(const char *aFilename,
                                           nsresult *aRv = 0) {
   nsCOMPtr<nsIFile> lf(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID, aRv));
   NS_ENSURE_TRUE(lf, nullptr);
   // XXX Handle relative paths somehow.
   lf->InitWithNativePath(nsDependentCString(aFilename));
+||||||| merged common ancestors
+static already_AddRefed<nsIURI>
+FileToURI(const char *aFilename, nsresult *aRv = 0)
+{
+    nsCOMPtr<nsIFile> lf(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID, aRv));
+    NS_ENSURE_TRUE(lf, nullptr);
+    // XXX Handle relative paths somehow.
+    lf->InitWithNativePath(nsDependentCString(aFilename));
+=======
+static already_AddRefed<nsIURI> FileToURI(const char* aFilename,
+                                          nsresult* aRv = 0) {
+  nsCOMPtr<nsIFile> lf(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID, aRv));
+  NS_ENSURE_TRUE(lf, nullptr);
+  // XXX Handle relative paths somehow.
+  lf->InitWithNativePath(nsDependentCString(aFilename));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsIURI *uri = nullptr;
   nsresult rv = NS_NewFileURI(&uri, lf);
   if (aRv) *aRv = rv;
   return uri;
+||||||| merged common ancestors
+    nsIURI *uri = nullptr;
+    nsresult rv = NS_NewFileURI(&uri, lf);
+    if (aRv)
+        *aRv = rv;
+    return uri;
+=======
+  nsIURI* uri = nullptr;
+  nsresult rv = NS_NewFileURI(&uri, lf);
+  if (aRv) *aRv = rv;
+  return uri;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static int ParseCSSFile(nsIURI *aSheetURI) {
   RefPtr<mozilla::css::Loader> = new mozilla::css::Loader();
   RefPtr<CSSStyleSheet> sheet;
@@ -51,18 +82,81 @@ static int ParseCSSFile(nsIURI *aSheetURI) {
   NS_ASSERTION(complete, "synchronous load did not complete");
   if (!complete) return -2;
   return 0;
+||||||| merged common ancestors
+static int
+ParseCSSFile(nsIURI *aSheetURI)
+{
+    RefPtr<mozilla::css::Loader> = new mozilla::css::Loader();
+    RefPtr<CSSStyleSheet> sheet;
+    loader->LoadSheetSync(aSheetURI, getter_AddRefs(sheet));
+    NS_ASSERTION(sheet, "sheet load failed");
+    /* This can happen if the file can't be found (e.g. you
+     * ask for a relative path and xpcom/io rejects it)
+     */
+    if (!sheet)
+        return -1;
+    bool complete;
+    sheet->GetComplete(complete);
+    NS_ASSERTION(complete, "synchronous load did not complete");
+    if (!complete)
+        return -2;
+    return 0;
+=======
+static int ParseCSSFile(nsIURI* aSheetURI) {
+  RefPtr<mozilla::css::Loader> = new mozilla::css::Loader();
+  RefPtr<CSSStyleSheet> sheet;
+  loader->LoadSheetSync(aSheetURI, getter_AddRefs(sheet));
+  NS_ASSERTION(sheet, "sheet load failed");
+  /* This can happen if the file can't be found (e.g. you
+   * ask for a relative path and xpcom/io rejects it)
+   */
+  if (!sheet) return -1;
+  bool complete;
+  sheet->GetComplete(complete);
+  NS_ASSERTION(complete, "synchronous load did not complete");
+  if (!complete) return -2;
+  return 0;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 int main(int argc, char **argv) {
   if (argc < 2) {
     fprintf(stderr, "%s [FILE]...\n", argv[0]);
   }
   nsresult rv = NS_InitXPCOM2(nullptr, nullptr, nullptr);
   if (NS_FAILED(rv)) return (int)rv;
+||||||| merged common ancestors
+int main(int argc, char** argv)
+{
+    if (argc < 2) {
+        fprintf(stderr, "%s [FILE]...\n", argv[0]);
+    }
+    nsresult rv = NS_InitXPCOM2(nullptr, nullptr, nullptr);
+    if (NS_FAILED(rv))
+        return (int)rv;
+=======
+int main(int argc, char** argv) {
+  if (argc < 2) {
+    fprintf(stderr, "%s [FILE]...\n", argv[0]);
+  }
+  nsresult rv = NS_InitXPCOM(nullptr, nullptr, nullptr);
+  if (NS_FAILED(rv)) return (int)rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   int res = 0;
   for (int i = 1; i < argc; ++i) {
     const char *filename = argv[i];
+||||||| merged common ancestors
+    int res = 0;
+    for (int i = 1; i < argc; ++i) {
+        const char *filename = argv[i];
+=======
+  int res = 0;
+  for (int i = 1; i < argc; ++i) {
+    const char* filename = argv[i];
+>>>>>>> upstream-releases
 
     printf("\nParsing %s.\n", filename);
 

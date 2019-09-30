@@ -48,7 +48,16 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(CSSMediaRule,
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mMediaList)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
+<<<<<<< HEAD
 /* virtual */ void CSSMediaRule::DropSheetReference() {
+||||||| merged common ancestors
+/* virtual */ void
+CSSMediaRule::DropSheetReference()
+{
+=======
+/* virtual */
+void CSSMediaRule::DropSheetReference() {
+>>>>>>> upstream-releases
   if (mMediaList) {
     mMediaList->SetStyleSheet(nullptr);
   }
@@ -56,7 +65,16 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 /* virtual */ void CSSMediaRule::List(FILE* out, int32_t aIndent) const {
+||||||| merged common ancestors
+/* virtual */ void
+CSSMediaRule::List(FILE* out, int32_t aIndent) const
+{
+=======
+/* virtual */
+void CSSMediaRule::List(FILE* out, int32_t aIndent) const {
+>>>>>>> upstream-releases
   nsAutoCString str;
   for (int32_t i = 0; i < aIndent; i++) {
     str.AppendLiteral("  ");
@@ -70,12 +88,34 @@ void CSSMediaRule::GetConditionText(nsAString& aConditionText) {
   Media()->GetMediaText(aConditionText);
 }
 
+<<<<<<< HEAD
 void CSSMediaRule::SetConditionText(const nsAString& aConditionText,
                                     ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+CSSMediaRule::SetConditionText(const nsAString& aConditionText,
+                               ErrorResult& aRv)
+{
+=======
+void CSSMediaRule::SetConditionText(const nsAString& aConditionText,
+                                    ErrorResult& aRv) {
+  if (IsReadOnly()) {
+    return;
+  }
+>>>>>>> upstream-releases
   Media()->SetMediaText(aConditionText);
 }
 
+<<<<<<< HEAD
 /* virtual */ void CSSMediaRule::GetCssText(nsAString& aCssText) const {
+||||||| merged common ancestors
+/* virtual */ void
+CSSMediaRule::GetCssText(nsAString& aCssText) const
+{
+=======
+/* virtual */
+void CSSMediaRule::GetCssText(nsAString& aCssText) const {
+>>>>>>> upstream-releases
   Servo_MediaRule_GetCssText(mRawRule, &aCssText);
 }
 
@@ -87,14 +127,34 @@ void CSSMediaRule::SetConditionText(const nsAString& aConditionText,
   return mMediaList;
 }
 
+<<<<<<< HEAD
 /* virtual */ size_t CSSMediaRule::SizeOfIncludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {
+||||||| merged common ancestors
+/* virtual */ size_t
+CSSMediaRule::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
+{
+=======
+/* virtual */
+size_t CSSMediaRule::SizeOfIncludingThis(
+    mozilla::MallocSizeOf aMallocSizeOf) const {
+>>>>>>> upstream-releases
   // TODO Implement this!
   return aMallocSizeOf(this);
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* CSSMediaRule::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+CSSMediaRule::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* CSSMediaRule::WrapObject(JSContext* aCx,
+                                   JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return CSSMediaRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

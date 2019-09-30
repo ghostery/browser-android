@@ -16,15 +16,36 @@ namespace mozilla {
 namespace layers {
 
 // Animation used by GenericOverscrollEffect.
+<<<<<<< HEAD
 class OverscrollAnimation : public AsyncPanZoomAnimation {
  public:
   explicit OverscrollAnimation(AsyncPanZoomController& aApzc,
                                const ParentLayerPoint& aVelocity)
       : mApzc(aApzc) {
+||||||| merged common ancestors
+class OverscrollAnimation: public AsyncPanZoomAnimation {
+public:
+  explicit OverscrollAnimation(AsyncPanZoomController& aApzc, const ParentLayerPoint& aVelocity)
+    : mApzc(aApzc)
+  {
+=======
+class OverscrollAnimation : public AsyncPanZoomAnimation {
+ public:
+  OverscrollAnimation(AsyncPanZoomController& aApzc,
+                      const ParentLayerPoint& aVelocity)
+      : mApzc(aApzc) {
+>>>>>>> upstream-releases
     mApzc.mX.StartOverscrollAnimation(aVelocity.x);
     mApzc.mY.StartOverscrollAnimation(aVelocity.y);
   }
+<<<<<<< HEAD
   ~OverscrollAnimation() {
+||||||| merged common ancestors
+  ~OverscrollAnimation()
+  {
+=======
+  virtual ~OverscrollAnimation() {
+>>>>>>> upstream-releases
     mApzc.mX.EndOverscrollAnimation();
     mApzc.mY.EndOverscrollAnimation();
   }

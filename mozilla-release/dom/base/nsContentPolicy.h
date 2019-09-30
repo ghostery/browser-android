@@ -25,6 +25,7 @@ class nsContentPolicy : public nsIContentPolicy {
   virtual ~nsContentPolicy();
 
  private:
+<<<<<<< HEAD
   // Array of policies
   nsCategoryCache<nsIContentPolicy> mPolicies;
 
@@ -36,8 +37,42 @@ class nsContentPolicy : public nsIContentPolicy {
   nsresult CheckPolicy(CPMethod policyMethod, nsIURI *aURI,
                        nsILoadInfo *aLoadInfo, const nsACString &mimeGuess,
                        int16_t *decision);
+||||||| merged common ancestors
+    //Array of policies
+    nsCategoryCache<nsIContentPolicy> mPolicies;
+
+    //Helper type for CheckPolicy
+    typedef decltype(&nsIContentPolicy::ShouldProcess) CPMethod;
+
+    //Helper method that applies policyMethod across all policies in mPolicies
+    // with the given parameters
+    nsresult CheckPolicy(CPMethod policyMethod,
+                         nsIURI *aURI,
+                         nsILoadInfo *aLoadInfo,
+                         const nsACString &mimeGuess,
+                         int16_t *decision);
+=======
+  // Array of policies
+  nsCategoryCache<nsIContentPolicy> mPolicies;
+
+  // Helper type for CheckPolicy
+  typedef decltype(&nsIContentPolicy::ShouldProcess) CPMethod;
+
+  // Helper method that applies policyMethod across all policies in mPolicies
+  // with the given parameters
+  nsresult CheckPolicy(CPMethod policyMethod, nsIURI* aURI,
+                       nsILoadInfo* aLoadInfo, const nsACString& mimeGuess,
+                       int16_t* decision);
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 nsresult NS_NewContentPolicy(nsIContentPolicy **aResult);
+||||||| merged common ancestors
+nsresult
+NS_NewContentPolicy(nsIContentPolicy **aResult);
+=======
+nsresult NS_NewContentPolicy(nsIContentPolicy** aResult);
+>>>>>>> upstream-releases
 
 #endif /* __nsContentPolicy_h__ */

@@ -16,10 +16,9 @@
 #include "jsutil.h"
 
 #include "builtin/Array.h"
-#ifdef ENABLE_BIGINT
 #include "builtin/BigInt.h"
-#endif
 #include "builtin/String.h"
+#include "js/PropertySpec.h"
 #include "js/StableStringChars.h"
 #include "util/StringBuffer.h"
 #include "vm/Interpreter.h"
@@ -68,6 +67,97 @@ static MOZ_ALWAYS_INLINE RangedPtr<DstCharT> InfallibleQuote(
         0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
         0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
         0,   0,  '\\', // rest are all zeros
+<<<<<<< HEAD
+      // clang-format on
+  };
+
+  /* Step 1. */
+  *dstPtr++ = '"';
+
+  auto ToLowerHex = [](uint8_t u) {
+    MOZ_ASSERT(u <= 0xF);
+    return "0123456789abcdef"[u];
+  };
+
+  /* Step 2. */
+  while (srcBegin != srcEnd) {
+    const SrcCharT c = *srcBegin++;
+
+    // Handle the Latin-1 cases.
+    if (MOZ_LIKELY(c < sizeof(escapeLookup))) {
+      Latin1Char escaped = escapeLookup[c];
+
+      // Directly copy non-escaped code points.
+      if (escaped == 0) {
+        *dstPtr++ = c;
+        continue;
+      }
+
+      // Escape the rest, elaborating Unicode escapes when needed.
+      *dstPtr++ = '\\';
+      *dstPtr++ = escaped;
+      if (escaped == 'u') {
+        *dstPtr++ = '0';
+        *dstPtr++ = '0';
+
+        uint8_t x = c >> 4;
+        MOZ_ASSERT(x < 10);
+        *dstPtr++ = '0' + x;
+
+        *dstPtr++ = ToLowerHex(c & 0xF);
+      }
+
+      continue;
+    }
+||||||| merged common ancestors
+        // clang-format on
+    };
+
+    /* Step 1. */
+    *dstPtr++ = '"';
+
+    auto ToLowerHex = [](uint8_t u) {
+        MOZ_ASSERT(u <= 0xF);
+        return "0123456789abcdef"[u];
+    };
+
+    /* Step 2. */
+    while (srcBegin != srcEnd) {
+        const SrcCharT c = *srcBegin++;
+
+        // Handle the Latin-1 cases.
+        if (MOZ_LIKELY(c < sizeof(escapeLookup))) {
+            Latin1Char escaped = escapeLookup[c];
+
+            // Directly copy non-escaped code points.
+            if (escaped == 0) {
+                *dstPtr++ = c;
+                continue;
+            }
+
+            // Escape the rest, elaborating Unicode escapes when needed.
+            *dstPtr++ = '\\';
+            *dstPtr++ = escaped;
+            if (escaped == 'u') {
+                *dstPtr++ = '0';
+                *dstPtr++ = '0';
+
+                uint8_t x = c >> 4;
+                MOZ_ASSERT(x < 10);
+                *dstPtr++ = '0' + x;
+
+                *dstPtr++ = ToLowerHex(c & 0xF);
+            }
+
+            continue;
+        }
+
+        // Non-ASCII non-surrogates are directly copied.
+        if (!unicode::IsSurrogate(c)) {
+            *dstPtr++ = c;
+            continue;
+        }
+=======
       // clang-format on
   };
 
@@ -139,6 +229,122 @@ static MOZ_ALWAYS_INLINE RangedPtr<DstCharT> InfallibleQuote(
   return dstPtr;
 }
 
+template <typename SrcCharT, typename DstCharT>
+static size_t QuoteHelper(const JSLinearString& linear, StringBuffer& sb,
+                          size_t sbOffset) {
+  size_t len = linear.length();
+
+  JS::AutoCheckCannotGC nogc;
+  RangedPtr<const SrcCharT> srcBegin{linear.chars<SrcCharT>(nogc), len};
+  RangedPtr<DstCharT> dstBegin{sb.begin<DstCharT>(), sb.begin<DstCharT>(),
+                               sb.end<DstCharT>()};
+  RangedPtr<DstCharT> dstEnd =
+      InfallibleQuote(srcBegin, srcBegin + len, dstBegin + sbOffset);
+
+  return dstEnd - dstBegin;
+}
+
+static bool Quote(JSContext* cx, StringBuffer& sb, JSString* str) {
+  JSLinearString* linear = str->ensureLinear(cx);
+  if (!linear) {
+    return false;
+  }
+
+  if (linear->hasTwoByteChars() && !sb.ensureTwoByteChars()) {
+    return false;
+  }
+
+  // We resize the backing buffer to the maximum size we could possibly need,
+  // write the escaped string into it, and shrink it back to the size we ended
+  // up needing.
+
+  size_t len = linear->length();
+  size_t sbInitialLen = sb.length();
+
+  CheckedInt<size_t> reservedLen = CheckedInt<size_t>(len) * 6 + 2;
+  if (MOZ_UNLIKELY(!reservedLen.isValid())) {
+    ReportAllocationOverflow(cx);
+    return false;
+  }
+
+  if (!sb.growByUninitialized(reservedLen.value())) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Non-ASCII non-surrogates are directly copied.
+    if (!unicode::IsSurrogate(c)) {
+      *dstPtr++ = c;
+      continue;
+    }
+||||||| merged common ancestors
+        // So too for complete surrogate pairs.
+        if (MOZ_LIKELY(unicode::IsLeadSurrogate(c) &&
+                       srcBegin < srcEnd &&
+                       unicode::IsTrailSurrogate(*srcBegin)))
+        {
+            *dstPtr++ = c;
+            *dstPtr++ = *srcBegin++;
+            continue;
+        }
+=======
+  size_t newSize;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // So too for complete surrogate pairs.
+    if (MOZ_LIKELY(unicode::IsLeadSurrogate(c) && srcBegin < srcEnd &&
+                   unicode::IsTrailSurrogate(*srcBegin))) {
+      *dstPtr++ = c;
+      *dstPtr++ = *srcBegin++;
+      continue;
+    }
+||||||| merged common ancestors
+        // But lone surrogates are Unicode-escaped.
+        char32_t as32 = char32_t(c);
+        *dstPtr++ = '\\';
+        *dstPtr++ = 'u';
+        *dstPtr++ = ToLowerHex(as32 >> 12);
+        *dstPtr++ = ToLowerHex((as32 >> 8) & 0xF);
+        *dstPtr++ = ToLowerHex((as32 >> 4) & 0xF);
+        *dstPtr++ = ToLowerHex(as32 & 0xF);
+    }
+=======
+  if (linear->hasTwoByteChars()) {
+    newSize = QuoteHelper<char16_t, char16_t>(*linear, sb, sbInitialLen);
+  } else if (sb.isUnderlyingBufferLatin1()) {
+    newSize = QuoteHelper<Latin1Char, Latin1Char>(*linear, sb, sbInitialLen);
+  } else {
+    newSize = QuoteHelper<Latin1Char, char16_t>(*linear, sb, sbInitialLen);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // But lone surrogates are Unicode-escaped.
+    char32_t as32 = char32_t(c);
+    *dstPtr++ = '\\';
+    *dstPtr++ = 'u';
+    *dstPtr++ = ToLowerHex(as32 >> 12);
+    *dstPtr++ = ToLowerHex((as32 >> 8) & 0xF);
+    *dstPtr++ = ToLowerHex((as32 >> 4) & 0xF);
+    *dstPtr++ = ToLowerHex(as32 & 0xF);
+  }
+
+  /* Steps 3-4. */
+  *dstPtr++ = '"';
+  return dstPtr;
+}
+||||||| merged common ancestors
+    /* Steps 3-4. */
+    *dstPtr++ = '"';
+    return dstPtr;
+}
+=======
+  sb.shrinkTo(newSize);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 template <typename SrcCharT, typename CharVectorT>
 static bool Quote(JSContext* cx, CharVectorT& sb, JSLinearString* str) {
   // We resize the backing buffer to the maximum size we could possibly need,
@@ -189,23 +395,89 @@ static bool Quote(JSContext* cx, StringBuffer& sb, JSString* str) {
   return sb.isUnderlyingBufferLatin1()
              ? Quote<Latin1Char>(cx, sb.latin1Chars(), linear)
              : Quote<Latin1Char>(cx, sb.rawTwoByteBuffer(), linear);
+||||||| merged common ancestors
+template <typename SrcCharT, typename CharVectorT>
+static bool
+Quote(CharVectorT& sb, JSLinearString* str)
+{
+    // We resize the backing buffer to the maximum size we could possibly need,
+    // write the escaped string into it, and shrink it back to the size we ended
+    // up needing.
+    size_t len = str->length();
+    size_t sbInitialLen = sb.length();
+    if (!sb.growByUninitialized(len * 6 + 2)) {
+        return false;
+    }
+
+    typedef typename CharVectorT::ElementType DstCharT;
+
+    JS::AutoCheckCannotGC nogc;
+    RangedPtr<const SrcCharT> srcBegin{str->chars<SrcCharT>(nogc), len};
+    RangedPtr<DstCharT> dstBegin{sb.begin(), sb.begin(), sb.end()};
+    RangedPtr<DstCharT> dstEnd = InfallibleQuote(srcBegin, srcBegin + len, dstBegin + sbInitialLen);
+    size_t newSize = dstEnd - dstBegin;
+    sb.shrinkTo(newSize);
+    return true;
+}
+
+static bool
+Quote(JSContext* cx, StringBuffer& sb, JSString* str)
+{
+    JSLinearString* linear = str->ensureLinear(cx);
+    if (!linear) {
+        return false;
+    }
+
+    // Check if either has non-latin1 before calling ensure, so that the buffer's
+    // hasEnsured flag is set if the converstion to twoByte was automatic.
+    if (!sb.isUnderlyingBufferLatin1() || linear->hasTwoByteChars()) {
+        if (!sb.ensureTwoByteChars()) {
+            return false;
+        }
+    }
+    if (linear->hasTwoByteChars()) {
+        return Quote<char16_t>(sb.rawTwoByteBuffer(), linear);
+    }
+
+    return sb.isUnderlyingBufferLatin1()
+           ? Quote<Latin1Char>(sb.latin1Chars(), linear)
+           : Quote<Latin1Char>(sb.rawTwoByteBuffer(), linear);
+=======
+  return true;
+>>>>>>> upstream-releases
 }
 
 namespace {
 
 using ObjectVector = GCVector<JSObject*, 8>;
 
+<<<<<<< HEAD
 class StringifyContext {
  public:
   StringifyContext(JSContext* cx, StringBuffer& sb, const StringBuffer& gap,
                    HandleObject replacer, const AutoIdVector& propertyList,
                    bool maybeSafely)
+||||||| merged common ancestors
+class StringifyContext
+{
+  public:
+    StringifyContext(JSContext* cx, StringBuffer& sb, const StringBuffer& gap,
+                     HandleObject replacer, const AutoIdVector& propertyList,
+                     bool maybeSafely)
+=======
+class StringifyContext {
+ public:
+  StringifyContext(JSContext* cx, StringBuffer& sb, const StringBuffer& gap,
+                   HandleObject replacer, const RootedIdVector& propertyList,
+                   bool maybeSafely)
+>>>>>>> upstream-releases
       : sb(sb),
         gap(gap),
         replacer(cx, replacer),
         stack(cx, ObjectVector(cx)),
         propertyList(propertyList),
         depth(0),
+<<<<<<< HEAD
         maybeSafely(maybeSafely) {
     MOZ_ASSERT_IF(maybeSafely, !replacer);
     MOZ_ASSERT_IF(maybeSafely, gap.empty());
@@ -218,6 +490,34 @@ class StringifyContext {
   const AutoIdVector& propertyList;
   uint32_t depth;
   bool maybeSafely;
+||||||| merged common ancestors
+        maybeSafely(maybeSafely)
+    {
+        MOZ_ASSERT_IF(maybeSafely, !replacer);
+        MOZ_ASSERT_IF(maybeSafely, gap.empty());
+    }
+
+    StringBuffer& sb;
+    const StringBuffer& gap;
+    RootedObject replacer;
+    Rooted<ObjectVector> stack;
+    const AutoIdVector& propertyList;
+    uint32_t depth;
+    bool maybeSafely;
+=======
+        maybeSafely(maybeSafely) {
+    MOZ_ASSERT_IF(maybeSafely, !replacer);
+    MOZ_ASSERT_IF(maybeSafely, gap.empty());
+  }
+
+  StringBuffer& sb;
+  const StringBuffer& gap;
+  RootedObject replacer;
+  Rooted<ObjectVector> stack;
+  const RootedIdVector& propertyList;
+  uint32_t depth;
+  bool maybeSafely;
+>>>>>>> upstream-releases
 };
 
 } /* anonymous namespace */
@@ -288,6 +588,7 @@ static bool PreprocessValue(JSContext* cx, HandleObject holder, KeyType key,
 
   RootedString keyStr(cx);
 
+<<<<<<< HEAD
   /* Step 2. */
   if (vp.isObject()) {
     RootedValue toJSON(cx);
@@ -295,7 +596,56 @@ static bool PreprocessValue(JSContext* cx, HandleObject holder, KeyType key,
     if (!GetProperty(cx, obj, obj, cx->names().toJSON, &toJSON)) {
       return false;
     }
+||||||| merged common ancestors
+    /* Step 2. */
+    if (vp.isObject()) {
+        RootedValue toJSON(cx);
+        RootedObject obj(cx, &vp.toObject());
+        if (!GetProperty(cx, obj, obj, cx->names().toJSON, &toJSON)) {
+            return false;
+        }
+=======
+  // Step 2. Modified by BigInt spec 6.1 to check for a toJSON method on the
+  // BigInt prototype when the value is a BigInt, and to pass the BigInt
+  // primitive value as receiver.
+  if (vp.isObject() || vp.isBigInt()) {
+    RootedValue toJSON(cx);
+    RootedObject obj(cx, JS::ToObject(cx, vp));
+    if (!obj) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    if (IsCallable(toJSON)) {
+      keyStr = KeyStringifier<KeyType>::toString(cx, key);
+      if (!keyStr) {
+        return false;
+      }
+||||||| merged common ancestors
+        if (IsCallable(toJSON)) {
+            keyStr = KeyStringifier<KeyType>::toString(cx, key);
+            if (!keyStr) {
+                return false;
+            }
+=======
+    if (!GetProperty(cx, obj, vp, cx->names().toJSON, &toJSON)) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      RootedValue arg0(cx, StringValue(keyStr));
+      if (!js::Call(cx, toJSON, vp, arg0, vp)) {
+        return false;
+      }
+||||||| merged common ancestors
+            RootedValue arg0(cx, StringValue(keyStr));
+            if (!js::Call(cx, toJSON, vp, arg0, vp)) {
+                return false;
+            }
+        }
+=======
     if (IsCallable(toJSON)) {
       keyStr = KeyStringifier<KeyType>::toString(cx, key);
       if (!keyStr) {
@@ -306,6 +656,7 @@ static bool PreprocessValue(JSContext* cx, HandleObject holder, KeyType key,
       if (!js::Call(cx, toJSON, vp, arg0, vp)) {
         return false;
       }
+>>>>>>> upstream-releases
     }
   }
 
@@ -337,6 +688,7 @@ static bool PreprocessValue(JSContext* cx, HandleObject holder, KeyType key,
       return false;
     }
 
+<<<<<<< HEAD
     if (cls == ESClass::Number) {
       double d;
       if (!ToNumber(cx, vp, &d)) {
@@ -359,9 +711,61 @@ static bool PreprocessValue(JSContext* cx, HandleObject holder, KeyType key,
       if (!Unbox(cx, obj, vp)) {
         return false;
       }
+||||||| merged common ancestors
+        if (cls == ESClass::Number) {
+            double d;
+            if (!ToNumber(cx, vp, &d)) {
+                return false;
+            }
+            vp.setNumber(d);
+        } else if (cls == ESClass::String) {
+            JSString* str = ToStringSlow<CanGC>(cx, vp);
+            if (!str) {
+                return false;
+            }
+            vp.setString(str);
+        } else if (cls == ESClass::Boolean) {
+            if (!Unbox(cx, obj, vp)) {
+                return false;
+            }
+        }
+#ifdef ENABLE_BIGINT
+        else if (cls == ESClass::BigInt) {
+            if (!Unbox(cx, obj, vp)) {
+                return false;
+            }
+        }
+#endif
+=======
+    if (cls == ESClass::Number) {
+      double d;
+      if (!ToNumber(cx, vp, &d)) {
+        return false;
+      }
+      vp.setNumber(d);
+    } else if (cls == ESClass::String) {
+      JSString* str = ToStringSlow<CanGC>(cx, vp);
+      if (!str) {
+        return false;
+      }
+      vp.setString(str);
+    } else if (cls == ESClass::Boolean) {
+      if (!Unbox(cx, obj, vp)) {
+        return false;
+      }
+    } else if (cls == ESClass::BigInt) {
+      if (!Unbox(cx, obj, vp)) {
+        return false;
+      }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 #endif
   }
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
   return true;
 }
@@ -377,6 +781,7 @@ static inline bool IsFilteredValue(const Value& v) {
   return v.isUndefined() || v.isSymbol() || IsCallable(v);
 }
 
+<<<<<<< HEAD
 class CycleDetector {
  public:
   CycleDetector(StringifyContext* scx, HandleObject obj)
@@ -399,6 +804,69 @@ class CycleDetector {
     if (MOZ_LIKELY(appended_)) {
       MOZ_ASSERT(stack_.back() == obj_);
       stack_.popBack();
+||||||| merged common ancestors
+class CycleDetector
+{
+  public:
+    CycleDetector(StringifyContext* scx, HandleObject obj)
+      : stack_(&scx->stack), obj_(obj), appended_(false) {
+    }
+
+    MOZ_ALWAYS_INLINE bool foundCycle(JSContext* cx) {
+        JSObject* obj = obj_;
+        for (JSObject* obj2 : stack_) {
+            if (MOZ_UNLIKELY(obj == obj2)) {
+                JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_JSON_CYCLIC_VALUE);
+                return false;
+            }
+        }
+        appended_ = stack_.append(obj);
+        return appended_;
+=======
+class CycleDetector {
+ public:
+  CycleDetector(StringifyContext* scx, HandleObject obj)
+      : stack_(&scx->stack), obj_(obj), appended_(false) {}
+
+  MOZ_ALWAYS_INLINE bool foundCycle(JSContext* cx) {
+    JSObject* obj = obj_;
+    for (JSObject* obj2 : stack_) {
+      if (MOZ_UNLIKELY(obj == obj2)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                  JSMSG_JSON_CYCLIC_VALUE);
+        return false;
+      }
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+
+ private:
+  MutableHandle<ObjectVector> stack_;
+  HandleObject obj_;
+  bool appended_;
+||||||| merged common ancestors
+
+    ~CycleDetector() {
+        if (MOZ_LIKELY(appended_)) {
+            MOZ_ASSERT(stack_.back() == obj_);
+            stack_.popBack();
+        }
+    }
+
+  private:
+    MutableHandle<ObjectVector> stack_;
+    HandleObject obj_;
+    bool appended_;
+=======
+    appended_ = stack_.append(obj);
+    return appended_;
+  }
+
+  ~CycleDetector() {
+    if (MOZ_LIKELY(appended_)) {
+      MOZ_ASSERT(stack_.back() == obj_);
+      stack_.popBack();
     }
   }
 
@@ -406,9 +874,11 @@ class CycleDetector {
   MutableHandle<ObjectVector> stack_;
   HandleObject obj_;
   bool appended_;
+>>>>>>> upstream-releases
 };
 
 /* ES5 15.12.3 JO. */
+<<<<<<< HEAD
 static bool JO(JSContext* cx, HandleObject obj, StringifyContext* scx) {
   /*
    * This method implements the JO algorithm in ES5 15.12.3, but:
@@ -462,6 +932,65 @@ static bool JO(JSContext* cx, HandleObject obj, StringifyContext* scx) {
       return false;
     }
 
+||||||| merged common ancestors
+static bool
+JO(JSContext* cx, HandleObject obj, StringifyContext* scx)
+{
+=======
+static bool JO(JSContext* cx, HandleObject obj, StringifyContext* scx) {
+  /*
+   * This method implements the JO algorithm in ES5 15.12.3, but:
+   *
+   *   * The algorithm is somewhat reformulated to allow the final string to
+   *     be streamed into a single buffer, rather than be created and copied
+   *     into place incrementally as the ES5 algorithm specifies it.  This
+   *     requires moving portions of the Str call in 8a into this algorithm
+   *     (and in JA as well).
+   */
+
+  MOZ_ASSERT_IF(scx->maybeSafely, obj->is<PlainObject>());
+
+  /* Steps 1-2, 11. */
+  CycleDetector detect(scx, obj);
+  if (!detect.foundCycle(cx)) {
+    return false;
+  }
+
+  if (!scx->sb.append('{')) {
+    return false;
+  }
+
+  /* Steps 5-7. */
+  Maybe<RootedIdVector> ids;
+  const RootedIdVector* props;
+  if (scx->replacer && !scx->replacer->isCallable()) {
+    // NOTE: We can't assert |IsArray(scx->replacer)| because the replacer
+    //       might have been a revocable proxy to an array.  Such a proxy
+    //       satisfies |IsArray|, but any side effect of JSON.stringify
+    //       could revoke the proxy so that |!IsArray(scx->replacer)|.  See
+    //       bug 1196497.
+    props = &scx->propertyList;
+  } else {
+    MOZ_ASSERT_IF(scx->replacer, scx->propertyList.length() == 0);
+    ids.emplace(cx);
+    if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY, ids.ptr())) {
+      return false;
+    }
+    props = ids.ptr();
+  }
+
+  /* My kingdom for not-quite-initialized-from-the-start references. */
+  const RootedIdVector& propertyList = *props;
+
+  /* Steps 8-10, 13. */
+  bool wroteMember = false;
+  RootedId id(cx);
+  for (size_t i = 0, len = propertyList.length(); i < len; i++) {
+    if (!CheckForInterrupt(cx)) {
+      return false;
+    }
+
+>>>>>>> upstream-releases
     /*
      * Steps 8a-8b.  Note that the call to Str is broken up into 1) getting
      * the property; 2) processing for toJSON, calling the replacer, and
@@ -516,9 +1045,75 @@ static bool JO(JSContext* cx, HandleObject obj, StringifyContext* scx) {
     return false;
   }
 
+<<<<<<< HEAD
   return scx->sb.append('}');
 }
 
+/* ES5 15.12.3 JA. */
+static bool JA(JSContext* cx, HandleObject obj, StringifyContext* scx) {
+  /*
+   * This method implements the JA algorithm in ES5 15.12.3, but:
+   *
+   *   * The algorithm is somewhat reformulated to allow the final string to
+   *     be streamed into a single buffer, rather than be created and copied
+   *     into place incrementally as the ES5 algorithm specifies it.  This
+   *     requires moving portions of the Str call in 8a into this algorithm
+   *     (and in JO as well).
+   */
+
+  /* Steps 1-2, 11. */
+  CycleDetector detect(scx, obj);
+  if (!detect.foundCycle(cx)) {
+    return false;
+  }
+
+  if (!scx->sb.append('[')) {
+    return false;
+  }
+
+  /* Step 6. */
+  uint32_t length;
+  if (!GetLengthProperty(cx, obj, &length)) {
+    return false;
+  }
+
+  /* Steps 7-10. */
+  if (length != 0) {
+    /* Steps 4, 10b(i). */
+    if (!WriteIndent(scx, scx->depth)) {
+      return false;
+    }
+||||||| merged common ancestors
+    /* Steps 8-10, 13. */
+    bool wroteMember = false;
+    RootedId id(cx);
+    for (size_t i = 0, len = propertyList.length(); i < len; i++) {
+        if (!CheckForInterrupt(cx)) {
+            return false;
+        }
+=======
+  return scx->sb.append('}');
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    /* Steps 7-10. */
+    RootedValue outputValue(cx);
+    for (uint32_t i = 0; i < length; i++) {
+      if (!CheckForInterrupt(cx)) {
+        return false;
+      }
+
+      /*
+       * Steps 8a-8c.  Again note how the call to the spec's Str method
+       * is broken up into getting the property, running it past toJSON
+       * and the replacer and maybe unboxing, and interpreting some
+       * values as |null| in separate steps.
+       */
+#ifdef DEBUG
+      if (scx->maybeSafely) {
+||||||| merged common ancestors
+=======
 /* ES5 15.12.3 JA. */
 static bool JA(JSContext* cx, HandleObject obj, StringifyContext* scx) {
   /*
@@ -569,6 +1164,7 @@ static bool JA(JSContext* cx, HandleObject obj, StringifyContext* scx) {
        */
 #ifdef DEBUG
       if (scx->maybeSafely) {
+>>>>>>> upstream-releases
         /*
          * Trying to do a JS_AlreadyHasOwnElement runs the risk of
          * hitting OOM on jsid creation.  Let's just assert sanity for
@@ -675,6 +1271,7 @@ static bool Str(JSContext* cx, const Value& v, StringifyContext* scx) {
     return NumberValueToStringBuffer(cx, v, scx->sb);
   }
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   /* Step 10 in the BigInt proposal. */
   if (v.isBigInt()) {
@@ -738,6 +1335,73 @@ bool js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_,
       /* Step 4b(iii)(2-3). */
       uint32_t len;
       if (!GetLengthProperty(cx, replacer, &len)) {
+||||||| merged common ancestors
+    /* Step 6. */
+    uint32_t length;
+    if (!GetLengthProperty(cx, obj, &length)) {
+=======
+  /* Step 10 in the BigInt proposal. */
+  if (v.isBigInt()) {
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                              JSMSG_BIGINT_NOT_SERIALIZABLE);
+    return false;
+  }
+
+  /* Step 10. */
+  MOZ_ASSERT(v.isObject());
+  RootedObject obj(cx, &v.toObject());
+
+  MOZ_ASSERT(
+      !scx->maybeSafely || obj->is<PlainObject>() || obj->is<ArrayObject>(),
+      "input to JS::ToJSONMaybeSafely must not include reachable "
+      "objects that are neither arrays nor plain objects");
+
+  scx->depth++;
+  auto dec = mozilla::MakeScopeExit([&] { scx->depth--; });
+
+  bool isArray;
+  if (!IsArray(cx, obj, &isArray)) {
+    return false;
+  }
+
+  return isArray ? JA(cx, obj, scx) : JO(cx, obj, scx);
+}
+
+/* ES6 24.3.2. */
+bool js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_,
+                   const Value& space_, StringBuffer& sb,
+                   StringifyBehavior stringifyBehavior) {
+  RootedObject replacer(cx, replacer_);
+  RootedValue space(cx, space_);
+
+  MOZ_ASSERT_IF(stringifyBehavior == StringifyBehavior::RestrictedSafe,
+                space.isNull());
+  MOZ_ASSERT_IF(stringifyBehavior == StringifyBehavior::RestrictedSafe,
+                vp.isObject());
+  /**
+   * This uses MOZ_ASSERT, since it's actually asserting something jsapi
+   * consumers could get wrong, so needs a better error message.
+   */
+  MOZ_ASSERT(stringifyBehavior == StringifyBehavior::Normal ||
+                 vp.toObject().is<PlainObject>() ||
+                 vp.toObject().is<ArrayObject>(),
+             "input to JS::ToJSONMaybeSafely must be a plain object or array");
+
+  /* Step 4. */
+  RootedIdVector propertyList(cx);
+  if (replacer) {
+    bool isArray;
+    if (replacer->isCallable()) {
+      /* Step 4a(i): use replacer to transform values.  */
+    } else if (!IsArray(cx, replacer, &isArray)) {
+      return false;
+    } else if (isArray) {
+      /* Step 4b(iii). */
+
+      /* Step 4b(iii)(2-3). */
+      uint32_t len;
+      if (!GetLengthProperty(cx, replacer, &len)) {
+>>>>>>> upstream-releases
         return false;
       }
 
@@ -804,6 +1468,7 @@ bool js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_,
       return false;
     }
 
+<<<<<<< HEAD
     if (cls == ESClass::Number) {
       double d;
       if (!ToNumber(cx, space, &d)) {
@@ -813,9 +1478,28 @@ bool js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_,
     } else if (cls == ESClass::String) {
       JSString* str = ToStringSlow<CanGC>(cx, space);
       if (!str) {
+||||||| merged common ancestors
+    if (!CheckRecursionLimit(cx)) {
+=======
+    if (cls == ESClass::Number) {
+      double d;
+      if (!ToNumber(cx, space, &d)) {
+>>>>>>> upstream-releases
+        return false;
+<<<<<<< HEAD
+      }
+      space = StringValue(str);
+||||||| merged common ancestors
+=======
+      }
+      space = NumberValue(d);
+    } else if (cls == ESClass::String) {
+      JSString* str = ToStringSlow<CanGC>(cx, space);
+      if (!str) {
         return false;
       }
       space = StringValue(str);
+>>>>>>> upstream-releases
     }
   }
 
@@ -921,6 +1605,7 @@ static bool Walk(JSContext* cx, HandleObject holder, HandleId name,
           return false;
         }
 
+<<<<<<< HEAD
         ObjectOpResult ignored;
         if (newElement.isUndefined()) {
           /* Step 2a(iii)(2). The spec deliberately ignores strict failure. */
@@ -932,16 +1617,64 @@ static bool Walk(JSContext* cx, HandleObject holder, HandleId name,
           Rooted<PropertyDescriptor> desc(cx);
           desc.setDataDescriptor(newElement, JSPROP_ENUMERATE);
           if (!DefineProperty(cx, obj, id, desc, ignored)) {
+||||||| merged common ancestors
+    if (space.isNumber()) {
+        /* Step 6. */
+        double d;
+        MOZ_ALWAYS_TRUE(ToInteger(cx, space, &d));
+        d = Min(10.0, d);
+        if (d >= 1 && !gap.appendN(' ', uint32_t(d))) {
+            return false;
+        }
+    } else if (space.isString()) {
+        /* Step 7. */
+        JSLinearString* str = space.toString()->ensureLinear(cx);
+        if (!str) {
+            return false;
+        }
+        size_t len = Min(size_t(10), str->length());
+        if (!gap.appendSubstring(str, 0, len)) {
+=======
+        ObjectOpResult ignored;
+        if (newElement.isUndefined()) {
+          /* Step 2a(iii)(2). The spec deliberately ignores strict failure. */
+          if (!DeleteProperty(cx, obj, id, ignored)) {
+            return false;
+          }
+        } else {
+          /* Step 2a(iii)(3). The spec deliberately ignores strict failure. */
+          Rooted<PropertyDescriptor> desc(cx);
+          desc.setDataDescriptor(newElement, JSPROP_ENUMERATE);
+          if (!DefineProperty(cx, obj, id, desc, ignored)) {
+>>>>>>> upstream-releases
             return false;
           }
         }
       }
     } else {
+<<<<<<< HEAD
       /* Step 2b(i). */
       AutoIdVector keys(cx);
       if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY, &keys)) {
         return false;
       }
+||||||| merged common ancestors
+        /* Step 8. */
+        MOZ_ASSERT(gap.empty());
+    }
+
+    RootedPlainObject wrapper(cx);
+    RootedId emptyId(cx, NameToId(cx->names().empty));
+    if (replacer && replacer->isCallable()) {
+        // We can skip creating the initial wrapper object if no replacer
+        // function is present.
+=======
+      /* Step 2b(i). */
+      RootedIdVector keys(cx);
+      if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY, &keys)) {
+        return false;
+      }
+>>>>>>> upstream-releases
 
       /* Step 2b(ii). */
       RootedId id(cx);
@@ -956,11 +1689,55 @@ static bool Walk(JSContext* cx, HandleObject holder, HandleId name,
         if (!Walk(cx, obj, id, reviver, &newElement)) {
           return false;
         }
+<<<<<<< HEAD
 
         ObjectOpResult ignored;
         if (newElement.isUndefined()) {
           /* Step 2b(ii)(2). The spec deliberately ignores strict failure. */
           if (!DeleteProperty(cx, obj, id, ignored)) {
+||||||| merged common ancestors
+    }
+
+    /* Step 12. */
+    StringifyContext scx(cx, sb, gap, replacer, propertyList,
+                         stringifyBehavior == StringifyBehavior::RestrictedSafe);
+    if (!PreprocessValue(cx, wrapper, HandleId(emptyId), vp, &scx)) {
+        return false;
+    }
+    if (IsFilteredValue(vp)) {
+        return true;
+    }
+
+    return Str(cx, vp, &scx);
+}
+
+/* ES5 15.12.2 Walk. */
+static bool
+Walk(JSContext* cx, HandleObject holder, HandleId name, HandleValue reviver, MutableHandleValue vp)
+{
+    if (!CheckRecursionLimit(cx)) {
+        return false;
+    }
+
+    /* Step 1. */
+    RootedValue val(cx);
+    if (!GetProperty(cx, holder, holder, name, &val)) {
+        return false;
+    }
+
+    /* Step 2. */
+    if (val.isObject()) {
+        RootedObject obj(cx, &val.toObject());
+
+        bool isArray;
+        if (!IsArray(cx, obj, &isArray)) {
+=======
+
+        ObjectOpResult ignored;
+        if (newElement.isUndefined()) {
+          /* Step 2b(ii)(2). The spec deliberately ignores strict failure. */
+          if (!DeleteProperty(cx, obj, id, ignored)) {
+>>>>>>> upstream-releases
             return false;
           }
         } else {
@@ -1062,6 +1839,7 @@ static bool json_parse(JSContext* cx, unsigned argc, Value* vp) {
 }
 
 /* ES6 24.3.2. */
+<<<<<<< HEAD
 bool json_stringify(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -1082,6 +1860,54 @@ bool json_stringify(JSContext* cx, unsigned argc, Value* vp) {
     JSString* str = sb.finishString();
     if (!str) {
       return false;
+||||||| merged common ancestors
+bool
+json_stringify(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+
+    RootedObject replacer(cx, args.get(1).isObject() ? &args[1].toObject() : nullptr);
+    RootedValue value(cx, args.get(0));
+    RootedValue space(cx, args.get(2));
+
+    StringBuffer sb(cx);
+    if (!Stringify(cx, &value, replacer, space, sb, StringifyBehavior::Normal)) {
+        return false;
+    }
+
+    // XXX This can never happen to nsJSON.cpp, but the JSON object
+    // needs to support returning undefined. So this is a little awkward
+    // for the API, because we want to support streaming writers.
+    if (!sb.empty()) {
+        JSString* str = sb.finishString();
+        if (!str) {
+            return false;
+        }
+        args.rval().setString(str);
+    } else {
+        args.rval().setUndefined();
+=======
+bool json_stringify(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  RootedObject replacer(cx,
+                        args.get(1).isObject() ? &args[1].toObject() : nullptr);
+  RootedValue value(cx, args.get(0));
+  RootedValue space(cx, args.get(2));
+
+  JSStringBuilder sb(cx);
+  if (!Stringify(cx, &value, replacer, space, sb, StringifyBehavior::Normal)) {
+    return false;
+  }
+
+  // XXX This can never happen to nsJSON.cpp, but the JSON object
+  // needs to support returning undefined. So this is a little awkward
+  // for the API, because we want to support streaming writers.
+  if (!sb.empty()) {
+    JSString* str = sb.finishString();
+    if (!str) {
+      return false;
+>>>>>>> upstream-releases
     }
     args.rval().setString(str);
   } else {

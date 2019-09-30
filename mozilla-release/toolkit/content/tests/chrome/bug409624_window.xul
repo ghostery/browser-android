@@ -12,11 +12,15 @@
         height="600"
         title="409624 test">
 
-  <script type="application/javascript"
-          src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
 
   <script type="application/javascript"><![CDATA[
+<<<<<<< HEAD
     ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
+||||||| merged common ancestors
+=======
+    const {BrowserTestUtils} = ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
+>>>>>>> upstream-releases
     var gFindBar = null;
     var gBrowser;
 

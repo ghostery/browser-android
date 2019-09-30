@@ -45,7 +45,13 @@
 #include "ssl.h"
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <winsock.h>  // for htonl
+||||||| merged common ancestors
+#include <winsock.h> // for htonl
+=======
+#  include <winsock.h>  // for htonl
+>>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -80,7 +86,16 @@ class nsNSSCertListEnumerator : public nsSimpleEnumerator {
 
 NS_IMPL_ISUPPORTS(nsNSSCertificate, nsIX509Cert, nsISerializable, nsIClassInfo)
 
+<<<<<<< HEAD
 /*static*/ nsNSSCertificate* nsNSSCertificate::Create(CERTCertificate* cert) {
+||||||| merged common ancestors
+/*static*/ nsNSSCertificate*
+nsNSSCertificate::Create(CERTCertificate* cert)
+{
+=======
+/*static*/
+nsNSSCertificate* nsNSSCertificate::Create(CERTCertificate* cert) {
+>>>>>>> upstream-releases
   if (cert)
     return new nsNSSCertificate(cert);
   else
@@ -103,7 +118,22 @@ bool nsNSSCertificate::InitFromDER(char* certDER, int derLen) {
 
   CERTCertificate* aCert = CERT_DecodeCertFromPackage(certDER, derLen);
 
+<<<<<<< HEAD
   if (!aCert) return false;
+||||||| merged common ancestors
+  if (!aCert)
+    return false;
+=======
+  if (!aCert) {
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+    if (XRE_GetProcessType() == GeckoProcessType_Content) {
+      MOZ_CRASH_UNSAFE_PRINTF("CERT_DecodeCertFromPackage failed in child: %d",
+                              PR_GetError());
+    }
+#endif
+    return false;
+  }
+>>>>>>> upstream-releases
 
   if (!aCert->dbhandle) {
     aCert->dbhandle = CERT_GetDefaultCertDB();
@@ -386,6 +416,7 @@ nsNSSCertificate::GetEmailAddress(nsAString& aEmailAddress) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSCertificate::GetEmailAddresses(uint32_t* aLength, char16_t*** aAddresses) {
   NS_ENSURE_ARG(aLength);
   NS_ENSURE_ARG(aAddresses);
@@ -393,17 +424,45 @@ nsNSSCertificate::GetEmailAddresses(uint32_t* aLength, char16_t*** aAddresses) {
   *aLength = 0;
 
   for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get()); aAddr;
+||||||| merged common ancestors
+nsNSSCertificate::GetEmailAddresses(uint32_t* aLength, char16_t*** aAddresses)
+{
+  NS_ENSURE_ARG(aLength);
+  NS_ENSURE_ARG(aAddresses);
+
+  *aLength = 0;
+
+  for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get());
+       aAddr;
+=======
+nsNSSCertificate::GetEmailAddresses(nsTArray<nsString>& aAddresses) {
+  uint32_t length = 0;
+  for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get()); aAddr;
+>>>>>>> upstream-releases
        aAddr = CERT_GetNextEmailAddress(mCert.get(), aAddr)) {
-    ++(*aLength);
+    ++(length);
   }
 
+<<<<<<< HEAD
   *aAddresses = (char16_t**)moz_xmalloc(sizeof(char16_t*) * (*aLength));
+||||||| merged common ancestors
+  *aAddresses = (char16_t**) moz_xmalloc(sizeof(char16_t*) * (*aLength));
+=======
+  aAddresses.SetCapacity(length);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   uint32_t iAddr = 0;
   for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get()); aAddr;
+||||||| merged common ancestors
+  uint32_t iAddr = 0;
+  for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get());
+       aAddr;
+=======
+  for (const char* aAddr = CERT_GetFirstEmailAddress(mCert.get()); aAddr;
+>>>>>>> upstream-releases
        aAddr = CERT_GetNextEmailAddress(mCert.get(), aAddr)) {
-    (*aAddresses)[iAddr] = ToNewUnicode(nsDependentCString(aAddr));
-    iAddr++;
+    CopyASCIItoUTF16(MakeStringSpan(aAddr), *aAddresses.AppendElement());
   }
 
   return NS_OK;
@@ -554,6 +613,53 @@ void nsNSSCertificate::GetSubjectAltNames() {
           name.Assign(NS_ConvertASCIItoUTF16(nameFromCert));
           mSubjectAltNames.push_back(name);
         }
+<<<<<<< HEAD
+      } break;
+
+      case certIPAddress: {
+        char buf[INET6_ADDRSTRLEN];
+        PRNetAddr addr;
+        if (current->name.other.len == 4) {
+          addr.inet.family = PR_AF_INET;
+          memcpy(&addr.inet.ip, current->name.other.data,
+                 current->name.other.len);
+          PR_NetAddrToString(&addr, buf, sizeof(buf));
+          name.AssignASCII(buf);
+        } else if (current->name.other.len == 16) {
+          addr.ipv6.family = PR_AF_INET6;
+          memcpy(&addr.ipv6.ip, current->name.other.data,
+                 current->name.other.len);
+          PR_NetAddrToString(&addr, buf, sizeof(buf));
+          name.AssignASCII(buf);
+        } else {
+          /* invalid IP address */
+||||||| merged common ancestors
+        break;
+
+      case certIPAddress:
+        {
+          char buf[INET6_ADDRSTRLEN];
+          PRNetAddr addr;
+          if (current->name.other.len == 4) {
+            addr.inet.family = PR_AF_INET;
+            memcpy(&addr.inet.ip, current->name.other.data,
+                   current->name.other.len);
+            PR_NetAddrToString(&addr, buf, sizeof(buf));
+            name.AssignASCII(buf);
+          } else if (current->name.other.len == 16) {
+            addr.ipv6.family = PR_AF_INET6;
+            memcpy(&addr.ipv6.ip, current->name.other.data,
+                   current->name.other.len);
+            PR_NetAddrToString(&addr, buf, sizeof(buf));
+            name.AssignASCII(buf);
+          } else {
+            /* invalid IP address */
+          }
+          if (!name.IsEmpty()) {
+            mSubjectAltNames.push_back(name);
+          }
+          break;
+=======
       } break;
 
       case certIPAddress: {
@@ -576,9 +682,19 @@ void nsNSSCertificate::GetSubjectAltNames() {
         }
         if (!name.IsEmpty()) {
           mSubjectAltNames.push_back(name);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+        if (!name.IsEmpty()) {
+          mSubjectAltNames.push_back(name);
         }
         break;
       }
+||||||| merged common ancestors
+=======
+        break;
+      }
+>>>>>>> upstream-releases
 
       default:  // all other types of names are ignored
         break;
@@ -694,14 +810,19 @@ nsNSSCertificate::GetSha256SubjectPublicKeyInfoDigest(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSCertificate::GetRawDER(uint32_t* aLength, uint8_t** aArray) {
+||||||| merged common ancestors
+nsNSSCertificate::GetRawDER(uint32_t* aLength, uint8_t** aArray)
+{
+=======
+nsNSSCertificate::GetRawDER(nsTArray<uint8_t>& aArray) {
+>>>>>>> upstream-releases
   if (mCert) {
-    *aArray = (uint8_t*)moz_xmalloc(mCert->derCert.len);
-    memcpy(*aArray, mCert->derCert.data, mCert->derCert.len);
-    *aLength = mCert->derCert.len;
+    aArray.SetLength(mCert->derCert.len);
+    memcpy(aArray.Elements(), mCert->derCert.data, mCert->derCert.len);
     return NS_OK;
   }
-  *aLength = 0;
   return NS_ERROR_FAILURE;
 }
 
@@ -1227,9 +1348,19 @@ nsNSSCertificate::Read(nsIObjectInputStream* aStream) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsNSSCertificate::GetInterfaces(uint32_t* count, nsIID*** array) {
   *count = 0;
   *array = nullptr;
+||||||| merged common ancestors
+nsNSSCertificate::GetInterfaces(uint32_t* count, nsIID*** array)
+{
+  *count = 0;
+  *array = nullptr;
+=======
+nsNSSCertificate::GetInterfaces(nsTArray<nsIID>& array) {
+  array.Clear();
+>>>>>>> upstream-releases
   return NS_OK;
 }
 

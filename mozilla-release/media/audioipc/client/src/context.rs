@@ -4,7 +4,15 @@
 // accompanying file LICENSE for details
 
 use assert_not_in_callback;
+<<<<<<< HEAD
+||||||| merged common ancestors
+use audioipc::{messages, ClientMessage, ServerMessage};
+use audioipc::{core, rpc};
+=======
+use audio_thread_priority::promote_current_thread_to_real_time;
+>>>>>>> upstream-releases
 use audioipc::codec::LengthDelimitedCodec;
+<<<<<<< HEAD
 use audioipc::fd_passing::{framed_with_fds, FramedWithFds};
 use audioipc::{core, rpc};
 use audioipc::{messages, ClientMessage, ServerMessage};
@@ -12,27 +20,57 @@ use cubeb_backend::{
     ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error, Ops, Result,
     Stream, StreamParams, StreamParamsRef,
 };
+||||||| merged common ancestors
+use audioipc::fd_passing::{framed_with_fds, FramedWithFds};
+use cubeb_backend::{ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error,
+                    Ops, Result, Stream, StreamParams, StreamParamsRef};
+=======
+use audioipc::platformhandle_passing::{framed_with_platformhandles, FramedWithPlatformHandles};
+use audioipc::{core, rpc};
+use audioipc::{messages, ClientMessage, ServerMessage};
+use cubeb_backend::{
+    ffi, Context, ContextOps, DeviceCollectionRef, DeviceId, DeviceType, Error, Ops, Result,
+    Stream, StreamParams, StreamParamsRef,
+};
+>>>>>>> upstream-releases
 use futures::Future;
+<<<<<<< HEAD
 use futures_cpupool::{self, CpuPool};
 use libc;
+||||||| merged common ancestors
+use futures_cpupool::{self, CpuPool};
+use libc;
+use std::{fmt, io, mem, ptr};
+=======
+use futures_cpupool::CpuPool;
+>>>>>>> upstream-releases
 use std::ffi::{CStr, CString};
 use std::os::raw::c_void;
-use std::os::unix::io::FromRawFd;
-use std::os::unix::net;
 use std::sync::mpsc;
 use std::thread;
 use std::{fmt, io, mem, ptr};
 use stream;
 use tokio_core::reactor::{Handle, Remote};
+<<<<<<< HEAD
 use tokio_uds::UnixStream;
 use {ClientStream, CPUPOOL_INIT_PARAMS, G_SERVER_FD};
+||||||| merged common ancestors
+use tokio_uds::UnixStream;
+=======
+use {ClientStream, CpuPoolInitParams, CPUPOOL_INIT_PARAMS, G_SERVER_FD};
+cfg_if! {
+    if #[cfg(target_os = "linux")] {
+        use {G_THREAD_POOL};
+    }
+}
+>>>>>>> upstream-releases
 
 struct CubebClient;
 
 impl rpc::Client for CubebClient {
     type Request = ServerMessage;
     type Response = ClientMessage;
-    type Transport = FramedWithFds<UnixStream, LengthDelimitedCodec<Self::Request, Self::Response>>;
+    type Transport = FramedWithPlatformHandles<audioipc::AsyncMessageStream, LengthDelimitedCodec<Self::Request, Self::Response>>;
 }
 
 macro_rules! t(
@@ -73,24 +111,68 @@ impl ClientContext {
 }
 
 // TODO: encapsulate connect, etc inside audioipc.
-fn open_server_stream() -> Result<net::UnixStream> {
+fn open_server_stream() -> Result<audioipc::MessageStream> {
     unsafe {
         if let Some(fd) = G_SERVER_FD {
-            return Ok(net::UnixStream::from_raw_fd(fd));
+            return Ok(audioipc::MessageStream::from_raw_fd(fd.as_raw()));
         }
 
         Err(Error::default())
     }
 }
 
+fn register_thread(callback: Option<extern "C" fn(*const ::std::os::raw::c_char)>) {
+    match promote_current_thread_to_real_time(0, 48000) {
+        Ok(_) => {
+            info!("Audio thread promoted to real-time.");
+        }
+        Err(_) => {
+            warn!("Could not promote thread to real-time.");
+        }
+    }
+    if let Some(func) = callback {
+        let thr = thread::current();
+        let name = CString::new(thr.name().unwrap()).unwrap();
+        func(name.as_ptr());
+    }
+}
+
+fn create_thread_pool(init_params: CpuPoolInitParams) -> CpuPool {
+    futures_cpupool::Builder::new()
+        .name_prefix("AudioIPC")
+        .after_start(move || register_thread(init_params.thread_create_callback))
+        .pool_size(init_params.pool_size)
+        .stack_size(init_params.stack_size)
+        .create()
+}
+
+cfg_if! {
+    if #[cfg(target_os = "linux")] {
+        fn get_thread_pool(init_params: CpuPoolInitParams) -> CpuPool {
+            let mut guard = G_THREAD_POOL.lock().unwrap();
+            if guard.is_some() {
+                // Sandbox is on, and the thread pool was created earlier, before the lockdown.
+                guard.take().unwrap()
+            } else {
+                // Sandbox is off, let's create the pool now, promoting the threads will work.
+                create_thread_pool(init_params)
+            }
+        }
+    } else {
+        fn get_thread_pool(init_params: CpuPoolInitParams) -> CpuPool {
+            create_thread_pool(init_params)
+        }
+    }
+}
+
 impl ContextOps for ClientContext {
     fn init(_context_name: Option<&CStr>) -> Result<Context> {
         fn bind_and_send_client(
-            stream: UnixStream,
+            stream: audioipc::AsyncMessageStream,
             handle: &Handle,
             tx_rpc: &mpsc::Sender<rpc::ClientProxy<ServerMessage, ClientMessage>>,
         ) -> Option<()> {
-            let transport = framed_with_fds(stream, Default::default());
+            let transport = framed_with_platformhandles(stream, Default::default());
             let rpc = rpc::bind_client::<CubebClient>(transport, handle);
             // If send fails then the rx end has closed
             // which is unlikely here.
@@ -102,6 +184,7 @@ impl ContextOps for ClientContext {
 
         let (tx_rpc, rx_rpc) = mpsc::channel();
 
+<<<<<<< HEAD
         let params = CPUPOOL_INIT_PARAMS.with(|p| p.replace(None).unwrap());
 
         let thread_create_callback = params.thread_create_callback;
@@ -113,15 +196,32 @@ impl ContextOps for ClientContext {
                 func(name.as_ptr());
             }
         };
+||||||| merged common ancestors
+        let params = CPUPOOL_INIT_PARAMS.with(|p| {
+            p.replace(None).unwrap()
+        });
+
+        let thread_create_callback = params.thread_create_callback;
+
+        let register_thread = move || {
+            if let Some(func) = thread_create_callback {
+                let thr = thread::current();
+                let name = CString::new(thr.name().unwrap()).unwrap();
+                func(name.as_ptr());
+            }
+        };
+=======
+        let params = CPUPOOL_INIT_PARAMS.with(|p| p.replace(None).unwrap());
+>>>>>>> upstream-releases
 
         let core = t!(core::spawn_thread("AudioIPC Client RPC", move || {
             let handle = core::handle();
 
-            register_thread();
+            register_thread(params.thread_create_callback);
 
             open_server_stream()
                 .ok()
-                .and_then(|stream| UnixStream::from_stream(stream, &handle).ok())
+                .and_then(|stream| stream.into_tokio_ipc(&handle).ok())
                 .and_then(|stream| bind_and_send_client(stream, &handle, &tx_rpc))
                 .ok_or_else(|| {
                     io::Error::new(
@@ -133,18 +233,33 @@ impl ContextOps for ClientContext {
 
         let rpc = t!(rx_rpc.recv());
 
+<<<<<<< HEAD
         let cpupool = futures_cpupool::Builder::new()
             .name_prefix("AudioIPC")
             .after_start(register_thread)
             .pool_size(params.pool_size)
             .stack_size(params.stack_size)
             .create();
+||||||| merged common ancestors
+        let cpupool = futures_cpupool::Builder::new()
+                .name_prefix("AudioIPC")
+                .after_start(register_thread)
+                .pool_size(params.pool_size)
+                .stack_size(params.stack_size)
+                .create();
+=======
+        // Don't let errors bubble from here.  Later calls against this context
+        // will return errors the caller expects to handle.
+        let _ = send_recv!(rpc, ClientConnect(std::process::id()) => ClientConnected);
+
+        let pool = get_thread_pool(params);
+>>>>>>> upstream-releases
 
         let ctx = Box::new(ClientContext {
             _ops: &CLIENT_OPS as *const _,
             rpc: rpc,
             core: core,
-            cpu_pool: cpupool,
+            cpu_pool: pool,
         });
         Ok(unsafe { Context::from_ptr(Box::into_raw(ctx) as *mut _) })
     }
@@ -280,7 +395,7 @@ impl Drop for ClientContext {
         let _ = send_recv!(self.rpc(), ClientDisconnect => ClientDisconnected);
         unsafe {
             if G_SERVER_FD.is_some() {
-                libc::close(super::G_SERVER_FD.take().unwrap());
+                G_SERVER_FD.take().unwrap().close();
             }
         }
     }

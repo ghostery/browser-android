@@ -1,3 +1,9 @@
+<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/usage/nested-arrow-import-then-returns-thenable.js
+||||||| merged common ancestors
+// |reftest| skip -- dynamic-import is not supported
+=======
+// |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
+>>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/usage/nested-arrow-import-then-returns-thenable.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/returns-thenable.case
 // - src/dynamic-import/default/nested-arrow.template

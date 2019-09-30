@@ -21,7 +21,6 @@ typedef enum {
   eXBL_InDocument,       /* outside any bindings */
   eXBL_InBindings,       /* Inside a <bindings> element */
   eXBL_InBinding,        /* Inside a <binding> */
-  eXBL_InResources,      /* Inside a <resources> */
   eXBL_InImplementation, /* Inside a <implementation> */
   eXBL_InHandlers,       /* Inside a <handlers> */
   eXBL_Error /* An error has occurred.  Suspend binding construction */
@@ -60,7 +59,16 @@ class nsXBLContentSink : public nsXMLContentSink {
   nsXBLContentSink();
   ~nsXBLContentSink();
 
+<<<<<<< HEAD
   nsresult Init(nsIDocument* aDoc, nsIURI* aURL, nsISupports* aContainer);
+||||||| merged common ancestors
+  nsresult Init(nsIDocument* aDoc,
+                nsIURI* aURL,
+                nsISupports* aContainer);
+=======
+  nsresult Init(mozilla::dom::Document* aDoc, nsIURI* aURL,
+                nsISupports* aContainer);
+>>>>>>> upstream-releases
 
   // nsIContentSink overrides
   NS_IMETHOD HandleStartElement(const char16_t* aName, const char16_t** aAtts,
@@ -88,7 +96,14 @@ class nsXBLContentSink : public nsXMLContentSink {
                          nsIContent** aResult, bool* aAppendContent,
                          mozilla::dom::FromParser aFromParser) override;
 
+<<<<<<< HEAD
   nsresult AddAttributes(const char16_t** aAtts, Element* aElement) override;
+||||||| merged common ancestors
+    nsresult AddAttributes(const char16_t** aAtts, Element* aElement) override;
+=======
+  nsresult AddAttributes(const char16_t** aAtts,
+                         mozilla::dom::Element* aElement) override;
+>>>>>>> upstream-releases
 
 #ifdef MOZ_XUL
   nsresult AddAttributesToXULPrototype(const char16_t** aAtts,
@@ -96,6 +111,7 @@ class nsXBLContentSink : public nsXMLContentSink {
                                        nsXULPrototypeElement* aElement);
 #endif
 
+<<<<<<< HEAD
   // Our own helpers for constructing XBL prototype objects.
   nsresult ConstructBinding(uint32_t aLineNumber);
   void ConstructHandler(const char16_t** aAtts, uint32_t aLineNumber);
@@ -105,6 +121,27 @@ class nsXBLContentSink : public nsXMLContentSink {
   void ConstructMethod(const char16_t** aAtts);
   void ConstructParameter(const char16_t** aAtts);
   void ConstructField(const char16_t** aAtts, uint32_t aLineNumber);
+||||||| merged common ancestors
+    // Our own helpers for constructing XBL prototype objects.
+    nsresult ConstructBinding(uint32_t aLineNumber);
+    void ConstructHandler(const char16_t **aAtts, uint32_t aLineNumber);
+    void ConstructResource(const char16_t **aAtts, nsAtom* aResourceType);
+    void ConstructImplementation(const char16_t **aAtts);
+    void ConstructProperty(const char16_t **aAtts, uint32_t aLineNumber);
+    void ConstructMethod(const char16_t **aAtts);
+    void ConstructParameter(const char16_t **aAtts);
+    void ConstructField(const char16_t **aAtts, uint32_t aLineNumber);
+
+=======
+  // Our own helpers for constructing XBL prototype objects.
+  nsresult ConstructBinding(uint32_t aLineNumber);
+  void ConstructHandler(const char16_t** aAtts, uint32_t aLineNumber);
+  void ConstructImplementation(const char16_t** aAtts);
+  void ConstructProperty(const char16_t** aAtts, uint32_t aLineNumber);
+  void ConstructMethod(const char16_t** aAtts);
+  void ConstructParameter(const char16_t** aAtts);
+  void ConstructField(const char16_t** aAtts, uint32_t aLineNumber);
+>>>>>>> upstream-releases
 
   // nsXMLContentSink overrides
   nsresult FlushText(bool aReleaseTextNode = true) override;
@@ -139,6 +176,20 @@ class nsXBLContentSink : public nsXMLContentSink {
   nsXBLProtoImplField* mField;
 };
 
+<<<<<<< HEAD
 nsresult NS_NewXBLContentSink(nsIXMLContentSink** aResult, nsIDocument* aDoc,
                               nsIURI* aURL, nsISupports* aContainer);
 #endif  // nsXBLContentSink_h__
+||||||| merged common ancestors
+nsresult
+NS_NewXBLContentSink(nsIXMLContentSink** aResult,
+                     nsIDocument* aDoc,
+                     nsIURI* aURL,
+                     nsISupports* aContainer);
+#endif // nsXBLContentSink_h__
+=======
+nsresult NS_NewXBLContentSink(nsIXMLContentSink** aResult,
+                              mozilla::dom::Document* aDoc, nsIURI* aURL,
+                              nsISupports* aContainer);
+#endif  // nsXBLContentSink_h__
+>>>>>>> upstream-releases

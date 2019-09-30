@@ -19,18 +19,35 @@
 #include "nsPoint.h"
 #include "nsTArray.h"
 
-class nsIPresShell;
 class nsIFrame;
 class nsPresContext;
 namespace mozilla {
 struct ReflowInput;
+<<<<<<< HEAD
 class StyleBasicShape;
 }  // namespace mozilla
+||||||| merged common ancestors
+class StyleBasicShape;
+} // namespace mozilla
+=======
+class PresShell;
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 enum class nsFlowAreaRectFlags : uint32_t {
+<<<<<<< HEAD
   NO_FLAGS = 0,
   HAS_FLOATS = 1 << 0,
   MAY_WIDEN = 1 << 1
+||||||| merged common ancestors
+  NO_FLAGS   = 0,
+  HAS_FLOATS = 1 << 0,
+  MAY_WIDEN  = 1 << 1
+=======
+  NoFlags = 0,
+  HasFloats = 1 << 0,
+  MayWiden = 1 << 1
+>>>>>>> upstream-releases
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(nsFlowAreaRectFlags)
 
@@ -55,10 +72,10 @@ struct nsFlowAreaRect {
         mAreaFlags(aAreaFlags) {}
 
   bool HasFloats() const {
-    return (bool)(mAreaFlags & nsFlowAreaRectFlags::HAS_FLOATS);
+    return (bool)(mAreaFlags & nsFlowAreaRectFlags::HasFloats);
   }
   bool MayWiden() const {
-    return (bool)(mAreaFlags & nsFlowAreaRectFlags::MAY_WIDEN);
+    return (bool)(mAreaFlags & nsFlowAreaRectFlags::MayWiden);
   }
 };
 
@@ -91,8 +108,17 @@ struct nsFlowAreaRect {
  * [2] https://drafts.csswg.org/css-writing-modes/#logical-to-physical
  */
 class nsFloatManager {
+<<<<<<< HEAD
  public:
   explicit nsFloatManager(nsIPresShell* aPresShell, mozilla::WritingMode aWM);
+||||||| merged common ancestors
+public:
+  explicit nsFloatManager(nsIPresShell* aPresShell, mozilla::WritingMode aWM);
+=======
+ public:
+  explicit nsFloatManager(mozilla::PresShell* aPresShell,
+                          mozilla::WritingMode aWM);
+>>>>>>> upstream-releases
   ~nsFloatManager();
 
   void* operator new(size_t aSize) CPP_THROW_NEW;

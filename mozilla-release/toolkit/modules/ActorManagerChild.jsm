@@ -12,6 +12,7 @@
 
 var EXPORTED_SYMBOLS = ["ActorManagerChild"];
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -25,6 +26,49 @@ const {sharedData} = Services.cpmm;
 
 XPCOMUtils.defineLazyPreferenceGetter(this, "simulateFission",
                                       "browser.fission.simulate", false);
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+const {DefaultMap} = ExtensionUtils;
+
+const {sharedData} = Services.cpmm;
+
+XPCOMUtils.defineLazyPreferenceGetter(this, "simulateFission",
+                                      "browser.fission.simulate", false);
+=======
+const { ExtensionUtils } = ChromeUtils.import(
+  "resource://gre/modules/ExtensionUtils.jsm"
+);
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+
+ChromeUtils.defineModuleGetter(
+  this,
+  "WebNavigationFrames",
+  "resource://gre/modules/WebNavigationFrames.jsm"
+);
+
+const { DefaultMap } = ExtensionUtils;
+
+const { sharedData } = Services.cpmm;
+
+XPCOMUtils.defineLazyPreferenceGetter(
+  this,
+  "simulateEvents",
+  "fission.frontend.simulate-events",
+  false
+);
+XPCOMUtils.defineLazyPreferenceGetter(
+  this,
+  "simulateMessages",
+  "fission.frontend.simulate-messages",
+  false
+);
+>>>>>>> upstream-releases
 
 function getMessageManager(window) {
   return window.docShell.messageManager;
@@ -52,8 +96,16 @@ class Dispatcher {
     for (let topic of this.observers.keys()) {
       Services.obs.addObserver(this, topic, true);
     }
+<<<<<<< HEAD
     for (let {event, options, actor} of this.events) {
       this.addEventListener(event, actor, options);
+||||||| merged common ancestors
+    for (let {event, options, actor} of this.events) {
+      this.addEventListener(event, this.handleActorEvent.bind(this, actor), options);
+=======
+    for (let { event, options, actor } of this.events) {
+      this.addEventListener(event, actor, options);
+>>>>>>> upstream-releases
     }
 
     this.mm.addEventListener("unload", this);
@@ -63,8 +115,15 @@ class Dispatcher {
     for (let topic of this.observers.keys()) {
       Services.obs.removeObserver(this, topic);
     }
+
+    this.mm.removeEventListener("unload", this);
   }
 
+  get window() {
+    return this.mm.content;
+  }
+
+<<<<<<< HEAD
   get window() {
     return this.mm.content;
   }
@@ -80,6 +139,21 @@ class Dispatcher {
 
   addEventListener(event, actor, options) {
     let listener = this.handleActorEvent.bind(this, actor);
+||||||| merged common ancestors
+  addEventListener(event, listener, options) {
+=======
+  get frameId() {
+    // 0 for top-level windows, outerWindowId otherwise
+    return WebNavigationFrames.getFrameId(this.window);
+  }
+
+  get browsingContextId() {
+    return this.window.docShell.browsingContext.id;
+  }
+
+  addEventListener(event, actor, options) {
+    let listener = this.handleActorEvent.bind(this, actor);
+>>>>>>> upstream-releases
     this.mm.addEventListener(event, listener, options);
   }
 
@@ -123,7 +197,7 @@ class Dispatcher {
   handleActorEvent(actor, event) {
     let targetWindow = null;
 
-    if (simulateFission) {
+    if (simulateEvents) {
       targetWindow = event.target.ownerGlobal;
       if (targetWindow != this.window) {
         // events can't propagate across frame boundaries because the
@@ -136,6 +210,7 @@ class Dispatcher {
 
   receiveMessage(message) {
     let actors = this.messages.get(message.name);
+<<<<<<< HEAD
 
     if (simulateFission) {
       let match = false;
@@ -155,6 +230,29 @@ class Dispatcher {
       }
     }
 
+||||||| merged common ancestors
+    let result;
+=======
+
+    if (simulateMessages) {
+      let match = false;
+      let data = message.data || {};
+      if (data.hasOwnProperty("frameId")) {
+        match = data.frameId == this.frameId;
+      } else if (data.hasOwnProperty("browsingContextId")) {
+        match = data.browsingContextId == this.browsingContextId;
+      } else {
+        // if no specific target was given, just dispatch it to
+        // top-level actors.
+        match = this.frameId == 0;
+      }
+
+      if (!match) {
+        return;
+      }
+    }
+
+>>>>>>> upstream-releases
     for (let actor of actors) {
       try {
         this.getActor(actor).receiveMessage(message);
@@ -176,18 +274,25 @@ class Dispatcher {
   }
 }
 
-Dispatcher.prototype.QueryInterface =
-  ChromeUtils.generateQI(["nsIObserver",
-                          "nsISupportsWeakReference"]);
+Dispatcher.prototype.QueryInterface = ChromeUtils.generateQI([
+  "nsIObserver",
+  "nsISupportsWeakReference",
+]);
 
 class SingletonDispatcher extends Dispatcher {
   constructor(window, data) {
     super(getMessageManager(window), data);
 
-    window.addEventListener("pageshow", this, {mozSystemGroup: true});
-    window.addEventListener("pagehide", this, {mozSystemGroup: true});
+    window.addEventListener("pageshow", this, { mozSystemGroup: true });
+    window.addEventListener("pagehide", this, { mozSystemGroup: true });
 
+<<<<<<< HEAD
     this._window = window;
+||||||| merged common ancestors
+    this.window = window;
+=======
+    this._window = Cu.getWeakReference(window);
+>>>>>>> upstream-releases
     this.listeners = [];
   }
 
@@ -216,20 +321,30 @@ class SingletonDispatcher extends Dispatcher {
     }
 
     for (let actor of this.instances.values()) {
-      try {
-        actor.cleanup();
-      } catch (e) {
-        Cu.reportError(e);
+      if (typeof actor.cleanup == "function") {
+        try {
+          actor.cleanup();
+        } catch (e) {
+          Cu.reportError(e);
+        }
       }
     }
 
     this.listeners = [];
   }
 
+<<<<<<< HEAD
   get window() {
     return this._window;
   }
 
+||||||| merged common ancestors
+=======
+  get window() {
+    return this._window.get();
+  }
+
+>>>>>>> upstream-releases
   handleEvent(event) {
     if (event.type == "pageshow") {
       if (this.hidden) {
@@ -242,6 +357,7 @@ class SingletonDispatcher extends Dispatcher {
     }
   }
 
+<<<<<<< HEAD
   handleActorEvent(actor, event) {
     if (event.target.ownerGlobal == this.window) {
       this.getActor(actor).handleEvent(event);
@@ -250,6 +366,24 @@ class SingletonDispatcher extends Dispatcher {
 
   addEventListener(event, actor, options) {
     let listener = this.handleActorEvent.bind(this, actor);
+||||||| merged common ancestors
+  addEventListener(event, listener, options) {
+=======
+  handleActorEvent(actor, event) {
+    if (event.target.ownerGlobal == this.window) {
+      const inst = this.getActor(actor);
+      if (typeof inst.handleEvent != "function") {
+        throw new Error(
+          `Unhandled event for ${actor}: ${event.type}: missing handleEvent`
+        );
+      }
+      inst.handleEvent(event);
+    }
+  }
+
+  addEventListener(event, actor, options) {
+    let listener = this.handleActorEvent.bind(this, actor);
+>>>>>>> upstream-releases
     this.listeners.push([event, listener, options]);
     this.mm.addEventListener(event, listener, options);
   }
@@ -268,7 +402,9 @@ var ActorManagerChild = {
     let singletons = sharedData.get("ChildSingletonActors");
     for (let [filter, data] of singletons.entries()) {
       let options = {
-        matches: new MatchPatternSet(filter.matches, {restrictSchemes: false}),
+        matches: new MatchPatternSet(filter.matches, {
+          restrictSchemes: false,
+        }),
         allFrames: filter.allFrames,
         matchAboutBlank: filter.matchAboutBlank,
       };
@@ -289,8 +425,7 @@ var ActorManagerChild = {
   onNewDocument(matcher, window) {
     new SingletonDispatcher(window, this.singletons.get(matcher)).init();
   },
-  onPreloadDocument(matcher, loadInfo) {
-  },
+  onPreloadDocument(matcher, loadInfo) {},
 
   /**
    * Attaches the appropriate set of actors to the given frame message manager.

@@ -14,7 +14,6 @@
 #include "SkDevice.h"
 #include "SkGlyphRunPainter.h"
 #include "SkImageInfo.h"
-#include "SkPixelRef.h"
 #include "SkRasterClip.h"
 #include "SkRasterClipStack.h"
 #include "SkRect.h"
@@ -26,7 +25,6 @@ class SkImageFilterCache;
 class SkMatrix;
 class SkPaint;
 class SkPath;
-class SkPixelRef;
 class SkPixmap;
 class SkRasterHandleAllocator;
 class SkRRect;
@@ -90,8 +88,16 @@ protected:
      *  may do this to implement helpers such as drawOval, by placing a temp
      *  path on the stack to hold the representation of the oval.
      */
+<<<<<<< HEAD
     void drawPath(const SkPath&, const SkPaint&, bool pathIsMutable) override;
     void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override;
+||||||| merged common ancestors
+    void drawPath(const SkPath&, const SkPaint&, const SkMatrix* prePathMatrix,
+                          bool pathIsMutable) override;
+    void drawBitmap(const SkBitmap&, SkScalar x, SkScalar y, const SkPaint&) override;
+=======
+    void drawPath(const SkPath&, const SkPaint&, bool pathIsMutable) override;
+>>>>>>> upstream-releases
     void drawSprite(const SkBitmap&, int x, int y, const SkPaint&) override;
 
     /**
@@ -114,6 +120,8 @@ protected:
     sk_sp<SkSpecialImage> makeSpecial(const SkImage*) override;
     sk_sp<SkSpecialImage> snapSpecial() override;
     void setImmutable() override { fBitmap.setImmutable(); }
+
+    sk_sp<SkSpecialImage> snapBackImage(const SkIRect&) override;
 
     ///////////////////////////////////////////////////////////////////////////
 

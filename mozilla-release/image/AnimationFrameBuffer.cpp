@@ -334,6 +334,7 @@ void AnimationFrameRecyclingQueue::AdvanceInternal() {
   // We only want to change the current frame index if we have advanced. This
   // means either a higher frame index, or going back to the beginning.
   // We should never have advanced beyond the frame buffer.
+<<<<<<< HEAD
   MOZ_ASSERT(mGetIndex < mSize);
 
   MOZ_ASSERT(!mDisplay.empty());
@@ -345,7 +346,23 @@ void AnimationFrameRecyclingQueue::AdvanceInternal() {
   if (mGetIndex == 1) {
     mForceUseFirstFrameRefreshArea = false;
   }
+||||||| merged common ancestors
+  MOZ_ASSERT(mGetIndex < framesLength);
+  // We should never advance if the current frame is null -- it needs to know
+  // the timeout from it at least to know when to advance.
+  MOZ_ASSERT(mFrames[mGetIndex]);
+  if (++mGetIndex == framesLength) {
+    MOZ_ASSERT(mSizeKnown);
+    mGetIndex = 0;
+  }
+  // The owner should have already accessed the next frame, so it should also
+  // be available.
+  MOZ_ASSERT(mFrames[mGetIndex]);
+=======
+  MOZ_ASSERT(mGetIndex < mSize);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RefPtr<imgFrame>& front = mDisplay.front();
   RecycleEntry newEntry(mForceUseFirstFrameRefreshArea ? mFirstFrameRefreshArea
                                                        : front->GetDirtyRect());
@@ -354,7 +371,74 @@ void AnimationFrameRecyclingQueue::AdvanceInternal() {
   // base class's AdvanceInternal discards it.
   if (front->ShouldRecycle()) {
     newEntry.mFrame = std::move(front);
+||||||| merged common ancestors
+  // If we moved forward, that means we can remove the previous frame, assuming
+  // that frame is not the first frame. If we looped and are back at the first
+  // frame, we can remove the last frame.
+  if (MayDiscard()) {
+    RawAccessFrameRef discard;
+    if (mGetIndex > 1) {
+      discard = std::move(mFrames[mGetIndex - 1]);
+    } else if (mGetIndex == 0) {
+      MOZ_ASSERT(mSizeKnown && framesLength > 1);
+      discard = std::move(mFrames[framesLength - 1]);
+    }
+=======
+  MOZ_ASSERT(!mDisplay.empty());
+  MOZ_ASSERT(mDisplay.front());
+
+  // We have advanced past the first frame. That means the next frame we are
+  // putting in the queue to recycling is the first frame in the animation,
+  // and we no longer need to worry about having looped around.
+  if (mGetIndex == 1) {
+    mForceUseFirstFrameRefreshArea = false;
+>>>>>>> upstream-releases
   }
+
+<<<<<<< HEAD
+  // Even if the frame itself isn't saved, we want the dirty rect to calculate
+  // the recycle rect for future recycled frames.
+  mRecycle.push_back(std::move(newEntry));
+  mDisplay.pop_front();
+  MOZ_ASSERT(!mDisplay.empty());
+  MOZ_ASSERT(mDisplay.front());
+
+  if (mDisplay.size() + mPending - 1 < mBatch) {
+    // If we have fewer frames than the batch size, then ask for more. If we
+    // do not have any pending, then we know that there is no active decoding.
+    //
+    // We limit the batch to avoid using the frame we just added to the queue.
+    // This gives other parts of the system time to switch to the new current
+    // frame, and maximize buffer reuse. In particular this is useful for
+    // WebRender which holds onto the previous frame for much longer.
+    size_t newPending = std::min(mPending + mBatch, mRecycle.size() - 1);
+    if (newPending == 0 && (mDisplay.size() <= 1 || mPending > 0)) {
+      // If we already have pending frames, then the decoder is active and we
+      // cannot go below one. If we are displaying the only frame we have, and
+      // there are none pending, then we must request at least one more frame to
+      // continue to animation, because we won't advance again without a new
+      // frame. This may cause us to skip recycling because the previous frame
+      // is still in use.
+      newPending = 1;
+||||||| merged common ancestors
+  if (!mRedecodeError && (!mSizeKnown || MayDiscard())) {
+    // Calculate how many frames we have requested ahead of the current frame.
+    size_t buffered = mPending;
+    if (mGetIndex > mInsertIndex) {
+      // It wrapped around and we are decoding the beginning again before the
+      // the display has finished the loop.
+      MOZ_ASSERT(mSizeKnown);
+      buffered += mInsertIndex + framesLength - mGetIndex - 1;
+    } else {
+      buffered += mInsertIndex - mGetIndex - 1;
+=======
+  RefPtr<imgFrame>& front = mDisplay.front();
+  RecycleEntry newEntry(mForceUseFirstFrameRefreshArea ? mFirstFrameRefreshArea
+                                                       : front->GetDirtyRect());
+
+  // If we are allowed to recycle the frame, then we should save it before the
+  // base class's AdvanceInternal discards it.
+  newEntry.mFrame = std::move(front);
 
   // Even if the frame itself isn't saved, we want the dirty rect to calculate
   // the recycle rect for future recycled frames.
@@ -380,11 +464,13 @@ void AnimationFrameRecyclingQueue::AdvanceInternal() {
       // frame. This may cause us to skip recycling because the previous frame
       // is still in use.
       newPending = 1;
+>>>>>>> upstream-releases
     }
     mPending = newPending;
   }
 }
 
+<<<<<<< HEAD
 bool AnimationFrameRecyclingQueue::ResetInternal() {
   // We should save any display frames that we can to save on at least the
   // allocation. The first frame refresh area is guaranteed to be the aggregate
@@ -398,6 +484,26 @@ bool AnimationFrameRecyclingQueue::ResetInternal() {
       newEntry.mFrame = std::move(frame);
       mRecycle.push_back(std::move(newEntry));
     }
+||||||| merged common ancestors
+    if (buffered < mBatch) {
+      // If we have fewer frames than the batch size, then ask for more. If we
+      // do not have any pending, then we know that there is no active decoding.
+      mPending += mBatch;
+      return mPending == mBatch;
+    }
+=======
+bool AnimationFrameRecyclingQueue::ResetInternal() {
+  // We should save any display frames that we can to save on at least the
+  // allocation. The first frame refresh area is guaranteed to be the aggregate
+  // dirty rect or the entire frame, and so the bare minimum area we can
+  // recycle. We don't need to worry about updating the dirty rect for the
+  // existing mRecycle entries, because that will happen in RecycleFrame when
+  // we try to pull out a frame to redecode the first frame.
+  for (RefPtr<imgFrame>& frame : mDisplay) {
+    RecycleEntry newEntry(mFirstFrameRefreshArea);
+    newEntry.mFrame = std::move(frame);
+    mRecycle.push_back(std::move(newEntry));
+>>>>>>> upstream-releases
   }
 
   return AnimationFrameDiscardingQueue::ResetInternal();
@@ -466,11 +572,23 @@ bool AnimationFrameRecyclingQueue::MarkComplete(
   bool continueDecoding =
       AnimationFrameDiscardingQueue::MarkComplete(aFirstFrameRefreshArea);
 
+<<<<<<< HEAD
   // If we encounter a redecode error, just make the first frame refresh area to
   // be the full frame, because we don't really know what we can safely recycle.
   mFirstFrameRefreshArea = mRedecodeError ? mFirstFrame->GetRect()
                                           : aFirstFrameRefreshArea;
   return continueDecoding;
+||||||| merged common ancestors
+  bool restartDecoder = mPending == 0;
+  mPending = 2 * mBatch;
+  return restartDecoder;
+=======
+  // If we encounter a redecode error, just make the first frame refresh area to
+  // be the full frame, because we don't really know what we can safely recycle.
+  mFirstFrameRefreshArea =
+      mRedecodeError ? mFirstFrame->GetRect() : aFirstFrameRefreshArea;
+  return continueDecoding;
+>>>>>>> upstream-releases
 }
 
 }  // namespace image

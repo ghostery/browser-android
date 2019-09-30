@@ -41,7 +41,7 @@ class TexturedLayerMLGPU : public LayerMLGPU {
 
  protected:
   explicit TexturedLayerMLGPU(LayerManagerMLGPU* aManager);
-  virtual ~TexturedLayerMLGPU() override;
+  virtual ~TexturedLayerMLGPU();
 
   void AssignBigImage(FrameBuilder* aBuilder, RenderViewMLGPU* aView,
                       BigImageIterator* aIter,
@@ -76,8 +76,16 @@ class TempImageLayerMLGPU final : public ImageLayer, public TexturedLayerMLGPU {
   // HostLayer
   Layer* GetLayer() override { return this; }
 
+<<<<<<< HEAD
  protected:
   ~TempImageLayerMLGPU() override;
+||||||| merged common ancestors
+protected:
+  ~TempImageLayerMLGPU() override;
+=======
+ protected:
+  virtual ~TempImageLayerMLGPU();
+>>>>>>> upstream-releases
 
  private:
   gfx::SamplingFilter mFilter;

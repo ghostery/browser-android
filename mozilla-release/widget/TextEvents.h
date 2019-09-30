@@ -11,7 +11,14 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/CheckedInt.h"
+<<<<<<< HEAD
 #include "mozilla/EventForwards.h"  // for KeyNameIndex, temporarily
+||||||| merged common ancestors
+#include "mozilla/EventForwards.h" // for KeyNameIndex, temporarily
+=======
+#include "mozilla/dom/DataTransfer.h"
+#include "mozilla/EventForwards.h"  // for KeyNameIndex, temporarily
+>>>>>>> upstream-releases
 #include "mozilla/FontRange.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/TextRange.h"
@@ -297,6 +304,68 @@ class WidgetKeyboardEvent : public WidgetInputEvent {
     result->mEditCommandsForRichTextEditor = mEditCommandsForRichTextEditor;
     result->mFlags = mFlags;
     return result;
+  }
+
+  bool CanUserGestureActivateTarget() const {
+    // Printable keys, 'carriage return' and 'space' are supported user gestures
+    // for activating the document. However, if supported key is being pressed
+    // combining with other operation keys, such like alt, control ..etc., we
+    // won't activate the target for them because at that time user might
+    // interact with browser or window manager which doesn't necessarily
+    // demonstrate user's intent to play media.
+    const bool isCombiningWithOperationKeys = (IsControl() && !IsAltGraph()) ||
+                                              (IsAlt() && !IsAltGraph()) ||
+                                              IsMeta() || IsOS();
+    const bool isEnterOrSpaceKey =
+        mKeyNameIndex == KEY_NAME_INDEX_Enter || mKeyCode == NS_VK_SPACE;
+    return (PseudoCharCode() || isEnterOrSpaceKey) &&
+           !isCombiningWithOperationKeys;
+  }
+
+  /**
+   * CanTreatAsUserInput() returns true if the key is pressed for perhaps
+   * doing something on the web app or our UI.  This means that when this
+   * returns false, e.g., when user presses a modifier key, user is probably
+   * displeased by opening popup, entering fullscreen mode, etc.  Therefore,
+   * only when this returns true, such reactions should be allowed.
+   */
+  bool CanTreatAsUserInput() const {
+    if (!IsTrusted()) {
+      return false;
+    }
+    switch (mKeyNameIndex) {
+      case KEY_NAME_INDEX_Escape:
+      // modifier keys:
+      case KEY_NAME_INDEX_Alt:
+      case KEY_NAME_INDEX_AltGraph:
+      case KEY_NAME_INDEX_CapsLock:
+      case KEY_NAME_INDEX_Control:
+      case KEY_NAME_INDEX_Fn:
+      case KEY_NAME_INDEX_FnLock:
+      case KEY_NAME_INDEX_Meta:
+      case KEY_NAME_INDEX_NumLock:
+      case KEY_NAME_INDEX_ScrollLock:
+      case KEY_NAME_INDEX_Shift:
+      case KEY_NAME_INDEX_Symbol:
+      case KEY_NAME_INDEX_SymbolLock:
+      // legacy modifier keys:
+      case KEY_NAME_INDEX_Hyper:
+      case KEY_NAME_INDEX_Super:
+      // obsolete modifier key:
+      case KEY_NAME_INDEX_OS:
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  /**
+   * ShouldInteractionTimeRecorded() returns true if the handling time of
+   * the event should be recorded with the telemetry.
+   */
+  bool ShouldInteractionTimeRecorded() const {
+    // Let's record only when we can treat the instance is a user input.
+    return CanTreatAsUserInput();
   }
 
   // OS translated Unicode chars which are used for accesskey and accelkey
@@ -938,6 +1007,7 @@ class WidgetQueryContentEvent : public WidgetGUIEvent {
     Init(aOptions);
   }
 
+<<<<<<< HEAD
   bool NeedsToFlushLayout() const {
 #ifdef XP_MACOSX
     return true;
@@ -945,6 +1015,18 @@ class WidgetQueryContentEvent : public WidgetGUIEvent {
     return mNeedsToFlushLayout;
 #endif
   }
+||||||| merged common ancestors
+  bool NeedsToFlushLayout() const
+  {
+#ifdef XP_MACOSX
+    return true;
+#else
+    return mNeedsToFlushLayout;
+#endif
+  }
+=======
+  bool NeedsToFlushLayout() const { return mNeedsToFlushLayout; }
+>>>>>>> upstream-releases
 
   void RequestFontRanges() {
     NS_ASSERTION(mMessage == eQueryTextContent, "not querying text content");
@@ -1020,7 +1102,8 @@ class WidgetQueryContentEvent : public WidgetGUIEvent {
         return true;
       }
       // Otherwise, we don't allow too large offset.
-      CheckedInt<uint32_t> absOffset = mOffset + aInsertionPointOffset;
+      CheckedInt<uint32_t> absOffset =
+          CheckedInt<uint32_t>(mOffset) + aInsertionPointOffset;
       if (NS_WARN_IF(!absOffset.isValid())) {
         mOffset = UINT32_MAX;
         return false;
@@ -1137,9 +1220,26 @@ class WidgetSelectionEvent : public WidgetGUIEvent {
  * mozilla::InternalEditorInputEvent
  ******************************************************************************/
 
+<<<<<<< HEAD
 class InternalEditorInputEvent : public InternalUIEvent {
  private:
   InternalEditorInputEvent() : mIsComposing(false) {}
+||||||| merged common ancestors
+class InternalEditorInputEvent : public InternalUIEvent
+{
+private:
+  InternalEditorInputEvent()
+    : mIsComposing(false)
+  {
+  }
+=======
+class InternalEditorInputEvent : public InternalUIEvent {
+ private:
+  InternalEditorInputEvent()
+      : mData(VoidString()),
+        mInputType(EditorInputType::eUnknown),
+        mIsComposing(false) {}
+>>>>>>> upstream-releases
 
  public:
   virtual InternalEditorInputEvent* AsEditorInputEvent() override {
@@ -1148,8 +1248,19 @@ class InternalEditorInputEvent : public InternalUIEvent {
 
   InternalEditorInputEvent(bool aIsTrusted, EventMessage aMessage,
                            nsIWidget* aWidget = nullptr)
+<<<<<<< HEAD
       : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass),
         mIsComposing(false) {}
+||||||| merged common ancestors
+    : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass)
+    , mIsComposing(false)
+  {
+  }
+=======
+      : InternalUIEvent(aIsTrusted, aMessage, aWidget, eEditorInputEventClass),
+        mData(VoidString()),
+        mInputType(EditorInputType::eUnknown) {}
+>>>>>>> upstream-releases
 
   virtual WidgetEvent* Duplicate() const override {
     MOZ_ASSERT(mClass == eEditorInputEventClass,
@@ -1162,14 +1273,36 @@ class InternalEditorInputEvent : public InternalUIEvent {
     return result;
   }
 
+  nsString mData;
+  RefPtr<dom::DataTransfer> mDataTransfer;
+
+  EditorInputType mInputType;
+
   bool mIsComposing;
 
   void AssignEditorInputEventData(const InternalEditorInputEvent& aEvent,
                                   bool aCopyTargets) {
     AssignUIEventData(aEvent, aCopyTargets);
 
+    mData = aEvent.mData;
+    mDataTransfer = aEvent.mDataTransfer;
+    mInputType = aEvent.mInputType;
     mIsComposing = aEvent.mIsComposing;
   }
+
+  void GetDOMInputTypeName(nsAString& aInputTypeName) {
+    GetDOMInputTypeName(mInputType, aInputTypeName);
+  }
+  static void GetDOMInputTypeName(EditorInputType aInputType,
+                                  nsAString& aInputTypeName);
+  static EditorInputType GetEditorInputType(const nsAString& aInputType);
+
+  static void Shutdown();
+
+ private:
+  static const char16_t* const kInputTypeNames[];
+  typedef nsDataHashtable<nsStringHashKey, EditorInputType> InputTypeHashtable;
+  static InputTypeHashtable* sInputTypeHashtable;
 };
 
 }  // namespace mozilla

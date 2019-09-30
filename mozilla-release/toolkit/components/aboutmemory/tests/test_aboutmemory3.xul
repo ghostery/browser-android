@@ -3,8 +3,8 @@
 <?xml-stylesheet type="text/css" href="chrome://mochikit/content/tests/SimpleTest/test.css"?>
 <window title="about:memory"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/javascript" src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"/>
-  <script type="text/javascript" src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"></script>
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"></script>
 
   <!-- This file tests the saving and loading of memory reports to/from file in
        about:memory. -->
@@ -189,8 +189,6 @@ Explicit Allocations\n\
 100,000 B (100.0%) -- explicit\n\
 └──100,000 B (100.0%) ── a/b\n\
 \n\
-Other Measurements\n\
-\n\
 End of Explicit-only process\n\
 Heap-unclassified process\n\
 Explicit Allocations\n\
@@ -370,6 +368,7 @@ Other Measurements\n\
       └───0.00 MB (-09.09%) ── (fake child) [!]\n\
 \n\
 End of P8\n\
+<<<<<<< HEAD
 P9\n\
 \n\
 WARNING: the 'heap-allocated' memory reporter does not work for this platform and/or configuration. This means that 'heap-unclassified' is not shown and the 'explicit' tree shows less memory than it should.\n\
@@ -381,6 +380,18 @@ Explicit Allocations\n\
 Other Measurements\n\
 \n\
 End of P9\n\
+||||||| merged common ancestors
+=======
+P9\n\
+\n\
+WARNING: the 'heap-allocated' memory reporter does not work for this platform and/or configuration. This means that 'heap-unclassified' is not shown and the 'explicit' tree shows less memory than it should.\n\
+Explicit Allocations\n\
+\n\
+0.00 MB (100.0%) -- explicit\n\
+└──0.00 MB (100.0%) ── threads/stacks/DNS Resolver #N (tid=NNN) [3]\n\
+\n\
+End of P9\n\
+>>>>>>> upstream-releases
 ";
 
   // This is the output for a verbose diff.
@@ -479,6 +490,7 @@ Other Measurements\n\
       └────2 B (-09.09%) ── (fake child) [!]\n\
 \n\
 End of P8\n\
+<<<<<<< HEAD
 P9\n\
 \n\
 WARNING: the 'heap-allocated' memory reporter does not work for this platform and/or configuration. This means that 'heap-unclassified' is not shown and the 'explicit' tree shows less memory than it should.\n\
@@ -490,6 +502,18 @@ Explicit Allocations\n\
 Other Measurements\n\
 \n\
 End of P9\n\
+||||||| merged common ancestors
+=======
+P9\n\
+\n\
+WARNING: the 'heap-allocated' memory reporter does not work for this platform and/or configuration. This means that 'heap-unclassified' is not shown and the 'explicit' tree shows less memory than it should.\n\
+Explicit Allocations\n\
+\n\
+5,000 B (100.0%) -- explicit\n\
+└──5,000 B (100.0%) ── threads/stacks/DNS Resolver #N (tid=NNN) [3]\n\
+\n\
+End of P9\n\
+>>>>>>> upstream-releases
 ";
 
   // This is the output for the crash reports diff.

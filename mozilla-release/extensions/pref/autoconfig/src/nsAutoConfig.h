@@ -23,6 +23,7 @@ class nsAutoConfig final : public nsITimerCallback,
                            public nsINamed
 
 {
+<<<<<<< HEAD
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIREQUESTOBSERVER
@@ -49,6 +50,63 @@ class nsAutoConfig final : public nsITimerCallback,
   bool mLoaded;
   nsCOMPtr<nsITimer> mTimer;
   nsCString mConfigURL;
+||||||| merged common ancestors
+    public:
+
+        NS_DECL_THREADSAFE_ISUPPORTS
+        NS_DECL_NSIREQUESTOBSERVER
+        NS_DECL_NSISTREAMLISTENER
+        NS_DECL_NSIOBSERVER
+        NS_DECL_NSITIMERCALLBACK
+        NS_DECL_NSINAMED
+
+        nsAutoConfig();
+        nsresult Init();
+
+        void SetConfigURL(const char* aConfigURL);
+
+    protected:
+
+        virtual ~nsAutoConfig();
+        nsresult downloadAutoConfig();
+        nsresult readOfflineFile();
+        nsresult evaluateLocalFile(nsIFile *file);
+        nsresult writeFailoverFile();
+        nsresult getEmailAddr(nsACString & emailAddr);
+        nsresult PromptForEMailAddress(nsACString &emailAddress);
+        nsCString mBuf;
+        nsCOMPtr<nsIPrefBranch> mPrefBranch;
+        bool mLoaded;
+        nsCOMPtr<nsITimer> mTimer;
+        nsCString mConfigURL;
+=======
+ public:
+  NS_DECL_THREADSAFE_ISUPPORTS
+  NS_DECL_NSIREQUESTOBSERVER
+  NS_DECL_NSISTREAMLISTENER
+  NS_DECL_NSIOBSERVER
+  NS_DECL_NSITIMERCALLBACK
+  NS_DECL_NSINAMED
+
+  nsAutoConfig();
+  nsresult Init();
+
+  void SetConfigURL(const char* aConfigURL);
+
+ protected:
+  virtual ~nsAutoConfig();
+  nsresult downloadAutoConfig();
+  nsresult readOfflineFile();
+  nsresult evaluateLocalFile(nsIFile* file);
+  nsresult writeFailoverFile();
+  nsresult getEmailAddr(nsACString& emailAddr);
+  nsresult PromptForEMailAddress(nsACString& emailAddress);
+  nsCString mBuf;
+  nsCOMPtr<nsIPrefBranch> mPrefBranch;
+  bool mLoaded;
+  nsCOMPtr<nsITimer> mTimer;
+  nsCString mConfigURL;
+>>>>>>> upstream-releases
 };
 
 #endif

@@ -45,8 +45,31 @@ class OriginUsageResult : public nsIQuotaOriginUsageResult {
   NS_DECL_NSIQUOTAORIGINUSAGERESULT
 };
 
+<<<<<<< HEAD
 }  // namespace quota
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace quota
+} // namespace dom
+} // namespace mozilla
+=======
+class InitializedOriginsResult : public nsIQuotaInitializedOriginsResult {
+  nsCString mOrigin;
+
+ public:
+  explicit InitializedOriginsResult(const nsACString& aOrigin);
+
+ private:
+  virtual ~InitializedOriginsResult() = default;
+
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIQUOTAINITIALIZEDORIGINSRESULT
+};
+
+}  // namespace quota
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // mozilla_dom_quota_QuotaResults_h

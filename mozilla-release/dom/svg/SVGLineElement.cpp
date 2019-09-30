@@ -9,7 +9,7 @@
 #include "mozilla/dom/SVGLineElementBinding.h"
 #include "mozilla/gfx/2D.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Line)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Line)
 
 using namespace mozilla::gfx;
 
@@ -21,6 +21,7 @@ JSObject* SVGLineElement::WrapNode(JSContext* aCx,
   return SVGLineElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthInfo SVGLineElement::sLengthInfo[4] = {
     {nsGkAtoms::x1, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -30,6 +31,24 @@ nsSVGElement::LengthInfo SVGLineElement::sLengthInfo[4] = {
      SVGContentUtils::X},
     {nsGkAtoms::y2, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::Y},
+||||||| merged common ancestors
+nsSVGElement::LengthInfo SVGLineElement::sLengthInfo[4] =
+{
+  { nsGkAtoms::x1, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::y1, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+  { nsGkAtoms::x2, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::y2, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+=======
+SVGElement::LengthInfo SVGLineElement::sLengthInfo[4] = {
+    {nsGkAtoms::x1, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::y1, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+    {nsGkAtoms::x2, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::y2, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+>>>>>>> upstream-releases
 };
 
 //----------------------------------------------------------------------
@@ -61,19 +80,51 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGLineElement)
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGLineElement::X1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGLineElement::X1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGLineElement::X1() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X1].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGLineElement::Y1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGLineElement::Y1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGLineElement::Y1() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y1].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGLineElement::X2() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGLineElement::X2()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGLineElement::X2() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X2].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGLineElement::Y2() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGLineElement::Y2()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGLineElement::Y2() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y2].ToDOMAnimatedLength(this);
 }
 
@@ -89,9 +140,17 @@ SVGLineElement::IsAttributeMapped(const nsAtom* name) const {
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::LengthAttributesInfo SVGLineElement::GetLengthInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthAttributesInfo
+SVGLineElement::GetLengthInfo()
+{
+=======
+SVGElement::LengthAttributesInfo SVGLineElement::GetLengthInfo() {
+>>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
@@ -99,15 +158,22 @@ nsSVGElement::LengthAttributesInfo SVGLineElement::GetLengthInfo() {
 //----------------------------------------------------------------------
 // SVGGeometryElement methods
 
+<<<<<<< HEAD
 void SVGLineElement::GetMarkPoints(nsTArray<nsSVGMark>* aMarks) {
+||||||| merged common ancestors
+void
+SVGLineElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks) {
+=======
+void SVGLineElement::GetMarkPoints(nsTArray<SVGMark>* aMarks) {
+>>>>>>> upstream-releases
   float x1, y1, x2, y2;
 
   GetAnimatedLengthValues(&x1, &y1, &x2, &y2, nullptr);
 
-  float angle = atan2(y2 - y1, x2 - x1);
+  float angle = std::atan2(y2 - y1, x2 - x1);
 
-  aMarks->AppendElement(nsSVGMark(x1, y1, angle, nsSVGMark::eStart));
-  aMarks->AppendElement(nsSVGMark(x2, y2, angle, nsSVGMark::eEnd));
+  aMarks->AppendElement(SVGMark(x1, y1, angle, SVGMark::eStart));
+  aMarks->AppendElement(SVGMark(x2, y2, angle, SVGMark::eEnd));
 }
 
 void SVGLineElement::GetAsSimplePath(SimplePath* aSimplePath) {

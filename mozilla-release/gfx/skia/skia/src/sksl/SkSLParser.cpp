@@ -29,6 +29,7 @@
 #include "ast/SkSLASTInterfaceBlock.h"
 #include "ast/SkSLASTIntLiteral.h"
 #include "ast/SkSLASTModifiersDeclaration.h"
+#include "ast/SkSLASTNullLiteral.h"
 #include "ast/SkSLASTParameter.h"
 #include "ast/SkSLASTPrefixExpression.h"
 #include "ast/SkSLASTReturnStatement.h"
@@ -77,6 +78,7 @@ private:
     Parser* fParser;
 };
 
+<<<<<<< HEAD
 std::unordered_map<String, Parser::LayoutToken>* Parser::layoutTokens;
 
 void Parser::InitLayoutMap() {
@@ -129,6 +131,60 @@ void Parser::InitLayoutMap() {
     #undef TOKEN
 }
 
+||||||| merged common ancestors
+=======
+std::unordered_map<String, Parser::LayoutToken>* Parser::layoutTokens;
+
+void Parser::InitLayoutMap() {
+    layoutTokens = new std::unordered_map<String, LayoutToken>;
+    #define TOKEN(name, text) (*layoutTokens)[text] = LayoutToken::name
+    TOKEN(LOCATION,                     "location");
+    TOKEN(OFFSET,                       "offset");
+    TOKEN(BINDING,                      "binding");
+    TOKEN(INDEX,                        "index");
+    TOKEN(SET,                          "set");
+    TOKEN(BUILTIN,                      "builtin");
+    TOKEN(INPUT_ATTACHMENT_INDEX,       "input_attachment_index");
+    TOKEN(ORIGIN_UPPER_LEFT,            "origin_upper_left");
+    TOKEN(OVERRIDE_COVERAGE,            "override_coverage");
+    TOKEN(BLEND_SUPPORT_ALL_EQUATIONS,  "blend_support_all_equations");
+    TOKEN(BLEND_SUPPORT_MULTIPLY,       "blend_support_multiply");
+    TOKEN(BLEND_SUPPORT_SCREEN,         "blend_support_screen");
+    TOKEN(BLEND_SUPPORT_OVERLAY,        "blend_support_overlay");
+    TOKEN(BLEND_SUPPORT_DARKEN,         "blend_support_darken");
+    TOKEN(BLEND_SUPPORT_LIGHTEN,        "blend_support_lighten");
+    TOKEN(BLEND_SUPPORT_COLORDODGE,     "blend_support_colordodge");
+    TOKEN(BLEND_SUPPORT_COLORBURN,      "blend_support_colorburn");
+    TOKEN(BLEND_SUPPORT_HARDLIGHT,      "blend_support_hardlight");
+    TOKEN(BLEND_SUPPORT_SOFTLIGHT,      "blend_support_softlight");
+    TOKEN(BLEND_SUPPORT_DIFFERENCE,     "blend_support_difference");
+    TOKEN(BLEND_SUPPORT_EXCLUSION,      "blend_support_exclusion");
+    TOKEN(BLEND_SUPPORT_HSL_HUE,        "blend_support_hsl_hue");
+    TOKEN(BLEND_SUPPORT_HSL_SATURATION, "blend_support_hsl_saturation");
+    TOKEN(BLEND_SUPPORT_HSL_COLOR,      "blend_support_hsl_color");
+    TOKEN(BLEND_SUPPORT_HSL_LUMINOSITY, "blend_support_hsl_luminosity");
+    TOKEN(PUSH_CONSTANT,                "push_constant");
+    TOKEN(POINTS,                       "points");
+    TOKEN(LINES,                        "lines");
+    TOKEN(LINE_STRIP,                   "line_strip");
+    TOKEN(LINES_ADJACENCY,              "lines_adjacency");
+    TOKEN(TRIANGLES,                    "triangles");
+    TOKEN(TRIANGLE_STRIP,               "triangle_strip");
+    TOKEN(TRIANGLES_ADJACENCY,          "triangles_adjacency");
+    TOKEN(MAX_VERTICES,                 "max_vertices");
+    TOKEN(INVOCATIONS,                  "invocations");
+    TOKEN(WHEN,                         "when");
+    TOKEN(KEY,                          "key");
+    TOKEN(TRACKED,                      "tracked");
+    TOKEN(CTYPE,                        "ctype");
+    TOKEN(SKPMCOLOR4F,                  "SkPMColor4f");
+    TOKEN(SKRECT,                       "SkRect");
+    TOKEN(SKIRECT,                      "SkIRect");
+    TOKEN(SKPMCOLOR,                    "SkPMColor");
+    #undef TOKEN
+}
+
+>>>>>>> upstream-releases
 Parser::Parser(const char* text, size_t length, SymbolTable& types, ErrorReporter& errors)
 : fText(text)
 , fPushback(Token::INVALID, -1, -1)
@@ -518,7 +574,7 @@ std::unique_ptr<ASTType> Parser::structDeclaration() {
     fTypes.add(this->text(name), std::unique_ptr<Type>(new Type(name.fOffset, this->text(name),
                                                                 fields)));
     return std::unique_ptr<ASTType>(new ASTType(name.fOffset, this->text(name),
-                                                ASTType::kStruct_Kind, std::vector<int>()));
+                                                ASTType::kStruct_Kind, std::vector<int>(), false));
 }
 
 /* structDeclaration ((IDENTIFIER varDeclarationEnd) | SEMICOLON) */
@@ -722,6 +778,7 @@ Layout::Key Parser::layoutKey() {
     return Layout::kKey_Key;
 }
 
+<<<<<<< HEAD
 Layout::CType Parser::layoutCType() {
     if (this->expect(Token::EQ, "'='")) {
         Token t = this->nextToken();
@@ -748,6 +805,33 @@ Layout::CType Parser::layoutCType() {
     return Layout::CType::kDefault;
 }
 
+||||||| merged common ancestors
+=======
+Layout::CType Parser::layoutCType() {
+    if (this->expect(Token::EQ, "'='")) {
+        Token t = this->nextToken();
+        String text = this->text(t);
+        auto found = layoutTokens->find(text);
+        if (found != layoutTokens->end()) {
+            switch (found->second) {
+                case LayoutToken::SKPMCOLOR4F:
+                    return Layout::CType::kSkPMColor4f;
+                case LayoutToken::SKRECT:
+                    return Layout::CType::kSkRect;
+                case LayoutToken::SKIRECT:
+                    return Layout::CType::kSkIRect;
+                case LayoutToken::SKPMCOLOR:
+                    return Layout::CType::kSkPMColor;
+                default:
+                    break;
+            }
+        }
+        this->error(t, "unsupported ctype");
+    }
+    return Layout::CType::kDefault;
+}
+
+>>>>>>> upstream-releases
 /* LAYOUT LPAREN IDENTIFIER (EQ INT_LITERAL)? (COMMA IDENTIFIER (EQ INT_LITERAL)?)* RPAREN */
 Layout Parser::layout() {
     int flags = 0;
@@ -916,7 +1000,8 @@ Layout Parser::layout() {
 }
 
 /* layout? (UNIFORM | CONST | IN | OUT | INOUT | LOWP | MEDIUMP | HIGHP | FLAT | NOPERSPECTIVE |
-            READONLY | WRITEONLY | COHERENT | VOLATILE | RESTRICT | BUFFER)* */
+            READONLY | WRITEONLY | COHERENT | VOLATILE | RESTRICT | BUFFER | PLS | PLSIN |
+            PLSOUT)* */
 Modifiers Parser::modifiers() {
     Layout layout = this->layout();
     int flags = 0;
@@ -992,6 +1077,18 @@ Modifiers Parser::modifiers() {
                 this->nextToken();
                 flags |= Modifiers::kHasSideEffects_Flag;
                 break;
+            case Token::PLS:
+                this->nextToken();
+                flags |= Modifiers::kPLS_Flag;
+                break;
+            case Token::PLSIN:
+                this->nextToken();
+                flags |= Modifiers::kPLSIn_Flag;
+                break;
+            case Token::PLSOUT:
+                this->nextToken();
+                flags |= Modifiers::kPLSOut_Flag;
+                break;
             default:
                 return Modifiers(layout, flags);
         }
@@ -1061,7 +1158,7 @@ std::unique_ptr<ASTStatement> Parser::statement() {
     }
 }
 
-/* IDENTIFIER(type) (LBRACKET intLiteral? RBRACKET)* */
+/* IDENTIFIER(type) (LBRACKET intLiteral? RBRACKET)* QUESTION? */
 std::unique_ptr<ASTType> Parser::type() {
     Token type;
     if (!this->expect(Token::IDENTIFIER, "a type", &type)) {
@@ -1085,8 +1182,9 @@ std::unique_ptr<ASTType> Parser::type() {
         }
         this->expect(Token::RBRACKET, "']'");
     }
+    bool nullable = this->checkNext(Token::QUESTION);
     return std::unique_ptr<ASTType>(new ASTType(type.fOffset, this->text(type),
-                                                ASTType::kIdentifier_Kind, sizes));
+                                                ASTType::kIdentifier_Kind, sizes, nullable));
 }
 
 /* IDENTIFIER LBRACE varDeclaration* RBRACE (IDENTIFIER (LBRACKET expression? RBRACKET)*)? */
@@ -1806,6 +1904,10 @@ std::unique_ptr<ASTExpression> Parser::unaryExpression() {
         case Token::BITWISENOT: // fall through
         case Token::PLUSPLUS:   // fall through
         case Token::MINUSMINUS: {
+            AutoDepth depth(this);
+            if (!depth.checkValid()) {
+                return nullptr;
+            }
             Token t = this->nextToken();
             std::unique_ptr<ASTExpression> expr = this->unaryExpression();
             if (!expr) {
@@ -1903,7 +2005,7 @@ std::unique_ptr<ASTSuffix> Parser::suffix() {
     }
 }
 
-/* IDENTIFIER | intLiteral | floatLiteral | boolLiteral | '(' expression ')' */
+/* IDENTIFIER | intLiteral | floatLiteral | boolLiteral | NULL_LITERAL | '(' expression ')' */
 std::unique_ptr<ASTExpression> Parser::term() {
     std::unique_ptr<ASTExpression> result;
     Token t = this->peek();
@@ -1937,6 +2039,10 @@ std::unique_ptr<ASTExpression> Parser::term() {
             }
             break;
         }
+        case Token::NULL_LITERAL:
+            this->nextToken();
+            result.reset(new ASTNullLiteral(t.fOffset));
+            break;
         case Token::LPAREN: {
             this->nextToken();
             result = this->expression();

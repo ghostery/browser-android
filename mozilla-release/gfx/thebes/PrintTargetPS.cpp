@@ -44,9 +44,22 @@ PrintTargetPS::~PrintTargetPS() {
   Finish();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PrintTargetPS> PrintTargetPS::CreateOrNull(
     nsIOutputStream* aStream, IntSize aSizeInPoints,
     PageOrientation aOrientation) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PrintTargetPS>
+PrintTargetPS::CreateOrNull(nsIOutputStream *aStream,
+                            IntSize aSizeInPoints,
+                            PageOrientation aOrientation)
+{
+=======
+/* static */
+already_AddRefed<PrintTargetPS> PrintTargetPS::CreateOrNull(
+    nsIOutputStream* aStream, IntSize aSizeInPoints,
+    PageOrientation aOrientation) {
+>>>>>>> upstream-releases
   // The PS output does not specify the page size so to print landscape we need
   // to rotate the drawing 90 degrees and print on portrait paper.  If printing
   // landscape, swap the width/height supplied to cairo to select a portrait

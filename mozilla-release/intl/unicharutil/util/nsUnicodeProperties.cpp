@@ -191,6 +191,7 @@ void ClusterIterator::Next() {
     // Handle conjoining Jamo that make Hangul syllables
     HSType hangulState = GetHangulSyllableType(ch);
     while (mPos < mLimit) {
+<<<<<<< HEAD
       ch = *mPos;
       HSType hangulType = GetHangulSyllableType(ch);
       switch (hangulType) {
@@ -214,6 +215,59 @@ void ClusterIterator::Next() {
         case HST_T:
           if (hangulState != HST_NONE && hangulState != HST_L) {
             hangulState = hangulType;
+||||||| merged common ancestors
+        ch = *mPos;
+
+        // Check for surrogate pairs; note that isolated surrogates will just
+        // be treated as generic (non-cluster-extending) characters here,
+        // which is fine for cluster-iterating purposes
+        if (NS_IS_HIGH_SURROGATE(ch) && mPos < mLimit - 1 &&
+            NS_IS_LOW_SURROGATE(*(mPos + 1))) {
+            ch = SURROGATE_TO_UCS4(ch, *(mPos + 1));
+        }
+
+        if (!IsClusterExtender(ch)) {
+            break;
+        }
+
+        mPos++;
+        if (!IS_IN_BMP(ch)) {
+=======
+      ch = *mPos;
+      HSType hangulType = GetHangulSyllableType(ch);
+      switch (hangulType) {
+        case HST_L:
+        case HST_LV:
+        case HST_LVT:
+          if (hangulState == HST_L) {
+            hangulState = hangulType;
+            mPos++;
+            continue;
+          }
+          break;
+        case HST_V:
+          if ((hangulState != HST_NONE) && (hangulState != HST_T) &&
+              (hangulState != HST_LVT)) {
+            hangulState = hangulType;
+>>>>>>> upstream-releases
+            mPos++;
+<<<<<<< HEAD
+            continue;
+          }
+          break;
+        default:
+          break;
+      }
+      break;
+||||||| merged common ancestors
+        }
+=======
+            continue;
+          }
+          break;
+        case HST_T:
+          if (hangulState != HST_NONE && hangulState != HST_L) {
+            hangulState = hangulType;
             mPos++;
             continue;
           }
@@ -225,8 +279,24 @@ void ClusterIterator::Next() {
     }
   }
 
+  const uint32_t kVS16 = 0xfe0f;
+  const uint32_t kZWJ = 0x200d;
+  // UTF-16 surrogate values for Fitzpatrick type modifiers
+  const uint32_t kFitzpatrickHigh = 0xD83C;
+  const uint32_t kFitzpatrickLowFirst = 0xDFFB;
+  const uint32_t kFitzpatrickLowLast = 0xDFFF;
+
+  bool baseIsEmoji = (GetEmojiPresentation(ch) == EmojiDefault) ||
+                     (GetEmojiPresentation(ch) == TextDefault &&
+                      ((mPos < mLimit && *mPos == kVS16) ||
+                       (mPos + 1 < mLimit && *mPos == kFitzpatrickHigh &&
+                        *(mPos + 1) >= kFitzpatrickLowFirst &&
+                        *(mPos + 1) <= kFitzpatrickLowLast)));
+  bool prevWasZwj = false;
+
   while (mPos < mLimit) {
     ch = *mPos;
+    size_t chLen = 1;
 
     // Check for surrogate pairs; note that isolated surrogates will just
     // be treated as generic (non-cluster-extending) characters here,
@@ -234,8 +304,63 @@ void ClusterIterator::Next() {
     if (NS_IS_HIGH_SURROGATE(ch) && mPos < mLimit - 1 &&
         NS_IS_LOW_SURROGATE(*(mPos + 1))) {
       ch = SURROGATE_TO_UCS4(ch, *(mPos + 1));
+      chLen = 2;
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  while (mPos < mLimit) {
+    ch = *mPos;
+||||||| merged common ancestors
+    NS_ASSERTION(mText < mPos && mPos <= mLimit,
+                 "ClusterIterator::Next has overshot the string!");
+}
+=======
+    bool extendCluster =
+        IsClusterExtender(ch) ||
+        (baseIsEmoji && prevWasZwj &&
+         ((GetEmojiPresentation(ch) == EmojiDefault) ||
+          (GetEmojiPresentation(ch) == TextDefault && mPos + chLen < mLimit &&
+           *(mPos + chLen) == kVS16)));
+    if (!extendCluster) {
+      break;
     }
 
+    prevWasZwj = (ch == kZWJ);
+    mPos += chLen;
+  }
+
+  NS_ASSERTION(mText < mPos && mPos <= mLimit,
+               "ClusterIterator::Next has overshot the string!");
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Check for surrogate pairs; note that isolated surrogates will just
+    // be treated as generic (non-cluster-extending) characters here,
+    // which is fine for cluster-iterating purposes
+    if (NS_IS_HIGH_SURROGATE(ch) && mPos < mLimit - 1 &&
+        NS_IS_LOW_SURROGATE(*(mPos + 1))) {
+      ch = SURROGATE_TO_UCS4(ch, *(mPos + 1));
+    }
+||||||| merged common ancestors
+void
+ClusterReverseIterator::Next()
+{
+    if (AtEnd()) {
+        NS_WARNING("ClusterReverseIterator has already reached the end");
+        return;
+    }
+=======
+void ClusterReverseIterator::Next() {
+  if (AtEnd()) {
+    NS_WARNING("ClusterReverseIterator has already reached the end");
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     if (!IsClusterExtender(ch)) {
       break;
     }
@@ -245,11 +370,33 @@ void ClusterIterator::Next() {
       mPos++;
     }
   }
+||||||| merged common ancestors
+    uint32_t ch;
+    do {
+        ch = *--mPos;
+=======
+  uint32_t ch;
+  do {
+    ch = *--mPos;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   NS_ASSERTION(mText < mPos && mPos <= mLimit,
                "ClusterIterator::Next has overshot the string!");
 }
+||||||| merged common ancestors
+        if (NS_IS_LOW_SURROGATE(ch) && mPos > mLimit &&
+            NS_IS_HIGH_SURROGATE(*(mPos - 1))) {
+            ch = SURROGATE_TO_UCS4(*--mPos, ch);
+        }
+=======
+    if (NS_IS_LOW_SURROGATE(ch) && mPos > mLimit &&
+        NS_IS_HIGH_SURROGATE(*(mPos - 1))) {
+      ch = SURROGATE_TO_UCS4(*--mPos, ch);
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void ClusterReverseIterator::Next() {
   if (AtEnd()) {
     NS_WARNING("ClusterReverseIterator has already reached the end");
@@ -269,6 +416,17 @@ void ClusterReverseIterator::Next() {
       break;
     }
   } while (mPos > mLimit);
+||||||| merged common ancestors
+        if (!IsClusterExtender(ch)) {
+            break;
+        }
+    } while (mPos > mLimit);
+=======
+    if (!IsClusterExtender(ch)) {
+      break;
+    }
+  } while (mPos > mLimit);
+>>>>>>> upstream-releases
 
   // XXX May need to handle conjoining Jamo
 

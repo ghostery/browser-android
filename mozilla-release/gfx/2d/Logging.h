@@ -13,14 +13,15 @@
 #include <vector>
 
 #ifdef MOZ_LOGGING
-#include "mozilla/Logging.h"
+#  include "mozilla/Logging.h"
 #endif
 #include "mozilla/Tuple.h"
 
 #if defined(MOZ_WIDGET_ANDROID)
-#include "nsDebug.h"
+#  include "nsDebug.h"
 #endif
 #include "2D.h"
+#include "mozilla/Atomics.h"
 #include "Point.h"
 #include "BaseRect.h"
 #include "Matrix.h"
@@ -58,7 +59,7 @@ class LoggingPrefs {
   // 1 just errors, 2 adds warnings and 3 or 4 add debug logging.
   // In addition to setting the value to 4, you will need to set the
   // environment variable MOZ_LOG to gfx:4. See mozilla/Logging.h for details.
-  static int32_t sGfxLogLevel;
+  static Atomic<int32_t> sGfxLogLevel;
 };
 
 /// Graphics logging is available in both debug and release builds and is
@@ -134,7 +135,9 @@ enum class LogReason : int {
   NativeFontResourceNotFound,
   UnscaledFontNotFound,
   ScaledFontNotFound,
-  InvalidLayerType,
+  InvalidLayerType,  // 40
+  PlayEventFailed,
+  InvalidConstrainedValueRead,
   // End
   MustBeLessThanThis = 101,
 };
@@ -148,13 +151,23 @@ struct BasicLogger {
 #if defined(MOZ_WIDGET_ANDROID)
       return true;
 #else
-#if defined(MOZ_LOGGING)
+#  if defined(MOZ_LOGGING)
       if (MOZ_LOG_TEST(GetGFX2DLog(), PRLogLevelForLevel(aLevel))) {
         return true;
       } else
+<<<<<<< HEAD
 #endif
           if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
               (aLevel < LOG_DEBUG)) {
+||||||| merged common ancestors
+#endif
+      if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
+                 (aLevel < LOG_DEBUG)) {
+=======
+#  endif
+          if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
+              (aLevel < LOG_DEBUG)) {
+>>>>>>> upstream-releases
         return true;
       }
 #endif
@@ -180,14 +193,24 @@ struct BasicLogger {
 #if defined(MOZ_WIDGET_ANDROID)
       printf_stderr("%s%s", aString.c_str(), aNoNewline ? "" : "\n");
 #else
-#if defined(MOZ_LOGGING)
+#  if defined(MOZ_LOGGING)
       if (MOZ_LOG_TEST(GetGFX2DLog(), PRLogLevelForLevel(aLevel))) {
         MOZ_LOG(GetGFX2DLog(), PRLogLevelForLevel(aLevel),
                 ("%s%s", aString.c_str(), aNoNewline ? "" : "\n"));
       } else
+<<<<<<< HEAD
 #endif
           if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
               (aLevel < LOG_DEBUG)) {
+||||||| merged common ancestors
+#endif
+      if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
+                 (aLevel < LOG_DEBUG)) {
+=======
+#  endif
+          if ((LoggingPrefs::sGfxLogLevel >= LOG_DEBUG_PRLOG) ||
+              (aLevel < LOG_DEBUG)) {
+>>>>>>> upstream-releases
         printf("%s%s", aString.c_str(), aNoNewline ? "" : "\n");
       }
 #endif
@@ -211,9 +234,19 @@ typedef mozilla::Tuple<int32_t, std::string, double> LoggingRecordEntry;
 // forward critical logs.
 typedef std::vector<LoggingRecordEntry> LoggingRecord;
 class LogForwarder {
+<<<<<<< HEAD
  public:
   virtual ~LogForwarder() {}
   virtual void Log(const std::string& aString) = 0;
+||||||| merged common ancestors
+public:
+  virtual ~LogForwarder() {}
+  virtual void Log(const std::string &aString) = 0;
+=======
+ public:
+  virtual ~LogForwarder() = default;
+  virtual void Log(const std::string& aString) = 0;
+>>>>>>> upstream-releases
   virtual void CrashAction(LogReason aReason) = 0;
   virtual bool UpdateStringsVector(const std::string& aString) = 0;
 
@@ -247,14 +280,39 @@ struct Hexa {
   explicit Hexa(T aVal) : mVal(aVal) {}
   T mVal;
 };
+<<<<<<< HEAD
+template <typename T>
+Hexa<T> hexa(T val) {
+  return Hexa<T>(val);
+}
+||||||| merged common ancestors
+template<typename T>
+Hexa<T> hexa(T val) { return Hexa<T>(val); }
+=======
 template <typename T>
 Hexa<T> hexa(T val) {
   return Hexa<T>(val);
 }
 
+#ifdef WIN32
+void LogWStr(const wchar_t* aStr, std::stringstream& aOut);
+#endif
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 template <int L, typename Logger = BasicLogger>
 class Log {
  public:
+||||||| merged common ancestors
+template<int L, typename Logger = BasicLogger>
+class Log
+{
+public:
+=======
+template <int L, typename Logger = BasicLogger>
+class Log final {
+ public:
+>>>>>>> upstream-releases
   // The default is to have the prefix, have the new line, and for critical
   // logs assert on each call.
   static int DefaultOptions(bool aWithAssert = true) {
@@ -302,7 +360,21 @@ class Log {
     }
     return *this;
   }
+<<<<<<< HEAD
   Log& operator<<(bool aBool) {
+||||||| merged common ancestors
+  Log &operator <<(bool aBool) {
+=======
+#ifdef WIN32
+  Log& operator<<(const wchar_t aWStr[]) {
+    if (MOZ_UNLIKELY(LogIt())) {
+      LogWStr(aWStr, mMessage);
+    }
+    return *this;
+  }
+#endif
+  Log& operator<<(bool aBool) {
+>>>>>>> upstream-releases
     if (MOZ_UNLIKELY(LogIt())) {
       mMessage << (aBool ? "true" : "false");
     }
@@ -754,7 +826,7 @@ typedef Log<LOG_CRITICAL, CriticalLogger> CriticalLog;
 
 // Macro to glue names to get us less chance of name clashing.
 #if defined GFX_LOGGING_GLUE1 || defined GFX_LOGGING_GLUE
-#error "Clash of the macro GFX_LOGGING_GLUE1 or GFX_LOGGING_GLUE"
+#  error "Clash of the macro GFX_LOGGING_GLUE1 or GFX_LOGGING_GLUE"
 #endif
 #define GFX_LOGGING_GLUE1(x, y) x##y
 #define GFX_LOGGING_GLUE(x, y) GFX_LOGGING_GLUE1(x, y)
@@ -786,10 +858,20 @@ typedef Log<LOG_CRITICAL, CriticalLogger> CriticalLog;
 //   gfxCriticalError() << "This message only shows up once;
 // }
 #if defined(DEBUG)
+<<<<<<< HEAD
 #define gfxDebug mozilla::gfx::DebugLog
 #define gfxDebugOnce \
   static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine, __LINE__) = gfxDebug
+||||||| merged common ancestors
+#define gfxDebug mozilla::gfx::DebugLog
+#define gfxDebugOnce static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine,__LINE__) = gfxDebug
+=======
+#  define gfxDebug mozilla::gfx::DebugLog
+#  define gfxDebugOnce \
+    static gfxDebug GFX_LOGGING_GLUE(sOnceAtLine, __LINE__) = gfxDebug
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define gfxDebug \
   if (1)         \
     ;            \
@@ -800,6 +882,21 @@ typedef Log<LOG_CRITICAL, CriticalLogger> CriticalLog;
     ;                \
   else               \
     mozilla::gfx::NoLog
+||||||| merged common ancestors
+#define gfxDebug if (1) ; else mozilla::gfx::NoLog
+#define gfxDebugOnce if (1) ; else mozilla::gfx::NoLog
+=======
+#  define gfxDebug \
+    if (1)         \
+      ;            \
+    else           \
+      mozilla::gfx::NoLog
+#  define gfxDebugOnce \
+    if (1)             \
+      ;                \
+    else               \
+      mozilla::gfx::NoLog
+>>>>>>> upstream-releases
 #endif
 
 // Have gfxWarning available (behind a runtime preference)
@@ -830,10 +927,10 @@ inline bool MOZ2D_error_if_impl(bool aCondition, const char* aExpr,
   }
   return aCondition;
 }
-#define MOZ2D_ERROR_IF(condition) \
-  MOZ2D_error_if_impl(condition, #condition, __FILE__, __LINE__)
+#  define MOZ2D_ERROR_IF(condition) \
+    MOZ2D_error_if_impl(condition, #condition, __FILE__, __LINE__)
 
-#ifdef DEBUG
+#  ifdef DEBUG
 inline bool MOZ2D_warn_if_impl(bool aCondition, const char* aExpr,
                                const char* aFile, int32_t aLine) {
   if (MOZ_UNLIKELY(aCondition)) {
@@ -841,17 +938,27 @@ inline bool MOZ2D_warn_if_impl(bool aCondition, const char* aExpr,
   }
   return aCondition;
 }
-#define MOZ2D_WARN_IF(condition) \
-  MOZ2D_warn_if_impl(condition, #condition, __FILE__, __LINE__)
-#else
-#define MOZ2D_WARN_IF(condition) (bool)(condition)
-#endif
+#    define MOZ2D_WARN_IF(condition) \
+      MOZ2D_warn_if_impl(condition, #condition, __FILE__, __LINE__)
+#  else
+#    define MOZ2D_WARN_IF(condition) (bool)(condition)
+#  endif
 #endif
 
 const int INDENT_PER_LEVEL = 2;
 
+<<<<<<< HEAD
 class TreeLog {
  public:
+||||||| merged common ancestors
+class TreeLog
+{
+public:
+=======
+template <int Level = LOG_DEBUG>
+class TreeLog {
+ public:
+>>>>>>> upstream-releases
   explicit TreeLog(const std::string& aPrefix = "")
       : mLog(int(LogOptions::NoNewline)),
         mPrefix(aPrefix),
@@ -892,9 +999,18 @@ class TreeLog {
     mConditionedOnPref = true;
     mPrefFunction = aPrefFunction;
   }
+<<<<<<< HEAD
 
  private:
   Log<LOG_DEBUG> mLog;
+||||||| merged common ancestors
+private:
+  Log<LOG_DEBUG> mLog;
+=======
+
+ private:
+  Log<Level> mLog;
+>>>>>>> upstream-releases
   std::string mPrefix;
   uint32_t mDepth;
   bool mStartOfLine;
@@ -917,9 +1033,21 @@ class TreeLog {
   }
 };
 
+<<<<<<< HEAD
 class TreeAutoIndent {
  public:
   explicit TreeAutoIndent(TreeLog& aTreeLog) : mTreeLog(aTreeLog) {
+||||||| merged common ancestors
+class TreeAutoIndent
+{
+public:
+  explicit TreeAutoIndent(TreeLog& aTreeLog) : mTreeLog(aTreeLog) {
+=======
+template <int Level = LOG_DEBUG>
+class TreeAutoIndent final {
+ public:
+  explicit TreeAutoIndent(TreeLog<Level>& aTreeLog) : mTreeLog(aTreeLog) {
+>>>>>>> upstream-releases
     mTreeLog.IncreaseIndent();
   }
 
@@ -930,10 +1058,23 @@ class TreeAutoIndent {
 
   TreeAutoIndent& operator=(const TreeAutoIndent& aTreeAutoIndent) = delete;
 
+<<<<<<< HEAD
   ~TreeAutoIndent() { mTreeLog.DecreaseIndent(); }
 
  private:
   TreeLog& mTreeLog;
+||||||| merged common ancestors
+  ~TreeAutoIndent() {
+    mTreeLog.DecreaseIndent();
+  }
+private:
+  TreeLog& mTreeLog;
+=======
+  ~TreeAutoIndent() { mTreeLog.DecreaseIndent(); }
+
+ private:
+  TreeLog<Level>& mTreeLog;
+>>>>>>> upstream-releases
 };
 
 }  // namespace gfx

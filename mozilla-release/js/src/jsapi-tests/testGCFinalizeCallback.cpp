@@ -8,6 +8,7 @@ static const unsigned BufferSize = 20;
 static unsigned FinalizeCalls = 0;
 static JSFinalizeStatus StatusBuffer[BufferSize];
 
+<<<<<<< HEAD
 BEGIN_TEST(testGCFinalizeCallback) {
   JS_SetGCParameter(cx, JSGC_MODE, JSGC_MODE_INCREMENTAL);
 
@@ -23,13 +24,63 @@ BEGIN_TEST(testGCFinalizeCallback) {
   JS::PrepareForFullGC(cx);
   JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
   while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+||||||| merged common ancestors
+BEGIN_TEST(testGCFinalizeCallback)
+{
+    JS_SetGCParameter(cx, JSGC_MODE, JSGC_MODE_INCREMENTAL);
+
+    /* Full GC, non-incremental. */
+    FinalizeCalls = 0;
+    JS_GC(cx);
+    CHECK(cx->runtime()->gc.isFullGc());
+    CHECK(checkSingleGroup());
+    CHECK(checkFinalizeStatus());
+
+    /* Full GC, incremental. */
+    FinalizeCalls = 0;
+=======
+BEGIN_TEST(testGCFinalizeCallback) {
+  JS_SetGCParameter(cx, JSGC_MODE, JSGC_MODE_ZONE_INCREMENTAL);
+
+  /* Full GC, non-incremental. */
+  FinalizeCalls = 0;
+  JS_GC(cx);
+  CHECK(cx->runtime()->gc.isFullGc());
+  CHECK(checkSingleGroup());
+  CHECK(checkFinalizeStatus());
+
+  /* Full GC, incremental. */
+  FinalizeCalls = 0;
+  JS::PrepareForFullGC(cx);
+  JS::StartIncrementalGC(cx, GC_NORMAL, JS::GCReason::API, 1000000);
+  while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+>>>>>>> upstream-releases
     JS::PrepareForFullGC(cx);
+<<<<<<< HEAD
     JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
   }
   CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
   CHECK(cx->runtime()->gc.isFullGc());
   CHECK(checkMultipleGroups());
   CHECK(checkFinalizeStatus());
+||||||| merged common ancestors
+    JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
+    while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+        JS::PrepareForFullGC(cx);
+        JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
+    }
+    CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+    CHECK(cx->runtime()->gc.isFullGc());
+    CHECK(checkMultipleGroups());
+    CHECK(checkFinalizeStatus());
+=======
+    JS::IncrementalGCSlice(cx, JS::GCReason::API, 1000000);
+  }
+  CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+  CHECK(cx->runtime()->gc.isFullGc());
+  CHECK(checkMultipleGroups());
+  CHECK(checkFinalizeStatus());
+>>>>>>> upstream-releases
 
 #ifdef JS_GC_ZEAL
   // Bug 1377593 - the below tests want to control how many zones are GC'ing,
@@ -37,6 +88,7 @@ BEGIN_TEST(testGCFinalizeCallback) {
   JS_SetGCZeal(cx, 0, 0);
 #endif
 
+<<<<<<< HEAD
   JS::RootedObject global1(cx, createTestGlobal());
   JS::RootedObject global2(cx, createTestGlobal());
   JS::RootedObject global3(cx, createTestGlobal());
@@ -67,7 +119,68 @@ BEGIN_TEST(testGCFinalizeCallback) {
   JS::PrepareZoneForGC(global1->zone());
   JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
   while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+||||||| merged common ancestors
+    JS::RootedObject global1(cx, createTestGlobal());
+    JS::RootedObject global2(cx, createTestGlobal());
+    JS::RootedObject global3(cx, createTestGlobal());
+    CHECK(global1);
+    CHECK(global2);
+    CHECK(global3);
+
+    /* Zone GC, non-incremental, single zone. */
+    FinalizeCalls = 0;
     JS::PrepareZoneForGC(global1->zone());
+    JS::NonIncrementalGC(cx, GC_NORMAL, JS::gcreason::API);
+    CHECK(!cx->runtime()->gc.isFullGc());
+    CHECK(checkSingleGroup());
+    CHECK(checkFinalizeStatus());
+
+    /* Zone GC, non-incremental, multiple zones. */
+    FinalizeCalls = 0;
+    JS::PrepareZoneForGC(global1->zone());
+    JS::PrepareZoneForGC(global2->zone());
+    JS::PrepareZoneForGC(global3->zone());
+    JS::NonIncrementalGC(cx, GC_NORMAL, JS::gcreason::API);
+    CHECK(!cx->runtime()->gc.isFullGc());
+    CHECK(checkSingleGroup());
+    CHECK(checkFinalizeStatus());
+
+    /* Zone GC, incremental, single zone. */
+    FinalizeCalls = 0;
+=======
+  JS::RootedObject global1(cx, createTestGlobal());
+  JS::RootedObject global2(cx, createTestGlobal());
+  JS::RootedObject global3(cx, createTestGlobal());
+  CHECK(global1);
+  CHECK(global2);
+  CHECK(global3);
+
+  /* Zone GC, non-incremental, single zone. */
+  FinalizeCalls = 0;
+  JS::PrepareZoneForGC(global1->zone());
+  JS::NonIncrementalGC(cx, GC_NORMAL, JS::GCReason::API);
+  CHECK(!cx->runtime()->gc.isFullGc());
+  CHECK(checkSingleGroup());
+  CHECK(checkFinalizeStatus());
+
+  /* Zone GC, non-incremental, multiple zones. */
+  FinalizeCalls = 0;
+  JS::PrepareZoneForGC(global1->zone());
+  JS::PrepareZoneForGC(global2->zone());
+  JS::PrepareZoneForGC(global3->zone());
+  JS::NonIncrementalGC(cx, GC_NORMAL, JS::GCReason::API);
+  CHECK(!cx->runtime()->gc.isFullGc());
+  CHECK(checkSingleGroup());
+  CHECK(checkFinalizeStatus());
+
+  /* Zone GC, incremental, single zone. */
+  FinalizeCalls = 0;
+  JS::PrepareZoneForGC(global1->zone());
+  JS::StartIncrementalGC(cx, GC_NORMAL, JS::GCReason::API, 1000000);
+  while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+>>>>>>> upstream-releases
+    JS::PrepareZoneForGC(global1->zone());
+<<<<<<< HEAD
     JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
   }
   CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
@@ -82,15 +195,65 @@ BEGIN_TEST(testGCFinalizeCallback) {
   JS::PrepareZoneForGC(global3->zone());
   JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
   while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+||||||| merged common ancestors
+    JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
+    while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+        JS::PrepareZoneForGC(global1->zone());
+        JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
+    }
+    CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+    CHECK(!cx->runtime()->gc.isFullGc());
+    CHECK(checkSingleGroup());
+    CHECK(checkFinalizeStatus());
+
+    /* Zone GC, incremental, multiple zones. */
+    FinalizeCalls = 0;
+=======
+    JS::IncrementalGCSlice(cx, JS::GCReason::API, 1000000);
+  }
+  CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+  CHECK(!cx->runtime()->gc.isFullGc());
+  CHECK(checkSingleGroup());
+  CHECK(checkFinalizeStatus());
+
+  /* Zone GC, incremental, multiple zones. */
+  FinalizeCalls = 0;
+  JS::PrepareZoneForGC(global1->zone());
+  JS::PrepareZoneForGC(global2->zone());
+  JS::PrepareZoneForGC(global3->zone());
+  JS::StartIncrementalGC(cx, GC_NORMAL, JS::GCReason::API, 1000000);
+  while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+>>>>>>> upstream-releases
     JS::PrepareZoneForGC(global1->zone());
     JS::PrepareZoneForGC(global2->zone());
     JS::PrepareZoneForGC(global3->zone());
+<<<<<<< HEAD
     JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
   }
   CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
   CHECK(!cx->runtime()->gc.isFullGc());
   CHECK(checkMultipleGroups());
   CHECK(checkFinalizeStatus());
+||||||| merged common ancestors
+    JS::StartIncrementalGC(cx, GC_NORMAL, JS::gcreason::API, 1000000);
+    while (cx->runtime()->gc.isIncrementalGCInProgress()) {
+        JS::PrepareZoneForGC(global1->zone());
+        JS::PrepareZoneForGC(global2->zone());
+        JS::PrepareZoneForGC(global3->zone());
+        JS::IncrementalGCSlice(cx, JS::gcreason::API, 1000000);
+    }
+    CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+    CHECK(!cx->runtime()->gc.isFullGc());
+    CHECK(checkMultipleGroups());
+    CHECK(checkFinalizeStatus());
+=======
+    JS::IncrementalGCSlice(cx, JS::GCReason::API, 1000000);
+  }
+  CHECK(!cx->runtime()->gc.isIncrementalGCInProgress());
+  CHECK(!cx->runtime()->gc.isFullGc());
+  CHECK(checkMultipleGroups());
+  CHECK(checkFinalizeStatus());
+>>>>>>> upstream-releases
 
 #ifdef JS_GC_ZEAL
 

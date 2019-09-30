@@ -7,11 +7,26 @@
 #ifndef GFX_LAYERSLOGGING_H
 #define GFX_LAYERSLOGGING_H
 
+<<<<<<< HEAD
 #include "FrameMetrics.h"             // for FrameMetrics
 #include "mozilla/gfx/Matrix.h"       // for Matrix4x4
 #include "mozilla/gfx/Point.h"        // for IntSize, etc
 #include "mozilla/gfx/TiledRegion.h"  // for TiledRegion
 #include "mozilla/gfx/Types.h"        // for SamplingFilter, SurfaceFormat
+||||||| merged common ancestors
+#include "FrameMetrics.h"               // for FrameMetrics, etc
+#include "mozilla/gfx/Matrix.h"         // for Matrix4x4
+#include "mozilla/gfx/Point.h"          // for IntSize, etc
+#include "mozilla/gfx/TiledRegion.h"    // for TiledRegion
+#include "mozilla/gfx/Types.h"          // for SamplingFilter, SurfaceFormat
+=======
+#include "FrameMetrics.h"             // for FrameMetrics
+#include "mozilla/gfx/Matrix.h"       // for Matrix4x4
+#include "mozilla/gfx/Point.h"        // for IntSize, etc
+#include "mozilla/gfx/TiledRegion.h"  // for TiledRegion
+#include "mozilla/gfx/Types.h"        // for SamplingFilter, SurfaceFormat
+#include "mozilla/layers/APZTypes.h"  // for SLGuidAndRenderRoot
+>>>>>>> upstream-releases
 #include "mozilla/layers/CompositorTypes.h"  // for TextureFlags
 #include "mozilla/layers/WebRenderLayersLogging.h"
 #include "mozilla/layers/ZoomConstraints.h"
@@ -181,6 +196,30 @@ void AppendToString(std::stringstream& aStream, const FrameMetrics& m,
 void AppendToString(std::stringstream& aStream, const ScrollableLayerGuid& s,
                     const char* pfx = "", const char* sfx = "");
 
+<<<<<<< HEAD
+void AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
+                    const char* pfx = "", const char* sfx = "");
+||||||| merged common ancestors
+void
+AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
+               const char* pfx="", const char* sfx="");
+=======
+void AppendToString(std::stringstream& aStream, const SLGuidAndRenderRoot& s,
+                    const char* pfx = "", const char* sfx = "");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+template <class T>
+void AppendToString(std::stringstream& aStream,
+                    const mozilla::gfx::MarginTyped<T>& m, const char* pfx = "",
+                    const char* sfx = "") {
+||||||| merged common ancestors
+template<class T>
+void
+AppendToString(std::stringstream& aStream, const mozilla::gfx::MarginTyped<T>& m,
+               const char* pfx="", const char* sfx="")
+{
+=======
 void AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
                     const char* pfx = "", const char* sfx = "");
 
@@ -188,6 +227,7 @@ template <class T>
 void AppendToString(std::stringstream& aStream,
                     const mozilla::gfx::MarginTyped<T>& m, const char* pfx = "",
                     const char* sfx = "") {
+>>>>>>> upstream-releases
   aStream << pfx;
   aStream << nsPrintfCString("(l=%f, t=%f, r=%f, b=%f)", m.left, m.top, m.right,
                              m.bottom)

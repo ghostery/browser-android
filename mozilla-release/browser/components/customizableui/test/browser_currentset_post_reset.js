@@ -4,12 +4,34 @@
 "use strict";
 
 function checkSpacers() {
+<<<<<<< HEAD
   let bsPass = ChromeUtils.import("resource:///modules/CustomizableUI.jsm", {});
+||||||| merged common ancestors
+=======
+  let bsPass = ChromeUtils.import(
+    "resource:///modules/CustomizableUI.jsm",
+    null
+  );
+>>>>>>> upstream-releases
   let navbarWidgets = CustomizableUI.getWidgetIdsInArea("nav-bar");
+<<<<<<< HEAD
   let currentSetWidgets = bsPass.CustomizableUIInternal._getCurrentWidgetsInContainer(document.getElementById("nav-bar"));
+||||||| merged common ancestors
+  let currentSetWidgets = document.getElementById("nav-bar").currentSet.split(",");
+=======
+  let currentSetWidgets = bsPass.CustomizableUIInternal._getCurrentWidgetsInContainer(
+    document.getElementById("nav-bar")
+  );
+>>>>>>> upstream-releases
   navbarWidgets = navbarWidgets.filter(w => CustomizableUI.isSpecialWidget(w));
-  currentSetWidgets = currentSetWidgets.filter(w => CustomizableUI.isSpecialWidget(w));
-  Assert.deepEqual(navbarWidgets, currentSetWidgets, "Should have the same 'special' widgets in currentset and placements");
+  currentSetWidgets = currentSetWidgets.filter(w =>
+    CustomizableUI.isSpecialWidget(w)
+  );
+  Assert.deepEqual(
+    navbarWidgets,
+    currentSetWidgets,
+    "Should have the same 'special' widgets in currentset and placements"
+  );
 }
 
 /**
@@ -19,7 +41,11 @@ add_task(async function() {
   await startCustomizing();
   checkSpacers();
 
-  CustomizableUI.addWidgetToArea("spring", "nav-bar", 4 /* Insert before the last extant spacer */);
+  CustomizableUI.addWidgetToArea(
+    "spring",
+    "nav-bar",
+    4 /* Insert before the last extant spacer */
+  );
   await gCustomizeMode.reset();
   checkSpacers();
   await endCustomizing();

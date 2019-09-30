@@ -47,21 +47,59 @@ bool WebGL2Context::IsTransformFeedback(
   const FuncScope funcScope(*this, "isTransformFeedback");
   if (!ValidateIsObject(obj)) return false;
 
+<<<<<<< HEAD
   if (obj->IsDeleteRequested()) return false;
 
   return obj->mHasBeenBound;
 }
+||||||| merged common ancestors
+    return gl->fIsTransformFeedback(obj->mGLName);
+}
+=======
+  if (obj->IsDeleteRequested()) return false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void WebGL2Context::BindTransformFeedback(GLenum target,
                                           WebGLTransformFeedback* tf) {
   const FuncScope funcScope(*this, "bindTransformFeedback");
   if (IsContextLost()) return;
+||||||| merged common ancestors
+void
+WebGL2Context::BindTransformFeedback(GLenum target, WebGLTransformFeedback* tf)
+{
+    const FuncScope funcScope(*this, "bindTransformFeedback");
+    if (IsContextLost())
+        return;
+=======
+  return obj->mHasBeenBound;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (target != LOCAL_GL_TRANSFORM_FEEDBACK)
     return ErrorInvalidEnum("`target` must be TRANSFORM_FEEDBACK.");
+||||||| merged common ancestors
+    if (target != LOCAL_GL_TRANSFORM_FEEDBACK)
+        return ErrorInvalidEnum("`target` must be TRANSFORM_FEEDBACK.");
+=======
+void WebGL2Context::BindTransformFeedback(GLenum target,
+                                          WebGLTransformFeedback* tf) {
+  const FuncScope funcScope(*this, "bindTransformFeedback");
+  if (IsContextLost()) return;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (tf && !ValidateObject("tf", *tf)) return;
+||||||| merged common ancestors
+    if (tf && !ValidateObject("tf", *tf))
+        return;
+=======
+  if (target != LOCAL_GL_TRANSFORM_FEEDBACK)
+    return ErrorInvalidEnum("`target` must be TRANSFORM_FEEDBACK.");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (mBoundTransformFeedback->mIsActive &&
       !mBoundTransformFeedback->mIsPaused) {
     ErrorInvalidOperation(
@@ -69,21 +107,62 @@ void WebGL2Context::BindTransformFeedback(GLenum target,
         " paused.");
     return;
   }
+||||||| merged common ancestors
+    if (mBoundTransformFeedback->mIsActive &&
+        !mBoundTransformFeedback->mIsPaused)
+    {
+        ErrorInvalidOperation("Currently bound transform feedback is active and not"
+                              " paused.");
+        return;
+    }
+=======
+  if (tf && !ValidateObject("tf", *tf)) return;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ////
+||||||| merged common ancestors
+    ////
+=======
+  if (mBoundTransformFeedback->mIsActive &&
+      !mBoundTransformFeedback->mIsPaused) {
+    ErrorInvalidOperation(
+        "Currently bound transform feedback is active and not"
+        " paused.");
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (mBoundTransformFeedback) {
     mBoundTransformFeedback->AddBufferBindCounts(-1);
   }
+||||||| merged common ancestors
+    if (mBoundTransformFeedback) {
+        mBoundTransformFeedback->AddBufferBindCounts(-1);
+    }
+=======
+  ////
+>>>>>>> upstream-releases
 
   mBoundTransformFeedback = (tf ? tf : mDefaultTransformFeedback);
 
   gl->fBindTransformFeedback(target, mBoundTransformFeedback->mGLName);
 
+<<<<<<< HEAD
   if (mBoundTransformFeedback) {
     mBoundTransformFeedback->AddBufferBindCounts(+1);
     mBoundTransformFeedback->mHasBeenBound = true;
   }
+||||||| merged common ancestors
+    if (mBoundTransformFeedback) {
+        mBoundTransformFeedback->AddBufferBindCounts(+1);
+    }
+=======
+  if (mBoundTransformFeedback) {
+    mBoundTransformFeedback->mHasBeenBound = true;
+  }
+>>>>>>> upstream-releases
 }
 
 void WebGL2Context::BeginTransformFeedback(GLenum primMode) {

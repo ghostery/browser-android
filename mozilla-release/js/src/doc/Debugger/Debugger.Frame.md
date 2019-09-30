@@ -93,6 +93,7 @@ Pushing a `"debugger"` frame makes this continuation explicit, and makes it
 easier to find the extent of the stack created for the invocation.
 
 
+<<<<<<< HEAD
 ## <span id='suspended'>Suspended</span> Frames
 
 Some frames can be *suspended*.
@@ -162,6 +163,73 @@ use internally, followed immediately by a second `.onEnterFrame` event
 for the same frame.
 
 
+||||||| merged common ancestors
+=======
+## <span id='suspended'>Suspended</span> Frames
+
+Some frames can be *suspended*.
+
+When a generator `yield`s a value, or when an async function `await`s a
+value, the current frame is suspended and removed from the stack, and
+other JS code has a chance to run. Later (if the `await`ed promise
+becomes resolved, for example), SpiderMonkey will *resume* the frame. It
+will be put back onto the stack, and execution will continue where it
+left off. Only generator and async function call frames can be suspended
+and resumed.
+
+Currently, a frame's `live` property is `false` while it's suspended
+([bug 1448880](https://bugzilla.mozilla.org/show_bug.cgi?id=1448880)).
+
+SpiderMonkey uses the same `Debugger.Frame` object each time a generator
+or async function call is put back onto the stack. This means that the
+`onStep` handler can be used to step over `yield` and `await`.
+
+The `frame.onPop` handler is called each time a frame is suspended, and
+the `Debugger.onEnterFrame` handler is called each time a frame is
+resumed. (This means these events can fire multiple times for the same
+`Frame` object, which is odd, but accurately conveys what's happening.)
+
+The [completion value][cv] passed to the `frame.onPop` handler for a suspension
+contains additional properties to clarify what's going on. See the documentation
+for completion values for details.
+
+
+## Stepping Into Generators: The "Initial Yield"
+
+When a debuggee generator is called, something weird happens. The
+`.onEnterFrame` hook fires, as though we're stepping into the generator.
+But the code inside the generator doesn't run. Instead it immediately
+returns. Then we sometimes get *another* `.onEnterFrame` event for the
+same generator. What's going on?
+
+To explain this, we first have to describe how generator calls work,
+according to the ECMAScript language specification. Note that except for
+step 3, it's exactly like a regular function call.
+
+1.  An "execution context" (what we call a `Frame`) is pushed to the stack.
+2.  An environment is created (for arguments and local variables).
+    Argument-default-value-expressions, if any, are evaluated.
+3.  A generator object is created, initially suspended at the start of the generator body.
+4.  The stack frame is popped, and the generator object is returned to the caller.
+
+The JavaScript engine actually carries out these steps, in this order.
+So when a debuggee generator is called, here's what you'll observe:
+
+1.  The `debugger.onEnterFrame` hook fires.
+2.  The debugger can step through the argument-default-value code, if any.
+3.  The body of the generator does not run yet. Instead, a generator object
+    is created and suspended (which does not fire any debugger events).
+4.  The `frame.onPop` hook fires, with a completion value of
+    `{return:` *(the new generator object)* `}`.
+
+In SpiderMonkey, this process of suspending and returning a new
+generator object is called the "initial yield".
+
+If the caller then uses the generator's `.next()` method, which may or
+may not happen right away depending on the debuggee code, the suspended
+generator will be resumed, firing `.onEnterFrame` again.
+
+>>>>>>> upstream-releases
 ## Accessor Properties of the Debugger.Frame Prototype Object
 
 A `Debugger.Frame` instance inherits the following accessor properties from
@@ -288,19 +356,19 @@ the compartment to which the handler method belongs.
     frames.
 
 `onPop`
-:   This property must be either `undefined` or a function. If it is a
-    function, SpiderMonkey calls it just before this frame is popped,
-    passing a [completion value][cv] indicating how this frame's execution
-    completed, and providing this `Debugger.Frame` instance as the `this`
-    value. The function should return a [resumption value][rv] indicating
-    how execution should proceed. On newly created frames, this property's
-    value is `undefined`.
+:   This property must be either `undefined` or a function. If it is a function,
+    SpiderMonkey calls it just before this frame is popped or suspended, passing
+    a [completion value][cv] indicating the reason, and providing this
+    `Debugger.Frame` instance as the `this` value. The function should return a
+    [resumption value][rv] indicating how execution should proceed. On newly
+    created frames, this property's value is `undefined`.
 
     When this handler is called, this frame's current execution location, as
     reflected in its `offset` and `environment` properties, is the operation
-    which caused it to be unwound. In frames returning or throwing an
-    exception, the location is often a return or a throw statement. In frames
-    propagating exceptions, the location is a call.
+    which caused it to be unwound. In frames returning or throwing an exception,
+    the location is often a return or a throw statement. In frames propagating
+    exceptions, the location is a call. In generator or async function frames,
+    the location may be a `yield` or `await` expression.
 
     When an `onPop` call reports the completion of a construction call
     (that is, a function called via the `new` operator), the completion
@@ -328,6 +396,11 @@ the compartment to which the handler method belongs.
     handlers set, their handlers are run in an unspecified order. The
     resumption value each handler returns establishes the completion value
     reported to the next handler.
+
+    The `onPop` handler is typically called only once for a given
+    `Debugger.Frame`, after which the frame becomes inactive. However, in the
+    case of [generators and async functions](#suspended), `onPop` fires each
+    time the frame is suspended.
 
     This handler is not called on `"debugger"` frames. It is also not called
     when unwinding a frame due to an over-recursion or out-of-memory

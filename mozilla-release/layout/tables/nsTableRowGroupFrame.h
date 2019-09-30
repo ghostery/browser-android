@@ -16,6 +16,7 @@
 
 class nsTableRowFrame;
 namespace mozilla {
+class PresShell;
 struct TableRowGroupReflowInput;
 }  // namespace mozilla
 
@@ -39,12 +40,28 @@ class nsTableRowGroupFrame final : public nsContainerFrame,
   NS_DECL_FRAMEARENA_HELPERS(nsTableRowGroupFrame)
 
   /** instantiate a new instance of nsTableRowFrame.
+<<<<<<< HEAD
    * @param aPresShell the pres shell for this frame
    *
    * @return           the frame that was created
    */
   friend nsTableRowGroupFrame* NS_NewTableRowGroupFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+    * @param aPresShell the pres shell for this frame
+    *
+    * @return           the frame that was created
+    */
+  friend nsTableRowGroupFrame* NS_NewTableRowGroupFrame(nsIPresShell* aPresShell,
+                                                        ComputedStyle* aStyle);
+=======
+   * @param aPresShell the pres shell for this frame
+   *
+   * @return           the frame that was created
+   */
+  friend nsTableRowGroupFrame* NS_NewTableRowGroupFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
   virtual ~nsTableRowGroupFrame();
 
   // nsIFrame overrides
@@ -290,9 +307,21 @@ class nsTableRowGroupFrame final : public nsContainerFrame,
   void ClearRowCursor();
 
   /**
+<<<<<<< HEAD
    * Get the first row that might contain y-coord 'aY', or nullptr if you must
    * search all rows. The actual row returned might not contain 'aY', but if
    * not, it is guaranteed to be before any row which does contain 'aY'.
+||||||| merged common ancestors
+   * Get the first row that might contain y-coord 'aY', or nullptr if you must search
+   * all rows.
+   * The actual row returned might not contain 'aY', but if not, it is guaranteed
+   * to be before any row which does contain 'aY'.
+=======
+   * Get the first row that might contain y-coord 'aY', or nullptr if you must
+   * search all rows.
+   * The actual row returned might not contain 'aY', but if not, it is
+   * guaranteed to be before any row which does contain 'aY'.
+>>>>>>> upstream-releases
    * aOverflowAbove is the maximum over all rows of -row.GetOverflowRect().y.
    * To find all rows that intersect the vertical interval aY/aYMost, call
    * GetFirstRowContaining(aY, &overflowAbove), and then iterate through all
@@ -329,8 +358,17 @@ class nsTableRowGroupFrame final : public nsContainerFrame,
     InvalidateFrameSubtree();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsTableRowGroupFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+protected:
+  explicit nsTableRowGroupFrame(ComputedStyle* aStyle);
+=======
+ protected:
+  explicit nsTableRowGroupFrame(ComputedStyle* aStyle,
+                                nsPresContext* aPresContext);
+>>>>>>> upstream-releases
 
   void InitChildReflowInput(nsPresContext& aPresContext, bool aBorderCollapse,
                             ReflowInput& aReflowInput);

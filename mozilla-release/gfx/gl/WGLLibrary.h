@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "GLContextTypes.h"
+#include "GLLibraryLoader.h"
 #include "mozilla/UniquePtr.h"
 #include <windows.h>
 
@@ -91,10 +92,23 @@ class WGLLibrary {
   // UniquePtr<WindowDC> CreateDummyWindow();
   HGLRC CreateContextWithFallback(HDC dc, bool tryRobustBuffers) const;
 
+<<<<<<< HEAD
   bool HasDXInterop2() const { return bool(mSymbols.fDXOpenDeviceNV); }
   bool IsInitialized() const { return mInitialized; }
   auto GetOGLLibrary() const { return mOGLLibrary; }
   auto RootDc() const { return mRootDc; }
+||||||| merged common ancestors
+    bool HasDXInterop2() const { return bool(mSymbols.fDXOpenDeviceNV); }
+    bool IsInitialized() const { return mInitialized; }
+    auto GetOGLLibrary() const { return mOGLLibrary; }
+    auto RootDc() const { return mRootDc; }
+=======
+  bool HasDXInterop2() const { return bool(mSymbols.fDXOpenDeviceNV); }
+  bool IsInitialized() const { return mInitialized; }
+  auto GetOGLLibrary() const { return mOGLLibrary; }
+  auto RootDc() const { return mRootDc; }
+  SymbolLoader GetSymbolLoader() const;
+>>>>>>> upstream-releases
 
  private:
   bool mInitialized = false;

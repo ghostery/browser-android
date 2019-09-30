@@ -12,14 +12,23 @@ class nsIChannel;
 class nsIHttpChannel;
 class nsIDocShellTreeItem;
 class nsIURI;
-class nsIPrincipal;
+class nsIContentSecurityPolicy;
 
 class FramingChecker {
  public:
   // Determine if X-Frame-Options allows content to be framed
   // as a subdocument
+<<<<<<< HEAD
   static bool CheckFrameOptions(nsIChannel* aChannel, nsIDocShell* aDocShell,
                                 nsIPrincipal* aPrincipal);
+||||||| merged common ancestors
+  static bool CheckFrameOptions(nsIChannel* aChannel,
+                                nsIDocShell* aDocShell,
+                                nsIPrincipal* aPrincipal);
+=======
+  static bool CheckFrameOptions(nsIChannel* aChannel, nsIDocShell* aDocShell,
+                                nsIContentSecurityPolicy* aCSP);
+>>>>>>> upstream-releases
 
  protected:
   enum XFOHeader { eDENY, eSAMEORIGIN, eALLOWFROM };

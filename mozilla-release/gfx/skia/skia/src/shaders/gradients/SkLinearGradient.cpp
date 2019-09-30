@@ -52,12 +52,30 @@ void SkLinearGradient::flatten(SkWriteBuffer& buffer) const {
     buffer.writePoint(fEnd);
 }
 
+#ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
 SkShaderBase::Context* SkLinearGradient::onMakeContext(
     const ContextRec& rec, SkArenaAlloc* alloc) const
 {
+<<<<<<< HEAD
     return fTileMode != kDecal_TileMode
         ? CheckedMakeContext<LinearGradient4fContext>(alloc, *this, rec)
         : nullptr;
+||||||| merged common ancestors
+    return CheckedMakeContext<LinearGradient4fContext>(alloc, *this, rec);
+=======
+    // make sure our colorspaces are compatible with legacy blits
+    if (!rec.isLegacyCompatible(fColorSpace.get())) {
+        return nullptr;
+    }
+    // Can't use legacy blit if we can't represent our colors as SkColors
+    if (!this->colorsCanConvertToSkColor()) {
+        return nullptr;
+    }
+
+    return fTileMode != kDecal_TileMode
+        ? CheckedMakeContext<LinearGradient4fContext>(alloc, *this, rec)
+        : nullptr;
+>>>>>>> upstream-releases
 }
 
 SkShaderBase::Context* SkLinearGradient::onMakeBurstPipelineContext(
@@ -71,6 +89,7 @@ SkShaderBase::Context* SkLinearGradient::onMakeBurstPipelineContext(
     return fColorCount > 2 ? CheckedMakeContext<LinearGradient4fContext>(alloc, *this, rec)
                            : nullptr;
 }
+#endif
 
 void SkLinearGradient::appendGradientStages(SkArenaAlloc*, SkRasterPipeline*,
                                             SkRasterPipeline*) const {
@@ -93,9 +112,110 @@ SkShader::GradientType SkLinearGradient::asAGradient(GradientInfo* info) const {
     return kLinear_GradientType;
 }
 
+<<<<<<< HEAD
 /////////////////////////////////////////////////////////////////////
 
 #if SK_SUPPORT_GPU
+||||||| merged common ancestors
+#if SK_SUPPORT_GPU
+
+#include "GrShaderCaps.h"
+#include "glsl/GrGLSLFragmentShaderBuilder.h"
+#include "SkGr.h"
+
+/////////////////////////////////////////////////////////////////////
+
+class GrLinearGradient : public GrGradientEffect {
+public:
+    class GLSLLinearProcessor;
+
+    static std::unique_ptr<GrFragmentProcessor> Make(const CreateArgs& args) {
+        return GrGradientEffect::AdjustFP(std::unique_ptr<GrLinearGradient>(
+                new GrLinearGradient(args)),
+                args);
+    }
+
+    const char* name() const override { return "Linear Gradient"; }
+
+    std::unique_ptr<GrFragmentProcessor> clone() const override {
+        return std::unique_ptr<GrFragmentProcessor>(new GrLinearGradient(*this));
+    }
+
+private:
+    explicit GrLinearGradient(const CreateArgs& args)
+            : INHERITED(kGrLinearGradient_ClassID, args, args.fShader->colorsAreOpaque()) {
+    }
+
+    explicit GrLinearGradient(const GrLinearGradient& that) : INHERITED(that) {}
+
+    GrGLSLFragmentProcessor* onCreateGLSLInstance() const override;
+
+    GR_DECLARE_FRAGMENT_PROCESSOR_TEST
+
+    typedef GrGradientEffect INHERITED;
+};
+
+/////////////////////////////////////////////////////////////////////
+
+class GrLinearGradient::GLSLLinearProcessor : public GrGradientEffect::GLSLProcessor {
+public:
+    GLSLLinearProcessor(const GrProcessor&) {}
+
+    virtual void emitCode(EmitArgs&) override;
+
+private:
+    typedef GrGradientEffect::GLSLProcessor INHERITED;
+};
+
+/////////////////////////////////////////////////////////////////////
+
+GrGLSLFragmentProcessor* GrLinearGradient::onCreateGLSLInstance() const {
+    return new GrLinearGradient::GLSLLinearProcessor(*this);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+GR_DEFINE_FRAGMENT_PROCESSOR_TEST(GrLinearGradient);
+
+#if GR_TEST_UTILS
+std::unique_ptr<GrFragmentProcessor> GrLinearGradient::TestCreate(GrProcessorTestData* d) {
+    SkPoint points[] = {{d->fRandom->nextUScalar1(), d->fRandom->nextUScalar1()},
+                        {d->fRandom->nextUScalar1(), d->fRandom->nextUScalar1()}};
+
+    RandomGradientParams params(d->fRandom);
+    auto shader = params.fUseColors4f ?
+        SkGradientShader::MakeLinear(points, params.fColors4f, params.fColorSpace, params.fStops,
+                                     params.fColorCount, params.fTileMode) :
+        SkGradientShader::MakeLinear(points, params.fColors, params.fStops,
+                                     params.fColorCount, params.fTileMode);
+    GrTest::TestAsFPArgs asFPArgs(d);
+    std::unique_ptr<GrFragmentProcessor> fp = as_SB(shader)->asFragmentProcessor(asFPArgs.args());
+    GrAlwaysAssert(fp);
+    return fp;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////
+
+void GrLinearGradient::GLSLLinearProcessor::emitCode(EmitArgs& args) {
+    const GrLinearGradient& ge = args.fFp.cast<GrLinearGradient>();
+    this->emitUniforms(args.fUniformHandler, ge);
+    SkString t = args.fFragBuilder->ensureCoords2D(args.fTransformedCoords[0]);
+    t.append(".x");
+    this->emitColor(args.fFragBuilder,
+                    args.fUniformHandler,
+                    args.fShaderCaps,
+                    ge,
+                    t.c_str(),
+                    args.fOutputColor,
+                    args.fInputColor,
+                    args.fTexSamplers);
+}
+=======
+/////////////////////////////////////////////////////////////////////
+
+#if SK_SUPPORT_GPU
+>>>>>>> upstream-releases
 
 #include "gradients/GrGradientShader.h"
 

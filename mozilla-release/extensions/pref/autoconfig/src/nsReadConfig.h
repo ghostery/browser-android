@@ -22,10 +22,19 @@ class nsReadConfig final : public nsIObserver {
  protected:
   virtual ~nsReadConfig();
 
+<<<<<<< HEAD
   nsresult readConfigFile();
   nsresult openAndEvaluateJSFile(const char *aFileName, int32_t obscureValue,
                                  bool isEncoded, bool isBinDir);
   bool mRead;
+||||||| merged common ancestors
+        nsReadConfig();
+=======
+  nsresult readConfigFile();
+  nsresult openAndEvaluateJSFile(const char* aFileName, int32_t obscureValue,
+                                 bool isEncoded, bool isBinDir);
+  bool mRead;
+>>>>>>> upstream-releases
 
  private:
   RefPtr<nsAutoConfig> mAutoConfig;

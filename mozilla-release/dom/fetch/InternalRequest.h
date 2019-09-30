@@ -17,9 +17,9 @@
 #include "nsIInputStream.h"
 #include "nsISupportsImpl.h"
 #ifdef DEBUG
-#include "nsIURLParser.h"
-#include "nsNetCID.h"
-#include "nsServiceManagerUtils.h"
+#  include "nsIURLParser.h"
+#  include "nsNetCID.h"
+#  include "nsServiceManagerUtils.h"
 #endif
 
 namespace mozilla {
@@ -48,10 +48,21 @@ namespace dom {
  * object            | TYPE_INTERNAL_OBJECT, TYPE_OBJECT
  * "paintworklet"    | TODO
  * report"           | TODO
+<<<<<<< HEAD
  * script            | TYPE_INTERNAL_SCRIPT, TYPE_INTERNAL_SCRIPT_PRELOAD,
  *                   | TYPE_SCRIPT,
  *                   | TYPE_INTERNAL_SERVICE_WORKER,
  *                   | TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS
+||||||| merged common ancestors
+ * script            | TYPE_INTERNAL_SCRIPT, TYPE_INTERNAL_SCRIPT_PRELOAD, TYPE_SCRIPT
+ *                   | TYPE_INTERNAL_SERVICE_WORKER, TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS
+=======
+ * script            | TYPE_INTERNAL_SCRIPT, TYPE_INTERNAL_SCRIPT_PRELOAD,
+ *                   | TYPE_INTERNAL_MODULE, TYPE_INTERNAL_MODULE_PRELOAD,
+ *                   | TYPE_SCRIPT,
+ *                   | TYPE_INTERNAL_SERVICE_WORKER,
+ *                   | TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS
+>>>>>>> upstream-releases
  * sharedworker      | TYPE_INTERNAL_SHARED_WORKER
  * serviceworker     | The spec lists this as a valid value for the enum,
  *                   | however it is impossible to observe a request with this
@@ -68,7 +79,6 @@ namespace dom {
  */
 
 class Request;
-class IPCInternalRequest;
 
 #define kFETCH_CLIENT_REFERRER_STR "about:client"
 class InternalRequest final {
@@ -86,10 +96,6 @@ class InternalRequest final {
                   const nsAString& aReferrer, ReferrerPolicy aReferrerPolicy,
                   nsContentPolicyType aContentPolicyType,
                   const nsAString& aIntegrity);
-
-  explicit InternalRequest(const IPCInternalRequest& aIPCRequest);
-
-  void ToIPC(IPCInternalRequest* aIPCRequest);
 
   already_AddRefed<InternalRequest> Clone();
 

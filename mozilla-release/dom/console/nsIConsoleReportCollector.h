@@ -12,8 +12,6 @@
 #include "nsStringFwd.h"
 #include "nsTArrayForwardDeclare.h"
 
-class nsIDocument;
-
 // Must be kept in sync with xpcom/rust/xpcom/src/interfaces/nonidl.rs
 #define NS_NSICONSOLEREPORTCOLLECTOR_IID             \
   {                                                  \
@@ -93,8 +91,18 @@ class NS_NO_VTABLE nsIConsoleReportCollector : public nsISupports {
   //                go to the browser console.
   // aAction        An action to determine whether to reserve the pending
   //                reports. Defalut action is to forget the report.
+<<<<<<< HEAD
   virtual void FlushConsoleReports(
       nsIDocument* aDocument, ReportAction aAction = ReportAction::Forget) = 0;
+||||||| merged common ancestors
+  virtual void
+  FlushConsoleReports(nsIDocument* aDocument,
+                      ReportAction aAction = ReportAction::Forget) = 0;
+=======
+  virtual void FlushConsoleReports(
+      mozilla::dom::Document* aDocument,
+      ReportAction aAction = ReportAction::Forget) = 0;
+>>>>>>> upstream-releases
 
   // Flush all pending reports to the console.  May be called from any thread.
   //

@@ -24,6 +24,7 @@
 #include "jit/ProcessExecutableMemory.h"
 #include "util/Text.h"
 #include "wasm/WasmBaselineCompile.h"
+#include "wasm/WasmCraneliftCompile.h"
 #include "wasm/WasmGenerator.h"
 #include "wasm/WasmIonCompile.h"
 #include "wasm/WasmOpIter.h"
@@ -68,25 +69,108 @@ uint32_t wasm::ObservedCPUFeatures() {
 #elif defined(JS_CODEGEN_NONE)
   return 0;
 #else
+<<<<<<< HEAD
 #error "unknown architecture"
+||||||| merged common ancestors
+# error "unknown architecture"
+=======
+#  error "unknown architecture"
+>>>>>>> upstream-releases
 #endif
 }
 
+<<<<<<< HEAD
 CompileArgs::CompileArgs(JSContext* cx, ScriptedCaller&& scriptedCaller)
     : scriptedCaller(std::move(scriptedCaller)) {
-#ifdef ENABLE_WASM_GC
-  bool gcEnabled = cx->options().wasmGc();
+||||||| merged common ancestors
+CompileArgs::CompileArgs(JSContext* cx, ScriptedCaller&& scriptedCaller)
+  : scriptedCaller(std::move(scriptedCaller))
+{
+=======
+SharedCompileArgs CompileArgs::build(JSContext* cx,
+                                     ScriptedCaller&& scriptedCaller) {
+  bool baseline = BaselineCanCompile() && cx->options().wasmBaseline();
+  bool ion = IonCanCompile() && cx->options().wasmIon();
+#ifdef ENABLE_WASM_CRANELIFT
+  bool cranelift = CraneliftCanCompile() && cx->options().wasmCranelift();
 #else
-  bool gcEnabled = false;
+  bool cranelift = false;
 #endif
 
+>>>>>>> upstream-releases
+#ifdef ENABLE_WASM_GC
+<<<<<<< HEAD
+  bool gcEnabled = cx->options().wasmGc();
+||||||| merged common ancestors
+    bool gcEnabled = cx->options().wasmGc();
+=======
+  bool gc = cx->options().wasmGc();
+>>>>>>> upstream-releases
+#else
+<<<<<<< HEAD
+  bool gcEnabled = false;
+||||||| merged common ancestors
+    bool gcEnabled = false;
+=======
+  bool gc = false;
+>>>>>>> upstream-releases
+#endif
+
+<<<<<<< HEAD
   baselineEnabled = cx->options().wasmBaseline();
   ionEnabled = cx->options().wasmIon();
+||||||| merged common ancestors
+    baselineEnabled = cx->options().wasmBaseline();
+    ionEnabled = cx->options().wasmIon();
+=======
+  // Debug information such as source view or debug traps will require
+  // additional memory and permanently stay in baseline code, so we try to
+  // only enable it when a developer actually cares: when the debugger tab
+  // is open.
+  bool debug = cx->realm()->debuggerObservesAsmJS();
+
+  bool sharedMemory =
+      cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
+  bool forceTiering =
+      cx->options().testWasmAwaitTier2() || JitOptions.wasmDelayTier2;
+
+  if (debug || gc) {
+    if (!baseline) {
+      JS_ReportErrorASCII(cx, "can't use wasm debug/gc without baseline");
+      return nullptr;
+    }
+    ion = false;
+    cranelift = false;
+  }
+
+  if (forceTiering && (!baseline || (!cranelift && !ion))) {
+    // This can happen only in testing, and in this case we don't have a
+    // proper way to signal the error, so just silently override the default,
+    // instead of adding a skip-if directive to every test using debug/gc.
+    forceTiering = false;
+  }
+
+>>>>>>> upstream-releases
 #ifdef ENABLE_WASM_CRANELIFT
+<<<<<<< HEAD
   forceCranelift = cx->options().wasmForceCranelift();
 #else
   forceCranelift = false;
+||||||| merged common ancestors
+    forceCranelift = cx->options().wasmForceCranelift();
+#else
+    forceCranelift = false;
+=======
+  if (!baseline && !ion && !cranelift) {
+    if (cx->options().wasmCranelift() && !CraneliftCanCompile()) {
+      // We're forcing to use Cranelift on a platform that doesn't support it.
+      JS_ReportErrorASCII(cx, "cranelift isn't supported on this platform");
+      return nullptr;
+    }
+  }
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
   sharedMemoryEnabled =
       cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
   gcTypesConfigured = gcEnabled ? HasGcTypes::True : HasGcTypes::False;
@@ -97,6 +181,36 @@ CompileArgs::CompileArgs(JSContext* cx, ScriptedCaller&& scriptedCaller)
   // only enable it when a developer actually cares: when the debugger tab
   // is open.
   debugEnabled = cx->realm()->debuggerObservesAsmJS();
+||||||| merged common ancestors
+    sharedMemoryEnabled = cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
+    gcTypesConfigured = gcEnabled ? HasGcTypes::True : HasGcTypes::False;
+    testTiering = cx->options().testWasmAwaitTier2() || JitOptions.wasmDelayTier2;
+
+    // Debug information such as source view or debug traps will require
+    // additional memory and permanently stay in baseline code, so we try to
+    // only enable it when a developer actually cares: when the debugger tab
+    // is open.
+    debugEnabled = cx->realm()->debuggerObservesAsmJS();
+=======
+
+  // HasCompilerSupport() should prevent failure here.
+  MOZ_RELEASE_ASSERT(baseline || ion || cranelift);
+
+  CompileArgs* target = cx->new_<CompileArgs>(std::move(scriptedCaller));
+  if (!target) {
+    return nullptr;
+  }
+
+  target->baselineEnabled = baseline;
+  target->ionEnabled = ion;
+  target->craneliftEnabled = cranelift;
+  target->debugEnabled = debug;
+  target->sharedMemoryEnabled = sharedMemory;
+  target->forceTiering = forceTiering;
+  target->gcEnabled = gc;
+
+  return target;
+>>>>>>> upstream-releases
 }
 
 // Classify the current system as one of a set of recognizable classes.  This
@@ -162,7 +276,10 @@ static SystemClass ClassifySystem() {
 }
 
 // Code sizes in machine code bytes per bytecode byte, again empirical except
-// where marked as "Guess".
+// where marked.
+//
+// The Ion estimate for ARM64 is the measured Baseline value scaled by a
+// plausible factor for optimized code.
 
 static const double x64Tox86Inflation = 1.25;
 
@@ -170,9 +287,16 @@ static const double x64IonBytesPerBytecode = 2.45;
 static const double x86IonBytesPerBytecode =
     x64IonBytesPerBytecode * x64Tox86Inflation;
 static const double arm32IonBytesPerBytecode = 3.3;
+<<<<<<< HEAD
 static const double arm64IonBytesPerBytecode = 3.0;  // Guess
+||||||| merged common ancestors
+static const double arm64IonBytesPerBytecode = 3.0; // Guess
+=======
+static const double arm64IonBytesPerBytecode = 3.0 / 1.4;  // Estimate
+>>>>>>> upstream-releases
 
 static const double x64BaselineBytesPerBytecode = x64IonBytesPerBytecode * 1.43;
+<<<<<<< HEAD
 static const double x86BaselineBytesPerBytecode =
     x64BaselineBytesPerBytecode * x64Tox86Inflation;
 static const double arm32BaselineBytesPerBytecode =
@@ -198,6 +322,57 @@ static double OptimizedBytesPerBytecode(SystemClass cls) {
     default:
       MOZ_CRASH();
   }
+||||||| merged common ancestors
+static const double x86BaselineBytesPerBytecode = x64BaselineBytesPerBytecode * x64Tox86Inflation;
+static const double arm32BaselineBytesPerBytecode = arm32IonBytesPerBytecode * 1.39;
+static const double arm64BaselineBytesPerBytecode = arm64IonBytesPerBytecode * 1.39; // Guess
+
+static double
+OptimizedBytesPerBytecode(SystemClass cls)
+{
+    switch (cls) {
+      case SystemClass::DesktopX86:
+      case SystemClass::MobileX86:
+      case SystemClass::DesktopUnknown32:
+        return x86IonBytesPerBytecode;
+      case SystemClass::DesktopX64:
+      case SystemClass::DesktopUnknown64:
+        return x64IonBytesPerBytecode;
+      case SystemClass::MobileArm32:
+      case SystemClass::MobileUnknown32:
+        return arm32IonBytesPerBytecode;
+      case SystemClass::MobileArm64:
+      case SystemClass::MobileUnknown64:
+        return arm64IonBytesPerBytecode;
+      default:
+        MOZ_CRASH();
+    }
+=======
+static const double x86BaselineBytesPerBytecode =
+    x64BaselineBytesPerBytecode * x64Tox86Inflation;
+static const double arm32BaselineBytesPerBytecode =
+    arm32IonBytesPerBytecode * 1.39;
+static const double arm64BaselineBytesPerBytecode = 3.0;
+
+static double OptimizedBytesPerBytecode(SystemClass cls) {
+  switch (cls) {
+    case SystemClass::DesktopX86:
+    case SystemClass::MobileX86:
+    case SystemClass::DesktopUnknown32:
+      return x86IonBytesPerBytecode;
+    case SystemClass::DesktopX64:
+    case SystemClass::DesktopUnknown64:
+      return x64IonBytesPerBytecode;
+    case SystemClass::MobileArm32:
+    case SystemClass::MobileUnknown32:
+      return arm32IonBytesPerBytecode;
+    case SystemClass::MobileArm64:
+    case SystemClass::MobileUnknown64:
+      return arm64IonBytesPerBytecode;
+    default:
+      MOZ_CRASH();
+  }
+>>>>>>> upstream-releases
 }
 
 static double BaselineBytesPerBytecode(SystemClass cls) {
@@ -234,23 +409,43 @@ double wasm::EstimateCompiledCodeSize(Tier tier, size_t bytecodeSize) {
 // If parallel Ion compilation is going to take longer than this, we should
 // tier.
 
-static const double tierCutoffMs = 250;
+static const double tierCutoffMs = 10;
 
 // Compilation rate values are empirical except when noted, the reference
 // systems are:
 //
-// Late-2013 MacBook Pro (2.6GHz quad hyperthreaded Haswell)
-// Late-2015 Nexus 5X (1.4GHz quad Cortex-A53 + 1.8GHz dual Cortex-A57)
+// Late-2013 MacBook Pro (2.6GHz 4 x hyperthreaded Haswell, Mac OS X)
+// Late-2015 Nexus 5X (1.4GHz 4 x Cortex-A53 + 1.8GHz 2 x Cortex-A57, Android)
+// Ca-2016 SoftIron Overdrive 1000 (1.7GHz 4 x Cortex-A57, Fedora)
+//
+// The rates are always per core.
+//
+// The estimate for ARM64 is the Baseline compilation rate on the SoftIron
+// (because we have no Ion yet), divided by 5 to estimate Ion compile rate and
+// then divided by 2 to make it more reasonable for consumer ARM64 systems.
 
+<<<<<<< HEAD
 static const double x64BytecodesPerMs = 2100;
 static const double x86BytecodesPerMs = 1500;
 static const double arm32BytecodesPerMs = 450;
 static const double arm64BytecodesPerMs = 650;  // Guess
+||||||| merged common ancestors
+static const double x64BytecodesPerMs = 2100;
+static const double x86BytecodesPerMs = 1500;
+static const double arm32BytecodesPerMs = 450;
+static const double arm64BytecodesPerMs = 650; // Guess
+=======
+static const double x64IonBytecodesPerMs = 2100;
+static const double x86IonBytecodesPerMs = 1500;
+static const double arm32IonBytecodesPerMs = 450;
+static const double arm64IonBytecodesPerMs = 750;  // Estimate
+>>>>>>> upstream-releases
 
 // Tiering cutoff values: if code section sizes are below these values (when
 // divided by the effective number of cores) we do not tier, because we guess
 // that parallel Ion compilation will be fast enough.
 
+<<<<<<< HEAD
 static const double x64DesktopTierCutoff = x64BytecodesPerMs * tierCutoffMs;
 static const double x86DesktopTierCutoff = x86BytecodesPerMs * tierCutoffMs;
 static const double x86MobileTierCutoff = x86DesktopTierCutoff / 2;  // Guess
@@ -276,6 +471,63 @@ static double CodesizeCutoff(SystemClass cls, uint32_t codeSize) {
     default:
       MOZ_CRASH();
   }
+||||||| merged common ancestors
+static const double x64DesktopTierCutoff = x64BytecodesPerMs * tierCutoffMs;
+static const double x86DesktopTierCutoff = x86BytecodesPerMs * tierCutoffMs;
+static const double x86MobileTierCutoff = x86DesktopTierCutoff / 2; // Guess
+static const double arm32MobileTierCutoff = arm32BytecodesPerMs * tierCutoffMs;
+static const double arm64MobileTierCutoff = arm64BytecodesPerMs * tierCutoffMs;
+
+static double
+CodesizeCutoff(SystemClass cls, uint32_t codeSize)
+{
+    switch (cls) {
+      case SystemClass::DesktopX86:
+      case SystemClass::DesktopUnknown32:
+        return x86DesktopTierCutoff;
+      case SystemClass::DesktopX64:
+      case SystemClass::DesktopUnknown64:
+        return x64DesktopTierCutoff;
+      case SystemClass::MobileX86:
+        return x86MobileTierCutoff;
+      case SystemClass::MobileArm32:
+      case SystemClass::MobileUnknown32:
+        return arm32MobileTierCutoff;
+      case SystemClass::MobileArm64:
+      case SystemClass::MobileUnknown64:
+        return arm64MobileTierCutoff;
+      default:
+        MOZ_CRASH();
+    }
+=======
+static const double x64DesktopTierCutoff = x64IonBytecodesPerMs * tierCutoffMs;
+static const double x86DesktopTierCutoff = x86IonBytecodesPerMs * tierCutoffMs;
+static const double x86MobileTierCutoff = x86DesktopTierCutoff / 2;  // Guess
+static const double arm32MobileTierCutoff =
+    arm32IonBytecodesPerMs * tierCutoffMs;
+static const double arm64MobileTierCutoff =
+    arm64IonBytecodesPerMs * tierCutoffMs;
+
+static double CodesizeCutoff(SystemClass cls) {
+  switch (cls) {
+    case SystemClass::DesktopX86:
+    case SystemClass::DesktopUnknown32:
+      return x86DesktopTierCutoff;
+    case SystemClass::DesktopX64:
+    case SystemClass::DesktopUnknown64:
+      return x64DesktopTierCutoff;
+    case SystemClass::MobileX86:
+      return x86MobileTierCutoff;
+    case SystemClass::MobileArm32:
+    case SystemClass::MobileUnknown32:
+      return arm32MobileTierCutoff;
+    case SystemClass::MobileArm64:
+    case SystemClass::MobileUnknown64:
+      return arm64MobileTierCutoff;
+    default:
+      MOZ_CRASH();
+  }
+>>>>>>> upstream-releases
 }
 
 // As the number of cores grows the effectiveness of each core dwindles (on the
@@ -335,6 +587,7 @@ static bool TieringBeneficial(uint32_t codeSize) {
   // Ion compilation on available cores must take long enough to be worth the
   // bother.
 
+<<<<<<< HEAD
   double cutoffSize = CodesizeCutoff(cls, codeSize);
   double effectiveCores = EffectiveCores(cls, cores);
 
@@ -345,6 +598,22 @@ static bool TieringBeneficial(uint32_t codeSize) {
   // Do not implement a size cutoff for 64-bit systems since the code size
   // budget for 64 bit is so large that it will hardly ever be an issue.
   // (Also the cutoff percentage might be different on 64-bit.)
+||||||| merged common ancestors
+    // Do not implement a size cutoff for 64-bit systems since the code size
+    // budget for 64 bit is so large that it will hardly ever be an issue.
+    // (Also the cutoff percentage might be different on 64-bit.)
+=======
+  double cutoffSize = CodesizeCutoff(cls);
+  double effectiveCores = EffectiveCores(cls, cores);
+
+  if ((codeSize / effectiveCores) < cutoffSize) {
+    return false;
+  }
+
+  // Do not implement a size cutoff for 64-bit systems since the code size
+  // budget for 64 bit is so large that it will hardly ever be an issue.
+  // (Also the cutoff percentage might be different on 64-bit.)
+>>>>>>> upstream-releases
 
 #ifndef JS_64BIT
   // If the amount of executable code for baseline compilation jeopardizes the
@@ -378,6 +647,7 @@ CompilerEnvironment::CompilerEnvironment(const CompileArgs& args)
 CompilerEnvironment::CompilerEnvironment(CompileMode mode, Tier tier,
                                          OptimizedBackend optimizedBackend,
                                          DebugEnabled debugEnabled,
+<<<<<<< HEAD
                                          HasGcTypes gcTypesConfigured)
     : state_(InitialWithModeTierDebug),
       mode_(mode),
@@ -450,6 +720,146 @@ void CompilerEnvironment::computeParameters(Decoder& d,
   debug_ = debugEnabled ? DebugEnabled::True : DebugEnabled::False;
   gcTypes_ = gcEnabled ? HasGcTypes::True : HasGcTypes::False;
   state_ = Computed;
+||||||| merged common ancestors
+                                         HasGcTypes gcTypesConfigured)
+  : state_(InitialWithModeTierDebug),
+    mode_(mode),
+    tier_(tier),
+    optimizedBackend_(optimizedBackend),
+    debug_(debugEnabled),
+    gcTypes_(gcTypesConfigured)
+{
+}
+
+void
+CompilerEnvironment::computeParameters(HasGcTypes gcFeatureOptIn)
+{
+    MOZ_ASSERT(state_ == InitialWithModeTierDebug);
+
+    if (gcTypes_ == HasGcTypes::True) {
+        gcTypes_ = gcFeatureOptIn;
+    }
+    state_ = Computed;
+}
+
+void
+CompilerEnvironment::computeParameters(Decoder& d, HasGcTypes gcFeatureOptIn)
+{
+    MOZ_ASSERT(!isComputed());
+
+    if (state_ == InitialWithModeTierDebug) {
+        computeParameters(gcFeatureOptIn);
+        return;
+    }
+
+    bool gcEnabled = args_->gcTypesConfigured == HasGcTypes::True &&
+                     gcFeatureOptIn == HasGcTypes::True;
+    bool argBaselineEnabled = args_->baselineEnabled || gcEnabled;
+    bool argIonEnabled = args_->ionEnabled && !gcEnabled;
+    bool argTestTiering = args_->testTiering && !gcEnabled;
+    bool argDebugEnabled = args_->debugEnabled;
+
+    uint32_t codeSectionSize = 0;
+
+    SectionRange range;
+    if (StartsCodeSection(d.begin(), d.end(), &range)) {
+        codeSectionSize = range.size;
+    }
+
+    // Attempt to default to ion if baseline is disabled.
+    bool baselineEnabled = BaselineCanCompile() && (argBaselineEnabled || argTestTiering);
+    bool debugEnabled = BaselineCanCompile() && argDebugEnabled;
+    bool ionEnabled = IonCanCompile() && (argIonEnabled || !baselineEnabled || argTestTiering);
+#ifdef ENABLE_WASM_CRANELIFT
+    bool forceCranelift = args_->forceCranelift;
+#endif
+
+    // HasCompilerSupport() should prevent failure here
+    MOZ_RELEASE_ASSERT(baselineEnabled || ionEnabled);
+
+    if (baselineEnabled && ionEnabled && !debugEnabled && CanUseExtraThreads() &&
+        (TieringBeneficial(codeSectionSize) || argTestTiering))
+    {
+        mode_ = CompileMode::Tier1;
+        tier_ = Tier::Baseline;
+    } else {
+        mode_ = CompileMode::Once;
+        tier_ = debugEnabled || !ionEnabled ? Tier::Baseline : Tier::Optimized;
+    }
+
+    optimizedBackend_ = OptimizedBackend::Ion;
+#ifdef ENABLE_WASM_CRANELIFT
+    if (forceCranelift) {
+        optimizedBackend_ = OptimizedBackend::Cranelift;
+    }
+#endif
+
+    debug_ = debugEnabled ? DebugEnabled::True : DebugEnabled::False;
+    gcTypes_ = gcEnabled ? HasGcTypes::True : HasGcTypes::False;
+    state_ = Computed;
+=======
+                                         bool gcTypesConfigured)
+    : state_(InitialWithModeTierDebug),
+      mode_(mode),
+      tier_(tier),
+      optimizedBackend_(optimizedBackend),
+      debug_(debugEnabled),
+      gcTypes_(gcTypesConfigured) {}
+
+void CompilerEnvironment::computeParameters(bool gcFeatureOptIn) {
+  MOZ_ASSERT(state_ == InitialWithModeTierDebug);
+
+  if (gcTypes_) {
+    gcTypes_ = gcFeatureOptIn;
+  }
+  state_ = Computed;
+}
+
+void CompilerEnvironment::computeParameters(Decoder& d, bool gcFeatureOptIn) {
+  MOZ_ASSERT(!isComputed());
+
+  if (state_ == InitialWithModeTierDebug) {
+    computeParameters(gcFeatureOptIn);
+    return;
+  }
+
+  bool gcEnabled = args_->gcEnabled && gcFeatureOptIn;
+  bool baselineEnabled = args_->baselineEnabled;
+  bool ionEnabled = args_->ionEnabled;
+  bool debugEnabled = args_->debugEnabled;
+  bool craneliftEnabled = args_->craneliftEnabled;
+  bool forceTiering = args_->forceTiering;
+
+  bool hasSecondTier = ionEnabled || craneliftEnabled;
+  MOZ_ASSERT_IF(gcEnabled || debugEnabled, baselineEnabled);
+  MOZ_ASSERT_IF(forceTiering, baselineEnabled && hasSecondTier);
+
+  // HasCompilerSupport() should prevent failure here
+  MOZ_RELEASE_ASSERT(baselineEnabled || ionEnabled || craneliftEnabled);
+
+  uint32_t codeSectionSize = 0;
+
+  SectionRange range;
+  if (StartsCodeSection(d.begin(), d.end(), &range)) {
+    codeSectionSize = range.size;
+  }
+
+  if (baselineEnabled && hasSecondTier && CanUseExtraThreads() &&
+      (TieringBeneficial(codeSectionSize) || forceTiering)) {
+    mode_ = CompileMode::Tier1;
+    tier_ = Tier::Baseline;
+  } else {
+    mode_ = CompileMode::Once;
+    tier_ = hasSecondTier ? Tier::Optimized : Tier::Baseline;
+  }
+
+  optimizedBackend_ =
+      craneliftEnabled ? OptimizedBackend::Cranelift : OptimizedBackend::Ion;
+
+  debug_ = debugEnabled ? DebugEnabled::True : DebugEnabled::False;
+  gcTypes_ = gcEnabled;
+  state_ = Computed;
+>>>>>>> upstream-releases
 }
 
 template <class DecoderT>
@@ -486,8 +896,76 @@ static bool DecodeCodeSection(const ModuleEnvironment& env, DecoderT& d,
     }
 
     return mg.finishFuncDefs();
+<<<<<<< HEAD
   }
 
+  uint32_t numFuncDefs;
+  if (!d.readVarU32(&numFuncDefs)) {
+    return d.fail("expected function body count");
+  }
+
+  if (numFuncDefs != env.numFuncDefs()) {
+    return d.fail(
+        "function body count does not match function signature count");
+  }
+||||||| merged common ancestors
+}
+
+SharedModule
+wasm::CompileBuffer(const CompileArgs& args, const ShareableBytes& bytecode, UniqueChars* error,
+                    UniqueCharsVector* warnings)
+{
+    MOZ_RELEASE_ASSERT(wasm::HaveSignalHandlers());
+
+    Decoder d(bytecode.bytes, 0, error, warnings);
+=======
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  for (uint32_t funcDefIndex = 0; funcDefIndex < numFuncDefs; funcDefIndex++) {
+    if (!DecodeFunctionBody(d, mg, env.numFuncImports() + funcDefIndex)) {
+      return false;
+    }
+  }
+
+  if (!d.finishSection(*env.codeSection, "code")) {
+    return false;
+  }
+||||||| merged common ancestors
+    CompilerEnvironment compilerEnv(args);
+    ModuleEnvironment env(args.gcTypesConfigured,
+                          &compilerEnv,
+                          args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+    if (!DecodeModuleEnvironment(d, &env)) {
+        return nullptr;
+    }
+
+#ifdef ENABLE_WASM_CRANELIFT
+    if (compilerEnv.tier() == Tier::Optimized &&
+        compilerEnv.optimizedBackend() == OptimizedBackend::Cranelift)
+    {
+        // At the moment, Cranelift performs no validation, so validate
+        // explicitly.
+        if (!ValidateForCranelift(bytecode, error)) {
+           return nullptr;
+        }
+    }
+#endif
+
+    ModuleGenerator mg(args, &env, nullptr, error);
+    if (!mg.init()) {
+        return nullptr;
+    }
+
+    if (!DecodeCodeSection(env, d, mg)) {
+        return nullptr;
+    }
+
+    if (!DecodeModuleTail(d, &env, mg.deferredValidationState())) {
+        return nullptr;
+    }
+=======
   uint32_t numFuncDefs;
   if (!d.readVarU32(&numFuncDefs)) {
     return d.fail("expected function body count");
@@ -507,10 +985,12 @@ static bool DecodeCodeSection(const ModuleEnvironment& env, DecoderT& d,
   if (!d.finishSection(*env.codeSection, "code")) {
     return false;
   }
+>>>>>>> upstream-releases
 
   return mg.finishFuncDefs();
 }
 
+<<<<<<< HEAD
 SharedModule wasm::CompileBuffer(const CompileArgs& args,
                                  const ShareableBytes& bytecode,
                                  UniqueChars* error,
@@ -541,7 +1021,83 @@ SharedModule wasm::CompileBuffer(const CompileArgs& args,
 
   return mg.finishModule(bytecode, nullptr, maybeLinkData);
 }
+||||||| merged common ancestors
+void
+wasm::CompileTier2(const CompileArgs& args, const Bytes& bytecode, const Module& module,
+                   Atomic<bool>* cancelled)
+{
+    MOZ_RELEASE_ASSERT(wasm::HaveSignalHandlers());
 
+    UniqueChars error;
+    Decoder d(bytecode, 0, &error);
+
+    HasGcTypes gcTypesConfigured = HasGcTypes::False; // No optimized backend support yet
+    OptimizedBackend optimizedBackend = args.forceCranelift
+                                      ? OptimizedBackend::Cranelift
+                                      : OptimizedBackend::Ion;
+
+    CompilerEnvironment compilerEnv(CompileMode::Tier2, Tier::Optimized, optimizedBackend,
+                                    DebugEnabled::False, gcTypesConfigured);
+
+    ModuleEnvironment env(gcTypesConfigured,
+                          &compilerEnv,
+                          args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+    if (!DecodeModuleEnvironment(d, &env)) {
+        return;
+    }
+
+    MOZ_ASSERT(env.gcTypesEnabled() == HasGcTypes::False, "can't ion-compile with gc types yet");
+
+    ModuleGenerator mg(args, &env, cancelled, &error);
+    if (!mg.init()) {
+        return;
+    }
+
+    if (!DecodeCodeSection(env, d, mg)) {
+        return;
+    }
+
+    if (!DecodeModuleTail(d, &env, mg.deferredValidationState())) {
+        return;
+    }
+
+    if (!mg.finishTier2(module)) {
+        return;
+    }
+=======
+SharedModule wasm::CompileBuffer(const CompileArgs& args,
+                                 const ShareableBytes& bytecode,
+                                 UniqueChars* error,
+                                 UniqueCharsVector* warnings,
+                                 JS::OptimizedEncodingListener* listener) {
+  Decoder d(bytecode.bytes, 0, error, warnings);
+
+  CompilerEnvironment compilerEnv(args);
+  ModuleEnvironment env(
+      args.gcEnabled, &compilerEnv,
+      args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+  if (!DecodeModuleEnvironment(d, &env)) {
+    return nullptr;
+  }
+
+  ModuleGenerator mg(args, &env, nullptr, error);
+  if (!mg.init()) {
+    return nullptr;
+  }
+
+  if (!DecodeCodeSection(env, d, mg)) {
+    return nullptr;
+  }
+
+  if (!DecodeModuleTail(d, &env)) {
+    return nullptr;
+  }
+
+  return mg.finishModule(bytecode, listener);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void wasm::CompileTier2(const CompileArgs& args, const Bytes& bytecode,
                         const Module& module, Atomic<bool>* cancelled) {
   UniqueChars error;
@@ -585,6 +1141,51 @@ void wasm::CompileTier2(const CompileArgs& args, const Bytes& bytecode,
 
   // The caller doesn't care about success or failure; only that compilation
   // is inactive, so there is no success to return here.
+||||||| merged common ancestors
+    // The caller doesn't care about success or failure; only that compilation
+    // is inactive, so there is no success to return here.
+=======
+void wasm::CompileTier2(const CompileArgs& args, const Bytes& bytecode,
+                        const Module& module, Atomic<bool>* cancelled) {
+  UniqueChars error;
+  Decoder d(bytecode, 0, &error);
+
+  bool gcTypesConfigured = false;  // No optimized backend support yet
+  OptimizedBackend optimizedBackend = args.craneliftEnabled
+                                          ? OptimizedBackend::Cranelift
+                                          : OptimizedBackend::Ion;
+
+  CompilerEnvironment compilerEnv(CompileMode::Tier2, Tier::Optimized,
+                                  optimizedBackend, DebugEnabled::False,
+                                  gcTypesConfigured);
+
+  ModuleEnvironment env(
+      gcTypesConfigured, &compilerEnv,
+      args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+  if (!DecodeModuleEnvironment(d, &env)) {
+    return;
+  }
+
+  ModuleGenerator mg(args, &env, cancelled, &error);
+  if (!mg.init()) {
+    return;
+  }
+
+  if (!DecodeCodeSection(env, d, mg)) {
+    return;
+  }
+
+  if (!DecodeModuleTail(d, &env)) {
+    return;
+  }
+
+  if (!mg.finishTier2(module)) {
+    return;
+  }
+
+  // The caller doesn't care about success or failure; only that compilation
+  // is inactive, so there is no success to return here.
+>>>>>>> upstream-releases
 }
 
 class StreamingDecoder {
@@ -662,6 +1263,7 @@ static SharedBytes CreateBytecode(const Bytes& env, const Bytes& code,
   return bytecode;
 }
 
+<<<<<<< HEAD
 SharedModule wasm::CompileStreaming(
     const CompileArgs& args, const Bytes& envBytes, const Bytes& codeBytes,
     const ExclusiveBytesPtr& codeBytesEnd,
@@ -670,7 +1272,55 @@ SharedModule wasm::CompileStreaming(
     UniqueCharsVector* warnings) {
   CompilerEnvironment compilerEnv(args);
   Maybe<ModuleEnvironment> env;
+||||||| merged common ancestors
+SharedModule
+wasm::CompileStreaming(const CompileArgs& args,
+                       const Bytes& envBytes,
+                       const Bytes& codeBytes,
+                       const ExclusiveBytesPtr& codeBytesEnd,
+                       const ExclusiveStreamEndData& exclusiveStreamEnd,
+                       const Atomic<bool>& cancelled,
+                       UniqueChars* error,
+                       UniqueCharsVector* warnings)
+{
+    MOZ_ASSERT(wasm::HaveSignalHandlers());
 
+    CompilerEnvironment compilerEnv(args);
+    Maybe<ModuleEnvironment> env;
+
+    {
+        Decoder d(envBytes, 0, error, warnings);
+
+        env.emplace(args.gcTypesConfigured,
+                    &compilerEnv,
+                    args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+        if (!DecodeModuleEnvironment(d, env.ptr())) {
+            return nullptr;
+        }
+
+        MOZ_ASSERT(d.done());
+    }
+=======
+SharedModule wasm::CompileStreaming(
+    const CompileArgs& args, const Bytes& envBytes, const Bytes& codeBytes,
+    const ExclusiveBytesPtr& codeBytesEnd,
+    const ExclusiveStreamEndData& exclusiveStreamEnd,
+    const Atomic<bool>& cancelled, UniqueChars* error,
+    UniqueCharsVector* warnings) {
+  CompilerEnvironment compilerEnv(args);
+  ModuleEnvironment env(
+      args.gcEnabled, &compilerEnv,
+      args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
+
+  {
+    Decoder d(envBytes, 0, error, warnings);
+
+    if (!DecodeModuleEnvironment(d, &env)) {
+      return nullptr;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   {
     Decoder d(envBytes, 0, error, warnings);
 
@@ -678,27 +1328,88 @@ SharedModule wasm::CompileStreaming(
                 args.sharedMemoryEnabled ? Shareable::True : Shareable::False);
     if (!DecodeModuleEnvironment(d, env.ptr())) {
       return nullptr;
+||||||| merged common ancestors
+    ModuleGenerator mg(args, env.ptr(), &cancelled, error);
+    if (!mg.init()) {
+        return nullptr;
+=======
+    if (!env.codeSection) {
+      d.fail("unknown section before code section");
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(d.done());
   }
+||||||| merged common ancestors
+    {
+        MOZ_ASSERT(env->codeSection->size == codeBytes.length());
+        StreamingDecoder d(*env, codeBytes, codeBytesEnd, cancelled, error, warnings);
+=======
+    MOZ_RELEASE_ASSERT(env.codeSection->size == codeBytes.length());
+    MOZ_RELEASE_ASSERT(d.done());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ModuleGenerator mg(args, env.ptr(), &cancelled, error);
   if (!mg.init()) {
     return nullptr;
   }
+||||||| merged common ancestors
+        if (!DecodeCodeSection(*env, d, mg)) {
+            return nullptr;
+        }
+=======
+  ModuleGenerator mg(args, &env, &cancelled, error);
+  if (!mg.init()) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   {
     MOZ_ASSERT(env->codeSection->size == codeBytes.length());
     StreamingDecoder d(*env, codeBytes, codeBytesEnd, cancelled, error,
                        warnings);
+||||||| merged common ancestors
+        MOZ_ASSERT(d.done());
+    }
+=======
+  {
+    StreamingDecoder d(env, codeBytes, codeBytesEnd, cancelled, error,
+                       warnings);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (!DecodeCodeSection(*env, d, mg)) {
       return nullptr;
+||||||| merged common ancestors
+    {
+        auto streamEnd = exclusiveStreamEnd.lock();
+        while (!streamEnd->reached) {
+            if (cancelled) {
+                return nullptr;
+            }
+            streamEnd.wait();
+        }
+=======
+    if (!DecodeCodeSection(env, d, mg)) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(d.done());
   }
+||||||| merged common ancestors
+    const StreamEndData& streamEnd = exclusiveStreamEnd.lock();
+    const Bytes& tailBytes = *streamEnd.tailBytes;
+=======
+    MOZ_RELEASE_ASSERT(d.done());
+  }
+>>>>>>> upstream-releases
 
   {
     auto streamEnd = exclusiveStreamEnd.lock();
@@ -713,13 +1424,31 @@ SharedModule wasm::CompileStreaming(
   const StreamEndData& streamEnd = exclusiveStreamEnd.lock();
   const Bytes& tailBytes = *streamEnd.tailBytes;
 
+<<<<<<< HEAD
   {
     Decoder d(tailBytes, env->codeSection->end(), error, warnings);
+||||||| merged common ancestors
+        MOZ_ASSERT(d.done());
+    }
+=======
+  {
+    Decoder d(tailBytes, env.codeSection->end(), error, warnings);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (!DecodeModuleTail(d, env.ptr(), mg.deferredValidationState())) {
       return nullptr;
+||||||| merged common ancestors
+    SharedBytes bytecode = CreateBytecode(envBytes, codeBytes, tailBytes, error);
+    if (!bytecode) {
+        return nullptr;
+=======
+    if (!DecodeModuleTail(d, &env)) {
+      return nullptr;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(d.done());
   }
 
@@ -729,4 +1458,17 @@ SharedModule wasm::CompileStreaming(
   }
 
   return mg.finishModule(*bytecode, streamEnd.tier2Listener);
+||||||| merged common ancestors
+    return mg.finishModule(*bytecode, streamEnd.tier2Listener);
+=======
+    MOZ_RELEASE_ASSERT(d.done());
+  }
+
+  SharedBytes bytecode = CreateBytecode(envBytes, codeBytes, tailBytes, error);
+  if (!bytecode) {
+    return nullptr;
+  }
+
+  return mg.finishModule(*bytecode, streamEnd.tier2Listener);
+>>>>>>> upstream-releases
 }

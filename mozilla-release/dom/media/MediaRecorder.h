@@ -27,6 +27,7 @@ namespace dom {
 
 class AudioNode;
 class Blob;
+class Document;
 class DOMException;
 
 /**
@@ -67,12 +68,26 @@ class MediaRecorder final : public DOMEventTargetHelper,
 
   // WebIDL
   // Start recording. If timeSlice has been provided, mediaRecorder will
+<<<<<<< HEAD
   // raise a dataavailable event containing the Blob of collected data on every
   // timeSlice milliseconds. If timeSlice isn't provided, UA should call the
   // RequestData to obtain the Blob data, also set the mTimeSlice to zero.
   void Start(const Optional<int32_t>& timeSlice, ErrorResult& aResult);
   // Stop the recording activiy. Including stop the Media Encoder thread,
   // un-hook the mediaStreamListener to encoder.
+||||||| merged common ancestors
+  // raise a dataavailable event containing the Blob of collected data on every timeSlice milliseconds.
+  // If timeSlice isn't provided, UA should call the RequestData to obtain the Blob data, also set the mTimeSlice to zero.
+  void Start(const Optional<int32_t>& timeSlice, ErrorResult & aResult);
+  // Stop the recording activiy. Including stop the Media Encoder thread, un-hook the mediaStreamListener to encoder.
+=======
+  // raise a dataavailable event containing the Blob of collected data on every
+  // timeSlice milliseconds. If timeSlice isn't provided, UA should call the
+  // RequestData to obtain the Blob data, also set the mTimeSlice to zero.
+  void Start(const Optional<uint32_t>& timeSlice, ErrorResult& aResult);
+  // Stop the recording activiy. Including stop the Media Encoder thread,
+  // un-hook the mediaStreamListener to encoder.
+>>>>>>> upstream-releases
   void Stop(ErrorResult& aResult);
   // Pause a recording.
   void Pause(ErrorResult& aResult);
@@ -166,7 +181,7 @@ class MediaRecorder final : public DOMEventTargetHelper,
   // session is running.
   nsTArray<RefPtr<Session>> mSessions;
 
-  nsCOMPtr<nsIDocument> mDocument;
+  RefPtr<Document> mDocument;
 
   // It specifies the container format as well as the audio and video capture
   // formats.

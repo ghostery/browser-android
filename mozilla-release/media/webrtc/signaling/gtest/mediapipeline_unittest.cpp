@@ -130,14 +130,33 @@ class FakeAudioStreamTrack : public mozilla::dom::AudioStreamTrack {
   }
 };
 
+<<<<<<< HEAD
 class LoopbackTransport : public MediaTransportBase {
+||||||| merged common ancestors
+class TransportInfo {
+=======
+class LoopbackTransport : public MediaTransportHandler {
+>>>>>>> upstream-releases
  public:
+<<<<<<< HEAD
   LoopbackTransport() {
     SetState("mux", TransportLayer::TS_INIT, false);
     SetState("mux", TransportLayer::TS_INIT, true);
     SetState("non-mux", TransportLayer::TS_INIT, false);
     SetState("non-mux", TransportLayer::TS_INIT, true);
   }
+||||||| merged common ancestors
+  TransportInfo() :
+    flow_(nullptr),
+    loopback_(nullptr) {}
+=======
+  LoopbackTransport() : MediaTransportHandler(nullptr) {
+    SetState("mux", TransportLayer::TS_INIT, false);
+    SetState("mux", TransportLayer::TS_INIT, true);
+    SetState("non-mux", TransportLayer::TS_INIT, false);
+    SetState("non-mux", TransportLayer::TS_INIT, true);
+  }
+>>>>>>> upstream-releases
 
   static void InitAndConnect(LoopbackTransport& client,
                              LoopbackTransport& server) {
@@ -145,15 +164,65 @@ class LoopbackTransport : public MediaTransportBase {
     server.Connect(&client);
   }
 
+<<<<<<< HEAD
+  void Connect(LoopbackTransport* peer) { peer_ = peer; }
+||||||| merged common ancestors
+  void Init(bool client) {
+    UniquePtr<TransportLayerLoopback> loopback(new TransportLayerLoopback);
+    UniquePtr<TransportLayerDtls> dtls(new TransportLayerDtls);
+    UniquePtr<TransportLayerSrtp> srtp(new TransportLayerSrtp(*dtls));
+
+    std::vector<uint16_t> ciphers;
+    ciphers.push_back(kDtlsSrtpAeadAes256Gcm);
+    dtls->SetSrtpCiphers(ciphers);
+    dtls->SetIdentity(DtlsIdentity::Generate());
+    dtls->SetRole(client ? TransportLayerDtls::CLIENT :
+      TransportLayerDtls::SERVER);
+    dtls->SetVerificationAllowAll();
+=======
   void Connect(LoopbackTransport* peer) { peer_ = peer; }
 
   void Shutdown() { peer_ = nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void Shutdown() { peer_ = nullptr; }
+||||||| merged common ancestors
+    ASSERT_EQ(NS_OK, loopback->Init());
+    ASSERT_EQ(NS_OK, dtls->Init());
+    ASSERT_EQ(NS_OK, srtp->Init());
+=======
+  RefPtr<IceLogPromise> GetIceLog(const nsCString& aPattern) override {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void SendPacket(const std::string& aTransportId,
                   MediaPacket& aPacket) override {
     peer_->SignalPacketReceived(aTransportId, aPacket);
+||||||| merged common ancestors
+    dtls->Chain(loopback.get());
+    srtp->Chain(loopback.get());
+
+    flow_ = new TransportFlow();
+    loopback_ = loopback.release();
+    flow_->PushLayer(loopback_);
+    flow_->PushLayer(dtls.release());
+    flow_->PushLayer(srtp.release());
+=======
+  void ClearIceLog() override {}
+  void EnterPrivateMode() override {}
+  void ExitPrivateMode() override {}
+
+  nsresult CreateIceCtx(const std::string& aName,
+                        const nsTArray<dom::RTCIceServer>& aIceServers,
+                        dom::RTCIceTransportPolicy aIcePolicy) override {
+    return NS_OK;
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   TransportLayer::State GetState(const std::string& aTransportId,
                                  bool aRtcp) const override {
     if (aRtcp) {
@@ -167,10 +236,65 @@ class LoopbackTransport : public MediaTransportBase {
         return it->second;
       }
     }
+||||||| merged common ancestors
+  void Connect(TransportInfo* peer) {
+    MOZ_ASSERT(loopback_);
+    MOZ_ASSERT(peer->loopback_);
+=======
+  void Destroy() override {}
 
+  // We will probably be able to move the proxy lookup stuff into
+  // this class once we move mtransport to its own process.
+  void SetProxyServer(NrSocketProxyConfig&& aProxyConfig) override {}
+
+  void EnsureProvisionalTransport(const std::string& aTransportId,
+                                  const std::string& aLocalUfrag,
+                                  const std::string& aLocalPwd,
+                                  size_t aComponentCount) override {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     return TransportLayer::TS_NONE;
+||||||| merged common ancestors
+    loopback_->Connect(peer->loopback_);
+=======
+  // We set default-route-only as late as possible because it depends on what
+  // capture permissions have been granted on the window, which could easily
+  // change between Init (ie; when the PC is created) and StartIceGathering
+  // (ie; when we set the local description).
+  void StartIceGathering(bool aDefaultRouteOnly,
+                         // TODO: It probably makes sense to look
+                         // this up internally
+                         const nsTArray<NrIceStunAddr>& aStunAddrs) override {}
+
+  void ActivateTransport(
+      const std::string& aTransportId, const std::string& aLocalUfrag,
+      const std::string& aLocalPwd, size_t aComponentCount,
+      const std::string& aUfrag, const std::string& aPassword,
+      const nsTArray<uint8_t>& aKeyDer, const nsTArray<uint8_t>& aCertDer,
+      SSLKEAType aAuthType, bool aDtlsClient, const DtlsDigestList& aDigests,
+      bool aPrivacyRequested) override {}
+
+  void RemoveTransportsExcept(
+      const std::set<std::string>& aTransportIds) override {}
+
+  void StartIceChecks(bool aIsControlling, bool aIsOfferer,
+                      const std::vector<std::string>& aIceOptions) override {}
+
+  void AddIceCandidate(const std::string& aTransportId,
+                       const std::string& aCandidate,
+                       const std::string& aUfrag) override {}
+
+  void UpdateNetworkState(bool aOnline) override {}
+
+  RefPtr<StatsPromise> GetIceStats(
+      const std::string& aTransportId, DOMHighResTimeStamp aNow,
+      std::unique_ptr<dom::RTCStatsReportInternal>&& aReport) override {
+    return nullptr;
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   void SetState(const std::string& aTransportId, TransportLayer::State aState,
                 bool aRtcp) {
     if (aRtcp) {
@@ -179,13 +303,38 @@ class LoopbackTransport : public MediaTransportBase {
     } else {
       mRtpStates[aTransportId] = aState;
       SignalStateChange(aTransportId, aState);
+||||||| merged common ancestors
+  void Shutdown() {
+    if (loopback_) {
+      loopback_->Disconnect();
+=======
+  void SendPacket(const std::string& aTransportId,
+                  MediaPacket&& aPacket) override {
+    peer_->SignalPacketReceived(aTransportId, aPacket);
+  }
+
+  void SetState(const std::string& aTransportId, TransportLayer::State aState,
+                bool aRtcp) {
+    if (aRtcp) {
+      MediaTransportHandler::OnRtcpStateChange(aTransportId, aState);
+    } else {
+      MediaTransportHandler::OnStateChange(aTransportId, aState);
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
  private:
   RefPtr<MediaTransportBase> peer_;
   std::map<std::string, TransportLayer::State> mRtpStates;
   std::map<std::string, TransportLayer::State> mRtcpStates;
+||||||| merged common ancestors
+  RefPtr<TransportFlow> flow_;
+  TransportLayerLoopback *loopback_;
+=======
+ private:
+  RefPtr<MediaTransportHandler> peer_;
+>>>>>>> upstream-releases
 };
 
 class TestAgent {
@@ -373,12 +522,43 @@ class MediaPipelineTest : public ::testing::Test {
     p2_.SetBundleFilter(initialFilter);
 
     // Setup transport flows
+<<<<<<< HEAD
     InitTransports();
 
     std::string transportId = aIsRtcpMux ? "mux" : "non-mux";
     p1_.CreatePipeline(transportId);
     p2_.CreatePipeline(transportId);
 
+    // Set state of transports to CONNECTING. MediaPipeline doesn't really care
+    // about this transition, but we're trying to simluate what happens in a
+    // real case.
+    p1_.SetState(transportId, TransportLayer::TS_CONNECTING, false);
+    p1_.SetState(transportId, TransportLayer::TS_CONNECTING, true);
+    p2_.SetState(transportId, TransportLayer::TS_CONNECTING, false);
+    p2_.SetState(transportId, TransportLayer::TS_CONNECTING, true);
+||||||| merged common ancestors
+    InitTransports(aIsRtcpMux);
+=======
+    InitTransports();
+
+    std::string transportId = aIsRtcpMux ? "mux" : "non-mux";
+    p1_.CreatePipeline(transportId);
+    p2_.CreatePipeline(transportId);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    PR_Sleep(10);
+
+    // Set state of transports to OPEN (ie; connected). This should result in
+    // media flowing.
+    p1_.SetState(transportId, TransportLayer::TS_OPEN, false);
+    p1_.SetState(transportId, TransportLayer::TS_OPEN, true);
+    p2_.SetState(transportId, TransportLayer::TS_OPEN, false);
+    p2_.SetState(transportId, TransportLayer::TS_OPEN, true);
+||||||| merged common ancestors
+    p1_.CreatePipeline(aIsRtcpMux);
+    p2_.CreatePipeline(aIsRtcpMux);
+=======
     // Set state of transports to CONNECTING. MediaPipeline doesn't really care
     // about this transition, but we're trying to simluate what happens in a
     // real case.
@@ -395,6 +575,7 @@ class MediaPipelineTest : public ::testing::Test {
     p1_.SetState(transportId, TransportLayer::TS_OPEN, true);
     p2_.SetState(transportId, TransportLayer::TS_OPEN, false);
     p2_.SetState(transportId, TransportLayer::TS_OPEN, true);
+>>>>>>> upstream-releases
 
     if (bundle) {
       PR_Sleep(ms_until_filter_update);

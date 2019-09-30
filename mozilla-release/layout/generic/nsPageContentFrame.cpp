@@ -4,17 +4,31 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "nsPageContentFrame.h"
+
+#include "mozilla/PresShell.h"
+
 #include "nsCSSFrameConstructor.h"
 #include "nsPresContext.h"
 #include "nsGkAtoms.h"
-#include "nsIPresShell.h"
-#include "nsSimplePageSequenceFrame.h"
+#include "nsPageSequenceFrame.h"
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 nsPageContentFrame* NS_NewPageContentFrame(nsIPresShell* aPresShell,
                                            ComputedStyle* aStyle) {
   return new (aPresShell) nsPageContentFrame(aStyle);
+||||||| merged common ancestors
+nsPageContentFrame*
+NS_NewPageContentFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsPageContentFrame(aStyle);
+=======
+nsPageContentFrame* NS_NewPageContentFrame(PresShell* aPresShell,
+                                           ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsPageContentFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsPageContentFrame)

@@ -24,10 +24,10 @@ class nsServerSocket : public nsASocketHandler, public nsIServerSocket {
   NS_DECL_NSISERVERSOCKET
 
   // nsASocketHandler methods:
-  virtual void OnSocketReady(PRFileDesc *fd, int16_t outFlags) override;
-  virtual void OnSocketDetached(PRFileDesc *fd) override;
-  virtual void IsLocal(bool *aIsLocal) override;
-  virtual void KeepWhenOffline(bool *aKeepWhenOffline) override;
+  virtual void OnSocketReady(PRFileDesc* fd, int16_t outFlags) override;
+  virtual void OnSocketDetached(PRFileDesc* fd) override;
+  virtual void IsLocal(bool* aIsLocal) override;
+  virtual void KeepWhenOffline(bool* aKeepWhenOffline) override;
 
   virtual uint64_t ByteCountSent() override { return 0; }
   virtual uint64_t ByteCountReceived() override { return 0; }
@@ -40,7 +40,13 @@ class nsServerSocket : public nsASocketHandler, public nsIServerSocket {
 
  protected:
   virtual ~nsServerSocket();
+<<<<<<< HEAD
   PRFileDesc *mFD;
+||||||| merged common ancestors
+  PRFileDesc*                       mFD;
+=======
+  PRFileDesc* mFD;
+>>>>>>> upstream-releases
   nsCOMPtr<nsIServerSocketListener> mListener;
 
  private:

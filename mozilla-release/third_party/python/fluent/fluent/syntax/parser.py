@@ -63,16 +63,7 @@ class FluentParser(object):
                 # clear it.
                 last_comment = None
 
-            if isinstance(entry, ast.Comment) \
-               and ps.last_comment_zero_four_syntax \
-               and len(entries) == 0:
-                comment = ast.ResourceComment(entry.content)
-                comment.span = entry.span
-                entries.append(comment)
-            else:
-                entries.append(entry)
-
-            ps.last_comment_zero_four_syntax = False
+            entries.append(entry)
 
         res = ast.Resource(entries)
 
@@ -131,6 +122,7 @@ class FluentParser(object):
         if ps.current_char == '#':
             return self.get_comment(ps)
 
+<<<<<<< HEAD
         if ps.current_char == '/':
             return self.get_zero_four_style_comment(ps)
 
@@ -138,6 +130,17 @@ class FluentParser(object):
             return self.get_group_comment_from_section(ps)
 
         if ps.current_char == '-':
+||||||| merged common ancestors
+        if ps.current_is('/'):
+            return self.get_zero_four_style_comment(ps)
+
+        if ps.current_is('['):
+            return self.get_group_comment_from_section(ps)
+
+        if ps.current_is('-'):
+=======
+        if ps.current_char == '-':
+>>>>>>> upstream-releases
             return self.get_term(ps)
 
         if ps.is_identifier_start():
@@ -146,6 +149,7 @@ class FluentParser(object):
         raise ParseError('E0002')
 
     @with_span
+<<<<<<< HEAD
     def get_zero_four_style_comment(self, ps):
         ps.expect_char('/')
         ps.expect_char('/')
@@ -179,6 +183,43 @@ class FluentParser(object):
         return ast.Comment(content)
 
     @with_span
+||||||| merged common ancestors
+    def get_zero_four_style_comment(self, ps):
+        ps.expect_char('/')
+        ps.expect_char('/')
+        ps.take_char(lambda x: x == ' ')
+
+        content = ''
+
+        while True:
+            ch = ps.take_char(lambda x: x != '\n')
+            while ch:
+                content += ch
+                ch = ps.take_char(lambda x: x != '\n')
+
+            if ps.is_peek_next_line_zero_four_style_comment():
+                content += ps.current()
+                ps.next()
+                ps.expect_char('/')
+                ps.expect_char('/')
+                ps.take_char(lambda x: x == ' ')
+            else:
+                break
+
+        # Comments followed by Sections become GroupComments.
+        ps.peek()
+        if ps.current_peek_is('['):
+            ps.skip_to_peek()
+            self.get_group_comment_from_section(ps)
+            return ast.GroupComment(content)
+
+        ps.reset_peek()
+        ps.last_comment_zero_four_syntax = True
+        return ast.Comment(content)
+
+    @with_span
+=======
+>>>>>>> upstream-releases
     def get_comment(self, ps):
         # 0 - comment
         # 1 - group comment
@@ -217,6 +258,7 @@ class FluentParser(object):
             return ast.ResourceComment(content)
 
     @with_span
+<<<<<<< HEAD
     def get_group_comment_from_section(self, ps):
         def until_closing_bracket_or_eol(ch):
             return ch not in (']', EOL)
@@ -233,8 +275,30 @@ class FluentParser(object):
         return ast.GroupComment('')
 
     @with_span
+||||||| merged common ancestors
+    def get_group_comment_from_section(self, ps):
+        ps.expect_char('[')
+        ps.expect_char('[')
+
+        ps.skip_inline_ws()
+
+        self.get_variant_name(ps)
+
+        ps.skip_inline_ws()
+
+        ps.expect_char(']')
+        ps.expect_char(']')
+
+        # A Section without a comment is like an empty Group Comment.
+        # Semantically it ends the previous group and starts a new one.
+        return ast.GroupComment('')
+
+    @with_span
+=======
+>>>>>>> upstream-releases
     def get_message(self, ps):
         id = self.get_identifier(ps)
+<<<<<<< HEAD
         ps.skip_blank_inline()
 
         # XXX Syntax 0.4 compat
@@ -243,10 +307,42 @@ class FluentParser(object):
             value = self.maybe_get_pattern(ps)
         else:
             value = None
+||||||| merged common ancestors
 
+        ps.skip_inline_ws()
+        pattern = None
+
+        # XXX Syntax 0.4 compat
+        if ps.current_is('='):
+            ps.next()
+
+            if ps.is_peek_value_start():
+                ps.skip_indent()
+                pattern = self.get_pattern(ps)
+            else:
+                ps.skip_inline_ws()
+
+        if ps.is_peek_next_line_attribute_start():
+            attrs = self.get_attributes(ps)
+        else:
+            attrs = None
+=======
+        ps.skip_blank_inline()
+        ps.expect_char('=')
+
+        value = self.maybe_get_pattern(ps)
+        attrs = self.get_attributes(ps)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         attrs = self.get_attributes(ps)
 
         if value is None and len(attrs) == 0:
+||||||| merged common ancestors
+        if pattern is None and attrs is None:
+=======
+        if value is None and len(attrs) == 0:
+>>>>>>> upstream-releases
             raise ParseError('E0005', id.name)
 
         return ast.Message(id, value, attrs)
@@ -259,11 +355,21 @@ class FluentParser(object):
         ps.skip_blank_inline()
         ps.expect_char('=')
 
+<<<<<<< HEAD
         # Syntax 0.8 compat: VariantLists are supported but deprecated. They
         # can only be found as values of Terms. Nested VariantLists are not
         # allowed.
         value = self.maybe_get_variant_list(ps) or self.maybe_get_pattern(ps)
         if value is None:
+||||||| merged common ancestors
+        if ps.is_peek_value_start():
+            ps.skip_indent()
+            value = self.get_value(ps)
+        else:
+=======
+        value = self.maybe_get_pattern(ps)
+        if value is None:
+>>>>>>> upstream-releases
             raise ParseError('E0006', id.name)
 
         attrs = self.get_attributes(ps)
@@ -278,12 +384,29 @@ class FluentParser(object):
         ps.skip_blank_inline()
         ps.expect_char('=')
 
+<<<<<<< HEAD
         value = self.maybe_get_pattern(ps)
         if value is None:
             raise ParseError('E0012')
 
         return ast.Attribute(key, value)
+||||||| merged common ancestors
+        if ps.is_peek_value_start():
+            ps.skip_indent()
+            value = self.get_pattern(ps)
+            return ast.Attribute(key, value)
+=======
+        value = self.maybe_get_pattern(ps)
+        if value is None:
+            raise ParseError('E0012')
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+        raise ParseError('E0012')
+=======
+        return ast.Attribute(key, value)
+>>>>>>> upstream-releases
 
     def get_attributes(self, ps):
         attrs = []
@@ -293,7 +416,12 @@ class FluentParser(object):
             ps.skip_to_peek()
             attr = self.get_attribute(ps)
             attrs.append(attr)
+<<<<<<< HEAD
             ps.peek_blank();
+||||||| merged common ancestors
+=======
+            ps.peek_blank()
+>>>>>>> upstream-releases
 
         return attrs
 
@@ -337,12 +465,29 @@ class FluentParser(object):
         ps.skip_blank()
         ps.expect_char(']')
 
+<<<<<<< HEAD
         value = self.maybe_get_pattern(ps)
         if value is None:
             raise ParseError('E0012')
 
         return ast.Variant(key, value, default_index)
+||||||| merged common ancestors
+        if ps.is_peek_value_start():
+            ps.skip_indent()
+            value = self.get_value(ps)
+            return ast.Variant(key, value, default_index)
+=======
+        value = self.maybe_get_pattern(ps)
+        if value is None:
+            raise ParseError('E0012')
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+        raise ParseError('E0012')
+=======
+        return ast.Variant(key, value, default_index)
+>>>>>>> upstream-releases
 
     def get_variants(self, ps):
         variants = []
@@ -397,6 +542,7 @@ class FluentParser(object):
 
         return ast.NumberLiteral(num)
 
+<<<<<<< HEAD
     def maybe_get_pattern(self, ps):
         '''Parse an inline or a block Pattern, or None
 
@@ -437,20 +583,67 @@ class FluentParser(object):
                     ps.reset_peek(start)
                     ps.skip_to_peek()
                     return self.get_variant_list(ps)
+||||||| merged common ancestors
+    @with_span
+    def get_value(self, ps):
+        if ps.current_is('{'):
+            ps.peek()
+            ps.peek_inline_ws()
+            if ps.is_peek_next_line_variant_start():
+                return self.get_variant_list(ps)
+=======
+    def maybe_get_pattern(self, ps):
+        '''Parse an inline or a block Pattern, or None
 
+        maybe_get_pattern distinguishes between patterns which start on the
+        same line as the indentifier (aka inline singleline patterns and inline
+        multiline patterns), and patterns which start on a new line (aka block
+        patterns). The distinction is important for the dedentation logic: the
+        indent of the first line of a block pattern must be taken into account
+        when calculating the maximum common indent.
+        '''
+        ps.peek_blank_inline()
+        if ps.is_value_start():
+            ps.skip_to_peek()
+            return self.get_pattern(ps, is_block=False)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         ps.reset_peek()
         return None
+||||||| merged common ancestors
+        return self.get_pattern(ps)
+=======
+        ps.peek_blank_block()
+        if ps.is_value_continuation():
+            ps.skip_to_peek()
+            return self.get_pattern(ps, is_block=True)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     @with_span
     def get_variant_list(self, ps):
         ps.expect_char('{')
         variants = self.get_variants(ps)
         ps.expect_char('}')
         return ast.VariantList(variants)
+||||||| merged common ancestors
+    @with_span
+    def get_variant_list(self, ps):
+        ps.expect_char('{')
+        ps.skip_inline_ws()
+        variants = self.get_variants(ps)
+        ps.expect_indent()
+        ps.expect_char('}')
+        return ast.VariantList(variants)
+=======
+        return None
+>>>>>>> upstream-releases
 
     @with_span
     def get_pattern(self, ps, is_block):
         elements = []
+<<<<<<< HEAD
         if is_block:
             # A block pattern is a pattern which starts on a new line. Measure
             # the indent of this first line for the dedentation logic.
@@ -476,6 +669,41 @@ class FluentParser(object):
                 # The end condition for get_pattern's while loop is a newline
                 # which is not followed by a valid pattern continuation.
                 ps.reset_peek()
+||||||| merged common ancestors
+        ps.skip_inline_ws()
+
+        while ps.current():
+            ch = ps.current()
+
+            # The end condition for get_pattern's while loop is a newline
+            # which is not followed by a valid pattern continuation.
+            if ch == '\n' and not ps.is_peek_next_line_value():
+=======
+        if is_block:
+            # A block pattern is a pattern which starts on a new line. Measure
+            # the indent of this first line for the dedentation logic.
+            blank_start = ps.index
+            first_indent = ps.skip_blank_inline()
+            elements.append(self.Indent(first_indent, blank_start, ps.index))
+            common_indent_length = len(first_indent)
+        else:
+            common_indent_length = float('infinity')
+
+        while ps.current_char:
+            if ps.current_char == EOL:
+                blank_start = ps.index
+                blank_lines = ps.peek_blank_block()
+                if ps.is_value_continuation():
+                    ps.skip_to_peek()
+                    indent = ps.skip_blank_inline()
+                    common_indent_length = min(common_indent_length, len(indent))
+                    elements.append(self.Indent(blank_lines + indent, blank_start, ps.index))
+                    continue
+
+                # The end condition for get_pattern's while loop is a newline
+                # which is not followed by a valid pattern continuation.
+                ps.reset_peek()
+>>>>>>> upstream-releases
                 break
 
             if ps.current_char == '}':
@@ -569,13 +797,32 @@ class FluentParser(object):
             return '\\{}'.format(next), next
 
         if next == 'u':
+<<<<<<< HEAD
             return self.get_unicode_escape_sequence(ps, next, 4)
 
         if next == 'U':
             return self.get_unicode_escape_sequence(ps, next, 6)
+||||||| merged common ancestors
+            sequence = ''
+            ps.next()
+
+            for _ in range(4):
+                ch = ps.take_hex_digit()
+                if ch is None:
+                    raise ParseError('E0026', sequence + ps.current())
+                sequence += ch
+
+            return '\\u{}'.format(sequence)
+=======
+            return self.get_unicode_escape_sequence(ps, next, 4)
+
+        if next == 'U':
+            return self.get_unicode_escape_sequence(ps, next, 6)
+>>>>>>> upstream-releases
 
         raise ParseError('E0025', next)
 
+<<<<<<< HEAD
     def get_unicode_escape_sequence(self, ps, u, digits):
         ps.expect_char(u)
         sequence = ''
@@ -600,6 +847,20 @@ class FluentParser(object):
 
         return '\\{}{}'.format(u, sequence), unescaped
 
+||||||| merged common ancestors
+=======
+    def get_unicode_escape_sequence(self, ps, u, digits):
+        ps.expect_char(u)
+        sequence = ''
+        for _ in range(digits):
+            ch = ps.take_hex_digit()
+            if not ch:
+                raise ParseError('E0026', '\\{}{}{}'.format(u, sequence, ps.current_char))
+            sequence += ch
+
+        return '\\{}{}'.format(u, sequence)
+
+>>>>>>> upstream-releases
     @with_span
     def get_placeable(self, ps):
         ps.expect_char('{')
@@ -610,28 +871,72 @@ class FluentParser(object):
 
     @with_span
     def get_expression(self, ps):
+<<<<<<< HEAD
         selector = self.get_inline_expression(ps)
 
+        ps.skip_blank()
+||||||| merged common ancestors
+        ps.skip_inline_ws()
+
+        selector = self.get_selector_expression(ps)
+=======
+        selector = self.get_inline_expression(ps)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if ps.current_char == '-':
+            if ps.peek() != '>':
+||||||| merged common ancestors
+        ps.skip_inline_ws()
+
+        if ps.current_is('-'):
+            ps.peek()
+
+            if not ps.current_peek_is('>'):
+=======
         ps.skip_blank()
 
         if ps.current_char == '-':
             if ps.peek() != '>':
+>>>>>>> upstream-releases
                 ps.reset_peek()
                 return selector
 
             if isinstance(selector, ast.MessageReference):
+<<<<<<< HEAD
                 raise ParseError('E0016')
 
             if isinstance(selector, ast.AttributeExpression) \
                    and isinstance(selector.ref, ast.MessageReference):
                 raise ParseError('E0018')
+||||||| merged common ancestors
+                raise ParseError('E0016')
 
+            if isinstance(selector, ast.AttributeExpression) \
+               and isinstance(selector.ref, ast.MessageReference):
+                raise ParseError('E0018')
+=======
+                if selector.attribute is None:
+                    raise ParseError('E0016')
+                else:
+                    raise ParseError('E0018')
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
             if isinstance(selector, ast.TermReference) \
                     or isinstance(selector, ast.VariantExpression):
                 raise ParseError('E0017')
 
             if isinstance(selector, ast.CallExpression) \
                    and isinstance(selector.callee, ast.TermReference):
+||||||| merged common ancestors
+            if isinstance(selector, ast.VariantExpression):
+=======
+            if (
+                isinstance(selector, ast.TermReference)
+                and selector.attribute is None
+            ):
+>>>>>>> upstream-releases
                 raise ParseError('E0017')
 
             ps.next()
@@ -641,6 +946,7 @@ class FluentParser(object):
             ps.expect_line_end()
 
             variants = self.get_variants(ps)
+<<<<<<< HEAD
             return ast.SelectExpression(selector, variants)
 
         if isinstance(selector, ast.AttributeExpression) \
@@ -649,6 +955,30 @@ class FluentParser(object):
 
         if isinstance(selector, ast.CallExpression) \
                 and isinstance(selector.callee, ast.AttributeExpression):
+||||||| merged common ancestors
+
+            if len(variants) == 0:
+                raise ParseError('E0011')
+
+            # VariantLists are only allowed in other VariantLists.
+            if any(isinstance(v.value, ast.VariantList) for v in variants):
+                raise ParseError('E0023')
+
+            ps.expect_indent()
+
+            return ast.SelectExpression(selector, variants)
+        elif (
+            isinstance(selector, ast.AttributeExpression)
+            and isinstance(selector.ref, ast.TermReference)
+        ):
+=======
+            return ast.SelectExpression(selector, variants)
+
+        if (
+            isinstance(selector, ast.TermReference)
+            and selector.attribute is not None
+        ):
+>>>>>>> upstream-releases
             raise ParseError('E0019')
 
         return selector
@@ -658,6 +988,7 @@ class FluentParser(object):
         if ps.current_char == '{':
             return self.get_placeable(ps)
 
+<<<<<<< HEAD
         expr = self.get_simple_expression(ps)
 
         if isinstance(expr, (ast.NumberLiteral, ast.StringLiteral,
@@ -687,15 +1018,47 @@ class FluentParser(object):
                 key = self.get_variant_key(ps)
                 ps.expect_char(']')
                 return ast.VariantExpression(expr, key)
+||||||| merged common ancestors
+        literal = self.get_literal(ps)
 
+        if not isinstance(literal, (ast.MessageReference, ast.TermReference)):
+            return literal
+
+        ch = ps.current()
+=======
+        if ps.is_number_start():
+            return self.get_number(ps)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
             if (ps.current_char == '.'):
                 ps.next()
                 attr = self.get_identifier(ps)
                 expr = ast.AttributeExpression(expr, attr)
+||||||| merged common ancestors
+        if (ch == '.'):
+            ps.next()
+            attr = self.get_identifier(ps)
+            return ast.AttributeExpression(literal, attr)
+=======
+        if ps.current_char == '"':
+            return self.get_string(ps)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
             if (ps.current_char == '('):
                 return ast.CallExpression(expr, *self.get_call_arguments(ps))
+||||||| merged common ancestors
+        if (ch == '['):
+            ps.next()
+=======
+        if ps.current_char == '$':
+            ps.next()
+            id = self.get_identifier(ps)
+            return ast.VariableReference(id)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
             return expr
 
         raise ParseError('E0028')
@@ -707,7 +1070,20 @@ class FluentParser(object):
         if ps.current_char == '"':
             return self.get_string(ps)
         if ps.current_char == '$':
+||||||| merged common ancestors
+            if isinstance(literal, ast.MessageReference):
+                raise ParseError('E0024')
+
+            key = self.get_variant_key(ps)
+            ps.expect_char(']')
+            return ast.VariantExpression(literal, key)
+
+        if (ch == '('):
+=======
+        if ps.current_char == '-':
+>>>>>>> upstream-releases
             ps.next()
+<<<<<<< HEAD
             id = self.get_identifier(ps)
             return ast.VariableReference(id)
         if ps.current_char == '-':
@@ -718,6 +1094,51 @@ class FluentParser(object):
             id = self.get_identifier(ps)
             return ast.MessageReference(id)
         raise ParseError('E0028')
+||||||| merged common ancestors
+
+            if not re.match('^[A-Z][A-Z_?-]*$', literal.id.name):
+                raise ParseError('E0008')
+
+            positional, named = self.get_call_args(ps)
+            ps.expect_char(')')
+
+            func = ast.Function(literal.id.name)
+            if (self.with_spans):
+                func.add_span(literal.span.start, literal.span.end)
+
+            return ast.CallExpression(func, positional, named)
+
+        return literal
+=======
+            id = self.get_identifier(ps)
+            attribute = None
+            if ps.current_char == '.':
+                ps.next()
+                attribute = self.get_identifier(ps)
+            arguments = None
+            if ps.current_char == '(':
+                arguments = self.get_call_arguments(ps)
+            return ast.TermReference(id, attribute, arguments)
+
+        if ps.is_identifier_start():
+            id = self.get_identifier(ps)
+
+            if ps.current_char == '(':
+                # It's a Function. Ensure it's all upper-case.
+                if not re.match('^[A-Z][A-Z0-9_-]*$', id.name):
+                    raise ParseError('E0008')
+                args = self.get_call_arguments(ps)
+                return ast.FunctionReference(id, args)
+
+            attribute = None
+            if ps.current_char == '.':
+                ps.next()
+                attribute = self.get_identifier(ps)
+
+            return ast.MessageReference(id, attribute)
+
+        raise ParseError('E0028')
+>>>>>>> upstream-releases
 
     @with_span
     def get_call_argument(self, ps):
@@ -728,16 +1149,46 @@ class FluentParser(object):
         if ps.current_char != ':':
             return exp
 
+<<<<<<< HEAD
         if not isinstance(exp, ast.MessageReference):
             raise ParseError('E0009')
 
         ps.next()
         ps.skip_blank()
+||||||| merged common ancestors
+        if not isinstance(exp, ast.MessageReference):
+            raise ParseError('E0009')
 
+        ps.next()
+        ps.skip_inline_ws()
+
+        val = self.get_arg_val(ps)
+=======
+        if isinstance(exp, ast.MessageReference) and exp.attribute is None:
+            ps.next()
+            ps.skip_blank()
+
+            value = self.get_literal(ps)
+            return ast.NamedArgument(exp.id, value)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         value = self.get_literal(ps)
         return ast.NamedArgument(exp.id, value)
+||||||| merged common ancestors
+        return ast.NamedArgument(exp.id, val)
+=======
+        raise ParseError('E0009')
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     def get_call_arguments(self, ps):
+||||||| merged common ancestors
+    def get_call_args(self, ps):
+=======
+    @with_span
+    def get_call_arguments(self, ps):
+>>>>>>> upstream-releases
         positional = []
         named = []
         argument_names = set()
@@ -769,13 +1220,31 @@ class FluentParser(object):
 
             break
 
+<<<<<<< HEAD
         ps.expect_char(')')
         return positional, named
+||||||| merged common ancestors
+    def get_arg_val(self, ps):
+        if ps.is_number_start():
+            return self.get_number(ps)
+        elif ps.current_is('"'):
+            return self.get_string(ps)
+        raise ParseError('E0012')
+=======
+        ps.expect_char(')')
+        return ast.CallArguments(positional, named)
+>>>>>>> upstream-releases
 
     @with_span
     def get_string(self, ps):
+<<<<<<< HEAD
         raw = ''
         value = ''
+||||||| merged common ancestors
+        val = ''
+=======
+        value = ''
+>>>>>>> upstream-releases
 
         ps.expect_char('"')
 
@@ -784,19 +1253,38 @@ class FluentParser(object):
             if not ch:
                 break
             if ch == '\\':
+<<<<<<< HEAD
                 sequence, unescaped = self.get_escape_sequence(ps)
                 raw += sequence
                 value += unescaped
+||||||| merged common ancestors
+                val += self.get_escape_sequence(ps, ('{', '\\', '"'))
+=======
+                value += self.get_escape_sequence(ps)
+>>>>>>> upstream-releases
             else:
+<<<<<<< HEAD
                 raw += ch
                 value += ch
+||||||| merged common ancestors
+                val += ch
+            ch = ps.take_char(lambda x: x != '"' and x != '\n')
+=======
+                value += ch
+>>>>>>> upstream-releases
 
         if ps.current_char == EOL:
             raise ParseError('E0020')
 
         ps.expect_char('"')
 
+<<<<<<< HEAD
         return ast.StringLiteral(raw, value)
+||||||| merged common ancestors
+        return ast.StringLiteral(val)
+=======
+        return ast.StringLiteral(value)
+>>>>>>> upstream-releases
 
     @with_span
     def get_literal(self, ps):

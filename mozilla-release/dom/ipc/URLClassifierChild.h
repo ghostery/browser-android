@@ -9,40 +9,128 @@
 
 #include "mozilla/dom/PURLClassifierChild.h"
 #include "mozilla/dom/PURLClassifierLocalChild.h"
+#include "mozilla/ipc/URIUtils.h"
+#include "mozilla/net/UrlClassifierFeatureResult.h"
 #include "nsIURIClassifier.h"
+#include "nsIUrlClassifierFeature.h"
 
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 template <typename BaseProtocol>
 class URLClassifierChildBase : public BaseProtocol {
  public:
   URLClassifierChildBase() = default;
 
   void SetCallback(nsIURIClassifierCallback* aCallback) {
+||||||| merged common ancestors
+template<typename BaseProtocol>
+class URLClassifierChildBase : public BaseProtocol
+{
+public:
+  URLClassifierChildBase() = default;
+
+  void SetCallback(nsIURIClassifierCallback* aCallback)
+  {
+=======
+class URLClassifierChild : public PURLClassifierChild {
+ public:
+  void SetCallback(nsIURIClassifierCallback* aCallback) {
+>>>>>>> upstream-releases
     mCallback = aCallback;
   }
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult Recv__delete__(const MaybeInfo& aInfo,
                                          const nsresult& aResult) override {
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult Recv__delete__(const MaybeInfo& aInfo,
+                                         const nsresult& aResult) override
+  {
+=======
+  mozilla::ipc::IPCResult Recv__delete__(const Maybe<ClassifierInfo>& aInfo,
+                                         const nsresult& aResult) override {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mCallback);
-    if (aInfo.type() == MaybeInfo::TClassifierInfo) {
-      mCallback->OnClassifyComplete(aResult, aInfo.get_ClassifierInfo().list(),
-                                    aInfo.get_ClassifierInfo().provider(),
-                                    aInfo.get_ClassifierInfo().fullhash());
+    if (aInfo.isSome()) {
+      mCallback->OnClassifyComplete(aResult, aInfo.ref().list(),
+                                    aInfo.ref().provider(),
+                                    aInfo.ref().fullhash());
     }
     return IPC_OK();
   }
 
+<<<<<<< HEAD
  private:
   ~URLClassifierChildBase() = default;
 
+||||||| merged common ancestors
+private:
+  ~URLClassifierChildBase() = default;
+
+=======
+ private:
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURIClassifierCallback> mCallback;
 };
 
+<<<<<<< HEAD
 using URLClassifierChild = URLClassifierChildBase<PURLClassifierChild>;
 using URLClassifierLocalChild =
     URLClassifierChildBase<PURLClassifierLocalChild>;
+||||||| merged common ancestors
+using URLClassifierChild = URLClassifierChildBase<PURLClassifierChild>;
+using URLClassifierLocalChild = URLClassifierChildBase<PURLClassifierLocalChild>;
+=======
+class URLClassifierLocalChild : public PURLClassifierLocalChild {
+ public:
+  void SetFeaturesAndCallback(
+      const nsTArray<RefPtr<nsIUrlClassifierFeature>>& aFeatures,
+      nsIUrlClassifierFeatureCallback* aCallback) {
+    mCallback = aCallback;
+    mFeatures = aFeatures;
+  }
+
+  mozilla::ipc::IPCResult Recv__delete__(
+      nsTArray<URLClassifierLocalResult>&& aResults) override {
+    nsTArray<RefPtr<nsIUrlClassifierFeatureResult>> finalResults;
+
+    nsTArray<URLClassifierLocalResult> results = std::move(aResults);
+    for (URLClassifierLocalResult& result : results) {
+      for (nsIUrlClassifierFeature* feature : mFeatures) {
+        nsAutoCString name;
+        nsresult rv = feature->GetName(name);
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          continue;
+        }
+
+        if (result.featureName() != name) {
+          continue;
+        }
+
+        RefPtr<nsIURI> uri = result.uri();
+        if (NS_WARN_IF(!uri)) {
+          continue;
+        }
+
+        RefPtr<net::UrlClassifierFeatureResult> r =
+            new net::UrlClassifierFeatureResult(uri, feature,
+                                                result.matchingList());
+        finalResults.AppendElement(r);
+        break;
+      }
+    }
+
+    mCallback->OnClassifyComplete(finalResults);
+    return IPC_OK();
+  }
+
+ private:
+  nsCOMPtr<nsIUrlClassifierFeatureCallback> mCallback;
+  nsTArray<RefPtr<nsIUrlClassifierFeature>> mFeatures;
+};
+>>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

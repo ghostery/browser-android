@@ -1,6 +1,7 @@
 //! Encoding tables for x86 ISAs.
 
 use super::registers::*;
+<<<<<<< HEAD
 use bitset::BitSet;
 use cursor::{Cursor, FuncCursor};
 use flowgraph::ControlFlowGraph;
@@ -13,10 +14,36 @@ use isa::encoding::base_size;
 use isa::encoding::RecipeSizing;
 use isa::RegUnit;
 use regalloc::RegDiversions;
+||||||| merged common ancestors
+use bitset::BitSet;
+use cursor::{Cursor, FuncCursor};
+use flowgraph::ControlFlowGraph;
+use ir::condcodes::IntCC;
+use ir::{self, InstBuilder};
+use isa;
+use isa::constraints::*;
+use isa::enc_tables::*;
+use isa::encoding::RecipeSizing;
+use predicates;
+=======
+use crate::bitset::BitSet;
+use crate::cursor::{Cursor, FuncCursor};
+use crate::flowgraph::ControlFlowGraph;
+use crate::ir::condcodes::{FloatCC, IntCC};
+use crate::ir::{self, Function, Inst, InstBuilder};
+use crate::isa;
+use crate::isa::constraints::*;
+use crate::isa::enc_tables::*;
+use crate::isa::encoding::base_size;
+use crate::isa::encoding::RecipeSizing;
+use crate::isa::RegUnit;
+use crate::regalloc::RegDiversions;
+>>>>>>> upstream-releases
 
 include!(concat!(env!("OUT_DIR"), "/encoding-x86.rs"));
 include!(concat!(env!("OUT_DIR"), "/legalize-x86.rs"));
 
+<<<<<<< HEAD
 pub fn needs_sib_byte(reg: RegUnit) -> bool {
     reg == RU::r12 as RegUnit || reg == RU::rsp as RegUnit
 }
@@ -91,12 +118,108 @@ fn size_plus_maybe_sib_or_offset_for_in_reg_1(
     sizing.base_size + additional_size_if(1, inst, divert, func, needs_sib_byte_or_offset)
 }
 
+||||||| merged common ancestors
+=======
+pub fn needs_sib_byte(reg: RegUnit) -> bool {
+    reg == RU::r12 as RegUnit || reg == RU::rsp as RegUnit
+}
+pub fn needs_offset(reg: RegUnit) -> bool {
+    reg == RU::r13 as RegUnit || reg == RU::rbp as RegUnit
+}
+pub fn needs_sib_byte_or_offset(reg: RegUnit) -> bool {
+    needs_sib_byte(reg) || needs_offset(reg)
+}
+
+fn additional_size_if(
+    op_index: usize,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+    condition_func: fn(RegUnit) -> bool,
+) -> u8 {
+    let addr_reg = divert.reg(func.dfg.inst_args(inst)[op_index], &func.locations);
+    if condition_func(addr_reg) {
+        1
+    } else {
+        0
+    }
+}
+
+fn size_plus_maybe_offset_for_in_reg_0(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(0, inst, divert, func, needs_offset)
+}
+fn size_plus_maybe_offset_for_in_reg_1(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(1, inst, divert, func, needs_offset)
+}
+fn size_plus_maybe_sib_for_in_reg_0(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(0, inst, divert, func, needs_sib_byte)
+}
+fn size_plus_maybe_sib_for_in_reg_1(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(1, inst, divert, func, needs_sib_byte)
+}
+fn size_plus_maybe_sib_or_offset_for_in_reg_0(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(0, inst, divert, func, needs_sib_byte_or_offset)
+}
+fn size_plus_maybe_sib_or_offset_for_in_reg_1(
+    sizing: &RecipeSizing,
+    inst: Inst,
+    divert: &RegDiversions,
+    func: &Function,
+) -> u8 {
+    sizing.base_size + additional_size_if(1, inst, divert, func, needs_sib_byte_or_offset)
+}
+
+/// If the value's definition is a constant immediate, returns its unpacked value, or None
+/// otherwise.
+fn maybe_iconst_imm(pos: &FuncCursor, value: ir::Value) -> Option<i64> {
+    if let ir::ValueDef::Result(inst, _) = &pos.func.dfg.value_def(value) {
+        if let ir::InstructionData::UnaryImm {
+            opcode: ir::Opcode::Iconst,
+            imm,
+        } = &pos.func.dfg[*inst]
+        {
+            let value: i64 = (*imm).into();
+            Some(value)
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+
+>>>>>>> upstream-releases
 /// Expand the `sdiv` and `srem` instructions using `x86_sdivmodx`.
 fn expand_sdivrem(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    isa: &isa::TargetIsa,
+    isa: &dyn isa::TargetIsa,
 ) {
     let (x, y, is_srem) = match func.dfg[inst] {
         ir::InstructionData::Binary {
@@ -109,7 +232,7 @@ fn expand_sdivrem(
         } => (args[0], args[1], true),
         _ => panic!("Need sdiv/srem: {}", func.dfg.display_inst(inst, None)),
     };
-    let avoid_div_traps = isa.flags().avoid_div_traps();
+
     let old_ebb = func.layout.pp_ebb(inst);
     let result = func.dfg.first_result(inst);
     let ty = func.dfg.value_type(result);
@@ -118,10 +241,38 @@ fn expand_sdivrem(
     pos.use_srcloc(inst);
     pos.func.dfg.clear_results(inst);
 
+    let avoid_div_traps = isa.flags().avoid_div_traps();
+
     // If we can tolerate native division traps, sdiv doesn't need branching.
     if !avoid_div_traps && !is_srem {
         let xhi = pos.ins().sshr_imm(x, i64::from(ty.lane_bits()) - 1);
         pos.ins().with_result(result).x86_sdivmodx(x, xhi, y);
+        pos.remove_inst();
+        return;
+    }
+
+    // Try to remove checks if the input value is an immediate other than 0 or -1. For these two
+    // immediates, we'd ideally replace conditional traps by traps, but this requires more
+    // manipulation of the dfg/cfg, which is out of scope here.
+    let (could_be_zero, could_be_minus_one) = if let Some(imm) = maybe_iconst_imm(&pos, y) {
+        (imm == 0, imm == -1)
+    } else {
+        (true, true)
+    };
+
+    // Put in an explicit division-by-zero trap if the environment requires it.
+    if avoid_div_traps && could_be_zero {
+        pos.ins().trapz(y, ir::TrapCode::IntegerDivisionByZero);
+    }
+
+    if !could_be_minus_one {
+        let xhi = pos.ins().sshr_imm(x, i64::from(ty.lane_bits()) - 1);
+        let reuse = if is_srem {
+            [None, Some(result)]
+        } else {
+            [Some(result), None]
+        };
+        pos.ins().with_results(reuse).x86_sdivmodx(x, xhi, y);
         pos.remove_inst();
         return;
     }
@@ -138,11 +289,6 @@ fn expand_sdivrem(
     // Start by checking for a -1 divisor which needs to be handled specially.
     let is_m1 = pos.ins().ifcmp_imm(y, -1);
     pos.ins().brif(IntCC::Equal, is_m1, minus_one, &[]);
-
-    // Put in an explicit division-by-zero trap if the environment requires it.
-    if avoid_div_traps {
-        pos.ins().trapz(y, ir::TrapCode::IntegerDivisionByZero);
-    }
 
     // Now it is safe to execute the `x86_sdivmodx` instruction which will still trap on division
     // by zero.
@@ -183,7 +329,7 @@ fn expand_udivrem(
     inst: ir::Inst,
     func: &mut ir::Function,
     _cfg: &mut ControlFlowGraph,
-    isa: &isa::TargetIsa,
+    isa: &dyn isa::TargetIsa,
 ) {
     let (x, y, is_urem) = match func.dfg[inst] {
         ir::InstructionData::Binary {
@@ -206,7 +352,17 @@ fn expand_udivrem(
 
     // Put in an explicit division-by-zero trap if the environment requires it.
     if avoid_div_traps {
-        pos.ins().trapz(y, ir::TrapCode::IntegerDivisionByZero);
+        let zero_check = if let Some(imm) = maybe_iconst_imm(&pos, y) {
+            // Ideally, we'd just replace the conditional trap with a trap when the immediate is
+            // zero, but this requires more manipulation of the dfg/cfg, which is out of scope
+            // here.
+            imm == 0
+        } else {
+            true
+        };
+        if zero_check {
+            pos.ins().trapz(y, ir::TrapCode::IntegerDivisionByZero);
+        }
     }
 
     // Now it is safe to execute the `x86_udivmodx` instruction.
@@ -226,10 +382,8 @@ fn expand_minmax(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::FloatCC;
-
     let (x, y, x86_opc, bitwise_opc) = match func.dfg[inst] {
         ir::InstructionData::Binary {
             opcode: ir::Opcode::Fmin,
@@ -320,10 +474,8 @@ fn expand_fcvt_from_uint(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::IntCC;
-
     let x;
     match func.dfg[inst] {
         ir::InstructionData::Unary {
@@ -393,10 +545,9 @@ fn expand_fcvt_to_sint(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::{FloatCC, IntCC};
-    use ir::immediates::{Ieee32, Ieee64};
+    use crate::ir::immediates::{Ieee32, Ieee64};
 
     let x = match func.dfg[inst] {
         ir::InstructionData::Unary {
@@ -489,10 +640,9 @@ fn expand_fcvt_to_sint_sat(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::{FloatCC, IntCC};
-    use ir::immediates::{Ieee32, Ieee64};
+    use crate::ir::immediates::{Ieee32, Ieee64};
 
     let x = match func.dfg[inst] {
         ir::InstructionData::Unary {
@@ -609,10 +759,9 @@ fn expand_fcvt_to_uint(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::{FloatCC, IntCC};
-    use ir::immediates::{Ieee32, Ieee64};
+    use crate::ir::immediates::{Ieee32, Ieee64};
 
     let x = match func.dfg[inst] {
         ir::InstructionData::Unary {
@@ -691,10 +840,9 @@ fn expand_fcvt_to_uint_sat(
     inst: ir::Inst,
     func: &mut ir::Function,
     cfg: &mut ControlFlowGraph,
-    _isa: &isa::TargetIsa,
+    _isa: &dyn isa::TargetIsa,
 ) {
-    use ir::condcodes::{FloatCC, IntCC};
-    use ir::immediates::{Ieee32, Ieee64};
+    use crate::ir::immediates::{Ieee32, Ieee64};
 
     let x = match func.dfg[inst] {
         ir::InstructionData::Unary {

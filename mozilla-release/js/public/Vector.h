@@ -26,9 +26,19 @@ struct TypeIsGCThing<JS::Value> : mozilla::TrueType {};
 
 template <typename T, size_t MinInlineCapacity = 0,
           class AllocPolicy = TempAllocPolicy,
+<<<<<<< HEAD
           // Don't use this with JS::Value!  Use JS::AutoValueVector instead.
           typename = typename mozilla::EnableIf<
               !detail::TypeIsGCThing<T>::value>::Type>
+||||||| merged common ancestors
+         // Don't use this with JS::Value!  Use JS::AutoValueVector instead.
+         typename = typename mozilla::EnableIf<!detail::TypeIsGCThing<T>::value>::Type
+         >
+=======
+          // Don't use this with JS::Value!  Use JS::RootedValueVector instead.
+          typename = typename mozilla::EnableIf<
+              !detail::TypeIsGCThing<T>::value>::Type>
+>>>>>>> upstream-releases
 using Vector = mozilla::Vector<T, MinInlineCapacity, AllocPolicy>;
 
 }  // namespace js

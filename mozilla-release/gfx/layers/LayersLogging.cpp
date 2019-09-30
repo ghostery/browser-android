@@ -228,9 +228,8 @@ void AppendToString(std::stringstream& aStream, const FrameMetrics& m,
     AppendToString(aStream, m.GetZoom(), "] [z=", "] }");
   } else {
     AppendToString(aStream, m.GetDisplayPortMargins(), " [dpm=");
-    aStream << nsPrintfCString("] um=%d", m.GetUseDisplayPortMargins()).get();
     AppendToString(aStream, m.GetRootCompositionSize(), "] [rcs=");
-    AppendToString(aStream, m.GetViewport(), "] [v=");
+    AppendToString(aStream, m.GetLayoutViewport(), "] [v=");
     aStream << nsPrintfCString("] [z=(ld=%.3f r=%.3f",
                                m.GetDevPixelsPerCSSPixel().scale,
                                m.GetPresShellResolution())
@@ -259,8 +258,25 @@ void AppendToString(std::stringstream& aStream, const ScrollableLayerGuid& s,
           << sfx;
 }
 
+<<<<<<< HEAD
 void AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
                     const char* pfx, const char* sfx) {
+||||||| merged common ancestors
+void
+AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
+               const char* pfx, const char* sfx)
+{
+=======
+void AppendToString(std::stringstream& aStream, const SLGuidAndRenderRoot& s,
+                    const char* pfx, const char* sfx) {
+  aStream << pfx << "{ ";
+  AppendToString(aStream, s.mScrollableLayerGuid, "s=");
+  aStream << nsPrintfCString(", r=%d }", (int)s.mRenderRoot).get() << sfx;
+}
+
+void AppendToString(std::stringstream& aStream, const ZoomConstraints& z,
+                    const char* pfx, const char* sfx) {
+>>>>>>> upstream-releases
   aStream << pfx
           << nsPrintfCString("{ z=%d dt=%d min=%f max=%f }", z.mAllowZoom,
                              z.mAllowDoubleTapZoom, z.mMinZoom.scale,

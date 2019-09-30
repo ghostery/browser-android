@@ -221,11 +221,15 @@ class Channel
 
   // Audio+Video Sync.
   uint32_t GetDelayEstimate() const;
+<<<<<<< HEAD
   void GetDelayEstimates(int* jitter_buffer_delay_ms,
                          int* playout_buffer_delay_ms,
                          int* avsync_offset_ms) const;
+||||||| merged common ancestors
+  int LeastRequiredDelayMs() const;
+=======
+>>>>>>> upstream-releases
   int SetMinimumPlayoutDelay(int delayMs);
-  void SetCurrentSyncOffset(int offsetMs) { _current_sync_offset = offsetMs; }
   int GetPlayoutTimestamp(unsigned int& timestamp);
   int GetRtpRtcp(RtpRtcp** rtpRtcpModule, RtpReceiver** rtp_receiver) const;
 
@@ -423,11 +427,23 @@ class Channel
 
   // Timestamp of the audio pulled from NetEq.
   rtc::Optional<uint32_t> jitter_buffer_playout_timestamp_;
+<<<<<<< HEAD
 
   rtc::CriticalSection video_sync_lock_;
   uint32_t playout_timestamp_rtp_ RTC_GUARDED_BY(video_sync_lock_);
   uint32_t playout_delay_ms_ RTC_GUARDED_BY(video_sync_lock_);
   int _current_sync_offset;
+||||||| merged common ancestors
+  uint32_t playout_timestamp_rtp_ GUARDED_BY(video_sync_lock_);
+  uint32_t playout_timestamp_rtcp_;
+  uint32_t playout_delay_ms_ GUARDED_BY(video_sync_lock_);
+  uint32_t _numberOfDiscardedPackets;
+=======
+
+  rtc::CriticalSection video_sync_lock_;
+  uint32_t playout_timestamp_rtp_ RTC_GUARDED_BY(video_sync_lock_);
+  uint32_t playout_delay_ms_ RTC_GUARDED_BY(video_sync_lock_);
+>>>>>>> upstream-releases
   uint16_t send_sequence_number_;
 
   rtc::CriticalSection ts_stats_lock_;

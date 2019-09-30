@@ -5,13 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "Animation.h"
+
 #include "AnimationUtils.h"
+#include "mozAutoDocUpdate.h"
 #include "mozilla/dom/AnimationBinding.h"
 #include "mozilla/dom/AnimationPlaybackEvent.h"
+#include "mozilla/dom/Document.h"
+#include "mozilla/dom/DocumentInlines.h"
 #include "mozilla/dom/DocumentTimeline.h"
 #include "mozilla/AnimationEventDispatcher.h"
 #include "mozilla/AnimationTarget.h"
 #include "mozilla/AutoRestore.h"
+<<<<<<< HEAD
 #include "mozilla/Maybe.h"          // For Maybe
 #include "mozilla/TypeTraits.h"     // For std::forward<>
 #include "nsAnimationManager.h"     // For CSSAnimation
@@ -21,6 +26,28 @@
 #include "nsThreadUtils.h"  // For nsRunnableMethod and nsRevocableEventPtr
 #include "nsTransitionManager.h"      // For CSSTransition
 #include "PendingAnimationTracker.h"  // For PendingAnimationTracker
+||||||| merged common ancestors
+#include "mozilla/Maybe.h" // For Maybe
+#include "mozilla/TypeTraits.h" // For std::forward<>
+#include "nsAnimationManager.h" // For CSSAnimation
+#include "nsDOMMutationObserver.h" // For nsAutoAnimationMutationBatch
+#include "nsIDocument.h" // For nsIDocument
+#include "nsIPresShell.h" // For nsIPresShell
+#include "nsThreadUtils.h" // For nsRunnableMethod and nsRevocableEventPtr
+#include "nsTransitionManager.h" // For CSSTransition
+#include "PendingAnimationTracker.h" // For PendingAnimationTracker
+=======
+#include "mozilla/DeclarationBlock.h"
+#include "mozilla/Maybe.h"       // For Maybe
+#include "mozilla/TypeTraits.h"  // For std::forward<>
+#include "nsAnimationManager.h"  // For CSSAnimation
+#include "nsComputedDOMStyle.h"
+#include "nsDOMMutationObserver.h"    // For nsAutoAnimationMutationBatch
+#include "nsDOMCSSAttrDeclaration.h"  // For nsDOMCSSAttributeDeclaration
+#include "nsThreadUtils.h"  // For nsRunnableMethod and nsRevocableEventPtr
+#include "nsTransitionManager.h"      // For CSSTransition
+#include "PendingAnimationTracker.h"  // For PendingAnimationTracker
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -58,6 +85,7 @@ class MOZ_RAII AutoMutationBatchForAnimation {
     MOZ_GUARD_OBJECT_NOTIFIER_INIT;
     Maybe<NonOwningAnimationTarget> target =
         nsNodeUtils::GetTargetForAnimation(&aAnimation);
+<<<<<<< HEAD
     if (!target) {
       return;
     }
@@ -66,8 +94,25 @@ class MOZ_RAII AutoMutationBatchForAnimation {
     nsIDocument* doc = target->mElement->OwnerDoc();
     if (!doc) {
       return;
+||||||| merged common ancestors
+      if (!target) {
+        return;
+      }
+
+      // For mutation observers, we use the OwnerDoc.
+      nsIDocument* doc = target->mElement->OwnerDoc();
+      if (!doc) {
+        return;
+      }
+
+      mAutoBatch.emplace(doc);
+=======
+    if (!target) {
+      return;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     mAutoBatch.emplace(doc);
   }
 
@@ -76,15 +121,46 @@ class MOZ_RAII AutoMutationBatchForAnimation {
   Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
 };
 }  // namespace
+||||||| merged common ancestors
+  private:
+    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+    Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
+  };
+}
+=======
+    // For mutation observers, we use the OwnerDoc.
+    mAutoBatch.emplace(target->mElement->OwnerDoc());
+  }
+
+ private:
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+  Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
+};
+}  // namespace
+>>>>>>> upstream-releases
 
 // ---------------------------------------------------------------------------
 //
 // Animation interface:
 //
 // ---------------------------------------------------------------------------
+<<<<<<< HEAD
 /* static */ already_AddRefed<Animation> Animation::Constructor(
     const GlobalObject& aGlobal, AnimationEffect* aEffect,
     const Optional<AnimationTimeline*>& aTimeline, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Animation>
+Animation::Constructor(const GlobalObject& aGlobal,
+                       AnimationEffect* aEffect,
+                       const Optional<AnimationTimeline*>& aTimeline,
+                       ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Animation> Animation::Constructor(
+    const GlobalObject& aGlobal, AnimationEffect* aEffect,
+    const Optional<AnimationTimeline*>& aTimeline, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<Animation> animation = new Animation(global);
 
@@ -92,8 +168,16 @@ class MOZ_RAII AutoMutationBatchForAnimation {
   if (aTimeline.WasPassed()) {
     timeline = aTimeline.Value();
   } else {
+<<<<<<< HEAD
     nsIDocument* document =
         AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
+||||||| merged common ancestors
+    nsIDocument* document =
+      AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
+=======
+    Document* document =
+        AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
+>>>>>>> upstream-releases
     if (!document) {
       aRv.Throw(NS_ERROR_FAILURE);
       return nullptr;
@@ -171,6 +255,8 @@ void Animation::SetEffectNoUpdate(AnimationEffect* aEffect) {
 
     ReschedulePendingTasks();
   }
+
+  MaybeScheduleReplacementCheck();
 
   UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
 }
@@ -471,9 +557,53 @@ Promise* Animation::GetFinished(ErrorResult& aRv) {
   return mFinished;
 }
 
+<<<<<<< HEAD
 void Animation::Cancel() {
   CancelNoUpdate();
   PostUpdate();
+||||||| merged common ancestors
+void
+Animation::Cancel()
+{
+  CancelNoUpdate();
+  PostUpdate();
+=======
+// https://drafts.csswg.org/web-animations/#cancel-an-animation
+void Animation::Cancel(PostRestyleMode aPostRestyle) {
+  bool newlyIdle = false;
+
+  if (PlayState() != AnimationPlayState::Idle) {
+    newlyIdle = true;
+
+    ResetPendingTasks();
+
+    if (mFinished) {
+      mFinished->MaybeReject(NS_ERROR_DOM_ABORT_ERR);
+    }
+    ResetFinishedPromise();
+
+    QueuePlaybackEvent(NS_LITERAL_STRING("cancel"),
+                       GetTimelineCurrentTimeAsTimeStamp());
+  }
+
+  StickyTimeDuration activeTime =
+      mEffect ? mEffect->GetComputedTiming().mActiveTime : StickyTimeDuration();
+
+  mHoldTime.SetNull();
+  mStartTime.SetNull();
+
+  // Allow our effect to remove itself from the its target element's EffectSet.
+  UpdateEffect(aPostRestyle);
+
+  if (mTimeline) {
+    mTimeline->RemoveAnimation(this);
+  }
+  MaybeQueueCancelEvent(activeTime);
+
+  if (newlyIdle && aPostRestyle == PostRestyleMode::IfNeeded) {
+    PostUpdate();
+  }
+>>>>>>> upstream-releases
 }
 
 // https://drafts.csswg.org/web-animations/#finish-an-animation
@@ -566,6 +696,124 @@ void Animation::Reverse(ErrorResult& aRv) {
   // it here.
 }
 
+void Animation::Persist() {
+  if (mReplaceState == AnimationReplaceState::Persisted) {
+    return;
+  }
+
+  bool wasRemoved = mReplaceState == AnimationReplaceState::Removed;
+
+  mReplaceState = AnimationReplaceState::Persisted;
+
+  // If the animation is not (yet) removed, there should be no side effects of
+  // persisting it.
+  if (wasRemoved) {
+    UpdateEffect(PostRestyleMode::IfNeeded);
+    PostUpdate();
+  }
+}
+
+// https://drafts.csswg.org/web-animations/#dom-animation-commitstyles
+void Animation::CommitStyles(ErrorResult& aRv) {
+  if (!mEffect) {
+    return;
+  }
+
+  // Take an owning reference to the keyframe effect. This will ensure that
+  // this Animation and the target element remain alive after flushing style.
+  RefPtr<KeyframeEffect> keyframeEffect = mEffect->AsKeyframeEffect();
+  if (!keyframeEffect) {
+    return;
+  }
+
+  Maybe<NonOwningAnimationTarget> target = keyframeEffect->GetTarget();
+  if (!target) {
+    return;
+  }
+
+  if (target->mPseudoType != PseudoStyleType::NotPseudo) {
+    aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+    return;
+  }
+
+  // Check it is an element with a style attribute
+  nsCOMPtr<nsStyledElement> styledElement = do_QueryInterface(target->mElement);
+  if (!styledElement) {
+    aRv.Throw(NS_ERROR_DOM_NO_MODIFICATION_ALLOWED_ERR);
+    return;
+  }
+
+  // Flush style before checking if the target element is rendered since the
+  // result could depend on pending style changes.
+  if (Document* doc = target->mElement->GetComposedDoc()) {
+    doc->FlushPendingNotifications(FlushType::Style);
+  }
+  if (!target->mElement->IsRendered()) {
+    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
+    return;
+  }
+
+  nsPresContext* presContext =
+      nsContentUtils::GetContextForContent(target->mElement);
+  if (!presContext) {
+    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
+    return;
+  }
+
+  // Get the computed animation values
+  UniquePtr<RawServoAnimationValueMap> animationValues =
+      Servo_AnimationValueMap_Create().Consume();
+  if (!presContext->EffectCompositor()->ComposeServoAnimationRuleForEffect(
+          *keyframeEffect, CascadeLevel(), animationValues.get())) {
+    NS_WARNING("Failed to compose animation style to commit");
+    return;
+  }
+
+  // Calling SetCSSDeclaration will trigger attribute setting code.
+  // Start the update now so that the old rule doesn't get used
+  // between when we mutate the declaration and when we set the new
+  // rule.
+  mozAutoDocUpdate autoUpdate(target->mElement->OwnerDoc(), true);
+
+  // Get the inline style to append to
+  RefPtr<DeclarationBlock> declarationBlock;
+  if (auto* existing = target->mElement->GetInlineStyleDeclaration()) {
+    declarationBlock = existing->EnsureMutable();
+  } else {
+    declarationBlock = new DeclarationBlock();
+    declarationBlock->SetDirty();
+  }
+
+  // Prepare the callback
+  MutationClosureData closureData;
+  closureData.mClosure = nsDOMCSSAttributeDeclaration::MutationClosureFunction;
+  closureData.mElement = target->mElement;
+  DeclarationBlockMutationClosure beforeChangeClosure = {
+      nsDOMCSSAttributeDeclaration::MutationClosureFunction,
+      &closureData,
+  };
+
+  // Set the animated styles
+  bool changed = false;
+  nsCSSPropertyIDSet properties = keyframeEffect->GetPropertySet();
+  for (nsCSSPropertyID property : properties) {
+    RefPtr<RawServoAnimationValue> computedValue =
+        Servo_AnimationValueMap_GetValue(animationValues.get(), property)
+            .Consume();
+    if (computedValue) {
+      changed |= Servo_DeclarationBlock_SetPropertyToAnimationValue(
+          declarationBlock->Raw(), computedValue, beforeChangeClosure);
+    }
+  }
+
+  if (!changed) {
+    return;
+  }
+
+  // Update inline style declaration
+  target->mElement->SetInlineStyleDeclaration(*declarationBlock, closureData);
+}
+
 // ---------------------------------------------------------------------------
 //
 // JS wrappers for Animation interface:
@@ -622,7 +870,14 @@ void Animation::Tick() {
     FinishPendingAt(mTimeline->GetCurrentTimeAsDuration().Value());
   }
 
-  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
+  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Sync);
+
+  // Check for changes to whether or not this animation is replaceable.
+  bool isReplaceable = IsReplaceable();
+  if (isReplaceable && !mWasReplaceableAtLastTick) {
+    ScheduleReplacementCheck();
+  }
+  mWasReplaceableAtLastTick = isReplaceable;
 
   if (!mEffect) {
     return;
@@ -772,6 +1027,7 @@ void Animation::SilentlySetCurrentTime(const TimeDuration& aSeekTime) {
   mPreviousCurrentTime.SetNull();
 }
 
+<<<<<<< HEAD
 // https://drafts.csswg.org/web-animations/#cancel-an-animation
 void Animation::CancelNoUpdate() {
   if (PlayState() != AnimationPlayState::Idle) {
@@ -803,13 +1059,56 @@ void Animation::CancelNoUpdate() {
 bool Animation::ShouldBeSynchronizedWithMainThread(
     nsCSSPropertyID aProperty, const nsIFrame* aFrame,
     AnimationPerformanceWarning::Type& aPerformanceWarning) const {
+||||||| merged common ancestors
+// https://drafts.csswg.org/web-animations/#cancel-an-animation
+void
+Animation::CancelNoUpdate()
+{
+  if (PlayState() != AnimationPlayState::Idle) {
+    ResetPendingTasks();
+
+    if (mFinished) {
+      mFinished->MaybeReject(NS_ERROR_DOM_ABORT_ERR);
+    }
+    ResetFinishedPromise();
+
+    QueuePlaybackEvent(NS_LITERAL_STRING("cancel"),
+                       GetTimelineCurrentTimeAsTimeStamp());
+  }
+
+  StickyTimeDuration activeTime = mEffect
+                                  ? mEffect->GetComputedTiming().mActiveTime
+                                  : StickyTimeDuration();
+
+  mHoldTime.SetNull();
+  mStartTime.SetNull();
+
+  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
+
+  if (mTimeline) {
+    mTimeline->RemoveAnimation(this);
+  }
+  MaybeQueueCancelEvent(activeTime);
+}
+
+bool
+Animation::ShouldBeSynchronizedWithMainThread(
+  nsCSSPropertyID aProperty,
+  const nsIFrame* aFrame,
+  AnimationPerformanceWarning::Type& aPerformanceWarning) const
+{
+=======
+bool Animation::ShouldBeSynchronizedWithMainThread(
+    const nsCSSPropertyIDSet& aPropertySet, const nsIFrame* aFrame,
+    AnimationPerformanceWarning::Type& aPerformanceWarning) const {
+>>>>>>> upstream-releases
   // Only synchronize playing animations
   if (!IsPlaying()) {
     return false;
   }
 
   // Currently only transform animations need to be synchronized
-  if (aProperty != eCSSProperty_transform) {
+  if (!aPropertySet.Intersects(nsCSSPropertyIDSet::TransformLikeProperties())) {
     return false;
   }
 
@@ -824,19 +1123,39 @@ bool Animation::ShouldBeSynchronizedWithMainThread(
   // because it's cheaper, but also because it's often the most useful thing
   // to know when you're debugging performance.
   if (mSyncWithGeometricAnimations &&
+<<<<<<< HEAD
       keyframeEffect->HasAnimationOfProperty(eCSSProperty_transform)) {
     aPerformanceWarning =
         AnimationPerformanceWarning::Type::TransformWithSyncGeometricAnimations;
+||||||| merged common ancestors
+      keyframeEffect->HasAnimationOfProperty(eCSSProperty_transform)) {
+    aPerformanceWarning = AnimationPerformanceWarning::Type::
+                          TransformWithSyncGeometricAnimations;
+=======
+      keyframeEffect->HasAnimationOfPropertySet(
+          nsCSSPropertyIDSet::TransformLikeProperties())) {
+    aPerformanceWarning =
+        AnimationPerformanceWarning::Type::TransformWithSyncGeometricAnimations;
+>>>>>>> upstream-releases
     return true;
   }
 
+<<<<<<< HEAD
   return keyframeEffect->ShouldBlockAsyncTransformAnimations(
       aFrame, aPerformanceWarning);
+||||||| merged common ancestors
+  return keyframeEffect->
+           ShouldBlockAsyncTransformAnimations(aFrame, aPerformanceWarning);
+=======
+  return keyframeEffect->ShouldBlockAsyncTransformAnimations(
+      aFrame, aPropertySet, aPerformanceWarning);
+>>>>>>> upstream-releases
 }
 
 void Animation::UpdateRelevance() {
   bool wasRelevant = mIsRelevant;
-  mIsRelevant = HasCurrentEffect() || IsInEffect();
+  mIsRelevant = mReplaceState != AnimationReplaceState::Removed &&
+                (HasCurrentEffect() || IsInEffect());
 
   // Notify animation observers.
   if (wasRelevant && !mIsRelevant) {
@@ -846,7 +1165,127 @@ void Animation::UpdateRelevance() {
   }
 }
 
+<<<<<<< HEAD
 bool Animation::HasLowerCompositeOrderThan(const Animation& aOther) const {
+||||||| merged common ancestors
+bool
+Animation::HasLowerCompositeOrderThan(const Animation& aOther) const
+{
+=======
+template <class T>
+bool IsMarkupAnimation(T* aAnimation) {
+  return aAnimation && aAnimation->IsTiedToMarkup();
+}
+
+// https://drafts.csswg.org/web-animations/#replaceable-animation
+bool Animation::IsReplaceable() const {
+  // We never replace CSS animations or CSS transitions since they are managed
+  // by CSS.
+  if (IsMarkupAnimation(AsCSSAnimation()) ||
+      IsMarkupAnimation(AsCSSTransition())) {
+    return false;
+  }
+
+  // Only finished animations can be replaced.
+  if (PlayState() != AnimationPlayState::Finished) {
+    return false;
+  }
+
+  // Already removed animations cannot be replaced.
+  if (ReplaceState() == AnimationReplaceState::Removed) {
+    return false;
+  }
+
+  // We can only replace an animation if we know that, uninterfered, it would
+  // never start playing again. That excludes any animations on timelines that
+  // aren't monotonically increasing.
+  //
+  // If we don't have any timeline at all, then we can't be in the finished
+  // state (since we need both a resolved start time and current time for that)
+  // and will have already returned false above.
+  //
+  // (However, if it ever does become possible to be finished without a timeline
+  // then we will want to return false here since it probably suggests an
+  // animation being driven directly by script, in which case we can't assume
+  // anything about how they will behave.)
+  if (!GetTimeline() || !GetTimeline()->TracksWallclockTime()) {
+    return false;
+  }
+
+  // If the animation doesn't have an effect then we can't determine if it is
+  // filling or not so just leave it alone.
+  if (!GetEffect()) {
+    return false;
+  }
+
+  // At the time of writing we only know about KeyframeEffects. If we introduce
+  // other types of effects we will need to decide if they are replaceable or
+  // not.
+  MOZ_ASSERT(GetEffect()->AsKeyframeEffect(),
+             "Effect should be a keyframe effect");
+
+  // We only replace animations that are filling.
+  if (GetEffect()->GetComputedTiming().mProgress.IsNull()) {
+    return false;
+  }
+
+  // We should only replace animations with a target element (since otherwise
+  // what other effects would we consider when determining if they are covered
+  // or not?).
+  if (!GetEffect()->AsKeyframeEffect()->GetTarget()) {
+    return false;
+  }
+
+  return true;
+}
+
+bool Animation::IsRemovable() const {
+  return ReplaceState() == AnimationReplaceState::Active && IsReplaceable();
+}
+
+void Animation::ScheduleReplacementCheck() {
+  MOZ_ASSERT(
+      IsReplaceable(),
+      "Should only schedule a replacement check for a replaceable animation");
+
+  // If IsReplaceable() is true, the following should also hold
+  MOZ_ASSERT(GetEffect());
+  MOZ_ASSERT(GetEffect()->AsKeyframeEffect());
+  MOZ_ASSERT(GetEffect()->AsKeyframeEffect()->GetTarget());
+
+  Maybe<NonOwningAnimationTarget> target =
+      GetEffect()->AsKeyframeEffect()->GetTarget();
+
+  nsPresContext* presContext =
+      nsContentUtils::GetContextForContent(target->mElement);
+  if (presContext) {
+    presContext->EffectCompositor()->NoteElementForReducing(*target);
+  }
+}
+
+void Animation::MaybeScheduleReplacementCheck() {
+  if (!IsReplaceable()) {
+    return;
+  }
+
+  ScheduleReplacementCheck();
+}
+
+void Animation::Remove() {
+  MOZ_ASSERT(IsRemovable(),
+             "Should not be trying to remove an effect that is not removable");
+
+  mReplaceState = AnimationReplaceState::Removed;
+
+  UpdateEffect(PostRestyleMode::IfNeeded);
+  PostUpdate();
+
+  QueuePlaybackEvent(NS_LITERAL_STRING("remove"),
+                     GetTimelineCurrentTimeAsTimeStamp());
+}
+
+bool Animation::HasLowerCompositeOrderThan(const Animation& aOther) const {
+>>>>>>> upstream-releases
   // 0. Object-equality case
   if (&aOther == this) {
     return false;
@@ -988,12 +1427,36 @@ void Animation::ComposeStyle(RawServoAnimationValueMap& aComposeResult,
 
 void Animation::NotifyEffectTimingUpdated() {
   MOZ_ASSERT(mEffect,
-             "We should only update timing effect when we have a target "
+             "We should only update effect timing when we have a target "
              "effect");
   UpdateTiming(Animation::SeekFlag::NoSeek, Animation::SyncNotifyFlag::Async);
 }
 
+<<<<<<< HEAD
 void Animation::NotifyGeometricAnimationsStartingThisFrame() {
+||||||| merged common ancestors
+void
+Animation::NotifyGeometricAnimationsStartingThisFrame()
+{
+=======
+void Animation::NotifyEffectPropertiesUpdated() {
+  MOZ_ASSERT(mEffect,
+             "We should only update effect properties when we have a target "
+             "effect");
+
+  MaybeScheduleReplacementCheck();
+}
+
+void Animation::NotifyEffectTargetUpdated() {
+  MOZ_ASSERT(mEffect,
+             "We should only update the effect target when we have a target "
+             "effect");
+
+  MaybeScheduleReplacementCheck();
+}
+
+void Animation::NotifyGeometricAnimationsStartingThisFrame() {
+>>>>>>> upstream-releases
   if (!IsNewlyStarted() || !mEffect) {
     return;
   }
@@ -1077,8 +1540,7 @@ void Animation::PlayNoUpdate(ErrorResult& aRv, LimitBehavior aLimitBehavior) {
   // animations if it applies.
   mSyncWithGeometricAnimations = false;
 
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
+  if (Document* doc = GetRenderedDocument()) {
     PendingAnimationTracker* tracker =
         doc->GetOrCreatePendingAnimationTracker();
     tracker->AddPlayPending(*this);
@@ -1126,8 +1588,7 @@ void Animation::Pause(ErrorResult& aRv) {
 
   mPendingState = PendingState::PausePending;
 
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
+  if (Document* doc = GetRenderedDocument()) {
     PendingAnimationTracker* tracker =
         doc->GetOrCreatePendingAnimationTracker();
     tracker->AddPausePending(*this);
@@ -1180,7 +1641,7 @@ void Animation::ResumeAt(const TimeDuration& aReadyTime) {
 
   mPendingState = PendingState::NotPending;
 
-  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
+  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Sync);
 
   // If we had a pending playback rate, we will have now applied it so we need
   // to notify observers.
@@ -1217,7 +1678,7 @@ void Animation::UpdateTiming(SeekFlag aSeekFlag,
   // We call UpdateFinishedState before UpdateEffect because the former
   // can change the current time, which is used by the latter.
   UpdateFinishedState(aSeekFlag, aSyncNotifyFlag);
-  UpdateEffect();
+  UpdateEffect(PostRestyleMode::IfNeeded);
 
   if (mTimeline) {
     mTimeline->NotifyAnimationUpdated(*this);
@@ -1272,20 +1733,39 @@ void Animation::UpdateFinishedState(SeekFlag aSeekFlag,
   mPreviousCurrentTime = GetCurrentTimeAsDuration();
 }
 
+<<<<<<< HEAD
 void Animation::UpdateEffect() {
+||||||| merged common ancestors
+void
+Animation::UpdateEffect()
+{
+=======
+void Animation::UpdateEffect(PostRestyleMode aPostRestyle) {
+>>>>>>> upstream-releases
   if (mEffect) {
     UpdateRelevance();
 
     KeyframeEffect* keyframeEffect = mEffect->AsKeyframeEffect();
     if (keyframeEffect) {
-      keyframeEffect->NotifyAnimationTimingUpdated();
+      keyframeEffect->NotifyAnimationTimingUpdated(aPostRestyle);
     }
   }
 }
 
+<<<<<<< HEAD
 void Animation::FlushUnanimatedStyle() const {
   nsIDocument* doc = GetRenderedDocument();
   if (doc) {
+||||||| merged common ancestors
+void
+Animation::FlushUnanimatedStyle() const
+{
+  nsIDocument* doc = GetRenderedDocument();
+  if (doc) {
+=======
+void Animation::FlushUnanimatedStyle() const {
+  if (Document* doc = GetRenderedDocument()) {
+>>>>>>> upstream-releases
     doc->FlushPendingNotifications(
         ChangesToFlush(FlushType::Style, false /* flush animations */));
   }
@@ -1308,8 +1788,7 @@ void Animation::CancelPendingTasks() {
     return;
   }
 
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
+  if (Document* doc = GetRenderedDocument()) {
     PendingAnimationTracker* tracker = doc->GetPendingAnimationTracker();
     if (tracker) {
       if (mPendingState == PendingState::PlayPending) {
@@ -1346,8 +1825,7 @@ void Animation::ReschedulePendingTasks() {
 
   mPendingReadyTime.SetNull();
 
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
+  if (Document* doc = GetRenderedDocument()) {
     PendingAnimationTracker* tracker =
         doc->GetOrCreatePendingAnimationTracker();
     if (mPendingState == PendingState::PlayPending &&
@@ -1401,7 +1879,7 @@ bool Animation::IsPossiblyOrphanedPendingAnimation() const {
   // If we're wrong and another document is tracking us then, at worst, we'll
   // simply start/pause the animation one tick too soon. That's better than
   // never starting/pausing the animation and is unlikely.
-  nsIDocument* doc = GetRenderedDocument();
+  Document* doc = GetRenderedDocument();
   if (!doc) {
     return true;
   }
@@ -1419,7 +1897,15 @@ StickyTimeDuration Animation::EffectEnd() const {
   return mEffect->SpecifiedTiming().EndTime();
 }
 
+<<<<<<< HEAD
 nsIDocument* Animation::GetRenderedDocument() const {
+||||||| merged common ancestors
+nsIDocument*
+Animation::GetRenderedDocument() const
+{
+=======
+Document* Animation::GetRenderedDocument() const {
+>>>>>>> upstream-releases
   if (!mEffect || !mEffect->AsKeyframeEffect()) {
     return nullptr;
   }
@@ -1427,7 +1913,15 @@ nsIDocument* Animation::GetRenderedDocument() const {
   return mEffect->AsKeyframeEffect()->GetRenderedDocument();
 }
 
+<<<<<<< HEAD
 nsIDocument* Animation::GetTimelineDocument() const {
+||||||| merged common ancestors
+nsIDocument*
+Animation::GetTimelineDocument() const
+{
+=======
+Document* Animation::GetTimelineDocument() const {
+>>>>>>> upstream-releases
   return mTimeline ? mTimeline->GetDocument() : nullptr;
 }
 
@@ -1495,7 +1989,7 @@ void Animation::QueuePlaybackEvent(const nsAString& aName,
                                    TimeStamp&& aScheduledEventTime) {
   // Use document for timing.
   // https://drafts.csswg.org/web-animations-1/#document-for-timing
-  nsIDocument* doc = GetTimelineDocument();
+  Document* doc = GetTimelineDocument();
   if (!doc) {
     return;
   }
@@ -1507,7 +2001,7 @@ void Animation::QueuePlaybackEvent(const nsAString& aName,
 
   AnimationPlaybackEventInit init;
 
-  if (aName.EqualsLiteral("finish")) {
+  if (aName.EqualsLiteral("finish") || aName.EqualsLiteral("remove")) {
     init.mCurrentTime = GetCurrentTimeAsDouble();
   }
   if (mTimeline) {

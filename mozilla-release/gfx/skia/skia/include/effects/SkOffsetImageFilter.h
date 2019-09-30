@@ -20,8 +20,15 @@ public:
 
     SkRect computeFastBounds(const SkRect& src) const override;
 
+<<<<<<< HEAD
     Factory getFactory() const override { return CreateProc; }
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkOffsetImageFilter)
+
+=======
+>>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
     sk_sp<SkSpecialImage> onFilterImage(SkSpecialImage* source, const Context&,
@@ -31,6 +38,8 @@ protected:
                                MapDirection, const SkIRect* inputRect) const override;
 
 private:
+    SK_FLATTENABLE_HOOKS(SkOffsetImageFilter)
+
     SkOffsetImageFilter(SkScalar dx, SkScalar dy, sk_sp<SkImageFilter> input, const CropRect*);
     static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
     friend class SkFlattenable::PrivateInitializer;

@@ -9,11 +9,24 @@
 
 #include <windows.h>
 
+<<<<<<< HEAD
 #include "LauncherResult.h"
 
+||||||| merged common ancestors
+=======
+#include "mozilla/LauncherResult.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
 
+<<<<<<< HEAD
 LauncherVoidResult InitializeDllBlocklistOOP(HANDLE aChildProcess);
+||||||| merged common ancestors
+bool InitializeDllBlocklistOOP(HANDLE aChildProcess);
+=======
+LauncherVoidResult InitializeDllBlocklistOOP(const wchar_t* aFullImagePath,
+                                             HANDLE aChildProcess);
+>>>>>>> upstream-releases
 
 }  // namespace mozilla
 

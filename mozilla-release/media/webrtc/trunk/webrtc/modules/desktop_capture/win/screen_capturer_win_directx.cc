@@ -39,6 +39,7 @@ bool ScreenCapturerWinDirectx::RetrieveD3dInfo(D3dInfo* info) {
   return DxgiDuplicatorController::Instance()->RetrieveD3dInfo(info);
 }
 
+<<<<<<< HEAD
 // static
 bool ScreenCapturerWinDirectx::IsCurrentSessionSupported() {
   return DxgiDuplicatorController::IsCurrentSessionSupported();
@@ -100,18 +101,87 @@ int ScreenCapturerWinDirectx::GetIndexFromScreenId(
 
 ScreenCapturerWinDirectx::ScreenCapturerWinDirectx()
     : controller_(DxgiDuplicatorController::Instance()) {}
+||||||| merged common ancestors
+ScreenCapturerWinDirectx::ScreenCapturerWinDirectx(
+    const DesktopCaptureOptions& options)
+    : callback_(nullptr) {}
+=======
+// static
+bool ScreenCapturerWinDirectx::IsCurrentSessionSupported() {
+  return DxgiDuplicatorController::IsCurrentSessionSupported();
+}
+
+// static
+bool ScreenCapturerWinDirectx::GetScreenListFromDeviceNames(
+    const std::vector<std::string>& device_names,
+    DesktopCapturer::SourceList* screens) {
+  RTC_DCHECK(screens->empty());
+
+  DesktopCapturer::SourceList gdi_screens;
+  std::vector<std::string> gdi_names;
+  if (!GetScreenList(&gdi_screens, &gdi_names)) {
+    return false;
+  }
+
+  RTC_DCHECK_EQ(gdi_screens.size(), gdi_names.size());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ScreenCapturerWinDirectx::~ScreenCapturerWinDirectx() = default;
+||||||| merged common ancestors
+ScreenCapturerWinDirectx::~ScreenCapturerWinDirectx() {}
+=======
+  ScreenId max_screen_id = -1;
+  for (const DesktopCapturer::Source& screen : gdi_screens) {
+    max_screen_id = std::max(max_screen_id, screen.id);
+  }
+
+  for (const auto& device_name : device_names) {
+    const auto it = std::find(
+        gdi_names.begin(), gdi_names.end(), device_name);
+    if (it == gdi_names.end()) {
+      // devices_names[i] has not been found in gdi_names, so use max_screen_id.
+      max_screen_id++;
+      screens->push_back({ max_screen_id });
+    } else {
+      screens->push_back({ gdi_screens[it - gdi_names.begin()] });
+    }
+  }
+
+  return true;
+}
+
+// static
+int ScreenCapturerWinDirectx::GetIndexFromScreenId(
+    ScreenId id,
+    const std::vector<std::string>& device_names) {
+  DesktopCapturer::SourceList screens;
+  if (!GetScreenListFromDeviceNames(device_names, &screens)) {
+    return -1;
+  }
+
+  RTC_DCHECK_EQ(device_names.size(), screens.size());
+
+  for (size_t i = 0; i < screens.size(); i++) {
+    if (screens[i].id == id) {
+      return static_cast<int>(i);
+    }
+  }
+
+  return -1;
+}
+
+ScreenCapturerWinDirectx::ScreenCapturerWinDirectx()
+    : controller_(DxgiDuplicatorController::Instance()) {}
 
 ScreenCapturerWinDirectx::~ScreenCapturerWinDirectx() = default;
+>>>>>>> upstream-releases
 
 void ScreenCapturerWinDirectx::Start(Callback* callback) {
   RTC_DCHECK(!callback_);
   RTC_DCHECK(callback);
 
   callback_ = callback;
-}
-
-void ScreenCapturerWinDirectx::Stop() {
-  callback_ = nullptr;
 }
 
 void ScreenCapturerWinDirectx::SetSharedMemoryFactory(

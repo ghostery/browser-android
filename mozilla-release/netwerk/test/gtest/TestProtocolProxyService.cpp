@@ -12,9 +12,19 @@
 namespace mozilla {
 namespace net {
 
+<<<<<<< HEAD
 TEST(TestProtocolProxyService, LoadHostFilters) {
   nsCOMPtr<nsIProtocolProxyService2> ps =
       do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
+||||||| merged common ancestors
+TEST(TestProtocolProxyService, LoadHostFilters) {
+  nsCOMPtr<nsIProtocolProxyService2> ps = do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
+=======
+TEST(TestProtocolProxyService, LoadHostFilters)
+{
+  nsCOMPtr<nsIProtocolProxyService2> ps =
+      do_GetService(NS_PROTOCOLPROXYSERVICE_CID);
+>>>>>>> upstream-releases
   ASSERT_TRUE(ps);
   mozilla::net::nsProtocolProxyService* pps =
       static_cast<mozilla::net::nsProtocolProxyService*>(ps.get());
@@ -28,6 +38,9 @@ TEST(TestProtocolProxyService, LoadHostFilters) {
     ASSERT_EQ(NS_NewURI(getter_AddRefs(url), spec), NS_OK);
     ASSERT_EQ(pps->CanUseProxy(url, 80), expected);
     spec = "http://[::1]";
+    ASSERT_EQ(NS_NewURI(getter_AddRefs(url), spec), NS_OK);
+    ASSERT_EQ(pps->CanUseProxy(url, 80), expected);
+    spec = "http://localhost";
     ASSERT_EQ(NS_NewURI(getter_AddRefs(url), spec), NS_OK);
     ASSERT_EQ(pps->CanUseProxy(url, 80), expected);
   };
@@ -86,7 +99,13 @@ TEST(TestProtocolProxyService, LoadHostFilters) {
   printf("Testing empty filter: %s\n", filter.get());
   pps->LoadHostFilters(filter);
 
+<<<<<<< HEAD
   CheckLoopbackURLs(true);  // only time when loopbacks can be proxied. bug?
+||||||| merged common ancestors
+  CheckLoopbackURLs(true); // only time when loopbacks can be proxied. bug?
+=======
+  CheckLoopbackURLs(false);
+>>>>>>> upstream-releases
   CheckLocalDomain(true);
   CheckURLs(true);
   CheckPortDomain(true);
@@ -98,9 +117,10 @@ TEST(TestProtocolProxyService, LoadHostFilters) {
       "[abcd::1]/64:123, *.test.com";
   printf("Testing filter: %s\n", filter.get());
   pps->LoadHostFilters(filter);
+
+  CheckLoopbackURLs(false);
   // Check URLs can no longer use filtered proxy
   CheckURLs(false);
-  CheckLoopbackURLs(false);
   CheckLocalDomain(true);
   CheckPortDomain(true);
 
@@ -111,8 +131,9 @@ TEST(TestProtocolProxyService, LoadHostFilters) {
   filter = "<local> blabla.com:10";
   printf("Testing filter: %s\n", filter.get());
   pps->LoadHostFilters(filter);
-  CheckURLs(true);
+
   CheckLoopbackURLs(false);
+  CheckURLs(true);
   CheckLocalDomain(false);
   CheckPortDomain(false);
 
@@ -125,10 +146,33 @@ TEST(TestProtocolProxyService, LoadHostFilters) {
   filter = "<local>";
   printf("Testing filter: %s\n", filter.get());
   pps->LoadHostFilters(filter);
-  CheckURLs(true);
+
   CheckLoopbackURLs(false);
+  CheckURLs(true);
   CheckLocalDomain(false);
   CheckPortDomain(true);
+
+  // Check that allow_hijacking_localhost works with empty filter
+  Preferences::SetBool("network.proxy.allow_hijacking_localhost", true);
+
+  filter = "";
+  printf("Testing filter: %s\n", filter.get());
+  pps->LoadHostFilters(filter);
+
+  CheckLoopbackURLs(true);
+  CheckLocalDomain(true);
+  CheckURLs(true);
+  CheckPortDomain(true);
+
+  // Check that allow_hijacking_localhost works with non-trivial filter
+  filter = "127.0.0.1, [::1], localhost, blabla.com:10";
+  printf("Testing filter: %s\n", filter.get());
+  pps->LoadHostFilters(filter);
+
+  CheckLoopbackURLs(false);
+  CheckLocalDomain(true);
+  CheckURLs(true);
+  CheckPortDomain(false);
 }
 
 }  // namespace net

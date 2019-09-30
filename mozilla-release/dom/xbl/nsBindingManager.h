@@ -20,13 +20,11 @@
 #include "nsThreadUtils.h"
 #include "mozilla/MediaFeatureChange.h"
 #include "mozilla/MemoryReporting.h"
-#include "mozilla/StyleSheet.h"
 #include "mozilla/EventStates.h"
 
 struct ElementDependentRuleProcessorData;
 class nsIXPConnectWrappedJS;
 class nsAtom;
-class nsIDocument;
 class nsIURI;
 class nsXBLDocumentInfo;
 class nsIStreamListener;
@@ -45,7 +43,7 @@ class nsBindingManager final : public nsStubMutationObserver {
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTINSERTED
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTREMOVED
 
-  explicit nsBindingManager(nsIDocument* aDocument);
+  explicit nsBindingManager(mozilla::dom::Document* aDocument);
 
   nsXBLBinding* GetBindingWithContent(const nsIContent* aContent);
 
@@ -65,18 +63,31 @@ class nsBindingManager final : public nsStubMutationObserver {
    *        destructor.
    */
 
+<<<<<<< HEAD
   enum DestructorHandling { eRunDtor, eDoNotRunDtor };
   void RemovedFromDocument(nsIContent* aContent, nsIDocument* aOldDocument,
                            DestructorHandling aDestructorHandling) {
+||||||| merged common ancestors
+ enum DestructorHandling {
+   eRunDtor,
+   eDoNotRunDtor
+ };
+  void RemovedFromDocument(nsIContent* aContent, nsIDocument* aOldDocument,
+                           DestructorHandling aDestructorHandling)
+  {
+=======
+  enum DestructorHandling { eRunDtor, eDoNotRunDtor };
+  void RemovedFromDocument(nsIContent* aContent,
+                           mozilla::dom::Document* aOldDocument,
+                           DestructorHandling aDestructorHandling) {
+>>>>>>> upstream-releases
     if (aContent->HasFlag(NODE_MAY_BE_IN_BINDING_MNGR)) {
       RemovedFromDocumentInternal(aContent, aOldDocument, aDestructorHandling);
     }
   }
   void RemovedFromDocumentInternal(nsIContent* aContent,
-                                   nsIDocument* aOldDocument,
+                                   mozilla::dom::Document* aOldDocument,
                                    DestructorHandling aDestructorHandling);
-
-  nsAtom* ResolveTag(nsIContent* aContent, int32_t* aNameSpaceID);
 
   /**
    * Return the nodelist of "anonymous" kids for this node.  This might
@@ -87,7 +98,7 @@ class nsBindingManager final : public nsStubMutationObserver {
   nsINodeList* GetAnonymousNodesFor(nsIContent* aContent);
 
   nsresult ClearBinding(mozilla::dom::Element* aElement);
-  nsresult LoadBindingDocument(nsIDocument* aBoundDoc, nsIURI* aURL,
+  nsresult LoadBindingDocument(mozilla::dom::Document* aBoundDoc, nsIURI* aURL,
                                nsIPrincipal* aOriginPrincipal);
 
   nsresult AddToAttachedQueue(nsXBLBinding* aBinding);
@@ -114,6 +125,7 @@ class nsBindingManager final : public nsStubMutationObserver {
   nsIStreamListener* GetLoadingDocListener(nsIURI* aURL);
   void RemoveLoadingDocListener(nsIURI* aURL);
 
+<<<<<<< HEAD
   void FlushSkinBindings();
 
   nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID,
@@ -122,6 +134,21 @@ class nsBindingManager final : public nsStubMutationObserver {
   void AppendAllSheets(nsTArray<mozilla::StyleSheet*>& aArray);
 
   void Traverse(nsIContent* aContent, nsCycleCollectionTraversalCallback& cb);
+||||||| merged common ancestors
+  void FlushSkinBindings();
+
+  nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID, void** aResult);
+
+
+  void AppendAllSheets(nsTArray<mozilla::StyleSheet*>& aArray);
+
+  void Traverse(nsIContent *aContent, nsCycleCollectionTraversalCallback &cb);
+=======
+  nsresult GetBindingImplementation(nsIContent* aContent, REFNSIID aIID,
+                                    void** aResult);
+
+  void Traverse(nsIContent* aContent, nsCycleCollectionTraversalCallback& cb);
+>>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTION_CLASS(nsBindingManager)
 
@@ -150,6 +177,7 @@ class nsBindingManager final : public nsStubMutationObserver {
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
+<<<<<<< HEAD
   // Enumerate each bound content's bindings (including its base bindings)
   // in mBoundContentSet. Return false from the callback to stop enumeration.
   using BoundContentProtoBindingCallback =
@@ -159,6 +187,19 @@ class nsBindingManager final : public nsStubMutationObserver {
       const BoundContentProtoBindingCallback&) const;
 
  protected:
+||||||| merged common ancestors
+  // Enumerate each bound content's bindings (including its base bindings)
+  // in mBoundContentSet. Return false from the callback to stop enumeration.
+  using BoundContentProtoBindingCallback =
+    std::function<bool (nsXBLPrototypeBinding*)>;
+
+  bool EnumerateBoundContentProtoBindings(
+      const BoundContentProtoBindingCallback&) const;
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   nsIXPConnectWrappedJS* GetWrappedJS(nsIContent* aContent);
   nsresult SetWrappedJS(nsIContent* aContent, nsIXPConnectWrappedJS* aResult);
 
@@ -215,7 +256,7 @@ class nsBindingManager final : public nsStubMutationObserver {
   RefPtr<nsRunnableMethod<nsBindingManager> > mProcessAttachedQueueEvent;
 
   // Our document.  This is a weak ref; the document owns us
-  nsIDocument* mDocument;
+  mozilla::dom::Document* mDocument;
 };
 
 #endif

@@ -13,20 +13,33 @@
 
 /**
  * Constant used to indicate an unconstrained size.
+ *
+ * NOTE: The constants defined in this file are semantically used as symbolic
+ *       values, so user should not depend on the underlying numeric values. If
+ *       new specific use cases arise, define a new constant here.
  */
 #define NS_UNCONSTRAINEDSIZE NS_MAXSIZE
 
+<<<<<<< HEAD
 // NOTE: There are assumptions all over that these have the same value,
 //       namely NS_UNCONSTRAINEDSIZE.
 #define NS_INTRINSICSIZE NS_UNCONSTRAINEDSIZE
 #define NS_AUTOHEIGHT NS_UNCONSTRAINEDSIZE
 #define NS_AUTOOFFSET NS_UNCONSTRAINEDSIZE
+||||||| merged common ancestors
+// NOTE: There are assumptions all over that these have the same value,
+//       namely NS_UNCONSTRAINEDSIZE.
+#define NS_INTRINSICSIZE    NS_UNCONSTRAINEDSIZE
+#define NS_AUTOHEIGHT       NS_UNCONSTRAINEDSIZE
+#define NS_AUTOOFFSET       NS_UNCONSTRAINEDSIZE
+=======
+// NS_AUTOOFFSET is assumed to have the same value as NS_UNCONSTRAINEDSIZE.
+#define NS_AUTOOFFSET NS_UNCONSTRAINEDSIZE
+>>>>>>> upstream-releases
 
 // +1 is to avoid clamped huge margin values being processed as auto margins
 #define NS_AUTOMARGIN (NS_UNCONSTRAINEDSIZE + 1)
 
-// FIXME The macro should go through a renaming refactoring to reflect the fact
-// that it means an inline size, not a width.
-#define NS_INTRINSIC_WIDTH_UNKNOWN nscoord_MIN
+#define NS_INTRINSIC_ISIZE_UNKNOWN nscoord_MIN
 
 #endif  // LayoutConstants_h___

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "manifest_version": 2,
 
@@ -32,3 +33,40 @@
     }
   }
 }
+||||||| merged common ancestors
+=======
+{
+  "manifest_version": 2,
+
+  "applications": {
+    "gecko": {"id": "quitter@mozilla.org"}
+  },
+
+  "name": "Quitter",
+  "description": "Quit",
+  "version": "2019.06.03",
+  "author": "Mozilla",
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [{
+    "js": ["contentscript.js"],
+    "run_at": "document_start",
+    "match_about_blank": true,
+    "matches": ["<all_urls>"]
+  }],
+
+  "experiment_apis": {
+    "quitter": {
+      "schema": "schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "parent.js",
+        "paths": [["quitter", "quit"]]
+      }
+    }
+  }
+}
+>>>>>>> upstream-releases

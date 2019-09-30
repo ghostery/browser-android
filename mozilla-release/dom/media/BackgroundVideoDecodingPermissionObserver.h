@@ -4,19 +4,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(BackgroundVideoDecodingPermissionObserver_h_)
-#define BackgroundVideoDecodingPermissionObserver_h_
+#  define BackgroundVideoDecodingPermissionObserver_h_
 
-#include "nsIObserver.h"
-#include "nsISupportsImpl.h"
+#  include "nsIObserver.h"
+#  include "nsISupportsImpl.h"
 
-class nsIDocument;
 class nsISupports;
 class nsPIDOMWindowOuter;
 
 namespace mozilla {
 
+namespace dom {
+class Document;
+}
+
 class MediaDecoder;
 
+<<<<<<< HEAD
 class BackgroundVideoDecodingPermissionObserver final : public nsIObserver {
  public:
   NS_DECL_ISUPPORTS
@@ -40,6 +44,56 @@ class BackgroundVideoDecodingPermissionObserver final : public nsIObserver {
   // use raw pointer here.
   MediaDecoder* mDecoder;
   bool mIsRegisteredForEvent;
+||||||| merged common ancestors
+class BackgroundVideoDecodingPermissionObserver final
+  : public nsIObserver
+{
+  public:
+    NS_DECL_ISUPPORTS
+
+    explicit BackgroundVideoDecodingPermissionObserver(MediaDecoder* aDecoder);
+
+    NS_IMETHOD Observe(nsISupports* aSubject, const char* aTopic,
+                       const char16_t* aData) override;
+    void RegisterEvent();
+    void UnregisterEvent();
+  private:
+    ~BackgroundVideoDecodingPermissionObserver();
+    void EnableEvent() const;
+    void DisableEvent() const;
+    already_AddRefed<nsPIDOMWindowOuter> GetOwnerWindow() const;
+    nsIDocument* GetOwnerDoc() const;
+    bool IsValidEventSender(nsISupports* aSubject) const;
+
+    // The life cycle of observer would always be shorter than decoder, so we
+    // use raw pointer here.
+    MediaDecoder* mDecoder;
+    bool mIsRegisteredForEvent;
+=======
+class BackgroundVideoDecodingPermissionObserver final : public nsIObserver {
+ public:
+  NS_DECL_ISUPPORTS
+
+  explicit BackgroundVideoDecodingPermissionObserver(MediaDecoder* aDecoder);
+
+  NS_IMETHOD Observe(nsISupports* aSubject, const char* aTopic,
+                     const char16_t* aData) override;
+  void RegisterEvent();
+  void UnregisterEvent();
+
+ private:
+  ~BackgroundVideoDecodingPermissionObserver();
+  void EnableEvent() const;
+  void DisableEvent() const;
+  already_AddRefed<nsPIDOMWindowOuter> GetOwnerWindow() const;
+  dom::Document* GetOwnerDoc() const;
+  bool IsValidEventSender(nsISupports* aSubject) const;
+
+  // The life cycle of observer would always be shorter than decoder, so we
+  // use raw pointer here.
+  MediaDecoder* mDecoder;
+  bool mIsRegisteredForEvent;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

@@ -122,8 +122,18 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(DominatorTree)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* virtual */ JSObject* DominatorTree::WrapObject(
     JSContext* aCx, JS::HandleObject aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+DominatorTree::WrapObject(JSContext* aCx, JS::HandleObject aGivenProto)
+{
+=======
+/* virtual */
+JSObject* DominatorTree::WrapObject(JSContext* aCx,
+                                    JS::HandleObject aGivenProto) {
+>>>>>>> upstream-releases
   return dom::DominatorTree_Binding::Wrap(aCx, this, aGivenProto);
 }
 

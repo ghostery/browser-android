@@ -18,19 +18,55 @@ namespace mozilla {
 namespace net {
 namespace CacheFileUtils {
 
-extern const char *kAltDataKey;
+extern const char* kAltDataKey;
 
+<<<<<<< HEAD
 already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString &aKey,
                                               nsACString *aIdEnhance = nullptr,
                                               nsACString *aURISpec = nullptr);
+||||||| merged common ancestors
+already_AddRefed<nsILoadContextInfo>
+ParseKey(const nsACString& aKey,
+         nsACString* aIdEnhance = nullptr,
+         nsACString* aURISpec = nullptr);
+=======
+already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString& aKey,
+                                              nsACString* aIdEnhance = nullptr,
+                                              nsACString* aURISpec = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval);
+||||||| merged common ancestors
+void
+AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval);
+=======
+void AppendKeyPrefix(nsILoadContextInfo* aInfo, nsACString& _retval);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void AppendTagWithValue(nsACString &aTarget, char const aTag,
                         const nsACString &aValue);
+||||||| merged common ancestors
+void
+AppendTagWithValue(nsACString& aTarget, char const aTag, const nsACString& aValue);
+=======
+void AppendTagWithValue(nsACString& aTarget, char const aTag,
+                        const nsACString& aValue);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult KeyMatchesLoadContextInfo(const nsACString &aKey,
                                    nsILoadContextInfo *aInfo, bool *_retval);
+||||||| merged common ancestors
+nsresult
+KeyMatchesLoadContextInfo(const nsACString &aKey,
+                          nsILoadContextInfo *aInfo,
+                          bool *_retval);
+=======
+nsresult KeyMatchesLoadContextInfo(const nsACString& aKey,
+                                   nsILoadContextInfo* aInfo, bool* _retval);
+>>>>>>> upstream-releases
 
 class ValidityPair {
  public:
@@ -154,8 +190,18 @@ class CachePerfStats {
   static void AddValue(EDataType aType, uint32_t aValue, bool aShortOnly);
   static uint32_t GetAverage(EDataType aType, bool aFiltered);
   static uint32_t GetStdDev(EDataType aType, bool aFiltered);
+<<<<<<< HEAD
   static bool IsCacheSlow();
   static void GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow);
+||||||| merged common ancestors
+  static bool     IsCacheSlow();
+  static void     GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow);
+
+private:
+=======
+  static bool IsCacheSlow();
+  static void GetSlowStats(uint32_t* aSlow, uint32_t* aNotSlow);
+>>>>>>> upstream-releases
 
  private:
   // This class computes average and standard deviation, it returns an
@@ -209,6 +255,7 @@ class CachePerfStats {
   static uint32_t sCacheNotSlowCnt;
 };
 
+<<<<<<< HEAD
 void FreeBuffer(void *aBuf);
 
 nsresult ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset,
@@ -220,5 +267,48 @@ void BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset,
 }  // namespace CacheFileUtils
 }  // namespace net
 }  // namespace mozilla
+||||||| merged common ancestors
+void
+FreeBuffer(void *aBuf);
+
+nsresult
+ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset, nsACString *_type);
+
+void
+BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset, nsACString &_retval);
+
+} // namespace CacheFileUtils
+} // namespace net
+} // namespace mozilla
+=======
+void FreeBuffer(void* aBuf);
+
+nsresult ParseAlternativeDataInfo(const char* aInfo, int64_t* _offset,
+                                  nsACString* _type);
+
+void BuildAlternativeDataInfo(const char* aInfo, int64_t aOffset,
+                              nsACString& _retval);
+
+// Parses base domain access info. If the info cannot be parsed (e.g. it's
+// corrupted or it's invalid because aTrID has changed) an error is thrown.
+// If aSearchSiteID is null, then the whole string is parsed and number of sites
+// in the info is returned in _count.
+// If aSearchSiteID is passed, then _count argument is ignored. It only searches
+// siteID in the info and returns the result in _found.
+nsresult ParseBaseDomainAccessInfo(const char* aInfo, uint32_t aTrID,
+                                   const uint32_t* aSearchSiteID, bool* _found,
+                                   uint16_t* _count);
+
+// If aOldInfo is null then new base domain access info containing aSiteID is
+// built. If an old base domain access info is passed in aOldInfo, then only
+// aSiteID is appended to it. Note that this function doesn't parse the old base
+// domain info, i.e. it assumes that it's valid and it doesn't contain aSiteID.
+void BuildOrAppendBaseDomainAccessInfo(const char* aOldInfo, uint32_t aTrID,
+                                       uint32_t aSiteID, nsACString& _retval);
+
+}  // namespace CacheFileUtils
+}  // namespace net
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif

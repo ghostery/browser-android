@@ -72,14 +72,34 @@ void Connection::Update(ConnectionType aType, bool aIsWifi,
   }
 }
 
+<<<<<<< HEAD
 /* static */ Connection* Connection::CreateForWindow(
     nsPIDOMWindowInner* aWindow) {
+||||||| merged common ancestors
+/* static */ Connection*
+Connection::CreateForWindow(nsPIDOMWindowInner* aWindow)
+{
+=======
+/* static */
+Connection* Connection::CreateForWindow(nsPIDOMWindowInner* aWindow) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWindow);
   return new ConnectionMainThread(aWindow);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Connection> Connection::CreateForWorker(
     WorkerPrivate* aWorkerPrivate, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Connection>
+Connection::CreateForWorker(WorkerPrivate* aWorkerPrivate,
+                            ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Connection> Connection::CreateForWorker(
+    WorkerPrivate* aWorkerPrivate, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   aWorkerPrivate->AssertIsOnWorkerThread();
   return ConnectionWorker::Create(aWorkerPrivate, aRv);

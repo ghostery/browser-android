@@ -20,8 +20,16 @@
 #include "nsThreadUtils.h"
 
 #ifdef MOZ_WIDGET_ANDROID
+<<<<<<< HEAD
 #include "nsIPropertyBag2.h"
 #endif  // MOZ_WIDGET_ANDROID
+||||||| merged common ancestors
+#include "nsIPropertyBag2.h"
+#endif // MOZ_WIDGET_ANDROID
+=======
+#  include "nsIPropertyBag2.h"
+#endif  // MOZ_WIDGET_ANDROID
+>>>>>>> upstream-releases
 
 #define PREF_PRESENTATION_DISCOVERY "dom.presentation.discovery.enabled"
 #define PREF_PRESENTATION_DISCOVERY_TIMEOUT_MS \
@@ -109,7 +117,17 @@ NS_IMPL_ISUPPORTS(MulticastDNSDeviceProvider, nsIPresentationDeviceProvider,
                   nsIDNSServiceResolveListener,
                   nsIPresentationControlServerListener, nsIObserver)
 
+<<<<<<< HEAD
 MulticastDNSDeviceProvider::~MulticastDNSDeviceProvider() { Uninit(); }
+||||||| merged common ancestors
+MulticastDNSDeviceProvider::~MulticastDNSDeviceProvider()
+{
+  Uninit();
+}
+=======
+MulticastDNSDeviceProvider::MulticastDNSDeviceProvider() {}
+MulticastDNSDeviceProvider::~MulticastDNSDeviceProvider() { Uninit(); }
+>>>>>>> upstream-releases
 
 nsresult MulticastDNSDeviceProvider::Init() {
   MOZ_ASSERT(NS_IsMainThread());

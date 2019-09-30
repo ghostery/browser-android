@@ -7,8 +7,8 @@
 #include "WindowNamedPropertiesHandler.h"
 #include "mozilla/dom/EventTargetBinding.h"
 #include "mozilla/dom/WindowBinding.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "nsContentUtils.h"
-#include "nsDOMWindowList.h"
 #include "nsGlobalWindow.h"
 #include "nsHTMLDocument.h"
 #include "nsJSUtils.h"
@@ -17,17 +17,28 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 static bool ShouldExposeChildWindow(nsString& aNameBeingResolved,
                                     nsPIDOMWindowOuter* aChild) {
   Element* e = aChild->GetFrameElementInternal();
+||||||| merged common ancestors
+static bool
+ShouldExposeChildWindow(nsString& aNameBeingResolved, nsPIDOMWindowOuter* aChild)
+{
+  Element* e = aChild->GetFrameElementInternal();
+=======
+static bool ShouldExposeChildWindow(const nsString& aNameBeingResolved,
+                                    BrowsingContext* aChild) {
+  Element* e = aChild->GetEmbedderElement();
+>>>>>>> upstream-releases
   if (e && e->IsInShadowTree()) {
     return false;
   }
 
   // If we're same-origin with the child, go ahead and expose it.
-  nsCOMPtr<nsIScriptObjectPrincipal> sop = do_QueryInterface(aChild);
-  NS_ENSURE_TRUE(sop, false);
-  if (nsContentUtils::SubjectPrincipal()->Equals(sop->GetPrincipal())) {
+  nsPIDOMWindowOuter* child = aChild->GetDOMWindow();
+  nsCOMPtr<nsIScriptObjectPrincipal> sop = do_QueryInterface(child);
+  if (sop && nsContentUtils::SubjectPrincipal()->Equals(sop->GetPrincipal())) {
     return true;
   }
 
@@ -100,13 +111,13 @@ bool WindowNamedPropertiesHandler::getOwnPropDescriptor(
   // Grab the DOM window.
   nsGlobalWindowInner* win = xpc::WindowGlobalOrNull(aProxy);
   if (win->Length() > 0) {
-    nsCOMPtr<nsPIDOMWindowOuter> childWin = win->GetChildWindow(str);
-    if (childWin && ShouldExposeChildWindow(str, childWin)) {
+    RefPtr<BrowsingContext> child = win->GetChildWindow(str);
+    if (child && ShouldExposeChildWindow(str, child)) {
       // We found a subframe of the right name. Shadowing via |var foo| in
       // global scope is still allowed, since |var| only looks up |own|
       // properties. But unqualified shadowing will fail, per-spec.
       JS::Rooted<JS::Value> v(aCx);
-      if (!ToJSValue(aCx, nsGlobalWindowOuter::Cast(childWin), &v)) {
+      if (!ToJSValue(aCx, WindowProxyHolder(child.forget()), &v)) {
         return false;
       }
       FillPropertyDescriptor(aDesc, aProxy, 0, v);
@@ -115,11 +126,11 @@ bool WindowNamedPropertiesHandler::getOwnPropDescriptor(
   }
 
   // The rest of this function is for HTML documents only.
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(win->GetExtantDoc());
-  if (!htmlDoc) {
+  Document* doc = win->GetExtantDoc();
+  if (!doc || !doc->IsHTMLOrXHTML()) {
     return true;
   }
-  nsHTMLDocument* document = static_cast<nsHTMLDocument*>(htmlDoc.get());
+  nsHTMLDocument* document = doc->AsHTMLDocument();
 
   JS::Rooted<JS::Value> v(aCx);
   Element* element = document->GetElementById(str);
@@ -153,9 +164,22 @@ bool WindowNamedPropertiesHandler::defineProperty(
   return false;
 }
 
+<<<<<<< HEAD
 bool WindowNamedPropertiesHandler::ownPropNames(
     JSContext* aCx, JS::Handle<JSObject*> aProxy, unsigned flags,
     JS::AutoIdVector& aProps) const {
+||||||| merged common ancestors
+bool
+WindowNamedPropertiesHandler::ownPropNames(JSContext* aCx,
+                                           JS::Handle<JSObject*> aProxy,
+                                           unsigned flags,
+                                           JS::AutoIdVector& aProps) const
+{
+=======
+bool WindowNamedPropertiesHandler::ownPropNames(
+    JSContext* aCx, JS::Handle<JSObject*> aProxy, unsigned flags,
+    JS::MutableHandleVector<jsid> aProps) const {
+>>>>>>> upstream-releases
   if (!(flags & JSITER_HIDDEN)) {
     // None of our named properties are enumerable.
     return true;
@@ -167,6 +191,7 @@ bool WindowNamedPropertiesHandler::ownPropNames(
   // The names live on the outer window, which might be null
   nsGlobalWindowOuter* outer = win->GetOuterWindowInternal();
   if (outer) {
+<<<<<<< HEAD
     nsDOMWindowList* childWindows = outer->GetFrames();
     if (childWindows) {
       uint32_t length = childWindows->GetLength();
@@ -181,9 +206,29 @@ bool WindowNamedPropertiesHandler::ownPropNames(
         nsString name;
         item->GetName(name);
         if (!names.Contains(name)) {
+||||||| merged common ancestors
+    nsDOMWindowList* childWindows = outer->GetFrames();
+    if (childWindows) {
+      uint32_t length = childWindows->GetLength();
+      for (uint32_t i = 0; i < length; ++i) {
+        nsCOMPtr<nsIDocShellTreeItem> item =
+          childWindows->GetDocShellTreeItemAt(i);
+        // This is a bit silly, since we could presumably just do
+        // item->GetWindow().  But it's not obvious whether this does the same
+        // thing as GetChildWindow() with the item's name (due to the complexity
+        // of FindChildWithName).  Since GetChildWindow is what we use in
+        // getOwnPropDescriptor, let's try to be consistent.
+        nsString name;
+        item->GetName(name);
+        if (!names.Contains(name)) {
+=======
+    if (BrowsingContext* bc = outer->GetBrowsingContext()) {
+      for (const auto& child : bc->GetChildren()) {
+        const nsString& name = child->Name();
+        if (!name.IsEmpty() && !names.Contains(name)) {
+>>>>>>> upstream-releases
           // Make sure we really would expose it from getOwnPropDescriptor.
-          nsCOMPtr<nsPIDOMWindowOuter> childWin = win->GetChildWindow(name);
-          if (childWin && ShouldExposeChildWindow(name, childWin)) {
+          if (ShouldExposeChildWindow(name, child)) {
             names.AppendElement(name);
           }
         }
@@ -195,17 +240,17 @@ bool WindowNamedPropertiesHandler::ownPropNames(
   }
 
   names.Clear();
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(win->GetExtantDoc());
-  if (!htmlDoc) {
+  Document* doc = win->GetExtantDoc();
+  if (!doc || !doc->IsHTMLOrXHTML()) {
     return true;
   }
-  nsHTMLDocument* document = static_cast<nsHTMLDocument*>(htmlDoc.get());
+  nsHTMLDocument* document = doc->AsHTMLDocument();
   // Document names are enumerable, so we want to get them no matter what flags
   // is.
   document->GetSupportedNames(names);
 
-  JS::AutoIdVector docProps(aCx);
-  if (!AppendNamedPropertyIds(aCx, aProxy, names, false, docProps)) {
+  JS::RootedVector<jsid> docProps(aCx);
+  if (!AppendNamedPropertyIds(aCx, aProxy, names, false, &docProps)) {
     return false;
   }
 

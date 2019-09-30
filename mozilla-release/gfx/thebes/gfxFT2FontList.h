@@ -70,10 +70,24 @@ class FT2FontEntry : public gfxFontEntry {
 
   nsresult ReadCMAP(FontInfoData* aFontInfoData = nullptr) override;
 
+<<<<<<< HEAD
   virtual hb_blob_t* GetFontTable(uint32_t aTableTag) override;
+||||||| merged common ancestors
+    virtual hb_blob_t* GetFontTable(uint32_t aTableTag) override;
+=======
+  hb_blob_t* GetFontTable(uint32_t aTableTag) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult CopyFontTable(uint32_t aTableTag,
                                  nsTArray<uint8_t>& aBuffer) override;
+||||||| merged common ancestors
+    virtual nsresult CopyFontTable(uint32_t aTableTag,
+                                   nsTArray<uint8_t>& aBuffer) override;
+=======
+  nsresult CopyFontTable(uint32_t aTableTag,
+                         nsTArray<uint8_t>& aBuffer) override;
+>>>>>>> upstream-releases
 
   bool HasVariations() override;
   void GetVariationAxes(
@@ -87,10 +101,22 @@ class FT2FontEntry : public gfxFontEntry {
 
   FT_MM_Var* GetMMVar() override;
 
+<<<<<<< HEAD
   virtual void AddSizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf,
                                       FontListSizes* aSizes) const override;
   virtual void AddSizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf,
                                       FontListSizes* aSizes) const override;
+||||||| merged common ancestors
+    virtual void AddSizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf,
+                                        FontListSizes* aSizes) const override;
+    virtual void AddSizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf,
+                                        FontListSizes* aSizes) const override;
+=======
+  void AddSizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf,
+                              FontListSizes* aSizes) const override;
+  void AddSizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf,
+                              FontListSizes* aSizes) const override;
+>>>>>>> upstream-releases
 
   FT_Face mFTFace;
   cairo_font_face_t* mFontFace;
@@ -120,66 +146,237 @@ class gfxFT2FontList : public gfxPlatformFontList {
   gfxFT2FontList();
   virtual ~gfxFT2FontList();
 
+<<<<<<< HEAD
   virtual gfxFontEntry* LookupLocalFont(
       const nsACString& aFontName, WeightRange aWeightForEntry,
       StretchRange aStretchForEntry, SlantStyleRange aStyleForEntry) override;
+||||||| merged common ancestors
+    virtual gfxFontEntry* LookupLocalFont(const nsACString& aFontName,
+                                          WeightRange aWeightForEntry,
+                                          StretchRange aStretchForEntry,
+                                          SlantStyleRange aStyleForEntry) override;
+=======
+  gfxFontEntry* LookupLocalFont(const nsACString& aFontName,
+                                WeightRange aWeightForEntry,
+                                StretchRange aStretchForEntry,
+                                SlantStyleRange aStyleForEntry) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual gfxFontEntry* MakePlatformFont(const nsACString& aFontName,
                                          WeightRange aWeightForEntry,
                                          StretchRange aStretchForEntry,
                                          SlantStyleRange aStyleForEntry,
                                          const uint8_t* aFontData,
                                          uint32_t aLength) override;
+||||||| merged common ancestors
+    virtual gfxFontEntry* MakePlatformFont(const nsACString& aFontName,
+                                           WeightRange aWeightForEntry,
+                                           StretchRange aStretchForEntry,
+                                           SlantStyleRange aStyleForEntry,
+                                           const uint8_t* aFontData,
+                                           uint32_t aLength) override;
+=======
+  gfxFontEntry* MakePlatformFont(const nsACString& aFontName,
+                                 WeightRange aWeightForEntry,
+                                 StretchRange aStretchForEntry,
+                                 SlantStyleRange aStyleForEntry,
+                                 const uint8_t* aFontData,
+                                 uint32_t aLength) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void GetSystemFontList(InfallibleTArray<FontListEntry>* retValue);
+||||||| merged common ancestors
+    void GetSystemFontList(InfallibleTArray<FontListEntry>* retValue);
+=======
+  void WriteCache();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static gfxFT2FontList* PlatformFontList() {
     return static_cast<gfxFT2FontList*>(
         gfxPlatformFontList::PlatformFontList());
   }
+||||||| merged common ancestors
+    static gfxFT2FontList* PlatformFontList() {
+        return static_cast<gfxFT2FontList*>(gfxPlatformFontList::PlatformFontList());
+    }
+=======
+  void GetSystemFontList(InfallibleTArray<FontListEntry>* retValue);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void GetFontFamilyList(
       nsTArray<RefPtr<gfxFontFamily> >& aFamilyArray) override;
+||||||| merged common ancestors
+    virtual void GetFontFamilyList(nsTArray<RefPtr<gfxFontFamily> >& aFamilyArray) override;
+=======
+  static gfxFT2FontList* PlatformFontList() {
+    return static_cast<gfxFT2FontList*>(
+        gfxPlatformFontList::PlatformFontList());
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   gfxFontFamily* CreateFontFamily(const nsACString& aName) const override;
+||||||| merged common ancestors
+    gfxFontFamily* CreateFontFamily(const nsACString& aName) const override;
+=======
+  void GetFontFamilyList(
+      nsTArray<RefPtr<gfxFontFamily> >& aFamilyArray) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void WillShutdown();
+||||||| merged common ancestors
+    void WillShutdown();
+=======
+  gfxFontFamily* CreateFontFamily(const nsACString& aName) const override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   typedef enum { kUnknown, kStandard } StandardFile;
+||||||| merged common ancestors
+protected:
+    typedef enum {
+        kUnknown,
+        kStandard
+    } StandardFile;
+=======
+  void WillShutdown();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // initialize font lists
   virtual nsresult InitFontListForPlatform() override;
+||||||| merged common ancestors
+    // initialize font lists
+    virtual nsresult InitFontListForPlatform() override;
+=======
+ protected:
+  typedef enum { kUnknown, kStandard } StandardFile;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void AppendFaceFromFontListEntry(const FontListEntry& aFLE,
                                    StandardFile aStdFile);
+||||||| merged common ancestors
+    void AppendFaceFromFontListEntry(const FontListEntry& aFLE,
+                                     StandardFile aStdFile);
+=======
+  // initialize font lists
+  nsresult InitFontListForPlatform() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void AppendFacesFromFontFile(const nsCString& aFileName,
                                FontNameCache* aCache, StandardFile aStdFile);
+||||||| merged common ancestors
+    void AppendFacesFromFontFile(const nsCString& aFileName,
+                                 FontNameCache *aCache,
+                                 StandardFile aStdFile);
+=======
+  void AppendFaceFromFontListEntry(const FontListEntry& aFLE,
+                                   StandardFile aStdFile);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void AppendFacesFromOmnijarEntry(nsZipArchive* aReader,
                                    const nsCString& aEntryName,
                                    FontNameCache* aCache, bool aJarChanged);
+||||||| merged common ancestors
+    void AppendFacesFromOmnijarEntry(nsZipArchive *aReader,
+                                     const nsCString& aEntryName,
+                                     FontNameCache *aCache,
+                                     bool aJarChanged);
+=======
+  void AppendFacesFromFontFile(const nsCString& aFileName,
+                               FontNameCache* aCache, StandardFile aStdFile);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // the defaults here are suitable for reading bundled fonts from omnijar
   void AppendFacesFromCachedFaceList(const nsCString& aFileName,
                                      const nsCString& aFaceList,
                                      StandardFile aStdFile = kStandard);
+||||||| merged common ancestors
+    // the defaults here are suitable for reading bundled fonts from omnijar
+    void AppendFacesFromCachedFaceList(const nsCString& aFileName,
+                                       const nsCString& aFaceList,
+                                       StandardFile aStdFile = kStandard);
+=======
+  void AppendFacesFromOmnijarEntry(nsZipArchive* aReader,
+                                   const nsCString& aEntryName,
+                                   FontNameCache* aCache, bool aJarChanged);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void AddFaceToList(const nsCString& aEntryName, uint32_t aIndex,
                      StandardFile aStdFile, FT_Face aFace,
                      nsCString& aFaceList);
+||||||| merged common ancestors
+    void AddFaceToList(const nsCString& aEntryName, uint32_t aIndex,
+                       StandardFile aStdFile,
+                       FT_Face aFace, nsCString& aFaceList);
+=======
+  // the defaults here are suitable for reading bundled fonts from omnijar
+  void AppendFacesFromCachedFaceList(const nsCString& aFileName,
+                                     const nsCString& aFaceList,
+                                     StandardFile aStdFile = kStandard);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void FindFonts();
+||||||| merged common ancestors
+    void FindFonts();
+=======
+  void AddFaceToList(const nsCString& aEntryName, uint32_t aIndex,
+                     StandardFile aStdFile, FT_Face aFace,
+                     nsCString& aFaceList);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void FindFontsInOmnijar(FontNameCache* aCache);
+||||||| merged common ancestors
+    void FindFontsInOmnijar(FontNameCache *aCache);
+=======
+  void FindFonts();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void FindFontsInDir(const nsCString& aDir, FontNameCache* aFNC);
+||||||| merged common ancestors
+    void FindFontsInDir(const nsCString& aDir, FontNameCache* aFNC);
+=======
+  void FindFontsInOmnijar(FontNameCache* aCache);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual gfxFontFamily* GetDefaultFontForPlatform(
       const gfxFontStyle* aStyle) override;
+||||||| merged common ancestors
+    virtual gfxFontFamily*
+    GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
+=======
+  void FindFontsInDir(const nsCString& aDir, FontNameCache* aFNC);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsTHashtable<nsCStringHashKey> mSkipSpaceLookupCheckFamilies;
+||||||| merged common ancestors
+    nsTHashtable<nsCStringHashKey> mSkipSpaceLookupCheckFamilies;
+
+private:
+    mozilla::UniquePtr<FontNameCache> mFontNameCache;
+    int64_t mJarModifiedTime;
+    RefPtr<WillShutdownObserver> mObserver;
+=======
+  FontFamily GetDefaultFontForPlatform(const gfxFontStyle* aStyle) override;
 
   nsTHashtable<nsCStringHashKey> mSkipSpaceLookupCheckFamilies;
+>>>>>>> upstream-releases
 
  private:
   mozilla::UniquePtr<FontNameCache> mFontNameCache;

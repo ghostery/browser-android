@@ -40,6 +40,7 @@ Layout::CType HCodeGenerator::ParameterCType(const Context& context, const Type&
                                      const Layout& layout) {
     if (layout.fCType != Layout::CType::kDefault) {
         return layout.fCType;
+<<<<<<< HEAD
     }
     if (type == *context.fFloat_Type || type == *context.fHalf_Type) {
         return Layout::CType::kFloat;
@@ -47,6 +48,20 @@ Layout::CType HCodeGenerator::ParameterCType(const Context& context, const Type&
                type == *context.fShort_Type ||
                type == *context.fByte_Type) {
         return Layout::CType::kInt32;
+||||||| merged common ancestors
+    } else if (type == *context.fFloat_Type || type == *context.fHalf_Type) {
+        return "float";
+=======
+    }
+    if (type.kind() == Type::kNullable_Kind) {
+        return ParameterCType(context, type.componentType(), layout);
+    } else if (type == *context.fFloat_Type || type == *context.fHalf_Type) {
+        return Layout::CType::kFloat;
+    } else if (type == *context.fInt_Type ||
+               type == *context.fShort_Type ||
+               type == *context.fByte_Type) {
+        return Layout::CType::kInt32;
+>>>>>>> upstream-releases
     } else if (type == *context.fFloat2_Type || type == *context.fHalf2_Type) {
         return Layout::CType::kSkPoint;
     } else if (type == *context.fInt2_Type ||
@@ -110,6 +125,7 @@ void HCodeGenerator::writef(const char* s, va_list va) {
         vsprintf(heap.get(), s, copy);
         fOut->write(heap.get(), length);
     }
+    va_end(copy);
 }
 
 void HCodeGenerator::writef(const char* s, ...) {
@@ -188,7 +204,7 @@ void HCodeGenerator::writeMake() {
                      fFullName.c_str());
         separator = "";
         for (const auto& param : fSectionAndParameterHelper.getParameters()) {
-            if (param->fType == *fContext.fFragmentProcessor_Type) {
+            if (param->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
                 this->writef("%sstd::move(%s)", separator, String(param->fName).c_str());
             } else {
                 this->writef("%s%s", separator, String(param->fName).c_str());
@@ -236,7 +252,8 @@ void HCodeGenerator::writeConstructor() {
     for (const auto& param : fSectionAndParameterHelper.getParameters()) {
         String nameString(param->fName);
         const char* name = nameString.c_str();
-        if (param->fType.kind() == Type::kSampler_Kind) {
+        const Type& type = param->fType.nonnullable();
+        if (type.kind() == Type::kSampler_Kind) {
             this->writef("\n    , %s(std::move(%s)", FieldName(name).c_str(), name);
             for (const Section* s : fSectionAndParameterHelper.getSections(
                                                                           SAMPLER_PARAMS_SECTION)) {
@@ -245,7 +262,7 @@ void HCodeGenerator::writeConstructor() {
                 }
             }
             this->writef(")");
-        } else if (param->fType == *fContext.fFragmentProcessor_Type) {
+        } else if (type == *fContext.fFragmentProcessor_Type) {
             // do nothing
         } else {
             this->writef("\n    , %s(%s)", FieldName(name).c_str(), name);
@@ -268,10 +285,31 @@ void HCodeGenerator::writeConstructor() {
     int samplerCount = 0;
     for (const auto& param : fSectionAndParameterHelper.getParameters()) {
         if (param->fType.kind() == Type::kSampler_Kind) {
+<<<<<<< HEAD
             ++samplerCount;
         } else if (param->fType == *fContext.fFragmentProcessor_Type) {
             this->writef("        this->registerChildProcessor(std::move(%s));",
+||||||| merged common ancestors
+            this->writef("        this->addTextureSampler(&%s);\n",
+                         FieldName(String(param->fName).c_str()).c_str());
+        } else if (param->fType == *fContext.fFragmentProcessor_Type) {
+            this->writef("        this->registerChildProcessor(std::move(%s));",
+=======
+            ++samplerCount;
+        } else if (param->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
+            if (param->fType.kind() == Type::kNullable_Kind) {
+                this->writef("        if (%s) {\n", String(param->fName).c_str());
+            } else {
+                this->writef("        SkASSERT(%s);", String(param->fName).c_str());
+            }
+            this->writef("            %s_index = this->numChildProcessors();",
+                         FieldName(String(param->fName).c_str()).c_str());
+            this->writef("            this->registerChildProcessor(std::move(%s));",
+>>>>>>> upstream-releases
                          String(param->fName).c_str());
+            if (param->fType.kind() == Type::kNullable_Kind) {
+                this->writef("       }");
+            }
         }
     }
     if (samplerCount) {
@@ -288,12 +326,14 @@ void HCodeGenerator::writeConstructor() {
 void HCodeGenerator::writeFields() {
     this->writeSection(FIELDS_SECTION);
     for (const auto& param : fSectionAndParameterHelper.getParameters()) {
-        if (param->fType == *fContext.fFragmentProcessor_Type) {
-            continue;
+        String name = FieldName(String(param->fName).c_str());
+        if (param->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
+            this->writef("    int %s_index = -1;\n", name.c_str());
+        } else {
+            this->writef("    %s %s;\n", FieldType(fContext, param->fType,
+                                                   param->fModifiers.fLayout).c_str(),
+                                         name.c_str());
         }
-        this->writef("    %s %s;\n", FieldType(fContext, param->fType,
-                                               param->fModifiers.fLayout).c_str(),
-                     FieldName(String(param->fName).c_str()).c_str());
     }
     const auto transforms = fSectionAndParameterHelper.getSections(COORD_TRANSFORM_SECTION);
     for (size_t i = 0; i < transforms.size(); ++i) {
@@ -340,15 +380,29 @@ bool HCodeGenerator::generateCode() {
     }
     this->writeSection(CLASS_SECTION);
     for (const auto& param : fSectionAndParameterHelper.getParameters()) {
-        if (param->fType.kind() == Type::kSampler_Kind ||
-            param->fType.kind() == Type::kOther_Kind) {
+        if (param->fType.kind() == Type::kSampler_Kind) {
             continue;
         }
         String nameString(param->fName);
         const char* name = nameString.c_str();
+<<<<<<< HEAD
         this->writef("    %s %s() const { return %s; }\n",
                      AccessType(fContext, param->fType, param->fModifiers.fLayout).c_str(), name,
                      FieldName(name).c_str());
+||||||| merged common ancestors
+        this->writef("    %s %s() const { return %s; }\n",
+                     FieldType(fContext, param->fType, param->fModifiers.fLayout).c_str(), name,
+                     FieldName(name).c_str());
+=======
+        if (param->fType.nonnullable() == *fContext.fFragmentProcessor_Type) {
+            this->writef("    int %s_index() const { return %s_index; }\n", name,
+                         FieldName(name).c_str());
+        } else {
+            this->writef("    %s %s() const { return %s; }\n",
+                         AccessType(fContext, param->fType, param->fModifiers.fLayout).c_str(),
+                         name, FieldName(name).c_str());
+        }
+>>>>>>> upstream-releases
     }
     this->writeMake();
     this->writef("    %s(const %s& src);\n"

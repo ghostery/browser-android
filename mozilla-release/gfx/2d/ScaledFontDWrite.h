@@ -22,6 +22,7 @@ class UnscaledFontDWrite;
 class ScaledFontDWrite final : public ScaledFontBase {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(ScaledFontDWrite, override)
+<<<<<<< HEAD
   ScaledFontDWrite(IDWriteFontFace* aFont,
                    const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize)
       : ScaledFontBase(aUnscaledFont, aSize),
@@ -36,6 +37,45 @@ class ScaledFontDWrite final : public ScaledFontBase {
                    bool aUseEmbeddedBitmap, bool aForceGDIMode,
                    IDWriteRenderingParams* aParams, Float aGamma,
                    Float aContrast, const gfxFontStyle* aStyle = nullptr);
+||||||| merged common ancestors
+  ScaledFontDWrite(IDWriteFontFace *aFont,
+                   const RefPtr<UnscaledFont>& aUnscaledFont,
+                   Float aSize)
+    : ScaledFontBase(aUnscaledFont, aSize)
+    , mFontFace(aFont)
+    , mUseEmbeddedBitmap(false)
+    , mForceGDIMode(false)
+    , mGamma(2.2f)
+    , mContrast(1.0f)
+  {}
+
+  ScaledFontDWrite(IDWriteFontFace *aFontFace,
+                   const RefPtr<UnscaledFont>& aUnscaledFont,
+                   Float aSize,
+                   bool aUseEmbeddedBitmap,
+                   bool aForceGDIMode,
+                   IDWriteRenderingParams *aParams,
+                   Float aGamma,
+                   Float aContrast,
+                   const gfxFontStyle* aStyle = nullptr);
+=======
+  ScaledFontDWrite(IDWriteFontFace* aFont,
+                   const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize)
+      : ScaledFontBase(aUnscaledFont, aSize),
+        mFontFace(aFont),
+        mUseEmbeddedBitmap(false),
+        mRenderingMode(DWRITE_RENDERING_MODE_DEFAULT),
+        mGamma(2.2f),
+        mContrast(1.0f) {}
+
+  ScaledFontDWrite(IDWriteFontFace* aFontFace,
+                   const RefPtr<UnscaledFont>& aUnscaledFont, Float aSize,
+                   bool aUseEmbeddedBitmap,
+                   DWRITE_RENDERING_MODE aRenderingMode,
+                   IDWriteRenderingParams* aParams,
+                   Float aGamma, Float aContrast,
+                   const gfxFontStyle* aStyle = nullptr);
+>>>>>>> upstream-releases
 
   FontType GetType() const override { return FontType::DWRITE; }
 
@@ -44,7 +84,14 @@ class ScaledFontDWrite final : public ScaledFontBase {
   void CopyGlyphsToBuilder(const GlyphBuffer& aBuffer, PathBuilder* aBuilder,
                            const Matrix* aTransformHint) override;
 
+<<<<<<< HEAD
   void CopyGlyphsToSink(const GlyphBuffer& aBuffer, ID2D1GeometrySink* aSink);
+||||||| merged common ancestors
+  void CopyGlyphsToSink(const GlyphBuffer &aBuffer, ID2D1GeometrySink *aSink);
+=======
+  void CopyGlyphsToSink(const GlyphBuffer& aBuffer,
+                        ID2D1SimplifiedGeometrySink* aSink);
+>>>>>>> upstream-releases
 
   void GetGlyphDesignMetrics(const uint16_t* aGlyphIndices, uint32_t aNumGlyphs,
                              GlyphMetrics* aGlyphMetrics) override;
@@ -60,8 +107,9 @@ class ScaledFontDWrite final : public ScaledFontBase {
 
   AntialiasMode GetDefaultAAMode() override;
 
-  bool UseEmbeddedBitmaps() { return mUseEmbeddedBitmap; }
-  bool ForceGDIMode() { return mForceGDIMode; }
+  bool UseEmbeddedBitmaps() const { return mUseEmbeddedBitmap; }
+  bool ForceGDIMode() const { return mRenderingMode == DWRITE_RENDERING_MODE_GDI_CLASSIC; }
+  DWRITE_RENDERING_MODE GetRenderingMode() const { return mRenderingMode; }
 
 #ifdef USE_SKIA
   SkTypeface* CreateSkTypeface() override;
@@ -70,7 +118,7 @@ class ScaledFontDWrite final : public ScaledFontBase {
 
   RefPtr<IDWriteFontFace> mFontFace;
   bool mUseEmbeddedBitmap;
-  bool mForceGDIMode;
+  DWRITE_RENDERING_MODE mRenderingMode;
   // DrawTargetD2D1 requires the IDWriteRenderingParams,
   // but we also separately need to store the gamma and contrast
   // since Skia needs to be able to access these without having
@@ -92,16 +140,29 @@ class ScaledFontDWrite final : public ScaledFontBase {
 
   struct InstanceData {
     explicit InstanceData(ScaledFontDWrite* aScaledFont)
+<<<<<<< HEAD
         : mUseEmbeddedBitmap(aScaledFont->mUseEmbeddedBitmap),
           mForceGDIMode(aScaledFont->mForceGDIMode),
           mGamma(aScaledFont->mGamma),
           mContrast(aScaledFont->mContrast) {}
+||||||| merged common ancestors
+      : mUseEmbeddedBitmap(aScaledFont->mUseEmbeddedBitmap)
+      , mForceGDIMode(aScaledFont->mForceGDIMode)
+      , mGamma(aScaledFont->mGamma)
+      , mContrast(aScaledFont->mContrast)
+    {}
+=======
+        : mUseEmbeddedBitmap(aScaledFont->mUseEmbeddedBitmap),
+          mRenderingMode(aScaledFont->mRenderingMode),
+          mGamma(aScaledFont->mGamma),
+          mContrast(aScaledFont->mContrast) {}
+>>>>>>> upstream-releases
 
     InstanceData(const wr::FontInstanceOptions* aOptions,
                  const wr::FontInstancePlatformOptions* aPlatformOptions);
 
     bool mUseEmbeddedBitmap;
-    bool mForceGDIMode;
+    DWRITE_RENDERING_MODE mRenderingMode;
     Float mGamma;
     Float mContrast;
   };

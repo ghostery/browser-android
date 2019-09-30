@@ -7,6 +7,7 @@
 #define dtls_identity_h__
 
 #include <string>
+#include <vector>
 
 #include "m_cpp_utils.h"
 #include "mozilla/Move.h"
@@ -14,20 +15,64 @@
 #include "nsISupportsImpl.h"
 #include "ScopedNSSTypes.h"
 #include "sslt.h"
+#include "nsTArray.h"
 
 // All code in this module requires NSS to be live.
 // Callers must initialize NSS and implement the nsNSSShutdownObject
 // protocol.
 namespace mozilla {
 
+class DtlsDigest {
+ public:
+  const static size_t kMaxDtlsDigestLength = HASH_LENGTH_MAX;
+  DtlsDigest() = default;
+  explicit DtlsDigest(const std::string& algorithm) : algorithm_(algorithm) {}
+  DtlsDigest(const std::string& algorithm, const std::vector<uint8_t>& value)
+      : algorithm_(algorithm), value_(value) {
+    MOZ_ASSERT(value.size() <= kMaxDtlsDigestLength);
+  }
+  ~DtlsDigest() = default;
+
+  bool operator!=(const DtlsDigest& rhs) const { return !operator==(rhs); }
+
+  bool operator==(const DtlsDigest& rhs) const {
+    if (algorithm_ != rhs.algorithm_) {
+      return false;
+    }
+
+    return value_ == rhs.value_;
+  }
+
+  std::string algorithm_;
+  std::vector<uint8_t> value_;
+};
+
+typedef std::vector<DtlsDigest> DtlsDigestList;
+
 class DtlsIdentity final {
  public:
   // This constructor takes ownership of privkey and cert.
   DtlsIdentity(UniqueSECKEYPrivateKey privkey, UniqueCERTCertificate cert,
                SSLKEAType authType)
+<<<<<<< HEAD
       : private_key_(std::move(privkey)),
         cert_(std::move(cert)),
         auth_type_(authType) {}
+||||||| merged common ancestors
+      : private_key_(std::move(privkey)), cert_(std::move(cert)), auth_type_(authType) {}
+=======
+      : private_key_(std::move(privkey)),
+        cert_(std::move(cert)),
+        auth_type_(authType) {}
+
+  // Allows serialization/deserialization; cannot write IPC serialization code
+  // directly for DtlsIdentity, since IPC-able types need to be constructable
+  // on the stack.
+  nsresult Serialize(nsTArray<uint8_t>* aKeyDer, nsTArray<uint8_t>* aCertDer);
+  static RefPtr<DtlsIdentity> Deserialize(const nsTArray<uint8_t>& aKeyDer,
+                                          const nsTArray<uint8_t>& aCertDer,
+                                          SSLKEAType authType);
+>>>>>>> upstream-releases
 
   // This is only for use in tests, or for external linkage.  It makes a (bad)
   // instance of this class.
@@ -43,12 +88,28 @@ class DtlsIdentity final {
   // expected).
   SSLKEAType auth_type() const { return auth_type_; }
 
+<<<<<<< HEAD
   nsresult ComputeFingerprint(const std::string algorithm, uint8_t *digest,
                               size_t size, size_t *digest_length) const;
   static nsresult ComputeFingerprint(const UniqueCERTCertificate &cert,
                                      const std::string algorithm,
                                      uint8_t *digest, size_t size,
                                      size_t *digest_length);
+||||||| merged common ancestors
+  nsresult ComputeFingerprint(const std::string algorithm,
+                              uint8_t *digest,
+                              size_t size,
+                              size_t *digest_length) const;
+  static nsresult ComputeFingerprint(const UniqueCERTCertificate& cert,
+                                     const std::string algorithm,
+                                     uint8_t *digest,
+                                     size_t size,
+                                     size_t *digest_length);
+=======
+  nsresult ComputeFingerprint(DtlsDigest* digest) const;
+  static nsresult ComputeFingerprint(const UniqueCERTCertificate& cert,
+                                     DtlsDigest* digest);
+>>>>>>> upstream-releases
 
   static const std::string DEFAULT_HASH_ALGORITHM;
   enum { HASH_ALGORITHM_MAX_LENGTH = 64 };

@@ -9,9 +9,9 @@
 #include "nsIContentSink.h"
 #include "nsISupports.h"
 
-class nsIDocument;
 class nsIURI;
 class nsIChannel;
+<<<<<<< HEAD
 
 #define NS_IXMLCONTENT_SINK_IID                      \
   {                                                  \
@@ -19,6 +19,25 @@ class nsIChannel;
       0x9b, 0xa5, 0x37, 0xc6, 0x99, 0x73, 0x29, 0x35 \
     }                                                \
   }
+||||||| merged common ancestors
+
+#define NS_IXMLCONTENT_SINK_IID \
+ { 0x63fedea0, 0x9b0f, 0x4d64, \
+ { 0x9b, 0xa5, 0x37, 0xc6, 0x99, 0x73, 0x29, 0x35 } }
+=======
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
+
+#define NS_IXMLCONTENT_SINK_IID                      \
+  {                                                  \
+    0x63fedea0, 0x9b0f, 0x4d64, {                    \
+      0x9b, 0xa5, 0x37, 0xc6, 0x99, 0x73, 0x29, 0x35 \
+    }                                                \
+  }
+>>>>>>> upstream-releases
 
 /**
  * This interface represents a content sink for generic XML files.
@@ -50,8 +69,19 @@ class nsIXMLContentSink : public nsIContentSink {
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIXMLContentSink, NS_IXMLCONTENT_SINK_IID)
 
+<<<<<<< HEAD
 nsresult NS_NewXMLContentSink(nsIXMLContentSink** aInstancePtrResult,
                               nsIDocument* aDoc, nsIURI* aURL,
                               nsISupports* aContainer, nsIChannel* aChannel);
+||||||| merged common ancestors
+nsresult
+NS_NewXMLContentSink(nsIXMLContentSink** aInstancePtrResult, nsIDocument* aDoc,
+                     nsIURI* aURL, nsISupports* aContainer,
+                     nsIChannel *aChannel);
+=======
+nsresult NS_NewXMLContentSink(nsIXMLContentSink** aInstancePtrResult,
+                              mozilla::dom::Document* aDoc, nsIURI* aURL,
+                              nsISupports* aContainer, nsIChannel* aChannel);
+>>>>>>> upstream-releases
 
 #endif  // nsIXMLContentSink_h___

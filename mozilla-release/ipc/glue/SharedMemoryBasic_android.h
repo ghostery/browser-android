@@ -12,7 +12,7 @@
 #include "SharedMemory.h"
 
 #ifdef FUZZING
-#include "SharedMemoryFuzzer.h"
+#  include "SharedMemoryFuzzer.h"
 #endif
 
 //
@@ -32,7 +32,7 @@ class SharedMemoryBasic final
 
   virtual bool Create(size_t aNbytes) override;
 
-  virtual bool Map(size_t nBytes) override;
+  virtual bool Map(size_t nBytes, void* fixed_address = nullptr) override;
 
   virtual void CloseHandle() override;
 
@@ -46,7 +46,18 @@ class SharedMemoryBasic final
 
   virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
 
+<<<<<<< HEAD
   static Handle NULLHandle() { return Handle(); }
+||||||| merged common ancestors
+  static Handle NULLHandle()
+  {
+    return Handle();
+  }
+=======
+  static Handle NULLHandle() { return Handle(); }
+
+  static void* FindFreeAddressSpace(size_t aSize);
+>>>>>>> upstream-releases
 
   virtual bool IsHandleValid(const Handle& aHandle) const override {
     return aHandle.fd >= 0;

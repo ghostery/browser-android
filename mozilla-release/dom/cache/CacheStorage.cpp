@@ -20,6 +20,7 @@
 #include "mozilla/dom/cache/PCacheChild.h"
 #include "mozilla/dom/cache/ReadStream.h"
 #include "mozilla/dom/cache/TypeUtils.h"
+#include "mozilla/dom/quota/QuotaManager.h"
 #include "mozilla/dom/WorkerPrivate.h"
 #include "mozilla/ipc/BackgroundChild.h"
 #include "mozilla/ipc/BackgroundUtils.h"
@@ -27,7 +28,7 @@
 #include "mozilla/ipc/PBackgroundSharedTypes.h"
 #include "mozilla/StaticPrefs.h"
 #include "nsContentUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIGlobalObject.h"
 #include "nsIScriptSecurityManager.h"
 #include "nsURLParsers.h"
@@ -37,7 +38,13 @@ namespace dom {
 namespace cache {
 
 using mozilla::ErrorResult;
+<<<<<<< HEAD
 using mozilla::Unused;
+||||||| merged common ancestors
+=======
+using mozilla::Unused;
+using mozilla::dom::quota::QuotaManager;
+>>>>>>> upstream-releases
 using mozilla::ipc::BackgroundChild;
 using mozilla::ipc::IProtocol;
 using mozilla::ipc::PBackgroundChild;
@@ -151,10 +158,27 @@ already_AddRefed<CacheStorage> CacheStorage::CreateOnMainThread(
     return nullptr;
   }
 
+<<<<<<< HEAD
   bool testingEnabled =
       aForceTrustedOrigin ||
       Preferences::GetBool("dom.caches.testing.enabled", false) ||
       StaticPrefs::dom_serviceWorkers_testing_enabled();
+||||||| merged common ancestors
+  bool testingEnabled = aForceTrustedOrigin ||
+    Preferences::GetBool("dom.caches.testing.enabled", false) ||
+    StaticPrefs::dom_serviceWorkers_testing_enabled();
+=======
+  if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(principalInfo))) {
+    NS_WARNING("CacheStorage not supported on invalid origins.");
+    RefPtr<CacheStorage> ref = new CacheStorage(NS_ERROR_DOM_SECURITY_ERR);
+    return ref.forget();
+  }
+
+  bool testingEnabled =
+      aForceTrustedOrigin ||
+      Preferences::GetBool("dom.caches.testing.enabled", false) ||
+      StaticPrefs::dom_serviceWorkers_testing_enabled();
+>>>>>>> upstream-releases
 
   if (!IsTrusted(principalInfo, testingEnabled)) {
     NS_WARNING("CacheStorage not supported on untrusted origins.");
@@ -189,7 +213,13 @@ already_AddRefed<CacheStorage> CacheStorage::CreateOnWorker(
     return nullptr;
   }
 
-  const PrincipalInfo& principalInfo = aWorkerPrivate->GetPrincipalInfo();
+  const PrincipalInfo& principalInfo =
+      aWorkerPrivate->GetEffectiveStoragePrincipalInfo();
+
+  if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(principalInfo))) {
+    aRv.Throw(NS_ERROR_FAILURE);
+    return nullptr;
+  }
 
   // We have a number of cases where we want to skip the https scheme
   // validation:
@@ -465,7 +495,7 @@ already_AddRefed<CacheStorage> CacheStorage::Constructor(
 
   bool privateBrowsing = false;
   if (nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(global)) {
-    nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
+    RefPtr<Document> doc = window->GetExtantDoc();
     if (doc) {
       nsCOMPtr<nsILoadContext> loadContext = doc->GetLoadContext();
       privateBrowsing = loadContext && loadContext->UsePrivateBrowsing();
@@ -554,21 +584,35 @@ OpenMode CacheStorage::GetOpenMode() const {
 bool CacheStorage::HasStorageAccess() const {
   NS_ASSERT_OWNINGTHREAD(CacheStorage);
 
+  StorageAccess access;
+
   if (NS_IsMainThread()) {
     nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(mGlobal);
     if (NS_WARN_IF(!window)) {
       return true;
     }
 
+<<<<<<< HEAD
     nsContentUtils::StorageAccess access =
         nsContentUtils::StorageAllowedForWindow(window);
     return access > nsContentUtils::StorageAccess::ePrivateBrowsing;
   }
+||||||| merged common ancestors
+    nsContentUtils::StorageAccess access =
+      nsContentUtils::StorageAllowedForWindow(window);
+    return access > nsContentUtils::StorageAccess::ePrivateBrowsing;
+  }
+=======
+    access = StorageAllowedForWindow(window);
+  } else {
+    WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
+    MOZ_ASSERT(workerPrivate);
+>>>>>>> upstream-releases
 
-  WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
-  MOZ_ASSERT(workerPrivate);
+    access = workerPrivate->StorageAccess();
+  }
 
-  return workerPrivate->IsStorageAllowed();
+  return access > StorageAccess::ePrivateBrowsing;
 }
 
 }  // namespace cache

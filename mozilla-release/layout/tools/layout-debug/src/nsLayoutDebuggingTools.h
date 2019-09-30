@@ -22,9 +22,18 @@ class nsLayoutDebuggingTools : public nsILayoutDebuggingTools {
  protected:
   virtual ~nsLayoutDebuggingTools();
 
+<<<<<<< HEAD
   void ForceRefresh();
   nsresult GetBoolPref(const char *aPrefName, bool *aValue);
   nsresult SetBoolPrefAndRefresh(const char *aPrefName, bool aNewValue);
+||||||| merged common ancestors
+protected:
+    virtual ~nsLayoutDebuggingTools();
+=======
+  void ForceRefresh();
+  nsresult GetBoolPref(const char* aPrefName, bool* aValue);
+  nsresult SetBoolPrefAndRefresh(const char* aPrefName, bool aNewValue);
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIDocShell> mDocShell;
 

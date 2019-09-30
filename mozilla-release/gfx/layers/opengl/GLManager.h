@@ -7,8 +7,17 @@
 #ifndef MOZILLA_GFX_GLMANAGER_H
 #define MOZILLA_GFX_GLMANAGER_H
 
+<<<<<<< HEAD
 #include "mozilla/gfx/Types.h"  // for SurfaceFormat
 #include "OGLShaderProgram.h"
+||||||| merged common ancestors
+#include "mozilla/gfx/Types.h"          // for SurfaceFormat
+#include "OGLShaderProgram.h"
+=======
+#include "GLDefs.h"
+#include "mozilla/gfx/Types.h"  // for SurfaceFormat
+#include "mozilla/gfx/2D.h"
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace gl {
@@ -18,6 +27,7 @@ class GLContext;
 namespace layers {
 
 class LayerManagerComposite;
+class ShaderProgramOGL;
 
 /**
  * Minimal interface to allow widgets to draw using OpenGL. Abstracts
@@ -28,7 +38,7 @@ class GLManager {
  public:
   static GLManager* CreateGLManager(LayerManagerComposite* aManager);
 
-  virtual ~GLManager() {}
+  virtual ~GLManager() = default;
 
   virtual gl::GLContext* gl() const = 0;
   virtual ShaderProgramOGL* GetProgram(GLenum aTarget,

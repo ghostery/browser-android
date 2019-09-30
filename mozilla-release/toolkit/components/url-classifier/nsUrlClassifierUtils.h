@@ -5,6 +5,8 @@
 #ifndef nsUrlClassifierUtils_h_
 #define nsUrlClassifierUtils_h_
 
+#include "mozilla/Mutex.h"
+#include "mozilla/Base64.h"
 #include "nsIUrlClassifierUtils.h"
 #include "nsClassHashtable.h"
 #include "nsIObserver.h"
@@ -16,13 +18,12 @@ class nsUrlClassifierUtils final : public nsIUrlClassifierUtils,
  public:
   typedef nsClassHashtable<nsCStringHashKey, nsCString> ProviderDictType;
 
-  nsUrlClassifierUtils();
-
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIURLCLASSIFIERUTILS
   NS_DECL_NSIOBSERVER
 
-  nsresult Init();
+  static already_AddRefed<nsUrlClassifierUtils> GetXPCOMSingleton();
+  static nsUrlClassifierUtils* GetInstance();
 
   nsresult CanonicalizeHostname(const nsACString& hostname,
                                 nsACString& _retval);
@@ -34,15 +35,51 @@ class nsUrlClassifierUtils final : public nsIUrlClassifierUtils,
   // space), 37(%), and anything 127 or above (special characters).  Url is the
   // string to encode, ret is the encoded string.  Function returns true if
   // ret != url.
+<<<<<<< HEAD
+  bool SpecialEncode(const nsACString& url, bool foldSlashes,
+                     nsACString& _retval);
+||||||| merged common ancestors
+  bool SpecialEncode(const nsACString & url,
+                       bool foldSlashes,
+                       nsACString & _retval);
+=======
   bool SpecialEncode(const nsACString& url, bool foldSlashes,
                      nsACString& _retval);
 
   void ParseIPAddress(const nsACString& host, nsACString& _retval);
   void CanonicalNum(const nsACString& num, uint32_t bytes, bool allowOctal,
                     nsACString& _retval);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void ParseIPAddress(const nsACString& host, nsACString& _retval);
+  void CanonicalNum(const nsACString& num, uint32_t bytes, bool allowOctal,
+                    nsACString& _retval);
+||||||| merged common ancestors
+  void ParseIPAddress(const nsACString & host, nsACString & _retval);
+  void CanonicalNum(const nsACString & num,
+                    uint32_t bytes,
+                    bool allowOctal,
+                    nsACString & _retval);
+=======
+  static bool IsMozTestTable(const nsACString& aTableName);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  private:
   ~nsUrlClassifierUtils() {}
+||||||| merged common ancestors
+private:
+  ~nsUrlClassifierUtils() {}
+=======
+  static bool IsTestTable(const nsACString& aTableName);
+
+ private:
+  nsUrlClassifierUtils();
+  ~nsUrlClassifierUtils();
+
+  nsresult Init();
+>>>>>>> upstream-releases
 
   // Disallow copy constructor
   nsUrlClassifierUtils(const nsUrlClassifierUtils&);

@@ -11,8 +11,8 @@
 #include "mozilla/dom/InspectorUtilsBinding.h"
 #include "mozilla/dom/NonRefcountedDOMObject.h"
 #include "nsRange.h"
-#include "gfxFont.h"
 
+class gfxFontEntry;
 class gfxFontGroup;
 
 namespace mozilla {
@@ -22,6 +22,7 @@ namespace dom {
  * Information on font face usage by a given DOM Range, as returned by
  * InspectorUtils.getUsedFontFaces.
  */
+<<<<<<< HEAD
 class InspectorFontFace final : public NonRefcountedDOMObject {
  public:
   InspectorFontFace(gfxFontEntry* aFontEntry, gfxFontGroup* aFontGroup,
@@ -29,13 +30,39 @@ class InspectorFontFace final : public NonRefcountedDOMObject {
       : mFontEntry(aFontEntry), mFontGroup(aFontGroup), mMatchType(aMatchType) {
     MOZ_COUNT_CTOR(InspectorFontFace);
   }
+||||||| merged common ancestors
+class InspectorFontFace final : public NonRefcountedDOMObject
+{
+public:
+  InspectorFontFace(gfxFontEntry* aFontEntry,
+                    gfxFontGroup* aFontGroup,
+                    gfxTextRange::MatchType aMatchType)
+    : mFontEntry(aFontEntry)
+    , mFontGroup(aFontGroup)
+    , mMatchType(aMatchType)
+  {
+    MOZ_COUNT_CTOR(InspectorFontFace);
+  }
+=======
+class InspectorFontFace final : public NonRefcountedDOMObject {
+ public:
+  InspectorFontFace(gfxFontEntry* aFontEntry, gfxFontGroup* aFontGroup,
+                    FontMatchType aMatchType);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ~InspectorFontFace() { MOZ_COUNT_DTOR(InspectorFontFace); }
+||||||| merged common ancestors
+  ~InspectorFontFace()
+  {
+    MOZ_COUNT_DTOR(InspectorFontFace);
+  }
+=======
+  ~InspectorFontFace();
+>>>>>>> upstream-releases
 
   gfxFontEntry* GetFontEntry() const { return mFontEntry; }
-  void AddMatchType(gfxTextRange::MatchType aMatchType) {
-    mMatchType |= aMatchType;
-  }
+  void AddMatchType(FontMatchType aMatchType) { mMatchType |= aMatchType; }
 
   void AddRange(nsRange* aRange);
   size_t RangeCount() const { return mRanges.Length(); }
@@ -71,7 +98,7 @@ class InspectorFontFace final : public NonRefcountedDOMObject {
   RefPtr<gfxFontEntry> mFontEntry;
   RefPtr<gfxFontGroup> mFontGroup;
   RefPtr<CSSFontFaceRule> mRule;
-  gfxTextRange::MatchType mMatchType;
+  FontMatchType mMatchType;
 
   nsTArray<RefPtr<nsRange>> mRanges;
 };

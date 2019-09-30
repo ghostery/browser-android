@@ -135,9 +135,26 @@ class nsBaseFilePickerEnumerator : public nsSimpleEnumerator {
 };
 
 nsBaseFilePicker::nsBaseFilePicker()
+<<<<<<< HEAD
     : mAddToRecentDocs(true), mMode(nsIFilePicker::modeOpen) {}
 
 nsBaseFilePicker::~nsBaseFilePicker() {}
+||||||| merged common ancestors
+  : mAddToRecentDocs(true)
+  , mMode(nsIFilePicker::modeOpen)
+{
+
+}
+
+nsBaseFilePicker::~nsBaseFilePicker()
+{
+
+}
+=======
+    : mAddToRecentDocs(true), mMode(nsIFilePicker::modeOpen) {}
+
+nsBaseFilePicker::~nsBaseFilePicker() {}
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP nsBaseFilePicker::Init(mozIDOMWindowProxy* aParent,
                                      const nsAString& aTitle, int16_t aMode) {
@@ -147,8 +164,14 @@ NS_IMETHODIMP nsBaseFilePicker::Init(mozIDOMWindowProxy* aParent,
 
   mParent = nsPIDOMWindowOuter::From(aParent);
 
+<<<<<<< HEAD
   nsCOMPtr<nsIWidget> widget =
       WidgetUtils::DOMWindowToWidget(mParent->GetOuterWindow());
+||||||| merged common ancestors
+  nsCOMPtr<nsIWidget> widget = WidgetUtils::DOMWindowToWidget(mParent->GetOuterWindow());
+=======
+  nsCOMPtr<nsIWidget> widget = WidgetUtils::DOMWindowToWidget(mParent);
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(widget, NS_ERROR_FAILURE);
 
   mMode = aMode;
@@ -229,6 +252,11 @@ nsBaseFilePicker::AppendFilters(int32_t aFilterMask) {
     // should recognize and do the correct platform behavior for.
     AppendFilter(title, NS_LITERAL_STRING("..apps"));
   }
+  return NS_OK;
+}
+
+NS_IMETHODIMP nsBaseFilePicker::AppendRawFilter(const nsAString& aFilter) {
+  mRawFilters.AppendElement(aFilter);
   return NS_OK;
 }
 

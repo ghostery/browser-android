@@ -33,12 +33,24 @@ void CachedInheritingStyles::Insert(ComputedStyle* aStyle) {
   }
 }
 
+<<<<<<< HEAD
 ComputedStyle* CachedInheritingStyles::Lookup(nsAtom* aPseudoTag) const {
   MOZ_ASSERT(nsCSSAnonBoxes::IsInheritingAnonBox(aPseudoTag) ||
              nsCSSPseudoElements::IsPseudoElement(aPseudoTag));
+||||||| merged common ancestors
+ComputedStyle*
+CachedInheritingStyles::Lookup(nsAtom* aPseudoTag) const
+{
+  MOZ_ASSERT(nsCSSAnonBoxes::IsInheritingAnonBox(aPseudoTag) ||
+             nsCSSPseudoElements::IsPseudoElement(aPseudoTag));
+=======
+ComputedStyle* CachedInheritingStyles::Lookup(PseudoStyleType aType) const {
+  MOZ_ASSERT(PseudoStyle::IsPseudoElement(aType) ||
+             PseudoStyle::IsInheritingAnonBox(aType));
+>>>>>>> upstream-releases
   if (IsIndirect()) {
     for (auto& style : *AsIndirect()) {
-      if (style->GetPseudo() == aPseudoTag) {
+      if (style->GetPseudoType() == aType) {
         return style;
       }
     }
@@ -47,7 +59,7 @@ ComputedStyle* CachedInheritingStyles::Lookup(nsAtom* aPseudoTag) const {
   }
 
   ComputedStyle* direct = AsDirect();
-  return direct && direct->GetPseudo() == aPseudoTag ? direct : nullptr;
+  return direct && direct->GetPseudoType() == aType ? direct : nullptr;
 }
 
 void CachedInheritingStyles::AddSizeOfIncludingThis(nsWindowSizes& aSizes,

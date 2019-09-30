@@ -10,25 +10,53 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ bool FlacDecoder::IsEnabled() {
+||||||| merged common ancestors
+/* static */ bool
+FlacDecoder::IsEnabled()
+{
+=======
+/* static */
+bool FlacDecoder::IsEnabled() {
+>>>>>>> upstream-releases
 #ifdef MOZ_FFVPX
-  return StaticPrefs::MediaFlacEnabled();
+  return StaticPrefs::media_flac_enabled();
 #else
   // Until bug 1295886 is fixed.
   return false;
 #endif
 }
 
+<<<<<<< HEAD
 /* static */ bool FlacDecoder::IsSupportedType(
     const MediaContainerType& aContainerType) {
+||||||| merged common ancestors
+/* static */ bool
+FlacDecoder::IsSupportedType(const MediaContainerType& aContainerType)
+{
+=======
+/* static */
+bool FlacDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
+>>>>>>> upstream-releases
   return IsEnabled() &&
          (aContainerType.Type() == MEDIAMIMETYPE("audio/flac") ||
           aContainerType.Type() == MEDIAMIMETYPE("audio/x-flac") ||
           aContainerType.Type() == MEDIAMIMETYPE("application/x-flac"));
 }
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> FlacDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+FlacDecoder::GetTracksInfo(const MediaContainerType& aType)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> FlacDecoder::GetTracksInfo(
+    const MediaContainerType& aType) {
+>>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   if (!IsSupportedType(aType)) {
     return tracks;

@@ -101,6 +101,12 @@ class DWriteFontFileStream final : public IDWriteFontFileStream {
   IFACEMETHOD_(ULONG, Release)() {
     uint32_t count = --mRefCnt;
     if (count == 0) {
+      // Avoid locking unless necessary. Verify the refcount hasn't changed
+      // while locked. Delete within the scope of the lock when zero.
+      StaticMutexAutoLock lock(sFontFileStreamsMutex);
+      if (0 != mRefCnt) {
+        return mRefCnt;
+      }
       delete this;
     }
     return count;
@@ -150,8 +156,16 @@ HRESULT STDMETHODCALLTYPE DWriteFontFileLoader::CreateStreamFromKey(
 DWriteFontFileStream::DWriteFontFileStream(uint64_t aFontFileKey)
     : mRefCnt(0), mFontFileKey(aFontFileKey) {}
 
+<<<<<<< HEAD
 DWriteFontFileStream::~DWriteFontFileStream() {
   StaticMutexAutoLock lock(sFontFileStreamsMutex);
+||||||| merged common ancestors
+DWriteFontFileStream::~DWriteFontFileStream()
+{
+  StaticMutexAutoLock lock(sFontFileStreamsMutex);
+=======
+DWriteFontFileStream::~DWriteFontFileStream() {
+>>>>>>> upstream-releases
   sFontFileStreams.erase(mFontFileKey);
 }
 

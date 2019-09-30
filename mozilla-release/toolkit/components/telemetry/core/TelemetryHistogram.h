@@ -10,6 +10,7 @@
 #include "mozilla/TelemetryHistogramEnums.h"
 #include "mozilla/TelemetryProcessEnums.h"
 #include "nsXULAppAPI.h"
+#include "TelemetryCommon.h"
 
 namespace mozilla {
 // This is only used for the GeckoView persistence.
@@ -46,6 +47,7 @@ void Accumulate(mozilla::Telemetry::HistogramID aHistogram,
 void Accumulate(mozilla::Telemetry::HistogramID aID, const nsCString& aKey,
                 uint32_t aSample);
 void Accumulate(mozilla::Telemetry::HistogramID aID, const nsCString& aKey,
+<<<<<<< HEAD
                 const nsTArray<uint32_t>& aSamples);
 /*
  * Accumulate a sample into the named histogram.
@@ -97,6 +99,98 @@ nsresult GetKeyedHistogramSnapshots(
     unsigned int aDataset, bool aClearSubsession, bool aFilterTest = false);
 
 size_t GetHistogramSizesOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf);
+||||||| merged common ancestors
+                                          const nsTArray<uint32_t>& aSamples);
+void Accumulate(const char* name, uint32_t sample);
+void Accumulate(const char* name, const nsCString& key, uint32_t sample);
+
+void AccumulateCategorical(mozilla::Telemetry::HistogramID aId, const nsCString& aLabel);
+void AccumulateCategorical(mozilla::Telemetry::HistogramID aId, const nsTArray<nsCString>& aLabels);
+
+void AccumulateChild(mozilla::Telemetry::ProcessID aProcessType,
+                     const nsTArray<mozilla::Telemetry::HistogramAccumulation>& aAccumulations);
+void AccumulateChildKeyed(mozilla::Telemetry::ProcessID aProcessType,
+                          const nsTArray<mozilla::Telemetry::KeyedHistogramAccumulation>& aAccumulations);
+
+nsresult
+GetHistogramById(const nsACString &name, JSContext *cx,
+                 JS::MutableHandle<JS::Value> ret);
+
+nsresult
+GetKeyedHistogramById(const nsACString &name, JSContext *cx,
+                      JS::MutableHandle<JS::Value> ret);
+
+const char*
+GetHistogramName(mozilla::Telemetry::HistogramID id);
+
+nsresult
+CreateHistogramSnapshots(JSContext* aCx, JS::MutableHandleValue aResult, unsigned int aDataset,
+                         bool aClearSubsession);
+
+nsresult
+GetKeyedHistogramSnapshots(JSContext *aCx, JS::MutableHandleValue aResult, unsigned int aDataset,
+                           bool aClearSubsession);
+
+size_t
+GetHistogramSizesOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf);
+=======
+                const nsTArray<uint32_t>& aSamples);
+/*
+ * Accumulate a sample into the named histogram.
+ *
+ * Returns NS_OK on success.
+ * Returns NS_ERROR_NOT_AVAILABLE if recording Telemetry is disabled.
+ * Returns NS_ERROR_FAILURE on other errors.
+ */
+nsresult Accumulate(const char* name, uint32_t sample);
+
+/*
+ * Accumulate a sample into the named keyed histogram by key.
+ *
+ * Returns NS_OK on success.
+ * Returns NS_ERROR_NOT_AVAILABLE if recording Telemetry is disabled.
+ * Returns NS_ERROR_FAILURE on other errors.
+ */
+nsresult Accumulate(const char* name, const nsCString& key, uint32_t sample);
+
+void AccumulateCategorical(mozilla::Telemetry::HistogramID aId,
+                           const nsCString& aLabel);
+void AccumulateCategorical(mozilla::Telemetry::HistogramID aId,
+                           const nsTArray<nsCString>& aLabels);
+
+void AccumulateChild(
+    mozilla::Telemetry::ProcessID aProcessType,
+    const nsTArray<mozilla::Telemetry::HistogramAccumulation>& aAccumulations);
+void AccumulateChildKeyed(
+    mozilla::Telemetry::ProcessID aProcessType,
+    const nsTArray<mozilla::Telemetry::KeyedHistogramAccumulation>&
+        aAccumulations);
+
+/**
+ * Append the list of registered stores to the given set.
+ */
+nsresult GetAllStores(mozilla::Telemetry::Common::StringHashSet& set);
+
+nsresult GetHistogramById(const nsACString& name, JSContext* cx,
+                          JS::MutableHandle<JS::Value> ret);
+
+nsresult GetKeyedHistogramById(const nsACString& name, JSContext* cx,
+                               JS::MutableHandle<JS::Value> ret);
+
+const char* GetHistogramName(mozilla::Telemetry::HistogramID id);
+
+nsresult CreateHistogramSnapshots(JSContext* aCx,
+                                  JS::MutableHandleValue aResult,
+                                  const nsACString& aStore,
+                                  unsigned int aDataset, bool aClearSubsession,
+                                  bool aFilterTest = false);
+
+nsresult GetKeyedHistogramSnapshots(
+    JSContext* aCx, JS::MutableHandleValue aResult, const nsACString& aStore,
+    unsigned int aDataset, bool aClearSubsession, bool aFilterTest = false);
+
+size_t GetHistogramSizesOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf);
+>>>>>>> upstream-releases
 
 // These functions are only meant to be used for GeckoView persistence.
 // They are responsible for updating in-memory probes with the data persisted

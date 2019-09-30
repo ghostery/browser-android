@@ -12,15 +12,25 @@ add_task(async function() {
   requestLongerTimeout(2);
 
   const target = await addTabTarget(MAIN_DOMAIN + "doc_allocations.html");
+<<<<<<< HEAD
   const front = await target.getFront("performance");
   await front.connect();
+||||||| merged common ancestors
+  const front = target.getFront("performance");
+  await front.connect();
+=======
+  const front = await target.getFront("performance");
+
+>>>>>>> upstream-releases
   const rec = await front.startRecording({ withMarkers: true });
 
   const markers = await waitForMarkerType(front, ["MinorGC"]);
   await front.stopRecording(rec);
 
-  ok(markers.some(m => m.name === "MinorGC" && m.causeName),
-     "got some MinorGC markers");
+  ok(
+    markers.some(m => m.name === "MinorGC" && m.causeName),
+    "got some MinorGC markers"
+  );
 
   await target.destroy();
   gBrowser.removeCurrentTab();

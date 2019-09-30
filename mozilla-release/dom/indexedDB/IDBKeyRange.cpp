@@ -19,19 +19,38 @@ using namespace mozilla::dom::indexedDB;
 
 namespace {
 
+<<<<<<< HEAD
 nsresult GetKeyFromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
                          Key& aKey) {
   nsresult rv = aKey.SetFromJSVal(aCx, aVal);
   if (NS_FAILED(rv)) {
     MOZ_ASSERT(NS_ERROR_GET_MODULE(rv) == NS_ERROR_MODULE_DOM_INDEXEDDB);
     return rv;
+||||||| merged common ancestors
+nsresult
+GetKeyFromJSVal(JSContext* aCx,
+                JS::Handle<JS::Value> aVal,
+                Key& aKey)
+{
+  nsresult rv = aKey.SetFromJSVal(aCx, aVal);
+  if (NS_FAILED(rv)) {
+    MOZ_ASSERT(NS_ERROR_GET_MODULE(rv) == NS_ERROR_MODULE_DOM_INDEXEDDB);
+    return rv;
+=======
+void GetKeyFromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal, Key& aKey,
+                     ErrorResult& aRv) {
+  auto result = aKey.SetFromJSVal(aCx, aVal, aRv);
+  if (!result.Is(Ok, aRv)) {
+    if (result.Is(Invalid, aRv)) {
+      aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    }
+    return;
+>>>>>>> upstream-releases
   }
 
   if (aKey.IsUnset()) {
-    return NS_ERROR_DOM_INDEXEDDB_DATA_ERR;
+    aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
   }
-
-  return NS_OK;
 }
 
 }  // namespace
@@ -62,8 +81,19 @@ IDBLocaleAwareKeyRange::IDBLocaleAwareKeyRange(nsISupports* aGlobal,
 IDBLocaleAwareKeyRange::~IDBLocaleAwareKeyRange() { DropJSObjects(); }
 
 // static
+<<<<<<< HEAD
 nsresult IDBKeyRange::FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
                                 IDBKeyRange** aKeyRange) {
+||||||| merged common ancestors
+nsresult
+IDBKeyRange::FromJSVal(JSContext* aCx,
+                       JS::Handle<JS::Value> aVal,
+                       IDBKeyRange** aKeyRange)
+{
+=======
+void IDBKeyRange::FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
+                            IDBKeyRange** aKeyRange, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_IF(!aCx, aVal.isUndefined());
 
   RefPtr<IDBKeyRange> keyRange;
@@ -71,7 +101,7 @@ nsresult IDBKeyRange::FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
   if (aVal.isNullOrUndefined()) {
     // undefined and null returns no IDBKeyRange.
     keyRange.forget(aKeyRange);
-    return NS_OK;
+    return;
   }
 
   JS::Rooted<JSObject*> obj(aCx, aVal.isObject() ? &aVal.toObject() : nullptr);
@@ -80,18 +110,15 @@ nsresult IDBKeyRange::FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
   if (obj && NS_SUCCEEDED(UNWRAP_OBJECT(IDBKeyRange, obj, keyRange))) {
     MOZ_ASSERT(keyRange);
     keyRange.forget(aKeyRange);
-    return NS_OK;
+    return;
   }
 
   // A valid key returns an 'only' IDBKeyRange.
   keyRange = new IDBKeyRange(nullptr, false, false, true);
-  nsresult rv = GetKeyFromJSVal(aCx, aVal, keyRange->Lower());
-  if (NS_FAILED(rv)) {
-    return rv;
+  GetKeyFromJSVal(aCx, aVal, keyRange->Lower(), aRv);
+  if (!aRv.Failed()) {
+    keyRange.forget(aKeyRange);
   }
-
-  keyRange.forget(aKeyRange);
-  return NS_OK;
 }
 
 // static
@@ -276,7 +303,7 @@ void IDBKeyRange::GetUpper(JSContext* aCx, JS::MutableHandle<JS::Value> aResult,
 bool IDBKeyRange::Includes(JSContext* aCx, JS::Handle<JS::Value> aValue,
                            ErrorResult& aRv) const {
   Key key;
-  aRv = GetKeyFromJSVal(aCx, aValue, key);
+  GetKeyFromJSVal(aCx, aValue, key, aRv);
   if (aRv.Failed()) {
     return false;
   }
@@ -324,7 +351,7 @@ already_AddRefed<IDBKeyRange> IDBKeyRange::Only(const GlobalObject& aGlobal,
   RefPtr<IDBKeyRange> keyRange =
       new IDBKeyRange(aGlobal.GetAsSupports(), false, false, true);
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Lower());
+  GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Lower(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -339,7 +366,7 @@ already_AddRefed<IDBKeyRange> IDBKeyRange::LowerBound(
   RefPtr<IDBKeyRange> keyRange =
       new IDBKeyRange(aGlobal.GetAsSupports(), aOpen, true, false);
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Lower());
+  GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Lower(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -354,7 +381,7 @@ already_AddRefed<IDBKeyRange> IDBKeyRange::UpperBound(
   RefPtr<IDBKeyRange> keyRange =
       new IDBKeyRange(aGlobal.GetAsSupports(), true, aOpen, false);
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Upper());
+  GetKeyFromJSVal(aGlobal.Context(), aValue, keyRange->Upper(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -372,12 +399,12 @@ already_AddRefed<IDBKeyRange> IDBKeyRange::Bound(const GlobalObject& aGlobal,
   RefPtr<IDBKeyRange> keyRange =
       new IDBKeyRange(aGlobal.GetAsSupports(), aLowerOpen, aUpperOpen, false);
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aLower, keyRange->Lower());
+  GetKeyFromJSVal(aGlobal.Context(), aLower, keyRange->Lower(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aUpper, keyRange->Upper());
+  GetKeyFromJSVal(aGlobal.Context(), aUpper, keyRange->Upper(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -392,6 +419,7 @@ already_AddRefed<IDBKeyRange> IDBKeyRange::Bound(const GlobalObject& aGlobal,
 }
 
 // static
+<<<<<<< HEAD
 already_AddRefed<IDBLocaleAwareKeyRange> IDBLocaleAwareKeyRange::Bound(
     const GlobalObject& aGlobal, JS::Handle<JS::Value> aLower,
     JS::Handle<JS::Value> aUpper, bool aLowerOpen, bool aUpperOpen,
@@ -400,11 +428,34 @@ already_AddRefed<IDBLocaleAwareKeyRange> IDBLocaleAwareKeyRange::Bound(
       aGlobal.GetAsSupports(), aLowerOpen, aUpperOpen, false);
 
   aRv = GetKeyFromJSVal(aGlobal.Context(), aLower, keyRange->Lower());
+||||||| merged common ancestors
+already_AddRefed<IDBLocaleAwareKeyRange>
+IDBLocaleAwareKeyRange::Bound(const GlobalObject& aGlobal,
+                              JS::Handle<JS::Value> aLower,
+                              JS::Handle<JS::Value> aUpper,
+                              bool aLowerOpen,
+                              bool aUpperOpen,
+                              ErrorResult& aRv)
+{
+  RefPtr<IDBLocaleAwareKeyRange> keyRange =
+    new IDBLocaleAwareKeyRange(aGlobal.GetAsSupports(), aLowerOpen, aUpperOpen, false);
+
+  aRv = GetKeyFromJSVal(aGlobal.Context(), aLower, keyRange->Lower());
+=======
+already_AddRefed<IDBLocaleAwareKeyRange> IDBLocaleAwareKeyRange::Bound(
+    const GlobalObject& aGlobal, JS::Handle<JS::Value> aLower,
+    JS::Handle<JS::Value> aUpper, bool aLowerOpen, bool aUpperOpen,
+    ErrorResult& aRv) {
+  RefPtr<IDBLocaleAwareKeyRange> keyRange = new IDBLocaleAwareKeyRange(
+      aGlobal.GetAsSupports(), aLowerOpen, aUpperOpen, false);
+
+  GetKeyFromJSVal(aGlobal.Context(), aLower, keyRange->Lower(), aRv);
+>>>>>>> upstream-releases
   if (aRv.Failed()) {
     return nullptr;
   }
 
-  aRv = GetKeyFromJSVal(aGlobal.Context(), aUpper, keyRange->Upper());
+  GetKeyFromJSVal(aGlobal.Context(), aUpper, keyRange->Upper(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }

@@ -1,14 +1,46 @@
 import re
 import os
+<<<<<<< HEAD
 import itertools
 from six import itervalues, iteritems
 from collections import defaultdict
 
+||||||| merged common ancestors
+=======
+import itertools
+from six import itervalues, iteritems
+from collections import defaultdict
+
+MYPY = False
+if MYPY:
+    # MYPY is set to True when run under Mypy.
+    from typing import Any
+    from typing import Dict
+    from typing import Iterable
+    from typing import List
+    from typing import MutableMapping
+    from typing import Optional
+    from typing import Pattern
+    from typing import Tuple
+    from typing import TypeVar
+    from typing import Union
+    from typing import cast
+
+    T = TypeVar('T')
+
+>>>>>>> upstream-releases
 
 end_space = re.compile(r"([^\\]\s)*$")
 
 
+<<<<<<< HEAD
 def fnmatch_translate(pat):
+||||||| merged common ancestors
+def fnmatch_translate(pat, path_name=False):
+=======
+def fnmatch_translate(pat):
+    # type: (str) -> Tuple[bool, Pattern[str]]
+>>>>>>> upstream-releases
     parts = []
     seq = None
     i = 0
@@ -94,9 +126,10 @@ pattern_re = re.compile(r".*[\*\[\?]")
 
 
 def parse_line(line):
+    # type: (str) -> Optional[Tuple[bool, bool, bool, Union[Tuple[str, ...], Tuple[bool, Pattern[str]]]]]
     line = line.rstrip()
     if not line or line[0] == "#":
-        return
+        return None
 
     invert = line[0] == "!"
     if invert:
@@ -107,6 +140,7 @@ def parse_line(line):
     if dir_only:
         line = line[:-1]
 
+<<<<<<< HEAD
     # Could make a special case for **/foo, but we don't have any patterns like that
     if not invert and not pattern_re.match(line):
         literal = True
@@ -116,12 +150,32 @@ def parse_line(line):
         literal = False
 
     return invert, dir_only, literal, pattern
+||||||| merged common ancestors
+    return invert, dir_only, fnmatch_translate(line, dir_only)
+=======
+    # Could make a special case for **/foo, but we don't have any patterns like that
+    if not invert and not pattern_re.match(line):
+        literal = True
+        pattern = tuple(line.rsplit("/", 1))  # type: Union[Tuple[str, ...], Tuple[bool, Pattern[str]]]
+    else:
+        pattern = fnmatch_translate(line)
+        literal = False
+
+    return invert, dir_only, literal, pattern
+>>>>>>> upstream-releases
 
 
 class PathFilter(object):
+<<<<<<< HEAD
     def __init__(self, root, extras=None, cache=None):
+||||||| merged common ancestors
+    def __init__(self, root, extras=None):
+=======
+    def __init__(self, root, extras=None, cache=None):
+        # type: (str, Optional[List[str]], Optional[MutableMapping[str, bool]]) -> None
+>>>>>>> upstream-releases
         if root:
-            ignore_path = os.path.join(root, ".gitignore")
+            ignore_path = os.path.join(root, ".gitignore")  # type: Optional[str]
         else:
             ignore_path = None
         if not ignore_path and not extras:
@@ -129,21 +183,45 @@ class PathFilter(object):
             return
         self.trivial = False
 
+<<<<<<< HEAD
         self.literals_file = defaultdict(dict)
         self.literals_dir = defaultdict(dict)
         self.patterns_file = []
         self.patterns_dir = []
         self.cache = cache or {}
+||||||| merged common ancestors
+        self.rules_file = []
+        self.rules_dir = []
+=======
+        self.literals_file = defaultdict(dict)  # type: Dict[Optional[str], Dict[str, List[Tuple[bool, Pattern[str]]]]]
+        self.literals_dir = defaultdict(dict)  # type: Dict[Optional[str], Dict[str, List[Tuple[bool, Pattern[str]]]]]
+        self.patterns_file = []  # type: List[Tuple[Tuple[bool, Pattern[str]], List[Tuple[bool, Pattern[str]]]]]
+        self.patterns_dir = []  # type: List[Tuple[Tuple[bool, Pattern[str]], List[Tuple[bool, Pattern[str]]]]]
+        self.cache = cache or {}  # type: MutableMapping[str, bool]
+>>>>>>> upstream-releases
 
         if extras is None:
             extras = []
 
         if ignore_path and os.path.exists(ignore_path):
+<<<<<<< HEAD
             args = ignore_path, extras
         else:
             args = None, extras
         self._read_ignore(*args)
+||||||| merged common ancestors
+            self._read_ignore(ignore_path)
 
+        for item in extras:
+            self._read_line(item)
+=======
+            args = ignore_path, extras  # type: Tuple[Optional[str], List[str]]
+        else:
+            args = None, extras
+        self._read_ignore(*args)
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     def _read_ignore(self, ignore_path, extras):
         if ignore_path is not None:
             with open(ignore_path) as f:
@@ -151,11 +229,28 @@ class PathFilter(object):
                     self._read_line(line)
         for line in extras:
             self._read_line(line)
+||||||| merged common ancestors
+    def _read_ignore(self, ignore_path):
+        with open(ignore_path) as f:
+            for line in f:
+                self._read_line(line)
+=======
+    def _read_ignore(self, ignore_path, extras):
+        # type: (Optional[str], List[str]) -> None
+        if ignore_path is not None:
+            with open(ignore_path) as f:
+                for line in f:
+                    self._read_line(line)
+        for line in extras:
+            self._read_line(line)
+>>>>>>> upstream-releases
 
     def _read_line(self, line):
+        # type: (str) -> None
         parsed = parse_line(line)
         if not parsed:
             return
+<<<<<<< HEAD
         invert, dir_only, literal, rule = parsed
 
         if invert:
@@ -176,7 +271,36 @@ class PathFilter(object):
 
             for rules in rules_iter:
                 rules[1].append(rule)
+||||||| merged common ancestors
+        invert, dir_only, regexp = parsed
+        if dir_only:
+            self.rules_dir.append((regexp, invert))
+=======
+        invert, dir_only, literal, rule = parsed
+
+        if invert:
+            # For exclude rules, we attach the rules to all preceeding patterns, so
+            # that we can match patterns out of order and check if they were later
+            # overriden by an exclude rule
+            assert not literal
+            if MYPY:
+                rule = cast(Tuple[bool, Pattern[str]], rule)
+            if not dir_only:
+                rules_iter = itertools.chain(
+                    itertools.chain(*(iteritems(item) for item in itervalues(self.literals_dir))),
+                    itertools.chain(*(iteritems(item) for item in itervalues(self.literals_file))),
+                    self.patterns_dir,
+                    self.patterns_file)  # type: Iterable[Tuple[Any, List[Tuple[bool, Pattern[str]]]]]
+            else:
+                rules_iter = itertools.chain(
+                    itertools.chain(*(iteritems(item) for item in itervalues(self.literals_dir))),
+                    self.patterns_dir)
+
+            for rules in rules_iter:
+                rules[1].append(rule)
+>>>>>>> upstream-releases
         else:
+<<<<<<< HEAD
             if literal:
                 if len(rule) == 1:
                     dir_name, pattern = None, rule[0]
@@ -243,9 +367,125 @@ class PathFilter(object):
     def __call__(self, iterator):
         if self.trivial:
             return iterator
+||||||| merged common ancestors
+            self.rules_file.append((regexp, invert))
+=======
+            if literal:
+                if MYPY:
+                    rule = cast(Tuple[str, ...], rule)
+                if len(rule) == 1:
+                    dir_name, pattern = None, rule[0]  # type: Tuple[Optional[str], str]
+                else:
+                    dir_name, pattern = rule
+                self.literals_dir[dir_name][pattern] = []
+                if not dir_only:
+                    self.literals_file[dir_name][pattern] = []
+            else:
+                if MYPY:
+                    rule = cast(Tuple[bool, Pattern[str]], rule)
+                self.patterns_dir.append((rule, []))
+                if not dir_only:
+                    self.patterns_file.append((rule, []))
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        return self.filter(iterator)
+||||||| merged common ancestors
+    def __call__(self, path):
+        if os.path.sep != "/":
+            path = path.replace(os.path.sep, "/")
+=======
+    def filter(self,
+               iterator  # type: Iterable[Tuple[str, List[Tuple[str, T]], List[Tuple[str, T]]]]
+               ):
+        # type: (...) -> Iterable[Tuple[str, List[Tuple[str, T]], List[Tuple[str, T]]]]
+        empty = {}  # type: Dict[Any, Any]
+        for dirpath, dirnames, filenames in iterator:
+            orig_dirpath = dirpath
+            if os.path.sep != "/":
+                dirpath = dirpath.replace(os.path.sep, "/")
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+||||||| merged common ancestors
+        if self.trivial:
+            return True
+=======
+            keep_dirs = []  # type: List[Tuple[str, T]]
+            keep_files = []  # type: List[Tuple[str, T]]
+
+            for iter_items, literals, patterns, target, suffix in [
+                    (dirnames, self.literals_dir, self.patterns_dir, keep_dirs, "/"),
+                    (filenames, self.literals_file, self.patterns_file, keep_files, "")]:
+                for item in iter_items:
+                    name = item[0]
+                    if dirpath:
+                        path = "%s/%s" % (dirpath, name) + suffix
+                    else:
+                        path = name + suffix
+                    if path in self.cache:
+                        if not self.cache[path]:
+                            target.append(item)
+                        continue
+                    for rule_dir in [None, dirpath]:
+                        if name in literals.get(rule_dir, empty):
+                            exclude = literals[rule_dir][name]
+                            if not any(rule.match(name if name_only else path)
+                                       for name_only, rule in exclude):
+                                # Skip this item
+                                self.cache[path] = True
+                                break
+                    else:
+                        for (component_only, pattern), exclude in patterns:
+                            if component_only:
+                                match = pattern.match(name)
+                            else:
+                                match = pattern.match(path)
+                            if match:
+                                if not any(rule.match(name if name_only else path)
+                                           for name_only, rule in exclude):
+                                    # Skip this item
+                                    self.cache[path] = True
+                                    break
+                        else:
+                            self.cache[path] = False
+                            target.append(item)
+
+            dirnames[:] = keep_dirs
+            assert ".git" not in dirnames
+            yield orig_dirpath, dirnames, keep_files
+
+    def __call__(self,
+                 iterator  # type: Iterable[Tuple[str, List[Tuple[str, T]], List[Tuple[str, T]]]]
+                 ):
+        # type: (...) -> Iterable[Tuple[str, List[Tuple[str, T]], List[Tuple[str, T]]]]
+        if self.trivial:
+            return iterator
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+def has_ignore(dirpath):
+    return os.path.exists(os.path.join(dirpath, ".gitignore"))
+||||||| merged common ancestors
+        path_is_dir = path[-1] == "/"
+        if path_is_dir:
+            path = path[:-1]
+            rules = self.rules_dir
+        else:
+            rules = self.rules_file
+
+        include = True
+        for regexp, invert in rules:
+            if not include and invert and regexp.match(path):
+                include = True
+            elif include and not invert and regexp.match(path):
+                include = False
+        return include
+=======
         return self.filter(iterator)
 
 
 def has_ignore(dirpath):
+    # type: (str) -> bool
     return os.path.exists(os.path.join(dirpath, ".gitignore"))
+>>>>>>> upstream-releases

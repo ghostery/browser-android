@@ -136,6 +136,7 @@ class BasicCompositor;
 class TextureReadLock;
 struct GPUStats;
 class AsyncReadbackBuffer;
+class RecordedFrame;
 
 enum SurfaceInitMode { INIT_MODE_NONE, INIT_MODE_CLEAR };
 
@@ -186,7 +187,7 @@ class Compositor : public TextureSourceProvider {
                       CompositorBridgeParent* aParent = nullptr);
 
   virtual bool Initialize(nsCString* const out_failureReason) = 0;
-  virtual void Destroy() override;
+  void Destroy() override;
   bool IsDestroyed() const { return mIsDestroyed; }
 
   virtual void DetachWidget() { mWidget = nullptr; }
@@ -292,7 +293,8 @@ class Compositor : public TextureSourceProvider {
    * Returns the current target for rendering. Will return null if we are
    * rendering to the screen.
    */
-  virtual CompositingRenderTarget* GetCurrentRenderTarget() const = 0;
+  virtual already_AddRefed<CompositingRenderTarget> GetCurrentRenderTarget()
+      const = 0;
 
   /**
    * Returns a render target which contains the entire window's drawing.
@@ -300,9 +302,18 @@ class Compositor : public TextureSourceProvider {
    * with buffered BasicCompositor, where only the invalid area is drawn to a
    * render target), this will return null.
    */
+<<<<<<< HEAD
   virtual CompositingRenderTarget* GetWindowRenderTarget() const {
     return nullptr;
   }
+||||||| merged common ancestors
+  virtual CompositingRenderTarget* GetWindowRenderTarget() const { return nullptr; }
+=======
+  virtual already_AddRefed<CompositingRenderTarget> GetWindowRenderTarget()
+      const {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   /**
    * Mostly the compositor will pull the size from a widget and this method will
@@ -466,11 +477,17 @@ class Compositor : public TextureSourceProvider {
 
   virtual LayersBackend GetBackendType() const = 0;
 
-  virtual CompositorOGL* AsCompositorOGL() { return nullptr; }
   virtual CompositorD3D11* AsCompositorD3D11() { return nullptr; }
-  virtual BasicCompositor* AsBasicCompositor() { return nullptr; }
 
+<<<<<<< HEAD
   virtual Compositor* AsCompositor() override { return this; }
+||||||| merged common ancestors
+  virtual Compositor* AsCompositor() override {
+    return this;
+  }
+=======
+  Compositor* AsCompositor() override { return this; }
+>>>>>>> upstream-releases
 
   TimeStamp GetLastCompositionEndTime() const override {
     return mLastCompositionEndTime;
@@ -517,8 +534,33 @@ class Compositor : public TextureSourceProvider {
   // A stale Compositor has no CompositorBridgeParent; it will not process
   // frames and should not be used.
   void SetInvalid();
+<<<<<<< HEAD
   virtual bool IsValid() const override;
   CompositorBridgeParent* GetCompositorBridgeParent() const { return mParent; }
+||||||| merged common ancestors
+  virtual bool IsValid() const override;
+  CompositorBridgeParent* GetCompositorBridgeParent() const {
+    return mParent;
+  }
+=======
+  bool IsValid() const override;
+  CompositorBridgeParent* GetCompositorBridgeParent() const { return mParent; }
+
+  /**
+   * Request the compositor to allow recording its frames.
+   *
+   * This is a noop on |CompositorOGL|.
+   */
+  virtual void RequestAllowFrameRecording(bool aWillRecord) {}
+
+  /**
+   * Record the current frame for readback by the |CompositionRecorder|.
+   *
+   * If this compositor does not support this feature, a null pointer is
+   * returned instead.
+   */
+  already_AddRefed<RecordedFrame> RecordFrame(const TimeStamp& aTimeStamp);
+>>>>>>> upstream-releases
 
  protected:
   void DrawDiagnosticsInternal(DiagnosticFlags aFlags,
@@ -635,7 +677,7 @@ class AsyncReadbackBuffer {
 
  protected:
   explicit AsyncReadbackBuffer(const gfx::IntSize& aSize) : mSize(aSize) {}
-  virtual ~AsyncReadbackBuffer() {}
+  virtual ~AsyncReadbackBuffer() = default;
 
   gfx::IntSize mSize;
 };

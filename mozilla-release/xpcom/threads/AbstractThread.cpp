@@ -53,9 +53,15 @@ class EventTargetWrapper : public AbstractThread {
                                                      std::move(aRunnable));
     }
 
+<<<<<<< HEAD
     RefPtr<nsIRunnable> runner(
         new Runner(this, std::move(aRunnable),
                    false /* already drained by TaskGroupRunnable  */));
+||||||| merged common ancestors
+    RefPtr<nsIRunnable> runner(new Runner(this, std::move(aRunnable), false /* already drained by TaskGroupRunnable  */));
+=======
+    RefPtr<nsIRunnable> runner = new Runner(this, std::move(aRunnable));
+>>>>>>> upstream-releases
     return mTarget->Dispatch(runner.forget(), NS_DISPATCH_NORMAL);
   }
 
@@ -99,6 +105,7 @@ class EventTargetWrapper : public AbstractThread {
   RefPtr<nsIEventTarget> mTarget;
   Maybe<AutoTaskDispatcher> mTailDispatcher;
 
+<<<<<<< HEAD
   virtual already_AddRefed<nsIRunnable> CreateDirectTaskDrainer(
       already_AddRefed<nsIRunnable> aRunnable) override {
     RefPtr<Runner> runner =
@@ -106,7 +113,19 @@ class EventTargetWrapper : public AbstractThread {
     return runner.forget();
   }
 
+||||||| merged common ancestors
+  virtual already_AddRefed<nsIRunnable>
+  CreateDirectTaskDrainer(already_AddRefed<nsIRunnable> aRunnable) override
+  {
+    RefPtr<Runner> runner =
+      new Runner(this, std::move(aRunnable), /* aDrainDirectTasks */ true);
+    return runner.forget();
+  }
+
+=======
+>>>>>>> upstream-releases
   class Runner : public CancelableRunnable {
+<<<<<<< HEAD
     class MOZ_STACK_CLASS AutoTaskGuard final {
      public:
       explicit AutoTaskGuard(EventTargetWrapper* aThread)
@@ -123,31 +142,73 @@ class EventTargetWrapper : public AbstractThread {
     };
 
    public:
+||||||| merged common ancestors
+    class MOZ_STACK_CLASS AutoTaskGuard final {
+    public:
+      explicit AutoTaskGuard(EventTargetWrapper* aThread)
+        : mLastCurrentThread(nullptr)
+      {
+        MOZ_ASSERT(aThread);
+        mLastCurrentThread = sCurrentThreadTLS.get();
+        sCurrentThreadTLS.set(aThread);
+      }
+
+      ~AutoTaskGuard()
+      {
+        sCurrentThreadTLS.set(mLastCurrentThread);
+      }
+    private:
+      AbstractThread* mLastCurrentThread;
+    };
+
+  public:
+=======
+   public:
+>>>>>>> upstream-releases
     explicit Runner(EventTargetWrapper* aThread,
+<<<<<<< HEAD
                     already_AddRefed<nsIRunnable> aRunnable,
                     bool aDrainDirectTasks)
         : CancelableRunnable("EventTargetWrapper::Runner"),
           mThread(aThread),
           mRunnable(aRunnable),
           mDrainDirectTasks(aDrainDirectTasks) {}
+||||||| merged common ancestors
+                    already_AddRefed<nsIRunnable> aRunnable,
+                    bool aDrainDirectTasks)
+      : CancelableRunnable("EventTargetWrapper::Runner")
+      , mThread(aThread)
+      , mRunnable(aRunnable)
+      , mDrainDirectTasks(aDrainDirectTasks)
+    {
+    }
+=======
+                    already_AddRefed<nsIRunnable> aRunnable)
+        : CancelableRunnable("EventTargetWrapper::Runner"),
+          mThread(aThread),
+          mRunnable(aRunnable) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     NS_IMETHOD Run() override {
       AutoTaskGuard taskGuard(mThread);
+||||||| merged common ancestors
+    NS_IMETHOD Run() override
+    {
+      AutoTaskGuard taskGuard(mThread);
+=======
+    NS_IMETHOD Run() override {
+      AutoEnter taskGuard(mThread);
+>>>>>>> upstream-releases
 
       MOZ_ASSERT(mThread == AbstractThread::GetCurrent());
       MOZ_ASSERT(mThread->IsCurrentThreadIn());
-      nsresult rv = mRunnable->Run();
-
-      if (mDrainDirectTasks) {
-        mThread->TailDispatcher().DrainDirectTasks();
-      }
-
-      return rv;
+      return mRunnable->Run();
     }
 
     nsresult Cancel() override {
       // Set the TLS during Cancel() just in case it calls Run().
-      AutoTaskGuard taskGuard(mThread);
+      AutoEnter taskGuard(mThread);
 
       nsresult rv = NS_OK;
 
@@ -176,10 +237,21 @@ class EventTargetWrapper : public AbstractThread {
     }
 #endif
 
+<<<<<<< HEAD
    private:
     RefPtr<EventTargetWrapper> mThread;
     RefPtr<nsIRunnable> mRunnable;
     bool mDrainDirectTasks;
+||||||| merged common ancestors
+  private:
+    RefPtr<EventTargetWrapper> mThread;
+    RefPtr<nsIRunnable> mRunnable;
+    bool mDrainDirectTasks;
+=======
+   private:
+    const RefPtr<EventTargetWrapper> mThread;
+    const RefPtr<nsIRunnable> mRunnable;
+>>>>>>> upstream-releases
   };
 };
 
@@ -270,8 +342,18 @@ void AbstractThread::DispatchStateChange(
   GetCurrent()->TailDispatcher().AddStateChangeTask(this, std::move(aRunnable));
 }
 
+<<<<<<< HEAD
 /* static */ void AbstractThread::DispatchDirectTask(
     already_AddRefed<nsIRunnable> aRunnable) {
+||||||| merged common ancestors
+/* static */ void
+AbstractThread::DispatchDirectTask(already_AddRefed<nsIRunnable> aRunnable)
+{
+=======
+/* static */
+void AbstractThread::DispatchDirectTask(
+    already_AddRefed<nsIRunnable> aRunnable) {
+>>>>>>> upstream-releases
   GetCurrent()->TailDispatcher().AddDirectTask(std::move(aRunnable));
 }
 

@@ -8,6 +8,7 @@
 #include "nsIServiceManager.h"
 #include "mozilla/ErrorResult.h"
 #include "mozilla/ModuleUtils.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Services.h"
 #include "nsIWebBrowserChrome.h"
 #include "nsCURILoader.h"
@@ -29,7 +30,7 @@
 #include "nsContainerFrame.h"
 #include "nsFrameTraversal.h"
 #include "nsIImageDocument.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIContent.h"
 #include "nsTextFragment.h"
 #include "nsIEditor.h"
@@ -218,9 +219,7 @@ nsTypeAheadFind::SetDocShell(nsIDocShell* aDocShell) {
   mWebBrowserFind = do_GetInterface(aDocShell);
   NS_ENSURE_TRUE(mWebBrowserFind, NS_ERROR_FAILURE);
 
-  nsCOMPtr<nsIPresShell> presShell;
-  presShell = aDocShell->GetPresShell();
-  mPresShell = do_GetWeakReference(presShell);
+  mPresShell = do_GetWeakReference(aDocShell->GetPresShell());
 
   ReleaseStrongMemberVariables();
   return NS_OK;
@@ -322,15 +321,33 @@ void nsTypeAheadFind::PlayNotFoundSound() {
   }
 }
 
+<<<<<<< HEAD
 nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
                                     bool aIsFirstVisiblePreferred,
                                     bool aFindPrev, uint16_t* aResult) {
+||||||| merged common ancestors
+nsresult
+nsTypeAheadFind::FindItNow(nsIPresShell *aPresShell, bool aIsLinksOnly,
+                           bool aIsFirstVisiblePreferred, bool aFindPrev,
+                           uint16_t* aResult)
+{
+=======
+nsresult nsTypeAheadFind::FindItNow(bool aIsLinksOnly,
+                                    bool aIsFirstVisiblePreferred,
+                                    bool aFindPrev, uint16_t* aResult) {
+>>>>>>> upstream-releases
   *aResult = FIND_NOTFOUND;
   mFoundLink = nullptr;
   mFoundEditable = nullptr;
   mFoundRange = nullptr;
   mCurrentWindow = nullptr;
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> startingPresShell(GetPresShell());
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> startingPresShell (GetPresShell());
+=======
+  RefPtr<PresShell> startingPresShell = GetPresShell();
+>>>>>>> upstream-releases
   if (!startingPresShell) {
     nsCOMPtr<nsIDocShell> ds = do_QueryReferent(mDocShell);
     NS_ENSURE_TRUE(ds, NS_ERROR_FAILURE);
@@ -339,12 +356,20 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
     mPresShell = do_GetWeakReference(startingPresShell);
   }
 
-  nsCOMPtr<nsIPresShell> presShell(aPresShell);
-
+  RefPtr<PresShell> presShell = startingPresShell;
   if (!presShell) {
+<<<<<<< HEAD
     presShell = startingPresShell;  // this is the current document
 
     if (!presShell) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+    presShell = startingPresShell;  // this is the current document
+
+    if (!presShell)
+      return NS_ERROR_FAILURE;
+=======
+    return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
   }
 
   // There could be unflushed notifications which hide textareas or other
@@ -433,7 +458,7 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
 
   while (true) {    // ----- Outer while loop: go through all docs -----
     while (true) {  // === Inner while loop: go through a single doc ===
-      mFind->Find(mTypeAheadBuffer.get(), mSearchRange, mStartPointRange,
+      mFind->Find(mTypeAheadBuffer, mSearchRange, mStartPointRange,
                   mEndPointRange, getter_AddRefs(returnRange));
       if (!returnRange) {
         break;  // Nothing found in this doc, go to outer loop (try next doc)
@@ -444,8 +469,15 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
 
       if (aIsLinksOnly) {
         // Don't check if inside link when searching all text
+<<<<<<< HEAD
         RangeStartsInsideLink(returnRange, presShell, &isInsideLink,
                               &isStartingLink);
+||||||| merged common ancestors
+        RangeStartsInsideLink(returnRange, presShell,
+                              &isInsideLink, &isStartingLink);
+=======
+        RangeStartsInsideLink(returnRange, &isInsideLink, &isStartingLink);
+>>>>>>> upstream-releases
       }
 
       bool usesIndependentSelection;
@@ -516,7 +548,7 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
         mPresShell = do_GetWeakReference(presShell);
       }
 
-      nsCOMPtr<nsIDocument> document = presShell->GetDocument();
+      RefPtr<Document> document = presShell->GetDocument();
       NS_ASSERTION(document, "Wow, presShell doesn't have document!");
       if (!document) return NS_ERROR_UNEXPECTED;
 
@@ -586,6 +618,7 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
         }
 
         // If we reach here without setting mFoundEditable, then something
+<<<<<<< HEAD
         // besides editable elements can cause us to have an independent
         // selection controller.  I don't know whether this is possible.
         // Currently, we simply fall back to grabbing the document's selection
@@ -594,6 +627,20 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
         NS_ASSERTION(mFoundEditable,
                      "Independent selection controller on "
                      "non-editable element!");
+||||||| merged common ancestors
+        // besides editable elements can cause us to have an independent
+        // selection controller.  I don't know whether this is possible.
+        // Currently, we simply fall back to grabbing the document's selection
+        // controller in this case.  Perhaps we should reject this find match
+        // and search again.
+        NS_ASSERTION(mFoundEditable, "Independent selection controller on "
+                     "non-editable element!");
+=======
+        // besides editable elements gave us an independent selection
+        // controller. List controls with multiple visible elements can do
+        // this (nsAreaSelectsFrame), and possibly others. We fall back to
+        // grabbing the document's selection controller in this case.
+>>>>>>> upstream-releases
       }
 
       if (!mFoundEditable) {
@@ -607,7 +654,8 @@ nsresult nsTypeAheadFind::FindItNow(nsIPresShell* aPresShell, bool aIsLinksOnly,
       // Select the found text
       if (selection) {
         selection->RemoveAllRanges(IgnoreErrors());
-        selection->AddRange(*returnRange, IgnoreErrors());
+        selection->AddRangeAndSelectFramesAndNotifyListeners(*returnRange,
+                                                             IgnoreErrors());
       }
 
       if (!mFoundEditable && fm) {
@@ -734,10 +782,26 @@ nsTypeAheadFind::GetCurrentWindow(mozIDOMWindow** aCurrentWindow) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsTypeAheadFind::GetSearchContainers(
     nsISupports* aContainer, nsISelectionController* aSelectionController,
     bool aIsFirstVisiblePreferred, bool aFindPrev, nsIPresShell** aPresShell,
     nsPresContext** aPresContext) {
+||||||| merged common ancestors
+nsresult
+nsTypeAheadFind::GetSearchContainers(nsISupports *aContainer,
+                                     nsISelectionController *aSelectionController,
+                                     bool aIsFirstVisiblePreferred,
+                                     bool aFindPrev,
+                                     nsIPresShell **aPresShell,
+                                     nsPresContext **aPresContext)
+{
+=======
+nsresult nsTypeAheadFind::GetSearchContainers(
+    nsISupports* aContainer, nsISelectionController* aSelectionController,
+    bool aIsFirstVisiblePreferred, bool aFindPrev, PresShell** aPresShell,
+    nsPresContext** aPresContext) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aContainer);
   NS_ENSURE_ARG_POINTER(aPresShell);
   NS_ENSURE_ARG_POINTER(aPresContext);
@@ -748,13 +812,13 @@ nsresult nsTypeAheadFind::GetSearchContainers(
   nsCOMPtr<nsIDocShell> docShell(do_QueryInterface(aContainer));
   if (!docShell) return NS_ERROR_FAILURE;
 
-  nsCOMPtr<nsIPresShell> presShell = docShell->GetPresShell();
+  RefPtr<PresShell> presShell = docShell->GetPresShell();
 
   RefPtr<nsPresContext> presContext = docShell->GetPresContext();
 
   if (!presShell || !presContext) return NS_ERROR_FAILURE;
 
-  nsIDocument* doc = presShell->GetDocument();
+  Document* doc = presShell->GetDocument();
 
   if (!doc) return NS_ERROR_FAILURE;
 
@@ -805,9 +869,18 @@ nsresult nsTypeAheadFind::GetSearchContainers(
   // Consider current selection as null if
   // it's not in the currently focused document
   RefPtr<nsRange> currentSelectionRange;
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> selectionPresShell = GetPresShell();
   if (aSelectionController && selectionPresShell &&
       selectionPresShell == presShell) {
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> selectionPresShell = GetPresShell();
+  if (aSelectionController && selectionPresShell && selectionPresShell == presShell) {
+=======
+  RefPtr<PresShell> selectionPresShell = GetPresShell();
+  if (aSelectionController && selectionPresShell &&
+      selectionPresShell == presShell) {
+>>>>>>> upstream-releases
     RefPtr<Selection> selection = aSelectionController->GetSelection(
         nsISelectionController::SELECTION_NORMAL);
     if (selection) {
@@ -850,10 +923,23 @@ nsresult nsTypeAheadFind::GetSearchContainers(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsTypeAheadFind::RangeStartsInsideLink(nsRange* aRange,
                                             nsIPresShell* aPresShell,
                                             bool* aIsInsideLink,
                                             bool* aIsStartingLink) {
+||||||| merged common ancestors
+void
+nsTypeAheadFind::RangeStartsInsideLink(nsRange *aRange,
+                                       nsIPresShell *aPresShell,
+                                       bool *aIsInsideLink,
+                                       bool *aIsStartingLink)
+{
+=======
+void nsTypeAheadFind::RangeStartsInsideLink(nsRange* aRange,
+                                            bool* aIsInsideLink,
+                                            bool* aIsStartingLink) {
+>>>>>>> upstream-releases
   *aIsInsideLink = false;
   *aIsStartingLink = true;
 
@@ -956,7 +1042,7 @@ nsTypeAheadFind::FindAgain(bool aFindBackwards, bool aLinksOnly,
   if (!mTypeAheadBuffer.IsEmpty())
     // Beware! This may flush notifications via synchronous
     // ScrollSelectionIntoView.
-    FindItNow(nullptr, aLinksOnly, false, aFindBackwards, aResult);
+    FindItNow(aLinksOnly, false, aFindBackwards, aResult);
 
   return NS_OK;
 }
@@ -966,7 +1052,13 @@ nsTypeAheadFind::Find(const nsAString& aSearchString, bool aLinksOnly,
                       uint16_t* aResult) {
   *aResult = FIND_NOTFOUND;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIPresShell> presShell(GetPresShell());
+||||||| merged common ancestors
+  nsCOMPtr<nsIPresShell> presShell (GetPresShell());
+=======
+  RefPtr<PresShell> presShell = GetPresShell();
+>>>>>>> upstream-releases
   if (!presShell) {
     nsCOMPtr<nsIDocShell> ds(do_QueryReferent(mDocShell));
     NS_ENSURE_TRUE(ds, NS_ERROR_FAILURE);
@@ -1045,8 +1137,17 @@ nsTypeAheadFind::Find(const nsAString& aSearchString, bool aLinksOnly,
       nsPresContext* presContext = presShell->GetPresContext();
       NS_ENSURE_TRUE(presContext, NS_OK);
 
+<<<<<<< HEAD
       nsCOMPtr<nsIDocument> document = presShell->GetDocument();
       if (!document) return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+      nsCOMPtr<nsIDocument> document = presShell->GetDocument();
+      if (!document)
+        return NS_ERROR_UNEXPECTED;
+=======
+      nsCOMPtr<Document> document = presShell->GetDocument();
+      if (!document) return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
 
       nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
       if (fm) {
@@ -1069,8 +1170,15 @@ nsTypeAheadFind::Find(const nsAString& aSearchString, bool aLinksOnly,
   // ----------- Find the text! ---------------------
   // Beware! This may flush notifications via synchronous
   // ScrollSelectionIntoView.
+<<<<<<< HEAD
   nsresult rv =
       FindItNow(nullptr, aLinksOnly, isFirstVisiblePreferred, false, aResult);
+||||||| merged common ancestors
+  nsresult rv = FindItNow(nullptr, aLinksOnly, isFirstVisiblePreferred,
+                          false, aResult);
+=======
+  nsresult rv = FindItNow(aLinksOnly, isFirstVisiblePreferred, false, aResult);
+>>>>>>> upstream-releases
 
   // ---------Handle success or failure ---------------
   if (NS_SUCCEEDED(rv)) {
@@ -1096,10 +1204,25 @@ nsTypeAheadFind::Find(const nsAString& aSearchString, bool aLinksOnly,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsTypeAheadFind::GetSelection(nsIPresShell* aPresShell,
                                    nsISelectionController** aSelCon,
                                    Selection** aDOMSel) {
   if (!aPresShell) return;
+||||||| merged common ancestors
+void
+nsTypeAheadFind::GetSelection(nsIPresShell *aPresShell,
+                              nsISelectionController **aSelCon,
+                              Selection **aDOMSel)
+{
+  if (!aPresShell)
+    return;
+=======
+void nsTypeAheadFind::GetSelection(PresShell* aPresShell,
+                                   nsISelectionController** aSelCon,
+                                   Selection** aDOMSel) {
+  if (!aPresShell) return;
+>>>>>>> upstream-releases
 
   // if aCurrentNode is nullptr, get selection for document
   *aDOMSel = nullptr;
@@ -1135,8 +1258,8 @@ nsTypeAheadFind::IsRangeVisible(nsRange* aRange, bool aMustBeInViewPort,
                                 bool* aResult) {
   nsCOMPtr<nsINode> node = aRange->GetStartContainer();
 
-  nsIDocument* doc = node->OwnerDoc();
-  nsCOMPtr<nsIPresShell> presShell = doc->GetShell();
+  Document* doc = node->OwnerDoc();
+  RefPtr<PresShell> presShell = doc->GetPresShell();
   if (!presShell) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -1147,12 +1270,30 @@ nsTypeAheadFind::IsRangeVisible(nsRange* aRange, bool aMustBeInViewPort,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool nsTypeAheadFind::IsRangeVisible(nsIPresShell* aPresShell,
                                      nsPresContext* aPresContext,
                                      nsRange* aRange, bool aMustBeInViewPort,
                                      bool aGetTopVisibleLeaf,
                                      nsRange** aFirstVisibleRange,
                                      bool* aUsesIndependentSelection) {
+||||||| merged common ancestors
+bool
+nsTypeAheadFind::IsRangeVisible(nsIPresShell *aPresShell,
+                                nsPresContext *aPresContext,
+                                nsRange *aRange, bool aMustBeInViewPort,
+                                bool aGetTopVisibleLeaf,
+                                nsRange **aFirstVisibleRange,
+                                bool *aUsesIndependentSelection)
+{
+=======
+bool nsTypeAheadFind::IsRangeVisible(PresShell* aPresShell,
+                                     nsPresContext* aPresContext,
+                                     nsRange* aRange, bool aMustBeInViewPort,
+                                     bool aGetTopVisibleLeaf,
+                                     nsRange** aFirstVisibleRange,
+                                     bool* aUsesIndependentSelection) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aPresShell && aPresContext && aRange && aFirstVisibleRange,
                "params are invalid");
 
@@ -1209,13 +1350,13 @@ bool nsTypeAheadFind::IsRangeVisible(nsIPresShell* aPresShell,
   // We don't use the more accurate AccGetBounds, because that is
   // more expensive and the STATE_OFFSCREEN flag that this is used
   // for only needs to be a rough indicator
-  nsRectVisibility rectVisibility = nsRectVisibility_kAboveViewport;
+  RectVisibility rectVisibility = RectVisibility::AboveViewport;
 
   if (!aGetTopVisibleLeaf && !frame->GetRect().IsEmpty()) {
     rectVisibility = aPresShell->GetRectVisibility(
         frame, frame->GetRectRelativeToSelf(), minDistance);
 
-    if (rectVisibility == nsRectVisibility_kVisible) {
+    if (rectVisibility == RectVisibility::Visible) {
       // The primary frame of the range is visible, but we don't yet know if
       // any of the rects of the range itself are visible. Check to see if at
       // least one of the rects is visible.
@@ -1237,10 +1378,18 @@ bool nsTypeAheadFind::IsRangeVisible(nsIPresShell* aPresShell,
         nsLayoutUtils::TransformResult res =
             nsLayoutUtils::TransformRect(containerFrame, frame, r);
         if (res == nsLayoutUtils::TransformResult::TRANSFORM_SUCCEEDED) {
+<<<<<<< HEAD
           nsRectVisibility rangeRectVisibility =
               aPresShell->GetRectVisibility(frame, r, minDistance);
+||||||| merged common ancestors
+          nsRectVisibility rangeRectVisibility =
+            aPresShell->GetRectVisibility(frame, r, minDistance);
+=======
+          RectVisibility rangeRectVisibility =
+              aPresShell->GetRectVisibility(frame, r, minDistance);
+>>>>>>> upstream-releases
 
-          if (rangeRectVisibility == nsRectVisibility_kVisible) {
+          if (rangeRectVisibility == RectVisibility::Visible) {
             atLeastOneRangeRectVisible = true;
             break;
           }
@@ -1281,7 +1430,7 @@ bool nsTypeAheadFind::IsRangeVisible(nsIPresShell* aPresShell,
     return false;
   }
 
-  while (rectVisibility == nsRectVisibility_kAboveViewport) {
+  while (rectVisibility == RectVisibility::AboveViewport) {
     frameTraversal->Next();
     frame = frameTraversal->CurrentItem();
     if (!frame) {
@@ -1322,8 +1471,7 @@ NS_IMETHODIMP
 nsTypeAheadFind::IsRangeRendered(nsRange* aRange, bool* aResult) {
   nsINode* node = aRange->GetStartContainer();
 
-  nsIDocument* doc = node->OwnerDoc();
-  nsCOMPtr<nsIPresShell> presShell = doc->GetShell();
+  RefPtr<PresShell> presShell = node->OwnerDoc()->GetPresShell();
   if (!presShell) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -1332,10 +1480,26 @@ nsTypeAheadFind::IsRangeRendered(nsRange* aRange, bool* aResult) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool nsTypeAheadFind::IsRangeRendered(nsIPresShell* aPresShell,
                                       nsPresContext* aPresContext,
                                       nsRange* aRange) {
   NS_ASSERTION(aPresShell && aPresContext && aRange, "params are invalid");
+||||||| merged common ancestors
+bool
+nsTypeAheadFind::IsRangeRendered(nsIPresShell *aPresShell,
+                                 nsPresContext *aPresContext,
+                                 nsRange *aRange)
+{
+  NS_ASSERTION(aPresShell && aPresContext && aRange,
+               "params are invalid");
+=======
+bool nsTypeAheadFind::IsRangeRendered(PresShell* aPresShell,
+                                      nsPresContext* aPresContext,
+                                      nsRange* aRange) {
+  using FrameForPointOption = nsLayoutUtils::FrameForPointOption;
+  NS_ASSERTION(aPresShell && aPresContext && aRange, "params are invalid");
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIContent> content = do_QueryInterface(aRange->GetCommonAncestor());
   if (!content) {
@@ -1364,11 +1528,24 @@ bool nsTypeAheadFind::IsRangeRendered(nsIPresShell* aPresShell,
              nsPresContext::CSSPixelsToAppUnits((float)rect->Width()),
              nsPresContext::CSSPixelsToAppUnits((float)rect->Height()));
     // Append visible frames to frames array.
+<<<<<<< HEAD
     nsLayoutUtils::GetFramesForArea(
         rootFrame, r, frames,
         nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
             nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME |
             nsLayoutUtils::ONLY_VISIBLE);
+||||||| merged common ancestors
+    nsLayoutUtils::GetFramesForArea(rootFrame, r, frames,
+      nsLayoutUtils::IGNORE_PAINT_SUPPRESSION |
+      nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME |
+      nsLayoutUtils::ONLY_VISIBLE);
+=======
+    nsLayoutUtils::GetFramesForArea(
+        rootFrame, r, frames,
+        {FrameForPointOption::IgnorePaintSuppression,
+         FrameForPointOption::IgnoreRootScrollFrame,
+         FrameForPointOption::OnlyVisible});
+>>>>>>> upstream-releases
 
     // See if any of the frames contain the content. If they do, then the range
     // is visible. We search for the content rather than the original frame,
@@ -1386,16 +1563,35 @@ bool nsTypeAheadFind::IsRangeRendered(nsIPresShell* aPresShell,
   return false;
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsIPresShell> nsTypeAheadFind::GetPresShell() {
   if (!mPresShell) return nullptr;
 
   nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShell);
   if (shell) {
     nsPresContext* pc = shell->GetPresContext();
+||||||| merged common ancestors
+already_AddRefed<nsIPresShell>
+nsTypeAheadFind::GetPresShell()
+{
+  if (!mPresShell)
+    return nullptr;
+
+  nsCOMPtr<nsIPresShell> shell = do_QueryReferent(mPresShell);
+  if (shell) {
+    nsPresContext *pc = shell->GetPresContext();
+=======
+already_AddRefed<PresShell> nsTypeAheadFind::GetPresShell() {
+  if (!mPresShell) {
+    return nullptr;
+  }
+  RefPtr<PresShell> presShell = do_QueryReferent(mPresShell);
+  if (presShell) {
+    nsPresContext* pc = presShell->GetPresContext();
+>>>>>>> upstream-releases
     if (!pc || !pc->GetContainerWeak()) {
       return nullptr;
     }
   }
-
-  return shell.forget();
+  return presShell.forget();
 }

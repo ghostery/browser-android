@@ -142,6 +142,7 @@ D2D1_CHANNEL_SELECTOR D2DChannelSelector(uint32_t aMode) {
   return D2D1_CHANNEL_SELECTOR_R;
 }
 
+<<<<<<< HEAD
 already_AddRefed<ID2D1Image> GetImageForSourceSurface(DrawTarget *aDT,
                                                       SourceSurface *aSurface) {
   if (aDT->IsTiledDrawTarget() || aDT->IsDualDrawTarget() ||
@@ -149,12 +150,33 @@ already_AddRefed<ID2D1Image> GetImageForSourceSurface(DrawTarget *aDT,
     gfxDevCrash(LogReason::FilterNodeD2D1Target)
         << "Incompatible draw target type! " << (int)aDT->IsTiledDrawTarget()
         << " " << (int)aDT->IsDualDrawTarget();
+||||||| merged common ancestors
+already_AddRefed<ID2D1Image> GetImageForSourceSurface(DrawTarget *aDT, SourceSurface *aSurface)
+{
+  if (aDT->IsTiledDrawTarget() || aDT->IsDualDrawTarget() || aDT->IsCaptureDT()) {
+    gfxDevCrash(LogReason::FilterNodeD2D1Target) << "Incompatible draw target type! " << (int)aDT->IsTiledDrawTarget() << " " << (int)aDT->IsDualDrawTarget();
+=======
+already_AddRefed<ID2D1Image> GetImageForSourceSurface(DrawTarget* aDT,
+                                                      SourceSurface* aSurface) {
+  if (aDT->IsTiledDrawTarget() || aDT->IsDualDrawTarget() ||
+      aDT->IsCaptureDT()) {
+    gfxDevCrash(LogReason::FilterNodeD2D1Target)
+        << "Incompatible draw target type! " << (int)aDT->IsTiledDrawTarget()
+        << " " << (int)aDT->IsDualDrawTarget();
+>>>>>>> upstream-releases
     return nullptr;
   }
   switch (aDT->GetBackendType()) {
     case BackendType::DIRECT2D1_1:
+<<<<<<< HEAD
       return static_cast<DrawTargetD2D1 *>(aDT)->GetImageForSurface(
           aSurface, ExtendMode::CLAMP);
+||||||| merged common ancestors
+      return static_cast<DrawTargetD2D1*>(aDT)->GetImageForSurface(aSurface, ExtendMode::CLAMP);
+=======
+      return static_cast<DrawTargetD2D1*>(aDT)->GetImageForSurface(
+          aSurface, ExtendMode::CLAMP);
+>>>>>>> upstream-releases
     default:
       gfxDevCrash(LogReason::FilterNodeD2D1Backend)
           << "Unknown draw target type! " << (int)aDT->GetBackendType();
@@ -207,7 +229,14 @@ uint32_t ConvertValue(FilterType aType, uint32_t aAttribute, uint32_t aValue) {
   return aValue;
 }
 
+<<<<<<< HEAD
 void ConvertValue(FilterType aType, uint32_t aAttribute, IntSize &aValue) {
+||||||| merged common ancestors
+void ConvertValue(FilterType aType, uint32_t aAttribute, IntSize &aValue)
+{
+=======
+void ConvertValue(FilterType aType, uint32_t aAttribute, IntSize& aValue) {
+>>>>>>> upstream-releases
   switch (aType) {
     case FilterType::MORPHOLOGY:
       if (aAttribute == ATT_MORPHOLOGY_RADII) {
@@ -497,8 +526,17 @@ GetD2D1PropForAttribute(FilterType aType, uint32_t aIndex) {
   return UINT32_MAX;
 }
 
+<<<<<<< HEAD
 bool GetD2D1PropsForIntSize(FilterType aType, uint32_t aIndex,
                             UINT32 *aPropWidth, UINT32 *aPropHeight) {
+||||||| merged common ancestors
+bool
+GetD2D1PropsForIntSize(FilterType aType, uint32_t aIndex, UINT32 *aPropWidth, UINT32 *aPropHeight)
+{
+=======
+bool GetD2D1PropsForIntSize(FilterType aType, uint32_t aIndex,
+                            UINT32* aPropWidth, UINT32* aPropHeight) {
+>>>>>>> upstream-releases
   switch (aType) {
     case FilterType::MORPHOLOGY:
       if (aIndex == ATT_MORPHOLOGY_RADII) {
@@ -604,8 +642,17 @@ static bool HasUnboundedOutputRegion(FilterType aType) {
 }
 
 /* static */
+<<<<<<< HEAD
 already_AddRefed<FilterNode> FilterNodeD2D1::Create(ID2D1DeviceContext *aDC,
                                                     FilterType aType) {
+||||||| merged common ancestors
+already_AddRefed<FilterNode>
+FilterNodeD2D1::Create(ID2D1DeviceContext *aDC, FilterType aType)
+{
+=======
+already_AddRefed<FilterNode> FilterNodeD2D1::Create(ID2D1DeviceContext* aDC,
+                                                    FilterType aType) {
+>>>>>>> upstream-releases
   if (aType == FilterType::CONVOLVE_MATRIX) {
     return MakeAndAddRef<FilterNodeConvolveD2D1>(aDC);
   }
@@ -657,7 +704,15 @@ void FilterNodeD2D1::InitUnmappedProperties() {
   }
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetInput(uint32_t aIndex, SourceSurface *aSurface) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetInput(uint32_t aIndex, SourceSurface *aSurface)
+{
+=======
+void FilterNodeD2D1::SetInput(uint32_t aIndex, SourceSurface* aSurface) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1InputForInput(mType, aIndex);
   ID2D1Effect *effect = InputEffect();
   MOZ_ASSERT(input < effect->GetInputCount());
@@ -691,7 +746,15 @@ void FilterNodeD2D1::SetInput(uint32_t aIndex, SourceSurface *aSurface) {
   effect->SetInput(input, nullptr);
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetInput(uint32_t aIndex, FilterNode *aFilter) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetInput(uint32_t aIndex, FilterNode *aFilter)
+{
+=======
+void FilterNodeD2D1::SetInput(uint32_t aIndex, FilterNode* aFilter) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1InputForInput(mType, aIndex);
   ID2D1Effect *effect = InputEffect();
 
@@ -727,14 +790,31 @@ void FilterNodeD2D1::SetInput(uint32_t aIndex, FilterNode *aFilter) {
   }
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::WillDraw(DrawTarget *aDT) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::WillDraw(DrawTarget *aDT)
+{
+=======
+void FilterNodeD2D1::WillDraw(DrawTarget* aDT) {
+>>>>>>> upstream-releases
   // Convert input SourceSurfaces into ID2D1Images and set them on the effect.
   for (size_t inputIndex = 0; inputIndex < mInputSurfaces.size();
        inputIndex++) {
     if (mInputSurfaces[inputIndex]) {
+<<<<<<< HEAD
       ID2D1Effect *effect = InputEffect();
       RefPtr<ID2D1Image> image =
           GetImageForSourceSurface(aDT, mInputSurfaces[inputIndex]);
+||||||| merged common ancestors
+      ID2D1Effect* effect = InputEffect();
+      RefPtr<ID2D1Image> image = GetImageForSourceSurface(aDT, mInputSurfaces[inputIndex]);
+=======
+      ID2D1Effect* effect = InputEffect();
+      RefPtr<ID2D1Image> image =
+          GetImageForSourceSurface(aDT, mInputSurfaces[inputIndex]);
+>>>>>>> upstream-releases
       effect->SetInput(inputIndex, image);
     }
   }
@@ -772,35 +852,75 @@ void FilterNodeD2D1::SetAttribute(uint32_t aIndex, Float aValue) {
   mEffect->SetValue(input, aValue);
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2DPoint(aValue));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix5x4 &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix5x4 &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix5x4& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2DMatrix5x4(aValue));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point3D &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point3D &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Point3D& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2DVector3D(aValue));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Size &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Size &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Size& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2D1::Vector2F(aValue.width, aValue.height));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntSize &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntSize &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntSize& aValue) {
+>>>>>>> upstream-releases
   UINT32 widthProp, heightProp;
 
   if (!GetD2D1PropsForIntSize(mType, aIndex, &widthProp, &heightProp)) {
@@ -814,7 +934,15 @@ void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntSize &aValue) {
   mEffect->SetValue(heightProp, (UINT)value.height);
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Color &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Color &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Color& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
@@ -834,14 +962,30 @@ void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Color &aValue) {
   }
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Rect &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Rect &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Rect& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2DRect(aValue));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntRect &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntRect &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntRect& aValue) {
+>>>>>>> upstream-releases
   if (mType == FilterType::TURBULENCE) {
     MOZ_ASSERT(aIndex == ATT_TURBULENCE_RECT);
 
@@ -868,22 +1012,47 @@ void FilterNodeD2D1::SetAttribute(uint32_t aIndex, bool aValue) {
   mEffect->SetValue(input, (BOOL)aValue);
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Float *aValues,
                                   uint32_t aSize) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Float *aValues, uint32_t aSize)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Float* aValues,
+                                  uint32_t aSize) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, (BYTE *)aValues, sizeof(Float) * aSize);
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntPoint &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntPoint &aValue)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const IntPoint& aValue) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
   mEffect->SetValue(input, D2DPoint(aValue));
 }
 
+<<<<<<< HEAD
 void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix &aMatrix) {
+||||||| merged common ancestors
+void
+FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix &aMatrix)
+{
+=======
+void FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Matrix& aMatrix) {
+>>>>>>> upstream-releases
   UINT32 input = GetD2D1PropForAttribute(mType, aIndex);
   MOZ_ASSERT(input < mEffect->GetPropertyCount());
 
@@ -900,9 +1069,21 @@ void FilterNodeOpacityD2D1::SetAttribute(uint32_t aIndex, Float aValue) {
                     D2D1_COLORMATRIX_ALPHA_MODE_STRAIGHT);
 }
 
+<<<<<<< HEAD
 FilterNodeConvolveD2D1::FilterNodeConvolveD2D1(ID2D1DeviceContext *aDC)
     : FilterNodeD2D1(nullptr, FilterType::CONVOLVE_MATRIX),
       mEdgeMode(EDGE_MODE_DUPLICATE) {
+||||||| merged common ancestors
+
+FilterNodeConvolveD2D1::FilterNodeConvolveD2D1(ID2D1DeviceContext *aDC)
+  : FilterNodeD2D1(nullptr, FilterType::CONVOLVE_MATRIX)
+  , mEdgeMode(EDGE_MODE_DUPLICATE)
+{
+=======
+FilterNodeConvolveD2D1::FilterNodeConvolveD2D1(ID2D1DeviceContext* aDC)
+    : FilterNodeD2D1(nullptr, FilterType::CONVOLVE_MATRIX),
+      mEdgeMode(EDGE_MODE_DUPLICATE) {
+>>>>>>> upstream-releases
   // Correctly handling the interaction of edge mode and source rect is a bit
   // tricky with D2D1 effects. We want the edge mode to only apply outside of
   // the source rect (as specified by the ATT_CONVOLVE_MATRIX_SOURCE_RECT
@@ -948,7 +1129,15 @@ FilterNodeConvolveD2D1::FilterNodeConvolveD2D1(ID2D1DeviceContext *aDC)
   UpdateSourceRect();
 }
 
+<<<<<<< HEAD
 void FilterNodeConvolveD2D1::SetInput(uint32_t aIndex, FilterNode *aFilter) {
+||||||| merged common ancestors
+void
+FilterNodeConvolveD2D1::SetInput(uint32_t aIndex, FilterNode *aFilter)
+{
+=======
+void FilterNodeConvolveD2D1::SetInput(uint32_t aIndex, FilterNode* aFilter) {
+>>>>>>> upstream-releases
   FilterNodeD2D1::SetInput(aIndex, aFilter);
 
   UpdateChain();
@@ -964,7 +1153,15 @@ void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex, uint32_t aValue) {
   UpdateChain();
 }
 
+<<<<<<< HEAD
 ID2D1Effect *FilterNodeConvolveD2D1::InputEffect() {
+||||||| merged common ancestors
+ID2D1Effect*
+FilterNodeConvolveD2D1::InputEffect()
+{
+=======
+ID2D1Effect* FilterNodeConvolveD2D1::InputEffect() {
+>>>>>>> upstream-releases
   return mEdgeMode == EDGE_MODE_NONE ? mEffect.get() : mExtendInputEffect.get();
 }
 
@@ -1002,8 +1199,17 @@ void FilterNodeConvolveD2D1::UpdateChain() {
   }
 }
 
+<<<<<<< HEAD
 void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
                                           const IntSize &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex, const IntSize &aValue)
+{
+=======
+void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
+                                          const IntSize& aValue) {
+>>>>>>> upstream-releases
   if (aIndex != ATT_CONVOLVE_MATRIX_KERNEL_SIZE) {
     MOZ_ASSERT(false);
     return;
@@ -1017,8 +1223,17 @@ void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
   UpdateOffset();
 }
 
+<<<<<<< HEAD
 void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
                                           const IntPoint &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex, const IntPoint &aValue)
+{
+=======
+void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
+                                          const IntPoint& aValue) {
+>>>>>>> upstream-releases
   if (aIndex != ATT_CONVOLVE_MATRIX_TARGET) {
     MOZ_ASSERT(false);
     return;
@@ -1029,8 +1244,17 @@ void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
   UpdateOffset();
 }
 
+<<<<<<< HEAD
 void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
                                           const IntRect &aValue) {
+||||||| merged common ancestors
+void
+FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex, const IntRect &aValue)
+{
+=======
+void FilterNodeConvolveD2D1::SetAttribute(uint32_t aIndex,
+                                          const IntRect& aValue) {
+>>>>>>> upstream-releases
   if (aIndex != ATT_CONVOLVE_MATRIX_SOURCE_RECT) {
     MOZ_ASSERT(false);
     return;
@@ -1056,10 +1280,23 @@ void FilterNodeConvolveD2D1::UpdateSourceRect() {
                      Float(mSourceRect.XMost()), Float(mSourceRect.YMost())));
 }
 
+<<<<<<< HEAD
 FilterNodeExtendInputAdapterD2D1::FilterNodeExtendInputAdapterD2D1(
     ID2D1DeviceContext *aDC, FilterNodeD2D1 *aFilterNode, FilterType aType)
     : FilterNodeD2D1(aFilterNode->MainEffect(), aType),
       mWrappedFilterNode(aFilterNode) {
+||||||| merged common ancestors
+FilterNodeExtendInputAdapterD2D1::FilterNodeExtendInputAdapterD2D1(ID2D1DeviceContext *aDC,
+                                                                   FilterNodeD2D1 *aFilterNode, FilterType aType)
+ : FilterNodeD2D1(aFilterNode->MainEffect(), aType)
+ , mWrappedFilterNode(aFilterNode)
+{
+=======
+FilterNodeExtendInputAdapterD2D1::FilterNodeExtendInputAdapterD2D1(
+    ID2D1DeviceContext* aDC, FilterNodeD2D1* aFilterNode, FilterType aType)
+    : FilterNodeD2D1(aFilterNode->MainEffect(), aType),
+      mWrappedFilterNode(aFilterNode) {
+>>>>>>> upstream-releases
   // We have an mEffect that looks at the bounds of the input effect, and we
   // want mEffect to regard its input as unbounded. So we take the input,
   // pipe it through an ExtendInput effect (which has an infinite output rect
@@ -1079,9 +1316,20 @@ FilterNodeExtendInputAdapterD2D1::FilterNodeExtendInputAdapterD2D1(
   aFilterNode->InputEffect()->SetInputEffect(0, mExtendInputEffect.get());
 }
 
+<<<<<<< HEAD
 FilterNodePremultiplyAdapterD2D1::FilterNodePremultiplyAdapterD2D1(
     ID2D1DeviceContext *aDC, FilterNodeD2D1 *aFilterNode, FilterType aType)
     : FilterNodeD2D1(aFilterNode->MainEffect(), aType) {
+||||||| merged common ancestors
+FilterNodePremultiplyAdapterD2D1::FilterNodePremultiplyAdapterD2D1(ID2D1DeviceContext *aDC,
+                                                                   FilterNodeD2D1 *aFilterNode, FilterType aType)
+ : FilterNodeD2D1(aFilterNode->MainEffect(), aType)
+{
+=======
+FilterNodePremultiplyAdapterD2D1::FilterNodePremultiplyAdapterD2D1(
+    ID2D1DeviceContext* aDC, FilterNodeD2D1* aFilterNode, FilterType aType)
+    : FilterNodeD2D1(aFilterNode->MainEffect(), aType) {
+>>>>>>> upstream-releases
   // D2D1 component transfer effects do strange things when it comes to
   // premultiplication.
   // For our purposes we only need the transfer filters to apply straight to

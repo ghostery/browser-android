@@ -12,10 +12,23 @@ namespace net {
 
 struct HttpRetParams;
 
+<<<<<<< HEAD
 class HttpInfo {
  public:
   /* Calls getConnectionData method in nsHttpConnectionMgr. */
   static void GetHttpConnectionData(nsTArray<HttpRetParams> *);
+||||||| merged common ancestors
+class HttpInfo
+{
+public:
+    /* Calls getConnectionData method in nsHttpConnectionMgr. */
+    static void GetHttpConnectionData(nsTArray<HttpRetParams> *);
+=======
+class HttpInfo {
+ public:
+  /* Calls getConnectionData method in nsHttpConnectionMgr. */
+  static void GetHttpConnectionData(nsTArray<HttpRetParams>*);
+>>>>>>> upstream-releases
 };
 
 }  // namespace net

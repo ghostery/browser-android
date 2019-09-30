@@ -8,6 +8,7 @@
 
 #include "nsICodeCoverage.h"
 
+<<<<<<< HEAD
 #define NS_CODECOVERAGE_CID                          \
   {                                                  \
     0x93576af0, 0xa62f, 0x4c88, {                    \
@@ -15,6 +16,13 @@
     }                                                \
   }
 
+||||||| merged common ancestors
+#define NS_CODECOVERAGE_CID \
+{ 0x93576af0, 0xa62f, 0x4c88, \
+{ 0xbc, 0x12, 0xf1, 0x85, 0x5d, 0x4e, 0x01, 0x73 } }
+
+=======
+>>>>>>> upstream-releases
 class nsCodeCoverage final : nsICodeCoverage {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS

@@ -6,14 +6,12 @@
 
 #include "nsNameSpaceManager.h"
 #include "nsGkAtoms.h"
-#include "nsIBoxObject.h"
 #include "nsTreeColumns.h"
 #include "nsTreeUtils.h"
 #include "mozilla/ComputedStyle.h"
 #include "nsContentUtils.h"
 #include "nsTreeBodyFrame.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/TreeBoxObject.h"
 #include "mozilla/dom/TreeColumnBinding.h"
 #include "mozilla/dom/TreeColumnsBinding.h"
 
@@ -168,14 +166,43 @@ void nsTreeColumn::Invalidate(ErrorResult& aRv) {
 
   // Figure out if we're a cycling column (one that doesn't cause a selection
   // to happen).
+<<<<<<< HEAD
+  mIsCycler = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::cycler,
+                                    nsGkAtoms::_true, eCaseMatters);
+||||||| merged common ancestors
+  mIsCycler =
+    mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::cycler,
+                          nsGkAtoms::_true, eCaseMatters);
+
+  mIsEditable =
+    mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::editable,
+                          nsGkAtoms::_true, eCaseMatters);
+=======
   mIsCycler = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::cycler,
                                     nsGkAtoms::_true, eCaseMatters);
 
   mIsEditable = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::editable,
                                       nsGkAtoms::_true, eCaseMatters);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  mIsEditable = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::editable,
+                                      nsGkAtoms::_true, eCaseMatters);
 
   mOverflow = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::overflow,
                                     nsGkAtoms::_true, eCaseMatters);
+||||||| merged common ancestors
+  mIsSelectable =
+    !mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::selectable,
+                           nsGkAtoms::_false, eCaseMatters);
+
+  mOverflow =
+    mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::overflow,
+                          nsGkAtoms::_true, eCaseMatters);
+=======
+  mOverflow = mContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::overflow,
+                                    nsGkAtoms::_true, eCaseMatters);
+>>>>>>> upstream-releases
 
   // Figure out our column type. Default type is text.
   mType = TreeColumn_Binding::TYPE_TEXT;
@@ -209,8 +236,18 @@ void nsTreeColumn::Invalidate(ErrorResult& aRv) {
 
 nsIContent* nsTreeColumn::GetParentObject() const { return mContent; }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* nsTreeColumn::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+nsTreeColumn::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* nsTreeColumn::WrapObject(JSContext* aCx,
+                                   JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return dom::TreeColumn_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -236,6 +273,40 @@ int32_t nsTreeColumn::GetWidth(mozilla::ErrorResult& aRv) {
   return nsPresContext::AppUnitsToIntCSSPixels(frame->GetRect().width);
 }
 
+<<<<<<< HEAD
+nsTreeColumns::nsTreeColumns(nsTreeBodyFrame* aTree) : mTree(aTree) {}
+||||||| merged common ancestors
+nsTreeColumns::nsTreeColumns(nsTreeBodyFrame* aTree)
+  : mTree(aTree)
+{
+}
+=======
+already_AddRefed<nsTreeColumn> nsTreeColumn::GetPreviousColumn() {
+  nsIFrame* frame = GetFrame();
+  while (frame) {
+    frame = frame->GetPrevSibling();
+    if (frame && frame->GetContent()->IsElement()) {
+      RefPtr<nsTreeColumn> column =
+          mColumns->GetColumnFor(frame->GetContent()->AsElement());
+      if (column) {
+        return column.forget();
+      }
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+nsTreeColumns::~nsTreeColumns() { nsTreeColumns::InvalidateColumns(); }
+||||||| merged common ancestors
+nsTreeColumns::~nsTreeColumns()
+{
+  nsTreeColumns::InvalidateColumns();
+}
+=======
+  return nullptr;
+}
+>>>>>>> upstream-releases
+
 nsTreeColumns::nsTreeColumns(nsTreeBodyFrame* aTree) : mTree(aTree) {}
 
 nsTreeColumns::~nsTreeColumns() { nsTreeColumns::InvalidateColumns(); }
@@ -255,15 +326,39 @@ nsIContent* nsTreeColumns::GetParentObject() const {
   return mTree ? mTree->GetBaseElement() : nullptr;
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* nsTreeColumns::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+nsTreeColumns::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* nsTreeColumns::WrapObject(JSContext* aCx,
+                                    JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return dom::TreeColumns_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 dom::TreeBoxObject* nsTreeColumns::GetTree() const {
   return mTree ? static_cast<mozilla::dom::TreeBoxObject*>(
                      mTree->GetTreeBoxObject())
                : nullptr;
+||||||| merged common ancestors
+dom::TreeBoxObject*
+nsTreeColumns::GetTree() const
+{
+  return mTree ? static_cast<mozilla::dom::TreeBoxObject*>(mTree->GetTreeBoxObject()) : nullptr;
+=======
+XULTreeElement* nsTreeColumns::GetTree() const {
+  if (!mTree) {
+    return nullptr;
+  }
+
+  return XULTreeElement::FromNodeOrNull(mTree->GetBaseElement());
+>>>>>>> upstream-releases
 }
 
 uint32_t nsTreeColumns::Count() {
@@ -444,6 +539,8 @@ nsTreeColumn* nsTreeColumns::GetPrimaryColumn() {
 void nsTreeColumns::EnsureColumns() {
   if (mTree && !mFirstColumn) {
     nsIContent* treeContent = mTree->GetBaseElement();
+    if (!treeContent) return;
+
     nsIContent* colsContent =
         nsTreeUtils::GetDescendantChild(treeContent, nsGkAtoms::treecols);
     if (!colsContent) return;

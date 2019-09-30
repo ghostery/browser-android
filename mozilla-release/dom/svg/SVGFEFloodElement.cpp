@@ -11,7 +11,7 @@
 #include "nsColor.h"
 #include "nsIFrame.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEFlood)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEFlood)
 
 using namespace mozilla::gfx;
 
@@ -23,8 +23,18 @@ JSObject* SVGFEFloodElement::WrapNode(JSContext* aCx,
   return SVGFEFloodElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] = {
     {nsGkAtoms::result, kNameSpaceID_None, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] =
+{
+  { nsGkAtoms::result, kNameSpaceID_None, true }
+};
+=======
+SVGElement::StringInfo SVGFEFloodElement::sStringInfo[1] = {
+    {nsGkAtoms::result, kNameSpaceID_None, true}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -60,9 +70,17 @@ SVGFEFloodElement::IsAttributeMapped(const nsAtom* name) const {
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGFEFloodElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGFEFloodElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGFEFloodElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

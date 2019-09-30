@@ -19,13 +19,29 @@
 // are not redefined as compiler intrinsics. Fix that for the interlocked
 // functions that are used in this file.
 #if defined(_MSC_VER) && !defined(InterlockedExchangeAdd)
+<<<<<<< HEAD
 #define InterlockedExchangeAdd(addend, value) \
   _InterlockedExchangeAdd((volatile long*)(addend), (long)(value))
+||||||| merged common ancestors
+#define InterlockedExchangeAdd(addend, value)                                  \
+  _InterlockedExchangeAdd((volatile long*)(addend), (long)(value))
+=======
+#  define InterlockedExchangeAdd(addend, value) \
+    _InterlockedExchangeAdd((volatile long*)(addend), (long)(value))
+>>>>>>> upstream-releases
 #endif
 
 #if defined(_MSC_VER) && !defined(InterlockedIncrement)
+<<<<<<< HEAD
 #define InterlockedIncrement(addend) \
   _InterlockedIncrement((volatile long*)(addend))
+||||||| merged common ancestors
+#define InterlockedIncrement(addend)                                           \
+  _InterlockedIncrement((volatile long*)(addend))
+=======
+#  define InterlockedIncrement(addend) \
+    _InterlockedIncrement((volatile long*)(addend))
+>>>>>>> upstream-releases
 #endif
 
 // Wrapper for native condition variable APIs.

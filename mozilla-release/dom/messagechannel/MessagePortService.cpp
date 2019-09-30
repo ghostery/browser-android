@@ -63,14 +63,32 @@ class MessagePortService::MessagePortServiceData final {
   bool mNextStepCloseAll;
 };
 
+<<<<<<< HEAD
 /* static */ MessagePortService* MessagePortService::Get() {
+||||||| merged common ancestors
+/* static */ MessagePortService*
+MessagePortService::Get()
+{
+=======
+/* static */
+MessagePortService* MessagePortService::Get() {
+>>>>>>> upstream-releases
   AssertIsInMainProcess();
   AssertIsOnBackgroundThread();
 
   return gInstance;
 }
 
+<<<<<<< HEAD
 /* static */ MessagePortService* MessagePortService::GetOrCreate() {
+||||||| merged common ancestors
+/* static */ MessagePortService*
+MessagePortService::GetOrCreate()
+{
+=======
+/* static */
+MessagePortService* MessagePortService::GetOrCreate() {
+>>>>>>> upstream-releases
   AssertIsInMainProcess();
   AssertIsOnBackgroundThread();
 

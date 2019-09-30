@@ -10,10 +10,10 @@
 
 #ifdef JS_DISASM_ARM
 
-#include "mozilla/Assertions.h"
-#include "mozilla/Types.h"
+#  include "mozilla/Assertions.h"
+#  include "mozilla/Types.h"
 
-#include <string.h>
+#  include <string.h>
 
 namespace js {
 namespace jit {
@@ -417,6 +417,7 @@ inline Hint NegateHint(Hint ignored) { return no_hint; }
 // }
 //
 class Instruction {
+<<<<<<< HEAD
  public:
   enum { kInstrSize = 4, kInstrSizeLog2 = 2, kPCReadOffset = 8 };
 
@@ -639,6 +640,466 @@ class Instruction {
   Instruction() = delete;
   Instruction(const Instruction&) = delete;
   void operator=(const Instruction&) = delete;
+||||||| merged common ancestors
+  public:
+    enum {
+        kInstrSize = 4,
+        kInstrSizeLog2 = 2,
+        kPCReadOffset = 8
+    };
+
+    // Helper macro to define static accessors.
+    // We use the cast to char* trick to bypass the strict anti-aliasing rules.
+#define DECLARE_STATIC_TYPED_ACCESSOR(return_type, Name)        \
+    static inline return_type Name(Instr instr) {               \
+        char* temp = reinterpret_cast<char*>(&instr);           \
+        return reinterpret_cast<Instruction*>(temp)->Name();    \
+    }
+
+#define DECLARE_STATIC_ACCESSOR(Name) DECLARE_STATIC_TYPED_ACCESSOR(int, Name)
+
+    // Get the raw instruction bits.
+    inline Instr InstructionBits() const {
+        return *reinterpret_cast<const Instr*>(this);
+    }
+
+    // Set the raw instruction bits to value.
+    inline void SetInstructionBits(Instr value) {
+        *reinterpret_cast<Instr*>(this) = value;
+    }
+
+    // Read one particular bit out of the instruction bits.
+    inline int Bit(int nr) const {
+        return (InstructionBits() >> nr) & 1;
+    }
+
+    // Read a bit field's value out of the instruction bits.
+    inline int Bits(int hi, int lo) const {
+        return (InstructionBits() >> lo) & ((2 << (hi - lo)) - 1);
+    }
+
+    // Read a bit field out of the instruction bits.
+    inline int BitField(int hi, int lo) const {
+        return InstructionBits() & (((2 << (hi - lo)) - 1) << lo);
+    }
+
+    // Static support.
+
+    // Read one particular bit out of the instruction bits.
+    static inline int Bit(Instr instr, int nr) {
+        return (instr >> nr) & 1;
+    }
+
+    // Read the value of a bit field out of the instruction bits.
+    static inline int Bits(Instr instr, int hi, int lo) {
+        return (instr >> lo) & ((2 << (hi - lo)) - 1);
+    }
+
+
+    // Read a bit field out of the instruction bits.
+    static inline int BitField(Instr instr, int hi, int lo) {
+        return instr & (((2 << (hi - lo)) - 1) << lo);
+    }
+
+
+    // Accessors for the different named fields used in the ARM encoding.
+    // The naming of these accessor corresponds to figure A3-1.
+    //
+    // Two kind of accessors are declared:
+    // - <Name>Field() will return the raw field, i.e. the field's bits at their
+    //   original place in the instruction encoding.
+    //   e.g. if instr is the 'addgt r0, r1, r2' instruction, encoded as
+    //   0xC0810002 ConditionField(instr) will return 0xC0000000.
+    // - <Name>Value() will return the field value, shifted back to bit 0.
+    //   e.g. if instr is the 'addgt r0, r1, r2' instruction, encoded as
+    //   0xC0810002 ConditionField(instr) will return 0xC.
+
+
+    // Generally applicable fields
+    inline Condition ConditionValue() const {
+        return static_cast<Condition>(Bits(31, 28));
+    }
+    inline Condition ConditionField() const {
+        return static_cast<Condition>(BitField(31, 28));
+    }
+    DECLARE_STATIC_TYPED_ACCESSOR(Condition, ConditionValue);
+    DECLARE_STATIC_TYPED_ACCESSOR(Condition, ConditionField);
+
+    inline int TypeValue() const { return Bits(27, 25); }
+    inline int SpecialValue() const { return Bits(27, 23); }
+
+    inline int RnValue() const { return Bits(19, 16); }
+    DECLARE_STATIC_ACCESSOR(RnValue);
+    inline int RdValue() const { return Bits(15, 12); }
+    DECLARE_STATIC_ACCESSOR(RdValue);
+
+    inline int CoprocessorValue() const { return Bits(11, 8); }
+    // Support for VFP.
+    // Vn(19-16) | Vd(15-12) |  Vm(3-0)
+    inline int VnValue() const { return Bits(19, 16); }
+    inline int VmValue() const { return Bits(3, 0); }
+    inline int VdValue() const { return Bits(15, 12); }
+    inline int NValue() const { return Bit(7); }
+    inline int MValue() const { return Bit(5); }
+    inline int DValue() const { return Bit(22); }
+    inline int RtValue() const { return Bits(15, 12); }
+    inline int PValue() const { return Bit(24); }
+    inline int UValue() const { return Bit(23); }
+    inline int Opc1Value() const { return (Bit(23) << 2) | Bits(21, 20); }
+    inline int Opc2Value() const { return Bits(19, 16); }
+    inline int Opc3Value() const { return Bits(7, 6); }
+    inline int SzValue() const { return Bit(8); }
+    inline int VLValue() const { return Bit(20); }
+    inline int VCValue() const { return Bit(8); }
+    inline int VAValue() const { return Bits(23, 21); }
+    inline int VBValue() const { return Bits(6, 5); }
+    inline int VFPNRegValue(VFPRegPrecision pre) {
+        return VFPGlueRegValue(pre, 16, 7);
+    }
+    inline int VFPMRegValue(VFPRegPrecision pre) {
+        return VFPGlueRegValue(pre, 0, 5);
+    }
+    inline int VFPDRegValue(VFPRegPrecision pre) {
+        return VFPGlueRegValue(pre, 12, 22);
+    }
+
+    // Fields used in Data processing instructions
+    inline int OpcodeValue() const {
+        return static_cast<Opcode>(Bits(24, 21));
+    }
+    inline Opcode OpcodeField() const {
+        return static_cast<Opcode>(BitField(24, 21));
+    }
+    inline int SValue() const { return Bit(20); }
+    // with register
+    inline int RmValue() const { return Bits(3, 0); }
+    DECLARE_STATIC_ACCESSOR(RmValue);
+    inline int ShiftValue() const { return static_cast<ShiftOp>(Bits(6, 5)); }
+    inline ShiftOp ShiftField() const {
+        return static_cast<ShiftOp>(BitField(6, 5));
+    }
+    inline int RegShiftValue() const { return Bit(4); }
+    inline int RsValue() const { return Bits(11, 8); }
+    inline int ShiftAmountValue() const { return Bits(11, 7); }
+    // with immediate
+    inline int RotateValue() const { return Bits(11, 8); }
+    DECLARE_STATIC_ACCESSOR(RotateValue);
+    inline int Immed8Value() const { return Bits(7, 0); }
+    DECLARE_STATIC_ACCESSOR(Immed8Value);
+    inline int Immed4Value() const { return Bits(19, 16); }
+    inline int ImmedMovwMovtValue() const {
+        return Immed4Value() << 12 | Offset12Value(); }
+    DECLARE_STATIC_ACCESSOR(ImmedMovwMovtValue);
+
+    // Fields used in Load/Store instructions
+    inline int PUValue() const { return Bits(24, 23); }
+    inline int PUField() const { return BitField(24, 23); }
+    inline int  BValue() const { return Bit(22); }
+    inline int  WValue() const { return Bit(21); }
+    inline int  LValue() const { return Bit(20); }
+    // with register uses same fields as Data processing instructions above
+    // with immediate
+    inline int Offset12Value() const { return Bits(11, 0); }
+    // multiple
+    inline int RlistValue() const { return Bits(15, 0); }
+    // extra loads and stores
+    inline int SignValue() const { return Bit(6); }
+    inline int HValue() const { return Bit(5); }
+    inline int ImmedHValue() const { return Bits(11, 8); }
+    inline int ImmedLValue() const { return Bits(3, 0); }
+
+    // Fields used in Branch instructions
+    inline int LinkValue() const { return Bit(24); }
+    inline int SImmed24Value() const { return ((InstructionBits() << 8) >> 8); }
+
+    // Fields used in Software interrupt instructions
+    inline SoftwareInterruptCodes SvcValue() const {
+        return static_cast<SoftwareInterruptCodes>(Bits(23, 0));
+    }
+
+    // Test for special encodings of type 0 instructions (extra loads and stores,
+    // as well as multiplications).
+    inline bool IsSpecialType0() const { return (Bit(7) == 1) && (Bit(4) == 1); }
+
+    // Test for miscellaneous instructions encodings of type 0 instructions.
+    inline bool IsMiscType0() const { return (Bit(24) == 1)
+            && (Bit(23) == 0)
+            && (Bit(20) == 0)
+            && ((Bit(7) == 0)); }
+
+    // Test for a nop instruction, which falls under type 1.
+    inline bool IsNopType1() const { return Bits(24, 0) == 0x0120F000; }
+
+    // Test for a nop instruction, which falls under type 1.
+    inline bool IsCsdbType1() const { return Bits(24, 0) == 0x0120F014; }
+
+    // Test for a stop instruction.
+    inline bool IsStop() const {
+        return (TypeValue() == 7) && (Bit(24) == 1) && (SvcValue() >= kStopCode);
+    }
+
+    // Special accessors that test for existence of a value.
+    inline bool HasS()    const { return SValue() == 1; }
+    inline bool HasB()    const { return BValue() == 1; }
+    inline bool HasW()    const { return WValue() == 1; }
+    inline bool HasL()    const { return LValue() == 1; }
+    inline bool HasU()    const { return UValue() == 1; }
+    inline bool HasSign() const { return SignValue() == 1; }
+    inline bool HasH()    const { return HValue() == 1; }
+    inline bool HasLink() const { return LinkValue() == 1; }
+
+    // Decoding the double immediate in the vmov instruction.
+    double DoubleImmedVmov() const;
+
+    // Instructions are read of out a code stream. The only way to get a
+    // reference to an instruction is to convert a pointer. There is no way
+    // to allocate or create instances of class Instruction.
+    // Use the At(pc) function to create references to Instruction.
+    static Instruction* At(uint8_t* pc) {
+        return reinterpret_cast<Instruction*>(pc);
+    }
+
+
+  private:
+    // Join split register codes, depending on single or double precision.
+    // four_bit is the position of the least-significant bit of the four
+    // bit specifier. one_bit is the position of the additional single bit
+    // specifier.
+    inline int VFPGlueRegValue(VFPRegPrecision pre, int four_bit, int one_bit) {
+        if (pre == kSinglePrecision) {
+            return (Bits(four_bit + 3, four_bit) << 1) | Bit(one_bit);
+        }
+        return (Bit(one_bit) << 4) | Bits(four_bit + 3, four_bit);
+    }
+
+    // We need to prevent the creation of instances of class Instruction.
+    Instruction() = delete;
+    Instruction(const Instruction&) = delete;
+    void operator=(const Instruction&) = delete;
+=======
+ public:
+  enum { kInstrSize = 4, kInstrSizeLog2 = 2, kPCReadOffset = 8 };
+
+  // Helper macro to define static accessors.
+  // We use the cast to char* trick to bypass the strict anti-aliasing rules.
+#  define DECLARE_STATIC_TYPED_ACCESSOR(return_type, Name) \
+    static inline return_type Name(Instr instr) {          \
+      char* temp = reinterpret_cast<char*>(&instr);        \
+      return reinterpret_cast<Instruction*>(temp)->Name(); \
+    }
+
+#  define DECLARE_STATIC_ACCESSOR(Name) DECLARE_STATIC_TYPED_ACCESSOR(int, Name)
+
+  // Get the raw instruction bits.
+  inline Instr InstructionBits() const {
+    return *reinterpret_cast<const Instr*>(this);
+  }
+
+  // Set the raw instruction bits to value.
+  inline void SetInstructionBits(Instr value) {
+    *reinterpret_cast<Instr*>(this) = value;
+  }
+
+  // Read one particular bit out of the instruction bits.
+  inline int Bit(int nr) const { return (InstructionBits() >> nr) & 1; }
+
+  // Read a bit field's value out of the instruction bits.
+  inline int Bits(int hi, int lo) const {
+    return (InstructionBits() >> lo) & ((2 << (hi - lo)) - 1);
+  }
+
+  // Read a bit field out of the instruction bits.
+  inline int BitField(int hi, int lo) const {
+    return InstructionBits() & (((2 << (hi - lo)) - 1) << lo);
+  }
+
+  // Static support.
+
+  // Read one particular bit out of the instruction bits.
+  static inline int Bit(Instr instr, int nr) { return (instr >> nr) & 1; }
+
+  // Read the value of a bit field out of the instruction bits.
+  static inline int Bits(Instr instr, int hi, int lo) {
+    return (instr >> lo) & ((2 << (hi - lo)) - 1);
+  }
+
+  // Read a bit field out of the instruction bits.
+  static inline int BitField(Instr instr, int hi, int lo) {
+    return instr & (((2 << (hi - lo)) - 1) << lo);
+  }
+
+  // Accessors for the different named fields used in the ARM encoding.
+  // The naming of these accessor corresponds to figure A3-1.
+  //
+  // Two kind of accessors are declared:
+  // - <Name>Field() will return the raw field, i.e. the field's bits at their
+  //   original place in the instruction encoding.
+  //   e.g. if instr is the 'addgt r0, r1, r2' instruction, encoded as
+  //   0xC0810002 ConditionField(instr) will return 0xC0000000.
+  // - <Name>Value() will return the field value, shifted back to bit 0.
+  //   e.g. if instr is the 'addgt r0, r1, r2' instruction, encoded as
+  //   0xC0810002 ConditionField(instr) will return 0xC.
+
+  // Generally applicable fields
+  inline Condition ConditionValue() const {
+    return static_cast<Condition>(Bits(31, 28));
+  }
+  inline Condition ConditionField() const {
+    return static_cast<Condition>(BitField(31, 28));
+  }
+  DECLARE_STATIC_TYPED_ACCESSOR(Condition, ConditionValue);
+  DECLARE_STATIC_TYPED_ACCESSOR(Condition, ConditionField);
+
+  inline int TypeValue() const { return Bits(27, 25); }
+  inline int SpecialValue() const { return Bits(27, 23); }
+
+  inline int RnValue() const { return Bits(19, 16); }
+  DECLARE_STATIC_ACCESSOR(RnValue);
+  inline int RdValue() const { return Bits(15, 12); }
+  DECLARE_STATIC_ACCESSOR(RdValue);
+
+  inline int CoprocessorValue() const { return Bits(11, 8); }
+  // Support for VFP.
+  // Vn(19-16) | Vd(15-12) |  Vm(3-0)
+  inline int VnValue() const { return Bits(19, 16); }
+  inline int VmValue() const { return Bits(3, 0); }
+  inline int VdValue() const { return Bits(15, 12); }
+  inline int NValue() const { return Bit(7); }
+  inline int MValue() const { return Bit(5); }
+  inline int DValue() const { return Bit(22); }
+  inline int RtValue() const { return Bits(15, 12); }
+  inline int PValue() const { return Bit(24); }
+  inline int UValue() const { return Bit(23); }
+  inline int Opc1Value() const { return (Bit(23) << 2) | Bits(21, 20); }
+  inline int Opc2Value() const { return Bits(19, 16); }
+  inline int Opc3Value() const { return Bits(7, 6); }
+  inline int SzValue() const { return Bit(8); }
+  inline int VLValue() const { return Bit(20); }
+  inline int VCValue() const { return Bit(8); }
+  inline int VAValue() const { return Bits(23, 21); }
+  inline int VBValue() const { return Bits(6, 5); }
+  inline int VFPNRegValue(VFPRegPrecision pre) {
+    return VFPGlueRegValue(pre, 16, 7);
+  }
+  inline int VFPMRegValue(VFPRegPrecision pre) {
+    return VFPGlueRegValue(pre, 0, 5);
+  }
+  inline int VFPDRegValue(VFPRegPrecision pre) {
+    return VFPGlueRegValue(pre, 12, 22);
+  }
+
+  // Fields used in Data processing instructions
+  inline int OpcodeValue() const { return static_cast<Opcode>(Bits(24, 21)); }
+  inline Opcode OpcodeField() const {
+    return static_cast<Opcode>(BitField(24, 21));
+  }
+  inline int SValue() const { return Bit(20); }
+  // with register
+  inline int RmValue() const { return Bits(3, 0); }
+  DECLARE_STATIC_ACCESSOR(RmValue);
+  inline int ShiftValue() const { return static_cast<ShiftOp>(Bits(6, 5)); }
+  inline ShiftOp ShiftField() const {
+    return static_cast<ShiftOp>(BitField(6, 5));
+  }
+  inline int RegShiftValue() const { return Bit(4); }
+  inline int RsValue() const { return Bits(11, 8); }
+  inline int ShiftAmountValue() const { return Bits(11, 7); }
+  // with immediate
+  inline int RotateValue() const { return Bits(11, 8); }
+  DECLARE_STATIC_ACCESSOR(RotateValue);
+  inline int Immed8Value() const { return Bits(7, 0); }
+  DECLARE_STATIC_ACCESSOR(Immed8Value);
+  inline int Immed4Value() const { return Bits(19, 16); }
+  inline int ImmedMovwMovtValue() const {
+    return Immed4Value() << 12 | Offset12Value();
+  }
+  DECLARE_STATIC_ACCESSOR(ImmedMovwMovtValue);
+
+  // Fields used in Load/Store instructions
+  inline int PUValue() const { return Bits(24, 23); }
+  inline int PUField() const { return BitField(24, 23); }
+  inline int BValue() const { return Bit(22); }
+  inline int WValue() const { return Bit(21); }
+  inline int LValue() const { return Bit(20); }
+  // with register uses same fields as Data processing instructions above
+  // with immediate
+  inline int Offset12Value() const { return Bits(11, 0); }
+  // multiple
+  inline int RlistValue() const { return Bits(15, 0); }
+  // extra loads and stores
+  inline int SignValue() const { return Bit(6); }
+  inline int HValue() const { return Bit(5); }
+  inline int ImmedHValue() const { return Bits(11, 8); }
+  inline int ImmedLValue() const { return Bits(3, 0); }
+
+  // Fields used in Branch instructions
+  inline int LinkValue() const { return Bit(24); }
+  inline int SImmed24Value() const { return ((InstructionBits() << 8) >> 8); }
+
+  // Fields used in Software interrupt instructions
+  inline SoftwareInterruptCodes SvcValue() const {
+    return static_cast<SoftwareInterruptCodes>(Bits(23, 0));
+  }
+
+  // Test for special encodings of type 0 instructions (extra loads and stores,
+  // as well as multiplications).
+  inline bool IsSpecialType0() const { return (Bit(7) == 1) && (Bit(4) == 1); }
+
+  // Test for miscellaneous instructions encodings of type 0 instructions.
+  inline bool IsMiscType0() const {
+    return (Bit(24) == 1) && (Bit(23) == 0) && (Bit(20) == 0) &&
+           ((Bit(7) == 0));
+  }
+
+  // Test for a nop instruction, which falls under type 1.
+  inline bool IsNopType1() const { return Bits(24, 0) == 0x0120F000; }
+
+  // Test for a nop instruction, which falls under type 1.
+  inline bool IsCsdbType1() const { return Bits(24, 0) == 0x0120F014; }
+
+  // Test for a stop instruction.
+  inline bool IsStop() const {
+    return (TypeValue() == 7) && (Bit(24) == 1) && (SvcValue() >= kStopCode);
+  }
+
+  // Special accessors that test for existence of a value.
+  inline bool HasS() const { return SValue() == 1; }
+  inline bool HasB() const { return BValue() == 1; }
+  inline bool HasW() const { return WValue() == 1; }
+  inline bool HasL() const { return LValue() == 1; }
+  inline bool HasU() const { return UValue() == 1; }
+  inline bool HasSign() const { return SignValue() == 1; }
+  inline bool HasH() const { return HValue() == 1; }
+  inline bool HasLink() const { return LinkValue() == 1; }
+
+  // Decoding the double immediate in the vmov instruction.
+  double DoubleImmedVmov() const;
+
+  // Instructions are read of out a code stream. The only way to get a
+  // reference to an instruction is to convert a pointer. There is no way
+  // to allocate or create instances of class Instruction.
+  // Use the At(pc) function to create references to Instruction.
+  static Instruction* At(uint8_t* pc) {
+    return reinterpret_cast<Instruction*>(pc);
+  }
+
+ private:
+  // Join split register codes, depending on single or double precision.
+  // four_bit is the position of the least-significant bit of the four
+  // bit specifier. one_bit is the position of the additional single bit
+  // specifier.
+  inline int VFPGlueRegValue(VFPRegPrecision pre, int four_bit, int one_bit) {
+    if (pre == kSinglePrecision) {
+      return (Bits(four_bit + 3, four_bit) << 1) | Bit(one_bit);
+    }
+    return (Bit(one_bit) << 4) | Bits(four_bit + 3, four_bit);
+  }
+
+  // We need to prevent the creation of instances of class Instruction.
+  Instruction() = delete;
+  Instruction(const Instruction&) = delete;
+  void operator=(const Instruction&) = delete;
+>>>>>>> upstream-releases
 };
 
 // Helper functions for converting between register numbers and names.

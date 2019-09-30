@@ -15,6 +15,7 @@
 #include "builtin/SelfHostingDefines.h"
 #include "gc/Marking.h"
 #include "js/GCHashTable.h"
+#include "js/RegExpFlags.h"
 #include "proxy/Proxy.h"
 #include "vm/ArrayObject.h"
 #include "vm/JSContext.h"
@@ -61,6 +62,7 @@ class RegExpObject : public NativeObject {
   static const unsigned RESERVED_SLOTS = 3;
   static const unsigned PRIVATE_SLOT = 3;
 
+<<<<<<< HEAD
   static const Class class_;
   static const Class protoClass_;
 
@@ -71,16 +73,50 @@ class RegExpObject : public NativeObject {
   template <typename CharT>
   static RegExpObject* create(JSContext* cx, const CharT* chars, size_t length,
                               RegExpFlag flags, NewObjectKind newKind);
+||||||| merged common ancestors
+    void setSource(JSAtom* source) {
+        setSlot(SOURCE_SLOT, StringValue(source));
+    }
+=======
+  static const Class class_;
+  static const Class protoClass_;
 
+  // The maximum number of pairs a MatchResult can have, without having to
+  // allocate a bigger MatchResult.
+  static const size_t MaxPairCount = 14;
+
+  template <typename CharT>
+  static RegExpObject* create(JSContext* cx, const CharT* chars, size_t length,
+                              JS::RegExpFlags flags, NewObjectKind newKind);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   template <typename CharT>
   static RegExpObject* create(JSContext* cx, const CharT* chars, size_t length,
                               RegExpFlag flags,
                               frontend::TokenStreamAnyChars& ts,
                               NewObjectKind kind);
+||||||| merged common ancestors
+    /* Flags. */
+=======
+  template <typename CharT>
+  static RegExpObject* create(JSContext* cx, const CharT* chars, size_t length,
+                              JS::RegExpFlags flags,
+                              frontend::TokenStreamAnyChars& ts,
+                              NewObjectKind kind);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static RegExpObject* create(JSContext* cx, HandleAtom source,
                               RegExpFlag flags, NewObjectKind newKind);
+||||||| merged common ancestors
+    static unsigned flagsSlot() { return FLAGS_SLOT; }
+=======
+  static RegExpObject* create(JSContext* cx, HandleAtom source,
+                              JS::RegExpFlags flags, NewObjectKind newKind);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static RegExpObject* create(JSContext* cx, HandleAtom source,
                               RegExpFlag flags,
                               frontend::TokenStreamAnyChars& ts,
@@ -101,6 +137,31 @@ class RegExpObject : public NativeObject {
     Shape* shape = rx->lastProperty();
     if (shape->isEmptyShape() || !shape->isDataProperty()) {
       return false;
+||||||| merged common ancestors
+    RegExpFlag getFlags() const {
+        return RegExpFlag(getFixedSlot(FLAGS_SLOT).toInt32());
+=======
+  static RegExpObject* create(JSContext* cx, HandleAtom source,
+                              JS::RegExpFlags flags,
+                              frontend::TokenStreamAnyChars& ts,
+                              NewObjectKind newKind);
+
+  /*
+   * Compute the initial shape to associate with fresh RegExp objects,
+   * encoding their initial properties. Return the shape after
+   * changing |obj|'s last property to it.
+   */
+  static Shape* assignInitialShape(JSContext* cx, Handle<RegExpObject*> obj);
+
+  /* Accessors. */
+
+  static unsigned lastIndexSlot() { return LAST_INDEX_SLOT; }
+
+  static bool isInitialShape(RegExpObject* rx) {
+    Shape* shape = rx->lastProperty();
+    if (shape->isEmptyShape() || !shape->isDataProperty()) {
+      return false;
+>>>>>>> upstream-releases
     }
     if (shape->maybeSlot() != LAST_INDEX_SLOT) {
       return false;
@@ -125,6 +186,7 @@ class RegExpObject : public NativeObject {
     return &getSlot(SOURCE_SLOT).toString()->asAtom();
   }
 
+<<<<<<< HEAD
   void setSource(JSAtom* source) { setSlot(SOURCE_SLOT, StringValue(source)); }
 
   /* Flags. */
@@ -143,11 +205,39 @@ class RegExpObject : public NativeObject {
   bool unicode() const { return getFlags() & UnicodeFlag; }
 
   static bool isOriginalFlagGetter(JSNative native, RegExpFlag* mask);
+||||||| merged common ancestors
+    PreBarriered<RegExpShared*>& sharedRef() {
+        auto& ref = NativeObject::privateRef(PRIVATE_SLOT);
+        return reinterpret_cast<PreBarriered<RegExpShared*>&>(ref);
+    }
+=======
+  void setSource(JSAtom* source) { setSlot(SOURCE_SLOT, StringValue(source)); }
+
+  /* Flags. */
+
+  static unsigned flagsSlot() { return FLAGS_SLOT; }
+
+  JS::RegExpFlags getFlags() const {
+    return JS::RegExpFlags(getFixedSlot(FLAGS_SLOT).toInt32());
+  }
+  void setFlags(JS::RegExpFlags flags) {
+    setFixedSlot(FLAGS_SLOT, Int32Value(flags.value()));
+  }
+
+  bool global() const { return getFlags().global(); }
+  bool ignoreCase() const { return getFlags().ignoreCase(); }
+  bool multiline() const { return getFlags().multiline(); }
+  bool unicode() const { return getFlags().unicode(); }
+  bool sticky() const { return getFlags().sticky(); }
+
+  static bool isOriginalFlagGetter(JSNative native, JS::RegExpFlags* mask);
+>>>>>>> upstream-releases
 
   static RegExpShared* getShared(JSContext* cx, Handle<RegExpObject*> regexp);
 
   bool hasShared() { return !!sharedRef(); }
 
+<<<<<<< HEAD
   void setShared(RegExpShared& shared) {
     MOZ_ASSERT(!hasShared());
     sharedRef().init(&shared);
@@ -167,6 +257,33 @@ class RegExpObject : public NativeObject {
   //       exposed to script, because it requires that the "lastIndex"
   //       property be writable.
   void initAndZeroLastIndex(JSAtom* source, RegExpFlag flags, JSContext* cx);
+||||||| merged common ancestors
+    // NOTE: This method is *only* safe to call on RegExps that haven't been
+    //       exposed to script, because it requires that the "lastIndex"
+    //       property be writable.
+    void initAndZeroLastIndex(JSAtom* source, RegExpFlag flags, JSContext* cx);
+=======
+  void setShared(RegExpShared& shared) {
+    MOZ_ASSERT(!hasShared());
+    sharedRef().init(&shared);
+  }
+
+  HeapPtrRegExpShared& sharedRef() {
+    auto& ref = NativeObject::privateRef(PRIVATE_SLOT);
+    return reinterpret_cast<HeapPtrRegExpShared&>(ref);
+  }
+
+  static void trace(JSTracer* trc, JSObject* obj);
+  void trace(JSTracer* trc);
+
+  void initIgnoringLastIndex(JSAtom* source, JS::RegExpFlags flags);
+
+  // NOTE: This method is *only* safe to call on RegExps that haven't been
+  //       exposed to script, because it requires that the "lastIndex"
+  //       property be writable.
+  void initAndZeroLastIndex(JSAtom* source, JS::RegExpFlags flags,
+                            JSContext* cx);
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   static MOZ_MUST_USE bool dumpBytecode(JSContext* cx,
@@ -193,6 +310,7 @@ class RegExpObject : public NativeObject {
  *
  * N.B. flagStr must be rooted.
  */
+<<<<<<< HEAD
 bool ParseRegExpFlags(JSContext* cx, JSString* flagStr, RegExpFlag* flagsOut);
 
 // Assuming GetBuiltinClass(obj) is ESClass::RegExp, return a RegExpShared for
@@ -201,6 +319,28 @@ inline RegExpShared* RegExpToShared(JSContext* cx, HandleObject obj) {
   if (obj->is<RegExpObject>()) {
     return RegExpObject::getShared(cx, obj.as<RegExpObject>());
   }
+||||||| merged common ancestors
+bool
+ParseRegExpFlags(JSContext* cx, JSString* flagStr, RegExpFlag* flagsOut);
+
+/* Assuming GetBuiltinClass(obj) is ESClass::RegExp, return a RegExpShared for obj. */
+inline RegExpShared*
+RegExpToShared(JSContext* cx, HandleObject obj)
+{
+    if (obj->is<RegExpObject>()) {
+        return RegExpObject::getShared(cx, obj.as<RegExpObject>());
+    }
+=======
+bool ParseRegExpFlags(JSContext* cx, JSString* flagStr,
+                      JS::RegExpFlags* flagsOut);
+
+// Assuming GetBuiltinClass(obj) is ESClass::RegExp, return a RegExpShared for
+// obj.
+inline RegExpShared* RegExpToShared(JSContext* cx, HandleObject obj) {
+  if (obj->is<RegExpObject>()) {
+    return RegExpObject::getShared(cx, obj.as<RegExpObject>());
+  }
+>>>>>>> upstream-releases
 
   return Proxy::regexp_toShared(cx, obj);
 }

@@ -14,8 +14,16 @@
   </video>
   <div id="log"></div>
   <script>
+<<<<<<< HEAD
 promise_test(function(t) {
   var async_t = async_test("calling play() then pause() on non-autoplay audio should trigger pause event", {timeout:5000});
+||||||| merged common ancestors
+test(function() {
+  var t = async_test("calling play() then pause() on non-autoplay audio should trigger pause event", {timeout:5000});
+=======
+promise_test(function(t) {
+  var async_t = async_test("calling play() then pause() on non-autoplay audio should trigger pause event");
+>>>>>>> upstream-releases
   var a = document.getElementById("a");
   a.addEventListener("pause", function() {
     async_t.done();
@@ -26,8 +34,16 @@ promise_test(function(t) {
   return promise_rejects(t, "AbortError", play_promise, "pause() should reject all pending play Promises");
 }, "audio events - pause");
 
+<<<<<<< HEAD
 promise_test(function(t) {
   var async_t = async_test("calling play() then pause() on non-autoplay video should trigger pause event", {timeout:5000});
+||||||| merged common ancestors
+test(function() {
+  var t = async_test("calling play() then pause() on non-autoplay video should trigger pause event", {timeout:5000});
+=======
+promise_test(function(t) {
+  var async_t = async_test("calling play() then pause() on non-autoplay video should trigger pause event");
+>>>>>>> upstream-releases
   var v = document.getElementById("v");
   v.addEventListener("pause", function() {
     async_t.done();

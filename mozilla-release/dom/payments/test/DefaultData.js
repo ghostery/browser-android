@@ -1,14 +1,41 @@
 // testing data declation
+<<<<<<< HEAD
 const defaultMethods = [{
   supportedMethods: "basic-card",
   data: {
     supportedNetworks: ['unionpay', 'visa', 'mastercard', 'amex', 'discover',
                         'diners', 'jcb', 'mir',
     ],
+||||||| merged common ancestors
+const defaultMethods = [{
+  supportedMethods: "basic-card",
+  data: {
+    supportedNetworks: ['unionpay', 'visa', 'mastercard', 'amex', 'discover',
+                        'diners', 'jcb', 'mir',
+    ],
+    supportedTypes: ['prepaid', 'debit', 'credit'],
+=======
+const defaultMethods = [
+  {
+    supportedMethods: "basic-card",
+    data: {
+      supportedNetworks: [
+        "unionpay",
+        "visa",
+        "mastercard",
+        "amex",
+        "discover",
+        "diners",
+        "jcb",
+        "mir",
+      ],
+    },
   },
-}, {
-  supportedMethods: "testing-payment-method",
-}];
+  {
+    supportedMethods: "testing-payment-method",
+>>>>>>> upstream-releases
+  },
+];
 
 const defaultDetails = {
   total: {
@@ -16,7 +43,7 @@ const defaultDetails = {
     amount: {
       currency: "USD",
       value: "1.00",
-    }
+    },
   },
   shippingOptions: [
     {
@@ -45,5 +72,5 @@ const defaultOptions = {
   requestPayerEmail: false,
   requestPayerPhone: false,
   requestShipping: true,
-  shippingType: "shipping"
+  shippingType: "shipping",
 };

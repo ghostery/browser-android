@@ -67,6 +67,16 @@ void MacroAssembler::move32To64SignExtend(Register src, Register64 dest) {
 }
 
 // ===============================================================
+// Load instructions
+
+void MacroAssembler::load32SignExtendToPtr(const Address& src, Register dest) {
+  load32(src, dest);
+  move32To64SignExtend(dest, Register64(dest));
+}
+
+void MacroAssembler::loadAbiReturnAddress(Register dest) { movePtr(lr, dest); }
+
+// ===============================================================
 // Logical instructions
 
 void MacroAssembler::not32(Register reg) {
@@ -265,6 +275,7 @@ void MacroAssembler::add64(Imm64 imm, Register64 dest) {
   Add(ARMRegister(dest.reg, 64), ARMRegister(dest.reg, 64), Operand(imm.value));
 }
 
+<<<<<<< HEAD
 CodeOffset MacroAssembler::sub32FromStackPtrWithPatch(Register dest) {
   vixl::UseScratchRegisterScope temps(this);
   const ARMRegister scratch = temps.AcquireX();
@@ -274,6 +285,30 @@ CodeOffset MacroAssembler::sub32FromStackPtrWithPatch(Register dest) {
   movk(scratch, 0, 16);
   Sub(ARMRegister(dest, 64), sp, scratch);
   return offs;
+||||||| merged common ancestors
+CodeOffset
+MacroAssembler::sub32FromStackPtrWithPatch(Register dest)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const ARMRegister scratch = temps.AcquireX();
+    AutoForbidPools afp(this, /* max number of instructions in scope = */ 3);
+    CodeOffset offs = CodeOffset(currentOffset());
+    movz(scratch, 0, 0);
+    movk(scratch, 0, 16);
+    Sub(ARMRegister(dest, 64), sp, scratch);
+    return offs;
+=======
+CodeOffset MacroAssembler::sub32FromStackPtrWithPatch(Register dest) {
+  vixl::UseScratchRegisterScope temps(this);
+  const ARMRegister scratch = temps.AcquireX();
+  AutoForbidPoolsAndNops afp(this,
+                             /* max number of instructions in scope = */ 3);
+  CodeOffset offs = CodeOffset(currentOffset());
+  movz(scratch, 0, 0);
+  movk(scratch, 0, 16);
+  Sub(ARMRegister(dest, 64), sp, scratch);
+  return offs;
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::patchSub32FromStackPtr(CodeOffset offset, Imm32 imm) {
@@ -475,44 +510,163 @@ void MacroAssembler::neg32(Register reg) {
   Negs(ARMRegister(reg, 32), Operand(ARMRegister(reg, 32)));
 }
 
+<<<<<<< HEAD
 void MacroAssembler::negateFloat(FloatRegister reg) {
   fneg(ARMFPRegister(reg, 32), ARMFPRegister(reg, 32));
+||||||| merged common ancestors
+void
+MacroAssembler::negateFloat(FloatRegister reg)
+{
+    fneg(ARMFPRegister(reg, 32), ARMFPRegister(reg, 32));
+=======
+void MacroAssembler::negPtr(Register reg) {
+  Negs(ARMRegister(reg, 64), Operand(ARMRegister(reg, 64)));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::negateDouble(FloatRegister reg) {
   fneg(ARMFPRegister(reg, 64), ARMFPRegister(reg, 64));
+||||||| merged common ancestors
+void
+MacroAssembler::negateDouble(FloatRegister reg)
+{
+    fneg(ARMFPRegister(reg, 64), ARMFPRegister(reg, 64));
+=======
+void MacroAssembler::negateFloat(FloatRegister reg) {
+  fneg(ARMFPRegister(reg, 32), ARMFPRegister(reg, 32));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest) {
   fabs(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+||||||| merged common ancestors
+void
+MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest)
+{
+    fabs(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+=======
+void MacroAssembler::negateDouble(FloatRegister reg) {
+  fneg(ARMFPRegister(reg, 64), ARMFPRegister(reg, 64));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::absDouble(FloatRegister src, FloatRegister dest) {
   fabs(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+||||||| merged common ancestors
+void
+MacroAssembler::absDouble(FloatRegister src, FloatRegister dest)
+{
+    fabs(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+=======
+void MacroAssembler::absFloat32(FloatRegister src, FloatRegister dest) {
+  fabs(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::sqrtFloat32(FloatRegister src, FloatRegister dest) {
   fsqrt(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+||||||| merged common ancestors
+void
+MacroAssembler::sqrtFloat32(FloatRegister src, FloatRegister dest)
+{
+    fsqrt(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+=======
+void MacroAssembler::absDouble(FloatRegister src, FloatRegister dest) {
+  fabs(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::sqrtDouble(FloatRegister src, FloatRegister dest) {
   fsqrt(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+||||||| merged common ancestors
+void
+MacroAssembler::sqrtDouble(FloatRegister src, FloatRegister dest)
+{
+    fsqrt(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+=======
+void MacroAssembler::sqrtFloat32(FloatRegister src, FloatRegister dest) {
+  fsqrt(ARMFPRegister(dest, 32), ARMFPRegister(src, 32));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::minFloat32(FloatRegister other, FloatRegister srcDest,
                                 bool handleNaN) {
   MOZ_ASSERT(handleNaN);  // Always true for wasm
   fmin(ARMFPRegister(srcDest, 32), ARMFPRegister(srcDest, 32),
        ARMFPRegister(other, 32));
+||||||| merged common ancestors
+void
+MacroAssembler::minFloat32(FloatRegister other, FloatRegister srcDest, bool handleNaN)
+{
+    MOZ_ASSERT(handleNaN);      // Always true for wasm
+    fmin(ARMFPRegister(srcDest, 32), ARMFPRegister(srcDest, 32), ARMFPRegister(other, 32));
+=======
+void MacroAssembler::sqrtDouble(FloatRegister src, FloatRegister dest) {
+  fsqrt(ARMFPRegister(dest, 64), ARMFPRegister(src, 64));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::minDouble(FloatRegister other, FloatRegister srcDest,
                                bool handleNaN) {
   MOZ_ASSERT(handleNaN);  // Always true for wasm
   fmin(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64),
        ARMFPRegister(other, 64));
+||||||| merged common ancestors
+void
+MacroAssembler::minDouble(FloatRegister other, FloatRegister srcDest, bool handleNaN)
+{
+    MOZ_ASSERT(handleNaN);      // Always true for wasm
+    fmin(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64), ARMFPRegister(other, 64));
+=======
+void MacroAssembler::minFloat32(FloatRegister other, FloatRegister srcDest,
+                                bool handleNaN) {
+  MOZ_ASSERT(handleNaN);  // Always true for wasm
+  fmin(ARMFPRegister(srcDest, 32), ARMFPRegister(srcDest, 32),
+       ARMFPRegister(other, 32));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::maxFloat32(FloatRegister other, FloatRegister srcDest,
+                                bool handleNaN) {
+  MOZ_ASSERT(handleNaN);  // Always true for wasm
+  fmax(ARMFPRegister(srcDest, 32), ARMFPRegister(srcDest, 32),
+       ARMFPRegister(other, 32));
+||||||| merged common ancestors
+void
+MacroAssembler::maxFloat32(FloatRegister other, FloatRegister srcDest, bool handleNaN)
+{
+    MOZ_ASSERT(handleNaN);      // Always true for wasm
+    fmax(ARMFPRegister(srcDest, 32), ARMFPRegister(srcDest, 32), ARMFPRegister(other, 32));
+=======
+void MacroAssembler::minDouble(FloatRegister other, FloatRegister srcDest,
+                               bool handleNaN) {
+  MOZ_ASSERT(handleNaN);  // Always true for wasm
+  fmin(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64),
+       ARMFPRegister(other, 64));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::maxDouble(FloatRegister other, FloatRegister srcDest,
+                               bool handleNaN) {
+  MOZ_ASSERT(handleNaN);  // Always true for wasm
+  fmax(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64),
+       ARMFPRegister(other, 64));
+||||||| merged common ancestors
+void
+MacroAssembler::maxDouble(FloatRegister other, FloatRegister srcDest, bool handleNaN)
+{
+    MOZ_ASSERT(handleNaN);      // Always true for wasm
+    fmax(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64), ARMFPRegister(other, 64));
+=======
 void MacroAssembler::maxFloat32(FloatRegister other, FloatRegister srcDest,
                                 bool handleNaN) {
   MOZ_ASSERT(handleNaN);  // Always true for wasm
@@ -525,6 +679,7 @@ void MacroAssembler::maxDouble(FloatRegister other, FloatRegister srcDest,
   MOZ_ASSERT(handleNaN);  // Always true for wasm
   fmax(ARMFPRegister(srcDest, 64), ARMFPRegister(srcDest, 64),
        ARMFPRegister(other, 64));
+>>>>>>> upstream-releases
 }
 
 // ===============================================================
@@ -715,6 +870,7 @@ void MacroAssembler::ctz64(Register64 src, Register dest) {
 void MacroAssembler::popcnt32(Register src_, Register dest_, Register tmp_) {
   MOZ_ASSERT(tmp_ != Register::Invalid());
 
+<<<<<<< HEAD
   // Equivalent to mozilla::CountPopulation32().
 
   ARMRegister src(src_, 32);
@@ -738,17 +894,126 @@ void MacroAssembler::popcnt32(Register src_, Register dest_, Register tmp_) {
   Add(dest, dest, Operand(dest, vixl::LSL, 16));
   Lsr(dest, dest, 24);
 }
+||||||| merged common ancestors
+    // Equivalent to mozilla::CountPopulation32().
 
+    ARMRegister src(src_, 32);
+    ARMRegister dest(dest_, 32);
+    ARMRegister tmp(tmp_, 32);
+
+    Mov(tmp, src);
+    if (src_ != dest_) {
+        Mov(dest, src);
+    }
+    Lsr(dest, dest, 1);
+    And(dest, dest, 0x55555555);
+    Sub(dest, tmp, dest);
+    Lsr(tmp, dest, 2);
+    And(tmp, tmp, 0x33333333);
+    And(dest, dest, 0x33333333);
+    Add(dest, tmp, dest);
+    Add(dest, dest, Operand(dest, vixl::LSR, 4));
+    And(dest, dest, 0x0F0F0F0F);
+    Add(dest, dest, Operand(dest, vixl::LSL, 8));
+    Add(dest, dest, Operand(dest, vixl::LSL, 16));
+    Lsr(dest, dest, 24);
+}
+
+void
+MacroAssembler::popcnt64(Register64 src_, Register64 dest_, Register tmp_)
+{
+    MOZ_ASSERT(tmp_ != Register::Invalid());
+
+    // Equivalent to mozilla::CountPopulation64(), though likely more efficient.
+
+    ARMRegister src(src_.reg, 64);
+    ARMRegister dest(dest_.reg, 64);
+    ARMRegister tmp(tmp_, 64);
+
+    Mov(tmp, src);
+    if (src_ != dest_) {
+        Mov(dest, src);
+    }
+    Lsr(dest, dest, 1);
+    And(dest, dest, 0x5555555555555555);
+    Sub(dest, tmp, dest);
+    Lsr(tmp, dest, 2);
+    And(tmp, tmp, 0x3333333333333333);
+    And(dest, dest, 0x3333333333333333);
+    Add(dest, tmp, dest);
+    Add(dest, dest, Operand(dest, vixl::LSR, 4));
+    And(dest, dest, 0x0F0F0F0F0F0F0F0F);
+    Add(dest, dest, Operand(dest, vixl::LSL, 8));
+    Add(dest, dest, Operand(dest, vixl::LSL, 16));
+    Add(dest, dest, Operand(dest, vixl::LSL, 32));
+    Lsr(dest, dest, 56);
+}
+=======
+  // Equivalent to mozilla::CountPopulation32().
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void MacroAssembler::popcnt64(Register64 src_, Register64 dest_,
                               Register tmp_) {
   MOZ_ASSERT(tmp_ != Register::Invalid());
+||||||| merged common ancestors
+// ===============================================================
+// Branch functions
+=======
+  ARMRegister src(src_, 32);
+  ARMRegister dest(dest_, 32);
+  ARMRegister tmp(tmp_, 32);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Equivalent to mozilla::CountPopulation64(), though likely more efficient.
+||||||| merged common ancestors
+template <class L>
+void
+MacroAssembler::branch32(Condition cond, Register lhs, Register rhs, L label)
+{
+    cmp32(lhs, rhs);
+    B(label, cond);
+}
+=======
+  Mov(tmp, src);
+  if (src_ != dest_) {
+    Mov(dest, src);
+  }
+  Lsr(dest, dest, 1);
+  And(dest, dest, 0x55555555);
+  Sub(dest, tmp, dest);
+  Lsr(tmp, dest, 2);
+  And(tmp, tmp, 0x33333333);
+  And(dest, dest, 0x33333333);
+  Add(dest, tmp, dest);
+  Add(dest, dest, Operand(dest, vixl::LSR, 4));
+  And(dest, dest, 0x0F0F0F0F);
+  Add(dest, dest, Operand(dest, vixl::LSL, 8));
+  Add(dest, dest, Operand(dest, vixl::LSL, 16));
+  Lsr(dest, dest, 24);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ARMRegister src(src_.reg, 64);
   ARMRegister dest(dest_.reg, 64);
   ARMRegister tmp(tmp_, 64);
+||||||| merged common ancestors
+template <class L>
+void
+MacroAssembler::branch32(Condition cond, Register lhs, Imm32 imm, L label)
+{
+    cmp32(lhs, imm);
+    B(label, cond);
+}
+=======
+void MacroAssembler::popcnt64(Register64 src_, Register64 dest_,
+                              Register tmp_) {
+  MOZ_ASSERT(tmp_ != Register::Invalid());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Mov(tmp, src);
   if (src_ != dest_) {
     Mov(dest, src);
@@ -767,24 +1032,97 @@ void MacroAssembler::popcnt64(Register64 src_, Register64 dest_,
   Add(dest, dest, Operand(dest, vixl::LSL, 32));
   Lsr(dest, dest, 56);
 }
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, const Address& lhs, Register rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    MOZ_ASSERT(scratch != rhs);
+    load32(lhs, scratch);
+    branch32(cond, scratch, rhs, label);
+}
+=======
+  // Equivalent to mozilla::CountPopulation64(), though likely more efficient.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 // ===============================================================
 // Branch functions
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, const Address& lhs, Imm32 imm, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    load32(lhs, scratch);
+    branch32(cond, scratch, imm, label);
+}
+=======
+  ARMRegister src(src_.reg, 64);
+  ARMRegister dest(dest_.reg, 64);
+  ARMRegister tmp(tmp_, 64);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 template <class L>
 void MacroAssembler::branch32(Condition cond, Register lhs, Register rhs,
                               L label) {
   cmp32(lhs, rhs);
   B(label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs, Register rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    movePtr(ImmPtr(lhs.addr), scratch);
+    branch32(cond, Address(scratch, 0), rhs, label);
+=======
+  Mov(tmp, src);
+  if (src_ != dest_) {
+    Mov(dest, src);
+  }
+  Lsr(dest, dest, 1);
+  And(dest, dest, 0x5555555555555555);
+  Sub(dest, tmp, dest);
+  Lsr(tmp, dest, 2);
+  And(tmp, tmp, 0x3333333333333333);
+  And(dest, dest, 0x3333333333333333);
+  Add(dest, tmp, dest);
+  Add(dest, dest, Operand(dest, vixl::LSR, 4));
+  And(dest, dest, 0x0F0F0F0F0F0F0F0F);
+  Add(dest, dest, Operand(dest, vixl::LSL, 8));
+  Add(dest, dest, Operand(dest, vixl::LSL, 16));
+  Add(dest, dest, Operand(dest, vixl::LSL, 32));
+  Lsr(dest, dest, 56);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template <class L>
 void MacroAssembler::branch32(Condition cond, Register lhs, Imm32 imm,
                               L label) {
   cmp32(lhs, imm);
   B(label, cond);
 }
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs, Imm32 rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    movePtr(ImmPtr(lhs.addr), scratch);
+    branch32(cond, Address(scratch, 0), rhs, label);
+}
+=======
+// ===============================================================
+// Branch functions
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, const Address& lhs, Register rhs,
                               Label* label) {
   vixl::UseScratchRegisterScope temps(this);
@@ -793,8 +1131,26 @@ void MacroAssembler::branch32(Condition cond, const Address& lhs, Register rhs,
   MOZ_ASSERT(scratch != rhs);
   load32(lhs, scratch);
   branch32(cond, scratch, rhs, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, const BaseIndex& lhs, Imm32 rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const ARMRegister scratch32 = temps.AcquireW();
+    MOZ_ASSERT(scratch32.asUnsized() != lhs.base);
+    MOZ_ASSERT(scratch32.asUnsized() != lhs.index);
+    doBaseIndex(scratch32, lhs, vixl::LDR_w);
+    branch32(cond, scratch32.asUnsized(), rhs, label);
+=======
+template <class L>
+void MacroAssembler::branch32(Condition cond, Register lhs, Register rhs,
+                              L label) {
+  cmp32(lhs, rhs);
+  B(label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, const Address& lhs, Imm32 imm,
                               Label* label) {
   vixl::UseScratchRegisterScope temps(this);
@@ -802,24 +1158,88 @@ void MacroAssembler::branch32(Condition cond, const Address& lhs, Imm32 imm,
   MOZ_ASSERT(scratch != lhs.base);
   load32(lhs, scratch);
   branch32(cond, scratch, imm, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branch32(Condition cond, wasm::SymbolicAddress lhs, Imm32 rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    movePtr(lhs, scratch);
+    branch32(cond, Address(scratch, 0), rhs, label);
 }
 
+void
+MacroAssembler::branch64(Condition cond, Register64 lhs, Imm64 val, Label* success, Label* fail)
+{
+    Cmp(ARMRegister(lhs.reg, 64), val.value);
+    B(success, cond);
+    if (fail) {
+        B(fail);
+    }
+=======
+template <class L>
+void MacroAssembler::branch32(Condition cond, Register lhs, Imm32 imm,
+                              L label) {
+  cmp32(lhs, imm);
+  B(label, cond);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs,
                               Register rhs, Label* label) {
   vixl::UseScratchRegisterScope temps(this);
   const Register scratch = temps.AcquireX().asUnsized();
   movePtr(ImmPtr(lhs.addr), scratch);
   branch32(cond, Address(scratch, 0), rhs, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs, Label* success, Label* fail)
+{
+    Cmp(ARMRegister(lhs.reg, 64), ARMRegister(rhs.reg, 64));
+    B(success, cond);
+    if (fail) {
+        B(fail);
+    }
+=======
+void MacroAssembler::branch32(Condition cond, const Address& lhs, Register rhs,
+                              Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  MOZ_ASSERT(scratch != rhs);
+  load32(lhs, scratch);
+  branch32(cond, scratch, rhs, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs,
                               Imm32 rhs, Label* label) {
   vixl::UseScratchRegisterScope temps(this);
   const Register scratch = temps.AcquireX().asUnsized();
   movePtr(ImmPtr(lhs.addr), scratch);
   branch32(cond, Address(scratch, 0), rhs, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branch64(Condition cond, const Address& lhs, Imm64 val, Label* label)
+{
+    MOZ_ASSERT(cond == Assembler::NotEqual,
+               "other condition codes not supported");
+
+    branchPtr(cond, lhs, ImmWord(val.value), label);
+=======
+void MacroAssembler::branch32(Condition cond, const Address& lhs, Imm32 imm,
+                              Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  load32(lhs, scratch);
+  branch32(cond, scratch, imm, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, const BaseIndex& lhs, Imm32 rhs,
                               Label* label) {
   vixl::UseScratchRegisterScope temps(this);
@@ -828,16 +1248,118 @@ void MacroAssembler::branch32(Condition cond, const BaseIndex& lhs, Imm32 rhs,
   MOZ_ASSERT(scratch32.asUnsized() != lhs.index);
   doBaseIndex(scratch32, lhs, vixl::LDR_w);
   branch32(cond, scratch32.asUnsized(), rhs, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branch64(Condition cond, const Address& lhs, const Address& rhs, Register scratch,
+                         Label* label)
+{
+    MOZ_ASSERT(cond == Assembler::NotEqual,
+               "other condition codes not supported");
+    MOZ_ASSERT(lhs.base != scratch);
+    MOZ_ASSERT(rhs.base != scratch);
+
+    loadPtr(rhs, scratch);
+    branchPtr(cond, lhs, scratch, label);
+=======
+void MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs,
+                              Register rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  movePtr(ImmPtr(lhs.addr), scratch);
+  branch32(cond, Address(scratch, 0), rhs, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branch32(Condition cond, wasm::SymbolicAddress lhs,
                               Imm32 rhs, Label* label) {
   vixl::UseScratchRegisterScope temps(this);
   const Register scratch = temps.AcquireX().asUnsized();
   movePtr(lhs, scratch);
   branch32(cond, Address(scratch, 0), rhs, label);
+||||||| merged common ancestors
+template <class L>
+void
+MacroAssembler::branchPtr(Condition cond, Register lhs, Register rhs, L label)
+{
+    Cmp(ARMRegister(lhs, 64), ARMRegister(rhs, 64));
+    B(label, cond);
+=======
+void MacroAssembler::branch32(Condition cond, const AbsoluteAddress& lhs,
+                              Imm32 rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  load32(lhs, scratch);
+  branch32(cond, scratch, rhs, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branch64(Condition cond, Register64 lhs, Imm64 val,
+                              Label* success, Label* fail) {
+  Cmp(ARMRegister(lhs.reg, 64), val.value);
+  B(success, cond);
+  if (fail) {
+    B(fail);
+  }
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, Register lhs, Imm32 rhs, Label* label)
+{
+    cmpPtr(lhs, rhs);
+    B(label, cond);
+=======
+void MacroAssembler::branch32(Condition cond, const BaseIndex& lhs, Imm32 rhs,
+                              Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const ARMRegister scratch32 = temps.AcquireW();
+  MOZ_ASSERT(scratch32.asUnsized() != lhs.base);
+  MOZ_ASSERT(scratch32.asUnsized() != lhs.index);
+  doBaseIndex(scratch32, lhs, vixl::LDR_w);
+  branch32(cond, scratch32.asUnsized(), rhs, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs,
+                              Label* success, Label* fail) {
+  Cmp(ARMRegister(lhs.reg, 64), ARMRegister(rhs.reg, 64));
+  B(success, cond);
+  if (fail) {
+    B(fail);
+  }
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, Register lhs, ImmPtr rhs, Label* label)
+{
+    cmpPtr(lhs, rhs);
+    B(label, cond);
+=======
+void MacroAssembler::branch32(Condition cond, wasm::SymbolicAddress lhs,
+                              Imm32 rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  movePtr(lhs, scratch);
+  branch32(cond, Address(scratch, 0), rhs, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branch64(Condition cond, const Address& lhs, Imm64 val,
+                              Label* label) {
+  MOZ_ASSERT(cond == Assembler::NotEqual,
+             "other condition codes not supported");
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, Register lhs, ImmGCPtr rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs);
+    movePtr(rhs, scratch);
+    branchPtr(cond, lhs, scratch, label);
+}
+=======
 void MacroAssembler::branch64(Condition cond, Register64 lhs, Imm64 val,
                               Label* success, Label* fail) {
   Cmp(ARMRegister(lhs.reg, 64), val.value);
@@ -846,7 +1368,17 @@ void MacroAssembler::branch64(Condition cond, Register64 lhs, Imm64 val,
     B(fail);
   }
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  branchPtr(cond, lhs, ImmWord(val.value), label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, Register lhs, ImmWord rhs, Label* label)
+{
+    cmpPtr(lhs, rhs);
+    B(label, cond);
+=======
 void MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs,
                               Label* success, Label* fail) {
   Cmp(ARMRegister(lhs.reg, 64), ARMRegister(rhs.reg, 64));
@@ -854,16 +1386,73 @@ void MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs,
   if (fail) {
     B(fail);
   }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branch64(Condition cond, const Address& lhs,
+                              const Address& rhs, Register scratch,
+                              Label* label) {
+  MOZ_ASSERT(cond == Assembler::NotEqual,
+             "other condition codes not supported");
+  MOZ_ASSERT(lhs.base != scratch);
+  MOZ_ASSERT(rhs.base != scratch);
+||||||| merged common ancestors
+template <class L>
+void
+MacroAssembler::branchPtr(Condition cond, const Address& lhs, Register rhs, L label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    MOZ_ASSERT(scratch != rhs);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+}
+=======
 void MacroAssembler::branch64(Condition cond, const Address& lhs, Imm64 val,
                               Label* label) {
   MOZ_ASSERT(cond == Assembler::NotEqual,
              "other condition codes not supported");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  loadPtr(rhs, scratch);
+  branchPtr(cond, lhs, scratch, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmPtr rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+=======
   branchPtr(cond, lhs, ImmWord(val.value), label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+template <class L>
+void MacroAssembler::branchPtr(Condition cond, Register lhs, Register rhs,
+                               L label) {
+  Cmp(ARMRegister(lhs, 64), ARMRegister(rhs, 64));
+  B(label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmGCPtr rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const ARMRegister scratch1_64 = temps.AcquireX();
+    const ARMRegister scratch2_64 = temps.AcquireX();
+    MOZ_ASSERT(scratch1_64.asUnsized() != lhs.base);
+    MOZ_ASSERT(scratch2_64.asUnsized() != lhs.base);
+
+    movePtr(rhs, scratch1_64.asUnsized());
+    loadPtr(lhs, scratch2_64.asUnsized());
+    branchPtr(cond, scratch2_64.asUnsized(), scratch1_64.asUnsized(), label);
+=======
 void MacroAssembler::branch64(Condition cond, const Address& lhs,
                               const Address& rhs, Register scratch,
                               Label* label) {
@@ -874,27 +1463,55 @@ void MacroAssembler::branch64(Condition cond, const Address& lhs,
 
   loadPtr(rhs, scratch);
   branchPtr(cond, lhs, scratch, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchPtr(Condition cond, Register lhs, Imm32 rhs,
+                               Label* label) {
+  cmpPtr(lhs, rhs);
+  B(label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmWord rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+=======
 template <class L>
 void MacroAssembler::branchPtr(Condition cond, Register lhs, Register rhs,
                                L label) {
   Cmp(ARMRegister(lhs, 64), ARMRegister(rhs, 64));
   B(label, cond);
+>>>>>>> upstream-releases
 }
 
-void MacroAssembler::branchPtr(Condition cond, Register lhs, Imm32 rhs,
-                               Label* label) {
-  cmpPtr(lhs, rhs);
-  B(label, cond);
-}
-
+<<<<<<< HEAD
 void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmPtr rhs,
                                Label* label) {
   cmpPtr(lhs, rhs);
   B(label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs, Register rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != rhs);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+=======
+void MacroAssembler::branchPtr(Condition cond, Register lhs, Imm32 rhs,
+                               Label* label) {
+  cmpPtr(lhs, rhs);
+  B(label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmGCPtr rhs,
                                Label* label) {
   vixl::UseScratchRegisterScope temps(this);
@@ -902,8 +1519,195 @@ void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmGCPtr rhs,
   MOZ_ASSERT(scratch != lhs);
   movePtr(rhs, scratch);
   branchPtr(cond, lhs, scratch, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs, ImmWord rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+=======
+void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmPtr rhs,
+                               Label* label) {
+  cmpPtr(lhs, rhs);
+  B(label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmWord rhs,
+                               Label* label) {
+  cmpPtr(lhs, rhs);
+  B(label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, wasm::SymbolicAddress lhs, Register rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != rhs);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+=======
+void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmGCPtr rhs,
+                               Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs);
+  movePtr(rhs, scratch);
+  branchPtr(cond, lhs, scratch, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+template <class L>
+void MacroAssembler::branchPtr(Condition cond, const Address& lhs, Register rhs,
+                               L label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  MOZ_ASSERT(scratch != rhs);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmPtr rhs,
+                               Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmGCPtr rhs,
+                               Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const ARMRegister scratch1_64 = temps.AcquireX();
+  const ARMRegister scratch2_64 = temps.AcquireX();
+  MOZ_ASSERT(scratch1_64.asUnsized() != lhs.base);
+  MOZ_ASSERT(scratch2_64.asUnsized() != lhs.base);
+
+  movePtr(rhs, scratch1_64.asUnsized());
+  loadPtr(lhs, scratch2_64.asUnsized());
+  branchPtr(cond, scratch2_64.asUnsized(), scratch1_64.asUnsized(), label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const Address& lhs, ImmWord rhs,
+                               Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
+                               Register rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != rhs);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const AbsoluteAddress& lhs,
+                               ImmWord rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, wasm::SymbolicAddress lhs,
+                               Register rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != rhs);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPtr(Condition cond, const BaseIndex& lhs,
+                               ImmWord rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  MOZ_ASSERT(scratch != lhs.base);
+  MOZ_ASSERT(scratch != lhs.index);
+  loadPtr(lhs, scratch);
+  branchPtr(cond, scratch, rhs, label);
+}
+
+void MacroAssembler::branchPrivatePtr(Condition cond, const Address& lhs,
+                                      Register rhs, Label* label) {
+  vixl::UseScratchRegisterScope temps(this);
+  const Register scratch = temps.AcquireX().asUnsized();
+  if (rhs != scratch) {
+    movePtr(rhs, scratch);
+  }
+  // Instead of unboxing lhs, box rhs and do direct comparison with lhs.
+  rshiftPtr(Imm32(1), scratch);
+  branchPtr(cond, lhs, scratch, label);
+}
+
+void MacroAssembler::branchFloat(DoubleCondition cond, FloatRegister lhs,
+                                 FloatRegister rhs, Label* label) {
+  compareFloat(cond, lhs, rhs);
+  switch (cond) {
+    case DoubleNotEqual: {
+      Label unordered;
+      // not equal *and* ordered
+      branch(Overflow, &unordered);
+      branch(NotEqual, label);
+      bind(&unordered);
+      break;
+||||||| merged common ancestors
+void
+MacroAssembler::branchPtr(Condition cond, const BaseIndex& lhs, ImmWord rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    MOZ_ASSERT(scratch != lhs.base);
+    MOZ_ASSERT(scratch != lhs.index);
+    loadPtr(lhs, scratch);
+    branchPtr(cond, scratch, rhs, label);
+}
+
+void
+MacroAssembler::branchPrivatePtr(Condition cond, const Address& lhs, Register rhs, Label* label)
+{
+    vixl::UseScratchRegisterScope temps(this);
+    const Register scratch = temps.AcquireX().asUnsized();
+    if (rhs != scratch) {
+        movePtr(rhs, scratch);
+    }
+    // Instead of unboxing lhs, box rhs and do direct comparison with lhs.
+    rshiftPtr(Imm32(1), scratch);
+    branchPtr(cond, lhs, scratch, label);
+}
+
+void
+MacroAssembler::branchFloat(DoubleCondition cond, FloatRegister lhs, FloatRegister rhs,
+                            Label* label)
+{
+    compareFloat(cond, lhs, rhs);
+    switch (cond) {
+      case DoubleNotEqual: {
+        Label unordered;
+        // not equal *and* ordered
+        branch(Overflow, &unordered);
+        branch(NotEqual, label);
+        bind(&unordered);
+        break;
+      }
+      case DoubleEqualOrUnordered:
+        branch(Overflow, label);
+        branch(Equal, label);
+        break;
+      default:
+        branch(Condition(cond), label);
+=======
 void MacroAssembler::branchPtr(Condition cond, Register lhs, ImmWord rhs,
                                Label* label) {
   cmpPtr(lhs, rhs);
@@ -1011,6 +1815,7 @@ void MacroAssembler::branchFloat(DoubleCondition cond, FloatRegister lhs,
       branch(NotEqual, label);
       bind(&unordered);
       break;
+>>>>>>> upstream-releases
     }
     case DoubleEqualOrUnordered:
       branch(Overflow, label);
@@ -1270,6 +2075,7 @@ void MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value,
 }
 
 template <typename T>
+<<<<<<< HEAD
 void MacroAssembler::branchTestDoubleImpl(Condition cond, const T& t,
                                           Label* label) {
   Condition c = testDouble(cond, t);
@@ -1292,8 +2098,78 @@ void MacroAssembler::branchTestDoubleTruthy(bool truthy, FloatRegister reg,
     B(label);
     bind(&onFalse);
   }
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestDoubleImpl(Condition cond, const T& t, Label* label)
+{
+    Condition c = testDouble(cond, t);
+    B(label, c);
 }
 
+void
+MacroAssembler::branchTestDoubleTruthy(bool truthy, FloatRegister reg, Label* label)
+{
+    Fcmp(ARMFPRegister(reg, 64), 0.0);
+    if (!truthy) {
+        // falsy values are zero, and NaN.
+        branch(Zero, label);
+        branch(Overflow, label);
+    } else {
+        // truthy values are non-zero and not nan.
+        // If it is overflow
+        Label onFalse;
+        branch(Zero, &onFalse);
+        branch(Overflow, &onFalse);
+        B(label);
+        bind(&onFalse);
+    }
+=======
+void MacroAssembler::branchTestDoubleImpl(Condition cond, const T& t,
+                                          Label* label) {
+  Condition c = testDouble(cond, t);
+  B(label, c);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNumber(Condition cond, Register tag,
+                                      Label* label) {
+  branchTestNumberImpl(cond, tag, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNumber(Condition cond, Register tag, Label* label)
+{
+    branchTestNumberImpl(cond, tag, label);
+=======
+void MacroAssembler::branchTestDoubleTruthy(bool truthy, FloatRegister reg,
+                                            Label* label) {
+  Fcmp(ARMFPRegister(reg, 64), 0.0);
+  if (!truthy) {
+    // falsy values are zero, and NaN.
+    branch(Zero, label);
+    branch(Overflow, label);
+  } else {
+    // truthy values are non-zero and not nan.
+    // If it is overflow
+    Label onFalse;
+    branch(Zero, &onFalse);
+    branch(Overflow, &onFalse);
+    B(label);
+    bind(&onFalse);
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
+                                      Label* label) {
+  branchTestNumberImpl(cond, value, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value, Label* label)
+{
+    branchTestNumberImpl(cond, value, label);
+=======
 void MacroAssembler::branchTestNumber(Condition cond, Register tag,
                                       Label* label) {
   branchTestNumberImpl(cond, tag, label);
@@ -1302,6 +2178,7 @@ void MacroAssembler::branchTestNumber(Condition cond, Register tag,
 void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestNumberImpl(cond, value, label);
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1367,6 +2244,18 @@ void MacroAssembler::branchTestString(Condition cond, const ValueOperand& value,
 }
 
 template <typename T>
+<<<<<<< HEAD
+void MacroAssembler::branchTestStringImpl(Condition cond, const T& t,
+                                          Label* label) {
+  Condition c = testString(cond, t);
+  B(label, c);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestStringImpl(Condition cond, const T& t, Label* label)
+{
+    Condition c = testString(cond, t);
+    B(label, c);
+=======
 void MacroAssembler::branchTestStringImpl(Condition cond, const T& t,
                                           Label* label) {
   Condition c = testString(cond, t);
@@ -1378,23 +2267,70 @@ void MacroAssembler::branchTestStringTruthy(bool truthy,
                                             Label* label) {
   Condition c = testStringTruthy(truthy, value);
   B(label, c);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestStringTruthy(bool truthy,
+                                            const ValueOperand& value,
+                                            Label* label) {
+  Condition c = testStringTruthy(truthy, value);
+  B(label, c);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestStringTruthy(bool truthy, const ValueOperand& value, Label* label)
+{
+    Condition c = testStringTruthy(truthy, value);
+    B(label, c);
+=======
 void MacroAssembler::branchTestSymbol(Condition cond, Register tag,
                                       Label* label) {
   branchTestSymbolImpl(cond, tag, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestSymbol(Condition cond, Register tag,
+                                      Label* label) {
+  branchTestSymbolImpl(cond, tag, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestSymbol(Condition cond, Register tag, Label* label)
+{
+    branchTestSymbolImpl(cond, tag, label);
+=======
 void MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address,
                                       Label* label) {
   branchTestSymbolImpl(cond, address, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  branchTestSymbolImpl(cond, address, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address, Label* label)
+{
+    branchTestSymbolImpl(cond, address, label);
+=======
 void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestSymbolImpl(cond, value, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
+                                      Label* label) {
+  branchTestSymbolImpl(cond, value, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value, Label* label)
+{
+    branchTestSymbolImpl(cond, value, label);
+=======
 template <typename T>
 void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
                                           Label* label) {
@@ -1402,16 +2338,102 @@ void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
   B(label, c);
 }
 
+void MacroAssembler::branchTestBigInt(Condition cond, Register tag,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, tag, label);
+}
+
+void MacroAssembler::branchTestBigInt(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, address, label);
+}
+
+void MacroAssembler::branchTestBigInt(Condition cond, const ValueOperand& value,
+                                      Label* label) {
+  branchTestBigIntImpl(cond, value, label);
+>>>>>>> upstream-releases
+}
+
+template <typename T>
+<<<<<<< HEAD
+void MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t,
+                                          Label* label) {
+  Condition c = testSymbol(cond, t);
+  B(label, c);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestSymbolImpl(Condition cond, const T& t, Label* label)
+{
+    Condition c = testSymbol(cond, t);
+    B(label, c);
+=======
+void MacroAssembler::branchTestBigIntImpl(Condition cond, const T& t,
+                                          Label* label) {
+  Condition c = testBigInt(cond, t);
+  B(label, c);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::branchTestNull(Condition cond, Register tag,
                                     Label* label) {
   branchTestNullImpl(cond, tag, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, Register tag, Label* label)
+{
+    branchTestNullImpl(cond, tag, label);
+=======
+void MacroAssembler::branchTestBigIntTruthy(bool truthy,
+                                            const ValueOperand& value,
+                                            Label* label) {
+  Condition c = testBigIntTruthy(truthy, value);
+  B(label, c);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchTestNull(Condition cond, const Address& address,
                                     Label* label) {
   branchTestNullImpl(cond, address, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const Address& address, Label* label)
+{
+    branchTestNullImpl(cond, address, label);
+=======
+void MacroAssembler::branchTestNull(Condition cond, Register tag,
+                                    Label* label) {
+  branchTestNullImpl(cond, tag, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
+                                    Label* label) {
+  branchTestNullImpl(cond, address, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address, Label* label)
+{
+    branchTestNullImpl(cond, address, label);
+=======
+void MacroAssembler::branchTestNull(Condition cond, const Address& address,
+                                    Label* label) {
+  branchTestNullImpl(cond, address, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
+                                    Label* label) {
+  branchTestNullImpl(cond, value, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value, Label* label)
+{
+    branchTestNullImpl(cond, value, label);
+=======
 void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
                                     Label* label) {
   branchTestNullImpl(cond, address, label);
@@ -1420,6 +2442,7 @@ void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
 void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
                                     Label* label) {
   branchTestNullImpl(cond, value, label);
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -1525,9 +2548,23 @@ void MacroAssembler::branchTestMagic(Condition cond, const Address& valaddr,
   B(label, cond);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
   // Not used by Rabaldr.
   MOZ_CRASH("NYI - branchToComputedAddress");
+||||||| merged common ancestors
+void
+MacroAssembler::branchToComputedAddress(const BaseIndex& addr)
+{
+    // Not used by Rabaldr.
+    MOZ_CRASH("NYI - branchToComputedAddress");
+=======
+void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
+  vixl::UseScratchRegisterScope temps(&this->asVIXL());
+  const ARMRegister scratch64 = temps.AcquireX();
+  loadPtr(addr, scratch64.asUnsized());
+  Br(scratch64);
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::cmp32Move32(Condition cond, Register lhs, Register rhs,
@@ -1545,13 +2582,90 @@ void MacroAssembler::cmp32Move32(Condition cond, Register lhs,
        cond);
 }
 
+<<<<<<< HEAD
 void MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs,
                                   Register src, Register dest) {
   cmp32(lhs, rhs);
   Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
        cond);
+||||||| merged common ancestors
+void
+MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs, Register src,
+                             Register dest)
+{
+    cmp32(lhs, rhs);
+    Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64), cond);
+=======
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs,
+                                 const Address& rhs, const Address& src,
+                                 Register dest) {
+  MOZ_CRASH("NYI");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
+                                   Imm32 mask, const Address& src,
+                                   Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+||||||| merged common ancestors
+void
+MacroAssembler::test32LoadPtr(Condition cond, const Address& addr, Imm32 mask, const Address& src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+=======
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs, Register rhs,
+                                 const Address& src, Register dest) {
+  MOZ_CRASH("NYI");
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // ARM64 does not support conditional loads, so we use a branch with a CSel
+  // (to prevent Spectre attacks).
+  vixl::UseScratchRegisterScope temps(this);
+  const ARMRegister scratch64 = temps.AcquireX();
+  Label done;
+  branchTest32(Assembler::InvertCondition(cond), addr, mask, &done);
+  loadPtr(src, scratch64.asUnsized());
+  Csel(ARMRegister(dest, 64), scratch64, ARMRegister(dest, 64), cond);
+  bind(&done);
+||||||| merged common ancestors
+    // ARM64 does not support conditional loads, so we use a branch with a CSel
+    // (to prevent Spectre attacks).
+    vixl::UseScratchRegisterScope temps(this);
+    const ARMRegister scratch64 = temps.AcquireX();
+    Label done;
+    branchTest32(Assembler::InvertCondition(cond), addr, mask, &done);
+    loadPtr(src, scratch64.asUnsized());
+    Csel(ARMRegister(dest, 64), scratch64, ARMRegister(dest, 64), cond);
+    bind(&done);
+=======
+void MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs,
+                                  Register src, Register dest) {
+  cmp32(lhs, rhs);
+  Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
+       cond);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::test32MovePtr(Condition cond, const Address& addr,
+                                   Imm32 mask, Register src, Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+  test32(addr, mask);
+  Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
+       cond);
+||||||| merged common ancestors
+void
+MacroAssembler::test32MovePtr(Condition cond, const Address& addr, Imm32 mask, Register src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+    test32(addr, mask);
+    Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64), cond);
+=======
 void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
                                    Imm32 mask, const Address& src,
                                    Register dest) {
@@ -1566,40 +2680,98 @@ void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
   loadPtr(src, scratch64.asUnsized());
   Csel(ARMRegister(dest, 64), scratch64, ARMRegister(dest, 64), cond);
   bind(&done);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::spectreMovePtr(Condition cond, Register src,
+                                    Register dest) {
+  Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
+       cond);
+||||||| merged common ancestors
+void
+MacroAssembler::spectreMovePtr(Condition cond, Register src, Register dest)
+{
+    Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64), cond);
+=======
 void MacroAssembler::test32MovePtr(Condition cond, const Address& addr,
                                    Imm32 mask, Register src, Register dest) {
   MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
   test32(addr, mask);
   Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
        cond);
+>>>>>>> upstream-releases
 }
 
-void MacroAssembler::spectreMovePtr(Condition cond, Register src,
-                                    Register dest) {
-  Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
-       cond);
-}
-
+<<<<<<< HEAD
 void MacroAssembler::spectreZeroRegister(Condition cond, Register,
                                          Register dest) {
   Csel(ARMRegister(dest, 64), ARMRegister(dest, 64), vixl::xzr,
        Assembler::InvertCondition(cond));
+||||||| merged common ancestors
+void
+MacroAssembler::spectreZeroRegister(Condition cond, Register, Register dest)
+{
+    Csel(ARMRegister(dest, 64), ARMRegister(dest, 64), vixl::xzr,
+         Assembler::InvertCondition(cond));
+=======
+void MacroAssembler::spectreMovePtr(Condition cond, Register src,
+                                    Register dest) {
+  Csel(ARMRegister(dest, 64), ARMRegister(src, 64), ARMRegister(dest, 64),
+       cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::spectreBoundsCheck32(Register index, Register length,
                                           Register maybeScratch,
                                           Label* failure) {
   MOZ_ASSERT(length != maybeScratch);
   MOZ_ASSERT(index != maybeScratch);
+||||||| merged common ancestors
+void
+MacroAssembler::spectreBoundsCheck32(Register index, Register length, Register maybeScratch,
+                                     Label* failure)
+{
+    MOZ_ASSERT(length != maybeScratch);
+    MOZ_ASSERT(index != maybeScratch);
+=======
+void MacroAssembler::spectreZeroRegister(Condition cond, Register,
+                                         Register dest) {
+  Csel(ARMRegister(dest, 64), ARMRegister(dest, 64), vixl::xzr,
+       Assembler::InvertCondition(cond));
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  branch32(Assembler::BelowOrEqual, length, index, failure);
+||||||| merged common ancestors
+    branch32(Assembler::BelowOrEqual, length, index, failure);
+=======
+void MacroAssembler::spectreBoundsCheck32(Register index, Register length,
+                                          Register maybeScratch,
+                                          Label* failure) {
+  MOZ_ASSERT(length != maybeScratch);
+  MOZ_ASSERT(index != maybeScratch);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (JitOptions.spectreIndexMasking) {
+    Csel(ARMRegister(index, 32), ARMRegister(index, 32), vixl::wzr,
+         Assembler::Above);
+  }
+||||||| merged common ancestors
+    if (JitOptions.spectreIndexMasking) {
+        Csel(ARMRegister(index, 32), ARMRegister(index, 32), vixl::wzr, Assembler::Above);
+    }
+=======
   branch32(Assembler::BelowOrEqual, length, index, failure);
 
   if (JitOptions.spectreIndexMasking) {
     Csel(ARMRegister(index, 32), ARMRegister(index, 32), vixl::wzr,
          Assembler::Above);
   }
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::spectreBoundsCheck32(Register index, const Address& length,

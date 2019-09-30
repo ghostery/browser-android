@@ -39,7 +39,7 @@
 #include <string>
 
 #ifndef PT_ARM_EXIDX
-#define PT_ARM_EXIDX 0x70000001
+#  define PT_ARM_EXIDX 0x70000001
 #endif
 
 // Bug 1082817: ICS B2G has a buggy linker that doesn't always ensure
@@ -48,7 +48,7 @@
 // and binary-search that; otherwise, we search the index in place
 // (avoiding the time and space overhead of the indirection).
 #if defined(ANDROID_VERSION) && ANDROID_VERSION < 16
-#define HAVE_UNSORTED_EXIDX
+#  define HAVE_UNSORTED_EXIDX
 #endif
 
 namespace mozilla {
@@ -58,21 +58,39 @@ struct PRel31 {
   bool topBit() const { return mBits & 0x80000000; }
   uint32_t value() const { return mBits & 0x7fffffff; }
   int32_t offset() const { return (static_cast<int32_t>(mBits) << 1) >> 1; }
-  const void *compute() const {
-    return reinterpret_cast<const char *>(this) + offset();
+  const void* compute() const {
+    return reinterpret_cast<const char*>(this) + offset();
   }
+<<<<<<< HEAD
 
  private:
   PRel31(const PRel31 &copied) = delete;
+||||||| merged common ancestors
+private:
+  PRel31(const PRel31 &copied) = delete;
+=======
+
+ private:
+  PRel31(const PRel31& copied) = delete;
+>>>>>>> upstream-releases
   PRel31() = delete;
 };
 
 struct EHEntry {
   PRel31 startPC;
   PRel31 exidx;
+<<<<<<< HEAD
 
  private:
   EHEntry(const EHEntry &copied) = delete;
+||||||| merged common ancestors
+private:
+  EHEntry(const EHEntry &copied) = delete;
+=======
+
+ private:
+  EHEntry(const EHEntry& copied) = delete;
+>>>>>>> upstream-releases
   EHEntry() = delete;
 };
 
@@ -80,6 +98,7 @@ class EHState {
   // Note that any core register can be used as a "frame pointer" to
   // influence the unwinding process, so this must track all of them.
   uint32_t mRegs[16];
+<<<<<<< HEAD
 
  public:
   bool unwind(const EHEntry *aEntry, const void *stackBase);
@@ -87,19 +106,58 @@ class EHState {
   const uint32_t &operator[](int i) const { return mRegs[i]; }
   explicit EHState(const mcontext_t &);
 };
+||||||| merged common ancestors
+public:
+  bool unwind(const EHEntry *aEntry, const void *stackBase);
+  uint32_t &operator[](int i) { return mRegs[i]; }
+  const uint32_t &operator[](int i) const { return mRegs[i]; }
+  explicit EHState(const mcontext_t &);
+};
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+enum { R_SP = 13, R_LR = 14, R_PC = 15 };
+||||||| merged common ancestors
+enum {
+  R_SP = 13,
+  R_LR = 14,
+  R_PC = 15
+};
+=======
+ public:
+  bool unwind(const EHEntry* aEntry, const void* stackBase);
+  uint32_t& operator[](int i) { return mRegs[i]; }
+  const uint32_t& operator[](int i) const { return mRegs[i]; }
+  explicit EHState(const mcontext_t&);
+};
+>>>>>>> upstream-releases
 
 enum { R_SP = 13, R_LR = 14, R_PC = 15 };
 
 #ifdef HAVE_UNSORTED_EXIDX
 class EHEntryHandle {
+<<<<<<< HEAD
   const EHEntry *mValue;
 
  public:
   EHEntryHandle(const EHEntry *aEntry) : mValue(aEntry) {}
   const EHEntry *value() const { return mValue; }
+||||||| merged common ancestors
+  const EHEntry *mValue;
+public:
+  EHEntryHandle(const EHEntry *aEntry) : mValue(aEntry) { }
+  const EHEntry *value() const { return mValue; }
+=======
+  const EHEntry* mValue;
+
+ public:
+  EHEntryHandle(const EHEntry* aEntry) : mValue(aEntry) {}
+  const EHEntry* value() const { return mValue; }
+>>>>>>> upstream-releases
 };
 
-bool operator<(const EHEntryHandle &lhs, const EHEntryHandle &rhs) {
+bool operator<(const EHEntryHandle& lhs, const EHEntryHandle& rhs) {
   return lhs.value()->startPC.compute() < rhs.value()->startPC.compute();
 }
 #endif
@@ -120,19 +178,30 @@ class EHTable {
     return aEntry->value();
   }
 #else
-  typedef const EHEntry *EntryIterator;
+  typedef const EHEntry* EntryIterator;
   EntryIterator mEntriesBegin, mEntriesEnd;
   EntryIterator entriesBegin() const { return mEntriesBegin; }
   EntryIterator entriesEnd() const { return mEntriesEnd; }
   static const EHEntry *entryGet(EntryIterator aEntry) { return aEntry; }
 #endif
   std::string mName;
+<<<<<<< HEAD
 
  public:
   EHTable(const void *aELF, size_t aSize, const std::string &aName);
   const EHEntry *lookup(uint32_t aPC) const;
+||||||| merged common ancestors
+public:
+  EHTable(const void *aELF, size_t aSize, const std::string &aName);
+  const EHEntry *lookup(uint32_t aPC) const;
+=======
+
+ public:
+  EHTable(const void* aELF, size_t aSize, const std::string& aName);
+  const EHEntry* lookup(uint32_t aPC) const;
+>>>>>>> upstream-releases
   bool isValid() const { return entriesEnd() != entriesBegin(); }
-  const std::string &name() const { return mName; }
+  const std::string& name() const { return mName; }
   uint32_t startPC() const { return mStartPC; }
   uint32_t endPC() const { return mEndPC; }
   uint32_t baseAddress() const { return mBaseAddress; }
@@ -141,38 +210,84 @@ class EHTable {
 class EHAddrSpace {
   std::vector<uint32_t> mStarts;
   std::vector<EHTable> mTables;
+<<<<<<< HEAD
   static mozilla::Atomic<const EHAddrSpace *> sCurrent;
 
  public:
   explicit EHAddrSpace(const std::vector<EHTable> &aTables);
   const EHTable *lookup(uint32_t aPC) const;
+||||||| merged common ancestors
+  static mozilla::Atomic<const EHAddrSpace*> sCurrent;
+public:
+  explicit EHAddrSpace(const std::vector<EHTable>& aTables);
+  const EHTable *lookup(uint32_t aPC) const;
+=======
+  static mozilla::Atomic<const EHAddrSpace*> sCurrent;
+
+ public:
+  explicit EHAddrSpace(const std::vector<EHTable>& aTables);
+  const EHTable* lookup(uint32_t aPC) const;
+>>>>>>> upstream-releases
   static void Update();
-  static const EHAddrSpace *Get();
+  static const EHAddrSpace* Get();
 };
 
 void EHABIStackWalkInit() { EHAddrSpace::Update(); }
 
+<<<<<<< HEAD
 size_t EHABIStackWalk(const mcontext_t &aContext, void *stackBase, void **aSPs,
                       void **aPCs, const size_t aNumFrames) {
   const EHAddrSpace *space = EHAddrSpace::Get();
+||||||| merged common ancestors
+void EHABIStackWalkInit()
+{
+  EHAddrSpace::Update();
+}
+
+size_t EHABIStackWalk(const mcontext_t &aContext, void *stackBase,
+                      void **aSPs, void **aPCs, const size_t aNumFrames)
+{
+  const EHAddrSpace *space = EHAddrSpace::Get();
+=======
+size_t EHABIStackWalk(const mcontext_t& aContext, void* stackBase, void** aSPs,
+                      void** aPCs, const size_t aNumFrames) {
+  const EHAddrSpace* space = EHAddrSpace::Get();
+>>>>>>> upstream-releases
   EHState state(aContext);
   size_t count = 0;
 
   while (count < aNumFrames) {
     uint32_t pc = state[R_PC], sp = state[R_SP];
-    aPCs[count] = reinterpret_cast<void *>(pc);
-    aSPs[count] = reinterpret_cast<void *>(sp);
+    aPCs[count] = reinterpret_cast<void*>(pc);
+    aSPs[count] = reinterpret_cast<void*>(sp);
     count++;
 
     if (!space) break;
     // TODO: cache these lookups.  Binary-searching libxul is
     // expensive (possibly more expensive than doing the actual
     // unwind), and even a small cache should help.
+<<<<<<< HEAD
     const EHTable *table = space->lookup(pc);
     if (!table) break;
     const EHEntry *entry = table->lookup(pc);
     if (!entry) break;
     if (!state.unwind(entry, stackBase)) break;
+||||||| merged common ancestors
+    const EHTable *table = space->lookup(pc);
+    if (!table)
+      break;
+    const EHEntry *entry = table->lookup(pc);
+    if (!entry)
+      break;
+    if (!state.unwind(entry, stackBase))
+      break;
+=======
+    const EHTable* table = space->lookup(pc);
+    if (!table) break;
+    const EHEntry* entry = table->lookup(pc);
+    if (!entry) break;
+    if (!state.unwind(entry, stackBase)) break;
+>>>>>>> upstream-releases
   }
 
   return count;
@@ -183,6 +298,7 @@ class EHInterp {
   // Note that stackLimit is exclusive and stackBase is inclusive
   // (i.e, stackLimit < SP <= stackBase), following the convention
   // set by the AAPCS spec.
+<<<<<<< HEAD
   EHInterp(EHState &aState, const EHEntry *aEntry, uint32_t aStackLimit,
            uint32_t aStackBase)
       : mState(aState),
@@ -192,6 +308,28 @@ class EHInterp {
         mWordsLeft(0),
         mFailed(false) {
     const PRel31 &exidx = aEntry->exidx;
+||||||| merged common ancestors
+  EHInterp(EHState &aState, const EHEntry *aEntry,
+           uint32_t aStackLimit, uint32_t aStackBase)
+    : mState(aState),
+      mStackLimit(aStackLimit),
+      mStackBase(aStackBase),
+      mNextWord(0),
+      mWordsLeft(0),
+      mFailed(false)
+  {
+    const PRel31 &exidx = aEntry->exidx;
+=======
+  EHInterp(EHState& aState, const EHEntry* aEntry, uint32_t aStackLimit,
+           uint32_t aStackBase)
+      : mState(aState),
+        mStackLimit(aStackLimit),
+        mStackBase(aStackBase),
+        mNextWord(0),
+        mWordsLeft(0),
+        mFailed(false) {
+    const PRel31& exidx = aEntry->exidx;
+>>>>>>> upstream-releases
     uint32_t firstWord;
 
     if (exidx.mBits == 1) {  // EXIDX_CANTUNWIND
@@ -201,7 +339,7 @@ class EHInterp {
     if (exidx.topBit()) {
       firstWord = exidx.mBits;
     } else {
-      mNextWord = reinterpret_cast<const uint32_t *>(exidx.compute());
+      mNextWord = reinterpret_cast<const uint32_t*>(exidx.compute());
       firstWord = *mNextWord++;
     }
 
@@ -230,10 +368,10 @@ class EHInterp {
   // it hasn't determined that they can't alias and is thus missing
   // optimization opportunities.  So, we may want to flatten EHState
   // into this class; this may also make the code simpler.
-  EHState &mState;
+  EHState& mState;
   uint32_t mStackLimit;
   uint32_t mStackBase;
-  const uint32_t *mNextWord;
+  const uint32_t* mNextWord;
   uint32_t mWord;
   uint8_t mWordsLeft;
   uint8_t mBytesLeft;
@@ -275,8 +413,8 @@ class EHInterp {
     return mWord;
   }
 
-  uint32_t &vSP() { return mState[R_SP]; }
-  uint32_t *ptrSP() { return reinterpret_cast<uint32_t *>(vSP()); }
+  uint32_t& vSP() { return mState[R_SP]; }
+  uint32_t* ptrSP() { return reinterpret_cast<uint32_t*>(vSP()); }
 
   void checkStackBase() {
     if (vSP() > mStackBase) mFailed = true;
@@ -317,7 +455,14 @@ class EHInterp {
   }
 };
 
+<<<<<<< HEAD
 bool EHState::unwind(const EHEntry *aEntry, const void *stackBasePtr) {
+||||||| merged common ancestors
+
+bool EHState::unwind(const EHEntry *aEntry, const void *stackBasePtr) {
+=======
+bool EHState::unwind(const EHEntry* aEntry, const void* stackBasePtr) {
+>>>>>>> upstream-releases
   // The unwinding program cannot set SP to less than the initial value.
   uint32_t stackLimit = mRegs[R_SP] - 4;
   uint32_t stackBase = reinterpret_cast<uint32_t>(stackBasePtr);
@@ -354,7 +499,7 @@ bool EHInterp::unwind() {
     if ((insn & M_POPN) == I_POPN) {
       uint8_t n = (insn & 0x07) + 1;
       bool lr = insn & 0x08;
-      uint32_t *ptr = ptrSP();
+      uint32_t* ptr = ptrSP();
       vSP() += (n + (lr ? 1 : 0)) * 4;
       checkStackBase();
       for (uint8_t r = 4; r < 4 + n; ++r) mState[r] = *ptr++;
@@ -464,13 +609,29 @@ bool EHInterp::unwind() {
   return false;
 }
 
+<<<<<<< HEAD
 bool operator<(const EHTable &lhs, const EHTable &rhs) {
+||||||| merged common ancestors
+
+bool operator<(const EHTable &lhs, const EHTable &rhs) {
+=======
+bool operator<(const EHTable& lhs, const EHTable& rhs) {
+>>>>>>> upstream-releases
   return lhs.startPC() < rhs.startPC();
 }
 
 // Async signal unsafe.
+<<<<<<< HEAD
 EHAddrSpace::EHAddrSpace(const std::vector<EHTable> &aTables)
     : mTables(aTables) {
+||||||| merged common ancestors
+EHAddrSpace::EHAddrSpace(const std::vector<EHTable>& aTables)
+  : mTables(aTables)
+{
+=======
+EHAddrSpace::EHAddrSpace(const std::vector<EHTable>& aTables)
+    : mTables(aTables) {
+>>>>>>> upstream-releases
   std::sort(mTables.begin(), mTables.end());
   DebugOnly<uint32_t> lastEnd = 0;
   for (std::vector<EHTable>::iterator i = mTables.begin(); i != mTables.end();
@@ -481,16 +642,34 @@ EHAddrSpace::EHAddrSpace(const std::vector<EHTable> &aTables)
   }
 }
 
+<<<<<<< HEAD
 const EHTable *EHAddrSpace::lookup(uint32_t aPC) const {
   ptrdiff_t i = (std::upper_bound(mStarts.begin(), mStarts.end(), aPC) -
                  mStarts.begin()) -
                 1;
+||||||| merged common ancestors
+const EHTable *EHAddrSpace::lookup(uint32_t aPC) const {
+  ptrdiff_t i = (std::upper_bound(mStarts.begin(), mStarts.end(), aPC)
+                 - mStarts.begin()) - 1;
+=======
+const EHTable* EHAddrSpace::lookup(uint32_t aPC) const {
+  ptrdiff_t i = (std::upper_bound(mStarts.begin(), mStarts.end(), aPC) -
+                 mStarts.begin()) -
+                1;
+>>>>>>> upstream-releases
 
   if (i < 0 || aPC >= mTables[i].endPC()) return 0;
   return &mTables[i];
 }
 
+<<<<<<< HEAD
 const EHEntry *EHTable::lookup(uint32_t aPC) const {
+||||||| merged common ancestors
+
+const EHEntry *EHTable::lookup(uint32_t aPC) const {
+=======
+const EHEntry* EHTable::lookup(uint32_t aPC) const {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aPC >= mStartPC);
   if (aPC >= mEndPC) return nullptr;
 
@@ -521,13 +700,23 @@ static const unsigned char hostEndian = ELFDATA2LSB;
 #elif MOZ_BIG_ENDIAN
 static const unsigned char hostEndian = ELFDATA2MSB;
 #else
-#error "No endian?"
+#  error "No endian?"
 #endif
 
 // Async signal unsafe: std::vector::reserve, std::string copy ctor.
+<<<<<<< HEAD
 EHTable::EHTable(const void *aELF, size_t aSize, const std::string &aName)
     : mStartPC(~0),  // largest uint32_t
       mEndPC(0),
+||||||| merged common ancestors
+EHTable::EHTable(const void *aELF, size_t aSize, const std::string &aName)
+  : mStartPC(~0), // largest uint32_t
+    mEndPC(0),
+=======
+EHTable::EHTable(const void* aELF, size_t aSize, const std::string& aName)
+    : mStartPC(~0),  // largest uint32_t
+      mEndPC(0),
+>>>>>>> upstream-releases
 #ifndef HAVE_UNSORTED_EXIDX
       mEntriesBegin(nullptr),
       mEntriesEnd(nullptr),
@@ -537,24 +726,46 @@ EHTable::EHTable(const void *aELF, size_t aSize, const std::string &aName)
 
   if (aSize < sizeof(Elf32_Ehdr)) return;
 
-  const Elf32_Ehdr &file = *(reinterpret_cast<Elf32_Ehdr *>(fileHeaderAddr));
+  const Elf32_Ehdr& file = *(reinterpret_cast<Elf32_Ehdr*>(fileHeaderAddr));
   if (memcmp(&file.e_ident[EI_MAG0], ELFMAG, SELFMAG) != 0 ||
       file.e_ident[EI_CLASS] != ELFCLASS32 ||
       file.e_ident[EI_DATA] != hostEndian ||
+<<<<<<< HEAD
       file.e_ident[EI_VERSION] != EV_CURRENT ||
       file.e_ident[EI_OSABI] != ELFOSABI_SYSV ||
 #ifdef EI_ABIVERSION
       file.e_ident[EI_ABIVERSION] != 0 ||
 #endif
       file.e_machine != EM_ARM || file.e_version != EV_CURRENT)
+||||||| merged common ancestors
+      file.e_ident[EI_VERSION] != EV_CURRENT ||
+      file.e_ident[EI_OSABI] != ELFOSABI_SYSV ||
+#ifdef EI_ABIVERSION
+      file.e_ident[EI_ABIVERSION] != 0 ||
+#endif
+      file.e_machine != EM_ARM ||
+      file.e_version != EV_CURRENT)
+=======
+      file.e_ident[EI_VERSION] != EV_CURRENT || file.e_machine != EM_ARM ||
+      file.e_version != EV_CURRENT)
+>>>>>>> upstream-releases
     // e_flags?
     return;
 
   MOZ_ASSERT(file.e_phoff + file.e_phnum * file.e_phentsize <= aSize);
   const Elf32_Phdr *exidxHdr = 0, *zeroHdr = 0;
   for (unsigned i = 0; i < file.e_phnum; ++i) {
+<<<<<<< HEAD
     const Elf32_Phdr &phdr = *(reinterpret_cast<Elf32_Phdr *>(
         fileHeaderAddr + file.e_phoff + i * file.e_phentsize));
+||||||| merged common ancestors
+    const Elf32_Phdr &phdr =
+      *(reinterpret_cast<Elf32_Phdr *>(fileHeaderAddr + file.e_phoff
+                                       + i * file.e_phentsize));
+=======
+    const Elf32_Phdr& phdr = *(reinterpret_cast<Elf32_Phdr*>(
+        fileHeaderAddr + file.e_phoff + i * file.e_phentsize));
+>>>>>>> upstream-releases
     if (phdr.p_type == PT_ARM_EXIDX) {
       exidxHdr = &phdr;
     } else if (phdr.p_type == PT_LOAD) {
@@ -574,13 +785,33 @@ EHTable::EHTable(const void *aELF, size_t aSize, const std::string &aName)
   mEndPC += mBaseAddress;
 
   // Create a sorted index of the index to work around linker bugs.
+<<<<<<< HEAD
   const EHEntry *startTable =
       reinterpret_cast<const EHEntry *>(mBaseAddress + exidxHdr->p_vaddr);
   const EHEntry *endTable = reinterpret_cast<const EHEntry *>(
       mBaseAddress + exidxHdr->p_vaddr + exidxHdr->p_memsz);
+||||||| merged common ancestors
+  const EHEntry *startTable =
+    reinterpret_cast<const EHEntry *>(mBaseAddress + exidxHdr->p_vaddr);
+  const EHEntry *endTable =
+    reinterpret_cast<const EHEntry *>(mBaseAddress + exidxHdr->p_vaddr
+                                    + exidxHdr->p_memsz);
+=======
+  const EHEntry* startTable =
+      reinterpret_cast<const EHEntry*>(mBaseAddress + exidxHdr->p_vaddr);
+  const EHEntry* endTable = reinterpret_cast<const EHEntry*>(
+      mBaseAddress + exidxHdr->p_vaddr + exidxHdr->p_memsz);
+>>>>>>> upstream-releases
 #ifdef HAVE_UNSORTED_EXIDX
   mEntries.reserve(endTable - startTable);
+<<<<<<< HEAD
   for (const EHEntry *i = startTable; i < endTable; ++i) mEntries.push_back(i);
+||||||| merged common ancestors
+  for (const EHEntry *i = startTable; i < endTable; ++i)
+    mEntries.push_back(i);
+=======
+  for (const EHEntry* i = startTable; i < endTable; ++i) mEntries.push_back(i);
+>>>>>>> upstream-releases
   std::sort(mEntries.begin(), mEntries.end());
 #else
   mEntriesBegin = startTable;
@@ -588,28 +819,63 @@ EHTable::EHTable(const void *aELF, size_t aSize, const std::string &aName)
 #endif
 }
 
+<<<<<<< HEAD
 mozilla::Atomic<const EHAddrSpace *> EHAddrSpace::sCurrent(nullptr);
+||||||| merged common ancestors
+
+mozilla::Atomic<const EHAddrSpace*> EHAddrSpace::sCurrent(nullptr);
+=======
+mozilla::Atomic<const EHAddrSpace*> EHAddrSpace::sCurrent(nullptr);
+>>>>>>> upstream-releases
 
 // Async signal safe; can fail if Update() hasn't returned yet.
+<<<<<<< HEAD
 const EHAddrSpace *EHAddrSpace::Get() { return sCurrent; }
+||||||| merged common ancestors
+const EHAddrSpace *EHAddrSpace::Get() {
+  return sCurrent;
+}
+=======
+const EHAddrSpace* EHAddrSpace::Get() { return sCurrent; }
+>>>>>>> upstream-releases
 
 // Collect unwinding information from loaded objects.  Calls after the
 // first have no effect.  Async signal unsafe.
 void EHAddrSpace::Update() {
+<<<<<<< HEAD
   const EHAddrSpace *space = sCurrent;
   if (space) return;
+||||||| merged common ancestors
+  const EHAddrSpace *space = sCurrent;
+  if (space)
+    return;
+=======
+  const EHAddrSpace* space = sCurrent;
+  if (space) return;
+>>>>>>> upstream-releases
 
   SharedLibraryInfo info = SharedLibraryInfo::GetInfoForSelf();
   std::vector<EHTable> tables;
 
   for (size_t i = 0; i < info.GetSize(); ++i) {
-    const SharedLibrary &lib = info.GetEntry(i);
+    const SharedLibrary& lib = info.GetEntry(i);
     // FIXME: This isn't correct if the start address isn't p_offset 0, because
     // the start address will not point at the file header. But this is worked
     // around by magic number checks in the EHTable constructor.
+<<<<<<< HEAD
     EHTable tab(reinterpret_cast<const void *>(lib.GetStart()),
                 lib.GetEnd() - lib.GetStart(), lib.GetNativeDebugPath());
     if (tab.isValid()) tables.push_back(tab);
+||||||| merged common ancestors
+    EHTable tab(reinterpret_cast<const void *>(lib.GetStart()),
+              lib.GetEnd() - lib.GetStart(), lib.GetNativeDebugPath());
+    if (tab.isValid())
+      tables.push_back(tab);
+=======
+    EHTable tab(reinterpret_cast<const void*>(lib.GetStart()),
+                lib.GetEnd() - lib.GetStart(), lib.GetNativeDebugPath());
+    if (tab.isValid()) tables.push_back(tab);
+>>>>>>> upstream-releases
   }
   space = new EHAddrSpace(tables);
 
@@ -619,7 +885,14 @@ void EHAddrSpace::Update() {
   }
 }
 
+<<<<<<< HEAD
 EHState::EHState(const mcontext_t &context) {
+||||||| merged common ancestors
+
+EHState::EHState(const mcontext_t &context) {
+=======
+EHState::EHState(const mcontext_t& context) {
+>>>>>>> upstream-releases
 #ifdef linux
   mRegs[0] = context.arm_r0;
   mRegs[1] = context.arm_r1;
@@ -638,7 +911,13 @@ EHState::EHState(const mcontext_t &context) {
   mRegs[14] = context.arm_lr;
   mRegs[15] = context.arm_pc;
 #else
+<<<<<<< HEAD
 #error "Unhandled OS for ARM EHABI unwinding"
+||||||| merged common ancestors
+# error "Unhandled OS for ARM EHABI unwinding"
+=======
+#  error "Unhandled OS for ARM EHABI unwinding"
+>>>>>>> upstream-releases
 #endif
 }
 

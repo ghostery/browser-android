@@ -85,6 +85,9 @@ class MediaDecodeTask final : public Runnable {
     MOZ_ASSERT(NS_IsMainThread());
   }
 
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.  See
+  // bug 1535398.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD Run() override;
   bool CreateReader();
   MediaFormatReader* Reader() {
@@ -92,7 +95,14 @@ class MediaDecodeTask final : public Runnable {
     return mDecoderReader;
   }
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+ private:
+  MOZ_CAN_RUN_SCRIPT
+>>>>>>> upstream-releases
   void ReportFailureOnMainThread(WebAudioDecodeJob::ErrorCode aErrorCode) {
     if (NS_IsMainThread()) {
       Cleanup();
@@ -109,14 +119,14 @@ class MediaDecodeTask final : public Runnable {
   }
 
   void Decode();
-  void OnMetadataRead(MetadataHolder&& aMetadata);
-  void OnMetadataNotRead(const MediaResult& aError);
+  MOZ_CAN_RUN_SCRIPT void OnMetadataRead(MetadataHolder&& aMetadata);
+  MOZ_CAN_RUN_SCRIPT void OnMetadataNotRead(const MediaResult& aError);
   void RequestSample();
   void SampleDecoded(RefPtr<AudioData> aData);
-  void SampleNotDecoded(const MediaResult& aError);
-  void FinishDecode();
-  void AllocateBuffer();
-  void CallbackTheResult();
+  MOZ_CAN_RUN_SCRIPT void SampleNotDecoded(const MediaResult& aError);
+  MOZ_CAN_RUN_SCRIPT void FinishDecode();
+  MOZ_CAN_RUN_SCRIPT void AllocateBuffer();
+  MOZ_CAN_RUN_SCRIPT void CallbackTheResult();
 
   void Cleanup() {
     MOZ_ASSERT(NS_IsMainThread());
@@ -271,7 +281,7 @@ void MediaDecodeTask::SampleNotDecoded(const MediaResult& aError) {
 void MediaDecodeTask::FinishDecode() {
   mDecoderReader->Shutdown();
 
-  uint32_t frameCount = mAudioQueue.FrameCount();
+  uint32_t frameCount = mAudioQueue.AudioFramesCount();
   uint32_t channelCount = mMediaInfo.mAudio.mChannels;
   uint32_t sampleRate = mMediaInfo.mAudio.mRate;
 
@@ -301,7 +311,7 @@ void MediaDecodeTask::FinishDecode() {
   mDecodeJob.mBuffer.mChannelData.SetLength(channelCount);
 #if AUDIO_OUTPUT_FORMAT == AUDIO_FORMAT_FLOAT32
   // This buffer has separate channel arrays that could be transferred to
-  // JS_NewArrayBufferWithContents(), but AudioBuffer::RestoreJSChannelData()
+  // JS::NewArrayBufferWithContents(), but AudioBuffer::RestoreJSChannelData()
   // does not yet take advantage of this.
   RefPtr<ThreadSharedFloatArrayBufferList> buffer =
       ThreadSharedFloatArrayBufferList::Create(channelCount, resampledFrames,
@@ -341,32 +351,45 @@ void MediaDecodeTask::FinishDecode() {
       const uint32_t maxOutSamples = resampledFrames - writeIndex;
 
       for (uint32_t i = 0; i < audioData->mChannels; ++i) {
-        uint32_t inSamples = audioData->mFrames;
+        uint32_t inSamples = audioData->Frames();
         uint32_t outSamples = maxOutSamples;
         AudioDataValue* outData =
             mDecodeJob.mBuffer.ChannelDataForWrite<AudioDataValue>(i) +
             writeIndex;
 
         WebAudioUtils::SpeexResamplerProcess(
-            resampler, i, &bufferData[i * audioData->mFrames], &inSamples,
+            resampler, i, &bufferData[i * audioData->Frames()], &inSamples,
             outData, &outSamples);
 
         if (i == audioData->mChannels - 1) {
           writeIndex += outSamples;
           MOZ_ASSERT(writeIndex <= resampledFrames);
-          MOZ_ASSERT(inSamples == audioData->mFrames);
+          MOZ_ASSERT(inSamples == audioData->Frames());
         }
       }
     } else {
       for (uint32_t i = 0; i < audioData->mChannels; ++i) {
+<<<<<<< HEAD
         AudioDataValue* outData =
             mDecodeJob.mBuffer.ChannelDataForWrite<AudioDataValue>(i) +
             writeIndex;
         PodCopy(outData, &bufferData[i * audioData->mFrames],
                 audioData->mFrames);
+||||||| merged common ancestors
+        AudioDataValue* outData = mDecodeJob.mBuffer.
+          ChannelDataForWrite<AudioDataValue>(i) + writeIndex;
+        PodCopy(outData, &bufferData[i * audioData->mFrames],
+                audioData->mFrames);
+=======
+        AudioDataValue* outData =
+            mDecodeJob.mBuffer.ChannelDataForWrite<AudioDataValue>(i) +
+            writeIndex;
+        PodCopy(outData, &bufferData[i * audioData->Frames()],
+                audioData->Frames());
+>>>>>>> upstream-releases
 
         if (i == audioData->mChannels - 1) {
-          writeIndex += audioData->mFrames;
+          writeIndex += audioData->Frames();
         }
       }
     }
@@ -486,14 +509,28 @@ void WebAudioDecodeJob::OnSuccess(ErrorCode aErrorCode) {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aErrorCode == NoError);
 
+  RefPtr<AudioBuffer> output(mOutput);
   if (mSuccessCallback) {
+<<<<<<< HEAD
     ErrorResult rv;
     mSuccessCallback->Call(*mOutput, rv);
     // Ignore errors in calling the callback, since there is not much that we
     // can do about it here.
     rv.SuppressException();
+||||||| merged common ancestors
+    ErrorResult rv;
+    mSuccessCallback->Call(*mOutput, rv);
+    // Ignore errors in calling the callback, since there is not much that we can
+    // do about it here.
+    rv.SuppressException();
+=======
+    RefPtr<DecodeSuccessCallback> callback(mSuccessCallback);
+    // Ignore errors in calling the callback, since there is not much that we
+    // can do about it here.
+    callback->Call(*output);
+>>>>>>> upstream-releases
   }
-  mPromise->MaybeResolve(mOutput);
+  mPromise->MaybeResolve(output);
 
   mContext->RemoveFromDecodeQueue(this);
 }
@@ -503,6 +540,7 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
 
   const char* errorMessage;
   switch (aErrorCode) {
+<<<<<<< HEAD
     case UnknownContent:
       errorMessage = "MediaDecodeAudioDataUnknownContentType";
       break;
@@ -524,6 +562,51 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
   }
 
   nsIDocument* doc = nullptr;
+||||||| merged common ancestors
+  case UnknownContent:
+    errorMessage = "MediaDecodeAudioDataUnknownContentType";
+    break;
+  case InvalidContent:
+    errorMessage = "MediaDecodeAudioDataInvalidContent";
+    break;
+  case NoAudio:
+    errorMessage = "MediaDecodeAudioDataNoAudio";
+    break;
+  case NoError:
+    MOZ_FALLTHROUGH_ASSERT("Who passed NoError to OnFailure?");
+    // Fall through to get some sort of a sane error message if this actually
+    // happens at runtime.
+  case UnknownError:
+    MOZ_FALLTHROUGH;
+  default:
+    errorMessage = "MediaDecodeAudioDataUnknownError";
+    break;
+  }
+
+  nsIDocument* doc = nullptr;
+=======
+    case UnknownContent:
+      errorMessage = "MediaDecodeAudioDataUnknownContentType";
+      break;
+    case InvalidContent:
+      errorMessage = "MediaDecodeAudioDataInvalidContent";
+      break;
+    case NoAudio:
+      errorMessage = "MediaDecodeAudioDataNoAudio";
+      break;
+    case NoError:
+      MOZ_FALLTHROUGH_ASSERT("Who passed NoError to OnFailure?");
+      // Fall through to get some sort of a sane error message if this actually
+      // happens at runtime.
+    case UnknownError:
+      MOZ_FALLTHROUGH;
+    default:
+      errorMessage = "MediaDecodeAudioDataUnknownError";
+      break;
+  }
+
+  Document* doc = nullptr;
+>>>>>>> upstream-releases
   if (nsPIDOMWindowInner* pWindow = mContext->GetParentObject()) {
     doc = pWindow->GetExtantDoc();
   }
@@ -535,9 +618,21 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
   // do about it here.
   if (mFailureCallback) {
     nsAutoCString errorString(errorMessage);
+<<<<<<< HEAD
     RefPtr<DOMException> exception = DOMException::Create(
         NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR, errorString);
     mFailureCallback->Call(*exception);
+||||||| merged common ancestors
+    RefPtr<DOMException> exception =
+      DOMException::Create(NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR,
+                           errorString);
+    mFailureCallback->Call(*exception);
+=======
+    RefPtr<DOMException> exception = DOMException::Create(
+        NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR, errorString);
+    RefPtr<DecodeErrorCallback> callback(mFailureCallback);
+    callback->Call(*exception);
+>>>>>>> upstream-releases
   }
 
   mPromise->MaybeReject(NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR);

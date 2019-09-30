@@ -31,10 +31,22 @@ namespace net {
 // function places true in outIsHTTPS if scheme is https, false if
 // http, and returns an error if neither. originScheme passed into
 // alternate service should already be normalized to those lower case
+<<<<<<< HEAD
 // strings by the URI parser (and so there is an assert)- this is an extra
 // check.
 static nsresult SchemeIsHTTPS(const nsACString &originScheme,
                               bool &outIsHTTPS) {
+||||||| merged common ancestors
+// strings by the URI parser (and so there is an assert)- this is an extra check.
+static nsresult
+SchemeIsHTTPS(const nsACString &originScheme, bool &outIsHTTPS)
+{
+=======
+// strings by the URI parser (and so there is an assert)- this is an extra
+// check.
+static nsresult SchemeIsHTTPS(const nsACString& originScheme,
+                              bool& outIsHTTPS) {
+>>>>>>> upstream-releases
   outIsHTTPS = originScheme.EqualsLiteral("https");
 
   if (!outIsHTTPS && !originScheme.EqualsLiteral("http")) {
@@ -44,16 +56,41 @@ static nsresult SchemeIsHTTPS(const nsACString &originScheme,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool AltSvcMapping::AcceptableProxy(nsProxyInfo *proxyInfo) {
+||||||| merged common ancestors
+bool
+AltSvcMapping::AcceptableProxy(nsProxyInfo *proxyInfo)
+{
+=======
+bool AltSvcMapping::AcceptableProxy(nsProxyInfo* proxyInfo) {
+>>>>>>> upstream-releases
   return !proxyInfo || proxyInfo->IsDirect() || proxyInfo->IsSOCKS();
 }
 
+<<<<<<< HEAD
 void AltSvcMapping::ProcessHeader(
     const nsCString &buf, const nsCString &originScheme,
     const nsCString &originHost, int32_t originPort, const nsACString &username,
     bool privateBrowsing, nsIInterfaceRequestor *callbacks,
     nsProxyInfo *proxyInfo, uint32_t caps,
     const OriginAttributes &originAttributes) {
+||||||| merged common ancestors
+void
+AltSvcMapping::ProcessHeader(const nsCString &buf, const nsCString &originScheme,
+                             const nsCString &originHost, int32_t originPort,
+                             const nsACString &username, bool privateBrowsing,
+                             nsIInterfaceRequestor *callbacks, nsProxyInfo *proxyInfo,
+                             uint32_t caps, const OriginAttributes &originAttributes)
+{
+=======
+void AltSvcMapping::ProcessHeader(
+    const nsCString& buf, const nsCString& originScheme,
+    const nsCString& originHost, int32_t originPort, const nsACString& username,
+    const nsACString& topWindowOrigin, bool privateBrowsing,
+    nsIInterfaceRequestor* callbacks, nsProxyInfo* proxyInfo, uint32_t caps,
+    const OriginAttributes& originAttributes) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   LOG(("AltSvcMapping::ProcessHeader: %s\n", buf.get()));
   if (!callbacks) {
@@ -88,10 +125,22 @@ void AltSvcMapping::ProcessHeader(
     for (uint32_t pairIndex = 0;
          pairIndex < parsedAltSvc.mValues[index].mValues.Length();
          ++pairIndex) {
+<<<<<<< HEAD
       nsDependentCSubstring &currentName =
           parsedAltSvc.mValues[index].mValues[pairIndex].mName;
       nsDependentCSubstring &currentValue =
           parsedAltSvc.mValues[index].mValues[pairIndex].mValue;
+||||||| merged common ancestors
+      nsDependentCSubstring &currentName =
+        parsedAltSvc.mValues[index].mValues[pairIndex].mName;
+      nsDependentCSubstring &currentValue =
+        parsedAltSvc.mValues[index].mValues[pairIndex].mValue;
+=======
+      nsDependentCSubstring& currentName =
+          parsedAltSvc.mValues[index].mValues[pairIndex].mName;
+      nsDependentCSubstring& currentValue =
+          parsedAltSvc.mValues[index].mValues[pairIndex].mValue;
+>>>>>>> upstream-releases
 
       if (!pairIndex) {
         if (currentName.EqualsLiteral("clear")) {
@@ -124,8 +173,20 @@ void AltSvcMapping::ProcessHeader(
       originAttributes.CreateSuffix(suffix);
       LOG(("Alt Svc clearing mapping for %s:%d:%s", originHost.get(),
            originPort, suffix.get()));
+<<<<<<< HEAD
       gHttpHandler->ConnMgr()->ClearHostMapping(originHost, originPort,
                                                 originAttributes);
+||||||| merged common ancestors
+      gHttpHandler->ConnMgr()->ClearHostMapping(originHost, originPort, originAttributes);
+=======
+      gHttpHandler->ConnMgr()->ClearHostMapping(originHost, originPort,
+                                                originAttributes);
+      continue;
+    }
+
+    if (NS_FAILED(NS_CheckPortSafety(portno, originScheme.get()))) {
+      LOG(("Alt Svc doesn't allow port %d, ignoring", portno));
+>>>>>>> upstream-releases
       continue;
     }
 
@@ -135,18 +196,35 @@ void AltSvcMapping::ProcessHeader(
     npnToken.SetLength(strlen(npnToken.BeginReading()));
 
     uint32_t spdyIndex;
-    SpdyInformation *spdyInfo = gHttpHandler->SpdyInfo();
+    SpdyInformation* spdyInfo = gHttpHandler->SpdyInfo();
     if (!(NS_SUCCEEDED(spdyInfo->GetNPNIndex(npnToken, &spdyIndex)) &&
           spdyInfo->ProtocolEnabled(spdyIndex))) {
       LOG(("Alt Svc unknown protocol %s, ignoring", npnToken.get()));
       continue;
     }
 
+<<<<<<< HEAD
     RefPtr<AltSvcMapping> mapping = new AltSvcMapping(
         gHttpHandler->ConnMgr()->GetStoragePtr(),
         gHttpHandler->ConnMgr()->StorageEpoch(), originScheme, originHost,
         originPort, username, privateBrowsing, NowInSeconds() + maxage,
         hostname, portno, npnToken, originAttributes);
+||||||| merged common ancestors
+    RefPtr<AltSvcMapping> mapping = new AltSvcMapping(gHttpHandler->ConnMgr()->GetStoragePtr(),
+                                                      gHttpHandler->ConnMgr()->StorageEpoch(),
+                                                      originScheme,
+                                                      originHost, originPort,
+                                                      username, privateBrowsing,
+                                                      NowInSeconds() + maxage,
+                                                      hostname, portno, npnToken,
+                                                      originAttributes);
+=======
+    RefPtr<AltSvcMapping> mapping = new AltSvcMapping(
+        gHttpHandler->ConnMgr()->GetStoragePtr(),
+        gHttpHandler->ConnMgr()->StorageEpoch(), originScheme, originHost,
+        originPort, username, topWindowOrigin, privateBrowsing,
+        NowInSeconds() + maxage, hostname, portno, npnToken, originAttributes);
+>>>>>>> upstream-releases
     if (mapping->TTL() <= 0) {
       LOG(("Alt Svc invalid map"));
       mapping = nullptr;
@@ -166,6 +244,7 @@ void AltSvcMapping::ProcessHeader(
   }
 }
 
+<<<<<<< HEAD
 AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
                              const nsACString &originScheme,
                              const nsACString &originHost, int32_t originPort,
@@ -188,6 +267,59 @@ AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
       mNPNToken(npnToken),
       mOriginAttributes(originAttributes),
       mSyncOnlyOnSuccess(false) {
+||||||| merged common ancestors
+AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
+                             const nsACString &originScheme,
+                             const nsACString &originHost,
+                             int32_t originPort,
+                             const nsACString &username,
+                             bool privateBrowsing,
+                             uint32_t expiresAt,
+                             const nsACString &alternateHost,
+                             int32_t alternatePort,
+                             const nsACString &npnToken,
+                             const OriginAttributes &originAttributes)
+  : mStorage(storage)
+  , mStorageEpoch(epoch)
+  , mAlternateHost(alternateHost)
+  , mAlternatePort(alternatePort)
+  , mOriginHost(originHost)
+  , mOriginPort(originPort)
+  , mUsername(username)
+  , mPrivate(privateBrowsing)
+  , mExpiresAt(expiresAt)
+  , mValidated(false)
+  , mMixedScheme(false)
+  , mNPNToken(npnToken)
+  , mOriginAttributes(originAttributes)
+  , mSyncOnlyOnSuccess(false)
+{
+=======
+AltSvcMapping::AltSvcMapping(DataStorage* storage, int32_t epoch,
+                             const nsACString& originScheme,
+                             const nsACString& originHost, int32_t originPort,
+                             const nsACString& username,
+                             const nsACString& topWindowOrigin,
+                             bool privateBrowsing, uint32_t expiresAt,
+                             const nsACString& alternateHost,
+                             int32_t alternatePort, const nsACString& npnToken,
+                             const OriginAttributes& originAttributes)
+    : mStorage(storage),
+      mStorageEpoch(epoch),
+      mAlternateHost(alternateHost),
+      mAlternatePort(alternatePort),
+      mOriginHost(originHost),
+      mOriginPort(originPort),
+      mUsername(username),
+      mTopWindowOrigin(topWindowOrigin),
+      mPrivate(privateBrowsing),
+      mExpiresAt(expiresAt),
+      mValidated(false),
+      mMixedScheme(false),
+      mNPNToken(npnToken),
+      mOriginAttributes(originAttributes),
+      mSyncOnlyOnSuccess(false) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (NS_FAILED(SchemeIsHTTPS(originScheme, mHttps))) {
@@ -222,11 +354,28 @@ AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
   }
 }
 
+<<<<<<< HEAD
 void AltSvcMapping::MakeHashKey(nsCString &outKey,
                                 const nsACString &originScheme,
                                 const nsACString &originHost,
                                 int32_t originPort, bool privateBrowsing,
                                 const OriginAttributes &originAttributes) {
+||||||| merged common ancestors
+void
+AltSvcMapping::MakeHashKey(nsCString &outKey,
+                           const nsACString &originScheme,
+                           const nsACString &originHost,
+                           int32_t originPort,
+                           bool privateBrowsing,
+                           const OriginAttributes &originAttributes)
+{
+=======
+void AltSvcMapping::MakeHashKey(nsCString& outKey,
+                                const nsACString& originScheme,
+                                const nsACString& originHost,
+                                int32_t originPort, bool privateBrowsing,
+                                const OriginAttributes& originAttributes) {
+>>>>>>> upstream-releases
   outKey.Truncate();
 
   if (originPort == -1) {
@@ -249,7 +398,15 @@ void AltSvcMapping::MakeHashKey(nsCString &outKey,
 
 int32_t AltSvcMapping::TTL() { return mExpiresAt - NowInSeconds(); }
 
+<<<<<<< HEAD
 void AltSvcMapping::SyncString(const nsCString &str) {
+||||||| merged common ancestors
+void
+AltSvcMapping::SyncString(const nsCString& str)
+{
+=======
+void AltSvcMapping::SyncString(const nsCString& str) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   mStorage->Put(HashKey(), str,
                 mPrivate ? DataStorage_Private : DataStorage_Persistent);
@@ -299,19 +456,46 @@ void AltSvcMapping::SetExpired() {
   Sync();
 }
 
+<<<<<<< HEAD
 bool AltSvcMapping::RouteEquals(AltSvcMapping *map) {
+||||||| merged common ancestors
+bool
+AltSvcMapping::RouteEquals(AltSvcMapping *map)
+{
+=======
+bool AltSvcMapping::RouteEquals(AltSvcMapping* map) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(map->mHashKey.Equals(mHashKey));
   return mAlternateHost.Equals(map->mAlternateHost) &&
          (mAlternatePort == map->mAlternatePort) &&
          mNPNToken.Equals(map->mNPNToken);
 }
 
+<<<<<<< HEAD
 void AltSvcMapping::GetConnectionInfo(
     nsHttpConnectionInfo **outCI, nsProxyInfo *pi,
     const OriginAttributes &originAttributes) {
   RefPtr<nsHttpConnectionInfo> ci = new nsHttpConnectionInfo(
       mOriginHost, mOriginPort, mNPNToken, mUsername, pi, originAttributes,
       mAlternateHost, mAlternatePort);
+||||||| merged common ancestors
+void
+AltSvcMapping::GetConnectionInfo(nsHttpConnectionInfo **outCI,
+                                 nsProxyInfo *pi,
+                                 const OriginAttributes &originAttributes)
+{
+  RefPtr<nsHttpConnectionInfo> ci =
+    new nsHttpConnectionInfo(mOriginHost, mOriginPort, mNPNToken,
+                             mUsername, pi, originAttributes,
+                             mAlternateHost, mAlternatePort);
+=======
+void AltSvcMapping::GetConnectionInfo(
+    nsHttpConnectionInfo** outCI, nsProxyInfo* pi,
+    const OriginAttributes& originAttributes) {
+  RefPtr<nsHttpConnectionInfo> ci = new nsHttpConnectionInfo(
+      mOriginHost, mOriginPort, mNPNToken, mUsername, mTopWindowOrigin, pi,
+      originAttributes, mAlternateHost, mAlternatePort);
+>>>>>>> upstream-releases
 
   // http:// without the mixed-scheme attribute needs to be segmented in the
   // connection manager connection information hash with this attribute
@@ -322,7 +506,16 @@ void AltSvcMapping::GetConnectionInfo(
   ci.forget(outCI);
 }
 
+<<<<<<< HEAD
 void AltSvcMapping::Serialize(nsCString &out) {
+||||||| merged common ancestors
+void
+AltSvcMapping::Serialize(nsCString &out)
+{
+=======
+void AltSvcMapping::Serialize(nsCString& out) {
+  // Be careful, when serializing new members, add them to the end of this list.
+>>>>>>> upstream-releases
   out = mHttps ? NS_LITERAL_CSTRING("https:") : NS_LITERAL_CSTRING("http:");
   out.Append(mOriginHost);
   out.Append(':');
@@ -350,13 +543,29 @@ void AltSvcMapping::Serialize(nsCString &out) {
   mOriginAttributes.CreateSuffix(suffix);
   out.Append(suffix);
   out.Append(':');
+  out.Append(mTopWindowOrigin);
+  out.Append('|');  // Be careful, the top window origin may contain colons!
+  // Add code to serialize new members here!
 }
 
+<<<<<<< HEAD
 AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
                              const nsCString &str)
     : mStorage(storage), mStorageEpoch(epoch), mSyncOnlyOnSuccess(false) {
+||||||| merged common ancestors
+AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch, const nsCString &str)
+  : mStorage(storage)
+  , mStorageEpoch(epoch)
+  , mSyncOnlyOnSuccess(false)
+{
+=======
+AltSvcMapping::AltSvcMapping(DataStorage* storage, int32_t epoch,
+                             const nsCString& str)
+    : mStorage(storage), mStorageEpoch(epoch), mSyncOnlyOnSuccess(false) {
+>>>>>>> upstream-releases
   mValidated = false;
   nsresult code;
+  char separator = ':';
 
   // The the do {} while(0) loop acts like try/catch(e){} with the break in
   // _NS_NEXT_TOKEN
@@ -364,14 +573,34 @@ AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
 #ifdef _NS_NEXT_TOKEN
     COMPILER ERROR
 #endif
+<<<<<<< HEAD
 #define _NS_NEXT_TOKEN            \
   start = idx + 1;                \
   idx = str.FindChar(':', start); \
   if (idx < 0) break;
         int32_t start = 0;
+||||||| merged common ancestors
+    #define _NS_NEXT_TOKEN start = idx + 1; idx = str.FindChar(':', start); if (idx < 0) break;
+    int32_t start = 0;
+=======
+#define _NS_NEXT_TOKEN                  \
+  start = idx + 1;                      \
+  idx = str.FindChar(separator, start); \
+  if (idx < 0) break;
+        int32_t start = 0;
+>>>>>>> upstream-releases
     int32_t idx;
+<<<<<<< HEAD
     idx = str.FindChar(':', start);
     if (idx < 0) break;
+||||||| merged common ancestors
+    idx = str.FindChar(':', start); if (idx < 0) break;
+=======
+    idx = str.FindChar(separator, start);
+    if (idx < 0) break;
+    // Be careful, when deserializing new members, add them to the end of this
+    // list.
+>>>>>>> upstream-releases
     mHttps = Substring(str, start, idx - start).EqualsLiteral("https");
     _NS_NEXT_TOKEN;
     mOriginHost = Substring(str, start, idx - start);
@@ -399,6 +628,7 @@ AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
     _NS_NEXT_TOKEN;
     mMixedScheme = Substring(str, start, idx - start).EqualsLiteral("y");
     _NS_NEXT_TOKEN;
+<<<<<<< HEAD
     Unused << mOriginAttributes.PopulateFromSuffix(
         Substring(str, start, idx - start));
 #undef _NS_NEXT_TOKEN
@@ -407,11 +637,35 @@ AltSvcMapping::AltSvcMapping(DataStorage *storage, int32_t epoch,
         mHashKey,
         mHttps ? NS_LITERAL_CSTRING("https") : NS_LITERAL_CSTRING("http"),
         mOriginHost, mOriginPort, mPrivate, mOriginAttributes);
+||||||| merged common ancestors
+    Unused << mOriginAttributes.PopulateFromSuffix(Substring(str, start, idx - start));
+    #undef _NS_NEXT_TOKEN
+
+    MakeHashKey(mHashKey, mHttps ? NS_LITERAL_CSTRING("https") : NS_LITERAL_CSTRING("http"),
+                mOriginHost, mOriginPort, mPrivate, mOriginAttributes);
+=======
+    Unused << mOriginAttributes.PopulateFromSuffix(
+        Substring(str, start, idx - start));
+    // The separator after the top window origin is a pipe character since the
+    // origin string can contain colons.
+    separator = '|';
+    _NS_NEXT_TOKEN;
+    mTopWindowOrigin = Substring(str, start, idx - start);
+    separator = ':';
+    // Add code to deserialize new members here!
+#undef _NS_NEXT_TOKEN
+
+    MakeHashKey(
+        mHashKey,
+        mHttps ? NS_LITERAL_CSTRING("https") : NS_LITERAL_CSTRING("http"),
+        mOriginHost, mOriginPort, mPrivate, mOriginAttributes);
+>>>>>>> upstream-releases
   } while (false);
 }
 
 // This is the asynchronous null transaction used to validate
 // an alt-svc advertisement only for https://
+<<<<<<< HEAD
 class AltSvcTransaction final : public NullHttpTransaction {
  public:
   AltSvcTransaction(AltSvcMapping *map, nsHttpConnectionInfo *ci,
@@ -423,6 +677,35 @@ class AltSvcTransaction final : public NullHttpTransaction {
         mTriedToWrite(false) {
     LOG(("AltSvcTransaction ctor %p map %p [%s -> %s]", this, map,
          map->OriginHost().get(), map->AlternateHost().get()));
+||||||| merged common ancestors
+class AltSvcTransaction final : public NullHttpTransaction
+{
+public:
+    AltSvcTransaction(AltSvcMapping *map,
+                      nsHttpConnectionInfo *ci,
+                      nsIInterfaceRequestor *callbacks,
+                      uint32_t caps)
+    : NullHttpTransaction(ci, callbacks, caps & ~NS_HTTP_ALLOW_KEEPALIVE)
+    , mMapping(map)
+    , mRunning(true)
+    , mTriedToValidate(false)
+    , mTriedToWrite(false)
+  {
+    LOG(("AltSvcTransaction ctor %p map %p [%s -> %s]",
+         this, map, map->OriginHost().get(), map->AlternateHost().get()));
+=======
+class AltSvcTransaction final : public NullHttpTransaction {
+ public:
+  AltSvcTransaction(AltSvcMapping* map, nsHttpConnectionInfo* ci,
+                    nsIInterfaceRequestor* callbacks, uint32_t caps)
+      : NullHttpTransaction(ci, callbacks, caps & ~NS_HTTP_ALLOW_KEEPALIVE),
+        mMapping(map),
+        mRunning(true),
+        mTriedToValidate(false),
+        mTriedToWrite(false) {
+    LOG(("AltSvcTransaction ctor %p map %p [%s -> %s]", this, map,
+         map->OriginHost().get(), map->AlternateHost().get()));
+>>>>>>> upstream-releases
     MOZ_ASSERT(mMapping);
     MOZ_ASSERT(mMapping->HTTPS());
   }
@@ -515,8 +798,17 @@ class AltSvcTransaction final : public NullHttpTransaction {
     NullHttpTransaction::Close(reason);
   }
 
+<<<<<<< HEAD
   nsresult ReadSegments(nsAHttpSegmentReader *reader, uint32_t count,
                         uint32_t *countRead) override {
+||||||| merged common ancestors
+  nsresult ReadSegments(nsAHttpSegmentReader *reader,
+                        uint32_t count, uint32_t *countRead) override
+  {
+=======
+  nsresult ReadSegments(nsAHttpSegmentReader* reader, uint32_t count,
+                        uint32_t* countRead) override {
+>>>>>>> upstream-releases
     LOG(("AltSvcTransaction::ReadSegements() %p\n", this));
     mTriedToWrite = true;
     return NullHttpTransaction::ReadSegments(reader, count, countRead);
@@ -529,6 +821,7 @@ class AltSvcTransaction final : public NullHttpTransaction {
   uint32_t mTriedToWrite : 1;
 };
 
+<<<<<<< HEAD
 class WellKnownChecker {
  public:
   WellKnownChecker(nsIURI *uri, const nsCString &origin, uint32_t caps,
@@ -542,6 +835,34 @@ class WellKnownChecker {
         mCI(ci),
         mURI(uri),
         mCaps(caps) {
+||||||| merged common ancestors
+class WellKnownChecker
+{
+public:
+  WellKnownChecker(nsIURI *uri, const nsCString &origin, uint32_t caps, nsHttpConnectionInfo *ci, AltSvcMapping *mapping)
+    : mWaiting(2) // waiting for 2 channels (default and alternate) to complete
+    , mOrigin(origin)
+    , mAlternatePort(ci->RoutedPort())
+    , mMapping(mapping)
+    , mCI(ci)
+    , mURI(uri)
+    , mCaps(caps)
+  {
+=======
+class WellKnownChecker {
+ public:
+  WellKnownChecker(nsIURI* uri, const nsCString& origin, uint32_t caps,
+                   nsHttpConnectionInfo* ci, AltSvcMapping* mapping)
+      : mWaiting(
+            2)  // waiting for 2 channels (default and alternate) to complete
+        ,
+        mOrigin(origin),
+        mAlternatePort(ci->RoutedPort()),
+        mMapping(mapping),
+        mCI(ci),
+        mURI(uri),
+        mCaps(caps) {
+>>>>>>> upstream-releases
     LOG(("WellKnownChecker ctor %p\n", this));
     MOZ_ASSERT(!mMapping->HTTPS());
   }
@@ -569,7 +890,14 @@ class WellKnownChecker {
     return MakeChannel(chan, mTransactionOrigin, newCI, mURI, mCaps, loadInfo);
   }
 
+<<<<<<< HEAD
   void Done(TransactionObserver *finished) {
+||||||| merged common ancestors
+  void Done(TransactionObserver *finished)
+  {
+=======
+  void Done(TransactionObserver* finished) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
     LOG(("WellKnownChecker::Done %p waiting for %d\n", this, mWaiting));
 
@@ -619,20 +947,23 @@ class WellKnownChecker {
       if (accepted) {
         MOZ_ASSERT(!mMapping->HTTPS());  // https:// does not use .wk
 
+<<<<<<< HEAD
         nsresult rv = uu->Verify(mTransactionAlternate->mWKResponse, mOrigin,
                                  mAlternatePort);
+||||||| merged common ancestors
+        nsresult rv = uu->Verify(mTransactionAlternate->mWKResponse, mOrigin, mAlternatePort);
+=======
+        nsresult rv = uu->Verify(mTransactionAlternate->mWKResponse, mOrigin);
+>>>>>>> upstream-releases
         if (NS_SUCCEEDED(rv)) {
           bool validWK = false;
-          bool mixedScheme = false;
-          int32_t lifetime = 0;
           Unused << uu->GetValid(&validWK);
-          Unused << uu->GetLifetime(&lifetime);
-          Unused << uu->GetMixed(&mixedScheme);
           if (!validWK) {
             LOG(("WellKnownChecker::Done %p json parser declares invalid\n%s\n",
                  this, mTransactionAlternate->mWKResponse.get()));
             accepted = false;
           }
+<<<<<<< HEAD
           if (accepted && (lifetime > 0)) {
             if (mMapping->TTL() > lifetime) {
               LOG((
@@ -651,6 +982,21 @@ class WellKnownChecker {
             LOG(("WellKnownChecker::Done %p atl-svc .wk allows mixed scheme\n",
                  this));
           }
+||||||| merged common ancestors
+          if (accepted && (lifetime > 0)) {
+            if (mMapping->TTL() > lifetime) {
+              LOG(("WellKnownChecker::Done %p atl-svc lifetime reduced by .wk\n", this));
+              mMapping->SetExpiresAt(NowInSeconds() + lifetime);
+            } else {
+              LOG(("WellKnownChecker::Done %p .wk lifetime exceeded alt-svc ma so ignored\n", this));
+            }
+          }
+          if (accepted && mixedScheme) {
+            mMapping->SetMixedScheme(true);
+            LOG(("WellKnownChecker::Done %p atl-svc .wk allows mixed scheme\n", this));
+          }
+=======
+>>>>>>> upstream-releases
         } else {
           LOG(("WellKnownChecker::Done %p .wk jason eval failed to run\n",
                this));
@@ -676,14 +1022,33 @@ class WellKnownChecker {
 
   ~WellKnownChecker() { LOG(("WellKnownChecker dtor %p\n", this)); }
 
+<<<<<<< HEAD
  private:
   nsresult MakeChannel(nsHttpChannel *chan, TransactionObserver *obs,
                        nsHttpConnectionInfo *ci, nsIURI *uri, uint32_t caps,
                        nsILoadInfo *loadInfo) {
+||||||| merged common ancestors
+private:
+  nsresult
+  MakeChannel(nsHttpChannel *chan, TransactionObserver *obs, nsHttpConnectionInfo *ci,
+              nsIURI *uri, uint32_t caps, nsILoadInfo *loadInfo)
+  {
+=======
+ private:
+  nsresult MakeChannel(nsHttpChannel* chan, TransactionObserver* obs,
+                       nsHttpConnectionInfo* ci, nsIURI* uri, uint32_t caps,
+                       nsILoadInfo* loadInfo) {
+>>>>>>> upstream-releases
     uint64_t channelId;
     nsLoadFlags flags;
+
+    nsContentPolicyType contentPolicyType =
+        loadInfo ? loadInfo->GetExternalContentPolicyType()
+                 : nsIContentPolicy::TYPE_OTHER;
+
     if (NS_FAILED(gHttpHandler->NewChannelId(channelId)) ||
-        NS_FAILED(chan->Init(uri, caps, nullptr, 0, nullptr, channelId)) ||
+        NS_FAILED(chan->Init(uri, caps, nullptr, 0, nullptr, channelId,
+                             contentPolicyType)) ||
         NS_FAILED(chan->SetAllowAltSvc(false)) ||
         NS_FAILED(chan->SetRedirectMode(
             nsIHttpChannelInternal::REDIRECT_MODE_ERROR)) ||
@@ -697,7 +1062,7 @@ class WellKnownChecker {
     }
     chan->SetTransactionObserver(obs);
     chan->SetConnectionInfo(ci);
-    return chan->AsyncOpen2(obs);
+    return chan->AsyncOpen(obs);
   }
 
   RefPtr<TransactionObserver> mTransactionAlternate;
@@ -713,6 +1078,7 @@ class WellKnownChecker {
 
 NS_IMPL_ISUPPORTS(TransactionObserver, nsIStreamListener)
 
+<<<<<<< HEAD
 TransactionObserver::TransactionObserver(nsHttpChannel *channel,
                                          WellKnownChecker *checker)
     : mChannel(channel),
@@ -724,9 +1090,41 @@ TransactionObserver::TransactionObserver(nsHttpChannel *channel,
   LOG(("TransactionObserver ctor %p channel %p checker %p\n", this, channel,
        checker));
   mChannelRef = do_QueryInterface((nsIHttpChannel *)channel);
+||||||| merged common ancestors
+TransactionObserver::TransactionObserver(nsHttpChannel *channel, WellKnownChecker *checker)
+  : mChannel(channel)
+  , mChecker(checker)
+  , mRanOnce(false)
+  , mAuthOK(false)
+  , mVersionOK(false)
+  , mStatusOK(false)
+{
+  LOG(("TransactionObserver ctor %p channel %p checker %p\n", this, channel, checker));
+  mChannelRef = do_QueryInterface((nsIHttpChannel *)channel);
+=======
+TransactionObserver::TransactionObserver(nsHttpChannel* channel,
+                                         WellKnownChecker* checker)
+    : mChannel(channel),
+      mChecker(checker),
+      mRanOnce(false),
+      mAuthOK(false),
+      mVersionOK(false),
+      mStatusOK(false) {
+  LOG(("TransactionObserver ctor %p channel %p checker %p\n", this, channel,
+       checker));
+  mChannelRef = do_QueryInterface((nsIHttpChannel*)channel);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void TransactionObserver::Complete(nsHttpTransaction *aTrans, nsresult reason) {
+||||||| merged common ancestors
+void
+TransactionObserver::Complete(nsHttpTransaction *aTrans, nsresult reason)
+{
+=======
+void TransactionObserver::Complete(nsHttpTransaction* aTrans, nsresult reason) {
+>>>>>>> upstream-releases
   // socket thread
   MOZ_ASSERT(!NS_IsMainThread());
   if (mRanOnce) {
@@ -734,9 +1132,18 @@ void TransactionObserver::Complete(nsHttpTransaction *aTrans, nsresult reason) {
   }
   mRanOnce = true;
 
+<<<<<<< HEAD
   RefPtr<nsAHttpConnection> conn = aTrans->GetConnectionReference();
   LOG(("TransactionObserver::Complete %p aTrans %p reason %" PRIx32
        " conn %p\n",
+||||||| merged common ancestors
+  RefPtr<nsAHttpConnection> conn = aTrans->GetConnectionReference();
+  LOG(("TransactionObserver::Complete %p aTrans %p reason %" PRIx32 " conn %p\n",
+=======
+  RefPtr<nsAHttpConnection> conn = aTrans->Connection();
+  LOG(("TransactionObserver::Complete %p aTrans %p reason %" PRIx32
+       " conn %p\n",
+>>>>>>> upstream-releases
        this, aTrans, static_cast<uint32_t>(reason), conn.get()));
   if (!conn) {
     return;
@@ -762,8 +1169,15 @@ void TransactionObserver::Complete(nsHttpTransaction *aTrans, nsresult reason) {
 #define MAX_WK 32768
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TransactionObserver::OnStartRequest(nsIRequest *aRequest,
                                     nsISupports *aContext) {
+||||||| merged common ancestors
+TransactionObserver::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext)
+{
+=======
+TransactionObserver::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // only consider the first 32KB.. because really.
   mWKResponse.SetCapacity(MAX_WK);
@@ -771,10 +1185,20 @@ TransactionObserver::OnStartRequest(nsIRequest *aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TransactionObserver::OnDataAvailable(nsIRequest *aRequest,
                                      nsISupports *aContext,
                                      nsIInputStream *aStream, uint64_t aOffset,
                                      uint32_t aCount) {
+||||||| merged common ancestors
+TransactionObserver::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext,
+                                     nsIInputStream *aStream, uint64_t aOffset, uint32_t aCount)
+{
+=======
+TransactionObserver::OnDataAvailable(nsIRequest* aRequest,
+                                     nsIInputStream* aStream, uint64_t aOffset,
+                                     uint32_t aCount) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   uint32_t oldLen = mWKResponse.Length();
   uint64_t newLen = aCount + oldLen;
@@ -799,15 +1223,32 @@ TransactionObserver::OnDataAvailable(nsIRequest *aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TransactionObserver::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
                                    nsresult code) {
+||||||| merged common ancestors
+TransactionObserver::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext, nsresult code)
+{
+=======
+TransactionObserver::OnStopRequest(nsIRequest* aRequest, nsresult code) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   LOG(("TransactionObserver onStopRequest %p code %" PRIx32 "\n", this,
        static_cast<uint32_t>(code)));
   if (NS_SUCCEEDED(code)) {
+<<<<<<< HEAD
     nsHttpResponseHead *hdrs = mChannel->GetResponseHead();
     LOG(("TransactionObserver onStopRequest %p http resp %d\n", this,
          hdrs ? hdrs->Status() : -1));
+||||||| merged common ancestors
+    nsHttpResponseHead *hdrs = mChannel->GetResponseHead();
+    LOG(("TransactionObserver onStopRequest %p http resp %d\n",
+         this, hdrs ? hdrs->Status() : -1));
+=======
+    nsHttpResponseHead* hdrs = mChannel->GetResponseHead();
+    LOG(("TransactionObserver onStopRequest %p http resp %d\n", this,
+         hdrs ? hdrs->Status() : -1));
+>>>>>>> upstream-releases
     mStatusOK = hdrs && (hdrs->Status() == 200);
   }
   if (mChecker) {
@@ -816,8 +1257,17 @@ TransactionObserver::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 already_AddRefed<AltSvcMapping> AltSvcCache::LookupMapping(
     const nsCString &key, bool privateBrowsing) {
+||||||| merged common ancestors
+already_AddRefed<AltSvcMapping>
+AltSvcCache::LookupMapping(const nsCString &key, bool privateBrowsing)
+{
+=======
+already_AddRefed<AltSvcMapping> AltSvcCache::LookupMapping(
+    const nsCString& key, bool privateBrowsing) {
+>>>>>>> upstream-releases
   LOG(("AltSvcCache::LookupMapping %p %s\n", this, key.get()));
   if (!mStorage) {
     LOG(("AltSvcCache::LookupMapping %p no backing store\n", this));
@@ -852,9 +1302,22 @@ already_AddRefed<AltSvcMapping> AltSvcCache::LookupMapping(
   return rv.forget();
 }
 
+<<<<<<< HEAD
 void AltSvcCache::UpdateAltServiceMapping(
     AltSvcMapping *map, nsProxyInfo *pi, nsIInterfaceRequestor *aCallbacks,
     uint32_t caps, const OriginAttributes &originAttributes) {
+||||||| merged common ancestors
+void
+AltSvcCache::UpdateAltServiceMapping(AltSvcMapping *map, nsProxyInfo *pi,
+                                     nsIInterfaceRequestor *aCallbacks,
+                                     uint32_t caps,
+                                     const OriginAttributes &originAttributes)
+{
+=======
+void AltSvcCache::UpdateAltServiceMapping(
+    AltSvcMapping* map, nsProxyInfo* pi, nsIInterfaceRequestor* aCallbacks,
+    uint32_t caps, const OriginAttributes& originAttributes) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (!mStorage) {
     return;
@@ -974,7 +1437,7 @@ void AltSvcCache::UpdateAltServiceMapping(
     uri.AppendLiteral("/.well-known/http-opportunistic");
     NS_NewURI(getter_AddRefs(wellKnown), uri);
 
-    auto *checker = new WellKnownChecker(wellKnown, origin, caps, ci, map);
+    auto* checker = new WellKnownChecker(wellKnown, origin, caps, ci, map);
     if (NS_FAILED(checker->Start())) {
       LOG(
           ("AltSvcCache::UpdateAltServiceMapping %p .wk checker failed to "
@@ -991,9 +1454,21 @@ void AltSvcCache::UpdateAltServiceMapping(
   }
 }
 
+<<<<<<< HEAD
 already_AddRefed<AltSvcMapping> AltSvcCache::GetAltServiceMapping(
     const nsACString &scheme, const nsACString &host, int32_t port,
     bool privateBrowsing, const OriginAttributes &originAttributes) {
+||||||| merged common ancestors
+already_AddRefed<AltSvcMapping>
+AltSvcCache::GetAltServiceMapping(const nsACString &scheme, const nsACString &host,
+                                  int32_t port, bool privateBrowsing,
+                                  const OriginAttributes &originAttributes)
+{
+=======
+already_AddRefed<AltSvcMapping> AltSvcCache::GetAltServiceMapping(
+    const nsACString& scheme, const nsACString& host, int32_t port,
+    bool privateBrowsing, const OriginAttributes& originAttributes) {
+>>>>>>> upstream-releases
   bool isHTTPS;
   MOZ_ASSERT(NS_IsMainThread());
   if (!mStorage) {
@@ -1002,8 +1477,7 @@ already_AddRefed<AltSvcMapping> AltSvcCache::GetAltServiceMapping(
     // on another thread
     mStorage = DataStorage::Get(DataStorageClass::AlternateServices);
     if (mStorage) {
-      bool storageWillPersist = false;
-      if (NS_FAILED(mStorage->Init(storageWillPersist))) {
+      if (NS_FAILED(mStorage->Init(nullptr))) {
         mStorage = nullptr;
       }
     }
@@ -1039,6 +1513,7 @@ already_AddRefed<AltSvcMapping> AltSvcCache::GetAltServiceMapping(
 }
 
 class ProxyClearHostMapping : public Runnable {
+<<<<<<< HEAD
  public:
   explicit ProxyClearHostMapping(const nsACString &host, int32_t port,
                                  const OriginAttributes &originAttributes)
@@ -1046,6 +1521,26 @@ class ProxyClearHostMapping : public Runnable {
         mHost(host),
         mPort(port),
         mOriginAttributes(originAttributes) {}
+||||||| merged common ancestors
+public:
+  explicit ProxyClearHostMapping(const nsACString& host,
+                                 int32_t port,
+                                 const OriginAttributes& originAttributes)
+    : Runnable("net::ProxyClearHostMapping")
+    , mHost(host)
+    , mPort(port)
+    , mOriginAttributes(originAttributes)
+  {
+  }
+=======
+ public:
+  explicit ProxyClearHostMapping(const nsACString& host, int32_t port,
+                                 const OriginAttributes& originAttributes)
+      : Runnable("net::ProxyClearHostMapping"),
+        mHost(host),
+        mPort(port),
+        mOriginAttributes(originAttributes) {}
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(NS_IsMainThread());
@@ -1059,8 +1554,18 @@ class ProxyClearHostMapping : public Runnable {
   OriginAttributes mOriginAttributes;
 };
 
+<<<<<<< HEAD
 void AltSvcCache::ClearHostMapping(const nsACString &host, int32_t port,
                                    const OriginAttributes &originAttributes) {
+||||||| merged common ancestors
+void
+AltSvcCache::ClearHostMapping(const nsACString &host, int32_t port,
+                              const OriginAttributes &originAttributes)
+{
+=======
+void AltSvcCache::ClearHostMapping(const nsACString& host, int32_t port,
+                                   const OriginAttributes& originAttributes) {
+>>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     nsCOMPtr<nsIRunnable> event =
         new ProxyClearHostMapping(host, port, originAttributes);
@@ -1099,7 +1604,15 @@ void AltSvcCache::ClearHostMapping(const nsACString &host, int32_t port,
   }
 }
 
+<<<<<<< HEAD
 void AltSvcCache::ClearHostMapping(nsHttpConnectionInfo *ci) {
+||||||| merged common ancestors
+void
+AltSvcCache::ClearHostMapping(nsHttpConnectionInfo *ci)
+{
+=======
+void AltSvcCache::ClearHostMapping(nsHttpConnectionInfo* ci) {
+>>>>>>> upstream-releases
   if (!ci->GetOrigin().IsEmpty()) {
     ClearHostMapping(ci->GetOrigin(), ci->OriginPort(),
                      ci->GetOriginAttributes());
@@ -1114,7 +1627,14 @@ void AltSvcCache::ClearAltServiceMappings() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AltSvcOverride::GetInterface(const nsIID &iid, void **result) {
+||||||| merged common ancestors
+AltSvcOverride::GetInterface(const nsIID &iid, void **result)
+{
+=======
+AltSvcOverride::GetInterface(const nsIID& iid, void** result) {
+>>>>>>> upstream-releases
   if (NS_SUCCEEDED(QueryInterface(iid, result)) && *result) {
     return NS_OK;
   }
@@ -1122,26 +1642,54 @@ AltSvcOverride::GetInterface(const nsIID &iid, void **result) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AltSvcOverride::GetIgnoreIdle(bool *ignoreIdle) {
+||||||| merged common ancestors
+AltSvcOverride::GetIgnoreIdle(bool *ignoreIdle)
+{
+=======
+AltSvcOverride::GetIgnoreIdle(bool* ignoreIdle) {
+>>>>>>> upstream-releases
   *ignoreIdle = true;
   return NS_OK;
 }
 
 NS_IMETHODIMP
 AltSvcOverride::GetParallelSpeculativeConnectLimit(
+<<<<<<< HEAD
     uint32_t *parallelSpeculativeConnectLimit) {
+||||||| merged common ancestors
+  uint32_t *parallelSpeculativeConnectLimit)
+{
+=======
+    uint32_t* parallelSpeculativeConnectLimit) {
+>>>>>>> upstream-releases
   *parallelSpeculativeConnectLimit = 32;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AltSvcOverride::GetIsFromPredictor(bool *isFromPredictor) {
+||||||| merged common ancestors
+AltSvcOverride::GetIsFromPredictor(bool *isFromPredictor)
+{
+=======
+AltSvcOverride::GetIsFromPredictor(bool* isFromPredictor) {
+>>>>>>> upstream-releases
   *isFromPredictor = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AltSvcOverride::GetAllow1918(bool *allow) {
+||||||| merged common ancestors
+AltSvcOverride::GetAllow1918(bool *allow)
+{
+=======
+AltSvcOverride::GetAllow1918(bool* allow) {
+>>>>>>> upstream-releases
   // normally we don't do speculative connects to 1918.. and we use
   // speculative connects for the mapping validation, so override
   // that default here for alt-svc

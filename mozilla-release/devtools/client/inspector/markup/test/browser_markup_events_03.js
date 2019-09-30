@@ -19,6 +19,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":66",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -28,6 +29,23 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "es6Method(foo, bar) {\n" +
+                 "  alert(\"obj.es6Method\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "es6Method(foo, bar) {\n" + '  alert("obj.es6Method");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#generator",
@@ -35,6 +53,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":85",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -44,6 +63,22 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function* generator() {\n" +
+                 "  alert(\"generator\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler: "function* generator() {\n" + '  alert("generator");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#anon-generator",
@@ -51,6 +86,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":43",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -60,6 +96,22 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function*() {\n" +
+                 "  alert(\"anonGenerator\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler: "function*() {\n" + '  alert("anonGenerator");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#named-function-expression",
@@ -67,6 +119,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":20",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -76,6 +129,23 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function foo() {\n" +
+                 "  alert(\"namedFunctionExpression\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "function foo() {\n" + '  alert("namedFunctionExpression");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#anon-function-expression",
@@ -83,6 +153,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":24",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -92,6 +163,23 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function() {\n" +
+                 "  alert(\"anonFunctionExpression\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler:
+          "function() {\n" + '  alert("anonFunctionExpression");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
   {
     selector: "#returned-function",
@@ -99,6 +187,7 @@ const TEST_DATA = [ // eslint-disable-line
       {
         type: "click",
         filename: TEST_URL + ":29",
+<<<<<<< HEAD
         attributes: [
           "Bubbling",
           "DOM2",
@@ -108,6 +197,22 @@ const TEST_DATA = [ // eslint-disable-line
                  "}",
       },
     ],
+||||||| merged common ancestors
+        attributes: [
+          "Bubbling",
+          "DOM2"
+        ],
+        handler: "function bar() {\n" +
+                 "  alert(\"returnedFunction\");\n" +
+                 "}"
+      }
+    ]
+=======
+        attributes: ["Bubbling", "DOM2"],
+        handler: "function bar() {\n" + '  alert("returnedFunction");\n' + "}",
+      },
+    ],
+>>>>>>> upstream-releases
   },
 ];
 

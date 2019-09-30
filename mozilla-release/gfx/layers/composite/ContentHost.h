@@ -70,7 +70,7 @@ class ContentHost : public CompositableHost {
     return gfx::IntRect();
   }
 
-  virtual ContentHost* AsContentHost() override { return this; }
+  ContentHost* AsContentHost() override { return this; }
 
  protected:
   explicit ContentHost(const TextureInfo& aTextureInfo)
@@ -98,7 +98,7 @@ class ContentHostBase : public ContentHost {
   explicit ContentHostBase(const TextureInfo& aTextureInfo);
   virtual ~ContentHostBase();
 
-  virtual gfx::IntRect GetBufferRect() override { return mBufferRect; }
+  gfx::IntRect GetBufferRect() override { return mBufferRect; }
 
   virtual nsIntPoint GetOriginOffset() {
     return mBufferRect.TopLeft() - mBufferRotation;
@@ -119,6 +119,7 @@ class ContentHostBase : public ContentHost {
 class ContentHostTexture : public ContentHostBase {
  public:
   explicit ContentHostTexture(const TextureInfo& aTextureInfo)
+<<<<<<< HEAD
       : ContentHostBase(aTextureInfo),
         mLocked(false),
         mReceivedNewHost(false) {}
@@ -133,20 +134,67 @@ class ContentHostTexture : public ContentHostBase {
 
   virtual void SetTextureSourceProvider(
       TextureSourceProvider* aProvider) override;
+||||||| merged common ancestors
+    : ContentHostBase(aTextureInfo)
+    , mLocked(false)
+    , mReceivedNewHost(false)
+  { }
 
-  virtual already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
+  virtual void Composite(Compositor* aCompositor,
+                         LayerComposite* aLayer,
+                         EffectChain& aEffectChain,
+                         float aOpacity,
+                         const gfx::Matrix4x4& aTransform,
+                         const gfx::SamplingFilter aSamplingFilter,
+                         const gfx::IntRect& aClipRect,
+                         const nsIntRegion* aVisibleRegion = nullptr,
+                         const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
 
+  virtual void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+=======
+      : ContentHostBase(aTextureInfo),
+        mLocked(false),
+        mReceivedNewHost(false) {}
+
+  void Composite(Compositor* aCompositor, LayerComposite* aLayer,
+                 EffectChain& aEffectChain, float aOpacity,
+                 const gfx::Matrix4x4& aTransform,
+                 const gfx::SamplingFilter aSamplingFilter,
+                 const gfx::IntRect& aClipRect,
+                 const nsIntRegion* aVisibleRegion = nullptr,
+                 const Maybe<gfx::Polygon>& aGeometry = Nothing()) override;
+
+  void SetTextureSourceProvider(TextureSourceProvider* aProvider) override;
+>>>>>>> upstream-releases
+
+  already_AddRefed<gfx::DataSourceSurface> GetAsSurface() override;
+
+<<<<<<< HEAD
   virtual void Dump(std::stringstream& aStream, const char* aPrefix = "",
                     bool aDumpHtml = false) override;
+||||||| merged common ancestors
+  virtual void Dump(std::stringstream& aStream,
+                    const char* aPrefix="",
+                    bool aDumpHtml=false) override;
+=======
+  void Dump(std::stringstream& aStream, const char* aPrefix = "",
+            bool aDumpHtml = false) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
-  virtual void UseTextureHost(const nsTArray<TimedTexture>& aTextures) override;
-  virtual void UseComponentAlphaTextures(TextureHost* aTextureOnBlack,
-                                         TextureHost* aTextureOnWhite) override;
+  void UseTextureHost(const nsTArray<TimedTexture>& aTextures) override;
+  void UseComponentAlphaTextures(TextureHost* aTextureOnBlack,
+                                 TextureHost* aTextureOnWhite) override;
 
-  virtual bool Lock() override {
+  bool Lock() override {
     MOZ_ASSERT(!mLocked);
     if (!mTextureHost) {
       return false;
@@ -162,7 +210,7 @@ class ContentHostTexture : public ContentHostBase {
     mLocked = true;
     return true;
   }
-  virtual void Unlock() override {
+  void Unlock() override {
     MOZ_ASSERT(mLocked);
     mTextureHost->Unlock();
     if (mTextureHostOnWhite) {
@@ -178,8 +226,15 @@ class ContentHostTexture : public ContentHostBase {
 
   ContentHostTexture* AsContentHostTexture() override { return this; }
 
+<<<<<<< HEAD
   virtual already_AddRefed<TexturedEffect> GenEffect(
       const gfx::SamplingFilter aSamplingFilter) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<TexturedEffect> GenEffect(const gfx::SamplingFilter aSamplingFilter) override;
+=======
+  already_AddRefed<TexturedEffect> GenEffect(
+      const gfx::SamplingFilter aSamplingFilter) override;
+>>>>>>> upstream-releases
 
  protected:
   CompositableTextureHostRef mTextureHost;
@@ -200,11 +255,19 @@ class ContentHostDoubleBuffered : public ContentHostTexture {
   explicit ContentHostDoubleBuffered(const TextureInfo& aTextureInfo)
       : ContentHostTexture(aTextureInfo) {}
 
-  virtual ~ContentHostDoubleBuffered() {}
+  virtual ~ContentHostDoubleBuffered() = default;
 
+<<<<<<< HEAD
   virtual CompositableType GetType() override {
     return CompositableType::CONTENT_DOUBLE;
   }
+||||||| merged common ancestors
+  virtual CompositableType GetType() override { return CompositableType::CONTENT_DOUBLE; }
+=======
+  CompositableType GetType() override {
+    return CompositableType::CONTENT_DOUBLE;
+  }
+>>>>>>> upstream-releases
 
   virtual bool UpdateThebes(const ThebesBufferData& aData,
                             const nsIntRegion& aUpdated,
@@ -221,16 +284,32 @@ class ContentHostDoubleBuffered : public ContentHostTexture {
 class ContentHostSingleBuffered : public ContentHostTexture {
  public:
   explicit ContentHostSingleBuffered(const TextureInfo& aTextureInfo)
+<<<<<<< HEAD
       : ContentHostTexture(aTextureInfo) {}
   virtual ~ContentHostSingleBuffered() {}
+||||||| merged common ancestors
+    : ContentHostTexture(aTextureInfo)
+  {}
+  virtual ~ContentHostSingleBuffered() {}
+=======
+      : ContentHostTexture(aTextureInfo) {}
+  virtual ~ContentHostSingleBuffered() = default;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual CompositableType GetType() override {
     return CompositableType::CONTENT_SINGLE;
   }
+||||||| merged common ancestors
+  virtual CompositableType GetType() override { return CompositableType::CONTENT_SINGLE; }
+=======
+  CompositableType GetType() override {
+    return CompositableType::CONTENT_SINGLE;
+  }
+>>>>>>> upstream-releases
 
-  virtual bool UpdateThebes(const ThebesBufferData& aData,
-                            const nsIntRegion& aUpdated,
-                            const nsIntRegion& aOldValidRegionBack) override;
+  bool UpdateThebes(const ThebesBufferData& aData, const nsIntRegion& aUpdated,
+                    const nsIntRegion& aOldValidRegionBack) override;
 };
 
 }  // namespace layers

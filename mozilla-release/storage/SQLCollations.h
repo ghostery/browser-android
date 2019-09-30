@@ -26,7 +26,7 @@ namespace storage {
  *         The Service that owns the nsICollation used by our collations.
  * @return the SQLite status code indicating success or failure.
  */
-int registerCollations(sqlite3 *aDB, Service *aService);
+int registerCollations(sqlite3* aDB, Service* aService);
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Predefined Functions
@@ -51,8 +51,19 @@ int registerCollations(sqlite3 *aDB, Service *aService);
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollation8(void *aService, int aLen1, const void *aStr1, int aLen2,
                      const void *aStr2);
+||||||| merged common ancestors
+int localeCollation8(void *aService,
+                                 int aLen1,
+                                 const void *aStr1,
+                                 int aLen2,
+                                 const void *aStr2);
+=======
+int localeCollation8(void* aService, int aLen1, const void* aStr1, int aLen2,
+                     const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-8 collating sequence that respects the application's locale.
@@ -75,8 +86,19 @@ int localeCollation8(void *aService, int aLen1, const void *aStr1, int aLen2,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationCaseSensitive8(void *aService, int aLen1, const void *aStr1,
                                   int aLen2, const void *aStr2);
+||||||| merged common ancestors
+int localeCollationCaseSensitive8(void *aService,
+                                              int aLen1,
+                                              const void *aStr1,
+                                              int aLen2,
+                                              const void *aStr2);
+=======
+int localeCollationCaseSensitive8(void* aService, int aLen1, const void* aStr1,
+                                  int aLen2, const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-8 collating sequence that respects the application's locale.
@@ -99,9 +121,21 @@ int localeCollationCaseSensitive8(void *aService, int aLen1, const void *aStr1,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationAccentSensitive8(void *aService, int aLen1,
                                     const void *aStr1, int aLen2,
                                     const void *aStr2);
+||||||| merged common ancestors
+int localeCollationAccentSensitive8(void *aService,
+                                                int aLen1,
+                                                const void *aStr1,
+                                                int aLen2,
+                                                const void *aStr2);
+=======
+int localeCollationAccentSensitive8(void* aService, int aLen1,
+                                    const void* aStr1, int aLen2,
+                                    const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-8 collating sequence that respects the application's locale.
@@ -123,9 +157,21 @@ int localeCollationAccentSensitive8(void *aService, int aLen1,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationCaseAccentSensitive8(void *aService, int aLen1,
                                         const void *aStr1, int aLen2,
                                         const void *aStr2);
+||||||| merged common ancestors
+int localeCollationCaseAccentSensitive8(void *aService,
+                                                    int aLen1,
+                                                    const void *aStr1,
+                                                    int aLen2,
+                                                    const void *aStr2);
+=======
+int localeCollationCaseAccentSensitive8(void* aService, int aLen1,
+                                        const void* aStr1, int aLen2,
+                                        const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-16 collating sequence that respects the application's locale.
@@ -147,8 +193,19 @@ int localeCollationCaseAccentSensitive8(void *aService, int aLen1,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollation16(void *aService, int aLen1, const void *aStr1, int aLen2,
                       const void *aStr2);
+||||||| merged common ancestors
+int localeCollation16(void *aService,
+                                  int aLen1,
+                                  const void *aStr1,
+                                  int aLen2,
+                                  const void *aStr2);
+=======
+int localeCollation16(void* aService, int aLen1, const void* aStr1, int aLen2,
+                      const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-16 collating sequence that respects the application's locale.
@@ -171,8 +228,19 @@ int localeCollation16(void *aService, int aLen1, const void *aStr1, int aLen2,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationCaseSensitive16(void *aService, int aLen1, const void *aStr1,
                                    int aLen2, const void *aStr2);
+||||||| merged common ancestors
+int localeCollationCaseSensitive16(void *aService,
+                                               int aLen1,
+                                               const void *aStr1,
+                                               int aLen2,
+                                               const void *aStr2);
+=======
+int localeCollationCaseSensitive16(void* aService, int aLen1, const void* aStr1,
+                                   int aLen2, const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-16 collating sequence that respects the application's locale.
@@ -195,9 +263,21 @@ int localeCollationCaseSensitive16(void *aService, int aLen1, const void *aStr1,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationAccentSensitive16(void *aService, int aLen1,
                                      const void *aStr1, int aLen2,
                                      const void *aStr2);
+||||||| merged common ancestors
+int localeCollationAccentSensitive16(void *aService,
+                                                 int aLen1,
+                                                 const void *aStr1,
+                                                 int aLen2,
+                                                 const void *aStr2);
+=======
+int localeCollationAccentSensitive16(void* aService, int aLen1,
+                                     const void* aStr1, int aLen2,
+                                     const void* aStr2);
+>>>>>>> upstream-releases
 
 /**
  * Custom UTF-16 collating sequence that respects the application's locale.
@@ -219,9 +299,21 @@ int localeCollationAccentSensitive16(void *aService, int aLen1,
  *         If aStr1 > aStr2, returns a positive number.  If aStr1 == aStr2,
  *         returns 0.
  */
+<<<<<<< HEAD
 int localeCollationCaseAccentSensitive16(void *aService, int aLen1,
                                          const void *aStr1, int aLen2,
                                          const void *aStr2);
+||||||| merged common ancestors
+int localeCollationCaseAccentSensitive16(void *aService,
+                                                     int aLen1,
+                                                     const void *aStr1,
+                                                     int aLen2,
+                                                     const void *aStr2);
+=======
+int localeCollationCaseAccentSensitive16(void* aService, int aLen1,
+                                         const void* aStr1, int aLen2,
+                                         const void* aStr2);
+>>>>>>> upstream-releases
 
 }  // namespace storage
 }  // namespace mozilla

@@ -43,12 +43,24 @@ class CallbackFunction : public CallbackObject {
     return CallbackPreserveColor();
   }
 
+<<<<<<< HEAD
   bool HasGrayCallable() const {
     // Play it safe in case this gets called after unlink.
     return mCallback && JS::ObjectIsMarkedGray(mCallback);
   }
 
  protected:
+||||||| merged common ancestors
+  bool HasGrayCallable() const
+  {
+    // Play it safe in case this gets called after unlink.
+    return mCallback && JS::ObjectIsMarkedGray(mCallback);
+  }
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   explicit CallbackFunction(CallbackFunction* aCallbackFunction)
       : CallbackObject(aCallbackFunction) {}
 

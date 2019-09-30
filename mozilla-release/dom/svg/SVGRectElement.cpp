@@ -5,29 +5,31 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/SVGRectElement.h"
-#include "nsGkAtoms.h"
 #include "mozilla/dom/SVGLengthBinding.h"
 #include "mozilla/dom/SVGRectElementBinding.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/Matrix.h"
 #include "mozilla/gfx/Rect.h"
 #include "mozilla/gfx/PathHelpers.h"
+#include "nsGkAtoms.h"
+#include "SVGGeometryProperty.h"
 #include <algorithm>
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Rect)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Rect)
 
 using namespace mozilla::gfx;
 
 namespace mozilla {
 namespace dom {
 
-class SVGAnimatedLength;
+class DOMSVGAnimatedLength;
 
 JSObject* SVGRectElement::WrapNode(JSContext* aCx,
                                    JS::Handle<JSObject*> aGivenProto) {
   return SVGRectElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthInfo SVGRectElement::sLengthInfo[6] = {
     {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -41,13 +43,56 @@ nsSVGElement::LengthInfo SVGRectElement::sLengthInfo[6] = {
      SVGContentUtils::X},
     {nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::Y}};
+||||||| merged common ancestors
+nsSVGElement::LengthInfo SVGRectElement::sLengthInfo[6] =
+{
+  { nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+  { nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+  { nsGkAtoms::rx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y }
+};
+=======
+SVGElement::LengthInfo SVGRectElement::sLengthInfo[6] = {
+    {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+    {nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+    {nsGkAtoms::rx, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::ry, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 SVGRectElement::SVGRectElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGRectElementBase(std::move(aNodeInfo)) {}
+||||||| merged common ancestors
+SVGRectElement::SVGRectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+  : SVGRectElementBase(std::move(aNodeInfo))
+{
+}
+=======
+SVGRectElement::SVGRectElement(
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : SVGRectElementBase(std::move(aNodeInfo)) {}
+
+bool SVGRectElement::IsAttributeMapped(const nsAtom* aAttribute) const {
+  return IsInLengthInfo(aAttribute, sLengthInfo) ||
+         SVGRectElementBase::IsAttributeMapped(aAttribute);
+}
+>>>>>>> upstream-releases
+
+namespace SVGT = SVGGeometryProperty::Tags;
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -56,31 +101,80 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGRectElement)
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::X() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::X()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::X() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::Y() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::Y()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::Y() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::Width() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::Width()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::Width() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_WIDTH].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::Height() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::Height()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::Height() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_HEIGHT].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::Rx() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::Rx()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::Rx() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_RX].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGRectElement::Ry() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGRectElement::Ry()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGRectElement::Ry() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_RY].ToDOMAnimatedLength(this);
 }
 
 //----------------------------------------------------------------------
+<<<<<<< HEAD
 // nsSVGElement methods
 
 /* virtual */ bool SVGRectElement::HasValidDimensions() const {
@@ -88,9 +182,40 @@ already_AddRefed<SVGAnimatedLength> SVGRectElement::Ry() {
          mLengthAttributes[ATTR_WIDTH].GetAnimValInSpecifiedUnits() > 0 &&
          mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet() &&
          mLengthAttributes[ATTR_HEIGHT].GetAnimValInSpecifiedUnits() > 0;
+||||||| merged common ancestors
+// nsSVGElement methods
+
+/* virtual */ bool
+SVGRectElement::HasValidDimensions() const
+{
+  return mLengthAttributes[ATTR_WIDTH].IsExplicitlySet() &&
+         mLengthAttributes[ATTR_WIDTH].GetAnimValInSpecifiedUnits() > 0 &&
+         mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet() &&
+         mLengthAttributes[ATTR_HEIGHT].GetAnimValInSpecifiedUnits() > 0;
+=======
+// SVGElement methods
+
+/* virtual */
+bool SVGRectElement::HasValidDimensions() const {
+  float width, height;
+
+  MOZ_ASSERT(GetPrimaryFrame());
+  SVGGeometryProperty::ResolveAll<SVGT::Width, SVGT::Height>(this, &width,
+                                                             &height);
+
+  return width > 0 && height > 0;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthAttributesInfo SVGRectElement::GetLengthInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthAttributesInfo
+SVGRectElement::GetLengthInfo()
+{
+=======
+SVGElement::LengthAttributesInfo SVGRectElement::GetLengthInfo() {
+>>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
@@ -104,8 +229,19 @@ bool SVGRectElement::GetGeometryBounds(Rect* aBounds,
                                        const Matrix* aToNonScalingStrokeSpace) {
   Rect rect;
   Float rx, ry;
+<<<<<<< HEAD
   GetAnimatedLengthValues(&rect.x, &rect.y, &rect.width, &rect.height, &rx, &ry,
                           nullptr);
+||||||| merged common ancestors
+  GetAnimatedLengthValues(&rect.x, &rect.y, &rect.width,
+                          &rect.height, &rx, &ry, nullptr);
+=======
+
+  MOZ_ASSERT(GetPrimaryFrame());
+  SVGGeometryProperty::ResolveAll<SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height,
+                                  SVGT::Rx, SVGT::Ry>(
+      this, &rect.x, &rect.y, &rect.width, &rect.height, &rx, &ry);
+>>>>>>> upstream-releases
 
   if (rect.IsEmpty()) {
     // Rendering of the element disabled
@@ -154,7 +290,10 @@ bool SVGRectElement::GetGeometryBounds(Rect* aBounds,
 
 void SVGRectElement::GetAsSimplePath(SimplePath* aSimplePath) {
   float x, y, width, height, rx, ry;
-  GetAnimatedLengthValues(&x, &y, &width, &height, &rx, &ry, nullptr);
+
+  SVGGeometryProperty::ResolveAllAllowFallback<
+      SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height, SVGT::Rx, SVGT::Ry>(
+      this, &x, &y, &width, &height, &rx, &ry);
 
   if (width <= 0 || height <= 0) {
     aSimplePath->Reset();
@@ -174,7 +313,10 @@ void SVGRectElement::GetAsSimplePath(SimplePath* aSimplePath) {
 
 already_AddRefed<Path> SVGRectElement::BuildPath(PathBuilder* aBuilder) {
   float x, y, width, height, rx, ry;
-  GetAnimatedLengthValues(&x, &y, &width, &height, &rx, &ry, nullptr);
+
+  SVGGeometryProperty::ResolveAllAllowFallback<
+      SVGT::X, SVGT::Y, SVGT::Width, SVGT::Height, SVGT::Rx, SVGT::Ry>(
+      this, &x, &y, &width, &height, &rx, &ry);
 
   if (width <= 0 || height <= 0) {
     return nullptr;
@@ -192,18 +334,6 @@ already_AddRefed<Path> SVGRectElement::BuildPath(PathBuilder* aBuilder) {
     aBuilder->LineTo(r.BottomLeft());
     aBuilder->Close();
   } else {
-    // If either the 'rx' or the 'ry' attribute isn't set, then we have to
-    // set it to the value of the other:
-    bool hasRx = mLengthAttributes[ATTR_RX].IsExplicitlySet();
-    bool hasRy = mLengthAttributes[ATTR_RY].IsExplicitlySet();
-    MOZ_ASSERT(hasRx || hasRy);
-
-    if (hasRx && !hasRy) {
-      ry = rx;
-    } else if (hasRy && !hasRx) {
-      rx = ry;
-    }
-
     // Clamp rx and ry to half the rect's width and height respectively:
     rx = std::min(rx, width / 2);
     ry = std::min(ry, height / 2);
@@ -215,5 +345,48 @@ already_AddRefed<Path> SVGRectElement::BuildPath(PathBuilder* aBuilder) {
   return aBuilder->Finish();
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+bool SVGRectElement::IsLengthChangedViaCSS(const ComputedStyle& aNewStyle,
+                                           const ComputedStyle& aOldStyle) {
+  auto *newSVGReset = aNewStyle.StyleSVGReset(),
+       *oldSVGReset = aOldStyle.StyleSVGReset();
+  auto *newPosition = aNewStyle.StylePosition(),
+       *oldPosition = aOldStyle.StylePosition();
+
+  return newSVGReset->mX != oldSVGReset->mX ||
+         newSVGReset->mY != oldSVGReset->mY ||
+         newPosition->mWidth != oldPosition->mWidth ||
+         newPosition->mHeight != oldPosition->mHeight ||
+         newSVGReset->mRx != oldSVGReset->mRx ||
+         newSVGReset->mRy != oldSVGReset->mRy;
+}
+
+nsCSSPropertyID SVGRectElement::GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum) {
+  switch (aAttrEnum) {
+    case ATTR_X:
+      return eCSSProperty_x;
+    case ATTR_Y:
+      return eCSSProperty_y;
+    case ATTR_WIDTH:
+      return eCSSProperty_width;
+    case ATTR_HEIGHT:
+      return eCSSProperty_height;
+    case ATTR_RX:
+      return eCSSProperty_rx;
+    case ATTR_RY:
+      return eCSSProperty_ry;
+    default:
+      MOZ_ASSERT_UNREACHABLE("Unknown attr enum");
+      return eCSSProperty_UNKNOWN;
+  }
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

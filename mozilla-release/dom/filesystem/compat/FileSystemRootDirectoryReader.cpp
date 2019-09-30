@@ -24,8 +24,18 @@ class EntriesCallbackRunnable final : public Runnable {
     MOZ_ASSERT(aCallback);
   }
 
+<<<<<<< HEAD
   NS_IMETHOD
   Run() override {
+||||||| merged common ancestors
+  NS_IMETHOD
+  Run() override
+  {
+=======
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is MOZ_CAN_RUN_SCRIPT.  See
+  // bug 1535398.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
     Sequence<OwningNonNull<FileSystemEntry>> entries;
     for (uint32_t i = 0; i < mEntries.Length(); ++i) {
       if (!entries.AppendElement(mEntries[i].forget(), fallible)) {
@@ -33,12 +43,20 @@ class EntriesCallbackRunnable final : public Runnable {
       }
     }
 
-    mCallback->HandleEvent(entries);
+    mCallback->Call(entries);
     return NS_OK;
   }
 
+<<<<<<< HEAD
  private:
   RefPtr<FileSystemEntriesCallback> mCallback;
+||||||| merged common ancestors
+private:
+  RefPtr<FileSystemEntriesCallback> mCallback;
+=======
+ private:
+  const RefPtr<FileSystemEntriesCallback> mCallback;
+>>>>>>> upstream-releases
   Sequence<RefPtr<FileSystemEntry>> mEntries;
 };
 

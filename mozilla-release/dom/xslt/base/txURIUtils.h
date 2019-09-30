@@ -8,8 +8,13 @@
 
 #include "txCore.h"
 
-class nsIDocument;
 class nsINode;
+
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
 
 /**
  * A utility class for URI handling
@@ -17,6 +22,7 @@ class nsINode;
  **/
 
 class URIUtils {
+<<<<<<< HEAD
  public:
   /**
    * Reset the given document with the document of the source node
@@ -31,6 +37,39 @@ class URIUtils {
   static void resolveHref(const nsAString& href, const nsAString& base,
                           nsAString& dest);
 };  //-- URIUtils
+||||||| merged common ancestors
+public:
+
+    /**
+     * Reset the given document with the document of the source node
+     */
+    static void ResetWithSource(nsIDocument *aNewDoc, nsINode *aSourceNode);
+
+    /**
+     * Resolves the given href argument, using the given documentBase
+     * if necessary.
+     * The new resolved href will be appended to the given dest String
+    **/
+    static void resolveHref(const nsAString& href, const nsAString& base,
+                            nsAString& dest);
+}; //-- URIUtils
+=======
+ public:
+  /**
+   * Reset the given document with the document of the source node
+   */
+  static void ResetWithSource(mozilla::dom::Document* aNewDoc,
+                              nsINode* aSourceNode);
+
+  /**
+   * Resolves the given href argument, using the given documentBase
+   * if necessary.
+   * The new resolved href will be appended to the given dest String
+   **/
+  static void resolveHref(const nsAString& href, const nsAString& base,
+                          nsAString& dest);
+};  //-- URIUtils
+>>>>>>> upstream-releases
 
 /* */
 #endif

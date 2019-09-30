@@ -19,7 +19,7 @@
 #include "nsCOMPtr.h"
 #include "nsHTMLStyleSheet.h"
 #include "nsIContentSink.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDOMEventListener.h"
 #include "nsIFormControl.h"
 #include "mozilla/dom/NodeInfo.h"
@@ -52,8 +52,14 @@
 #include "nsContentTypeParser.h"
 #include "XULDocument.h"
 
+<<<<<<< HEAD
 static mozilla::LazyLogModule gContentSinkLog("nsXULContentSink");
 ;
+||||||| merged common ancestors
+static mozilla::LazyLogModule gContentSinkLog("nsXULContentSink");;
+=======
+static mozilla::LazyLogModule gContentSinkLog("nsXULContentSink");
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 
@@ -67,6 +73,7 @@ XULContentSinkImpl::ContextStack::~ContextStack() {
   }
 }
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::ContextStack::Push(nsXULPrototypeNode* aNode,
                                                 State aState) {
   Entry* entry = new Entry(aNode, aState, mTop);
@@ -75,6 +82,22 @@ nsresult XULContentSinkImpl::ContextStack::Push(nsXULPrototypeNode* aNode,
 
   ++mDepth;
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::ContextStack::Push(nsXULPrototypeNode* aNode, State aState)
+{
+    Entry* entry = new Entry(aNode, aState, mTop);
+
+    mTop = entry;
+
+    ++mDepth;
+    return NS_OK;
+=======
+void XULContentSinkImpl::ContextStack::Push(RefPtr<nsXULPrototypeNode>&& aNode,
+                                            State aState) {
+  mTop = new Entry(std::move(aNode), aState, mTop);
+  ++mDepth;
+>>>>>>> upstream-releases
 }
 
 nsresult XULContentSinkImpl::ContextStack::Pop(State* aState) {
@@ -135,14 +158,40 @@ XULContentSinkImpl::XULContentSinkImpl()
       mTextLength(0),
       mTextSize(0),
       mConstrainSize(true),
+<<<<<<< HEAD
+      mState(eInProlog) {}
+||||||| merged common ancestors
+      mState(eInProlog)
+{
+}
+
+=======
       mState(eInProlog) {}
 
 XULContentSinkImpl::~XULContentSinkImpl() {
   // The context stack _should_ be empty, unless something has gone wrong.
   NS_ASSERTION(mContextStack.Depth() == 0, "Context stack not empty?");
   mContextStack.Clear();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+XULContentSinkImpl::~XULContentSinkImpl() {
+  // The context stack _should_ be empty, unless something has gone wrong.
+  NS_ASSERTION(mContextStack.Depth() == 0, "Context stack not empty?");
+  mContextStack.Clear();
 
   free(mText);
+||||||| merged common ancestors
+XULContentSinkImpl::~XULContentSinkImpl()
+{
+    // The context stack _should_ be empty, unless something has gone wrong.
+    NS_ASSERTION(mContextStack.Depth() == 0, "Context stack not empty?");
+    mContextStack.Clear();
+
+    free(mText);
+=======
+  free(mText);
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -191,12 +240,29 @@ XULContentSinkImpl::WillBuildModel(nsDTDMode aDTDMode) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 XULContentSinkImpl::DidBuildModel(bool aTerminated) {
   nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
   if (doc) {
     doc->EndLoad();
     mDocument = nullptr;
   }
+||||||| merged common ancestors
+XULContentSinkImpl::DidBuildModel(bool aTerminated)
+{
+    nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+    if (doc) {
+        doc->EndLoad();
+        mDocument = nullptr;
+    }
+=======
+XULContentSinkImpl::DidBuildModel(bool aTerminated) {
+  nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+  if (doc) {
+    mPrototype->NotifyLoadDone();
+    mDocument = nullptr;
+  }
+>>>>>>> upstream-releases
 
   // Drop our reference to the parser to get rid of a circular
   // reference.
@@ -222,25 +288,69 @@ XULContentSinkImpl::SetParser(nsParserBase* aParser) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void XULContentSinkImpl::SetDocumentCharset(
     NotNull<const Encoding*> aEncoding) {
   nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
   if (doc) {
     doc->SetDocumentCharacterSet(aEncoding);
   }
+||||||| merged common ancestors
+void
+XULContentSinkImpl::SetDocumentCharset(NotNull<const Encoding*> aEncoding)
+{
+    nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+    if (doc) {
+        doc->SetDocumentCharacterSet(aEncoding);
+    }
+=======
+void XULContentSinkImpl::SetDocumentCharset(
+    NotNull<const Encoding*> aEncoding) {
+  nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+  if (doc) {
+    doc->SetDocumentCharacterSet(aEncoding);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsISupports* XULContentSinkImpl::GetTarget() {
   nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
   return doc;
+||||||| merged common ancestors
+nsISupports *
+XULContentSinkImpl::GetTarget()
+{
+    nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+    return doc;
+=======
+nsISupports* XULContentSinkImpl::GetTarget() {
+  nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+  return ToSupports(doc);
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::Init(nsIDocument* aDocument,
                                   nsXULPrototypeDocument* aPrototype) {
   MOZ_ASSERT(aDocument != nullptr, "null ptr");
   if (!aDocument) return NS_ERROR_NULL_POINTER;
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::Init(nsIDocument* aDocument,
+                         nsXULPrototypeDocument* aPrototype)
+{
+    MOZ_ASSERT(aDocument != nullptr, "null ptr");
+    if (! aDocument)
+        return NS_ERROR_NULL_POINTER;
+=======
+nsresult XULContentSinkImpl::Init(Document* aDocument,
+                                  nsXULPrototypeDocument* aPrototype) {
+  MOZ_ASSERT(aDocument != nullptr, "null ptr");
+  if (!aDocument) return NS_ERROR_NULL_POINTER;
+>>>>>>> upstream-releases
 
   mDocument = do_GetWeakReference(aDocument);
   mPrototype = aPrototype;
@@ -299,18 +409,38 @@ nsresult XULContentSinkImpl::FlushText(bool aCreateTextNode) {
     // Don't bother if we're not in XUL document body
     if (mState != eInDocumentElement || mContextStack.Depth() == 0) break;
 
+<<<<<<< HEAD
     nsXULPrototypeText* text = new nsXULPrototypeText();
     text->mValue.Assign(mText, mTextLength);
     if (stripWhitespace) text->mValue.Trim(" \t\n\r");
+||||||| merged common ancestors
+        nsXULPrototypeText* text = new nsXULPrototypeText();
+        text->mValue.Assign(mText, mTextLength);
+        if (stripWhitespace)
+            text->mValue.Trim(" \t\n\r");
+=======
+    RefPtr<nsXULPrototypeText> text = new nsXULPrototypeText();
+    text->mValue.Assign(mText, mTextLength);
+    if (stripWhitespace) text->mValue.Trim(" \t\n\r");
+>>>>>>> upstream-releases
 
     // hook it up
     nsPrototypeArray* children = nullptr;
     rv = mContextStack.GetTopChildren(&children);
     if (NS_FAILED(rv)) return rv;
 
+<<<<<<< HEAD
     // transfer ownership of 'text' to the children array
     children->AppendElement(text);
   } while (0);
+||||||| merged common ancestors
+        // transfer ownership of 'text' to the children array
+        children->AppendElement(text);
+    } while (0);
+=======
+    children->AppendElement(text.forget());
+  } while (0);
+>>>>>>> upstream-releases
 
   // Reset our text buffer
   mTextLength = 0;
@@ -319,6 +449,7 @@ nsresult XULContentSinkImpl::FlushText(bool aCreateTextNode) {
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::NormalizeAttributeString(
     const char16_t* aExpatName, nsAttrName& aName) {
   int32_t nameSpaceID;
@@ -331,22 +462,85 @@ nsresult XULContentSinkImpl::NormalizeAttributeString(
 
     return NS_OK;
   }
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::NormalizeAttributeString(const char16_t *aExpatName,
+                                             nsAttrName &aName)
+{
+    int32_t nameSpaceID;
+    RefPtr<nsAtom> prefix, localName;
+    nsContentUtils::SplitExpatName(aExpatName, getter_AddRefs(prefix),
+                                   getter_AddRefs(localName), &nameSpaceID);
 
+    if (nameSpaceID == kNameSpaceID_None) {
+        aName.SetTo(localName);
+
+        return NS_OK;
+    }
+=======
+nsresult XULContentSinkImpl::NormalizeAttributeString(
+    const char16_t* aExpatName, nsAttrName& aName) {
+  int32_t nameSpaceID;
+  RefPtr<nsAtom> prefix, localName;
+  nsContentUtils::SplitExpatName(aExpatName, getter_AddRefs(prefix),
+                                 getter_AddRefs(localName), &nameSpaceID);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   RefPtr<mozilla::dom::NodeInfo> ni;
   ni = mNodeInfoManager->GetNodeInfo(localName, prefix, nameSpaceID,
                                      nsINode::ATTRIBUTE_NODE);
   aName.SetTo(ni);
+||||||| merged common ancestors
+    RefPtr<mozilla::dom::NodeInfo> ni;
+    ni = mNodeInfoManager->GetNodeInfo(localName, prefix,
+                                       nameSpaceID,
+                                       nsINode::ATTRIBUTE_NODE);
+    aName.SetTo(ni);
+=======
+  if (nameSpaceID == kNameSpaceID_None) {
+    aName.SetTo(localName);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return NS_OK;
 }
+||||||| merged common ancestors
+    return NS_OK;
+}
+=======
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::CreateElement(mozilla::dom::NodeInfo* aNodeInfo,
                                            nsXULPrototypeElement** aResult) {
   nsXULPrototypeElement* element = new nsXULPrototypeElement();
   element->mNodeInfo = aNodeInfo;
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::CreateElement(mozilla::dom::NodeInfo *aNodeInfo,
+                                  nsXULPrototypeElement** aResult)
+{
+    nsXULPrototypeElement* element = new nsXULPrototypeElement();
+    element->mNodeInfo    = aNodeInfo;
+=======
+  RefPtr<mozilla::dom::NodeInfo> ni;
+  ni = mNodeInfoManager->GetNodeInfo(localName, prefix, nameSpaceID,
+                                     nsINode::ATTRIBUTE_NODE);
+  aName.SetTo(ni);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   *aResult = element;
   return NS_OK;
+||||||| merged common ancestors
+    *aResult = element;
+    return NS_OK;
+=======
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 /**** BEGIN NEW APIs ****/
@@ -444,9 +638,19 @@ XULContentSinkImpl::HandleEndElement(const char16_t* aName) {
       nsXULPrototypeScript* script =
           static_cast<nsXULPrototypeScript*>(node.get());
 
+<<<<<<< HEAD
       // If given a src= attribute, we must ignore script tag content.
       if (!script->mSrcURI && !script->HasScriptObject()) {
         nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+||||||| merged common ancestors
+        // If given a src= attribute, we must ignore script tag content.
+        if (!script->mSrcURI && !script->HasScriptObject()) {
+            nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+=======
+      // If given a src= attribute, we must ignore script tag content.
+      if (!script->mSrcURI && !script->HasScriptObject()) {
+        nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+>>>>>>> upstream-releases
 
         script->mOutOfLine = false;
         if (doc) {
@@ -580,9 +784,18 @@ XULContentSinkImpl::ReportError(const char16_t* aErrorText,
   // destructor, so don't mess with it.
   mTextLength = 0;
 
+<<<<<<< HEAD
   // return leaving the document empty if we're asked to not add a <parsererror>
   // root node
   nsCOMPtr<nsIDocument> idoc = do_QueryReferent(mDocument);
+||||||| merged common ancestors
+  // return leaving the document empty if we're asked to not add a <parsererror> root node
+  nsCOMPtr<nsIDocument> idoc = do_QueryReferent(mDocument);
+=======
+  // return leaving the document empty if we're asked to not add a <parsererror>
+  // root node
+  nsCOMPtr<Document> idoc = do_QueryReferent(mDocument);
+>>>>>>> upstream-releases
   if (idoc && idoc->SuppressParserErrorElement()) {
     return NS_OK;
   };
@@ -621,6 +834,7 @@ XULContentSinkImpl::ReportError(const char16_t* aErrorText,
   return rv;
 }
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
                                       const uint32_t aAttrLen,
                                       mozilla::dom::NodeInfo* aNodeInfo) {
@@ -628,19 +842,81 @@ nsresult XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
   if (mState != eInProlog) return NS_ERROR_UNEXPECTED;
 
   nsresult rv;
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
+                             const uint32_t aAttrLen,
+                             mozilla::dom::NodeInfo *aNodeInfo)
+{
+    NS_ASSERTION(mState == eInProlog, "how'd we get here?");
+    if (mState != eInProlog)
+        return NS_ERROR_UNEXPECTED;
+
+    nsresult rv;
+
+    if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
+        aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
+        MOZ_LOG(gContentSinkLog, LogLevel::Error,
+               ("xul: script tag not allowed as root content element"));
+=======
+nsresult XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
+                                      const uint32_t aAttrLen,
+                                      mozilla::dom::NodeInfo* aNodeInfo) {
+  NS_ASSERTION(mState == eInProlog, "how'd we get here?");
+  if (mState != eInProlog) return NS_ERROR_UNEXPECTED;
 
   if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
       aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
     MOZ_LOG(gContentSinkLog, LogLevel::Error,
             ("xul: script tag not allowed as root content element"));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
+      aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
+    MOZ_LOG(gContentSinkLog, LogLevel::Error,
+            ("xul: script tag not allowed as root content element"));
+||||||| merged common ancestors
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
     return NS_ERROR_UNEXPECTED;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    return NS_ERROR_UNEXPECTED;
+  }
+||||||| merged common ancestors
+    // Create the element
+    nsXULPrototypeElement* element;
+    rv = CreateElement(aNodeInfo, &element);
+=======
+  // Create the element
+  RefPtr<nsXULPrototypeElement> element = new nsXULPrototypeElement(aNodeInfo);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Create the element
   nsXULPrototypeElement* element;
   rv = CreateElement(aNodeInfo, &element);
+||||||| merged common ancestors
+    if (NS_FAILED(rv)) {
+        if (MOZ_LOG_TEST(gContentSinkLog, LogLevel::Error)) {
+            nsAutoString anodeC;
+            aNodeInfo->GetName(anodeC);
+            MOZ_LOG(gContentSinkLog, LogLevel::Error,
+                   ("xul: unable to create element '%s' at line %d",
+                    NS_ConvertUTF16toUTF8(anodeC).get(),
+                    -1)); // XXX pass in line number
+        }
+=======
+  // Add the attributes
+  nsresult rv = AddAttributes(aAttributes, aAttrLen, element);
+  if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (NS_FAILED(rv)) {
     if (MOZ_LOG_TEST(gContentSinkLog, LogLevel::Error)) {
       nsAutoString anodeC;
@@ -650,7 +926,16 @@ nsresult XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
                NS_ConvertUTF16toUTF8(anodeC).get(),
                -1));  // XXX pass in line number
     }
+||||||| merged common ancestors
+        return rv;
+    }
+=======
+  // Push the element onto the context stack, so that child
+  // containers will hook up to us as their parent.
+  mContextStack.Push(std::move(element), mState);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     return rv;
   }
 
@@ -668,8 +953,28 @@ nsresult XULContentSinkImpl::OpenRoot(const char16_t** aAttributes,
 
   mState = eInDocumentElement;
   return NS_OK;
+||||||| merged common ancestors
+    // Push the element onto the context stack, so that child
+    // containers will hook up to us as their parent.
+    rv = mContextStack.Push(element, mState);
+    if (NS_FAILED(rv)) {
+        element->Release();
+        return rv;
+    }
+
+    // Add the attributes
+    rv = AddAttributes(aAttributes, aAttrLen, element);
+    if (NS_FAILED(rv)) return rv;
+
+    mState = eInDocumentElement;
+    return NS_OK;
+=======
+  mState = eInDocumentElement;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsresult XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
                                      const uint32_t aAttrLen,
                                      const uint32_t aLineNumber,
@@ -688,10 +993,61 @@ nsresult XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
               ("xul: unable to create element '%s' at line %d",
                NS_ConvertUTF16toUTF8(anodeC).get(), aLineNumber));
     }
+||||||| merged common ancestors
+nsresult
+XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
+                            const uint32_t aAttrLen,
+                            const uint32_t aLineNumber,
+                            mozilla::dom::NodeInfo *aNodeInfo)
+{
+    nsresult rv;
 
+    // Create the element
+    nsXULPrototypeElement* element;
+    rv = CreateElement(aNodeInfo, &element);
+
+    if (NS_FAILED(rv)) {
+        if (MOZ_LOG_TEST(gContentSinkLog, LogLevel::Error)) {
+            nsAutoString anodeC;
+            aNodeInfo->GetName(anodeC);
+            MOZ_LOG(gContentSinkLog, LogLevel::Error,
+                   ("xul: unable to create element '%s' at line %d",
+                    NS_ConvertUTF16toUTF8(anodeC).get(),
+                    aLineNumber));
+        }
+
+        return rv;
+    }
+=======
+nsresult XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
+                                     const uint32_t aAttrLen,
+                                     const uint32_t aLineNumber,
+                                     mozilla::dom::NodeInfo* aNodeInfo) {
+  // Create the element
+  RefPtr<nsXULPrototypeElement> element = new nsXULPrototypeElement(aNodeInfo);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     return rv;
   }
+||||||| merged common ancestors
+    // Link this element to its parent.
+    nsPrototypeArray* children = nullptr;
+    rv = mContextStack.GetTopChildren(&children);
+    if (NS_FAILED(rv)) {
+        delete element;
+        return rv;
+    }
+=======
+  // Link this element to its parent.
+  nsPrototypeArray* children = nullptr;
+  nsresult rv = mContextStack.GetTopChildren(&children);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Link this element to its parent.
   nsPrototypeArray* children = nullptr;
   rv = mContextStack.GetTopChildren(&children);
@@ -699,13 +1055,43 @@ nsresult XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
     delete element;
     return rv;
   }
-
+||||||| merged common ancestors
+    // Add the attributes
+    rv = AddAttributes(aAttributes, aAttrLen, element);
+    if (NS_FAILED(rv)) return rv;
+=======
   // Add the attributes
   rv = AddAttributes(aAttributes, aAttrLen, element);
   if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Add the attributes
+  rv = AddAttributes(aAttributes, aAttrLen, element);
+  if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+    children->AppendElement(element);
+=======
   children->AppendElement(element);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  children->AppendElement(element);
+||||||| merged common ancestors
+    if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
+        aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
+        // Do scripty things now
+        rv = OpenScript(aAttributes, aLineNumber);
+        NS_ENSURE_SUCCESS(rv, rv);
+=======
+  if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
+      aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
+    // Do scripty things now
+    rv = OpenScript(aAttributes, aLineNumber);
+    NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML) ||
       aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XUL)) {
     // Do scripty things now
@@ -718,13 +1104,40 @@ nsresult XULContentSinkImpl::OpenTag(const char16_t** aAttributes,
       // OpenScript has pushed the nsPrototypeScriptElement onto the
       // stack, so we're done.
       return NS_OK;
+||||||| merged common ancestors
+        NS_ASSERTION(mState == eInScript || mState == eInDocumentElement,
+                     "Unexpected state");
+        if (mState == eInScript) {
+            // OpenScript has pushed the nsPrototypeScriptElement onto the
+            // stack, so we're done.
+            return NS_OK;
+        }
+=======
+    NS_ASSERTION(mState == eInScript || mState == eInDocumentElement,
+                 "Unexpected state");
+    if (mState == eInScript) {
+      // OpenScript has pushed the nsPrototypeScriptElement onto the
+      // stack, so we're done.
+      return NS_OK;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   // Push the element onto the context stack, so that child
   // containers will hook up to us as their parent.
   rv = mContextStack.Push(element, mState);
   if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+    // Push the element onto the context stack, so that child
+    // containers will hook up to us as their parent.
+    rv = mContextStack.Push(element, mState);
+    if (NS_FAILED(rv)) return rv;
+=======
+  // Push the element onto the context stack, so that child
+  // containers will hook up to us as their parent.
+  mContextStack.Push(std::move(element), mState);
+>>>>>>> upstream-releases
 
   mState = eInDocumentElement;
   return NS_OK;
@@ -738,6 +1151,7 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
   // Look for SRC attribute and look for a LANGUAGE attribute
   nsAutoString src;
   while (*aAttributes) {
+<<<<<<< HEAD
     const nsDependentString key(aAttributes[0]);
     if (key.EqualsLiteral("src")) {
       src.Assign(aAttributes[1]);
@@ -784,9 +1198,112 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
       nsAutoString lang(aAttributes[1]);
       if (nsContentUtils::IsJavaScriptLanguage(lang)) {
         isJavaScript = true;
+||||||| merged common ancestors
+      const nsDependentString key(aAttributes[0]);
+      if (key.EqualsLiteral("src")) {
+          src.Assign(aAttributes[1]);
+      } else if (key.EqualsLiteral("type")) {
+          nsDependentString str(aAttributes[1]);
+          nsContentTypeParser parser(str);
+          nsAutoString mimeType;
+          rv = parser.GetType(mimeType);
+          if (NS_FAILED(rv)) {
+              if (rv == NS_ERROR_INVALID_ARG) {
+                  // Fail immediately rather than checking if later things
+                  // are okay.
+                  return NS_OK;
+              }
+              // We do want the warning here
+              NS_ENSURE_SUCCESS(rv, rv);
+          }
+
+          if (nsContentUtils::IsJavascriptMIMEType(mimeType)) {
+              isJavaScript = true;
+
+              // Get the version string, and ensure that JavaScript supports it.
+              nsAutoString versionName;
+              rv = parser.GetParameter("version", versionName);
+
+              if (NS_SUCCEEDED(rv)) {
+                  nsContentUtils::ReportToConsoleNonLocalized(
+                      NS_LITERAL_STRING("Versioned JavaScripts are no longer supported. "
+                                        "Please remove the version parameter."),
+                      nsIScriptError::errorFlag,
+                      NS_LITERAL_CSTRING("XUL Document"),
+                      nullptr, mDocumentURL, EmptyString(), aLineNumber);
+                  isJavaScript = false;
+              } else if (rv != NS_ERROR_INVALID_ARG) {
+                  return rv;
+              }
+          } else {
+              isJavaScript = false;
+          }
+      } else if (key.EqualsLiteral("language")) {
+          // Language is deprecated, and the impl in ScriptLoader ignores the
+          // various version strings anyway.  So we make no attempt to support
+          // languages other than JS for language=
+          nsAutoString lang(aAttributes[1]);
+          if (nsContentUtils::IsJavaScriptLanguage(lang)) {
+              isJavaScript = true;
+          }
+=======
+    const nsDependentString key(aAttributes[0]);
+    if (key.EqualsLiteral("src")) {
+      src.Assign(aAttributes[1]);
+    } else if (key.EqualsLiteral("type")) {
+      nsDependentString str(aAttributes[1]);
+      nsContentTypeParser parser(str);
+      nsAutoString mimeType;
+      rv = parser.GetType(mimeType);
+      if (NS_FAILED(rv)) {
+        if (rv == NS_ERROR_INVALID_ARG) {
+          // Fail immediately rather than checking if later things
+          // are okay.
+          return NS_OK;
+        }
+        // We do want the warning here
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+
+      if (nsContentUtils::IsJavascriptMIMEType(mimeType)) {
+        isJavaScript = true;
+
+        // Get the version string, and ensure that JavaScript supports it.
+        nsAutoString versionName;
+        rv = parser.GetParameter("version", versionName);
+
+        if (NS_SUCCEEDED(rv)) {
+          nsContentUtils::ReportToConsoleNonLocalized(
+              NS_LITERAL_STRING(
+                  "Versioned JavaScripts are no longer supported. "
+                  "Please remove the version parameter."),
+              nsIScriptError::errorFlag, NS_LITERAL_CSTRING("XUL Document"),
+              nullptr, mDocumentURL, EmptyString(), aLineNumber);
+          isJavaScript = false;
+        } else if (rv != NS_ERROR_INVALID_ARG) {
+          return rv;
+        }
+      } else {
+        isJavaScript = false;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+    }
+    aAttributes += 2;
+||||||| merged common ancestors
+      aAttributes += 2;
+=======
+    } else if (key.EqualsLiteral("language")) {
+      // Language is deprecated, and the impl in ScriptLoader ignores the
+      // various version strings anyway.  So we make no attempt to support
+      // languages other than JS for language=
+      nsAutoString lang(aAttributes[1]);
+      if (nsContentUtils::IsJavaScriptLanguage(lang)) {
+        isJavaScript = true;
       }
     }
     aAttributes += 2;
+>>>>>>> upstream-releases
   }
 
   // Don't process scripts that aren't JavaScript.
@@ -794,7 +1311,7 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
     return NS_OK;
   }
 
-  nsCOMPtr<nsIDocument> doc(do_QueryReferent(mDocument));
+  nsCOMPtr<Document> doc(do_QueryReferent(mDocument));
   nsCOMPtr<nsIScriptGlobalObject> globalObject;
   if (doc) globalObject = do_QueryInterface(doc->GetWindow());
   RefPtr<nsXULPrototypeScript> script = new nsXULPrototypeScript(aLineNumber);
@@ -811,7 +1328,25 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
       if (!mSecMan)
         mSecMan = do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
       if (NS_SUCCEEDED(rv)) {
+<<<<<<< HEAD
         nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument, &rv);
+||||||| merged common ancestors
+          if (!mSecMan)
+              mSecMan = do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
+          if (NS_SUCCEEDED(rv)) {
+              nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument, &rv);
+
+              if (NS_SUCCEEDED(rv)) {
+                  rv = mSecMan->
+                      CheckLoadURIWithPrincipal(doc->NodePrincipal(),
+                                                script->mSrcURI,
+                                                nsIScriptSecurityManager::ALLOW_CHROME);
+              }
+          }
+      }
+=======
+        nsCOMPtr<Document> doc = do_QueryReferent(mDocument, &rv);
+>>>>>>> upstream-releases
 
         if (NS_SUCCEEDED(rv)) {
           rv = mSecMan->CheckLoadURIWithPrincipal(
@@ -819,8 +1354,18 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
               nsIScriptSecurityManager::ALLOW_CHROME);
         }
       }
+<<<<<<< HEAD
+    }
+||||||| merged common ancestors
+=======
     }
 
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -830,6 +1375,19 @@ nsresult XULContentSinkImpl::OpenScript(const char16_t** aAttributes,
     // corrupting the FastLoad file trying to serialize it, in the case
     // where it's already there.
     script->DeserializeOutOfLine(nullptr, mPrototype);
+||||||| merged common ancestors
+      // Attempt to deserialize an out-of-line script from the FastLoad
+      // file right away.  Otherwise we'll end up reloading the script and
+      // corrupting the FastLoad file trying to serialize it, in the case
+      // where it's already there.
+      script->DeserializeOutOfLine(nullptr, mPrototype);
+=======
+    // Attempt to deserialize an out-of-line script from the FastLoad
+    // file right away.  Otherwise we'll end up reloading the script and
+    // corrupting the FastLoad file trying to serialize it, in the case
+    // where it's already there.
+    script->DeserializeOutOfLine(nullptr, mPrototype);
+>>>>>>> upstream-releases
   }
 
   nsPrototypeArray* children = nullptr;

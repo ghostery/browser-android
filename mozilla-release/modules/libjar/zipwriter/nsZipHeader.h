@@ -77,6 +77,7 @@ class nsZipHeader final : public nsIZipEntry {
   mozilla::UniquePtr<uint8_t[]> mExtraField;
   mozilla::UniquePtr<uint8_t[]> mLocalExtraField;
 
+<<<<<<< HEAD
   void Init(const nsACString &aPath, PRTime aDate, uint32_t aAttr,
             uint32_t aOffset);
   uint32_t GetFileHeaderLength();
@@ -87,6 +88,28 @@ class nsZipHeader final : public nsIZipEntry {
   const uint8_t *GetExtraField(uint16_t aTag, bool aLocal,
                                uint16_t *aBlockSize);
   nsresult PadExtraField(uint32_t aOffset, uint16_t aAlignSize);
+||||||| merged common ancestors
+    void Init(const nsACString & aPath, PRTime aDate, uint32_t aAttr,
+              uint32_t aOffset);
+    uint32_t GetFileHeaderLength();
+    nsresult WriteFileHeader(nsIOutputStream *aStream);
+    uint32_t GetCDSHeaderLength();
+    nsresult WriteCDSHeader(nsIOutputStream *aStream);
+    nsresult ReadCDSHeader(nsIInputStream *aStream);
+    const uint8_t * GetExtraField(uint16_t aTag, bool aLocal, uint16_t *aBlockSize);
+    nsresult PadExtraField(uint32_t aOffset, uint16_t aAlignSize);
+=======
+  void Init(const nsACString& aPath, PRTime aDate, uint32_t aAttr,
+            uint32_t aOffset);
+  uint32_t GetFileHeaderLength();
+  nsresult WriteFileHeader(nsIOutputStream* aStream);
+  uint32_t GetCDSHeaderLength();
+  nsresult WriteCDSHeader(nsIOutputStream* aStream);
+  nsresult ReadCDSHeader(nsIInputStream* aStream);
+  const uint8_t* GetExtraField(uint16_t aTag, bool aLocal,
+                               uint16_t* aBlockSize);
+  nsresult PadExtraField(uint32_t aOffset, uint16_t aAlignSize);
+>>>>>>> upstream-releases
 };
 
 #endif

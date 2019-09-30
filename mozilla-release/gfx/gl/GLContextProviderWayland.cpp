@@ -4,8 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #ifdef MOZ_WIDGET_GTK
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
+#  include <gdk/gdk.h>
+#  include <gdk/gdkx.h>
 #endif
 
 #include "GLContextProvider.h"
@@ -28,6 +28,7 @@ already_AddRefed<GLContext> GLContextProviderWayland::CreateWrappingExisting(
   }
 }
 
+<<<<<<< HEAD
 already_AddRefed<GLContext> GLContextProviderWayland::CreateForCompositorWidget(
     CompositorWidget* aCompositorWidget, bool aForceAccelerated) {
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
@@ -37,6 +38,27 @@ already_AddRefed<GLContext> GLContextProviderWayland::CreateForCompositorWidget(
     return sGLContextProviderEGL.CreateForCompositorWidget(aCompositorWidget,
                                                            aForceAccelerated);
   }
+||||||| merged common ancestors
+already_AddRefed<GLContext>
+GLContextProviderWayland::CreateForCompositorWidget(CompositorWidget* aCompositorWidget, bool aForceAccelerated)
+{
+    if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        return sGLContextProviderGLX.CreateForCompositorWidget(aCompositorWidget, aForceAccelerated);
+    } else {
+        return sGLContextProviderEGL.CreateForCompositorWidget(aCompositorWidget, aForceAccelerated);
+    }
+=======
+already_AddRefed<GLContext> GLContextProviderWayland::CreateForCompositorWidget(
+    CompositorWidget* aCompositorWidget, bool aWebRender,
+    bool aForceAccelerated) {
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    return sGLContextProviderGLX.CreateForCompositorWidget(
+        aCompositorWidget, aWebRender, aForceAccelerated);
+  } else {
+    return sGLContextProviderEGL.CreateForCompositorWidget(
+        aCompositorWidget, aWebRender, aForceAccelerated);
+  }
+>>>>>>> upstream-releases
 }
 
 already_AddRefed<GLContext> GLContextProviderWayland::CreateForWindow(
@@ -50,6 +72,7 @@ already_AddRefed<GLContext> GLContextProviderWayland::CreateForWindow(
   }
 }
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<GLContext> GLContextProviderWayland::CreateHeadless(
     CreateContextFlags flags, nsACString* const out_failureId) {
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
@@ -57,8 +80,29 @@ already_AddRefed<GLContext> GLContextProviderWayland::CreateForWindow(
   } else {
     return sGLContextProviderEGL.CreateHeadless(flags, out_failureId);
   }
+||||||| merged common ancestors
+/*static*/ already_AddRefed<GLContext>
+GLContextProviderWayland::CreateHeadless(CreateContextFlags flags,
+                                     nsACString* const out_failureId)
+{
+    if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        return sGLContextProviderGLX.CreateHeadless(flags, out_failureId);
+    } else {
+        return sGLContextProviderEGL.CreateHeadless(flags, out_failureId);
+    }
+=======
+/*static*/
+already_AddRefed<GLContext> GLContextProviderWayland::CreateHeadless(
+    CreateContextFlags flags, nsACString* const out_failureId) {
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    return sGLContextProviderGLX.CreateHeadless(flags, out_failureId);
+  } else {
+    return sGLContextProviderEGL.CreateHeadless(flags, out_failureId);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<GLContext>
 GLContextProviderWayland::CreateOffscreen(const IntSize& size,
                                           const SurfaceCaps& minCaps,
@@ -71,22 +115,85 @@ GLContextProviderWayland::CreateOffscreen(const IntSize& size,
     return sGLContextProviderEGL.CreateOffscreen(size, minCaps, flags,
                                                  out_failureId);
   }
+||||||| merged common ancestors
+/*static*/ already_AddRefed<GLContext>
+GLContextProviderWayland::CreateOffscreen(const IntSize& size,
+                                      const SurfaceCaps& minCaps,
+                                      CreateContextFlags flags,
+                                      nsACString* const out_failureId)
+{
+    if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        return sGLContextProviderGLX.CreateOffscreen(size, minCaps, flags, out_failureId);
+    } else {
+        return sGLContextProviderEGL.CreateOffscreen(size, minCaps, flags, out_failureId);
+    }
+=======
+/*static*/
+already_AddRefed<GLContext> GLContextProviderWayland::CreateOffscreen(
+    const IntSize& size, const SurfaceCaps& minCaps, CreateContextFlags flags,
+    nsACString* const out_failureId) {
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    return sGLContextProviderGLX.CreateOffscreen(size, minCaps, flags,
+                                                 out_failureId);
+  } else {
+    return sGLContextProviderEGL.CreateOffscreen(size, minCaps, flags,
+                                                 out_failureId);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /*static*/ GLContext* GLContextProviderWayland::GetGlobalContext() {
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
     return sGLContextProviderGLX.GetGlobalContext();
   } else {
     return sGLContextProviderEGL.GetGlobalContext();
   }
+||||||| merged common ancestors
+/*static*/ GLContext*
+GLContextProviderWayland::GetGlobalContext()
+{
+    if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        return sGLContextProviderGLX.GetGlobalContext();
+    } else {
+        return sGLContextProviderEGL.GetGlobalContext();
+    }
+=======
+/*static*/
+GLContext* GLContextProviderWayland::GetGlobalContext() {
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    return sGLContextProviderGLX.GetGlobalContext();
+  } else {
+    return sGLContextProviderEGL.GetGlobalContext();
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /*static*/ void GLContextProviderWayland::Shutdown() {
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
     sGLContextProviderGLX.Shutdown();
   } else {
     sGLContextProviderEGL.Shutdown();
   }
+||||||| merged common ancestors
+/*static*/ void
+GLContextProviderWayland::Shutdown()
+{
+    if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        sGLContextProviderGLX.Shutdown();
+    } else {
+        sGLContextProviderEGL.Shutdown();
+    }
+=======
+/*static*/
+void GLContextProviderWayland::Shutdown() {
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    sGLContextProviderGLX.Shutdown();
+  } else {
+    sGLContextProviderEGL.Shutdown();
+  }
+>>>>>>> upstream-releases
 }
 
 } /* namespace gl */

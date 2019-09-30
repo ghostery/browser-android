@@ -8,6 +8,7 @@
 #define mozilla_dom_PerformanceTiming_h
 
 #include "mozilla/Attributes.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsContentUtils.h"
 #include "nsDOMNavigationTiming.h"
 #include "nsRFPService.h"
@@ -243,8 +244,17 @@ class PerformanceTiming final : public nsWrapperCache {
                                JS::Handle<JSObject*> aGivenProto) override;
 
   // PerformanceNavigation WebIDL methods
+<<<<<<< HEAD
   DOMTimeMilliSec NavigationStart() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec NavigationStart() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec NavigationStart() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -256,8 +266,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec UnloadEventStart() {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec UnloadEventStart()
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec UnloadEventStart() {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -269,8 +288,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec UnloadEventEnd() {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec UnloadEventEnd()
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec UnloadEventEnd() {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -295,8 +323,17 @@ class PerformanceTiming final : public nsWrapperCache {
   DOMTimeMilliSec ResponseStart();
   DOMTimeMilliSec ResponseEnd();
 
+<<<<<<< HEAD
   DOMTimeMilliSec DomLoading() {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec DomLoading()
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec DomLoading() {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -307,8 +344,17 @@ class PerformanceTiming final : public nsWrapperCache {
         GetDOMTiming()->GetDomLoading(), mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec DomInteractive() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec DomInteractive() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec DomInteractive() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -320,8 +366,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec DomContentLoadedEventStart() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec DomContentLoadedEventStart() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec DomContentLoadedEventStart() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -333,8 +388,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec DomContentLoadedEventEnd() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec DomContentLoadedEventEnd() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec DomContentLoadedEventEnd() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -346,8 +410,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec DomComplete() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec DomComplete() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec DomComplete() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -359,8 +432,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec LoadEventStart() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec LoadEventStart() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec LoadEventStart() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -372,8 +454,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec LoadEventEnd() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec LoadEventEnd() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec LoadEventEnd() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -385,8 +476,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec TimeToNonBlankPaint() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec TimeToNonBlankPaint() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec TimeToNonBlankPaint() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -394,10 +494,32 @@ class PerformanceTiming final : public nsWrapperCache {
       return GetDOMTiming()->GetTimeToNonBlankPaint();
     }
     return nsRFPService::ReduceTimePrecisionAsMSecs(
+<<<<<<< HEAD
+        GetDOMTiming()->GetTimeToNonBlankPaint(),
+        mPerformance->GetRandomTimelineSeed());
+||||||| merged common ancestors
+      GetDOMTiming()->GetTimeToNonBlankPaint(),
+      mPerformance->GetRandomTimelineSeed());
+=======
         GetDOMTiming()->GetTimeToNonBlankPaint(),
         mPerformance->GetRandomTimelineSeed());
   }
 
+  DOMTimeMilliSec TimeToContentfulPaint() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+        nsContentUtils::ShouldResistFingerprinting()) {
+      return 0;
+    }
+    if (mPerformance->IsSystemPrincipal()) {
+      return GetDOMTiming()->GetTimeToContentfulPaint();
+    }
+    return nsRFPService::ReduceTimePrecisionAsMSecs(
+        GetDOMTiming()->GetTimeToContentfulPaint(),
+        mPerformance->GetRandomTimelineSeed());
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
   DOMTimeMilliSec TimeToContentfulPaint() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
         nsContentUtils::ShouldResistFingerprinting()) {
@@ -413,6 +535,14 @@ class PerformanceTiming final : public nsWrapperCache {
 
   DOMTimeMilliSec TimeToDOMContentFlushed() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec TimeToDOMContentFlushed() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec TimeToDOMContentFlushed() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }
@@ -424,8 +554,17 @@ class PerformanceTiming final : public nsWrapperCache {
         mPerformance->GetRandomTimelineSeed());
   }
 
+<<<<<<< HEAD
   DOMTimeMilliSec TimeToFirstInteractive() const {
     if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+||||||| merged common ancestors
+  DOMTimeMilliSec TimeToFirstInteractive() const
+  {
+    if (!nsContentUtils::IsPerformanceTimingEnabled() ||
+=======
+  DOMTimeMilliSec TimeToFirstInteractive() const {
+    if (!StaticPrefs::dom_enable_performance() ||
+>>>>>>> upstream-releases
         nsContentUtils::ShouldResistFingerprinting()) {
       return 0;
     }

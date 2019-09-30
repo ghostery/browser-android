@@ -22,7 +22,21 @@ void mozilla::detail::MutexImpl::lock() {
   AcquireSRWLockExclusive(&platformData()->lock);
 }
 
+<<<<<<< HEAD
 void mozilla::detail::MutexImpl::unlock() {
+||||||| merged common ancestors
+void
+mozilla::detail::MutexImpl::unlock()
+{
+=======
+bool mozilla::detail::MutexImpl::tryLock() { return mutexTryLock(); }
+
+bool mozilla::detail::MutexImpl::mutexTryLock() {
+  return !!TryAcquireSRWLockExclusive(&platformData()->lock);
+}
+
+void mozilla::detail::MutexImpl::unlock() {
+>>>>>>> upstream-releases
   ReleaseSRWLockExclusive(&platformData()->lock);
 }
 

@@ -155,6 +155,7 @@ impl Enum {
         self.variants().iter().any(|v| enums.matches(&v.name()))
     }
 
+<<<<<<< HEAD
     /// Returns the final representation of the enum.
     pub fn computed_enum_variation(&self, ctx: &BindgenContext, item: &Item) -> EnumVariation {
         // ModuleConsts has higher precedence before Rust in order to avoid
@@ -170,6 +171,29 @@ impl Enum {
         } else {
             ctx.options().default_enum_style
         }
+||||||| merged common ancestors
+    /// Whether the enum should be a Rust enum
+    pub fn is_rustified_enum(&self, ctx: &BindgenContext, item: &Item) -> bool {
+        self.is_matching_enum(ctx, &ctx.options().rustified_enums, item)
+=======
+    /// Returns the final representation of the enum.
+    pub fn computed_enum_variation(&self, ctx: &BindgenContext, item: &Item) -> EnumVariation {
+        // ModuleConsts has higher precedence before Rust in order to avoid
+        // problems with overlapping match patterns.
+        if self.is_matching_enum(ctx, &ctx.options().constified_enum_modules, item) {
+            EnumVariation::ModuleConsts
+        } else if self.is_matching_enum(ctx, &ctx.options().bitfield_enums, item) {
+            EnumVariation::Bitfield
+        } else if self.is_matching_enum(ctx, &ctx.options().rustified_enums, item) {
+            EnumVariation::Rust { non_exhaustive: false }
+        } else if self.is_matching_enum(ctx, &ctx.options().rustified_non_exhaustive_enums, item) {
+            EnumVariation::Rust { non_exhaustive: true }
+        } else if self.is_matching_enum(ctx, &ctx.options().constified_enums, item) {
+            EnumVariation::Consts
+        } else {
+            ctx.options().default_enum_style
+        }
+>>>>>>> upstream-releases
     }
 }
 

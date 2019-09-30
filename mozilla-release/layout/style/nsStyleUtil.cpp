@@ -7,6 +7,7 @@
 #include "nsStyleUtil.h"
 #include "nsStyleConsts.h"
 
+#include "mozilla/ExpandedPrincipal.h"
 #include "mozilla/FontPropertyTypes.h"
 #include "nsIContent.h"
 #include "nsCSSProps.h"
@@ -107,8 +108,18 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   aReturn.Append(quoteChar);
 }
 
+<<<<<<< HEAD
 /* static */ void nsStyleUtil::AppendEscapedCSSIdent(const nsAString& aIdent,
                                                      nsAString& aReturn) {
+||||||| merged common ancestors
+/* static */ void
+nsStyleUtil::AppendEscapedCSSIdent(const nsAString& aIdent, nsAString& aReturn)
+{
+=======
+/* static */
+void nsStyleUtil::AppendEscapedCSSIdent(const nsAString& aIdent,
+                                        nsAString& aReturn) {
+>>>>>>> upstream-releases
   // The relevant parts of the CSS grammar are:
   //   ident    ([-]?{nmstart}|[-][-]){nmchar}*
   //   nmstart  [_a-z]|{nonascii}|{escape}
@@ -166,9 +177,25 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   }
 }
 
+<<<<<<< HEAD
 /* static */ void nsStyleUtil::AppendBitmaskCSSValue(
     const nsCSSKTableEntry aTable[], int32_t aMaskedValue, int32_t aFirstMask,
     int32_t aLastMask, nsAString& aResult) {
+||||||| merged common ancestors
+/* static */ void
+nsStyleUtil::AppendBitmaskCSSValue(const nsCSSKTableEntry aTable[],
+                                   int32_t aMaskedValue,
+                                   int32_t aFirstMask,
+                                   int32_t aLastMask,
+                                   nsAString& aResult)
+{
+=======
+/* static */
+void nsStyleUtil::AppendBitmaskCSSValue(const nsCSSKTableEntry aTable[],
+                                        int32_t aMaskedValue,
+                                        int32_t aFirstMask, int32_t aLastMask,
+                                        nsAString& aResult) {
+>>>>>>> upstream-releases
   for (int32_t mask = aFirstMask; mask <= aLastMask; mask <<= 1) {
     if (mask & aMaskedValue) {
       AppendASCIItoUTF16(nsCSSProps::ValueToKeyword(mask, aTable), aResult);
@@ -181,6 +208,7 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   MOZ_ASSERT(aMaskedValue == 0, "unexpected bit remaining in bitfield");
 }
 
+<<<<<<< HEAD
 /* static */ void nsStyleUtil::AppendAngleValue(const nsStyleCoord& aAngle,
                                                 nsAString& aResult) {
   MOZ_ASSERT(aAngle.IsAngleValue(), "Should have angle value");
@@ -203,6 +231,36 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   static_assert(
       NS_STYLE_PAINT_ORDER_BITWIDTH * NS_STYLE_PAINT_ORDER_LAST_VALUE <= 8,
       "SVGStyleStruct::mPaintOrder and local variables not big enough");
+||||||| merged common ancestors
+/* static */ void
+nsStyleUtil::AppendAngleValue(const nsStyleCoord& aAngle, nsAString& aResult)
+{
+  MOZ_ASSERT(aAngle.IsAngleValue(), "Should have angle value");
+
+  // Append number.
+  AppendCSSNumber(aAngle.GetAngleValue(), aResult);
+
+  // Append unit.
+  switch (aAngle.GetUnit()) {
+    case eStyleUnit_Degree: aResult.AppendLiteral("deg");  break;
+    default: MOZ_ASSERT_UNREACHABLE("unrecognized angle unit");
+  }
+}
+
+/* static */ void
+nsStyleUtil::AppendPaintOrderValue(uint8_t aValue,
+                                   nsAString& aResult)
+{
+  static_assert
+    (NS_STYLE_PAINT_ORDER_BITWIDTH * NS_STYLE_PAINT_ORDER_LAST_VALUE <= 8,
+     "SVGStyleStruct::mPaintOrder and local variables not big enough");
+=======
+/* static */
+void nsStyleUtil::AppendPaintOrderValue(uint8_t aValue, nsAString& aResult) {
+  static_assert(
+      NS_STYLE_PAINT_ORDER_BITWIDTH * NS_STYLE_PAINT_ORDER_LAST_VALUE <= 8,
+      "SVGStyleStruct::mPaintOrder and local variables not big enough");
+>>>>>>> upstream-releases
 
   if (aValue == NS_STYLE_PAINT_ORDER_NORMAL) {
     aResult.AppendLiteral("normal");
@@ -256,7 +314,84 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   }
 }
 
+<<<<<<< HEAD
 /* static */ float nsStyleUtil::ColorComponentToFloat(uint8_t aAlpha) {
+||||||| merged common ancestors
+/* static */ void
+nsStyleUtil::AppendStepsTimingFunction(nsTimingFunction::Type aType,
+                                       uint32_t aSteps,
+                                       nsAString& aResult)
+{
+  MOZ_ASSERT(aType == nsTimingFunction::Type::StepStart ||
+             aType == nsTimingFunction::Type::StepEnd);
+
+  aResult.AppendLiteral("steps(");
+  aResult.AppendInt(aSteps);
+  if (aType == nsTimingFunction::Type::StepStart) {
+    aResult.AppendLiteral(", start)");
+  } else {
+    aResult.AppendLiteral(")");
+  }
+}
+
+/* static */ void
+nsStyleUtil::AppendFramesTimingFunction(uint32_t aFrames,
+                                        nsAString& aResult)
+{
+  aResult.AppendLiteral("frames(");
+  aResult.AppendInt(aFrames);
+  aResult.AppendLiteral(")");
+}
+
+/* static */ void
+nsStyleUtil::AppendCubicBezierTimingFunction(float aX1, float aY1,
+                                             float aX2, float aY2,
+                                             nsAString& aResult)
+{
+  // set the value from the cubic-bezier control points
+  // (We could try to regenerate the keywords if we want.)
+  aResult.AppendLiteral("cubic-bezier(");
+  aResult.AppendFloat(aX1);
+  aResult.AppendLiteral(", ");
+  aResult.AppendFloat(aY1);
+  aResult.AppendLiteral(", ");
+  aResult.AppendFloat(aX2);
+  aResult.AppendLiteral(", ");
+  aResult.AppendFloat(aY2);
+  aResult.Append(')');
+}
+
+/* static */ void
+nsStyleUtil::AppendCubicBezierKeywordTimingFunction(
+    nsTimingFunction::Type aType,
+    nsAString& aResult)
+{
+  switch (aType) {
+    case nsTimingFunction::Type::Ease:
+    case nsTimingFunction::Type::Linear:
+    case nsTimingFunction::Type::EaseIn:
+    case nsTimingFunction::Type::EaseOut:
+    case nsTimingFunction::Type::EaseInOut: {
+      nsCSSKeyword keyword = nsCSSProps::ValueToKeywordEnum(
+          static_cast<int32_t>(aType),
+          nsCSSProps::kTransitionTimingFunctionKTable);
+      AppendASCIItoUTF16(nsCSSKeywords::GetStringValue(keyword),
+                         aResult);
+      break;
+    }
+    default:
+      MOZ_ASSERT_UNREACHABLE("unexpected aType");
+      break;
+  }
+}
+
+/* static */ float
+nsStyleUtil::ColorComponentToFloat(uint8_t aAlpha)
+{
+=======
+/* static */
+float nsStyleUtil::ColorComponentToFloat(uint8_t aAlpha) {
+>>>>>>> upstream-releases
   // Alpha values are expressed as decimals, so we should convert
   // back, using as few decimal places as possible for
   // round-tripping.
@@ -269,8 +404,43 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
   return rounded;
 }
 
+<<<<<<< HEAD
 /* static */ bool nsStyleUtil::IsSignificantChild(
     nsIContent* aChild, bool aWhitespaceIsSignificant) {
+||||||| merged common ancestors
+/* static */ bool
+nsStyleUtil::IsSignificantChild(nsIContent* aChild,
+                                bool aWhitespaceIsSignificant)
+{
+=======
+/* static */
+void nsStyleUtil::GetSerializedColorValue(nscolor aColor,
+                                          nsAString& aSerializedColor) {
+  MOZ_ASSERT(aSerializedColor.IsEmpty());
+
+  const bool hasAlpha = NS_GET_A(aColor) != 255;
+  if (hasAlpha) {
+    aSerializedColor.AppendLiteral("rgba(");
+  } else {
+    aSerializedColor.AppendLiteral("rgb(");
+  }
+  aSerializedColor.AppendInt(NS_GET_R(aColor));
+  aSerializedColor.AppendLiteral(", ");
+  aSerializedColor.AppendInt(NS_GET_G(aColor));
+  aSerializedColor.AppendLiteral(", ");
+  aSerializedColor.AppendInt(NS_GET_B(aColor));
+  if (hasAlpha) {
+    aSerializedColor.AppendLiteral(", ");
+    float alpha = nsStyleUtil::ColorComponentToFloat(NS_GET_A(aColor));
+    nsStyleUtil::AppendCSSNumber(alpha, aSerializedColor);
+  }
+  aSerializedColor.AppendLiteral(")");
+}
+
+/* static */
+bool nsStyleUtil::IsSignificantChild(nsIContent* aChild,
+                                     bool aWhitespaceIsSignificant) {
+>>>>>>> upstream-releases
   bool isText = aChild->IsText();
 
   if (!isText && !aChild->IsComment() && !aChild->IsProcessingInstruction()) {
@@ -281,8 +451,19 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
          (aWhitespaceIsSignificant || !aChild->TextIsOnlyWhitespace());
 }
 
+<<<<<<< HEAD
 /* static */ bool nsStyleUtil::ThreadSafeIsSignificantChild(
     const nsIContent* aChild, bool aWhitespaceIsSignificant) {
+||||||| merged common ancestors
+/* static */ bool
+nsStyleUtil::ThreadSafeIsSignificantChild(const nsIContent* aChild,
+                                          bool aWhitespaceIsSignificant)
+{
+=======
+/* static */
+bool nsStyleUtil::ThreadSafeIsSignificantChild(const nsIContent* aChild,
+                                               bool aWhitespaceIsSignificant) {
+>>>>>>> upstream-releases
   bool isText = aChild->IsText();
 
   if (!isText && !aChild->IsComment() && !aChild->IsProcessingInstruction()) {
@@ -297,27 +478,47 @@ void nsStyleUtil::AppendEscapedCSSString(const nsAString& aString,
 // For a replaced element whose concrete object size is no larger than the
 // element's content-box, this method checks whether the given
 // "object-position" coordinate might cause overflow in its dimension.
+<<<<<<< HEAD
 static bool ObjectPositionCoordMightCauseOverflow(
     const Position::Coord& aCoord) {
+||||||| merged common ancestors
+static bool
+ObjectPositionCoordMightCauseOverflow(const Position::Coord& aCoord)
+{
+=======
+static bool ObjectPositionCoordMightCauseOverflow(
+    const LengthPercentage& aCoord) {
+>>>>>>> upstream-releases
   // Any nonzero length in "object-position" can push us to overflow
   // (particularly if our concrete object size is exactly the same size as the
   // replaced element's content-box).
-  if (aCoord.mLength != 0) {
+  if (aCoord.LengthInCSSPixels() != 0.) {
     return true;
   }
 
   // Percentages are interpreted as a fraction of the extra space. So,
   // percentages in the 0-100% range are safe, but values outside of that
   // range could cause overflow.
-  if (aCoord.mHasPercent &&
-      (aCoord.mPercent < 0.0f || aCoord.mPercent > 1.0f)) {
+  if (aCoord.HasPercent() &&
+      (aCoord.Percentage() < 0.0f || aCoord.Percentage() > 1.0f)) {
     return true;
   }
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ bool nsStyleUtil::ObjectPropsMightCauseOverflow(
     const nsStylePosition* aStylePos) {
+||||||| merged common ancestors
+
+/* static */ bool
+nsStyleUtil::ObjectPropsMightCauseOverflow(const nsStylePosition* aStylePos)
+{
+=======
+/* static */
+bool nsStyleUtil::ObjectPropsMightCauseOverflow(
+    const nsStylePosition* aStylePos) {
+>>>>>>> upstream-releases
   auto objectFit = aStylePos->mObjectFit;
 
   // "object-fit: cover" & "object-fit: none" can give us a render rect that's
@@ -332,37 +533,69 @@ static bool ObjectPositionCoordMightCauseOverflow(
   // Check each of our "object-position" coords to see if it could cause
   // overflow in its dimension:
   const Position& objectPosistion = aStylePos->mObjectPosition;
-  if (ObjectPositionCoordMightCauseOverflow(objectPosistion.mXPosition) ||
-      ObjectPositionCoordMightCauseOverflow(objectPosistion.mYPosition)) {
+  if (ObjectPositionCoordMightCauseOverflow(objectPosistion.horizontal) ||
+      ObjectPositionCoordMightCauseOverflow(objectPosistion.vertical)) {
     return true;
   }
 
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ bool nsStyleUtil::CSPAllowsInlineStyle(
     Element* aElement, nsIPrincipal* aPrincipal,
     nsIPrincipal* aTriggeringPrincipal, nsIURI* aSourceURI,
     uint32_t aLineNumber, uint32_t aColumnNumber, const nsAString& aStyleText,
     nsresult* aRv) {
+||||||| merged common ancestors
+
+/* static */ bool
+nsStyleUtil::CSPAllowsInlineStyle(Element* aElement,
+                                  nsIPrincipal* aPrincipal,
+                                  nsIPrincipal* aTriggeringPrincipal,
+                                  nsIURI* aSourceURI,
+                                  uint32_t aLineNumber,
+                                  uint32_t aColumnNumber,
+                                  const nsAString& aStyleText,
+                                  nsresult* aRv)
+{
+=======
+/* static */
+bool nsStyleUtil::CSPAllowsInlineStyle(
+    Element* aElement, dom::Document* aDocument,
+    nsIPrincipal* aTriggeringPrincipal, uint32_t aLineNumber,
+    uint32_t aColumnNumber, const nsAString& aStyleText, nsresult* aRv) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   if (aRv) {
     *aRv = NS_OK;
   }
 
-  nsIPrincipal* principal = aPrincipal;
-  if (aTriggeringPrincipal &&
-      BasePrincipal::Cast(aTriggeringPrincipal)->OverridesCSP(aPrincipal)) {
-    principal = aTriggeringPrincipal;
-  }
-
   nsCOMPtr<nsIContentSecurityPolicy> csp;
+<<<<<<< HEAD
   rv = principal->GetCsp(getter_AddRefs(csp));
 
   if (NS_FAILED(rv)) {
     if (aRv) *aRv = rv;
     return false;
+||||||| merged common ancestors
+  rv = principal->GetCsp(getter_AddRefs(csp));
+
+  if (NS_FAILED(rv)) {
+    if (aRv)
+      *aRv = rv;
+    return false;
+=======
+  if (aTriggeringPrincipal && BasePrincipal::Cast(aTriggeringPrincipal)
+                                  ->OverridesCSP(aDocument->NodePrincipal())) {
+    nsCOMPtr<nsIExpandedPrincipal> ep = do_QueryInterface(aTriggeringPrincipal);
+    if (ep) {
+      csp = ep->GetCsp();
+    }
+  } else {
+    csp = aDocument->GetCsp();
+>>>>>>> upstream-releases
   }
 
   if (!csp) {
@@ -398,7 +631,8 @@ void nsStyleUtil::AppendFontSlantStyle(const FontSlantStyle& aStyle,
     auto angle = aStyle.ObliqueAngle();
     if (angle != FontSlantStyle::kDefaultAngle) {
       aOut.AppendLiteral(" ");
-      AppendAngleValue(nsStyleCoord(angle, eStyleUnit_Degree), aOut);
+      AppendCSSNumber(angle, aOut);
+      aOut.AppendLiteral("deg");
     }
   }
 }

@@ -10,6 +10,7 @@
 #include "mozilla/EventStates.h"
 #include "mozilla/MouseEvents.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/MouseEventBinding.h"
 #include "nsLayoutUtils.h"
 #include "nsGkAtoms.h"
@@ -258,12 +259,26 @@ static nsIContent* GetClickableAncestor(
 
 static nscoord AppUnitsFromMM(nsIFrame* aFrame, uint32_t aMM) {
   nsPresContext* pc = aFrame->PresContext();
+<<<<<<< HEAD
   nsIPresShell* presShell = pc->PresShell();
   float result = float(aMM) * (pc->DeviceContext()->AppUnitsPerPhysicalInch() /
                                MM_PER_INCH_FLOAT);
   if (presShell->ScaleToResolution()) {
     result = result / presShell->GetResolution();
   }
+||||||| merged common ancestors
+  nsIPresShell* presShell = pc->PresShell();
+  float result = float(aMM) *
+    (pc->DeviceContext()->AppUnitsPerPhysicalInch() / MM_PER_INCH_FLOAT);
+  if (presShell->ScaleToResolution()) {
+    result = result / presShell->GetResolution();
+  }
+=======
+  PresShell* presShell = pc->PresShell();
+  float result = float(aMM) * (pc->DeviceContext()->AppUnitsPerPhysicalInch() /
+                               MM_PER_INCH_FLOAT);
+  result = result / presShell->GetResolution();
+>>>>>>> upstream-releases
   return NSToCoordRound(result);
 }
 
@@ -358,7 +373,7 @@ static bool IsLargeElement(nsIFrame* aFrame, const EventRadiusPrefs* aPrefs) {
   uint32_t keepLimitSizeForCluster = aPrefs->mKeepLimitSizeForCluster;
   nsSize frameSize = aFrame->GetSize();
   nsPresContext* pc = aFrame->PresContext();
-  nsIPresShell* presShell = pc->PresShell();
+  PresShell* presShell = pc->PresShell();
   float cumulativeResolution = presShell->GetCumulativeResolution();
   if ((pc->AppUnitsToGfxUnits(frameSize.height) * cumulativeResolution) >
           keepLimitSizeForCluster &&
@@ -489,7 +504,7 @@ static bool IsElementClickableAndReadable(nsIFrame* aFrame,
   uint32_t limitReadableSize = aPrefs->mLimitReadableSize;
   nsSize frameSize = aFrame->GetSize();
   nsPresContext* pc = aFrame->PresContext();
-  nsIPresShell* presShell = pc->PresShell();
+  PresShell* presShell = pc->PresShell();
   float cumulativeResolution = presShell->GetCumulativeResolution();
   if ((pc->AppUnitsToGfxUnits(frameSize.height) * cumulativeResolution) <
           limitReadableSize ||
@@ -538,6 +553,7 @@ static bool IsElementClickableAndReadable(nsIFrame* aFrame,
   return true;
 }
 
+<<<<<<< HEAD
 nsIFrame* FindFrameTargetedByInputEvent(
     WidgetGUIEvent* aEvent, nsIFrame* aRootFrame,
     const nsPoint& aPointRelativeToRootFrame, uint32_t aFlags) {
@@ -555,6 +571,42 @@ nsIFrame* FindFrameTargetedByInputEvent(
            : (aEvent->mClass == eTouchEventClass ? "touch" : "other")),
       mozilla::layers::Stringify(aPointRelativeToRootFrame).c_str(),
       aRootFrame);
+||||||| merged common ancestors
+nsIFrame*
+FindFrameTargetedByInputEvent(WidgetGUIEvent* aEvent,
+                              nsIFrame* aRootFrame,
+                              const nsPoint& aPointRelativeToRootFrame,
+                              uint32_t aFlags)
+{
+  uint32_t flags = (aFlags & INPUT_IGNORE_ROOT_SCROLL_FRAME) ?
+     nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME : 0;
+  nsIFrame* target =
+    nsLayoutUtils::GetFrameForPoint(aRootFrame, aPointRelativeToRootFrame, flags);
+  PET_LOG("Found initial target %p for event class %s point %s relative to root frame %p\n",
+    target, (aEvent->mClass == eMouseEventClass ? "mouse" :
+             (aEvent->mClass == eTouchEventClass ? "touch" : "other")),
+    mozilla::layers::Stringify(aPointRelativeToRootFrame).c_str(), aRootFrame);
+=======
+nsIFrame* FindFrameTargetedByInputEvent(
+    WidgetGUIEvent* aEvent, nsIFrame* aRootFrame,
+    const nsPoint& aPointRelativeToRootFrame, uint32_t aFlags) {
+  using FrameForPointOption = nsLayoutUtils::FrameForPointOption;
+  EnumSet<FrameForPointOption> options;
+  if (aFlags & INPUT_IGNORE_ROOT_SCROLL_FRAME) {
+    options += FrameForPointOption::IgnoreRootScrollFrame;
+  }
+  nsIFrame* target = nsLayoutUtils::GetFrameForPoint(
+      aRootFrame, aPointRelativeToRootFrame, options);
+  PET_LOG(
+      "Found initial target %p for event class %s point %s relative to root "
+      "frame %p\n",
+      target,
+      (aEvent->mClass == eMouseEventClass
+           ? "mouse"
+           : (aEvent->mClass == eTouchEventClass ? "touch" : "other")),
+      mozilla::layers::Stringify(aPointRelativeToRootFrame).c_str(),
+      aRootFrame);
+>>>>>>> upstream-releases
 
   const EventRadiusPrefs* prefs = GetPrefsFor(aEvent->mClass);
   if (!prefs || !prefs->mEnabled) {
@@ -566,7 +618,7 @@ nsIFrame* FindFrameTargetedByInputEvent(
     clickableAncestor = GetClickableAncestor(target, nsGkAtoms::body);
     if (clickableAncestor) {
       if (!IsElementClickableAndReadable(target, aEvent, prefs)) {
-        aEvent->AsMouseEventBase()->hitCluster = true;
+        aEvent->AsMouseEventBase()->mHitCluster = true;
       }
       PET_LOG("Target %p is clickable\n", target);
       // If the target that was directly hit has a clickable ancestor, that
@@ -579,9 +631,20 @@ nsIFrame* FindFrameTargetedByInputEvent(
 
   // Do not modify targeting for actual mouse hardware; only for mouse
   // events generated by touch-screen hardware.
+<<<<<<< HEAD
   if (aEvent->mClass == eMouseEventClass && prefs->mTouchOnly &&
       aEvent->AsMouseEvent()->inputSource !=
           MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
+||||||| merged common ancestors
+  if (aEvent->mClass == eMouseEventClass &&
+      prefs->mTouchOnly &&
+      aEvent->AsMouseEvent()->inputSource !=
+        MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
+=======
+  if (aEvent->mClass == eMouseEventClass && prefs->mTouchOnly &&
+      aEvent->AsMouseEvent()->mInputSource !=
+          MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
+>>>>>>> upstream-releases
     PET_LOG("Mouse input event is not from a touch source\n");
     return target;
   }
@@ -597,10 +660,21 @@ nsIFrame* FindFrameTargetedByInputEvent(
   nsRect targetRect = GetTargetRect(aRootFrame, aPointRelativeToRootFrame,
                                     restrictToDescendants, prefs, aFlags);
   PET_LOG("Expanded point to target rect %s\n",
+<<<<<<< HEAD
           mozilla::layers::Stringify(targetRect).c_str());
   AutoTArray<nsIFrame*, 8> candidates;
   nsresult rv = nsLayoutUtils::GetFramesForArea(aRootFrame, targetRect,
                                                 candidates, flags);
+||||||| merged common ancestors
+    mozilla::layers::Stringify(targetRect).c_str());
+  AutoTArray<nsIFrame*,8> candidates;
+  nsresult rv = nsLayoutUtils::GetFramesForArea(aRootFrame, targetRect, candidates, flags);
+=======
+          mozilla::layers::Stringify(targetRect).c_str());
+  AutoTArray<nsIFrame*, 8> candidates;
+  nsresult rv = nsLayoutUtils::GetFramesForArea(aRootFrame, targetRect,
+                                                candidates, options);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return target;
   }
@@ -615,7 +689,7 @@ nsIFrame* FindFrameTargetedByInputEvent(
         (!IsElementClickableAndReadable(closestClickable, aEvent, prefs))) {
       if (aEvent->mClass == eMouseEventClass) {
         WidgetMouseEventBase* mouseEventBase = aEvent->AsMouseEventBase();
-        mouseEventBase->hitCluster = true;
+        mouseEventBase->mHitCluster = true;
       }
     }
     target = closestClickable;

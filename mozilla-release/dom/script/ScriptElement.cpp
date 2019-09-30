@@ -25,19 +25,31 @@ ScriptElement::ScriptAvailable(nsresult aResult, nsIScriptElement* aElement,
   if (!aIsInlineClassicScript && NS_FAILED(aResult)) {
     nsCOMPtr<nsIParser> parser = do_QueryReferent(mCreatorParser);
     if (parser) {
-      parser->PushDefinedInsertionPoint();
+      parser->IncrementScriptNestingLevel();
     }
     nsresult rv = FireErrorEvent();
     if (parser) {
-      parser->PopDefinedInsertionPoint();
+      parser->DecrementScriptNestingLevel();
     }
     return rv;
   }
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult ScriptElement::FireErrorEvent() {
   nsCOMPtr<nsIContent> cont = do_QueryInterface((nsIScriptElement*)this);
+||||||| merged common ancestors
+/* virtual */ nsresult
+ScriptElement::FireErrorEvent()
+{
+  nsCOMPtr<nsIContent> cont =
+    do_QueryInterface((nsIScriptElement*) this);
+=======
+/* virtual */
+nsresult ScriptElement::FireErrorEvent() {
+  nsCOMPtr<nsIContent> cont = do_QueryInterface((nsIScriptElement*)this);
+>>>>>>> upstream-releases
 
   return nsContentUtils::DispatchTrustedEvent(cont->OwnerDoc(), cont,
                                               NS_LITERAL_STRING("error"),
@@ -96,7 +108,7 @@ bool ScriptElement::MaybeProcessScript() {
     return false;
   }
 
-  nsIDocument* ownerDoc = cont->OwnerDoc();
+  Document* ownerDoc = cont->OwnerDoc();
   FreezeExecutionAttrs(ownerDoc);
 
   mAlreadyStarted = true;
@@ -105,7 +117,7 @@ bool ScriptElement::MaybeProcessScript() {
   if (parser) {
     nsCOMPtr<nsIContentSink> sink = parser->GetContentSink();
     if (sink) {
-      nsCOMPtr<nsIDocument> parserDoc = do_QueryInterface(sink->GetTarget());
+      nsCOMPtr<Document> parserDoc = do_QueryInterface(sink->GetTarget());
       if (ownerDoc != parserDoc) {
         // Willful violation of HTML5 as of 2010-12-01
         return false;

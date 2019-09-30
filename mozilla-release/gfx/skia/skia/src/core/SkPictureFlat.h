@@ -41,16 +41,28 @@ enum DrawType {
     DRAW_PATH,
     DRAW_PICTURE,
     DRAW_POINTS,
-    DRAW_POS_TEXT,
-    DRAW_POS_TEXT_TOP_BOTTOM, // fast variant of DRAW_POS_TEXT
-    DRAW_POS_TEXT_H,
-    DRAW_POS_TEXT_H_TOP_BOTTOM, // fast variant of DRAW_POS_TEXT_H
+    DRAW_POS_TEXT_REMOVED_1_2019,
+    DRAW_POS_TEXT_TOP_BOTTOM_REMOVED_1_2019,
+    DRAW_POS_TEXT_H_REMOVED_1_2019,
+    DRAW_POS_TEXT_H_TOP_BOTTOM_REMOVED_1_2019,
     DRAW_RECT,
     DRAW_RRECT,
+<<<<<<< HEAD
     DRAW_SPRITE_RETIRED_2015_REMOVED_2018,
     DRAW_TEXT,
     DRAW_TEXT_ON_PATH_RETIRED_08_2018_REMOVED_10_2018,
     DRAW_TEXT_TOP_BOTTOM,   // fast variant of DRAW_TEXT
+||||||| merged common ancestors
+    DRAW_SPRITE,
+    DRAW_TEXT,
+    DRAW_TEXT_ON_PATH,
+    DRAW_TEXT_TOP_BOTTOM,   // fast variant of DRAW_TEXT
+=======
+    DRAW_SPRITE_RETIRED_2015_REMOVED_2018,
+    DRAW_TEXT_REMOVED_1_2019,
+    DRAW_TEXT_ON_PATH_RETIRED_08_2018_REMOVED_10_2018,
+    DRAW_TEXT_TOP_BOTTOM_REMOVED_1_2019,
+>>>>>>> upstream-releases
     DRAW_VERTICES_RETIRED_03_2017_REMOVED_01_2018,
     RESTORE,
     ROTATE,
@@ -85,7 +97,7 @@ enum DrawType {
     DRAW_ANNOTATION,
     DRAW_DRAWABLE,
     DRAW_DRAWABLE_MATRIX,
-    DRAW_TEXT_RSXFORM,
+    DRAW_TEXT_RSXFORM_DEPRECATED_DEC_2018,
 
     TRANSLATE_Z, // deprecated (M60)
 
@@ -97,9 +109,22 @@ enum DrawType {
 
     FLUSH,
 
-    LAST_DRAWTYPE_ENUM = FLUSH
+    DRAW_IMAGE_SET,
+
+    SAVE_BEHIND,
+
+<<<<<<< HEAD
+||||||| merged common ancestors
+// In the 'match' method, this constant will match any flavor of DRAW_BITMAP*
+static const int kDRAW_BITMAP_FLAVOR = LAST_DRAWTYPE_ENUM+1;
+
+=======
+    DRAW_EDGEAA_RECT,
+
+    LAST_DRAWTYPE_ENUM = DRAW_EDGEAA_RECT,
 };
 
+>>>>>>> upstream-releases
 enum DrawVertexFlags {
     DRAW_VERTICES_HAS_TEXS    = 0x01,
     DRAW_VERTICES_HAS_COLORS  = 0x02,
@@ -123,6 +148,10 @@ enum SaveLayerRecFlatFlags {
     SAVELAYERREC_HAS_FLAGS      = 1 << 3,
     SAVELAYERREC_HAS_CLIPMASK   = 1 << 4,
     SAVELAYERREC_HAS_CLIPMATRIX = 1 << 5,
+};
+
+enum SaveBehindFlatFlags {
+    SAVEBEHIND_HAS_SUBSET = 1 << 0,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,8 +184,16 @@ static inline bool ClipParams_unpackDoAA(uint32_t packed) {
 
 class SkTypefacePlayback {
 public:
+<<<<<<< HEAD
     SkTypefacePlayback() : fCount(0), fArray(nullptr) {}
     ~SkTypefacePlayback();
+||||||| merged common ancestors
+    SkTypefacePlayback();
+    virtual ~SkTypefacePlayback();
+=======
+    SkTypefacePlayback() : fCount(0), fArray(nullptr) {}
+    ~SkTypefacePlayback() = default;
+>>>>>>> upstream-releases
 
     void setCount(size_t count);
 

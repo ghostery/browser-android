@@ -992,10 +992,16 @@ ControlFlowGenerator::ControlStatus ControlFlowGenerator::processBrokenLoop(
     CFGState& state) {
   MOZ_ASSERT(!current);
 
+<<<<<<< HEAD
   {
     state.loop.entry->setStopIns(CFGGoto::New(
         alloc(), state.loop.entry->stopIns()->toLoopEntry()->successor()));
   }
+||||||| merged common ancestors
+    CFGBlock* header = CFGBlock::New(alloc(), loopEntry);
+=======
+  state.loop.entry->stopIns()->toLoopEntry()->setIsBrokenLoop();
+>>>>>>> upstream-releases
 
   // If the loop started with a condition (while/for) then even if the
   // structure never actually loops, the condition itself can still fail and
@@ -1671,6 +1677,7 @@ static inline jsbytecode* EffectiveContinue(jsbytecode* pc) {
   return pc;
 }
 
+<<<<<<< HEAD
 ControlFlowGenerator::ControlStatus ControlFlowGenerator::processContinue(
     JSOp op) {
   MOZ_ASSERT(op == JSOP_GOTO);
@@ -1706,6 +1713,76 @@ ControlFlowGenerator::ControlStatus ControlFlowGenerator::processContinue(
   pc += CodeSpec[op].length;
   return processControlEnd();
 }
+||||||| merged common ancestors
+ControlFlowGenerator::ControlStatus
+ControlFlowGenerator::processTableSwitch(JSOp op, jssrcnote* sn)
+{
+    // TableSwitch op contains the following data
+    // (length between data is JUMP_OFFSET_LEN)
+    //
+    // 0: Offset of default case
+    // 1: Lowest number in tableswitch
+    // 2: Highest number in tableswitch
+    // 3: Offset of case low
+    // 4: Offset of case low+1
+    // .: ...
+    // .: Offset of case high
+
+    MOZ_ASSERT(op == JSOP_TABLESWITCH);
+    MOZ_ASSERT(SN_TYPE(sn) == SRC_TABLESWITCH);
+
+    // Get the default and exit pc
+    jsbytecode* exitpc = pc + GetSrcNoteOffset(sn, SrcNote::TableSwitch::EndOffset);
+    jsbytecode* defaultpc = pc + GET_JUMP_OFFSET(pc);
+
+    MOZ_ASSERT(defaultpc > pc && defaultpc <= exitpc);
+
+    // Get the low and high from the tableswitch
+    jsbytecode* pc2 = pc;
+    pc2 += JUMP_OFFSET_LEN;
+    int low = GET_JUMP_OFFSET(pc2);
+    pc2 += JUMP_OFFSET_LEN;
+    int high = GET_JUMP_OFFSET(pc2);
+    pc2 += JUMP_OFFSET_LEN;
+
+    // Create MIR instruction
+    CFGTableSwitch* tableswitch = CFGTableSwitch::New(alloc(), low, high);
+=======
+ControlFlowGenerator::ControlStatus ControlFlowGenerator::processContinue(
+    JSOp op) {
+  MOZ_ASSERT(op == JSOP_GOTO);
+
+  // Find the target loop.
+  CFGState* found = nullptr;
+  jsbytecode* target = pc + GetJumpOffset(pc);
+  for (size_t i = loops_.length() - 1;; i--) {
+    if (loops_[i].continuepc == target + JSOP_JUMPTARGET_LENGTH ||
+        EffectiveContinue(loops_[i].continuepc) == target) {
+      found = &cfgStack_[loops_[i].cfgEntry];
+      break;
+    }
+    if (i == 0) {
+      break;
+    }
+  }
+
+  // There must always be a valid target loop structure. If not, there's
+  // probably an off-by-something error in which pc we track.
+  MOZ_ASSERT(found);
+  CFGState& state = *found;
+
+  state.loop.continues =
+      new (alloc()) DeferredEdge(current, state.loop.continues);
+  if (!state.loop.continues) {
+    return ControlStatus::Error;
+  }
+  current->setStopPc(pc);
+
+  current = nullptr;
+  pc += CodeSpec[op].length;
+  return processControlEnd();
+}
+>>>>>>> upstream-releases
 
 ControlFlowGenerator::ControlStatus ControlFlowGenerator::processSwitchBreak(
     JSOp op) {
@@ -2161,8 +2238,16 @@ ControlFlowGenerator::ControlStatus ControlFlowGenerator::processAndOr(
 ControlFlowGenerator::ControlStatus ControlFlowGenerator::processLabel() {
   MOZ_ASSERT(JSOp(*pc) == JSOP_LABEL);
 
+<<<<<<< HEAD
   jsbytecode* endpc = pc + GET_JUMP_OFFSET(pc);
   MOZ_ASSERT(endpc > pc);
+||||||| merged common ancestors
+    jsbytecode* endpc = pc + GET_JUMP_OFFSET(pc);
+    MOZ_ASSERT(endpc > pc);
+=======
+  jsbytecode* endpc = pc + GET_CODE_OFFSET(pc);
+  MOZ_ASSERT(endpc > pc);
+>>>>>>> upstream-releases
 
   ControlFlowInfo label(cfgStack_.length(), endpc);
   if (!labels_.append(label)) {

@@ -35,10 +35,22 @@
 
 namespace WebCore {
 
+<<<<<<< HEAD
 void ZeroPole::process(const float *source, float *destination,
                        int framesToProcess) {
   float zero = m_zero;
   float pole = m_pole;
+||||||| merged common ancestors
+void ZeroPole::process(const float *source, float *destination, int framesToProcess)
+{
+    float zero = m_zero;
+    float pole = m_pole;
+=======
+void ZeroPole::process(const float* source, float* destination,
+                       int framesToProcess) {
+  float zero = m_zero;
+  float pole = m_pole;
+>>>>>>> upstream-releases
 
   // Gain compensation to make 0dB @ 0Hz
   const float k1 = 1 / (1 - zero);

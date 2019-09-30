@@ -73,10 +73,20 @@ public:
     }
 
     Factory getFactory() const override { return nullptr; }
+<<<<<<< HEAD
 
 protected:
     bool onFilterPath(SkPath* dst, const SkPath&, SkStrokeRec* , const SkRect*) const override;
     DashType onAsADash(DashInfo* info) const override;
+||||||| merged common ancestors
+    void toString(SkString*) const override {}
+=======
+    const char* getTypeName() const override { return nullptr; }
+
+protected:
+    bool onFilterPath(SkPath* dst, const SkPath&, SkStrokeRec* , const SkRect*) const override;
+    DashType onAsADash(DashInfo* info) const override;
+>>>>>>> upstream-releases
 
 private:
     TestDashPathEffect(const SkScalar* intervals, int count, SkScalar phase);
@@ -125,7 +135,6 @@ static inline GrColor GrRandomColor(SkRandom* random) {
             break;
         }
     }
-    GrColorIsPMAssert(color);
     return color;
 }
 

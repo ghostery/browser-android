@@ -12,7 +12,6 @@
 #include "SkReadBuffer.h"
 #include "SkString.h"
 #include "SkWriteBuffer.h"
-#include "../jumper/SkJumper.h"
 
 #if SK_SUPPORT_GPU
 #include "GrColorSpaceInfo.h"
@@ -37,7 +36,7 @@ public:
 
 #if SK_SUPPORT_GPU
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(
-            GrContext*, const GrColorSpaceInfo&) const override;
+            GrRecordingContext*, const GrColorSpaceInfo&) const override;
  #endif
 
     void onAppendStages(SkRasterPipeline* p,
@@ -45,12 +44,22 @@ public:
                         SkArenaAlloc* scratch,
                         bool shaderIsOpaque) const override;
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkHighContrast_Filter)
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkHighContrast_Filter)
+
+=======
+>>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
 
 private:
+    SK_FLATTENABLE_HOOKS(SkHighContrast_Filter)
+
     SkHighContrastConfig fConfig;
 
     friend class SkHighContrastFilter;
@@ -66,6 +75,7 @@ void SkHighContrast_Filter::onAppendStages(SkRasterPipeline* p,
         p->append(SkRasterPipeline::unpremul);
     }
 
+<<<<<<< HEAD
     if (!dstCS) {
         // In legacy draws this effect approximately linearizes by squaring.
         // When non-legacy, we're already (better) linearized.
@@ -74,7 +84,29 @@ void SkHighContrast_Filter::onAppendStages(SkRasterPipeline* p,
         square->B = square->C = square->D = square->E = square->F = 0;
 
         p->append(SkRasterPipeline::parametric, square);
+||||||| merged common ancestors
+    if (!dstCS) {
+        // In legacy draws this effect approximately linearizes by squaring.
+        // When non-legacy, we're already (better) linearized.
+        auto square = alloc->make<SkJumper_ParametricTransferFunction>();
+        square->G = 2.0f; square->A = 1.0f;
+        square->B = square->C = square->D = square->E = square->F = 0;
+
+        p->append(SkRasterPipeline::parametric_r, square);
+        p->append(SkRasterPipeline::parametric_g, square);
+        p->append(SkRasterPipeline::parametric_b, square);
+=======
+    // Linearize before applying high-contrast filter.
+    auto tf = alloc->make<skcms_TransferFunction>();
+    if (dstCS) {
+        dstCS->transferFn(&tf->g);
+    } else {
+        // Historically we approximate untagged destinations as gamma 2.
+        // TODO: sRGB?
+        *tf = {2,1, 0,0,0,0,0};
+>>>>>>> upstream-releases
     }
+    p->append(SkRasterPipeline::parametric, tf);
 
     if (fConfig.fGrayscale) {
         float r = SK_LUM_COEFF_R;
@@ -114,6 +146,7 @@ void SkHighContrast_Filter::onAppendStages(SkRasterPipeline* p,
     p->append(SkRasterPipeline::clamp_0);
     p->append(SkRasterPipeline::clamp_1);
 
+<<<<<<< HEAD
     if (!dstCS) {
         // See the previous if(!dstCS) { ... }
         auto sqrt = alloc->make<SkJumper_ParametricTransferFunction>();
@@ -121,7 +154,27 @@ void SkHighContrast_Filter::onAppendStages(SkRasterPipeline* p,
         sqrt->B = sqrt->C = sqrt->D = sqrt->E = sqrt->F = 0;
 
         p->append(SkRasterPipeline::parametric, sqrt);
+||||||| merged common ancestors
+    if (!dstCS) {
+        // See the previous if(!dstCS) { ... }
+        auto sqrt = alloc->make<SkJumper_ParametricTransferFunction>();
+        sqrt->G = 0.5f; sqrt->A = 1.0f;
+        sqrt->B = sqrt->C = sqrt->D = sqrt->E = sqrt->F = 0;
+
+        p->append(SkRasterPipeline::parametric_r, sqrt);
+        p->append(SkRasterPipeline::parametric_g, sqrt);
+        p->append(SkRasterPipeline::parametric_b, sqrt);
+=======
+    // Re-encode back from linear.
+    auto invTF = alloc->make<skcms_TransferFunction>();
+    if (dstCS) {
+        dstCS->invTransferFn(&invTF->g);
+    } else {
+        // See above... historically untagged == gamma 2 in this filter.
+        *invTF ={0.5f,1, 0,0,0,0,0};
+>>>>>>> upstream-releases
     }
+    p->append(SkRasterPipeline::parametric, invTF);
 
     if (!shaderIsOpaque) {
         p->append(SkRasterPipeline::premul);
@@ -151,9 +204,25 @@ sk_sp<SkColorFilter> SkHighContrastFilter::Make(
     return sk_make_sp<SkHighContrast_Filter>(config);
 }
 
+<<<<<<< HEAD
 SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_START(SkHighContrastFilter)
     SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkHighContrast_Filter)
 SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_END
+||||||| merged common ancestors
+#ifndef SK_IGNORE_TO_STRING
+void SkHighContrast_Filter::toString(SkString* str) const {
+    str->append("SkHighContrastColorFilter ");
+}
+#endif
+
+SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_START(SkHighContrastFilter)
+    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkHighContrast_Filter)
+SK_DEFINE_FLATTENABLE_REGISTRAR_GROUP_END
+=======
+void SkHighContrastFilter::RegisterFlattenables() {
+    SK_REGISTER_FLATTENABLE(SkHighContrast_Filter);
+}
+>>>>>>> upstream-releases
 
 #if SK_SUPPORT_GPU
 class HighContrastFilterEffect : public GrFragmentProcessor {
@@ -354,8 +423,16 @@ void GLHighContrastFilterEffect::emitCode(EmitArgs& args) {
 }
 
 std::unique_ptr<GrFragmentProcessor> SkHighContrast_Filter::asFragmentProcessor(
+<<<<<<< HEAD
         GrContext*, const GrColorSpaceInfo& csi) const {
     bool linearize = !csi.isLinearlyBlended();
+||||||| merged common ancestors
+        GrContext*, const GrColorSpaceInfo& csi) const {
+    bool linearize = !csi.isGammaCorrect();
+=======
+        GrRecordingContext*, const GrColorSpaceInfo& csi) const {
+    bool linearize = !csi.isLinearlyBlended();
+>>>>>>> upstream-releases
     return HighContrastFilterEffect::Make(fConfig, linearize);
 }
 #endif

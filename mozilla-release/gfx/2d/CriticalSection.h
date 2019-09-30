@@ -8,10 +8,10 @@
 #define MOZILLA_GFX_CRITICALSECTION_H_
 
 #ifdef WIN32
-#include <windows.h>
+#  include <windows.h>
 #else
-#include <pthread.h>
-#include "mozilla/DebugOnly.h"
+#  include <pthread.h>
+#  include "mozilla/DebugOnly.h"
 #endif
 
 namespace mozilla {
@@ -67,12 +67,28 @@ class CriticalSection {
 #endif
 
 /// RAII helper.
+<<<<<<< HEAD
 struct CriticalSectionAutoEnter {
   explicit CriticalSectionAutoEnter(CriticalSection* aSection)
       : mSection(aSection) {
     mSection->Enter();
   }
   ~CriticalSectionAutoEnter() { mSection->Leave(); }
+||||||| merged common ancestors
+struct CriticalSectionAutoEnter {
+    explicit CriticalSectionAutoEnter(CriticalSection* aSection) : mSection(aSection) { mSection->Enter(); }
+    ~CriticalSectionAutoEnter() { mSection->Leave(); }
+protected:
+    CriticalSection* mSection;
+};
+=======
+struct CriticalSectionAutoEnter final {
+  explicit CriticalSectionAutoEnter(CriticalSection* aSection)
+      : mSection(aSection) {
+    mSection->Enter();
+  }
+  ~CriticalSectionAutoEnter() { mSection->Leave(); }
+>>>>>>> upstream-releases
 
  protected:
   CriticalSection* mSection;

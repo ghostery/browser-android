@@ -12,6 +12,7 @@
 #include "nsPIDOMWindow.h"
 
 #include "mozilla/ErrorResult.h"
+#include "mozilla/dom/BodyStream.h"
 #include "mozilla/dom/FetchBinding.h"
 #include "mozilla/dom/ResponseBinding.h"
 #include "mozilla/dom/Headers.h"
@@ -22,19 +23,18 @@
 #include "nsDOMString.h"
 
 #include "BodyExtractor.h"
-#include "FetchStream.h"
 #include "FetchStreamReader.h"
 #include "InternalResponse.h"
 
 namespace mozilla {
 namespace dom {
 
-NS_IMPL_CYCLE_COLLECTING_ADDREF(Response)
-NS_IMPL_CYCLE_COLLECTING_RELEASE(Response)
+NS_IMPL_ADDREF_INHERITED(Response, FetchBody<Response>)
+NS_IMPL_RELEASE_INHERITED(Response, FetchBody<Response>)
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(Response)
 
-NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Response)
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(Response, FetchBody<Response>)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mOwner)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mHeaders)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mSignalImpl)
@@ -46,14 +46,14 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Response)
   NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(Response)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(Response, FetchBody<Response>)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mOwner)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mHeaders)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSignalImpl)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFetchStreamReader)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
-NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(Response)
+NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN_INHERITED(Response, FetchBody<Response>)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mReadableStreamBody)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mReadableStreamReader)
   NS_IMPL_CYCLE_COLLECTION_TRACE_PRESERVED_WRAPPER
@@ -61,8 +61,7 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_END
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Response)
   NS_WRAPPERCACHE_INTERFACE_MAP_ENTRY
-  NS_INTERFACE_MAP_ENTRY(nsISupports)
-NS_INTERFACE_MAP_END
+NS_INTERFACE_MAP_END_INHERITING(FetchBody<Response>)
 
 Response::Response(nsIGlobalObject* aGlobal,
                    InternalResponse* aInternalResponse,
@@ -80,8 +79,17 @@ Response::Response(nsIGlobalObject* aGlobal,
 
 Response::~Response() { mozilla::DropJSObjects(this); }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Response> Response::Error(
     const GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Response>
+Response::Error(const GlobalObject& aGlobal)
+{
+=======
+/* static */
+already_AddRefed<Response> Response::Error(const GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<InternalResponse> error =
       InternalResponse::NetworkError(NS_ERROR_FAILURE);
@@ -89,16 +97,38 @@ Response::~Response() { mozilla::DropJSObjects(this); }
   return r.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Response> Response::Redirect(
     const GlobalObject& aGlobal, const nsAString& aUrl, uint16_t aStatus,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Response>
+Response::Redirect(const GlobalObject& aGlobal, const nsAString& aUrl,
+                   uint16_t aStatus, ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Response> Response::Redirect(const GlobalObject& aGlobal,
+                                              const nsAString& aUrl,
+                                              uint16_t aStatus,
+                                              ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsAutoString parsedURL;
 
   if (NS_IsMainThread()) {
     nsCOMPtr<nsIURI> baseURI;
+<<<<<<< HEAD
     nsCOMPtr<nsPIDOMWindowInner> inner(
         do_QueryInterface(aGlobal.GetAsSupports()));
     nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
+||||||| merged common ancestors
+    nsCOMPtr<nsPIDOMWindowInner> inner(do_QueryInterface(aGlobal.GetAsSupports()));
+    nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
+=======
+    nsCOMPtr<nsPIDOMWindowInner> inner(
+        do_QueryInterface(aGlobal.GetAsSupports()));
+    Document* doc = inner ? inner->GetExtantDoc() : nullptr;
+>>>>>>> upstream-releases
     if (doc) {
       baseURI = doc->GetBaseURI();
     }
@@ -124,7 +154,8 @@ Response::~Response() { mozilla::DropJSObjects(this); }
     worker->AssertIsOnWorkerThread();
 
     NS_ConvertUTF8toUTF16 baseURL(worker->GetLocationInfo().mHref);
-    RefPtr<URL> url = URL::WorkerConstructor(aGlobal, aUrl, baseURL, aRv);
+    RefPtr<URL> url =
+        URL::Constructor(aGlobal.GetAsSupports(), aUrl, baseURL, aRv);
     if (aRv.Failed()) {
       return nullptr;
     }
@@ -158,11 +189,30 @@ Response::~Response() { mozilla::DropJSObjects(this); }
   return r.forget();
 }
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<Response> Response::Constructor(
     const GlobalObject& aGlobal,
     const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
     const ResponseInit& aInit, ErrorResult& aRv) {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<Response>
+Response::Constructor(const GlobalObject& aGlobal,
+                      const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
+                      const ResponseInit& aInit, ErrorResult& aRv)
+{
+=======
+/*static*/
+already_AddRefed<Response> Response::Constructor(
+    const GlobalObject& aGlobal,
+    const Optional<Nullable<fetch::ResponseBodyInit>>& aBody,
+    const ResponseInit& aInit, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
+
+  if (NS_WARN_IF(!global)) {
+    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
+    return nullptr;
+  }
 
   if (aInit.mStatus < 200 || aInit.mStatus > 599) {
     aRv.ThrowRangeError<MSG_INVALID_RESPONSE_STATUSCODE_ERROR>();
@@ -185,7 +235,15 @@ Response::~Response() { mozilla::DropJSObjects(this); }
   }
 
   RefPtr<InternalResponse> internalResponse =
+<<<<<<< HEAD
       new InternalResponse(aInit.mStatus, aInit.mStatusText);
+||||||| merged common ancestors
+    new InternalResponse(aInit.mStatus, aInit.mStatusText);
+=======
+      new InternalResponse(aInit.mStatus, aInit.mStatusText);
+
+  UniquePtr<mozilla::ipc::PrincipalInfo> principalInfo;
+>>>>>>> upstream-releases
 
   // Grab a valid channel info from the global so this response is 'valid' for
   // interception.
@@ -193,18 +251,42 @@ Response::~Response() { mozilla::DropJSObjects(this); }
     ChannelInfo info;
     nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(global);
     if (window) {
-      nsIDocument* doc = window->GetExtantDoc();
+      Document* doc = window->GetExtantDoc();
       MOZ_ASSERT(doc);
       info.InitFromDocument(doc);
-    } else {
+
+      principalInfo.reset(new mozilla::ipc::PrincipalInfo());
+      nsresult rv =
+          PrincipalToPrincipalInfo(doc->NodePrincipal(), principalInfo.get());
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        aRv.ThrowTypeError<MSG_FETCH_BODY_CONSUMED_ERROR>();
+        return nullptr;
+      }
+
+      internalResponse->InitChannelInfo(info);
+    } else if (nsContentUtils::IsSystemPrincipal(global->PrincipalOrNull())) {
       info.InitFromChromeGlobal(global);
+
+      internalResponse->InitChannelInfo(info);
     }
-    internalResponse->InitChannelInfo(info);
+
+    /**
+     * The channel info is left uninitialized if neither the above `if` nor
+     * `else if` statements are executed; this could be because we're in a
+     * WebExtensions content script, where the global (i.e. `global`) is a
+     * wrapper, and the principal is an expanded principal. In this case,
+     * as far as I can tell, there's no way to get the security info, but we'd
+     * like the `Response` to be successfully constructed.
+     */
   } else {
     WorkerPrivate* worker = GetCurrentThreadWorkerPrivate();
     MOZ_ASSERT(worker);
     internalResponse->InitChannelInfo(worker->GetChannelInfo());
+    principalInfo =
+        MakeUnique<mozilla::ipc::PrincipalInfo>(worker->GetPrincipalInfo());
   }
+
+  internalResponse->SetPrincipalInfo(std::move(principalInfo));
 
   RefPtr<Response> r = new Response(global, internalResponse, nullptr);
 
@@ -275,8 +357,8 @@ Response::~Response() { mozilla::DropJSObjects(this); }
 
         MOZ_ASSERT(underlyingSource);
 
-        aRv = FetchStream::RetrieveInputStream(underlyingSource,
-                                               getter_AddRefs(bodyStream));
+        aRv = BodyStream::RetrieveInputStream(underlyingSource,
+                                              getter_AddRefs(bodyStream));
 
         // The releasing of the external source is needed in order to avoid an
         // extra stream lock.

@@ -44,12 +44,38 @@ class PublicKeyCredential final : public Credential {
   static already_AddRefed<Promise>
   IsUserVerifyingPlatformAuthenticatorAvailable(GlobalObject& aGlobal);
 
+<<<<<<< HEAD
   void GetClientExtensionResults(
       AuthenticationExtensionsClientOutputs& aResult);
+||||||| merged common ancestors
+  void
+  GetClientExtensionResults(AuthenticationExtensionsClientOutputs& aResult);
+=======
+  static already_AddRefed<Promise> IsExternalCTAP2SecurityKeySupported(
+      GlobalObject& aGlobal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void SetClientExtensionResultAppId(bool aResult);
+||||||| merged common ancestors
+  void
+  SetClientExtensionResultAppId(bool aResult);
+=======
+  void GetClientExtensionResults(
+      AuthenticationExtensionsClientOutputs& aResult);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
   void SetClientExtensionResultAppId(bool aResult);
 
+  void SetClientExtensionResultHmacSecret(bool aHmacCreateSecret);
+
  private:
+>>>>>>> upstream-releases
   CryptoBuffer mRawId;
   JS::Heap<JSObject*> mRawIdCachedObj;
   RefPtr<AuthenticatorResponse> mResponse;

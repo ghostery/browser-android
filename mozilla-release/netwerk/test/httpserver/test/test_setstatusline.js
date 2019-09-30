@@ -30,23 +30,51 @@ function run_test() {
   runHttpTests(tests, testComplete(srv));
 }
 
+<<<<<<< HEAD
 
 /** ***********
+||||||| merged common ancestors
+
+/*************
+=======
+/** ***********
+>>>>>>> upstream-releases
  * UTILITIES *
  *************/
 
+<<<<<<< HEAD
 function checkStatusLine(channel, httpMaxVer, httpMinVer, httpCode, statusText) {
+||||||| merged common ancestors
+function checkStatusLine(channel, httpMaxVer, httpMinVer, httpCode, statusText)
+{
+=======
+function checkStatusLine(
+  channel,
+  httpMaxVer,
+  httpMinVer,
+  httpCode,
+  statusText
+) {
+>>>>>>> upstream-releases
   Assert.equal(channel.responseStatus, httpCode);
   Assert.equal(channel.responseStatusText, statusText);
 
-  var respMaj = {}, respMin = {};
+  var respMaj = {},
+    respMin = {};
   channel.getResponseVersion(respMaj, respMin);
   Assert.equal(respMaj.value, httpMaxVer);
   Assert.equal(respMin.value, httpMinVer);
 }
 
+<<<<<<< HEAD
 
 /** *******
+||||||| merged common ancestors
+
+/*********
+=======
+/** *******
+>>>>>>> upstream-releases
  * TESTS *
  *********/
 
@@ -63,35 +91,63 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
   ];
 });
 
-
 // /no/setstatusline
+<<<<<<< HEAD
 function noSetstatusline(metadata, response) {
 }
 function startNoSetStatusLine(ch, cx) {
+||||||| merged common ancestors
+function noSetstatusline(metadata, response)
+{
+}
+function startNoSetStatusLine(ch, cx)
+{
+=======
+function noSetstatusline(metadata, response) {}
+function startNoSetStatusLine(ch) {
+>>>>>>> upstream-releases
   checkStatusLine(ch, 1, 1, 200, "OK");
 }
+<<<<<<< HEAD
 function stop(ch, cx, status, data) {
+||||||| merged common ancestors
+function stop(ch, cx, status, data)
+{
+=======
+function stop(ch, status, data) {
+>>>>>>> upstream-releases
   Assert.ok(Components.isSuccessCode(status));
 }
-
 
 // /http1_0
 function http1_0(metadata, response) {
   response.setStatusLine("1.0", 200, "OK");
 }
+<<<<<<< HEAD
 function startHttp1_0(ch, cx) {
+||||||| merged common ancestors
+function startHttp1_0(ch, cx)
+{
+=======
+function startHttp1_0(ch) {
+>>>>>>> upstream-releases
   checkStatusLine(ch, 1, 0, 200, "OK");
 }
-
 
 // /http1_1
 function http1_1(metadata, response) {
   response.setStatusLine("1.1", 200, "OK");
 }
+<<<<<<< HEAD
 function startHttp1_1(ch, cx) {
+||||||| merged common ancestors
+function startHttp1_1(ch, cx)
+{
+=======
+function startHttp1_1(ch) {
+>>>>>>> upstream-releases
   checkStatusLine(ch, 1, 1, 200, "OK");
 }
-
 
 // /invalidVersion
 function invalidVersion(metadata, response) {
@@ -101,11 +157,17 @@ function invalidVersion(metadata, response) {
     response.setHeader("Passed", "true", false);
   }
 }
+<<<<<<< HEAD
 function startPassedTrue(ch, cx) {
+||||||| merged common ancestors
+function startPassedTrue(ch, cx)
+{
+=======
+function startPassedTrue(ch) {
+>>>>>>> upstream-releases
   checkStatusLine(ch, 1, 1, 200, "OK");
   Assert.equal(ch.getResponseHeader("Passed"), "true");
 }
-
 
 // /invalidStatus
 function invalidStatus(metadata, response) {
@@ -116,7 +178,6 @@ function invalidStatus(metadata, response) {
   }
 }
 
-
 // /invalidDescription
 function invalidDescription(metadata, response) {
   try {
@@ -126,21 +187,33 @@ function invalidDescription(metadata, response) {
   }
 }
 
-
 // /crazyCode
 function crazyCode(metadata, response) {
   response.setStatusLine("1.1", 617, "Crazy");
 }
+<<<<<<< HEAD
 function startCrazy(ch, cx) {
+||||||| merged common ancestors
+function startCrazy(ch, cx)
+{
+=======
+function startCrazy(ch) {
+>>>>>>> upstream-releases
   checkStatusLine(ch, 1, 1, 617, "Crazy");
 }
-
 
 // /nullVersion
 function nullVersion(metadata, response) {
   response.setStatusLine(null, 255, "NULL");
 }
+<<<<<<< HEAD
 function startNullVersion(ch, cx) {
+||||||| merged common ancestors
+function startNullVersion(ch, cx)
+{
+=======
+function startNullVersion(ch) {
+>>>>>>> upstream-releases
   // currently, this server implementation defaults to 1.1
   checkStatusLine(ch, 1, 1, 255, "NULL");
 }

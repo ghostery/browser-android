@@ -23,7 +23,13 @@ typedef uintptr_t SyncHandle;
 class SyncObjectHost : public RefCounted<SyncObjectHost> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SyncObjectHost)
+<<<<<<< HEAD
   virtual ~SyncObjectHost() {}
+||||||| merged common ancestors
+  virtual ~SyncObjectHost() { }
+=======
+  virtual ~SyncObjectHost() = default;
+>>>>>>> upstream-releases
 
   static already_AddRefed<SyncObjectHost> CreateSyncObjectHost(
 #ifdef XP_WIN
@@ -45,7 +51,13 @@ class SyncObjectHost : public RefCounted<SyncObjectHost> {
 class SyncObjectClient : public external::AtomicRefCounted<SyncObjectClient> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(SyncObjectClient)
+<<<<<<< HEAD
   virtual ~SyncObjectClient() {}
+||||||| merged common ancestors
+  virtual ~SyncObjectClient() { }
+=======
+  virtual ~SyncObjectClient() = default;
+>>>>>>> upstream-releases
 
   static already_AddRefed<SyncObjectClient> CreateSyncObjectClient(
       SyncHandle aHandle

@@ -17,7 +17,14 @@ MemoryDownloader::MemoryDownloader(IObserver* aObserver)
     : mObserver(aObserver), mStatus(NS_ERROR_NOT_INITIALIZED) {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MemoryDownloader::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt) {
+||||||| merged common ancestors
+MemoryDownloader::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt)
+{
+=======
+MemoryDownloader::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mData);
   mData.reset(new FallibleTArray<uint8_t>());
   mStatus = NS_OK;
@@ -25,15 +32,32 @@ MemoryDownloader::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MemoryDownloader::OnStopRequest(nsIRequest* aRequest, nsISupports* aCtxt,
                                 nsresult aStatus) {
+||||||| merged common ancestors
+MemoryDownloader::OnStopRequest(nsIRequest* aRequest,
+                                nsISupports* aCtxt,
+                                nsresult aStatus)
+{
+=======
+MemoryDownloader::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_IF(NS_FAILED(mStatus), NS_FAILED(aStatus));
   MOZ_ASSERT(!mData == NS_FAILED(mStatus));
   Data data;
   data.swap(mData);
   RefPtr<IObserver> observer;
   observer.swap(mObserver);
+<<<<<<< HEAD
   observer->OnDownloadComplete(this, aRequest, aCtxt, aStatus, std::move(data));
+||||||| merged common ancestors
+  observer->OnDownloadComplete(this, aRequest, aCtxt, aStatus,
+                               std::move(data));
+=======
+  observer->OnDownloadComplete(this, aRequest, nullptr, aStatus,
+                               std::move(data));
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -53,9 +77,21 @@ nsresult MemoryDownloader::ConsumeData(nsIInputStream* aIn, void* aClosure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 MemoryDownloader::OnDataAvailable(nsIRequest* aRequest, nsISupports* aCtxt,
                                   nsIInputStream* aInStr,
                                   uint64_t aSourceOffset, uint32_t aCount) {
+||||||| merged common ancestors
+MemoryDownloader::OnDataAvailable(nsIRequest* aRequest,
+                                  nsISupports* aCtxt,
+                                  nsIInputStream* aInStr,
+                                  uint64_t aSourceOffset,
+                                  uint32_t aCount)
+{
+=======
+MemoryDownloader::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aInStr,
+                                  uint64_t aSourceOffset, uint32_t aCount) {
+>>>>>>> upstream-releases
   uint32_t n;
   MOZ_ASSERT(mData);
   nsresult rv = aInStr->ReadSegments(ConsumeData, this, aCount, &n);

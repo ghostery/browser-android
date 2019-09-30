@@ -9,6 +9,7 @@
 #include "TextEditUtils.h"
 #include "TypeInState.h"
 #include "mozilla/Assertions.h"
+#include "mozilla/ContentIterator.h"
 #include "mozilla/EditAction.h"
 #include "mozilla/EditorUtils.h"
 #include "mozilla/SelectionState.h"
@@ -26,9 +27,9 @@
 #include "nsGkAtoms.h"
 #include "nsAtom.h"
 #include "nsIContent.h"
-#include "nsIContentIterator.h"
 #include "nsNameSpaceManager.h"
 #include "nsINode.h"
+#include "nsIPrincipal.h"
 #include "nsISupportsImpl.h"
 #include "nsLiteralString.h"
 #include "nsRange.h"
@@ -55,6 +56,7 @@ static already_AddRefed<nsAtom> AtomizeAttribute(const nsAString& aAttribute) {
 bool HTMLEditor::IsEmptyTextNode(nsINode& aNode) {
   bool isEmptyTextNode = false;
   return EditorBase::IsTextNode(&aNode) &&
+<<<<<<< HEAD
          NS_SUCCEEDED(IsEmptyNode(&aNode, &isEmptyTextNode)) && isEmptyTextNode;
 }
 
@@ -88,6 +90,59 @@ nsresult HTMLEditor::SetInlinePropertyAsAction(nsAtom& aProperty,
     return rv;
   }
   return NS_OK;
+||||||| merged common ancestors
+         NS_SUCCEEDED(IsEmptyNode(&aNode, &isEmptyTextNode)) &&
+         isEmptyTextNode;
+=======
+         NS_SUCCEEDED(IsEmptyNode(&aNode, &isEmptyTextNode)) && isEmptyTextNode;
+}
+
+nsresult HTMLEditor::SetInlinePropertyAsAction(nsAtom& aProperty,
+                                               nsAtom* aAttribute,
+                                               const nsAString& aValue,
+                                               nsIPrincipal* aPrincipal) {
+  AutoEditActionDataSetter editActionData(
+      *this,
+      HTMLEditUtils::GetEditActionForFormatText(aProperty, aAttribute, true),
+      aPrincipal);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+  switch (editActionData.GetEditAction()) {
+    case EditAction::eSetFontFamilyProperty:
+      MOZ_ASSERT(!aValue.IsVoid());
+      // XXX Should we trim unnecessary whitespaces?
+      editActionData.SetData(aValue);
+      break;
+    case EditAction::eSetColorProperty:
+    case EditAction::eSetBackgroundColorPropertyInline:
+      editActionData.SetColorData(aValue);
+      break;
+    default:
+      break;
+  }
+
+  AutoTransactionBatch treatAsOneTransaction(*this);
+
+  if (&aProperty == nsGkAtoms::sup) {
+    // Superscript and Subscript styles are mutually exclusive.
+    nsresult rv = RemoveInlinePropertyInternal(nsGkAtoms::sub, nullptr);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return EditorBase::ToGenericNSResult(rv);
+    }
+  } else if (&aProperty == nsGkAtoms::sub) {
+    // Superscript and Subscript styles are mutually exclusive.
+    nsresult rv = RemoveInlinePropertyInternal(nsGkAtoms::sup, nullptr);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return EditorBase::ToGenericNSResult(rv);
+    }
+  }
+  nsresult rv = SetInlinePropertyInternal(aProperty, aAttribute, aValue);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -98,6 +153,7 @@ HTMLEditor::SetInlineProperty(const nsAString& aProperty,
   if (NS_WARN_IF(!property)) {
     return NS_ERROR_INVALID_ARG;
   }
+<<<<<<< HEAD
   RefPtr<nsAtom> attribute = AtomizeAttribute(aAttribute);
   AutoEditActionDataSetter editActionData(
       *this,
@@ -106,6 +162,36 @@ HTMLEditor::SetInlineProperty(const nsAString& aProperty,
     return NS_ERROR_NOT_INITIALIZED;
   }
   return SetInlinePropertyInternal(*property, attribute, aValue);
+||||||| merged common ancestors
+  RefPtr<nsAtom> attribute = NS_Atomize(aAttribute);
+  return SetInlinePropertyInternal(*property, attribute, aValue);
+=======
+  RefPtr<nsAtom> attribute = AtomizeAttribute(aAttribute);
+  AutoEditActionDataSetter editActionData(
+      *this,
+      HTMLEditUtils::GetEditActionForFormatText(*property, attribute, true));
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+  switch (editActionData.GetEditAction()) {
+    case EditAction::eSetFontFamilyProperty:
+      MOZ_ASSERT(!aValue.IsVoid());
+      // XXX Should we trim unnecessary whitespaces?
+      editActionData.SetData(aValue);
+      break;
+    case EditAction::eSetColorProperty:
+    case EditAction::eSetBackgroundColorPropertyInline:
+      editActionData.SetColorData(aValue);
+      break;
+    default:
+      break;
+  }
+  nsresult rv = SetInlinePropertyInternal(*property, attribute, aValue);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsresult HTMLEditor::SetInlinePropertyInternal(nsAtom& aProperty,
@@ -155,9 +241,20 @@ nsresult HTMLEditor::SetInlinePropertyInternal(nsAtom& aProperty,
       nsCOMPtr<nsINode> startNode = range->GetStartContainer();
       nsCOMPtr<nsINode> endNode = range->GetEndContainer();
       if (startNode && startNode == endNode && startNode->GetAsText()) {
+<<<<<<< HEAD
         rv = SetInlinePropertyOnTextNode(
             *startNode->GetAsText(), range->StartOffset(), range->EndOffset(),
             aProperty, aAttribute, aValue);
+||||||| merged common ancestors
+        rv = SetInlinePropertyOnTextNode(*startNode->GetAsText(),
+                                         range->StartOffset(),
+                                         range->EndOffset(),
+                                         aProperty, aAttribute, aValue);
+=======
+        rv = SetInlinePropertyOnTextNode(
+            MOZ_KnownLive(*startNode->GetAsText()), range->StartOffset(),
+            range->EndOffset(), aProperty, aAttribute, aValue);
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -175,18 +272,17 @@ nsresult HTMLEditor::SetInlinePropertyInternal(nsAtom& aProperty,
       // (since doing operations on the document during iteration would perturb
       // the iterator).
 
-      OwningNonNull<nsIContentIterator> iter = NS_NewContentSubtreeIterator();
-
       nsTArray<OwningNonNull<nsIContent>> arrayOfNodes;
 
       // Iterate range and build up array
-      rv = iter->Init(range);
+      ContentSubtreeIterator subtreeIter;
+      rv = subtreeIter.Init(range);
       // Init returns an error if there are no nodes in range.  This can easily
       // happen with the subtree iterator if the selection doesn't contain any
       // *whole* nodes.
       if (NS_SUCCEEDED(rv)) {
-        for (; !iter->IsDone(); iter->Next()) {
-          OwningNonNull<nsINode> node = *iter->GetCurrentNode();
+        for (; !subtreeIter.IsDone(); subtreeIter.Next()) {
+          OwningNonNull<nsINode> node = *subtreeIter.GetCurrentNode();
 
           if (node->IsContent() && IsEditable(node)) {
             arrayOfNodes.AppendElement(*node->AsContent());
@@ -197,9 +293,20 @@ nsresult HTMLEditor::SetInlinePropertyInternal(nsAtom& aProperty,
       // separately handled (it does if it's a text node, due to how the
       // subtree iterator works - it will not have reported it).
       if (startNode && startNode->GetAsText() && IsEditable(startNode)) {
+<<<<<<< HEAD
         rv = SetInlinePropertyOnTextNode(
             *startNode->GetAsText(), range->StartOffset(), startNode->Length(),
             aProperty, aAttribute, aValue);
+||||||| merged common ancestors
+        rv = SetInlinePropertyOnTextNode(*startNode->GetAsText(),
+                                         range->StartOffset(),
+                                         startNode->Length(), aProperty,
+                                         aAttribute, aValue);
+=======
+        rv = SetInlinePropertyOnTextNode(
+            MOZ_KnownLive(*startNode->GetAsText()), range->StartOffset(),
+            startNode->Length(), aProperty, aAttribute, aValue);
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -217,9 +324,19 @@ nsresult HTMLEditor::SetInlinePropertyInternal(nsAtom& aProperty,
       // separately handled (it does if it's a text node, due to how the
       // subtree iterator works - it will not have reported it).
       if (endNode && endNode->GetAsText() && IsEditable(endNode)) {
+<<<<<<< HEAD
         rv = SetInlinePropertyOnTextNode(*endNode->GetAsText(), 0,
                                          range->EndOffset(), aProperty,
                                          aAttribute, aValue);
+||||||| merged common ancestors
+        rv = SetInlinePropertyOnTextNode(*endNode->GetAsText(), 0,
+                                          range->EndOffset(), aProperty,
+                                          aAttribute, aValue);
+=======
+        rv = SetInlinePropertyOnTextNode(MOZ_KnownLive(*endNode->GetAsText()),
+                                         0, range->EndOffset(), aProperty,
+                                         aAttribute, aValue);
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -335,7 +452,7 @@ nsresult HTMLEditor::SetInlinePropertyOnTextNode(
   nsCOMPtr<nsIContent> textNodeForTheRange = &aText;
 
   // Split at the end of the range.
-  EditorRawDOMPoint atEnd(textNodeForTheRange, aEndOffset);
+  EditorDOMPoint atEnd(textNodeForTheRange, aEndOffset);
   if (!atEnd.IsEndOfContainer()) {
     // We need to split off back of text node
     ErrorResult error;
@@ -346,7 +463,7 @@ nsresult HTMLEditor::SetInlinePropertyOnTextNode(
   }
 
   // Split at the start of the range.
-  EditorRawDOMPoint atStart(textNodeForTheRange, aStartOffset);
+  EditorDOMPoint atStart(textNodeForTheRange, aStartOffset);
   if (!atStart.IsStartOfContainer()) {
     // We need to split off front of text node
     ErrorResult error;
@@ -359,7 +476,7 @@ nsresult HTMLEditor::SetInlinePropertyOnTextNode(
 
   if (aAttribute) {
     // Look for siblings that are correct type of node
-    nsIContent* sibling = GetPriorHTMLSibling(textNodeForTheRange);
+    nsCOMPtr<nsIContent> sibling = GetPriorHTMLSibling(textNodeForTheRange);
     if (IsSimpleModifiableNode(sibling, &aProperty, aAttribute, &aValue)) {
       // Previous sib is already right kind of inline node; slide this over
       return MoveNodeToEndWithTransaction(*textNodeForTheRange, *sibling);
@@ -368,7 +485,7 @@ nsresult HTMLEditor::SetInlinePropertyOnTextNode(
     if (IsSimpleModifiableNode(sibling, &aProperty, aAttribute, &aValue)) {
       // Following sib is already right kind of inline node; slide this over
       return MoveNodeWithTransaction(*textNodeForTheRange,
-                                     EditorRawDOMPoint(sibling, 0));
+                                     EditorDOMPoint(sibling, 0));
     }
   }
 
@@ -424,7 +541,13 @@ nsresult HTMLEditor::SetInlinePropertyOnNodeImpl(nsIContent& aNode,
   }
   if (IsSimpleModifiableNode(nextSibling, &aProperty, aAttribute, &aValue)) {
     nsresult rv =
+<<<<<<< HEAD
         MoveNodeWithTransaction(aNode, EditorRawDOMPoint(nextSibling, 0));
+||||||| merged common ancestors
+      MoveNodeWithTransaction(aNode, EditorRawDOMPoint(nextSibling, 0));
+=======
+        MoveNodeWithTransaction(aNode, EditorDOMPoint(nextSibling, 0));
+>>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -473,7 +596,8 @@ nsresult HTMLEditor::SetInlinePropertyOnNodeImpl(nsIContent& aNode,
       return NS_ERROR_FAILURE;
     }
     // Just set the attribute on it.
-    return SetAttributeWithTransaction(*aNode.AsElement(), *aAttribute, aValue);
+    return SetAttributeWithTransaction(MOZ_KnownLive(*aNode.AsElement()),
+                                       *aAttribute, aValue);
   }
 
   // ok, chuck it in its very own container
@@ -605,13 +729,24 @@ nsresult HTMLEditor::SplitStyleAbovePoint(
         // node is href - test if really <a href=...
         (aProperty == nsGkAtoms::href && HTMLEditUtils::IsLink(node)) ||
         // or node is any prop, and we asked to split them all
-        (!aProperty && NodeIsProperty(*node)) ||
+        (!aProperty && node->IsElement() && IsEditable(node) &&
+         HTMLEditUtils::IsRemovableInlineStyleElement(*node->AsElement())) ||
         // or the style is specified in the style attribute
         isSet) {
       // Found a style node we need to split
+<<<<<<< HEAD
       SplitNodeResult splitNodeResult = SplitNodeDeepWithTransaction(
           *node, EditorRawDOMPoint(*aNode, *aOffset),
           SplitAtEdges::eAllowToCreateEmptyContainer);
+||||||| merged common ancestors
+      SplitNodeResult splitNodeResult =
+        SplitNodeDeepWithTransaction(*node, EditorRawDOMPoint(*aNode, *aOffset),
+                                     SplitAtEdges::eAllowToCreateEmptyContainer);
+=======
+      SplitNodeResult splitNodeResult = SplitNodeDeepWithTransaction(
+          *node, EditorDOMPoint(*aNode, *aOffset),
+          SplitAtEdges::eAllowToCreateEmptyContainer);
+>>>>>>> upstream-releases
       NS_WARNING_ASSERTION(splitNodeResult.Succeeded(),
                            "Failed to split the node");
 
@@ -701,8 +836,15 @@ nsresult HTMLEditor::ClearStyle(nsCOMPtr<nsINode>* aNode, int32_t* aOffset,
     // leftNode.  This is so we you don't revert back to the previous style
     // if you happen to click at the end of a line.
     if (savedBR) {
+<<<<<<< HEAD
       rv =
           MoveNodeWithTransaction(*savedBR, EditorRawDOMPoint(newSelParent, 0));
+||||||| merged common ancestors
+      rv = MoveNodeWithTransaction(*savedBR,
+                                   EditorRawDOMPoint(newSelParent, 0));
+=======
+      rv = MoveNodeWithTransaction(*savedBR, EditorDOMPoint(newSelParent, 0));
+>>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -728,6 +870,7 @@ nsresult HTMLEditor::ClearStyle(nsCOMPtr<nsINode>* aNode, int32_t* aOffset,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool HTMLEditor::NodeIsProperty(nsINode& aNode) {
   return IsContainer(&aNode) && IsEditable(&aNode) && !IsBlockNode(&aNode) &&
          !aNode.IsHTMLElement(nsGkAtoms::a);
@@ -736,6 +879,25 @@ bool HTMLEditor::NodeIsProperty(nsINode& aNode) {
 nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
                                        nsAtom* aAttribute,
                                        const bool aChildrenOnly /* = false */) {
+||||||| merged common ancestors
+bool
+HTMLEditor::NodeIsProperty(nsINode& aNode)
+{
+  return IsContainer(&aNode) && IsEditable(&aNode) && !IsBlockNode(&aNode) &&
+         !aNode.IsHTMLElement(nsGkAtoms::a);
+}
+
+nsresult
+HTMLEditor::RemoveStyleInside(nsIContent& aNode,
+                              nsAtom* aProperty,
+                              nsAtom* aAttribute,
+                              const bool aChildrenOnly /* = false */)
+{
+=======
+nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
+                                       nsAtom* aAttribute,
+                                       const bool aChildrenOnly /* = false */) {
+>>>>>>> upstream-releases
   if (!aNode.IsElement()) {
     return NS_OK;
   }
@@ -759,7 +921,8 @@ nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
        // and for named anchors
        (aProperty == nsGkAtoms::name && HTMLEditUtils::IsNamedAnchor(&aNode)) ||
        // or node is any prop and we asked for that
-       (!aProperty && NodeIsProperty(aNode)))) {
+       (!aProperty && IsEditable(&aNode) &&
+        HTMLEditUtils::IsRemovableInlineStyleElement(*aNode.AsElement())))) {
     // if we weren't passed an attribute, then we want to
     // remove any matching inlinestyles entirely
     if (!aAttribute) {
@@ -777,18 +940,28 @@ nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
         if (NS_WARN_IF(!spanNode)) {
           return NS_ERROR_FAILURE;
         }
+<<<<<<< HEAD
         nsresult rv = CloneAttributeWithTransaction(
             *nsGkAtoms::style, *spanNode, *aNode.AsElement());
+||||||| merged common ancestors
+        nsresult rv =
+          CloneAttributeWithTransaction(*nsGkAtoms::style, *spanNode,
+                                        *aNode.AsElement());
+=======
+        nsresult rv = CloneAttributeWithTransaction(
+            *nsGkAtoms::style, *spanNode, MOZ_KnownLive(*aNode.AsElement()));
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
         rv = CloneAttributeWithTransaction(*nsGkAtoms::_class, *spanNode,
-                                           *aNode.AsElement());
+                                           MOZ_KnownLive(*aNode.AsElement()));
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
       }
-      nsresult rv = RemoveContainerWithTransaction(*aNode.AsElement());
+      nsresult rv =
+          RemoveContainerWithTransaction(MOZ_KnownLive(*aNode.AsElement()));
       NS_ENSURE_SUCCESS(rv, rv);
     } else if (aNode.IsElement()) {
       // otherwise we just want to eliminate the attribute
@@ -796,13 +969,22 @@ nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
         // if this matching attribute is the ONLY one on the node,
         // then remove the whole node.  Otherwise just nix the attribute.
         if (IsOnlyAttribute(aNode.AsElement(), aAttribute)) {
-          nsresult rv = RemoveContainerWithTransaction(*aNode.AsElement());
+          nsresult rv =
+              RemoveContainerWithTransaction(MOZ_KnownLive(*aNode.AsElement()));
           if (NS_WARN_IF(NS_FAILED(rv))) {
             return rv;
           }
         } else {
+<<<<<<< HEAD
           nsresult rv =
               RemoveAttributeWithTransaction(*aNode.AsElement(), *aAttribute);
+||||||| merged common ancestors
+          nsresult rv =
+            RemoveAttributeWithTransaction(*aNode.AsElement(), *aAttribute);
+=======
+          nsresult rv = RemoveAttributeWithTransaction(
+              MOZ_KnownLive(*aNode.AsElement()), *aAttribute);
+>>>>>>> upstream-releases
           if (NS_WARN_IF(NS_FAILED(rv))) {
             return rv;
           }
@@ -823,11 +1005,23 @@ nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
         // yes, tmp has the corresponding css declarations in its style
         // attribute
         // let's remove them
+<<<<<<< HEAD
         mCSSEditUtils->RemoveCSSEquivalentToHTMLStyle(
             aNode.AsElement(), aProperty, aAttribute, nullptr, false);
+||||||| merged common ancestors
+        mCSSEditUtils->RemoveCSSEquivalentToHTMLStyle(aNode.AsElement(),
+                                                      aProperty,
+                                                      aAttribute,
+                                                      nullptr,
+                                                      false);
+=======
+        mCSSEditUtils->RemoveCSSEquivalentToHTMLStyle(
+            MOZ_KnownLive(aNode.AsElement()), aProperty, aAttribute, nullptr,
+            false);
+>>>>>>> upstream-releases
         // remove the node if it is a span or font, if its style attribute is
         // empty or absent, and if it does not have a class nor an id
-        RemoveElementIfNoStyleOrIdOrClass(*aNode.AsElement());
+        RemoveElementIfNoStyleOrIdOrClass(MOZ_KnownLive(*aNode.AsElement()));
       }
     }
   }
@@ -841,7 +1035,7 @@ nsresult HTMLEditor::RemoveStyleInside(nsIContent& aNode, nsAtom* aProperty,
        aNode.IsHTMLElement(nsGkAtoms::small)) &&
       aAttribute == nsGkAtoms::size) {
     // if we are setting font size, remove any nested bigs and smalls
-    return RemoveContainerWithTransaction(*aNode.AsElement());
+    return RemoveContainerWithTransaction(MOZ_KnownLive(*aNode.AsElement()));
   }
   return NS_OK;
 }
@@ -1041,18 +1235,22 @@ nsresult HTMLEditor::GetInlinePropertyBase(nsAtom& aProperty,
     }
 
     // Non-collapsed selection
-    nsCOMPtr<nsIContentIterator> iter = NS_NewContentIterator();
 
     nsAutoString firstValue, theValue;
 
     nsCOMPtr<nsINode> endNode = range->GetEndContainer();
     int32_t endOffset = range->EndOffset();
 
-    for (iter->Init(range); !iter->IsDone(); iter->Next()) {
-      if (!iter->GetCurrentNode()->IsContent()) {
+    PostContentIterator postOrderIter;
+    DebugOnly<nsresult> rvIgnored = postOrderIter.Init(range);
+    NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
+                         "Failed to initialize post-order content iterator");
+    for (; !postOrderIter.IsDone(); postOrderIter.Next()) {
+      if (!postOrderIter.GetCurrentNode()->IsContent()) {
         continue;
       }
-      nsCOMPtr<nsIContent> content = iter->GetCurrentNode()->AsContent();
+      nsCOMPtr<nsIContent> content =
+          postOrderIter.GetCurrentNode()->AsContent();
 
       if (content->IsHTMLElement(nsGkAtoms::body)) {
         break;
@@ -1145,6 +1343,7 @@ HTMLEditor::GetInlineProperty(const nsAString& aProperty,
   return GetInlineProperty(property, attribute, aValue, aFirst, aAny, aAll);
 }
 
+<<<<<<< HEAD
 nsresult HTMLEditor::GetInlineProperty(nsAtom* aProperty, nsAtom* aAttribute,
                                        const nsAString& aValue, bool* aFirst,
                                        bool* aAny, bool* aAll) {
@@ -1162,6 +1361,44 @@ nsresult HTMLEditor::GetInlineProperty(nsAtom* aProperty, nsAtom* aAttribute,
   if (!aValue.IsEmpty()) val = &aValue;
   return GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny, aAll,
                                nullptr);
+||||||| merged common ancestors
+nsresult
+HTMLEditor::GetInlineProperty(nsAtom* aProperty,
+                              nsAtom* aAttribute,
+                              const nsAString& aValue,
+                              bool* aFirst,
+                              bool* aAny,
+                              bool* aAll)
+{
+  NS_ENSURE_TRUE(aProperty && aFirst && aAny && aAll, NS_ERROR_NULL_POINTER);
+  const nsAString *val = nullptr;
+  if (!aValue.IsEmpty())
+    val = &aValue;
+  return GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny, aAll,
+                               nullptr);
+=======
+nsresult HTMLEditor::GetInlineProperty(nsAtom* aProperty, nsAtom* aAttribute,
+                                       const nsAString& aValue, bool* aFirst,
+                                       bool* aAny, bool* aAll) {
+  if (NS_WARN_IF(!aProperty) || NS_WARN_IF(!aFirst) || NS_WARN_IF(!aAny) ||
+      NS_WARN_IF(!aAll)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  const nsAString* val = nullptr;
+  if (!aValue.IsEmpty()) val = &aValue;
+  nsresult rv = GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny,
+                                      aAll, nullptr);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1176,6 +1413,7 @@ HTMLEditor::GetInlinePropertyWithAttrValue(const nsAString& aProperty,
                                         aAny, aAll, outValue);
 }
 
+<<<<<<< HEAD
 nsresult HTMLEditor::GetInlinePropertyWithAttrValue(
     nsAtom* aProperty, nsAtom* aAttribute, const nsAString& aValue,
     bool* aFirst, bool* aAny, bool* aAll, nsAString& outValue) {
@@ -1193,9 +1431,48 @@ nsresult HTMLEditor::GetInlinePropertyWithAttrValue(
   if (!aValue.IsEmpty()) val = &aValue;
   return GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny, aAll,
                                &outValue);
+||||||| merged common ancestors
+nsresult
+HTMLEditor::GetInlinePropertyWithAttrValue(nsAtom* aProperty,
+                                           nsAtom* aAttribute,
+                                           const nsAString& aValue,
+                                           bool* aFirst,
+                                           bool* aAny,
+                                           bool* aAll,
+                                           nsAString& outValue)
+{
+  NS_ENSURE_TRUE(aProperty && aFirst && aAny && aAll, NS_ERROR_NULL_POINTER);
+  const nsAString *val = nullptr;
+  if (!aValue.IsEmpty())
+    val = &aValue;
+  return GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny, aAll, &outValue);
+=======
+nsresult HTMLEditor::GetInlinePropertyWithAttrValue(
+    nsAtom* aProperty, nsAtom* aAttribute, const nsAString& aValue,
+    bool* aFirst, bool* aAny, bool* aAll, nsAString& outValue) {
+  if (NS_WARN_IF(!aProperty) || NS_WARN_IF(!aFirst) || NS_WARN_IF(!aAny) ||
+      NS_WARN_IF(!aAll)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  const nsAString* val = nullptr;
+  if (!aValue.IsEmpty()) val = &aValue;
+  nsresult rv = GetInlinePropertyBase(*aProperty, aAttribute, val, aFirst, aAny,
+                                      aAll, &outValue);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HTMLEditor::RemoveAllInlineProperties() {
   AutoEditActionDataSetter editActionData(
       *this, EditAction::eRemoveAllInlineStyleProperties);
@@ -1204,11 +1481,63 @@ HTMLEditor::RemoveAllInlineProperties() {
   }
 
   AutoPlaceholderBatch treatAsOneTransaction(*this);
+||||||| merged common ancestors
+HTMLEditor::RemoveAllInlineProperties()
+{
+  AutoPlaceholderBatch batchIt(this);
+=======
+HTMLEditor::RemoveAllInlineProperties() {
+  nsresult rv = RemoveAllInlinePropertiesAsAction();
+  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to remove all inline styles");
+  return rv;
+}
+
+nsresult HTMLEditor::RemoveAllInlinePropertiesAsAction(
+    nsIPrincipal* aPrincipal) {
+  AutoEditActionDataSetter editActionData(
+      *this, EditAction::eRemoveAllInlineStyleProperties, aPrincipal);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  AutoPlaceholderBatch treatAsOneTransaction(*this);
+>>>>>>> upstream-releases
   AutoTopLevelEditSubActionNotifier maybeTopLevelEditSubAction(
       *this, EditSubAction::eRemoveAllTextProperties, nsIEditor::eNext);
 
   nsresult rv = RemoveInlinePropertyInternal(nullptr, nullptr);
-  NS_ENSURE_SUCCESS(rv, rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+}
+
+nsresult HTMLEditor::RemoveInlinePropertyAsAction(nsAtom& aProperty,
+                                                  nsAtom* aAttribute,
+                                                  nsIPrincipal* aPrincipal) {
+  AutoEditActionDataSetter editActionData(
+      *this,
+      HTMLEditUtils::GetEditActionForFormatText(aProperty, aAttribute, false),
+      aPrincipal);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+  switch (editActionData.GetEditAction()) {
+    case EditAction::eRemoveFontFamilyProperty:
+      MOZ_ASSERT(!EmptyString().IsVoid());
+      editActionData.SetData(EmptyString());
+      break;
+    case EditAction::eRemoveColorProperty:
+    case EditAction::eRemoveBackgroundColorPropertyInline:
+      editActionData.SetColorData(EmptyString());
+      break;
+    default:
+      break;
+  }
+  nsresult rv = RemoveInlinePropertyInternal(&aProperty, aAttribute);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
   return NS_OK;
 }
 
@@ -1232,6 +1561,7 @@ NS_IMETHODIMP
 HTMLEditor::RemoveInlineProperty(const nsAString& aProperty,
                                  const nsAString& aAttribute) {
   RefPtr<nsAtom> property = NS_Atomize(aProperty);
+<<<<<<< HEAD
   RefPtr<nsAtom> attribute = AtomizeAttribute(aAttribute);
 
   AutoEditActionDataSetter editActionData(
@@ -1242,6 +1572,36 @@ HTMLEditor::RemoveInlineProperty(const nsAString& aProperty,
   }
 
   return RemoveInlinePropertyInternal(property, attribute);
+||||||| merged common ancestors
+  RefPtr<nsAtom> attribute = NS_Atomize(aAttribute);
+  return RemoveInlinePropertyInternal(property, attribute);
+=======
+  RefPtr<nsAtom> attribute = AtomizeAttribute(aAttribute);
+
+  AutoEditActionDataSetter editActionData(
+      *this,
+      HTMLEditUtils::GetEditActionForFormatText(*property, attribute, false));
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+  switch (editActionData.GetEditAction()) {
+    case EditAction::eRemoveFontFamilyProperty:
+      MOZ_ASSERT(!EmptyString().IsVoid());
+      editActionData.SetData(EmptyString());
+      break;
+    case EditAction::eRemoveColorProperty:
+    case EditAction::eRemoveBackgroundColorPropertyInline:
+      editActionData.SetColorData(EmptyString());
+      break;
+    default:
+      break;
+  }
+  nsresult rv = RemoveInlinePropertyInternal(property, attribute);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsresult HTMLEditor::RemoveInlinePropertyInternal(nsAtom* aProperty,
@@ -1333,21 +1693,35 @@ nsresult HTMLEditor::RemoveInlinePropertyInternal(nsAtom* aProperty,
             // comes from a rule and try to insert a span "inverting" the style
             if (CSSEditUtils::IsCSSInvertible(*aProperty, aAttribute)) {
               NS_NAMED_LITERAL_STRING(value, "-moz-editor-invert-value");
+<<<<<<< HEAD
               SetInlinePropertyOnTextNode(
                   *startNode->GetAsText(), range->StartOffset(),
                   range->EndOffset(), *aProperty, aAttribute, value);
+||||||| merged common ancestors
+              SetInlinePropertyOnTextNode(*startNode->GetAsText(),
+                                          range->StartOffset(),
+                                          range->EndOffset(), *aProperty,
+                                          aAttribute, value);
+=======
+              SetInlinePropertyOnTextNode(
+                  MOZ_KnownLive(*startNode->GetAsText()), range->StartOffset(),
+                  range->EndOffset(), *aProperty, aAttribute, value);
+>>>>>>> upstream-releases
             }
           }
         }
       } else {
         // Not the easy case.  Range not contained in single text node.
-        nsCOMPtr<nsIContentIterator> iter = NS_NewContentSubtreeIterator();
 
         nsTArray<OwningNonNull<nsIContent>> arrayOfNodes;
 
         // Iterate range and build up array
-        for (iter->Init(range); !iter->IsDone(); iter->Next()) {
-          nsCOMPtr<nsINode> node = iter->GetCurrentNode();
+        ContentSubtreeIterator subtreeIter;
+        DebugOnly<nsresult> rvIgnored = subtreeIter.Init(range);
+        NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
+                             "Failed to initialize subtree iterator");
+        for (; !subtreeIter.IsDone(); subtreeIter.Next()) {
+          nsCOMPtr<nsINode> node = subtreeIter.GetCurrentNode();
           if (NS_WARN_IF(!node)) {
             return NS_ERROR_FAILURE;
           }
@@ -1394,6 +1768,7 @@ nsresult HTMLEditor::RemoveInlinePropertyInternal(nsAtom* aProperty,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HTMLEditor::IncreaseFontSize() {
   AutoEditActionDataSetter editActionData(*this,
                                           EditAction::eIncrementFontSize);
@@ -1402,9 +1777,34 @@ HTMLEditor::IncreaseFontSize() {
   }
 
   return RelativeFontChange(FontSize::incr);
+||||||| merged common ancestors
+HTMLEditor::IncreaseFontSize()
+{
+  return RelativeFontChange(FontSize::incr);
+=======
+HTMLEditor::IncreaseFontSize() {
+  nsresult rv = IncreaseFontSizeAsAction();
+  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to increase font size");
+  return rv;
+}
+
+nsresult HTMLEditor::IncreaseFontSizeAsAction(nsIPrincipal* aPrincipal) {
+  AutoEditActionDataSetter editActionData(*this, EditAction::eIncrementFontSize,
+                                          aPrincipal);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  nsresult rv = RelativeFontChange(FontSize::incr);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 HTMLEditor::DecreaseFontSize() {
   AutoEditActionDataSetter editActionData(*this,
                                           EditAction::eDecrementFontSize);
@@ -1413,11 +1813,45 @@ HTMLEditor::DecreaseFontSize() {
   }
 
   return RelativeFontChange(FontSize::decr);
+||||||| merged common ancestors
+HTMLEditor::DecreaseFontSize()
+{
+  return RelativeFontChange(FontSize::decr);
+=======
+HTMLEditor::DecreaseFontSize() {
+  nsresult rv = DecreaseFontSizeAsAction();
+  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to decrease font size");
+  return rv;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+nsresult HTMLEditor::RelativeFontChange(FontSize aDir) {
+  MOZ_ASSERT(IsEditActionDataAvailable());
+
+||||||| merged common ancestors
+nsresult
+HTMLEditor::RelativeFontChange(FontSize aDir)
+{
+=======
+nsresult HTMLEditor::DecreaseFontSizeAsAction(nsIPrincipal* aPrincipal) {
+  AutoEditActionDataSetter editActionData(*this, EditAction::eDecrementFontSize,
+                                          aPrincipal);
+  if (NS_WARN_IF(!editActionData.CanHandle())) {
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
+  nsresult rv = RelativeFontChange(FontSize::decr);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 nsresult HTMLEditor::RelativeFontChange(FontSize aDir) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
+>>>>>>> upstream-releases
   CommitComposition();
 
   // If selection is collapsed, set typing state
@@ -1470,12 +1904,26 @@ nsresult HTMLEditor::RelativeFontChange(FontSize aDir) {
     nsCOMPtr<nsINode> startNode = range->GetStartContainer();
     nsCOMPtr<nsINode> endNode = range->GetEndContainer();
     if (startNode == endNode && IsTextNode(startNode)) {
+<<<<<<< HEAD
       rv = RelativeFontChangeOnTextNode(aDir, *startNode->GetAsText(),
                                         range->StartOffset(),
                                         range->EndOffset());
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
+||||||| merged common ancestors
+      rv = RelativeFontChangeOnTextNode(aDir, *startNode->GetAsText(),
+                                        range->StartOffset(),
+                                        range->EndOffset());
+      NS_ENSURE_SUCCESS(rv, rv);
+=======
+      rv = RelativeFontChangeOnTextNode(
+          aDir, MOZ_KnownLive(*startNode->GetAsText()), range->StartOffset(),
+          range->EndOffset());
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return rv;
+      }
+>>>>>>> upstream-releases
     } else {
       // Not the easy case.  Range not contained in single text node.  There
       // are up to three phases here.  There are all the nodes reported by the
@@ -1488,17 +1936,29 @@ nsresult HTMLEditor::RelativeFontChange(FontSize aDir) {
       // (since doing operations on the document during iteration would perturb
       // the iterator).
 
-      OwningNonNull<nsIContentIterator> iter = NS_NewContentSubtreeIterator();
-
       // Iterate range and build up array
-      rv = iter->Init(range);
+      ContentSubtreeIterator subtreeIter;
+      rv = subtreeIter.Init(range);
       if (NS_SUCCEEDED(rv)) {
         nsTArray<OwningNonNull<nsIContent>> arrayOfNodes;
+<<<<<<< HEAD
         for (; !iter->IsDone(); iter->Next()) {
           if (NS_WARN_IF(!iter->GetCurrentNode()->IsContent())) {
             return NS_ERROR_FAILURE;
           }
           OwningNonNull<nsIContent> node = *iter->GetCurrentNode()->AsContent();
+||||||| merged common ancestors
+        for (; !iter->IsDone(); iter->Next()) {
+          NS_ENSURE_TRUE(iter->GetCurrentNode()->IsContent(), NS_ERROR_FAILURE);
+          OwningNonNull<nsIContent> node = *iter->GetCurrentNode()->AsContent();
+=======
+        for (; !subtreeIter.IsDone(); subtreeIter.Next()) {
+          if (NS_WARN_IF(!subtreeIter.GetCurrentNode()->IsContent())) {
+            return NS_ERROR_FAILURE;
+          }
+          OwningNonNull<nsIContent> node =
+              *subtreeIter.GetCurrentNode()->AsContent();
+>>>>>>> upstream-releases
 
           if (IsEditable(node)) {
             arrayOfNodes.AppendElement(node);
@@ -1517,19 +1977,45 @@ nsresult HTMLEditor::RelativeFontChange(FontSize aDir) {
       // to be separately handled (they do if they are text nodes, due to how
       // the subtree iterator works - it will not have reported them).
       if (IsTextNode(startNode) && IsEditable(startNode)) {
+<<<<<<< HEAD
         rv = RelativeFontChangeOnTextNode(aDir, *startNode->GetAsText(),
                                           range->StartOffset(),
                                           startNode->Length());
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
+||||||| merged common ancestors
+        rv = RelativeFontChangeOnTextNode(aDir, *startNode->GetAsText(),
+                                          range->StartOffset(),
+                                          startNode->Length());
+        NS_ENSURE_SUCCESS(rv, rv);
+=======
+        rv = RelativeFontChangeOnTextNode(
+            aDir, MOZ_KnownLive(*startNode->GetAsText()), range->StartOffset(),
+            startNode->Length());
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          return rv;
+        }
+>>>>>>> upstream-releases
       }
       if (IsTextNode(endNode) && IsEditable(endNode)) {
+<<<<<<< HEAD
         rv = RelativeFontChangeOnTextNode(aDir, *endNode->GetAsText(), 0,
                                           range->EndOffset());
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
+||||||| merged common ancestors
+        rv = RelativeFontChangeOnTextNode(aDir, *endNode->GetAsText(), 0,
+                                          range->EndOffset());
+        NS_ENSURE_SUCCESS(rv, rv);
+=======
+        rv = RelativeFontChangeOnTextNode(
+            aDir, MOZ_KnownLive(*endNode->GetAsText()), 0, range->EndOffset());
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          return rv;
+        }
+>>>>>>> upstream-releases
       }
     }
   }
@@ -1560,7 +2046,7 @@ nsresult HTMLEditor::RelativeFontChangeOnTextNode(FontSize aDir,
   nsCOMPtr<nsIContent> textNodeForTheRange = &aTextNode;
 
   // Split at the end of the range.
-  EditorRawDOMPoint atEnd(textNodeForTheRange, aEndOffset);
+  EditorDOMPoint atEnd(textNodeForTheRange, aEndOffset);
   if (!atEnd.IsEndOfContainer()) {
     // We need to split off back of text node
     ErrorResult error;
@@ -1571,7 +2057,7 @@ nsresult HTMLEditor::RelativeFontChangeOnTextNode(FontSize aDir,
   }
 
   // Split at the start of the range.
-  EditorRawDOMPoint atStart(textNodeForTheRange, aStartOffset);
+  EditorDOMPoint atStart(textNodeForTheRange, aStartOffset);
   if (!atStart.IsStartOfContainer()) {
     // We need to split off front of text node
     ErrorResult error;
@@ -1597,7 +2083,7 @@ nsresult HTMLEditor::RelativeFontChangeOnTextNode(FontSize aDir,
   if (sibling && sibling->IsHTMLElement(nodeType)) {
     // Following sib is already right kind of inline node; slide this over
     nsresult rv = MoveNodeWithTransaction(*textNodeForTheRange,
-                                          EditorRawDOMPoint(sibling, 0));
+                                          EditorDOMPoint(sibling, 0));
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -1605,8 +2091,16 @@ nsresult HTMLEditor::RelativeFontChangeOnTextNode(FontSize aDir,
   }
 
   // Else reparent the node inside font node with appropriate relative size
+<<<<<<< HEAD
   RefPtr<Element> newElement =
       InsertContainerWithTransaction(*textNodeForTheRange, *nodeType);
+||||||| merged common ancestors
+  RefPtr<Element> newElement =
+    InsertContainerWithTransaction(*textNodeForTheRange, *nodeType);
+=======
+  RefPtr<Element> newElement = InsertContainerWithTransaction(
+      *textNodeForTheRange, MOZ_KnownLive(*nodeType));
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!newElement)) {
     return NS_ERROR_FAILURE;
   }
@@ -1685,7 +2179,7 @@ nsresult HTMLEditor::RelativeFontChangeOnNode(int32_t aSizeChange,
     nsresult rv = RelativeFontChangeHelper(aSizeChange, aNode);
     NS_ENSURE_SUCCESS(rv, rv);
     // in that case, just remove this node and pull up the children
-    return RemoveContainerWithTransaction(*aNode->AsElement());
+    return RemoveContainerWithTransaction(MOZ_KnownLive(*aNode->AsElement()));
   }
 
   // can it be put inside a "big" or "small"?
@@ -1697,7 +2191,7 @@ nsresult HTMLEditor::RelativeFontChangeOnNode(int32_t aSizeChange,
     // ok, chuck it in.
     // first look at siblings of aNode for matching bigs or smalls.
     // if we find one, move aNode into it.
-    nsIContent* sibling = GetPriorHTMLSibling(aNode);
+    nsCOMPtr<nsIContent> sibling = GetPriorHTMLSibling(aNode);
     if (sibling && sibling->IsHTMLElement(atom)) {
       // previous sib is already right kind of inline node; slide this over into
       // it
@@ -1706,13 +2200,23 @@ nsresult HTMLEditor::RelativeFontChangeOnNode(int32_t aSizeChange,
 
     sibling = GetNextHTMLSibling(aNode);
     if (sibling && sibling->IsHTMLElement(atom)) {
+<<<<<<< HEAD
       // following sib is already right kind of inline node; slide this over
       // into it
       return MoveNodeWithTransaction(*aNode, EditorRawDOMPoint(sibling, 0));
+||||||| merged common ancestors
+      // following sib is already right kind of inline node; slide this over into it
+      return MoveNodeWithTransaction(*aNode, EditorRawDOMPoint(sibling, 0));
+=======
+      // following sib is already right kind of inline node; slide this over
+      // into it
+      return MoveNodeWithTransaction(*aNode, EditorDOMPoint(sibling, 0));
+>>>>>>> upstream-releases
     }
 
     // else insert it above aNode
-    RefPtr<Element> newElement = InsertContainerWithTransaction(*aNode, *atom);
+    RefPtr<Element> newElement =
+        InsertContainerWithTransaction(*aNode, MOZ_KnownLive(*atom));
     if (NS_WARN_IF(!newElement)) {
       return NS_ERROR_FAILURE;
     }
@@ -1753,9 +2257,22 @@ HTMLEditor::GetFontFaceState(bool* aMixed, nsAString& outFace) {
 
   bool first, any, all;
 
+<<<<<<< HEAD
   nsresult rv = GetInlinePropertyBase(*nsGkAtoms::font, nsGkAtoms::face,
                                       nullptr, &first, &any, &all, &outFace);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  nsresult rv =
+    GetInlinePropertyBase(*nsGkAtoms::font, nsGkAtoms::face, nullptr, &first,
+                          &any, &all, &outFace);
+  NS_ENSURE_SUCCESS(rv, rv);
+=======
+  nsresult rv = GetInlinePropertyBase(*nsGkAtoms::font, nsGkAtoms::face,
+                                      nullptr, &first, &any, &all, &outFace);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+>>>>>>> upstream-releases
   if (any && !all) {
     return NS_OK;  // mixed
   }
@@ -1766,10 +2283,26 @@ HTMLEditor::GetFontFaceState(bool* aMixed, nsAString& outFace) {
 
   // if there is no font face, check for tt
   rv = GetInlinePropertyBase(*nsGkAtoms::tt, nullptr, nullptr, &first, &any,
+<<<<<<< HEAD
                              &all, nullptr);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+                             &all,nullptr);
+  NS_ENSURE_SUCCESS(rv, rv);
+=======
+                             &all, nullptr);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+>>>>>>> upstream-releases
   if (any && !all) {
+<<<<<<< HEAD
     return rv;  // mixed
+||||||| merged common ancestors
+    return rv; // mixed
+=======
+    return EditorBase::ToGenericNSResult(rv);  // mixed
+>>>>>>> upstream-releases
   }
   if (all) {
     *aMixed = false;
@@ -1801,7 +2334,7 @@ nsresult HTMLEditor::GetFontColorState(bool* aMixed, nsAString& aOutColor) {
   nsresult rv = GetInlinePropertyBase(*nsGkAtoms::font, nsGkAtoms::color,
                                       nullptr, &first, &any, &all, &aOutColor);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
 
   if (any && !all) {

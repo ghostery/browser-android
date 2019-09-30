@@ -14,10 +14,11 @@
 #include "signaling/src/sdp/SdpErrorHolder.h"
 
 #ifdef CRLF
-#undef CRLF
+#  undef CRLF
 #endif
 #define CRLF "\r\n"
 
+<<<<<<< HEAD
 namespace mozilla {
 
 RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
@@ -26,6 +27,27 @@ RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
     const RsdparsaSdpAttributeList* sessionLevel)
     : SdpMediaSection(level), mSession(std::move(session)), mSection(section) {
   switch (sdp_rust_get_media_type(section)) {
+||||||| merged common ancestors
+namespace mozilla
+{
+
+RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(size_t level,
+      RsdparsaSessionHandle session, const RustMediaSection* const section,
+      const RsdparsaSdpAttributeList* sessionLevel)
+  : SdpMediaSection(level), mSession(std::move(session)),
+    mSection(section)
+{
+  switch(sdp_rust_get_media_type(section)) {
+=======
+namespace mozilla {
+
+RsdparsaSdpMediaSection::RsdparsaSdpMediaSection(
+    size_t level, RsdparsaSessionHandle session,
+    const RustMediaSection* const section,
+    const RsdparsaSdpAttributeList* sessionLevel)
+    : SdpMediaSection(level), mSession(std::move(session)), mSection(section) {
+  switch (sdp_rust_get_media_type(section)) {
+>>>>>>> upstream-releases
     case RustSdpMediaValue::kRustAudio:
       mMediaType = kAudio;
       break;
@@ -61,18 +83,29 @@ SdpMediaSection::Protocol RsdparsaSdpMediaSection::GetProtocol() const {
   switch (sdp_get_media_protocol(mSection)) {
     case RustSdpProtocolValue::kRustRtpSavpf:
       return kRtpSavpf;
+    case RustSdpProtocolValue::kRustUdpTlsRtpSavp:
+      return kUdpTlsRtpSavp;
+    case RustSdpProtocolValue::kRustTcpDtlsRtpSavp:
+      return kTcpDtlsRtpSavp;
     case RustSdpProtocolValue::kRustUdpTlsRtpSavpf:
       return kUdpTlsRtpSavpf;
     case RustSdpProtocolValue::kRustTcpTlsRtpSavpf:
       return kTcpTlsRtpSavpf;
+    case RustSdpProtocolValue::kRustTcpDtlsRtpSavpf:
+      return kTcpDtlsRtpSavpf;
     case RustSdpProtocolValue::kRustDtlsSctp:
       return kDtlsSctp;
     case RustSdpProtocolValue::kRustUdpDtlsSctp:
       return kUdpDtlsSctp;
     case RustSdpProtocolValue::kRustTcpDtlsSctp:
       return kTcpDtlsSctp;
+    case RustSdpProtocolValue::kRustRtpAvp:
+      return kRtpAvp;
+    case RustSdpProtocolValue::kRustRtpAvpf:
+      return kRtpAvpf;
+    case RustSdpProtocolValue::kRustRtpSavp:
+      return kRtpSavp;
   }
-
   MOZ_CRASH("invalid media protocol");
 }
 

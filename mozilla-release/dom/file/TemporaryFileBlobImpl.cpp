@@ -50,13 +50,56 @@ class TemporaryFileInputStream final : public nsFileInputStream {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   void Serialize(InputStreamParams& aParams,
                  FileDescriptorArray& aFileDescriptors) override {
+||||||| merged common ancestors
+  void
+  Serialize(InputStreamParams& aParams,
+            FileDescriptorArray& aFileDescriptors) override
+  {
+=======
+  void Serialize(InputStreamParams& aParams,
+                 FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+                 uint32_t aMaxSize, uint32_t* aSizeUsed,
+                 ContentChild* aManager) override {
+    MOZ_CRASH("This inputStream cannot be serialized.");
+  }
+
+  void Serialize(InputStreamParams& aParams,
+                 FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+                 uint32_t aMaxSize, uint32_t* aSizeUsed,
+                 PBackgroundChild* aManager) override {
+    MOZ_CRASH("This inputStream cannot be serialized.");
+  }
+
+  void Serialize(InputStreamParams& aParams,
+                 FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+                 uint32_t aMaxSize, uint32_t* aSizeUsed,
+                 ContentParent* aManager) override {
+>>>>>>> upstream-releases
+    MOZ_CRASH("This inputStream cannot be serialized.");
+  }
+
+<<<<<<< HEAD
+  bool Deserialize(const InputStreamParams& aParams,
+                   const FileDescriptorArray& aFileDescriptors) override {
+||||||| merged common ancestors
+  bool
+  Deserialize(const InputStreamParams& aParams,
+              const FileDescriptorArray& aFileDescriptors) override
+  {
+=======
+  void Serialize(InputStreamParams& aParams,
+                 FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+                 uint32_t aMaxSize, uint32_t* aSizeUsed,
+                 PBackgroundParent* aManager) override {
     MOZ_CRASH("This inputStream cannot be serialized.");
   }
 
   bool Deserialize(const InputStreamParams& aParams,
                    const FileDescriptorArray& aFileDescriptors) override {
+>>>>>>> upstream-releases
     MOZ_CRASH("This inputStream cannot be deserialized.");
     return false;
   }
@@ -87,13 +130,23 @@ class TemporaryFileInputStream final : public nsFileInputStream {
 
 TemporaryFileBlobImpl::TemporaryFileBlobImpl(nsIFile* aFile,
                                              const nsAString& aContentType)
+<<<<<<< HEAD
     : FileBlobImpl(aFile, EmptyString(), aContentType)
+||||||| merged common ancestors
+  : FileBlobImpl(aFile, EmptyString(), aContentType)
+=======
+    : FileBlobImpl(aFile, EmptyString(), aContentType,
+                   NS_LITERAL_STRING("TemporaryBlobImpl"))
+>>>>>>> upstream-releases
 #ifdef DEBUG
       ,
       mInputStreamCreated(false)
 #endif
 {
   MOZ_ASSERT(XRE_IsParentProcess());
+
+  // This must be considered a blob.
+  mIsFile = false;
 }
 
 TemporaryFileBlobImpl::~TemporaryFileBlobImpl() {

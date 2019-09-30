@@ -43,21 +43,59 @@ class WebGLBuffer final : public nsWrapperCache,
                                          uint32_t indexCount) const;
   bool ValidateRange(size_t byteOffset, size_t byteLen) const;
 
+<<<<<<< HEAD
   WebGLContext* GetParentObject() const { return mContext; }
 
   virtual JSObject* WrapObject(JSContext* cx,
                                JS::Handle<JSObject*> givenProto) override;
+||||||| merged common ancestors
+    WebGLContext* GetParentObject() const {
+        return mContext;
+    }
 
+    virtual JSObject* WrapObject(JSContext* cx, JS::Handle<JSObject*> givenProto) override;
+=======
+  WebGLContext* GetParentObject() const { return mContext; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool ValidateCanBindToTarget(GLenum target);
   void BufferData(GLenum target, size_t size, const void* data, GLenum usage);
   void BufferSubData(GLenum target, size_t dstByteOffset, size_t dataLen,
                      const void* data) const;
+||||||| merged common ancestors
+    bool ValidateCanBindToTarget(GLenum target);
+    void BufferData(GLenum target, size_t size, const void* data, GLenum usage);
+    void BufferSubData(GLenum target, size_t dstByteOffset, size_t dataLen,
+                       const void* data) const;
+=======
+  virtual JSObject* WrapObject(JSContext* cx,
+                               JS::Handle<JSObject*> givenProto) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ////
+||||||| merged common ancestors
+    ////
+=======
+  bool ValidateCanBindToTarget(GLenum target);
+  void BufferData(GLenum target, uint64_t size, const void* data, GLenum usage);
+  void BufferSubData(GLenum target, uint64_t dstByteOffset, uint64_t dataLen,
+                     const void* data) const;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static void AddBindCount(GLenum target, WebGLBuffer* buffer, int8_t addVal) {
     if (!buffer) return;
+||||||| merged common ancestors
+    static void AddBindCount(GLenum target, WebGLBuffer* buffer, int8_t addVal) {
+        if (!buffer)
+            return;
+=======
+  ////
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (target == LOCAL_GL_TRANSFORM_FEEDBACK_BUFFER) {
       MOZ_ASSERT_IF(addVal < 0, buffer->mTFBindCount >= size_t(-addVal));
       buffer->mTFBindCount += addVal;
@@ -75,29 +113,111 @@ class WebGLBuffer final : public nsWrapperCache,
     AddBindCount(target, newBuffer, +1);
     *out_slot = newBuffer;
   }
+||||||| merged common ancestors
+        if (target == LOCAL_GL_TRANSFORM_FEEDBACK_BUFFER) {
+            MOZ_ASSERT_IF(addVal < 0, buffer->mTFBindCount >= size_t(-addVal));
+            buffer->mTFBindCount += addVal;
+            buffer->mFetchInvalidator.InvalidateCaches();
+        } else {
+            MOZ_ASSERT_IF(addVal < 0, buffer->mNonTFBindCount >= size_t(-addVal));
+            buffer->mNonTFBindCount += addVal;
+        }
+    }
 
+    static void SetSlot(GLenum target, WebGLBuffer* newBuffer,
+                        WebGLRefPtr<WebGLBuffer>* const out_slot)
+    {
+        WebGLBuffer* const oldBuffer = *out_slot;
+        AddBindCount(target, oldBuffer, -1);
+        AddBindCount(target, newBuffer, +1);
+        *out_slot = newBuffer;
+    }
+=======
+  const GLenum mGLName;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool IsBoundForTF() const { return bool(mTFBindCount); }
   bool IsBoundForNonTF() const { return bool(mNonTFBindCount); }
-
-  ////
-
-  const GLenum mGLName;
-
+||||||| merged common ancestors
+    bool IsBoundForTF() const { return bool(mTFBindCount); }
+    bool IsBoundForNonTF() const { return bool(mNonTFBindCount); }
+=======
   NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(WebGLBuffer)
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(WebGLBuffer)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+    ////
+=======
  protected:
   ~WebGLBuffer();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const GLenum mGLName;
+||||||| merged common ancestors
+    const GLenum mGLName;
+=======
   void InvalidateCacheRange(uint64_t byteOffset, uint64_t byteLength) const;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(WebGLBuffer)
+  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(WebGLBuffer)
+||||||| merged common ancestors
+    NS_INLINE_DECL_CYCLE_COLLECTING_NATIVE_REFCOUNTING(WebGLBuffer)
+    NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(WebGLBuffer)
+=======
+  Kind mContent = Kind::Undefined;
+  GLenum mUsage = LOCAL_GL_STATIC_DRAW;
+  size_t mByteLength = 0;
+  mutable uint64_t mLastUpdateFenceId = 0;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ protected:
+  ~WebGLBuffer();
+||||||| merged common ancestors
+protected:
+    ~WebGLBuffer();
+=======
+  struct IndexRange final {
+    GLenum type;
+    uint64_t byteOffset;
+    uint32_t indexCount;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void InvalidateCacheRange(uint64_t byteOffset, uint64_t byteLength) const;
+||||||| merged common ancestors
+    void InvalidateCacheRange(uint64_t byteOffset, uint64_t byteLength) const;
+=======
+    bool operator<(const IndexRange& x) const {
+      if (type != x.type) return type < x.type;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   Kind mContent;
   GLenum mUsage;
   size_t mByteLength;
   size_t mTFBindCount;
   size_t mNonTFBindCount;
   mutable uint64_t mLastUpdateFenceId = 0;
+||||||| merged common ancestors
+    Kind mContent;
+    GLenum mUsage;
+    size_t mByteLength;
+    size_t mTFBindCount;
+    size_t mNonTFBindCount;
+    mutable uint64_t mLastUpdateFenceId = 0;
+=======
+      if (byteOffset != x.byteOffset) return byteOffset < x.byteOffset;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   struct IndexRange final {
     GLenum type;
     uint64_t byteOffset;
@@ -111,6 +231,27 @@ class WebGLBuffer final : public nsWrapperCache,
       return indexCount < x.indexCount;
     }
   };
+||||||| merged common ancestors
+    struct IndexRange final {
+        GLenum type;
+        uint64_t byteOffset;
+        uint32_t indexCount;
+
+        bool operator<(const IndexRange& x) const {
+            if (type != x.type)
+                return type < x.type;
+
+            if (byteOffset != x.byteOffset)
+                return byteOffset < x.byteOffset;
+
+            return indexCount < x.indexCount;
+        }
+    };
+=======
+      return indexCount < x.indexCount;
+    }
+  };
+>>>>>>> upstream-releases
 
   UniqueBuffer mIndexCache;
   mutable std::map<IndexRange, Maybe<uint32_t>> mIndexRanges;

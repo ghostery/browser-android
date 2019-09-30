@@ -27,7 +27,11 @@
 class nsHtml5Parser;
 class nsHtml5StreamParser;
 class nsIContent;
-class nsIDocument;
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
 
 class nsHtml5TreeOpExecutor final
     : public nsHtml5DocumentBuilder,
@@ -68,11 +72,6 @@ class nsHtml5TreeOpExecutor final
 
   nsCOMPtr<nsIURI> mSpeculationBaseURI;
 
-  /**
-   * Speculative referrer policy
-   */
-  ReferrerPolicy mSpeculationReferrerPolicy;
-
   nsCOMPtr<nsIURI> mViewSourceBaseURI;
 
   /**
@@ -92,7 +91,19 @@ class nsHtml5TreeOpExecutor final
    */
   bool mAlreadyComplainedAboutCharset;
 
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  /**
+   * Whether this executor has already complained about the tree being too
+   * deep.
+   */
+  bool mAlreadyComplainedAboutDeepTree;
+
+ public:
+>>>>>>> upstream-releases
   nsHtml5TreeOpExecutor();
 
  protected:
@@ -125,6 +136,8 @@ class nsHtml5TreeOpExecutor final
    * Unimplemented. For interface compat only.
    */
   NS_IMETHOD WillResume() override;
+
+  virtual void InitialDocumentTranslationCompleted() override;
 
   /**
    * Sets the parser.
@@ -185,7 +198,9 @@ class nsHtml5TreeOpExecutor final
   void MaybeComplainAboutCharset(const char* aMsgId, bool aError,
                                  uint32_t aLineNumber);
 
-  void ComplainAboutBogusProtocolCharset(nsIDocument* aDoc);
+  void ComplainAboutBogusProtocolCharset(mozilla::dom::Document*);
+
+  void MaybeComplainAboutDeepTree(uint32_t aLineNumber);
 
   bool HasStarted() { return mStarted; }
 
@@ -245,8 +260,7 @@ class nsHtml5TreeOpExecutor final
 
   void SetSpeculationBase(const nsAString& aURL);
 
-  void SetSpeculationReferrerPolicy(ReferrerPolicy aReferrerPolicy);
-  void SetSpeculationReferrerPolicy(const nsAString& aReferrerPolicy);
+  void UpdateReferrerInfoFromMeta(const nsAString& aMetaReferrer);
 
   void AddSpeculationCSP(const nsAString& aCSP);
 
@@ -272,8 +286,16 @@ class nsHtml5TreeOpExecutor final
    * list of preloaded URIs
    */
   bool ShouldPreloadURI(nsIURI* aURI);
+<<<<<<< HEAD
 
   ReferrerPolicy GetPreloadReferrerPolicy(const nsAString& aReferrerPolicy);
+||||||| merged common ancestors
+=======
+
+  ReferrerPolicy GetPreloadReferrerPolicy(const nsAString& aReferrerPolicy);
+
+  ReferrerPolicy GetPreloadReferrerPolicy(ReferrerPolicy aReferrerPolicy);
+>>>>>>> upstream-releases
 };
 
 #endif  // nsHtml5TreeOpExecutor_h

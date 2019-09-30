@@ -25,7 +25,7 @@ namespace layers {
 class AxisPhysicsModel {
  public:
   AxisPhysicsModel(double aInitialPosition, double aInitialVelocity);
-  ~AxisPhysicsModel();
+  virtual ~AxisPhysicsModel();
 
   /**
    * Advance the physics simulation.
@@ -72,9 +72,20 @@ class AxisPhysicsModel {
    * axis-position-units / second that should be added or removed from the
    * velocity.
    */
+<<<<<<< HEAD
   virtual double Acceleration(const State &aState) = 0;
 
  private:
+||||||| merged common ancestors
+  virtual double Acceleration(const State &aState) = 0;
+
+private:
+
+=======
+  virtual double Acceleration(const State& aState) = 0;
+
+ private:
+>>>>>>> upstream-releases
   /**
    * Duration of fixed delta time step (seconds)
    */
@@ -108,8 +119,8 @@ class AxisPhysicsModel {
    * Apply delta velocity and position represented by aDerivative over
    * aDeltaTime seconds, calculate new acceleration, and return new deltas.
    */
-  Derivative Evaluate(const State &aInitState, double aDeltaTime,
-                      const Derivative &aDerivative);
+  Derivative Evaluate(const State& aInitState, double aDeltaTime,
+                      const Derivative& aDerivative);
 
   /**
    * Helper function for performing linear interpolation (lerp) of double's

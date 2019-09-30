@@ -72,7 +72,17 @@ void AudioParam::DisconnectFromGraphAndDestroyStream() {
   }
 }
 
+<<<<<<< HEAD
 MediaStream* AudioParam::Stream() {
+||||||| merged common ancestors
+MediaStream*
+AudioParam::Stream()
+{
+=======
+MediaStream* AudioParam::GetStream() const { return mStream; }
+
+MediaStream* AudioParam::Stream() {
+>>>>>>> upstream-releases
   if (mStream) {
     return mStream;
   }

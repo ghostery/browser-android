@@ -211,6 +211,7 @@ static inline nsresult RUN_ON_THREAD(
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define ASSERT_ON_THREAD(t)           \
   do {                                \
     if (t) {                          \
@@ -221,8 +222,30 @@ static inline nsresult RUN_ON_THREAD(
       MOZ_ASSERT(on);                 \
     }                                 \
   } while (0)
+||||||| merged common ancestors
+#define ASSERT_ON_THREAD(t) do {                \
+    if (t) {                                    \
+      bool on;                                    \
+      nsresult rv;                                \
+      rv = t->IsOnCurrentThread(&on);             \
+      MOZ_ASSERT(NS_SUCCEEDED(rv));               \
+      MOZ_ASSERT(on);                             \
+    }                                           \
+  } while(0)
+=======
+#  define ASSERT_ON_THREAD(t)           \
+    do {                                \
+      if (t) {                          \
+        bool on;                        \
+        nsresult rv;                    \
+        rv = t->IsOnCurrentThread(&on); \
+        MOZ_ASSERT(NS_SUCCEEDED(rv));   \
+        MOZ_ASSERT(on);                 \
+      }                                 \
+    } while (0)
+>>>>>>> upstream-releases
 #else
-#define ASSERT_ON_THREAD(t)
+#  define ASSERT_ON_THREAD(t)
 #endif
 
 template <class T>

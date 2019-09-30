@@ -43,21 +43,32 @@ class BindingParams : public mozIStorageBindingParams,
    *        and our invariant requires us to have this, so you need to tell us
    *        again.
    */
-  void unlock(Statement *aOwningStatement);
+  void unlock(Statement* aOwningStatement);
 
   /**
    * @returns the pointer to the owning BindingParamsArray.  Used by a
    *          BindingParamsArray to verify that we belong to it when added.
    */
-  const mozIStorageBindingParamsArray *getOwner() const;
+  const mozIStorageBindingParamsArray* getOwner() const;
 
+<<<<<<< HEAD
   BindingParams(mozIStorageBindingParamsArray *aOwningArray,
                 Statement *aOwningStatement);
 
  protected:
+||||||| merged common ancestors
+  BindingParams(mozIStorageBindingParamsArray *aOwningArray,
+                Statement *aOwningStatement);
+protected:
+=======
+  BindingParams(mozIStorageBindingParamsArray* aOwningArray,
+                Statement* aOwningStatement);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~BindingParams() {}
 
-  explicit BindingParams(mozIStorageBindingParamsArray *aOwningArray);
+  explicit BindingParams(mozIStorageBindingParamsArray* aOwningArray);
   // Note that this is managed as a sparse array, so particular caution should
   // be used for out-of-bounds usage.
   nsTArray<RefPtr<Variant_base> > mParameters;
@@ -77,7 +88,7 @@ class BindingParams : public mozIStorageBindingParams,
    * Not reference-counted because this is only non-null as long as mOwningArray
    * is non-null and mOwningArray also holds a statement reference.
    */
-  Statement *mOwningStatement;
+  Statement* mOwningStatement;
   uint32_t mParamCount;
 };
 
@@ -90,15 +101,36 @@ class BindingParams : public mozIStorageBindingParams,
  * We support *either* binding by name or binding by index.  Trying to do both
  * results in only binding by name at sqlite3_stmt bind time.
  */
+<<<<<<< HEAD
 class AsyncBindingParams : public BindingParams {
  public:
   NS_IMETHOD BindByName(const nsACString &aName, nsIVariant *aValue) override;
   NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant *aValue) override;
+||||||| merged common ancestors
+class AsyncBindingParams : public BindingParams
+{
+public:
+  NS_IMETHOD BindByName(const nsACString & aName,
+                        nsIVariant *aValue) override;
+  NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant *aValue) override;
+=======
+class AsyncBindingParams : public BindingParams {
+ public:
+  NS_IMETHOD BindByName(const nsACString& aName, nsIVariant* aValue) override;
+  NS_IMETHOD BindByIndex(uint32_t aIndex, nsIVariant* aValue) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual already_AddRefed<mozIStorageError> bind(
       sqlite3_stmt *aStatement) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<mozIStorageError> bind(sqlite3_stmt * aStatement) override;
+=======
+  virtual already_AddRefed<mozIStorageError> bind(
+      sqlite3_stmt* aStatement) override;
+>>>>>>> upstream-releases
 
-  explicit AsyncBindingParams(mozIStorageBindingParamsArray *aOwningArray);
+  explicit AsyncBindingParams(mozIStorageBindingParamsArray* aOwningArray);
   virtual ~AsyncBindingParams() {}
 
  private:

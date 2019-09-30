@@ -14,13 +14,29 @@
 // The various synthesized event values are hardcoded to avoid pulling
 // in the platform specific widget code.
 #if defined(MOZ_WIDGET_GTK)
+<<<<<<< HEAD
 #define MOZ_HEADLESS_MOUSE_MOVE 3  // GDK_MOTION_NOTIFY
 #define MOZ_HEADLESS_MOUSE_DOWN 4  // GDK_BUTTON_PRESS
 #define MOZ_HEADLESS_MOUSE_UP 7    // GDK_BUTTON_RELEASE
 #define MOZ_HEADLESS_SCROLL_MULTIPLIER 3
 #define MOZ_HEADLESS_SCROLL_DELTA_MODE \
   mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+||||||| merged common ancestors
+#define MOZ_HEADLESS_MOUSE_MOVE 3 // GDK_MOTION_NOTIFY
+#define MOZ_HEADLESS_MOUSE_DOWN 4 // GDK_BUTTON_PRESS
+#define MOZ_HEADLESS_MOUSE_UP   7 // GDK_BUTTON_RELEASE
+#define MOZ_HEADLESS_SCROLL_MULTIPLIER 3
+#define MOZ_HEADLESS_SCROLL_DELTA_MODE mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+=======
+#  define MOZ_HEADLESS_MOUSE_MOVE 3  // GDK_MOTION_NOTIFY
+#  define MOZ_HEADLESS_MOUSE_DOWN 4  // GDK_BUTTON_PRESS
+#  define MOZ_HEADLESS_MOUSE_UP 7    // GDK_BUTTON_RELEASE
+#  define MOZ_HEADLESS_SCROLL_MULTIPLIER 3
+#  define MOZ_HEADLESS_SCROLL_DELTA_MODE \
+    mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+>>>>>>> upstream-releases
 #elif defined(XP_WIN)
+<<<<<<< HEAD
 #define MOZ_HEADLESS_MOUSE_MOVE 1  // MOUSEEVENTF_MOVE
 #define MOZ_HEADLESS_MOUSE_DOWN 2  // MOUSEEVENTF_LEFTDOWN
 #define MOZ_HEADLESS_MOUSE_UP 4    // MOUSEEVENTF_LEFTUP
@@ -28,26 +44,85 @@
   .025  // default scroll lines (3) / WHEEL_DELTA (120)
 #define MOZ_HEADLESS_SCROLL_DELTA_MODE \
   mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+||||||| merged common ancestors
+#define MOZ_HEADLESS_MOUSE_MOVE 1 // MOUSEEVENTF_MOVE
+#define MOZ_HEADLESS_MOUSE_DOWN 2 // MOUSEEVENTF_LEFTDOWN
+#define MOZ_HEADLESS_MOUSE_UP   4 // MOUSEEVENTF_LEFTUP
+#define MOZ_HEADLESS_SCROLL_MULTIPLIER .025 // default scroll lines (3) / WHEEL_DELTA (120)
+#define MOZ_HEADLESS_SCROLL_DELTA_MODE mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+=======
+#  define MOZ_HEADLESS_MOUSE_MOVE 1  // MOUSEEVENTF_MOVE
+#  define MOZ_HEADLESS_MOUSE_DOWN 2  // MOUSEEVENTF_LEFTDOWN
+#  define MOZ_HEADLESS_MOUSE_UP 4    // MOUSEEVENTF_LEFTUP
+#  define MOZ_HEADLESS_SCROLL_MULTIPLIER \
+    .025  // default scroll lines (3) / WHEEL_DELTA (120)
+#  define MOZ_HEADLESS_SCROLL_DELTA_MODE \
+    mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+>>>>>>> upstream-releases
 #elif defined(XP_MACOSX)
+<<<<<<< HEAD
 #define MOZ_HEADLESS_MOUSE_MOVE 5  // NSMouseMoved
 #define MOZ_HEADLESS_MOUSE_DOWN 1  // NSLeftMouseDown
 #define MOZ_HEADLESS_MOUSE_UP 2    // NSLeftMouseUp
 #define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
 #define MOZ_HEADLESS_SCROLL_DELTA_MODE \
   mozilla::dom::WheelEvent_Binding::DOM_DELTA_PIXEL
+||||||| merged common ancestors
+#define MOZ_HEADLESS_MOUSE_MOVE 5 // NSMouseMoved
+#define MOZ_HEADLESS_MOUSE_DOWN 1 // NSLeftMouseDown
+#define MOZ_HEADLESS_MOUSE_UP   2 // NSLeftMouseUp
+#define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
+#define MOZ_HEADLESS_SCROLL_DELTA_MODE mozilla::dom::WheelEvent_Binding::DOM_DELTA_PIXEL
+=======
+#  define MOZ_HEADLESS_MOUSE_MOVE 5  // NSMouseMoved
+#  define MOZ_HEADLESS_MOUSE_DOWN 1  // NSLeftMouseDown
+#  define MOZ_HEADLESS_MOUSE_UP 2    // NSLeftMouseUp
+#  define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
+#  define MOZ_HEADLESS_SCROLL_DELTA_MODE \
+    mozilla::dom::WheelEvent_Binding::DOM_DELTA_PIXEL
+>>>>>>> upstream-releases
 #elif defined(ANDROID)
+<<<<<<< HEAD
 #define MOZ_HEADLESS_MOUSE_MOVE 7  // ACTION_HOVER_MOVE
 #define MOZ_HEADLESS_MOUSE_DOWN 5  // ACTION_POINTER_DOWN
 #define MOZ_HEADLESS_MOUSE_UP 6    // ACTION_POINTER_UP
 #define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
 #define MOZ_HEADLESS_SCROLL_DELTA_MODE \
   mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+||||||| merged common ancestors
+#define MOZ_HEADLESS_MOUSE_MOVE 7 // ACTION_HOVER_MOVE
+#define MOZ_HEADLESS_MOUSE_DOWN 5 // ACTION_POINTER_DOWN
+#define MOZ_HEADLESS_MOUSE_UP   6 // ACTION_POINTER_UP
+#define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
+#define MOZ_HEADLESS_SCROLL_DELTA_MODE mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+=======
+#  define MOZ_HEADLESS_MOUSE_MOVE 7  // ACTION_HOVER_MOVE
+#  define MOZ_HEADLESS_MOUSE_DOWN 5  // ACTION_POINTER_DOWN
+#  define MOZ_HEADLESS_MOUSE_UP 6    // ACTION_POINTER_UP
+#  define MOZ_HEADLESS_SCROLL_MULTIPLIER 1
+#  define MOZ_HEADLESS_SCROLL_DELTA_MODE \
+    mozilla::dom::WheelEvent_Binding::DOM_DELTA_LINE
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define MOZ_HEADLESS_MOUSE_MOVE -1
 #define MOZ_HEADLESS_MOUSE_DOWN -1
 #define MOZ_HEADLESS_MOUSE_UP -1
 #define MOZ_HEADLESS_SCROLL_MULTIPLIER -1
 #define MOZ_HEADLESS_SCROLL_DELTA_MODE -1
+||||||| merged common ancestors
+#define MOZ_HEADLESS_MOUSE_MOVE -1
+#define MOZ_HEADLESS_MOUSE_DOWN -1
+#define MOZ_HEADLESS_MOUSE_UP   -1
+#define MOZ_HEADLESS_SCROLL_MULTIPLIER -1
+#define MOZ_HEADLESS_SCROLL_DELTA_MODE -1
+=======
+#  define MOZ_HEADLESS_MOUSE_MOVE -1
+#  define MOZ_HEADLESS_MOUSE_DOWN -1
+#  define MOZ_HEADLESS_MOUSE_UP -1
+#  define MOZ_HEADLESS_SCROLL_MULTIPLIER -1
+#  define MOZ_HEADLESS_SCROLL_DELTA_MODE -1
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -89,11 +164,24 @@ class HeadlessWidget : public nsBaseWidget {
                                   nsIScreen* aTargetScreen = nullptr) override;
   virtual void Enable(bool aState) override;
   virtual bool IsEnabled() const override;
+<<<<<<< HEAD
   virtual nsresult SetFocus(bool aRaise) override;
   virtual nsresult ConfigureChildren(
       const nsTArray<Configuration>& aConfigurations) override {
     MOZ_ASSERT_UNREACHABLE(
         "Headless widgets do not support configuring children.");
+||||||| merged common ancestors
+  virtual nsresult SetFocus(bool aRaise) override;
+  virtual nsresult ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override
+  {
+    MOZ_ASSERT_UNREACHABLE("Headless widgets do not support configuring children.");
+=======
+  virtual void SetFocus(Raise) override;
+  virtual nsresult ConfigureChildren(
+      const nsTArray<Configuration>& aConfigurations) override {
+    MOZ_ASSERT_UNREACHABLE(
+        "Headless widgets do not support configuring children.");
+>>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
   virtual void Invalidate(const LayoutDeviceIntRect& aRect) override {

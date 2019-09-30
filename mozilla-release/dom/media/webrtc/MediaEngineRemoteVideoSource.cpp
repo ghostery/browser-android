@@ -5,7 +5,6 @@
 
 #include "MediaEngineRemoteVideoSource.h"
 
-#include "AllocationHandle.h"
 #include "CamerasChild.h"
 #include "MediaManager.h"
 #include "MediaTrackConstraints.h"
@@ -18,12 +17,25 @@
 #include "webrtc/common_video/include/video_frame_buffer.h"
 #include "webrtc/common_video/libyuv/include/webrtc_libyuv.h"
 
+<<<<<<< HEAD
 mozilla::LogModule* GetMediaManagerLog();
 #define LOG(msg) MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Debug, msg)
 #define LOGFRAME(msg) \
   MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Verbose, msg)
 
+||||||| merged common ancestors
+mozilla::LogModule* GetMediaManagerLog();
+#define LOG(msg) MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Debug, msg)
+#define LOGFRAME(msg) MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Verbose, msg)
+
+=======
+>>>>>>> upstream-releases
 namespace mozilla {
+
+extern LazyLogModule gMediaManagerLog;
+#define LOG(...) MOZ_LOG(gMediaManagerLog, LogLevel::Debug, (__VA_ARGS__))
+#define LOG_FRAME(...) \
+  MOZ_LOG(gMediaManagerLog, LogLevel::Verbose, (__VA_ARGS__))
 
 using dom::ConstrainLongRange;
 using dom::MediaSourceEnum;
@@ -32,7 +44,44 @@ using dom::MediaTrackConstraintSet;
 using dom::MediaTrackSettings;
 using dom::VideoFacingModeEnum;
 
+static Maybe<VideoFacingModeEnum> GetFacingMode(const nsString& aDeviceName) {
+  // Set facing mode based on device name.
+#if defined(ANDROID)
+  // Names are generated. Example: "Camera 0, Facing back, Orientation 90"
+  //
+  // See media/webrtc/trunk/webrtc/modules/video_capture/android/java/src/org/
+  // webrtc/videoengine/VideoCaptureDeviceInfoAndroid.java
+
+  if (aDeviceName.Find(NS_LITERAL_STRING("Facing back")) != kNotFound) {
+    return Some(VideoFacingModeEnum::Environment);
+  }
+  if (aDeviceName.Find(NS_LITERAL_STRING("Facing front")) != kNotFound) {
+    return Some(VideoFacingModeEnum::User);
+  }
+#endif  // ANDROID
+#ifdef XP_MACOSX
+  // Kludge to test user-facing cameras on OSX.
+  if (aDeviceName.Find(NS_LITERAL_STRING("Face")) != -1) {
+    return Some(VideoFacingModeEnum::User);
+  }
+#endif
+#ifdef XP_WIN
+  // The cameras' name of Surface book are "Microsoft Camera Front" and
+  // "Microsoft Camera Rear" respectively.
+
+  if (aDeviceName.Find(NS_LITERAL_STRING("Front")) != kNotFound) {
+    return Some(VideoFacingModeEnum::User);
+  }
+  if (aDeviceName.Find(NS_LITERAL_STRING("Rear")) != kNotFound) {
+    return Some(VideoFacingModeEnum::Environment);
+  }
+#endif  // WINDOWS
+
+  return Nothing();
+}
+
 MediaEngineRemoteVideoSource::MediaEngineRemoteVideoSource(
+<<<<<<< HEAD
     int aIndex, camera::CaptureEngine aCapEngine, MediaSourceEnum aMediaSource,
     bool aScary)
     : mCaptureIndex(aIndex),
@@ -45,34 +94,114 @@ MediaEngineRemoteVideoSource::MediaEngineRemoteVideoSource(
       mSettingsUpdatedByFrame(MakeAndAddRef<media::Refcountable<AtomicBool>>()),
       mSettings(MakeAndAddRef<media::Refcountable<MediaTrackSettings>>()) {
   MOZ_ASSERT(aMediaSource != MediaSourceEnum::Other);
+||||||| merged common ancestors
+    int aIndex,
+    camera::CaptureEngine aCapEngine,
+    MediaSourceEnum aMediaSource,
+    bool aScary)
+  : mCaptureIndex(aIndex)
+  , mMediaSource(aMediaSource)
+  , mCapEngine(aCapEngine)
+  , mScary(aScary)
+  , mMutex("MediaEngineRemoteVideoSource::mMutex")
+  , mRescalingBufferPool(/* zero_initialize */ false,
+                         /* max_number_of_buffers */ 1)
+  , mSettingsUpdatedByFrame(MakeAndAddRef<media::Refcountable<AtomicBool>>())
+  , mSettings(MakeAndAddRef<media::Refcountable<MediaTrackSettings>>())
+{
+  MOZ_ASSERT(aMediaSource != MediaSourceEnum::Other);
+=======
+    int aIndex, camera::CaptureEngine aCapEngine, bool aScary)
+    : mCaptureIndex(aIndex),
+      mCapEngine(aCapEngine),
+      mScary(aScary),
+      mMutex("MediaEngineRemoteVideoSource::mMutex"),
+      mRescalingBufferPool(/* zero_initialize */ false,
+                           /* max_number_of_buffers */ 1),
+      mSettingsUpdatedByFrame(MakeAndAddRef<media::Refcountable<AtomicBool>>()),
+      mSettings(MakeAndAddRef<media::Refcountable<MediaTrackSettings>>()),
+      mFirstFramePromise(mFirstFramePromiseHolder.Ensure(__func__)) {
+>>>>>>> upstream-releases
   mSettings->mWidth.Construct(0);
   mSettings->mHeight.Construct(0);
   mSettings->mFrameRate.Construct(0);
   Init();
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::Init() {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+void
+MediaEngineRemoteVideoSource::Init()
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+MediaEngineRemoteVideoSource::~MediaEngineRemoteVideoSource() {
+  mFirstFramePromiseHolder.RejectIfExists(NS_ERROR_ABORT, __func__);
+}
+
+dom::MediaSourceEnum MediaEngineRemoteVideoSource::GetMediaSource() const {
+  switch (mCapEngine) {
+    case camera::BrowserEngine:
+      return MediaSourceEnum::Browser;
+    case camera::CameraEngine:
+      return MediaSourceEnum::Camera;
+    case camera::ScreenEngine:
+      return MediaSourceEnum::Screen;
+    case camera::WinEngine:
+      return MediaSourceEnum::Window;
+    default:
+      MOZ_CRASH();
+  }
+}
+
+void MediaEngineRemoteVideoSource::Init() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   char deviceName[kMaxDeviceNameLength];
   char uniqueId[kMaxUniqueIdLength];
   if (camera::GetChildAndCall(&camera::CamerasChild::GetCaptureDevice,
+<<<<<<< HEAD
                               mCapEngine, mCaptureIndex, deviceName,
                               kMaxDeviceNameLength, uniqueId,
                               kMaxUniqueIdLength, nullptr)) {
     LOG(("Error initializing RemoteVideoSource (GetCaptureDevice)"));
+||||||| merged common ancestors
+                              mCapEngine, mCaptureIndex,
+                              deviceName, kMaxDeviceNameLength,
+                              uniqueId, kMaxUniqueIdLength, nullptr)) {
+    LOG(("Error initializing RemoteVideoSource (GetCaptureDevice)"));
+=======
+                              mCapEngine, mCaptureIndex, deviceName,
+                              kMaxDeviceNameLength, uniqueId,
+                              kMaxUniqueIdLength, nullptr)) {
+    LOG("Error initializing RemoteVideoSource (GetCaptureDevice)");
+>>>>>>> upstream-releases
     return;
   }
 
   SetName(NS_ConvertUTF8toUTF16(deviceName));
   SetUUID(uniqueId);
+  SetGroupId(NS_ConvertUTF8toUTF16(deviceName));
 
   mInitDone = true;
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::Shutdown() {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+void
+MediaEngineRemoteVideoSource::Shutdown()
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+void MediaEngineRemoteVideoSource::Shutdown() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   if (!mInitDone) {
@@ -80,27 +209,34 @@ void MediaEngineRemoteVideoSource::Shutdown() {
     return;
   }
 
-  // Allocate always returns a null AllocationHandle.
-  // We can safely pass nullptr here.
   if (mState == kStarted) {
-    Stop(nullptr);
+    Stop();
   }
   if (mState == kAllocated || mState == kStopped) {
-    Deallocate(nullptr);
+    Deallocate();
   }
   MOZ_ASSERT(mState == kReleased);
 
   mInitDone = false;
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::SetName(nsString aName) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+void
+MediaEngineRemoteVideoSource::SetName(nsString aName)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+void MediaEngineRemoteVideoSource::SetName(nsString aName) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   mDeviceName = std::move(aName);
-  bool hasFacingMode = false;
-  VideoFacingModeEnum facingMode = VideoFacingModeEnum::User;
 
+<<<<<<< HEAD
   // Set facing mode based on device name.
 #if defined(ANDROID)
   // Names are generated. Example: "Camera 0, Facing back, Orientation 90"
@@ -121,12 +257,36 @@ void MediaEngineRemoteVideoSource::SetName(nsString aName) {
   if (mDeviceName.Find(NS_LITERAL_STRING("Face")) != -1) {
     hasFacingMode = true;
     facingMode = VideoFacingModeEnum::User;
-  }
-#endif
-#ifdef XP_WIN
-  // The cameras' name of Surface book are "Microsoft Camera Front" and
-  // "Microsoft Camera Rear" respectively.
+||||||| merged common ancestors
+  // Set facing mode based on device name.
+#if defined(ANDROID)
+  // Names are generated. Example: "Camera 0, Facing back, Orientation 90"
+  //
+  // See media/webrtc/trunk/webrtc/modules/video_capture/android/java/src/org/
+  // webrtc/videoengine/VideoCaptureDeviceInfoAndroid.java
 
+  if (mDeviceName.Find(NS_LITERAL_STRING("Facing back")) != kNotFound) {
+    hasFacingMode = true;
+    facingMode = VideoFacingModeEnum::Environment;
+  } else if (mDeviceName.Find(NS_LITERAL_STRING("Facing front")) != kNotFound) {
+    hasFacingMode = true;
+    facingMode = VideoFacingModeEnum::User;
+  }
+#endif // ANDROID
+#ifdef XP_MACOSX
+  // Kludge to test user-facing cameras on OSX.
+  if (mDeviceName.Find(NS_LITERAL_STRING("Face")) != -1) {
+    hasFacingMode = true;
+    facingMode = VideoFacingModeEnum::User;
+=======
+  Maybe<VideoFacingModeEnum> facingMode;
+  if (GetMediaSource() == MediaSourceEnum::Camera) {
+    // Only cameras can have a facing mode.
+    facingMode = GetFacingMode(mDeviceName);
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
   if (mDeviceName.Find(NS_LITERAL_STRING("Front")) != kNotFound) {
     hasFacingMode = true;
     facingMode = VideoFacingModeEnum::User;
@@ -136,11 +296,34 @@ void MediaEngineRemoteVideoSource::SetName(nsString aName) {
   }
 #endif  // WINDOWS
   if (hasFacingMode) {
+||||||| merged common ancestors
+  if (mDeviceName.Find(NS_LITERAL_STRING("Front")) != kNotFound) {
+    hasFacingMode = true;
+    facingMode = VideoFacingModeEnum::User;
+  } else if (mDeviceName.Find(NS_LITERAL_STRING("Rear")) != kNotFound) {
+    hasFacingMode = true;
+    facingMode = VideoFacingModeEnum::Environment;
+  }
+#endif // WINDOWS
+  if (hasFacingMode) {
+=======
+  if (facingMode.isSome()) {
+>>>>>>> upstream-releases
     mFacingMode.Assign(NS_ConvertUTF8toUTF16(
-        dom::VideoFacingModeEnumValues::strings[uint32_t(facingMode)].value));
+        dom::VideoFacingModeEnumValues::strings[uint32_t(*facingMode)].value));
   } else {
     mFacingMode.Truncate();
   }
+  NS_DispatchToMainThread(NS_NewRunnableFunction(
+      "MediaEngineRemoteVideoSource::SetName (facingMode updater)",
+      [settings = mSettings, hasFacingMode = facingMode.isSome(),
+       mode = mFacingMode]() {
+        if (!hasFacingMode) {
+          settings->mFacingMode.Reset();
+          return;
+        }
+        settings->mFacingMode.Construct(mode);
+      }));
 }
 
 nsString MediaEngineRemoteVideoSource::GetName() const {
@@ -161,31 +344,72 @@ nsCString MediaEngineRemoteVideoSource::GetUUID() const {
   return mUniqueId;
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::Allocate(
     const MediaTrackConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::Allocate(
+    const MediaTrackConstraints& aConstraints,
+    const MediaEnginePrefs& aPrefs,
+=======
+void MediaEngineRemoteVideoSource::SetGroupId(nsString aGroupId) {
+  AssertIsOnOwningThread();
+
+  mGroupId = std::move(aGroupId);
+}
+
+nsString MediaEngineRemoteVideoSource::GetGroupId() const {
+  AssertIsOnOwningThread();
+
+  return mGroupId;
+}
+
+nsresult MediaEngineRemoteVideoSource::Allocate(
+    const MediaTrackConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
+>>>>>>> upstream-releases
     const nsString& aDeviceId,
     const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
+<<<<<<< HEAD
     AllocationHandle** aOutHandle, const char** aOutBadConstraint) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+    AllocationHandle** aOutHandle,
+    const char** aOutBadConstraint)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+    const char** aOutBadConstraint) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   MOZ_ASSERT(mState == kReleased);
 
   if (!mInitDone) {
-    LOG(("Init not done"));
+    LOG("Init not done");
     return NS_ERROR_FAILURE;
   }
 
   NormalizedConstraints constraints(aConstraints);
   webrtc::CaptureCapability newCapability;
+<<<<<<< HEAD
   LOG(("ChooseCapability(kFitness) for mCapability (Allocate) ++"));
   if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability,
                         kFitness)) {
+||||||| merged common ancestors
+  LOG(("ChooseCapability(kFitness) for mCapability (Allocate) ++"));
+  if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability, kFitness)) {
+=======
+  LOG("ChooseCapability(kFitness) for mCapability (Allocate) ++");
+  if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability,
+                        kFitness)) {
+>>>>>>> upstream-releases
     *aOutBadConstraint =
         MediaConstraintsHelper::FindBadConstraint(constraints, this, aDeviceId);
     return NS_ERROR_FAILURE;
   }
-  LOG(("ChooseCapability(kFitness) for mCapability (Allocate) --"));
+  LOG("ChooseCapability(kFitness) for mCapability (Allocate) --");
 
   if (camera::GetChildAndCall(&camera::CamerasChild::AllocateCaptureDevice,
                               mCapEngine, mUniqueId.get(), kMaxUniqueIdLength,
@@ -193,21 +417,29 @@ nsresult MediaEngineRemoteVideoSource::Allocate(
     return NS_ERROR_FAILURE;
   }
 
-  *aOutHandle = nullptr;
-
   {
     MutexAutoLock lock(mMutex);
     mState = kAllocated;
     mCapability = newCapability;
   }
 
-  LOG(("Video device %d allocated", mCaptureIndex));
+  LOG("Video device %d allocated", mCaptureIndex);
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::Deallocate(
     const RefPtr<const AllocationHandle>& aHandle) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::Deallocate(const RefPtr<const AllocationHandle>& aHandle)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+nsresult MediaEngineRemoteVideoSource::Deallocate() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   MOZ_ASSERT(mState == kStopped || mState == kAllocated);
@@ -231,7 +463,7 @@ nsresult MediaEngineRemoteVideoSource::Deallocate(
   mImageContainer = nullptr;
   mRescalingBufferPool.Release();
 
-  LOG(("Video device %d deallocated", mCaptureIndex));
+  LOG("Video device %d deallocated", mCaptureIndex);
 
   if (camera::GetChildAndCall(&camera::CamerasChild::ReleaseCaptureDevice,
                               mCapEngine, mCaptureIndex)) {
@@ -240,11 +472,26 @@ nsresult MediaEngineRemoteVideoSource::Deallocate(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::SetTrack(
     const RefPtr<const AllocationHandle>& aHandle,
     const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
     const PrincipalHandle& aPrincipal) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::SetTrack(const RefPtr<const AllocationHandle>& aHandle,
+                                       const RefPtr<SourceMediaStream>& aStream,
+                                       TrackID aTrackID,
+                                       const PrincipalHandle& aPrincipal)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+void MediaEngineRemoteVideoSource::SetTrack(
+    const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
+    const PrincipalHandle& aPrincipal) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   MOZ_ASSERT(mState == kAllocated);
@@ -268,9 +515,19 @@ void MediaEngineRemoteVideoSource::SetTrack(
                     SourceMediaStream::ADDTRACK_QUEUED);
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::Start(
     const RefPtr<const AllocationHandle>& aHandle) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::Start(const RefPtr<const AllocationHandle>& aHandle)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+nsresult MediaEngineRemoteVideoSource::Start() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   MOZ_ASSERT(mState == kAllocated || mState == kStopped);
@@ -285,9 +542,19 @@ nsresult MediaEngineRemoteVideoSource::Start(
 
   mSettingsUpdatedByFrame->mValue = false;
 
+<<<<<<< HEAD
   if (camera::GetChildAndCall(&camera::CamerasChild::StartCapture, mCapEngine,
                               mCaptureIndex, mCapability, this)) {
     LOG(("StartCapture failed"));
+||||||| merged common ancestors
+  if (camera::GetChildAndCall(&camera::CamerasChild::StartCapture,
+                              mCapEngine, mCaptureIndex, mCapability, this)) {
+    LOG(("StartCapture failed"));
+=======
+  if (camera::GetChildAndCall(&camera::CamerasChild::StartCapture, mCapEngine,
+                              mCaptureIndex, mCapability, this)) {
+    LOG("StartCapture failed");
+>>>>>>> upstream-releases
     MutexAutoLock lock(mMutex);
     mState = kStopped;
     return NS_ERROR_FAILURE;
@@ -295,6 +562,7 @@ nsresult MediaEngineRemoteVideoSource::Start(
 
   NS_DispatchToMainThread(NS_NewRunnableFunction(
       "MediaEngineRemoteVideoSource::SetLastCapability",
+<<<<<<< HEAD
       [settings = mSettings, updated = mSettingsUpdatedByFrame,
        source = mMediaSource, cap = mCapability]() mutable {
         switch (source) {
@@ -312,6 +580,43 @@ nsresult MediaEngineRemoteVideoSource::Start(
           default:
             break;
         }
+||||||| merged common ancestors
+      [settings = mSettings,
+       updated = mSettingsUpdatedByFrame,
+       source = mMediaSource,
+       cap = mCapability]() mutable {
+    switch (source) {
+      case dom::MediaSourceEnum::Screen:
+      case dom::MediaSourceEnum::Window:
+      case dom::MediaSourceEnum::Application:
+        // Undo the hack where ideal and max constraints are crammed together
+        // in mCapability for consumption by low-level code. We don't actually
+        // know the real resolution yet, so report min(ideal, max) for now.
+        // TODO: This can be removed in bug 1453269.
+        cap.width = std::min(cap.width >> 16, cap.width & 0xffff);
+        cap.height = std::min(cap.height >> 16, cap.height & 0xffff);
+        break;
+      default:
+        break;
+    }
+=======
+      [settings = mSettings, updated = mSettingsUpdatedByFrame,
+       capEngine = mCapEngine, cap = mCapability]() mutable {
+        switch (capEngine) {
+          case camera::ScreenEngine:
+          case camera::WinEngine:
+            // Undo the hack where ideal and max constraints are crammed
+            // together in mCapability for consumption by low-level code. We
+            // don't actually know the real resolution yet, so report min(ideal,
+            // max) for now.
+            // TODO: This can be removed in bug 1453269.
+            cap.width = std::min(cap.width >> 16, cap.width & 0xffff);
+            cap.height = std::min(cap.height >> 16, cap.height & 0xffff);
+            break;
+          default:
+            break;
+        }
+>>>>>>> upstream-releases
 
         if (!updated->mValue) {
           settings->mWidth.Value() = cap.width;
@@ -323,9 +628,19 @@ nsresult MediaEngineRemoteVideoSource::Start(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::FocusOnSelectedSource(
     const RefPtr<const AllocationHandle>& aHandle) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+nsresult MediaEngineRemoteVideoSource::FocusOnSelectedSource() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   int result;
@@ -334,9 +649,19 @@ nsresult MediaEngineRemoteVideoSource::FocusOnSelectedSource(
   return result == 0 ? NS_OK : NS_ERROR_FAILURE;
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::Stop(
     const RefPtr<const AllocationHandle>& aHandle) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::Stop(const RefPtr<const AllocationHandle>& aHandle)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+nsresult MediaEngineRemoteVideoSource::Stop() {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   if (mState == kStopped || mState == kAllocated) {
@@ -354,35 +679,55 @@ nsresult MediaEngineRemoteVideoSource::Stop(
   {
     MutexAutoLock lock(mMutex);
     mState = kStopped;
-
-    // Drop any cached image so we don't start with a stale image on next
-    // usage.  Also, gfx gets very upset if these are held until this object
-    // is gc'd in final-cc during shutdown (bug 1374164)
-    mImage = nullptr;
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult MediaEngineRemoteVideoSource::Reconfigure(
     const RefPtr<AllocationHandle>& aHandle,
     const MediaTrackConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
     const nsString& aDeviceId, const char** aOutBadConstraint) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+nsresult
+MediaEngineRemoteVideoSource::Reconfigure(const RefPtr<AllocationHandle>& aHandle,
+                                          const MediaTrackConstraints& aConstraints,
+                                          const MediaEnginePrefs& aPrefs,
+                                          const nsString& aDeviceId,
+                                          const char** aOutBadConstraint)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+nsresult MediaEngineRemoteVideoSource::Reconfigure(
+    const MediaTrackConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
+    const nsString& aDeviceId, const char** aOutBadConstraint) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   MOZ_ASSERT(mInitDone);
 
   NormalizedConstraints constraints(aConstraints);
   webrtc::CaptureCapability newCapability;
+<<<<<<< HEAD
   LOG(("ChooseCapability(kFitness) for mTargetCapability (Reconfigure) ++"));
   if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability,
                         kFitness)) {
+||||||| merged common ancestors
+  LOG(("ChooseCapability(kFitness) for mTargetCapability (Reconfigure) ++"));
+  if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability, kFitness)) {
+=======
+  LOG("ChooseCapability(kFitness) for mTargetCapability (Reconfigure) ++");
+  if (!ChooseCapability(constraints, aPrefs, aDeviceId, newCapability,
+                        kFitness)) {
+>>>>>>> upstream-releases
     *aOutBadConstraint =
         MediaConstraintsHelper::FindBadConstraint(constraints, this, aDeviceId);
     return NS_ERROR_INVALID_ARG;
   }
-  LOG(("ChooseCapability(kFitness) for mTargetCapability (Reconfigure) --"));
+  LOG("ChooseCapability(kFitness) for mTargetCapability (Reconfigure) --");
 
   if (mCapability == newCapability) {
     return NS_OK;
@@ -390,16 +735,23 @@ nsresult MediaEngineRemoteVideoSource::Reconfigure(
 
   bool started = mState == kStarted;
   if (started) {
-    // Allocate always returns a null AllocationHandle.
-    // We can safely pass nullptr below.
-    nsresult rv = Stop(nullptr);
+    nsresult rv = Stop();
     if (NS_WARN_IF(NS_FAILED(rv))) {
       nsAutoCString name;
       GetErrorName(rv, name);
+<<<<<<< HEAD
       LOG(
           ("Video source %p for video device %d Reconfigure() failed "
            "unexpectedly in Stop(). rv=%s",
            this, mCaptureIndex, name.Data()));
+||||||| merged common ancestors
+      LOG(("Video source %p for video device %d Reconfigure() failed "
+           "unexpectedly in Stop(). rv=%s", this, mCaptureIndex, name.Data()));
+=======
+      LOG("Video source %p for video device %d Reconfigure() failed "
+          "unexpectedly in Stop(). rv=%s",
+          this, mCaptureIndex, name.Data());
+>>>>>>> upstream-releases
       return NS_ERROR_UNEXPECTED;
     }
   }
@@ -411,14 +763,23 @@ nsresult MediaEngineRemoteVideoSource::Reconfigure(
   }
 
   if (started) {
-    nsresult rv = Start(nullptr);
+    nsresult rv = Start();
     if (NS_WARN_IF(NS_FAILED(rv))) {
       nsAutoCString name;
       GetErrorName(rv, name);
+<<<<<<< HEAD
       LOG(
           ("Video source %p for video device %d Reconfigure() failed "
            "unexpectedly in Start(). rv=%s",
            this, mCaptureIndex, name.Data()));
+||||||| merged common ancestors
+      LOG(("Video source %p for video device %d Reconfigure() failed "
+           "unexpectedly in Start(). rv=%s", this, mCaptureIndex, name.Data()));
+=======
+      LOG("Video source %p for video device %d Reconfigure() failed "
+          "unexpectedly in Start(). rv=%s",
+          this, mCaptureIndex, name.Data());
+>>>>>>> upstream-releases
       return NS_ERROR_UNEXPECTED;
     }
   }
@@ -458,6 +819,7 @@ webrtc::CaptureCapability MediaEngineRemoteVideoSource::GetCapability(
   return result;
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::Pull(
     const RefPtr<const AllocationHandle>& aHandle,
     const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
@@ -496,6 +858,54 @@ void MediaEngineRemoteVideoSource::Pull(
 
 int MediaEngineRemoteVideoSource::DeliverFrame(
     uint8_t* aBuffer, const camera::VideoFrameProperties& aProps) {
+||||||| merged common ancestors
+void
+MediaEngineRemoteVideoSource::Pull(const RefPtr<const AllocationHandle>& aHandle,
+                                   const RefPtr<SourceMediaStream>& aStream,
+                                   TrackID aTrackID,
+                                   StreamTime aDesiredTime,
+                                   const PrincipalHandle& aPrincipalHandle)
+{
+  TRACE_AUDIO_CALLBACK_COMMENT("SourceMediaStream %p track %i",
+                               aStream.get(), aTrackID);
+  MutexAutoLock lock(mMutex);
+  if (mState == kReleased) {
+    // We end the track before deallocating, so this is safe.
+    return;
+  }
+
+  MOZ_ASSERT(mState == kStarted || mState == kStopped);
+
+  StreamTime delta = aDesiredTime - aStream->GetEndOfAppendedData(aTrackID);
+  if (delta <= 0) {
+    return;
+  }
+
+  VideoSegment segment;
+  RefPtr<layers::Image> image = mImage;
+  if (mState == kStarted) {
+    MOZ_ASSERT(!image || mImageSize == image->GetSize());
+    segment.AppendFrame(image.forget(), delta, mImageSize, aPrincipalHandle);
+  } else {
+    // nullptr images are allowed, but we force it to black and retain the size.
+    segment.AppendFrame(image.forget(), delta, mImageSize, aPrincipalHandle, true);
+  }
+
+  // This is safe from any thread, and is safe if the track is Finished
+  // or Destroyed.
+  // This can fail if either a) we haven't added the track yet, or b)
+  // we've removed or finished the track.
+  aStream->AppendToTrack(aTrackID, &segment);
+}
+
+int
+MediaEngineRemoteVideoSource::DeliverFrame(uint8_t* aBuffer,
+                                           const camera::VideoFrameProperties& aProps)
+{
+=======
+int MediaEngineRemoteVideoSource::DeliverFrame(
+    uint8_t* aBuffer, const camera::VideoFrameProperties& aProps) {
+>>>>>>> upstream-releases
   // Cameras IPC thread - take great care with accessing members!
 
   int32_t req_max_width;
@@ -540,10 +950,9 @@ int MediaEngineRemoteVideoSource::DeliverFrame(
                dst_max_height);
 
   // Apply scaling for screen sharing, see bug 1453269.
-  switch (mMediaSource) {
-    case MediaSourceEnum::Screen:
-    case MediaSourceEnum::Window:
-    case MediaSourceEnum::Application: {
+  switch (mCapEngine) {
+    case camera::ScreenEngine:
+    case camera::WinEngine: {
       // scale to average of portrait and landscape
       float scale_width = (float)dst_width / (float)aProps.width();
       float scale_height = (float)dst_height / (float)aProps.height();
@@ -613,35 +1022,74 @@ int MediaEngineRemoteVideoSource::DeliverFrame(
 
 #ifdef DEBUG
   static uint32_t frame_num = 0;
+<<<<<<< HEAD
   LOGFRAME(
       ("frame %d (%dx%d)->(%dx%d); rotation %d, timeStamp %u, "
        "ntpTimeMs %" PRIu64 ", renderTimeMs %" PRIu64,
        frame_num++, aProps.width(), aProps.height(), dst_width, dst_height,
        aProps.rotation(), aProps.timeStamp(), aProps.ntpTimeMs(),
        aProps.renderTimeMs()));
+||||||| merged common ancestors
+  LOGFRAME(("frame %d (%dx%d)->(%dx%d); rotation %d, timeStamp %u, "
+            "ntpTimeMs %" PRIu64 ", renderTimeMs %" PRIu64,
+            frame_num++, aProps.width(), aProps.height(), dst_width, dst_height,
+            aProps.rotation(), aProps.timeStamp(), aProps.ntpTimeMs(),
+            aProps.renderTimeMs()));
+=======
+  LOG_FRAME(
+      "frame %d (%dx%d)->(%dx%d); rotation %d, timeStamp %u, ntpTimeMs %" PRIu64
+      ", renderTimeMs %" PRIu64,
+      frame_num++, aProps.width(), aProps.height(), dst_width, dst_height,
+      aProps.rotation(), aProps.timeStamp(), aProps.ntpTimeMs(),
+      aProps.renderTimeMs());
+>>>>>>> upstream-releases
 #endif
 
   if (mImageSize.width != dst_width || mImageSize.height != dst_height) {
     NS_DispatchToMainThread(NS_NewRunnableFunction(
         "MediaEngineRemoteVideoSource::FrameSizeChange",
+<<<<<<< HEAD
         [settings = mSettings, updated = mSettingsUpdatedByFrame, dst_width,
+||||||| merged common ancestors
+        [settings = mSettings,
+         updated = mSettingsUpdatedByFrame,
+         dst_width,
+=======
+        [settings = mSettings, updated = mSettingsUpdatedByFrame,
+         holder = std::move(mFirstFramePromiseHolder), dst_width,
+>>>>>>> upstream-releases
          dst_height]() mutable {
+<<<<<<< HEAD
           settings->mWidth.Value() = dst_width;
           settings->mHeight.Value() = dst_height;
           updated->mValue = true;
         }));
+||||||| merged common ancestors
+      settings->mWidth.Value() = dst_width;
+      settings->mHeight.Value() = dst_height;
+      updated->mValue = true;
+    }));
+=======
+          settings->mWidth.Value() = dst_width;
+          settings->mHeight.Value() = dst_height;
+          updated->mValue = true;
+          // Since mImageSize was initialized to (0,0), we end up here on the
+          // arrival of the first frame. We resolve the promise representing
+          // arrival of first frame, after correct settings values have been
+          // made available (Resolve() is idempotent if already resolved).
+          holder.ResolveIfExists(true, __func__);
+        }));
+>>>>>>> upstream-releases
   }
 
   {
     MutexAutoLock lock(mMutex);
-    // implicitly releases last image
-    mImage = image.forget();
-    mImageSize = mImage->GetSize();
+    MOZ_ASSERT(mState == kStarted);
+    VideoSegment segment;
+    mImageSize = image->GetSize();
+    segment.AppendFrame(image.forget(), mImageSize, mPrincipal);
+    mStream->AppendToTrack(mTrackID, &segment);
   }
-
-  // We'll push the frame into the MSG on the next Pull. This will avoid
-  // swamping the MSG with frames should it be taking longer than normal to run
-  // an iteration.
 
   return 0;
 }
@@ -712,8 +1160,18 @@ uint32_t MediaEngineRemoteVideoSource::GetFeasibilityDistance(
 
 // Find best capability by removing inferiors. May leave >1 of equal distance
 
+<<<<<<< HEAD
 /* static */ void MediaEngineRemoteVideoSource::TrimLessFitCandidates(
     nsTArray<CapabilityCandidate>& aSet) {
+||||||| merged common ancestors
+/* static */ void
+MediaEngineRemoteVideoSource::TrimLessFitCandidates(nsTArray<CapabilityCandidate>& aSet)
+{
+=======
+/* static */
+void MediaEngineRemoteVideoSource::TrimLessFitCandidates(
+    nsTArray<CapabilityCandidate>& aSet) {
+>>>>>>> upstream-releases
   uint32_t best = UINT32_MAX;
   for (auto& candidate : aSet) {
     if (best > candidate.mDistance) {
@@ -765,6 +1223,7 @@ uint32_t MediaEngineRemoteVideoSource::GetBestFitnessDistance(
   return candidateSet[0].mDistance;
 }
 
+<<<<<<< HEAD
 static void LogCapability(const char* aHeader,
                           const webrtc::CaptureCapability& aCapability,
                           uint32_t aDistance) {
@@ -777,31 +1236,116 @@ static void LogCapability(const char* aHeader,
        codec[std::min(std::max(uint32_t(0), uint32_t(aCapability.videoType)),
                       uint32_t(sizeof(codec) / sizeof(*codec) - 1))],
        aDistance));
+||||||| merged common ancestors
+static void
+LogCapability(const char* aHeader,
+              const webrtc::CaptureCapability &aCapability,
+              uint32_t aDistance)
+{
+  // RawVideoType and VideoCodecType media/webrtc/trunk/webrtc/common_types.h
+  static const char* const types[] = {
+    "I420",
+    "YV12",
+    "YUY2",
+    "UYVY",
+    "IYUV",
+    "ARGB",
+    "RGB24",
+    "RGB565",
+    "ARGB4444",
+    "ARGB1555",
+    "MJPEG",
+    "NV12",
+    "NV21",
+    "BGRA",
+    "Unknown type"
+  };
+
+  static const char* const codec[] = {
+    "VP8",
+    "VP9",
+    "H264",
+    "I420",
+    "RED",
+    "ULPFEC",
+    "Generic codec",
+    "Unknown codec"
+  };
+
+  LOG(("%s: %4u x %4u x %2u maxFps, %s, %s. Distance = %" PRIu32,
+       aHeader, aCapability.width, aCapability.height, aCapability.maxFPS,
+       types[std::min(std::max(uint32_t(0), uint32_t(aCapability.rawType)),
+                      uint32_t(sizeof(types) / sizeof(*types) - 1))],
+       codec[std::min(std::max(uint32_t(0), uint32_t(aCapability.codecType)),
+                      uint32_t(sizeof(codec) / sizeof(*codec) - 1))],
+       aDistance));
+=======
+static void LogCapability(const char* aHeader,
+                          const webrtc::CaptureCapability& aCapability,
+                          uint32_t aDistance) {
+  static const char* const codec[] = {"VP8",           "VP9",          "H264",
+                                      "I420",          "RED",          "ULPFEC",
+                                      "Generic codec", "Unknown codec"};
+
+  LOG("%s: %4u x %4u x %2u maxFps, %s. Distance = %" PRIu32, aHeader,
+      aCapability.width, aCapability.height, aCapability.maxFPS,
+      codec[std::min(std::max(uint32_t(0), uint32_t(aCapability.videoType)),
+                     uint32_t(sizeof(codec) / sizeof(*codec) - 1))],
+      aDistance);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool MediaEngineRemoteVideoSource::ChooseCapability(
     const NormalizedConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
     const nsString& aDeviceId, webrtc::CaptureCapability& aCapability,
     const DistanceCalculation aCalculate) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+bool
+MediaEngineRemoteVideoSource::ChooseCapability(
+    const NormalizedConstraints& aConstraints,
+    const MediaEnginePrefs& aPrefs,
+    const nsString& aDeviceId,
+    webrtc::CaptureCapability& aCapability,
+    const DistanceCalculation aCalculate)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+bool MediaEngineRemoteVideoSource::ChooseCapability(
+    const NormalizedConstraints& aConstraints, const MediaEnginePrefs& aPrefs,
+    const nsString& aDeviceId, webrtc::CaptureCapability& aCapability,
+    const DistanceCalculation aCalculate) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
+<<<<<<< HEAD
   if (MOZ_LOG_TEST(GetMediaManagerLog(), LogLevel::Debug)) {
     LOG(("ChooseCapability: prefs: %dx%d @%dfps", aPrefs.GetWidth(),
          aPrefs.GetHeight(), aPrefs.mFPS));
+||||||| merged common ancestors
+  if (MOZ_LOG_TEST(GetMediaManagerLog(), LogLevel::Debug)) {
+    LOG(("ChooseCapability: prefs: %dx%d @%dfps",
+         aPrefs.GetWidth(), aPrefs.GetHeight(),
+         aPrefs.mFPS));
+=======
+  if (MOZ_LOG_TEST(gMediaManagerLog, LogLevel::Debug)) {
+    LOG("ChooseCapability: prefs: %dx%d @%dfps", aPrefs.GetWidth(),
+        aPrefs.GetHeight(), aPrefs.mFPS);
+>>>>>>> upstream-releases
     MediaConstraintsHelper::LogConstraints(aConstraints);
     if (!aConstraints.mAdvanced.empty()) {
-      LOG(("Advanced array[%zu]:", aConstraints.mAdvanced.size()));
+      LOG("Advanced array[%zu]:", aConstraints.mAdvanced.size());
       for (auto& advanced : aConstraints.mAdvanced) {
         MediaConstraintsHelper::LogConstraints(advanced);
       }
     }
   }
 
-  switch (mMediaSource) {
-    case MediaSourceEnum::Screen:
-    case MediaSourceEnum::Window:
-    case MediaSourceEnum::Application: {
+  switch (mCapEngine) {
+    case camera::ScreenEngine:
+    case camera::WinEngine: {
       FlattenedConstraints c(aConstraints);
       // The actual resolution to constrain around is not easy to find ahead of
       // time (and may in fact change over time), so as a hack, we push ideal
@@ -828,8 +1372,7 @@ bool MediaEngineRemoteVideoSource::ChooseCapability(
     candidateSet.AppendElement(CapabilityCandidate(GetCapability(i)));
   }
 
-  if (!mHardcodedCapabilities.IsEmpty() &&
-      mMediaSource == MediaSourceEnum::Camera) {
+  if (!mHardcodedCapabilities.IsEmpty() && mCapEngine == camera::CameraEngine) {
     // We have a hardcoded capability, which means this camera didn't report
     // discrete capabilities. It might still allow a ranged capability, so we
     // add a couple of default candidates based on prefs and constraints.
@@ -873,7 +1416,7 @@ bool MediaEngineRemoteVideoSource::ChooseCapability(
         continue;
       }
       LogCapability("Hardcoded capability", cap, 0);
-      candidateSet.AppendElement(CapabilityCandidate(std::move(cap)));
+      candidateSet.AppendElement(cap);
     }
   }
 
@@ -892,8 +1435,15 @@ bool MediaEngineRemoteVideoSource::ChooseCapability(
   }
 
   if (candidateSet.IsEmpty()) {
+<<<<<<< HEAD
     LOG(("failed to find capability match from %zu choices",
          candidateSet.Length()));
+||||||| merged common ancestors
+    LOG(("failed to find capability match from %zu choices", candidateSet.Length()));
+=======
+    LOG("failed to find capability match from %zu choices",
+        candidateSet.Length());
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -950,8 +1500,18 @@ void MediaEngineRemoteVideoSource::GetSettings(
   aOutSettings = *mSettings;
 }
 
+<<<<<<< HEAD
 void MediaEngineRemoteVideoSource::Refresh(int aIndex) {
   LOG((__PRETTY_FUNCTION__));
+||||||| merged common ancestors
+void
+MediaEngineRemoteVideoSource::Refresh(int aIndex)
+{
+  LOG((__PRETTY_FUNCTION__));
+=======
+void MediaEngineRemoteVideoSource::Refresh(int aIndex) {
+  LOG(__PRETTY_FUNCTION__);
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   // NOTE: mCaptureIndex might have changed when allocated!
@@ -969,6 +1529,7 @@ void MediaEngineRemoteVideoSource::Refresh(int aIndex) {
 
   SetName(NS_ConvertUTF8toUTF16(deviceName));
   MOZ_ASSERT(mUniqueId.Equals(uniqueId));
+  SetGroupId(NS_ConvertUTF8toUTF16(deviceName));
 }
 
 }  // namespace mozilla

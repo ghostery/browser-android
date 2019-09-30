@@ -9,6 +9,7 @@
 #include "mozilla/dom/Touch.h"
 #include "mozilla/dom/TouchListBinding.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/TouchEvents.h"
 #include "nsContentUtils.h"
 #include "nsIDocShell.h"
@@ -275,9 +276,47 @@ bool TouchEvent::PrefEnabled(nsIDocShell* aDocShell) {
 }
 
 // static
+<<<<<<< HEAD
 already_AddRefed<TouchEvent> TouchEvent::Constructor(
     const GlobalObject& aGlobal, const nsAString& aType,
     const TouchEventInit& aParam, ErrorResult& aRv) {
+||||||| merged common ancestors
+already_AddRefed<TouchEvent>
+TouchEvent::Constructor(const GlobalObject& aGlobal,
+                        const nsAString& aType,
+                        const TouchEventInit& aParam,
+                        ErrorResult& aRv)
+{
+=======
+bool TouchEvent::LegacyAPIEnabled(JSContext* aCx, JSObject* aGlobal) {
+  nsIPrincipal* principal = nsContentUtils::SubjectPrincipal(aCx);
+  bool isSystem = principal && nsContentUtils::IsSystemPrincipal(principal);
+
+  nsIDocShell* docShell = nullptr;
+  if (aGlobal) {
+    nsGlobalWindowInner* win = xpc::WindowOrNull(aGlobal);
+    if (win) {
+      docShell = win->GetDocShell();
+    }
+  }
+  return LegacyAPIEnabled(docShell, isSystem);
+}
+
+// static
+bool TouchEvent::LegacyAPIEnabled(nsIDocShell* aDocShell,
+                                  bool aCallerIsSystem) {
+  return (aCallerIsSystem ||
+          StaticPrefs::dom_w3c_touch_events_legacy_apis_enabled() ||
+          (aDocShell && aDocShell->GetTouchEventsOverride() ==
+                            nsIDocShell::TOUCHEVENTS_OVERRIDE_ENABLED)) &&
+         PrefEnabled(aDocShell);
+}
+
+// static
+already_AddRefed<TouchEvent> TouchEvent::Constructor(
+    const GlobalObject& aGlobal, const nsAString& aType,
+    const TouchEventInit& aParam, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<EventTarget> t = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<TouchEvent> e = new TouchEvent(t, nullptr, nullptr);
   bool trusted = e->Init(t);

@@ -79,9 +79,24 @@ already_AddRefed<IDirect3DSurface9> DXGID3D9TextureData::GetD3D9Surface()
   return textureSurface.forget();
 }
 
+<<<<<<< HEAD
 bool DXGID3D9TextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
   aOutDescriptor =
       SurfaceDescriptorD3D10((WindowsHandle)(mHandle), mFormat, GetSize());
+||||||| merged common ancestors
+bool
+DXGID3D9TextureData::Serialize(SurfaceDescriptor& aOutDescriptor)
+{
+  aOutDescriptor = SurfaceDescriptorD3D10((WindowsHandle)(mHandle), mFormat, GetSize());
+=======
+bool DXGID3D9TextureData::Serialize(SurfaceDescriptor& aOutDescriptor) {
+  // In reality, with D3D9 we will only ever deal with RGBA textures.
+  bool isYUV = mFormat == SurfaceFormat::NV12 ||
+               mFormat == SurfaceFormat::P010 || mFormat == SurfaceFormat::P016;
+  aOutDescriptor = SurfaceDescriptorD3D10(
+      (WindowsHandle)(mHandle), mFormat, GetSize(),
+      isYUV ? gfx::YUVColorSpace::BT601 : gfx::YUVColorSpace::UNKNOWN);
+>>>>>>> upstream-releases
   return true;
 }
 
@@ -177,10 +192,26 @@ D3D9SurfaceImage::GetShareHandle() const { return mShareHandle; }
 
 gfx::IntSize D3D9SurfaceImage::GetSize() const { return mSize; }
 
+<<<<<<< HEAD
 TextureClient* D3D9SurfaceImage::GetTextureClient(KnowsCompositor* aForwarder) {
+||||||| merged common ancestors
+TextureClient*
+D3D9SurfaceImage::GetTextureClient(KnowsCompositor* aForwarder)
+{
+=======
+TextureClient* D3D9SurfaceImage::GetTextureClient(
+    KnowsCompositor* aKnowsCompositor) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mTextureClient);
+<<<<<<< HEAD
   MOZ_ASSERT(mTextureClient->GetAllocator() ==
              aForwarder->GetTextureForwarder());
+||||||| merged common ancestors
+  MOZ_ASSERT(mTextureClient->GetAllocator() == aForwarder->GetTextureForwarder());
+=======
+  MOZ_ASSERT(mTextureClient->GetAllocator() ==
+             aKnowsCompositor->GetTextureForwarder());
+>>>>>>> upstream-releases
   return mTextureClient;
 }
 

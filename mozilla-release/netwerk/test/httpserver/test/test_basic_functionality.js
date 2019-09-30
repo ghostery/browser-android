@@ -16,14 +16,30 @@ XPCOMUtils.defineLazyGetter(this, "port", function() {
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
-    new Test("http://localhost:" + port + "/objHandler",
-          null, start_objHandler, null),
-    new Test("http://localhost:" + port + "/functionHandler",
-          null, start_functionHandler, null),
-    new Test("http://localhost:" + port + "/nonexistent-path",
-          null, start_non_existent_path, null),
-    new Test("http://localhost:" + port + "/lotsOfHeaders",
-          null, start_lots_of_headers, null),
+    new Test(
+      "http://localhost:" + port + "/objHandler",
+      null,
+      start_objHandler,
+      null
+    ),
+    new Test(
+      "http://localhost:" + port + "/functionHandler",
+      null,
+      start_functionHandler,
+      null
+    ),
+    new Test(
+      "http://localhost:" + port + "/nonexistent-path",
+      null,
+      start_non_existent_path,
+      null
+    ),
+    new Test(
+      "http://localhost:" + port + "/lotsOfHeaders",
+      null,
+      start_lots_of_headers,
+      null
+    ),
   ];
 });
 
@@ -60,7 +76,14 @@ function commonCheck(ch) {
   Assert.ok(!ch.isPrivateResponse());
 }
 
+<<<<<<< HEAD
 function start_objHandler(ch, cx) {
+||||||| merged common ancestors
+function start_objHandler(ch, cx)
+{
+=======
+function start_objHandler(ch) {
+>>>>>>> upstream-releases
   commonCheck(ch);
 
   Assert.equal(ch.responseStatus, 200);
@@ -68,14 +91,23 @@ function start_objHandler(ch, cx) {
   Assert.equal(ch.getResponseHeader("content-type"), "text/plain");
   Assert.equal(ch.responseStatusText, "OK");
 
-  var reqMin = {}, reqMaj = {}, respMin = {}, respMaj = {};
+  var reqMin = {},
+    reqMaj = {},
+    respMin = {},
+    respMaj = {};
   ch.getRequestVersion(reqMaj, reqMin);
   ch.getResponseVersion(respMaj, respMin);
-  Assert.ok(reqMaj.value == respMaj.value &&
-            reqMin.value == respMin.value);
+  Assert.ok(reqMaj.value == respMaj.value && reqMin.value == respMin.value);
 }
 
+<<<<<<< HEAD
 function start_functionHandler(ch, cx) {
+||||||| merged common ancestors
+function start_functionHandler(ch, cx)
+{
+=======
+function start_functionHandler(ch) {
+>>>>>>> upstream-releases
   commonCheck(ch);
 
   Assert.equal(ch.responseStatus, 404);
@@ -83,33 +115,52 @@ function start_functionHandler(ch, cx) {
   Assert.equal(ch.getResponseHeader("foopy"), "quux-baz");
   Assert.equal(ch.responseStatusText, "Page Not Found");
 
-  var reqMin = {}, reqMaj = {}, respMin = {}, respMaj = {};
+  var reqMin = {},
+    reqMaj = {},
+    respMin = {},
+    respMaj = {};
   ch.getRequestVersion(reqMaj, reqMin);
   ch.getResponseVersion(respMaj, respMin);
   Assert.ok(reqMaj.value == 1 && reqMin.value == 1);
   Assert.ok(respMaj.value == 1 && respMin.value == 1);
 }
 
+<<<<<<< HEAD
 function start_non_existent_path(ch, cx) {
+||||||| merged common ancestors
+function start_non_existent_path(ch, cx)
+{
+=======
+function start_non_existent_path(ch) {
+>>>>>>> upstream-releases
   commonCheck(ch);
 
   Assert.equal(ch.responseStatus, 404);
   Assert.ok(!ch.requestSucceeded);
 }
 
+<<<<<<< HEAD
 function start_lots_of_headers(ch, cx) {
+||||||| merged common ancestors
+function start_lots_of_headers(ch, cx)
+{
+=======
+function start_lots_of_headers(ch) {
+>>>>>>> upstream-releases
   commonCheck(ch);
 
   Assert.equal(ch.responseStatus, 200);
   Assert.ok(ch.requestSucceeded);
 
-  for (var i = 0; i < HEADER_COUNT; i++)
+  for (var i = 0; i < HEADER_COUNT; i++) {
     Assert.equal(ch.getResponseHeader("X-Header-" + i), "value " + i);
+  }
 }
 
 // PATH HANDLERS
 
 // /objHandler
+<<<<<<< HEAD
 var objHandler =
   {
     handle(metadata, response) {
@@ -138,6 +189,71 @@ var objHandler =
     },
     QueryInterface: ChromeUtils.generateQI(["nsIHttpRequestHandler"]),
   };
+||||||| merged common ancestors
+var objHandler =
+  {
+    handle: function(metadata, response)
+    {
+      response.setStatusLine(metadata.httpVersion, 200, "OK");
+      response.setHeader("Content-Type", "text/plain", false);
+
+      var body = "Request (slightly reformatted):\n\n";
+      body += metadata.method + " " + metadata.path;
+
+      Assert.equal(metadata.port, port);
+
+      if (metadata.queryString)
+        body +=  "?" + metadata.queryString;
+
+      body += " HTTP/" + metadata.httpVersion + "\n";
+
+      var headEnum = metadata.headers;
+      while (headEnum.hasMoreElements())
+      {
+        var fieldName = headEnum.getNext()
+                                .QueryInterface(Ci.nsISupportsString)
+                                .data;
+        body += fieldName + ": " + metadata.getHeader(fieldName) + "\n";
+      }
+
+      response.bodyOutputStream.write(body, body.length);
+    },
+    QueryInterface: function(id)
+    {
+      if (id.equals(Ci.nsISupports) || id.equals(Ci.nsIHttpRequestHandler))
+        return this;
+      throw Cr.NS_ERROR_NOINTERFACE;
+    }
+  };
+=======
+var objHandler = {
+  handle(metadata, response) {
+    response.setStatusLine(metadata.httpVersion, 200, "OK");
+    response.setHeader("Content-Type", "text/plain", false);
+
+    var body = "Request (slightly reformatted):\n\n";
+    body += metadata.method + " " + metadata.path;
+
+    Assert.equal(metadata.port, port);
+
+    if (metadata.queryString) {
+      body += "?" + metadata.queryString;
+    }
+
+    body += " HTTP/" + metadata.httpVersion + "\n";
+
+    var headEnum = metadata.headers;
+    while (headEnum.hasMoreElements()) {
+      var fieldName = headEnum.getNext().QueryInterface(Ci.nsISupportsString)
+        .data;
+      body += fieldName + ": " + metadata.getHeader(fieldName) + "\n";
+    }
+
+    response.bodyOutputStream.write(body, body.length);
+  },
+  QueryInterface: ChromeUtils.generateQI(["nsIHttpRequestHandler"]),
+};
+>>>>>>> upstream-releases
 
 // /functionHandler
 function functionHandler(metadata, response) {
@@ -156,6 +272,7 @@ function functionHandler(metadata, response) {
 function lotsOfHeadersHandler(request, response) {
   response.setHeader("Content-Type", "text/plain", false);
 
-  for (var i = 0; i < HEADER_COUNT; i++)
+  for (var i = 0; i < HEADER_COUNT; i++) {
     response.setHeader("X-Header-" + i, "value " + i, false);
+  }
 }

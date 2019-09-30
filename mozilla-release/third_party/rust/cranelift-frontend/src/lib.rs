@@ -20,8 +20,8 @@
 //!
 //! This API has been designed to help you translate your mutable variables into
 //! [`SSA`](https://en.wikipedia.org/wiki/Static_single_assignment_form) form.
-//! [`use_var`](struct.FunctionBuilder.html#method.use_var) will returns the Cranelift IR value
-//! that corresponds to your mutable variable at a precise point in the program. However, you know
+//! [`use_var`](struct.FunctionBuilder.html#method.use_var) will return the Cranelift IR value
+//! that corresponds to your mutable variable at a precise point in the program. However, if you know
 //! beforehand that one of your variables is defined only once, for instance if it is the result
 //! of an intermediate expression in an expression-based language, then you can translate it
 //! directly by the Cranelift IR value returned by the instruction builder. Using the
@@ -30,7 +30,7 @@
 //! beforehand if a variable is immutable or not).
 //!
 //! The moral is that you should use these three functions to handle all your mutable variables,
-//! even those that are not present in the source code but artefacts of the translation. It is up
+//! even those that are not present in the source code but artifacts of the translation. It is up
 //! to you to keep a mapping between the mutable variables of your language and their `Variable`
 //! index that is used by Cranelift. Caution: as the `Variable` is used by Cranelift to index an
 //! array containing information about your mutable variables, when you create a new `Variable`
@@ -160,10 +160,11 @@
 #![deny(missing_docs, trivial_numeric_casts, unused_extern_crates)]
 #![warn(unused_import_braces)]
 #![cfg_attr(feature = "std", deny(unstable_features))]
-#![cfg_attr(feature = "cargo-clippy", allow(new_without_default))]
+#![cfg_attr(feature = "cargo-clippy", allow(clippy::new_without_default))]
 #![cfg_attr(
     feature = "cargo-clippy",
     warn(
+<<<<<<< HEAD
         float_arithmetic,
         mut_mut,
         nonminimal_bool,
@@ -172,11 +173,25 @@
         print_stdout,
         unicode_not_nfc,
         use_self
+||||||| merged common ancestors
+        float_arithmetic, mut_mut, nonminimal_bool, option_map_unwrap_or, option_map_unwrap_or_else,
+        print_stdout, unicode_not_nfc, use_self
+=======
+        clippy::float_arithmetic,
+        clippy::mut_mut,
+        clippy::nonminimal_bool,
+        clippy::option_map_unwrap_or,
+        clippy::option_map_unwrap_or_else,
+        clippy::print_stdout,
+        clippy::unicode_not_nfc,
+        clippy::use_self
+>>>>>>> upstream-releases
     )
 )]
-#![cfg_attr(not(feature = "std"), no_std)]
+#![no_std]
 #![cfg_attr(not(feature = "std"), feature(alloc))]
 
+<<<<<<< HEAD
 #[cfg(not(feature = "std"))]
 #[macro_use]
 extern crate alloc;
@@ -185,16 +200,41 @@ extern crate cranelift_codegen;
 extern crate target_lexicon;
 #[macro_use]
 extern crate log;
+||||||| merged common ancestors
+extern crate cranelift_codegen;
+=======
+#[cfg(not(feature = "std"))]
+#[macro_use]
+extern crate alloc as std;
+#[cfg(feature = "std")]
+#[macro_use]
+extern crate std;
 
+#[cfg(not(feature = "std"))]
+use hashmap_core::HashMap;
+#[cfg(feature = "std")]
+use std::collections::HashMap;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 pub use frontend::{FunctionBuilder, FunctionBuilderContext};
 pub use switch::Switch;
 pub use variable::Variable;
+||||||| merged common ancestors
+pub use frontend::{FunctionBuilder, FunctionBuilderContext};
+pub use variable::Variable;
+=======
+pub use crate::frontend::{FunctionBuilder, FunctionBuilderContext};
+pub use crate::switch::Switch;
+pub use crate::variable::Variable;
+>>>>>>> upstream-releases
 
 mod frontend;
 mod ssa;
 mod switch;
 mod variable;
 
+<<<<<<< HEAD
 /// This replaces `std` in builds with `core`.
 #[cfg(not(feature = "std"))]
 mod std {
@@ -208,3 +248,15 @@ mod std {
         pub use self::hashmap_core::{HashMap, HashSet};
     }
 }
+||||||| merged common ancestors
+#[cfg(not(feature = "std"))]
+mod std {
+    extern crate alloc;
+
+    pub use self::alloc::vec;
+    pub use core::*;
+}
+=======
+/// Version number of this crate.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+>>>>>>> upstream-releases

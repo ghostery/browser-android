@@ -74,9 +74,19 @@ class SiteHPKPState : public nsISiteHPKPState {
                 const OriginAttributes& aOriginAttributes,
                 const nsCString& aStateString);
   SiteHPKPState(const nsCString& aHost,
+<<<<<<< HEAD
                 const OriginAttributes& aOriginAttributes, PRTime aExpireTime,
                 SecurityPropertyState aState, bool aIncludeSubdomains,
                 nsTArray<nsCString>& SHA256keys);
+||||||| merged common ancestors
+                const OriginAttributes& aOriginAttributes,
+                PRTime aExpireTime, SecurityPropertyState aState,
+                bool aIncludeSubdomains, nsTArray<nsCString>& SHA256keys);
+=======
+                const OriginAttributes& aOriginAttributes, PRTime aExpireTime,
+                SecurityPropertyState aState, bool aIncludeSubdomains,
+                const nsTArray<nsCString>& SHA256keys);
+>>>>>>> upstream-releases
 
   nsCString mHostname;
   OriginAttributes mOriginAttributes;
@@ -191,11 +201,11 @@ class nsSiteSecurityService : public nsISiteSecurityService,
   nsresult SetHPKPState(const char* aHost, SiteHPKPState& entry, uint32_t flags,
                         bool aIsPreload,
                         const OriginAttributes& aOriginAttributes);
-  nsresult RemoveStateInternal(uint32_t aType, nsIURI* aURI, uint32_t aFlags,
-                               const OriginAttributes& aOriginAttributes);
-  nsresult RemoveStateInternal(uint32_t aType, const nsAutoCString& aHost,
-                               uint32_t aFlags, bool aIsPreload,
-                               const OriginAttributes& aOriginAttributes);
+  nsresult MarkHostAsNotHSTS(uint32_t aType, const nsAutoCString& aHost,
+                             uint32_t aFlags, bool aIsPreload,
+                             const OriginAttributes& aOriginAttributes);
+  nsresult ResetStateInternal(uint32_t aType, nsIURI* aURI, uint32_t aFlags,
+                              const OriginAttributes& aOriginAttributes);
   bool HostHasHSTSEntry(const nsAutoCString& aHost,
                         bool aRequireIncludeSubdomains, uint32_t aFlags,
                         const OriginAttributes& aOriginAttributes,

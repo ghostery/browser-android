@@ -12,11 +12,14 @@
 #include "mozilla/dom/URL.h"
 #include "mozilla/Move.h"
 #include "mozilla/StaticPtr.h"
+#include "mozilla/UserAgentStyleSheetID.h"
 #include "mozilla/net/ReferrerPolicy.h"
 
 #include "nsCOMPtr.h"
 #include "nsIPrincipal.h"
 #include "nsIURI.h"
+
+class nsLayoutStylesheetCache;
 
 namespace mozilla {
 
@@ -55,7 +58,18 @@ struct URLExtraData {
   static void InitDummy();
   static void ReleaseDummy();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  // URLExtraData objects that shared style sheets use a sheet ID index to
+  // refer to.
+  static StaticRefPtr<URLExtraData>
+      sShared[size_t(UserAgentStyleSheetID::Count)];
+
+ private:
+>>>>>>> upstream-releases
   ~URLExtraData();
 
   nsCOMPtr<nsIURI> mBaseURI;

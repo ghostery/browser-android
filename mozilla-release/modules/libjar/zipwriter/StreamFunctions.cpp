@@ -11,6 +11,7 @@
  * Fully reads the required amount of data. Keeps reading until all the
  * data is retrieved or an error is hit.
  */
+<<<<<<< HEAD
 nsresult ZW_ReadData(nsIInputStream *aStream, char *aBuffer, uint32_t aCount) {
   while (aCount > 0) {
     uint32_t read;
@@ -21,6 +22,31 @@ nsresult ZW_ReadData(nsIInputStream *aStream, char *aBuffer, uint32_t aCount) {
     // If we hit EOF before reading the data we need then throw.
     if (read == 0 && aCount > 0) return NS_ERROR_FAILURE;
   }
+||||||| merged common ancestors
+nsresult ZW_ReadData(nsIInputStream *aStream, char *aBuffer, uint32_t aCount)
+{
+    while (aCount > 0) {
+        uint32_t read;
+        nsresult rv = aStream->Read(aBuffer, aCount, &read);
+        NS_ENSURE_SUCCESS(rv, rv);
+        aCount -= read;
+        aBuffer += read;
+        // If we hit EOF before reading the data we need then throw.
+        if (read == 0 && aCount > 0)
+            return NS_ERROR_FAILURE;
+    }
+=======
+nsresult ZW_ReadData(nsIInputStream* aStream, char* aBuffer, uint32_t aCount) {
+  while (aCount > 0) {
+    uint32_t read;
+    nsresult rv = aStream->Read(aBuffer, aCount, &read);
+    NS_ENSURE_SUCCESS(rv, rv);
+    aCount -= read;
+    aBuffer += read;
+    // If we hit EOF before reading the data we need then throw.
+    if (read == 0 && aCount > 0) return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -29,6 +55,7 @@ nsresult ZW_ReadData(nsIInputStream *aStream, char *aBuffer, uint32_t aCount) {
  * Fully writes the required amount of data. Keeps writing until all the
  * data is written or an error is hit.
  */
+<<<<<<< HEAD
 nsresult ZW_WriteData(nsIOutputStream *aStream, const char *aBuffer,
                       uint32_t aCount) {
   while (aCount > 0) {
@@ -39,6 +66,31 @@ nsresult ZW_WriteData(nsIOutputStream *aStream, const char *aBuffer,
     aCount -= written;
     aBuffer += written;
   }
+||||||| merged common ancestors
+nsresult ZW_WriteData(nsIOutputStream *aStream, const char *aBuffer,
+                                  uint32_t aCount)
+{
+    while (aCount > 0) {
+        uint32_t written;
+        nsresult rv = aStream->Write(aBuffer, aCount, &written);
+        NS_ENSURE_SUCCESS(rv, rv);
+        if (written <= 0)
+            return NS_ERROR_FAILURE;
+        aCount -= written;
+        aBuffer += written;
+    }
+=======
+nsresult ZW_WriteData(nsIOutputStream* aStream, const char* aBuffer,
+                      uint32_t aCount) {
+  while (aCount > 0) {
+    uint32_t written;
+    nsresult rv = aStream->Write(aBuffer, aCount, &written);
+    NS_ENSURE_SUCCESS(rv, rv);
+    if (written <= 0) return NS_ERROR_FAILURE;
+    aCount -= written;
+    aBuffer += written;
+  }
+>>>>>>> upstream-releases
 
   return NS_OK;
 }

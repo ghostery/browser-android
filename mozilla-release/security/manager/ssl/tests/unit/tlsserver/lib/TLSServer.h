@@ -34,28 +34,66 @@ enum DebugLevel { DEBUG_ERRORS = 1, DEBUG_WARNINGS = 2, DEBUG_VERBOSE = 3 };
 
 extern DebugLevel gDebugLevel;
 
-void PrintPRError(const char *aPrefix);
+void PrintPRError(const char* aPrefix);
 
 // The default certificate is trusted for localhost and *.example.com
 extern const char DEFAULT_CERT_NICKNAME[];
 
 // Pass DEFAULT_CERT_NICKNAME as certName unless you need a specific
 // certificate.
+<<<<<<< HEAD
 SECStatus ConfigSecureServerWithNamedCert(
     PRFileDesc *fd, const char *certName,
     /*optional*/ UniqueCERTCertificate *cert,
     /*optional*/ SSLKEAType *kea);
+||||||| merged common ancestors
+SECStatus
+ConfigSecureServerWithNamedCert(PRFileDesc* fd, const char* certName,
+                                /*optional*/ UniqueCERTCertificate* cert,
+                                /*optional*/ SSLKEAType* kea);
+=======
+SECStatus ConfigSecureServerWithNamedCert(
+    PRFileDesc* fd, const char* certName,
+    /*optional*/ UniqueCERTCertificate* cert,
+    /*optional*/ SSLKEAType* kea);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 SECStatus InitializeNSS(const char *nssCertDBDir);
+||||||| merged common ancestors
+SECStatus
+InitializeNSS(const char* nssCertDBDir);
+=======
+SECStatus InitializeNSS(const char* nssCertDBDir);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 int StartServer(const char *nssCertDBDir, SSLSNISocketConfig sniSocketConfig,
                 void *sniSocketConfigArg);
+||||||| merged common ancestors
+int
+StartServer(const char *nssCertDBDir, SSLSNISocketConfig sniSocketConfig,
+            void *sniSocketConfigArg);
+=======
+int StartServer(int argc, char* argv[], SSLSNISocketConfig sniSocketConfig,
+                void* sniSocketConfigArg);
+>>>>>>> upstream-releases
 
 template <typename Host>
+<<<<<<< HEAD
 inline const Host *GetHostForSNI(const SECItem *aSrvNameArr,
                                  uint32_t aSrvNameArrSize, const Host *hosts) {
+||||||| merged common ancestors
+inline const Host *
+GetHostForSNI(const SECItem *aSrvNameArr, uint32_t aSrvNameArrSize,
+              const Host *hosts)
+{
+=======
+inline const Host* GetHostForSNI(const SECItem* aSrvNameArr,
+                                 uint32_t aSrvNameArrSize, const Host* hosts) {
+>>>>>>> upstream-releases
   for (uint32_t i = 0; i < aSrvNameArrSize; i++) {
-    for (const Host *host = hosts; host->mHostName; ++host) {
+    for (const Host* host = hosts; host->mHostName; ++host) {
       SECItem hostName;
       hostName.data =
           BitwiseCast<unsigned char *, const char *>(host->mHostName);

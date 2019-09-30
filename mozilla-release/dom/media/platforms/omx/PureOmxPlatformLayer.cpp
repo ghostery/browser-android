@@ -10,7 +10,7 @@
 #include "OmxCoreLibLinker.h"
 
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 
 #define LOG(arg, ...)                    \
@@ -74,7 +74,16 @@ bool PureOmxBufferData::ShouldUseEGLImage() {
   return (err != OMX_ErrorNotImplemented);
 }
 
+<<<<<<< HEAD
 /* static */ bool PureOmxPlatformLayer::Init(void) {
+||||||| merged common ancestors
+/* static */ bool
+PureOmxPlatformLayer::Init(void)
+{
+=======
+/* static */
+bool PureOmxPlatformLayer::Init(void) {
+>>>>>>> upstream-releases
   if (!OmxCoreLibLinker::Link()) {
     return false;
   }
@@ -90,6 +99,7 @@ bool PureOmxBufferData::ShouldUseEGLImage() {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ OMX_CALLBACKTYPE PureOmxPlatformLayer::sCallbacks = {
     EventHandler, EmptyBufferDone, FillBufferDone};
 
@@ -101,6 +111,34 @@ PureOmxPlatformLayer::PureOmxPlatformLayer(
       mPromiseLayer(aPromiseLayer),
       mTaskQueue(aTaskQueue),
       mImageContainer(aImageContainer) {
+||||||| merged common ancestors
+/* static */ OMX_CALLBACKTYPE PureOmxPlatformLayer::sCallbacks =
+  { EventHandler, EmptyBufferDone, FillBufferDone };
+
+PureOmxPlatformLayer::PureOmxPlatformLayer(OmxDataDecoder* aDataDecoder,
+                                           OmxPromiseLayer* aPromiseLayer,
+                                           TaskQueue* aTaskQueue,
+                                           layers::ImageContainer* aImageContainer)
+  : mComponent(nullptr)
+  , mDataDecoder(aDataDecoder)
+  , mPromiseLayer(aPromiseLayer)
+  , mTaskQueue(aTaskQueue)
+  , mImageContainer(aImageContainer)
+{
+=======
+/* static */
+OMX_CALLBACKTYPE PureOmxPlatformLayer::sCallbacks = {
+    EventHandler, EmptyBufferDone, FillBufferDone};
+
+PureOmxPlatformLayer::PureOmxPlatformLayer(
+    OmxDataDecoder* aDataDecoder, OmxPromiseLayer* aPromiseLayer,
+    TaskQueue* aTaskQueue, layers::ImageContainer* aImageContainer)
+    : mComponent(nullptr),
+      mDataDecoder(aDataDecoder),
+      mPromiseLayer(aPromiseLayer),
+      mTaskQueue(aTaskQueue),
+      mImageContainer(aImageContainer) {
+>>>>>>> upstream-releases
   LOG("");
 }
 
@@ -252,9 +290,27 @@ nsresult PureOmxPlatformLayer::Shutdown() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ OMX_ERRORTYPE PureOmxPlatformLayer::EventHandler(
     OMX_HANDLETYPE hComponent, OMX_PTR pAppData, OMX_EVENTTYPE eEventType,
     OMX_U32 nData1, OMX_U32 nData2, OMX_PTR pEventData) {
+||||||| merged common ancestors
+/* static */ OMX_ERRORTYPE
+PureOmxPlatformLayer::EventHandler(OMX_HANDLETYPE hComponent,
+                                   OMX_PTR pAppData,
+                                   OMX_EVENTTYPE eEventType,
+                                   OMX_U32 nData1,
+                                   OMX_U32 nData2,
+                                   OMX_PTR pEventData)
+{
+=======
+/* static */
+OMX_ERRORTYPE PureOmxPlatformLayer::EventHandler(OMX_HANDLETYPE hComponent,
+                                                 OMX_PTR pAppData,
+                                                 OMX_EVENTTYPE eEventType,
+                                                 OMX_U32 nData1, OMX_U32 nData2,
+                                                 OMX_PTR pEventData) {
+>>>>>>> upstream-releases
   PureOmxPlatformLayer* self = static_cast<PureOmxPlatformLayer*>(pAppData);
   nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
       "mozilla::PureOmxPlatformLayer::EventHandler",
@@ -265,9 +321,22 @@ nsresult PureOmxPlatformLayer::Shutdown() {
   return NS_SUCCEEDED(rv) ? OMX_ErrorNone : OMX_ErrorUndefined;
 }
 
+<<<<<<< HEAD
 /* static */ OMX_ERRORTYPE PureOmxPlatformLayer::EmptyBufferDone(
     OMX_HANDLETYPE hComponent, OMX_IN OMX_PTR pAppData,
     OMX_IN OMX_BUFFERHEADERTYPE* pBuffer) {
+||||||| merged common ancestors
+/* static */ OMX_ERRORTYPE
+PureOmxPlatformLayer::EmptyBufferDone(OMX_HANDLETYPE hComponent,
+                                      OMX_IN OMX_PTR pAppData,
+                                      OMX_IN OMX_BUFFERHEADERTYPE* pBuffer)
+{
+=======
+/* static */
+OMX_ERRORTYPE PureOmxPlatformLayer::EmptyBufferDone(
+    OMX_HANDLETYPE hComponent, OMX_IN OMX_PTR pAppData,
+    OMX_IN OMX_BUFFERHEADERTYPE* pBuffer) {
+>>>>>>> upstream-releases
   PureOmxPlatformLayer* self = static_cast<PureOmxPlatformLayer*>(pAppData);
   nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
       "mozilla::PureOmxPlatformLayer::EmptyBufferDone",
@@ -276,9 +345,22 @@ nsresult PureOmxPlatformLayer::Shutdown() {
   return NS_SUCCEEDED(rv) ? OMX_ErrorNone : OMX_ErrorUndefined;
 }
 
+<<<<<<< HEAD
 /* static */ OMX_ERRORTYPE PureOmxPlatformLayer::FillBufferDone(
     OMX_OUT OMX_HANDLETYPE hComponent, OMX_OUT OMX_PTR pAppData,
     OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+||||||| merged common ancestors
+/* static */ OMX_ERRORTYPE
+PureOmxPlatformLayer::FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
+                                     OMX_OUT OMX_PTR pAppData,
+                                     OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+{
+=======
+/* static */
+OMX_ERRORTYPE PureOmxPlatformLayer::FillBufferDone(
+    OMX_OUT OMX_HANDLETYPE hComponent, OMX_OUT OMX_PTR pAppData,
+    OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer) {
+>>>>>>> upstream-releases
   PureOmxPlatformLayer* self = static_cast<PureOmxPlatformLayer*>(pAppData);
   nsCOMPtr<nsIRunnable> r = NS_NewRunnableFunction(
       "mozilla::PureOmxPlatformLayer::FillBufferDone",
@@ -335,8 +417,19 @@ static bool GetStandardComponentRole(const nsACString& aMimeType,
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ bool PureOmxPlatformLayer::FindStandardComponent(
     const nsACString& aMimeType, nsACString* aComponentName) {
+||||||| merged common ancestors
+/* static */ bool
+PureOmxPlatformLayer::FindStandardComponent(const nsACString& aMimeType,
+                                            nsACString* aComponentName)
+{
+=======
+/* static */
+bool PureOmxPlatformLayer::FindStandardComponent(const nsACString& aMimeType,
+                                                 nsACString* aComponentName) {
+>>>>>>> upstream-releases
   nsAutoCString role;
   if (!GetStandardComponentRole(aMimeType, role)) return false;
 

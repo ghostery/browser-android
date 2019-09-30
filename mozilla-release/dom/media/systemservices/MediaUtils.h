@@ -132,7 +132,14 @@ class Refcountable<UniquePtr<T>> : public UniquePtr<T> {
 /* Async shutdown helpers
  */
 
+<<<<<<< HEAD
 already_AddRefed<nsIAsyncShutdownClient> GetShutdownBarrier();
+||||||| merged common ancestors
+already_AddRefed<nsIAsyncShutdownClient>
+GetShutdownBarrier();
+=======
+RefPtr<nsIAsyncShutdownClient> GetShutdownBarrier();
+>>>>>>> upstream-releases
 
 class ShutdownBlocker : public nsIAsyncShutdownBlocker {
  public:
@@ -161,11 +168,23 @@ class ShutdownTicket final {
   explicit ShutdownTicket(nsIAsyncShutdownBlocker* aBlocker)
       : mBlocker(aBlocker) {}
   NS_INLINE_DECL_REFCOUNTING(ShutdownTicket)
+<<<<<<< HEAD
  private:
   ~ShutdownTicket() {
     nsCOMPtr<nsIAsyncShutdownClient> barrier = GetShutdownBarrier();
     barrier->RemoveBlocker(mBlocker);
   }
+||||||| merged common ancestors
+private:
+  ~ShutdownTicket()
+  {
+    nsCOMPtr<nsIAsyncShutdownClient> barrier = GetShutdownBarrier();
+    barrier->RemoveBlocker(mBlocker);
+  }
+=======
+ private:
+  ~ShutdownTicket() { GetShutdownBarrier()->RemoveBlocker(mBlocker); }
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIAsyncShutdownBlocker> mBlocker;
 };
@@ -222,6 +241,7 @@ Await(already_AddRefed<nsIEventTarget> aPool,
   Monitor mon(__func__);
   bool done = false;
 
+<<<<<<< HEAD
   typename MozPromise<ResolveValueType, RejectValueType,
                       Excl>::ResolveOrRejectValue val;
   aPromise->Then(taskQueue, __func__,
@@ -237,6 +257,40 @@ Await(already_AddRefed<nsIEventTarget> aPool,
                    done = true;
                    mon.Notify();
                  });
+||||||| merged common ancestors
+  typename MozPromise<ResolveValueType, RejectValueType, Excl>::ResolveOrRejectValue val;
+  aPromise->Then(taskQueue,
+                 __func__,
+                 [&](ResolveValueType aResolveValue) {
+                   val.SetResolve(std::move(aResolveValue));
+                   MonitorAutoLock lock(mon);
+                   done = true;
+                   mon.Notify();
+                 },
+                 [&](RejectValueType aRejectValue) {
+                   val.SetReject(std::move(aRejectValue));
+                   MonitorAutoLock lock(mon);
+                   done = true;
+                   mon.Notify();
+                 });
+=======
+  typename MozPromise<ResolveValueType, RejectValueType,
+                      Excl>::ResolveOrRejectValue val;
+  aPromise->Then(
+      taskQueue, __func__,
+      [&](ResolveValueType aResolveValue) {
+        val.SetResolve(std::move(aResolveValue));
+        MonitorAutoLock lock(mon);
+        done = true;
+        mon.Notify();
+      },
+      [&](RejectValueType aRejectValue) {
+        val.SetReject(std::move(aRejectValue));
+        MonitorAutoLock lock(mon);
+        done = true;
+        mon.Notify();
+      });
+>>>>>>> upstream-releases
 
   MonitorAutoLock lock(mon);
   while (!done) {

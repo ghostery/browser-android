@@ -7,7 +7,7 @@
 #include "mozilla/layers/APZChild.h"
 #include "mozilla/layers/GeckoContentController.h"
 
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/layers/APZCCallbackHelper.h"
 
 #include "InputData.h"  // for InputData
@@ -27,8 +27,23 @@ APZChild::~APZChild() {
   }
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult APZChild::RecvRequestContentRepaint(
     const RepaintRequest& aRequest) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+APZChild::RecvRequestContentRepaint(const FrameMetrics& aFrameMetrics)
+{
+=======
+mozilla::ipc::IPCResult APZChild::RecvLayerTransforms(
+    const nsTArray<MatrixMessage>& aTransforms) {
+  mController->NotifyLayerTransforms(aTransforms);
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult APZChild::RecvRequestContentRepaint(
+    const RepaintRequest& aRequest) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mController->IsRepaintThread());
 
   mController->RequestContentRepaint(aRequest);

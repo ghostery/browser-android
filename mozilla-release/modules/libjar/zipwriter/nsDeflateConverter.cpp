@@ -60,14 +60,32 @@ nsresult nsDeflateConverter::Init() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsDeflateConverter::Convert(nsIInputStream *aFromStream,
                                           const char *aFromType,
                                           const char *aToType,
                                           nsISupports *aCtxt,
                                           nsIInputStream **_retval) {
   return NS_ERROR_NOT_IMPLEMENTED;
+||||||| merged common ancestors
+NS_IMETHODIMP nsDeflateConverter::Convert(nsIInputStream *aFromStream,
+                                          const char *aFromType,
+                                          const char *aToType,
+                                          nsISupports *aCtxt,
+                                          nsIInputStream **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+=======
+NS_IMETHODIMP nsDeflateConverter::Convert(nsIInputStream* aFromStream,
+                                          const char* aFromType,
+                                          const char* aToType,
+                                          nsISupports* aCtxt,
+                                          nsIInputStream** _retval) {
+  return NS_ERROR_NOT_IMPLEMENTED;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsDeflateConverter::AsyncConvertData(const char *aFromType,
                                                    const char *aToType,
                                                    nsIStreamListener *aListener,
@@ -86,15 +104,65 @@ NS_IMETHODIMP nsDeflateConverter::AsyncConvertData(const char *aFromType,
 
   nsresult rv = Init();
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+NS_IMETHODIMP nsDeflateConverter::AsyncConvertData(const char *aFromType,
+                                                   const char *aToType,
+                                                   nsIStreamListener *aListener,
+                                                   nsISupports *aCtxt)
+{
+    if (mListener)
+        return NS_ERROR_ALREADY_INITIALIZED;
+
+    NS_ENSURE_ARG_POINTER(aListener);
+
+    if (!PL_strncasecmp(aToType, ZLIB_TYPE, sizeof(ZLIB_TYPE)-1))
+        mWrapMode = WRAP_ZLIB;
+    else if (!PL_strcasecmp(aToType, GZIP_TYPE) ||
+             !PL_strcasecmp(aToType, X_GZIP_TYPE))
+        mWrapMode = WRAP_GZIP;
+    else
+        mWrapMode = WRAP_NONE;
+
+    nsresult rv = Init();
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+NS_IMETHODIMP nsDeflateConverter::AsyncConvertData(const char* aFromType,
+                                                   const char* aToType,
+                                                   nsIStreamListener* aListener,
+                                                   nsISupports* aCtxt) {
+  if (mListener) return NS_ERROR_ALREADY_INITIALIZED;
+
+  NS_ENSURE_ARG_POINTER(aListener);
+
+  if (!PL_strncasecmp(aToType, ZLIB_TYPE, sizeof(ZLIB_TYPE) - 1))
+    mWrapMode = WRAP_ZLIB;
+  else if (!PL_strcasecmp(aToType, GZIP_TYPE) ||
+           !PL_strcasecmp(aToType, X_GZIP_TYPE))
+    mWrapMode = WRAP_GZIP;
+  else
+    mWrapMode = WRAP_NONE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  mListener = aListener;
+  mContext = aCtxt;
+  return rv;
+||||||| merged common ancestors
+    mListener = aListener;
+    mContext = aCtxt;
+    return rv;
+=======
+  nsresult rv = Init();
+  NS_ENSURE_SUCCESS(rv, rv);
 
   mListener = aListener;
   mContext = aCtxt;
   return rv;
+>>>>>>> upstream-releases
 }
 
-NS_IMETHODIMP nsDeflateConverter::OnDataAvailable(nsIRequest *aRequest,
-                                                  nsISupports *aContext,
-                                                  nsIInputStream *aInputStream,
+NS_IMETHODIMP nsDeflateConverter::OnDataAvailable(nsIRequest* aRequest,
+                                                  nsIInputStream* aInputStream,
                                                   uint64_t aOffset,
                                                   uint32_t aCount) {
   if (!mListener) return NS_ERROR_NOT_INITIALIZED;
@@ -102,13 +170,31 @@ NS_IMETHODIMP nsDeflateConverter::OnDataAvailable(nsIRequest *aRequest,
   auto buffer = MakeUnique<char[]>(aCount);
   NS_ENSURE_TRUE(buffer, NS_ERROR_OUT_OF_MEMORY);
 
+<<<<<<< HEAD
   nsresult rv = ZW_ReadData(aInputStream, buffer.get(), aCount);
   NS_ENSURE_SUCCESS(rv, rv);
 
   // make sure we aren't reading too much
   mZstream.avail_in = aCount;
   mZstream.next_in = (unsigned char *)buffer.get();
+||||||| merged common ancestors
+    nsresult rv = ZW_ReadData(aInputStream, buffer.get(), aCount);
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+  nsresult rv = ZW_ReadData(aInputStream, buffer.get(), aCount);
+  NS_ENSURE_SUCCESS(rv, rv);
 
+  // make sure we aren't reading too much
+  mZstream.avail_in = aCount;
+  mZstream.next_in = (unsigned char*)buffer.get();
+
+  int zerr = Z_OK;
+  // deflate loop
+  while (mZstream.avail_in > 0 && zerr == Z_OK) {
+    zerr = deflate(&mZstream, Z_NO_FLUSH);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   int zerr = Z_OK;
   // deflate loop
   while (mZstream.avail_in > 0 && zerr == Z_OK) {
@@ -119,38 +205,114 @@ NS_IMETHODIMP nsDeflateConverter::OnDataAvailable(nsIRequest *aRequest,
       rv = PushAvailableData(aRequest, aContext);
       NS_ENSURE_SUCCESS(rv, rv);
       zerr = deflate(&mZstream, Z_NO_FLUSH);
+||||||| merged common ancestors
+    // make sure we aren't reading too much
+    mZstream.avail_in = aCount;
+    mZstream.next_in = (unsigned char*)buffer.get();
+
+    int zerr = Z_OK;
+    // deflate loop
+    while (mZstream.avail_in > 0 && zerr == Z_OK) {
+        zerr = deflate(&mZstream, Z_NO_FLUSH);
+
+        while (mZstream.avail_out == 0) {
+            // buffer is full, push the data out to the listener
+            rv = PushAvailableData(aRequest, aContext);
+            NS_ENSURE_SUCCESS(rv, rv);
+            zerr = deflate(&mZstream, Z_NO_FLUSH);
+        }
+=======
+    while (mZstream.avail_out == 0) {
+      // buffer is full, push the data out to the listener
+      rv = PushAvailableData(aRequest, nullptr);
+      NS_ENSURE_SUCCESS(rv, rv);
+      zerr = deflate(&mZstream, Z_NO_FLUSH);
+>>>>>>> upstream-releases
     }
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsDeflateConverter::OnStartRequest(nsIRequest *aRequest,
                                                  nsISupports *aContext) {
   if (!mListener) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+NS_IMETHODIMP nsDeflateConverter::OnStartRequest(nsIRequest *aRequest,
+                                                 nsISupports *aContext)
+{
+    if (!mListener)
+        return NS_ERROR_NOT_INITIALIZED;
+=======
+NS_IMETHODIMP nsDeflateConverter::OnStartRequest(nsIRequest* aRequest) {
+  if (!mListener) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return mListener->OnStartRequest(aRequest, mContext);
+||||||| merged common ancestors
+    return mListener->OnStartRequest(aRequest, mContext);
+=======
+  return mListener->OnStartRequest(aRequest);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsDeflateConverter::OnStopRequest(nsIRequest *aRequest,
                                                 nsISupports *aContext,
                                                 nsresult aStatusCode) {
   if (!mListener) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+NS_IMETHODIMP nsDeflateConverter::OnStopRequest(nsIRequest *aRequest,
+                                                nsISupports *aContext,
+                                                nsresult aStatusCode)
+{
+    if (!mListener)
+        return NS_ERROR_NOT_INITIALIZED;
+=======
+NS_IMETHODIMP nsDeflateConverter::OnStopRequest(nsIRequest* aRequest,
+                                                nsresult aStatusCode) {
+  if (!mListener) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
   nsresult rv;
 
+<<<<<<< HEAD
   int zerr;
   do {
     zerr = deflate(&mZstream, Z_FINISH);
     rv = PushAvailableData(aRequest, aContext);
     NS_ENSURE_SUCCESS(rv, rv);
   } while (zerr == Z_OK);
+||||||| merged common ancestors
+    int zerr;
+    do {
+        zerr = deflate(&mZstream, Z_FINISH);
+        rv = PushAvailableData(aRequest, aContext);
+        NS_ENSURE_SUCCESS(rv, rv);
+    } while (zerr == Z_OK);
+=======
+  int zerr;
+  do {
+    zerr = deflate(&mZstream, Z_FINISH);
+    rv = PushAvailableData(aRequest, nullptr);
+    NS_ENSURE_SUCCESS(rv, rv);
+  } while (zerr == Z_OK);
+>>>>>>> upstream-releases
 
   deflateEnd(&mZstream);
 
+<<<<<<< HEAD
   return mListener->OnStopRequest(aRequest, mContext, aStatusCode);
+||||||| merged common ancestors
+    return mListener->OnStopRequest(aRequest, mContext, aStatusCode);
+=======
+  return mListener->OnStopRequest(aRequest, aStatusCode);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsresult nsDeflateConverter::PushAvailableData(nsIRequest *aRequest,
                                                nsISupports *aContext) {
   uint32_t bytesToWrite = sizeof(mWriteBuffer) - mZstream.avail_out;
@@ -172,4 +334,51 @@ nsresult nsDeflateConverter::PushAvailableData(nsIRequest *aRequest,
 
   mOffset += bytesToWrite;
   return rv;
+||||||| merged common ancestors
+nsresult nsDeflateConverter::PushAvailableData(nsIRequest *aRequest,
+                                               nsISupports *aContext)
+{
+    uint32_t bytesToWrite = sizeof(mWriteBuffer) - mZstream.avail_out;
+    // We don't need to do anything if there isn't any data
+    if (bytesToWrite == 0)
+        return NS_OK;
+
+    MOZ_ASSERT(bytesToWrite <= INT32_MAX);
+    nsCOMPtr<nsIInputStream> stream;
+    nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
+					(char*)mWriteBuffer, bytesToWrite);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    rv = mListener->OnDataAvailable(aRequest, mContext, stream, mOffset,
+                                    bytesToWrite);
+
+    // now set the state for 'deflate'
+    mZstream.next_out = mWriteBuffer;
+    mZstream.avail_out = sizeof(mWriteBuffer);
+
+    mOffset += bytesToWrite;
+    return rv;
+=======
+nsresult nsDeflateConverter::PushAvailableData(nsIRequest* aRequest,
+                                               nsISupports* aContext) {
+  uint32_t bytesToWrite = sizeof(mWriteBuffer) - mZstream.avail_out;
+  // We don't need to do anything if there isn't any data
+  if (bytesToWrite == 0) return NS_OK;
+
+  MOZ_ASSERT(bytesToWrite <= INT32_MAX);
+  nsCOMPtr<nsIInputStream> stream;
+  nsresult rv = NS_NewByteInputStream(
+      getter_AddRefs(stream), MakeSpan((char*)mWriteBuffer, bytesToWrite),
+      NS_ASSIGNMENT_DEPEND);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = mListener->OnDataAvailable(aRequest, stream, mOffset, bytesToWrite);
+
+  // now set the state for 'deflate'
+  mZstream.next_out = mWriteBuffer;
+  mZstream.avail_out = sizeof(mWriteBuffer);
+
+  mOffset += bytesToWrite;
+  return rv;
+>>>>>>> upstream-releases
 }

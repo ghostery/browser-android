@@ -14,7 +14,14 @@ using namespace mozilla::dom;
 NS_IMPL_ISUPPORTS(nsSoundProxy, nsISound)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSoundProxy::Play(nsIURL *aURL) {
+||||||| merged common ancestors
+nsSoundProxy::Play(nsIURL *aURL)
+{
+=======
+nsSoundProxy::Play(nsIURL* aURL) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_GetProcessType() == GeckoProcessType_Content);
 
   nsCOMPtr<nsIURI> soundURI(aURL);

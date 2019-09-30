@@ -43,6 +43,7 @@ nsresult SystemPrincipal::GetScriptLocation(nsACString& aStr) {
 // Methods implementing nsIPrincipal //
 ///////////////////////////////////////
 
+<<<<<<< HEAD
 uint32_t SystemPrincipal::GetHashValue() { return NS_PTR_TO_INT32(this); }
 
 NS_IMETHODIMP
@@ -50,14 +51,41 @@ SystemPrincipal::GetURI(nsIURI** aURI) {
   *aURI = nullptr;
   return NS_OK;
 }
+||||||| merged common ancestors
+NS_IMETHODIMP
+SystemPrincipal::GetHashValue(uint32_t *result)
+{
+    *result = NS_PTR_TO_INT32(this);
+    return NS_OK;
+}
 
 NS_IMETHODIMP
+SystemPrincipal::GetURI(nsIURI** aURI)
+{
+    *aURI = nullptr;
+    return NS_OK;
+}
+=======
+uint32_t SystemPrincipal::GetHashValue() { return NS_PTR_TO_INT32(this); }
+>>>>>>> upstream-releases
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 SystemPrincipal::GetCsp(nsIContentSecurityPolicy** aCsp) {
   *aCsp = nullptr;
+||||||| merged common ancestors
+SystemPrincipal::GetCsp(nsIContentSecurityPolicy** aCsp)
+{
+  *aCsp = nullptr;
+=======
+SystemPrincipal::GetURI(nsIURI** aURI) {
+  *aURI = nullptr;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SystemPrincipal::SetCsp(nsIContentSecurityPolicy* aCsp) {
   // Never destroy an existing CSP on the principal.
   // This method should only be called in rare cases.
@@ -75,10 +103,36 @@ SystemPrincipal::EnsureCSP(nsIDocument* aDocument,
 NS_IMETHODIMP
 SystemPrincipal::GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP) {
   *aPreloadCSP = nullptr;
+||||||| merged common ancestors
+SystemPrincipal::SetCsp(nsIContentSecurityPolicy* aCsp)
+{
+  // Never destroy an existing CSP on the principal.
+  // This method should only be called in rare cases.
+
+  return NS_ERROR_FAILURE;
+}
+
+NS_IMETHODIMP
+SystemPrincipal::EnsureCSP(nsIDocument* aDocument,
+                           nsIContentSecurityPolicy** aCSP)
+{
+  // CSP on a system principal makes no sense
+  return NS_ERROR_FAILURE;
+}
+
+NS_IMETHODIMP
+SystemPrincipal::GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP)
+{
+  *aPreloadCSP = nullptr;
+=======
+SystemPrincipal::GetDomain(nsIURI** aDomain) {
+  *aDomain = nullptr;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SystemPrincipal::EnsurePreloadCSP(nsIDocument* aDocument,
                                   nsIContentSecurityPolicy** aPreloadCSP) {
   // CSP on a system principal makes no sense
@@ -90,12 +144,42 @@ SystemPrincipal::GetDomain(nsIURI** aDomain) {
   *aDomain = nullptr;
   return NS_OK;
 }
+||||||| merged common ancestors
+SystemPrincipal::EnsurePreloadCSP(nsIDocument* aDocument,
+                                  nsIContentSecurityPolicy** aPreloadCSP)
+{
+  // CSP on a system principal makes no sense
+  return NS_ERROR_FAILURE;
+}
 
 NS_IMETHODIMP
+SystemPrincipal::GetDomain(nsIURI** aDomain)
+{
+    *aDomain = nullptr;
+    return NS_OK;
+}
+=======
+SystemPrincipal::SetDomain(nsIURI* aDomain) { return NS_OK; }
+>>>>>>> upstream-releases
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 SystemPrincipal::SetDomain(nsIURI* aDomain) { return NS_OK; }
 
 NS_IMETHODIMP
 SystemPrincipal::GetBaseDomain(nsACString& aBaseDomain) {
+||||||| merged common ancestors
+SystemPrincipal::SetDomain(nsIURI* aDomain)
+{
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+SystemPrincipal::GetBaseDomain(nsACString& aBaseDomain)
+{
+=======
+SystemPrincipal::GetBaseDomain(nsACString& aBaseDomain) {
+>>>>>>> upstream-releases
   // No base domain for chrome.
   return NS_OK;
 }
@@ -117,7 +201,19 @@ SystemPrincipal::Read(nsIObjectInputStream* aStream) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SystemPrincipal::Write(nsIObjectOutputStream* aStream) {
   // no-op: CID is sufficient to identify the mSystemPrincipal singleton
   return NS_OK;
+||||||| merged common ancestors
+SystemPrincipal::Write(nsIObjectOutputStream* aStream)
+{
+    // no-op: CID is sufficient to identify the mSystemPrincipal singleton
+    return NS_OK;
+=======
+SystemPrincipal::Write(nsIObjectOutputStream* aStream) {
+  // Read is used still for legacy principals
+  MOZ_RELEASE_ASSERT(false, "Old style serialization is removed");
+  return NS_OK;
+>>>>>>> upstream-releases
 }

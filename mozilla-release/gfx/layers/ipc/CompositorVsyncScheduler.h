@@ -39,10 +39,20 @@ class CompositorVsyncSchedulerOwner;
 class CompositorVsyncScheduler {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(CompositorVsyncScheduler)
 
+<<<<<<< HEAD
  public:
   explicit CompositorVsyncScheduler(
       CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
       widget::CompositorWidget* aWidget);
+||||||| merged common ancestors
+public:
+  explicit CompositorVsyncScheduler(CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
+                                    widget::CompositorWidget* aWidget);
+=======
+ public:
+  CompositorVsyncScheduler(CompositorVsyncSchedulerOwner* aVsyncSchedulerOwner,
+                           widget::CompositorWidget* aWidget);
+>>>>>>> upstream-releases
 
   /**
    * Notify this class of a vsync. This will trigger a composite if one is
@@ -94,6 +104,13 @@ class CompositorVsyncScheduler {
   const TimeStamp& GetLastComposeTime() const;
 
   /**
+   * Return the vsync timestamp and id of the most recently received
+   * vsync event. Must be called on the compositor thread.
+   */
+  const TimeStamp& GetLastVsyncTime() const;
+  const VsyncId& GetLastVsyncId() const;
+
+  /**
    * Update LastCompose TimeStamp to current timestamp.
    * The function is typically used when composition is handled outside the
    * CompositorVsyncScheduler.
@@ -114,6 +131,11 @@ class CompositorVsyncScheduler {
   // such a task already queued. Can be called from any thread.
   void PostVRTask(TimeStamp aTimestamp);
 
+  /**
+   * Cancel any VR task that has been scheduled but hasn't run yet.
+   */
+  void CancelCurrentVRTask();
+
   // This gets run at vsync time and "does" a composite (which really means
   // update internal state and call the owner to do the composite).
   void Composite(VsyncId aId, TimeStamp aVsyncTimestamp);
@@ -126,7 +148,13 @@ class CompositorVsyncScheduler {
   class Observer final : public VsyncObserver {
    public:
     explicit Observer(CompositorVsyncScheduler* aOwner);
+<<<<<<< HEAD
     virtual bool NotifyVsync(const VsyncEvent& aVsync) override;
+||||||| merged common ancestors
+    virtual bool NotifyVsync(TimeStamp aVsyncTimestamp) override;
+=======
+    bool NotifyVsync(const VsyncEvent& aVsync) override;
+>>>>>>> upstream-releases
     void Destroy();
 
    private:
@@ -139,6 +167,8 @@ class CompositorVsyncScheduler {
 
   CompositorVsyncSchedulerOwner* mVsyncSchedulerOwner;
   TimeStamp mLastCompose;
+  TimeStamp mLastVsync;
+  VsyncId mLastVsyncId;
 
   bool mAsapScheduling;
   bool mIsObservingVsync;
@@ -151,7 +181,7 @@ class CompositorVsyncScheduler {
   RefPtr<CancelableRunnable> mCurrentCompositeTask;
 
   mozilla::Monitor mCurrentVRTaskMonitor;
-  RefPtr<Runnable> mCurrentVRTask;
+  RefPtr<CancelableRunnable> mCurrentVRTask;
 };
 
 }  // namespace layers

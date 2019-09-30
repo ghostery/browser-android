@@ -73,10 +73,21 @@ class MOZ_NON_PARAM InlineCharBuffer {
       return true;
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(!heapStorage, "heap storage already allocated");
     heapStorage = cx->make_pod_array<CharT>(length + 1);
     return !!heapStorage;
   }
+||||||| merged common ancestors
+    bool maybeAlloc(JSContext* cx, size_t length)
+    {
+        assertValidRequest(0, length);
+=======
+    MOZ_ASSERT(!heapStorage, "heap storage already allocated");
+    heapStorage = cx->make_pod_array<CharT>(length + 1, js::StringBufferArena);
+    return !!heapStorage;
+  }
+>>>>>>> upstream-releases
 
   bool maybeRealloc(JSContext* cx, size_t oldLength, size_t newLength) {
     assertValidRequest(oldLength, newLength);
@@ -85,6 +96,7 @@ class MOZ_NON_PARAM InlineCharBuffer {
       return true;
     }
 
+<<<<<<< HEAD
     if (!heapStorage) {
       heapStorage = cx->make_pod_array<CharT>(newLength + 1);
       if (!heapStorage) {
@@ -94,14 +106,69 @@ class MOZ_NON_PARAM InlineCharBuffer {
       MOZ_ASSERT(oldLength <= InlineCapacity);
       mozilla::PodCopy(heapStorage.get(), inlineStorage, oldLength);
       return true;
+||||||| merged common ancestors
+    bool maybeRealloc(JSContext* cx, size_t oldLength, size_t newLength)
+    {
+        assertValidRequest(oldLength, newLength);
+
+        if (newLength <= InlineCapacity) {
+            return true;
+        }
+
+        if (!heapStorage) {
+            heapStorage = cx->make_pod_array<CharT>(newLength + 1);
+            if (!heapStorage) {
+                return false;
+            }
+
+            MOZ_ASSERT(oldLength <= InlineCapacity);
+            mozilla::PodCopy(heapStorage.get(), inlineStorage, oldLength);
+            return true;
+        }
+
+        CharT* oldChars = heapStorage.release();
+        CharT* newChars = cx->pod_realloc(oldChars, oldLength + 1, newLength + 1);
+        if (!newChars) {
+            js_free(oldChars);
+            return false;
+        }
+
+        heapStorage.reset(newChars);
+        return true;
+=======
+    if (!heapStorage) {
+      heapStorage =
+          cx->make_pod_array<CharT>(newLength + 1, js::StringBufferArena);
+      if (!heapStorage) {
+        return false;
+      }
+
+      MOZ_ASSERT(oldLength <= InlineCapacity);
+      mozilla::PodCopy(heapStorage.get(), inlineStorage, oldLength);
+      return true;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     CharT* oldChars = heapStorage.release();
     CharT* newChars = cx->pod_realloc(oldChars, oldLength + 1, newLength + 1);
     if (!newChars) {
       js_free(oldChars);
       return false;
     }
+||||||| merged common ancestors
+    JSString* toStringDontDeflate(JSContext* cx, size_t length)
+    {
+        MOZ_ASSERT(length == lastRequestedLength);
+=======
+    CharT* oldChars = heapStorage.release();
+    CharT* newChars = cx->pod_realloc(oldChars, oldLength + 1, newLength + 1,
+                                      js::StringBufferArena);
+    if (!newChars) {
+      js_free(oldChars);
+      return false;
+    }
+>>>>>>> upstream-releases
 
     heapStorage.reset(newChars);
     return true;

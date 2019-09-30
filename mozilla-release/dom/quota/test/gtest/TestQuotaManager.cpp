@@ -48,13 +48,6 @@ TEST(QuotaManager, OriginScope) {
   }
 
   {
-    NS_NAMED_LITERAL_STRING(pattern, "{\"appId\":1007}");
-    originScope.SetFromJSONPattern(pattern);
-    EXPECT_TRUE(originScope.IsPattern());
-    EXPECT_TRUE(originScope.GetJSONPattern().Equals(pattern));
-  }
-
-  {
     originScope.SetFromNull();
     EXPECT_TRUE(originScope.IsNull());
   }
@@ -78,6 +71,7 @@ TEST(QuotaManager, OriginScope) {
     originScope.SetFromPrefix(NS_LITERAL_CSTRING("http://www.mozilla.org"));
 
     static const OriginTest tests[] = {
+<<<<<<< HEAD
         {"http://www.mozilla.org", true},
         {"http://www.mozilla.org^userContextId=1", true},
         {"http://www.example.org^userContextId=1", false},
@@ -95,6 +89,29 @@ TEST(QuotaManager, OriginScope) {
         {"http+++www.mozilla.org^appId=1007", true},
         {"http+++www.example.org^appId=1007", true},
         {"http+++www.example.org^appId=1008", false},
+||||||| merged common ancestors
+      { "http://www.mozilla.org", true },
+      { "http://www.mozilla.org^userContextId=1", true },
+      { "http://www.example.org^userContextId=1", false },
+    };
+
+    for (const auto& test : tests) {
+      CheckOriginScopeMatchesOrigin(originScope, test.mOrigin, test.mMatch);
+    }
+  }
+
+  {
+    originScope.SetFromJSONPattern(NS_LITERAL_STRING("{\"appId\":1007}"));
+
+    static const OriginTest tests[] = {
+      { "http+++www.mozilla.org^appId=1007", true },
+      { "http+++www.example.org^appId=1007", true },
+      { "http+++www.example.org^appId=1008", false },
+=======
+        {"http://www.mozilla.org", true},
+        {"http://www.mozilla.org^userContextId=1", true},
+        {"http://www.example.org^userContextId=1", false},
+>>>>>>> upstream-releases
     };
 
     for (const auto& test : tests) {
@@ -106,12 +123,25 @@ TEST(QuotaManager, OriginScope) {
     originScope.SetFromNull();
 
     static const OriginTest tests[] = {
+<<<<<<< HEAD
         {"http://www.mozilla.org", true},
         {"http://www.mozilla.org^userContextId=1", true},
         {"http://www.example.org^userContextId=1", true},
         {"http+++www.mozilla.org^appId=1007", true},
         {"http+++www.example.org^appId=1007", true},
         {"http+++www.example.org^appId=1008", true},
+||||||| merged common ancestors
+      { "http://www.mozilla.org", true },
+      { "http://www.mozilla.org^userContextId=1", true },
+      { "http://www.example.org^userContextId=1", true },
+      { "http+++www.mozilla.org^appId=1007", true },
+      { "http+++www.example.org^appId=1007", true },
+      { "http+++www.example.org^appId=1008", true },
+=======
+        {"http://www.mozilla.org", true},
+        {"http://www.mozilla.org^userContextId=1", true},
+        {"http://www.example.org^userContextId=1", true},
+>>>>>>> upstream-releases
     };
 
     for (const auto& test : tests) {

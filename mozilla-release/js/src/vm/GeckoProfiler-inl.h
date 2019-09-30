@@ -46,6 +46,7 @@ class MOZ_RAII AutoSuppressProfilerSampling {
 };
 
 MOZ_ALWAYS_INLINE
+<<<<<<< HEAD
 GeckoProfilerEntryMarker::GeckoProfilerEntryMarker(
     JSContext* cx, JSScript* script MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
     : profiler_(&cx->geckoProfiler()) {
@@ -54,8 +55,38 @@ GeckoProfilerEntryMarker::GeckoProfilerEntryMarker(
     profiler_ = nullptr;
     return;
   }
+||||||| merged common ancestors
+GeckoProfilerEntryMarker::GeckoProfilerEntryMarker(JSContext* cx,
+                                                   JSScript* script
+                                                   MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
+  : profiler_(&cx->geckoProfiler())
+{
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    if (MOZ_LIKELY(!profiler_->infraInstalled())) {
+        profiler_ = nullptr;
+        return;
+    }
+=======
+GeckoProfilerEntryMarker::GeckoProfilerEntryMarker(
+    JSContext* cx, JSScript* script MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
+    : profiler_(&cx->geckoProfiler()) {
+  MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+  if (MOZ_LIKELY(!profiler_->infraInstalled())) {
+    profiler_ = nullptr;
+>>>>>>> upstream-releases
+#ifdef DEBUG
+<<<<<<< HEAD
+  spBefore_ = profiler_->stackPointer();
+||||||| merged common ancestors
+    spBefore_ = profiler_->stackPointer();
+=======
+    spBefore_ = 0;
+#endif
+    return;
+  }
 #ifdef DEBUG
   spBefore_ = profiler_->stackPointer();
+>>>>>>> upstream-releases
 #endif
 
   // Push an sp marker frame so the profiler can correctly order JS and native
@@ -78,6 +109,7 @@ GeckoProfilerEntryMarker::~GeckoProfilerEntryMarker() {
 }
 
 MOZ_ALWAYS_INLINE
+<<<<<<< HEAD
 AutoGeckoProfilerEntry::AutoGeckoProfilerEntry(
     JSContext* cx, const char* label, ProfilingStackFrame::Category category,
     uint32_t flags MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
@@ -87,12 +119,56 @@ AutoGeckoProfilerEntry::AutoGeckoProfilerEntry(
     profiler_ = nullptr;
     return;
   }
+||||||| merged common ancestors
+AutoGeckoProfilerEntry::AutoGeckoProfilerEntry(JSContext* cx, const char* label,
+                                               ProfilingStackFrame::Category category
+                                               MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
+  : profiler_(&cx->geckoProfiler())
+{
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    if (MOZ_LIKELY(!profiler_->infraInstalled())) {
+        profiler_ = nullptr;
+        return;
+    }
+=======
+AutoGeckoProfilerEntry::AutoGeckoProfilerEntry(
+    JSContext* cx, const char* label, JS::ProfilingCategoryPair categoryPair,
+    uint32_t flags MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
+    : profiler_(&cx->geckoProfiler()) {
+  MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+  if (MOZ_LIKELY(!profiler_->infraInstalled())) {
+    profiler_ = nullptr;
+>>>>>>> upstream-releases
+#ifdef DEBUG
+<<<<<<< HEAD
+  spBefore_ = profiler_->stackPointer();
+||||||| merged common ancestors
+    spBefore_ = profiler_->stackPointer();
+=======
+    spBefore_ = 0;
+>>>>>>> upstream-releases
+#endif
+<<<<<<< HEAD
+  profiler_->profilingStack_->pushLabelFrame(label,
+                                             /* dynamicString = */ nullptr,
+                                             /* sp = */ this, category, flags);
+||||||| merged common ancestors
+    profiler_->profilingStack_->pushLabelFrame(label,
+                                            /* dynamicString = */ nullptr,
+                                            /* sp = */ this,
+                                            /* line = */ 0,
+                                            category);
+=======
+    return;
+  }
 #ifdef DEBUG
   spBefore_ = profiler_->stackPointer();
 #endif
   profiler_->profilingStack_->pushLabelFrame(label,
                                              /* dynamicString = */ nullptr,
-                                             /* sp = */ this, category, flags);
+                                             /* sp = */ this, categoryPair,
+                                             flags);
+>>>>>>> upstream-releases
 }
 
 MOZ_ALWAYS_INLINE

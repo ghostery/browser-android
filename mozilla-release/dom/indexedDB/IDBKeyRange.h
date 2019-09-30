@@ -51,6 +51,7 @@ class IDBKeyRange : public nsISupports {
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(IDBKeyRange)
 
   // aCx is allowed to be null, but only if aVal.isUndefined().
+<<<<<<< HEAD
   static nsresult FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
                             IDBKeyRange** aKeyRange);
 
@@ -98,6 +99,142 @@ class IDBKeyRange : public nsISupports {
   nsresult BindToStatement(mozIStorageStatement* aStatement) const;
 
   void DropJSObjects();
+||||||| merged common ancestors
+  static nsresult
+  FromJSVal(JSContext* aCx,
+            JS::Handle<JS::Value> aVal,
+            IDBKeyRange** aKeyRange);
+
+  static already_AddRefed<IDBKeyRange>
+  FromSerialized(const indexedDB::SerializedKeyRange& aKeyRange);
+
+  static already_AddRefed<IDBKeyRange>
+  Only(const GlobalObject& aGlobal,
+       JS::Handle<JS::Value> aValue,
+       ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange>
+  LowerBound(const GlobalObject& aGlobal,
+             JS::Handle<JS::Value> aValue,
+             bool aOpen,
+             ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange>
+  UpperBound(const GlobalObject& aGlobal,
+             JS::Handle<JS::Value> aValue,
+             bool aOpen,
+             ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange>
+  Bound(const GlobalObject& aGlobal,
+        JS::Handle<JS::Value> aLower,
+        JS::Handle<JS::Value> aUpper,
+        bool aLowerOpen,
+        bool aUpperOpen,
+        ErrorResult& aRv);
+
+  void
+  AssertIsOnOwningThread() const
+  {
+    NS_ASSERT_OWNINGTHREAD(IDBKeyRange);
+  }
+
+  void
+  ToSerialized(indexedDB::SerializedKeyRange& aKeyRange) const;
+
+  const indexedDB::Key&
+  Lower() const
+  {
+    return mLower;
+  }
+
+  indexedDB::Key&
+  Lower()
+  {
+    return mLower;
+  }
+
+  const indexedDB::Key&
+  Upper() const
+  {
+    return mIsOnly ? mLower : mUpper;
+  }
+
+  indexedDB::Key&
+  Upper()
+  {
+    return mIsOnly ? mLower : mUpper;
+  }
+
+  bool
+  Includes(JSContext* aCx,
+           JS::Handle<JS::Value> aKey,
+           ErrorResult& aRv) const;
+
+  bool
+  IsOnly() const
+  {
+    return mIsOnly;
+  }
+
+  void
+  GetBindingClause(const nsACString& aKeyColumnName,
+                   nsACString& _retval) const;
+
+  nsresult
+  BindToStatement(mozIStorageStatement* aStatement) const;
+
+  void
+  DropJSObjects();
+=======
+  static void FromJSVal(JSContext* aCx, JS::Handle<JS::Value> aVal,
+                        IDBKeyRange** aKeyRange, ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange> FromSerialized(
+      const indexedDB::SerializedKeyRange& aKeyRange);
+
+  static already_AddRefed<IDBKeyRange> Only(const GlobalObject& aGlobal,
+                                            JS::Handle<JS::Value> aValue,
+                                            ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange> LowerBound(const GlobalObject& aGlobal,
+                                                  JS::Handle<JS::Value> aValue,
+                                                  bool aOpen, ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange> UpperBound(const GlobalObject& aGlobal,
+                                                  JS::Handle<JS::Value> aValue,
+                                                  bool aOpen, ErrorResult& aRv);
+
+  static already_AddRefed<IDBKeyRange> Bound(const GlobalObject& aGlobal,
+                                             JS::Handle<JS::Value> aLower,
+                                             JS::Handle<JS::Value> aUpper,
+                                             bool aLowerOpen, bool aUpperOpen,
+                                             ErrorResult& aRv);
+
+  void AssertIsOnOwningThread() const { NS_ASSERT_OWNINGTHREAD(IDBKeyRange); }
+
+  void ToSerialized(indexedDB::SerializedKeyRange& aKeyRange) const;
+
+  const indexedDB::Key& Lower() const { return mLower; }
+
+  indexedDB::Key& Lower() { return mLower; }
+
+  const indexedDB::Key& Upper() const { return mIsOnly ? mLower : mUpper; }
+
+  indexedDB::Key& Upper() { return mIsOnly ? mLower : mUpper; }
+
+  bool Includes(JSContext* aCx, JS::Handle<JS::Value> aKey,
+                ErrorResult& aRv) const;
+
+  bool IsOnly() const { return mIsOnly; }
+
+  void GetBindingClause(const nsACString& aKeyColumnName,
+                        nsACString& _retval) const;
+
+  nsresult BindToStatement(mozIStorageStatement* aStatement) const;
+
+  void DropJSObjects();
+>>>>>>> upstream-releases
 
   // WebIDL
   bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,

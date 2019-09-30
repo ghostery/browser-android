@@ -7,9 +7,9 @@
 #ifndef mozilla_dom_SVGFEGaussianBlurElement_h
 #define mozilla_dom_SVGFEGaussianBlurElement_h
 
-#include "nsSVGFilters.h"
-#include "nsSVGNumberPair.h"
-#include "nsSVGString.h"
+#include "SVGAnimatedNumberPair.h"
+#include "SVGAnimatedString.h"
+#include "SVGFilters.h"
 
 nsresult NS_NewSVGFEGaussianBlurElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
@@ -17,7 +17,7 @@ nsresult NS_NewSVGFEGaussianBlurElement(
 namespace mozilla {
 namespace dom {
 
-typedef nsSVGFE SVGFEGaussianBlurElementBase;
+typedef SVGFE SVGFEGaussianBlurElementBase;
 
 class SVGFEGaussianBlurElement : public SVGFEGaussianBlurElementBase {
   friend nsresult(::NS_NewSVGFEGaussianBlurElement(
@@ -31,6 +31,7 @@ class SVGFEGaussianBlurElement : public SVGFEGaussianBlurElementBase {
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;
 
+<<<<<<< HEAD
  public:
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
@@ -43,13 +44,37 @@ class SVGFEGaussianBlurElement : public SVGFEGaussianBlurElementBase {
   }
   virtual void GetSourceImageNames(
       nsTArray<nsSVGStringInfo>& aSources) override;
+||||||| merged common ancestors
+public:
+  virtual FilterPrimitiveDescription
+    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
+                            const IntRect& aFilterSubregion,
+                            const nsTArray<bool>& aInputsAreTainted,
+                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual bool AttributeAffectsRendering(
+          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
+  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
+  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo >& aSources) override;
+=======
+ public:
+  virtual FilterPrimitiveDescription GetPrimitiveDescription(
+      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
+      const nsTArray<bool>& aInputsAreTainted,
+      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
+                                         nsAtom* aAttribute) const override;
+  virtual SVGAnimatedString& GetResultImageName() override {
+    return mStringAttributes[RESULT];
+  }
+  virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
+>>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-  already_AddRefed<SVGAnimatedString> In1();
-  already_AddRefed<SVGAnimatedNumber> StdDeviationX();
-  already_AddRefed<SVGAnimatedNumber> StdDeviationY();
+  already_AddRefed<DOMSVGAnimatedString> In1();
+  already_AddRefed<DOMSVGAnimatedNumber> StdDeviationX();
+  already_AddRefed<DOMSVGAnimatedNumber> StdDeviationY();
   void SetStdDeviation(float stdDeviationX, float stdDeviationY);
 
  protected:
@@ -57,11 +82,11 @@ class SVGFEGaussianBlurElement : public SVGFEGaussianBlurElementBase {
   virtual StringAttributesInfo GetStringInfo() override;
 
   enum { STD_DEV };
-  nsSVGNumberPair mNumberPairAttributes[1];
+  SVGAnimatedNumberPair mNumberPairAttributes[1];
   static NumberPairInfo sNumberPairInfo[1];
 
   enum { RESULT, IN1 };
-  nsSVGString mStringAttributes[2];
+  SVGAnimatedString mStringAttributes[2];
   static StringInfo sStringInfo[2];
 };
 

@@ -13,7 +13,7 @@
 #include "nsISupportsUtils.h"
 
 #if !defined(XPCOM_GLUE_AVOID_NSPR)
-#include "prthread.h" /* needed for cargo-culting headers */
+#  include "prthread.h" /* needed for cargo-culting headers */
 #endif
 
 #include "nsDebug.h"
@@ -34,20 +34,33 @@
                 " should not have a public destructor. " \
                 "Make this class's destructor non-public");
 
+<<<<<<< HEAD
 inline nsISupports* ToSupports(nsISupports* aSupports) { return aSupports; }
+||||||| merged common ancestors
+inline nsISupports*
+ToSupports(nsISupports* aSupports)
+{
+  return aSupports;
+}
+=======
+inline nsISupports* ToSupports(decltype(nullptr)) { return nullptr; }
+
+inline nsISupports* ToSupports(nsISupports* aSupports) { return aSupports; }
+>>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 // Macros to help detect thread-safety:
 
 #ifdef MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
 
-#include "prthread.h" /* needed for thread-safety checks */
+#  include "prthread.h" /* needed for thread-safety checks */
 
 class nsAutoOwningThread {
  public:
   nsAutoOwningThread();
 
   // We move the actual assertion checks out-of-line to minimize code bloat,
+<<<<<<< HEAD
   // but that means we have to pass a non-literal string to
   // MOZ_CRASH_UNSAFE_OOL.  To make that more safe, the public interface
   // requires a literal string and passes that to the private interface; we
@@ -55,6 +68,23 @@ class nsAutoOwningThread {
   // to MOZ_CRASH_UNSAFE_OOL.
   template <int N>
   void AssertOwnership(const char (&aMsg)[N]) const {
+||||||| merged common ancestors
+  // but that means we have to pass a non-literal string to
+  // MOZ_CRASH_UNSAFE_OOL.  To make that more safe, the public interface
+  // requires a literal string and passes that to the private interface; we
+  // can then be assured that we effectively are passing a literal string
+  // to MOZ_CRASH_UNSAFE_OOL.
+  template<int N>
+  void AssertOwnership(const char (&aMsg)[N]) const
+  {
+=======
+  // but that means we have to pass a non-literal string to MOZ_CRASH_UNSAFE.
+  // To make that more safe, the public interface requires a literal string
+  // and passes that to the private interface; we can then be assured that we
+  // effectively are passing a literal string to MOZ_CRASH_UNSAFE.
+  template <int N>
+  void AssertOwnership(const char (&aMsg)[N]) const {
+>>>>>>> upstream-releases
     AssertCurrentThreadOwnsMe(aMsg);
   }
 
@@ -66,16 +96,43 @@ class nsAutoOwningThread {
   void* mThread;
 };
 
+<<<<<<< HEAD
 #define NS_DECL_OWNINGTHREAD nsAutoOwningThread _mOwningThread;
 #define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) \
   agg->_mOwningThread.AssertOwnership(#_class " not thread-safe")
 #define NS_ASSERT_OWNINGTHREAD(_class) \
   NS_ASSERT_OWNINGTHREAD_AGGREGATE(this, _class)
 #else  // !MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
+||||||| merged common ancestors
+#define NS_DECL_OWNINGTHREAD            nsAutoOwningThread _mOwningThread;
+#define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) \
+  agg->_mOwningThread.AssertOwnership(#_class " not thread-safe")
+#define NS_ASSERT_OWNINGTHREAD(_class) NS_ASSERT_OWNINGTHREAD_AGGREGATE(this, _class)
+#else // !MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
+=======
+#  define NS_DECL_OWNINGTHREAD nsAutoOwningThread _mOwningThread;
+#  define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) \
+    agg->_mOwningThread.AssertOwnership(#_class " not thread-safe")
+#  define NS_ASSERT_OWNINGTHREAD(_class) \
+    NS_ASSERT_OWNINGTHREAD_AGGREGATE(this, _class)
+#else  // !MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define NS_DECL_OWNINGTHREAD /* nothing */
 #define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) ((void)0)
 #define NS_ASSERT_OWNINGTHREAD(_class) ((void)0)
+||||||| merged common ancestors
+#define NS_DECL_OWNINGTHREAD            /* nothing */
+#define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) ((void)0)
+#define NS_ASSERT_OWNINGTHREAD(_class)  ((void)0)
+
+#endif // MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
+=======
+#  define NS_DECL_OWNINGTHREAD /* nothing */
+#  define NS_ASSERT_OWNINGTHREAD_AGGREGATE(agg, _class) ((void)0)
+#  define NS_ASSERT_OWNINGTHREAD(_class) ((void)0)
+>>>>>>> upstream-releases
 
 #endif  // MOZ_THREAD_SAFETY_OWNERSHIP_CHECKS_SUPPORTED
 
@@ -83,24 +140,63 @@ class nsAutoOwningThread {
 
 #if defined(NS_BUILD_REFCNT_LOGGING)
 
+<<<<<<< HEAD
 #define NS_LOG_ADDREF(_p, _rc, _type, _size) \
   NS_LogAddRef((_p), (_rc), (_type), (uint32_t)(_size))
+||||||| merged common ancestors
+#define NS_LOG_ADDREF(_p, _rc, _type, _size) \
+  NS_LogAddRef((_p), (_rc), (_type), (uint32_t) (_size))
+=======
+#  define NS_LOG_ADDREF(_p, _rc, _type, _size) \
+    NS_LogAddRef((_p), (_rc), (_type), (uint32_t)(_size))
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define NS_LOG_RELEASE(_p, _rc, _type) NS_LogRelease((_p), (_rc), (_type))
+||||||| merged common ancestors
+#define NS_LOG_RELEASE(_p, _rc, _type) \
+  NS_LogRelease((_p), (_rc), (_type))
+=======
+#  define NS_LOG_RELEASE(_p, _rc, _type) NS_LogRelease((_p), (_rc), (_type))
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #include "mozilla/TypeTraits.h"
 #define MOZ_ASSERT_CLASSNAME(_type)             \
   static_assert(mozilla::IsClass<_type>::value, \
                 "Token '" #_type "' is not a class type.")
+||||||| merged common ancestors
+#include "mozilla/TypeTraits.h"
+#define MOZ_ASSERT_CLASSNAME(_type)                         \
+  static_assert(mozilla::IsClass<_type>::value,             \
+                "Token '" #_type "' is not a class type.")
+=======
+#  include "mozilla/TypeTraits.h"
+#  define MOZ_ASSERT_CLASSNAME(_type)             \
+    static_assert(mozilla::IsClass<_type>::value, \
+                  "Token '" #_type "' is not a class type.")
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define MOZ_ASSERT_NOT_ISUPPORTS(_type)                                     \
   static_assert(!mozilla::IsBaseOf<nsISupports, _type>::value,              \
                 "nsISupports classes don't need to call MOZ_COUNT_CTOR or " \
                 "MOZ_COUNT_DTOR");
+||||||| merged common ancestors
+#define MOZ_ASSERT_NOT_ISUPPORTS(_type)                        \
+  static_assert(!mozilla::IsBaseOf<nsISupports, _type>::value, \
+                "nsISupports classes don't need to call MOZ_COUNT_CTOR or MOZ_COUNT_DTOR");
+=======
+#  define MOZ_ASSERT_NOT_ISUPPORTS(_type)                                     \
+    static_assert(!mozilla::IsBaseOf<nsISupports, _type>::value,              \
+                  "nsISupports classes don't need to call MOZ_COUNT_CTOR or " \
+                  "MOZ_COUNT_DTOR");
+>>>>>>> upstream-releases
 
 // Note that the following constructor/destructor logging macros are redundant
 // for refcounted objects that log via the NS_LOG_ADDREF/NS_LOG_RELEASE macros.
 // Refcount logging is preferred.
+<<<<<<< HEAD
 #define MOZ_COUNT_CTOR(_type)                       \
   do {                                              \
     MOZ_ASSERT_CLASSNAME(_type);                    \
@@ -140,28 +236,127 @@ class nsAutoOwningThread {
   do {                                     \
     NS_LogDtor((void*)_ptr, _name, _size); \
   } while (0)
+||||||| merged common ancestors
+#define MOZ_COUNT_CTOR(_type)                                 \
+do {                                                          \
+  MOZ_ASSERT_CLASSNAME(_type);                                \
+  MOZ_ASSERT_NOT_ISUPPORTS(_type);                            \
+  NS_LogCtor((void*)this, #_type, sizeof(*this));             \
+} while (0)
+
+#define MOZ_COUNT_CTOR_INHERITED(_type, _base)                    \
+do {                                                              \
+  MOZ_ASSERT_CLASSNAME(_type);                                    \
+  MOZ_ASSERT_CLASSNAME(_base);                                    \
+  MOZ_ASSERT_NOT_ISUPPORTS(_type);                                \
+  NS_LogCtor((void*)this, #_type, sizeof(*this) - sizeof(_base)); \
+} while (0)
+
+#define MOZ_LOG_CTOR(_ptr, _name, _size) \
+do {                                     \
+  NS_LogCtor((void*)_ptr, _name, _size); \
+} while (0)
+
+#define MOZ_COUNT_DTOR(_type)                                 \
+do {                                                          \
+  MOZ_ASSERT_CLASSNAME(_type);                                \
+  MOZ_ASSERT_NOT_ISUPPORTS(_type);                            \
+  NS_LogDtor((void*)this, #_type, sizeof(*this));             \
+} while (0)
+
+#define MOZ_COUNT_DTOR_INHERITED(_type, _base)                    \
+do {                                                              \
+  MOZ_ASSERT_CLASSNAME(_type);                                    \
+  MOZ_ASSERT_CLASSNAME(_base);                                    \
+  MOZ_ASSERT_NOT_ISUPPORTS(_type);                                \
+  NS_LogDtor((void*)this, #_type, sizeof(*this) - sizeof(_base)); \
+} while (0)
+
+#define MOZ_LOG_DTOR(_ptr, _name, _size) \
+do {                                     \
+  NS_LogDtor((void*)_ptr, _name, _size); \
+} while (0)
+=======
+#  define MOZ_COUNT_CTOR(_type)                       \
+    do {                                              \
+      MOZ_ASSERT_CLASSNAME(_type);                    \
+      MOZ_ASSERT_NOT_ISUPPORTS(_type);                \
+      NS_LogCtor((void*)this, #_type, sizeof(*this)); \
+    } while (0)
+
+#  define MOZ_COUNT_CTOR_INHERITED(_type, _base)                      \
+    do {                                                              \
+      MOZ_ASSERT_CLASSNAME(_type);                                    \
+      MOZ_ASSERT_CLASSNAME(_base);                                    \
+      MOZ_ASSERT_NOT_ISUPPORTS(_type);                                \
+      NS_LogCtor((void*)this, #_type, sizeof(*this) - sizeof(_base)); \
+    } while (0)
+
+#  define MOZ_LOG_CTOR(_ptr, _name, _size)   \
+    do {                                     \
+      NS_LogCtor((void*)_ptr, _name, _size); \
+    } while (0)
+
+#  define MOZ_COUNT_DTOR(_type)                       \
+    do {                                              \
+      MOZ_ASSERT_CLASSNAME(_type);                    \
+      MOZ_ASSERT_NOT_ISUPPORTS(_type);                \
+      NS_LogDtor((void*)this, #_type, sizeof(*this)); \
+    } while (0)
+
+#  define MOZ_COUNT_DTOR_INHERITED(_type, _base)                      \
+    do {                                                              \
+      MOZ_ASSERT_CLASSNAME(_type);                                    \
+      MOZ_ASSERT_CLASSNAME(_base);                                    \
+      MOZ_ASSERT_NOT_ISUPPORTS(_type);                                \
+      NS_LogDtor((void*)this, #_type, sizeof(*this) - sizeof(_base)); \
+    } while (0)
+
+#  define MOZ_LOG_DTOR(_ptr, _name, _size)   \
+    do {                                     \
+      NS_LogDtor((void*)_ptr, _name, _size); \
+    } while (0)
+>>>>>>> upstream-releases
 
 /* nsCOMPtr.h allows these macros to be defined by clients
  * These logging functions require dynamic_cast<void*>, so they don't
  * do anything useful if we don't have dynamic_cast<void*>.
  * Note: The explicit comparison to nullptr is needed to avoid warnings
  *       when _p is a nullptr itself. */
+<<<<<<< HEAD
 #define NSCAP_LOG_ASSIGNMENT(_c, _p) \
   if (_p != nullptr) NS_LogCOMPtrAddRef((_c), static_cast<nsISupports*>(_p))
+||||||| merged common ancestors
+#define NSCAP_LOG_ASSIGNMENT(_c, _p)                                \
+  if (_p != nullptr)                                                \
+    NS_LogCOMPtrAddRef((_c),static_cast<nsISupports*>(_p))
+=======
+#  define NSCAP_LOG_ASSIGNMENT(_c, _p) \
+    if (_p != nullptr) NS_LogCOMPtrAddRef((_c), ToSupports(_p))
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define NSCAP_LOG_RELEASE(_c, _p) \
   if (_p) NS_LogCOMPtrRelease((_c), static_cast<nsISupports*>(_p))
+||||||| merged common ancestors
+#define NSCAP_LOG_RELEASE(_c, _p)                                   \
+  if (_p)                                                           \
+    NS_LogCOMPtrRelease((_c), static_cast<nsISupports*>(_p))
+=======
+#  define NSCAP_LOG_RELEASE(_c, _p) \
+    if (_p) NS_LogCOMPtrRelease((_c), ToSupports(_p))
+>>>>>>> upstream-releases
 
 #else /* !NS_BUILD_REFCNT_LOGGING */
 
-#define NS_LOG_ADDREF(_p, _rc, _type, _size)
-#define NS_LOG_RELEASE(_p, _rc, _type)
-#define MOZ_COUNT_CTOR(_type)
-#define MOZ_COUNT_CTOR_INHERITED(_type, _base)
-#define MOZ_LOG_CTOR(_ptr, _name, _size)
-#define MOZ_COUNT_DTOR(_type)
-#define MOZ_COUNT_DTOR_INHERITED(_type, _base)
-#define MOZ_LOG_DTOR(_ptr, _name, _size)
+#  define NS_LOG_ADDREF(_p, _rc, _type, _size)
+#  define NS_LOG_RELEASE(_p, _rc, _type)
+#  define MOZ_COUNT_CTOR(_type)
+#  define MOZ_COUNT_CTOR_INHERITED(_type, _base)
+#  define MOZ_LOG_CTOR(_ptr, _name, _size)
+#  define MOZ_COUNT_DTOR(_type)
+#  define MOZ_COUNT_DTOR_INHERITED(_type, _base)
+#  define MOZ_LOG_DTOR(_ptr, _name, _size)
 
 #endif /* NS_BUILD_REFCNT_LOGGING */
 
@@ -703,10 +898,10 @@ typedef ThreadSafeAutoRefCntWithRecording<recordreplay::Behavior::DontPreserve>
 // the refcnt decrement.  (We use a macro to make absolutely sure the name
 // isn't loaded in builds where it wouldn't be used.)
 #ifdef NS_BUILD_REFCNT_LOGGING
-#define NS_LOAD_NAME_BEFORE_RELEASE(localname, _name) \
-  const char* const localname = _name
+#  define NS_LOAD_NAME_BEFORE_RELEASE(localname, _name) \
+    const char* const localname = _name
 #else
-#define NS_LOAD_NAME_BEFORE_RELEASE(localname, _name)
+#  define NS_LOAD_NAME_BEFORE_RELEASE(localname, _name)
 #endif
 
 /**
@@ -1017,6 +1212,24 @@ nsresult NS_FASTCALL NS_TableDrivenQI(void* aThis, REFNSIID aIID,
   return status;                                                     \
   }
 
+<<<<<<< HEAD
+#define NS_IMPL_QUERY_TAIL_INHERITING(_baseclass)                       \
+  foundInterface = 0;                                                   \
+  nsresult status;                                                      \
+  if (!foundInterface)                                                  \
+    status = _baseclass::QueryInterface(aIID, (void**)&foundInterface); \
+  else {                                                                \
+    NS_ADDREF(foundInterface);                                          \
+    status = NS_OK;                                                     \
+  }                                                                     \
+  *aInstancePtr = foundInterface;                                       \
+  return status;                                                        \
+  }
+||||||| merged common ancestors
+#define NS_IMPL_QUERY_TAIL(_supports_interface)                               \
+  NS_IMPL_QUERY_BODY_AMBIGUOUS(nsISupports, _supports_interface)              \
+  NS_IMPL_QUERY_TAIL_GUTS
+=======
 #define NS_IMPL_QUERY_TAIL_INHERITING(_baseclass)                       \
   foundInterface = 0;                                                   \
   nsresult status;                                                      \
@@ -1043,10 +1256,32 @@ nsresult NS_FASTCALL NS_TableDrivenQI(void* aThis, REFNSIID aIID,
   *aInstancePtr = foundInterface;                                        \
   return status;                                                         \
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#define NS_IMPL_QUERY_TAIL_USING_AGGREGATOR(_aggregator)                 \
+  foundInterface = 0;                                                    \
+  nsresult status;                                                       \
+  if (!foundInterface) {                                                 \
+    NS_ASSERTION(_aggregator, "null aggregator");                        \
+    status = _aggregator->QueryInterface(aIID, (void**)&foundInterface); \
+  } else {                                                               \
+    NS_ADDREF(foundInterface);                                           \
+    status = NS_OK;                                                      \
+  }                                                                      \
+  *aInstancePtr = foundInterface;                                        \
+  return status;                                                         \
+  }
 
 #define NS_IMPL_QUERY_TAIL(_supports_interface)                  \
   NS_IMPL_QUERY_BODY_AMBIGUOUS(nsISupports, _supports_interface) \
   NS_IMPL_QUERY_TAIL_GUTS
+||||||| merged common ancestors
+=======
+#define NS_IMPL_QUERY_TAIL(_supports_interface)                  \
+  NS_IMPL_QUERY_BODY_AMBIGUOUS(nsISupports, _supports_interface) \
+  NS_IMPL_QUERY_TAIL_GUTS
+>>>>>>> upstream-releases
 
 /*
   This is the new scheme.  Using this notation now will allow us to switch to
@@ -1220,6 +1455,7 @@ class Runnable;
  * class.
  */
 #if defined(NS_BUILD_REFCNT_LOGGING)
+<<<<<<< HEAD
 #define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)  \
   NS_IMETHOD_(MozExternalRefCountType) AddRef() override {  \
     NS_IMPL_ADDREF_INHERITED_GUTS(Class, Super);            \
@@ -1230,6 +1466,29 @@ class Runnable;
 #else  // NS_BUILD_REFCNT_LOGGING
 #define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)
 #endif  // NS_BUILD_REFCNT_LOGGINGx
+||||||| merged common ancestors
+#define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)      \
+  NS_IMETHOD_(MozExternalRefCountType) AddRef() override {      \
+    NS_IMPL_ADDREF_INHERITED_GUTS(Class, Super);                \
+  }                                                             \
+  NS_IMETHOD_(MozExternalRefCountType) Release() override {     \
+    NS_IMPL_RELEASE_INHERITED_GUTS(Class, Super);               \
+  }
+#else // NS_BUILD_REFCNT_LOGGING
+#define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)
+#endif // NS_BUILD_REFCNT_LOGGINGx
+=======
+#  define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)  \
+    NS_IMETHOD_(MozExternalRefCountType) AddRef() override {  \
+      NS_IMPL_ADDREF_INHERITED_GUTS(Class, Super);            \
+    }                                                         \
+    NS_IMETHOD_(MozExternalRefCountType) Release() override { \
+      NS_IMPL_RELEASE_INHERITED_GUTS(Class, Super);           \
+    }
+#else  // NS_BUILD_REFCNT_LOGGING
+#  define NS_INLINE_DECL_REFCOUNTING_INHERITED(Class, Super)
+#endif  // NS_BUILD_REFCNT_LOGGINGx
+>>>>>>> upstream-releases
 
 /*
  * Macro to glue together a QI that starts with an interface table
@@ -1246,6 +1505,7 @@ class Runnable;
  * Macro to generate nsIClassInfo methods for classes which do not have
  * corresponding nsIFactory implementations.
  */
+<<<<<<< HEAD
 #define NS_IMPL_THREADSAFE_CI(_class)                           \
   NS_IMETHODIMP                                                 \
   _class::GetInterfaces(uint32_t* _count, nsIID*** _array) {    \
@@ -1286,5 +1546,95 @@ class Runnable;
   _class::GetClassIDNoAlloc(nsCID* _classIDNoAlloc) {           \
     return NS_ERROR_NOT_AVAILABLE;                              \
   }
+||||||| merged common ancestors
+#define NS_IMPL_THREADSAFE_CI(_class)                                         \
+NS_IMETHODIMP                                                                 \
+_class::GetInterfaces(uint32_t* _count, nsIID*** _array)                      \
+{                                                                             \
+  return NS_CI_INTERFACE_GETTER_NAME(_class)(_count, _array);                 \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetScriptableHelper(nsIXPCScriptable** _retval)                       \
+{                                                                             \
+  *_retval = nullptr;                                                         \
+  return NS_OK;                                                               \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetContractID(nsACString& _contractID)                                \
+{                                                                             \
+  _contractID.SetIsVoid(true);                                                \
+  return NS_OK;                                                               \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetClassDescription(nsACString& _classDescription)                    \
+{                                                                             \
+  _classDescription.SetIsVoid(true);                                          \
+  return NS_OK;                                                               \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetClassID(nsCID** _classID)                                          \
+{                                                                             \
+  *_classID = nullptr;                                                        \
+  return NS_OK;                                                               \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetFlags(uint32_t* _flags)                                            \
+{                                                                             \
+  *_flags = nsIClassInfo::THREADSAFE;                                         \
+  return NS_OK;                                                               \
+}                                                                             \
+                                                                              \
+NS_IMETHODIMP                                                                 \
+_class::GetClassIDNoAlloc(nsCID* _classIDNoAlloc)                             \
+{                                                                             \
+  return NS_ERROR_NOT_AVAILABLE;                                              \
+}
+=======
+#define NS_IMPL_THREADSAFE_CI(_class)                          \
+  NS_IMETHODIMP                                                \
+  _class::GetInterfaces(nsTArray<nsIID>& _array) {             \
+    return NS_CI_INTERFACE_GETTER_NAME(_class)(_array);        \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetScriptableHelper(nsIXPCScriptable** _retval) {    \
+    *_retval = nullptr;                                        \
+    return NS_OK;                                              \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetContractID(nsACString& _contractID) {             \
+    _contractID.SetIsVoid(true);                               \
+    return NS_OK;                                              \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetClassDescription(nsACString& _classDescription) { \
+    _classDescription.SetIsVoid(true);                         \
+    return NS_OK;                                              \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetClassID(nsCID** _classID) {                       \
+    *_classID = nullptr;                                       \
+    return NS_OK;                                              \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetFlags(uint32_t* _flags) {                         \
+    *_flags = nsIClassInfo::THREADSAFE;                        \
+    return NS_OK;                                              \
+  }                                                            \
+                                                               \
+  NS_IMETHODIMP                                                \
+  _class::GetClassIDNoAlloc(nsCID* _classIDNoAlloc) {          \
+    return NS_ERROR_NOT_AVAILABLE;                             \
+  }
+>>>>>>> upstream-releases
 
 #endif

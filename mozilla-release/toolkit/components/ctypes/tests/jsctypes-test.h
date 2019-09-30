@@ -13,12 +13,12 @@
 
 #define EXPORT_CDECL(type) MOZ_EXPORT type
 #if defined(_WIN32)
-#if defined(_WIN64)
-#define NS_STDCALL
-#else
-#define NS_STDCALL __stdcall
-#endif
-#define EXPORT_STDCALL(type) MOZ_EXPORT type NS_STDCALL
+#  if defined(_WIN64)
+#    define NS_STDCALL
+#  else
+#    define NS_STDCALL __stdcall
+#  endif
+#  define EXPORT_STDCALL(type) MOZ_EXPORT type NS_STDCALL
 #endif
 
 MOZ_BEGIN_EXTERN_C
@@ -47,6 +47,7 @@ CTYPES_FOR_EACH_TYPE(DECLARE_CDECL_FUNCTIONS)
 #undef DECLARE_CDECL_FUNCTIONS
 
 #if defined(_WIN32)
+<<<<<<< HEAD
 EXPORT_STDCALL(void) test_void_t_stdcall();
 
 EXPORT_STDCALL(void*) get_voidptr_t_stdcall();
@@ -66,6 +67,46 @@ EXPORT_STDCALL(void*) set_voidptr_t_stdcall(void*);
                             type, type);
 CTYPES_FOR_EACH_TYPE(DECLARE_STDCALL_FUNCTIONS)
 #undef DECLARE_STDCALL_FUNCTIONS
+||||||| merged common ancestors
+  EXPORT_STDCALL(void) test_void_t_stdcall();
+
+  EXPORT_STDCALL(void*) get_voidptr_t_stdcall();
+  EXPORT_STDCALL(void*) set_voidptr_t_stdcall(void*);
+
+#define DECLARE_STDCALL_FUNCTIONS(name, type, ffiType)                         \
+  EXPORT_STDCALL(type) get_##name##_stdcall();                                 \
+  EXPORT_STDCALL(type) set_##name##_stdcall(type);                             \
+  EXPORT_STDCALL(type) sum_##name##_stdcall(type, type);                       \
+  EXPORT_STDCALL(type) sum_alignb_##name##_stdcall(                            \
+    char, type, char, type, char);                                             \
+  EXPORT_STDCALL(type) sum_alignf_##name##_stdcall(                            \
+    float, type, float, type, float);                                          \
+  EXPORT_STDCALL(type) sum_many_##name##_stdcall(                              \
+    type, type, type, type, type, type, type, type, type,                      \
+    type, type, type, type, type, type, type, type, type);
+  CTYPES_FOR_EACH_TYPE(DECLARE_STDCALL_FUNCTIONS)
+#undef DECLARE_STDCALL_FUNCTIONS
+=======
+EXPORT_STDCALL(void) test_void_t_stdcall();
+
+EXPORT_STDCALL(void*) get_voidptr_t_stdcall();
+EXPORT_STDCALL(void*) set_voidptr_t_stdcall(void*);
+
+#  define DECLARE_STDCALL_FUNCTIONS(name, type, ffiType)                      \
+    EXPORT_STDCALL(type) get_##name##_stdcall();                              \
+    EXPORT_STDCALL(type) set_##name##_stdcall(type);                          \
+    EXPORT_STDCALL(type) sum_##name##_stdcall(type, type);                    \
+    EXPORT_STDCALL(type)                                                      \
+    sum_alignb_##name##_stdcall(char, type, char, type, char);                \
+    EXPORT_STDCALL(type)                                                      \
+    sum_alignf_##name##_stdcall(float, type, float, type, float);             \
+    EXPORT_STDCALL(type)                                                      \
+    sum_many_##name##_stdcall(type, type, type, type, type, type, type, type, \
+                              type, type, type, type, type, type, type, type, \
+                              type, type);
+CTYPES_FOR_EACH_TYPE(DECLARE_STDCALL_FUNCTIONS)
+#  undef DECLARE_STDCALL_FUNCTIONS
+>>>>>>> upstream-releases
 
 #endif /* defined(_WIN32) */
 

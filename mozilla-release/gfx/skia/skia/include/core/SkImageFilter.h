@@ -18,11 +18,11 @@
 #include "SkMatrix.h"
 #include "SkRect.h"
 
-class GrContext;
 class GrFragmentProcessor;
 class SkColorFilter;
 class SkColorSpaceXformer;
 struct SkIPoint;
+class GrRecordingContext;
 class SkSpecialImage;
 class SkImageFilterCache;
 struct SkImageFilterCacheKey;
@@ -167,7 +167,7 @@ public:
                          MapDirection, const SkIRect* inputRect = nullptr) const;
 
 #if SK_SUPPORT_GPU
-    static sk_sp<SkSpecialImage> DrawWithFP(GrContext* context,
+    static sk_sp<SkSpecialImage> DrawWithFP(GrRecordingContext* context,
                                             std::unique_ptr<GrFragmentProcessor> fp,
                                             const SkIRect& bounds,
                                             const OutputProperties& outputProperties);
@@ -252,6 +252,7 @@ public:
                                                  SkFilterQuality quality,
                                                  sk_sp<SkImageFilter> input);
 
+<<<<<<< HEAD
     static void InitializeFlattenables();
 
     static SkFlattenable::Type GetFlattenableType() {
@@ -268,6 +269,28 @@ public:
                                   SkFlattenable::Deserialize(
                                   kSkImageFilter_Type, data, size, procs).release()));
     }
+||||||| merged common ancestors
+    SK_TO_STRING_PUREVIRT()
+    SK_DEFINE_FLATTENABLE_TYPE(SkImageFilter)
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
+=======
+    static void RegisterFlattenables();
+
+    static SkFlattenable::Type GetFlattenableType() {
+        return kSkImageFilter_Type;
+    }
+
+    SkFlattenable::Type getFlattenableType() const override {
+        return kSkImageFilter_Type;
+    }
+
+    static sk_sp<SkImageFilter> Deserialize(const void* data, size_t size,
+                                          const SkDeserialProcs* procs = nullptr) {
+        return sk_sp<SkImageFilter>(static_cast<SkImageFilter*>(
+                                  SkFlattenable::Deserialize(
+                                  kSkImageFilter_Type, data, size, procs).release()));
+    }
+>>>>>>> upstream-releases
 
 protected:
     class Common {

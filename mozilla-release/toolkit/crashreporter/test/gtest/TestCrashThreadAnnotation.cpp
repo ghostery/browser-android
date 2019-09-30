@@ -262,8 +262,17 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
+<<<<<<< HEAD
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestNameOfBaseThread) {
+||||||| merged common ancestors
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestNameOfBaseThread)
+{
+=======
+TEST(TestCrashThreadAnnotation,
+     TestGetFlatThreadAnnotation_TestNameOfBaseThread)
+{
+>>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -289,8 +298,17 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
+<<<<<<< HEAD
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestShutdownBaseThread) {
+||||||| merged common ancestors
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestShutdownBaseThread)
+{
+=======
+TEST(TestCrashThreadAnnotation,
+     TestGetFlatThreadAnnotation_TestShutdownBaseThread)
+{
+>>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");
@@ -317,8 +335,17 @@ TEST(TestCrashThreadAnnotation,
   ShutdownThreadAnnotation();
 }
 
+<<<<<<< HEAD
 TEST(TestCrashThreadAnnotation,
      TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads) {
+||||||| merged common ancestors
+TEST(TestCrashThreadAnnotation, TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads)
+{
+=======
+TEST(TestCrashThreadAnnotation,
+     TestGetFlatThreadAnnotation_TestShutdownBothBaseThreads)
+{
+>>>>>>> upstream-releases
   InitThreadAnnotation();
 
   Monitor monitor("TestCrashThreadAnnotation");

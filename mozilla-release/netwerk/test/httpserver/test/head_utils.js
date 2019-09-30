@@ -13,8 +13,10 @@ load(_HTTPD_JS_PATH.path);
 // if these tests fail, we'll want the debug output
 var linDEBUG = true;
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+var { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 
 /**
  * Constructs a new nsHttpServer instance.  This function is intended to
@@ -32,9 +34,22 @@ function createServer() {
  * @param url
  *   the URL of the channel to create
  */
+<<<<<<< HEAD
 function makeChannel(url) {
   return NetUtil.newChannel({uri: url, loadUsingSystemPrincipal: true})
                 .QueryInterface(Ci.nsIHttpChannel);
+||||||| merged common ancestors
+function makeChannel(url)
+{
+  return NetUtil.newChannel({uri: url, loadUsingSystemPrincipal: true})
+                .QueryInterface(Ci.nsIHttpChannel);
+=======
+function makeChannel(url) {
+  return NetUtil.newChannel({
+    uri: url,
+    loadUsingSystemPrincipal: true,
+  }).QueryInterface(Ci.nsIHttpChannel);
+>>>>>>> upstream-releases
 }
 
 /**
@@ -47,7 +62,6 @@ function makeBIS(stream) {
   return new BinaryInputStream(stream);
 }
 
-
 /**
  * Returns the contents of the file as a string.
  *
@@ -58,8 +72,12 @@ function makeBIS(stream) {
  */
 function fileContents(file) {
   const PR_RDONLY = 0x01;
-  var fis = new FileInputStream(file, PR_RDONLY, 0o444,
-                                Ci.nsIFileInputStream.CLOSE_ON_EOF);
+  var fis = new FileInputStream(
+    file,
+    PR_RDONLY,
+    0o444,
+    Ci.nsIFileInputStream.CLOSE_ON_EOF
+  );
   var sis = new ScriptableInputStream(fis);
   var contents = sis.read(file.fileSize);
   sis.close();
@@ -80,14 +98,14 @@ function* LineIterator(data) {
   var index = 0;
   do {
     index = data.indexOf("\r\n");
-    if (index >= 0)
+    if (index >= 0) {
       yield data.substring(0, index);
-    else
+    } else {
       yield data;
+    }
 
     data = data.substring(index + 2);
-  }
-  while (index >= 0);
+  } while (index >= 0);
 }
 
 /**
@@ -98,25 +116,51 @@ function* LineIterator(data) {
  *   an Iterator which returns lines of text
  * @param expectedLines : [string]
  *   an array of the expected lines of text
- * @throws string
- *   an error message if iter doesn't agree with expectedLines
+ * @throws an error message if iter doesn't agree with expectedLines
  */
 function expectLines(iter, expectedLines) {
   var index = 0;
+<<<<<<< HEAD
   for (var line of iter) {
     if (expectedLines.length == index)
       throw "Error: got more than " + expectedLines.length + " expected lines!";
+||||||| merged common ancestors
+  for (var line of iter)
+  {
+    if (expectedLines.length == index)
+      throw "Error: got more than " + expectedLines.length + " expected lines!";
+=======
+  for (var line of iter) {
+    if (expectedLines.length == index) {
+      throw new Error(
+        `Error: got more than ${expectedLines.length} expected lines!`
+      );
+    }
+>>>>>>> upstream-releases
 
     var expected = expectedLines[index++];
-    if (expected !== line)
-      throw "Error on line " + index + "!\n" +
-            "  actual: '" + line + "',\n" +
-            "  expect: '" + expected + "'";
+    if (expected !== line) {
+      throw new Error(`Error on line ${index}!
+  actual: '${line}',
+  expect: '${expected}'`);
+    }
   }
 
+<<<<<<< HEAD
   if (expectedLines.length !== index) {
     throw "Expected more lines!  Got " + index +
           ", expected " + expectedLines.length;
+||||||| merged common ancestors
+  if (expectedLines.length !== index)
+  {
+    throw "Expected more lines!  Got " + index +
+          ", expected " + expectedLines.length;
+=======
+  if (expectedLines.length !== index) {
+    throw new Error(
+      `Expected more lines!  Got ${index}, expected ${expectedLines.length}`
+    );
+>>>>>>> upstream-releases
   }
 }
 
@@ -148,8 +192,9 @@ function writeDetails(request, response) {
  */
 function skipHeaders(iter) {
   var line = iter.next().value;
-  while (line !== "")
+  while (line !== "") {
     line = iter.next().value;
+  }
 }
 
 /**
@@ -161,9 +206,19 @@ function skipHeaders(iter) {
  * @param code : nsresult
  *   the expected exception
  */
+<<<<<<< HEAD
 function isException(e, code) {
   if (e !== code && e.result !== code)
+||||||| merged common ancestors
+function isException(e, code)
+{
+  if (e !== code && e.result !== code)
+=======
+function isException(e, code) {
+  if (e !== code && e.result !== code) {
+>>>>>>> upstream-releases
     do_throw("unexpected error: " + e);
+  }
 }
 
 /**
@@ -180,8 +235,15 @@ function callLater(msecs, callback) {
   do_timeout(msecs, callback);
 }
 
+<<<<<<< HEAD
 
 /** *****************************************************
+||||||| merged common ancestors
+
+/*******************************************************
+=======
+/** *****************************************************
+>>>>>>> upstream-releases
  * SIMPLE SUPPORT FOR LOADING/TESTING A SERIES OF URLS *
  *******************************************************/
 
@@ -192,7 +254,9 @@ function callLater(msecs, callback) {
 function testComplete(srv) {
   return function complete() {
     do_test_pending();
-    srv.stop(function quit() { do_test_finished(); });
+    srv.stop(function quit() {
+      do_test_finished();
+    });
   };
 }
 
@@ -217,8 +281,17 @@ function testComplete(srv) {
  *   nsIHttpChannel and nsIHttpChannelInternal for convenience; may be null if
  *   nothing needs to be done
  */
+<<<<<<< HEAD
 function Test(path, initChannel, onStartRequest, onStopRequest) {
   function nil() { }
+||||||| merged common ancestors
+function Test(path, initChannel, onStartRequest, onStopRequest)
+{
+  function nil() { }
+=======
+function Test(path, initChannel, onStartRequest, onStopRequest) {
+  function nil() {}
+>>>>>>> upstream-releases
 
   this.path = path;
   this.initChannel = initChannel || nil;
@@ -252,22 +325,43 @@ function runHttpTests(testArray, done) {
     var ch = makeChannel(test.path);
     try {
       test.initChannel(ch);
+<<<<<<< HEAD
     } catch (e) {
       try {
         do_report_unexpected_exception(e, "testArray[" + testIndex + "].initChannel(ch)");
       } catch (x) {
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+      try
+      {
+        do_report_unexpected_exception(e, "testArray[" + testIndex + "].initChannel(ch)");
+      }
+      catch (e)
+      {
+=======
+    } catch (e) {
+      try {
+        do_report_unexpected_exception(
+          e,
+          "testArray[" + testIndex + "].initChannel(ch)"
+        );
+      } catch (x) {
+>>>>>>> upstream-releases
         /* swallow and let tests continue */
       }
     }
 
     listener._channel = ch;
-    ch.asyncOpen2(listener);
+    ch.asyncOpen(listener);
   }
 
   /** Index of the test being run. */
   var testIndex = -1;
 
   /** Stream listener for the channels. */
+<<<<<<< HEAD
   var listener =
     {
       /** Current channel being observed by this. */
@@ -298,7 +392,71 @@ function runHttpTests(testArray, done) {
         for (var start = 0; start < count; start += quantum) {
           var newData = bis.readByteArray(Math.min(quantum, count - start));
           Array.prototype.push.apply(this._data, newData);
+||||||| merged common ancestors
+  var listener =
+    {
+      /** Current channel being observed by this. */
+      _channel: null,
+      /** Array of bytes of data in body of response. */
+      _data: [],
+
+      onStartRequest: function(request, cx)
+      {
+        Assert.ok(request === this._channel);
+        var ch = request.QueryInterface(Ci.nsIHttpChannel)
+                        .QueryInterface(Ci.nsIHttpChannelInternal);
+
+        this._data.length = 0;
+        try
+        {
+          try
+          {
+            testArray[testIndex].onStartRequest(ch, cx);
+          }
+          catch (e)
+          {
+            do_report_unexpected_exception(e, "testArray[" + testIndex + "].onStartRequest");
+          }
         }
+        catch (e)
+        {
+          do_note_exception(e, "!!! swallowing onStartRequest exception so onStopRequest is " +
+                "called...");
+        }
+      },
+      onDataAvailable: function(request, cx, inputStream, offset, count)
+      {
+        var quantum = 262144; // just above half the argument-count limit
+        var bis = makeBIS(inputStream);
+        for (var start = 0; start < count; start += quantum)
+        {
+          var newData = bis.readByteArray(Math.min(quantum, count - start));
+          Array.prototype.push.apply(this._data, newData);
+=======
+  var listener = {
+    /** Current channel being observed by this. */
+    _channel: null,
+    /** Array of bytes of data in body of response. */
+    _data: [],
+
+    onStartRequest(request) {
+      Assert.ok(request === this._channel);
+      var ch = request
+        .QueryInterface(Ci.nsIHttpChannel)
+        .QueryInterface(Ci.nsIHttpChannelInternal);
+
+      this._data.length = 0;
+      try {
+        try {
+          testArray[testIndex].onStartRequest(ch);
+        } catch (e) {
+          do_report_unexpected_exception(
+            e,
+            "testArray[" + testIndex + "].onStartRequest"
+          );
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
       },
       onStopRequest(request, cx, status) {
         this._channel = null;
@@ -318,16 +476,107 @@ function runHttpTests(testArray, done) {
           } finally {
             do_test_finished();
           }
+||||||| merged common ancestors
+      },
+      onStopRequest: function(request, cx, status)
+      {
+        this._channel = null;
+
+        var ch = request.QueryInterface(Ci.nsIHttpChannel)
+                        .QueryInterface(Ci.nsIHttpChannelInternal);
+
+        // NB: The onStopRequest callback must run before performNextTest here,
+        //     because the latter runs the next test's initChannel callback, and
+        //     we want one test to be sequentially processed before the next
+        //     one.
+        try
+        {
+          testArray[testIndex].onStopRequest(ch, cx, status, this._data);
         }
+        finally
+        {
+          try
+          {
+            performNextTest();
+          }
+          finally
+          {
+            do_test_finished();
+          }
+=======
+      } catch (e) {
+        do_note_exception(
+          e,
+          "!!! swallowing onStartRequest exception so onStopRequest is " +
+            "called..."
+        );
+      }
+    },
+    onDataAvailable(request, inputStream, offset, count) {
+      var quantum = 262144; // just above half the argument-count limit
+      var bis = makeBIS(inputStream);
+      for (var start = 0; start < count; start += quantum) {
+        var newData = bis.readByteArray(Math.min(quantum, count - start));
+        Array.prototype.push.apply(this._data, newData);
+      }
+    },
+    onStopRequest(request, status) {
+      this._channel = null;
+
+      var ch = request
+        .QueryInterface(Ci.nsIHttpChannel)
+        .QueryInterface(Ci.nsIHttpChannelInternal);
+
+      // NB: The onStopRequest callback must run before performNextTest here,
+      //     because the latter runs the next test's initChannel callback, and
+      //     we want one test to be sequentially processed before the next
+      //     one.
+      try {
+        testArray[testIndex].onStopRequest(ch, status, this._data);
+      } finally {
+        try {
+          performNextTest();
+        } finally {
+          do_test_finished();
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
       },
       QueryInterface: ChromeUtils.generateQI(["nsIStreamListener", "nsIRequestObserver"]),
     };
+||||||| merged common ancestors
+      },
+      QueryInterface: function(aIID)
+      {
+        if (aIID.equals(Ci.nsIStreamListener) ||
+            aIID.equals(Ci.nsIRequestObserver) ||
+            aIID.equals(Ci.nsISupports))
+          return this;
+        throw Cr.NS_ERROR_NO_INTERFACE;
+      }
+    };
+=======
+      }
+    },
+    QueryInterface: ChromeUtils.generateQI([
+      "nsIStreamListener",
+      "nsIRequestObserver",
+    ]),
+  };
+>>>>>>> upstream-releases
 
   performNextTest();
 }
 
+<<<<<<< HEAD
 
 /** **************************************
+||||||| merged common ancestors
+
+/****************************************
+=======
+/** **************************************
+>>>>>>> upstream-releases
  * RAW REQUEST FORMAT TESTING FUNCTIONS *
  ****************************************/
 
@@ -349,17 +598,52 @@ function runHttpTests(testArray, done) {
  *   conducts whatever tests it wants on that data; useful for tweaking the test
  *   environment between tests
  */
+<<<<<<< HEAD
 function RawTest(host, port, data, responseCheck) {
   if (0 > port || 65535 < port || port % 1 !== 0)
     throw "bad port";
   if (!(data instanceof Array))
+||||||| merged common ancestors
+function RawTest(host, port, data, responseCheck)
+{
+  if (0 > port || 65535 < port || port % 1 !== 0)
+    throw "bad port";
+  if (!(data instanceof Array))
+=======
+function RawTest(host, port, data, responseCheck) {
+  if (0 > port || 65535 < port || port % 1 !== 0) {
+    throw new Error("bad port");
+  }
+  if (!(data instanceof Array)) {
+>>>>>>> upstream-releases
     data = [data];
+<<<<<<< HEAD
   if (data.length <= 0)
     throw "bad data length";
 
   // eslint-disable-next-line no-control-regex
   if (!data.every(function(v) { return /^[\x00-\xff]*$/.test(v); }))
     throw "bad data contained non-byte-valued character";
+||||||| merged common ancestors
+  if (data.length <= 0)
+    throw "bad data length";
+  if (!data.every(function(v) { return /^[\x00-\xff]*$/.test(v); }))
+    throw "bad data contained non-byte-valued character";
+=======
+  }
+  if (data.length <= 0) {
+    throw new Error("bad data length");
+  }
+
+  if (
+    !data.every(function(v) {
+      // eslint-disable-next-line no-control-regex
+      return /^[\x00-\xff]*$/.test(v);
+    })
+  ) {
+    throw new Error("bad data contained non-byte-valued character");
+  }
+>>>>>>> upstream-releases
 
   this.host = host;
   this.port = port;
@@ -380,13 +664,25 @@ function RawTest(host, port, data, responseCheck) {
 function runRawTests(testArray, done, beforeTestCallback) {
   do_test_pending();
 
-  var sts = Cc["@mozilla.org/network/socket-transport-service;1"]
-              .getService(Ci.nsISocketTransportService);
+  var sts = Cc["@mozilla.org/network/socket-transport-service;1"].getService(
+    Ci.nsISocketTransportService
+  );
 
+  var currentThread = Cc["@mozilla.org/thread-manager;1"].getService()
+    .currentThread;
+
+<<<<<<< HEAD
   var currentThread = Cc["@mozilla.org/thread-manager;1"]
                         .getService()
                         .currentThread;
 
+||||||| merged common ancestors
+  var currentThread = Cc["@mozilla.org/thread-manager;1"]
+                        .getService()
+                        .currentThread;
+  
+=======
+>>>>>>> upstream-releases
   /** Kicks off running the next test in the array. */
   function performNextTest() {
     if (++testIndex == testArray.length) {
@@ -399,19 +695,29 @@ function runRawTests(testArray, done, beforeTestCallback) {
       return;
     }
 
+<<<<<<< HEAD
     if (beforeTestCallback) {
       try {
         beforeTestCallback(testIndex);
       } catch (e) { /* We don't care if this call fails */ }
     }
+||||||| merged common ancestors
+=======
+    if (beforeTestCallback) {
+      try {
+        beforeTestCallback(testIndex);
+      } catch (e) {
+        /* We don't care if this call fails */
+      }
+    }
+>>>>>>> upstream-releases
 
     var rawTest = testArray[testIndex];
 
-    var transport =
-      sts.createTransport(null, 0, rawTest.host, rawTest.port, null);
+    var transport = sts.createTransport([], rawTest.host, rawTest.port, null);
 
     var inStream = transport.openInputStream(0, 0, 0);
-    var outStream  = transport.openOutputStream(0, 0, 0);
+    var outStream = transport.openOutputStream(0, 0, 0);
 
     // reset
     dataIndex = 0;
@@ -432,8 +738,12 @@ function runRawTests(testArray, done, beforeTestCallback) {
     // guarantee that 'stream' passed in here been QIed to nsIAsyncOutputStream
     // since the last GC.
     stream = stream.QueryInterface(Ci.nsIAsyncOutputStream);
-    stream.asyncWait(writer, 0, testArray[testIndex].data[dataIndex].length,
-                     currentThread);
+    stream.asyncWait(
+      writer,
+      0,
+      testArray[testIndex].data[dataIndex].length,
+      currentThread
+    );
   }
 
   /** Index of the test being run. */
@@ -449,6 +759,7 @@ function runRawTests(testArray, done, beforeTestCallback) {
   var received = "";
 
   /** Reads data from the socket. */
+<<<<<<< HEAD
   var reader =
     {
       onInputStreamReady(stream) {
@@ -463,7 +774,43 @@ function runRawTests(testArray, done, beforeTestCallback) {
             /* default to 0 */
             do_note_exception(e);
           }
+||||||| merged common ancestors
+  var reader =
+    {
+      onInputStreamReady: function(stream)
+      {
+        Assert.ok(stream === this.stream);
+        try
+        {
+          var bis = new BinaryInputStream(stream);
 
+          var av = 0;
+          try
+          {
+            av = bis.available();
+          }
+          catch (e)
+          {
+            /* default to 0 */
+            do_note_exception(e);
+          }
+=======
+  var reader = {
+    onInputStreamReady(stream) {
+      Assert.ok(stream === this.stream);
+      try {
+        var bis = new BinaryInputStream(stream);
+
+        var av = 0;
+        try {
+          av = bis.available();
+        } catch (e) {
+          /* default to 0 */
+          do_note_exception(e);
+        }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
           if (av > 0) {
             var quantum = 262144;
             for (var start = 0; start < av; start += quantum) {
@@ -472,16 +819,71 @@ function runRawTests(testArray, done, beforeTestCallback) {
             }
             waitForMoreInput(stream);
             return;
+||||||| merged common ancestors
+          if (av > 0)
+          {
+            var quantum = 262144;
+            for (var start = 0; start < av; start += quantum)
+            {
+              var bytes = bis.readByteArray(Math.min(quantum, av - start));
+              received += String.fromCharCode.apply(null, bytes);
+            }
+            waitForMoreInput(stream);
+            return;
+=======
+        if (av > 0) {
+          var quantum = 262144;
+          for (var start = 0; start < av; start += quantum) {
+            var bytes = bis.readByteArray(Math.min(quantum, av - start));
+            received += String.fromCharCode.apply(null, bytes);
+>>>>>>> upstream-releases
           }
+<<<<<<< HEAD
         } catch (e) {
           do_report_unexpected_exception(e);
         }
+||||||| merged common ancestors
+        }
+        catch(e)
+        {
+          do_report_unexpected_exception(e);
+        }
+=======
+          waitForMoreInput(stream);
+          return;
+        }
+      } catch (e) {
+        do_report_unexpected_exception(e);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         var rawTest = testArray[testIndex];
         try {
           rawTest.responseCheck(received);
         } catch (e) {
+||||||| merged common ancestors
+        var rawTest = testArray[testIndex];
+        try
+        {
+          rawTest.responseCheck(received);
+        }
+        catch (e)
+        {
+=======
+      var rawTest = testArray[testIndex];
+      try {
+        rawTest.responseCheck(received);
+      } catch (e) {
+        do_report_unexpected_exception(e);
+      } finally {
+        try {
+          stream.close();
+          performNextTest();
+        } catch (e) {
+>>>>>>> upstream-releases
           do_report_unexpected_exception(e);
+<<<<<<< HEAD
         } finally {
           try {
             stream.close();
@@ -492,8 +894,31 @@ function runRawTests(testArray, done, beforeTestCallback) {
         }
       },
     };
+||||||| merged common ancestors
+        }
+        finally
+        {
+          try
+          {
+            stream.close();
+            performNextTest();
+          }
+          catch (e)
+          {
+            do_report_unexpected_exception(e);
+          }
+        }
+      }
+    };
+=======
+        }
+      }
+    },
+  };
+>>>>>>> upstream-releases
 
   /** Writes data to the socket. */
+<<<<<<< HEAD
   var writer =
     {
       onOutputStreamReady(stream) {
@@ -509,8 +934,46 @@ function runRawTests(testArray, done, beforeTestCallback) {
         } catch (e) {
           do_note_exception(e);
           /* stream could have been closed, just ignore */
-        }
+||||||| merged common ancestors
+  var writer = 
+    {
+      onOutputStreamReady: function(stream)
+      {
+        var str = testArray[testIndex].data[dataIndex];
 
+        var written = 0;
+        try
+        {
+          written = stream.write(str, str.length);
+          if (written == str.length)
+            dataIndex++;
+          else
+            testArray[testIndex].data[dataIndex] = str.substring(written);
+        }
+        catch (e)
+        {
+          do_note_exception(e);
+          /* stream could have been closed, just ignore */
+=======
+  var writer = {
+    onOutputStreamReady(stream) {
+      var str = testArray[testIndex].data[dataIndex];
+
+      var written = 0;
+      try {
+        written = stream.write(str, str.length);
+        if (written == str.length) {
+          dataIndex++;
+        } else {
+          testArray[testIndex].data[dataIndex] = str.substring(written);
+>>>>>>> upstream-releases
+        }
+      } catch (e) {
+        do_note_exception(e);
+        /* stream could have been closed, just ignore */
+      }
+
+<<<<<<< HEAD
         try {
           // Keep writing data while we can write and
           // until there's no more data to read
@@ -520,9 +983,42 @@ function runRawTests(testArray, done, beforeTestCallback) {
             stream.close();
         } catch (e) {
           do_report_unexpected_exception(e);
+||||||| merged common ancestors
+        try
+        {
+          // Keep writing data while we can write and 
+          // until there's no more data to read
+          if (written > 0 && dataIndex < testArray[testIndex].data.length)
+            waitToWriteOutput(stream);
+          else
+            stream.close();
         }
+        catch (e)
+        {
+          do_report_unexpected_exception(e);
+=======
+      try {
+        // Keep writing data while we can write and
+        // until there's no more data to read
+        if (written > 0 && dataIndex < testArray[testIndex].data.length) {
+          waitToWriteOutput(stream);
+        } else {
+          stream.close();
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
       },
     };
+||||||| merged common ancestors
+      }
+    };
+=======
+      } catch (e) {
+        do_report_unexpected_exception(e);
+      }
+    },
+  };
+>>>>>>> upstream-releases
 
   performNextTest();
 }

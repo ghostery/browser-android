@@ -2,5 +2,11 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 az_Cyrl{
     %%Parent{"root"}
+<<<<<<< HEAD
     Version{"2.1.44.53"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
 }

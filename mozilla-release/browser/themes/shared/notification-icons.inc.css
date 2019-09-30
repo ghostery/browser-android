@@ -18,6 +18,13 @@
   padding-inline-end: 5px;
 }
 
+.blocked-permission-icon:-moz-focusring,
+.notification-anchor-icon:-moz-focusring {
+  outline: var(--toolbarbutton-focus-outline);
+  outline-offset: 4px;
+  -moz-outline-radius: var(--toolbarbutton-border-radius);
+}
+
 /* This class can be used alone or in combination with the class defining the
    type of icon displayed. This rule must be defined before the others in order
    for its list-style-image to be overridden. */
@@ -75,6 +82,7 @@
   list-style-image: url(chrome://browser/skin/notification-icons/autoplay-media-blocked.svg);
 }
 
+<<<<<<< HEAD
 .storage-access-notification-content {
   color: var(--panel-disabled-color);
   font-style: italic;
@@ -93,17 +101,43 @@
   padding: 20px;
 }
 
+||||||| merged common ancestors
+=======
+.image-icon {
+  list-style-image: url(chrome://browser/skin/notification-icons/images.svg);
+}
+
+.image-icon.blocked-permission-icon {
+  list-style-image: url(chrome://browser/skin/notification-icons/images-blocked.svg);
+}
+
+.storage-access-notification-content {
+  color: var(--panel-disabled-color);
+  font-style: italic;
+  margin-top: 15px;
+}
+
+.storage-access-notification-content .text-link {
+  color: -moz-nativehyperlinktext;
+}
+
+.storage-access-notification-content .text-link:hover {
+  text-decoration: underline;
+}
+
+#storage-access-notification .popup-notification-body-container {
+  padding: 20px;
+}
+
+>>>>>>> upstream-releases
 .popup-notification-icon[popupid="indexedDB-permissions-prompt"],
 .indexedDB-icon {
   list-style-image: url(chrome://browser/skin/notification-icons/indexedDB.svg);
 }
 
+.popup-notification-icon[popupid="password"],
 .login-icon {
-  list-style-image: url(chrome://browser/skin/notification-icons/login.svg);
-}
-
-.popup-notification-icon[popupid="password"] {
-  list-style-image: url(chrome://browser/skin/notification-icons/login-detailed.svg);
+  list-style-image: url(chrome://browser/skin/login.svg);
 }
 
 .camera-icon {
@@ -195,6 +229,10 @@ html|*#webRTC-previewVideo {
   border-top: 1px solid var(--panel-separator-color);
 }
 
+#webRTC-previewWarning:-moz-locale-dir(rtl) {
+  background-position: calc(100% - .75em) .75em;
+}
+
 #webRTC-previewWarning > .text-link {
   margin-inline-start: 0;
 }
@@ -206,7 +244,9 @@ html|*#webRTC-previewVideo {
 
 .popup-subitem {
   list-style-image: url("chrome://browser/skin/notification-icons/popup-subitem.svg");
-  margin-inline-start: 30px;
+  margin-inline-start: 42px;
+  width: 16px;
+  height: 16px;
 }
 
 .identity-popup-popup-menulist {
@@ -220,6 +260,7 @@ html|*#webRTC-previewVideo {
   list-style-image: url("chrome://browser/skin/drm-icon.svg");
 }
 
+.notification-anchor-icon[animate=true],
 #eme-notification-icon[firstplay=true] {
   animation: emeTeachingMoment 0.2s linear 0s 5 normal;
 }
@@ -237,6 +278,7 @@ html|*#webRTC-previewVideo {
   list-style-image: url(chrome://mozapps/skin/extensions/extensionGeneric-16.svg);
 }
 
+.install-icon.blocked-permission-icon,
 .popup-notification-icon[popupid="xpinstall-disabled"],
 .popup-notification-icon[popupid="addon-install-blocked"],
 .popup-notification-icon[popupid="addon-install-origin-blocked"] {
@@ -277,10 +319,18 @@ html|*#webRTC-previewVideo {
   transition: fill 1.5s;
 }
 
+<<<<<<< HEAD
 .plugin-icon.blocked-permission-icon {
   list-style-image: url(chrome://global/skin/plugins/plugin-blocked.svg);
 }
 
+||||||| merged common ancestors
+.plugin-icon.blocked-permission-icon {
+  list-style-image: url(chrome://mozapps/skin/plugins/plugin-blocked.svg);
+}
+
+=======
+>>>>>>> upstream-releases
 #plugin-icon-badge {
   list-style-image: url(chrome://browser/skin/notification-icons/plugin-badge.svg);
   opacity: 0;
@@ -366,5 +416,10 @@ html|*#webRTC-previewVideo {
 .popup-notification-icon[popupid="update-manual"],
 .popup-notification-icon[popupid="update-restart"] {
   background: #74BF43 url(chrome://browser/skin/notification-icons/update.svg) no-repeat center;
+  border-radius: 50%;
+}
+
+.popup-notification-icon[popupid="update-unsupported"] {
+  background: #FFE900 url(chrome://browser/skin/notification-icons/update.svg) no-repeat center;
   border-radius: 50%;
 }

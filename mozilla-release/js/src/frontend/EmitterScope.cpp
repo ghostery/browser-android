@@ -129,10 +129,23 @@ Scope* EmitterScope::enclosingScope(BytecodeEmitter* bce) const {
   return bce->sc->compilationEnclosingScope();
 }
 
+<<<<<<< HEAD
 /* static */ bool EmitterScope::nameCanBeFree(BytecodeEmitter* bce,
                                               JSAtom* name) {
   // '.generator' cannot be accessed by name.
   return name != bce->cx->names().dotGenerator;
+||||||| merged common ancestors
+/* static */ bool
+EmitterScope::nameCanBeFree(BytecodeEmitter* bce, JSAtom* name)
+{
+    // '.generator' cannot be accessed by name.
+    return name != bce->cx->names().dotGenerator;
+=======
+/* static */
+bool EmitterScope::nameCanBeFree(BytecodeEmitter* bce, JSAtom* name) {
+  // '.generator' cannot be accessed by name.
+  return name != bce->cx->names().dotGenerator;
+>>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
@@ -167,11 +180,25 @@ static bool NameIsOnEnvironment(Scope* scope, JSAtom* name) {
 }
 #endif
 
+<<<<<<< HEAD
 /* static */ NameLocation EmitterScope::searchInEnclosingScope(JSAtom* name,
                                                                Scope* scope,
                                                                uint8_t hops) {
   for (ScopeIter si(scope); si; si++) {
     MOZ_ASSERT(NameIsOnEnvironment(si.scope(), name));
+||||||| merged common ancestors
+/* static */ NameLocation
+EmitterScope::searchInEnclosingScope(JSAtom* name, Scope* scope, uint8_t hops)
+{
+    for (ScopeIter si(scope); si; si++) {
+        MOZ_ASSERT(NameIsOnEnvironment(si.scope(), name));
+=======
+/* static */
+NameLocation EmitterScope::searchInEnclosingScope(JSAtom* name, Scope* scope,
+                                                  uint8_t hops) {
+  for (ScopeIter si(scope); si; si++) {
+    MOZ_ASSERT(NameIsOnEnvironment(si.scope(), name));
+>>>>>>> upstream-releases
 
     bool hasEnv = si.hasSyntacticEnvironment();
 
@@ -334,6 +361,7 @@ NameLocation EmitterScope::searchAndCache(BytecodeEmitter* bce, JSAtom* name) {
   return *loc;
 }
 
+<<<<<<< HEAD
 template <typename ScopeCreator>
 bool EmitterScope::internScope(BytecodeEmitter* bce, ScopeCreator createScope) {
   RootedScope enclosing(bce->cx, enclosingScope(bce));
@@ -344,8 +372,22 @@ bool EmitterScope::internScope(BytecodeEmitter* bce, ScopeCreator createScope) {
   hasEnvironment_ = scope->hasEnvironment();
   scopeIndex_ = bce->scopeList.length();
   return bce->scopeList.append(scope);
+||||||| merged common ancestors
+    fprintf(stdout, "\n");
+=======
+template <typename ScopeCreator>
+bool EmitterScope::internScope(BytecodeEmitter* bce, ScopeCreator createScope) {
+  RootedScope enclosing(bce->cx, enclosingScope(bce));
+  Scope* scope = createScope(bce->cx, enclosing);
+  if (!scope) {
+    return false;
+  }
+  hasEnvironment_ = scope->hasEnvironment();
+  return bce->perScriptData().gcThingList().append(scope, &scopeIndex_);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template <typename ScopeCreator>
 bool EmitterScope::internBodyScope(BytecodeEmitter* bce,
                                    ScopeCreator createScope) {
@@ -364,6 +406,33 @@ bool EmitterScope::appendScopeNote(BytecodeEmitter* bce) {
                                        ? enclosingInFrame()->noteIndex()
                                        : ScopeNote::NoScopeNoteIndex);
 }
+||||||| merged common ancestors
+bool
+EmitterScope::enterLexical(BytecodeEmitter* bce, ScopeKind kind,
+                           Handle<LexicalScope::Data*> bindings)
+{
+    MOZ_ASSERT(kind != ScopeKind::NamedLambda && kind != ScopeKind::StrictNamedLambda);
+    MOZ_ASSERT(this == bce->innermostEmitterScopeNoCheck());
+=======
+template <typename ScopeCreator>
+bool EmitterScope::internBodyScope(BytecodeEmitter* bce,
+                                   ScopeCreator createScope) {
+  MOZ_ASSERT(bce->bodyScopeIndex == UINT32_MAX,
+             "There can be only one body scope");
+  bce->bodyScopeIndex = bce->perScriptData().gcThingList().length();
+  return internScope(bce, createScope);
+}
+
+bool EmitterScope::appendScopeNote(BytecodeEmitter* bce) {
+  MOZ_ASSERT(ScopeKindIsInBody(scope(bce)->kind()) && enclosingInFrame(),
+             "Scope notes are not needed for body-level scopes.");
+  noteIndex_ = bce->bytecodeSection().scopeNoteList().length();
+  return bce->bytecodeSection().scopeNoteList().append(
+      index(), bce->bytecodeSection().offset(),
+      enclosingInFrame() ? enclosingInFrame()->noteIndex()
+                         : ScopeNote::NoScopeNoteIndex);
+}
+>>>>>>> upstream-releases
 
 bool EmitterScope::deadZoneFrameSlotRange(BytecodeEmitter* bce,
                                           uint32_t slotStart,
@@ -1005,6 +1074,7 @@ bool EmitterScope::deadZoneFrameSlots(BytecodeEmitter* bce) const {
   return deadZoneFrameSlotRange(bce, frameSlotStart(), frameSlotEnd());
 }
 
+<<<<<<< HEAD
 bool EmitterScope::leave(BytecodeEmitter* bce, bool nonLocal) {
   // If we aren't leaving the scope due to a non-local jump (e.g., break),
   // we must be the innermost scope.
@@ -1064,10 +1134,93 @@ bool EmitterScope::leave(BytecodeEmitter* bce, bool nonLocal) {
   }
 
   return true;
+||||||| merged common ancestors
+Scope*
+EmitterScope::scope(const BytecodeEmitter* bce) const
+{
+    return bce->scopeList.vector[index()];
+=======
+bool EmitterScope::leave(BytecodeEmitter* bce, bool nonLocal) {
+  // If we aren't leaving the scope due to a non-local jump (e.g., break),
+  // we must be the innermost scope.
+  MOZ_ASSERT_IF(!nonLocal, this == bce->innermostEmitterScopeNoCheck());
+
+  ScopeKind kind = scope(bce)->kind();
+  switch (kind) {
+    case ScopeKind::Lexical:
+    case ScopeKind::SimpleCatch:
+    case ScopeKind::Catch:
+      if (!bce->emit1(hasEnvironment() ? JSOP_POPLEXICALENV
+                                       : JSOP_DEBUGLEAVELEXICALENV)) {
+        return false;
+      }
+      break;
+
+    case ScopeKind::With:
+      if (!bce->emit1(JSOP_LEAVEWITH)) {
+        return false;
+      }
+      break;
+
+    case ScopeKind::ParameterExpressionVar:
+      MOZ_ASSERT(hasEnvironment());
+      if (!bce->emit1(JSOP_POPVARENV)) {
+        return false;
+      }
+      break;
+
+    case ScopeKind::Function:
+    case ScopeKind::FunctionBodyVar:
+    case ScopeKind::NamedLambda:
+    case ScopeKind::StrictNamedLambda:
+    case ScopeKind::Eval:
+    case ScopeKind::StrictEval:
+    case ScopeKind::Global:
+    case ScopeKind::NonSyntactic:
+    case ScopeKind::Module:
+      break;
+
+    case ScopeKind::WasmInstance:
+    case ScopeKind::WasmFunction:
+      MOZ_CRASH("No wasm function scopes in JS");
+  }
+
+  // Finish up the scope if we are leaving it in LIFO fashion.
+  if (!nonLocal) {
+    // Popping scopes due to non-local jumps generate additional scope
+    // notes. See NonLocalExitControl::prepareForNonLocalJump.
+    if (ScopeKindIsInBody(kind)) {
+      if (kind == ScopeKind::FunctionBodyVar) {
+        // The extra function var scope is never popped once it's pushed,
+        // so its scope note extends until the end of any possible code.
+        bce->bytecodeSection().scopeNoteList().recordEndFunctionBodyVar(
+            noteIndex_);
+      } else {
+        bce->bytecodeSection().scopeNoteList().recordEnd(
+            noteIndex_, bce->bytecodeSection().offset());
+      }
+    }
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 Scope* EmitterScope::scope(const BytecodeEmitter* bce) const {
   return bce->scopeList.vector[index()];
+||||||| merged common ancestors
+NameLocation
+EmitterScope::lookup(BytecodeEmitter* bce, JSAtom* name)
+{
+    if (Maybe<NameLocation> loc = lookupInCache(bce, name)) {
+        return *loc;
+    }
+    return searchAndCache(bce, name);
+=======
+Scope* EmitterScope::scope(const BytecodeEmitter* bce) const {
+  return bce->perScriptData().gcThingList().getScope(index());
+>>>>>>> upstream-releases
 }
 
 NameLocation EmitterScope::lookup(BytecodeEmitter* bce, JSAtom* name) {

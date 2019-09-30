@@ -18,11 +18,11 @@
 #include "gfxUserFontSet.h"
 #include "gfxUtils.h"
 #include "gfxFT2FontBase.h"
-#include "gfxPrefs.h"
 #include "gfxTextRun.h"
 #include "VsyncSource.h"
 #include "mozilla/Atomics.h"
 #include "mozilla/Monitor.h"
+#include "mozilla/StaticPrefs.h"
 #include "base/task.h"
 #include "base/thread.h"
 #include "base/message_loop.h"
@@ -36,6 +36,7 @@
 
 #include "gfxImageSurface.h"
 #ifdef MOZ_X11
+<<<<<<< HEAD
 #include <gdk/gdkx.h>
 #include "gfxXlibSurface.h"
 #include "cairo-xlib.h"
@@ -55,6 +56,46 @@
 #ifdef MOZ_WAYLAND
 #include <gdk/gdkwayland.h>
 #endif
+||||||| merged common ancestors
+#include <gdk/gdkx.h>
+#include "gfxXlibSurface.h"
+#include "cairo-xlib.h"
+#include "mozilla/Preferences.h"
+#include "mozilla/X11Util.h"
+
+#include "GLContextProvider.h"
+#include "GLContextGLX.h"
+#include "GLXLibrary.h"
+
+/* Undefine the Status from Xlib since it will conflict with system headers on OSX */
+#if defined(__APPLE__) && defined(Status)
+#undef Status
+#endif
+
+#ifdef MOZ_WAYLAND
+#include <gdk/gdkwayland.h>
+#endif
+=======
+#  include <gdk/gdkx.h>
+#  include "gfxXlibSurface.h"
+#  include "cairo-xlib.h"
+#  include "mozilla/Preferences.h"
+#  include "mozilla/X11Util.h"
+
+#  include "GLContextProvider.h"
+#  include "GLContextGLX.h"
+#  include "GLXLibrary.h"
+
+/* Undefine the Status from Xlib since it will conflict with system headers on
+ * OSX */
+#  if defined(__APPLE__) && defined(Status)
+#    undef Status
+#  endif
+
+#  ifdef MOZ_WAYLAND
+#    include <gdk/gdkwayland.h>
+#  endif
+>>>>>>> upstream-releases
 
 #endif /* MOZ_X11 */
 
@@ -121,6 +162,40 @@ void gfxPlatformGtk::FlushContentDrawing() {
   }
 }
 
+<<<<<<< HEAD
+already_AddRefed<gfxASurface> gfxPlatformGtk::CreateOffscreenSurface(
+    const IntSize& aSize, gfxImageFormat aFormat) {
+  if (!Factory::AllowedSurfaceSize(aSize)) {
+    return nullptr;
+  }
+||||||| merged common ancestors
+already_AddRefed<gfxASurface>
+gfxPlatformGtk::CreateOffscreenSurface(const IntSize& aSize,
+                                       gfxImageFormat aFormat)
+{
+    if (!Factory::AllowedSurfaceSize(aSize)) {
+        return nullptr;
+    }
+=======
+void gfxPlatformGtk::InitPlatformGPUProcessPrefs() {
+#ifdef MOZ_WAYLAND
+  if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    FeatureState& gpuProc = gfxConfig::GetFeature(Feature::GPU_PROCESS);
+    gpuProc.ForceDisable(FeatureStatus::Blocked,
+                         "Wayland does not work in the GPU process",
+                         NS_LITERAL_CSTRING("FEATURE_FAILURE_WAYLAND"));
+  }
+#endif
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RefPtr<gfxASurface> newSurface;
+  bool needsClear = true;
+||||||| merged common ancestors
+    RefPtr<gfxASurface> newSurface;
+    bool needsClear = true;
+=======
 already_AddRefed<gfxASurface> gfxPlatformGtk::CreateOffscreenSurface(
     const IntSize& aSize, gfxImageFormat aFormat) {
   if (!Factory::AllowedSurfaceSize(aSize)) {
@@ -129,6 +204,7 @@ already_AddRefed<gfxASurface> gfxPlatformGtk::CreateOffscreenSurface(
 
   RefPtr<gfxASurface> newSurface;
   bool needsClear = true;
+>>>>>>> upstream-releases
 #ifdef MOZ_X11
   // XXX we really need a different interface here, something that passes
   // in more context, including the display and/or target surface type that
@@ -289,9 +365,21 @@ double gfxPlatformGtk::GetFontScaleFactor() {
   return round(dpi / 96.0);
 }
 
+<<<<<<< HEAD
 bool gfxPlatformGtk::UseImageOffscreenSurfaces() {
   return GetDefaultContentBackend() != mozilla::gfx::BackendType::CAIRO ||
          gfxPrefs::UseImageOffscreenSurfaces();
+||||||| merged common ancestors
+bool
+gfxPlatformGtk::UseImageOffscreenSurfaces()
+{
+    return GetDefaultContentBackend() != mozilla::gfx::BackendType::CAIRO ||
+           gfxPrefs::UseImageOffscreenSurfaces();
+=======
+bool gfxPlatformGtk::UseImageOffscreenSurfaces() {
+  return GetDefaultContentBackend() != mozilla::gfx::BackendType::CAIRO ||
+         StaticPrefs::layers_use_image_offscreen_surfaces();
+>>>>>>> upstream-releases
 }
 
 gfxImageFormat gfxPlatformGtk::GetOffscreenFormat() {
@@ -329,15 +417,26 @@ uint32_t gfxPlatformGtk::MaxGenericSubstitions() {
   return uint32_t(mMaxGenericSubstitutions);
 }
 
+<<<<<<< HEAD
 bool gfxPlatformGtk::AccelerateLayersByDefault() {
   return gfxPrefs::WebRenderAll();
 }
+||||||| merged common ancestors
+bool
+gfxPlatformGtk::AccelerateLayersByDefault()
+{
+    return gfxPrefs::WebRenderAll();
+}
+=======
+bool gfxPlatformGtk::AccelerateLayersByDefault() { return true; }
+>>>>>>> upstream-releases
 
 void gfxPlatformGtk::GetPlatformCMSOutputProfile(void*& mem, size_t& size) {
   mem = nullptr;
   size = 0;
 
 #ifdef MOZ_X11
+<<<<<<< HEAD
   GdkDisplay* display = gdk_display_get_default();
   if (!GDK_IS_X11_DISPLAY(display)) return;
 
@@ -382,7 +481,105 @@ void gfxPlatformGtk::GetPlatformCMSOutputProfile(void*& mem, size_t& size) {
 #endif
         return;
       }
+||||||| merged common ancestors
+    GdkDisplay *display = gdk_display_get_default();
+    if (!GDK_IS_X11_DISPLAY(display))
+        return;
+
+    const char EDID1_ATOM_NAME[] = "XFree86_DDC_EDID1_RAWDATA";
+    const char ICC_PROFILE_ATOM_NAME[] = "_ICC_PROFILE";
+
+    Atom edidAtom, iccAtom;
+    Display *dpy = GDK_DISPLAY_XDISPLAY(display);
+    // In xpcshell tests, we never initialize X and hence don't have a Display.
+    // In this case, there's no output colour management to be done, so we just
+    // return with nullptr.
+    if (!dpy)
+        return;
+
+    Window root = gdk_x11_get_default_root_xwindow();
+
+    Atom retAtom;
+    int retFormat;
+    unsigned long retLength, retAfter;
+    unsigned char *retProperty ;
+
+    iccAtom = XInternAtom(dpy, ICC_PROFILE_ATOM_NAME, TRUE);
+    if (iccAtom) {
+        // read once to get size, once for the data
+        if (Success == XGetWindowProperty(dpy, root, iccAtom,
+                                          0, INT_MAX /* length */,
+                                          False, AnyPropertyType,
+                                          &retAtom, &retFormat, &retLength,
+                                          &retAfter, &retProperty)) {
+
+            if (retLength > 0) {
+                void *buffer = malloc(retLength);
+                if (buffer) {
+                    memcpy(buffer, retProperty, retLength);
+                    mem = buffer;
+                    size = retLength;
+                }
+            }
+
+            XFree(retProperty);
+            if (size > 0) {
+#ifdef DEBUG_tor
+                fprintf(stderr,
+                        "ICM profile read from %s successfully\n",
+                        ICC_PROFILE_ATOM_NAME);
+#endif
+                return;
+            }
+        }
+=======
+  GdkDisplay* display = gdk_display_get_default();
+  if (!GDK_IS_X11_DISPLAY(display)) return;
+
+  const char EDID1_ATOM_NAME[] = "XFree86_DDC_EDID1_RAWDATA";
+  const char ICC_PROFILE_ATOM_NAME[] = "_ICC_PROFILE";
+
+  Atom edidAtom, iccAtom;
+  Display* dpy = GDK_DISPLAY_XDISPLAY(display);
+  // In xpcshell tests, we never initialize X and hence don't have a Display.
+  // In this case, there's no output colour management to be done, so we just
+  // return with nullptr.
+  if (!dpy) return;
+
+  Window root = gdk_x11_get_default_root_xwindow();
+
+  Atom retAtom;
+  int retFormat;
+  unsigned long retLength, retAfter;
+  unsigned char* retProperty;
+
+  iccAtom = XInternAtom(dpy, ICC_PROFILE_ATOM_NAME, TRUE);
+  if (iccAtom) {
+    // read once to get size, once for the data
+    if (Success == XGetWindowProperty(dpy, root, iccAtom, 0,
+                                      INT_MAX /* length */, X11False,
+                                      AnyPropertyType, &retAtom, &retFormat,
+                                      &retLength, &retAfter, &retProperty)) {
+      if (retLength > 0) {
+        void* buffer = malloc(retLength);
+        if (buffer) {
+          memcpy(buffer, retProperty, retLength);
+          mem = buffer;
+          size = retLength;
+        }
+      }
+
+      XFree(retProperty);
+      if (size > 0) {
+#  ifdef DEBUG_tor
+        fprintf(stderr, "ICM profile read from %s successfully\n",
+                ICC_PROFILE_ATOM_NAME);
+#  endif
+        return;
+      }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   }
 
   edidAtom = XInternAtom(dpy, EDID1_ATOM_NAME, TRUE);
@@ -393,7 +590,12 @@ void gfxPlatformGtk::GetPlatformCMSOutputProfile(void*& mem, size_t& size) {
       double gamma;
       qcms_CIE_xyY whitePoint;
       qcms_CIE_xyYTRIPLE primaries;
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       if (retLength != 128) {
 #ifdef DEBUG_tor
         fprintf(stderr, "Short EDID data\n");
@@ -442,13 +644,148 @@ void gfxPlatformGtk::GetPlatformCMSOutputProfile(void*& mem, size_t& size) {
 
       qcms_data_create_rgb_with_gamma(whitePoint, primaries, gamma, &mem,
                                       &size);
+||||||| merged common ancestors
+    edidAtom = XInternAtom(dpy, EDID1_ATOM_NAME, TRUE);
+    if (edidAtom) {
+        if (Success == XGetWindowProperty(dpy, root, edidAtom, 0, 32,
+                                          False, AnyPropertyType,
+                                          &retAtom, &retFormat, &retLength,
+                                          &retAfter, &retProperty)) {
+            double gamma;
+            qcms_CIE_xyY whitePoint;
+            qcms_CIE_xyYTRIPLE primaries;
 
+            if (retLength != 128) {
+#ifdef DEBUG_tor
+                fprintf(stderr, "Short EDID data\n");
+#endif
+                return;
+            }
+
+            // Format documented in "VESA E-EDID Implementation Guide"
+
+            gamma = (100 + retProperty[0x17]) / 100.0;
+            whitePoint.x = ((retProperty[0x21] << 2) |
+                            (retProperty[0x1a] >> 2 & 3)) / 1024.0;
+            whitePoint.y = ((retProperty[0x22] << 2) |
+                            (retProperty[0x1a] >> 0 & 3)) / 1024.0;
+            whitePoint.Y = 1.0;
+
+            primaries.red.x = ((retProperty[0x1b] << 2) |
+                               (retProperty[0x19] >> 6 & 3)) / 1024.0;
+            primaries.red.y = ((retProperty[0x1c] << 2) |
+                               (retProperty[0x19] >> 4 & 3)) / 1024.0;
+            primaries.red.Y = 1.0;
+
+            primaries.green.x = ((retProperty[0x1d] << 2) |
+                                 (retProperty[0x19] >> 2 & 3)) / 1024.0;
+            primaries.green.y = ((retProperty[0x1e] << 2) |
+                                 (retProperty[0x19] >> 0 & 3)) / 1024.0;
+            primaries.green.Y = 1.0;
+
+            primaries.blue.x = ((retProperty[0x1f] << 2) |
+                               (retProperty[0x1a] >> 6 & 3)) / 1024.0;
+            primaries.blue.y = ((retProperty[0x20] << 2) |
+                               (retProperty[0x1a] >> 4 & 3)) / 1024.0;
+            primaries.blue.Y = 1.0;
+
+            XFree(retProperty);
+
+#ifdef DEBUG_tor
+            fprintf(stderr, "EDID gamma: %f\n", gamma);
+            fprintf(stderr, "EDID whitepoint: %f %f %f\n",
+                    whitePoint.x, whitePoint.y, whitePoint.Y);
+            fprintf(stderr, "EDID primaries: [%f %f %f] [%f %f %f] [%f %f %f]\n",
+                    primaries.Red.x, primaries.Red.y, primaries.Red.Y,
+                    primaries.Green.x, primaries.Green.y, primaries.Green.Y,
+                    primaries.Blue.x, primaries.Blue.y, primaries.Blue.Y);
+#endif
+
+            qcms_data_create_rgb_with_gamma(whitePoint, primaries, gamma, &mem, &size);
+=======
+  edidAtom = XInternAtom(dpy, EDID1_ATOM_NAME, TRUE);
+  if (edidAtom) {
+    if (Success == XGetWindowProperty(dpy, root, edidAtom, 0, 32, X11False,
+                                      AnyPropertyType, &retAtom, &retFormat,
+                                      &retLength, &retAfter, &retProperty)) {
+      double gamma;
+      qcms_CIE_xyY whitePoint;
+      qcms_CIE_xyYTRIPLE primaries;
+
+      if (retLength != 128) {
+#  ifdef DEBUG_tor
+        fprintf(stderr, "Short EDID data\n");
+#  endif
+        return;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #ifdef DEBUG_tor
       if (size > 0) {
         fprintf(stderr, "ICM profile read from %s successfully\n",
                 EDID1_ATOM_NAME);
       }
 #endif
+||||||| merged common ancestors
+#ifdef DEBUG_tor
+            if (size > 0) {
+                fprintf(stderr,
+                        "ICM profile read from %s successfully\n",
+                        EDID1_ATOM_NAME);
+            }
+#endif
+        }
+=======
+      // Format documented in "VESA E-EDID Implementation Guide"
+
+      gamma = (100 + retProperty[0x17]) / 100.0;
+      whitePoint.x =
+          ((retProperty[0x21] << 2) | (retProperty[0x1a] >> 2 & 3)) / 1024.0;
+      whitePoint.y =
+          ((retProperty[0x22] << 2) | (retProperty[0x1a] >> 0 & 3)) / 1024.0;
+      whitePoint.Y = 1.0;
+
+      primaries.red.x =
+          ((retProperty[0x1b] << 2) | (retProperty[0x19] >> 6 & 3)) / 1024.0;
+      primaries.red.y =
+          ((retProperty[0x1c] << 2) | (retProperty[0x19] >> 4 & 3)) / 1024.0;
+      primaries.red.Y = 1.0;
+
+      primaries.green.x =
+          ((retProperty[0x1d] << 2) | (retProperty[0x19] >> 2 & 3)) / 1024.0;
+      primaries.green.y =
+          ((retProperty[0x1e] << 2) | (retProperty[0x19] >> 0 & 3)) / 1024.0;
+      primaries.green.Y = 1.0;
+
+      primaries.blue.x =
+          ((retProperty[0x1f] << 2) | (retProperty[0x1a] >> 6 & 3)) / 1024.0;
+      primaries.blue.y =
+          ((retProperty[0x20] << 2) | (retProperty[0x1a] >> 4 & 3)) / 1024.0;
+      primaries.blue.Y = 1.0;
+
+      XFree(retProperty);
+
+#  ifdef DEBUG_tor
+      fprintf(stderr, "EDID gamma: %f\n", gamma);
+      fprintf(stderr, "EDID whitepoint: %f %f %f\n", whitePoint.x, whitePoint.y,
+              whitePoint.Y);
+      fprintf(stderr, "EDID primaries: [%f %f %f] [%f %f %f] [%f %f %f]\n",
+              primaries.Red.x, primaries.Red.y, primaries.Red.Y,
+              primaries.Green.x, primaries.Green.y, primaries.Green.Y,
+              primaries.Blue.x, primaries.Blue.y, primaries.Blue.Y);
+#  endif
+
+      qcms_data_create_rgb_with_gamma(whitePoint, primaries, gamma, &mem,
+                                      &size);
+
+#  ifdef DEBUG_tor
+      if (size > 0) {
+        fprintf(stderr, "ICM profile read from %s successfully\n",
+                EDID1_ATOM_NAME);
+      }
+#  endif
+>>>>>>> upstream-releases
     }
   }
 #endif
@@ -472,6 +809,7 @@ class GtkVsyncSource final : public VsyncSource {
     mGlobalDisplay = new GLXDisplay();
   }
 
+<<<<<<< HEAD
   virtual ~GtkVsyncSource() { MOZ_ASSERT(NS_IsMainThread()); }
 
   virtual Display& GetGlobalDisplay() override { return *mGlobalDisplay; }
@@ -492,6 +830,54 @@ class GtkVsyncSource final : public VsyncSource {
           ,
           mIsWaylandDisplay(false)
 #endif
+||||||| merged common ancestors
+  virtual ~GtkVsyncSource()
+  {
+    MOZ_ASSERT(NS_IsMainThread());
+  }
+
+  virtual Display& GetGlobalDisplay() override
+  {
+    return *mGlobalDisplay;
+  }
+
+  class GLXDisplay final : public VsyncSource::Display
+  {
+  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GLXDisplay)
+
+  public:
+    GLXDisplay() : mGLContext(nullptr)
+                 , mXDisplay(nullptr)
+                 , mSetupLock("GLXVsyncSetupLock")
+                 , mVsyncThread("GLXVsyncThread")
+                 , mVsyncTask(nullptr)
+                 , mVsyncEnabledLock("GLXVsyncEnabledLock")
+                 , mVsyncEnabled(false)
+#ifdef MOZ_WAYLAND
+                 , mIsWaylandDisplay(false)
+#endif
+=======
+  virtual ~GtkVsyncSource() { MOZ_ASSERT(NS_IsMainThread()); }
+
+  virtual Display& GetGlobalDisplay() override { return *mGlobalDisplay; }
+
+  class GLXDisplay final : public VsyncSource::Display {
+    NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GLXDisplay)
+
+   public:
+    GLXDisplay()
+        : mGLContext(nullptr),
+          mXDisplay(nullptr),
+          mSetupLock("GLXVsyncSetupLock"),
+          mVsyncThread("GLXVsyncThread"),
+          mVsyncTask(nullptr),
+          mVsyncEnabledLock("GLXVsyncEnabledLock"),
+          mVsyncEnabled(false)
+#  ifdef MOZ_WAYLAND
+          ,
+          mIsWaylandDisplay(false)
+#  endif
+>>>>>>> upstream-releases
     {
     }
 
@@ -512,14 +898,23 @@ class GtkVsyncSource final : public VsyncSource {
       return mGLContext != nullptr;
     }
 
+<<<<<<< HEAD
 #ifdef MOZ_WAYLAND
     bool SetupWayland() {
+||||||| merged common ancestors
+#ifdef MOZ_WAYLAND
+    bool SetupWayland()
+    {
+=======
+#  ifdef MOZ_WAYLAND
+    bool SetupWayland() {
+>>>>>>> upstream-releases
       MonitorAutoLock lock(mSetupLock);
       MOZ_ASSERT(NS_IsMainThread());
       mIsWaylandDisplay = true;
       return mVsyncThread.Start();
     }
-#endif
+#  endif
 
     // Called on the Vsync thread to setup the GL context.
     void SetupGLContext() {
@@ -571,9 +966,9 @@ class GtkVsyncSource final : public VsyncSource {
 
     virtual void EnableVsync() override {
       MOZ_ASSERT(NS_IsMainThread());
-#if !defined(MOZ_WAYLAND)
+#  if !defined(MOZ_WAYLAND)
       MOZ_ASSERT(mGLContext, "GLContext not setup!");
-#endif
+#  endif
 
       MonitorAutoLock lock(mVsyncEnabledLock);
       if (mVsyncEnabled) {
@@ -584,12 +979,28 @@ class GtkVsyncSource final : public VsyncSource {
       // If the task has not nulled itself out, it hasn't yet realized
       // that vsync was disabled earlier, so continue its execution.
       if (!mVsyncTask) {
+<<<<<<< HEAD
         mVsyncTask =
             NewRunnableMethod("GtkVsyncSource::GLXDisplay::RunVsync", this,
 #if defined(MOZ_WAYLAND)
                               mIsWaylandDisplay ? &GLXDisplay::RunVsyncWayland :
 #endif
                                                 &GLXDisplay::RunVsync);
+||||||| merged common ancestors
+        mVsyncTask = NewRunnableMethod(
+          "GtkVsyncSource::GLXDisplay::RunVsync", this,
+#if defined(MOZ_WAYLAND)
+          mIsWaylandDisplay ? &GLXDisplay::RunVsyncWayland :
+#endif
+          &GLXDisplay::RunVsync);
+=======
+        mVsyncTask =
+            NewRunnableMethod("GtkVsyncSource::GLXDisplay::RunVsync", this,
+#  if defined(MOZ_WAYLAND)
+                              mIsWaylandDisplay ? &GLXDisplay::RunVsyncWayland :
+#  endif
+                                                &GLXDisplay::RunVsync);
+>>>>>>> upstream-releases
         RefPtr<Runnable> addrefedTask = mVsyncTask;
         mVsyncThread.message_loop()->PostTask(addrefedTask.forget());
       }
@@ -618,8 +1029,18 @@ class GtkVsyncSource final : public VsyncSource {
       mVsyncThread.Stop();
     }
 
+<<<<<<< HEAD
    private:
     virtual ~GLXDisplay() {}
+||||||| merged common ancestors
+  private:
+    virtual ~GLXDisplay()
+    {
+    }
+=======
+   private:
+    virtual ~GLXDisplay() = default;
+>>>>>>> upstream-releases
 
     void RunVsync() {
       MOZ_ASSERT(!NS_IsMainThread());
@@ -669,7 +1090,7 @@ class GtkVsyncSource final : public VsyncSource {
       }
     }
 
-#ifdef MOZ_WAYLAND
+#  ifdef MOZ_WAYLAND
     /* VSync on Wayland is tricky as we can get only "last VSync" event signal.
      * That means we should draw next frame at "last Vsync + frame delay" time.
      */
@@ -702,7 +1123,7 @@ class GtkVsyncSource final : public VsyncSource {
         NotifyVsync(TimeStamp::Now());
       }
     }
-#endif
+#  endif
 
     void Cleanup() {
       MOZ_ASSERT(!NS_IsMainThread());
@@ -719,9 +1140,9 @@ class GtkVsyncSource final : public VsyncSource {
     RefPtr<Runnable> mVsyncTask;
     Monitor mVsyncEnabledLock;
     bool mVsyncEnabled;
-#ifdef MOZ_WAYLAND
+#  ifdef MOZ_WAYLAND
     bool mIsWaylandDisplay;
-#endif
+#  endif
   };
 
  private:
@@ -729,15 +1150,27 @@ class GtkVsyncSource final : public VsyncSource {
   RefPtr<GLXDisplay> mGlobalDisplay;
 };
 
+<<<<<<< HEAD
 already_AddRefed<gfx::VsyncSource> gfxPlatformGtk::CreateHardwareVsyncSource() {
 #ifdef MOZ_WAYLAND
   if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+||||||| merged common ancestors
+already_AddRefed<gfx::VsyncSource>
+gfxPlatformGtk::CreateHardwareVsyncSource()
+{
+#ifdef MOZ_WAYLAND
+  if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default())) {
+=======
+already_AddRefed<gfx::VsyncSource> gfxPlatformGtk::CreateHardwareVsyncSource() {
+#  ifdef MOZ_WAYLAND
+  if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+>>>>>>> upstream-releases
     RefPtr<VsyncSource> vsyncSource = new GtkVsyncSource();
     VsyncSource::Display& display = vsyncSource->GetGlobalDisplay();
     static_cast<GtkVsyncSource::GLXDisplay&>(display).SetupWayland();
     return vsyncSource.forget();
   }
-#endif
+#  endif
 
   // Only use GLX vsync when the OpenGL compositor is being used.
   // The extra cost of initializing a GLX context while blocking the main

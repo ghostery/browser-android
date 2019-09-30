@@ -12,13 +12,38 @@
 
 class nsIInputStream;
 
+<<<<<<< HEAD
 class nsDataChannel : public nsBaseChannel {
  public:
   explicit nsDataChannel(nsIURI *uri) { SetURI(uri); }
+||||||| merged common ancestors
+class nsDataChannel : public nsBaseChannel
+{
+public:
+    explicit nsDataChannel(nsIURI *uri) {
+        SetURI(uri);
+    }
+=======
+class nsDataChannel : public nsBaseChannel {
+ public:
+  explicit nsDataChannel(nsIURI* uri) { SetURI(uri); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   virtual MOZ_MUST_USE nsresult OpenContentStream(
       bool async, nsIInputStream **result, nsIChannel **channel) override;
+||||||| merged common ancestors
+protected:
+    virtual MOZ_MUST_USE
+    nsresult OpenContentStream(bool async,
+                               nsIInputStream **result,
+                               nsIChannel** channel) override;
+=======
+ protected:
+  virtual MOZ_MUST_USE nsresult OpenContentStream(
+      bool async, nsIInputStream** result, nsIChannel** channel) override;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsDataChannel_h___ */

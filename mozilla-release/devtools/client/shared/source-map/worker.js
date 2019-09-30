@@ -70,19 +70,487 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/assets/build";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3726);
+/******/ 	return __webpack_require__(__webpack_require__.s = 389);
 /******/ })
 /************************************************************************/
 /******/ ({
 
+<<<<<<< HEAD
 /***/ 248:
+||||||| merged common ancestors
+/***/ 118:
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ 119:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(120)))
+
+/***/ }),
+
+/***/ 120:
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ 248:
+=======
+/***/ 104:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const sourceMapRequests = new Map();
+
+function clearSourceMaps() {
+  sourceMapRequests.clear();
+}
+
+function getSourceMap(generatedSourceId) {
+  return sourceMapRequests.get(generatedSourceId);
+}
+
+function setSourceMap(generatedId, request) {
+  sourceMapRequests.set(generatedId, request);
+}
+
+module.exports = {
+  clearSourceMaps,
+  getSourceMap,
+  setSourceMap
+};
+
+/***/ }),
+
+/***/ 105:
+>>>>>>> upstream-releases
 /***/ (function(module, exports, __webpack_require__) {
 
 (function(){
-  var crypt = __webpack_require__(249),
-      utf8 = __webpack_require__(250).utf8,
-      isBuffer = __webpack_require__(251),
-      bin = __webpack_require__(250).bin,
+  var crypt = __webpack_require__(106),
+      utf8 = __webpack_require__(36).utf8,
+      isBuffer = __webpack_require__(107),
+      bin = __webpack_require__(36).bin,
 
   // The core
   md5 = function (message, options) {
@@ -242,7 +710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ 249:
+/***/ 106:
 /***/ (function(module, exports) {
 
 (function() {
@@ -345,47 +813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ 250:
-/***/ (function(module, exports) {
-
-var charenc = {
-  // UTF-8 encoding
-  utf8: {
-    // Convert a string to a byte array
-    stringToBytes: function(str) {
-      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-    },
-
-    // Convert a byte array to a string
-    bytesToString: function(bytes) {
-      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-    }
-  },
-
-  // Binary encoding
-  bin: {
-    // Convert a string to a byte array
-    stringToBytes: function(str) {
-      for (var bytes = [], i = 0; i < str.length; i++)
-        bytes.push(str.charCodeAt(i) & 0xFF);
-      return bytes;
-    },
-
-    // Convert a byte array to a string
-    bytesToString: function(bytes) {
-      for (var str = [], i = 0; i < bytes.length; i++)
-        str.push(String.fromCharCode(bytes[i]));
-      return str.join('');
-    }
-  }
-};
-
-module.exports = charenc;
-
-
-/***/ }),
-
-/***/ 251:
+/***/ 107:
 /***/ (function(module, exports) {
 
 /*!
@@ -413,6 +841,7 @@ function isSlowBuffer (obj) {
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 3641:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -955,109 +1384,13 @@ function isSlowBuffer (obj) {
 
 /***/ 3651:
 /***/ (function(module, exports, __webpack_require__) {
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-const networkRequest = __webpack_require__(3653);
-const workerUtils = __webpack_require__(3654);
-
-module.exports = {
-  networkRequest,
-  workerUtils
-};
-
-/***/ }),
-
-/***/ 3652:
+||||||| merged common ancestors
+/***/ 3651:
 /***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-const md5 = __webpack_require__(248);
-
-function originalToGeneratedId(originalId) {
-  const match = originalId.match(/(.*)\/originalSource/);
-  return match ? match[1] : "";
-}
-
-function generatedToOriginalId(generatedId, url) {
-  return `${generatedId}/originalSource-${md5(url)}`;
-}
-
-function isOriginalId(id) {
-  return !!id.match(/\/originalSource/);
-}
-
-function isGeneratedId(id) {
-  return !isOriginalId(id);
-}
-
-/**
- * Trims the query part or reference identifier of a URL string, if necessary.
- */
-function trimUrlQuery(url) {
-  const length = url.length;
-  const q1 = url.indexOf("?");
-  const q2 = url.indexOf("&");
-  const q3 = url.indexOf("#");
-  const q = Math.min(q1 != -1 ? q1 : length, q2 != -1 ? q2 : length, q3 != -1 ? q3 : length);
-
-  return url.slice(0, q);
-}
-
-// Map suffix to content type.
-const contentMap = {
-  js: "text/javascript",
-  jsm: "text/javascript",
-  mjs: "text/javascript",
-  ts: "text/typescript",
-  tsx: "text/typescript-jsx",
-  jsx: "text/jsx",
-  vue: "text/vue",
-  coffee: "text/coffeescript",
-  elm: "text/elm",
-  cljs: "text/x-clojure"
-};
-
-/**
- * Returns the content type for the specified URL.  If no specific
- * content type can be determined, "text/plain" is returned.
- *
- * @return String
- *         The content type.
- */
-function getContentType(url) {
-  url = trimUrlQuery(url);
-  const dot = url.lastIndexOf(".");
-  if (dot >= 0) {
-    const name = url.substring(dot + 1);
-    if (name in contentMap) {
-      return contentMap[name];
-    }
-  }
-  return "text/plain";
-}
-
-module.exports = {
-  originalToGeneratedId,
-  generatedToOriginalId,
-  isOriginalId,
-  isGeneratedId,
-  getContentType,
-  contentMapForTesting: contentMap
-};
-
-/***/ }),
-
-/***/ 3653:
+=======
+/***/ 13:
 /***/ (function(module, exports) {
+>>>>>>> upstream-releases
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1084,10 +1417,10 @@ module.exports = networkRequest;
 
 /***/ }),
 
-/***/ 3654:
+/***/ 14:
 /***/ (function(module, exports) {
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 
 function WorkerDispatcher() {
   this.msgId = 1;
@@ -1202,68 +1535,23 @@ function workerHandler(publicInterface) {
   };
 }
 
-function streamingWorkerHandler(publicInterface, { timeout = 100 } = {}, worker = self) {
-  let streamingWorker = (() => {
-    var _ref = _asyncToGenerator(function* (id, tasks) {
-      let isWorking = true;
-
-      const timeoutId = setTimeout(function () {
-        isWorking = false;
-      }, timeout);
-
-      const results = [];
-      while (tasks.length !== 0 && isWorking) {
-        const { callback, context, args } = tasks.shift();
-        const result = yield callback.call(context, args);
-        results.push(result);
-      }
-      worker.postMessage({ id, status: "pending", data: results });
-      clearTimeout(timeoutId);
-
-      if (tasks.length !== 0) {
-        yield streamingWorker(id, tasks);
-      }
-    });
-
-    return function streamingWorker(_x, _x2) {
-      return _ref.apply(this, arguments);
-    };
-  })();
-
-  return (() => {
-    var _ref2 = _asyncToGenerator(function* (msg) {
-      const { id, method, args } = msg.data;
-      const workerMethod = publicInterface[method];
-      if (!workerMethod) {
-        console.error(`Could not find ${method} defined in worker.`);
-      }
-      worker.postMessage({ id, status: "start" });
-
-      try {
-        const tasks = workerMethod(args);
-        yield streamingWorker(id, tasks);
-        worker.postMessage({ id, status: "done" });
-      } catch (error) {
-        worker.postMessage({ id, status: "error", error });
-      }
-    });
-
-    return function (_x3) {
-      return _ref2.apply(this, arguments);
-    };
-  })();
-}
-
 module.exports = {
   WorkerDispatcher,
-  workerHandler,
-  streamingWorkerHandler
+  workerHandler
 };
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 3668:
 /***/ (function(module, exports, __webpack_require__) {
+||||||| merged common ancestors
+/***/ 3668:
+/***/ (function(module, exports) {
+=======
+/***/ 171:
+/***/ (function(module, exports, __webpack_require__) {
+>>>>>>> upstream-releases
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
@@ -1272,28 +1560,411 @@ module.exports = {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 
+<<<<<<< HEAD
 const URL = __webpack_require__(3815);
 
-/**
- * This is a helper function for getting values from parameter/options
- * objects.
- *
- * @param args The object we are extracting values from
- * @param name The name of the property we are getting.
- * @param defaultValue An optional value to return if the property is missing
- * from the object. If this is not specified and the property is missing, an
- * error will be thrown.
- */
-function getArg(aArgs, aName, aDefaultValue) {
-  if (aName in aArgs) {
-    return aArgs[aName];
-  } else if (arguments.length === 3) {
-    return aDefaultValue;
-  }
-    throw new Error('"' + aName + '" is a required argument.');
+||||||| merged common ancestors
+=======
+const base64VLQ = __webpack_require__(172);
+const util = __webpack_require__(61);
+const ArraySet = __webpack_require__(177).ArraySet;
+const MappingList = __webpack_require__(402).MappingList;
 
+>>>>>>> upstream-releases
+/**
+ * An instance of the SourceMapGenerator represents a source map which is
+ * being built incrementally. You may pass an object with the following
+ * properties:
+ *
+ *   - file: The filename of the generated source.
+ *   - sourceRoot: A root for all relative URLs in this source map.
+ */
+class SourceMapGenerator {
+  constructor(aArgs) {
+    if (!aArgs) {
+      aArgs = {};
+    }
+    this._file = util.getArg(aArgs, "file", null);
+    this._sourceRoot = util.getArg(aArgs, "sourceRoot", null);
+    this._skipValidation = util.getArg(aArgs, "skipValidation", false);
+    this._sources = new ArraySet();
+    this._names = new ArraySet();
+    this._mappings = new MappingList();
+    this._sourcesContents = null;
+  }
+
+<<<<<<< HEAD
 }
 exports.getArg = getArg;
+
+const supportsNullProto = (function() {
+  const obj = Object.create(null);
+  return !("__proto__" in obj);
+}());
+||||||| merged common ancestors
+}
+exports.getArg = getArg;
+
+const urlRegexp = /^(?:([\w+\-.]+):)?\/\/(?:(\w+:\w+)@)?([\w.-]*)(?::(\d+))?(.*)$/;
+const dataUrlRegexp = /^data:.+\,.+$/;
+
+function urlParse(aUrl) {
+  const match = aUrl.match(urlRegexp);
+  if (!match) {
+    return null;
+  }
+  return {
+    scheme: match[1],
+    auth: match[2],
+    host: match[3],
+    port: match[4],
+    path: match[5]
+  };
+}
+exports.urlParse = urlParse;
+=======
+  /**
+   * Creates a new SourceMapGenerator based on a SourceMapConsumer
+   *
+   * @param aSourceMapConsumer The SourceMap.
+   */
+  static fromSourceMap(aSourceMapConsumer) {
+    const sourceRoot = aSourceMapConsumer.sourceRoot;
+    const generator = new SourceMapGenerator({
+      file: aSourceMapConsumer.file,
+      sourceRoot
+    });
+    aSourceMapConsumer.eachMapping(function(mapping) {
+      const newMapping = {
+        generated: {
+          line: mapping.generatedLine,
+          column: mapping.generatedColumn
+        }
+      };
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+function identity(s) {
+  return s;
+}
+||||||| merged common ancestors
+function urlGenerate(aParsedUrl) {
+  let url = "";
+  if (aParsedUrl.scheme) {
+    url += aParsedUrl.scheme + ":";
+  }
+  url += "//";
+  if (aParsedUrl.auth) {
+    url += aParsedUrl.auth + "@";
+  }
+  if (aParsedUrl.host) {
+    url += aParsedUrl.host;
+  }
+  if (aParsedUrl.port) {
+    url += ":" + aParsedUrl.port;
+  }
+  if (aParsedUrl.path) {
+    url += aParsedUrl.path;
+  }
+  return url;
+}
+exports.urlGenerate = urlGenerate;
+
+const MAX_CACHED_INPUTS = 32;
+=======
+      if (mapping.source != null) {
+        newMapping.source = mapping.source;
+        if (sourceRoot != null) {
+          newMapping.source = util.relative(sourceRoot, newMapping.source);
+        }
+
+        newMapping.original = {
+          line: mapping.originalLine,
+          column: mapping.originalColumn
+        };
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+/**
+ * Because behavior goes wacky when you set `__proto__` on objects, we
+ * have to prefix all the strings in our set with an arbitrary character.
+ *
+ * See https://github.com/mozilla/source-map/pull/31 and
+ * https://github.com/mozilla/source-map/issues/30
+ *
+ * @param String aStr
+ */
+function toSetString(aStr) {
+  if (isProtoString(aStr)) {
+    return "$" + aStr;
+  }
+
+  return aStr;
+}
+exports.toSetString = supportsNullProto ? identity : toSetString;
+
+function fromSetString(aStr) {
+  if (isProtoString(aStr)) {
+    return aStr.slice(1);
+  }
+
+  return aStr;
+}
+exports.fromSetString = supportsNullProto ? identity : fromSetString;
+||||||| merged common ancestors
+/**
+ * Takes some function `f(input) -> result` and returns a memoized version of
+ * `f`.
+ *
+ * We keep at most `MAX_CACHED_INPUTS` memoized results of `f` alive. The
+ * memoization is a dumb-simple, linear least-recently-used cache.
+ */
+function lruMemoize(f) {
+  const cache = [];
+
+  return function(input) {
+    for (let i = 0; i < cache.length; i++) {
+      if (cache[i].input === input) {
+        const temp = cache[0];
+        cache[0] = cache[i];
+        cache[i] = temp;
+        return cache[0].result;
+      }
+    }
+
+    const result = f(input);
+
+    cache.unshift({
+      input,
+      result,
+    });
+
+    if (cache.length > MAX_CACHED_INPUTS) {
+      cache.pop();
+    }
+
+    return result;
+  };
+}
+
+/**
+ * Normalizes a path, or the path portion of a URL:
+ *
+ * - Replaces consecutive slashes with one slash.
+ * - Removes unnecessary '.' parts.
+ * - Removes unnecessary '<dir>/..' parts.
+ *
+ * Based on code in the Node.js 'path' core module.
+ *
+ * @param aPath The path or url to normalize.
+ */
+const normalize = lruMemoize(function normalize(aPath) {
+  let path = aPath;
+  const url = urlParse(aPath);
+  if (url) {
+    if (!url.path) {
+      return aPath;
+    }
+    path = url.path;
+  }
+  const isAbsolute = exports.isAbsolute(path);
+
+  // Split the path into parts between `/` characters. This is much faster than
+  // using `.split(/\/+/g)`.
+  const parts = [];
+  let start = 0;
+  let i = 0;
+  while (true) {
+    start = i;
+    i = path.indexOf("/", start);
+    if (i === -1) {
+      parts.push(path.slice(start));
+      break;
+    } else {
+      parts.push(path.slice(start, i));
+      while (i < path.length && path[i] === "/") {
+        i++;
+      }
+    }
+  }
+=======
+        if (mapping.name != null) {
+          newMapping.name = mapping.name;
+        }
+      }
+
+      generator.addMapping(newMapping);
+    });
+    aSourceMapConsumer.sources.forEach(function(sourceFile) {
+      let sourceRelative = sourceFile;
+      if (sourceRoot !== null) {
+        sourceRelative = util.relative(sourceRoot, sourceFile);
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+function isProtoString(s) {
+  if (!s) {
+    return false;
+  }
+||||||| merged common ancestors
+  let up = 0;
+  for (i = parts.length - 1; i >= 0; i--) {
+    const part = parts[i];
+    if (part === ".") {
+      parts.splice(i, 1);
+    } else if (part === "..") {
+      up++;
+    } else if (up > 0) {
+      if (part === "") {
+        // The first part is blank if the path is absolute. Trying to go
+        // above the root is a no-op. Therefore we can remove all '..' parts
+        // directly after the root.
+        parts.splice(i + 1, up);
+        up = 0;
+      } else {
+        parts.splice(i, 2);
+        up--;
+      }
+    }
+  }
+  path = parts.join("/");
+=======
+      if (!generator._sources.has(sourceRelative)) {
+        generator._sources.add(sourceRelative);
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  const length = s.length;
+||||||| merged common ancestors
+  if (path === "") {
+    path = isAbsolute ? "/" : ".";
+  }
+=======
+      const content = aSourceMapConsumer.sourceContentFor(sourceFile);
+      if (content != null) {
+        generator.setSourceContent(sourceFile, content);
+      }
+    });
+    return generator;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (length < 9 /* "__proto__".length */) {
+    return false;
+||||||| merged common ancestors
+  if (url) {
+    url.path = path;
+    return urlGenerate(url);
+  }
+  return path;
+});
+exports.normalize = normalize;
+
+/**
+ * Joins two paths/URLs.
+ *
+ * @param aRoot The root path or URL.
+ * @param aPath The path or URL to be joined with the root.
+ *
+ * - If aPath is a URL or a data URI, aPath is returned, unless aPath is a
+ *   scheme-relative URL: Then the scheme of aRoot, if any, is prepended
+ *   first.
+ * - Otherwise aPath is a path. If aRoot is a URL, then its path portion
+ *   is updated with the result and aRoot is returned. Otherwise the result
+ *   is returned.
+ *   - If aPath is absolute, the result is aPath.
+ *   - Otherwise the two paths are joined with a slash.
+ * - Joining for example 'http://' and 'www.example.com' is also supported.
+ */
+function join(aRoot, aPath) {
+  if (aRoot === "") {
+    aRoot = ".";
+  }
+  if (aPath === "") {
+    aPath = ".";
+  }
+  const aPathUrl = urlParse(aPath);
+  const aRootUrl = urlParse(aRoot);
+  if (aRootUrl) {
+    aRoot = aRootUrl.path || "/";
+  }
+
+  // `join(foo, '//www.example.org')`
+  if (aPathUrl && !aPathUrl.scheme) {
+    if (aRootUrl) {
+      aPathUrl.scheme = aRootUrl.scheme;
+    }
+    return urlGenerate(aPathUrl);
+  }
+
+  if (aPathUrl || aPath.match(dataUrlRegexp)) {
+    return aPath;
+  }
+
+  // `join('http://', 'www.example.com')`
+  if (aRootUrl && !aRootUrl.host && !aRootUrl.path) {
+    aRootUrl.host = aPath;
+    return urlGenerate(aRootUrl);
+  }
+
+  const joined = aPath.charAt(0) === "/"
+    ? aPath
+    : normalize(aRoot.replace(/\/+$/, "") + "/" + aPath);
+
+  if (aRootUrl) {
+    aRootUrl.path = joined;
+    return urlGenerate(aRootUrl);
+  }
+  return joined;
+}
+exports.join = join;
+
+exports.isAbsolute = function(aPath) {
+  return aPath.charAt(0) === "/" || urlRegexp.test(aPath);
+};
+
+/**
+ * Make a path relative to a URL or another path.
+ *
+ * @param aRoot The root path or URL.
+ * @param aPath The path or URL to be made relative to aRoot.
+ */
+function relative(aRoot, aPath) {
+  if (aRoot === "") {
+    aRoot = ".";
+  }
+
+  aRoot = aRoot.replace(/\/$/, "");
+
+  // It is possible for the path to be above the root. In this case, simply
+  // checking whether the root is a prefix of the path won't work. Instead, we
+  // need to remove components from the root one by one, until either we find
+  // a prefix that fits, or we run out of components to remove.
+  let level = 0;
+  while (aPath.indexOf(aRoot + "/") !== 0) {
+    const index = aRoot.lastIndexOf("/");
+    if (index < 0) {
+      return aPath;
+    }
+
+    // If the only part of the root that is left is the scheme (i.e. http://,
+    // file:///, etc.), one or more slashes (/), or simply nothing at all, we
+    // have exhausted all components, so the path is not relative to the root.
+    aRoot = aRoot.slice(0, index);
+    if (aRoot.match(/^([^\/]+:\/)?\/*$/)) {
+      return aPath;
+    }
+
+    ++level;
+  }
+
+  // Make sure we add a "../" for each component we removed from the root.
+  return Array(level + 1).join("../") + aPath.substr(aRoot.length + 1);
+}
+exports.relative = relative;
 
 const supportsNullProto = (function() {
   const obj = Object.create(null);
@@ -1340,512 +2011,7 @@ function isProtoString(s) {
 
   if (length < 9 /* "__proto__".length */) {
     return false;
-  }
-
-  /* eslint-disable no-multi-spaces */
-  if (s.charCodeAt(length - 1) !== 95  /* '_' */ ||
-      s.charCodeAt(length - 2) !== 95  /* '_' */ ||
-      s.charCodeAt(length - 3) !== 111 /* 'o' */ ||
-      s.charCodeAt(length - 4) !== 116 /* 't' */ ||
-      s.charCodeAt(length - 5) !== 111 /* 'o' */ ||
-      s.charCodeAt(length - 6) !== 114 /* 'r' */ ||
-      s.charCodeAt(length - 7) !== 112 /* 'p' */ ||
-      s.charCodeAt(length - 8) !== 95  /* '_' */ ||
-      s.charCodeAt(length - 9) !== 95  /* '_' */) {
-    return false;
-  }
-  /* eslint-enable no-multi-spaces */
-
-  for (let i = length - 10; i >= 0; i--) {
-    if (s.charCodeAt(i) !== 36 /* '$' */) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function strcmp(aStr1, aStr2) {
-  if (aStr1 === aStr2) {
-    return 0;
-  }
-
-  if (aStr1 === null) {
-    return 1; // aStr2 !== null
-  }
-
-  if (aStr2 === null) {
-    return -1; // aStr1 !== null
-  }
-
-  if (aStr1 > aStr2) {
-    return 1;
-  }
-
-  return -1;
-}
-
-/**
- * Comparator between two mappings with inflated source and name strings where
- * the generated positions are compared.
- */
-function compareByGeneratedPositionsInflated(mappingA, mappingB) {
-  let cmp = mappingA.generatedLine - mappingB.generatedLine;
-  if (cmp !== 0) {
-    return cmp;
-  }
-
-  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
-  if (cmp !== 0) {
-    return cmp;
-  }
-
-  cmp = strcmp(mappingA.source, mappingB.source);
-  if (cmp !== 0) {
-    return cmp;
-  }
-
-  cmp = mappingA.originalLine - mappingB.originalLine;
-  if (cmp !== 0) {
-    return cmp;
-  }
-
-  cmp = mappingA.originalColumn - mappingB.originalColumn;
-  if (cmp !== 0) {
-    return cmp;
-  }
-
-  return strcmp(mappingA.name, mappingB.name);
-}
-exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
-
-/**
- * Strip any JSON XSSI avoidance prefix from the string (as documented
- * in the source maps specification), and then parse the string as
- * JSON.
- */
-function parseSourceMapInput(str) {
-  return JSON.parse(str.replace(/^\)]}'[^\n]*\n/, ""));
-}
-exports.parseSourceMapInput = parseSourceMapInput;
-
-// We use 'http' as the base here because we want URLs processed relative
-// to the safe base to be treated as "special" URLs during parsing using
-// the WHATWG URL parsing. This ensures that backslash normalization
-// applies to the path and such.
-const PROTOCOL = "http:";
-const PROTOCOL_AND_HOST = `${PROTOCOL}//host`;
-
-/**
- * Make it easy to create small utilities that tweak a URL's path.
- */
-function createSafeHandler(cb) {
-  return input => {
-    const type = getURLType(input);
-    const base = buildSafeBase(input);
-    const url = new URL(input, base);
-
-    cb(url);
-
-    const result = url.toString();
-
-    if (type === "absolute") {
-      return result;
-    } else if (type === "scheme-relative") {
-      return result.slice(PROTOCOL.length);
-    } else if (type === "path-absolute") {
-      return result.slice(PROTOCOL_AND_HOST.length);
-    }
-
-    // This assumes that the callback will only change
-    // the path, search and hash values.
-    return computeRelativeURL(base, result);
-  };
-}
-
-function withBase(url, base) {
-  return new URL(url, base).toString();
-}
-
-function buildUniqueSegment(prefix, str) {
-  let id = 0;
-  do {
-    const ident = prefix + (id++);
-    if (str.indexOf(ident) === -1) return ident;
-  } while (true);
-}
-
-function buildSafeBase(str) {
-  const maxDotParts = str.split("..").length - 1;
-
-  // If we used a segment that also existed in `str`, then we would be unable
-  // to compute relative paths. For example, if `segment` were just "a":
-  //
-  //   const url = "../../a/"
-  //   const base = buildSafeBase(url); // http://host/a/a/
-  //   const joined = "http://host/a/";
-  //   const result = relative(base, joined);
-  //
-  // Expected: "../../a/";
-  // Actual: "a/"
-  //
-  const segment = buildUniqueSegment("p", str);
-
-  let base = `${PROTOCOL_AND_HOST}/`;
-  for (let i = 0; i < maxDotParts; i++) {
-    base += `${segment}/`;
-  }
-  return base;
-}
-
-const ABSOLUTE_SCHEME = /^[A-Za-z0-9\+\-\.]+:/;
-function getURLType(url) {
-  if (url[0] === "/") {
-    if (url[1] === "/") return "scheme-relative";
-    return "path-absolute";
-  }
-
-  return ABSOLUTE_SCHEME.test(url) ? "absolute" : "path-relative";
-}
-
-/**
- * Given two URLs that are assumed to be on the same
- * protocol/host/user/password build a relative URL from the
- * path, params, and hash values.
- *
- * @param rootURL The root URL that the target will be relative to.
- * @param targetURL The target that the relative URL points to.
- * @return A rootURL-relative, normalized URL value.
- */
-function computeRelativeURL(rootURL, targetURL) {
-  if (typeof rootURL === "string") rootURL = new URL(rootURL);
-  if (typeof targetURL === "string") targetURL = new URL(targetURL);
-
-  const targetParts = targetURL.pathname.split("/");
-  const rootParts = rootURL.pathname.split("/");
-
-  // If we've got a URL path ending with a "/", we remove it since we'd
-  // otherwise be relative to the wrong location.
-  if (rootParts.length > 0 && !rootParts[rootParts.length - 1]) {
-    rootParts.pop();
-  }
-
-  while (
-    targetParts.length > 0 &&
-    rootParts.length > 0 &&
-    targetParts[0] === rootParts[0]
-  ) {
-    targetParts.shift();
-    rootParts.shift();
-  }
-
-  const relativePath = rootParts
-    .map(() => "..")
-    .concat(targetParts)
-    .join("/");
-
-  return relativePath + targetURL.search + targetURL.hash;
-}
-
-/**
- * Given a URL, ensure that it is treated as a directory URL.
- *
- * @param url
- * @return A normalized URL value.
- */
-const ensureDirectory = createSafeHandler(url => {
-  url.pathname = url.pathname.replace(/\/?$/, "/");
-});
-
-/**
- * Given a URL, strip off any filename if one is present.
- *
- * @param url
- * @return A normalized URL value.
- */
-const trimFilename = createSafeHandler(url => {
-  url.href = new URL(".", url.toString()).toString();
-});
-
-/**
- * Normalize a given URL.
- * * Convert backslashes.
- * * Remove any ".." and "." segments.
- *
- * @param url
- * @return A normalized URL value.
- */
-const normalize = createSafeHandler(url => {});
-exports.normalize = normalize;
-
-/**
- * Joins two paths/URLs.
- *
- * All returned URLs will be normalized.
- *
- * @param aRoot The root path or URL. Assumed to reference a directory.
- * @param aPath The path or URL to be joined with the root.
- * @return A joined and normalized URL value.
- */
-function join(aRoot, aPath) {
-  const pathType = getURLType(aPath);
-  const rootType = getURLType(aRoot);
-
-  aRoot = ensureDirectory(aRoot);
-
-  if (pathType === "absolute") {
-    return withBase(aPath, undefined);
-  }
-  if (rootType === "absolute") {
-    return withBase(aPath, aRoot);
-  }
-
-  if (pathType === "scheme-relative") {
-    return normalize(aPath);
-  }
-  if (rootType === "scheme-relative") {
-    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL.length);
-  }
-
-  if (pathType === "path-absolute") {
-    return normalize(aPath);
-  }
-  if (rootType === "path-absolute") {
-    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL_AND_HOST.length);
-  }
-
-  const base = buildSafeBase(aPath + aRoot);
-  const newPath = withBase(aPath, withBase(aRoot, base));
-  return computeRelativeURL(base, newPath);
-}
-exports.join = join;
-
-/**
- * Make a path relative to a URL or another path. If returning a
- * relative URL is not possible, the original target will be returned.
- * All returned URLs will be normalized.
- *
- * @param aRoot The root path or URL.
- * @param aPath The path or URL to be made relative to aRoot.
- * @return A rootURL-relative (if possible), normalized URL value.
- */
-function relative(rootURL, targetURL) {
-  const result = relativeIfPossible(rootURL, targetURL);
-
-  return typeof result === "string" ? result : normalize(targetURL);
-}
-exports.relative = relative;
-
-function relativeIfPossible(rootURL, targetURL) {
-  const urlType = getURLType(rootURL);
-  if (urlType !== getURLType(targetURL)) {
-    return null;
-  }
-
-  const base = buildSafeBase(rootURL + targetURL);
-  const root = new URL(rootURL, base);
-  const target = new URL(targetURL, base);
-
-  try {
-    new URL("", target.toString());
-  } catch (err) {
-    // Bail if the URL doesn't support things being relative to it,
-    // For example, data: and blob: URLs.
-    return null;
-  }
-
-  if (
-    target.protocol !== root.protocol ||
-    target.user !== root.user ||
-    target.password !== root.password ||
-    target.hostname !== root.hostname ||
-    target.port !== root.port
-  ) {
-    return null;
-  }
-
-  return computeRelativeURL(root, target);
-}
-
-/**
- * Compute the URL of a source given the the source root, the source's
- * URL, and the source map's URL.
- */
-function computeSourceURL(sourceRoot, sourceURL, sourceMapURL) {
-  // The source map spec states that "sourceRoot" and "sources" entries are to be appended. While
-  // that is a little vague, implementations have generally interpreted that as joining the
-  // URLs with a `/` between then, assuming the "sourceRoot" doesn't already end with one.
-  // For example,
-  //
-  //   sourceRoot: "some-dir",
-  //   sources: ["/some-path.js"]
-  //
-  // and
-  //
-  //   sourceRoot: "some-dir/",
-  //   sources: ["/some-path.js"]
-  //
-  // must behave as "some-dir/some-path.js".
-  //
-  // With this library's the transition to a more URL-focused implementation, that behavior is
-  // preserved here. To acheive that, we trim the "/" from absolute-path when a sourceRoot value
-  // is present in order to make the sources entries behave as if they are relative to the
-  // "sourceRoot", as they would have if the two strings were simply concated.
-  if (sourceRoot && getURLType(sourceURL) === "path-absolute") {
-    sourceURL = sourceURL.replace(/^\//, "");
-  }
-
-  let url = normalize(sourceURL || "");
-
-  // Parsing URLs can be expensive, so we only perform these joins when needed.
-  if (sourceRoot) url = join(sourceRoot, url);
-  if (sourceMapURL) url = join(trimFilename(sourceMapURL), url);
-  return url;
-}
-exports.computeSourceURL = computeSourceURL;
-
-
-/***/ }),
-
-/***/ 3704:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
-const sourceMapRequests = new Map();
-
-function clearSourceMaps() {
-  sourceMapRequests.clear();
-}
-
-function getSourceMap(generatedSourceId) {
-  return sourceMapRequests.get(generatedSourceId);
-}
-
-function setSourceMap(generatedId, request) {
-  sourceMapRequests.set(generatedId, request);
-}
-
-module.exports = {
-  clearSourceMaps,
-  getSourceMap,
-  setSourceMap
-};
-
-/***/ }),
-
-/***/ 3705:
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- * Copyright 2009-2011 Mozilla Foundation and contributors
- * Licensed under the New BSD license. See LICENSE.txt or:
- * http://opensource.org/licenses/BSD-3-Clause
- */
-exports.SourceMapGenerator = __webpack_require__(3706).SourceMapGenerator;
-exports.SourceMapConsumer = __webpack_require__(3713).SourceMapConsumer;
-exports.SourceNode = __webpack_require__(3716).SourceNode;
-
-
-/***/ }),
-
-/***/ 3706:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* -*- Mode: js; js-indent-level: 2; -*- */
-/*
- * Copyright 2011 Mozilla Foundation and contributors
- * Licensed under the New BSD license. See LICENSE or:
- * http://opensource.org/licenses/BSD-3-Clause
- */
-
-const base64VLQ = __webpack_require__(3707);
-const util = __webpack_require__(3668);
-const ArraySet = __webpack_require__(3708).ArraySet;
-const MappingList = __webpack_require__(3712).MappingList;
-
-/**
- * An instance of the SourceMapGenerator represents a source map which is
- * being built incrementally. You may pass an object with the following
- * properties:
- *
- *   - file: The filename of the generated source.
- *   - sourceRoot: A root for all relative URLs in this source map.
- */
-class SourceMapGenerator {
-  constructor(aArgs) {
-    if (!aArgs) {
-      aArgs = {};
-    }
-    this._file = util.getArg(aArgs, "file", null);
-    this._sourceRoot = util.getArg(aArgs, "sourceRoot", null);
-    this._skipValidation = util.getArg(aArgs, "skipValidation", false);
-    this._sources = new ArraySet();
-    this._names = new ArraySet();
-    this._mappings = new MappingList();
-    this._sourcesContents = null;
-  }
-
-  /**
-   * Creates a new SourceMapGenerator based on a SourceMapConsumer
-   *
-   * @param aSourceMapConsumer The SourceMap.
-   */
-  static fromSourceMap(aSourceMapConsumer) {
-    const sourceRoot = aSourceMapConsumer.sourceRoot;
-    const generator = new SourceMapGenerator({
-      file: aSourceMapConsumer.file,
-      sourceRoot
-    });
-    aSourceMapConsumer.eachMapping(function(mapping) {
-      const newMapping = {
-        generated: {
-          line: mapping.generatedLine,
-          column: mapping.generatedColumn
-        }
-      };
-
-      if (mapping.source != null) {
-        newMapping.source = mapping.source;
-        if (sourceRoot != null) {
-          newMapping.source = util.relative(sourceRoot, newMapping.source);
-        }
-
-        newMapping.original = {
-          line: mapping.originalLine,
-          column: mapping.originalColumn
-        };
-
-        if (mapping.name != null) {
-          newMapping.name = mapping.name;
-        }
-      }
-
-      generator.addMapping(newMapping);
-    });
-    aSourceMapConsumer.sources.forEach(function(sourceFile) {
-      let sourceRelative = sourceFile;
-      if (sourceRoot !== null) {
-        sourceRelative = util.relative(sourceRoot, sourceFile);
-      }
-
-      if (!generator._sources.has(sourceRelative)) {
-        generator._sources.add(sourceRelative);
-      }
-
-      const content = aSourceMapConsumer.sourceContentFor(sourceFile);
-      if (content != null) {
-        generator.setSourceContent(sourceFile, content);
-      }
-    });
-    return generator;
-  }
-
+=======
   /**
    * Add a single mapping from original source line and column to the generated
    * source's line and column for this source map being created. The mapping
@@ -2054,6 +2220,7 @@ class SourceMapGenerator {
         name: aName
       }));
     }
+>>>>>>> upstream-releases
   }
 
   /**
@@ -2091,6 +2258,31 @@ class SourceMapGenerator {
         next += ",";
       }
 
+<<<<<<< HEAD
+function strcmp(aStr1, aStr2) {
+  if (aStr1 === aStr2) {
+    return 0;
+  }
+||||||| merged common ancestors
+/**
+ * Comparator between two mappings where the original positions are compared.
+ *
+ * Optionally pass in `true` as `onlyCompareGenerated` to consider two
+ * mappings with the same original source/line/column, but different generated
+ * line and column the same. Useful when searching for a mapping with a
+ * stubbed out mapping.
+ */
+function compareByOriginalPositions(mappingA, mappingB, onlyCompareOriginal) {
+  let cmp = strcmp(mappingA.source, mappingB.source);
+  if (cmp !== 0) {
+    return cmp;
+  }
+
+  cmp = mappingA.originalLine - mappingB.originalLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
       next += base64VLQ.encode(mapping.generatedColumn
                                  - previousGeneratedColumn);
       previousGeneratedColumn = mapping.generatedColumn;
@@ -2099,29 +2291,106 @@ class SourceMapGenerator {
         sourceIdx = this._sources.indexOf(mapping.source);
         next += base64VLQ.encode(sourceIdx - previousSource);
         previousSource = sourceIdx;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (aStr1 === null) {
+    return 1; // aStr2 !== null
+  }
+||||||| merged common ancestors
+  cmp = mappingA.originalColumn - mappingB.originalColumn;
+  if (cmp !== 0 || onlyCompareOriginal) {
+    return cmp;
+  }
+=======
         // lines are stored 0-based in SourceMap spec version 3
         next += base64VLQ.encode(mapping.originalLine - 1
                                    - previousOriginalLine);
         previousOriginalLine = mapping.originalLine - 1;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (aStr2 === null) {
+    return -1; // aStr1 !== null
+  }
+||||||| merged common ancestors
+  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
         next += base64VLQ.encode(mapping.originalColumn
                                    - previousOriginalColumn);
         previousOriginalColumn = mapping.originalColumn;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (aStr1 > aStr2) {
+    return 1;
+  }
+||||||| merged common ancestors
+  cmp = mappingA.generatedLine - mappingB.generatedLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
         if (mapping.name != null) {
           nameIdx = this._names.indexOf(mapping.name);
           next += base64VLQ.encode(nameIdx - previousName);
           previousName = nameIdx;
         }
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return -1;
+}
+||||||| merged common ancestors
+  return strcmp(mappingA.name, mappingB.name);
+}
+exports.compareByOriginalPositions = compareByOriginalPositions;
+=======
       result += next;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+/**
+ * Comparator between two mappings with inflated source and name strings where
+ * the generated positions are compared.
+ */
+function compareByGeneratedPositionsInflated(mappingA, mappingB) {
+  let cmp = mappingA.generatedLine - mappingB.generatedLine;
+  if (cmp !== 0) {
+    return cmp;
+||||||| merged common ancestors
+/**
+ * Comparator between two mappings with deflated source and name indices where
+ * the generated positions are compared.
+ *
+ * Optionally pass in `true` as `onlyCompareGenerated` to consider two
+ * mappings with the same generated line and column, but different
+ * source/name/original line and column the same. Useful when searching for a
+ * mapping with a stubbed out mapping.
+ */
+function compareByGeneratedPositionsDeflated(mappingA, mappingB, onlyCompareGenerated) {
+  let cmp = mappingA.generatedLine - mappingB.generatedLine;
+  if (cmp !== 0) {
+    return cmp;
+=======
     return result;
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
+  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
+  if (cmp !== 0) {
+    return cmp;
+||||||| merged common ancestors
+  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
+  if (cmp !== 0 || onlyCompareGenerated) {
+    return cmp;
+=======
   _generateSourcesContent(aSources, aSourceRoot) {
     return aSources.map(function(source) {
       if (!this._sourcesContents) {
@@ -2135,6 +2404,7 @@ class SourceMapGenerator {
         ? this._sourcesContents[key]
         : null;
     }, this);
+>>>>>>> upstream-releases
   }
 
   /**
@@ -2167,16 +2437,153 @@ class SourceMapGenerator {
     return JSON.stringify(this.toJSON());
   }
 }
+<<<<<<< HEAD
+exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
 
+/**
+ * Strip any JSON XSSI avoidance prefix from the string (as documented
+ * in the source maps specification), and then parse the string as
+ * JSON.
+ */
+function parseSourceMapInput(str) {
+  return JSON.parse(str.replace(/^\)]}'[^\n]*\n/, ""));
+}
+exports.parseSourceMapInput = parseSourceMapInput;
+||||||| merged common ancestors
+exports.compareByGeneratedPositionsDeflated = compareByGeneratedPositionsDeflated;
+
+function strcmp(aStr1, aStr2) {
+  if (aStr1 === aStr2) {
+    return 0;
+  }
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+// We use 'http' as the base here because we want URLs processed relative
+// to the safe base to be treated as "special" URLs during parsing using
+// the WHATWG URL parsing. This ensures that backslash normalization
+// applies to the path and such.
+const PROTOCOL = "http:";
+const PROTOCOL_AND_HOST = `${PROTOCOL}//host`;
+||||||| merged common ancestors
+  if (aStr1 === null) {
+    return 1; // aStr2 !== null
+  }
+=======
 SourceMapGenerator.prototype._version = 3;
 exports.SourceMapGenerator = SourceMapGenerator;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+/**
+ * Make it easy to create small utilities that tweak a URL's path.
+ */
+function createSafeHandler(cb) {
+  return input => {
+    const type = getURLType(input);
+    const base = buildSafeBase(input);
+    const url = new URL(input, base);
 
+    cb(url);
+
+    const result = url.toString();
+
+    if (type === "absolute") {
+      return result;
+    } else if (type === "scheme-relative") {
+      return result.slice(PROTOCOL.length);
+    } else if (type === "path-absolute") {
+      return result.slice(PROTOCOL_AND_HOST.length);
+    }
+
+    // This assumes that the callback will only change
+    // the path, search and hash values.
+    return computeRelativeURL(base, result);
+  };
+}
+
+function withBase(url, base) {
+  return new URL(url, base).toString();
+}
+
+function buildUniqueSegment(prefix, str) {
+  let id = 0;
+  do {
+    const ident = prefix + (id++);
+    if (str.indexOf(ident) === -1) return ident;
+  } while (true);
+}
+
+function buildSafeBase(str) {
+  const maxDotParts = str.split("..").length - 1;
+
+  // If we used a segment that also existed in `str`, then we would be unable
+  // to compute relative paths. For example, if `segment` were just "a":
+  //
+  //   const url = "../../a/"
+  //   const base = buildSafeBase(url); // http://host/a/a/
+  //   const joined = "http://host/a/";
+  //   const result = relative(base, joined);
+  //
+  // Expected: "../../a/";
+  // Actual: "a/"
+  //
+  const segment = buildUniqueSegment("p", str);
+
+  let base = `${PROTOCOL_AND_HOST}/`;
+  for (let i = 0; i < maxDotParts; i++) {
+    base += `${segment}/`;
+  }
+  return base;
+}
+||||||| merged common ancestors
+  if (aStr2 === null) {
+    return -1; // aStr1 !== null
+  }
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+const ABSOLUTE_SCHEME = /^[A-Za-z0-9\+\-\.]+:/;
+function getURLType(url) {
+  if (url[0] === "/") {
+    if (url[1] === "/") return "scheme-relative";
+    return "path-absolute";
+  }
+||||||| merged common ancestors
+  if (aStr1 > aStr2) {
+    return 1;
+  }
+=======
 /***/ }),
+>>>>>>> upstream-releases
 
-/***/ 3707:
+<<<<<<< HEAD
+  return ABSOLUTE_SCHEME.test(url) ? "absolute" : "path-relative";
+}
+||||||| merged common ancestors
+  return -1;
+}
+=======
+/***/ 172:
 /***/ (function(module, exports, __webpack_require__) {
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+/**
+ * Given two URLs that are assumed to be on the same
+ * protocol/host/user/password build a relative URL from the
+ * path, params, and hash values.
+ *
+ * @param rootURL The root URL that the target will be relative to.
+ * @param targetURL The target that the relative URL points to.
+ * @return A rootURL-relative, normalized URL value.
+||||||| merged common ancestors
+/**
+ * Comparator between two mappings with inflated source and name strings where
+ * the generated positions are compared.
+=======
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -2212,10 +2619,115 @@ exports.SourceMapGenerator = SourceMapGenerator;
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>>>>>>> upstream-releases
  */
+<<<<<<< HEAD
+function computeRelativeURL(rootURL, targetURL) {
+  if (typeof rootURL === "string") rootURL = new URL(rootURL);
+  if (typeof targetURL === "string") targetURL = new URL(targetURL);
 
-const base64 = __webpack_require__(3711);
+  const targetParts = targetURL.pathname.split("/");
+  const rootParts = rootURL.pathname.split("/");
 
+  // If we've got a URL path ending with a "/", we remove it since we'd
+  // otherwise be relative to the wrong location.
+  if (rootParts.length > 0 && !rootParts[rootParts.length - 1]) {
+    rootParts.pop();
+  }
+||||||| merged common ancestors
+function compareByGeneratedPositionsInflated(mappingA, mappingB) {
+  let cmp = mappingA.generatedLine - mappingB.generatedLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  while (
+    targetParts.length > 0 &&
+    rootParts.length > 0 &&
+    targetParts[0] === rootParts[0]
+  ) {
+    targetParts.shift();
+    rootParts.shift();
+  }
+||||||| merged common ancestors
+  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
+const base64 = __webpack_require__(392);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  const relativePath = rootParts
+    .map(() => "..")
+    .concat(targetParts)
+    .join("/");
+
+  return relativePath + targetURL.search + targetURL.hash;
+}
+
+/**
+ * Given a URL, ensure that it is treated as a directory URL.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const ensureDirectory = createSafeHandler(url => {
+  url.pathname = url.pathname.replace(/\/?$/, "/");
+});
+
+/**
+ * Given a URL, strip off any filename if one is present.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const trimFilename = createSafeHandler(url => {
+  url.href = new URL(".", url.toString()).toString();
+});
+
+/**
+ * Normalize a given URL.
+ * * Convert backslashes.
+ * * Remove any ".." and "." segments.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const normalize = createSafeHandler(url => {});
+exports.normalize = normalize;
+
+/**
+ * Joins two paths/URLs.
+ *
+ * All returned URLs will be normalized.
+ *
+ * @param aRoot The root path or URL. Assumed to reference a directory.
+ * @param aPath The path or URL to be joined with the root.
+ * @return A joined and normalized URL value.
+ */
+function join(aRoot, aPath) {
+  const pathType = getURLType(aPath);
+  const rootType = getURLType(aRoot);
+
+  aRoot = ensureDirectory(aRoot);
+
+  if (pathType === "absolute") {
+    return withBase(aPath, undefined);
+  }
+  if (rootType === "absolute") {
+    return withBase(aPath, aRoot);
+  }
+||||||| merged common ancestors
+  cmp = strcmp(mappingA.source, mappingB.source);
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
 // A single base 64 digit can contain 6 bits of data. For the base 64 variable
 // length quantities we use in the source map spec, the first bit is the sign,
 // the next four bits are the actual value, and the 6th bit is the
@@ -2227,19 +2739,113 @@ const base64 = __webpack_require__(3711);
 //   |    |
 //   V    V
 //   101011
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (pathType === "scheme-relative") {
+    return normalize(aPath);
+  }
+  if (rootType === "scheme-relative") {
+    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL.length);
+  }
+||||||| merged common ancestors
+  cmp = mappingA.originalLine - mappingB.originalLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
 const VLQ_BASE_SHIFT = 5;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (pathType === "path-absolute") {
+    return normalize(aPath);
+  }
+  if (rootType === "path-absolute") {
+    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL_AND_HOST.length);
+  }
+||||||| merged common ancestors
+  cmp = mappingA.originalColumn - mappingB.originalColumn;
+  if (cmp !== 0) {
+    return cmp;
+  }
+=======
 // binary: 100000
 const VLQ_BASE = 1 << VLQ_BASE_SHIFT;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const base = buildSafeBase(aPath + aRoot);
+  const newPath = withBase(aPath, withBase(aRoot, base));
+  return computeRelativeURL(base, newPath);
+}
+exports.join = join;
+||||||| merged common ancestors
+  return strcmp(mappingA.name, mappingB.name);
+}
+exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
+=======
 // binary: 011111
 const VLQ_BASE_MASK = VLQ_BASE - 1;
 
 // binary: 100000
 const VLQ_CONTINUATION_BIT = VLQ_BASE;
+>>>>>>> upstream-releases
 
 /**
+<<<<<<< HEAD
+ * Make a path relative to a URL or another path. If returning a
+ * relative URL is not possible, the original target will be returned.
+ * All returned URLs will be normalized.
+ *
+ * @param aRoot The root path or URL.
+ * @param aPath The path or URL to be made relative to aRoot.
+ * @return A rootURL-relative (if possible), normalized URL value.
+ */
+function relative(rootURL, targetURL) {
+  const result = relativeIfPossible(rootURL, targetURL);
+
+  return typeof result === "string" ? result : normalize(targetURL);
+}
+exports.relative = relative;
+
+function relativeIfPossible(rootURL, targetURL) {
+  const urlType = getURLType(rootURL);
+  if (urlType !== getURLType(targetURL)) {
+    return null;
+  }
+
+  const base = buildSafeBase(rootURL + targetURL);
+  const root = new URL(rootURL, base);
+  const target = new URL(targetURL, base);
+
+  try {
+    new URL("", target.toString());
+  } catch (err) {
+    // Bail if the URL doesn't support things being relative to it,
+    // For example, data: and blob: URLs.
+    return null;
+  }
+
+  if (
+    target.protocol !== root.protocol ||
+    target.user !== root.user ||
+    target.password !== root.password ||
+    target.hostname !== root.hostname ||
+    target.port !== root.port
+  ) {
+    return null;
+  }
+
+  return computeRelativeURL(root, target);
+||||||| merged common ancestors
+ * Strip any JSON XSSI avoidance prefix from the string (as documented
+ * in the source maps specification), and then parse the string as
+ * JSON.
+ */
+function parseSourceMapInput(str) {
+  return JSON.parse(str.replace(/^\)]}'[^\n]*\n/, ""));
+=======
  * Converts from a two-complement value to a value where the sign bit is
  * placed in the least significant bit.  For example, as decimals:
  *   1 becomes 2 (10 binary), -1 becomes 3 (11 binary)
@@ -2249,6 +2855,7 @@ function toVLQSigned(aValue) {
   return aValue < 0
     ? ((-aValue) << 1) + 1
     : (aValue << 1) + 0;
+>>>>>>> upstream-releases
 }
 
 /**
@@ -2257,6 +2864,85 @@ function toVLQSigned(aValue) {
  *   2 (10 binary) becomes 1, 3 (11 binary) becomes -1
  *   4 (100 binary) becomes 2, 5 (101 binary) becomes -2
  */
+<<<<<<< HEAD
+function computeSourceURL(sourceRoot, sourceURL, sourceMapURL) {
+  // The source map spec states that "sourceRoot" and "sources" entries are to be appended. While
+  // that is a little vague, implementations have generally interpreted that as joining the
+  // URLs with a `/` between then, assuming the "sourceRoot" doesn't already end with one.
+  // For example,
+  //
+  //   sourceRoot: "some-dir",
+  //   sources: ["/some-path.js"]
+  //
+  // and
+  //
+  //   sourceRoot: "some-dir/",
+  //   sources: ["/some-path.js"]
+  //
+  // must behave as "some-dir/some-path.js".
+  //
+  // With this library's the transition to a more URL-focused implementation, that behavior is
+  // preserved here. To acheive that, we trim the "/" from absolute-path when a sourceRoot value
+  // is present in order to make the sources entries behave as if they are relative to the
+  // "sourceRoot", as they would have if the two strings were simply concated.
+  if (sourceRoot && getURLType(sourceURL) === "path-absolute") {
+    sourceURL = sourceURL.replace(/^\//, "");
+  }
+
+  let url = normalize(sourceURL || "");
+
+  // Parsing URLs can be expensive, so we only perform these joins when needed.
+  if (sourceRoot) url = join(sourceRoot, url);
+  if (sourceMapURL) url = join(trimFilename(sourceMapURL), url);
+  return url;
+||||||| merged common ancestors
+function computeSourceURL(sourceRoot, sourceURL, sourceMapURL) {
+  sourceURL = sourceURL || "";
+
+  if (sourceRoot) {
+    // This follows what Chrome does.
+    if (sourceRoot[sourceRoot.length - 1] !== "/" && sourceURL[0] !== "/") {
+      sourceRoot += "/";
+    }
+    // The spec says:
+    //   Line 4: An optional source root, useful for relocating source
+    //   files on a server or removing repeated values in the
+    //   “sources” entry.  This value is prepended to the individual
+    //   entries in the “source” field.
+    sourceURL = sourceRoot + sourceURL;
+  }
+
+  // Historically, SourceMapConsumer did not take the sourceMapURL as
+  // a parameter.  This mode is still somewhat supported, which is why
+  // this code block is conditional.  However, it's preferable to pass
+  // the source map URL to SourceMapConsumer, so that this function
+  // can implement the source URL resolution algorithm as outlined in
+  // the spec.  This block is basically the equivalent of:
+  //    new URL(sourceURL, sourceMapURL).toString()
+  // ... except it avoids using URL, which wasn't available in the
+  // older releases of node still supported by this library.
+  //
+  // The spec says:
+  //   If the sources are not absolute URLs after prepending of the
+  //   “sourceRoot”, the sources are resolved relative to the
+  //   SourceMap (like resolving script src in a html document).
+  if (sourceMapURL) {
+    const parsed = urlParse(sourceMapURL);
+    if (!parsed) {
+      throw new Error("sourceMapURL could not be parsed");
+    }
+    if (parsed.path) {
+      // Strip the last path component, but keep the "/".
+      const index = parsed.path.lastIndexOf("/");
+      if (index >= 0) {
+        parsed.path = parsed.path.substring(0, index + 1);
+      }
+    }
+    sourceURL = join(urlGenerate(parsed), sourceURL);
+  }
+
+  return normalize(sourceURL);
+=======
 // eslint-disable-next-line no-unused-vars
 function fromVLQSigned(aValue) {
   const isNegative = (aValue & 1) === 1;
@@ -2264,6 +2950,7 @@ function fromVLQSigned(aValue) {
   return isNegative
     ? -shifted
     : shifted;
+>>>>>>> upstream-releases
 }
 
 /**
@@ -2292,7 +2979,7 @@ exports.encode = function base64VLQ_encode(aValue) {
 
 /***/ }),
 
-/***/ 3708:
+/***/ 177:
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -2399,7 +3086,107 @@ exports.ArraySet = ArraySet;
 
 /***/ }),
 
-/***/ 3709:
+/***/ 178:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let mappingsWasm = null;
+
+module.exports = function readWasm() {
+  if (typeof mappingsWasm === "string") {
+    return fetch(mappingsWasm)
+      .then(response => response.arrayBuffer());
+  }
+  if (mappingsWasm instanceof ArrayBuffer) {
+    return Promise.resolve(mappingsWasm);
+  }
+
+  throw new Error("You must provide the string URL or ArrayBuffer contents " +
+                  "of lib/mappings.wasm by calling " +
+                  "SourceMapConsumer.initialize({ 'lib/mappings.wasm': ... }) " +
+                  "before using SourceMapConsumer");
+};
+
+module.exports.initialize = input => {
+  mappingsWasm = input;
+};
+
+
+/***/ }),
+
+/***/ 179:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const { SourceMapConsumer } = __webpack_require__(60);
+
+async function createConsumer(map, sourceMapUrl) {
+  return new SourceMapConsumer(map, sourceMapUrl);
+}
+
+module.exports = {
+  createConsumer
+};
+
+/***/ }),
+
+/***/ 36:
+/***/ (function(module, exports) {
+
+var charenc = {
+  // UTF-8 encoding
+  utf8: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+    }
+  },
+
+  // Binary encoding
+  bin: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      for (var bytes = [], i = 0; i < str.length; i++)
+        bytes.push(str.charCodeAt(i) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      for (var str = [], i = 0; i < bytes.length; i++)
+        str.push(String.fromCharCode(bytes[i]));
+      return str.join('');
+    }
+  }
+};
+
+module.exports = charenc;
+
+
+/***/ }),
+
+/***/ 389:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(390);
+
+
+/***/ }),
+
+/***/ 390:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2410,36 +3197,44 @@ exports.ArraySet = ArraySet;
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 const {
   getOriginalURLs,
+  hasOriginalURL,
   getOriginalRanges,
   getGeneratedRanges,
   getGeneratedLocation,
   getAllGeneratedLocations,
   getOriginalLocation,
+  getOriginalLocations,
   getOriginalSourceText,
+  getGeneratedRangesForOriginal,
+  getFileGeneratedRange,
   hasMappedSource,
   clearSourceMaps,
   applySourceMap
-} = __webpack_require__(3710);
+} = __webpack_require__(391);
 
-const { getOriginalStackFrames } = __webpack_require__(3783);
-const { setAssetRootURL } = __webpack_require__(3794);
+const { getOriginalStackFrames } = __webpack_require__(411);
+const { setAssetRootURL } = __webpack_require__(515);
 
 const {
   workerUtils: { workerHandler }
-} = __webpack_require__(3651);
+} = __webpack_require__(7);
 
 // The interface is implemented in source-map to be
 // easier to unit test.
 self.onmessage = workerHandler({
   setAssetRootURL,
   getOriginalURLs,
+  hasOriginalURL,
   getOriginalRanges,
   getGeneratedRanges,
   getGeneratedLocation,
   getAllGeneratedLocations,
   getOriginalLocation,
+  getOriginalLocations,
   getOriginalSourceText,
   getOriginalStackFrames,
+  getGeneratedRangesForOriginal,
+  getFileGeneratedRange,
   hasMappedSource,
   applySourceMap,
   clearSourceMaps
@@ -2447,7 +3242,7 @@ self.onmessage = workerHandler({
 
 /***/ }),
 
-/***/ 3710:
+/***/ 391:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2462,25 +3257,29 @@ self.onmessage = workerHandler({
  * @module utils/source-map-worker
  */
 
-const { networkRequest } = __webpack_require__(3651);
-const { SourceMapConsumer, SourceMapGenerator } = __webpack_require__(3705);
+const { networkRequest } = __webpack_require__(7);
+const { SourceMapConsumer, SourceMapGenerator } = __webpack_require__(60);
 
-const { createConsumer } = __webpack_require__(3793);
-const assert = __webpack_require__(3717);
-const { fetchSourceMap } = __webpack_require__(3718);
+const { createConsumer } = __webpack_require__(179);
+const assert = __webpack_require__(407);
+const {
+  fetchSourceMap,
+  hasOriginalURL,
+  clearOriginalURLs
+} = __webpack_require__(408);
 const {
   getSourceMap,
   setSourceMap,
   clearSourceMaps: clearSourceMapsRequests
-} = __webpack_require__(3704);
+} = __webpack_require__(104);
 const {
   originalToGeneratedId,
   generatedToOriginalId,
   isGeneratedId,
   isOriginalId,
   getContentType
-} = __webpack_require__(3652);
-const { clearWasmXScopes } = __webpack_require__(3788);
+} = __webpack_require__(64);
+const { clearWasmXScopes } = __webpack_require__(510);
 
 async function getOriginalURLs(generatedSource) {
   const map = await fetchSourceMap(generatedSource);
@@ -2659,16 +3458,20 @@ async function getAllGeneratedLocations(location, originalSource) {
   }));
 }
 
-async function getOriginalLocation(location, { search } = {}) {
-  if (!isGeneratedId(location.sourceId)) {
-    return location;
+async function getOriginalLocations(sourceId, locations, options = {}) {
+  if (locations.some(location => location.sourceId != sourceId)) {
+    throw new Error("Generated locations must belong to the same source");
   }
 
-  const map = await getSourceMap(location.sourceId);
+  const map = await getSourceMap(sourceId);
   if (!map) {
-    return location;
+    return locations;
   }
 
+  return locations.map(location => getOriginalLocationSync(map, location, options));
+}
+
+function getOriginalLocationSync(map, location, { search } = {}) {
   // First check for an exact match
   let match = map.originalPositionFor({
     line: location.line,
@@ -2707,6 +3510,19 @@ async function getOriginalLocation(location, { search } = {}) {
   };
 }
 
+async function getOriginalLocation(location, options = {}) {
+  if (!isGeneratedId(location.sourceId)) {
+    return location;
+  }
+
+  const map = await getSourceMap(location.sourceId);
+  if (!map) {
+    return location;
+  }
+
+  return getOriginalLocationSync(map, location, options);
+}
+
 async function getOriginalSourceText(originalSource) {
   assert(isOriginalId(originalSource.id), "Source is not an original source");
 
@@ -2724,6 +3540,152 @@ async function getOriginalSourceText(originalSource) {
   return {
     text,
     contentType: getContentType(originalSource.url || "")
+  };
+}
+
+/**
+ * Find the set of ranges on the generated file that map from the original
+ * file's locations.
+ *
+ * @param sourceId - The original ID of the file we are processing.
+ * @param url - The original URL of the file we are processing.
+ * @param mergeUnmappedRegions - If unmapped regions are encountered between
+ *   two mappings for the given original file, allow the two mappings to be
+ *   merged anyway. This is useful if you are more interested in the general
+ *   contiguous ranges associated with a file, rather than the specifics of
+ *   the ranges provided by the sourcemap.
+ */
+const GENERATED_MAPPINGS = new WeakMap();
+async function getGeneratedRangesForOriginal(sourceId, url, mergeUnmappedRegions = false) {
+  assert(isOriginalId(sourceId), "Source is not an original source");
+
+  const map = await getSourceMap(originalToGeneratedId(sourceId));
+
+  // NOTE: this is only needed for Flow
+  if (!map) {
+    return [];
+  }
+
+  if (!COMPUTED_SPANS.has(map)) {
+    COMPUTED_SPANS.add(map);
+    map.computeColumnSpans();
+  }
+
+  if (!GENERATED_MAPPINGS.has(map)) {
+    GENERATED_MAPPINGS.set(map, new Map());
+  }
+
+  const generatedRangesMap = GENERATED_MAPPINGS.get(map);
+  if (!generatedRangesMap) {
+    return [];
+  }
+
+  if (generatedRangesMap.has(sourceId)) {
+    // NOTE we need to coerce the result to an array for Flow
+    return generatedRangesMap.get(sourceId) || [];
+  }
+
+  // Gather groups of mappings on the generated file, with new groups created
+  // if we cross a mapping for a different file.
+  let currentGroup = [];
+  const originalGroups = [currentGroup];
+  map.eachMapping(mapping => {
+    if (mapping.source === url) {
+      currentGroup.push({
+        start: {
+          line: mapping.generatedLine,
+          column: mapping.generatedColumn
+        },
+        end: {
+          line: mapping.generatedLine,
+          // The lastGeneratedColumn value is an inclusive value so we add
+          // one to it to get the exclusive end position.
+          column: mapping.lastGeneratedColumn + 1
+        }
+      });
+    } else if (typeof mapping.source === "string" && currentGroup.length > 0) {
+      // If there is a URL, but it is for a _different_ file, we create a
+      // new group of mappings so that we can tell
+      currentGroup = [];
+      originalGroups.push(currentGroup);
+    }
+  }, null, SourceMapConsumer.GENERATED_ORDER);
+
+  const generatedMappingsForOriginal = [];
+  if (mergeUnmappedRegions) {
+    // If we don't care about excluding unmapped regions, then we just need to
+    // create a range that is the fully encompasses each group, ignoring the
+    // empty space between each individual range.
+    for (const group of originalGroups) {
+      if (group.length > 0) {
+        generatedMappingsForOriginal.push({
+          start: group[0].start,
+          end: group[group.length - 1].end
+        });
+      }
+    }
+  } else {
+    let lastEntry;
+    for (const group of originalGroups) {
+      lastEntry = null;
+      for (const { start, end } of group) {
+        const lastEnd = lastEntry ? wrappedMappingPosition(lastEntry.end) : null;
+
+        // If this entry comes immediately after the previous one, extend the
+        // range of the previous entry instead of adding a new one.
+        if (lastEntry && lastEnd && lastEnd.line === start.line && lastEnd.column === start.column) {
+          lastEntry.end = end;
+        } else {
+          const newEntry = { start, end };
+          generatedMappingsForOriginal.push(newEntry);
+          lastEntry = newEntry;
+        }
+      }
+    }
+  }
+
+  generatedRangesMap.set(sourceId, generatedMappingsForOriginal);
+  return generatedMappingsForOriginal;
+}
+
+function wrappedMappingPosition(pos) {
+  if (pos.column !== Infinity) {
+    return pos;
+  }
+
+  // If the end of the entry consumes the whole line, treat it as wrapping to
+  // the next line.
+  return {
+    line: pos.line + 1,
+    column: 0
+  };
+}
+
+async function getFileGeneratedRange(originalSource) {
+  assert(isOriginalId(originalSource.id), "Source is not an original source");
+
+  const map = await getSourceMap(originalToGeneratedId(originalSource.id));
+  if (!map) {
+    return;
+  }
+
+  const start = map.generatedPositionFor({
+    source: originalSource.url,
+    line: 1,
+    column: 0,
+    bias: SourceMapConsumer.LEAST_UPPER_BOUND
+  });
+
+  const end = map.generatedPositionFor({
+    source: originalSource.url,
+    line: Number.MAX_SAFE_INTEGER,
+    column: Number.MAX_SAFE_INTEGER,
+    bias: SourceMapConsumer.GREATEST_LOWER_BOUND
+  });
+
+  return {
+    start,
+    end
   };
 }
 
@@ -2748,16 +3710,21 @@ function applySourceMap(generatedId, url, code, mappings) {
 function clearSourceMaps() {
   clearSourceMapsRequests();
   clearWasmXScopes();
+  clearOriginalURLs();
 }
 
 module.exports = {
   getOriginalURLs,
+  hasOriginalURL,
   getOriginalRanges,
   getGeneratedRanges,
   getGeneratedLocation,
   getAllGeneratedLocations,
   getOriginalLocation,
+  getOriginalLocations,
   getOriginalSourceText,
+  getGeneratedRangesForOriginal,
+  getFileGeneratedRange,
   applySourceMap,
   clearSourceMaps,
   hasMappedSource
@@ -2765,7 +3732,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3711:
+/***/ 392:
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -2790,7 +3757,36 @@ exports.encode = function(number) {
 
 /***/ }),
 
-/***/ 3712:
+/***/ 393:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* -*- Mode: js; js-indent-level: 2; -*- */
+/*
+ * Copyright 2011 Mozilla Foundation and contributors
+ * Licensed under the New BSD license. See LICENSE or:
+ * http://opensource.org/licenses/BSD-3-Clause
+ */
+
+
+/**
+ * Browser 'URL' implementations have been found to handle non-standard URL
+ * schemes poorly, and schemes like
+ *
+ *   webpack:///src/folder/file.js
+ *
+ * are very common in source maps. For the time being we use a JS
+ * implementation in these contexts instead. See
+ *
+ * * https://bugzilla.mozilla.org/show_bug.cgi?id=1374505
+ * * https://bugs.chromium.org/p/chromium/issues/detail?id=734880
+ */
+module.exports = __webpack_require__(507).URL;
+
+
+/***/ }),
+
+/***/ 402:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -2800,7 +3796,7 @@ exports.encode = function(number) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 
-const util = __webpack_require__(3668);
+const util = __webpack_require__(61);
 
 /**
  * Determine whether mappingB is after mappingA with respect to generated
@@ -2877,7 +3873,7 @@ exports.MappingList = MappingList;
 
 /***/ }),
 
-/***/ 3713:
+/***/ 403:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -2887,12 +3883,28 @@ exports.MappingList = MappingList;
  * http://opensource.org/licenses/BSD-3-Clause
  */
 
+<<<<<<< HEAD
 const util = __webpack_require__(3668);
 const binarySearch = __webpack_require__(3714);
 const ArraySet = __webpack_require__(3708).ArraySet;
 const base64VLQ = __webpack_require__(3707); // eslint-disable-line no-unused-vars
 const readWasm = __webpack_require__(3813);
 const wasm = __webpack_require__(3795);
+||||||| merged common ancestors
+const util = __webpack_require__(3668);
+const binarySearch = __webpack_require__(3714);
+const ArraySet = __webpack_require__(3708).ArraySet;
+const base64VLQ = __webpack_require__(3707); // eslint-disable-line no-unused-vars
+const readWasm = __webpack_require__(3792);
+const wasm = __webpack_require__(3795);
+=======
+const util = __webpack_require__(61);
+const binarySearch = __webpack_require__(404);
+const ArraySet = __webpack_require__(177).ArraySet;
+const base64VLQ = __webpack_require__(172); // eslint-disable-line no-unused-vars
+const readWasm = __webpack_require__(178);
+const wasm = __webpack_require__(405);
+>>>>>>> upstream-releases
 
 const INTERNAL = Symbol("smcInternal");
 
@@ -3751,6 +4763,17 @@ class IndexedSourceMapConsumer extends SourceMapConsumer {
    *     The column number is 0-based.
    */
   generatedPositionFor(aArgs) {
+<<<<<<< HEAD
+    const index = this._findSectionIndex(util.getArg(aArgs, "source"));
+    const section = index >= 0 ? this._sections[index] : null;
+    const nextSection =
+      index >= 0 && index + 1 < this._sections.length
+        ? this._sections[index + 1]
+        : null;
+||||||| merged common ancestors
+    for (let i = 0; i < this._sections.length; i++) {
+      const section = this._sections[i];
+=======
     const index = this._findSectionIndex(util.getArg(aArgs, "source"));
     const section = index >= 0 ? this._sections[index] : null;
     const nextSection =
@@ -3763,12 +4786,32 @@ class IndexedSourceMapConsumer extends SourceMapConsumer {
     if (generatedPosition && generatedPosition.line !== null) {
       const lineShift = section.generatedOffset.generatedLine - 1;
       const columnShift = section.generatedOffset.generatedColumn - 1;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    const generatedPosition =
+      section && section.consumer.generatedPositionFor(aArgs);
+    if (generatedPosition && generatedPosition.line !== null) {
+      const lineShift = section.generatedOffset.generatedLine - 1;
+      const columnShift = section.generatedOffset.generatedColumn - 1;
 
       if (generatedPosition.line === 1) {
         generatedPosition.column += columnShift;
         if (typeof generatedPosition.lastColumn === "number") {
           generatedPosition.lastColumn += columnShift;
         }
+||||||| merged common ancestors
+      // Only consider this section if the requested source is in the list of
+      // sources of the consumer.
+      if (section.consumer._findSourceIndex(util.getArg(aArgs, "source")) === -1) {
+        continue;
+=======
+      if (generatedPosition.line === 1) {
+        generatedPosition.column += columnShift;
+        if (typeof generatedPosition.lastColumn === "number") {
+          generatedPosition.lastColumn += columnShift;
+        }
+>>>>>>> upstream-releases
       }
 
       if (
@@ -3900,7 +4943,7 @@ function _factoryBSM(aSourceMap, aSourceMapURL) {
 
 /***/ }),
 
-/***/ 3714:
+/***/ 404:
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -4014,7 +5057,121 @@ exports.search = function search(aNeedle, aHaystack, aCompare, aBias) {
 
 /***/ }),
 
-/***/ 3716:
+/***/ 405:
+/***/ (function(module, exports, __webpack_require__) {
+
+const readWasm = __webpack_require__(178);
+
+/**
+ * Provide the JIT with a nice shape / hidden class.
+ */
+function Mapping() {
+  this.generatedLine = 0;
+  this.generatedColumn = 0;
+  this.lastGeneratedColumn = null;
+  this.source = null;
+  this.originalLine = null;
+  this.originalColumn = null;
+  this.name = null;
+}
+
+let cachedWasm = null;
+
+module.exports = function wasm() {
+  if (cachedWasm) {
+    return cachedWasm;
+  }
+
+  const callbackStack = [];
+
+  cachedWasm = readWasm().then(buffer => {
+      return WebAssembly.instantiate(buffer, {
+        env: {
+          mapping_callback(
+            generatedLine,
+            generatedColumn,
+
+            hasLastGeneratedColumn,
+            lastGeneratedColumn,
+
+            hasOriginal,
+            source,
+            originalLine,
+            originalColumn,
+
+            hasName,
+            name
+          ) {
+            const mapping = new Mapping();
+            // JS uses 1-based line numbers, wasm uses 0-based.
+            mapping.generatedLine = generatedLine + 1;
+            mapping.generatedColumn = generatedColumn;
+
+            if (hasLastGeneratedColumn) {
+              // JS uses inclusive last generated column, wasm uses exclusive.
+              mapping.lastGeneratedColumn = lastGeneratedColumn - 1;
+            }
+
+            if (hasOriginal) {
+              mapping.source = source;
+              // JS uses 1-based line numbers, wasm uses 0-based.
+              mapping.originalLine = originalLine + 1;
+              mapping.originalColumn = originalColumn;
+
+              if (hasName) {
+                mapping.name = name;
+              }
+            }
+
+            callbackStack[callbackStack.length - 1](mapping);
+          },
+
+          start_all_generated_locations_for() { console.time("all_generated_locations_for"); },
+          end_all_generated_locations_for() { console.timeEnd("all_generated_locations_for"); },
+
+          start_compute_column_spans() { console.time("compute_column_spans"); },
+          end_compute_column_spans() { console.timeEnd("compute_column_spans"); },
+
+          start_generated_location_for() { console.time("generated_location_for"); },
+          end_generated_location_for() { console.timeEnd("generated_location_for"); },
+
+          start_original_location_for() { console.time("original_location_for"); },
+          end_original_location_for() { console.timeEnd("original_location_for"); },
+
+          start_parse_mappings() { console.time("parse_mappings"); },
+          end_parse_mappings() { console.timeEnd("parse_mappings"); },
+
+          start_sort_by_generated_location() { console.time("sort_by_generated_location"); },
+          end_sort_by_generated_location() { console.timeEnd("sort_by_generated_location"); },
+
+          start_sort_by_original_location() { console.time("sort_by_original_location"); },
+          end_sort_by_original_location() { console.timeEnd("sort_by_original_location"); },
+        }
+      });
+  }).then(Wasm => {
+    return {
+      exports: Wasm.instance.exports,
+      withMappingCallback: (mappingCallback, f) => {
+        callbackStack.push(mappingCallback);
+        try {
+          f();
+        } finally {
+          callbackStack.pop();
+        }
+      }
+    };
+  }).then(null, e => {
+    cachedWasm = null;
+    throw e;
+  });
+
+  return cachedWasm;
+};
+
+
+/***/ }),
+
+/***/ 406:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -4024,8 +5181,8 @@ exports.search = function search(aNeedle, aHaystack, aCompare, aBias) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 
-const SourceMapGenerator = __webpack_require__(3706).SourceMapGenerator;
-const util = __webpack_require__(3668);
+const SourceMapGenerator = __webpack_require__(171).SourceMapGenerator;
+const util = __webpack_require__(61);
 
 // Matches a Windows-style `\r\n` newline or a `\n` newline used by all other
 // operating systems these days (capturing the result).
@@ -4425,7 +5582,7 @@ exports.SourceNode = SourceNode;
 
 /***/ }),
 
-/***/ 3717:
+/***/ 407:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4445,7 +5602,7 @@ module.exports = assert;
 
 /***/ }),
 
-/***/ 3718:
+/***/ 408:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4455,12 +5612,23 @@ module.exports = assert;
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-const { networkRequest } = __webpack_require__(3651);
-const { getSourceMap, setSourceMap } = __webpack_require__(3704);
-const { WasmRemap } = __webpack_require__(3719);
-const { SourceMapConsumer } = __webpack_require__(3705);
-const { convertToJSON } = __webpack_require__(3785);
-const { createConsumer } = __webpack_require__(3793);
+const { networkRequest } = __webpack_require__(7);
+const { getSourceMap, setSourceMap } = __webpack_require__(104);
+const { WasmRemap } = __webpack_require__(409);
+const { SourceMapConsumer } = __webpack_require__(60);
+const { convertToJSON } = __webpack_require__(510);
+const { createConsumer } = __webpack_require__(179);
+
+// URLs which have been seen in a completed source map request.
+const originalURLs = new Set();
+
+function clearOriginalURLs() {
+  originalURLs.clear();
+}
+
+function hasOriginalURL(url) {
+  return originalURLs.has(url);
+}
 
 function _resolveSourceMapURL(source) {
   const { url = "", sourceMapURL = "" } = source;
@@ -4504,6 +5672,10 @@ async function _resolveAndFetch(generatedSource) {
     }
   }
 
+  if (map && map.sources) {
+    map.sources.forEach(url => originalURLs.add(url));
+  }
+
   return map;
 }
 
@@ -4533,11 +5705,11 @@ function fetchSourceMap(generatedSource) {
   return req;
 }
 
-module.exports = { fetchSourceMap };
+module.exports = { fetchSourceMap, hasOriginalURL, clearOriginalURLs };
 
 /***/ }),
 
-/***/ 3719:
+/***/ 409:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4601,7 +5773,7 @@ class WasmRemap {
       column: 0
     };
     if (this._computeColumnSpans) {
-      generatedPosition.lastColumn = Infinity;
+      generatedPosition.lastColumn = 0;
     }
     return generatedPosition;
   }
@@ -4639,6 +5811,7 @@ class WasmRemap {
         source,
         generatedLine: generatedColumn,
         generatedColumn: 0,
+        lastGeneratedColumn: 0,
         originalLine,
         originalColumn,
         name
@@ -4651,30 +5824,26 @@ exports.WasmRemap = WasmRemap;
 
 /***/ }),
 
-/***/ 3726:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3709);
-
-
-/***/ }),
-
-/***/ 3783:
+/***/ 411:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-const { getWasmXScopes } = __webpack_require__(3788);
+const { getWasmXScopes } = __webpack_require__(510); /* This Source Code Form is subject to the terms of the Mozilla Public
+                                                            * License, v. 2.0. If a copy of the MPL was not distributed with this
+                                                            * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const { getSourceMap } = __webpack_require__(104);
+const { generatedToOriginalId } = __webpack_require__(64);
 
 // Returns expanded stack frames details based on the generated location.
 // The function return null if not information was found.
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-
 async function getOriginalStackFrames(generatedLocation) {
-  const wasmXScopes = await getWasmXScopes(generatedLocation.sourceId);
+  const wasmXScopes = await getWasmXScopes(generatedLocation.sourceId, {
+    getSourceMap,
+    generatedToOriginalId
+  });
   if (!wasmXScopes) {
     return null;
   }
@@ -4693,7 +5862,73 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3785:
+/***/ 507:
+/***/ (function(module, exports) {
+
+module.exports = 
+(() => { 
+  importScripts("resource://devtools/client/shared/vendor/whatwg-url.js");
+  return { URL }
+})()
+;
+
+/***/ }),
+
+/***/ 510:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const { convertToJSON } = __webpack_require__(512);
+const { setAssetRootURL } = __webpack_require__(511);
+const { getWasmXScopes, clearWasmXScopes } = __webpack_require__(513);
+
+module.exports = {
+  convertToJSON,
+  setAssetRootURL,
+  getWasmXScopes,
+  clearWasmXScopes
+};
+
+/***/ }),
+
+/***/ 511:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+let root;
+function setAssetRootURL(assetRoot) {
+  root = assetRoot;
+}
+
+async function getDwarfToWasmData(name) {
+  if (!root) {
+    throw new Error(`No wasm path - Unable to resolve ${name}`);
+  }
+
+  const response = await fetch(`${root}/dwarf_to_json.wasm`);
+
+  return response.arrayBuffer();
+}
+
+module.exports = {
+  setAssetRootURL,
+  getDwarfToWasmData
+};
+
+/***/ }),
+
+/***/ 512:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4705,7 +5940,7 @@ module.exports = {
 
 /* eslint camelcase: 0*/
 
-const { getDwarfToWasmData } = __webpack_require__(3794);
+const { getDwarfToWasmData } = __webpack_require__(511);
 
 let cachedWasmModule;
 let utf8Decoder;
@@ -4716,12 +5951,15 @@ function convertDwarf(wasm, instance) {
   new Uint8Array(memory.buffer, wasmPtr, wasm.byteLength).set(new Uint8Array(wasm));
   const resultPtr = alloc_mem(12);
   const enableXScopes = true;
-  convert_dwarf(wasmPtr, wasm.byteLength, resultPtr, resultPtr + 4, enableXScopes);
+  const success = convert_dwarf(wasmPtr, wasm.byteLength, resultPtr, resultPtr + 4, enableXScopes);
   free_mem(wasmPtr);
   const resultView = new DataView(memory.buffer, resultPtr, 12);
   const outputPtr = resultView.getUint32(0, true),
         outputLen = resultView.getUint32(4, true);
   free_mem(resultPtr);
+  if (!success) {
+    throw new Error("Unable to convert from DWARF sections");
+  }
   if (!utf8Decoder) {
     utf8Decoder = new TextDecoder("utf-8");
   }
@@ -4751,19 +5989,19 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3788:
+/***/ 513:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-const { getSourceMap } = __webpack_require__(3704); /* This Source Code Form is subject to the terms of the Mozilla Public
-                                                          * License, v. 2.0. If a copy of the MPL was not distributed with this
-                                                          * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
 /* eslint camelcase: 0*/
 
-const { generatedToOriginalId } = __webpack_require__(3652);
+const { decodeExpr } = __webpack_require__(514);
 
 const xScopes = new Map();
 
@@ -4772,7 +6010,11 @@ function indexLinkingNames(items) {
   let queue = [...items];
   while (queue.length > 0) {
     const item = queue.shift();
-    if ("linkage_name" in item) {
+    if ("uid" in item) {
+      result.set(item.uid, item);
+    } else if ("linkage_name" in item) {
+      // TODO the linkage_name string value is used for compatibility
+      // with old format. Remove in favour of the uid referencing.
       result.set(item.linkage_name, item);
     }
     if ("children" in item) {
@@ -4782,7 +6024,17 @@ function indexLinkingNames(items) {
   return result;
 }
 
-async function getXScopes(sourceId) {
+function getIndexedItem(index, key) {
+  if (typeof key === "object" && key != null) {
+    return index.get(key.uid);
+  }
+  if (typeof key === "string") {
+    return index.get(key);
+  }
+  return null;
+}
+
+async function getXScopes(sourceId, getSourceMap) {
   if (xScopes.has(sourceId)) {
     return xScopes.get(sourceId);
   }
@@ -4812,6 +6064,39 @@ function isInRange(item, pc) {
   return false;
 }
 
+function decodeExprAt(expr, pc) {
+  if (typeof expr === "string") {
+    return decodeExpr(expr);
+  }
+  const foundAt = expr.find(i => i.range[0] <= pc && pc < i.range[1]);
+  return foundAt ? decodeExpr(foundAt.expr) : null;
+}
+
+function getVariables(scope, pc) {
+  const vars = scope.children ? scope.children.reduce((result, item) => {
+    switch (item.tag) {
+      case "variable":
+      case "formal_parameter":
+        result.push({
+          name: item.name || "",
+          expr: item.location ? decodeExprAt(item.location, pc) : null
+        });
+        break;
+      case "lexical_block":
+        // FIXME build scope blocks (instead of combining)
+        const tmp = getVariables(item, pc);
+        result = [...tmp.vars, ...result];
+        break;
+    }
+    return result;
+  }, []) : [];
+  const frameBase = scope.frame_base ? decodeExpr(scope.frame_base) : null;
+  return {
+    vars,
+    frameBase
+  };
+}
+
 function filterScopes(items, pc, lastItem, index) {
   if (!items) {
     return [];
@@ -4832,17 +6117,19 @@ function filterScopes(items, pc, lastItem, index) {
         if (isInRange(item, pc)) {
           const s = {
             id: item.linkage_name,
-            name: item.name
+            name: item.name,
+            variables: getVariables(item, pc)
           };
           result = [...result, s, ...filterScopes(item.children, pc, s, index)];
         }
         break;
       case "inlined_subroutine":
         if (isInRange(item, pc)) {
-          const linkedItem = index.get(item.abstract_origin);
+          const linkedItem = getIndexedItem(index, item.abstract_origin);
           const s = {
             id: item.abstract_origin,
-            name: linkedItem ? linkedItem.name : void 0
+            name: linkedItem ? linkedItem.name : void 0,
+            variables: getVariables(item, pc)
           };
           if (lastItem) {
             lastItem.file = item.call_file;
@@ -4858,8 +6145,9 @@ function filterScopes(items, pc, lastItem, index) {
 
 class XScope {
 
-  constructor(xScopeData) {
+  constructor(xScopeData, sourceMapContext) {
     this.xScope = xScopeData;
+    this.sourceMapContext = sourceMapContext;
   }
 
   search(generatedLocation) {
@@ -4871,12 +6159,14 @@ class XScope {
     return scopes.map(i => {
       if (!("file" in i)) {
         return {
-          displayName: i.name || ""
+          displayName: i.name || "",
+          variables: i.variables
         };
       }
-      const sourceId = generatedToOriginalId(generatedLocation.sourceId, sources[i.file || 0]);
+      const sourceId = this.sourceMapContext.generatedToOriginalId(generatedLocation.sourceId, sources[i.file || 0]);
       return {
         displayName: i.name || "",
+        variables: i.variables,
         location: {
           line: i.line || 0,
           sourceId
@@ -4886,12 +6176,13 @@ class XScope {
   }
 }
 
-async function getWasmXScopes(sourceId) {
-  const xScopeData = await getXScopes(sourceId);
+async function getWasmXScopes(sourceId, sourceMapContext) {
+  const { getSourceMap } = sourceMapContext;
+  const xScopeData = await getXScopes(sourceId, getSourceMap);
   if (!xScopeData) {
     return null;
   }
-  return new XScope(xScopeData);
+  return new XScope(xScopeData, sourceMapContext);
 }
 
 function clearWasmXScopes() {
@@ -4905,29 +6196,271 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3793:
+/***/ 514:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+class Value {
 
-const { SourceMapConsumer } = __webpack_require__(3705);
+  constructor(val) {
+    this.val = val;
+  }
+  toString() {
+    return `${this.val}`;
+  }
+} /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-async function createConsumer(map, sourceMapUrl) {
-  return new SourceMapConsumer(map, sourceMapUrl);
+/* eslint camelcase: 0*/
+/* eslint-disable no-inline-comments */
+
+const Int32Formatter = {
+  fromAddr(addr) {
+    return `(new DataView(memory0.buffer).getInt32(${addr}, true))`;
+  },
+  fromValue(value) {
+    return `${value.val}`;
+  }
+};
+
+const Uint32Formatter = {
+  fromAddr(addr) {
+    return `(new DataView(memory0.buffer).getUint32(${addr}, true))`;
+  },
+  fromValue(value) {
+    return `(${value.val} >>> 0)`;
+  }
+};
+
+function createPieceFormatter(bytes) {
+  let getter;
+  switch (bytes) {
+    case 0:
+    case 1:
+      getter = "getUint8";
+      break;
+    case 2:
+      getter = "getUint16";
+      break;
+    case 3:
+    case 4:
+    default:
+      // FIXME 64-bit
+      getter = "getUint32";
+      break;
+  }
+  const mask = (1 << 8 * bytes) - 1;
+  return {
+    fromAddr(addr) {
+      return `(new DataView(memory0.buffer).${getter}(${addr}, true))`;
+    },
+    fromValue(value) {
+      return `((${value.val} & ${mask}) >>> 0)`;
+    }
+  };
+}
+
+// eslint-disable-next-line complexity
+function toJS(buf, typeFormatter, frame_base = "fp()") {
+  const readU8 = function () {
+    return buf[i++];
+  };
+  const readS8 = function () {
+    return readU8() << 24 >> 24;
+  };
+  const readU16 = function () {
+    const w = buf[i] | buf[i + 1] << 8;
+    i += 2;
+    return w;
+  };
+  const readS16 = function () {
+    return readU16() << 16 >> 16;
+  };
+  const readS32 = function () {
+    const w = buf[i] | buf[i + 1] << 8 | buf[i + 2] << 16 | buf[i + 3] << 24;
+    i += 4;
+    return w;
+  };
+  const readU32 = function () {
+    return readS32() >>> 0;
+  };
+  const readU = function () {
+    let n = 0,
+        shift = 0,
+        b;
+    while ((b = readU8()) & 0x80) {
+      n |= (b & 0x7f) << shift;
+      shift += 7;
+    }
+    return n | b << shift;
+  };
+  const readS = function () {
+    let n = 0,
+        shift = 0,
+        b;
+    while ((b = readU8()) & 0x80) {
+      n |= (b & 0x7f) << shift;
+      shift += 7;
+    }
+    n |= b << shift;
+    shift += 7;
+    return shift > 32 ? n << 32 - shift >> 32 - shift : n;
+  };
+  const popValue = function (formatter) {
+    const loc = stack.pop();
+    if (loc instanceof Value) {
+      return formatter.fromValue(loc);
+    }
+    return formatter.fromAddr(loc);
+  };
+  let i = 0,
+      a,
+      b;
+  const stack = [frame_base];
+  while (i < buf.length) {
+    const code = buf[i++];
+    switch (code) {
+      case 0x03 /* DW_OP_addr */:
+        stack.push(Uint32Formatter.fromAddr(readU32()));
+        break;
+      case 0x08 /* DW_OP_const1u 0x08 1 1-byte constant */:
+        stack.push(readU8());
+        break;
+      case 0x09 /* DW_OP_const1s 0x09 1 1-byte constant */:
+        stack.push(readS8());
+        break;
+      case 0x0a /* DW_OP_const2u 0x0a 1 2-byte constant */:
+        stack.push(readU16());
+        break;
+      case 0x0b /* DW_OP_const2s 0x0b 1 2-byte constant */:
+        stack.push(readS16());
+        break;
+      case 0x0c /* DW_OP_const2u 0x0a 1 2-byte constant */:
+        stack.push(readU32());
+        break;
+      case 0x0d /* DW_OP_const2s 0x0b 1 2-byte constant */:
+        stack.push(readS32());
+        break;
+      case 0x10 /* DW_OP_constu 0x10 1 ULEB128 constant */:
+        stack.push(readU());
+        break;
+      case 0x11 /* DW_OP_const2s 0x0b 1 2-byte constant */:
+        stack.push(readS());
+        break;
+
+      case 0x1c /* DW_OP_minus */:
+        b = stack.pop();
+        a = stack.pop();
+        stack.push(`${a} - ${b}`);
+        break;
+
+      case 0x22 /* DW_OP_plus */:
+        b = stack.pop();
+        a = stack.pop();
+        stack.push(`${a} + ${b}`);
+        break;
+
+      case 0x23 /* DW_OP_plus_uconst */:
+        b = readU();
+        a = stack.pop();
+        stack.push(`${a} + ${b}`);
+        break;
+
+      case 0x30 /* DW_OP_lit0 */:
+      case 0x31:
+      case 0x32:
+      case 0x33:
+      case 0x34:
+      case 0x35:
+      case 0x36:
+      case 0x37:
+      case 0x38:
+      case 0x39:
+      case 0x3a:
+      case 0x3b:
+      case 0x3c:
+      case 0x3d:
+      case 0x3e:
+      case 0x3f:
+      case 0x40:
+      case 0x41:
+      case 0x42:
+      case 0x43:
+      case 0x44:
+      case 0x45:
+      case 0x46:
+      case 0x47:
+      case 0x48:
+      case 0x49:
+      case 0x4a:
+      case 0x4b:
+      case 0x4c:
+      case 0x4d:
+      case 0x4e:
+      case 0x4f:
+        stack.push(`${code - 0x30}`);
+        break;
+
+      case 0x93 /* DW_OP_piece */:
+        {
+          a = readU();
+          const formatter = createPieceFormatter(a);
+          stack.push(popValue(formatter));
+          break;
+        }
+
+      case 0x9f /* DW_OP_stack_value */:
+        stack.push(new Value(stack.pop()));
+        break;
+
+      case 0xf6 /* WASM ext (old, FIXME phase out) */:
+      case 0xed /* WASM ext */:
+        b = readU();
+        a = readS();
+        switch (b) {
+          case 0:
+            stack.push(`var${a}`);
+            break;
+          case 1:
+            stack.push(`global${a}`);
+            break;
+          default:
+            stack.push(`ti${b}(${a})`);
+            break;
+        }
+        break;
+
+      default:
+        // Unknown encoding, baling out
+        return null;
+    }
+  }
+  // FIXME use real DWARF type information
+  return popValue(typeFormatter);
+}
+
+function decodeExpr(expr) {
+  if (expr.includes("//")) {
+    expr = expr.slice(0, expr.indexOf("//")).trim();
+  }
+  const code = new Uint8Array(expr.length >> 1);
+  for (let i = 0; i < code.length; i++) {
+    code[i] = parseInt(expr.substr(i << 1, 2), 16);
+  }
+  const typeFormatter = Int32Formatter;
+  return toJS(code, typeFormatter) || `dwarf("${expr}")`;
 }
 
 module.exports = {
-  createConsumer
+  decodeExpr
 };
 
 /***/ }),
 
-/***/ 3794:
+/***/ 515:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4936,146 +6469,674 @@ module.exports = {
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-const { SourceMapConsumer } = __webpack_require__(3705);
+const { SourceMapConsumer } = __webpack_require__(60);
+const {
+  setAssetRootURL: wasmDwarfSetAssetRootURL
+} = __webpack_require__(510);
 
-let root;
 function setAssetRootURL(assetRoot) {
   // Remove any trailing slash so we don't generate a double-slash below.
-  root = assetRoot.replace(/\/$/, "");
+  const root = assetRoot.replace(/\/$/, "");
+
+  wasmDwarfSetAssetRootURL(root);
 
   SourceMapConsumer.initialize({
     "lib/mappings.wasm": `${root}/source-map-mappings.wasm`
   });
 }
 
-async function getDwarfToWasmData(name) {
-  if (!root) {
-    throw new Error(`No wasm path - Unable to resolve ${name}`);
-  }
-
-  const response = await fetch(`${root}/dwarf_to_json.wasm`);
-
-  return response.arrayBuffer();
-}
-
 module.exports = {
-  setAssetRootURL,
-  getDwarfToWasmData
+  setAssetRootURL
 };
 
 /***/ }),
 
-/***/ 3795:
+/***/ 60:
 /***/ (function(module, exports, __webpack_require__) {
 
-const readWasm = __webpack_require__(3813);
+/*
+ * Copyright 2009-2011 Mozilla Foundation and contributors
+ * Licensed under the New BSD license. See LICENSE.txt or:
+ * http://opensource.org/licenses/BSD-3-Clause
+ */
+exports.SourceMapGenerator = __webpack_require__(171).SourceMapGenerator;
+exports.SourceMapConsumer = __webpack_require__(403).SourceMapConsumer;
+exports.SourceNode = __webpack_require__(406).SourceNode;
+
+
+/***/ }),
+
+/***/ 61:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* -*- Mode: js; js-indent-level: 2; -*- */
+/*
+ * Copyright 2011 Mozilla Foundation and contributors
+ * Licensed under the New BSD license. See LICENSE or:
+ * http://opensource.org/licenses/BSD-3-Clause
+ */
+
+const URL = __webpack_require__(393);
 
 /**
- * Provide the JIT with a nice shape / hidden class.
+ * This is a helper function for getting values from parameter/options
+ * objects.
+ *
+ * @param args The object we are extracting values from
+ * @param name The name of the property we are getting.
+ * @param defaultValue An optional value to return if the property is missing
+ * from the object. If this is not specified and the property is missing, an
+ * error will be thrown.
  */
-function Mapping() {
-  this.generatedLine = 0;
-  this.generatedColumn = 0;
-  this.lastGeneratedColumn = null;
-  this.source = null;
-  this.originalLine = null;
-  this.originalColumn = null;
-  this.name = null;
+function getArg(aArgs, aName, aDefaultValue) {
+  if (aName in aArgs) {
+    return aArgs[aName];
+  } else if (arguments.length === 3) {
+    return aDefaultValue;
+  }
+    throw new Error('"' + aName + '" is a required argument.');
+
+}
+exports.getArg = getArg;
+
+const supportsNullProto = (function() {
+  const obj = Object.create(null);
+  return !("__proto__" in obj);
+}());
+
+function identity(s) {
+  return s;
 }
 
-let cachedWasm = null;
-
-module.exports = function wasm() {
-  if (cachedWasm) {
-    return cachedWasm;
+/**
+ * Because behavior goes wacky when you set `__proto__` on objects, we
+ * have to prefix all the strings in our set with an arbitrary character.
+ *
+ * See https://github.com/mozilla/source-map/pull/31 and
+ * https://github.com/mozilla/source-map/issues/30
+ *
+ * @param String aStr
+ */
+function toSetString(aStr) {
+  if (isProtoString(aStr)) {
+    return "$" + aStr;
   }
 
-  const callbackStack = [];
+  return aStr;
+}
+exports.toSetString = supportsNullProto ? identity : toSetString;
 
-  cachedWasm = readWasm().then(buffer => {
-      return WebAssembly.instantiate(buffer, {
-        env: {
-          mapping_callback(
-            generatedLine,
-            generatedColumn,
+function fromSetString(aStr) {
+  if (isProtoString(aStr)) {
+    return aStr.slice(1);
+  }
 
-            hasLastGeneratedColumn,
-            lastGeneratedColumn,
+  return aStr;
+}
+exports.fromSetString = supportsNullProto ? identity : fromSetString;
 
-            hasOriginal,
-            source,
-            originalLine,
-            originalColumn,
+function isProtoString(s) {
+  if (!s) {
+    return false;
+  }
 
-            hasName,
-            name
-          ) {
-            const mapping = new Mapping();
-            // JS uses 1-based line numbers, wasm uses 0-based.
-            mapping.generatedLine = generatedLine + 1;
-            mapping.generatedColumn = generatedColumn;
+  const length = s.length;
 
-            if (hasLastGeneratedColumn) {
-              // JS uses inclusive last generated column, wasm uses exclusive.
-              mapping.lastGeneratedColumn = lastGeneratedColumn - 1;
-            }
+  if (length < 9 /* "__proto__".length */) {
+    return false;
+  }
 
-            if (hasOriginal) {
-              mapping.source = source;
-              // JS uses 1-based line numbers, wasm uses 0-based.
-              mapping.originalLine = originalLine + 1;
-              mapping.originalColumn = originalColumn;
+  /* eslint-disable no-multi-spaces */
+  if (s.charCodeAt(length - 1) !== 95  /* '_' */ ||
+      s.charCodeAt(length - 2) !== 95  /* '_' */ ||
+      s.charCodeAt(length - 3) !== 111 /* 'o' */ ||
+      s.charCodeAt(length - 4) !== 116 /* 't' */ ||
+      s.charCodeAt(length - 5) !== 111 /* 'o' */ ||
+      s.charCodeAt(length - 6) !== 114 /* 'r' */ ||
+      s.charCodeAt(length - 7) !== 112 /* 'p' */ ||
+      s.charCodeAt(length - 8) !== 95  /* '_' */ ||
+      s.charCodeAt(length - 9) !== 95  /* '_' */) {
+    return false;
+  }
+  /* eslint-enable no-multi-spaces */
 
-              if (hasName) {
-                mapping.name = name;
-              }
-            }
+  for (let i = length - 10; i >= 0; i--) {
+    if (s.charCodeAt(i) !== 36 /* '$' */) {
+      return false;
+    }
+  }
 
-            callbackStack[callbackStack.length - 1](mapping);
-          },
+  return true;
+}
 
-          start_all_generated_locations_for() { console.time("all_generated_locations_for"); },
-          end_all_generated_locations_for() { console.timeEnd("all_generated_locations_for"); },
+function strcmp(aStr1, aStr2) {
+  if (aStr1 === aStr2) {
+    return 0;
+  }
 
-          start_compute_column_spans() { console.time("compute_column_spans"); },
-          end_compute_column_spans() { console.timeEnd("compute_column_spans"); },
+  if (aStr1 === null) {
+    return 1; // aStr2 !== null
+  }
 
-          start_generated_location_for() { console.time("generated_location_for"); },
-          end_generated_location_for() { console.timeEnd("generated_location_for"); },
+  if (aStr2 === null) {
+    return -1; // aStr1 !== null
+  }
 
-          start_original_location_for() { console.time("original_location_for"); },
-          end_original_location_for() { console.timeEnd("original_location_for"); },
+  if (aStr1 > aStr2) {
+    return 1;
+  }
 
-          start_parse_mappings() { console.time("parse_mappings"); },
-          end_parse_mappings() { console.timeEnd("parse_mappings"); },
+  return -1;
+}
 
-          start_sort_by_generated_location() { console.time("sort_by_generated_location"); },
-          end_sort_by_generated_location() { console.timeEnd("sort_by_generated_location"); },
+/**
+ * Comparator between two mappings with inflated source and name strings where
+ * the generated positions are compared.
+ */
+function compareByGeneratedPositionsInflated(mappingA, mappingB) {
+  let cmp = mappingA.generatedLine - mappingB.generatedLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
 
-          start_sort_by_original_location() { console.time("sort_by_original_location"); },
-          end_sort_by_original_location() { console.timeEnd("sort_by_original_location"); },
+  cmp = mappingA.generatedColumn - mappingB.generatedColumn;
+  if (cmp !== 0) {
+    return cmp;
+  }
+
+  cmp = strcmp(mappingA.source, mappingB.source);
+  if (cmp !== 0) {
+    return cmp;
+  }
+
+  cmp = mappingA.originalLine - mappingB.originalLine;
+  if (cmp !== 0) {
+    return cmp;
+  }
+
+  cmp = mappingA.originalColumn - mappingB.originalColumn;
+  if (cmp !== 0) {
+    return cmp;
+  }
+
+  return strcmp(mappingA.name, mappingB.name);
+}
+exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
+
+/**
+ * Strip any JSON XSSI avoidance prefix from the string (as documented
+ * in the source maps specification), and then parse the string as
+ * JSON.
+ */
+function parseSourceMapInput(str) {
+  return JSON.parse(str.replace(/^\)]}'[^\n]*\n/, ""));
+}
+exports.parseSourceMapInput = parseSourceMapInput;
+
+// We use 'http' as the base here because we want URLs processed relative
+// to the safe base to be treated as "special" URLs during parsing using
+// the WHATWG URL parsing. This ensures that backslash normalization
+// applies to the path and such.
+const PROTOCOL = "http:";
+const PROTOCOL_AND_HOST = `${PROTOCOL}//host`;
+
+/**
+ * Make it easy to create small utilities that tweak a URL's path.
+ */
+function createSafeHandler(cb) {
+  return input => {
+    const type = getURLType(input);
+    const base = buildSafeBase(input);
+    const url = new URL(input, base);
+
+    cb(url);
+
+    const result = url.toString();
+
+    if (type === "absolute") {
+      return result;
+    } else if (type === "scheme-relative") {
+      return result.slice(PROTOCOL.length);
+    } else if (type === "path-absolute") {
+      return result.slice(PROTOCOL_AND_HOST.length);
+    }
+
+    // This assumes that the callback will only change
+    // the path, search and hash values.
+    return computeRelativeURL(base, result);
+  };
+}
+
+function withBase(url, base) {
+  return new URL(url, base).toString();
+}
+
+function buildUniqueSegment(prefix, str) {
+  let id = 0;
+  do {
+    const ident = prefix + (id++);
+    if (str.indexOf(ident) === -1) return ident;
+  } while (true);
+}
+
+function buildSafeBase(str) {
+  const maxDotParts = str.split("..").length - 1;
+
+  // If we used a segment that also existed in `str`, then we would be unable
+  // to compute relative paths. For example, if `segment` were just "a":
+  //
+  //   const url = "../../a/"
+  //   const base = buildSafeBase(url); // http://host/a/a/
+  //   const joined = "http://host/a/";
+  //   const result = relative(base, joined);
+  //
+  // Expected: "../../a/";
+  // Actual: "a/"
+  //
+  const segment = buildUniqueSegment("p", str);
+
+  let base = `${PROTOCOL_AND_HOST}/`;
+  for (let i = 0; i < maxDotParts; i++) {
+    base += `${segment}/`;
+  }
+  return base;
+}
+
+const ABSOLUTE_SCHEME = /^[A-Za-z0-9\+\-\.]+:/;
+function getURLType(url) {
+  if (url[0] === "/") {
+    if (url[1] === "/") return "scheme-relative";
+    return "path-absolute";
+  }
+
+  return ABSOLUTE_SCHEME.test(url) ? "absolute" : "path-relative";
+}
+
+/**
+ * Given two URLs that are assumed to be on the same
+ * protocol/host/user/password build a relative URL from the
+ * path, params, and hash values.
+ *
+ * @param rootURL The root URL that the target will be relative to.
+ * @param targetURL The target that the relative URL points to.
+ * @return A rootURL-relative, normalized URL value.
+ */
+function computeRelativeURL(rootURL, targetURL) {
+  if (typeof rootURL === "string") rootURL = new URL(rootURL);
+  if (typeof targetURL === "string") targetURL = new URL(targetURL);
+
+  const targetParts = targetURL.pathname.split("/");
+  const rootParts = rootURL.pathname.split("/");
+
+  // If we've got a URL path ending with a "/", we remove it since we'd
+  // otherwise be relative to the wrong location.
+  if (rootParts.length > 0 && !rootParts[rootParts.length - 1]) {
+    rootParts.pop();
+  }
+
+  while (
+    targetParts.length > 0 &&
+    rootParts.length > 0 &&
+    targetParts[0] === rootParts[0]
+  ) {
+    targetParts.shift();
+    rootParts.shift();
+  }
+
+  const relativePath = rootParts
+    .map(() => "..")
+    .concat(targetParts)
+    .join("/");
+
+  return relativePath + targetURL.search + targetURL.hash;
+}
+
+/**
+ * Given a URL, ensure that it is treated as a directory URL.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const ensureDirectory = createSafeHandler(url => {
+  url.pathname = url.pathname.replace(/\/?$/, "/");
+});
+
+/**
+ * Given a URL, strip off any filename if one is present.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const trimFilename = createSafeHandler(url => {
+  url.href = new URL(".", url.toString()).toString();
+});
+
+<<<<<<< HEAD
+/***/ 3793:
+/***/ (function(module, exports, __webpack_require__) {
+||||||| merged common ancestors
+/***/ 3792:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(__dirname) {if (typeof fetch === "function") {
+  // Web version of reading a wasm file into an array buffer.
+
+  let mappingsWasmUrl = null;
+
+  module.exports = function readWasm() {
+    if (typeof mappingsWasmUrl !== "string") {
+      throw new Error("You must provide the URL of lib/mappings.wasm by calling " +
+                      "SourceMapConsumer.initialize({ 'lib/mappings.wasm': ... }) " +
+                      "before using SourceMapConsumer");
+    }
+
+    return fetch(mappingsWasmUrl)
+      .then(response => response.arrayBuffer());
+  };
+
+  module.exports.initialize = url => mappingsWasmUrl = url;
+} else {
+  // Node version of reading a wasm file into an array buffer.
+  const fs = __webpack_require__(118);
+  const path = __webpack_require__(119);
+
+  module.exports = function readWasm() {
+    return new Promise((resolve, reject) => {
+      const wasmPath = path.join(__dirname, "mappings.wasm");
+      fs.readFile(wasmPath, null, (error, data) => {
+        if (error) {
+          reject(error);
+          return;
         }
+
+        resolve(data.buffer);
       });
-  }).then(Wasm => {
-    return {
-      exports: Wasm.instance.exports,
-      withMappingCallback: (mappingCallback, f) => {
-        callbackStack.push(mappingCallback);
-        try {
-          f();
-        } finally {
-          callbackStack.pop();
-        }
-      }
-    };
-  }).then(null, e => {
-    cachedWasm = null;
-    throw e;
-  });
+    });
+  };
 
-  return cachedWasm;
+  module.exports.initialize = _ => {
+    console.debug("SourceMapConsumer.initialize is a no-op when running in node.js");
+  };
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, "/"))
+
+/***/ }),
+
+/***/ 3793:
+/***/ (function(module, exports, __webpack_require__) {
+=======
+/**
+ * Normalize a given URL.
+ * * Convert backslashes.
+ * * Remove any ".." and "." segments.
+ *
+ * @param url
+ * @return A normalized URL value.
+ */
+const normalize = createSafeHandler(url => {});
+exports.normalize = normalize;
+
+/**
+ * Joins two paths/URLs.
+ *
+ * All returned URLs will be normalized.
+ *
+ * @param aRoot The root path or URL. Assumed to reference a directory.
+ * @param aPath The path or URL to be joined with the root.
+ * @return A joined and normalized URL value.
+ */
+function join(aRoot, aPath) {
+  const pathType = getURLType(aPath);
+  const rootType = getURLType(aRoot);
+
+  aRoot = ensureDirectory(aRoot);
+
+  if (pathType === "absolute") {
+    return withBase(aPath, undefined);
+  }
+  if (rootType === "absolute") {
+    return withBase(aPath, aRoot);
+  }
+
+  if (pathType === "scheme-relative") {
+    return normalize(aPath);
+  }
+  if (rootType === "scheme-relative") {
+    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL.length);
+  }
+
+  if (pathType === "path-absolute") {
+    return normalize(aPath);
+  }
+  if (rootType === "path-absolute") {
+    return withBase(aPath, withBase(aRoot, PROTOCOL_AND_HOST)).slice(PROTOCOL_AND_HOST.length);
+  }
+
+  const base = buildSafeBase(aPath + aRoot);
+  const newPath = withBase(aPath, withBase(aRoot, base));
+  return computeRelativeURL(base, newPath);
+}
+exports.join = join;
+
+/**
+ * Make a path relative to a URL or another path. If returning a
+ * relative URL is not possible, the original target will be returned.
+ * All returned URLs will be normalized.
+ *
+ * @param aRoot The root path or URL.
+ * @param aPath The path or URL to be made relative to aRoot.
+ * @return A rootURL-relative (if possible), normalized URL value.
+ */
+function relative(rootURL, targetURL) {
+  const result = relativeIfPossible(rootURL, targetURL);
+
+  return typeof result === "string" ? result : normalize(targetURL);
+}
+exports.relative = relative;
+
+function relativeIfPossible(rootURL, targetURL) {
+  const urlType = getURLType(rootURL);
+  if (urlType !== getURLType(targetURL)) {
+    return null;
+  }
+
+  const base = buildSafeBase(rootURL + targetURL);
+  const root = new URL(rootURL, base);
+  const target = new URL(targetURL, base);
+
+  try {
+    new URL("", target.toString());
+  } catch (err) {
+    // Bail if the URL doesn't support things being relative to it,
+    // For example, data: and blob: URLs.
+    return null;
+  }
+>>>>>>> upstream-releases
+
+  if (
+    target.protocol !== root.protocol ||
+    target.user !== root.user ||
+    target.password !== root.password ||
+    target.hostname !== root.hostname ||
+    target.port !== root.port
+  ) {
+    return null;
+  }
+
+  return computeRelativeURL(root, target);
+}
+
+/**
+ * Compute the URL of a source given the the source root, the source's
+ * URL, and the source map's URL.
+ */
+function computeSourceURL(sourceRoot, sourceURL, sourceMapURL) {
+  // The source map spec states that "sourceRoot" and "sources" entries are to be appended. While
+  // that is a little vague, implementations have generally interpreted that as joining the
+  // URLs with a `/` between then, assuming the "sourceRoot" doesn't already end with one.
+  // For example,
+  //
+  //   sourceRoot: "some-dir",
+  //   sources: ["/some-path.js"]
+  //
+  // and
+  //
+  //   sourceRoot: "some-dir/",
+  //   sources: ["/some-path.js"]
+  //
+  // must behave as "some-dir/some-path.js".
+  //
+  // With this library's the transition to a more URL-focused implementation, that behavior is
+  // preserved here. To acheive that, we trim the "/" from absolute-path when a sourceRoot value
+  // is present in order to make the sources entries behave as if they are relative to the
+  // "sourceRoot", as they would have if the two strings were simply concated.
+  if (sourceRoot && getURLType(sourceURL) === "path-absolute") {
+    sourceURL = sourceURL.replace(/^\//, "");
+  }
+
+  let url = normalize(sourceURL || "");
+
+  // Parsing URLs can be expensive, so we only perform these joins when needed.
+  if (sourceRoot) url = join(sourceRoot, url);
+  if (sourceMapURL) url = join(trimFilename(sourceMapURL), url);
+  return url;
+}
+exports.computeSourceURL = computeSourceURL;
+
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const md5 = __webpack_require__(105);
+
+function originalToGeneratedId(sourceId) {
+  if (isGeneratedId(sourceId)) {
+    return sourceId;
+  }
+
+  const match = sourceId.match(/(.*)\/originalSource/);
+  return match ? match[1] : "";
+}
+
+const getMd5 = memoize(url => md5(url));
+
+function generatedToOriginalId(generatedId, url) {
+  return `${generatedId}/originalSource-${getMd5(url)}`;
+}
+
+function isOriginalId(id) {
+  return (/\/originalSource/.test(id)
+  );
+}
+
+<<<<<<< HEAD
+const readWasm = __webpack_require__(3813);
+||||||| merged common ancestors
+const readWasm = __webpack_require__(3792);
+=======
+function isGeneratedId(id) {
+  return !isOriginalId(id);
+}
+>>>>>>> upstream-releases
+
+/**
+ * Trims the query part or reference identifier of a URL string, if necessary.
+ */
+function trimUrlQuery(url) {
+  const length = url.length;
+  const q1 = url.indexOf("?");
+  const q2 = url.indexOf("&");
+  const q3 = url.indexOf("#");
+  const q = Math.min(q1 != -1 ? q1 : length, q2 != -1 ? q2 : length, q3 != -1 ? q3 : length);
+
+  return url.slice(0, q);
+}
+
+// Map suffix to content type.
+const contentMap = {
+  js: "text/javascript",
+  jsm: "text/javascript",
+  mjs: "text/javascript",
+  ts: "text/typescript",
+  tsx: "text/typescript-jsx",
+  jsx: "text/jsx",
+  vue: "text/vue",
+  coffee: "text/coffeescript",
+  elm: "text/elm",
+  cljc: "text/x-clojure",
+  cljs: "text/x-clojurescript"
 };
 
+/**
+ * Returns the content type for the specified URL.  If no specific
+ * content type can be determined, "text/plain" is returned.
+ *
+ * @return String
+ *         The content type.
+ */
+function getContentType(url) {
+  url = trimUrlQuery(url);
+  const dot = url.lastIndexOf(".");
+  if (dot >= 0) {
+    const name = url.substring(dot + 1);
+    if (name in contentMap) {
+      return contentMap[name];
+    }
+  }
+  return "text/plain";
+}
+
+function memoize(func) {
+  const map = new Map();
+
+  return arg => {
+    if (map.has(arg)) {
+      return map.get(arg);
+    }
+
+    const result = func(arg);
+    map.set(arg, result);
+    return result;
+  };
+}
+
+module.exports = {
+  originalToGeneratedId,
+  generatedToOriginalId,
+  isOriginalId,
+  isGeneratedId,
+  getContentType,
+  contentMapForTesting: contentMap
+};
+
+/***/ }),
+
+/***/ 7:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+const networkRequest = __webpack_require__(13);
+const workerUtils = __webpack_require__(14);
+
+module.exports = {
+  networkRequest,
+  workerUtils
+};
+
+<<<<<<< HEAD
 
 /***/ }),
 
@@ -13360,6 +15421,10 @@ module.exports = Array.isArray || function (arr) {
 };
 
 
+||||||| merged common ancestors
+
+=======
+>>>>>>> upstream-releases
 /***/ })
 
 /******/ });

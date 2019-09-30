@@ -65,9 +65,29 @@ function callCompleteWhileRetrying(button) {
     await promise_rejects(
       t,
       "InvalidStateError",
+<<<<<<< HEAD
       completePromise1,
       "Calling complete() while retrying rejects with an InvalidStateError"
     );
+    await promise_rejects(
+      t,
+      "InvalidStateError",
+      completePromise2,
+||||||| merged common ancestors
+      response.complete("success"),
+=======
+      completePromise1,
+>>>>>>> upstream-releases
+      "Calling complete() while retrying rejects with an InvalidStateError"
+    );
+<<<<<<< HEAD
+    assert_not_equals(
+      completePromise1,
+      completePromise2,
+      "complete() must return unique promises"
+    );
+||||||| merged common ancestors
+=======
     await promise_rejects(
       t,
       "InvalidStateError",
@@ -79,6 +99,7 @@ function callCompleteWhileRetrying(button) {
       completePromise2,
       "complete() must return unique promises"
     );
+>>>>>>> upstream-releases
     await retryPromise;
     await response.complete("success");
   }, button.textContent.trim());
@@ -164,16 +185,26 @@ function userIsShownErrorsFields(button) {
 function abortTheUpdate(button) {
   button.disabled = true;
   promise_test(async t => {
-    const { response, request } = await getPaymentRequestResponse({ requestShipping: true });
-    // causes "abort the update" to run
-    const shippingChangedPromise = new Promise(resolve => {
-      request.onshippingoptionchange = () => {
-        event.updateWith({ total: { amount: { currency: "USD", value: "INVALID" } }});
+    const { response, request } = await getPaymentRequestResponse({
+      requestShipping: true,
+    });
+    const shipOptionChangePromise = new Promise(resolve => {
+      request.onshippingoptionchange = event => {
+        // causes "abort the update" to run
+        event.updateWith({ total: "error!" });
         resolve();
       };
     });
+<<<<<<< HEAD
     const retryPromise = response.retry();
     await shippingChangedPromise;
+||||||| merged common ancestors
+    const retryPromise = response.retry({});
+    await shippingChangedPromise;
+=======
+    const retryPromise = response.retry();
+    await shipOptionChangePromise;
+>>>>>>> upstream-releases
     await promise_rejects(
       t,
       new TypeError(),
@@ -265,7 +296,9 @@ function callingRetryReturnsUniquePromise(button){
   </li>
   <li>
     <p>
-      When shown the payment sheet, hit pay once. Then retry once.
+      When shown the payment sheet, hit pay once.
+      Then, change the shipping option.
+      Select to pay again.
     </p>
     <button onclick="abortTheUpdate(this);">
       When "abort the update" occurs because of an update error,

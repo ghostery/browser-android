@@ -24,8 +24,17 @@ class nsAppShell : public nsBaseAppShell {
  private:
   virtual ~nsAppShell();
 
+<<<<<<< HEAD
   static gboolean EventProcessorCallback(GIOChannel *source,
                                          GIOCondition condition, gpointer data);
+||||||| merged common ancestors
+    static gboolean EventProcessorCallback(GIOChannel *source,
+                                           GIOCondition condition,
+                                           gpointer data);
+=======
+  static gboolean EventProcessorCallback(GIOChannel* source,
+                                         GIOCondition condition, gpointer data);
+>>>>>>> upstream-releases
 
   int mPipeFDs[2];
   unsigned mTag;

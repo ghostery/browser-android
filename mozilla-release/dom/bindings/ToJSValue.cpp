@@ -8,6 +8,7 @@
 #include "mozilla/dom/DOMException.h"
 #include "mozilla/dom/Exceptions.h"
 #include "mozilla/dom/Promise.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "nsAString.h"
 #include "nsContentUtils.h"
 #include "nsStringBuffer.h"
@@ -60,5 +61,45 @@ bool ToJSValue(JSContext* aCx, Promise& aArgument,
   return MaybeWrapObjectValue(aCx, aValue);
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+bool ToJSValue(JSContext* aCx, const WindowProxyHolder& aArgument,
+               JS::MutableHandle<JS::Value> aValue) {
+  BrowsingContext* bc = aArgument.get();
+  if (!bc) {
+    aValue.setNull();
+    return true;
+  }
+  JS::Rooted<JSObject*> windowProxy(aCx);
+  if (bc->IsInProcess()) {
+    windowProxy = bc->GetWindowProxy();
+    if (!windowProxy) {
+      nsPIDOMWindowOuter* window = bc->GetDOMWindow();
+      if (!window) {
+        // Torn down enough that we should just return null.
+        aValue.setNull();
+        return true;
+      }
+      if (!window->EnsureInnerWindow()) {
+        return Throw(aCx, NS_ERROR_UNEXPECTED);
+      }
+      windowProxy = bc->GetWindowProxy();
+    }
+    return ToJSValue(aCx, windowProxy, aValue);
+  }
+
+  if (!GetRemoteOuterWindowProxy(aCx, bc, &windowProxy)) {
+    return false;
+  }
+  aValue.setObjectOrNull(windowProxy);
+  return true;
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

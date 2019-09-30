@@ -5,12 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // Keep in (case-insensitive) order:
+#include "mozilla/PresShell.h"
 #include "nsContainerFrame.h"
 #include "nsFrame.h"
 #include "nsGkAtoms.h"
 #include "SVGObserverUtils.h"
-#include "nsSVGFilters.h"
+#include "SVGFilters.h"
 
+<<<<<<< HEAD
 using namespace mozilla;
 
 class SVGFEUnstyledLeafFrame final : public nsFrame {
@@ -20,6 +22,27 @@ class SVGFEUnstyledLeafFrame final : public nsFrame {
  protected:
   explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle)
       : nsFrame(aStyle, kClassID) {
+||||||| merged common ancestors
+class SVGFEUnstyledLeafFrame final : public nsFrame
+{
+  friend nsIFrame*
+  NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle)
+    : nsFrame(aStyle, kClassID)
+  {
+=======
+using namespace mozilla;
+
+class SVGFEUnstyledLeafFrame final : public nsFrame {
+  friend nsIFrame* NS_NewSVGFEUnstyledLeafFrame(mozilla::PresShell* aPresShell,
+                                                ComputedStyle* aStyle);
+
+ protected:
+  explicit SVGFEUnstyledLeafFrame(ComputedStyle* aStyle,
+                                  nsPresContext* aPresContext)
+      : nsFrame(aStyle, aPresContext, kClassID) {
+>>>>>>> upstream-releases
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -52,9 +75,21 @@ class SVGFEUnstyledLeafFrame final : public nsFrame {
   }
 };
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell) SVGFEUnstyledLeafFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGFEUnstyledLeafFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) SVGFEUnstyledLeafFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGFEUnstyledLeafFrame(PresShell* aPresShell,
+                                       ComputedStyle* aStyle) {
+  return new (aPresShell)
+      SVGFEUnstyledLeafFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(SVGFEUnstyledLeafFrame)

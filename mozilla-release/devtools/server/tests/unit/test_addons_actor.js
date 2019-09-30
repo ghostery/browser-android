@@ -22,17 +22,31 @@ add_task(async function testSuccessfulInstall() {
 
   const allowMissing = false;
   const usePlatformSeparator = true;
-  const addonPath = getFilePath("addons/web-extension",
-                                allowMissing, usePlatformSeparator);
+  const addonPath = getFilePath(
+    "addons/web-extension",
+    allowMissing,
+    usePlatformSeparator
+  );
   const installedAddon = await addons.installTemporaryAddon(addonPath);
   equal(installedAddon.id, "test-addons-actor@mozilla.org");
   // The returned object is currently not a proper actor.
   equal(installedAddon.actor, false);
 
+<<<<<<< HEAD
   const addonList = await client.mainRoot.listAddons();
   ok(addonList && addonList.map(a => a.name),
      "Received list of add-ons");
   const addon = addonList.find(a => a.id === installedAddon.id);
+||||||| merged common ancestors
+  const addonList = await client.listAddons();
+  ok(addonList && addonList.addons && addonList.addons.map(a => a.name),
+     "Received list of add-ons");
+  const addon = addonList.addons.filter(a => a.id === installedAddon.id)[0];
+=======
+  const addonList = await client.mainRoot.listAddons();
+  ok(addonList && addonList.map(a => a.name), "Received list of add-ons");
+  const addon = addonList.find(a => a.id === installedAddon.id);
+>>>>>>> upstream-releases
   ok(addon, "Test add-on appeared in root install list");
 
   await close(client);
@@ -43,7 +57,8 @@ add_task(async function testNonExistantPath() {
 
   await Assert.rejects(
     addons.installTemporaryAddon("some-non-existant-path"),
-    /Could not install add-on.*Component returned failure/);
+    /Could not install add-on.*Component returned failure/
+  );
 
   await close(client);
 });

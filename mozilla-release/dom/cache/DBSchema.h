@@ -22,7 +22,6 @@ namespace cache {
 
 class CacheQueryParams;
 class CacheRequest;
-class CacheRequestOrVoid;
 class CacheResponse;
 struct SavedRequest;
 struct SavedResponse;
@@ -33,6 +32,7 @@ namespace db {
 nsresult CreateOrMigrateSchema(mozIStorageConnection* aConn);
 
 // Note, this cannot be executed within a transaction.
+<<<<<<< HEAD
 nsresult InitializeConnection(mozIStorageConnection* aConn);
 
 nsresult CreateCacheId(mozIStorageConnection* aConn, CacheId* aCacheIdOut);
@@ -99,6 +99,160 @@ nsresult StorageForgetCache(mozIStorageConnection* aConn, Namespace aNamespace,
 
 nsresult StorageGetKeys(mozIStorageConnection* aConn, Namespace aNamespace,
                         nsTArray<nsString>& aKeysOut);
+||||||| merged common ancestors
+nsresult
+InitializeConnection(mozIStorageConnection* aConn);
+
+nsresult
+CreateCacheId(mozIStorageConnection* aConn, CacheId* aCacheIdOut);
+
+nsresult
+DeleteCacheId(mozIStorageConnection* aConn, CacheId aCacheId,
+              nsTArray<nsID>& aDeletedBodyIdListOut,
+              int64_t* aDeletedPaddingSizeOut);
+
+// TODO: Consider removing unused IsCacheOrphaned after writing cleanup code. (bug 1110446)
+nsresult
+IsCacheOrphaned(mozIStorageConnection* aConn, CacheId aCacheId,
+                bool* aOrphanedOut);
+
+nsresult
+FindOrphanedCacheIds(mozIStorageConnection* aConn,
+                     nsTArray<CacheId>& aOrphanedListOut);
+
+nsresult
+FindOverallPaddingSize(mozIStorageConnection* aConn,
+                       int64_t* aOverallPaddingSizeOut);
+
+nsresult
+GetKnownBodyIds(mozIStorageConnection* aConn, nsTArray<nsID>& aBodyIdListOut);
+
+nsresult
+CacheMatch(mozIStorageConnection* aConn, CacheId aCacheId,
+           const CacheRequest& aRequest, const CacheQueryParams& aParams,
+           bool* aFoundResponseOut, SavedResponse* aSavedResponseOut);
+
+nsresult
+CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
+              const CacheRequestOrVoid& aRequestOrVoid,
+              const CacheQueryParams& aParams,
+              nsTArray<SavedResponse>& aSavedResponsesOut);
+
+nsresult
+CachePut(mozIStorageConnection* aConn, CacheId aCacheId,
+         const CacheRequest& aRequest,
+         const nsID* aRequestBodyId,
+         const CacheResponse& aResponse,
+         const nsID* aResponseBodyId,
+         nsTArray<nsID>& aDeletedBodyIdListOut,
+         int64_t* aDeletedPaddingSizeOut);
+
+nsresult
+CacheDelete(mozIStorageConnection* aConn, CacheId aCacheId,
+            const CacheRequest& aRequest,
+            const CacheQueryParams& aParams,
+            nsTArray<nsID>& aDeletedBodyIdListOut,
+            int64_t* aDeletedPaddingSizeOut,
+            bool* aSuccessOut);
+
+nsresult
+CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
+          const CacheRequestOrVoid& aRequestOrVoid,
+          const CacheQueryParams& aParams,
+          nsTArray<SavedRequest>& aSavedRequestsOut);
+
+nsresult
+StorageMatch(mozIStorageConnection* aConn,
+             Namespace aNamespace,
+             const CacheRequest& aRequest,
+             const CacheQueryParams& aParams,
+             bool* aFoundResponseOut,
+             SavedResponse* aSavedResponseOut);
+
+nsresult
+StorageGetCacheId(mozIStorageConnection* aConn, Namespace aNamespace,
+                  const nsAString& aKey, bool* aFoundCacheOut,
+                  CacheId* aCacheIdOut);
+
+nsresult
+StoragePutCache(mozIStorageConnection* aConn, Namespace aNamespace,
+                const nsAString& aKey, CacheId aCacheId);
+
+nsresult
+StorageForgetCache(mozIStorageConnection* aConn, Namespace aNamespace,
+                   const nsAString& aKey);
+
+nsresult
+StorageGetKeys(mozIStorageConnection* aConn, Namespace aNamespace,
+               nsTArray<nsString>& aKeysOut);
+=======
+nsresult InitializeConnection(mozIStorageConnection* aConn);
+
+nsresult CreateCacheId(mozIStorageConnection* aConn, CacheId* aCacheIdOut);
+
+nsresult DeleteCacheId(mozIStorageConnection* aConn, CacheId aCacheId,
+                       nsTArray<nsID>& aDeletedBodyIdListOut,
+                       int64_t* aDeletedPaddingSizeOut);
+
+// TODO: Consider removing unused IsCacheOrphaned after writing cleanup code.
+// (bug 1110446)
+nsresult IsCacheOrphaned(mozIStorageConnection* aConn, CacheId aCacheId,
+                         bool* aOrphanedOut);
+
+nsresult FindOrphanedCacheIds(mozIStorageConnection* aConn,
+                              nsTArray<CacheId>& aOrphanedListOut);
+
+nsresult FindOverallPaddingSize(mozIStorageConnection* aConn,
+                                int64_t* aOverallPaddingSizeOut);
+
+nsresult GetKnownBodyIds(mozIStorageConnection* aConn,
+                         nsTArray<nsID>& aBodyIdListOut);
+
+nsresult CacheMatch(mozIStorageConnection* aConn, CacheId aCacheId,
+                    const CacheRequest& aRequest,
+                    const CacheQueryParams& aParams, bool* aFoundResponseOut,
+                    SavedResponse* aSavedResponseOut);
+
+nsresult CacheMatchAll(mozIStorageConnection* aConn, CacheId aCacheId,
+                       const Maybe<CacheRequest>& aMaybeRequest,
+                       const CacheQueryParams& aParams,
+                       nsTArray<SavedResponse>& aSavedResponsesOut);
+
+nsresult CachePut(mozIStorageConnection* aConn, CacheId aCacheId,
+                  const CacheRequest& aRequest, const nsID* aRequestBodyId,
+                  const CacheResponse& aResponse, const nsID* aResponseBodyId,
+                  nsTArray<nsID>& aDeletedBodyIdListOut,
+                  int64_t* aDeletedPaddingSizeOut);
+
+nsresult CacheDelete(mozIStorageConnection* aConn, CacheId aCacheId,
+                     const CacheRequest& aRequest,
+                     const CacheQueryParams& aParams,
+                     nsTArray<nsID>& aDeletedBodyIdListOut,
+                     int64_t* aDeletedPaddingSizeOut, bool* aSuccessOut);
+
+nsresult CacheKeys(mozIStorageConnection* aConn, CacheId aCacheId,
+                   const Maybe<CacheRequest>& aMaybeRequest,
+                   const CacheQueryParams& aParams,
+                   nsTArray<SavedRequest>& aSavedRequestsOut);
+
+nsresult StorageMatch(mozIStorageConnection* aConn, Namespace aNamespace,
+                      const CacheRequest& aRequest,
+                      const CacheQueryParams& aParams, bool* aFoundResponseOut,
+                      SavedResponse* aSavedResponseOut);
+
+nsresult StorageGetCacheId(mozIStorageConnection* aConn, Namespace aNamespace,
+                           const nsAString& aKey, bool* aFoundCacheOut,
+                           CacheId* aCacheIdOut);
+
+nsresult StoragePutCache(mozIStorageConnection* aConn, Namespace aNamespace,
+                         const nsAString& aKey, CacheId aCacheId);
+
+nsresult StorageForgetCache(mozIStorageConnection* aConn, Namespace aNamespace,
+                            const nsAString& aKey);
+
+nsresult StorageGetKeys(mozIStorageConnection* aConn, Namespace aNamespace,
+                        nsTArray<nsString>& aKeysOut);
+>>>>>>> upstream-releases
 
 // Note, this works best when its NOT executed within a transaction.
 nsresult IncrementalVacuum(mozIStorageConnection* aConn);

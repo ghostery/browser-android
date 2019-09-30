@@ -7,6 +7,7 @@
 function test() {
   waitForExplicitFinish();
 
+<<<<<<< HEAD
   getParentProcessActors((client, front) => {
     const options = {
       activeTab: front,
@@ -20,6 +21,27 @@ function test() {
         finish();
       });
       client.close();
+||||||| merged common ancestors
+  getParentProcessActors((client, response) => {
+    const options = {
+      form: response,
+      client: client,
+      chrome: true,
+    };
+
+    TargetFactory.forRemoteTab(options).then(target => {
+      target.on("close", () => {
+        ok(true, "Target was closed");
+        finish();
+      });
+      client.close();
+=======
+  getParentProcessActors((client, target) => {
+    target.on("close", () => {
+      ok(true, "Target was closed");
+      finish();
+>>>>>>> upstream-releases
     });
+    client.close();
   });
 }

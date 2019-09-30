@@ -87,16 +87,31 @@ nsDirIndexParser::GetEncoding(char **aEncoding) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDirIndexParser::OnStartRequest(nsIRequest *aRequest, nsISupports *aCtxt) {
   return NS_OK;
 }
+||||||| merged common ancestors
+nsDirIndexParser::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt) {
+  return NS_OK;
+}
+=======
+nsDirIndexParser::OnStartRequest(nsIRequest* aRequest) { return NS_OK; }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
-nsDirIndexParser::OnStopRequest(nsIRequest *aRequest, nsISupports *aCtxt,
-                                nsresult aStatusCode) {
+nsDirIndexParser::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
   // Finish up
+<<<<<<< HEAD
   if (mBuf.Length() > (uint32_t)mLineStart) {
     ProcessData(aRequest, aCtxt);
+||||||| merged common ancestors
+  if (mBuf.Length() > (uint32_t) mLineStart) {
+    ProcessData(aRequest, aCtxt);
+=======
+  if (mBuf.Length() > (uint32_t)mLineStart) {
+    ProcessData(aRequest, nullptr);
+>>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -112,9 +127,17 @@ nsDirIndexParser::Field nsDirIndexParser::gFieldTable[] = {
     {nullptr, FIELD_UNKNOWN}};
 
 nsrefcnt nsDirIndexParser::gRefCntParser = 0;
-nsITextToSubURI *nsDirIndexParser::gTextToSubURI;
+nsITextToSubURI* nsDirIndexParser::gTextToSubURI;
 
+<<<<<<< HEAD
 nsresult nsDirIndexParser::ParseFormat(const char *aFormatStr) {
+||||||| merged common ancestors
+nsresult
+nsDirIndexParser::ParseFormat(const char* aFormatStr)
+{
+=======
+nsresult nsDirIndexParser::ParseFormat(const char* aFormatStr) {
+>>>>>>> upstream-releases
   // Parse a "200" format line, and remember the fields and their
   // ordering in mFormat. Multiple 200 lines stomp on each other.
   unsigned int formatNum = 0;
@@ -153,8 +176,17 @@ nsresult nsDirIndexParser::ParseFormat(const char *aFormatStr) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsDirIndexParser::ParseData(nsIDirIndex *aIdx, char *aDataStr,
                                      int32_t aLineLen) {
+||||||| merged common ancestors
+nsresult
+nsDirIndexParser::ParseData(nsIDirIndex *aIdx, char* aDataStr, int32_t aLineLen)
+{
+=======
+nsresult nsDirIndexParser::ParseData(nsIDirIndex* aIdx, char* aDataStr,
+                                     int32_t aLineLen) {
+>>>>>>> upstream-releases
   // Parse a "201" data line, using the field ordering specified in
   // mFormat.
 
@@ -183,7 +215,13 @@ nsresult nsDirIndexParser::ParseData(nsIDirIndex *aIdx, char *aDataStr,
       return NS_OK;
     }
 
+<<<<<<< HEAD
     char *value = aDataStr;
+||||||| merged common ancestors
+    char    *value = aDataStr;
+=======
+    char* value = aDataStr;
+>>>>>>> upstream-releases
     if (*aDataStr == '"' || *aDataStr == '\'') {
       // it's a quoted string. snarf everything up to the next quote character
       const char quotechar = *(aDataStr++);
@@ -297,10 +335,23 @@ nsresult nsDirIndexParser::ParseData(nsIDirIndex *aIdx, char *aDataStr,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDirIndexParser::OnDataAvailable(nsIRequest *aRequest, nsISupports *aCtxt,
                                   nsIInputStream *aStream,
                                   uint64_t aSourceOffset, uint32_t aCount) {
   if (aCount < 1) return NS_OK;
+||||||| merged common ancestors
+nsDirIndexParser::OnDataAvailable(nsIRequest *aRequest, nsISupports *aCtxt,
+                                  nsIInputStream *aStream,
+                                  uint64_t aSourceOffset,
+                                  uint32_t aCount) {
+  if (aCount < 1)
+    return NS_OK;
+=======
+nsDirIndexParser::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* aStream,
+                                  uint64_t aSourceOffset, uint32_t aCount) {
+  if (aCount < 1) return NS_OK;
+>>>>>>> upstream-releases
 
   int32_t len = mBuf.Length();
 
@@ -319,12 +370,23 @@ nsDirIndexParser::OnDataAvailable(nsIRequest *aRequest, nsISupports *aCtxt,
   //       work on other strings.
   mBuf.SetLength(len + count);
 
-  return ProcessData(aRequest, aCtxt);
+  return ProcessData(aRequest, nullptr);
 }
 
+<<<<<<< HEAD
 nsresult nsDirIndexParser::ProcessData(nsIRequest *aRequest,
                                        nsISupports *aCtxt) {
   if (!mListener) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+nsresult
+nsDirIndexParser::ProcessData(nsIRequest *aRequest, nsISupports *aCtxt) {
+  if (!mListener)
+    return NS_ERROR_FAILURE;
+=======
+nsresult nsDirIndexParser::ProcessData(nsIRequest* aRequest,
+                                       nsISupports* aCtxt) {
+  if (!mListener) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
   int32_t numItems = 0;
 
@@ -335,14 +397,28 @@ nsresult nsDirIndexParser::ProcessData(nsIRequest *aRequest,
     if (eol < 0) break;
     mBuf.SetCharAt(char16_t('\0'), eol);
 
+<<<<<<< HEAD
     const char *line = mBuf.get() + mLineStart;
+||||||| merged common ancestors
+    const char  *line = mBuf.get() + mLineStart;
+=======
+    const char* line = mBuf.get() + mLineStart;
+>>>>>>> upstream-releases
 
     int32_t lineLen = eol - mLineStart;
     mLineStart = eol + 1;
 
     if (lineLen >= 4) {
+<<<<<<< HEAD
       nsresult rv;
       const char *buf = line;
+||||||| merged common ancestors
+      nsresult  rv;
+      const char        *buf = line;
+=======
+      nsresult rv;
+      const char* buf = line;
+>>>>>>> upstream-releases
 
       if (buf[0] == '1') {
         if (buf[1] == '0') {
@@ -352,7 +428,13 @@ nsresult nsDirIndexParser::ProcessData(nsIRequest *aRequest,
             // 101. Human-readable information line.
             mComment.Append(buf + 4);
 
+<<<<<<< HEAD
             char *value = ((char *)buf) + 4;
+||||||| merged common ancestors
+            char    *value = ((char *)buf) + 4;
+=======
+            char* value = ((char*)buf) + 4;
+>>>>>>> upstream-releases
             nsUnescape(value);
             mListener->OnInformationAvailable(aRequest, aCtxt,
                                               NS_ConvertUTF8toUTF16(value));
@@ -374,7 +456,7 @@ nsresult nsDirIndexParser::ProcessData(nsIRequest *aRequest,
             // 201. Field data
             nsCOMPtr<nsIDirIndex> idx = new nsDirIndex();
 
-            rv = ParseData(idx, ((char *)buf) + 4, lineLen - 4);
+            rv = ParseData(idx, ((char*)buf) + 4, lineLen - 4);
             if (NS_FAILED(rv)) {
               return rv;
             }

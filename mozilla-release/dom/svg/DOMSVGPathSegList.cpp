@@ -4,24 +4,41 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "nsSVGElement.h"
 #include "DOMSVGPathSegList.h"
+
 #include "DOMSVGPathSeg.h"
 #include "nsError.h"
 #include "SVGAnimatedPathSegList.h"
-#include "nsCOMPtr.h"
-#include "nsSVGAttrTearoffTable.h"
+#include "SVGAttrTearoffTable.h"
 #include "SVGPathSegUtils.h"
+#include "mozilla/dom/SVGElement.h"
 #include "mozilla/dom/SVGPathSegListBinding.h"
+#include "mozilla/RefPtr.h"
+
+using namespace mozilla::dom;
 
 // See the comment in this file's header.
 
 namespace mozilla {
 
+<<<<<<< HEAD
 static inline nsSVGAttrTearoffTable<void, DOMSVGPathSegList>&
 SVGPathSegListTearoffTable() {
   static nsSVGAttrTearoffTable<void, DOMSVGPathSegList>
       sSVGPathSegListTearoffTable;
+||||||| merged common ancestors
+  static inline
+nsSVGAttrTearoffTable<void, DOMSVGPathSegList>&
+SVGPathSegListTearoffTable()
+{
+  static nsSVGAttrTearoffTable<void, DOMSVGPathSegList>
+    sSVGPathSegListTearoffTable;
+=======
+static inline SVGAttrTearoffTable<void, DOMSVGPathSegList>&
+SVGPathSegListTearoffTable() {
+  static SVGAttrTearoffTable<void, DOMSVGPathSegList>
+      sSVGPathSegListTearoffTable;
+>>>>>>> upstream-releases
   return sSVGPathSegListTearoffTable;
 }
 
@@ -74,9 +91,21 @@ class MOZ_RAII AutoChangePathSegListNotifier {
   MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
 };
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMSVGPathSegList>
 DOMSVGPathSegList::GetDOMWrapper(void* aList, nsSVGElement* aElement,
                                  bool aIsAnimValList) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DOMSVGPathSegList>
+DOMSVGPathSegList::GetDOMWrapper(void *aList,
+                                 nsSVGElement *aElement,
+                                 bool aIsAnimValList)
+{
+=======
+/* static */
+already_AddRefed<DOMSVGPathSegList> DOMSVGPathSegList::GetDOMWrapper(
+    void* aList, SVGElement* aElement, bool aIsAnimValList) {
+>>>>>>> upstream-releases
   RefPtr<DOMSVGPathSegList> wrapper =
       SVGPathSegListTearoffTable().GetTearoff(aList);
   if (!wrapper) {
@@ -86,8 +115,17 @@ DOMSVGPathSegList::GetDOMWrapper(void* aList, nsSVGElement* aElement,
   return wrapper.forget();
 }
 
+<<<<<<< HEAD
 /* static */ DOMSVGPathSegList* DOMSVGPathSegList::GetDOMWrapperIfExists(
     void* aList) {
+||||||| merged common ancestors
+/* static */ DOMSVGPathSegList*
+DOMSVGPathSegList::GetDOMWrapperIfExists(void *aList)
+{
+=======
+/* static */
+DOMSVGPathSegList* DOMSVGPathSegList::GetDOMWrapperIfExists(void* aList) {
+>>>>>>> upstream-releases
   return SVGPathSegListTearoffTable().GetTearoff(aList);
 }
 

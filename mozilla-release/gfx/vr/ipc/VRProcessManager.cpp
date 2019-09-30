@@ -10,30 +10,88 @@
 #include "VRChild.h"
 #include "VRGPUChild.h"
 #include "VRGPUParent.h"
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+
+=======
+#include "mozilla/dom/ContentParent.h"
+#include "mozilla/MemoryReportingProcess.h"
+#include "mozilla/Preferences.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace gfx {
 
 static StaticAutoPtr<VRProcessManager> sSingleton;
 
+<<<<<<< HEAD
 /* static */ VRProcessManager* VRProcessManager::Get() { return sSingleton; }
+||||||| merged common ancestors
+/* static */ VRProcessManager*
+VRProcessManager::Get()
+{
+  return sSingleton;
+}
+=======
+/* static */
+VRProcessManager* VRProcessManager::Get() { return sSingleton; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ void VRProcessManager::Initialize() {
+||||||| merged common ancestors
+/* static */ void
+VRProcessManager::Initialize()
+{
+=======
+/* static */
+void VRProcessManager::Initialize() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
-  sSingleton = new VRProcessManager();
+  if (sSingleton == nullptr) {
+    sSingleton = new VRProcessManager();
+  }
 }
 
+<<<<<<< HEAD
 /* static */ void VRProcessManager::Shutdown() { sSingleton = nullptr; }
+||||||| merged common ancestors
+/* static */ void
+VRProcessManager::Shutdown()
+{
+  sSingleton = nullptr;
+}
+=======
+/* static */
+void VRProcessManager::Shutdown() { sSingleton = nullptr; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 VRProcessManager::VRProcessManager() : mProcess(nullptr) {
+||||||| merged common ancestors
+VRProcessManager::VRProcessManager()
+ : mProcess(nullptr)
+{
+=======
+VRProcessManager::VRProcessManager() : mProcess(nullptr), mVRChild(nullptr) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRProcessManager);
 
   mObserver = new Observer(this);
   nsContentUtils::RegisterShutdownObserver(mObserver);
+  Preferences::AddStrongObserver(mObserver, "");
 }
 
 VRProcessManager::~VRProcessManager() {
   MOZ_COUNT_DTOR(VRProcessManager);
+
+  if (mObserver) {
+    nsContentUtils::UnregisterShutdownObserver(mObserver);
+    Preferences::RemoveObserver(mObserver, "");
+    mObserver = nullptr;
+  }
 
   DestroyProcess();
   // The VR process should have already been shut down.
@@ -47,14 +105,24 @@ void VRProcessManager::LaunchVRProcess() {
 
   // The subprocess is launched asynchronously, so we wait for a callback to
   // acquire the IPDL actor.
-  mProcess = new VRProcessParent();
+  mProcess = new VRProcessParent(this);
   if (!mProcess->Launch()) {
     DisableVRProcess("Failed to launch VR process");
   }
 }
 
+<<<<<<< HEAD
 void VRProcessManager::DisableVRProcess(const char* aMessage) {
   if (!gfxPrefs::VRProcessEnabled()) {
+||||||| merged common ancestors
+void
+VRProcessManager::DisableVRProcess(const char* aMessage)
+{
+  if (!gfxPrefs::VRProcessEnabled()) {
+=======
+void VRProcessManager::DisableVRProcess(const char* aMessage) {
+  if (!StaticPrefs::dom_vr_process_enabled()) {
+>>>>>>> upstream-releases
     return;
   }
 
@@ -68,11 +136,79 @@ void VRProcessManager::DestroyProcess() {
 
   mProcess->Shutdown();
   mProcess = nullptr;
+  mVRChild = nullptr;
+
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::VRProcessStatus,
+                                     NS_LITERAL_CSTRING("Destroyed"));
+}
+
+<<<<<<< HEAD
+bool VRProcessManager::CreateGPUBridges(
+    base::ProcessId aOtherProcess,
+    mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge) {
+||||||| merged common ancestors
+bool
+VRProcessManager::CreateGPUBridges(base::ProcessId aOtherProcess,
+                                   mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge)
+{
+=======
+bool VRProcessManager::EnsureVRReady() {
+  if (mProcess && !mProcess->IsConnected()) {
+    if (!mProcess->WaitForLaunch()) {
+      // If this fails, we should have fired OnProcessLaunchComplete and
+      // removed the process.
+      MOZ_ASSERT(!mProcess && !mVRChild);
+      return false;
+    }
+  }
+
+  if (mVRChild) {
+    if (mVRChild->EnsureVRReady()) {
+      return true;
+    }
+
+    // If the initialization above fails, we likely have a GPU process teardown
+    // waiting in our message queue (or will soon). We need to ensure we don't
+    // restart it later because if we fail here, our callers assume they should
+    // fall back to a combined UI/GPU process. This also ensures our internal
+    // state is consistent (e.g. process token is reset).
+    DisableVRProcess("Failed to initialize VR process");
+  }
+
+  return false;
+}
+
+void VRProcessManager::OnProcessLaunchComplete(VRProcessParent* aParent) {
+  MOZ_ASSERT(mProcess && mProcess == aParent);
+
+  mVRChild = mProcess->GetActor();
+
+  if (!mProcess->IsConnected()) {
+    DestroyProcess();
+    return;
+  }
+
+  // Flush any pref updates that happened during launch and weren't
+  // included in the blobs set up in LaunchGPUProcess.
+  for (const mozilla::dom::Pref& pref : mQueuedPrefs) {
+    Unused << NS_WARN_IF(!mVRChild->SendPreferenceUpdate(pref));
+  }
+  mQueuedPrefs.Clear();
+
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::VRProcessStatus,
+                                     NS_LITERAL_CSTRING("Running"));
+}
+
+void VRProcessManager::OnProcessUnexpectedShutdown(VRProcessParent* aParent) {
+  MOZ_ASSERT(mProcess && mProcess == aParent);
+
+  DestroyProcess();
 }
 
 bool VRProcessManager::CreateGPUBridges(
     base::ProcessId aOtherProcess,
     mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge) {
+>>>>>>> upstream-releases
   if (!CreateGPUVRManager(aOtherProcess, aOutVRBridge)) {
     return false;
   }
@@ -115,6 +251,8 @@ VRProcessManager::Observer::Observe(nsISupports* aSubject, const char* aTopic,
                                     const char16_t* aData) {
   if (!strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
     mManager->OnXPCOMShutdown();
+  } else if (!strcmp(aTopic, "nsPref:changed")) {
+    mManager->OnPreferenceChange(aData);
   }
   return NS_OK;
 }
@@ -124,13 +262,103 @@ void VRProcessManager::CleanShutdown() { DestroyProcess(); }
 void VRProcessManager::OnXPCOMShutdown() {
   if (mObserver) {
     nsContentUtils::UnregisterShutdownObserver(mObserver);
+    Preferences::RemoveObserver(mObserver, "");
     mObserver = nullptr;
   }
 
   CleanShutdown();
 }
 
+<<<<<<< HEAD
+VRChild* VRProcessManager::GetVRChild() { return mProcess->GetActor(); }
+||||||| merged common ancestors
+VRChild*
+VRProcessManager::GetVRChild()
+{
+  return mProcess->GetActor();
+}
+=======
+void VRProcessManager::OnPreferenceChange(const char16_t* aData) {
+  // A pref changed. If it's not on the blacklist, inform child processes.
+  if (!dom::ContentParent::ShouldSyncPreference(aData)) {
+    return;
+  }
+
+  // We know prefs are ASCII here.
+  NS_LossyConvertUTF16toASCII strData(aData);
+
+  mozilla::dom::Pref pref(strData, /* isLocked */ false, Nothing(), Nothing());
+  Preferences::GetPreference(&pref);
+  if (!!mVRChild) {
+    MOZ_ASSERT(mQueuedPrefs.IsEmpty());
+    mVRChild->SendPreferenceUpdate(pref);
+  } else {
+    mQueuedPrefs.AppendElement(pref);
+  }
+}
+
 VRChild* VRProcessManager::GetVRChild() { return mProcess->GetActor(); }
 
+class VRMemoryReporter : public MemoryReportingProcess {
+ public:
+  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRMemoryReporter, override)
+
+  bool IsAlive() const override {
+    if (VRProcessManager* vpm = VRProcessManager::Get()) {
+      return !!vpm->GetVRChild();
+    }
+    return false;
+  }
+
+  bool SendRequestMemoryReport(const uint32_t& aGeneration,
+                               const bool& aAnonymize,
+                               const bool& aMinimizeMemoryUsage,
+                               const Maybe<FileDescriptor>& aDMDFile) override {
+    VRChild* child = GetChild();
+    if (!child) {
+      return false;
+    }
+
+    return child->SendRequestMemoryReport(aGeneration, aAnonymize,
+                                          aMinimizeMemoryUsage, aDMDFile);
+  }
+
+  int32_t Pid() const override {
+    if (VRChild* child = GetChild()) {
+      return (int32_t)child->OtherPid();
+    }
+    return 0;
+  }
+
+ private:
+  VRChild* GetChild() const {
+    if (VRProcessManager* vpm = VRProcessManager::Get()) {
+      if (VRChild* child = vpm->GetVRChild()) {
+        return child;
+      }
+    }
+    return nullptr;
+  }
+
+ protected:
+  ~VRMemoryReporter() = default;
+};
+
+RefPtr<MemoryReportingProcess> VRProcessManager::GetProcessMemoryReporter() {
+  if (!EnsureVRReady()) {
+    return nullptr;
+  }
+  return new VRMemoryReporter();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+=======
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases

@@ -10,10 +10,17 @@
 #include "nsAppShell.h"
 #include "nsIXPConnect.h"
 #include "nsJSUtils.h"
+#include "js/Warnings.h"  // JS::WarnUTF8
 #include "xpcpublic.h"
 
 #include "mozilla/ScopeExit.h"
 #include "mozilla/dom/ScriptSettings.h"
+
+// Disable the C++ 2a warning. See bug #1509926
+#if defined(__clang__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wc++2a-compat"
+#endif
 
 namespace mozilla {
 namespace widget {
@@ -110,6 +117,27 @@ nsresult BoxArrayObject(JSContext* aCx, JS::HandleObject aData,
     NS_ENSURE_TRUE(element.isNullOrUndefined() || aIsType(element),
                    NS_ERROR_INVALID_ARG);
 
+<<<<<<< HEAD
+    rv = (*Box)(aCx, element, jniElement);
+    NS_ENSURE_SUCCESS(rv, rv);
+    out->SetElement(i, jniElement);
+  }
+  aOut = out;
+  return NS_OK;
+}
+||||||| merged common ancestors
+    if (!length) {
+        // Always represent empty arrays as an empty boolean array.
+        aOut = java::GeckoBundle::EMPTY_BOOLEAN_ARRAY();
+        return NS_OK;
+    }
+
+    // We only check the first element's type. If the array has mixed types,
+    // we'll throw an error during actual conversion.
+    JS::RootedValue element(aCx);
+    NS_ENSURE_TRUE(CheckJS(aCx, JS_GetElement(aCx, aData, 0, &element)),
+                   NS_ERROR_FAILURE);
+=======
     rv = (*Box)(aCx, element, jniElement);
     NS_ENSURE_SUCCESS(rv, rv);
     out->SetElement(i, jniElement);
@@ -118,6 +146,14 @@ nsresult BoxArrayObject(JSContext* aCx, JS::HandleObject aData,
   return NS_OK;
 }
 
+nsresult BoxArray(JSContext* aCx, JS::HandleObject aData,
+                  jni::Object::LocalRef& aOut) {
+  uint32_t length = 0;
+  NS_ENSURE_TRUE(CheckJS(aCx, JS_GetArrayLength(aCx, aData, &length)),
+                 NS_ERROR_FAILURE);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 nsresult BoxArray(JSContext* aCx, JS::HandleObject aData,
                   jni::Object::LocalRef& aOut) {
   uint32_t length = 0;
@@ -149,6 +185,49 @@ nsresult BoxArray(JSContext* aCx, JS::HandleObject aData,
                                                               length, element);
     if (rv != NS_ERROR_INVALID_ARG) {
       return rv;
+||||||| merged common ancestors
+    if (element.isBoolean()) {
+        return BoxArrayPrimitive<bool, &JS::Value::isBoolean, &JS::Value::toBoolean,
+                                 jni::BooleanArray, &jni::BooleanArray::New>(
+                aCx, aData, aOut, length, element);
+    }
+
+    if (element.isInt32()) {
+        nsresult rv = BoxArrayPrimitive<
+                int32_t, &JS::Value::isInt32, &JS::Value::toInt32,
+                jni::IntArray, &jni::IntArray::New>(aCx, aData, aOut,
+                                                    length, element);
+        if (rv != NS_ERROR_INVALID_ARG) {
+            return rv;
+        }
+        // Not int32, but we can still try a double array.
+=======
+  if (!length) {
+    // Always represent empty arrays as an empty boolean array.
+    aOut = java::GeckoBundle::EMPTY_BOOLEAN_ARRAY();
+    return NS_OK;
+  }
+
+  // We only check the first element's type. If the array has mixed types,
+  // we'll throw an error during actual conversion.
+  JS::RootedValue element(aCx);
+  NS_ENSURE_TRUE(CheckJS(aCx, JS_GetElement(aCx, aData, 0, &element)),
+                 NS_ERROR_FAILURE);
+
+  if (element.isBoolean()) {
+    return BoxArrayPrimitive<bool, &JS::Value::isBoolean, &JS::Value::toBoolean,
+                             jni::BooleanArray, &jni::BooleanArray::New>(
+        aCx, aData, aOut, length, element);
+  }
+
+  if (element.isInt32()) {
+    nsresult rv =
+        BoxArrayPrimitive<int32_t, &JS::Value::isInt32, &JS::Value::toInt32,
+                          jni::IntArray, &jni::IntArray::New>(aCx, aData, aOut,
+                                                              length, element);
+    if (rv != NS_ERROR_INVALID_ARG) {
+      return rv;
+>>>>>>> upstream-releases
     }
     // Not int32, but we can still try a double array.
   }
@@ -275,6 +354,7 @@ nsresult BoxValue(JSContext* aCx, JS::HandleValue aData,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult BoxData(const nsAString& aEvent, JSContext* aCx, JS::HandleValue aData,
                  jni::Object::LocalRef& aOut, bool aObjectOnly) {
   nsresult rv = NS_ERROR_INVALID_ARG;
@@ -296,6 +376,38 @@ nsresult BoxData(const nsAString& aEvent, JSContext* aCx, JS::HandleValue aData,
   }
   return NS_ERROR_INVALID_ARG;
 }
+||||||| merged common ancestors
+nsresult
+UnboxString(JSContext* aCx, const jni::Object::LocalRef& aData,
+            JS::MutableHandleValue aOut)
+{
+    if (!aData) {
+        aOut.setNull();
+        return NS_OK;
+    }
+=======
+nsresult BoxData(const nsAString& aEvent, JSContext* aCx, JS::HandleValue aData,
+                 jni::Object::LocalRef& aOut, bool aObjectOnly) {
+  nsresult rv = NS_ERROR_INVALID_ARG;
+
+  if (!aObjectOnly) {
+    rv = BoxValue(aCx, aData, aOut);
+  } else if (aData.isObject() || aData.isNullOrUndefined()) {
+    rv = BoxObject(aCx, aData, aOut);
+  }
+  if (rv != NS_ERROR_INVALID_ARG) {
+    return rv;
+  }
+
+  NS_ConvertUTF16toUTF8 event(aEvent);
+  if (JS_IsExceptionPending(aCx)) {
+    JS::WarnUTF8(aCx, "Error dispatching %s", event.get());
+  } else {
+    JS_ReportErrorUTF8(aCx, "Invalid event data for %s", event.get());
+  }
+  return NS_ERROR_INVALID_ARG;
+}
+>>>>>>> upstream-releases
 
 nsresult UnboxString(JSContext* aCx, const jni::Object::LocalRef& aData,
                      JS::MutableHandleValue aOut) {
@@ -388,6 +500,7 @@ nsresult UnboxBundle(JSContext* aCx, const jni::Object::LocalRef& aData,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 template <typename Type, typename JNIType, typename ArrayType,
           JNIType* (JNIEnv::*GetElements)(ArrayType, jboolean*),
           void (JNIEnv::*ReleaseElements)(ArrayType, JNIType*, jint),
@@ -403,6 +516,40 @@ nsresult UnboxArrayPrimitive(JSContext* aCx, const jni::Object::LocalRef& aData,
     env->ExceptionClear();
     return NS_ERROR_FAILURE;
   }
+||||||| merged common ancestors
+template<typename Type, typename JNIType, typename ArrayType,
+         JNIType* (JNIEnv::*GetElements)(ArrayType, jboolean*),
+         void (JNIEnv::*ReleaseElements)(ArrayType, JNIType*, jint),
+         JS::Value (*ToValue)(Type)> nsresult
+UnboxArrayPrimitive(JSContext* aCx, const jni::Object::LocalRef& aData,
+                    JS::MutableHandleValue aOut)
+{
+    JNIEnv* const env = aData.Env();
+    const ArrayType jarray = ArrayType(aData.Get());
+    JNIType* const array = (env->*GetElements)(jarray, nullptr);
+    JS::AutoValueVector elements(aCx);
+
+    if (NS_WARN_IF(!array)) {
+        env->ExceptionClear();
+        return NS_ERROR_FAILURE;
+    }
+=======
+template <typename Type, typename JNIType, typename ArrayType,
+          JNIType* (JNIEnv::*GetElements)(ArrayType, jboolean*),
+          void (JNIEnv::*ReleaseElements)(ArrayType, JNIType*, jint),
+          JS::Value (*ToValue)(Type)>
+nsresult UnboxArrayPrimitive(JSContext* aCx, const jni::Object::LocalRef& aData,
+                             JS::MutableHandleValue aOut) {
+  JNIEnv* const env = aData.Env();
+  const ArrayType jarray = ArrayType(aData.Get());
+  JNIType* const array = (env->*GetElements)(jarray, nullptr);
+  JS::RootedVector<JS::Value> elements(aCx);
+
+  if (NS_WARN_IF(!array)) {
+    env->ExceptionClear();
+    return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   auto releaseArray = MakeScopeExit([env, jarray, array] {
     (env->*ReleaseElements)(jarray, array, JNI_ABORT);
@@ -537,10 +684,43 @@ nsresult UnboxValue(JSContext* aCx, const jni::Object::LocalRef& aData,
   } else {
     NS_WARNING("Invalid type");
     return NS_ERROR_INVALID_ARG;
+<<<<<<< HEAD
+  }
+  return NS_OK;
+||||||| merged common ancestors
+=======
   }
   return NS_OK;
 }
 
+nsresult UnboxData(jni::String::Param aEvent, JSContext* aCx,
+                   jni::Object::Param aData, JS::MutableHandleValue aOut,
+                   bool aBundleOnly) {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  jni::Object::LocalRef jniData(jni::GetGeckoThreadEnv(), aData);
+  nsresult rv = NS_ERROR_INVALID_ARG;
+
+  if (!aBundleOnly) {
+    rv = UnboxValue(aCx, jniData, aOut);
+  } else if (!jniData || jniData.IsInstanceOf<java::GeckoBundle>()) {
+    rv = UnboxBundle(aCx, jniData, aOut);
+  }
+  if (rv != NS_ERROR_INVALID_ARG || !aEvent) {
+    return rv;
+  }
+
+  nsCString event = aEvent->ToCString();
+  if (JS_IsExceptionPending(aCx)) {
+    JS::WarnUTF8(aCx, "Error dispatching %s", event.get());
+  } else {
+    JS_ReportErrorUTF8(aCx, "Invalid event data for %s", event.get());
+  }
+  return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 nsresult UnboxData(jni::String::Param aEvent, JSContext* aCx,
                    jni::Object::Param aData, JS::MutableHandleValue aOut,
                    bool aBundleOnly) {
@@ -566,35 +746,120 @@ nsresult UnboxData(jni::String::Param aEvent, JSContext* aCx,
   }
   return NS_ERROR_INVALID_ARG;
 }
-
+||||||| merged common ancestors
+class JavaCallbackDelegate final : public nsIAndroidEventCallback
+{
+    const java::EventCallback::GlobalRef mCallback;
+=======
 class JavaCallbackDelegate final : public nsIAndroidEventCallback {
   const java::EventCallback::GlobalRef mCallback;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+class JavaCallbackDelegate final : public nsIAndroidEventCallback {
+  const java::EventCallback::GlobalRef mCallback;
+||||||| merged common ancestors
+    virtual ~JavaCallbackDelegate() {}
+=======
   virtual ~JavaCallbackDelegate() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual ~JavaCallbackDelegate() {}
+||||||| merged common ancestors
+    NS_IMETHOD Call(JS::HandleValue aData,
+                    void (java::EventCallback::*aCall)(
+                            jni::Object::Param) const)
+    {
+        MOZ_ASSERT(NS_IsMainThread());
+        AutoJSContext cx;
+=======
+  NS_IMETHOD Call(JSContext* aCx, JS::HandleValue aData,
+                  void (java::EventCallback::*aCall)(jni::Object::Param)
+                      const) {
+    MOZ_ASSERT(NS_IsMainThread());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   NS_IMETHOD Call(JS::HandleValue aData,
                   void (java::EventCallback::*aCall)(jni::Object::Param)
                       const) {
     MOZ_ASSERT(NS_IsMainThread());
     AutoJSContext cx;
+||||||| merged common ancestors
+        jni::Object::LocalRef data(jni::GetGeckoThreadEnv());
+        nsresult rv = BoxData(NS_LITERAL_STRING("callback"), cx, aData, data,
+                              /* ObjectOnly */ false);
+        NS_ENSURE_SUCCESS(rv, JS_IsExceptionPending(cx) ? NS_OK : rv);
+=======
+    jni::Object::LocalRef data(jni::GetGeckoThreadEnv());
+    nsresult rv = BoxData(NS_LITERAL_STRING("callback"), aCx, aData, data,
+                          /* ObjectOnly */ false);
+    NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     jni::Object::LocalRef data(jni::GetGeckoThreadEnv());
     nsresult rv = BoxData(NS_LITERAL_STRING("callback"), cx, aData, data,
                           /* ObjectOnly */ false);
     NS_ENSURE_SUCCESS(rv, JS_IsExceptionPending(cx) ? NS_OK : rv);
-
+||||||| merged common ancestors
+        dom::AutoNoJSAPI nojsapi;
+=======
     dom::AutoNoJSAPI nojsapi;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    dom::AutoNoJSAPI nojsapi;
+||||||| merged common ancestors
+        (java::EventCallback(*mCallback).*aCall)(data);
+        return NS_OK;
+    }
+=======
     (java::EventCallback(*mCallback).*aCall)(data);
     return NS_OK;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    (java::EventCallback(*mCallback).*aCall)(data);
+    return NS_OK;
+  }
+||||||| merged common ancestors
+public:
+    explicit JavaCallbackDelegate(java::EventCallback::Param aCallback)
+        : mCallback(jni::GetGeckoThreadEnv(), aCallback)
+    {}
+=======
  public:
   explicit JavaCallbackDelegate(java::EventCallback::Param aCallback)
       : mCallback(jni::GetGeckoThreadEnv(), aCallback) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  explicit JavaCallbackDelegate(java::EventCallback::Param aCallback)
+      : mCallback(jni::GetGeckoThreadEnv(), aCallback) {}
+||||||| merged common ancestors
+    NS_DECL_ISUPPORTS
+=======
   NS_DECL_ISUPPORTS
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  NS_DECL_ISUPPORTS
+||||||| merged common ancestors
+    NS_IMETHOD OnSuccess(JS::HandleValue aData) override
+    {
+        return Call(aData, &java::EventCallback::SendSuccess);
+    }
+=======
+  NS_IMETHOD OnSuccess(JS::HandleValue aData, JSContext* aCx) override {
+    return Call(aCx, aData, &java::EventCallback::SendSuccess);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   NS_IMETHOD OnSuccess(JS::HandleValue aData) override {
     return Call(aData, &java::EventCallback::SendSuccess);
   }
@@ -602,6 +867,16 @@ class JavaCallbackDelegate final : public nsIAndroidEventCallback {
   NS_IMETHOD OnError(JS::HandleValue aData) override {
     return Call(aData, &java::EventCallback::SendError);
   }
+||||||| merged common ancestors
+    NS_IMETHOD OnError(JS::HandleValue aData) override
+    {
+        return Call(aData, &java::EventCallback::SendError);
+    }
+=======
+  NS_IMETHOD OnError(JS::HandleValue aData, JSContext* aCx) override {
+    return Call(aCx, aData, &java::EventCallback::SendError);
+  }
+>>>>>>> upstream-releases
 };
 
 NS_IMPL_ISUPPORTS(JavaCallbackDelegate, nsIAndroidEventCallback)
@@ -616,12 +891,38 @@ class NativeCallbackDelegateSupport final
   const nsCOMPtr<nsIAndroidEventFinalizer> mFinalizer;
   const nsCOMPtr<nsIGlobalObject> mGlobalObject;
 
+<<<<<<< HEAD
   void Call(jni::Object::Param aData,
             nsresult (nsIAndroidEventCallback::*aCall)(JS::HandleValue)) {
     MOZ_ASSERT(NS_IsMainThread());
+||||||| merged common ancestors
+    static void Finalize(const CallbackDelegate::LocalRef& aInstance)
+    {
+        DisposeNative(aInstance);
+    }
+=======
+  void Call(jni::Object::Param aData,
+            nsresult (nsIAndroidEventCallback::*aCall)(JS::HandleValue,
+                                                       JSContext*)) {
+    MOZ_ASSERT(NS_IsMainThread());
+>>>>>>> upstream-releases
 
     // Use either the attached window's realm or a default realm.
 
+<<<<<<< HEAD
+    dom::AutoJSAPI jsapi;
+    NS_ENSURE_TRUE_VOID(jsapi.Init(mGlobalObject));
+
+    JS::RootedValue data(jsapi.cx());
+    nsresult rv = UnboxData(NS_LITERAL_STRING("callback"), jsapi.cx(), aData,
+                            &data, /* BundleOnly */ false);
+    NS_ENSURE_SUCCESS_VOID(rv);
+||||||| merged common ancestors
+    void SendSuccess(jni::Object::Param aData)
+    {
+        Call(aData, &nsIAndroidEventCallback::OnSuccess);
+    }
+=======
     dom::AutoJSAPI jsapi;
     NS_ENSURE_TRUE_VOID(jsapi.Init(mGlobalObject));
 
@@ -630,6 +931,12 @@ class NativeCallbackDelegateSupport final
                             &data, /* BundleOnly */ false);
     NS_ENSURE_SUCCESS_VOID(rv);
 
+    rv = (mCallback->*aCall)(data, jsapi.cx());
+    NS_ENSURE_SUCCESS_VOID(rv);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     dom::AutoNoJSAPI nojsapi;
     rv = (mCallback->*aCall)(data);
     NS_ENSURE_SUCCESS_VOID(rv);
@@ -643,7 +950,41 @@ class NativeCallbackDelegateSupport final
     if (NS_IsMainThread()) {
       // Invoke callbacks synchronously if we're already on Gecko thread.
       return aCall();
+||||||| merged common ancestors
+    void SendError(jni::Object::Param aData)
+    {
+        Call(aData, &nsIAndroidEventCallback::OnError);
+=======
+ public:
+  using Base::AttachNative;
+
+  template <typename Functor>
+  static void OnNativeCall(Functor&& aCall) {
+    if (NS_IsMainThread()) {
+      // Invoke callbacks synchronously if we're already on Gecko thread.
+      return aCall();
     }
+    NS_DispatchToMainThread(
+        NS_NewRunnableFunction("OnNativeCall", std::move(aCall)));
+  }
+
+  static void Finalize(const CallbackDelegate::LocalRef& aInstance) {
+    DisposeNative(aInstance);
+  }
+
+  NativeCallbackDelegateSupport(nsIAndroidEventCallback* callback,
+                                nsIAndroidEventFinalizer* finalizer,
+                                nsIGlobalObject* globalObject)
+      : mCallback(callback),
+        mFinalizer(finalizer),
+        mGlobalObject(globalObject) {}
+
+  ~NativeCallbackDelegateSupport() {
+    if (mFinalizer) {
+      mFinalizer->OnFinalize();
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
     NS_DispatchToMainThread(
         NS_NewRunnableFunction("OnNativeCall", std::move(aCall)));
   }
@@ -672,6 +1013,18 @@ class NativeCallbackDelegateSupport final
   void SendError(jni::Object::Param aData) {
     Call(aData, &nsIAndroidEventCallback::OnError);
   }
+||||||| merged common ancestors
+=======
+  }
+
+  void SendSuccess(jni::Object::Param aData) {
+    Call(aData, &nsIAndroidEventCallback::OnSuccess);
+  }
+
+  void SendError(jni::Object::Param aData) {
+    Call(aData, &nsIAndroidEventCallback::OnError);
+  }
+>>>>>>> upstream-releases
 };
 
 class FinalizingCallbackDelegate final : public nsIAndroidEventCallback {
@@ -746,6 +1099,7 @@ nsresult EventDispatcher::DispatchOnGecko(ListenersList* list,
 
 java::EventDispatcher::NativeCallbackDelegate::LocalRef
 EventDispatcher::WrapCallback(nsIAndroidEventCallback* aCallback,
+<<<<<<< HEAD
                               nsIAndroidEventFinalizer* aFinalizer) {
   if (!aCallback) {
     return java::EventDispatcher::NativeCallbackDelegate::LocalRef(
@@ -758,6 +1112,45 @@ EventDispatcher::WrapCallback(nsIAndroidEventCallback* aCallback,
       callback, MakeUnique<NativeCallbackDelegateSupport>(aCallback, aFinalizer,
                                                           GetGlobalObject()));
   return callback;
+||||||| merged common ancestors
+                              nsIAndroidEventFinalizer* aFinalizer)
+{
+    if (!aCallback) {
+        return java::EventDispatcher::NativeCallbackDelegate::LocalRef(
+                jni::GetGeckoThreadEnv());
+    }
+
+    java::EventDispatcher::NativeCallbackDelegate::LocalRef
+            callback = java::EventDispatcher::NativeCallbackDelegate::New();
+    NativeCallbackDelegateSupport::AttachNative(
+            callback,
+            MakeUnique<NativeCallbackDelegateSupport>(
+                    aCallback, aFinalizer, mDOMWindow));
+    return callback;
+=======
+                              nsIAndroidEventFinalizer* aFinalizer) {
+  if (!aCallback) {
+    return java::EventDispatcher::NativeCallbackDelegate::LocalRef(
+        jni::GetGeckoThreadEnv());
+  }
+
+  java::EventDispatcher::NativeCallbackDelegate::LocalRef callback =
+      java::EventDispatcher::NativeCallbackDelegate::New();
+  NativeCallbackDelegateSupport::AttachNative(
+      callback, MakeUnique<NativeCallbackDelegateSupport>(aCallback, aFinalizer,
+                                                          GetGlobalObject()));
+  return callback;
+}
+
+bool EventDispatcher::HasListener(const char16_t* aEvent) {
+  java::EventDispatcher::LocalRef dispatcher(mDispatcher);
+  if (!dispatcher) {
+    return false;
+  }
+
+  nsDependentString event(aEvent);
+  return dispatcher->HasListener(event);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -792,10 +1185,19 @@ EventDispatcher::Dispatch(JS::HandleValue aEvent, JS::HandleValue aData,
   java::EventDispatcher::LocalRef dispatcher(mDispatcher);
   if (!dispatcher) {
     return NS_OK;
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+}
+=======
   }
 
   jni::Object::LocalRef data(jni::GetGeckoThreadEnv());
   nsresult rv = BoxData(event, aCx, aData, data, /* ObjectOnly */ true);
+  // Keep XPConnect from overriding the JSContext exception with one
+  // based on the nsresult.
+  //
+  // XXXbz Does xpconnect still do that?  Needs to be checked/tested.
   NS_ENSURE_SUCCESS(rv, JS_IsExceptionPending(aCx) ? NS_OK : rv);
 
   dom::AutoNoJSAPI nojsapi;
@@ -803,7 +1205,42 @@ EventDispatcher::Dispatch(JS::HandleValue aEvent, JS::HandleValue aData,
                                 WrapCallback(aCallback, aFinalizer));
   return NS_OK;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  jni::Object::LocalRef data(jni::GetGeckoThreadEnv());
+  nsresult rv = BoxData(event, aCx, aData, data, /* ObjectOnly */ true);
+  NS_ENSURE_SUCCESS(rv, JS_IsExceptionPending(aCx) ? NS_OK : rv);
+||||||| merged common ancestors
+nsresult
+EventDispatcher::Dispatch(const char16_t* aEvent,
+                          java::GeckoBundle::Param aData,
+                          nsIAndroidEventCallback* aCallback)
+{
+    nsDependentString event(aEvent);
+
+    ListenersList* list = mListenersMap.Get(event);
+    if (list) {
+        dom::AutoJSAPI jsapi;
+        if (mDOMWindow) {
+            NS_ENSURE_TRUE(jsapi.Init(mDOMWindow->GetCurrentInnerWindow()),
+                           NS_ERROR_FAILURE);
+        } else {
+            NS_ENSURE_TRUE(jsapi.Init(xpc::PrivilegedJunkScope()),
+                           NS_ERROR_FAILURE);
+        }
+        JS::RootedValue data(jsapi.cx());
+        nsresult rv = UnboxData(/* Event */ nullptr, jsapi.cx(), aData, &data,
+                                /* BundleOnly */ true);
+        NS_ENSURE_SUCCESS(rv, rv);
+        return DispatchOnGecko(list, event, data, aCallback);
+    }
+
+    java::EventDispatcher::LocalRef dispatcher(mDispatcher);
+    if (!dispatcher) {
+        return NS_OK;
+    }
+=======
 nsresult EventDispatcher::Dispatch(const char16_t* aEvent,
                                    java::GeckoBundle::Param aData,
                                    nsIAndroidEventCallback* aCallback) {
@@ -819,23 +1256,140 @@ nsresult EventDispatcher::Dispatch(const char16_t* aEvent,
     NS_ENSURE_SUCCESS(rv, rv);
     return DispatchOnGecko(list, event, data, aCallback);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  dom::AutoNoJSAPI nojsapi;
+  dispatcher->DispatchToThreads(event, data,
+                                WrapCallback(aCallback, aFinalizer));
+  return NS_OK;
+}
+
+nsresult EventDispatcher::Dispatch(const char16_t* aEvent,
+                                   java::GeckoBundle::Param aData,
+                                   nsIAndroidEventCallback* aCallback) {
+  nsDependentString event(aEvent);
+||||||| merged common ancestors
+    dispatcher->DispatchToThreads(event, aData, WrapCallback(aCallback));
+    return NS_OK;
+}
+
+nsresult
+EventDispatcher::IterateEvents(JSContext* aCx, JS::HandleValue aEvents,
+                               IterateEventsCallback aCallback,
+                               nsIAndroidEventListener* aListener)
+{
+    MOZ_ASSERT(NS_IsMainThread());
+=======
   java::EventDispatcher::LocalRef dispatcher(mDispatcher);
   if (!dispatcher) {
     return NS_OK;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ListenersList* list = mListenersMap.Get(event);
+  if (list) {
+    dom::AutoJSAPI jsapi;
+    NS_ENSURE_TRUE(jsapi.Init(GetGlobalObject()), NS_ERROR_FAILURE);
+    JS::RootedValue data(jsapi.cx());
+    nsresult rv = UnboxData(/* Event */ nullptr, jsapi.cx(), aData, &data,
+                            /* BundleOnly */ true);
+    NS_ENSURE_SUCCESS(rv, rv);
+    return DispatchOnGecko(list, event, data, aCallback);
+  }
+||||||| merged common ancestors
+    MutexAutoLock lock(mLock);
+=======
   dispatcher->DispatchToThreads(event, aData, WrapCallback(aCallback));
   return NS_OK;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  java::EventDispatcher::LocalRef dispatcher(mDispatcher);
+  if (!dispatcher) {
+    return NS_OK;
+  }
+||||||| merged common ancestors
+    auto processEvent = [this, aCx, aCallback, aListener]
+            (JS::HandleValue event) -> nsresult {
+        nsAutoJSString str;
+        NS_ENSURE_TRUE(CheckJS(aCx, str.init(aCx, event.toString())),
+                       NS_ERROR_OUT_OF_MEMORY);
+        return (this->*aCallback)(str, aListener);
+    };
+=======
+nsresult EventDispatcher::IterateEvents(JSContext* aCx, JS::HandleValue aEvents,
+                                        IterateEventsCallback aCallback,
+                                        nsIAndroidEventListener* aListener) {
+  MOZ_ASSERT(NS_IsMainThread());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  dispatcher->DispatchToThreads(event, aData, WrapCallback(aCallback));
+  return NS_OK;
+}
+||||||| merged common ancestors
+    if (aEvents.isString()) {
+        return processEvent(aEvents);
+    }
+=======
+  MutexAutoLock lock(mLock);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 nsresult EventDispatcher::IterateEvents(JSContext* aCx, JS::HandleValue aEvents,
                                         IterateEventsCallback aCallback,
                                         nsIAndroidEventListener* aListener) {
   MOZ_ASSERT(NS_IsMainThread());
 
   MutexAutoLock lock(mLock);
+||||||| merged common ancestors
+    bool isArray = false;
+    NS_ENSURE_TRUE(aEvents.isObject(), NS_ERROR_INVALID_ARG);
+    NS_ENSURE_TRUE(CheckJS(aCx, JS_IsArrayObject(aCx, aEvents, &isArray)),
+                   NS_ERROR_INVALID_ARG);
+    NS_ENSURE_TRUE(isArray, NS_ERROR_INVALID_ARG);
 
+    JS::RootedObject events(aCx, &aEvents.toObject());
+    uint32_t length = 0;
+    NS_ENSURE_TRUE(CheckJS(aCx, JS_GetArrayLength(aCx, events, &length)),
+                   NS_ERROR_INVALID_ARG);
+    NS_ENSURE_TRUE(length, NS_ERROR_INVALID_ARG);
+=======
+  auto processEvent = [this, aCx, aCallback,
+                       aListener](JS::HandleValue event) -> nsresult {
+    nsAutoJSString str;
+    NS_ENSURE_TRUE(CheckJS(aCx, str.init(aCx, event.toString())),
+                   NS_ERROR_OUT_OF_MEMORY);
+    return (this->*aCallback)(str, aListener);
+  };
+
+  if (aEvents.isString()) {
+    return processEvent(aEvents);
+  }
+
+  bool isArray = false;
+  NS_ENSURE_TRUE(aEvents.isObject(), NS_ERROR_INVALID_ARG);
+  NS_ENSURE_TRUE(CheckJS(aCx, JS_IsArrayObject(aCx, aEvents, &isArray)),
+                 NS_ERROR_INVALID_ARG);
+  NS_ENSURE_TRUE(isArray, NS_ERROR_INVALID_ARG);
+
+  JS::RootedObject events(aCx, &aEvents.toObject());
+  uint32_t length = 0;
+  NS_ENSURE_TRUE(CheckJS(aCx, JS_GetArrayLength(aCx, events, &length)),
+                 NS_ERROR_INVALID_ARG);
+  NS_ENSURE_TRUE(length, NS_ERROR_INVALID_ARG);
+
+  for (size_t i = 0; i < length; i++) {
+    JS::RootedValue event(aCx);
+    NS_ENSURE_TRUE(CheckJS(aCx, JS_GetElement(aCx, events, i, &event)),
+                   NS_ERROR_INVALID_ARG);
+    NS_ENSURE_TRUE(event.isString(), NS_ERROR_INVALID_ARG);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   auto processEvent = [this, aCx, aCallback,
                        aListener](JS::HandleValue event) -> nsresult {
     nsAutoJSString str;
@@ -870,6 +1424,23 @@ nsresult EventDispatcher::IterateEvents(JSContext* aCx, JS::HandleValue aEvents,
     NS_ENSURE_SUCCESS(rv, rv);
   }
   return NS_OK;
+||||||| merged common ancestors
+    for (size_t i = 0; i < length; i++) {
+        JS::RootedValue event(aCx);
+        NS_ENSURE_TRUE(CheckJS(aCx, JS_GetElement(aCx, events, i, &event)),
+                       NS_ERROR_INVALID_ARG);
+        NS_ENSURE_TRUE(event.isString(), NS_ERROR_INVALID_ARG);
+
+        const nsresult rv = processEvent(event);
+        NS_ENSURE_SUCCESS(rv, rv);
+    }
+    return NS_OK;
+=======
+    const nsresult rv = processEvent(event);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsresult EventDispatcher::RegisterEventLocked(
@@ -907,6 +1478,7 @@ nsresult EventDispatcher::UnregisterEventLocked(
   NS_ENSURE_TRUE(list, NS_OK);
 #endif
 
+<<<<<<< HEAD
   DebugOnly<bool> found = false;
   for (ssize_t i = list->listeners.Count() - 1; i >= 0; i--) {
     if (list->listeners[i] != aListener) {
@@ -918,9 +1490,42 @@ nsresult EventDispatcher::UnregisterEventLocked(
       list->unregistering = true;
     } else {
       list->listeners.RemoveObjectAt(i);
+||||||| merged common ancestors
+    DebugOnly<bool> found = false;
+    for (ssize_t i = list->listeners.Count() - 1; i >= 0; i--) {
+        if (list->listeners[i] != aListener) {
+            continue;
+        }
+        if (list->lockCount) {
+            // Only mark for removal when list is locked.
+            list->listeners.ReplaceObjectAt(nullptr, i);
+            list->unregistering = true;
+        } else {
+            list->listeners.RemoveObjectAt(i);
+        }
+        found = true;
+=======
+  DebugOnly<bool> found = false;
+  for (ssize_t i = list->listeners.Count() - 1; i >= 0; i--) {
+    if (list->listeners[i] != aListener) {
+      continue;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+    found = true;
+  }
+||||||| merged common ancestors
+=======
+    if (list->lockCount) {
+      // Only mark for removal when list is locked.
+      list->listeners.ReplaceObjectAt(nullptr, i);
+      list->unregistering = true;
+    } else {
+      list->listeners.RemoveObjectAt(i);
     }
     found = true;
   }
+>>>>>>> upstream-releases
 #ifdef DEBUG
   return found ? NS_OK : NS_ERROR_NOT_INITIALIZED;
 #else
@@ -1020,5 +1625,17 @@ nsresult EventDispatcher::UnboxBundle(JSContext* aCx, jni::Object::Param aData,
   return detail::UnboxBundle(aCx, aData, aOut);
 }
 
+<<<<<<< HEAD
 }  // namespace widget
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace widget
+} // namespace mozilla
+=======
+}  // namespace widget
+}  // namespace mozilla
+
+#if defined(__clang__)
+#  pragma clang diagnostic pop
+#endif
+>>>>>>> upstream-releases

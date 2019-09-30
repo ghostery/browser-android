@@ -10,12 +10,14 @@
 #include "jit/BaselineIC.h"
 #include "jit/JitcodeMap.h"
 #include "jit/JitFrames.h"
+#include "jit/JitScript.h"
 #include "jit/Safepoints.h"
 
 using namespace js;
 using namespace js::jit;
 
 JSJitFrameIter::JSJitFrameIter(const JitActivation* activation)
+<<<<<<< HEAD
     : current_(activation->jsExitFP()),
       type_(FrameType::Exit),
       returnAddressToFp_(nullptr),
@@ -27,7 +29,48 @@ JSJitFrameIter::JSJitFrameIter(const JitActivation* activation)
     frameSize_ = activation_->bailoutData()->topFrameSize();
     type_ = FrameType::Bailout;
   } else {
+||||||| merged common ancestors
+  : current_(activation->jsExitFP()),
+    type_(FrameType::Exit),
+    returnAddressToFp_(nullptr),
+    frameSize_(0),
+    cachedSafepointIndex_(nullptr),
+    activation_(activation)
+{
+    if (activation_->bailoutData()) {
+        current_ = activation_->bailoutData()->fp();
+        frameSize_ = activation_->bailoutData()->topFrameSize();
+        type_ = FrameType::Bailout;
+    } else {
+        MOZ_ASSERT(!TlsContext.get()->inUnsafeCallWithABI);
+    }
+}
+
+JSJitFrameIter::JSJitFrameIter(const JitActivation* activation, FrameType frameType, uint8_t* fp)
+  : current_(fp),
+    type_(frameType),
+    returnAddressToFp_(nullptr),
+    frameSize_(0),
+    cachedSafepointIndex_(nullptr),
+    activation_(activation)
+{
+    MOZ_ASSERT(type_ == FrameType::JSJitToWasm || type_ == FrameType::Exit);
+    MOZ_ASSERT(!activation_->bailoutData());
+=======
+    : current_(activation->jsExitFP()),
+      type_(FrameType::Exit),
+      resumePCinCurrentFrame_(nullptr),
+      frameSize_(0),
+      cachedSafepointIndex_(nullptr),
+      activation_(activation) {
+  if (activation_->bailoutData()) {
+    current_ = activation_->bailoutData()->fp();
+    frameSize_ = activation_->bailoutData()->topFrameSize();
+    type_ = FrameType::Bailout;
+  } else {
+>>>>>>> upstream-releases
     MOZ_ASSERT(!TlsContext.get()->inUnsafeCallWithABI);
+<<<<<<< HEAD
   }
 }
 
@@ -64,6 +107,46 @@ bool JSJitFrameIter::checkInvalidation(IonScript** ionScriptOut) const {
   if (!invalidated) {
     return false;
   }
+||||||| merged common ancestors
+}
+=======
+  }
+}
+
+JSJitFrameIter::JSJitFrameIter(const JitActivation* activation,
+                               FrameType frameType, uint8_t* fp)
+    : current_(fp),
+      type_(frameType),
+      resumePCinCurrentFrame_(nullptr),
+      frameSize_(0),
+      cachedSafepointIndex_(nullptr),
+      activation_(activation) {
+  MOZ_ASSERT(type_ == FrameType::JSJitToWasm || type_ == FrameType::Exit);
+  MOZ_ASSERT(!activation_->bailoutData());
+  MOZ_ASSERT(!TlsContext.get()->inUnsafeCallWithABI);
+}
+
+bool JSJitFrameIter::checkInvalidation() const {
+  IonScript* dummy;
+  return checkInvalidation(&dummy);
+}
+
+bool JSJitFrameIter::checkInvalidation(IonScript** ionScriptOut) const {
+  JSScript* script = this->script();
+  if (isBailoutJS()) {
+    *ionScriptOut = activation_->bailoutData()->ionScript();
+    return !script->hasIonScript() || script->ionScript() != *ionScriptOut;
+  }
+
+  uint8_t* returnAddr = resumePCinCurrentFrame();
+  // N.B. the current IonScript is not the same as the frame's
+  // IonScript if the frame has since been invalidated.
+  bool invalidated = !script->hasIonScript() ||
+                     !script->ionScript()->containsReturnAddress(returnAddr);
+  if (!invalidated) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   int32_t invalidationDataOffset = ((int32_t*)returnAddr)[-1];
   uint8_t* ionScriptDataOffset = returnAddr + invalidationDataOffset;
@@ -129,21 +212,79 @@ void JSJitFrameIter::baselineScriptAndPc(JSScript** scriptRes,
     return;
   }
 
+<<<<<<< HEAD
   // Else, there must be a VMCallEntry for the current return address.
   uint8_t* retAddr = returnAddressToFp();
   RetAddrEntry& entry =
       script->baselineScript()->retAddrEntryFromReturnAddress(retAddr);
   *pcRes = entry.pc(script);
 }
+||||||| merged common ancestors
+    // Else, there must be an ICEntry for the current return address.
+    uint8_t* retAddr = returnAddressToFp();
+    ICEntry& icEntry = script->baselineScript()->icEntryFromReturnAddress(retAddr);
+    *pcRes = icEntry.pc(script);
+}
+=======
+  // The Baseline Interpreter stores the bytecode pc in the frame.
+  if (baselineFrame()->runningInInterpreter()) {
+    MOZ_ASSERT(baselineFrame()->interpreterScript() == script);
+    *pcRes = baselineFrame()->interpreterPC();
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 Value* JSJitFrameIter::actualArgs() const { return jsFrame()->argv() + 1; }
+||||||| merged common ancestors
+Value*
+JSJitFrameIter::actualArgs() const
+{
+    return jsFrame()->argv() + 1;
+}
+=======
+  // Else, there must be a BaselineScript with a VMCallEntry for the current
+  // return address.
+  uint8_t* retAddr = resumePCinCurrentFrame();
+  RetAddrEntry& entry =
+      script->baselineScript()->retAddrEntryFromReturnAddress(retAddr);
+  *pcRes = entry.pc(script);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+uint8_t* JSJitFrameIter::prevFp() const {
+  return current_ + current()->prevFrameLocalSize() + current()->headerSize();
+}
+||||||| merged common ancestors
+uint8_t*
+JSJitFrameIter::prevFp() const
+{
+    return current_ + current()->prevFrameLocalSize() + current()->headerSize();
+}
+=======
+Value* JSJitFrameIter::actualArgs() const { return jsFrame()->argv() + 1; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void JSJitFrameIter::operator++() {
+  MOZ_ASSERT(!isEntry());
+||||||| merged common ancestors
+void
+JSJitFrameIter::operator++()
+{
+    MOZ_ASSERT(!isEntry());
+
+    frameSize_ = prevFrameLocalSize();
+    cachedSafepointIndex_ = nullptr;
+=======
 uint8_t* JSJitFrameIter::prevFp() const {
   return current_ + current()->prevFrameLocalSize() + current()->headerSize();
 }
 
 void JSJitFrameIter::operator++() {
   MOZ_ASSERT(!isEntry());
+>>>>>>> upstream-releases
 
   frameSize_ = prevFrameLocalSize();
   cachedSafepointIndex_ = nullptr;
@@ -152,12 +293,24 @@ void JSJitFrameIter::operator++() {
   // since the entry and first frames overlap.
   if (isEntry(current()->prevType())) {
     type_ = current()->prevType();
+<<<<<<< HEAD
     return;
   }
 
   type_ = current()->prevType();
   returnAddressToFp_ = current()->returnAddress();
   current_ = prevFp();
+||||||| merged common ancestors
+    returnAddressToFp_ = current()->returnAddress();
+    current_ = prevFp();
+=======
+    return;
+  }
+
+  type_ = current()->prevType();
+  resumePCinCurrentFrame_ = current()->returnAddress();
+  current_ = prevFp();
+>>>>>>> upstream-releases
 }
 
 uintptr_t* JSJitFrameIter::spillBase() const {
@@ -234,12 +387,31 @@ IonScript* JSJitFrameIter::ionScriptFromCalleeToken() const {
   return script()->ionScript();
 }
 
+<<<<<<< HEAD
 const SafepointIndex* JSJitFrameIter::safepoint() const {
   MOZ_ASSERT(isIonJS());
   if (!cachedSafepointIndex_) {
     cachedSafepointIndex_ = ionScript()->getSafepointIndex(returnAddressToFp());
   }
   return cachedSafepointIndex_;
+||||||| merged common ancestors
+const SafepointIndex*
+JSJitFrameIter::safepoint() const
+{
+    MOZ_ASSERT(isIonJS());
+    if (!cachedSafepointIndex_) {
+        cachedSafepointIndex_ = ionScript()->getSafepointIndex(returnAddressToFp());
+    }
+    return cachedSafepointIndex_;
+=======
+const SafepointIndex* JSJitFrameIter::safepoint() const {
+  MOZ_ASSERT(isIonJS());
+  if (!cachedSafepointIndex_) {
+    cachedSafepointIndex_ =
+        ionScript()->getSafepointIndex(resumePCinCurrentFrame());
+  }
+  return cachedSafepointIndex_;
+>>>>>>> upstream-releases
 }
 
 SnapshotOffset JSJitFrameIter::snapshotOffset() const {
@@ -364,6 +536,7 @@ void JSJitFrameIter::dump() const {
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 bool JSJitFrameIter::verifyReturnAddressUsingNativeToBytecodeMap() {
   MOZ_ASSERT(returnAddressToFp_ != nullptr);
 
@@ -396,10 +569,74 @@ bool JSJitFrameIter::verifyReturnAddressUsingNativeToBytecodeMap() {
   if (!entry) {
     return true;
   }
+||||||| merged common ancestors
+bool
+JSJitFrameIter::verifyReturnAddressUsingNativeToBytecodeMap()
+{
+    MOZ_ASSERT(returnAddressToFp_ != nullptr);
 
+    // Only handle Ion frames for now.
+    if (type_ != FrameType::IonJS && type_ != FrameType::BaselineJS) {
+        return true;
+    }
+
+    JSRuntime* rt = TlsContext.get()->runtime();
+
+    // Don't verify while off thread.
+    if (!CurrentThreadCanAccessRuntime(rt)) {
+        return true;
+    }
+
+    // Don't verify if sampling is being suppressed.
+    if (!TlsContext.get()->isProfilerSamplingEnabled()) {
+        return true;
+    }
+
+    if (JS::RuntimeHeapIsMinorCollecting()) {
+        return true;
+    }
+
+    JitRuntime* jitrt = rt->jitRuntime();
+
+    // Look up and print bytecode info for the native address.
+    const JitcodeGlobalEntry* entry = jitrt->getJitcodeGlobalTable()->lookup(returnAddressToFp_);
+    if (!entry) {
+        return true;
+    }
+
+    JitSpew(JitSpew_Profiling, "Found nativeToBytecode entry for %p: %p - %p",
+            returnAddressToFp_, entry->nativeStartAddr(), entry->nativeEndAddr());
+=======
+bool JSJitFrameIter::verifyReturnAddressUsingNativeToBytecodeMap() {
+  MOZ_ASSERT(resumePCinCurrentFrame_ != nullptr);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JitSpew(JitSpew_Profiling, "Found nativeToBytecode entry for %p: %p - %p",
           returnAddressToFp_, entry->nativeStartAddr(), entry->nativeEndAddr());
+||||||| merged common ancestors
+    JitcodeGlobalEntry::BytecodeLocationVector location;
+    uint32_t depth = UINT32_MAX;
+    if (!entry->callStackAtAddr(rt, returnAddressToFp_, location, &depth)) {
+        return false;
+    }
+    MOZ_ASSERT(depth > 0 && depth != UINT32_MAX);
+    MOZ_ASSERT(location.length() == depth);
 
+    JitSpew(JitSpew_Profiling, "Found bytecode location of depth %d:", depth);
+    for (size_t i = 0; i < location.length(); i++) {
+        JitSpew(JitSpew_Profiling, "   %s:%u - %zu",
+                location[i].script->filename(), location[i].script->lineno(),
+                size_t(location[i].pc - location[i].script->code()));
+    }
+=======
+  // Only handle Ion frames for now.
+  if (type_ != FrameType::IonJS && type_ != FrameType::BaselineJS) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JitcodeGlobalEntry::BytecodeLocationVector location;
   uint32_t depth = UINT32_MAX;
   if (!entry->callStackAtAddr(rt, returnAddressToFp_, location, &depth)) {
@@ -437,11 +674,62 @@ bool JSJitFrameIter::verifyReturnAddressUsingNativeToBytecodeMap() {
       }
     }
   }
+||||||| merged common ancestors
+    if (type_ == FrameType::IonJS) {
+        // Create an InlineFrameIterator here and verify the mapped info against the iterator info.
+        InlineFrameIterator inlineFrames(TlsContext.get(), this);
+        for (size_t idx = 0; idx < location.length(); idx++) {
+            MOZ_ASSERT(idx < location.length());
+            MOZ_ASSERT_IF(idx < location.length() - 1, inlineFrames.more());
 
+            JitSpew(JitSpew_Profiling,
+                    "Match %d: ION %s:%u(%zu) vs N2B %s:%u(%zu)",
+                    (int)idx,
+                    inlineFrames.script()->filename(),
+                    inlineFrames.script()->lineno(),
+                    size_t(inlineFrames.pc() - inlineFrames.script()->code()),
+                    location[idx].script->filename(),
+                    location[idx].script->lineno(),
+                    size_t(location[idx].pc - location[idx].script->code()));
+
+            MOZ_ASSERT(inlineFrames.script() == location[idx].script);
+
+            if (inlineFrames.more()) {
+                ++inlineFrames;
+            }
+        }
+    }
+=======
+  JSRuntime* rt = TlsContext.get()->runtime();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return true;
 }
 #endif  // DEBUG
+||||||| merged common ancestors
+    return true;
+}
+#endif // DEBUG
 
+JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx, void* pc)
+{
+    // If no profilingActivation is live, initialize directly to
+    // end-of-iteration state.
+    if (!cx->profilingActivation()) {
+        type_ = FrameType::CppToJSJit;
+        fp_ = nullptr;
+        returnAddressToFp_ = nullptr;
+        return;
+    }
+=======
+  // Don't verify while off thread.
+  if (!CurrentThreadCanAccessRuntime(rt)) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx,
                                                          void* pc) {
   // If no profilingActivation is live, initialize directly to
@@ -452,11 +740,42 @@ JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx,
     returnAddressToFp_ = nullptr;
     return;
   }
+||||||| merged common ancestors
+    MOZ_ASSERT(cx->profilingActivation()->isJit());
+=======
+  // Don't verify if sampling is being suppressed.
+  if (!TlsContext.get()->isProfilerSamplingEnabled()) {
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(cx->profilingActivation()->isJit());
+||||||| merged common ancestors
+    JitActivation* act = cx->profilingActivation()->asJit();
+=======
+  if (JS::RuntimeHeapIsMinorCollecting()) {
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JitActivation* act = cx->profilingActivation()->asJit();
+||||||| merged common ancestors
+    // If the top JitActivation has a null lastProfilingFrame, assume that
+    // it's a trivially empty activation, and initialize directly
+    // to end-of-iteration state.
+    if (!act->lastProfilingFrame()) {
+        type_ = FrameType::CppToJSJit;
+        fp_ = nullptr;
+        returnAddressToFp_ = nullptr;
+        return;
+    }
+=======
+  JitRuntime* jitrt = rt->jitRuntime();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // If the top JitActivation has a null lastProfilingFrame, assume that
   // it's a trivially empty activation, and initialize directly
   // to end-of-iteration state.
@@ -464,6 +783,174 @@ JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx,
     type_ = FrameType::CppToJSJit;
     fp_ = nullptr;
     returnAddressToFp_ = nullptr;
+    return;
+  }
+||||||| merged common ancestors
+    // Get the fp from the current profilingActivation
+    fp_ = (uint8_t*) act->lastProfilingFrame();
+=======
+  // Look up and print bytecode info for the native address.
+  const JitcodeGlobalEntry* entry =
+      jitrt->getJitcodeGlobalTable()->lookup(resumePCinCurrentFrame_);
+  if (!entry) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Get the fp from the current profilingActivation
+  fp_ = (uint8_t*)act->lastProfilingFrame();
+||||||| merged common ancestors
+    // Profiler sampling must NOT be suppressed if we are here.
+    MOZ_ASSERT(cx->isProfilerSamplingEnabled());
+=======
+  JitSpew(JitSpew_Profiling, "Found nativeToBytecode entry for %p: %p - %p",
+          resumePCinCurrentFrame_, entry->nativeStartAddr(),
+          entry->nativeEndAddr());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Profiler sampling must NOT be suppressed if we are here.
+  MOZ_ASSERT(cx->isProfilerSamplingEnabled());
+||||||| merged common ancestors
+    // Try initializing with sampler pc
+    if (tryInitWithPC(pc)) {
+        return;
+    }
+=======
+  JitcodeGlobalEntry::BytecodeLocationVector location;
+  uint32_t depth = UINT32_MAX;
+  if (!entry->callStackAtAddr(rt, resumePCinCurrentFrame_, location, &depth)) {
+    return false;
+  }
+  MOZ_ASSERT(depth > 0 && depth != UINT32_MAX);
+  MOZ_ASSERT(location.length() == depth);
+
+  JitSpew(JitSpew_Profiling, "Found bytecode location of depth %d:", depth);
+  for (size_t i = 0; i < location.length(); i++) {
+    JitSpew(JitSpew_Profiling, "   %s:%u - %zu", location[i].script->filename(),
+            location[i].script->lineno(),
+            size_t(location[i].pc - location[i].script->code()));
+  }
+
+  if (type_ == FrameType::IonJS) {
+    // Create an InlineFrameIterator here and verify the mapped info against the
+    // iterator info.
+    InlineFrameIterator inlineFrames(TlsContext.get(), this);
+    for (size_t idx = 0; idx < location.length(); idx++) {
+      MOZ_ASSERT(idx < location.length());
+      MOZ_ASSERT_IF(idx < location.length() - 1, inlineFrames.more());
+
+      JitSpew(JitSpew_Profiling, "Match %d: ION %s:%u(%zu) vs N2B %s:%u(%zu)",
+              (int)idx, inlineFrames.script()->filename(),
+              inlineFrames.script()->lineno(),
+              size_t(inlineFrames.pc() - inlineFrames.script()->code()),
+              location[idx].script->filename(), location[idx].script->lineno(),
+              size_t(location[idx].pc - location[idx].script->code()));
+
+      MOZ_ASSERT(inlineFrames.script() == location[idx].script);
+
+      if (inlineFrames.more()) {
+        ++inlineFrames;
+      }
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Try initializing with sampler pc
+  if (tryInitWithPC(pc)) {
+    return;
+  }
+||||||| merged common ancestors
+    // Try initializing with sampler pc using native=>bytecode table.
+    JitcodeGlobalTable* table = cx->runtime()->jitRuntime()->getJitcodeGlobalTable();
+    if (tryInitWithTable(table, pc, /* forLastCallSite = */ false)) {
+        return;
+    }
+=======
+  return true;
+}
+#endif  // DEBUG
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Try initializing with sampler pc using native=>bytecode table.
+  JitcodeGlobalTable* table =
+      cx->runtime()->jitRuntime()->getJitcodeGlobalTable();
+  if (tryInitWithTable(table, pc, /* forLastCallSite = */ false)) {
+    return;
+  }
+||||||| merged common ancestors
+    // Try initializing with lastProfilingCallSite pc
+    void* lastCallSite = act->lastProfilingCallSite();
+    if (lastCallSite) {
+        if (tryInitWithPC(lastCallSite)) {
+            return;
+        }
+=======
+JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx,
+                                                         void* pc) {
+  // If no profilingActivation is live, initialize directly to
+  // end-of-iteration state.
+  if (!cx->profilingActivation()) {
+    type_ = FrameType::CppToJSJit;
+    fp_ = nullptr;
+    resumePCinCurrentFrame_ = nullptr;
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Try initializing with lastProfilingCallSite pc
+  void* lastCallSite = act->lastProfilingCallSite();
+  if (lastCallSite) {
+    if (tryInitWithPC(lastCallSite)) {
+      return;
+    }
+
+    // Try initializing with lastProfilingCallSite pc using native=>bytecode
+    // table.
+    if (tryInitWithTable(table, lastCallSite, /* forLastCallSite = */ true)) {
+      return;
+    }
+  }
+||||||| merged common ancestors
+        // Try initializing with lastProfilingCallSite pc using native=>bytecode table.
+        if (tryInitWithTable(table, lastCallSite, /* forLastCallSite = */ true)) {
+            return;
+        }
+    }
+=======
+  MOZ_ASSERT(cx->profilingActivation()->isJit());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MOZ_ASSERT(frameScript()->hasBaselineScript());
+||||||| merged common ancestors
+    MOZ_ASSERT(frameScript()->hasBaselineScript());
+=======
+  JitActivation* act = cx->profilingActivation()->asJit();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // If nothing matches, for now just assume we are at the start of the last
+  // frame's baseline jit code.
+  type_ = FrameType::BaselineJS;
+  returnAddressToFp_ = frameScript()->baselineScript()->method()->raw();
+||||||| merged common ancestors
+    // If nothing matches, for now just assume we are at the start of the last frame's
+    // baseline jit code.
+    type_ = FrameType::BaselineJS;
+    returnAddressToFp_ = frameScript()->baselineScript()->method()->raw();
+=======
+  // If the top JitActivation has a null lastProfilingFrame, assume that
+  // it's a trivially empty activation, and initialize directly
+  // to end-of-iteration state.
+  if (!act->lastProfilingFrame()) {
+    type_ = FrameType::CppToJSJit;
+    fp_ = nullptr;
+    resumePCinCurrentFrame_ = nullptr;
     return;
   }
 
@@ -499,12 +986,17 @@ JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(JSContext* cx,
     }
   }
 
-  MOZ_ASSERT(frameScript()->hasBaselineScript());
-
   // If nothing matches, for now just assume we are at the start of the last
-  // frame's baseline jit code.
+  // frame's baseline jit code or interpreter code.
   type_ = FrameType::BaselineJS;
-  returnAddressToFp_ = frameScript()->baselineScript()->method()->raw();
+  if (frameScript()->hasBaselineScript()) {
+    resumePCinCurrentFrame_ = frameScript()->baselineScript()->method()->raw();
+  } else {
+    MOZ_ASSERT(JitOptions.baselineInterpreter);
+    resumePCinCurrentFrame_ =
+        cx->runtime()->jitRuntime()->baselineInterpreter().codeRaw();
+  }
+>>>>>>> upstream-releases
 }
 
 template <typename ReturnType = CommonFrameLayout*>
@@ -521,6 +1013,7 @@ JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(
 bool JSJitProfilingFrameIterator::tryInitWithPC(void* pc) {
   JSScript* callee = frameScript();
 
+<<<<<<< HEAD
   // Check for Ion first, since it's more likely for hot code.
   if (callee->hasIonScript() &&
       callee->ionScript()->method()->containsNativePC(pc)) {
@@ -528,7 +1021,24 @@ bool JSJitProfilingFrameIterator::tryInitWithPC(void* pc) {
     returnAddressToFp_ = pc;
     return true;
   }
+||||||| merged common ancestors
+    // Check for Ion first, since it's more likely for hot code.
+    if (callee->hasIonScript() && callee->ionScript()->method()->containsNativePC(pc)) {
+        type_ = FrameType::IonJS;
+        returnAddressToFp_ = pc;
+        return true;
+    }
+=======
+  // Check for Ion first, since it's more likely for hot code.
+  if (callee->hasIonScript() &&
+      callee->ionScript()->method()->containsNativePC(pc)) {
+    type_ = FrameType::IonJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Check for containment in Baseline jitcode second.
   if (callee->hasBaselineScript() &&
       callee->baselineScript()->method()->containsNativePC(pc)) {
@@ -536,6 +1046,22 @@ bool JSJitProfilingFrameIterator::tryInitWithPC(void* pc) {
     returnAddressToFp_ = pc;
     return true;
   }
+||||||| merged common ancestors
+    // Check for containment in Baseline jitcode second.
+    if (callee->hasBaselineScript() && callee->baselineScript()->method()->containsNativePC(pc)) {
+        type_ = FrameType::BaselineJS;
+        returnAddressToFp_ = pc;
+        return true;
+    }
+=======
+  // Check for containment in Baseline jitcode second.
+  if (callee->hasBaselineScript() &&
+      callee->baselineScript()->method()->containsNativePC(pc)) {
+    type_ = FrameType::BaselineJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
+>>>>>>> upstream-releases
 
   return false;
 }
@@ -554,9 +1080,20 @@ bool JSJitProfilingFrameIterator::tryInitWithTable(JitcodeGlobalTable* table,
 
   JSScript* callee = frameScript();
 
+<<<<<<< HEAD
   MOZ_ASSERT(entry->isIon() || entry->isBaseline() || entry->isIonCache() ||
              entry->isDummy());
+||||||| merged common ancestors
+        type_ = FrameType::IonJS;
+        returnAddressToFp_ = pc;
+        return true;
+    }
+=======
+  MOZ_ASSERT(entry->isIon() || entry->isBaseline() || entry->isIonCache() ||
+             entry->isBaselineInterpreter() || entry->isDummy());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Treat dummy lookups as an empty frame sequence.
   if (entry->isDummy()) {
     type_ = FrameType::CppToJSJit;
@@ -564,6 +1101,21 @@ bool JSJitProfilingFrameIterator::tryInitWithTable(JitcodeGlobalTable* table,
     returnAddressToFp_ = nullptr;
     return true;
   }
+||||||| merged common ancestors
+    if (entry->isBaseline()) {
+        // If looked-up callee doesn't match frame callee, don't accept lastProfilingCallSite
+        if (forLastCallSite && entry->baselineEntry().script() != callee) {
+            return false;
+        }
+=======
+  // Treat dummy lookups as an empty frame sequence.
+  if (entry->isDummy()) {
+    type_ = FrameType::CppToJSJit;
+    fp_ = nullptr;
+    resumePCinCurrentFrame_ = nullptr;
+    return true;
+  }
+>>>>>>> upstream-releases
 
   if (entry->isIon()) {
     // If looked-up callee doesn't match frame callee, don't accept
@@ -572,10 +1124,26 @@ bool JSJitProfilingFrameIterator::tryInitWithTable(JitcodeGlobalTable* table,
       return false;
     }
 
+<<<<<<< HEAD
     type_ = FrameType::IonJS;
     returnAddressToFp_ = pc;
     return true;
   }
+||||||| merged common ancestors
+    if (entry->isIonCache()) {
+        void* ptr = entry->ionCacheEntry().rejoinAddr();
+        const JitcodeGlobalEntry& ionEntry = table->lookupInfallible(ptr);
+        MOZ_ASSERT(ionEntry.isIon());
+
+        if (ionEntry.ionEntry().getScript(0) != callee) {
+            return false;
+        }
+=======
+    type_ = FrameType::IonJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
+>>>>>>> upstream-releases
 
   if (entry->isBaseline()) {
     // If looked-up callee doesn't match frame callee, don't accept
@@ -584,10 +1152,33 @@ bool JSJitProfilingFrameIterator::tryInitWithTable(JitcodeGlobalTable* table,
       return false;
     }
 
+<<<<<<< HEAD
     type_ = FrameType::BaselineJS;
     returnAddressToFp_ = pc;
     return true;
   }
+||||||| merged common ancestors
+    return false;
+}
+
+void
+JSJitProfilingFrameIterator::fixBaselineReturnAddress()
+{
+    MOZ_ASSERT(type_ == FrameType::BaselineJS);
+    BaselineFrame* bl = (BaselineFrame*)(fp_ - BaselineFrame::FramePointerOffset -
+                                         BaselineFrame::Size());
+=======
+    type_ = FrameType::BaselineJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
+
+  if (entry->isBaselineInterpreter()) {
+    type_ = FrameType::BaselineJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
+>>>>>>> upstream-releases
 
   if (entry->isIonCache()) {
     void* ptr = entry->ionCacheEntry().rejoinAddr();
@@ -598,6 +1189,7 @@ bool JSJitProfilingFrameIterator::tryInitWithTable(JitcodeGlobalTable* table,
       return false;
     }
 
+<<<<<<< HEAD
     type_ = FrameType::IonJS;
     returnAddressToFp_ = pc;
     return true;
@@ -697,10 +1289,160 @@ void JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame) {
     type_ = FrameType::IonJS;
     return;
   }
+||||||| merged common ancestors
+void
+JSJitProfilingFrameIterator::operator++()
+{
+    JitFrameLayout* frame = framePtr();
+    moveToNextFrame(frame);
+}
+=======
+    type_ = FrameType::IonJS;
+    resumePCinCurrentFrame_ = pc;
+    return true;
+  }
 
+  return false;
+}
+
+void JSJitProfilingFrameIterator::fixBaselineReturnAddress() {
+  MOZ_ASSERT(type_ == FrameType::BaselineJS);
+  BaselineFrame* bl = (BaselineFrame*)(fp_ - BaselineFrame::FramePointerOffset -
+                                       BaselineFrame::Size());
+
+  // Debug mode OSR for Baseline uses a "continuation fixer" and stashes the
+  // actual return address in an auxiliary structure.
+  if (BaselineDebugModeOSRInfo* info = bl->getDebugModeOSRInfo()) {
+    resumePCinCurrentFrame_ = info->resumeAddr;
+    return;
+  }
+
+  // Certain exception handling cases such as debug OSR or resuming a generator
+  // with .throw() will use BaselineFrame::setOverridePc() to indicate the
+  // effective |pc|. We translate the effective-pc into a Baseline code
+  // address. Don't do this for frames running in the Baseline Interpreter,
+  // because we don't use the return address in that case.
+  jsbytecode* overridePC = bl->maybeOverridePc();
+  if (overridePC && !bl->runningInInterpreter()) {
+    PCMappingSlotInfo slotInfo;
+    JSScript* script = bl->script();
+    BaselineScript* blScript = script->baselineScript();
+    resumePCinCurrentFrame_ =
+        blScript->nativeCodeForPC(script, overridePC, &slotInfo);
+
+    // NOTE: The stack may not be synced at this PC. For the purpose of
+    // profiler sampling this is fine.
+    return;
+  }
+}
+
+const char* JSJitProfilingFrameIterator::baselineInterpreterLabel() const {
+  MOZ_ASSERT(type_ == FrameType::BaselineJS);
+  return frameScript()->jitScript()->profileString();
+}
+
+void JSJitProfilingFrameIterator::baselineInterpreterScriptPC(
+    JSScript** script, jsbytecode** pc) const {
+  MOZ_ASSERT(type_ == FrameType::BaselineJS);
+  BaselineFrame* blFrame =
+      (BaselineFrame*)(fp_ - BaselineFrame::FramePointerOffset -
+                       BaselineFrame::Size());
+  *script = frameScript();
+  *pc = (*script)->code();
+
+  if (blFrame->runningInInterpreter() &&
+      blFrame->interpreterScript() == *script) {
+    jsbytecode* interpPC = blFrame->interpreterPC();
+    if ((*script)->containsPC(interpPC)) {
+      *pc = interpPC;
+    }
+  }
+}
+
+void JSJitProfilingFrameIterator::operator++() {
+  JitFrameLayout* frame = framePtr();
+  moveToNextFrame(frame);
+}
+
+void JSJitProfilingFrameIterator::moveToWasmFrame(CommonFrameLayout* frame) {
+  // No previous js jit frame, this is a transition frame, used to
+  // pass a wasm iterator the correct value of FP.
+  resumePCinCurrentFrame_ = nullptr;
+  fp_ = GetPreviousRawFrame<uint8_t*>(frame);
+  type_ = FrameType::WasmToJSJit;
+  MOZ_ASSERT(!done());
+}
+
+void JSJitProfilingFrameIterator::moveToCppEntryFrame() {
+  // No previous frame, set to nullptr to indicate that
+  // JSJitProfilingFrameIterator is done().
+  resumePCinCurrentFrame_ = nullptr;
+  fp_ = nullptr;
+  type_ = FrameType::CppToJSJit;
+}
+
+void JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame) {
+  /*
+   * fp_ points to a Baseline or Ion frame.  The possible call-stacks
+   * patterns occurring between this frame and a previous Ion or Baseline
+   * frame are as follows:
+   *
+   * <Baseline-Or-Ion>
+   * ^
+   * |
+   * ^--- Ion
+   * |
+   * ^--- Baseline Stub <---- Baseline
+   * |
+   * ^--- WasmToJSJit <---- (other wasm frames, not handled by this iterator)
+   * |
+   * ^--- Argument Rectifier
+   * |    ^
+   * |    |
+   * |    ^--- Ion
+   * |    |
+   * |    ^--- Baseline Stub <---- Baseline
+   * |    |
+   * |    ^--- WasmToJSJit <--- (other wasm frames)
+   * |    |
+   * |    ^--- CppToJSJit
+   * |
+   * ^--- Entry Frame (From C++)
+   *      Exit Frame (From previous JitActivation)
+   *      ^
+   *      |
+   *      ^--- Ion
+   *      |
+   *      ^--- Baseline
+   *      |
+   *      ^--- Baseline Stub <---- Baseline
+   */
+  FrameType prevType = frame->prevType();
+
+  if (prevType == FrameType::IonJS) {
+    resumePCinCurrentFrame_ = frame->returnAddress();
+    fp_ = GetPreviousRawFrame<uint8_t*>(frame);
+    type_ = FrameType::IonJS;
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (prevType == FrameType::BaselineJS) {
     returnAddressToFp_ = frame->returnAddress();
+||||||| merged common ancestors
+void
+JSJitProfilingFrameIterator::moveToWasmFrame(CommonFrameLayout* frame)
+{
+    // No previous js jit frame, this is a transition frame, used to
+    // pass a wasm iterator the correct value of FP.
+    returnAddressToFp_ = nullptr;
+=======
+  if (prevType == FrameType::BaselineJS) {
+    resumePCinCurrentFrame_ = frame->returnAddress();
+>>>>>>> upstream-releases
     fp_ = GetPreviousRawFrame<uint8_t*>(frame);
+<<<<<<< HEAD
     type_ = FrameType::BaselineJS;
     fixBaselineReturnAddress();
     return;
@@ -718,19 +1460,97 @@ void JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame) {
     fixBaselineReturnAddress();
     return;
   }
+||||||| merged common ancestors
+    type_ = FrameType::WasmToJSJit;
+    MOZ_ASSERT(!done());
+}
+=======
+    type_ = FrameType::BaselineJS;
+    fixBaselineReturnAddress();
+    return;
+  }
+
+  if (prevType == FrameType::BaselineStub) {
+    BaselineStubFrameLayout* stubFrame =
+        GetPreviousRawFrame<BaselineStubFrameLayout*>(frame);
+    MOZ_ASSERT(stubFrame->prevType() == FrameType::BaselineJS);
+
+    resumePCinCurrentFrame_ = stubFrame->returnAddress();
+    fp_ = ((uint8_t*)stubFrame->reverseSavedFramePtr()) +
+          jit::BaselineFrame::FramePointerOffset;
+    type_ = FrameType::BaselineJS;
+    fixBaselineReturnAddress();
+    return;
+  }
+>>>>>>> upstream-releases
 
   if (prevType == FrameType::Rectifier) {
     RectifierFrameLayout* rectFrame =
         GetPreviousRawFrame<RectifierFrameLayout*>(frame);
     FrameType rectPrevType = rectFrame->prevType();
 
+<<<<<<< HEAD
     if (rectPrevType == FrameType::IonJS) {
       returnAddressToFp_ = rectFrame->returnAddress();
       fp_ = GetPreviousRawFrame<uint8_t*>(rectFrame);
       type_ = FrameType::IonJS;
       return;
+||||||| merged common ancestors
+void
+JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame)
+{
+    /*
+     * fp_ points to a Baseline or Ion frame.  The possible call-stacks
+     * patterns occurring between this frame and a previous Ion or Baseline
+     * frame are as follows:
+     *
+     * <Baseline-Or-Ion>
+     * ^
+     * |
+     * ^--- Ion
+     * |
+     * ^--- Baseline Stub <---- Baseline
+     * |
+     * ^--- WasmToJSJit <---- (other wasm frames, not handled by this iterator)
+     * |
+     * ^--- Argument Rectifier
+     * |    ^
+     * |    |
+     * |    ^--- Ion
+     * |    |
+     * |    ^--- Baseline Stub <---- Baseline
+     * |    |
+     * |    ^--- WasmToJSJit <--- (other wasm frames)
+     * |    |
+     * |    ^--- CppToJSJit
+     * |
+     * ^--- Entry Frame (From C++)
+     *      Exit Frame (From previous JitActivation)
+     *      ^
+     *      |
+     *      ^--- Ion
+     *      |
+     *      ^--- Baseline
+     *      |
+     *      ^--- Baseline Stub <---- Baseline
+     */
+    FrameType prevType = frame->prevType();
+
+    if (prevType == FrameType::IonJS) {
+        returnAddressToFp_ = frame->returnAddress();
+        fp_ = GetPreviousRawFrame<uint8_t*>(frame);
+        type_ = FrameType::IonJS;
+        return;
+=======
+    if (rectPrevType == FrameType::IonJS) {
+      resumePCinCurrentFrame_ = rectFrame->returnAddress();
+      fp_ = GetPreviousRawFrame<uint8_t*>(rectFrame);
+      type_ = FrameType::IonJS;
+      return;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (rectPrevType == FrameType::BaselineStub) {
       BaselineStubFrameLayout* stubFrame =
           GetPreviousRawFrame<BaselineStubFrameLayout*>(rectFrame);
@@ -740,6 +1560,24 @@ void JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame) {
       type_ = FrameType::BaselineJS;
       fixBaselineReturnAddress();
       return;
+||||||| merged common ancestors
+    if (prevType == FrameType::BaselineJS) {
+        returnAddressToFp_ = frame->returnAddress();
+        fp_ = GetPreviousRawFrame<uint8_t*>(frame);
+        type_ = FrameType::BaselineJS;
+        fixBaselineReturnAddress();
+        return;
+=======
+    if (rectPrevType == FrameType::BaselineStub) {
+      BaselineStubFrameLayout* stubFrame =
+          GetPreviousRawFrame<BaselineStubFrameLayout*>(rectFrame);
+      resumePCinCurrentFrame_ = stubFrame->returnAddress();
+      fp_ = ((uint8_t*)stubFrame->reverseSavedFramePtr()) +
+            jit::BaselineFrame::FramePointerOffset;
+      type_ = FrameType::BaselineJS;
+      fixBaselineReturnAddress();
+      return;
+>>>>>>> upstream-releases
     }
 
     if (rectPrevType == FrameType::WasmToJSJit) {
@@ -761,11 +1599,24 @@ void JSJitProfilingFrameIterator::moveToNextFrame(CommonFrameLayout* frame) {
 
     MOZ_ASSERT(callFrame->prevType() == FrameType::IonJS);
 
+<<<<<<< HEAD
     returnAddressToFp_ = callFrame->returnAddress();
     fp_ = GetPreviousRawFrame<uint8_t*>(callFrame);
     type_ = FrameType::IonJS;
     return;
   }
+||||||| merged common ancestors
+    if (prevType == FrameType::WasmToJSJit) {
+        moveToWasmFrame(frame);
+        return;
+    }
+=======
+    resumePCinCurrentFrame_ = callFrame->returnAddress();
+    fp_ = GetPreviousRawFrame<uint8_t*>(callFrame);
+    type_ = FrameType::IonJS;
+    return;
+  }
+>>>>>>> upstream-releases
 
   if (prevType == FrameType::WasmToJSJit) {
     moveToWasmFrame(frame);

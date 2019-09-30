@@ -7,6 +7,7 @@
 #include "mozilla/dom/HTMLSourceElement.h"
 #include "mozilla/dom/HTMLSourceElementBinding.h"
 
+#include "mozilla/dom/DocumentInlines.h"
 #include "mozilla/dom/HTMLImageElement.h"
 #include "mozilla/dom/HTMLMediaElement.h"
 #include "mozilla/dom/ResponsiveImageSelector.h"
@@ -39,24 +40,32 @@ NS_IMPL_ELEMENT_CLONE(HTMLSourceElement)
 
 bool HTMLSourceElement::MatchesCurrentMedia() {
   if (mMediaList) {
-    nsPresContext* pctx = OwnerDoc()->GetPresContext();
-    return pctx && mMediaList->Matches(pctx);
+    return mMediaList->Matches(*OwnerDoc());
   }
 
   // No media specified
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool HTMLSourceElement::WouldMatchMediaForDocument(
     const nsAString& aMedia, const nsIDocument* aDocument) {
+||||||| merged common ancestors
+/* static */ bool
+HTMLSourceElement::WouldMatchMediaForDocument(const nsAString& aMedia,
+                                              const nsIDocument *aDocument)
+{
+=======
+/* static */
+bool HTMLSourceElement::WouldMatchMediaForDocument(const nsAString& aMedia,
+                                                   const Document* aDocument) {
+>>>>>>> upstream-releases
   if (aMedia.IsEmpty()) {
     return true;
   }
 
-  nsPresContext* pctx = aDocument->GetPresContext();
-
   RefPtr<MediaList> mediaList = MediaList::Create(aMedia);
-  return pctx && mediaList->Matches(pctx);
+  return mediaList->Matches(*aDocument);
 }
 
 void HTMLSourceElement::UpdateMediaList(const nsAttrValue* aValue) {
@@ -86,25 +95,34 @@ nsresult HTMLSourceElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
       (aName == nsGkAtoms::srcset || aName == nsGkAtoms::sizes ||
        aName == nsGkAtoms::media || aName == nsGkAtoms::type) &&
       parent && parent->IsHTMLElement(nsGkAtoms::picture)) {
+    if (aName == nsGkAtoms::media) {
+      UpdateMediaList(aValue);
+    }
+
     nsString strVal = aValue ? aValue->GetStringValue() : EmptyString();
     // Find all img siblings after this <source> and notify them of the change
     nsCOMPtr<nsIContent> sibling = AsContent();
+<<<<<<< HEAD
     while ((sibling = sibling->GetNextSibling())) {
       if (sibling->IsHTMLElement(nsGkAtoms::img)) {
         HTMLImageElement* img = static_cast<HTMLImageElement*>(sibling.get());
+||||||| merged common ancestors
+    while ( (sibling = sibling->GetNextSibling()) ) {
+      if (sibling->IsHTMLElement(nsGkAtoms::img)) {
+        HTMLImageElement *img = static_cast<HTMLImageElement*>(sibling.get());
+=======
+    while ((sibling = sibling->GetNextSibling())) {
+      if (auto* img = HTMLImageElement::FromNode(sibling)) {
+>>>>>>> upstream-releases
         if (aName == nsGkAtoms::srcset) {
-          img->PictureSourceSrcsetChanged(AsContent(), strVal, aNotify);
+          img->PictureSourceSrcsetChanged(this, strVal, aNotify);
         } else if (aName == nsGkAtoms::sizes) {
-          img->PictureSourceSizesChanged(AsContent(), strVal, aNotify);
-        } else if (aName == nsGkAtoms::media) {
-          UpdateMediaList(aValue);
-          img->PictureSourceMediaOrTypeChanged(AsContent(), aNotify);
-        } else if (aName == nsGkAtoms::type) {
-          img->PictureSourceMediaOrTypeChanged(AsContent(), aNotify);
+          img->PictureSourceSizesChanged(this, strVal, aNotify);
+        } else if (aName == nsGkAtoms::media || aName == nsGkAtoms::type) {
+          img->PictureSourceMediaOrTypeChanged(this, aNotify);
         }
       }
     }
-
   } else if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::media) {
     UpdateMediaList(aValue);
   } else if (aNameSpaceID == kNameSpaceID_None && aName == nsGkAtoms::src) {
@@ -126,14 +144,29 @@ nsresult HTMLSourceElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
       aNameSpaceID, aName, aValue, aOldValue, aMaybeScriptedPrincipal, aNotify);
 }
 
+<<<<<<< HEAD
 nsresult HTMLSourceElement::BindToTree(nsIDocument* aDocument,
                                        nsIContent* aParent,
                                        nsIContent* aBindingParent) {
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+HTMLSourceElement::BindToTree(nsIDocument *aDocument,
+                              nsIContent *aParent,
+                              nsIContent *aBindingParent)
+{
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument,
+                                                 aParent,
+                                                 aBindingParent);
+=======
+nsresult HTMLSourceElement::BindToTree(BindContext& aContext,
+                                       nsINode& aParent) {
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  if (auto* media = HTMLMediaElement::FromNodeOrNull(aParent)) {
+  if (auto* media = HTMLMediaElement::FromNode(aParent)) {
     media->NotifyAddedSource();
   }
 

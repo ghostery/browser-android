@@ -6,16 +6,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if defined(JS_SIMULATOR_MIPS32)
-#include "jit/Linker.h"
-#include "jit/MacroAssembler.h"
-#include "jit/mips32/Assembler-mips32.h"
-#include "jit/mips32/MoveEmitter-mips32.h"
-#include "jit/mips32/Simulator-mips32.h"
-#include "jit/MoveResolver.h"
+#  include "jit/Linker.h"
+#  include "jit/MacroAssembler.h"
+#  include "jit/mips32/Assembler-mips32.h"
+#  include "jit/mips32/MoveEmitter-mips32.h"
+#  include "jit/mips32/Simulator-mips32.h"
+#  include "jit/MoveResolver.h"
 
-#include "jsapi-tests/tests.h"
+#  include "jsapi-tests/tests.h"
 
-#include "vm/Runtime.h"
+#  include "vm/Runtime.h"
 
 static const int LIFO_ALLOC_PRIMARY_CHUNK_SIZE = 4 * 1024;
 
@@ -117,6 +117,7 @@ static constexpr js::jit::FloatRegister double14(
 static constexpr js::jit::FloatRegister double15(
     30, js::jit::FloatRegister::Double);
 
+<<<<<<< HEAD
 static js::jit::JitCode* linkAndAllocate(JSContext* cx,
                                          js::jit::MacroAssembler* masm) {
   using namespace js;
@@ -124,10 +125,34 @@ static js::jit::JitCode* linkAndAllocate(JSContext* cx,
   AutoFlushICache afc("test");
   Linker l(*masm);
   return l.newCode(cx, CodeKind::Ion);
+||||||| merged common ancestors
+static js::jit::JitCode*
+linkAndAllocate(JSContext* cx, js::jit::MacroAssembler* masm)
+{
+    using namespace js;
+    using namespace js::jit;
+    AutoFlushICache afc("test");
+    Linker l(*masm);
+    return l.newCode(cx, CodeKind::Ion);
+=======
+static js::jit::JitCode* linkAndAllocate(JSContext* cx,
+                                         js::jit::MacroAssembler* masm) {
+  using namespace js;
+  using namespace js::jit;
+  Linker l(*masm, "test");
+  return l.newCode(cx, CodeKind::Ion);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 #define TRY(x) \
   if (!(x)) return false;
+||||||| merged common ancestors
+#define TRY(x) if (!(x)) return false;
+=======
+#  define TRY(x) \
+    if (!(x)) return false;
+>>>>>>> upstream-releases
 
 BEGIN_TEST(testJitMoveEmitterCycles_simple) {
   using namespace js;

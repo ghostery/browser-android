@@ -14,9 +14,16 @@
 #include "nsRefreshDriver.h"
 #include "Units.h"
 
+<<<<<<< HEAD
 class nsChildView;
 class nsIPresShell;
 class nsIWidget;
+||||||| merged common ancestors
+class nsIPresShell;
+=======
+class nsChildView;
+class nsIWidget;
+>>>>>>> upstream-releases
 
 namespace mozilla {
 

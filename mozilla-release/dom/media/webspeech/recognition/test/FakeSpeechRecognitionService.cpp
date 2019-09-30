@@ -23,9 +23,25 @@ using namespace dom;
 NS_IMPL_ISUPPORTS(FakeSpeechRecognitionService, nsISpeechRecognitionService,
                   nsIObserver)
 
+<<<<<<< HEAD
 FakeSpeechRecognitionService::FakeSpeechRecognitionService() {}
+||||||| merged common ancestors
+FakeSpeechRecognitionService::FakeSpeechRecognitionService()
+{
+}
+=======
+FakeSpeechRecognitionService::FakeSpeechRecognitionService() = default;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 FakeSpeechRecognitionService::~FakeSpeechRecognitionService() {}
+||||||| merged common ancestors
+FakeSpeechRecognitionService::~FakeSpeechRecognitionService()
+{
+}
+=======
+FakeSpeechRecognitionService::~FakeSpeechRecognitionService() = default;
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 FakeSpeechRecognitionService::Initialize(
@@ -56,9 +72,19 @@ NS_IMETHODIMP
 FakeSpeechRecognitionService::Abort() { return NS_OK; }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 FakeSpeechRecognitionService::Observe(nsISupports* aSubject, const char* aTopic,
                                       const char16_t* aData) {
   MOZ_ASSERT(StaticPrefs::MediaWebspeechTextFakeRecognitionService(),
+||||||| merged common ancestors
+FakeSpeechRecognitionService::Observe(nsISupports* aSubject, const char* aTopic, const char16_t* aData)
+{
+  MOZ_ASSERT(StaticPrefs::MediaWebspeechTextFakeRecognitionService(),
+=======
+FakeSpeechRecognitionService::Observe(nsISupports* aSubject, const char* aTopic,
+                                      const char16_t* aData) {
+  MOZ_ASSERT(StaticPrefs::media_webspeech_test_fake_recognition_service(),
+>>>>>>> upstream-releases
              "Got request to fake recognition service event, but "
              "media.webspeech.test.fake_recognition_service is not set");
 

@@ -7,16 +7,32 @@
 #ifndef mozilla_AppleVTDecoder_h
 #define mozilla_AppleVTDecoder_h
 
+<<<<<<< HEAD
 #include <CoreFoundation/CFDictionary.h>  // For CFDictionaryRef
 #include <CoreMedia/CoreMedia.h>          // For CMVideoFormatDescriptionRef
 #include <VideoToolbox/VideoToolbox.h>    // For VTDecompressionSessionRef
 
+||||||| merged common ancestors
+=======
+#include <CoreFoundation/CFDictionary.h>  // For CFDictionaryRef
+#include <CoreMedia/CoreMedia.h>          // For CMVideoFormatDescriptionRef
+#include <VideoToolbox/VideoToolbox.h>    // For VTDecompressionSessionRef
+>>>>>>> upstream-releases
 #include "PlatformDecoderModule.h"
-#include "mozilla/Atomics.h"
-#include "nsIThread.h"
 #include "ReorderQueue.h"
 #include "TimeUnits.h"
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+#include "VideoToolbox/VideoToolbox.h"
+
+=======
+#include "mozilla/Atomics.h"
+#include "mozilla/gfx/Types.h"
+#include "nsIThread.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
 
 DDLoggedTypeDeclNameAndBase(AppleVTDecoder, MediaDataDecoder);
@@ -88,6 +104,7 @@ class AppleVTDecoder : public MediaDataDecoder,
   const uint32_t mPictureHeight;
   const uint32_t mDisplayWidth;
   const uint32_t mDisplayHeight;
+  const gfx::YUVColorSpace mColorSpace;
 
   // Method to set up the decompression session.
   MediaResult InitializeSession();

@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/layers/ContentClient.h"
+<<<<<<< HEAD
 #include "BasicLayers.h"            // for BasicLayerManager
 #include "gfxContext.h"             // for gfxContext, etc
 #include "gfxPlatform.h"            // for gfxPlatform
@@ -18,6 +19,35 @@
 #include "mozilla/gfx/BasePoint.h"  // for BasePoint
 #include "mozilla/gfx/BaseSize.h"   // for BaseSize
 #include "mozilla/gfx/Rect.h"       // for Rect
+||||||| merged common ancestors
+#include "BasicLayers.h"                // for BasicLayerManager
+#include "gfxContext.h"                 // for gfxContext, etc
+#include "gfxPlatform.h"                // for gfxPlatform
+#include "gfxEnv.h"                     // for gfxEnv
+#include "gfxPrefs.h"                   // for gfxPrefs
+#include "gfxPoint.h"                   // for IntSize, gfxPoint
+#include "gfxUtils.h"                   // for gfxUtils
+#include "ipc/ShadowLayers.h"           // for ShadowLayerForwarder
+#include "mozilla/ArrayUtils.h"         // for ArrayLength
+#include "mozilla/gfx/2D.h"             // for DrawTarget, Factory
+#include "mozilla/gfx/BasePoint.h"      // for BasePoint
+#include "mozilla/gfx/BaseSize.h"       // for BaseSize
+#include "mozilla/gfx/Rect.h"           // for Rect
+=======
+#include "BasicLayers.h"  // for BasicLayerManager
+#include "gfxContext.h"   // for gfxContext, etc
+#include "gfxPlatform.h"  // for gfxPlatform
+#include "gfxEnv.h"       // for gfxEnv
+
+#include "gfxPoint.h"               // for IntSize, gfxPoint
+#include "gfxUtils.h"               // for gfxUtils
+#include "ipc/ShadowLayers.h"       // for ShadowLayerForwarder
+#include "mozilla/ArrayUtils.h"     // for ArrayLength
+#include "mozilla/gfx/2D.h"         // for DrawTarget, Factory
+#include "mozilla/gfx/BasePoint.h"  // for BasePoint
+#include "mozilla/gfx/BaseSize.h"   // for BaseSize
+#include "mozilla/gfx/Rect.h"       // for Rect
+>>>>>>> upstream-releases
 #include "mozilla/gfx/Types.h"
 #include "mozilla/layers/CompositorBridgeChild.h"  // for CompositorBridgeChild
 #include "mozilla/layers/LayerManagerComposite.h"
@@ -29,10 +59,10 @@
 #include "nsIWidget.h"        // for nsIWidget
 #include "nsLayoutUtils.h"
 #ifdef XP_WIN
-#include "gfxWindowsPlatform.h"
+#  include "gfxWindowsPlatform.h"
 #endif
 #ifdef MOZ_WIDGET_GTK
-#include "gfxPlatformGtk.h"
+#  include "gfxPlatformGtk.h"
 #endif
 #include "ReadbackLayer.h"
 
@@ -68,8 +98,18 @@ static IntRect ComputeBufferRect(const IntRect& aRequestedRect) {
   return rect;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ContentClient> ContentClient::CreateContentClient(
     CompositableForwarder* aForwarder) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ContentClient>
+ContentClient::CreateContentClient(CompositableForwarder* aForwarder)
+{
+=======
+/* static */
+already_AddRefed<ContentClient> ContentClient::CreateContentClient(
+    CompositableForwarder* aForwarder) {
+>>>>>>> upstream-releases
   LayersBackend backend = aForwarder->GetCompositorBackendType();
   if (backend != LayersBackend::LAYERS_OPENGL &&
       backend != LayersBackend::LAYERS_D3D11 &&
@@ -301,9 +341,21 @@ void ContentClient::EndPaint(
   }
 }
 
+<<<<<<< HEAD
 nsIntRegion ExpandDrawRegion(ContentClient::PaintState& aPaintState,
                              RotatedBuffer::DrawIterator* aIter,
                              BackendType aBackendType) {
+||||||| merged common ancestors
+nsIntRegion
+ExpandDrawRegion(ContentClient::PaintState& aPaintState,
+                 RotatedBuffer::DrawIterator* aIter,
+                 BackendType aBackendType)
+{
+=======
+static nsIntRegion ExpandDrawRegion(ContentClient::PaintState& aPaintState,
+                                    RotatedBuffer::DrawIterator* aIter,
+                                    BackendType aBackendType) {
+>>>>>>> upstream-releases
   nsIntRegion* drawPtr = &aPaintState.mRegionToDraw;
   if (aIter) {
     // The iterators draw region currently only contains the bounds of the
@@ -499,6 +551,7 @@ RefPtr<RotatedBuffer> ContentClientBasic::CreateBuffer(gfxContentType aType,
   RefPtr<gfx::DrawTarget> drawTarget;
 
 #ifdef XP_WIN
+<<<<<<< HEAD
   if (mBackend == BackendType::CAIRO &&
       (aType == gfxContentType::COLOR ||
        aType == gfxContentType::COLOR_ALPHA)) {
@@ -507,6 +560,22 @@ RefPtr<RotatedBuffer> ContentClientBasic::CreateBuffer(gfxContentType aType,
                                              : gfxImageFormat::A8R8G8B8_UINT32);
     drawTarget =
         gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(surf, size);
+||||||| merged common ancestors
+  if (mBackend == BackendType::CAIRO && 
+      (aType == gfxContentType::COLOR || aType == gfxContentType::COLOR_ALPHA)) {
+    RefPtr<gfxASurface> surf =
+      new gfxWindowsSurface(size, aType == gfxContentType::COLOR ? gfxImageFormat::X8R8G8B8_UINT32 :
+                                                                   gfxImageFormat::A8R8G8B8_UINT32);
+    drawTarget = gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(surf, size);
+=======
+  if (mBackend == BackendType::CAIRO &&
+      (aType == gfxContentType::COLOR ||
+       aType == gfxContentType::COLOR_ALPHA)) {
+    RefPtr<gfxASurface> surf = new gfxWindowsSurface(
+        size, aType == gfxContentType::COLOR ? gfxImageFormat::X8R8G8B8_UINT32
+                                             : gfxImageFormat::A8R8G8B8_UINT32);
+    drawTarget = gfxPlatform::CreateDrawTargetForSurface(surf, size);
+>>>>>>> upstream-releases
   }
 #endif
 
@@ -637,6 +706,7 @@ RefPtr<RotatedBuffer> ContentClientRemoteBuffer::CreateBuffer(
   return buffer;
 }
 
+<<<<<<< HEAD
 RefPtr<RotatedBuffer> ContentClientRemoteBuffer::CreateBufferInternal(
     const gfx::IntRect& aRect, gfx::SurfaceFormat aFormat,
     TextureFlags aFlags) {
@@ -644,6 +714,23 @@ RefPtr<RotatedBuffer> ContentClientRemoteBuffer::CreateBufferInternal(
       (aFlags & TextureFlags::COMPONENT_ALPHA)
           ? TextureAllocationFlags::ALLOC_CLEAR_BUFFER_BLACK
           : TextureAllocationFlags::ALLOC_CLEAR_BUFFER;
+||||||| merged common ancestors
+RefPtr<RotatedBuffer>
+ContentClientRemoteBuffer::CreateBufferInternal(const gfx::IntRect& aRect,
+                                                gfx::SurfaceFormat aFormat,
+                                                TextureFlags aFlags)
+{
+  TextureAllocationFlags textureAllocFlags
+                         = (aFlags & TextureFlags::COMPONENT_ALPHA) ?
+                            TextureAllocationFlags::ALLOC_CLEAR_BUFFER_BLACK :
+                            TextureAllocationFlags::ALLOC_CLEAR_BUFFER;
+=======
+RefPtr<RotatedBuffer> ContentClientRemoteBuffer::CreateBufferInternal(
+    const gfx::IntRect& aRect, gfx::SurfaceFormat aFormat,
+    TextureFlags aFlags) {
+  TextureAllocationFlags textureAllocFlags =
+      TextureAllocationFlags::ALLOC_DEFAULT;
+>>>>>>> upstream-releases
 
   RefPtr<TextureClient> textureClient = CreateTextureClientForDrawing(
       aFormat, aRect.Size(), BackendSelector::Content,
@@ -656,7 +743,7 @@ RefPtr<RotatedBuffer> ContentClientRemoteBuffer::CreateBufferInternal(
 
   RefPtr<TextureClient> textureClientOnWhite;
   if (aFlags & TextureFlags::COMPONENT_ALPHA) {
-    TextureAllocationFlags allocFlags = ALLOC_CLEAR_BUFFER_WHITE;
+    TextureAllocationFlags allocFlags = TextureAllocationFlags::ALLOC_DEFAULT;
     if (mForwarder->SupportsTextureDirectMapping()) {
       allocFlags =
           TextureAllocationFlags(allocFlags | ALLOC_ALLOW_DIRECT_MAPPING);
@@ -716,7 +803,8 @@ void ContentClientRemoteBuffer::Updated(const nsIntRegion& aRegionToDraw,
     t->mTextureClient = remoteBuffer->GetClient();
     IntSize size = remoteBuffer->GetClient()->GetSize();
     t->mPictureRect = nsIntRect(0, 0, size.width, size.height);
-    GetForwarder()->UseTextures(this, textures);
+
+    GetForwarder()->UseTextures(this, textures, Nothing());
   }
 
   // This forces a synchronous transaction, so we can swap buffers now

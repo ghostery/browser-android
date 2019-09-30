@@ -22,7 +22,7 @@ class AxisPhysicsMSDModel : public AxisPhysicsModel {
                       double aInitialVelocity, double aSpringConstant,
                       double aDampingRatio);
 
-  ~AxisPhysicsMSDModel();
+  virtual ~AxisPhysicsMSDModel();
 
   /**
    * Gets the raw destination of this axis at this moment.
@@ -40,10 +40,23 @@ class AxisPhysicsMSDModel : public AxisPhysicsModel {
    */
   bool IsFinished(double aSmallestVisibleIncrement);
 
+<<<<<<< HEAD
  protected:
   virtual double Acceleration(const State &aState) override;
 
  private:
+||||||| merged common ancestors
+protected:
+  virtual double Acceleration(const State &aState) override;
+
+private:
+
+=======
+ protected:
+  double Acceleration(const State& aState) override;
+
+ private:
+>>>>>>> upstream-releases
   /**
    * mDestination represents the target position and the resting position of
    * the simulated spring.

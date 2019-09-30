@@ -13,16 +13,33 @@ typedef uint32_t HashNumber;
 
 #include "jsapi.h"
 #include "jsfriendapi.h"
+#include "js/ArrayBuffer.h"
 #include "js/CompilationAndEvaluation.h"
 #include "js/CompileOptions.h"
+#include "js/ContextOptions.h"
 #include "js/Conversions.h"
+#include "js/Date.h"
+#include "js/ForOfIterator.h"
 #include "js/Initialization.h"
 #include "js/MemoryMetrics.h"
+<<<<<<< HEAD
 #include "js/SourceText.h"
+||||||| merged common ancestors
+#include "js/SourceBufferHolder.h"
+=======
+#include "js/PropertySpec.h"
+#include "js/SourceText.h"
+>>>>>>> upstream-releases
 #include "js/StructuredClone.h"
+#include "js/Warnings.h"
 
 // Replacements for types that are too difficult for rust-bindgen.
 
 /// <div rustbindgen replaces="JS::detail::MaybeWrapped" />
 template <typename T>
 using replaces_MaybeWrapped = T;
+
+/// <div rustbindgen replaces="JS::MutableHandleIdVector" />
+struct MutableHandleIdVector_Simple {
+    uintptr_t handle_mut;
+};

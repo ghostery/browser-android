@@ -7,7 +7,6 @@
 #include "ServiceWorkerRegistrationImpl.h"
 
 #include "ipc/ErrorIPCUtils.h"
-#include "mozilla/dom/DOMPrefs.h"
 #include "mozilla/dom/Promise.h"
 #include "mozilla/dom/PromiseWorkerProxy.h"
 #include "mozilla/dom/PushManagerBinding.h"
@@ -28,7 +27,7 @@
 #include "ServiceWorkerRegistration.h"
 #include "ServiceWorkerUnregisterCallback.h"
 
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIServiceWorkerManager.h"
 #include "nsISupportsPrimitives.h"
 #include "nsPIDOMWindow.h"
@@ -500,6 +499,7 @@ void ServiceWorkerRegistrationMainThread::Update(
   UpdateInternal(principal, NS_ConvertUTF16toUTF8(mScope), cb);
 
   auto holder =
+<<<<<<< HEAD
       MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
           global);
 
@@ -516,6 +516,37 @@ void ServiceWorkerRegistrationMainThread::Update(
                failureCB(CopyableErrorResult(aRv));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(global);
+
+  cb->Promise()->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+      holder->Complete();
+      successCB(aDescriptor);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aRv) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aRv));
+    })->Track(*holder);
+=======
+      MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
+          global);
+
+  cb->Promise()
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+            holder->Complete();
+            successCB(aDescriptor);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aRv) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aRv));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 void ServiceWorkerRegistrationMainThread::Unregister(
@@ -554,6 +585,7 @@ void ServiceWorkerRegistrationMainThread::Unregister(
 
   auto holder = MakeRefPtr<DOMMozPromiseRequestHolder<GenericPromise>>(global);
 
+<<<<<<< HEAD
   cb->Promise()
       ->Then(global->EventTargetFor(TaskCategory::Other), __func__,
              [successCB = std::move(aSuccessCB), holder](bool aResult) {
@@ -565,6 +597,30 @@ void ServiceWorkerRegistrationMainThread::Unregister(
                failureCB(CopyableErrorResult(aRv));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+  cb->Promise()->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (bool aResult) {
+      holder->Complete();
+      successCB(aResult);
+    }, [failureCB = std::move(aFailureCB), holder] (nsresult aRv) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aRv));
+    })->Track(*holder);
+=======
+  cb->Promise()
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB), holder](bool aResult) {
+            holder->Complete();
+            successCB(aResult);
+          },
+          [failureCB = std::move(aFailureCB), holder](nsresult aRv) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aRv));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////
@@ -765,6 +821,7 @@ void ServiceWorkerRegistrationWorkerThread::Update(
   auto promise =
       MakeRefPtr<ServiceWorkerRegistrationPromise::Private>(__func__);
   auto holder =
+<<<<<<< HEAD
       MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
           global);
 
@@ -784,6 +841,45 @@ void ServiceWorkerRegistrationWorkerThread::Update(
 
   RefPtr<SWRUpdateRunnable> r = new SWRUpdateRunnable(
       workerRef, promise, workerRef->Private()->GetServiceWorkerDescriptor());
+||||||| merged common ancestors
+    MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(global);
+
+  promise->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+      holder->Complete();
+      successCB(aDescriptor);
+    }, [failureCB = std::move(aFailureCB), holder] (const CopyableErrorResult& aRv) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aRv));
+    })->Track(*holder);
+
+  RefPtr<SWRUpdateRunnable> r =
+    new SWRUpdateRunnable(workerRef,
+                          promise,
+                          workerRef->Private()->GetServiceWorkerDescriptor());
+=======
+      MakeRefPtr<DOMMozPromiseRequestHolder<ServiceWorkerRegistrationPromise>>(
+          global);
+
+  promise
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB),
+           holder](const ServiceWorkerRegistrationDescriptor& aDescriptor) {
+            holder->Complete();
+            successCB(aDescriptor);
+          },
+          [failureCB = std::move(aFailureCB),
+           holder](const CopyableErrorResult& aRv) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aRv));
+          })
+      ->Track(*holder);
+
+  RefPtr<SWRUpdateRunnable> r = new SWRUpdateRunnable(
+      workerRef, promise, workerRef->Private()->GetServiceWorkerDescriptor());
+>>>>>>> upstream-releases
 
   nsresult rv = workerRef->Private()->DispatchToMainThread(r.forget());
   if (NS_FAILED(rv)) {
@@ -823,6 +919,7 @@ void ServiceWorkerRegistrationWorkerThread::Unregister(
   auto promise = MakeRefPtr<GenericPromise::Private>(__func__);
   auto holder = MakeRefPtr<DOMMozPromiseRequestHolder<GenericPromise>>(global);
 
+<<<<<<< HEAD
   promise
       ->Then(global->EventTargetFor(TaskCategory::Other), __func__,
              [successCB = std::move(aSuccessCB), holder](bool aResult) {
@@ -834,6 +931,30 @@ void ServiceWorkerRegistrationWorkerThread::Unregister(
                failureCB(CopyableErrorResult(aRv));
              })
       ->Track(*holder);
+||||||| merged common ancestors
+  promise->Then(
+    global->EventTargetFor(TaskCategory::Other), __func__,
+    [successCB = std::move(aSuccessCB), holder] (bool aResult) {
+      holder->Complete();
+      successCB(aResult);
+    }, [failureCB = std::move(aFailureCB), holder] (nsresult aRv) {
+      holder->Complete();
+      failureCB(CopyableErrorResult(aRv));
+    })->Track(*holder);
+=======
+  promise
+      ->Then(
+          global->EventTargetFor(TaskCategory::Other), __func__,
+          [successCB = std::move(aSuccessCB), holder](bool aResult) {
+            holder->Complete();
+            successCB(aResult);
+          },
+          [failureCB = std::move(aFailureCB), holder](nsresult aRv) {
+            holder->Complete();
+            failureCB(CopyableErrorResult(aRv));
+          })
+      ->Track(*holder);
+>>>>>>> upstream-releases
 
   RefPtr<StartUnregisterRunnable> r =
       new StartUnregisterRunnable(workerRef, promise, mDescriptor);

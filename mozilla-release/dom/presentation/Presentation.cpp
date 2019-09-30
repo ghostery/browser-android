@@ -36,8 +36,18 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Presentation)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Presentation> Presentation::Create(
     nsPIDOMWindowInner* aWindow) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Presentation>
+Presentation::Create(nsPIDOMWindowInner* aWindow)
+{
+=======
+/* static */
+already_AddRefed<Presentation> Presentation::Create(
+    nsPIDOMWindowInner* aWindow) {
+>>>>>>> upstream-releases
   RefPtr<Presentation> presentation = new Presentation(aWindow);
   return presentation.forget();
 }
@@ -46,8 +56,19 @@ Presentation::Presentation(nsPIDOMWindowInner* aWindow) : mWindow(aWindow) {}
 
 Presentation::~Presentation() {}
 
+<<<<<<< HEAD
 /* virtual */ JSObject* Presentation::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+Presentation::WrapObject(JSContext* aCx,
+                         JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* Presentation::WrapObject(JSContext* aCx,
+                                   JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return Presentation_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -56,7 +77,7 @@ void Presentation::SetDefaultRequest(PresentationRequest* aRequest) {
     return;
   }
 
-  nsCOMPtr<nsIDocument> doc = mWindow ? mWindow->GetExtantDoc() : nullptr;
+  nsCOMPtr<Document> doc = mWindow ? mWindow->GetExtantDoc() : nullptr;
   if (NS_WARN_IF(!doc)) {
     return;
   }
@@ -122,7 +143,7 @@ bool Presentation::HasReceiverSupport() const {
     return false;
   }
 
-  if (!Preferences::GetBool("dom.presentation.testing.simulate-receiver") &&
+  if (!StaticPrefs::dom_presentation_testing_simulate_receiver() &&
       !docShell->GetIsInMozBrowser() &&
       !docShell->GetIsTopLevelContentDocShell()) {
     return false;
@@ -148,7 +169,7 @@ bool Presentation::HasReceiverSupport() const {
   }
 
   bool isPrivateWin = false;
-  nsCOMPtr<nsIDocument> doc = mWindow->GetExtantDoc();
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
   if (doc) {
     isPrivateWin =
         doc->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId > 0;

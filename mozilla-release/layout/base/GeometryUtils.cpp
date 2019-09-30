@@ -6,6 +6,7 @@
 
 #include "GeometryUtils.h"
 
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/CharacterData.h"
 #include "mozilla/dom/DOMPointBinding.h"
 #include "mozilla/dom/GeometryUtilsBinding.h"
@@ -30,17 +31,28 @@ enum GeometryNodeType {
   GEOMETRY_NODE_DOCUMENT
 };
 
+<<<<<<< HEAD
 static nsIFrame* GetFrameForNode(nsINode* aNode, GeometryNodeType aType) {
   nsIDocument* doc = aNode->OwnerDoc();
+||||||| merged common ancestors
+static nsIFrame*
+GetFrameForNode(nsINode* aNode, GeometryNodeType aType)
+{
+  nsIDocument* doc = aNode->OwnerDoc();
+=======
+static nsIFrame* GetFrameForNode(nsINode* aNode, GeometryNodeType aType) {
+  Document* doc = aNode->OwnerDoc();
+>>>>>>> upstream-releases
   if (aType == GEOMETRY_NODE_TEXT) {
-    if (nsIPresShell* shell = doc->GetShell()) {
-      shell->FrameConstructor()->EnsureFrameForTextNodeIsCreatedAfterFlush(
+    if (PresShell* presShell = doc->GetPresShell()) {
+      presShell->FrameConstructor()->EnsureFrameForTextNodeIsCreatedAfterFlush(
           static_cast<CharacterData*>(aNode));
     }
   }
   doc->FlushPendingNotifications(FlushType::Layout);
 
   switch (aType) {
+<<<<<<< HEAD
     case GEOMETRY_NODE_TEXT:
     case GEOMETRY_NODE_ELEMENT:
       return aNode->AsContent()->GetPrimaryFrame();
@@ -51,6 +63,29 @@ static nsIFrame* GetFrameForNode(nsINode* aNode, GeometryNodeType aType) {
     default:
       MOZ_ASSERT(false, "Unknown GeometryNodeType");
       return nullptr;
+||||||| merged common ancestors
+  case GEOMETRY_NODE_TEXT:
+  case GEOMETRY_NODE_ELEMENT:
+    return aNode->AsContent()->GetPrimaryFrame();
+  case GEOMETRY_NODE_DOCUMENT: {
+    nsIPresShell* presShell = doc->GetShell();
+    return presShell ? presShell->GetRootFrame() : nullptr;
+  }
+  default:
+    MOZ_ASSERT(false, "Unknown GeometryNodeType");
+    return nullptr;
+=======
+    case GEOMETRY_NODE_TEXT:
+    case GEOMETRY_NODE_ELEMENT:
+      return aNode->AsContent()->GetPrimaryFrame();
+    case GEOMETRY_NODE_DOCUMENT: {
+      PresShell* presShell = doc->GetPresShell();
+      return presShell ? presShell->GetRootFrame() : nullptr;
+    }
+    default:
+      MOZ_ASSERT(false, "Unknown GeometryNodeType");
+      return nullptr;
+>>>>>>> upstream-releases
   }
 }
 
@@ -156,17 +191,40 @@ static nsRect GetBoxRectForFrame(nsIFrame** aFrame, CSSBoxType aType) {
 }
 
 class AccumulateQuadCallback : public nsLayoutUtils::BoxCallback {
+<<<<<<< HEAD
  public:
   AccumulateQuadCallback(nsISupports* aParentObject,
+||||||| merged common ancestors
+public:
+  AccumulateQuadCallback(nsISupports* aParentObject,
+=======
+ public:
+  AccumulateQuadCallback(Document* aParentObject,
+>>>>>>> upstream-releases
                          nsTArray<RefPtr<DOMQuad> >& aResult,
                          nsIFrame* aRelativeToFrame,
                          const nsPoint& aRelativeToBoxTopLeft,
                          CSSBoxType aBoxType)
+<<<<<<< HEAD
       : mParentObject(aParentObject),
         mResult(aResult),
         mRelativeToFrame(aRelativeToFrame),
         mRelativeToBoxTopLeft(aRelativeToBoxTopLeft),
         mBoxType(aBoxType) {
+||||||| merged common ancestors
+    : mParentObject(aParentObject)
+    , mResult(aResult)
+    , mRelativeToFrame(aRelativeToFrame)
+    , mRelativeToBoxTopLeft(aRelativeToBoxTopLeft)
+    , mBoxType(aBoxType)
+  {
+=======
+      : mParentObject(ToSupports(aParentObject)),
+        mResult(aResult),
+        mRelativeToFrame(aRelativeToFrame),
+        mRelativeToBoxTopLeft(aRelativeToBoxTopLeft),
+        mBoxType(aBoxType) {
+>>>>>>> upstream-releases
     if (mBoxType == CSSBoxType::Margin) {
       // Don't include the caption margin when computing margins for a
       // table
@@ -250,7 +308,7 @@ void GetBoxQuads(nsINode* aNode, const dom::BoxQuadOptions& aOptions,
     return;
   }
   AutoWeakFrame weakFrame(frame);
-  nsIDocument* ownerDoc = aNode->OwnerDoc();
+  Document* ownerDoc = aNode->OwnerDoc();
   nsIFrame* relativeToFrame =
       GetFirstNonAnonymousFrameForGeometryNode(aOptions.mRelativeTo, ownerDoc);
   // The first frame might be destroyed now if the above call lead to an

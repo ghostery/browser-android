@@ -13,6 +13,7 @@
 #include "mozilla/EditorDOMPoint.h"
 #include "mozilla/EditorUtils.h"
 #include "mozilla/FlushType.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/Selection.h"
 #include "mozilla/dom/Element.h"
 #include "nsAString.h"
@@ -26,7 +27,6 @@
 #include "nsIContent.h"
 #include "nsIFrame.h"
 #include "nsINode.h"
-#include "nsIPresShell.h"
 #include "nsISupportsUtils.h"
 #include "nsITableCellLayout.h"  // For efficient access to table cell
 #include "nsLiteralString.h"
@@ -52,6 +52,7 @@ class MOZ_STACK_CLASS AutoSelectionSetterAfterTableEdit final {
   RefPtr<Element> mTable;
   int32_t mCol, mRow, mDirection, mSelected;
 
+<<<<<<< HEAD
  public:
   AutoSelectionSetterAfterTableEdit(HTMLEditor& aHTMLEditor, Element* aTable,
                                     int32_t aRow, int32_t aCol,
@@ -64,9 +65,44 @@ class MOZ_STACK_CLASS AutoSelectionSetterAfterTableEdit final {
         mSelected(aSelected) {}
 
   ~AutoSelectionSetterAfterTableEdit() {
+||||||| merged common ancestors
+public:
+  AutoSelectionSetterAfterTableEdit(HTMLEditor& aHTMLEditor,
+                                    Element* aTable,
+                                    int32_t aRow,
+                                    int32_t aCol,
+                                    int32_t aDirection,
+                                    bool aSelected)
+    : mHTMLEditor(&aHTMLEditor)
+    , mTable(aTable)
+    , mCol(aCol)
+    , mRow(aRow)
+    , mDirection(aDirection)
+    , mSelected(aSelected)
+  {
+  }
+
+  ~AutoSelectionSetterAfterTableEdit()
+  {
+=======
+ public:
+  AutoSelectionSetterAfterTableEdit(HTMLEditor& aHTMLEditor, Element* aTable,
+                                    int32_t aRow, int32_t aCol,
+                                    int32_t aDirection, bool aSelected)
+      : mHTMLEditor(&aHTMLEditor),
+        mTable(aTable),
+        mCol(aCol),
+        mRow(aRow),
+        mDirection(aDirection),
+        mSelected(aSelected) {}
+
+  MOZ_CAN_RUN_SCRIPT
+  ~AutoSelectionSetterAfterTableEdit() {
+>>>>>>> upstream-releases
     if (mHTMLEditor) {
-      mHTMLEditor->SetSelectionAfterTableEdit(mTable, mRow, mCol, mDirection,
-                                              mSelected);
+      MOZ_KnownLive(mHTMLEditor)
+          ->SetSelectionAfterTableEdit(MOZ_KnownLive(mTable), mRow, mCol,
+                                       mDirection, mSelected);
     }
   }
 
@@ -161,7 +197,7 @@ HTMLEditor::InsertTableCell(int32_t aNumberOfCellsToInsert,
                                   ? InsertPosition::eAfterSelectedCell
                                   : InsertPosition::eBeforeSelectedCell);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return NS_ERROR_FAILURE;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -257,7 +293,7 @@ HTMLEditor::GetFirstRow(Element* aTableOrElementInTable,
   RefPtr<Element> firstRowElement =
       GetFirstTableRowElement(*aTableOrElementInTable, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   firstRowElement.forget(aFirstRowElement);
   return NS_OK;
@@ -447,7 +483,7 @@ nsresult HTMLEditor::InsertTableColumnsWithTransaction(
       // Assume they want to stop the "0" behavior and really add a new column.
       // Thus we set the colspan to its true value.
       if (!cellDataAtSelection.mColSpan) {
-        SetColSpan(cellDataAtSelection.mElement,
+        SetColSpan(MOZ_KnownLive(cellDataAtSelection.mElement),
                    cellDataAtSelection.mEffectiveColSpan);
       }
       break;
@@ -495,7 +531,7 @@ nsresult HTMLEditor::InsertTableColumnsWithTransaction(
         // Note: we do nothing if colsspan=0, since it should automatically
         // span the new column.
         if (cellData.mColSpan > 0) {
-          SetColSpan(cellData.mElement,
+          SetColSpan(MOZ_KnownLive(cellData.mElement),
                      cellData.mColSpan + aNumberOfColumnsToInsert);
         }
         continue;
@@ -578,7 +614,7 @@ HTMLEditor::InsertTableRow(int32_t aNumberOfRowsToInsert,
                                  ? InsertPosition::eAfterSelectedCell
                                  : InsertPosition::eBeforeSelectedCell);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -634,7 +670,7 @@ nsresult HTMLEditor::InsertTableRowsWithTransaction(
       // Assume they want to stop the "0" behavior and really add a new row.
       // Thus we set the rowspan to its true value.
       if (!cellDataAtSelection.mRowSpan) {
-        SetRowSpan(cellDataAtSelection.mElement,
+        SetRowSpan(MOZ_KnownLive(cellDataAtSelection.mElement),
                    cellDataAtSelection.mEffectiveRowSpan);
       }
       break;
@@ -672,7 +708,7 @@ nsresult HTMLEditor::InsertTableRowsWithTransaction(
         // Note that if rowspan is 0, we do nothing since that cell should
         // automatically extend into the new row.
         if (cellData.mRowSpan > 0) {
-          SetRowSpan(cellData.mElement,
+          SetRowSpan(MOZ_KnownLive(cellData.mElement),
                      cellData.mRowSpan + aNumberOfRowsToInsert);
         }
         continue;
@@ -772,8 +808,7 @@ nsresult HTMLEditor::InsertTableRowsWithTransaction(
   // SetSelectionAfterTableEdit from AutoSelectionSetterAfterTableEdit will
   // access frame selection, so we need reframe.
   // Because GetTableCellElementAt() depends on frame.
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (presShell) {
+  if (RefPtr<PresShell> presShell = GetPresShell()) {
     presShell->FlushPendingNotifications(FlushType::Frames);
   }
 
@@ -803,7 +838,13 @@ nsresult HTMLEditor::DeleteTableElementAndChildrenWithTransaction(
     if (NS_WARN_IF(error.Failed())) {
       return error.StealNSResult();
     }
+<<<<<<< HEAD
     SelectionRefPtr()->AddRange(*range, error);
+||||||| merged common ancestors
+    aSelection.AddRange(*range, error);
+=======
+    SelectionRefPtr()->AddRangeAndSelectFramesAndNotifyListeners(*range, error);
+>>>>>>> upstream-releases
     if (NS_WARN_IF(error.Failed())) {
       return error.StealNSResult();
     }
@@ -837,7 +878,7 @@ HTMLEditor::DeleteTable() {
   nsresult rv = GetCellContext(getter_AddRefs(table), nullptr, nullptr, nullptr,
                                nullptr, nullptr);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   if (NS_WARN_IF(!table)) {
     return NS_ERROR_FAILURE;
@@ -846,7 +887,7 @@ HTMLEditor::DeleteTable() {
   AutoPlaceholderBatch treateAsOneTransaction(*this);
   rv = DeleteTableElementAndChildrenWithTransaction(*table);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -861,7 +902,7 @@ HTMLEditor::DeleteTableCell(int32_t aNumberOfCellsToDelete) {
 
   nsresult rv = DeleteTableCellWithTransaction(aNumberOfCellsToDelete);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -1133,7 +1174,7 @@ HTMLEditor::DeleteTableCellContents() {
 
   nsresult rv = DeleteTableCellContentsWithTransaction();
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -1212,7 +1253,7 @@ HTMLEditor::DeleteTableColumn(int32_t aNumberOfColumnsToDelete) {
   nsresult rv =
       DeleteSelectedTableColumnsWithTransaction(aNumberOfColumnsToDelete);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -1354,17 +1395,28 @@ nsresult HTMLEditor::DeleteTableColumnWithTransaction(Element& aTableElement,
       if (cellData.mColSpan > 0) {
         NS_WARNING_ASSERTION(cellData.mColSpan > 1,
                              "colspan should be 2 or larger");
-        SetColSpan(cellData.mElement, cellData.mColSpan - 1);
+        SetColSpan(MOZ_KnownLive(cellData.mElement), cellData.mColSpan - 1);
       }
       if (!cellData.IsSpannedFromOtherColumn()) {
         // Cell is in column to be deleted, but must have colspan > 1,
         // so delete contents of cell instead of cell itself (We must have
         // reset colspan above).
         DebugOnly<nsresult> rv =
+<<<<<<< HEAD
             DeleteAllChildrenWithTransaction(*cellData.mElement);
         NS_WARNING_ASSERTION(
             NS_SUCCEEDED(rv),
             "Failed to remove all children of the cell element");
+||||||| merged common ancestors
+          DeleteAllChildrenWithTransaction(*cellData.mElement);
+        NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
+          "Failed to remove all children of the cell element");
+=======
+            DeleteAllChildrenWithTransaction(MOZ_KnownLive(*cellData.mElement));
+        NS_WARNING_ASSERTION(
+            NS_SUCCEEDED(rv),
+            "Failed to remove all children of the cell element");
+>>>>>>> upstream-releases
       }
       // Skip rows which the removed cell spanned.
       rowIndex += cellData.NumberOfFollowingRows();
@@ -1379,7 +1431,8 @@ nsresult HTMLEditor::DeleteTableColumnWithTransaction(Element& aTableElement,
     if (numberOfCellsInRow != 1) {
       // If removing cell is not the last cell of the row, we can just remove
       // it.
-      nsresult rv = DeleteNodeWithTransaction(*cellData.mElement);
+      nsresult rv =
+          DeleteNodeWithTransaction(MOZ_KnownLive(*cellData.mElement));
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -1434,7 +1487,7 @@ HTMLEditor::DeleteTableRow(int32_t aNumberOfRowsToDelete) {
 
   nsresult rv = DeleteSelectedTableRowsWithTransaction(aNumberOfRowsToDelete);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -1666,7 +1719,8 @@ nsresult HTMLEditor::DeleteTableRowWithTransaction(Element& aTableElement,
     if (NS_WARN_IF(!spanCell.mElement)) {
       continue;
     }
-    nsresult rv = SetRowSpan(spanCell.mElement, spanCell.mNewRowSpanValue);
+    nsresult rv =
+        SetRowSpan(MOZ_KnownLive(spanCell.mElement), spanCell.mNewRowSpanValue);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -1688,10 +1742,14 @@ HTMLEditor::SelectTable() {
   }
 
   nsresult rv = ClearSelection();
-  if (NS_FAILED(rv)) {
-    return rv;
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
   }
-  return AppendNodeToSelectionAsRange(table);
+  rv = AppendNodeToSelectionAsRange(table);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1707,10 +1765,14 @@ HTMLEditor::SelectTableCell() {
   }
 
   nsresult rv = ClearSelection();
-  if (NS_FAILED(rv)) {
-    return rv;
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
   }
-  return AppendNodeToSelectionAsRange(cell);
+  rv = AppendNodeToSelectionAsRange(cell);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1745,11 +1807,11 @@ HTMLEditor::SelectBlockOfCells(Element* aStartCell, Element* aEndCell) {
   ErrorResult error;
   CellIndexes startCellIndexes(*aStartCell, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   CellIndexes endCellIndexes(*aEndCell, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   // Suppress nsISelectionListener notification
@@ -1767,7 +1829,7 @@ HTMLEditor::SelectBlockOfCells(Element* aStartCell, Element* aEndCell) {
 
   RefPtr<Element> cell = GetFirstSelectedTableCellElement(error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   if (!cell) {
     return NS_OK;
@@ -1777,19 +1839,26 @@ HTMLEditor::SelectBlockOfCells(Element* aStartCell, Element* aEndCell) {
   while (cell) {
     CellIndexes currentCellIndexes(*cell, error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
     if (currentCellIndexes.mRow < maxRow || currentCellIndexes.mRow > maxRow ||
         currentCellIndexes.mColumn < maxColumn ||
         currentCellIndexes.mColumn > maxColumn) {
+<<<<<<< HEAD
       SelectionRefPtr()->RemoveRange(*range, IgnoreErrors());
+||||||| merged common ancestors
+      selection->RemoveRange(*range, IgnoreErrors());
+=======
+      SelectionRefPtr()->RemoveRangeAndUnselectFramesAndNotifyListeners(
+          *range, IgnoreErrors());
+>>>>>>> upstream-releases
       // Since we've removed the range, decrement pointer to next range
       MOZ_ASSERT(mSelectedCellIndex > 0);
       mSelectedCellIndex--;
     }
     cell = GetNextSelectedTableCellElement(error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
     if (cell) {
       MOZ_ASSERT(mSelectedCellIndex > 0);
@@ -1821,7 +1890,9 @@ HTMLEditor::SelectBlockOfCells(Element* aStartCell, Element* aEndCell) {
       MOZ_ASSERT(col < cellData.NextColumnIndex());
     }
   }
-  // NS_OK, otherwise, the last failure of AppendNodeToSelectionAsRange().
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
   return rv;
 }
 
@@ -1850,7 +1921,7 @@ HTMLEditor::SelectAllTableCells() {
   ErrorResult error;
   TableSize tableSize(*this, *table, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   // Suppress nsISelectionListener notification
@@ -1889,11 +1960,17 @@ HTMLEditor::SelectAllTableCells() {
   }
   // Safety code to select starting cell if nothing else was selected
   if (!cellSelected) {
-    return AppendNodeToSelectionAsRange(startCell);
+    rv = AppendNodeToSelectionAsRange(startCell);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return EditorBase::ToGenericNSResult(rv);
+    }
+    return NS_OK;
   }
-  // NS_OK, otherwise, the error of ClearSelection() when there is no column or
-  // the last failure of CellData or AppendNodeToSelectionAsRange().
-  return rv;
+
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1919,7 +1996,7 @@ HTMLEditor::SelectTableRow() {
       GetCellContext(getter_AddRefs(table), getter_AddRefs(cell), nullptr,
                      nullptr, &startRowIndex, &startColIndex);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   if (NS_WARN_IF(!table)) {
     return NS_ERROR_FAILURE;
@@ -1928,7 +2005,7 @@ HTMLEditor::SelectTableRow() {
   ErrorResult error;
   TableSize tableSize(*this, *table, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   // Note: At this point, we could get first and last cells in row,
@@ -1971,9 +2048,10 @@ HTMLEditor::SelectTableRow() {
   if (!cellSelected) {
     return AppendNodeToSelectionAsRange(startCell);
   }
-  // NS_OK, otherwise, the error of ClearSelection() when there is no column or
-  // the last failure of CellData or AppendNodeToSelectionAsRange().
-  return rv;
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1999,7 +2077,7 @@ HTMLEditor::SelectTableColumn() {
       GetCellContext(getter_AddRefs(table), getter_AddRefs(cell), nullptr,
                      nullptr, &startRowIndex, &startColIndex);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   if (NS_WARN_IF(!table)) {
     return NS_ERROR_FAILURE;
@@ -2008,7 +2086,7 @@ HTMLEditor::SelectTableColumn() {
   ErrorResult error;
   TableSize tableSize(*this, *table, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   // Suppress nsISelectionListener notification
@@ -2047,9 +2125,10 @@ HTMLEditor::SelectTableColumn() {
   if (!cellSelected) {
     return AppendNodeToSelectionAsRange(startCell);
   }
-  // NS_OK, otherwise, the error of ClearSelection() when there is no row or
-  // the last failure of CellData or AppendNodeToSelectionAsRange().
-  return rv;
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -2064,18 +2143,46 @@ HTMLEditor::SplitTableCell() {
   RefPtr<Element> cell;
   int32_t startRowIndex, startColIndex, actualRowSpan, actualColSpan;
   // Get cell, table, etc. at selection anchor node
+<<<<<<< HEAD
   nsresult rv =
       GetCellContext(getter_AddRefs(table), getter_AddRefs(cell), nullptr,
                      nullptr, &startRowIndex, &startColIndex);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  nsresult rv = GetCellContext(nullptr,
+                               getter_AddRefs(table),
+                               getter_AddRefs(cell),
+                               nullptr, nullptr,
+                               &startRowIndex, &startColIndex);
+  NS_ENSURE_SUCCESS(rv, rv);
+=======
+  nsresult rv =
+      GetCellContext(getter_AddRefs(table), getter_AddRefs(cell), nullptr,
+                     nullptr, &startRowIndex, &startColIndex);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+>>>>>>> upstream-releases
   if (!table || !cell) {
     return NS_SUCCESS_EDITOR_ELEMENT_NOT_FOUND;
   }
 
   // We need rowspan and colspan data
+<<<<<<< HEAD
   rv = GetCellSpansAt(table, startRowIndex, startColIndex, actualRowSpan,
                       actualColSpan);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  rv = GetCellSpansAt(table, startRowIndex, startColIndex,
+                      actualRowSpan, actualColSpan);
+  NS_ENSURE_SUCCESS(rv, rv);
+=======
+  rv = GetCellSpansAt(table, startRowIndex, startColIndex, actualRowSpan,
+                      actualColSpan);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return EditorBase::ToGenericNSResult(rv);
+  }
+>>>>>>> upstream-releases
 
   // Must have some span to split
   if (actualRowSpan <= 1 && actualColSpan <= 1) {
@@ -2104,7 +2211,9 @@ HTMLEditor::SplitTableCell() {
     if (rowSpanBelow > 0) {
       rv = SplitCellIntoRows(table, rowIndex, startColIndex, 1, rowSpanBelow,
                              getter_AddRefs(newCell));
-      NS_ENSURE_SUCCESS(rv, rv);
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return EditorBase::ToGenericNSResult(rv);
+      }
       CopyCellBackgroundColor(newCell, cell);
     }
     int32_t colIndex = startColIndex;
@@ -2112,7 +2221,9 @@ HTMLEditor::SplitTableCell() {
     for (colSpanAfter = actualColSpan - 1; colSpanAfter > 0; colSpanAfter--) {
       rv = SplitCellIntoColumns(table, rowIndex, colIndex, 1, colSpanAfter,
                                 getter_AddRefs(newCell));
-      NS_ENSURE_SUCCESS(rv, rv);
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return EditorBase::ToGenericNSResult(rv);
+      }
       CopyCellBackgroundColor(newCell, cell);
       colIndex++;
     }
@@ -2167,7 +2278,7 @@ nsresult HTMLEditor::SplitCellIntoColumns(Element* aTable, int32_t aRowIndex,
   }
 
   // Reduce colspan of cell to split
-  nsresult rv = SetColSpan(cellData.mElement, aColSpanLeft);
+  nsresult rv = SetColSpan(MOZ_KnownLive(cellData.mElement), aColSpanLeft);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2175,8 +2286,17 @@ nsresult HTMLEditor::SplitCellIntoColumns(Element* aTable, int32_t aRowIndex,
   // Insert new cell after using the remaining span
   // and always get the new cell so we can copy the background color;
   RefPtr<Element> newCellElement;
+<<<<<<< HEAD
   rv = InsertCell(cellData.mElement, cellData.mEffectiveRowSpan, aColSpanRight,
                   true, false, getter_AddRefs(newCellElement));
+||||||| merged common ancestors
+  rv = InsertCell(cellData.mElement,
+                  cellData.mEffectiveRowSpan, aColSpanRight, true, false,
+                  getter_AddRefs(newCellElement));
+=======
+  rv = InsertCell(MOZ_KnownLive(cellData.mElement), cellData.mEffectiveRowSpan,
+                  aColSpanRight, true, false, getter_AddRefs(newCellElement));
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2186,7 +2306,8 @@ nsresult HTMLEditor::SplitCellIntoColumns(Element* aTable, int32_t aRowIndex,
   if (aNewCell) {
     NS_ADDREF(*aNewCell = newCellElement.get());
   }
-  rv = CopyCellBackgroundColor(newCellElement, cellData.mElement);
+  rv =
+      CopyCellBackgroundColor(newCellElement, MOZ_KnownLive(cellData.mElement));
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2288,7 +2409,7 @@ nsresult HTMLEditor::SplitCellIntoRows(Element* aTable, int32_t aRowIndex,
   }
 
   // Reduce rowspan of cell to split
-  nsresult rv = SetRowSpan(cellData.mElement, aRowSpanAbove);
+  nsresult rv = SetRowSpan(MOZ_KnownLive(cellData.mElement), aRowSpanAbove);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -2345,8 +2466,17 @@ HTMLEditor::SwitchTableCellHeaderType(Element* aSourceCell,
 
   // This creates new node, moves children, copies attributes (true)
   //   and manages the selection!
+<<<<<<< HEAD
   RefPtr<Element> newCell = ReplaceContainerAndCloneAttributesWithTransaction(
       *aSourceCell, *newCellName);
+||||||| merged common ancestors
+  RefPtr<Element> newCell =
+    ReplaceContainerAndCloneAttributesWithTransaction(*aSourceCell,
+                                                      *newCellName);
+=======
+  RefPtr<Element> newCell = ReplaceContainerAndCloneAttributesWithTransaction(
+      *aSourceCell, MOZ_KnownLive(*newCellName));
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!newCell)) {
     return NS_ERROR_FAILURE;
   }
@@ -2376,7 +2506,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
       GetCellContext(getter_AddRefs(table), getter_AddRefs(targetCell), nullptr,
                      nullptr, &startRowIndex, &startColIndex);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   if (!table || !targetCell) {
     return NS_OK;
@@ -2393,14 +2523,14 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
   ErrorResult error;
   CellAndIndexes firstSelectedCell(*this, *SelectionRefPtr(), error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   bool joinSelectedCells = false;
   if (firstSelectedCell.mElement) {
     RefPtr<Element> secondCell = GetNextSelectedTableCellElement(error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
 
     // If only one cell is selected, join with cell to the right
@@ -2412,7 +2542,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
     // and just merge contents if not contiguous
     TableSize tableSize(*this, *table, error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
 
     // Get spans for cell we will merge into
@@ -2421,7 +2551,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
                         firstSelectedCell.mIndexes.mColumn, firstRowSpan,
                         firstColSpan);
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      return EditorBase::ToGenericNSResult(rv);
     }
 
     // This defines the last indexes along the "edges"
@@ -2441,7 +2571,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
       // Be sure each row doesn't have rowspan errors
       rv = FixBadRowSpan(table, rowIndex, tableSize.mRowCount);
       if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
+        return EditorBase::ToGenericNSResult(rv);
       }
       // Adjust rowcount by number of rows we removed
       lastRowIndex -= currentRowCount - tableSize.mRowCount;
@@ -2566,7 +2696,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
                     cellData.mEffectiveColSpan - extraColSpan, extraColSpan,
                     nullptr);
                 if (NS_WARN_IF(NS_FAILED(rv))) {
-                  return rv;
+                  return EditorBase::ToGenericNSResult(rv);
                 }
               }
             }
@@ -2574,7 +2704,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
             rv = MergeCells(firstSelectedCell.mElement, cellData.mElement,
                             false);
             if (NS_WARN_IF(NS_FAILED(rv))) {
-              return rv;
+              return EditorBase::ToGenericNSResult(rv);
             }
 
             // Add cell to list to delete
@@ -2602,7 +2732,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
       if (nodeToBeRemoved) {
         rv = DeleteNodeWithTransaction(*nodeToBeRemoved);
         if (NS_WARN_IF(NS_FAILED(rv))) {
-          return rv;
+          return EditorBase::ToGenericNSResult(rv);
         }
       }
     }
@@ -2619,22 +2749,29 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
       RefPtr<Element> deletedCell;
       HTMLEditor::GetCellFromRange(range, getter_AddRefs(deletedCell));
       if (!deletedCell) {
+<<<<<<< HEAD
         SelectionRefPtr()->RemoveRange(*range, IgnoreErrors());
+||||||| merged common ancestors
+        selection->RemoveRange(*range, IgnoreErrors());
+=======
+        SelectionRefPtr()->RemoveRangeAndUnselectFramesAndNotifyListeners(
+            *range, IgnoreErrors());
+>>>>>>> upstream-releases
         rangeCount--;
         i--;
       }
     }
 
     // Set spans for the cell everything merged into
-    rv = SetRowSpan(firstSelectedCell.mElement,
+    rv = SetRowSpan(MOZ_KnownLive(firstSelectedCell.mElement),
                     lastRowIndex - firstSelectedCell.mIndexes.mRow + 1);
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      return EditorBase::ToGenericNSResult(rv);
     }
-    rv = SetColSpan(firstSelectedCell.mElement,
+    rv = SetColSpan(MOZ_KnownLive(firstSelectedCell.mElement),
                     lastColIndex - firstSelectedCell.mIndexes.mColumn + 1);
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      return EditorBase::ToGenericNSResult(rv);
     }
 
     // Fixup disturbances in table layout
@@ -2683,7 +2820,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
           spanAboveMergedCell + leftCellData.mEffectiveRowSpan,
           effectiveRowSpan2 - leftCellData.mEffectiveRowSpan, nullptr);
       if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
+        return EditorBase::ToGenericNSResult(rv);
       }
     }
 
@@ -2694,7 +2831,7 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
                     !rightCellData.IsSpannedFromOtherRow() &&
                         effectiveRowSpan2 >= leftCellData.mEffectiveRowSpan);
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      return EditorBase::ToGenericNSResult(rv);
     }
 
     if (effectiveRowSpan2 < leftCellData.mEffectiveRowSpan) {
@@ -2708,17 +2845,28 @@ HTMLEditor::JoinTableCells(bool aMergeNonContiguousContents) {
     if (spanAboveMergedCell > 0) {
       // Cell we merged started in a row above the target cell
       // Reduce rowspan to give room where target cell will extend its colspan
-      rv = SetRowSpan(rightCellData.mElement, spanAboveMergedCell);
+      rv = SetRowSpan(MOZ_KnownLive(rightCellData.mElement),
+                      spanAboveMergedCell);
       if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
+        return EditorBase::ToGenericNSResult(rv);
       }
     }
 
     // Reset target cell's colspan to encompass cell to the right
+<<<<<<< HEAD
     rv = SetColSpan(leftCellData.mElement, leftCellData.mEffectiveColSpan +
                                                rightCellData.mEffectiveColSpan);
+||||||| merged common ancestors
+    rv = SetColSpan(leftCellData.mElement,
+                    leftCellData.mEffectiveColSpan +
+                      rightCellData.mEffectiveColSpan);
+=======
+    rv = SetColSpan(
+        MOZ_KnownLive(leftCellData.mElement),
+        leftCellData.mEffectiveColSpan + rightCellData.mEffectiveColSpan);
+>>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
+      return EditorBase::ToGenericNSResult(rv);
     }
   }
   return NS_OK;
@@ -2744,7 +2892,7 @@ nsresult HTMLEditor::MergeCells(RefPtr<Element> aTargetCell,
     uint32_t len = aTargetCell->GetChildCount();
     if (len == 1 && IsEmptyCell(aTargetCell)) {
       // Delete the empty node
-      nsIContent* cellChild = aTargetCell->GetFirstChild();
+      nsCOMPtr<nsIContent> cellChild = aTargetCell->GetFirstChild();
       if (NS_WARN_IF(!cellChild)) {
         return NS_ERROR_FAILURE;
       }
@@ -2767,8 +2915,17 @@ nsresult HTMLEditor::MergeCells(RefPtr<Element> aTargetCell,
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
+<<<<<<< HEAD
       rv = InsertNodeWithTransaction(
           *cellChild, EditorRawDOMPoint(aTargetCell, insertIndex));
+||||||| merged common ancestors
+      rv = InsertNodeWithTransaction(*cellChild,
+                                     EditorRawDOMPoint(aTargetCell,
+                                                       insertIndex));
+=======
+      rv = InsertNodeWithTransaction(*cellChild,
+                                     EditorDOMPoint(aTargetCell, insertIndex));
+>>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -2844,8 +3001,16 @@ nsresult HTMLEditor::FixBadRowSpan(Element* aTable, int32_t aRowIndex,
       //     not found a cell.  Fix this later.
       if (cellData.mElement && cellData.mRowSpan > 0 &&
           !cellData.IsSpannedFromOtherRowOrColumn()) {
+<<<<<<< HEAD
         nsresult rv =
             SetRowSpan(cellData.mElement, cellData.mRowSpan - rowsReduced);
+||||||| merged common ancestors
+        nsresult rv =
+          SetRowSpan(cellData.mElement, cellData.mRowSpan - rowsReduced);
+=======
+        nsresult rv = SetRowSpan(MOZ_KnownLive(cellData.mElement),
+                                 cellData.mRowSpan - rowsReduced);
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -2917,8 +3082,16 @@ nsresult HTMLEditor::FixBadColSpan(Element* aTable, int32_t aColIndex,
       //     not found a cell.  Fix this later.
       if (cellData.mElement && cellData.mColSpan > 0 &&
           !cellData.IsSpannedFromOtherRowOrColumn()) {
+<<<<<<< HEAD
         nsresult rv =
             SetColSpan(cellData.mElement, cellData.mColSpan - colsReduced);
+||||||| merged common ancestors
+        nsresult rv =
+          SetColSpan(cellData.mElement, cellData.mColSpan - colsReduced);
+=======
+        nsresult rv = SetColSpan(MOZ_KnownLive(cellData.mElement),
+                                 cellData.mColSpan - colsReduced);
+>>>>>>> upstream-releases
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -2950,7 +3123,7 @@ HTMLEditor::NormalizeTable(Element* aTableOrElementInTable) {
   }
   nsresult rv = NormalizeTableInternal(*aTableOrElementInTable);
   if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
+    return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
 }
@@ -3067,7 +3240,7 @@ HTMLEditor::GetCellIndexes(Element* aCellElement, int32_t* aRowIndex,
     ErrorResult error;
     CellIndexes cellIndexes(*this, *SelectionRefPtr(), error);
     if (error.Failed()) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
     *aRowIndex = cellIndexes.mRow;
     *aColumnIndex = cellIndexes.mColumn;
@@ -3077,7 +3250,7 @@ HTMLEditor::GetCellIndexes(Element* aCellElement, int32_t* aRowIndex,
   ErrorResult error;
   CellIndexes cellIndexes(*aCellElement, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   *aRowIndex = cellIndexes.mRow;
   *aColumnIndex = cellIndexes.mColumn;
@@ -3187,7 +3360,7 @@ HTMLEditor::GetTableSize(Element* aTableOrElementInTable, int32_t* aRowCount,
   ErrorResult error;
   TableSize tableSize(*this, *tableOrElementInTable, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   *aRowCount = tableSize.mRowCount;
   *aColumnCount = tableSize.mColumnCount;
@@ -3549,7 +3722,7 @@ HTMLEditor::GetFirstSelectedCell(nsRange** aFirstSelectedRange,
   RefPtr<Element> firstSelectedCellElement =
       GetFirstSelectedTableCellElement(error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   if (!firstSelectedCellElement) {
@@ -3627,7 +3800,7 @@ HTMLEditor::GetNextSelectedCell(nsRange** aNextSelectedCellRange,
   RefPtr<Element> nextSelectedCellElement =
       GetNextSelectedTableCellElement(error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   if (!nextSelectedCellElement) {
@@ -3706,7 +3879,7 @@ HTMLEditor::GetFirstSelectedCellInTable(int32_t* aRowIndex,
   ErrorResult error;
   CellAndIndexes result(*this, *SelectionRefPtr(), error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   result.mElement.forget(aCellElement);
   *aRowIndex = std::max(result.mIndexes.mRow, 0);
@@ -3835,7 +4008,7 @@ HTMLEditor::GetSelectedOrParentTableElement(
   RefPtr<Element> cellOrRowOrTableElement =
       GetSelectedOrParentTableElement(aRv, &isCellSelected);
   if (NS_WARN_IF(aRv.Failed())) {
-    return aRv.StealNSResult();
+    return EditorBase::ToGenericNSResult(aRv.StealNSResult());
   }
   if (!cellOrRowOrTableElement) {
     return NS_OK;
@@ -3965,13 +4138,13 @@ HTMLEditor::GetSelectedCellsType(Element* aElement, uint32_t* aSelectionType) {
   ErrorResult error;
   TableSize tableSize(*this, *table, error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
 
   // Traverse all selected cells
   RefPtr<Element> selectedCell = GetFirstSelectedTableCellElement(error);
   if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
+    return EditorBase::ToGenericNSResult(error.StealNSResult());
   }
   if (!selectedCell) {
     return NS_OK;
@@ -3989,7 +4162,7 @@ HTMLEditor::GetSelectedCellsType(Element* aElement, uint32_t* aSelectionType) {
   while (selectedCell) {
     CellIndexes selectedCellIndexes(*selectedCell, error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
     if (!indexArray.Contains(selectedCellIndexes.mColumn)) {
       indexArray.AppendElement(selectedCellIndexes.mColumn);
@@ -4019,7 +4192,7 @@ HTMLEditor::GetSelectedCellsType(Element* aElement, uint32_t* aSelectionType) {
   while (selectedCell) {
     CellIndexes selectedCellIndexes(*selectedCell, error);
     if (NS_WARN_IF(error.Failed())) {
-      return error.StealNSResult();
+      return EditorBase::ToGenericNSResult(error.StealNSResult());
     }
 
     if (!indexArray.Contains(selectedCellIndexes.mRow)) {

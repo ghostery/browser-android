@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // Keep in (case-insensitive) order:
+#include "mozilla/PresShell.h"
 #include "nsContainerFrame.h"
 #include "nsGkAtoms.h"
 #include "nsIFrame.h"
 #include "nsLiteralString.h"
 #include "SVGObserverUtils.h"
-#include "nsSVGFilters.h"
+#include "SVGFilters.h"
 
 using namespace mozilla;
 
@@ -18,6 +19,7 @@ using namespace mozilla;
  * This frame is used by filter primitive elements that
  * have special child elements that provide parameters.
  */
+<<<<<<< HEAD
 class SVGFEContainerFrame final : public nsContainerFrame {
   friend nsIFrame* NS_NewSVGFEContainerFrame(nsIPresShell* aPresShell,
                                              ComputedStyle* aStyle);
@@ -25,6 +27,25 @@ class SVGFEContainerFrame final : public nsContainerFrame {
  protected:
   explicit SVGFEContainerFrame(ComputedStyle* aStyle)
       : nsContainerFrame(aStyle, kClassID) {
+||||||| merged common ancestors
+class SVGFEContainerFrame final : public nsContainerFrame
+{
+  friend nsIFrame*
+  NS_NewSVGFEContainerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit SVGFEContainerFrame(ComputedStyle* aStyle)
+    : nsContainerFrame(aStyle, kClassID)
+  {
+=======
+class SVGFEContainerFrame final : public nsContainerFrame {
+  friend nsIFrame* NS_NewSVGFEContainerFrame(mozilla::PresShell* aPresShell,
+                                             ComputedStyle* aStyle);
+
+ protected:
+  explicit SVGFEContainerFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+      : nsContainerFrame(aStyle, aPresContext, kClassID) {
+>>>>>>> upstream-releases
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -60,9 +81,21 @@ class SVGFEContainerFrame final : public nsContainerFrame {
   }
 };
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGFEContainerFrame(nsIPresShell* aPresShell,
                                     ComputedStyle* aStyle) {
   return new (aPresShell) SVGFEContainerFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGFEContainerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) SVGFEContainerFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGFEContainerFrame(PresShell* aPresShell,
+                                    ComputedStyle* aStyle) {
+  return new (aPresShell)
+      SVGFEContainerFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(SVGFEContainerFrame)
@@ -78,10 +111,24 @@ void SVGFEContainerFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
 }
 #endif /* DEBUG */
 
+<<<<<<< HEAD
 nsresult SVGFEContainerFrame::AttributeChanged(int32_t aNameSpaceID,
                                                nsAtom* aAttribute,
                                                int32_t aModType) {
   nsSVGFE* element = static_cast<nsSVGFE*>(GetContent());
+||||||| merged common ancestors
+nsresult
+SVGFEContainerFrame::AttributeChanged(int32_t  aNameSpaceID,
+                                      nsAtom* aAttribute,
+                                      int32_t  aModType)
+{
+  nsSVGFE *element = static_cast<nsSVGFE*>(GetContent());
+=======
+nsresult SVGFEContainerFrame::AttributeChanged(int32_t aNameSpaceID,
+                                               nsAtom* aAttribute,
+                                               int32_t aModType) {
+  dom::SVGFE* element = static_cast<dom::SVGFE*>(GetContent());
+>>>>>>> upstream-releases
   if (element->AttributeAffectsRendering(aNameSpaceID, aAttribute)) {
     MOZ_ASSERT(
         GetParent()->IsSVGFilterFrame(),

@@ -87,17 +87,43 @@ void GamepadServiceTest::DestroyPBackgroundActor() {
   mChild = nullptr;
 }
 
+<<<<<<< HEAD
 already_AddRefed<Promise> GamepadServiceTest::AddGamepad(
     const nsAString& aID, GamepadMappingType aMapping, GamepadHand aHand,
     uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+already_AddRefed<Promise>
+GamepadServiceTest::AddGamepad(const nsAString& aID,
+                               GamepadMappingType aMapping,
+                               GamepadHand aHand,
+                               uint32_t aNumButtons,
+                               uint32_t aNumAxes,
+                               uint32_t aNumHaptics,
+                               ErrorResult& aRv)
+{
+=======
+already_AddRefed<Promise> GamepadServiceTest::AddGamepad(
+    const nsAString& aID, GamepadMappingType aMapping, GamepadHand aHand,
+    uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
+    uint32_t aNumLightIndicator, uint32_t aNumTouchEvents, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (mShuttingDown) {
     return nullptr;
   }
 
   // Only VR controllers has displayID, we give 0 to the general gamepads.
+<<<<<<< HEAD
   GamepadAdded a(nsString(aID), aMapping, aHand, 0, aNumButtons, aNumAxes,
                  aNumHaptics);
+||||||| merged common ancestors
+  GamepadAdded a(nsString(aID),
+                 aMapping, aHand, 0,
+                 aNumButtons, aNumAxes, aNumHaptics);
+=======
+  GamepadAdded a(nsString(aID), aMapping, aHand, 0, aNumButtons, aNumAxes,
+                 aNumHaptics, aNumLightIndicator, aNumTouchEvents);
+>>>>>>> upstream-releases
   GamepadChangeEventBody body(a);
   GamepadChangeEvent e(0, GamepadServiceType::Standard, body);
 
@@ -246,8 +272,51 @@ void GamepadServiceTest::NewPoseMove(
   mChild->SendGamepadTestEvent(id, e);
 }
 
+<<<<<<< HEAD
 JSObject* GamepadServiceTest::WrapObject(JSContext* aCx,
                                          JS::HandleObject aGivenProto) {
+||||||| merged common ancestors
+JSObject*
+GamepadServiceTest::WrapObject(JSContext* aCx, JS::HandleObject aGivenProto)
+{
+=======
+void GamepadServiceTest::NewTouch(uint32_t aIndex, uint32_t aTouchArrayIndex,
+                                  uint32_t aTouchId, uint8_t aSurfaceId,
+                                  const Float32Array& aPos,
+                                  const Nullable<Float32Array>& aSurfDim) {
+  if (mShuttingDown) {
+    return;
+  }
+
+  GamepadTouchState touchState;
+  touchState.touchId = aTouchId;
+  touchState.surfaceId = aSurfaceId;
+  const Float32Array& value = aPos;
+  value.ComputeLengthAndData();
+  MOZ_ASSERT(value.Length() == 2);
+  touchState.position[0] = value.Data()[0];
+  touchState.position[1] = value.Data()[1];
+
+  if (!aSurfDim.IsNull()) {
+    const Float32Array& value = aSurfDim.Value();
+    value.ComputeLengthAndData();
+    MOZ_ASSERT(value.Length() == 2);
+    touchState.surfaceDimensions[0] = value.Data()[0];
+    touchState.surfaceDimensions[1] = value.Data()[1];
+    touchState.isSurfaceDimensionsValid = true;
+  }
+
+  GamepadTouchInformation a(aTouchArrayIndex, touchState);
+  GamepadChangeEventBody body(a);
+  GamepadChangeEvent e(aIndex, GamepadServiceType::Standard, body);
+
+  uint32_t id = ++mEventNumber;
+  mChild->SendGamepadTestEvent(id, e);
+}
+
+JSObject* GamepadServiceTest::WrapObject(JSContext* aCx,
+                                         JS::HandleObject aGivenProto) {
+>>>>>>> upstream-releases
   return GamepadServiceTest_Binding::Wrap(aCx, this, aGivenProto);
 }
 

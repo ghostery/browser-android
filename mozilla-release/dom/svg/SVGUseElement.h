@@ -9,10 +9,12 @@
 
 #include "mozilla/dom/FromParser.h"
 #include "mozilla/dom/IDTracker.h"
-#include "nsStubMutationObserver.h"
 #include "mozilla/dom/SVGGraphicsElement.h"
-#include "nsSVGLength2.h"
-#include "nsSVGString.h"
+#include "mozilla/RefPtr.h"
+#include "nsCOMPtr.h"
+#include "nsStubMutationObserver.h"
+#include "SVGAnimatedLength.h"
+#include "SVGAnimatedString.h"
 #include "nsTArray.h"
 
 class nsIContent;
@@ -47,9 +49,20 @@ class SVGUseElement final : public SVGUseElementBase,
  public:
   NS_IMPL_FROMNODE_WITH_TAG(SVGUseElement, kNameSpaceID_SVG, use)
 
+<<<<<<< HEAD
   nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                       nsIContent* aBindingParent) override;
   void UnbindFromTree(bool aDeep = true, bool aNullParent = true) override;
+||||||| merged common ancestors
+  nsresult BindToTree(nsIDocument* aDocument,
+                      nsIContent* aParent,
+                      nsIContent* aBindingParent) override;
+  void UnbindFromTree(bool aDeep = true,
+                      bool aNullParent = true) override;
+=======
+  nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  void UnbindFromTree(bool aNullParent = true) override;
+>>>>>>> upstream-releases
 
   // interfaces:
   NS_DECL_ISUPPORTS_INHERITED
@@ -62,7 +75,7 @@ class SVGUseElement final : public SVGUseElementBase,
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTREMOVED
   NS_DECL_NSIMUTATIONOBSERVER_NODEWILLBEDESTROYED
 
-  // nsSVGElement specializations:
+  // SVGElement specializations:
   virtual gfxMatrix PrependLocalTransformsTo(
       const gfxMatrix& aMatrix,
       SVGTransformTypes aWhich = eAllTransforms) const override;
@@ -73,11 +86,11 @@ class SVGUseElement final : public SVGUseElementBase,
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
   // WebIDL
-  already_AddRefed<SVGAnimatedString> Href();
-  already_AddRefed<SVGAnimatedLength> X();
-  already_AddRefed<SVGAnimatedLength> Y();
-  already_AddRefed<SVGAnimatedLength> Width();
-  already_AddRefed<SVGAnimatedLength> Height();
+  already_AddRefed<DOMSVGAnimatedString> Href();
+  already_AddRefed<DOMSVGAnimatedLength> X();
+  already_AddRefed<DOMSVGAnimatedLength> Y();
+  already_AddRefed<DOMSVGAnimatedLength> Width();
+  already_AddRefed<DOMSVGAnimatedLength> Height();
 
   nsIURI* GetSourceDocURI();
   URLExtraData* GetContentURLData() const { return mContentURLData; }
@@ -91,11 +104,32 @@ class SVGUseElement final : public SVGUseElementBase,
   // This is needed because SMIL doesn't go through AfterSetAttr unfortunately.
   void ProcessAttributeChange(int32_t aNamespaceID, nsAtom* aAttribute);
 
+<<<<<<< HEAD
+  nsresult AfterSetAttr(int32_t aNamespaceID, nsAtom* aAttribute,
+                        const nsAttrValue* aValue, const nsAttrValue* aOldValue,
+                        nsIPrincipal* aSubjectPrincipal, bool aNotify) final;
+||||||| merged common ancestors
+  nsresult AfterSetAttr(int32_t aNamespaceID,
+                        nsAtom* aAttribute,
+                        const nsAttrValue* aValue,
+                        const nsAttrValue* aOldValue,
+                        nsIPrincipal* aSubjectPrincipal,
+                        bool aNotify) final;
+=======
   nsresult AfterSetAttr(int32_t aNamespaceID, nsAtom* aAttribute,
                         const nsAttrValue* aValue, const nsAttrValue* aOldValue,
                         nsIPrincipal* aSubjectPrincipal, bool aNotify) final;
 
  protected:
+  bool IsCyclicReferenceTo(const Element& aTarget) const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ protected:
+||||||| merged common ancestors
+protected:
+=======
+>>>>>>> upstream-releases
   /**
    * Helper that provides a reference to the element with the ID that is
    * referenced by the 'use' element's 'href' attribute, and that will update
@@ -136,14 +170,20 @@ class SVGUseElement final : public SVGUseElementBase,
   void UnlinkSource();
 
   enum { ATTR_X, ATTR_Y, ATTR_WIDTH, ATTR_HEIGHT };
-  nsSVGLength2 mLengthAttributes[4];
+  SVGAnimatedLength mLengthAttributes[4];
   static LengthInfo sLengthInfo[4];
 
   enum { HREF, XLINK_HREF };
-  nsSVGString mStringAttributes[2];
+  SVGAnimatedString mStringAttributes[2];
   static StringInfo sStringInfo[2];
 
+<<<<<<< HEAD
   nsCOMPtr<nsIContent> mOriginal;  // if we've been cloned, our "real" copy
+||||||| merged common ancestors
+  nsCOMPtr<nsIContent> mOriginal; // if we've been cloned, our "real" copy
+=======
+  RefPtr<SVGUseElement> mOriginal;  // if we've been cloned, our "real" copy
+>>>>>>> upstream-releases
   ElementTracker mReferencedElementTracker;
   RefPtr<URLExtraData> mContentURLData;  // URL data for its anonymous content
 };

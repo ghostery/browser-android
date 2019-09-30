@@ -24,12 +24,30 @@ using namespace JS;
 
 namespace xpc {
 
+<<<<<<< HEAD
 bool IsReflector(JSObject* obj) {
   obj = js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
   if (!obj) {
     return false;
   }
   return IS_WN_REFLECTOR(obj) || dom::IsDOMObject(obj);
+||||||| merged common ancestors
+bool
+IsReflector(JSObject* obj)
+{
+    obj = js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
+    if (!obj) {
+        return false;
+    }
+    return IS_WN_REFLECTOR(obj) || dom::IsDOMObject(obj);
+=======
+bool IsReflector(JSObject* obj, JSContext* cx) {
+  obj = js::CheckedUnwrapDynamic(obj, cx, /* stopAtWindowProxy = */ false);
+  if (!obj) {
+    return false;
+  }
+  return IS_WN_REFLECTOR(obj) || dom::IsDOMObject(obj);
+>>>>>>> upstream-releases
 }
 
 enum StackScopedCloneTags {
@@ -46,6 +64,7 @@ enum StackScopedCloneTags {
 // wrapReflectors == false case to maintain compatibility.
 //
 // FileList clones are supposed to give brand new objects, rather than
+<<<<<<< HEAD
 // cross-compartment wrappers. For this, our current implementation relies on
 // the fact that these objects are implemented with XPConnect and have one
 // reflector per scope.
@@ -57,6 +76,79 @@ class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
       : mOptions(aOptions), mReflectors(aCx), mFunctions(aCx) {}
 
   ~StackScopedCloneData() { Clear(); }
+||||||| merged common ancestors
+// cross-compartment wrappers. For this, our current implementation relies on the
+// fact that these objects are implemented with XPConnect and have one reflector
+// per scope.
+bool IsFileList(JSObject* obj)
+{
+    return IS_INSTANCE_OF(FileList, obj);
+}
+
+class MOZ_STACK_CLASS StackScopedCloneData
+    : public StructuredCloneHolderBase
+{
+public:
+    StackScopedCloneData(JSContext* aCx, StackScopedCloneOptions* aOptions)
+        : mOptions(aOptions)
+        , mReflectors(aCx)
+        , mFunctions(aCx)
+    {}
+
+    ~StackScopedCloneData()
+    {
+        Clear();
+    }
+
+    JSObject* CustomReadHandler(JSContext* aCx,
+                                JSStructuredCloneReader* aReader,
+                                uint32_t aTag,
+                                uint32_t aData) override
+    {
+        if (aTag == SCTAG_REFLECTOR) {
+            MOZ_ASSERT(!aData);
+=======
+// cross-compartment wrappers. For this, our current implementation relies on
+// the fact that these objects are implemented with XPConnect and have one
+// reflector per scope.
+bool IsFileList(JSObject* obj) { return IS_INSTANCE_OF(FileList, obj); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSObject* CustomReadHandler(JSContext* aCx, JSStructuredCloneReader* aReader,
+                              uint32_t aTag, uint32_t aData) override {
+    if (aTag == SCTAG_REFLECTOR) {
+      MOZ_ASSERT(!aData);
+||||||| merged common ancestors
+            size_t idx;
+            if (!JS_ReadBytes(aReader, &idx, sizeof(size_t))) {
+                return nullptr;
+            }
+=======
+class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
+ public:
+  StackScopedCloneData(JSContext* aCx, StackScopedCloneOptions* aOptions)
+      : mOptions(aOptions), mReflectors(aCx), mFunctions(aCx) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      size_t idx;
+      if (!JS_ReadBytes(aReader, &idx, sizeof(size_t))) {
+        return nullptr;
+      }
+||||||| merged common ancestors
+            RootedObject reflector(aCx, mReflectors[idx]);
+            MOZ_ASSERT(reflector, "No object pointer?");
+            MOZ_ASSERT(IsReflector(reflector), "Object pointer must be a reflector!");
+
+            if (!JS_WrapObject(aCx, &reflector)) {
+                return nullptr;
+            }
+
+            return reflector;
+        }
+=======
+  ~StackScopedCloneData() { Clear(); }
 
   JSObject* CustomReadHandler(JSContext* aCx, JSStructuredCloneReader* aReader,
                               uint32_t aTag, uint32_t aData) override {
@@ -67,10 +159,21 @@ class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
       if (!JS_ReadBytes(aReader, &idx, sizeof(size_t))) {
         return nullptr;
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       RootedObject reflector(aCx, mReflectors[idx]);
       MOZ_ASSERT(reflector, "No object pointer?");
       MOZ_ASSERT(IsReflector(reflector), "Object pointer must be a reflector!");
+||||||| merged common ancestors
+        if (aTag == SCTAG_FUNCTION) {
+          MOZ_ASSERT(aData < mFunctions.length());
+=======
+      RootedObject reflector(aCx, mReflectors[idx]);
+      MOZ_ASSERT(reflector, "No object pointer?");
+      MOZ_ASSERT(IsReflector(reflector, aCx),
+                 "Object pointer must be a reflector!");
+>>>>>>> upstream-releases
 
       if (!JS_WrapObject(aCx, &reflector)) {
         return nullptr;
@@ -146,7 +249,26 @@ class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
       }
     }
 
+<<<<<<< HEAD
     if ((mOptions->wrapReflectors && IsReflector(aObj)) || IsFileList(aObj)) {
+      if (!mReflectors.append(aObj)) {
+        return false;
+      }
+||||||| merged common ancestors
+        if (JS::IsCallable(aObj)) {
+            if (mOptions->cloneFunctions) {
+                if (!mFunctions.append(aObj)) {
+                    return false;
+                }
+                return JS_WriteUint32Pair(aWriter, SCTAG_FUNCTION, mFunctions.length() - 1);
+            } else {
+                JS_ReportErrorASCII(aCx, "Permission denied to pass a Function via structured clone");
+                return false;
+            }
+        }
+=======
+    if ((mOptions->wrapReflectors && IsReflector(aObj, aCx)) ||
+        IsFileList(aObj)) {
       if (!mReflectors.append(aObj)) {
         return false;
       }
@@ -160,7 +282,39 @@ class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
       }
       return true;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      size_t idx = mReflectors.length() - 1;
+      if (!JS_WriteUint32Pair(aWriter, SCTAG_REFLECTOR, 0)) {
+        return false;
+      }
+      if (!JS_WriteBytes(aWriter, &idx, sizeof(size_t))) {
+||||||| merged common ancestors
+        JS_ReportErrorASCII(aCx, "Encountered unsupported value type writing stack-scoped structured clone");
+=======
+    if (JS::IsCallable(aObj)) {
+      if (mOptions->cloneFunctions) {
+        if (!mFunctions.append(aObj)) {
+          return false;
+        }
+        return JS_WriteUint32Pair(aWriter, SCTAG_FUNCTION,
+                                  mFunctions.length() - 1);
+      } else {
+        JS_ReportErrorASCII(
+            aCx, "Permission denied to pass a Function via structured clone");
+>>>>>>> upstream-releases
+        return false;
+<<<<<<< HEAD
+      }
+      return true;
+||||||| merged common ancestors
+=======
+      }
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     if (JS::IsCallable(aObj)) {
       if (mOptions->cloneFunctions) {
         if (!mFunctions.append(aObj)) {
@@ -185,6 +339,23 @@ class MOZ_STACK_CLASS StackScopedCloneData : public StructuredCloneHolderBase {
   AutoObjectVector mReflectors;
   AutoObjectVector mFunctions;
   nsTArray<RefPtr<BlobImpl>> mBlobImpls;
+||||||| merged common ancestors
+    StackScopedCloneOptions* mOptions;
+    AutoObjectVector mReflectors;
+    AutoObjectVector mFunctions;
+    nsTArray<RefPtr<BlobImpl>> mBlobImpls;
+=======
+    JS_ReportErrorASCII(aCx,
+                        "Encountered unsupported value type writing "
+                        "stack-scoped structured clone");
+    return false;
+  }
+
+  StackScopedCloneOptions* mOptions;
+  RootedObjectVector mReflectors;
+  RootedObjectVector mFunctions;
+  nsTArray<RefPtr<BlobImpl>> mBlobImpls;
+>>>>>>> upstream-releases
 };
 
 /*
@@ -267,6 +438,76 @@ static bool CheckSameOriginArg(JSContext* cx, FunctionForwarderOptions& options,
   return false;
 }
 
+<<<<<<< HEAD
+static bool FunctionForwarder(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  // Grab the options from the reserved slot.
+  RootedObject optionsObj(
+      cx, &js::GetFunctionNativeReserved(&args.callee(), 1).toObject());
+  FunctionForwarderOptions options(cx, optionsObj);
+  if (!options.Parse()) {
+    return false;
+  }
+
+  // Grab and unwrap the underlying callable.
+  RootedValue v(cx, js::GetFunctionNativeReserved(&args.callee(), 0));
+  RootedObject unwrappedFun(cx, js::UncheckedUnwrap(&v.toObject()));
+||||||| merged common ancestors
+static bool
+FunctionForwarder(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+
+    // Grab the options from the reserved slot.
+    RootedObject optionsObj(cx, &js::GetFunctionNativeReserved(&args.callee(), 1).toObject());
+    FunctionForwarderOptions options(cx, optionsObj);
+    if (!options.Parse()) {
+        return false;
+    }
+
+    // Grab and unwrap the underlying callable.
+    RootedValue v(cx, js::GetFunctionNativeReserved(&args.callee(), 0));
+    RootedObject unwrappedFun(cx, js::UncheckedUnwrap(&v.toObject()));
+
+    RootedValue thisVal(cx, NullValue());
+    if (!args.isConstructing()) {
+        RootedObject thisObject(cx);
+        if (!args.computeThis(cx, &thisObject)) {
+            return false;
+        }
+        thisVal.setObject(*thisObject);
+    }
+
+    {
+        // We manually implement the contents of CrossCompartmentWrapper::call
+        // here, because certain function wrappers (notably content->nsEP) are
+        // not callable.
+        JSAutoRealm ar(cx, unwrappedFun);
+        if (!CheckSameOriginArg(cx, options, thisVal) || !JS_WrapValue(cx, &thisVal)) {
+            return false;
+        }
+
+        for (size_t n = 0;  n < args.length(); ++n) {
+            if (!CheckSameOriginArg(cx, options, args[n]) || !JS_WrapValue(cx, args[n])) {
+                return false;
+            }
+        }
+
+        RootedValue fval(cx, ObjectValue(*unwrappedFun));
+        if (args.isConstructing()) {
+            RootedObject obj(cx);
+            if (!JS::Construct(cx, fval, args, &obj)) {
+                return false;
+            }
+            args.rval().setObject(*obj);
+        } else {
+            if (!JS::Call(cx, thisVal, fval, args, args.rval())) {
+                return false;
+            }
+        }
+    }
+=======
 static bool FunctionForwarder(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -296,18 +537,42 @@ static bool FunctionForwarder(JSContext* cx, unsigned argc, Value* vp) {
     // here, because certain function wrappers (notably content->nsEP) are
     // not callable.
     JSAutoRealm ar(cx, unwrappedFun);
-    if (!CheckSameOriginArg(cx, options, thisVal) ||
-        !JS_WrapValue(cx, &thisVal)) {
-      return false;
-    }
-
-    for (size_t n = 0; n < args.length(); ++n) {
-      if (!CheckSameOriginArg(cx, options, args[n]) ||
-          !JS_WrapValue(cx, args[n])) {
+    bool crossCompartment = js::GetObjectCompartment(unwrappedFun) !=
+                            js::GetObjectCompartment(&args.callee());
+    if (crossCompartment) {
+      if (!CheckSameOriginArg(cx, options, thisVal) ||
+          !JS_WrapValue(cx, &thisVal)) {
         return false;
       }
-    }
 
+      for (size_t n = 0; n < args.length(); ++n) {
+        if (!CheckSameOriginArg(cx, options, args[n]) ||
+            !JS_WrapValue(cx, args[n])) {
+          return false;
+        }
+      }
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedValue thisVal(cx, NullValue());
+  if (!args.isConstructing()) {
+    RootedObject thisObject(cx);
+    if (!args.computeThis(cx, &thisObject)) {
+      return false;
+||||||| merged common ancestors
+    // Rewrap the return value into our compartment.
+    return JS_WrapValue(cx, args.rval());
+}
+
+bool
+NewFunctionForwarder(JSContext* cx, HandleId idArg, HandleObject callable,
+                     FunctionForwarderOptions& options, MutableHandleValue vp)
+{
+    RootedId id(cx, idArg);
+    if (id == JSID_VOIDHANDLE) {
+        id = GetJSIDByIndex(cx, XPCJSContext::IDX_EMPTYSTRING);
+=======
     RootedValue fval(cx, ObjectValue(*unwrappedFun));
     if (args.isConstructing()) {
       RootedObject obj(cx);
@@ -319,13 +584,55 @@ static bool FunctionForwarder(JSContext* cx, unsigned argc, Value* vp) {
       if (!JS::Call(cx, thisVal, fval, args, args.rval())) {
         return false;
       }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
+    thisVal.setObject(*thisObject);
+  }
+
+  {
+    // We manually implement the contents of CrossCompartmentWrapper::call
+    // here, because certain function wrappers (notably content->nsEP) are
+    // not callable.
+    JSAutoRealm ar(cx, unwrappedFun);
+    if (!CheckSameOriginArg(cx, options, thisVal) ||
+        !JS_WrapValue(cx, &thisVal)) {
+      return false;
+    }
+||||||| merged common ancestors
+
+    // If our callable is a (possibly wrapped) function, we can give
+    // the exported thing the right number of args.
+    unsigned nargs = 0;
+    RootedObject unwrapped(cx, js::UncheckedUnwrap(callable));
+    if (unwrapped) {
+        if (JSFunction* fun = JS_GetObjectFunction(unwrapped)) {
+            nargs = JS_GetFunctionArity(fun);
+        }
+    }
+=======
   }
 
   // Rewrap the return value into our compartment.
   return JS_WrapValue(cx, args.rval());
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    for (size_t n = 0; n < args.length(); ++n) {
+      if (!CheckSameOriginArg(cx, options, args[n]) ||
+          !JS_WrapValue(cx, args[n])) {
+        return false;
+      }
+||||||| merged common ancestors
+    // We have no way of knowing whether the underlying function wants to be a
+    // constructor or not, so we just mark all forwarders as constructors, and
+    // let the underlying function throw for construct calls if it wants.
+    JSFunction* fun = js::NewFunctionByIdWithReserved(cx, FunctionForwarder,
+                                                      nargs, JSFUN_CONSTRUCTOR, id);
+    if (!fun) {
+        return false;
+=======
 bool NewFunctionForwarder(JSContext* cx, HandleId idArg, HandleObject callable,
                           FunctionForwarderOptions& options,
                           MutableHandleValue vp) {
@@ -341,6 +648,7 @@ bool NewFunctionForwarder(JSContext* cx, HandleId idArg, HandleObject callable,
   if (unwrapped) {
     if (JSFunction* fun = JS_GetObjectFunction(unwrapped)) {
       nargs = JS_GetFunctionArity(fun);
+>>>>>>> upstream-releases
     }
   }
 
@@ -353,11 +661,194 @@ bool NewFunctionForwarder(JSContext* cx, HandleId idArg, HandleObject callable,
     return false;
   }
 
+<<<<<<< HEAD
+    RootedValue fval(cx, ObjectValue(*unwrappedFun));
+    if (args.isConstructing()) {
+      RootedObject obj(cx);
+      if (!JS::Construct(cx, fval, args, &obj)) {
+        return false;
+      }
+      args.rval().setObject(*obj);
+    } else {
+      if (!JS::Call(cx, thisVal, fval, args, args.rval())) {
+        return false;
+      }
+    }
+  }
+||||||| merged common ancestors
+    // Stash the callable in slot 0.
+    AssertSameCompartment(cx, callable);
+    RootedObject funobj(cx, JS_GetFunctionObject(fun));
+    js::SetFunctionNativeReserved(funobj, 0, ObjectValue(*callable));
+
+    // Stash the options in slot 1.
+    RootedObject optionsObj(cx, options.ToJSObject(cx));
+    if (!optionsObj) {
+        return false;
+    }
+    js::SetFunctionNativeReserved(funobj, 1, ObjectValue(*optionsObj));
+
+    vp.setObject(*funobj);
+    return true;
+}
+
+bool
+ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope, HandleValue voptions,
+               MutableHandleValue rval)
+{
+    bool hasOptions = !voptions.isUndefined();
+    if (!vscope.isObject() || !vfunction.isObject() || (hasOptions && !voptions.isObject())) {
+        JS_ReportErrorASCII(cx, "Invalid argument");
+        return false;
+    }
+=======
   // Stash the callable in slot 0.
   AssertSameCompartment(cx, callable);
   RootedObject funobj(cx, JS_GetFunctionObject(fun));
   js::SetFunctionNativeReserved(funobj, 0, ObjectValue(*callable));
 
+  // Stash the options in slot 1.
+  RootedObject optionsObj(cx, options.ToJSObject(cx));
+  if (!optionsObj) {
+    return false;
+  }
+  js::SetFunctionNativeReserved(funobj, 1, ObjectValue(*optionsObj));
+
+  vp.setObject(*funobj);
+  return true;
+}
+
+bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
+                    HandleValue voptions, MutableHandleValue rval) {
+  bool hasOptions = !voptions.isUndefined();
+  if (!vscope.isObject() || !vfunction.isObject() ||
+      (hasOptions && !voptions.isObject())) {
+    JS_ReportErrorASCII(cx, "Invalid argument");
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Rewrap the return value into our compartment.
+  return JS_WrapValue(cx, args.rval());
+}
+||||||| merged common ancestors
+    RootedObject funObj(cx, &vfunction.toObject());
+    RootedObject targetScope(cx, &vscope.toObject());
+    ExportFunctionOptions options(cx, hasOptions ? &voptions.toObject() : nullptr);
+    if (hasOptions && !options.Parse()) {
+        return false;
+    }
+=======
+  RootedObject funObj(cx, &vfunction.toObject());
+  RootedObject targetScope(cx, &vscope.toObject());
+  ExportFunctionOptions options(cx,
+                                hasOptions ? &voptions.toObject() : nullptr);
+  if (hasOptions && !options.Parse()) {
+    return false;
+  }
+
+  // Restrictions:
+  // * We must subsume the scope we are exporting to.
+  // * We must subsume the function being exported, because the function
+  //   forwarder manually circumvents security wrapper CALL restrictions.
+  targetScope = js::CheckedUnwrapDynamic(targetScope, cx);
+  // For the function we can just CheckedUnwrapStatic, because if it's
+  // not callable we're going to fail out anyway.
+  funObj = js::CheckedUnwrapStatic(funObj);
+  if (!targetScope || !funObj) {
+    JS_ReportErrorASCII(cx, "Permission denied to export function into scope");
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool NewFunctionForwarder(JSContext* cx, HandleId idArg, HandleObject callable,
+                          FunctionForwarderOptions& options,
+                          MutableHandleValue vp) {
+  RootedId id(cx, idArg);
+  if (id == JSID_VOIDHANDLE) {
+    id = GetJSIDByIndex(cx, XPCJSContext::IDX_EMPTYSTRING);
+  }
+
+  // If our callable is a (possibly wrapped) function, we can give
+  // the exported thing the right number of args.
+  unsigned nargs = 0;
+  RootedObject unwrapped(cx, js::UncheckedUnwrap(callable));
+  if (unwrapped) {
+    if (JSFunction* fun = JS_GetObjectFunction(unwrapped)) {
+      nargs = JS_GetFunctionArity(fun);
+||||||| merged common ancestors
+    // Restrictions:
+    // * We must subsume the scope we are exporting to.
+    // * We must subsume the function being exported, because the function
+    //   forwarder manually circumvents security wrapper CALL restrictions.
+    targetScope = js::CheckedUnwrap(targetScope);
+    funObj = js::CheckedUnwrap(funObj);
+    if (!targetScope || !funObj) {
+        JS_ReportErrorASCII(cx, "Permission denied to export function into scope");
+        return false;
+=======
+  if (js::IsScriptedProxy(targetScope)) {
+    JS_ReportErrorASCII(cx, "Defining property on proxy object is not allowed");
+    return false;
+  }
+
+  {
+    // We need to operate in the target scope from here on, let's enter
+    // its realm.
+    JSAutoRealm ar(cx, targetScope);
+
+    // Unwrapping to see if we have a callable.
+    funObj = UncheckedUnwrap(funObj);
+    if (!JS::IsCallable(funObj)) {
+      JS_ReportErrorASCII(cx, "First argument must be a function");
+      return false;
+>>>>>>> upstream-releases
+    }
+  }
+
+  // We have no way of knowing whether the underlying function wants to be a
+  // constructor or not, so we just mark all forwarders as constructors, and
+  // let the underlying function throw for construct calls if it wants.
+  JSFunction* fun = js::NewFunctionByIdWithReserved(
+      cx, FunctionForwarder, nargs, JSFUN_CONSTRUCTOR, id);
+  if (!fun) {
+    return false;
+  }
+
+<<<<<<< HEAD
+  // Stash the callable in slot 0.
+  AssertSameCompartment(cx, callable);
+  RootedObject funobj(cx, JS_GetFunctionObject(fun));
+  js::SetFunctionNativeReserved(funobj, 0, ObjectValue(*callable));
+||||||| merged common ancestors
+    if (js::IsScriptedProxy(targetScope)) {
+        JS_ReportErrorASCII(cx, "Defining property on proxy object is not allowed");
+        return false;
+    }
+=======
+    RootedId id(cx, options.defineAs);
+    if (JSID_IS_VOID(id)) {
+      // If there wasn't any function name specified,
+      // copy the name from the function being imported.
+      JSFunction* fun = JS_GetObjectFunction(funObj);
+      RootedString funName(cx, JS_GetFunctionId(fun));
+      if (!funName) {
+        funName = JS_AtomizeAndPinString(cx, "");
+      }
+      JS_MarkCrossZoneIdValue(cx, StringValue(funName));
+
+      if (!JS_StringToId(cx, funName, &id)) {
+        return false;
+      }
+    } else {
+      JS_MarkCrossZoneId(cx, id);
+    }
+    MOZ_ASSERT(JSID_IS_STRING(id));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Stash the options in slot 1.
   RootedObject optionsObj(cx, options.ToJSObject(cx));
   if (!optionsObj) {
@@ -396,7 +887,63 @@ bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
     JS_ReportErrorASCII(cx, "Permission denied to export function into scope");
     return false;
   }
+||||||| merged common ancestors
+    {
+        // We need to operate in the target scope from here on, let's enter
+        // its realm.
+        JSAutoRealm ar(cx, targetScope);
 
+        // Unwrapping to see if we have a callable.
+        funObj = UncheckedUnwrap(funObj);
+        if (!JS::IsCallable(funObj)) {
+            JS_ReportErrorASCII(cx, "First argument must be a function");
+            return false;
+        }
+
+        RootedId id(cx, options.defineAs);
+        if (JSID_IS_VOID(id)) {
+            // If there wasn't any function name specified,
+            // copy the name from the function being imported.
+            JSFunction* fun = JS_GetObjectFunction(funObj);
+            RootedString funName(cx, JS_GetFunctionId(fun));
+            if (!funName) {
+                funName = JS_AtomizeAndPinString(cx, "");
+            }
+            JS_MarkCrossZoneIdValue(cx, StringValue(funName));
+
+            if (!JS_StringToId(cx, funName, &id)) {
+                return false;
+            }
+        } else {
+            JS_MarkCrossZoneId(cx, id);
+        }
+        MOZ_ASSERT(JSID_IS_STRING(id));
+
+        // The function forwarder will live in the target compartment. Since
+        // this function will be referenced from its private slot, to avoid a
+        // GC hazard, we must wrap it to the same compartment.
+        if (!JS_WrapObject(cx, &funObj)) {
+            return false;
+        }
+
+        // And now, let's create the forwarder function in the target compartment
+        // for the function the be exported.
+        FunctionForwarderOptions forwarderOptions;
+        forwarderOptions.allowCrossOriginArguments = options.allowCrossOriginArguments;
+        if (!NewFunctionForwarder(cx, id, funObj, forwarderOptions, rval)) {
+            JS_ReportErrorASCII(cx, "Exporting function failed");
+            return false;
+        }
+=======
+    // The function forwarder will live in the target compartment. Since
+    // this function will be referenced from its private slot, to avoid a
+    // GC hazard, we must wrap it to the same compartment.
+    if (!JS_WrapObject(cx, &funObj)) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (js::IsScriptedProxy(targetScope)) {
     JS_ReportErrorASCII(cx, "Defining property on proxy object is not allowed");
     return false;
@@ -412,8 +959,29 @@ bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
     if (!JS::IsCallable(funObj)) {
       JS_ReportErrorASCII(cx, "First argument must be a function");
       return false;
+||||||| merged common ancestors
+        // We have the forwarder function in the target compartment. If
+        // defineAs was set, we also need to define it as a property on
+        // the target.
+        if (!JSID_IS_VOID(options.defineAs)) {
+            if (!JS_DefinePropertyById(cx, targetScope, id, rval,
+                                       JSPROP_ENUMERATE)) {
+                return false;
+            }
+        }
+=======
+    // And now, let's create the forwarder function in the target compartment
+    // for the function the be exported.
+    FunctionForwarderOptions forwarderOptions;
+    forwarderOptions.allowCrossOriginArguments =
+        options.allowCrossOriginArguments;
+    if (!NewFunctionForwarder(cx, id, funObj, forwarderOptions, rval)) {
+      JS_ReportErrorASCII(cx, "Exporting function failed");
+      return false;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     RootedId id(cx, options.defineAs);
     if (JSID_IS_VOID(id)) {
       // If there wasn't any function name specified,
@@ -426,20 +994,52 @@ bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
       JS_MarkCrossZoneIdValue(cx, StringValue(funName));
 
       if (!JS_StringToId(cx, funName, &id)) {
+||||||| merged common ancestors
+    // Finally we have to re-wrap the exported function back to the caller compartment.
+    if (!JS_WrapValue(cx, rval)) {
+=======
+    // We have the forwarder function in the target compartment. If
+    // defineAs was set, we also need to define it as a property on
+    // the target.
+    if (!JSID_IS_VOID(options.defineAs)) {
+      if (!JS_DefinePropertyById(cx, targetScope, id, rval, JSPROP_ENUMERATE)) {
+>>>>>>> upstream-releases
         return false;
+<<<<<<< HEAD
       }
     } else {
       JS_MarkCrossZoneId(cx, id);
+||||||| merged common ancestors
+=======
+      }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     MOZ_ASSERT(JSID_IS_STRING(id));
+||||||| merged common ancestors
+=======
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // The function forwarder will live in the target compartment. Since
     // this function will be referenced from its private slot, to avoid a
     // GC hazard, we must wrap it to the same compartment.
     if (!JS_WrapObject(cx, &funObj)) {
       return false;
     }
+||||||| merged common ancestors
+    return true;
+}
+=======
+  // Finally we have to re-wrap the exported function back to the caller
+  // compartment.
+  if (!JS_WrapValue(cx, rval)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // And now, let's create the forwarder function in the target compartment
     // for the function the be exported.
     FunctionForwarderOptions forwarderOptions;
@@ -449,7 +1049,21 @@ bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
       JS_ReportErrorASCII(cx, "Exporting function failed");
       return false;
     }
+||||||| merged common ancestors
+bool
+CreateObjectIn(JSContext* cx, HandleValue vobj, CreateObjectInOptions& options,
+               MutableHandleValue rval)
+{
+    if (!vobj.isObject()) {
+        JS_ReportErrorASCII(cx, "Expected an object as the target scope");
+        return false;
+    }
+=======
+  return true;
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // We have the forwarder function in the target compartment. If
     // defineAs was set, we also need to define it as a property on
     // the target.
@@ -459,30 +1073,90 @@ bool ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope,
       }
     }
   }
-
-  // Finally we have to re-wrap the exported function back to the caller
-  // compartment.
-  if (!JS_WrapValue(cx, rval)) {
-    return false;
-  }
-
-  return true;
-}
-
+||||||| merged common ancestors
+    RootedObject scope(cx, js::CheckedUnwrap(&vobj.toObject()));
+    if (!scope) {
+        JS_ReportErrorASCII(cx, "Permission denied to create object in the target scope");
+        return false;
+    }
+=======
 bool CreateObjectIn(JSContext* cx, HandleValue vobj,
                     CreateObjectInOptions& options, MutableHandleValue rval) {
   if (!vobj.isObject()) {
     JS_ReportErrorASCII(cx, "Expected an object as the target scope");
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Finally we have to re-wrap the exported function back to the caller
+  // compartment.
+  if (!JS_WrapValue(cx, rval)) {
+    return false;
+  }
+||||||| merged common ancestors
+    bool define = !JSID_IS_VOID(options.defineAs);
+=======
+  // cx represents the caller Realm.
+  RootedObject scope(cx, js::CheckedUnwrapDynamic(&vobj.toObject(), cx));
+  if (!scope) {
+    JS_ReportErrorASCII(
+        cx, "Permission denied to create object in the target scope");
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return true;
+}
+||||||| merged common ancestors
+    if (define && js::IsScriptedProxy(scope)) {
+        JS_ReportErrorASCII(cx, "Defining property on proxy object is not allowed");
+        return false;
+    }
+=======
+  bool define = !JSID_IS_VOID(options.defineAs);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool CreateObjectIn(JSContext* cx, HandleValue vobj,
+                    CreateObjectInOptions& options, MutableHandleValue rval) {
+  if (!vobj.isObject()) {
+    JS_ReportErrorASCII(cx, "Expected an object as the target scope");
+    return false;
+  }
+||||||| merged common ancestors
+    RootedObject obj(cx);
+    {
+        JSAutoRealm ar(cx, scope);
+        JS_MarkCrossZoneId(cx, options.defineAs);
+=======
+  if (define && js::IsScriptedProxy(scope)) {
+    JS_ReportErrorASCII(cx, "Defining property on proxy object is not allowed");
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   RootedObject scope(cx, js::CheckedUnwrap(&vobj.toObject()));
   if (!scope) {
     JS_ReportErrorASCII(
         cx, "Permission denied to create object in the target scope");
     return false;
   }
+||||||| merged common ancestors
+        obj = JS_NewPlainObject(cx);
+        if (!obj) {
+            return false;
+        }
+=======
+  RootedObject obj(cx);
+  {
+    JSAutoRealm ar(cx, scope);
+    JS_MarkCrossZoneId(cx, options.defineAs);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool define = !JSID_IS_VOID(options.defineAs);
 
   if (define && js::IsScriptedProxy(scope)) {
@@ -498,6 +1172,17 @@ bool CreateObjectIn(JSContext* cx, HandleValue vobj,
     obj = JS_NewPlainObject(cx);
     if (!obj) {
       return false;
+||||||| merged common ancestors
+        if (define) {
+            if (!JS_DefinePropertyById(cx, scope, options.defineAs, obj,
+                                       JSPROP_ENUMERATE))
+                return false;
+        }
+=======
+    obj = JS_NewPlainObject(cx);
+    if (!obj) {
+      return false;
+>>>>>>> upstream-releases
     }
 
     if (define) {

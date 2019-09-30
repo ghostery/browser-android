@@ -6,6 +6,7 @@
 #include "mozilla/extensions/MatchPattern.h"
 #include "mozilla/extensions/MatchGlob.h"
 
+#include "js/RegExp.h"  // JS::NewUCRegExpObject, JS::ExecuteRegExpNoStatics
 #include "mozilla/dom/ScriptSettings.h"
 #include "mozilla/HoldDropJSObjects.h"
 #include "mozilla/Unused.h"
@@ -233,9 +234,23 @@ const char* HOST_LOCATOR_SCHEMES[] = {
 
 const char* WILDCARD_SCHEMES[] = {"http", "https", "ws", "wss", nullptr};
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MatchPattern> MatchPattern::Constructor(
     dom::GlobalObject& aGlobal, const nsAString& aPattern,
     const MatchPatternOptions& aOptions, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MatchPattern>
+MatchPattern::Constructor(dom::GlobalObject& aGlobal,
+                          const nsAString& aPattern,
+                          const MatchPatternOptions& aOptions,
+                          ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MatchPattern> MatchPattern::Constructor(
+    dom::GlobalObject& aGlobal, const nsAString& aPattern,
+    const MatchPatternOptions& aOptions, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<MatchPattern> pattern = new MatchPattern(aGlobal.GetAsSupports());
   pattern->Init(aGlobal.Context(), aPattern, aOptions.mIgnorePath,
                 aOptions.mRestrictSchemes, aRv);
@@ -323,6 +338,11 @@ void MatchPattern::Init(JSContext* aCx, const nsAString& aPattern,
     } else if (StringHead(host, 2).EqualsLiteral("*.")) {
       mDomain = NS_ConvertUTF16toUTF8(Substring(host, 2));
       mMatchSubdomain = true;
+    } else if (host.Length() > 1 && host[0] == '[' &&
+               host[host.Length() - 1] == ']') {
+      // This is an IPv6 literal, we drop the enclosing `[]` to be
+      // consistent with nsIURI.
+      mDomain = NS_ConvertUTF16toUTF8(Substring(host, 1, host.Length() - 2));
     } else {
       mDomain = NS_ConvertUTF16toUTF8(host);
     }
@@ -455,7 +475,16 @@ JSObject* MatchPattern::WrapObject(JSContext* aCx,
   return MatchPattern_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ bool MatchPattern::MatchesAllURLs(const URLInfo& aURL) {
+||||||| merged common ancestors
+/* static */ bool
+MatchPattern::MatchesAllURLs(const URLInfo& aURL)
+{
+=======
+/* static */
+bool MatchPattern::MatchesAllURLs(const URLInfo& aURL) {
+>>>>>>> upstream-releases
   RefPtr<AtomSet> permittedSchemes = AtomSet::Get<PERMITTED_SCHEMES>();
   return permittedSchemes->Contains(aURL.Scheme());
 }
@@ -474,10 +503,25 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(MatchPattern)
  * MatchPatternSet
  *****************************************************************************/
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MatchPatternSet> MatchPatternSet::Constructor(
     dom::GlobalObject& aGlobal,
     const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
     const MatchPatternOptions& aOptions, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MatchPatternSet>
+MatchPatternSet::Constructor(dom::GlobalObject& aGlobal,
+                             const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
+                             const MatchPatternOptions& aOptions,
+                             ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MatchPatternSet> MatchPatternSet::Constructor(
+    dom::GlobalObject& aGlobal,
+    const nsTArray<dom::OwningStringOrMatchPattern>& aPatterns,
+    const MatchPatternOptions& aOptions, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   ArrayType patterns;
 
   for (auto& elem : aPatterns) {
@@ -538,7 +582,24 @@ bool MatchPatternSet::Subsumes(const MatchPattern& aPattern) const {
   return false;
 }
 
+<<<<<<< HEAD
 bool MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const {
+||||||| merged common ancestors
+bool
+MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const
+{
+=======
+bool MatchPatternSet::SubsumesDomain(const MatchPattern& aPattern) const {
+  for (const auto& pattern : mPatterns) {
+    if (pattern->SubsumesDomain(aPattern)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool MatchPatternSet::Overlaps(const MatchPatternSet& aPatternSet) const {
+>>>>>>> upstream-releases
   for (const auto& pattern : aPatternSet.mPatterns) {
     if (Overlaps(*pattern)) {
       return true;
@@ -586,9 +647,24 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(MatchPatternSet)
 
 MatchGlob::~MatchGlob() { mozilla::DropJSObjects(this); }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MatchGlob> MatchGlob::Constructor(
     dom::GlobalObject& aGlobal, const nsAString& aGlob, bool aAllowQuestion,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MatchGlob>
+MatchGlob::Constructor(dom::GlobalObject& aGlobal,
+                       const nsAString& aGlob,
+                       bool aAllowQuestion,
+                       ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MatchGlob> MatchGlob::Constructor(dom::GlobalObject& aGlobal,
+                                                   const nsAString& aGlob,
+                                                   bool aAllowQuestion,
+                                                   ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<MatchGlob> glob = new MatchGlob(aGlobal.GetAsSupports());
   glob->Init(aGlobal.Context(), aGlob, aAllowQuestion, aRv);
   if (aRv.Failed()) {
@@ -641,7 +717,7 @@ void MatchGlob::Init(JSContext* aCx, const nsAString& aGlob,
   // TODO: Switch to the Rust regexp crate, when Rust integration is easier.
   // It uses a much more efficient, linear time matching algorithm, and
   // doesn't require special casing for the literal and prefix cases.
-  mRegExp = JS_NewUCRegExpObject(aCx, escaped.get(), escaped.Length(), 0);
+  mRegExp = JS::NewUCRegExpObject(aCx, escaped.get(), escaped.Length(), 0);
   if (mRegExp) {
     mozilla::HoldJSObjects(this);
   } else {
@@ -663,8 +739,16 @@ bool MatchGlob::Matches(const nsAString& aString) const {
     nsString input(aString);
 
     size_t index = 0;
+<<<<<<< HEAD
     if (!JS_ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(),
                                    aString.Length(), &index, true, &result)) {
+||||||| merged common ancestors
+    if (!JS_ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(), aString.Length(),
+                                   &index, true, &result)) {
+=======
+    if (!JS::ExecuteRegExpNoStatics(cx, regexp, input.BeginWriting(),
+                                    aString.Length(), &index, true, &result)) {
+>>>>>>> upstream-releases
       return false;
     }
 

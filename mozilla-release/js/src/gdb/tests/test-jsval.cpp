@@ -1,10 +1,15 @@
 #include "gdb-tests.h"
 #include "jsapi.h"
 
+<<<<<<< HEAD
 #include "js/Symbol.h"
 #ifdef ENABLE_BIGINT
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+=======
+#include "js/Symbol.h"
+>>>>>>> upstream-releases
 #include "vm/BigIntType.h"
-#endif
 
 FRAGMENT(jsval, simple) {
   using namespace JS;
@@ -23,9 +28,7 @@ FRAGMENT(jsval, simple) {
   RootedString hello(cx, JS_NewStringCopyZ(cx, "Hello!"));
   RootedValue friendly_string(cx, StringValue(hello));
   RootedValue symbol(cx, SymbolValue(GetSymbolFor(cx, hello)));
-#ifdef ENABLE_BIGINT
-  RootedValue bi(cx, BigIntValue(BigInt::create(cx)));
-#endif
+  RootedValue bi(cx, BigIntValue(BigInt::zero(cx)));
 
   RootedValue global(cx);
   global.setObject(*CurrentGlobalOrNull(cx));
@@ -47,8 +50,6 @@ FRAGMENT(jsval, simple) {
   use(empty_string);
   use(friendly_string);
   use(symbol);
-#ifdef ENABLE_BIGINT
   use(bi);
-#endif
   use(global);
 }

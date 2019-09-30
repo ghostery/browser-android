@@ -5,7 +5,6 @@
 
 #include "IDecodingTask.h"
 
-#include "gfxPrefs.h"
 #include "nsThreadUtils.h"
 
 #include "Decoder.h"
@@ -82,6 +81,7 @@ void IDecodingTask::NotifyProgress(NotNull<RasterImage*> aImage,
 
   // We're forced to notify asynchronously.
   NotNull<RefPtr<RasterImage>> image = aImage;
+<<<<<<< HEAD
   mEventTarget->Dispatch(NS_NewRunnableFunction("IDecodingTask::NotifyProgress",
                                                 [=]() -> void {
                                                   image->NotifyProgress(
@@ -90,6 +90,23 @@ void IDecodingTask::NotifyProgress(NotNull<RasterImage*> aImage,
                                                       surfaceFlags);
                                                 }),
                          NS_DISPATCH_NORMAL);
+||||||| merged common ancestors
+  mEventTarget->Dispatch(NS_NewRunnableFunction(
+                           "IDecodingTask::NotifyProgress",
+                           [=]() -> void {
+    image->NotifyProgress(progress, invalidRect, frameCount,
+                          decoderFlags, surfaceFlags);
+  }), NS_DISPATCH_NORMAL);
+=======
+  mEventTarget->Dispatch(CreateMediumHighRunnable(NS_NewRunnableFunction(
+                             "IDecodingTask::NotifyProgress",
+                             [=]() -> void {
+                               image->NotifyProgress(progress, invalidRect,
+                                                     frameCount, decoderFlags,
+                                                     surfaceFlags);
+                             })),
+                         NS_DISPATCH_NORMAL);
+>>>>>>> upstream-releases
 }
 
 void IDecodingTask::NotifyDecodeComplete(NotNull<RasterImage*> aImage,
@@ -118,6 +135,7 @@ void IDecodingTask::NotifyDecodeComplete(NotNull<RasterImage*> aImage,
 
   // We're forced to notify asynchronously.
   NotNull<RefPtr<RasterImage>> image = aImage;
+<<<<<<< HEAD
   mEventTarget->Dispatch(
       NS_NewRunnableFunction("IDecodingTask::NotifyDecodeComplete",
                              [=]() -> void {
@@ -127,6 +145,25 @@ void IDecodingTask::NotifyDecodeComplete(NotNull<RasterImage*> aImage,
                                    surfaceFlags);
                              }),
       NS_DISPATCH_NORMAL);
+||||||| merged common ancestors
+  mEventTarget->Dispatch(NS_NewRunnableFunction(
+                           "IDecodingTask::NotifyDecodeComplete",
+                           [=]() -> void {
+    image->NotifyDecodeComplete(finalStatus, metadata, telemetry, progress,
+                                invalidRect, frameCount, decoderFlags,
+                                surfaceFlags);
+  }), NS_DISPATCH_NORMAL);
+=======
+  mEventTarget->Dispatch(CreateMediumHighRunnable(NS_NewRunnableFunction(
+                             "IDecodingTask::NotifyDecodeComplete",
+                             [=]() -> void {
+                               image->NotifyDecodeComplete(
+                                   finalStatus, metadata, telemetry, progress,
+                                   invalidRect, frameCount, decoderFlags,
+                                   surfaceFlags);
+                             })),
+                         NS_DISPATCH_NORMAL);
+>>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////////

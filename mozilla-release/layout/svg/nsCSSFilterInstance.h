@@ -13,16 +13,22 @@
 #include "mozilla/gfx/Point.h"
 #include "mozilla/gfx/Types.h"
 #include "nsColor.h"
-#include "nsTArrayForwardDeclare.h"
-
-struct nsStyleFilter;
+#include "mozilla/ServoStyleConsts.h"
 
 /**
  * This class helps nsFilterInstance build its filter graph. It turns a CSS
  * filter function (e.g. blur(3px)) from the style system into a
  * FilterPrimitiveDescription connected to the filter graph.
  */
+<<<<<<< HEAD
 class nsCSSFilterInstance {
+||||||| merged common ancestors
+class nsCSSFilterInstance
+{
+=======
+class nsCSSFilterInstance {
+  using StyleFilter = mozilla::StyleFilter;
+>>>>>>> upstream-releases
   typedef mozilla::gfx::Color Color;
   typedef mozilla::gfx::FilterPrimitiveDescription FilterPrimitiveDescription;
   typedef mozilla::gfx::IntPoint IntPoint;
@@ -40,10 +46,22 @@ class nsCSSFilterInstance {
    * @param aFrameSpaceInCSSPxToFilterSpaceTransform The transformation from
    *   the filtered element's frame space in CSS pixels to filter space.
    */
+<<<<<<< HEAD
   nsCSSFilterInstance(
       const nsStyleFilter& aFilter, nscolor aShadowFallbackColor,
       const nsIntRect& aTargetBoundsInFilterSpace,
       const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
+||||||| merged common ancestors
+  nsCSSFilterInstance(const nsStyleFilter& aFilter,
+                      nscolor aShadowFallbackColor,
+                      const nsIntRect& aTargetBoundsInFilterSpace,
+                      const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
+=======
+  nsCSSFilterInstance(
+      const StyleFilter& aFilter, nscolor aShadowFallbackColor,
+      const nsIntRect& aTargetBoundsInFilterSpace,
+      const gfxMatrix& aFrameSpaceInCSSPxToFilterSpaceTransform);
+>>>>>>> upstream-releases
 
   /**
    * Creates at least one new FilterPrimitiveDescription based on the filter
@@ -121,7 +139,7 @@ class nsCSSFilterInstance {
   /**
    * The CSS filter originally from the style system.
    */
-  const nsStyleFilter& mFilter;
+  const StyleFilter& mFilter;
 
   /**
    * The color that should be used for drop-shadow() filters that don't

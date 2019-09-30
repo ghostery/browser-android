@@ -112,8 +112,18 @@ void WebGLContext::ColorMask(WebGLboolean r, WebGLboolean g, WebGLboolean b,
   const FuncScope funcScope(*this, "colorMask");
   if (IsContextLost()) return;
 
+<<<<<<< HEAD
   mColorWriteMask = uint8_t(bool(r)) << 0 | uint8_t(bool(g)) << 1 |
                     uint8_t(bool(b)) << 2 | uint8_t(bool(a)) << 3;
+||||||| merged common ancestors
+    mColorWriteMask = uint8_t(bool(r)) << 0 |
+                      uint8_t(bool(g)) << 1 |
+                      uint8_t(bool(b)) << 2 |
+                      uint8_t(bool(a)) << 3;
+=======
+  mColorWriteMask = uint8_t(bool(r) << 0) | uint8_t(bool(g) << 1) |
+                    uint8_t(bool(b) << 2) | uint8_t(bool(a) << 3);
+>>>>>>> upstream-releases
 }
 
 void WebGLContext::DepthMask(WebGLboolean b) {

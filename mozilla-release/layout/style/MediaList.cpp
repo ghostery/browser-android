@@ -9,6 +9,7 @@
 #include "mozilla/dom/MediaList.h"
 
 #include "mozAutoDocUpdate.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/MediaListBinding.h"
 #include "mozilla/ServoBindings.h"
 #include "mozilla/ServoStyleSet.h"
@@ -39,8 +40,22 @@ void MediaList::SetStyleSheet(StyleSheet* aSheet) {
   mStyleSheet = aSheet;
 }
 
+<<<<<<< HEAD
 template <typename Func>
 nsresult MediaList::DoMediaChange(Func aCallback) {
+||||||| merged common ancestors
+template<typename Func>
+nsresult
+MediaList::DoMediaChange(Func aCallback)
+{
+=======
+template <typename Func>
+nsresult MediaList::DoMediaChange(Func aCallback) {
+  if (IsReadOnly()) {
+    return NS_OK;
+  }
+
+>>>>>>> upstream-releases
   if (mStyleSheet) {
     mStyleSheet->WillDirty();
   }
@@ -77,13 +92,35 @@ void MediaList::GetText(nsAString& aMediaText) {
   Servo_MediaList_GetText(mRawList, &aMediaText);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MediaList> MediaList::Create(
     const nsAString& aMedia, CallerType aCallerType) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MediaList>
+MediaList::Create(const nsAString& aMedia, CallerType aCallerType)
+{
+=======
+/* static */
+already_AddRefed<MediaList> MediaList::Create(const nsAString& aMedia,
+                                              CallerType aCallerType) {
+>>>>>>> upstream-releases
   RefPtr<MediaList> mediaList = new MediaList(aMedia, aCallerType);
   return mediaList.forget();
 }
 
+<<<<<<< HEAD
 void MediaList::SetText(const nsAString& aMediaText) {
+||||||| merged common ancestors
+void
+MediaList::SetText(const nsAString& aMediaText)
+{
+=======
+void MediaList::SetText(const nsAString& aMediaText) {
+  if (IsReadOnly()) {
+    return;
+  }
+
+>>>>>>> upstream-releases
   SetTextInternal(aMediaText, CallerType::NonSystem);
 }
 
@@ -105,7 +142,16 @@ void MediaList::IndexedGetter(uint32_t aIndex, bool& aFound,
   }
 }
 
+<<<<<<< HEAD
 nsresult MediaList::Delete(const nsAString& aOldMedium) {
+||||||| merged common ancestors
+nsresult
+MediaList::Delete(const nsAString& aOldMedium)
+{
+=======
+nsresult MediaList::Delete(const nsAString& aOldMedium) {
+  MOZ_ASSERT(!IsReadOnly());
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 oldMedium(aOldMedium);
   if (Servo_MediaList_DeleteMedium(mRawList, &oldMedium)) {
     return NS_OK;
@@ -113,13 +159,34 @@ nsresult MediaList::Delete(const nsAString& aOldMedium) {
   return NS_ERROR_DOM_NOT_FOUND_ERR;
 }
 
+<<<<<<< HEAD
 bool MediaList::Matches(nsPresContext* aPresContext) const {
   const RawServoStyleSet* rawSet = aPresContext->StyleSet()->RawSet();
+||||||| merged common ancestors
+bool
+MediaList::Matches(nsPresContext* aPresContext) const
+{
+  const RawServoStyleSet* rawSet =
+    aPresContext->StyleSet()->RawSet();
+=======
+bool MediaList::Matches(const Document& aDocument) const {
+  const RawServoStyleSet* rawSet =
+      aDocument.StyleSetForPresShellOrMediaQueryEvaluation()->RawSet();
+>>>>>>> upstream-releases
   MOZ_ASSERT(rawSet, "The RawServoStyleSet should be valid!");
   return Servo_MediaList_Matches(mRawList, rawSet);
 }
 
+<<<<<<< HEAD
 nsresult MediaList::Append(const nsAString& aNewMedium) {
+||||||| merged common ancestors
+nsresult
+MediaList::Append(const nsAString& aNewMedium)
+{
+=======
+nsresult MediaList::Append(const nsAString& aNewMedium) {
+  MOZ_ASSERT(!IsReadOnly());
+>>>>>>> upstream-releases
   if (aNewMedium.IsEmpty()) {
     return NS_ERROR_DOM_NOT_FOUND_ERR;
   }
@@ -159,5 +226,17 @@ size_t MediaList::SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const {
   return n;
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+bool MediaList::IsReadOnly() const {
+  return mStyleSheet && mStyleSheet->IsReadOnly();
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

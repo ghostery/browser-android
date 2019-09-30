@@ -8,15 +8,15 @@
 #define mozilla_dom_DocumentOrShadowRoot_h__
 
 #include "mozilla/dom/NameSpaceConstants.h"
+#include "mozilla/IdentifierMapEntry.h"
 #include "nsClassHashtable.h"
 #include "nsContentListDeclarations.h"
 #include "nsTArray.h"
-#include "nsIdentifierMapEntry.h"
 
 class nsContentList;
 class nsCycleCollectionTraversalCallback;
-class nsIDocument;
 class nsINode;
+class nsINodeList;
 class nsIRadioVisitor;
 class nsWindowSizes;
 
@@ -45,9 +45,19 @@ class DocumentOrShadowRoot {
     ShadowRoot,
   };
 
+<<<<<<< HEAD
  public:
   explicit DocumentOrShadowRoot(nsIDocument&);
   explicit DocumentOrShadowRoot(mozilla::dom::ShadowRoot&);
+||||||| merged common ancestors
+public:
+  explicit DocumentOrShadowRoot(nsIDocument&);
+  explicit DocumentOrShadowRoot(mozilla::dom::ShadowRoot&);
+=======
+ public:
+  explicit DocumentOrShadowRoot(Document&);
+  explicit DocumentOrShadowRoot(ShadowRoot&);
+>>>>>>> upstream-releases
 
   // Unusual argument naming is because of cycle collection macros.
   static void Traverse(DocumentOrShadowRoot* tmp,
@@ -102,8 +112,10 @@ class DocumentOrShadowRoot {
   Element* GetFullscreenElement();
 
   Element* ElementFromPoint(float aX, float aY);
-  void ElementsFromPoint(float aX, float aY,
-                         nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
+  nsINode* NodeFromPoint(float aX, float aY);
+
+  void ElementsFromPoint(float aX, float aY, nsTArray<RefPtr<Element>>&);
+  void NodesFromPoint(float aX, float aY, nsTArray<RefPtr<nsINode>>&);
 
   /**
    * Helper for elementFromPoint implementation that allows
@@ -114,15 +126,35 @@ class DocumentOrShadowRoot {
   Element* ElementFromPointHelper(float aX, float aY,
                                   bool aIgnoreRootScrollFrame,
                                   bool aFlushLayout);
+<<<<<<< HEAD
   enum ElementsFromPointFlags {
     IGNORE_ROOT_SCROLL_FRAME = 1,
     FLUSH_LAYOUT = 2,
     IS_ELEMENT_FROM_POINT = 4
   };
+||||||| merged common ancestors
+  enum ElementsFromPointFlags
+  {
+    IGNORE_ROOT_SCROLL_FRAME = 1,
+    FLUSH_LAYOUT = 2,
+    IS_ELEMENT_FROM_POINT = 4
+  };
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ElementsFromPointHelper(
       float aX, float aY, uint32_t aFlags,
       nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
+||||||| merged common ancestors
+  void ElementsFromPointHelper(float aX, float aY, uint32_t aFlags,
+                               nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
+=======
+  void NodesFromRect(float aX, float aY, float aTopSize, float aRightSize,
+                     float aBottomSize, float aLeftSize,
+                     bool aIgnoreRootScrollFrame, bool aFlushLayout,
+                     bool aOnlyVisible, nsTArray<RefPtr<nsINode>>&);
+>>>>>>> upstream-releases
 
   /**
    * This gets fired when the element that an id refers to changes.
@@ -199,16 +231,33 @@ class DocumentOrShadowRoot {
   nsRadioGroupStruct* GetRadioGroup(const nsAString& aName) const;
   nsRadioGroupStruct* GetOrCreateRadioGroup(const nsAString& aName);
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  nsIContent* Retarget(nsIContent* aContent) const;
+
+ protected:
+>>>>>>> upstream-releases
   // Returns the reference to the sheet, if found in mStyleSheets.
   already_AddRefed<StyleSheet> RemoveSheet(StyleSheet& aSheet);
   void InsertSheetAt(size_t aIndex, StyleSheet& aSheet);
 
   void AddSizeOfExcludingThis(nsWindowSizes&) const;
   void AddSizeOfOwnedSheetArrayExcludingThis(
+<<<<<<< HEAD
       nsWindowSizes&, const nsTArray<RefPtr<StyleSheet>>&) const;
 
   nsIContent* Retarget(nsIContent* aContent) const;
+||||||| merged common ancestors
+      nsWindowSizes&,
+      const nsTArray<RefPtr<StyleSheet>>&) const;
+
+  nsIContent* Retarget(nsIContent* aContent) const;
+=======
+      nsWindowSizes&, const nsTArray<RefPtr<StyleSheet>>&) const;
+>>>>>>> upstream-releases
 
   /**
    * If focused element's subtree root is this document or shadow root, return
@@ -217,8 +266,8 @@ class DocumentOrShadowRoot {
    */
   Element* GetRetargetedFocusedElement();
 
-  nsTArray<RefPtr<mozilla::StyleSheet>> mStyleSheets;
-  RefPtr<mozilla::dom::StyleSheetList> mDOMStyleSheets;
+  nsTArray<RefPtr<StyleSheet>> mStyleSheets;
+  RefPtr<StyleSheetList> mDOMStyleSheets;
 
   /*
    * mIdentifierMap works as follows for IDs:
@@ -228,7 +277,7 @@ class DocumentOrShadowRoot {
    * 3) Additions to the DOM always update existing entries for names, and add
    *    new ones for IDs.
    */
-  nsTHashtable<nsIdentifierMapEntry> mIdentifierMap;
+  nsTHashtable<IdentifierMapEntry> mIdentifierMap;
 
   nsClassHashtable<nsStringHashKey, nsRadioGroupStruct> mRadioGroups;
 
@@ -242,7 +291,7 @@ inline const nsTArray<Element*>* DocumentOrShadowRoot::GetAllElementsForId(
     return nullptr;
   }
 
-  nsIdentifierMapEntry* entry = mIdentifierMap.GetEntry(aElementId);
+  IdentifierMapEntry* entry = mIdentifierMap.GetEntry(aElementId);
   return entry ? &entry->GetIdElements() : nullptr;
 }
 

@@ -101,7 +101,13 @@ zh_Hant_HK{
             }
         }
     }
+<<<<<<< HEAD
     Version{"2.1.43.65"}
+||||||| merged common ancestors
+    Version{"2.1.39.11"}
+=======
+    Version{"2.1.47.86"}
+>>>>>>> upstream-releases
     calendar{
         buddhist{
             availableFormats{
@@ -391,6 +397,10 @@ zh_Hant_HK{
             }
             eras{
                 abbreviated{
+                    "公元前",
+                    "公元",
+                }
+                narrow{
                     "公元前",
                     "公元",
                 }

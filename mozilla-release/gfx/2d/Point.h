@@ -139,9 +139,18 @@ struct PointTyped
   constexpr MOZ_IMPLICIT PointTyped(const IntPointTyped<units>& point)
       : Super(F(point.x), F(point.y)) {}
 
+<<<<<<< HEAD
   bool WithinEpsilonOf(const PointTyped<units, F>& aPoint, F aEpsilon) {
     return fabs(aPoint.x - this->x) < aEpsilon &&
            fabs(aPoint.y - this->y) < aEpsilon;
+||||||| merged common ancestors
+  bool WithinEpsilonOf(const PointTyped<units, F>& aPoint, F aEpsilon) {
+    return fabs(aPoint.x - this->x) < aEpsilon && fabs(aPoint.y - this->y) < aEpsilon;
+=======
+  bool WithinEpsilonOf(const PointTyped<units, F>& aPoint, F aEpsilon) const {
+    return fabs(aPoint.x - this->x) < aEpsilon &&
+           fabs(aPoint.y - this->y) < aEpsilon;
+>>>>>>> upstream-releases
   }
 
   // XXX When all of the code is ported, the following functions to convert to

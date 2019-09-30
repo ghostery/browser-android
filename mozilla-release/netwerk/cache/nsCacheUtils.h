@@ -17,12 +17,21 @@ class nsIThread;
  * A class with utility methods for shutting down nsIThreads easily.
  */
 class nsShutdownThread : public mozilla::Runnable {
+<<<<<<< HEAD
  public:
   explicit nsShutdownThread(nsIThread *aThread);
+||||||| merged common ancestors
+public:
+  explicit nsShutdownThread(nsIThread *aThread);
+=======
+ public:
+  explicit nsShutdownThread(nsIThread* aThread);
+>>>>>>> upstream-releases
   ~nsShutdownThread() = default;
 
   NS_IMETHOD Run() override;
 
+<<<<<<< HEAD
   /**
    * Shutdown ensures that aThread->Shutdown() is called on a main thread
    */
@@ -38,6 +47,38 @@ class nsShutdownThread : public mozilla::Runnable {
  private:
   mozilla::Monitor mMonitor;
   bool mShuttingDown;
+||||||| merged common ancestors
+/**
+ * Shutdown ensures that aThread->Shutdown() is called on a main thread
+ */
+  static nsresult Shutdown(nsIThread *aThread);
+
+/**
+ * BlockingShutdown ensures that by the time it returns, aThread->Shutdown() has
+ * been called and no pending events have been processed on the current thread.
+ */
+  static nsresult BlockingShutdown(nsIThread *aThread);
+
+private:
+  mozilla::Monitor    mMonitor;
+  bool                mShuttingDown;
+=======
+  /**
+   * Shutdown ensures that aThread->Shutdown() is called on a main thread
+   */
+  static nsresult Shutdown(nsIThread* aThread);
+
+  /**
+   * BlockingShutdown ensures that by the time it returns, aThread->Shutdown()
+   * has been called and no pending events have been processed on the current
+   * thread.
+   */
+  static nsresult BlockingShutdown(nsIThread* aThread);
+
+ private:
+  mozilla::Monitor mMonitor;
+  bool mShuttingDown;
+>>>>>>> upstream-releases
   nsCOMPtr<nsIThread> mThread;
 };
 

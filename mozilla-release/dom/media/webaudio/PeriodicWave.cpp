@@ -66,9 +66,24 @@ PeriodicWave::PeriodicWave(AudioContext* aContext, const float* aRealData,
   mCoefficients.mBufferFormat = AUDIO_FORMAT_FLOAT32;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PeriodicWave> PeriodicWave::Constructor(
     const GlobalObject& aGlobal, AudioContext& aAudioContext,
     const PeriodicWaveOptions& aOptions, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PeriodicWave>
+PeriodicWave::Constructor(const GlobalObject& aGlobal,
+                          AudioContext& aAudioContext,
+                          const PeriodicWaveOptions& aOptions,
+                          ErrorResult& aRv)
+{
+
+=======
+/* static */
+already_AddRefed<PeriodicWave> PeriodicWave::Constructor(
+    const GlobalObject& aGlobal, AudioContext& aAudioContext,
+    const PeriodicWaveOptions& aOptions, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (aOptions.mReal.WasPassed() && aOptions.mImag.WasPassed() &&
       aOptions.mReal.Value().Length() != aOptions.mImag.Value().Length()) {
     aRv.Throw(NS_ERROR_DOM_INDEX_SIZE_ERR);

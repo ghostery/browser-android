@@ -35,10 +35,24 @@ bool DeadObjectProxy::defineProperty(JSContext* cx, HandleObject wrapper,
   return false;
 }
 
+<<<<<<< HEAD
 bool DeadObjectProxy::ownPropertyKeys(JSContext* cx, HandleObject wrapper,
                                       AutoIdVector& props) const {
   ReportDead(cx);
   return false;
+||||||| merged common ancestors
+bool
+DeadObjectProxy::ownPropertyKeys(JSContext* cx, HandleObject wrapper,
+                                 AutoIdVector& props) const
+{
+    ReportDead(cx);
+    return false;
+=======
+bool DeadObjectProxy::ownPropertyKeys(JSContext* cx, HandleObject wrapper,
+                                      MutableHandleIdVector props) const {
+  ReportDead(cx);
+  return false;
+>>>>>>> upstream-releases
 }
 
 bool DeadObjectProxy::delete_(JSContext* cx, HandleObject wrapper, HandleId id,
@@ -66,6 +80,36 @@ bool DeadObjectProxy::preventExtensions(JSContext* cx, HandleObject proxy,
   return false;
 }
 
+<<<<<<< HEAD
+bool DeadObjectProxy::isExtensible(JSContext* cx, HandleObject proxy,
+                                   bool* extensible) const {
+  // This is kind of meaningless, but dead-object semantics aside,
+  // [[Extensible]] always being true is consistent with other proxy types.
+  *extensible = true;
+  return true;
+}
+
+bool DeadObjectProxy::call(JSContext* cx, HandleObject wrapper,
+                           const CallArgs& args) const {
+  ReportDead(cx);
+  return false;
+}
+
+bool DeadObjectProxy::construct(JSContext* cx, HandleObject wrapper,
+                                const CallArgs& args) const {
+  ReportDead(cx);
+  return false;
+}
+||||||| merged common ancestors
+bool
+DeadObjectProxy::isExtensible(JSContext* cx, HandleObject proxy, bool* extensible) const
+{
+    // This is kind of meaningless, but dead-object semantics aside,
+    // [[Extensible]] always being true is consistent with other proxy types.
+    *extensible = true;
+    return true;
+}
+=======
 bool DeadObjectProxy::isExtensible(JSContext* cx, HandleObject proxy,
                                    bool* extensible) const {
   // This is kind of meaningless, but dead-object semantics aside,
@@ -91,42 +135,171 @@ bool DeadObjectProxy::nativeCall(JSContext* cx, IsAcceptableThis test,
   ReportDead(cx);
   return false;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+bool DeadObjectProxy::nativeCall(JSContext* cx, IsAcceptableThis test,
+                                 NativeImpl impl, const CallArgs& args) const {
+  ReportDead(cx);
+  return false;
+||||||| merged common ancestors
+bool
+DeadObjectProxy::call(JSContext* cx, HandleObject wrapper, const CallArgs& args) const
+{
+    ReportDead(cx);
+    return false;
+=======
 bool DeadObjectProxy::hasInstance(JSContext* cx, HandleObject proxy,
                                   MutableHandleValue v, bool* bp) const {
   ReportDead(cx);
   return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool DeadObjectProxy::hasInstance(JSContext* cx, HandleObject proxy,
+                                  MutableHandleValue v, bool* bp) const {
+  ReportDead(cx);
+  return false;
+||||||| merged common ancestors
+bool
+DeadObjectProxy::construct(JSContext* cx, HandleObject wrapper, const CallArgs& args) const
+{
+    ReportDead(cx);
+    return false;
+=======
 bool DeadObjectProxy::getBuiltinClass(JSContext* cx, HandleObject proxy,
                                       ESClass* cls) const {
   ReportDead(cx);
   return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool DeadObjectProxy::getBuiltinClass(JSContext* cx, HandleObject proxy,
+                                      ESClass* cls) const {
+  ReportDead(cx);
+  return false;
+||||||| merged common ancestors
+bool
+DeadObjectProxy::nativeCall(JSContext* cx, IsAcceptableThis test, NativeImpl impl,
+                            const CallArgs& args) const
+{
+    ReportDead(cx);
+    return false;
+=======
 bool DeadObjectProxy::isArray(JSContext* cx, HandleObject obj,
                               JS::IsArrayAnswer* answer) const {
   ReportDead(cx);
   return false;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool DeadObjectProxy::isArray(JSContext* cx, HandleObject obj,
+                              JS::IsArrayAnswer* answer) const {
+  ReportDead(cx);
+  return false;
+||||||| merged common ancestors
+bool
+DeadObjectProxy::hasInstance(JSContext* cx, HandleObject proxy, MutableHandleValue v,
+                             bool* bp) const
+{
+    ReportDead(cx);
+    return false;
+}
+
+bool
+DeadObjectProxy::getBuiltinClass(JSContext* cx, HandleObject proxy, ESClass* cls) const
+{
+    ReportDead(cx);
+    return false;
+}
+
+bool
+DeadObjectProxy::isArray(JSContext* cx, HandleObject obj, JS::IsArrayAnswer* answer) const
+{
+    ReportDead(cx);
+    return false;
+}
+
+const char*
+DeadObjectProxy::className(JSContext* cx, HandleObject wrapper) const
+{
+    return "DeadObject";
+=======
 const char* DeadObjectProxy::className(JSContext* cx,
                                        HandleObject wrapper) const {
   return "DeadObject";
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+const char* DeadObjectProxy::className(JSContext* cx,
+                                       HandleObject wrapper) const {
+  return "DeadObject";
+||||||| merged common ancestors
+JSString*
+DeadObjectProxy::fun_toString(JSContext* cx, HandleObject proxy, bool isToSource) const
+{
+    ReportDead(cx);
+    return nullptr;
+=======
 JSString* DeadObjectProxy::fun_toString(JSContext* cx, HandleObject proxy,
                                         bool isToSource) const {
   ReportDead(cx);
   return nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+JSString* DeadObjectProxy::fun_toString(JSContext* cx, HandleObject proxy,
+                                        bool isToSource) const {
+  ReportDead(cx);
+  return nullptr;
+||||||| merged common ancestors
+RegExpShared*
+DeadObjectProxy::regexp_toShared(JSContext* cx, HandleObject proxy) const
+{
+    ReportDead(cx);
+    return nullptr;
+=======
 RegExpShared* DeadObjectProxy::regexp_toShared(JSContext* cx,
                                                HandleObject proxy) const {
   ReportDead(cx);
   return nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+RegExpShared* DeadObjectProxy::regexp_toShared(JSContext* cx,
+                                               HandleObject proxy) const {
+  ReportDead(cx);
+  return nullptr;
+||||||| merged common ancestors
+bool
+js::IsDeadProxyObject(JSObject* obj)
+{
+    return IsDerivedProxyObject(obj, &DeadObjectProxy::singleton);
+}
+
+Value
+js::DeadProxyTargetValue(ProxyObject* obj)
+{
+    // When nuking scripted proxies, isCallable and isConstructor values for
+    // the proxy needs to be preserved.  So does background-finalization status.
+    int32_t flags = 0;
+    if (obj->handler()->isCallable(obj)) {
+        flags |= DeadObjectProxyIsCallable;
+    }
+    if (obj->handler()->isConstructor(obj)) {
+         flags |= DeadObjectProxyIsConstructor;
+    }
+    if (obj->handler()->finalizeInBackground(obj->private_())) {
+         flags |= DeadObjectProxyIsBackgroundFinalized;
+    }
+    return Int32Value(flags);
+=======
 bool js::IsDeadProxyObject(JSObject* obj) {
   return IsDerivedProxyObject(obj, &DeadObjectProxy::singleton);
 }
@@ -159,4 +332,71 @@ JSObject* js::NewDeadProxyObject(JSContext* cx, JSObject* origObj) {
 
   return NewProxyObject(cx, &DeadObjectProxy::singleton, target, nullptr,
                         ProxyOptions());
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+bool js::IsDeadProxyObject(JSObject* obj) {
+  return IsDerivedProxyObject(obj, &DeadObjectProxy::singleton);
+}
+
+Value js::DeadProxyTargetValue(ProxyObject* obj) {
+  // When nuking scripted proxies, isCallable and isConstructor values for
+  // the proxy needs to be preserved.  So does background-finalization status.
+  int32_t flags = 0;
+  if (obj->handler()->isCallable(obj)) {
+    flags |= DeadObjectProxyIsCallable;
+  }
+  if (obj->handler()->isConstructor(obj)) {
+    flags |= DeadObjectProxyIsConstructor;
+  }
+  if (obj->handler()->finalizeInBackground(obj->private_())) {
+    flags |= DeadObjectProxyIsBackgroundFinalized;
+  }
+  return Int32Value(flags);
+}
+
+JSObject* js::NewDeadProxyObject(JSContext* cx, JSObject* origObj) {
+  MOZ_ASSERT_IF(origObj, origObj->is<ProxyObject>());
+
+  RootedValue target(cx);
+  if (origObj && origObj->is<ProxyObject>()) {
+    target = DeadProxyTargetValue(&origObj->as<ProxyObject>());
+  } else {
+    target = Int32Value(DeadObjectProxyIsBackgroundFinalized);
+  }
+||||||| merged common ancestors
+JSObject*
+js::NewDeadProxyObject(JSContext* cx, JSObject* origObj)
+{
+    MOZ_ASSERT_IF(origObj, origObj->is<ProxyObject>());
+
+    RootedValue target(cx);
+    if (origObj && origObj->is<ProxyObject>()) {
+        target = DeadProxyTargetValue(&origObj->as<ProxyObject>());
+    } else {
+        target = Int32Value(DeadObjectProxyIsBackgroundFinalized);
+    }
+=======
+JSObject* js::NewDeadProxyObject(JSContext* cx, IsCallableFlag isCallable,
+                                 IsConstructorFlag isConstructor) {
+  int32_t flags = 0;
+  if (isCallable == IsCallableFlag::True) {
+    flags |= DeadObjectProxyIsCallable;
+  }
+  if (isConstructor == IsConstructorFlag::True) {
+    flags |= DeadObjectProxyIsConstructor;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return NewProxyObject(cx, &DeadObjectProxy::singleton, target, nullptr,
+                        ProxyOptions());
+||||||| merged common ancestors
+    return NewProxyObject(cx, &DeadObjectProxy::singleton, target, nullptr, ProxyOptions());
+=======
+  RootedValue target(cx, Int32Value(flags));
+  return NewProxyObject(cx, &DeadObjectProxy::singleton, target, nullptr,
+                        ProxyOptions());
+>>>>>>> upstream-releases
 }

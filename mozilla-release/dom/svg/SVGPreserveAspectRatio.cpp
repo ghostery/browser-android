@@ -52,11 +52,29 @@ static uint16_t GetMeetOrSliceForString(const nsAString& aMeetOrSlice) {
   return SVG_MEETORSLICE_UNKNOWN;
 }
 
+<<<<<<< HEAD
 /* static */ nsresult SVGPreserveAspectRatio::FromString(
     const nsAString& aString, SVGPreserveAspectRatio* aValue) {
   nsWhitespaceTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
       aString);
   if (tokenizer.whitespaceBeforeFirstToken() || !tokenizer.hasMoreTokens()) {
+||||||| merged common ancestors
+/* static */ nsresult
+SVGPreserveAspectRatio::FromString(const nsAString& aString,
+                                   SVGPreserveAspectRatio* aValue)
+{
+  nsWhitespaceTokenizerTemplate<nsContentUtils::IsHTMLWhitespace>
+    tokenizer(aString);
+  if (tokenizer.whitespaceBeforeFirstToken() ||
+      !tokenizer.hasMoreTokens()) {
+=======
+/* static */
+nsresult SVGPreserveAspectRatio::FromString(const nsAString& aString,
+                                            SVGPreserveAspectRatio* aValue) {
+  nsWhitespaceTokenizerTemplate<nsContentUtils::IsHTMLWhitespace> tokenizer(
+      aString);
+  if (tokenizer.whitespaceBeforeFirstToken() || !tokenizer.hasMoreTokens()) {
+>>>>>>> upstream-releases
     return NS_ERROR_DOM_SYNTAX_ERR;
   }
   const nsAString& token = tokenizer.nextToken();

@@ -16,8 +16,17 @@ class nsIURI;
 namespace mozilla {
 namespace scache {
 
+<<<<<<< HEAD
 nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
                                         nsIObjectInputStream **stream);
+||||||| merged common ancestors
+nsresult
+NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
+                               nsIObjectInputStream** stream);
+=======
+nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
+                                        nsIObjectInputStream** stream);
+>>>>>>> upstream-releases
 
 // We can't retrieve the wrapped stream from the objectOutputStream later,
 // so we return it here. We give callers in debug builds the option
@@ -25,20 +34,58 @@ nsresult NewObjectInputStreamFromBuffer(UniquePtr<char[]> buffer, uint32_t len,
 // non-singleton objects are written out multiple times during a serialization.
 // This could cause them to be deserialized incorrectly (as multiple copies
 // instead of references).
+<<<<<<< HEAD
 nsresult NewObjectOutputWrappedStorageStream(
     nsIObjectOutputStream **wrapperStream, nsIStorageStream **stream,
     bool wantDebugStream);
+||||||| merged common ancestors
+nsresult
+NewObjectOutputWrappedStorageStream(nsIObjectOutputStream **wrapperStream,
+                                    nsIStorageStream** stream,
+                                    bool wantDebugStream);
+=======
+nsresult NewObjectOutputWrappedStorageStream(
+    nsIObjectOutputStream** wrapperStream, nsIStorageStream** stream,
+    bool wantDebugStream);
+>>>>>>> upstream-releases
 
 // Creates a buffer for storing the stream into the cache. The buffer is
 // allocated with 'new []'.  After calling this function, the caller would
 // typically call StartupCache::PutBuffer with the returned buffer.
+<<<<<<< HEAD
 nsresult NewBufferFromStorageStream(nsIStorageStream *storageStream,
                                     UniquePtr<char[]> *buffer, uint32_t *len);
+||||||| merged common ancestors
+nsresult
+NewBufferFromStorageStream(nsIStorageStream *storageStream,
+                           UniquePtr<char[]>* buffer, uint32_t* len);
+=======
+nsresult NewBufferFromStorageStream(nsIStorageStream* storageStream,
+                                    UniquePtr<char[]>* buffer, uint32_t* len);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult ResolveURI(nsIURI *in, nsIURI **out);
+||||||| merged common ancestors
+nsresult
+ResolveURI(nsIURI *in, nsIURI **out);
+=======
+nsresult ResolveURI(nsIURI* in, nsIURI** out);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult PathifyURI(nsIURI *in, nsACString &out);
 }  // namespace scache
 }  // namespace mozilla
+||||||| merged common ancestors
+nsresult
+PathifyURI(nsIURI *in, nsACString &out);
+} // namespace scache
+} // namespace mozilla
+=======
+nsresult PathifyURI(nsIURI* in, nsACString& out);
+}  // namespace scache
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // nsStartupCacheUtils_h_

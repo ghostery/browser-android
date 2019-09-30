@@ -15,11 +15,22 @@ from taskgraph.util.attributes import copy_attributes_from_dependent_job
 from taskgraph.util.scriptworker import (generate_beetmover_artifact_map,
                                          generate_beetmover_upstream_artifacts,
                                          get_beetmover_action_scope,
+<<<<<<< HEAD
                                          get_beetmover_bucket_scope,
                                          get_worker_type_for_scope,
                                          should_use_artifact_map)
 from voluptuous import Any, Optional, Required
+||||||| merged common ancestors
+                                         get_worker_type_for_scope)
+=======
+                                         get_beetmover_bucket_scope,
+                                         get_worker_type_for_scope,
+                                         should_use_artifact_map)
+from voluptuous import Optional, Required
+from taskgraph.util.treeherder import replace_group
+>>>>>>> upstream-releases
 from taskgraph.transforms.task import task_description_schema
+<<<<<<< HEAD
 
 # Voluptuous uses marker objects as dictionary *keys*, but they are not
 # comparable, so we cast all of the keys back to regular strings
@@ -28,6 +39,20 @@ task_description_schema = {str(k): v for k, v in task_description_schema.schema.
 taskref_or_string = Any(
     basestring,
     {Required('task-reference'): basestring})
+||||||| merged common ancestors
+from voluptuous import Any, Required, Optional
+
+# Voluptuous uses marker objects as dictionary *keys*, but they are not
+# comparable, so we cast all of the keys back to regular strings
+task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
+
+transforms = TransformSequence()
+
+taskref_or_string = Any(
+    basestring,
+    {Required('task-reference'): basestring})
+=======
+>>>>>>> upstream-releases
 
 beetmover_checksums_description_schema = schema.extend({
     Required('depname', default='build'): basestring,
@@ -50,7 +75,10 @@ def make_beetmover_checksums_description(config, jobs):
         attributes = dep_job.attributes
 
         treeherder = job.get('treeherder', {})
-        treeherder.setdefault('symbol', 'BMcs(N)')
+        treeherder.setdefault(
+            'symbol',
+            replace_group(dep_job.task['extra']['treeherder']['symbol'], 'BMcs')
+        )
         dep_th_platform = dep_job.task.get('extra', {}).get(
             'treeherder', {}).get('machine', {}).get('platform', '')
         treeherder.setdefault('platform',
@@ -81,8 +109,18 @@ def make_beetmover_checksums_description(config, jobs):
         else:
             extra['product'] = 'firefox'
 
+<<<<<<< HEAD
         dependent_kind = str(dep_job.kind)
         dependencies = {dependent_kind: dep_job.label}
+||||||| merged common ancestors
+        dependent_kind = str(dep_job.kind)
+        dependencies = {dependent_kind: dep_job.label}
+        for k, v in dep_job.dependencies.items():
+            if k.startswith('beetmover'):
+                dependencies[k] = v
+=======
+        dependencies = {dep_job.kind: dep_job.label}
+>>>>>>> upstream-releases
 
         attributes = copy_attributes_from_dependent_job(dep_job)
         attributes.update(job.get('attributes', {}))
@@ -150,6 +188,7 @@ def make_beetmover_checksums_worker(config, jobs):
             'release-properties': craft_release_properties(config, job),
         }
 
+<<<<<<< HEAD
         if should_use_artifact_map(platform, config.params['project']):
             upstream_artifacts = generate_beetmover_upstream_artifacts(
                 job, platform, locale
@@ -166,6 +205,25 @@ def make_beetmover_checksums_worker(config, jobs):
 
         worker['upstream-artifacts'] = upstream_artifacts
 
+||||||| merged common ancestors
+=======
+        if should_use_artifact_map(platform):
+            upstream_artifacts = generate_beetmover_upstream_artifacts(
+                config, job, platform, locale
+            )
+            worker['artifact-map'] = generate_beetmover_artifact_map(
+                config, job, platform=platform, locale=locale)
+        else:
+            upstream_artifacts = generate_upstream_artifacts(
+                refs, platform, locale
+            )
+            # Clean up un-used artifact map, to avoid confusion
+            if job['attributes'].get('artifact_map'):
+                del job['attributes']['artifact_map']
+
+        worker['upstream-artifacts'] = upstream_artifacts
+
+>>>>>>> upstream-releases
         if locale:
             worker["locale"] = locale
         job["worker"] = worker

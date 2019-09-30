@@ -5,8 +5,17 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "OGLShaderProgram.h"
+<<<<<<< HEAD
 #include <stdint.h>  // for uint32_t
 #include <sstream>   // for ostringstream
+||||||| merged common ancestors
+#include <stdint.h>                     // for uint32_t
+#include <sstream>                      // for ostringstream
+=======
+
+#include <stdint.h>  // for uint32_t
+#include <sstream>   // for ostringstream
+>>>>>>> upstream-releases
 #include "gfxEnv.h"
 #include "gfxRect.h"  // for gfxRect
 #include "gfxUtils.h"
@@ -25,6 +34,7 @@ using namespace std;
 #define GAUSSIAN_KERNEL_HALF_WIDTH 11
 #define GAUSSIAN_KERNEL_STEP 0.2
 
+<<<<<<< HEAD
 void AddUniforms(ProgramProfileOGL &aProfile) {
   // This needs to be kept in sync with the KnownUniformName enum
   static const char *sKnownUniformNames[] = {"uLayerTransform",
@@ -66,6 +76,95 @@ void AddUniforms(ProgramProfileOGL &aProfile) {
     aProfile.mUniforms[i].mNameString = sKnownUniformNames[i];
     aProfile.mUniforms[i].mName = (KnownUniform::KnownUniformName)i;
   }
+||||||| merged common ancestors
+void
+AddUniforms(ProgramProfileOGL& aProfile)
+{
+    // This needs to be kept in sync with the KnownUniformName enum
+    static const char *sKnownUniformNames[] = {
+        "uLayerTransform",
+        "uLayerTransformInverse",
+        "uMaskTransform",
+        "uBackdropTransform",
+        "uLayerRects",
+        "uMatrixProj",
+        "uTextureTransform",
+        "uTextureRects",
+        "uRenderTargetOffset",
+        "uLayerOpacity",
+        "uTexture",
+        "uYTexture",
+        "uCbTexture",
+        "uCrTexture",
+        "uBlackTexture",
+        "uWhiteTexture",
+        "uMaskTexture",
+        "uBackdropTexture",
+        "uRenderColor",
+        "uTexCoordMultiplier",
+        "uCbCrTexCoordMultiplier",
+        "uMaskCoordMultiplier",
+        "uTexturePass2",
+        "uColorMatrix",
+        "uColorMatrixVector",
+        "uBlurRadius",
+        "uBlurOffset",
+        "uBlurAlpha",
+        "uBlurGaussianKernel",
+        "uSSEdges",
+        "uViewportSize",
+        "uVisibleCenter",
+        "uYuvColorMatrix",
+        nullptr
+    };
+
+    for (int i = 0; sKnownUniformNames[i] != nullptr; ++i) {
+        aProfile.mUniforms[i].mNameString = sKnownUniformNames[i];
+        aProfile.mUniforms[i].mName = (KnownUniform::KnownUniformName) i;
+    }
+=======
+static void AddUniforms(ProgramProfileOGL& aProfile) {
+  // This needs to be kept in sync with the KnownUniformName enum
+  static const char* sKnownUniformNames[] = {"uLayerTransform",
+                                             "uLayerTransformInverse",
+                                             "uMaskTransform",
+                                             "uBackdropTransform",
+                                             "uLayerRects",
+                                             "uMatrixProj",
+                                             "uTextureTransform",
+                                             "uTextureRects",
+                                             "uRenderTargetOffset",
+                                             "uLayerOpacity",
+                                             "uTexture",
+                                             "uYTexture",
+                                             "uCbTexture",
+                                             "uCrTexture",
+                                             "uBlackTexture",
+                                             "uWhiteTexture",
+                                             "uMaskTexture",
+                                             "uBackdropTexture",
+                                             "uRenderColor",
+                                             "uTexCoordMultiplier",
+                                             "uCbCrTexCoordMultiplier",
+                                             "uMaskCoordMultiplier",
+                                             "uTexturePass2",
+                                             "uColorMatrix",
+                                             "uColorMatrixVector",
+                                             "uBlurRadius",
+                                             "uBlurOffset",
+                                             "uBlurAlpha",
+                                             "uBlurGaussianKernel",
+                                             "uSSEdges",
+                                             "uViewportSize",
+                                             "uVisibleCenter",
+                                             "uYuvColorMatrix",
+                                             nullptr};
+
+  for (int i = 0; sKnownUniformNames[i] != nullptr; ++i) {
+    aProfile.mUniforms[i].mNameString = sKnownUniformNames[i];
+    aProfile.mUniforms[i].mName = (KnownUniform::KnownUniformName)i;
+  }
+>>>>>>> upstream-releases
 }
 
 void ShaderConfigOGL::SetRenderColor(bool aEnabled) {
@@ -153,8 +252,17 @@ void ShaderConfigOGL::SetDynamicGeometry(bool aEnabled) {
   SetFeature(ENABLE_DYNAMIC_GEOMETRY, aEnabled);
 }
 
+<<<<<<< HEAD
 /* static */ ProgramProfileOGL ProgramProfileOGL::GetProfileFor(
     ShaderConfigOGL aConfig) {
+||||||| merged common ancestors
+/* static */ ProgramProfileOGL
+ProgramProfileOGL::GetProfileFor(ShaderConfigOGL aConfig)
+{
+=======
+/* static */
+ProgramProfileOGL ProgramProfileOGL::GetProfileFor(ShaderConfigOGL aConfig) {
+>>>>>>> upstream-releases
   ProgramProfileOGL result;
   ostringstream fs, vs;
 
@@ -366,8 +474,8 @@ void ShaderConfigOGL::SetDynamicGeometry(bool aEnabled) {
     fs << "varying vec2 vBackdropCoord;" << endl;
   }
 
-  const char *sampler2D = "sampler2D";
-  const char *texture2D = "texture2D";
+  const char* sampler2D = "sampler2D";
+  const char* texture2D = "texture2D";
 
   if (aConfig.mFeatures & ENABLE_TEXTURE_RECT) {
     fs << "uniform vec2 uTexCoordMultiplier;" << endl;
@@ -379,8 +487,8 @@ void ShaderConfigOGL::SetDynamicGeometry(bool aEnabled) {
     texture2D = "texture2DRect";
   }
 
-  const char *maskSampler2D = "sampler2D";
-  const char *maskTexture2D = "texture2D";
+  const char* maskSampler2D = "sampler2D";
+  const char* maskTexture2D = "texture2D";
 
   if (aConfig.mFeatures & ENABLE_MASK &&
       aConfig.mFeatures & ENABLE_MASK_TEXTURE_RECT) {
@@ -401,6 +509,7 @@ void ShaderConfigOGL::SetDynamicGeometry(bool aEnabled) {
   } else if (aConfig.mFeatures & ENABLE_TEXTURE_NV12) {
     fs << "uniform " << sampler2D << " uYTexture;" << endl;
     fs << "uniform " << sampler2D << " uCbTexture;" << endl;
+    fs << "uniform mat3 uYuvColorMatrix;" << endl;
   } else if (aConfig.mFeatures & ENABLE_TEXTURE_COMPONENT_ALPHA) {
     fs << "uniform " << sampler2D << " uBlackTexture;" << endl;
     fs << "uniform " << sampler2D << " uWhiteTexture;" << endl;
@@ -614,8 +723,17 @@ void ShaderConfigOGL::SetDynamicGeometry(bool aEnabled) {
   return result;
 }
 
+<<<<<<< HEAD
 void ProgramProfileOGL::BuildMixBlender(const ShaderConfigOGL &aConfig,
                                         std::ostringstream &fs) {
+||||||| merged common ancestors
+void
+ProgramProfileOGL::BuildMixBlender(const ShaderConfigOGL& aConfig, std::ostringstream& fs)
+{
+=======
+void ProgramProfileOGL::BuildMixBlender(const ShaderConfigOGL& aConfig,
+                                        std::ostringstream& fs) {
+>>>>>>> upstream-releases
   // From the "Compositing and Blending Level 1" spec.
   // Generate helper functions first.
   switch (aConfig.mCompositionOp) {
@@ -831,9 +949,23 @@ void ProgramProfileOGL::BuildMixBlender(const ShaderConfigOGL &aConfig,
   fs << "}" << endl;
 }
 
+<<<<<<< HEAD
 ShaderProgramOGL::ShaderProgramOGL(GLContext *aGL,
                                    const ProgramProfileOGL &aProfile)
     : mGL(aGL), mProgram(0), mProfile(aProfile), mProgramState(STATE_NEW) {}
+||||||| merged common ancestors
+ShaderProgramOGL::ShaderProgramOGL(GLContext* aGL, const ProgramProfileOGL& aProfile)
+  : mGL(aGL)
+  , mProgram(0)
+  , mProfile(aProfile)
+  , mProgramState(STATE_NEW)
+{
+}
+=======
+ShaderProgramOGL::ShaderProgramOGL(GLContext* aGL,
+                                   const ProgramProfileOGL& aProfile)
+    : mGL(aGL), mProgram(0), mProfile(aProfile), mProgramState(STATE_NEW) {}
+>>>>>>> upstream-releases
 
 ShaderProgramOGL::~ShaderProgramOGL() {
   if (mProgram <= 0) {
@@ -875,15 +1007,30 @@ bool ShaderProgramOGL::Initialize() {
   return true;
 }
 
+<<<<<<< HEAD
 GLint ShaderProgramOGL::CreateShader(GLenum aShaderType,
                                      const char *aShaderSource) {
+||||||| merged common ancestors
+GLint
+ShaderProgramOGL::CreateShader(GLenum aShaderType, const char *aShaderSource)
+{
+=======
+GLint ShaderProgramOGL::CreateShader(GLenum aShaderType,
+                                     const char* aShaderSource) {
+>>>>>>> upstream-releases
   GLint success, len = 0;
 
   GLint sh = mGL->fCreateShader(aShaderType);
   mGL->fShaderSource(sh, 1, (const GLchar **)&aShaderSource, nullptr);
   mGL->fCompileShader(sh);
   mGL->fGetShaderiv(sh, LOCAL_GL_COMPILE_STATUS, &success);
+<<<<<<< HEAD
   mGL->fGetShaderiv(sh, LOCAL_GL_INFO_LOG_LENGTH, (GLint *)&len);
+||||||| merged common ancestors
+  mGL->fGetShaderiv(sh, LOCAL_GL_INFO_LOG_LENGTH, (GLint*) &len);
+=======
+  mGL->fGetShaderiv(sh, LOCAL_GL_INFO_LOG_LENGTH, (GLint*)&len);
+>>>>>>> upstream-releases
   /* Even if compiling is successful, there may still be warnings.  Print them
    * in a debug build.  The > 10 is to catch silly compilers that might put
    * some whitespace in the log but otherwise leave it empty.
@@ -894,9 +1041,17 @@ GLint ShaderProgramOGL::CreateShader(GLenum aShaderType,
 #endif
   ) {
     nsAutoCString log;
+<<<<<<< HEAD
     log.SetCapacity(len);
     mGL->fGetShaderInfoLog(sh, len, (GLint *)&len, (char *)log.BeginWriting());
+||||||| merged common ancestors
+    log.SetCapacity(len);
+    mGL->fGetShaderInfoLog(sh, len, (GLint*) &len, (char*) log.BeginWriting());
+=======
+>>>>>>> upstream-releases
     log.SetLength(len);
+    mGL->fGetShaderInfoLog(sh, len, (GLint*)&len, (char*)log.BeginWriting());
+    log.Truncate(len);
 
     if (!success) {
       printf_stderr("=== SHADER COMPILATION FAILED ===\n");
@@ -917,12 +1072,28 @@ GLint ShaderProgramOGL::CreateShader(GLenum aShaderType,
   return sh;
 }
 
+<<<<<<< HEAD
 bool ShaderProgramOGL::CreateProgram(const char *aVertexShaderString,
                                      const char *aFragmentShaderString) {
   GLuint vertexShader =
       CreateShader(LOCAL_GL_VERTEX_SHADER, aVertexShaderString);
   GLuint fragmentShader =
       CreateShader(LOCAL_GL_FRAGMENT_SHADER, aFragmentShaderString);
+||||||| merged common ancestors
+bool
+ShaderProgramOGL::CreateProgram(const char *aVertexShaderString,
+                                const char *aFragmentShaderString)
+{
+  GLuint vertexShader = CreateShader(LOCAL_GL_VERTEX_SHADER, aVertexShaderString);
+  GLuint fragmentShader = CreateShader(LOCAL_GL_FRAGMENT_SHADER, aFragmentShaderString);
+=======
+bool ShaderProgramOGL::CreateProgram(const char* aVertexShaderString,
+                                     const char* aFragmentShaderString) {
+  GLuint vertexShader =
+      CreateShader(LOCAL_GL_VERTEX_SHADER, aVertexShaderString);
+  GLuint fragmentShader =
+      CreateShader(LOCAL_GL_FRAGMENT_SHADER, aFragmentShaderString);
+>>>>>>> upstream-releases
 
   if (!vertexShader || !fragmentShader) return false;
 
@@ -939,7 +1110,13 @@ bool ShaderProgramOGL::CreateProgram(const char *aVertexShaderString,
 
   GLint success, len;
   mGL->fGetProgramiv(result, LOCAL_GL_LINK_STATUS, &success);
+<<<<<<< HEAD
   mGL->fGetProgramiv(result, LOCAL_GL_INFO_LOG_LENGTH, (GLint *)&len);
+||||||| merged common ancestors
+  mGL->fGetProgramiv(result, LOCAL_GL_INFO_LOG_LENGTH, (GLint*) &len);
+=======
+  mGL->fGetProgramiv(result, LOCAL_GL_INFO_LOG_LENGTH, (GLint*)&len);
+>>>>>>> upstream-releases
   /* Even if linking is successful, there may still be warnings.  Print them
    * in a debug build.  The > 10 is to catch silly compilers that might put
    * some whitespace in the log but otherwise leave it empty.
@@ -951,8 +1128,15 @@ bool ShaderProgramOGL::CreateProgram(const char *aVertexShaderString,
   ) {
     nsAutoCString log;
     log.SetLength(len);
+<<<<<<< HEAD
     mGL->fGetProgramInfoLog(result, len, (GLint *)&len,
                             (char *)log.BeginWriting());
+||||||| merged common ancestors
+    mGL->fGetProgramInfoLog(result, len, (GLint*) &len, (char*) log.BeginWriting());
+=======
+    mGL->fGetProgramInfoLog(result, len, (GLint*)&len,
+                            (char*)log.BeginWriting());
+>>>>>>> upstream-releases
 
     if (!success) {
       printf_stderr("=== PROGRAM LINKING FAILED ===\n");
@@ -1008,9 +1192,20 @@ void ShaderProgramOGL::SetBlurRadius(float aRX, float aRY) {
                   gaussianKernel);
 }
 
+<<<<<<< HEAD
 void ShaderProgramOGL::SetYUVColorSpace(YUVColorSpace aYUVColorSpace) {
   const float *yuvToRgb =
       gfxUtils::YuvToRgbMatrix3x3ColumnMajor(aYUVColorSpace);
+||||||| merged common ancestors
+void
+ShaderProgramOGL::SetYUVColorSpace(YUVColorSpace aYUVColorSpace)
+{
+  const float* yuvToRgb = gfxUtils::YuvToRgbMatrix3x3ColumnMajor(aYUVColorSpace);
+=======
+void ShaderProgramOGL::SetYUVColorSpace(gfx::YUVColorSpace aYUVColorSpace) {
+  const float* yuvToRgb =
+      gfxUtils::YuvToRgbMatrix3x3ColumnMajor(aYUVColorSpace);
+>>>>>>> upstream-releases
   SetMatrix3fvUniform(KnownUniform::YuvColorMatrix, yuvToRgb);
 }
 

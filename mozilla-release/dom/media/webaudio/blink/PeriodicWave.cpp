@@ -97,6 +97,7 @@ already_AddRefed<PeriodicWave> PeriodicWave::createTriangle(float sampleRate) {
   return periodicWave.forget();
 }
 
+<<<<<<< HEAD
 PeriodicWave::PeriodicWave(float sampleRate, size_t numberOfComponents,
                            bool disableNormalization)
     : m_sampleRate(sampleRate),
@@ -118,6 +119,34 @@ PeriodicWave::PeriodicWave(float sampleRate, size_t numberOfComponents,
   m_bandLimitedTables.SetLength(m_numberOfRanges);
   m_lowestFundamentalFrequency = nyquist / maxNumberOfPartials();
   m_rateScale = m_periodicWaveSize / m_sampleRate;
+||||||| merged common ancestors
+    m_numberOfRanges = (unsigned)(3.0f*logf(m_periodicWaveSize)/logf(2.0f));
+    m_bandLimitedTables.SetLength(m_numberOfRanges);
+    m_lowestFundamentalFrequency = nyquist / maxNumberOfPartials();
+    m_rateScale = m_periodicWaveSize / m_sampleRate;
+=======
+PeriodicWave::PeriodicWave(float sampleRate, size_t numberOfComponents,
+                           bool disableNormalization)
+    : m_sampleRate(sampleRate),
+      m_centsPerRange(CentsPerRange),
+      m_maxPartialsInBandLimitedTable(0),
+      m_normalizationScale(1.0f),
+      m_disableNormalization(disableNormalization) {
+  float nyquist = 0.5 * m_sampleRate;
+
+  if (numberOfComponents <= MinPeriodicWaveSize) {
+    m_periodicWaveSize = MinPeriodicWaveSize;
+  } else {
+    unsigned npow2 =
+        exp2f(floorf(logf(numberOfComponents - 1.0) / logf(2.0f) + 1.0f));
+    m_periodicWaveSize = std::min(MaxPeriodicWaveSize, npow2);
+  }
+
+  m_numberOfRanges = (unsigned)(3.0f * logf(m_periodicWaveSize) / logf(2.0f));
+  m_bandLimitedTables.SetLength(m_numberOfRanges);
+  m_lowestFundamentalFrequency = nyquist / maxNumberOfPartials();
+  m_rateScale = m_periodicWaveSize / m_sampleRate;
+>>>>>>> upstream-releases
 }
 
 size_t PeriodicWave::sizeOfIncludingThis(
@@ -204,8 +233,16 @@ unsigned PeriodicWave::numberOfPartialsForRange(unsigned rangeIndex) const {
   // Number of cents below nyquist where we cull partials.
   float centsToCull = rangeIndex * m_centsPerRange;
 
+<<<<<<< HEAD
   // A value from 0 -> 1 representing what fraction of the partials to keep.
   float cullingScale = pow(2, -centsToCull / 1200);
+||||||| merged common ancestors
+    // A value from 0 -> 1 representing what fraction of the partials to keep.
+    float cullingScale = pow(2, -centsToCull / 1200);
+=======
+  // A value from 0 -> 1 representing what fraction of the partials to keep.
+  float cullingScale = exp2(-centsToCull / 1200);
+>>>>>>> upstream-releases
 
   // The very top range will have all the partials culled.
   unsigned numberOfPartials = cullingScale * maxNumberOfPartials();

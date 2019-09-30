@@ -32,8 +32,15 @@ WheelEvent::WheelEvent(EventTarget* aOwner, nsPresContext* aPresContext,
     mEventIsInternal = true;
     mEvent->mTime = PR_Now();
     mEvent->mRefPoint = LayoutDeviceIntPoint(0, 0);
+<<<<<<< HEAD
     mEvent->AsWheelEvent()->inputSource =
         MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+||||||| merged common ancestors
+    mEvent->AsWheelEvent()->inputSource = MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+=======
+    mEvent->AsWheelEvent()->mInputSource =
+        MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
+>>>>>>> upstream-releases
   }
 }
 

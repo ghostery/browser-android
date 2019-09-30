@@ -8,7 +8,13 @@ smn{
                 "[import und-u-co-search]"
                 "[import smn-u-co-standard]"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -19,7 +25,13 @@ smn{
                 "&S<š<<<Š"
                 "&Z<ž<<<Ž<æ<<<Æ<ø<<<Ø<å<<<Å<ã<<<Ã<ä<<<Ä<á<<<Á<ö<<<Ö"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

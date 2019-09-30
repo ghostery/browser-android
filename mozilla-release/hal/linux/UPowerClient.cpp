@@ -153,7 +153,16 @@ void GetCurrentBatteryInformation(hal::BatteryInformation* aBatteryInfo) {
 
 UPowerClient* UPowerClient::sInstance = nullptr;
 
+<<<<<<< HEAD
 /* static */ UPowerClient* UPowerClient::GetInstance() {
+||||||| merged common ancestors
+/* static */ UPowerClient*
+UPowerClient::GetInstance()
+{
+=======
+/* static */
+UPowerClient* UPowerClient::GetInstance() {
+>>>>>>> upstream-releases
   if (!sInstance) {
     sInstance = new UPowerClient();
   }
@@ -317,9 +326,20 @@ void UPowerClient::UpdateTrackedDeviceSync() {
   g_ptr_array_free(devices, true);
 }
 
+<<<<<<< HEAD
 /* static */ void UPowerClient::DeviceChanged(DBusGProxy* aProxy,
                                               const gchar* aObjectPath,
                                               UPowerClient* aListener) {
+||||||| merged common ancestors
+/* static */ void
+UPowerClient::DeviceChanged(DBusGProxy* aProxy, const gchar* aObjectPath,
+                            UPowerClient* aListener)
+{
+=======
+/* static */
+void UPowerClient::DeviceChanged(DBusGProxy* aProxy, const gchar* aObjectPath,
+                                 UPowerClient* aListener) {
+>>>>>>> upstream-releases
   if (!aListener->mTrackedDevice) {
     return;
   }
@@ -335,15 +355,38 @@ void UPowerClient::UpdateTrackedDeviceSync() {
   aListener->GetDevicePropertiesAsync(aListener->mTrackedDeviceProxy);
 }
 
+<<<<<<< HEAD
 /* static */ void UPowerClient::PropertiesChanged(DBusGProxy* aProxy,
                                                   const gchar*, GHashTable*,
                                                   char**,
                                                   UPowerClient* aListener) {
+||||||| merged common ancestors
+/* static */ void
+UPowerClient::PropertiesChanged(DBusGProxy* aProxy, const gchar*, GHashTable*,
+                                char**, UPowerClient* aListener)
+{
+=======
+/* static */
+void UPowerClient::PropertiesChanged(DBusGProxy* aProxy, const gchar*,
+                                     GHashTable*, char**,
+                                     UPowerClient* aListener) {
+>>>>>>> upstream-releases
   aListener->GetDevicePropertiesAsync(aListener->mTrackedDeviceProxy);
 }
 
+<<<<<<< HEAD
 /* static */ DBusHandlerResult UPowerClient::ConnectionSignalFilter(
     DBusConnection* aConnection, DBusMessage* aMessage, void* aData) {
+||||||| merged common ancestors
+/* static */ DBusHandlerResult
+UPowerClient::ConnectionSignalFilter(DBusConnection* aConnection,
+                                     DBusMessage* aMessage, void* aData)
+{
+=======
+/* static */
+DBusHandlerResult UPowerClient::ConnectionSignalFilter(
+    DBusConnection* aConnection, DBusMessage* aMessage, void* aData) {
+>>>>>>> upstream-releases
   if (dbus_message_is_signal(aMessage, DBUS_INTERFACE_LOCAL, "Disconnected")) {
     static_cast<UPowerClient*>(aData)->StopListening();
     // We do not return DBUS_HANDLER_RESULT_HANDLED here because the connection
@@ -369,8 +412,20 @@ GHashTable* UPowerClient::GetDevicePropertiesSync(DBusGProxy* aProxy) {
   return hashTable;
 }
 
+<<<<<<< HEAD
 /* static */ void UPowerClient::GetDevicePropertiesCallback(
     DBusGProxy* aProxy, DBusGProxyCall* aCall, void* aData) {
+||||||| merged common ancestors
+/* static */ void
+UPowerClient::GetDevicePropertiesCallback(DBusGProxy* aProxy,
+                                          DBusGProxyCall* aCall, void* aData)
+{
+=======
+/* static */
+void UPowerClient::GetDevicePropertiesCallback(DBusGProxy* aProxy,
+                                               DBusGProxyCall* aCall,
+                                               void* aData) {
+>>>>>>> upstream-releases
   GError* error = nullptr;
   GHashTable* hashTable = nullptr;
   GType typeGHashTable =

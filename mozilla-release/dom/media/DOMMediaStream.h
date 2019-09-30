@@ -167,11 +167,25 @@ class OverlayImage;
  *                    ----> t2 ------------> t2     <- MediaStreamTrack Z'
  *                                                     (pointing to t2 in A')
  */
+<<<<<<< HEAD
 // clang-format on
 class DOMMediaStream
     : public DOMEventTargetHelper,
       public dom::PrincipalChangeObserver<dom::MediaStreamTrack>,
       public RelativeTimeline {
+||||||| merged common ancestors
+class DOMMediaStream : public DOMEventTargetHelper,
+                       public dom::PrincipalChangeObserver<dom::MediaStreamTrack>,
+                       public RelativeTimeline
+{
+=======
+// clang-format on
+class DOMMediaStream
+    : public DOMEventTargetHelper,
+      public dom::PrincipalChangeObserver<dom::MediaStreamTrack>,
+      public RelativeTimeline,
+      public SupportsWeakPtr<DOMMediaStream> {
+>>>>>>> upstream-releases
   friend class dom::MediaStreamTrack;
   typedef dom::MediaStreamTrack MediaStreamTrack;
   typedef dom::AudioStreamTrack AudioStreamTrack;
@@ -184,6 +198,8 @@ class DOMMediaStream
 
  public:
   typedef dom::MediaTrackConstraints MediaTrackConstraints;
+
+  MOZ_DECLARE_WEAKREFERENCE_TYPENAME(DOMMediaStream)
 
   class TrackListener {
    public:
@@ -298,13 +314,52 @@ class DOMMediaStream
 
   // WebIDL
 
+<<<<<<< HEAD
   static already_AddRefed<DOMMediaStream> Constructor(
       const dom::GlobalObject& aGlobal, ErrorResult& aRv);
 
   static already_AddRefed<DOMMediaStream> Constructor(
       const dom::GlobalObject& aGlobal, const DOMMediaStream& aStream,
       ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<DOMMediaStream>
+  Constructor(const dom::GlobalObject& aGlobal,
+              ErrorResult& aRv);
 
+  static already_AddRefed<DOMMediaStream>
+  Constructor(const dom::GlobalObject& aGlobal,
+              const DOMMediaStream& aStream,
+              ErrorResult& aRv);
+=======
+  static already_AddRefed<DOMMediaStream> Constructor(
+      const dom::GlobalObject& aGlobal, ErrorResult& aRv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static already_AddRefed<DOMMediaStream> Constructor(
+      const dom::GlobalObject& aGlobal,
+      const dom::Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
+      ErrorResult& aRv);
+||||||| merged common ancestors
+  static already_AddRefed<DOMMediaStream>
+  Constructor(const dom::GlobalObject& aGlobal,
+              const dom::Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
+              ErrorResult& aRv);
+=======
+  static already_AddRefed<DOMMediaStream> Constructor(
+      const dom::GlobalObject& aGlobal, const DOMMediaStream& aStream,
+      ErrorResult& aRv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static already_AddRefed<dom::Promise> CountUnderlyingStreams(
+      const dom::GlobalObject& aGlobal, ErrorResult& aRv);
+||||||| merged common ancestors
+  double CurrentTime();
+
+  static already_AddRefed<dom::Promise>
+  CountUnderlyingStreams(const dom::GlobalObject& aGlobal, ErrorResult& aRv);
+=======
   static already_AddRefed<DOMMediaStream> Constructor(
       const dom::GlobalObject& aGlobal,
       const dom::Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
@@ -312,6 +367,7 @@ class DOMMediaStream
 
   static already_AddRefed<dom::Promise> CountUnderlyingStreams(
       const dom::GlobalObject& aGlobal, ErrorResult& aRv);
+>>>>>>> upstream-releases
 
   void GetId(nsAString& aID) const;
 

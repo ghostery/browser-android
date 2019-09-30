@@ -24,16 +24,37 @@ typedef struct _GVariantType GVariantType;
 typedef struct _GVariant GVariant;
 
 #ifndef G_VARIANT_TYPE_INT32
+<<<<<<< HEAD
 #define G_VARIANT_TYPE_INT32 ((const GVariantType *)"i")
 #define G_VARIANT_TYPE_BOOLEAN ((const GVariantType *)"b")
 #define G_VARIANT_TYPE_STRING ((const GVariantType *)"s")
 #define G_VARIANT_TYPE_OBJECT_PATH ((const GVariantType *)"o")
 #define G_VARIANT_TYPE_SIGNATURE ((const GVariantType *)"g")
+||||||| merged common ancestors
+# define G_VARIANT_TYPE_INT32        ((const GVariantType *) "i")
+# define G_VARIANT_TYPE_BOOLEAN      ((const GVariantType *) "b")
+# define G_VARIANT_TYPE_STRING       ((const GVariantType *) "s")
+# define G_VARIANT_TYPE_OBJECT_PATH  ((const GVariantType *) "o")
+# define G_VARIANT_TYPE_SIGNATURE    ((const GVariantType *) "g")
+=======
+#  define G_VARIANT_TYPE_INT32 ((const GVariantType*)"i")
+#  define G_VARIANT_TYPE_BOOLEAN ((const GVariantType*)"b")
+#  define G_VARIANT_TYPE_STRING ((const GVariantType*)"s")
+#  define G_VARIANT_TYPE_OBJECT_PATH ((const GVariantType*)"o")
+#  define G_VARIANT_TYPE_SIGNATURE ((const GVariantType*)"g")
+>>>>>>> upstream-releases
 #endif
 #ifndef G_VARIANT_TYPE_STRING_ARRAY
+<<<<<<< HEAD
 #define G_VARIANT_TYPE_STRING_ARRAY ((const GVariantType *)"as")
+||||||| merged common ancestors
+# define G_VARIANT_TYPE_STRING_ARRAY ((const GVariantType *) "as")
+=======
+#  define G_VARIANT_TYPE_STRING_ARRAY ((const GVariantType*)"as")
+>>>>>>> upstream-releases
 #endif
 
+<<<<<<< HEAD
 #define GSETTINGS_FUNCTIONS                                                    \
   FUNC(g_settings_new, GSettings *, (const char *schema))                      \
   FUNC(g_settings_list_schemas, const char *const *, (void))                   \
@@ -57,6 +78,51 @@ typedef struct _GVariant GVariant;
 
 #define FUNC(name, type, params)      \
   typedef type(*_##name##_fn) params; \
+||||||| merged common ancestors
+#define GSETTINGS_FUNCTIONS \
+  FUNC(g_settings_new, GSettings *, (const char* schema)) \
+  FUNC(g_settings_list_schemas, const char * const *, (void)) \
+  FUNC(g_settings_list_keys, char **, (GSettings* settings)) \
+  FUNC(g_settings_get_value, GVariant *, (GSettings* settings, const char* key)) \
+  FUNC(g_settings_set_value, gboolean, (GSettings* settings, const char* key, GVariant* value)) \
+  FUNC(g_settings_range_check, gboolean, (GSettings* settings, const char* key, GVariant* value)) \
+  FUNC(g_variant_get_int32, gint32, (GVariant* variant)) \
+  FUNC(g_variant_get_boolean, gboolean, (GVariant* variant)) \
+  FUNC(g_variant_get_string, const char *, (GVariant* value, gsize* length)) \
+  FUNC(g_variant_get_strv, const char **, (GVariant* value, gsize* length)) \
+  FUNC(g_variant_is_of_type, gboolean, (GVariant* value, const GVariantType* type)) \
+  FUNC(g_variant_new_int32, GVariant *, (gint32 value)) \
+  FUNC(g_variant_new_boolean, GVariant *, (gboolean value)) \
+  FUNC(g_variant_new_string, GVariant *, (const char* string)) \
+  FUNC(g_variant_unref, void, (GVariant* value))
+
+#define FUNC(name, type, params) \
+  typedef type (*_##name##_fn) params; \
+=======
+#define GSETTINGS_FUNCTIONS                                                   \
+  FUNC(g_settings_new, GSettings*, (const char* schema))                      \
+  FUNC(g_settings_list_schemas, const char* const*, (void))                   \
+  FUNC(g_settings_list_keys, char**, (GSettings * settings))                  \
+  FUNC(g_settings_get_value, GVariant*,                                       \
+       (GSettings * settings, const char* key))                               \
+  FUNC(g_settings_set_value, gboolean,                                        \
+       (GSettings * settings, const char* key, GVariant* value))              \
+  FUNC(g_settings_range_check, gboolean,                                      \
+       (GSettings * settings, const char* key, GVariant* value))              \
+  FUNC(g_variant_get_int32, gint32, (GVariant * variant))                     \
+  FUNC(g_variant_get_boolean, gboolean, (GVariant * variant))                 \
+  FUNC(g_variant_get_string, const char*, (GVariant * value, gsize * length)) \
+  FUNC(g_variant_get_strv, const char**, (GVariant * value, gsize * length))  \
+  FUNC(g_variant_is_of_type, gboolean,                                        \
+       (GVariant * value, const GVariantType* type))                          \
+  FUNC(g_variant_new_int32, GVariant*, (gint32 value))                        \
+  FUNC(g_variant_new_boolean, GVariant*, (gboolean value))                    \
+  FUNC(g_variant_new_string, GVariant*, (const char* string))                 \
+  FUNC(g_variant_unref, void, (GVariant * value))
+
+#define FUNC(name, type, params)      \
+  typedef type(*_##name##_fn) params; \
+>>>>>>> upstream-releases
   static _##name##_fn _##name;
 
 GSETTINGS_FUNCTIONS
@@ -79,24 +145,44 @@ GSETTINGS_FUNCTIONS
 #define g_variant_new_string _g_variant_new_string
 #define g_variant_unref _g_variant_unref
 
-static PRLibrary *gioLib = nullptr;
+static PRLibrary* gioLib = nullptr;
 
 class nsGSettingsCollection final : public nsIGSettingsCollection {
  public:
   NS_DECL_ISUPPORTS
   NS_DECL_NSIGSETTINGSCOLLECTION
 
+<<<<<<< HEAD
   explicit nsGSettingsCollection(GSettings *aSettings)
       : mSettings(aSettings), mKeys(nullptr) {}
 
  private:
+||||||| merged common ancestors
+  explicit nsGSettingsCollection(GSettings* aSettings) : mSettings(aSettings),
+                                                         mKeys(nullptr) {}
+private:
+=======
+  explicit nsGSettingsCollection(GSettings* aSettings)
+      : mSettings(aSettings), mKeys(nullptr) {}
+
+ private:
+>>>>>>> upstream-releases
   ~nsGSettingsCollection();
 
+<<<<<<< HEAD
   bool KeyExists(const nsACString &aKey);
   bool SetValue(const nsACString &aKey, GVariant *aValue);
+||||||| merged common ancestors
+  bool KeyExists(const nsACString& aKey);
+  bool SetValue(const nsACString& aKey,
+                  GVariant *aValue);
+=======
+  bool KeyExists(const nsACString& aKey);
+  bool SetValue(const nsACString& aKey, GVariant* aValue);
+>>>>>>> upstream-releases
 
-  GSettings *mSettings;
-  char **mKeys;
+  GSettings* mSettings;
+  char** mKeys;
 };
 
 nsGSettingsCollection::~nsGSettingsCollection() {
@@ -104,8 +190,19 @@ nsGSettingsCollection::~nsGSettingsCollection() {
   g_object_unref(mSettings);
 }
 
+<<<<<<< HEAD
 bool nsGSettingsCollection::KeyExists(const nsACString &aKey) {
   if (!mKeys) mKeys = g_settings_list_keys(mSettings);
+||||||| merged common ancestors
+bool
+nsGSettingsCollection::KeyExists(const nsACString& aKey)
+{
+  if (!mKeys)
+    mKeys = g_settings_list_keys(mSettings);
+=======
+bool nsGSettingsCollection::KeyExists(const nsACString& aKey) {
+  if (!mKeys) mKeys = g_settings_list_keys(mSettings);
+>>>>>>> upstream-releases
 
   for (uint32_t i = 0; mKeys[i] != nullptr; i++) {
     if (aKey.Equals(mKeys[i])) return true;
@@ -114,7 +211,16 @@ bool nsGSettingsCollection::KeyExists(const nsACString &aKey) {
   return false;
 }
 
+<<<<<<< HEAD
 bool nsGSettingsCollection::SetValue(const nsACString &aKey, GVariant *aValue) {
+||||||| merged common ancestors
+bool
+nsGSettingsCollection::SetValue(const nsACString& aKey,
+                                GVariant *aValue)
+{
+=======
+bool nsGSettingsCollection::SetValue(const nsACString& aKey, GVariant* aValue) {
+>>>>>>> upstream-releases
   if (!KeyExists(aKey) ||
       !g_settings_range_check(mSettings, PromiseFlatCString(aKey).get(),
                               aValue)) {
@@ -129,10 +235,24 @@ bool nsGSettingsCollection::SetValue(const nsACString &aKey, GVariant *aValue) {
 NS_IMPL_ISUPPORTS(nsGSettingsCollection, nsIGSettingsCollection)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::SetString(const nsACString &aKey,
                                  const nsACString &aValue) {
   GVariant *value = g_variant_new_string(PromiseFlatCString(aValue).get());
   if (!value) return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+nsGSettingsCollection::SetString(const nsACString& aKey,
+                                 const nsACString& aValue)
+{
+  GVariant *value = g_variant_new_string(PromiseFlatCString(aValue).get());
+  if (!value)
+    return NS_ERROR_OUT_OF_MEMORY;
+=======
+nsGSettingsCollection::SetString(const nsACString& aKey,
+                                 const nsACString& aValue) {
+  GVariant* value = g_variant_new_string(PromiseFlatCString(aValue).get());
+  if (!value) return NS_ERROR_OUT_OF_MEMORY;
+>>>>>>> upstream-releases
 
   bool res = SetValue(aKey, value);
 
@@ -140,9 +260,22 @@ nsGSettingsCollection::SetString(const nsACString &aKey,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::SetBoolean(const nsACString &aKey, bool aValue) {
   GVariant *value = g_variant_new_boolean(aValue);
   if (!value) return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+nsGSettingsCollection::SetBoolean(const nsACString& aKey,
+                                  bool aValue)
+{
+  GVariant *value = g_variant_new_boolean(aValue);
+  if (!value)
+    return NS_ERROR_OUT_OF_MEMORY;
+=======
+nsGSettingsCollection::SetBoolean(const nsACString& aKey, bool aValue) {
+  GVariant* value = g_variant_new_boolean(aValue);
+  if (!value) return NS_ERROR_OUT_OF_MEMORY;
+>>>>>>> upstream-releases
 
   bool res = SetValue(aKey, value);
 
@@ -150,9 +283,22 @@ nsGSettingsCollection::SetBoolean(const nsACString &aKey, bool aValue) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::SetInt(const nsACString &aKey, int32_t aValue) {
   GVariant *value = g_variant_new_int32(aValue);
   if (!value) return NS_ERROR_OUT_OF_MEMORY;
+||||||| merged common ancestors
+nsGSettingsCollection::SetInt(const nsACString& aKey,
+                              int32_t aValue)
+{
+  GVariant *value = g_variant_new_int32(aValue);
+  if (!value)
+    return NS_ERROR_OUT_OF_MEMORY;
+=======
+nsGSettingsCollection::SetInt(const nsACString& aKey, int32_t aValue) {
+  GVariant* value = g_variant_new_int32(aValue);
+  if (!value) return NS_ERROR_OUT_OF_MEMORY;
+>>>>>>> upstream-releases
 
   bool res = SetValue(aKey, value);
 
@@ -160,11 +306,28 @@ nsGSettingsCollection::SetInt(const nsACString &aKey, int32_t aValue) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::GetString(const nsACString &aKey, nsACString &aResult) {
   if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
 
   GVariant *value =
       g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+||||||| merged common ancestors
+nsGSettingsCollection::GetString(const nsACString& aKey,
+                                 nsACString& aResult)
+{
+  if (!KeyExists(aKey))
+    return NS_ERROR_INVALID_ARG;
+
+  GVariant *value = g_settings_get_value(mSettings,
+                                         PromiseFlatCString(aKey).get());
+=======
+nsGSettingsCollection::GetString(const nsACString& aKey, nsACString& aResult) {
+  if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
+
+  GVariant* value =
+      g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+>>>>>>> upstream-releases
   if (!g_variant_is_of_type(value, G_VARIANT_TYPE_STRING) &&
       !g_variant_is_of_type(value, G_VARIANT_TYPE_OBJECT_PATH) &&
       !g_variant_is_of_type(value, G_VARIANT_TYPE_SIGNATURE)) {
@@ -179,13 +342,29 @@ nsGSettingsCollection::GetString(const nsACString &aKey, nsACString &aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::GetBoolean(const nsACString &aKey, bool *aResult) {
+||||||| merged common ancestors
+nsGSettingsCollection::GetBoolean(const nsACString& aKey,
+                                  bool* aResult)
+{
+=======
+nsGSettingsCollection::GetBoolean(const nsACString& aKey, bool* aResult) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aResult);
 
   if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
 
+<<<<<<< HEAD
   GVariant *value =
       g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+||||||| merged common ancestors
+  GVariant *value = g_settings_get_value(mSettings,
+                                         PromiseFlatCString(aKey).get());
+=======
+  GVariant* value =
+      g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+>>>>>>> upstream-releases
   if (!g_variant_is_of_type(value, G_VARIANT_TYPE_BOOLEAN)) {
     g_variant_unref(value);
     return NS_ERROR_FAILURE;
@@ -199,13 +378,29 @@ nsGSettingsCollection::GetBoolean(const nsACString &aKey, bool *aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::GetInt(const nsACString &aKey, int32_t *aResult) {
+||||||| merged common ancestors
+nsGSettingsCollection::GetInt(const nsACString& aKey,
+                              int32_t* aResult)
+{
+=======
+nsGSettingsCollection::GetInt(const nsACString& aKey, int32_t* aResult) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aResult);
 
   if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
 
+<<<<<<< HEAD
   GVariant *value =
       g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+||||||| merged common ancestors
+  GVariant *value = g_settings_get_value(mSettings,
+                                         PromiseFlatCString(aKey).get());
+=======
+  GVariant* value =
+      g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+>>>>>>> upstream-releases
   if (!g_variant_is_of_type(value, G_VARIANT_TYPE_INT32)) {
     g_variant_unref(value);
     return NS_ERROR_FAILURE;
@@ -222,29 +417,54 @@ nsGSettingsCollection::GetInt(const nsACString &aKey, int32_t *aResult) {
 // Boo-urns!
 typedef void (*nsGSettingsFunc)();
 struct nsGSettingsDynamicFunction {
-  const char *functionName;
-  nsGSettingsFunc *function;
+  const char* functionName;
+  nsGSettingsFunc* function;
 };
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsCollection::GetStringList(const nsACString &aKey,
                                      nsIArray **aResult) {
   if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
+||||||| merged common ancestors
+nsGSettingsCollection::GetStringList(const nsACString& aKey, nsIArray** aResult)
+{
+  if (!KeyExists(aKey))
+    return NS_ERROR_INVALID_ARG;
+=======
+nsGSettingsCollection::GetStringList(const nsACString& aKey,
+                                     nsIArray** aResult) {
+  if (!KeyExists(aKey)) return NS_ERROR_INVALID_ARG;
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIMutableArray> items(do_CreateInstance(NS_ARRAY_CONTRACTID));
   if (!items) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
+<<<<<<< HEAD
   GVariant *value =
       g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+||||||| merged common ancestors
+  GVariant *value = g_settings_get_value(mSettings,
+                                         PromiseFlatCString(aKey).get());
+=======
+  GVariant* value =
+      g_settings_get_value(mSettings, PromiseFlatCString(aKey).get());
+>>>>>>> upstream-releases
 
   if (!g_variant_is_of_type(value, G_VARIANT_TYPE_STRING_ARRAY)) {
     g_variant_unref(value);
     return NS_ERROR_FAILURE;
   }
 
+<<<<<<< HEAD
   const gchar **gs_strings = g_variant_get_strv(value, nullptr);
+||||||| merged common ancestors
+  const gchar ** gs_strings = g_variant_get_strv(value, nullptr);
+=======
+  const gchar** gs_strings = g_variant_get_strv(value, nullptr);
+>>>>>>> upstream-releases
   if (!gs_strings) {
     // empty array
     items.forget(aResult);
@@ -252,10 +472,22 @@ nsGSettingsCollection::GetStringList(const nsACString &aKey,
     return NS_OK;
   }
 
+<<<<<<< HEAD
   const gchar **p_gs_strings = gs_strings;
   while (*p_gs_strings != nullptr) {
     nsCOMPtr<nsISupportsCString> obj(
         do_CreateInstance(NS_SUPPORTS_CSTRING_CONTRACTID));
+||||||| merged common ancestors
+  const gchar** p_gs_strings = gs_strings;
+  while (*p_gs_strings != nullptr)
+  {
+    nsCOMPtr<nsISupportsCString> obj(do_CreateInstance(NS_SUPPORTS_CSTRING_CONTRACTID));
+=======
+  const gchar** p_gs_strings = gs_strings;
+  while (*p_gs_strings != nullptr) {
+    nsCOMPtr<nsISupportsCString> obj(
+        do_CreateInstance(NS_SUPPORTS_CSTRING_CONTRACTID));
+>>>>>>> upstream-releases
     if (obj) {
       obj->SetData(nsDependentCString(*p_gs_strings));
       items->AppendElement(obj);
@@ -268,8 +500,18 @@ nsGSettingsCollection::GetStringList(const nsACString &aKey,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsGSettingsService::Init() {
 #define FUNC(name, type, params) {#name, (nsGSettingsFunc *)&_##name},
+||||||| merged common ancestors
+nsresult
+nsGSettingsService::Init()
+{
+#define FUNC(name, type, params) { #name, (nsGSettingsFunc *)&_##name },
+=======
+nsresult nsGSettingsService::Init() {
+#define FUNC(name, type, params) {#name, (nsGSettingsFunc*)&_##name},
+>>>>>>> upstream-releases
   static const nsGSettingsDynamicFunction kGSettingsSymbols[] = {
       GSETTINGS_FUNCTIONS};
 #undef FUNC
@@ -300,16 +542,31 @@ nsGSettingsService::~nsGSettingsService() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsGSettingsService::GetCollectionForSchema(
     const nsACString &schema, nsIGSettingsCollection **collection) {
+||||||| merged common ancestors
+nsGSettingsService::GetCollectionForSchema(const nsACString& schema,
+                                           nsIGSettingsCollection** collection)
+{
+=======
+nsGSettingsService::GetCollectionForSchema(
+    const nsACString& schema, nsIGSettingsCollection** collection) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(collection);
 
+<<<<<<< HEAD
   const char *const *schemas = g_settings_list_schemas();
+||||||| merged common ancestors
+  const char * const *schemas = g_settings_list_schemas();
+=======
+  const char* const* schemas = g_settings_list_schemas();
+>>>>>>> upstream-releases
 
   for (uint32_t i = 0; schemas[i] != nullptr; i++) {
     if (schema.Equals(schemas[i])) {
-      GSettings *settings = g_settings_new(PromiseFlatCString(schema).get());
-      nsGSettingsCollection *mozGSettings = new nsGSettingsCollection(settings);
+      GSettings* settings = g_settings_new(PromiseFlatCString(schema).get());
+      nsGSettingsCollection* mozGSettings = new nsGSettingsCollection(settings);
       NS_ADDREF(*collection = mozGSettings);
       return NS_OK;
     }

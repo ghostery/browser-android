@@ -10,6 +10,7 @@
 #include "mozilla/TransactionManager.h"  // for TransactionManager
 #include "mozilla/dom/Selection.h"
 #include "nsAString.h"
+<<<<<<< HEAD
 #include "nsComponentManagerUtils.h"     // for do_CreateInstance
 #include "nsDebug.h"                     // for NS_ENSURE_TRUE, etc
 #include "nsError.h"                     // for NS_OK, NS_ERROR_FAILURE, etc
@@ -17,11 +18,39 @@
 #include "nsID.h"                        // for NS_GET_IID, etc
 #include "nsIDOMWindow.h"                // for nsIDOMWindow
 #include "nsIDocShell.h"                 // for nsIDocShell
+||||||| merged common ancestors
+#include "nsComponentManagerUtils.h"    // for do_CreateInstance
+#include "nsDebug.h"                    // for NS_ENSURE_TRUE, etc
+#include "nsError.h"                    // for NS_OK, NS_ERROR_FAILURE, etc
+#include "nsICommandManager.h"          // for nsICommandManager
+#include "nsID.h"                       // for NS_GET_IID, etc
+#include "nsIDOMWindow.h"               // for nsIDOMWindow
+#include "nsIDocShell.h"                // for nsIDocShell
+=======
+#include "nsCommandManager.h"            // for nsCommandManager
+#include "nsComponentManagerUtils.h"     // for do_CreateInstance
+#include "nsDebug.h"                     // for NS_ENSURE_TRUE, etc
+#include "nsError.h"                     // for NS_OK, NS_ERROR_FAILURE, etc
+#include "nsID.h"                        // for NS_GET_IID, etc
+#include "nsIDOMWindow.h"                // for nsIDOMWindow
+#include "nsIDocShell.h"                 // for nsIDocShell
+>>>>>>> upstream-releases
 #include "nsIInterfaceRequestorUtils.h"  // for do_GetInterface
+<<<<<<< HEAD
 #include "nsITransactionManager.h"       // for nsITransactionManager
 #include "nsLiteralString.h"             // for NS_LITERAL_STRING
 #include "nsPICommandUpdater.h"          // for nsPICommandUpdater
 #include "nsPIDOMWindow.h"               // for nsPIDOMWindow
+||||||| merged common ancestors
+#include "nsITransactionManager.h"      // for nsITransactionManager
+#include "nsLiteralString.h"            // for NS_LITERAL_STRING
+#include "nsPICommandUpdater.h"         // for nsPICommandUpdater
+#include "nsPIDOMWindow.h"              // for nsPIDOMWindow
+=======
+#include "nsITransactionManager.h"       // for nsITransactionManager
+#include "nsLiteralString.h"             // for NS_LITERAL_STRING
+#include "nsPIDOMWindow.h"               // for nsPIDOMWindow
+>>>>>>> upstream-releases
 
 class nsITransaction;
 
@@ -55,7 +84,7 @@ NS_IMPL_CYCLE_COLLECTION(ComposerCommandsUpdater, mUpdateTimer, mDOMWindow,
                          mDocShell)
 
 #if 0
-#pragma mark -
+#  pragma mark -
 #endif
 
 NS_IMETHODIMP
@@ -90,7 +119,7 @@ ComposerCommandsUpdater::NotifyDocumentStateChanged(bool aNowDirty) {
 }
 
 #if 0
-#pragma mark -
+#  pragma mark -
 #endif
 
 NS_IMETHODIMP
@@ -197,9 +226,10 @@ ComposerCommandsUpdater::DidMerge(nsITransactionManager* aManager,
 }
 
 #if 0
-#pragma mark -
+#  pragma mark -
 #endif
 
+<<<<<<< HEAD
 nsresult ComposerCommandsUpdater::Init(nsPIDOMWindowOuter* aDOMWindow) {
   if (NS_WARN_IF(!aDOMWindow)) {
     return NS_ERROR_INVALID_ARG;
@@ -207,6 +237,21 @@ nsresult ComposerCommandsUpdater::Init(nsPIDOMWindowOuter* aDOMWindow) {
   mDOMWindow = aDOMWindow;
   mDocShell = aDOMWindow->GetDocShell();
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+ComposerCommandsUpdater::Init(nsPIDOMWindowOuter* aDOMWindow)
+{
+  if (NS_WARN_IF(!aDOMWindow)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  mDOMWindow = aDOMWindow;
+  mDocShell = aDOMWindow->GetDocShell();
+  return NS_OK;
+=======
+void ComposerCommandsUpdater::Init(nsPIDOMWindowOuter& aDOMWindow) {
+  mDOMWindow = &aDOMWindow;
+  mDocShell = aDOMWindow.GetDocShell();
+>>>>>>> upstream-releases
 }
 
 nsresult ComposerCommandsUpdater::PrimeUpdateTimer() {
@@ -245,65 +290,97 @@ nsresult ComposerCommandsUpdater::UpdateDirtyState(bool aNowDirty) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult ComposerCommandsUpdater::UpdateCommandGroup(
     const nsAString& aCommandGroup) {
   nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
   NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
 
+||||||| merged common ancestors
+nsresult
+ComposerCommandsUpdater::UpdateCommandGroup(const nsAString& aCommandGroup)
+{
+  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
+  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
+
+
+=======
+nsresult ComposerCommandsUpdater::UpdateCommandGroup(
+    const nsAString& aCommandGroup) {
+  RefPtr<nsCommandManager> commandManager = GetCommandManager();
+  NS_ENSURE_TRUE(commandManager, NS_ERROR_FAILURE);
+
+>>>>>>> upstream-releases
   if (aCommandGroup.EqualsLiteral("undo")) {
-    commandUpdater->CommandStatusChanged("cmd_undo");
-    commandUpdater->CommandStatusChanged("cmd_redo");
+    commandManager->CommandStatusChanged("cmd_undo");
+    commandManager->CommandStatusChanged("cmd_redo");
     return NS_OK;
   }
 
   if (aCommandGroup.EqualsLiteral("select") ||
       aCommandGroup.EqualsLiteral("style")) {
-    commandUpdater->CommandStatusChanged("cmd_bold");
-    commandUpdater->CommandStatusChanged("cmd_italic");
-    commandUpdater->CommandStatusChanged("cmd_underline");
-    commandUpdater->CommandStatusChanged("cmd_tt");
+    commandManager->CommandStatusChanged("cmd_bold");
+    commandManager->CommandStatusChanged("cmd_italic");
+    commandManager->CommandStatusChanged("cmd_underline");
+    commandManager->CommandStatusChanged("cmd_tt");
 
-    commandUpdater->CommandStatusChanged("cmd_strikethrough");
-    commandUpdater->CommandStatusChanged("cmd_superscript");
-    commandUpdater->CommandStatusChanged("cmd_subscript");
-    commandUpdater->CommandStatusChanged("cmd_nobreak");
+    commandManager->CommandStatusChanged("cmd_strikethrough");
+    commandManager->CommandStatusChanged("cmd_superscript");
+    commandManager->CommandStatusChanged("cmd_subscript");
+    commandManager->CommandStatusChanged("cmd_nobreak");
 
-    commandUpdater->CommandStatusChanged("cmd_em");
-    commandUpdater->CommandStatusChanged("cmd_strong");
-    commandUpdater->CommandStatusChanged("cmd_cite");
-    commandUpdater->CommandStatusChanged("cmd_abbr");
-    commandUpdater->CommandStatusChanged("cmd_acronym");
-    commandUpdater->CommandStatusChanged("cmd_code");
-    commandUpdater->CommandStatusChanged("cmd_samp");
-    commandUpdater->CommandStatusChanged("cmd_var");
+    commandManager->CommandStatusChanged("cmd_em");
+    commandManager->CommandStatusChanged("cmd_strong");
+    commandManager->CommandStatusChanged("cmd_cite");
+    commandManager->CommandStatusChanged("cmd_abbr");
+    commandManager->CommandStatusChanged("cmd_acronym");
+    commandManager->CommandStatusChanged("cmd_code");
+    commandManager->CommandStatusChanged("cmd_samp");
+    commandManager->CommandStatusChanged("cmd_var");
 
-    commandUpdater->CommandStatusChanged("cmd_increaseFont");
-    commandUpdater->CommandStatusChanged("cmd_decreaseFont");
+    commandManager->CommandStatusChanged("cmd_increaseFont");
+    commandManager->CommandStatusChanged("cmd_decreaseFont");
 
-    commandUpdater->CommandStatusChanged("cmd_paragraphState");
-    commandUpdater->CommandStatusChanged("cmd_fontFace");
-    commandUpdater->CommandStatusChanged("cmd_fontColor");
-    commandUpdater->CommandStatusChanged("cmd_backgroundColor");
-    commandUpdater->CommandStatusChanged("cmd_highlight");
+    commandManager->CommandStatusChanged("cmd_paragraphState");
+    commandManager->CommandStatusChanged("cmd_fontFace");
+    commandManager->CommandStatusChanged("cmd_fontColor");
+    commandManager->CommandStatusChanged("cmd_backgroundColor");
+    commandManager->CommandStatusChanged("cmd_highlight");
     return NS_OK;
   }
 
   if (aCommandGroup.EqualsLiteral("save")) {
     // save commands (most are not in C++)
-    commandUpdater->CommandStatusChanged("cmd_setDocumentModified");
-    commandUpdater->CommandStatusChanged("cmd_save");
+    commandManager->CommandStatusChanged("cmd_setDocumentModified");
+    commandManager->CommandStatusChanged("cmd_save");
     return NS_OK;
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand) {
   nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
   NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
 
   commandUpdater->CommandStatusChanged(aCommand);
 
+||||||| merged common ancestors
+nsresult
+ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand)
+{
+  nsCOMPtr<nsPICommandUpdater> commandUpdater = GetCommandUpdater();
+  NS_ENSURE_TRUE(commandUpdater, NS_ERROR_FAILURE);
+
+  commandUpdater->CommandStatusChanged(aCommand);
+
+=======
+nsresult ComposerCommandsUpdater::UpdateOneCommand(const char* aCommand) {
+  RefPtr<nsCommandManager> commandManager = GetCommandManager();
+  NS_ENSURE_TRUE(commandManager, NS_ERROR_FAILURE);
+  commandManager->CommandStatusChanged(aCommand);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -320,15 +397,20 @@ bool ComposerCommandsUpdater::SelectionIsCollapsed() {
   return domSelection->IsCollapsed();
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsPICommandUpdater>
 ComposerCommandsUpdater::GetCommandUpdater() {
+||||||| merged common ancestors
+already_AddRefed<nsPICommandUpdater>
+ComposerCommandsUpdater::GetCommandUpdater()
+{
+=======
+nsCommandManager* ComposerCommandsUpdater::GetCommandManager() {
+>>>>>>> upstream-releases
   if (NS_WARN_IF(!mDocShell)) {
     return nullptr;
   }
-
-  nsCOMPtr<nsICommandManager> manager = mDocShell->GetCommandManager();
-  nsCOMPtr<nsPICommandUpdater> updater = do_QueryInterface(manager);
-  return updater.forget();
+  return mDocShell->GetCommandManager();
 }
 
 NS_IMETHODIMP
@@ -338,7 +420,7 @@ ComposerCommandsUpdater::GetName(nsACString& aName) {
 }
 
 #if 0
-#pragma mark -
+#  pragma mark -
 #endif
 
 nsresult ComposerCommandsUpdater::Notify(nsITimer* aTimer) {
@@ -348,7 +430,7 @@ nsresult ComposerCommandsUpdater::Notify(nsITimer* aTimer) {
 }
 
 #if 0
-#pragma mark -
+#  pragma mark -
 #endif
 
 }  // namespace mozilla

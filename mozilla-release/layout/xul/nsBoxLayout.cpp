@@ -43,11 +43,26 @@ nsSize nsBoxLayout::GetXULMinSize(nsIFrame* aBox,
   return minSize;
 }
 
+<<<<<<< HEAD
 nsSize nsBoxLayout::GetXULMaxSize(nsIFrame* aBox,
                                   nsBoxLayoutState& aBoxLayoutState) {
   // AddBorderAndPadding () never changes maxSize (NS_INTRINSICSIZE)
   // AddBorderAndPadding(aBox, maxSize);
   return nsSize(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+||||||| merged common ancestors
+nsSize
+nsBoxLayout::GetXULMaxSize(nsIFrame* aBox, nsBoxLayoutState& aBoxLayoutState)
+{
+  //AddBorderAndPadding () never changes maxSize (NS_INTRINSICSIZE)
+  //AddBorderAndPadding(aBox, maxSize);
+  return nsSize (NS_INTRINSICSIZE,NS_INTRINSICSIZE);
+=======
+nsSize nsBoxLayout::GetXULMaxSize(nsIFrame* aBox,
+                                  nsBoxLayoutState& aBoxLayoutState) {
+  // AddBorderAndPadding () never changes maxSize (NS_UNCONSTRAINEDSIZE)
+  // AddBorderAndPadding(aBox, maxSize);
+  return nsSize(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
 }
 
 nscoord nsBoxLayout::GetAscent(nsIFrame* aBox,

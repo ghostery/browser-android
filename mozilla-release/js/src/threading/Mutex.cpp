@@ -14,9 +14,29 @@ using namespace js;
 
 MOZ_THREAD_LOCAL(js::Mutex::MutexVector*) js::Mutex::HeldMutexStack;
 
+<<<<<<< HEAD
 /* static */ bool js::Mutex::Init() { return HeldMutexStack.init(); }
+||||||| merged common ancestors
+/* static */ bool
+js::Mutex::Init()
+{
+  return HeldMutexStack.init();
+}
+=======
+/* static */
+bool js::Mutex::Init() { return HeldMutexStack.init(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ void js::Mutex::ShutDown() {
+||||||| merged common ancestors
+/* static */ void
+js::Mutex::ShutDown()
+{
+=======
+/* static */
+void js::Mutex::ShutDown() {
+>>>>>>> upstream-releases
   js_delete(HeldMutexStack.get());
   HeldMutexStack.set(nullptr);
 }

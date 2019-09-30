@@ -16,8 +16,17 @@ class nsApplicationCache : public nsIApplicationCache,
   NS_DECL_ISUPPORTS
   NS_DECL_NSIAPPLICATIONCACHE
 
+<<<<<<< HEAD
   nsApplicationCache(nsOfflineCacheDevice *device, const nsACString &group,
                      const nsACString &clientID);
+||||||| merged common ancestors
+  nsApplicationCache(nsOfflineCacheDevice *device,
+                     const nsACString &group,
+                     const nsACString &clientID);
+=======
+  nsApplicationCache(nsOfflineCacheDevice* device, const nsACString& group,
+                     const nsACString& clientID);
+>>>>>>> upstream-releases
 
   nsApplicationCache();
 

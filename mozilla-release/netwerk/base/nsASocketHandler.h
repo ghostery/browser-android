@@ -43,6 +43,7 @@ class nsASocketHandler : public nsISupports {
 
   bool mIsPrivate;
 
+<<<<<<< HEAD
   //
   // called to service a socket
   //
@@ -53,7 +54,31 @@ class nsASocketHandler : public nsISupports {
   //               or -1 if a timeout occurred
   //
   virtual void OnSocketReady(PRFileDesc *fd, int16_t outFlags) = 0;
+||||||| merged common ancestors
+    //
+    // called to service a socket
+    //
+    // params:
+    //   socketRef - socket identifier
+    //   fd        - socket file descriptor
+    //   outFlags  - value of PR_PollDesc::out_flags after PR_Poll returns
+    //               or -1 if a timeout occurred
+    //
+    virtual void OnSocketReady(PRFileDesc *fd, int16_t outFlags) = 0;
+=======
+  //
+  // called to service a socket
+  //
+  // params:
+  //   socketRef - socket identifier
+  //   fd        - socket file descriptor
+  //   outFlags  - value of PR_PollDesc::out_flags after PR_Poll returns
+  //               or -1 if a timeout occurred
+  //
+  virtual void OnSocketReady(PRFileDesc* fd, int16_t outFlags) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   //
   // called when a socket is no longer under the control of the socket
   // transport service.  the socket handler may close the socket at this
@@ -61,14 +86,48 @@ class nsASocketHandler : public nsISupports {
   // by the socket transport service.
   //
   virtual void OnSocketDetached(PRFileDesc *fd) = 0;
+||||||| merged common ancestors
+    //
+    // called when a socket is no longer under the control of the socket
+    // transport service.  the socket handler may close the socket at this
+    // point.  after this call returns, the handler will no longer be owned
+    // by the socket transport service.
+    //
+    virtual void OnSocketDetached(PRFileDesc *fd) = 0;
+=======
+  //
+  // called when a socket is no longer under the control of the socket
+  // transport service.  the socket handler may close the socket at this
+  // point.  after this call returns, the handler will no longer be owned
+  // by the socket transport service.
+  //
+  virtual void OnSocketDetached(PRFileDesc* fd) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   //
   // called to determine if the socket is for a local peer.
   // when used for server sockets, indicates if it only accepts local
   // connections.
   //
   virtual void IsLocal(bool *aIsLocal) = 0;
+||||||| merged common ancestors
+    //
+    // called to determine if the socket is for a local peer.
+    // when used for server sockets, indicates if it only accepts local
+    // connections.
+    //
+    virtual void IsLocal(bool *aIsLocal) = 0;
+=======
+  //
+  // called to determine if the socket is for a local peer.
+  // when used for server sockets, indicates if it only accepts local
+  // connections.
+  //
+  virtual void IsLocal(bool* aIsLocal) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   //
   // called to determine if this socket should not be terminated when Gecko
   // is turned offline. This is mostly useful for the debugging server
@@ -77,6 +136,26 @@ class nsASocketHandler : public nsISupports {
   virtual void KeepWhenOffline(bool *aKeepWhenOffline) {
     *aKeepWhenOffline = false;
   }
+||||||| merged common ancestors
+    //
+    // called to determine if this socket should not be terminated when Gecko
+    // is turned offline. This is mostly useful for the debugging server
+    // socket.
+    //
+    virtual void KeepWhenOffline(bool *aKeepWhenOffline)
+    {
+        *aKeepWhenOffline = false;
+    }
+=======
+  //
+  // called to determine if this socket should not be terminated when Gecko
+  // is turned offline. This is mostly useful for the debugging server
+  // socket.
+  //
+  virtual void KeepWhenOffline(bool* aKeepWhenOffline) {
+    *aKeepWhenOffline = false;
+  }
+>>>>>>> upstream-releases
 
   //
   // called when global pref for keepalive has changed.

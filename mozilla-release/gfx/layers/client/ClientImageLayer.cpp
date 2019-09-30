@@ -37,43 +37,100 @@ class ClientImageLayer : public ImageLayer, public ClientLayer {
     MOZ_COUNT_DTOR(ClientImageLayer);
   }
 
+<<<<<<< HEAD
   virtual void SetContainer(ImageContainer* aContainer) override {
+||||||| merged common ancestors
+  virtual void SetContainer(ImageContainer* aContainer) override
+  {
+=======
+  void SetContainer(ImageContainer* aContainer) override {
+>>>>>>> upstream-releases
     ImageLayer::SetContainer(aContainer);
     mImageClientTypeContainer = CompositableType::UNKNOWN;
   }
 
+<<<<<<< HEAD
   virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+||||||| merged common ancestors
+  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
+  {
+=======
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+>>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ImageLayer::SetVisibleRegion(aRegion);
   }
 
+<<<<<<< HEAD
   virtual void RenderLayer() override;
+||||||| merged common ancestors
+  virtual void RenderLayer() override;
+  
+  virtual void ClearCachedResources() override
+  {
+    DestroyBackBuffer();
+  }
+=======
+  void RenderLayer() override;
 
+  void ClearCachedResources() override { DestroyBackBuffer(); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual void ClearCachedResources() override { DestroyBackBuffer(); }
 
   virtual bool SupportsAsyncUpdate() override {
+||||||| merged common ancestors
+  virtual bool SupportsAsyncUpdate() override
+  {
+=======
+  bool SupportsAsyncUpdate() override {
+>>>>>>> upstream-releases
     if (GetImageClientType() == CompositableType::IMAGE_BRIDGE) {
       return true;
     }
     return false;
   }
 
+<<<<<<< HEAD
   virtual void HandleMemoryPressure() override {
+||||||| merged common ancestors
+  virtual void HandleMemoryPressure() override
+  {
+=======
+  void HandleMemoryPressure() override {
+>>>>>>> upstream-releases
     if (mImageClient) {
       mImageClient->HandleMemoryPressure();
     }
   }
 
+<<<<<<< HEAD
   virtual void FillSpecificAttributes(
       SpecificLayerAttributes& aAttrs) override {
+||||||| merged common ancestors
+  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override
+  {
+=======
+  void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override {
+>>>>>>> upstream-releases
     aAttrs = ImageLayerAttributes(mSamplingFilter, mScaleToSize, mScaleMode);
   }
 
-  virtual Layer* AsLayer() override { return this; }
-  virtual ShadowableLayer* AsShadowableLayer() override { return this; }
+  Layer* AsLayer() override { return this; }
+  ShadowableLayer* AsShadowableLayer() override { return this; }
 
+<<<<<<< HEAD
   virtual void Disconnect() override { DestroyBackBuffer(); }
+||||||| merged common ancestors
+  virtual void Disconnect() override
+  {
+    DestroyBackBuffer();
+  }
+=======
+  void Disconnect() override { DestroyBackBuffer(); }
+>>>>>>> upstream-releases
 
   void DestroyBackBuffer() {
     if (mImageClient) {
@@ -83,9 +140,18 @@ class ClientImageLayer : public ImageLayer, public ClientLayer {
     }
   }
 
+<<<<<<< HEAD
   virtual CompositableClient* GetCompositableClient() override {
     return mImageClient;
   }
+||||||| merged common ancestors
+  virtual CompositableClient* GetCompositableClient() override
+  {
+    return mImageClient;
+  }
+=======
+  CompositableClient* GetCompositableClient() override { return mImageClient; }
+>>>>>>> upstream-releases
 
  protected:
   ClientLayerManager* ClientManager() {
@@ -121,7 +187,7 @@ void ClientImageLayer::RenderLayer() {
   }
 
   if (!mImageClient ||
-      !mImageClient->UpdateImage(mContainer, GetContentFlags())) {
+      !mImageClient->UpdateImage(mContainer, GetContentFlags(), Nothing())) {
     CompositableType type = GetImageClientType();
     if (type == CompositableType::UNKNOWN) {
       return;
@@ -137,7 +203,7 @@ void ClientImageLayer::RenderLayer() {
       mImageClient->Connect();
       ClientManager()->AsShadowForwarder()->Attach(mImageClient, this);
     }
-    if (!mImageClient->UpdateImage(mContainer, GetContentFlags())) {
+    if (!mImageClient->UpdateImage(mContainer, GetContentFlags(), Nothing())) {
       return;
     }
   }

@@ -8,19 +8,55 @@
 #define jit_SharedICHelpers_inl_h
 
 #if defined(JS_CODEGEN_X86)
+<<<<<<< HEAD
 #include "jit/x86/SharedICHelpers-x86-inl.h"
+||||||| merged common ancestors
+# include "jit/x86/SharedICHelpers-x86-inl.h"
+=======
+#  include "jit/x86/SharedICHelpers-x86-inl.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_X64)
+<<<<<<< HEAD
 #include "jit/x64/SharedICHelpers-x64-inl.h"
+||||||| merged common ancestors
+# include "jit/x64/SharedICHelpers-x64-inl.h"
+=======
+#  include "jit/x64/SharedICHelpers-x64-inl.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM)
+<<<<<<< HEAD
 #include "jit/arm/SharedICHelpers-arm-inl.h"
+||||||| merged common ancestors
+# include "jit/arm/SharedICHelpers-arm-inl.h"
+=======
+#  include "jit/arm/SharedICHelpers-arm-inl.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM64)
+<<<<<<< HEAD
 #include "jit/arm64/SharedICHelpers-arm64-inl.h"
+||||||| merged common ancestors
+# include "jit/arm64/SharedICHelpers-arm64-inl.h"
+=======
+#  include "jit/arm64/SharedICHelpers-arm64-inl.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS32) || defined(JS_CODEGEN_MIPS64)
-#include "jit/mips-shared/SharedICHelpers-mips-shared-inl.h"
+#  include "jit/mips-shared/SharedICHelpers-mips-shared-inl.h"
 #elif defined(JS_CODEGEN_NONE)
+<<<<<<< HEAD
 #include "jit/none/SharedICHelpers-none-inl.h"
+||||||| merged common ancestors
+# include "jit/none/SharedICHelpers-none-inl.h"
+=======
+#  include "jit/none/SharedICHelpers-none-inl.h"
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #error "Unknown architecture!"
+||||||| merged common ancestors
+# error "Unknown architecture!"
+=======
+#  error "Unknown architecture!"
+>>>>>>> upstream-releases
 #endif
 
 namespace js {

@@ -21,6 +21,7 @@ uint16x4_t Divide(uint32x4_t aValues, uint32x2_t aDivisor) {
 }
 
 MOZ_ALWAYS_INLINE
+<<<<<<< HEAD
 uint16x4_t BlurFourPixels(const uint32x4_t &aTopLeft,
                           const uint32x4_t &aTopRight,
                           const uint32x4_t &aBottomRight,
@@ -28,11 +29,26 @@ uint16x4_t BlurFourPixels(const uint32x4_t &aTopLeft,
                           const uint32x2_t &aDivisor) {
   uint32x4_t values = vaddq_u32(
       vsubq_u32(vsubq_u32(aBottomRight, aTopRight), aBottomLeft), aTopLeft);
+||||||| merged common ancestors
+uint16x4_t BlurFourPixels(const uint32x4_t& aTopLeft, const uint32x4_t& aTopRight,
+                          const uint32x4_t& aBottomRight, const uint32x4_t& aBottomLeft,
+                          const uint32x2_t& aDivisor)
+{
+  uint32x4_t values = vaddq_u32(vsubq_u32(vsubq_u32(aBottomRight, aTopRight), aBottomLeft), aTopLeft);
+=======
+uint16x4_t BlurFourPixels(const uint32x4_t& aTopLeft,
+                          const uint32x4_t& aTopRight,
+                          const uint32x4_t& aBottomRight,
+                          const uint32x4_t& aBottomLeft,
+                          const uint32x2_t& aDivisor) {
+  uint32x4_t values = vaddq_u32(
+      vsubq_u32(vsubq_u32(aBottomRight, aTopRight), aBottomLeft), aTopLeft);
+>>>>>>> upstream-releases
   return Divide(values, aDivisor);
 }
 
 MOZ_ALWAYS_INLINE
-void LoadIntegralRowFromRow(uint32_t *aDest, const uint8_t *aSource,
+void LoadIntegralRowFromRow(uint32_t* aDest, const uint8_t* aSource,
                             int32_t aSourceWidth, int32_t aLeftInflation,
                             int32_t aRightInflation) {
   int32_t currentRowSum = 0;
@@ -52,11 +68,26 @@ void LoadIntegralRowFromRow(uint32_t *aDest, const uint8_t *aSource,
   }
 }
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
     int32_t aLeftInflation, int32_t aRightInflation, int32_t aTopInflation,
     int32_t aBottomInflation, uint32_t *aIntegralImage,
     size_t aIntegralImageStride, uint8_t *aSource, int32_t aSourceStride,
     const IntSize &aSize) {
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE void
+GenerateIntegralImage_NEON(int32_t aLeftInflation, int32_t aRightInflation,
+                           int32_t aTopInflation, int32_t aBottomInflation,
+                           uint32_t *aIntegralImage, size_t aIntegralImageStride,
+                           uint8_t *aSource, int32_t aSourceStride, const IntSize &aSize)
+{
+=======
+MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
+    int32_t aLeftInflation, int32_t aRightInflation, int32_t aTopInflation,
+    int32_t aBottomInflation, uint32_t* aIntegralImage,
+    size_t aIntegralImageStride, uint8_t* aSource, int32_t aSourceStride,
+    const IntSize& aSize) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!(aLeftInflation & 3));
 
   uint32_t stride32bit = aIntegralImageStride / 4;
@@ -67,9 +98,9 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
                          aRightInflation);
 
   for (int y = 1; y < aTopInflation + 1; y++) {
-    uint32_t *intRow = aIntegralImage + (y * stride32bit);
-    uint32_t *intPrevRow = aIntegralImage + (y - 1) * stride32bit;
-    uint32_t *intFirstRow = aIntegralImage;
+    uint32_t* intRow = aIntegralImage + (y * stride32bit);
+    uint32_t* intPrevRow = aIntegralImage + (y - 1) * stride32bit;
+    uint32_t* intFirstRow = aIntegralImage;
 
     for (int x = 0; x < integralImageSize.width; x += 4) {
       uint32x4_t firstRow = vld1q_u32(intFirstRow + x);
@@ -80,9 +111,9 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
 
   for (int y = aTopInflation + 1; y < (aSize.height + aTopInflation); y++) {
     uint32x4_t currentRowSum = vdupq_n_u32(0);
-    uint32_t *intRow = aIntegralImage + (y * stride32bit);
-    uint32_t *intPrevRow = aIntegralImage + (y - 1) * stride32bit;
-    uint8_t *sourceRow = aSource + aSourceStride * (y - aTopInflation);
+    uint32_t* intRow = aIntegralImage + (y * stride32bit);
+    uint32_t* intPrevRow = aIntegralImage + (y - 1) * stride32bit;
+    uint8_t* sourceRow = aSource + aSourceStride * (y - aTopInflation);
 
     uint32_t pixel = sourceRow[0];
     for (int x = 0; x < aLeftInflation; x += 4) {
@@ -120,8 +151,15 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
     if ((aSize.width & 3)) {
       // Deal with unaligned portion. Get the correct pixel from currentRowSum,
       // see explanation above.
+<<<<<<< HEAD
       uint32_t intCurrentRowSum =
           ((uint32_t *)&currentRowSum)[(aSize.width % 4) - 1];
+||||||| merged common ancestors
+      uint32_t intCurrentRowSum = ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
+=======
+      uint32_t intCurrentRowSum =
+          ((uint32_t*)&currentRowSum)[(aSize.width % 4) - 1];
+>>>>>>> upstream-releases
       for (; x < integralImageSize.width; x++) {
         // We could be unaligned here!
         if (!(x & 3)) {
@@ -153,6 +191,7 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
     // Store the last valid row of our source image in the last row of
     // our integral image. This will be overwritten with the correct values
     // in the upcoming loop.
+<<<<<<< HEAD
     LoadIntegralRowFromRow(
         aIntegralImage + (integralImageSize.height - 1) * stride32bit,
         aSource + (aSize.height - 1) * aSourceStride, aSize.width,
@@ -164,6 +203,27 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
       uint32_t *intPrevRow = aIntegralImage + (y - 1) * stride32bit;
       uint32_t *intLastRow =
           aIntegralImage + (integralImageSize.height - 1) * stride32bit;
+||||||| merged common ancestors
+    LoadIntegralRowFromRow(aIntegralImage + (integralImageSize.height - 1) * stride32bit,
+                           aSource + (aSize.height - 1) * aSourceStride, aSize.width, aLeftInflation, aRightInflation);
+
+    for (int y = aSize.height + aTopInflation; y < integralImageSize.height; y++) {
+      uint32_t *intRow = aIntegralImage + (y * stride32bit);
+      uint32_t *intPrevRow = aIntegralImage + (y - 1) * stride32bit;
+      uint32_t *intLastRow = aIntegralImage + (integralImageSize.height - 1) * stride32bit;
+=======
+    LoadIntegralRowFromRow(
+        aIntegralImage + (integralImageSize.height - 1) * stride32bit,
+        aSource + (aSize.height - 1) * aSourceStride, aSize.width,
+        aLeftInflation, aRightInflation);
+
+    for (int y = aSize.height + aTopInflation; y < integralImageSize.height;
+         y++) {
+      uint32_t* intRow = aIntegralImage + (y * stride32bit);
+      uint32_t* intPrevRow = aIntegralImage + (y - 1) * stride32bit;
+      uint32_t* intLastRow =
+          aIntegralImage + (integralImageSize.height - 1) * stride32bit;
+>>>>>>> upstream-releases
       for (int x = 0; x < integralImageSize.width; x += 4) {
         vst1q_u32(intRow + x, vaddq_u32(vld1q_u32(intLastRow + x),
                                         vld1q_u32(intPrevRow + x)));
@@ -175,10 +235,27 @@ MOZ_ALWAYS_INLINE void GenerateIntegralImage_NEON(
 /**
  * Attempt to do an in-place box blur using an integral image.
  */
+<<<<<<< HEAD
 void AlphaBoxBlur::BoxBlur_NEON(uint8_t *aData, int32_t aLeftLobe,
                                 int32_t aRightLobe, int32_t aTopLobe,
                                 int32_t aBottomLobe, uint32_t *aIntegralImage,
                                 size_t aIntegralImageStride) const {
+||||||| merged common ancestors
+void
+AlphaBoxBlur::BoxBlur_NEON(uint8_t* aData,
+                           int32_t aLeftLobe,
+                           int32_t aRightLobe,
+                           int32_t aTopLobe,
+                           int32_t aBottomLobe,
+                           uint32_t *aIntegralImage,
+                           size_t aIntegralImageStride) const
+{
+=======
+void AlphaBoxBlur::BoxBlur_NEON(uint8_t* aData, int32_t aLeftLobe,
+                                int32_t aRightLobe, int32_t aTopLobe,
+                                int32_t aBottomLobe, uint32_t* aIntegralImage,
+                                size_t aIntegralImageStride) const {
+>>>>>>> upstream-releases
   IntSize size = GetSize();
 
   MOZ_ASSERT(size.height > 0);
@@ -206,16 +283,28 @@ void AlphaBoxBlur::BoxBlur_NEON(uint8_t *aData, int32_t aLeftLobe,
 
   uint32x2_t divisor = vdup_n_u32(reciprocal);
 
+<<<<<<< HEAD
   // This points to the start of the rectangle within the IntegralImage that
   // overlaps the surface being blurred.
   uint32_t *innerIntegral =
       aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
+||||||| merged common ancestors
+  // This points to the start of the rectangle within the IntegralImage that overlaps
+  // the surface being blurred.
+  uint32_t *innerIntegral = aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
+=======
+  // This points to the start of the rectangle within the IntegralImage that
+  // overlaps the surface being blurred.
+  uint32_t* innerIntegral =
+      aIntegralImage + (aTopLobe * stride32bit) + leftInflation;
+>>>>>>> upstream-releases
   IntRect skipRect = mSkipRect;
   int32_t stride = mStride;
-  uint8_t *data = aData;
+  uint8_t* data = aData;
 
   for (int32_t y = 0; y < size.height; y++) {
     bool inSkipRectY = y > skipRect.y && y < skipRect.YMost();
+<<<<<<< HEAD
     uint32_t *topLeftBase =
         innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
     uint32_t *topRightBase =
@@ -226,6 +315,23 @@ void AlphaBoxBlur::BoxBlur_NEON(uint8_t *aData, int32_t aLeftLobe,
     uint32_t *bottomLeftBase =
         innerIntegral +
         ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
+||||||| merged common ancestors
+    uint32_t *topLeftBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
+    uint32_t *topRightBase = innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
+    uint32_t *bottomRightBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
+    uint32_t *bottomLeftBase = innerIntegral + ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
+=======
+    uint32_t* topLeftBase =
+        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
+    uint32_t* topRightBase =
+        innerIntegral + ((y - aTopLobe) * ptrdiff_t(stride32bit) + aRightLobe);
+    uint32_t* bottomRightBase =
+        innerIntegral +
+        ((y + aBottomLobe) * ptrdiff_t(stride32bit) + aRightLobe);
+    uint32_t* bottomLeftBase =
+        innerIntegral +
+        ((y + aBottomLobe) * ptrdiff_t(stride32bit) - aLeftLobe);
+>>>>>>> upstream-releases
 
     int32_t x = 0;
     // Process 16 pixels at a time for as long as possible.
@@ -290,11 +396,23 @@ void AlphaBoxBlur::BoxBlur_NEON(uint8_t *aData, int32_t aLeftLobe,
       uint32x4_t topRight = vld1q_u32(topRightBase + x);
       uint32x4_t bottomRight = vld1q_u32(bottomRightBase + x);
       uint32x4_t bottomLeft = vld1q_u32(bottomLeftBase + x);
+<<<<<<< HEAD
       uint16x4_t result =
           BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
       uint32x2_t final =
           vreinterpret_u32_u8(vmovn_u16(vcombine_u16(result, vdup_n_u16(0))));
       *(uint32_t *)(data + stride * y + x) = vget_lane_u32(final, 0);
+||||||| merged common ancestors
+      uint16x4_t result = BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
+      uint32x2_t final = vreinterpret_u32_u8(vmovn_u16(vcombine_u16(result, vdup_n_u16(0))));
+      *(uint32_t*)(data + stride * y + x) = vget_lane_u32(final, 0);
+=======
+      uint16x4_t result =
+          BlurFourPixels(topLeft, topRight, bottomRight, bottomLeft, divisor);
+      uint32x2_t final =
+          vreinterpret_u32_u8(vmovn_u16(vcombine_u16(result, vdup_n_u16(0))));
+      *(uint32_t*)(data + stride * y + x) = vget_lane_u32(final, 0);
+>>>>>>> upstream-releases
     }
   }
 }

@@ -8,10 +8,12 @@
 #define mozilla_dom_timeout_handler_h
 
 #include "nsCOMPtr.h"
+#include "nsIGlobalObject.h"
 #include "nsISupports.h"
-#include "nsITimeoutHandler.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsString.h"
+#include "mozilla/Attributes.h"
+#include "mozilla/dom/FunctionBinding.h"
 
 namespace mozilla {
 namespace dom {
@@ -19,32 +21,114 @@ namespace dom {
 /**
  * Utility class for implementing nsITimeoutHandlers, designed to be subclassed.
  */
+<<<<<<< HEAD
 class TimeoutHandler : public nsITimeoutHandler {
  public:
+||||||| merged common ancestors
+class TimeoutHandler : public nsITimeoutHandler
+{
+public:
+=======
+class TimeoutHandler : public nsISupports {
+ public:
+>>>>>>> upstream-releases
   // TimeoutHandler doesn't actually contain cycles, but subclasses
   // probably will.
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_CLASS(TimeoutHandler)
 
-  virtual nsresult Call() override;
+  MOZ_CAN_RUN_SCRIPT virtual bool Call(const char* /* unused */);
+  // Get the location of the script.
+  // Note: The memory pointed to by aFileName is owned by the
+  // nsITimeoutHandler and should not be freed by the caller.
   virtual void GetLocation(const char** aFileName, uint32_t* aLineNo,
+<<<<<<< HEAD
                            uint32_t* aColumn) override;
   virtual void MarkForCC() override {}
 
  protected:
+||||||| merged common ancestors
+                           uint32_t* aColumn) override;
+  virtual void MarkForCC() override {}
+protected:
+=======
+                           uint32_t* aColumn);
+  virtual void MarkForCC() {}
+
+ protected:
+>>>>>>> upstream-releases
   TimeoutHandler() : mFileName(""), mLineNo(0), mColumn(0) {}
   explicit TimeoutHandler(JSContext* aCx);
 
   virtual ~TimeoutHandler() {}
+<<<<<<< HEAD
 
  private:
   TimeoutHandler(const TimeoutHandler&) = delete;
   TimeoutHandler& operator=(const TimeoutHandler&) = delete;
   TimeoutHandler& operator=(const TimeoutHandler&&) = delete;
+||||||| merged common ancestors
+private:
+  TimeoutHandler(const TimeoutHandler&) = delete;
+  TimeoutHandler& operator=(const TimeoutHandler&) = delete;
+  TimeoutHandler& operator=(const TimeoutHandler&&) = delete;
+=======
+>>>>>>> upstream-releases
 
+  // filename, line number and JS language version string of the
+  // caller of setTimeout()
   nsCString mFileName;
   uint32_t mLineNo;
   uint32_t mColumn;
+
+ private:
+  TimeoutHandler(const TimeoutHandler&) = delete;
+  TimeoutHandler& operator=(const TimeoutHandler&) = delete;
+  TimeoutHandler& operator=(const TimeoutHandler&&) = delete;
+};
+
+class ScriptTimeoutHandler : public TimeoutHandler {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(ScriptTimeoutHandler, TimeoutHandler)
+
+  ScriptTimeoutHandler(JSContext* aCx, nsIGlobalObject* aGlobal,
+                       const nsAString& aExpression);
+
+  MOZ_CAN_RUN_SCRIPT virtual bool Call(const char* /* unused */) override {
+    return false;
+  };
+
+ protected:
+  virtual ~ScriptTimeoutHandler() {}
+
+  nsCOMPtr<nsIGlobalObject> mGlobal;
+  // The expression to evaluate or function to call. If mFunction is non-null
+  // it should be used, else use mExpr.
+  nsString mExpr;
+};
+
+class CallbackTimeoutHandler final : public TimeoutHandler {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(CallbackTimeoutHandler,
+                                                         TimeoutHandler)
+
+  CallbackTimeoutHandler(JSContext* aCx, nsIGlobalObject* aGlobal,
+                         Function* aFunction,
+                         nsTArray<JS::Heap<JS::Value>>&& aArguments);
+
+  MOZ_CAN_RUN_SCRIPT virtual bool Call(const char* aExecutionReason) override;
+  virtual void MarkForCC() override;
+
+  void ReleaseJSObjects();
+
+ private:
+  virtual ~CallbackTimeoutHandler() { ReleaseJSObjects(); }
+
+  nsCOMPtr<nsIGlobalObject> mGlobal;
+  RefPtr<Function> mFunction;
+  nsTArray<JS::Heap<JS::Value>> mArgs;
 };
 
 }  // namespace dom

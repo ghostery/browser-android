@@ -16,8 +16,10 @@ GfxDeviceFamily* const GfxDriverInfo::allDevices = nullptr;
 
 GfxDeviceFamily* GfxDriverInfo::sDeviceFamilies[DeviceFamilyMax];
 nsAString* GfxDriverInfo::sDeviceVendors[DeviceVendorMax];
+nsAString* GfxDriverInfo::sDriverVendors[DriverVendorMax];
 
 GfxDriverInfo::GfxDriverInfo()
+<<<<<<< HEAD
     : mOperatingSystem(OperatingSystem::Unknown),
       mOperatingSystemVersion(0),
       mAdapterVendor(GfxDriverInfo::GetDeviceVendor(VendorAll)),
@@ -31,14 +33,63 @@ GfxDriverInfo::GfxDriverInfo()
       mSuggestedVersion(nullptr),
       mRuleId(nullptr),
       mGpu2(false) {}
+||||||| merged common ancestors
+  : mOperatingSystem(OperatingSystem::Unknown),
+    mOperatingSystemVersion(0),
+    mAdapterVendor(GfxDriverInfo::GetDeviceVendor(VendorAll)),
+    mDevices(allDevices),
+    mDeleteDevices(false),
+    mFeature(allFeatures),
+    mFeatureStatus(nsIGfxInfo::FEATURE_STATUS_OK),
+    mComparisonOp(DRIVER_COMPARISON_IGNORED),
+    mDriverVersion(0),
+    mDriverVersionMax(0),
+    mSuggestedVersion(nullptr),
+    mRuleId(nullptr),
+    mGpu2(false)
+{}
+=======
+    : mOperatingSystem(OperatingSystem::Unknown),
+      mOperatingSystemVersion(0),
+      mAdapterVendor(GfxDriverInfo::GetDeviceVendor(VendorAll)),
+      mDriverVendor(GfxDriverInfo::GetDriverVendor(DriverVendorAll)),
+      mDevices(allDevices),
+      mDeleteDevices(false),
+      mFeature(allFeatures),
+      mFeatureStatus(nsIGfxInfo::FEATURE_STATUS_OK),
+      mComparisonOp(DRIVER_COMPARISON_IGNORED),
+      mDriverVersion(0),
+      mDriverVersionMax(0),
+      mSuggestedVersion(nullptr),
+      mRuleId(nullptr),
+      mGpu2(false) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 GfxDriverInfo::GfxDriverInfo(OperatingSystem os, nsAString& vendor,
                              GfxDeviceFamily* devices, int32_t feature,
                              int32_t featureStatus, VersionComparisonOp op,
                              uint64_t driverVersion, const char* ruleId,
                              const char* suggestedVersion /* = nullptr */,
+||||||| merged common ancestors
+GfxDriverInfo::GfxDriverInfo(OperatingSystem os, nsAString& vendor,
+                             GfxDeviceFamily* devices,
+                             int32_t feature, int32_t featureStatus,
+                             VersionComparisonOp op,
+                             uint64_t driverVersion,
+                             const char *ruleId,
+                             const char *suggestedVersion /* = nullptr */,
+=======
+GfxDriverInfo::GfxDriverInfo(OperatingSystem os, const nsAString& vendor,
+                             const nsAString& driverVendor,
+                             GfxDeviceFamily* devices, int32_t feature,
+                             int32_t featureStatus, VersionComparisonOp op,
+                             uint64_t driverVersion, const char* ruleId,
+                             const char* suggestedVersion /* = nullptr */,
+>>>>>>> upstream-releases
                              bool ownDevices /* = false */,
                              bool gpu2 /* = false */)
+<<<<<<< HEAD
     : mOperatingSystem(os),
       mOperatingSystemVersion(0),
       mAdapterVendor(vendor),
@@ -52,8 +103,40 @@ GfxDriverInfo::GfxDriverInfo(OperatingSystem os, nsAString& vendor,
       mSuggestedVersion(suggestedVersion),
       mRuleId(ruleId),
       mGpu2(gpu2) {}
+||||||| merged common ancestors
+  : mOperatingSystem(os),
+    mOperatingSystemVersion(0),
+    mAdapterVendor(vendor),
+    mDevices(devices),
+    mDeleteDevices(ownDevices),
+    mFeature(feature),
+    mFeatureStatus(featureStatus),
+    mComparisonOp(op),
+    mDriverVersion(driverVersion),
+    mDriverVersionMax(0),
+    mSuggestedVersion(suggestedVersion),
+    mRuleId(ruleId),
+    mGpu2(gpu2)
+{}
+=======
+    : mOperatingSystem(os),
+      mOperatingSystemVersion(0),
+      mAdapterVendor(vendor),
+      mDriverVendor(driverVendor),
+      mDevices(devices),
+      mDeleteDevices(ownDevices),
+      mFeature(feature),
+      mFeatureStatus(featureStatus),
+      mComparisonOp(op),
+      mDriverVersion(driverVersion),
+      mDriverVersionMax(0),
+      mSuggestedVersion(suggestedVersion),
+      mRuleId(ruleId),
+      mGpu2(gpu2) {}
+>>>>>>> upstream-releases
 
 GfxDriverInfo::GfxDriverInfo(const GfxDriverInfo& aOrig)
+<<<<<<< HEAD
     : mOperatingSystem(aOrig.mOperatingSystem),
       mOperatingSystemVersion(aOrig.mOperatingSystemVersion),
       mAdapterVendor(aOrig.mAdapterVendor),
@@ -65,6 +148,33 @@ GfxDriverInfo::GfxDriverInfo(const GfxDriverInfo& aOrig)
       mSuggestedVersion(aOrig.mSuggestedVersion),
       mRuleId(aOrig.mRuleId),
       mGpu2(aOrig.mGpu2) {
+||||||| merged common ancestors
+  : mOperatingSystem(aOrig.mOperatingSystem),
+    mOperatingSystemVersion(aOrig.mOperatingSystemVersion),
+    mAdapterVendor(aOrig.mAdapterVendor),
+    mFeature(aOrig.mFeature),
+    mFeatureStatus(aOrig.mFeatureStatus),
+    mComparisonOp(aOrig.mComparisonOp),
+    mDriverVersion(aOrig.mDriverVersion),
+    mDriverVersionMax(aOrig.mDriverVersionMax),
+    mSuggestedVersion(aOrig.mSuggestedVersion),
+    mRuleId(aOrig.mRuleId),
+    mGpu2(aOrig.mGpu2)
+{
+=======
+    : mOperatingSystem(aOrig.mOperatingSystem),
+      mOperatingSystemVersion(aOrig.mOperatingSystemVersion),
+      mAdapterVendor(aOrig.mAdapterVendor),
+      mDriverVendor(aOrig.mDriverVendor),
+      mFeature(aOrig.mFeature),
+      mFeatureStatus(aOrig.mFeatureStatus),
+      mComparisonOp(aOrig.mComparisonOp),
+      mDriverVersion(aOrig.mDriverVersion),
+      mDriverVersionMax(aOrig.mDriverVersionMax),
+      mSuggestedVersion(aOrig.mSuggestedVersion),
+      mRuleId(aOrig.mRuleId),
+      mGpu2(aOrig.mGpu2) {
+>>>>>>> upstream-releases
   // If we're managing the lifetime of the device family, we have to make a
   // copy of the original's device family.
   if (aOrig.mDeleteDevices && aOrig.mDevices) {
@@ -386,4 +496,33 @@ const nsAString& GfxDriverInfo::GetDeviceVendor(DeviceVendor id) {
   }
 
   return *sDeviceVendors[id];
+}
+
+// Macro for assigning a driver vendor id to a string.
+#define DECLARE_DRIVER_VENDOR_ID(name, driverVendorId) \
+  case name:                                           \
+    sDriverVendors[id]->AssignLiteral(driverVendorId); \
+    break;
+
+const nsAString& GfxDriverInfo::GetDriverVendor(DriverVendor id) {
+  NS_ASSERTION(id >= 0 && id < DriverVendorMax,
+               "DriverVendor id is out of range");
+
+  if (sDriverVendors[id]) return *sDriverVendors[id];
+
+  sDriverVendors[id] = new nsString();
+
+  switch (id) {
+    DECLARE_DRIVER_VENDOR_ID(DriverVendorAll, "");
+    DECLARE_DRIVER_VENDOR_ID(DriverMesaAll, "mesa/all");
+    DECLARE_DRIVER_VENDOR_ID(DriverMesaLLVMPipe, "mesa/llvmpipe");
+    DECLARE_DRIVER_VENDOR_ID(DriverMesaSoftPipe, "mesa/softpipe");
+    DECLARE_DRIVER_VENDOR_ID(DriverMesaSWRast, "mesa/swrast");
+    DECLARE_DRIVER_VENDOR_ID(DriverMesaUnknown, "mesa/unknown");
+    DECLARE_DRIVER_VENDOR_ID(DriverNonMesaAll, "non-mesa/all");
+    // Suppress a warning.
+    DECLARE_DRIVER_VENDOR_ID(DriverVendorMax, "");
+  }
+
+  return *sDriverVendors[id];
 }

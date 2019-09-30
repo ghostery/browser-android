@@ -66,23 +66,48 @@ class ImageLayer : public Layer {
 
   MOZ_LAYER_DECL_NAME("ImageLayer", TYPE_IMAGE)
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override;
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override;
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual const gfx::Matrix4x4& GetEffectiveTransformForBuffer()
       const override {
+||||||| merged common ancestors
+  virtual const gfx::Matrix4x4& GetEffectiveTransformForBuffer() const override
+  {
+=======
+  const gfx::Matrix4x4& GetEffectiveTransformForBuffer() const override {
+>>>>>>> upstream-releases
     return mEffectiveTransformForBuffer;
   }
 
-  virtual ImageLayer* AsImageLayer() override { return this; }
+  ImageLayer* AsImageLayer() override { return this; }
 
  protected:
   ImageLayer(LayerManager* aManager, void* aImplData);
+<<<<<<< HEAD
   ~ImageLayer();
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
   virtual void DumpPacket(layerscope::LayersPacket* aPacket,
                           const void* aParent) override;
+||||||| merged common ancestors
+  ~ImageLayer();
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+  virtual void DumpPacket(layerscope::LayersPacket* aPacket, const void* aParent) override;
+=======
+  virtual ~ImageLayer();
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+  void DumpPacket(layerscope::LayersPacket* aPacket,
+                  const void* aParent) override;
+>>>>>>> upstream-releases
 
   RefPtr<ImageContainer> mContainer;
   gfx::SamplingFilter mSamplingFilter;

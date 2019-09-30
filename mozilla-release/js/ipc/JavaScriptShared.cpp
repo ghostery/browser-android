@@ -8,7 +8,7 @@
 #include "JavaScriptShared.h"
 #include "mozilla/dom/BindingUtils.h"
 #include "mozilla/dom/CPOWManagerGetter.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "jsfriendapi.h"
 #include "js/Symbol.h"
 #include "xpcprivate.h"
@@ -173,11 +173,29 @@ bool JavaScriptShared::toVariant(JSContext* cx, JS::HandleValue from,
         return true;
       }
 
+<<<<<<< HEAD
       if (xpc_JSObjectIsID(cx, obj)) {
         JSIID iid;
         const nsID* id = xpc_JSObjectToID(cx, obj);
         ConvertID(*id, &iid);
         *to = iid;
+||||||| merged common ancestors
+      case JSTYPE_SYMBOL:
+      {
+        RootedSymbol sym(cx, from.toSymbol());
+
+        SymbolVariant symVar;
+        if (!toSymbolVariant(cx, sym, &symVar)) {
+            return false;
+        }
+        *to = symVar;
+=======
+      Maybe<nsID> id = xpc::JSValue2ID(cx, from);
+      if (id) {
+        JSIID iid;
+        ConvertID(*id, &iid);
+        *to = iid;
+>>>>>>> upstream-releases
         return true;
       }
 
@@ -208,6 +226,10 @@ bool JavaScriptShared::toVariant(JSContext* cx, JS::HandleValue from,
       *to = autoStr;
       return true;
     }
+<<<<<<< HEAD
+||||||| merged common ancestors
+}
+=======
 
     case JSTYPE_NUMBER:
       if (from.isInt32()) {
@@ -226,7 +248,54 @@ bool JavaScriptShared::toVariant(JSContext* cx, JS::HandleValue from,
       return false;
   }
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    case JSTYPE_NUMBER:
+      if (from.isInt32()) {
+        *to = double(from.toInt32());
+      } else {
+        *to = from.toDouble();
+      }
+      return true;
+
+    case JSTYPE_BOOLEAN:
+      *to = from.toBoolean();
+      return true;
+
+    default:
+      MOZ_ASSERT(false);
+      return false;
+  }
+}
+||||||| merged common ancestors
+bool
+JavaScriptShared::toJSIDVariant(JSContext* cx, HandleId from, JSIDVariant* to)
+{
+    if (JSID_IS_STRING(from)) {
+        nsAutoJSString autoStr;
+        if (!autoStr.init(cx, JSID_TO_STRING(from))) {
+            return false;
+        }
+        *to = autoStr;
+        return true;
+    }
+    if (JSID_IS_INT(from)) {
+        *to = JSID_TO_INT(from);
+        return true;
+    }
+    if (JSID_IS_SYMBOL(from)) {
+        SymbolVariant symVar;
+        if (!toSymbolVariant(cx, JSID_TO_SYMBOL(from), &symVar)) {
+            return false;
+        }
+        *to = symVar;
+        return true;
+    }
+    MOZ_ASSERT(false);
+    return false;
+}
+=======
 bool JavaScriptShared::fromVariant(JSContext* cx, const JSVariant& from,
                                    MutableHandleValue to) {
   switch (from.type()) {
@@ -246,7 +315,29 @@ bool JavaScriptShared::fromVariant(JSContext* cx, const JSVariant& from,
       to.set(ObjectValue(*obj));
       return true;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+bool JavaScriptShared::fromVariant(JSContext* cx, const JSVariant& from,
+                                   MutableHandleValue to) {
+  switch (from.type()) {
+    case JSVariant::TUndefinedVariant:
+      to.set(UndefinedValue());
+      return true;
+||||||| merged common ancestors
+bool
+JavaScriptShared::fromJSIDVariant(JSContext* cx, const JSIDVariant& from, MutableHandleId to)
+{
+    switch (from.type()) {
+      case JSIDVariant::TSymbolVariant: {
+        Symbol* sym = fromSymbolVariant(cx, from.get_SymbolVariant());
+        if (!sym) {
+            return false;
+        }
+        to.set(SYMBOL_TO_JSID(sym));
+        return true;
+      }
+=======
     case JSVariant::TSymbolVariant: {
       Symbol* sym = fromSymbolVariant(cx, from.get_SymbolVariant());
       if (!sym) {
@@ -255,11 +346,85 @@ bool JavaScriptShared::fromVariant(JSContext* cx, const JSVariant& from,
       to.setSymbol(sym);
       return true;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    case JSVariant::TNullVariant:
+      to.set(NullValue());
+      return true;
+||||||| merged common ancestors
+      case JSIDVariant::TnsString:
+        return convertGeckoStringToId(cx, from.get_nsString(), to);
+=======
     case JSVariant::Tdouble:
       to.set(JS_NumberValue(from.get_double()));
       return true;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    case JSVariant::TObjectVariant: {
+      JSObject* obj = fromObjectVariant(cx, from.get_ObjectVariant());
+      if (!obj) {
+        return false;
+      }
+      to.set(ObjectValue(*obj));
+      return true;
+    }
+||||||| merged common ancestors
+      case JSIDVariant::Tint32_t:
+        to.set(INT_TO_JSID(from.get_int32_t()));
+        return true;
+=======
+    case JSVariant::Tbool:
+      to.setBoolean(from.get_bool());
+      return true;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JSVariant::TSymbolVariant: {
+      Symbol* sym = fromSymbolVariant(cx, from.get_SymbolVariant());
+      if (!sym) {
+||||||| merged common ancestors
+      default:
+=======
+    case JSVariant::TnsString: {
+      const nsString& old = from.get_nsString();
+      JSString* str = JS_NewUCStringCopyN(cx, old.BeginReading(), old.Length());
+      if (!str) {
+>>>>>>> upstream-releases
+        return false;
+<<<<<<< HEAD
+      }
+      to.setSymbol(sym);
+      return true;
+||||||| merged common ancestors
+=======
+      }
+      to.set(StringValue(str));
+      return true;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
+    case JSVariant::Tdouble:
+      to.set(JS_NumberValue(from.get_double()));
+      return true;
+||||||| merged common ancestors
+bool
+JavaScriptShared::toSymbolVariant(JSContext* cx, JS::Symbol* symArg, SymbolVariant* symVarp)
+{
+    RootedSymbol sym(cx, symArg);
+    MOZ_ASSERT(sym);
+=======
+    case JSVariant::TJSIID: {
+      nsID iid;
+      const JSIID& id = from.get_JSIID();
+      ConvertID(id, &iid);
+      return xpc::ID2JSValue(cx, iid, to);
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     case JSVariant::Tbool:
       to.setBoolean(from.get_bool());
       return true;
@@ -272,28 +437,125 @@ bool JavaScriptShared::fromVariant(JSContext* cx, const JSVariant& from,
       }
       to.set(StringValue(str));
       return true;
+||||||| merged common ancestors
+    SymbolCode code = GetSymbolCode(sym);
+    if (static_cast<uint32_t>(code) < WellKnownSymbolLimit) {
+        *symVarp = WellKnownSymbol(static_cast<uint32_t>(code));
+        return true;
     }
-
-    case JSVariant::TJSIID: {
-      nsID iid;
-      const JSIID& id = from.get_JSIID();
-      ConvertID(id, &iid);
-
-      RootedObject global(cx, JS::CurrentGlobalOrNull(cx));
-      JSObject* obj = xpc_NewIDObject(cx, global, iid);
-      if (!obj) {
-        return false;
-      }
-      to.set(ObjectValue(*obj));
-      return true;
-    }
-
+    if (code == SymbolCode::InSymbolRegistry) {
+        nsAutoJSString autoStr;
+        if (!autoStr.init(cx, GetSymbolDescription(sym))) {
+            return false;
+        }
+        *symVarp = RegisteredSymbol(autoStr);
+        return true;
+=======
     default:
       MOZ_CRASH("NYI");
       return false;
   }
 }
 
+bool JavaScriptShared::toJSIDVariant(JSContext* cx, HandleId from,
+                                     JSIDVariant* to) {
+  if (JSID_IS_STRING(from)) {
+    nsAutoJSString autoStr;
+    if (!autoStr.init(cx, JSID_TO_STRING(from))) {
+      return false;
+    }
+    *to = autoStr;
+    return true;
+  }
+  if (JSID_IS_INT(from)) {
+    *to = JSID_TO_INT(from);
+    return true;
+  }
+  if (JSID_IS_SYMBOL(from)) {
+    SymbolVariant symVar;
+    if (!toSymbolVariant(cx, JSID_TO_SYMBOL(from), &symVar)) {
+      return false;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+
+    case JSVariant::TJSIID: {
+      nsID iid;
+      const JSIID& id = from.get_JSIID();
+      ConvertID(id, &iid);
+||||||| merged common ancestors
+
+    JS_ReportErrorASCII(cx, "unique symbol can't be used with CPOW");
+    return false;
+}
+=======
+    *to = symVar;
+    return true;
+  }
+  MOZ_ASSERT(false);
+  return false;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      RootedObject global(cx, JS::CurrentGlobalOrNull(cx));
+      JSObject* obj = xpc_NewIDObject(cx, global, iid);
+      if (!obj) {
+        return false;
+||||||| merged common ancestors
+JS::Symbol*
+JavaScriptShared::fromSymbolVariant(JSContext* cx, const SymbolVariant& symVar)
+{
+    switch (symVar.type()) {
+      case SymbolVariant::TWellKnownSymbol: {
+        uint32_t which = symVar.get_WellKnownSymbol().which();
+        if (which < WellKnownSymbolLimit) {
+            return GetWellKnownSymbol(cx, static_cast<SymbolCode>(which));
+        }
+        MOZ_ASSERT(false, "bad child data");
+        return nullptr;
+=======
+bool JavaScriptShared::fromJSIDVariant(JSContext* cx, const JSIDVariant& from,
+                                       MutableHandleId to) {
+  switch (from.type()) {
+    case JSIDVariant::TSymbolVariant: {
+      Symbol* sym = fromSymbolVariant(cx, from.get_SymbolVariant());
+      if (!sym) {
+        return false;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+      to.set(ObjectValue(*obj));
+      return true;
+    }
+||||||| merged common ancestors
+=======
+      to.set(SYMBOL_TO_JSID(sym));
+      return true;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    default:
+      MOZ_CRASH("NYI");
+      return false;
+  }
+}
+||||||| merged common ancestors
+      case SymbolVariant::TRegisteredSymbol: {
+        nsString key = symVar.get_RegisteredSymbol().key();
+        RootedString str(cx, JS_NewUCStringCopyN(cx, key.get(), key.Length()));
+        if (!str) {
+            return nullptr;
+        }
+        return GetSymbolFor(cx, str);
+      }
+=======
+    case JSIDVariant::TnsString:
+      return convertGeckoStringToId(cx, from.get_nsString(), to);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool JavaScriptShared::toJSIDVariant(JSContext* cx, HandleId from,
                                      JSIDVariant* to) {
   if (JSID_IS_STRING(from)) {
@@ -319,7 +581,18 @@ bool JavaScriptShared::toJSIDVariant(JSContext* cx, HandleId from,
   MOZ_ASSERT(false);
   return false;
 }
+||||||| merged common ancestors
+      default:
+        return nullptr;
+    }
+}
+=======
+    case JSIDVariant::Tint32_t:
+      to.set(INT_TO_JSID(from.get_int32_t()));
+      return true;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool JavaScriptShared::fromJSIDVariant(JSContext* cx, const JSIDVariant& from,
                                        MutableHandleId to) {
   switch (from.type()) {
@@ -342,6 +615,52 @@ bool JavaScriptShared::fromJSIDVariant(JSContext* cx, const JSIDVariant& from,
     default:
       return false;
   }
+||||||| merged common ancestors
+/* static */ void
+JavaScriptShared::ConvertID(const nsID& from, JSIID* to)
+{
+    to->m0() = from.m0;
+    to->m1() = from.m1;
+    to->m2() = from.m2;
+    to->m3_0() = from.m3[0];
+    to->m3_1() = from.m3[1];
+    to->m3_2() = from.m3[2];
+    to->m3_3() = from.m3[3];
+    to->m3_4() = from.m3[4];
+    to->m3_5() = from.m3[5];
+    to->m3_6() = from.m3[6];
+    to->m3_7() = from.m3[7];
+}
+
+/* static */ void
+JavaScriptShared::ConvertID(const JSIID& from, nsID* to)
+{
+    to->m0 = from.m0();
+    to->m1 = from.m1();
+    to->m2 = from.m2();
+    to->m3[0] = from.m3_0();
+    to->m3[1] = from.m3_1();
+    to->m3[2] = from.m3_2();
+    to->m3[3] = from.m3_3();
+    to->m3[4] = from.m3_4();
+    to->m3[5] = from.m3_5();
+    to->m3[6] = from.m3_6();
+    to->m3[7] = from.m3_7();
+}
+
+JSObject*
+JavaScriptShared::findCPOWById(const ObjectId& objId)
+{
+    JSObject* obj = findCPOWByIdPreserveColor(objId);
+    if (obj) {
+        JS::ExposeObjectToActiveJS(obj);
+    }
+    return obj;
+=======
+    default:
+      return false;
+  }
+>>>>>>> upstream-releases
 }
 
 bool JavaScriptShared::toSymbolVariant(JSContext* cx, JS::Symbol* symArg,
@@ -379,6 +698,7 @@ JS::Symbol* JavaScriptShared::fromSymbolVariant(JSContext* cx,
       return nullptr;
     }
 
+<<<<<<< HEAD
     case SymbolVariant::TRegisteredSymbol: {
       nsString key = symVar.get_RegisteredSymbol().key();
       RootedString str(cx, JS_NewUCStringCopyN(cx, key.get(), key.Length()));
@@ -468,6 +788,117 @@ JSObject* JavaScriptShared::findObjectById(JSContext* cx,
     }
   }
   return obj;
+||||||| merged common ancestors
+    // Each process has a dedicated compartment for CPOW targets. All CPOWs
+    // from the other process point to objects in this scope. From there, they
+    // can access objects in other compartments using cross-compartment
+    // wrappers.
+    JSAutoRealm ar(cx, scopeForTargetObjects());
+    if (objId.hasXrayWaiver()) {
+        obj = js::ToWindowProxyIfWindow(obj);
+        MOZ_ASSERT(obj);
+        if (!xpc::WrapperFactory::WaiveXrayAndWrap(cx, &obj)) {
+            return nullptr;
+        }
+    } else {
+        if (!JS_WrapObject(cx, &obj)) {
+            return nullptr;
+        }
+    }
+    return obj;
+=======
+    case SymbolVariant::TRegisteredSymbol: {
+      nsString key = symVar.get_RegisteredSymbol().key();
+      RootedString str(cx, JS_NewUCStringCopyN(cx, key.get(), key.Length()));
+      if (!str) {
+        return nullptr;
+      }
+      return GetSymbolFor(cx, str);
+    }
+
+    default:
+      return nullptr;
+  }
+}
+
+/* static */
+void JavaScriptShared::ConvertID(const nsID& from, JSIID* to) {
+  to->m0() = from.m0;
+  to->m1() = from.m1;
+  to->m2() = from.m2;
+  to->m3_0() = from.m3[0];
+  to->m3_1() = from.m3[1];
+  to->m3_2() = from.m3[2];
+  to->m3_3() = from.m3[3];
+  to->m3_4() = from.m3[4];
+  to->m3_5() = from.m3[5];
+  to->m3_6() = from.m3[6];
+  to->m3_7() = from.m3[7];
+}
+
+/* static */
+void JavaScriptShared::ConvertID(const JSIID& from, nsID* to) {
+  to->m0 = from.m0();
+  to->m1 = from.m1();
+  to->m2 = from.m2();
+  to->m3[0] = from.m3_0();
+  to->m3[1] = from.m3_1();
+  to->m3[2] = from.m3_2();
+  to->m3[3] = from.m3_3();
+  to->m3[4] = from.m3_4();
+  to->m3[5] = from.m3_5();
+  to->m3[6] = from.m3_6();
+  to->m3[7] = from.m3_7();
+}
+
+JSObject* JavaScriptShared::findCPOWById(const ObjectId& objId) {
+  JSObject* obj = findCPOWByIdPreserveColor(objId);
+  if (obj) {
+    JS::ExposeObjectToActiveJS(obj);
+  }
+  return obj;
+}
+
+JSObject* JavaScriptShared::findCPOWByIdPreserveColor(const ObjectId& objId) {
+  JSObject* obj = cpows_.findPreserveColor(objId);
+  if (!obj) {
+    return nullptr;
+  }
+
+  if (js::gc::EdgeNeedsSweepUnbarriered(&obj)) {
+    cpows_.remove(objId);
+    return nullptr;
+  }
+
+  return obj;
+}
+
+JSObject* JavaScriptShared::findObjectById(JSContext* cx,
+                                           const ObjectId& objId) {
+  RootedObject obj(cx, objects_.find(objId));
+  if (!obj) {
+    JS_ReportErrorASCII(cx, "operation not possible on dead CPOW");
+    return nullptr;
+  }
+
+  // Each process has a dedicated compartment for CPOW targets. All CPOWs
+  // from the other process point to objects in this scope. From there, they
+  // can access objects in other compartments using cross-compartment
+  // wrappers.
+  JSAutoRealm ar(cx, scopeForTargetObjects());
+  if (objId.hasXrayWaiver()) {
+    obj = js::ToWindowProxyIfWindow(obj);
+    MOZ_ASSERT(obj);
+    if (!xpc::WrapperFactory::WaiveXrayAndWrap(cx, &obj)) {
+      return nullptr;
+    }
+  } else {
+    if (!JS_WrapObject(cx, &obj)) {
+      return nullptr;
+    }
+  }
+  return obj;
+>>>>>>> upstream-releases
 }
 
 static const uint64_t UnknownPropertyOp = 1;

@@ -16,12 +16,13 @@
 #include "../layers/ImageTypes.h"
 
 #ifdef XP_WIN
-#include <windows.h>
+#  include <windows.h>
 #endif
 
 namespace mozilla {
 
 namespace layers {
+class D3D11ShareHandleImage;
 class D3D11YCbCrImage;
 class Image;
 class GPUVideoImage;
@@ -59,6 +60,7 @@ Mat3 SubRectMat3(const gfx::IntRect& subrect, const gfx::IntSize& size);
 Mat3 SubRectMat3(const gfx::IntRect& bigSubrect, const gfx::IntSize& smallSize,
                  const gfx::IntSize& divisors);
 
+<<<<<<< HEAD
 class DrawBlitProg final {
   const GLBlitHelper& mParent;
   const GLuint mProg;
@@ -95,6 +97,82 @@ class DrawBlitProg final {
   };
 
   void Draw(const BaseArgs& args, const YUVArgs* argsYUV = nullptr) const;
+||||||| merged common ancestors
+class DrawBlitProg final
+{
+    const GLBlitHelper& mParent;
+    const GLuint mProg;
+    const GLint mLoc_uDestMatrix;
+    const GLint mLoc_uTexMatrix0;
+    const GLint mLoc_uTexMatrix1;
+    const GLint mLoc_uColorMatrix;
+    GLenum mType_uColorMatrix = 0;
+
+public:
+    struct Key final {
+        const char* const fragHeader;
+        const char* const fragBody;
+
+        bool operator <(const Key& x) const {
+            if (fragHeader != x.fragHeader)
+                return fragHeader < x.fragHeader;
+            return fragBody < x.fragBody;
+        }
+    };
+
+    DrawBlitProg(const GLBlitHelper* parent, GLuint prog);
+    ~DrawBlitProg();
+
+    struct BaseArgs final {
+        Mat3 texMatrix0;
+        bool yFlip;
+        gfx::IntSize destSize; // Always needed for (at least) setting the viewport.
+        Maybe<gfx::IntRect> destRect;
+    };
+    struct YUVArgs final {
+        Mat3 texMatrix1;
+        YUVColorSpace colorSpace;
+    };
+
+    void Draw(const BaseArgs& args, const YUVArgs* argsYUV = nullptr) const;
+=======
+class DrawBlitProg final {
+  const GLBlitHelper& mParent;
+  const GLuint mProg;
+  const GLint mLoc_uDestMatrix;
+  const GLint mLoc_uTexMatrix0;
+  const GLint mLoc_uTexMatrix1;
+  const GLint mLoc_uColorMatrix;
+  GLenum mType_uColorMatrix = 0;
+
+ public:
+  struct Key final {
+    const char* const fragHeader;
+    const char* const fragBody;
+
+    bool operator<(const Key& x) const {
+      if (fragHeader != x.fragHeader) return fragHeader < x.fragHeader;
+      return fragBody < x.fragBody;
+    }
+  };
+
+  DrawBlitProg(const GLBlitHelper* parent, GLuint prog);
+  ~DrawBlitProg();
+
+  struct BaseArgs final {
+    Mat3 texMatrix0;
+    bool yFlip;
+    gfx::IntSize
+        destSize;  // Always needed for (at least) setting the viewport.
+    Maybe<gfx::IntRect> destRect;
+  };
+  struct YUVArgs final {
+    Mat3 texMatrix1;
+    gfx::YUVColorSpace colorSpace;
+  };
+
+  void Draw(const BaseArgs& args, const YUVArgs* argsYUV = nullptr) const;
+>>>>>>> upstream-releases
 };
 
 class ScopedSaveMultiTex final {
@@ -186,6 +264,7 @@ class GLBlitHelper final {
 
  private:
 #ifdef XP_WIN
+<<<<<<< HEAD
   // GLBlitHelperD3D.cpp:
   bool BlitImage(layers::GPUVideoImage* srcImage, const gfx::IntSize& destSize,
                  OriginPos destOrigin) const;
@@ -206,6 +285,49 @@ class GLBlitHelper final {
                        const DrawBlitProg* prog,
                        const DrawBlitProg::BaseArgs& baseArgs,
                        const DrawBlitProg::YUVArgs* const yuvArgs) const;
+||||||| merged common ancestors
+    // GLBlitHelperD3D.cpp:
+    bool BlitImage(layers::GPUVideoImage* srcImage, const gfx::IntSize& destSize,
+                   OriginPos destOrigin) const;
+    bool BlitImage(layers::D3D11YCbCrImage* srcImage, const gfx::IntSize& destSize,
+                   OriginPos destOrigin) const;
+
+    bool BlitDescriptor(const layers::SurfaceDescriptorD3D10& desc,
+                        const gfx::IntSize& destSize, OriginPos destOrigin) const;
+
+    bool BlitAngleYCbCr(const WindowsHandle (&handleList)[3],
+                        const gfx::IntRect& clipRect,
+                        const gfx::IntSize& ySize, const gfx::IntSize& uvSize,
+                        const YUVColorSpace colorSpace, const gfx::IntSize& destSize,
+                        OriginPos destOrigin) const;
+
+    bool BlitAnglePlanes(uint8_t numPlanes, const RefPtr<ID3D11Texture2D>* texD3DList,
+                         const DrawBlitProg* prog, const DrawBlitProg::BaseArgs& baseArgs,
+                         const DrawBlitProg::YUVArgs* const yuvArgs) const;
+=======
+  // GLBlitHelperD3D.cpp:
+  bool BlitImage(layers::GPUVideoImage* srcImage, const gfx::IntSize& destSize,
+                 OriginPos destOrigin) const;
+  bool BlitImage(layers::D3D11ShareHandleImage* srcImage,
+                 const gfx::IntSize& destSize, OriginPos destOrigin) const;
+  bool BlitImage(layers::D3D11YCbCrImage* srcImage,
+                 const gfx::IntSize& destSize, OriginPos destOrigin) const;
+
+  bool BlitDescriptor(const layers::SurfaceDescriptorD3D10& desc,
+                      const gfx::IntSize& destSize, OriginPos destOrigin) const;
+
+  bool BlitAngleYCbCr(const WindowsHandle (&handleList)[3],
+                      const gfx::IntRect& clipRect, const gfx::IntSize& ySize,
+                      const gfx::IntSize& uvSize,
+                      const gfx::YUVColorSpace colorSpace,
+                      const gfx::IntSize& destSize, OriginPos destOrigin) const;
+
+  bool BlitAnglePlanes(uint8_t numPlanes,
+                       const RefPtr<ID3D11Texture2D>* texD3DList,
+                       const DrawBlitProg* prog,
+                       const DrawBlitProg::BaseArgs& baseArgs,
+                       const DrawBlitProg::YUVArgs* const yuvArgs) const;
+>>>>>>> upstream-releases
 #endif
 };
 

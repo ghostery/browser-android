@@ -6,6 +6,7 @@
 
 #include "AddonManagerWebAPI.h"
 
+#include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/Navigator.h"
 #include "mozilla/dom/NavigatorBinding.h"
 
@@ -28,6 +29,7 @@ static bool IsValidHost(const nsACString& host) {
     return false;
   }
 
+<<<<<<< HEAD
   // This is ugly, but Preferences.h doesn't have support
   // for default prefs or locked prefs
   nsCOMPtr<nsIPrefService> prefService(
@@ -46,9 +48,27 @@ static bool IsValidHost(const nsACString& host) {
     }
   }
 
+||||||| merged common ancestors
+  // This is ugly, but Preferences.h doesn't have support
+  // for default prefs or locked prefs
+  nsCOMPtr<nsIPrefService> prefService (do_GetService(NS_PREFSERVICE_CONTRACTID));
+  nsCOMPtr<nsIPrefBranch> prefs;
+  if (prefService) {
+    prefService->GetDefaultBranch(nullptr, getter_AddRefs(prefs));
+    bool isEnabled;
+    if (NS_SUCCEEDED(prefs->GetBoolPref("xpinstall.enabled", &isEnabled)) && !isEnabled) {
+      bool isLocked;
+      prefs->PrefIsLocked("xpinstall.enabled", &isLocked);
+      if (isLocked) {
+        return false;
+      }
+    }
+  }
+
+=======
+>>>>>>> upstream-releases
   if (host.EqualsLiteral("addons.mozilla.org") ||
-      host.EqualsLiteral("discovery.addons.mozilla.org") ||
-      host.EqualsLiteral("testpilot.firefox.com")) {
+      host.EqualsLiteral("discovery.addons.mozilla.org")) {
     return true;
   }
 
@@ -58,8 +78,6 @@ static bool IsValidHost(const nsACString& host) {
         host.LowerCaseEqualsLiteral("discovery.addons.allizom.org") ||
         host.LowerCaseEqualsLiteral("addons-dev.allizom.org") ||
         host.LowerCaseEqualsLiteral("discovery.addons-dev.allizom.org") ||
-        host.LowerCaseEqualsLiteral("testpilot.stage.mozaws.net") ||
-        host.LowerCaseEqualsLiteral("testpilot.dev.mozaws.net") ||
         host.LowerCaseEqualsLiteral("example.com")) {
       return true;
     }
@@ -95,12 +113,7 @@ bool AddonManagerWebAPI::IsValidSite(nsIURI* uri) {
 
 bool AddonManagerWebAPI::IsAPIEnabled(JSContext* aCx, JSObject* aGlobal) {
   MOZ_DIAGNOSTIC_ASSERT(JS_IsGlobalObject(aGlobal));
-  nsGlobalWindowInner* global = xpc::WindowOrNull(aGlobal);
-  if (!global) {
-    return false;
-  }
-
-  nsCOMPtr<nsPIDOMWindowInner> win = global->AsInner();
+  nsCOMPtr<nsPIDOMWindowInner> win = xpc::WindowOrNull(aGlobal);
   if (!win) {
     return false;
   }
@@ -120,7 +133,7 @@ bool AddonManagerWebAPI::IsAPIEnabled(JSContext* aCx, JSObject* aGlobal) {
 
     // Reaching a window with a system principal means we have reached
     // privileged UI of some kind so stop at this point and allow access.
-    if (principal->GetIsSystemPrincipal()) {
+    if (principal->IsSystemPrincipal()) {
       return true;
     }
 
@@ -148,7 +161,7 @@ bool AddonManagerWebAPI::IsAPIEnabled(JSContext* aCx, JSObject* aGlobal) {
       return true;
     }
 
-    nsIDocument* doc = win->GetDoc();
+    Document* doc = win->GetDoc();
     if (!doc) {
       return false;
     }

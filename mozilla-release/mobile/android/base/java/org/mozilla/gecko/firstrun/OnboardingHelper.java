@@ -154,6 +154,9 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
                     }
                 }
 
+                // Ignore trying to show the Onboarding again
+                saveOnboardingShownStatus();
+
                 // We have no intention of stopping this session. The FIRSTRUN session
                 // ends when the browsing session/activity has ended. All events
                 // during firstrun will be tagged as FIRSTRUN.
@@ -308,6 +311,10 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
     private void tryShowOnboarding(final boolean shouldUseLocalValues) {
         final AppCompatActivity activity = activityRef.get();
         if (activity == null) {
+            return;
+        }
+
+        if (Intent.ACTION_VIEW.equals(activityStartingIntent.getAction())) {
             return;
         }
 

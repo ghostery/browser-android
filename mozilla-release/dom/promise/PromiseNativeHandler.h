@@ -18,6 +18,7 @@ namespace dom {
  * rejected/resolved. A PromiseNativeHandler can be appended to a Promise using
  * Promise::AppendNativeHandler().
  */
+<<<<<<< HEAD
 class PromiseNativeHandler : public nsISupports {
  protected:
   virtual ~PromiseNativeHandler() {}
@@ -28,6 +29,33 @@ class PromiseNativeHandler : public nsISupports {
 
   virtual void RejectedCallback(JSContext* aCx,
                                 JS::Handle<JS::Value> aValue) = 0;
+||||||| merged common ancestors
+class PromiseNativeHandler : public nsISupports
+{
+protected:
+  virtual ~PromiseNativeHandler()
+  { }
+
+public:
+  virtual void
+  ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) = 0;
+
+  virtual void
+  RejectedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue) = 0;
+=======
+class PromiseNativeHandler : public nsISupports {
+ protected:
+  virtual ~PromiseNativeHandler() {}
+
+ public:
+  MOZ_CAN_RUN_SCRIPT
+  virtual void ResolvedCallback(JSContext* aCx,
+                                JS::Handle<JS::Value> aValue) = 0;
+
+  MOZ_CAN_RUN_SCRIPT
+  virtual void RejectedCallback(JSContext* aCx,
+                                JS::Handle<JS::Value> aValue) = 0;
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

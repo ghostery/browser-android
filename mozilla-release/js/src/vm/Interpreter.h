@@ -287,6 +287,7 @@ inline void RunState::setReturnValue(const Value& v) {
   }
 }
 
+<<<<<<< HEAD
 extern bool RunScript(JSContext* cx, RunState& state);
 
 extern bool StrictlyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
@@ -294,17 +295,56 @@ extern bool StrictlyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
 
 extern bool LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval,
                          bool* equal);
+||||||| merged common ancestors
+extern bool
+RunScript(JSContext* cx, RunState& state);
 
+extern bool
+StrictlyEqual(JSContext* cx, HandleValue lval, HandleValue rval, bool* equal);
+
+extern bool
+LooselyEqual(JSContext* cx, HandleValue lval, HandleValue rval, bool* equal);
+=======
+extern bool RunScript(JSContext* cx, RunState& state);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 /* === except that NaN is the same as NaN and -0 is not the same as +0. */
 extern bool SameValue(JSContext* cx, HandleValue v1, HandleValue v2,
                       bool* same);
+||||||| merged common ancestors
+/* === except that NaN is the same as NaN and -0 is not the same as +0. */
+extern bool
+SameValue(JSContext* cx, HandleValue v1, HandleValue v2, bool* same);
 
+extern JSType
+TypeOfObject(JSObject* obj);
+=======
+extern JSType TypeOfObject(JSObject* obj);
+
+extern JSType TypeOfValue(const Value& v);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 extern JSType TypeOfObject(JSObject* obj);
 
 extern JSType TypeOfValue(const Value& v);
 
 extern bool HasInstance(JSContext* cx, HandleObject obj, HandleValue v,
                         bool* bp);
+||||||| merged common ancestors
+extern JSType
+TypeOfValue(const Value& v);
+
+extern bool
+InstanceOfOperator(JSContext* cx, HandleObject obj, HandleValue v, bool* bp);
+
+extern bool
+HasInstance(JSContext* cx, HandleObject obj, HandleValue v, bool* bp);
+=======
+extern bool HasInstance(JSContext* cx, HandleObject obj, HandleValue v,
+                        bool* bp);
+>>>>>>> upstream-releases
 
 // Unwind environment chain and iterator to match the scope corresponding to
 // the given bytecode position.
@@ -316,6 +356,7 @@ extern void UnwindAllEnvironmentsInFrame(JSContext* cx, EnvironmentIter& ei);
 
 // Compute the pc needed to unwind the scope to the beginning of the block
 // pointed to by the try note.
+<<<<<<< HEAD
 extern jsbytecode* UnwindEnvironmentToTryPc(JSScript* script,
                                             const JSTryNote* tn);
 
@@ -357,13 +398,186 @@ class MOZ_STACK_CLASS TryNoteIter {
       if (tn_->stackDepth <= getStackDepth_()) {
         break;
       }
+||||||| merged common ancestors
+extern jsbytecode*
+UnwindEnvironmentToTryPc(JSScript* script, const JSTryNote* tn);
+
+template <class StackDepthOp>
+class MOZ_STACK_CLASS TryNoteIter
+{
+    RootedScript script_;
+    uint32_t pcOffset_;
+    StackDepthOp getStackDepth_;
+
+    const JSTryNote* tn_;
+    const JSTryNote* tnEnd_;
+
+    void settle() {
+        for (; tn_ != tnEnd_; ++tn_) {
+            /* If pc is out of range, try the next one. */
+            if (pcOffset_ - tn_->start >= tn_->length) {
+                continue;
+            }
+
+            /*
+             * We have a note that covers the exception pc but we must check
+             * whether the interpreter has already executed the corresponding
+             * handler. This is possible when the executed bytecode implements
+             * break or return from inside a for-in loop.
+             *
+             * In this case the emitter generates additional [enditer] and [gosub]
+             * opcodes to close all outstanding iterators and execute the finally
+             * blocks. If such an [enditer] throws an exception, its pc can still
+             * be inside several nested for-in loops and try-finally statements
+             * even if we have already closed the corresponding iterators and
+             * invoked the finally blocks.
+             *
+             * To address this, we make [enditer] always decrease the stack even
+             * when its implementation throws an exception. Thus already executed
+             * [enditer] and [gosub] opcodes will have try notes with the stack
+             * depth exceeding the current one and this condition is what we use to
+             * filter them out.
+             */
+            if (tn_->stackDepth <= getStackDepth_()) {
+                break;
+            }
+        }
+=======
+extern jsbytecode* UnwindEnvironmentToTryPc(JSScript* script,
+                                            const JSTryNote* tn);
+
+template <class TryNoteFilter>
+class MOZ_STACK_CLASS TryNoteIter {
+  RootedScript script_;
+  uint32_t pcOffset_;
+  TryNoteFilter isTryNoteValid_;
+
+  const JSTryNote* tn_;
+  const JSTryNote* tnEnd_;
+
+  void settle() {
+    for (; tn_ != tnEnd_; ++tn_) {
+      if (!pcInRange()) {
+        continue;
+      }
+
+      /*  Try notes cannot be disjoint. That is, we can't have
+       *  multiple notes with disjoint pc ranges jumping to the same
+       *  catch block. This interacts awkwardly with for-of loops, in
+       *  which calls to IteratorClose emitted due to abnormal
+       *  completion (break, throw, return) are emitted inline, at the
+       *  source location of the break, throw, or return
+       *  statement. For example:
+       *
+       *      for (x of iter) {
+       *        try { return; } catch (e) { }
+       *      }
+       *
+       *  From the try-note nesting's perspective, the IteratorClose
+       *  resulting from |return| is covered by the inner try, when it
+       *  should not be. If IteratorClose throws, we don't want to
+       *  catch it here.
+       *
+       *  To make this work, we use JSTRY_FOR_OF_ITERCLOSE try-notes,
+       *  which cover the range of the abnormal completion. When
+       *  looking up trynotes, a for-of iterclose note indicates that
+       *  the enclosing for-of has just been terminated. As a result,
+       *  trynotes within that for-of are no longer active. When we
+       *  see a for-of-iterclose, we skip ahead in the trynotes list
+       *  until we see the matching for-of.
+       *
+       *  Breaking out of multiple levels of for-of at once is handled
+       *  using nested FOR_OF_ITERCLOSE try-notes. Consider this code:
+       *
+       *  try {
+       *    loop: for (i of first) {
+       *      <A>
+       *      for (j of second) {
+       *        <B>
+       *        break loop; // <C1/2>
+       *      }
+       *    }
+       *  } catch {...}
+       *
+       *  Here is the mapping from various PCs to try-notes that we
+       *  want to return:
+       *
+       *        A     B     C1     C2
+       *        |     |     |      |
+       *        |     |     |  [---|---]     ForOfIterClose (outer)
+       *        |     | [---|------|---]     ForOfIterClose (inner)
+       *        |  [--X-----|------|----]    ForOf (inner)
+       *    [---X-----------X------|-----]   ForOf (outer)
+       *  [------------------------X------]  TryCatch
+       *
+       *  - At A, we find the outer for-of.
+       *  - At B, we find the inner for-of.
+       *  - At C1, we find one FOR_OF_ITERCLOSE, skip past one FOR_OF, and find
+       *    the outer for-of. (This occurs if an exception is thrown while
+       *    closing the inner iterator.)
+       *  - At C2, we find two FOR_OF_ITERCLOSE, skip past two FOR_OF, and reach
+       *    the outer try-catch. (This occurs if an exception is thrown while
+       *    closing the outer iterator.)
+       */
+      if (tn_->kind == JSTRY_FOR_OF_ITERCLOSE) {
+        uint32_t iterCloseDepth = 1;
+        do {
+          ++tn_;
+          MOZ_ASSERT(tn_ != tnEnd_);
+          if (pcInRange()) {
+            if (tn_->kind == JSTRY_FOR_OF_ITERCLOSE) {
+              iterCloseDepth++;
+            } else if (tn_->kind == JSTRY_FOR_OF) {
+              iterCloseDepth--;
+            }
+          }
+        } while (iterCloseDepth > 0);
+
+        // Advance to trynote following the enclosing for-of.
+        continue;
+      }
+
+      /*
+       * We have a note that covers the exception pc but we must check
+       * whether the interpreter has already executed the corresponding
+       * handler. This is possible when the executed bytecode implements
+       * break or return from inside a for-in loop.
+       *
+       * In this case the emitter generates additional [enditer] and [gosub]
+       * opcodes to close all outstanding iterators and execute the finally
+       * blocks. If such an [enditer] throws an exception, its pc can still
+       * be inside several nested for-in loops and try-finally statements
+       * even if we have already closed the corresponding iterators and
+       * invoked the finally blocks.
+       *
+       * To address this, we make [enditer] always decrease the stack even
+       * when its implementation throws an exception. Thus already executed
+       * [enditer] and [gosub] opcodes will have try notes with the stack
+       * depth exceeding the current one and this condition is what we use to
+       * filter them out.
+       */
+      if (tn_ == tnEnd_ || isTryNoteValid_(tn_)) {
+        return;
+      }
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
  public:
   TryNoteIter(JSContext* cx, JSScript* script, jsbytecode* pc,
               StackDepthOp getStackDepth)
+||||||| merged common ancestors
+  public:
+    TryNoteIter(JSContext* cx, JSScript* script, jsbytecode* pc,
+                StackDepthOp getStackDepth)
+=======
+ public:
+  TryNoteIter(JSContext* cx, JSScript* script, jsbytecode* pc,
+              TryNoteFilter isTryNoteValid)
+>>>>>>> upstream-releases
       : script_(cx, script),
+<<<<<<< HEAD
         pcOffset_(script->pcToOffset(pc)),
         getStackDepth_(getStackDepth) {
     if (script->hasTrynotes()) {
@@ -385,6 +599,60 @@ class MOZ_STACK_CLASS TryNoteIter {
 
   bool done() const { return tn_ == tnEnd_; }
   const JSTryNote* operator*() const { return tn_; }
+||||||| merged common ancestors
+        pcOffset_(pc - script->main()),
+        getStackDepth_(getStackDepth)
+    {
+        if (script->hasTrynotes()) {
+            // NOTE: The Span is a temporary so we can't use begin()/end()
+            // here or the iterator will outlive the span.
+            auto trynotes = script->trynotes();
+            tn_ = trynotes.data();
+            tnEnd_ = tn_ + trynotes.size();
+        } else {
+            tn_ = tnEnd_ = nullptr;
+        }
+        settle();
+    }
+
+    void operator++() {
+        ++tn_;
+        settle();
+    }
+
+    bool done() const { return tn_ == tnEnd_; }
+    const JSTryNote* operator*() const { return tn_; }
+=======
+        pcOffset_(script->pcToOffset(pc)),
+        isTryNoteValid_(isTryNoteValid) {
+    if (script->hasTrynotes()) {
+      // NOTE: The Span is a temporary so we can't use begin()/end()
+      // here or the iterator will outlive the span.
+      auto trynotes = script->trynotes();
+      tn_ = trynotes.data();
+      tnEnd_ = tn_ + trynotes.size();
+    } else {
+      tn_ = tnEnd_ = nullptr;
+    }
+    settle();
+  }
+
+  void operator++() {
+    ++tn_;
+    settle();
+  }
+
+  bool pcInRange() const {
+    // This checks both ends of the range at once
+    // because unsigned integers wrap on underflow.
+    uint32_t offset = pcOffset_;
+    uint32_t start = tn_->start;
+    uint32_t length = tn_->length;
+    return offset - start < length;
+  }
+  bool done() const { return tn_ == tnEnd_; }
+  const JSTryNote* operator*() const { return tn_; }
+>>>>>>> upstream-releases
 };
 
 bool HandleClosingGeneratorReturn(JSContext* cx, AbstractFramePtr frame,
@@ -392,115 +660,465 @@ bool HandleClosingGeneratorReturn(JSContext* cx, AbstractFramePtr frame,
 
 /************************************************************************/
 
+<<<<<<< HEAD
 bool Throw(JSContext* cx, HandleValue v);
 
 bool GetProperty(JSContext* cx, HandleValue value, HandlePropertyName name,
                  MutableHandleValue vp);
 
 JSObject* Lambda(JSContext* cx, HandleFunction fun, HandleObject parent);
+||||||| merged common ancestors
+bool
+Throw(JSContext* cx, HandleValue v);
 
+bool
+ThrowingOperation(JSContext* cx, HandleValue v);
+
+bool
+GetProperty(JSContext* cx, HandleValue value, HandlePropertyName name, MutableHandleValue vp);
+=======
+bool ThrowOperation(JSContext* cx, HandleValue v);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JSObject* LambdaArrow(JSContext* cx, HandleFunction fun, HandleObject parent,
                       HandleValue newTargetv);
+||||||| merged common ancestors
+JSObject*
+Lambda(JSContext* cx, HandleFunction fun, HandleObject parent);
+=======
+bool GetProperty(JSContext* cx, HandleValue value, HandlePropertyName name,
+                 MutableHandleValue vp);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetElement(JSContext* cx, MutableHandleValue lref, HandleValue rref,
                 MutableHandleValue res);
+||||||| merged common ancestors
+JSObject*
+LambdaArrow(JSContext* cx, HandleFunction fun, HandleObject parent, HandleValue newTargetv);
+=======
+bool GetValueProperty(JSContext* cx, HandleValue value, HandlePropertyName name,
+                      MutableHandleValue vp);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool CallElement(JSContext* cx, MutableHandleValue lref, HandleValue rref,
                  MutableHandleValue res);
+||||||| merged common ancestors
+bool
+GetElement(JSContext* cx, MutableHandleValue lref, HandleValue rref, MutableHandleValue res);
+=======
+JSObject* Lambda(JSContext* cx, HandleFunction fun, HandleObject parent);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                       HandleValue value, bool strict);
 bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                       HandleValue value, bool strict, HandleScript script,
                       jsbytecode* pc);
+||||||| merged common ancestors
+bool
+CallElement(JSContext* cx, MutableHandleValue lref, HandleValue rref, MutableHandleValue res);
+=======
+JSObject* LambdaArrow(JSContext* cx, HandleFunction fun, HandleObject parent,
+                      HandleValue newTargetv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                       HandleValue value, HandleValue receiver, bool strict);
 bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
                       HandleValue value, HandleValue receiver, bool strict,
                       HandleScript script, jsbytecode* pc);
+||||||| merged common ancestors
+bool
+SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                 bool strict);
+bool
+SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                 bool strict, HandleScript script, jsbytecode* pc);
+=======
+bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                      HandleValue value, bool strict);
+bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                      HandleValue value, bool strict, HandleScript script,
+                      jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool InitElementArray(JSContext* cx, jsbytecode* pc, HandleObject obj,
                       uint32_t index, HandleValue value);
+||||||| merged common ancestors
+bool
+SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                 HandleValue receiver, bool strict);
+bool
+SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index, HandleValue value,
+                 HandleValue receiver, bool strict, HandleScript script, jsbytecode* pc);
+=======
+bool SetObjectElementWithReceiver(JSContext* cx, HandleObject obj,
+                                  HandleValue index, HandleValue value,
+                                  HandleValue receiver, bool strict);
+bool SetObjectElement(JSContext* cx, HandleObject obj, HandleValue index,
+                      HandleValue value, HandleValue receiver, bool strict,
+                      HandleScript script, jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool AddValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+InitElementArray(JSContext* cx, jsbytecode* pc,
+                 HandleObject obj, uint32_t index, HandleValue value);
+=======
+bool InitElementArray(JSContext* cx, jsbytecode* pc, HandleObject obj,
+                      uint32_t index, HandleValue value);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool SubValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+AddValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool AddValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool MulValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+SubValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool SubValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool DivValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+MulValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool MulValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool ModValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+DivValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool DivValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool PowValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+ModValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool ModValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+bool UrshValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+                MutableHandleValue res);
+||||||| merged common ancestors
+bool
+PowValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+=======
+bool PowValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
+               MutableHandleValue res);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool AtomicIsLockFree(JSContext* cx, HandleValue in, int* out);
+||||||| merged common ancestors
+bool
+UrshValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs, MutableHandleValue res);
+
+bool
+AtomicIsLockFree(JSContext* cx, HandleValue in, int* out);
+=======
 bool UrshValues(JSContext* cx, MutableHandleValue lhs, MutableHandleValue rhs,
                 MutableHandleValue res);
 
 bool AtomicIsLockFree(JSContext* cx, HandleValue in, int* out);
+>>>>>>> upstream-releases
 
 template <bool strict>
 bool DeletePropertyJit(JSContext* ctx, HandleValue val, HandlePropertyName name,
                        bool* bv);
 
 template <bool strict>
+<<<<<<< HEAD
+bool DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
+                      bool* bv);
+||||||| merged common ancestors
+bool
+DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index, bool* bv);
+
+bool
+DefFunOperation(JSContext* cx, HandleScript script, HandleObject envChain, HandleFunction funArg);
+=======
 bool DeleteElementJit(JSContext* cx, HandleValue val, HandleValue index,
                       bool* bv);
 
+JSObject* BindVarOperation(JSContext* cx, JSObject* envChain);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool DefFunOperation(JSContext* cx, HandleScript script, HandleObject envChain,
                      HandleFunction funArg);
+||||||| merged common ancestors
+bool
+ThrowMsgOperation(JSContext* cx, const unsigned errorNum);
+=======
+bool DefVarOperation(JSContext* cx, HandleObject envChain, HandleScript script,
+                     jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool ThrowMsgOperation(JSContext* cx, const unsigned errorNum);
+||||||| merged common ancestors
+bool
+GetAndClearException(JSContext* cx, MutableHandleValue res);
+=======
+bool DefLexicalOperation(JSContext* cx, HandleObject envChain,
+                         HandleScript script, jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool GetAndClearException(JSContext* cx, MutableHandleValue res);
+||||||| merged common ancestors
+bool
+DeleteNameOperation(JSContext* cx, HandlePropertyName name, HandleObject scopeObj,
+                    MutableHandleValue res);
+=======
+bool DefFunOperation(JSContext* cx, HandleScript script, HandleObject envChain,
+                     HandleFunction funArg);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool DeleteNameOperation(JSContext* cx, HandlePropertyName name,
                          HandleObject scopeObj, MutableHandleValue res);
+||||||| merged common ancestors
+bool
+ImplicitThisOperation(JSContext* cx, HandleObject scopeObj, HandlePropertyName name,
+                      MutableHandleValue res);
+=======
+JSObject* SingletonObjectLiteralOperation(JSContext* cx, HandleScript script,
+                                          jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool ImplicitThisOperation(JSContext* cx, HandleObject scopeObj,
                            HandlePropertyName name, MutableHandleValue res);
+||||||| merged common ancestors
+bool
+RunOnceScriptPrologue(JSContext* cx, HandleScript script);
+=======
+JSObject* ImportMetaOperation(JSContext* cx, HandleScript script);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool RunOnceScriptPrologue(JSContext* cx, HandleScript script);
+||||||| merged common ancestors
+bool
+InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj, HandleId id,
+                          HandleObject val);
+=======
+JSObject* BuiltinProtoOperation(JSContext* cx, jsbytecode* pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj,
                                HandleId id, HandleObject val);
+||||||| merged common ancestors
+bool
+InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj, HandlePropertyName name,
+                          HandleObject val);
+=======
+bool ThrowMsgOperation(JSContext* cx, const unsigned errorNum);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj,
                                HandlePropertyName name, HandleObject val);
+||||||| merged common ancestors
+unsigned
+GetInitDataPropAttrs(JSOp op);
+=======
+bool GetAndClearException(JSContext* cx, MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 unsigned GetInitDataPropAttrs(JSOp op);
+||||||| merged common ancestors
+bool
+EnterWithOperation(JSContext* cx, AbstractFramePtr frame, HandleValue val,
+                   Handle<WithScope*> scope);
+=======
+bool GetAndClearExceptionAndStack(JSContext* cx, MutableHandleValue res,
+                                  MutableHandleSavedFrame stack);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool EnterWithOperation(JSContext* cx, AbstractFramePtr frame, HandleValue val,
                         Handle<WithScope*> scope);
+||||||| merged common ancestors
+=======
+bool DeleteNameOperation(JSContext* cx, HandlePropertyName name,
+                         HandleObject scopeObj, MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj,
                                HandleValue idval, HandleObject val);
+||||||| merged common ancestors
+bool
+InitGetterSetterOperation(JSContext* cx, jsbytecode* pc, HandleObject obj, HandleValue idval,
+                          HandleObject val);
+=======
+bool ImplicitThisOperation(JSContext* cx, HandleObject scopeObj,
+                           HandlePropertyName name, MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
                          HandleValue thisv, HandleValue callee, HandleValue arr,
                          HandleValue newTarget, MutableHandleValue res);
+||||||| merged common ancestors
+bool
+SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc, HandleValue thisv,
+                    HandleValue callee, HandleValue arr, HandleValue newTarget, MutableHandleValue res);
+=======
+bool InitPropGetterSetterOperation(JSContext* cx, jsbytecode* pc,
+                                   HandleObject obj, HandlePropertyName name,
+                                   HandleObject val);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized);
+||||||| merged common ancestors
+bool
+OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized);
+=======
+unsigned GetInitDataPropAttrs(JSOp op);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* NewObjectOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
                              NewObjectKind newKind = GenericObject);
+||||||| merged common ancestors
+JSObject*
+NewObjectOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                   NewObjectKind newKind = GenericObject);
+=======
+bool EnterWithOperation(JSContext* cx, AbstractFramePtr frame, HandleValue val,
+                        Handle<WithScope*> scope);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* NewObjectOperationWithTemplate(JSContext* cx,
                                          HandleObject templateObject);
+||||||| merged common ancestors
+JSObject*
+NewObjectOperationWithTemplate(JSContext* cx, HandleObject templateObject);
+=======
+bool InitElemGetterSetterOperation(JSContext* cx, jsbytecode* pc,
+                                   HandleObject obj, HandleValue idval,
+                                   HandleObject val);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* NewArrayOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
                             uint32_t length,
                             NewObjectKind newKind = GenericObject);
+||||||| merged common ancestors
+JSObject*
+NewArrayOperation(JSContext* cx, HandleScript script, jsbytecode* pc, uint32_t length,
+                  NewObjectKind newKind = GenericObject);
+=======
+bool SpreadCallOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                         HandleValue thisv, HandleValue callee, HandleValue arr,
+                         HandleValue newTarget, MutableHandleValue res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSObject* NewArrayOperationWithTemplate(JSContext* cx,
                                         HandleObject templateObject);
+||||||| merged common ancestors
+JSObject*
+NewArrayOperationWithTemplate(JSContext* cx, HandleObject templateObject);
+=======
+bool OptimizeSpreadCall(JSContext* cx, HandleValue arg, bool* optimized);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                               HandleId id);
+||||||| merged common ancestors
+void
+ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber, HandleId id);
+=======
+JSObject* NewObjectOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                             NewObjectKind newKind = GenericObject);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                               HandlePropertyName name);
+||||||| merged common ancestors
+void
+ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber, HandlePropertyName name);
+=======
+JSObject* NewObjectOperationWithTemplate(JSContext* cx,
+                                         HandleObject templateObject);
+JSObject* CreateThisWithTemplate(JSContext* cx, HandleObject templateObject);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
+                               HandleScript script, jsbytecode* pc);
+||||||| merged common ancestors
+void
+ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber, HandleScript script, jsbytecode* pc);
+=======
+JSObject* NewArrayOperation(JSContext* cx, HandleScript script, jsbytecode* pc,
+                            uint32_t length,
+                            NewObjectKind newKind = GenericObject);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
+                            HandleValue rref, int rindex);
+||||||| merged common ancestors
+void
+ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex, HandleValue rref, int rindex);
+=======
+JSObject* NewArrayOperationWithTemplate(JSContext* cx,
+                                        HandleObject templateObject);
+
+ArrayObject* NewArrayCopyOnWriteOperation(JSContext* cx, HandleScript script,
+                                          jsbytecode* pc);
+
+MOZ_MUST_USE bool GetImportOperation(JSContext* cx, HandleObject envChain,
+                                     HandleScript script, jsbytecode* pc,
+                                     MutableHandleValue vp);
 
 void ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
                                HandleId id);
@@ -513,6 +1131,7 @@ void ReportRuntimeLexicalError(JSContext* cx, unsigned errorNumber,
 
 void ReportInNotObjectError(JSContext* cx, HandleValue lref, int lindex,
                             HandleValue rref, int rindex);
+>>>>>>> upstream-releases
 
 // The parser only reports redeclarations that occurs within a single
 // script. Due to the extensibility of the global lexical scope, we also check

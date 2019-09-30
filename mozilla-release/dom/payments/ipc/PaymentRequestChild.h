@@ -14,24 +14,69 @@ namespace dom {
 
 class PaymentRequest;
 
+<<<<<<< HEAD
 class PaymentRequestChild final : public PPaymentRequestChild {
  public:
+||||||| merged common ancestors
+class PaymentRequestChild final : public PPaymentRequestChild
+{
+public:
+=======
+class PaymentRequestChild final : public PPaymentRequestChild {
+  friend class PPaymentRequestChild;
+
+ public:
+>>>>>>> upstream-releases
   explicit PaymentRequestChild(PaymentRequest* aRequest);
 
   void MaybeDelete(bool aCanBeInManager);
 
   nsresult RequestPayment(const IPCPaymentActionRequest& aAction);
 
+<<<<<<< HEAD
  protected:
   mozilla::ipc::IPCResult RecvRespondPayment(
       const IPCPaymentActionResponse& aResponse) override;
+||||||| merged common ancestors
+protected:
+  mozilla::ipc::IPCResult
+  RecvRespondPayment(const IPCPaymentActionResponse& aResponse) override;
+=======
+ protected:
+  mozilla::ipc::IPCResult RecvRespondPayment(
+      const IPCPaymentActionResponse& aResponse);
 
   mozilla::ipc::IPCResult RecvChangeShippingAddress(
-      const nsString& aRequestId, const IPCPaymentAddress& aAddress) override;
+      const nsString& aRequestId, const IPCPaymentAddress& aAddress);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  mozilla::ipc::IPCResult RecvChangeShippingAddress(
+      const nsString& aRequestId, const IPCPaymentAddress& aAddress) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvChangeShippingAddress(const nsString& aRequestId,
+                            const IPCPaymentAddress& aAddress) override;
+=======
+  mozilla::ipc::IPCResult RecvChangeShippingOption(const nsString& aRequestId,
+                                                   const nsString& aOption);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvChangeShippingOption(
       const nsString& aRequestId, const nsString& aOption) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvChangeShippingOption(const nsString& aRequestId,
+                           const nsString& aOption) override;
+=======
+  mozilla::ipc::IPCResult RecvChangePayerDetail(const nsString& aRequestId,
+                                                const nsString& aPayerName,
+                                                const nsString& aPayerEmail,
+                                                const nsString& aPayerPhone);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvChangePayerDetail(
       const nsString& aRequestId, const nsString& aPayerName,
       const nsString& aPayerEmail, const nsString& aPayerPhone) override;
@@ -39,6 +84,17 @@ class PaymentRequestChild final : public PPaymentRequestChild {
   mozilla::ipc::IPCResult RecvChangePaymentMethod(
       const nsString& aRequestId, const nsString& aMethodName,
       const IPCMethodChangeDetails& aMethodDetails) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult
+  RecvChangePayerDetail(const nsString& aRequestId,
+                        const nsString& aPayerName,
+                        const nsString& aPayerEmail,
+                        const nsString& aPayerPhone) override;
+=======
+  mozilla::ipc::IPCResult RecvChangePaymentMethod(
+      const nsString& aRequestId, const nsString& aMethodName,
+      const IPCMethodChangeDetails& aMethodDetails);
+>>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason aWhy) override;
 

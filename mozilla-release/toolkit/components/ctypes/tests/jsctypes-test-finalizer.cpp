@@ -14,8 +14,8 @@
  * - 1: acquired
  * - < 0: error, resource has been released several times.
  */
-int *gFinalizerTestResources = nullptr;
-char **gFinalizerTestNames = nullptr;
+int* gFinalizerTestResources = nullptr;
+char** gFinalizerTestNames = nullptr;
 size_t gFinalizerTestSize;
 
 void test_finalizer_start(size_t size) {
@@ -106,50 +106,126 @@ bool test_finalizer_cmp_int64_t(int64_t a, int64_t b) { return a == b; }
 // Resource type: void*
 
 // Acquire resource i
+<<<<<<< HEAD
 void *test_finalizer_acq_ptr_t(size_t i) {
+||||||| merged common ancestors
+void*
+test_finalizer_acq_ptr_t(size_t i)
+{
+=======
+void* test_finalizer_acq_ptr_t(size_t i) {
+>>>>>>> upstream-releases
   gFinalizerTestResources[i] = 1;
   return (void *)&gFinalizerTestResources[i];
 }
 
 // Release resource i
+<<<<<<< HEAD
 void test_finalizer_rel_ptr_t(void *i) {
   int *as_int = (int *)i;
   --(*as_int);
+||||||| merged common ancestors
+void
+test_finalizer_rel_ptr_t(void *i)
+{
+  int *as_int = (int*)i;
+  -- (*as_int);
+=======
+void test_finalizer_rel_ptr_t(void* i) {
+  int* as_int = (int*)i;
+  --(*as_int);
+>>>>>>> upstream-releases
   if (*as_int < 0) {
     MOZ_CRASH("Assertion failed");
   }
 }
 
+<<<<<<< HEAD
 bool test_finalizer_cmp_ptr_t(void *a, void *b) { return a == b; }
+||||||| merged common ancestors
+bool
+test_finalizer_cmp_ptr_t(void *a, void *b)
+{
+  return a==b;
+}
+=======
+bool test_finalizer_cmp_ptr_t(void* a, void* b) { return a == b; }
+>>>>>>> upstream-releases
 
 // Resource type: int32_t*
 
 // Acquire resource i
+<<<<<<< HEAD
 int32_t *test_finalizer_acq_int32_ptr_t(size_t i) {
+||||||| merged common ancestors
+int32_t*
+test_finalizer_acq_int32_ptr_t(size_t i)
+{
+=======
+int32_t* test_finalizer_acq_int32_ptr_t(size_t i) {
+>>>>>>> upstream-releases
   gFinalizerTestResources[i] = 1;
   return (int32_t *)&gFinalizerTestResources[i];
 }
 
 // Release resource i
+<<<<<<< HEAD
 void test_finalizer_rel_int32_ptr_t(int32_t *i) {
   --(*i);
+||||||| merged common ancestors
+void
+test_finalizer_rel_int32_ptr_t(int32_t *i)
+{
+  -- (*i);
+=======
+void test_finalizer_rel_int32_ptr_t(int32_t* i) {
+  --(*i);
+>>>>>>> upstream-releases
   if (*i < 0) {
     MOZ_CRASH("Assertion failed");
   }
 }
 
+<<<<<<< HEAD
 bool test_finalizer_cmp_int32_ptr_t(int32_t *a, int32_t *b) { return a == b; }
+||||||| merged common ancestors
+bool
+test_finalizer_cmp_int32_ptr_t(int32_t *a, int32_t *b)
+{
+  return a==b;
+}
+=======
+bool test_finalizer_cmp_int32_ptr_t(int32_t* a, int32_t* b) { return a == b; }
+>>>>>>> upstream-releases
 
 // Resource type: nullptr
 
 // Acquire resource i
+<<<<<<< HEAD
 void *test_finalizer_acq_null_t(size_t i) {
   gFinalizerTestResources[0] = 1;  // Always index 0
+||||||| merged common ancestors
+void*
+test_finalizer_acq_null_t(size_t i)
+{
+  gFinalizerTestResources[0] = 1;//Always index 0
+=======
+void* test_finalizer_acq_null_t(size_t i) {
+  gFinalizerTestResources[0] = 1;  // Always index 0
+>>>>>>> upstream-releases
   return nullptr;
 }
 
 // Release resource i
+<<<<<<< HEAD
 void test_finalizer_rel_null_t(void *i) {
+||||||| merged common ancestors
+void
+test_finalizer_rel_null_t(void *i)
+{
+=======
+void test_finalizer_rel_null_t(void* i) {
+>>>>>>> upstream-releases
   if (i != nullptr) {
     MOZ_CRASH("Assertion failed");
   }
@@ -160,12 +236,30 @@ bool test_finalizer_null_resource_is_acquired(size_t) {
   return gFinalizerTestResources[0] == 1;
 }
 
+<<<<<<< HEAD
 bool test_finalizer_cmp_null_t(void *a, void *b) { return a == b; }
+||||||| merged common ancestors
+bool
+test_finalizer_cmp_null_t(void *a, void *b)
+{
+  return a==b;
+}
+=======
+bool test_finalizer_cmp_null_t(void* a, void* b) { return a == b; }
+>>>>>>> upstream-releases
 
 // Resource type: char*
 
 // Acquire resource i
+<<<<<<< HEAD
 char *test_finalizer_acq_string_t(int i) {
+||||||| merged common ancestors
+char*
+test_finalizer_acq_string_t(int i)
+{
+=======
+char* test_finalizer_acq_string_t(int i) {
+>>>>>>> upstream-releases
   gFinalizerTestResources[i] = 1;
   if (!gFinalizerTestNames[i]) {
     char *buf = new char[12];
@@ -177,7 +271,15 @@ char *test_finalizer_acq_string_t(int i) {
 }
 
 // Release resource i
+<<<<<<< HEAD
 void test_finalizer_rel_string_t(char *i) {
+||||||| merged common ancestors
+void
+test_finalizer_rel_string_t(char *i)
+{
+=======
+void test_finalizer_rel_string_t(char* i) {
+>>>>>>> upstream-releases
   int index = atoi(i);
   if (index < 0 || index >= (int)gFinalizerTestSize) {
     MOZ_CRASH("Assertion failed");
@@ -189,7 +291,15 @@ bool test_finalizer_string_resource_is_acquired(size_t i) {
   return gFinalizerTestResources[i] == 1;
 }
 
+<<<<<<< HEAD
 bool test_finalizer_cmp_string_t(char *a, char *b) {
+||||||| merged common ancestors
+bool
+test_finalizer_cmp_string_t(char *a, char *b)
+{
+=======
+bool test_finalizer_cmp_string_t(char* a, char* b) {
+>>>>>>> upstream-releases
   return !strncmp(a, b, 10);
 }
 
@@ -222,7 +332,16 @@ bool test_finalizer_struct_resource_is_acquired(myRECT i) {
 bool test_finalizer_cmp_struct_t(myRECT a, myRECT b) { return a.top == b.top; }
 
 // Support for checking that we reject nullptr finalizer
+<<<<<<< HEAD
 afun *test_finalizer_rel_null_function() { return nullptr; }
+||||||| merged common ancestors
+afun* test_finalizer_rel_null_function()
+{
+  return nullptr;
+}
+=======
+afun* test_finalizer_rel_null_function() { return nullptr; }
+>>>>>>> upstream-releases
 
 void test_finalizer_rel_size_t_set_errno(size_t i) {
   if (--gFinalizerTestResources[i] < 0) {

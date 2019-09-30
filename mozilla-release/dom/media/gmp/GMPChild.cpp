@@ -17,9 +17,11 @@
 #include "gmp-video-decode.h"
 #include "gmp-video-encode.h"
 #include "GMPPlatform.h"
+#include "GMPProcessParent.h"
 #include "mozilla/Algorithm.h"
 #include "mozilla/ipc/CrashReporterClient.h"
 #include "mozilla/ipc/ProcessChild.h"
+#include "mozilla/TextUtils.h"
 #include "GMPUtils.h"
 #include "prio.h"
 #include "base/task.h"
@@ -30,16 +32,30 @@
 using namespace mozilla::ipc;
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <stdlib.h>  // for _exit()
 #include "WinUtils.h"
+||||||| merged common ancestors
+#include <stdlib.h> // for _exit()
+#include "WinUtils.h"
+=======
+#  include <stdlib.h>  // for _exit()
+#  include "WinUtils.h"
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #include <unistd.h>  // for _exit()
+||||||| merged common ancestors
+#include <unistd.h> // for _exit()
+=======
+#  include <unistd.h>  // for _exit()
+>>>>>>> upstream-releases
 #endif
 
-#if defined(MOZ_GMP_SANDBOX)
-#if defined(XP_MACOSX)
-#include "mozilla/Sandbox.h"
-#endif
+#if defined(MOZ_SANDBOX)
+#  if defined(XP_MACOSX)
+#    include "mozilla/Sandbox.h"
+#  endif
 #endif
 
 namespace mozilla {
@@ -106,7 +122,7 @@ static bool GetPluginFile(const nsAString& aPluginPath,
 #elif defined(XP_WIN)
   nsAutoString binaryName = baseName + NS_LITERAL_STRING(".dll");
 #else
-#error not defined
+#  error not defined
 #endif
   aLibFile->AppendRelativePath(binaryName);
   return true;
@@ -131,10 +147,24 @@ static nsCString GetNativeTarget(nsIFile* aFile) {
   return path;
 }
 
+<<<<<<< HEAD
 #if defined(MOZ_GMP_SANDBOX)
 static bool GetPluginPaths(const nsAString& aPluginPath,
                            nsCString& aPluginDirectoryPath,
                            nsCString& aPluginFilePath) {
+||||||| merged common ancestors
+#if defined(MOZ_GMP_SANDBOX)
+static bool
+GetPluginPaths(const nsAString& aPluginPath,
+               nsCString &aPluginDirectoryPath,
+               nsCString &aPluginFilePath)
+{
+=======
+#  if defined(MOZ_SANDBOX)
+static bool GetPluginPaths(const nsAString& aPluginPath,
+                           nsCString& aPluginDirectoryPath,
+                           nsCString& aPluginFilePath) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIFile> libDirectory, libFile;
   if (!GetPluginFile(aPluginPath, libDirectory, libFile)) {
     return false;
@@ -191,7 +221,15 @@ static bool GetAppPaths(nsCString& aAppPath, nsCString& aAppBinaryPath) {
   return true;
 }
 
+<<<<<<< HEAD
 bool GMPChild::SetMacSandboxInfo(MacSandboxPluginType aPluginType) {
+||||||| merged common ancestors
+bool
+GMPChild::SetMacSandboxInfo(MacSandboxPluginType aPluginType)
+{
+=======
+bool GMPChild::SetMacSandboxInfo(bool aAllowWindowServer) {
+>>>>>>> upstream-releases
   if (!mGMPLoader) {
     return false;
   }
@@ -205,20 +243,28 @@ bool GMPChild::SetMacSandboxInfo(MacSandboxPluginType aPluginType) {
   }
 
   MacSandboxInfo info;
-  info.type = MacSandboxType_Plugin;
+  info.type = MacSandboxType_GMP;
   info.shouldLog = Preferences::GetBool("security.sandbox.logging.enabled") ||
                    PR_GetEnv("MOZ_SANDBOX_LOGGING");
-  info.pluginInfo.type = aPluginType;
-  info.pluginInfo.pluginPath.assign(pluginDirectoryPath.get());
-  info.pluginInfo.pluginBinaryPath.assign(pluginFilePath.get());
+  info.hasWindowServer = aAllowWindowServer;
+  info.pluginPath.assign(pluginDirectoryPath.get());
+  info.pluginBinaryPath.assign(pluginFilePath.get());
   info.appPath.assign(appPath.get());
   info.appBinaryPath.assign(appBinaryPath.get());
 
   mGMPLoader->SetSandboxInfo(&info);
   return true;
 }
+<<<<<<< HEAD
 #endif  // MOZ_GMP_SANDBOX
 #endif  // XP_MACOSX
+||||||| merged common ancestors
+#endif // MOZ_GMP_SANDBOX
+#endif // XP_MACOSX
+=======
+#  endif  // MOZ_SANDBOX
+#endif    // XP_MACOSX
+>>>>>>> upstream-releases
 
 bool GMPChild::Init(const nsAString& aPluginPath, base::ProcessId aParentPid,
                     MessageLoop* aIOLoop, IPC::Channel* aChannel) {
@@ -264,7 +310,8 @@ mozilla::ipc::IPCResult GMPChild::RecvPreloadLibs(const nsCString& aLibs) {
       u"msmpeg2vdec.dll",  // H.264 decoder
       u"psapi.dll",        // For GetMappedFileNameW, see bug 1383611
   };
-  constexpr static bool (*IsASCII)(const char16_t*) = NS_IsAscii;
+  constexpr static bool (*IsASCII)(const char16_t*) =
+      IsAsciiNullTerminated<char16_t>;
   static_assert(AllOf(std::begin(whitelist), std::end(whitelist), IsASCII),
                 "Items in the whitelist must not contain non-ASCII "
                 "characters!");
@@ -285,7 +332,15 @@ mozilla::ipc::IPCResult GMPChild::RecvPreloadLibs(const nsCString& aLibs) {
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 bool GMPChild::ResolveLinks(nsCOMPtr<nsIFile>& aPath) {
+||||||| merged common ancestors
+bool
+GMPChild::ResolveLinks(nsCOMPtr<nsIFile>& aPath)
+{
+=======
+static bool ResolveLinks(nsCOMPtr<nsIFile>& aPath) {
+>>>>>>> upstream-releases
 #if defined(XP_WIN)
   return widget::WinUtils::ResolveJunctionPointsAndSymLinks(aPath);
 #elif defined(XP_MACOSX)
@@ -302,8 +357,18 @@ bool GMPChild::ResolveLinks(nsCOMPtr<nsIFile>& aPath) {
 #endif
 }
 
+<<<<<<< HEAD
 bool GMPChild::GetUTF8LibPath(nsACString& aOutLibPath) {
 #if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
+||||||| merged common ancestors
+bool
+GMPChild::GetUTF8LibPath(nsACString& aOutLibPath)
+{
+#if defined(XP_MACOSX) && defined(MOZ_GMP_SANDBOX)
+=======
+bool GMPChild::GetUTF8LibPath(nsACString& aOutLibPath) {
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
   nsAutoCString pluginDirectoryPath, pluginFilePath;
   if (!GetPluginPaths(mPluginPath, pluginDirectoryPath, pluginFilePath)) {
     MOZ_CRASH("Error scanning plugin path");
@@ -329,40 +394,99 @@ bool GMPChild::GetUTF8LibPath(nsACString& aOutLibPath) {
 #endif
 }
 
-#if defined(XP_WIN)
-#define FIREFOX_FILE NS_LITERAL_STRING("firefox.exe")
-#define XUL_LIB_FILE NS_LITERAL_STRING("xul.dll")
-#elif defined(XP_MACOSX)
-#define FIREFOX_FILE NS_LITERAL_STRING("firefox")
-#define XUL_LIB_FILE NS_LITERAL_STRING("XUL")
-#else
-#define FIREFOX_FILE NS_LITERAL_STRING("firefox")
-#define XUL_LIB_FILE NS_LITERAL_STRING("libxul.so")
-#endif
-
-#if defined(XP_MACOSX)
-static bool GetFirefoxAppPath(nsCOMPtr<nsIFile> aPluginContainerPath,
-                              nsCOMPtr<nsIFile>& aOutFirefoxAppPath) {
-  // aPluginContainerPath will end with something like:
-  // xxxx/NightlyDebug.app/Contents/MacOS/plugin-container.app/Contents/MacOS/plugin-container
-  MOZ_ASSERT(aPluginContainerPath);
-  nsCOMPtr<nsIFile> path = aPluginContainerPath;
-  for (int i = 0; i < 4; i++) {
-    nsCOMPtr<nsIFile> parent;
-    if (NS_WARN_IF(NS_FAILED(path->GetParent(getter_AddRefs(parent))))) {
-      return false;
-    }
-    path = parent;
-  }
-  MOZ_ASSERT(path);
-  aOutFirefoxAppPath = path;
-  return true;
+static nsCOMPtr<nsIFile> AppendFile(nsCOMPtr<nsIFile>&& aFile,
+                                    const nsString& aStr) {
+  return (aFile && NS_SUCCEEDED(aFile->Append(aStr))) ? aFile : nullptr;
 }
 
+static nsCOMPtr<nsIFile> CloneFile(const nsCOMPtr<nsIFile>& aFile) {
+  nsCOMPtr<nsIFile> clone;
+  return (aFile && NS_SUCCEEDED(aFile->Clone(getter_AddRefs(clone)))) ? clone
+                                                                      : nullptr;
+}
+
+static nsCOMPtr<nsIFile> GetParentFile(const nsCOMPtr<nsIFile>& aFile) {
+  nsCOMPtr<nsIFile> parent;
+  return (aFile && NS_SUCCEEDED(aFile->GetParent(getter_AddRefs(parent))))
+             ? parent
+             : nullptr;
+}
+
+#if defined(XP_WIN)
+static bool IsFileLeafEqualToASCII(const nsCOMPtr<nsIFile>& aFile,
+                                   const char* aStr) {
+  nsAutoString leafName;
+  return aFile && NS_SUCCEEDED(aFile->GetLeafName(leafName)) &&
+         leafName.EqualsASCII(aStr);
+}
+#endif
+
+#if defined(XP_WIN)
+#  define FIREFOX_FILE NS_LITERAL_STRING("firefox.exe")
+#  define XUL_LIB_FILE NS_LITERAL_STRING("xul.dll")
+#elif defined(XP_MACOSX)
+#  define FIREFOX_FILE NS_LITERAL_STRING("firefox")
+#  define XUL_LIB_FILE NS_LITERAL_STRING("XUL")
+#else
+#  define FIREFOX_FILE NS_LITERAL_STRING("firefox")
+#  define XUL_LIB_FILE NS_LITERAL_STRING("libxul.so")
+#endif
+
+static nsCOMPtr<nsIFile> GetFirefoxAppPath(
+    nsCOMPtr<nsIFile> aPluginContainerPath) {
+  MOZ_ASSERT(aPluginContainerPath);
+#if defined(XP_MACOSX)
+<<<<<<< HEAD
+static bool GetFirefoxAppPath(nsCOMPtr<nsIFile> aPluginContainerPath,
+                              nsCOMPtr<nsIFile>& aOutFirefoxAppPath) {
+||||||| merged common ancestors
+static bool
+GetFirefoxAppPath(nsCOMPtr<nsIFile> aPluginContainerPath,
+                  nsCOMPtr<nsIFile>& aOutFirefoxAppPath)
+{
+=======
+  // On MacOS the firefox binary is a few parent directories up from
+  // plugin-container.
+>>>>>>> upstream-releases
+  // aPluginContainerPath will end with something like:
+  // xxxx/NightlyDebug.app/Contents/MacOS/plugin-container.app/Contents/MacOS/plugin-container
+  nsCOMPtr<nsIFile> path = aPluginContainerPath;
+  for (int i = 0; i < 4; i++) {
+    path = GetParentFile(path);
+  }
+  return path;
+#else
+  nsCOMPtr<nsIFile> parent = GetParentFile(aPluginContainerPath);
+#  if XP_WIN
+  if (IsFileLeafEqualToASCII(parent, "i686")) {
+    // We must be on Windows on ARM64, where the plugin-container path will
+    // be in the 'i686' subdir. The firefox.exe is in the parent directory.
+    parent = GetParentFile(parent);
+  }
+#  endif
+  return parent;
+#endif
+}
+
+<<<<<<< HEAD
 static bool GetSigPath(const int aRelativeLayers,
                        const nsString& aTargetSigFileName,
                        nsCOMPtr<nsIFile> aExecutablePath,
                        nsCOMPtr<nsIFile>& aOutSigPath) {
+||||||| merged common ancestors
+static bool
+GetSigPath(const int aRelativeLayers,
+           const nsString& aTargetSigFileName,
+           nsCOMPtr<nsIFile> aExecutablePath,
+           nsCOMPtr<nsIFile>& aOutSigPath)
+{
+=======
+#if defined(XP_MACOSX)
+static bool GetSigPath(const int aRelativeLayers,
+                       const nsString& aTargetSigFileName,
+                       nsCOMPtr<nsIFile> aExecutablePath,
+                       nsCOMPtr<nsIFile>& aOutSigPath) {
+>>>>>>> upstream-releases
   // The sig file will be located in
   // xxxx/NightlyDebug.app/Contents/Resources/XUL.sig
   // xxxx/NightlyDebug.app/Contents/Resources/firefox.sig
@@ -386,7 +510,50 @@ static bool GetSigPath(const int aRelativeLayers,
 }
 #endif
 
+<<<<<<< HEAD
 nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
+||||||| merged common ancestors
+nsTArray<Pair<nsCString, nsCString>>
+GMPChild::MakeCDMHostVerificationPaths()
+{
+=======
+static bool AppendHostPath(nsCOMPtr<nsIFile>& aFile,
+                           nsTArray<Pair<nsCString, nsCString>>& aPaths) {
+  nsString str;
+  if (!FileExists(aFile) || !ResolveLinks(aFile) ||
+      NS_FAILED(aFile->GetPath(str))) {
+    return false;
+  }
+
+  nsCString filePath = NS_ConvertUTF16toUTF8(str);
+  nsCString sigFilePath;
+#if defined(XP_MACOSX)
+  nsAutoString binary;
+  if (NS_FAILED(aFile->GetLeafName(binary))) {
+    return false;
+  }
+  binary.Append(NS_LITERAL_STRING(".sig"));
+  nsCOMPtr<nsIFile> sigFile;
+  if (GetSigPath(2, binary, aFile, sigFile) &&
+      NS_SUCCEEDED(sigFile->GetPath(str))) {
+    sigFilePath = NS_ConvertUTF16toUTF8(str);
+  } else {
+    // Cannot successfully get the sig file path.
+    // Assume it is located at the same place as plugin-container
+    // alternatively.
+    sigFilePath =
+        nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"));
+  }
+#else
+  sigFilePath =
+      nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"));
+#endif
+  aPaths.AppendElement(MakePair(std::move(filePath), std::move(sigFilePath)));
+  return true;
+}
+
+nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
+>>>>>>> upstream-releases
   // Record the file path and its sig file path.
   nsTArray<Pair<nsCString, nsCString>> paths;
   // Plugin binary path.
@@ -406,6 +573,7 @@ nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
       WideToUTF8(CommandLine::ForCurrentProcess()->program());
   path = nullptr;
   str = NS_ConvertUTF8toUTF16(nsDependentCString(pluginContainer.c_str()));
+<<<<<<< HEAD
   if (NS_SUCCEEDED(NS_NewLocalFile(str, true, /* aFollowLinks */
                                    getter_AddRefs(path))) &&
       FileExists(path) && ResolveLinks(path) &&
@@ -431,11 +599,44 @@ nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
 #endif
     paths.AppendElement(MakePair(std::move(filePath), std::move(sigFilePath)));
   } else {
+||||||| merged common ancestors
+  if (NS_SUCCEEDED(NS_NewLocalFile(str,
+                                   true, /* aFollowLinks */
+                                   getter_AddRefs(path))) &&
+      FileExists(path) && ResolveLinks(path) &&
+      NS_SUCCEEDED(path->GetPath(str))) {
+    nsCString filePath = NS_ConvertUTF16toUTF8(str);
+    nsCString sigFilePath;
+#if defined(XP_MACOSX)
+    nsCOMPtr<nsIFile> sigFile;
+    if (GetSigPath(2, NS_LITERAL_STRING("plugin-container.sig"), path, sigFile) &&
+        NS_SUCCEEDED(sigFile->GetPath(str))) {
+      sigFilePath = NS_ConvertUTF16toUTF8(str);
+    } else {
+      // Cannot successfully get the sig file path.
+      // Assume it is located at the same place as plugin-container alternatively.
+      sigFilePath = nsCString(NS_ConvertUTF16toUTF8(str) +
+                              NS_LITERAL_CSTRING(".sig"));
+    }
+#else
+    sigFilePath = nsCString(NS_ConvertUTF16toUTF8(str) +
+                            NS_LITERAL_CSTRING(".sig"));
+#endif
+    paths.AppendElement(
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
+  } else {
+=======
+  if (NS_FAILED(NS_NewLocalFile(str, true, /* aFollowLinks */
+                                getter_AddRefs(path))) ||
+      !AppendHostPath(path, paths)) {
+>>>>>>> upstream-releases
     // Without successfully determining plugin-container's path, we can't
     // determine libxul's or Firefox's. So give up.
     return paths;
   }
 
+<<<<<<< HEAD
   // Firefox application binary path.
   nsCOMPtr<nsIFile> appDir;
 #if defined(XP_MACOSX)
@@ -456,7 +657,41 @@ nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
       // Assume it is located at the same place as firefox alternatively.
       sigFilePath =
           nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"));
+||||||| merged common ancestors
+  // Firefox application binary path.
+  nsCOMPtr<nsIFile> appDir;
+#if defined(XP_MACOSX)
+  // On MacOS the firefox binary is a few parent directories up from
+  // plugin-container.
+  if (GetFirefoxAppPath(path, appDir) &&
+      NS_SUCCEEDED(appDir->Clone(getter_AddRefs(path))) &&
+      NS_SUCCEEDED(path->Append(FIREFOX_FILE)) && FileExists(path) &&
+      ResolveLinks(path) && NS_SUCCEEDED(path->GetPath(str))) {
+    nsCString filePath = NS_ConvertUTF16toUTF8(str);
+    nsCString sigFilePath;
+    nsCOMPtr<nsIFile> sigFile;
+    if (GetSigPath(2, NS_LITERAL_STRING("firefox.sig"), path, sigFile) &&
+        NS_SUCCEEDED(sigFile->GetPath(str))) {
+      sigFilePath = NS_ConvertUTF16toUTF8(str);
+    } else {
+      // Cannot successfully get the sig file path.
+      // Assume it is located at the same place as firefox alternatively.
+      sigFilePath = nsCString(NS_ConvertUTF16toUTF8(str) +
+                              NS_LITERAL_CSTRING(".sig"));
+=======
+#if defined(XP_WIN)
+  // On Windows on ARM64, we should also append the x86 plugin-container's
+  // xul.dll.
+  const bool isWindowsOnARM64 =
+      IsFileLeafEqualToASCII(GetParentFile(path), "i686");
+  if (isWindowsOnARM64) {
+    nsCOMPtr<nsIFile> x86XulPath =
+        AppendFile(GetParentFile(path), XUL_LIB_FILE);
+    if (!AppendHostPath(x86XulPath, paths)) {
+      return paths;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     paths.AppendElement(MakePair(std::move(filePath), std::move(sigFilePath)));
   }
 #else
@@ -469,11 +704,37 @@ nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
     paths.AppendElement(MakePair(
         nsCString(NS_ConvertUTF16toUTF8(str)),
         nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"))));
+||||||| merged common ancestors
+    paths.AppendElement(
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
+  }
+#else
+  // Note: re-using 'path' var here, as on Windows/Linux we assume Firefox
+  // executable is in the same directory as plugin-container.
+  if (NS_SUCCEEDED(path->GetParent(getter_AddRefs(appDir))) &&
+      NS_SUCCEEDED(appDir->Clone(getter_AddRefs(path))) &&
+      NS_SUCCEEDED(path->Append(FIREFOX_FILE)) && FileExists(path) &&
+      ResolveLinks(path) && NS_SUCCEEDED(path->GetPath(str))) {
+    paths.AppendElement(
+      MakePair(nsCString(NS_ConvertUTF16toUTF8(str)),
+               nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"))));
+=======
+>>>>>>> upstream-releases
   }
 #endif
-  // Libxul path. Note: re-using 'path' var here, as we assume libxul is in
+
+  // Firefox application binary path.
+  nsCOMPtr<nsIFile> appDir = GetFirefoxAppPath(path);
+  path = AppendFile(CloneFile(appDir), FIREFOX_FILE);
+  if (!AppendHostPath(path, paths)) {
+    return paths;
+  }
+
+  // Libxul path. Note: re-using 'appDir' var here, as we assume libxul is in
   // the same directory as Firefox executable.
   appDir->GetPath(str);
+<<<<<<< HEAD
   if (NS_SUCCEEDED(appDir->Clone(getter_AddRefs(path))) &&
       NS_SUCCEEDED(path->Append(XUL_LIB_FILE)) && FileExists(path) &&
       ResolveLinks(path) && NS_SUCCEEDED(path->GetPath(str))) {
@@ -495,6 +756,35 @@ nsTArray<Pair<nsCString, nsCString>> GMPChild::MakeCDMHostVerificationPaths() {
         nsCString(NS_ConvertUTF16toUTF8(str) + NS_LITERAL_CSTRING(".sig"));
 #endif
     paths.AppendElement(MakePair(std::move(filePath), std::move(sigFilePath)));
+||||||| merged common ancestors
+  if (NS_SUCCEEDED(appDir->Clone(getter_AddRefs(path))) &&
+      NS_SUCCEEDED(path->Append(XUL_LIB_FILE)) && FileExists(path) &&
+      ResolveLinks(path) && NS_SUCCEEDED(path->GetPath(str))) {
+    nsCString filePath = NS_ConvertUTF16toUTF8(str);
+    nsCString sigFilePath;
+#if defined(XP_MACOSX)
+    nsCOMPtr<nsIFile> sigFile;
+    if (GetSigPath(2, NS_LITERAL_STRING("XUL.sig"), path, sigFile) &&
+        NS_SUCCEEDED(sigFile->GetPath(str))) {
+      sigFilePath = NS_ConvertUTF16toUTF8(str);
+    } else {
+      // Cannot successfully get the sig file path.
+      // Assume it is located at the same place as XUL alternatively.
+      sigFilePath = nsCString(NS_ConvertUTF16toUTF8(str) +
+                              NS_LITERAL_CSTRING(".sig"));
+    }
+#else
+    sigFilePath = nsCString(NS_ConvertUTF16toUTF8(str) +
+                            NS_LITERAL_CSTRING(".sig"));
+#endif
+    paths.AppendElement(
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
+=======
+  path = AppendFile(CloneFile(appDir), XUL_LIB_FILE);
+  if (!AppendHostPath(path, paths)) {
+    return paths;
+>>>>>>> upstream-releases
   }
 
   return paths;
@@ -535,14 +825,16 @@ mozilla::ipc::IPCResult GMPChild::AnswerStartPlugin(const nsString& aAdapter) {
   InitPlatformAPI(*platformAPI, this);
 
   mGMPLoader = MakeUnique<GMPLoader>();
-#if defined(MOZ_GMP_SANDBOX)
+#if defined(MOZ_SANDBOX)
   if (!mGMPLoader->CanSandbox()) {
     LOGD("%s Can't sandbox GMP, failing", __FUNCTION__);
     delete platformAPI;
     return IPC_FAIL(this, "Can't sandbox GMP.");
   }
 #endif
+
   bool isChromium = aAdapter.EqualsLiteral("chromium");
+<<<<<<< HEAD
 #if defined(MOZ_GMP_SANDBOX) && defined(XP_MACOSX)
   MacSandboxPluginType pluginType = MacSandboxPluginType_GMPlugin_Default;
   if (isChromium) {
@@ -556,6 +848,35 @@ mozilla::ipc::IPCResult GMPChild::AnswerStartPlugin(const nsString& aAdapter) {
                   "Failed to set Mac GMP sandbox info with plugin type %d.",
                   pluginType)
                   .get());
+||||||| merged common ancestors
+#if defined(MOZ_GMP_SANDBOX) && defined(XP_MACOSX)
+  MacSandboxPluginType pluginType = MacSandboxPluginType_GMPlugin_Default;
+  if (isChromium) {
+    pluginType = MacSandboxPluginType_GMPlugin_EME_Widevine;
+  }
+  if (!SetMacSandboxInfo(pluginType)) {
+    NS_WARNING("Failed to set Mac GMP sandbox info");
+    delete platformAPI;
+    return IPC_FAIL(
+      this,
+      nsPrintfCString("Failed to set Mac GMP sandbox info with plugin type %d.",
+                      pluginType).get());
+=======
+
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+  // If we started the sandbox at launch ("earlyinit"), then we don't
+  // need to setup sandbox arguments here with SetMacSandboxInfo().
+  if (!IsMacSandboxStarted()) {
+    // Use of the chromium adapter indicates we are going to be
+    // running the Widevine plugin which requires access to the
+    // WindowServer in the Mac GMP sandbox policy.
+    if (!SetMacSandboxInfo(isChromium /* allow-window-server */)) {
+      NS_WARNING("Failed to set Mac GMP sandbox info");
+      delete platformAPI;
+      return IPC_FAIL(
+          this, nsPrintfCString("Failed to set Mac GMP sandbox info.").get());
+    }
+>>>>>>> upstream-releases
   }
 #endif
 

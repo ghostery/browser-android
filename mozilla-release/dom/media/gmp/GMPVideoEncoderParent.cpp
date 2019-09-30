@@ -22,7 +22,7 @@
 namespace mozilla {
 
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 
 extern LogModule* GetGMPLog();
@@ -31,7 +31,7 @@ extern LogModule* GetGMPLog();
 #define LOG(level, msg) MOZ_LOG(GetGMPLog(), (level), msg)
 
 #ifdef __CLASS__
-#undef __CLASS__
+#  undef __CLASS__
 #endif
 #define __CLASS__ "GMPVideoEncoderParent"
 
@@ -127,13 +127,31 @@ GMPErr GMPVideoEncoderParent::Encode(
   if ((NumInUse(GMPSharedMem::kGMPFrameData) >
        3 * GMPSharedMem::kGMPBufLimit) ||
       (NumInUse(GMPSharedMem::kGMPEncodedData) > GMPSharedMem::kGMPBufLimit)) {
+    LOG(LogLevel::Error,
+        ("%s::%s: Out of mem buffers. Frame Buffers:%lu Max:%lu, Encoded "
+         "Buffers: %lu Max: %lu",
+         __CLASS__, __FUNCTION__,
+         static_cast<unsigned long>(NumInUse(GMPSharedMem::kGMPFrameData)),
+         static_cast<unsigned long>(3 * GMPSharedMem::kGMPBufLimit),
+         static_cast<unsigned long>(NumInUse(GMPSharedMem::kGMPEncodedData)),
+         static_cast<unsigned long>(GMPSharedMem::kGMPBufLimit)));
     return GMPGenericErr;
   }
 
   GMPVideoi420FrameData frameData;
   inputFrameImpl->InitFrameData(frameData);
 
+<<<<<<< HEAD
   if (!SendEncode(frameData, aCodecSpecificInfo, aFrameTypes)) {
+||||||| merged common ancestors
+  if (!SendEncode(frameData,
+                  aCodecSpecificInfo,
+                  aFrameTypes)) {
+=======
+  if (!SendEncode(frameData, aCodecSpecificInfo, aFrameTypes)) {
+    LOG(LogLevel::Error,
+        ("%s::%s: failed to send encode", __CLASS__, __FUNCTION__));
+>>>>>>> upstream-releases
     return GMPGenericErr;
   }
 

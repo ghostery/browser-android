@@ -11,7 +11,7 @@
 
 #include "nsCOMArray.h"
 #include "nsCOMPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIObserver.h"
 #include "nsIObserverService.h"
 #include "nsIURI.h"
@@ -29,26 +29,72 @@ class OfflineCacheUpdateChild : public nsIOfflineCacheUpdate,
   NS_DECL_ISUPPORTS
   NS_DECL_NSIOFFLINECACHEUPDATE
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyStateEvent(
       const uint32_t& stateEvent, const uint64_t& byteProgress) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvNotifyStateEvent(const uint32_t& stateEvent,
+                         const uint64_t& byteProgress) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyStateEvent(const uint32_t& stateEvent,
+                                               const uint64_t& byteProgress);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvAssociateDocuments(
       const nsCString& cacheGroupId, const nsCString& cacheClientId) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvAssociateDocuments(
+            const nsCString& cacheGroupId,
+            const nsCString& cacheClientId) override;
+=======
+  mozilla::ipc::IPCResult RecvAssociateDocuments(
+      const nsCString& cacheGroupId, const nsCString& cacheClientId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvFinish(const bool& succeeded,
                                              const bool& isUpgrade) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvFinish(const bool& succeeded,
+               const bool& isUpgrade) override;
+=======
+  mozilla::ipc::IPCResult RecvFinish(const bool& succeeded,
+                                     const bool& isUpgrade);
+>>>>>>> upstream-releases
 
   explicit OfflineCacheUpdateChild(nsPIDOMWindowInner* aWindow);
 
+<<<<<<< HEAD
   void SetDocument(nsIDocument* aDocument);
+||||||| merged common ancestors
+    void SetDocument(nsIDocument *aDocument);
+=======
+  void SetDocument(dom::Document* aDocument);
+>>>>>>> upstream-releases
 
  private:
   ~OfflineCacheUpdateChild();
 
+<<<<<<< HEAD
   nsresult AssociateDocument(nsIDocument* aDocument,
                              nsIApplicationCache* aApplicationCache);
   void GatherObservers(nsCOMArray<nsIOfflineCacheUpdateObserver>& aObservers);
   nsresult Finish();
+||||||| merged common ancestors
+    nsresult AssociateDocument(nsIDocument *aDocument,
+                               nsIApplicationCache *aApplicationCache);
+    void GatherObservers(nsCOMArray<nsIOfflineCacheUpdateObserver> &aObservers);
+    nsresult Finish();
+=======
+  nsresult AssociateDocument(dom::Document* aDocument,
+                             nsIApplicationCache* aApplicationCache);
+  void GatherObservers(nsCOMArray<nsIOfflineCacheUpdateObserver>& aObservers);
+  nsresult Finish();
+>>>>>>> upstream-releases
 
   enum {
     STATE_UNINITIALIZED,
@@ -73,8 +119,16 @@ class OfflineCacheUpdateChild : public nsIOfflineCacheUpdate,
   nsCOMArray<nsIWeakReference> mWeakObservers;
   nsCOMArray<nsIOfflineCacheUpdateObserver> mObservers;
 
+<<<<<<< HEAD
   /* Document that requested this update */
   nsCOMPtr<nsIDocument> mDocument;
+||||||| merged common ancestors
+    /* Document that requested this update */
+    nsCOMPtr<nsIDocument> mDocument;
+=======
+  /* Document that requested this update */
+  nsCOMPtr<dom::Document> mDocument;
+>>>>>>> upstream-releases
 
   /* Keep reference to the window that owns this update to call the
      parent offline cache update construcor */

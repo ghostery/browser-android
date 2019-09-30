@@ -18,6 +18,7 @@
 #include "nsIProxyInfo.h"
 #include "nsIProxiedChannel.h"
 #include "nsIResumableChannel.h"
+#include "nsWeakReference.h"
 
 class nsIURI;
 using mozilla::net::ADivertableParentChannel;
@@ -28,6 +29,7 @@ class nsFtpChannel final : public nsBaseChannel,
                            public nsIResumableChannel,
                            public nsIProxiedChannel,
                            public nsIForcePendingChannel,
+<<<<<<< HEAD
                            public nsIChannelWithDivertableParentListener {
  public:
   NS_DECL_ISUPPORTS_INHERITED
@@ -113,6 +115,193 @@ class nsFtpChannel final : public nsBaseChannel,
 
   // Current suspension depth for this channel object
   uint32_t mSuspendCount;
+||||||| merged common ancestors
+                           public nsIChannelWithDivertableParentListener
+{
+public:
+    NS_DECL_ISUPPORTS_INHERITED
+    NS_DECL_NSIUPLOADCHANNEL
+    NS_DECL_NSIRESUMABLECHANNEL
+    NS_DECL_NSIPROXIEDCHANNEL
+    NS_DECL_NSICHANNELWITHDIVERTABLEPARENTLISTENER
+
+    nsFtpChannel(nsIURI *uri, nsIProxyInfo *pi)
+        : mProxyInfo(pi)
+        , mStartPos(0)
+        , mResumeRequested(false)
+        , mLastModifiedTime(0)
+        , mForcePending(false)
+        , mSuspendCount(0)
+    {
+        SetURI(uri);
+    }
+
+    void UpdateURI(nsIURI *aURI) {
+        MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread(), "Not thread-safe.");
+        mURI = aURI;
+    }
+
+    nsIProxyInfo *ProxyInfo() {
+        return mProxyInfo;
+    }
+
+    void SetProxyInfo(nsIProxyInfo *pi)
+    {
+        mProxyInfo = pi;
+    }
+
+    NS_IMETHOD IsPending(bool *result) override;
+
+    // This is a short-cut to calling nsIRequest::IsPending().
+    // Overrides Pending in nsBaseChannel.
+    bool Pending() const override;
+
+    // Were we asked to resume a download?
+    bool ResumeRequested() { return mResumeRequested; }
+
+    // Download from this byte offset
+    uint64_t StartPos() { return mStartPos; }
+
+    // ID of the entity to resume downloading
+    const nsCString &EntityID() {
+        return mEntityID;
+    }
+    void SetEntityID(const nsACString& entityID) {
+        mEntityID = entityID;
+    }
+
+    NS_IMETHOD GetLastModifiedTime(PRTime* lastModifiedTime) override {
+        *lastModifiedTime = mLastModifiedTime;
+        return NS_OK;
+    }
+
+    NS_IMETHOD SetLastModifiedTime(PRTime lastModifiedTime) override {
+        mLastModifiedTime = lastModifiedTime;
+        return NS_OK;
+    }
+
+    // Data stream to upload
+    nsIInputStream *UploadStream() {
+        return mUploadStream;
+    }
+
+    // Helper function for getting the nsIFTPEventSink.
+    void GetFTPEventSink(nsCOMPtr<nsIFTPEventSink> &aResult);
+
+    NS_IMETHOD Suspend() override;
+    NS_IMETHOD Resume() override;
+
+public:
+    NS_IMETHOD ForcePending(bool aForcePending) override;
+
+protected:
+    virtual ~nsFtpChannel() = default;
+    virtual nsresult OpenContentStream(bool async, nsIInputStream **result,
+                                       nsIChannel** channel) override;
+    virtual bool GetStatusArg(nsresult status, nsString &statusArg) override;
+    virtual void OnCallbacksChanged() override;
+
+private:
+    nsCOMPtr<nsIProxyInfo>           mProxyInfo;
+    nsCOMPtr<nsIFTPEventSink>        mFTPEventSink;
+    nsCOMPtr<nsIInputStream>         mUploadStream;
+    uint64_t                         mStartPos;
+    nsCString                        mEntityID;
+    bool                             mResumeRequested;
+    PRTime                           mLastModifiedTime;
+    bool                             mForcePending;
+    RefPtr<ADivertableParentChannel> mParentChannel;
+
+    // Current suspension depth for this channel object
+    uint32_t                          mSuspendCount;
+=======
+                           public nsSupportsWeakReference,
+                           public nsIChannelWithDivertableParentListener {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_NSIUPLOADCHANNEL
+  NS_DECL_NSIRESUMABLECHANNEL
+  NS_DECL_NSIPROXIEDCHANNEL
+  NS_DECL_NSICHANNELWITHDIVERTABLEPARENTLISTENER
+
+  nsFtpChannel(nsIURI* uri, nsIProxyInfo* pi)
+      : mProxyInfo(pi),
+        mStartPos(0),
+        mResumeRequested(false),
+        mLastModifiedTime(0),
+        mForcePending(false),
+        mSuspendCount(0) {
+    SetURI(uri);
+  }
+
+  void UpdateURI(nsIURI* aURI) {
+    MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread(), "Not thread-safe.");
+    mURI = aURI;
+  }
+
+  nsIProxyInfo* ProxyInfo() { return mProxyInfo; }
+
+  void SetProxyInfo(nsIProxyInfo* pi) { mProxyInfo = pi; }
+
+  NS_IMETHOD IsPending(bool* result) override;
+
+  // This is a short-cut to calling nsIRequest::IsPending().
+  // Overrides Pending in nsBaseChannel.
+  bool Pending() const override;
+
+  // Were we asked to resume a download?
+  bool ResumeRequested() { return mResumeRequested; }
+
+  // Download from this byte offset
+  uint64_t StartPos() { return mStartPos; }
+
+  // ID of the entity to resume downloading
+  const nsCString& EntityID() { return mEntityID; }
+  void SetEntityID(const nsACString& entityID) { mEntityID = entityID; }
+
+  NS_IMETHOD GetLastModifiedTime(PRTime* lastModifiedTime) override {
+    *lastModifiedTime = mLastModifiedTime;
+    return NS_OK;
+  }
+
+  NS_IMETHOD SetLastModifiedTime(PRTime lastModifiedTime) override {
+    mLastModifiedTime = lastModifiedTime;
+    return NS_OK;
+  }
+
+  // Data stream to upload
+  nsIInputStream* UploadStream() { return mUploadStream; }
+
+  // Helper function for getting the nsIFTPEventSink.
+  void GetFTPEventSink(nsCOMPtr<nsIFTPEventSink>& aResult);
+
+  NS_IMETHOD Suspend() override;
+  NS_IMETHOD Resume() override;
+
+ public:
+  NS_IMETHOD ForcePending(bool aForcePending) override;
+
+ protected:
+  virtual ~nsFtpChannel() = default;
+  virtual nsresult OpenContentStream(bool async, nsIInputStream** result,
+                                     nsIChannel** channel) override;
+  virtual bool GetStatusArg(nsresult status, nsString& statusArg) override;
+  virtual void OnCallbacksChanged() override;
+
+ private:
+  nsCOMPtr<nsIProxyInfo> mProxyInfo;
+  nsCOMPtr<nsIFTPEventSink> mFTPEventSink;
+  nsCOMPtr<nsIInputStream> mUploadStream;
+  uint64_t mStartPos;
+  nsCString mEntityID;
+  bool mResumeRequested;
+  PRTime mLastModifiedTime;
+  bool mForcePending;
+  RefPtr<ADivertableParentChannel> mParentChannel;
+
+  // Current suspension depth for this channel object
+  uint32_t mSuspendCount;
+>>>>>>> upstream-releases
 };
 
 #endif /* nsFTPChannel_h___ */

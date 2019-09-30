@@ -16,13 +16,13 @@
 #include "nsFaviconService.h"
 #include "mozilla/storage.h"
 #include "mozilla/Telemetry.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsNetUtil.h"
 #include "nsPrintfCString.h"
 #include "nsStreamUtils.h"
 #include "nsStringStream.h"
 #include "nsIPrivateBrowsingChannel.h"
 #include "nsISupportsPriority.h"
-#include "nsContentUtils.h"
 #include <algorithm>
 #include <deque>
 #include "mozilla/gfx/2D.h"
@@ -204,12 +204,30 @@ nsresult SetIconInfo(const RefPtr<Database>& aDB, IconData& aIcon,
       "(icon_url, fixed_icon_url_hash, width, root, expire_ms, data) "
       "VALUES (:url, hash(fixup_url(:url)), :width, :root, :expire, :data) ");
   NS_ENSURE_STATE(insertStmt);
+  // ReplaceFaviconData may replace data for an already existing icon, and in
+  // that case it won't have the page uri at hand, thus it can't tell if the
+  // icon is a root icon or not. For that reason, never overwrite a root = 1.
   nsCOMPtr<mozIStorageStatement> updateStmt = aDB->GetStatement(
+<<<<<<< HEAD
       "UPDATE moz_icons SET width = :width, "
       "expire_ms = :expire, "
       "data = :data, "
       "root = :root "
       "WHERE id = :id ");
+||||||| merged common ancestors
+    "UPDATE moz_icons SET width = :width, "
+                         "expire_ms = :expire, "
+                         "data = :data, "
+                         "root = :root "
+    "WHERE id = :id "
+  );
+=======
+      "UPDATE moz_icons SET width = :width, "
+      "expire_ms = :expire, "
+      "data = :data, "
+      "root = (root  OR :root) "
+      "WHERE id = :id ");
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(updateStmt);
 
   for (auto& payload : aIcon.payloads) {
@@ -589,7 +607,7 @@ nsresult AsyncFetchAndSetIconForPage::FetchFromNetwork() {
     priorityChannel->AdjustPriority(nsISupportsPriority::PRIORITY_LOWEST);
   }
 
-  if (nsContentUtils::IsTailingEnabled()) {
+  if (StaticPrefs::network_http_tailing_enabled()) {
     nsCOMPtr<nsIClassOfService> cos = do_QueryInterface(channel);
     if (cos) {
       cos->AddClassFlags(nsIClassOfService::Tail |
@@ -602,7 +620,7 @@ nsresult AsyncFetchAndSetIconForPage::FetchFromNetwork() {
     }
   }
 
-  rv = channel->AsyncOpen2(this);
+  rv = channel->AsyncOpen(this);
   if (NS_SUCCEEDED(rv)) {
     mRequest = channel;
   }
@@ -623,8 +641,16 @@ AsyncFetchAndSetIconForPage::Cancel() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest,
                                             nsISupports* aContext) {
+||||||| merged common ancestors
+AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest,
+                                            nsISupports* aContext)
+{
+=======
+AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   // mRequest should already be set from ::FetchFromNetwork, but in the case of
   // a redirect we might get a new request, and we should make sure we keep a
   // reference to the most current request.
@@ -637,7 +663,6 @@ AsyncFetchAndSetIconForPage::OnStartRequest(nsIRequest* aRequest,
 
 NS_IMETHODIMP
 AsyncFetchAndSetIconForPage::OnDataAvailable(nsIRequest* aRequest,
-                                             nsISupports* aContext,
                                              nsIInputStream* aInputStream,
                                              uint64_t aOffset,
                                              uint32_t aCount) {
@@ -680,8 +705,16 @@ AsyncFetchAndSetIconForPage::AsyncOnChannelRedirect(
 
 NS_IMETHODIMP
 AsyncFetchAndSetIconForPage::OnStopRequest(nsIRequest* aRequest,
+<<<<<<< HEAD
                                            nsISupports* aContext,
                                            nsresult aStatusCode) {
+||||||| merged common ancestors
+                                           nsISupports* aContext,
+                                           nsresult aStatusCode)
+{
+=======
+                                           nsresult aStatusCode) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Don't need to track this anymore.
@@ -814,7 +847,10 @@ AsyncAssociateIconToPage::Run() {
   nsresult rv;
   if (shouldUpdateIcon) {
     rv = SetIconInfo(DB, mIcon);
-    NS_ENSURE_SUCCESS(rv, rv);
+    if (NS_FAILED(rv)) {
+      (void)transaction.Commit();
+      return rv;
+    }
 
     mIcon.status = (mIcon.status & ~(ICON_STATUS_CACHED)) | ICON_STATUS_SAVED;
   }
@@ -826,6 +862,34 @@ AsyncAssociateIconToPage::Run() {
     rv = transaction.Commit();
     NS_ENSURE_SUCCESS(rv, rv);
     return NS_OK;
+  }
+
+  // Expire old favicons to keep up with website changes. Associated icons must
+  // be expired also when storing a root favicon, because a page may change to
+  // only have a root favicon.
+  // Note that here we could also be in the process of adding further payloads
+  // to a page, and we don't want to expire just added payloads. For this
+  // reason we only remove expired payloads.
+  // Oprhan icons are not removed at this time because it'd be expensive. The
+  // privacy implications are limited, since history removal methods also expire
+  // orphan icons.
+  if (mPage.id > 0) {
+    nsCOMPtr<mozIStorageStatement> stmt;
+    stmt = DB->GetStatement(
+        "DELETE FROM moz_icons_to_pages "
+        "WHERE icon_id IN ( "
+        "  SELECT icon_id FROM moz_icons_to_pages "
+        "  JOIN moz_icons i ON icon_id = i.id "
+        "  WHERE page_id = :page_id "
+        "  AND expire_ms < strftime('%s','now','localtime','start of day','-7 "
+        "days','utc') * 1000 "
+        ") AND page_id = :page_id ");
+    NS_ENSURE_STATE(stmt);
+    mozStorageStatementScoper scoper(stmt);
+    rv = stmt->BindInt64ByName(NS_LITERAL_CSTRING("page_id"), mPage.id);
+    NS_ENSURE_SUCCESS(rv, rv);
+    rv = stmt->Execute();
+    NS_ENSURE_SUCCESS(rv, rv);
   }
 
   // Don't associate pages to root domain icons, since those will be returned
@@ -843,6 +907,7 @@ AsyncAssociateIconToPage::Run() {
     // it being elapsed. We don't remove orphan icons at this time since it
     // would have a cost. The privacy hit is limited since history removal
     // methods already expire orphan icons.
+<<<<<<< HEAD
     if (mPage.id != 0) {
       nsCOMPtr<mozIStorageStatement> stmt;
       stmt = DB->GetStatement(
@@ -861,6 +926,28 @@ AsyncAssociateIconToPage::Run() {
       rv = stmt->Execute();
       NS_ENSURE_SUCCESS(rv, rv);
     } else {
+||||||| merged common ancestors
+    if (mPage.id != 0)  {
+      nsCOMPtr<mozIStorageStatement> stmt;
+      stmt = DB->GetStatement(
+        "DELETE FROM moz_icons_to_pages "
+        "WHERE icon_id IN ( "
+          "SELECT icon_id FROM moz_icons_to_pages "
+          "JOIN moz_icons i ON icon_id = i.id "
+          "WHERE page_id = :page_id "
+            "AND expire_ms < strftime('%s','now','localtime','start of day','-7 days','utc') * 1000 "
+        ") AND page_id = :page_id "
+      );
+      NS_ENSURE_STATE(stmt);
+      mozStorageStatementScoper scoper(stmt);
+      rv = stmt->BindInt64ByName(NS_LITERAL_CSTRING("page_id"), mPage.id);
+      NS_ENSURE_SUCCESS(rv, rv);
+      rv = stmt->Execute();
+      NS_ENSURE_SUCCESS(rv, rv);
+    } else {
+=======
+    if (mPage.id == 0) {
+>>>>>>> upstream-releases
       // We need to create the page entry.
       nsCOMPtr<mozIStorageStatement> stmt;
       stmt = DB->GetStatement(
@@ -1031,6 +1118,7 @@ AsyncReplaceFaviconData::Run() {
   nsresult rv = SetIconInfo(DB, mIcon, true);
   if (rv == NS_ERROR_NOT_AVAILABLE) {
     // There's no previous icon to replace, we don't need to do anything.
+    (void)transaction.Commit();
     return NS_OK;
   }
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1217,8 +1305,17 @@ nsresult FetchAndConvertUnsupportedPayloads::ConvertPayload(
 
   // Convert the payload to an input stream.
   nsCOMPtr<nsIInputStream> stream;
+<<<<<<< HEAD
   nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), aPayload.get(),
                                       aPayload.Length(), NS_ASSIGNMENT_DEPEND);
+||||||| merged common ancestors
+  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream),
+                aPayload.get(), aPayload.Length(),
+                NS_ASSIGNMENT_DEPEND);
+=======
+  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stream), aPayload,
+                                      NS_ASSIGNMENT_DEPEND);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Decode the input stream to a surface.
@@ -1234,7 +1331,7 @@ nsresult FetchAndConvertUnsupportedPayloads::ConvertPayload(
   // For non-square images, pick the largest side.
   int32_t originalSize = std::max(width, height);
   int32_t size = originalSize;
-  for (uint16_t supportedSize : sFaviconSizes) {
+  for (uint16_t supportedSize : gFaviconSizes) {
     if (supportedSize <= originalSize) {
       size = supportedSize;
       break;

@@ -32,9 +32,23 @@ namespace mozilla {
     return nullptr;
   }
 
+<<<<<<< HEAD
   RefPtr<AudioWorkletImpl> impl =
       new AudioWorkletImpl(window, principal, aContext->DestinationStream());
   return MakeAndAddRef<dom::Worklet>(window, std::move(impl));
+||||||| merged common ancestors
+  RefPtr<AudioWorkletImpl> impl = new AudioWorkletImpl(window, principal);
+  return MakeAndAddRef<dom::Worklet>(window, std::move(impl));
+=======
+  RefPtr<AudioWorkletImpl> impl =
+      new AudioWorkletImpl(window, principal, aContext->DestinationStream());
+
+  // The Worklet owns a reference to the AudioContext so as to keep the graph
+  // thread running as long as the Worklet is alive by keeping the
+  // AudioDestinationNode alive.
+  return MakeAndAddRef<dom::Worklet>(window, std::move(impl),
+                                     ToSupports(aContext));
+>>>>>>> upstream-releases
 }
 
 AudioWorkletImpl::AudioWorkletImpl(nsPIDOMWindowInner* aWindow,
@@ -49,6 +63,12 @@ JSObject* AudioWorkletImpl::WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
                                         JS::Handle<JSObject*> aGivenProto) {
   MOZ_ASSERT(NS_IsMainThread());
   return dom::AudioWorklet_Binding::Wrap(aCx, aWorklet, aGivenProto);
+}
+
+nsresult AudioWorkletImpl::SendControlMessage(
+    already_AddRefed<nsIRunnable> aRunnable) {
+  mDestinationStream->SendRunnable(std::move(aRunnable));
+  return NS_OK;
 }
 
 already_AddRefed<dom::WorkletGlobalScope>

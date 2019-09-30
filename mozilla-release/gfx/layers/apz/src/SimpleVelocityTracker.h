@@ -21,8 +21,17 @@ class SimpleVelocityTracker : public VelocityTracker {
  public:
   explicit SimpleVelocityTracker(Axis* aAxis);
   void StartTracking(ParentLayerCoord aPos, uint32_t aTimestamp) override;
+<<<<<<< HEAD
   Maybe<float> AddPosition(ParentLayerCoord aPos, uint32_t aTimestampMs,
                            bool aIsAxisLocked) override;
+||||||| merged common ancestors
+  Maybe<float> AddPosition(ParentLayerCoord aPos,
+                           uint32_t aTimestampMs,
+                           bool aIsAxisLocked) override;
+=======
+  Maybe<float> AddPosition(ParentLayerCoord aPos,
+                           uint32_t aTimestampMs) override;
+>>>>>>> upstream-releases
   float HandleDynamicToolbarMovement(uint32_t aStartTimestampMs,
                                      uint32_t aEndTimestampMs,
                                      ParentLayerCoord aDelta) override;

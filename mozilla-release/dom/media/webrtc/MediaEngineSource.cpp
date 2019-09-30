@@ -18,11 +18,19 @@ using dom::MediaTrackSettings;
 const unsigned int MediaEngineSource::kMaxDeviceNameLength;
 const unsigned int MediaEngineSource::kMaxUniqueIdLength;
 
+<<<<<<< HEAD
 /* static */ bool MediaEngineSource::IsVideo(MediaSourceEnum aSource) {
+||||||| merged common ancestors
+/* static */ bool
+MediaEngineSource::IsVideo(MediaSourceEnum aSource)
+{
+=======
+/* static */
+bool MediaEngineSource::IsVideo(MediaSourceEnum aSource) {
+>>>>>>> upstream-releases
   switch (aSource) {
     case MediaSourceEnum::Camera:
     case MediaSourceEnum::Screen:
-    case MediaSourceEnum::Application:
     case MediaSourceEnum::Window:
     case MediaSourceEnum::Browser:
       return true;
@@ -36,14 +44,38 @@ const unsigned int MediaEngineSource::kMaxUniqueIdLength;
   }
 }
 
+<<<<<<< HEAD
 bool MediaEngineSource::RequiresSharing() const { return false; }
 
 bool MediaEngineSource::IsFake() const { return false; }
+||||||| merged common ancestors
+bool
+MediaEngineSource::RequiresSharing() const
+{
+  return false;
+}
+
+bool
+MediaEngineSource::IsFake() const
+{
+  return false;
+}
+=======
+bool MediaEngineSource::IsFake() const { return false; }
+>>>>>>> upstream-releases
 
 bool MediaEngineSource::GetScary() const { return false; }
 
+<<<<<<< HEAD
 nsresult MediaEngineSource::FocusOnSelectedSource(
     const RefPtr<const AllocationHandle>& aHandle) {
+||||||| merged common ancestors
+nsresult
+MediaEngineSource::FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle)
+{
+=======
+nsresult MediaEngineSource::FocusOnSelectedSource() {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
@@ -53,11 +85,22 @@ nsresult MediaEngineSource::TakePhoto(MediaEnginePhotoCallback* aCallback) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+<<<<<<< HEAD
 void MediaEngineSource::GetSettings(MediaTrackSettings& aOutSettings) const {
   MediaTrackSettings empty;
   aOutSettings = empty;
 }
 
+||||||| merged common ancestors
+void
+MediaEngineSource::GetSettings(MediaTrackSettings& aOutSettings) const
+{
+  MediaTrackSettings empty;
+  aOutSettings = empty;
+}
+
+=======
+>>>>>>> upstream-releases
 MediaEngineSource::~MediaEngineSource() = default;
 
 }  // namespace mozilla

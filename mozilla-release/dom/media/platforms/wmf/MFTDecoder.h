@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MFTDecoder_h_)
-#define MFTDecoder_h_
+#  define MFTDecoder_h_
 
-#include "WMF.h"
-#include "mozilla/ReentrantMonitor.h"
-#include "mozilla/RefPtr.h"
-#include "nsIThread.h"
+#  include "WMF.h"
+#  include "mozilla/ReentrantMonitor.h"
+#  include "mozilla/RefPtr.h"
+#  include "nsIThread.h"
 
 namespace mozilla {
 
@@ -28,7 +28,6 @@ class MFTDecoder final {
   //  - aMFTClsID the clsid used by CoCreateInstance to instantiate the
   //    decoder MFT.
   HRESULT Create(const GUID& aMFTClsID);
-  HRESULT Create(HMODULE aDecoderDLL, const GUID& aMFTClsID);
 
   // Sets the input and output media types. Call after Init().
   //
@@ -37,9 +36,21 @@ class MFTDecoder final {
   //  - aOutputType needs at least major and minor types set.
   //    This is used to select the matching output type out
   //    of all the available output types of the MFT.
+<<<<<<< HEAD
   HRESULT SetMediaTypes(IMFMediaType* aInputType, IMFMediaType* aOutputType,
                         std::function<HRESULT(IMFMediaType*)>&& aCallback =
                             [](IMFMediaType* aOutput) { return S_OK; });
+||||||| merged common ancestors
+  HRESULT SetMediaTypes(IMFMediaType* aInputType,
+                        IMFMediaType* aOutputType,
+                        std::function<HRESULT(IMFMediaType*)>&& aCallback =
+                          [](IMFMediaType* aOutput) { return S_OK; });
+=======
+  HRESULT SetMediaTypes(
+      IMFMediaType* aInputType, IMFMediaType* aOutputType,
+      std::function<HRESULT(IMFMediaType*)>&& aCallback =
+          [](IMFMediaType* aOutput) { return S_OK; });
+>>>>>>> upstream-releases
 
   // Returns the MFT's IMFAttributes object.
   already_AddRefed<IMFAttributes> GetAttributes();

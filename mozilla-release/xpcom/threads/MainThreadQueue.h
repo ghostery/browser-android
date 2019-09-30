@@ -16,6 +16,7 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 template <typename SynchronizedQueueT, typename InnerQueueT>
 inline already_AddRefed<nsThread> CreateMainThread(
     nsIIdlePeriod* aIdlePeriod,
@@ -27,6 +28,28 @@ inline already_AddRefed<nsThread> CreateMainThread(
       MakeUnique<InnerQueueT>(EventPriority::Input),
       MakeUnique<InnerQueueT>(EventPriority::Normal),
       MakeUnique<InnerQueueT>(EventPriority::Idle), do_AddRef(aIdlePeriod));
+||||||| merged common ancestors
+template<typename SynchronizedQueueT, typename InnerQueueT>
+inline already_AddRefed<nsThread>
+CreateMainThread(nsIIdlePeriod* aIdlePeriod, SynchronizedQueueT** aSynchronizedQueue = nullptr)
+{
+  using MainThreadQueueT = PrioritizedEventQueue<InnerQueueT>;
+
+  auto queue = MakeUnique<MainThreadQueueT>(
+    MakeUnique<InnerQueueT>(EventPriority::High),
+    MakeUnique<InnerQueueT>(EventPriority::Input),
+    MakeUnique<InnerQueueT>(EventPriority::Normal),
+    MakeUnique<InnerQueueT>(EventPriority::Idle),
+    do_AddRef(aIdlePeriod));
+=======
+template <typename SynchronizedQueueT>
+inline already_AddRefed<nsThread> CreateMainThread(
+    nsIIdlePeriod* aIdlePeriod,
+    SynchronizedQueueT** aSynchronizedQueue = nullptr) {
+  using MainThreadQueueT = PrioritizedEventQueue;
+
+  auto queue = MakeUnique<MainThreadQueueT>(do_AddRef(aIdlePeriod));
+>>>>>>> upstream-releases
 
   MainThreadQueueT* prioritized = queue.get();
 

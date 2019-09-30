@@ -7,7 +7,9 @@
 const { PureComponent } = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
-const { translateNodeFrontToGrip } = require("devtools/client/inspector/shared/utils");
+const {
+  translateNodeFrontToGrip,
+} = require("devtools/client/inspector/shared/utils");
 
 const { REPS, MODE } = require("devtools/client/shared/components/reps/reps");
 const { Rep } = REPS;
@@ -38,6 +40,7 @@ class FlexItem extends PureComponent {
     } = this.props;
     const { nodeFront } = flexItem;
 
+<<<<<<< HEAD
     return (
       dom.button(
         {
@@ -58,6 +61,46 @@ class FlexItem extends PureComponent {
           object: translateNodeFrontToGrip(nodeFront),
         })
       )
+||||||| merged common ancestors
+    return (
+      dom.li({},
+        dom.button(
+          {
+            className: "devtools-button devtools-monospace",
+            onClick: () => {
+              setSelectedNode(nodeFront);
+              onHideBoxModelHighlighter();
+            },
+            onMouseOut: () => onHideBoxModelHighlighter(),
+            onMouseOver: () => onShowBoxModelHighlighterForNode(nodeFront),
+          },
+          Rep({
+            defaultRep: ElementNode,
+            mode: MODE.TINY,
+            object: translateNodeFrontToGrip(nodeFront),
+          })
+        )
+      )
+=======
+    return dom.button(
+      {
+        className: "devtools-button devtools-monospace",
+        onClick: e => {
+          e.stopPropagation();
+          scrollToTop();
+          setSelectedNode(nodeFront);
+          onHideBoxModelHighlighter();
+        },
+        onMouseOut: () => onHideBoxModelHighlighter(),
+        onMouseOver: () => onShowBoxModelHighlighterForNode(nodeFront),
+      },
+      dom.span({ className: "flex-item-index" }, index),
+      Rep({
+        defaultRep: ElementNode,
+        mode: MODE.TINY,
+        object: translateNodeFrontToGrip(nodeFront),
+      })
+>>>>>>> upstream-releases
     );
   }
 }

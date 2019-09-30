@@ -19,7 +19,7 @@
 #include "AndroidSurfaceTexture.h"
 #include "AndroidNativeWindow.h"
 #ifdef MOZ_WIDGET_ANDROID
-#include "GeneratedJNIWrappers.h"
+#  include "GeneratedJNIWrappers.h"
 #endif
 
 namespace mozilla {
@@ -34,34 +34,65 @@ namespace layers {
 
 #ifdef MOZ_WIDGET_ANDROID
 
+<<<<<<< HEAD
 class AndroidSurfaceTextureData : public TextureData {
  public:
   static already_AddRefed<TextureClient> CreateTextureClient(
       AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
       gl::OriginPos aOriginPos, LayersIPCChannel* aAllocator,
       TextureFlags aFlags);
+||||||| merged common ancestors
+class AndroidSurfaceTextureData : public TextureData
+{
+public:
+  static already_AddRefed<TextureClient>
+  CreateTextureClient(AndroidSurfaceTextureHandle aHandle,
+                      gfx::IntSize aSize,
+                      bool aContinuous,
+                      gl::OriginPos aOriginPos,
+                      LayersIPCChannel* aAllocator,
+                      TextureFlags aFlags);
+=======
+class AndroidSurfaceTextureData : public TextureData {
+ public:
+  static already_AddRefed<TextureClient> CreateTextureClient(
+      AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous,
+      gl::OriginPos aOriginPos, bool aHasAlpha, LayersIPCChannel* aAllocator,
+      TextureFlags aFlags);
+>>>>>>> upstream-releases
 
-  ~AndroidSurfaceTextureData();
+  virtual ~AndroidSurfaceTextureData();
 
-  virtual void FillInfo(TextureData::Info& aInfo) const override;
+  void FillInfo(TextureData::Info& aInfo) const override;
 
-  virtual bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
+  bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
 
   // Useless functions.
-  virtual bool Lock(OpenMode) override { return true; }
+  bool Lock(OpenMode) override { return true; }
 
-  virtual void Unlock() override {}
+  void Unlock() override {}
 
   // Our data is always owned externally.
-  virtual void Deallocate(LayersIPCChannel*) override {}
+  void Deallocate(LayersIPCChannel*) override {}
 
+<<<<<<< HEAD
  protected:
   AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle,
                             gfx::IntSize aSize, bool aContinuous);
+||||||| merged common ancestors
+protected:
+  AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle, gfx::IntSize aSize, bool aContinuous);
+=======
+ protected:
+  AndroidSurfaceTextureData(AndroidSurfaceTextureHandle aHandle,
+                            gfx::IntSize aSize, bool aContinuous,
+                            bool aHasAlpha);
+>>>>>>> upstream-releases
 
   const AndroidSurfaceTextureHandle mHandle;
   const gfx::IntSize mSize;
   const bool mContinuous;
+  const bool mHasAlpha;
 };
 
 class AndroidNativeWindowTextureData : public TextureData {
@@ -69,19 +100,19 @@ class AndroidNativeWindowTextureData : public TextureData {
   static AndroidNativeWindowTextureData* Create(gfx::IntSize aSize,
                                                 gfx::SurfaceFormat aFormat);
 
-  virtual void FillInfo(TextureData::Info& aInfo) const override;
+  void FillInfo(TextureData::Info& aInfo) const override;
 
-  virtual bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
+  bool Serialize(SurfaceDescriptor& aOutDescriptor) override;
 
-  virtual bool Lock(OpenMode) override;
-  virtual void Unlock() override;
+  bool Lock(OpenMode) override;
+  void Unlock() override;
 
-  virtual void Forget(LayersIPCChannel*) override;
-  virtual void Deallocate(LayersIPCChannel*) override {}
+  void Forget(LayersIPCChannel*) override;
+  void Deallocate(LayersIPCChannel*) override {}
 
-  virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget() override;
+  already_AddRefed<gfx::DrawTarget> BorrowDrawTarget() override;
 
-  virtual void OnForwardedToHost() override;
+  void OnForwardedToHost() override;
 
  protected:
   AndroidNativeWindowTextureData(java::GeckoSurface::Param aSurface,

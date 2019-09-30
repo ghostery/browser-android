@@ -53,7 +53,20 @@ class PartiallySeekableInputStream final : public nsISeekableStream,
 
   ~PartiallySeekableInputStream() = default;
 
+<<<<<<< HEAD
   void Init();
+||||||| merged common ancestors
+  void
+  Init();
+=======
+  void Init();
+
+  template <typename M>
+  void SerializeInternal(mozilla::ipc::InputStreamParams& aParams,
+                         FileDescriptorArray& aFileDescriptors,
+                         bool aDelayedStart, uint32_t aMaxSize,
+                         uint32_t* aSizeUsed, M* aManager);
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> mInputStream;
 

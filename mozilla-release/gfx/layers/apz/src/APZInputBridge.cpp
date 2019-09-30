@@ -6,7 +6,6 @@
 
 #include "mozilla/layers/APZInputBridge.h"
 
-#include "gfxPrefs.h"                       // for gfxPrefs
 #include "InputData.h"                      // for MouseInput, etc
 #include "mozilla/dom/WheelEventBinding.h"  // for WheelEvent constants
 #include "mozilla/EventStateManager.h"      // for EventStateManager
@@ -20,15 +19,42 @@
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 static bool WillHandleMouseEvent(const WidgetMouseEventBase& aEvent) {
   return aEvent.mMessage == eMouseMove || aEvent.mMessage == eMouseDown ||
          aEvent.mMessage == eMouseUp || aEvent.mMessage == eDragEnd ||
          (gfxPrefs::TestEventsAsyncEnabled() &&
           aEvent.mMessage == eMouseHitTest);
+||||||| merged common ancestors
+static bool
+WillHandleMouseEvent(const WidgetMouseEventBase& aEvent)
+{
+  return aEvent.mMessage == eMouseMove ||
+         aEvent.mMessage == eMouseDown ||
+         aEvent.mMessage == eMouseUp ||
+         aEvent.mMessage == eDragEnd ||
+         (gfxPrefs::TestEventsAsyncEnabled() && aEvent.mMessage == eMouseHitTest);
+=======
+static bool WillHandleMouseEvent(const WidgetMouseEventBase& aEvent) {
+  return aEvent.mMessage == eMouseMove || aEvent.mMessage == eMouseDown ||
+         aEvent.mMessage == eMouseUp || aEvent.mMessage == eDragEnd ||
+         (StaticPrefs::test_events_async_enabled() &&
+          aEvent.mMessage == eMouseHitTest);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ Maybe<APZWheelAction> APZInputBridge::ActionForWheelEvent(
     WidgetWheelEvent* aEvent) {
+||||||| merged common ancestors
+/* static */ Maybe<APZWheelAction>
+APZInputBridge::ActionForWheelEvent(WidgetWheelEvent* aEvent)
+{
+=======
+/* static */
+Maybe<APZWheelAction> APZInputBridge::ActionForWheelEvent(
+    WidgetWheelEvent* aEvent) {
+>>>>>>> upstream-releases
   if (!(aEvent->mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_LINE ||
         aEvent->mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_PIXEL ||
         aEvent->mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_PAGE)) {
@@ -63,7 +89,9 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
       // mouse event undergoes (in PositionedEventTargeting.cpp) uses
       // the IGNORE_ROOT_SCROLL_FRAME flag, which is needed for correct
       // hit testing in a zoomed-in or zoomed-out state.
-      if (gfxPrefs::APZAllowZooming()) {
+      // FIXME: bug 1525793 -- this may need to handle zooming or not on a
+      // per-document basis.
+      if (StaticPrefs::apz_allow_zooming()) {
         mouseEvent.mIgnoreRootScrollFrame = true;
       }
 
@@ -79,11 +107,19 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
         mouseEvent.mRefPoint.y = input.mOrigin.y;
         mouseEvent.mFlags.mHandledByAPZ = input.mHandledByAPZ;
         mouseEvent.mFocusSequenceNumber = input.mFocusSequenceNumber;
+        aEvent.mLayersId = input.mLayersId;
         return status;
       }
 
+<<<<<<< HEAD
       ProcessUnhandledEvent(&mouseEvent.mRefPoint, aOutTargetGuid,
                             &aEvent.mFocusSequenceNumber);
+||||||| merged common ancestors
+      ProcessUnhandledEvent(&mouseEvent.mRefPoint, aOutTargetGuid, &aEvent.mFocusSequenceNumber);
+=======
+      ProcessUnhandledEvent(&mouseEvent.mRefPoint, aOutTargetGuid,
+                            &aEvent.mFocusSequenceNumber, &aEvent.mLayersId);
+>>>>>>> upstream-releases
       return nsEventStatus_eIgnore;
     }
     case eTouchEventClass: {
@@ -103,12 +139,14 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
       }
       touchEvent.mFlags.mHandledByAPZ = touchInput.mHandledByAPZ;
       touchEvent.mFocusSequenceNumber = touchInput.mFocusSequenceNumber;
+      aEvent.mLayersId = touchInput.mLayersId;
       return result;
     }
     case eWheelEventClass: {
       WidgetWheelEvent& wheelEvent = *aEvent.AsWheelEvent();
 
       if (Maybe<APZWheelAction> action = ActionForWheelEvent(&wheelEvent)) {
+<<<<<<< HEAD
         ScrollWheelInput::ScrollMode scrollMode =
             ScrollWheelInput::SCROLLMODE_INSTANT;
         if (gfxPrefs::SmoothScrollEnabled() &&
@@ -118,6 +156,26 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
              (wheelEvent.mDeltaMode ==
                   dom::WheelEvent_Binding::DOM_DELTA_PAGE &&
               gfxPrefs::PageSmoothScrollEnabled()))) {
+||||||| merged common ancestors
+
+        ScrollWheelInput::ScrollMode scrollMode = ScrollWheelInput::SCROLLMODE_INSTANT;
+        if (gfxPrefs::SmoothScrollEnabled() &&
+            ((wheelEvent.mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_LINE &&
+              gfxPrefs::WheelSmoothScrollEnabled()) ||
+             (wheelEvent.mDeltaMode == dom::WheelEvent_Binding::DOM_DELTA_PAGE &&
+              gfxPrefs::PageSmoothScrollEnabled())))
+        {
+=======
+        ScrollWheelInput::ScrollMode scrollMode =
+            ScrollWheelInput::SCROLLMODE_INSTANT;
+        if (StaticPrefs::general_smoothScroll() &&
+            ((wheelEvent.mDeltaMode ==
+                  dom::WheelEvent_Binding::DOM_DELTA_LINE &&
+              StaticPrefs::general_smoothScroll_mouseWheel()) ||
+             (wheelEvent.mDeltaMode ==
+                  dom::WheelEvent_Binding::DOM_DELTA_PAGE &&
+              StaticPrefs::general_smoothScroll_pages()))) {
+>>>>>>> upstream-releases
           scrollMode = ScrollWheelInput::SCROLLMODE_SMOOTH;
         }
 
@@ -161,13 +219,22 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
           wheelEvent.mRefPoint.y = input.mOrigin.y;
           wheelEvent.mFlags.mHandledByAPZ = input.mHandledByAPZ;
           wheelEvent.mFocusSequenceNumber = input.mFocusSequenceNumber;
+          aEvent.mLayersId = input.mLayersId;
+
           return status;
         }
       }
 
       UpdateWheelTransaction(aEvent.mRefPoint, aEvent.mMessage);
+<<<<<<< HEAD
       ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid,
                             &aEvent.mFocusSequenceNumber);
+||||||| merged common ancestors
+      ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid, &aEvent.mFocusSequenceNumber);
+=======
+      ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid,
+                            &aEvent.mFocusSequenceNumber, &aEvent.mLayersId);
+>>>>>>> upstream-releases
       return nsEventStatus_eIgnore;
     }
     case eKeyboardEventClass: {
@@ -184,8 +251,15 @@ nsEventStatus APZInputBridge::ReceiveInputEvent(
     }
     default: {
       UpdateWheelTransaction(aEvent.mRefPoint, aEvent.mMessage);
+<<<<<<< HEAD
       ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid,
                             &aEvent.mFocusSequenceNumber);
+||||||| merged common ancestors
+      ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid, &aEvent.mFocusSequenceNumber);
+=======
+      ProcessUnhandledEvent(&aEvent.mRefPoint, aOutTargetGuid,
+                            &aEvent.mFocusSequenceNumber, &aEvent.mLayersId);
+>>>>>>> upstream-releases
       return nsEventStatus_eIgnore;
     }
   }

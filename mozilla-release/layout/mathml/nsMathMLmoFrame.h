@@ -11,6 +11,10 @@
 #include "nsMathMLTokenFrame.h"
 #include "nsMathMLChar.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <mo> -- operator, fence, or separator
 //
@@ -19,8 +23,15 @@ class nsMathMLmoFrame final : public nsMathMLTokenFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmoFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmoFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmoFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLmoFrame(mozilla::PresShell* aPresShell,
+                                       ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   virtual eMathMLFrameType GetMathMLFrameType() override;
 
@@ -68,12 +79,25 @@ class nsMathMLmoFrame final : public nsMathMLTokenFrame {
     return nsMathMLContainerFrame::ChildListChanged(aModType);
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmoFrame(ComputedStyle* aStyle)
       : nsMathMLTokenFrame(aStyle, kClassID),
         mFlags(0),
         mMinSize(0),
         mMaxSize(0) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmoFrame(ComputedStyle* aStyle) :
+    nsMathMLTokenFrame(aStyle, kClassID), mFlags(0), mMinSize(0), mMaxSize(0) {}
+=======
+ protected:
+  explicit nsMathMLmoFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsMathMLTokenFrame(aStyle, aPresContext, kClassID),
+        mFlags(0),
+        mMinSize(0),
+        mMaxSize(0) {}
+>>>>>>> upstream-releases
   virtual ~nsMathMLmoFrame();
 
   nsMathMLChar

@@ -71,8 +71,16 @@
   border-style: none;
 }
 
+<<<<<<< HEAD
 #nav-bar:not([tabs-hidden="true"]) {
   box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
+||||||| merged common ancestors
+#TabsToolbar:not([collapsed="true"]) + #nav-bar {
+  box-shadow: 0 -@navbarTabsShadowSize@ 0 var(--tabs-border-color);
+=======
+#nav-bar:not([tabs-hidden="true"]) {
+  box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
+>>>>>>> upstream-releases
   /* This is needed for some toolbar button animations. Gross :( */
   position: relative;
 }
@@ -196,7 +204,8 @@ menuitem.bookmark-item {
 %include ../shared/urlbar-searchbar.inc.css
 
 #urlbar:not(:-moz-lwtheme):not([focused="true"]),
-.searchbar-textbox:not(:-moz-lwtheme):not([focused="true"]) {
+#urlbar:not(:-moz-lwtheme).hidden-focus,
+#searchbar:not(:-moz-lwtheme):not(:focus-within) {
   border-color: ThreeDShadow;
 }
 
@@ -247,10 +256,7 @@ menuitem.bookmark-item {
 }
 
 .urlbar-display {
-  margin-top: 0;
-  margin-bottom: 0;
   margin-inline-start: 0;
-  color: GrayText;
 }
 
 %include ../shared/urlbarSearchSuggestionsNotification.inc.css
@@ -261,73 +267,10 @@ menuitem.bookmark-item {
 
 /* identity box */
 
-#identity-box:not(:active):-moz-focusring {
-  outline: 1px dotted;
-  outline-offset: -3px;
-}
-
 %include ../shared/identity-block/identity-block.inc.css
 
 %include ../shared/notification-icons.inc.css
-
-.popup-notification-body[popupid="addon-progress"],
-.popup-notification-body[popupid="addon-install-confirmation"] {
-  width: 28em;
-  max-width: 28em;
-}
-
-.addon-install-confirmation-name {
-  font-weight: bold;
-}
-
-html|*.addon-webext-perm-list {
-  margin-block-end: 0;
-  padding-inline-start: 10px;
-}
-
-.addon-webext-perm-text {
-  margin-inline-start: 0;
-}
-
-.popup-notification-description[popupid="addon-webext-permissions"],
-.popup-notification-description[popupid="addon-webext-permissions-notification"] {
-  margin-inline-start: -1px;
-}
-
-.addon-webext-perm-notification-content,
-.addon-installed-notification-content {
-  margin-top: 0;
-}
-
-.addon-webext-name {
-  display: inline;
-  font-weight: bold;
-  margin: 0;
-}
-
-.addon-addon-icon,
-.addon-toolbar-icon {
-  width: 14px;
-  height: 14px;
-  vertical-align: bottom;
-  margin-bottom: 1px;
-  -moz-context-properties: fill;
-  fill: currentColor;
-}
-
-.addon-addon-icon {
-  list-style-image: url("chrome://mozapps/skin/extensions/extensionGeneric-16.svg");
-}
-
-.addon-toolbar-icon {
-  list-style-image: url("chrome://browser/skin/menu.svg");
-}
-
-/* Notification icon box */
-
-.notification-anchor-icon:-moz-focusring {
-  outline: 1px dotted -moz-DialogText;
-}
+%include ../shared/addon-notification.inc.css
 
 /* Translation infobar */
 
@@ -417,7 +360,8 @@ notification[value="translation"] menulist > .menulist-dropmarker {
   border-top: 1px solid ThreeDShadow;
 }
 
-.ac-title {
+.ac-title,
+#urlbarView-results {
   font-size: 1.05em;
 }
 
@@ -449,15 +393,37 @@ notification[value="translation"] menulist > .menulist-dropmarker {
 }
 
 .browserContainer > findbar {
+<<<<<<< HEAD
   background-color: var(--toolbar-bgcolor);
   color: var(--toolbar-color);
+||||||| merged common ancestors
+  background-color: -moz-dialog;
+  color: -moz-DialogText;
+  text-shadow: none;
+=======
+  background-color: var(--toolbar-non-lwt-bgcolor);
+  color: var(--toolbar-non-lwt-textcolor);
+  text-shadow: none;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 .browserContainer > findbar:-moz-lwtheme {
   background-color: var(--lwt-accent-color);
   background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
   border-top-color: var(--chrome-content-separator-color);
   text-shadow: none;
+||||||| merged common ancestors
+.browserContainer > findbar:-moz-lwtheme {
+  background-color: var(--toolbar-bgcolor);
+  color: var(--toolbar-color, -moz-DialogText);
+=======
+:root:not([lwtheme-image]) .browserContainer > findbar:-moz-lwtheme {
+  background-color: var(--lwt-accent-color);
+  background-image: linear-gradient(var(--toolbar-bgcolor), var(--toolbar-bgcolor));
+  border-top-color: var(--chrome-content-separator-color);
+  color: var(--toolbar-color);
+>>>>>>> upstream-releases
 }
 
 /* Tabstrip */
@@ -479,12 +445,24 @@ notification[value="translation"] menulist > .menulist-dropmarker {
 }
 
 #nav-bar {
+<<<<<<< HEAD
   -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
+||||||| merged common ancestors
+  -moz-binding: url("chrome://browser/content/customizableui/toolbar.xml#toolbar-drag");
+=======
+  -moz-window-dragging: drag;
+>>>>>>> upstream-releases
 }
 
 @media (-moz-menubar-drag) {
   #TabsToolbar {
+<<<<<<< HEAD
     -moz-binding: url("chrome://global/content/bindings/toolbar.xml#toolbar-drag");
+||||||| merged common ancestors
+    -moz-binding: url("chrome://browser/content/customizableui/toolbar.xml#toolbar-drag");
+=======
+    -moz-window-dragging: drag;
+>>>>>>> upstream-releases
   }
 }
 
@@ -713,6 +691,12 @@ notification[value="translation"] menulist > .menulist-dropmarker {
   @media (-moz-gtk-csd-close-button: 0) {
     .titlebar-close {
       display: none;
+    }
+  }
+  @media (-moz-gtk-csd-reversed-placement) {
+    .titlebar-buttonbox-container,
+    .titlebar-close {
+      -moz-box-ordinal-group: 0;
     }
   }
 }

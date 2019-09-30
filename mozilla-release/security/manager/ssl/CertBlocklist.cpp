@@ -34,11 +34,24 @@ NS_IMPL_ISUPPORTS(CertBlocklist, nsICertBlocklist)
 using namespace mozilla;
 using namespace mozilla::pkix;
 
+<<<<<<< HEAD
 #define PREF_BACKGROUND_UPDATE_TIMER \
   "app.update.lastUpdateTime.blocklist-background-update-timer"
 #define PREF_BLOCKLIST_ONECRL_CHECKED "services.blocklist.onecrl.checked"
 #define PREF_MAX_STALENESS_IN_SECONDS \
   "security.onecrl.maximum_staleness_in_seconds"
+||||||| merged common ancestors
+#define PREF_BACKGROUND_UPDATE_TIMER "app.update.lastUpdateTime.blocklist-background-update-timer"
+#define PREF_BLOCKLIST_ONECRL_CHECKED "services.blocklist.onecrl.checked"
+#define PREF_MAX_STALENESS_IN_SECONDS "security.onecrl.maximum_staleness_in_seconds"
+=======
+#define PREF_BACKGROUND_UPDATE_TIMER \
+  "app.update.lastUpdateTime.blocklist-background-update-timer"
+#define PREF_BLOCKLIST_ONECRL_CHECKED \
+  "services.settings.security.onecrl.checked"
+#define PREF_MAX_STALENESS_IN_SECONDS \
+  "security.onecrl.maximum_staleness_in_seconds"
+>>>>>>> upstream-releases
 
 static LazyLogModule gCertBlockPRLog("CertBlock");
 

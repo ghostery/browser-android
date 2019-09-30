@@ -18,11 +18,17 @@
 
 #include "wasm/WasmCraneliftCompile.h"
 
+#include "mozilla/ScopeExit.h"
+
 #include "js/Printf.h"
 
 #include "wasm/cranelift/baldrapi.h"
 #include "wasm/cranelift/clifapi.h"
 #include "wasm/WasmGenerator.h"
+#if defined(JS_CODEGEN_X64) && defined(JS_JITSPEW) && \
+    defined(ENABLE_WASM_CRANELIFT)
+#  include "zydis/ZydisAPI.h"
+#endif
 
 #include "jit/MacroAssembler-inl.h"
 
@@ -30,6 +36,7 @@ using namespace js;
 using namespace js::jit;
 using namespace js::wasm;
 
+<<<<<<< HEAD
 static inline SymbolicAddress ToSymbolicAddress(BD_SymbolicAddress bd) {
   switch (bd) {
     case BD_SymbolicAddress::GrowMemory:
@@ -56,8 +63,35 @@ static inline SymbolicAddress ToSymbolicAddress(BD_SymbolicAddress bd) {
       break;
   }
   MOZ_CRASH("unknown baldrdash symbolic address");
+||||||| merged common ancestors
+static inline SymbolicAddress
+ToSymbolicAddress(BD_SymbolicAddress bd)
+{
+    switch (bd) {
+      case BD_SymbolicAddress::GrowMemory:    return SymbolicAddress::GrowMemory;
+      case BD_SymbolicAddress::CurrentMemory: return SymbolicAddress::CurrentMemory;
+      case BD_SymbolicAddress::FloorF32:      return SymbolicAddress::FloorF;
+      case BD_SymbolicAddress::FloorF64:      return SymbolicAddress::FloorD;
+      case BD_SymbolicAddress::CeilF32:       return SymbolicAddress::CeilF;
+      case BD_SymbolicAddress::CeilF64:       return SymbolicAddress::CeilD;
+      case BD_SymbolicAddress::NearestF32:    return SymbolicAddress::NearbyIntF;
+      case BD_SymbolicAddress::NearestF64:    return SymbolicAddress::NearbyIntD;
+      case BD_SymbolicAddress::TruncF32:      return SymbolicAddress::TruncF;
+      case BD_SymbolicAddress::TruncF64:      return SymbolicAddress::TruncD;
+      case BD_SymbolicAddress::Limit:         break;
+    }
+    MOZ_CRASH("unknown baldrdash symbolic address");
+=======
+bool wasm::CraneliftCanCompile() {
+#ifdef JS_CODEGEN_X64
+  return true;
+#else
+  return false;
+#endif
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static bool GenerateCraneliftCode(WasmMacroAssembler& masm,
                                   const CraneliftCompiledFunc& func,
                                   const FuncTypeIdDesc& funcTypeId,
@@ -95,13 +129,202 @@ static bool GenerateCraneliftCode(WasmMacroAssembler& masm,
     offset += metadata.offset;
     if (!offset.isValid()) {
       return false;
+||||||| merged common ancestors
+static bool
+GenerateCraneliftCode(WasmMacroAssembler& masm, const CraneliftCompiledFunc& func,
+                      const FuncTypeIdDesc& funcTypeId, uint32_t lineOrBytecode,
+                      FuncOffsets* offsets)
+{
+    wasm::GenerateFunctionPrologue(masm, funcTypeId, mozilla::Nothing(), offsets);
+
+    // Omit the check when framePushed is small and we know there's no
+    // recursion.
+    if (func.framePushed < MAX_UNCHECKED_LEAF_FRAME_SIZE && !func.containsCalls) {
+        masm.reserveStack(func.framePushed);
+    } else {
+        masm.wasmReserveStackChecked(func.framePushed, BytecodeOffset(lineOrBytecode));
+    }
+    MOZ_ASSERT(masm.framePushed() == func.framePushed);
+
+    uint32_t funcBase = masm.currentOffset();
+    if (!masm.appendRawCode(func.code, func.codeSize)) {
+        return false;
     }
 
+    wasm::GenerateFunctionEpilogue(masm, func.framePushed, offsets);
+
+    masm.flush();
+    if (masm.oom()) {
+        return false;
+=======
+static inline SymbolicAddress ToSymbolicAddress(BD_SymbolicAddress bd) {
+  switch (bd) {
+    case BD_SymbolicAddress::MemoryGrow:
+      return SymbolicAddress::MemoryGrow;
+    case BD_SymbolicAddress::MemorySize:
+      return SymbolicAddress::MemorySize;
+    case BD_SymbolicAddress::FloorF32:
+      return SymbolicAddress::FloorF;
+    case BD_SymbolicAddress::FloorF64:
+      return SymbolicAddress::FloorD;
+    case BD_SymbolicAddress::CeilF32:
+      return SymbolicAddress::CeilF;
+    case BD_SymbolicAddress::CeilF64:
+      return SymbolicAddress::CeilD;
+    case BD_SymbolicAddress::NearestF32:
+      return SymbolicAddress::NearbyIntF;
+    case BD_SymbolicAddress::NearestF64:
+      return SymbolicAddress::NearbyIntD;
+    case BD_SymbolicAddress::TruncF32:
+      return SymbolicAddress::TruncF;
+    case BD_SymbolicAddress::TruncF64:
+      return SymbolicAddress::TruncD;
+    case BD_SymbolicAddress::Limit:
+      break;
+  }
+  MOZ_CRASH("unknown baldrdash symbolic address");
+}
+
+static void DisassembleCode(uint8_t* code, size_t codeLen) {
+#if defined(JS_CODEGEN_X64) && defined(JS_JITSPEW) && \
+    defined(ENABLE_WASM_CRANELIFT)
+  zydisDisassemble(code, codeLen, [](const char* text) {
+    JitSpew(JitSpew_Codegen, "%s", text);
+  });
+#else
+  JitSpew(JitSpew_Codegen, "*** No disassembly available ***");
+#endif
+}
+
+static bool GenerateCraneliftCode(WasmMacroAssembler& masm,
+                                  const CraneliftCompiledFunc& func,
+                                  const FuncTypeIdDesc& funcTypeId,
+                                  uint32_t lineOrBytecode,
+                                  uint32_t funcBytecodeSize,
+                                  FuncOffsets* offsets) {
+  wasm::GenerateFunctionPrologue(masm, funcTypeId, mozilla::Nothing(), offsets);
+
+  // Omit the check when framePushed is small and we know there's no
+  // recursion.
+  if (func.framePushed < MAX_UNCHECKED_LEAF_FRAME_SIZE && !func.containsCalls) {
+    masm.reserveStack(func.framePushed);
+  } else {
+    masm.wasmReserveStackChecked(func.framePushed,
+                                 BytecodeOffset(lineOrBytecode));
+  }
+  MOZ_ASSERT(masm.framePushed() == func.framePushed);
+
+  // Copy the machine code; handle jump tables and other read-only data below.
+  uint32_t funcBase = masm.currentOffset();
+  if (!masm.appendRawCode(func.code, func.codeSize)) {
+    return false;
+  }
+#if defined(JS_CODEGEN_X64) || defined(JS_CODEGEN_X86)
+  uint32_t codeEnd = masm.currentOffset();
+#endif
+
+  // Cranelift isn't aware of pinned registers in general, so we need to reload
+  // both TLS and pinned regs from the stack.
+  // TODO(bug 1507820): We should teach Cranelift to reload this register
+  // itself, so we don't have to do it manually.
+  masm.loadWasmTlsRegFromFrame();
+  masm.loadWasmPinnedRegsFromTls();
+
+  wasm::GenerateFunctionEpilogue(masm, func.framePushed, offsets);
+
+  if (func.numRodataRelocs > 0) {
+#if defined(JS_CODEGEN_X64) || defined(JS_CODEGEN_X86)
+    constexpr size_t jumptableElementSize = 4;
+
+    MOZ_ASSERT(func.jumptablesSize % jumptableElementSize == 0);
+
+    // Align the jump tables properly.
+    masm.haltingAlign(jumptableElementSize);
+
+    // Copy over the tables and read-only data.
+    uint32_t rodataBase = masm.currentOffset();
+    if (!masm.appendRawCode(func.code + func.codeSize,
+                            func.totalSize - func.codeSize)) {
+      return false;
+    }
+
+    uint32_t numElem = func.jumptablesSize / jumptableElementSize;
+    uint32_t bias = rodataBase - codeEnd;
+
+    // Bias the jump table(s).  The table values are negative values
+    // representing backward jumps.  By shifting the table down we increase the
+    // distance and so we add a negative value to reflect the larger distance.
+    //
+    // Note addToPCRel4() works from the end of the instruction, hence the loop
+    // bounds.
+    for (uint32_t i = 1; i <= numElem; i++) {
+      masm.addToPCRel4(rodataBase + (i * jumptableElementSize), -bias);
+    }
+
+    // Patch up the code locations.  These represent forward distances that also
+    // become greater, so we add a positive value.
+    for (uint32_t i = 0; i < func.numRodataRelocs; i++) {
+      MOZ_ASSERT(func.rodataRelocs[i] < func.codeSize);
+      masm.addToPCRel4(funcBase + func.rodataRelocs[i], bias);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+||||||| merged common ancestors
+    offsets->end = masm.currentOffset();
+
+    for (size_t i = 0; i < func.numMetadata; i++) {
+        const CraneliftMetadataEntry& metadata = func.metadatas[i];
+
+        CheckedInt<size_t> offset = funcBase;
+        offset += metadata.offset;
+        if (!offset.isValid()) {
+            return false;
+        }
+=======
+#else
+    MOZ_CRASH("No jump table support on this platform");
+#endif
+  }
+
+  masm.flush();
+  if (masm.oom()) {
+    return false;
+  }
+  offsets->end = masm.currentOffset();
+
+  for (size_t i = 0; i < func.numMetadata; i++) {
+    const CraneliftMetadataEntry& metadata = func.metadatas[i];
+
+    CheckedInt<size_t> offset = funcBase;
+    offset += metadata.codeOffset;
+    if (!offset.isValid()) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
 #ifdef DEBUG
+<<<<<<< HEAD
     CheckedInt<uint32_t> checkedBytecodeOffset = lineOrBytecode;
     checkedBytecodeOffset += metadata.srcLoc;
     MOZ_ASSERT(checkedBytecodeOffset.isValid());
+||||||| merged common ancestors
+        CheckedInt<uint32_t> checkedBytecodeOffset = lineOrBytecode;
+        checkedBytecodeOffset += metadata.srcLoc;
+        MOZ_ASSERT(checkedBytecodeOffset.isValid());
+=======
+    // Check code offsets.
+    MOZ_ASSERT(offset.value() >= offsets->normalEntry);
+    MOZ_ASSERT(offset.value() < offsets->ret);
+
+    // Check bytecode offsets.
+    if (metadata.moduleBytecodeOffset > 0 && lineOrBytecode > 0) {
+      MOZ_ASSERT(metadata.moduleBytecodeOffset >= lineOrBytecode);
+      MOZ_ASSERT(metadata.moduleBytecodeOffset <
+                 lineOrBytecode + funcBytecodeSize);
+    }
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
     uint32_t bytecodeOffset = lineOrBytecode + metadata.srcLoc;
 
     switch (metadata.which) {
@@ -133,6 +356,79 @@ static bool GenerateCraneliftCode(WasmMacroAssembler& masm,
         break;
       }
       default: { MOZ_CRASH("unknown cranelift metadata kind"); }
+||||||| merged common ancestors
+        uint32_t bytecodeOffset = lineOrBytecode + metadata.srcLoc;
+
+        switch (metadata.which) {
+          case CraneliftMetadataEntry::Which::DirectCall: {
+            CallSiteDesc desc(bytecodeOffset, CallSiteDesc::Func);
+            masm.append(desc, CodeOffset(offset.value()), metadata.extra);
+            break;
+          }
+          case CraneliftMetadataEntry::Which::IndirectCall: {
+            CallSiteDesc desc(bytecodeOffset, CallSiteDesc::Dynamic);
+            masm.append(desc, CodeOffset(offset.value()));
+            break;
+          }
+          case CraneliftMetadataEntry::Which::Trap: {
+            Trap trap = (Trap)metadata.extra;
+            BytecodeOffset trapOffset(bytecodeOffset);
+            masm.append(trap, wasm::TrapSite(offset.value(), trapOffset));
+            break;
+          }
+          case CraneliftMetadataEntry::Which::MemoryAccess: {
+            BytecodeOffset trapOffset(bytecodeOffset);
+            masm.appendOutOfBoundsTrap(trapOffset, offset.value());
+            break;
+          }
+          case CraneliftMetadataEntry::Which::SymbolicAccess: {
+            SymbolicAddress sym = ToSymbolicAddress(BD_SymbolicAddress(metadata.extra));
+            masm.append(SymbolicAccess(CodeOffset(offset.value()), sym));
+            break;
+          }
+          default: {
+            MOZ_CRASH("unknown cranelift metadata kind");
+          }
+        }
+=======
+    // TODO(bug 1532716): Cranelift gives null bytecode offsets for symbolic
+    // accesses.
+    uint32_t bytecodeOffset = metadata.moduleBytecodeOffset
+                                  ? metadata.moduleBytecodeOffset
+                                  : lineOrBytecode;
+
+    switch (metadata.which) {
+      case CraneliftMetadataEntry::Which::DirectCall: {
+        CallSiteDesc desc(bytecodeOffset, CallSiteDesc::Func);
+        masm.append(desc, CodeOffset(offset.value()), metadata.extra);
+        break;
+      }
+      case CraneliftMetadataEntry::Which::IndirectCall: {
+        CallSiteDesc desc(bytecodeOffset, CallSiteDesc::Dynamic);
+        masm.append(desc, CodeOffset(offset.value()));
+        break;
+      }
+      case CraneliftMetadataEntry::Which::Trap: {
+        Trap trap = (Trap)metadata.extra;
+        BytecodeOffset trapOffset(bytecodeOffset);
+        masm.append(trap, wasm::TrapSite(offset.value(), trapOffset));
+        break;
+      }
+      case CraneliftMetadataEntry::Which::MemoryAccess: {
+        BytecodeOffset trapOffset(bytecodeOffset);
+        masm.appendOutOfBoundsTrap(trapOffset, offset.value());
+        break;
+      }
+      case CraneliftMetadataEntry::Which::SymbolicAccess: {
+        SymbolicAddress sym =
+            ToSymbolicAddress(BD_SymbolicAddress(metadata.extra));
+        masm.append(SymbolicAccess(CodeOffset(offset.value()), sym));
+        break;
+      }
+      default: {
+        MOZ_CRASH("unknown cranelift metadata kind");
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -164,11 +460,26 @@ class AutoCranelift {
   operator CraneliftCompiler*() { return compiler_; }
 };
 
+<<<<<<< HEAD
 CraneliftFuncCompileInput::CraneliftFuncCompileInput(
     const FuncCompileInput& func)
     : bytecode(func.begin),
       bytecodeSize(func.end - func.begin),
       index(func.index) {}
+||||||| merged common ancestors
+CraneliftFuncCompileInput::CraneliftFuncCompileInput(const FuncCompileInput& func)
+  : bytecode(func.begin),
+    bytecodeSize(func.end - func.begin),
+    index(func.index)
+{}
+=======
+CraneliftFuncCompileInput::CraneliftFuncCompileInput(
+    const FuncCompileInput& func)
+    : bytecode(func.begin),
+      bytecodeSize(func.end - func.begin),
+      index(func.index),
+      offset_in_module(func.lineOrBytecode) {}
+>>>>>>> upstream-releases
 
 #ifndef WASM_HUGE_MEMORY
 static_assert(offsetof(TlsData, boundsCheckLimit) == sizeof(size_t),
@@ -230,44 +541,124 @@ static size_t globalToTlsOffset(size_t globalOffset) {
   return offsetof(wasm::TlsData, globalArea) + globalOffset;
 }
 
+<<<<<<< HEAD
 CraneliftModuleEnvironment::CraneliftModuleEnvironment(
     const ModuleEnvironment& env)
     : env(env), min_memory_length(env.minMemoryLength) {}
+||||||| merged common ancestors
+CraneliftModuleEnvironment::CraneliftModuleEnvironment(const ModuleEnvironment& env)
+  : env(env),
+    min_memory_length(env.minMemoryLength)
+{
+}
+=======
+CraneliftModuleEnvironment::CraneliftModuleEnvironment(
+    const ModuleEnvironment& env)
+    : env(&env), min_memory_length(env.minMemoryLength) {}
+>>>>>>> upstream-releases
 
 TypeCode env_unpack(BD_ValType valType) {
   return TypeCode(UnpackTypeCodeType(PackedTypeCode(valType.packed)));
 }
 
+<<<<<<< HEAD
 const FuncTypeWithId* env_function_signature(
     const CraneliftModuleEnvironment* env, size_t funcIndex) {
   return env->env.funcTypes[funcIndex];
+||||||| merged common ancestors
+const FuncTypeWithId*
+env_function_signature(const CraneliftModuleEnvironment* env, size_t funcIndex)
+{
+    return env->env.funcTypes[funcIndex];
+=======
+const FuncTypeWithId* env_function_signature(
+    const CraneliftModuleEnvironment* wrapper, size_t funcIndex) {
+  return wrapper->env->funcTypes[funcIndex];
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 size_t env_func_import_tls_offset(const CraneliftModuleEnvironment* env,
                                   size_t funcIndex) {
   return globalToTlsOffset(env->env.funcImportGlobalDataOffsets[funcIndex]);
+||||||| merged common ancestors
+size_t
+env_func_import_tls_offset(const CraneliftModuleEnvironment* env, size_t funcIndex)
+{
+    return globalToTlsOffset(env->env.funcImportGlobalDataOffsets[funcIndex]);
+=======
+size_t env_func_import_tls_offset(const CraneliftModuleEnvironment* wrapper,
+                                  size_t funcIndex) {
+  return globalToTlsOffset(
+      wrapper->env->funcImportGlobalDataOffsets[funcIndex]);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool env_func_is_import(const CraneliftModuleEnvironment* env,
                         size_t funcIndex) {
   return env->env.funcIsImport(funcIndex);
+||||||| merged common ancestors
+bool
+env_func_is_import(const CraneliftModuleEnvironment* env, size_t funcIndex)
+{
+    return env->env.funcIsImport(funcIndex);
+=======
+bool env_func_is_import(const CraneliftModuleEnvironment* wrapper,
+                        size_t funcIndex) {
+  return wrapper->env->funcIsImport(funcIndex);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 const FuncTypeWithId* env_signature(const CraneliftModuleEnvironment* env,
                                     size_t funcTypeIndex) {
   return &env->env.types[funcTypeIndex].funcType();
+||||||| merged common ancestors
+const FuncTypeWithId*
+env_signature(const CraneliftModuleEnvironment* env, size_t funcTypeIndex)
+{
+    return &env->env.types[funcTypeIndex].funcType();
+=======
+const FuncTypeWithId* env_signature(const CraneliftModuleEnvironment* wrapper,
+                                    size_t funcTypeIndex) {
+  return &wrapper->env->types[funcTypeIndex].funcType();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 const TableDesc* env_table(const CraneliftModuleEnvironment* env,
                            size_t tableIndex) {
   return &env->env.tables[tableIndex];
+||||||| merged common ancestors
+const TableDesc*
+env_table(const CraneliftModuleEnvironment* env, size_t tableIndex)
+{
+    return &env->env.tables[tableIndex];
+=======
+const TableDesc* env_table(const CraneliftModuleEnvironment* wrapper,
+                           size_t tableIndex) {
+  return &wrapper->env->tables[tableIndex];
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 const GlobalDesc* env_global(const CraneliftModuleEnvironment* env,
                              size_t globalIndex) {
   return &env->env.globals[globalIndex];
+||||||| merged common ancestors
+const GlobalDesc*
+env_global(const CraneliftModuleEnvironment* env, size_t globalIndex)
+{
+    return &env->env.globals[globalIndex];
+=======
+const GlobalDesc* env_global(const CraneliftModuleEnvironment* wrapper,
+                             size_t globalIndex) {
+  return &wrapper->env->globals[globalIndex];
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
                                      LifoAlloc& lifo,
                                      const FuncCompileInputVector& inputs,
@@ -298,8 +689,111 @@ bool wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
     Decoder d(func.begin, func.end, func.lineOrBytecode, error);
     if (!ValidateFunctionBody(env, func.index, func.end - func.begin, d, dvs)) {
       return false;
+||||||| merged common ancestors
+bool
+wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
+                                LifoAlloc& lifo,
+                                const FuncCompileInputVector& inputs,
+                                CompiledCode* code,
+                                UniqueChars* error)
+{
+    MOZ_ASSERT(env.tier() == Tier::Optimized);
+    MOZ_ASSERT(env.optimizedBackend() == OptimizedBackend::Cranelift);
+
+    AutoCranelift compiler(env);
+    if (!compiler.init()) {
+        return false;
+=======
+bool wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
+                                     LifoAlloc& lifo,
+                                     const FuncCompileInputVector& inputs,
+                                     CompiledCode* code, UniqueChars* error) {
+  MOZ_RELEASE_ASSERT(CraneliftCanCompile());
+
+  MOZ_ASSERT(env.tier() == Tier::Optimized);
+  MOZ_ASSERT(env.optimizedBackend() == OptimizedBackend::Cranelift);
+  MOZ_ASSERT(!env.isAsmJS());
+
+  AutoCranelift compiler(env);
+  if (!compiler.init()) {
+    return false;
+  }
+
+  TempAllocator alloc(&lifo);
+  JitContext jitContext(&alloc);
+  WasmMacroAssembler masm(alloc);
+  MOZ_ASSERT(IsCompilingWasm());
+
+  // Swap in already-allocated empty vectors to avoid malloc/free.
+  MOZ_ASSERT(code->empty());
+  if (!code->swap(masm)) {
+    return false;
+  }
+
+  // Disable instruction spew if we're going to disassemble after code
+  // generation, or the output will be a mess.
+
+  bool jitSpew = JitSpewEnabled(js::jit::JitSpew_Codegen);
+  if (jitSpew) {
+    DisableChannel(js::jit::JitSpew_Codegen);
+  }
+  auto reenableSpew = mozilla::MakeScopeExit([&] {
+    if (jitSpew) {
+      EnableChannel(js::jit::JitSpew_Codegen);
+>>>>>>> upstream-releases
+    }
+  });
+
+<<<<<<< HEAD
+    CraneliftFuncCompileInput clifInput(func);
+||||||| merged common ancestors
+    TempAllocator alloc(&lifo);
+    JitContext jitContext(&alloc);
+    WasmMacroAssembler masm(alloc);
+    MOZ_ASSERT(IsCompilingWasm());
+=======
+  for (const FuncCompileInput& func : inputs) {
+    Decoder d(func.begin, func.end, func.lineOrBytecode, error);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    CraneliftCompiledFunc clifFunc;
+    if (!cranelift_compile_function(compiler, &clifInput, &clifFunc)) {
+      *error = JS_smprintf("Cranelift error in clifFunc #%u", clifInput.index);
+      return false;
+||||||| merged common ancestors
+    // Swap in already-allocated empty vectors to avoid malloc/free.
+    MOZ_ASSERT(code->empty());
+    if (!code->swap(masm)) {
+        return false;
+=======
+    size_t funcBytecodeSize = func.end - func.begin;
+    if (!ValidateFunctionBody(env, func.index, funcBytecodeSize, d)) {
+      return false;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
+    uint32_t lineOrBytecode = func.lineOrBytecode;
+    const FuncTypeIdDesc& funcTypeId = env.funcTypes[clifInput.index]->id;
+||||||| merged common ancestors
+    for (const FuncCompileInput& func : inputs) {
+        CraneliftFuncCompileInput clifInput(func);
+
+        CraneliftCompiledFunc clifFunc;
+        if (!cranelift_compile_function(compiler, &clifInput, &clifFunc)) {
+            *error = JS_smprintf("Cranelift error in clifFunc #%u", clifInput.index);
+            return false;
+        }
+
+        uint32_t lineOrBytecode = func.lineOrBytecode;
+        const FuncTypeIdDesc& funcTypeId = env.funcTypes[clifInput.index]->id;
+
+        FuncOffsets offsets;
+        if (!GenerateCraneliftCode(masm, clifFunc, funcTypeId, lineOrBytecode, &offsets)) {
+            return false;
+        }
+=======
     CraneliftFuncCompileInput clifInput(func);
 
     CraneliftCompiledFunc clifFunc;
@@ -310,15 +804,35 @@ bool wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
 
     uint32_t lineOrBytecode = func.lineOrBytecode;
     const FuncTypeIdDesc& funcTypeId = env.funcTypes[clifInput.index]->id;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     FuncOffsets offsets;
     if (!GenerateCraneliftCode(masm, clifFunc, funcTypeId, lineOrBytecode,
                                &offsets)) {
       return false;
+||||||| merged common ancestors
+        if (!code->codeRanges.emplaceBack(func.index, func.lineOrBytecode, offsets)) {
+            return false;
+        }
+=======
+    FuncOffsets offsets;
+    if (!GenerateCraneliftCode(masm, clifFunc, funcTypeId, lineOrBytecode,
+                               funcBytecodeSize, &offsets)) {
+      return false;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (!code->codeRanges.emplaceBack(func.index, func.lineOrBytecode,
                                       offsets)) {
+      return false;
+||||||| merged common ancestors
+    masm.finish();
+    if (masm.oom()) {
+        return false;
+=======
+    if (!code->codeRanges.emplaceBack(func.index, lineOrBytecode, offsets)) {
       return false;
     }
   }
@@ -328,7 +842,44 @@ bool wasm::CraneliftCompileFunctions(const ModuleEnvironment& env,
     return false;
   }
 
+  if (jitSpew) {
+    // The disassembler uses the jitspew for output, so re-enable now.
+    EnableChannel(js::jit::JitSpew_Codegen);
+
+    uint32_t totalCodeSize = masm.currentOffset();
+    uint8_t* codeBuf = (uint8_t*)js_malloc(totalCodeSize);
+    if (codeBuf) {
+      masm.executableCopy(codeBuf, totalCodeSize);
+
+      for (const FuncCompileInput& func : inputs) {
+        JitSpew(JitSpew_Codegen, "# ========================================");
+        JitSpew(JitSpew_Codegen, "# Start of wasm cranelift code for index %d",
+                (int)func.index);
+
+        uint32_t codeStart = code->codeRanges[func.index].begin();
+        uint32_t codeEnd = code->codeRanges[func.index].end();
+        DisassembleCode(codeBuf + codeStart, codeEnd - codeStart);
+
+        JitSpew(JitSpew_Codegen, "# End of wasm cranelift code for index %d",
+                (int)func.index);
+      }
+      js_free(codeBuf);
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  masm.finish();
+  if (masm.oom()) {
+    return false;
+  }
+
   return code->swap(masm);
+||||||| merged common ancestors
+    return code->swap(masm);
+=======
+  return code->swap(masm);
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,6 +905,7 @@ bool global_isIndirect(const GlobalDesc* global) {
   return global->isIndirect();
 }
 
+<<<<<<< HEAD
 BD_ConstantValue global_constantValue(const GlobalDesc* global) {
   Val value(global->constantValue());
   BD_ConstantValue v;
@@ -388,13 +940,86 @@ static bool IsCraneliftCompatible(TypeCode type) {
     default:
       return false;
   }
+||||||| merged common ancestors
+BD_ConstantValue
+global_constantValue(const GlobalDesc* global)
+{
+    Val value(global->constantValue());
+    BD_ConstantValue v;
+    v.t = TypeCode(value.type().code());
+    switch (v.t) {
+      case TypeCode::I32:
+        v.u.i32 = value.i32();
+        break;
+      case TypeCode::I64:
+        v.u.i64 = value.i64();
+        break;
+      case TypeCode::F32:
+        v.u.f32 = value.f32();
+        break;
+      case TypeCode::F64:
+        v.u.f64 = value.f64();
+        break;
+      default:
+        MOZ_CRASH("Bad type");
+    }
+    return v;
 }
-#endif
 
+#ifdef DEBUG
+static bool
+IsCraneliftCompatible(TypeCode type)
+{
+    switch (type) {
+      case TypeCode::I32:
+      case TypeCode::I64:
+      case TypeCode::F32:
+      case TypeCode::F64:
+        return true;
+      default:
+        return false;
+    }
+=======
+BD_ConstantValue global_constantValue(const GlobalDesc* global) {
+  Val value(global->constantValue());
+  BD_ConstantValue v;
+  v.t = TypeCode(value.type().code());
+  switch (v.t) {
+    case TypeCode::I32:
+      v.u.i32 = value.i32();
+      break;
+    case TypeCode::I64:
+      v.u.i64 = value.i64();
+      break;
+    case TypeCode::F32:
+      v.u.f32 = value.f32();
+      break;
+    case TypeCode::F64:
+      v.u.f64 = value.f64();
+      break;
+    default:
+      MOZ_CRASH("Bad type");
+  }
+  return v;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 TypeCode global_type(const GlobalDesc* global) {
   TypeCode type = TypeCode(global->type().code());
   MOZ_ASSERT(IsCraneliftCompatible(type));
   return type;
+||||||| merged common ancestors
+TypeCode
+global_type(const GlobalDesc* global)
+{
+    TypeCode type = TypeCode(global->type().code());
+    MOZ_ASSERT(IsCraneliftCompatible(type));
+    return type;
+=======
+TypeCode global_type(const GlobalDesc* global) {
+  return TypeCode(global->type().code());
+>>>>>>> upstream-releases
 }
 
 size_t global_tlsOffset(const GlobalDesc* global) {
@@ -403,11 +1028,30 @@ size_t global_tlsOffset(const GlobalDesc* global) {
 
 // TableDesc
 
+<<<<<<< HEAD
 size_t table_tlsOffset(const TableDesc* table) {
   MOZ_RELEASE_ASSERT(table->kind == TableKind::AnyFunction ||
                          table->kind == TableKind::TypedFunction,
                      "cranelift doesn't support AnyRef tables yet.");
   return globalToTlsOffset(table->globalDataOffset);
+||||||| merged common ancestors
+size_t
+table_tlsOffset(const TableDesc* table)
+{
+    return globalToTlsOffset(table->globalDataOffset);
+}
+
+bool
+table_isExternal(const TableDesc* table)
+{
+    return table->external;
+=======
+size_t table_tlsOffset(const TableDesc* table) {
+  MOZ_RELEASE_ASSERT(
+      table->kind == TableKind::FuncRef || table->kind == TableKind::AsmJS,
+      "cranelift doesn't support AnyRef tables yet.");
+  return globalToTlsOffset(table->globalDataOffset);
+>>>>>>> upstream-releases
 }
 
 // Sig
@@ -416,6 +1060,7 @@ size_t funcType_numArgs(const FuncTypeWithId* funcType) {
   return funcType->args().length();
 }
 
+<<<<<<< HEAD
 const BD_ValType* funcType_args(const FuncTypeWithId* funcType) {
 #ifdef DEBUG
   for (ValType valType : funcType->args()) {
@@ -424,6 +1069,22 @@ const BD_ValType* funcType_args(const FuncTypeWithId* funcType) {
 #endif
   static_assert(sizeof(BD_ValType) == sizeof(ValType), "update BD_ValType");
   return (const BD_ValType*)&funcType->args()[0];
+||||||| merged common ancestors
+const BD_ValType*
+funcType_args(const FuncTypeWithId* funcType)
+{
+#ifdef DEBUG
+    for (ValType valType : funcType->args()) {
+        MOZ_ASSERT(IsCraneliftCompatible(TypeCode(valType.code())));
+    }
+#endif
+    static_assert(sizeof(BD_ValType) == sizeof(ValType), "update BD_ValType");
+    return (const BD_ValType*)&funcType->args()[0];
+=======
+const BD_ValType* funcType_args(const FuncTypeWithId* funcType) {
+  static_assert(sizeof(BD_ValType) == sizeof(ValType), "update BD_ValType");
+  return (const BD_ValType*)&funcType->args()[0];
+>>>>>>> upstream-releases
 }
 
 TypeCode funcType_retType(const FuncTypeWithId* funcType) {

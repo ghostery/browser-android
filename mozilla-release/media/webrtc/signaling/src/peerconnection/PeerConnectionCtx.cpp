@@ -31,7 +31,7 @@
 
 static const char* pccLogTag = "PeerConnectionCtx";
 #ifdef LOGTAG
-#undef LOGTAG
+#  undef LOGTAG
 #endif
 #define LOGTAG pccLogTag
 
@@ -174,6 +174,7 @@ void PeerConnectionCtx::Destroy() {
   StopWebRtcLog();
 }
 
+<<<<<<< HEAD
 // Telemetry reporting every second after start of first call.
 // The threading model around the media pipelines is weird:
 // - The pipelines are containers,
@@ -187,13 +188,122 @@ static auto FindId(const Sequence<RTCInboundRTPStreamStats>& aArray,
     if (aArray[i].mId.Value() == aId) {
       return i;
     }
+||||||| merged common ancestors
+typedef Vector<nsAutoPtr<RTCStatsQuery>> RTCStatsQueries;
+
+// Telemetry reporting every second after start of first call.
+// The threading model around the media pipelines is weird:
+// - The pipelines are containers,
+// - containers that are only safe on main thread, with members only safe on STS,
+// - hence the there and back again approach.
+
+static auto
+FindId(const Sequence<RTCInboundRTPStreamStats>& aArray,
+       const nsString &aId) -> decltype(aArray.Length()) {
+  for (decltype(aArray.Length()) i = 0; i < aArray.Length(); i++) {
+    if (aArray[i].mId.Value() == aId) {
+      return i;
+    }
+=======
+template <typename T>
+static void RecordCommonRtpTelemetry(const T& list, const T& lastList,
+                                     const bool isRemote) {
+  using namespace Telemetry;
+  if (!list.WasPassed()) {
+    return;
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   return aArray.NoIndex;
 }
 
 void PeerConnectionCtx::DeliverStats(RTCStatsQuery& aQuery) {
+||||||| merged common ancestors
+  return aArray.NoIndex;
+}
+
+static auto
+FindId(const nsTArray<nsAutoPtr<RTCStatsReportInternal>>& aArray,
+       const nsString &aId) -> decltype(aArray.Length()) {
+  for (decltype(aArray.Length()) i = 0; i < aArray.Length(); i++) {
+    if (aArray[i]->mPcid == aId) {
+      return i;
+    }
+  }
+  return aArray.NoIndex;
+}
+
+static void
+FreeOnMain_m(nsAutoPtr<RTCStatsQueries> aQueryList) {
+  MOZ_ASSERT(NS_IsMainThread());
+}
+
+static void
+EverySecondTelemetryCallback_s(nsAutoPtr<RTCStatsQueries> aQueryList) {
+=======
+  for (const auto& s : list.Value()) {
+    const bool isAudio = s.mKind.Value().Find("audio") != -1;
+    if (s.mPacketsLost.WasPassed() && s.mPacketsReceived.WasPassed()) {
+      if (const uint64_t total =
+              s.mPacketsLost.Value() + s.mPacketsReceived.Value()) {
+        HistogramID id =
+            isRemote ? (isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_PACKETLOSS_RATE
+                                : WEBRTC_VIDEO_QUALITY_OUTBOUND_PACKETLOSS_RATE)
+                     : (isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_PACKETLOSS_RATE
+                                : WEBRTC_VIDEO_QUALITY_INBOUND_PACKETLOSS_RATE);
+        Accumulate(id, (s.mPacketsLost.Value() * 1000) / total);
+      }
+    }
+    if (s.mJitter.WasPassed()) {
+      HistogramID id = isRemote
+                           ? (isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_JITTER
+                                      : WEBRTC_VIDEO_QUALITY_OUTBOUND_JITTER)
+                           : (isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_JITTER
+                                      : WEBRTC_VIDEO_QUALITY_INBOUND_JITTER);
+      Accumulate(id, s.mJitter.Value() * 1000);
+    }
+    // Record bandwidth telemetry
+    if (s.mBytesReceived.WasPassed() && lastList.WasPassed()) {
+      for (const auto& lastS : lastList.Value()) {
+        if (lastS.mId == s.mId) {
+          int32_t deltaMs = s.mTimestamp.Value() - lastS.mTimestamp.Value();
+          // In theory we're called every second, so delta *should* be in that
+          // range. Small deltas could cause errors due to division
+          if (deltaMs < 500 || deltaMs > 60000 ||
+              !lastS.mBytesReceived.WasPassed()) {
+            break;
+          }
+          HistogramID id =
+              isRemote
+                  ? (isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_BANDWIDTH_KBITS
+                             : WEBRTC_VIDEO_QUALITY_OUTBOUND_BANDWIDTH_KBITS)
+                  : (isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_BANDWIDTH_KBITS
+                             : WEBRTC_VIDEO_QUALITY_INBOUND_BANDWIDTH_KBITS);
+          // We could accumulate values until enough time has passed
+          // and then Accumulate() but this isn't that important
+          Accumulate(
+              id,
+              ((s.mBytesReceived.Value() - lastS.mBytesReceived.Value()) * 8) /
+                  deltaMs);
+          break;
+        }
+      }
+    }
+  }
+}
+
+// Telemetry reporting every second after start of first call.
+// The threading model around the media pipelines is weird:
+// - The pipelines are containers,
+// - containers that are only safe on main thread, with members only safe on
+//   STS,
+// - hence the there and back again approach.
+
+void PeerConnectionCtx::DeliverStats(RTCStatsQuery& aQuery) {
+>>>>>>> upstream-releases
   using namespace Telemetry;
 
+<<<<<<< HEAD
   std::unique_ptr<dom::RTCStatsReportInternal> report(aQuery.report.forget());
   // First, get reports from a second ago, if any, for calculations below
   std::unique_ptr<dom::RTCStatsReportInternal> lastReport;
@@ -202,7 +312,23 @@ void PeerConnectionCtx::DeliverStats(RTCStatsQuery& aQuery) {
     if (i != mLastReports.end()) {
       lastReport = std::move(i->second);
     }
+||||||| merged common ancestors
+  if(!PeerConnectionCtx::isActive()) {
+    return;
+=======
+  std::unique_ptr<dom::RTCStatsReportInternal> report(std::move(aQuery.report));
+  // First, get reports from a second ago, if any, for calculations below
+  std::unique_ptr<dom::RTCStatsReportInternal> lastReport;
+  {
+    auto i = mLastReports.find(report->mPcid);
+    if (i != mLastReports.end()) {
+      lastReport = std::move(i->second);
+    } else {
+      lastReport = std::make_unique<dom::RTCStatsReportInternal>();
+    }
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   if (report->mInboundRTPStreamStats.WasPassed()) {
     // Then, look for the things we want telemetry on
@@ -269,6 +395,99 @@ void PeerConnectionCtx::DeliverStats(RTCStatsQuery& aQuery) {
             // and then Accumulate() but this isn't that important.
           }
         }
+||||||| merged common ancestors
+  PeerConnectionCtx *ctx = PeerConnectionCtx::GetInstance();
+
+  for (auto & q : *aQueryList) {
+    PeerConnectionImpl::ExecuteStatsQuery_s(q);
+    auto& r = *q->report;
+    if (r.mInboundRTPStreamStats.WasPassed()) {
+      // First, get reports from a second ago, if any, for calculations below
+      const Sequence<RTCInboundRTPStreamStats> *lastInboundStats = nullptr;
+      {
+        auto i = FindId(ctx->mLastReports, r.mPcid);
+        if (i != ctx->mLastReports.NoIndex) {
+          lastInboundStats = &ctx->mLastReports[i]->mInboundRTPStreamStats.Value();
+        }
+      }
+      // Then, look for the things we want telemetry on
+      auto& array = r.mInboundRTPStreamStats.Value();
+      for (decltype(array.Length()) i = 0; i < array.Length(); i++) {
+        auto& s = array[i];
+        bool isAudio = (s.mId.Value().Find("audio") != -1);
+        if (s.mPacketsLost.WasPassed() && s.mPacketsReceived.WasPassed() &&
+            (s.mPacketsLost.Value() + s.mPacketsReceived.Value()) != 0) {
+          HistogramID id;
+          if (s.mIsRemote) {
+            id = isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_PACKETLOSS_RATE :
+                           WEBRTC_VIDEO_QUALITY_OUTBOUND_PACKETLOSS_RATE;
+          } else {
+            id = isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_PACKETLOSS_RATE :
+                           WEBRTC_VIDEO_QUALITY_INBOUND_PACKETLOSS_RATE;
+          }
+          // *1000 so we can read in 10's of a percent (permille)
+          Accumulate(id,
+                     (s.mPacketsLost.Value() * 1000) /
+                     (s.mPacketsLost.Value() + s.mPacketsReceived.Value()));
+        }
+        if (s.mJitter.WasPassed()) {
+          HistogramID id;
+          if (s.mIsRemote) {
+            id = isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_JITTER :
+                           WEBRTC_VIDEO_QUALITY_OUTBOUND_JITTER;
+          } else {
+            id = isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_JITTER :
+                           WEBRTC_VIDEO_QUALITY_INBOUND_JITTER;
+          }
+          Accumulate(id, s.mJitter.Value());
+        }
+        if (s.mRoundTripTime.WasPassed()) {
+          MOZ_ASSERT(s.mIsRemote);
+          HistogramID id = isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_RTT :
+                                     WEBRTC_VIDEO_QUALITY_OUTBOUND_RTT;
+          Accumulate(id, s.mRoundTripTime.Value());
+        }
+        if (lastInboundStats && s.mBytesReceived.WasPassed()) {
+          auto& laststats = *lastInboundStats;
+          auto i = FindId(laststats, s.mId.Value());
+          if (i != laststats.NoIndex) {
+            auto& lasts = laststats[i];
+            if (lasts.mBytesReceived.WasPassed()) {
+              auto delta_ms = int32_t(s.mTimestamp.Value() -
+                                      lasts.mTimestamp.Value());
+              // In theory we're called every second, so delta *should* be in that range.
+              // Small deltas could cause errors due to division
+              if (delta_ms > 500 && delta_ms < 60000) {
+                HistogramID id;
+                if (s.mIsRemote) {
+                  id = isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_BANDWIDTH_KBITS :
+                                 WEBRTC_VIDEO_QUALITY_OUTBOUND_BANDWIDTH_KBITS;
+                } else {
+                  id = isAudio ? WEBRTC_AUDIO_QUALITY_INBOUND_BANDWIDTH_KBITS :
+                                 WEBRTC_VIDEO_QUALITY_INBOUND_BANDWIDTH_KBITS;
+                }
+                Accumulate(id, ((s.mBytesReceived.Value() -
+                                 lasts.mBytesReceived.Value()) * 8) / delta_ms);
+              }
+              // We could accumulate values until enough time has passed
+              // and then Accumulate() but this isn't that important.
+            }
+          }
+        }
+=======
+  // Record Telemetery
+  RecordCommonRtpTelemetry(report->mInboundRtpStreamStats,
+                           lastReport->mInboundRtpStreamStats, false);
+  RecordCommonRtpTelemetry(report->mRemoteInboundRtpStreamStats,
+                           lastReport->mRemoteInboundRtpStreamStats, true);
+  if (report->mRemoteInboundRtpStreamStats.WasPassed()) {
+    for (const auto& s : report->mRemoteInboundRtpStreamStats.Value()) {
+      if (s.mRoundTripTime.WasPassed()) {
+        const bool isAudio = s.mKind.Value().Find("audio") != -1;
+        HistogramID id = isAudio ? WEBRTC_AUDIO_QUALITY_OUTBOUND_RTT
+                                 : WEBRTC_VIDEO_QUALITY_OUTBOUND_RTT;
+        Accumulate(id, s.mRoundTripTime.Value() * 1000);
+>>>>>>> upstream-releases
       }
     }
   }
@@ -280,6 +499,7 @@ void PeerConnectionCtx::EverySecondTelemetryCallback_m(nsITimer* timer,
                                                        void* closure) {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(PeerConnectionCtx::isActive());
+<<<<<<< HEAD
 
   for (auto& idAndPc : GetInstance()->mPeerConnections) {
     if (idAndPc.second->HasMedia()) {
@@ -291,6 +511,46 @@ void PeerConnectionCtx::EverySecondTelemetryCallback_m(nsITimer* timer,
                    }
                  },
                  [=](nsresult aError) {});
+||||||| merged common ancestors
+  auto ctx = static_cast<PeerConnectionCtx*>(closure);
+  if (ctx->mPeerConnections.empty()) {
+    return;
+  }
+  nsresult rv;
+  nsCOMPtr<nsIEventTarget> stsThread =
+      do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID, &rv);
+  if (NS_FAILED(rv)) {
+    return;
+  }
+  MOZ_ASSERT(stsThread);
+
+  nsAutoPtr<RTCStatsQueries> queries(new RTCStatsQueries);
+  for (auto p = ctx->mPeerConnections.begin();
+        p != ctx->mPeerConnections.end(); ++p) {
+    if (p->second->HasMedia()) {
+      if (!queries->append(nsAutoPtr<RTCStatsQuery>(new RTCStatsQuery(true)))) {
+        return;
+      }
+      if (NS_WARN_IF(NS_FAILED(p->second->BuildStatsQuery_m(nullptr, // all tracks
+                                                            queries->back())))) {
+        queries->popBack();
+      } else {
+        MOZ_ASSERT(queries->back()->report);
+      }
+=======
+
+  for (auto& idAndPc : GetInstance()->mPeerConnections) {
+    if (idAndPc.second->HasMedia()) {
+      idAndPc.second->GetStats(nullptr, true, true)
+          ->Then(
+              GetMainThreadSerialEventTarget(), __func__,
+              [=](UniquePtr<RTCStatsQuery>&& aQuery) {
+                if (PeerConnectionCtx::isActive()) {
+                  PeerConnectionCtx::GetInstance()->DeliverStats(*aQuery);
+                }
+              },
+              [=](nsresult aError) {});
+>>>>>>> upstream-releases
     }
   }
 }
@@ -362,6 +622,7 @@ nsresult PeerConnectionCtx::Cleanup() {
 
   mQueuedJSEPOperations.Clear();
   mGMPService = nullptr;
+  mTransportHandler->Destroy();
   return NS_OK;
 }
 

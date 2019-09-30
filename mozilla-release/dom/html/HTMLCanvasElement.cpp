@@ -6,7 +6,6 @@
 
 #include "mozilla/dom/HTMLCanvasElement.h"
 
-#include "gfxPrefs.h"
 #include "ImageEncoder.h"
 #include "jsapi.h"
 #include "jsfriendapi.h"
@@ -229,8 +228,18 @@ HTMLCanvasPrintState::HTMLCanvasPrintState(
 
 HTMLCanvasPrintState::~HTMLCanvasPrintState() {}
 
+<<<<<<< HEAD
 /* virtual */ JSObject* HTMLCanvasPrintState::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+HTMLCanvasPrintState::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* HTMLCanvasPrintState::WrapObject(JSContext* aCx,
+                                           JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return MozCanvasPrintState_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -282,9 +291,19 @@ void HTMLCanvasElementObserver::RegisterVisibilityChangeEvent() {
     return;
   }
 
+<<<<<<< HEAD
   nsIDocument* document = mElement->OwnerDoc();
   document->AddSystemEventListener(NS_LITERAL_STRING("visibilitychange"), this,
                                    true, false);
+||||||| merged common ancestors
+  nsIDocument* document = mElement->OwnerDoc();
+  document->AddSystemEventListener(NS_LITERAL_STRING("visibilitychange"),
+                                   this, true, false);
+=======
+  Document* document = mElement->OwnerDoc();
+  document->AddSystemEventListener(NS_LITERAL_STRING("visibilitychange"), this,
+                                   true, false);
+>>>>>>> upstream-releases
 }
 
 void HTMLCanvasElementObserver::UnregisterVisibilityChangeEvent() {
@@ -292,7 +311,7 @@ void HTMLCanvasElementObserver::UnregisterVisibilityChangeEvent() {
     return;
   }
 
-  nsIDocument* document = mElement->OwnerDoc();
+  Document* document = mElement->OwnerDoc();
   document->RemoveSystemEventListener(NS_LITERAL_STRING("visibilitychange"),
                                       this, true);
 }
@@ -386,8 +405,18 @@ NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED_0(HTMLCanvasElement,
 
 NS_IMPL_ELEMENT_CLONE(HTMLCanvasElement)
 
+<<<<<<< HEAD
 /* virtual */ JSObject* HTMLCanvasElement::WrapNode(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+HTMLCanvasElement::WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* HTMLCanvasElement::WrapNode(JSContext* aCx,
+                                      JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return HTMLCanvasElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -490,9 +519,23 @@ nsresult HTMLCanvasElement::DispatchPrintCallback(nsITimerCallback* aCallback) {
   return OwnerDoc()->Dispatch(TaskCategory::Other, renderEvent.forget());
 }
 
+<<<<<<< HEAD
 void HTMLCanvasElement::CallPrintCallback() {
   ErrorResult rv;
   GetMozPrintCallback()->Call(*mPrintState, rv);
+||||||| merged common ancestors
+void
+HTMLCanvasElement::CallPrintCallback()
+{
+  ErrorResult rv;
+  GetMozPrintCallback()->Call(*mPrintState, rv);
+=======
+MOZ_CAN_RUN_SCRIPT
+void HTMLCanvasElement::CallPrintCallback() {
+  RefPtr<PrintCallback> callback = GetMozPrintCallback();
+  RefPtr<HTMLCanvasPrintState> state = mPrintState;
+  callback->Call(*state);
+>>>>>>> upstream-releases
 }
 
 void HTMLCanvasElement::ResetPrintCallback() {
@@ -517,7 +560,9 @@ nsresult HTMLCanvasElement::CopyInnerTo(HTMLCanvasElement* aDest) {
   nsresult rv = nsGenericHTMLElement::CopyInnerTo(aDest);
   NS_ENSURE_SUCCESS(rv, rv);
   if (aDest->OwnerDoc()->IsStaticDocument()) {
-    aDest->mOriginalCanvas = this;
+    // The Firefox print preview code can create a static clone from an
+    // existing static clone, so we may not be the original 'canvas' element.
+    aDest->mOriginalCanvas = GetOriginalCanvas();
 
     // We make sure that the canvas is not zero sized since that would cause
     // the DrawImage call below to return an error, which would cause printing
@@ -555,7 +600,7 @@ void HTMLCanvasElement::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
       hitpoint.x = (ptInRoot.x - paddingRect.x) / AppUnitsPerCSSPixel();
       hitpoint.y = (ptInRoot.y - paddingRect.y) / AppUnitsPerCSSPixel();
 
-      evt->region = mCurrentContext->GetHitRegion(hitpoint);
+      evt->mRegion = mCurrentContext->GetHitRegion(hitpoint);
       aVisitor.mCanHandle = true;
     }
   }
@@ -842,10 +887,25 @@ OffscreenCanvas* HTMLCanvasElement::TransferControlToOffscreen(
   return mOffscreenCanvas;
 }
 
+<<<<<<< HEAD
 already_AddRefed<File> HTMLCanvasElement::MozGetAsFile(
     const nsAString& aName, const nsAString& aType,
     nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {
   OwnerDoc()->WarnOnceAbout(nsIDocument::eMozGetAsFile);
+||||||| merged common ancestors
+already_AddRefed<File>
+HTMLCanvasElement::MozGetAsFile(const nsAString& aName,
+                                const nsAString& aType,
+                                nsIPrincipal& aSubjectPrincipal,
+                                ErrorResult& aRv)
+{
+  OwnerDoc()->WarnOnceAbout(nsIDocument::eMozGetAsFile);
+=======
+already_AddRefed<File> HTMLCanvasElement::MozGetAsFile(
+    const nsAString& aName, const nsAString& aType,
+    nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {
+  OwnerDoc()->WarnOnceAbout(Document::eMozGetAsFile);
+>>>>>>> upstream-releases
 
   // do a trust check if this is a write-only canvas
   if (mWriteOnly && !nsContentUtils::IsSystemPrincipal(&aSubjectPrincipal)) {
@@ -1197,7 +1257,7 @@ nsresult HTMLCanvasElement::RegisterFrameCaptureListener(
   }
 
   if (!mRequestedFrameRefreshObserver) {
-    nsIDocument* doc = OwnerDoc();
+    Document* doc = OwnerDoc();
     if (!doc) {
       return NS_ERROR_FAILURE;
     }
@@ -1376,9 +1436,21 @@ void HTMLCanvasElement::OnMemoryPressure() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void HTMLCanvasElement::SetAttrFromAsyncCanvasRenderer(
     AsyncCanvasRenderer* aRenderer) {
   HTMLCanvasElement* element = aRenderer->mHTMLCanvasElement;
+||||||| merged common ancestors
+/* static */ void
+HTMLCanvasElement::SetAttrFromAsyncCanvasRenderer(AsyncCanvasRenderer *aRenderer)
+{
+  HTMLCanvasElement *element = aRenderer->mHTMLCanvasElement;
+=======
+/* static */
+void HTMLCanvasElement::SetAttrFromAsyncCanvasRenderer(
+    AsyncCanvasRenderer* aRenderer) {
+  HTMLCanvasElement* element = aRenderer->mHTMLCanvasElement;
+>>>>>>> upstream-releases
   if (!element) {
     return;
   }
@@ -1407,9 +1479,21 @@ void HTMLCanvasElement::OnMemoryPressure() {
   element->mResetLayer = true;
 }
 
+<<<<<<< HEAD
 /* static */ void HTMLCanvasElement::InvalidateFromAsyncCanvasRenderer(
     AsyncCanvasRenderer* aRenderer) {
   HTMLCanvasElement* element = aRenderer->mHTMLCanvasElement;
+||||||| merged common ancestors
+/* static */ void
+HTMLCanvasElement::InvalidateFromAsyncCanvasRenderer(AsyncCanvasRenderer *aRenderer)
+{
+  HTMLCanvasElement *element = aRenderer->mHTMLCanvasElement;
+=======
+/* static */
+void HTMLCanvasElement::InvalidateFromAsyncCanvasRenderer(
+    AsyncCanvasRenderer* aRenderer) {
+  HTMLCanvasElement* element = aRenderer->mHTMLCanvasElement;
+>>>>>>> upstream-releases
   if (!element) {
     return;
   }

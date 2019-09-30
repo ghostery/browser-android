@@ -19,6 +19,7 @@ WebGLExtensionInstancedArrays::WebGLExtensionInstancedArrays(
 
 WebGLExtensionInstancedArrays::~WebGLExtensionInstancedArrays() {}
 
+<<<<<<< HEAD
 void WebGLExtensionInstancedArrays::DrawArraysInstancedANGLE(
     GLenum mode, GLint first, GLsizei count, GLsizei primcount) {
   if (mIsLost) {
@@ -26,10 +27,34 @@ void WebGLExtensionInstancedArrays::DrawArraysInstancedANGLE(
                                     "drawArraysInstancedANGLE");
     return;
   }
+||||||| merged common ancestors
+void
+WebGLExtensionInstancedArrays::DrawArraysInstancedANGLE(GLenum mode,
+                                                        GLint first,
+                                                        GLsizei count,
+                                                        GLsizei primcount)
+{
+    if (mIsLost) {
+        mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                        "drawArraysInstancedANGLE");
+        return;
+    }
+=======
+void WebGLExtensionInstancedArrays::DrawArraysInstancedANGLE(
+    GLenum mode, GLint first, GLsizei count, GLsizei primcount) {
+  if (mIsLost) {
+    if (mContext) {
+      mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                      "drawArraysInstancedANGLE");
+    }
+    return;
+  }
+>>>>>>> upstream-releases
 
   mContext->DrawArraysInstanced(mode, first, count, primcount);
 }
 
+<<<<<<< HEAD
 void WebGLExtensionInstancedArrays::DrawElementsInstancedANGLE(
     GLenum mode, GLsizei count, GLenum type, WebGLintptr offset,
     GLsizei primcount) {
@@ -38,10 +63,36 @@ void WebGLExtensionInstancedArrays::DrawElementsInstancedANGLE(
                                     "drawElementsInstancedANGLE");
     return;
   }
+||||||| merged common ancestors
+void
+WebGLExtensionInstancedArrays::DrawElementsInstancedANGLE(GLenum mode,
+                                                          GLsizei count,
+                                                          GLenum type,
+                                                          WebGLintptr offset,
+                                                          GLsizei primcount)
+{
+    if (mIsLost) {
+        mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                        "drawElementsInstancedANGLE");
+        return;
+    }
+=======
+void WebGLExtensionInstancedArrays::DrawElementsInstancedANGLE(
+    GLenum mode, GLsizei count, GLenum type, WebGLintptr offset,
+    GLsizei primcount) {
+  if (mIsLost) {
+    if (mContext) {
+      mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                      "drawElementsInstancedANGLE");
+    }
+    return;
+  }
+>>>>>>> upstream-releases
 
   mContext->DrawElementsInstanced(mode, count, type, offset, primcount);
 }
 
+<<<<<<< HEAD
 void WebGLExtensionInstancedArrays::VertexAttribDivisorANGLE(GLuint index,
                                                              GLuint divisor) {
   if (mIsLost) {
@@ -49,14 +100,51 @@ void WebGLExtensionInstancedArrays::VertexAttribDivisorANGLE(GLuint index,
                                     "vertexAttribDivisorANGLE");
     return;
   }
+||||||| merged common ancestors
+void
+WebGLExtensionInstancedArrays::VertexAttribDivisorANGLE(GLuint index,
+                                                        GLuint divisor)
+{
+    if (mIsLost) {
+        mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                        "vertexAttribDivisorANGLE");
+        return;
+    }
+=======
+void WebGLExtensionInstancedArrays::VertexAttribDivisorANGLE(GLuint index,
+                                                             GLuint divisor) {
+  if (mIsLost) {
+    if (mContext) {
+      mContext->ErrorInvalidOperation("%s: Extension is lost.",
+                                      "vertexAttribDivisorANGLE");
+    }
+    return;
+  }
+>>>>>>> upstream-releases
 
   mContext->VertexAttribDivisor(index, divisor);
 }
 
+<<<<<<< HEAD
 bool WebGLExtensionInstancedArrays::IsSupported(const WebGLContext* webgl) {
   gl::GLContext* gl = webgl->GL();
   return gl->IsSupported(gl::GLFeature::draw_instanced) &&
          gl->IsSupported(gl::GLFeature::instanced_arrays);
+||||||| merged common ancestors
+bool
+WebGLExtensionInstancedArrays::IsSupported(const WebGLContext* webgl)
+{
+    gl::GLContext* gl = webgl->GL();
+    return gl->IsSupported(gl::GLFeature::draw_instanced) &&
+           gl->IsSupported(gl::GLFeature::instanced_arrays);
+=======
+bool WebGLExtensionInstancedArrays::IsSupported(const WebGLContext* webgl) {
+  if (webgl->IsWebGL2()) return false;
+
+  gl::GLContext* gl = webgl->GL();
+  return gl->IsSupported(gl::GLFeature::draw_instanced) &&
+         gl->IsSupported(gl::GLFeature::instanced_arrays);
+>>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionInstancedArrays, ANGLE_instanced_arrays)

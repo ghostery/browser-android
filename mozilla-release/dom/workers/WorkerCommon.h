@@ -32,18 +32,63 @@ JSContext* GetCurrentWorkerThreadJSContext();
 
 JSObject* GetCurrentThreadWorkerGlobal();
 
+<<<<<<< HEAD
 void CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+JSObject* GetCurrentThreadWorkerDebuggerGlobal();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+void CancelWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+void FreezeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+void ThawWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
+=======
+void SuspendWorkersForWindow(nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void PropagateFirstPartyStorageAccessGrantedToWorkers(
+    nsPIDOMWindowInner* aWindow);
+||||||| merged common ancestors
+void
+PropagateFirstPartyStorageAccessGrantedToWorkers(nsPIDOMWindowInner* aWindow);
+=======
 void ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow);
 
 void PropagateFirstPartyStorageAccessGrantedToWorkers(
     nsPIDOMWindowInner* aWindow);
+>>>>>>> upstream-releases
 
 // All of these are implemented in WorkerScope.cpp
 

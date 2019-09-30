@@ -29,6 +29,7 @@ class GridLine : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(GridLine)
 
   void GetNames(nsTArray<nsString>& aNames) const;
+  const nsTArray<RefPtr<nsAtom>>& Names() const { return mNames; }
 
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
@@ -40,13 +41,32 @@ class GridLine : public nsISupports, public nsWrapperCache {
   uint32_t Number() const;
   int32_t NegativeNumber() const;
 
+<<<<<<< HEAD
   void SetLineValues(const nsTArray<nsString>& aNames, double aStart,
                      double aBreadth, uint32_t aNumber, int32_t aNegativeNumber,
+||||||| merged common ancestors
+  void SetLineValues(const nsTArray<nsString>& aNames,
+                     double aStart,
+                     double aBreadth,
+                     uint32_t aNumber,
+                     int32_t aNegativeNumber,
+=======
+  void SetLineValues(const nsTArray<RefPtr<nsAtom>>& aNames, double aStart,
+                     double aBreadth, uint32_t aNumber, int32_t aNegativeNumber,
+>>>>>>> upstream-releases
                      GridDeclaration aType);
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  void SetLineNames(const nsTArray<RefPtr<nsAtom>>& aNames);
+
+ protected:
+>>>>>>> upstream-releases
   RefPtr<GridLines> mParent;
-  nsTArray<nsString> mNames;
+  nsTArray<RefPtr<nsAtom>> mNames;
   double mStart;
   double mBreadth;
   GridDeclaration mType;

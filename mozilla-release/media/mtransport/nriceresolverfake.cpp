@@ -72,10 +72,24 @@ NrIceResolverFake::~NrIceResolverFake() {
   delete vtbl_;
 }
 
+<<<<<<< HEAD
 nr_resolver *NrIceResolverFake::AllocateResolver() {
   nr_resolver *resolver;
 
   int r = nr_resolver_create_int((void *)this, vtbl_, &resolver);
+||||||| merged common ancestors
+
+nr_resolver *NrIceResolverFake::AllocateResolver() {
+  nr_resolver *resolver;
+
+  int r = nr_resolver_create_int((void *)this,
+                                 vtbl_, &resolver);
+=======
+nr_resolver* NrIceResolverFake::AllocateResolver() {
+  nr_resolver* resolver;
+
+  int r = nr_resolver_create_int((void*)this, vtbl_, &resolver);
+>>>>>>> upstream-releases
   MOZ_ASSERT(!r);
   if (r) return nullptr;
 
@@ -86,10 +100,19 @@ nr_resolver *NrIceResolverFake::AllocateResolver() {
 
 void NrIceResolverFake::DestroyResolver() { --allocated_resolvers_; }
 
+<<<<<<< HEAD
 int NrIceResolverFake::destroy(void **objp) {
   if (!objp || !*objp) return 0;
+||||||| merged common ancestors
+int NrIceResolverFake::destroy(void **objp) {
+  if (!objp || !*objp)
+    return 0;
+=======
+int NrIceResolverFake::destroy(void** objp) {
+  if (!objp || !*objp) return 0;
+>>>>>>> upstream-releases
 
-  NrIceResolverFake *fake = static_cast<NrIceResolverFake *>(*objp);
+  NrIceResolverFake* fake = static_cast<NrIceResolverFake*>(*objp);
   *objp = nullptr;
 
   fake->DestroyResolver();
@@ -97,16 +120,32 @@ int NrIceResolverFake::destroy(void **objp) {
   return 0;
 }
 
+<<<<<<< HEAD
 int NrIceResolverFake::resolve(void *obj, nr_resolver_resource *resource,
                                int (*cb)(void *cb_arg, nr_transport_addr *addr),
                                void *cb_arg, void **handle) {
   int r, _status;
+||||||| merged common ancestors
+int NrIceResolverFake::resolve(void *obj,
+                               nr_resolver_resource *resource,
+                               int (*cb)(void *cb_arg,
+                                         nr_transport_addr *addr),
+                               void *cb_arg,
+                               void **handle) {
+  int r,_status;
+=======
+int NrIceResolverFake::resolve(void* obj, nr_resolver_resource* resource,
+                               int (*cb)(void* cb_arg, nr_transport_addr* addr),
+                               void* cb_arg, void** handle) {
+  int r, _status;
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(obj);
-  NrIceResolverFake *fake = static_cast<NrIceResolverFake *>(obj);
+  NrIceResolverFake* fake = static_cast<NrIceResolverFake*>(obj);
 
   MOZ_ASSERT(fake->allocated_resolvers_ > 0);
 
+<<<<<<< HEAD
   PendingResolution *pending = new PendingResolution(
       fake, resource->domain_name, resource->port ? resource->port : 3478,
       resource->transport_protocol ? resource->transport_protocol : IPPROTO_UDP,
@@ -114,6 +153,28 @@ int NrIceResolverFake::resolve(void *obj, nr_resolver_resource *resource,
 
   if ((r = NR_ASYNC_TIMER_SET(fake->delay_ms_, NrIceResolverFake::resolve_cb,
                               (void *)pending, &pending->timer_handle_))) {
+||||||| merged common ancestors
+  PendingResolution *pending =
+      new PendingResolution(fake,
+                            resource->domain_name,
+                            resource->port ? resource->port : 3478,
+                            resource->transport_protocol ?
+                            resource->transport_protocol :
+                            IPPROTO_UDP,
+                            resource->address_family,
+                            cb, cb_arg);
+
+  if ((r=NR_ASYNC_TIMER_SET(fake->delay_ms_,NrIceResolverFake::resolve_cb,
+                            (void *)pending, &pending->timer_handle_))) {
+=======
+  PendingResolution* pending = new PendingResolution(
+      fake, resource->domain_name, resource->port ? resource->port : 3478,
+      resource->transport_protocol ? resource->transport_protocol : IPPROTO_UDP,
+      resource->address_family, cb, cb_arg);
+
+  if ((r = NR_ASYNC_TIMER_SET(fake->delay_ms_, NrIceResolverFake::resolve_cb,
+                              (void*)pending, &pending->timer_handle_))) {
+>>>>>>> upstream-releases
     delete pending;
     ABORT(r);
   }
@@ -124,12 +185,20 @@ abort:
   return (_status);
 }
 
-void NrIceResolverFake::resolve_cb(NR_SOCKET s, int how, void *cb_arg) {
+void NrIceResolverFake::resolve_cb(NR_SOCKET s, int how, void* cb_arg) {
   MOZ_ASSERT(cb_arg);
-  PendingResolution *pending = static_cast<PendingResolution *>(cb_arg);
+  PendingResolution* pending = static_cast<PendingResolution*>(cb_arg);
 
+<<<<<<< HEAD
   const PRNetAddr *addr =
       pending->resolver_->Resolve(pending->hostname_, pending->address_family_);
+||||||| merged common ancestors
+  const PRNetAddr *addr=pending->resolver_->Resolve(pending->hostname_,
+                                                    pending->address_family_);
+=======
+  const PRNetAddr* addr =
+      pending->resolver_->Resolve(pending->hostname_, pending->address_family_);
+>>>>>>> upstream-releases
 
   if (addr) {
     nr_transport_addr transport_addr;
@@ -160,11 +229,11 @@ abort:
   delete pending;
 }
 
-int NrIceResolverFake::cancel(void *obj, void *handle) {
+int NrIceResolverFake::cancel(void* obj, void* handle) {
   MOZ_ASSERT(obj);
-  MOZ_ASSERT(static_cast<NrIceResolverFake *>(obj)->allocated_resolvers_ > 0);
+  MOZ_ASSERT(static_cast<NrIceResolverFake*>(obj)->allocated_resolvers_ > 0);
 
-  PendingResolution *pending = static_cast<PendingResolution *>(handle);
+  PendingResolution* pending = static_cast<PendingResolution*>(handle);
 
   NR_async_timer_cancel(pending->timer_handle_);
   delete pending;

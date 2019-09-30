@@ -40,6 +40,7 @@ void MacroAssembler::moveDoubleToGPR64(FloatRegister src, Register64 dest) {
   }
 }
 
+<<<<<<< HEAD
 void MacroAssembler::moveGPR64ToDouble(Register64 src, FloatRegister dest) {
   ScratchDoubleScope scratch(*this);
 
@@ -51,6 +52,32 @@ void MacroAssembler::moveGPR64ToDouble(Register64 src, FloatRegister dest) {
     vmovd(src.high, ScratchDoubleReg);
     vunpcklps(ScratchDoubleReg, dest, dest);
   }
+||||||| merged common ancestors
+void
+MacroAssembler::moveGPR64ToDouble(Register64 src, FloatRegister dest)
+{
+    ScratchDoubleScope scratch(*this);
+
+    if (Assembler::HasSSE41()) {
+        vmovd(src.low, dest);
+        vpinsrd(1, src.high, dest, dest);
+    } else {
+        vmovd(src.low, dest);
+        vmovd(src.high, ScratchDoubleReg);
+        vunpcklps(ScratchDoubleReg, dest, dest);
+    }
+=======
+void MacroAssembler::moveGPR64ToDouble(Register64 src, FloatRegister dest) {
+  if (Assembler::HasSSE41()) {
+    vmovd(src.low, dest);
+    vpinsrd(1, src.high, dest, dest);
+  } else {
+    ScratchDoubleScope fpscratch(*this);
+    vmovd(src.low, dest);
+    vmovd(src.high, fpscratch);
+    vunpcklps(fpscratch, dest, dest);
+  }
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::move64To32(Register64 src, Register dest) {
@@ -89,12 +116,60 @@ void MacroAssembler::move32To64SignExtend(Register src, Register64 dest) {
   masm.cdq();
 }
 
+<<<<<<< HEAD
+// ===============================================================
+// Logical functions
+||||||| merged common ancestors
+void
+MacroAssembler::or64(Imm64 imm, Register64 dest)
+{
+    if (imm.low().value != 0) {
+        orl(imm.low(), dest.low);
+    }
+    if (imm.hi().value != 0) {
+        orl(imm.hi(), dest.high);
+    }
+}
+=======
+// ===============================================================
+// Load instructions
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::andPtr(Register src, Register dest) { andl(src, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::xor64(Imm64 imm, Register64 dest)
+{
+    if (imm.low().value != 0) {
+        xorl(imm.low(), dest.low);
+    }
+    if (imm.hi().value != 0) {
+        xorl(imm.hi(), dest.high);
+    }
+}
+=======
+void MacroAssembler::load32SignExtendToPtr(const Address& src, Register dest) {
+  load32(src, dest);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void MacroAssembler::andPtr(Imm32 imm, Register dest) { andl(imm, dest); }
+||||||| merged common ancestors
+void
+MacroAssembler::orPtr(Register src, Register dest)
+{
+    orl(src, dest);
+}
+=======
 // ===============================================================
 // Logical functions
 
 void MacroAssembler::andPtr(Register src, Register dest) { andl(src, dest); }
 
 void MacroAssembler::andPtr(Imm32 imm, Register dest) { andl(imm, dest); }
+>>>>>>> upstream-releases
 
 void MacroAssembler::and64(Imm64 imm, Register64 dest) {
   if (imm.low().value != int32_t(0xFFFFFFFF)) {
@@ -234,6 +309,7 @@ void MacroAssembler::sub64(Imm64 imm, Register64 dest) {
 }
 
 // Note: this function clobbers eax and edx.
+<<<<<<< HEAD
 void MacroAssembler::mul64(Imm64 imm, const Register64& dest) {
   // LOW32  = LOW(LOW(dest) * LOW(imm));
   // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
@@ -262,9 +338,78 @@ void MacroAssembler::mul64(Imm64 imm, const Register64& dest) {
     MOZ_CRASH("Unsupported imm");
   }
   addl(edx, dest.high);
+||||||| merged common ancestors
+void
+MacroAssembler::mul64(Imm64 imm, const Register64& dest)
+{
+    // LOW32  = LOW(LOW(dest) * LOW(imm));
+    // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
+    //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
+    //        + HIGH(LOW(dest) * LOW(imm)) [carry]
+
+    MOZ_ASSERT(dest.low != eax && dest.low != edx);
+    MOZ_ASSERT(dest.high != eax && dest.high != edx);
+
+    // HIGH(dest) = LOW(HIGH(dest) * LOW(imm));
+    movl(Imm32(imm.value & 0xFFFFFFFFL), edx);
+    imull(edx, dest.high);
+
+    // edx:eax = LOW(dest) * LOW(imm);
+    movl(Imm32(imm.value & 0xFFFFFFFFL), edx);
+    movl(dest.low, eax);
+    mull(edx);
+
+    // HIGH(dest) += edx;
+    addl(edx, dest.high);
+
+    // HIGH(dest) += LOW(LOW(dest) * HIGH(imm));
+    if (((imm.value >> 32) & 0xFFFFFFFFL) == 5) {
+        leal(Operand(dest.low, dest.low, TimesFour), edx);
+    } else {
+        MOZ_CRASH("Unsupported imm");
+    }
+    addl(edx, dest.high);
+=======
+void MacroAssembler::mul64(Imm64 imm, const Register64& dest) {
+  // LOW32  = LOW(LOW(dest) * LOW(imm));
+  // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
+  //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
+  //        + HIGH(LOW(dest) * LOW(imm)) [carry]
+
+  MOZ_ASSERT(dest.low != eax && dest.low != edx);
+  MOZ_ASSERT(dest.high != eax && dest.high != edx);
+
+  // HIGH(dest) = LOW(HIGH(dest) * LOW(imm));
+  movl(Imm32(imm.value & 0xFFFFFFFFL), edx);
+  imull(edx, dest.high);
+
+  // edx:eax = LOW(dest) * LOW(imm);
+  movl(Imm32(imm.value & 0xFFFFFFFFL), edx);
+  movl(dest.low, eax);
+  mull(edx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // LOW(dest) = eax;
+  movl(eax, dest.low);
+||||||| merged common ancestors
+    // LOW(dest) = eax;
+    movl(eax, dest.low);
+=======
+  // HIGH(dest) += edx;
+  addl(edx, dest.high);
+
+  // HIGH(dest) += LOW(LOW(dest) * HIGH(imm));
+  if (((imm.value >> 32) & 0xFFFFFFFFL) == 5) {
+    leal(Operand(dest.low, dest.low, TimesFour), edx);
+  } else {
+    MOZ_CRASH("Unsupported imm");
+  }
+  addl(edx, dest.high);
 
   // LOW(dest) = eax;
   movl(eax, dest.low);
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::mul64(Imm64 imm, const Register64& dest,
@@ -336,6 +481,8 @@ void MacroAssembler::neg64(Register64 reg) {
   adcl(Imm32(0), reg.high);
   negl(reg.high);
 }
+
+void MacroAssembler::negPtr(Register reg) { negl(reg); }
 
 // ===============================================================
 // Shift functions
@@ -654,6 +801,73 @@ void MacroAssembler::branch64(Condition cond, Register64 lhs, Imm64 val,
       }
       break;
     }
+<<<<<<< HEAD
+    default:
+      MOZ_CRASH("Condition code not supported");
+      break;
+  }
+
+  if (fallthrough) {
+    bind(fail);
+  }
+}
+
+void MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs,
+                              Label* success, Label* fail) {
+  bool fallthrough = false;
+  Label fallthroughLabel;
+
+  if (!fail) {
+    fail = &fallthroughLabel;
+    fallthrough = true;
+  }
+
+  switch (cond) {
+    case Assembler::Equal:
+      branch32(Assembler::NotEqual, lhs.low, rhs.low, fail);
+      branch32(Assembler::Equal, lhs.high, rhs.high, success);
+      if (!fallthrough) {
+        jump(fail);
+||||||| merged common ancestors
+
+    switch(cond) {
+      case Assembler::Equal:
+        branch32(Assembler::NotEqual, lhs.low, rhs.low, fail);
+        branch32(Assembler::Equal, lhs.high, rhs.high, success);
+        if (!fallthrough) {
+            jump(fail);
+        }
+        break;
+      case Assembler::NotEqual:
+        branch32(Assembler::NotEqual, lhs.low, rhs.low, success);
+        branch32(Assembler::NotEqual, lhs.high, rhs.high, success);
+        if (!fallthrough) {
+            jump(fail);
+        }
+        break;
+      case Assembler::LessThan:
+      case Assembler::LessThanOrEqual:
+      case Assembler::GreaterThan:
+      case Assembler::GreaterThanOrEqual:
+      case Assembler::Below:
+      case Assembler::BelowOrEqual:
+      case Assembler::Above:
+      case Assembler::AboveOrEqual: {
+        Assembler::Condition cond1 = Assembler::ConditionWithoutEqual(cond);
+        Assembler::Condition cond2 =
+            Assembler::ConditionWithoutEqual(Assembler::InvertCondition(cond));
+        Assembler::Condition cond3 = Assembler::UnsignedCondition(cond);
+
+        cmp32(lhs.high, rhs.high);
+        j(cond1, success);
+        j(cond2, fail);
+        cmp32(lhs.low, rhs.low);
+        j(cond3, success);
+        if (!fallthrough) {
+            jump(fail);
+        }
+        break;
+=======
     default:
       MOZ_CRASH("Condition code not supported");
       break;
@@ -709,8 +923,46 @@ void MacroAssembler::branch64(Condition cond, Register64 lhs, Register64 rhs,
       j(cond3, success);
       if (!fallthrough) {
         jump(fail);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+      break;
+    case Assembler::NotEqual:
+      branch32(Assembler::NotEqual, lhs.low, rhs.low, success);
+      branch32(Assembler::NotEqual, lhs.high, rhs.high, success);
+      if (!fallthrough) {
+        jump(fail);
       }
       break;
+    case Assembler::LessThan:
+    case Assembler::LessThanOrEqual:
+    case Assembler::GreaterThan:
+    case Assembler::GreaterThanOrEqual:
+    case Assembler::Below:
+    case Assembler::BelowOrEqual:
+    case Assembler::Above:
+    case Assembler::AboveOrEqual: {
+      Assembler::Condition cond1 = Assembler::ConditionWithoutEqual(cond);
+      Assembler::Condition cond2 =
+          Assembler::ConditionWithoutEqual(Assembler::InvertCondition(cond));
+      Assembler::Condition cond3 = Assembler::UnsignedCondition(cond);
+
+      cmp32(lhs.high, rhs.high);
+      j(cond1, success);
+      j(cond2, fail);
+      cmp32(lhs.low, rhs.low);
+      j(cond3, success);
+      if (!fallthrough) {
+        jump(fail);
+      }
+      break;
+||||||| merged common ancestors
+      default:
+        MOZ_CRASH("Condition code not supported");
+        break;
+=======
+      break;
+>>>>>>> upstream-releases
     }
     default:
       MOZ_CRASH("Condition code not supported");
@@ -863,6 +1115,25 @@ void MacroAssembler::branchTestMagic(Condition cond, const Address& valaddr,
                                      JSWhyMagic why, Label* label) {
   MOZ_ASSERT(cond == Assembler::Equal || cond == Assembler::NotEqual);
 
+<<<<<<< HEAD
+  Label notMagic;
+  if (cond == Assembler::Equal) {
+    branchTestMagic(Assembler::NotEqual, valaddr, &notMagic);
+  } else {
+    branchTestMagic(Assembler::NotEqual, valaddr, label);
+  }
+
+  branch32(cond, ToPayload(valaddr), Imm32(why), label);
+  bind(&notMagic);
+}
+||||||| merged common ancestors
+    Label notMagic;
+    if (cond == Assembler::Equal) {
+        branchTestMagic(Assembler::NotEqual, valaddr, &notMagic);
+    } else {
+        branchTestMagic(Assembler::NotEqual, valaddr, label);
+    }
+=======
   Label notMagic;
   if (cond == Assembler::Equal) {
     branchTestMagic(Assembler::NotEqual, valaddr, &notMagic);
@@ -874,6 +1145,33 @@ void MacroAssembler::branchTestMagic(Condition cond, const Address& valaddr,
   bind(&notMagic);
 }
 
+void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
+  jmp(Operand(addr));
+}
+
+void MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs,
+                                  Register src, Register dest) {
+  cmp32(lhs, rhs);
+  cmovCCl(cond, Operand(src), dest);
+}
+
+void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,
+                                   Imm32 mask, const Address& src,
+                                   Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+  test32(addr, mask);
+  cmovCCl(cond, Operand(src), dest);
+}
+
+void MacroAssembler::test32MovePtr(Condition cond, const Address& addr,
+                                   Imm32 mask, Register src, Register dest) {
+  MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+  test32(addr, mask);
+  cmovCCl(cond, Operand(src), dest);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
   jmp(Operand(addr));
 }
@@ -915,6 +1213,80 @@ void MacroAssembler::spectreBoundsCheck32(Register index, const Operand& length,
       pushedValue = true;
     } else {
       move32(Imm32(0), maybeScratch);
+||||||| merged common ancestors
+    branch32(cond, ToPayload(valaddr), Imm32(why), label);
+    bind(&notMagic);
+}
+
+void
+MacroAssembler::branchToComputedAddress(const BaseIndex& addr)
+{
+    jmp(Operand(addr));
+}
+
+void
+MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs, Register src,
+                             Register dest)
+{
+    cmp32(lhs, rhs);
+    cmovCCl(cond, Operand(src), dest);
+}
+
+void
+MacroAssembler::test32LoadPtr(Condition cond, const Address& addr, Imm32 mask, const Address& src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+    test32(addr, mask);
+    cmovCCl(cond, Operand(src), dest);
+}
+
+void
+MacroAssembler::test32MovePtr(Condition cond, const Address& addr, Imm32 mask, Register src,
+                              Register dest)
+{
+    MOZ_ASSERT(cond == Assembler::Zero || cond == Assembler::NonZero);
+    test32(addr, mask);
+    cmovCCl(cond, Operand(src), dest);
+}
+
+void
+MacroAssembler::spectreMovePtr(Condition cond, Register src, Register dest)
+{
+    cmovCCl(cond, Operand(src), dest);
+}
+
+void
+MacroAssembler::spectreBoundsCheck32(Register index, const Operand& length, Register maybeScratch,
+                                     Label* failure)
+{
+    Label failurePopValue;
+    bool pushedValue = false;
+    if (JitOptions.spectreIndexMasking) {
+        if (maybeScratch == InvalidReg) {
+            push(Imm32(0));
+            pushedValue = true;
+        } else {
+            move32(Imm32(0), maybeScratch);
+        }
+=======
+void MacroAssembler::spectreMovePtr(Condition cond, Register src,
+                                    Register dest) {
+  cmovCCl(cond, Operand(src), dest);
+}
+
+void MacroAssembler::spectreBoundsCheck32(Register index, const Operand& length,
+                                          Register maybeScratch,
+                                          Label* failure) {
+  Label failurePopValue;
+  bool pushedValue = false;
+  if (JitOptions.spectreIndexMasking) {
+    if (maybeScratch == InvalidReg) {
+      push(Imm32(0));
+      pushedValue = true;
+    } else {
+      move32(Imm32(0), maybeScratch);
+>>>>>>> upstream-releases
     }
   }
 

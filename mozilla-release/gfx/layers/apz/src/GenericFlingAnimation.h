@@ -12,9 +12,9 @@
 #include "AsyncPanZoomController.h"
 #include "FrameMetrics.h"
 #include "Layers.h"
+#include "LayersLogging.h"
 #include "Units.h"
 #include "OverscrollHandoffState.h"
-#include "gfxPrefs.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/Monitor.h"
 #include "mozilla/RefPtr.h"
@@ -92,18 +92,33 @@ class GenericFlingAnimation : public AsyncPanZoomAnimation,
     // is only applied in the APZC that originated the fling, not in APZCs
     // further down the handoff chain during handoff.
     bool applyAcceleration = !aFlingIsHandedOff;
+<<<<<<< HEAD
     if (applyAcceleration && !mApzc.mLastFlingTime.IsNull() &&
         (now - mApzc.mLastFlingTime).ToMilliseconds() <
             gfxPrefs::APZFlingAccelInterval() &&
         velocity.Length() >= gfxPrefs::APZFlingAccelMinVelocity()) {
       if (SameDirection(velocity.x, mApzc.mLastFlingVelocity.x)) {
+||||||| merged common ancestors
+    if (applyAcceleration && !mApzc.mLastFlingTime.IsNull()
+        && (now - mApzc.mLastFlingTime).ToMilliseconds() < gfxPrefs::APZFlingAccelInterval()
+        && velocity.Length() >= gfxPrefs::APZFlingAccelMinVelocity()) {
+      if (SameDirection(velocity.x, mApzc.mLastFlingVelocity.x)) {
+=======
+    if (applyAcceleration && !mApzc.mLastFlingTime.IsNull() &&
+        (now - mApzc.mLastFlingTime).ToMilliseconds() <
+            StaticPrefs::apz_fling_accel_interval_ms() &&
+        velocity.Length() >= StaticPrefs::apz_fling_accel_min_velocity()) {
+      if (velocity.x != 0 &&
+          SameDirection(velocity.x, mApzc.mLastFlingVelocity.x)) {
+>>>>>>> upstream-releases
         velocity.x = Accelerate(velocity.x, mApzc.mLastFlingVelocity.x);
         FLING_LOG("%p Applying fling x-acceleration from %f to %f (delta %f)\n",
                   &mApzc, mApzc.mX.GetVelocity(), velocity.x,
                   mApzc.mLastFlingVelocity.x);
         mApzc.mX.SetVelocity(velocity.x);
       }
-      if (SameDirection(velocity.y, mApzc.mLastFlingVelocity.y)) {
+      if (velocity.y != 0 &&
+          SameDirection(velocity.y, mApzc.mLastFlingVelocity.y)) {
         velocity.y = Accelerate(velocity.y, mApzc.mLastFlingVelocity.y);
         FLING_LOG("%p Applying fling y-acceleration from %f to %f (delta %f)\n",
                   &mApzc, mApzc.mY.GetVelocity(), velocity.y,
@@ -206,15 +221,45 @@ class GenericFlingAnimation : public AsyncPanZoomAnimation,
     return true;
   }
 
+<<<<<<< HEAD
  private:
   static bool SameDirection(float aVelocity1, float aVelocity2) {
     return (aVelocity1 == 0.0f) || (aVelocity2 == 0.0f) ||
            (IsNegative(aVelocity1) == IsNegative(aVelocity2));
+||||||| merged common ancestors
+private:
+  static bool SameDirection(float aVelocity1, float aVelocity2)
+  {
+    return (aVelocity1 == 0.0f)
+        || (aVelocity2 == 0.0f)
+        || (IsNegative(aVelocity1) == IsNegative(aVelocity2));
+=======
+  virtual bool HandleScrollOffsetUpdate(
+      const Maybe<CSSPoint>& aRelativeDelta) override {
+    return true;
   }
 
+ private:
+  static bool SameDirection(float aVelocity1, float aVelocity2) {
+    return (aVelocity1 == 0.0f) || (aVelocity2 == 0.0f) ||
+           (IsNegative(aVelocity1) == IsNegative(aVelocity2));
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
   static float Accelerate(float aBase, float aSupplemental) {
     return (aBase * gfxPrefs::APZFlingAccelBaseMultiplier()) +
            (aSupplemental * gfxPrefs::APZFlingAccelSupplementalMultiplier());
+||||||| merged common ancestors
+  static float Accelerate(float aBase, float aSupplemental)
+  {
+    return (aBase * gfxPrefs::APZFlingAccelBaseMultiplier())
+         + (aSupplemental * gfxPrefs::APZFlingAccelSupplementalMultiplier());
+=======
+  static float Accelerate(float aBase, float aSupplemental) {
+    return (aBase * StaticPrefs::apz_fling_accel_base_mult()) +
+           (aSupplemental * StaticPrefs::apz_fling_accel_supplemental_mult());
+>>>>>>> upstream-releases
   }
 
   AsyncPanZoomController& mApzc;

@@ -38,7 +38,13 @@ class PersistentBufferProvider : public RefCounted<PersistentBufferProvider> {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PersistentBufferProvider)
 
+<<<<<<< HEAD
   virtual ~PersistentBufferProvider() {}
+||||||| merged common ancestors
+  virtual ~PersistentBufferProvider() { }
+=======
+  virtual ~PersistentBufferProvider() = default;
+>>>>>>> upstream-releases
 
   virtual LayersBackend GetType() { return LayersBackend::LAYERS_NONE; }
 
@@ -95,29 +101,56 @@ class PersistentBufferProviderBasic : public PersistentBufferProvider {
 
   explicit PersistentBufferProviderBasic(gfx::DrawTarget* aTarget);
 
+<<<<<<< HEAD
   virtual LayersBackend GetType() override {
     return LayersBackend::LAYERS_BASIC;
   }
+||||||| merged common ancestors
+  virtual LayersBackend GetType() override { return LayersBackend::LAYERS_BASIC; }
+=======
+  LayersBackend GetType() override { return LayersBackend::LAYERS_BASIC; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(
       const gfx::IntRect& aPersistedRect) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(const gfx::IntRect& aPersistedRect) override;
+=======
+  already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(
+      const gfx::IntRect& aPersistedRect) override;
+>>>>>>> upstream-releases
 
-  virtual bool ReturnDrawTarget(already_AddRefed<gfx::DrawTarget> aDT) override;
+  bool ReturnDrawTarget(already_AddRefed<gfx::DrawTarget> aDT) override;
 
-  virtual already_AddRefed<gfx::SourceSurface> BorrowSnapshot() override;
+  already_AddRefed<gfx::SourceSurface> BorrowSnapshot() override;
 
+<<<<<<< HEAD
   virtual void ReturnSnapshot(
       already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+||||||| merged common ancestors
+  virtual void ReturnSnapshot(already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+=======
+  void ReturnSnapshot(already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+>>>>>>> upstream-releases
 
-  virtual bool PreservesDrawingState() const override { return true; }
+  bool PreservesDrawingState() const override { return true; }
 
-  virtual void OnShutdown() override { Destroy(); }
+  void OnShutdown() override { Destroy(); }
 
  protected:
   void Destroy();
 
+<<<<<<< HEAD
  private:
   ~PersistentBufferProviderBasic();
+||||||| merged common ancestors
+private:
+  ~PersistentBufferProviderBasic();
+=======
+ private:
+  virtual ~PersistentBufferProviderBasic();
+>>>>>>> upstream-releases
 
   RefPtr<gfx::DrawTarget> mDrawTarget;
   RefPtr<gfx::SourceSurface> mSnapshot;
@@ -137,31 +170,53 @@ class PersistentBufferProviderShared : public PersistentBufferProvider,
       gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
       KnowsCompositor* aKnowsCompositor);
 
-  virtual LayersBackend GetType() override;
+  LayersBackend GetType() override;
 
+<<<<<<< HEAD
   virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(
       const gfx::IntRect& aPersistedRect) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(const gfx::IntRect& aPersistedRect) override;
+=======
+  already_AddRefed<gfx::DrawTarget> BorrowDrawTarget(
+      const gfx::IntRect& aPersistedRect) override;
+>>>>>>> upstream-releases
 
-  virtual bool ReturnDrawTarget(already_AddRefed<gfx::DrawTarget> aDT) override;
+  bool ReturnDrawTarget(already_AddRefed<gfx::DrawTarget> aDT) override;
 
-  virtual already_AddRefed<gfx::SourceSurface> BorrowSnapshot() override;
+  already_AddRefed<gfx::SourceSurface> BorrowSnapshot() override;
 
+<<<<<<< HEAD
   virtual void ReturnSnapshot(
       already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+||||||| merged common ancestors
+  virtual void ReturnSnapshot(already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+=======
+  void ReturnSnapshot(already_AddRefed<gfx::SourceSurface> aSnapshot) override;
+>>>>>>> upstream-releases
 
-  virtual TextureClient* GetTextureClient() override;
+  TextureClient* GetTextureClient() override;
 
-  virtual void NotifyInactive() override;
+  void NotifyInactive() override;
 
-  virtual void OnShutdown() override { Destroy(); }
+  void OnShutdown() override { Destroy(); }
 
-  virtual bool SetKnowsCompositor(KnowsCompositor* aKnowsCompositor) override;
+  bool SetKnowsCompositor(KnowsCompositor* aKnowsCompositor) override;
 
-  virtual void ClearCachedResources() override;
+  void ClearCachedResources() override;
 
+<<<<<<< HEAD
   virtual bool PreservesDrawingState() const override { return false; }
 
  protected:
+||||||| merged common ancestors
+  virtual bool PreservesDrawingState() const override { return false; }
+protected:
+=======
+  bool PreservesDrawingState() const override { return false; }
+
+ protected:
+>>>>>>> upstream-releases
   PersistentBufferProviderShared(gfx::IntSize aSize, gfx::SurfaceFormat aFormat,
                                  KnowsCompositor* aKnowsCompositor,
                                  RefPtr<TextureClient>& aTexture);
@@ -183,10 +238,24 @@ class PersistentBufferProviderShared : public PersistentBufferProvider,
   Maybe<uint32_t> mFront;
 
   RefPtr<gfx::DrawTarget> mDrawTarget;
+<<<<<<< HEAD
   RefPtr<gfx::SourceSurface> mSnapshot;
+||||||| merged common ancestors
+  RefPtr<gfx::SourceSurface > mSnapshot;
+=======
+  RefPtr<gfx::SourceSurface> mSnapshot;
+  RefPtr<gfx::SourceSurface> mPreviousSnapshot;
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 struct AutoReturnSnapshot {
+||||||| merged common ancestors
+struct AutoReturnSnapshot
+{
+=======
+struct AutoReturnSnapshot final {
+>>>>>>> upstream-releases
   PersistentBufferProvider* mBufferProvider;
   RefPtr<gfx::SourceSurface>* mSnapshot;
 

@@ -14,7 +14,14 @@ webidl Document;
 
 %{ C++
 #include "mozilla/dom/ChildSHistory.h"
+namespace mozilla {
+namespace dom {
+struct LoadURIOptions;
+} // namespace dom
+} // namespace mozilla
 %}
+
+[ref] native LoadURIOptionsRef(const mozilla::dom::LoadURIOptions);
 
 /**
  * The nsIWebNavigation interface defines an interface for navigating the web.
@@ -138,7 +145,7 @@ interface nsIWebNavigation : nsISupports
    * document.
    */
   const unsigned long LOAD_FLAGS_CHARSET_CHANGE  = 0x0400;
- 
+
   /**
    * If this flag is set, Stop() will be called before the load starts
    * and will stop both content and network activity (the default is to
@@ -161,7 +168,7 @@ interface nsIWebNavigation : nsISupports
   /**
    * This flag specifies that this is the first load in this object.
    * Set with care, since setting incorrectly can cause us to assume that
-   * nothing was actually loaded in this object if the load ends up being 
+   * nothing was actually loaded in this object if the load ends up being
    * handled by an external application.  This flag must not be passed to
    * Reload.
    */
@@ -215,6 +222,7 @@ interface nsIWebNavigation : nsISupports
   const unsigned long LOAD_FLAGS_FORCE_ALLOW_DATA_URI = 0x400000;
 
   /**
+<<<<<<< HEAD
    * This load is the result of an HTTP redirect.
    */
   const unsigned long LOAD_FLAGS_IS_REDIRECT = 0x800000;
@@ -261,14 +269,11 @@ interface nsIWebNavigation : nsISupports
                in nsIInputStream           aPostData,
                in nsIInputStream           aHeaders,
                [optional] in nsIPrincipal  aTriggeringPrincipal);
-
-  /**
+||||||| merged common ancestors
    * Loads a given URI.  This will give priority to loading the requested URI
-   * in the object implementing this interface.  If it can't be loaded here
+   * in the object implementing	this interface.  If it can't be loaded here
    * however, the URI dispatcher will go through its normal process of content
    * loading.
-   *
-   * Behaves like loadURI, but allows passing of additional parameters.
    *
    * @param aURI
    *        The URI string to load.  For HTTP and FTP URLs and possibly others,
@@ -282,9 +287,6 @@ interface nsIWebNavigation : nsISupports
    * @param aReferrer
    *        The referring URI.  If this argument is null, then the referring
    *        URI will be inferred internally.
-   * @param aReferrerPolicy
-   *        One of the REFERRER_POLICY_* constants from nsIHttpChannel.
-   *        Normal case is REFERRER_POLICY_NO_REFERRER_WHEN_DOWNGRADE.
    * @param aPostData
    *        If the URI corresponds to a HTTP request, then this stream is
    *        appended directly to the HTTP request headers.  It may be prefixed
@@ -297,25 +299,48 @@ interface nsIWebNavigation : nsISupports
    *        header stream is formatted as:
    *            ( HEADER "\r\n" )*
    *        This parameter is optional and may be null.
-   * @param aBaseURI
-   *        Set to indicate a base URI to be associated with the load. Note
-   *        that at present this argument is only used with view-source aURIs
-   *        and cannot be used to resolve aURI.
-   *        This parameter is optional and may be null.
    * @param aTriggeringPrincipal
    *        The principal that initiated the load of aURI. If omitted docShell
    *        tries to create a codeBasePrincipal from aReferrer if not null. If
    *        aReferrer is also null docShell peforms a load using the
    *        SystemPrincipal as the triggeringPrincipal.
    */
-  void loadURIWithOptions(in AString                  aURI,
-                          in unsigned long            aLoadFlags,
-                          in nsIURI                   aReferrer,
-                          in unsigned long            aReferrerPolicy,
-                          in nsIInputStream           aPostData,
-                          in nsIInputStream           aHeaders,
-                          in nsIURI                   aBaseURI,
-                          [optional] in nsIPrincipal  aTriggeringPrincipal);
+  void loadURI(in AString                  aURI,
+               in unsigned long            aLoadFlags,
+               in nsIURI                   aReferrer,
+               in nsIInputStream           aPostData,
+               in nsIInputStream           aHeaders,
+               [optional] in nsIPrincipal  aTriggeringPrincipal);
+=======
+   * This load is the result of an HTTP redirect.
+   */
+  const unsigned long LOAD_FLAGS_IS_REDIRECT = 0x800000;
+>>>>>>> upstream-releases
+
+  /**
+   * Loads a given URI.  This will give priority to loading the requested URI
+   * in the object implementing this interface.  If it can't be loaded here
+   * however, the URI dispatcher will go through its normal process of content
+   * loading.
+   *
+   * @param aURI
+   *        The URI string to load.  For HTTP and FTP URLs and possibly others,
+   *        characters above U+007F will be converted to UTF-8 and then URL-
+   *        escaped per the rules of RFC 2396.
+   * @param aLoadURIOptions
+   *        A JSObject defined in LoadURIOptions.webidl holding info like e.g.
+   *        the triggeringPrincipal, the referrer info.
+   */
+  [implicit_jscontext, binaryname(LoadURIFromScript)]
+  void loadURI(in AString aURI,
+               in jsval   aLoadURIOptions);
+
+  /**
+   * A C++ friendly version of loadURI
+   */
+  [nostdcall, binaryname(LoadURI)]
+  void binaryLoadURI(in AString           aURI,
+                     in LoadURIOptionsRef aLoadURIOptions);
 
   /**
    * Tells the Object to reload the current page.  There may be cases where the
@@ -374,11 +399,6 @@ interface nsIWebNavigation : nsISupports
    * The currently loaded URI or null.
    */
   readonly attribute nsIURI currentURI;
- 
-  /**
-   * The referring URI for the currently loaded URI or null.
-   */
-  readonly attribute nsIURI referringURI;
 
   /**
    * The session history object used by this web navigation instance. This
@@ -410,4 +430,13 @@ interface nsIWebNavigation : nsISupports
    */
   [implicit_jscontext]
   void setOriginAttributesBeforeLoading(in jsval originAttributes);
+
+  /**
+   * Resume a load which has been redirected from another process.
+   *
+   * A negative |aHistoryIndex| value corresponds to a non-history load being
+   * resumed.
+   */
+  void resumeRedirectedLoad(in unsigned long long aLoadIdentifier,
+                            in long aHistoryIndex);
 };

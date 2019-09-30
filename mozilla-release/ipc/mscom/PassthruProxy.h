@@ -11,9 +11,19 @@
 #include "mozilla/mscom/ProxyStream.h"
 #include "mozilla/mscom/Ptr.h"
 #include "mozilla/NotNull.h"
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX)
 #include "mozilla/SandboxSettings.h"
 #endif  // defined(MOZ_CONTENT_SANDBOX)
+||||||| merged common ancestors
+#if defined(MOZ_CONTENT_SANDBOX)
+#include "mozilla/SandboxSettings.h"
+#endif // defined(MOZ_CONTENT_SANDBOX)
+=======
+#if defined(MOZ_SANDBOX)
+#  include "mozilla/SandboxSettings.h"
+#endif  // defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
 
 #include <objbase.h>
 
@@ -37,7 +47,7 @@ class PassthruProxy final : public IMarshal, public IClientSecurity {
   static RefPtr<Iface> Wrap(NotNull<Iface*> aIn) {
     static_assert(detail::VTableSizer<Iface>::Size >= 3, "VTable too small");
 
-#if defined(MOZ_CONTENT_SANDBOX)
+#if defined(MOZ_SANDBOX)
     if (mozilla::GetEffectiveContentSandboxLevel() < 3) {
       // The sandbox isn't strong enough to be a problem; no wrapping required
       return aIn.get();
@@ -57,7 +67,13 @@ class PassthruProxy final : public IMarshal, public IClientSecurity {
 #else
     // No wrapping required
     return aIn.get();
+<<<<<<< HEAD
 #endif  // defined(MOZ_CONTENT_SANDBOX)
+||||||| merged common ancestors
+#endif // defined(MOZ_CONTENT_SANDBOX)
+=======
+#endif  // defined(MOZ_SANDBOX)
+>>>>>>> upstream-releases
   }
 
   static HRESULT Register();

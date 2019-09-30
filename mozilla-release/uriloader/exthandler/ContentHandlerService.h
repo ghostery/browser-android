@@ -1,11 +1,12 @@
 #ifndef ContentHandlerService_h
 #define ContentHandlerService_h
 
+#include "mozilla/dom/PHandlerService.h"
 #include "nsIHandlerService.h"
 #include "nsClassHashtable.h"
-#include "HandlerServiceChild.h"
 #include "nsIMIMEInfo.h"
 
+<<<<<<< HEAD
 #define NS_CONTENTHANDLERSERVICE_CID                 \
   {                                                  \
     0xc4b6fb7c, 0xbfb1, 0x49dc, {                    \
@@ -13,7 +14,16 @@
     }                                                \
   }
 
+||||||| merged common ancestors
+#define  NS_CONTENTHANDLERSERVICE_CID                                   \
+  {0xc4b6fb7c, 0xbfb1, 0x49dc, {0xa6, 0x5f, 0x03, 0x57, 0x96, 0x52, 0x4b, 0x53}}
+
+=======
+>>>>>>> upstream-releases
 namespace mozilla {
+
+class HandlerServiceChild;
+
 namespace dom {
 
 class PHandlerServiceChild;

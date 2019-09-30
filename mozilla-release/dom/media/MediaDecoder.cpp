@@ -45,7 +45,7 @@ namespace mozilla {
 // GetTickCount() and conflicts with MediaDecoder::GetCurrentTime
 // implementation.
 #ifdef GetCurrentTime
-#undef GetCurrentTime
+#  undef GetCurrentTime
 #endif
 
 // avoid redefined macro in unified build
@@ -247,9 +247,21 @@ void MediaDecoder::AddOutputStream(DOMMediaStream* aStream) {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mDecoderStateMachine, "Must be called after Load().");
   AbstractThread::AutoEnter context(AbstractMainThread());
+<<<<<<< HEAD
   mDecoderStateMachine->EnsureOutputStreamManager(
       aStream->GetInputStream()->Graph(), ToMaybe(mInfo.get()));
   mDecoderStateMachine->AddOutputStream(aStream);
+||||||| merged common ancestors
+  mDecoderStateMachine->AddOutputStream(
+    aStream, aNextAvailableTrackID, aFinishWhenEnded);
+=======
+  mDecoderStateMachine->EnsureOutputStreamManager(
+      aStream->GetInputStream()->Graph());
+  if (mInfo) {
+    mDecoderStateMachine->EnsureOutputStreamManagerHasTracks(*mInfo);
+  }
+  mDecoderStateMachine->AddOutputStream(aStream);
+>>>>>>> upstream-releases
 }
 
 void MediaDecoder::RemoveOutputStream(DOMMediaStream* aStream) {
@@ -291,6 +303,7 @@ bool MediaDecoder::IsInfinite() const {
   name(mOwner->AbstractMainThread(), val, "MediaDecoder::" #name " (Canonical)")
 
 MediaDecoder::MediaDecoder(MediaDecoderInit& aInit)
+<<<<<<< HEAD
     : mWatchManager(this, aInit.mOwner->AbstractMainThread()),
       mLogicalPosition(0.0),
       mDuration(std::numeric_limits<double>::quiet_NaN()),
@@ -321,6 +334,71 @@ MediaDecoder::MediaDecoder(MediaDecoderInit& aInit)
       mIsBackgroundVideoDecodingAllowed(false),
       mTelemetryReported(false),
       mContainerType(aInit.mContainerType) {
+||||||| merged common ancestors
+  : mWatchManager(this, aInit.mOwner->AbstractMainThread())
+  , mLogicalPosition(0.0)
+  , mDuration(std::numeric_limits<double>::quiet_NaN())
+  , mOwner(aInit.mOwner)
+  , mAbstractMainThread(aInit.mOwner->AbstractMainThread())
+  , mFrameStats(new FrameStatistics())
+  , mVideoFrameContainer(aInit.mOwner->GetVideoFrameContainer())
+  , mMinimizePreroll(aInit.mMinimizePreroll)
+  , mFiredMetadataLoaded(false)
+  , mIsDocumentVisible(false)
+  , mElementVisibility(Visibility::UNTRACKED)
+  , mIsElementInTree(false)
+  , mForcedHidden(false)
+  , mHasSuspendTaint(aInit.mHasSuspendTaint)
+  , mPlaybackRate(aInit.mPlaybackRate)
+  , INIT_MIRROR(mBuffered, TimeIntervals())
+  , INIT_MIRROR(mCurrentPosition, TimeUnit::Zero())
+  , INIT_MIRROR(mStateMachineDuration, NullableTimeUnit())
+  , INIT_MIRROR(mIsAudioDataAudible, false)
+  , INIT_CANONICAL(mVolume, aInit.mVolume)
+  , INIT_CANONICAL(mPreservesPitch, aInit.mPreservesPitch)
+  , INIT_CANONICAL(mLooping, aInit.mLooping)
+  , INIT_CANONICAL(mPlayState, PLAY_STATE_LOADING)
+  , INIT_CANONICAL(mLogicallySeeking, false)
+  , INIT_CANONICAL(mSameOriginMedia, false)
+  , INIT_CANONICAL(mMediaPrincipalHandle, PRINCIPAL_HANDLE_NONE)
+  , mVideoDecodingOberver(new BackgroundVideoDecodingPermissionObserver(this))
+  , mIsBackgroundVideoDecodingAllowed(false)
+  , mTelemetryReported(false)
+  , mContainerType(aInit.mContainerType)
+{
+=======
+    : mWatchManager(this, aInit.mOwner->AbstractMainThread()),
+      mLogicalPosition(0.0),
+      mDuration(std::numeric_limits<double>::quiet_NaN()),
+      mOwner(aInit.mOwner),
+      mAbstractMainThread(aInit.mOwner->AbstractMainThread()),
+      mFrameStats(new FrameStatistics()),
+      mVideoFrameContainer(aInit.mOwner->GetVideoFrameContainer()),
+      mMinimizePreroll(aInit.mMinimizePreroll),
+      mFiredMetadataLoaded(false),
+      mIsDocumentVisible(false),
+      mElementVisibility(Visibility::Untracked),
+      mIsElementInTree(false),
+      mForcedHidden(false),
+      mHasSuspendTaint(aInit.mHasSuspendTaint),
+      mIsCloningVisually(false),
+      mPlaybackRate(aInit.mPlaybackRate),
+      mLogicallySeeking(false, "MediaDecoder::mLogicallySeeking"),
+      INIT_MIRROR(mBuffered, TimeIntervals()),
+      INIT_MIRROR(mCurrentPosition, TimeUnit::Zero()),
+      INIT_MIRROR(mStateMachineDuration, NullableTimeUnit()),
+      INIT_MIRROR(mIsAudioDataAudible, false),
+      INIT_CANONICAL(mVolume, aInit.mVolume),
+      INIT_CANONICAL(mPreservesPitch, aInit.mPreservesPitch),
+      INIT_CANONICAL(mLooping, aInit.mLooping),
+      INIT_CANONICAL(mPlayState, PLAY_STATE_LOADING),
+      INIT_CANONICAL(mSameOriginMedia, false),
+      mVideoDecodingOberver(
+          new BackgroundVideoDecodingPermissionObserver(this)),
+      mIsBackgroundVideoDecodingAllowed(false),
+      mTelemetryReported(false),
+      mContainerType(aInit.mContainerType) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mAbstractMainThread);
   MediaMemoryTracker::AddMediaDecoder(this);
@@ -346,7 +424,6 @@ MediaDecoder::MediaDecoder(MediaDecoderInit& aInit)
   mWatchManager.Watch(mIsAudioDataAudible,
                       &MediaDecoder::NotifyAudibleStateChanged);
 
-  MediaShutdownManager::InitStatics();
   mVideoDecodingOberver->RegisterEvent();
 }
 
@@ -474,7 +551,7 @@ void MediaDecoder::OnDecoderDoctorEvent(DecoderDoctorEvent aEvent) {
   MOZ_ASSERT(NS_IsMainThread());
   // OnDecoderDoctorEvent is disconnected at shutdown time.
   MOZ_DIAGNOSTIC_ASSERT(!IsShutdown());
-  nsIDocument* doc = GetOwner()->GetDocument();
+  Document* doc = GetOwner()->GetDocument();
   if (!doc) {
     return;
   }
@@ -591,12 +668,12 @@ void MediaDecoder::Seek(double aTime, SeekTarget::Type aSeekType) {
   AbstractThread::AutoEnter context(AbstractMainThread());
   MOZ_ASSERT(aTime >= 0.0, "Cannot seek to a negative value.");
 
-  int64_t timeUsecs = TimeUnit::FromSeconds(aTime).ToMicroseconds();
+  auto time = TimeUnit::FromSeconds(aTime);
 
   mLogicalPosition = aTime;
 
   mLogicallySeeking = true;
-  SeekTarget target = SeekTarget(timeUsecs, aSeekType);
+  SeekTarget target = SeekTarget(time, aSeekType);
   CallSeek(target);
 
   if (mPlayState == PLAY_STATE_ENDED) {
@@ -656,6 +733,7 @@ void MediaDecoder::MetadataLoaded(
       aInfo->mMediaSeekableOnlyInBufferedRanges;
   mInfo = aInfo.release();
   GetOwner()->ConstructMediaTracks(mInfo);
+  mDecoderStateMachine->EnsureOutputStreamManagerHasTracks(*mInfo);
 
   // Make sure the element and the frame (if any) are told about
   // our new size.
@@ -922,7 +1000,7 @@ void MediaDecoder::DurationChanged() {
 
 already_AddRefed<KnowsCompositor> MediaDecoder::GetCompositor() {
   MediaDecoderOwner* owner = GetOwner();
-  nsIDocument* ownerDoc = owner ? owner->GetDocument() : nullptr;
+  Document* ownerDoc = owner ? owner->GetDocument() : nullptr;
   RefPtr<LayerManager> layerManager =
       ownerDoc ? nsContentUtils::LayerManagerForDocument(ownerDoc) : nullptr;
   RefPtr<KnowsCompositor> knows =
@@ -973,10 +1051,44 @@ void MediaDecoder::UpdateVideoDecodeMode() {
     return;
   }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+  // If an element is in-tree with UNTRACKED visibility, the visibility is
+  // incomplete and don't update the video decode mode.
+  if (mIsElementInTree && mElementVisibility == Visibility::UNTRACKED) {
+    LOG("UpdateVideoDecodeMode(), early return because we have incomplete visibility states.");
+    return;
+  }
+
+=======
+  // Seeking is required when leaving suspend mode.
+  if (!mMediaSeekable) {
+    LOG("UpdateVideoDecodeMode(), set Normal because the media is not "
+        "seekable");
+    mDecoderStateMachine->SetVideoDecodeMode(VideoDecodeMode::Normal);
+    return;
+  }
+
+>>>>>>> upstream-releases
   // If mHasSuspendTaint is set, never suspend the video decoder.
   if (mHasSuspendTaint) {
+<<<<<<< HEAD
     LOG("UpdateVideoDecodeMode(), set Normal because the element has been "
         "tainted.");
+||||||| merged common ancestors
+    LOG("UpdateVideoDecodeMode(), set Normal because the element has been tainted.");
+=======
+    LOG("UpdateVideoDecodeMode(), set Normal because the element has been "
+        "tainted.");
+    mDecoderStateMachine->SetVideoDecodeMode(VideoDecodeMode::Normal);
+    return;
+  }
+
+  // If mIsCloningVisually is set, never suspend the video decoder.
+  if (mIsCloningVisually) {
+    LOG("UpdateVideoDecodeMode(), set Normal because the element is cloning "
+        "itself visually to another video container.");
+>>>>>>> upstream-releases
     mDecoderStateMachine->SetVideoDecodeMode(VideoDecodeMode::Normal);
     return;
   }
@@ -1005,6 +1117,7 @@ void MediaDecoder::UpdateVideoDecodeMode() {
     return;
   }
 
+<<<<<<< HEAD
   // If the element is in-tree with UNTRACKED visibility, that means the element
   // is not close enough to the viewport so we have not start to update its
   // visibility. In this case, it's equals to invisible.
@@ -1015,11 +1128,24 @@ void MediaDecoder::UpdateVideoDecodeMode() {
     return;
   }
 
+||||||| merged common ancestors
+=======
+  // If the element is in-tree with UNTRACKED visibility, that means the element
+  // is not close enough to the viewport so we have not start to update its
+  // visibility. In this case, it's equals to invisible.
+  if (mIsElementInTree && mElementVisibility == Visibility::Untracked) {
+    LOG("UpdateVideoDecodeMode(), set Suspend because element hasn't be "
+        "updated visibility state.");
+    mDecoderStateMachine->SetVideoDecodeMode(VideoDecodeMode::Suspend);
+    return;
+  }
+
+>>>>>>> upstream-releases
   // Otherwise, depends on the owner's visibility state.
   // A element is visible only if its document is visible and the element
   // itself is visible.
   if (mIsDocumentVisible &&
-      mElementVisibility == Visibility::APPROXIMATELY_VISIBLE) {
+      mElementVisibility == Visibility::ApproximatelyVisible) {
     LOG("UpdateVideoDecodeMode(), set Normal because the element visible.");
     mDecoderStateMachine->SetVideoDecodeMode(VideoDecodeMode::Normal);
   } else {
@@ -1039,7 +1165,22 @@ bool MediaDecoder::HasSuspendTaint() const {
   return mHasSuspendTaint;
 }
 
+<<<<<<< HEAD
 bool MediaDecoder::IsMediaSeekable() {
+||||||| merged common ancestors
+bool
+MediaDecoder::IsMediaSeekable()
+{
+=======
+void MediaDecoder::SetCloningVisually(bool aIsCloningVisually) {
+  if (mIsCloningVisually != aIsCloningVisually) {
+    mIsCloningVisually = aIsCloningVisually;
+    UpdateVideoDecodeMode();
+  }
+}
+
+bool MediaDecoder::IsMediaSeekable() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_TRUE(GetStateMachine(), false);
   return mMediaSeekable;
@@ -1220,13 +1361,53 @@ RefPtr<SetCDMPromise> MediaDecoder::SetCDMProxy(CDMProxy* aProxy) {
                                        &MediaFormatReader::SetCDMProxy, aProxy);
 }
 
+<<<<<<< HEAD
 bool MediaDecoder::IsOpusEnabled() { return StaticPrefs::MediaOpusEnabled(); }
+||||||| merged common ancestors
+bool
+MediaDecoder::IsOpusEnabled()
+{
+  return StaticPrefs::MediaOpusEnabled();
+}
+=======
+bool MediaDecoder::IsOpusEnabled() { return StaticPrefs::media_opus_enabled(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool MediaDecoder::IsOggEnabled() { return StaticPrefs::MediaOggEnabled(); }
+||||||| merged common ancestors
+bool
+MediaDecoder::IsOggEnabled()
+{
+  return StaticPrefs::MediaOggEnabled();
+}
+=======
+bool MediaDecoder::IsOggEnabled() { return StaticPrefs::media_ogg_enabled(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool MediaDecoder::IsWaveEnabled() { return StaticPrefs::MediaWaveEnabled(); }
+||||||| merged common ancestors
+bool
+MediaDecoder::IsWaveEnabled()
+{
+  return StaticPrefs::MediaWaveEnabled();
+}
+=======
+bool MediaDecoder::IsWaveEnabled() { return StaticPrefs::media_wave_enabled(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool MediaDecoder::IsWebMEnabled() { return StaticPrefs::MediaWebMEnabled(); }
+||||||| merged common ancestors
+bool
+MediaDecoder::IsWebMEnabled()
+{
+  return StaticPrefs::MediaWebMEnabled();
+}
+=======
+bool MediaDecoder::IsWebMEnabled() { return StaticPrefs::media_webm_enabled(); }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 MediaMemoryTracker::CollectReports(nsIHandleReportCallback* aHandleReport,
@@ -1293,6 +1474,7 @@ MediaDecoderOwner::NextFrameStatus MediaDecoder::NextFrameBufferedStatus() {
   media::TimeInterval interval(
       currentPosition, currentPosition + DEFAULT_NEXT_FRAME_AVAILABLE_BUFFERED);
   return GetBuffered().Contains(interval)
+<<<<<<< HEAD
              ? MediaDecoderOwner::NEXT_FRAME_AVAILABLE
              : MediaDecoderOwner::NEXT_FRAME_UNAVAILABLE;
 }
@@ -1316,12 +1498,56 @@ RefPtr<GenericPromise> MediaDecoder::DumpDebugInfo() {
     str += "\nreader data:\n";
     str += readerStr;
   }
+||||||| merged common ancestors
+         ? MediaDecoderOwner::NEXT_FRAME_AVAILABLE
+         : MediaDecoderOwner::NEXT_FRAME_UNAVAILABLE;
+}
 
-  if (!GetStateMachine()) {
-    DUMP("%s", str.get());
-    return GenericPromise::CreateAndResolve(true, __func__);
+nsCString
+MediaDecoder::GetDebugInfo()
+{
+  return nsPrintfCString(
+    "MediaDecoder=%p: channels=%u rate=%u hasAudio=%d hasVideo=%d "
+    "mPlayState=%s",
+    this,
+    mInfo ? mInfo->mAudio.mChannels : 0,
+    mInfo ? mInfo->mAudio.mRate : 0,
+    mInfo ? mInfo->HasAudio() : 0,
+    mInfo ? mInfo->HasVideo() : 0,
+    PlayStateStr());
+}
+
+RefPtr<GenericPromise>
+MediaDecoder::DumpDebugInfo()
+{
+  MOZ_DIAGNOSTIC_ASSERT(!IsShutdown());
+  nsCString str = GetDebugInfo();
+
+  nsAutoCString readerStr;
+  GetMozDebugReaderData(readerStr);
+  if (!readerStr.IsEmpty()) {
+    str += "\nreader data:\n";
+    str += readerStr;
   }
+=======
+             ? MediaDecoderOwner::NEXT_FRAME_AVAILABLE
+             : MediaDecoderOwner::NEXT_FRAME_UNAVAILABLE;
+}
+>>>>>>> upstream-releases
 
+void MediaDecoder::GetDebugInfo(dom::MediaDecoderDebugInfo& aInfo) {
+  aInfo.mInstance = NS_ConvertUTF8toUTF16(nsPrintfCString("%p", this));
+  aInfo.mChannels = mInfo ? mInfo->mAudio.mChannels : 0;
+  aInfo.mRate = mInfo ? mInfo->mAudio.mRate : 0;
+  aInfo.mHasAudio = mInfo ? mInfo->HasAudio() : false;
+  aInfo.mHasVideo = mInfo ? mInfo->HasVideo() : false;
+  aInfo.mPlayState = NS_ConvertUTF8toUTF16(PlayStateStr());
+  aInfo.mContainerType =
+      NS_ConvertUTF8toUTF16(ContainerType().Type().AsString());
+  mReader->GetDebugInfo(aInfo.mReader);
+}
+
+<<<<<<< HEAD
   return GetStateMachine()->RequestDebugInfo()->Then(
       SystemGroup::AbstractMainThreadFor(TaskCategory::Other), __func__,
       [str](const nsACString& aString) {
@@ -1336,13 +1562,36 @@ RefPtr<GenericPromise> MediaDecoder::DumpDebugInfo() {
 }
 
 RefPtr<MediaDecoder::DebugInfoPromise> MediaDecoder::RequestDebugInfo() {
-  MOZ_DIAGNOSTIC_ASSERT(!IsShutdown());
+||||||| merged common ancestors
+  return GetStateMachine()->RequestDebugInfo()->Then(
+    SystemGroup::AbstractMainThreadFor(TaskCategory::Other),
+    __func__,
+    [str](const nsACString& aString) {
+      DUMP("%s", str.get());
+      DUMP("%s", aString.Data());
+      return GenericPromise::CreateAndResolve(true, __func__);
+    },
+    [str]() {
+      DUMP("%s", str.get());
+      return GenericPromise::CreateAndResolve(true, __func__);
+    });
+}
 
-  auto str = GetDebugInfo();
+RefPtr<MediaDecoder::DebugInfoPromise>
+MediaDecoder::RequestDebugInfo()
+{
+=======
+RefPtr<GenericPromise> MediaDecoder::RequestDebugInfo(
+    MediaDecoderDebugInfo& aInfo) {
+>>>>>>> upstream-releases
+  MOZ_DIAGNOSTIC_ASSERT(!IsShutdown());
+  GetDebugInfo(aInfo);
+
   if (!GetStateMachine()) {
-    return DebugInfoPromise::CreateAndResolve(str, __func__);
+    return GenericPromise::CreateAndResolve(true, __func__);
   }
 
+<<<<<<< HEAD
   return GetStateMachine()->RequestDebugInfo()->Then(
       SystemGroup::AbstractMainThreadFor(TaskCategory::Other), __func__,
       [str](const nsACString& aString) {
@@ -1358,6 +1607,37 @@ void MediaDecoder::GetMozDebugReaderData(nsACString& aString) {
   if (mReader) {
     mReader->GetMozDebugReaderData(aString);
   }
+||||||| merged common ancestors
+  return GetStateMachine()->RequestDebugInfo()->Then(
+    SystemGroup::AbstractMainThreadFor(TaskCategory::Other), __func__,
+    [str] (const nsACString& aString) {
+      nsCString result = str + nsCString("\n") + aString;
+      return DebugInfoPromise::CreateAndResolve(result, __func__);
+    },
+    [str] () {
+      return DebugInfoPromise::CreateAndResolve(str, __func__);
+    });
+}
+
+void
+MediaDecoder::GetMozDebugReaderData(nsACString& aString)
+{
+  aString += nsPrintfCString("Container Type: %s\n",
+                             ContainerType().Type().AsString().get());
+  if (mReader) {
+    mReader->GetMozDebugReaderData(aString);
+  }
+=======
+  return GetStateMachine()
+      ->RequestDebugInfo(aInfo.mStateMachine)
+      ->Then(
+          SystemGroup::AbstractMainThreadFor(TaskCategory::Other), __func__,
+          []() { return GenericPromise::CreateAndResolve(true, __func__); },
+          []() {
+            UNREACHABLE();
+            return GenericPromise::CreateAndResolve(false, __func__);
+          });
+>>>>>>> upstream-releases
 }
 
 void MediaDecoder::NotifyAudibleStateChanged() {

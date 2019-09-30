@@ -6,6 +6,7 @@
 #ifndef mozilla_EditorUtils_h
 #define mozilla_EditorUtils_h
 
+#include "mozilla/ContentIterator.h"
 #include "mozilla/dom/Selection.h"
 #include "mozilla/EditAction.h"
 #include "mozilla/EditorBase.h"
@@ -17,7 +18,6 @@
 #include "nscore.h"
 
 class nsAtom;
-class nsIContentIterator;
 class nsISimpleEnumerator;
 class nsITransferable;
 class nsRange;
@@ -240,17 +240,24 @@ class MOZ_STACK_CLASS SplitNodeResult final {
    * by this instance.  Therefore, the life time of both container node
    * and child node are guaranteed while using the result temporarily.
    */
+<<<<<<< HEAD
   EditorRawDOMPoint SplitPoint() const {
+||||||| merged common ancestors
+  EditorRawDOMPoint SplitPoint() const
+  {
+=======
+  EditorDOMPoint SplitPoint() const {
+>>>>>>> upstream-releases
     if (Failed()) {
-      return EditorRawDOMPoint();
+      return EditorDOMPoint();
     }
     if (mGivenSplitPoint.IsSet()) {
-      return EditorRawDOMPoint(mGivenSplitPoint);
+      return EditorDOMPoint(mGivenSplitPoint);
     }
     if (!mPreviousNode) {
-      return EditorRawDOMPoint(mNextNode);
+      return EditorDOMPoint(mNextNode);
     }
-    EditorRawDOMPoint point(mPreviousNode);
+    EditorDOMPoint point(mPreviousNode);
     DebugOnly<bool> advanced = point.AdvanceOffset();
     NS_WARNING_ASSERTION(advanced,
                          "Failed to advance offset to after previous node");
@@ -405,6 +412,7 @@ class MOZ_STACK_CLASS SplitRangeOffFromNodeResult final {
  * AutoTransactionBatch in such cases since it uses non-virtual internal
  * methods.
  ***************************************************************************/
+<<<<<<< HEAD
 class MOZ_RAII AutoTransactionBatchExternal final {
  private:
   OwningNonNull<EditorBase> mEditorBase;
@@ -424,6 +432,229 @@ class MOZ_RAII AutoTransactionBatchExternal final {
 class MOZ_STACK_CLASS AutoRangeArray final {
  public:
   explicit AutoRangeArray(dom::Selection* aSelection) {
+||||||| merged common ancestors
+class MOZ_RAII AutoTransactionBatch final
+{
+private:
+  OwningNonNull<EditorBase> mEditorBase;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+
+public:
+  explicit AutoTransactionBatch(EditorBase& aEditorBase
+                                MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    mEditorBase->BeginTransactionInternal();
+  }
+
+  ~AutoTransactionBatch()
+  {
+    mEditorBase->EndTransactionInternal();
+  }
+};
+
+/***************************************************************************
+ * stack based helper class for batching a collection of transactions inside a
+ * placeholder transaction.
+ */
+class MOZ_RAII AutoPlaceholderBatch final
+{
+private:
+  RefPtr<EditorBase> mEditorBase;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+
+public:
+  explicit AutoPlaceholderBatch(EditorBase* aEditorBase
+                                MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    BeginPlaceholderTransaction(nullptr);
+  }
+  AutoPlaceholderBatch(EditorBase* aEditorBase,
+                       nsAtom* aTransactionName
+                       MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    BeginPlaceholderTransaction(aTransactionName);
+  }
+  ~AutoPlaceholderBatch()
+  {
+    if (mEditorBase) {
+      mEditorBase->EndPlaceholderTransaction();
+    }
+  }
+
+private:
+  void BeginPlaceholderTransaction(nsAtom* aTransactionName)
+  {
+    if (mEditorBase) {
+      mEditorBase->BeginPlaceholderTransaction(aTransactionName);
+    }
+  }
+};
+
+/***************************************************************************
+ * stack based helper class for saving/restoring selection.  Note that this
+ * assumes that the nodes involved are still around afterwards!
+ */
+class MOZ_RAII AutoSelectionRestorer final
+{
+private:
+  // Ref-counted reference to the selection that we are supposed to restore.
+  RefPtr<dom::Selection> mSelection;
+  EditorBase* mEditorBase;  // Non-owning ref to EditorBase.
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+
+public:
+  /**
+   * Constructor responsible for remembering all state needed to restore
+   * aSelection.
+   */
+  AutoSelectionRestorer(dom::Selection* aSelection,
+                        EditorBase* aEditorBase
+                        MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
+
+  /**
+   * Destructor restores mSelection to its former state
+   */
+  ~AutoSelectionRestorer();
+
+  /**
+   * Abort() cancels to restore the selection.
+   */
+  void Abort();
+};
+
+/***************************************************************************
+ * AutoTopLevelEditSubActionNotifier notifies editor of start to handle
+ * top level edit sub-action and end handling top level edit sub-action.
+ */
+class MOZ_RAII AutoTopLevelEditSubActionNotifier final
+{
+public:
+  AutoTopLevelEditSubActionNotifier(EditorBase& aEditorBase,
+                                    EditSubAction aEditSubAction,
+                                    nsIEditor::EDirection aDirection
+                                    MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+    , mDoNothing(false)
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    // mTopLevelEditSubAction will already be set if this is nested call
+    // XXX Looks like that this is not aware of unexpected nested edit action
+    //     handling via selectionchange event listener or mutation event
+    //     listener.
+    if (!mEditorBase.mTopLevelEditSubAction) {
+      mEditorBase.OnStartToHandleTopLevelEditSubAction(aEditSubAction,
+                                                       aDirection);
+    } else {
+      mDoNothing = true; // nested calls will end up here
+    }
+  }
+
+  ~AutoTopLevelEditSubActionNotifier()
+  {
+    if (!mDoNothing) {
+      mEditorBase.OnEndHandlingTopLevelEditSubAction();
+    }
+  }
+
+protected:
+  EditorBase& mEditorBase;
+  bool mDoNothing;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+};
+
+/***************************************************************************
+ * stack based helper class for turning off active selection adjustment
+ * by low level transactions
+ */
+class MOZ_RAII AutoTransactionsConserveSelection final
+{
+public:
+  explicit AutoTransactionsConserveSelection(EditorBase& aEditorBase
+                                             MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+    , mAllowedTransactionsToChangeSelection(
+        aEditorBase.AllowsTransactionsToChangeSelection())
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    mEditorBase.MakeThisAllowTransactionsToChangeSelection(false);
+  }
+
+  ~AutoTransactionsConserveSelection()
+  {
+    mEditorBase.MakeThisAllowTransactionsToChangeSelection(
+                  mAllowedTransactionsToChangeSelection);
+  }
+
+protected:
+  EditorBase& mEditorBase;
+  bool mAllowedTransactionsToChangeSelection;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+};
+
+/***************************************************************************
+ * stack based helper class for batching reflow and paint requests.
+ */
+class MOZ_RAII AutoUpdateViewBatch final
+{
+public:
+  explicit AutoUpdateViewBatch(EditorBase* aEditorBase
+                               MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+    : mEditorBase(aEditorBase)
+  {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    NS_ASSERTION(mEditorBase, "null mEditorBase pointer!");
+
+    if (mEditorBase) {
+      mEditorBase->BeginUpdateViewBatch();
+    }
+  }
+
+  ~AutoUpdateViewBatch()
+  {
+    if (mEditorBase) {
+      mEditorBase->EndUpdateViewBatch();
+    }
+  }
+
+protected:
+  EditorBase* mEditorBase;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+};
+
+class MOZ_STACK_CLASS AutoRangeArray final
+{
+public:
+  explicit AutoRangeArray(dom::Selection* aSelection)
+  {
+=======
+class MOZ_RAII AutoTransactionBatchExternal final {
+ public:
+  MOZ_CAN_RUN_SCRIPT explicit AutoTransactionBatchExternal(
+      EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
+      : mEditorBase(aEditorBase) {
+    MOZ_GUARD_OBJECT_NOTIFIER_INIT;
+    mEditorBase.BeginTransaction();
+  }
+
+  MOZ_CAN_RUN_SCRIPT ~AutoTransactionBatchExternal() {
+    MOZ_KnownLive(mEditorBase).EndTransaction();
+  }
+
+ private:
+  EditorBase& mEditorBase;
+  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
+};
+
+class MOZ_STACK_CLASS AutoRangeArray final {
+ public:
+  explicit AutoRangeArray(dom::Selection* aSelection) {
+>>>>>>> upstream-releases
     if (!aSelection) {
       return;
     }
@@ -450,7 +681,7 @@ class MOZ_RAII DOMIterator {
   explicit DOMIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM);
 
   explicit DOMIterator(nsINode& aNode MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
-  virtual ~DOMIterator();
+  virtual ~DOMIterator() = default;
 
   nsresult Init(nsRange& aRange);
 
@@ -458,17 +689,31 @@ class MOZ_RAII DOMIterator {
       const BoolDomIterFunctor& functor,
       nsTArray<mozilla::OwningNonNull<nsINode>>& arrayOfNodes) const;
 
+<<<<<<< HEAD
  protected:
   nsCOMPtr<nsIContentIterator> mIter;
+||||||| merged common ancestors
+protected:
+  nsCOMPtr<nsIContentIterator> mIter;
+=======
+ protected:
+  ContentIteratorBase* mIter;
+  PostContentIterator mPostOrderIter;
+>>>>>>> upstream-releases
   MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
 };
 
 class MOZ_RAII DOMSubtreeIterator final : public DOMIterator {
  public:
   explicit DOMSubtreeIterator(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM);
-  virtual ~DOMSubtreeIterator();
+  virtual ~DOMSubtreeIterator() = default;
 
   nsresult Init(nsRange& aRange);
+
+ private:
+  ContentSubtreeIterator mSubtreeIter;
+  explicit DOMSubtreeIterator(nsINode& aNode MOZ_GUARD_OBJECT_NOTIFIER_PARAM) =
+      delete;
 };
 
 class TrivialFunctor final : public BoolDomIterFunctor {

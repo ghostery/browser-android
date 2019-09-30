@@ -87,6 +87,7 @@ class MouseCursorMonitor {
       const DesktopCaptureOptions& options,
       ScreenId screen);
 
+<<<<<<< HEAD
   // Creates a capturer that monitors the mouse cursor shape and position across
   // the entire desktop. The capturer ensures that the top-left monitor starts
   // from (0, 0).
@@ -96,9 +97,21 @@ class MouseCursorMonitor {
   // Initializes the monitor with the |callback|, which must remain valid until
   // capturer is destroyed.
   virtual void Init(Callback* callback, Mode mode) = 0;
+||||||| merged common ancestors
+  // Initializes the monitor with the |callback|, which must remain valid until
+  // capturer is destroyed or until Stop()
+  virtual void Start(Callback* callback, Mode mode) = 0;
+=======
+  // Creates a capturer that monitors the mouse cursor shape and position across
+  // the entire desktop. The capturer ensures that the top-left monitor starts
+  // from (0, 0).
+  static std::unique_ptr<MouseCursorMonitor> Create(
+      const DesktopCaptureOptions& options);
+>>>>>>> upstream-releases
 
-  // clears the callback
-  virtual void Stop() = 0;
+  // Initializes the monitor with the |callback|, which must remain valid until
+  // capturer is destroyed.
+  virtual void Init(Callback* callback, Mode mode) = 0;
 
   // Captures current cursor shape and position (depending on the |mode| passed
   // to Init()). Calls Callback::OnMouseCursor() if cursor shape has

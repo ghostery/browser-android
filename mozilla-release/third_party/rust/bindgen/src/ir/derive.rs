@@ -24,6 +24,7 @@ pub trait CanDeriveDebug {
     fn can_derive_debug(&self, ctx: &BindgenContext) -> bool;
 }
 
+<<<<<<< HEAD
 /// A trait that encapsulates the logic for whether or not we can trivially
 /// derive `Debug` without looking at any other types or the results of a fix
 /// point analysis. This is a helper trait for the fix point analysis.
@@ -33,11 +34,24 @@ pub trait CanTriviallyDeriveDebug {
     fn can_trivially_derive_debug(&self, ctx: &BindgenContext) -> bool;
 }
 
+||||||| merged common ancestors
+/// A trait that encapsulates the logic for whether or not we can trivially
+/// derive `Debug` without looking at any other types or the results of a fix
+/// point analysis. This is a helper trait for the fix point analysis.
+pub trait CanTriviallyDeriveDebug {
+    /// Return `true` if `Debug` can trivially be derived for this thing,
+    /// `false` otherwise.
+    fn can_trivially_derive_debug(&self) -> bool;
+}
+
+=======
+>>>>>>> upstream-releases
 /// A trait that encapsulates the logic for whether or not we can derive `Copy`
 /// for a given thing.
 pub trait CanDeriveCopy {
     /// Return `true` if `Copy` can be derived for this thing, `false`
     /// otherwise.
+<<<<<<< HEAD
     fn can_derive_copy(&self, ctx: &BindgenContext) -> bool;
 }
 
@@ -48,6 +62,20 @@ pub trait CanTriviallyDeriveCopy {
     /// Return `true` if `Copy` can be trivially derived for this thing, `false`
     /// otherwise.
     fn can_trivially_derive_copy(&self, ctx: &BindgenContext) -> bool;
+||||||| merged common ancestors
+    fn can_derive_copy(&'a self, ctx: &'a BindgenContext) -> bool;
+}
+
+/// A trait that encapsulates the logic for whether or not we can trivially
+/// derive `Copy` without looking at any other types or results of fix point
+/// analyses. This is a helper trait for fix point analysis.
+pub trait CanTriviallyDeriveCopy {
+    /// Return `true` if `Copy` can be trivially derived for this thing, `false`
+    /// otherwise.
+    fn can_trivially_derive_copy(&self) -> bool;
+=======
+    fn can_derive_copy(&self, ctx: &BindgenContext) -> bool;
+>>>>>>> upstream-releases
 }
 
 /// A trait that encapsulates the logic for whether or not we can derive
@@ -58,6 +86,7 @@ pub trait CanDeriveDefault {
     fn can_derive_default(&self, ctx: &BindgenContext) -> bool;
 }
 
+<<<<<<< HEAD
 /// A trait that encapsulates the logic for whether or not we can trivially
 /// derive `Default` without looking at any other types or results of fix point
 /// analyses. This is a helper trait for the fix point analysis.
@@ -67,6 +96,18 @@ pub trait CanTriviallyDeriveDefault {
     fn can_trivially_derive_default(&self, ctx: &BindgenContext) -> bool;
 }
 
+||||||| merged common ancestors
+/// A trait that encapsulates the logic for whether or not we can trivially
+/// derive `Default` without looking at any other types or results of fix point
+/// analyses. This is a helper trait for the fix point analysis.
+pub trait CanTriviallyDeriveDefault {
+    /// Return `true` if `Default` can trivially derived for this thing, `false`
+    /// otherwise.
+    fn can_trivially_derive_default(&self) -> bool;
+}
+
+=======
+>>>>>>> upstream-releases
 /// A trait that encapsulates the logic for whether or not we can derive `Hash`
 /// for a given thing.
 pub trait CanDeriveHash {
@@ -105,6 +146,7 @@ pub trait CanDeriveOrd {
     fn can_derive_ord(&self, ctx: &BindgenContext) -> bool;
 }
 
+<<<<<<< HEAD
 /// A trait that encapsulates the logic for whether or not we can derive `Hash`
 /// without looking at any other types or the results of any fix point
 /// analyses. This is a helper trait for the fix point analysis.
@@ -123,13 +165,34 @@ pub trait CanTriviallyDerivePartialEqOrPartialOrd {
     fn can_trivially_derive_partialeq_or_partialord(&self, ctx: &BindgenContext) -> CanDerive;
 }
 
+||||||| merged common ancestors
+/// A trait that encapsulates the logic for whether or not we can derive `Hash`
+/// without looking at any other types or the results of any fix point
+/// analyses. This is a helper trait for the fix point analysis.
+pub trait CanTriviallyDeriveHash {
+    /// Return `true` if `Hash` can trivially be derived for this thing, `false`
+    /// otherwise.
+    fn can_trivially_derive_hash(&self) -> bool;
+}
+
+/// A trait that encapsulates the logic for whether or not we can trivially
+/// derive `PartialEq` or `PartialOrd` without looking at any other types or
+/// results of fix point analyses. This is a helper for the fix point analysis.
+pub trait CanTriviallyDerivePartialEqOrPartialOrd {
+    /// Return `Yes` if `PartialEq` or `PartialOrd` can trivially be derived
+    /// for this thing.
+    fn can_trivially_derive_partialeq_or_partialord(&self) -> CanDerive;
+}
+
+=======
+>>>>>>> upstream-releases
 /// Whether it is possible or not to automatically derive trait for an item.
 ///
 /// ```ignore
 ///         No
 ///          ^
 ///          |
-///    ArrayTooLarge
+///      Manually
 ///          ^
 ///          |
 ///         Yes
@@ -146,7 +209,7 @@ pub enum CanDerive {
     /// array with more than maximum number of elements is used.
     ///
     /// This means we probably can "manually" implement such trait.
-    ArrayTooLarge,
+    Manually,
 
     /// Yes, we can derive automatically.
     Yes,
@@ -166,8 +229,8 @@ impl cmp::PartialOrd for CanDerive {
             (x, y) if x == y => cmp::Ordering::Equal,
             (No, _) => cmp::Ordering::Greater,
             (_, No) => cmp::Ordering::Less,
-            (ArrayTooLarge, _) => cmp::Ordering::Greater,
-            (_, ArrayTooLarge) => cmp::Ordering::Less,
+            (Manually, _) => cmp::Ordering::Greater,
+            (_, Manually) => cmp::Ordering::Less,
             _ => unreachable!()
         };
         Some(ordering)

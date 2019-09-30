@@ -102,7 +102,15 @@ class AudioNodeStream : public ProcessedMediaStream {
                                   ChannelCountMode aChannelCountMoe,
                                   ChannelInterpretation aChannelInterpretation);
   void SetPassThrough(bool aPassThrough);
+<<<<<<< HEAD
   ChannelInterpretation GetChannelInterpretation() {
+||||||| merged common ancestors
+  ChannelInterpretation GetChannelInterpretation()
+  {
+=======
+  void SendRunnable(already_AddRefed<nsIRunnable> aRunnable);
+  ChannelInterpretation GetChannelInterpretation() {
+>>>>>>> upstream-releases
     return mChannelInterpretation;
   }
 

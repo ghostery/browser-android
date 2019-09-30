@@ -20,13 +20,12 @@
 #include "mozilla/dom/KeyframeEffect.h"
 
 #include "nsPresContext.h"
+#include "nsPresContextInlines.h"
 #include "nsStyleChangeList.h"
 #include "nsLayoutUtils.h"
 #include "nsIFrame.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsDOMMutationObserver.h"
-#include "nsIPresShell.h"
-#include "nsIPresShellInlines.h"
 #include "nsRFPService.h"
 #include <algorithm>  // std::stable_sort
 #include <math.h>
@@ -528,18 +527,41 @@ static nsAnimationManager::OwningCSSAnimationPtrArray BuildAnimations(
   return result;
 }
 
+<<<<<<< HEAD
 void nsAnimationManager::UpdateAnimations(dom::Element* aElement,
                                           CSSPseudoElementType aPseudoType,
                                           const ComputedStyle* aComputedStyle) {
+||||||| merged common ancestors
+
+void
+nsAnimationManager::UpdateAnimations(
+  dom::Element* aElement,
+  CSSPseudoElementType aPseudoType,
+  const ComputedStyle* aComputedStyle)
+{
+=======
+void nsAnimationManager::UpdateAnimations(dom::Element* aElement,
+                                          PseudoStyleType aPseudoType,
+                                          const ComputedStyle* aComputedStyle) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mPresContext->IsDynamic(),
              "Should not update animations for print or print preview");
   MOZ_ASSERT(aElement->IsInComposedDoc(),
              "Should not update animations that are not attached to the "
              "document tree");
 
+<<<<<<< HEAD
   const nsStyleDisplay* disp =
       aComputedStyle ? aComputedStyle->ComputedData()->GetStyleDisplay()
                      : nullptr;
+||||||| merged common ancestors
+  const nsStyleDisplay* disp = aComputedStyle
+    ? aComputedStyle->ComputedData()->GetStyleDisplay()
+    : nullptr;
+=======
+  const nsStyleDisplay* disp =
+      aComputedStyle ? aComputedStyle->StyleDisplay() : nullptr;
+>>>>>>> upstream-releases
 
   if (!disp || disp->mDisplay == StyleDisplay::None) {
     // If we are in a display:none subtree we will have no computed values.
@@ -608,6 +630,6 @@ void nsAnimationManager::DoUpdateAnimations(
   // Cancel removed animations
   for (size_t newAnimIdx = newAnimations.Length(); newAnimIdx-- != 0;) {
     aBuilder.NotifyNewOrRemovedAnimation(*newAnimations[newAnimIdx]);
-    newAnimations[newAnimIdx]->CancelFromStyle();
+    newAnimations[newAnimIdx]->CancelFromStyle(PostRestyleMode::IfNeeded);
   }
 }

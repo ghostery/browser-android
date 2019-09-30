@@ -17,7 +17,13 @@
 #include "nsITokenizer.h"
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(disable : 4275)
+||||||| merged common ancestors
+#pragma warning( disable : 4275 )
+=======
+#  pragma warning(disable : 4275)
+>>>>>>> upstream-releases
 #endif
 
 class nsHTMLTokenizer final : public nsITokenizer {

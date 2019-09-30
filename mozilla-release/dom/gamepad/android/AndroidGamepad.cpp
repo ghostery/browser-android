@@ -25,9 +25,21 @@ class AndroidGamepadManager final
 
     if (aAdded) {
       const int svc_id = service->AddGamepad(
+<<<<<<< HEAD
           "android", GamepadMappingType::Standard, GamepadHand::_empty,
           kStandardGamepadButtons, kStandardGamepadAxes,
           0);  // TODO: Bug 680289, implement gamepad haptics for Android
+||||||| merged common ancestors
+          "android", GamepadMappingType::Standard,
+          GamepadHand::_empty, kStandardGamepadButtons,
+          kStandardGamepadAxes, 0); // TODO: Bug 680289, implement gamepad haptics for Android
+=======
+          "android", GamepadMappingType::Standard, GamepadHand::_empty,
+          kStandardGamepadButtons, kStandardGamepadAxes, 0, 0,
+          0);  // TODO: Bug 680289, implement gamepad haptics for Android.
+      // TODO: Bug 1523355, implement gamepad lighindicator and touch for
+      // Android.
+>>>>>>> upstream-releases
       java::AndroidGamepadManager::OnGamepadAdded(aID, svc_id);
 
     } else {
@@ -77,5 +89,19 @@ void StopGamepadMonitoring() {
       java::GeckoAppShell::GetApplicationContext());
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+void SetGamepadLightIndicatorColor(uint32_t aControllerIdx,
+                                   uint32_t aLightColorIndex, uint8_t aRed,
+                                   uint8_t aGreen, uint8_t aBlue) {
+  NS_WARNING("Android doesn't support gamepad light indicator.");
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

@@ -39,6 +39,7 @@ class TestAndroidParser(ParserTestMixin, unittest.TestCase):
             source,
             (
                 (DocumentWrapper, '<?xml'),
+                (DocumentWrapper, '>'),
                 (Whitespace, '\n  '),
                 ('foo', 'value', 'bar'),
                 (Whitespace, '\n'),
@@ -79,6 +80,7 @@ class TestAndroidParser(ParserTestMixin, unittest.TestCase):
             source,
             (
                 (DocumentWrapper, '<?xml'),
+                (DocumentWrapper, '>'),
                 (Whitespace, '\n  '),
                 ('first', 'value'),
                 (Whitespace, '\n  '),
@@ -102,6 +104,7 @@ class TestAndroidParser(ParserTestMixin, unittest.TestCase):
                 (Junk, 'no xml'),
             )
         )
+<<<<<<< HEAD
 
     def test_empty_strings(self):
         source = '''\
@@ -123,3 +126,28 @@ class TestAndroidParser(ParserTestMixin, unittest.TestCase):
                 (DocumentWrapper, '</resources>')
             )
         )
+||||||| merged common ancestors
+=======
+
+    def test_empty_strings(self):
+        source = '''\
+<?xml version="1.0" ?>
+<resources>
+  <string name="one"></string>
+  <string name="two"/>
+</resources>
+'''
+        self._test(
+            source,
+            (
+                (DocumentWrapper, '<?xml'),
+                (DocumentWrapper, '>'),
+                (Whitespace, '\n  '),
+                ('one', ''),
+                (Whitespace, '\n  '),
+                ('two', ''),
+                (Whitespace, '\n'),
+                (DocumentWrapper, '</resources>')
+            )
+        )
+>>>>>>> upstream-releases

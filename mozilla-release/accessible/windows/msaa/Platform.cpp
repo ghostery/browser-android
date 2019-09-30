@@ -25,8 +25,16 @@
 #include "ProxyWrappers.h"
 
 #if defined(MOZ_TELEMETRY_REPORTING)
+<<<<<<< HEAD
 #include "mozilla/Telemetry.h"
 #endif  // defined(MOZ_TELEMETRY_REPORTING)
+||||||| merged common ancestors
+#include "mozilla/Telemetry.h"
+#endif // defined(MOZ_TELEMETRY_REPORTING)
+=======
+#  include "mozilla/Telemetry.h"
+#endif  // defined(MOZ_TELEMETRY_REPORTING)
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::a11y;
@@ -322,6 +330,7 @@ static void AccumulateInstantiatorTelemetry(const nsAString& aValue) {
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!aValue.IsEmpty()) {
+<<<<<<< HEAD
 #if defined(MOZ_TELEMETRY_REPORTING)
     Telemetry::ScalarSet(Telemetry::ScalarID::A11Y_INSTANTIATORS, aValue);
 #endif  // defined(MOZ_TELEMETRY_REPORTING)
@@ -330,6 +339,26 @@ static void AccumulateInstantiatorTelemetry(const nsAString& aValue) {
         CrashReporter::Annotation::AccessibilityClient,
         NS_ConvertUTF16toUTF8(aValue));
 #endif  // defined(MOZ_CRASHREPORTER)
+||||||| merged common ancestors
+#if defined(MOZ_TELEMETRY_REPORTING)
+    Telemetry::ScalarSet(Telemetry::ScalarID::A11Y_INSTANTIATORS,
+                         aValue);
+#endif // defined(MOZ_TELEMETRY_REPORTING)
+#if defined(MOZ_CRASHREPORTER)
+    CrashReporter::
+      AnnotateCrashReport(CrashReporter::Annotation::AccessibilityClient,
+                          NS_ConvertUTF16toUTF8(aValue));
+#endif // defined(MOZ_CRASHREPORTER)
+=======
+#  if defined(MOZ_TELEMETRY_REPORTING)
+    Telemetry::ScalarSet(Telemetry::ScalarID::A11Y_INSTANTIATORS, aValue);
+#  endif  // defined(MOZ_TELEMETRY_REPORTING)
+#  if defined(MOZ_CRASHREPORTER)
+    CrashReporter::AnnotateCrashReport(
+        CrashReporter::Annotation::AccessibilityClient,
+        NS_ConvertUTF16toUTF8(aValue));
+#  endif  // defined(MOZ_CRASHREPORTER)
+>>>>>>> upstream-releases
   }
 }
 

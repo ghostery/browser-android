@@ -79,19 +79,37 @@ void SkLayerDrawLooper::LayerDrawLooperContext::ApplyInfo(
                     sk_srgb_singleton());
 
     BitFlags bits = info.fPaintBits;
-    SkPaint::TextEncoding encoding = dst->getTextEncoding();
 
     if (0 == bits) {
         return;
     }
     if (kEntirePaint_Bits == bits) {
         // we've already computed these, so save it from the assignment
+<<<<<<< HEAD
         uint32_t f = dst->getFlags();
         SkColor4f c = dst->getColor4f();
+||||||| merged common ancestors
+        uint32_t f = dst->getFlags();
+        SkColor c = dst->getColor();
+=======
+        bool aa = dst->isAntiAlias();
+        bool di = dst->isDither();
+        SkColor4f c = dst->getColor4f();
+>>>>>>> upstream-releases
         *dst = src;
+<<<<<<< HEAD
         dst->setFlags(f);
         dst->setColor4f(c, sk_srgb_singleton());
         dst->setTextEncoding(encoding);
+||||||| merged common ancestors
+        dst->setFlags(f);
+        dst->setColor(c);
+        dst->setTextEncoding(encoding);
+=======
+        dst->setAntiAlias(aa);
+        dst->setDither(di);
+        dst->setColor4f(c, sk_srgb_singleton());
+>>>>>>> upstream-releases
         return;
     }
 
@@ -101,10 +119,6 @@ void SkLayerDrawLooper::LayerDrawLooperContext::ApplyInfo(
         dst->setStrokeMiter(src.getStrokeMiter());
         dst->setStrokeCap(src.getStrokeCap());
         dst->setStrokeJoin(src.getStrokeJoin());
-    }
-
-    if (bits & kTextSkewX_Bit) {
-        dst->setTextSkewX(src.getTextSkewX());
     }
 
     if (bits & kPathEffect_Bit) {
@@ -274,10 +288,77 @@ sk_sp<SkFlattenable> SkLayerDrawLooper::CreateProc(SkReadBuffer& buffer) {
         info.fColorMode = (SkBlendMode)buffer.readInt();
         buffer.readPoint(&info.fOffset);
         info.fPostTranslate = buffer.readBool();
+<<<<<<< HEAD
         buffer.readPaint(builder.addLayerOnTop(info));
         if (!buffer.isValid()) {
             return nullptr;
         }
+||||||| merged common ancestors
+        buffer.readPaint(builder.addLayerOnTop(info));
+    }
+    return builder.detach();
+}
+
+#ifndef SK_IGNORE_TO_STRING
+void SkLayerDrawLooper::toString(SkString* str) const {
+    str->appendf("SkLayerDrawLooper (%d): ", fCount);
+
+    Rec* rec = fRecs;
+    for (int i = 0; i < fCount; i++) {
+        str->appendf("%d: paintBits: (", i);
+        if (0 == rec->fInfo.fPaintBits) {
+            str->append("None");
+        } else if (kEntirePaint_Bits == rec->fInfo.fPaintBits) {
+            str->append("EntirePaint");
+        } else {
+            bool needSeparator = false;
+            SkAddFlagToString(str, SkToBool(kStyle_Bit & rec->fInfo.fPaintBits), "Style",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kTextSkewX_Bit & rec->fInfo.fPaintBits), "TextSkewX",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kPathEffect_Bit & rec->fInfo.fPaintBits), "PathEffect",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kMaskFilter_Bit & rec->fInfo.fPaintBits), "MaskFilter",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kShader_Bit & rec->fInfo.fPaintBits), "Shader",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kColorFilter_Bit & rec->fInfo.fPaintBits), "ColorFilter",
+                              &needSeparator);
+            SkAddFlagToString(str, SkToBool(kXfermode_Bit & rec->fInfo.fPaintBits), "Xfermode",
+                              &needSeparator);
+        }
+        str->append(") ");
+
+        static const char* gModeStrings[(int)SkBlendMode::kLastMode+1] = {
+            "kClear", "kSrc", "kDst", "kSrcOver", "kDstOver", "kSrcIn", "kDstIn",
+            "kSrcOut", "kDstOut", "kSrcATop", "kDstATop", "kXor", "kPlus",
+            "kMultiply", "kScreen", "kOverlay", "kDarken", "kLighten", "kColorDodge",
+            "kColorBurn", "kHardLight", "kSoftLight", "kDifference", "kExclusion"
+        };
+
+        str->appendf("mode: %s ", gModeStrings[(int)rec->fInfo.fColorMode]);
+
+        str->append("offset: (");
+        str->appendScalar(rec->fInfo.fOffset.fX);
+        str->append(", ");
+        str->appendScalar(rec->fInfo.fOffset.fY);
+        str->append(") ");
+
+        str->append("postTranslate: ");
+        if (rec->fInfo.fPostTranslate) {
+            str->append("true ");
+        } else {
+            str->append("false ");
+        }
+
+        rec->fPaint.toString(str);
+        rec = rec->fNext;
+=======
+        buffer.readPaint(builder.addLayerOnTop(info), nullptr);
+        if (!buffer.isValid()) {
+            return nullptr;
+        }
+>>>>>>> upstream-releases
     }
     return builder.detach();
 }
@@ -349,6 +430,12 @@ sk_sp<SkDrawLooper> SkLayerDrawLooper::Builder::detach() {
 
 sk_sp<SkDrawLooper> SkBlurDrawLooper::Make(SkColor color, SkScalar sigma, SkScalar dx, SkScalar dy)
 {
+    return Make(SkColor4f::FromColor(color), sk_srgb_singleton(), sigma, dx, dy);
+}
+
+sk_sp<SkDrawLooper> SkBlurDrawLooper::Make(SkColor4f color, SkColorSpace* cs,
+        SkScalar sigma, SkScalar dx, SkScalar dy)
+{
     sk_sp<SkMaskFilter> blur = nullptr;
     if (sigma > 0.0f) {
         blur = SkMaskFilter::MakeBlur(kNormal_SkBlurStyle, sigma, true);
@@ -367,7 +454,7 @@ sk_sp<SkDrawLooper> SkBlurDrawLooper::Make(SkColor color, SkScalar sigma, SkScal
     blurInfo.fOffset = SkVector::Make(dx, dy);
     SkPaint* paint = builder.addLayer(blurInfo);
     paint->setMaskFilter(std::move(blur));
-    paint->setColor(color);
+    paint->setColor4f(color, cs);
 
     return builder.detach();
 }

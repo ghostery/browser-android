@@ -9,7 +9,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
 from taskgraph.util.partials import get_balrog_platform_name, get_builds
-from taskgraph.util.taskcluster import get_taskcluster_artifact_prefix, get_artifact_prefix
+from taskgraph.util.platforms import architecture
+from taskgraph.util.taskcluster import get_artifact_prefix
 
 import logging
 logger = logging.getLogger(__name__)
@@ -56,8 +57,19 @@ def make_task_description(config, jobs):
         treeherder.setdefault('kind', 'build')
         treeherder.setdefault('tier', 1)
 
+<<<<<<< HEAD
         dependent_kind = str(dep_job.kind)
         dependencies = {dependent_kind: dep_job.label}
+||||||| merged common ancestors
+        dependent_kind = str(dep_job.kind)
+        dependencies = {dependent_kind: dep_job.label}
+        signing_dependencies = dep_job.dependencies
+        # This is so we get the build task etc in our dependencies to
+        # have better beetmover support.
+        dependencies.update(signing_dependencies)
+=======
+        dependencies = {dep_job.kind: dep_job.label}
+>>>>>>> upstream-releases
 
         attributes = copy_attributes_from_dependent_job(dep_job)
         locale = dep_job.attributes.get('locale')
@@ -76,19 +88,46 @@ def make_task_description(config, jobs):
         if not builds:
             continue
 
+<<<<<<< HEAD
         dep_task_ref = '<{}>'.format(dependent_kind)
 
+||||||| merged common ancestors
+        signing_task = None
+        for dependency in sorted(dependencies.keys()):
+            if 'repackage-signing-l10n' in dependency:
+                signing_task = dependency
+                break
+            if 'repackage-signing' in dependency:
+                signing_task = dependency
+                break
+        signing_task_ref = '<{}>'.format(signing_task)
+
+=======
+>>>>>>> upstream-releases
         extra = {'funsize': {'partials': list()}}
         update_number = 1
+<<<<<<< HEAD
         artifact_path = "{}{}".format(
             get_taskcluster_artifact_prefix(dep_job, dep_task_ref, locale=locale),
             'target.complete.mar'
+||||||| merged common ancestors
+        artifact_path = "{}{}".format(
+            get_taskcluster_artifact_prefix(dep_job, signing_task_ref, locale=locale),
+            'target.complete.mar'
+=======
+
+        locale_suffix = ''
+        if locale:
+            locale_suffix = '{}/'.format(locale)
+        artifact_path = "<{}/{}/{}target.complete.mar>".format(
+            dep_job.kind, get_artifact_prefix(dep_job), locale_suffix,
+>>>>>>> upstream-releases
         )
         for build in sorted(builds):
             partial_info = {
                 'locale': build_locale,
                 'from_mar': builds[build]['mar_url'],
-                'to_mar': {'task-reference': artifact_path},
+                'to_mar': {'artifact-reference': artifact_path},
                 'platform': get_balrog_platform_name(dep_th_platform),
                 'branch': config.params['project'],
                 'update_number': update_number,
@@ -121,7 +160,7 @@ def make_task_description(config, jobs):
             'implementation': 'docker-worker',
             'docker-image': {'in-tree': 'funsize-update-generator'},
             'os': 'linux',
-            'max-run-time': 3600,
+            'max-run-time': 3600 if 'asan' in dep_job.label else 900,
             'chain-of-trust': True,
             'taskcluster-proxy': True,
             'env': {
@@ -129,6 +168,7 @@ def make_task_description(config, jobs):
                 'SHA384_SIGNING_CERT': 'nightly_sha384',
                 'DATADOG_API_SECRET':
                     'project/releng/gecko/build/level-{}/datadog-api-key'.format(level),
+                'EXTRA_PARAMS': '--arch={}'.format(architecture(attributes['build_platform'])),
             }
         }
         if mar_channel_id:
@@ -140,7 +180,7 @@ def make_task_description(config, jobs):
             'label': label,
             'description': "{} Partials".format(
                 dep_job.task["metadata"]["description"]),
-            'worker-type': 'aws-provisioner-v1/gecko-%s-b-linux' % level,
+            'worker-type': 'b-linux',
             'dependencies': dependencies,
             'scopes': [
                 'secrets:get:project/releng/gecko/build/level-%s/datadog-api-key' % level
@@ -153,7 +193,8 @@ def make_task_description(config, jobs):
         }
 
         # We only want caching on linux/windows due to bug 1436977
-        if level == 3 and any([platform in dep_th_platform for platform in ['linux', 'windows']]):
+        if int(level) == 3 \
+                and any([platform in dep_th_platform for platform in ['linux', 'windows']]):
             task['scopes'].append(
                 'auth:aws-s3:read-write:tc-gp-private-1d-us-east-1/releng/mbsdiff-cache/')
 

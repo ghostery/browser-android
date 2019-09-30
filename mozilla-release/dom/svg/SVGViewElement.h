@@ -7,13 +7,11 @@
 #ifndef mozilla_dom_SVGViewElement_h
 #define mozilla_dom_SVGViewElement_h
 
-#include "nsSVGElement.h"
-#include "nsSVGEnum.h"
-#include "nsSVGViewBox.h"
+#include "SVGAnimatedEnumeration.h"
 #include "SVGAnimatedPreserveAspectRatio.h"
+#include "SVGAnimatedViewBox.h"
 #include "SVGStringList.h"
-
-typedef nsSVGElement SVGViewElementBase;
+#include "mozilla/dom/SVGElement.h"
 
 class nsSVGOuterSVGFrame;
 
@@ -26,8 +24,19 @@ class SVGFragmentIdentifier;
 namespace dom {
 class SVGViewportElement;
 
+<<<<<<< HEAD
 class SVGViewElement : public SVGViewElementBase {
  protected:
+||||||| merged common ancestors
+class SVGViewElement : public SVGViewElementBase
+{
+protected:
+=======
+typedef SVGElement SVGViewElementBase;
+
+class SVGViewElement : public SVGViewElementBase {
+ protected:
+>>>>>>> upstream-releases
   friend class mozilla::SVGFragmentIdentifier;
   friend class SVGSVGElement;
   friend class SVGViewportElement;
@@ -48,20 +57,44 @@ class SVGViewElement : public SVGViewElementBase {
   already_AddRefed<SVGAnimatedRect> ViewBox();
   already_AddRefed<DOMSVGAnimatedPreserveAspectRatio> PreserveAspectRatio();
 
+<<<<<<< HEAD
  private:
   // nsSVGElement overrides
+||||||| merged common ancestors
+private:
+
+  // nsSVGElement overrides
+=======
+ private:
+  // SVGElement overrides
+>>>>>>> upstream-releases
 
   virtual EnumAttributesInfo GetEnumInfo() override;
 
   enum { ZOOMANDPAN };
-  nsSVGEnum mEnumAttributes[1];
-  static nsSVGEnumMapping sZoomAndPanMap[];
+  SVGAnimatedEnumeration mEnumAttributes[1];
+  static SVGEnumMapping sZoomAndPanMap[];
   static EnumInfo sEnumInfo[1];
 
+<<<<<<< HEAD
   virtual nsSVGViewBox* GetViewBox() override;
   virtual SVGAnimatedPreserveAspectRatio* GetPreserveAspectRatio() override;
+||||||| merged common ancestors
+  virtual nsSVGViewBox *GetViewBox() override;
+  virtual SVGAnimatedPreserveAspectRatio *GetPreserveAspectRatio() override;
+=======
+  virtual SVGAnimatedViewBox* GetAnimatedViewBox() override;
+  virtual SVGAnimatedPreserveAspectRatio* GetAnimatedPreserveAspectRatio()
+      override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsSVGViewBox mViewBox;
+||||||| merged common ancestors
+  nsSVGViewBox                   mViewBox;
+=======
+  SVGAnimatedViewBox mViewBox;
+>>>>>>> upstream-releases
   SVGAnimatedPreserveAspectRatio mPreserveAspectRatio;
 };
 

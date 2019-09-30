@@ -2,10 +2,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 use crate::cg;
+||||||| merged common ancestors
+use cg;
+=======
+>>>>>>> upstream-releases
 use darling::util::Override;
+<<<<<<< HEAD
 use proc_macro2::TokenStream;
 use quote::{ToTokens, TokenStreamExt};
+||||||| merged common ancestors
+use quote::{ToTokens, Tokens};
+=======
+use derive_common::cg;
+use proc_macro2::TokenStream;
+use quote::{ToTokens, TokenStreamExt};
+>>>>>>> upstream-releases
 use syn::{self, Data, Path, WhereClause};
 use synstructure::{BindingInfo, Structure, VariantInfo};
 
@@ -148,12 +161,20 @@ fn derive_variant_fields_expr(
                 }
             }
         }
+
+        if let Some(condition) = attrs.contextual_skip_if {
+            expr = quote! {
+                if !#condition(#(#bindings), *) {
+                    #expr
+                }
+            }
+        }
         return expr;
     }
 
-    let mut expr = derive_single_field_expr(first, attrs, where_clause);
+    let mut expr = derive_single_field_expr(first, attrs, where_clause, bindings);
     for (binding, attrs) in iter {
-        derive_single_field_expr(binding, attrs, where_clause).to_tokens(&mut expr)
+        derive_single_field_expr(binding, attrs, where_clause, bindings).to_tokens(&mut expr)
     }
 
     quote! {{
@@ -167,7 +188,14 @@ fn derive_single_field_expr(
     field: &BindingInfo,
     attrs: CssFieldAttrs,
     where_clause: &mut Option<WhereClause>,
+<<<<<<< HEAD
 ) -> TokenStream {
+||||||| merged common ancestors
+) -> Tokens {
+=======
+    bindings: &[BindingInfo],
+) -> TokenStream {
+>>>>>>> upstream-releases
     let mut expr = if attrs.iterable {
         if let Some(if_empty) = attrs.if_empty {
             return quote! {
@@ -216,6 +244,14 @@ fn derive_single_field_expr(
         }
     }
 
+    if let Some(condition) = attrs.contextual_skip_if {
+        expr = quote! {
+            if !#condition(#(#bindings), *) {
+                #expr
+            }
+        }
+    }
+
     expr
 }
 
@@ -249,5 +285,6 @@ pub struct CssFieldAttrs {
     pub iterable: bool,
     pub skip: bool,
     pub represents_keyword: bool,
+    pub contextual_skip_if: Option<Path>,
     pub skip_if: Option<Path>,
 }

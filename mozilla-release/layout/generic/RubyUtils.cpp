@@ -15,18 +15,45 @@ using namespace mozilla;
 
 NS_DECLARE_FRAME_PROPERTY_SMALL_VALUE(ReservedISize, nscoord)
 
+<<<<<<< HEAD
 /* static */ void RubyUtils::SetReservedISize(nsIFrame* aFrame,
                                               nscoord aISize) {
+||||||| merged common ancestors
+/* static */ void
+RubyUtils::SetReservedISize(nsIFrame* aFrame, nscoord aISize)
+{
+=======
+/* static */
+void RubyUtils::SetReservedISize(nsIFrame* aFrame, nscoord aISize) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsExpandableRubyBox(aFrame));
   aFrame->SetProperty(ReservedISize(), aISize);
 }
 
+<<<<<<< HEAD
 /* static */ void RubyUtils::ClearReservedISize(nsIFrame* aFrame) {
+||||||| merged common ancestors
+/* static */ void
+RubyUtils::ClearReservedISize(nsIFrame* aFrame)
+{
+=======
+/* static */
+void RubyUtils::ClearReservedISize(nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsExpandableRubyBox(aFrame));
   aFrame->RemoveProperty(ReservedISize());
 }
 
+<<<<<<< HEAD
 /* static */ nscoord RubyUtils::GetReservedISize(nsIFrame* aFrame) {
+||||||| merged common ancestors
+/* static */ nscoord
+RubyUtils::GetReservedISize(nsIFrame* aFrame)
+{
+=======
+/* static */
+nscoord RubyUtils::GetReservedISize(nsIFrame* aFrame) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(IsExpandableRubyBox(aFrame));
   return aFrame->GetProperty(ReservedISize());
 }

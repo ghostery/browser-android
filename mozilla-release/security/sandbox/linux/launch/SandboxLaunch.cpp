@@ -40,13 +40,13 @@
 #include "sandbox/linux/system_headers/linux_syscalls.h"
 
 #ifdef MOZ_X11
-#ifndef MOZ_WIDGET_GTK
-#error "Unknown toolkit"
-#endif
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#include "X11UndefineNone.h"
-#include "gfxPlatform.h"
+#  ifndef MOZ_WIDGET_GTK
+#    error "Unknown toolkit"
+#  endif
+#  include <gdk/gdk.h>
+#  include <gdk/gdkx.h>
+#  include "X11UndefineNone.h"
+#  include "gfxPlatform.h"
 #endif
 
 namespace mozilla {
@@ -212,6 +212,7 @@ class SandboxFork : public base::LaunchOptions::ForkDelegate {
 static int GetEffectiveSandboxLevel(GeckoProcessType aType) {
   auto info = SandboxInfo::Get();
   switch (aType) {
+<<<<<<< HEAD
 #ifdef MOZ_GMP_SANDBOX
     case GeckoProcessType_GMPlugin:
       if (info.Test(SandboxInfo::kEnabledForMedia)) {
@@ -230,6 +231,43 @@ static int GetEffectiveSandboxLevel(GeckoProcessType aType) {
 #endif
     default:
       return 0;
+||||||| merged common ancestors
+#ifdef MOZ_GMP_SANDBOX
+  case GeckoProcessType_GMPlugin:
+    if (info.Test(SandboxInfo::kEnabledForMedia)) {
+      return 1;
+    }
+    return 0;
+#endif
+#ifdef MOZ_CONTENT_SANDBOX
+  case GeckoProcessType_Content:
+    // GetEffectiveContentSandboxLevel is main-thread-only due to prefs.
+    MOZ_ASSERT(NS_IsMainThread());
+    if (info.Test(SandboxInfo::kEnabledForContent)) {
+      return GetEffectiveContentSandboxLevel();
+    }
+    return 0;
+#endif
+  default:
+    return 0;
+=======
+    case GeckoProcessType_GMPlugin:
+      if (info.Test(SandboxInfo::kEnabledForMedia)) {
+        return 1;
+      }
+      return 0;
+    case GeckoProcessType_Content:
+      // GetEffectiveContentSandboxLevel is main-thread-only due to prefs.
+      MOZ_ASSERT(NS_IsMainThread());
+      if (info.Test(SandboxInfo::kEnabledForContent)) {
+        return GetEffectiveContentSandboxLevel();
+      }
+      return 0;
+    case GeckoProcessType_RDD:
+      return PR_GetEnv("MOZ_DISABLE_RDD_SANDBOX") == nullptr ? 1 : 0;
+    default:
+      return 0;
+>>>>>>> upstream-releases
   }
 }
 
@@ -275,6 +313,7 @@ void SandboxLaunchPrepare(GeckoProcessType aType,
   }
 
   switch (aType) {
+<<<<<<< HEAD
 #ifdef MOZ_GMP_SANDBOX
     case GeckoProcessType_GMPlugin:
       if (level >= 1) {
@@ -295,7 +334,35 @@ void SandboxLaunchPrepare(GeckoProcessType aType,
         if (canCloneNet) {
           flags |= CLONE_NEWNET;
         }
+||||||| merged common ancestors
+#ifdef MOZ_GMP_SANDBOX
+  case GeckoProcessType_GMPlugin:
+    if (level >= 1) {
+      canChroot = true;
+      flags |= CLONE_NEWNET | CLONE_NEWIPC;
+    }
+    break;
+#endif
+#ifdef MOZ_CONTENT_SANDBOX
+  case GeckoProcessType_Content:
+    if (level >= 4) {
+      canChroot = true;
+      // Unshare network namespace if allowed by graphics; see
+      // function definition above for details.  (The display
+      // local-ness is cached because it won't change.)
+      static const bool canCloneNet =
+        IsDisplayLocal() && !PR_GetEnv("RENDERDOC_CAPTUREOPTS");
+      if (canCloneNet) {
+        flags |= CLONE_NEWNET;
+=======
+    case GeckoProcessType_GMPlugin:
+    case GeckoProcessType_RDD:
+      if (level >= 1) {
+        canChroot = true;
+        flags |= CLONE_NEWNET | CLONE_NEWIPC;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
       // Hidden pref to allow testing user namespaces separately, even
       // if there's nothing that would require them.
       if (Preferences::GetBool("security.sandbox.content.force-namespace",
@@ -307,6 +374,43 @@ void SandboxLaunchPrepare(GeckoProcessType aType,
     default:
       // Nothing yet.
       break;
+||||||| merged common ancestors
+    }
+    // Hidden pref to allow testing user namespaces separately, even
+    // if there's nothing that would require them.
+    if (Preferences::GetBool("security.sandbox.content.force-namespace", false)) {
+      flags |= CLONE_NEWUSER;
+    }
+    break;
+#endif
+  default:
+    // Nothing yet.
+    break;
+=======
+      break;
+    case GeckoProcessType_Content:
+      if (level >= 4) {
+        canChroot = true;
+        // Unshare network namespace if allowed by graphics; see
+        // function definition above for details.  (The display
+        // local-ness is cached because it won't change.)
+        static const bool canCloneNet =
+            IsDisplayLocal() && !PR_GetEnv("RENDERDOC_CAPTUREOPTS");
+        if (canCloneNet) {
+          flags |= CLONE_NEWNET;
+        }
+      }
+      // Hidden pref to allow testing user namespaces separately, even
+      // if there's nothing that would require them.
+      if (Preferences::GetBool("security.sandbox.content.force-namespace",
+                               false)) {
+        flags |= CLONE_NEWUSER;
+      }
+      break;
+    default:
+      // Nothing yet.
+      break;
+>>>>>>> upstream-releases
   }
 
   if (canChroot || flags != 0) {

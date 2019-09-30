@@ -10,6 +10,7 @@ const asyncStorage = require("devtools/shared/async-storage");
 const {
   ADD_DEVICE,
   ADD_DEVICE_TYPE,
+  EDIT_DEVICE,
   LOAD_DEVICE_LIST_START,
   LOAD_DEVICE_LIST_ERROR,
   LOAD_DEVICE_LIST_END,
@@ -19,9 +20,15 @@ const {
 } = require("./index");
 const { post } = require("../utils/message");
 
-const { addDevice, getDevices, removeDevice } = require("devtools/client/shared/devices");
+const { addDevice, editDevice, getDevices, removeDevice } = require("devtools/client/shared/devices");
 const { changeUserAgent, toggleTouchSimulation } = require("./ui");
+<<<<<<< HEAD
 const { changeDevice, changePixelRatio } = require("./viewports");
+||||||| merged common ancestors
+const { changeDevice, changePixelRatio, resizeViewport } = require("./viewports");
+=======
+const { changeDevice, changePixelRatio, changeViewportAngle } = require("./viewports");
+>>>>>>> upstream-releases
 
 const DISPLAYED_DEVICES_PREF = "devtools.responsive.html.displayedDeviceList";
 
@@ -101,6 +108,33 @@ module.exports = {
     return {
       type: ADD_DEVICE_TYPE,
       deviceType,
+    };
+  },
+
+  editCustomDevice(viewport, oldDevice, newDevice) {
+    return async function(dispatch) {
+      // Edit custom device in storage
+      await editDevice(oldDevice, newDevice, "custom");
+      // Notify the window that the device should be updated in the device selector.
+      post(window, {
+        type: "change-device",
+        device: newDevice,
+        viewport,
+      });
+
+      // Update UI if the device is selected.
+      if (viewport) {
+        dispatch(changeUserAgent(newDevice.userAgent));
+        dispatch(toggleTouchSimulation(newDevice.touch));
+      }
+
+      dispatch({
+        type: EDIT_DEVICE,
+        deviceType: "custom",
+        viewport,
+        oldDevice,
+        newDevice,
+      });
     };
   },
 
@@ -185,12 +219,26 @@ module.exports = {
         return;
       }
 
+<<<<<<< HEAD
       post(window, {
+||||||| merged common ancestors
+      post(window, {
+        type: "viewport-resize",
+        width: device.width,
+        height: device.height,
+      });
+      post(window, {
+=======
+      const viewport = getState().viewports[0];
+      post(window, {
+>>>>>>> upstream-releases
         type: "change-device",
         device,
+        viewport,
       });
 
       dispatch(changeDevice(id, device.name, deviceType));
+      dispatch(changeViewportAngle(id, viewport.angle));
       dispatch(changePixelRatio(id, device.pixelRatio));
       dispatch(changeUserAgent(device.userAgent));
       dispatch(toggleTouchSimulation(device.touch));

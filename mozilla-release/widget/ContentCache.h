@@ -24,8 +24,16 @@ namespace mozilla {
 class ContentCacheInParent;
 
 namespace dom {
+<<<<<<< HEAD
 class TabParent;
 }  // namespace dom
+||||||| merged common ancestors
+class TabParent;
+} // namespace dom
+=======
+class BrowserParent;
+}  // namespace dom
+>>>>>>> upstream-releases
 
 /**
  * ContentCache stores various information of the child content.
@@ -263,14 +271,25 @@ class ContentCacheInChild final : public ContentCache {
                       const IMENotification* aNotification = nullptr);
 };
 
+<<<<<<< HEAD
 class ContentCacheInParent final : public ContentCache {
  public:
   explicit ContentCacheInParent(dom::TabParent& aTabParent);
+||||||| merged common ancestors
+class ContentCacheInParent final : public ContentCache
+{
+public:
+  explicit ContentCacheInParent(dom::TabParent& aTabParent);
+=======
+class ContentCacheInParent final : public ContentCache {
+ public:
+  explicit ContentCacheInParent(dom::BrowserParent& aBrowserParent);
+>>>>>>> upstream-releases
 
   /**
-   * AssignContent() is called when TabParent receives ContentCache from
+   * AssignContent() is called when BrowserParent receives ContentCache from
    * the content process.  This doesn't copy composition information because
-   * it's managed by TabParent itself.
+   * it's managed by BrowserParent itself.
    */
   void AssignContent(const ContentCache& aOther, nsIWidget* aWidget,
                      const IMENotification* aNotification = nullptr);
@@ -315,7 +334,7 @@ class ContentCacheInParent final : public ContentCache {
    * handles a sent event which needs acknowledging.
    *
    * WARNING: This may send notifications to IME.  That might cause destroying
-   *          TabParent or aWidget.  Therefore, the caller must not destroy
+   *          BrowserParent or aWidget.  Therefore, the caller must not destroy
    *          this instance during a call of this method.
    */
   void OnEventNeedingAckHandled(nsIWidget* aWidget, EventMessage aMessage);
@@ -358,7 +377,7 @@ class ContentCacheInParent final : public ContentCache {
   enum class RequestIMEToCommitCompositionResult : uint8_t {
     eToOldCompositionReceived,
     eToCommittedCompositionReceived,
-    eReceivedAfterTabParentBlur,
+    eReceivedAfterBrowserParentBlur,
     eReceivedButNoTextComposition,
     eHandledAsynchronously,
     eHandledSynchronously,
@@ -370,11 +389,12 @@ class ContentCacheInParent final : public ContentCache {
         return "Commit request is not handled because it's for "
                "older composition";
       case RequestIMEToCommitCompositionResult::eToCommittedCompositionReceived:
-        return "Commit request is not handled because TabParent has already "
+        return "Commit request is not handled because BrowserParent has "
+               "already "
                "sent commit event for the composition";
-      case RequestIMEToCommitCompositionResult::eReceivedAfterTabParentBlur:
+      case RequestIMEToCommitCompositionResult::eReceivedAfterBrowserParentBlur:
         return "Commit request is handled with stored composition string "
-               "because TabParent has already lost focus";
+               "because BrowserParent has already lost focus";
       case RequestIMEToCommitCompositionResult::eReceivedButNoTextComposition:
         return "Commit request is not handled because there is no "
                "TextCompsition instance";
@@ -391,8 +411,8 @@ class ContentCacheInParent final : public ContentCache {
       mRequestIMEToCommitCompositionResults;
 #endif  // MOZ_DIAGNOSTIC_ASSERT_ENABLED
 
-  // mTabParent is owner of the instance.
-  dom::TabParent& MOZ_NON_OWNING_REF mTabParent;
+  // mBrowserParent is owner of the instance.
+  dom::BrowserParent& MOZ_NON_OWNING_REF mBrowserParent;
   // mCompositionString is composition string which were sent to the remote
   // process but not yet committed in the remote process.
   nsString mCompositionString;

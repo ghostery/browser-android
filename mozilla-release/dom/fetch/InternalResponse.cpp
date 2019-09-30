@@ -11,6 +11,7 @@
 #include "mozilla/dom/cache/CacheTypes.h"
 #include "mozilla/ipc/PBackgroundSharedTypes.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
+#include "mozilla/RandomNum.h"
 #include "nsIRandomGenerator.h"
 #include "nsIURI.h"
 #include "nsStreamUtils.h"
@@ -24,6 +25,7 @@ namespace {
 // XXX This will be tweaked to something more meaningful in Bug 1383656.
 const uint32_t kMaxRandomNumber = 102400;
 
+<<<<<<< HEAD
 }  // namespace
 
 InternalResponse::InternalResponse(uint16_t aStatus,
@@ -57,10 +59,58 @@ already_AddRefed<InternalResponse> InternalResponse::FromIPC(
         aIPCResponse.principalInfo().get_PrincipalInfo()));
     response->SetPrincipalInfo(std::move(info));
   }
+||||||| merged common ancestors
+} // namespace
 
-  nsCOMPtr<nsIInputStream> stream = DeserializeIPCStream(aIPCResponse.body());
-  response->SetBody(stream, aIPCResponse.bodySize());
+InternalResponse::InternalResponse(uint16_t aStatus, const nsACString& aStatusText)
+  : mType(ResponseType::Default)
+  , mStatus(aStatus)
+  , mStatusText(aStatusText)
+  , mHeaders(new InternalHeaders(HeadersGuardEnum::Response))
+  , mBodySize(UNKNOWN_BODY_SIZE)
+  , mPaddingSize(UNKNOWN_PADDING_SIZE)
+  , mErrorCode(NS_OK)
+{
+}
 
+already_AddRefed<InternalResponse>
+InternalResponse::FromIPC(const IPCInternalResponse& aIPCResponse)
+{
+  if (aIPCResponse.type() == ResponseType::Error) {
+    return InternalResponse::NetworkError(aIPCResponse.errorCode());
+  }
+
+  RefPtr<InternalResponse> response =
+    new InternalResponse(aIPCResponse.status(),
+                         aIPCResponse.statusText());
+
+  response->SetURLList(aIPCResponse.urlList());
+
+  response->mHeaders = new InternalHeaders(aIPCResponse.headers(),
+                                           aIPCResponse.headersGuard());
+
+  response->InitChannelInfo(aIPCResponse.channelInfo());
+  if (aIPCResponse.principalInfo().type() == mozilla::ipc::OptionalPrincipalInfo::TPrincipalInfo) {
+    UniquePtr<mozilla::ipc::PrincipalInfo> info(new mozilla::ipc::PrincipalInfo(aIPCResponse.principalInfo().get_PrincipalInfo()));
+    response->SetPrincipalInfo(std::move(info));
+  }
+=======
+}  // namespace
+>>>>>>> upstream-releases
+
+InternalResponse::InternalResponse(uint16_t aStatus,
+                                   const nsACString& aStatusText,
+                                   RequestCredentials aCredentialsMode)
+    : mType(ResponseType::Default),
+      mStatus(aStatus),
+      mStatusText(aStatusText),
+      mHeaders(new InternalHeaders(HeadersGuardEnum::Response)),
+      mBodySize(UNKNOWN_BODY_SIZE),
+      mPaddingSize(UNKNOWN_PADDING_SIZE),
+      mErrorCode(NS_OK),
+      mCredentialsMode(aCredentialsMode) {}
+
+<<<<<<< HEAD
   switch (aIPCResponse.type()) {
     case ResponseType::Basic:
       response = response->BasicResponse();
@@ -83,7 +133,35 @@ already_AddRefed<InternalResponse> InternalResponse::FromIPC(
 
   return response.forget();
 }
+||||||| merged common ancestors
+  switch (aIPCResponse.type())
+  {
+    case ResponseType::Basic:
+      response = response->BasicResponse();
+      break;
+    case ResponseType::Cors:
+      response = response->CORSResponse();
+      break;
+    case ResponseType::Default:
+      break;
+    case ResponseType::Opaque:
+      response = response->OpaqueResponse();
+      break;
+    case ResponseType::Opaqueredirect:
+      response = response->OpaqueRedirectResponse();
+      break;
+    default:
+      MOZ_CRASH("Unexpected ResponseType!");
+  }
+  MOZ_ASSERT(response);
 
+  return response.forget();
+}
+=======
+InternalResponse::~InternalResponse() {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 InternalResponse::~InternalResponse() {}
 
 template void InternalResponse::ToIPC<nsIContentParent>(
@@ -136,6 +214,75 @@ void InternalResponse::ToIPC(
 
 already_AddRefed<InternalResponse> InternalResponse::Clone(
     CloneType aCloneType) {
+||||||| merged common ancestors
+InternalResponse::~InternalResponse()
+{
+}
+
+template void
+InternalResponse::ToIPC<nsIContentParent>
+  (IPCInternalResponse* aIPCResponse,
+   nsIContentParent* aManager,
+   UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
+template void
+InternalResponse::ToIPC<nsIContentChild>
+  (IPCInternalResponse* aIPCResponse,
+   nsIContentChild* aManager,
+   UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
+template void
+InternalResponse::ToIPC<mozilla::ipc::PBackgroundParent>
+  (IPCInternalResponse* aIPCResponse,
+   mozilla::ipc::PBackgroundParent* aManager,
+   UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
+template void
+InternalResponse::ToIPC<mozilla::ipc::PBackgroundChild>
+  (IPCInternalResponse* aIPCResponse,
+   mozilla::ipc::PBackgroundChild* aManager,
+   UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
+
+template<typename M>
+void
+InternalResponse::ToIPC(IPCInternalResponse* aIPCResponse,
+                        M* aManager,
+                        UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream)
+{
+  MOZ_ASSERT(aIPCResponse);
+  aIPCResponse->type() = mType;
+  aIPCResponse->urlList() = mURLList;
+  aIPCResponse->status() = GetUnfilteredStatus();
+  aIPCResponse->statusText() = GetUnfilteredStatusText();
+
+  mHeaders->ToIPC(aIPCResponse->headers(), aIPCResponse->headersGuard());
+
+  aIPCResponse->channelInfo() = mChannelInfo.AsIPCChannelInfo();
+  if (mPrincipalInfo) {
+    aIPCResponse->principalInfo() = *mPrincipalInfo;
+  } else {
+    aIPCResponse->principalInfo() = void_t();
+  }
+
+  nsCOMPtr<nsIInputStream> body;
+  int64_t bodySize;
+  GetUnfilteredBody(getter_AddRefs(body), &bodySize);
+
+  if (body) {
+    aAutoStream.reset(new mozilla::ipc::AutoIPCStream(aIPCResponse->body()));
+    DebugOnly<bool> ok = aAutoStream->Serialize(body, aManager);
+    MOZ_ASSERT(ok);
+  } else {
+    aIPCResponse->body() = void_t();
+  }
+
+  aIPCResponse->bodySize() = bodySize;
+}
+
+already_AddRefed<InternalResponse>
+InternalResponse::Clone(CloneType aCloneType)
+{
+=======
+already_AddRefed<InternalResponse> InternalResponse::Clone(
+    CloneType aCloneType) {
+>>>>>>> upstream-releases
   RefPtr<InternalResponse> clone = CreateIncompleteCopy();
 
   clone->mHeaders = new InternalHeaders(*mHeaders);
@@ -143,6 +290,8 @@ already_AddRefed<InternalResponse> InternalResponse::Clone(
   // Make sure the clone response will have the same padding size.
   clone->mPaddingInfo = mPaddingInfo;
   clone->mPaddingSize = mPaddingSize;
+
+  clone->mCacheInfoChannel = mCacheInfoChannel;
 
   if (mWrappedResponse) {
     clone->mWrappedResponse = mWrappedResponse->Clone(aCloneType);
@@ -186,7 +335,7 @@ already_AddRefed<InternalResponse> InternalResponse::CORSResponse() {
              "Can't CORSResponse a already wrapped response");
   RefPtr<InternalResponse> cors = CreateIncompleteCopy();
   cors->mType = ResponseType::Cors;
-  cors->mHeaders = InternalHeaders::CORSHeaders(Headers());
+  cors->mHeaders = InternalHeaders::CORSHeaders(Headers(), mCredentialsMode);
   cors->mWrappedResponse = this;
   return cors.forget();
 }
@@ -214,18 +363,46 @@ nsresult InternalResponse::GeneratePaddingInfo() {
   nsresult rv;
   uint32_t randomNumber = 0;
   nsCOMPtr<nsIRandomGenerator> randomGenerator =
+<<<<<<< HEAD
       do_GetService("@mozilla.org/security/random-generator;1", &rv);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
+||||||| merged common ancestors
+    do_GetService("@mozilla.org/security/random-generator;1", &rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
+=======
+      do_GetService("@mozilla.org/security/random-generator;1", &rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    Maybe<uint64_t> maybeRandomNum = RandomUint64();
+    if (maybeRandomNum.isSome()) {
+      mPaddingInfo.emplace(uint32_t(maybeRandomNum.value() % kMaxRandomNumber));
+      return NS_OK;
+    }
+    return rv;
+  }
+>>>>>>> upstream-releases
 
   MOZ_DIAGNOSTIC_ASSERT(randomGenerator);
 
   uint8_t* buffer;
   rv = randomGenerator->GenerateRandomBytes(sizeof(randomNumber), &buffer);
+<<<<<<< HEAD
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
+||||||| merged common ancestors
+  if (NS_WARN_IF(NS_FAILED(rv))) { return rv; }
+=======
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    Maybe<uint64_t> maybeRandomNum = RandomUint64();
+    if (maybeRandomNum.isSome()) {
+      mPaddingInfo.emplace(uint32_t(maybeRandomNum.value() % kMaxRandomNumber));
+      return NS_OK;
+    }
+    return rv;
+  }
+>>>>>>> upstream-releases
 
   memcpy(&randomNumber, buffer, sizeof(randomNumber));
   free(buffer);

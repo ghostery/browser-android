@@ -80,6 +80,7 @@ class CDMProxy {
   NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
 
   // Main thread only.
+<<<<<<< HEAD
   CDMProxy(dom::MediaKeys* aKeys, const nsAString& aKeySystem,
            bool aDistinctiveIdentifierRequired, bool aPersistentStateRequired,
            nsIEventTarget* aMainThread)
@@ -89,6 +90,30 @@ class CDMProxy {
         mDistinctiveIdentifierRequired(aDistinctiveIdentifierRequired),
         mPersistentStateRequired(aPersistentStateRequired),
         mMainThread(aMainThread) {}
+||||||| merged common ancestors
+  CDMProxy(dom::MediaKeys* aKeys,
+           const nsAString& aKeySystem,
+           bool aDistinctiveIdentifierRequired,
+           bool aPersistentStateRequired,
+           nsIEventTarget* aMainThread)
+    : mKeys(aKeys)
+    , mKeySystem(aKeySystem)
+    , mCapabilites("CDMProxy::mCDMCaps")
+    , mDistinctiveIdentifierRequired(aDistinctiveIdentifierRequired)
+    , mPersistentStateRequired(aPersistentStateRequired)
+    , mMainThread(aMainThread)
+  {}
+=======
+  CDMProxy(dom::MediaKeys* aKeys, const nsAString& aKeySystem,
+           bool aDistinctiveIdentifierRequired, bool aPersistentStateRequired,
+           nsISerialEventTarget* aMainThread)
+      : mKeys(aKeys),
+        mKeySystem(aKeySystem),
+        mCapabilites("CDMProxy::mCDMCaps"),
+        mDistinctiveIdentifierRequired(aDistinctiveIdentifierRequired),
+        mPersistentStateRequired(aPersistentStateRequired),
+        mMainThread(aMainThread) {}
+>>>>>>> upstream-releases
 
   // Main thread only.
   // Loads the CDM corresponding to mKeySystem.
@@ -272,7 +297,7 @@ class CDMProxy {
   const bool mPersistentStateRequired;
 
   // The main thread associated with the root document.
-  const nsCOMPtr<nsIEventTarget> mMainThread;
+  const nsCOMPtr<nsISerialEventTarget> mMainThread;
 };
 
 }  // namespace mozilla

@@ -1080,6 +1080,7 @@ static CachePage* GetCachePageLocked(SimulatorProcess::ICacheMap& i_cache,
 }
 
 // Flush from start up to and not including start + size.
+<<<<<<< HEAD
 static void FlushOnePageLocked(SimulatorProcess::ICacheMap& i_cache,
                                intptr_t start, int size) {
   MOZ_ASSERT(size <= CachePage::kPageSize);
@@ -1215,6 +1216,294 @@ bool Simulator::init() {
   registers_[sp] = reinterpret_cast<int32_t>(stack_) + stackSize - 64;
 
   return true;
+||||||| merged common ancestors
+static void
+FlushOnePageLocked(SimulatorProcess::ICacheMap& i_cache, intptr_t start, int size)
+{
+    MOZ_ASSERT(size <= CachePage::kPageSize);
+    MOZ_ASSERT(AllOnOnePage(start, size - 1));
+    MOZ_ASSERT((start & CachePage::kLineMask) == 0);
+    MOZ_ASSERT((size & CachePage::kLineMask) == 0);
+    void* page = reinterpret_cast<void*>(start & (~CachePage::kPageMask));
+    int offset = (start & CachePage::kPageMask);
+    CachePage* cache_page = GetCachePageLocked(i_cache, page);
+    char* valid_bytemap = cache_page->validityByte(offset);
+    memset(valid_bytemap, CachePage::LINE_INVALID, size >> CachePage::kLineShift);
+}
+
+static void
+FlushICacheLocked(SimulatorProcess::ICacheMap& i_cache, void* start_addr, size_t size)
+{
+    intptr_t start = reinterpret_cast<intptr_t>(start_addr);
+    int intra_line = (start & CachePage::kLineMask);
+    start -= intra_line;
+    size += intra_line;
+    size = ((size - 1) | CachePage::kLineMask) + 1;
+    int offset = (start & CachePage::kPageMask);
+    while (!AllOnOnePage(start, size - 1)) {
+        int bytes_to_flush = CachePage::kPageSize - offset;
+        FlushOnePageLocked(i_cache, start, bytes_to_flush);
+        start += bytes_to_flush;
+        size -= bytes_to_flush;
+        MOZ_ASSERT((start & CachePage::kPageMask) == 0);
+        offset = 0;
+    }
+    if (size != 0) {
+        FlushOnePageLocked(i_cache, start, size);
+    }
+}
+
+/* static */ void
+SimulatorProcess::checkICacheLocked(SimInstruction* instr)
+{
+    intptr_t address = reinterpret_cast<intptr_t>(instr);
+    void* page = reinterpret_cast<void*>(address & (~CachePage::kPageMask));
+    void* line = reinterpret_cast<void*>(address & (~CachePage::kLineMask));
+    int offset = (address & CachePage::kPageMask);
+    CachePage* cache_page = GetCachePageLocked(icache(), page);
+    char* cache_valid_byte = cache_page->validityByte(offset);
+    bool cache_hit = (*cache_valid_byte == CachePage::LINE_VALID);
+    char* cached_line = cache_page->cachedData(offset & ~CachePage::kLineMask);
+
+    if (cache_hit) {
+        // Check that the data in memory matches the contents of the I-cache.
+        int cmpret = memcmp(reinterpret_cast<void*>(instr),
+                            cache_page->cachedData(offset),
+                            SimInstruction::kInstrSize);
+        MOZ_ASSERT(cmpret == 0);
+    } else {
+        // Cache miss.  Load memory into the cache.
+        memcpy(cached_line, line, CachePage::kLineLength);
+        *cache_valid_byte = CachePage::LINE_VALID;
+    }
+}
+
+HashNumber
+SimulatorProcess::ICacheHasher::hash(const Lookup& l)
+{
+    return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(l)) >> 2;
+}
+
+bool
+SimulatorProcess::ICacheHasher::match(const Key& k, const Lookup& l)
+{
+    MOZ_ASSERT((reinterpret_cast<intptr_t>(k) & CachePage::kPageMask) == 0);
+    MOZ_ASSERT((reinterpret_cast<intptr_t>(l) & CachePage::kPageMask) == 0);
+    return k == l;
+}
+
+/* static */ void
+SimulatorProcess::FlushICache(void* start_addr, size_t size)
+{
+    if (!ICacheCheckingDisableCount) {
+        AutoLockSimulatorCache als;
+        js::jit::FlushICacheLocked(icache(), start_addr, size);
+    }
+}
+
+Simulator::Simulator()
+{
+    // Set up simulator support first. Some of this information is needed to
+    // setup the architecture state.
+
+    // Note, allocation and anything that depends on allocated memory is
+    // deferred until init(), in order to handle OOM properly.
+
+    stack_ = nullptr;
+    stackLimit_ = 0;
+    pc_modified_ = false;
+    icount_ = 0;
+    break_count_ = 0;
+    break_pc_ = nullptr;
+    break_instr_ = 0;
+    single_stepping_ = false;
+    single_step_callback_ = nullptr;
+    single_step_callback_arg_ = nullptr;
+
+    // Set up architecture state.
+    // All registers are initialized to zero to start with.
+    for (int i = 0; i < Register::kNumSimuRegisters; i++) {
+        registers_[i] = 0;
+    }
+    for (int i = 0; i < Simulator::FPURegister::kNumFPURegisters; i++) {
+        FPUregisters_[i] = 0;
+    }
+    FCSR_ = 0;
+    LLBit_ = false;
+    LLAddr_ = 0;
+    lastLLValue_ = 0;
+
+    // The ra and pc are initialized to a known bad value that will cause an
+    // access violation if the simulator ever tries to execute it.
+    registers_[pc] = bad_ra;
+    registers_[ra] = bad_ra;
+
+    for (int i = 0; i < kNumExceptions; i++) {
+        exceptions[i] = 0;
+    }
+
+    lastDebuggerInput_ = nullptr;
+}
+
+bool
+Simulator::init()
+{
+    // Allocate 2MB for the stack. Note that we will only use 1MB, see below.
+    static const size_t stackSize = 2 * 1024 * 1024;
+    stack_ = js_pod_malloc<char>(stackSize);
+    if (!stack_) {
+        return false;
+    }
+
+    // Leave a safety margin of 1MB to prevent overrunning the stack when
+    // pushing values (total stack size is 2MB).
+    stackLimit_ = reinterpret_cast<uintptr_t>(stack_) + 1024 * 1024;
+
+    // The sp is initialized to point to the bottom (high address) of the
+    // allocated stack area. To be safe in potential stack underflows we leave
+    // some buffer below.
+    registers_[sp] = reinterpret_cast<int32_t>(stack_) + stackSize - 64;
+
+    return true;
+=======
+static void FlushOnePageLocked(SimulatorProcess::ICacheMap& i_cache,
+                               intptr_t start, int size) {
+  MOZ_ASSERT(size <= CachePage::kPageSize);
+  MOZ_ASSERT(AllOnOnePage(start, size - 1));
+  MOZ_ASSERT((start & CachePage::kLineMask) == 0);
+  MOZ_ASSERT((size & CachePage::kLineMask) == 0);
+  void* page = reinterpret_cast<void*>(start & (~CachePage::kPageMask));
+  int offset = (start & CachePage::kPageMask);
+  CachePage* cache_page = GetCachePageLocked(i_cache, page);
+  char* valid_bytemap = cache_page->validityByte(offset);
+  memset(valid_bytemap, CachePage::LINE_INVALID, size >> CachePage::kLineShift);
+}
+
+static void FlushICacheLocked(SimulatorProcess::ICacheMap& i_cache,
+                              void* start_addr, size_t size) {
+  intptr_t start = reinterpret_cast<intptr_t>(start_addr);
+  int intra_line = (start & CachePage::kLineMask);
+  start -= intra_line;
+  size += intra_line;
+  size = ((size - 1) | CachePage::kLineMask) + 1;
+  int offset = (start & CachePage::kPageMask);
+  while (!AllOnOnePage(start, size - 1)) {
+    int bytes_to_flush = CachePage::kPageSize - offset;
+    FlushOnePageLocked(i_cache, start, bytes_to_flush);
+    start += bytes_to_flush;
+    size -= bytes_to_flush;
+    MOZ_ASSERT((start & CachePage::kPageMask) == 0);
+    offset = 0;
+  }
+  if (size != 0) {
+    FlushOnePageLocked(i_cache, start, size);
+  }
+}
+
+/* static */
+void SimulatorProcess::checkICacheLocked(SimInstruction* instr) {
+  intptr_t address = reinterpret_cast<intptr_t>(instr);
+  void* page = reinterpret_cast<void*>(address & (~CachePage::kPageMask));
+  void* line = reinterpret_cast<void*>(address & (~CachePage::kLineMask));
+  int offset = (address & CachePage::kPageMask);
+  CachePage* cache_page = GetCachePageLocked(icache(), page);
+  char* cache_valid_byte = cache_page->validityByte(offset);
+  bool cache_hit = (*cache_valid_byte == CachePage::LINE_VALID);
+  char* cached_line = cache_page->cachedData(offset & ~CachePage::kLineMask);
+
+  if (cache_hit) {
+    // Check that the data in memory matches the contents of the I-cache.
+    int cmpret =
+        memcmp(reinterpret_cast<void*>(instr), cache_page->cachedData(offset),
+               SimInstruction::kInstrSize);
+    MOZ_ASSERT(cmpret == 0);
+  } else {
+    // Cache miss.  Load memory into the cache.
+    memcpy(cached_line, line, CachePage::kLineLength);
+    *cache_valid_byte = CachePage::LINE_VALID;
+  }
+}
+
+HashNumber SimulatorProcess::ICacheHasher::hash(const Lookup& l) {
+  return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(l)) >> 2;
+}
+
+bool SimulatorProcess::ICacheHasher::match(const Key& k, const Lookup& l) {
+  MOZ_ASSERT((reinterpret_cast<intptr_t>(k) & CachePage::kPageMask) == 0);
+  MOZ_ASSERT((reinterpret_cast<intptr_t>(l) & CachePage::kPageMask) == 0);
+  return k == l;
+}
+
+/* static */
+void SimulatorProcess::FlushICache(void* start_addr, size_t size) {
+  if (!ICacheCheckingDisableCount) {
+    AutoLockSimulatorCache als;
+    js::jit::FlushICacheLocked(icache(), start_addr, size);
+  }
+}
+
+Simulator::Simulator() {
+  // Set up simulator support first. Some of this information is needed to
+  // setup the architecture state.
+
+  // Note, allocation and anything that depends on allocated memory is
+  // deferred until init(), in order to handle OOM properly.
+
+  stack_ = nullptr;
+  stackLimit_ = 0;
+  pc_modified_ = false;
+  icount_ = 0;
+  break_count_ = 0;
+  break_pc_ = nullptr;
+  break_instr_ = 0;
+  single_stepping_ = false;
+  single_step_callback_ = nullptr;
+  single_step_callback_arg_ = nullptr;
+
+  // Set up architecture state.
+  // All registers are initialized to zero to start with.
+  for (int i = 0; i < Register::kNumSimuRegisters; i++) {
+    registers_[i] = 0;
+  }
+  for (int i = 0; i < Simulator::FPURegister::kNumFPURegisters; i++) {
+    FPUregisters_[i] = 0;
+  }
+  FCSR_ = 0;
+  LLBit_ = false;
+  LLAddr_ = 0;
+  lastLLValue_ = 0;
+
+  // The ra and pc are initialized to a known bad value that will cause an
+  // access violation if the simulator ever tries to execute it.
+  registers_[pc] = bad_ra;
+  registers_[ra] = bad_ra;
+
+  for (int i = 0; i < kNumExceptions; i++) {
+    exceptions[i] = 0;
+  }
+
+  lastDebuggerInput_ = nullptr;
+}
+
+bool Simulator::init() {
+  // Allocate 2MB for the stack. Note that we will only use 1MB, see below.
+  static const size_t stackSize = 2 * 1024 * 1024;
+  stack_ = js_pod_malloc<char>(stackSize);
+  if (!stack_) {
+    return false;
+  }
+
+  // Leave a safety margin of 1MB to prevent overrunning the stack when
+  // pushing values (total stack size is 2MB).
+  stackLimit_ = reinterpret_cast<uintptr_t>(stack_) + 1024 * 1024;
+
+  // The sp is initialized to point to the bottom (high address) of the
+  // allocated stack area. To be safe in potential stack underflows we leave
+  // some buffer below.
+  registers_[sp] = reinterpret_cast<int32_t>(stack_) + stackSize - 64;
+
+  return true;
+>>>>>>> upstream-releases
 }
 
 // When the generated code calls an external reference we need to catch that in
@@ -1299,10 +1588,24 @@ SimulatorProcess::~SimulatorProcess() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void* Simulator::RedirectNativeFunction(void* nativeFunction,
                                                      ABIFunctionType type) {
   Redirection* redirection = Redirection::Get(nativeFunction, type);
   return redirection->addressOfSwiInstruction();
+||||||| merged common ancestors
+/* static */ void*
+Simulator::RedirectNativeFunction(void* nativeFunction, ABIFunctionType type)
+{
+    Redirection* redirection = Redirection::Get(nativeFunction, type);
+    return redirection->addressOfSwiInstruction();
+=======
+/* static */
+void* Simulator::RedirectNativeFunction(void* nativeFunction,
+                                        ABIFunctionType type) {
+  Redirection* redirection = Redirection::Get(nativeFunction, type);
+  return redirection->addressOfSwiInstruction();
+>>>>>>> upstream-releases
 }
 
 // Get the active Simulator for the current thread.

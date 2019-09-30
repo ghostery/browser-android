@@ -4,13 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/dom/SVGComponentTransferFunctionElement.h"
 #include "mozilla/dom/SVGFEComponentTransferElement.h"
+
+#include "mozilla/dom/SVGComponentTransferFunctionElement.h"
 #include "mozilla/dom/SVGFEComponentTransferElementBinding.h"
 #include "nsSVGUtils.h"
 #include "mozilla/gfx/2D.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEComponentTransfer)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEComponentTransfer)
 
 using namespace mozilla::gfx;
 ;
@@ -23,24 +24,53 @@ JSObject* SVGFEComponentTransferElement::WrapNode(
   return SVGFEComponentTransferElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGFEComponentTransferElement::sStringInfo[2] = {
     {nsGkAtoms::result, kNameSpaceID_None, true},
     {nsGkAtoms::in, kNameSpaceID_None, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGFEComponentTransferElement::sStringInfo[2] =
+{
+  { nsGkAtoms::result, kNameSpaceID_None, true },
+  { nsGkAtoms::in, kNameSpaceID_None, true }
+};
+=======
+SVGElement::StringInfo SVGFEComponentTransferElement::sStringInfo[2] = {
+    {nsGkAtoms::result, kNameSpaceID_None, true},
+    {nsGkAtoms::in, kNameSpaceID_None, true}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEComponentTransferElement)
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGFEComponentTransferElement::In1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGFEComponentTransferElement::In1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGFEComponentTransferElement::In1() {
+>>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo
 SVGFEComponentTransferElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGFEComponentTransferElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo
+SVGFEComponentTransferElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }
@@ -83,9 +113,20 @@ bool SVGFEComponentTransferElement::AttributeAffectsRendering(
          (aNameSpaceID == kNameSpaceID_None && aAttribute == nsGkAtoms::in);
 }
 
+<<<<<<< HEAD
 void SVGFEComponentTransferElement::GetSourceImageNames(
     nsTArray<nsSVGStringInfo>& aSources) {
   aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
+||||||| merged common ancestors
+void
+SVGFEComponentTransferElement::GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources)
+{
+  aSources.AppendElement(nsSVGStringInfo(&mStringAttributes[IN1], this));
+=======
+void SVGFEComponentTransferElement::GetSourceImageNames(
+    nsTArray<SVGStringInfo>& aSources) {
+  aSources.AppendElement(SVGStringInfo(&mStringAttributes[IN1], this));
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

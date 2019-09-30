@@ -202,7 +202,13 @@ ti{
         native{"latn"}
         traditional{"ethi"}
     }
+<<<<<<< HEAD
     Version{"2.1.44.88"}
+||||||| merged common ancestors
+    Version{"2.1.38.72"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -285,8 +291,8 @@ ti{
                 MMM{"LLL"}
                 MMMEd{"MMM d, E"}
                 MMMMW{
-                    one{"ሰሙን W ናይ MMM"}
-                    other{"ሰሙን W ናይ MMM"}
+                    one{"ሰሙን W ናይ MMMM"}
+                    other{"ሰሙን W ናይ MMMM"}
                 }
                 MMMMd{"MMMM d"}
                 MMMMdd{"dd MMMM"}

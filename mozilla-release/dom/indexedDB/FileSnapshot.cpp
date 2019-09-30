@@ -58,7 +58,21 @@ class StreamWrapper final : public nsIAsyncInputStream,
  private:
   virtual ~StreamWrapper();
 
+<<<<<<< HEAD
   bool IsOnOwningThread() const {
+||||||| merged common ancestors
+  bool
+  IsOnOwningThread() const
+  {
+=======
+  template <typename M>
+  void SerializeInternal(InputStreamParams& aParams,
+                         FileDescriptorArray& aFileDescriptors,
+                         bool aDelayedStart, uint32_t aMaxSize,
+                         uint32_t* aSizeUsed, M* aManager);
+
+  bool IsOnOwningThread() const {
+>>>>>>> upstream-releases
     MOZ_ASSERT(mOwningThread);
 
     bool current;
@@ -202,7 +216,24 @@ BlobImpl* BlobImplSnapshot::GetBlobImpl() const {
   return mBlobImpl;
 }
 
+<<<<<<< HEAD
 StreamWrapper::~StreamWrapper() {
+||||||| merged common ancestors
+StreamWrapper::~StreamWrapper()
+{
+=======
+void BlobImplSnapshot::GetBlobImplType(nsAString& aBlobImplType) const {
+  aBlobImplType.AssignLiteral("BlobImplSnapshot[");
+
+  nsAutoString blobImplType;
+  mBlobImpl->GetBlobImplType(blobImplType);
+  aBlobImplType.Append(blobImplType);
+
+  aBlobImplType.AppendLiteral("]");
+}
+
+StreamWrapper::~StreamWrapper() {
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   Finish();
@@ -254,13 +285,89 @@ StreamWrapper::IsNonBlocking(bool* _retval) {
   return mInputStream->IsNonBlocking(_retval);
 }
 
+<<<<<<< HEAD
 void StreamWrapper::Serialize(InputStreamParams& aParams,
                               FileDescriptorArray& aFileDescriptors) {
   nsCOMPtr<nsIIPCSerializableInputStream> stream =
       do_QueryInterface(mInputStream);
+||||||| merged common ancestors
+void
+StreamWrapper::Serialize(InputStreamParams& aParams,
+                         FileDescriptorArray& aFileDescriptors)
+{
+  nsCOMPtr<nsIIPCSerializableInputStream> stream =
+    do_QueryInterface(mInputStream);
+=======
+void StreamWrapper::Serialize(InputStreamParams& aParams,
+                              FileDescriptorArray& aFileDescriptors,
+                              bool aDelayedStart, uint32_t aMaxSize,
+                              uint32_t* aSizeUsed, ContentChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+>>>>>>> upstream-releases
+
+void StreamWrapper::Serialize(InputStreamParams& aParams,
+                              FileDescriptorArray& aFileDescriptors,
+                              bool aDelayedStart, uint32_t aMaxSize,
+                              uint32_t* aSizeUsed, PBackgroundChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+<<<<<<< HEAD
+bool StreamWrapper::Deserialize(const InputStreamParams& aParams,
+                                const FileDescriptorArray& aFileDescriptors) {
+  MOZ_CRASH("This method should never be called");
+  return false;
+||||||| merged common ancestors
+bool
+StreamWrapper::Deserialize(const InputStreamParams& aParams,
+                           const FileDescriptorArray& aFileDescriptors)
+{
+  MOZ_CRASH("This method should never be called");
+  return false;
+=======
+void StreamWrapper::Serialize(InputStreamParams& aParams,
+                              FileDescriptorArray& aFileDescriptors,
+                              bool aDelayedStart, uint32_t aMaxSize,
+                              uint32_t* aSizeUsed, ContentParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+Maybe<uint64_t> StreamWrapper::ExpectedSerializedLength() {
+||||||| merged common ancestors
+Maybe<uint64_t>
+StreamWrapper::ExpectedSerializedLength()
+{
+=======
+void StreamWrapper::Serialize(InputStreamParams& aParams,
+                              FileDescriptorArray& aFileDescriptors,
+                              bool aDelayedStart, uint32_t aMaxSize,
+                              uint32_t* aSizeUsed,
+                              PBackgroundParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+template <typename M>
+void StreamWrapper::SerializeInternal(InputStreamParams& aParams,
+                                      FileDescriptorArray& aFileDescriptors,
+                                      bool aDelayedStart, uint32_t aMaxSize,
+                                      uint32_t* aSizeUsed, M* aManager) {
+  MOZ_ASSERT(aSizeUsed);
+  *aSizeUsed = 0;
+
+>>>>>>> upstream-releases
+  nsCOMPtr<nsIIPCSerializableInputStream> stream =
+      do_QueryInterface(mInputStream);
 
   if (stream) {
-    stream->Serialize(aParams, aFileDescriptors);
+    stream->Serialize(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                      aSizeUsed, aManager);
   }
 }
 
@@ -268,16 +375,6 @@ bool StreamWrapper::Deserialize(const InputStreamParams& aParams,
                                 const FileDescriptorArray& aFileDescriptors) {
   MOZ_CRASH("This method should never be called");
   return false;
-}
-
-Maybe<uint64_t> StreamWrapper::ExpectedSerializedLength() {
-  nsCOMPtr<nsIIPCSerializableInputStream> stream =
-      do_QueryInterface(mInputStream);
-
-  if (stream) {
-    return stream->ExpectedSerializedLength();
-  }
-  return Nothing();
 }
 
 NS_IMETHODIMP

@@ -9,7 +9,15 @@
 #include_next <gdk/gdkvisual.h>
 #undef gdk_visual_get_depth
 
+<<<<<<< HEAD
 static inline gint gdk_visual_get_depth(GdkVisual *visual) {
+||||||| merged common ancestors
+static inline gint
+gdk_visual_get_depth(GdkVisual *visual)
+{
+=======
+static inline gint gdk_visual_get_depth(GdkVisual* visual) {
+>>>>>>> upstream-releases
   return visual->depth;
 }
 #endif /* GDKVISUAL_WRAPPER_H */

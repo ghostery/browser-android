@@ -5,22 +5,39 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "DOMSVGAnimatedLengthList.h"
+
 #include "DOMSVGLengthList.h"
 #include "SVGAnimatedLengthList.h"
-#include "nsSVGElement.h"
-#include "nsCOMPtr.h"
-#include "nsSVGAttrTearoffTable.h"
+#include "SVGAttrTearoffTable.h"
 #include "mozilla/dom/SVGAnimatedLengthListBinding.h"
+#include "mozilla/dom/SVGElement.h"
+#include "mozilla/RefPtr.h"
 
 // See the architecture comment in this file's header.
 
 namespace mozilla {
+namespace dom {
 
+<<<<<<< HEAD
 static inline nsSVGAttrTearoffTable<SVGAnimatedLengthList,
                                     DOMSVGAnimatedLengthList>&
 SVGAnimatedLengthListTearoffTable() {
   static nsSVGAttrTearoffTable<SVGAnimatedLengthList, DOMSVGAnimatedLengthList>
       sSVGAnimatedLengthListTearoffTable;
+||||||| merged common ancestors
+static inline
+nsSVGAttrTearoffTable<SVGAnimatedLengthList, DOMSVGAnimatedLengthList>&
+SVGAnimatedLengthListTearoffTable()
+{
+  static nsSVGAttrTearoffTable<SVGAnimatedLengthList, DOMSVGAnimatedLengthList>
+    sSVGAnimatedLengthListTearoffTable;
+=======
+static inline SVGAttrTearoffTable<SVGAnimatedLengthList,
+                                  DOMSVGAnimatedLengthList>&
+SVGAnimatedLengthListTearoffTable() {
+  static SVGAttrTearoffTable<SVGAnimatedLengthList, DOMSVGAnimatedLengthList>
+      sSVGAnimatedLengthListTearoffTable;
+>>>>>>> upstream-releases
   return sSVGAnimatedLengthListTearoffTable;
 }
 
@@ -51,10 +68,25 @@ already_AddRefed<DOMSVGLengthList> DOMSVGAnimatedLengthList::AnimVal() {
   return animVal.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMSVGAnimatedLengthList>
 DOMSVGAnimatedLengthList::GetDOMWrapper(SVGAnimatedLengthList* aList,
                                         nsSVGElement* aElement,
                                         uint8_t aAttrEnum, uint8_t aAxis) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DOMSVGAnimatedLengthList>
+DOMSVGAnimatedLengthList::GetDOMWrapper(SVGAnimatedLengthList *aList,
+                                        nsSVGElement *aElement,
+                                        uint8_t aAttrEnum,
+                                        uint8_t aAxis)
+{
+=======
+/* static */
+already_AddRefed<DOMSVGAnimatedLengthList>
+DOMSVGAnimatedLengthList::GetDOMWrapper(SVGAnimatedLengthList* aList,
+                                        dom::SVGElement* aElement,
+                                        uint8_t aAttrEnum, uint8_t aAxis) {
+>>>>>>> upstream-releases
   RefPtr<DOMSVGAnimatedLengthList> wrapper =
       SVGAnimatedLengthListTearoffTable().GetTearoff(aList);
   if (!wrapper) {
@@ -64,8 +96,18 @@ DOMSVGAnimatedLengthList::GetDOMWrapper(SVGAnimatedLengthList* aList,
   return wrapper.forget();
 }
 
+<<<<<<< HEAD
 /* static */ DOMSVGAnimatedLengthList*
 DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(SVGAnimatedLengthList* aList) {
+||||||| merged common ancestors
+/* static */ DOMSVGAnimatedLengthList*
+DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(SVGAnimatedLengthList *aList)
+{
+=======
+/* static */
+DOMSVGAnimatedLengthList* DOMSVGAnimatedLengthList::GetDOMWrapperIfExists(
+    SVGAnimatedLengthList* aList) {
+>>>>>>> upstream-releases
   return SVGAnimatedLengthListTearoffTable().GetTearoff(aList);
 }
 
@@ -123,4 +165,11 @@ const SVGAnimatedLengthList& DOMSVGAnimatedLengthList::InternalAList() const {
   return *mElement->GetAnimatedLengthList(mAttrEnum);
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

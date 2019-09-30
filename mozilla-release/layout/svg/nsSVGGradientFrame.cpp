@@ -11,13 +11,14 @@
 // Keep others in (case-insensitive) order:
 #include "AutoReferenceChainGuard.h"
 #include "gfxPattern.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/dom/SVGGradientElement.h"
 #include "mozilla/dom/SVGGradientElementBinding.h"
 #include "mozilla/dom/SVGStopElement.h"
 #include "mozilla/dom/SVGUnitTypesBinding.h"
 #include "nsContentUtils.h"
 #include "SVGObserverUtils.h"
-#include "nsSVGAnimatedTransformList.h"
+#include "SVGAnimatedTransformList.h"
 
 // XXX Tight coupling with content classes ahead!
 
@@ -30,11 +31,29 @@ using namespace mozilla::gfx;
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 nsSVGGradientFrame::nsSVGGradientFrame(ComputedStyle* aStyle, ClassID aID)
     : nsSVGPaintServerFrame(aStyle, aID),
       mSource(nullptr),
       mLoopFlag(false),
       mNoHRefURI(false) {}
+||||||| merged common ancestors
+nsSVGGradientFrame::nsSVGGradientFrame(ComputedStyle* aStyle,
+                                       ClassID aID)
+  : nsSVGPaintServerFrame(aStyle, aID)
+  , mSource(nullptr)
+  , mLoopFlag(false)
+  , mNoHRefURI(false)
+{
+}
+=======
+nsSVGGradientFrame::nsSVGGradientFrame(ComputedStyle* aStyle,
+                                       nsPresContext* aPresContext, ClassID aID)
+    : nsSVGPaintServerFrame(aStyle, aPresContext, aID),
+      mSource(nullptr),
+      mLoopFlag(false),
+      mNoHRefURI(false) {}
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsIFrame methods:
@@ -63,13 +82,36 @@ nsresult nsSVGGradientFrame::AttributeChanged(int32_t aNameSpaceID,
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 uint16_t nsSVGGradientFrame::GetEnumValue(uint32_t aIndex,
                                           nsIContent* aDefault) {
   const nsSVGEnum& thisEnum =
       static_cast<dom::SVGGradientElement*>(GetContent())
           ->mEnumAttributes[aIndex];
+||||||| merged common ancestors
+uint16_t
+nsSVGGradientFrame::GetEnumValue(uint32_t aIndex, nsIContent *aDefault)
+{
+  const nsSVGEnum& thisEnum =
+    static_cast<dom::SVGGradientElement*>(GetContent())->mEnumAttributes[aIndex];
+=======
+uint16_t nsSVGGradientFrame::GetEnumValue(uint32_t aIndex,
+                                          nsIContent* aDefault) {
+  const SVGAnimatedEnumeration& thisEnum =
+      static_cast<dom::SVGGradientElement*>(GetContent())
+          ->mEnumAttributes[aIndex];
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (thisEnum.IsExplicitlySet()) return thisEnum.GetAnimValue();
+||||||| merged common ancestors
+  if (thisEnum.IsExplicitlySet())
+    return thisEnum.GetAnimValue();
+=======
+  if (thisEnum.IsExplicitlySet()) {
+    return thisEnum.GetAnimValue();
+  }
+>>>>>>> upstream-releases
 
   // Before we recurse, make sure we'll break reference loops and over long
   // reference chains:
@@ -100,11 +142,25 @@ uint16_t nsSVGGradientFrame::GetSpreadMethod() {
   return GetEnumValue(dom::SVGGradientElement::SPREADMETHOD);
 }
 
+<<<<<<< HEAD
 const nsSVGAnimatedTransformList* nsSVGGradientFrame::GetGradientTransformList(
     nsIContent* aDefault) {
   nsSVGAnimatedTransformList* thisTransformList =
       static_cast<dom::SVGGradientElement*>(GetContent())
           ->GetAnimatedTransformList();
+||||||| merged common ancestors
+const nsSVGAnimatedTransformList*
+nsSVGGradientFrame::GetGradientTransformList(nsIContent* aDefault)
+{
+  nsSVGAnimatedTransformList *thisTransformList =
+    static_cast<dom::SVGGradientElement*>(GetContent())->GetAnimatedTransformList();
+=======
+const SVGAnimatedTransformList* nsSVGGradientFrame::GetGradientTransformList(
+    nsIContent* aDefault) {
+  SVGAnimatedTransformList* thisTransformList =
+      static_cast<dom::SVGGradientElement*>(GetContent())
+          ->GetAnimatedTransformList();
+>>>>>>> upstream-releases
 
   if (thisTransformList && thisTransformList->IsExplicitlySet())
     return thisTransformList;
@@ -146,9 +202,22 @@ gfxMatrix nsSVGGradientFrame::GetGradientTransform(
         gfxMatrix(bbox.Width(), 0, 0, bbox.Height(), bbox.X(), bbox.Y());
   }
 
+<<<<<<< HEAD
   const nsSVGAnimatedTransformList* animTransformList =
       GetGradientTransformList(GetContent());
   if (!animTransformList) return bboxMatrix;
+||||||| merged common ancestors
+  const nsSVGAnimatedTransformList* animTransformList =
+    GetGradientTransformList(GetContent());
+  if (!animTransformList)
+    return bboxMatrix;
+=======
+  const SVGAnimatedTransformList* animTransformList =
+      GetGradientTransformList(GetContent());
+  if (!animTransformList) {
+    return bboxMatrix;
+  }
+>>>>>>> upstream-releases
 
   gfxMatrix gradientTransform =
       animTransformList->GetAnimValue().GetConsolidationMatrix();
@@ -213,11 +282,29 @@ static void GetStopInformation(nsIFrame* aStopFrame, float* aOffset,
   *aStopOpacity = styleSVGReset->mStopOpacity;
 }
 
+<<<<<<< HEAD
 already_AddRefed<gfxPattern> nsSVGGradientFrame::GetPaintServerPattern(
     nsIFrame* aSource, const DrawTarget* aDrawTarget,
     const gfxMatrix& aContextMatrix, nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
     float aGraphicOpacity, imgDrawingParams& aImgParams,
     const gfxRect* aOverrideBounds) {
+||||||| merged common ancestors
+already_AddRefed<gfxPattern>
+nsSVGGradientFrame::GetPaintServerPattern(nsIFrame* aSource,
+                                          const DrawTarget* aDrawTarget,
+                                          const gfxMatrix& aContextMatrix,
+                                          nsStyleSVGPaint nsStyleSVG::*aFillOrStroke,
+                                          float aGraphicOpacity,
+                                          imgDrawingParams& aImgParams,
+                                          const gfxRect* aOverrideBounds)
+{
+=======
+already_AddRefed<gfxPattern> nsSVGGradientFrame::GetPaintServerPattern(
+    nsIFrame* aSource, const DrawTarget* aDrawTarget,
+    const gfxMatrix& aContextMatrix, StyleSVGPaint nsStyleSVG::*aFillOrStroke,
+    float aGraphicOpacity, imgDrawingParams& aImgParams,
+    const gfxRect* aOverrideBounds) {
+>>>>>>> upstream-releases
   uint16_t gradientUnits = GetGradientUnits();
   MOZ_ASSERT(gradientUnits == SVG_UNIT_TYPE_OBJECTBOUNDINGBOX ||
              gradientUnits == SVG_UNIT_TYPE_USERSPACEONUSE);
@@ -413,8 +500,16 @@ float nsSVGLinearGradientFrame::GetLengthValue(uint32_t aIndex) {
   // We passed in mContent as a fallback, so, assuming mContent is non-null, the
   // return value should also be non-null.
   MOZ_ASSERT(lengthElement,
+<<<<<<< HEAD
              "Got unexpected null element from GetLinearGradientWithLength");
   const nsSVGLength2& length = lengthElement->mLengthAttributes[aIndex];
+||||||| merged common ancestors
+    "Got unexpected null element from GetLinearGradientWithLength");
+  const nsSVGLength2 &length = lengthElement->mLengthAttributes[aIndex];
+=======
+             "Got unexpected null element from GetLinearGradientWithLength");
+  const SVGAnimatedLength& length = lengthElement->mLengthAttributes[aIndex];
+>>>>>>> upstream-releases
 
   // Object bounding box units are handled by setting the appropriate
   // transform in GetGradientTransform, but we need to handle user
@@ -435,8 +530,16 @@ dom::SVGLinearGradientElement*
 nsSVGLinearGradientFrame::GetLinearGradientWithLength(
     uint32_t aIndex, dom::SVGLinearGradientElement* aDefault) {
   dom::SVGLinearGradientElement* thisElement =
+<<<<<<< HEAD
       static_cast<dom::SVGLinearGradientElement*>(GetContent());
   const nsSVGLength2& length = thisElement->mLengthAttributes[aIndex];
+||||||| merged common ancestors
+    static_cast<dom::SVGLinearGradientElement*>(GetContent());
+  const nsSVGLength2 &length = thisElement->mLengthAttributes[aIndex];
+=======
+      static_cast<dom::SVGLinearGradientElement*>(GetContent());
+  const SVGAnimatedLength& length = thisElement->mLengthAttributes[aIndex];
+>>>>>>> upstream-releases
 
   if (length.IsExplicitlySet()) {
     return thisElement;
@@ -514,9 +617,21 @@ float nsSVGRadialGradientFrame::GetLengthValue(uint32_t aIndex,
                        : aDefaultValue;
 }
 
+<<<<<<< HEAD
 float nsSVGRadialGradientFrame::GetLengthValueFromElement(
     uint32_t aIndex, dom::SVGRadialGradientElement& aElement) {
   const nsSVGLength2& length = aElement.mLengthAttributes[aIndex];
+||||||| merged common ancestors
+float
+nsSVGRadialGradientFrame::GetLengthValueFromElement(uint32_t aIndex,
+  dom::SVGRadialGradientElement& aElement)
+{
+  const nsSVGLength2 &length = aElement.mLengthAttributes[aIndex];
+=======
+float nsSVGRadialGradientFrame::GetLengthValueFromElement(
+    uint32_t aIndex, dom::SVGRadialGradientElement& aElement) {
+  const SVGAnimatedLength& length = aElement.mLengthAttributes[aIndex];
+>>>>>>> upstream-releases
 
   // Object bounding box units are handled by setting the appropriate
   // transform in GetGradientTransform, but we need to handle user
@@ -537,8 +652,16 @@ dom::SVGRadialGradientElement*
 nsSVGRadialGradientFrame::GetRadialGradientWithLength(
     uint32_t aIndex, dom::SVGRadialGradientElement* aDefault) {
   dom::SVGRadialGradientElement* thisElement =
+<<<<<<< HEAD
       static_cast<dom::SVGRadialGradientElement*>(GetContent());
   const nsSVGLength2& length = thisElement->mLengthAttributes[aIndex];
+||||||| merged common ancestors
+    static_cast<dom::SVGRadialGradientElement*>(GetContent());
+  const nsSVGLength2 &length = thisElement->mLengthAttributes[aIndex];
+=======
+      static_cast<dom::SVGRadialGradientElement*>(GetContent());
+  const SVGAnimatedLength& length = thisElement->mLengthAttributes[aIndex];
+>>>>>>> upstream-releases
 
   if (length.IsExplicitlySet()) {
     return thisElement;
@@ -570,14 +693,26 @@ already_AddRefed<gfxPattern> nsSVGRadialGradientFrame::CreateGradient() {
     // 1/128 is the limit of the fractional part of cairo's 24.8 fixed point
     // representation divided by 2 to ensure that we get different cairo
     // fractions
+<<<<<<< HEAD
     double dMax = std::max(0.0, r - 1.0 / 128);
     float dx = fx - cx;
     float dy = fy - cy;
     double d = sqrt((dx * dx) + (dy * dy));
+||||||| merged common ancestors
+    double dMax = std::max(0.0, r - 1.0/128);
+    float dx = fx - cx;
+    float dy = fy - cy;
+    double d = sqrt((dx * dx) + (dy * dy));
+=======
+    double dMax = std::max(0.0, r - 1.0 / 128);
+    double dx = fx - cx;
+    double dy = fy - cy;
+    double d = std::sqrt((dx * dx) + (dy * dy));
+>>>>>>> upstream-releases
     if (d > dMax) {
-      double angle = atan2(dy, dx);
-      fx = (float)(dMax * cos(angle)) + cx;
-      fy = (float)(dMax * sin(angle)) + cy;
+      double angle = std::atan2(dy, dx);
+      fx = float(dMax * std::cos(angle)) + cx;
+      fy = float(dMax * std::sin(angle)) + cy;
     }
   }
 
@@ -589,16 +724,42 @@ already_AddRefed<gfxPattern> nsSVGRadialGradientFrame::CreateGradient() {
 // Public functions
 // -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGLinearGradientFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGLinearGradientFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGLinearGradientFrame(nsIPresShell*   aPresShell,
+                             ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGLinearGradientFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGLinearGradientFrame(mozilla::PresShell* aPresShell,
+                                       ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsSVGLinearGradientFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGLinearGradientFrame)
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGRadialGradientFrame(nsIPresShell* aPresShell,
                                        ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGRadialGradientFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGRadialGradientFrame(nsIPresShell*   aPresShell,
+                             ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGRadialGradientFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGRadialGradientFrame(mozilla::PresShell* aPresShell,
+                                       ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsSVGRadialGradientFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGRadialGradientFrame)

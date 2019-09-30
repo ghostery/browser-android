@@ -8,10 +8,15 @@
 #ifndef SkBitmapCache_DEFINED
 #define SkBitmapCache_DEFINED
 
-#include "SkBitmap.h"
-#include "SkMipMap.h"
+#include "SkRect.h"
+#include <memory>
 
+class SkBitmap;
+class SkBitmapProvider;
 class SkImage;
+struct SkImageInfo;
+class SkMipMap;
+class SkPixmap;
 class SkResourceCache;
 
 uint64_t SkMakeResourceCacheSharedIDForBitmap(uint32_t bitmapGenID);
@@ -20,9 +25,15 @@ void SkNotifyBitmapGenIDIsStale(uint32_t bitmapGenID);
 
 struct SkBitmapCacheDesc {
     uint32_t    fImageID;       // != 0
+<<<<<<< HEAD
     SkColorType fColorType;
     uint32_t    fCSXYZHash;
     uint32_t    fCSTransferFnHash;
+||||||| merged common ancestors
+    int32_t     fScaledWidth;   // 0 for unscaled
+    int32_t     fScaledHeight;  // 0 for unscaled
+=======
+>>>>>>> upstream-releases
     SkIRect     fSubset;        // always set to a valid rect (entire or subset)
 
     void validate() const {
@@ -32,10 +43,25 @@ struct SkBitmapCacheDesc {
         SkASSERT(kUnknown_SkColorType != fColorType);
     }
 
+<<<<<<< HEAD
     static SkBitmapCacheDesc Make(const SkBitmap&);
+||||||| merged common ancestors
+    static SkBitmapCacheDesc Make(const SkBitmap&, int scaledWidth, int scaledHeight);
+    static SkBitmapCacheDesc Make(const SkBitmap&);
+    static SkBitmapCacheDesc Make(const SkImage*, int scaledWidth, int scaledHeight);
+=======
+>>>>>>> upstream-releases
     static SkBitmapCacheDesc Make(const SkImage*);
+<<<<<<< HEAD
     static SkBitmapCacheDesc Make(uint32_t genID, SkColorType, SkColorSpace*,
                                   const SkIRect& subset);
+||||||| merged common ancestors
+
+    // Use with care -- width/height must match the original bitmap/image
+    static SkBitmapCacheDesc Make(uint32_t genID, int origWidth, int origHeight);
+=======
+    static SkBitmapCacheDesc Make(uint32_t genID, const SkIRect& subset);
+>>>>>>> upstream-releases
 };
 
 class SkBitmapCache {
@@ -61,7 +87,15 @@ class SkMipMapCache {
 public:
     static const SkMipMap* FindAndRef(const SkBitmapCacheDesc&,
                                       SkResourceCache* localCache = nullptr);
+<<<<<<< HEAD
     static const SkMipMap* AddAndRef(const SkBitmap& src, SkResourceCache* localCache = nullptr);
+||||||| merged common ancestors
+    static const SkMipMap* AddAndRef(const SkBitmap& src, SkDestinationSurfaceColorMode,
+                                     SkResourceCache* localCache = nullptr);
+=======
+    static const SkMipMap* AddAndRef(const SkBitmapProvider&,
+                                     SkResourceCache* localCache = nullptr);
+>>>>>>> upstream-releases
 };
 
 #endif

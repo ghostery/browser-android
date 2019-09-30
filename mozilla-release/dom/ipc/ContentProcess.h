@@ -12,7 +12,7 @@
 #include "ContentChild.h"
 
 #if defined(XP_WIN)
-#include "mozilla/mscom/MainThreadRuntime.h"
+#  include "mozilla/mscom/ProcessRuntime.h"
 #endif
 
 namespace mozilla {
@@ -39,12 +39,13 @@ class ContentProcess : public mozilla::ipc::ProcessChild {
 
 #if defined(XP_WIN)
   // This object initializes and configures COM.
-  mozilla::mscom::MainThreadRuntime mCOMRuntime;
+  mozilla::mscom::ProcessRuntime mCOMRuntime;
 #endif
 
   DISALLOW_EVIL_CONSTRUCTORS(ContentProcess);
 };
 
+<<<<<<< HEAD
 #ifdef ANDROID
 // Android doesn't use -prefsHandle or -prefMapHandle. It gets those FDs
 // another way.
@@ -54,5 +55,19 @@ void SetPrefMapFd(int aFd);
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+#ifdef ANDROID
+// Android doesn't use -prefsHandle or -prefMapHandle. It gets those FDs
+// another way.
+void SetPrefsFd(int aFd);
+void SetPrefMapFd(int aFd);
+#endif
+
+} // namespace dom
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // ifndef dom_tabs_ContentThread_h

@@ -119,12 +119,35 @@ mozilla::ipc::IPCResult APZInputBridgeParent::RecvUpdateWheelTransaction(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult APZInputBridgeParent::RecvProcessUnhandledEvent(
     const LayoutDeviceIntPoint& aRefPoint, LayoutDeviceIntPoint* aOutRefPoint,
     ScrollableLayerGuid* aOutTargetGuid, uint64_t* aOutFocusSequenceNumber) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+APZInputBridgeParent::RecvProcessUnhandledEvent(
+        const LayoutDeviceIntPoint& aRefPoint,
+        LayoutDeviceIntPoint* aOutRefPoint,
+        ScrollableLayerGuid*  aOutTargetGuid,
+        uint64_t*             aOutFocusSequenceNumber)
+{
+=======
+mozilla::ipc::IPCResult APZInputBridgeParent::RecvProcessUnhandledEvent(
+    const LayoutDeviceIntPoint& aRefPoint, LayoutDeviceIntPoint* aOutRefPoint,
+    ScrollableLayerGuid* aOutTargetGuid, uint64_t* aOutFocusSequenceNumber,
+    LayersId* aOutLayersId) {
+>>>>>>> upstream-releases
   LayoutDeviceIntPoint refPoint = aRefPoint;
+<<<<<<< HEAD
   mTreeManager->InputBridge()->ProcessUnhandledEvent(&refPoint, aOutTargetGuid,
                                                      aOutFocusSequenceNumber);
+||||||| merged common ancestors
+  mTreeManager->InputBridge()->ProcessUnhandledEvent(
+        &refPoint, aOutTargetGuid, aOutFocusSequenceNumber);
+=======
+  mTreeManager->InputBridge()->ProcessUnhandledEvent(
+      &refPoint, aOutTargetGuid, aOutFocusSequenceNumber, aOutLayersId);
+>>>>>>> upstream-releases
   *aOutRefPoint = refPoint;
 
   return IPC_OK();

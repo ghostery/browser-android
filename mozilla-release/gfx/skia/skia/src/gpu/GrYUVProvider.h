@@ -10,10 +10,19 @@
 
 #include "GrTypes.h"
 #include "SkImageInfo.h"
-#include "SkYUVSizeInfo.h"
+#include "SkYUVAIndex.h"
+#include "SkYUVASizeInfo.h"
 
+<<<<<<< HEAD
 class GrContext;
 struct GrSurfaceDesc;
+||||||| merged common ancestors
+class GrContext;
+=======
+class GrBackendFormat;
+class GrRecordingContext;
+struct GrSurfaceDesc;
+>>>>>>> upstream-releases
 class GrTexture;
 class GrTextureProxy;
 class SkCachedData;
@@ -39,14 +48,36 @@ public:
      *
      *  On failure (e.g. the provider had no data), this returns NULL.
      */
+<<<<<<< HEAD
     sk_sp<GrTextureProxy> refAsTextureProxy(GrContext*, const GrSurfaceDesc&,
                                             SkColorSpace* srcColorSpace,
                                             SkColorSpace* dstColorSpace);
+||||||| merged common ancestors
+    sk_sp<GrTextureProxy> refAsTextureProxy(GrContext*, const GrSurfaceDesc&,
+                                            const SkColorSpace* srcColorSpace,
+                                            const SkColorSpace* dstColorSpace);
+=======
+    sk_sp<GrTextureProxy> refAsTextureProxy(GrRecordingContext*,
+                                            const GrBackendFormat&,
+                                            const GrSurfaceDesc&,
+                                            SkColorSpace* srcColorSpace,
+                                            SkColorSpace* dstColorSpace);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     sk_sp<SkCachedData> getPlanes(SkYUVSizeInfo*, SkYUVColorSpace*, const void* planes[3]);
 
 private:
     virtual uint32_t onGetID() const = 0;
+||||||| merged common ancestors
+    virtual uint32_t onGetID() = 0;
+=======
+    sk_sp<SkCachedData> getPlanes(SkYUVASizeInfo*, SkYUVAIndex[SkYUVAIndex::kIndexCount],
+                                  SkYUVColorSpace*, const void* planes[SkYUVASizeInfo::kMaxCount]);
+
+private:
+    virtual uint32_t onGetID() const = 0;
+>>>>>>> upstream-releases
 
     // These are not meant to be called by a client, only by the implementation
 
@@ -54,23 +85,29 @@ private:
      *  If decoding to YUV is supported, this returns true.  Otherwise, this
      *  returns false and does not modify any of the parameters.
      *
-     *  @param sizeInfo   Output parameter indicating the sizes and required
-     *                    allocation widths of the Y, U, and V planes.
-     *  @param colorSpace Output parameter.
+     *  @param sizeInfo    Output parameter indicating the sizes and required
+     *                     allocation widths of the Y, U, V, and A planes.
+     *  @param yuvaIndices How the YUVA planes are used/organized
+     *  @param colorSpace  Output parameter.
      */
-    virtual bool onQueryYUV8(SkYUVSizeInfo* sizeInfo, SkYUVColorSpace* colorSpace) const = 0;
+    virtual bool onQueryYUVA8(SkYUVASizeInfo* sizeInfo,
+                              SkYUVAIndex yuvaIndices[SkYUVAIndex::kIndexCount],
+                              SkYUVColorSpace* colorSpace) const = 0;
 
     /**
      *  Returns true on success and false on failure.
      *  This always attempts to perform a full decode.  If the client only
-     *  wants size, it should call onQueryYUV8().
+     *  wants size, it should call onQueryYUVA8().
      *
-     *  @param sizeInfo   Needs to exactly match the values returned by the
-     *                    query, except the WidthBytes may be larger than the
-     *                    recommendation (but not smaller).
-     *  @param planes     Memory for each of the Y, U, and V planes.
+     *  @param sizeInfo    Needs to exactly match the values returned by the
+     *                     query, except the WidthBytes may be larger than the
+     *                     recommendation (but not smaller).
+     *  @param yuvaIndices How the YUVA planes are used/organized
+     *  @param planes      Memory for each of the Y, U, V, and A planes.
      */
-    virtual bool onGetYUV8Planes(const SkYUVSizeInfo& sizeInfo, void* planes[3]) = 0;
+    virtual bool onGetYUVA8Planes(const SkYUVASizeInfo& sizeInfo,
+                                  const SkYUVAIndex yuvaIndices[SkYUVAIndex::kIndexCount],
+                                  void* planes[]) = 0;
 
     // This is used as release callback for the YUV data that we capture in an SkImage when
     // uploading to a gpu. When the upload is complete and we release the SkImage this callback will

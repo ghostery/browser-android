@@ -174,7 +174,8 @@ class nsBMPDecoder : public Decoder {
   nsBMPDecoder(RasterImage* aImage, uint32_t aDataOffset);
 
   // Helper constructor called by the other two.
-  nsBMPDecoder(RasterImage* aImage, State aState, size_t aLength);
+  nsBMPDecoder(RasterImage* aImage, State aState, size_t aLength,
+               bool aForClipboard);
 
   int32_t AbsoluteHeight() const { return abs(mH.mHeight); }
 
@@ -201,6 +202,9 @@ class nsBMPDecoder : public Decoder {
 
   // If the BMP is within an ICO file our treatment of it differs slightly.
   bool mIsWithinICO;
+
+  // If the BMP decoded from the clipboard, we don't start with a data offset.
+  bool mIsForClipboard;
 
   bmp::BitFields mBitFields;
 

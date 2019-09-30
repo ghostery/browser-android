@@ -16,7 +16,9 @@ registerCleanupFunction(() => {
 });
 
 add_task(async function() {
-  info("Switch to 2 pane inspector to avoid sidebar width issues with opening events");
+  info(
+    "Switch to 2 pane inspector to avoid sidebar width issues with opening events"
+  );
   await pushPref("devtools.inspector.three-pane-enabled", false);
   const { inspector, toolbox } = await openInspectorForURL(TEST_URL);
   await runTests(inspector);
@@ -32,15 +34,27 @@ add_task(async function() {
 
 async function runTests(inspector) {
   const markupContainer = await getContainerForSelector("#events", inspector);
+<<<<<<< HEAD
   const evHolder = markupContainer.elt.querySelector(
     ".inspector-badge.interactive[data-event]");
+||||||| merged common ancestors
+  const evHolder = markupContainer.elt.querySelector(".markup-badge[data-event]");
+=======
+  const evHolder = markupContainer.elt.querySelector(
+    ".inspector-badge.interactive[data-event]"
+  );
+>>>>>>> upstream-releases
   const tooltip = inspector.markup.eventDetailsTooltip;
 
   info("Clicking to open event tooltip.");
 
   let onInspectorUpdated = inspector.once("inspector-updated");
   const onTooltipShown = tooltip.once("shown");
-  EventUtils.synthesizeMouseAtCenter(evHolder, {}, inspector.markup.doc.defaultView);
+  EventUtils.synthesizeMouseAtCenter(
+    evHolder,
+    {},
+    inspector.markup.doc.defaultView
+  );
 
   await onTooltipShown;
   // New node is selected when clicking on the events bubble, wait for inspector-updated.

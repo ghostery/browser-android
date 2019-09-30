@@ -90,9 +90,17 @@ class HTMLFrameElement final : public nsGenericHTMLFrameElement {
   using nsGenericHTMLFrameElement::GetContentDocument;
   using nsGenericHTMLFrameElement::GetContentWindow;
 
+<<<<<<< HEAD
   NS_FORWARD_NSIFRAMELOADEROWNER(nsGenericHTMLFrameElement::)
 
  protected:
+||||||| merged common ancestors
+  NS_FORWARD_NSIFRAMELOADEROWNER(nsGenericHTMLFrameElement::)
+
+protected:
+=======
+ protected:
+>>>>>>> upstream-releases
   virtual ~HTMLFrameElement();
 
   virtual JSObject* WrapNode(JSContext* aCx,

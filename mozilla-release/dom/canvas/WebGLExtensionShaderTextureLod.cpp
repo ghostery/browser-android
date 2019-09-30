@@ -17,8 +17,20 @@ WebGLExtensionShaderTextureLod::WebGLExtensionShaderTextureLod(
   MOZ_ASSERT(IsSupported(webgl), "Don't construct extension if unsupported.");
 }
 
+<<<<<<< HEAD
+WebGLExtensionShaderTextureLod::~WebGLExtensionShaderTextureLod() {}
+||||||| merged common ancestors
+WebGLExtensionShaderTextureLod::~WebGLExtensionShaderTextureLod()
+{
+}
+=======
 WebGLExtensionShaderTextureLod::~WebGLExtensionShaderTextureLod() {}
 
+bool WebGLExtensionShaderTextureLod::IsSupported(const WebGLContext* webgl) {
+  if (webgl->IsWebGL2()) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool WebGLExtensionShaderTextureLod::IsSupported(const WebGLContext* webgl) {
   gl::GLContext* gl = webgl->GL();
   if (gl->IsGLES() && gl->Version() >= 300) {
@@ -27,6 +39,26 @@ bool WebGLExtensionShaderTextureLod::IsSupported(const WebGLContext* webgl) {
     return false;
   }
   return gl->IsSupported(gl::GLFeature::shader_texture_lod);
+||||||| merged common ancestors
+bool
+WebGLExtensionShaderTextureLod::IsSupported(const WebGLContext* webgl)
+{
+    gl::GLContext* gl = webgl->GL();
+    if (gl->IsGLES() && gl->Version() >= 300) {
+        // ANGLE's shader translator doesn't yet translate
+        // WebGL1+EXT_shader_texture_lod to ES3. (Bug 1491221)
+        return false;
+    }
+    return gl->IsSupported(gl::GLFeature::shader_texture_lod);
+=======
+  gl::GLContext* gl = webgl->GL();
+  if (gl->IsGLES() && gl->Version() >= 300) {
+    // ANGLE's shader translator doesn't yet translate
+    // WebGL1+EXT_shader_texture_lod to ES3. (Bug 1491221)
+    return false;
+  }
+  return gl->IsSupported(gl::GLFeature::shader_texture_lod);
+>>>>>>> upstream-releases
 }
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionShaderTextureLod,

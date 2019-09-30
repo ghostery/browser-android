@@ -14,32 +14,58 @@ namespace dom {
 
 using namespace mozilla::css;
 
+<<<<<<< HEAD
 /* virtual */ JSObject* CSSMozDocumentRule::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+CSSMozDocumentRule::WrapObject(JSContext* aCx,
+                               JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* CSSMozDocumentRule::WrapObject(JSContext* aCx,
+                                         JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return CSSMozDocumentRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 bool CSSMozDocumentRule::Match(nsIDocument* aDoc, nsIURI* aDocURI,
                                const nsACString& aDocURISpec,
                                const nsACString& aPattern,
                                DocumentMatchingFunction aMatchingFunction) {
+||||||| merged common ancestors
+bool
+CSSMozDocumentRule::Match(nsIDocument* aDoc,
+                          nsIURI* aDocURI,
+                          const nsACString& aDocURISpec,
+                          const nsACString& aPattern,
+                          DocumentMatchingFunction aMatchingFunction)
+{
+=======
+bool CSSMozDocumentRule::Match(const Document* aDoc, nsIURI* aDocURI,
+                               const nsACString& aDocURISpec,
+                               const nsACString& aPattern,
+                               DocumentMatchingFunction aMatchingFunction) {
+>>>>>>> upstream-releases
   switch (aMatchingFunction) {
     case DocumentMatchingFunction::MediaDocument: {
       auto kind = aDoc->MediaDocumentKind();
       if (aPattern.EqualsLiteral("all")) {
-        return kind != nsIDocument::MediaDocumentKind::NotMedia;
+        return kind != Document::MediaDocumentKind::NotMedia;
       }
       MOZ_ASSERT(aPattern.EqualsLiteral("plugin") ||
                  aPattern.EqualsLiteral("image") ||
                  aPattern.EqualsLiteral("video"));
       switch (kind) {
-        case nsIDocument::MediaDocumentKind::NotMedia:
+        case Document::MediaDocumentKind::NotMedia:
           return false;
-        case nsIDocument::MediaDocumentKind::Plugin:
+        case Document::MediaDocumentKind::Plugin:
           return aPattern.EqualsLiteral("plugin");
-        case nsIDocument::MediaDocumentKind::Image:
+        case Document::MediaDocumentKind::Image:
           return aPattern.EqualsLiteral("image");
-        case nsIDocument::MediaDocumentKind::Video:
+        case Document::MediaDocumentKind::Video:
           return aPattern.EqualsLiteral("video");
       }
       MOZ_ASSERT_UNREACHABLE("Unknown media document kind");
@@ -86,7 +112,16 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(CSSMozDocumentRule)
 NS_INTERFACE_MAP_END_INHERITING(css::ConditionRule)
 
 #ifdef DEBUG
+<<<<<<< HEAD
 /* virtual */ void CSSMozDocumentRule::List(FILE* out, int32_t aIndent) const {
+||||||| merged common ancestors
+/* virtual */ void
+CSSMozDocumentRule::List(FILE* out, int32_t aIndent) const
+{
+=======
+/* virtual */
+void CSSMozDocumentRule::List(FILE* out, int32_t aIndent) const {
+>>>>>>> upstream-releases
   nsAutoCString str;
   for (int32_t i = 0; i < aIndent; i++) {
     str.AppendLiteral("  ");
@@ -100,17 +135,50 @@ void CSSMozDocumentRule::GetConditionText(nsAString& aConditionText) {
   Servo_MozDocumentRule_GetConditionText(mRawRule, &aConditionText);
 }
 
+<<<<<<< HEAD
 void CSSMozDocumentRule::SetConditionText(const nsAString& aConditionText,
                                           ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+CSSMozDocumentRule::SetConditionText(const nsAString& aConditionText,
+                                     ErrorResult& aRv)
+{
+=======
+void CSSMozDocumentRule::SetConditionText(const nsAString& aConditionText,
+                                          ErrorResult& aRv) {
+  if (IsReadOnly()) {
+    return;
+  }
+
+>>>>>>> upstream-releases
   aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
 }
 
+<<<<<<< HEAD
 /* virtual */ void CSSMozDocumentRule::GetCssText(nsAString& aCssText) const {
+||||||| merged common ancestors
+/* virtual */ void
+CSSMozDocumentRule::GetCssText(nsAString& aCssText) const
+{
+=======
+/* virtual */
+void CSSMozDocumentRule::GetCssText(nsAString& aCssText) const {
+>>>>>>> upstream-releases
   Servo_MozDocumentRule_GetCssText(mRawRule, &aCssText);
 }
 
+<<<<<<< HEAD
 /* virtual */ size_t CSSMozDocumentRule::SizeOfIncludingThis(
     MallocSizeOf aMallocSizeOf) const {
+||||||| merged common ancestors
+/* virtual */ size_t
+CSSMozDocumentRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
+{
+=======
+/* virtual */
+size_t CSSMozDocumentRule::SizeOfIncludingThis(
+    MallocSizeOf aMallocSizeOf) const {
+>>>>>>> upstream-releases
   // TODO Implement this!
   return aMallocSizeOf(this);
 }

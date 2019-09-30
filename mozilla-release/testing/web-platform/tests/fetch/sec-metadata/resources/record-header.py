@@ -2,7 +2,16 @@ import os
 import uuid
 import hashlib
 import time
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+
+resourcePath = os.getcwd() + "/fetch/sec-metadata/resources/"
+
+=======
+import json
+
+>>>>>>> upstream-releases
 def main(request, response):
   ## Get the query parameter (key) from URL ##
   ## Tests will record POST requests (CSP Report) and GET (rest) ##
@@ -30,8 +39,14 @@ def main(request, response):
   ## Record incoming Sec-Metadata header value
   else:
     try:
-      ## Return empty string as a default value ##
-      header = request.headers.get("Sec-Metadata", "")
+      ## Return a serialized JSON object with one member per header. If the ##
+      ## header isn't present, the member will contain an empty string.     ##
+      header = json.dumps({
+        "dest": request.headers.get("sec-fetch-dest", ""),
+        "mode": request.headers.get("sec-fetch-mode", ""),
+        "site": request.headers.get("sec-fetch-site", ""),
+        "user": request.headers.get("sec-fetch-user", ""),
+      })
       request.server.stash.put(testId, header)
     except KeyError:
       ## The header is already recorded or it doesn't exist
@@ -46,6 +61,14 @@ def main(request, response):
     ## Add a valid ServiceWorker Content-Type ##
     if key.startswith("serviceworker"):
       response.headers.set("Content-Type", "application/javascript")
+
+    ## Add a valid image Content-Type ##
+    if key.startswith("image"):
+      response.headers.set("Content-Type", "image/png")
+      file = open(os.path.join(request.doc_root, "media", "1x1-green.png"), "r")
+      image = file.read()
+      file.close()
+      return image
 
     ## Return a valid .vtt content for the <track> tag ##
     if key.startswith("track"):

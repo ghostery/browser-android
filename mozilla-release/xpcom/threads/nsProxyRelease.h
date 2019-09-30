@@ -21,7 +21,7 @@
 #include "mozilla/Unused.h"
 
 #ifdef XPCOM_GLUE_AVOID_NSPR
-#error NS_ProxyRelease implementation depends on NSPR.
+#  error NS_ProxyRelease implementation depends on NSPR.
 #endif
 
 namespace detail {
@@ -215,9 +215,20 @@ inline NS_HIDDEN_(void)
  * All structs and classes that might be accessed on other threads should store
  * an nsMainThreadPtrHandle<T> rather than an nsCOMPtr<T>.
  */
+<<<<<<< HEAD
 template <class T>
 class nsMainThreadPtrHolder final {
  public:
+||||||| merged common ancestors
+template<class T>
+class nsMainThreadPtrHolder final
+{
+public:
+=======
+template <class T>
+class MOZ_IS_SMARTPTR_TO_REFCOUNTED nsMainThreadPtrHolder final {
+ public:
+>>>>>>> upstream-releases
   // We can only acquire a pointer on the main thread. We to fail fast for
   // threading bugs, so by default we assert if our pointer is used or acquired
   // off-main-thread. But some consumers need to use the same pointer for
@@ -309,8 +320,17 @@ class nsMainThreadPtrHolder final {
   nsMainThreadPtrHolder(const nsMainThreadPtrHolder& aOther);
 };
 
+<<<<<<< HEAD
 template <class T>
 class nsMainThreadPtrHandle {
+||||||| merged common ancestors
+template<class T>
+class nsMainThreadPtrHandle
+{
+=======
+template <class T>
+class MOZ_IS_SMARTPTR_TO_REFCOUNTED nsMainThreadPtrHandle {
+>>>>>>> upstream-releases
   RefPtr<nsMainThreadPtrHolder<T>> mPtr;
 
  public:
@@ -368,6 +388,29 @@ using PtrHolder = nsMainThreadPtrHolder<T>;
 template <typename T>
 using PtrHandle = nsMainThreadPtrHandle<T>;
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+}  // namespace mozilla
+
+class nsCycleCollectionTraversalCallback;
+template <typename T>
+void CycleCollectionNoteChild(nsCycleCollectionTraversalCallback& aCallback,
+                              T* aChild, const char* aName, uint32_t aFlags);
+
+template <typename T>
+inline void ImplCycleCollectionTraverse(
+    nsCycleCollectionTraversalCallback& aCallback,
+    nsMainThreadPtrHandle<T>& aField, const char* aName, uint32_t aFlags = 0) {
+  CycleCollectionNoteChild(aCallback, aField.get(), aName, aFlags);
+}
+
+template <typename T>
+inline void ImplCycleCollectionUnlink(nsMainThreadPtrHandle<T>& aField) {
+  aField = nullptr;
+}
+>>>>>>> upstream-releases
 
 #endif

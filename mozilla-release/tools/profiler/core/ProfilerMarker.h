@@ -7,18 +7,25 @@
 #ifndef ProfilerMarker_h
 #define ProfilerMarker_h
 
-#include "mozilla/UniquePtrExtensions.h"
-
+#include "ProfileBufferEntry.h"
+#include "ProfileJSONWriter.h"
 #include "ProfilerMarkerPayload.h"
 
+<<<<<<< HEAD
 template <typename T>
+||||||| merged common ancestors
+template<typename T>
+=======
+#include "mozilla/UniquePtrExtensions.h"
+
+template <typename T>
+>>>>>>> upstream-releases
 class ProfilerLinkedList;
-class SpliceableJSONWriter;
-class UniqueStacks;
 
 class ProfilerMarker {
   friend class ProfilerLinkedList<ProfilerMarker>;
 
+<<<<<<< HEAD
  public:
   explicit ProfilerMarker(
       const char* aMarkerName, int aThreadId,
@@ -36,6 +43,46 @@ class ProfilerMarker {
   }
 
   bool HasExpired(uint64_t aBufferRangeStart) const {
+||||||| merged common ancestors
+public:
+  explicit ProfilerMarker(const char* aMarkerName,
+                          int aThreadId,
+                          mozilla::UniquePtr<ProfilerMarkerPayload>
+                            aPayload = nullptr,
+                          double aTime = 0)
+    : mMarkerName(strdup(aMarkerName))
+    , mPayload(std::move(aPayload))
+    , mNext{nullptr}
+    , mTime(aTime)
+    , mPositionInBuffer{0}
+    , mThreadId{aThreadId}
+    {}
+
+  void SetPositionInBuffer(uint64_t aPosition) { mPositionInBuffer = aPosition; }
+
+  bool HasExpired(uint64_t aBufferRangeStart) const
+  {
+=======
+ public:
+  explicit ProfilerMarker(
+      const char* aMarkerName, JS::ProfilingCategoryPair aCategoryPair,
+      int aThreadId,
+      mozilla::UniquePtr<ProfilerMarkerPayload> aPayload = nullptr,
+      double aTime = 0)
+      : mMarkerName(strdup(aMarkerName)),
+        mPayload(std::move(aPayload)),
+        mNext{nullptr},
+        mTime(aTime),
+        mPositionInBuffer{0},
+        mThreadId{aThreadId},
+        mCategoryPair{aCategoryPair} {}
+
+  void SetPositionInBuffer(uint64_t aPosition) {
+    mPositionInBuffer = aPosition;
+  }
+
+  bool HasExpired(uint64_t aBufferRangeStart) const {
+>>>>>>> upstream-releases
     return mPositionInBuffer < aBufferRangeStart;
   }
 
@@ -47,12 +94,15 @@ class ProfilerMarker {
                   const mozilla::TimeStamp& aProcessStartTime,
                   UniqueStacks& aUniqueStacks) const {
     // Schema:
-    //   [name, time, data]
+    //   [name, time, category, data]
 
     aWriter.StartArrayElement();
     {
       aUniqueStacks.mUniqueStrings->WriteElement(aWriter, mMarkerName.get());
       aWriter.DoubleElement(mTime);
+      const JS::ProfilingCategoryPairInfo& info =
+          JS::GetProfilingCategoryPairInfo(mCategoryPair);
+      aWriter.IntElement(unsigned(info.mCategory));
       // TODO: Store the callsite for this marker if available:
       // if have location data
       //   b.NameValue(marker, "location", ...);
@@ -72,6 +122,7 @@ class ProfilerMarker {
   double mTime;
   uint64_t mPositionInBuffer;
   int mThreadId;
+  JS::ProfilingCategoryPair mCategoryPair;
 };
 
 template <typename T>

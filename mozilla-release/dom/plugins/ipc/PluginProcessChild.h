@@ -11,7 +11,7 @@
 #include "mozilla/plugins/PluginModuleChild.h"
 
 #if defined(XP_WIN)
-#include "mozilla/mscom/MainThreadRuntime.h"
+#  include "mozilla/mscom/ProcessRuntime.h"
 #endif
 
 namespace mozilla {
@@ -38,9 +38,19 @@ class PluginProcessChild : public mozilla::ipc::ProcessChild {
 
  private:
 #if defined(XP_WIN)
+<<<<<<< HEAD
   /* Drag-and-drop depends on the host initializing COM.
    * This object initializes and configures COM. */
   mozilla::mscom::MainThreadRuntime mCOMRuntime;
+||||||| merged common ancestors
+    /* Drag-and-drop depends on the host initializing COM.
+     * This object initializes and configures COM. */
+    mozilla::mscom::MainThreadRuntime mCOMRuntime;
+=======
+  /* Drag-and-drop depends on the host initializing COM.
+   * This object initializes and configures COM. */
+  mozilla::mscom::ProcessRuntime mCOMRuntime;
+>>>>>>> upstream-releases
 #endif
   PluginModuleChild mPlugin;
 

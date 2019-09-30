@@ -18,6 +18,7 @@
 #include "nsTArray.h"
 #include "nsCOMArray.h"
 #include "nsCycleCollectionParticipant.h"
+#include "mozilla/dom/Element.h"
 
 class nsAutoCompleteController final : public nsIAutoCompleteController,
                                        public nsIAutoCompleteObserver,
@@ -34,8 +35,16 @@ class nsAutoCompleteController final : public nsIAutoCompleteController,
 
   nsAutoCompleteController();
 
+<<<<<<< HEAD
  protected:
   virtual ~nsAutoCompleteController();
+||||||| merged common ancestors
+protected:
+  virtual ~nsAutoCompleteController();
+=======
+ protected:
+  MOZ_CAN_RUN_SCRIPT virtual ~nsAutoCompleteController();
+>>>>>>> upstream-releases
 
   /**
    * SetValueOfInputTo() sets value of mInput to aValue and notifies the input
@@ -51,21 +60,38 @@ class nsAutoCompleteController final : public nsIAutoCompleteController,
     mSearchString = mSetValue = aSearchString;
   }
 
-  nsresult OpenPopup();
-  nsresult ClosePopup();
+  MOZ_CAN_RUN_SCRIPT nsresult OpenPopup();
+  MOZ_CAN_RUN_SCRIPT nsresult ClosePopup();
 
   nsresult StartSearch(uint16_t aSearchType);
 
   nsresult BeforeSearches();
-  nsresult StartSearches();
-  void AfterSearches();
+  MOZ_CAN_RUN_SCRIPT nsresult StartSearches();
+  MOZ_CAN_RUN_SCRIPT void AfterSearches();
   nsresult ClearSearchTimer();
   void MaybeCompletePlaceholder();
 
+<<<<<<< HEAD
   nsresult ProcessResult(int32_t aSearchIndex, nsIAutoCompleteResult* aResult);
   nsresult PostSearchCleanup();
+||||||| merged common ancestors
+  nsresult ProcessResult(int32_t aSearchIndex, nsIAutoCompleteResult *aResult);
+  nsresult PostSearchCleanup();
+=======
+  MOZ_CAN_RUN_SCRIPT nsresult ProcessResult(int32_t aSearchIndex,
+                                            nsIAutoCompleteResult* aResult);
+  MOZ_CAN_RUN_SCRIPT nsresult PostSearchCleanup();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult EnterMatch(bool aIsPopupSelection, mozilla::dom::Event* aEvent);
+||||||| merged common ancestors
+  nsresult EnterMatch(bool aIsPopupSelection,
+                      mozilla::dom::Event* aEvent);
+=======
+  MOZ_CAN_RUN_SCRIPT nsresult EnterMatch(bool aIsPopupSelection,
+                                         mozilla::dom::Event* aEvent);
+>>>>>>> upstream-releases
   nsresult RevertTextValue();
 
   nsresult CompleteDefaultIndex(int32_t aResultIndex);
@@ -74,10 +100,43 @@ class nsAutoCompleteController final : public nsIAutoCompleteController,
   nsresult GetResultAt(int32_t aIndex, nsIAutoCompleteResult** aResult,
                        int32_t* aMatchIndex);
   nsresult GetResultValueAt(int32_t aIndex, bool aGetFinalValue,
+<<<<<<< HEAD
                             nsAString& _retval);
   nsresult GetResultLabelAt(int32_t aIndex, nsAString& _retval);
 
  private:
+||||||| merged common ancestors
+                            nsAString & _retval);
+  nsresult GetResultLabelAt(int32_t aIndex, nsAString & _retval);
+private:
+=======
+                            nsAString& _retval);
+  nsresult GetResultLabelAt(int32_t aIndex, nsAString& _retval);
+
+  /**
+   * Returns autocomplete popup for the autocomplete input. nsIAutoCompleteInput
+   * can be implemented two different ways to return a popup. The first one is
+   * to return a popup object implementing nsIAutoCompletePopup interface,
+   * the second one is a DOM element representing a popup and implementing
+   * that interface.
+   */
+  already_AddRefed<nsIAutoCompletePopup> GetPopup() {
+    nsCOMPtr<nsIAutoCompletePopup> popup;
+    mInput->GetPopup(getter_AddRefs(popup));
+    if (popup) {
+      return popup.forget();
+    }
+
+    nsCOMPtr<Element> popupEl;
+    mInput->GetPopupElement(getter_AddRefs(popupEl));
+    if (popupEl) {
+      return popupEl->AsAutoCompletePopup();
+    }
+    return nullptr;
+  }
+
+ private:
+>>>>>>> upstream-releases
   nsresult GetResultValueLabelAt(int32_t aIndex, bool aGetFinalValue,
                                  bool aGetValue, nsAString& _retval);
 

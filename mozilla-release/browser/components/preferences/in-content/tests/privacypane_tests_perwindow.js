@@ -3,12 +3,17 @@
 
 async function runTestOnPrivacyPrefPane(testFunc) {
   info("runTestOnPrivacyPrefPane entered");
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, "about:preferences", true, true);
+  let tab = await BrowserTestUtils.openNewForegroundTab(
+    gBrowser,
+    "about:preferences",
+    true,
+    true
+  );
   let browser = tab.linkedBrowser;
   info("loaded about:preferences");
-  browser.contentWindow.gotoPref("panePrivacy");
+  await browser.contentWindow.gotoPref("panePrivacy");
   info("viewing privacy pane, executing testFunc");
-  testFunc(browser.contentWindow);
+  await testFunc(browser.contentWindow);
   BrowserTestUtils.removeTab(tab);
 }
 
@@ -19,8 +24,8 @@ function controlChanged(element) {
 // We can only test the panes that don't trigger a preference update
 function test_pane_visibility(win) {
   let modes = {
-    "remember": "historyRememberPane",
-    "custom": "historyCustomPane",
+    remember: "historyRememberPane",
+    custom: "historyCustomPane",
   };
 
   let historymode = win.document.getElementById("historyMode");
@@ -31,10 +36,15 @@ function test_pane_visibility(win) {
   for (let mode in modes) {
     historymode.value = mode;
     controlChanged(historymode);
-    is(historypane.selectedPanel, win.document.getElementById(modes[mode]),
-      "The correct pane should be selected for the " + mode + " mode");
-    is_element_visible(historypane.selectedPanel,
-                       "Correct pane should be visible for the " + mode + " mode");
+    is(
+      historypane.selectedPanel,
+      win.document.getElementById(modes[mode]),
+      "The correct pane should be selected for the " + mode + " mode"
+    );
+    is_element_visible(
+      historypane.selectedPanel,
+      "Correct pane should be visible for the " + mode + " mode"
+    );
   }
 }
 
@@ -73,28 +83,50 @@ function test_dependent_elements(win) {
 
   function expect_disabled(disabled) {
     controls.forEach(function(control) {
-      is(control.disabled, disabled,
-        control.getAttribute("id") + " should " + (disabled ? "" : "not ") + "be disabled");
+      is(
+        control.disabled,
+        disabled,
+        control.getAttribute("id") +
+          " should " +
+          (disabled ? "" : "not ") +
+          "be disabled"
+      );
     });
     if (disabled) {
-     ok(!alwaysclear.checked,
-        "the clear data on close checkbox value should be as expected");
-     ok(!rememberhistory.checked,
-        "the remember history checkbox value should be as expected");
-     ok(!rememberforms.checked,
-        "the remember forms checkbox value should be as expected");
+      ok(
+        !alwaysclear.checked,
+        "the clear data on close checkbox value should be as expected"
+      );
+      ok(
+        !rememberhistory.checked,
+        "the remember history checkbox value should be as expected"
+      );
+      ok(
+        !rememberforms.checked,
+        "the remember forms checkbox value should be as expected"
+      );
     }
   }
   function check_independents(expected) {
     independents.forEach(function(control) {
-      is(control.disabled, expected,
-        control.getAttribute("id") + " should " + (expected ? "" : "not ") + "be disabled");
+      is(
+        control.disabled,
+        expected,
+        control.getAttribute("id") +
+          " should " +
+          (expected ? "" : "not ") +
+          "be disabled"
+      );
     });
 
-    ok(!cookieexceptions.disabled,
-      "the cookie exceptions button should never be disabled");
-    ok(alwaysclearsettings.disabled,
-      "the clear data settings button should always be disabled");
+    ok(
+      !cookieexceptions.disabled,
+      "the cookie exceptions button should never be disabled"
+    );
+    ok(
+      alwaysclearsettings.disabled,
+      "the clear data settings button should always be disabled"
+    );
   }
 
   // controls should only change in custom mode
@@ -111,20 +143,45 @@ function test_dependent_elements(win) {
 }
 
 function test_dependent_cookie_elements(win) {
+<<<<<<< HEAD
   let deleteOnCloseCheckbox = win.document.getElementById("deleteOnClose");
+||||||| merged common ancestors
+  let keepUntil = win.document.getElementById("keepUntil");
+  let keepCookiesUntil = win.document.getElementById("keepCookiesUntil");
+  let blockCookiesLabel = win.document.getElementById("blockCookiesLabel");
+=======
+  let deleteOnCloseCheckbox = win.document.getElementById("deleteOnClose");
+  let deleteOnCloseNote = win.document.getElementById("deleteOnCloseNote");
+>>>>>>> upstream-releases
   let blockCookiesMenu = win.document.getElementById("blockCookiesMenu");
 
   let controls = [blockCookiesMenu, deleteOnCloseCheckbox];
   controls.forEach(function(control) {
     ok(control, "the dependent cookie controls should exist");
   });
+<<<<<<< HEAD
   let blockCookiesCheckbox = win.document.getElementById("contentBlockingBlockCookiesCheckbox");
   ok(blockCookiesCheckbox, "the block cookies checkbox should exist");
+||||||| merged common ancestors
+  let blockcookies = win.document.getElementById("blockCookies");
+  ok(blockcookies, "the block cookies checkbox should exist");
+=======
+  let blockCookiesCheckbox = win.document.getElementById(
+    "contentBlockingBlockCookiesCheckbox"
+  );
+  ok(blockCookiesCheckbox, "the block cookies checkbox should exist");
+>>>>>>> upstream-releases
 
   function expect_disabled(disabled, c = controls) {
     c.forEach(function(control) {
-      is(control.disabled, disabled,
-        control.getAttribute("id") + " should " + (disabled ? "" : "not ") + "be disabled");
+      is(
+        control.disabled,
+        disabled,
+        control.getAttribute("id") +
+          " should " +
+          (disabled ? "" : "not ") +
+          "be disabled"
+      );
     });
   }
 
@@ -132,15 +189,43 @@ function test_dependent_cookie_elements(win) {
   controlChanged(blockCookiesCheckbox);
   expect_disabled(false);
 
+<<<<<<< HEAD
   blockCookiesCheckbox.checked = false;
   controlChanged(blockCookiesCheckbox);
   expect_disabled(true, [blockCookiesMenu]);
   expect_disabled(false, [deleteOnCloseCheckbox]);
+||||||| merged common ancestors
+  blockcookies.value = "allow";
+  controlChanged(blockcookies);
+  expect_disabled(true, [blockCookiesLabel, blockCookiesMenu]);
+  expect_disabled(false, [keepUntil, keepCookiesUntil]);
+=======
+  blockCookiesCheckbox.checked = false;
+  controlChanged(blockCookiesCheckbox);
+  expect_disabled(true, [blockCookiesMenu]);
+  expect_disabled(false, [deleteOnCloseCheckbox]);
+  is_element_hidden(
+    deleteOnCloseNote,
+    "The notice for delete on close in permanent private browsing mode should be hidden."
+  );
+>>>>>>> upstream-releases
 
   blockCookiesMenu.value = "always";
   controlChanged(blockCookiesMenu);
+<<<<<<< HEAD
   expect_disabled(true, [deleteOnCloseCheckbox]);
   expect_disabled(false, [blockCookiesMenu]);
+||||||| merged common ancestors
+  expect_disabled(true, [keepUntil, keepCookiesUntil]);
+  expect_disabled(false, [blockCookiesLabel, blockCookiesMenu]);
+=======
+  expect_disabled(true, [deleteOnCloseCheckbox]);
+  expect_disabled(false, [blockCookiesMenu]);
+  is_element_hidden(
+    deleteOnCloseNote,
+    "The notice for delete on close in permanent private browsing mode should be hidden."
+  );
+>>>>>>> upstream-releases
 
   if (win.contentBlockingCookiesAndSiteDataRejectTrackersEnabled) {
     blockCookiesMenu.value = "trackers";
@@ -156,12 +241,28 @@ function test_dependent_cookie_elements(win) {
   // disable the "keep cookies until..." menu.
   historymode.value = "dontremember";
   controlChanged(historymode);
+<<<<<<< HEAD
   expect_disabled(true, [deleteOnCloseCheckbox]);
   expect_disabled(false, [blockCookiesMenu]);
+||||||| merged common ancestors
+  expect_disabled(true, [keepUntil, keepCookiesUntil]);
+  expect_disabled(false, [blockCookiesLabel, blockCookiesMenu]);
+=======
+  expect_disabled(true, [deleteOnCloseCheckbox]);
+  is_element_visible(
+    deleteOnCloseNote,
+    "The notice for delete on close in permanent private browsing mode should be visible."
+  );
+  expect_disabled(false, [blockCookiesMenu]);
+>>>>>>> upstream-releases
 
   historymode.value = "remember";
   controlChanged(historymode);
   expect_disabled(false);
+  is_element_hidden(
+    deleteOnCloseNote,
+    "The notice for delete on close in permanent private browsing mode should be hidden."
+  );
 }
 
 function test_dependent_clearonclose_elements(win) {
@@ -175,8 +276,13 @@ function test_dependent_clearonclose_elements(win) {
   ok(alwaysclearsettings, "the clear data settings button should exist");
 
   function expect_disabled(disabled) {
-    is(alwaysclearsettings.disabled, disabled,
-      "the clear data settings should " + (disabled ? "" : "not ") + "be disabled");
+    is(
+      alwaysclearsettings.disabled,
+      disabled,
+      "the clear data settings should " +
+        (disabled ? "" : "not ") +
+        "be disabled"
+    );
   }
 
   historymode.value = "custom";
@@ -196,7 +302,7 @@ function test_dependent_clearonclose_elements(win) {
   expect_disabled(true);
 }
 
-function test_dependent_prefs(win) {
+async function test_dependent_prefs(win) {
   let historymode = win.document.getElementById("historyMode");
   ok(historymode, "history mode menulist should exist");
   let controls = [
@@ -209,14 +315,24 @@ function test_dependent_prefs(win) {
 
   function expect_checked(checked) {
     controls.forEach(function(control) {
-      is(control.checked, checked,
-        control.getAttribute("id") + " should " + (checked ? "" : "not ") + "be checked");
+      is(
+        control.checked,
+        checked,
+        control.getAttribute("id") +
+          " should " +
+          (checked ? "" : "not ") +
+          "be checked"
+      );
     });
   }
 
   // controls should be checked in remember mode
   historymode.value = "remember";
   controlChanged(historymode);
+  // Initial updates from prefs are not sync, so wait:
+  await TestUtils.waitForCondition(
+    () => controls[0].getAttribute("checked") == "true"
+  );
   expect_checked(true);
 
   // even if they're unchecked in custom mode
@@ -237,15 +353,20 @@ function test_historymode_retention(mode, expect) {
     let historymode = win.document.getElementById("historyMode");
     ok(historymode, "history mode menulist should exist");
 
-    if ((historymode.value == "remember" && mode == "dontremember") ||
-        (historymode.value == "dontremember" && mode == "remember") ||
-        (historymode.value == "custom" && mode == "dontremember")) {
+    if (
+      (historymode.value == "remember" && mode == "dontremember") ||
+      (historymode.value == "dontremember" && mode == "remember") ||
+      (historymode.value == "custom" && mode == "dontremember")
+    ) {
       return;
     }
 
     if (expect !== undefined) {
-      is(historymode.value, expect,
-        "history mode is expected to remain " + expect);
+      is(
+        historymode.value,
+        expect,
+        "history mode is expected to remain " + expect
+      );
     }
 
     historymode.value = mode;
@@ -259,8 +380,11 @@ function test_custom_retention(controlToChange, expect, valueIncrement) {
     ok(historymode, "history mode menulist should exist");
 
     if (expect !== undefined) {
-      is(historymode.value, expect,
-        "history mode is expected to remain " + expect);
+      is(
+        historymode.value,
+        expect,
+        "history mode is expected to remain " + expect
+      );
     }
 
     historymode.value = "custom";
@@ -269,15 +393,16 @@ function test_custom_retention(controlToChange, expect, valueIncrement) {
     controlToChange = win.document.getElementById(controlToChange);
     ok(controlToChange, "the control to change should exist");
     switch (controlToChange.localName) {
-    case "checkbox":
-      controlToChange.checked = !controlToChange.checked;
-      break;
-    case "textbox":
-      controlToChange.value = parseInt(controlToChange.value) + valueIncrement;
-      break;
-    case "menulist":
-      controlToChange.value = valueIncrement;
-      break;
+      case "checkbox":
+        controlToChange.checked = !controlToChange.checked;
+        break;
+      case "textbox":
+        controlToChange.value =
+          parseInt(controlToChange.value) + valueIncrement;
+        break;
+      case "menulist":
+        controlToChange.value = valueIncrement;
+        break;
     }
     controlChanged(controlToChange);
   };
@@ -287,21 +412,26 @@ const gPrefCache = new Map();
 
 function cache_preferences(win) {
   let prefs = win.Preferences.getAll();
-  for (let pref of prefs)
+  for (let pref of prefs) {
     gPrefCache.set(pref.name, pref.value);
+  }
 }
 
 function reset_preferences(win) {
   let prefs = win.Preferences.getAll();
-  for (let pref of prefs)
-    // Avoid assigning undefined, which means clearing a "user"/test pref value
-    if (gPrefCache.has(pref.name))
+  // Avoid assigning undefined, which means clearing a "user"/test pref value
+  for (let pref of prefs) {
+    if (gPrefCache.has(pref.name)) {
       pref.value = gPrefCache.get(pref.name);
+    }
+  }
 }
 
 function run_test_subset(subset) {
   info("subset: " + Array.from(subset, x => x.name).join(",") + "\n");
-  SpecialPowers.pushPrefEnv({"set": [["browser.preferences.instantApply", true]]});
+  SpecialPowers.pushPrefEnv({
+    set: [["browser.preferences.instantApply", true]],
+  });
 
   let tests = [cache_preferences, ...subset, reset_preferences];
   for (let test of tests) {

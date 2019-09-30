@@ -198,18 +198,26 @@ bool GMPVideoDecoderChild::Alloc(size_t aSize,
                           this, &GMPVideoDecoderChild::RecvDecodingComplete));
   }
 #else
-#ifdef GMP_SAFE_SHMEM
+#  ifdef GMP_SAFE_SHMEM
   rv = AllocShmem(aSize, aType, aMem);
-#else
+#  else
   rv = AllocUnsafeShmem(aSize, aType, aMem);
-#endif
+#  endif
 #endif
   return rv;
 }
 
+<<<<<<< HEAD
 void GMPVideoDecoderChild::Dealloc(Shmem& aMem) {
+||||||| merged common ancestors
+void
+GMPVideoDecoderChild::Dealloc(Shmem& aMem)
+{
+=======
+void GMPVideoDecoderChild::Dealloc(Shmem&& aMem) {
+>>>>>>> upstream-releases
 #ifndef SHMEM_ALLOC_IN_CHILD
-  SendParentShmemForPool(aMem);
+  SendParentShmemForPool(std::move(aMem));
 #else
   DeallocShmem(aMem);
 #endif

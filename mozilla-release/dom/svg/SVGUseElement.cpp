@@ -4,16 +4,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/dom/SVGUseElement.h"
+
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/ErrorResult.h"
-
-#include "mozilla/dom/SVGUseElement.h"
 #include "mozilla/dom/SVGLengthBinding.h"
 #include "mozilla/dom/SVGUseElementBinding.h"
 #include "nsGkAtoms.h"
 #include "mozilla/dom/SVGSVGElement.h"
-#include "nsIDocument.h"
-#include "nsIPresShell.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Element.h"
 #include "nsContentUtils.h"
 #include "nsIURI.h"
@@ -22,7 +21,7 @@
 #include "nsSVGUseFrame.h"
 #include "mozilla/net/ReferrerPolicy.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Use)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Use)
 
 namespace mozilla {
 namespace dom {
@@ -35,6 +34,7 @@ JSObject* SVGUseElement::WrapNode(JSContext* aCx,
 ////////////////////////////////////////////////////////////////////////
 // implementation
 
+<<<<<<< HEAD
 nsSVGElement::LengthInfo SVGUseElement::sLengthInfo[4] = {
     {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::X},
@@ -44,11 +44,41 @@ nsSVGElement::LengthInfo SVGUseElement::sLengthInfo[4] = {
      SVGContentUtils::X},
     {nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
      SVGContentUtils::Y},
+||||||| merged common ancestors
+nsSVGElement::LengthInfo SVGUseElement::sLengthInfo[4] =
+{
+  { nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+  { nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::X },
+  { nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER, SVGContentUtils::Y },
+=======
+SVGElement::LengthInfo SVGUseElement::sLengthInfo[4] = {
+    {nsGkAtoms::x, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::y, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+    {nsGkAtoms::width, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::X},
+    {nsGkAtoms::height, 0, SVGLength_Binding::SVG_LENGTHTYPE_NUMBER,
+     SVGContentUtils::Y},
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGUseElement::sStringInfo[2] = {
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGUseElement::sStringInfo[2] =
+{
+  { nsGkAtoms::href, kNameSpaceID_None, true },
+  { nsGkAtoms::href, kNameSpaceID_XLink, true }
+};
+=======
+SVGElement::StringInfo SVGUseElement::sStringInfo[2] = {
+    {nsGkAtoms::href, kNameSpaceID_None, true},
+    {nsGkAtoms::href, kNameSpaceID_XLink, true}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsISupports methods
@@ -150,22 +180,52 @@ nsresult SVGUseElement::Clone(dom::NodeInfo* aNodeInfo,
   return NS_FAILED(rv1) ? rv1 : rv2;
 }
 
+<<<<<<< HEAD
 nsresult SVGUseElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                    nsIContent* aBindingParent) {
   nsresult rv =
       SVGUseElementBase::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+SVGUseElement::BindToTree(nsIDocument* aDocument,
+                          nsIContent* aParent,
+                          nsIContent* aBindingParent)
+{
+  nsresult rv = SVGUseElementBase::BindToTree(aDocument, aParent, aBindingParent);
+=======
+nsresult SVGUseElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+  nsresult rv = SVGUseElementBase::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   TriggerReclone();
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SVGUseElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   SVGUseElementBase::UnbindFromTree(aDeep, aNullParent);
+||||||| merged common ancestors
+void
+SVGUseElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  SVGUseElementBase::UnbindFromTree(aDeep, aNullParent);
+=======
+void SVGUseElement::UnbindFromTree(bool aNullParent) {
+  SVGUseElementBase::UnbindFromTree(aNullParent);
+>>>>>>> upstream-releases
   OwnerDoc()->UnscheduleSVGUseElementShadowTreeUpdate(*this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGUseElement::Href() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGUseElement::Href()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGUseElement::Href() {
+>>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -173,36 +233,98 @@ already_AddRefed<SVGAnimatedString> SVGUseElement::Href() {
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGUseElement::X() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGUseElement::X()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGUseElement::X() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_X].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGUseElement::Y() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGUseElement::Y()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGUseElement::Y() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_Y].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGUseElement::Width() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGUseElement::Width()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGUseElement::Width() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_WIDTH].ToDOMAnimatedLength(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedLength> SVGUseElement::Height() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedLength>
+SVGUseElement::Height()
+{
+=======
+already_AddRefed<DOMSVGAnimatedLength> SVGUseElement::Height() {
+>>>>>>> upstream-releases
   return mLengthAttributes[ATTR_HEIGHT].ToDOMAnimatedLength(this);
 }
 
 //----------------------------------------------------------------------
 // nsIMutationObserver methods
 
+<<<<<<< HEAD
 void SVGUseElement::CharacterDataChanged(nsIContent* aContent,
                                          const CharacterDataChangeInfo&) {
   if (nsContentUtils::IsInSameAnonymousTree(this, aContent)) {
+||||||| merged common ancestors
+void
+SVGUseElement::CharacterDataChanged(nsIContent* aContent,
+                                    const CharacterDataChangeInfo&)
+{
+  if (nsContentUtils::IsInSameAnonymousTree(this, aContent)) {
+=======
+void SVGUseElement::CharacterDataChanged(nsIContent* aContent,
+                                         const CharacterDataChangeInfo&) {
+  if (nsContentUtils::IsInSameAnonymousTree(mReferencedElementTracker.get(),
+                                            aContent)) {
+>>>>>>> upstream-releases
     TriggerReclone();
   }
 }
 
+<<<<<<< HEAD
 void SVGUseElement::AttributeChanged(Element* aElement, int32_t aNamespaceID,
                                      nsAtom* aAttribute, int32_t aModType,
                                      const nsAttrValue* aOldValue) {
   if (nsContentUtils::IsInSameAnonymousTree(this, aElement)) {
+||||||| merged common ancestors
+void
+SVGUseElement::AttributeChanged(Element* aElement,
+                                int32_t aNamespaceID,
+                                nsAtom* aAttribute,
+                                int32_t aModType,
+                                const nsAttrValue* aOldValue)
+{
+  if (nsContentUtils::IsInSameAnonymousTree(this, aElement)) {
+=======
+void SVGUseElement::AttributeChanged(Element* aElement, int32_t aNamespaceID,
+                                     nsAtom* aAttribute, int32_t aModType,
+                                     const nsAttrValue* aOldValue) {
+  if (nsContentUtils::IsInSameAnonymousTree(mReferencedElementTracker.get(),
+                                            aElement)) {
+>>>>>>> upstream-releases
     TriggerReclone();
   }
 }
@@ -210,8 +332,15 @@ void SVGUseElement::AttributeChanged(Element* aElement, int32_t aNamespaceID,
 void SVGUseElement::ContentAppended(nsIContent* aFirstNewContent) {
   // FIXME(emilio, bug 1442336): Why does this check the parent but
   // ContentInserted the child?
+<<<<<<< HEAD
   if (nsContentUtils::IsInSameAnonymousTree(this,
                                             aFirstNewContent->GetParent())) {
+||||||| merged common ancestors
+  if (nsContentUtils::IsInSameAnonymousTree(this, aFirstNewContent->GetParent())) {
+=======
+  if (nsContentUtils::IsInSameAnonymousTree(mReferencedElementTracker.get(),
+                                            aFirstNewContent->GetParent())) {
+>>>>>>> upstream-releases
     TriggerReclone();
   }
 }
@@ -219,14 +348,27 @@ void SVGUseElement::ContentAppended(nsIContent* aFirstNewContent) {
 void SVGUseElement::ContentInserted(nsIContent* aChild) {
   // FIXME(emilio, bug 1442336): Why does this check the child but
   // ContentAppended the parent?
-  if (nsContentUtils::IsInSameAnonymousTree(this, aChild)) {
+  if (nsContentUtils::IsInSameAnonymousTree(mReferencedElementTracker.get(),
+                                            aChild)) {
     TriggerReclone();
   }
 }
 
+<<<<<<< HEAD
 void SVGUseElement::ContentRemoved(nsIContent* aChild,
                                    nsIContent* aPreviousSibling) {
   if (nsContentUtils::IsInSameAnonymousTree(this, aChild)) {
+||||||| merged common ancestors
+void
+SVGUseElement::ContentRemoved(nsIContent* aChild, nsIContent* aPreviousSibling)
+{
+  if (nsContentUtils::IsInSameAnonymousTree(this, aChild)) {
+=======
+void SVGUseElement::ContentRemoved(nsIContent* aChild,
+                                   nsIContent* aPreviousSibling) {
+  if (nsContentUtils::IsInSameAnonymousTree(mReferencedElementTracker.get(),
+                                            aChild)) {
+>>>>>>> upstream-releases
     TriggerReclone();
   }
 }
@@ -234,6 +376,27 @@ void SVGUseElement::ContentRemoved(nsIContent* aChild,
 void SVGUseElement::NodeWillBeDestroyed(const nsINode* aNode) {
   nsCOMPtr<nsIMutationObserver> kungFuDeathGrip(this);
   UnlinkSource();
+}
+
+bool SVGUseElement::IsCyclicReferenceTo(const Element& aTarget) const {
+  if (&aTarget == this) {
+    return true;
+  }
+  if (mOriginal && mOriginal->IsCyclicReferenceTo(aTarget)) {
+    return true;
+  }
+  for (nsINode* parent = GetParentOrHostNode(); parent;
+       parent = parent->GetParentOrHostNode()) {
+    if (parent == &aTarget) {
+      return true;
+    }
+    if (auto* use = SVGUseElement::FromNode(*parent)) {
+      if (mOriginal && use->mOriginal == mOriginal) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 //----------------------------------------------------------------------
@@ -281,12 +444,20 @@ void SVGUseElement::UpdateShadowTree() {
 
   // circular loop detection
 
+<<<<<<< HEAD
   // check 1 - check if we're a document descendent of the target
   if (nsContentUtils::ContentIsShadowIncludingDescendantOf(this,
                                                            targetElement)) {
+||||||| merged common ancestors
+  // check 1 - check if we're a document descendent of the target
+  if (nsContentUtils::ContentIsShadowIncludingDescendantOf(this, targetElement)) {
+=======
+  if (IsCyclicReferenceTo(*targetElement)) {
+>>>>>>> upstream-releases
     return;
   }
 
+<<<<<<< HEAD
   // check 2 - check if we're a clone, and if we already exist in the hierarchy
   if (mOriginal) {
     for (nsINode* parent = GetParentOrHostNode(); parent;
@@ -298,6 +469,21 @@ void SVGUseElement::UpdateShadowTree() {
     }
   }
 
+||||||| merged common ancestors
+  // check 2 - check if we're a clone, and if we already exist in the hierarchy
+  if (mOriginal) {
+    for (nsINode* parent = GetParentOrHostNode();
+         parent;
+         parent = parent->GetParentOrHostNode()) {
+      SVGUseElement* use = SVGUseElement::FromNode(*parent);
+      if (use && use->mOriginal == mOriginal) {
+        return;
+      }
+    }
+  }
+
+=======
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> baseURI = targetElement->GetBaseURI();
   if (!baseURI) {
     return;
@@ -319,7 +505,7 @@ void SVGUseElement::UpdateShadowTree() {
   }
 
   if (newElement->IsAnyOfSVGElements(nsGkAtoms::svg, nsGkAtoms::symbol)) {
-    auto* newSVGElement = static_cast<nsSVGElement*>(newElement.get());
+    auto* newSVGElement = static_cast<SVGElement*>(newElement.get());
     if (mLengthAttributes[ATTR_WIDTH].IsExplicitlySet())
       newSVGElement->SetLength(nsGkAtoms::width, mLengthAttributes[ATTR_WIDTH]);
     if (mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet())
@@ -368,9 +554,18 @@ void SVGUseElement::SyncWidthOrHeight(nsAtom* aName) {
     return;
   }
 
+<<<<<<< HEAD
   auto* target = nsSVGElement::FromNode(GetClonedChild(*this));
   uint32_t index =
       sLengthInfo[ATTR_WIDTH].mName == aName ? ATTR_WIDTH : ATTR_HEIGHT;
+||||||| merged common ancestors
+  auto* target = nsSVGElement::FromNode(GetClonedChild(*this));
+  uint32_t index = sLengthInfo[ATTR_WIDTH].mName == aName ? ATTR_WIDTH : ATTR_HEIGHT;
+=======
+  auto* target = SVGElement::FromNode(GetClonedChild(*this));
+  uint32_t index =
+      sLengthInfo[ATTR_WIDTH].mName == aName ? ATTR_WIDTH : ATTR_HEIGHT;
+>>>>>>> upstream-releases
 
   if (mLengthAttributes[index].IsExplicitlySet()) {
     target->SetLength(aName, mLengthAttributes[index]);
@@ -385,9 +580,19 @@ void SVGUseElement::SyncWidthOrHeight(nsAtom* aName) {
   }
   // Our width/height attribute is now no longer explicitly set, so we
   // need to set the value to 100%
+<<<<<<< HEAD
   nsSVGLength2 length;
   length.Init(SVGContentUtils::XY, 0xff, 100,
               SVGLength_Binding::SVG_LENGTHTYPE_PERCENTAGE);
+||||||| merged common ancestors
+  nsSVGLength2 length;
+  length.Init(SVGContentUtils::XY, 0xff,
+              100, SVGLength_Binding::SVG_LENGTHTYPE_PERCENTAGE);
+=======
+  SVGAnimatedLength length;
+  length.Init(SVGContentUtils::XY, 0xff, 100,
+              SVGLength_Binding::SVG_LENGTHTYPE_PERCENTAGE);
+>>>>>>> upstream-releases
   target->SetLength(aName, length);
 }
 
@@ -419,8 +624,18 @@ void SVGUseElement::LookupHref() {
       OwnerDoc()->GetReferrerPolicy());
 }
 
+<<<<<<< HEAD
 void SVGUseElement::TriggerReclone() {
   if (nsIDocument* doc = GetComposedDoc()) {
+||||||| merged common ancestors
+void
+SVGUseElement::TriggerReclone()
+{
+  if (nsIDocument* doc = GetComposedDoc()) {
+=======
+void SVGUseElement::TriggerReclone() {
+  if (Document* doc = GetComposedDoc()) {
+>>>>>>> upstream-releases
     doc->ScheduleSVGUseElementShadowTreeUpdate(*this);
   }
 }
@@ -433,10 +648,21 @@ void SVGUseElement::UnlinkSource() {
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 /* virtual */ gfxMatrix SVGUseElement::PrependLocalTransformsTo(
     const gfxMatrix& aMatrix, SVGTransformTypes aWhich) const {
+||||||| merged common ancestors
+/* virtual */ gfxMatrix
+SVGUseElement::PrependLocalTransformsTo(
+  const gfxMatrix &aMatrix, SVGTransformTypes aWhich) const
+{
+=======
+/* virtual */
+gfxMatrix SVGUseElement::PrependLocalTransformsTo(
+    const gfxMatrix& aMatrix, SVGTransformTypes aWhich) const {
+>>>>>>> upstream-releases
   // 'transform' attribute:
   gfxMatrix userToParent;
 
@@ -470,19 +696,44 @@ void SVGUseElement::UnlinkSource() {
   return childToUser * aMatrix;
 }
 
+<<<<<<< HEAD
 /* virtual */ bool SVGUseElement::HasValidDimensions() const {
+||||||| merged common ancestors
+/* virtual */ bool
+SVGUseElement::HasValidDimensions() const
+{
+=======
+/* virtual */
+bool SVGUseElement::HasValidDimensions() const {
+>>>>>>> upstream-releases
   return (!mLengthAttributes[ATTR_WIDTH].IsExplicitlySet() ||
           mLengthAttributes[ATTR_WIDTH].GetAnimValInSpecifiedUnits() > 0) &&
          (!mLengthAttributes[ATTR_HEIGHT].IsExplicitlySet() ||
           mLengthAttributes[ATTR_HEIGHT].GetAnimValInSpecifiedUnits() > 0);
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthAttributesInfo SVGUseElement::GetLengthInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthAttributesInfo
+SVGUseElement::GetLengthInfo()
+{
+=======
+SVGElement::LengthAttributesInfo SVGUseElement::GetLengthInfo() {
+>>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGUseElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGUseElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGUseElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

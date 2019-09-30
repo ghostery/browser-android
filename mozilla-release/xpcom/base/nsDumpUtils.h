@@ -16,15 +16,24 @@
 #include "nsTArray.h"
 
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 
 #ifdef ANDROID
+<<<<<<< HEAD
 #include "android/log.h"
 #define LOG(...) \
   __android_log_print(ANDROID_LOG_INFO, "Gecko:DumpUtils", ##__VA_ARGS__)
+||||||| merged common ancestors
+#include "android/log.h"
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "Gecko:DumpUtils", ## __VA_ARGS__)
+=======
+#  include "android/log.h"
+#  define LOG(...) \
+    __android_log_print(ANDROID_LOG_INFO, "Gecko:DumpUtils", ##__VA_ARGS__)
+>>>>>>> upstream-releases
 #else
-#define LOG(...)
+#  define LOG(...)
 #endif
 
 #ifdef XP_UNIX  // {

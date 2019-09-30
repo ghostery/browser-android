@@ -14,6 +14,8 @@
 
 namespace mozilla {
 
+class PresShell;
+
 // This class is a wrapper for nsColumnSetFrames and column-span frame.
 // Essentially, we divide the *original* nsColumnSetFrame into multiple
 // nsColumnSetFrames on the basis of the number and position of spanning
@@ -28,9 +30,16 @@ class ColumnSetWrapperFrame final : public nsBlockFrame {
   NS_DECL_FRAMEARENA_HELPERS(ColumnSetWrapperFrame)
   NS_DECL_QUERYFRAME
 
-  friend nsBlockFrame* ::NS_NewColumnSetWrapperFrame(nsIPresShell* aPresShell,
-                                                     ComputedStyle* aStyle,
-                                                     nsFrameState aStateFlags);
+  friend nsBlockFrame* ::NS_NewColumnSetWrapperFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle,
+      nsFrameState aStateFlags);
+
+  void Init(nsIContent* aContent, nsContainerFrame* aParent,
+            nsIFrame* aPrevInFlow) override;
+
+  nsContainerFrame* GetContentInsertionFrame() override;
+
+  void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
   nsContainerFrame* GetContentInsertionFrame() override;
 
@@ -47,8 +56,23 @@ class ColumnSetWrapperFrame final : public nsBlockFrame {
 
   void RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) override;
 
+<<<<<<< HEAD
  private:
   explicit ColumnSetWrapperFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+private:
+  explicit ColumnSetWrapperFrame(ComputedStyle* aStyle);
+=======
+  void MarkIntrinsicISizesDirty() override;
+
+  nscoord GetMinISize(gfxContext* aRenderingContext) override;
+
+  nscoord GetPrefISize(gfxContext* aRenderingContext) override;
+
+ private:
+  explicit ColumnSetWrapperFrame(ComputedStyle* aStyle,
+                                 nsPresContext* aPresContext);
+>>>>>>> upstream-releases
   ~ColumnSetWrapperFrame() override = default;
 
 #ifdef DEBUG

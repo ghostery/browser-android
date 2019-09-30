@@ -42,7 +42,18 @@ void CSSCounterStyleRule::GetName(nsAString& aName) {
   nsStyleUtil::AppendEscapedCSSIdent(nameStr, aName);
 }
 
+<<<<<<< HEAD
 void CSSCounterStyleRule::SetName(const nsAString& aName) {
+||||||| merged common ancestors
+void
+CSSCounterStyleRule::SetName(const nsAString& aName)
+{
+=======
+void CSSCounterStyleRule::SetName(const nsAString& aName) {
+  if (IsReadOnly()) {
+    return;
+  }
+>>>>>>> upstream-releases
   NS_ConvertUTF16toUTF8 name(aName);
   if (Servo_CounterStyleRule_SetName(mRawRule, &name)) {
     if (StyleSheet* sheet = GetStyleSheet()) {
@@ -51,6 +62,7 @@ void CSSCounterStyleRule::SetName(const nsAString& aName) {
   }
 }
 
+<<<<<<< HEAD
 #define CSS_COUNTER_DESC(name_, method_)                            \
   void CSSCounterStyleRule::Get##method_(nsAString& aValue) {       \
     aValue.Truncate();                                              \
@@ -65,17 +77,76 @@ void CSSCounterStyleRule::SetName(const nsAString& aName) {
         sheet->RuleChanged(this);                                   \
       }                                                             \
     }                                                               \
+||||||| merged common ancestors
+#define CSS_COUNTER_DESC(name_, method_)                        \
+  void                                                          \
+  CSSCounterStyleRule::Get##method_(nsAString& aValue)          \
+  {                                                             \
+    aValue.Truncate();                                          \
+    Servo_CounterStyleRule_GetDescriptorCssText(                \
+      mRawRule, eCSSCounterDesc_##method_, &aValue);            \
+  }                                                             \
+  void                                                          \
+  CSSCounterStyleRule::Set##method_(const nsAString& aValue)    \
+  {                                                             \
+    NS_ConvertUTF16toUTF8 value(aValue);                        \
+    if (Servo_CounterStyleRule_SetDescriptor(                   \
+          mRawRule, eCSSCounterDesc_##method_, &value)) {       \
+      if (StyleSheet* sheet = GetStyleSheet()) {                \
+        sheet->RuleChanged(this);                               \
+      }                                                         \
+    }                                                           \
+=======
+#define CSS_COUNTER_DESC(name_, method_)                            \
+  void CSSCounterStyleRule::Get##method_(nsAString& aValue) {       \
+    aValue.Truncate();                                              \
+    Servo_CounterStyleRule_GetDescriptorCssText(                    \
+        mRawRule, eCSSCounterDesc_##method_, &aValue);              \
+  }                                                                 \
+  void CSSCounterStyleRule::Set##method_(const nsAString& aValue) { \
+    if (IsReadOnly()) {                                             \
+      return;                                                       \
+    }                                                               \
+    NS_ConvertUTF16toUTF8 value(aValue);                            \
+    if (Servo_CounterStyleRule_SetDescriptor(                       \
+            mRawRule, eCSSCounterDesc_##method_, &value)) {         \
+      if (StyleSheet* sheet = GetStyleSheet()) {                    \
+        sheet->RuleChanged(this);                                   \
+      }                                                             \
+    }                                                               \
+>>>>>>> upstream-releases
   }
 #include "nsCSSCounterDescList.h"
 #undef CSS_COUNTER_DESC
 
+<<<<<<< HEAD
 /* virtual */ size_t CSSCounterStyleRule::SizeOfIncludingThis(
     MallocSizeOf aMallocSizeOf) const {
+||||||| merged common ancestors
+/* virtual */ size_t
+CSSCounterStyleRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
+{
+=======
+/* virtual */
+size_t CSSCounterStyleRule::SizeOfIncludingThis(
+    MallocSizeOf aMallocSizeOf) const {
+>>>>>>> upstream-releases
   return aMallocSizeOf(this);
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* CSSCounterStyleRule::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+CSSCounterStyleRule::WrapObject(JSContext* aCx,
+                                JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* CSSCounterStyleRule::WrapObject(JSContext* aCx,
+                                          JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return CSSCounterStyleRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

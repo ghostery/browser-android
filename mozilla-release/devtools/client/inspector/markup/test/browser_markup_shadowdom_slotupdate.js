@@ -27,7 +27,15 @@ const TEST_URL = `data:text/html;charset=utf-8,
   </script>`;
 
 add_task(async function() {
+<<<<<<< HEAD
   const {inspector} = await openInspectorForURL(TEST_URL);
+||||||| merged common ancestors
+  await enableWebComponents();
+
+  const {inspector} = await openInspectorForURL(TEST_URL);
+=======
+  const { inspector } = await openInspectorForURL(TEST_URL);
+>>>>>>> upstream-releases
 
   const tree = `
     test-component

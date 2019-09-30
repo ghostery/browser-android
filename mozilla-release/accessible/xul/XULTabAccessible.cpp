@@ -12,7 +12,7 @@
 #include "States.h"
 
 // NOTE: alphabetically ordered
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDOMXULSelectCntrlEl.h"
 #include "nsIDOMXULSelectCntrlItemEl.h"
 #include "nsIDOMXULRelatedElement.h"
@@ -62,7 +62,8 @@ uint64_t XULTabAccessible::NativeState() const {
   uint64_t state = AccessibleWrap::NativeState();
 
   // Check whether the tab is selected and/or pinned
-  nsCOMPtr<nsIDOMXULSelectControlItemElement> tab(do_QueryInterface(mContent));
+  nsCOMPtr<nsIDOMXULSelectControlItemElement> tab =
+      Elm()->AsXULSelectControlItem();
   if (tab) {
     bool selected = false;
     if (NS_SUCCEEDED(tab->GetSelected(&selected)) && selected)
@@ -86,9 +87,23 @@ Relation XULTabAccessible::RelationByType(RelationType aType) const {
   if (aType != RelationType::LABEL_FOR) return rel;
 
   // Expose 'LABEL_FOR' relation on tab accessible for tabpanel accessible.
+  ErrorResult rv;
+  nsIContent* parent =
+      mContent->AsElement()->Closest(NS_LITERAL_STRING("tabs"), rv);
+  if (!parent) return rel;
+
   nsCOMPtr<nsIDOMXULRelatedElement> tabsElm =
+<<<<<<< HEAD
       do_QueryInterface(mContent->GetParent());
   if (!tabsElm) return rel;
+||||||| merged common ancestors
+    do_QueryInterface(mContent->GetParent());
+  if (!tabsElm)
+    return rel;
+=======
+      parent->AsElement()->AsXULRelated();
+  if (!tabsElm) return rel;
+>>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Element> tabpanelElement;
   tabsElm->GetRelatedElement(GetNode(), getter_AddRefs(tabpanelElement));
@@ -197,9 +212,20 @@ Relation XULTabpanelAccessible::RelationByType(RelationType aType) const {
   if (aType != RelationType::LABELLED_BY) return rel;
 
   // Expose 'LABELLED_BY' relation on tabpanel accessible for tab accessible.
+  if (!mContent->GetParent()) return rel;
+
   nsCOMPtr<nsIDOMXULRelatedElement> tabpanelsElm =
+<<<<<<< HEAD
       do_QueryInterface(mContent->GetParent());
   if (!tabpanelsElm) return rel;
+||||||| merged common ancestors
+    do_QueryInterface(mContent->GetParent());
+  if (!tabpanelsElm)
+    return rel;
+=======
+      mContent->GetParent()->AsElement()->AsXULRelated();
+  if (!tabpanelsElm) return rel;
+>>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Element> tabElement;
   tabpanelsElm->GetRelatedElement(GetNode(), getter_AddRefs(tabElement));

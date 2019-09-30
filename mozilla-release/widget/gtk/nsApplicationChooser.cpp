@@ -60,16 +60,38 @@ nsApplicationChooser::Open(const nsACString& aContentType,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ void nsApplicationChooser::OnResponse(GtkWidget* chooser,
                                                    gint response_id,
                                                    gpointer user_data) {
+||||||| merged common ancestors
+/* static */ void
+nsApplicationChooser::OnResponse(GtkWidget* chooser, gint response_id, gpointer user_data)
+{
+=======
+/* static */
+void nsApplicationChooser::OnResponse(GtkWidget* chooser, gint response_id,
+                                      gpointer user_data) {
+>>>>>>> upstream-releases
   static_cast<nsApplicationChooser*>(user_data)->Done(chooser, response_id);
 }
 
+<<<<<<< HEAD
 /* static */ void nsApplicationChooser::OnDestroy(GtkWidget* chooser,
                                                   gpointer user_data) {
   static_cast<nsApplicationChooser*>(user_data)->Done(chooser,
                                                       GTK_RESPONSE_CANCEL);
+||||||| merged common ancestors
+/* static */ void
+nsApplicationChooser::OnDestroy(GtkWidget *chooser, gpointer user_data)
+{
+  static_cast<nsApplicationChooser*>(user_data)->Done(chooser, GTK_RESPONSE_CANCEL);
+=======
+/* static */
+void nsApplicationChooser::OnDestroy(GtkWidget* chooser, gpointer user_data) {
+  static_cast<nsApplicationChooser*>(user_data)->Done(chooser,
+                                                      GTK_RESPONSE_CANCEL);
+>>>>>>> upstream-releases
 }
 
 void nsApplicationChooser::Done(GtkWidget* chooser, gint response) {

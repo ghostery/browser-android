@@ -58,15 +58,39 @@
 // is identical to the one in mfbt/Attributes.h, which we don't use here because
 // this file avoids depending on Mozilla headers.
 #if defined(__clang__) && __cplusplus >= 201103L
+<<<<<<< HEAD
 /* clang's fallthrough annotations are only available starting in C++11. */
 #define MOZ_FALLTHROUGH [[clang::fallthrough]]
+||||||| merged common ancestors
+   /* clang's fallthrough annotations are only available starting in C++11. */
+#  define MOZ_FALLTHROUGH [[clang::fallthrough]]
+=======
+/* clang's fallthrough annotations are only available starting in C++11. */
+#  define MOZ_FALLTHROUGH [[clang::fallthrough]]
+>>>>>>> upstream-releases
 #elif defined(_MSC_VER)
+<<<<<<< HEAD
 /*
  * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
  * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
  */
 #include <sal.h>
 #define MOZ_FALLTHROUGH __fallthrough
+||||||| merged common ancestors
+   /*
+    * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
+    * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
+    */
+#  include <sal.h>
+#  define MOZ_FALLTHROUGH __fallthrough
+=======
+/*
+ * MSVC's __fallthrough annotations are checked by /analyze (Code Analysis):
+ * https://msdn.microsoft.com/en-us/library/ms235402%28VS.80%29.aspx
+ */
+#  include <sal.h>
+#  define MOZ_FALLTHROUGH __fallthrough
+>>>>>>> upstream-releases
 #else
 #define MOZ_FALLTHROUGH /* FALLTHROUGH */
 #endif
@@ -116,8 +140,8 @@ static void PrintAndFlush(const char* aFormat, ...) {
 // Because of the pkg_energy_statistics_t::pkes_version check below, the
 // earliest OS X version this code will work with is 10.9.0 (xnu-2422.1.72).
 
-#include <sys/types.h>
-#include <sys/sysctl.h>
+#  include <sys/types.h>
+#  include <sys/sysctl.h>
 
 // OS X has four kinds of system calls:
 //
@@ -141,12 +165,12 @@ static void PrintAndFlush(const char* aFormat, ...) {
 // From osfmk/i386/Diagnostics.h
 // - In 10.8.4 (xnu-2050.24.15) this value was introduced. (In 10.8.3 the value
 //   17 was used for dgGzallocTest.)
-#define dgPowerStat 17
+#  define dgPowerStat 17
 
 // From osfmk/i386/cpu_data.h
 // - In 10.8.5 these values were introduced, along with core_energy_stat_t.
-#define CPU_RTIME_BINS (12)
-#define CPU_ITIME_BINS (CPU_RTIME_BINS)
+#  define CPU_RTIME_BINS (12)
+#  define CPU_ITIME_BINS (CPU_RTIME_BINS)
 
 // core_energy_stat_t and pkg_energy_statistics_t are both from
 // osfmk/i386/Diagnostics.c.
@@ -163,6 +187,7 @@ static void PrintAndFlush(const char* aFormat, ...) {
 //   pkg_energy_statistics_t::pkes_version did not change, though.
 
 typedef struct {
+<<<<<<< HEAD
   uint64_t caperf;
   uint64_t cmperf;
   uint64_t ccres[6];
@@ -177,6 +202,37 @@ typedef struct {
 #if DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
   uint64_t gpmcs[4];        // Added in 10.10.2 (xnu-2782.10.72).
 #endif /* DIAG_ALL_PMCS */  // Added in 10.10.2 (xnu-2782.10.72).
+||||||| merged common ancestors
+        uint64_t caperf;
+        uint64_t cmperf;
+        uint64_t ccres[6];
+        uint64_t crtimes[CPU_RTIME_BINS];
+        uint64_t citimes[CPU_ITIME_BINS];
+        uint64_t crtime_total;
+        uint64_t citime_total;
+        uint64_t cpu_idle_exits;
+        uint64_t cpu_insns;
+        uint64_t cpu_ucc;
+        uint64_t cpu_urc;
+#if     DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
+        uint64_t gpmcs[4];      // Added in 10.10.2 (xnu-2782.10.72).
+#endif /* DIAG_ALL_PMCS */      // Added in 10.10.2 (xnu-2782.10.72).
+=======
+  uint64_t caperf;
+  uint64_t cmperf;
+  uint64_t ccres[6];
+  uint64_t crtimes[CPU_RTIME_BINS];
+  uint64_t citimes[CPU_ITIME_BINS];
+  uint64_t crtime_total;
+  uint64_t citime_total;
+  uint64_t cpu_idle_exits;
+  uint64_t cpu_insns;
+  uint64_t cpu_ucc;
+  uint64_t cpu_urc;
+#  if DIAG_ALL_PMCS           // Added in 10.10.2 (xnu-2782.10.72).
+  uint64_t gpmcs[4];          // Added in 10.10.2 (xnu-2782.10.72).
+#  endif /* DIAG_ALL_PMCS */  // Added in 10.10.2 (xnu-2782.10.72).
+>>>>>>> upstream-releases
 } core_energy_stat_t;
 
 typedef struct {
@@ -234,7 +290,7 @@ static int diagCall64(uint64_t aMode, void* aBuf) {
   // We cannot use syscall() here because it doesn't work with diagnostic
   // system calls -- it raises SIGSYS if you try. So we have to use asm.
 
-#ifdef __x86_64__
+#  ifdef __x86_64__
   // The 0x40000 prefix indicates it's a diagnostic system call. The 0x01
   // suffix indicates the syscall number is 1, which also happens to be the
   // only diagnostic system call. See osfmk/mach/i386/syscall_sw.h for more
@@ -256,9 +312,9 @@ static int diagCall64(uint64_t aMode, void* aBuf) {
       // this particular syscall also writes memory (aBuf).
       : /* clobbers */ "rcx", "r11", "cc", "memory");
   return rv;
-#else
-#error Sorry, only x86-64 is supported
-#endif
+#  else
+#    error Sorry, only x86-64 is supported
+#  endif
 }
 
 static void diagCall64_dgPowerStat(pkg_energy_statistics_t* aPkes) {
@@ -416,8 +472,8 @@ class RAPL {
 
 #elif defined(__linux__)
 
-#include <linux/perf_event.h>
-#include <sys/syscall.h>
+#  include <linux/perf_event.h>
+#  include <sys/syscall.h>
 
 // There is no glibc wrapper for this system call so we provide our own.
 static int perf_event_open(struct perf_event_attr* aAttr, pid_t aPid, int aCpu,
@@ -480,12 +536,17 @@ class Domain {
 
     mIsSupported = true;
 
-    ReadValueFromPowerFile("events/energy-", aName, ".scale", "%lf",
-                           &mJoulesPerTick);
+    if (!ReadValueFromPowerFile("events/energy-", aName, ".scale", "%lf",
+                                &mJoulesPerTick)) {
+      Abort("failed to read from .scale file");
+    }
 
     // The unit should be "Joules", so 128 chars should be plenty.
     char unit[128];
-    ReadValueFromPowerFile("events/energy-", aName, ".unit", "%127s", unit);
+    if (!ReadValueFromPowerFile("events/energy-", aName, ".unit", "%127s",
+                                unit)) {
+      Abort("failed to read from .unit file");
+    }
     if (strcmp(unit, "Joules") != 0) {
       Abort("unexpected unit '%s' in .unit file", unit);
     }
@@ -541,7 +602,9 @@ class RAPL {
  public:
   RAPL() {
     uint32_t type;
-    ReadValueFromPowerFile("type", "", "", "%u", &type);
+    if (!ReadValueFromPowerFile("type", "", "", "%u", &type)) {
+      Abort("failed to read from type file");
+    }
 
     mPkg = new Domain("pkg", type);
     mCores = new Domain("cores", type);
@@ -574,7 +637,7 @@ class RAPL {
 // Unsupported platforms
 //---------------------------------------------------------------------------
 
-#error Sorry, this platform is not supported
+#  error Sorry, this platform is not supported
 
 #endif  // platform
 
@@ -731,7 +794,7 @@ static void PrintUsage() {
       "contents\n"
       "of /proc/sys/kernel/perf_event_paranoid is set to 0 or lower.\n"
 #else
-#error Sorry, this platform is not supported
+#  error Sorry, this platform is not supported
 #endif
       "\n");
 }

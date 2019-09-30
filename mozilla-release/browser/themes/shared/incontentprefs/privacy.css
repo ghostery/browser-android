@@ -18,6 +18,7 @@
   width: 16px;
 }
 
+<<<<<<< HEAD
 #contentBlockingTrackingProtectionCheckbox > .checkbox-label-box {
   list-style-image: url("chrome://browser/skin/controlcenter/trackers.svg");
 }
@@ -35,8 +36,49 @@
 }
 
 
+||||||| merged common ancestors
+=======
+#contentBlockingTrackingProtectionCheckbox > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/trackers.svg");
+}
+
+#contentBlockingTrackingProtectionCheckbox[checked] > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/trackers-disabled.svg");
+}
+
+#contentBlockingBlockCookiesCheckbox > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/3rdpartycookies.svg");
+}
+
+#contentBlockingBlockCookiesCheckbox[checked] > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/3rdpartycookies-disabled.svg");
+}
+
+#contentBlockingCryptominersCheckbox > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/cryptominers.svg");
+}
+
+#contentBlockingCryptominersCheckbox[checked] > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/cryptominers-disabled.svg");
+}
+
+#contentBlockingFingerprintersCheckbox > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/fingerprinters.svg");
+}
+
+#contentBlockingFingerprintersCheckbox[checked] > .checkbox-label-box {
+  list-style-image: url("chrome://browser/skin/controlcenter/fingerprinters-disabled.svg");
+}
+
+>>>>>>> upstream-releases
 .content-blocking-icon,
-.permission-icon {
+.permission-icon,
+.content-blocking-category .checkbox-label-box,
+.extra-information-label > image,
+.arrowhead,
+.content-blocking-info-image,
+.reload-tabs-button,
+.content-blocking-warning-image {
   -moz-context-properties: fill;
   fill: currentColor;
 }
@@ -61,26 +103,52 @@
   list-style-image: url(chrome://browser/skin/notification-icons/desktop-notification.svg);
 }
 
+.autoplay-icon {
+  list-style-image: url(chrome://browser/skin/notification-icons/autoplay-media-detailed.svg);
+}
+
 .midi-icon {
   list-style-image: url(chrome://browser/skin/notification-icons/midi.svg);
 }
 
 /* Content Blocking */
 
+<<<<<<< HEAD
 /* Override styling that sets descriptions as grey */
 #trackingGroup description.indent,
 #trackingGroup .indent > description {
   color: #000;
+||||||| merged common ancestors
+#contentBlockingLearnMore {
+  margin-top: 4px !important;
+=======
+/* Override styling that sets descriptions as grey */
+#trackingGroup description.indent,
+#trackingGroup .indent > description {
+  color: inherit;
 }
 
+[data-subcategory="trackingprotection"] {
+  margin-top: 10px;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 [data-subcategory="trackingprotection"] {
   margin-top: 10px;
 }
 
 #contentBlockingCategories {
+||||||| merged common ancestors
+#contentBlockingCategories,
+#contentBlockingCheckboxContainer {
+=======
+#contentBlockingCategories {
+>>>>>>> upstream-releases
   margin-top: 16px;
 }
 
+<<<<<<< HEAD
 #trackingProtectionShield {
   background-image: url("chrome://browser/skin/controlcenter/tracking-protection.svg");
   -moz-context-properties: fill;
@@ -102,12 +170,38 @@
 
 .content-blocking-category.disabled {
   opacity: 0.5;
+||||||| merged common ancestors
+#contentBlockingToggleLabel {
+  line-height: 34px;
+=======
+#trackingProtectionShield {
+  list-style-image: url("chrome://browser/skin/controlcenter/tracking-protection.svg");
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+  fill-opacity: 0.5;
+  width: 64px;
+  height: 64px;
+  margin-inline-end: 10px;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 .content-blocking-category.disabled .radio-check {
   opacity: 1;
+||||||| merged common ancestors
+#contentBlockingCheckbox {
+  visibility: collapse;
+=======
+.content-blocking-category {
+  border-radius: 4px;
+  margin: 3px 0;
+  padding: 9px;
+  border: 1px solid var(--in-content-border-color);
+  background-color: rgba(215, 215, 219, 0.2);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 .content-blocking-warning > .indent,
 .content-blocking-category > .indent {
   margin-inline-end: 28px;
@@ -116,10 +210,36 @@
 #contentBlockingCategories[fallback-ui] .default-content-blocking-ui,
 #contentBlockingCategories:not([fallback-ui]) .fallback-content-blocking-ui {
   display: none;
+||||||| merged common ancestors
+/* If shown, the button-box takes up some space that results
+ * in unwanted changes in right-hand margin when toggling
+ * this button. We just hide it since we don't need it. */
+#contentBlockingToggle > .button-box {
+  display: none;
+=======
+.content-blocking-category.disabled {
+  opacity: 0.5;
+}
+
+.content-blocking-category.disabled .radio-check {
+  opacity: 1;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+.arrowhead {
+||||||| merged common ancestors
+#contentBlockingToggle {
+=======
+.content-blocking-warning > .indent,
+.content-blocking-category > .indent {
+  margin-inline-end: 28px;
 }
 
 .arrowhead {
+>>>>>>> upstream-releases
   -moz-appearance: none;
+<<<<<<< HEAD
   border: none;
   border-radius: 2px;
   min-height: 20px;
@@ -130,6 +250,31 @@
   background-image: url("chrome://global/skin/icons/arrow-dropdown-12.svg");
   background-repeat: no-repeat;
   background-position: center;
+||||||| merged common ancestors
+  box-sizing: border-box;
+  min-width: 48px;
+  max-width: 48px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 20px;
+  background-color: #d7d7db;
+  border: 1px solid transparent;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-inline-start: 1px;
+  margin-inline-end: 7px;
+  padding: 5px;
+  transition: padding .2s ease;
+=======
+  border: none;
+  border-radius: 2px;
+  min-height: 20px;
+  min-width: 20px;
+  max-height: 20px;
+  max-width: 20px;
+  list-style-image: url("chrome://global/skin/icons/arrow-dropdown-12.svg");
+  background-color: transparent;
+  padding: 3px;
 }
 
 .arrowhead:not([disabled]):hover {
@@ -142,11 +287,101 @@
 }
 
 .arrowhead.up {
-  background-image: url("chrome://global/skin/icons/arrow-up-12.svg");
+  list-style-image: url("chrome://global/skin/icons/arrow-up-12.svg");
 }
 
 .arrowhead > .button-box {
   padding: 0 !important;
+}
+
+.content-blocking-category.expanded:not(.selected) .reload-tabs {
+  display: none;
+}
+
+.content-blocking-warning.reload-tabs description {
+  width: 318px;
+  margin-inline-end: 5px;
+}
+
+.content-blocking-warning.reload-tabs .indent {
+  min-height: 30px;
+}
+
+.content-blocking-warning.reload-tabs .content-blocking-info-image {
+  list-style-image: url(chrome://browser/skin/identity-icon.svg);
+  margin-top: 5px;
+  margin-inline-end: 8px;
+  margin-inline-start: 4px;
+}
+
+.reload-tabs-button {
+  max-height: 30px;
+  min-height: 30px;
+  padding: 0 20px;
+  list-style-image: url("chrome://browser/skin/reload.svg");
+  background-color: var(--blue-50);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+.arrowhead:not([disabled]):hover {
+  cursor: pointer;
+  background-color: var(--grey-90-a10);
+||||||| merged common ancestors
+#contentBlockingToggle::before {
+  position: relative;
+  display: block;
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  background: white;
+=======
+.reload-tabs-button:not([disabled="true"]):hover {
+  background-color: var(--blue-60);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+.arrowhead:not([disabled]):hover:active {
+  background-color: var(--grey-90-a20);
+||||||| merged common ancestors
+#contentBlockingCheckbox[checked="true"] + #contentBlockingToggle {
+  background-color: #2292d0;
+  border: 1px solid #2292d0;
+  /* Push the toggle to the right. */
+  padding-inline-start: 23px;
+=======
+.reload-tabs-button:not([disabled="true"]):hover:active {
+  background-color: var(--blue-70);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+.arrowhead.up {
+  background-image: url("chrome://global/skin/icons/arrow-up-12.svg");
+||||||| merged common ancestors
+#contentBlockingToggle:hover,
+#contentBlockingToggle:-moz-focusring {
+  border: 1px solid #b1b1b3;
+=======
+.reload-tabs-button .button-icon {
+  margin: 0 6px;
+  color: white;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+.arrowhead > .button-box {
+  padding: 0 !important;
+||||||| merged common ancestors
+#contentBlockingCheckbox[checked] + #contentBlockingToggle:hover,
+#contentBlockingCheckbox[checked] + #contentBlockingToggle:-moz-focusring {
+  background-color: #0a84ff;
+=======
+.reload-tabs-button .button-text {
+  color: white;
+>>>>>>> upstream-releases
 }
 
 .content-blocking-category.expanded:not(.selected) .content-blocking-warning {
@@ -167,6 +402,7 @@
   font-weight: bold;
 }
 
+<<<<<<< HEAD
 .content-blocking-extra-information {
   visibility: collapse;
 }
@@ -186,8 +422,60 @@
 
 .content-blocking-extra-information > .custom-option {
   margin: 10px 0;
+||||||| merged common ancestors
+#blockCookiesCBDeck:not([selectedIndex]) > .warning-description,
+#blockCookiesCBDeck[selectedIndex="0"] > .warning-description {
+  display: none;
+=======
+.content-blocking-extra-information {
+  visibility: collapse;
 }
 
+.extra-information-label {
+  margin-top: 18px;
+}
+
+.content-blocking-category.expanded .content-blocking-extra-information,
+.content-blocking-category.selected .content-blocking-extra-information {
+  visibility: visible;
+}
+
+.content-blocking-extra-information > .indent {
+  margin-bottom: 18px;
+}
+
+.content-blocking-extra-information > .custom-option {
+  margin: 10px 0;
+}
+
+.content-blocking-warning {
+  background-color: rgba(69, 161, 255, 0.2);
+  border-radius: 4px;
+  padding: 10px 0;
+  margin: 10px 0;
+}
+
+.content-blocking-warning:not([hidden]) + .content-blocking-warning {
+  margin-top: 0;
+}
+
+.content-blocking-trackers-image {
+  list-style-image: url("chrome://browser/skin/controlcenter/trackers-disabled.svg");
+  margin-inline-end: 5px;
+}
+
+.content-blocking-cookies-image {
+  list-style-image: url("chrome://browser/skin/controlcenter/3rdpartycookies-disabled.svg");
+  margin-inline-end: 5px;
+}
+
+.content-blocking-cryptominers-image {
+  list-style-image: url("chrome://browser/skin/controlcenter/cryptominers-disabled.svg");
+  margin-inline-end: 5px;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 .content-blocking-warning {
   background-color: rgba(69, 161, 255, 0.2);
   border-radius: 4px;
@@ -216,6 +504,25 @@
 #blockCookiesMenu,
 #trackingProtectionMenu {
   margin: 0;
+||||||| merged common ancestors
+#blockCookiesCBDeck > .warning-description {
+  margin-bottom: 0.75em !important;
+=======
+.content-blocking-fingerprinters-image {
+  list-style-image: url("chrome://browser/skin/controlcenter/fingerprinters-disabled.svg");
+  margin-inline-end: 5px;
+}
+
+.content-blocking-warning-image {
+  list-style-image: url("chrome://global/skin/icons/warning.svg");
+  margin-inline-end: 8px;
+  margin-inline-start: 4px;
+}
+
+#blockCookiesMenu,
+#trackingProtectionMenu {
+  margin: 0;
+>>>>>>> upstream-releases
 }
 
 #changeBlockListLink {
@@ -243,4 +550,9 @@
 #contentBlockingChangeCookieSettings {
   padding: 0.25em 0.75em;
   margin: 4px 8px;
+}
+
+#deleteOnCloseNote {
+  margin-bottom: 0 !important; /* Overrides .info-panel margin-bottom. */
+  margin-inline-end: 32px;
 }

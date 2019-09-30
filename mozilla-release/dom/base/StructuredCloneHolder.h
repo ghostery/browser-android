@@ -17,7 +17,7 @@
 #include "nsTArray.h"
 
 #ifdef DEBUG
-#include "nsIThread.h"
+#  include "nsIThread.h"
 #endif
 
 class nsIInputStream;
@@ -252,12 +252,36 @@ class StructuredCloneHolder : public StructuredCloneHolderBase {
   // They can be used by custom StructuredCloneHolderBase classes to
   // serialize objects such as ImageData, CryptoKey, RTCCertificate, etc.
 
+<<<<<<< HEAD
+  static JSObject* ReadFullySerializableObjects(
+      JSContext* aCx, JSStructuredCloneReader* aReader, uint32_t aTag);
+||||||| merged common ancestors
+  static JSObject* ReadFullySerializableObjects(JSContext* aCx,
+                                                JSStructuredCloneReader* aReader,
+                                                uint32_t aTag);
+=======
   static JSObject* ReadFullySerializableObjects(
       JSContext* aCx, JSStructuredCloneReader* aReader, uint32_t aTag);
 
   static bool WriteFullySerializableObjects(JSContext* aCx,
                                             JSStructuredCloneWriter* aWriter,
                                             JS::Handle<JSObject*> aObj);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static bool WriteFullySerializableObjects(JSContext* aCx,
+                                            JSStructuredCloneWriter* aWriter,
+                                            JS::Handle<JSObject*> aObj);
+||||||| merged common ancestors
+  static bool  WriteFullySerializableObjects(JSContext* aCx,
+                                             JSStructuredCloneWriter* aWriter,
+                                             JS::Handle<JSObject*> aObj);
+=======
+  // Helper functions for reading and writing strings.
+  static bool ReadString(JSStructuredCloneReader* aReader, nsString& aString);
+  static bool WriteString(JSStructuredCloneWriter* aWriter,
+                          const nsString& aString);
+>>>>>>> upstream-releases
 
   static const JSStructuredCloneCallbacks sCallbacks;
 

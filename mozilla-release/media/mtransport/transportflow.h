@@ -51,9 +51,23 @@ namespace mozilla {
 class TransportFlow final : public nsISupports {
  public:
   TransportFlow()
+<<<<<<< HEAD
       : id_("(anonymous)"), layers_(new std::deque<TransportLayer *>) {}
+||||||| merged common ancestors
+    : id_("(anonymous)"),
+      layers_(new std::deque<TransportLayer *>) {}
+=======
+      : id_("(anonymous)"), layers_(new std::deque<TransportLayer*>) {}
+>>>>>>> upstream-releases
   explicit TransportFlow(const std::string id)
+<<<<<<< HEAD
       : id_(id), layers_(new std::deque<TransportLayer *>) {}
+||||||| merged common ancestors
+    : id_(id),
+      layers_(new std::deque<TransportLayer *>) {}
+=======
+      : id_(id), layers_(new std::deque<TransportLayer*>) {}
+>>>>>>> upstream-releases
 
   const std::string &id() const { return id_; }
 
@@ -66,7 +80,13 @@ class TransportFlow final : public nsISupports {
   // push.
   void PushLayer(TransportLayer *layer);
 
+<<<<<<< HEAD
   TransportLayer *GetLayer(const std::string &id) const;
+||||||| merged common ancestors
+  TransportLayer *GetLayer(const std::string& id) const;
+=======
+  TransportLayer* GetLayer(const std::string& id) const;
+>>>>>>> upstream-releases
 
   NS_DECL_THREADSAFE_ISUPPORTS
 
@@ -90,15 +110,27 @@ class TransportFlow final : public nsISupports {
     return on;
   }
 
-  void EnsureSameThread(TransportLayer *layer);
+  void EnsureSameThread(TransportLayer* layer);
 
+<<<<<<< HEAD
   static void DestroyFinal(nsAutoPtr<std::deque<TransportLayer *>> layers);
+||||||| merged common ancestors
+  static void DestroyFinal(nsAutoPtr<std::deque<TransportLayer *> > layers);
+=======
+  static void DestroyFinal(nsAutoPtr<std::deque<TransportLayer*>> layers);
+>>>>>>> upstream-releases
 
   // Overload needed because we use deque internally and queue externally.
+<<<<<<< HEAD
   static void ClearLayers(std::deque<TransportLayer *> *layers);
+||||||| merged common ancestors
+  static void ClearLayers(std::deque<TransportLayer *>* layers);
+=======
+  static void ClearLayers(std::deque<TransportLayer*>* layers);
+>>>>>>> upstream-releases
 
   std::string id_;
-  UniquePtr<std::deque<TransportLayer *>> layers_;
+  UniquePtr<std::deque<TransportLayer*>> layers_;
   nsCOMPtr<nsIEventTarget> target_;
 };
 

@@ -27,6 +27,7 @@ MESSAGEMANAGER_FUZZER_STRINGSFILE=<path> (optional)
 MESSAGEMANAGER_FUZZER_BLACKLIST=<path> (optional)
 */
 
+<<<<<<< HEAD
 class MessageManagerFuzzer {
  public:
   static void TryMutate(JSContext* aCx, const nsAString& aMessageName,
@@ -35,6 +36,33 @@ class MessageManagerFuzzer {
 
  private:
   static void ReadFile(const char* path, nsTArray<nsCString>& aArray);
+||||||| merged common ancestors
+class MessageManagerFuzzer
+{
+public:
+  static void TryMutate(
+    JSContext* aCx,
+    const nsAString& aMessageName,
+    ipc::StructuredCloneData* aData,
+    const JS::Value& aTransfer);
+
+private:
+  static void ReadFile(const char* path, nsTArray<nsCString> &aArray);
+=======
+#ifdef IsLoggingEnabled
+// This is defined in the Windows SDK urlmon.h
+#  undef IsLoggingEnabled
+#endif
+
+class MessageManagerFuzzer {
+ public:
+  static void TryMutate(JSContext* aCx, const nsAString& aMessageName,
+                        ipc::StructuredCloneData* aData,
+                        const JS::Value& aTransfer);
+
+ private:
+  static void ReadFile(const char* path, nsTArray<nsCString>& aArray);
+>>>>>>> upstream-releases
   static nsCString GetFuzzValueFromFile();
   static bool IsMessageNameBlacklisted(const nsAString& aMessageName);
   static bool Mutate(JSContext* aCx, const nsAString& aMessageName,

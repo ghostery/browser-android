@@ -9,21 +9,24 @@ EXPORTS += [
     'readstrings.h',
     'updatecommon.h',
     'updatedefines.h',
+    'updatererrors.h',
 ]
 
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
     EXPORTS += [
+        'certificatecheck.h',
         'pathhash.h',
+        'registrycertificates.h',
         'uachelper.h',
         'updatehelper.cpp',
         'updatehelper.h',
+<<<<<<< HEAD
         'win_dirent.h',
+||||||| merged common ancestors
+=======
+        'updateutils_win.h',
+>>>>>>> upstream-releases
     ]
-    if CONFIG['MOZ_MAINTENANCE_SERVICE']:
-        EXPORTS += [
-            'certificatecheck.h',
-            'registrycertificates.h',
-        ]
 
 Library('updatecommon')
 
@@ -34,26 +37,37 @@ DisableStlWrapping()
 
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
     SOURCES += [
+        'certificatecheck.cpp',
         'pathhash.cpp',
+        'registrycertificates.cpp',
         'uachelper.cpp',
         'updatehelper.cpp',
+<<<<<<< HEAD
         'win_dirent.cpp',
+||||||| merged common ancestors
+=======
+        'updateutils_win.cpp',
+>>>>>>> upstream-releases
     ]
     OS_LIBS += [
+<<<<<<< HEAD
         'advapi32',
         'ole32',
+||||||| merged common ancestors
+=======
+        'advapi32',
+        'crypt32',
+        'ole32',
+>>>>>>> upstream-releases
         'rpcrt4',
+<<<<<<< HEAD
         'shell32',
+||||||| merged common ancestors
+=======
+        'shell32',
+        'wintrust',
+>>>>>>> upstream-releases
     ]
-    if CONFIG['MOZ_MAINTENANCE_SERVICE']:
-        SOURCES += [
-            'certificatecheck.cpp',
-            'registrycertificates.cpp',
-        ]
-        OS_LIBS += [
-            'crypt32',
-            'wintrust',
-        ]
 
 SOURCES += [
     '/other-licenses/nsis/Contrib/CityHash/cityhash/city.cpp',
@@ -62,6 +76,7 @@ SOURCES += [
     'updatecommon.cpp',
 ]
 
+<<<<<<< HEAD
 if CONFIG['CC_TYPE'] == 'clang-cl':
     AllowCompilerWarnings()  # workaround for bug 1090497
 
@@ -70,3 +85,13 @@ LOCAL_INCLUDES += [
 ]
 
 DEFINES['MOZ_APP_BASENAME'] = '"%s"' % CONFIG['MOZ_APP_BASENAME']
+||||||| merged common ancestors
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497
+=======
+LOCAL_INCLUDES += [
+    '/other-licenses/nsis/Contrib/CityHash/cityhash',
+]
+
+DEFINES['MOZ_APP_BASENAME'] = '"%s"' % CONFIG['MOZ_APP_BASENAME']
+>>>>>>> upstream-releases

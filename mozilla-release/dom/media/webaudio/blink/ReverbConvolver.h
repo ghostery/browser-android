@@ -33,11 +33,10 @@
 #include "ReverbInputBuffer.h"
 #include "nsAutoPtr.h"
 #include "mozilla/MemoryReporting.h"
+#include "mozilla/Monitor.h"
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
-#include "base/condition_variable.h"
-#include "base/lock.h"
 #include "base/thread.h"
 
 namespace WebCore {
@@ -45,6 +44,7 @@ namespace WebCore {
 class ReverbConvolverStage;
 
 class ReverbConvolver {
+<<<<<<< HEAD
  public:
   // maxFFTSize can be adjusted (from say 2048 to 32768) depending on how much
   // precision is necessary. For certain tweaky de-convolving applications the
@@ -85,6 +85,86 @@ class ReverbConvolver {
   bool m_useBackgroundThreads;
   bool m_wantsToExit;
   bool m_moreInputBuffered;
+||||||| merged common ancestors
+public:
+    // maxFFTSize can be adjusted (from say 2048 to 32768) depending on how much precision is necessary.
+    // For certain tweaky de-convolving applications the phase errors add up quickly and lead to non-sensical results with
+    // larger FFT sizes and single-precision floats.  In these cases 2048 is a good size.
+    // If not doing multi-threaded convolution, then should not go > 8192.
+    ReverbConvolver(const float* impulseResponseData,
+                    size_t impulseResponseLength, size_t maxFFTSize,
+                    size_t convolverRenderPhase, bool useBackgroundThreads);
+    ~ReverbConvolver();
+
+    void process(const float* sourceChannelData,
+                 float* destinationChannelData);
+
+    size_t impulseResponseLength() const { return m_impulseResponseLength; }
+
+    ReverbInputBuffer* inputBuffer() { return &m_inputBuffer; }
+
+    bool useBackgroundThreads() const { return m_useBackgroundThreads; }
+    void backgroundThreadEntry();
+
+    size_t sizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
+private:
+    nsTArray<nsAutoPtr<ReverbConvolverStage> > m_stages;
+    nsTArray<nsAutoPtr<ReverbConvolverStage> > m_backgroundStages;
+    size_t m_impulseResponseLength;
+
+    ReverbAccumulationBuffer m_accumulationBuffer;
+
+    // One or more background threads read from this input buffer which is fed from the realtime thread.
+    ReverbInputBuffer m_inputBuffer;
+
+    // Background thread and synchronization
+    base::Thread m_backgroundThread;
+    Lock m_backgroundThreadLock;
+    ConditionVariable m_backgroundThreadCondition;
+    bool m_useBackgroundThreads;
+    bool m_wantsToExit;
+    bool m_moreInputBuffered;
+=======
+ public:
+  // maxFFTSize can be adjusted (from say 2048 to 32768) depending on how much
+  // precision is necessary. For certain tweaky de-convolving applications the
+  // phase errors add up quickly and lead to non-sensical results with larger
+  // FFT sizes and single-precision floats.  In these cases 2048 is a good size.
+  // If not doing multi-threaded convolution, then should not go > 8192.
+  ReverbConvolver(const float* impulseResponseData,
+                  size_t impulseResponseLength, size_t maxFFTSize,
+                  size_t convolverRenderPhase, bool useBackgroundThreads);
+  ~ReverbConvolver();
+
+  void process(const float* sourceChannelData, float* destinationChannelData);
+
+  size_t impulseResponseLength() const { return m_impulseResponseLength; }
+
+  ReverbInputBuffer* inputBuffer() { return &m_inputBuffer; }
+
+  bool useBackgroundThreads() const { return m_useBackgroundThreads; }
+  void backgroundThreadEntry();
+
+  size_t sizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
+
+ private:
+  nsTArray<nsAutoPtr<ReverbConvolverStage> > m_stages;
+  nsTArray<nsAutoPtr<ReverbConvolverStage> > m_backgroundStages;
+  size_t m_impulseResponseLength;
+
+  ReverbAccumulationBuffer m_accumulationBuffer;
+
+  // One or more background threads read from this input buffer which is fed
+  // from the realtime thread.
+  ReverbInputBuffer m_inputBuffer;
+
+  // Background thread and synchronization
+  base::Thread m_backgroundThread;
+  mozilla::Monitor m_backgroundThreadMonitor;
+  bool m_useBackgroundThreads;
+  bool m_wantsToExit;
+  bool m_moreInputBuffered;
+>>>>>>> upstream-releases
 };
 
 }  // namespace WebCore

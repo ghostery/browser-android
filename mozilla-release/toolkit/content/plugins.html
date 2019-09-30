@@ -6,10 +6,33 @@
 
 <html>
 <head>
+<<<<<<< HEAD
 <title data-l10n-id="title-label"></title>
 <script type="application/javascript">
+||||||| merged common ancestors
+<script type="application/javascript">
+=======
+<title data-l10n-id="title-label"></title>
+<script>
+>>>>>>> upstream-releases
   "use strict";
+<<<<<<< HEAD
   ChromeUtils.import("resource://gre/modules/Services.jsm");
+||||||| merged common ancestors
+
+  ChromeUtils.import("resource://gre/modules/Services.jsm");
+
+  // XXX Bug 1418959 - For some reason, using Services.strings here causes
+  // about:plugins to leak when running browser_aboutURLs.js.
+  // eslint-disable-next-line mozilla/use-services
+  var strBundleService = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService);
+  var pluginsbundle = strBundleService.createBundle("chrome://global/locale/plugins.properties");
+
+  // eslint-disable-next-line no-unsanitized/method
+  document.writeln("<title>" + pluginsbundle.GetStringFromName("title_label") + "<\/title>");
+=======
+  const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
+>>>>>>> upstream-releases
 </script>
 <link rel="stylesheet" type="text/css" href="chrome://global/content/plugins.css">
 <link rel="stylesheet" type="text/css" href="chrome://global/skin/plugins.css">
@@ -17,7 +40,7 @@
 </head>
 <body>
 <div id="outside">
-<script type="application/javascript">
+<script>
   /* eslint-env mozilla/frame-script */
 
   "use strict";

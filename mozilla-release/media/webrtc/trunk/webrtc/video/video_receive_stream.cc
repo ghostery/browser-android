@@ -170,6 +170,7 @@ void VideoReceiveStream::Start() {
   RTC_DCHECK_CALLED_SEQUENTIALLY(&worker_sequence_checker_);
   if (decode_thread_.IsRunning())
     return;
+<<<<<<< HEAD
   video_receiver_.Reset();
 
   bool protected_by_fec = config_.rtp.protected_by_flexfec ||
@@ -182,6 +183,29 @@ void VideoReceiveStream::Start() {
   if (rtp_video_stream_receiver_.IsRetransmissionsEnabled() &&
       protected_by_fec) {
     frame_buffer_->SetProtectionMode(kProtectionNackFEC);
+||||||| merged common ancestors
+  video_receiver_.Reset();
+  if (jitter_buffer_experiment_) {
+    frame_buffer_->Start();
+    call_stats_->RegisterStatsObserver(&rtp_stream_receiver_);
+
+    if (rtp_stream_receiver_.IsRetransmissionsEnabled() &&
+        rtp_stream_receiver_.IsUlpfecEnabled()) {
+      frame_buffer_->SetProtectionMode(kProtectionNackFEC);
+    }
+=======
+
+  bool protected_by_fec = config_.rtp.protected_by_flexfec ||
+                          rtp_video_stream_receiver_.IsUlpfecEnabled();
+
+  frame_buffer_->Start();
+  call_stats_->RegisterStatsObserver(&rtp_video_stream_receiver_);
+  call_stats_->RegisterStatsObserver(this);
+
+  if (rtp_video_stream_receiver_.IsRetransmissionsEnabled() &&
+      protected_by_fec) {
+    frame_buffer_->SetProtectionMode(kProtectionNackFEC);
+>>>>>>> upstream-releases
   }
 
   transport_adapter_.Enable();

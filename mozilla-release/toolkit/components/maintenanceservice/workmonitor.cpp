@@ -9,19 +9,26 @@
 #include <shellapi.h>
 
 #ifndef __MINGW32__
-#pragma comment(lib, "wtsapi32.lib")
-#pragma comment(lib, "userenv.lib")
-#pragma comment(lib, "shlwapi.lib")
-#pragma comment(lib, "ole32.lib")
-#pragma comment(lib, "rpcrt4.lib")
+#  pragma comment(lib, "wtsapi32.lib")
+#  pragma comment(lib, "userenv.lib")
+#  pragma comment(lib, "shlwapi.lib")
+#  pragma comment(lib, "ole32.lib")
+#  pragma comment(lib, "rpcrt4.lib")
 #endif
 
 #include "mozilla/CmdLineAndEnvUtils.h"
 #include "nsWindowsHelpers.h"
+<<<<<<< HEAD
 #include "mozilla/UniquePtr.h"
 
 using mozilla::MakeUnique;
 using mozilla::UniquePtr;
+||||||| merged common ancestors
+=======
+#include "mozilla/UniquePtr.h"
+
+using mozilla::UniquePtr;
+>>>>>>> upstream-releases
 
 #include "workmonitor.h"
 #include "usertoken.h"
@@ -31,8 +38,15 @@ using mozilla::UniquePtr;
 #include "uachelper.h"
 #include "updatehelper.h"
 #include "pathhash.h"
+<<<<<<< HEAD
 #include "errors.h"
 #include "commonupdatedir.h"
+||||||| merged common ancestors
+#include "errors.h"
+=======
+#include "updatererrors.h"
+#include "commonupdatedir.h"
+>>>>>>> upstream-releases
 
 #define PATCH_DIR_PATH L"\\updates\\0"
 
@@ -52,8 +66,18 @@ BOOL DoesFallbackKeyExist();
  * @param  isApplying Out parameter for specifying if the status
  *         is set to applying or not.
  * @return TRUE if the information was filled.
+<<<<<<< HEAD
  */
 static BOOL IsStatusApplying(LPCWSTR updateDirPath, BOOL &isApplying) {
+||||||| merged common ancestors
+*/
+static BOOL
+IsStatusApplying(LPCWSTR updateDirPath, BOOL &isApplying)
+{
+=======
+ */
+static BOOL IsStatusApplying(LPCWSTR updateDirPath, BOOL& isApplying) {
+>>>>>>> upstream-releases
   isApplying = FALSE;
   WCHAR updateStatusFilePath[MAX_PATH + 1] = {L'\0'};
   wcsncpy(updateStatusFilePath, updateDirPath, MAX_PATH);
@@ -91,7 +115,15 @@ static BOOL IsStatusApplying(LPCWSTR updateDirPath, BOOL &isApplying) {
  * @param  argv    The argv value normally sent to updater.exe
  * @return boolean True if we're staging an update
  */
+<<<<<<< HEAD
 static bool IsUpdateBeingStaged(int argc, LPWSTR *argv) {
+||||||| merged common ancestors
+static bool
+IsUpdateBeingStaged(int argc, LPWSTR *argv)
+{
+=======
+static bool IsUpdateBeingStaged(int argc, LPWSTR* argv) {
+>>>>>>> upstream-releases
   // PID will be set to -1 if we're supposed to stage an update.
   return (argc == 4 && !wcscmp(argv[3], L"-1")) ||
          (argc == 5 && !wcscmp(argv[4], L"-1"));
@@ -103,7 +135,15 @@ static bool IsUpdateBeingStaged(int argc, LPWSTR *argv) {
  * @param str     The string to check
  * @param boolean True if the param only contains digits
  */
+<<<<<<< HEAD
 static bool IsDigits(WCHAR *str) {
+||||||| merged common ancestors
+static bool
+IsDigits(WCHAR *str)
+{
+=======
+static bool IsDigits(WCHAR* str) {
+>>>>>>> upstream-releases
   while (*str) {
     if (!iswdigit(*str++)) {
       return FALSE;
@@ -122,7 +162,15 @@ static bool IsDigits(WCHAR *str) {
  * @param boolean True if the command line contains just the directory to apply
  *                the update to
  */
+<<<<<<< HEAD
 static bool IsOldCommandline(int argc, LPWSTR *argv) {
+||||||| merged common ancestors
+static bool
+IsOldCommandline(int argc, LPWSTR *argv)
+{
+=======
+static bool IsOldCommandline(int argc, LPWSTR* argv) {
+>>>>>>> upstream-releases
   return (argc == 4 && !wcscmp(argv[3], L"-1")) ||
          (argc >= 4 && (wcsstr(argv[3], L"/replace") || IsDigits(argv[3])));
 }
@@ -134,8 +182,17 @@ static bool IsOldCommandline(int argc, LPWSTR *argv) {
  * @param argvTmp    The argv value normally sent to updater.exe
  * @param aResultDir Buffer to hold the installation directory.
  */
+<<<<<<< HEAD
 static BOOL GetInstallationDir(int argcTmp, LPWSTR *argvTmp,
                                WCHAR aResultDir[MAX_PATH + 1]) {
+||||||| merged common ancestors
+static BOOL
+GetInstallationDir(int argcTmp, LPWSTR *argvTmp, WCHAR aResultDir[MAX_PATH + 1])
+{
+=======
+static BOOL GetInstallationDir(int argcTmp, LPWSTR* argvTmp,
+                               WCHAR aResultDir[MAX_PATH + 1]) {
+>>>>>>> upstream-releases
   int index = 3;
   if (IsOldCommandline(argcTmp, argvTmp)) {
     index = 2;
@@ -173,11 +230,26 @@ static BOOL GetInstallationDir(int argcTmp, LPWSTR *argvTmp,
  * @param  userToken      User impersonation token to pass to the updater.
  * @return TRUE if the update process was run had a return code of 0.
  */
+<<<<<<< HEAD
 BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
                         BOOL &processStarted, nsAutoHandle &userToken) {
   processStarted = FALSE;
 
+||||||| merged common ancestors
+BOOL
+StartUpdateProcess(int argc,
+                   LPWSTR *argv,
+                   LPCWSTR installDir,
+                   BOOL &processStarted)
+{
+=======
+BOOL StartUpdateProcess(int argc, LPWSTR* argv, LPCWSTR installDir,
+                        BOOL& processStarted) {
+  processStarted = FALSE;
+
+>>>>>>> upstream-releases
   LOG(("Starting update process as the service in session 0."));
+<<<<<<< HEAD
   STARTUPINFOEXW sie;
   ZeroMemory(&sie, sizeof(sie));
   sie.StartupInfo.cb = sizeof(sie);
@@ -185,6 +257,20 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
   STARTUPINFOW &si = sie.StartupInfo;
   si.lpDesktop = const_cast<LPWSTR>(L"winsta0\\Default");  // -Wwritable-strings
   PROCESS_INFORMATION pi = {0};
+||||||| merged common ancestors
+  STARTUPINFO si = {0};
+  si.cb = sizeof(STARTUPINFO);
+  si.lpDesktop = L"winsta0\\Default";
+  PROCESS_INFORMATION pi = {0};
+=======
+  STARTUPINFOW si;
+  PROCESS_INFORMATION pi;
+
+  ZeroMemory(&si, sizeof(si));
+  ZeroMemory(&pi, sizeof(pi));
+  si.cb = sizeof(si);
+  si.lpDesktop = const_cast<LPWSTR>(L"winsta0\\Default");  // -Wwritable-strings
+>>>>>>> upstream-releases
 
   // The updater command line is of the form:
   // updater.exe update-dir apply [wait-pid [callback-dir callback-path args]]
@@ -209,6 +295,7 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
   // Add an env var for MOZ_USING_SERVICE so the updater.exe can
   // do anything special that it needs to do for service updates.
   // Search in updater.cpp for more info on MOZ_USING_SERVICE.
+<<<<<<< HEAD
   putenv(const_cast<char *>("MOZ_USING_SERVICE=1"));
 
 #ifndef DISABLE_USER_IMPERSONATION
@@ -263,6 +350,22 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
                        CREATE_DEFAULT_ERROR_MODE | EXTENDED_STARTUPINFO_PRESENT,
                        nullptr, nullptr, &si, &pi);
   }
+||||||| merged common ancestors
+  putenv(const_cast<char*>("MOZ_USING_SERVICE=1"));
+  LOG(("Starting service with cmdline: %ls", cmdLine.get()));
+  processStarted = CreateProcessW(argv[0], cmdLine.get(),
+                                  nullptr, nullptr, FALSE,
+                                  CREATE_DEFAULT_ERROR_MODE,
+                                  nullptr,
+                                  nullptr, &si, &pi);
+=======
+  putenv(const_cast<char*>("MOZ_USING_SERVICE=1"));
+
+  LOG(("Starting service with cmdline: %ls", cmdLine.get()));
+  processStarted =
+      CreateProcessW(argv[0], cmdLine.get(), nullptr, nullptr, FALSE,
+                     CREATE_DEFAULT_ERROR_MODE, nullptr, nullptr, &si, &pi);
+>>>>>>> upstream-releases
 
   BOOL updateWasSuccessful = FALSE;
   if (processStarted) {
@@ -299,11 +402,23 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
         LOG(
             ("update.status is still applying even though update was "
              "successful."));
+<<<<<<< HEAD
         if (!WriteStatusFailure(argv[1], SERVICE_STILL_APPLYING_ON_SUCCESS,
                                 userToken)) {
           LOG_WARN(
               ("Could not write update.status still applying on "
                "success error."));
+||||||| merged common ancestors
+        if (!WriteStatusFailure(argv[1],
+                                SERVICE_STILL_APPLYING_ON_SUCCESS)) {
+          LOG_WARN(("Could not write update.status still applying on "
+                    "success error."));
+=======
+        if (!WriteStatusFailure(argv[1], SERVICE_STILL_APPLYING_ON_SUCCESS)) {
+          LOG_WARN(
+              ("Could not write update.status still applying on "
+               "success error."));
+>>>>>>> upstream-releases
         }
         // Since we still had applying we know updater.exe didn't do its
         // job correctly.
@@ -317,10 +432,21 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
         } else if (processTerminated) {
           failcode = SERVICE_STILL_APPLYING_TERMINATED;
         }
+<<<<<<< HEAD
         if (!WriteStatusFailure(argv[1], failcode, userToken)) {
           LOG_WARN(
               ("Could not write update.status still applying on "
                "failure error."));
+||||||| merged common ancestors
+        if (!WriteStatusFailure(argv[1], failcode)) {
+          LOG_WARN(("Could not write update.status still applying on "
+                    "failure error."));
+=======
+        if (!WriteStatusFailure(argv[1], failcode)) {
+          LOG_WARN(
+              ("Could not write update.status still applying on "
+               "failure error."));
+>>>>>>> upstream-releases
         }
       }
     }
@@ -354,13 +480,23 @@ BOOL StartUpdateProcess(int argc, LPWSTR *argv, LPCWSTR installDir,
  *
  * @return true if updater is the path to a valid updater
  */
+<<<<<<< HEAD
 static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir,
                            nsAutoHandle &userToken) {
+||||||| merged common ancestors
+static bool
+UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir)
+{
+=======
+static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir,
+                           LPWSTR updateDir) {
+>>>>>>> upstream-releases
   // Make sure the path to the updater to use for the update is local.
   // We do this check to make sure that file locking is available for
   // race condition security checks.
   BOOL isLocal = FALSE;
   if (!IsLocalFile(updater, isLocal) || !isLocal) {
+<<<<<<< HEAD
     LOG_WARN(("Filesystem in path %ls is not supported (%d)", updater,
               GetLastError()));
     if (
@@ -369,6 +505,15 @@ static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir,
 #endif
         !WriteStatusFailure(updateDir, SERVICE_UPDATER_NOT_FIXED_DRIVE,
                             userToken)) {
+||||||| merged common ancestors
+    LOG_WARN(("Filesystem in path %ls is not supported (%d)",
+              updater, GetLastError()));
+    if (!WriteStatusFailure(updateDir, SERVICE_UPDATER_NOT_FIXED_DRIVE)) {
+=======
+    LOG_WARN(("Filesystem in path %ls is not supported (%d)", updater,
+              GetLastError()));
+    if (!WriteStatusFailure(updateDir, SERVICE_UPDATER_NOT_FIXED_DRIVE)) {
+>>>>>>> upstream-releases
       LOG_WARN(("Could not write update.status service update failure.  (%d)",
                 GetLastError()));
     }
@@ -412,6 +557,7 @@ static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir,
   }
 
   if (!updaterIsCorrect) {
+<<<<<<< HEAD
     LOG_WARN(
         ("The updaters do not match, updater will not run.\n"
          "Path 1: %ls\nPath 2: %ls",
@@ -422,6 +568,17 @@ static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir,
 #endif
         !WriteStatusFailure(updateDir, SERVICE_UPDATER_COMPARE_ERROR,
                             userToken)) {
+||||||| merged common ancestors
+    LOG_WARN(("The updaters do not match, updater will not run.\n"
+              "Path 1: %ls\nPath 2: %ls", updater, installDirUpdater));
+    if (!WriteStatusFailure(updateDir, SERVICE_UPDATER_COMPARE_ERROR)) {
+=======
+    LOG_WARN(
+        ("The updaters do not match, updater will not run.\n"
+         "Path 1: %ls\nPath 2: %ls",
+         updater, installDirUpdater));
+    if (!WriteStatusFailure(updateDir, SERVICE_UPDATER_COMPARE_ERROR)) {
+>>>>>>> upstream-releases
       LOG_WARN(("Could not write update.status updater compare failure."));
     }
     return false;
@@ -486,13 +643,26 @@ static bool UpdaterIsValid(LPWSTR updater, LPWSTR installDir, LPWSTR updateDir,
  * @param  argc           The number of arguments in argv
  * @param  argv           The arguments normally passed to updater.exe
  *                        argv[0] must be the path to updater.exe
+<<<<<<< HEAD
  * @param  userToken      Impersonation token to use when writing
  *                        update.status, passed along to the updater
  *
+||||||| merged common ancestors
+=======
+ *
+>>>>>>> upstream-releases
  * @return TRUE if the update was successful.
  */
+<<<<<<< HEAD
 BOOL ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR *argv,
                                   nsAutoHandle &userToken) {
+||||||| merged common ancestors
+BOOL
+ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR *argv)
+{
+=======
+BOOL ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR* argv) {
+>>>>>>> upstream-releases
   BOOL result = TRUE;
   if (argc < 3) {
     LOG_WARN(
@@ -513,17 +683,33 @@ BOOL ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR *argv,
   WCHAR installDir[MAX_PATH + 1] = {L'\0'};
   if (!GetInstallationDir(argc, argv, installDir)) {
     LOG_WARN(("Could not get the installation directory"));
+<<<<<<< HEAD
     if (!WriteStatusFailure(argv[1], SERVICE_INSTALLDIR_ERROR, userToken)) {
       LOG_WARN(
           ("Could not write update.status for GetInstallationDir failure."));
+||||||| merged common ancestors
+    if (!WriteStatusFailure(argv[1], SERVICE_INSTALLDIR_ERROR)) {
+      LOG_WARN(("Could not write update.status for GetInstallationDir failure."));
+=======
+    if (!WriteStatusFailure(argv[1], SERVICE_INSTALLDIR_ERROR)) {
+      LOG_WARN(
+          ("Could not write update.status for GetInstallationDir failure."));
+>>>>>>> upstream-releases
     }
     return FALSE;
   }
 
   if (UpdaterIsValid(argv[0], installDir, argv[1], userToken)) {
     BOOL updateProcessWasStarted = FALSE;
+<<<<<<< HEAD
     if (StartUpdateProcess(argc, argv, installDir, updateProcessWasStarted,
                            userToken)) {
+||||||| merged common ancestors
+    if (StartUpdateProcess(argc, argv, installDir,
+                           updateProcessWasStarted)) {
+=======
+    if (StartUpdateProcess(argc, argv, installDir, updateProcessWasStarted)) {
+>>>>>>> upstream-releases
       LOG(("updater.exe was launched and run successfully!"));
       LogFlush();
 
@@ -545,11 +731,24 @@ BOOL ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR *argv,
       // so that the app.update.service.errors pref can be updated when
       // the callback app restarts.
       if (!updateProcessWasStarted) {
+<<<<<<< HEAD
         if (!WriteStatusFailure(argv[1], SERVICE_UPDATER_COULD_NOT_BE_STARTED,
                                 userToken)) {
           LOG_WARN(
               ("Could not write update.status service update failure.  (%d)",
                GetLastError()));
+||||||| merged common ancestors
+        if (!WriteStatusFailure(argv[1],
+                                SERVICE_UPDATER_COULD_NOT_BE_STARTED)) {
+          LOG_WARN(("Could not write update.status service update failure.  (%d)",
+                    GetLastError()));
+=======
+        if (!WriteStatusFailure(argv[1],
+                                SERVICE_UPDATER_COULD_NOT_BE_STARTED)) {
+          LOG_WARN(
+              ("Could not write update.status service update failure.  (%d)",
+               GetLastError()));
+>>>>>>> upstream-releases
         }
       }
     }
@@ -562,7 +761,14 @@ BOOL ProcessSoftwareUpdateCommand(DWORD argc, LPWSTR *argv,
 
     // When there is a certificate check error on the updater.exe application,
     // we want to write out the error.
+<<<<<<< HEAD
     if (!WriteStatusFailure(argv[1], SERVICE_UPDATER_SIGN_ERROR, userToken)) {
+||||||| merged common ancestors
+    if (!WriteStatusFailure(argv[1],
+                            SERVICE_UPDATER_SIGN_ERROR)) {
+=======
+    if (!WriteStatusFailure(argv[1], SERVICE_UPDATER_SIGN_ERROR)) {
+>>>>>>> upstream-releases
       LOG_WARN(("Could not write pending state to update.status.  (%d)",
                 GetLastError()));
     }
@@ -652,13 +858,31 @@ BOOL DeleteSecureUpdater(WCHAR serviceUpdaterPath[MAX_PATH + 1]) {
  * Executes a service command.
  *
  * @param argc The number of arguments in argv
+<<<<<<< HEAD
  * @param argv The service command line arguments, argv[0] is automatically
  *             included by Windows, argv[1] is unused but hardcoded to
  *             "MozillaMaintenance". argv[2] is the service command.
+||||||| merged common ancestors
+ * @param argv The service command line arguments, argv[0] and argv[1]
+ *             and automatically included by Windows.  argv[2] is the
+ *             service command.
+=======
+ * @param argv The service command line arguments, argv[0] is automatically
+ *             included by Windows, argv[1] is unused but hardcoded to
+ *             "MozillaMaintenance", and argv[2] is the service command.
+>>>>>>> upstream-releases
  *
  * @return FALSE if there was an error executing the service command.
  */
+<<<<<<< HEAD
 BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
+||||||| merged common ancestors
+BOOL
+ExecuteServiceCommand(int argc, LPWSTR *argv)
+{
+=======
+BOOL ExecuteServiceCommand(int argc, LPWSTR* argv) {
+>>>>>>> upstream-releases
   if (argc < 3) {
     LOG_WARN(
         ("Not enough command line arguments to execute a service command"));
@@ -718,11 +942,21 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
     // This check is also performed in updater.cpp and is performed here
     // as well since the maintenance service can be called directly.
     if (argc < 5 || !IsValidFullPath(argv[5])) {
+<<<<<<< HEAD
       LOG_WARN(
           ("The install directory path is not valid for this application."));
 #ifdef DISABLE_USER_IMPERSONATION
       if (!WriteStatusFailure(argv[4], SERVICE_INVALID_INSTALL_DIR_PATH_ERROR,
                               userToken)) {
+||||||| merged common ancestors
+      LOG_WARN(("The install directory path is not valid for this application."));
+      if (!WriteStatusFailure(argv[4], SERVICE_INVALID_INSTALL_DIR_PATH_ERROR)) {
+=======
+      LOG_WARN(
+          ("The install directory path is not valid for this application."));
+      if (!WriteStatusFailure(argv[4],
+                              SERVICE_INVALID_INSTALL_DIR_PATH_ERROR)) {
+>>>>>>> upstream-releases
         LOG_WARN(("Could not write update.status for previous failure."));
       }
 #else
@@ -736,11 +970,21 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
       // This check is also performed in updater.cpp and is performed here
       // as well since the maintenance service can be called directly.
       if (argc < 6 || !IsValidFullPath(argv[6])) {
+<<<<<<< HEAD
         LOG_WARN(
             ("The working directory path is not valid for this application."));
 #ifdef DISABLE_USER_IMPERSONATION
         if (!WriteStatusFailure(argv[4], SERVICE_INVALID_WORKING_DIR_PATH_ERROR,
                                 userToken)) {
+||||||| merged common ancestors
+        LOG_WARN(("The working directory path is not valid for this application."));
+        if (!WriteStatusFailure(argv[4], SERVICE_INVALID_WORKING_DIR_PATH_ERROR)) {
+=======
+        LOG_WARN(
+            ("The working directory path is not valid for this application."));
+        if (!WriteStatusFailure(argv[4],
+                                SERVICE_INVALID_WORKING_DIR_PATH_ERROR)) {
+>>>>>>> upstream-releases
           LOG_WARN(("Could not write update.status for previous failure."));
         }
 #else
@@ -753,6 +997,7 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
       // These checks are also performed in updater.cpp and is performed here
       // as well since the maintenance service can be called directly.
       if (_wcsnicmp(argv[6], argv[5], MAX_PATH) != 0) {
+<<<<<<< HEAD
         if (argc < 7 ||
             (wcscmp(argv[7], L"-1") != 0 && !wcsstr(argv[7], L"/replace"))) {
           LOG_WARN(
@@ -761,6 +1006,19 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
 #ifdef DISABLE_USER_IMPERSONATION
           if (!WriteStatusFailure(argv[4], SERVICE_INVALID_APPLYTO_DIR_ERROR,
                                   userToken)) {
+||||||| merged common ancestors
+        if (wcscmp(argv[7], L"-1") != 0 && !wcsstr(argv[7], L"/replace")) {
+          LOG_WARN(("Installation directory and working directory must be the "
+                    "same for non-staged updates. Exiting."));
+          if (!WriteStatusFailure(argv[4], SERVICE_INVALID_APPLYTO_DIR_ERROR)) {
+=======
+        if (argc < 7 ||
+            (wcscmp(argv[7], L"-1") != 0 && !wcsstr(argv[7], L"/replace"))) {
+          LOG_WARN(
+              ("Installation directory and working directory must be the "
+               "same for non-staged updates. Exiting."));
+          if (!WriteStatusFailure(argv[4], SERVICE_INVALID_APPLYTO_DIR_ERROR)) {
+>>>>>>> upstream-releases
             LOG_WARN(("Could not write update.status for previous failure."));
           }
 #else
@@ -775,12 +1033,24 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
                      sizeof(workingDirParent) / sizeof(workingDirParent[0]),
                      NS_T("%s"), argv[6]);
         if (!PathRemoveFileSpecW(workingDirParent)) {
+<<<<<<< HEAD
           LOG_WARN(
               ("Couldn't remove file spec when attempting to verify the "
                "working directory path.  (%d)",
                GetLastError()));
 #ifdef DISABLE_USER_IMPERSONATION
           if (!WriteStatusFailure(argv[4], REMOVE_FILE_SPEC_ERROR, userToken)) {
+||||||| merged common ancestors
+          LOG_WARN(("Couldn't remove file spec when attempting to verify the "
+                    "working directory path.  (%d)", GetLastError()));
+          if (!WriteStatusFailure(argv[4], REMOVE_FILE_SPEC_ERROR)) {
+=======
+          LOG_WARN(
+              ("Couldn't remove file spec when attempting to verify the "
+               "working directory path.  (%d)",
+               GetLastError()));
+          if (!WriteStatusFailure(argv[4], REMOVE_FILE_SPEC_ERROR)) {
+>>>>>>> upstream-releases
             LOG_WARN(("Could not write update.status for previous failure."));
           }
 #else
@@ -791,6 +1061,7 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
         }
 
         if (_wcsnicmp(workingDirParent, argv[5], MAX_PATH) != 0) {
+<<<<<<< HEAD
           LOG_WARN(
               ("The apply-to directory must be the same as or "
                "a child of the installation directory! Exiting."));
@@ -798,6 +1069,17 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
           if (!WriteStatusFailure(argv[4],
                                   SERVICE_INVALID_APPLYTO_DIR_STAGED_ERROR,
                                   userToken)) {
+||||||| merged common ancestors
+          LOG_WARN(("The apply-to directory must be the same as or "
+                    "a child of the installation directory! Exiting."));
+          if (!WriteStatusFailure(argv[4], SERVICE_INVALID_APPLYTO_DIR_STAGED_ERROR)) {
+=======
+          LOG_WARN(
+              ("The apply-to directory must be the same as or "
+               "a child of the installation directory! Exiting."));
+          if (!WriteStatusFailure(argv[4],
+                                  SERVICE_INVALID_APPLYTO_DIR_STAGED_ERROR)) {
+>>>>>>> upstream-releases
             LOG_WARN(("Could not write update.status for previous failure."));
           }
 #else
@@ -887,8 +1169,15 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
     // write status.
     result = UpdaterIsValid(installDirUpdater, installDir, argv[4], userToken);
 
+<<<<<<< HEAD
 #ifndef DISABLE_USER_IMPERSONATION
+||||||| merged common ancestors
+    WCHAR secureUpdaterPath[MAX_PATH + 1] = { L'\0' };
+=======
+    WCHAR secureUpdaterPath[MAX_PATH + 1] = {L'\0'};
+>>>>>>> upstream-releases
     if (result) {
+<<<<<<< HEAD
       userToken.own(GetUserProcessToken(installDirUpdater, argc - 3,
                                         const_cast<LPCWSTR *>(argv + 3)));
       result = !!userToken;
@@ -901,6 +1190,11 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
     WCHAR secureUpdaterPath[MAX_PATH + 1] = {L'\0'};
     if (result) {
       result = GetSecureUpdaterPath(secureUpdaterPath);  // Does its own logging
+||||||| merged common ancestors
+      result = GetSecureUpdaterPath(secureUpdaterPath); // Does its own logging
+=======
+      result = GetSecureUpdaterPath(secureUpdaterPath);  // Does its own logging
+>>>>>>> upstream-releases
     }
     if (result) {
       LOG(
@@ -913,6 +1207,7 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
     }
 
     if (!result) {
+<<<<<<< HEAD
       LOG_WARN(
           ("Could not copy path to secure location.  (%d)", GetLastError()));
       if (
@@ -923,6 +1218,18 @@ BOOL ExecuteServiceCommand(int argc, LPWSTR *argv) {
                               userToken)) {
         LOG_WARN(
             ("Could not write update.status could not copy updater error"));
+||||||| merged common ancestors
+      LOG_WARN(("Could not copy path to secure location.  (%d)",
+                GetLastError()));
+      if (!WriteStatusFailure(argv[4], SERVICE_COULD_NOT_COPY_UPDATER)) {
+        LOG_WARN(("Could not write update.status could not copy updater error"));
+=======
+      LOG_WARN(
+          ("Could not copy path to secure location.  (%d)", GetLastError()));
+      if (!WriteStatusFailure(argv[4], SERVICE_COULD_NOT_COPY_UPDATER)) {
+        LOG_WARN(
+            ("Could not write update.status could not copy updater error"));
+>>>>>>> upstream-releases
       }
     } else {
       // We obtained the path and copied it successfully, update the path to

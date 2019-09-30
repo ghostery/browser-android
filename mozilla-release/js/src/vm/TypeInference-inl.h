@@ -20,6 +20,7 @@
 #include "builtin/Symbol.h"
 #include "gc/GC.h"
 #include "jit/BaselineJIT.h"
+#include "jit/JitScript.h"
 #include "js/HeapAPI.h"
 #include "vm/ArrayObject.h"
 #include "vm/BooleanObject.h"
@@ -31,8 +32,8 @@
 #include "vm/SharedArrayObject.h"
 #include "vm/StringObject.h"
 #include "vm/TypedArrayObject.h"
-#include "vm/UnboxedObject.h"
 
+#include "jit/JitScript-inl.h"
 #include "vm/JSContext-inl.h"
 #include "vm/ObjectGroup-inl.h"
 
@@ -79,6 +80,7 @@ inline bool RecompileInfo::shouldSweep(const TypeZone& zone) {
 // Types
 /////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 /* static */ inline TypeSet::ObjectKey* TypeSet::ObjectKey::get(JSObject* obj) {
   MOZ_ASSERT(obj);
   if (obj->isSingleton()) {
@@ -153,17 +155,148 @@ inline TypeSet::Type TypeSet::GetValueType(const Value& val) {
     return TypeSet::ObjectType(&val.toObject());
   }
   return TypeSet::PrimitiveType(val.extractNonDoubleType());
+||||||| merged common ancestors
+/* static */ inline TypeSet::ObjectKey*
+TypeSet::ObjectKey::get(JSObject* obj)
+{
+    MOZ_ASSERT(obj);
+    if (obj->isSingleton()) {
+        return (ObjectKey*) (uintptr_t(obj) | 1);
+    }
+    return (ObjectKey*) obj->group();
 }
 
+/* static */ inline TypeSet::ObjectKey*
+TypeSet::ObjectKey::get(ObjectGroup* group)
+{
+    MOZ_ASSERT(group);
+    if (group->singleton()) {
+        return (ObjectKey*) (uintptr_t(group->singleton()) | 1);
+    }
+    return (ObjectKey*) group;
+}
+
+inline ObjectGroup*
+TypeSet::ObjectKey::groupNoBarrier()
+{
+    MOZ_ASSERT(isGroup());
+    return (ObjectGroup*) this;
+}
+
+inline JSObject*
+TypeSet::ObjectKey::singletonNoBarrier()
+{
+    MOZ_ASSERT(isSingleton());
+    return (JSObject*) (uintptr_t(this) & ~1);
+}
+
+inline ObjectGroup*
+TypeSet::ObjectKey::group()
+{
+    ObjectGroup* res = groupNoBarrier();
+    ObjectGroup::readBarrier(res);
+    return res;
+}
+
+inline JSObject*
+TypeSet::ObjectKey::singleton()
+{
+    JSObject* res = singletonNoBarrier();
+    JSObject::readBarrier(res);
+    return res;
+}
+
+inline JS::Compartment*
+TypeSet::ObjectKey::maybeCompartment()
+{
+    if (isSingleton()) {
+        return singletonNoBarrier()->compartment();
+    }
+
+    return groupNoBarrier()->compartment();
+}
+
+/* static */ inline TypeSet::Type
+TypeSet::ObjectType(const JSObject* obj)
+{
+    if (obj->isSingleton()) {
+        return Type(uintptr_t(obj) | 1);
+    }
+    return Type(uintptr_t(obj->group()));
+}
+
+/* static */ inline TypeSet::Type
+TypeSet::ObjectType(const ObjectGroup* group)
+{
+    if (group->singleton()) {
+        return Type(uintptr_t(group->singleton()) | 1);
+    }
+    return Type(uintptr_t(group));
+}
+
+/* static */ inline TypeSet::Type
+TypeSet::ObjectType(const ObjectKey* obj)
+{
+    return Type(uintptr_t(obj));
+}
+
+inline TypeSet::Type
+TypeSet::GetValueType(const Value& val)
+{
+    if (val.isDouble()) {
+        return TypeSet::DoubleType();
+    }
+    if (val.isObject()) {
+        return TypeSet::ObjectType(&val.toObject());
+    }
+    return TypeSet::PrimitiveType(val.extractNonDoubleType());
+=======
+/* static */ inline TypeSet::ObjectKey* TypeSet::ObjectKey::get(JSObject* obj) {
+  MOZ_ASSERT(obj);
+  if (obj->isSingleton()) {
+    return (ObjectKey*)(uintptr_t(obj) | 1);
+  }
+  return (ObjectKey*)obj->group();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 inline bool TypeSet::IsUntrackedValue(const Value& val) {
   return val.isMagic() && (val.whyMagic() == JS_OPTIMIZED_OUT ||
                            val.whyMagic() == JS_UNINITIALIZED_LEXICAL);
+||||||| merged common ancestors
+inline bool
+TypeSet::IsUntrackedValue(const Value& val)
+{
+    return val.isMagic() && (val.whyMagic() == JS_OPTIMIZED_OUT ||
+                             val.whyMagic() == JS_UNINITIALIZED_LEXICAL);
+=======
+/* static */ inline TypeSet::ObjectKey* TypeSet::ObjectKey::get(
+    ObjectGroup* group) {
+  MOZ_ASSERT(group);
+  if (group->singleton()) {
+    return (ObjectKey*)(uintptr_t(group->singleton()) | 1);
+  }
+  return (ObjectKey*)group;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline TypeSet::Type TypeSet::GetMaybeUntrackedValueType(const Value& val) {
   return IsUntrackedValue(val) ? UnknownType() : GetValueType(val);
+||||||| merged common ancestors
+inline TypeSet::Type
+TypeSet::GetMaybeUntrackedValueType(const Value& val)
+{
+    return IsUntrackedValue(val) ? UnknownType() : GetValueType(val);
+=======
+inline ObjectGroup* TypeSet::ObjectKey::groupNoBarrier() {
+  MOZ_ASSERT(isGroup());
+  return (ObjectGroup*)this;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline TypeFlags PrimitiveTypeFlag(JSValueType type) {
   switch (type) {
     case JSVAL_TYPE_UNDEFINED:
@@ -216,6 +349,179 @@ inline JSValueType TypeFlagPrimitive(TypeFlags flags) {
     default:
       MOZ_CRASH("Bad TypeFlags");
   }
+||||||| merged common ancestors
+inline TypeFlags
+PrimitiveTypeFlag(JSValueType type)
+{
+    switch (type) {
+      case JSVAL_TYPE_UNDEFINED:
+        return TYPE_FLAG_UNDEFINED;
+      case JSVAL_TYPE_NULL:
+        return TYPE_FLAG_NULL;
+      case JSVAL_TYPE_BOOLEAN:
+        return TYPE_FLAG_BOOLEAN;
+      case JSVAL_TYPE_INT32:
+        return TYPE_FLAG_INT32;
+      case JSVAL_TYPE_DOUBLE:
+        return TYPE_FLAG_DOUBLE;
+      case JSVAL_TYPE_STRING:
+        return TYPE_FLAG_STRING;
+      case JSVAL_TYPE_SYMBOL:
+        return TYPE_FLAG_SYMBOL;
+#ifdef ENABLE_BIGINT
+      case JSVAL_TYPE_BIGINT:
+        return TYPE_FLAG_BIGINT;
+#endif
+      case JSVAL_TYPE_MAGIC:
+        return TYPE_FLAG_LAZYARGS;
+      default:
+        MOZ_CRASH("Bad JSValueType");
+    }
+}
+
+inline JSValueType
+TypeFlagPrimitive(TypeFlags flags)
+{
+    switch (flags) {
+      case TYPE_FLAG_UNDEFINED:
+        return JSVAL_TYPE_UNDEFINED;
+      case TYPE_FLAG_NULL:
+        return JSVAL_TYPE_NULL;
+      case TYPE_FLAG_BOOLEAN:
+        return JSVAL_TYPE_BOOLEAN;
+      case TYPE_FLAG_INT32:
+        return JSVAL_TYPE_INT32;
+      case TYPE_FLAG_DOUBLE:
+        return JSVAL_TYPE_DOUBLE;
+      case TYPE_FLAG_STRING:
+        return JSVAL_TYPE_STRING;
+      case TYPE_FLAG_SYMBOL:
+        return JSVAL_TYPE_SYMBOL;
+#ifdef ENABLE_BIGINT
+      case TYPE_FLAG_BIGINT:
+        return JSVAL_TYPE_BIGINT;
+#endif
+      case TYPE_FLAG_LAZYARGS:
+        return JSVAL_TYPE_MAGIC;
+      default:
+        MOZ_CRASH("Bad TypeFlags");
+    }
+=======
+inline JSObject* TypeSet::ObjectKey::singletonNoBarrier() {
+  MOZ_ASSERT(isSingleton());
+  return (JSObject*)(uintptr_t(this) & ~1);
+}
+
+inline ObjectGroup* TypeSet::ObjectKey::group() {
+  ObjectGroup* res = groupNoBarrier();
+  ObjectGroup::readBarrier(res);
+  return res;
+}
+
+inline JSObject* TypeSet::ObjectKey::singleton() {
+  JSObject* res = singletonNoBarrier();
+  JSObject::readBarrier(res);
+  return res;
+}
+
+inline JS::Compartment* TypeSet::ObjectKey::maybeCompartment() {
+  if (isSingleton()) {
+    return singletonNoBarrier()->compartment();
+  }
+
+  return groupNoBarrier()->compartment();
+}
+
+/* static */ inline TypeSet::Type TypeSet::ObjectType(const JSObject* obj) {
+  if (obj->isSingleton()) {
+    return Type(uintptr_t(obj) | 1);
+  }
+  return Type(uintptr_t(obj->group()));
+}
+
+/* static */ inline TypeSet::Type TypeSet::ObjectType(
+    const ObjectGroup* group) {
+  if (group->singleton()) {
+    return Type(uintptr_t(group->singleton()) | 1);
+  }
+  return Type(uintptr_t(group));
+}
+
+/* static */ inline TypeSet::Type TypeSet::ObjectType(const ObjectKey* obj) {
+  return Type(uintptr_t(obj));
+}
+
+inline TypeSet::Type TypeSet::GetValueType(const Value& val) {
+  if (val.isDouble()) {
+    return TypeSet::DoubleType();
+  }
+  if (val.isObject()) {
+    return TypeSet::ObjectType(&val.toObject());
+  }
+  return TypeSet::PrimitiveType(val.extractNonDoubleType());
+}
+
+inline bool TypeSet::IsUntrackedValue(const Value& val) {
+  return val.isMagic() && (val.whyMagic() == JS_OPTIMIZED_OUT ||
+                           val.whyMagic() == JS_UNINITIALIZED_LEXICAL);
+}
+
+inline TypeSet::Type TypeSet::GetMaybeUntrackedValueType(const Value& val) {
+  return IsUntrackedValue(val) ? UnknownType() : GetValueType(val);
+}
+
+inline TypeFlags PrimitiveTypeFlag(ValueType type) {
+  switch (type) {
+    case ValueType::Undefined:
+      return TYPE_FLAG_UNDEFINED;
+    case ValueType::Null:
+      return TYPE_FLAG_NULL;
+    case ValueType::Boolean:
+      return TYPE_FLAG_BOOLEAN;
+    case ValueType::Int32:
+      return TYPE_FLAG_INT32;
+    case ValueType::Double:
+      return TYPE_FLAG_DOUBLE;
+    case ValueType::String:
+      return TYPE_FLAG_STRING;
+    case ValueType::Symbol:
+      return TYPE_FLAG_SYMBOL;
+    case ValueType::BigInt:
+      return TYPE_FLAG_BIGINT;
+    case ValueType::Magic:
+      return TYPE_FLAG_LAZYARGS;
+    case ValueType::PrivateGCThing:
+    case ValueType::Object:
+      break;
+  }
+
+  MOZ_CRASH("Bad ValueType");
+}
+
+inline JSValueType TypeFlagPrimitive(TypeFlags flags) {
+  switch (flags) {
+    case TYPE_FLAG_UNDEFINED:
+      return JSVAL_TYPE_UNDEFINED;
+    case TYPE_FLAG_NULL:
+      return JSVAL_TYPE_NULL;
+    case TYPE_FLAG_BOOLEAN:
+      return JSVAL_TYPE_BOOLEAN;
+    case TYPE_FLAG_INT32:
+      return JSVAL_TYPE_INT32;
+    case TYPE_FLAG_DOUBLE:
+      return JSVAL_TYPE_DOUBLE;
+    case TYPE_FLAG_STRING:
+      return JSVAL_TYPE_STRING;
+    case TYPE_FLAG_SYMBOL:
+      return JSVAL_TYPE_SYMBOL;
+    case TYPE_FLAG_BIGINT:
+      return JSVAL_TYPE_BIGINT;
+    case TYPE_FLAG_LAZYARGS:
+      return JSVAL_TYPE_MAGIC;
+    default:
+      MOZ_CRASH("Bad TypeFlags");
+  }
+>>>>>>> upstream-releases
 }
 
 /*
@@ -280,6 +586,7 @@ static inline const char* TypeIdString(jsid id) {
 // analyzable code, while still allowing us to determine definite properties
 // robustly when code consistently adds the same properties to objects, but in
 // complex ways which can't be understood statically.
+<<<<<<< HEAD
 class TypeNewScript {
  private:
   // Scripted function which this information was computed for.
@@ -365,25 +672,262 @@ class TypeNewScript {
     return offsetof(TypeNewScript, preliminaryObjects);
   }
 };
+||||||| merged common ancestors
+class TypeNewScript
+{
+  private:
+    // Scripted function which this information was computed for.
+    HeapPtr<JSFunction*> function_ = {};
 
+    // Any preliminary objects with the type. The analyses are not performed
+    // until this array is cleared.
+    PreliminaryObjectArray* preliminaryObjects = nullptr;
+
+    // After the new script properties analyses have been performed, a template
+    // object to use for newly constructed objects. The shape of this object
+    // reflects all definite properties the object will have, and the
+    // allocation kind to use. This is null if the new objects have an unboxed
+    // layout, in which case the UnboxedLayout provides the initial structure
+    // of the object.
+    HeapPtr<PlainObject*> templateObject_ = {};
+
+    // Order in which definite properties become initialized. We need this in
+    // case the definite properties are invalidated (such as by adding a setter
+    // to an object on the prototype chain) while an object is in the middle of
+    // being initialized, so we can walk the stack and fixup any objects which
+    // look for in-progress objects which were prematurely set with an incorrect
+    // shape. Property assignments in inner frames are preceded by a series of
+    // SETPROP_FRAME entries specifying the stack down to the frame containing
+    // the write.
+    TypeNewScriptInitializer* initializerList = nullptr;
+
+    // If there are additional properties found by the acquired properties
+    // analysis which were not found by the definite properties analysis, this
+    // shape contains all such additional properties (plus the definite
+    // properties). When an object of this group acquires this shape, it is
+    // fully initialized and its group can be changed to initializedGroup.
+    HeapPtr<Shape*> initializedShape_ = {};
+
+    // Group with definite properties set for all properties found by
+    // both the definite and acquired properties analyses.
+    HeapPtr<ObjectGroup*> initializedGroup_ = {};
+
+  public:
+    TypeNewScript() = default;
+
+    ~TypeNewScript() {
+        js_delete(preliminaryObjects);
+        js_free(initializerList);
+    }
+
+    void clear() {
+        function_ = nullptr;
+        templateObject_ = nullptr;
+        initializedShape_ = nullptr;
+        initializedGroup_ = nullptr;
+    }
+
+    static void writeBarrierPre(TypeNewScript* newScript);
+
+    bool analyzed() const {
+        return preliminaryObjects == nullptr;
+    }
+
+    PlainObject* templateObject() const {
+        return templateObject_;
+    }
+
+    Shape* initializedShape() const {
+        return initializedShape_;
+    }
+
+    ObjectGroup* initializedGroup() const {
+        return initializedGroup_;
+    }
+
+    JSFunction* function() const {
+        return function_;
+    }
+
+    void trace(JSTracer* trc);
+    void sweep();
+
+    void registerNewObject(PlainObject* res);
+    bool maybeAnalyze(JSContext* cx, ObjectGroup* group, bool* regenerate, bool force = false);
+
+    bool rollbackPartiallyInitializedObjects(JSContext* cx, ObjectGroup* group);
+
+    static bool make(JSContext* cx, ObjectGroup* group, JSFunction* fun);
+    static TypeNewScript* makeNativeVersion(JSContext* cx, TypeNewScript* newScript,
+                                            PlainObject* templateObject);
+
+    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
+
+    static size_t offsetOfPreliminaryObjects() {
+        return offsetof(TypeNewScript, preliminaryObjects);
+    }
+};
+=======
+class TypeNewScript {
+ private:
+  // Variable-length list of TypeNewScriptInitializer pointers.
+  struct InitializerList {
+    size_t length;
+    TypeNewScriptInitializer entries[1];
+  };
+
+  // Scripted function which this information was computed for.
+  HeapPtr<JSFunction*> function_ = {};
+
+  // Any preliminary objects with the type. The analyses are not performed
+  // until this array is cleared.
+  PreliminaryObjectArray* preliminaryObjects = nullptr;
+
+  // After the new script properties analyses have been performed, a template
+  // object to use for newly constructed objects. The shape of this object
+  // reflects all definite properties the object will have, and the
+  // allocation kind to use.
+  HeapPtr<PlainObject*> templateObject_ = {};
+
+  // Order in which definite properties become initialized. We need this in
+  // case the definite properties are invalidated (such as by adding a setter
+  // to an object on the prototype chain) while an object is in the middle of
+  // being initialized, so we can walk the stack and fixup any objects which
+  // look for in-progress objects which were prematurely set with an incorrect
+  // shape. Property assignments in inner frames are preceded by a series of
+  // SETPROP_FRAME entries specifying the stack down to the frame containing
+  // the write.
+  InitializerList* initializerList = nullptr;
+
+  // If there are additional properties found by the acquired properties
+  // analysis which were not found by the definite properties analysis, this
+  // shape contains all such additional properties (plus the definite
+  // properties). When an object of this group acquires this shape, it is
+  // fully initialized and its group can be changed to initializedGroup.
+  HeapPtr<Shape*> initializedShape_ = {};
+
+  // Group with definite properties set for all properties found by
+  // both the definite and acquired properties analyses.
+  HeapPtr<ObjectGroup*> initializedGroup_ = {};
+
+ public:
+  TypeNewScript() = default;
+
+  ~TypeNewScript() {
+    js_delete(preliminaryObjects);
+    js_free(initializerList);
+  }
+
+  void clear() {
+    function_ = nullptr;
+    templateObject_ = nullptr;
+    initializedShape_ = nullptr;
+    initializedGroup_ = nullptr;
+  }
+
+  static void writeBarrierPre(TypeNewScript* newScript);
+
+  bool analyzed() const { return preliminaryObjects == nullptr; }
+
+  PlainObject* templateObject() const { return templateObject_; }
+
+  Shape* initializedShape() const { return initializedShape_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 inline UnboxedLayout::~UnboxedLayout() {
   if (newScript_) {
     newScript_->clear();
   }
   js_delete(newScript_);
   js_free(traceList_);
+||||||| merged common ancestors
+inline
+UnboxedLayout::~UnboxedLayout()
+{
+    if (newScript_) {
+        newScript_->clear();
+    }
+    js_delete(newScript_);
+    js_free(traceList_);
+=======
+  ObjectGroup* initializedGroup() const { return initializedGroup_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nativeGroup_.init(nullptr);
   nativeShape_.init(nullptr);
   replacementGroup_.init(nullptr);
   constructorCode_.init(nullptr);
 }
+||||||| merged common ancestors
+    nativeGroup_.init(nullptr);
+    nativeShape_.init(nullptr);
+    replacementGroup_.init(nullptr);
+    constructorCode_.init(nullptr);
+}
+=======
+  JSFunction* function() const { return function_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+inline bool ObjectGroup::hasUnanalyzedPreliminaryObjects() {
+  return (newScriptDontCheckGeneration() &&
+          !newScriptDontCheckGeneration()->analyzed()) ||
+         maybePreliminaryObjectsDontCheckGeneration();
+||||||| merged common ancestors
+inline bool
+ObjectGroup::hasUnanalyzedPreliminaryObjects()
+{
+    return (newScriptDontCheckGeneration() && !newScriptDontCheckGeneration()->analyzed()) ||
+           maybePreliminaryObjectsDontCheckGeneration();
+=======
+  void trace(JSTracer* trc);
+  void sweep();
+
+  void registerNewObject(PlainObject* res);
+  bool maybeAnalyze(JSContext* cx, ObjectGroup* group, bool* regenerate,
+                    bool force = false);
+
+  bool rollbackPartiallyInitializedObjects(JSContext* cx, ObjectGroup* group);
+
+  static bool make(JSContext* cx, ObjectGroup* group, JSFunction* fun);
+
+  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
+
+  size_t gcMallocBytes() const;
+
+  static size_t offsetOfPreliminaryObjects() {
+    return offsetof(TypeNewScript, preliminaryObjects);
+  }
+
+  static size_t sizeOfInitializerList(size_t length);
+};
 
 inline bool ObjectGroup::hasUnanalyzedPreliminaryObjects() {
   return (newScriptDontCheckGeneration() &&
           !newScriptDontCheckGeneration()->analyzed()) ||
          maybePreliminaryObjectsDontCheckGeneration();
+>>>>>>> upstream-releases
 }
+
+class MOZ_RAII AutoSuppressAllocationMetadataBuilder {
+  JS::Zone* zone;
+  bool saved;
+
+ public:
+  explicit AutoSuppressAllocationMetadataBuilder(JSContext* cx)
+      : AutoSuppressAllocationMetadataBuilder(cx->realm()->zone()) {}
+
+  explicit AutoSuppressAllocationMetadataBuilder(JS::Zone* zone)
+      : zone(zone), saved(zone->suppressAllocationMetadataBuilder) {
+    zone->suppressAllocationMetadataBuilder = true;
+  }
+
+  ~AutoSuppressAllocationMetadataBuilder() {
+    zone->suppressAllocationMetadataBuilder = saved;
+  }
+};
 
 /*
  * Structure for type inference entry point functions. All functions which can
@@ -394,46 +938,150 @@ inline bool ObjectGroup::hasUnanalyzedPreliminaryObjects() {
  * Ensures that GC cannot occur. Does additional sanity checking that inference
  * is not reentrant and that recompilations occur properly.
  */
+<<<<<<< HEAD
 struct MOZ_RAII AutoEnterAnalysis {
   // For use when initializing an UnboxedLayout.  The UniquePtr's destructor
   // must run when GC is not suppressed.
   UniquePtr<UnboxedLayout> unboxedLayoutToCleanUp;
-
+||||||| merged common ancestors
+struct MOZ_RAII AutoEnterAnalysis
+{
+    // For use when initializing an UnboxedLayout.  The UniquePtr's destructor
+    // must run when GC is not suppressed.
+    UniquePtr<UnboxedLayout> unboxedLayoutToCleanUp;
+=======
+struct MOZ_RAII AutoEnterAnalysis {
   // Prevent GC activity in the middle of analysis.
   gc::AutoSuppressGC suppressGC;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Prevent GC activity in the middle of analysis.
+  gc::AutoSuppressGC suppressGC;
+||||||| merged common ancestors
+    // Prevent GC activity in the middle of analysis.
+    gc::AutoSuppressGC suppressGC;
+=======
   // Allow clearing inference info on OOM during incremental sweeping. This is
   // constructed for the outermost AutoEnterAnalysis on the stack.
   mozilla::Maybe<AutoClearTypeInferenceStateOnOOM> oom;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Allow clearing inference info on OOM during incremental sweeping. This is
+  // constructed for the outermost AutoEnterAnalysis on the stack.
+  mozilla::Maybe<AutoClearTypeInferenceStateOnOOM> oom;
+||||||| merged common ancestors
+    // Allow clearing inference info on OOM during incremental sweeping. This is
+    // constructed for the outermost AutoEnterAnalysis on the stack.
+    mozilla::Maybe<AutoClearTypeInferenceStateOnOOM> oom;
+=======
   // Pending recompilations to perform before execution of JIT code can resume.
   RecompileInfoVector pendingRecompiles;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Pending recompilations to perform before execution of JIT code can resume.
+  RecompileInfoVector pendingRecompiles;
+||||||| merged common ancestors
+    // Pending recompilations to perform before execution of JIT code can resume.
+    RecompileInfoVector pendingRecompiles;
+=======
   // Prevent us from calling the objectMetadataCallback.
   js::AutoSuppressAllocationMetadataBuilder suppressMetadata;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Prevent us from calling the objectMetadataCallback.
+  js::AutoSuppressAllocationMetadataBuilder suppressMetadata;
+||||||| merged common ancestors
+    // Prevent us from calling the objectMetadataCallback.
+    js::AutoSuppressAllocationMetadataBuilder suppressMetadata;
+=======
   FreeOp* freeOp;
   Zone* zone;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  FreeOp* freeOp;
+  Zone* zone;
+||||||| merged common ancestors
+    FreeOp* freeOp;
+    Zone* zone;
+=======
   explicit AutoEnterAnalysis(JSContext* cx)
       : suppressGC(cx), suppressMetadata(cx) {
     init(cx->defaultFreeOp(), cx->zone());
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  explicit AutoEnterAnalysis(JSContext* cx)
+      : suppressGC(cx), suppressMetadata(cx) {
+    init(cx->defaultFreeOp(), cx->zone());
+  }
+||||||| merged common ancestors
+    explicit AutoEnterAnalysis(JSContext* cx)
+      : suppressGC(cx), suppressMetadata(cx)
+    {
+        init(cx->defaultFreeOp(), cx->zone());
+    }
+=======
   AutoEnterAnalysis(FreeOp* fop, Zone* zone)
       : suppressGC(TlsContext.get()), suppressMetadata(zone) {
     init(fop, zone);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  AutoEnterAnalysis(FreeOp* fop, Zone* zone)
+      : suppressGC(TlsContext.get()), suppressMetadata(zone) {
+    init(fop, zone);
+  }
+||||||| merged common ancestors
+    AutoEnterAnalysis(FreeOp* fop, Zone* zone)
+      : suppressGC(TlsContext.get()),
+        suppressMetadata(zone)
+    {
+        init(fop, zone);
+    }
+=======
   ~AutoEnterAnalysis() {
     if (this != zone->types.activeAnalysis) {
       return;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ~AutoEnterAnalysis() {
+    if (this != zone->types.activeAnalysis) {
+      return;
+    }
+||||||| merged common ancestors
+    ~AutoEnterAnalysis()
+    {
+        if (this != zone->types.activeAnalysis) {
+            return;
+        }
+=======
+    zone->types.activeAnalysis = nullptr;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     zone->types.activeAnalysis = nullptr;
 
     if (!pendingRecompiles.empty()) {
       zone->types.processPendingRecompiles(freeOp, pendingRecompiles);
+||||||| merged common ancestors
+        zone->types.activeAnalysis = nullptr;
+
+        if (!pendingRecompiles.empty()) {
+            zone->types.processPendingRecompiles(freeOp, pendingRecompiles);
+        }
+=======
+    if (!pendingRecompiles.empty()) {
+      zone->types.processPendingRecompiles(freeOp, pendingRecompiles);
+>>>>>>> upstream-releases
     }
   }
 
@@ -456,8 +1104,6 @@ struct MOZ_RAII AutoEnterAnalysis {
 // Interface functions
 /////////////////////////////////////////////////////////////////////
 
-void MarkIteratorUnknownSlow(JSContext* cx);
-
 void TypeMonitorCallSlow(JSContext* cx, JSObject* callee, const CallArgs& args,
                          bool constructing);
 
@@ -465,6 +1111,7 @@ void TypeMonitorCallSlow(JSContext* cx, JSObject* callee, const CallArgs& args,
  * Monitor a javascript call, either on entry to the interpreter or made
  * from within the interpreter.
  */
+<<<<<<< HEAD
 inline void TypeMonitorCall(JSContext* cx, const js::CallArgs& args,
                             bool constructing) {
   if (args.callee().is<JSFunction>()) {
@@ -483,6 +1130,44 @@ MOZ_ALWAYS_INLINE bool TrackPropertyTypes(JSObject* obj, jsid id) {
       obj->group()->unknownPropertiesDontCheckGeneration()) {
     return false;
   }
+||||||| merged common ancestors
+inline void
+TypeMonitorCall(JSContext* cx, const js::CallArgs& args, bool constructing)
+{
+    if (args.callee().is<JSFunction>()) {
+        JSFunction* fun = &args.callee().as<JSFunction>();
+        if (fun->isInterpreted()) {
+            AutoSweepTypeScript sweep(fun->nonLazyScript());
+            if (fun->nonLazyScript()->types(sweep)) {
+                TypeMonitorCallSlow(cx, &args.callee(), args, constructing);
+            }
+        }
+    }
+}
+
+MOZ_ALWAYS_INLINE bool
+TrackPropertyTypes(JSObject* obj, jsid id)
+{
+    if (obj->hasLazyGroup() || obj->group()->unknownPropertiesDontCheckGeneration()) {
+        return false;
+    }
+=======
+inline void TypeMonitorCall(JSContext* cx, const js::CallArgs& args,
+                            bool constructing) {
+  if (args.callee().is<JSFunction>()) {
+    JSFunction* fun = &args.callee().as<JSFunction>();
+    if (fun->isInterpreted() && fun->nonLazyScript()->jitScript()) {
+      TypeMonitorCallSlow(cx, &args.callee(), args, constructing);
+    }
+  }
+}
+
+MOZ_ALWAYS_INLINE bool TrackPropertyTypes(JSObject* obj, jsid id) {
+  if (obj->hasLazyGroup() ||
+      obj->group()->unknownPropertiesDontCheckGeneration()) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   if (obj->isSingleton() &&
       !obj->group()->maybeGetPropertyDontCheckGeneration(id)) {
@@ -615,6 +1300,7 @@ inline void MarkObjectStateChange(JSContext* cx, JSObject* obj) {
   }
 }
 
+<<<<<<< HEAD
 /* Interface helpers for JSScript*. */
 extern void TypeMonitorResult(JSContext* cx, JSScript* script, jsbytecode* pc,
                               TypeSet::Type type);
@@ -633,8 +1319,37 @@ extern void TypeMonitorResult(JSContext* cx, JSScript* script, jsbytecode* pc,
     num += fun->nargs();
   }
   return num;
+||||||| merged common ancestors
+/* Interface helpers for JSScript*. */
+extern void TypeMonitorResult(JSContext* cx, JSScript* script, jsbytecode* pc, TypeSet::Type type);
+extern void TypeMonitorResult(JSContext* cx, JSScript* script, jsbytecode* pc, StackTypeSet* types,
+                              TypeSet::Type type);
+extern void TypeMonitorResult(JSContext* cx, JSScript* script, jsbytecode* pc, const Value& rval);
+
+/////////////////////////////////////////////////////////////////////
+// Script interface functions
+/////////////////////////////////////////////////////////////////////
+
+/* static */ inline unsigned
+TypeScript::NumTypeSets(JSScript* script)
+{
+    size_t num = script->nTypeSets() + 1 /* this */;
+    if (JSFunction* fun = script->functionNonDelazifying()) {
+        num += fun->nargs();
+    }
+    return num;
+=======
+/* static */ inline void jit::JitScript::MonitorBytecodeType(
+    JSContext* cx, JSScript* script, jsbytecode* pc, StackTypeSet* types,
+    const js::Value& rval) {
+  TypeSet::Type type = TypeSet::GetValueType(rval);
+  if (!types->hasType(type)) {
+    MonitorBytecodeTypeSlow(cx, script, pc, types, type);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ inline StackTypeSet* TypeScript::ThisTypes(JSScript* script) {
   AutoSweepTypeScript sweep(script);
   TypeScript* types = script->types(sweep);
@@ -669,7 +1384,63 @@ template <typename TYPESET>
     (*hint)++;
     return typeArray + *hint;
   }
+||||||| merged common ancestors
+/* static */ inline StackTypeSet*
+TypeScript::ThisTypes(JSScript* script)
+{
+    AutoSweepTypeScript sweep(script);
+    TypeScript* types = script->types(sweep);
+    return types ? types->typeArray() + script->nTypeSets() : nullptr;
+}
 
+/*
+ * Note: for non-escaping arguments, argTypes reflect only the initial type of
+ * the variable (e.g. passed values for argTypes, or undefined for localTypes)
+ * and not types from subsequent assignments.
+ */
+
+/* static */ inline StackTypeSet*
+TypeScript::ArgTypes(JSScript* script, unsigned i)
+{
+    MOZ_ASSERT(i < script->functionNonDelazifying()->nargs());
+    AutoSweepTypeScript sweep(script);
+    TypeScript* types = script->types(sweep);
+    return types ? types->typeArray() + script->nTypeSets() + 1 + i : nullptr;
+}
+
+template <typename TYPESET>
+/* static */ inline TYPESET*
+TypeScript::BytecodeTypes(JSScript* script, jsbytecode* pc, uint32_t* bytecodeMap,
+                          uint32_t* hint, TYPESET* typeArray)
+{
+    MOZ_ASSERT(CodeSpec[*pc].format & JOF_TYPESET);
+    uint32_t offset = script->pcToOffset(pc);
+
+    // See if this pc is the next typeset opcode after the last one looked up.
+    if ((*hint + 1) < script->nTypeSets() && bytecodeMap[*hint + 1] == offset) {
+        (*hint)++;
+        return typeArray + *hint;
+    }
+=======
+/* static */ inline void jit::JitScript::MonitorAssign(JSContext* cx,
+                                                       HandleObject obj,
+                                                       jsid id) {
+  if (!obj->isSingleton()) {
+    /*
+     * Mark as unknown any object which has had dynamic assignments to
+     * non-integer properties at SETELEM opcodes. This avoids making large
+     * numbers of type properties for hashmap-style objects. We don't need
+     * to do this for objects with singleton type, because type properties
+     * are only constructed for them when analyzed scripts depend on those
+     * specific properties.
+     */
+    uint32_t i;
+    if (IdIsIndex(id, &i)) {
+      return;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // See if this pc is the same as the last one looked up.
   if (bytecodeMap[*hint] == offset) {
     return typeArray + *hint;
@@ -688,8 +1459,38 @@ template <typename TYPESET>
   MOZ_ASSERT_IF(found, bytecodeMap[loc] == offset);
   *hint = mozilla::AssertedCast<uint32_t>(loc);
   return typeArray + *hint;
+||||||| merged common ancestors
+    // See if this pc is the same as the last one looked up.
+    if (bytecodeMap[*hint] == offset) {
+        return typeArray + *hint;
+    }
+
+    // Fall back to a binary search.  We'll either find the exact offset, or
+    // there are more JOF_TYPESET opcodes than nTypeSets in the script (as can
+    // happen if the script is very long) and we'll use the last location.
+    size_t loc;
+#ifdef DEBUG
+    bool found =
+#endif
+        mozilla::BinarySearch(bytecodeMap, 0, script->nTypeSets() - 1, offset, &loc);
+
+    MOZ_ASSERT_IF(found, bytecodeMap[loc] == offset);
+    *hint = mozilla::AssertedCast<uint32_t>(loc);
+    return typeArray + *hint;
+=======
+    // But if we don't have too many properties yet, don't do anything.  The
+    // idea here is that normal object initialization should not trigger
+    // deoptimization in most cases, while actual usage as a hashmap should.
+    ObjectGroup* group = obj->group();
+    if (group->basePropertyCountDontCheckGeneration() < 128) {
+      return;
+    }
+    MarkObjectGroupUnknownProperties(cx, group);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ inline StackTypeSet* TypeScript::BytecodeTypes(JSScript* script,
                                                             jsbytecode* pc) {
   MOZ_ASSERT(CurrentThreadCanAccessZone(script->zone()));
@@ -703,26 +1504,84 @@ template <typename TYPESET>
   return BytecodeTypes(script, pc, script->baselineScript()->bytecodeTypeMap(),
                        hint, types->typeArray());
 }
+||||||| merged common ancestors
+/* static */ inline StackTypeSet*
+TypeScript::BytecodeTypes(JSScript* script, jsbytecode* pc)
+{
+    MOZ_ASSERT(CurrentThreadCanAccessZone(script->zone()));
+    AutoSweepTypeScript sweep(script);
+    TypeScript* types = script->types(sweep);
+    if (!types) {
+        return nullptr;
+    }
+    uint32_t* hint = script->baselineScript()->bytecodeTypeMap() + script->nTypeSets();
+    return BytecodeTypes(script, pc, script->baselineScript()->bytecodeTypeMap(),
+                         hint, types->typeArray());
+}
+=======
+/* static */ inline void jit::JitScript::MonitorThisType(JSContext* cx,
+                                                         JSScript* script,
+                                                         TypeSet::Type type) {
+  cx->check(script, type);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::Monitor(JSContext* cx, JSScript* script,
                                              jsbytecode* pc,
                                              const js::Value& rval) {
   TypeMonitorResult(cx, script, pc, rval);
 }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::Monitor(JSContext* cx, JSScript* script, jsbytecode* pc, const js::Value& rval)
+{
+    TypeMonitorResult(cx, script, pc, rval);
+}
+=======
+  JitScript* jitScript = script->jitScript();
+  if (!jitScript) {
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::Monitor(JSContext* cx, JSScript* script,
                                              jsbytecode* pc,
                                              TypeSet::Type type) {
   TypeMonitorResult(cx, script, pc, type);
 }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::Monitor(JSContext* cx, JSScript* script, jsbytecode* pc, TypeSet::Type type)
+{
+    TypeMonitorResult(cx, script, pc, type);
+}
+=======
+  AutoSweepJitScript sweep(script);
+  StackTypeSet* types = jitScript->thisTypes(sweep, script);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::Monitor(JSContext* cx,
                                              const js::Value& rval) {
   jsbytecode* pc;
   RootedScript script(cx, cx->currentScript(&pc));
   Monitor(cx, script, pc, rval);
 }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::Monitor(JSContext* cx, const js::Value& rval)
+{
+    jsbytecode* pc;
+    RootedScript script(cx, cx->currentScript(&pc));
+    Monitor(cx, script, pc, rval);
+}
+=======
+  if (!types->hasType(type)) {
+    AutoEnterAnalysis enter(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::Monitor(JSContext* cx, JSScript* script,
                                              jsbytecode* pc,
                                              StackTypeSet* types,
@@ -731,8 +1590,24 @@ template <typename TYPESET>
   if (!types->hasType(type)) {
     TypeMonitorResult(cx, script, pc, types, type);
   }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::Monitor(JSContext* cx, JSScript* script, jsbytecode* pc, StackTypeSet* types,
+                    const js::Value& rval)
+{
+    TypeSet::Type type = TypeSet::GetValueType(rval);
+    if (!types->hasType(type)) {
+        TypeMonitorResult(cx, script, pc, types, type);
+    }
+=======
+    InferSpew(ISpewOps, "externalType: setThis %p: %s", script,
+              TypeSet::TypeString(type).get());
+    types->addType(sweep, cx, type);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::MonitorAssign(JSContext* cx,
                                                    HandleObject obj, jsid id) {
   if (!obj->isSingleton()) {
@@ -758,8 +1633,41 @@ template <typename TYPESET>
     }
     MarkObjectGroupUnknownProperties(cx, group);
   }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::MonitorAssign(JSContext* cx, HandleObject obj, jsid id)
+{
+    if (!obj->isSingleton()) {
+        /*
+         * Mark as unknown any object which has had dynamic assignments to
+         * non-integer properties at SETELEM opcodes. This avoids making large
+         * numbers of type properties for hashmap-style objects. We don't need
+         * to do this for objects with singleton type, because type properties
+         * are only constructed for them when analyzed scripts depend on those
+         * specific properties.
+         */
+        uint32_t i;
+        if (IdIsIndex(id, &i)) {
+            return;
+        }
+
+        // But if we don't have too many properties yet, don't do anything.  The
+        // idea here is that normal object initialization should not trigger
+        // deoptimization in most cases, while actual usage as a hashmap should.
+        ObjectGroup* group = obj->group();
+        if (group->basePropertyCountDontCheckGeneration() < 128) {
+            return;
+        }
+        MarkObjectGroupUnknownProperties(cx, group);
+    }
+=======
+/* static */ inline void jit::JitScript::MonitorThisType(
+    JSContext* cx, JSScript* script, const js::Value& value) {
+  MonitorThisType(cx, script, TypeSet::GetValueType(value));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::SetThis(JSContext* cx, JSScript* script,
                                              TypeSet::Type type) {
   cx->check(script, type);
@@ -772,18 +1680,64 @@ template <typename TYPESET>
 
   if (!types->hasType(type)) {
     AutoEnterAnalysis enter(cx);
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::SetThis(JSContext* cx, JSScript* script, TypeSet::Type type)
+{
+    cx->check(script, type);
 
+    AutoSweepTypeScript sweep(script);
+    StackTypeSet* types = ThisTypes(script);
+    if (!types) {
+        return;
+    }
+
+    if (!types->hasType(type)) {
+        AutoEnterAnalysis enter(cx);
+=======
+/* static */ inline void jit::JitScript::MonitorArgType(JSContext* cx,
+                                                        JSScript* script,
+                                                        unsigned arg,
+                                                        TypeSet::Type type) {
+  cx->check(script->compartment(), type);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     InferSpew(ISpewOps, "externalType: setThis %p: %s", script,
               TypeSet::TypeString(type).get());
     types->addType(sweep, cx, type);
   }
 }
+||||||| merged common ancestors
+        InferSpew(ISpewOps, "externalType: setThis %p: %s",
+                  script, TypeSet::TypeString(type).get());
+        types->addType(sweep, cx, type);
+    }
+}
+=======
+  JitScript* jitScript = script->jitScript();
+  if (!jitScript) {
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::SetThis(JSContext* cx, JSScript* script,
                                              const js::Value& value) {
   SetThis(cx, script, TypeSet::GetValueType(value));
 }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::SetThis(JSContext* cx, JSScript* script, const js::Value& value)
+{
+    SetThis(cx, script, TypeSet::GetValueType(value));
+}
+=======
+  AutoSweepJitScript sweep(script);
+  StackTypeSet* types = jitScript->argTypes(sweep, script, arg);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ inline void TypeScript::SetArgument(JSContext* cx,
                                                  JSScript* script, unsigned arg,
                                                  TypeSet::Type type) {
@@ -809,15 +1763,71 @@ template <typename TYPESET>
                                                  const js::Value& value) {
   SetArgument(cx, script, arg, TypeSet::GetValueType(value));
 }
+||||||| merged common ancestors
+/* static */ inline void
+TypeScript::SetArgument(JSContext* cx, JSScript* script, unsigned arg, TypeSet::Type type)
+{
+    cx->check(script, type);
 
+    AutoSweepTypeScript sweep(script);
+    StackTypeSet* types = ArgTypes(script, arg);
+    if (!types) {
+        return;
+    }
+
+    if (!types->hasType(type)) {
+        AutoEnterAnalysis enter(cx);
+
+        InferSpew(ISpewOps, "externalType: setArg %p %u: %s",
+                  script, arg, TypeSet::TypeString(type).get());
+        types->addType(sweep, cx, type);
+    }
+}
+
+/* static */ inline void
+TypeScript::SetArgument(JSContext* cx, JSScript* script, unsigned arg, const js::Value& value)
+{
+    SetArgument(cx, script, arg, TypeSet::GetValueType(value));
+}
+=======
+  if (!types->hasType(type)) {
+    AutoEnterAnalysis enter(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 inline AutoKeepTypeScripts::AutoKeepTypeScripts(JSContext* cx)
     : zone_(cx->zone()->types), prev_(zone_.keepTypeScripts) {
   zone_.keepTypeScripts = true;
+||||||| merged common ancestors
+inline
+AutoKeepTypeScripts::AutoKeepTypeScripts(JSContext* cx)
+  : zone_(cx->zone()->types),
+    prev_(zone_.keepTypeScripts)
+{
+    zone_.keepTypeScripts = true;
+=======
+    InferSpew(ISpewOps, "externalType: setArg %p %u: %s", script, arg,
+              TypeSet::TypeString(type).get());
+    types->addType(sweep, cx, type);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline AutoKeepTypeScripts::~AutoKeepTypeScripts() {
   MOZ_ASSERT(zone_.keepTypeScripts);
   zone_.keepTypeScripts = prev_;
+||||||| merged common ancestors
+inline
+AutoKeepTypeScripts::~AutoKeepTypeScripts()
+{
+    MOZ_ASSERT(zone_.keepTypeScripts);
+    zone_.keepTypeScripts = prev_;
+=======
+/* static */ inline void jit::JitScript::MonitorArgType(
+    JSContext* cx, JSScript* script, unsigned arg, const js::Value& value) {
+  MonitorArgType(cx, script, arg, TypeSet::GetValueType(value));
+>>>>>>> upstream-releases
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -1008,6 +2018,7 @@ struct TypeHashSet {
       pos = (pos + 1) & (capacity - 1);
     }
 
+<<<<<<< HEAD
     return nullptr;
   }
 
@@ -1085,6 +2096,147 @@ struct TypeHashSet {
         unsigned pos = HashKey<T, Key>(Key::getKey(elem)) & mask;
         while (values[pos] != nullptr && !lowBit(values[pos])) {
           pos = (pos + 1) & mask;
+||||||| merged common ancestors
+        // Simple functions to read and mutate the lowest bit of pointers.
+        auto lowBit = [](U* elem) -> bool {
+            return bool(reinterpret_cast<uintptr_t>(elem) & 1);
+        };
+        auto toggleLowBit = [](U* elem) -> U* {
+            return reinterpret_cast<U*>(reinterpret_cast<uintptr_t>(elem) ^ 1);
+        };
+
+        // This code applies the function f and relocates the values based on
+        // the new pointers.
+        //
+        // To avoid allocations, we reuse the same structure but distinguish the
+        // elements to be rellocated from the rellocated elements with the
+        // lowest bit.
+        unsigned capacity = Capacity(count);
+        MOZ_RELEASE_ASSERT(uintptr_t(values[-1]) == capacity);
+        unsigned found = 0;
+        for (unsigned i = 0; i < capacity; i++) {
+            if (!values[i]) {
+                continue;
+            }
+            MOZ_ASSERT(found <= count);
+            U* elem = f(values[i]);
+            values[i] = nullptr;
+            MOZ_ASSERT(!lowBit(elem));
+            values[found++] = toggleLowBit(elem);
+        }
+        MOZ_ASSERT(found == count);
+
+        // Follow the same rule as InsertTry, except that for each cell we
+        // identify empty cell content with:
+        //
+        //   nullptr    empty cell.
+        //   0b....0    inserted element.
+        //   0b....1    empty cell - element to be inserted.
+        unsigned mask = capacity - 1;
+        for (unsigned i = 0; i < count; i++) {
+            U* elem = values[i];
+            if (!lowBit(elem)) {
+                // If this is a newly inserted element, this implies that one of
+                // the previous objects was moved to this position.
+                continue;
+            }
+            values[i] = nullptr;
+            while (elem) {
+                MOZ_ASSERT(lowBit(elem));
+                elem = toggleLowBit(elem);
+                unsigned pos = HashKey<T,Key>(Key::getKey(elem)) & mask;
+                while (values[pos] != nullptr && !lowBit(values[pos])) {
+                    pos = (pos + 1) & mask;
+                }
+                // The replaced element is either a nullptr, which stops this
+                // loop, or an element to be inserted, which would be inserted
+                // by this loop.
+                std::swap(values[pos], elem);
+            }
+=======
+    return nullptr;
+  }
+
+  template <class T, class U, class Key, typename Fun>
+  static void MapEntries(U**& values, unsigned count, Fun f) {
+    // No element.
+    if (count == 0) {
+      MOZ_RELEASE_ASSERT(!values);
+      return;
+    }
+
+    // Simple functions to read and mutate the mark bit of pointers.
+    auto markBit = [](U* elem) -> bool {
+      return bool(reinterpret_cast<uintptr_t>(elem) & U::TypeHashSetMarkBit);
+    };
+    auto toggleMarkBit = [](U* elem) -> U* {
+      return reinterpret_cast<U*>(reinterpret_cast<uintptr_t>(elem) ^
+                                  U::TypeHashSetMarkBit);
+    };
+
+    // When we have a single element it is stored in-place of the function
+    // array pointer.
+    if (count == 1) {
+      U* elem = f(reinterpret_cast<U*>(values));
+      MOZ_ASSERT(!markBit(elem));
+      values = reinterpret_cast<U**>(elem);
+      return;
+    }
+
+    // When we have SET_ARRAY_SIZE or fewer elements, the values is an
+    // unorderred array.
+    if (count <= SET_ARRAY_SIZE) {
+      for (unsigned i = 0; i < count; i++) {
+        U* elem = f(values[i]);
+        MOZ_ASSERT(!markBit(elem));
+        values[i] = elem;
+      }
+      return;
+    }
+
+    // This code applies the function f and relocates the values based on
+    // the new pointers.
+    //
+    // To avoid allocations, we reuse the same structure but distinguish the
+    // elements to be rellocated from the rellocated elements with the
+    // mark bit.
+    unsigned capacity = Capacity(count);
+    MOZ_RELEASE_ASSERT(uintptr_t(values[-1]) == capacity);
+    unsigned found = 0;
+    for (unsigned i = 0; i < capacity; i++) {
+      if (!values[i]) {
+        continue;
+      }
+      MOZ_ASSERT(found <= count);
+      U* elem = f(values[i]);
+      values[i] = nullptr;
+      MOZ_ASSERT(!markBit(elem));
+      values[found++] = toggleMarkBit(elem);
+    }
+    MOZ_ASSERT(found == count);
+
+    // Follow the same rule as InsertTry, except that for each cell we identify
+    // empty cell content with either a nullptr or the value of the mark bit:
+    //
+    //   nullptr    empty cell.
+    //   0b...0.    inserted element.
+    //   0b...1.    empty cell - element to be inserted.
+    unsigned mask = capacity - 1;
+    for (unsigned i = 0; i < count; i++) {
+      U* elem = values[i];
+      if (!markBit(elem)) {
+        // If this is a newly inserted element, this implies that one of
+        // the previous objects was moved to this position.
+        continue;
+      }
+      values[i] = nullptr;
+      while (elem) {
+        MOZ_ASSERT(markBit(elem));
+        elem = toggleMarkBit(elem);
+        unsigned pos = HashKey<T, Key>(Key::getKey(elem)) & mask;
+        while (values[pos] != nullptr && !markBit(values[pos])) {
+          pos = (pos + 1) & mask;
+>>>>>>> upstream-releases
         }
         // The replaced element is either a nullptr, which stops this
         // loop, or an element to be inserted, which would be inserted
@@ -1178,6 +2330,7 @@ inline void TypeSet::setBaseObjectCount(uint32_t count) {
           (count << TYPE_FLAG_OBJECT_COUNT_SHIFT);
 }
 
+<<<<<<< HEAD
 inline void HeapTypeSet::newPropertyState(const AutoSweepObjectGroup& sweep,
                                           JSContext* cx) {
   checkMagic();
@@ -1188,6 +2341,33 @@ inline void HeapTypeSet::newPropertyState(const AutoSweepObjectGroup& sweep,
     while (constraint) {
       constraint->newPropertyState(cx, this);
       constraint = constraint->next();
+||||||| merged common ancestors
+inline void
+HeapTypeSet::newPropertyState(const AutoSweepObjectGroup& sweep, JSContext* cx)
+{
+    checkMagic();
+
+    /* Propagate the change to all constraints. */
+    if (!cx->helperThread()) {
+        TypeConstraint* constraint = constraintList(sweep);
+        while (constraint) {
+            constraint->newPropertyState(cx, this);
+            constraint = constraint->next();
+        }
+    } else {
+        MOZ_ASSERT(!constraintList(sweep));
+=======
+inline void HeapTypeSet::newPropertyState(const AutoSweepObjectGroup& sweep,
+                                          JSContext* cx) {
+  checkMagic();
+
+  /* Propagate the change to all constraints. */
+  if (!cx->isHelperThreadContext()) {
+    TypeConstraint* constraint = constraintList(sweep);
+    while (constraint) {
+      constraint->newPropertyState(cx, this);
+      constraint = constraint->next();
+>>>>>>> upstream-releases
     }
   } else {
     MOZ_ASSERT(!constraintList(sweep));
@@ -1421,23 +2601,63 @@ inline AutoSweepObjectGroup::~AutoSweepObjectGroup() {
 }
 #endif
 
+<<<<<<< HEAD
 inline AutoSweepTypeScript::AutoSweepTypeScript(JSScript* script)
+||||||| merged common ancestors
+inline
+AutoSweepTypeScript::AutoSweepTypeScript(JSScript* script)
+=======
+inline AutoSweepJitScript::AutoSweepJitScript(JSScript* script)
+>>>>>>> upstream-releases
 #ifdef DEBUG
+<<<<<<< HEAD
     : script_(script)
+||||||| merged common ancestors
+  : script_(script)
+=======
+    : zone_(script->zone()),
+      jitScript_(script->jitScript())
+>>>>>>> upstream-releases
 #endif
 {
+<<<<<<< HEAD
   if (script->typesNeedsSweep()) {
     script->sweepTypes(*this);
   }
+||||||| merged common ancestors
+    if (script->typesNeedsSweep()) {
+        script->sweepTypes(*this);
+    }
+=======
+  if (jit::JitScript* jitScript = script->jitScript()) {
+    Zone* zone = script->zone();
+    if (jitScript->typesNeedsSweep(zone)) {
+      jitScript->sweepTypes(*this, zone);
+    }
+  }
+>>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
+<<<<<<< HEAD
 inline AutoSweepTypeScript::~AutoSweepTypeScript() {
   // This should still hold.
   MOZ_ASSERT(!script_->typesNeedsSweep());
+||||||| merged common ancestors
+inline
+AutoSweepTypeScript::~AutoSweepTypeScript()
+{
+    // This should still hold.
+    MOZ_ASSERT(!script_->typesNeedsSweep());
+=======
+inline AutoSweepJitScript::~AutoSweepJitScript() {
+  // This should still hold.
+  MOZ_ASSERT_IF(jitScript_, !jitScript_->typesNeedsSweep(zone_));
+>>>>>>> upstream-releases
 }
 #endif
 
+<<<<<<< HEAD
 }  // namespace js
 
 inline js::TypeScript* JSScript::types(const js::AutoSweepTypeScript& sweep) {
@@ -1454,5 +2674,31 @@ inline bool JSScript::ensureHasTypes(JSContext* cx, js::AutoKeepTypeScripts&) {
   js::AutoSweepTypeScript sweep(this);
   return types(sweep) || makeTypes(cx);
 }
+||||||| merged common ancestors
+} // namespace js
+
+inline js::TypeScript*
+JSScript::types(const js::AutoSweepTypeScript& sweep)
+{
+    MOZ_ASSERT(sweep.script() == this);
+    return types_;
+}
+
+inline bool
+JSScript::typesNeedsSweep() const
+{
+    MOZ_ASSERT(!js::TlsContext.get()->inUnsafeCallWithABI);
+    return types_ && typesGeneration() != zone()->types.generation;
+}
+
+inline bool
+JSScript::ensureHasTypes(JSContext* cx, js::AutoKeepTypeScripts&)
+{
+    js::AutoSweepTypeScript sweep(this);
+    return types(sweep) || makeTypes(cx);
+}
+=======
+}  // namespace js
+>>>>>>> upstream-releases
 
 #endif /* vm_TypeInference_inl_h */

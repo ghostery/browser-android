@@ -29,10 +29,24 @@ namespace wasm {
 bool BaselineCanCompile();
 
 // Generate adequate code quickly.
+<<<<<<< HEAD
 MOZ_MUST_USE bool BaselineCompileFunctions(
     const ModuleEnvironment& env, LifoAlloc& lifo,
     const FuncCompileInputVector& inputs, CompiledCode* code,
     ExclusiveDeferredValidationState& dvs, UniqueChars* error);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+BaselineCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
+                         const FuncCompileInputVector& inputs, CompiledCode* code,
+                         ExclusiveDeferredValidationState& dvs,
+                         UniqueChars* error);
+=======
+MOZ_MUST_USE bool BaselineCompileFunctions(const ModuleEnvironment& env,
+                                           LifoAlloc& lifo,
+                                           const FuncCompileInputVector& inputs,
+                                           CompiledCode* code,
+                                           UniqueChars* error);
+>>>>>>> upstream-releases
 
 class BaseLocalIter {
  private:
@@ -81,7 +95,21 @@ class BaseLocalIter {
 #endif
 };
 
+<<<<<<< HEAD
 }  // namespace wasm
 }  // namespace js
+||||||| merged common ancestors
+} // namespace wasm
+} // namespace js
+=======
+#ifdef DEBUG
+// Check whether |nextPC| is a valid code address for a stackmap created by
+// this compiler.
+bool IsValidStackMapKey(bool debugEnabled, const uint8_t* nextPC);
+#endif
+
+}  // namespace wasm
+}  // namespace js
+>>>>>>> upstream-releases
 
 #endif  // asmjs_wasm_baseline_compile_h

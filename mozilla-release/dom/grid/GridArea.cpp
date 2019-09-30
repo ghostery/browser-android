@@ -19,8 +19,20 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(GridArea)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 GridArea::GridArea(Grid* aParent, const nsString& aName, GridDeclaration aType,
                    uint32_t aRowStart, uint32_t aRowEnd, uint32_t aColumnStart,
+||||||| merged common ancestors
+GridArea::GridArea(Grid* aParent,
+                   const nsString& aName,
+                   GridDeclaration aType,
+                   uint32_t aRowStart,
+                   uint32_t aRowEnd,
+                   uint32_t aColumnStart,
+=======
+GridArea::GridArea(Grid* aParent, nsAtom* aName, GridDeclaration aType,
+                   uint32_t aRowStart, uint32_t aRowEnd, uint32_t aColumnStart,
+>>>>>>> upstream-releases
                    uint32_t aColumnEnd)
     : mParent(aParent),
       mName(aName),
@@ -37,7 +49,17 @@ JSObject* GridArea::WrapObject(JSContext* aCx,
   return GridArea_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 void GridArea::GetName(nsString& aName) const { aName = mName; }
+||||||| merged common ancestors
+void
+GridArea::GetName(nsString& aName) const
+{
+  aName = mName;
+}
+=======
+void GridArea::GetName(nsString& aName) const { mName->ToString(aName); }
+>>>>>>> upstream-releases
 
 GridDeclaration GridArea::Type() const { return mType; }
 

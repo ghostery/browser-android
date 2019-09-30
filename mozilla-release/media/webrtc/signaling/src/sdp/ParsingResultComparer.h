@@ -15,16 +15,51 @@ class Sdp;
 class SdpMediaSection;
 class SdpAttributeList;
 
+<<<<<<< HEAD
 class ParsingResultComparer {
  public:
+||||||| merged common ancestors
+class ParsingResultComparer
+{
+public:
+
+=======
+enum class SdpComparisonResult {
+  Inequal = false,
+  Equal = true,
+};
+
+class ParsingResultComparer {
+ public:
+>>>>>>> upstream-releases
   ParsingResultComparer() = default;
 
   bool Compare(const Sdp& rsdparsaSdp, const Sdp& sipccSdp,
+<<<<<<< HEAD
                const std::string& originalSdp);
   bool CompareMediaSections(const SdpMediaSection& rustMediaSection,
                             const SdpMediaSection& sipccMediaSection) const;
   bool CompareAttrLists(const SdpAttributeList& rustAttrlist,
                         const SdpAttributeList& sipccAttrlist, int level) const;
+||||||| merged common ancestors
+               const std::string& originalSdp);
+  bool CompareMediaSections(const SdpMediaSection& rustMediaSection,
+                            const SdpMediaSection& sipccMediaSection) const;
+  bool CompareAttrLists(const SdpAttributeList& rustAttrlist,
+                        const SdpAttributeList& sipccAttrlist,
+                        int level) const;
+=======
+               const std::string& originalSdp,
+               const SdpComparisonResult expect = SdpComparisonResult::Equal);
+  bool CompareMediaSections(
+      const SdpMediaSection& rustMediaSection,
+      const SdpMediaSection& sipccMediaSection,
+      const SdpComparisonResult expect = SdpComparisonResult::Equal) const;
+  bool CompareAttrLists(
+      const SdpAttributeList& rustAttrlist,
+      const SdpAttributeList& sipccAttrlist, int level,
+      const SdpComparisonResult expect = SdpComparisonResult::Equal) const;
+>>>>>>> upstream-releases
   void TrackRustParsingFailed(size_t sipccErrorCount) const;
 
  private:

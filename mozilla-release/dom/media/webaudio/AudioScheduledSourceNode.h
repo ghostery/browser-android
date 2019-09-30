@@ -15,11 +15,23 @@ namespace dom {
 
 class AudioContext;
 
+<<<<<<< HEAD
 class AudioScheduledSourceNode : public AudioNode {
  public:
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
 
+||||||| merged common ancestors
+class AudioScheduledSourceNode : public AudioNode
+{
+public:
+  JSObject* WrapObject(JSContext* aCx,
+                       JS::Handle<JSObject*> aGivenProto) override;
+
+=======
+class AudioScheduledSourceNode : public AudioNode {
+ public:
+>>>>>>> upstream-releases
   virtual void Start(double aWhen, ErrorResult& aRv) = 0;
   virtual void Stop(double aWhen, ErrorResult& aRv) = 0;
 

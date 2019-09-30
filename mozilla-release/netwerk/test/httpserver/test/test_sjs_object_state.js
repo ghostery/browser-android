@@ -8,7 +8,6 @@
  * Tests that the object-state-preservation mechanism works correctly.
  */
 
-
 XPCOMUtils.defineLazyGetter(this, "PATH", function() {
   return "http://localhost:" + srv.identity.primaryPort + "/object-state.sjs";
 });
@@ -57,35 +56,63 @@ function run_test() {
  */
 
 var initialStarted = false;
+<<<<<<< HEAD
 function initialStart(ch, cx) {
+||||||| merged common ancestors
+function initialStart(ch, cx)
+{
+=======
+function initialStart(ch) {
+>>>>>>> upstream-releases
   dumpn("*** initialStart");
 
-  if (initialStarted)
+  if (initialStarted) {
     do_throw("initialStart: initialStarted is true?!?!");
+  }
 
   initialStarted = true;
 
-  new HTTPTestLoader(PATH + "?state=intermediate",
-                     intermediateStart, intermediateStop);
+  new HTTPTestLoader(
+    PATH + "?state=intermediate",
+    intermediateStart,
+    intermediateStop
+  );
 }
 
 var initialStopped = false;
+<<<<<<< HEAD
 function initialStop(ch, cx, status, data) {
+||||||| merged common ancestors
+function initialStop(ch, cx, status, data)
+{
+=======
+function initialStop(ch, status, data) {
+>>>>>>> upstream-releases
   dumpn("*** initialStop");
 
-  Assert.equal(data.map(function(v) { return String.fromCharCode(v); }).join(""),
-               "done");
+  Assert.equal(
+    data
+      .map(function(v) {
+        return String.fromCharCode(v);
+      })
+      .join(""),
+    "done"
+  );
 
   Assert.equal(srv.getObjectState("object-state-test"), null);
 
-  if (!initialStarted)
+  if (!initialStarted) {
     do_throw("initialStop: initialStarted is false?!?!");
-  if (initialStopped)
+  }
+  if (initialStopped) {
     do_throw("initialStop: initialStopped is true?!?!");
-  if (!intermediateStarted)
+  }
+  if (!intermediateStarted) {
     do_throw("initialStop: intermediateStarted is false?!?!");
-  if (!intermediateStopped)
+  }
+  if (!intermediateStopped) {
     do_throw("initialStop: intermediateStopped is false?!?!");
+  }
 
   initialStopped = true;
 
@@ -93,74 +120,127 @@ function initialStop(ch, cx, status, data) {
 }
 
 var intermediateStarted = false;
+<<<<<<< HEAD
 function intermediateStart(ch, cx) {
+||||||| merged common ancestors
+function intermediateStart(ch, cx)
+{
+=======
+function intermediateStart(ch) {
+>>>>>>> upstream-releases
   dumpn("*** intermediateStart");
 
   Assert.notEqual(srv.getObjectState("object-state-test"), null);
 
-  if (!initialStarted)
+  if (!initialStarted) {
     do_throw("intermediateStart: initialStarted is false?!?!");
-  if (intermediateStarted)
+  }
+  if (intermediateStarted) {
     do_throw("intermediateStart: intermediateStarted is true?!?!");
+  }
 
   intermediateStarted = true;
 }
 
 var intermediateStopped = false;
+<<<<<<< HEAD
 function intermediateStop(ch, cx, status, data) {
+||||||| merged common ancestors
+function intermediateStop(ch, cx, status, data)
+{
+=======
+function intermediateStop(ch, status, data) {
+>>>>>>> upstream-releases
   dumpn("*** intermediateStop");
 
-  Assert.equal(data.map(function(v) { return String.fromCharCode(v); }).join(""),
-               "intermediate");
+  Assert.equal(
+    data
+      .map(function(v) {
+        return String.fromCharCode(v);
+      })
+      .join(""),
+    "intermediate"
+  );
 
   Assert.notEqual(srv.getObjectState("object-state-test"), null);
 
-  if (!initialStarted)
+  if (!initialStarted) {
     do_throw("intermediateStop: initialStarted is false?!?!");
-  if (!intermediateStarted)
+  }
+  if (!intermediateStarted) {
     do_throw("intermediateStop: intermediateStarted is false?!?!");
-  if (intermediateStopped)
+  }
+  if (intermediateStopped) {
     do_throw("intermediateStop: intermediateStopped is true?!?!");
+  }
 
   intermediateStopped = true;
 
-  new HTTPTestLoader(PATH + "?state=trigger", triggerStart,
-                     triggerStop);
+  new HTTPTestLoader(PATH + "?state=trigger", triggerStart, triggerStop);
 }
 
 var triggerStarted = false;
+<<<<<<< HEAD
 function triggerStart(ch, cx) {
+||||||| merged common ancestors
+function triggerStart(ch, cx)
+{
+=======
+function triggerStart(ch) {
+>>>>>>> upstream-releases
   dumpn("*** triggerStart");
 
-  if (!initialStarted)
+  if (!initialStarted) {
     do_throw("triggerStart: initialStarted is false?!?!");
-  if (!intermediateStarted)
+  }
+  if (!intermediateStarted) {
     do_throw("triggerStart: intermediateStarted is false?!?!");
-  if (!intermediateStopped)
+  }
+  if (!intermediateStopped) {
     do_throw("triggerStart: intermediateStopped is false?!?!");
-  if (triggerStarted)
+  }
+  if (triggerStarted) {
     do_throw("triggerStart: triggerStarted is true?!?!");
+  }
 
   triggerStarted = true;
 }
 
 var triggerStopped = false;
+<<<<<<< HEAD
 function triggerStop(ch, cx, status, data) {
+||||||| merged common ancestors
+function triggerStop(ch, cx, status, data)
+{
+=======
+function triggerStop(ch, status, data) {
+>>>>>>> upstream-releases
   dumpn("*** triggerStop");
 
-  Assert.equal(data.map(function(v) { return String.fromCharCode(v); }).join(""),
-               "trigger");
+  Assert.equal(
+    data
+      .map(function(v) {
+        return String.fromCharCode(v);
+      })
+      .join(""),
+    "trigger"
+  );
 
-  if (!initialStarted)
+  if (!initialStarted) {
     do_throw("triggerStop: initialStarted is false?!?!");
-  if (!intermediateStarted)
+  }
+  if (!intermediateStarted) {
     do_throw("triggerStop: intermediateStarted is false?!?!");
-  if (!intermediateStopped)
+  }
+  if (!intermediateStopped) {
     do_throw("triggerStop: intermediateStopped is false?!?!");
-  if (!triggerStarted)
+  }
+  if (!triggerStarted) {
     do_throw("triggerStop: triggerStarted is false?!?!");
-  if (triggerStopped)
+  }
+  if (triggerStopped) {
     do_throw("triggerStop: triggerStopped is false?!?!");
+  }
 
   triggerStopped = true;
 
@@ -183,22 +263,41 @@ function checkForFinish() {
     try {
       Assert.equal(srv.getObjectState("object-state-test"), null);
 
-      if (!initialStarted)
+      if (!initialStarted) {
         do_throw("checkForFinish: initialStarted is false?!?!");
-      if (!intermediateStarted)
+      }
+      if (!intermediateStarted) {
         do_throw("checkForFinish: intermediateStarted is false?!?!");
-      if (!intermediateStopped)
+      }
+      if (!intermediateStopped) {
         do_throw("checkForFinish: intermediateStopped is false?!?!");
-      if (!triggerStarted)
+      }
+      if (!triggerStarted) {
         do_throw("checkForFinish: triggerStarted is false?!?!");
+<<<<<<< HEAD
     } finally {
+||||||| merged common ancestors
+    }
+    finally
+    {
+=======
+      }
+    } finally {
+>>>>>>> upstream-releases
       srv.stop(do_test_finished);
     }
   }
 }
 
+<<<<<<< HEAD
 
 /** *******************************
+||||||| merged common ancestors
+
+/*********************************
+=======
+/** *******************************
+>>>>>>> upstream-releases
  * UTILITY OBSERVABLE URL LOADER *
  *********************************/
 
@@ -217,8 +316,9 @@ function HTTPTestLoader(path, start, stop) {
   this._stop = stop;
 
   var channel = makeChannel(path);
-  channel.asyncOpen2(this);
+  channel.asyncOpen(this);
 }
+<<<<<<< HEAD
 HTTPTestLoader.prototype =
   {
     onStartRequest(request, cx) {
@@ -236,7 +336,48 @@ HTTPTestLoader.prototype =
       } catch (e) {
         dumpn("!!! swallowing onStartRequest exception so onStopRequest is " +
               "called...");
+||||||| merged common ancestors
+HTTPTestLoader.prototype =
+  {
+    onStartRequest: function(request, cx)
+    {
+      dumpn("*** HTTPTestLoader.onStartRequest for " + this._path);
+
+      var ch = request.QueryInterface(Ci.nsIHttpChannel)
+                      .QueryInterface(Ci.nsIHttpChannelInternal);
+
+      try
+      {
+        try
+        {
+          this._start(ch, cx);
+        }
+        catch (e)
+        {
+          do_throw(this._path + ": error in onStartRequest: " + e);
+        }
       }
+      catch (e)
+      {
+        dumpn("!!! swallowing onStartRequest exception so onStopRequest is " +
+              "called...");
+=======
+HTTPTestLoader.prototype = {
+  onStartRequest(request) {
+    dumpn("*** HTTPTestLoader.onStartRequest for " + this._path);
+
+    var ch = request
+      .QueryInterface(Ci.nsIHttpChannel)
+      .QueryInterface(Ci.nsIHttpChannelInternal);
+
+    try {
+      try {
+        this._start(ch);
+      } catch (e) {
+        do_throw(this._path + ": error in onStartRequest: " + e);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
     },
     onDataAvailable(request, cx, inputStream, offset, count) {
       dumpn("*** HTTPTestLoader.onDataAvailable for " + this._path);
@@ -254,3 +395,63 @@ HTTPTestLoader.prototype =
     },
     QueryInterface: ChromeUtils.generateQI(["nsIStreamListener", "nsIRequestObserver"]),
   };
+||||||| merged common ancestors
+    },
+    onDataAvailable: function(request, cx, inputStream, offset, count)
+    {
+      dumpn("*** HTTPTestLoader.onDataAvailable for " + this._path);
+
+      Array.prototype.push.apply(this._data,
+                                 makeBIS(inputStream).readByteArray(count));
+    },
+    onStopRequest: function(request, cx, status)
+    {
+      dumpn("*** HTTPTestLoader.onStopRequest for " + this._path);
+
+      var ch = request.QueryInterface(Ci.nsIHttpChannel)
+                      .QueryInterface(Ci.nsIHttpChannelInternal);
+
+      this._stop(ch, cx, status, this._data);
+    },
+    QueryInterface: function(aIID)
+    {
+      dumpn("*** QueryInterface: " + aIID);
+
+      if (aIID.equals(Ci.nsIStreamListener) ||
+          aIID.equals(Ci.nsIRequestObserver) ||
+          aIID.equals(Ci.nsISupports))
+        return this;
+      throw Cr.NS_ERROR_NO_INTERFACE;
+    }
+  };
+=======
+    } catch (e) {
+      dumpn(
+        "!!! swallowing onStartRequest exception so onStopRequest is " +
+          "called..."
+      );
+    }
+  },
+  onDataAvailable(request, inputStream, offset, count) {
+    dumpn("*** HTTPTestLoader.onDataAvailable for " + this._path);
+
+    Array.prototype.push.apply(
+      this._data,
+      makeBIS(inputStream).readByteArray(count)
+    );
+  },
+  onStopRequest(request, status) {
+    dumpn("*** HTTPTestLoader.onStopRequest for " + this._path);
+
+    var ch = request
+      .QueryInterface(Ci.nsIHttpChannel)
+      .QueryInterface(Ci.nsIHttpChannelInternal);
+
+    this._stop(ch, status, this._data);
+  },
+  QueryInterface: ChromeUtils.generateQI([
+    "nsIStreamListener",
+    "nsIRequestObserver",
+  ]),
+};
+>>>>>>> upstream-releases

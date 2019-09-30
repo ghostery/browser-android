@@ -43,6 +43,7 @@ struct GSNCache {
   void purge();
 };
 
+<<<<<<< HEAD
 /*
  * EnvironmentCoordinateName cache to avoid O(n^2) growth in finding the name
  * associated with a given aliasedvar operation.
@@ -56,8 +57,23 @@ struct EnvironmentCoordinateNameCache {
 
   EnvironmentCoordinateNameCache() : shape(nullptr) {}
   void purge();
-};
+||||||| merged common ancestors
+/*
+ * EnvironmentCoordinateName cache to avoid O(n^2) growth in finding the name
+ * associated with a given aliasedvar operation.
+ */
+struct EnvironmentCoordinateNameCache {
+    typedef HashMap<uint32_t,
+                    jsid,
+                    DefaultHasher<uint32_t>,
+                    SystemAllocPolicy> Map;
 
+    Shape* shape;
+    Map map;
+
+    EnvironmentCoordinateNameCache() : shape(nullptr) {}
+    void purge();
+=======
 struct EvalCacheEntry {
   JSLinearString* str;
   JSScript* script;
@@ -70,20 +86,84 @@ struct EvalCacheEntry {
   // The entire cache is purged on a major GC, so we don't need to sweep it
   // then.
   bool needsSweep() { return !str->isTenured(); }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
+struct EvalCacheEntry {
+  JSLinearString* str;
+  JSScript* script;
+  JSScript* callerScript;
+  jsbytecode* pc;
+
+  // We sweep this cache before a nursery collection to remove entries with
+  // string keys in the nursery.
+  //
+  // The entire cache is purged on a major GC, so we don't need to sweep it
+  // then.
+  bool needsSweep() { return !str->isTenured(); }
+||||||| merged common ancestors
+struct EvalCacheEntry
+{
+    JSLinearString* str;
+    JSScript* script;
+    JSScript* callerScript;
+    jsbytecode* pc;
+
+    // We sweep this cache before a nursery collection to remove entries with
+    // string keys in the nursery.
+    //
+    // The entire cache is purged on a major GC, so we don't need to sweep it
+    // then.
+    bool needsSweep() {
+        return !str->isTenured();
+    }
+=======
+struct EvalCacheLookup {
+  explicit EvalCacheLookup(JSContext* cx) : str(cx), callerScript(cx) {}
+  RootedLinearString str;
+  RootedScript callerScript;
+  MOZ_INIT_OUTSIDE_CTOR jsbytecode* pc;
+>>>>>>> upstream-releases
+};
+
+<<<<<<< HEAD
 struct EvalCacheLookup {
   explicit EvalCacheLookup(JSContext* cx) : str(cx), callerScript(cx) {}
   RootedLinearString str;
   RootedScript callerScript;
   MOZ_INIT_OUTSIDE_CTOR jsbytecode* pc;
 };
+||||||| merged common ancestors
+struct EvalCacheLookup
+{
+    explicit EvalCacheLookup(JSContext* cx) : str(cx), callerScript(cx) {}
+    RootedLinearString str;
+    RootedScript callerScript;
+    MOZ_INIT_OUTSIDE_CTOR jsbytecode* pc;
+};
+=======
+struct EvalCacheHashPolicy {
+  typedef EvalCacheLookup Lookup;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 struct EvalCacheHashPolicy {
   typedef EvalCacheLookup Lookup;
 
   static HashNumber hash(const Lookup& l);
   static bool match(const EvalCacheEntry& entry, const EvalCacheLookup& l);
+||||||| merged common ancestors
+struct EvalCacheHashPolicy
+{
+    typedef EvalCacheLookup Lookup;
+
+    static HashNumber hash(const Lookup& l);
+    static bool match(const EvalCacheEntry& entry, const EvalCacheLookup& l);
+=======
+  static HashNumber hash(const Lookup& l);
+  static bool match(const EvalCacheEntry& entry, const EvalCacheLookup& l);
+>>>>>>> upstream-releases
 };
 
 typedef GCHashSet<EvalCacheEntry, EvalCacheHashPolicy, SystemAllocPolicy>
@@ -236,6 +316,7 @@ class NewObjectCache {
   }
 };
 
+<<<<<<< HEAD
 class RuntimeCaches {
  public:
   js::GSNCache gsnCache;
@@ -260,6 +341,56 @@ class RuntimeCaches {
     envCoordinateNameCache.purge();
     uncompressedSourceCache.purge();
   }
+||||||| merged common ancestors
+class RuntimeCaches
+{
+  public:
+    js::GSNCache gsnCache;
+    js::EnvironmentCoordinateNameCache envCoordinateNameCache;
+    js::NewObjectCache newObjectCache;
+    js::UncompressedSourceCache uncompressedSourceCache;
+    js::EvalCache evalCache;
+
+    void purgeForMinorGC(JSRuntime* rt) {
+        newObjectCache.clearNurseryObjects(rt);
+        evalCache.sweep();
+    }
+
+    void purgeForCompaction() {
+        newObjectCache.purge();
+        evalCache.clear();
+    }
+
+    void purge() {
+        purgeForCompaction();
+        gsnCache.purge();
+        envCoordinateNameCache.purge();
+        uncompressedSourceCache.purge();
+    }
+=======
+class RuntimeCaches {
+ public:
+  js::GSNCache gsnCache;
+  js::NewObjectCache newObjectCache;
+  js::UncompressedSourceCache uncompressedSourceCache;
+  js::EvalCache evalCache;
+
+  void purgeForMinorGC(JSRuntime* rt) {
+    newObjectCache.clearNurseryObjects(rt);
+    evalCache.sweep();
+  }
+
+  void purgeForCompaction() {
+    newObjectCache.purge();
+    evalCache.clear();
+  }
+
+  void purge() {
+    purgeForCompaction();
+    gsnCache.purge();
+    uncompressedSourceCache.purge();
+  }
+>>>>>>> upstream-releases
 };
 
 }  // namespace js

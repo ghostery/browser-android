@@ -7,17 +7,20 @@
 #ifndef MOZILLA_DOMSVGANIMATEDNUMBERLIST_H__
 #define MOZILLA_DOMSVGANIMATEDNUMBERLIST_H__
 
-#include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "nsWrapperCache.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/RefPtr.h"
 
 namespace mozilla {
 
-class DOMSVGNumberList;
 class SVGAnimatedNumberList;
 class SVGNumberList;
+
+namespace dom {
+
+class DOMSVGNumberList;
 
 /**
  * Class DOMSVGAnimatedNumberList
@@ -53,8 +56,19 @@ class DOMSVGAnimatedNumberList final : public nsISupports,
    * for the SVGAnimatedNumberList will naturally result in a new
    * DOMSVGAnimatedNumberList being returned.
    */
+<<<<<<< HEAD
   static already_AddRefed<DOMSVGAnimatedNumberList> GetDOMWrapper(
       SVGAnimatedNumberList* aList, nsSVGElement* aElement, uint8_t aAttrEnum);
+||||||| merged common ancestors
+  static already_AddRefed<DOMSVGAnimatedNumberList>
+    GetDOMWrapper(SVGAnimatedNumberList *aList,
+                  nsSVGElement *aElement,
+                  uint8_t aAttrEnum);
+=======
+  static already_AddRefed<DOMSVGAnimatedNumberList> GetDOMWrapper(
+      SVGAnimatedNumberList* aList, dom::SVGElement* aElement,
+      uint8_t aAttrEnum);
+>>>>>>> upstream-releases
 
   /**
    * This method returns the DOMSVGAnimatedNumberList wrapper for an internal
@@ -86,9 +100,18 @@ class DOMSVGAnimatedNumberList final : public nsISupports,
   bool IsAnimating() const;
 
   // WebIDL
+<<<<<<< HEAD
   nsSVGElement* GetParentObject() const { return mElement; }
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
+||||||| merged common ancestors
+  nsSVGElement* GetParentObject() const { return mElement; }
+  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
+=======
+  dom::SVGElement* GetParentObject() const { return mElement; }
+  virtual JSObject* WrapObject(JSContext* aCx,
+                               JS::Handle<JSObject*> aGivenProto) override;
+>>>>>>> upstream-releases
   // These aren't weak refs because mBaseVal and mAnimVal are weak
   already_AddRefed<DOMSVGNumberList> BaseVal();
   already_AddRefed<DOMSVGNumberList> AnimVal();
@@ -98,11 +121,27 @@ class DOMSVGAnimatedNumberList final : public nsISupports,
    * Only our static GetDOMWrapper() factory method may create objects of our
    * type.
    */
+<<<<<<< HEAD
   DOMSVGAnimatedNumberList(nsSVGElement* aElement, uint8_t aAttrEnum)
       : mBaseVal(nullptr),
         mAnimVal(nullptr),
         mElement(aElement),
         mAttrEnum(aAttrEnum) {}
+||||||| merged common ancestors
+  DOMSVGAnimatedNumberList(nsSVGElement *aElement, uint8_t aAttrEnum)
+    : mBaseVal(nullptr)
+    , mAnimVal(nullptr)
+    , mElement(aElement)
+    , mAttrEnum(aAttrEnum)
+  {
+  }
+=======
+  DOMSVGAnimatedNumberList(dom::SVGElement* aElement, uint8_t aAttrEnum)
+      : mBaseVal(nullptr),
+        mAnimVal(nullptr),
+        mElement(aElement),
+        mAttrEnum(aAttrEnum) {}
+>>>>>>> upstream-releases
 
   ~DOMSVGAnimatedNumberList();
 
@@ -118,11 +157,18 @@ class DOMSVGAnimatedNumberList final : public nsISupports,
 
   // Strong ref to our element to keep it alive. We hold this not only for
   // ourself, but also for our base/animVal and all of their items.
-  RefPtr<nsSVGElement> mElement;
+  RefPtr<dom::SVGElement> mElement;
 
   uint8_t mAttrEnum;
 };
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // MOZILLA_DOMSVGANIMATEDNUMBERLIST_H__

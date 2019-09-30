@@ -11,6 +11,7 @@
 #include <cstdint>
 
 #include "mozilla/Attributes.h"
+#include "Point.h"
 #include "Rect.h"
 #include "Types.h"
 
@@ -33,7 +34,7 @@ namespace gfx {
  * Do not use this class directly. Subclass it, pass that subclass as the
  * Sub parameter, and only use that subclass.
  */
-template <class T, class Sub, class Rect>
+template <class T, class Sub, class Point, class Rect>
 struct BaseRectAbsolute {
  protected:
   T left, top, right, bottom;
@@ -108,6 +109,7 @@ struct BaseRectAbsolute {
     return IsEqualEdges(aRect) || (IsEmpty() && aRect.IsEmpty());
   }
 
+<<<<<<< HEAD
   MOZ_ALWAYS_INLINE void MoveBy(T aDx, T aDy) {
     left += aDx;
     right += aDx;
@@ -119,10 +121,44 @@ struct BaseRectAbsolute {
     right += aPoint.x;
     top += aPoint.y;
     bottom += aPoint.y;
+||||||| merged common ancestors
+  MOZ_ALWAYS_INLINE void MoveBy(T aDx, T aDy) { left += aDx; right += aDx; top += aDy; bottom += aDy; }
+  MOZ_ALWAYS_INLINE void MoveBy(const Point& aPoint) { left += aPoint.x; right += aPoint.x; top += aPoint.y; bottom += aPoint.y; }
+  MOZ_ALWAYS_INLINE void SizeTo(T aWidth, T aHeight) { right = left + aWidth; bottom = top + aHeight; }
+
+  bool Contains(const Sub& aRect) const
+  {
+    return aRect.IsEmpty() ||
+      (left <= aRect.left && aRect.right <= right &&
+       top <= aRect.top && aRect.bottom <= bottom);
+=======
+  MOZ_ALWAYS_INLINE void MoveBy(T aDx, T aDy) {
+    left += aDx;
+    right += aDx;
+    top += aDy;
+    bottom += aDy;
+>>>>>>> upstream-releases
+  }
+<<<<<<< HEAD
+  MOZ_ALWAYS_INLINE void SizeTo(T aWidth, T aHeight) {
+    right = left + aWidth;
+    bottom = top + aHeight;
+||||||| merged common ancestors
+  bool Contains(T aX, T aY) const
+  {
+    return (left <= aX && aX < right &&
+            top <= aY && aY < bottom);
+=======
+  MOZ_ALWAYS_INLINE void MoveBy(const Point& aPoint) {
+    left += aPoint.x;
+    right += aPoint.x;
+    top += aPoint.y;
+    bottom += aPoint.y;
   }
   MOZ_ALWAYS_INLINE void SizeTo(T aWidth, T aHeight) {
     right = left + aWidth;
     bottom = top + aHeight;
+>>>>>>> upstream-releases
   }
 
   bool Contains(const Sub& aRect) const {
@@ -238,18 +274,66 @@ struct BaseRectAbsolute {
     left = static_cast<T>(ceil(double(left) / aXScale));
     top = static_cast<T>(ceil(double(top) / aYScale));
   }
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+
+  /**
+   * Translate this rectangle to be inside aRect. If it doesn't fit inside
+   * aRect then the dimensions that don't fit will be shrunk so that they
+   * do fit. The resulting rect is returned.
+   */
+  MOZ_MUST_USE Sub MoveInsideAndClamp(const Sub& aRect) const {
+    T newLeft = std::max(aRect.left, left);
+    T newTop = std::max(aRect.top, top);
+    T width = std::min(aRect.Width(), Width());
+    T height = std::min(aRect.Height(), Height());
+    Sub rect(newLeft, newTop, newLeft + width, newTop + height);
+    newLeft = std::min(rect.right, aRect.right) - width;
+    newTop = std::min(rect.bottom, aRect.bottom) - height;
+    rect.MoveBy(newLeft - rect.left, newTop - rect.top);
+    return rect;
+  }
+
+  friend std::ostream& operator<<(
+      std::ostream& stream,
+      const BaseRectAbsolute<T, Sub, Point, Rect>& aRect) {
+    return stream << '(' << aRect.left << ',' << aRect.top << ',' << aRect.right
+                  << ',' << aRect.bottom << ')';
+  }
+>>>>>>> upstream-releases
 };
 
 template <class Units>
+<<<<<<< HEAD
 struct IntRectAbsoluteTyped
     : public BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>,
                               IntRectTyped<Units>>,
       public Units {
+||||||| merged common ancestors
+struct IntRectAbsoluteTyped :
+    public BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>, IntRectTyped<Units>>,
+    public Units {
+=======
+struct IntRectAbsoluteTyped
+    : public BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>,
+                              IntPointTyped<Units>, IntRectTyped<Units>>,
+      public Units {
+>>>>>>> upstream-releases
   static_assert(IsPixel<Units>::value,
                 "'units' must be a coordinate system tag");
+<<<<<<< HEAD
   typedef BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>,
                            IntRectTyped<Units>>
       Super;
+||||||| merged common ancestors
+  typedef BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>, IntRectTyped<Units>> Super;
+=======
+  typedef BaseRectAbsolute<int32_t, IntRectAbsoluteTyped<Units>,
+                           IntPointTyped<Units>, IntRectTyped<Units>>
+      Super;
+>>>>>>> upstream-releases
   typedef IntParam<int32_t> ToInt;
 
   IntRectAbsoluteTyped() : Super() {}
@@ -258,14 +342,33 @@ struct IntRectAbsoluteTyped
 };
 
 template <class Units>
+<<<<<<< HEAD
 struct RectAbsoluteTyped
     : public BaseRectAbsolute<Float, RectAbsoluteTyped<Units>,
                               RectTyped<Units>>,
       public Units {
+||||||| merged common ancestors
+struct RectAbsoluteTyped :
+    public BaseRectAbsolute<Float, RectAbsoluteTyped<Units>, RectTyped<Units>>,
+    public Units {
+=======
+struct RectAbsoluteTyped
+    : public BaseRectAbsolute<Float, RectAbsoluteTyped<Units>,
+                              PointTyped<Units>, RectTyped<Units>>,
+      public Units {
+>>>>>>> upstream-releases
   static_assert(IsPixel<Units>::value,
                 "'units' must be a coordinate system tag");
+<<<<<<< HEAD
   typedef BaseRectAbsolute<Float, RectAbsoluteTyped<Units>, RectTyped<Units>>
       Super;
+||||||| merged common ancestors
+  typedef BaseRectAbsolute<Float, RectAbsoluteTyped<Units>, RectTyped<Units>> Super;
+=======
+  typedef BaseRectAbsolute<Float, RectAbsoluteTyped<Units>, PointTyped<Units>,
+                           RectTyped<Units>>
+      Super;
+>>>>>>> upstream-releases
 
   RectAbsoluteTyped() : Super() {}
   RectAbsoluteTyped(Float aLeft, Float aTop, Float aRight, Float aBottom)

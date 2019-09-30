@@ -62,11 +62,7 @@ class ComputedStylePath extends PureComponent {
    *         [{x: {Number} time, y: {Number} segment value}, ...]
    */
   getPathSegments(startKeyframe, endKeyframe) {
-    const {
-      componentWidth,
-      simulateAnimation,
-      totalDuration,
-    } = this.props;
+    const { componentWidth, simulateAnimation, totalDuration } = this.props;
 
     const propertyName = this.getPropertyName();
     const offsetDistance = endKeyframe.offset - startKeyframe.offset;
@@ -96,8 +92,9 @@ class ComputedStylePath extends PureComponent {
 
     const getSegment = time => {
       simulatedAnimation.currentTime = time;
-      const computedStyle =
-        win.getComputedStyle(simulatedElement).getPropertyValue(propertyName);
+      const computedStyle = win
+        .getComputedStyle(simulatedElement)
+        .getPropertyValue(propertyName);
 
       return {
         computedStyle,
@@ -106,8 +103,14 @@ class ComputedStylePath extends PureComponent {
       };
     };
 
-    const segments = createPathSegments(0, duration, duration / componentWidth, threshold,
-                                        DEFAULT_DURATION_RESOLUTION, getSegment);
+    const segments = createPathSegments(
+      0,
+      duration,
+      duration / componentWidth,
+      threshold,
+      DEFAULT_DURATION_RESOLUTION,
+      getSegment
+    );
     const offset = startKeyframe.offset * totalDuration;
 
     for (const segment of segments) {
@@ -126,11 +129,7 @@ class ComputedStylePath extends PureComponent {
    *         Element which represents easing hint.
    */
   renderEasingHint(segments) {
-    const {
-      easingHintStrokeWidth,
-      keyframes,
-      totalDuration,
-    } = this.props;
+    const { easingHintStrokeWidth, keyframes, totalDuration } = this.props;
 
     const hints = [];
 
@@ -157,6 +156,7 @@ class ComputedStylePath extends PureComponent {
           className: "hint",
         },
         dom.title({}, startKeyframe.easing),
+<<<<<<< HEAD
         dom.path(
           {
             d: `M${ hintSegments[0].x },${ hintSegments[0].y } ` +
@@ -166,6 +166,26 @@ class ComputedStylePath extends PureComponent {
             },
           }
         )
+||||||| merged common ancestors
+        dom.path(
+          {
+            d: `M${ hintSegments[0].x },${ hintSegments[0].y } ` +
+               toPathString(hintSegments),
+            style: {
+              "stroke-width": easingHintStrokeWidth,
+            }
+          }
+        )
+=======
+        dom.path({
+          d:
+            `M${hintSegments[0].x},${hintSegments[0].y} ` +
+            toPathString(hintSegments),
+          style: {
+            "stroke-width": easingHintStrokeWidth,
+          },
+        })
+>>>>>>> upstream-releases
       );
 
       hints.push(g);
@@ -187,7 +207,10 @@ class ComputedStylePath extends PureComponent {
     for (let i = 0; i < keyframes.length - 1; i++) {
       const startKeyframe = keyframes[i];
       const endKeyframe = keyframes[i + 1];
-      const keyframesSegments = this.getPathSegments(startKeyframe, endKeyframe);
+      const keyframesSegments = this.getPathSegments(
+        startKeyframe,
+        endKeyframe
+      );
 
       if (!keyframesSegments) {
         return null;
@@ -196,10 +219,19 @@ class ComputedStylePath extends PureComponent {
       segments.push(...keyframesSegments);
     }
 
+<<<<<<< HEAD
     return [
       this.renderPathSegments(segments),
       this.renderEasingHint(segments),
     ];
+||||||| merged common ancestors
+    return [
+      this.renderPathSegments(segments),
+      this.renderEasingHint(segments)
+    ];
+=======
+    return [this.renderPathSegments(segments), this.renderEasingHint(segments)];
+>>>>>>> upstream-releases
   }
 
   /**
@@ -216,9 +248,9 @@ class ComputedStylePath extends PureComponent {
       segment.y *= graphHeight;
     }
 
-    let d = `M${ segments[0].x },0 `;
+    let d = `M${segments[0].x},0 `;
     d += toPathString(segments);
-    d += `L${ segments[segments.length - 1].x },0 Z`;
+    d += `L${segments[segments.length - 1].x},0 Z`;
 
     return dom.path({ d, style });
   }

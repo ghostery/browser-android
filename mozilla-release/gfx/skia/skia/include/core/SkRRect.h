@@ -104,18 +104,37 @@ public:
     inline bool isNinePatch() const { return kNinePatch_Type == this->getType(); }
     inline bool isComplex() const { return kComplex_Type == this->getType(); }
 
+<<<<<<< HEAD
     /** Returns span on the x-axis. This does not check if result fits in 32-bit float;
         result may be infinity.
 
         @return  bounds().fRight minus bounds().fLeft
     */
+||||||| merged common ancestors
+=======
+    /** Returns span on the x-axis. This does not check if result fits in 32-bit float;
+        result may be infinity.
+
+        @return  rect().fRight minus rect().fLeft
+    */
+>>>>>>> upstream-releases
     SkScalar width() const { return fRect.width(); }
+<<<<<<< HEAD
 
     /** Returns span on the y-axis. This does not check if result fits in 32-bit float;
         result may be infinity.
 
         @return  bounds().fBottom minus bounds().fTop
     */
+||||||| merged common ancestors
+=======
+
+    /** Returns span on the y-axis. This does not check if result fits in 32-bit float;
+        result may be infinity.
+
+        @return  rect().fBottom minus rect().fTop
+    */
+>>>>>>> upstream-releases
     SkScalar height() const { return fRect.height(); }
 
     /** Returns top-left corner radii. If type() returns kEmpty_Type, kRect_Type,
@@ -307,6 +326,7 @@ public:
     */
     const SkRect& getBounds() const { return fRect; }
 
+<<<<<<< HEAD
     /** Returns true if bounds and radii in a are equal to bounds and radii in b.
 
         a and b are not equal if either contain NaN. a and b are equal if members
@@ -316,10 +336,23 @@ public:
         @param b  SkRect bounds and radii to compare
         @return   true if members are equal
     */
+||||||| merged common ancestors
+=======
+    /** Returns true if bounds and radii in a are equal to bounds and radii in b.
+
+        a and b are not equal if either contain NaN. a and b are equal if members
+        contain zeroes with different signs.
+
+        @param a  SkRect bounds and radii to compare
+        @param b  SkRect bounds and radii to compare
+        @return   true if members are equal
+    */
+>>>>>>> upstream-releases
     friend bool operator==(const SkRRect& a, const SkRRect& b) {
         return a.fRect == b.fRect && SkScalarsEqual(&a.fRadii[0].fX, &b.fRadii[0].fX, 8);
     }
 
+<<<<<<< HEAD
     /** Returns true if bounds and radii in a are not equal to bounds and radii in b.
 
         a and b are not equal if either contain NaN. a and b are equal if members
@@ -329,6 +362,18 @@ public:
         @param b  SkRect bounds and radii to compare
         @return   true if members are not equal
     */
+||||||| merged common ancestors
+=======
+    /** Returns true if bounds and radii in a are not equal to bounds and radii in b.
+
+        a and b are not equal if either contain NaN. a and b are equal if members
+        contain zeroes with different signs.
+
+        @param a  SkRect bounds and radii to compare
+        @param b  SkRect bounds and radii to compare
+        @return   true if members are not equal
+    */
+>>>>>>> upstream-releases
     friend bool operator!=(const SkRRect& a, const SkRRect& b) {
         return a.fRect != b.fRect || !SkScalarsEqual(&a.fRadii[0].fX, &b.fRadii[0].fX, 8);
     }

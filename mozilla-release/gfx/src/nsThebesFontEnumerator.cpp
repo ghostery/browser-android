@@ -23,12 +23,23 @@ NS_IMPL_ISUPPORTS(nsThebesFontEnumerator, nsIFontEnumerator)
 nsThebesFontEnumerator::nsThebesFontEnumerator() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::EnumerateAllFonts(uint32_t *aCount,
                                           char16_t ***aResult) {
   return EnumerateFonts(nullptr, nullptr, aCount, aResult);
+||||||| merged common ancestors
+nsThebesFontEnumerator::EnumerateAllFonts(uint32_t *aCount,
+                                          char16_t ***aResult)
+{
+    return EnumerateFonts (nullptr, nullptr, aCount, aResult);
+=======
+nsThebesFontEnumerator::EnumerateAllFonts(nsTArray<nsString>& aResult) {
+  return EnumerateFonts(nullptr, nullptr, aResult);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::EnumerateFonts(const char *aLangGroup,
                                        const char *aGeneric, uint32_t *aCount,
                                        char16_t ***aResult) {
@@ -71,14 +82,97 @@ nsThebesFontEnumerator::EnumerateFonts(const char *aLangGroup,
   *aCount = fontList.Length();
 
   return NS_OK;
+||||||| merged common ancestors
+nsThebesFontEnumerator::EnumerateFonts(const char *aLangGroup,
+                                       const char *aGeneric,
+                                       uint32_t *aCount,
+                                       char16_t ***aResult)
+{
+    NS_ENSURE_ARG_POINTER(aCount);
+    NS_ENSURE_ARG_POINTER(aResult);
+
+    nsTArray<nsString> fontList;
+
+    nsAutoCString generic;
+    if (aGeneric)
+        generic.Assign(aGeneric);
+    else
+        generic.SetIsVoid(true);
+
+    RefPtr<nsAtom> langGroupAtom;
+    if (aLangGroup) {
+        nsAutoCString lowered;
+        lowered.Assign(aLangGroup);
+        ToLowerCase(lowered);
+        langGroupAtom = NS_Atomize(lowered);
+    }
+
+    nsresult rv = gfxPlatform::GetPlatform()->GetFontList(langGroupAtom, generic, fontList);
+
+    if (NS_FAILED(rv)) {
+        *aCount = 0;
+        *aResult = nullptr;
+        /* XXX in this case, do we want to return the CSS generics? */
+        return NS_OK;
+    }
+
+    char16_t **fs = static_cast<char16_t **>
+                                (moz_xmalloc(fontList.Length() * sizeof(char16_t*)));
+    for (uint32_t i = 0; i < fontList.Length(); i++) {
+        fs[i] = ToNewUnicode(fontList[i]);
+    }
+
+    *aResult = fs;
+    *aCount = fontList.Length();
+
+    return NS_OK;
+=======
+nsThebesFontEnumerator::EnumerateFonts(const char* aLangGroup,
+                                       const char* aGeneric,
+                                       nsTArray<nsString>& aResult) {
+  nsAutoCString generic;
+  if (aGeneric)
+    generic.Assign(aGeneric);
+  else
+    generic.SetIsVoid(true);
+
+  RefPtr<nsAtom> langGroupAtom;
+  if (aLangGroup) {
+    nsAutoCString lowered;
+    lowered.Assign(aLangGroup);
+    ToLowerCase(lowered);
+    langGroupAtom = NS_Atomize(lowered);
+  }
+
+  return gfxPlatform::GetPlatform()->GetFontList(langGroupAtom, generic,
+                                                 aResult);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 struct EnumerateFontsPromise final {
   explicit EnumerateFontsPromise(mozilla::dom::Promise *aPromise)
       : mPromise(aPromise) {
     MOZ_ASSERT(aPromise);
     MOZ_ASSERT(NS_IsMainThread());
   }
+||||||| merged common ancestors
+struct EnumerateFontsPromise final
+{
+    explicit EnumerateFontsPromise(mozilla::dom::Promise* aPromise)
+        : mPromise(aPromise)
+    {
+        MOZ_ASSERT(aPromise);
+        MOZ_ASSERT(NS_IsMainThread());
+    }
+=======
+struct EnumerateFontsPromise final {
+  explicit EnumerateFontsPromise(mozilla::dom::Promise* aPromise)
+      : mPromise(aPromise) {
+    MOZ_ASSERT(aPromise);
+    MOZ_ASSERT(NS_IsMainThread());
+  }
+>>>>>>> upstream-releases
 
   RefPtr<mozilla::dom::Promise> mPromise;
 };
@@ -117,6 +211,7 @@ class EnumerateFontsResult final : public Runnable {
   nsCOMPtr<nsIThread> mWorkerThread;
 };
 
+<<<<<<< HEAD
 class EnumerateFontsTask final : public Runnable {
  public:
   EnumerateFontsTask(nsAtom *aLangGroupAtom, const nsAutoCString &aGeneric,
@@ -129,6 +224,36 @@ class EnumerateFontsTask final : public Runnable {
         mMainThreadTarget(aMainThreadTarget) {
     MOZ_ASSERT(NS_IsMainThread());
   }
+||||||| merged common ancestors
+class EnumerateFontsTask final : public Runnable
+{
+public:
+    EnumerateFontsTask(nsAtom* aLangGroupAtom,
+                       const nsAutoCString& aGeneric,
+                       UniquePtr<EnumerateFontsPromise> aEnumerateFontsPromise,
+                       nsIEventTarget* aMainThreadTarget)
+        : Runnable("EnumerateFontsTask")
+        , mLangGroupAtom(aLangGroupAtom)
+        , mGeneric(aGeneric)
+        , mEnumerateFontsPromise(std::move(aEnumerateFontsPromise))
+        , mMainThreadTarget(aMainThreadTarget)
+    {
+        MOZ_ASSERT(NS_IsMainThread());
+    }
+=======
+class EnumerateFontsTask final : public Runnable {
+ public:
+  EnumerateFontsTask(nsAtom* aLangGroupAtom, const nsAutoCString& aGeneric,
+                     UniquePtr<EnumerateFontsPromise> aEnumerateFontsPromise,
+                     nsIEventTarget* aMainThreadTarget)
+      : Runnable("EnumerateFontsTask"),
+        mLangGroupAtom(aLangGroupAtom),
+        mGeneric(aGeneric),
+        mEnumerateFontsPromise(std::move(aEnumerateFontsPromise)),
+        mMainThreadTarget(aMainThreadTarget) {
+    MOZ_ASSERT(NS_IsMainThread());
+  }
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(!NS_IsMainThread());
@@ -152,12 +277,24 @@ class EnumerateFontsTask final : public Runnable {
 };
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::EnumerateAllFontsAsync(JSContext *aCx,
                                                JS::MutableHandleValue aRval) {
   return EnumerateFontsAsync(nullptr, nullptr, aCx, aRval);
+||||||| merged common ancestors
+nsThebesFontEnumerator::EnumerateAllFontsAsync(JSContext* aCx,
+                                               JS::MutableHandleValue aRval)
+{
+    return EnumerateFontsAsync(nullptr, nullptr, aCx, aRval);
+=======
+nsThebesFontEnumerator::EnumerateAllFontsAsync(JSContext* aCx,
+                                               JS::MutableHandleValue aRval) {
+  return EnumerateFontsAsync(nullptr, nullptr, aCx, aRval);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::EnumerateFontsAsync(const char *aLangGroup,
                                             const char *aGeneric,
                                             JSContext *aCx,
@@ -205,17 +342,125 @@ nsThebesFontEnumerator::EnumerateFontsAsync(const char *aLangGroup,
   }
 
   return NS_OK;
+||||||| merged common ancestors
+nsThebesFontEnumerator::EnumerateFontsAsync(const char* aLangGroup,
+                                            const char* aGeneric,
+                                            JSContext* aCx,
+                                            JS::MutableHandleValue aRval)
+{
+    MOZ_ASSERT(NS_IsMainThread());
+
+    nsCOMPtr<nsIGlobalObject> global = xpc::CurrentNativeGlobal(aCx);
+    NS_ENSURE_TRUE(global, NS_ERROR_UNEXPECTED);
+
+    ErrorResult errv;
+    RefPtr<mozilla::dom::Promise> promise = dom::Promise::Create(global, errv);
+    if (errv.Failed()) {
+        return errv.StealNSResult();
+    }
+
+    auto enumerateFontsPromise = MakeUnique<EnumerateFontsPromise>(promise);
+
+    nsCOMPtr<nsIThread> thread;
+    nsresult rv = NS_NewNamedThread("FontEnumThread", getter_AddRefs(thread));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    RefPtr<nsAtom> langGroupAtom;
+    if (aLangGroup) {
+        nsAutoCStringN<16> lowered;
+        lowered.Assign(aLangGroup);
+        ToLowerCase(lowered);
+        langGroupAtom = NS_Atomize(lowered);
+    }
+
+    nsAutoCString generic;
+    if (aGeneric) {
+        generic.Assign(aGeneric);
+    } else {
+        generic.SetIsVoid(true);
+    }
+
+    nsCOMPtr<nsIEventTarget> target = global->EventTargetFor(mozilla::TaskCategory::Other);
+    nsCOMPtr<nsIRunnable> runnable = new EnumerateFontsTask(
+        langGroupAtom, generic, std::move(enumerateFontsPromise), target);
+    thread->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
+
+    if (!ToJSValue(aCx, promise, aRval)) {
+        return NS_ERROR_FAILURE;
+    }
+
+    return NS_OK;
+=======
+nsThebesFontEnumerator::EnumerateFontsAsync(const char* aLangGroup,
+                                            const char* aGeneric,
+                                            JSContext* aCx,
+                                            JS::MutableHandleValue aRval) {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  nsCOMPtr<nsIGlobalObject> global = xpc::CurrentNativeGlobal(aCx);
+  NS_ENSURE_TRUE(global, NS_ERROR_UNEXPECTED);
+
+  ErrorResult errv;
+  RefPtr<mozilla::dom::Promise> promise = dom::Promise::Create(global, errv);
+  if (errv.Failed()) {
+    return errv.StealNSResult();
+  }
+
+  auto enumerateFontsPromise = MakeUnique<EnumerateFontsPromise>(promise);
+
+  nsCOMPtr<nsIThread> thread;
+  nsresult rv = NS_NewNamedThread("FontEnumThread", getter_AddRefs(thread));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  RefPtr<nsAtom> langGroupAtom;
+  if (aLangGroup) {
+    nsAutoCStringN<16> lowered;
+    lowered.Assign(aLangGroup);
+    ToLowerCase(lowered);
+    langGroupAtom = NS_Atomize(lowered);
+  }
+
+  nsAutoCString generic;
+  if (aGeneric) {
+    generic.Assign(aGeneric);
+  } else {
+    generic.SetIsVoid(true);
+  }
+
+  nsCOMPtr<nsIEventTarget> target =
+      global->EventTargetFor(mozilla::TaskCategory::Other);
+  nsCOMPtr<nsIRunnable> runnable = new EnumerateFontsTask(
+      langGroupAtom, generic, std::move(enumerateFontsPromise), target);
+  thread->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
+
+  if (!ToJSValue(aCx, promise, aRval)) {
+    return NS_ERROR_FAILURE;
+  }
+
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::HaveFontFor(const char *aLangGroup, bool *aResult) {
   NS_ENSURE_ARG_POINTER(aResult);
+||||||| merged common ancestors
+nsThebesFontEnumerator::HaveFontFor(const char *aLangGroup,
+                                    bool *aResult)
+{
+    NS_ENSURE_ARG_POINTER(aResult);
+=======
+nsThebesFontEnumerator::HaveFontFor(const char* aLangGroup, bool* aResult) {
+  NS_ENSURE_ARG_POINTER(aResult);
+>>>>>>> upstream-releases
 
   *aResult = true;
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::GetDefaultFont(const char *aLangGroup,
                                        const char *aGeneric,
                                        char16_t **aResult) {
@@ -231,20 +476,87 @@ nsThebesFontEnumerator::GetDefaultFont(const char *aLangGroup,
     *aResult = UTF8ToNewUnicode(defaultFontName);
   }
   return NS_OK;
+||||||| merged common ancestors
+nsThebesFontEnumerator::GetDefaultFont(const char *aLangGroup,
+                                       const char *aGeneric,
+                                       char16_t **aResult)
+{
+    if (NS_WARN_IF(!aResult) || NS_WARN_IF(!aLangGroup) ||
+        NS_WARN_IF(!aGeneric)) {
+        return NS_ERROR_INVALID_ARG;
+    }
+
+    *aResult = nullptr;
+    nsAutoCString defaultFontName(gfxPlatform::GetPlatform()->
+        GetDefaultFontName(nsDependentCString(aLangGroup),
+                           nsDependentCString(aGeneric)));
+    if (!defaultFontName.IsEmpty()) {
+        *aResult = UTF8ToNewUnicode(defaultFontName);
+    }
+    return NS_OK;
+=======
+nsThebesFontEnumerator::GetDefaultFont(const char* aLangGroup,
+                                       const char* aGeneric,
+                                       char16_t** aResult) {
+  if (NS_WARN_IF(!aResult) || NS_WARN_IF(!aLangGroup) ||
+      NS_WARN_IF(!aGeneric)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  *aResult = nullptr;
+  nsAutoCString defaultFontName(gfxPlatform::GetPlatform()->GetDefaultFontName(
+      nsDependentCString(aLangGroup), nsDependentCString(aGeneric)));
+  if (!defaultFontName.IsEmpty()) {
+    *aResult = UTF8ToNewUnicode(defaultFontName);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::UpdateFontList(bool *_retval) {
   gfxPlatform::GetPlatform()->UpdateFontList();
   *_retval = false;  // always return false for now
   return NS_OK;
+||||||| merged common ancestors
+nsThebesFontEnumerator::UpdateFontList(bool *_retval)
+{
+    gfxPlatform::GetPlatform()->UpdateFontList();
+    *_retval = false; // always return false for now
+    return NS_OK;
+=======
+nsThebesFontEnumerator::UpdateFontList(bool* _retval) {
+  gfxPlatform::GetPlatform()->UpdateFontList();
+  *_retval = false;  // always return false for now
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsThebesFontEnumerator::GetStandardFamilyName(const char16_t *aName,
                                               char16_t **aResult) {
   NS_ENSURE_ARG_POINTER(aResult);
   NS_ENSURE_ARG_POINTER(aName);
+||||||| merged common ancestors
+nsThebesFontEnumerator::GetStandardFamilyName(const char16_t *aName,
+                                              char16_t **aResult)
+{
+    NS_ENSURE_ARG_POINTER(aResult);
+    NS_ENSURE_ARG_POINTER(aName);
+
+    nsAutoString name(aName);
+    if (name.IsEmpty()) {
+        *aResult = nullptr;
+        return NS_OK;
+    }
+=======
+nsThebesFontEnumerator::GetStandardFamilyName(const char16_t* aName,
+                                              char16_t** aResult) {
+  NS_ENSURE_ARG_POINTER(aResult);
+  NS_ENSURE_ARG_POINTER(aName);
+>>>>>>> upstream-releases
 
   nsAutoString name(aName);
   if (name.IsEmpty()) {

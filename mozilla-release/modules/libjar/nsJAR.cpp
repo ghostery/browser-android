@@ -13,9 +13,19 @@
 #include "mozilla/Unused.h"
 
 #ifdef XP_UNIX
+<<<<<<< HEAD
 #include <sys/stat.h>
 #elif defined(XP_WIN)
 #include <io.h>
+||||||| merged common ancestors
+  #include <sys/stat.h>
+#elif defined (XP_WIN)
+  #include <io.h>
+=======
+#  include <sys/stat.h>
+#elif defined(XP_WIN)
+#  include <io.h>
+>>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -314,17 +324,25 @@ nsresult nsJAR::LoadEntry(const nsACString& aFilename, nsCString& aBuf) {
   uint64_t len64;
   rv = manifestStream->Available(&len64);
   if (NS_FAILED(rv)) return rv;
+<<<<<<< HEAD
   if (len64 >= UINT32_MAX) {  // bug 164695
     nsZipArchive::sFileCorruptedReason = "nsJAR: invalid manifest size";
     return NS_ERROR_FILE_CORRUPTED;
   }
+||||||| merged common ancestors
+  if (len64 >= UINT32_MAX) { // bug 164695
+    nsZipArchive::sFileCorruptedReason = "nsJAR: invalid manifest size";
+    return NS_ERROR_FILE_CORRUPTED;
+  }
+=======
+  NS_ENSURE_TRUE(len64 < UINT32_MAX, NS_ERROR_FILE_CORRUPTED);  // bug 164695
+>>>>>>> upstream-releases
   uint32_t len = (uint32_t)len64;
   buf = (char*)malloc(len + 1);
   if (!buf) return NS_ERROR_OUT_OF_MEMORY;
   uint32_t bytesRead;
   rv = manifestStream->Read(buf, len, &bytesRead);
   if (bytesRead != len) {
-    nsZipArchive::sFileCorruptedReason = "nsJAR: manifest too small";
     rv = NS_ERROR_FILE_CORRUPTED;
   }
   if (NS_FAILED(rv)) {

@@ -13,11 +13,11 @@ using namespace mozilla;
 using namespace mozilla::gfx;
 
 #ifdef A
-#undef A
+#  undef A
 #endif
 
 #ifdef B
-#undef B
+#  undef B
 #endif
 
 // to avoid having symbols that collide easily like A and B in the global
@@ -28,8 +28,16 @@ class A;
 class B;
 
 class Base {
+<<<<<<< HEAD
  public:
   virtual ~Base() {}
+||||||| merged common ancestors
+public:
+  virtual ~Base() {}
+=======
+ public:
+  virtual ~Base() = default;
+>>>>>>> upstream-releases
   virtual A* AsA() { return nullptr; }
   virtual B* AsB() { return nullptr; }
 };
@@ -64,7 +72,14 @@ struct BigStruct {
   explicit BigStruct(uint64_t val) : mVal(val) {}
 };
 
+<<<<<<< HEAD
 void TestArenaAlloc(IterableArena::ArenaType aType) {
+||||||| merged common ancestors
+void TestArenaAlloc(IterableArena::ArenaType aType)
+{
+=======
+static void TestArenaAlloc(IterableArena::ArenaType aType) {
+>>>>>>> upstream-releases
   sDtorItemA = 0;
   sDtorItemB = 0;
   IterableArena arena(aType, 256);
@@ -133,7 +148,15 @@ void TestArenaAlloc(IterableArena::ArenaType aType) {
   }
 }
 
+<<<<<<< HEAD
 void TestArenaLimit(IterableArena::ArenaType aType, bool aShouldReachLimit) {
+||||||| merged common ancestors
+void TestArenaLimit(IterableArena::ArenaType aType, bool aShouldReachLimit)
+{
+=======
+static void TestArenaLimit(IterableArena::ArenaType aType,
+                           bool aShouldReachLimit) {
+>>>>>>> upstream-releases
   IterableArena arena(aType, 128);
 
   // A non-growable arena should return a negative offset when running out
@@ -155,12 +178,14 @@ void TestArenaLimit(IterableArena::ArenaType aType, bool aShouldReachLimit) {
 
 using namespace test_arena;
 
-TEST(Moz2D, FixedArena) {
+TEST(Moz2D, FixedArena)
+{
   TestArenaAlloc(IterableArena::FIXED_SIZE);
   TestArenaLimit(IterableArena::FIXED_SIZE, true);
 }
 
-TEST(Moz2D, GrowableArena) {
+TEST(Moz2D, GrowableArena)
+{
   TestArenaAlloc(IterableArena::GROWABLE);
   TestArenaLimit(IterableArena::GROWABLE, false);
 

@@ -377,7 +377,16 @@ PassthruProxyClassObject::LockServer(BOOL aLock) {
   return S_OK;
 }
 
+<<<<<<< HEAD
 /* static */ HRESULT PassthruProxy::Register() {
+||||||| merged common ancestors
+/* static */ HRESULT
+PassthruProxy::Register()
+{
+=======
+/* static */
+HRESULT PassthruProxy::Register() {
+>>>>>>> upstream-releases
   DWORD cookie;
   RefPtr<IClassFactory> classObj(new PassthruProxyClassObject());
   return ::CoRegisterClassObject(CLSID_PassthruProxy, classObj,

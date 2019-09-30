@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/PExternalHelperAppParent.h"
+#include "mozilla/ipc/BackgroundUtils.h"
 #include "nsIChannel.h"
 #include "nsIMultiPartChannel.h"
 #include "nsIResumableChannel.h"
 #include "nsIStreamListener.h"
 #include "nsHashPropertyBag.h"
-#include "PrivateBrowsingChannel.h"
+#include "mozilla/net/PrivateBrowsingChannel.h"
 
 namespace IPC {
 class URI;
@@ -19,8 +20,16 @@ class URI;
 namespace mozilla {
 
 namespace ipc {
+<<<<<<< HEAD
 class OptionalURIParams;
 }  // namespace ipc
+||||||| merged common ancestors
+class OptionalURIParams;
+} // namespace ipc
+=======
+class URIParams;
+}  // namespace ipc
+>>>>>>> upstream-releases
 
 namespace net {
 class PChannelDiverterParent;
@@ -51,6 +60,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsIExternalHelperAppParent,
 class ContentParent;
 class PBrowserParent;
 
+<<<<<<< HEAD
 class ExternalHelperAppParent
     : public PExternalHelperAppParent,
       public nsHashPropertyBag,
@@ -94,6 +104,97 @@ class ExternalHelperAppParent
             PBrowserParent* aBrowser);
 
  protected:
+||||||| merged common ancestors
+class ExternalHelperAppParent : public PExternalHelperAppParent
+                              , public nsHashPropertyBag
+                              , public nsIChannel
+                              , public nsIMultiPartChannel
+                              , public nsIResumableChannel
+                              , public nsIStreamListener
+                              , public net::PrivateBrowsingChannel<ExternalHelperAppParent>
+                              , public nsIExternalHelperAppParent
+{
+    typedef mozilla::ipc::OptionalURIParams OptionalURIParams;
+
+public:
+    NS_DECL_ISUPPORTS_INHERITED
+    NS_DECL_NSIREQUEST
+    NS_DECL_NSICHANNEL
+    NS_DECL_NSIMULTIPARTCHANNEL
+    NS_DECL_NSIRESUMABLECHANNEL
+    NS_DECL_NSISTREAMLISTENER
+    NS_DECL_NSIREQUESTOBSERVER
+
+    mozilla::ipc::IPCResult RecvOnStartRequest(const nsCString& entityID,
+                                               PBrowserParent* aBrowser) override;
+    mozilla::ipc::IPCResult RecvOnDataAvailable(const nsCString& data,
+                                                const uint64_t& offset,
+                                                const uint32_t& count) override;
+    mozilla::ipc::IPCResult RecvOnStopRequest(const nsresult& code) override;
+
+    mozilla::ipc::IPCResult RecvDivertToParentUsing(PChannelDiverterParent* diverter,
+                                                    PBrowserParent* aBrowser) override;
+
+    bool WasFileChannel() override {
+      return mWasFileChannel;
+    }
+
+    ExternalHelperAppParent(const OptionalURIParams& uri, const int64_t& contentLength,
+                            const bool& wasFileChannel,
+                            const nsCString& aContentDispositionHeader,
+                            const uint32_t& aContentDispositionHint,
+                            const nsString& aContentDispositionFilename);
+    void Init(ContentParent *parent,
+              const nsCString& aMimeContentType,
+              const bool& aForceSave,
+              const OptionalURIParams& aReferrer,
+              PBrowserParent* aBrowser);
+
+protected:
+=======
+class ExternalHelperAppParent
+    : public PExternalHelperAppParent,
+      public nsHashPropertyBag,
+      public nsIChannel,
+      public nsIMultiPartChannel,
+      public nsIResumableChannel,
+      public nsIStreamListener,
+      public net::PrivateBrowsingChannel<ExternalHelperAppParent>,
+      public nsIExternalHelperAppParent {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_NSIREQUEST
+  NS_DECL_NSICHANNEL
+  NS_DECL_NSIMULTIPARTCHANNEL
+  NS_DECL_NSIRESUMABLECHANNEL
+  NS_DECL_NSISTREAMLISTENER
+  NS_DECL_NSIREQUESTOBSERVER
+
+  mozilla::ipc::IPCResult RecvOnStartRequest(const nsCString& entityID,
+                                             PBrowserParent* aBrowser) override;
+  mozilla::ipc::IPCResult RecvOnDataAvailable(const nsCString& data,
+                                              const uint64_t& offset,
+                                              const uint32_t& count) override;
+  mozilla::ipc::IPCResult RecvOnStopRequest(const nsresult& code) override;
+
+  mozilla::ipc::IPCResult RecvDivertToParentUsing(
+      PChannelDiverterParent* diverter, PBrowserParent* aBrowser) override;
+
+  bool WasFileChannel() override { return mWasFileChannel; }
+
+  ExternalHelperAppParent(const Maybe<mozilla::ipc::URIParams>& uri,
+                          const int64_t& contentLength,
+                          const bool& wasFileChannel,
+                          const nsCString& aContentDispositionHeader,
+                          const uint32_t& aContentDispositionHint,
+                          const nsString& aContentDispositionFilename);
+  void Init(const Maybe<mozilla::net::LoadInfoArgs>& aLoadInfoArgs,
+            const nsCString& aMimeContentType, const bool& aForceSave,
+            const Maybe<mozilla::ipc::URIParams>& aReferrer,
+            PBrowserParent* aBrowser);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~ExternalHelperAppParent();
 
   virtual void ActorDestroy(ActorDestroyReason why) override;
@@ -102,6 +203,7 @@ class ExternalHelperAppParent
  private:
   nsCOMPtr<nsIStreamListener> mListener;
   nsCOMPtr<nsIURI> mURI;
+  nsCOMPtr<nsILoadInfo> mLoadInfo;
   bool mPending;
 #ifdef DEBUG
   bool mDiverted;

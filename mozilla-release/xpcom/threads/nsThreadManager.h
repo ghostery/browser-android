@@ -66,7 +66,15 @@ class nsThreadManager : public nsIThreadManager {
   void SuspendInputEventPrioritization();
   void ResumeInputEventPrioritization();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  static bool MainThreadHasPendingHighPriorityEvents();
+
+ private:
+>>>>>>> upstream-releases
   nsThreadManager()
       : mCurThreadIndex(0), mMainPRThread(nullptr), mInitialized(false) {}
 

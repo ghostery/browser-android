@@ -5,7 +5,6 @@
 
 #include "WebGLQuery.h"
 
-#include "gfxPrefs.h"
 #include "GLContext.h"
 #include "mozilla/dom/WebGL2RenderingContextBinding.h"
 #include "nsContentUtils.h"
@@ -100,6 +99,7 @@ void WebGLQuery::GetQueryParameter(GLenum pname,
       break;
 
     default:
+<<<<<<< HEAD
       mContext->ErrorInvalidEnumInfo("pname", pname);
       return;
   }
@@ -121,6 +121,52 @@ void WebGLQuery::GetQueryParameter(GLenum pname,
   if (!canBeAvailable) {
     if (pname == LOCAL_GL_QUERY_RESULT_AVAILABLE) {
       retval.set(JS::BooleanValue(false));
+||||||| merged common ancestors
+        mContext->ErrorInvalidEnumInfo("pname", pname);
+        return;
+    }
+
+    if (!mTarget) {
+        mContext->ErrorInvalidOperation("Query has never been active.");
+        return;
+    }
+
+    if (mActiveSlot)
+        return mContext->ErrorInvalidOperation("Query is still active.");
+
+    // End of validation
+    ////
+
+    // We must usually wait for an event loop before the query can be available.
+    const bool canBeAvailable = (mCanBeAvailable || gfxPrefs::WebGLImmediateQueries());
+    if (!canBeAvailable) {
+        if (pname == LOCAL_GL_QUERY_RESULT_AVAILABLE) {
+            retval.set(JS::BooleanValue(false));
+        }
+        return;
+=======
+      mContext->ErrorInvalidEnumInfo("pname", pname);
+      return;
+  }
+
+  if (!mTarget) {
+    mContext->ErrorInvalidOperation("Query has never been active.");
+    return;
+  }
+
+  if (mActiveSlot)
+    return mContext->ErrorInvalidOperation("Query is still active.");
+
+  // End of validation
+  ////
+
+  // We must usually wait for an event loop before the query can be available.
+  const bool canBeAvailable =
+      (mCanBeAvailable || StaticPrefs::webgl_allow_immediate_queries());
+  if (!canBeAvailable) {
+    if (pname == LOCAL_GL_QUERY_RESULT_AVAILABLE) {
+      retval.set(JS::BooleanValue(false));
+>>>>>>> upstream-releases
     }
     return;
   }

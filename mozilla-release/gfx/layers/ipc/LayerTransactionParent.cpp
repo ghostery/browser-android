@@ -11,9 +11,18 @@
 #include "Layers.h"                         // for Layer, ContainerLayer, etc
 #include "CompositableTransactionParent.h"  // for EditReplyVector
 #include "CompositorBridgeParent.h"
+<<<<<<< HEAD
 #include "gfxPrefs.h"
 #include "mozilla/gfx/BasePoint3D.h"         // for BasePoint3D
 #include "mozilla/layers/AnimationHelper.h"  // for GetAnimatedPropValue
+||||||| merged common ancestors
+#include "gfxPrefs.h"
+#include "mozilla/gfx/BasePoint3D.h"    // for BasePoint3D
+#include "mozilla/layers/AnimationHelper.h" // for GetAnimatedPropValue
+=======
+#include "mozilla/gfx/BasePoint3D.h"         // for BasePoint3D
+#include "mozilla/layers/AnimationHelper.h"  // for GetAnimatedPropValue
+>>>>>>> upstream-releases
 #include "mozilla/layers/CanvasLayerComposite.h"
 #include "mozilla/layers/ColorLayerComposite.h"
 #include "mozilla/layers/Compositor.h"  // for Compositor
@@ -25,7 +34,15 @@
 #include "mozilla/layers/LayersTypes.h"     // for MOZ_LAYERS_LOG
 #include "mozilla/layers/TextureHostOGL.h"  // for TextureHostOGL
 #include "mozilla/layers/PaintedLayerComposite.h"
+<<<<<<< HEAD
 #include "mozilla/mozalloc.h"  // for operator delete, etc
+||||||| merged common ancestors
+#include "mozilla/mozalloc.h"           // for operator delete, etc
+=======
+#include "mozilla/mozalloc.h"  // for operator delete, etc
+#include "mozilla/PerfStats.h"
+#include "mozilla/StaticPrefs.h"
+>>>>>>> upstream-releases
 #include "mozilla/Telemetry.h"
 #include "mozilla/Unused.h"
 #include "nsCoord.h"          // for NSAppUnitsToFloatPixels
@@ -46,6 +63,7 @@ namespace layers {
 
 //--------------------------------------------------
 // LayerTransactionParent
+<<<<<<< HEAD
 LayerTransactionParent::LayerTransactionParent(
     HostLayerManager* aManager, CompositorBridgeParentBase* aBridge,
     CompositorAnimationStorage* aAnimStorage, LayersId aId,
@@ -61,6 +79,40 @@ LayerTransactionParent::LayerTransactionParent(
       mDestroyed(false),
       mIPCOpen(false),
       mUpdateHitTestingTree(false) {
+||||||| merged common ancestors
+LayerTransactionParent::LayerTransactionParent(HostLayerManager* aManager,
+                                               CompositorBridgeParentBase* aBridge,
+                                               CompositorAnimationStorage* aAnimStorage,
+                                               LayersId aId,
+                                               TimeDuration aVsyncRate)
+  : mLayerManager(aManager)
+  , mCompositorBridge(aBridge)
+  , mAnimStorage(aAnimStorage)
+  , mId(aId)
+  , mChildEpoch{0}
+  , mParentEpoch{0}
+  , mVsyncRate(aVsyncRate)
+  , mPendingTransaction{0}
+  , mDestroyed(false)
+  , mIPCOpen(false)
+  , mUpdateHitTestingTree(false)
+{
+=======
+LayerTransactionParent::LayerTransactionParent(
+    HostLayerManager* aManager, CompositorBridgeParentBase* aBridge,
+    CompositorAnimationStorage* aAnimStorage, LayersId aId,
+    TimeDuration aVsyncRate)
+    : mLayerManager(aManager),
+      mCompositorBridge(aBridge),
+      mAnimStorage(aAnimStorage),
+      mId(aId),
+      mChildEpoch{0},
+      mParentEpoch{0},
+      mVsyncRate(aVsyncRate),
+      mDestroyed(false),
+      mIPCOpen(false),
+      mUpdateHitTestingTree(false) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mId.IsValid());
 }
 
@@ -113,12 +165,30 @@ void LayerTransactionParent::Destroy() {
   mAnimStorage = nullptr;
 }
 
+<<<<<<< HEAD
 class MOZ_STACK_CLASS AutoLayerTransactionParentAsyncMessageSender {
  public:
   explicit AutoLayerTransactionParentAsyncMessageSender(
       LayerTransactionParent* aLayerTransaction,
       const InfallibleTArray<OpDestroy>* aDestroyActors = nullptr)
       : mLayerTransaction(aLayerTransaction), mActorsToDestroy(aDestroyActors) {
+||||||| merged common ancestors
+class MOZ_STACK_CLASS AutoLayerTransactionParentAsyncMessageSender
+{
+public:
+  explicit AutoLayerTransactionParentAsyncMessageSender(LayerTransactionParent* aLayerTransaction,
+                                                        const InfallibleTArray<OpDestroy>* aDestroyActors = nullptr)
+    : mLayerTransaction(aLayerTransaction)
+    , mActorsToDestroy(aDestroyActors)
+  {
+=======
+class MOZ_STACK_CLASS AutoLayerTransactionParentAsyncMessageSender final {
+ public:
+  explicit AutoLayerTransactionParentAsyncMessageSender(
+      LayerTransactionParent* aLayerTransaction,
+      const InfallibleTArray<OpDestroy>* aDestroyActors = nullptr)
+      : mLayerTransaction(aLayerTransaction), mActorsToDestroy(aDestroyActors) {
+>>>>>>> upstream-releases
     mLayerTransaction->SetAboutToSendAsyncMessages();
   }
 
@@ -152,8 +222,10 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
     }
   });
 
-  AUTO_PROFILER_TRACING("Paint", "LayerTransaction");
+  AUTO_PROFILER_TRACING("Paint", "LayerTransaction", GRAPHICS);
   AUTO_PROFILER_LABEL("LayerTransactionParent::RecvUpdate", GRAPHICS);
+  PerfStats::AutoMetricRecording<PerfStats::Metric::LayerTransactions>
+      autoRecording;
 
   TimeStamp updateStart = TimeStamp::Now();
 
@@ -192,6 +264,7 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
       case Edit::TOpCreatePaintedLayer: {
         MOZ_LAYERS_LOG(("[ParentSide] CreatePaintedLayer"));
 
+<<<<<<< HEAD
         RefPtr<PaintedLayer> layer = mLayerManager->CreatePaintedLayer();
         if (!BindLayer(layer, edit.get_OpCreatePaintedLayer())) {
           return IPC_FAIL_NO_REASON(this);
@@ -199,6 +272,30 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
 
         UpdateHitTestingTree(layer, "CreatePaintedLayer");
         break;
+||||||| merged common ancestors
+      RefPtr<PaintedLayer> layer = mLayerManager->CreatePaintedLayer();
+      if (!BindLayer(layer, edit.get_OpCreatePaintedLayer())) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+
+      UpdateHitTestingTree(layer, "CreatePaintedLayer");
+      break;
+    }
+    case Edit::TOpCreateContainerLayer: {
+      MOZ_LAYERS_LOG(("[ParentSide] CreateContainerLayer"));
+
+      RefPtr<ContainerLayer> layer = mLayerManager->CreateContainerLayer();
+      if (!BindLayer(layer, edit.get_OpCreateContainerLayer())) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+        RefPtr<PaintedLayer> layer = mLayerManager->CreatePaintedLayer();
+        if (!BindLayer(layer, edit.get_OpCreatePaintedLayer())) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "CreatePaintedLayer");
+        break;
+>>>>>>> upstream-releases
       }
       case Edit::TOpCreateContainerLayer: {
         MOZ_LAYERS_LOG(("[ParentSide] CreateContainerLayer"));
@@ -247,6 +344,53 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
       case Edit::TOpCreateRefLayer: {
         MOZ_LAYERS_LOG(("[ParentSide] CreateRefLayer"));
 
+<<<<<<< HEAD
+        RefPtr<RefLayer> layer = mLayerManager->CreateRefLayer();
+        if (!BindLayer(layer, edit.get_OpCreateRefLayer())) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "CreateRefLayer");
+        break;
+||||||| merged common ancestors
+      UpdateHitTestingTree(layer, "CreateRefLayer");
+      break;
+    }
+    case Edit::TOpSetDiagnosticTypes: {
+      mLayerManager->SetDiagnosticTypes(edit.get_OpSetDiagnosticTypes().diagnostics());
+      break;
+    }
+    case Edit::TOpWindowOverlayChanged: {
+      mLayerManager->SetWindowOverlayChanged();
+      break;
+    }
+    // Tree ops
+    case Edit::TOpSetRoot: {
+      MOZ_LAYERS_LOG(("[ParentSide] SetRoot"));
+
+      Layer* newRoot = AsLayer(edit.get_OpSetRoot().root());
+      if (!newRoot) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      if (newRoot->GetParent()) {
+        // newRoot is not a root!
+        return IPC_FAIL_NO_REASON(this);
+      }
+      mRoot = newRoot;
+
+      UpdateHitTestingTree(mRoot, "SetRoot");
+      break;
+    }
+    case Edit::TOpInsertAfter: {
+      MOZ_LAYERS_LOG(("[ParentSide] InsertAfter"));
+
+      const OpInsertAfter& oia = edit.get_OpInsertAfter();
+      Layer* child = AsLayer(oia.childLayer());
+      Layer* layer = AsLayer(oia.container());
+      Layer* after = AsLayer(oia.after());
+      if (!child || !layer || !after) {
+        return IPC_FAIL_NO_REASON(this);
+=======
         RefPtr<RefLayer> layer = mLayerManager->CreateRefLayer();
         if (!BindLayer(layer, edit.get_OpCreateRefLayer())) {
           return IPC_FAIL_NO_REASON(this);
@@ -260,6 +404,40 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
             edit.get_OpSetDiagnosticTypes().diagnostics());
         break;
       }
+      case Edit::TOpWindowOverlayChanged: {
+        mLayerManager->SetWindowOverlayChanged();
+        break;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+      case Edit::TOpSetDiagnosticTypes: {
+        mLayerManager->SetDiagnosticTypes(
+            edit.get_OpSetDiagnosticTypes().diagnostics());
+        break;
+||||||| merged common ancestors
+      ContainerLayer* container = layer->AsContainerLayer();
+      if (!container || !container->InsertAfter(child, after)) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+      // Tree ops
+      case Edit::TOpSetRoot: {
+        MOZ_LAYERS_LOG(("[ParentSide] SetRoot"));
+
+        Layer* newRoot = AsLayer(edit.get_OpSetRoot().root());
+        if (!newRoot) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        if (newRoot->GetParent()) {
+          // newRoot is not a root!
+          return IPC_FAIL_NO_REASON(this);
+        }
+        mRoot = newRoot;
+
+        UpdateHitTestingTree(mRoot, "SetRoot");
+        break;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
       case Edit::TOpWindowOverlayChanged: {
         mLayerManager->SetWindowOverlayChanged();
         break;
@@ -370,13 +548,120 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
 
         UpdateHitTestingTree(layer, "RaiseToTopChild");
         break;
+||||||| merged common ancestors
+
+      UpdateHitTestingTree(layer, "InsertAfter");
+      break;
+    }
+    case Edit::TOpPrependChild: {
+      MOZ_LAYERS_LOG(("[ParentSide] PrependChild"));
+
+      const OpPrependChild& oac = edit.get_OpPrependChild();
+      Layer* child = AsLayer(oac.childLayer());
+      Layer* layer = AsLayer(oac.container());
+      if (!child || !layer) {
+        return IPC_FAIL_NO_REASON(this);
       }
+      ContainerLayer* container = layer->AsContainerLayer();
+      if (!container || !container->InsertAfter(child, nullptr)) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+
+      UpdateHitTestingTree(layer, "PrependChild");
+      break;
+    }
+    case Edit::TOpRemoveChild: {
+      MOZ_LAYERS_LOG(("[ParentSide] RemoveChild"));
+
+      const OpRemoveChild& orc = edit.get_OpRemoveChild();
+      Layer* childLayer = AsLayer(orc.childLayer());
+      Layer* layer = AsLayer(orc.container());
+      if (!childLayer || !layer) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      ContainerLayer* container = layer->AsContainerLayer();
+      if (!container || !container->RemoveChild(childLayer)) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+
+      UpdateHitTestingTree(layer, "RemoveChild");
+      break;
+    }
+    case Edit::TOpRepositionChild: {
+      MOZ_LAYERS_LOG(("[ParentSide] RepositionChild"));
+
+      const OpRepositionChild& orc = edit.get_OpRepositionChild();
+      Layer* child = AsLayer(orc.childLayer());
+      Layer* after = AsLayer(orc.after());
+      Layer* layer = AsLayer(orc.container());
+      if (!child || !layer || !after) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      ContainerLayer* container = layer->AsContainerLayer();
+      if (!container || !container->RepositionChild(child, after)) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+
+      UpdateHitTestingTree(layer, "RepositionChild");
+      break;
+    }
+    case Edit::TOpRaiseToTopChild: {
+      MOZ_LAYERS_LOG(("[ParentSide] RaiseToTopChild"));
+
+      const OpRaiseToTopChild& rtc = edit.get_OpRaiseToTopChild();
+      Layer* child = AsLayer(rtc.childLayer());
+      if (!child) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+      case Edit::TOpInsertAfter: {
+        MOZ_LAYERS_LOG(("[ParentSide] InsertAfter"));
+
+        const OpInsertAfter& oia = edit.get_OpInsertAfter();
+        Layer* child = AsLayer(oia.childLayer());
+        Layer* layer = AsLayer(oia.container());
+        Layer* after = AsLayer(oia.after());
+        if (!child || !layer || !after) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        ContainerLayer* container = layer->AsContainerLayer();
+        if (!container || !container->InsertAfter(child, after)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "InsertAfter");
+        break;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
       case Edit::TCompositableOperation: {
         if (!ReceiveCompositableUpdate(edit.get_CompositableOperation())) {
           return IPC_FAIL_NO_REASON(this);
         }
         break;
+||||||| merged common ancestors
+      Layer* layer = AsLayer(rtc.container());
+      if (!layer) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+      case Edit::TOpPrependChild: {
+        MOZ_LAYERS_LOG(("[ParentSide] PrependChild"));
+
+        const OpPrependChild& oac = edit.get_OpPrependChild();
+        Layer* child = AsLayer(oac.childLayer());
+        Layer* layer = AsLayer(oac.container());
+        if (!child || !layer) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        ContainerLayer* container = layer->AsContainerLayer();
+        if (!container || !container->InsertAfter(child, nullptr)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "PrependChild");
+        break;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
       case Edit::TOpAttachCompositable: {
         const OpAttachCompositable& op = edit.get_OpAttachCompositable();
         RefPtr<CompositableHost> host = FindCompositable(op.compositable());
@@ -385,7 +670,30 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
         }
         host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
         break;
+||||||| merged common ancestors
+      ContainerLayer* container = layer->AsContainerLayer();
+      if (!container || !container->RepositionChild(child, nullptr)) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+      case Edit::TOpRemoveChild: {
+        MOZ_LAYERS_LOG(("[ParentSide] RemoveChild"));
+
+        const OpRemoveChild& orc = edit.get_OpRemoveChild();
+        Layer* childLayer = AsLayer(orc.childLayer());
+        Layer* layer = AsLayer(orc.container());
+        if (!childLayer || !layer) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        ContainerLayer* container = layer->AsContainerLayer();
+        if (!container || !container->RemoveChild(childLayer)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "RemoveChild");
+        break;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
       case Edit::TOpAttachAsyncCompositable: {
         const OpAttachAsyncCompositable& op =
             edit.get_OpAttachAsyncCompositable();
@@ -411,9 +719,137 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
         }
         host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
         break;
+||||||| merged common ancestors
+
+      UpdateHitTestingTree(layer, "RaiseToTopChild");
+      break;
+    }
+    case Edit::TCompositableOperation: {
+      if (!ReceiveCompositableUpdate(edit.get_CompositableOperation())) {
+        return IPC_FAIL_NO_REASON(this);
+=======
+      case Edit::TOpRepositionChild: {
+        MOZ_LAYERS_LOG(("[ParentSide] RepositionChild"));
+
+        const OpRepositionChild& orc = edit.get_OpRepositionChild();
+        Layer* child = AsLayer(orc.childLayer());
+        Layer* after = AsLayer(orc.after());
+        Layer* layer = AsLayer(orc.container());
+        if (!child || !layer || !after) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        ContainerLayer* container = layer->AsContainerLayer();
+        if (!container || !container->RepositionChild(child, after)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "RepositionChild");
+        break;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+      default:
+        MOZ_CRASH("not reached");
+||||||| merged common ancestors
+      break;
+    }
+    case Edit::TOpAttachCompositable: {
+      const OpAttachCompositable& op = edit.get_OpAttachCompositable();
+      RefPtr<CompositableHost> host = FindCompositable(op.compositable());
+      if (!Attach(AsLayer(op.layer()), host, false)) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
+      break;
+    }
+    case Edit::TOpAttachAsyncCompositable: {
+      const OpAttachAsyncCompositable& op = edit.get_OpAttachAsyncCompositable();
+      RefPtr<ImageBridgeParent> imageBridge = ImageBridgeParent::GetInstance(OtherPid());
+      if (!imageBridge) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      RefPtr<CompositableHost> host = imageBridge->FindCompositable(op.compositable());
+      if (!host) {
+        // This normally should not happen, but can after a GPU process crash.
+        // Media may not have had time to update the ImageContainer associated
+        // with a video frame, and we may try to attach a stale CompositableHandle.
+        // Rather than break the whole transaction, we just continue.
+        gfxCriticalNote << "CompositableHost " << op.compositable().Value() << " not found";
+        continue;
+      }
+      if (!Attach(AsLayer(op.layer()), host, true)) {
+        return IPC_FAIL_NO_REASON(this);
+      }
+      host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
+      break;
+    }
+    default:
+      MOZ_CRASH("not reached");
+=======
+      case Edit::TOpRaiseToTopChild: {
+        MOZ_LAYERS_LOG(("[ParentSide] RaiseToTopChild"));
+
+        const OpRaiseToTopChild& rtc = edit.get_OpRaiseToTopChild();
+        Layer* child = AsLayer(rtc.childLayer());
+        if (!child) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        Layer* layer = AsLayer(rtc.container());
+        if (!layer) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        ContainerLayer* container = layer->AsContainerLayer();
+        if (!container || !container->RepositionChild(child, nullptr)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+
+        UpdateHitTestingTree(layer, "RaiseToTopChild");
+        break;
+      }
+      case Edit::TCompositableOperation: {
+        if (!ReceiveCompositableUpdate(edit.get_CompositableOperation())) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        break;
+      }
+      case Edit::TOpAttachCompositable: {
+        const OpAttachCompositable& op = edit.get_OpAttachCompositable();
+        RefPtr<CompositableHost> host = FindCompositable(op.compositable());
+        if (!Attach(AsLayer(op.layer()), host, false)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
+        break;
+      }
+      case Edit::TOpAttachAsyncCompositable: {
+        const OpAttachAsyncCompositable& op =
+            edit.get_OpAttachAsyncCompositable();
+        RefPtr<ImageBridgeParent> imageBridge =
+            ImageBridgeParent::GetInstance(OtherPid());
+        if (!imageBridge) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        RefPtr<CompositableHost> host = imageBridge->FindCompositable(
+            op.compositable(), /* aAllowDisablingWebRender */ true);
+        if (!host) {
+          // This normally should not happen, but can after a GPU process crash.
+          // Media may not have had time to update the ImageContainer associated
+          // with a video frame, and we may try to attach a stale
+          // CompositableHandle. Rather than break the whole transaction, we
+          // just continue.
+          gfxCriticalNote << "CompositableHost " << op.compositable().Value()
+                          << " not found";
+          continue;
+        }
+        if (!Attach(AsLayer(op.layer()), host, true)) {
+          return IPC_FAIL_NO_REASON(this);
+        }
+        host->SetCompositorBridgeID(mLayerManager->GetCompositorBridgeID());
+        break;
       }
       default:
         MOZ_CRASH("not reached");
+>>>>>>> upstream-releases
     }
   }
 
@@ -473,11 +909,21 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvUpdate(
 #endif
 
   // Enable visual warning for long transaction when draw FPS option is enabled
-  bool drawFps = gfxPrefs::LayersDrawFPS();
+  bool drawFps = StaticPrefs::layers_acceleration_draw_fps();
   if (drawFps) {
+<<<<<<< HEAD
     uint32_t visualWarningTrigger = gfxPrefs::LayerTransactionWarning();
     // The default theshold is 200ms to trigger, hit red when it take 4 times
     // longer
+||||||| merged common ancestors
+    uint32_t visualWarningTrigger = gfxPrefs::LayerTransactionWarning();
+    // The default theshold is 200ms to trigger, hit red when it take 4 times longer
+=======
+    uint32_t visualWarningTrigger =
+        StaticPrefs::layers_transaction_warning_ms();
+    // The default theshold is 200ms to trigger, hit red when it take 4 times
+    // longer
+>>>>>>> upstream-releases
     TimeDuration latency = TimeStamp::Now() - aInfo.transactionStart();
     if (latency > TimeDuration::FromMilliseconds(visualWarningTrigger)) {
       float severity =
@@ -537,8 +983,17 @@ bool LayerTransactionParent::SetLayerAttributes(
   layer->SetCompositorAnimations(common.compositorAnimations());
   // Clean up the Animations by id in the CompositorAnimationStorage
   // if there are no active animations on the layer
+<<<<<<< HEAD
   if (mAnimStorage && layer->GetCompositorAnimationsId() &&
       layer->GetAnimations().IsEmpty()) {
+||||||| merged common ancestors
+  if (mAnimStorage &&
+      layer->GetCompositorAnimationsId() &&
+      layer->GetAnimations().IsEmpty()) {
+=======
+  if (mAnimStorage && layer->GetCompositorAnimationsId() &&
+      layer->GetPropertyAnimationGroups().IsEmpty()) {
+>>>>>>> upstream-releases
     mAnimStorage->ClearById(layer->GetCompositorAnimationsId());
   }
   if (common.scrollMetadata() != layer->GetAllScrollMetadata()) {
@@ -583,6 +1038,7 @@ bool LayerTransactionParent::SetLayerAttributes(
     case Specific::TContainerLayerAttributes: {
       MOZ_LAYERS_LOG(("[ParentSide]   container layer"));
 
+<<<<<<< HEAD
       ContainerLayer* containerLayer = layer->AsContainerLayer();
       if (!containerLayer) {
         return false;
@@ -595,6 +1051,23 @@ bool LayerTransactionParent::SetLayerAttributes(
       containerLayer->SetScaleToResolution(attrs.scaleToResolution(),
                                            attrs.presShellResolution());
       break;
+||||||| merged common ancestors
+    ContainerLayer* containerLayer = layer->AsContainerLayer();
+    if (!containerLayer) {
+      return false;
+=======
+      ContainerLayer* containerLayer = layer->AsContainerLayer();
+      if (!containerLayer) {
+        return false;
+      }
+      const ContainerLayerAttributes& attrs =
+          specific.get_ContainerLayerAttributes();
+      containerLayer->SetPreScale(attrs.preXScale(), attrs.preYScale());
+      containerLayer->SetInheritedScale(attrs.inheritedXScale(),
+                                        attrs.inheritedYScale());
+      containerLayer->SetScaleToResolution(attrs.presShellResolution());
+      break;
+>>>>>>> upstream-releases
     }
     case Specific::TColorLayerAttributes: {
       MOZ_LAYERS_LOG(("[ParentSide]   color layer"));
@@ -674,7 +1147,19 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvSetTestSampleTime(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvLeaveTestMode() {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvLeaveTestMode()
+{
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvLeaveTestMode() {
+  if (mDestroyed) {
+    return IPC_FAIL_NO_REASON(this);
+  }
+
+>>>>>>> upstream-releases
   mCompositorBridge->LeaveTestMode(GetId());
   return IPC_OK();
 }
@@ -700,8 +1185,18 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvGetAnimationValue(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTransform(
     const LayerHandle& aLayerHandle, MaybeTransform* aTransform) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvGetTransform(const LayerHandle& aLayerHandle,
+                                         MaybeTransform* aTransform)
+{
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTransform(
+    const LayerHandle& aLayerHandle, Maybe<Matrix4x4>* aTransform) {
+>>>>>>> upstream-releases
   if (mDestroyed || !mLayerManager || mLayerManager->IsDestroyed()) {
     return IPC_FAIL_NO_REASON(this);
   }
@@ -724,6 +1219,7 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTransform(
   float scale = 1;
   Point3D scaledOrigin;
   Point3D transformOrigin;
+<<<<<<< HEAD
   for (uint32_t i = 0; i < layer->GetAnimations().Length(); i++) {
     if (layer->GetAnimations()[i].data().type() ==
         AnimationData::TTransformData) {
@@ -735,7 +1231,31 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTransform(
           NS_round(NSAppUnitsToFloatPixels(data.origin().y, scale)), 0.0f);
       transformOrigin = data.transformOrigin();
       break;
+||||||| merged common ancestors
+  for (uint32_t i = 0; i < layer->GetAnimations().Length(); i++) {
+    if (layer->GetAnimations()[i].data().type() == AnimationData::TTransformData) {
+      const TransformData& data = layer->GetAnimations()[i].data().get_TransformData();
+      scale = data.appUnitsPerDevPixel();
+      scaledOrigin =
+        Point3D(NS_round(NSAppUnitsToFloatPixels(data.origin().x, scale)),
+                NS_round(NSAppUnitsToFloatPixels(data.origin().y, scale)),
+                0.0f);
+      transformOrigin = data.transformOrigin();
+      break;
+=======
+  for (const PropertyAnimationGroup& group :
+       layer->GetPropertyAnimationGroups()) {
+    if (group.mAnimationData.isNothing()) {
+      continue;
+>>>>>>> upstream-releases
     }
+    const TransformData& data = group.mAnimationData.ref();
+    scale = data.appUnitsPerDevPixel();
+    scaledOrigin = Point3D(
+        NS_round(NSAppUnitsToFloatPixels(data.origin().x, scale)),
+        NS_round(NSAppUnitsToFloatPixels(data.origin().y, scale)), 0.0f);
+    transformOrigin = data.transformOrigin();
+    break;
   }
 
   // If our parent isn't a perspective layer, then the offset into reference
@@ -749,13 +1269,22 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTransform(
   // containers are enabled, then the APZ transform might not be on |layer| but
   // instead would be on the parent of |layer|, if that is the root scrollable
   // metrics. So we special-case that behaviour.
+<<<<<<< HEAD
   if (gfxPrefs::LayoutUseContainersForRootFrames() &&
       !layer->HasScrollableFrameMetrics() && layer->GetParent() &&
+||||||| merged common ancestors
+  if (gfxPrefs::LayoutUseContainersForRootFrames() &&
+      !layer->HasScrollableFrameMetrics() &&
+      layer->GetParent() &&
+=======
+  if (StaticPrefs::layout_scroll_root_frame_containers() &&
+      !layer->HasScrollableFrameMetrics() && layer->GetParent() &&
+>>>>>>> upstream-releases
       layer->GetParent()->HasRootScrollableFrameMetrics()) {
     transform *= layer->GetParent()->AsHostLayer()->GetShadowBaseTransform();
   }
 
-  *aTransform = transform;
+  *aTransform = Some(transform);
 
   return IPC_OK();
 }
@@ -767,8 +1296,15 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvSetAsyncScrollOffset(
     return IPC_FAIL_NO_REASON(this);
   }
 
+<<<<<<< HEAD
   mCompositorBridge->SetTestAsyncScrollOffset(GetId(), aScrollID,
                                               CSSPoint(aX, aY));
+||||||| merged common ancestors
+  mCompositorBridge->SetTestAsyncScrollOffset(GetId(), aScrollID, CSSPoint(aX, aY));
+=======
+  mCompositorBridge->SetTestAsyncScrollOffset(WRRootId::NonWebRender(GetId()),
+                                              aScrollID, CSSPoint(aX, aY));
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -778,19 +1314,48 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvSetAsyncZoom(
     return IPC_FAIL_NO_REASON(this);
   }
 
+<<<<<<< HEAD
   mCompositorBridge->SetTestAsyncZoom(GetId(), aScrollID,
                                       LayerToParentLayerScale(aValue));
+||||||| merged common ancestors
+  mCompositorBridge->SetTestAsyncZoom(GetId(), aScrollID, LayerToParentLayerScale(aValue));
+=======
+  mCompositorBridge->SetTestAsyncZoom(WRRootId::NonWebRender(GetId()),
+                                      aScrollID,
+                                      LayerToParentLayerScale(aValue));
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvFlushApzRepaints() {
   mCompositorBridge->FlushApzRepaints(GetId());
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvFlushApzRepaints()
+{
+  mCompositorBridge->FlushApzRepaints(GetId());
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvFlushApzRepaints() {
+  mCompositorBridge->FlushApzRepaints(WRRootId::NonWebRender(GetId()));
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvGetAPZTestData(
     APZTestData* aOutData) {
   mCompositorBridge->GetAPZTestData(GetId(), aOutData);
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvGetAPZTestData(APZTestData* aOutData)
+{
+  mCompositorBridge->GetAPZTestData(GetId(), aOutData);
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvGetAPZTestData(
+    APZTestData* aOutData) {
+  mCompositorBridge->GetAPZTestData(WRRootId::NonWebRender(GetId()), aOutData);
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -800,8 +1365,33 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvRequestProperty(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvSetConfirmedTargetAPZC(
     const uint64_t& aBlockId, nsTArray<ScrollableLayerGuid>&& aTargets) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvSetConfirmedTargetAPZC(const uint64_t& aBlockId,
+                                                   nsTArray<ScrollableLayerGuid>&& aTargets)
+{
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvSetConfirmedTargetAPZC(
+    const uint64_t& aBlockId, nsTArray<SLGuidAndRenderRoot>&& aTargets) {
+  for (size_t i = 0; i < aTargets.Length(); i++) {
+    // Guard against bad data from hijacked child processes
+    if (aTargets[i].mRenderRoot != wr::RenderRoot::Default) {
+      NS_ERROR(
+          "Unexpected render root in RecvSetConfirmedTargetAPZC; dropping "
+          "message...");
+      return IPC_FAIL(this, "Bad render root");
+    }
+    if (aTargets[i].mScrollableLayerGuid.mLayersId != GetId()) {
+      NS_ERROR(
+          "Unexpected layers id in RecvSetConfirmedTargetAPZC; dropping "
+          "message...");
+      return IPC_FAIL(this, "Bad layers id");
+    }
+  }
+>>>>>>> upstream-releases
   mCompositorBridge->SetConfirmedTargetAPZC(GetId(), aBlockId, aTargets);
   return IPC_OK();
 }
@@ -885,6 +1475,7 @@ bool LayerTransactionParent::IsSameProcess() const {
   return OtherPid() == base::GetCurrentProcId();
 }
 
+<<<<<<< HEAD
 TransactionId LayerTransactionParent::FlushTransactionId(
     const VsyncId& aId, TimeStamp& aCompositeEnd) {
   if (mId.IsValid() && mPendingTransaction.IsValid() && !mVsyncRate.IsZero()) {
@@ -930,7 +1521,29 @@ TransactionId LayerTransactionParent::FlushTransactionId(
       }
     }
   }
+||||||| merged common ancestors
+TransactionId
+LayerTransactionParent::FlushTransactionId(TimeStamp& aCompositeEnd)
+{
+  if (mId.IsValid() && mPendingTransaction.IsValid() && !mVsyncRate.IsZero()) {
+    double latencyMs = (aCompositeEnd - mTxnStartTime).ToMilliseconds();
+    double latencyNorm = latencyMs / mVsyncRate.ToMilliseconds();
+    int32_t fracLatencyNorm = lround(latencyNorm * 100.0);
+    Telemetry::Accumulate(Telemetry::CONTENT_FRAME_TIME, fracLatencyNorm);
+  }
+=======
+void LayerTransactionParent::SetPendingTransactionId(
+    TransactionId aId, const VsyncId& aVsyncId,
+    const TimeStamp& aVsyncStartTime, const TimeStamp& aRefreshStartTime,
+    const TimeStamp& aTxnStartTime, const TimeStamp& aTxnEndTime,
+    bool aContainsSVG, const nsCString& aURL, const TimeStamp& aFwdTime) {
+  mPendingTransactions.AppendElement(PendingTransaction{
+      aId, aVsyncId, aVsyncStartTime, aRefreshStartTime, aTxnStartTime,
+      aTxnEndTime, aFwdTime, aURL, aContainsSVG});
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #if defined(ENABLE_FRAME_LATENCY_LOG)
   if (mPendingTransaction.IsValid()) {
     if (mRefreshStartTime) {
@@ -940,22 +1553,63 @@ TransactionId LayerTransactionParent::FlushTransactionId(
           "From transaction start to end of generate frame latencyMs %d this "
           "%p\n",
           latencyMs, this);
+||||||| merged common ancestors
+#if defined(ENABLE_FRAME_LATENCY_LOG)
+  if (mPendingTransaction.IsValid()) {
+    if (mRefreshStartTime) {
+      int32_t latencyMs = lround((aCompositeEnd - mRefreshStartTime).ToMilliseconds());
+      printf_stderr("From transaction start to end of generate frame latencyMs %d this %p\n", latencyMs, this);
+=======
+TransactionId LayerTransactionParent::FlushTransactionId(
+    const VsyncId& aCompositeId, TimeStamp& aCompositeEnd) {
+  TransactionId id;
+  for (auto& transaction : mPendingTransactions) {
+    id = transaction.mId;
+    if (mId.IsValid() && transaction.mId.IsValid() && !mVsyncRate.IsZero()) {
+      RecordContentFrameTime(
+          transaction.mTxnVsyncId, transaction.mVsyncStartTime,
+          transaction.mTxnStartTime, aCompositeId, aCompositeEnd,
+          transaction.mTxnEndTime - transaction.mTxnStartTime, mVsyncRate,
+          transaction.mContainsSVG, false);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     if (mFwdTime) {
       int32_t latencyMs = lround((aCompositeEnd - mFwdTime).ToMilliseconds());
       printf_stderr(
           "From forwarding transaction to end of generate frame latencyMs %d "
           "this %p\n",
           latencyMs, this);
-    }
-  }
-#endif
+||||||| merged common ancestors
+    if (mFwdTime) {
+      int32_t latencyMs = lround((aCompositeEnd - mFwdTime).ToMilliseconds());
+      printf_stderr("From forwarding transaction to end of generate frame latencyMs %d this %p\n", latencyMs, this);
+=======
 
-  mRefreshStartTime = TimeStamp();
-  mTxnStartTime = TimeStamp();
-  mFwdTime = TimeStamp();
-  TransactionId id = mPendingTransaction;
-  mPendingTransaction = TransactionId{0};
+#if defined(ENABLE_FRAME_LATENCY_LOG)
+    if (transaction.mId.IsValid()) {
+      if (transaction.mRefreshStartTime) {
+        int32_t latencyMs = lround(
+            (aCompositeEnd - transaction.mRefreshStartTime).ToMilliseconds());
+        printf_stderr(
+            "From transaction start to end of generate frame latencyMs %d this "
+            "%p\n",
+            latencyMs, this);
+      }
+      if (transaction.mFwdTime) {
+        int32_t latencyMs =
+            lround((aCompositeEnd - transaction.mFwdTime).ToMilliseconds());
+        printf_stderr(
+            "From forwarding transaction to end of generate frame latencyMs %d "
+            "this %p\n",
+            latencyMs, this);
+      }
+>>>>>>> upstream-releases
+    }
+#endif
+  }
+
+  mPendingTransactions.Clear();
   return id;
 }
 
@@ -1036,9 +1690,20 @@ mozilla::ipc::IPCResult LayerTransactionParent::RecvRecordPaintTimes(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTextureFactoryIdentifier(
     TextureFactoryIdentifier* aIdentifier) {
   if (!mLayerManager) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+LayerTransactionParent::RecvGetTextureFactoryIdentifier(TextureFactoryIdentifier* aIdentifier)
+{
+  if (!mLayerManager) {
+=======
+mozilla::ipc::IPCResult LayerTransactionParent::RecvGetTextureFactoryIdentifier(
+    TextureFactoryIdentifier* aIdentifier) {
+  if (mDestroyed || !mLayerManager || mLayerManager->IsDestroyed()) {
+>>>>>>> upstream-releases
     // Default constructor sets mParentBackend to LAYERS_NONE.
     return IPC_OK();
   }

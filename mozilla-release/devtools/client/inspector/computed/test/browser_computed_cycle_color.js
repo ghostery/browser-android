@@ -17,7 +17,7 @@ const TEST_URI = `
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-  const {inspector, view} = await openComputedView();
+  const { inspector, view } = await openComputedView();
   await selectNode("#matches", inspector);
 
   info("Checking the property itself");
@@ -34,9 +34,13 @@ async function checkColorCycling(container, view) {
   const win = view.styleWindow;
 
   // "Authored" (default; currently the computed value)
-  is(valueNode.textContent, "rgb(255, 0, 0)",
-                            "Color displayed as an RGB value.");
+  is(
+    valueNode.textContent,
+    "rgb(255, 0, 0)",
+    "Color displayed as an RGB value."
+  );
 
+<<<<<<< HEAD
   const tests = [{
     value: "red",
     comment: "Color displayed as a color name.",
@@ -50,6 +54,40 @@ async function checkColorCycling(container, view) {
     value: "rgb(255, 0, 0)",
     comment: "Color displayed as an RGB value again.",
   }];
+||||||| merged common ancestors
+  const tests = [{
+    value: "red",
+    comment: "Color displayed as a color name."
+  }, {
+    value: "#f00",
+    comment: "Color displayed as an authored value."
+  }, {
+    value: "hsl(0, 100%, 50%)",
+    comment: "Color displayed as an HSL value again."
+  }, {
+    value: "rgb(255, 0, 0)",
+    comment: "Color displayed as an RGB value again."
+  }];
+=======
+  const tests = [
+    {
+      value: "red",
+      comment: "Color displayed as a color name.",
+    },
+    {
+      value: "#f00",
+      comment: "Color displayed as an authored value.",
+    },
+    {
+      value: "hsl(0, 100%, 50%)",
+      comment: "Color displayed as an HSL value again.",
+    },
+    {
+      value: "rgb(255, 0, 0)",
+      comment: "Color displayed as an RGB value again.",
+    },
+  ];
+>>>>>>> upstream-releases
 
   for (const test of tests) {
     await checkSwatchShiftClick(container, win, test.value, test.comment);
@@ -62,14 +100,30 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
   swatch.scrollIntoView();
 
   const onUnitChange = swatch.once("unit-change");
+<<<<<<< HEAD
   EventUtils.synthesizeMouseAtCenter(swatch, {
     type: "mousedown",
     shiftKey: true,
   }, win);
+||||||| merged common ancestors
+  EventUtils.synthesizeMouseAtCenter(swatch, {
+    type: "mousedown",
+    shiftKey: true
+  }, win);
+=======
+  EventUtils.synthesizeMouseAtCenter(
+    swatch,
+    {
+      type: "mousedown",
+      shiftKey: true,
+    },
+    win
+  );
+>>>>>>> upstream-releases
   // we need to have the mouse up event in order to make sure that the platform
   // lets go of the last container, and is not waiting for something to happen.
   // Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1442153
-  EventUtils.synthesizeMouseAtCenter(swatch, {type: "mouseup"}, win);
+  EventUtils.synthesizeMouseAtCenter(swatch, { type: "mouseup" }, win);
   await onUnitChange;
   is(valueNode.textContent, expectedValue, comment);
 }

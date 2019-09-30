@@ -12,12 +12,7 @@
 #include "mozilla/dom/quota/PersistenceType.h"
 #include "mozilla/Mutex.h"
 #include "nsClassHashtable.h"
-#include "nsCOMPtr.h"
 #include "nsHashKeys.h"
-#include "nsINamed.h"
-#include "nsITimer.h"
-
-class nsIEventTarget;
 
 namespace mozilla {
 
@@ -27,12 +22,22 @@ namespace dom {
 
 class IDBFactory;
 
+<<<<<<< HEAD
 namespace quota {
 
 class QuotaManager;
 
 }  // namespace quota
 
+||||||| merged common ancestors
+namespace quota {
+
+class QuotaManager;
+
+} // namespace quota
+
+=======
+>>>>>>> upstream-releases
 namespace indexedDB {
 
 class BackgroundUtilsChild;
@@ -41,9 +46,17 @@ class FileManagerInfo;
 
 }  // namespace indexedDB
 
+<<<<<<< HEAD
 class IndexedDatabaseManager final : public nsITimerCallback, public nsINamed {
+||||||| merged common ancestors
+class IndexedDatabaseManager final
+  : public nsITimerCallback
+  , public nsINamed
+{
+=======
+class IndexedDatabaseManager final {
+>>>>>>> upstream-releases
   typedef mozilla::dom::quota::PersistenceType PersistenceType;
-  typedef mozilla::dom::quota::QuotaManager QuotaManager;
   typedef mozilla::dom::indexedDB::FileManager FileManager;
   typedef mozilla::dom::indexedDB::FileManagerInfo FileManagerInfo;
 
@@ -56,9 +69,7 @@ class IndexedDatabaseManager final : public nsITimerCallback, public nsINamed {
     Logging_DetailedProfilerMarks
   };
 
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSITIMERCALLBACK
-  NS_DECL_NSINAMED
+  NS_INLINE_DECL_REFCOUNTING_WITH_DESTROY(IndexedDatabaseManager, Destroy())
 
   // Returns a non-owning reference.
   static IndexedDatabaseManager* GetOrCreate();
@@ -99,21 +110,69 @@ class IndexedDatabaseManager final : public nsITimerCallback, public nsINamed {
   }
 #endif
 
+<<<<<<< HEAD
   static bool ExperimentalFeaturesEnabled();
 
   static bool ExperimentalFeaturesEnabled(JSContext* aCx, JSObject* aGlobal);
 
   static bool IsFileHandleEnabled();
+||||||| merged common ancestors
+  static bool
+  ExperimentalFeaturesEnabled();
 
+  static bool
+  ExperimentalFeaturesEnabled(JSContext* aCx, JSObject* aGlobal);
+
+  static bool
+  IsFileHandleEnabled();
+=======
+  static bool ExperimentalFeaturesEnabled();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   static uint32_t DataThreshold();
+||||||| merged common ancestors
+  static uint32_t
+  DataThreshold();
+=======
+  static bool ExperimentalFeaturesEnabled(JSContext* aCx, JSObject* aGlobal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static uint32_t MaxSerializedMsgSize();
+||||||| merged common ancestors
+  static uint32_t
+  MaxSerializedMsgSize();
+=======
+  static bool IsFileHandleEnabled();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ClearBackgroundActor();
+||||||| merged common ancestors
+  void
+  ClearBackgroundActor();
+=======
+  static uint32_t DataThreshold();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void NoteLiveQuotaManager(QuotaManager* aQuotaManager);
+||||||| merged common ancestors
+  void
+  NoteLiveQuotaManager(QuotaManager* aQuotaManager);
+=======
+  static uint32_t MaxSerializedMsgSize();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void NoteShuttingDownQuotaManager();
+||||||| merged common ancestors
+  void
+  NoteShuttingDownQuotaManager();
+=======
+  void ClearBackgroundActor();
+>>>>>>> upstream-releases
 
   already_AddRefed<FileManager> GetFileManager(PersistenceType aPersistenceType,
                                                const nsACString& aOrigin,
@@ -126,11 +185,26 @@ class IndexedDatabaseManager final : public nsITimerCallback, public nsINamed {
   void InvalidateFileManagers(PersistenceType aPersistenceType,
                               const nsACString& aOrigin);
 
+<<<<<<< HEAD
   void InvalidateFileManager(PersistenceType aPersistenceType,
                              const nsACString& aOrigin,
                              const nsAString& aDatabaseName);
 
   nsresult AsyncDeleteFile(FileManager* aFileManager, int64_t aFileId);
+||||||| merged common ancestors
+  void
+  InvalidateFileManager(PersistenceType aPersistenceType,
+                        const nsACString& aOrigin,
+                        const nsAString& aDatabaseName);
+
+  nsresult
+  AsyncDeleteFile(FileManager* aFileManager,
+                  int64_t aFileId);
+=======
+  void InvalidateFileManager(PersistenceType aPersistenceType,
+                             const nsACString& aOrigin,
+                             const nsAString& aDatabaseName);
+>>>>>>> upstream-releases
 
   // Don't call this method in real code, it blocks the main thread!
   // It is intended to be used by mochitests to test correctness of the special
@@ -164,16 +238,30 @@ class IndexedDatabaseManager final : public nsITimerCallback, public nsINamed {
   IndexedDatabaseManager();
   ~IndexedDatabaseManager();
 
+<<<<<<< HEAD
   nsresult Init();
 
   void Destroy();
 
   static void LoggingModePrefChangedCallback(const char* aPrefName,
                                              void* aClosure);
+||||||| merged common ancestors
+  nsresult
+  Init();
 
-  nsCOMPtr<nsIEventTarget> mBackgroundThread;
+  void
+  Destroy();
 
-  nsCOMPtr<nsITimer> mDeleteTimer;
+  static void
+  LoggingModePrefChangedCallback(const char* aPrefName, void* aClosure);
+=======
+  nsresult Init();
+>>>>>>> upstream-releases
+
+  void Destroy();
+
+  static void LoggingModePrefChangedCallback(const char* aPrefName,
+                                             void* aClosure);
 
   // Maintains a list of all file managers per origin. This list isn't
   // protected by any mutex but it is only ever touched on the IO thread.

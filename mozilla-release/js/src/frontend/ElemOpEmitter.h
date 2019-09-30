@@ -116,6 +116,7 @@ struct BytecodeEmitter;
 //     emit_add_op_here();
 //     eoe.emitAssignment();
 //
+<<<<<<< HEAD
 class MOZ_STACK_CLASS ElemOpEmitter {
  public:
   enum class Kind {
@@ -137,8 +138,59 @@ class MOZ_STACK_CLASS ElemOpEmitter {
 
   Kind kind_;
   ObjKind objKind_;
+||||||| merged common ancestors
+class MOZ_STACK_CLASS ElemOpEmitter
+{
+  public:
+    enum class Kind {
+        Get,
+        Call,
+        Set,
+        Delete,
+        PostIncrement,
+        PreIncrement,
+        PostDecrement,
+        PreDecrement,
+        SimpleAssignment,
+        CompoundAssignment
+    };
+    enum class ObjKind {
+        Super,
+        Other
+    };
+
+  private:
+    BytecodeEmitter* bce_;
+
+    Kind kind_;
+    ObjKind objKind_;
+=======
+class MOZ_STACK_CLASS ElemOpEmitter {
+ public:
+  enum class Kind {
+    Get,
+    Call,
+    Set,
+    Delete,
+    PostIncrement,
+    PreIncrement,
+    PostDecrement,
+    PreDecrement,
+    SimpleAssignment,
+    PropInit,
+    CompoundAssignment
+  };
+  enum class ObjKind { Super, Other };
+
+ private:
+  BytecodeEmitter* bce_;
+
+  Kind kind_;
+  ObjKind objKind_;
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
+<<<<<<< HEAD
   // The state of this emitter.
   //
   //             skipObjAndKeyAndRhs
@@ -207,6 +259,146 @@ class MOZ_STACK_CLASS ElemOpEmitter {
     Assignment,
   };
   State state_ = State::Start;
+||||||| merged common ancestors
+    // The state of this emitter.
+    //
+    //             skipObjAndKeyAndRhs
+    //           +------------------------------------------------+
+    //           |                                                |
+    // +-------+ | prepareForObj +-----+ prepareForKey +-----+    |
+    // | Start |-+-------------->| Obj |-------------->| Key |-+  |
+    // +-------+                 +-----+               +-----+ |  |
+    //                                                         |  |
+    // +-------------------------------------------------------+  |
+    // |                                                          |
+    // |                                                          |
+    // |                                                          |
+    // | [Get]                                                    |
+    // | [Call]                                                   |
+    // |   emitGet +-----+                                        |
+    // +---------->| Get |                                        |
+    // |           +-----+                                        |
+    // |                                                          |
+    // | [Delete]                                                 |
+    // |   emitDelete +--------+                                  |
+    // +------------->| Delete |                                  |
+    // |              +--------+                                  |
+    // |                                                          |
+    // | [PostIncrement]                                          |
+    // | [PreIncrement]                                           |
+    // | [PostDecrement]                                          |
+    // | [PreDecrement]                                           |
+    // |   emitIncDec +--------+                                  |
+    // +------------->| IncDec |                                  |
+    // |              +--------+                                  |
+    // |                                      +-------------------+
+    // | [SimpleAssignment]                   |
+    // |                        prepareForRhs v  +-----+
+    // +--------------------->+-------------->+->| Rhs |-+
+    // |                      ^                  +-----+ |
+    // |                      |                          |
+    // |                      |            +-------------+
+    // | [CompoundAssignment] |            |
+    // |   emitGet +-----+    |            | emitAssignment +------------+
+    // +---------->| Get |----+            +--------------->| Assignment |
+    //             +-----+                                  +------------+
+    enum class State {
+        // The initial state.
+        Start,
+
+        // After calling prepareForObj.
+        Obj,
+
+        // After calling emitKey.
+        Key,
+
+        // After calling emitGet.
+        Get,
+
+        // After calling emitDelete.
+        Delete,
+
+        // After calling emitIncDec.
+        IncDec,
+
+        // After calling prepareForRhs or skipObjAndKeyAndRhs.
+        Rhs,
+
+        // After calling emitAssignment.
+        Assignment,
+    };
+    State state_ = State::Start;
+=======
+  // The state of this emitter.
+  //
+  //             skipObjAndKeyAndRhs
+  //           +------------------------------------------------+
+  //           |                                                |
+  // +-------+ | prepareForObj +-----+ prepareForKey +-----+    |
+  // | Start |-+-------------->| Obj |-------------->| Key |-+  |
+  // +-------+                 +-----+               +-----+ |  |
+  //                                                         |  |
+  // +-------------------------------------------------------+  |
+  // |                                                          |
+  // |                                                          |
+  // |                                                          |
+  // | [Get]                                                    |
+  // | [Call]                                                   |
+  // |   emitGet +-----+                                        |
+  // +---------->| Get |                                        |
+  // |           +-----+                                        |
+  // |                                                          |
+  // | [Delete]                                                 |
+  // |   emitDelete +--------+                                  |
+  // +------------->| Delete |                                  |
+  // |              +--------+                                  |
+  // |                                                          |
+  // | [PostIncrement]                                          |
+  // | [PreIncrement]                                           |
+  // | [PostDecrement]                                          |
+  // | [PreDecrement]                                           |
+  // |   emitIncDec +--------+                                  |
+  // +------------->| IncDec |                                  |
+  // |              +--------+                                  |
+  // |                                      +-------------------+
+  // | [SimpleAssignment]                   |
+  // | [PropInit]                           |
+  // |                        prepareForRhs v  +-----+
+  // +--------------------->+-------------->+->| Rhs |-+
+  // |                      ^                  +-----+ |
+  // |                      |                          |
+  // |                      |            +-------------+
+  // | [CompoundAssignment] |            |
+  // |   emitGet +-----+    |            | emitAssignment +------------+
+  // +---------->| Get |----+            +--------------->| Assignment |
+  //             +-----+                                  +------------+
+  enum class State {
+    // The initial state.
+    Start,
+
+    // After calling prepareForObj.
+    Obj,
+
+    // After calling emitKey.
+    Key,
+
+    // After calling emitGet.
+    Get,
+
+    // After calling emitDelete.
+    Delete,
+
+    // After calling emitIncDec.
+    IncDec,
+
+    // After calling prepareForRhs or skipObjAndKeyAndRhs.
+    Rhs,
+
+    // After calling emitAssignment.
+    Assignment,
+  };
+  State state_ = State::Start;
+>>>>>>> upstream-releases
 #endif
 
  public:
@@ -219,42 +411,154 @@ class MOZ_STACK_CLASS ElemOpEmitter {
     return kind_ == Kind::SimpleAssignment;
   }
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isDelete() const { return kind_ == Kind::Delete; }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isDelete() const {
+        return kind_ == Kind::Delete;
+    }
+=======
+  MOZ_MUST_USE bool isPropInit() const { return kind_ == Kind::PropInit; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isCompoundAssignment() const {
     return kind_ == Kind::CompoundAssignment;
   }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isCompoundAssignment() const {
+        return kind_ == Kind::CompoundAssignment;
+    }
+=======
+  MOZ_MUST_USE bool isDelete() const { return kind_ == Kind::Delete; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isIncDec() const { return isPostIncDec() || isPreIncDec(); }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isIncDec() const {
+        return isPostIncDec() || isPreIncDec();
+    }
+=======
+  MOZ_MUST_USE bool isCompoundAssignment() const {
+    return kind_ == Kind::CompoundAssignment;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isPostIncDec() const {
     return kind_ == Kind::PostIncrement || kind_ == Kind::PostDecrement;
   }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isPostIncDec() const {
+        return kind_ == Kind::PostIncrement ||
+               kind_ == Kind::PostDecrement;
+    }
+=======
+  MOZ_MUST_USE bool isIncDec() const { return isPostIncDec() || isPreIncDec(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isPreIncDec() const {
     return kind_ == Kind::PreIncrement || kind_ == Kind::PreDecrement;
   }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isPreIncDec() const {
+        return kind_ == Kind::PreIncrement ||
+               kind_ == Kind::PreDecrement;
+    }
+=======
+  MOZ_MUST_USE bool isPostIncDec() const {
+    return kind_ == Kind::PostIncrement || kind_ == Kind::PostDecrement;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isInc() const {
     return kind_ == Kind::PostIncrement || kind_ == Kind::PreIncrement;
   }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isInc() const {
+        return kind_ == Kind::PostIncrement ||
+               kind_ == Kind::PreIncrement;
+    }
+=======
+  MOZ_MUST_USE bool isPreIncDec() const {
+    return kind_ == Kind::PreIncrement || kind_ == Kind::PreDecrement;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isSuper() const { return objKind_ == ObjKind::Super; }
+||||||| merged common ancestors
+    MOZ_MUST_USE bool isSuper() const {
+        return objKind_ == ObjKind::Super;
+    }
+=======
+  MOZ_MUST_USE bool isInc() const {
+    return kind_ == Kind::PostIncrement || kind_ == Kind::PreIncrement;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   MOZ_MUST_USE bool prepareForObj();
   MOZ_MUST_USE bool prepareForKey();
+||||||| merged common ancestors
+  public:
+    MOZ_MUST_USE bool prepareForObj();
+    MOZ_MUST_USE bool prepareForKey();
+=======
+  MOZ_MUST_USE bool isSuper() const { return objKind_ == ObjKind::Super; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool emitGet();
+||||||| merged common ancestors
+    MOZ_MUST_USE bool emitGet();
+=======
+ public:
+  MOZ_MUST_USE bool prepareForObj();
+  MOZ_MUST_USE bool prepareForKey();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool prepareForRhs();
   MOZ_MUST_USE bool skipObjAndKeyAndRhs();
+||||||| merged common ancestors
+    MOZ_MUST_USE bool prepareForRhs();
+    MOZ_MUST_USE bool skipObjAndKeyAndRhs();
+=======
+  MOZ_MUST_USE bool emitGet();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool emitDelete();
+||||||| merged common ancestors
+    MOZ_MUST_USE bool emitDelete();
+=======
+  MOZ_MUST_USE bool prepareForRhs();
+  MOZ_MUST_USE bool skipObjAndKeyAndRhs();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool emitAssignment();
+||||||| merged common ancestors
+    MOZ_MUST_USE bool emitAssignment();
+=======
+  MOZ_MUST_USE bool emitDelete();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MOZ_MUST_USE bool emitIncDec();
+||||||| merged common ancestors
+    MOZ_MUST_USE bool emitIncDec();
+=======
+  enum class EmitSetFunctionName : bool { No, Yes };
+  MOZ_MUST_USE bool emitAssignment(EmitSetFunctionName emitSetFunName);
 
   MOZ_MUST_USE bool emitIncDec();
+>>>>>>> upstream-releases
 };
 
 } /* namespace frontend */

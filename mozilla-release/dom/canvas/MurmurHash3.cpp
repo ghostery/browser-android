@@ -19,12 +19,26 @@ namespace {
 
 #if defined(_MSC_VER)
 
+<<<<<<< HEAD
 #define FORCE_INLINE __forceinline
+||||||| merged common ancestors
+#define FORCE_INLINE	__forceinline
+=======
+#  define FORCE_INLINE __forceinline
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define ROTL32(x, y) _rotl(x, y)
 #define ROTL64(x, y) _rotl64(x, y)
+||||||| merged common ancestors
+#define ROTL32(x,y)	_rotl(x,y)
+#define ROTL64(x,y)	_rotl64(x,y)
+=======
+#  define ROTL32(x, y) _rotl(x, y)
+#  define ROTL64(x, y) _rotl64(x, y)
+>>>>>>> upstream-releases
 
-#define BIG_CONSTANT(x) (x)
+#  define BIG_CONSTANT(x) (x)
 
 // Other compilers
 
@@ -33,7 +47,13 @@ namespace {
 // We can't do always_inline, becasue -Werror -Wattribute will trigger
 // a "might not be able to inline" warning.
 //#define	FORCE_INLINE __attribute__((always_inline))
+<<<<<<< HEAD
 #define FORCE_INLINE inline
+||||||| merged common ancestors
+#define	FORCE_INLINE inline
+=======
+#  define FORCE_INLINE inline
+>>>>>>> upstream-releases
 
 inline uint32_t rotl32(uint32_t x, int8_t r) {
   return (x << r) | (x >> (32 - r));
@@ -43,10 +63,18 @@ inline uint64_t rotl64(uint64_t x, int8_t r) {
   return (x << r) | (x >> (64 - r));
 }
 
+<<<<<<< HEAD
 #define ROTL32(x, y) rotl32(x, y)
 #define ROTL64(x, y) rotl64(x, y)
+||||||| merged common ancestors
+#define	ROTL32(x,y)	rotl32(x,y)
+#define ROTL64(x,y)	rotl64(x,y)
+=======
+#  define ROTL32(x, y) rotl32(x, y)
+#  define ROTL64(x, y) rotl64(x, y)
+>>>>>>> upstream-releases
 
-#define BIG_CONSTANT(x) (x##LLU)
+#  define BIG_CONSTANT(x) (x##LLU)
 
 #endif  // !defined(_MSC_VER)
 
@@ -54,9 +82,27 @@ inline uint64_t rotl64(uint64_t x, int8_t r) {
 // Block read - if your platform needs to do endian-swapping or can only
 // handle aligned reads, do the conversion here
 
+<<<<<<< HEAD
 FORCE_INLINE uint32_t getblock(const uint32_t *p, int i) { return p[i]; }
+||||||| merged common ancestors
+FORCE_INLINE uint32_t getblock ( const uint32_t * p, int i )
+{
+  return p[i];
+}
+=======
+FORCE_INLINE uint32_t getblock(const uint32_t* p, int i) { return p[i]; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 FORCE_INLINE uint64_t getblock(const uint64_t *p, int i) { return p[i]; }
+||||||| merged common ancestors
+FORCE_INLINE uint64_t getblock ( const uint64_t * p, int i )
+{
+  return p[i];
+}
+=======
+FORCE_INLINE uint64_t getblock(const uint64_t* p, int i) { return p[i]; }
+>>>>>>> upstream-releases
 
 //-----------------------------------------------------------------------------
 // Finalization mix - force all bits of a hash block to avalanche
@@ -87,8 +133,18 @@ FORCE_INLINE uint64_t fmix(uint64_t k) {
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void MurmurHash3_x86_32(const void *key, int len, uint32_t seed, void *out) {
   const uint8_t *data = (const uint8_t *)key;
+||||||| merged common ancestors
+void MurmurHash3_x86_32 ( const void * key, int len,
+                          uint32_t seed, void * out )
+{
+  const uint8_t * data = (const uint8_t*)key;
+=======
+void MurmurHash3_x86_32(const void* key, int len, uint32_t seed, void* out) {
+  const uint8_t* data = (const uint8_t*)key;
+>>>>>>> upstream-releases
   const int nblocks = len / 4;
 
   uint32_t h1 = seed;
@@ -99,7 +155,13 @@ void MurmurHash3_x86_32(const void *key, int len, uint32_t seed, void *out) {
   //----------
   // body
 
+<<<<<<< HEAD
   const uint32_t *blocks = (const uint32_t *)(data + nblocks * 4);
+||||||| merged common ancestors
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
+=======
+  const uint32_t* blocks = (const uint32_t*)(data + nblocks * 4);
+>>>>>>> upstream-releases
 
   for (int i = -nblocks; i; i++) {
     uint32_t k1 = getblock(blocks, i);
@@ -116,7 +178,13 @@ void MurmurHash3_x86_32(const void *key, int len, uint32_t seed, void *out) {
   //----------
   // tail
 
+<<<<<<< HEAD
   const uint8_t *tail = (const uint8_t *)(data + nblocks * 4);
+||||||| merged common ancestors
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*4);
+=======
+  const uint8_t* tail = (const uint8_t*)(data + nblocks * 4);
+>>>>>>> upstream-releases
 
   uint32_t k1 = 0;
 
@@ -145,9 +213,20 @@ void MurmurHash3_x86_32(const void *key, int len, uint32_t seed, void *out) {
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void MurmurHash3_x86_128(const void *key, const int len, uint32_t seed,
                          void *out) {
   const uint8_t *data = (const uint8_t *)key;
+||||||| merged common ancestors
+void MurmurHash3_x86_128 ( const void * key, const int len,
+                           uint32_t seed, void * out )
+{
+  const uint8_t * data = (const uint8_t*)key;
+=======
+void MurmurHash3_x86_128(const void* key, const int len, uint32_t seed,
+                         void* out) {
+  const uint8_t* data = (const uint8_t*)key;
+>>>>>>> upstream-releases
   const int nblocks = len / 16;
 
   uint32_t h1 = seed;
@@ -163,7 +242,13 @@ void MurmurHash3_x86_128(const void *key, const int len, uint32_t seed,
   //----------
   // body
 
+<<<<<<< HEAD
   const uint32_t *blocks = (const uint32_t *)(data + nblocks * 16);
+||||||| merged common ancestors
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*16);
+=======
+  const uint32_t* blocks = (const uint32_t*)(data + nblocks * 16);
+>>>>>>> upstream-releases
 
   for (int i = -nblocks; i; i++) {
     uint32_t k1 = getblock(blocks, i * 4 + 0);
@@ -211,7 +296,13 @@ void MurmurHash3_x86_128(const void *key, const int len, uint32_t seed,
   //----------
   // tail
 
+<<<<<<< HEAD
   const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+||||||| merged common ancestors
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+=======
+  const uint8_t* tail = (const uint8_t*)(data + nblocks * 16);
+>>>>>>> upstream-releases
 
   uint32_t k1 = 0;
   uint32_t k2 = 0;
@@ -305,9 +396,20 @@ void MurmurHash3_x86_128(const void *key, const int len, uint32_t seed,
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 void MurmurHash3_x64_128(const void *key, const int len, const uint32_t seed,
                          void *out) {
   const uint8_t *data = (const uint8_t *)key;
+||||||| merged common ancestors
+void MurmurHash3_x64_128 ( const void * key, const int len,
+                           const uint32_t seed, void * out )
+{
+  const uint8_t * data = (const uint8_t*)key;
+=======
+void MurmurHash3_x64_128(const void* key, const int len, const uint32_t seed,
+                         void* out) {
+  const uint8_t* data = (const uint8_t*)key;
+>>>>>>> upstream-releases
   const int nblocks = len / 16;
 
   uint64_t h1 = seed;
@@ -319,7 +421,13 @@ void MurmurHash3_x64_128(const void *key, const int len, const uint32_t seed,
   //----------
   // body
 
+<<<<<<< HEAD
   const uint64_t *blocks = (const uint64_t *)(data);
+||||||| merged common ancestors
+  const uint64_t * blocks = (const uint64_t *)(data);
+=======
+  const uint64_t* blocks = (const uint64_t*)(data);
+>>>>>>> upstream-releases
 
   for (int i = 0; i < nblocks; i++) {
     uint64_t k1 = getblock(blocks, i * 2 + 0);
@@ -347,7 +455,13 @@ void MurmurHash3_x64_128(const void *key, const int len, const uint32_t seed,
   //----------
   // tail
 
+<<<<<<< HEAD
   const uint8_t *tail = (const uint8_t *)(data + nblocks * 16);
+||||||| merged common ancestors
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+=======
+  const uint8_t* tail = (const uint8_t*)(data + nblocks * 16);
+>>>>>>> upstream-releases
 
   uint64_t k1 = 0;
   uint64_t k2 = 0;

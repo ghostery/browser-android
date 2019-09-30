@@ -256,7 +256,16 @@ nsresult SourceBuffer::Compact() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ size_t SourceBuffer::RoundedUpCapacity(size_t aCapacity) {
+||||||| merged common ancestors
+/* static */ size_t
+SourceBuffer::RoundedUpCapacity(size_t aCapacity)
+{
+=======
+/* static */
+size_t SourceBuffer::RoundedUpCapacity(size_t aCapacity) {
+>>>>>>> upstream-releases
   // Protect against overflow.
   if (MOZ_UNLIKELY(SIZE_MAX - aCapacity < MIN_CHUNK_CAPACITY)) {
     return aCapacity;

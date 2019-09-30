@@ -22,6 +22,7 @@ using mozilla::gfx::gfxConfig;
 using mozilla::layers::BasicCompositor;
 using mozilla::layers::Compositor;
 using mozilla::layers::CompositorOptions;
+using mozilla::layers::ISurfaceAllocator;
 using mozilla::layers::LayersBackend;
 using mozilla::layers::TestSurfaceAllocator;
 using mozilla::layers::TextureClient;
@@ -67,7 +68,15 @@ static void GetPlatformBackends(nsTArray<LayersBackend>& aBackends) {
 /**
  * This function will return a BasicCompositor to caller.
  */
+<<<<<<< HEAD
 already_AddRefed<Compositor> CreateBasicCompositor() {
+||||||| merged common ancestors
+already_AddRefed<Compositor>
+CreateBasicCompositor()
+{
+=======
+static already_AddRefed<Compositor> CreateBasicCompositor() {
+>>>>>>> upstream-releases
   RefPtr<Compositor> compositor;
   // Init the platform.
   if (gfxPlatform::GetPlatform()) {
@@ -84,8 +93,18 @@ already_AddRefed<Compositor> CreateBasicCompositor() {
  * This function checks if the textures react correctly when setting them to
  * BasicCompositor.
  */
+<<<<<<< HEAD
 void CheckCompatibilityWithBasicCompositor(
     LayersBackend aBackends, nsTArray<RefPtr<TextureHost>>& aTextures) {
+||||||| merged common ancestors
+void
+CheckCompatibilityWithBasicCompositor(LayersBackend aBackends,
+                                      nsTArray<RefPtr<TextureHost>>& aTextures)
+{
+=======
+static void CheckCompatibilityWithBasicCompositor(
+    LayersBackend aBackends, nsTArray<RefPtr<TextureHost>>& aTextures) {
+>>>>>>> upstream-releases
   RefPtr<Compositor> compositor = CreateBasicCompositor();
   for (uint32_t i = 0; i < aTextures.Length(); i++) {
     if (!aTextures[i]) {

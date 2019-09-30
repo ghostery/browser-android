@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "DriverCrashGuard.h"
 #include "gfxEnv.h"
-#include "gfxPrefs.h"
 #include "gfxConfig.h"
 #include "nsAppDirectoryServiceDefs.h"
 #include "nsDirectoryServiceUtils.h"
@@ -14,6 +13,7 @@
 #include "nsString.h"
 #include "nsXULAppAPI.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/Services.h"
 #include "mozilla/gfx/Logging.h"
@@ -24,10 +24,19 @@ namespace gfx {
 
 static const size_t NUM_CRASH_GUARD_TYPES = size_t(CrashGuardType::NUM_TYPES);
 static const char* sCrashGuardNames[] = {
+<<<<<<< HEAD
     "d3d11layers",
     "d3d9video",
     "glcontext",
     "d3d11video",
+||||||| merged common ancestors
+  "d3d11layers",
+  "d3d9video",
+  "glcontext",
+  "d3d11video",
+=======
+    "d3d11layers", "d3d9video", "glcontext", "d3d11video", "wmfvpxvideo",
+>>>>>>> upstream-releases
 };
 static_assert(MOZ_ARRAY_LENGTH(sCrashGuardNames) == NUM_CRASH_GUARD_TYPES,
               "CrashGuardType updated without a name string");
@@ -60,7 +69,15 @@ void DriverCrashGuard::InitializeIfNeeded() {
   Initialize();
 }
 
+<<<<<<< HEAD
 static inline bool AreCrashGuardsEnabled() {
+||||||| merged common ancestors
+static inline bool
+AreCrashGuardsEnabled()
+{
+=======
+static inline bool AreCrashGuardsEnabled(CrashGuardType aType) {
+>>>>>>> upstream-releases
   // Crash guard isn't supported in the GPU process since the entire
   // process is basically a crash guard.
   if (XRE_IsGPUProcess()) {
@@ -71,18 +88,28 @@ static inline bool AreCrashGuardsEnabled() {
   // channel is for development and having graphics features perma-disabled
   // is rather annoying.  Unless the user forces is with an environment
   // variable, which comes in handy for testing.
-  return gfxEnv::ForceCrashGuardNightly();
-#else
-  // Check to see if all guards have been disabled through the environment.
-  if (gfxEnv::DisableCrashGuard()) {
-    return false;
+  // We handle the WMFVPXVideo crash guard differently to the other and always
+  // enable it as it completely breaks playback and there's no way around it.
+  if (aType != CrashGuardType::WMFVPXVideo) {
+    return gfxEnv::ForceCrashGuardNightly();
   }
-  return true;
 #endif
+  // Check to see if all guards have been disabled through the environment.
+  return !gfxEnv::DisableCrashGuard();
 }
 
+<<<<<<< HEAD
 void DriverCrashGuard::Initialize() {
   if (!AreCrashGuardsEnabled()) {
+||||||| merged common ancestors
+void
+DriverCrashGuard::Initialize()
+{
+  if (!AreCrashGuardsEnabled()) {
+=======
+void DriverCrashGuard::Initialize() {
+  if (!AreCrashGuardsEnabled(mType)) {
+>>>>>>> upstream-releases
     return;
   }
 
@@ -222,8 +249,17 @@ void DriverCrashGuard::ActivateGuard() {
   }
 }
 
+<<<<<<< HEAD
 void DriverCrashGuard::NotifyCrashed() {
   CheckOrRefreshEnvironment();
+||||||| merged common ancestors
+void
+DriverCrashGuard::NotifyCrashed()
+{
+  CheckOrRefreshEnvironment();
+=======
+void DriverCrashGuard::NotifyCrashed() {
+>>>>>>> upstream-releases
   SetStatus(DriverInitStatus::Crashed);
   FlushPreferences();
   LogCrashRecovery();
@@ -253,18 +289,33 @@ bool DriverCrashGuard::RecoverFromCrash() {
 // session are activated rather than just the first.
 bool DriverCrashGuard::CheckOrRefreshEnvironment() {
   // Our result can be cached statically since we don't check live prefs.
-  static bool sBaseInfoChanged = false;
-  static bool sBaseInfoChecked = false;
+  // We need to cache once per crash guard type.
+  // The first call to CheckOrRefrechEnvironment will always return true should
+  // the configuration had changed, following calls will return false.
+  static bool sBaseInfoChanged[NUM_CRASH_GUARD_TYPES];
+  static bool sBaseInfoChecked[NUM_CRASH_GUARD_TYPES];
 
-  if (!sBaseInfoChecked) {
+  const uint32_t type = uint32_t(mType);
+  if (!sBaseInfoChecked[type]) {
     // None of the prefs we care about, so we cache the result statically.
-    sBaseInfoChecked = true;
-    sBaseInfoChanged = UpdateBaseEnvironment();
+    sBaseInfoChecked[type] = true;
+    sBaseInfoChanged[type] = UpdateBaseEnvironment();
   }
 
   // Always update the full environment, even if the base info didn't change.
+<<<<<<< HEAD
   return UpdateEnvironment() || sBaseInfoChanged ||
          GetStatus() == DriverInitStatus::Unknown;
+||||||| merged common ancestors
+  return UpdateEnvironment() ||
+         sBaseInfoChanged ||
+         GetStatus() == DriverInitStatus::Unknown;
+=======
+  bool result = UpdateEnvironment() || sBaseInfoChanged[type] ||
+                GetStatus() == DriverInitStatus::Unknown;
+  sBaseInfoChanged[type] = false;
+  return result;
+>>>>>>> upstream-releases
 }
 
 bool DriverCrashGuard::UpdateBaseEnvironment() {
@@ -349,6 +400,7 @@ void DriverCrashGuard::FlushPreferences() {
   }
 }
 
+<<<<<<< HEAD
 void DriverCrashGuard::ForEachActiveCrashGuard(
     const CrashGuardCallback& aCallback) {
   if (!AreCrashGuardsEnabled()) {
@@ -357,8 +409,28 @@ void DriverCrashGuard::ForEachActiveCrashGuard(
     return;
   }
 
+||||||| merged common ancestors
+void
+DriverCrashGuard::ForEachActiveCrashGuard(const CrashGuardCallback& aCallback)
+{
+  if (!AreCrashGuardsEnabled()) {
+    // Even if guards look active (via prefs), they can be ignored if globally
+    // disabled.
+    return;
+  }
+
+=======
+void DriverCrashGuard::ForEachActiveCrashGuard(
+    const CrashGuardCallback& aCallback) {
+>>>>>>> upstream-releases
   for (size_t i = 0; i < NUM_CRASH_GUARD_TYPES; i++) {
     CrashGuardType type = static_cast<CrashGuardType>(i);
+
+    if (!AreCrashGuardsEnabled(type)) {
+      // Even if guards look active (via prefs), they can be ignored if globally
+      // disabled.
+      continue;
+    }
 
     nsCString prefName;
     BuildCrashGuardPrefName(type, prefName);
@@ -393,31 +465,39 @@ void D3D11LayersCrashGuard::Initialize() {
 bool D3D11LayersCrashGuard::UpdateEnvironment() {
   // Our result can be cached statically since we don't check live prefs.
   static bool checked = false;
-  static bool changed = false;
 
   if (checked) {
-    return changed;
+    // We no longer need to bypass the crash guard.
+    return false;
   }
 
   checked = true;
 
+  bool changed = false;
   // Feature status.
 #if defined(XP_WIN)
+<<<<<<< HEAD
   bool d2dEnabled = gfxPrefs::Direct2DForceEnabled() ||
                     (!gfxPrefs::Direct2DDisabled() &&
                      FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
+||||||| merged common ancestors
+  bool d2dEnabled = gfxPrefs::Direct2DForceEnabled() ||
+                    (!gfxPrefs::Direct2DDisabled() && FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
+=======
+  bool d2dEnabled = StaticPrefs::gfx_direct2d_force_enabled() ||
+                    (!StaticPrefs::gfx_direct2d_disabled() &&
+                     FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT2D));
+>>>>>>> upstream-releases
   changed |= CheckAndUpdateBoolPref("feature-d2d", d2dEnabled);
 
   bool d3d11Enabled = gfxConfig::IsEnabled(Feature::D3D11_COMPOSITING);
   changed |= CheckAndUpdateBoolPref("feature-d3d11", d3d11Enabled);
+  if (changed) {
+    RecordTelemetry(TelemetryState::EnvironmentChanged);
+  }
 #endif
 
-  if (!changed) {
-    return false;
-  }
-
-  RecordTelemetry(TelemetryState::EnvironmentChanged);
-  return true;
+  return changed;
 }
 
 void D3D11LayersCrashGuard::LogCrashRecovery() {
@@ -449,12 +529,27 @@ void D3D11LayersCrashGuard::RecordTelemetry(TelemetryState aState) {
 }
 
 D3D9VideoCrashGuard::D3D9VideoCrashGuard(dom::ContentParent* aContentParent)
+<<<<<<< HEAD
     : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent) {}
 
 bool D3D9VideoCrashGuard::UpdateEnvironment() {
   // We don't care about any extra preferences here.
   return false;
 }
+||||||| merged common ancestors
+ : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent)
+{
+}
+
+bool
+D3D9VideoCrashGuard::UpdateEnvironment()
+{
+  // We don't care about any extra preferences here.
+  return false;
+}
+=======
+    : DriverCrashGuard(CrashGuardType::D3D9Video, aContentParent) {}
+>>>>>>> upstream-releases
 
 void D3D9VideoCrashGuard::LogCrashRecovery() {
   gfxCriticalNote << "DXVA2D3D9 just crashed; hardware video will be disabled.";
@@ -466,12 +561,27 @@ void D3D9VideoCrashGuard::LogFeatureDisabled() {
 }
 
 D3D11VideoCrashGuard::D3D11VideoCrashGuard(dom::ContentParent* aContentParent)
+<<<<<<< HEAD
     : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent) {}
 
 bool D3D11VideoCrashGuard::UpdateEnvironment() {
   // We don't care about any extra preferences here.
   return false;
 }
+||||||| merged common ancestors
+ : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent)
+{
+}
+
+bool
+D3D11VideoCrashGuard::UpdateEnvironment()
+{
+  // We don't care about any extra preferences here.
+  return false;
+}
+=======
+    : DriverCrashGuard(CrashGuardType::D3D11Video, aContentParent) {}
+>>>>>>> upstream-releases
 
 void D3D11VideoCrashGuard::LogCrashRecovery() {
   gfxCriticalNote
@@ -506,20 +616,23 @@ void GLContextCrashGuard::Initialize() {
 
 bool GLContextCrashGuard::UpdateEnvironment() {
   static bool checked = false;
-  static bool changed = false;
 
   if (checked) {
-    return changed;
+    // We no longer need to bypass the crash guard.
+    return false;
   }
 
   checked = true;
 
+  bool changed = false;
+
 #if defined(XP_WIN)
   changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle-force-d3d11",
-                                    gfxPrefs::WebGLANGLEForceD3D11());
+                                    StaticPrefs::webgl_angle_force_d3d11());
   changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle-try-d3d11",
-                                    gfxPrefs::WebGLANGLETryD3D11());
+                                    StaticPrefs::webgl_angle_try_d3d11());
   changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle-force-warp",
+<<<<<<< HEAD
                                     gfxPrefs::WebGLANGLEForceWARP());
   changed |= CheckAndUpdateBoolPref(
       "gfx.driver-init.webgl-angle",
@@ -527,6 +640,21 @@ bool GLContextCrashGuard::UpdateEnvironment() {
   changed |= CheckAndUpdateBoolPref(
       "gfx.driver-init.direct3d11-angle",
       FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
+||||||| merged common ancestors
+                                    gfxPrefs::WebGLANGLEForceWARP());
+  changed |= CheckAndUpdateBoolPref("gfx.driver-init.webgl-angle",
+                                    FeatureEnabled(nsIGfxInfo::FEATURE_WEBGL_ANGLE, false));
+  changed |= CheckAndUpdateBoolPref("gfx.driver-init.direct3d11-angle",
+                                    FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
+=======
+                                    StaticPrefs::webgl_angle_force_warp());
+  changed |= CheckAndUpdateBoolPref(
+      "gfx.driver-init.webgl-angle",
+      FeatureEnabled(nsIGfxInfo::FEATURE_WEBGL_ANGLE, false));
+  changed |= CheckAndUpdateBoolPref(
+      "gfx.driver-init.direct3d11-angle",
+      FeatureEnabled(nsIGfxInfo::FEATURE_DIRECT3D_11_ANGLE, false));
+>>>>>>> upstream-releases
 #endif
 
   return changed;
@@ -540,5 +668,26 @@ void GLContextCrashGuard::LogFeatureDisabled() {
   gfxCriticalNote << "GLContext remains enabled despite a previous crash.";
 }
 
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+=======
+WMFVPXVideoCrashGuard::WMFVPXVideoCrashGuard(dom::ContentParent* aContentParent)
+    : DriverCrashGuard(CrashGuardType::WMFVPXVideo, aContentParent) {}
+
+void WMFVPXVideoCrashGuard::LogCrashRecovery() {
+  gfxCriticalNote
+      << "WMF VPX decoder just crashed; hardware video will be disabled.";
+}
+
+void WMFVPXVideoCrashGuard::LogFeatureDisabled() {
+  gfxCriticalNote
+      << "WMF VPX video decoding is disabled due to a previous crash.";
+}
+
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases

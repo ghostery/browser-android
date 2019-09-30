@@ -29,9 +29,18 @@ class nsFakeSynthServices : public nsIObserver {
 
   static already_AddRefed<nsFakeSynthServices> GetInstanceForService();
 
+<<<<<<< HEAD
   static void Shutdown();
 
  private:
+||||||| merged common ancestors
+  static void Shutdown();
+
+private:
+
+=======
+ private:
+>>>>>>> upstream-releases
   virtual ~nsFakeSynthServices() = default;
 
   void Init();

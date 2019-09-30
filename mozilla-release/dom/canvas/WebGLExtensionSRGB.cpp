@@ -52,10 +52,29 @@ WebGLExtensionSRGB::WebGLExtensionSRGB(WebGLContext* webgl)
 
 WebGLExtensionSRGB::~WebGLExtensionSRGB() {}
 
+<<<<<<< HEAD
 bool WebGLExtensionSRGB::IsSupported(const WebGLContext* const webgl) {
   return webgl->gl->IsSupported(gl::GLFeature::sRGB);
 }
+||||||| merged common ancestors
+bool
+WebGLExtensionSRGB::IsSupported(const WebGLContext* const webgl)
+{
+    return webgl->gl->IsSupported(gl::GLFeature::sRGB);
+}
+=======
+bool WebGLExtensionSRGB::IsSupported(const WebGLContext* const webgl) {
+  if (webgl->IsWebGL2()) return false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+  return webgl->gl->IsSupported(gl::GLFeature::sRGB);
+}
+
+>>>>>>> upstream-releases
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionSRGB, EXT_sRGB)
 
 }  // namespace mozilla

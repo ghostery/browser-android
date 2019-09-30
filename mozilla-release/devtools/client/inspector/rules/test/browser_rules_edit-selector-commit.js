@@ -30,7 +30,6 @@ const TEST_DATA = [
     commitKey: "VK_ESCAPE",
     modifiers: {},
     expected: "#testid1",
-
   },
   {
     node: "#testid1",
@@ -50,9 +49,19 @@ const TEST_DATA = [
     node: "#testid3",
     value: ".testclass3",
     commitKey: "VK_TAB",
+<<<<<<< HEAD
     modifiers: {shiftKey: true},
     expected: ".testclass3",
   },
+||||||| merged common ancestors
+    modifiers: {shiftKey: true},
+    expected: ".testclass3"
+  }
+=======
+    modifiers: { shiftKey: true },
+    expected: ".testclass3",
+  },
+>>>>>>> upstream-releases
 ];
 
 add_task(async function() {
@@ -65,10 +74,18 @@ add_task(async function() {
 });
 
 async function runTestData(inspector, view, data) {
-  const {node, value, commitKey, modifiers, expected} = data;
+  const { node, value, commitKey, modifiers, expected } = data;
 
-  info("Updating " + node + " to " + value + " and committing with " +
-       commitKey + ". Expecting: " + expected);
+  info(
+    "Updating " +
+      node +
+      " to " +
+      value +
+      " and committing with " +
+      commitKey +
+      ". Expecting: " +
+      expected
+  );
 
   info("Selecting the test element");
   await selectNode(node, inspector);
@@ -77,8 +94,11 @@ async function runTestData(inspector, view, data) {
 
   info("Focusing an existing selector name in the rule-view");
   const editor = await focusEditableField(view, idRuleEditor.selectorText);
-  is(inplaceEditor(idRuleEditor.selectorText), editor,
-      "The selector editor got focused");
+  is(
+    inplaceEditor(idRuleEditor.selectorText),
+    editor,
+    "The selector editor got focused"
+  );
 
   info("Enter the new selector value: " + value);
   editor.input.value = value;
@@ -89,18 +109,22 @@ async function runTestData(inspector, view, data) {
   const activeElement = view.styleDocument.activeElement;
 
   if (commitKey === "VK_ESCAPE") {
-    is(idRuleEditor.rule.selectorText, expected,
-        "Value is as expected: " + expected);
+    is(
+      idRuleEditor.rule.selectorText,
+      expected,
+      "Value is as expected: " + expected
+    );
     is(idRuleEditor.isEditing, false, "Selector is not being edited.");
-    is(idRuleEditor.selectorText, activeElement,
-       "Focus is on selector span.");
+    is(idRuleEditor.selectorText, activeElement, "Focus is on selector span.");
     return;
   }
 
   await once(view, "ruleview-changed");
 
-  ok(getRuleViewRule(view, expected),
-     "Rule with " + expected + " selector exists.");
+  ok(
+    getRuleViewRule(view, expected),
+    "Rule with " + expected + " selector exists."
+  );
 
   if (modifiers.shiftKey) {
     idRuleEditor = getRuleViewRuleEditor(view, 0);
@@ -108,10 +132,16 @@ async function runTestData(inspector, view, data) {
 
   const rule = idRuleEditor.rule;
   if (rule.textProps.length > 0) {
-    is(inplaceEditor(rule.textProps[0].editor.nameSpan).input, activeElement,
-       "Focus is on the first property name span.");
+    is(
+      inplaceEditor(rule.textProps[0].editor.nameSpan).input,
+      activeElement,
+      "Focus is on the first property name span."
+    );
   } else {
-    is(inplaceEditor(idRuleEditor.newPropSpan).input, activeElement,
-       "Focus is on the new property span.");
+    is(
+      inplaceEditor(idRuleEditor.newPropSpan).input,
+      activeElement,
+      "Focus is on the new property span."
+    );
   }
 }

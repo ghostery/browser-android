@@ -16,6 +16,7 @@
 #include "nsNetUtil.h"
 #include "nsPIDOMWindow.h"
 #include "nsURLHelper.h"
+#include "ReferrerInfo.h"
 
 namespace mozilla {
 namespace dom {
@@ -121,7 +122,22 @@ class NavigateLoadListener final : public nsIWebProgressListener,
 
   NS_IMETHOD
   OnSecurityChange(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
+<<<<<<< HEAD
                    uint32_t aState) override {
+||||||| merged common ancestors
+                   uint32_t aOldState, uint32_t aState,
+                   const nsAString& aContentBlockingLogJSON) override
+  {
+=======
+                   uint32_t aState) override {
+    MOZ_CRASH("Unexpected notification.");
+    return NS_OK;
+  }
+
+  NS_IMETHOD
+  OnContentBlockingEvent(nsIWebProgress* aWebProgress, nsIRequest* aRequest,
+                         uint32_t aEvent) override {
+>>>>>>> upstream-releases
     MOZ_CRASH("Unexpected notification.");
     return NS_OK;
   }
@@ -134,9 +150,19 @@ NS_IMPL_ISUPPORTS(NavigateLoadListener, nsIWebProgressListener,
 
 }  // anonymous namespace
 
+<<<<<<< HEAD
 already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
     const ClientNavigateOpConstructorArgs& aArgs) {
   RefPtr<ClientOpPromise> ref;
+||||||| merged common ancestors
+already_AddRefed<ClientOpPromise>
+ClientNavigateOpChild::DoNavigate(const ClientNavigateOpConstructorArgs& aArgs)
+{
+  RefPtr<ClientOpPromise> ref;
+=======
+RefPtr<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
+    const ClientNavigateOpConstructorArgs& aArgs) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowInner> window;
 
   // Navigating the target client window will result in the original
@@ -151,16 +177,14 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
 
     ClientSource* target = targetActor->GetSource();
     if (!target) {
-      ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
-                                             __func__);
-      return ref.forget();
+      return ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                              __func__);
     }
 
     window = target->GetInnerWindow();
     if (!window) {
-      ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
-                                             __func__);
-      return ref.forget();
+      return ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                              __func__);
     }
   }
 
@@ -175,8 +199,7 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
   nsCOMPtr<nsIURI> baseURL;
   nsresult rv = NS_NewURI(getter_AddRefs(baseURL), aArgs.baseURL());
   if (NS_FAILED(rv)) {
-    ref = ClientOpPromise::CreateAndReject(rv, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(rv, __func__);
   }
 
   // There is an edge case for view-source url here. According to the wpt test
@@ -197,38 +220,61 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
   rv = NS_NewURI(getter_AddRefs(url), aArgs.url(), nullptr,
                  shouldUseBaseURL ? baseURL.get() : nullptr);
   if (NS_FAILED(rv)) {
-    ref = ClientOpPromise::CreateAndReject(rv, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(rv, __func__);
   }
 
   if (url->GetSpecOrDefault().EqualsLiteral("about:blank")) {
-    ref = ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
   }
 
-  nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
+  RefPtr<Document> doc = window->GetExtantDoc();
   if (!doc || !doc->IsActive()) {
+<<<<<<< HEAD
     ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
                                            __func__);
     return ref.forget();
+||||||| merged common ancestors
+    ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
+    return ref.forget();
+=======
+    return ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                            __func__);
+>>>>>>> upstream-releases
   }
 
   nsCOMPtr<nsIPrincipal> principal = doc->NodePrincipal();
   if (!principal) {
-    ref = ClientOpPromise::CreateAndReject(rv, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(rv, __func__);
   }
 
   nsCOMPtr<nsIDocShell> docShell = window->GetDocShell();
   nsCOMPtr<nsIWebProgress> webProgress = do_GetInterface(docShell);
   if (!docShell || !webProgress) {
+<<<<<<< HEAD
     ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
                                            __func__);
     return ref.forget();
+||||||| merged common ancestors
+    ref = ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
+    return ref.forget();
+=======
+    return ClientOpPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                            __func__);
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState();
+||||||| merged common ancestors
+  RefPtr<nsDocShellLoadInfo> loadInfo = new nsDocShellLoadInfo();
+=======
+  RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState(url);
+  nsCOMPtr<nsIReferrerInfo> referrerInfo = new ReferrerInfo();
+  referrerInfo->InitWithDocument(doc);
+  loadState->SetTriggeringPrincipal(principal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   loadState->SetTriggeringPrincipal(principal);
   loadState->SetReferrerPolicy(doc->GetReferrerPolicy());
   loadState->SetLoadType(LOAD_STOP_CONTENT);
@@ -237,9 +283,24 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
   loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
   loadState->SetFirstParty(true);
   rv = docShell->LoadURI(loadState);
+||||||| merged common ancestors
+  loadInfo->SetTriggeringPrincipal(principal);
+  loadInfo->SetReferrerPolicy(doc->GetReferrerPolicy());
+  loadInfo->SetLoadType(LOAD_STOP_CONTENT);
+  loadInfo->SetSourceDocShell(docShell);
+  rv = docShell->LoadURI(url, loadInfo, nsIWebNavigation::LOAD_FLAGS_NONE, true);
+=======
+  loadState->SetCsp(doc->GetCsp());
+
+  loadState->SetReferrerInfo(referrerInfo);
+  loadState->SetLoadType(LOAD_STOP_CONTENT);
+  loadState->SetSourceDocShell(docShell);
+  loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
+  loadState->SetFirstParty(true);
+  rv = docShell->LoadURI(loadState);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
-    ref = ClientOpPromise::CreateAndReject(rv, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(rv, __func__);
   }
 
   RefPtr<ClientOpPromise::Private> promise =
@@ -252,10 +313,10 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
                                         nsIWebProgress::NOTIFY_STATE_DOCUMENT);
   if (NS_FAILED(rv)) {
     promise->Reject(rv, __func__);
-    ref = promise;
-    return ref.forget();
+    return promise.forget();
   }
 
+<<<<<<< HEAD
   ref = promise.get();
 
   ref->Then(mSerialEventTarget, __func__,
@@ -263,6 +324,21 @@ already_AddRefed<ClientOpPromise> ClientNavigateOpChild::DoNavigate(
             [listener](nsresult aResult) {});
 
   return ref.forget();
+||||||| merged common ancestors
+  ref = promise.get();
+
+  ref->Then(mSerialEventTarget, __func__,
+    [listener] (const ClientOpResult& aResult) { },
+    [listener] (nsresult aResult) { });
+
+  return ref.forget();
+=======
+  return promise->Then(
+      mSerialEventTarget, __func__,
+      [listener](const ClientOpPromise::ResolveOrRejectValue& aValue) {
+        return ClientOpPromise::CreateAndResolveOrReject(aValue, __func__);
+      });
+>>>>>>> upstream-releases
 }
 
 void ClientNavigateOpChild::ActorDestroy(ActorDestroyReason aReason) {
@@ -281,6 +357,7 @@ void ClientNavigateOpChild::Init(const ClientNavigateOpConstructorArgs& aArgs) {
 
   // Capturing `this` is safe here since we clear the mPromiseRequestHolder in
   // ActorDestroy.
+<<<<<<< HEAD
   promise
       ->Then(mSerialEventTarget, __func__,
              [this](const ClientOpResult& aResult) {
@@ -292,6 +369,29 @@ void ClientNavigateOpChild::Init(const ClientNavigateOpConstructorArgs& aArgs) {
                PClientNavigateOpChild::Send__delete__(this, aResult);
              })
       ->Track(mPromiseRequestHolder);
+||||||| merged common ancestors
+  promise->Then(mSerialEventTarget, __func__,
+    [this] (const ClientOpResult& aResult) {
+      mPromiseRequestHolder.Complete();
+      PClientNavigateOpChild::Send__delete__(this, aResult);
+    }, [this] (nsresult aResult) {
+      mPromiseRequestHolder.Complete();
+      PClientNavigateOpChild::Send__delete__(this, aResult);
+  })->Track(mPromiseRequestHolder);
+=======
+  promise
+      ->Then(
+          mSerialEventTarget, __func__,
+          [this](const ClientOpResult& aResult) {
+            mPromiseRequestHolder.Complete();
+            PClientNavigateOpChild::Send__delete__(this, aResult);
+          },
+          [this](nsresult aResult) {
+            mPromiseRequestHolder.Complete();
+            PClientNavigateOpChild::Send__delete__(this, aResult);
+          })
+      ->Track(mPromiseRequestHolder);
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

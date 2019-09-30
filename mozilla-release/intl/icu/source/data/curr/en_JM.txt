@@ -8,5 +8,11 @@ en_JM{
             "Jamaican Dollar",
         }
     }
+<<<<<<< HEAD
     Version{"2.1.44.18"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.69"}
+>>>>>>> upstream-releases
 }

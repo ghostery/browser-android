@@ -12,8 +12,16 @@
 #include "mozilla/Result.h"
 
 #if defined(MOZILLA_INTERNAL_API)
+<<<<<<< HEAD
 #include "nsString.h"
 #endif  // defined(MOZILLA_INTERNAL_API)
+||||||| merged common ancestors
+#include "nsString.h"
+#endif // defined(MOZILLA_INTERNAL_API)
+=======
+#  include "nsString.h"
+#endif  // defined(MOZILLA_INTERNAL_API)
+>>>>>>> upstream-releases
 
 #include <windows.h>
 

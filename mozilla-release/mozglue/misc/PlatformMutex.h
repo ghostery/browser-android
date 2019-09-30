@@ -13,7 +13,13 @@
 #include "mozilla/RecordReplay.h"
 
 #if !defined(XP_WIN)
+<<<<<<< HEAD
 #include <pthread.h>
+||||||| merged common ancestors
+# include <pthread.h>
+=======
+#  include <pthread.h>
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -33,6 +39,9 @@ class MutexImpl {
  protected:
   MFBT_API void lock();
   MFBT_API void unlock();
+  // We have a separate, forwarding API so internal uses don't have to go
+  // through the PLT.
+  MFBT_API bool tryLock();
 
  private:
   MutexImpl(const MutexImpl&) = delete;
@@ -42,9 +51,7 @@ class MutexImpl {
   bool operator==(const MutexImpl& rhs) = delete;
 
   void mutexLock();
-#ifdef XP_DARWIN
   bool mutexTryLock();
-#endif
 
   PlatformData* platformData();
 
@@ -53,14 +60,23 @@ class MutexImpl {
   static_assert(sizeof(pthread_mutex_t) / sizeof(void*) != 0 &&
                     sizeof(pthread_mutex_t) % sizeof(void*) == 0,
                 "pthread_mutex_t must have pointer alignment");
-#ifdef XP_DARWIN
+#  ifdef XP_DARWIN
   // Moving average of the number of spins it takes to acquire the mutex if we
   // have to wait. May be accessed by multiple threads concurrently. Getting the
   // latest value is not essential hence relaxed memory ordering is sufficient.
   mozilla::Atomic<int32_t, mozilla::MemoryOrdering::Relaxed,
+<<<<<<< HEAD
                   recordreplay::Behavior::DontPreserve>
       averageSpins;
 #endif
+||||||| merged common ancestors
+                  recordreplay::Behavior::DontPreserve> averageSpins;
+#endif
+=======
+                  recordreplay::Behavior::DontPreserve>
+      averageSpins;
+#  endif
+>>>>>>> upstream-releases
 #else
   void* platformData_[6];
 #endif

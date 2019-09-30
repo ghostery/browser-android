@@ -34,32 +34,56 @@ nsHtml5StreamListener::CheckListenerChain() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHtml5StreamListener::OnStartRequest(nsIRequest* aRequest,
                                       nsISupports* aContext) {
+||||||| merged common ancestors
+nsHtml5StreamListener::OnStartRequest(nsIRequest* aRequest,
+                                      nsISupports* aContext)
+{
+=======
+nsHtml5StreamListener::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   if (MOZ_UNLIKELY(!mDelegate)) {
     return NS_ERROR_NOT_AVAILABLE;
   }
-  return mDelegate->OnStartRequest(aRequest, aContext);
+  return mDelegate->OnStartRequest(aRequest);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsHtml5StreamListener::OnStopRequest(nsIRequest* aRequest,
                                      nsISupports* aContext, nsresult aStatus) {
+||||||| merged common ancestors
+nsHtml5StreamListener::OnStopRequest(nsIRequest* aRequest,
+                                     nsISupports* aContext,
+                                     nsresult aStatus)
+{
+=======
+nsHtml5StreamListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
+>>>>>>> upstream-releases
   if (MOZ_UNLIKELY(!mDelegate)) {
     return NS_ERROR_NOT_AVAILABLE;
   }
-  return mDelegate->OnStopRequest(aRequest, aContext, aStatus);
+  return mDelegate->OnStopRequest(aRequest, aStatus);
 }
 
 NS_IMETHODIMP
 nsHtml5StreamListener::OnDataAvailable(nsIRequest* aRequest,
-                                       nsISupports* aContext,
                                        nsIInputStream* aInStream,
                                        uint64_t aSourceOffset,
                                        uint32_t aLength) {
   if (MOZ_UNLIKELY(!mDelegate)) {
     return NS_ERROR_NOT_AVAILABLE;
   }
+<<<<<<< HEAD
   return mDelegate->OnDataAvailable(aRequest, aContext, aInStream,
                                     aSourceOffset, aLength);
+||||||| merged common ancestors
+  return mDelegate->OnDataAvailable(
+    aRequest, aContext, aInStream, aSourceOffset, aLength);
+=======
+  return mDelegate->OnDataAvailable(aRequest, aInStream, aSourceOffset,
+                                    aLength);
+>>>>>>> upstream-releases
 }

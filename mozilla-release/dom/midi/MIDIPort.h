@@ -13,7 +13,6 @@
 #include "mozilla/DOMEventTargetHelper.h"
 #include "mozilla/ErrorResult.h"
 #include "mozilla/dom/MIDIAccess.h"
-#include "mozilla/dom/MIDIPortBinding.h"
 #include "mozilla/dom/MIDIPortInterface.h"
 
 struct JSContext;
@@ -43,12 +42,22 @@ class MIDIPort : public DOMEventTargetHelper,
   MIDIPort(nsPIDOMWindowInner* aWindow, MIDIAccess* aMIDIAccessParent);
   bool Initialize(const MIDIPortInfo& aPortInfo, bool aSysexEnabled);
   virtual ~MIDIPort();
+<<<<<<< HEAD
 
  public:
   nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }
+||||||| merged common ancestors
+public:
+  nsPIDOMWindowInner*
+  GetParentObject() const
+  {
+    return GetOwner();
+  }
+=======
+>>>>>>> upstream-releases
 
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
+ public:
+  nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }
 
   // Getters
   void GetId(nsString& aRetVal) const;

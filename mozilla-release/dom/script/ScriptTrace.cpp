@@ -5,11 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ScriptTrace.h"
+#include "mozilla/StaticPrefs.h"
 
 namespace mozilla {
 namespace dom {
 namespace script {
 
+<<<<<<< HEAD
 static nsresult TestingDispatchEvent(nsIScriptElement* aScriptElement,
                                      const nsAString& aEventType) {
   static bool sExposeTestInterfaceEnabled = false;
@@ -20,6 +22,25 @@ static nsresult TestingDispatchEvent(nsIScriptElement* aScriptElement,
                                  "dom.expose_test_interfaces", false);
   }
   if (!sExposeTestInterfaceEnabled) {
+||||||| merged common ancestors
+static nsresult
+TestingDispatchEvent(nsIScriptElement* aScriptElement,
+                     const nsAString& aEventType)
+{
+  static bool sExposeTestInterfaceEnabled = false;
+  static bool sExposeTestInterfacePrefCached = false;
+  if (!sExposeTestInterfacePrefCached) {
+    sExposeTestInterfacePrefCached = true;
+    Preferences::AddBoolVarCache(&sExposeTestInterfaceEnabled,
+                                 "dom.expose_test_interfaces",
+                                 false);
+  }
+  if (!sExposeTestInterfaceEnabled) {
+=======
+static nsresult TestingDispatchEvent(nsIScriptElement* aScriptElement,
+                                     const nsAString& aEventType) {
+  if (!StaticPrefs::dom_expose_test_interfaces()) {
+>>>>>>> upstream-releases
     return NS_OK;
   }
 

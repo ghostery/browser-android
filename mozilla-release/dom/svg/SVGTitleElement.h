@@ -8,16 +8,27 @@
 #define mozilla_dom_SVGTitleElement_h
 
 #include "mozilla/Attributes.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "nsStubMutationObserver.h"
 
+<<<<<<< HEAD
 typedef nsSVGElement SVGTitleElementBase;
 
 nsresult NS_NewSVGTitleElement(
     nsIContent **aResult, already_AddRefed<mozilla::dom::NodeInfo> &&aNodeInfo);
+||||||| merged common ancestors
+typedef nsSVGElement SVGTitleElementBase;
+
+nsresult NS_NewSVGTitleElement(nsIContent **aResult,
+                               already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+=======
+nsresult NS_NewSVGTitleElement(
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class SVGTitleElement final : public SVGTitleElementBase,
                               public nsStubMutationObserver {
  protected:
@@ -30,8 +41,41 @@ class SVGTitleElement final : public SVGTitleElementBase,
 
   virtual JSObject *WrapNode(JSContext *aCx,
                              JS::Handle<JSObject *> aGivenProto) override;
+||||||| merged common ancestors
+class SVGTitleElement final : public SVGTitleElementBase,
+                              public nsStubMutationObserver
+{
+protected:
+  friend nsresult (::NS_NewSVGTitleElement(nsIContent **aResult,
+                                           already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGTitleElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGTitleElement();
+
+  virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
+=======
+typedef SVGElement SVGTitleElementBase;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+class SVGTitleElement final : public SVGTitleElementBase,
+                              public nsStubMutationObserver {
+ protected:
+  friend nsresult(::NS_NewSVGTitleElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+  explicit SVGTitleElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  ~SVGTitleElement() = default;
+
+  virtual JSObject* WrapNode(JSContext* aCx,
+                             JS::Handle<JSObject*> aGivenProto) override;
 
  public:
+>>>>>>> upstream-releases
   // interfaces:
 
   NS_DECL_ISUPPORTS_INHERITED
@@ -44,11 +88,9 @@ class SVGTitleElement final : public SVGTitleElementBase,
 
   virtual nsresult Clone(dom::NodeInfo *, nsINode **aResult) const override;
 
-  virtual nsresult BindToTree(nsIDocument *aDocument, nsIContent *aParent,
-                              nsIContent *aBindingParent) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
 
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
 
   virtual void DoneAddingChildren(bool aHaveNotified) override;
 

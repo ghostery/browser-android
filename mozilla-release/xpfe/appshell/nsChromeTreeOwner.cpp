@@ -118,21 +118,42 @@ NS_IMETHODIMP nsChromeTreeOwner::GetPrimaryContentShell(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsChromeTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary) {
+||||||| merged common ancestors
+nsChromeTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary)
+{
+=======
+nsChromeTreeOwner::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
-  return mXULWindow->TabParentAdded(aTab, aPrimary);
+  return mXULWindow->RemoteTabAdded(aTab, aPrimary);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsChromeTreeOwner::TabParentRemoved(nsITabParent* aTab) {
+||||||| merged common ancestors
+nsChromeTreeOwner::TabParentRemoved(nsITabParent* aTab)
+{
+=======
+nsChromeTreeOwner::RemoteTabRemoved(nsIRemoteTab* aTab) {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
-  return mXULWindow->TabParentRemoved(aTab);
+  return mXULWindow->RemoteTabRemoved(aTab);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsChromeTreeOwner::GetPrimaryTabParent(nsITabParent** aTab) {
+||||||| merged common ancestors
+nsChromeTreeOwner::GetPrimaryTabParent(nsITabParent** aTab)
+{
+=======
+nsChromeTreeOwner::GetPrimaryRemoteTab(nsIRemoteTab** aTab) {
+>>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
-  return mXULWindow->GetPrimaryTabParent(aTab);
+  return mXULWindow->GetPrimaryRemoteTab(aTab);
 }
 
 NS_IMETHODIMP
@@ -443,10 +464,37 @@ nsChromeTreeOwner::OnStatusChange(nsIWebProgress* aWebProgress,
   return NS_OK;
 }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+
+=======
 NS_IMETHODIMP
+nsChromeTreeOwner::OnSecurityChange(nsIWebProgress* aWebProgress,
+                                    nsIRequest* aRequest, uint32_t aState) {
+  return NS_OK;
+}
+
+>>>>>>> upstream-releases
+NS_IMETHODIMP
+<<<<<<< HEAD
 nsChromeTreeOwner::OnSecurityChange(nsIWebProgress* aWebProgress,
                                     nsIRequest* aRequest, uint32_t state) {
   return NS_OK;
+||||||| merged common ancestors
+nsChromeTreeOwner::OnSecurityChange(nsIWebProgress *aWebProgress,
+                                    nsIRequest *aRequest,
+                                    uint32_t aOldState,
+                                    uint32_t aState,
+                                    const nsAString& aContentBlockingLogJSON)
+{
+    return NS_OK;
+=======
+nsChromeTreeOwner::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
+                                          nsIRequest* aRequest,
+                                          uint32_t aEvent) {
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 //*****************************************************************************

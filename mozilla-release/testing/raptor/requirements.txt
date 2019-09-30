@@ -1,5 +1,13 @@
+mozcrash ~= 1.0
 mozrunner ~= 7.0
 mozprofile ~= 2.1
 manifestparser >= 1.1
 wptserve ~= 1.4.0
+<<<<<<< HEAD
 mozdevice >= 1.1.6
+||||||| merged common ancestors
+mozdevice >= 1.1.1
+=======
+mozdevice >= 3.0.1
+mozproxy >= 1.0
+>>>>>>> upstream-releases

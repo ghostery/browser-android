@@ -2,6 +2,7 @@
 // License & terms of use: http://www.unicode.org/copyright.html#License
 en_IN{
     %%Parent{"en_001"}
+<<<<<<< HEAD
     Currencies{
         VEF{
             "VEF",
@@ -23,4 +24,29 @@ en_IN{
         }
     }
     Version{"2.1.44.18"}
+||||||| merged common ancestors
+    Version{"2.1.38.73"}
+=======
+    Currencies{
+        VEF{
+            "VEF",
+            "Venezuelan Bolívar",
+        }
+        VES{
+            "VES",
+            "VES",
+        }
+    }
+    CurrencyPlurals{
+        VEF{
+            one{"Venezuelan bolívar"}
+            other{"Venezuelan bolívars"}
+        }
+        VES{
+            one{"VES"}
+            other{"VES"}
+        }
+    }
+    Version{"2.1.49.14"}
+>>>>>>> upstream-releases
 }

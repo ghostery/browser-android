@@ -23,11 +23,25 @@ add_task(async function() {
   ok(flexSizingContainer, "The flex sizing exists in the DOM");
 
   info("Check that the base, flexibility and final sizes are displayed");
-  const allSections = [...flexSizingContainer.querySelectorAll(".section .name")];
+  const allSections = [
+    ...flexSizingContainer.querySelectorAll(".section .name"),
+  ];
   const allSectionTitles = allSections.map(el => el.textContent);
 
+<<<<<<< HEAD
   ["Base Size", "Flexibility", "Final Size"].forEach((expectedTitle, i) => {
     ok(allSectionTitles[i].includes(expectedTitle),
        `Sizing section #${i + 1} (${expectedTitle}) was found`);
   });
+||||||| merged common ancestors
+  ok(expectedTitles.every(title => allSectionTitles.includes(title)),
+     "The 3 main sizing sections where found");
+=======
+  ["Base Size", "Flexibility", "Final Size"].forEach((expectedTitle, i) => {
+    ok(
+      allSectionTitles[i].includes(expectedTitle),
+      `Sizing section #${i + 1} (${expectedTitle}) was found`
+    );
+  });
+>>>>>>> upstream-releases
 });

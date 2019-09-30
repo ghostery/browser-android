@@ -40,7 +40,7 @@
 
 // needed to check if current OS is lower than 10.7
 #if defined(MOZ_WIDGET_COCOA)
-#include "nsCocoaFeatures.h"
+#  include "nsCocoaFeatures.h"
 #endif
 
 #include "mozilla/DebugOnly.h"
@@ -160,8 +160,19 @@ bool ValidateTexImageTarget(WebGLContext* webgl, uint8_t funcDims,
   return true;
 }
 
+<<<<<<< HEAD
 /*virtual*/ bool WebGLContext::IsTexParamValid(GLenum pname) const {
   switch (pname) {
+||||||| merged common ancestors
+/*virtual*/ bool
+WebGLContext::IsTexParamValid(GLenum pname) const
+{
+    switch (pname) {
+=======
+/*virtual*/
+bool WebGLContext::IsTexParamValid(GLenum pname) const {
+  switch (pname) {
+>>>>>>> upstream-releases
     case LOCAL_GL_TEXTURE_MIN_FILTER:
     case LOCAL_GL_TEXTURE_MAG_FILTER:
     case LOCAL_GL_TEXTURE_WRAP_S:

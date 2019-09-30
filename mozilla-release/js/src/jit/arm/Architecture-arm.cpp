@@ -7,7 +7,7 @@
 #include "jit/arm/Architecture-arm.h"
 
 #if !defined(JS_SIMULATOR_ARM) && !defined(__APPLE__)
-#include <elf.h>
+#  include <elf.h>
 #endif
 
 #include <fcntl.h>
@@ -19,6 +19,7 @@
 #include "jit/RegisterSets.h"
 
 #if !defined(__linux__) || defined(ANDROID) || defined(JS_SIMULATOR_ARM)
+<<<<<<< HEAD
 // The Android NDK and B2G do not include the hwcap.h kernel header, and it is
 // not defined when building the simulator, so inline the header defines we
 // need.
@@ -31,7 +32,34 @@
 #define HWCAP_IDIVT (1 << 18)
 #define HWCAP_VFPD32 (1 << 19) /* set if VFP has 32 regs (not 16) */
 #define AT_HWCAP 16
+||||||| merged common ancestors
+// The Android NDK and B2G do not include the hwcap.h kernel header, and it is not
+// defined when building the simulator, so inline the header defines we need.
+# define HWCAP_VFP        (1 << 6)
+# define HWCAP_NEON       (1 << 12)
+# define HWCAP_VFPv3      (1 << 13)
+# define HWCAP_VFPv3D16   (1 << 14) /* also set for VFPv4-D16 */
+# define HWCAP_VFPv4      (1 << 16)
+# define HWCAP_IDIVA      (1 << 17)
+# define HWCAP_IDIVT      (1 << 18)
+# define HWCAP_VFPD32     (1 << 19) /* set if VFP has 32 regs (not 16) */
+# define AT_HWCAP 16
+=======
+// The Android NDK and B2G do not include the hwcap.h kernel header, and it is
+// not defined when building the simulator, so inline the header defines we
+// need.
+#  define HWCAP_VFP (1 << 6)
+#  define HWCAP_NEON (1 << 12)
+#  define HWCAP_VFPv3 (1 << 13)
+#  define HWCAP_VFPv3D16 (1 << 14) /* also set for VFPv4-D16 */
+#  define HWCAP_VFPv4 (1 << 16)
+#  define HWCAP_IDIVA (1 << 17)
+#  define HWCAP_IDIVT (1 << 18)
+#  define HWCAP_VFPD32 (1 << 19) /* set if VFP has 32 regs (not 16) */
+#  define AT_HWCAP 16
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #include <asm/hwcap.h>
 #if !defined(HWCAP_IDIVA)
 #define HWCAP_IDIVA (1 << 17)
@@ -39,6 +67,23 @@
 #if !defined(HWCAP_VFPD32)
 #define HWCAP_VFPD32 (1 << 19) /* set if VFP has 32 regs (not 16) */
 #endif
+||||||| merged common ancestors
+# include <asm/hwcap.h>
+# if !defined(HWCAP_IDIVA)
+#  define HWCAP_IDIVA     (1 << 17)
+# endif
+# if !defined(HWCAP_VFPD32)
+#  define HWCAP_VFPD32    (1 << 19) /* set if VFP has 32 regs (not 16) */
+# endif
+=======
+#  include <asm/hwcap.h>
+#  if !defined(HWCAP_IDIVA)
+#    define HWCAP_IDIVA (1 << 17)
+#  endif
+#  if !defined(HWCAP_VFPD32)
+#    define HWCAP_VFPD32 (1 << 19) /* set if VFP has 32 regs (not 16) */
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -212,6 +257,7 @@ void InitARMFlags() {
           HWCAP_IDIVA | HWCAP_FIXUP_FAULT;
 #else
 
+<<<<<<< HEAD
 #if defined(__linux__) || defined(ANDROID)
   // This includes Android and B2G.
   bool readAuxv = false;
@@ -227,7 +273,40 @@ void InitARMFlags() {
         readAuxv = true;
         break;
       }
+||||||| merged common ancestors
+#if defined(__linux__) || defined(ANDROID)
+    // This includes Android and B2G.
+    bool readAuxv = false;
+    int fd = open("/proc/self/auxv", O_RDONLY);
+    if (fd > 0) {
+        struct { uint32_t a_type; uint32_t a_val; } aux;
+        while (read(fd, &aux, sizeof(aux))) {
+            if (aux.a_type == AT_HWCAP) {
+                flags = aux.a_val;
+                readAuxv = true;
+                break;
+            }
+        }
+        close(fd);
+=======
+#  if defined(__linux__) || defined(ANDROID)
+  // This includes Android and B2G.
+  bool readAuxv = false;
+  int fd = open("/proc/self/auxv", O_RDONLY);
+  if (fd > 0) {
+    struct {
+      uint32_t a_type;
+      uint32_t a_val;
+    } aux;
+    while (read(fd, &aux, sizeof(aux))) {
+      if (aux.a_type == AT_HWCAP) {
+        flags = aux.a_val;
+        readAuxv = true;
+        break;
+      }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     close(fd);
   }
 
@@ -259,10 +338,72 @@ void InitARMFlags() {
     char* exynos7420 = strstr(buf, "Exynos7420");
     if (exynos7420) {
       forceDoubleCacheFlush = true;
+||||||| merged common ancestors
+
+    FILE* fp = fopen("/proc/cpuinfo", "r");
+    if (fp) {
+        char buf[1024];
+        memset(buf, 0, sizeof(buf));
+        size_t len = fread(buf, sizeof(char), sizeof(buf) - 1, fp);
+        fclose(fp);
+        buf[len] = '\0';
+
+        // Read the cpuinfo Features if the auxv is not available.
+        if (!readAuxv) {
+            char* featureList = strstr(buf, "Features");
+            if (featureList) {
+                if (char* featuresEnd = strstr(featureList, "\n")) {
+                    *featuresEnd = '\0';
+                }
+                flags = ParseARMCpuFeatures(featureList + 8);
+            }
+            if (strstr(buf, "ARMv7")) {
+                flags |= HWCAP_ARMv7;
+            }
+        }
+
+        // The exynos7420 cpu (EU galaxy S6 (Note)) has a bug where sometimes
+        // flushing doesn't invalidate the instruction cache. As a result we force
+        // it by calling the cacheFlush twice on different start addresses.
+        char* exynos7420 = strstr(buf, "Exynos7420");
+        if (exynos7420) {
+            forceDoubleCacheFlush = true;
+        }
+=======
+    close(fd);
+  }
+
+  FILE* fp = fopen("/proc/cpuinfo", "r");
+  if (fp) {
+    char buf[1024];
+    memset(buf, 0, sizeof(buf));
+    size_t len = fread(buf, sizeof(char), sizeof(buf) - 1, fp);
+    fclose(fp);
+    buf[len] = '\0';
+
+    // Read the cpuinfo Features if the auxv is not available.
+    if (!readAuxv) {
+      char* featureList = strstr(buf, "Features");
+      if (featureList) {
+        if (char* featuresEnd = strstr(featureList, "\n")) {
+          *featuresEnd = '\0';
+        }
+        flags = ParseARMCpuFeatures(featureList + 8);
+      }
+      if (strstr(buf, "ARMv7")) {
+        flags |= HWCAP_ARMv7;
+      }
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   }
 #endif
+||||||| merged common ancestors
+#endif
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // If compiled to use specialized features then these features can be
   // assumed to be present otherwise the compiler would fail to run.
 
@@ -296,6 +437,85 @@ void InitARMFlags() {
 
   JitSpew(JitSpew_Codegen, "ARM HWCAP: 0x%x\n", armHwCapFlags);
   return;
+||||||| merged common ancestors
+    // If compiled to use specialized features then these features can be
+    // assumed to be present otherwise the compiler would fail to run.
+
+#ifdef JS_CODEGEN_ARM_HARDFP
+    // Compiled to use the hardfp ABI.
+    flags |= HWCAP_USE_HARDFP_ABI;
+#endif
+
+#if defined(__VFP_FP__) && !defined(__SOFTFP__)
+    // Compiled to use VFP instructions so assume VFP support.
+    flags |= HWCAP_VFP;
+#endif
+
+#if defined(__ARM_ARCH_7__) || defined (__ARM_ARCH_7A__)
+    // Compiled to use ARMv7 instructions so assume the ARMv7 arch.
+    flags |= HWCAP_ARMv7;
+#endif
+
+#if defined(__APPLE__)
+    #if defined(__ARM_NEON__)
+        flags |= HWCAP_NEON;
+    #endif
+    #if defined(__ARMVFPV3__)
+        flags |= HWCAP_VFPv3 | HWCAP_VFPD32
+    #endif
+#endif
+
+#endif // JS_SIMULATOR_ARM
+
+    armHwCapFlags = CanonicalizeARMHwCapFlags(flags);
+
+    JitSpew(JitSpew_Codegen, "ARM HWCAP: 0x%x\n", armHwCapFlags);
+    return;
+=======
+    // The exynos7420 cpu (EU galaxy S6 (Note)) has a bug where sometimes
+    // flushing doesn't invalidate the instruction cache. As a result we force
+    // it by calling the cacheFlush twice on different start addresses.
+    char* exynos7420 = strstr(buf, "Exynos7420");
+    if (exynos7420) {
+      forceDoubleCacheFlush = true;
+    }
+  }
+#  endif
+
+  // If compiled to use specialized features then these features can be
+  // assumed to be present otherwise the compiler would fail to run.
+
+#  ifdef JS_CODEGEN_ARM_HARDFP
+  // Compiled to use the hardfp ABI.
+  flags |= HWCAP_USE_HARDFP_ABI;
+#  endif
+
+#  if defined(__VFP_FP__) && !defined(__SOFTFP__)
+  // Compiled to use VFP instructions so assume VFP support.
+  flags |= HWCAP_VFP;
+#  endif
+
+#  if defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__)
+  // Compiled to use ARMv7 instructions so assume the ARMv7 arch.
+  flags |= HWCAP_ARMv7;
+#  endif
+
+#  if defined(__APPLE__)
+#    if defined(__ARM_NEON__)
+  flags |= HWCAP_NEON;
+#    endif
+#    if defined(__ARMVFPV3__)
+  flags |= HWCAP_VFPv3 | HWCAP_VFPD32
+#    endif
+#  endif
+
+#endif  // JS_SIMULATOR_ARM
+
+  armHwCapFlags = CanonicalizeARMHwCapFlags(flags);
+
+  JitSpew(JitSpew_Codegen, "ARM HWCAP: 0x%x\n", armHwCapFlags);
+  return;
+>>>>>>> upstream-releases
 }
 
 uint32_t GetARMFlags() {
@@ -352,6 +572,7 @@ bool UseHardFpABI() {
 }
 #endif
 
+<<<<<<< HEAD
 Registers::Code Registers::FromName(const char* name) {
   // Check for some register aliases first.
   if (strcmp(name, "ip") == 0) {
@@ -374,6 +595,55 @@ Registers::Code Registers::FromName(const char* name) {
   }
 
   return Invalid;
+||||||| merged common ancestors
+Registers::Code
+Registers::FromName(const char* name)
+{
+    // Check for some register aliases first.
+    if (strcmp(name, "ip") == 0) {
+        return ip;
+    }
+    if (strcmp(name, "r13") == 0) {
+        return r13;
+    }
+    if (strcmp(name, "lr") == 0) {
+        return lr;
+    }
+    if (strcmp(name, "r15") == 0) {
+        return r15;
+    }
+
+    for (size_t i = 0; i < Total; i++) {
+        if (strcmp(GetName(i), name) == 0) {
+            return Code(i);
+        }
+    }
+
+    return Invalid;
+=======
+Registers::Code Registers::FromName(const char* name) {
+  // Check for some register aliases first.
+  if (strcmp(name, "ip") == 0) {
+    return ip;
+  }
+  if (strcmp(name, "r13") == 0) {
+    return r13;
+  }
+  if (strcmp(name, "lr") == 0) {
+    return lr;
+  }
+  if (strcmp(name, "r15") == 0) {
+    return r15;
+  }
+
+  for (size_t i = 0; i < Total; i++) {
+    if (strcmp(GetName(i), name) == 0) {
+      return Code(i);
+    }
+  }
+
+  return Invalid;
+>>>>>>> upstream-releases
 }
 
 FloatRegisters::Code FloatRegisters::FromName(const char* name) {

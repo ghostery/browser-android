@@ -45,8 +45,15 @@ class MouseCursorMonitorWin : public MouseCursorMonitor {
   explicit MouseCursorMonitorWin(ScreenId screen);
   ~MouseCursorMonitorWin() override;
 
+<<<<<<< HEAD
   void Init(Callback* callback, Mode mode) override;
   void Stop() override;
+||||||| merged common ancestors
+  void Start(Callback* callback, Mode mode) override;
+  void Stop() override;
+=======
+  void Init(Callback* callback, Mode mode) override;
+>>>>>>> upstream-releases
   void Capture() override;
 
  private:
@@ -100,14 +107,6 @@ void MouseCursorMonitorWin::Init(Callback* callback, Mode mode) {
   mode_ = mode;
 
   desktop_dc_ = GetDC(NULL);
-}
-
-void MouseCursorMonitorWin::Stop() {
-  callback_ = NULL;
-
-  if (desktop_dc_)
-    ReleaseDC(NULL, desktop_dc_);
-  desktop_dc_ = NULL;
 }
 
 void MouseCursorMonitorWin::Capture() {

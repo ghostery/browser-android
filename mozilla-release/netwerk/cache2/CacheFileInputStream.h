@@ -25,15 +25,23 @@ class CacheFileInputStream : public nsIAsyncInputStream,
   NS_DECL_NSISEEKABLESTREAM
   NS_DECL_NSITELLABLESTREAM
 
+<<<<<<< HEAD
  public:
   explicit CacheFileInputStream(CacheFile *aFile, nsISupports *aEntry,
+||||||| merged common ancestors
+public:
+  explicit CacheFileInputStream(CacheFile *aFile, nsISupports *aEntry,
+=======
+ public:
+  explicit CacheFileInputStream(CacheFile* aFile, nsISupports* aEntry,
+>>>>>>> upstream-releases
                                 bool aAlternativeData);
 
-  NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk *aChunk) override;
-  NS_IMETHOD OnChunkWritten(nsresult aResult, CacheFileChunk *aChunk) override;
+  NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk* aChunk) override;
+  NS_IMETHOD OnChunkWritten(nsresult aResult, CacheFileChunk* aChunk) override;
   NS_IMETHOD OnChunkAvailable(nsresult aResult, uint32_t aChunkIdx,
-                              CacheFileChunk *aChunk) override;
-  NS_IMETHOD OnChunkUpdated(CacheFileChunk *aChunk) override;
+                              CacheFileChunk* aChunk) override;
+  NS_IMETHOD OnChunkUpdated(CacheFileChunk* aChunk) override;
 
   // Memory reporting
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
@@ -54,7 +62,7 @@ class CacheFileInputStream : public nsIAsyncInputStream,
 
   // CanRead returns negative value when output stream truncates the data before
   // the input stream's mPos.
-  int64_t CanRead(CacheFileChunkReadHandle *aHandle);
+  int64_t CanRead(CacheFileChunkReadHandle* aHandle);
   void NotifyListener();
   void MaybeNotifyListener();
 

@@ -188,16 +188,33 @@ class FontFace final : public nsISupports, public nsWrapperCache {
   void DoLoad();
 
   // Helper function for the descriptor setter methods.
+<<<<<<< HEAD
   // Returns whether it successfully sets the descriptor.
   bool SetDescriptor(nsCSSFontDesc aFontDesc, const nsAString& aValue,
+||||||| merged common ancestors
+  // Returns whether it successfully sets the descriptor.
+  bool SetDescriptor(nsCSSFontDesc aFontDesc,
+                     const nsAString& aValue,
+=======
+  // Returns true if the descriptor was modified, false if descriptor is
+  // unchanged (which may not be an error: check aRv for actual failure).
+  bool SetDescriptor(nsCSSFontDesc aFontDesc, const nsAString& aValue,
+>>>>>>> upstream-releases
                      mozilla::ErrorResult& aRv);
 
   /**
    * Sets all of the descriptor values in mDescriptors using values passed
    * to the JS constructor.
+   * Returns true on success, false if parsing any descriptor failed.
    */
   bool SetDescriptors(const nsAString& aFamily,
                       const FontFaceDescriptors& aDescriptors);
+
+  /**
+   * Called when a descriptor has been modified, so font-face sets can
+   * be told to refresh.
+   */
+  void DescriptorUpdated();
 
   /**
    * Sets the current loading status.

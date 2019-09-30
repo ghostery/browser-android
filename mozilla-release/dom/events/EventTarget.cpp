@@ -8,6 +8,8 @@
 #include "mozilla/dom/EventTarget.h"
 #include "mozilla/dom/EventTargetBinding.h"
 #include "mozilla/dom/ConstructibleEventTarget.h"
+#include "mozilla/dom/Nullable.h"
+#include "mozilla/dom/WindowProxyHolder.h"
 #include "nsIGlobalObject.h"
 #include "nsThreadUtils.h"
 
@@ -182,5 +184,22 @@ void EventTarget::DispatchEvent(Event& aEvent, ErrorResult& aRv) {
   Unused << DispatchEvent(aEvent, CallerType::NonSystem, IgnoreErrors());
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+Nullable<WindowProxyHolder> EventTarget::GetOwnerGlobalForBindings() {
+  nsPIDOMWindowOuter* win = GetOwnerGlobalForBindingsInternal();
+  if (!win) {
+    return nullptr;
+  }
+
+  return WindowProxyHolder(win->GetBrowsingContext());
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

@@ -12,8 +12,16 @@
 #include "mozilla/dom/RTCDataChannelBinding.h"
 #include "mozilla/dom/TypedArray.h"
 #include "mozilla/net/DataChannelListener.h"
+<<<<<<< HEAD
 #include "nsIInputStream.h"
 
+||||||| merged common ancestors
+#include "nsIInputStream.h"
+
+
+=======
+
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 class Blob;
@@ -75,8 +83,9 @@ class nsDOMDataChannel final : public mozilla::DOMEventTargetHelper,
   void Send(const mozilla::dom::ArrayBufferView& aData,
             mozilla::ErrorResult& aRv);
 
+  bool Negotiated() const;
   bool Ordered() const;
-  uint16_t Id() const;
+  mozilla::dom::Nullable<uint16_t> GetId() const;
 
   nsresult DoOnMessageAvailable(const nsACString& aMessage, bool aBinary);
 
@@ -88,15 +97,46 @@ class nsDOMDataChannel final : public mozilla::DOMEventTargetHelper,
 
   virtual nsresult OnSimpleEvent(nsISupports* aContext, const nsAString& aName);
 
+<<<<<<< HEAD
   virtual nsresult OnChannelConnected(nsISupports* aContext) override;
 
   virtual nsresult OnChannelClosed(nsISupports* aContext) override;
+||||||| merged common ancestors
+  virtual nsresult
+  OnChannelConnected(nsISupports* aContext) override;
 
+  virtual nsresult
+  OnChannelClosed(nsISupports* aContext) override;
+=======
+  virtual nsresult OnChannelConnected(nsISupports* aContext) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual nsresult OnBufferLow(nsISupports* aContext) override;
+||||||| merged common ancestors
+  virtual nsresult
+  OnBufferLow(nsISupports* aContext) override;
+=======
+  virtual nsresult OnChannelClosed(nsISupports* aContext) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult NotBuffered(nsISupports* aContext) override;
+||||||| merged common ancestors
+  virtual nsresult
+  NotBuffered(nsISupports* aContext) override;
+=======
+  virtual nsresult OnBufferLow(nsISupports* aContext) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void AppReady();
+||||||| merged common ancestors
+  virtual void
+  AppReady();
+=======
+  virtual nsresult NotBuffered(nsISupports* aContext) override;
+>>>>>>> upstream-releases
 
   // if there are "strong event listeners" or outgoing not sent messages
   // then this method keeps the object alive when js doesn't have strong
@@ -109,8 +149,16 @@ class nsDOMDataChannel final : public mozilla::DOMEventTargetHelper,
  protected:
   ~nsDOMDataChannel();
 
+<<<<<<< HEAD
  private:
   void Send(nsIInputStream* aMsgStream, const nsACString& aMsgString,
+||||||| merged common ancestors
+private:
+  void Send(nsIInputStream* aMsgStream, const nsACString& aMsgString,
+=======
+ private:
+  void Send(mozilla::dom::Blob* aMsgBlob, const nsACString* aMsgString,
+>>>>>>> upstream-releases
             bool aIsBinary, mozilla::ErrorResult& aRv);
 
   void ReleaseSelf();

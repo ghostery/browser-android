@@ -16,6 +16,18 @@
 #define GR_NO_MANGLE_PREFIX "sk_"
 
 class GrGLSLProgramBuilder;
+class GrSamplerState;
+class GrTexture;
+
+// Handles for program uniforms (other than per-effect uniforms)
+struct GrGLSLBuiltinUniformHandles {
+    GrGLSLProgramDataManager::UniformHandle fRTAdjustmentUni;
+    // Render target width, used to implement sk_Width
+    GrGLSLProgramDataManager::UniformHandle fRTWidthUni;
+    // Render target height, used to implement sk_Height and to calculate sk_FragCoord when
+    // origin_upper_left is not supported.
+    GrGLSLProgramDataManager::UniformHandle fRTHeightUni;
+};
 
 // Handles for program uniforms (other than per-effect uniforms)
 struct GrGLSLBuiltinUniformHandles {
@@ -97,7 +109,19 @@ private:
     virtual const GrShaderVar& samplerVariable(SamplerHandle) const = 0;
     virtual GrSwizzle samplerSwizzle(SamplerHandle) const = 0;
 
+<<<<<<< HEAD
     virtual SamplerHandle addSampler(GrSwizzle, GrTextureType, GrSLPrecision, const char* name) = 0;
+||||||| merged common ancestors
+    virtual SamplerHandle addSampler(uint32_t visibility, GrSwizzle, GrSLType, GrSLPrecision,
+                                     const char* name) = 0;
+
+    virtual const GrShaderVar& texelBufferVariable(TexelBufferHandle) const = 0;
+    virtual TexelBufferHandle addTexelBuffer(uint32_t visibility, GrSLPrecision,
+                                             const char* name) = 0;
+=======
+    virtual SamplerHandle addSampler(const GrTexture*, const GrSamplerState&, const char* name,
+                                     const GrShaderCaps*) = 0;
+>>>>>>> upstream-releases
 
     virtual UniformHandle internalAddUniformArray(uint32_t visibility,
                                                   GrSLType type,

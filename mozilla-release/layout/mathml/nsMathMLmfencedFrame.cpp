@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "gfxContext.h"
+#include "mozilla/PresShell.h"
 #include "nsMathMLmfencedFrame.h"
 #include "nsMathMLChar.h"
 #include <algorithm>
@@ -17,9 +18,21 @@ using mozilla::gfx::DrawTarget;
 // <mfenced> -- surround content with a pair of fences
 //
 
+<<<<<<< HEAD
 nsIFrame* NS_NewMathMLmfencedFrame(nsIPresShell* aPresShell,
                                    ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmfencedFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMathMLmfencedFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmfencedFrame(aStyle);
+=======
+nsIFrame* NS_NewMathMLmfencedFrame(PresShell* aPresShell,
+                                   ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmfencedFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmfencedFrame)
@@ -509,10 +522,24 @@ nsresult nsMathMLmfencedFrame::ReflowChar(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /*static*/ void nsMathMLmfencedFrame::PlaceChar(nsMathMLChar* aMathMLChar,
                                                 nscoord aDesiredAscent,
                                                 nsBoundingMetrics& bm,
                                                 nscoord& dx) {
+||||||| merged common ancestors
+/*static*/ void
+nsMathMLmfencedFrame::PlaceChar(nsMathMLChar*      aMathMLChar,
+                                nscoord            aDesiredAscent,
+                                nsBoundingMetrics& bm,
+                                nscoord&           dx)
+{
+=======
+/*static*/
+void nsMathMLmfencedFrame::PlaceChar(nsMathMLChar* aMathMLChar,
+                                     nscoord aDesiredAscent,
+                                     nsBoundingMetrics& bm, nscoord& dx) {
+>>>>>>> upstream-releases
   aMathMLChar->GetBoundingMetrics(bm);
 
   // the char's x-origin was used to store lspace ...
@@ -557,8 +584,18 @@ static nscoord GetMaxCharWidth(nsIFrame* aFrame, DrawTarget* aDrawTarget,
   return width;
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsMathMLmfencedFrame::GetIntrinsicISizeMetrics(
     gfxContext* aRenderingContext, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ void
+nsMathMLmfencedFrame::GetIntrinsicISizeMetrics(gfxContext* aRenderingContext, ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+void nsMathMLmfencedFrame::GetIntrinsicISizeMetrics(
+    gfxContext* aRenderingContext, ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   nscoord width = 0;
 
   const nsStyleFont* font = StyleFont();

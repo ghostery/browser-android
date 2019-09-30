@@ -107,11 +107,30 @@ class ScriptErrorRunnable final : public mozilla::Runnable {
           /* aSourceLine */ EmptyString(), aLineNumber, aColumnNumber,
           aSeverityFlag, category, aInnerWindowID));
     } else {
+<<<<<<< HEAD
       MOZ_ALWAYS_SUCCEEDS(scriptError->Init(
           aMessage, aFilename,
           /* aSourceLine */ EmptyString(), aLineNumber, aColumnNumber,
           aSeverityFlag, category.get(),
           /* IDB doesn't run on Private browsing mode */ false));
+||||||| merged common ancestors
+      MOZ_ALWAYS_SUCCEEDS(
+        scriptError->Init(aMessage,
+                          aFilename,
+                          /* aSourceLine */ EmptyString(),
+                          aLineNumber,
+                          aColumnNumber,
+                          aSeverityFlag,
+                          category.get(),
+                          /* IDB doesn't run on Private browsing mode */ false));
+=======
+      MOZ_ALWAYS_SUCCEEDS(scriptError->Init(
+          aMessage, aFilename,
+          /* aSourceLine */ EmptyString(), aLineNumber, aColumnNumber,
+          aSeverityFlag, category.get(),
+          /* IDB doesn't run on Private browsing mode */ false,
+          /* from chrome context */ aIsChrome));
+>>>>>>> upstream-releases
     }
 
     MOZ_ALWAYS_SUCCEEDS(consoleService->LogMessage(scriptError));
@@ -144,12 +163,30 @@ namespace mozilla {
 namespace dom {
 namespace indexedDB {
 
+<<<<<<< HEAD
 /*static*/ void ScriptErrorHelper::Dump(const nsAString& aMessage,
                                         const nsAString& aFilename,
                                         uint32_t aLineNumber,
                                         uint32_t aColumnNumber,
                                         uint32_t aSeverityFlag, bool aIsChrome,
                                         uint64_t aInnerWindowID) {
+||||||| merged common ancestors
+/*static*/ void
+ScriptErrorHelper::Dump(const nsAString& aMessage,
+                        const nsAString& aFilename,
+                        uint32_t aLineNumber,
+                        uint32_t aColumnNumber,
+                        uint32_t aSeverityFlag,
+                        bool aIsChrome,
+                        uint64_t aInnerWindowID)
+{
+=======
+/*static*/
+void ScriptErrorHelper::Dump(const nsAString& aMessage,
+                             const nsAString& aFilename, uint32_t aLineNumber,
+                             uint32_t aColumnNumber, uint32_t aSeverityFlag,
+                             bool aIsChrome, uint64_t aInnerWindowID) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     ScriptErrorRunnable::Dump(aMessage, aFilename, aLineNumber, aColumnNumber,
                               aSeverityFlag, aIsChrome, aInnerWindowID);
@@ -162,10 +199,28 @@ namespace indexedDB {
   }
 }
 
+<<<<<<< HEAD
 /*static*/ void ScriptErrorHelper::DumpLocalizedMessage(
     const nsACString& aMessageName, const nsAString& aFilename,
     uint32_t aLineNumber, uint32_t aColumnNumber, uint32_t aSeverityFlag,
     bool aIsChrome, uint64_t aInnerWindowID) {
+||||||| merged common ancestors
+/*static*/ void
+ScriptErrorHelper::DumpLocalizedMessage(const nsACString& aMessageName,
+                                        const nsAString& aFilename,
+                                        uint32_t aLineNumber,
+                                        uint32_t aColumnNumber,
+                                        uint32_t aSeverityFlag,
+                                        bool aIsChrome,
+                                        uint64_t aInnerWindowID)
+{
+=======
+/*static*/
+void ScriptErrorHelper::DumpLocalizedMessage(
+    const nsACString& aMessageName, const nsAString& aFilename,
+    uint32_t aLineNumber, uint32_t aColumnNumber, uint32_t aSeverityFlag,
+    bool aIsChrome, uint64_t aInnerWindowID) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     ScriptErrorRunnable::DumpLocalizedMessage(
         aMessageName, aFilename, aLineNumber, aColumnNumber, aSeverityFlag,

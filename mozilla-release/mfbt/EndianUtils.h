@@ -99,6 +99,7 @@
 #error "CPU type is unknown"
 #endif
 #elif defined(__APPLE__) || defined(__powerpc__) || defined(__ppc__)
+<<<<<<< HEAD
 #if __LITTLE_ENDIAN__
 #define MOZ_LITTLE_ENDIAN 1
 #elif __BIG_ENDIAN__
@@ -117,12 +118,54 @@
 #else
 #error "Can't handle mixed-endian architectures"
 #endif
+||||||| merged common ancestors
+#  if __LITTLE_ENDIAN__
+#    define MOZ_LITTLE_ENDIAN 1
+#  elif __BIG_ENDIAN__
+#    define MOZ_BIG_ENDIAN 1
+#  endif
+#elif defined(__GNUC__) && \
+      defined(__BYTE_ORDER__) && \
+      defined(__ORDER_LITTLE_ENDIAN__) && \
+      defined(__ORDER_BIG_ENDIAN__)
+   /*
+    * Some versions of GCC provide architecture-independent macros for
+    * this.  Yes, there are more than two values for __BYTE_ORDER__.
+    */
+#  if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#    define MOZ_LITTLE_ENDIAN 1
+#  elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#    define MOZ_BIG_ENDIAN 1
+#  else
+#    error "Can't handle mixed-endian architectures"
+#  endif
+=======
+#  if __LITTLE_ENDIAN__
+#    define MOZ_LITTLE_ENDIAN 1
+#  elif __BIG_ENDIAN__
+#    define MOZ_BIG_ENDIAN 1
+#  endif
+#elif defined(__GNUC__) && defined(__BYTE_ORDER__) && \
+    defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__)
+/*
+ * Some versions of GCC provide architecture-independent macros for
+ * this.  Yes, there are more than two values for __BYTE_ORDER__.
+ */
+#  if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#    define MOZ_LITTLE_ENDIAN 1
+#  elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#    define MOZ_BIG_ENDIAN 1
+#  else
+#    error "Can't handle mixed-endian architectures"
+#  endif
+>>>>>>> upstream-releases
 /*
  * We can't include useful headers like <endian.h> or <sys/isa_defs.h>
  * here because they're not present on all platforms.  Instead we have
  * this big conditional that ideally will catch all the interesting
  * cases.
  */
+<<<<<<< HEAD
 #elif defined(__sparc) || defined(__sparc__) || defined(_POWER) || \
     defined(__hppa) || defined(_MIPSEB) || defined(__ARMEB__) ||   \
     defined(__s390__) || defined(__AARCH64EB__) ||                 \
@@ -135,6 +178,35 @@
     (defined(__sh__) && defined(__BIG_ENDIAN__)) ||                  \
     (defined(__ia64) && !defined(__BIG_ENDIAN__))
 #define MOZ_LITTLE_ENDIAN 1
+||||||| merged common ancestors
+#elif defined(__sparc) || defined(__sparc__) || \
+      defined(_POWER) || defined(__hppa) || \
+      defined(_MIPSEB) || defined(__ARMEB__) || \
+      defined(__s390__) || defined(__AARCH64EB__) || \
+      (defined(__sh__) && defined(__LITTLE_ENDIAN__)) || \
+      (defined(__ia64) && defined(__BIG_ENDIAN__))
+#  define MOZ_BIG_ENDIAN 1
+#elif defined(__i386) || defined(__i386__) || \
+      defined(__x86_64) || defined(__x86_64__) || \
+      defined(_MIPSEL) || defined(__ARMEL__) || \
+      defined(__alpha__) || defined(__AARCH64EL__) || \
+      (defined(__sh__) && defined(__BIG_ENDIAN__)) || \
+      (defined(__ia64) && !defined(__BIG_ENDIAN__))
+#  define MOZ_LITTLE_ENDIAN 1
+=======
+#elif defined(__sparc) || defined(__sparc__) || defined(_POWER) || \
+    defined(__hppa) || defined(_MIPSEB) || defined(__ARMEB__) ||   \
+    defined(__s390__) || defined(__AARCH64EB__) ||                 \
+    (defined(__sh__) && defined(__LITTLE_ENDIAN__)) ||             \
+    (defined(__ia64) && defined(__BIG_ENDIAN__))
+#  define MOZ_BIG_ENDIAN 1
+#elif defined(__i386) || defined(__i386__) || defined(__x86_64) ||   \
+    defined(__x86_64__) || defined(_MIPSEL) || defined(__ARMEL__) || \
+    defined(__alpha__) || defined(__AARCH64EL__) ||                  \
+    (defined(__sh__) && defined(__BIG_ENDIAN__)) ||                  \
+    (defined(__ia64) && !defined(__BIG_ENDIAN__))
+#  define MOZ_LITTLE_ENDIAN 1
+>>>>>>> upstream-releases
 #endif
 
 #if MOZ_BIG_ENDIAN
@@ -404,7 +476,9 @@ class Endian : private EndianUtils {
 
   /*
    * Copies |aCount| values of type T starting at |aSrc| to |aDest|, converting
-   * them to little-endian format if ThisEndian is Big.
+   * them to little-endian format if ThisEndian is Big.  |aSrc| as a typed
+   * pointer must be aligned; |aDest| need not be.
+   *
    * As with memcpy, |aDest| and |aSrc| must not overlap.
    */
   template <typename T>
@@ -431,7 +505,9 @@ class Endian : private EndianUtils {
 
   /*
    * Copies |aCount| values of type T starting at |aSrc| to |aDest|, converting
-   * them to big-endian format if ThisEndian is Little.
+   * them to big-endian format if ThisEndian is Little.  |aSrc| as a typed
+   * pointer must be aligned; |aDest| need not be.
+   *
    * As with memcpy, |aDest| and |aSrc| must not overlap.
    */
   template <typename T>
@@ -479,7 +555,9 @@ class Endian : private EndianUtils {
 
   /*
    * Copies |aCount| values of type T starting at |aSrc| to |aDest|, converting
-   * them to little-endian format if ThisEndian is Big.
+   * them to little-endian format if ThisEndian is Big.  |aDest| as a typed
+   * pointer must be aligned; |aSrc| need not be.
+   *
    * As with memcpy, |aDest| and |aSrc| must not overlap.
    */
   template <typename T>
@@ -506,7 +584,9 @@ class Endian : private EndianUtils {
 
   /*
    * Copies |aCount| values of type T starting at |aSrc| to |aDest|, converting
-   * them to big-endian format if ThisEndian is Little.
+   * them to big-endian format if ThisEndian is Little.  |aDest| as a typed
+   * pointer must be aligned; |aSrc| need not be.
+   *
    * As with memcpy, |aDest| and |aSrc| must not overlap.
    */
   template <typename T>

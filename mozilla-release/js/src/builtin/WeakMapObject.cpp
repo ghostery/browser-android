@@ -10,6 +10,7 @@
 
 #include "builtin/WeakSetObject.h"
 #include "gc/FreeOp.h"
+#include "js/PropertySpec.h"
 #include "vm/JSContext.h"
 #include "vm/SelfHosting.h"
 
@@ -43,10 +44,24 @@ using namespace js;
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool WeakMapObject::has(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::has_impl>(cx,
                                                                           args);
+||||||| merged common ancestors
+static bool
+WeakMap_has(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    return CallNonGenericMethod<IsWeakMap, WeakMap_has_impl>(cx, args);
+=======
+/* static */
+bool WeakMapObject::has(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::has_impl>(cx,
+                                                                          args);
+>>>>>>> upstream-releases
 }
 
 /* static */ MOZ_ALWAYS_INLINE bool WeakMapObject::get_impl(
@@ -71,10 +86,24 @@ using namespace js;
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool WeakMapObject::get(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::get_impl>(cx,
                                                                           args);
+||||||| merged common ancestors
+static bool
+WeakMap_get(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    return CallNonGenericMethod<IsWeakMap, WeakMap_get_impl>(cx, args);
+=======
+/* static */
+bool WeakMapObject::get(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::get_impl>(cx,
+                                                                          args);
+>>>>>>> upstream-releases
 }
 
 /* static */ MOZ_ALWAYS_INLINE bool WeakMapObject::delete_impl(
@@ -100,21 +129,47 @@ using namespace js;
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool WeakMapObject::delete_(JSContext* cx, unsigned argc,
                                          Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::delete_impl>(
       cx, args);
+||||||| merged common ancestors
+static bool
+WeakMap_delete(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    return CallNonGenericMethod<IsWeakMap, WeakMap_delete_impl>(cx, args);
+=======
+/* static */
+bool WeakMapObject::delete_(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::delete_impl>(
+      cx, args);
+>>>>>>> upstream-releases
 }
 
 /* static */ MOZ_ALWAYS_INLINE bool WeakMapObject::set_impl(
     JSContext* cx, const CallArgs& args) {
   MOZ_ASSERT(WeakMapObject::is(args.thisv()));
 
+<<<<<<< HEAD
   if (!args.get(0).isObject()) {
     ReportNotObjectWithName(cx, "WeakMap key", args.get(0));
     return false;
   }
+||||||| merged common ancestors
+    if (!args.get(0).isObject()) {
+        ReportNotObjectWithName(cx, "WeakMap key", args.get(0));
+        return false;
+    }
+=======
+  if (!args.get(0).isObject()) {
+    ReportNotObject(cx, JSMSG_OBJECT_REQUIRED_WEAKMAP_KEY, args.get(0));
+    return false;
+  }
+>>>>>>> upstream-releases
 
   RootedObject key(cx, &args[0].toObject());
   Rooted<WeakMapObject*> map(cx, &args.thisv().toObject().as<WeakMapObject>());
@@ -126,10 +181,24 @@ using namespace js;
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool WeakMapObject::set(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::set_impl>(cx,
                                                                           args);
+||||||| merged common ancestors
+static bool
+WeakMap_set(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    return CallNonGenericMethod<IsWeakMap, WeakMap_set_impl>(cx, args);
+=======
+/* static */
+bool WeakMapObject::set(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  return CallNonGenericMethod<WeakMapObject::is, WeakMapObject::set_impl>(cx,
+                                                                          args);
+>>>>>>> upstream-releases
 }
 
 bool WeakCollectionObject::nondeterministicGetKeys(
@@ -174,11 +243,27 @@ static void WeakCollection_trace(JSTracer* trc, JSObject* obj) {
   }
 }
 
+<<<<<<< HEAD
 static void WeakCollection_finalize(FreeOp* fop, JSObject* obj) {
   MOZ_ASSERT(fop->maybeOnHelperThread());
   if (ObjectValueMap* map = obj->as<WeakCollectionObject>().getMap()) {
     fop->delete_(map);
   }
+||||||| merged common ancestors
+static void
+WeakCollection_finalize(FreeOp* fop, JSObject* obj)
+{
+    MOZ_ASSERT(fop->maybeOnHelperThread());
+    if (ObjectValueMap* map = obj->as<WeakCollectionObject>().getMap()) {
+        fop->delete_(map);
+    }
+=======
+static void WeakCollection_finalize(FreeOp* fop, JSObject* obj) {
+  MOZ_ASSERT(fop->maybeOnHelperThread());
+  if (ObjectValueMap* map = obj->as<WeakCollectionObject>().getMap()) {
+    fop->delete_(obj, map, MemoryUse::WeakMapObject);
+  }
+>>>>>>> upstream-releases
 }
 
 JS_PUBLIC_API JSObject* JS::NewWeakMapObject(JSContext* cx) {
@@ -216,6 +301,7 @@ JS_PUBLIC_API bool JS::SetWeakMapEntry(JSContext* cx, HandleObject mapObj,
   return WeakCollectionPutEntryInternal(cx, rootedMap, key, val);
 }
 
+<<<<<<< HEAD
 /* static */ bool WeakMapObject::construct(JSContext* cx, unsigned argc,
                                            Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
@@ -244,6 +330,66 @@ JS_PUBLIC_API bool JS::SetWeakMapEntry(JSContext* cx, HandleObject mapObj,
     if (!CallSelfHostedFunction(cx, cx->names().WeakMapConstructorInit, thisv,
                                 args2, args2.rval())) {
       return false;
+||||||| merged common ancestors
+static bool
+WeakMap_construct(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+
+    // ES6 draft rev 31 (15 Jan 2015) 23.3.1.1 step 1.
+    if (!ThrowIfNotConstructing(cx, args, "WeakMap")) {
+        return false;
+    }
+
+    RootedObject proto(cx);
+    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
+        return false;
+    }
+
+    RootedObject obj(cx, NewObjectWithClassProto<WeakMapObject>(cx, proto));
+    if (!obj) {
+        return false;
+    }
+
+    // Steps 5-6, 11.
+    if (!args.get(0).isNullOrUndefined()) {
+        FixedInvokeArgs<1> args2(cx);
+        args2[0].set(args[0]);
+
+        RootedValue thisv(cx, ObjectValue(*obj));
+        if (!CallSelfHostedFunction(cx, cx->names().WeakMapConstructorInit, thisv, args2, args2.rval())) {
+            return false;
+        }
+=======
+/* static */
+bool WeakMapObject::construct(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  // ES6 draft rev 31 (15 Jan 2015) 23.3.1.1 step 1.
+  if (!ThrowIfNotConstructing(cx, args, "WeakMap")) {
+    return false;
+  }
+
+  RootedObject proto(cx);
+  if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_WeakMap, &proto)) {
+    return false;
+  }
+
+  RootedObject obj(cx, NewObjectWithClassProto<WeakMapObject>(cx, proto));
+  if (!obj) {
+    return false;
+  }
+
+  // Steps 5-6, 11.
+  if (!args.get(0).isNullOrUndefined()) {
+    FixedInvokeArgs<1> args2(cx);
+    args2[0].set(args[0]);
+
+    RootedValue thisv(cx, ObjectValue(*obj));
+    if (!CallSelfHostedFunction(cx, cx->names().WeakMapConstructorInit, thisv,
+                                args2, args2.rval())) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 

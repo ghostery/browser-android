@@ -20,10 +20,26 @@ namespace loader {
 using mozilla::ipc::FileDescriptor;
 using mozilla::ipc::IPCResult;
 
+<<<<<<< HEAD
 class ScriptCacheParent final : public PScriptCacheParent {
  public:
   explicit ScriptCacheParent(bool wantCacheData)
       : mWantCacheData(wantCacheData) {}
+||||||| merged common ancestors
+class ScriptCacheParent final : public PScriptCacheParent
+{
+public:
+    explicit ScriptCacheParent(bool wantCacheData)
+        : mWantCacheData(wantCacheData)
+    {}
+=======
+class ScriptCacheParent final : public PScriptCacheParent {
+  friend class PScriptCacheParent;
+
+ public:
+  explicit ScriptCacheParent(bool wantCacheData)
+      : mWantCacheData(wantCacheData) {}
+>>>>>>> upstream-releases
 
  protected:
   virtual IPCResult Recv__delete__(nsTArray<ScriptData>&& scripts) override;

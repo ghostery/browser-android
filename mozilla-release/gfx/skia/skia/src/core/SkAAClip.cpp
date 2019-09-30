@@ -6,18 +6,33 @@
  */
 
 #include "SkAAClip.h"
+<<<<<<< HEAD
 
 #include "SkAtomics.h"
+||||||| merged common ancestors
+#include "SkAtomics.h"
+=======
+
+>>>>>>> upstream-releases
 #include "SkBlitter.h"
 #include "SkColorData.h"
 #include "SkMacros.h"
 #include "SkPath.h"
 #include "SkRectPriv.h"
 #include "SkScan.h"
+<<<<<<< HEAD
 #include "SkTo.h"
 #include "SkUTF.h"
 
 #include <utility>
+||||||| merged common ancestors
+#include "SkUtils.h"
+=======
+#include "SkTo.h"
+#include "SkUTF.h"
+#include <atomic>
+#include <utility>
+>>>>>>> upstream-releases
 
 class AutoAAClipValidate {
 public:
@@ -61,7 +76,7 @@ struct SkAAClip::YOffset {
 };
 
 struct SkAAClip::RunHead {
-    int32_t fRefCnt;
+    std::atomic<int32_t> fRefCnt;
     int32_t fRowCount;
     size_t  fDataSize;
 
@@ -81,7 +96,7 @@ struct SkAAClip::RunHead {
     static RunHead* Alloc(int rowCount, size_t dataSize) {
         size_t size = sizeof(RunHead) + rowCount * sizeof(YOffset) + dataSize;
         RunHead* head = (RunHead*)sk_malloc_throw(size);
-        head->fRefCnt = 1;
+        head->fRefCnt.store(1);
         head->fRowCount = rowCount;
         head->fDataSize = dataSize;
         return head;
@@ -200,7 +215,7 @@ void SkAAClip::validate() const {
     SkASSERT(!fBounds.isEmpty());
 
     const RunHead* head = fRunHead;
-    SkASSERT(head->fRefCnt > 0);
+    SkASSERT(head->fRefCnt.load() > 0);
     SkASSERT(head->fRowCount > 0);
 
     const YOffset* yoff = head->yoffsets();
@@ -535,8 +550,8 @@ bool SkAAClip::trimBounds() {
 
 void SkAAClip::freeRuns() {
     if (fRunHead) {
-        SkASSERT(fRunHead->fRefCnt >= 1);
-        if (1 == sk_atomic_dec(&fRunHead->fRefCnt)) {
+        SkASSERT(fRunHead->fRefCnt.load() >= 1);
+        if (1 == fRunHead->fRefCnt--) {
             sk_free(fRunHead);
         }
     }
@@ -566,7 +581,7 @@ SkAAClip& SkAAClip::operator=(const SkAAClip& src) {
         fBounds = src.fBounds;
         fRunHead = src.fRunHead;
         if (fRunHead) {
-            sk_atomic_inc(&fRunHead->fRefCnt);
+            fRunHead->fRefCnt++;
         }
     }
     return *this;
@@ -1755,7 +1770,7 @@ bool SkAAClip::translate(int dx, int dy, SkAAClip* dst) const {
     }
 
     if (this != dst) {
-        sk_atomic_inc(&fRunHead->fRefCnt);
+        fRunHead->fRefCnt++;
         dst->freeRuns();
         dst->fRunHead = fRunHead;
         dst->fBounds = fBounds;

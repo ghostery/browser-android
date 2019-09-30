@@ -10,11 +10,12 @@
 #include "ConsoleCommon.h"
 
 #include "mozilla/dom/BlobBinding.h"
-#include "mozilla/dom/DOMPrefs.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Exceptions.h"
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/FunctionBinding.h"
 #include "mozilla/dom/Performance.h"
+#include "mozilla/dom/PromiseBinding.h"
 #include "mozilla/dom/ScriptSettings.h"
 #include "mozilla/dom/StructuredCloneHolder.h"
 #include "mozilla/dom/ToJSValue.h"
@@ -27,7 +28,6 @@
 #include "mozilla/Maybe.h"
 #include "mozilla/StaticPrefs.h"
 #include "nsCycleCollectionParticipant.h"
-#include "nsDocument.h"
 #include "nsDOMNavigationTiming.h"
 #include "nsGlobalWindow.h"
 #include "nsJSUtils.h"
@@ -444,9 +444,19 @@ class ConsoleRunnable : public StructuredCloneHolderBase {
     return true;
   }
 
+<<<<<<< HEAD
   void ProcessProfileData(JSContext* aCx, Console* aConsole,
                           Console::MethodName aMethodName,
                           const nsAString& aAction) {
+||||||| merged common ancestors
+  void
+  ProcessProfileData(JSContext* aCx, Console* aConsole,
+                     Console::MethodName aMethodName, const nsAString& aAction)
+  {
+=======
+  void ProcessProfileData(JSContext* aCx, Console::MethodName aMethodName,
+                          const nsAString& aAction) {
+>>>>>>> upstream-releases
     AssertIsOnMainThread();
 
     ConsoleCommon::ClearException ce(aCx);
@@ -484,7 +494,7 @@ class ConsoleRunnable : public StructuredCloneHolderBase {
       }
     }
 
-    aConsole->ProfileMethodInternal(aCx, aMethodName, aAction, arguments);
+    Console::ProfileMethodMainthread(aCx, aAction, arguments);
   }
 
   ConsoleStructuredCloneData mClonedData;
@@ -633,7 +643,7 @@ class ConsoleWorkerRunnable : public WorkerProxyToMainThreadRunnable,
       wp = wp->GetParent();
     }
 
-    nsPIDOMWindowInner* window = wp->GetWindow();
+    nsCOMPtr<nsPIDOMWindowInner> window = wp->GetWindow();
     if (!window) {
       RunWindowless(aWorkerPrivate);
     } else {
@@ -654,7 +664,7 @@ class ConsoleWorkerRunnable : public WorkerProxyToMainThreadRunnable,
       return;
     }
 
-    nsPIDOMWindowOuter* outerWindow = aWindow->GetOuterWindow();
+    nsCOMPtr<nsPIDOMWindowOuter> outerWindow = aWindow->GetOuterWindow();
     if (NS_WARN_IF(!outerWindow)) {
       return;
     }
@@ -709,7 +719,16 @@ class ConsoleWorkerRunnable : public WorkerProxyToMainThreadRunnable,
                           nsPIDOMWindowInner* aInnerWindow) = 0;
 
   // This method is called in the owning thread of the Console object.
+<<<<<<< HEAD
   virtual void ReleaseData() = 0;
+||||||| merged common ancestors
+  virtual void
+  ReleaseData() = 0;
+=======
+  virtual void ReleaseData() = 0;
+
+  bool ForMessaging() const override { return true; }
+>>>>>>> upstream-releases
 
   // This must be released on the worker thread.
   RefPtr<Console> mConsole;
@@ -831,8 +850,7 @@ class ConsoleProfileWorkletRunnable final : public ConsoleWorkletRunnable {
 
     // We don't need to set a parent object in mCallData bacause there are not
     // DOM objects exposed to worklet.
-
-    ProcessProfileData(cx, mConsole, mName, mAction);
+    ProcessProfileData(cx, mName, mAction);
   }
 
   virtual void ReleaseData() override {}
@@ -867,7 +885,7 @@ class ConsoleProfileWorkerRunnable final : public ConsoleWorkerRunnable {
     // Now we could have the correct window (if we are not window-less).
     mClonedData.mParent = aInnerWindow;
 
-    ProcessProfileData(aCx, mConsole, mName, mAction);
+    ProcessProfileData(aCx, mName, mAction);
 
     mClonedData.mParent = nullptr;
   }
@@ -922,8 +940,19 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Console)
   NS_INTERFACE_MAP_ENTRY(nsISupportsWeakReference)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Console> Console::Create(
     JSContext* aCx, nsPIDOMWindowInner* aWindow, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Console>
+Console::Create(JSContext* aCx, nsPIDOMWindowInner* aWindow, ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Console> Console::Create(JSContext* aCx,
+                                          nsPIDOMWindowInner* aWindow,
+                                          ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_IF(NS_IsMainThread(), aWindow);
 
   uint64_t outerWindowID = 0;
@@ -951,9 +980,24 @@ NS_INTERFACE_MAP_END
   return console.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Console> Console::CreateForWorklet(
     JSContext* aCx, nsIGlobalObject* aGlobal, uint64_t aOuterWindowID,
     uint64_t aInnerWindowID, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Console>
+Console::CreateForWorklet(JSContext* aCx, nsIGlobalObject* aGlobal,
+                          uint64_t aOuterWindowID, uint64_t aInnerWindowID,
+                          ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Console> Console::CreateForWorklet(JSContext* aCx,
+                                                    nsIGlobalObject* aGlobal,
+                                                    uint64_t aOuterWindowID,
+                                                    uint64_t aInnerWindowID,
+                                                    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   WorkletThread::AssertIsOnWorkletThread();
 
   RefPtr<Console> console =
@@ -1100,40 +1144,101 @@ METHOD(GroupCollapsed, "groupCollapsed")
 
 #undef METHOD
 
+<<<<<<< HEAD
 /* static */ void Console::Clear(const GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ void
+Console::Clear(const GlobalObject& aGlobal)
+{
+=======
+/* static */
+void Console::Clear(const GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   const Sequence<JS::Value> data;
   Method(aGlobal, MethodClear, NS_LITERAL_STRING("clear"), data);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::GroupEnd(const GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ void
+Console::GroupEnd(const GlobalObject& aGlobal)
+{
+=======
+/* static */
+void Console::GroupEnd(const GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   const Sequence<JS::Value> data;
   Method(aGlobal, MethodGroupEnd, NS_LITERAL_STRING("groupEnd"), data);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::Time(const GlobalObject& aGlobal,
                                 const nsAString& aLabel) {
+||||||| merged common ancestors
+/* static */ void
+Console::Time(const GlobalObject& aGlobal, const nsAString& aLabel)
+{
+=======
+/* static */
+void Console::Time(const GlobalObject& aGlobal, const nsAString& aLabel) {
+>>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodTime,
                NS_LITERAL_STRING("time"));
 }
 
+<<<<<<< HEAD
 /* static */ void Console::TimeEnd(const GlobalObject& aGlobal,
                                    const nsAString& aLabel) {
+||||||| merged common ancestors
+/* static */ void
+Console::TimeEnd(const GlobalObject& aGlobal, const nsAString& aLabel)
+{
+=======
+/* static */
+void Console::TimeEnd(const GlobalObject& aGlobal, const nsAString& aLabel) {
+>>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodTimeEnd,
                NS_LITERAL_STRING("timeEnd"));
 }
 
+<<<<<<< HEAD
 /* static */ void Console::TimeLog(const GlobalObject& aGlobal,
                                    const nsAString& aLabel,
                                    const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::TimeLog(const GlobalObject& aGlobal, const nsAString& aLabel,
+                 const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::TimeLog(const GlobalObject& aGlobal, const nsAString& aLabel,
+                      const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, aData, MethodTimeLog,
                NS_LITERAL_STRING("timeLog"));
 }
 
+<<<<<<< HEAD
 /* static */ void Console::StringMethod(const GlobalObject& aGlobal,
                                         const nsAString& aLabel,
                                         const Sequence<JS::Value>& aData,
                                         MethodName aMethodName,
                                         const nsAString& aMethodString) {
+||||||| merged common ancestors
+/* static */ void
+Console::StringMethod(const GlobalObject& aGlobal, const nsAString& aLabel,
+                      const Sequence<JS::Value>& aData, MethodName aMethodName,
+                      const nsAString& aMethodString)
+{
+=======
+/* static */
+void Console::StringMethod(const GlobalObject& aGlobal, const nsAString& aLabel,
+                           const Sequence<JS::Value>& aData,
+                           MethodName aMethodName,
+                           const nsAString& aMethodString) {
+>>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -1170,8 +1275,19 @@ void Console::StringMethodInternal(JSContext* aCx, const nsAString& aLabel,
   MethodInternal(aCx, aMethodName, aMethodString, data);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::TimeStamp(const GlobalObject& aGlobal,
                                      const JS::Handle<JS::Value> aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::TimeStamp(const GlobalObject& aGlobal,
+                   const JS::Handle<JS::Value> aData)
+{
+=======
+/* static */
+void Console::TimeStamp(const GlobalObject& aGlobal,
+                        const JS::Handle<JS::Value> aData) {
+>>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   ConsoleCommon::ClearException ce(cx);
@@ -1186,21 +1302,55 @@ void Console::StringMethodInternal(JSContext* aCx, const nsAString& aLabel,
   Method(aGlobal, MethodTimeStamp, NS_LITERAL_STRING("timeStamp"), data);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::Profile(const GlobalObject& aGlobal,
                                    const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::Profile(const GlobalObject& aGlobal, const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::Profile(const GlobalObject& aGlobal,
+                      const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   ProfileMethod(aGlobal, MethodProfile, NS_LITERAL_STRING("profile"), aData);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::ProfileEnd(const GlobalObject& aGlobal,
                                       const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::ProfileEnd(const GlobalObject& aGlobal,
+                    const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::ProfileEnd(const GlobalObject& aGlobal,
+                         const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   ProfileMethod(aGlobal, MethodProfileEnd, NS_LITERAL_STRING("profileEnd"),
                 aData);
 }
 
+<<<<<<< HEAD
 /* static */ void Console::ProfileMethod(const GlobalObject& aGlobal,
                                          MethodName aName,
                                          const nsAString& aAction,
                                          const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::ProfileMethod(const GlobalObject& aGlobal, MethodName aName,
+                       const nsAString& aAction,
+                       const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::ProfileMethod(const GlobalObject& aGlobal, MethodName aName,
+                            const nsAString& aAction,
+                            const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -1254,10 +1404,18 @@ void Console::ProfileMethodInternal(JSContext* aCx, MethodName aMethodName,
     return;
   }
 
+  ProfileMethodMainthread(aCx, aAction, aData);
+}
+
+// static
+void Console::ProfileMethodMainthread(JSContext* aCx, const nsAString& aAction,
+                                      const Sequence<JS::Value>& aData) {
+  MOZ_ASSERT(NS_IsMainThread());
   ConsoleCommon::ClearException ce(aCx);
 
   RootedDictionary<ConsoleProfileEvent> event(aCx);
   event.mAction = aAction;
+  event.mChromeContext = nsContentUtils::ThreadsafeIsSystemCaller(aCx);
 
   event.mArguments.Construct();
   Sequence<JS::Value>& sequence = event.mArguments.Value();
@@ -1295,21 +1453,50 @@ void Console::ProfileMethodInternal(JSContext* aCx, MethodName aMethodName,
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Console::Assert(const GlobalObject& aGlobal, bool aCondition,
                                   const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::Assert(const GlobalObject& aGlobal, bool aCondition,
+                const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::Assert(const GlobalObject& aGlobal, bool aCondition,
+                     const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   if (!aCondition) {
     Method(aGlobal, MethodAssert, NS_LITERAL_STRING("assert"), aData);
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Console::Count(const GlobalObject& aGlobal,
                                  const nsAString& aLabel) {
+||||||| merged common ancestors
+/* static */ void
+Console::Count(const GlobalObject& aGlobal, const nsAString& aLabel)
+{
+=======
+/* static */
+void Console::Count(const GlobalObject& aGlobal, const nsAString& aLabel) {
+>>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodCount,
                NS_LITERAL_STRING("count"));
 }
 
+<<<<<<< HEAD
 /* static */ void Console::CountReset(const GlobalObject& aGlobal,
                                       const nsAString& aLabel) {
+||||||| merged common ancestors
+/* static */ void
+Console::CountReset(const GlobalObject& aGlobal, const nsAString& aLabel)
+{
+=======
+/* static */
+void Console::CountReset(const GlobalObject& aGlobal, const nsAString& aLabel) {
+>>>>>>> upstream-releases
   StringMethod(aGlobal, aLabel, Sequence<JS::Value>(), MethodCountReset,
                NS_LITERAL_STRING("countReset"));
 }
@@ -1322,8 +1509,8 @@ void StackFrameToStackEntry(JSContext* aCx, nsIStackFrame* aStackFrame,
 
   aStackFrame->GetFilename(aCx, aStackEntry.mFilename);
 
+  aStackEntry.mSourceId = aStackFrame->GetSourceId(aCx);
   aStackEntry.mLineNumber = aStackFrame->GetLineNumber(aCx);
-
   aStackEntry.mColumnNumber = aStackFrame->GetColumnNumber(aCx);
 
   aStackFrame->GetName(aCx, aStackEntry.mFunctionName);
@@ -1355,10 +1542,23 @@ void ReifyStack(JSContext* aCx, nsIStackFrame* aStack,
 }  // anonymous namespace
 
 // Queue a call to a console method. See the CALL_DELAY constant.
+<<<<<<< HEAD
 /* static */ void Console::Method(const GlobalObject& aGlobal,
                                   MethodName aMethodName,
                                   const nsAString& aMethodString,
                                   const Sequence<JS::Value>& aData) {
+||||||| merged common ancestors
+/* static */ void
+Console::Method(const GlobalObject& aGlobal, MethodName aMethodName,
+                const nsAString& aMethodString,
+                const Sequence<JS::Value>& aData)
+{
+=======
+/* static */
+void Console::Method(const GlobalObject& aGlobal, MethodName aMethodName,
+                     const nsAString& aMethodString,
+                     const Sequence<JS::Value>& aData) {
+>>>>>>> upstream-releases
   RefPtr<Console> console = GetConsole(aGlobal);
   if (!console) {
     return;
@@ -1664,6 +1864,8 @@ bool Console::PopulateConsoleNotificationInTheTargetScope(
   event.mID.Construct();
   event.mInnerID.Construct();
 
+  event.mChromeContext = nsContentUtils::ThreadsafeIsSystemCaller(aCx);
+
   if (aData->mIDType == ConsoleCallData::eString) {
     event.mID.Value().SetAsString() = aData->mOuterIDString;
     event.mInnerID.Value().SetAsString() = aData->mInnerIDString;
@@ -1695,6 +1897,7 @@ bool Console::PopulateConsoleNotificationInTheTargetScope(
     }
   }
 
+  event.mSourceId = frame.mSourceId;
   event.mLineNumber = frame.mLineNumber;
   event.mColumnNumber = frame.mColumnNumber;
   event.mFunctionName = frame.mFunctionName;
@@ -2502,7 +2705,8 @@ void Console::NotifyHandler(JSContext* aCx,
   }
 
   JS::Rooted<JS::Value> ignored(aCx);
-  mConsoleEventNotifier->Call(value, &ignored);
+  RefPtr<AnyCallback> notifier(mConsoleEventNotifier);
+  notifier->Call(value, &ignored);
 }
 
 void Console::RetrieveConsoleEvents(JSContext* aCx,
@@ -2560,8 +2764,17 @@ bool Console::IsShuttingDown() const {
   return mStatus == eShuttingDown;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Console> Console::GetConsole(
     const GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Console>
+Console::GetConsole(const GlobalObject& aGlobal)
+{
+=======
+/* static */
+already_AddRefed<Console> Console::GetConsole(const GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   ErrorResult rv;
   RefPtr<Console> console = GetConsoleInternal(aGlobal, rv);
   if (NS_WARN_IF(rv.Failed()) || !console) {
@@ -2578,8 +2791,18 @@ bool Console::IsShuttingDown() const {
   return console.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Console> Console::GetConsoleInternal(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Console>
+Console::GetConsoleInternal(const GlobalObject& aGlobal, ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Console> Console::GetConsoleInternal(
+    const GlobalObject& aGlobal, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   // Window
   if (NS_IsMainThread()) {
     nsCOMPtr<nsPIDOMWindowInner> innerWindow =
@@ -2715,8 +2938,19 @@ bool Console::MonotonicTimer(JSContext* aCx, MethodName aMethodName,
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<ConsoleInstance> Console::CreateInstance(
     const GlobalObject& aGlobal, const ConsoleInstanceOptions& aOptions) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<ConsoleInstance>
+Console::CreateInstance(const GlobalObject& aGlobal,
+                        const ConsoleInstanceOptions& aOptions)
+{
+=======
+/* static */
+already_AddRefed<ConsoleInstance> Console::CreateInstance(
+    const GlobalObject& aGlobal, const ConsoleInstanceOptions& aOptions) {
+>>>>>>> upstream-releases
   RefPtr<ConsoleInstance> console =
       new ConsoleInstance(aGlobal.Context(), aOptions);
   return console.forget();
@@ -2833,7 +3067,8 @@ void Console::MaybeExecuteDumpFunctionForTime(JSContext* aCx,
 
 void Console::ExecuteDumpFunction(const nsAString& aMessage) {
   if (mDumpFunction) {
-    mDumpFunction->Call(aMessage);
+    RefPtr<ConsoleInstanceDumpCallback> dumpFunction(mDumpFunction);
+    dumpFunction->Call(aMessage);
     return;
   }
 

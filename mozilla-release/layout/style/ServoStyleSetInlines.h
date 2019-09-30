@@ -17,10 +17,22 @@ nscoord ServoStyleSet::EvaluateSourceSizeList(
   return Servo_SourceSizeList_Evaluate(mRawSet.get(), aSourceSizeList);
 }
 
+<<<<<<< HEAD
 already_AddRefed<ComputedStyle> ServoStyleSet::ResolveServoStyle(
     const dom::Element& aElement) {
   // TODO(emilio): mRawSet isn't used by this function, remove.
   return Servo_ResolveStyle(&aElement, mRawSet.get()).Consume();
+||||||| merged common ancestors
+already_AddRefed<ComputedStyle>
+ServoStyleSet::ResolveServoStyle(const dom::Element& aElement)
+{
+  // TODO(emilio): mRawSet isn't used by this function, remove.
+  return Servo_ResolveStyle(&aElement, mRawSet.get()).Consume();
+=======
+already_AddRefed<ComputedStyle> ServoStyleSet::ResolveServoStyle(
+    const dom::Element& aElement) {
+  return Servo_ResolveStyle(&aElement).Consume();
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

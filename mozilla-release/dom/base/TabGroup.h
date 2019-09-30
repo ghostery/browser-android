@@ -19,13 +19,14 @@
 
 class mozIDOMWindowProxy;
 class nsIDocShellTreeItem;
-class nsIDocument;
 class nsPIDOMWindowOuter;
 
 namespace mozilla {
 class AbstractThread;
+class ThrottledEventQueue;
 namespace dom {
-class TabChild;
+class Document;
+class BrowserChild;
 
 // Two browsing contexts are considered "related" if they are reachable from one
 // another through window.opener, window.parent, or window.frames. This is the
@@ -43,7 +44,7 @@ class TabChild;
 // window.opener. A DocGroup is a member of exactly one TabGroup.
 
 class DocGroup;
-class TabChild;
+class BrowserChild;
 
 class TabGroup final : public SchedulerGroup,
                        public LinkedListElement<TabGroup> {
@@ -67,11 +68,11 @@ class TabGroup final : public SchedulerGroup,
 
   static TabGroup* GetChromeTabGroup();
 
-  // Checks if the TabChild already has a TabGroup assigned to it in
+  // Checks if the BrowserChild already has a TabGroup assigned to it in
   // IPDL. Returns this TabGroup if it does. This could happen if the parent
   // process created the PBrowser and we needed to assign a TabGroup immediately
   // upon receiving the IPDL message. This method is main thread only.
-  static TabGroup* GetFromActor(TabChild* aTabChild);
+  static TabGroup* GetFromActor(BrowserChild* aBrowserChild);
 
   static TabGroup* GetFromWindow(mozIDOMWindowProxy* aWindow);
 
@@ -81,8 +82,16 @@ class TabGroup final : public SchedulerGroup,
   // Returns null if the given key hasn't been seen yet.
   already_AddRefed<DocGroup> GetDocGroup(const nsACString& aKey);
 
+<<<<<<< HEAD
   already_AddRefed<DocGroup> AddDocument(const nsACString& aKey,
                                          nsIDocument* aDocument);
+||||||| merged common ancestors
+  already_AddRefed<DocGroup>
+  AddDocument(const nsACString& aKey, nsIDocument* aDocument);
+=======
+  already_AddRefed<DocGroup> AddDocument(const nsACString& aKey,
+                                         Document* aDocument);
+>>>>>>> upstream-releases
 
   // Join the specified TabGroup, returning a reference to it. If aTabGroup is
   // nullptr, create a new tabgroup to join.
@@ -143,9 +152,23 @@ class TabGroup final : public SchedulerGroup,
   // can be throttled.
   static bool HasOnlyThrottableTabs();
 
+<<<<<<< HEAD
  private:
   virtual AbstractThread* AbstractMainThreadForImpl(
       TaskCategory aCategory) override;
+||||||| merged common ancestors
+private:
+  virtual AbstractThread*
+  AbstractMainThreadForImpl(TaskCategory aCategory) override;
+=======
+  nsresult QueuePostMessageEvent(already_AddRefed<nsIRunnable>&& aRunnable);
+
+  void FlushPostMessageEvents();
+
+ private:
+  virtual AbstractThread* AbstractMainThreadForImpl(
+      TaskCategory aCategory) override;
+>>>>>>> upstream-releases
 
   TabGroup* AsTabGroup() override { return this; }
 
@@ -166,6 +189,10 @@ class TabGroup final : public SchedulerGroup,
   uint32_t mForegroundCount;
 
   static LinkedList<TabGroup>* sTabGroups;
+
+  // A queue to store postMessage events during page load, the queue will be
+  // flushed once the page is loaded
+  RefPtr<mozilla::ThrottledEventQueue> mPostMessageEventQueue;
 };
 
 }  // namespace dom

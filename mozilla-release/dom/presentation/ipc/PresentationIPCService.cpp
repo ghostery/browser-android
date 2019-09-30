@@ -7,7 +7,7 @@
 #include "mozilla/dom/ContentChild.h"
 #include "mozilla/dom/PermissionMessageUtils.h"
 #include "mozilla/dom/PPresentation.h"
-#include "mozilla/dom/TabParent.h"
+#include "mozilla/dom/BrowserParent.h"
 #include "mozilla/ipc/InputStreamUtils.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "nsGlobalWindow.h"
@@ -64,6 +64,7 @@ PresentationIPCService::StartSession(
   }
 
   nsPIDOMWindowInner* window =
+<<<<<<< HEAD
       nsGlobalWindowInner::GetInnerWindowWithId(aWindowId)->AsInner();
   TabId tabId = TabParent::GetTabIdFrom(window->GetDocShell());
 
@@ -72,6 +73,27 @@ PresentationIPCService::StartSession(
       StartSessionRequest(aUrls, nsString(aSessionId), nsString(aOrigin),
                           nsString(aDeviceId), aWindowId, tabId,
                           IPC::Principal(aPrincipal)));
+||||||| merged common ancestors
+    nsGlobalWindowInner::GetInnerWindowWithId(aWindowId)->AsInner();
+  TabId tabId = TabParent::GetTabIdFrom(window->GetDocShell());
+
+  return SendRequest(aCallback, StartSessionRequest(aUrls,
+                                                    nsString(aSessionId),
+                                                    nsString(aOrigin),
+                                                    nsString(aDeviceId),
+                                                    aWindowId,
+                                                    tabId,
+                                                    IPC::Principal(aPrincipal)));
+=======
+      nsGlobalWindowInner::GetInnerWindowWithId(aWindowId);
+  TabId tabId = BrowserParent::GetTabIdFrom(window->GetDocShell());
+
+  return SendRequest(
+      aCallback,
+      StartSessionRequest(aUrls, nsString(aSessionId), nsString(aOrigin),
+                          nsString(aDeviceId), aWindowId, tabId,
+                          IPC::Principal(aPrincipal)));
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

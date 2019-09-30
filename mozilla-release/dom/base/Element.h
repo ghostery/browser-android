@@ -13,37 +13,64 @@
 #ifndef mozilla_dom_Element_h__
 #define mozilla_dom_Element_h__
 
+<<<<<<< HEAD
 #include "mozilla/dom/FragmentOrElement.h"  // for base class
 #include "nsChangeHint.h"                   // for enum
 #include "mozilla/EventStates.h"            // for member
 #include "mozilla/RustCell.h"
 #include "mozilla/dom/DirectionalityUtils.h"
-#include "nsILinkHandler.h"
-#include "nsINodeList.h"
-#include "nsNodeUtils.h"
+||||||| merged common ancestors
+#include "mozilla/dom/FragmentOrElement.h" // for base class
+#include "nsChangeHint.h"                  // for enum
+#include "mozilla/EventStates.h"           // for member
+#include "mozilla/RustCell.h"
+#include "mozilla/dom/DirectionalityUtils.h"
+=======
 #include "AttrArray.h"
-#include "mozilla/FlushType.h"
-#include "nsDOMAttributeMap.h"
-#include "nsPresContext.h"
-#include "mozilla/CORSMode.h"
-#include "mozilla/Attributes.h"
-#include "nsIScrollableFrame.h"
-#include "mozilla/dom/Attr.h"
-#include "nsISMILAttr.h"
-#include "mozilla/dom/DOMRect.h"
+#include "DOMIntersectionObserver.h"
 #include "nsAttrValue.h"
 #include "nsAttrValueInlines.h"
+#include "nsChangeHint.h"
+#include "nsContentUtils.h"
+#include "nsDOMAttributeMap.h"
+>>>>>>> upstream-releases
+#include "nsILinkHandler.h"
+#include "nsINodeList.h"
+#include "nsIScrollableFrame.h"
+#include "nsNodeUtils.h"
+#include "nsPresContext.h"
+#include "Units.h"
+#include "mozilla/Attributes.h"
+#include "mozilla/CORSMode.h"
 #include "mozilla/EventForwards.h"
+#include "mozilla/EventStates.h"
+#include "mozilla/FlushType.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/PseudoStyleType.h"
+#include "mozilla/RustCell.h"
+#include "mozilla/SMILAttr.h"
+#include "mozilla/UniquePtr.h"
+#include "mozilla/dom/Attr.h"
 #include "mozilla/dom/BindingDeclarations.h"
+#include "mozilla/dom/DirectionalityUtils.h"
+#include "mozilla/dom/FragmentOrElement.h"
+#include "mozilla/dom/DOMRect.h"
 #include "mozilla/dom/DOMTokenListSupportedTokens.h"
-#include "mozilla/dom/WindowBinding.h"
 #include "mozilla/dom/ElementBinding.h"
 #include "mozilla/dom/Nullable.h"
 #include "mozilla/dom/PointerEventHandler.h"
+<<<<<<< HEAD
 #include "mozilla/UniquePtr.h"
 #include "Units.h"
 #include "DOMIntersectionObserver.h"
 #include "nsContentUtils.h"
+||||||| merged common ancestors
+#include "mozilla/UniquePtr.h"
+#include "Units.h"
+#include "DOMIntersectionObserver.h"
+=======
+#include "mozilla/dom/WindowBinding.h"
+>>>>>>> upstream-releases
 
 class mozAutoDocUpdate;
 class nsIFrame;
@@ -58,10 +85,21 @@ class nsFocusManager;
 class nsGlobalWindowInner;
 class nsGlobalWindowOuter;
 class nsDOMCSSAttributeDeclaration;
-class nsISMILAttr;
-class nsDocument;
 class nsDOMStringMap;
 struct ServoNodeData;
+
+class nsIDOMXULButtonElement;
+class nsIDOMXULContainerElement;
+class nsIDOMXULContainerItemElement;
+class nsIDOMXULControlElement;
+class nsIDOMXULMenuListElement;
+class nsIDOMXULMultiSelectControlElement;
+class nsIDOMXULRadioGroupElement;
+class nsIDOMXULRelatedElement;
+class nsIDOMXULSelectControlElement;
+class nsIDOMXULSelectControlItemElement;
+class nsIBrowser;
+class nsIAutoCompletePopup;
 
 namespace mozilla {
 class DeclarationBlock;
@@ -71,6 +109,7 @@ namespace css {
 struct URLValue;
 }  // namespace css
 namespace dom {
+<<<<<<< HEAD
 struct AnimationFilter;
 struct ScrollIntoViewOptions;
 struct ScrollToOptions;
@@ -81,6 +120,29 @@ class ElementOrCSSPseudoElement;
 class UnrestrictedDoubleOrKeyframeAnimationOptions;
 enum class CallerType : uint32_t;
 typedef nsDataHashtable<nsRefPtrHashKey<DOMIntersectionObserver>, int32_t>
+||||||| merged common ancestors
+  struct AnimationFilter;
+  struct ScrollIntoViewOptions;
+  struct ScrollToOptions;
+  class DOMIntersectionObserver;
+  class DOMMatrixReadOnly;
+  class Element;
+  class ElementOrCSSPseudoElement;
+  class UnrestrictedDoubleOrKeyframeAnimationOptions;
+  enum class CallerType : uint32_t;
+  typedef nsDataHashtable<nsRefPtrHashKey<DOMIntersectionObserver>, int32_t>
+=======
+struct GetAnimationsOptions;
+struct ScrollIntoViewOptions;
+struct ScrollToOptions;
+class DOMIntersectionObserver;
+class DOMMatrixReadOnly;
+class Element;
+class ElementOrCSSPseudoElement;
+class UnrestrictedDoubleOrKeyframeAnimationOptions;
+enum class CallerType : uint32_t;
+typedef nsDataHashtable<nsRefPtrHashKey<DOMIntersectionObserver>, int32_t>
+>>>>>>> upstream-releases
     IntersectionObserverList;
 }  // namespace dom
 }  // namespace mozilla
@@ -123,7 +185,7 @@ enum {
 ASSERT_NODE_FLAGS_SPACE(ELEMENT_TYPE_SPECIFIC_BITS_OFFSET);
 
 namespace mozilla {
-enum class CSSPseudoElementType : uint8_t;
+enum class PseudoStyleType : uint8_t;
 class EventChainPostVisitor;
 class EventChainPreVisitor;
 class EventChainVisitor;
@@ -240,7 +302,7 @@ class Element : public FragmentOrElement {
   /**
    * Make focus on this element.
    */
-  virtual void Focus(mozilla::ErrorResult& aError);
+  virtual void Focus(const FocusOptions& aOptions, ErrorResult& aError);
 
   /**
    * Show blur and clear focus.
@@ -337,19 +399,27 @@ class Element : public FragmentOrElement {
   DeclarationBlock* GetSMILOverrideStyleDeclaration();
 
   /**
-   * Set the SMIL override style declaration for this element. If
-   * aNotify is true, this method will notify the document's pres
-   * context, so that the style changes will be noticed.
+   * Set the SMIL override style declaration for this element. This method will
+   * notify the document's pres context, so that the style changes will be
+   * noticed.
    */
-  nsresult SetSMILOverrideStyleDeclaration(DeclarationBlock* aDeclaration,
-                                           bool aNotify);
+  nsresult SetSMILOverrideStyleDeclaration(DeclarationBlock* aDeclaration);
 
   /**
-   * Returns a new nsISMILAttr that allows the caller to animate the given
+   * Returns a new SMILAttr that allows the caller to animate the given
    * attribute on this element.
    */
+<<<<<<< HEAD
   virtual UniquePtr<nsISMILAttr> GetAnimatedAttr(int32_t aNamespaceID,
                                                  nsAtom* aName) {
+||||||| merged common ancestors
+  virtual UniquePtr<nsISMILAttr> GetAnimatedAttr(int32_t aNamespaceID,
+                                                 nsAtom* aName)
+  {
+=======
+  virtual UniquePtr<SMILAttr> GetAnimatedAttr(int32_t aNamespaceID,
+                                              nsAtom* aName) {
+>>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -448,7 +518,13 @@ class Element : public FragmentOrElement {
     }
   }
 
+<<<<<<< HEAD
   bool GetBindingURL(nsIDocument* aDocument, css::URLValue** aResult);
+||||||| merged common ancestors
+  bool GetBindingURL(nsIDocument* aDocument, css::URLValue **aResult);
+=======
+  mozilla::StyleUrlOrNone GetBindingURL(Document* aDocument);
+>>>>>>> upstream-releases
 
   Directionality GetComputedDirectionality() const;
 
@@ -498,7 +574,7 @@ class Element : public FragmentOrElement {
   bool HasServoData() const { return !!mServoData.Get(); }
 
   void ClearServoData() { ClearServoData(GetComposedDoc()); }
-  void ClearServoData(nsIDocument* aDocument);
+  void ClearServoData(Document* aDocument);
 
   /**
    * Gets the custom element data used by web components custom element.
@@ -641,10 +717,25 @@ class Element : public FragmentOrElement {
 
   void UpdateEditableState(bool aNotify) override;
 
+<<<<<<< HEAD
   nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                       nsIContent* aBindingParent) override;
+||||||| merged common ancestors
+  nsresult BindToTree(nsIDocument* aDocument,
+                      nsIContent* aParent,
+                      nsIContent* aBindingParent) override;
+=======
+  nsresult BindToTree(BindContext&, nsINode& aParent) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void UnbindFromTree(bool aDeep = true, bool aNullParent = true) override;
+||||||| merged common ancestors
+  void UnbindFromTree(bool aDeep = true,
+                      bool aNullParent = true) override;
+=======
+  void UnbindFromTree(bool aNullParent = true) override;
+>>>>>>> upstream-releases
 
   /**
    * Normalizes an attribute name and returns it as a nodeinfo if an attribute
@@ -1060,6 +1151,7 @@ class Element : public FragmentOrElement {
   }
   bool HasAttributeNS(const nsAString& aNamespaceURI,
                       const nsAString& aLocalName) const;
+<<<<<<< HEAD
   bool HasAttributes() const { return HasAttrs(); }
   Element* Closest(const nsAString& aSelector, ErrorResult& aResult);
   bool Matches(const nsAString& aSelector, ErrorResult& aError);
@@ -1072,18 +1164,51 @@ class Element : public FragmentOrElement {
       const nsAString& aClassNames);
 
   CSSPseudoElementType GetPseudoElementType() const {
+||||||| merged common ancestors
+  bool HasAttributes() const
+  {
+    return HasAttrs();
+  }
+  Element* Closest(const nsAString& aSelector,
+                   ErrorResult& aResult);
+  bool Matches(const nsAString& aSelector,
+               ErrorResult& aError);
+  already_AddRefed<nsIHTMLCollection>
+    GetElementsByTagName(const nsAString& aQualifiedName);
+  already_AddRefed<nsIHTMLCollection>
+    GetElementsByTagNameNS(const nsAString& aNamespaceURI,
+                           const nsAString& aLocalName,
+                           ErrorResult& aError);
+  already_AddRefed<nsIHTMLCollection>
+    GetElementsByClassName(const nsAString& aClassNames);
+
+  CSSPseudoElementType GetPseudoElementType() const {
+=======
+  bool HasAttributes() const { return HasAttrs(); }
+  Element* Closest(const nsAString& aSelector, ErrorResult& aResult);
+  bool Matches(const nsAString& aSelector, ErrorResult& aError);
+  already_AddRefed<nsIHTMLCollection> GetElementsByTagName(
+      const nsAString& aQualifiedName);
+  already_AddRefed<nsIHTMLCollection> GetElementsByTagNameNS(
+      const nsAString& aNamespaceURI, const nsAString& aLocalName,
+      ErrorResult& aError);
+  already_AddRefed<nsIHTMLCollection> GetElementsByClassName(
+      const nsAString& aClassNames);
+
+  PseudoStyleType GetPseudoElementType() const {
+>>>>>>> upstream-releases
     nsresult rv = NS_OK;
     auto raw = GetProperty(nsGkAtoms::pseudoProperty, &rv);
     if (rv == NS_PROPTABLE_PROP_NOT_THERE) {
-      return CSSPseudoElementType::NotPseudo;
+      return PseudoStyleType::NotPseudo;
     }
-    return CSSPseudoElementType(reinterpret_cast<uintptr_t>(raw));
+    return PseudoStyleType(reinterpret_cast<uintptr_t>(raw));
   }
 
-  void SetPseudoElementType(CSSPseudoElementType aPseudo) {
-    static_assert(sizeof(CSSPseudoElementType) <= sizeof(uintptr_t),
+  void SetPseudoElementType(PseudoStyleType aPseudo) {
+    static_assert(sizeof(PseudoStyleType) <= sizeof(uintptr_t),
                   "Need to be able to store this in a void*");
-    MOZ_ASSERT(aPseudo != CSSPseudoElementType::NotPseudo);
+    MOZ_ASSERT(PseudoStyle::IsPseudoElement(aPseudo));
     SetProperty(nsGkAtoms::pseudoProperty, reinterpret_cast<void*>(aPseudo));
   }
 
@@ -1121,7 +1246,7 @@ class Element : public FragmentOrElement {
       aError.Throw(NS_ERROR_DOM_INVALID_POINTER_ERR);
       return;
     }
-    if (!IsInUncomposedDoc()) {
+    if (!IsInComposedDoc()) {
       aError.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
       return;
     }
@@ -1163,22 +1288,60 @@ class Element : public FragmentOrElement {
     // If there is already an active capture, ignore this request. This would
     // occur if a splitter, frame resizer, etc had already captured and we don't
     // want to override those.
+<<<<<<< HEAD
     if (!nsIPresShell::GetCapturingContent()) {
       nsIPresShell::SetCapturingContent(
           this, CAPTURE_PREVENTDRAG |
                     (aRetargetToElement ? CAPTURE_RETARGETTOELEMENT : 0));
+||||||| merged common ancestors
+    if (!nsIPresShell::GetCapturingContent()) {
+      nsIPresShell::SetCapturingContent(this, CAPTURE_PREVENTDRAG |
+        (aRetargetToElement ? CAPTURE_RETARGETTOELEMENT : 0));
+=======
+    if (!PresShell::GetCapturingContent()) {
+      PresShell::SetCapturingContent(
+          this, CaptureFlags::PreventDragStart |
+                    (aRetargetToElement ? CaptureFlags::RetargetToElement
+                                        : CaptureFlags::None));
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   void SetCaptureAlways(bool aRetargetToElement) {
     nsIPresShell::SetCapturingContent(
         this, CAPTURE_PREVENTDRAG | CAPTURE_IGNOREALLOWED |
                   (aRetargetToElement ? CAPTURE_RETARGETTOELEMENT : 0));
+||||||| merged common ancestors
+  void SetCaptureAlways(bool aRetargetToElement)
+  {
+    nsIPresShell::SetCapturingContent(this,
+        CAPTURE_PREVENTDRAG | CAPTURE_IGNOREALLOWED |
+        (aRetargetToElement ? CAPTURE_RETARGETTOELEMENT : 0));
+=======
+  void SetCaptureAlways(bool aRetargetToElement) {
+    PresShell::SetCapturingContent(
+        this, CaptureFlags::PreventDragStart |
+                  CaptureFlags::IgnoreAllowedState |
+                  (aRetargetToElement ? CaptureFlags::RetargetToElement
+                                      : CaptureFlags::None));
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   void ReleaseCapture() {
     if (nsIPresShell::GetCapturingContent() == this) {
       nsIPresShell::SetCapturingContent(nullptr, 0);
+||||||| merged common ancestors
+  void ReleaseCapture()
+  {
+    if (nsIPresShell::GetCapturingContent() == this) {
+      nsIPresShell::SetCapturingContent(nullptr, 0);
+=======
+  void ReleaseCapture() {
+    if (PresShell::GetCapturingContent() == this) {
+      PresShell::ReleaseCapturingContent();
+>>>>>>> upstream-releases
     }
   }
 
@@ -1199,6 +1362,7 @@ class Element : public FragmentOrElement {
   // Shadow DOM v1
   already_AddRefed<ShadowRoot> AttachShadow(const ShadowRootInit& aInit,
                                             ErrorResult& aError);
+<<<<<<< HEAD
   bool CanAttachShadowDOM() const;
 
   already_AddRefed<ShadowRoot> AttachShadowWithoutNameChecks(
@@ -1219,6 +1383,29 @@ class Element : public FragmentOrElement {
   // Dispatch an event to UAWidgetsChild, triggering UA Widget destruction.
   // and optionally remove the shadow root.
   void NotifyUAWidgetTeardown(UnattachShadowRoot = UnattachShadowRoot::Yes);
+||||||| merged common ancestors
+=======
+  bool CanAttachShadowDOM() const;
+
+  already_AddRefed<ShadowRoot> AttachShadowWithoutNameChecks(
+      ShadowRootMode aMode);
+
+  // Attach UA Shadow Root if it is not attached.
+  void AttachAndSetUAShadowRoot();
+
+  // Dispatch an event to UAWidgetsChild, triggering construction
+  // or onchange callback on the existing widget.
+  void NotifyUAWidgetSetupOrChange();
+
+  enum class UnattachShadowRoot {
+    No,
+    Yes,
+  };
+
+  // Dispatch an event to UAWidgetsChild, triggering UA Widget destruction.
+  // and optionally remove the shadow root.
+  void NotifyUAWidgetTeardown(UnattachShadowRoot = UnattachShadowRoot::Yes);
+>>>>>>> upstream-releases
 
   void UnattachShadow();
 
@@ -1231,10 +1418,22 @@ class Element : public FragmentOrElement {
     return slots ? slots->mShadowRoot.get() : nullptr;
   }
 
+<<<<<<< HEAD
  private:
   void ScrollIntoView(const ScrollIntoViewOptions& aOptions);
 
  public:
+||||||| merged common ancestors
+private:
+  void ScrollIntoView(const ScrollIntoViewOptions &aOptions);
+public:
+=======
+ private:
+  MOZ_CAN_RUN_SCRIPT void ScrollIntoView(const ScrollIntoViewOptions& aOptions);
+
+ public:
+  MOZ_CAN_RUN_SCRIPT
+>>>>>>> upstream-releases
   void ScrollIntoView(const BooleanOrScrollIntoViewOptions& aObject);
   MOZ_CAN_RUN_SCRIPT void Scroll(double aXScroll, double aYScroll);
   MOZ_CAN_RUN_SCRIPT void Scroll(const ScrollToOptions& aOptions);
@@ -1242,11 +1441,6 @@ class Element : public FragmentOrElement {
   MOZ_CAN_RUN_SCRIPT void ScrollTo(const ScrollToOptions& aOptions);
   MOZ_CAN_RUN_SCRIPT void ScrollBy(double aXScrollDif, double aYScrollDif);
   MOZ_CAN_RUN_SCRIPT void ScrollBy(const ScrollToOptions& aOptions);
-  /* Scrolls without flushing the layout.
-   * aDx is the x offset, aDy the y offset in CSS pixels.
-   * Returns true if we actually scrolled.
-   */
-  MOZ_CAN_RUN_SCRIPT bool ScrollByNoFlush(int32_t aDx, int32_t aDy);
   MOZ_CAN_RUN_SCRIPT int32_t ScrollTop();
   MOZ_CAN_RUN_SCRIPT void SetScrollTop(int32_t aScrollTop);
   MOZ_CAN_RUN_SCRIPT int32_t ScrollLeft();
@@ -1284,10 +1478,35 @@ class Element : public FragmentOrElement {
   }
   MOZ_CAN_RUN_SCRIPT int32_t ScrollLeftMax() {
     nsIScrollableFrame* sf = GetScrollFrame();
+<<<<<<< HEAD
+    return sf ? nsPresContext::AppUnitsToIntCSSPixels(
+                    sf->GetScrollRange().XMost())
+              : 0;
+||||||| merged common ancestors
+    return sf ?
+           nsPresContext::AppUnitsToIntCSSPixels(sf->GetScrollRange().XMost()) :
+           0;
+=======
     return sf ? nsPresContext::AppUnitsToIntCSSPixels(
                     sf->GetScrollRange().XMost())
               : 0;
   }
+
+  MOZ_CAN_RUN_SCRIPT double ClientHeightDouble() {
+    return nsPresContext::AppUnitsToDoubleCSSPixels(
+        GetClientAreaRect().Height());
+  }
+
+  MOZ_CAN_RUN_SCRIPT double ClientWidthDouble() {
+    return nsPresContext::AppUnitsToDoubleCSSPixels(
+        GetClientAreaRect().Width());
+>>>>>>> upstream-releases
+  }
+
+  // This function will return the block size of first line box, no matter if
+  // the box is 'block' or 'inline'. The return unit is pixel. If the element
+  // can't get a primary frame, we will return be zero.
+  double FirstLineBoxBSize() const;
 
   already_AddRefed<Flex> GetAsFlexContainer();
   void GetGridFragments(nsTArray<RefPtr<Grid>>& aResult);
@@ -1313,10 +1532,10 @@ class Element : public FragmentOrElement {
   // Note: GetAnimations will flush style while GetAnimationsUnsorted won't.
   // Callers must keep this element alive because flushing style may destroy
   // this element.
-  void GetAnimations(const AnimationFilter& filter,
+  void GetAnimations(const GetAnimationsOptions& aOptions,
                      nsTArray<RefPtr<Animation>>& aAnimations);
   static void GetAnimationsUnsorted(Element* aElement,
-                                    CSSPseudoElementType aPseudoType,
+                                    PseudoStyleType aPseudoType,
                                     nsTArray<RefPtr<Animation>>& aAnimations);
 
   virtual void GetInnerHTML(nsAString& aInnerHTML, OOMReporter& aError);
@@ -1357,6 +1576,7 @@ class Element : public FragmentOrElement {
    * @param aFlags      Extra flags for the dispatching event.  The true flags
    *                    will be respected.
    */
+  MOZ_CAN_RUN_SCRIPT
   static nsresult DispatchClickEvent(nsPresContext* aPresContext,
                                      WidgetInputEvent* aSourceEvent,
                                      nsIContent* aTarget, bool aFullDispatch,
@@ -1371,10 +1591,12 @@ class Element : public FragmentOrElement {
    * If aPresContext is nullptr, this does nothing.
    */
   using nsIContent::DispatchEvent;
+  MOZ_CAN_RUN_SCRIPT
   static nsresult DispatchEvent(nsPresContext* aPresContext,
                                 WidgetEvent* aEvent, nsIContent* aTarget,
                                 bool aFullDispatch, nsEventStatus* aStatus);
 
+<<<<<<< HEAD
   /**
    * Get the primary frame for this content with flushing
    *
@@ -1387,10 +1609,42 @@ class Element : public FragmentOrElement {
   nsIFrame* GetPrimaryFrame() const { return nsIContent::GetPrimaryFrame(); }
 
   bool IsDisplayContents() const {
+||||||| merged common ancestors
+  /**
+   * Get the primary frame for this content with flushing
+   *
+   * @param aType the kind of flush to do, typically FlushType::Frames or
+   *              FlushType::Layout
+   * @return the primary frame
+   */
+  nsIFrame* GetPrimaryFrame(FlushType aType);
+  // Work around silly C++ name hiding stuff
+  nsIFrame* GetPrimaryFrame() const { return nsIContent::GetPrimaryFrame(); }
+
+  bool IsDisplayContents() const
+  {
+=======
+  bool IsDisplayContents() const {
+>>>>>>> upstream-releases
     return HasServoData() && Servo_Element_IsDisplayContents(this);
   }
 
+<<<<<<< HEAD
   const nsAttrValue* GetParsedAttr(const nsAtom* aAttr) const {
+||||||| merged common ancestors
+  const nsAttrValue* GetParsedAttr(nsAtom* aAttr) const
+  {
+=======
+  /*
+   * https://html.spec.whatwg.org/#being-rendered
+   *
+   * With a gotcha for display contents:
+   *   https://github.com/whatwg/html/issues/1837
+   */
+  bool IsRendered() const { return GetPrimaryFrame() || IsDisplayContents(); }
+
+  const nsAttrValue* GetParsedAttr(const nsAtom* aAttr) const {
+>>>>>>> upstream-releases
     return mAttrs.GetAttr(aAttr);
   }
 
@@ -1445,7 +1699,7 @@ class Element : public FragmentOrElement {
    *
    * If you change this, change also the similar method in Link.
    */
-  virtual void NodeInfoChanged(nsIDocument* aOldDoc) {}
+  virtual void NodeInfoChanged(Document* aOldDoc) {}
 
   /**
    * Parse a string into an nsAttrValue for a CORS attribute.  This
@@ -1581,10 +1835,37 @@ class Element : public FragmentOrElement {
   void RegisterIntersectionObserver(DOMIntersectionObserver* aObserver);
   void UnregisterIntersectionObserver(DOMIntersectionObserver* aObserver);
   void UnlinkIntersectionObservers();
+<<<<<<< HEAD
   bool UpdateIntersectionObservation(DOMIntersectionObserver* aObserver,
                                      int32_t threshold);
 
  protected:
+||||||| merged common ancestors
+  bool UpdateIntersectionObservation(DOMIntersectionObserver* aObserver, int32_t threshold);
+
+protected:
+=======
+  bool UpdateIntersectionObservation(DOMIntersectionObserver* aObserver,
+                                     int32_t threshold);
+
+  // A number of methods to cast to various XUL interfaces. They return a
+  // pointer only if the element implements that interface.
+  already_AddRefed<nsIDOMXULButtonElement> AsXULButton();
+  already_AddRefed<nsIDOMXULContainerElement> AsXULContainer();
+  already_AddRefed<nsIDOMXULContainerItemElement> AsXULContainerItem();
+  already_AddRefed<nsIDOMXULControlElement> AsXULControl();
+  already_AddRefed<nsIDOMXULMenuListElement> AsXULMenuList();
+  already_AddRefed<nsIDOMXULMultiSelectControlElement>
+  AsXULMultiSelectControl();
+  already_AddRefed<nsIDOMXULRadioGroupElement> AsXULRadioGroup();
+  already_AddRefed<nsIDOMXULRelatedElement> AsXULRelated();
+  already_AddRefed<nsIDOMXULSelectControlElement> AsXULSelectControl();
+  already_AddRefed<nsIDOMXULSelectControlItemElement> AsXULSelectControlItem();
+  already_AddRefed<nsIBrowser> AsBrowser();
+  already_AddRefed<nsIAutoCompletePopup> AsAutoCompletePopup();
+
+ protected:
+>>>>>>> upstream-releases
   /*
    * Named-bools for use with SetAttrAndNotify to make call sites easier to
    * read.
@@ -1640,9 +1921,20 @@ class Element : public FragmentOrElement {
                             nsAtom* aPrefix, const nsAttrValue* aOldValue,
                             nsAttrValue& aParsedValue,
                             nsIPrincipal* aMaybeScriptedPrincipal,
+<<<<<<< HEAD
                             uint8_t aModType, bool aFireMutation, bool aNotify,
                             bool aCallAfterSetAttr,
                             nsIDocument* aComposedDocument,
+||||||| merged common ancestors
+                            uint8_t aModType,
+                            bool aFireMutation,
+                            bool aNotify,
+                            bool aCallAfterSetAttr,
+                            nsIDocument* aComposedDocument,
+=======
+                            uint8_t aModType, bool aFireMutation, bool aNotify,
+                            bool aCallAfterSetAttr, Document* aComposedDocument,
+>>>>>>> upstream-releases
                             const mozAutoDocUpdate& aGuard);
 
   /**
@@ -1739,15 +2031,22 @@ class Element : public FragmentOrElement {
    *        principal is directly responsible for the attribute change.
    * @param aNotify Whether we plan to notify document observers.
    */
-  // Note that this is inlined so that when subclasses call it it gets
-  // inlined.  Those calls don't go through a vtable.
   virtual nsresult AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
                                 const nsAttrValue* aValue,
                                 const nsAttrValue* aOldValue,
                                 nsIPrincipal* aMaybeScriptedPrincipal,
+<<<<<<< HEAD
                                 bool aNotify) {
     return NS_OK;
   }
+||||||| merged common ancestors
+                                bool aNotify)
+  {
+    return NS_OK;
+  }
+=======
+                                bool aNotify);
+>>>>>>> upstream-releases
 
   /**
    * This function shall be called just before the id attribute changes. It will
@@ -1857,6 +2156,7 @@ class Element : public FragmentOrElement {
   /**
    * Handle default actions for link event if the event isn't consumed yet.
    */
+  MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEventForLinks(EventChainPostVisitor& aVisitor);
 
   /**
@@ -1910,19 +2210,34 @@ class Element : public FragmentOrElement {
   EventStates mState;
   // Per-node data managed by Servo.
   //
-  // There should not be data on nodes that are in the flattened tree, or
+  // There should not be data on nodes that are not in the flattened tree, or
   // descendants of display: none elements.
   mozilla::RustCell<ServoNodeData*> mServoData;
+<<<<<<< HEAD
 
 protected:
   // Array containing all attributes for this element
   AttrArray mAttrs;
+||||||| merged common ancestors
+=======
+
+ protected:
+  // Array containing all attributes for this element
+  AttrArray mAttrs;
+>>>>>>> upstream-releases
 };
 
 class RemoveFromBindingManagerRunnable : public mozilla::Runnable {
  public:
   RemoveFromBindingManagerRunnable(nsBindingManager* aManager,
+<<<<<<< HEAD
                                    nsIContent* aContent, nsIDocument* aDoc);
+||||||| merged common ancestors
+                                   nsIContent* aContent,
+                                   nsIDocument* aDoc);
+=======
+                                   nsIContent* aContent, Document* aDoc);
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override;
 
@@ -1930,7 +2245,7 @@ class RemoveFromBindingManagerRunnable : public mozilla::Runnable {
   virtual ~RemoveFromBindingManagerRunnable();
   RefPtr<nsBindingManager> mManager;
   RefPtr<nsIContent> mContent;
-  nsCOMPtr<nsIDocument> mDoc;
+  RefPtr<Document> mDoc;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(Element, NS_ELEMENT_IID)
@@ -2009,6 +2324,7 @@ inline mozilla::dom::Element* nsINode::GetNextElementSibling() const {
  * Macros to implement Clone(). _elementName is the class for which to implement
  * Clone.
  */
+<<<<<<< HEAD
 #define NS_IMPL_ELEMENT_CLONE(_elementName)                         \
   nsresult _elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo,   \
                                nsINode** aResult) const {           \
@@ -2027,8 +2343,44 @@ inline mozilla::dom::Element* nsINode::GetNextElementSibling() const {
                                                                     \
     return rv;                                                      \
   }
+||||||| merged common ancestors
+#define NS_IMPL_ELEMENT_CLONE(_elementName)                                 \
+nsresult                                                                    \
+_elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo, nsINode** aResult) const \
+{                                                                           \
+  *aResult = nullptr;                                                       \
+  RefPtr<mozilla::dom::NodeInfo> ni(aNodeInfo);                             \
+  _elementName *it = new _elementName(ni.forget());                         \
+  if (!it) {                                                                \
+    return NS_ERROR_OUT_OF_MEMORY;                                          \
+  }                                                                         \
+                                                                            \
+  nsCOMPtr<nsINode> kungFuDeathGrip = it;                                   \
+  nsresult rv = const_cast<_elementName*>(this)->CopyInnerTo(it);           \
+  if (NS_SUCCEEDED(rv)) {                                                   \
+    kungFuDeathGrip.swap(*aResult);                                         \
+  }                                                                         \
+                                                                            \
+  return rv;                                                                \
+}
+=======
+#define NS_IMPL_ELEMENT_CLONE(_elementName)                         \
+  nsresult _elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo,   \
+                               nsINode** aResult) const {           \
+    *aResult = nullptr;                                             \
+    RefPtr<mozilla::dom::NodeInfo> ni(aNodeInfo);                   \
+    RefPtr<_elementName> it = new _elementName(ni.forget());        \
+    nsresult rv = const_cast<_elementName*>(this)->CopyInnerTo(it); \
+    if (NS_SUCCEEDED(rv)) {                                         \
+      it.forget(aResult);                                           \
+    }                                                               \
+                                                                    \
+    return rv;                                                      \
+  }
+>>>>>>> upstream-releases
 
 #define EXPAND(...) __VA_ARGS__
+<<<<<<< HEAD
 #define NS_IMPL_ELEMENT_CLONE_WITH_INIT_HELPER(_elementName, extra_args_) \
   nsresult _elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo,         \
                                nsINode** aResult) const {                 \
@@ -2051,6 +2403,51 @@ inline mozilla::dom::Element* nsINode::GetNextElementSibling() const {
                                                                           \
     return rv;                                                            \
   }
+||||||| merged common ancestors
+#define NS_IMPL_ELEMENT_CLONE_WITH_INIT_HELPER(_elementName, extra_args_)   \
+nsresult                                                                    \
+_elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo,                      \
+                    nsINode** aResult) const                                \
+{                                                                           \
+  *aResult = nullptr;                                                       \
+  RefPtr<mozilla::dom::NodeInfo> ni(aNodeInfo);                             \
+  _elementName *it = new _elementName(ni.forget() EXPAND extra_args_);      \
+  if (!it) {                                                                \
+    return NS_ERROR_OUT_OF_MEMORY;                                          \
+  }                                                                         \
+                                                                            \
+  nsCOMPtr<nsINode> kungFuDeathGrip = it;                                   \
+  nsresult rv = it->Init();                                                 \
+  nsresult rv2 = const_cast<_elementName*>(this)->CopyInnerTo(it);          \
+  if (NS_FAILED(rv2)) {                                                     \
+    rv = rv2;                                                               \
+  }                                                                         \
+  if (NS_SUCCEEDED(rv)) {                                                   \
+    kungFuDeathGrip.swap(*aResult);                                         \
+  }                                                                         \
+                                                                            \
+  return rv;                                                                \
+}
+=======
+#define NS_IMPL_ELEMENT_CLONE_WITH_INIT_HELPER(_elementName, extra_args_) \
+  nsresult _elementName::Clone(mozilla::dom::NodeInfo* aNodeInfo,         \
+                               nsINode** aResult) const {                 \
+    *aResult = nullptr;                                                   \
+    RefPtr<mozilla::dom::NodeInfo> ni(aNodeInfo);                         \
+    RefPtr<_elementName> it =                                             \
+        new _elementName(ni.forget() EXPAND extra_args_);                 \
+    nsresult rv = it->Init();                                             \
+    nsresult rv2 = const_cast<_elementName*>(this)->CopyInnerTo(it);      \
+    if (NS_FAILED(rv2)) {                                                 \
+      rv = rv2;                                                           \
+    }                                                                     \
+    if (NS_SUCCEEDED(rv)) {                                               \
+      it.forget(aResult);                                                 \
+    }                                                                     \
+                                                                          \
+    return rv;                                                            \
+  }
+>>>>>>> upstream-releases
 
 #define NS_IMPL_ELEMENT_CLONE_WITH_INIT(_elementName) \
   NS_IMPL_ELEMENT_CLONE_WITH_INIT_HELPER(_elementName, ())

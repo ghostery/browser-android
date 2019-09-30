@@ -444,6 +444,7 @@ struct ReadFromExternalSourceFixture : public StreamTestFixture {
     CHECK(locked);
     CHECK(ReadableStreamReleaseExternalUnderlyingSource(cx, stream));
 
+<<<<<<< HEAD
     // Run caller-supplied JS code to read from the stream.
     RootedValue streamVal(cx, ObjectValue(*stream));
     CHECK(JS_SetProperty(cx, global, "stream", streamVal));
@@ -477,6 +478,48 @@ struct ReadFromExternalSourceFixture : public StreamTestFixture {
     }
     CHECK(JS_WrapObject(cx, &chunk));
     CHECK(JS_IsUint8Array(chunk));
+||||||| merged common ancestors
+        dataRequestCBCalled = false;
+        writeIntoRequestBufferCBCalled = false;
+        EVAL(evalSrc2, &rval);
+        CHECK(dataRequestCBCalled);
+        CHECK(!writeIntoRequestBufferCBCalled);
+=======
+    // Run caller-supplied JS code to read from the stream.
+    RootedValue streamVal(cx, ObjectValue(*stream));
+    CHECK(JS_SetProperty(cx, global, "stream", streamVal));
+    RootedValue rval(cx);
+    EVAL(evalSrc, &rval);
+    CHECK(StubExternalUnderlyingSource::instance.dataRequestCBCalled);
+    CHECK(
+        !StubExternalUnderlyingSource::instance.writeIntoRequestBufferCBCalled);
+    CHECK(rval.isObject());
+    RootedObject unwrappedPromise(cx,
+                                  js::CheckedUnwrapStatic(&rval.toObject()));
+    CHECK(unwrappedPromise);
+    CHECK(IsPromiseObject(unwrappedPromise));
+    CHECK(GetPromiseState(unwrappedPromise) == PromiseState::Pending);
+
+    // Stream in some data; this resolves the read() result promise.
+    size_t length = sizeof(testBufferData);
+    CHECK(ReadableStreamUpdateDataAvailableFromSource(cx, stream, length));
+    CHECK(
+        StubExternalUnderlyingSource::instance.writeIntoRequestBufferCBCalled);
+    CHECK(GetPromiseState(unwrappedPromise) == PromiseState::Fulfilled);
+    RootedObject chunk(cx);
+    {
+      JSAutoRealm ar(cx, unwrappedPromise);
+      RootedValue iterVal(cx);
+      bool done;
+      if (!GetIterResult(cx, unwrappedPromise, &iterVal, &done)) {
+        return false;
+      }
+      CHECK(!done);
+      chunk = &iterVal.toObject();
+    }
+    CHECK(JS_WrapObject(cx, &chunk));
+    CHECK(JS_IsUint8Array(chunk));
+>>>>>>> upstream-releases
 
     {
       JS::AutoCheckCannotGC noGC(cx);
@@ -521,6 +564,7 @@ struct ReadFromExternalSourceFixture : public StreamTestFixture {
     size_t length = sizeof(testBufferData);
     CHECK(ReadableStreamUpdateDataAvailableFromSource(cx, stream, length));
 
+<<<<<<< HEAD
     // Read from the stream.
     RootedValue streamVal(cx, ObjectValue(*stream));
     CHECK(JS_SetProperty(cx, global, "stream", streamVal));
@@ -552,6 +596,42 @@ struct ReadFromExternalSourceFixture : public StreamTestFixture {
       bool dummy;
       void* buffer = JS_GetArrayBufferViewData(chunk, &dummy, noGC);
       CHECK(!memcmp(buffer, testBufferData, writtenLength));
+||||||| merged common ancestors
+        return true;
+=======
+    // Read from the stream.
+    RootedValue streamVal(cx, ObjectValue(*stream));
+    CHECK(JS_SetProperty(cx, global, "stream", streamVal));
+    RootedValue rval(cx);
+    EVAL(evalSrc, &rval);
+    CHECK(
+        StubExternalUnderlyingSource::instance.writeIntoRequestBufferCBCalled);
+    CHECK(rval.isObject());
+    RootedObject unwrappedPromise(cx,
+                                  js::CheckedUnwrapStatic(&rval.toObject()));
+    CHECK(unwrappedPromise);
+    CHECK(IsPromiseObject(unwrappedPromise));
+    CHECK(GetPromiseState(unwrappedPromise) == PromiseState::Fulfilled);
+    RootedObject chunk(cx);
+    {
+      JSAutoRealm ar(cx, unwrappedPromise);
+      RootedValue iterVal(cx);
+      bool done;
+      if (!GetIterResult(cx, unwrappedPromise, &iterVal, &done)) {
+        return false;
+      }
+      CHECK(!done);
+      chunk = &iterVal.toObject();
+    }
+    CHECK(JS_WrapObject(cx, &chunk));
+    CHECK(JS_IsUint8Array(chunk));
+
+    {
+      JS::AutoCheckCannotGC noGC(cx);
+      bool dummy;
+      void* buffer = JS_GetArrayBufferViewData(chunk, &dummy, noGC);
+      CHECK(!memcmp(buffer, testBufferData, writtenLength));
+>>>>>>> upstream-releases
     }
 
     return true;

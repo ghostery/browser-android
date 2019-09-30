@@ -15,7 +15,16 @@ class nsBackdropFrame final : public nsFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsBackdropFrame)
 
+<<<<<<< HEAD
   explicit nsBackdropFrame(ComputedStyle* aStyle) : nsFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsBackdropFrame(ComputedStyle* aStyle)
+    : nsFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsBackdropFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
 #ifdef DEBUG_FRAME_DUMP
   virtual nsresult GetFrameName(nsAString& aResult) const override;

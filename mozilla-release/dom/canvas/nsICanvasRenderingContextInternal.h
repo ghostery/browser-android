@@ -13,6 +13,7 @@
 #include "nsRefreshDriver.h"
 #include "mozilla/dom/HTMLCanvasElement.h"
 #include "mozilla/dom/OffscreenCanvas.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/UniquePtr.h"
 #include "mozilla/NotNull.h"
@@ -27,6 +28,7 @@
 class nsDisplayListBuilder;
 
 namespace mozilla {
+class PresShell;
 namespace layers {
 class CanvasLayer;
 class CanvasRenderer;
@@ -56,9 +58,15 @@ class nsICanvasRenderingContextInternal : public nsISupports,
     AddPostRefreshObserverIfNecessary();
   }
 
+<<<<<<< HEAD
   virtual nsIPresShell* GetPresShell() {
+||||||| merged common ancestors
+  virtual nsIPresShell *GetPresShell() {
+=======
+  virtual mozilla::PresShell* GetPresShell() {
+>>>>>>> upstream-releases
     if (mCanvasElement) {
-      return mCanvasElement->OwnerDoc()->GetShell();
+      return mCanvasElement->OwnerDoc()->GetPresShell();
     }
     return nullptr;
   }
@@ -110,9 +118,19 @@ class nsICanvasRenderingContextInternal : public nsISupports,
   // If the image format does not support transparency or includeTransparency
   // is false, alpha will be discarded and the result will be the image
   // composited on black.
+<<<<<<< HEAD
   NS_IMETHOD GetInputStream(const char* mimeType,
                             const char16_t* encoderOptions,
                             nsIInputStream** stream) = 0;
+||||||| merged common ancestors
+  NS_IMETHOD GetInputStream(const char *mimeType,
+                            const char16_t *encoderOptions,
+                            nsIInputStream **stream) = 0;
+=======
+  NS_IMETHOD GetInputStream(const char* mimeType,
+                            const nsAString& encoderOptions,
+                            nsIInputStream** stream) = 0;
+>>>>>>> upstream-releases
 
   // This gets an Azure SourceSurface for the canvas, this will be a snapshot
   // of the canvas at the time it was called.

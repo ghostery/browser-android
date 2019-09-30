@@ -1,6 +1,5 @@
-    <script type="application/javascript"
-            src="chrome://browser/content/preferences/in-content/search.js"/>
-
+    <script src="chrome://browser/content/preferences/in-content/search.js"/>
+    <html:template id="template-paneSearch">
     <hbox id="searchCategory"
           class="subcategory"
           hidden="true"
@@ -8,9 +7,19 @@
       <html:h1 data-l10n-id="pane-search-title"/>
     </hbox>
 
+<<<<<<< HEAD
     <groupbox id="searchbarGroup" data-category="paneSearch">
       <label control="searchBarVisibleGroup"><html:h2 data-l10n-id="search-bar-header"/></label>
       <radiogroup id="searchBarVisibleGroup" preference="browser.search.widget.inNavBar">
+||||||| merged common ancestors
+    <groupbox id="searchbarGroup" data-category="paneSearch">
+      <caption><label id="searchbarLabel" data-l10n-id="search-bar-header" /></caption>
+      <radiogroup id="searchBarVisibleGroup" aria-labelledby="searchbarLabel" preference="browser.search.widget.inNavBar">
+=======
+    <groupbox id="searchbarGroup" data-category="paneSearch" hidden="true">
+      <label control="searchBarVisibleGroup"><html:h2 data-l10n-id="search-bar-header"/></label>
+      <radiogroup id="searchBarVisibleGroup" preference="browser.search.widget.inNavBar">
+>>>>>>> upstream-releases
         <radio id="searchBarHiddenRadio" value="false" data-l10n-id="search-bar-hidden"/>
         <image class="searchBarImage searchBarHiddenImage" role="presentation"/>
         <radio id="searchBarShownRadio" value="true" data-l10n-id="search-bar-shown"/>
@@ -19,8 +28,16 @@
     </groupbox>
 
     <!-- Default Search Engine -->
+<<<<<<< HEAD
     <groupbox id="defaultEngineGroup" data-category="paneSearch">
       <label><html:h2 data-l10n-id="search-engine-default-header" /></label>
+||||||| merged common ancestors
+    <groupbox id="defaultEngineGroup" data-category="paneSearch">
+      <caption><label data-l10n-id="search-engine-default-header" /></caption>
+=======
+    <groupbox id="defaultEngineGroup" data-category="paneSearch" hidden="true">
+      <label><html:h2 data-l10n-id="search-engine-default-header" /></label>
+>>>>>>> upstream-releases
       <description data-l10n-id="search-engine-default-desc" />
 
       <hbox id="browserDefaultSearchExtensionContent"
@@ -51,8 +68,16 @@
       </vbox>
     </groupbox>
 
+<<<<<<< HEAD
     <groupbox id="oneClickSearchProvidersGroup" data-category="paneSearch">
       <label><html:h2 data-l10n-id="search-one-click-header" /></label>
+||||||| merged common ancestors
+    <groupbox id="oneClickSearchProvidersGroup" data-category="paneSearch">
+      <caption><label data-l10n-id="search-one-click-header" /></caption>
+=======
+    <groupbox id="oneClickSearchProvidersGroup" data-category="paneSearch" hidden="true">
+      <label><html:h2 data-l10n-id="search-one-click-header" /></label>
+>>>>>>> upstream-releases
       <description data-l10n-id="search-one-click-desc" />
 
       <tree id="engineList" flex="1" rows="8" hidecolumnpicker="true" editable="true"
@@ -68,16 +93,19 @@
 
       <hbox>
         <button id="restoreDefaultSearchEngines"
+                is="highlightable-button"
                 data-l10n-id="search-restore-default"
                 />
         <spacer flex="1"/>
         <button id="removeEngineButton"
+                is="highlightable-button"
                 class="searchEngineAction"
                 data-l10n-id="search-remove-engine"
                 disabled="true"
                 />
       </hbox>
       <hbox id="addEnginesBox" pack="start">
-        <label id="addEngines" class="text-link" data-l10n-id="search-find-more-link"></label>
+        <label id="addEngines" data-l10n-id="search-find-more-link" is="text-link"></label>
       </hbox>
     </groupbox>
+    </html:template>

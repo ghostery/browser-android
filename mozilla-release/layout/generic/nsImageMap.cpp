@@ -27,7 +27,7 @@
 #include "ImageLayers.h"
 
 #ifdef ACCESSIBILITY
-#include "nsAccessibilityService.h"
+#  include "nsAccessibilityService.h"
 #endif
 
 using namespace mozilla;
@@ -71,11 +71,24 @@ inline bool is_space(char c) {
           c == '\v');
 }
 
+<<<<<<< HEAD
 static void logMessage(nsIContent* aContent, const nsAString& aCoordsSpec,
                        int32_t aFlags, const char* aMessageName) {
   nsIDocument* doc = aContent->OwnerDoc();
 
+||||||| merged common ancestors
+static void logMessage(nsIContent*      aContent,
+                       const nsAString& aCoordsSpec,
+                       int32_t          aFlags,
+                       const char* aMessageName) {
+  nsIDocument* doc = aContent->OwnerDoc();
+
+=======
+static void logMessage(nsIContent* aContent, const nsAString& aCoordsSpec,
+                       int32_t aFlags, const char* aMessageName) {
+>>>>>>> upstream-releases
   nsContentUtils::ReportToConsole(
+<<<<<<< HEAD
       aFlags, NS_LITERAL_CSTRING("Layout: ImageMap"), doc,
       nsContentUtils::eLAYOUT_PROPERTIES, aMessageName, nullptr, /* params */
       0, /* params length */
@@ -85,6 +98,31 @@ static void logMessage(nsIContent* aContent, const nsAString& aCoordsSpec,
 }
 
 void Area::ParseCoords(const nsAString& aSpec) {
+||||||| merged common ancestors
+     aFlags, NS_LITERAL_CSTRING("Layout: ImageMap"), doc,
+     nsContentUtils::eLAYOUT_PROPERTIES,
+     aMessageName,
+     nullptr,  /* params */
+     0, /* params length */
+     nullptr,
+     PromiseFlatString(NS_LITERAL_STRING("coords=\"") +
+                       aCoordsSpec +
+                       NS_LITERAL_STRING("\""))); /* source line */
+}
+
+void Area::ParseCoords(const nsAString& aSpec)
+{
+=======
+      aFlags, NS_LITERAL_CSTRING("Layout: ImageMap"), aContent->OwnerDoc(),
+      nsContentUtils::eLAYOUT_PROPERTIES, aMessageName,
+      nsTArray<nsString>(), /* params */
+      nullptr,
+      PromiseFlatString(NS_LITERAL_STRING("coords=\"") + aCoordsSpec +
+                        NS_LITERAL_STRING("\""))); /* source line */
+}
+
+void Area::ParseCoords(const nsAString& aSpec) {
+>>>>>>> upstream-releases
   char* cp = ToNewUTF8String(aSpec);
   if (cp) {
     char* tptr;
@@ -626,11 +664,24 @@ nsresult nsImageMap::GetBoundsForAreaContent(nsIContent* aContent,
   return NS_ERROR_FAILURE;
 }
 
+<<<<<<< HEAD
 void nsImageMap::AreaRemoved(HTMLAreaElement* aArea) {
   if (aArea->IsInUncomposedDoc()) {
     NS_ASSERTION(aArea->GetPrimaryFrame() == mImageFrame,
                  "Unexpected primary frame");
 
+||||||| merged common ancestors
+void
+nsImageMap::AreaRemoved(HTMLAreaElement* aArea)
+{
+  if (aArea->IsInUncomposedDoc()) {
+    NS_ASSERTION(aArea->GetPrimaryFrame() == mImageFrame,
+                 "Unexpected primary frame");
+
+=======
+void nsImageMap::AreaRemoved(HTMLAreaElement* aArea) {
+  if (aArea->GetPrimaryFrame() == mImageFrame) {
+>>>>>>> upstream-releases
     aArea->SetPrimaryFrame(nullptr);
   }
 
@@ -743,7 +794,15 @@ void nsImageMap::AddArea(HTMLAreaElement* aArea) {
   mAreas.AppendElement(std::move(area));
 }
 
+<<<<<<< HEAD
 nsIContent* nsImageMap::GetArea(nscoord aX, nscoord aY) const {
+||||||| merged common ancestors
+nsIContent*
+nsImageMap::GetArea(nscoord aX, nscoord aY) const
+{
+=======
+HTMLAreaElement* nsImageMap::GetArea(nscoord aX, nscoord aY) const {
+>>>>>>> upstream-releases
   NS_ASSERTION(mMap, "Not initialized");
   for (const auto& area : mAreas) {
     if (area->IsInside(aX, aY)) {
@@ -754,7 +813,15 @@ nsIContent* nsImageMap::GetArea(nscoord aX, nscoord aY) const {
   return nullptr;
 }
 
+<<<<<<< HEAD
 nsIContent* nsImageMap::GetAreaAt(uint32_t aIndex) const {
+||||||| merged common ancestors
+nsIContent*
+nsImageMap::GetAreaAt(uint32_t aIndex) const
+{
+=======
+HTMLAreaElement* nsImageMap::GetAreaAt(uint32_t aIndex) const {
+>>>>>>> upstream-releases
   return mAreas.ElementAt(aIndex)->mArea;
 }
 

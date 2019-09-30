@@ -32,8 +32,16 @@
 namespace mozilla {
 
 namespace dom {
+<<<<<<< HEAD
 class TabChild;
 }  // namespace dom
+||||||| merged common ancestors
+class TabChild;
+} // namespace dom
+=======
+class BrowserChild;
+}  // namespace dom
+>>>>>>> upstream-releases
 
 namespace widget {
 
@@ -43,7 +51,7 @@ class PuppetWidget : public nsBaseWidget,
                      public TextEventDispatcherListener,
                      public layers::MemoryPressureListener {
   typedef mozilla::CSSRect CSSRect;
-  typedef mozilla::dom::TabChild TabChild;
+  typedef mozilla::dom::BrowserChild BrowserChild;
   typedef mozilla::gfx::DrawTarget DrawTarget;
 
   // Avoiding to make compiler confused between mozilla::widget and nsIWidget.
@@ -56,8 +64,16 @@ class PuppetWidget : public nsBaseWidget,
   // The width and height of the "widget" are clamped to this.
   static const size_t kMaxDimension;
 
+<<<<<<< HEAD
  public:
   explicit PuppetWidget(TabChild* aTabChild);
+||||||| merged common ancestors
+public:
+  explicit PuppetWidget(TabChild* aTabChild);
+=======
+ public:
+  explicit PuppetWidget(BrowserChild* aBrowserChild);
+>>>>>>> upstream-releases
 
  protected:
   virtual ~PuppetWidget();
@@ -93,7 +109,7 @@ class PuppetWidget : public nsBaseWidget,
     *aY = kMaxDimension;
   }
 
-  // Widget position is controlled by the parent process via TabChild.
+  // Widget position is controlled by the parent process via BrowserChild.
   virtual void Move(double aX, double aY) override {}
 
   virtual void Resize(double aWidth, double aHeight, bool aRepaint) override;
@@ -111,7 +127,7 @@ class PuppetWidget : public nsBaseWidget,
   virtual void Enable(bool aState) override { mEnabled = aState; }
   virtual bool IsEnabled() const override { return mEnabled; }
 
-  virtual nsresult SetFocus(bool aRaise = false) override;
+  virtual void SetFocus(Raise) override;
 
   virtual nsresult ConfigureChildren(
       const nsTArray<Configuration>& aConfigurations) override;
@@ -125,13 +141,38 @@ class PuppetWidget : public nsBaseWidget,
 #endif
 
   // PuppetWidgets don't have any concept of titles.
+<<<<<<< HEAD
+  virtual nsresult SetTitle(const nsAString& aTitle) override {
+    return NS_ERROR_UNEXPECTED;
+  }
+||||||| merged common ancestors
+  virtual nsresult SetTitle(const nsAString& aTitle) override
+  { return NS_ERROR_UNEXPECTED; }
+=======
   virtual nsresult SetTitle(const nsAString& aTitle) override {
     return NS_ERROR_UNEXPECTED;
   }
 
+  virtual mozilla::LayoutDeviceToLayoutDeviceMatrix4x4
+  WidgetToTopLevelWidgetTransform() override;
+
   virtual LayoutDeviceIntPoint WidgetToScreenOffset() override {
     return GetWindowPosition() + GetChromeOffset();
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override {
+    return GetWindowPosition() + GetChromeOffset();
+  }
+||||||| merged common ancestors
+  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override
+  { return GetWindowPosition() + GetChromeOffset(); }
+=======
+  virtual LayoutDeviceIntPoint TopLevelWidgetToScreenOffset() override {
+    return GetWindowPosition();
+  }
+>>>>>>> upstream-releases
 
   int32_t RoundsWidgetCoordinatesTo() override;
 
@@ -141,12 +182,27 @@ class PuppetWidget : public nsBaseWidget,
   virtual nsresult DispatchEvent(WidgetGUIEvent* aEvent,
                                  nsEventStatus& aStatus) override;
   nsEventStatus DispatchInputEvent(WidgetInputEvent* aEvent) override;
+<<<<<<< HEAD
   void SetConfirmedTargetAPZC(
       uint64_t aInputBlockId,
       const nsTArray<ScrollableLayerGuid>& aTargets) const override;
   void UpdateZoomConstraints(
       const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
       const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
+||||||| merged common ancestors
+  void SetConfirmedTargetAPZC(uint64_t aInputBlockId,
+                              const nsTArray<ScrollableLayerGuid>& aTargets) const override;
+  void UpdateZoomConstraints(const uint32_t& aPresShellId,
+                             const FrameMetrics::ViewID& aViewId,
+                             const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
+=======
+  void SetConfirmedTargetAPZC(
+      uint64_t aInputBlockId,
+      const nsTArray<SLGuidAndRenderRoot>& aTargets) const override;
+  void UpdateZoomConstraints(
+      const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
+      const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
+>>>>>>> upstream-releases
   bool AsyncPanZoomEnabled() const override;
 
   virtual void GetEditCommands(
@@ -198,9 +254,18 @@ class PuppetWidget : public nsBaseWidget,
     mNativeTextEventDispatcherListener = aListener;
   }
 
+<<<<<<< HEAD
   virtual void SetCursor(nsCursor aCursor) override;
   virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
                              uint32_t aHotspotY) override;
+||||||| merged common ancestors
+  virtual void SetCursor(nsCursor aCursor) override;
+  virtual nsresult SetCursor(imgIContainer* aCursor,
+                             uint32_t aHotspotX, uint32_t aHotspotY) override;
+=======
+  virtual void SetCursor(nsCursor aDefaultCursor, imgIContainer* aCustomCursor,
+                         uint32_t aHotspotX, uint32_t aHotspotY) override;
+>>>>>>> upstream-releases
 
   virtual void ClearCachedCursor() override;
 
@@ -216,7 +281,9 @@ class PuppetWidget : public nsBaseWidget,
   // Paint the widget immediately if any paints are queued up.
   void PaintNowIfNeeded();
 
-  virtual TabChild* GetOwningTabChild() override { return mTabChild; }
+  virtual BrowserChild* GetOwningBrowserChild() override {
+    return mBrowserChild;
+  }
 
   void UpdateBackingScaleCache(float aDpi, int32_t aRounding, double aScale) {
     mDPI = aDpi;
@@ -234,9 +301,22 @@ class PuppetWidget : public nsBaseWidget,
 
   virtual LayoutDeviceIntRect GetScreenBounds() override;
 
+<<<<<<< HEAD
   virtual MOZ_MUST_USE nsresult StartPluginIME(
       const mozilla::WidgetKeyboardEvent& aKeyboardEvent, int32_t aPanelX,
       int32_t aPanelY, nsString& aCommitted) override;
+||||||| merged common ancestors
+  virtual MOZ_MUST_USE nsresult
+  StartPluginIME(const mozilla::WidgetKeyboardEvent& aKeyboardEvent,
+                 int32_t aPanelX, int32_t aPanelY,
+                 nsString& aCommitted) override;
+=======
+  virtual LayoutDeviceIntSize GetCompositionSize() override;
+
+  virtual MOZ_MUST_USE nsresult StartPluginIME(
+      const mozilla::WidgetKeyboardEvent& aKeyboardEvent, int32_t aPanelX,
+      int32_t aPanelY, nsString& aCommitted) override;
+>>>>>>> upstream-releases
 
   virtual void SetPluginFocused(bool& aFocused) override;
   virtual void DefaultProcOfPluginEvent(
@@ -352,13 +432,13 @@ class PuppetWidget : public nsBaseWidget,
     PuppetWidget* mWidget;
   };
 
-  // TabChild normally holds a strong reference to this PuppetWidget
+  // BrowserChild normally holds a strong reference to this PuppetWidget
   // or its root ancestor, but each PuppetWidget also needs a
-  // reference back to TabChild (e.g. to delegate nsIWidget IME calls
-  // to chrome) So we hold a weak reference to TabChild here.  Since
-  // it's possible for TabChild to outlive the PuppetWidget, we clear
+  // reference back to BrowserChild (e.g. to delegate nsIWidget IME calls
+  // to chrome) So we hold a weak reference to BrowserChild here.  Since
+  // it's possible for BrowserChild to outlive the PuppetWidget, we clear
   // this weak reference in Destroy()
-  TabChild* mTabChild;
+  BrowserChild* mBrowserChild;
   // The "widget" to which we delegate events if we don't have an
   // event handler.
   RefPtr<PuppetWidget> mChild;

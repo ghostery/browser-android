@@ -48,6 +48,7 @@ class ArrayBufferViewObject : public NativeObject {
   static const uint8_t ZeroLengthArrayData = 0x4A;
 #endif
 
+<<<<<<< HEAD
   // The raw pointer to the buffer memory, the "private" value.
   //
   // This offset is exposed for performance reasons - so that it
@@ -79,6 +80,41 @@ class ArrayBufferViewObject : public NativeObject {
   void initDataPointer(SharedMem<uint8_t*> viewData) {
     // Install a pointer to the buffer location that corresponds
     // to offset zero within the typed array.
+||||||| merged common ancestors
+    // The raw pointer to the buffer memory, the "private" value.
+=======
+  // The raw pointer to the buffer memory, the "private" value.
+  //
+  // This offset is exposed for performance reasons - so that it
+  // need not be looked up on accesses.
+  static constexpr size_t DATA_SLOT = 3;
+
+ private:
+  void* dataPointerEither_() const {
+    // Note, do not check whether shared or not
+    // Keep synced with js::Get<Type>ArrayLengthAndData in jsfriendapi.h!
+    return static_cast<void*>(getPrivate(DATA_SLOT));
+  }
+
+ public:
+  MOZ_MUST_USE bool init(JSContext* cx, ArrayBufferObjectMaybeShared* buffer,
+                         uint32_t byteOffset, uint32_t length,
+                         uint32_t bytesPerElement);
+
+  static ArrayBufferObjectMaybeShared* bufferObject(
+      JSContext* cx, Handle<ArrayBufferViewObject*> obj);
+
+  void notifyBufferDetached();
+
+  // By construction we only need unshared variants here.  See
+  // comments in ArrayBufferObject.cpp.
+  uint8_t* dataPointerUnshared(const JS::AutoRequireNoGC&);
+  void setDataPointerUnshared(uint8_t* data);
+
+  void initDataPointer(SharedMem<uint8_t*> viewData) {
+    // Install a pointer to the buffer location that corresponds
+    // to offset zero within the typed array.
+>>>>>>> upstream-releases
     //
     // The following unwrap is safe because the DATA_SLOT is
     // accessed only from jitted code and from the

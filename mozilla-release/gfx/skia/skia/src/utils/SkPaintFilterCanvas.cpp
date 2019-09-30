@@ -60,7 +60,24 @@ void SkPaintFilterCanvas::onDrawPoints(PointMode mode, size_t count, const SkPoi
 void SkPaintFilterCanvas::onDrawRect(const SkRect& rect, const SkPaint& paint) {
     AutoPaintFilter apf(this, kRect_Type, paint);
     if (apf.shouldDraw()) {
+<<<<<<< HEAD
         this->SkNWayCanvas::onDrawRect(rect, *apf.paint());
+||||||| merged common ancestors
+        this->INHERITED::onDrawRect(rect, *apf.paint());
+=======
+        this->SkNWayCanvas::onDrawRect(rect, *apf.paint());
+    }
+}
+
+void SkPaintFilterCanvas::onDrawEdgeAARect(const SkRect& rect, SkCanvas::QuadAAFlags aa,
+                                           SkColor color, SkBlendMode mode) {
+    SkPaint paint;
+    paint.setColor(color);
+    paint.setBlendMode(mode);
+    AutoPaintFilter apf(this, kRect_Type, paint);
+    if (apf.shouldDraw()) {
+        this->SkNWayCanvas::onDrawEdgeAARect(rect, aa, paint.getColor(), paint.getBlendMode());
+>>>>>>> upstream-releases
     }
 }
 
@@ -158,6 +175,7 @@ void SkPaintFilterCanvas::onDrawImageRect(const SkImage* image, const SkRect* sr
 }
 
 void SkPaintFilterCanvas::onDrawImageNine(const SkImage* image, const SkIRect& center,
+<<<<<<< HEAD
                                           const SkRect& dst, const SkPaint* paint) {
     AutoPaintFilter apf(this, kBitmap_Type, paint);
     if (apf.shouldDraw()) {
@@ -167,15 +185,54 @@ void SkPaintFilterCanvas::onDrawImageNine(const SkImage* image, const SkIRect& c
 
 void SkPaintFilterCanvas::onDrawImageLattice(const SkImage* image, const Lattice& lattice,
                                              const SkRect& dst, const SkPaint* paint) {
+||||||| merged common ancestors
+                                               const SkRect& dst, const SkPaint* paint) {
+=======
+                                          const SkRect& dst, const SkPaint* paint) {
+>>>>>>> upstream-releases
+    AutoPaintFilter apf(this, kBitmap_Type, paint);
+    if (apf.shouldDraw()) {
+<<<<<<< HEAD
+        this->SkNWayCanvas::onDrawImageLattice(image, lattice, dst, apf.paint());
+||||||| merged common ancestors
+        this->INHERITED::onDrawImageNine(image, center, dst, apf.paint());
+=======
+        this->SkNWayCanvas::onDrawImageNine(image, center, dst, apf.paint());
+>>>>>>> upstream-releases
+    }
+}
+
+<<<<<<< HEAD
+void SkPaintFilterCanvas::onDrawVerticesObject(const SkVertices* vertices,
+                                               const SkVertices::Bone bones[], int boneCount,
+                                               SkBlendMode bmode, const SkPaint& paint) {
+||||||| merged common ancestors
+void SkPaintFilterCanvas::onDrawVerticesObject(const SkVertices* vertices, SkBlendMode bmode,
+                                               const SkPaint& paint) {
+=======
+void SkPaintFilterCanvas::onDrawImageLattice(const SkImage* image, const Lattice& lattice,
+                                             const SkRect& dst, const SkPaint* paint) {
     AutoPaintFilter apf(this, kBitmap_Type, paint);
     if (apf.shouldDraw()) {
         this->SkNWayCanvas::onDrawImageLattice(image, lattice, dst, apf.paint());
     }
 }
 
+void SkPaintFilterCanvas::onDrawImageSet(const SkCanvas::ImageSetEntry set[], int count,
+                                         SkFilterQuality filterQuality, SkBlendMode mode) {
+    SkPaint paint;
+    paint.setBlendMode(mode);
+    AutoPaintFilter apf(this, kBitmap_Type, &paint);
+    mode = paint.getBlendMode();
+    if (apf.shouldDraw()) {
+        this->SkNWayCanvas::onDrawImageSet(set, count, filterQuality, mode);
+    }
+}
+
 void SkPaintFilterCanvas::onDrawVerticesObject(const SkVertices* vertices,
                                                const SkVertices::Bone bones[], int boneCount,
                                                SkBlendMode bmode, const SkPaint& paint) {
+>>>>>>> upstream-releases
     AutoPaintFilter apf(this, kVertices_Type, paint);
     if (apf.shouldDraw()) {
         this->SkNWayCanvas::onDrawVerticesObject(vertices, bones, boneCount, bmode, *apf.paint());
@@ -205,6 +262,7 @@ void SkPaintFilterCanvas::onDrawDrawable(SkDrawable* drawable, const SkMatrix* m
     // order to actually filter nested content.
     AutoPaintFilter apf(this, kDrawable_Type, nullptr);
     if (apf.shouldDraw()) {
+<<<<<<< HEAD
         this->SkNWayCanvas::onDrawDrawable(drawable, matrix);
     }
 }
@@ -214,9 +272,23 @@ void SkPaintFilterCanvas::onDrawText(const void* text, size_t byteLength, SkScal
     AutoPaintFilter apf(this, kText_Type, paint);
     if (apf.shouldDraw()) {
         this->SkNWayCanvas::onDrawText(text, byteLength, x, y, *apf.paint());
+||||||| merged common ancestors
+        this->INHERITED::onDrawDrawable(drawable, matrix);
     }
 }
 
+void SkPaintFilterCanvas::onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
+                                     const SkPaint& paint) {
+    AutoPaintFilter apf(this, kText_Type, paint);
+    if (apf.shouldDraw()) {
+        this->INHERITED::onDrawText(text, byteLength, x, y, *apf.paint());
+=======
+        this->SkNWayCanvas::onDrawDrawable(drawable, matrix);
+>>>>>>> upstream-releases
+    }
+}
+
+<<<<<<< HEAD
 void SkPaintFilterCanvas::onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
                                         const SkPaint& paint) {
     AutoPaintFilter apf(this, kText_Type, paint);
@@ -228,11 +300,52 @@ void SkPaintFilterCanvas::onDrawPosText(const void* text, size_t byteLength, con
 void SkPaintFilterCanvas::onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xpos[],
                                          SkScalar constY, const SkPaint& paint) {
     AutoPaintFilter apf(this, kText_Type, paint);
+||||||| merged common ancestors
+void SkPaintFilterCanvas::onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
+                                        const SkPaint& paint) {
+    AutoPaintFilter apf(this, kText_Type, paint);
     if (apf.shouldDraw()) {
-        this->SkNWayCanvas::onDrawPosTextH(text, byteLength, xpos, constY, *apf.paint());
+        this->INHERITED::onDrawPosText(text, byteLength, pos, *apf.paint());
     }
 }
 
+void SkPaintFilterCanvas::onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xpos[],
+                                         SkScalar constY, const SkPaint& paint) {
+    AutoPaintFilter apf(this, kText_Type, paint);
+=======
+void SkPaintFilterCanvas::onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
+                                         const SkPaint& paint) {
+    AutoPaintFilter apf(this, kTextBlob_Type, paint);
+>>>>>>> upstream-releases
+    if (apf.shouldDraw()) {
+<<<<<<< HEAD
+        this->SkNWayCanvas::onDrawPosTextH(text, byteLength, xpos, constY, *apf.paint());
+||||||| merged common ancestors
+        this->INHERITED::onDrawPosTextH(text, byteLength, xpos, constY, *apf.paint());
+    }
+}
+
+void SkPaintFilterCanvas::onDrawTextOnPath(const void* text, size_t byteLength, const SkPath& path,
+                                           const SkMatrix* matrix, const SkPaint& paint) {
+    AutoPaintFilter apf(this, kText_Type, paint);
+    if (apf.shouldDraw()) {
+        this->INHERITED::onDrawTextOnPath(text, byteLength, path, matrix, *apf.paint());
+=======
+        this->SkNWayCanvas::onDrawTextBlob(blob, x, y, *apf.paint());
+    }
+}
+
+void SkPaintFilterCanvas::onDrawAtlas(const SkImage* image, const SkRSXform xform[],
+                                      const SkRect tex[], const SkColor colors[], int count,
+                                      SkBlendMode bmode, const SkRect* cull, const SkPaint* paint) {
+    AutoPaintFilter apf(this, kBitmap_Type, paint);
+    if (apf.shouldDraw()) {
+        this->SkNWayCanvas::onDrawAtlas(image, xform, tex, colors, count, bmode, cull, apf.paint());
+>>>>>>> upstream-releases
+    }
+}
+
+<<<<<<< HEAD
 void SkPaintFilterCanvas::onDrawTextRSXform(const void* text, size_t byteLength,
                                             const SkRSXform xform[], const SkRect* cull,
                                             const SkPaint& paint) {
@@ -240,8 +353,21 @@ void SkPaintFilterCanvas::onDrawTextRSXform(const void* text, size_t byteLength,
     if (apf.shouldDraw()) {
         this->SkNWayCanvas::onDrawTextRSXform(text, byteLength, xform, cull, *apf.paint());
     }
+||||||| merged common ancestors
+void SkPaintFilterCanvas::onDrawTextRSXform(const void* text, size_t byteLength,
+                                            const SkRSXform xform[], const SkRect* cull,
+                                            const SkPaint& paint) {
+    AutoPaintFilter apf(this, kText_Type, paint);
+    if (apf.shouldDraw()) {
+        this->INHERITED::onDrawTextRSXform(text, byteLength, xform, cull, *apf.paint());
+    }
+=======
+void SkPaintFilterCanvas::onDrawAnnotation(const SkRect& rect, const char key[], SkData* value) {
+    this->SkNWayCanvas::onDrawAnnotation(rect, key, value);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void SkPaintFilterCanvas::onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
                                          const SkPaint& paint) {
     AutoPaintFilter apf(this, kTextBlob_Type, paint);
@@ -257,6 +383,17 @@ void SkPaintFilterCanvas::onDrawAtlas(const SkImage* image, const SkRSXform xfor
     if (apf.shouldDraw()) {
         this->SkNWayCanvas::onDrawAtlas(image, xform, tex, colors, count, bmode, cull, apf.paint());
     }
+||||||| merged common ancestors
+void SkPaintFilterCanvas::onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
+                                         const SkPaint& paint) {
+    AutoPaintFilter apf(this, kTextBlob_Type, paint);
+    if (apf.shouldDraw()) {
+        this->INHERITED::onDrawTextBlob(blob, x, y, *apf.paint());
+    }
+=======
+void SkPaintFilterCanvas::onDrawShadowRec(const SkPath& path, const SkDrawShadowRec& rec) {
+    this->SkNWayCanvas::onDrawShadowRec(path, rec);
+>>>>>>> upstream-releases
 }
 
 void SkPaintFilterCanvas::onDrawAnnotation(const SkRect& rect, const char key[], SkData* value) {

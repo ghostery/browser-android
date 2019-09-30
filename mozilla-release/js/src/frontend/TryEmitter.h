@@ -7,15 +7,14 @@
 #ifndef frontend_TryEmitter_h
 #define frontend_TryEmitter_h
 
-#include "mozilla/Attributes.h"
-#include "mozilla/Maybe.h"
+#include "mozilla/Attributes.h"  // MOZ_STACK_CLASS, MOZ_MUST_USE
+#include "mozilla/Maybe.h"       // mozilla::Maybe, mozilla::Nothing
 
-#include <stddef.h>
-#include <stdint.h>
+#include <stdint.h>  // uint32_t
 
-#include "frontend/BytecodeControlStructures.h"
-#include "frontend/JumpList.h"
-#include "frontend/TDZCheckCache.h"
+#include "frontend/BytecodeControlStructures.h"  // TryFinallyControl
+#include "frontend/BytecodeOffset.h"             // BytecodeOffset
+#include "frontend/JumpList.h"                   // JumpList, JumpTarget
 
 namespace js {
 namespace frontend {
@@ -56,6 +55,7 @@ struct BytecodeEmitter;
 //     emit(finally_block);
 //     tryCatch.emitEnd();
 //
+<<<<<<< HEAD
 class MOZ_STACK_CLASS TryEmitter {
  public:
   enum class Kind { TryCatch, TryCatchFinally, TryFinally };
@@ -150,6 +150,205 @@ class MOZ_STACK_CLASS TryEmitter {
 
   // The offset of JSOP_JUMPTARGET at the beginning of the finally block.
   JumpTarget finallyStart_;
+||||||| merged common ancestors
+class MOZ_STACK_CLASS TryEmitter
+{
+  public:
+    enum class Kind {
+        TryCatch,
+        TryCatchFinally,
+        TryFinally
+    };
+
+    // Syntactic try-catch-finally and internally used non-syntactic
+    // try-catch-finally behave differently for 2 points.
+    //
+    // The first one is whether TryFinallyControl is used or not.
+    // See the comment for `controlInfo_`.
+    //
+    // The second one is whether the catch and finally blocks handle the frame's
+    // return value.  For syntactic try-catch-finally, the bytecode marked with
+    // "*" are emitted to clear return value with `undefined` before the catch
+    // block and the finally block, and also to save/restore the return value
+    // before/after the finally block.
+    //
+    //     JSOP_TRY
+    //
+    //     try_body...
+    //
+    //     JSOP_GOSUB finally
+    //     JSOP_JUMPTARGET
+    //     JSOP_GOTO end:
+    //
+    //   catch:
+    //     JSOP_JUMPTARGET
+    //   * JSOP_UNDEFINED
+    //   * JSOP_SETRVAL
+    //
+    //     catch_body...
+    //
+    //     JSOP_GOSUB finally
+    //     JSOP_JUMPTARGET
+    //     JSOP_GOTO end
+    //
+    //   finally:
+    //     JSOP_JUMPTARGET
+    //   * JSOP_GETRVAL
+    //   * JSOP_UNDEFINED
+    //   * JSOP_SETRVAL
+    //
+    //     finally_body...
+    //
+    //   * JSOP_SETRVAL
+    //     JSOP_NOP
+    //
+    //   end:
+    //     JSOP_JUMPTARGET
+    //
+    // For syntactic try-catch-finally, Syntactic should be used.
+    // For non-syntactic try-catch-finally, NonSyntactic should be used.
+    enum class ControlKind {
+        Syntactic,
+        NonSyntactic
+    };
+
+  private:
+    BytecodeEmitter* bce_;
+    Kind kind_;
+    ControlKind controlKind_;
+
+    // Track jumps-over-catches and gosubs-to-finally for later fixup.
+    //
+    // When a finally block is active, non-local jumps (including
+    // jumps-over-catches) result in a GOSUB being written into the bytecode
+    // stream and fixed-up later.
+    //
+    // For non-syntactic try-catch-finally, all that handling is skipped.
+    // The non-syntactic try-catch-finally must:
+    //   * have only one catch block
+    //   * have JSOP_GOTO at the end of catch-block
+    //   * have no non-local-jump
+    //   * don't use finally block for normal completion of try-block and
+    //     catch-block
+    //
+    // Additionally, a finally block may be emitted for non-syntactic
+    // try-catch-finally, even if the kind is TryCatch, because GOSUBs are not
+    // emitted.
+    mozilla::Maybe<TryFinallyControl> controlInfo_;
+
+    // The stack depth before emitting JSOP_TRY.
+    int depth_;
+
+    // The source note index for SRC_TRY.
+    unsigned noteIndex_;
+
+    // The offset after JSOP_TRY.
+    ptrdiff_t tryStart_;
+
+    // JSOP_JUMPTARGET after the entire try-catch-finally block.
+    JumpList catchAndFinallyJump_;
+
+    // The offset of JSOP_GOTO at the end of the try block.
+    JumpTarget tryEnd_;
+
+    // The offset of JSOP_JUMPTARGET at the beginning of the finally block.
+    JumpTarget finallyStart_;
+=======
+class MOZ_STACK_CLASS TryEmitter {
+ public:
+  enum class Kind { TryCatch, TryCatchFinally, TryFinally };
+
+  // Syntactic try-catch-finally and internally used non-syntactic
+  // try-catch-finally behave differently for 2 points.
+  //
+  // The first one is whether TryFinallyControl is used or not.
+  // See the comment for `controlInfo_`.
+  //
+  // The second one is whether the catch and finally blocks handle the frame's
+  // return value.  For syntactic try-catch-finally, the bytecode marked with
+  // "*" are emitted to clear return value with `undefined` before the catch
+  // block and the finally block, and also to save/restore the return value
+  // before/after the finally block.
+  //
+  //     JSOP_TRY
+  //
+  //     try_body...
+  //
+  //     JSOP_GOSUB finally
+  //     JSOP_JUMPTARGET
+  //     JSOP_GOTO end:
+  //
+  //   catch:
+  //     JSOP_JUMPTARGET
+  //   * JSOP_UNDEFINED
+  //   * JSOP_SETRVAL
+  //
+  //     catch_body...
+  //
+  //     JSOP_GOSUB finally
+  //     JSOP_JUMPTARGET
+  //     JSOP_GOTO end
+  //
+  //   finally:
+  //     JSOP_JUMPTARGET
+  //   * JSOP_GETRVAL
+  //   * JSOP_UNDEFINED
+  //   * JSOP_SETRVAL
+  //
+  //     finally_body...
+  //
+  //   * JSOP_SETRVAL
+  //     JSOP_NOP
+  //
+  //   end:
+  //     JSOP_JUMPTARGET
+  //
+  // For syntactic try-catch-finally, Syntactic should be used.
+  // For non-syntactic try-catch-finally, NonSyntactic should be used.
+  enum class ControlKind { Syntactic, NonSyntactic };
+
+ private:
+  BytecodeEmitter* bce_;
+  Kind kind_;
+  ControlKind controlKind_;
+
+  // Track jumps-over-catches and gosubs-to-finally for later fixup.
+  //
+  // When a finally block is active, non-local jumps (including
+  // jumps-over-catches) result in a GOSUB being written into the bytecode
+  // stream and fixed-up later.
+  //
+  // For non-syntactic try-catch-finally, all that handling is skipped.
+  // The non-syntactic try-catch-finally must:
+  //   * have only one catch block
+  //   * have JSOP_GOTO at the end of catch-block
+  //   * have no non-local-jump
+  //   * don't use finally block for normal completion of try-block and
+  //     catch-block
+  //
+  // Additionally, a finally block may be emitted for non-syntactic
+  // try-catch-finally, even if the kind is TryCatch, because GOSUBs are not
+  // emitted.
+  mozilla::Maybe<TryFinallyControl> controlInfo_;
+
+  // The stack depth before emitting JSOP_TRY.
+  int depth_;
+
+  // The source note index for SRC_TRY.
+  unsigned noteIndex_;
+
+  // The offset after JSOP_TRY.
+  BytecodeOffset tryStart_;
+
+  // JSOP_JUMPTARGET after the entire try-catch-finally block.
+  JumpList catchAndFinallyJump_;
+
+  // The offset of JSOP_GOTO at the end of the try block.
+  JumpTarget tryEnd_;
+
+  // The offset of JSOP_JUMPTARGET at the beginning of the finally block.
+  JumpTarget finallyStart_;
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   // The state of this emitter.

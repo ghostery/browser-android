@@ -7,6 +7,7 @@
 #define nsBaseChannel_h__
 
 #include "mozilla/net/NeckoTargetHolder.h"
+#include "mozilla/MozPromise.h"
 #include "nsString.h"
 #include "nsAutoPtr.h"
 #include "nsCOMPtr.h"
@@ -24,7 +25,7 @@
 #include "nsIAsyncVerifyRedirectCallback.h"
 #include "nsIThreadRetargetableRequest.h"
 #include "nsIThreadRetargetableStreamListener.h"
-#include "PrivateBrowsingChannel.h"
+#include "mozilla/net/PrivateBrowsingChannel.h"
 #include "nsThreadUtils.h"
 
 class nsIInputStream;
@@ -73,7 +74,15 @@ class nsBaseChannel
 
   virtual ~nsBaseChannel();
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  using BlockingPromise = mozilla::MozPromise<nsresult, nsresult, true>;
+
+ private:
+>>>>>>> upstream-releases
   // Implemented by subclass to supply data stream.  The parameter, async, is
   // true when called from nsIChannel::AsyncOpen and false otherwise.  When
   // async is true, the resulting stream will be used with a nsIInputStreamPump
@@ -89,21 +98,50 @@ class nsBaseChannel
   // That case will be treated as a redirect to the new channel.  By default
   // *channel will be set to null by the caller, so callees who don't want to
   // return one an just not touch it.
+<<<<<<< HEAD
   virtual nsresult OpenContentStream(bool async, nsIInputStream **stream,
                                      nsIChannel **channel) = 0;
+||||||| merged common ancestors
+  virtual nsresult OpenContentStream(bool async, nsIInputStream **stream,
+                                     nsIChannel** channel) = 0;
+=======
+  virtual nsresult OpenContentStream(bool async, nsIInputStream** stream,
+                                     nsIChannel** channel) = 0;
+>>>>>>> upstream-releases
 
   // Implemented by subclass to begin pumping data for an async channel, in
   // lieu of returning a stream. If implemented, OpenContentStream will never
-  // be called for async channels. If not implemented, AsyncOpen2 will fall
+  // be called for async channels. If not implemented, AsyncOpen will fall
   // back to OpenContentStream.
   //
   // On success, the callee must begin pumping data to the stream listener,
   // and at some point call OnStartRequest followed by OnStopRequest.
   // Additionally, it may provide a request object which may be used to
   // suspend, resume, and cancel the underlying request.
+<<<<<<< HEAD
   virtual nsresult BeginAsyncRead(nsIStreamListener *listener,
                                   nsIRequest **request) {
+||||||| merged common ancestors
+  virtual nsresult BeginAsyncRead(nsIStreamListener* listener, nsIRequest** request) {
+=======
+  virtual nsresult BeginAsyncRead(nsIStreamListener* listener,
+                                  nsIRequest** request) {
+>>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
+  }
+
+  // This method may return a promise that will keep the input stream pump
+  // suspended until the promise is resolved or rejected.  On resolution the
+  // pump is resumed.  On rejection the channel is canceled with the resulting
+  // error and then the pump is also resumed to propagate the error to the
+  // channel listener.  Use it to do any asynchronous/background tasks you need
+  // to finish prior calling OnStartRequest of the listener.  This method is
+  // called right after OpenContentStream() with async == true, after the input
+  // stream pump has already been called asyncRead().
+  virtual nsresult ListenerBlockingPromise(BlockingPromise** aPromise) {
+    NS_ENSURE_ARG(aPromise);
+    *aPromise = nullptr;
+    return NS_OK;
   }
 
   // The basechannel calls this method from its OnTransportStatus method to
@@ -114,7 +152,7 @@ class nsBaseChannel
   // to pass to the OnStatus method.  By default, OnStatus messages are
   // suppressed.  The status parameter passed to this method is the status value
   // from the OnTransportStatus method.
-  virtual bool GetStatusArg(nsresult status, nsString &statusArg) {
+  virtual bool GetStatusArg(nsresult status, nsString& statusArg) {
     return false;
   }
 
@@ -135,7 +173,7 @@ class nsBaseChannel
   // redirect could not be performed (no channel was opened; this channel
   // wasn't canceled.)  The redirectFlags parameter consists of the flag values
   // defined on nsIChannelEventSink.
-  nsresult Redirect(nsIChannel *newChannel, uint32_t redirectFlags,
+  nsresult Redirect(nsIChannel* newChannel, uint32_t redirectFlags,
                     bool openNewChannel);
 
   // Tests whether a type hint was set. Subclasses can use this to decide
@@ -146,20 +184,50 @@ class nsBaseChannel
 
   // The URI member should be initialized before the channel is used, and then
   // it should never be changed again until the channel is destroyed.
+<<<<<<< HEAD
   nsIURI *URI() { return mURI; }
   void SetURI(nsIURI *uri) {
+||||||| merged common ancestors
+  nsIURI *URI() {
+    return mURI;
+  }
+  void SetURI(nsIURI *uri) {
+=======
+  nsIURI* URI() { return mURI; }
+  void SetURI(nsIURI* uri) {
+>>>>>>> upstream-releases
     NS_ASSERTION(uri, "must specify a non-null URI");
     NS_ASSERTION(!mURI, "must not modify URI");
     NS_ASSERTION(!mOriginalURI, "how did that get set so early?");
     mURI = uri;
     mOriginalURI = uri;
   }
+<<<<<<< HEAD
   nsIURI *OriginalURI() { return mOriginalURI; }
+||||||| merged common ancestors
+  nsIURI *OriginalURI() {
+    return mOriginalURI;
+  }
+=======
+  nsIURI* OriginalURI() { return mOriginalURI; }
+>>>>>>> upstream-releases
 
   // The security info is a property of the transport-layer, which should be
   // assigned by the subclass.
+<<<<<<< HEAD
   nsISupports *SecurityInfo() { return mSecurityInfo; }
   void SetSecurityInfo(nsISupports *info) { mSecurityInfo = info; }
+||||||| merged common ancestors
+  nsISupports *SecurityInfo() {
+    return mSecurityInfo;
+  }
+  void SetSecurityInfo(nsISupports *info) {
+    mSecurityInfo = info;
+  }
+=======
+  nsISupports* SecurityInfo() { return mSecurityInfo; }
+  void SetSecurityInfo(nsISupports* info) { mSecurityInfo = info; }
+>>>>>>> upstream-releases
 
   // Test the load flags
   bool HasLoadFlag(uint32_t flag) { return (mLoadFlags & flag) != 0; }
@@ -170,8 +238,15 @@ class nsBaseChannel
   }
 
   // Helper function for querying the channel's notification callbacks.
+<<<<<<< HEAD
   template <class T>
   void GetCallback(nsCOMPtr<T> &result) {
+||||||| merged common ancestors
+  template <class T> void GetCallback(nsCOMPtr<T> &result) {
+=======
+  template <class T>
+  void GetCallback(nsCOMPtr<T>& result) {
+>>>>>>> upstream-releases
     GetInterface(NS_GET_TEMPLATE_IID(T), getter_AddRefs(result));
   }
 
@@ -185,8 +260,20 @@ class nsBaseChannel
 
   // Some subclasses may wish to manually insert a stream listener between this
   // and the channel's listener.  The following methods make that possible.
+<<<<<<< HEAD
   void SetStreamListener(nsIStreamListener *listener) { mListener = listener; }
   nsIStreamListener *StreamListener() { return mListener; }
+||||||| merged common ancestors
+  void SetStreamListener(nsIStreamListener *listener) {
+    mListener = listener;
+  }
+  nsIStreamListener *StreamListener() {
+    return mListener;
+  }
+=======
+  void SetStreamListener(nsIStreamListener* listener) { mListener = listener; }
+  nsIStreamListener* StreamListener() { return mListener; }
+>>>>>>> upstream-releases
 
   // Pushes a new stream converter in front of the channel's stream listener.
   // The fromType and toType values are passed to nsIStreamConverterService's
@@ -195,9 +282,9 @@ class nsBaseChannel
   // necessary when the converter changes the length of the resulting data
   // stream, which is almost always the case for a "stream converter" ;-)
   // This function optionally returns a reference to the new converter.
-  nsresult PushStreamConverter(const char *fromType, const char *toType,
+  nsresult PushStreamConverter(const char* fromType, const char* toType,
                                bool invalidatesContentLength = true,
-                               nsIStreamListener **converter = nullptr);
+                               nsIStreamListener** converter = nullptr);
 
  protected:
   void DisallowThreadRetargeting() { mAllowThreadRetargeting = false; }
@@ -221,9 +308,18 @@ class nsBaseChannel
   // Called when our channel is done.  This should drop no-longer-needed
   // pointers.
   void ChannelDone() {
+<<<<<<< HEAD
     mListener = nullptr;
     mListenerContext = nullptr;
     OnChannelDone();
+||||||| merged common ancestors
+      mListener = nullptr;
+      mListenerContext = nullptr;
+      OnChannelDone();
+=======
+    mListener = nullptr;
+    OnChannelDone();
+>>>>>>> upstream-releases
   }
 
   // Handle an async redirect callback.  This will only be called if we
@@ -235,12 +331,30 @@ class nsBaseChannel
   // start URI classifier if requested
   void ClassifyURI();
 
+<<<<<<< HEAD
   class RedirectRunnable : public mozilla::Runnable {
    public:
     RedirectRunnable(nsBaseChannel *chan, nsIChannel *newChannel)
         : mozilla::Runnable("nsBaseChannel::RedirectRunnable"),
           mChannel(chan),
           mNewChannel(newChannel) {
+||||||| merged common ancestors
+  class RedirectRunnable : public mozilla::Runnable
+  {
+  public:
+    RedirectRunnable(nsBaseChannel* chan, nsIChannel* newChannel)
+      : mozilla::Runnable("nsBaseChannel::RedirectRunnable")
+      , mChannel(chan)
+      , mNewChannel(newChannel)
+    {
+=======
+  class RedirectRunnable : public mozilla::Runnable {
+   public:
+    RedirectRunnable(nsBaseChannel* chan, nsIChannel* newChannel)
+        : mozilla::Runnable("nsBaseChannel::RedirectRunnable"),
+          mChannel(chan),
+          mNewChannel(newChannel) {
+>>>>>>> upstream-releases
       MOZ_ASSERT(newChannel, "Must have channel to redirect to");
     }
 
@@ -255,6 +369,7 @@ class nsBaseChannel
   };
   friend class RedirectRunnable;
 
+<<<<<<< HEAD
   RefPtr<nsInputStreamPump> mPump;
   RefPtr<nsIRequest> mRequest;
   bool mPumpingData;
@@ -285,6 +400,68 @@ class nsBaseChannel
   nsAutoPtr<nsString> mContentDispositionFilename;
   int64_t mContentLength;
   bool mWasOpened;
+||||||| merged common ancestors
+  RefPtr<nsInputStreamPump>         mPump;
+  RefPtr<nsIRequest>                  mRequest;
+  bool                                mPumpingData;
+  nsCOMPtr<nsIProgressEventSink>      mProgressSink;
+  nsCOMPtr<nsIURI>                    mOriginalURI;
+  nsCOMPtr<nsISupports>               mOwner;
+  nsCOMPtr<nsISupports>               mSecurityInfo;
+  nsCOMPtr<nsIChannel>                mRedirectChannel;
+  nsCString                           mContentType;
+  nsCString                           mContentCharset;
+  uint32_t                            mLoadFlags;
+  bool                                mQueriedProgressSink;
+  bool                                mSynthProgressEvents;
+  bool                                mAllowThreadRetargeting;
+  bool                                mWaitingOnAsyncRedirect;
+  bool                                mOpenRedirectChannel;
+  uint32_t                            mRedirectFlags;
+
+protected:
+  nsCOMPtr<nsIURI>                    mURI;
+  nsCOMPtr<nsILoadGroup>              mLoadGroup;
+  nsCOMPtr<nsILoadInfo>               mLoadInfo;
+  nsCOMPtr<nsIInterfaceRequestor>     mCallbacks;
+  nsCOMPtr<nsIStreamListener>         mListener;
+  nsCOMPtr<nsISupports>               mListenerContext;
+  nsresult                            mStatus;
+  uint32_t                            mContentDispositionHint;
+  nsAutoPtr<nsString>                 mContentDispositionFilename;
+  int64_t                             mContentLength;
+  bool                                mWasOpened;
+=======
+  RefPtr<nsInputStreamPump> mPump;
+  RefPtr<nsIRequest> mRequest;
+  bool mPumpingData;
+  nsCOMPtr<nsIProgressEventSink> mProgressSink;
+  nsCOMPtr<nsIURI> mOriginalURI;
+  nsCOMPtr<nsISupports> mOwner;
+  nsCOMPtr<nsISupports> mSecurityInfo;
+  nsCOMPtr<nsIChannel> mRedirectChannel;
+  nsCString mContentType;
+  nsCString mContentCharset;
+  uint32_t mLoadFlags;
+  bool mQueriedProgressSink;
+  bool mSynthProgressEvents;
+  bool mAllowThreadRetargeting;
+  bool mWaitingOnAsyncRedirect;
+  bool mOpenRedirectChannel;
+  uint32_t mRedirectFlags;
+
+ protected:
+  nsCOMPtr<nsIURI> mURI;
+  nsCOMPtr<nsILoadGroup> mLoadGroup;
+  nsCOMPtr<nsILoadInfo> mLoadInfo;
+  nsCOMPtr<nsIInterfaceRequestor> mCallbacks;
+  nsCOMPtr<nsIStreamListener> mListener;
+  nsresult mStatus;
+  uint32_t mContentDispositionHint;
+  nsAutoPtr<nsString> mContentDispositionFilename;
+  int64_t mContentLength;
+  bool mWasOpened;
+>>>>>>> upstream-releases
 
   friend class mozilla::net::PrivateBrowsingChannel<nsBaseChannel>;
 };

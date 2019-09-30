@@ -48,8 +48,16 @@ class nsTextEquivUtils {
    * @param aRule       [in] a given name rule
    * @return true if the accessible has the rule
    */
+<<<<<<< HEAD
   static inline bool HasNameRule(Accessible *aAccessible,
                                  ETextEquivRule aRule) {
+||||||| merged common ancestors
+  static inline bool HasNameRule(Accessible* aAccessible, ETextEquivRule aRule)
+  {
+=======
+  static inline bool HasNameRule(Accessible* aAccessible,
+                                 ETextEquivRule aRule) {
+>>>>>>> upstream-releases
     return (GetRoleRule(aAccessible->Role()) & aRule) == aRule;
   }
 
@@ -66,8 +74,17 @@ class nsTextEquivUtils {
    * Calculates text equivalent from the subtree. Similar to GetNameFromSubtree.
    * However it returns not empty result for things like HTML p.
    */
+<<<<<<< HEAD
   static void GetTextEquivFromSubtree(const Accessible *aAccessible,
                                       nsString &aTextEquiv) {
+||||||| merged common ancestors
+  static void GetTextEquivFromSubtree(const Accessible* aAccessible,
+                                      nsString& aTextEquiv)
+  {
+=======
+  static void GetTextEquivFromSubtree(const Accessible* aAccessible,
+                                      nsString& aTextEquiv) {
+>>>>>>> upstream-releases
     aTextEquiv.Truncate();
 
     AppendFromAccessibleChildren(aAccessible, &aTextEquiv);
@@ -82,9 +99,19 @@ class nsTextEquivUtils {
    * @param aIDRefsAttr  [in] IDRefs attribute on DOM node of the accessible
    * @param aTextEquiv   [out] result text equivalent
    */
+<<<<<<< HEAD
   static nsresult GetTextEquivFromIDRefs(const Accessible *aAccessible,
                                          nsAtom *aIDRefsAttr,
                                          nsAString &aTextEquiv);
+||||||| merged common ancestors
+  static nsresult GetTextEquivFromIDRefs(const Accessible* aAccessible,
+                                         nsAtom *aIDRefsAttr,
+                                         nsAString& aTextEquiv);
+=======
+  static nsresult GetTextEquivFromIDRefs(const Accessible* aAccessible,
+                                         nsAtom* aIDRefsAttr,
+                                         nsAString& aTextEquiv);
+>>>>>>> upstream-releases
 
   /**
    * Calculates the text equivalent from the given content and its subtree if
@@ -97,9 +124,19 @@ class nsTextEquivUtils {
    *                       computed from
    * @param aString        [in, out] the string
    */
+<<<<<<< HEAD
   static nsresult AppendTextEquivFromContent(const Accessible *aInitiatorAcc,
                                              nsIContent *aContent,
                                              nsAString *aString);
+||||||| merged common ancestors
+  static nsresult AppendTextEquivFromContent(const Accessible* aInitiatorAcc,
+                                             nsIContent *aContent,
+                                             nsAString *aString);
+=======
+  static nsresult AppendTextEquivFromContent(const Accessible* aInitiatorAcc,
+                                             nsIContent* aContent,
+                                             nsAString* aString);
+>>>>>>> upstream-releases
 
   /**
    * Calculates the text equivalent from the given text content (may be text
@@ -108,46 +145,77 @@ class nsTextEquivUtils {
    * @param aContent       [in] the text content
    * @param aString        [in, out] the string
    */
-  static nsresult AppendTextEquivFromTextContent(nsIContent *aContent,
-                                                 nsAString *aString);
+  static nsresult AppendTextEquivFromTextContent(nsIContent* aContent,
+                                                 nsAString* aString);
 
  private:
   /**
    * Iterates accessible children and calculates text equivalent from each
    * child.
    */
+<<<<<<< HEAD
   static nsresult AppendFromAccessibleChildren(const Accessible *aAccessible,
                                                nsAString *aString);
+||||||| merged common ancestors
+  static nsresult AppendFromAccessibleChildren(const Accessible* aAccessible,
+                                               nsAString *aString);
+=======
+  static nsresult AppendFromAccessibleChildren(const Accessible* aAccessible,
+                                               nsAString* aString);
+>>>>>>> upstream-releases
 
   /**
    * Calculates text equivalent from the given accessible and its subtree if
    * allowed.
    */
+<<<<<<< HEAD
   static nsresult AppendFromAccessible(Accessible *aAccessible,
                                        nsAString *aString);
+||||||| merged common ancestors
+  static nsresult AppendFromAccessible(Accessible* aAccessible,
+                                       nsAString *aString);
+=======
+  static nsresult AppendFromAccessible(Accessible* aAccessible,
+                                       nsAString* aString);
+>>>>>>> upstream-releases
 
   /**
    * Calculates text equivalent from the value of given accessible.
    */
+<<<<<<< HEAD
   static nsresult AppendFromValue(Accessible *aAccessible, nsAString *aString);
+||||||| merged common ancestors
+  static nsresult AppendFromValue(Accessible* aAccessible,
+                                  nsAString *aString);
+=======
+  static nsresult AppendFromValue(Accessible* aAccessible, nsAString* aString);
+>>>>>>> upstream-releases
   /**
    * Iterates DOM children and calculates text equivalent from each child node.
    */
-  static nsresult AppendFromDOMChildren(nsIContent *aContent,
-                                        nsAString *aString);
+  static nsresult AppendFromDOMChildren(nsIContent* aContent,
+                                        nsAString* aString);
 
   /**
    * Calculates text equivalent from the given DOM node and its subtree if
    * allowed.
    */
-  static nsresult AppendFromDOMNode(nsIContent *aContent, nsAString *aString);
+  static nsresult AppendFromDOMNode(nsIContent* aContent, nsAString* aString);
 
   /**
    * Concatenates strings and appends space between them. Returns true if
    * text equivalent string was appended.
    */
+<<<<<<< HEAD
   static bool AppendString(nsAString *aString,
                            const nsAString &aTextEquivalent);
+||||||| merged common ancestors
+  static bool AppendString(nsAString *aString,
+                             const nsAString& aTextEquivalent);
+=======
+  static bool AppendString(nsAString* aString,
+                           const nsAString& aTextEquivalent);
+>>>>>>> upstream-releases
 
   /**
    * Returns the rule (constant of ETextEquivRule) for a given role.

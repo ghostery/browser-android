@@ -6,7 +6,8 @@
 
 #include "ContentProcessController.h"
 
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/layers/APZCCallbackHelper.h"
 #include "mozilla/layers/APZChild.h"
 #include "nsIContentInlines.h"
@@ -16,14 +17,39 @@
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 ContentProcessController::ContentProcessController(
     const RefPtr<dom::TabChild>& aBrowser)
     : mBrowser(aBrowser) {
+||||||| merged common ancestors
+ContentProcessController::ContentProcessController(const RefPtr<dom::TabChild>& aBrowser)
+    : mBrowser(aBrowser)
+{
+=======
+ContentProcessController::ContentProcessController(
+    const RefPtr<dom::BrowserChild>& aBrowser)
+    : mBrowser(aBrowser) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mBrowser);
+}
+
+<<<<<<< HEAD
+void ContentProcessController::RequestContentRepaint(
+    const RepaintRequest& aRequest) {
+||||||| merged common ancestors
+void
+ContentProcessController::RequestContentRepaint(const FrameMetrics& aFrameMetrics)
+{
+=======
+void ContentProcessController::NotifyLayerTransforms(
+    const nsTArray<MatrixMessage>& aTransforms) {
+  // This should never get called
+  MOZ_ASSERT(false);
 }
 
 void ContentProcessController::RequestContentRepaint(
     const RepaintRequest& aRequest) {
+>>>>>>> upstream-releases
   if (mBrowser) {
     mBrowser->UpdateFrame(aRequest);
   }
@@ -61,11 +87,8 @@ void ContentProcessController::NotifyMozMouseScrollEvent(
 
 void ContentProcessController::NotifyFlushComplete() {
   if (mBrowser) {
-    nsCOMPtr<nsIPresShell> shell;
-    if (nsCOMPtr<nsIDocument> doc = mBrowser->GetDocument()) {
-      shell = doc->GetShell();
-    }
-    APZCCallbackHelper::NotifyFlushComplete(shell.get());
+    RefPtr<PresShell> presShell = mBrowser->GetTopLevelPresShell();
+    APZCCallbackHelper::NotifyFlushComplete(presShell);
   }
 }
 

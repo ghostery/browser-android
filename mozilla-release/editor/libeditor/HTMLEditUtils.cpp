@@ -31,10 +31,57 @@ namespace mozilla {
  */
 bool HTMLEditUtils::IsInlineStyle(nsINode* aNode) {
   MOZ_ASSERT(aNode);
+<<<<<<< HEAD
   return aNode->IsAnyOfHTMLElements(
       nsGkAtoms::b, nsGkAtoms::i, nsGkAtoms::u, nsGkAtoms::tt, nsGkAtoms::s,
       nsGkAtoms::strike, nsGkAtoms::big, nsGkAtoms::small, nsGkAtoms::sub,
       nsGkAtoms::sup, nsGkAtoms::font);
+||||||| merged common ancestors
+  return aNode->IsAnyOfHTMLElements(nsGkAtoms::b,
+                                    nsGkAtoms::i,
+                                    nsGkAtoms::u,
+                                    nsGkAtoms::tt,
+                                    nsGkAtoms::s,
+                                    nsGkAtoms::strike,
+                                    nsGkAtoms::big,
+                                    nsGkAtoms::small,
+                                    nsGkAtoms::sub,
+                                    nsGkAtoms::sup,
+                                    nsGkAtoms::font);
+=======
+  return aNode->IsAnyOfHTMLElements(
+      nsGkAtoms::b, nsGkAtoms::i, nsGkAtoms::u, nsGkAtoms::tt, nsGkAtoms::s,
+      nsGkAtoms::strike, nsGkAtoms::big, nsGkAtoms::small, nsGkAtoms::sub,
+      nsGkAtoms::sup, nsGkAtoms::font);
+}
+
+bool HTMLEditUtils::IsRemovableInlineStyleElement(Element& aElement) {
+  if (!aElement.IsHTMLElement()) {
+    return false;
+  }
+  // https://w3c.github.io/editing/execCommand.html#removeformat-candidate
+  if (aElement.IsAnyOfHTMLElements(
+          nsGkAtoms::abbr,  // Chrome ignores, but does not make sense.
+          nsGkAtoms::acronym, nsGkAtoms::b,
+          nsGkAtoms::bdi,  // Chrome ignores, but does not make sense.
+          nsGkAtoms::bdo, nsGkAtoms::big, nsGkAtoms::cite, nsGkAtoms::code,
+          // nsGkAtoms::del, Chrome ignores, but does not make sense but
+          // execCommand unofficial draft excludes this.  Spec issue:
+          // https://github.com/w3c/editing/issues/192
+          nsGkAtoms::dfn, nsGkAtoms::em, nsGkAtoms::font, nsGkAtoms::i,
+          nsGkAtoms::ins, nsGkAtoms::kbd,
+          nsGkAtoms::mark,  // Chrome ignores, but does not make sense.
+          nsGkAtoms::nobr, nsGkAtoms::q, nsGkAtoms::s, nsGkAtoms::samp,
+          nsGkAtoms::small, nsGkAtoms::span, nsGkAtoms::strike,
+          nsGkAtoms::strong, nsGkAtoms::sub, nsGkAtoms::sup, nsGkAtoms::tt,
+          nsGkAtoms::u, nsGkAtoms::var)) {
+    return true;
+  }
+  // If it's a <blink> element, we can remove it.
+  nsAutoString tagName;
+  aElement.GetTagName(tagName);
+  return tagName.LowerCaseEqualsASCII("blink");
+>>>>>>> upstream-releases
 }
 
 /**
@@ -216,10 +263,26 @@ bool HTMLEditUtils::IsMailCite(nsINode* aNode) {
  */
 bool HTMLEditUtils::IsFormWidget(nsINode* aNode) {
   MOZ_ASSERT(aNode);
+<<<<<<< HEAD
   return aNode->IsAnyOfHTMLElements(nsGkAtoms::textarea, nsGkAtoms::select,
                                     nsGkAtoms::button, nsGkAtoms::output,
                                     nsGkAtoms::keygen, nsGkAtoms::progress,
                                     nsGkAtoms::meter, nsGkAtoms::input);
+||||||| merged common ancestors
+  return aNode->IsAnyOfHTMLElements(nsGkAtoms::textarea,
+                                    nsGkAtoms::select,
+                                    nsGkAtoms::button,
+                                    nsGkAtoms::output,
+                                    nsGkAtoms::keygen,
+                                    nsGkAtoms::progress,
+                                    nsGkAtoms::meter,
+                                    nsGkAtoms::input);
+=======
+  return aNode->IsAnyOfHTMLElements(nsGkAtoms::textarea, nsGkAtoms::select,
+                                    nsGkAtoms::button, nsGkAtoms::output,
+                                    nsGkAtoms::progress, nsGkAtoms::meter,
+                                    nsGkAtoms::input);
+>>>>>>> upstream-releases
 }
 
 bool HTMLEditUtils::SupportsAlignAttr(nsINode& aNode) {
@@ -337,14 +400,18 @@ struct ElementInfo final {
 };
 
 #ifdef DEBUG
-#define ELEM(_tag, _isContainer, _canContainSelf, _group, _canContainGroups) \
-  { eHTMLTag_##_tag, _group, _canContainGroups, _isContainer, _canContainSelf }
+#  define ELEM(_tag, _isContainer, _canContainSelf, _group, _canContainGroups) \
+    {                                                                          \
+      eHTMLTag_##_tag, _group, _canContainGroups, _isContainer,                \
+          _canContainSelf                                                      \
+    }
 #else
-#define ELEM(_tag, _isContainer, _canContainSelf, _group, _canContainGroups) \
-  { _group, _canContainGroups, _isContainer, _canContainSelf }
+#  define ELEM(_tag, _isContainer, _canContainSelf, _group, _canContainGroups) \
+    { _group, _canContainGroups, _isContainer, _canContainSelf }
 #endif
 
 static const ElementInfo kElements[eHTMLTag_userdefined] = {
+<<<<<<< HEAD
     ELEM(a, true, false, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
     ELEM(abbr, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
     ELEM(acronym, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
@@ -508,6 +575,348 @@ static const ElementInfo kElements[eHTMLTag_userdefined] = {
     ELEM(userdefined, true, false, GROUP_NONE, GROUP_FLOW_ELEMENT)};
 
 bool HTMLEditUtils::CanContain(int32_t aParent, int32_t aChild) {
+||||||| merged common ancestors
+  ELEM(a, true, false, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(abbr, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(acronym, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(address, true, true, GROUP_BLOCK, GROUP_INLINE_ELEMENT | GROUP_P),
+  // While applet is no longer a valid tag, removing it here breaks the editor
+  // (compiles, but causes many tests to fail in odd ways). This list is tracked
+  // against the main HTML Tag list, so any changes will require more than just
+  // removing entries.
+  ELEM(applet,
+       true,
+       true,
+       GROUP_SPECIAL | GROUP_BLOCK,
+       GROUP_FLOW_ELEMENT | GROUP_OBJECT_CONTENT),
+  ELEM(area, false, false, GROUP_MAP_CONTENT, GROUP_NONE),
+  ELEM(article, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(aside, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(audio, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(b, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(base, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+  ELEM(basefont, false, false, GROUP_SPECIAL, GROUP_NONE),
+  ELEM(bdi, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(bdo, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(bgsound, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(big, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(blockquote, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(body, true, true, GROUP_TOPLEVEL, GROUP_FLOW_ELEMENT),
+  ELEM(br, false, false, GROUP_SPECIAL, GROUP_NONE),
+  ELEM(button, true, true, GROUP_FORMCONTROL | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(canvas, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(caption, true, true, GROUP_NONE, GROUP_INLINE_ELEMENT),
+  ELEM(center, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(cite, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(code, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(col,
+       false,
+       false,
+       GROUP_TABLE_CONTENT | GROUP_COLGROUP_CONTENT,
+       GROUP_NONE),
+  ELEM(colgroup, true, false, GROUP_NONE, GROUP_COLGROUP_CONTENT),
+  ELEM(data, true, false, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(datalist,
+       true,
+       false,
+       GROUP_PHRASE,
+       GROUP_OPTIONS | GROUP_INLINE_ELEMENT),
+  ELEM(dd, true, false, GROUP_DL_CONTENT, GROUP_FLOW_ELEMENT),
+  ELEM(del, true, true, GROUP_PHRASE | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(details, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(dfn, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(dialog, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(dir, true, false, GROUP_BLOCK, GROUP_LI),
+  ELEM(div, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(dl, true, false, GROUP_BLOCK, GROUP_DL_CONTENT),
+  ELEM(dt, true, true, GROUP_DL_CONTENT, GROUP_INLINE_ELEMENT),
+  ELEM(em, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(embed, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(fieldset, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(figcaption, true, false, GROUP_FIGCAPTION, GROUP_FLOW_ELEMENT),
+  ELEM(figure, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT | GROUP_FIGCAPTION),
+  ELEM(font, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(footer, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(form, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(frame, false, false, GROUP_FRAME, GROUP_NONE),
+  ELEM(frameset, true, true, GROUP_FRAME, GROUP_FRAME),
+  ELEM(h1, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(h2, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(h3, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(h4, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(h5, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(h6, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+  ELEM(head, true, false, GROUP_TOPLEVEL, GROUP_HEAD_CONTENT),
+  ELEM(header, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(hgroup, true, false, GROUP_BLOCK, GROUP_HEADING),
+  ELEM(hr, false, false, GROUP_BLOCK, GROUP_NONE),
+  ELEM(html, true, false, GROUP_TOPLEVEL, GROUP_TOPLEVEL),
+  ELEM(i, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(iframe, true, true, GROUP_SPECIAL | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(image, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(img, false, false, GROUP_SPECIAL | GROUP_PICTURE_CONTENT, GROUP_NONE),
+  ELEM(input, false, false, GROUP_FORMCONTROL, GROUP_NONE),
+  ELEM(ins, true, true, GROUP_PHRASE | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(kbd, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(keygen, false, false, GROUP_FORMCONTROL, GROUP_NONE),
+  ELEM(label, true, false, GROUP_FORMCONTROL, GROUP_INLINE_ELEMENT),
+  ELEM(legend, true, true, GROUP_NONE, GROUP_INLINE_ELEMENT),
+  ELEM(li, true, false, GROUP_LI, GROUP_FLOW_ELEMENT),
+  ELEM(link, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+  ELEM(listing, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(main, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(map, true, true, GROUP_SPECIAL, GROUP_BLOCK | GROUP_MAP_CONTENT),
+  ELEM(mark, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(marquee, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(menu, true, true, GROUP_BLOCK, GROUP_LI | GROUP_FLOW_ELEMENT),
+  ELEM(menuitem, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(meta, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+  ELEM(meter, true, false, GROUP_SPECIAL, GROUP_FLOW_ELEMENT),
+  ELEM(multicol, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(nav, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(nobr, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(noembed, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(noframes, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(noscript, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(object,
+       true,
+       true,
+       GROUP_SPECIAL | GROUP_BLOCK,
+       GROUP_FLOW_ELEMENT | GROUP_OBJECT_CONTENT),
+  // XXX Can contain self and ul because editor does sublists illegally.
+  ELEM(ol, true, true, GROUP_BLOCK | GROUP_OL_UL, GROUP_LI | GROUP_OL_UL),
+  ELEM(optgroup, true, false, GROUP_SELECT_CONTENT, GROUP_OPTIONS),
+  ELEM(option, true, false, GROUP_SELECT_CONTENT | GROUP_OPTIONS, GROUP_LEAF),
+  ELEM(output, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(p, true, false, GROUP_BLOCK | GROUP_P, GROUP_INLINE_ELEMENT),
+  ELEM(param, false, false, GROUP_OBJECT_CONTENT, GROUP_NONE),
+  ELEM(picture, true, false, GROUP_SPECIAL, GROUP_PICTURE_CONTENT),
+  ELEM(plaintext, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(pre, true, true, GROUP_BLOCK, GROUP_INLINE_ELEMENT),
+  ELEM(progress, true, false, GROUP_SPECIAL, GROUP_FLOW_ELEMENT),
+  ELEM(q, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(rb, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(rp, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(rt, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(rtc, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(ruby, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(s, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(samp, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(script, true, false, GROUP_HEAD_CONTENT | GROUP_SPECIAL, GROUP_LEAF),
+  ELEM(section, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(select, true, false, GROUP_FORMCONTROL, GROUP_SELECT_CONTENT),
+  ELEM(small, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(slot, true, false, GROUP_NONE, GROUP_FLOW_ELEMENT),
+  ELEM(source, false, false, GROUP_PICTURE_CONTENT, GROUP_NONE),
+  ELEM(span, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(strike, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(strong, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(style, true, false, GROUP_HEAD_CONTENT, GROUP_LEAF),
+  ELEM(sub, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(summary, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+  ELEM(sup, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+  ELEM(table, true, false, GROUP_BLOCK, GROUP_TABLE_CONTENT),
+  ELEM(tbody, true, false, GROUP_TABLE_CONTENT, GROUP_TBODY_CONTENT),
+  ELEM(td, true, false, GROUP_TR_CONTENT, GROUP_FLOW_ELEMENT),
+  ELEM(textarea, true, false, GROUP_FORMCONTROL, GROUP_LEAF),
+  ELEM(tfoot, true, false, GROUP_NONE, GROUP_TBODY_CONTENT),
+  ELEM(th, true, false, GROUP_TR_CONTENT, GROUP_FLOW_ELEMENT),
+  ELEM(thead, true, false, GROUP_NONE, GROUP_TBODY_CONTENT),
+  ELEM(template, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(time, true, false, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(title, true, false, GROUP_HEAD_CONTENT, GROUP_LEAF),
+  ELEM(tr, true, false, GROUP_TBODY_CONTENT, GROUP_TR_CONTENT),
+  ELEM(track, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(tt, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  ELEM(u, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+  // XXX Can contain self and ol because editor does sublists illegally.
+  ELEM(ul, true, true, GROUP_BLOCK | GROUP_OL_UL, GROUP_LI | GROUP_OL_UL),
+  ELEM(var, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+  ELEM(video, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(wbr, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(xmp, false, false, GROUP_NONE, GROUP_NONE),
+
+  // These aren't elements.
+  ELEM(text, false, false, GROUP_LEAF, GROUP_NONE),
+  ELEM(whitespace, false, false, GROUP_LEAF, GROUP_NONE),
+  ELEM(newline, false, false, GROUP_LEAF, GROUP_NONE),
+  ELEM(comment, false, false, GROUP_LEAF, GROUP_NONE),
+  ELEM(entity, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(doctypeDecl, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(markupDecl, false, false, GROUP_NONE, GROUP_NONE),
+  ELEM(instruction, false, false, GROUP_NONE, GROUP_NONE),
+
+  ELEM(userdefined, true, false, GROUP_NONE, GROUP_FLOW_ELEMENT)
+};
+
+bool
+HTMLEditUtils::CanContain(int32_t aParent, int32_t aChild)
+{
+=======
+    ELEM(a, true, false, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(abbr, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(acronym, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(address, true, true, GROUP_BLOCK, GROUP_INLINE_ELEMENT | GROUP_P),
+    // While applet is no longer a valid tag, removing it here breaks the editor
+    // (compiles, but causes many tests to fail in odd ways). This list is
+    // tracked against the main HTML Tag list, so any changes will require more
+    // than just removing entries.
+    ELEM(applet, true, true, GROUP_SPECIAL | GROUP_BLOCK,
+         GROUP_FLOW_ELEMENT | GROUP_OBJECT_CONTENT),
+    ELEM(area, false, false, GROUP_MAP_CONTENT, GROUP_NONE),
+    ELEM(article, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(aside, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(audio, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(b, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(base, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+    ELEM(basefont, false, false, GROUP_SPECIAL, GROUP_NONE),
+    ELEM(bdi, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(bdo, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(bgsound, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(big, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(blockquote, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(body, true, true, GROUP_TOPLEVEL, GROUP_FLOW_ELEMENT),
+    ELEM(br, false, false, GROUP_SPECIAL, GROUP_NONE),
+    ELEM(button, true, true, GROUP_FORMCONTROL | GROUP_BLOCK,
+         GROUP_FLOW_ELEMENT),
+    ELEM(canvas, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(caption, true, true, GROUP_NONE, GROUP_INLINE_ELEMENT),
+    ELEM(center, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(cite, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(code, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(col, false, false, GROUP_TABLE_CONTENT | GROUP_COLGROUP_CONTENT,
+         GROUP_NONE),
+    ELEM(colgroup, true, false, GROUP_NONE, GROUP_COLGROUP_CONTENT),
+    ELEM(data, true, false, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(datalist, true, false, GROUP_PHRASE,
+         GROUP_OPTIONS | GROUP_INLINE_ELEMENT),
+    ELEM(dd, true, false, GROUP_DL_CONTENT, GROUP_FLOW_ELEMENT),
+    ELEM(del, true, true, GROUP_PHRASE | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(details, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(dfn, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(dialog, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(dir, true, false, GROUP_BLOCK, GROUP_LI),
+    ELEM(div, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(dl, true, false, GROUP_BLOCK, GROUP_DL_CONTENT),
+    ELEM(dt, true, true, GROUP_DL_CONTENT, GROUP_INLINE_ELEMENT),
+    ELEM(em, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(embed, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(fieldset, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(figcaption, true, false, GROUP_FIGCAPTION, GROUP_FLOW_ELEMENT),
+    ELEM(figure, true, true, GROUP_BLOCK,
+         GROUP_FLOW_ELEMENT | GROUP_FIGCAPTION),
+    ELEM(font, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(footer, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(form, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(frame, false, false, GROUP_FRAME, GROUP_NONE),
+    ELEM(frameset, true, true, GROUP_FRAME, GROUP_FRAME),
+    ELEM(h1, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(h2, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(h3, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(h4, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(h5, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(h6, true, false, GROUP_BLOCK | GROUP_HEADING, GROUP_INLINE_ELEMENT),
+    ELEM(head, true, false, GROUP_TOPLEVEL, GROUP_HEAD_CONTENT),
+    ELEM(header, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(hgroup, true, false, GROUP_BLOCK, GROUP_HEADING),
+    ELEM(hr, false, false, GROUP_BLOCK, GROUP_NONE),
+    ELEM(html, true, false, GROUP_TOPLEVEL, GROUP_TOPLEVEL),
+    ELEM(i, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(iframe, true, true, GROUP_SPECIAL | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(image, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(img, false, false, GROUP_SPECIAL | GROUP_PICTURE_CONTENT, GROUP_NONE),
+    ELEM(input, false, false, GROUP_FORMCONTROL, GROUP_NONE),
+    ELEM(ins, true, true, GROUP_PHRASE | GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(kbd, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(keygen, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(label, true, false, GROUP_FORMCONTROL, GROUP_INLINE_ELEMENT),
+    ELEM(legend, true, true, GROUP_NONE, GROUP_INLINE_ELEMENT),
+    ELEM(li, true, false, GROUP_LI, GROUP_FLOW_ELEMENT),
+    ELEM(link, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+    ELEM(listing, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(main, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(map, true, true, GROUP_SPECIAL, GROUP_BLOCK | GROUP_MAP_CONTENT),
+    ELEM(mark, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(marquee, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(menu, true, true, GROUP_BLOCK, GROUP_LI | GROUP_FLOW_ELEMENT),
+    ELEM(menuitem, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(meta, false, false, GROUP_HEAD_CONTENT, GROUP_NONE),
+    ELEM(meter, true, false, GROUP_SPECIAL, GROUP_FLOW_ELEMENT),
+    ELEM(multicol, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(nav, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(nobr, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(noembed, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(noframes, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(noscript, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(object, true, true, GROUP_SPECIAL | GROUP_BLOCK,
+         GROUP_FLOW_ELEMENT | GROUP_OBJECT_CONTENT),
+    // XXX Can contain self and ul because editor does sublists illegally.
+    ELEM(ol, true, true, GROUP_BLOCK | GROUP_OL_UL, GROUP_LI | GROUP_OL_UL),
+    ELEM(optgroup, true, false, GROUP_SELECT_CONTENT, GROUP_OPTIONS),
+    ELEM(option, true, false, GROUP_SELECT_CONTENT | GROUP_OPTIONS, GROUP_LEAF),
+    ELEM(output, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(p, true, false, GROUP_BLOCK | GROUP_P, GROUP_INLINE_ELEMENT),
+    ELEM(param, false, false, GROUP_OBJECT_CONTENT, GROUP_NONE),
+    ELEM(picture, true, false, GROUP_SPECIAL, GROUP_PICTURE_CONTENT),
+    ELEM(plaintext, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(pre, true, true, GROUP_BLOCK, GROUP_INLINE_ELEMENT),
+    ELEM(progress, true, false, GROUP_SPECIAL, GROUP_FLOW_ELEMENT),
+    ELEM(q, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(rb, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(rp, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(rt, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(rtc, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(ruby, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(s, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(samp, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(script, true, false, GROUP_HEAD_CONTENT | GROUP_SPECIAL, GROUP_LEAF),
+    ELEM(section, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(select, true, false, GROUP_FORMCONTROL, GROUP_SELECT_CONTENT),
+    ELEM(small, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(slot, true, false, GROUP_NONE, GROUP_FLOW_ELEMENT),
+    ELEM(source, false, false, GROUP_PICTURE_CONTENT, GROUP_NONE),
+    ELEM(span, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(strike, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(strong, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(style, true, false, GROUP_HEAD_CONTENT, GROUP_LEAF),
+    ELEM(sub, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(summary, true, true, GROUP_BLOCK, GROUP_FLOW_ELEMENT),
+    ELEM(sup, true, true, GROUP_SPECIAL, GROUP_INLINE_ELEMENT),
+    ELEM(table, true, false, GROUP_BLOCK, GROUP_TABLE_CONTENT),
+    ELEM(tbody, true, false, GROUP_TABLE_CONTENT, GROUP_TBODY_CONTENT),
+    ELEM(td, true, false, GROUP_TR_CONTENT, GROUP_FLOW_ELEMENT),
+    ELEM(textarea, true, false, GROUP_FORMCONTROL, GROUP_LEAF),
+    ELEM(tfoot, true, false, GROUP_NONE, GROUP_TBODY_CONTENT),
+    ELEM(th, true, false, GROUP_TR_CONTENT, GROUP_FLOW_ELEMENT),
+    ELEM(thead, true, false, GROUP_NONE, GROUP_TBODY_CONTENT),
+    ELEM(template, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(time, true, false, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(title, true, false, GROUP_HEAD_CONTENT, GROUP_LEAF),
+    ELEM(tr, true, false, GROUP_TBODY_CONTENT, GROUP_TR_CONTENT),
+    ELEM(track, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(tt, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    ELEM(u, true, true, GROUP_FONTSTYLE, GROUP_INLINE_ELEMENT),
+    // XXX Can contain self and ol because editor does sublists illegally.
+    ELEM(ul, true, true, GROUP_BLOCK | GROUP_OL_UL, GROUP_LI | GROUP_OL_UL),
+    ELEM(var, true, true, GROUP_PHRASE, GROUP_INLINE_ELEMENT),
+    ELEM(video, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(wbr, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(xmp, false, false, GROUP_NONE, GROUP_NONE),
+
+    // These aren't elements.
+    ELEM(text, false, false, GROUP_LEAF, GROUP_NONE),
+    ELEM(whitespace, false, false, GROUP_LEAF, GROUP_NONE),
+    ELEM(newline, false, false, GROUP_LEAF, GROUP_NONE),
+    ELEM(comment, false, false, GROUP_LEAF, GROUP_NONE),
+    ELEM(entity, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(doctypeDecl, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(markupDecl, false, false, GROUP_NONE, GROUP_NONE),
+    ELEM(instruction, false, false, GROUP_NONE, GROUP_NONE),
+
+    ELEM(userdefined, true, false, GROUP_NONE, GROUP_FLOW_ELEMENT)};
+
+bool HTMLEditUtils::CanContain(int32_t aParent, int32_t aChild) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aParent > eHTMLTag_unknown && aParent <= eHTMLTag_userdefined,
                "aParent out of range!");
   NS_ASSERTION(aChild > eHTMLTag_unknown && aChild <= eHTMLTag_userdefined,

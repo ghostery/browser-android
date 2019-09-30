@@ -12,7 +12,10 @@
 #include "mozilla/layers/StackingContextHelper.h"
 #include "mozilla/webrender/WebRenderAPI.h"
 #include "mozilla/layers/AnimationInfo.h"
+#include "mozilla/layers/RenderRootBoundary.h"
+#include "mozilla/dom/RemoteBrowser.h"
 #include "nsIFrame.h"
+#include "ImageTypes.h"
 
 class nsDisplayItemGeometry;
 
@@ -34,7 +37,7 @@ class WebRenderCanvasData;
 class WebRenderCanvasRendererAsync;
 class WebRenderImageData;
 class WebRenderFallbackData;
-class WebRenderLayerManager;
+class RenderRootStateManager;
 class WebRenderGroupData;
 
 class WebRenderBackgroundData {
@@ -48,19 +51,42 @@ class WebRenderBackgroundData {
   wr::ColorF mColor;
 };
 
+<<<<<<< HEAD
 class WebRenderUserData {
  public:
   typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
       WebRenderUserDataRefTable;
+||||||| merged common ancestors
+class WebRenderUserData
+{
+public:
+  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData> > WebRenderUserDataRefTable;
+=======
+/// Parent class for arbitrary WebRender-specific data that can be associated
+/// to an nsFrame.
+class WebRenderUserData {
+ public:
+  typedef nsTHashtable<nsRefPtrHashKey<WebRenderUserData>>
+      WebRenderUserDataRefTable;
+>>>>>>> upstream-releases
 
   static bool SupportsAsyncUpdate(nsIFrame* aFrame);
 
+<<<<<<< HEAD
   static bool ProcessInvalidateForImage(nsIFrame* aFrame,
                                         DisplayItemType aType);
 
+||||||| merged common ancestors
+=======
+  static bool ProcessInvalidateForImage(nsIFrame* aFrame, DisplayItemType aType,
+                                        ContainerProducerID aProducerId);
+
+>>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(WebRenderUserData)
 
-  WebRenderUserData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+  WebRenderUserData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
+  WebRenderUserData(RenderRootStateManager* aManager, uint32_t mDisplayItemKey,
+                    nsIFrame* aFrame);
 
   virtual WebRenderImageData* AsImageData() { return nullptr; }
   virtual WebRenderFallbackData* AsFallbackData() { return nullptr; }
@@ -72,7 +98,10 @@ class WebRenderUserData {
     eFallback,
     eAnimation,
     eCanvas,
+    eRemote,
     eGroup,
+    eMask,
+    eRenderRoot,
   };
 
   virtual UserDataType GetType() = 0;
@@ -88,7 +117,7 @@ class WebRenderUserData {
 
   WebRenderBridgeChild* WrBridge() const;
 
-  RefPtr<WebRenderLayerManager> mWRManager;
+  RefPtr<RenderRootStateManager> mManager;
   nsIFrame* mFrame;
   uint32_t mDisplayItemKey;
   WebRenderUserDataRefTable* mTable;
@@ -113,6 +142,7 @@ struct WebRenderUserDataKey {
   WebRenderUserData::UserDataType mType;
 };
 
+<<<<<<< HEAD
 typedef nsRefPtrHashtable<
     nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData>
     WebRenderUserDataTable;
@@ -122,13 +152,41 @@ typedef nsRefPtrHashtable<
 class WebRenderImageData : public WebRenderUserData {
  public:
   WebRenderImageData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+||||||| merged common ancestors
+typedef nsRefPtrHashtable<nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData> WebRenderUserDataTable;
+
+class WebRenderImageData : public WebRenderUserData
+{
+public:
+  WebRenderImageData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+=======
+typedef nsRefPtrHashtable<
+    nsGenericHashKey<mozilla::layers::WebRenderUserDataKey>, WebRenderUserData>
+    WebRenderUserDataTable;
+
+/// Holds some data used to share TextureClient/ImageClient with the parent
+/// process.
+class WebRenderImageData : public WebRenderUserData {
+ public:
+  WebRenderImageData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
+  WebRenderImageData(RenderRootStateManager* aManager, uint32_t aDisplayItemKey,
+                     nsIFrame* aFrame);
+>>>>>>> upstream-releases
   virtual ~WebRenderImageData();
 
-  virtual WebRenderImageData* AsImageData() override { return this; }
-  virtual UserDataType GetType() override { return UserDataType::eImage; }
+  WebRenderImageData* AsImageData() override { return this; }
+  UserDataType GetType() override { return UserDataType::eImage; }
   static UserDataType Type() { return UserDataType::eImage; }
+<<<<<<< HEAD
   virtual Maybe<wr::ImageKey> GetImageKey() { return mKey; }
   void SetImageKey(const wr::ImageKey& aKey);
+||||||| merged common ancestors
+  Maybe<wr::ImageKey> GetKey() { return mKey; }
+  void SetKey(const wr::ImageKey& aKey);
+=======
+  Maybe<wr::ImageKey> GetImageKey() { return mKey; }
+  void SetImageKey(const wr::ImageKey& aKey);
+>>>>>>> upstream-releases
   already_AddRefed<ImageClient> GetImageClient();
 
   Maybe<wr::ImageKey> UpdateImageKey(ImageContainer* aContainer,
@@ -144,21 +202,45 @@ class WebRenderImageData : public WebRenderUserData {
 
   void CreateImageClientIfNeeded();
 
+<<<<<<< HEAD
+  bool IsAsync() { return mPipelineId.isSome(); }
+||||||| merged common ancestors
+  bool IsAsync()
+  {
+    return mPipelineId.isSome();
+  }
+=======
   bool IsAsync() { return mPipelineId.isSome(); }
 
+  bool UsingSharedSurface(ContainerProducerID aProducerId) const;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool IsAsyncAnimatedImage() const;
 
  protected:
   virtual void ClearImageKey();
+||||||| merged common ancestors
+protected:
+  void ClearImageKey();
+=======
+  void ClearImageKey();
+>>>>>>> upstream-releases
 
-  RefPtr<TextureClient> mTextureOfImage;
+ protected:
   Maybe<wr::ImageKey> mKey;
+  RefPtr<TextureClient> mTextureOfImage;
   RefPtr<ImageClient> mImageClient;
   Maybe<wr::PipelineId> mPipelineId;
   RefPtr<ImageContainer> mContainer;
+  // The key can be owned by a shared surface that is used by several elements.
+  // when this is the case the shared surface is responsible for managing the
+  // destruction of the key.
+  // TODO: we surely can come up with a simpler/safer way to model this.
   bool mOwnsKey;
 };
 
+<<<<<<< HEAD
 /// Used for fallback rendering.
 ///
 /// In most cases this uses blob images but it can also render on the content
@@ -172,47 +254,97 @@ class WebRenderFallbackData : public WebRenderImageData {
  public:
   WebRenderFallbackData(WebRenderLayerManager* aWRManager,
                         nsDisplayItem* aItem);
+||||||| merged common ancestors
+class WebRenderFallbackData : public WebRenderImageData
+{
+public:
+  WebRenderFallbackData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+=======
+/// Used for fallback rendering.
+///
+/// In most cases this uses blob images but it can also render on the content
+/// side directly into a texture.
+class WebRenderFallbackData : public WebRenderUserData {
+ public:
+  WebRenderFallbackData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
+>>>>>>> upstream-releases
   virtual ~WebRenderFallbackData();
 
-  virtual WebRenderFallbackData* AsFallbackData() override { return this; }
-  virtual UserDataType GetType() override { return UserDataType::eFallback; }
+  WebRenderFallbackData* AsFallbackData() override { return this; }
+  UserDataType GetType() override { return UserDataType::eFallback; }
   static UserDataType Type() { return UserDataType::eFallback; }
-  nsDisplayItemGeometry* GetGeometry() override;
-  void SetGeometry(nsAutoPtr<nsDisplayItemGeometry> aGeometry);
-  nsRect GetBounds() { return mBounds; }
-  void SetBounds(const nsRect& aRect) { mBounds = aRect; }
+
   void SetInvalid(bool aInvalid) { mInvalid = aInvalid; }
-  void SetScale(gfx::Size aScale) { mScale = aScale; }
-  gfx::Size GetScale() { return mScale; }
   bool IsInvalid() { return mInvalid; }
+<<<<<<< HEAD
   void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) {
     mFonts = aFonts;
   }
   Maybe<wr::BlobImageKey> GetBlobImageKey() { return mBlobKey; }
   virtual Maybe<wr::ImageKey> GetImageKey() override;
   void SetBlobImageKey(const wr::BlobImageKey& aKey);
+||||||| merged common ancestors
+  void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) { mFonts = aFonts; }
+=======
+  void SetFonts(const std::vector<RefPtr<gfx::ScaledFont>>& aFonts) {
+    mFonts = aFonts;
+  }
+  Maybe<wr::BlobImageKey> GetBlobImageKey() { return mBlobKey; }
+  void SetBlobImageKey(const wr::BlobImageKey& aKey);
+  Maybe<wr::ImageKey> GetImageKey();
 
-  RefPtr<BasicLayerManager> mBasicLayerManager;
+  /// Create a WebRenderImageData to manage the image we are about to render
+  /// into.
+  WebRenderImageData* PaintIntoImage();
+>>>>>>> upstream-releases
+
   std::vector<RefPtr<gfx::SourceSurface>> mExternalSurfaces;
+<<<<<<< HEAD
 
  protected:
   virtual void ClearImageKey() override;
 
   Maybe<wr::BlobImageKey> mBlobKey;
+||||||| merged common ancestors
+protected:
+=======
+  RefPtr<BasicLayerManager> mBasicLayerManager;
+>>>>>>> upstream-releases
   nsAutoPtr<nsDisplayItemGeometry> mGeometry;
   nsRect mBounds;
-  bool mInvalid;
+  nsRect mBuildingRect;
   gfx::Size mScale;
+
+ protected:
+  void ClearImageKey();
+
   std::vector<RefPtr<gfx::ScaledFont>> mFonts;
+  Maybe<wr::BlobImageKey> mBlobKey;
+  // When rendering into a blob image, mImageData is null. It is non-null only
+  // when we render directly into a texture on the content side.
+  RefPtr<WebRenderImageData> mImageData;
+  bool mInvalid;
 };
 
+<<<<<<< HEAD
 class WebRenderAnimationData : public WebRenderUserData {
  public:
   WebRenderAnimationData(WebRenderLayerManager* aWRManager,
                          nsDisplayItem* aItem);
+||||||| merged common ancestors
+class WebRenderAnimationData : public WebRenderUserData
+{
+public:
+  WebRenderAnimationData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+=======
+class WebRenderAnimationData : public WebRenderUserData {
+ public:
+  WebRenderAnimationData(RenderRootStateManager* aManager,
+                         nsDisplayItem* aItem);
+>>>>>>> upstream-releases
   virtual ~WebRenderAnimationData();
 
-  virtual UserDataType GetType() override { return UserDataType::eAnimation; }
+  UserDataType GetType() override { return UserDataType::eAnimation; }
   static UserDataType Type() { return UserDataType::eAnimation; }
   AnimationInfo& GetAnimationInfo() { return mAnimationInfo; }
 
@@ -220,13 +352,24 @@ class WebRenderAnimationData : public WebRenderUserData {
   AnimationInfo mAnimationInfo;
 };
 
+<<<<<<< HEAD
 class WebRenderCanvasData : public WebRenderUserData {
  public:
   WebRenderCanvasData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+||||||| merged common ancestors
+class WebRenderCanvasData : public WebRenderUserData
+{
+public:
+  WebRenderCanvasData(WebRenderLayerManager* aWRManager, nsDisplayItem* aItem);
+=======
+class WebRenderCanvasData : public WebRenderUserData {
+ public:
+  WebRenderCanvasData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
+>>>>>>> upstream-releases
   virtual ~WebRenderCanvasData();
 
-  virtual WebRenderCanvasData* AsCanvasData() override { return this; }
-  virtual UserDataType GetType() override { return UserDataType::eCanvas; }
+  WebRenderCanvasData* AsCanvasData() override { return this; }
+  UserDataType GetType() override { return UserDataType::eCanvas; }
   static UserDataType Type() { return UserDataType::eCanvas; }
 
   void ClearCanvasRenderer();
@@ -235,6 +378,37 @@ class WebRenderCanvasData : public WebRenderUserData {
 
  protected:
   UniquePtr<WebRenderCanvasRendererAsync> mCanvasRenderer;
+};
+
+class WebRenderRemoteData : public WebRenderUserData {
+ public:
+  WebRenderRemoteData(RenderRootStateManager* aManager, nsDisplayItem* aItem);
+  virtual ~WebRenderRemoteData();
+
+  UserDataType GetType() override { return UserDataType::eRemote; }
+  static UserDataType Type() { return UserDataType::eRemote; }
+
+  void SetRemoteBrowser(dom::RemoteBrowser* aBrowser) {
+    mRemoteBrowser = aBrowser;
+  }
+
+ protected:
+  RefPtr<dom::RemoteBrowser> mRemoteBrowser;
+};
+
+class WebRenderRenderRootData : public WebRenderUserData {
+ public:
+  WebRenderRenderRootData(RenderRootStateManager* aManager,
+                          nsDisplayItem* aItem);
+  virtual ~WebRenderRenderRootData();
+
+  UserDataType GetType() override { return UserDataType::eRenderRoot; }
+  static UserDataType Type() { return UserDataType::eRenderRoot; }
+
+  RenderRootBoundary& EnsureHasBoundary(wr::RenderRoot aChildType);
+
+ protected:
+  Maybe<RenderRootBoundary> mBoundary;
 };
 
 extern void DestroyWebRenderUserDataTable(WebRenderUserDataTable* aTable);

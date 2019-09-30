@@ -37,6 +37,7 @@ class SharedSurface;
 class ShSurfHandle;
 class SurfaceFactory;
 
+<<<<<<< HEAD
 class DrawBuffer {
  public:
   // Fallible!
@@ -71,7 +72,82 @@ class DrawBuffer {
  public:
   virtual ~DrawBuffer();
 };
+||||||| merged common ancestors
+class DrawBuffer
+{
+public:
+    // Fallible!
+    // But it may return true with *out_buffer==nullptr if unneeded.
+    static bool Create(GLContext* const gl,
+                       const SurfaceCaps& caps,
+                       const GLFormats& formats,
+                       const gfx::IntSize& size,
+                       UniquePtr<DrawBuffer>* out_buffer);
 
+protected:
+    GLContext* const mGL;
+public:
+    const gfx::IntSize mSize;
+    const GLsizei mSamples;
+    const GLuint mFB;
+protected:
+    const GLuint mColorMSRB;
+    const GLuint mDepthRB;
+    const GLuint mStencilRB;
+
+    DrawBuffer(GLContext* gl,
+               const gfx::IntSize& size,
+               GLsizei samples,
+               GLuint fb,
+               GLuint colorMSRB,
+               GLuint depthRB,
+               GLuint stencilRB)
+        : mGL(gl)
+        , mSize(size)
+        , mSamples(samples)
+        , mFB(fb)
+        , mColorMSRB(colorMSRB)
+        , mDepthRB(depthRB)
+        , mStencilRB(stencilRB)
+    {}
+
+public:
+    virtual ~DrawBuffer();
+};
+=======
+class ReadBuffer {
+ public:
+  // Infallible, always non-null.
+  static UniquePtr<ReadBuffer> Create(GLContext* gl, const SurfaceCaps& caps,
+                                      const GLFormats& formats,
+                                      SharedSurface* surf);
+
+ protected:
+  GLContext* const mGL;
+
+ public:
+  const GLuint mFB;
+
+ protected:
+  // mFB has the following attachments:
+  const GLuint mDepthRB;
+  const GLuint mStencilRB;
+  // note no mColorRB here: this is provided by mSurf.
+  SharedSurface* mSurf;
+
+  ReadBuffer(GLContext* gl, GLuint fb, GLuint depthRB, GLuint stencilRB,
+             SharedSurface* surf)
+      : mGL(gl),
+        mFB(fb),
+        mDepthRB(depthRB),
+        mStencilRB(stencilRB),
+        mSurf(surf) {}
+
+ public:
+  virtual ~ReadBuffer();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 class ReadBuffer {
  public:
   // Infallible, always non-null.
@@ -111,6 +187,62 @@ class ReadBuffer {
   SharedSurface* SharedSurf() const { return mSurf; }
 
   void SetReadBuffer(GLenum mode) const;
+||||||| merged common ancestors
+class ReadBuffer
+{
+public:
+    // Infallible, always non-null.
+    static UniquePtr<ReadBuffer> Create(GLContext* gl,
+                                        const SurfaceCaps& caps,
+                                        const GLFormats& formats,
+                                        SharedSurface* surf);
+
+protected:
+    GLContext* const mGL;
+public:
+    const GLuint mFB;
+protected:
+    // mFB has the following attachments:
+    const GLuint mDepthRB;
+    const GLuint mStencilRB;
+    // note no mColorRB here: this is provided by mSurf.
+    SharedSurface* mSurf;
+
+    ReadBuffer(GLContext* gl,
+               GLuint fb,
+               GLuint depthRB,
+               GLuint stencilRB,
+               SharedSurface* surf)
+        : mGL(gl)
+        , mFB(fb)
+        , mDepthRB(depthRB)
+        , mStencilRB(stencilRB)
+        , mSurf(surf)
+    {}
+
+public:
+    virtual ~ReadBuffer();
+
+    // Cannot attach a surf of a different AttachType or Size than before.
+    void Attach(SharedSurface* surf);
+
+    const gfx::IntSize& Size() const;
+
+    SharedSurface* SharedSurf() const {
+        return mSurf;
+    }
+
+    void SetReadBuffer(GLenum mode) const;
+=======
+  // Cannot attach a surf of a different AttachType or Size than before.
+  void Attach(SharedSurface* surf);
+
+  const gfx::IntSize& Size() const;
+
+  SharedSurface* SharedSurf() const { return mSurf; }
+
+  void SetReadBuffer(GLenum mode) const;
+>>>>>>> upstream-releases
 };
 
 class GLScreenBuffer {
@@ -136,8 +268,15 @@ class GLScreenBuffer {
   RefPtr<layers::SharedSurfaceTextureClient> mBack;
   RefPtr<layers::SharedSurfaceTextureClient> mFront;
 
+<<<<<<< HEAD
   UniquePtr<DrawBuffer> mDraw;
   UniquePtr<ReadBuffer> mRead;
+||||||| merged common ancestors
+    UniquePtr<DrawBuffer> mDraw;
+    UniquePtr<ReadBuffer> mRead;
+=======
+  UniquePtr<ReadBuffer> mRead;
+>>>>>>> upstream-releases
 
   bool mNeedsBlit;
 
@@ -155,6 +294,7 @@ class GLScreenBuffer {
   bool mInInternalMode_ReadFB;
 #endif
 
+<<<<<<< HEAD
   GLScreenBuffer(GLContext* gl, const SurfaceCaps& caps,
                  UniquePtr<SurfaceFactory> factory);
 
@@ -166,37 +306,123 @@ class GLScreenBuffer {
   const RefPtr<layers::SharedSurfaceTextureClient>& Front() const {
     return mFront;
   }
+||||||| merged common ancestors
+    GLScreenBuffer(GLContext* gl,
+                   const SurfaceCaps& caps,
+                   UniquePtr<SurfaceFactory> factory);
 
+public:
+    virtual ~GLScreenBuffer();
+
+    SurfaceFactory* Factory() const {
+        return mFactory.get();
+    }
+=======
+  GLScreenBuffer(GLContext* gl, const SurfaceCaps& caps,
+                 UniquePtr<SurfaceFactory> factory);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   SharedSurface* SharedSurf() const {
     MOZ_ASSERT(mRead);
     return mRead->SharedSurf();
   }
+||||||| merged common ancestors
+    const RefPtr<layers::SharedSurfaceTextureClient>& Front() const {
+        return mFront;
+    }
+=======
+ public:
+  virtual ~GLScreenBuffer();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool ShouldPreserveBuffer() const { return mCaps.preserve; }
+||||||| merged common ancestors
+    SharedSurface* SharedSurf() const {
+        MOZ_ASSERT(mRead);
+        return mRead->SharedSurf();
+    }
+=======
+  SurfaceFactory* Factory() const { return mFactory.get(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   GLuint DrawFB() const {
     if (!mDraw) return ReadFB();
+||||||| merged common ancestors
+    bool ShouldPreserveBuffer() const {
+        return mCaps.preserve;
+    }
+=======
+  const RefPtr<layers::SharedSurfaceTextureClient>& Front() const {
+    return mFront;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     return mDraw->mFB;
   }
+||||||| merged common ancestors
+    GLuint DrawFB() const {
+        if (!mDraw)
+            return ReadFB();
+=======
+  SharedSurface* SharedSurf() const {
+    MOZ_ASSERT(mRead);
+    return mRead->SharedSurf();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   GLuint ReadFB() const { return mRead->mFB; }
+||||||| merged common ancestors
+        return mDraw->mFB;
+    }
+=======
+  bool ShouldPreserveBuffer() const { return mCaps.preserve; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   GLsizei Samples() const {
     if (!mDraw) return 0;
+||||||| merged common ancestors
+    GLuint ReadFB() const {
+        return mRead->mFB;
+    }
+=======
+  GLuint DrawFB() const { return ReadFB(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     return mDraw->mSamples;
   }
+||||||| merged common ancestors
+    GLsizei Samples() const {
+        if (!mDraw)
+            return 0;
+=======
+  GLuint ReadFB() const { return mRead->mFB; }
+>>>>>>> upstream-releases
 
   uint32_t DepthBits() const;
 
   void DeletingFB(GLuint fb);
 
+<<<<<<< HEAD
   const gfx::IntSize& Size() const {
     MOZ_ASSERT(mRead);
     MOZ_ASSERT(!mDraw || mDraw->mSize == mRead->Size());
     return mRead->Size();
   }
+||||||| merged common ancestors
+    void DeletingFB(GLuint fb);
+=======
+  const gfx::IntSize& Size() const {
+    MOZ_ASSERT(mRead);
+    return mRead->Size();
+  }
+>>>>>>> upstream-releases
 
   bool IsReadBufferReady() const { return mRead.get() != nullptr; }
 
@@ -242,8 +468,15 @@ class GLScreenBuffer {
  protected:
   bool Attach(SharedSurface* surf, const gfx::IntSize& size);
 
+<<<<<<< HEAD
   bool CreateDraw(const gfx::IntSize& size, UniquePtr<DrawBuffer>* out_buffer);
   UniquePtr<ReadBuffer> CreateRead(SharedSurface* surf);
+||||||| merged common ancestors
+protected:
+    bool Attach(SharedSurface* surf, const gfx::IntSize& size);
+=======
+  UniquePtr<ReadBuffer> CreateRead(SharedSurface* surf);
+>>>>>>> upstream-releases
 
  public:
   /* `fb` in these functions is the framebuffer the GLContext is hoping to

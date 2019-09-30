@@ -32,6 +32,7 @@ const TEST_URL = "data:text/html;charset=utf-8," + encodeURIComponent(HTML);
 // - pseudo: (optional) if the focused node is actually supposed to be a pseudo element
 //   of the specified selector.
 // Note that after each test case, undo is called.
+<<<<<<< HEAD
 const TEST_DATA = [{
   selector: "#first",
   focusedSelector: "#second",
@@ -49,9 +50,52 @@ const TEST_DATA = [{
   focusedSelector: "#pseudo",
   pseudo: "after",
 }];
+||||||| merged common ancestors
+const TEST_DATA = [{
+  selector: "#first",
+  focusedSelector: "#second"
+}, {
+  selector: "#second",
+  focusedSelector: "#third"
+}, {
+  selector: "#third",
+  focusedSelector: "#second"
+}, {
+  selector: "#fourth",
+  focusedSelector: "#only-child"
+}, {
+  selector: "#fifth",
+  focusedSelector: "#pseudo",
+  pseudo: "after"
+}];
+=======
+const TEST_DATA = [
+  {
+    selector: "#first",
+    focusedSelector: "#second",
+  },
+  {
+    selector: "#second",
+    focusedSelector: "#third",
+  },
+  {
+    selector: "#third",
+    focusedSelector: "#second",
+  },
+  {
+    selector: "#fourth",
+    focusedSelector: "#only-child",
+  },
+  {
+    selector: "#fifth",
+    focusedSelector: "#pseudo",
+    pseudo: "after",
+  },
+];
+>>>>>>> upstream-releases
 
 add_task(async function() {
-  const {inspector} = await openInspectorForURL(TEST_URL);
+  const { inspector } = await openInspectorForURL(TEST_URL);
 
   for (const data of TEST_DATA) {
     await checkDeleteAndSelection(inspector, "delete", data);

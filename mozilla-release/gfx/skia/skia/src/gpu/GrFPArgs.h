@@ -11,12 +11,38 @@
 #include "SkFilterQuality.h"
 #include "SkMatrix.h"
 
+<<<<<<< HEAD
 class GrContext;
+||||||| merged common ancestors
+class SkMatrix;
+class GrContext;
+=======
+>>>>>>> upstream-releases
 class GrColorSpaceInfo;
+class GrRecordingContext;
 
 struct GrFPArgs {
+<<<<<<< HEAD
     GrFPArgs(GrContext* context,
              const SkMatrix* viewMatrix,
+||||||| merged common ancestors
+    GrFPArgs(GrContext* context,
+             const SkMatrix* viewMatrix,
+             const SkMatrix* localMatrix,
+             SkFilterQuality filterQuality,
+             const GrColorSpaceInfo* dstColorSpaceInfo)
+        : fContext(context)
+        , fViewMatrix(viewMatrix)
+        , fLocalMatrix(localMatrix)
+        , fFilterQuality(filterQuality)
+        , fDstColorSpaceInfo(dstColorSpaceInfo) {}
+
+    GrFPArgs(GrContext* context,
+             const SkMatrix* viewMatrix,
+=======
+    GrFPArgs(GrRecordingContext* context,
+             const SkMatrix* viewMatrix,
+>>>>>>> upstream-releases
              SkFilterQuality filterQuality,
              const GrColorSpaceInfo* dstColorSpaceInfo)
     : fContext(context)
@@ -30,7 +56,7 @@ struct GrFPArgs {
     class WithPreLocalMatrix;
     class WithPostLocalMatrix;
 
-    GrContext* fContext;
+    GrRecordingContext* fContext;
     const SkMatrix* fViewMatrix;
 
     // We track both pre and post local matrix adjustments.  For a given FP:

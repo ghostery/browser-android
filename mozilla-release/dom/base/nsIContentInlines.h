@@ -8,7 +8,7 @@
 #define nsIContentInlines_h
 
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsBindingManager.h"
 #include "nsContentUtils.h"
 #include "nsAtom.h"
@@ -17,7 +17,32 @@
 #include "mozilla/dom/HTMLSlotElement.h"
 #include "mozilla/dom/ShadowRoot.h"
 
+<<<<<<< HEAD
 inline bool nsIContent::IsInHTMLDocument() const {
+||||||| merged common ancestors
+inline bool
+nsIContent::IsInHTMLDocument() const
+{
+=======
+inline bool nsINode::IsUAWidget() const {
+  auto* shadow = mozilla::dom::ShadowRoot::FromNode(this);
+  return shadow && shadow->IsUAWidget();
+}
+
+inline bool nsINode::IsInUAWidget() const {
+  if (!IsInShadowTree()) {
+    return false;
+  }
+  mozilla::dom::ShadowRoot* shadow = AsContent()->GetContainingShadow();
+  return shadow && shadow->IsUAWidget();
+}
+
+inline bool nsINode::IsRootOfChromeAccessOnlySubtree() const {
+  return IsRootOfNativeAnonymousSubtree() || IsUAWidget();
+}
+
+inline bool nsIContent::IsInHTMLDocument() const {
+>>>>>>> upstream-releases
   return OwnerDoc()->IsHTMLDocument();
 }
 
@@ -33,6 +58,7 @@ inline void nsIContent::SetPrimaryFrame(nsIFrame* aFrame) {
                "Losing track of existing primary frame");
 
   if (aFrame) {
+    MOZ_ASSERT(!aFrame->IsPlaceholderFrame());
     if (MOZ_LIKELY(!IsHTMLElement(nsGkAtoms::area)) ||
         aFrame->GetContent() == this) {
       aFrame->SetIsPrimaryFrame(true);
@@ -153,9 +179,14 @@ inline bool nsINode::IsEditable() const {
     return true;
   }
 
-  nsIDocument* doc = GetUncomposedDoc();
+  // All editable anonymous content should be made explicitly editable via the
+  // NODE_IS_EDITABLE flag.
+  if (IsInNativeAnonymousSubtree()) {
+    return false;
+  }
 
   // Check if the node is in a document and the document is in designMode.
+  Document* doc = GetUncomposedDoc();
   return doc && doc->HasFlag(NODE_IS_EDITABLE);
 }
 

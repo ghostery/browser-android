@@ -27,7 +27,16 @@
 using namespace wmf;
 using namespace cdm;
 
+<<<<<<< HEAD
 VideoDecoder::VideoDecoder(Host_9* aHost) : mHost(aHost), mHasShutdown(false) {
+||||||| merged common ancestors
+VideoDecoder::VideoDecoder(Host_9 *aHost)
+  : mHost(aHost)
+  , mHasShutdown(false)
+{
+=======
+VideoDecoder::VideoDecoder(Host_10* aHost) : mHost(aHost), mHasShutdown(false) {
+>>>>>>> upstream-releases
   CK_LOGD("VideoDecoder created");
 
   // We drop the ref in DecodingComplete().
@@ -38,11 +47,22 @@ VideoDecoder::VideoDecoder(Host_9* aHost) : mHost(aHost), mHasShutdown(false) {
   uint32_t cores = std::max(1u, std::thread::hardware_concurrency());
 
   HRESULT hr = mDecoder->Init(cores);
+  if (FAILED(hr)) {
+    CK_LOGE("Failed to initialize mDecoder!");
+  }
 }
 
 VideoDecoder::~VideoDecoder() { CK_LOGD("VideoDecoder destroyed"); }
 
+<<<<<<< HEAD
 Status VideoDecoder::InitDecode(const VideoDecoderConfig_1& aConfig) {
+||||||| merged common ancestors
+Status
+VideoDecoder::InitDecode(const VideoDecoderConfig_1& aConfig)
+{
+=======
+Status VideoDecoder::InitDecode(const VideoDecoderConfig_2& aConfig) {
+>>>>>>> upstream-releases
   CK_LOGD("VideoDecoder::InitDecode");
 
   if (!mDecoder) {
@@ -54,8 +74,17 @@ Status VideoDecoder::InitDecode(const VideoDecoderConfig_1& aConfig) {
   return Status::kSuccess;
 }
 
+<<<<<<< HEAD
 Status VideoDecoder::Decode(const InputBuffer_1& aInputBuffer,
                             VideoFrame* aVideoFrame) {
+||||||| merged common ancestors
+Status
+VideoDecoder::Decode(const InputBuffer_1& aInputBuffer, VideoFrame* aVideoFrame)
+{
+=======
+Status VideoDecoder::Decode(const InputBuffer_2& aInputBuffer,
+                            VideoFrame* aVideoFrame) {
+>>>>>>> upstream-releases
   CK_LOGD("VideoDecoder::Decode");
   // If the input buffer we have been passed has a null buffer, it means we
   // should drain.

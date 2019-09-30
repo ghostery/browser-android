@@ -9,7 +9,7 @@
 
 #include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIURI.h"
 #include "nsIWebBrowserPersistDocument.h"
 
@@ -19,9 +19,20 @@ class nsISHEntry;
 namespace mozilla {
 
 class WebBrowserPersistLocalDocument final
+<<<<<<< HEAD
     : public nsIWebBrowserPersistDocument {
  public:
   explicit WebBrowserPersistLocalDocument(nsIDocument* aDocument);
+||||||| merged common ancestors
+    : public nsIWebBrowserPersistDocument
+{
+public:
+    explicit WebBrowserPersistLocalDocument(nsIDocument* aDocument);
+=======
+    : public nsIWebBrowserPersistDocument {
+ public:
+  explicit WebBrowserPersistLocalDocument(dom::Document* aDocument);
+>>>>>>> upstream-releases
 
   NotNull<const Encoding*> GetCharacterSet() const;
   uint32_t GetPersistFlags() const;
@@ -32,9 +43,19 @@ class WebBrowserPersistLocalDocument final
 
   NS_DECL_CYCLE_COLLECTION_CLASS(WebBrowserPersistLocalDocument)
 
+<<<<<<< HEAD
  private:
   nsCOMPtr<nsIDocument> mDocument;
   uint32_t mPersistFlags;
+||||||| merged common ancestors
+private:
+    nsCOMPtr<nsIDocument> mDocument;
+    uint32_t mPersistFlags;
+=======
+ private:
+  RefPtr<dom::Document> mDocument;
+  uint32_t mPersistFlags;
+>>>>>>> upstream-releases
 
   void DecideContentType(nsACString& aContentType);
   nsresult GetDocEncoder(const nsACString& aContentType, uint32_t aEncoderFlags,

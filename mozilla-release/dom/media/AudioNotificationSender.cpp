@@ -177,7 +177,16 @@ static StaticAutoPtr<AudioNotification> sAudioNotification;
 /*
  * AudioNotificationSender Implementation
  */
+<<<<<<< HEAD
 /* static */ nsresult AudioNotificationSender::Init() {
+||||||| merged common ancestors
+/* static */ nsresult
+AudioNotificationSender::Init()
+{
+=======
+/* static */
+nsresult AudioNotificationSender::Init() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -195,7 +204,16 @@ static StaticAutoPtr<AudioNotification> sAudioNotification;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ void AudioNotificationSender::NotifyDefaultDeviceChanged() {
+||||||| merged common ancestors
+/* static */ void
+AudioNotificationSender::NotifyDefaultDeviceChanged()
+{
+=======
+/* static */
+void AudioNotificationSender::NotifyDefaultDeviceChanged() {
+>>>>>>> upstream-releases
   // This is running on the callback thread (from OnDefaultDeviceChanged).
   MOZ_ASSERT(XRE_IsParentProcess());
   ANS_LOG("Notify the default device-changed event.");

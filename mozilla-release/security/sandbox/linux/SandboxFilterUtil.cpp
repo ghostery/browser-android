@@ -7,9 +7,12 @@
 #include "SandboxFilterUtil.h"
 
 #ifndef ANDROID
-#include <linux/ipc.h>
+#  include <linux/ipc.h>
 #endif
 #include <linux/net.h>
+#include <sys/socket.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
 #include "mozilla/UniquePtr.h"
 #include "sandbox/linux/bpf_dsl/bpf_dsl.h"
@@ -17,13 +20,19 @@
 // Older kernel headers (mostly Android, but also some older desktop
 // distributions) are missing some or all of these:
 #ifndef SYS_ACCEPT4
+<<<<<<< HEAD
 #define SYS_ACCEPT4 18
+||||||| merged common ancestors
+#define SYS_ACCEPT4  18
+=======
+#  define SYS_ACCEPT4 18
+>>>>>>> upstream-releases
 #endif
 #ifndef SYS_RECVMMSG
-#define SYS_RECVMMSG 19
+#  define SYS_RECVMMSG 19
 #endif
 #ifndef SYS_SENDMMSG
-#define SYS_SENDMMSG 20
+#  define SYS_SENDMMSG 20
 #endif
 
 using namespace sandbox::bpf_dsl;
@@ -47,7 +56,7 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
       }
       return acc->Default(InvalidSyscall());
     }
-#ifndef ANDROID
+#  ifndef ANDROID
     case __NR_ipc: {
       Arg<int> callAndVersion(0);
       auto call = callAndVersion & 0xFFFF;
@@ -61,12 +70,27 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
       }
       return acc->Default(InvalidSyscall());
     }
+<<<<<<< HEAD
 #endif  // ANDROID
 #endif  // __NR_socketcall
         // clang-format off
 #define DISPATCH_SOCKETCALL(sysnum, socketnum) \
   case sysnum:                                 \
     return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
+||||||| merged common ancestors
+#endif // ANDROID
+#endif // __NR_socketcall
+#define DISPATCH_SOCKETCALL(sysnum, socketnum)                       \
+    case sysnum:                                                     \
+      return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
+=======
+#  endif  // ANDROID
+#endif    // __NR_socketcall
+          // clang-format off
+#define DISPATCH_SOCKETCALL(sysnum, socketnum) \
+  case sysnum:                                 \
+    return EvaluateSocketCall(socketnum, true).valueOr(InvalidSyscall())
+>>>>>>> upstream-releases
 #ifdef __NR_socket
       DISPATCH_SOCKETCALL(__NR_socket,      SYS_SOCKET);
       DISPATCH_SOCKETCALL(__NR_bind,        SYS_BIND);
@@ -112,12 +136,50 @@ sandbox::bpf_dsl::ResultExpr SandboxPolicyBase::EvaluateSyscall(
       DISPATCH_SYSVCALL(__NR_shmget,      SHMGET);
       DISPATCH_SYSVCALL(__NR_shmctl,      SHMCTL);
 #undef DISPATCH_SYSVCALL
+<<<<<<< HEAD
 #endif  // ANDROID
 #endif  // __NR_socketcall
         // clang-format on
     default:
       return InvalidSyscall();
+||||||| merged common ancestors
+#endif // ANDROID
+#endif // __NR_socketcall
+  default:
+    return InvalidSyscall();
+=======
+#endif  // ANDROID
+#endif  // __NR_socketcall
+          // clang-format on
+    default:
+      return InvalidSyscall();
+>>>>>>> upstream-releases
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+}
+=======
+/* static */ bool SandboxPolicyBase::HasSeparateSocketCalls() {
+#ifdef __NR_socket
+  // If there's no socketcall, then obviously there are separate syscalls.
+#  ifdef __NR_socketcall
+  // This could be memoized, but currently it's called at most once
+  // per process.
+  int fd = syscall(__NR_socket, AF_LOCAL, SOCK_STREAM, 0);
+  if (fd < 0) {
+    MOZ_DIAGNOSTIC_ASSERT(errno == ENOSYS);
+    return false;
+  }
+  close(fd);
+#  endif  // __NR_socketcall
+  return true;
+#else   // ifndef __NR_socket
+  return false;
+#endif  // __NR_socket
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

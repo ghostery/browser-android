@@ -1,4 +1,4 @@
-// |jit-test| skip-if: !wasmGcEnabled()
+// |jit-test| skip-if: !wasmReftypesEnabled()
 
 const { startProfiling, endProfiling, assertEqPreciseStacks, isSingleStepProfilingEnabled } = WasmHelpers;
 
@@ -10,30 +10,75 @@ function Baguette(calories) {
 // Ensure the baseline compiler sync's before the postbarrier.
 (function() {
     wasmEvalText(`(module
+<<<<<<< HEAD
         (gc_feature_opt_in 2)
         (global (mut anyref) (ref.null))
+||||||| merged common ancestors
+        (gc_feature_opt_in 1)
+        (global (mut anyref) (ref.null anyref))
+=======
+        (global (mut anyref) (ref.null))
+>>>>>>> upstream-releases
         (func (export "f")
+<<<<<<< HEAD
             get_global 0
             ref.null
             set_global 0
             set_global 0
+||||||| merged common ancestors
+            get_global 0
+            ref.null anyref
+            set_global 0
+            set_global 0
+=======
+            global.get 0
+            ref.null
+            global.set 0
+            global.set 0
+>>>>>>> upstream-releases
         )
     )`).exports.f();
 })();
 
 let exportsPlain = wasmEvalText(`(module
+<<<<<<< HEAD
     (gc_feature_opt_in 2)
+||||||| merged common ancestors
+    (gc_feature_opt_in 1)
+=======
+>>>>>>> upstream-releases
     (global i32 (i32.const 42))
+<<<<<<< HEAD
     (global $g (mut anyref) (ref.null))
     (func (export "set") (param anyref) get_local 0 set_global $g)
     (func (export "get") (result anyref) get_global $g)
+||||||| merged common ancestors
+    (global $g (mut anyref) (ref.null anyref))
+    (func (export "set") (param anyref) get_local 0 set_global $g)
+    (func (export "get") (result anyref) get_global $g)
+=======
+    (global $g (mut anyref) (ref.null))
+    (func (export "set") (param anyref) local.get 0 global.set $g)
+    (func (export "get") (result anyref) global.get $g)
+>>>>>>> upstream-releases
 )`).exports;
 
 let exportsObj = wasmEvalText(`(module
+<<<<<<< HEAD
     (gc_feature_opt_in 2)
     (global $g (export "g") (mut anyref) (ref.null))
     (func (export "set") (param anyref) get_local 0 set_global $g)
     (func (export "get") (result anyref) get_global $g)
+||||||| merged common ancestors
+    (gc_feature_opt_in 1)
+    (global $g (export "g") (mut anyref) (ref.null anyref))
+    (func (export "set") (param anyref) get_local 0 set_global $g)
+    (func (export "get") (result anyref) get_global $g)
+=======
+    (global $g (export "g") (mut anyref) (ref.null))
+    (func (export "set") (param anyref) local.get 0 global.set $g)
+    (func (export "get") (result anyref) global.get $g)
+>>>>>>> upstream-releases
 )`).exports;
 
 // 7 => Generational GC zeal.
@@ -65,7 +110,15 @@ if (!isSingleStepProfilingEnabled)
 enableGeckoProfiling();
 
 const EXPECTED_STACKS = [
-    ['', '!>', '0,!>', '<,0,!>', 'GC postbarrier,0,!>', '<,0,!>', '0,!>', '!>', ''],
+    // Expected output for (simulator+baseline).
+    ['', '!>', '0,!>', '<,0,!>', 'GC postbarrier,0,!>',
+     '<,0,!>', '0,!>', '!>', ''],
+
+    // Expected output for (simulator+via-Ion).
+    ['', '!>', '0,!>', '<,0,!>', 'filtering GC postbarrier,0,!>',
+     '<,0,!>', '0,!>', '!>', ''],
+
+    // Expected output for other configurations.
     ['', '!>', '0,!>', '!>', ''],
 ];
 

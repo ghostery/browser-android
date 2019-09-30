@@ -17,6 +17,7 @@
  * Gesture System Metrics
  */
 #ifndef SM_DIGITIZER
+<<<<<<< HEAD
 #define SM_DIGITIZER 94
 #define TABLET_CONFIG_NONE 0x00000000
 #define NID_INTEGRATED_TOUCH 0x00000001
@@ -25,14 +26,41 @@
 #define NID_EXTERNAL_PEN 0x00000008
 #define NID_MULTI_INPUT 0x00000040
 #define NID_READY 0x00000080
+||||||| merged common ancestors
+#define SM_DIGITIZER         94
+#define TABLET_CONFIG_NONE   0x00000000
+#define NID_INTEGRATED_TOUCH 0x00000001
+#define NID_EXTERNAL_TOUCH   0x00000002
+#define NID_INTEGRATED_PEN   0x00000004
+#define NID_EXTERNAL_PEN     0x00000008
+#define NID_MULTI_INPUT      0x00000040
+#define NID_READY            0x00000080
+=======
+#  define SM_DIGITIZER 94
+#  define TABLET_CONFIG_NONE 0x00000000
+#  define NID_INTEGRATED_TOUCH 0x00000001
+#  define NID_EXTERNAL_TOUCH 0x00000002
+#  define NID_INTEGRATED_PEN 0x00000004
+#  define NID_EXTERNAL_PEN 0x00000008
+#  define NID_MULTI_INPUT 0x00000040
+#  define NID_READY 0x00000080
+>>>>>>> upstream-releases
 #endif
 
 /*
  * Tablet mode detection
  */
 #ifndef SM_SYSTEMDOCKED
+<<<<<<< HEAD
 #define SM_CONVERTIBLESLATEMODE 0x00002003
 #define SM_SYSTEMDOCKED 0x00002004
+||||||| merged common ancestors
+#define SM_CONVERTIBLESLATEMODE 0x00002003
+#define SM_SYSTEMDOCKED         0x00002004
+=======
+#  define SM_CONVERTIBLESLATEMODE 0x00002003
+#  define SM_SYSTEMDOCKED 0x00002004
+>>>>>>> upstream-releases
 #endif
 
 /*
@@ -51,11 +79,26 @@ class nsLookAndFeel final : public nsXPLookAndFeel {
 
   void NativeInit() final;
   void RefreshImpl() override;
+<<<<<<< HEAD
   nsresult NativeGetColor(ColorID aID, nscolor& aResult) override;
   nsresult GetIntImpl(IntID aID, int32_t& aResult) override;
   nsresult GetFloatImpl(FloatID aID, float& aResult) override;
   bool GetFontImpl(FontID aID, nsString& aFontName, gfxFontStyle& aFontStyle,
                    float aDevPixPerCSSPixel) override;
+||||||| merged common ancestors
+  nsresult NativeGetColor(ColorID aID, nscolor &aResult) override;
+  nsresult GetIntImpl(IntID aID, int32_t &aResult) override;
+  nsresult GetFloatImpl(FloatID aID, float &aResult) override;
+  bool GetFontImpl(FontID aID, nsString& aFontName,
+                   gfxFontStyle& aFontStyle,
+                   float aDevPixPerCSSPixel) override;
+=======
+  nsresult NativeGetColor(ColorID aID, nscolor& aResult) override;
+  nsresult GetIntImpl(IntID aID, int32_t& aResult) override;
+  nsresult GetFloatImpl(FloatID aID, float& aResult) override;
+  bool GetFontImpl(FontID aID, nsString& aFontName,
+                   gfxFontStyle& aFontStyle) override;
+>>>>>>> upstream-releases
   char16_t GetPasswordCharacterImpl() override;
 
   nsTArray<LookAndFeelInt> GetIntCacheImpl() override;

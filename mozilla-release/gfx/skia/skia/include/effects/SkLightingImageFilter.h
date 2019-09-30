@@ -39,7 +39,13 @@ public:
         SkScalar shininess, sk_sp<SkImageFilter> input, const CropRect* cropRect = nullptr);
     ~SkLightingImageFilter() override;
 
+<<<<<<< HEAD
     static void InitializeFlattenables();
+||||||| merged common ancestors
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
+=======
+    static void RegisterFlattenables();
+>>>>>>> upstream-releases
 
 protected:
     SkLightingImageFilter(sk_sp<SkImageFilterLight> light,

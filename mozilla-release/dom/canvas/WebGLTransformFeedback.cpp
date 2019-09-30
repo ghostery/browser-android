@@ -7,6 +7,7 @@
 
 #include "GLContext.h"
 #include "mozilla/dom/WebGL2RenderingContextBinding.h"
+#include "mozilla/IntegerRange.h"
 #include "WebGL2Context.h"
 #include "WebGLProgram.h"
 
@@ -41,6 +42,52 @@ void WebGLTransformFeedback::BeginTransformFeedback(GLenum primMode) {
     case LOCAL_GL_TRIANGLES:
       break;
     default:
+<<<<<<< HEAD
+      mContext->ErrorInvalidEnum(
+          "`primitiveMode` must be one of POINTS, LINES, or"
+          " TRIANGLES.");
+      return;
+  }
+
+  const auto& prog = mContext->mCurrentProgram;
+  if (!prog || !prog->IsLinked() ||
+      prog->LinkInfo()->componentsPerTFVert.empty()) {
+    mContext->ErrorInvalidOperation(
+        "Current program not valid for transform"
+        " feedback.");
+    return;
+  }
+
+  const auto& linkInfo = prog->LinkInfo();
+  const auto& componentsPerTFVert = linkInfo->componentsPerTFVert;
+
+  size_t minVertCapacity = SIZE_MAX;
+  for (size_t i = 0; i < componentsPerTFVert.size(); i++) {
+    const auto& indexedBinding = mIndexedBindings[i];
+    const auto& componentsPerVert = componentsPerTFVert[i];
+
+    const auto& buffer = indexedBinding.mBufferBinding;
+    if (!buffer) {
+      mContext->ErrorInvalidOperation(
+          "No buffer attached to required transform"
+          " feedback index %u.",
+          (uint32_t)i);
+      return;
+||||||| merged common ancestors
+        mContext->ErrorInvalidEnum("`primitiveMode` must be one of POINTS, LINES, or"
+                                   " TRIANGLES.");
+        return;
+    }
+
+    const auto& prog = mContext->mCurrentProgram;
+    if (!prog ||
+        !prog->IsLinked() ||
+        prog->LinkInfo()->componentsPerTFVert.empty())
+    {
+        mContext->ErrorInvalidOperation("Current program not valid for transform"
+                                        " feedback.");
+        return;
+=======
       mContext->ErrorInvalidEnum(
           "`primitiveMode` must be one of POINTS, LINES, or"
           " TRIANGLES.");
@@ -73,39 +120,141 @@ void WebGLTransformFeedback::BeginTransformFeedback(GLenum primMode) {
       return;
     }
 
+    for (const auto iBound : IntegerRange(mIndexedBindings.size())) {
+      const auto& bound = mIndexedBindings[iBound].mBufferBinding.get();
+      if (iBound != i && buffer == bound) {
+        mContext->GenErrorIllegalUse(
+            LOCAL_GL_TRANSFORM_FEEDBACK_BUFFER, static_cast<uint32_t>(i),
+            LOCAL_GL_TRANSFORM_FEEDBACK_BUFFER, static_cast<uint32_t>(iBound));
+        return;
+      }
+>>>>>>> upstream-releases
+    }
+
     const size_t vertCapacity = buffer->ByteLength() / 4 / componentsPerVert;
     minVertCapacity = std::min(minVertCapacity, vertCapacity);
   }
 
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+    size_t minVertCapacity = SIZE_MAX;
+    for (size_t i = 0; i < componentsPerTFVert.size(); i++) {
+        const auto& indexedBinding = mIndexedBindings[i];
+        const auto& componentsPerVert = componentsPerTFVert[i];
+
+        const auto& buffer = indexedBinding.mBufferBinding;
+        if (!buffer) {
+            mContext->ErrorInvalidOperation("No buffer attached to required transform"
+                                            " feedback index %u.",
+                                            (uint32_t)i);
+            return;
+        }
+
+        const size_t vertCapacity = buffer->ByteLength() / 4 / componentsPerVert;
+        minVertCapacity = std::min(minVertCapacity, vertCapacity);
+    }
+=======
   ////
 
   const auto& gl = mContext->gl;
   gl->fBeginTransformFeedback(primMode);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const auto& gl = mContext->gl;
+  gl->fBeginTransformFeedback(primMode);
+||||||| merged common ancestors
+    ////
+=======
   ////
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+    const auto& gl = mContext->gl;
+    gl->fBeginTransformFeedback(primMode);
+=======
   mIsActive = true;
   MOZ_ASSERT(!mIsPaused);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  mIsActive = true;
+  MOZ_ASSERT(!mIsPaused);
+||||||| merged common ancestors
+    ////
+=======
   mActive_Program = prog;
   mActive_PrimMode = primMode;
   mActive_VertPosition = 0;
   mActive_VertCapacity = minVertCapacity;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  mActive_Program = prog;
+  mActive_PrimMode = primMode;
+  mActive_VertPosition = 0;
+  mActive_VertCapacity = minVertCapacity;
+||||||| merged common ancestors
+    mIsActive = true;
+    MOZ_ASSERT(!mIsPaused);
+=======
+  ////
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   ////
 
   mActive_Program->mNumActiveTFOs++;
+||||||| merged common ancestors
+    mActive_Program = prog;
+    mActive_PrimMode = primMode;
+    mActive_VertPosition = 0;
+    mActive_VertCapacity = minVertCapacity;
+
+    ////
+
+    mActive_Program->mNumActiveTFOs++;
+=======
+  mActive_Program->mNumActiveTFOs++;
+>>>>>>> upstream-releases
 }
 
 void WebGLTransformFeedback::EndTransformFeedback() {
   if (!mIsActive) return mContext->ErrorInvalidOperation("Not active.");
 
+<<<<<<< HEAD
+  ////
+||||||| merged common ancestors
+void
+WebGLTransformFeedback::EndTransformFeedback()
+{
+    if (!mIsActive)
+        return mContext->ErrorInvalidOperation("Not active.");
+
+    ////
+=======
   ////
 
   const auto& gl = mContext->gl;
   gl->fEndTransformFeedback();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  const auto& gl = mContext->gl;
+  gl->fEndTransformFeedback();
 
   if (gl->WorkAroundDriverBugs()) {
+||||||| merged common ancestors
+    const auto& gl = mContext->gl;
+    gl->fEndTransformFeedback();
+
+    if (gl->WorkAroundDriverBugs()) {
+=======
+  if (gl->WorkAroundDriverBugs()) {
+>>>>>>> upstream-releases
 #ifdef XP_MACOSX
     // Multi-threaded GL on mac will generate INVALID_OP in some cases for at
     // least BindBufferBase after an EndTransformFeedback if there is not a
@@ -158,6 +307,7 @@ void WebGLTransformFeedback::ResumeTransformFeedback() {
 
   ////
 
+<<<<<<< HEAD
   MOZ_ASSERT(mIsActive);
   mIsPaused = false;
 }
@@ -169,6 +319,24 @@ void WebGLTransformFeedback::AddBufferBindCounts(int8_t addVal) const {
   for (const auto& binding : mIndexedBindings) {
     WebGLBuffer::AddBindCount(target, binding.mBufferBinding.get(), addVal);
   }
+||||||| merged common ancestors
+    MOZ_ASSERT(mIsActive);
+    mIsPaused = false;
+}
+
+////////////////////////////////////////
+
+void
+WebGLTransformFeedback::AddBufferBindCounts(int8_t addVal) const
+{
+    const GLenum target = LOCAL_GL_TRANSFORM_FEEDBACK_BUFFER;
+    for (const auto& binding : mIndexedBindings) {
+        WebGLBuffer::AddBindCount(target, binding.mBufferBinding.get(), addVal);
+    }
+=======
+  MOZ_ASSERT(mIsActive);
+  mIsPaused = false;
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////

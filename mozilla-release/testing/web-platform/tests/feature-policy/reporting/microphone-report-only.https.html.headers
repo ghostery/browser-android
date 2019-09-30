@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: microphone-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: microphone 'none'
+>>>>>>> upstream-releases

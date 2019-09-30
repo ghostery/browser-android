@@ -10,7 +10,14 @@
 
 #include "GrTypesPriv.h"
 #include "GrVkResource.h"
+<<<<<<< HEAD
 #include "vk/GrVkDefines.h"
+||||||| merged common ancestors
+
+#include "vk/GrVkDefines.h"
+=======
+#include "vk/GrVkTypes.h"
+>>>>>>> upstream-releases
 
 class GrPipeline;
 class GrPrimitiveProcessor;
@@ -24,8 +31,16 @@ struct SkIRect;
 
 class GrVkPipeline : public GrVkResource {
 public:
+<<<<<<< HEAD
     static GrVkPipeline* Create(GrVkGpu* gpu,
                                 const GrPrimitiveProcessor& primProc,
+||||||| merged common ancestors
+    static GrVkPipeline* Create(GrVkGpu* gpu,
+=======
+    static GrVkPipeline* Create(GrVkGpu*,
+                                int numColorSamples,
+                                const GrPrimitiveProcessor&,
+>>>>>>> upstream-releases
                                 const GrPipeline& pipeline,
                                 const GrStencilSettings&,
                                 VkPipelineShaderStageCreateInfo* shaderStageInfo,
@@ -55,7 +70,7 @@ protected:
     VkPipeline  fPipeline;
 
 private:
-    void freeGPUData(const GrVkGpu* gpu) const override;
+    void freeGPUData(GrVkGpu* gpu) const override;
 
     typedef GrVkResource INHERITED;
 };

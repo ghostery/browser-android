@@ -14,6 +14,7 @@ namespace plugins {
 
 class StreamNotifyParent : public PStreamNotifyParent {
   friend class PluginInstanceParent;
+  friend class PStreamNotifyParent;
 
   StreamNotifyParent() : mDestructionFlag(nullptr) {}
   ~StreamNotifyParent() {
@@ -28,9 +29,17 @@ class StreamNotifyParent : public PStreamNotifyParent {
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 
+<<<<<<< HEAD
  private:
   mozilla::ipc::IPCResult RecvRedirectNotifyResponse(
       const bool& allow) override;
+||||||| merged common ancestors
+private:
+  mozilla::ipc::IPCResult RecvRedirectNotifyResponse(const bool& allow) override;
+=======
+ private:
+  mozilla::ipc::IPCResult RecvRedirectNotifyResponse(const bool& allow);
+>>>>>>> upstream-releases
 
   bool* mDestructionFlag;
 };

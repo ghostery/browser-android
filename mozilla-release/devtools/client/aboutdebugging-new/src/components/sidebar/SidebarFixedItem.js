@@ -4,7 +4,10 @@
 
 "use strict";
 
-const { PureComponent, createFactory } = require("devtools/client/shared/vendor/react");
+const {
+  PureComponent,
+  createFactory,
+} = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 
@@ -24,18 +27,33 @@ class SidebarFixedItem extends PureComponent {
   }
 
   render() {
+<<<<<<< HEAD
     const {
       icon,
       isSelected,
       name,
       to,
     } = this.props;
+||||||| merged common ancestors
+    const {
+      dispatch,
+      id,
+      icon,
+      isSelected,
+      name,
+      runtimeId,
+    } = this.props;
+=======
+    const { icon, isSelected, name, to } = this.props;
+>>>>>>> upstream-releases
 
     return SidebarItem(
       {
+        className: "sidebar-item--tall",
         isSelected,
         to,
       },
+<<<<<<< HEAD
       dom.div(
         {
           className: "sidebar-fixed-item__container",
@@ -53,6 +71,36 @@ class SidebarFixedItem extends PureComponent {
           },
           name
         )
+||||||| merged common ancestors
+      dom.img(
+        {
+          className: "sidebar-fixed-item__icon",
+          src: icon,
+        }
+      ),
+      dom.span(
+        {
+          className: "ellipsis-text",
+          title: name,
+        },
+        name
+=======
+      dom.div(
+        {
+          className: "sidebar-fixed-item__container",
+        },
+        dom.img({
+          className: "sidebar-fixed-item__icon",
+          src: icon,
+        }),
+        dom.span(
+          {
+            className: "ellipsis-text",
+            title: name,
+          },
+          name
+        )
+>>>>>>> upstream-releases
       )
     );
   }

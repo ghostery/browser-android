@@ -9,15 +9,32 @@
 
 #include "nsIMacUtils.h"
 #include "nsString.h"
+#include "mozilla/Atomics.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/StaticMutex.h"
+#include "mozilla/StaticPtr.h"
+
+<<<<<<< HEAD
+class nsMacUtilsImpl final : public nsIMacUtils {
+ public:
+||||||| merged common ancestors
+class nsMacUtilsImpl final : public nsIMacUtils
+{
+public:
+=======
+using mozilla::Atomic;
+using mozilla::StaticAutoPtr;
+using mozilla::StaticMutex;
 
 class nsMacUtilsImpl final : public nsIMacUtils {
  public:
+>>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_DECL_NSIMACUTILS
 
   nsMacUtilsImpl() {}
 
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX)
   static bool GetAppPath(nsCString &aAppPath);
 
@@ -25,6 +42,34 @@ class nsMacUtilsImpl final : public nsIMacUtils {
   static nsAutoCString GetDirectoryPath(const char *aPath);
 #endif /* DEBUG */
 #endif /* MOZ_CONTENT_SANDBOX */
+||||||| merged common ancestors
+private:
+  ~nsMacUtilsImpl()
+  {
+  }
+=======
+  // Return the repo directory and the repo object directory respectively.
+  // These should only be used on Mac developer builds to determine the path
+  // to the repo or object directory.
+  static nsresult GetRepoDir(nsIFile** aRepoDir);
+  static nsresult GetObjDir(nsIFile** aObjDir);
+
+#if defined(MOZ_SANDBOX)
+  static bool GetAppPath(nsCString& aAppPath);
+#  ifdef DEBUG
+  static nsresult GetBloatLogDir(nsCString& aDirectoryPath);
+  static nsresult GetDirectoryPath(const char* aPath,
+                                   nsCString& aDirectoryPath);
+#  endif /* DEBUG */
+#endif   /* MOZ_SANDBOX */
+
+  static void EnableTCSMIfAvailable();
+  static bool IsTCSMAvailable();
+  static uint32_t GetPhysicalCPUCount();
+
+ private:
+  ~nsMacUtilsImpl() {}
+>>>>>>> upstream-releases
 
  private:
   ~nsMacUtilsImpl() {}
@@ -34,6 +79,23 @@ class nsMacUtilsImpl final : public nsIMacUtils {
   // A string containing a "-" delimited list of architectures
   // in our binary.
   nsString mBinaryArchs;
+
+#if defined(MOZ_SANDBOX)
+  // Cache the appDir returned from GetAppPath to avoid doing I/O
+  static StaticAutoPtr<nsCString> sCachedAppPath;
+  // For thread safe setting/checking of sCachedAppPath
+  static StaticMutex sCachedAppPathMutex;
+  // Utility method to call ClearOnShutdown() on the main thread
+  static nsresult ClearCachedAppPathOnShutdown();
+#endif
+
+  enum TCSMStatus { TCSM_Unknown = 0, TCSM_Available, TCSM_Unavailable };
+  static mozilla::Atomic<nsMacUtilsImpl::TCSMStatus> sTCSMStatus;
+
+  static nsresult EnableTCSM();
+#if defined(DEBUG)
+  static bool IsTCSMEnabled();
+#endif
 };
 
 // Global singleton service

@@ -16,28 +16,28 @@
 #include "ClearOnShutdown.h"
 
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
-#include "mozilla/SandboxSettings.h"
+#  include "mozilla/SandboxSettings.h"
 #endif
 
 #if defined(XP_MACOSX)
-#include "nsCocoaFeatures.h"
+#  include "nsCocoaFeatures.h"
 // An undocumented CoreGraphics framework method, present in the same form
 // since at least OS X 10.5.
 extern "C" CGError CGSSetDebugOptions(int options);
 #endif
 
 #ifdef XP_WIN
-#if defined(MOZ_SANDBOX)
-#include "mozilla/sandboxTarget.h"
-#include "ProcessUtils.h"
-#include "nsDirectoryService.h"
-#endif
+#  if defined(MOZ_SANDBOX)
+#    include "mozilla/sandboxTarget.h"
+#    include "ProcessUtils.h"
+#    include "nsDirectoryService.h"
+#  endif
 #endif
 
 using mozilla::ipc::IOThreadChild;
 
 #ifdef OS_WIN
-#include <algorithm>
+#  include <algorithm>
 #endif
 
 namespace mozilla {
@@ -102,6 +102,7 @@ bool PluginProcessChild::Init(int aArgc, char* aArgv[]) {
   std::string pluginFilename;
 
 #if defined(OS_POSIX)
+<<<<<<< HEAD
   // NB: need to be very careful in ensuring that the first arg
   // (after the binary name) here is indeed the plugin module path.
   // Keep in sync with dom/plugins/PluginModuleParent.
@@ -120,13 +121,66 @@ bool PluginProcessChild::Init(int aArgc, char* aArgv[]) {
     bool enableLogging = false;
     if (values.size() >= 5 && values[4] == "-flashSandboxLogging") {
       enableLogging = true;
+||||||| merged common ancestors
+    // NB: need to be very careful in ensuring that the first arg
+    // (after the binary name) here is indeed the plugin module path.
+    // Keep in sync with dom/plugins/PluginModuleParent.
+    std::vector<std::string> values = CommandLine::ForCurrentProcess()->argv();
+    MOZ_ASSERT(values.size() >= 2, "not enough args");
+
+    pluginFilename = UnmungePluginDsoPath(values[1]);
+
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+    int level;
+    if (values.size() >= 4 && values[2] == "-flashSandboxLevel" &&
+        (level = std::stoi(values[3], nullptr)) > 0) {
+
+      level = ClampFlashSandboxLevel(level);
+      MOZ_ASSERT(level > 0);
+
+      bool enableLogging = false;
+      if (values.size() >= 5 && values[4] == "-flashSandboxLogging") {
+        enableLogging = true;
+      }
+
+      mPlugin.EnableFlashSandbox(level, enableLogging);
+=======
+  // NB: need to be very careful in ensuring that the first arg
+  // (after the binary name) here is indeed the plugin module path.
+  // Keep in sync with dom/plugins/PluginModuleParent.
+  std::vector<std::string> values = CommandLine::ForCurrentProcess()->argv();
+  MOZ_ASSERT(values.size() >= 2, "not enough args");
+
+  pluginFilename = UnmungePluginDsoPath(values[1]);
+
+#  if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+  int level;
+  if (values.size() >= 4 && values[2] == "-flashSandboxLevel" &&
+      (level = std::stoi(values[3], nullptr)) > 0) {
+    level = ClampFlashSandboxLevel(level);
+    MOZ_ASSERT(level > 0);
+
+    bool enableLogging = false;
+    if (values.size() >= 5 && values[4] == "-flashSandboxLogging") {
+      enableLogging = true;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     mPlugin.EnableFlashSandbox(level, enableLogging);
   }
 #endif
+||||||| merged common ancestors
+#endif
+=======
+
+    mPlugin.EnableFlashSandbox(level, enableLogging);
+  }
+#  endif
+>>>>>>> upstream-releases
 
 #elif defined(OS_WIN)
+<<<<<<< HEAD
   std::vector<std::wstring> values =
       CommandLine::ForCurrentProcess()->GetLooseValues();
   MOZ_ASSERT(values.size() >= 1, "not enough loose args");
@@ -161,6 +215,75 @@ bool PluginProcessChild::Init(int aArgc, char* aArgv[]) {
   // to later in the plugin initialization.
   mozilla::SandboxTarget::Instance()->StartSandbox();
 #endif
+||||||| merged common ancestors
+    std::vector<std::wstring> values =
+        CommandLine::ForCurrentProcess()->GetLooseValues();
+    MOZ_ASSERT(values.size() >= 1, "not enough loose args");
+
+    // parameters are:
+    // values[0] is path to plugin DLL
+    // values[1] is path to folder that should be used for temp files
+    // values[2] is path to the Flash Player roaming folder
+    //   (this is always that Flash folder, regardless of what plugin is being run)
+    pluginFilename = WideToUTF8(values[0]);
+
+    // We don't initialize XPCOM but we need the thread manager and the
+    // logging framework for the FunctionBroker.
+    NS_SetMainThread();
+    mozilla::TimeStamp::Startup();
+    NS_LogInit();
+    mozilla::LogModule::Init(aArgc, aArgv);
+    nsThreadManager::get().Init();
+
+#if defined(MOZ_SANDBOX)
+    MOZ_ASSERT(values.size() >= 3, "not enough loose args for sandboxed plugin process");
+
+    // The sandbox closes off the default location temp file location so we set
+    // a new one here (regardless of whether or not we are sandboxing).
+    SetSandboxTempPath(values[1]);
+    PluginModuleChild::SetFlashRoamingPath(values[2]);
+
+    // This is probably the earliest we would want to start the sandbox.
+    // As we attempt to tighten the sandbox, we may need to consider moving this
+    // to later in the plugin initialization.
+    mozilla::SandboxTarget::Instance()->StartSandbox();
+#endif
+=======
+  std::vector<std::wstring> values =
+      CommandLine::ForCurrentProcess()->GetLooseValues();
+  MOZ_ASSERT(values.size() >= 1, "not enough loose args");
+
+  // parameters are:
+  // values[0] is path to plugin DLL
+  // values[1] is path to folder that should be used for temp files
+  // values[2] is path to the Flash Player roaming folder
+  //   (this is always that Flash folder, regardless of what plugin is being
+  //   run)
+  pluginFilename = WideToUTF8(values[0]);
+
+  // We don't initialize XPCOM but we need the thread manager and the
+  // logging framework for the FunctionBroker.
+  NS_SetMainThread();
+  mozilla::TimeStamp::Startup();
+  NS_LogInit();
+  mozilla::LogModule::Init(aArgc, aArgv);
+  nsThreadManager::get().Init();
+
+#  if defined(MOZ_SANDBOX)
+  MOZ_ASSERT(values.size() >= 3,
+             "not enough loose args for sandboxed plugin process");
+
+  // The sandbox closes off the default location temp file location so we set
+  // a new one here (regardless of whether or not we are sandboxing).
+  SetSandboxTempPath(values[1]);
+  PluginModuleChild::SetFlashRoamingPath(values[2]);
+
+  // This is probably the earliest we would want to start the sandbox.
+  // As we attempt to tighten the sandbox, we may need to consider moving this
+  // to later in the plugin initialization.
+  mozilla::SandboxTarget::Instance()->StartSandbox();
+#  endif
+>>>>>>> upstream-releases
 #else
 #error Sorry
 #endif

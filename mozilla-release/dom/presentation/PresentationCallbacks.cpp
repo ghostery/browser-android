@@ -209,6 +209,20 @@ PresentationResponderLoadingCallback::OnStateChange(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+PresentationResponderLoadingCallback::OnProgressChange(
+    nsIWebProgress* aWebProgress, nsIRequest* aRequest,
+    int32_t aCurSelfProgress, int32_t aMaxSelfProgress,
+    int32_t aCurTotalProgress, int32_t aMaxTotalProgress) {
+||||||| merged common ancestors
+PresentationResponderLoadingCallback::OnProgressChange(nsIWebProgress* aWebProgress,
+                                                       nsIRequest* aRequest,
+                                                       int32_t aCurSelfProgress,
+                                                       int32_t aMaxSelfProgress,
+                                                       int32_t aCurTotalProgress,
+                                                       int32_t aMaxTotalProgress)
+{
+=======
 PresentationResponderLoadingCallback::OnProgressChange(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest,
     int32_t aCurSelfProgress, int32_t aMaxSelfProgress,
@@ -221,21 +235,65 @@ NS_IMETHODIMP
 PresentationResponderLoadingCallback::OnLocationChange(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest, nsIURI* aURI,
     uint32_t aFlags) {
+>>>>>>> upstream-releases
   // Do nothing.
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+PresentationResponderLoadingCallback::OnLocationChange(
+    nsIWebProgress* aWebProgress, nsIRequest* aRequest, nsIURI* aURI,
+    uint32_t aFlags) {
+||||||| merged common ancestors
+PresentationResponderLoadingCallback::OnLocationChange(nsIWebProgress* aWebProgress,
+                                                       nsIRequest* aRequest,
+                                                       nsIURI* aURI,
+                                                       uint32_t aFlags)
+{
+=======
 PresentationResponderLoadingCallback::OnStatusChange(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest, nsresult aStatus,
     const char16_t* aMessage) {
+>>>>>>> upstream-releases
   // Do nothing.
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+PresentationResponderLoadingCallback::OnStatusChange(
+    nsIWebProgress* aWebProgress, nsIRequest* aRequest, nsresult aStatus,
+    const char16_t* aMessage) {
+||||||| merged common ancestors
+PresentationResponderLoadingCallback::OnStatusChange(nsIWebProgress* aWebProgress,
+                                                     nsIRequest* aRequest,
+                                                     nsresult aStatus,
+                                                     const char16_t* aMessage)
+{
+=======
+PresentationResponderLoadingCallback::OnSecurityChange(
+    nsIWebProgress* aWebProgress, nsIRequest* aRequest, uint32_t aState) {
+>>>>>>> upstream-releases
+  // Do nothing.
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 PresentationResponderLoadingCallback::OnSecurityChange(
     nsIWebProgress* aWebProgress, nsIRequest* aRequest, uint32_t state) {
+||||||| merged common ancestors
+PresentationResponderLoadingCallback::OnSecurityChange(nsIWebProgress* aWebProgress,
+                                                       nsIRequest* aRequest,
+                                                       uint32_t aOldState,
+                                                       uint32_t aState,
+                                                       const nsAString& aContentBlockingLogJSON)
+{
+=======
+PresentationResponderLoadingCallback::OnContentBlockingEvent(
+    nsIWebProgress* aWebProgress, nsIRequest* aRequest, uint32_t aEvent) {
+>>>>>>> upstream-releases
   // Do nothing.
   return NS_OK;
 }

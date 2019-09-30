@@ -16,9 +16,16 @@ XPIDL_MODULE = 'places'
 if CONFIG['MOZ_PLACES']:
     XPIDL_SOURCES += [
         'mozIAsyncHistory.idl',
+<<<<<<< HEAD
         'mozIColorAnalyzer.idl',
+||||||| merged common ancestors
+        'mozIAsyncLivemarks.idl',
+        'mozIColorAnalyzer.idl',
+=======
+>>>>>>> upstream-releases
         'mozIPlacesAutoComplete.idl',
         'mozIPlacesPendingOperation.idl',
+        'mozISyncedBookmarksMirror.idl',
         'nsIAnnotationService.idl',
         'nsIFaviconService.idl',
         'nsINavBookmarksService.idl',
@@ -30,6 +37,7 @@ if CONFIG['MOZ_PLACES']:
         'History.h',
         'INativePlacesEventCallback.h',
         'Shutdown.h',
+        'SyncedBookmarksMirror.h',
     ]
 
     UNIFIED_SOURCES += [
@@ -44,7 +52,6 @@ if CONFIG['MOZ_PLACES']:
         'nsNavHistory.cpp',
         'nsNavHistoryQuery.cpp',
         'nsNavHistoryResult.cpp',
-        'nsPlacesModule.cpp',
         'PlaceInfo.cpp',
         'Shutdown.cpp',
         'SQLFunctions.cpp',
@@ -59,21 +66,24 @@ if CONFIG['MOZ_PLACES']:
         'BookmarkHTMLUtils.jsm',
         'BookmarkJSONUtils.jsm',
         'Bookmarks.jsm',
-        'ClusterLib.js',
-        'ColorAnalyzer_worker.js',
-        'ColorConversion.js',
         'ExtensionSearchHandler.jsm',
         'History.jsm',
+        'PageIconProtocolHandler.jsm',
         'PlacesBackups.jsm',
+        'PlacesCategoriesStarter.jsm',
         'PlacesDBUtils.jsm',
+        'PlacesExpiration.jsm',
         'PlacesRemoteTabsAutocompleteProvider.jsm',
         'PlacesSearchAutocompleteProvider.jsm',
         'PlacesSyncUtils.jsm',
         'PlacesTransactions.jsm',
         'PlacesUtils.jsm',
         'SyncedBookmarksMirror.jsm',
+        'TaggingService.jsm',
+        'UnifiedComplete.jsm',
     ]
 
+<<<<<<< HEAD
     EXTRA_COMPONENTS += [
         'ColorAnalyzer.js',
         'nsPlacesExpiration.js',
@@ -82,6 +92,20 @@ if CONFIG['MOZ_PLACES']:
         'PlacesCategoriesStarter.js',
         'toolkitplaces.manifest',
         'UnifiedComplete.js',
+||||||| merged common ancestors
+    EXTRA_COMPONENTS += [
+        'ColorAnalyzer.js',
+        'nsLivemarkService.js',
+        'nsPlacesExpiration.js',
+        'nsTaggingService.js',
+        'PageIconProtocolHandler.js',
+        'PlacesCategoriesStarter.js',
+        'toolkitplaces.manifest',
+        'UnifiedComplete.js',
+=======
+    XPCOM_MANIFESTS += [
+        'components.conf',
+>>>>>>> upstream-releases
     ]
 
     FINAL_LIBRARY = 'xul'

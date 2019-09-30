@@ -356,6 +356,7 @@ impl Iso2022JpDecoder {
     );
 }
 
+<<<<<<< HEAD
 #[cfg(feature = "fast-kanji-encode")]
 #[inline(always)]
 fn is_kanji_mapped(bmp: u16) -> bool {
@@ -396,6 +397,44 @@ fn is_kanji_mapped(bmp: u16) -> bool {
         if_same_then_else
     )
 )]
+||||||| merged common ancestors
+#[cfg_attr(feature = "cargo-clippy", allow(if_let_redundant_pattern_matching, if_same_then_else))]
+=======
+#[cfg(feature = "fast-kanji-encode")]
+#[inline(always)]
+fn is_kanji_mapped(bmp: u16) -> bool {
+    // Use the shift_jis variant, because we don't care about the
+    // byte values here.
+    jis0208_kanji_shift_jis_encode(bmp).is_some()
+}
+
+#[cfg(not(feature = "fast-kanji-encode"))]
+#[cfg_attr(
+    feature = "cargo-clippy",
+    allow(if_let_redundant_pattern_matching, if_same_then_else)
+)]
+#[inline(always)]
+fn is_kanji_mapped(bmp: u16) -> bool {
+    if 0x4EDD == bmp {
+        true
+    } else if let Some(_) = jis0208_level1_kanji_shift_jis_encode(bmp) {
+        // Use the shift_jis variant, because we don't care about the
+        // byte values here.
+        true
+    } else if let Some(_) = jis0208_level2_and_additional_kanji_encode(bmp) {
+        true
+    } else if let Some(_) = position(&IBM_KANJI[..], bmp) {
+        true
+    } else {
+        false
+    }
+}
+
+#[cfg_attr(
+    feature = "cargo-clippy",
+    allow(if_let_redundant_pattern_matching, if_same_then_else)
+)]
+>>>>>>> upstream-releases
 fn is_mapped_for_two_byte_encode(bmp: u16) -> bool {
     // The code below uses else after return to
     // keep the same structure as in EUC-JP.

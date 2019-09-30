@@ -10,6 +10,7 @@
 #include "BRNameMatchingPolicy.h"
 #include "CTPolicyEnforcer.h"
 #include "CTVerifyResult.h"
+#include "EnterpriseRoots.h"
 #include "OCSPCache.h"
 #include "RootCertificateTelemetryUtils.h"
 #include "ScopedNSSTypes.h"
@@ -20,15 +21,29 @@
 #include "mozpkix/pkixtypes.h"
 
 #if defined(_MSC_VER)
-#pragma warning(push)
+#  pragma warning(push)
 // Silence "RootingAPI.h(718): warning C4324: 'js::DispatchWrapper<T>':
 // structure was padded due to alignment specifier with [ T=void * ]"
+<<<<<<< HEAD
 #pragma warning(disable : 4324)
+||||||| merged common ancestors
+#pragma warning(disable:4324)
+=======
+#  pragma warning(disable : 4324)
+>>>>>>> upstream-releases
 #endif /* defined(_MSC_VER) */
 #include "mozilla/BasePrincipal.h"
 #if defined(_MSC_VER)
+<<<<<<< HEAD
 #pragma warning(pop) /* popping the pragma in this file */
 #endif               /* defined(_MSC_VER) */
+||||||| merged common ancestors
+#pragma warning(pop) /* popping the pragma in this file */
+#endif /* defined(_MSC_VER) */
+=======
+#  pragma warning(pop) /* popping the pragma in this file */
+#endif                 /* defined(_MSC_VER) */
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace ct {
@@ -206,7 +221,8 @@ class CertVerifier {
                SHA1Mode sha1Mode, BRNameMatchingPolicy::Mode nameMatchingMode,
                NetscapeStepUpPolicy netscapeStepUpPolicy,
                CertificateTransparencyMode ctMode,
-               DistrustedCAPolicy distrustedCAPolicy);
+               DistrustedCAPolicy distrustedCAPolicy,
+               const Vector<EnterpriseCert>& thirdPartyCerts);
   ~CertVerifier();
 
   void ClearOCSPCache() { mOCSPCache.Clear(); }
@@ -225,6 +241,13 @@ class CertVerifier {
 
  private:
   OCSPCache mOCSPCache;
+  // We keep a copy of the bytes of each third party root to own.
+  Vector<EnterpriseCert> mThirdPartyCerts;
+  // This is a reusable, precomputed list of Inputs corresponding to each root
+  // in mThirdPartyCerts that wasn't too long to make an Input out of.
+  Vector<mozilla::pkix::Input> mThirdPartyRootInputs;
+  // Similarly, but with intermediates.
+  Vector<mozilla::pkix::Input> mThirdPartyIntermediateInputs;
 
   // We only have a forward declarations of these classes (see above)
   // so we must allocate dynamically.

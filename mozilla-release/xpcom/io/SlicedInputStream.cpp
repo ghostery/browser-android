@@ -420,14 +420,64 @@ SlicedInputStream::OnInputStreamReady(nsIAsyncInputStream* aStream) {
 
 // nsIIPCSerializableInputStream
 
+<<<<<<< HEAD
 void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
                                   FileDescriptorArray& aFileDescriptors) {
+||||||| merged common ancestors
+void
+SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                             FileDescriptorArray& aFileDescriptors)
+{
+=======
+void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                  FileDescriptorArray& aFileDescriptors,
+                                  bool aDelayedStart, uint32_t aMaxSize,
+                                  uint32_t* aSizeUsed,
+                                  mozilla::dom::ContentChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                  FileDescriptorArray& aFileDescriptors,
+                                  bool aDelayedStart, uint32_t aMaxSize,
+                                  uint32_t* aSizeUsed,
+                                  mozilla::ipc::PBackgroundChild* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                  FileDescriptorArray& aFileDescriptors,
+                                  bool aDelayedStart, uint32_t aMaxSize,
+                                  uint32_t* aSizeUsed,
+                                  mozilla::dom::ContentParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+void SlicedInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
+                                  FileDescriptorArray& aFileDescriptors,
+                                  bool aDelayedStart, uint32_t aMaxSize,
+                                  uint32_t* aSizeUsed,
+                                  mozilla::ipc::PBackgroundParent* aManager) {
+  SerializeInternal(aParams, aFileDescriptors, aDelayedStart, aMaxSize,
+                    aSizeUsed, aManager);
+}
+
+template <typename M>
+void SlicedInputStream::SerializeInternal(
+    mozilla::ipc::InputStreamParams& aParams,
+    FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
+    uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mInputStream);
   MOZ_ASSERT(mWeakIPCSerializableInputStream);
 
   SlicedInputStreamParams params;
   InputStreamHelper::SerializeInputStream(mInputStream, params.stream(),
-                                          aFileDescriptors);
+                                          aFileDescriptors, aDelayedStart,
+                                          aMaxSize, aSizeUsed, aManager);
   params.start() = mStart;
   params.length() = mLength;
   params.curPos() = mCurPos;
@@ -466,6 +516,7 @@ bool SlicedInputStream::Deserialize(
   return true;
 }
 
+<<<<<<< HEAD
 mozilla::Maybe<uint64_t> SlicedInputStream::ExpectedSerializedLength() {
   if (!mInputStream || !mWeakIPCSerializableInputStream) {
     return mozilla::Nothing();
@@ -474,6 +525,19 @@ mozilla::Maybe<uint64_t> SlicedInputStream::ExpectedSerializedLength() {
   return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
 }
 
+||||||| merged common ancestors
+mozilla::Maybe<uint64_t>
+SlicedInputStream::ExpectedSerializedLength()
+{
+  if (!mInputStream || !mWeakIPCSerializableInputStream) {
+    return mozilla::Nothing();
+  }
+
+  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
+}
+
+=======
+>>>>>>> upstream-releases
 // nsISeekableStream
 
 NS_IMETHODIMP

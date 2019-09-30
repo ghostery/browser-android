@@ -47,6 +47,7 @@ class MOZ_STACK_CLASS APZAutoDirWheelDeltaAdjuster final
    *                           IsHorizontalContentRightToLeft() in
    *                           the base class AutoDirWheelDeltaAdjuster.
    */
+<<<<<<< HEAD
   explicit APZAutoDirWheelDeltaAdjuster(double& aDeltaX, double& aDeltaY,
                                         const AxisX& aAxisX,
                                         const AxisY& aAxisY,
@@ -55,6 +56,28 @@ class MOZ_STACK_CLASS APZAutoDirWheelDeltaAdjuster final
         mAxisX(aAxisX),
         mAxisY(aAxisY),
         mIsHorizontalContentRightToLeft(aIsHorizontalContentRightToLeft) {}
+||||||| merged common ancestors
+  explicit
+  APZAutoDirWheelDeltaAdjuster(double& aDeltaX,
+                               double& aDeltaY,
+                               const AxisX& aAxisX,
+                               const AxisY& aAxisY,
+                               bool aIsHorizontalContentRightToLeft)
+    : AutoDirWheelDeltaAdjuster(aDeltaX, aDeltaY)
+    , mAxisX(aAxisX)
+    , mAxisY(aAxisY)
+    , mIsHorizontalContentRightToLeft(aIsHorizontalContentRightToLeft)
+  {
+  }
+=======
+  APZAutoDirWheelDeltaAdjuster(double& aDeltaX, double& aDeltaY,
+                               const AxisX& aAxisX, const AxisY& aAxisY,
+                               bool aIsHorizontalContentRightToLeft)
+      : AutoDirWheelDeltaAdjuster(aDeltaX, aDeltaY),
+        mAxisX(aAxisX),
+        mAxisY(aAxisY),
+        mIsHorizontalContentRightToLeft(aIsHorizontalContentRightToLeft) {}
+>>>>>>> upstream-releases
 
  private:
   virtual bool CanScrollAlongXAxis() const override {

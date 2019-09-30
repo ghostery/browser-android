@@ -11,6 +11,7 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 WebGLExtensionDepthTexture::WebGLExtensionDepthTexture(WebGLContext* webgl)
     : WebGLExtensionBase(webgl) {
   auto& fua = webgl->mFormatUsage;
@@ -28,18 +29,99 @@ WebGLExtensionDepthTexture::WebGLExtensionDepthTexture(WebGLContext* webgl)
 
     fua->AllowUnsizedTexFormat(pi, usage);
   };
+||||||| merged common ancestors
+WebGLExtensionDepthTexture::WebGLExtensionDepthTexture(WebGLContext* webgl)
+    : WebGLExtensionBase(webgl)
+{
+    auto& fua = webgl->mFormatUsage;
+
+    const auto fnAdd = [&fua](webgl::EffectiveFormat effFormat, GLenum unpackFormat,
+                              GLenum unpackType)
+    {
+        auto usage = fua->EditUsage(effFormat);
+        usage->isFilterable = true;
+        usage->SetRenderable();
+
+        const webgl::PackingInfo pi = {unpackFormat, unpackType};
+        const webgl::DriverUnpackInfo dui = {unpackFormat, unpackFormat, unpackType};
+        fua->AddTexUnpack(usage, pi, dui);
+
+        fua->AllowUnsizedTexFormat(pi, usage);
+    };
+=======
+WebGLExtensionDepthTexture::WebGLExtensionDepthTexture(
+    WebGLContext* const webgl)
+    : WebGLExtensionBase(webgl) {
+  auto& fua = webgl->mFormatUsage;
+
+  const auto fnAdd = [&fua](webgl::EffectiveFormat effFormat,
+                            GLenum unpackFormat, GLenum unpackType) {
+    auto usage = fua->EditUsage(effFormat);
+    MOZ_ASSERT(usage->isFilterable);
+    MOZ_ASSERT(usage->IsRenderable());
+
+    const webgl::PackingInfo pi = {unpackFormat, unpackType};
+    const webgl::DriverUnpackInfo dui = {unpackFormat, unpackFormat,
+                                         unpackType};
+    fua->AddTexUnpack(usage, pi, dui);
+    fua->AllowUnsizedTexFormat(pi, usage);
+  };
 
   fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT16, LOCAL_GL_DEPTH_COMPONENT,
         LOCAL_GL_UNSIGNED_SHORT);
-
   fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT24, LOCAL_GL_DEPTH_COMPONENT,
         LOCAL_GL_UNSIGNED_INT);
-
   fnAdd(webgl::EffectiveFormat::DEPTH24_STENCIL8, LOCAL_GL_DEPTH_STENCIL,
         LOCAL_GL_UNSIGNED_INT_24_8);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT16, LOCAL_GL_DEPTH_COMPONENT,
+        LOCAL_GL_UNSIGNED_SHORT);
+||||||| merged common ancestors
+    fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT16, LOCAL_GL_DEPTH_COMPONENT,
+          LOCAL_GL_UNSIGNED_SHORT);
+=======
+WebGLExtensionDepthTexture::~WebGLExtensionDepthTexture() = default;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT24, LOCAL_GL_DEPTH_COMPONENT,
+        LOCAL_GL_UNSIGNED_INT);
+||||||| merged common ancestors
+    fnAdd(webgl::EffectiveFormat::DEPTH_COMPONENT24, LOCAL_GL_DEPTH_COMPONENT,
+          LOCAL_GL_UNSIGNED_INT);
+=======
+bool WebGLExtensionDepthTexture::IsSupported(const WebGLContext* const webgl) {
+  if (webgl->IsWebGL2()) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  fnAdd(webgl::EffectiveFormat::DEPTH24_STENCIL8, LOCAL_GL_DEPTH_STENCIL,
+        LOCAL_GL_UNSIGNED_INT_24_8);
+}
+||||||| merged common ancestors
+    fnAdd(webgl::EffectiveFormat::DEPTH24_STENCIL8, LOCAL_GL_DEPTH_STENCIL,
+          LOCAL_GL_UNSIGNED_INT_24_8);
+}
+=======
+  // WEBGL_depth_texture supports DEPTH_STENCIL textures
+  const auto& gl = webgl->gl;
+  if (!gl->IsSupported(gl::GLFeature::packed_depth_stencil)) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 WebGLExtensionDepthTexture::~WebGLExtensionDepthTexture() {}
+||||||| merged common ancestors
+WebGLExtensionDepthTexture::~WebGLExtensionDepthTexture()
+{
+}
+=======
+  return gl->IsSupported(gl::GLFeature::depth_texture) ||
+         gl->IsExtensionSupported(gl::GLContext::ANGLE_depth_texture);
+}
+>>>>>>> upstream-releases
 
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionDepthTexture, WEBGL_depth_texture)
 

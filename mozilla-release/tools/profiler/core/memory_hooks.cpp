@@ -4,27 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include <ctype.h>
-#include <errno.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#ifdef XP_WIN
-#include <windows.h>
-#include <process.h>
-#else
-#include <pthread.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif
-
-#ifdef ANDROID
-#include <android/log.h>
-#endif
-
 #include "memory_hooks.h"
 
 #include "nscore.h"
@@ -36,6 +15,27 @@
 #include "mozilla/ProfilerCounts.h"
 
 #include "replace_malloc.h"
+
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifdef XP_WIN
+#  include <windows.h>
+#  include <process.h>
+#else
+#  include <pthread.h>
+#  include <sys/types.h>
+#  include <unistd.h>
+#endif
+
+#ifdef ANDROID
+#  include <android/log.h>
+#endif
 
 static mozilla::UniquePtr<ProfilerCounterTotal> sCounter;
 
@@ -82,15 +82,27 @@ static void FreeCallback(void* aPtr) {
   // XXX add optional stackwalk here
 }
 
+}  // namespace profiler
+}  // namespace mozilla
+
 //---------------------------------------------------------------------------
 // malloc/free interception
 //---------------------------------------------------------------------------
 
+<<<<<<< HEAD
 static bool Init(malloc_table_t const* aMallocTable);
 
 }  // namespace profiler
 }  // namespace mozilla
 
+||||||| merged common ancestors
+static bool Init(malloc_table_t const* aMallocTable);
+
+} // namespace profiler
+} // namespace mozilla
+
+=======
+>>>>>>> upstream-releases
 using namespace mozilla::profiler;
 
 static void* replace_malloc(size_t aSize) {
@@ -183,12 +195,21 @@ static void replace_moz_dispose_arena(arena_id_t aArenaId) {
 }
 
 // Must come after all the replace_* funcs
+<<<<<<< HEAD
 void replace_init(malloc_table_t* aMallocTable, ReplaceMallocBridge** aBridge) {
   if (mozilla::profiler::Init(aMallocTable)) {
+||||||| merged common ancestors
+void
+replace_init(malloc_table_t * aMallocTable, ReplaceMallocBridge** aBridge)
+{
+  if (mozilla::profiler::Init(aMallocTable)) {
+=======
+void replace_init(malloc_table_t* aMallocTable, ReplaceMallocBridge** aBridge) {
+  gMallocTable = *aMallocTable;
+>>>>>>> upstream-releases
 #define MALLOC_FUNCS (MALLOC_FUNCS_MALLOC_BASE | MALLOC_FUNCS_ARENA)
 #define MALLOC_DECL(name, ...) aMallocTable->name = replace_##name;
 #include "malloc_decls.h"
-  }
 }
 
 void profiler_replace_remove() {}
@@ -199,6 +220,7 @@ namespace profiler {
 // Initialization
 //---------------------------------------------------------------------------
 
+<<<<<<< HEAD
 static bool Init(malloc_table_t const* aMallocTable) {
   gMallocTable = *aMallocTable;
 
@@ -212,10 +234,35 @@ void install_memory_counter(bool aInstall) {
                                                   "Amount of allocated memory");
     } else {
       return;
+||||||| merged common ancestors
+static bool
+Init(malloc_table_t const* aMallocTable)
+{
+  gMallocTable = *aMallocTable;
+
+  return true;
+}
+
+void
+install_memory_counter(bool aInstall)
+{
+  if (!sCounter) {
+    if (aInstall) {
+      sCounter = MakeUnique<ProfilerCounterTotal>("malloc", "Memory", "Amount of allocated memory");
+    } else {
+      return;
+=======
+void install_memory_counter(bool aInstall) {
+  if (aInstall) {
+    if (!sCounter) {
+      sCounter = MakeUnique<ProfilerCounterTotal>("malloc", "Memory",
+                                                  "Amount of allocated memory");
+>>>>>>> upstream-releases
     }
+    jemalloc_replace_dynamic(replace_init);
+  } else {
+    jemalloc_replace_dynamic(nullptr);
   }
-  // start counting memory allocations, or stop
-  jemalloc_replace_dynamic(aInstall ? replace_init : nullptr);
 }
 
 }  // namespace profiler

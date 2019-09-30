@@ -13,6 +13,10 @@
 
 class nsTableColFrame;
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 /**
  * nsTableColGroupFrame
  * data structure to maintain information about a single table cell's frame
@@ -21,6 +25,7 @@ class nsTableColGroupFrame final : public nsContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsTableColGroupFrame)
 
+<<<<<<< HEAD
   /**
    * instantiate a new instance of nsTableRowFrame.
    *
@@ -30,6 +35,25 @@ class nsTableColGroupFrame final : public nsContainerFrame {
    */
   friend nsTableColGroupFrame* NS_NewTableColGroupFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+  /** instantiate a new instance of nsTableRowFrame.
+    * @param aPresShell the pres shell for this frame
+    *
+    * @return           the frame that was created
+    */
+  friend nsTableColGroupFrame* NS_NewTableColGroupFrame(nsIPresShell* aPresShell,
+                                                        ComputedStyle* aStyle);
+=======
+  /**
+   * instantiate a new instance of nsTableRowFrame.
+   *
+   * @param aPresShell the pres shell for this frame
+   *
+   * @return           the frame that was created
+   */
+  friend nsTableColGroupFrame* NS_NewTableColGroupFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   // nsIFrame overrides
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
@@ -203,8 +227,17 @@ class nsTableColGroupFrame final : public nsContainerFrame {
     InvalidateFrameSubtree();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsTableColGroupFrame(ComputedStyle* aStyle);
+||||||| merged common ancestors
+protected:
+  explicit nsTableColGroupFrame(ComputedStyle* aStyle);
+=======
+ protected:
+  explicit nsTableColGroupFrame(ComputedStyle* aStyle,
+                                nsPresContext* aPresContext);
+>>>>>>> upstream-releases
 
   void InsertColsReflow(int32_t aColIndex, const nsFrameList::Slice& aCols);
 
@@ -221,8 +254,23 @@ class nsTableColGroupFrame final : public nsContainerFrame {
   BCPixelSize mBEndContBorderWidth;
 };
 
+<<<<<<< HEAD
 inline nsTableColGroupFrame::nsTableColGroupFrame(ComputedStyle* aStyle)
     : nsContainerFrame(aStyle, kClassID), mColCount(0), mStartColIndex(0) {}
+||||||| merged common ancestors
+inline nsTableColGroupFrame::nsTableColGroupFrame(ComputedStyle* aStyle)
+  : nsContainerFrame(aStyle, kClassID)
+  , mColCount(0)
+  , mStartColIndex(0)
+{
+}
+=======
+inline nsTableColGroupFrame::nsTableColGroupFrame(ComputedStyle* aStyle,
+                                                  nsPresContext* aPresContext)
+    : nsContainerFrame(aStyle, aPresContext, kClassID),
+      mColCount(0),
+      mStartColIndex(0) {}
+>>>>>>> upstream-releases
 
 inline int32_t nsTableColGroupFrame::GetStartColumnIndex() {
   return mStartColIndex;

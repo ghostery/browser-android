@@ -17,6 +17,7 @@
 #include "AutoObjectMapper.h"
 
 #if defined(GP_OS_android)
+<<<<<<< HEAD
 #include <dlfcn.h>
 #include "mozilla/Types.h"
 // FIXME move these out of mozglue/linker/ElfLoader.h into their
@@ -31,6 +32,40 @@ MFBT_API void __dl_munmap(void* handle, void* addr, size_t length);
 #include "nsString.h"
 #include "nsDirectoryServiceUtils.h"
 #include "nsDirectoryServiceDefs.h"
+||||||| merged common ancestors
+# include <dlfcn.h>
+# include "mozilla/Types.h"
+  // FIXME move these out of mozglue/linker/ElfLoader.h into their
+  // own header, so as to avoid conflicts arising from two definitions
+  // of Array
+  extern "C" {
+    MFBT_API size_t
+    __dl_get_mappable_length(void *handle);
+    MFBT_API void *
+    __dl_mmap(void *handle, void *addr, size_t length, off_t offset);
+    MFBT_API void
+    __dl_munmap(void *handle, void *addr, size_t length);
+  }
+  // The following are for get_installation_lib_dir()
+# include "nsString.h"
+# include "nsDirectoryServiceUtils.h"
+# include "nsDirectoryServiceDefs.h"
+=======
+#  include <dlfcn.h>
+#  include "mozilla/Types.h"
+// FIXME move these out of mozglue/linker/ElfLoader.h into their
+// own header, so as to avoid conflicts arising from two definitions
+// of Array
+extern "C" {
+MFBT_API size_t __dl_get_mappable_length(void* handle);
+MFBT_API void* __dl_mmap(void* handle, void* addr, size_t length, off_t offset);
+MFBT_API void __dl_munmap(void* handle, void* addr, size_t length);
+}
+// The following are for get_installation_lib_dir()
+#  include "nsString.h"
+#  include "nsDirectoryServiceUtils.h"
+#  include "nsDirectoryServiceDefs.h"
+>>>>>>> upstream-releases
 #endif
 
 // A helper function for creating failure error messages in

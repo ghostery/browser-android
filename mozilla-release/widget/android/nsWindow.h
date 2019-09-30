@@ -173,6 +173,7 @@ class nsWindow final : public nsBaseWidget {
   // Owned by the Java LayerView instance.
   NativePtr<LayerViewSupport> mLayerViewSupport;
 
+<<<<<<< HEAD
   class NPZCSupport;
   // Object that implements native NativePanZoomController calls.
   // Owned by the Java NativePanZoomController instance.
@@ -363,6 +364,200 @@ class nsWindow final : public nsBaseWidget {
   mozilla::layers::LayersId GetRootLayerId() const;
   RefPtr<mozilla::layers::UiCompositorControllerChild>
   GetUiCompositorControllerChild();
+||||||| merged common ancestors
+    mozilla::layers::LayersId GetRootLayerId() const;
+    RefPtr<mozilla::layers::UiCompositorControllerChild> GetUiCompositorControllerChild();
+=======
+  class NPZCSupport;
+  // Object that implements native NativePanZoomController calls.
+  // Owned by the Java NativePanZoomController instance.
+  NativePtr<NPZCSupport> mNPZCSupport;
+
+  // Object that implements native GeckoEditable calls.
+  // Strong referenced by the Java instance.
+  NativePtr<mozilla::widget::GeckoEditableSupport> mEditableSupport;
+  mozilla::jni::Object::GlobalRef mEditableParent;
+
+  // Object that implements native SessionAccessibility calls.
+  // Strong referenced by the Java instance.
+  NativePtr<mozilla::a11y::SessionAccessibility> mSessionAccessibility;
+
+  class GeckoViewSupport;
+  // Object that implements native GeckoView calls and associated states.
+  // nullptr for nsWindows that were not opened from GeckoView.
+  // Because other objects get destroyed in the mGeckOViewSupport destructor,
+  // keep it last in the list, so its destructor is called first.
+  mozilla::UniquePtr<GeckoViewSupport> mGeckoViewSupport;
+
+  mozilla::Atomic<bool, mozilla::ReleaseAcquire> mContentDocumentDisplayed;
+
+ public:
+  static already_AddRefed<nsWindow> From(nsPIDOMWindowOuter* aDOMWindow);
+  static already_AddRefed<nsWindow> From(nsIWidget* aWidget);
+
+  static nsWindow* TopWindow();
+
+  static mozilla::Modifiers GetModifiers(int32_t aMetaState);
+  static mozilla::TimeStamp GetEventTimeStamp(int64_t aEventTime);
+
+  void OnSizeChanged(const mozilla::gfx::IntSize& aSize);
+
+  void InitEvent(mozilla::WidgetGUIEvent& event,
+                 LayoutDeviceIntPoint* aPoint = 0);
+
+  void UpdateOverscrollVelocity(const float aX, const float aY);
+  void UpdateOverscrollOffset(const float aX, const float aY);
+
+  mozilla::widget::EventDispatcher* GetEventDispatcher() const {
+    if (mAndroidView) {
+      return mAndroidView->mEventDispatcher;
+    }
+    return nullptr;
+  }
+
+  void NotifyDisablingWebRender();
+
+  //
+  // nsIWidget
+  //
+
+  using nsBaseWidget::Create;  // for Create signature not overridden here
+  virtual MOZ_MUST_USE nsresult Create(nsIWidget* aParent,
+                                       nsNativeWidget aNativeParent,
+                                       const LayoutDeviceIntRect& aRect,
+                                       nsWidgetInitData* aInitData) override;
+  virtual void Destroy() override;
+  virtual nsresult ConfigureChildren(
+      const nsTArray<nsIWidget::Configuration>&) override;
+  virtual void SetParent(nsIWidget* aNewParent) override;
+  virtual nsIWidget* GetParent(void) override;
+  virtual float GetDPI() override;
+  virtual double GetDefaultScaleInternal() override;
+  virtual void Show(bool aState) override;
+  virtual bool IsVisible() const override;
+  virtual void ConstrainPosition(bool aAllowSlop, int32_t* aX,
+                                 int32_t* aY) override;
+  virtual void Move(double aX, double aY) override;
+  virtual void Resize(double aWidth, double aHeight, bool aRepaint) override;
+  virtual void Resize(double aX, double aY, double aWidth, double aHeight,
+                      bool aRepaint) override;
+  void SetZIndex(int32_t aZIndex) override;
+  virtual void SetSizeMode(nsSizeMode aMode) override;
+  virtual void Enable(bool aState) override;
+  virtual bool IsEnabled() const override;
+  virtual void Invalidate(const LayoutDeviceIntRect& aRect) override;
+  virtual void SetFocus(Raise) override;
+  virtual LayoutDeviceIntRect GetScreenBounds() override;
+  virtual LayoutDeviceIntPoint WidgetToScreenOffset() override;
+  virtual nsresult DispatchEvent(mozilla::WidgetGUIEvent* aEvent,
+                                 nsEventStatus& aStatus) override;
+  nsEventStatus DispatchEvent(mozilla::WidgetGUIEvent* aEvent);
+  virtual already_AddRefed<nsIScreen> GetWidgetScreen() override;
+  virtual nsresult MakeFullScreen(bool aFullScreen,
+                                  nsIScreen* aTargetScreen = nullptr) override;
+  void SetCursor(nsCursor aDefaultCursor, imgIContainer* aImageCursor,
+                 uint32_t aHotspotX, uint32_t aHotspotY) override {}
+  void* GetNativeData(uint32_t aDataType) override;
+  void SetNativeData(uint32_t aDataType, uintptr_t aVal) override;
+  virtual nsresult SetTitle(const nsAString& aTitle) override { return NS_OK; }
+  virtual MOZ_MUST_USE nsresult GetAttention(int32_t aCycleCount) override {
+    return NS_ERROR_NOT_IMPLEMENTED;
+  }
+
+  TextEventDispatcherListener* GetNativeTextEventDispatcherListener() override;
+  virtual void SetInputContext(const InputContext& aContext,
+                               const InputContextAction& aAction) override;
+  virtual InputContext GetInputContext() override;
+
+  LayerManager* GetLayerManager(
+      PLayerTransactionChild* aShadowManager = nullptr,
+      LayersBackend aBackendHint = mozilla::layers::LayersBackend::LAYERS_NONE,
+      LayerManagerPersistence aPersistence = LAYER_MANAGER_CURRENT) override;
+
+  virtual bool NeedsPaint() override;
+
+  virtual bool WidgetPaintsBackground() override;
+
+  virtual uint32_t GetMaxTouchPoints() const override;
+
+  void UpdateZoomConstraints(
+      const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
+      const mozilla::Maybe<ZoomConstraints>& aConstraints) override;
+
+  nsresult SynthesizeNativeTouchPoint(uint32_t aPointerId,
+                                      TouchPointerState aPointerState,
+                                      LayoutDeviceIntPoint aPoint,
+                                      double aPointerPressure,
+                                      uint32_t aPointerOrientation,
+                                      nsIObserver* aObserver) override;
+  nsresult SynthesizeNativeMouseEvent(LayoutDeviceIntPoint aPoint,
+                                      uint32_t aNativeMessage,
+                                      uint32_t aModifierFlags,
+                                      nsIObserver* aObserver) override;
+  nsresult SynthesizeNativeMouseMove(LayoutDeviceIntPoint aPoint,
+                                     nsIObserver* aObserver) override;
+
+  mozilla::layers::CompositorBridgeChild* GetCompositorBridgeChild() const;
+
+  void SetContentDocumentDisplayed(bool aDisplayed);
+  bool IsContentDocumentDisplayed();
+
+  // Call this function when the users activity is the direct cause of an
+  // event (like a keypress or mouse click).
+  void UserActivity();
+
+  mozilla::jni::Object::Ref& GetEditableParent() { return mEditableParent; }
+
+  mozilla::a11y::SessionAccessibility* GetSessionAccessibility() {
+    return mSessionAccessibility;
+  }
+
+  void RecvToolbarAnimatorMessageFromCompositor(int32_t aMessage) override;
+  void UpdateRootFrameMetrics(const ScreenPoint& aScrollOffset,
+                              const CSSToScreenScale& aZoom) override;
+  void RecvScreenPixels(mozilla::ipc::Shmem&& aMem,
+                        const ScreenIntSize& aSize) override;
+
+  nsresult SetPrefersReducedMotionOverrideForTest(bool aValue) override;
+  nsresult ResetPrefersReducedMotionOverrideForTest() override;
+
+ protected:
+  void BringToFront();
+  nsWindow* FindTopLevel();
+  bool IsTopLevel();
+
+  void ConfigureAPZControllerThread() override;
+  void DispatchHitTest(const mozilla::WidgetTouchEvent& aEvent);
+
+  already_AddRefed<GeckoContentController> CreateRootContentController()
+      override;
+
+  bool mIsVisible;
+  nsTArray<nsWindow*> mChildren;
+  nsWindow* mParent;
+
+  double mStartDist;
+  double mLastDist;
+
+  nsCOMPtr<nsIIdleServiceInternal> mIdleService;
+
+  bool mIsFullScreen;
+  bool mIsDisablingWebRender;
+
+  bool UseExternalCompositingSurface() const override { return true; }
+
+  static void DumpWindows();
+  static void DumpWindows(const nsTArray<nsWindow*>& wins, int indent = 0);
+  static void LogWindow(nsWindow* win, int index, int indent);
+
+ private:
+  void CreateLayerManager();
+  void RedrawAll();
+
+  mozilla::layers::LayersId GetRootLayerId() const;
+  RefPtr<mozilla::layers::UiCompositorControllerChild>
+  GetUiCompositorControllerChild();
+>>>>>>> upstream-releases
 };
 
 // Explicit template declarations to make clang be quiet.

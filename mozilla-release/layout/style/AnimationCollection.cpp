@@ -22,11 +22,23 @@ template <class AnimationType>
   MOZ_ASSERT(!collection->mCalledPropertyDtor, "can't call dtor twice");
   collection->mCalledPropertyDtor = true;
 #endif
+
+  PostRestyleMode postRestyle = collection->mCalledDestroy
+                                    ? PostRestyleMode::IfNeeded
+                                    : PostRestyleMode::Never;
   {
     nsAutoAnimationMutationBatch mb(collection->mElement->OwnerDoc());
 
+<<<<<<< HEAD
     for (size_t animIdx = collection->mAnimations.Length(); animIdx-- != 0;) {
       collection->mAnimations[animIdx]->CancelFromStyle();
+||||||| merged common ancestors
+    for (size_t animIdx = collection->mAnimations.Length(); animIdx-- != 0; ) {
+      collection->mAnimations[animIdx]->CancelFromStyle();
+=======
+    for (size_t animIdx = collection->mAnimations.Length(); animIdx-- != 0;) {
+      collection->mAnimations[animIdx]->CancelFromStyle(postRestyle);
+>>>>>>> upstream-releases
     }
   }
   delete collection;
@@ -35,7 +47,15 @@ template <class AnimationType>
 template <class AnimationType>
 /* static */ AnimationCollection<AnimationType>*
 AnimationCollection<AnimationType>::GetAnimationCollection(
+<<<<<<< HEAD
     const dom::Element* aElement, CSSPseudoElementType aPseudoType) {
+||||||| merged common ancestors
+  const dom::Element *aElement,
+  CSSPseudoElementType aPseudoType)
+{
+=======
+    const dom::Element* aElement, PseudoStyleType aPseudoType) {
+>>>>>>> upstream-releases
   if (!aElement->MayHaveAnimations()) {
     // Early return for the most common case.
     return nullptr;
@@ -71,8 +91,18 @@ AnimationCollection<AnimationType>::GetAnimationCollection(
 template <class AnimationType>
 /* static */ AnimationCollection<AnimationType>*
 AnimationCollection<AnimationType>::GetOrCreateAnimationCollection(
+<<<<<<< HEAD
     dom::Element* aElement, CSSPseudoElementType aPseudoType,
     bool* aCreatedCollection) {
+||||||| merged common ancestors
+  dom::Element* aElement,
+  CSSPseudoElementType aPseudoType,
+  bool* aCreatedCollection)
+{
+=======
+    dom::Element* aElement, PseudoStyleType aPseudoType,
+    bool* aCreatedCollection) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCreatedCollection);
   *aCreatedCollection = false;
 
@@ -108,15 +138,24 @@ AnimationCollection<AnimationType>::GetOrCreateAnimationCollection(
 template <class AnimationType>
 /*static*/ nsAtom*
 AnimationCollection<AnimationType>::GetPropertyAtomForPseudoType(
+<<<<<<< HEAD
     CSSPseudoElementType aPseudoType) {
+||||||| merged common ancestors
+  CSSPseudoElementType aPseudoType)
+{
+=======
+    PseudoStyleType aPseudoType) {
+>>>>>>> upstream-releases
   nsAtom* propName = nullptr;
 
-  if (aPseudoType == CSSPseudoElementType::NotPseudo) {
+  if (aPseudoType == PseudoStyleType::NotPseudo) {
     propName = TraitsType::ElementPropertyAtom();
-  } else if (aPseudoType == CSSPseudoElementType::before) {
+  } else if (aPseudoType == PseudoStyleType::before) {
     propName = TraitsType::BeforePropertyAtom();
-  } else if (aPseudoType == CSSPseudoElementType::after) {
+  } else if (aPseudoType == PseudoStyleType::after) {
     propName = TraitsType::AfterPropertyAtom();
+  } else if (aPseudoType == PseudoStyleType::marker) {
+    propName = TraitsType::MarkerPropertyAtom();
   }
 
   return propName;

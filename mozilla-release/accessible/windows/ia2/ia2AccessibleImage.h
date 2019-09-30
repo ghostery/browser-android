@@ -20,16 +20,16 @@ class ia2AccessibleImage : public IAccessibleImage {
 
   // IAccessibleImage
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_description(
-      /* [retval][out] */ BSTR *description);
+      /* [retval][out] */ BSTR* description);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_imagePosition(
       /* [in] */ enum IA2CoordinateType coordinateType,
-      /* [out] */ long *x,
-      /* [retval][out] */ long *y);
+      /* [out] */ long* x,
+      /* [retval][out] */ long* y);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_imageSize(
-      /* [out] */ long *height,
-      /* [retval][out] */ long *width);
+      /* [out] */ long* height,
+      /* [retval][out] */ long* width);
 };
 
 }  // namespace a11y

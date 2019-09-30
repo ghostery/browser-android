@@ -34,9 +34,9 @@ static constexpr float kOctoEdgeNorms[8 * 4] = {
 
 GR_DECLARE_STATIC_UNIQUE_KEY(gVertexBufferKey);
 
-sk_sp<const GrBuffer> GrCCPathProcessor::FindVertexBuffer(GrOnFlushResourceProvider* onFlushRP) {
+sk_sp<const GrGpuBuffer> GrCCPathProcessor::FindVertexBuffer(GrOnFlushResourceProvider* onFlushRP) {
     GR_DEFINE_STATIC_UNIQUE_KEY(gVertexBufferKey);
-    return onFlushRP->findOrMakeStaticBuffer(kVertex_GrBufferType, sizeof(kOctoEdgeNorms),
+    return onFlushRP->findOrMakeStaticBuffer(GrGpuBufferType::kVertex, sizeof(kOctoEdgeNorms),
                                              kOctoEdgeNorms, gVertexBufferKey);
 }
 
@@ -61,23 +61,35 @@ static constexpr uint16_t kOctoIndicesAsTris[] = {
 
 GR_DECLARE_STATIC_UNIQUE_KEY(gIndexBufferKey);
 
+<<<<<<< HEAD
 constexpr GrPrimitiveProcessor::Attribute GrCCPathProcessor::kInstanceAttribs[];
 constexpr GrPrimitiveProcessor::Attribute GrCCPathProcessor::kEdgeNormsAttrib;
 
 sk_sp<const GrBuffer> GrCCPathProcessor::FindIndexBuffer(GrOnFlushResourceProvider* onFlushRP) {
+||||||| merged common ancestors
+sk_sp<const GrBuffer> GrCCPathProcessor::FindIndexBuffer(GrOnFlushResourceProvider* onFlushRP) {
+=======
+constexpr GrPrimitiveProcessor::Attribute GrCCPathProcessor::kInstanceAttribs[];
+constexpr GrPrimitiveProcessor::Attribute GrCCPathProcessor::kEdgeNormsAttrib;
+
+sk_sp<const GrGpuBuffer> GrCCPathProcessor::FindIndexBuffer(GrOnFlushResourceProvider* onFlushRP) {
+>>>>>>> upstream-releases
     GR_DEFINE_STATIC_UNIQUE_KEY(gIndexBufferKey);
     if (onFlushRP->caps()->usePrimitiveRestart()) {
-        return onFlushRP->findOrMakeStaticBuffer(kIndex_GrBufferType, sizeof(kOctoIndicesAsStrips),
-                                                 kOctoIndicesAsStrips, gIndexBufferKey);
+        return onFlushRP->findOrMakeStaticBuffer(GrGpuBufferType::kIndex,
+                                                 sizeof(kOctoIndicesAsStrips), kOctoIndicesAsStrips,
+                                                 gIndexBufferKey);
     } else {
-        return onFlushRP->findOrMakeStaticBuffer(kIndex_GrBufferType, sizeof(kOctoIndicesAsTris),
-                                                 kOctoIndicesAsTris, gIndexBufferKey);
+        return onFlushRP->findOrMakeStaticBuffer(GrGpuBufferType::kIndex,
+                                                 sizeof(kOctoIndicesAsTris), kOctoIndicesAsTris,
+                                                 gIndexBufferKey);
     }
 }
 
 GrCCPathProcessor::GrCCPathProcessor(const GrTextureProxy* atlas,
                                      const SkMatrix& viewMatrixIfUsingLocalCoords)
         : INHERITED(kGrCCPathProcessor_ClassID)
+<<<<<<< HEAD
         , fAtlasAccess(atlas->textureType(), atlas->config(), GrSamplerState::Filter::kNearest,
                        GrSamplerState::WrapMode::kClamp)
         , fAtlasSize(atlas->isize())
@@ -100,6 +112,55 @@ GrCCPathProcessor::GrCCPathProcessor(const GrTextureProxy* atlas,
 
     if (!viewMatrixIfUsingLocalCoords.invert(&fLocalMatrix)) {
         fLocalMatrix.setIdentity();
+||||||| merged common ancestors
+        , fFillType(fillType)
+        , fAtlasAccess(std::move(atlas), GrSamplerState::Filter::kNearest,
+                       GrSamplerState::WrapMode::kClamp, kFragment_GrShaderFlag) {
+    this->addInstanceAttrib("devbounds", kFloat4_GrVertexAttribType);
+    this->addInstanceAttrib("devbounds45", kFloat4_GrVertexAttribType);
+    this->addInstanceAttrib("view_matrix", kFloat4_GrVertexAttribType);
+    this->addInstanceAttrib("view_translate", kFloat2_GrVertexAttribType);
+    this->addInstanceAttrib("atlas_offset", kShort2_GrVertexAttribType);
+    this->addInstanceAttrib("color", kUByte4_norm_GrVertexAttribType);
+
+    SkASSERT(offsetof(Instance, fDevBounds) ==
+             this->getInstanceAttrib(InstanceAttribs::kDevBounds).fOffsetInRecord);
+    SkASSERT(offsetof(Instance, fDevBounds45) ==
+             this->getInstanceAttrib(InstanceAttribs::kDevBounds45).fOffsetInRecord);
+    SkASSERT(offsetof(Instance, fViewMatrix) ==
+             this->getInstanceAttrib(InstanceAttribs::kViewMatrix).fOffsetInRecord);
+    SkASSERT(offsetof(Instance, fViewTranslate) ==
+             this->getInstanceAttrib(InstanceAttribs::kViewTranslate).fOffsetInRecord);
+    SkASSERT(offsetof(Instance, fAtlasOffset) ==
+             this->getInstanceAttrib(InstanceAttribs::kAtlasOffset).fOffsetInRecord);
+    SkASSERT(offsetof(Instance, fColor) ==
+             this->getInstanceAttrib(InstanceAttribs::kColor).fOffsetInRecord);
+    SkASSERT(sizeof(Instance) == this->getInstanceStride());
+
+    GR_STATIC_ASSERT(6 == kNumInstanceAttribs);
+
+    this->addVertexAttrib("edge_norms", kFloat4_GrVertexAttribType);
+
+    fAtlasAccess.instantiate(resourceProvider);
+    this->addTextureSampler(&fAtlasAccess);
+
+    if (resourceProvider->caps()->usePrimitiveRestart()) {
+        this->setWillUsePrimitiveRestart();
+=======
+        , fAtlasAccess(atlas->textureType(), atlas->config(), GrSamplerState::Filter::kNearest,
+                       GrSamplerState::WrapMode::kClamp)
+        , fAtlasSize(atlas->isize())
+        , fAtlasOrigin(atlas->origin()) {
+    // TODO: Can we just assert that atlas has GrCCAtlas::kTextureOrigin and remove fAtlasOrigin?
+    this->setInstanceAttributes(kInstanceAttribs, kNumInstanceAttribs);
+    SkASSERT(this->instanceStride() == sizeof(Instance));
+
+    this->setVertexAttributes(&kEdgeNormsAttrib, 1);
+    this->setTextureSamplerCnt(1);
+
+    if (!viewMatrixIfUsingLocalCoords.invert(&fLocalMatrix)) {
+        fLocalMatrix.setIdentity();
+>>>>>>> upstream-releases
     }
 }
 
@@ -125,6 +186,7 @@ GrGLSLPrimitiveProcessor* GrCCPathProcessor::createGLSLInstance(const GrShaderCa
     return new GLSLPathProcessor();
 }
 
+<<<<<<< HEAD
 void GrCCPathProcessor::drawPaths(GrOpFlushState* flushState, const GrPipeline& pipeline,
                                   const GrPipeline::FixedDynamicState* fixedDynamicState,
                                   const GrCCPerFlushResources& resources, int baseInstance,
@@ -148,6 +210,32 @@ void GrCCPathProcessor::drawPaths(GrOpFlushState* flushState, const GrPipeline& 
                                         bounds);
 }
 
+||||||| merged common ancestors
+=======
+void GrCCPathProcessor::drawPaths(GrOpFlushState* flushState, const GrPipeline& pipeline,
+                                  const GrPipeline::FixedDynamicState* fixedDynamicState,
+                                  const GrCCPerFlushResources& resources, int baseInstance,
+                                  int endInstance, const SkRect& bounds) const {
+    const GrCaps& caps = flushState->caps();
+    GrPrimitiveType primitiveType = caps.usePrimitiveRestart()
+                                            ? GrPrimitiveType::kTriangleStrip
+                                            : GrPrimitiveType::kTriangles;
+    int numIndicesPerInstance = caps.usePrimitiveRestart()
+                                        ? SK_ARRAY_COUNT(kOctoIndicesAsStrips)
+                                        : SK_ARRAY_COUNT(kOctoIndicesAsTris);
+    GrMesh mesh(primitiveType);
+    auto enablePrimitiveRestart = GrPrimitiveRestart(flushState->caps().usePrimitiveRestart());
+
+    mesh.setIndexedInstanced(resources.refIndexBuffer(), numIndicesPerInstance,
+                             resources.refInstanceBuffer(), endInstance - baseInstance,
+                             baseInstance, enablePrimitiveRestart);
+    mesh.setVertexData(resources.refVertexBuffer());
+
+    flushState->rtCommandBuffer()->draw(*this, pipeline, fixedDynamicState, nullptr, &mesh, 1,
+                                        bounds);
+}
+
+>>>>>>> upstream-releases
 void GLSLPathProcessor::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
     using InstanceAttribs = GrCCPathProcessor::InstanceAttribs;
     using Interpolation = GrGLSLVaryingHandler::Interpolation;
@@ -199,6 +287,7 @@ void GLSLPathProcessor::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
     v->codeAppend ("float2 K = float2(dot(N[0], refpt), dot(N[1], refpt45));");
     v->codeAppendf("float2 octocoord = K * inverse(N);");
 
+<<<<<<< HEAD
     // Round the octagon out to ensure we rasterize every pixel the path might touch. (Positive
     // bloatdir means we should take the "ceil" and negative means to take the "floor".)
     //
@@ -209,6 +298,20 @@ void GLSLPathProcessor::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
                            "? half2(N[0].x, N[1].y) : half2(N[1].x, N[0].y);");
     v->codeAppend ("octocoord = (ceil(octocoord * bloatdir - 1e-4) + 0.25) * bloatdir;");
 
+||||||| merged common ancestors
+=======
+    // Round the octagon out to ensure we rasterize every pixel the path might touch. (Positive
+    // bloatdir means we should take the "ceil" and negative means to take the "floor".)
+    //
+    // NOTE: If we were just drawing a rect, ceil/floor would be enough. But since there are also
+    // diagonals in the octagon that cross through pixel centers, we need to outset by another
+    // quarter px to ensure those pixels get rasterized.
+    v->codeAppend ("half2 bloatdir = (0 != N[0].x) "
+                           "? half2(half(N[0].x), half(N[1].y))"
+                           ": half2(half(N[1].x), half(N[0].y));");
+    v->codeAppend ("octocoord = (ceil(octocoord * bloatdir - 1e-4) + 0.25) * bloatdir;");
+
+>>>>>>> upstream-releases
     gpArgs->fPositionVar.set(kFloat2_GrSLType, "octocoord");
 
     // Convert to atlas coordinates in order to do our texture lookup.
@@ -237,6 +340,7 @@ void GLSLPathProcessor::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
                            kFloat2_GrSLType);
     f->codeAppend (".a;");
 
+<<<<<<< HEAD
     // Scale coverage count by .5. Make it negative for even-odd paths and positive for winding
     // ones. Clamp winding coverage counts at 1.0 (i.e. min(coverage/2, .5)).
     f->codeAppendf("coverage = min(abs(coverage) * %s.z, .5);", texcoord.fsIn());
@@ -246,4 +350,23 @@ void GLSLPathProcessor::onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) {
     f->codeAppend ("coverage = 1 - abs(fract(coverage) * 2 - 1);");
 
     f->codeAppendf("%s = half4(coverage);", args.fOutputCoverage);
+||||||| merged common ancestors
+    if (SkPath::kWinding_FillType == proc.fillType()) {
+        f->codeAppendf("%s = half4(min(abs(coverage_count), 1));", args.fOutputCoverage);
+    } else {
+        SkASSERT(SkPath::kEvenOdd_FillType == proc.fillType());
+        f->codeAppend ("half t = mod(abs(coverage_count), 2);");
+        f->codeAppendf("%s = half4(1 - abs(t - 1));", args.fOutputCoverage);
+    }
+=======
+    // Scale coverage count by .5. Make it negative for even-odd paths and positive for winding
+    // ones. Clamp winding coverage counts at 1.0 (i.e. min(coverage/2, .5)).
+    f->codeAppendf("coverage = min(abs(coverage) * half(%s.z), .5);", texcoord.fsIn());
+
+    // For negative values, this finishes the even-odd sawtooth function. Since positive (winding)
+    // values were clamped at "coverage/2 = .5", this only undoes the previous multiply by .5.
+    f->codeAppend ("coverage = 1 - abs(fract(coverage) * 2 - 1);");
+
+    f->codeAppendf("%s = half4(coverage);", args.fOutputCoverage);
+>>>>>>> upstream-releases
 }

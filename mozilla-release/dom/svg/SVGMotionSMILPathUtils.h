@@ -11,19 +11,28 @@
 #define MOZILLA_SVGMOTIONSMILPATHUTILS_H_
 
 #include "mozilla/Attributes.h"
-#include "gfxPlatform.h"
-#include "mozilla/gfx/2D.h"
 #include "mozilla/RefPtr.h"
+#include "mozilla/SMILParserUtils.h"
+#include "mozilla/gfx/2D.h"
+#include "gfxPlatform.h"
 #include "nsDebug.h"
-#include "nsSMILParserUtils.h"
 #include "nsStringFwd.h"
 #include "nsTArray.h"
 
-class nsSVGElement;
-
 namespace mozilla {
 
+<<<<<<< HEAD
 class SVGMotionSMILPathUtils {
+||||||| merged common ancestors
+class SVGMotionSMILPathUtils
+{
+=======
+namespace dom {
+class SVGElement;
+}
+
+class SVGMotionSMILPathUtils {
+>>>>>>> upstream-releases
   typedef mozilla::gfx::DrawTarget DrawTarget;
   typedef mozilla::gfx::Path Path;
   typedef mozilla::gfx::PathBuilder PathBuilder;
@@ -32,9 +41,21 @@ class SVGMotionSMILPathUtils {
   // Class to assist in generating a Path, based on
   // coordinates in the <animateMotion> from/by/to/values attributes.
   class PathGenerator {
+<<<<<<< HEAD
    public:
     explicit PathGenerator(const nsSVGElement* aSVGElement)
         : mSVGElement(aSVGElement), mHaveReceivedCommands(false) {
+||||||| merged common ancestors
+  public:
+    explicit PathGenerator(const nsSVGElement* aSVGElement)
+      : mSVGElement(aSVGElement),
+        mHaveReceivedCommands(false)
+    {
+=======
+   public:
+    explicit PathGenerator(const dom::SVGElement* aSVGElement)
+        : mSVGElement(aSVGElement), mHaveReceivedCommands(false) {
+>>>>>>> upstream-releases
       RefPtr<DrawTarget> drawTarget =
           gfxPlatform::GetPlatform()->ScreenReferenceDrawTarget();
       NS_ASSERTION(
@@ -64,19 +85,44 @@ class SVGMotionSMILPathUtils {
 
    protected:
     // Helper methods
+<<<<<<< HEAD
     bool ParseCoordinatePair(const nsAString& aStr, float& aXVal, float& aYVal);
+||||||| merged common ancestors
+    bool ParseCoordinatePair(const nsAString& aStr,
+                               float& aXVal, float& aYVal);
+=======
+    bool ParseCoordinatePair(const nsAString& aCoordPairStr, float& aXVal,
+                             float& aYVal);
+>>>>>>> upstream-releases
 
     // Member data
+<<<<<<< HEAD
     const nsSVGElement* mSVGElement;  // context for converting to user units
+||||||| merged common ancestors
+    const nsSVGElement* mSVGElement; // context for converting to user units
+=======
+    const dom::SVGElement* mSVGElement;  // context for converting to user units
+>>>>>>> upstream-releases
     RefPtr<PathBuilder> mPathBuilder;
     bool mHaveReceivedCommands;
   };
 
   // Class to assist in passing each subcomponent of a |values| attribute to
   // a PathGenerator, for generating a corresponding Path.
+<<<<<<< HEAD
   class MOZ_STACK_CLASS MotionValueParser
       : public nsSMILParserUtils::GenericValueParser {
    public:
+||||||| merged common ancestors
+  class MOZ_STACK_CLASS MotionValueParser :
+    public nsSMILParserUtils::GenericValueParser
+  {
+  public:
+=======
+  class MOZ_STACK_CLASS MotionValueParser
+      : public SMILParserUtils::GenericValueParser {
+   public:
+>>>>>>> upstream-releases
     MotionValueParser(PathGenerator* aPathGenerator,
                       FallibleTArray<double>* aPointDistances)
         : mPathGenerator(aPathGenerator),
@@ -86,7 +132,7 @@ class SVGMotionSMILPathUtils {
                  "expecting point distances array to start empty");
     }
 
-    // nsSMILParserUtils::GenericValueParser interface
+    // SMILParserUtils::GenericValueParser interface
     virtual bool Parse(const nsAString& aValueStr) override;
 
    protected:

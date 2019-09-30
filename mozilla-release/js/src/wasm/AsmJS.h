@@ -16,10 +16,27 @@
  * limitations under the License.
  */
 
-#ifndef asmjs_asmjs_h
-#define asmjs_asmjs_h
+#ifndef wasm_AsmJS_h
+#define wasm_AsmJS_h
 
-#include "NamespaceImports.h"
+#include "mozilla/Attributes.h"  // MOZ_MUST_USE
+#include "mozilla/Utf8.h"        // mozilla::Utf8Unit
+
+#include <stdint.h>  // uint32_t
+
+#include "js/CallArgs.h"  // JSNative
+
+struct JSContext;
+class JSFunction;
+
+namespace JS {
+
+union Value;
+
+template <typename T>
+class Handle;
+
+}  // namespace JS
 
 namespace js {
 
@@ -34,7 +51,8 @@ class FullParseHandler;
 
 }  // namespace frontend
 
-using AsmJSParser = frontend::Parser<frontend::FullParseHandler, char16_t>;
+template <typename Unit>
+using AsmJSParser = frontend::Parser<frontend::FullParseHandler, Unit>;
 
 // This function takes over parsing of a function starting with "use asm". The
 // return value indicates whether an error was reported which the caller should
@@ -43,9 +61,25 @@ using AsmJSParser = frontend::Parser<frontend::FullParseHandler, char16_t>;
 // indeterminate amount and the entire function should be reparsed from the
 // beginning.
 
+<<<<<<< HEAD
 extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx, AsmJSParser& parser,
                                       frontend::ParseNode* stmtList,
                                       bool* validated);
+||||||| merged common ancestors
+extern MOZ_MUST_USE bool
+CompileAsmJS(JSContext* cx, AsmJSParser& parser, frontend::ParseNode* stmtList,
+             bool* validated);
+=======
+extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx,
+                                      AsmJSParser<mozilla::Utf8Unit>& parser,
+                                      frontend::ParseNode* stmtList,
+                                      bool* validated);
+
+extern MOZ_MUST_USE bool CompileAsmJS(JSContext* cx,
+                                      AsmJSParser<char16_t>& parser,
+                                      frontend::ParseNode* stmtList,
+                                      bool* validated);
+>>>>>>> upstream-releases
 
 // asm.js module/export queries:
 
@@ -61,22 +95,56 @@ extern bool InstantiateAsmJS(JSContext* cx, unsigned argc, JS::Value* vp);
 
 // asm.js testing natives:
 
+<<<<<<< HEAD
 extern bool IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc,
                                         JS::Value* vp);
 
 extern bool IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
+||||||| merged common ancestors
+extern bool
+IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc, JS::Value* vp);
 
+extern bool
+IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
+=======
+extern bool IsAsmJSCompilationAvailable(JSContext* cx, unsigned argc,
+                                        JS::Value* vp);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 extern bool IsAsmJSModuleLoadedFromCache(JSContext* cx, unsigned argc,
                                          Value* vp);
+||||||| merged common ancestors
+extern bool
+IsAsmJSModuleLoadedFromCache(JSContext* cx, unsigned argc, Value* vp);
+=======
+extern bool IsAsmJSModule(JSContext* cx, unsigned argc, JS::Value* vp);
+>>>>>>> upstream-releases
 
 extern bool IsAsmJSFunction(JSContext* cx, unsigned argc, JS::Value* vp);
 
 // asm.js toString/toSource support:
 
+<<<<<<< HEAD
 extern JSString* AsmJSFunctionToString(JSContext* cx, HandleFunction fun);
+||||||| merged common ancestors
+extern JSString*
+AsmJSFunctionToString(JSContext* cx, HandleFunction fun);
+=======
+extern JSString* AsmJSFunctionToString(JSContext* cx,
+                                       JS::Handle<JSFunction*> fun);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 extern JSString* AsmJSModuleToString(JSContext* cx, HandleFunction fun,
                                      bool isToSource);
+||||||| merged common ancestors
+extern JSString*
+AsmJSModuleToString(JSContext* cx, HandleFunction fun, bool isToSource);
+=======
+extern JSString* AsmJSModuleToString(JSContext* cx, JS::Handle<JSFunction*> fun,
+                                     bool isToSource);
+>>>>>>> upstream-releases
 
 // asm.js heap:
 
@@ -84,4 +152,10 @@ extern bool IsValidAsmJSHeapLength(uint32_t length);
 
 }  // namespace js
 
+<<<<<<< HEAD
 #endif  // asmjs_asmjs_h
+||||||| merged common ancestors
+#endif // asmjs_asmjs_h
+=======
+#endif  // wasm_AsmJS_h
+>>>>>>> upstream-releases

@@ -16,7 +16,7 @@ var EXPORTED_SYMBOLS = ["ActorChild"];
  * the `content` property of this class will be bound to a specific subframe.
  * Otherwise, the `content` is always the top-level content tied to the `mm`.
  */
-class ActorChild {
+this.ActorChild = class ActorChild {
   constructor(dispatcher) {
     this._dispatcher = dispatcher;
     this.mm = dispatcher.mm;
@@ -30,6 +30,7 @@ class ActorChild {
     return this.mm.docShell;
   }
 
+<<<<<<< HEAD
   addEventListener(event, options) {
     this._dispatcher.addEventListener(event, this.constructor.name, options);
   }
@@ -42,9 +43,22 @@ class ActorChild {
     data.frameId = this._dispatcher.frameId;
     data.browsingContextId = this._dispatcher.browsingContextId;
     this.mm.sendAsyncMessage(msg, data);
+||||||| merged common ancestors
+  addEventListener(event, listener, options) {
+    this._dispatcher.addEventListener(event, listener, options);
+=======
+  addEventListener(event, options) {
+    this._dispatcher.addEventListener(event, this.constructor.name, options);
+>>>>>>> upstream-releases
   }
 
-  cleanup() {
-    this._dispatcher = null;
+  addMessageListener(msg) {
+    this._dispatcher.addMessageListener(msg, this.constructor.name);
   }
-}
+
+  sendAsyncMessage(msg, data = {}) {
+    data.frameId = this._dispatcher.frameId;
+    data.browsingContextId = this._dispatcher.browsingContextId;
+    this.mm.sendAsyncMessage(msg, data);
+  }
+};

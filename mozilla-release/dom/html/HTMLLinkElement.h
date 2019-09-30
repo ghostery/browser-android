@@ -39,7 +39,15 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
 
   // EventTarget
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
+<<<<<<< HEAD
   virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
+||||||| merged common ancestors
+  virtual nsresult PostHandleEvent(
+                     EventChainPostVisitor& aVisitor) override;
+=======
+  MOZ_CAN_RUN_SCRIPT
+  nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
+>>>>>>> upstream-releases
 
   // nsINode
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
@@ -47,10 +55,8 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
                              JS::Handle<JSObject*> aGivenProto) override;
 
   // nsIContent
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
   virtual nsresult BeforeSetAttr(int32_t aNameSpaceID, nsAtom* aName,
                                  const nsAttrValueOrString* aValue,
                                  bool aNotify) override;
@@ -70,15 +76,15 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
   virtual void GetLinkTarget(nsAString& aTarget) override;
   virtual EventStates IntrinsicState() const override;
 
-  void CreateAndDispatchEvent(nsIDocument* aDoc, const nsAString& aEventName);
+  void CreateAndDispatchEvent(Document* aDoc, const nsAString& aEventName);
 
   virtual void OnDNSPrefetchDeferred() override;
   virtual void OnDNSPrefetchRequested() override;
   virtual bool HasDeferredDNSPrefetchRequest() override;
 
   // WebIDL
-  bool Disabled();
-  void SetDisabled(bool aDisabled);
+  bool Disabled() const;
+  void SetDisabled(bool aDisabled, ErrorResult& aRv);
 
   void GetHref(nsAString& aValue) {
     GetURIAttr(nsGkAtoms::href, nullptr, aValue);
@@ -155,23 +161,51 @@ class HTMLLinkElement final : public nsGenericHTMLElement,
     return AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin));
   }
 
+<<<<<<< HEAD
   void NodeInfoChanged(nsIDocument* aOldDoc) final {
+||||||| merged common ancestors
+  void NodeInfoChanged(nsIDocument* aOldDoc) final
+  {
+=======
+  void NodeInfoChanged(Document* aOldDoc) final {
+>>>>>>> upstream-releases
     ClearHasPendingLinkUpdate();
     nsGenericHTMLElement::NodeInfoChanged(aOldDoc);
   }
 
   static bool CheckPreloadAttrs(const nsAttrValue& aAs, const nsAString& aType,
+<<<<<<< HEAD
                                 const nsAString& aMedia,
                                 nsIDocument* aDocument);
 
  protected:
+||||||| merged common ancestors
+                                const nsAString& aMedia, nsIDocument* aDocument);
+protected:
+=======
+                                const nsAString& aMedia, Document* aDocument);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~HTMLLinkElement();
 
   // nsStyleLinkElement
   Maybe<SheetInfo> GetStyleSheetInfo() final;
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+>>>>>>> upstream-releases
   RefPtr<nsDOMTokenList> mRelList;
+
+  // The "explicitly enabled" flag. This flag is set whenever the `disabled`
+  // attribute is explicitly unset, and makes alternate stylesheets not be
+  // disabled by default anymore.
+  //
+  // See https://github.com/whatwg/html/issues/3840#issuecomment-481034206.
+  bool mExplicitlyEnabled = false;
 };
 
 }  // namespace dom

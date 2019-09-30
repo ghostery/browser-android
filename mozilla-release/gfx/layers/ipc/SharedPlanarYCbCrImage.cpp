@@ -46,17 +46,38 @@ size_t SharedPlanarYCbCrImage::SizeOfExcludingThis(
   return 0;
 }
 
+<<<<<<< HEAD
 TextureClient* SharedPlanarYCbCrImage::GetTextureClient(
     KnowsCompositor* aForwarder) {
+||||||| merged common ancestors
+TextureClient*
+SharedPlanarYCbCrImage::GetTextureClient(KnowsCompositor* aForwarder)
+{
+=======
+TextureClient* SharedPlanarYCbCrImage::GetTextureClient(
+    KnowsCompositor* aKnowsCompositor) {
+>>>>>>> upstream-releases
   return mTextureClient.get();
 }
 
+<<<<<<< HEAD
 uint8_t* SharedPlanarYCbCrImage::GetBuffer() const {
   // This should never be used
   MOZ_ASSERT(false);
   return nullptr;
 }
 
+||||||| merged common ancestors
+uint8_t*
+SharedPlanarYCbCrImage::GetBuffer() const
+{
+  // This should never be used
+  MOZ_ASSERT(false);
+  return nullptr;
+}
+
+=======
+>>>>>>> upstream-releases
 already_AddRefed<gfx::SourceSurface>
 SharedPlanarYCbCrImage::GetAsSourceSurface() {
   if (!IsValid()) {
@@ -89,6 +110,7 @@ bool SharedPlanarYCbCrImage::CopyData(const PlanarYCbCrData& aData) {
   return true;
 }
 
+<<<<<<< HEAD
 bool SharedPlanarYCbCrImage::AdoptData(const Data& aData) {
   MOZ_ASSERT(mTextureClient, "This Image should have already allocated data");
   if (!mTextureClient) {
@@ -122,6 +144,51 @@ bool SharedPlanarYCbCrImage::AdoptData(const Data& aData) {
           aData.mYUVColorSpace, hasIntermediateBuffer));
 
   return true;
+||||||| merged common ancestors
+bool
+SharedPlanarYCbCrImage::AdoptData(const Data& aData)
+{
+  MOZ_ASSERT(mTextureClient, "This Image should have already allocated data");
+  if (!mTextureClient) {
+    return false;
+  }
+  mData = aData;
+  mSize = aData.mPicSize;
+  mOrigin = gfx::IntPoint(aData.mPicX, aData.mPicY);
+
+  uint8_t *base = GetBuffer();
+  uint32_t yOffset = aData.mYChannel - base;
+  uint32_t cbOffset = aData.mCbChannel - base;
+  uint32_t crOffset = aData.mCrChannel - base;
+
+  auto fwd = mCompositable->GetForwarder();
+  bool supportsTextureDirectMapping = fwd->SupportsTextureDirectMapping() &&
+    std::max(aData.mYSize.width,
+             std::max(aData.mYSize.height,
+                      std::max(aData.mCbCrSize.width, aData.mCbCrSize.height))) <= fwd->GetMaxTextureSize();
+  bool hasIntermediateBuffer = ComputeHasIntermediateBuffer(
+    gfx::SurfaceFormat::YUV, fwd->GetCompositorBackendType(),
+    supportsTextureDirectMapping);
+
+  static_cast<BufferTextureData*>(mTextureClient->GetInternalData())
+    ->SetDescriptor(YCbCrDescriptor(aData.mYSize,
+                                    aData.mYStride,
+                                    aData.mCbCrSize,
+                                    aData.mCbCrStride,
+                                    yOffset,
+                                    cbOffset,
+                                    crOffset,
+                                    aData.mStereoMode,
+                                    aData.mColorDepth,
+                                    aData.mYUVColorSpace,
+                                    hasIntermediateBuffer));
+
+  return true;
+=======
+bool SharedPlanarYCbCrImage::AdoptData(const Data& aData) {
+  MOZ_ASSERT(false, "This shouldn't be used.");
+  return false;
+>>>>>>> upstream-releases
 }
 
 bool SharedPlanarYCbCrImage::IsValid() const {

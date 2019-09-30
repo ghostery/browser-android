@@ -26,9 +26,22 @@ namespace storage {
 ////////////////////////////////////////////////////////////////////////////////
 //// AsyncStatementJSHelper
 
+<<<<<<< HEAD
 nsresult AsyncStatementJSHelper::getParams(AsyncStatement *aStatement,
                                            JSContext *aCtx, JSObject *aScopeObj,
                                            JS::Value *_params) {
+||||||| merged common ancestors
+nsresult
+AsyncStatementJSHelper::getParams(AsyncStatement *aStatement,
+                                  JSContext *aCtx,
+                                  JSObject *aScopeObj,
+                                  JS::Value *_params)
+{
+=======
+nsresult AsyncStatementJSHelper::getParams(AsyncStatement* aStatement,
+                                           JSContext* aCtx, JSObject* aScopeObj,
+                                           JS::Value* _params) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
 #ifdef DEBUG
@@ -62,9 +75,18 @@ nsresult AsyncStatementJSHelper::getParams(AsyncStatement *aStatement,
             "Statement::mStatementParamsHolder", paramsHolder);
   }
 
+<<<<<<< HEAD
   RefPtr<AsyncStatementParams> params(
       aStatement->mStatementParamsHolder->Get());
   JSObject *obj = params->WrapObject(aCtx, nullptr);
+||||||| merged common ancestors
+  RefPtr<AsyncStatementParams> params(aStatement->mStatementParamsHolder->Get());
+  JSObject* obj = params->WrapObject(aCtx, nullptr);
+=======
+  RefPtr<AsyncStatementParams> params(
+      aStatement->mStatementParamsHolder->Get());
+  JSObject* obj = params->WrapObject(aCtx, nullptr);
+>>>>>>> upstream-releases
   if (!obj) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -94,21 +116,48 @@ NS_INTERFACE_MAP_END
 #include "xpc_map_end.h"
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 AsyncStatementJSHelper::Resolve(nsIXPConnectWrappedNative *aWrapper,
                                 JSContext *aCtx, JSObject *aScopeObj, jsid aId,
                                 bool *resolvedp, bool *_retval) {
   if (!JSID_IS_STRING(aId)) return NS_OK;
+||||||| merged common ancestors
+AsyncStatementJSHelper::Resolve(nsIXPConnectWrappedNative *aWrapper,
+                                JSContext *aCtx,
+                                JSObject *aScopeObj,
+                                jsid aId,
+                                bool *resolvedp,
+                                bool *_retval)
+{
+  if (!JSID_IS_STRING(aId))
+    return NS_OK;
+=======
+AsyncStatementJSHelper::Resolve(nsIXPConnectWrappedNative* aWrapper,
+                                JSContext* aCtx, JSObject* aScopeObj, jsid aId,
+                                bool* resolvedp, bool* _retval) {
+  if (!JSID_IS_STRING(aId)) return NS_OK;
+>>>>>>> upstream-releases
 
   // Cast to async via mozI* since direct from nsISupports is ambiguous.
   JS::RootedObject scope(aCtx, aScopeObj);
   JS::RootedId id(aCtx, aId);
+<<<<<<< HEAD
   mozIStorageAsyncStatement *iAsyncStmt =
       static_cast<mozIStorageAsyncStatement *>(aWrapper->Native());
   AsyncStatement *stmt = static_cast<AsyncStatement *>(iAsyncStmt);
+||||||| merged common ancestors
+  mozIStorageAsyncStatement *iAsyncStmt =
+    static_cast<mozIStorageAsyncStatement *>(aWrapper->Native());
+  AsyncStatement *stmt = static_cast<AsyncStatement *>(iAsyncStmt);
+=======
+  mozIStorageAsyncStatement* iAsyncStmt =
+      static_cast<mozIStorageAsyncStatement*>(aWrapper->Native());
+  AsyncStatement* stmt = static_cast<AsyncStatement*>(iAsyncStmt);
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   {
-    nsISupports *supp = aWrapper->Native();
+    nsISupports* supp = aWrapper->Native();
     nsCOMPtr<mozIStorageAsyncStatement> isStatement(do_QueryInterface(supp));
     NS_ASSERTION(isStatement, "How is this not an async statement?!");
   }

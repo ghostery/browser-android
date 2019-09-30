@@ -4,10 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef mozilla_dom_ipc_IPCBlobInputStream_h
-#define mozilla_dom_ipc_IPCBlobInputStream_h
+#ifndef mozilla_dom_IPCBlobInputStream_h
+#define mozilla_dom_IPCBlobInputStream_h
 
 #include "mozilla/Mutex.h"
+#include "mozIIPCBlobInputStream.h"
 #include "nsIAsyncInputStream.h"
 #include "nsICloneableInputStream.h"
 #include "nsIFileStreams.h"
@@ -20,6 +21,7 @@ namespace dom {
 
 class IPCBlobInputStreamChild;
 
+<<<<<<< HEAD
 #define IPCBLOBINPUTSTREAM_IID                       \
   {                                                  \
     0xbcfa38fc, 0x8b7f, 0x4d79, {                    \
@@ -33,7 +35,29 @@ class nsIIPCBlobInputStream : public nsISupports {
 
   virtual nsIInputStream* GetInternalStream() const = 0;
 };
+||||||| merged common ancestors
+#define IPCBLOBINPUTSTREAM_IID \
+  { 0xbcfa38fc, 0x8b7f, 0x4d79, \
+    { 0xbe, 0x3a, 0x1e, 0x7b, 0xbe, 0x52, 0x38, 0xcd } }
 
+class nsIIPCBlobInputStream : public nsISupports
+{
+public:
+  NS_DECLARE_STATIC_IID_ACCESSOR(IPCBLOBINPUTSTREAM_IID)
+
+  virtual nsIInputStream*
+  GetInternalStream() const = 0;
+};
+=======
+#define IPCBLOBINPUTSTREAM_IID                       \
+  {                                                  \
+    0xbcfa38fc, 0x8b7f, 0x4d79, {                    \
+      0xbe, 0x3a, 0x1e, 0x7b, 0xbe, 0x52, 0x38, 0xcd \
+    }                                                \
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIIPCBlobInputStream, IPCBLOBINPUTSTREAM_IID)
 
 class IPCBlobInputStream final : public nsIAsyncInputStream,
@@ -45,6 +69,31 @@ class IPCBlobInputStream final : public nsIAsyncInputStream,
                                  public nsIAsyncInputStreamLength,
                                  public nsIIPCBlobInputStream {
  public:
+||||||| merged common ancestors
+NS_DEFINE_STATIC_IID_ACCESSOR(nsIIPCBlobInputStream,
+                              IPCBLOBINPUTSTREAM_IID)
+
+class IPCBlobInputStream final : public nsIAsyncInputStream
+                               , public nsIInputStreamCallback
+                               , public nsICloneableInputStreamWithRange
+                               , public nsIIPCSerializableInputStream
+                               , public nsIAsyncFileMetadata
+                               , public nsIInputStreamLength
+                               , public nsIAsyncInputStreamLength
+                               , public nsIIPCBlobInputStream
+{
+public:
+=======
+class IPCBlobInputStream final : public nsIAsyncInputStream,
+                                 public nsIInputStreamCallback,
+                                 public nsICloneableInputStreamWithRange,
+                                 public nsIIPCSerializableInputStream,
+                                 public nsIAsyncFileMetadata,
+                                 public nsIInputStreamLength,
+                                 public nsIAsyncInputStreamLength,
+                                 public mozIIPCBlobInputStream {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIINPUTSTREAM
   NS_DECL_NSIASYNCINPUTSTREAM
@@ -59,12 +108,38 @@ class IPCBlobInputStream final : public nsIAsyncInputStream,
 
   explicit IPCBlobInputStream(IPCBlobInputStreamChild* aActor);
 
+<<<<<<< HEAD
+  void StreamReady(already_AddRefed<nsIInputStream> aInputStream);
+||||||| merged common ancestors
+  void
+  StreamReady(already_AddRefed<nsIInputStream> aInputStream);
+=======
   void StreamReady(already_AddRefed<nsIInputStream> aInputStream);
 
   void LengthReady(int64_t aLength);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void LengthReady(int64_t aLength);
+||||||| merged common ancestors
+  void
+  LengthReady(int64_t aLength);
+=======
+  void SerializeInternal(mozilla::ipc::InputStreamParams& aParams);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // nsIIPCBlobInputStream
   nsIInputStream* GetInternalStream() const override {
+||||||| merged common ancestors
+  // nsIIPCBlobInputStream
+  nsIInputStream*
+  GetInternalStream() const override
+  {
+=======
+  // mozIIPCBlobInputStream
+  NS_IMETHOD_(nsIInputStream*) GetInternalStream() override {
+>>>>>>> upstream-releases
     if (mRemoteStream) {
       return mRemoteStream;
     }
@@ -137,4 +212,10 @@ class IPCBlobInputStream final : public nsIAsyncInputStream,
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 #endif  // mozilla_dom_ipc_IPCBlobInputStream_h
+||||||| merged common ancestors
+#endif // mozilla_dom_ipc_IPCBlobInputStream_h
+=======
+#endif  // mozilla_dom_IPCBlobInputStream_h
+>>>>>>> upstream-releases

@@ -27,6 +27,7 @@ const TEST_DATA_DOUBLE = [
   ["l", "styl", 4, 4, false],
   ["e", "style", 5, 5, false],
   ["=", "style=", 6, 6, false],
+<<<<<<< HEAD
   ["\"", "style=\"", 7, 7, false],
   ["c", "style=\"color", 8, 12, true],
   ["VK_RIGHT", "style=\"color", 12, 12, false],
@@ -41,6 +42,36 @@ const TEST_DATA_DOUBLE = [
   ["a", "style=\"color:beige\" data", 24, 24, false],
   ["VK_RETURN", "style=\"color:beige\"",
    -1, -1, false],
+||||||| merged common ancestors
+  ["\"", "style=\"", 7, 7, false],
+  ["c", "style=\"color", 8, 12, true],
+  ["VK_RIGHT", "style=\"color", 12, 12, false],
+  [":", "style=\"color:aliceblue", 13, 22, true],
+  ["b", "style=\"color:beige", 14, 18, true],
+  ["VK_RIGHT", "style=\"color:beige", 18, 18, false],
+  ["\"", "style=\"color:beige\"", 19, 19, false],
+  [" ", "style=\"color:beige\" ", 20, 20, false],
+  ["d", "style=\"color:beige\" d", 21, 21, false],
+  ["a", "style=\"color:beige\" da", 22, 22, false],
+  ["t", "style=\"color:beige\" dat", 23, 23, false],
+  ["a", "style=\"color:beige\" data", 24, 24, false],
+  ["VK_RETURN", "style=\"color:beige\"",
+   -1, -1, false]
+=======
+  ['"', 'style="', 7, 7, false],
+  ["c", 'style="color', 8, 12, true],
+  ["VK_RIGHT", 'style="color', 12, 12, false],
+  [":", 'style="color:aliceblue', 13, 22, true],
+  ["b", 'style="color:beige', 14, 18, true],
+  ["VK_RIGHT", 'style="color:beige', 18, 18, false],
+  ['"', 'style="color:beige"', 19, 19, false],
+  [" ", 'style="color:beige" ', 20, 20, false],
+  ["d", 'style="color:beige" d', 21, 21, false],
+  ["a", 'style="color:beige" da', 22, 22, false],
+  ["t", 'style="color:beige" dat', 23, 23, false],
+  ["a", 'style="color:beige" data', 24, 24, false],
+  ["VK_RETURN", 'style="color:beige"', -1, -1, false],
+>>>>>>> upstream-releases
 ];
 
 // Check that single quote attribute is also supported
@@ -63,8 +94,15 @@ const TEST_DATA_SINGLE = [
   ["a", "style='color:beige' da", 22, 22, false],
   ["t", "style='color:beige' dat", 23, 23, false],
   ["a", "style='color:beige' data", 24, 24, false],
+<<<<<<< HEAD
   ["VK_RETURN", "style=\"color:beige\"",
    -1, -1, false],
+||||||| merged common ancestors
+  ["VK_RETURN", "style=\"color:beige\"",
+   -1, -1, false]
+=======
+  ["VK_RETURN", 'style="color:beige"', -1, -1, false],
+>>>>>>> upstream-releases
 ];
 
 // Check that autocompletion is still enabled after using url('1)
@@ -75,15 +113,15 @@ const TEST_DATA_INNER = [
   ["l", "styl", 4, 4, false],
   ["e", "style", 5, 5, false],
   ["=", "style=", 6, 6, false],
-  ["\"", "style=\"", 7, 7, false],
-  ["b", "style=\"border", 8, 13, true],
-  ["a", "style=\"background", 9, 17, true],
-  ["VK_RIGHT", "style=\"background", 17, 17, false],
-  [":", "style=\"background:aliceblue", 18, 27, true],
-  ["u", "style=\"background:unset", 19, 23, true],
-  ["r", "style=\"background:url", 20, 21, false],
-  ["l", "style=\"background:url", 21, 21, false],
-  ["(", "style=\"background:url()", 22, 22, false],
+  ['"', 'style="', 7, 7, false],
+  ["b", 'style="border', 8, 13, true],
+  ["a", 'style="background', 9, 17, true],
+  ["VK_RIGHT", 'style="background', 17, 17, false],
+  [":", 'style="background:aliceblue', 18, 27, true],
+  ["u", 'style="background:unset', 19, 23, true],
+  ["r", 'style="background:url', 20, 21, false],
+  ["l", 'style="background:url', 21, 21, false],
+  ["(", 'style="background:url()', 22, 22, false],
   ["'", "style=\"background:url(')", 23, 23, false],
   ["1", "style=\"background:url('1)", 24, 24, false],
   ["'", "style=\"background:url('1')", 25, 25, false],
@@ -98,7 +136,7 @@ const TEST_DATA_INNER = [
 ];
 
 add_task(async function() {
-  const {inspector} = await openInspectorForURL(TEST_URL);
+  const { inspector } = await openInspectorForURL(TEST_URL);
 
   await runStyleAttributeAutocompleteTests(inspector, TEST_DATA_DOUBLE);
   await runStyleAttributeAutocompleteTests(inspector, TEST_DATA_SINGLE);

@@ -20,11 +20,20 @@ public:
     std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(const GrFPArgs&) const override;
 #endif
 
+<<<<<<< HEAD
     SkScalar getTBias() const { return fTBias; }
 
     SkScalar getTScale() const { return fTScale; }
 
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSweepGradient)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSweepGradient)
+=======
+    SkScalar getTBias() const { return fTBias; }
+
+    SkScalar getTScale() const { return fTScale; }
+>>>>>>> upstream-releases
 
 protected:
     void flatten(SkWriteBuffer& buffer) const override;
@@ -34,6 +43,8 @@ protected:
                               SkRasterPipeline* postPipeline) const override;
 
 private:
+    SK_FLATTENABLE_HOOKS(SkSweepGradient)
+
     const SkPoint  fCenter;
     const SkScalar fTBias,
                    fTScale;

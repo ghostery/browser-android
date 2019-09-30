@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Test for resizers of some elements</title>
-  <script type="application/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
-  <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
   <style>
   #target {
@@ -85,6 +85,7 @@ SimpleTest.waitForFocus(async function() {
       let basePosX = rect.width * baseX;
       let basePosY = rect.height * baseY;
 
+<<<<<<< HEAD
       let inputEventExpected = true;
       function onInput(aEvent) {
         if (!inputEventExpected) {
@@ -101,6 +102,31 @@ SimpleTest.waitForFocus(async function() {
 
       content.addEventListener("input", onInput);
 
+||||||| merged common ancestors
+=======
+      let inputEventExpected = true;
+      function onInput(aEvent) {
+        if (!inputEventExpected) {
+          ok(false, "\"input\" event shouldn't be fired after stopping resizing");
+          return;
+        }
+        ok(aEvent instanceof InputEvent,
+           '"input" event should be dispatched with InputEvent interface');
+        is(aEvent.cancelable, false,
+           '"input" event should be never cancelable');
+        is(aEvent.bubbles, true,
+           '"input" event should always bubble');
+        is(aEvent.inputType, "",
+           `inputType should be empty string when an element is resized`);
+        is(aEvent.data, null,
+           `data should be null ${aDescription}`);
+        is(aEvent.dataTransfer, null,
+           `data should be null ${aDescription}`);
+      }
+
+      content.addEventListener("input", onInput);
+
+>>>>>>> upstream-releases
       // Click on the correct resizer
       synthesizeMouse(target, basePosX, basePosY, {type: "mousedown"});
       // Drag it delta pixels to the right and bottom (or maybe left and top!)

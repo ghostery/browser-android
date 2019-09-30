@@ -15,6 +15,10 @@
 #include "nsMathMLFrame.h"
 #include "mozilla/Likely.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 /*
  * Base class for MathML container frames. It acts like an inferred
  * mrow. By default, this frame uses its Reflow() method to lay its
@@ -31,12 +35,29 @@
 
 class nsMathMLContainerFrame : public nsContainerFrame, public nsMathMLFrame {
   friend class nsMathMLmfencedFrame;
+<<<<<<< HEAD
 
  public:
   nsMathMLContainerFrame(ComputedStyle* aStyle, ClassID aID)
       : nsContainerFrame(aStyle, aID),
         mIntrinsicWidth(NS_INTRINSIC_WIDTH_UNKNOWN),
         mBlockStartAscent(0) {}
+||||||| merged common ancestors
+public:
+  nsMathMLContainerFrame(ComputedStyle* aStyle, ClassID aID)
+    : nsContainerFrame(aStyle, aID)
+    , mIntrinsicWidth(NS_INTRINSIC_WIDTH_UNKNOWN)
+    , mBlockStartAscent(0)
+  {}
+=======
+
+ public:
+  nsMathMLContainerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                         ClassID aID)
+      : nsContainerFrame(aStyle, aPresContext, aID),
+        mIntrinsicWidth(NS_INTRINSIC_ISIZE_UNKNOWN),
+        mBlockStartAscent(0) {}
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME_TARGET(nsMathMLContainerFrame)
   NS_DECL_QUERYFRAME
@@ -183,6 +204,7 @@ class nsMathMLContainerFrame : public nsContainerFrame, public nsMathMLFrame {
   // nsMathMLContainerFrame::GetIntrinsicISize to measure the child frames as
   // if in an <mrow>, and so their frames implement MeasureForWidth to use
   // nsMathMLContainerFrame::Place.
+<<<<<<< HEAD
   virtual nsresult MeasureForWidth(DrawTarget* aDrawTarget,
                                    ReflowOutput& aDesiredSize);
 
@@ -190,6 +212,25 @@ class nsMathMLContainerFrame : public nsContainerFrame, public nsMathMLFrame {
   // to reflow us when changes (e.g., append/insert/remove) happen in our child
   // list
   virtual nsresult ChildListChanged(int32_t aModType);
+||||||| merged common ancestors
+  virtual nsresult
+  MeasureForWidth(DrawTarget* aDrawTarget,
+                  ReflowOutput& aDesiredSize);
+
+
+  // helper to re-sync the automatic data in our children and notify our parent to
+  // reflow us when changes (e.g., append/insert/remove) happen in our child list
+  virtual nsresult
+  ChildListChanged(int32_t aModType);
+=======
+  virtual nsresult MeasureForWidth(DrawTarget* aDrawTarget,
+                                   ReflowOutput& aDesiredSize);
+
+  // helper to re-sync the automatic data in our children and notify our parent
+  // to reflow us when changes (e.g., append/insert/remove) happen in our child
+  // list
+  virtual nsresult ChildListChanged(int32_t aModType);
+>>>>>>> upstream-releases
 
   // helper to get the preferred size that a container frame should use to fire
   // the stretch on its stretchy child frames.
@@ -230,9 +271,20 @@ class nsMathMLContainerFrame : public nsContainerFrame, public nsMathMLFrame {
    * Helper to call ReportToConsole when an error occurs.
    * @param aParams see nsContentUtils::ReportToConsole
    */
+<<<<<<< HEAD
   nsresult ReportErrorToConsole(const char* aErrorMsgId,
                                 const char16_t** aParams = nullptr,
                                 uint32_t aParamCount = 0);
+||||||| merged common ancestors
+  nsresult
+  ReportErrorToConsole(const char*       aErrorMsgId,
+                       const char16_t** aParams = nullptr,
+                       uint32_t          aParamCount = 0);
+=======
+  nsresult ReportErrorToConsole(
+      const char* aErrorMsgId,
+      const nsTArray<nsString>& aParams = nsTArray<nsString>());
+>>>>>>> upstream-releases
 
   // helper method to reflow a child frame. We are inline frames, and we don't
   // know our positions until reflow is finished. That's why we ask the
@@ -359,16 +411,39 @@ class nsMathMLContainerFrame : public nsContainerFrame, public nsMathMLFrame {
 // A separate implemention needs to provide:
 // 1) line-breaking
 // 2) proper inter-frame spacing
+<<<<<<< HEAD
 // 3) firing of Stretch() (in which case FinalizeReflow() would have to be
 // cleaned) Issues: If/when mathml becomes a pluggable component, the separation
 // will be needed.
 class nsMathMLmathBlockFrame final : public nsBlockFrame {
  public:
+||||||| merged common ancestors
+// 3) firing of Stretch() (in which case FinalizeReflow() would have to be cleaned)
+// Issues: If/when mathml becomes a pluggable component, the separation will be needed.
+class nsMathMLmathBlockFrame final : public nsBlockFrame
+{
+public:
+=======
+// 3) firing of Stretch() (in which case FinalizeReflow() would have to be
+//    cleaned)
+// Issues: If/when mathml becomes a pluggable component, the separation will be
+// needed.
+class nsMathMLmathBlockFrame final : public nsBlockFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmathBlockFrame)
 
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewMathMLmathBlockFrame(nsIPresShell* aPresShell,
                                                       ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsContainerFrame* NS_NewMathMLmathBlockFrame(nsIPresShell* aPresShell,
+          ComputedStyle* aStyle);
+=======
+  friend nsContainerFrame* NS_NewMathMLmathBlockFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   // beware, mFrames is not set by nsBlockFrame
   // cannot use mFrames{.FirstChild()|.etc} since the block code doesn't set
@@ -420,9 +495,21 @@ class nsMathMLmathBlockFrame final : public nsBlockFrame {
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmathBlockFrame(ComputedStyle* aStyle)
       : nsBlockFrame(aStyle, kClassID) {
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmathBlockFrame(ComputedStyle* aStyle)
+    : nsBlockFrame(aStyle, kClassID)
+  {
+=======
+ protected:
+  explicit nsMathMLmathBlockFrame(ComputedStyle* aStyle,
+                                  nsPresContext* aPresContext)
+      : nsBlockFrame(aStyle, aPresContext, kClassID) {
+>>>>>>> upstream-releases
     // We should always have a float manager.  Not that things can really try
     // to float out of us anyway, but we need one for line layout.
     // Bug 1301881: Do we still need to set NS_BLOCK_FLOAT_MGR?
@@ -439,8 +526,8 @@ class nsMathMLmathInlineFrame final : public nsInlineFrame,
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmathInlineFrame)
 
-  friend nsContainerFrame* NS_NewMathMLmathInlineFrame(nsIPresShell* aPresShell,
-                                                       ComputedStyle* aStyle);
+  friend nsContainerFrame* NS_NewMathMLmathInlineFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
 
   virtual void SetInitialChildList(ChildListID aListID,
                                    nsFrameList& aChildList) override {
@@ -485,9 +572,21 @@ class nsMathMLmathInlineFrame final : public nsInlineFrame,
     return mFrames.FirstChild() != mFrames.LastChild() || !mFrames.FirstChild();
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmathInlineFrame(ComputedStyle* aStyle)
       : nsInlineFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmathInlineFrame(ComputedStyle* aStyle)
+    : nsInlineFrame(aStyle, kClassID)
+  {}
+=======
+ protected:
+  explicit nsMathMLmathInlineFrame(ComputedStyle* aStyle,
+                                   nsPresContext* aPresContext)
+      : nsInlineFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual ~nsMathMLmathInlineFrame() {}
 };

@@ -11,11 +11,15 @@
 
 #include "nsRubyContentFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 /**
  * Factory function.
  * @return a newly allocated nsRubyBaseFrame (infallible)
  */
-nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
+nsContainerFrame* NS_NewRubyBaseFrame(mozilla::PresShell* aPresShell,
                                       mozilla::ComputedStyle* aStyle);
 
 class nsRubyBaseFrame final : public nsRubyContentFrame {
@@ -27,11 +31,28 @@ class nsRubyBaseFrame final : public nsRubyContentFrame {
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
+<<<<<<< HEAD
  protected:
   friend nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
+||||||| merged common ancestors
+protected:
+  friend nsContainerFrame* NS_NewRubyBaseFrame(nsIPresShell* aPresShell,
+=======
+ protected:
+  friend nsContainerFrame* NS_NewRubyBaseFrame(mozilla::PresShell* aPresShell,
+>>>>>>> upstream-releases
                                                ComputedStyle* aStyle);
+<<<<<<< HEAD
   explicit nsRubyBaseFrame(ComputedStyle* aStyle)
       : nsRubyContentFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsRubyBaseFrame(ComputedStyle* aStyle)
+    : nsRubyContentFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsRubyBaseFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsRubyContentFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 };
 
 #endif /* nsRubyBaseFrame_h___ */

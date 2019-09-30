@@ -12,7 +12,16 @@ namespace mozilla {
 
 // We need to define this function out of line so that clang-cl doesn't inline
 // it.
+<<<<<<< HEAD
 /* static */ SandboxTarget* SandboxTarget::Instance() {
+||||||| merged common ancestors
+/* static */ SandboxTarget*
+SandboxTarget::Instance()
+{
+=======
+/* static */
+SandboxTarget* SandboxTarget::Instance() {
+>>>>>>> upstream-releases
   static SandboxTarget sb;
   return &sb;
 }
@@ -20,7 +29,35 @@ namespace mozilla {
 void SandboxTarget::StartSandbox() {
   if (mTargetServices) {
     mTargetServices->LowerToken();
+    NotifyStartObservers();
   }
+}
+
+<<<<<<< HEAD
+bool SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
+                                          DWORD aTargetProcessId,
+                                          HANDLE* aTargetHandle,
+                                          DWORD aDesiredAccess,
+                                          DWORD aOptions) {
+||||||| merged common ancestors
+bool
+SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
+                                     DWORD aTargetProcessId,
+                                     HANDLE* aTargetHandle,
+                                     DWORD aDesiredAccess,
+                                     DWORD aOptions)
+{
+=======
+void SandboxTarget::NotifyStartObservers() {
+  for (auto&& obs : mStartObservers) {
+    if (!obs) {
+      continue;
+    }
+
+    obs();
+  }
+
+  mStartObservers.clear();
 }
 
 bool SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
@@ -28,6 +65,7 @@ bool SandboxTarget::BrokerDuplicateHandle(HANDLE aSourceHandle,
                                           HANDLE* aTargetHandle,
                                           DWORD aDesiredAccess,
                                           DWORD aOptions) {
+>>>>>>> upstream-releases
   if (!mTargetServices) {
     return false;
   }

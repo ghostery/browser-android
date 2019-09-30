@@ -26,12 +26,18 @@ class PresentationBuilderChild final
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 
-  virtual mozilla::ipc::IPCResult RecvOnOffer(const nsString& aSDP) override;
+  mozilla::ipc::IPCResult RecvOnOffer(const nsString& aSDP);
 
-  virtual mozilla::ipc::IPCResult RecvOnAnswer(const nsString& aSDP) override;
+  mozilla::ipc::IPCResult RecvOnAnswer(const nsString& aSDP);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvOnIceCandidate(
       const nsString& aCandidate) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvOnIceCandidate(const nsString& aCandidate) override;
+=======
+  mozilla::ipc::IPCResult RecvOnIceCandidate(const nsString& aCandidate);
+>>>>>>> upstream-releases
 
  private:
   virtual ~PresentationBuilderChild() = default;

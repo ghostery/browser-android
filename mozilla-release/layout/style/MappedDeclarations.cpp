@@ -4,12 +4,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 #include "MappedDeclarations.h"
 
 #include "nsAttrValue.h"
 #include "nsAttrValueInlines.h"
 #include "nsIDocument.h"
 #include "nsPresContext.h"
+||||||| merged common ancestors
+#include "mozilla/MappedDeclarations.h"
+=======
+#include "MappedDeclarations.h"
+
+#include "nsAttrValue.h"
+#include "nsAttrValueInlines.h"
+#include "mozilla/dom/Document.h"
+#include "nsPresContext.h"
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -23,9 +34,7 @@ void MappedDeclarations::SetIdentAtomValue(nsCSSPropertyID aId,
     // FIXME(emilio): Can we move mapped attribute declarations across
     // documents? Isn't this wrong in that case? This is pretty out of place
     // anyway.
-    if (nsPresContext* pc = mDocument->GetPresContext()) {
-      pc->ForceCacheLang(aValue);
-    }
+    mDocument->ForceCacheLang(aValue);
   }
 }
 
@@ -37,7 +46,13 @@ void MappedDeclarations::SetBackgroundImage(const nsAttrValue& aValue) {
   nsAutoString str;
   aValue.ToString(str);
   Servo_DeclarationBlock_SetBackgroundImage(
+<<<<<<< HEAD
       mDecl, str, mDocument->DefaultStyleAttrURLData());
+||||||| merged common ancestors
+    mDecl, str, mDocument->DefaultStyleAttrURLData());
+=======
+      mDecl, &str, mDocument->DefaultStyleAttrURLData());
+>>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

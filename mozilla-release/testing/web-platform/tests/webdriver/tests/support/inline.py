@@ -1,8 +1,19 @@
 import urllib
 
 
+<<<<<<< HEAD
 def inline(doc, doctype="html", mime="text/html;charset=utf-8", protocol="http"):
     from .fixtures import server_config, url
+||||||| merged common ancestors
+def inline(doc, doctype="html", mime="text/html;charset=utf-8", protocol="http"):
+    from ..conftest import server_config, url
+=======
+def inline(doc,
+           doctype="html",
+           mime="text/html;charset=utf-8",
+           **kwargs):
+    from .fixtures import server_config, url
+>>>>>>> upstream-releases
     build_url = url(server_config())
 
     if doctype == "html":
@@ -30,11 +41,11 @@ def inline(doc, doctype="html", mime="text/html;charset=utf-8", protocol="http")
 
     return build_url("/webdriver/tests/support/inline.py",
                      query=urllib.urlencode(query),
-                     protocol=protocol)
+                     **kwargs)
 
 
-def iframe(doc):
-    return "<iframe src='%s'></iframe>" % inline(doc)
+def iframe(doc, **kwargs):
+    return "<iframe src='%s'></iframe>" % inline(doc, **kwargs)
 
 
 def main(request, response):

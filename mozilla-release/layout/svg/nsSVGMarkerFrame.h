@@ -19,18 +19,34 @@
 class gfxContext;
 
 namespace mozilla {
+
+class PresShell;
 class SVGGeometryFrame;
+
+struct SVGMark;
+
 namespace dom {
 class SVGViewportElement;
 }  // namespace dom
 }  // namespace mozilla
 
+<<<<<<< HEAD
 struct nsSVGMark;
 
 class nsSVGMarkerFrame final : public nsSVGContainerFrame {
+||||||| merged common ancestors
+struct nsSVGMark;
+
+class nsSVGMarkerFrame final : public nsSVGContainerFrame
+{
+=======
+class nsSVGMarkerFrame final : public nsSVGContainerFrame {
+  typedef mozilla::SVGMark SVGMark;
+>>>>>>> upstream-releases
   typedef mozilla::image::imgDrawingParams imgDrawingParams;
 
   friend class nsSVGMarkerAnonChildFrame;
+<<<<<<< HEAD
   friend nsContainerFrame* NS_NewSVGMarkerFrame(nsIPresShell* aPresShell,
                                                 ComputedStyle* aStyle);
 
@@ -40,6 +56,27 @@ class nsSVGMarkerFrame final : public nsSVGContainerFrame {
         mMarkedFrame(nullptr),
         mInUse(false),
         mInUse2(false) {
+||||||| merged common ancestors
+  friend nsContainerFrame*
+  NS_NewSVGMarkerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGMarkerFrame(ComputedStyle* aStyle)
+    : nsSVGContainerFrame(aStyle, kClassID)
+    , mMarkedFrame(nullptr)
+    , mInUse(false)
+    , mInUse2(false)
+  {
+=======
+  friend nsContainerFrame* NS_NewSVGMarkerFrame(mozilla::PresShell* aPresShell,
+                                                ComputedStyle* aStyle);
+
+ protected:
+  explicit nsSVGMarkerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsSVGContainerFrame(aStyle, aPresContext, kClassID),
+        mMarkedFrame(nullptr),
+        mInUse(false),
+        mInUse2(false) {
+>>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -74,15 +111,35 @@ class nsSVGMarkerFrame final : public nsSVGContainerFrame {
   }
 
   // nsSVGMarkerFrame methods:
+<<<<<<< HEAD
   void PaintMark(gfxContext& aContext, const gfxMatrix& aToMarkedFrameUserSpace,
                  mozilla::SVGGeometryFrame* aMarkedFrame,
                  const nsSVGMark& aMark, float aStrokeWidth,
                  imgDrawingParams& aImgParams);
+||||||| merged common ancestors
+  void PaintMark(gfxContext& aContext,
+                 const gfxMatrix& aToMarkedFrameUserSpace,
+                 mozilla::SVGGeometryFrame* aMarkedFrame,
+                 const nsSVGMark& aMark,
+                 float aStrokeWidth,
+                 imgDrawingParams& aImgParams);
+=======
+  void PaintMark(gfxContext& aContext, const gfxMatrix& aToMarkedFrameUserSpace,
+                 mozilla::SVGGeometryFrame* aMarkedFrame, const SVGMark& aMark,
+                 float aStrokeWidth, imgDrawingParams& aImgParams);
+>>>>>>> upstream-releases
 
   SVGBBox GetMarkBBoxContribution(const Matrix& aToBBoxUserspace,
                                   uint32_t aFlags,
                                   mozilla::SVGGeometryFrame* aMarkedFrame,
+<<<<<<< HEAD
                                   const nsSVGMark& aMark, float aStrokeWidth);
+||||||| merged common ancestors
+                                  const nsSVGMark& aMark,
+                                  float aStrokeWidth);
+=======
+                                  const SVGMark& aMark, float aStrokeWidth);
+>>>>>>> upstream-releases
 
   // Return our anonymous box child.
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
@@ -125,12 +182,34 @@ class nsSVGMarkerFrame final : public nsSVGContainerFrame {
 ////////////////////////////////////////////////////////////////////////
 // nsMarkerAnonChildFrame class
 
+<<<<<<< HEAD
 class nsSVGMarkerAnonChildFrame final : public nsSVGDisplayContainerFrame {
   friend nsContainerFrame* NS_NewSVGMarkerAnonChildFrame(
       nsIPresShell* aPresShell, ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGMarkerAnonChildFrame final : public nsSVGDisplayContainerFrame
+{
+  friend nsContainerFrame*
+  NS_NewSVGMarkerAnonChildFrame(nsIPresShell* aPresShell,
+                                ComputedStyle* aStyle);
+=======
+class nsSVGMarkerAnonChildFrame final : public nsSVGDisplayContainerFrame {
+  friend nsContainerFrame* NS_NewSVGMarkerAnonChildFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   explicit nsSVGMarkerAnonChildFrame(ComputedStyle* aStyle)
       : nsSVGDisplayContainerFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsSVGMarkerAnonChildFrame(ComputedStyle* aStyle)
+    : nsSVGDisplayContainerFrame(aStyle, kClassID)
+  {}
+=======
+  explicit nsSVGMarkerAnonChildFrame(ComputedStyle* aStyle,
+                                     nsPresContext* aPresContext)
+      : nsSVGDisplayContainerFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsSVGMarkerAnonChildFrame)

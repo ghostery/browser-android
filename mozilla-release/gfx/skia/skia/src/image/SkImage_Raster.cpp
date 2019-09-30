@@ -17,7 +17,6 @@
 #include "SkPixelRef.h"
 #include "SkSurface.h"
 #include "SkTLazy.h"
-#include "SkUnPreMultiplyPriv.h"
 
 #if SK_SUPPORT_GPU
 #include "GrContext.h"
@@ -82,13 +81,12 @@ public:
     const SkBitmap* onPeekBitmap() const override { return &fBitmap; }
 
 #if SK_SUPPORT_GPU
-    sk_sp<GrTextureProxy> asTextureProxyRef(GrContext*, const GrSamplerState&, SkColorSpace*,
-                                            sk_sp<SkColorSpace>*,
+    sk_sp<GrTextureProxy> asTextureProxyRef(GrRecordingContext*, const GrSamplerState&,
                                             SkScalar scaleAdjust[2]) const override;
 #endif
 
-    bool getROPixels(SkBitmap*, SkColorSpace* dstColorSpace, CachingHint) const override;
-    sk_sp<SkImage> onMakeSubset(const SkIRect&) const override;
+    bool getROPixels(SkBitmap*, CachingHint) const override;
+    sk_sp<SkImage> onMakeSubset(GrRecordingContext*, const SkIRect&) const override;
 
     SkPixelRef* getPixelRef() const { return fBitmap.pixelRef(); }
 
@@ -103,12 +101,28 @@ public:
         SkASSERT(bitmapMayBeMutable || fBitmap.isImmutable());
     }
 
+<<<<<<< HEAD
     sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>) const override;
+||||||| merged common ancestors
+    sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>, SkColorType,
+                                    SkTransferFunctionBehavior) const override;
+=======
+    sk_sp<SkImage> onMakeColorTypeAndColorSpace(GrRecordingContext*,
+                                                SkColorType, sk_sp<SkColorSpace>) const override;
+>>>>>>> upstream-releases
 
     bool onIsValid(GrContext* context) const override { return true; }
+    void notifyAddedToRasterCache() const override {
+        // We explicitly DON'T want to call INHERITED::notifyAddedToRasterCache. That ties the
+        // lifetime of derived/cached resources to the image. In this case, we only want cached
+        // data (eg mips) tied to the lifetime of the underlying pixelRef.
+        SkASSERT(fBitmap.pixelRef());
+        fBitmap.pixelRef()->notifyAddedToCache();
+    }
 
 #if SK_SUPPORT_GPU
-    sk_sp<GrTextureProxy> refPinnedTextureProxy(uint32_t* uniqueID) const override;
+    sk_sp<GrTextureProxy> refPinnedTextureProxy(GrRecordingContext*,
+                                                uint32_t* uniqueID) const override;
     bool onPinAsTexture(GrContext*) const override;
     void onUnpinAsTexture(GrContext*) const override;
 #endif
@@ -158,27 +172,31 @@ bool SkImage_Raster::onPeekPixels(SkPixmap* pm) const {
     return fBitmap.peekPixels(pm);
 }
 
-bool SkImage_Raster::getROPixels(SkBitmap* dst, SkColorSpace* dstColorSpace, CachingHint) const {
+bool SkImage_Raster::getROPixels(SkBitmap* dst, CachingHint) const {
     *dst = fBitmap;
     return true;
 }
 
 #if SK_SUPPORT_GPU
-sk_sp<GrTextureProxy> SkImage_Raster::asTextureProxyRef(GrContext* context,
+sk_sp<GrTextureProxy> SkImage_Raster::asTextureProxyRef(GrRecordingContext* context,
                                                         const GrSamplerState& params,
-                                                        SkColorSpace* dstColorSpace,
-                                                        sk_sp<SkColorSpace>* texColorSpace,
                                                         SkScalar scaleAdjust[2]) const {
     if (!context) {
         return nullptr;
     }
 
     uint32_t uniqueID;
-    sk_sp<GrTextureProxy> tex = this->refPinnedTextureProxy(&uniqueID);
+    sk_sp<GrTextureProxy> tex = this->refPinnedTextureProxy(context, &uniqueID);
     if (tex) {
         GrTextureAdjuster adjuster(context, fPinnedProxy, fBitmap.alphaType(), fPinnedUniqueID,
                                    fBitmap.colorSpace());
+<<<<<<< HEAD
         return adjuster.refTextureProxyForParams(params, dstColorSpace, texColorSpace, scaleAdjust);
+||||||| merged common ancestors
+        return adjuster.refTextureProxySafeForParams(params, scaleAdjust);
+=======
+        return adjuster.refTextureProxyForParams(params, scaleAdjust);
+>>>>>>> upstream-releases
     }
 
     return GrRefCachedBitmapTextureProxy(context, fBitmap, params, scaleAdjust);
@@ -187,7 +205,8 @@ sk_sp<GrTextureProxy> SkImage_Raster::asTextureProxyRef(GrContext* context,
 
 #if SK_SUPPORT_GPU
 
-sk_sp<GrTextureProxy> SkImage_Raster::refPinnedTextureProxy(uint32_t* uniqueID) const {
+sk_sp<GrTextureProxy> SkImage_Raster::refPinnedTextureProxy(GrRecordingContext*,
+                                                            uint32_t* uniqueID) const {
     if (fPinnedProxy) {
         SkASSERT(fPinnedCount > 0);
         SkASSERT(fPinnedUniqueID != 0);
@@ -228,7 +247,7 @@ void SkImage_Raster::onUnpinAsTexture(GrContext* ctx) const {
 }
 #endif
 
-sk_sp<SkImage> SkImage_Raster::onMakeSubset(const SkIRect& subset) const {
+sk_sp<SkImage> SkImage_Raster::onMakeSubset(GrRecordingContext*, const SkIRect& subset) const {
     SkImageInfo info = fBitmap.info().makeWH(subset.width(), subset.height());
     SkBitmap bitmap;
     if (!bitmap.tryAllocPixels(info)) {
@@ -334,10 +353,21 @@ bool SkImage_Raster::onAsLegacyBitmap(SkBitmap* bitmap) const {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 sk_sp<SkImage> SkImage_Raster::onMakeColorSpace(sk_sp<SkColorSpace> target) const {
+||||||| merged common ancestors
+sk_sp<SkImage> SkImage_Raster::onMakeColorSpace(sk_sp<SkColorSpace> target,
+                                                SkColorType targetColorType,
+                                                SkTransferFunctionBehavior premulBehavior) const {
+=======
+sk_sp<SkImage> SkImage_Raster::onMakeColorTypeAndColorSpace(GrRecordingContext*,
+                                                            SkColorType targetCT,
+                                                            sk_sp<SkColorSpace> targetCS) const {
+>>>>>>> upstream-releases
     SkPixmap src;
     SkAssertResult(fBitmap.peekPixels(&src));
 
+<<<<<<< HEAD
     // Treat nullptr srcs as sRGB.
     if (!src.colorSpace()) {
         if (target->isSRGB()) {
@@ -351,10 +381,29 @@ sk_sp<SkImage> SkImage_Raster::onMakeColorSpace(sk_sp<SkColorSpace> target) cons
 #if defined(SK_LEGACY_MAKE_COLOR_SPACE_IMPL)
     dstInfo = dstInfo.makeColorType(kN32_SkColorType);
 #endif
-    SkBitmap dst;
-    dst.allocPixels(dstInfo);
+||||||| merged common ancestors
+    // Treat nullptr srcs as sRGB.
+    if (!src.colorSpace()) {
+        if (target->isSRGB()) {
+            return sk_ref_sp(const_cast<SkImage*>((SkImage*)this));
+        }
 
+        src.setColorSpace(SkColorSpace::MakeSRGB());
+    }
+
+    SkImageInfo dstInfo = fBitmap.info().makeColorType(targetColorType).makeColorSpace(target);
+=======
+>>>>>>> upstream-releases
+    SkBitmap dst;
+    dst.allocPixels(fBitmap.info().makeColorType(targetCT).makeColorSpace(targetCS));
+
+<<<<<<< HEAD
     SkAssertResult(dst.writePixels(src, 0, 0));
+||||||| merged common ancestors
+    SkAssertResult(dst.writePixels(src, 0, 0, premulBehavior));
+=======
+    SkAssertResult(dst.writePixels(src));
+>>>>>>> upstream-releases
     dst.setImmutable();
     return SkImage::MakeFromBitmap(dst);
 }

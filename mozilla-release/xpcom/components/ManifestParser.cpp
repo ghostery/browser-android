@@ -14,16 +14,16 @@
 
 #include "prio.h"
 #if defined(XP_WIN)
-#include <windows.h>
+#  include <windows.h>
 #elif defined(MOZ_WIDGET_COCOA)
-#include <CoreServices/CoreServices.h>
-#include "nsCocoaFeatures.h"
+#  include <CoreServices/CoreServices.h>
+#  include "nsCocoaFeatures.h"
 #elif defined(MOZ_WIDGET_GTK)
-#include <gtk/gtk.h>
+#  include <gtk/gtk.h>
 #endif
 
 #ifdef MOZ_WIDGET_ANDROID
-#include "AndroidBridge.h"
+#  include "AndroidBridge.h"
 #endif
 
 #include "mozilla/Services.h"
@@ -155,10 +155,24 @@ void LogMessageWithContext(FileLocation& aFile, uint32_t aLineNumber,
     return;
   }
 
+<<<<<<< HEAD
   nsresult rv = error->Init(
       NS_ConvertUTF8toUTF16(formatted.get()), NS_ConvertUTF8toUTF16(file),
       EmptyString(), aLineNumber, 0, nsIScriptError::warningFlag,
       "chrome registration", false /* from private window */);
+||||||| merged common ancestors
+  nsresult rv = error->Init(NS_ConvertUTF8toUTF16(formatted.get()),
+                            NS_ConvertUTF8toUTF16(file), EmptyString(),
+                            aLineNumber, 0, nsIScriptError::warningFlag,
+                            "chrome registration",
+                            false /* from private window */);
+=======
+  nsresult rv = error->Init(
+      NS_ConvertUTF8toUTF16(formatted.get()), NS_ConvertUTF8toUTF16(file),
+      EmptyString(), aLineNumber, 0, nsIScriptError::warningFlag,
+      "chrome registration", false /* from private window */,
+      true /* from chrome context */);
+>>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return;
   }
@@ -453,14 +467,24 @@ void ParseManifest(NSLocationType aType, FileLocation& aFile, char* aBuf,
 
   nsAutoString osVersion;
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #pragma warning(push)
 #pragma warning(disable : 4996)  // VC12+ deprecates GetVersionEx
   OSVERSIONINFO info = {sizeof(OSVERSIONINFO)};
+||||||| merged common ancestors
+#pragma warning(push)
+#pragma warning(disable:4996) // VC12+ deprecates GetVersionEx
+  OSVERSIONINFO info = { sizeof(OSVERSIONINFO) };
+=======
+#  pragma warning(push)
+#  pragma warning(disable : 4996)  // VC12+ deprecates GetVersionEx
+  OSVERSIONINFO info = {sizeof(OSVERSIONINFO)};
+>>>>>>> upstream-releases
   if (GetVersionEx(&info)) {
     nsTextFormatter::ssprintf(osVersion, u"%ld.%ld", info.dwMajorVersion,
                               info.dwMinorVersion);
   }
-#pragma warning(pop)
+#  pragma warning(pop)
 #elif defined(MOZ_WIDGET_COCOA)
   SInt32 majorVersion = nsCocoaFeatures::OSXVersionMajor();
   SInt32 minorVersion = nsCocoaFeatures::OSXVersionMinor();

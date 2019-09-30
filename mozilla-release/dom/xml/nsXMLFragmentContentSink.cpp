@@ -11,7 +11,7 @@
 #include "nsContentSink.h"
 #include "nsIExpatSink.h"
 #include "nsIDTD.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIContent.h"
 #include "nsGkAtoms.h"
 #include "mozilla/dom/NodeInfo.h"
@@ -66,7 +66,7 @@ class nsXMLFragmentContentSink : public nsXMLContentSink,
 
   // nsIFragmentContentSink
   NS_IMETHOD FinishFragmentParsing(DocumentFragment** aFragment) override;
-  NS_IMETHOD SetTargetDocument(nsIDocument* aDocument) override;
+  NS_IMETHOD SetTargetDocument(Document* aDocument) override;
   NS_IMETHOD WillBuildContent() override;
   NS_IMETHOD DidBuildContent() override;
   NS_IMETHOD IgnoreFirstContainer() override;
@@ -94,12 +94,32 @@ class nsXMLFragmentContentSink : public nsXMLContentSink,
 
   // nsXMLContentSink overrides
   virtual nsresult MaybeProcessXSLTLink(
+<<<<<<< HEAD
       ProcessingInstruction* aProcessingInstruction, const nsAString& aHref,
       bool aAlternate, const nsAString& aTitle, const nsAString& aType,
       const nsAString& aMedia, const nsAString& aReferrerPolicy,
       bool* aWasXSLT = nullptr) override;
 
   nsCOMPtr<nsIDocument> mTargetDocument;
+||||||| merged common ancestors
+    ProcessingInstruction* aProcessingInstruction,
+    const nsAString& aHref,
+    bool aAlternate,
+    const nsAString& aTitle,
+    const nsAString& aType,
+    const nsAString& aMedia,
+    const nsAString& aReferrerPolicy,
+    bool* aWasXSLT = nullptr) override;
+
+  nsCOMPtr<nsIDocument> mTargetDocument;
+=======
+      ProcessingInstruction* aProcessingInstruction, const nsAString& aHref,
+      bool aAlternate, const nsAString& aTitle, const nsAString& aType,
+      const nsAString& aMedia, const nsAString& aReferrerPolicy,
+      bool* aWasXSLT = nullptr) override;
+
+  nsCOMPtr<Document> mTargetDocument;
+>>>>>>> upstream-releases
   // the fragment
   RefPtr<DocumentFragment> mRoot;
   bool mParseError;
@@ -168,7 +188,19 @@ void nsXMLFragmentContentSink::SetDocumentCharset(
   MOZ_ASSERT_UNREACHABLE("fragments shouldn't set charset");
 }
 
+<<<<<<< HEAD
 nsISupports* nsXMLFragmentContentSink::GetTarget() { return mTargetDocument; }
+||||||| merged common ancestors
+nsISupports *
+nsXMLFragmentContentSink::GetTarget()
+{
+  return mTargetDocument;
+}
+=======
+nsISupports* nsXMLFragmentContentSink::GetTarget() {
+  return ToSupports(mTargetDocument);
+}
+>>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -332,7 +364,14 @@ nsXMLFragmentContentSink::FinishFragmentParsing(DocumentFragment** aFragment) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXMLFragmentContentSink::SetTargetDocument(nsIDocument* aTargetDocument) {
+||||||| merged common ancestors
+nsXMLFragmentContentSink::SetTargetDocument(nsIDocument* aTargetDocument)
+{
+=======
+nsXMLFragmentContentSink::SetTargetDocument(Document* aTargetDocument) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aTargetDocument);
 
   mTargetDocument = aTargetDocument;

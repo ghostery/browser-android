@@ -12,7 +12,6 @@ const {
 } = require("./index");
 
 module.exports = {
-
   /**
    * Update the sidebar with an object treeview.
    */
@@ -55,6 +54,13 @@ module.exports = {
       type: EXTENSION_SIDEBAR_REMOVE,
       sidebarId,
     };
+<<<<<<< HEAD
   },
 
+||||||| merged common ancestors
+  }
+
+=======
+  },
+>>>>>>> upstream-releases
 };

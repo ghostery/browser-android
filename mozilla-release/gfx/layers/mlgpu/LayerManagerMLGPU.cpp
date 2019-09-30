@@ -22,12 +22,14 @@
 #include "FrameBuilder.h"
 #include "LayersLogging.h"
 #include "UtilityMLGPU.h"
+#include "CompositionRecorder.h"
 #include "mozilla/layers/Diagnostics.h"
 #include "mozilla/layers/TextRenderer.h"
+#include "mozilla/StaticPrefs.h"
 
 #ifdef XP_WIN
-#include "mozilla/widget/WinCompositorWidget.h"
-#include "mozilla/gfx/DeviceManagerDx.h"
+#  include "mozilla/widget/WinCompositorWidget.h"
+#  include "mozilla/gfx/DeviceManagerDx.h"
 #endif
 
 using namespace std;
@@ -41,6 +43,49 @@ static const int kDebugOverlayX = 2;
 static const int kDebugOverlayY = 5;
 static const int kDebugOverlayMaxWidth = 600;
 static const int kDebugOverlayMaxHeight = 96;
+
+class RecordedFrameMLGPU : public RecordedFrame {
+ public:
+  RecordedFrameMLGPU(MLGDevice* aDevice, MLGTexture* aTexture,
+                     const TimeStamp& aTimestamp)
+      : RecordedFrame(aTimestamp), mDevice(aDevice) {
+    mSoftTexture =
+        aDevice->CreateTexture(aTexture->GetSize(), SurfaceFormat::B8G8R8A8,
+                               MLGUsage::Staging, MLGTextureFlags::None);
+
+    aDevice->CopyTexture(mSoftTexture, IntPoint(), aTexture,
+                         IntRect(IntPoint(), aTexture->GetSize()));
+  }
+
+  ~RecordedFrameMLGPU() {
+    if (mIsMapped) {
+      mDevice->Unmap(mSoftTexture);
+    }
+  }
+
+  virtual already_AddRefed<gfx::DataSourceSurface> GetSourceSurface() override {
+    if (mDataSurf) {
+      return RefPtr<DataSourceSurface>(mDataSurf).forget();
+    }
+    MLGMappedResource map;
+    if (!mDevice->Map(mSoftTexture, MLGMapType::READ, &map)) {
+      return nullptr;
+    }
+
+    mIsMapped = true;
+    mDataSurf = Factory::CreateWrappingDataSourceSurface(
+        map.mData, map.mStride, mSoftTexture->GetSize(),
+        SurfaceFormat::B8G8R8A8);
+    return RefPtr<DataSourceSurface>(mDataSurf).forget();
+  }
+
+ private:
+  RefPtr<MLGDevice> mDevice;
+  // Software texture in VRAM.
+  RefPtr<MLGTexture> mSoftTexture;
+  RefPtr<DataSourceSurface> mDataSurf;
+  bool mIsMapped = false;
+};
 
 LayerManagerMLGPU::LayerManagerMLGPU(widget::CompositorWidget* aWidget)
     : mWidget(aWidget),
@@ -91,6 +136,7 @@ void LayerManagerMLGPU::Destroy() {
   }
 
   LayerManager::Destroy();
+  mProfilerScreenshotGrabber.Destroy();
 
   if (mDevice && mDevice->IsValid()) {
     mDevice->Flush();
@@ -159,10 +205,21 @@ LayersBackend LayerManagerMLGPU::GetBackendType() {
 
 void LayerManagerMLGPU::SetRoot(Layer* aLayer) { mRoot = aLayer; }
 
+<<<<<<< HEAD
 bool LayerManagerMLGPU::BeginTransaction(const nsCString& aURL) {
   MOZ_ASSERT(!mTarget);
   return true;
 }
+||||||| merged common ancestors
+bool
+LayerManagerMLGPU::BeginTransaction()
+{
+  MOZ_ASSERT(!mTarget);
+  return true;
+}
+=======
+bool LayerManagerMLGPU::BeginTransaction(const nsCString& aURL) { return true; }
+>>>>>>> upstream-releases
 
 void LayerManagerMLGPU::BeginTransactionWithDrawTarget(
     gfx::DrawTarget* aTarget, const gfx::IntRect& aRect) {
@@ -174,10 +231,27 @@ void LayerManagerMLGPU::BeginTransactionWithDrawTarget(
 }
 
 // Helper class for making sure textures are unlocked.
+<<<<<<< HEAD
 class MOZ_STACK_CLASS AutoUnlockAllTextures {
  public:
   explicit AutoUnlockAllTextures(MLGDevice* aDevice) : mDevice(aDevice) {}
   ~AutoUnlockAllTextures() { mDevice->UnlockAllTextures(); }
+||||||| merged common ancestors
+class MOZ_STACK_CLASS AutoUnlockAllTextures
+{
+public:
+  explicit AutoUnlockAllTextures(MLGDevice* aDevice)
+   : mDevice(aDevice)
+  {}
+  ~AutoUnlockAllTextures() {
+    mDevice->UnlockAllTextures();
+  }
+=======
+class MOZ_STACK_CLASS AutoUnlockAllTextures final {
+ public:
+  explicit AutoUnlockAllTextures(MLGDevice* aDevice) : mDevice(aDevice) {}
+  ~AutoUnlockAllTextures() { mDevice->UnlockAllTextures(); }
+>>>>>>> upstream-releases
 
  private:
   RefPtr<MLGDevice> mDevice;
@@ -192,6 +266,11 @@ void LayerManagerMLGPU::EndTransaction(const TimeStamp& aTimeStamp,
   TextureSourceProvider::AutoReadUnlockTextures unlock(mTextureSourceProvider);
 
   if (!mRoot || (aFlags & END_NO_IMMEDIATE_REDRAW) || !mWidget) {
+    return;
+  }
+
+  if (!mDevice->IsValid()) {
+    // Waiting device reset handling.
     return;
   }
 
@@ -215,8 +294,8 @@ void LayerManagerMLGPU::EndTransaction(const TimeStamp& aTimeStamp,
   }
 
   // Don't draw the diagnostic overlay if we want to snapshot the output.
-  mDrawDiagnostics = gfxPrefs::LayersDrawFPS() && !mTarget;
-  mUsingInvalidation = gfxPrefs::AdvancedLayersUseInvalidation();
+  mDrawDiagnostics = StaticPrefs::layers_acceleration_draw_fps() && !mTarget;
+  mUsingInvalidation = StaticPrefs::layers_mlgpu_enable_invalidation();
   mDebugFrameNumber++;
 
   AL_LOG("--- Compositing frame %d ---\n", mDebugFrameNumber);
@@ -262,8 +341,16 @@ void LayerManagerMLGPU::Composite() {
 
   // Now that we have the final invalid region, give it to the swap chain which
   // will tell us if we still need to render.
+<<<<<<< HEAD
   if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion),
                                          diagnosticRect)) {
+||||||| merged common ancestors
+  if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion), diagnosticRect)) {
+=======
+  if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion),
+                                         diagnosticRect)) {
+    mProfilerScreenshotGrabber.NotifyEmptyFrame();
+>>>>>>> upstream-releases
     return;
   }
 
@@ -304,6 +391,10 @@ void LayerManagerMLGPU::Composite() {
   // performs invalidation against the clean layer tree.
   mClonedLayerTreeProperties = nullptr;
   mClonedLayerTreeProperties = LayerProperties::CloneFrom(mRoot);
+
+  PayloadPresented();
+
+  mPayload.Clear();
 }
 
 void LayerManagerMLGPU::RenderLayers() {
@@ -342,6 +433,25 @@ void LayerManagerMLGPU::RenderLayers() {
 
   // Execute all render passes.
   builder.Render();
+
+  mProfilerScreenshotGrabber.MaybeGrabScreenshot(
+      mDevice, builder.GetWidgetRT()->GetTexture());
+
+  if (mCompositionRecorder) {
+    bool hasContentPaint = false;
+    for (CompositionPayload& payload : mPayload) {
+      if (payload.mType == CompositionPayloadType::eContentPaint) {
+        hasContentPaint = true;
+        break;
+      }
+    }
+
+    if (hasContentPaint) {
+      RefPtr<RecordedFrame> frame = new RecordedFrameMLGPU(
+          mDevice, builder.GetWidgetRT()->GetTexture(), TimeStamp::Now());
+      mCompositionRecorder->RecordFrame(frame);
+    }
+  }
   mCurrentFrame = nullptr;
 
   if (mDrawDiagnostics) {
@@ -478,8 +588,18 @@ void LayerManagerMLGPU::ClearCachedResources(Layer* aSubtree) {
   });
 }
 
+<<<<<<< HEAD
 void LayerManagerMLGPU::NotifyShadowTreeTransaction() {
   if (gfxPrefs::LayersDrawFPS()) {
+||||||| merged common ancestors
+void
+LayerManagerMLGPU::NotifyShadowTreeTransaction()
+{
+  if (gfxPrefs::LayersDrawFPS()) {
+=======
+void LayerManagerMLGPU::NotifyShadowTreeTransaction() {
+  if (StaticPrefs::layers_acceleration_draw_fps()) {
+>>>>>>> upstream-releases
     mDiagnostics->AddTxnFrame();
   }
 }
@@ -501,6 +621,7 @@ bool LayerManagerMLGPU::PreRender() {
 
 void LayerManagerMLGPU::PostRender() {
   mWidget->PostRender(mWidgetContext.ptr());
+  mProfilerScreenshotGrabber.MaybeProcessQueue();
   mWidgetContext = Nothing();
 }
 

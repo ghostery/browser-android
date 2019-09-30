@@ -9,7 +9,15 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 SessionStorageCache::SessionStorageCache() : mSessionDataSetActive(false) {}
+||||||| merged common ancestors
+SessionStorageCache::SessionStorageCache()
+  : mSessionDataSetActive(false)
+{}
+=======
+SessionStorageCache::SessionStorageCache() = default;
+>>>>>>> upstream-releases
 
 SessionStorageCache::DataSet* SessionStorageCache::Set(
     DataSetType aDataSetType) {
@@ -18,16 +26,6 @@ SessionStorageCache::DataSet* SessionStorageCache::Set(
   }
 
   MOZ_ASSERT(aDataSetType == eSessionSetType);
-
-  if (!mSessionDataSetActive) {
-    mSessionSet.mOriginQuotaUsage = mDefaultSet.mOriginQuotaUsage;
-
-    for (auto iter = mDefaultSet.mKeys.ConstIter(); !iter.Done(); iter.Next()) {
-      mSessionSet.mKeys.Put(iter.Key(), iter.Data());
-    }
-
-    mSessionDataSetActive = true;
-  }
 
   return &mSessionSet;
 }
@@ -121,16 +119,10 @@ void SessionStorageCache::Clear(DataSetType aDataSetType,
   DataSet* dataSet = Set(aDataSetType);
   dataSet->ProcessUsageDelta(-dataSet->mOriginQuotaUsage);
   dataSet->mKeys.Clear();
-
-  if (!aByUserInteraction && aDataSetType == eSessionSetType) {
-    mSessionDataSetActive = false;
-  }
 }
 
 already_AddRefed<SessionStorageCache> SessionStorageCache::Clone() const {
   RefPtr<SessionStorageCache> cache = new SessionStorageCache();
-
-  cache->mSessionDataSetActive = mSessionDataSetActive;
 
   cache->mDefaultSet.mOriginQuotaUsage = mDefaultSet.mOriginQuotaUsage;
   for (auto iter = mDefaultSet.mKeys.ConstIter(); !iter.Done(); iter.Next()) {

@@ -9,12 +9,12 @@
 #include <fcntl.h>
 
 #ifdef _WIN32
-#include <windows.h>
-#include <io.h>
-#include <process.h>
+#  include <windows.h>
+#  include <io.h>
+#  include <process.h>
 #else
-#include <unistd.h>
-#include <pthread.h>
+#  include <unistd.h>
+#  include <pthread.h>
 #endif
 
 #include "replace_malloc.h"
@@ -27,9 +27,31 @@ static bool sStdoutOrStderr = false;
 
 static Mutex sMutex;
 
+<<<<<<< HEAD
 static void prefork() { sMutex.Lock(); }
+||||||| merged common ancestors
+static void
+prefork()
+{
+  sMutex.Lock();
+}
+=======
+#ifndef _WIN32
+static void prefork() { sMutex.Lock(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static void postfork() { sMutex.Unlock(); }
+||||||| merged common ancestors
+static void
+postfork()
+{
+  sMutex.Unlock();
+}
+=======
+static void postfork() { sMutex.Unlock(); }
+#endif
+>>>>>>> upstream-releases
 
 static size_t GetPid() { return size_t(getpid()); }
 

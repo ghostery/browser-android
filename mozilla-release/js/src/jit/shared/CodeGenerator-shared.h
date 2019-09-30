@@ -30,9 +30,6 @@ class CodeGenerator;
 class MacroAssembler;
 class IonIC;
 
-template <class ArgSeq, class StoreOutputTo>
-class OutOfLineCallVM;
-
 class OutOfLineTruncateSlow;
 
 struct ReciprocalMulConstants {
@@ -160,6 +157,7 @@ class CodeGeneratorShared : public LElementVisitor {
   bool checkOsiPointRegisters;
 #endif
 
+<<<<<<< HEAD
   // The initial size of the frame in bytes. These are bytes beyond the
   // constant header present for every Ion frame, used for pre-determined
   // spills.
@@ -396,6 +394,474 @@ class CodeGeneratorShared : public LElementVisitor {
   template <typename T>
   void pushArg(const T& t) {
     masm.Push(t);
+||||||| merged common ancestors
+    // The initial size of the frame in bytes. These are bytes beyond the
+    // constant header present for every Ion frame, used for pre-determined
+    // spills.
+    int32_t frameDepth_;
+
+    // Frame class this frame's size falls into (see IonFrame.h).
+    FrameSizeClass frameClass_;
+
+    // For arguments to the current function.
+    inline int32_t ArgToStackOffset(int32_t slot) const;
+
+    inline int32_t SlotToStackOffset(int32_t slot) const;
+    inline int32_t StackOffsetToSlot(int32_t offset) const;
+
+    // For argument construction for calls. Argslots are Value-sized.
+    inline int32_t StackOffsetOfPassedArg(int32_t slot) const;
+
+    inline int32_t ToStackOffset(LAllocation a) const;
+    inline int32_t ToStackOffset(const LAllocation* a) const;
+
+    inline Address ToAddress(const LAllocation& a);
+    inline Address ToAddress(const LAllocation* a);
+
+    uint32_t frameSize() const {
+        return frameClass_ == FrameSizeClass::None() ? frameDepth_ : frameClass_.frameSize();
+    }
+
+  protected:
+#ifdef CHECK_OSIPOINT_REGISTERS
+    void resetOsiPointRegs(LSafepoint* safepoint);
+    bool shouldVerifyOsiPointRegs(LSafepoint* safepoint);
+    void verifyOsiPointRegs(LSafepoint* safepoint);
+#endif
+
+    bool addNativeToBytecodeEntry(const BytecodeSite* site);
+    void dumpNativeToBytecodeEntries();
+    void dumpNativeToBytecodeEntry(uint32_t idx);
+
+    bool addTrackedOptimizationsEntry(const TrackedOptimizations* optimizations);
+    void extendTrackedOptimizationsEntry(const TrackedOptimizations* optimizations);
+
+  public:
+    MIRGenerator& mirGen() const {
+        return *gen;
+    }
+
+    // When appending to runtimeData_, the vector might realloc, leaving pointers
+    // int the origianl vector stale and unusable. DataPtr acts like a pointer,
+    // but allows safety in the face of potentially realloc'ing vector appends.
+    friend class DataPtr;
+    template <typename T>
+    class DataPtr
+    {
+        CodeGeneratorShared* cg_;
+        size_t index_;
+
+        T* lookup() {
+            return reinterpret_cast<T*>(&cg_->runtimeData_[index_]);
+        }
+      public:
+        DataPtr(CodeGeneratorShared* cg, size_t index)
+          : cg_(cg), index_(index) { }
+
+        T * operator ->() {
+            return lookup();
+        }
+        T * operator*() {
+            return lookup();
+        }
+    };
+
+  protected:
+    MOZ_MUST_USE
+    bool allocateData(size_t size, size_t* offset) {
+        MOZ_ASSERT(size % sizeof(void*) == 0);
+        *offset = runtimeData_.length();
+        masm.propagateOOM(runtimeData_.appendN(0, size));
+        return !masm.oom();
+    }
+
+    template <typename T>
+    inline size_t allocateIC(const T& cache) {
+        static_assert(mozilla::IsBaseOf<IonIC, T>::value, "T must inherit from IonIC");
+        size_t index;
+        masm.propagateOOM(allocateData(sizeof(mozilla::AlignedStorage2<T>), &index));
+        masm.propagateOOM(icList_.append(index));
+        masm.propagateOOM(icInfo_.append(CompileTimeICInfo()));
+        if (masm.oom()) {
+            return SIZE_MAX;
+        }
+        // Use the copy constructor on the allocated space.
+        MOZ_ASSERT(index == icList_.back());
+        new (&runtimeData_[index]) T(cache);
+        return index;
+    }
+
+  protected:
+    // Encodes an LSnapshot into the compressed snapshot buffer.
+    void encode(LRecoverInfo* recover);
+    void encode(LSnapshot* snapshot);
+    void encodeAllocation(LSnapshot* snapshot, MDefinition* def, uint32_t* startIndex);
+
+    // Attempts to assign a BailoutId to a snapshot, if one isn't already set.
+    // If the bailout table is full, this returns false, which is not a fatal
+    // error (the code generator may use a slower bailout mechanism).
+    bool assignBailoutId(LSnapshot* snapshot);
+
+    // Encode all encountered safepoints in CG-order, and resolve |indices| for
+    // safepoint offsets.
+    bool encodeSafepoints();
+
+    // Fixup offsets of native-to-bytecode map.
+    bool createNativeToBytecodeScriptList(JSContext* cx);
+    bool generateCompactNativeToBytecodeMap(JSContext* cx, JitCode* code);
+    void verifyCompactNativeToBytecodeMap(JitCode* code);
+
+    bool generateCompactTrackedOptimizationsMap(JSContext* cx, JitCode* code,
+                                                IonTrackedTypeVector* allTypes);
+    void verifyCompactTrackedOptimizationsMap(JitCode* code, uint32_t numRegions,
+                                              const UniqueTrackedOptimizations& unique,
+                                              const IonTrackedTypeVector* allTypes);
+
+    // Mark the safepoint on |ins| as corresponding to the current assembler location.
+    // The location should be just after a call.
+    void markSafepoint(LInstruction* ins);
+    void markSafepointAt(uint32_t offset, LInstruction* ins);
+
+    // Mark the OSI point |ins| as corresponding to the current
+    // assembler location inside the |osiIndices_|. Return the assembler
+    // location for the OSI point return location.
+    uint32_t markOsiPoint(LOsiPoint* ins);
+
+    // Ensure that there is enough room between the last OSI point and the
+    // current instruction, such that:
+    //  (1) Invalidation will not overwrite the current instruction, and
+    //  (2) Overwriting the current instruction will not overwrite
+    //      an invalidation marker.
+    void ensureOsiSpace();
+
+    OutOfLineCode* oolTruncateDouble(FloatRegister src, Register dest, MInstruction* mir,
+                                     wasm::BytecodeOffset callOffset = wasm::BytecodeOffset());
+    void emitTruncateDouble(FloatRegister src, Register dest, MTruncateToInt32* mir);
+    void emitTruncateFloat32(FloatRegister src, Register dest, MTruncateToInt32* mir);
+
+    void emitPreBarrier(Register elements, const LAllocation* index, int32_t offsetAdjustment);
+    void emitPreBarrier(Address address);
+
+    // We don't emit code for trivial blocks, so if we want to branch to the
+    // given block, and it's trivial, return the ultimate block we should
+    // actually branch directly to.
+    MBasicBlock* skipTrivialBlocks(MBasicBlock* block) {
+        while (block->lir()->isTrivial()) {
+            LGoto* ins = block->lir()->rbegin()->toGoto();
+            MOZ_ASSERT(ins->numSuccessors() == 1);
+            block = ins->getSuccessor(0);
+        }
+        return block;
+    }
+
+    // Test whether the given block can be reached via fallthrough from the
+    // current block.
+    inline bool isNextBlock(LBlock* block) {
+        uint32_t target = skipTrivialBlocks(block->mir())->id();
+        uint32_t i = current->mir()->id() + 1;
+        if (target < i) {
+            return false;
+        }
+        // Trivial blocks can be crossed via fallthrough.
+        for (; i != target; ++i) {
+            if (!graph.getBlock(i)->isTrivial()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+  protected:
+    // Save and restore all volatile registers to/from the stack, excluding the
+    // specified register(s), before a function call made using callWithABI and
+    // after storing the function call's return value to an output register.
+    // (The only registers that don't need to be saved/restored are 1) the
+    // temporary register used to store the return value of the function call,
+    // if there is one [otherwise that stored value would be overwritten]; and
+    // 2) temporary registers whose values aren't needed in the rest of the LIR
+    // instruction [this is purely an optimization].  All other volatiles must
+    // be saved and restored in case future LIR instructions need those values.)
+    void saveVolatile(Register output) {
+        LiveRegisterSet regs(RegisterSet::Volatile());
+        regs.takeUnchecked(output);
+        masm.PushRegsInMask(regs);
+    }
+    void restoreVolatile(Register output) {
+        LiveRegisterSet regs(RegisterSet::Volatile());
+        regs.takeUnchecked(output);
+        masm.PopRegsInMask(regs);
+    }
+    void saveVolatile(FloatRegister output) {
+        LiveRegisterSet regs(RegisterSet::Volatile());
+        regs.takeUnchecked(output);
+        masm.PushRegsInMask(regs);
+    }
+    void restoreVolatile(FloatRegister output) {
+        LiveRegisterSet regs(RegisterSet::Volatile());
+        regs.takeUnchecked(output);
+        masm.PopRegsInMask(regs);
+    }
+    void saveVolatile(LiveRegisterSet temps) {
+        masm.PushRegsInMask(LiveRegisterSet(RegisterSet::VolatileNot(temps.set())));
+    }
+    void restoreVolatile(LiveRegisterSet temps) {
+        masm.PopRegsInMask(LiveRegisterSet(RegisterSet::VolatileNot(temps.set())));
+    }
+    void saveVolatile() {
+        masm.PushRegsInMask(LiveRegisterSet(RegisterSet::Volatile()));
+    }
+    void restoreVolatile() {
+        masm.PopRegsInMask(LiveRegisterSet(RegisterSet::Volatile()));
+    }
+
+    // These functions have to be called before and after any callVM and before
+    // any modifications of the stack.  Modification of the stack made after
+    // these calls should update the framePushed variable, needed by the exit
+    // frame produced by callVM.
+    inline void saveLive(LInstruction* ins);
+    inline void restoreLive(LInstruction* ins);
+    inline void restoreLiveIgnore(LInstruction* ins, LiveRegisterSet reg);
+
+    // Save/restore all registers that are both live and volatile.
+    inline void saveLiveVolatile(LInstruction* ins);
+    inline void restoreLiveVolatile(LInstruction* ins);
+
+  public:
+    template <typename T>
+    void pushArg(const T& t) {
+        masm.Push(t);
+=======
+  // The initial size of the frame in bytes. These are bytes beyond the
+  // constant header present for every Ion frame, used for pre-determined
+  // spills.
+  int32_t frameDepth_;
+
+  // Frame class this frame's size falls into (see IonFrame.h).
+  FrameSizeClass frameClass_;
+
+  // For arguments to the current function.
+  inline int32_t ArgToStackOffset(int32_t slot) const;
+
+  inline int32_t SlotToStackOffset(int32_t slot) const;
+  inline int32_t StackOffsetToSlot(int32_t offset) const;
+
+  // For argument construction for calls. Argslots are Value-sized.
+  inline int32_t StackOffsetOfPassedArg(int32_t slot) const;
+
+  inline int32_t ToStackOffset(LAllocation a) const;
+  inline int32_t ToStackOffset(const LAllocation* a) const;
+
+  inline Address ToAddress(const LAllocation& a);
+  inline Address ToAddress(const LAllocation* a);
+
+  uint32_t frameSize() const {
+    return frameClass_ == FrameSizeClass::None() ? frameDepth_
+                                                 : frameClass_.frameSize();
+  }
+
+ protected:
+  bool addNativeToBytecodeEntry(const BytecodeSite* site);
+  void dumpNativeToBytecodeEntries();
+  void dumpNativeToBytecodeEntry(uint32_t idx);
+
+  bool addTrackedOptimizationsEntry(const TrackedOptimizations* optimizations);
+  void extendTrackedOptimizationsEntry(
+      const TrackedOptimizations* optimizations);
+
+ public:
+  MIRGenerator& mirGen() const { return *gen; }
+
+  // When appending to runtimeData_, the vector might realloc, leaving pointers
+  // int the origianl vector stale and unusable. DataPtr acts like a pointer,
+  // but allows safety in the face of potentially realloc'ing vector appends.
+  friend class DataPtr;
+  template <typename T>
+  class DataPtr {
+    CodeGeneratorShared* cg_;
+    size_t index_;
+
+    T* lookup() { return reinterpret_cast<T*>(&cg_->runtimeData_[index_]); }
+
+   public:
+    DataPtr(CodeGeneratorShared* cg, size_t index) : cg_(cg), index_(index) {}
+
+    T* operator->() { return lookup(); }
+    T* operator*() { return lookup(); }
+  };
+
+ protected:
+  MOZ_MUST_USE
+  bool allocateData(size_t size, size_t* offset) {
+    MOZ_ASSERT(size % sizeof(void*) == 0);
+    *offset = runtimeData_.length();
+    masm.propagateOOM(runtimeData_.appendN(0, size));
+    return !masm.oom();
+  }
+
+  template <typename T>
+  inline size_t allocateIC(const T& cache) {
+    static_assert(mozilla::IsBaseOf<IonIC, T>::value,
+                  "T must inherit from IonIC");
+    size_t index;
+    masm.propagateOOM(
+        allocateData(sizeof(mozilla::AlignedStorage2<T>), &index));
+    masm.propagateOOM(icList_.append(index));
+    masm.propagateOOM(icInfo_.append(CompileTimeICInfo()));
+    if (masm.oom()) {
+      return SIZE_MAX;
+    }
+    // Use the copy constructor on the allocated space.
+    MOZ_ASSERT(index == icList_.back());
+    new (&runtimeData_[index]) T(cache);
+    return index;
+  }
+
+ protected:
+  // Encodes an LSnapshot into the compressed snapshot buffer.
+  void encode(LRecoverInfo* recover);
+  void encode(LSnapshot* snapshot);
+  void encodeAllocation(LSnapshot* snapshot, MDefinition* def,
+                        uint32_t* startIndex);
+
+  // Attempts to assign a BailoutId to a snapshot, if one isn't already set.
+  // If the bailout table is full, this returns false, which is not a fatal
+  // error (the code generator may use a slower bailout mechanism).
+  bool assignBailoutId(LSnapshot* snapshot);
+
+  // Encode all encountered safepoints in CG-order, and resolve |indices| for
+  // safepoint offsets.
+  bool encodeSafepoints();
+
+  // Fixup offsets of native-to-bytecode map.
+  bool createNativeToBytecodeScriptList(JSContext* cx);
+  bool generateCompactNativeToBytecodeMap(JSContext* cx, JitCode* code);
+  void verifyCompactNativeToBytecodeMap(JitCode* code);
+
+  bool generateCompactTrackedOptimizationsMap(JSContext* cx, JitCode* code,
+                                              IonTrackedTypeVector* allTypes);
+  void verifyCompactTrackedOptimizationsMap(
+      JitCode* code, uint32_t numRegions,
+      const UniqueTrackedOptimizations& unique,
+      const IonTrackedTypeVector* allTypes);
+
+  // Mark the safepoint on |ins| as corresponding to the current assembler
+  // location. The location should be just after a call.
+  void markSafepoint(LInstruction* ins);
+  void markSafepointAt(uint32_t offset, LInstruction* ins);
+
+  // Mark the OSI point |ins| as corresponding to the current
+  // assembler location inside the |osiIndices_|. Return the assembler
+  // location for the OSI point return location.
+  uint32_t markOsiPoint(LOsiPoint* ins);
+
+  // Ensure that there is enough room between the last OSI point and the
+  // current instruction, such that:
+  //  (1) Invalidation will not overwrite the current instruction, and
+  //  (2) Overwriting the current instruction will not overwrite
+  //      an invalidation marker.
+  void ensureOsiSpace();
+
+  OutOfLineCode* oolTruncateDouble(
+      FloatRegister src, Register dest, MInstruction* mir,
+      wasm::BytecodeOffset callOffset = wasm::BytecodeOffset());
+  void emitTruncateDouble(FloatRegister src, Register dest,
+                          MTruncateToInt32* mir);
+  void emitTruncateFloat32(FloatRegister src, Register dest,
+                           MTruncateToInt32* mir);
+
+  void emitPreBarrier(Register elements, const LAllocation* index,
+                      int32_t offsetAdjustment);
+  void emitPreBarrier(Address address);
+
+  // We don't emit code for trivial blocks, so if we want to branch to the
+  // given block, and it's trivial, return the ultimate block we should
+  // actually branch directly to.
+  MBasicBlock* skipTrivialBlocks(MBasicBlock* block) {
+    while (block->lir()->isTrivial()) {
+      LGoto* ins = block->lir()->rbegin()->toGoto();
+      MOZ_ASSERT(ins->numSuccessors() == 1);
+      block = ins->getSuccessor(0);
+    }
+    return block;
+  }
+
+  // Test whether the given block can be reached via fallthrough from the
+  // current block.
+  inline bool isNextBlock(LBlock* block) {
+    uint32_t target = skipTrivialBlocks(block->mir())->id();
+    uint32_t i = current->mir()->id() + 1;
+    if (target < i) {
+      return false;
+    }
+    // Trivial blocks can be crossed via fallthrough.
+    for (; i != target; ++i) {
+      if (!graph.getBlock(i)->isTrivial()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+ protected:
+  // Save and restore all volatile registers to/from the stack, excluding the
+  // specified register(s), before a function call made using callWithABI and
+  // after storing the function call's return value to an output register.
+  // (The only registers that don't need to be saved/restored are 1) the
+  // temporary register used to store the return value of the function call,
+  // if there is one [otherwise that stored value would be overwritten]; and
+  // 2) temporary registers whose values aren't needed in the rest of the LIR
+  // instruction [this is purely an optimization].  All other volatiles must
+  // be saved and restored in case future LIR instructions need those values.)
+  void saveVolatile(Register output) {
+    LiveRegisterSet regs(RegisterSet::Volatile());
+    regs.takeUnchecked(output);
+    masm.PushRegsInMask(regs);
+  }
+  void restoreVolatile(Register output) {
+    LiveRegisterSet regs(RegisterSet::Volatile());
+    regs.takeUnchecked(output);
+    masm.PopRegsInMask(regs);
+  }
+  void saveVolatile(FloatRegister output) {
+    LiveRegisterSet regs(RegisterSet::Volatile());
+    regs.takeUnchecked(output);
+    masm.PushRegsInMask(regs);
+  }
+  void restoreVolatile(FloatRegister output) {
+    LiveRegisterSet regs(RegisterSet::Volatile());
+    regs.takeUnchecked(output);
+    masm.PopRegsInMask(regs);
+  }
+  void saveVolatile(LiveRegisterSet temps) {
+    masm.PushRegsInMask(LiveRegisterSet(RegisterSet::VolatileNot(temps.set())));
+  }
+  void restoreVolatile(LiveRegisterSet temps) {
+    masm.PopRegsInMask(LiveRegisterSet(RegisterSet::VolatileNot(temps.set())));
+  }
+  void saveVolatile() {
+    masm.PushRegsInMask(LiveRegisterSet(RegisterSet::Volatile()));
+  }
+  void restoreVolatile() {
+    masm.PopRegsInMask(LiveRegisterSet(RegisterSet::Volatile()));
+  }
+
+  // These functions have to be called before and after any callVM and before
+  // any modifications of the stack.  Modification of the stack made after
+  // these calls should update the framePushed variable, needed by the exit
+  // frame produced by callVM.
+  inline void saveLive(LInstruction* ins);
+  inline void restoreLive(LInstruction* ins);
+  inline void restoreLiveIgnore(LInstruction* ins, LiveRegisterSet reg);
+
+  // Save/restore all registers that are both live and volatile.
+  inline void saveLiveVolatile(LInstruction* ins);
+  inline void restoreLiveVolatile(LInstruction* ins);
+
+ public:
+  template <typename T>
+  void pushArg(const T& t) {
+    masm.Push(t);
+>>>>>>> upstream-releases
 #ifdef DEBUG
     pushedArgs_++;
 #endif
@@ -406,27 +872,77 @@ class CodeGeneratorShared : public LElementVisitor {
 #ifdef DEBUG
     pushedArgs_++;
 #endif
+<<<<<<< HEAD
     return masm.PushWithPatch(t);
   }
 
   void storePointerResultTo(Register reg) { masm.storeCallPointerResult(reg); }
 
   void storeFloatResultTo(FloatRegister reg) { masm.storeCallFloatResult(reg); }
+||||||| merged common ancestors
+        return masm.PushWithPatch(t);
+    }
 
+    void storePointerResultTo(Register reg) {
+        masm.storeCallPointerResult(reg);
+    }
+
+    void storeFloatResultTo(FloatRegister reg) {
+        masm.storeCallFloatResult(reg);
+    }
+=======
+    return masm.PushWithPatch(t);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   template <typename T>
   void storeResultValueTo(const T& t) {
     masm.storeCallResultValue(t);
   }
+||||||| merged common ancestors
+    template <typename T>
+    void storeResultValueTo(const T& t) {
+        masm.storeCallResultValue(t);
+    }
+=======
+  void storePointerResultTo(Register reg) { masm.storeCallPointerResult(reg); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   void callVM(const VMFunction& f, LInstruction* ins,
               const Register* dynStack = nullptr);
+||||||| merged common ancestors
+  protected:
+    void callVM(const VMFunction& f, LInstruction* ins, const Register* dynStack = nullptr);
+=======
+  void storeFloatResultTo(FloatRegister reg) { masm.storeCallFloatResult(reg); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   template <class ArgSeq, class StoreOutputTo>
   inline OutOfLineCode* oolCallVM(const VMFunction& fun, LInstruction* ins,
                                   const ArgSeq& args, const StoreOutputTo& out);
+||||||| merged common ancestors
+    template <class ArgSeq, class StoreOutputTo>
+    inline OutOfLineCode* oolCallVM(const VMFunction& fun, LInstruction* ins, const ArgSeq& args,
+                                    const StoreOutputTo& out);
+=======
+  template <typename T>
+  void storeResultValueTo(const T& t) {
+    masm.storeCallResultValue(t);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void addIC(LInstruction* lir, size_t cacheIndex);
+||||||| merged common ancestors
+    void addIC(LInstruction* lir, size_t cacheIndex);
+=======
+ protected:
+  void addIC(LInstruction* lir, size_t cacheIndex);
+>>>>>>> upstream-releases
 
   ReciprocalMulConstants computeDivisionConstants(uint32_t d, int maxLog);
 
@@ -456,13 +972,30 @@ class CodeGeneratorShared : public LElementVisitor {
  public:
   CodeGeneratorShared(MIRGenerator* gen, LIRGraph* graph, MacroAssembler* masm);
 
+<<<<<<< HEAD
  public:
   template <class ArgSeq, class StoreOutputTo>
   void visitOutOfLineCallVM(OutOfLineCallVM<ArgSeq, StoreOutputTo>* ool);
+||||||| merged common ancestors
+  public:
+    template <class ArgSeq, class StoreOutputTo>
+    void visitOutOfLineCallVM(OutOfLineCallVM<ArgSeq, StoreOutputTo>* ool);
+=======
+ public:
+  void visitOutOfLineTruncateSlow(OutOfLineTruncateSlow* ool);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void visitOutOfLineTruncateSlow(OutOfLineTruncateSlow* ool);
 
   bool omitOverRecursedCheck() const;
+||||||| merged common ancestors
+    void visitOutOfLineTruncateSlow(OutOfLineTruncateSlow* ool);
+
+    bool omitOverRecursedCheck() const;
+=======
+  bool omitOverRecursedCheck() const;
+>>>>>>> upstream-releases
 
 #ifdef JS_TRACE_LOGGING
  protected:
@@ -552,6 +1085,7 @@ class OutOfLineCodeBase : public OutOfLineCode {
   virtual void accept(T* codegen) = 0;
 };
 
+<<<<<<< HEAD
 // ArgSeq store arguments for OutOfLineCallVM.
 //
 // OutOfLineCallVM are created with "oolCallVM" function. The third argument of
@@ -722,6 +1256,202 @@ void CodeGeneratorShared::visitOutOfLineCallVM(
   masm.jump(ool->rejoin());
 }
 
+||||||| merged common ancestors
+// ArgSeq store arguments for OutOfLineCallVM.
+//
+// OutOfLineCallVM are created with "oolCallVM" function. The third argument of
+// this function is an instance of a class which provides a "generate" in charge
+// of pushing the argument, with "pushArg", for a VMFunction.
+//
+// Such list of arguments can be created by using the "ArgList" function which
+// creates one instance of "ArgSeq", where the type of the arguments are inferred
+// from the type of the arguments.
+//
+// The list of arguments must be written in the same order as if you were
+// calling the function in C++.
+//
+// Example:
+//   ArgList(ToRegister(lir->lhs()), ToRegister(lir->rhs()))
+
+template <typename... ArgTypes>
+class ArgSeq;
+
+template <>
+class ArgSeq<>
+{
+  public:
+    ArgSeq() { }
+
+    inline void generate(CodeGeneratorShared* codegen) const {
+    }
+};
+
+template <typename HeadType, typename... TailTypes>
+class ArgSeq<HeadType, TailTypes...> : public ArgSeq<TailTypes...>
+{
+  private:
+    using RawHeadType = typename mozilla::RemoveReference<HeadType>::Type;
+    RawHeadType head_;
+
+  public:
+    template <typename ProvidedHead, typename... ProvidedTail>
+    explicit ArgSeq(ProvidedHead&& head, ProvidedTail&&... tail)
+      : ArgSeq<TailTypes...>(std::forward<ProvidedTail>(tail)...),
+        head_(std::forward<ProvidedHead>(head))
+    { }
+
+    // Arguments are pushed in reverse order, from last argument to first
+    // argument.
+    inline void generate(CodeGeneratorShared* codegen) const {
+        this->ArgSeq<TailTypes...>::generate(codegen);
+        codegen->pushArg(head_);
+    }
+};
+
+template <typename... ArgTypes>
+inline ArgSeq<ArgTypes...>
+ArgList(ArgTypes&&... args)
+{
+    return ArgSeq<ArgTypes...>(std::forward<ArgTypes>(args)...);
+}
+
+// Store wrappers, to generate the right move of data after the VM call.
+
+struct StoreNothing
+{
+    inline void generate(CodeGeneratorShared* codegen) const {
+    }
+    inline LiveRegisterSet clobbered() const {
+        return LiveRegisterSet(); // No register gets clobbered
+    }
+};
+
+class StoreRegisterTo
+{
+  private:
+    Register out_;
+
+  public:
+    explicit StoreRegisterTo(Register out)
+      : out_(out)
+    { }
+
+    inline void generate(CodeGeneratorShared* codegen) const {
+        // It's okay to use storePointerResultTo here - the VMFunction wrapper
+        // ensures the upper bytes are zero for bool/int32 return values.
+        codegen->storePointerResultTo(out_);
+    }
+    inline LiveRegisterSet clobbered() const {
+        LiveRegisterSet set;
+        set.add(out_);
+        return set;
+    }
+};
+
+class StoreFloatRegisterTo
+{
+  private:
+    FloatRegister out_;
+
+  public:
+    explicit StoreFloatRegisterTo(FloatRegister out)
+      : out_(out)
+    { }
+
+    inline void generate(CodeGeneratorShared* codegen) const {
+        codegen->storeFloatResultTo(out_);
+    }
+    inline LiveRegisterSet clobbered() const {
+        LiveRegisterSet set;
+        set.add(out_);
+        return set;
+    }
+};
+
+template <typename Output>
+class StoreValueTo_
+{
+  private:
+    Output out_;
+
+  public:
+    explicit StoreValueTo_(const Output& out)
+      : out_(out)
+    { }
+
+    inline void generate(CodeGeneratorShared* codegen) const {
+        codegen->storeResultValueTo(out_);
+    }
+    inline LiveRegisterSet clobbered() const {
+        LiveRegisterSet set;
+        set.add(out_);
+        return set;
+    }
+};
+
+template <typename Output>
+StoreValueTo_<Output> StoreValueTo(const Output& out)
+{
+    return StoreValueTo_<Output>(out);
+}
+
+template <class ArgSeq, class StoreOutputTo>
+class OutOfLineCallVM : public OutOfLineCodeBase<CodeGeneratorShared>
+{
+  private:
+    LInstruction* lir_;
+    const VMFunction& fun_;
+    ArgSeq args_;
+    StoreOutputTo out_;
+
+  public:
+    OutOfLineCallVM(LInstruction* lir, const VMFunction& fun, const ArgSeq& args,
+                    const StoreOutputTo& out)
+      : lir_(lir),
+        fun_(fun),
+        args_(args),
+        out_(out)
+    { }
+
+    void accept(CodeGeneratorShared* codegen) override {
+        codegen->visitOutOfLineCallVM(this);
+    }
+
+    LInstruction* lir() const { return lir_; }
+    const VMFunction& function() const { return fun_; }
+    const ArgSeq& args() const { return args_; }
+    const StoreOutputTo& out() const { return out_; }
+};
+
+template <class ArgSeq, class StoreOutputTo>
+inline OutOfLineCode*
+CodeGeneratorShared::oolCallVM(const VMFunction& fun, LInstruction* lir, const ArgSeq& args,
+                               const StoreOutputTo& out)
+{
+    MOZ_ASSERT(lir->mirRaw());
+    MOZ_ASSERT(lir->mirRaw()->isInstruction());
+
+    OutOfLineCode* ool = new(alloc()) OutOfLineCallVM<ArgSeq, StoreOutputTo>(lir, fun, args, out);
+    addOutOfLineCode(ool, lir->mirRaw()->toInstruction());
+    return ool;
+}
+
+template <class ArgSeq, class StoreOutputTo>
+void
+CodeGeneratorShared::visitOutOfLineCallVM(OutOfLineCallVM<ArgSeq, StoreOutputTo>* ool)
+{
+    LInstruction* lir = ool->lir();
+
+    saveLive(lir);
+    ool->args().generate(this);
+    callVM(ool->function(), lir);
+    ool->out().generate(this);
+    restoreLiveIgnore(lir, ool->out().clobbered());
+    masm.jump(ool->rejoin());
+}
+
+=======
+>>>>>>> upstream-releases
 template <class CodeGen>
 class OutOfLineWasmTruncateCheckBase : public OutOfLineCodeBase<CodeGen> {
   MIRType fromType_;

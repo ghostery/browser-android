@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 == color_targets(1) alpha_targets(0) no-clip-mask.yaml no-clip-mask.png
+||||||| merged common ancestors
+=======
+skip_on(android) == color_targets(2) alpha_targets(0) no-clip-mask.yaml no-clip-mask.png  # Too wide for Android
+>>>>>>> upstream-releases

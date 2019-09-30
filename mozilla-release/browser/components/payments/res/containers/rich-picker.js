@@ -5,7 +5,9 @@
 import PaymentStateSubscriberMixin from "../mixins/PaymentStateSubscriberMixin.js";
 import RichSelect from "../components/rich-select.js";
 
-export default class RichPicker extends PaymentStateSubscriberMixin(HTMLElement) {
+export default class RichPicker extends PaymentStateSubscriberMixin(
+  HTMLElement
+) {
   static get observedAttributes() {
     return ["label"];
   }
@@ -34,12 +36,23 @@ export default class RichPicker extends PaymentStateSubscriberMixin(HTMLElement)
   }
 
   connectedCallback() {
+<<<<<<< HEAD
     if (!this.dropdown.popupBox.id) {
       this.dropdown.popupBox.id = "select-" + Math.floor(Math.random() * 1000000);
     }
     this.labelElement.setAttribute("for", this.dropdown.popupBox.id);
     this.invalidLabel.setAttribute("for", this.dropdown.popupBox.id);
 
+||||||| merged common ancestors
+=======
+    if (!this.dropdown.popupBox.id) {
+      this.dropdown.popupBox.id =
+        "select-" + Math.floor(Math.random() * 1000000);
+    }
+    this.labelElement.setAttribute("for", this.dropdown.popupBox.id);
+    this.invalidLabel.setAttribute("for", this.dropdown.popupBox.id);
+
+>>>>>>> upstream-releases
     // The document order, by default, controls tab order so keep that in mind if changing this.
     this.appendChild(this.labelElement);
     this.appendChild(this.dropdown);
@@ -59,8 +72,7 @@ export default class RichPicker extends PaymentStateSubscriberMixin(HTMLElement)
     this.editLink.hidden = !this.dropdown.value;
 
     let errorText = this.errorForSelectedOption(state);
-    this.classList.toggle("invalid-selected-option",
-                          !!errorText);
+    this.classList.toggle("invalid-selected-option", !!errorText);
     this.invalidLabel.textContent = errorText;
     this.addLink.textContent = this.dataset.addLinkLabel;
     this.editLink.textContent = this.dataset.editLinkLabel;
@@ -93,7 +105,9 @@ export default class RichPicker extends PaymentStateSubscriberMixin(HTMLElement)
     if (!this.dataset.invalidLabel) {
       throw new Error("data-invalid-label is required");
     }
-    return this.missingFieldsOfSelectedOption().length ? this.dataset.invalidLabel : "";
+    return this.missingFieldsOfSelectedOption().length
+      ? this.dataset.invalidLabel
+      : "";
   }
 
   missingFieldsOfSelectedOption() {

@@ -2,8 +2,8 @@
 //!
 //! This module defines cursor data types that can be used for inserting instructions.
 
-use ir;
-use isa::TargetIsa;
+use crate::ir;
+use crate::isa::TargetIsa;
 
 /// The possible positions of a cursor.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -657,13 +657,21 @@ pub struct EncCursor<'f> {
     pub func: &'f mut ir::Function,
 
     /// The target ISA that will be used to encode instructions.
-    pub isa: &'f TargetIsa,
+    pub isa: &'f dyn TargetIsa,
 }
 
 impl<'f> EncCursor<'f> {
     /// Create a new `EncCursor` pointing nowhere.
+<<<<<<< HEAD
     pub fn new(func: &'f mut ir::Function, isa: &'f TargetIsa) -> Self {
         Self {
+||||||| merged common ancestors
+    pub fn new(func: &'f mut ir::Function, isa: &'f TargetIsa) -> EncCursor<'f> {
+        EncCursor {
+=======
+    pub fn new(func: &'f mut ir::Function, isa: &'f dyn TargetIsa) -> Self {
+        Self {
+>>>>>>> upstream-releases
             pos: CursorPosition::Nowhere,
             srcloc: Default::default(),
             built_inst: None,
@@ -751,7 +759,7 @@ impl<'c, 'f> ir::InstInserterBase<'c> for &'c mut EncCursor<'f> {
         }
         // Assign an encoding.
         // XXX Is there a way to describe this error to the user?
-        #[cfg_attr(feature = "cargo-clippy", allow(match_wild_err_arm))]
+        #[cfg_attr(feature = "cargo-clippy", allow(clippy::match_wild_err_arm))]
         match self
             .isa
             .encode(&self.func, &self.func.dfg[inst], ctrl_typevar)

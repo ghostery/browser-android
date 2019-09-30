@@ -12,24 +12,75 @@
 #include "GrSurfaceContext.h"
 #include "text/GrAtlasManager.h"
 
+class GrBackendFormat;
 class GrBackendRenderTarget;
 class GrOpMemoryPool;
 class GrOnFlushCallbackObject;
 class GrSemaphore;
+<<<<<<< HEAD
 class GrSkSLFPFactory;
+||||||| merged common ancestors
+=======
+class GrSkSLFPFactory;
+class GrSkSLFPFactoryCache;
+>>>>>>> upstream-releases
 class GrSurfaceProxy;
 class GrTextureContext;
 
 class SkDeferredDisplayList;
+class SkTaskGroup;
 
 /** Class that adds methods to GrContext that are only intended for use internal to Skia.
     This class is purely a privileged window into GrContext. It should never have additional
     data members or virtual methods. */
 class GrContextPriv {
 public:
+
+    // from GrContext_Base
+    uint32_t contextID() const { return fContext->contextID(); }
+
+    bool matches(GrContext_Base* candidate) const { return fContext->matches(candidate); }
+
+    const GrContextOptions& options() const { return fContext->options(); }
+
+    bool explicitlyAllocateGPUResources() const {
+        return fContext->explicitlyAllocateGPUResources();
+    }
+
+    const GrCaps* caps() const { return fContext->caps(); }
+    sk_sp<const GrCaps> refCaps() const;
+
+    sk_sp<GrSkSLFPFactoryCache> fpFactoryCache();
+
+    GrImageContext* asImageContext() { return fContext->asImageContext(); }
+    GrRecordingContext* asRecordingContext() { return fContext->asRecordingContext(); }
+    GrContext* asDirectContext() { return fContext->asDirectContext(); }
+
+    // from GrImageContext
+    GrProxyProvider* proxyProvider() { return fContext->proxyProvider(); }
+    const GrProxyProvider* proxyProvider() const { return fContext->proxyProvider(); }
+
+    bool abandoned() const { return fContext->abandoned(); }
+
+    /** This is only useful for debug purposes */
+    SkDEBUGCODE(GrSingleOwner* singleOwner() const { return fContext->singleOwner(); } )
+
+    // from GrRecordingContext
+    GrDrawingManager* drawingManager() { return fContext->drawingManager(); }
+
+    sk_sp<GrOpMemoryPool> refOpMemoryPool();
+    GrOpMemoryPool* opMemoryPool() { return fContext->opMemoryPool(); }
+
+    GrStrikeCache* getGrStrikeCache() { return fContext->getGrStrikeCache(); }
+    GrTextBlobCache* getTextBlobCache() { return fContext->getTextBlobCache(); }
+
     /**
-     * Create a GrContext without a resource cache
+     * Registers an object for flush-related callbacks. (See GrOnFlushCallbackObject.)
+     *
+     * NOTE: the drawing manager tracks this object as a raw pointer; it is up to the caller to
+     * ensure its lifetime is tied to that of the context.
      */
+<<<<<<< HEAD
     static sk_sp<GrContext> MakeDDL(const sk_sp<GrContextThreadSafeProxy>&);
 
     const GrCaps* caps() const { return fContext->fCaps.get(); }
@@ -38,35 +89,100 @@ public:
     GrOpMemoryPool* opMemoryPool();
 
     GrDrawingManager* drawingManager() { return fContext->fDrawingManager.get(); }
+||||||| merged common ancestors
+    static sk_sp<GrContext> MakeDDL(GrContextThreadSafeProxy*);
+
+    GrDrawingManager* drawingManager() { return fContext->fDrawingManager.get(); }
+=======
+    void addOnFlushCallbackObject(GrOnFlushCallbackObject*);
+>>>>>>> upstream-releases
 
     sk_sp<GrSurfaceContext> makeWrappedSurfaceContext(sk_sp<GrSurfaceProxy>,
                                                       sk_sp<SkColorSpace> = nullptr,
                                                       const SkSurfaceProps* = nullptr);
 
+<<<<<<< HEAD
     sk_sp<GrSurfaceContext> makeDeferredSurfaceContext(const GrSurfaceDesc&,
                                                        GrSurfaceOrigin,
+||||||| merged common ancestors
+    sk_sp<GrSurfaceContext> makeDeferredSurfaceContext(const GrSurfaceDesc&,
+=======
+    sk_sp<GrSurfaceContext> makeDeferredSurfaceContext(const GrBackendFormat&,
+                                                       const GrSurfaceDesc&,
+                                                       GrSurfaceOrigin,
+>>>>>>> upstream-releases
                                                        GrMipMapped,
                                                        SkBackingFit,
                                                        SkBudgeted,
                                                        sk_sp<SkColorSpace> colorSpace = nullptr,
                                                        const SkSurfaceProps* = nullptr);
 
+    /*
+     * Create a new render target context backed by a deferred-style
+     * GrRenderTargetProxy. We guarantee that "asTextureProxy" will succeed for
+     * renderTargetContexts created via this entry point.
+     */
+    sk_sp<GrRenderTargetContext> makeDeferredRenderTargetContext(
+                                            const GrBackendFormat& format,
+                                            SkBackingFit fit,
+                                            int width, int height,
+                                            GrPixelConfig config,
+                                            sk_sp<SkColorSpace> colorSpace,
+                                            int sampleCnt = 1,
+                                            GrMipMapped = GrMipMapped::kNo,
+                                            GrSurfaceOrigin origin = kBottomLeft_GrSurfaceOrigin,
+                                            const SkSurfaceProps* surfaceProps = nullptr,
+                                            SkBudgeted = SkBudgeted::kYes);
+
+    /*
+     * This method will attempt to create a renderTargetContext that has, at least, the number of
+     * channels and precision per channel as requested in 'config' (e.g., A8 and 888 can be
+     * converted to 8888). It may also swizzle the channels (e.g., BGRA -> RGBA).
+     * SRGB-ness will be preserved.
+     */
+    sk_sp<GrRenderTargetContext> makeDeferredRenderTargetContextWithFallback(
+                                            const GrBackendFormat& format,
+                                            SkBackingFit fit,
+                                            int width, int height,
+                                            GrPixelConfig config,
+                                            sk_sp<SkColorSpace> colorSpace,
+                                            int sampleCnt = 1,
+                                            GrMipMapped = GrMipMapped::kNo,
+                                            GrSurfaceOrigin origin = kBottomLeft_GrSurfaceOrigin,
+                                            const SkSurfaceProps* surfaceProps = nullptr,
+                                            SkBudgeted budgeted = SkBudgeted::kYes);
+
+    GrAuditTrail* auditTrail() { return fContext->auditTrail(); }
+
+    /**
+     * Create a GrContext without a resource cache
+     */
+    static sk_sp<GrContext> MakeDDL(const sk_sp<GrContextThreadSafeProxy>&);
+
     sk_sp<GrTextureContext> makeBackendTextureContext(const GrBackendTexture& tex,
                                                       GrSurfaceOrigin origin,
                                                       sk_sp<SkColorSpace> colorSpace);
+
+    // These match the definitions in SkSurface & GrSurface.h, for whence they came
+    typedef void* ReleaseContext;
+    typedef void (*ReleaseProc)(ReleaseContext);
 
     sk_sp<GrRenderTargetContext> makeBackendTextureRenderTargetContext(
                                                          const GrBackendTexture& tex,
                                                          GrSurfaceOrigin origin,
                                                          int sampleCnt,
                                                          sk_sp<SkColorSpace> colorSpace,
-                                                         const SkSurfaceProps* = nullptr);
+                                                         const SkSurfaceProps* = nullptr,
+                                                         ReleaseProc = nullptr,
+                                                         ReleaseContext = nullptr);
 
     sk_sp<GrRenderTargetContext> makeBackendRenderTargetRenderTargetContext(
                                                               const GrBackendRenderTarget&,
                                                               GrSurfaceOrigin origin,
                                                               sk_sp<SkColorSpace> colorSpace,
-                                                              const SkSurfaceProps* = nullptr);
+                                                              const SkSurfaceProps* = nullptr,
+                                                              ReleaseProc = nullptr,
+                                                              ReleaseContext = nullptr);
 
     sk_sp<GrRenderTargetContext> makeBackendTextureAsRenderTargetRenderTargetContext(
                                                                  const GrBackendTexture& tex,
@@ -75,8 +191,8 @@ public:
                                                                  sk_sp<SkColorSpace> colorSpace,
                                                                  const SkSurfaceProps* = nullptr);
 
-    bool disableGpuYUVConversion() const { return fContext->fDisableGpuYUVConversion; }
-    bool sharpenMipmappedTextures() const { return fContext->fSharpenMipmappedTextures; }
+    sk_sp<GrRenderTargetContext> makeVulkanSecondaryCBRenderTargetContext(
+            const SkImageInfo&, const GrVkDrawableInfo&, const SkSurfaceProps* = nullptr);
 
     /**
      * Call to ensure all drawing to the context has been issued to the
@@ -86,16 +202,6 @@ public:
      * provided then all current work will be flushed.
      */
     void flush(GrSurfaceProxy*);
-
-    /**
-     * Registers an object for flush-related callbacks. (See GrOnFlushCallbackObject.)
-     *
-     * NOTE: the drawing manager tracks this object as a raw pointer; it is up to the caller to
-     * ensure its lifetime is tied to that of the context.
-     */
-    void addOnFlushCallbackObject(GrOnFlushCallbackObject*);
-
-    void testingOnly_flushAndRemoveOnFlushCallbackObject(GrOnFlushCallbackObject*);
 
     /**
      * After this returns any pending writes to the surface will have been issued to the
@@ -176,13 +282,19 @@ public:
     bool writeSurfacePixels(GrSurfaceContext* dst, int left, int top, int width, int height,
                             GrColorType srcColorType, SkColorSpace* srcColorSpace,
                             const void* buffer, size_t rowBytes, uint32_t pixelOpsFlags = 0);
+<<<<<<< HEAD
 
     GrBackend getBackend() const { return fContext->fBackend; }
+||||||| merged common ancestors
+    bool writeSurfacePixels2(GrSurfaceContext* dst, int left, int top, int width, int height,
+                             GrColorType srcColorType, SkColorSpace* srcColorSpace,
+                             const void* buffer, size_t rowBytes, uint32_t pixelOpsFlags = 0);
+
+    GrBackend getBackend() const { return fContext->fBackend; }
+=======
+>>>>>>> upstream-releases
 
     SkTaskGroup* getTaskGroup() { return fContext->fTaskGroup.get(); }
-
-    GrProxyProvider* proxyProvider() { return fContext->fProxyProvider; }
-    const GrProxyProvider* proxyProvider() const { return fContext->fProxyProvider; }
 
     GrResourceProvider* resourceProvider() { return fContext->fResourceProvider; }
     const GrResourceProvider* resourceProvider() const { return fContext->fResourceProvider; }
@@ -192,8 +304,18 @@ public:
     GrGpu* getGpu() { return fContext->fGpu.get(); }
     const GrGpu* getGpu() const { return fContext->fGpu.get(); }
 
+<<<<<<< HEAD
     GrGlyphCache* getGlyphCache() { return fContext->fGlyphCache; }
     GrTextBlobCache* getTextBlobCache() { return fContext->fTextBlobCache.get(); }
+||||||| merged common ancestors
+    GrAtlasGlyphCache* getAtlasGlyphCache() { return fContext->fAtlasGlyphCache; }
+    GrTextBlobCache* getTextBlobCache() { return fContext->fTextBlobCache.get(); }
+=======
+    // This accessor should only ever be called by the GrOpFlushState.
+    GrAtlasManager* getAtlasManager() {
+        return fContext->onGetAtlasManager();
+    }
+>>>>>>> upstream-releases
 
     // This accessor should only ever be called by the GrOpFlushState.
     GrAtlasManager* getAtlasManager() {
@@ -203,6 +325,7 @@ public:
     void moveOpListsToDDL(SkDeferredDisplayList*);
     void copyOpListsFromDDL(const SkDeferredDisplayList*, GrRenderTargetProxy* newDest);
 
+<<<<<<< HEAD
     /**
      * Purge all the unlocked resources from the cache.
      * This entry point is mainly meant for timing texture uploads
@@ -279,6 +402,49 @@ public:
     /** This is only useful for debug purposes */
     SkDEBUGCODE(GrSingleOwner* debugSingleOwner() const { return &fContext->fSingleOwner; } )
 
+||||||| merged common ancestors
+=======
+    GrContextOptions::PersistentCache* getPersistentCache() { return fContext->fPersistentCache; }
+
+#ifdef SK_ENABLE_DUMP_GPU
+    /** Returns a string with detailed information about the context & GPU, in JSON format. */
+    SkString dump() const;
+#endif
+
+#if GR_TEST_UTILS
+    /** Reset GPU stats */
+    void resetGpuStats() const ;
+
+    /** Prints cache stats to the string if GR_CACHE_STATS == 1. */
+    void dumpCacheStats(SkString*) const;
+    void dumpCacheStatsKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values) const;
+    void printCacheStats() const;
+
+    /** Prints GPU stats to the string if GR_GPU_STATS == 1. */
+    void dumpGpuStats(SkString*) const;
+    void dumpGpuStatsKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values) const;
+    void printGpuStats() const;
+
+    /** Specify the TextBlob cache limit. If the current cache exceeds this limit it will purge.
+        this is for testing only */
+    void testingOnly_setTextBlobCacheLimit(size_t bytes);
+
+    /** Get pointer to atlas texture for given mask format. Note that this wraps an
+        actively mutating texture in an SkImage. This could yield unexpected results
+        if it gets cached or used more generally. */
+    sk_sp<SkImage> testingOnly_getFontAtlasImage(GrMaskFormat format, unsigned int index = 0);
+
+    /**
+     * Purge all the unlocked resources from the cache.
+     * This entry point is mainly meant for timing texture uploads
+     * and is not defined in normal builds of Skia.
+     */
+    void testingOnly_purgeAllUnlockedResources();
+
+    void testingOnly_flushAndRemoveOnFlushCallbackObject(GrOnFlushCallbackObject*);
+#endif
+
+>>>>>>> upstream-releases
 private:
     explicit GrContextPriv(GrContext* context) : fContext(context) {}
     GrContextPriv(const GrContextPriv&); // unimpl
@@ -293,9 +459,9 @@ private:
     friend class GrContext; // to construct/copy this type.
 };
 
-inline GrContextPriv GrContext::contextPriv() { return GrContextPriv(this); }
+inline GrContextPriv GrContext::priv() { return GrContextPriv(this); }
 
-inline const GrContextPriv GrContext::contextPriv () const {
+inline const GrContextPriv GrContext::priv() const {
     return GrContextPriv(const_cast<GrContext*>(this));
 }
 

@@ -17,13 +17,27 @@
 // At this point we're catching a crash which is of much greater
 // importance than the missing dereference for the nsCOMPtr<>
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(disable : 4509)
+||||||| merged common ancestors
+#pragma warning( disable : 4509 )
+=======
+#  pragma warning(disable : 4509)
+>>>>>>> upstream-releases
 #endif
 
+<<<<<<< HEAD
 #if defined(__GNUC__) || defined(__clang__)
 #define ATTRIBUTE_UNUSED __attribute__((unused))
+||||||| merged common ancestors
+#ifdef __GNUC__
+#define ATTRIBUTE_UNUSED __attribute__((unused))
+=======
+#if defined(__GNUC__) || defined(__clang__)
+#  define ATTRIBUTE_UNUSED __attribute__((unused))
+>>>>>>> upstream-releases
 #else
-#define ATTRIBUTE_UNUSED
+#  define ATTRIBUTE_UNUSED
 #endif
 
 namespace mozilla {

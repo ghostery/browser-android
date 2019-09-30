@@ -9,7 +9,7 @@
 #include "nsContentPolicyUtils.h"
 #include "nsContentSecurityManager.h"
 #include "nsContentUtils.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIServiceWorkerManager.h"
 #include "nsIScriptError.h"
 #include "nsThreadUtils.h"
@@ -23,6 +23,7 @@
 #include "nsServiceManagerUtils.h"
 
 #include "mozilla/LoadInfo.h"
+#include "mozilla/StorageAccess.h"
 #include "mozilla/dom/ClientIPCTypes.h"
 #include "mozilla/dom/DOMMozPromiseRequestHolder.h"
 #include "mozilla/dom/MessageEvent.h"
@@ -42,7 +43,13 @@
 
 // This is defined to something else on Windows
 #ifdef DispatchMessage
+<<<<<<< HEAD
 #undef DispatchMessage
+||||||| merged common ancestors
+  #undef DispatchMessage
+=======
+#  undef DispatchMessage
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -81,8 +88,17 @@ bool IsServiceWorkersTestingEnabledInWindow(JSObject* const aGlobal) {
 
 }  // namespace
 
+<<<<<<< HEAD
 /* static */ bool ServiceWorkerContainer::IsEnabled(JSContext* aCx,
                                                     JSObject* aGlobal) {
+||||||| merged common ancestors
+/* static */ bool
+ServiceWorkerContainer::IsEnabled(JSContext* aCx, JSObject* aGlobal)
+{
+=======
+/* static */
+bool ServiceWorkerContainer::IsEnabled(JSContext* aCx, JSObject* aGlobal) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   JS::Rooted<JSObject*> global(aCx, aGlobal);
@@ -204,7 +220,7 @@ already_AddRefed<nsIURI> GetBaseURIFromGlobal(nsIGlobalObject* aGlobal,
     return nullptr;
   }
 
-  nsIDocument* doc = window->GetExtantDoc();
+  Document* doc = window->GetExtantDoc();
   if (!doc) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -307,7 +323,7 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
     return nullptr;
   }
 
-  nsIDocument* doc = window->GetExtantDoc();
+  Document* doc = window->GetExtantDoc();
   if (!doc) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -315,7 +331,7 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
 
   // The next section of code executes an NS_CheckContentLoadPolicy()
   // check.  This is necessary to enforce the CSP of the calling client.
-  // Currently this requires an nsIDocument.  Once bug 965637 lands we
+  // Currently this requires an Document.  Once bug 965637 lands we
   // should try to move this into ServiceWorkerScopeAndScriptAreValid()
   // using the ClientInfo instead of doing a window-specific check here.
   // See bug 1455077 for further investigation.
@@ -357,6 +373,7 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
   // Verify that the global is valid and has permission to store
   // data.  We perform this late so that we can report the final
   // scope URL in any error message.
+<<<<<<< HEAD
   Unused << GetGlobalIfValid(aRv, [&](nsIDocument* aDoc) {
     NS_ConvertUTF8toUTF16 reportScope(cleanedScopeURL);
     const char16_t* param[] = {reportScope.get()};
@@ -364,11 +381,30 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
         nsIScriptError::errorFlag, NS_LITERAL_CSTRING("Service Workers"), aDoc,
         nsContentUtils::eDOM_PROPERTIES, "ServiceWorkerRegisterStorageError",
         param, 1);
+||||||| merged common ancestors
+  Unused << GetGlobalIfValid(aRv, [&](nsIDocument* aDoc) {
+    NS_ConvertUTF8toUTF16 reportScope(cleanedScopeURL);
+    const char16_t* param[] = { reportScope.get() };
+    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
+                                    NS_LITERAL_CSTRING("Service Workers"),
+                                    aDoc, nsContentUtils::eDOM_PROPERTIES,
+                                    "ServiceWorkerRegisterStorageError",
+                                    param, 1);
+=======
+  Unused << GetGlobalIfValid(aRv, [&](Document* aDoc) {
+    AutoTArray<nsString, 1> param;
+    CopyUTF8toUTF16(cleanedScopeURL, *param.AppendElement());
+    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
+                                    NS_LITERAL_CSTRING("Service Workers"), aDoc,
+                                    nsContentUtils::eDOM_PROPERTIES,
+                                    "ServiceWorkerRegisterStorageError", param);
+>>>>>>> upstream-releases
   });
 
   window->NoteCalledRegisterForServiceWorkerScope(cleanedScopeURL);
 
-  RefPtr<Promise> outer = Promise::Create(global, aRv);
+  RefPtr<Promise> outer =
+      Promise::Create(global, aRv, Promise::ePropagateUserInteraction);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -399,9 +435,20 @@ already_AddRefed<ServiceWorker> ServiceWorkerContainer::GetController() {
   return ref.forget();
 }
 
+<<<<<<< HEAD
 already_AddRefed<Promise> ServiceWorkerContainer::GetRegistrations(
     ErrorResult& aRv) {
   nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
+||||||| merged common ancestors
+already_AddRefed<Promise>
+ServiceWorkerContainer::GetRegistrations(ErrorResult& aRv)
+{
+  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
+=======
+already_AddRefed<Promise> ServiceWorkerContainer::GetRegistrations(
+    ErrorResult& aRv) {
+  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](Document* aDoc) {
+>>>>>>> upstream-releases
     nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                     NS_LITERAL_CSTRING("Service Workers"), aDoc,
                                     nsContentUtils::eDOM_PROPERTIES,
@@ -417,7 +464,8 @@ already_AddRefed<Promise> ServiceWorkerContainer::GetRegistrations(
     return nullptr;
   }
 
-  RefPtr<Promise> outer = Promise::Create(global, aRv);
+  RefPtr<Promise> outer =
+      Promise::Create(global, aRv, Promise::ePropagateUserInteraction);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -457,9 +505,21 @@ void ServiceWorkerContainer::StartMessages() {
   mMessagesStarted = true;
 }
 
+<<<<<<< HEAD
 already_AddRefed<Promise> ServiceWorkerContainer::GetRegistration(
     const nsAString& aURL, ErrorResult& aRv) {
   nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
+||||||| merged common ancestors
+already_AddRefed<Promise>
+ServiceWorkerContainer::GetRegistration(const nsAString& aURL,
+                                        ErrorResult& aRv)
+{
+  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
+=======
+already_AddRefed<Promise> ServiceWorkerContainer::GetRegistration(
+    const nsAString& aURL, ErrorResult& aRv) {
+  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](Document* aDoc) {
+>>>>>>> upstream-releases
     nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                     NS_LITERAL_CSTRING("Service Workers"), aDoc,
                                     nsContentUtils::eDOM_PROPERTIES,
@@ -492,7 +552,8 @@ already_AddRefed<Promise> ServiceWorkerContainer::GetRegistration(
     return nullptr;
   }
 
-  RefPtr<Promise> outer = Promise::Create(global, aRv);
+  RefPtr<Promise> outer =
+      Promise::Create(global, aRv, Promise::ePropagateUserInteraction);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -543,7 +604,8 @@ Promise* ServiceWorkerContainer::GetReady(ErrorResult& aRv) {
     return nullptr;
   }
 
-  mReadyPromise = Promise::Create(global, aRv);
+  mReadyPromise =
+      Promise::Create(global, aRv, Promise::ePropagateUserInteraction);
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -593,7 +655,7 @@ void ServiceWorkerContainer::GetScopeForUrl(const nsAString& aUrl,
     return;
   }
 
-  nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
+  nsCOMPtr<Document> doc = window->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return;
@@ -602,9 +664,20 @@ void ServiceWorkerContainer::GetScopeForUrl(const nsAString& aUrl,
   aRv = swm->GetScopeForUrl(doc->NodePrincipal(), aUrl, aScope);
 }
 
+<<<<<<< HEAD
 nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
     ErrorResult& aRv,
     const std::function<void(nsIDocument*)>&& aStorageFailureCB) const {
+||||||| merged common ancestors
+nsIGlobalObject*
+ServiceWorkerContainer::GetGlobalIfValid(ErrorResult& aRv,
+                                         const std::function<void(nsIDocument*)>&& aStorageFailureCB) const
+{
+=======
+nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
+    ErrorResult& aRv,
+    const std::function<void(Document*)>&& aStorageFailureCB) const {
+>>>>>>> upstream-releases
   // For now we require a window since ServiceWorkerContainer is
   // not exposed on worker globals yet.  The main thing we need
   // to fix here to support that is the storage access check via
@@ -615,7 +688,7 @@ nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
     return nullptr;
   }
 
-  nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
+  nsCOMPtr<Document> doc = window->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -625,8 +698,8 @@ nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
   // from a window with storage disabled.  If these windows can access
   // the registration it increases the chance they can bypass the storage
   // block via postMessage(), etc.
-  auto storageAllowed = nsContentUtils::StorageAllowedForWindow(window);
-  if (NS_WARN_IF(storageAllowed != nsContentUtils::StorageAccess::eAllow)) {
+  auto storageAllowed = StorageAllowedForWindow(window);
+  if (NS_WARN_IF(storageAllowed != StorageAccess::eAllow)) {
     if (aStorageFailureCB) {
       aStorageFailureCB(doc);
     }

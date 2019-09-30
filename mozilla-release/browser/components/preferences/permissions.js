@@ -2,19 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { AppConstants } = ChromeUtils.import(
+  "resource://gre/modules/AppConstants.jsm"
+);
 
 const permissionExceptionsL10n = {
-  "trackingprotection": {
+  trackingprotection: {
     window: "permissions-exceptions-content-blocking-window",
     description: "permissions-exceptions-content-blocking-desc",
   },
-  "cookie": {
+  cookie: {
     window: "permissions-exceptions-cookie-window",
     description: "permissions-exceptions-cookie-desc",
   },
-  "popup": {
+  popup: {
     window: "permissions-exceptions-popup-window",
     description: "permissions-exceptions-popup-desc",
   },
@@ -22,13 +24,9 @@ const permissionExceptionsL10n = {
     window: "permissions-exceptions-saved-logins-window",
     description: "permissions-exceptions-saved-logins-desc",
   },
-  "install": {
+  install: {
     window: "permissions-exceptions-addons-window",
     description: "permissions-exceptions-addons-desc",
-  },
-  "autoplay-media": {
-    window: "permissions-exceptions-autoplay-media-window2",
-    description: "permissions-exceptions-autoplay-media-desc2",
   },
 };
 
@@ -77,11 +75,12 @@ var gPermissionManager = {
       document.documentElement,
     ]);
 
-    document.getElementById("btnBlock").hidden    = !params.blockVisible;
-    document.getElementById("btnSession").hidden  = !params.sessionVisible;
-    document.getElementById("btnAllow").hidden    = !params.allowVisible;
+    document.getElementById("btnBlock").hidden = !params.blockVisible;
+    document.getElementById("btnSession").hidden = !params.sessionVisible;
+    document.getElementById("btnAllow").hidden = !params.allowVisible;
 
-    let urlFieldVisible = (params.blockVisible || params.sessionVisible || params.allowVisible);
+    let urlFieldVisible =
+      params.blockVisible || params.sessionVisible || params.allowVisible;
 
     let urlField = document.getElementById("url");
     urlField.value = params.prefilledHost;
@@ -97,8 +96,9 @@ var gPermissionManager = {
     statusCol.hidden = this._hideStatusColumn;
     if (this._hideStatusColumn) {
       statusCol.removeAttribute("data-isCurrentSortCol");
-      document.getElementById("siteCol")
-              .setAttribute("data-isCurrentSortCol", "true");
+      document
+        .getElementById("siteCol")
+        .setAttribute("data-isCurrentSortCol", "true");
     }
 
     Services.obs.notifyObservers(null, "flush-pending-permissions", this._type);
@@ -117,22 +117,38 @@ var gPermissionManager = {
   },
 
   observe(subject, topic, data) {
-    if (topic !== "perm-changed")
+    if (topic !== "perm-changed") {
       return;
+    }
 
     let permission = subject.QueryInterface(Ci.nsIPermission);
 
     // Ignore unrelated permission types.
-    if (permission.type !== this._type)
+    if (permission.type !== this._type) {
       return;
+    }
 
     if (data == "added") {
       this._addPermissionToList(permission);
       this.buildPermissionsList();
     } else if (data == "changed") {
       let p = this._permissions.get(permission.principal.origin);
+<<<<<<< HEAD
       p.capability = permission.capability;
       this._handleCapabilityChange(p);
+||||||| merged common ancestors
+      p.capability = permission.capability;
+      p.l10nId = this._getCapabilityString(permission.capability);
+      this._handleCapabilityChange(p);
+=======
+      // Maybe this item has been excluded before because it had an invalid capability.
+      if (p) {
+        p.capability = permission.capability;
+        this._handleCapabilityChange(p);
+      } else {
+        this._addPermissionToList(permission);
+      }
+>>>>>>> upstream-releases
       this.buildPermissionsList();
     } else if (data == "deleted") {
       this._removePermissionFromList(permission.principal.origin);
@@ -140,13 +156,42 @@ var gPermissionManager = {
   },
 
   _handleCapabilityChange(perm) {
+<<<<<<< HEAD
     let permissionlistitem = document.getElementsByAttribute("origin", perm.origin)[0];
     document.l10n.setAttributes(permissionlistitem.querySelector(".website-capability-value"), this._getCapabilityL10nId(perm.capability));
+||||||| merged common ancestors
+    let permissionlistitem = document.getElementsByAttribute("origin", perm.origin)[0];
+    permissionlistitem.querySelector(".website-capability-value").setAttribute("value", perm.capability);
+=======
+    let permissionlistitem = document.getElementsByAttribute(
+      "origin",
+      perm.origin
+    )[0];
+    document.l10n.setAttributes(
+      permissionlistitem.querySelector(".website-capability-value"),
+      this._getCapabilityL10nId(perm.capability)
+    );
+>>>>>>> upstream-releases
+  },
+
+<<<<<<< HEAD
+  _getCapabilityL10nId(capability) {
+||||||| merged common ancestors
+  _getCapabilityString(capability) {
+=======
+  _isCapabilitySupported(capability) {
+    return (
+      capability == Ci.nsIPermissionManager.ALLOW_ACTION ||
+      capability == Ci.nsIPermissionManager.DENY_ACTION ||
+      capability == Ci.nsICookiePermission.ACCESS_SESSION
+    );
   },
 
   _getCapabilityL10nId(capability) {
+>>>>>>> upstream-releases
     let stringKey = null;
     switch (capability) {
+<<<<<<< HEAD
     case Ci.nsIPermissionManager.ALLOW_ACTION:
       stringKey = "permissions-capabilities-listitem-allow";
       break;
@@ -161,21 +206,90 @@ var gPermissionManager = {
       break;
     default:
       throw new Error(`Unknown capability: ${capability}`);
+||||||| merged common ancestors
+    case Ci.nsIPermissionManager.ALLOW_ACTION:
+      stringKey = "can";
+      break;
+    case Ci.nsIPermissionManager.DENY_ACTION:
+      stringKey = "cannot";
+      break;
+    case Ci.nsICookiePermission.ACCESS_ALLOW_FIRST_PARTY_ONLY:
+      stringKey = "canAccessFirstParty";
+      break;
+    case Ci.nsICookiePermission.ACCESS_SESSION:
+      stringKey = "canSession";
+      break;
+    default:
+      throw new Error(`Unknown capability: ${capability}`);
+=======
+      case Ci.nsIPermissionManager.ALLOW_ACTION:
+        stringKey = "permissions-capabilities-listitem-allow";
+        break;
+      case Ci.nsIPermissionManager.DENY_ACTION:
+        stringKey = "permissions-capabilities-listitem-block";
+        break;
+      case Ci.nsICookiePermission.ACCESS_SESSION:
+        stringKey = "permissions-capabilities-listitem-allow-session";
+        break;
+      default:
+        throw new Error(`Unknown capability: ${capability}`);
+>>>>>>> upstream-releases
     }
     return stringKey;
   },
 
   _addPermissionToList(perm) {
+<<<<<<< HEAD
     if (perm.type !== this._type)
+||||||| merged common ancestors
+    // Ignore unrelated permission types and excluded capabilities.
+    if (perm.type !== this._type ||
+        (this._manageCapability && perm.capability != this._manageCapability))
+=======
+    if (perm.type !== this._type) {
       return;
+    }
+    if (!this._isCapabilitySupported(perm.capability)) {
+>>>>>>> upstream-releases
+      return;
+<<<<<<< HEAD
     let p = new Permission(perm.principal, perm.type, perm.capability);
+||||||| merged common ancestors
+    let capabilityString = this._getCapabilityString(perm.capability);
+    let p = new Permission(perm.principal, perm.type, capabilityString);
+=======
+    }
+
+    let p = new Permission(perm.principal, perm.type, perm.capability);
+>>>>>>> upstream-releases
     this._permissions.set(p.origin, p);
+  },
+
+  _addOrModifyPermission(principal, capability) {
+    // check whether the permission already exists, if not, add it
+    let permissionParams = { principal, type: this._type, capability };
+    let existingPermission = this._permissions.get(principal.origin);
+    if (!existingPermission) {
+      this._permissionsToAdd.set(principal.origin, permissionParams);
+      this._addPermissionToList(permissionParams);
+      this.buildPermissionsList();
+    } else if (existingPermission.capability != capability) {
+      existingPermission.capability = capability;
+      this._permissionsToAdd.set(principal.origin, permissionParams);
+      this._handleCapabilityChange(existingPermission);
+    }
+  },
+
+  _addNewPrincipalToList(list, uri) {
+    list.push(Services.scriptSecurityManager.createCodebasePrincipal(uri, {}));
+    // If we have ended up with an unknown scheme, the following will throw.
+    list[list.length - 1].origin;
   },
 
   addPermission(capability) {
     let textbox = document.getElementById("url");
-    let input_url = textbox.value.replace(/^\s*/, ""); // trim any leading space
-    let principal;
+    let input_url = textbox.value.trim(); // trim any leading and trailing space
+    let principals = [];
     try {
       // The origin accessor on the principal object will throw if the
       // principal doesn't have a canonical origin representation. This will
@@ -184,29 +298,39 @@ var gPermissionManager = {
       // an invalid URI. A canonical origin representation is required by the
       // permission manager for storage, so this won't prevent any valid
       // permissions from being entered by the user.
-      let uri;
       try {
-        uri = Services.io.newURI(input_url);
-        principal = Services.scriptSecurityManager.createCodebasePrincipal(uri, {});
+        let uri = Services.io.newURI(input_url);
+        let principal = Services.scriptSecurityManager.createCodebasePrincipal(
+          uri,
+          {}
+        );
         if (principal.origin.startsWith("moz-nullprincipal:")) {
-          throw "Null principal";
+          throw new Error("Null principal");
         }
+        principals.push(principal);
       } catch (ex) {
-        uri = Services.io.newURI("http://" + input_url);
-        principal = Services.scriptSecurityManager.createCodebasePrincipal(uri, {});
-        // If we have ended up with an unknown scheme, the following will throw.
-        principal.origin;
+        this._addNewPrincipalToList(
+          principals,
+          Services.io.newURI("http://" + input_url)
+        );
+        this._addNewPrincipalToList(
+          principals,
+          Services.io.newURI("https://" + input_url)
+        );
       }
     } catch (ex) {
-      document.l10n.formatValues([
-        {id: "permissions-invalid-uri-title"},
-        {id: "permissions-invalid-uri-label"},
-      ]).then(([title, message]) => {
-        Services.prompt.alert(window, title, message);
-      });
+      document.l10n
+        .formatValues([
+          { id: "permissions-invalid-uri-title" },
+          { id: "permissions-invalid-uri-label" },
+        ])
+        .then(([title, message]) => {
+          Services.prompt.alert(window, title, message);
+        });
       return;
     }
 
+<<<<<<< HEAD
     // check whether the permission already exists, if not, add it
     let permissionParams = {principal, type: this._type, capability};
     let existingPermission = this._permissions.get(principal.origin);
@@ -218,6 +342,24 @@ var gPermissionManager = {
       existingPermission.capability = capability;
       this._permissionsToAdd.set(principal.origin, permissionParams);
       this._handleCapabilityChange(existingPermission);
+||||||| merged common ancestors
+    let capabilityString = this._getCapabilityString(capability);
+
+    // check whether the permission already exists, if not, add it
+    let permissionParams = {principal, type: this._type, capability};
+    let existingPermission = this._permissions.get(principal.origin);
+    if (!existingPermission) {
+      this._permissionsToAdd.set(principal.origin, permissionParams);
+      this._addPermissionToList(permissionParams);
+      this.buildPermissionsList();
+    } else if (existingPermission.capability != capabilityString) {
+      existingPermission.capability = capabilityString;
+      this._permissionsToAdd.set(principal.origin, permissionParams);
+      this._handleCapabilityChange(existingPermission);
+=======
+    for (let principal of principals) {
+      this._addOrModifyPermission(principal, capability);
+>>>>>>> upstream-releases
     }
 
     textbox.value = "";
@@ -244,7 +386,10 @@ var gPermissionManager = {
 
   _removePermissionFromList(origin) {
     this._permissions.delete(origin);
-    let permissionlistitem = document.getElementsByAttribute("origin", origin)[0];
+    let permissionlistitem = document.getElementsByAttribute(
+      "origin",
+      origin
+    )[0];
     if (permissionlistitem) {
       permissionlistitem.remove();
     }
@@ -276,7 +421,16 @@ var gPermissionManager = {
       hbox = document.createXULElement("hbox");
       let capability = document.createXULElement("label");
       capability.setAttribute("class", "website-capability-value");
+<<<<<<< HEAD
       document.l10n.setAttributes(capability, this._getCapabilityL10nId(permission.capability));
+||||||| merged common ancestors
+      capability.setAttribute("value", permission.capability);
+=======
+      document.l10n.setAttributes(
+        capability,
+        this._getCapabilityL10nId(permission.capability)
+      );
+>>>>>>> upstream-releases
       hbox.setAttribute("width", "0");
       hbox.setAttribute("class", "website-name");
       hbox.setAttribute("flex", "1");
@@ -289,25 +443,30 @@ var gPermissionManager = {
   },
 
   onWindowKeyPress(event) {
-    if (event.keyCode == KeyEvent.DOM_VK_ESCAPE)
+    if (event.keyCode == KeyEvent.DOM_VK_ESCAPE) {
       window.close();
+    }
   },
 
   onPermissionKeyPress(event) {
-    if (!this._list.selectedItem)
+    if (!this._list.selectedItem) {
       return;
+    }
 
-    if (event.keyCode == KeyEvent.DOM_VK_DELETE ||
-       (AppConstants.platform == "macosx" &&
-        event.keyCode == KeyEvent.DOM_VK_BACK_SPACE)) {
+    if (
+      event.keyCode == KeyEvent.DOM_VK_DELETE ||
+      (AppConstants.platform == "macosx" &&
+        event.keyCode == KeyEvent.DOM_VK_BACK_SPACE)
+    ) {
       this.onPermissionDelete();
       event.preventDefault();
     }
   },
 
   onHostKeyPress(event) {
-    if (event.keyCode == KeyEvent.DOM_VK_RETURN)
+    if (event.keyCode == KeyEvent.DOM_VK_RETURN) {
       document.getElementById("btnAllow").click();
+    }
   },
 
   onHostInput(siteField) {
@@ -317,8 +476,9 @@ var gPermissionManager = {
   },
 
   _setRemoveButtonState() {
-    if (!this._list)
+    if (!this._list) {
       return;
+    }
 
     let hasSelection = this._list.selectedIndex >= 0;
     let hasRows = this._list.itemCount > 0;
@@ -354,12 +514,12 @@ var gPermissionManager = {
     // to update the UI
     this.uninit();
 
-    for (let p of this._permissionsToAdd.values()) {
-      Services.perms.addFromPrincipal(p.principal, p.type, p.capability);
-    }
-
     for (let p of this._permissionsToDelete.values()) {
       Services.perms.removeFromPrincipal(p.principal, p.type);
+    }
+
+    for (let p of this._permissionsToAdd.values()) {
+      Services.perms.addFromPrincipal(p.principal, p.type, p.capability);
     }
 
     window.close();
@@ -393,24 +553,38 @@ var gPermissionManager = {
 
     if (!column) {
       column = document.querySelector("treecol[data-isCurrentSortCol=true]");
-      sortDirection = column.getAttribute("data-last-sortDirection") || "ascending";
+      sortDirection =
+        column.getAttribute("data-last-sortDirection") || "ascending";
     } else {
       sortDirection = column.getAttribute("data-last-sortDirection");
-      sortDirection = sortDirection === "ascending" ? "descending" : "ascending";
+      sortDirection =
+        sortDirection === "ascending" ? "descending" : "ascending";
     }
 
     let sortFunc = null;
     switch (column.id) {
       case "siteCol":
         sortFunc = (a, b) => {
-          return comp.compare(a.getAttribute("origin"), b.getAttribute("origin"));
+          return comp.compare(
+            a.getAttribute("origin"),
+            b.getAttribute("origin")
+          );
         };
         break;
 
       case "statusCol":
         sortFunc = (a, b) => {
-          return a.querySelector(".website-capability-value").getAttribute("value") >
-                 b.querySelector(".website-capability-value").getAttribute("value");
+          // The capabilities values ("Allow" and "Block") are localized asynchronously.
+          // Sort based on the guaranteed-present localization ID instead, note that the
+          // ascending/descending arrow may be pointing the wrong way.
+          return (
+            a
+              .querySelector(".website-capability-value")
+              .getAttribute("data-l10n-id") >
+            b
+              .querySelector(".website-capability-value")
+              .getAttribute("data-l10n-id")
+          );
         };
         break;
     }
@@ -430,7 +604,7 @@ var gPermissionManager = {
     // Re-append items in the correct order:
     items.forEach(item => frag.appendChild(item));
 
-    let cols = list.querySelectorAll("treecol");
+    let cols = list.previousElementSibling.querySelectorAll("treecol");
     cols.forEach(c => {
       c.removeAttribute("data-isCurrentSortCol");
       c.removeAttribute("sortDirection");

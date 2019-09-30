@@ -565,10 +565,17 @@ inline AudioFrame& AudioFrame::operator+=(const AudioFrame& rhs) {
       }
     }
   }
+<<<<<<< HEAD
 
   return *this;
 }
+||||||| merged common ancestors
+  return *this;
+}
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 struct PacedPacketInfo {
   PacedPacketInfo() {}
   PacedPacketInfo(int probe_cluster_id,
@@ -597,6 +604,115 @@ inline bool IsNewerOrSameTimestamp(uint32_t timestamp, uint32_t prev_timestamp) 
       static_cast<uint32_t>(timestamp - prev_timestamp) < 0x80000000;
 }
 
+||||||| merged common ancestors
+inline bool IsNewerSequenceNumber(uint16_t sequence_number,
+                                  uint16_t prev_sequence_number) {
+  // Distinguish between elements that are exactly 0x8000 apart.
+  // If s1>s2 and |s1-s2| = 0x8000: IsNewer(s1,s2)=true, IsNewer(s2,s1)=false
+  // rather than having IsNewer(s1,s2) = IsNewer(s2,s1) = false.
+  if (static_cast<uint16_t>(sequence_number - prev_sequence_number) == 0x8000) {
+    return sequence_number > prev_sequence_number;
+  }
+  return sequence_number != prev_sequence_number &&
+         static_cast<uint16_t>(sequence_number - prev_sequence_number) < 0x8000;
+}
+
+inline bool IsNewerTimestamp(uint32_t timestamp, uint32_t prev_timestamp) {
+  // Distinguish between elements that are exactly 0x80000000 apart.
+  // If t1>t2 and |t1-t2| = 0x80000000: IsNewer(t1,t2)=true,
+  // IsNewer(t2,t1)=false
+  // rather than having IsNewer(t1,t2) = IsNewer(t2,t1) = false.
+  if (static_cast<uint32_t>(timestamp - prev_timestamp) == 0x80000000) {
+    return timestamp > prev_timestamp;
+  }
+  return timestamp != prev_timestamp &&
+         static_cast<uint32_t>(timestamp - prev_timestamp) < 0x80000000;
+}
+ 
+inline bool IsNewerOrSameTimestamp(uint32_t timestamp, uint32_t prev_timestamp) {
+  return timestamp == prev_timestamp ||
+      static_cast<uint32_t>(timestamp - prev_timestamp) < 0x80000000;
+}
+
+inline uint16_t LatestSequenceNumber(uint16_t sequence_number1,
+                                     uint16_t sequence_number2) {
+  return IsNewerSequenceNumber(sequence_number1, sequence_number2)
+             ? sequence_number1
+             : sequence_number2;
+}
+
+inline uint32_t LatestTimestamp(uint32_t timestamp1, uint32_t timestamp2) {
+  return IsNewerTimestamp(timestamp1, timestamp2) ? timestamp1 : timestamp2;
+}
+
+// Utility class to unwrap a sequence number to a larger type, for easier
+// handling large ranges. Note that sequence numbers will never be unwrapped
+// to a negative value.
+class SequenceNumberUnwrapper {
+ public:
+  SequenceNumberUnwrapper() : last_seq_(-1) {}
+
+  // Get the unwrapped sequence, but don't update the internal state.
+  int64_t UnwrapWithoutUpdate(uint16_t sequence_number) {
+    if (last_seq_ == -1)
+      return sequence_number;
+
+    uint16_t cropped_last = static_cast<uint16_t>(last_seq_);
+    int64_t delta = sequence_number - cropped_last;
+    if (IsNewerSequenceNumber(sequence_number, cropped_last)) {
+      if (delta < 0)
+        delta += (1 << 16);  // Wrap forwards.
+    } else if (delta > 0 && (last_seq_ + delta - (1 << 16)) >= 0) {
+      // If sequence_number is older but delta is positive, this is a backwards
+      // wrap-around. However, don't wrap backwards past 0 (unwrapped).
+      delta -= (1 << 16);
+    }
+
+    return last_seq_ + delta;
+  }
+
+  // Only update the internal state to the specified last (unwrapped) sequence.
+  void UpdateLast(int64_t last_sequence) { last_seq_ = last_sequence; }
+
+  // Unwrap the sequence number and update the internal state.
+  int64_t Unwrap(uint16_t sequence_number) {
+    int64_t unwrapped = UnwrapWithoutUpdate(sequence_number);
+    UpdateLast(unwrapped);
+    return unwrapped;
+  }
+
+ private:
+  int64_t last_seq_;
+};
+
+=======
+  return *this;
+}
+
+struct PacedPacketInfo {
+  PacedPacketInfo() {}
+  PacedPacketInfo(int probe_cluster_id,
+                  int probe_cluster_min_probes,
+                  int probe_cluster_min_bytes)
+      : probe_cluster_id(probe_cluster_id),
+        probe_cluster_min_probes(probe_cluster_min_probes),
+        probe_cluster_min_bytes(probe_cluster_min_bytes) {}
+
+  bool operator==(const PacedPacketInfo& rhs) const {
+    return send_bitrate_bps == rhs.send_bitrate_bps &&
+           probe_cluster_id == rhs.probe_cluster_id &&
+           probe_cluster_min_probes == rhs.probe_cluster_min_probes &&
+           probe_cluster_min_bytes == rhs.probe_cluster_min_bytes;
+  }
+
+  static constexpr int kNotAProbe = -1;
+  int send_bitrate_bps = -1;
+  int probe_cluster_id = kNotAProbe;
+  int probe_cluster_min_probes = -1;
+  int probe_cluster_min_bytes = -1;
+};
+
+>>>>>>> upstream-releases
 }  // namespace webrtc
 
 #endif  // MODULES_INCLUDE_MODULE_COMMON_TYPES_H_

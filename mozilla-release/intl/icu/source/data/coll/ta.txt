@@ -34,7 +34,13 @@ ta{
                 "&[before 1]ஹ<ஹ்"
                 "&[before 1]க்ஷ<க்ஷ்"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

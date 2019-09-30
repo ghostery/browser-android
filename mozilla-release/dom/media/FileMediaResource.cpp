@@ -11,6 +11,7 @@
 #include "nsContentUtils.h"
 #include "nsIFileChannel.h"
 #include "nsIFileStreams.h"
+#include "nsITimedChannel.h"
 #include "nsNetUtil.h"
 
 namespace mozilla {
@@ -117,8 +118,32 @@ already_AddRefed<nsIPrincipal> FileMediaResource::GetCurrentPrincipal() {
   return principal.forget();
 }
 
+<<<<<<< HEAD
 nsresult FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
                                           uint32_t aCount) {
+||||||| merged common ancestors
+nsresult
+FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
+                                 uint32_t aCount)
+{
+=======
+bool FileMediaResource::HadCrossOriginRedirects() {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  nsCOMPtr<nsITimedChannel> timedChannel = do_QueryInterface(mChannel);
+  if (!timedChannel) {
+    return false;
+  }
+
+  bool allRedirectsSameOrigin = false;
+  return NS_SUCCEEDED(timedChannel->GetAllRedirectsSameOrigin(
+             &allRedirectsSameOrigin)) &&
+         !allRedirectsSameOrigin;
+}
+
+nsresult FileMediaResource::ReadFromCache(char* aBuffer, int64_t aOffset,
+                                          uint32_t aCount) {
+>>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   EnsureSizeInitialized();

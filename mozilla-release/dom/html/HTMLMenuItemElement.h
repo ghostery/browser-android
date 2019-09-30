@@ -34,8 +34,16 @@ class HTMLMenuItemElement final : public nsGenericHTMLElement {
   void GetEventTargetParent(EventChainPreVisitor& aVisitor) override;
   virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
 
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument* aDocument,
+                              nsIContent* aParent,
+                              nsIContent* aBindingParent) override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+>>>>>>> upstream-releases
 
   virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                               const nsAString& aValue,

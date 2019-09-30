@@ -19,16 +19,40 @@ struct UserDataKey {
 };
 
 /* this class is basically a clone of the user data concept from cairo */
+<<<<<<< HEAD
 class UserData {
   typedef void (*destroyFunc)(void *data);
 
  public:
+||||||| merged common ancestors
+class UserData
+{
+  typedef void (*destroyFunc)(void *data);
+public:
+=======
+class UserData {
+  typedef void (*destroyFunc)(void* data);
+
+ public:
+>>>>>>> upstream-releases
   UserData() : count(0), entries(nullptr) {}
 
+<<<<<<< HEAD
   /* Attaches untyped userData associated with key. destroy is called on
    * destruction */
   void Add(UserDataKey *key, void *userData, destroyFunc destroy) {
     for (int i = 0; i < count; i++) {
+||||||| merged common ancestors
+  /* Attaches untyped userData associated with key. destroy is called on destruction */
+  void Add(UserDataKey *key, void *userData, destroyFunc destroy)
+  {
+    for (int i=0; i<count; i++) {
+=======
+  /* Attaches untyped userData associated with key. destroy is called on
+   * destruction */
+  void Add(UserDataKey* key, void* userData, destroyFunc destroy) {
+    for (int i = 0; i < count; i++) {
+>>>>>>> upstream-releases
       if (key == entries[i].key) {
         if (entries[i].destroy) {
           entries[i].destroy(entries[i].userData);
@@ -43,8 +67,15 @@ class UserData {
     // but that would propagate an stl dependency out which we'd rather not
     // do (see bug 666609). Plus, the entries array is expect to stay small
     // so doing a realloc everytime we add a new entry shouldn't be too costly
+<<<<<<< HEAD
     entries =
         static_cast<Entry *>(realloc(entries, sizeof(Entry) * (count + 1)));
+||||||| merged common ancestors
+    entries = static_cast<Entry*>(realloc(entries, sizeof(Entry)*(count+1)));
+=======
+    entries =
+        static_cast<Entry*>(realloc(entries, sizeof(Entry) * (count + 1)));
+>>>>>>> upstream-releases
 
     if (!entries) {
       MOZ_CRASH("GFX: UserData::Add");
@@ -58,10 +89,19 @@ class UserData {
   }
 
   /* Remove and return user data associated with key, without destroying it */
+<<<<<<< HEAD
   void *Remove(UserDataKey *key) {
     for (int i = 0; i < count; i++) {
+||||||| merged common ancestors
+  void* Remove(UserDataKey *key)
+  {
+    for (int i=0; i<count; i++) {
+=======
+  void* Remove(UserDataKey* key) {
+    for (int i = 0; i < count; i++) {
+>>>>>>> upstream-releases
       if (key == entries[i].key) {
-        void *userData = entries[i].userData;
+        void* userData = entries[i].userData;
         // decrement before looping so entries[i+1] doesn't read past the end:
         --count;
         for (; i < count; i++) {
@@ -74,8 +114,17 @@ class UserData {
   }
 
   /* Remove and destroy a given key */
+<<<<<<< HEAD
   void RemoveAndDestroy(UserDataKey *key) {
     for (int i = 0; i < count; i++) {
+||||||| merged common ancestors
+  void RemoveAndDestroy(UserDataKey *key)
+  {
+    for (int i=0; i<count; i++) {
+=======
+  void RemoveAndDestroy(UserDataKey* key) {
+    for (int i = 0; i < count; i++) {
+>>>>>>> upstream-releases
       if (key == entries[i].key) {
         if (entries[i].destroy) {
           entries[i].destroy(entries[i].userData);
@@ -90,8 +139,17 @@ class UserData {
   }
 
   /* Retrives the userData for the associated key */
+<<<<<<< HEAD
   void *Get(UserDataKey *key) const {
     for (int i = 0; i < count; i++) {
+||||||| merged common ancestors
+  void *Get(UserDataKey *key) const
+  {
+    for (int i=0; i<count; i++) {
+=======
+  void* Get(UserDataKey* key) const {
+    for (int i = 0; i < count; i++) {
+>>>>>>> upstream-releases
       if (key == entries[i].key) {
         return entries[i].userData;
       }
@@ -99,8 +157,17 @@ class UserData {
     return nullptr;
   }
 
+<<<<<<< HEAD
   bool Has(UserDataKey *key) {
     for (int i = 0; i < count; i++) {
+||||||| merged common ancestors
+  bool Has(UserDataKey *key)
+  {
+    for (int i=0; i<count; i++) {
+=======
+  bool Has(UserDataKey* key) {
+    for (int i = 0; i < count; i++) {
+>>>>>>> upstream-releases
       if (key == entries[i].key) {
         return true;
       }
@@ -123,13 +190,20 @@ class UserData {
 
  private:
   struct Entry {
-    const UserDataKey *key;
-    void *userData;
+    const UserDataKey* key;
+    void* userData;
     destroyFunc destroy;
   };
 
   int count;
+<<<<<<< HEAD
   Entry *entries;
+||||||| merged common ancestors
+  Entry *entries;
+
+=======
+  Entry* entries;
+>>>>>>> upstream-releases
 };
 
 }  // namespace gfx

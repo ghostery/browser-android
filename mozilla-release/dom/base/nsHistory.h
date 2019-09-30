@@ -12,7 +12,14 @@
 #include "mozilla/dom/ChildSHistory.h"
 #include "nsCOMPtr.h"
 #include "nsCycleCollectionParticipant.h"
+<<<<<<< HEAD
 #include "nsPIDOMWindow.h"  // for GetParentObject
+||||||| merged common ancestors
+#include "nsPIDOMWindow.h" // for GetParentObject
+=======
+#include "nsIWeakReferenceUtils.h"  // for nsWeakPtr
+#include "nsPIDOMWindow.h"          // for GetParentObject
+>>>>>>> upstream-releases
 #include "nsStringFwd.h"
 #include "nsWrapperCache.h"
 

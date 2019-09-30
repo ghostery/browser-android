@@ -8,12 +8,13 @@
 #include "nsSVGGFrame.h"
 
 // Keep others in (case-insensitive) order:
+#include "mozilla/PresShell.h"
 #include "nsGkAtoms.h"
-#include "SVGTransformableElement.h"
 #include "nsIFrame.h"
-#include "SVGGraphicsElement.h"
 #include "nsSVGIntegrationUtils.h"
 #include "nsSVGUtils.h"
+#include "SVGGraphicsElement.h"
+#include "SVGTransformableElement.h"
 
 using namespace mozilla;
 using namespace mozilla::dom;
@@ -21,8 +22,18 @@ using namespace mozilla::dom;
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGGFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGGFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSVGGFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGGFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGGFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsSVGGFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGGFrame)
@@ -31,7 +42,13 @@ NS_IMPL_FRAMEARENA_HELPERS(nsSVGGFrame)
 void nsSVGGFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
                        nsIFrame* aPrevInFlow) {
   NS_ASSERTION(aContent->IsSVGElement() &&
+<<<<<<< HEAD
                    static_cast<nsSVGElement*>(aContent)->IsTransformable(),
+||||||| merged common ancestors
+               static_cast<nsSVGElement*>(aContent)->IsTransformable(),
+=======
+                   static_cast<SVGElement*>(aContent)->IsTransformable(),
+>>>>>>> upstream-releases
                "The element doesn't support nsIDOMSVGTransformable");
 
   nsSVGDisplayContainerFrame::Init(aContent, aParent, aPrevInFlow);

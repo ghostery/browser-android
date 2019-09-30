@@ -5,7 +5,7 @@
 
 #include "txMozillaXMLOutput.h"
 
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIDocShell.h"
 #include "nsIScriptElement.h"
 #include "nsCharsetSource.h"
@@ -20,7 +20,6 @@
 #include "nsNameSpaceManager.h"
 #include "txStringUtils.h"
 #include "txURIUtils.h"
-#include "nsIHTMLDocument.h"
 #include "nsIStyleSheetLinkingElement.h"
 #include "nsIDocumentTransformer.h"
 #include "mozilla/StyleSheetInlines.h"
@@ -188,6 +187,35 @@ nsresult txMozillaXMLOutput::comment(const nsString& aData) {
 nsresult txMozillaXMLOutput::endDocument(nsresult aResult) {
   TX_ENSURE_CURRENTNODE;
 
+<<<<<<< HEAD
+  if (NS_FAILED(aResult)) {
+    if (mNotifier) {
+      mNotifier->OnTransformEnd(aResult);
+    }
+||||||| merged common ancestors
+        return NS_OK;
+    }
+
+    nsresult rv = closePrevious(true);
+    if (NS_FAILED(rv)) {
+        if (mNotifier) {
+            mNotifier->OnTransformEnd(rv);
+        }
+
+        return rv;
+    }
+
+    if (mCreatingNewDocument) {
+        // This should really be handled by nsIDocument::EndLoad
+        MOZ_ASSERT(mDocument->GetReadyStateEnum() ==
+                   nsIDocument::READYSTATE_LOADING, "Bad readyState");
+        mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
+        ScriptLoader* loader = mDocument->ScriptLoader();
+        if (loader) {
+            loader->ParsingComplete(false);
+        }
+    }
+=======
   if (NS_FAILED(aResult)) {
     if (mNotifier) {
       mNotifier->OnTransformEnd(aResult);
@@ -202,6 +230,62 @@ nsresult txMozillaXMLOutput::endDocument(nsresult aResult) {
       mNotifier->OnTransformEnd(rv);
     }
 
+    return rv;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    return NS_OK;
+  }
+||||||| merged common ancestors
+    if (!mRefreshString.IsEmpty()) {
+        nsPIDOMWindowOuter* win = mDocument->GetWindow();
+        if (win) {
+            nsCOMPtr<nsIRefreshURI> refURI =
+                do_QueryInterface(win->GetDocShell());
+            if (refURI) {
+                refURI->SetupRefreshURIFromHeader(mDocument->GetDocBaseURI(),
+                                                  mDocument->NodePrincipal(),
+                                                  mRefreshString);
+            }
+        }
+    }
+=======
+  if (mCreatingNewDocument) {
+    // This should really be handled by Document::EndLoad
+    MOZ_ASSERT(mDocument->GetReadyStateEnum() == Document::READYSTATE_LOADING,
+               "Bad readyState");
+    mDocument->SetReadyStateInternal(Document::READYSTATE_INTERACTIVE);
+    ScriptLoader* loader = mDocument->ScriptLoader();
+    if (loader) {
+      loader->ParsingComplete(false);
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsresult rv = closePrevious(true);
+  if (NS_FAILED(rv)) {
+    if (mNotifier) {
+      mNotifier->OnTransformEnd(rv);
+||||||| merged common ancestors
+    if (mNotifier) {
+        mNotifier->OnTransformEnd();
+=======
+  if (!mRefreshString.IsEmpty()) {
+    nsPIDOMWindowOuter* win = mDocument->GetWindow();
+    if (win) {
+      nsCOMPtr<nsIRefreshURI> refURI = do_QueryInterface(win->GetDocShell());
+      if (refURI) {
+        refURI->SetupRefreshURIFromHeader(mDocument->GetDocBaseURI(),
+                                          mDocument->NodePrincipal(),
+                                          mRefreshString);
+      }
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
     return rv;
   }
 
@@ -302,14 +386,182 @@ nsresult txMozillaXMLOutput::endElement() {
           updateOrError.unwrap().ShouldBlock()) {
         mNotifier->AddPendingStylesheet();
       }
+||||||| merged common ancestors
+    return NS_OK;
+}
+
+nsresult
+txMozillaXMLOutput::endElement()
+{
+    TX_ENSURE_CURRENTNODE;
+
+    if (mBadChildLevel) {
+        --mBadChildLevel;
+        MOZ_LOG(txLog::xslt, LogLevel::Debug,
+               ("endElement, mBadChildLevel = %d\n", mBadChildLevel));
+        return NS_OK;
+=======
+  if (mNotifier) {
+    mNotifier->OnTransformEnd();
+  }
+
+  return NS_OK;
+}
+
+nsresult txMozillaXMLOutput::endElement() {
+  TX_ENSURE_CURRENTNODE;
+
+  if (mBadChildLevel) {
+    --mBadChildLevel;
+    MOZ_LOG(txLog::xslt, LogLevel::Debug,
+            ("endElement, mBadChildLevel = %d\n", mBadChildLevel));
+    return NS_OK;
+  }
+
+  --mTreeDepth;
+
+  nsresult rv = closePrevious(true);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  NS_ASSERTION(mCurrentNode->IsElement(), "borked mCurrentNode");
+  NS_ENSURE_TRUE(mCurrentNode->IsElement(), NS_ERROR_UNEXPECTED);
+
+  Element* element = mCurrentNode->AsElement();
+
+  // Handle html-elements
+  if (!mNoFixup) {
+    if (element->IsHTMLElement()) {
+      rv = endHTMLElement(element);
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
+
+    // Handle elements that are different when parser-created
+    if (element->IsAnyOfHTMLElements(nsGkAtoms::title, nsGkAtoms::object,
+                                     nsGkAtoms::select, nsGkAtoms::textarea) ||
+        element->IsSVGElement(nsGkAtoms::title)) {
+      element->DoneAddingChildren(true);
+    } else if (element->IsSVGElement(nsGkAtoms::script) ||
+               element->IsHTMLElement(nsGkAtoms::script)) {
+      nsCOMPtr<nsIScriptElement> sele = do_QueryInterface(element);
+      if (sele) {
+        bool block = sele->AttemptToExecute();
+        // If the act of insertion evaluated the script, we're fine.
+        // Else, add this script element to the array of loading scripts.
+        if (block) {
+          rv = mNotifier->AddScriptElement(sele);
+          NS_ENSURE_SUCCESS(rv, rv);
+        }
+      } else {
+        MOZ_ASSERT(nsNameSpaceManager::GetInstance()->mSVGDisabled,
+                   "Script elements need to implement nsIScriptElement and SVG "
+                   "wasn't disabled.");
+      }
+    } else if (element->IsAnyOfHTMLElements(
+                   nsGkAtoms::input, nsGkAtoms::button, nsGkAtoms::menuitem,
+                   nsGkAtoms::audio, nsGkAtoms::video)) {
+      element->DoneCreatingElement();
     }
   }
 
+  if (mCreatingNewDocument) {
+    // Handle all sorts of stylesheets
+    nsCOMPtr<nsIStyleSheetLinkingElement> ssle =
+        do_QueryInterface(mCurrentNode);
+    if (ssle) {
+      ssle->SetEnableUpdates(true);
+      auto updateOrError = ssle->UpdateStyleSheet(mNotifier);
+      if (mNotifier && updateOrError.isOk() &&
+          updateOrError.unwrap().ShouldBlock()) {
+        mNotifier->AddPendingStylesheet();
+      }
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
   // Add the element to the tree if it wasn't added before and take one step
   // up the tree
   uint32_t last = mCurrentNodeStack.Count() - 1;
   NS_ASSERTION(last != (uint32_t)-1, "empty stack");
 
+  nsCOMPtr<nsINode> parent = mCurrentNodeStack.SafeObjectAt(last);
+  mCurrentNodeStack.RemoveObjectAt(last);
+||||||| merged common ancestors
+    --mTreeDepth;
+
+    nsresult rv = closePrevious(true);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    NS_ASSERTION(mCurrentNode->IsElement(), "borked mCurrentNode");
+    NS_ENSURE_TRUE(mCurrentNode->IsElement(), NS_ERROR_UNEXPECTED);
+
+    Element* element = mCurrentNode->AsElement();
+=======
+  // Add the element to the tree if it wasn't added before and take one step
+  // up the tree
+  uint32_t last = mCurrentNodeStack.Count() - 1;
+  NS_ASSERTION(last != (uint32_t)-1, "empty stack");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (mCurrentNode == mNonAddedNode) {
+    if (parent == mDocument) {
+      NS_ASSERTION(!mRootContentCreated,
+                   "Parent to add to shouldn't be a document if we "
+                   "have a root content");
+      mRootContentCreated = true;
+||||||| merged common ancestors
+    // Handle html-elements
+    if (!mNoFixup) {
+        if (element->IsHTMLElement()) {
+            rv = endHTMLElement(element);
+            NS_ENSURE_SUCCESS(rv, rv);
+        }
+
+        // Handle elements that are different when parser-created
+        if (element->IsAnyOfHTMLElements(nsGkAtoms::title,
+                                         nsGkAtoms::object,
+                                         nsGkAtoms::select,
+                                         nsGkAtoms::textarea) ||
+            element->IsSVGElement(nsGkAtoms::title)) {
+            element->DoneAddingChildren(true);
+        } else if (element->IsSVGElement(nsGkAtoms::script) ||
+                   element->IsHTMLElement(nsGkAtoms::script)) {
+            nsCOMPtr<nsIScriptElement> sele = do_QueryInterface(element);
+            if (sele) {
+              bool block = sele->AttemptToExecute();
+              // If the act of insertion evaluated the script, we're fine.
+              // Else, add this script element to the array of loading scripts.
+              if (block) {
+                  rv = mNotifier->AddScriptElement(sele);
+                  NS_ENSURE_SUCCESS(rv, rv);
+              }
+            } else {
+              MOZ_ASSERT(nsNameSpaceManager::GetInstance()->mSVGDisabled, "Script elements need to implement nsIScriptElement and SVG wasn't disabled.");
+            }
+        } else if (element->IsAnyOfHTMLElements(nsGkAtoms::input,
+                                                nsGkAtoms::button,
+                                                nsGkAtoms::menuitem,
+                                                nsGkAtoms::audio,
+                                                nsGkAtoms::video)) {
+          element->DoneCreatingElement();
+        }
+    }
+
+    if (mCreatingNewDocument) {
+        // Handle all sorts of stylesheets
+        nsCOMPtr<nsIStyleSheetLinkingElement> ssle =
+            do_QueryInterface(mCurrentNode);
+        if (ssle) {
+            ssle->SetEnableUpdates(true);
+            auto updateOrError = ssle->UpdateStyleSheet(mNotifier);
+            if (mNotifier &&
+                updateOrError.isOk() &&
+                updateOrError.unwrap().ShouldBlock()) {
+                mNotifier->AddPendingStylesheet();
+            }
+        }
+=======
   nsCOMPtr<nsINode> parent = mCurrentNodeStack.SafeObjectAt(last);
   mCurrentNodeStack.RemoveObjectAt(last);
 
@@ -325,6 +577,16 @@ nsresult txMozillaXMLOutput::endElement() {
     // else in the tree
     if (!mCurrentNode->GetParentNode()) {
       parent->AppendChildTo(mNonAddedNode, true);
+>>>>>>> upstream-releases
+    }
+    mNonAddedNode = nullptr;
+  }
+
+<<<<<<< HEAD
+    // Check to make sure that script hasn't inserted the node somewhere
+    // else in the tree
+    if (!mCurrentNode->GetParentNode()) {
+      parent->AppendChildTo(mNonAddedNode, true);
     }
     mNonAddedNode = nullptr;
   }
@@ -335,10 +597,58 @@ nsresult txMozillaXMLOutput::endElement() {
       static_cast<TableState>(NS_PTR_TO_INT32(mTableStateStack.pop()));
 
   return NS_OK;
+||||||| merged common ancestors
+    // Add the element to the tree if it wasn't added before and take one step
+    // up the tree
+    uint32_t last = mCurrentNodeStack.Count() - 1;
+    NS_ASSERTION(last != (uint32_t)-1, "empty stack");
+
+    nsCOMPtr<nsINode> parent = mCurrentNodeStack.SafeObjectAt(last);
+    mCurrentNodeStack.RemoveObjectAt(last);
+
+    if (mCurrentNode == mNonAddedNode) {
+        if (parent == mDocument) {
+            NS_ASSERTION(!mRootContentCreated,
+                         "Parent to add to shouldn't be a document if we "
+                         "have a root content");
+            mRootContentCreated = true;
+        }
+
+        // Check to make sure that script hasn't inserted the node somewhere
+        // else in the tree
+        if (!mCurrentNode->GetParentNode()) {
+            parent->AppendChildTo(mNonAddedNode, true);
+        }
+        mNonAddedNode = nullptr;
+    }
+
+    mCurrentNode = parent;
+
+    mTableState =
+        static_cast<TableState>(NS_PTR_TO_INT32(mTableStateStack.pop()));
+
+    return NS_OK;
+=======
+  mCurrentNode = parent;
+
+  mTableState =
+      static_cast<TableState>(NS_PTR_TO_INT32(mTableStateStack.pop()));
+
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void txMozillaXMLOutput::getOutputDocument(nsIDocument** aDocument) {
   NS_IF_ADDREF(*aDocument = mDocument);
+||||||| merged common ancestors
+void txMozillaXMLOutput::getOutputDocument(nsIDocument** aDocument)
+{
+    NS_IF_ADDREF(*aDocument = mDocument);
+=======
+void txMozillaXMLOutput::getOutputDocument(Document** aDocument) {
+  NS_IF_ADDREF(*aDocument = mDocument);
+>>>>>>> upstream-releases
 }
 
 nsresult txMozillaXMLOutput::processingInstruction(const nsString& aTarget,
@@ -447,6 +757,7 @@ nsresult txMozillaXMLOutput::startElement(nsAtom* aPrefix,
   return startElementInternal(aPrefix, lname, nsId);
 }
 
+<<<<<<< HEAD
 nsresult txMozillaXMLOutput::startElementInternal(nsAtom* aPrefix,
                                                   nsAtom* aLocalName,
                                                   int32_t aNsID) {
@@ -471,6 +782,61 @@ nsresult txMozillaXMLOutput::startElementInternal(nsAtom* aPrefix,
             ("startElement, mBadChildLevel = %d\n", mBadChildLevel));
     return NS_OK;
   }
+||||||| merged common ancestors
+nsresult
+txMozillaXMLOutput::startElementInternal(nsAtom* aPrefix,
+                                         nsAtom* aLocalName,
+                                         int32_t aNsID)
+{
+    TX_ENSURE_CURRENTNODE;
+
+    if (mBadChildLevel) {
+        ++mBadChildLevel;
+        MOZ_LOG(txLog::xslt, LogLevel::Debug,
+               ("startElement, mBadChildLevel = %d\n", mBadChildLevel));
+        return NS_OK;
+    }
+
+    nsresult rv = closePrevious(true);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Push and init state
+    if (mTreeDepth == MAX_REFLOW_DEPTH) {
+        // eCloseElement couldn't add the parent so we fail as well or we've
+        // reached the limit of the depth of the tree that we allow.
+        ++mBadChildLevel;
+        MOZ_LOG(txLog::xslt, LogLevel::Debug,
+               ("startElement, mBadChildLevel = %d\n", mBadChildLevel));
+        return NS_OK;
+    }
+
+    ++mTreeDepth;
+=======
+nsresult txMozillaXMLOutput::startElementInternal(nsAtom* aPrefix,
+                                                  nsAtom* aLocalName,
+                                                  int32_t aNsID) {
+  TX_ENSURE_CURRENTNODE;
+
+  if (mBadChildLevel) {
+    ++mBadChildLevel;
+    MOZ_LOG(txLog::xslt, LogLevel::Debug,
+            ("startElement, mBadChildLevel = %d\n", mBadChildLevel));
+    return NS_OK;
+  }
+
+  nsresult rv = closePrevious(true);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Push and init state
+  if (mTreeDepth == MAX_REFLOW_DEPTH) {
+    // eCloseElement couldn't add the parent so we fail as well or we've
+    // reached the limit of the depth of the tree that we allow.
+    ++mBadChildLevel;
+    MOZ_LOG(txLog::xslt, LogLevel::Debug,
+            ("startElement, mBadChildLevel = %d\n", mBadChildLevel));
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
   ++mTreeDepth;
 
@@ -693,6 +1059,7 @@ nsresult txMozillaXMLOutput::endHTMLElement(nsIContent* aElement) {
     mTableState =
         static_cast<TableState>(NS_PTR_TO_INT32(mTableStateStack.pop()));
 
+<<<<<<< HEAD
     return NS_OK;
   } else if (mCreatingNewDocument && aElement->IsHTMLElement(nsGkAtoms::meta)) {
     // handle HTTP-EQUIV data
@@ -746,7 +1113,84 @@ nsresult txMozillaXMLOutput::createResultDocument(const nsAString& aName,
   mDocument->SetMayStartLayout(false);
   bool hasHadScriptObject = false;
   nsIScriptGlobalObject* sgo =
+||||||| merged common ancestors
+    // Create the document
+    if (mOutputFormat.mMethod == eHTMLOutput) {
+        rv = NS_NewHTMLDocument(getter_AddRefs(mDocument),
+                                aLoadedAsData);
+        NS_ENSURE_SUCCESS(rv, rv);
+    }
+    else {
+        // We should check the root name/namespace here and create the
+        // appropriate document
+        rv = NS_NewXMLDocument(getter_AddRefs(mDocument),
+                               aLoadedAsData);
+        NS_ENSURE_SUCCESS(rv, rv);
+    }
+    // This should really be handled by nsIDocument::BeginLoad
+    MOZ_ASSERT(mDocument->GetReadyStateEnum() ==
+               nsIDocument::READYSTATE_UNINITIALIZED, "Bad readyState");
+    mDocument->SetReadyStateInternal(nsIDocument::READYSTATE_LOADING);
+    mDocument->SetMayStartLayout(false);
+    bool hasHadScriptObject = false;
+    nsIScriptGlobalObject* sgo =
+=======
+    return NS_OK;
+  } else if (mCreatingNewDocument && aElement->IsHTMLElement(nsGkAtoms::meta)) {
+    // handle HTTP-EQUIV data
+    nsAutoString httpEquiv;
+    aElement->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::httpEquiv,
+                                   httpEquiv);
+    if (!httpEquiv.IsEmpty()) {
+      nsAutoString value;
+      aElement->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::content,
+                                     value);
+      if (!value.IsEmpty()) {
+        nsContentUtils::ASCIIToLower(httpEquiv);
+        RefPtr<nsAtom> header = NS_Atomize(httpEquiv);
+        processHTTPEquiv(header, value);
+      }
+    }
+  }
+
+  return NS_OK;
+}
+
+void txMozillaXMLOutput::processHTTPEquiv(nsAtom* aHeader,
+                                          const nsString& aValue) {
+  // For now we only handle "refresh". There's a longer list in
+  // HTMLContentSink::ProcessHeaderData
+  if (aHeader == nsGkAtoms::refresh)
+    LossyCopyUTF16toASCII(aValue, mRefreshString);
+}
+
+nsresult txMozillaXMLOutput::createResultDocument(const nsAString& aName,
+                                                  int32_t aNsID,
+                                                  Document* aSourceDocument,
+                                                  bool aLoadedAsData) {
+  nsresult rv;
+
+  // Create the document
+  if (mOutputFormat.mMethod == eHTMLOutput) {
+    rv = NS_NewHTMLDocument(getter_AddRefs(mDocument), aLoadedAsData);
+    NS_ENSURE_SUCCESS(rv, rv);
+  } else {
+    // We should check the root name/namespace here and create the
+    // appropriate document
+    rv = NS_NewXMLDocument(getter_AddRefs(mDocument), aLoadedAsData);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  // This should really be handled by Document::BeginLoad
+  MOZ_ASSERT(
+      mDocument->GetReadyStateEnum() == Document::READYSTATE_UNINITIALIZED,
+      "Bad readyState");
+  mDocument->SetReadyStateInternal(Document::READYSTATE_LOADING);
+  mDocument->SetMayStartLayout(false);
+  bool hasHadScriptObject = false;
+  nsIScriptGlobalObject* sgo =
+>>>>>>> upstream-releases
       aSourceDocument->GetScriptHandlingObject(hasHadScriptObject);
+<<<<<<< HEAD
   NS_ENSURE_STATE(sgo || !hasHadScriptObject);
 
   mCurrentNode = mDocument;
@@ -824,6 +1268,117 @@ nsresult txMozillaXMLOutput::createResultDocument(const nsAString& aName,
     } else {
       qName.Assign(aName);
     }
+||||||| merged common ancestors
+    NS_ENSURE_STATE(sgo || !hasHadScriptObject);
+
+    mCurrentNode = mDocument;
+    mNodeInfoManager = mDocument->NodeInfoManager();
+
+    // Reset and set up the document
+    URIUtils::ResetWithSource(mDocument, aSourceDocument);
+
+    // Make sure we set the script handling object after resetting with the
+    // source, so that we have the right principal.
+    mDocument->SetScriptHandlingObject(sgo);
+
+    // Set the charset
+    if (!mOutputFormat.mEncoding.IsEmpty()) {
+        const Encoding* encoding = Encoding::ForLabel(mOutputFormat.mEncoding);
+        if (encoding) {
+            mDocument->SetDocumentCharacterSetSource(kCharsetFromOtherComponent);
+            mDocument->SetDocumentCharacterSet(WrapNotNull(encoding));
+        }
+    }
+
+    // Set the mime-type
+    if (!mOutputFormat.mMediaType.IsEmpty()) {
+        mDocument->SetContentType(mOutputFormat.mMediaType);
+    }
+    else if (mOutputFormat.mMethod == eHTMLOutput) {
+        mDocument->SetContentType(NS_LITERAL_STRING("text/html"));
+    }
+    else {
+        mDocument->SetContentType(NS_LITERAL_STRING("application/xml"));
+    }
+=======
+  NS_ENSURE_STATE(sgo || !hasHadScriptObject);
+
+  mCurrentNode = mDocument;
+  mNodeInfoManager = mDocument->NodeInfoManager();
+
+  // Reset and set up the document
+  URIUtils::ResetWithSource(mDocument, aSourceDocument);
+
+  // Make sure we set the script handling object after resetting with the
+  // source, so that we have the right principal.
+  mDocument->SetScriptHandlingObject(sgo);
+
+  mDocument->SetStateObjectFrom(aSourceDocument);
+
+  // Set the charset
+  if (!mOutputFormat.mEncoding.IsEmpty()) {
+    const Encoding* encoding = Encoding::ForLabel(mOutputFormat.mEncoding);
+    if (encoding) {
+      mDocument->SetDocumentCharacterSetSource(kCharsetFromOtherComponent);
+      mDocument->SetDocumentCharacterSet(WrapNotNull(encoding));
+    }
+  }
+
+  // Set the mime-type
+  if (!mOutputFormat.mMediaType.IsEmpty()) {
+    mDocument->SetContentType(mOutputFormat.mMediaType);
+  } else if (mOutputFormat.mMethod == eHTMLOutput) {
+    mDocument->SetContentType(NS_LITERAL_STRING("text/html"));
+  } else {
+    mDocument->SetContentType(NS_LITERAL_STRING("application/xml"));
+  }
+
+  if (mOutputFormat.mMethod == eXMLOutput &&
+      mOutputFormat.mOmitXMLDeclaration != eTrue) {
+    int32_t standalone;
+    if (mOutputFormat.mStandalone == eNotSet) {
+      standalone = -1;
+    } else if (mOutputFormat.mStandalone == eFalse) {
+      standalone = 0;
+    } else {
+      standalone = 1;
+    }
+
+    // Could use mOutputFormat.mVersion.get() when we support
+    // versions > 1.0.
+    static const char16_t kOneDotZero[] = {'1', '.', '0', '\0'};
+    mDocument->SetXMLDeclaration(kOneDotZero, mOutputFormat.mEncoding.get(),
+                                 standalone);
+  }
+
+  // Set up script loader of the result document.
+  ScriptLoader* loader = mDocument->ScriptLoader();
+  if (mNotifier) {
+    loader->AddObserver(mNotifier);
+  } else {
+    // Don't load scripts, we can't notify the caller when they're loaded.
+    loader->SetEnabled(false);
+  }
+
+  if (mNotifier) {
+    rv = mNotifier->SetOutputDocument(mDocument);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+
+  // Do this after calling OnDocumentCreated to ensure that the
+  // PresShell/PresContext has been hooked up and get notified.
+  if (mDocument) {
+    mDocument->SetCompatibilityMode(eCompatibility_FullStandards);
+  }
+
+  // Add a doc-type if requested
+  if (!mOutputFormat.mSystemId.IsEmpty()) {
+    nsAutoString qName;
+    if (mOutputFormat.mMethod == eHTMLOutput) {
+      qName.AssignLiteral("html");
+    } else {
+      qName.Assign(aName);
+    }
 
     nsresult rv = nsContentUtils::CheckQName(qName);
     if (NS_SUCCEEDED(rv)) {
@@ -831,7 +1386,36 @@ nsresult txMozillaXMLOutput::createResultDocument(const nsAString& aName,
       if (!doctypeName) {
         return NS_ERROR_OUT_OF_MEMORY;
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    nsresult rv = nsContentUtils::CheckQName(qName);
+    if (NS_SUCCEEDED(rv)) {
+      RefPtr<nsAtom> doctypeName = NS_Atomize(qName);
+      if (!doctypeName) {
+        return NS_ERROR_OUT_OF_MEMORY;
+      }
+||||||| merged common ancestors
+    if (mOutputFormat.mMethod == eXMLOutput &&
+        mOutputFormat.mOmitXMLDeclaration != eTrue) {
+        int32_t standalone;
+        if (mOutputFormat.mStandalone == eNotSet) {
+          standalone = -1;
+        }
+        else if (mOutputFormat.mStandalone == eFalse) {
+          standalone = 0;
+        }
+        else {
+          standalone = 1;
+        }
+
+        // Could use mOutputFormat.mVersion.get() when we support
+        // versions > 1.0.
+        static const char16_t kOneDotZero[] = { '1', '.', '0', '\0' };
+        mDocument->SetXMLDeclaration(kOneDotZero, mOutputFormat.mEncoding.get(),
+                                     standalone);
+    }
+=======
       // Indicate that there is no internal subset (not just an empty one)
       RefPtr<DocumentType> documentType = NS_NewDOMDocumentType(
           mNodeInfoManager, doctypeName, mOutputFormat.mPublicId,
@@ -841,15 +1425,81 @@ nsresult txMozillaXMLOutput::createResultDocument(const nsAString& aName,
       NS_ENSURE_SUCCESS(rv, rv);
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // Indicate that there is no internal subset (not just an empty one)
+      RefPtr<DocumentType> documentType = NS_NewDOMDocumentType(
+          mNodeInfoManager, doctypeName, mOutputFormat.mPublicId,
+          mOutputFormat.mSystemId, VoidString());
+||||||| merged common ancestors
+    // Set up script loader of the result document.
+    ScriptLoader *loader = mDocument->ScriptLoader();
+    if (mNotifier) {
+        loader->AddObserver(mNotifier);
+    }
+    else {
+        // Don't load scripts, we can't notify the caller when they're loaded.
+        loader->SetEnabled(false);
+    }
+=======
   return NS_OK;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      rv = mDocument->AppendChildTo(documentType, true);
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
+  }
+||||||| merged common ancestors
+    if (mNotifier) {
+        rv = mNotifier->SetOutputDocument(mDocument);
+        NS_ENSURE_SUCCESS(rv, rv);
+    }
+=======
 nsresult txMozillaXMLOutput::createHTMLElement(nsAtom* aName,
                                                Element** aResult) {
   NS_ASSERTION(mOutputFormat.mMethod == eHTMLOutput,
                "need to adjust createHTMLElement");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return NS_OK;
+}
+||||||| merged common ancestors
+    // Do this after calling OnDocumentCreated to ensure that the
+    // PresShell/PresContext has been hooked up and get notified.
+    nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(mDocument);
+    if (htmlDoc) {
+        htmlDoc->SetCompatibilityMode(eCompatibility_FullStandards);
+    }
+=======
+  *aResult = nullptr;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+nsresult txMozillaXMLOutput::createHTMLElement(nsAtom* aName,
+                                               Element** aResult) {
+  NS_ASSERTION(mOutputFormat.mMethod == eHTMLOutput,
+               "need to adjust createHTMLElement");
+||||||| merged common ancestors
+    // Add a doc-type if requested
+    if (!mOutputFormat.mSystemId.IsEmpty()) {
+        nsAutoString qName;
+        if (mOutputFormat.mMethod == eHTMLOutput) {
+            qName.AssignLiteral("html");
+        }
+        else {
+            qName.Assign(aName);
+        }
+=======
+  RefPtr<NodeInfo> ni;
+  ni = mNodeInfoManager->GetNodeInfo(aName, nullptr, kNameSpaceID_XHTML,
+                                     nsINode::ELEMENT_NODE);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   *aResult = nullptr;
 
   RefPtr<NodeInfo> ni;
@@ -862,6 +1512,58 @@ nsresult txMozillaXMLOutput::createHTMLElement(nsAtom* aName,
       mCreatingNewDocument ? FROM_PARSER_XSLT : FROM_PARSER_FRAGMENT);
   el.forget(aResult);
   return rv;
+||||||| merged common ancestors
+        nsresult rv = nsContentUtils::CheckQName(qName);
+        if (NS_SUCCEEDED(rv)) {
+            RefPtr<nsAtom> doctypeName = NS_Atomize(qName);
+            if (!doctypeName) {
+                return NS_ERROR_OUT_OF_MEMORY;
+            }
+
+            // Indicate that there is no internal subset (not just an empty one)
+            RefPtr<DocumentType> documentType =
+                NS_NewDOMDocumentType(mNodeInfoManager,
+                                      doctypeName,
+                                      mOutputFormat.mPublicId,
+                                      mOutputFormat.mSystemId,
+                                      VoidString());
+
+            rv = mDocument->AppendChildTo(documentType, true);
+            NS_ENSURE_SUCCESS(rv, rv);
+        }
+    }
+
+    return NS_OK;
+}
+
+nsresult
+txMozillaXMLOutput::createHTMLElement(nsAtom* aName, Element** aResult)
+{
+    NS_ASSERTION(mOutputFormat.mMethod == eHTMLOutput,
+                 "need to adjust createHTMLElement");
+
+    *aResult = nullptr;
+
+    RefPtr<NodeInfo> ni;
+    ni = mNodeInfoManager->GetNodeInfo(aName, nullptr,
+                                       kNameSpaceID_XHTML,
+                                       nsINode::ELEMENT_NODE);
+
+    nsCOMPtr<Element> el;
+    nsresult rv =
+        NS_NewHTMLElement(getter_AddRefs(el), ni.forget(),
+                          mCreatingNewDocument ?
+                            FROM_PARSER_XSLT : FROM_PARSER_FRAGMENT);
+    el.forget(aResult);
+    return rv;
+=======
+  nsCOMPtr<Element> el;
+  nsresult rv = NS_NewHTMLElement(
+      getter_AddRefs(el), ni.forget(),
+      mCreatingNewDocument ? FROM_PARSER_XSLT : FROM_PARSER_FRAGMENT);
+  el.forget(aResult);
+  return rv;
+>>>>>>> upstream-releases
 }
 
 txTransformNotifier::txTransformNotifier()
@@ -932,8 +1634,18 @@ void txTransformNotifier::OnTransformEnd(nsresult aResult) {
 
 void txTransformNotifier::OnTransformStart() { mInTransform = true; }
 
+<<<<<<< HEAD
 nsresult txTransformNotifier::SetOutputDocument(nsIDocument* aDocument) {
   mDocument = aDocument;
+||||||| merged common ancestors
+nsresult
+txTransformNotifier::SetOutputDocument(nsIDocument* aDocument)
+{
+    mDocument = aDocument;
+=======
+nsresult txTransformNotifier::SetOutputDocument(Document* aDocument) {
+  mDocument = aDocument;
+>>>>>>> upstream-releases
 
   // Notify the contentsink that the document is created
   return mObserver->OnDocumentCreated(mDocument);

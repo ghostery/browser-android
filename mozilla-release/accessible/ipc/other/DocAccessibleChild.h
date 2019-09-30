@@ -84,14 +84,38 @@ class DocAccessibleChild : public DocAccessibleChildBase {
   virtual mozilla::ipc::IPCResult RecvGetLevelInternal(
       const uint64_t& aID, int32_t* aLevel) override;
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvAttributes(
       const uint64_t& aID, nsTArray<Attribute>* aAttributes) override;
   virtual mozilla::ipc::IPCResult RecvScrollTo(
       const uint64_t& aID, const uint32_t& aScrollType) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvAttributes(const uint64_t& aID,
+                                                 nsTArray<Attribute> *aAttributes) override;
+  virtual mozilla::ipc::IPCResult RecvScrollTo(const uint64_t& aID, const uint32_t& aScrollType)
+    override;
+=======
+  virtual mozilla::ipc::IPCResult RecvAttributes(
+      const uint64_t& aID, nsTArray<Attribute>* aAttributes) override;
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  virtual mozilla::ipc::IPCResult RecvScrollTo(
+      const uint64_t& aID, const uint32_t& aScrollType) override;
+>>>>>>> upstream-releases
   virtual mozilla::ipc::IPCResult RecvScrollToPoint(const uint64_t& aID,
                                                     const uint32_t& aScrollType,
+<<<<<<< HEAD
                                                     const int32_t& aX,
                                                     const int32_t& aY) override;
+||||||| merged common ancestors
+                                                    const int32_t& aX, const int32_t& aY) override;
+=======
+                                                    const int32_t& aX,
+                                                    const int32_t& aY) override;
+
+  virtual mozilla::ipc::IPCResult RecvAnnounce(
+      const uint64_t& aID, const nsString& aAnnouncement,
+      const uint16_t& aPriority) override;
+>>>>>>> upstream-releases
 
   virtual mozilla::ipc::IPCResult RecvCaretLineNumber(
       const uint64_t& aID, int32_t* aLineNumber) override;
@@ -202,6 +226,7 @@ class DocAccessibleChild : public DocAccessibleChildBase {
                                                  const int32_t& aEndPos,
                                                  bool* aValid) override;
 
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual mozilla::ipc::IPCResult RecvPasteText(const uint64_t& aID,
                                                 const int32_t& aPosition,
                                                 bool* aValid) override;

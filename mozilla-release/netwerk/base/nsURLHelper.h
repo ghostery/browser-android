@@ -39,23 +39,44 @@ void net_ShutdownURLHelperOSX();
 #endif
 
 /* access URL parsers */
+<<<<<<< HEAD
 nsIURLParser *net_GetAuthURLParser();
 nsIURLParser *net_GetNoAuthURLParser();
 nsIURLParser *net_GetStdURLParser();
+||||||| merged common ancestors
+nsIURLParser * net_GetAuthURLParser();
+nsIURLParser * net_GetNoAuthURLParser();
+nsIURLParser * net_GetStdURLParser();
+=======
+nsIURLParser* net_GetAuthURLParser();
+nsIURLParser* net_GetNoAuthURLParser();
+nsIURLParser* net_GetStdURLParser();
+>>>>>>> upstream-releases
 
 /* convert between nsIFile and file:// URL spec
  * net_GetURLSpecFromFile does an extra stat, so callers should
  * avoid it if possible in favor of net_GetURLSpecFromActualFile
  * and net_GetURLSpecFromDir */
-nsresult net_GetURLSpecFromFile(nsIFile *, nsACString &);
-nsresult net_GetURLSpecFromDir(nsIFile *, nsACString &);
-nsresult net_GetURLSpecFromActualFile(nsIFile *, nsACString &);
-nsresult net_GetFileFromURLSpec(const nsACString &, nsIFile **);
+nsresult net_GetURLSpecFromFile(nsIFile*, nsACString&);
+nsresult net_GetURLSpecFromDir(nsIFile*, nsACString&);
+nsresult net_GetURLSpecFromActualFile(nsIFile*, nsACString&);
+nsresult net_GetFileFromURLSpec(const nsACString&, nsIFile**);
 
 /* extract file path components from file:// URL */
+<<<<<<< HEAD
 nsresult net_ParseFileURL(const nsACString &inURL, nsACString &outDirectory,
                           nsACString &outFileBaseName,
                           nsACString &outFileExtension);
+||||||| merged common ancestors
+nsresult net_ParseFileURL(const nsACString &inURL,
+                                      nsACString &outDirectory,
+                                      nsACString &outFileBaseName,
+                                      nsACString &outFileExtension);
+=======
+nsresult net_ParseFileURL(const nsACString& inURL, nsACString& outDirectory,
+                          nsACString& outFileBaseName,
+                          nsACString& outFileExtension);
+>>>>>>> upstream-releases
 
 /* handle .. in dirs while resolving URLs (path is UTF-8) */
 void net_CoalesceDirs(netCoalesceFlags flags, char *path);
@@ -73,9 +94,19 @@ void net_CoalesceDirs(netCoalesceFlags flags, char *path);
  *
  * @return a new string, representing canonical uri
  */
+<<<<<<< HEAD
 nsresult net_ResolveRelativePath(const nsACString &relativePath,
                                  const nsACString &basePath,
                                  nsACString &result);
+||||||| merged common ancestors
+nsresult net_ResolveRelativePath(const nsACString &relativePath,
+                                             const nsACString &basePath,
+                                             nsACString &result);
+=======
+nsresult net_ResolveRelativePath(const nsACString& relativePath,
+                                 const nsACString& basePath,
+                                 nsACString& result);
+>>>>>>> upstream-releases
 
 /**
  * Check if a URL is absolute
@@ -91,13 +122,29 @@ bool net_IsAbsoluteURL(const nsACString &inURL);
  * @param inURI     URI spec
  * @param scheme    scheme copied to this buffer on return. Is lowercase.
  */
+<<<<<<< HEAD
 nsresult net_ExtractURLScheme(const nsACString &inURI, nsACString &scheme);
+||||||| merged common ancestors
+nsresult net_ExtractURLScheme(const nsACString &inURI,
+                              nsACString &scheme);
+=======
+nsresult net_ExtractURLScheme(const nsACString& inURI, nsACString& scheme);
+>>>>>>> upstream-releases
 
 /* check that the given scheme conforms to RFC 2396 */
-bool net_IsValidScheme(const char *scheme, uint32_t schemeLen);
+bool net_IsValidScheme(const char* scheme, uint32_t schemeLen);
 
+<<<<<<< HEAD
 inline bool net_IsValidScheme(const nsCString &scheme) {
   return net_IsValidScheme(scheme.get(), scheme.Length());
+||||||| merged common ancestors
+inline bool net_IsValidScheme(const nsCString& scheme)
+{
+    return net_IsValidScheme(scheme.get(), scheme.Length());
+=======
+inline bool net_IsValidScheme(const nsCString& scheme) {
+  return net_IsValidScheme(scheme.get(), scheme.Length());
+>>>>>>> upstream-releases
 }
 
 /**
@@ -121,8 +168,15 @@ void net_FilterURIString(const nsACString &input, nsACString &result);
  * @param aFlags the flags which control which characters we escape
  * @param aResult the out param to write to if filtering happens
  */
+<<<<<<< HEAD
 nsresult net_FilterAndEscapeURI(const nsACString &aInput, uint32_t aFlags,
                                 nsACString &aResult);
+||||||| merged common ancestors
+nsresult net_FilterAndEscapeURI(const nsACString& aInput, uint32_t aFlags, nsACString& aResult);
+=======
+nsresult net_FilterAndEscapeURI(const nsACString& aInput, uint32_t aFlags,
+                                nsACString& aResult);
+>>>>>>> upstream-releases
 
 #if defined(XP_WIN)
 /**
@@ -138,7 +192,14 @@ nsresult net_FilterAndEscapeURI(const nsACString &aInput, uint32_t aFlags,
  *
  * @returns false if aURL is already normalized.  Otherwise, returns true.
  */
+<<<<<<< HEAD
 bool net_NormalizeFileURL(const nsACString &aURL, nsCString &aResultBuf);
+||||||| merged common ancestors
+bool net_NormalizeFileURL(const nsACString &aURL,
+                                        nsCString &aResultBuf);
+=======
+bool net_NormalizeFileURL(const nsACString& aURL, nsCString& aResultBuf);
+>>>>>>> upstream-releases
 #endif
 
 /*****************************************************************************
@@ -154,7 +215,13 @@ void net_ToLowerCase(char *str);
  * then |end| is returned.  stops prematurely if a null byte is encountered,
  * and returns the address of the null byte.
  */
+<<<<<<< HEAD
 char *net_FindCharInSet(const char *str, const char *end, const char *set);
+||||||| merged common ancestors
+char * net_FindCharInSet(const char *str, const char *end, const char *set);
+=======
+char* net_FindCharInSet(const char* str, const char* end, const char* set);
+>>>>>>> upstream-releases
 
 /**
  * returns pointer to first character of |str| NOT in the given set.  if all
@@ -162,13 +229,25 @@ char *net_FindCharInSet(const char *str, const char *end, const char *set);
  * included in |set|, then stops prematurely if a null byte is encountered,
  * and returns the address of the null byte.
  */
+<<<<<<< HEAD
 char *net_FindCharNotInSet(const char *str, const char *end, const char *set);
+||||||| merged common ancestors
+char * net_FindCharNotInSet(const char *str, const char *end, const char *set);
+=======
+char* net_FindCharNotInSet(const char* str, const char* end, const char* set);
+>>>>>>> upstream-releases
 
 /**
  * returns pointer to last character of |str| NOT in the given set.  if all
  * characters are in the given set, then |str - 1| is returned.
  */
+<<<<<<< HEAD
 char *net_RFindCharNotInSet(const char *str, const char *end, const char *set);
+||||||| merged common ancestors
+char * net_RFindCharNotInSet(const char *str, const char *end, const char *set);
+=======
+char* net_RFindCharNotInSet(const char* str, const char* end, const char* set);
+>>>>>>> upstream-releases
 
 /**
  * Parses a content-type header and returns the content type and
@@ -181,10 +260,22 @@ char *net_RFindCharNotInSet(const char *str, const char *end, const char *set);
  * This parsing is suitable for HTTP request.  Use net_ParseContentType
  * for parsing this header in HTTP responses.
  */
+<<<<<<< HEAD
 void net_ParseRequestContentType(const nsACString &aHeaderStr,
                                  nsACString &aContentType,
                                  nsACString &aContentCharset,
                                  bool *aHadCharset);
+||||||| merged common ancestors
+void net_ParseRequestContentType(const nsACString &aHeaderStr,
+                                 nsACString       &aContentType,
+                                 nsACString       &aContentCharset,
+                                 bool*          aHadCharset);
+=======
+void net_ParseRequestContentType(const nsACString& aHeaderStr,
+                                 nsACString& aContentType,
+                                 nsACString& aContentCharset,
+                                 bool* aHadCharset);
+>>>>>>> upstream-releases
 
 /**
  * Parses a content-type header and returns the content type and
@@ -194,9 +285,20 @@ void net_ParseRequestContentType(const nsACString &aHeaderStr,
  * true.  Note that aContentCharset can be empty even if aHadCharset
  * is true.
  */
+<<<<<<< HEAD
 void net_ParseContentType(const nsACString &aHeaderStr,
                           nsACString &aContentType, nsACString &aContentCharset,
                           bool *aHadCharset);
+||||||| merged common ancestors
+void net_ParseContentType(const nsACString &aHeaderStr,
+                          nsACString       &aContentType,
+                          nsACString       &aContentCharset,
+                          bool*          aHadCharset);
+=======
+void net_ParseContentType(const nsACString& aHeaderStr,
+                          nsACString& aContentType, nsACString& aContentCharset,
+                          bool* aHadCharset);
+>>>>>>> upstream-releases
 /**
  * As above, but also returns the start and end indexes for the charset
  * parameter in aHeaderStr.  These are indices for the entire parameter, NOT
@@ -206,24 +308,65 @@ void net_ParseContentType(const nsACString &aHeaderStr,
  * it's possible to have aContentCharset empty and *aHadCharset true when
  * *aCharsetStart is nonnegative; this corresponds to charset="".
  */
+<<<<<<< HEAD
 void net_ParseContentType(const nsACString &aHeaderStr,
                           nsACString &aContentType, nsACString &aContentCharset,
                           bool *aHadCharset, int32_t *aCharsetStart,
                           int32_t *aCharsetEnd);
+||||||| merged common ancestors
+void net_ParseContentType(const nsACString &aHeaderStr,
+                          nsACString       &aContentType,
+                          nsACString       &aContentCharset,
+                          bool             *aHadCharset,
+                          int32_t          *aCharsetStart,
+                          int32_t          *aCharsetEnd);
+=======
+void net_ParseContentType(const nsACString& aHeaderStr,
+                          nsACString& aContentType, nsACString& aContentCharset,
+                          bool* aHadCharset, int32_t* aCharsetStart,
+                          int32_t* aCharsetEnd);
+>>>>>>> upstream-releases
 
 /* inline versions */
 
 /* remember the 64-bit platforms ;-) */
 #define NET_MAX_ADDRESS ((char *)UINTPTR_MAX)
 
+<<<<<<< HEAD
 inline char *net_FindCharInSet(const char *str, const char *set) {
   return net_FindCharInSet(str, NET_MAX_ADDRESS, set);
+||||||| merged common ancestors
+inline char *net_FindCharInSet(const char *str, const char *set)
+{
+    return net_FindCharInSet(str, NET_MAX_ADDRESS, set);
+=======
+inline char* net_FindCharInSet(const char* str, const char* set) {
+  return net_FindCharInSet(str, NET_MAX_ADDRESS, set);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 inline char *net_FindCharNotInSet(const char *str, const char *set) {
   return net_FindCharNotInSet(str, NET_MAX_ADDRESS, set);
+||||||| merged common ancestors
+inline char *net_FindCharNotInSet(const char *str, const char *set)
+{
+    return net_FindCharNotInSet(str, NET_MAX_ADDRESS, set);
+=======
+inline char* net_FindCharNotInSet(const char* str, const char* set) {
+  return net_FindCharNotInSet(str, NET_MAX_ADDRESS, set);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 inline char *net_RFindCharNotInSet(const char *str, const char *set) {
   return net_RFindCharNotInSet(str, str + strlen(str), set);
+||||||| merged common ancestors
+inline char *net_RFindCharNotInSet(const char *str, const char *set)
+{
+    return net_RFindCharNotInSet(str, str + strlen(str), set);
+=======
+inline char* net_RFindCharNotInSet(const char* str, const char* set) {
+  return net_RFindCharNotInSet(str, str + strlen(str), set);
+>>>>>>> upstream-releases
 }
 
 /**
@@ -235,13 +378,22 @@ bool net_IsValidHostName(const nsACString &host);
 /**
  * Checks whether the IPv4 address is valid according to RFC 3986 section 3.2.2.
  */
-bool net_IsValidIPv4Addr(const char *addr, int32_t addrLen);
+bool net_IsValidIPv4Addr(const nsACString& aAddr);
 
 /**
  * Checks whether the IPv6 address is valid according to RFC 3986 section 3.2.2.
  */
+<<<<<<< HEAD
 bool net_IsValidIPv6Addr(const char *addr, int32_t addrLen);
 
+||||||| merged common ancestors
+bool net_IsValidIPv6Addr(const char *addr, int32_t addrLen);
+
+
+=======
+bool net_IsValidIPv6Addr(const nsACString& aAddr);
+
+>>>>>>> upstream-releases
 /**
  * Returns the max length of a URL. The default is 1048576 (1 MB).
  * Can be changed by pref "network.standard-url.max-length"

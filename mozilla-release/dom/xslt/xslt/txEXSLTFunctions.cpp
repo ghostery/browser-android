@@ -15,10 +15,12 @@
 #include "txExecutionState.h"
 #include "txExpr.h"
 #include "txIXPathContext.h"
+#include "txIEXSLTFunctions.h"
 #include "txNodeSet.h"
 #include "txOutputFormat.h"
 #include "txRtfHandler.h"
 #include "txXPathTreeWalker.h"
+#include "nsImportModule.h"
 #include "nsPrintfCString.h"
 #include "nsComponentManagerUtils.h"
 #include "nsContentCID.h"
@@ -39,11 +41,27 @@ class txStylesheetCompilerState;
 // Utility functions
 // ------------------------------------------------------------------
 
+<<<<<<< HEAD
 static nsIDocument* getSourceDocument(txIEvalContext* aContext) {
   txExecutionState* es =
       static_cast<txExecutionState*>(aContext->getPrivateContext());
   if (!es) {
     NS_ERROR("Need txExecutionState!");
+||||||| merged common ancestors
+static nsIDocument*
+getSourceDocument(txIEvalContext *aContext)
+{
+    txExecutionState* es =
+        static_cast<txExecutionState*>(aContext->getPrivateContext());
+    if (!es) {
+        NS_ERROR("Need txExecutionState!");
+=======
+static Document* getSourceDocument(txIEvalContext* aContext) {
+  txExecutionState* es =
+      static_cast<txExecutionState*>(aContext->getPrivateContext());
+  if (!es) {
+    NS_ERROR("Need txExecutionState!");
+>>>>>>> upstream-releases
 
     return nullptr;
   }
@@ -52,12 +70,29 @@ static nsIDocument* getSourceDocument(txIEvalContext* aContext) {
   return txXPathNativeNode::getDocument(document);
 }
 
+<<<<<<< HEAD
 static nsresult convertRtfToNode(txIEvalContext* aContext,
                                  txResultTreeFragment* aRtf) {
   nsIDocument* doc = getSourceDocument(aContext);
   if (!doc) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+static nsresult
+convertRtfToNode(txIEvalContext *aContext, txResultTreeFragment *aRtf)
+{
+    nsIDocument *doc = getSourceDocument(aContext);
+    if (!doc) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+static nsresult convertRtfToNode(txIEvalContext* aContext,
+                                 txResultTreeFragment* aRtf) {
+  Document* doc = getSourceDocument(aContext);
+  if (!doc) {
+    return NS_ERROR_UNEXPECTED;
+  }
+>>>>>>> upstream-releases
 
   RefPtr<DocumentFragment> domFragment =
       new DocumentFragment(doc->NodeInfoManager());
@@ -81,12 +116,30 @@ static nsresult convertRtfToNode(txIEvalContext* aContext,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static nsresult createTextNode(txIEvalContext* aContext, nsString& aValue,
                                txXPathNode** aResult) {
   nsIDocument* doc = getSourceDocument(aContext);
   if (!doc) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+static nsresult
+createTextNode(txIEvalContext *aContext, nsString& aValue,
+               txXPathNode* *aResult)
+{
+    nsIDocument *doc = getSourceDocument(aContext);
+    if (!doc) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+static nsresult createTextNode(txIEvalContext* aContext, nsString& aValue,
+                               txXPathNode** aResult) {
+  Document* doc = getSourceDocument(aContext);
+  if (!doc) {
+    return NS_ERROR_UNEXPECTED;
+  }
+>>>>>>> upstream-releases
 
   RefPtr<nsTextNode> text = new nsTextNode(doc->NodeInfoManager());
 
@@ -99,6 +152,7 @@ static nsresult createTextNode(txIEvalContext* aContext, nsString& aValue,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 static nsresult createAndAddToResult(nsAtom* aName, const nsAString& aValue,
                                      txNodeSet* aResultSet,
                                      DocumentFragment* aResultHolder) {
@@ -106,6 +160,24 @@ static nsresult createAndAddToResult(nsAtom* aName, const nsAString& aValue,
   nsCOMPtr<Element> elem =
       doc->CreateElem(nsDependentAtomString(aName), nullptr, kNameSpaceID_None);
   NS_ENSURE_TRUE(elem, NS_ERROR_NULL_POINTER);
+||||||| merged common ancestors
+static nsresult
+createAndAddToResult(nsAtom* aName, const nsAString& aValue,
+                     txNodeSet* aResultSet, DocumentFragment* aResultHolder)
+{
+    nsIDocument* doc = aResultHolder->OwnerDoc();
+    nsCOMPtr<Element> elem = doc->CreateElem(nsDependentAtomString(aName),
+                                             nullptr, kNameSpaceID_None);
+    NS_ENSURE_TRUE(elem, NS_ERROR_NULL_POINTER);
+=======
+static nsresult createAndAddToResult(nsAtom* aName, const nsAString& aValue,
+                                     txNodeSet* aResultSet,
+                                     DocumentFragment* aResultHolder) {
+  Document* doc = aResultHolder->OwnerDoc();
+  nsCOMPtr<Element> elem =
+      doc->CreateElem(nsDependentAtomString(aName), nullptr, kNameSpaceID_None);
+  NS_ENSURE_TRUE(elem, NS_ERROR_NULL_POINTER);
+>>>>>>> upstream-releases
 
   RefPtr<nsTextNode> text = new nsTextNode(doc->NodeInfoManager());
 
@@ -203,15 +275,35 @@ class txEXSLTRegExFunctionCall : public FunctionCall {
  public:
   explicit txEXSLTRegExFunctionCall(txEXSLTType aType) : mType(aType) {}
 
+<<<<<<< HEAD
+  static bool Create(txEXSLTType aType, FunctionCall** aFunction) {
+    *aFunction = new txEXSLTRegExFunctionCall(aType);
+    return true;
+  }
+||||||| merged common ancestors
+    TX_DECL_FUNCTION
+=======
   static bool Create(txEXSLTType aType, FunctionCall** aFunction) {
     *aFunction = new txEXSLTRegExFunctionCall(aType);
     return true;
   }
 
   TX_DECL_FUNCTION
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  TX_DECL_FUNCTION
 
  private:
   txEXSLTType mType;
+||||||| merged common ancestors
+private:
+    txEXSLTType mType;
+    nsCOMPtr<txIEXSLTRegExFunctions> mRegExService;
+=======
+ private:
+  txEXSLTType mType;
+>>>>>>> upstream-releases
 };
 
 nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
@@ -260,9 +352,32 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
 
           resultSet->append(*node);
         }
+<<<<<<< HEAD
 
         NS_ADDREF(*aResult = resultSet);
       }
+||||||| merged common ancestors
+        case txEXSLTType::DIFFERENCE:
+        case txEXSLTType::INTERSECTION:
+        {
+            RefPtr<txNodeSet> nodes1;
+            rv = evaluateToNodeSet(mParams[0], aContext,
+                                   getter_AddRefs(nodes1));
+            NS_ENSURE_SUCCESS(rv, rv);
+
+            RefPtr<txNodeSet> nodes2;
+            rv = evaluateToNodeSet(mParams[1], aContext,
+                                   getter_AddRefs(nodes2));
+            NS_ENSURE_SUCCESS(rv, rv);
+
+            RefPtr<txNodeSet> resultSet;
+            rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+
+        NS_ADDREF(*aResult = resultSet);
+      }
+>>>>>>> upstream-releases
 
       return NS_OK;
     }
@@ -362,8 +477,30 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
         }
       }
 
+<<<<<<< HEAD
+      aContext->recycler()->getBoolResult(found, aResult);
+||||||| merged common ancestors
+            RefPtr<txNodeSet> nodes2;
+            rv = evaluateToNodeSet(mParams[1], aContext,
+                                   getter_AddRefs(nodes2));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
       aContext->recycler()->getBoolResult(found, aResult);
 
+      return NS_OK;
+    }
+    case txEXSLTType::LEADING:
+    case txEXSLTType::TRAILING: {
+      RefPtr<txNodeSet> nodes1;
+      rv = evaluateToNodeSet(mParams[0], aContext, getter_AddRefs(nodes1));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      RefPtr<txNodeSet> nodes2;
+      rv = evaluateToNodeSet(mParams[1], aContext, getter_AddRefs(nodes2));
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       return NS_OK;
     }
     case txEXSLTType::LEADING:
@@ -382,10 +519,35 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
 
         return NS_OK;
       }
+||||||| merged common ancestors
+            bool found = false;
+            int32_t i, len = nodes1->size();
+            for (i = 0; i < len; ++i) {
+                if (nodes2->contains(nodes1->get(i))) {
+                    found = true;
+                    break;
+                }
+            }
+=======
+      if (nodes2->isEmpty()) {
+        *aResult = nodes1;
+        NS_ADDREF(*aResult);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      RefPtr<txNodeSet> resultSet;
+      rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+      NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            aContext->recycler()->getBoolResult(found, aResult);
+=======
+        return NS_OK;
+      }
 
       RefPtr<txNodeSet> resultSet;
       rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
       NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
       int32_t end = nodes1->indexOf(nodes2->get(0));
       if (end >= 0) {
@@ -434,17 +596,83 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
         pattern.AssignLiteral("\t\r\n ");
       }
 
+<<<<<<< HEAD
       // Set up holders for the result
       nsIDocument* sourceDoc = getSourceDocument(aContext);
       NS_ENSURE_STATE(sourceDoc);
+||||||| merged common ancestors
+            RefPtr<txNodeSet> resultSet;
+            rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      // Set up holders for the result
+      Document* sourceDoc = getSourceDocument(aContext);
+      NS_ENSURE_STATE(sourceDoc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       RefPtr<DocumentFragment> docFrag =
           new DocumentFragment(sourceDoc->NodeInfoManager());
 
       RefPtr<txNodeSet> resultSet;
       rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            int32_t end = nodes1->indexOf(nodes2->get(0));
+            if (end >= 0) {
+                int32_t i = 0;
+                if (mType == txEXSLTType::TRAILING) {
+                    i = end + 1;
+                    end = nodes1->size();
+                }
+                for (; i < end; ++i) {
+                    rv = resultSet->append(nodes1->get(i));
+                    NS_ENSURE_SUCCESS(rv, rv);
+                }
+            }
 
+            NS_ADDREF(*aResult = resultSet);
+
+            return NS_OK;
+        }
+        case txEXSLTType::CONCAT:
+        {
+            RefPtr<txNodeSet> nodes;
+            rv = evaluateToNodeSet(mParams[0], aContext,
+                                   getter_AddRefs(nodes));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      RefPtr<DocumentFragment> docFrag =
+          new DocumentFragment(sourceDoc->NodeInfoManager());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      uint32_t tailIndex;
+||||||| merged common ancestors
+            nsAutoString str;
+            int32_t i, len = nodes->size();
+            for (i = 0; i < len; ++i) {
+                txXPathNodeUtils::appendNodeValue(nodes->get(i), str);
+            }
+=======
+      RefPtr<txNodeSet> resultSet;
+      rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      // Start splitting
+      if (pattern.IsEmpty()) {
+        nsString::const_char_iterator start = string.BeginReading();
+        nsString::const_char_iterator end = string.EndReading();
+        for (; start < end; ++start) {
+          rv = createAndAddToResult(nsGkAtoms::token,
+                                    Substring(start, start + 1), resultSet,
+                                    docFrag);
+          NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            return aContext->recycler()->getStringResult(str, aResult);
+=======
       uint32_t tailIndex;
 
       // Start splitting
@@ -456,6 +684,7 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
                                     Substring(start, start + 1), resultSet,
                                     docFrag);
           NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
         }
 
         tailIndex = string.Length();
@@ -485,6 +714,7 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
                                       Substring(string, start, found - start),
                                       resultSet, docFrag);
             NS_ENSURE_SUCCESS(rv, rv);
+<<<<<<< HEAD
           }
           start = found + 1;
         }
@@ -492,6 +722,114 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
         tailIndex = start;
       }
 
+      // Add tail if needed
+      if (tailIndex != (uint32_t)string.Length()) {
+        rv = createAndAddToResult(
+            nsGkAtoms::token, Substring(string, tailIndex), resultSet, docFrag);
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+
+      NS_ADDREF(*aResult = resultSet);
+||||||| merged common ancestors
+=======
+          }
+          start = found + 1;
+        }
+
+        tailIndex = start;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      return NS_OK;
+    }
+    case txEXSLTType::MAX:
+    case txEXSLTType::MIN: {
+      RefPtr<txNodeSet> nodes;
+      rv = evaluateToNodeSet(mParams[0], aContext, getter_AddRefs(nodes));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (nodes->isEmpty()) {
+        return aContext->recycler()->getNumberResult(UnspecifiedNaN<double>(),
+                                                     aResult);
+      }
+
+      bool findMax = mType == txEXSLTType::MAX;
+
+      double res = findMax ? mozilla::NegativeInfinity<double>()
+                           : mozilla::PositiveInfinity<double>();
+      int32_t i, len = nodes->size();
+      for (i = 0; i < len; ++i) {
+        nsAutoString str;
+        txXPathNodeUtils::appendNodeValue(nodes->get(i), str);
+        double val = txDouble::toDouble(str);
+        if (mozilla::IsNaN(val)) {
+          res = UnspecifiedNaN<double>();
+          break;
+||||||| merged common ancestors
+            uint32_t tailIndex;
+
+            // Start splitting
+            if (pattern.IsEmpty()) {
+                nsString::const_char_iterator start = string.BeginReading();
+                nsString::const_char_iterator end = string.EndReading();
+                for (; start < end; ++start) {
+                    rv = createAndAddToResult(nsGkAtoms::token,
+                                              Substring(start, start + 1),
+                                              resultSet, docFrag);
+                    NS_ENSURE_SUCCESS(rv, rv);
+                }
+
+                tailIndex = string.Length();
+            }
+            else if (mType == txEXSLTType::SPLIT) {
+                nsAString::const_iterator strStart, strEnd;
+                string.BeginReading(strStart);
+                string.EndReading(strEnd);
+                nsAString::const_iterator start = strStart, end = strEnd;
+
+                while (FindInReadable(pattern, start, end)) {
+                    if (start != strStart) {
+                        rv = createAndAddToResult(nsGkAtoms::token,
+                                                  Substring(strStart, start),
+                                                  resultSet, docFrag);
+                        NS_ENSURE_SUCCESS(rv, rv);
+                    }
+                    strStart = start = end;
+                    end = strEnd;
+                }
+
+                tailIndex = strStart.get() - string.get();
+            }
+            else {
+                int32_t found, start = 0;
+                while ((found = string.FindCharInSet(pattern, start)) !=
+                       kNotFound) {
+                    if (found != start) {
+                        rv = createAndAddToResult(nsGkAtoms::token,
+                                                  Substring(string, start,
+                                                            found - start),
+                                                  resultSet, docFrag);
+                        NS_ENSURE_SUCCESS(rv, rv);
+                    }
+                    start = found + 1;
+                }
+
+                tailIndex = start;
+            }
+
+            // Add tail if needed
+            if (tailIndex != (uint32_t)string.Length()) {
+                rv = createAndAddToResult(nsGkAtoms::token,
+                                          Substring(string, tailIndex),
+                                          resultSet, docFrag);
+                NS_ENSURE_SUCCESS(rv, rv);
+            }
+
+            NS_ADDREF(*aResult = resultSet);
+
+            return NS_OK;
+=======
       // Add tail if needed
       if (tailIndex != (uint32_t)string.Length()) {
         rv = createAndAddToResult(
@@ -526,6 +864,7 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
         if (mozilla::IsNaN(val)) {
           res = UnspecifiedNaN<double>();
           break;
+>>>>>>> upstream-releases
         }
 
         if (findMax ? (val > res) : (val < res)) {
@@ -544,6 +883,14 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
       if (nodes->isEmpty()) {
         NS_ADDREF(*aResult = nodes);
 
+<<<<<<< HEAD
+        return NS_OK;
+      }
+||||||| merged common ancestors
+            RefPtr<txNodeSet> resultSet;
+            rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
         return NS_OK;
       }
 
@@ -568,30 +915,153 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
           resultSet->clear();
           res = val;
         }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      RefPtr<txNodeSet> resultSet;
+      rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      bool findMax = mType == txEXSLTType::HIGHEST;
+      double res = findMax ? mozilla::NegativeInfinity<double>()
+                           : mozilla::PositiveInfinity<double>();
+      int32_t i, len = nodes->size();
+      for (i = 0; i < len; ++i) {
+        nsAutoString str;
+        const txXPathNode& node = nodes->get(i);
+        txXPathNodeUtils::appendNodeValue(node, str);
+        double val = txDouble::toDouble(str);
+        if (mozilla::IsNaN(val)) {
+          resultSet->clear();
+          break;
+        }
+        if (findMax ? (val > res) : (val < res)) {
+          resultSet->clear();
+          res = val;
+||||||| merged common ancestors
+            bool findMax = mType == txEXSLTType::HIGHEST;
+            double res = findMax ? mozilla::NegativeInfinity<double>() :
+                                   mozilla::PositiveInfinity<double>();
+            int32_t i, len = nodes->size();
+            for (i = 0; i < len; ++i) {
+                nsAutoString str;
+                const txXPathNode& node = nodes->get(i);
+                txXPathNodeUtils::appendNodeValue(node, str);
+                double val = txDouble::toDouble(str);
+                if (mozilla::IsNaN(val)) {
+                    resultSet->clear();
+                    break;
+                }
+                if (findMax ? (val > res) : (val < res)) {
+                    resultSet->clear();
+                    res = val;
+                }
+
+                if (res == val) {
+                    rv = resultSet->append(node);
+                    NS_ENSURE_SUCCESS(rv, rv);
+                }
+            }
+
+            NS_ADDREF(*aResult = resultSet);
+
+            return NS_OK;
+=======
+        if (res == val) {
+          rv = resultSet->append(node);
+          NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+||||||| merged common ancestors
+        case txEXSLTType::DATE_TIME:
+        {
+            // http://exslt.org/date/functions/date-time/
+=======
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         if (res == val) {
           rv = resultSet->append(node);
           NS_ENSURE_SUCCESS(rv, rv);
         }
       }
-
+||||||| merged common ancestors
+            PRExplodedTime prtime;
+            PR_ExplodeTime(PR_Now(), PR_LocalTimeParameters, &prtime);
+=======
       NS_ADDREF(*aResult = resultSet);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      NS_ADDREF(*aResult = resultSet);
+||||||| merged common ancestors
+            int32_t offset = (prtime.tm_params.tp_gmt_offset +
+              prtime.tm_params.tp_dst_offset) / 60;
+=======
       return NS_OK;
     }
     case txEXSLTType::DATE_TIME: {
       // http://exslt.org/date/functions/date-time/
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      return NS_OK;
+    }
+    case txEXSLTType::DATE_TIME: {
+      // http://exslt.org/date/functions/date-time/
+||||||| merged common ancestors
+            bool isneg = offset < 0;
+            if (isneg) offset = -offset;
+=======
       PRExplodedTime prtime;
       PR_ExplodeTime(PR_Now(), PR_LocalTimeParameters, &prtime);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      PRExplodedTime prtime;
+      PR_ExplodeTime(PR_Now(), PR_LocalTimeParameters, &prtime);
+||||||| merged common ancestors
+            StringResult* strRes;
+            rv = aContext->recycler()->getStringResult(&strRes);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
       int32_t offset =
           (prtime.tm_params.tp_gmt_offset + prtime.tm_params.tp_dst_offset) /
           60;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      int32_t offset =
+          (prtime.tm_params.tp_gmt_offset + prtime.tm_params.tp_dst_offset) /
+          60;
+||||||| merged common ancestors
+            // format: YYYY-MM-DDTTHH:MM:SS.sss+00:00
+            CopyASCIItoUTF16(nsPrintfCString("%04hd-%02" PRId32 "-%02" PRId32
+                                             "T%02" PRId32 ":%02" PRId32 ":%02" PRId32
+                                             ".%03" PRId32 "%c%02" PRId32 ":%02" PRId32,
+              prtime.tm_year, prtime.tm_month + 1, prtime.tm_mday,
+              prtime.tm_hour, prtime.tm_min, prtime.tm_sec,
+              prtime.tm_usec / 10000,
+              isneg ? '-' : '+', offset / 60, offset % 60), strRes->mValue);
+=======
       bool isneg = offset < 0;
       if (isneg) offset = -offset;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      bool isneg = offset < 0;
+      if (isneg) offset = -offset;
+||||||| merged common ancestors
+            *aResult = strRes;
+=======
+      StringResult* strRes;
+      rv = aContext->recycler()->getStringResult(&strRes);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       StringResult* strRes;
       rv = aContext->recycler()->getStringResult(&strRes);
       NS_ENSURE_SUCCESS(rv, rv);
@@ -615,6 +1085,36 @@ nsresult txEXSLTFunctionCall::evaluate(txIEvalContext* aContext,
       aContext->receiveError(NS_LITERAL_STRING("Internal error"),
                              NS_ERROR_UNEXPECTED);
       return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        default:
+        {
+            aContext->receiveError(NS_LITERAL_STRING("Internal error"),
+                                   NS_ERROR_UNEXPECTED);
+            return NS_ERROR_UNEXPECTED;
+        }
+=======
+      // format: YYYY-MM-DDTTHH:MM:SS.sss+00:00
+      CopyASCIItoUTF16(
+          nsPrintfCString("%04hd-%02" PRId32 "-%02" PRId32 "T%02" PRId32
+                          ":%02" PRId32 ":%02" PRId32 ".%03" PRId32
+                          "%c%02" PRId32 ":%02" PRId32,
+                          prtime.tm_year, prtime.tm_month + 1, prtime.tm_mday,
+                          prtime.tm_hour, prtime.tm_min, prtime.tm_sec,
+                          prtime.tm_usec / 10000, isneg ? '-' : '+',
+                          offset / 60, offset % 60),
+          strRes->mValue);
+
+      *aResult = strRes;
+
+      return NS_OK;
+    }
+    default: {
+      aContext->receiveError(NS_LITERAL_STRING("Internal error"),
+                             NS_ERROR_UNEXPECTED);
+      return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
     }
   }
 
@@ -640,6 +1140,7 @@ void txEXSLTFunctionCall::appendName(nsAString& aDest) {
 }
 #endif
 
+<<<<<<< HEAD
 nsresult txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
                                             txAExprResult** aResult) {
   *aResult = nullptr;
@@ -727,11 +1228,84 @@ nsresult txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
            result = result->GetNextSibling()) {
         node = txXPathNativeNode::createXPathNode(result, true);
         rv = resultSet->add(*node);
+||||||| merged common ancestors
+
+nsresult
+txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
+                                   txAExprResult** aResult)
+{
+    *aResult = nullptr;
+    if (!requireParams(descriptTable[mType].mMinParams,
+                       descriptTable[mType].mMaxParams,
+                       aContext)) {
+        return NS_ERROR_XPATH_BAD_ARGUMENT_COUNT;
+    }
+
+    nsAutoString string;
+    nsresult rv = mParams[0]->evaluateToString(aContext, string);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsAutoString regex;
+    rv = mParams[1]->evaluateToString(aContext, regex);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsAutoString flags;
+    if (mParams.Length() >= 3) {
+        rv = mParams[2]->evaluateToString(aContext, flags);
+=======
+nsresult txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
+                                            txAExprResult** aResult) {
+  *aResult = nullptr;
+  if (!requireParams(descriptTable[mType].mMinParams,
+                     descriptTable[mType].mMaxParams, aContext)) {
+    return NS_ERROR_XPATH_BAD_ARGUMENT_COUNT;
+  }
+
+  nsAutoString string;
+  nsresult rv = mParams[0]->evaluateToString(aContext, string);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsAutoString regex;
+  rv = mParams[1]->evaluateToString(aContext, regex);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsAutoString flags;
+  if (mParams.Length() >= 3) {
+    rv = mParams[2]->evaluateToString(aContext, flags);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+
+  nsCOMPtr<txIEXSLTFunctions> funcs =
+      do_ImportModule("resource://gre/modules/txEXSLTRegExFunctions.jsm");
+  MOZ_ALWAYS_TRUE(funcs);
+
+  switch (mType) {
+    case txEXSLTType::MATCH: {
+      nsCOMPtr<Document> sourceDoc = getSourceDocument(aContext);
+      NS_ENSURE_STATE(sourceDoc);
+
+      RefPtr<DocumentFragment> docFrag;
+      rv = funcs->Match(string, regex, flags, sourceDoc,
+                        getter_AddRefs(docFrag));
+      NS_ENSURE_SUCCESS(rv, rv);
+      NS_ENSURE_STATE(docFrag);
+
+      RefPtr<txNodeSet> resultSet;
+      rv = aContext->recycler()->getNodeSet(getter_AddRefs(resultSet));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      nsAutoPtr<txXPathNode> node;
+      for (nsIContent* result = docFrag->GetFirstChild(); result;
+           result = result->GetNextSibling()) {
+        node = txXPathNativeNode::createXPathNode(result, true);
+        rv = resultSet->add(*node);
+>>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, rv);
       }
 
       resultSet.forget(aResult);
 
+<<<<<<< HEAD
       return NS_OK;
     }
     case txEXSLTType::REPLACE: {
@@ -756,10 +1330,37 @@ nsresult txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
       if (!ConvertJSValueToString(cx, rval, result)) {
         return NS_ERROR_FAILURE;
       }
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        case txEXSLTType::REPLACE:
+        {
+            nsAutoString replace;
+            rv = mParams[3]->evaluateToString(aContext, replace);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      return NS_OK;
+    }
+    case txEXSLTType::REPLACE: {
+      nsAutoString replace;
+      rv = mParams[3]->evaluateToString(aContext, replace);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       rv = aContext->recycler()->getStringResult(result, aResult);
       NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+            nsString result;
+            rv = mRegExService->Replace(string, regex, flags, replace, result);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      nsAutoString result;
+      rv = funcs->Replace(string, regex, flags, replace, result);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       return NS_OK;
     }
     case txEXSLTType::TEST: {
@@ -772,19 +1373,66 @@ nsresult txEXSLTRegExFunctionCall::evaluate(txIEvalContext* aContext,
       if (!JS_CallFunctionName(cx, sandbox, "test", args, &rval)) {
         return NS_ERROR_FAILURE;
       }
+||||||| merged common ancestors
+            rv = aContext->recycler()->getStringResult(result, aResult);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      rv = aContext->recycler()->getStringResult(result, aResult);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       bool result = rval.toBoolean();
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        case txEXSLTType::TEST:
+        {
+            bool result;
+            rv = mRegExService->Test(string, regex, flags, &result);
+            NS_ENSURE_SUCCESS(rv, rv);
+=======
+      return NS_OK;
+    }
+    case txEXSLTType::TEST: {
+      bool result;
+      rv = funcs->Test(string, regex, flags, &result);
+      NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
       aContext->recycler()->getBoolResult(result, aResult);
 
+<<<<<<< HEAD
       return NS_OK;
     }
     default: {
       aContext->receiveError(NS_LITERAL_STRING("Internal error"),
                              NS_ERROR_UNEXPECTED);
       return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+            return NS_OK;
+        }
+        default:
+        {
+            aContext->receiveError(NS_LITERAL_STRING("Internal error"),
+                                   NS_ERROR_UNEXPECTED);
+            return NS_ERROR_UNEXPECTED;
+        }
+=======
+      return NS_OK;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    default: {
+      aContext->receiveError(NS_LITERAL_STRING("Internal error"),
+                             NS_ERROR_UNEXPECTED);
+      return NS_ERROR_UNEXPECTED;
     }
   }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT_UNREACHABLE("Missing return?");
   return NS_ERROR_UNEXPECTED;

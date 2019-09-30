@@ -8,6 +8,7 @@
 
 #include "mozilla/gfx/DrawEventRecorder.h"
 #include "mozilla/gfx/InlineTranslator.h"
+#include "mozilla/webrender/webrender_ffi.h"
 
 namespace mozilla {
 namespace layers {
@@ -28,8 +29,17 @@ class WebRenderDrawEventRecorder final : public gfx::DrawEventRecorderMemory {
   void StoreSourceSurfaceRecording(gfx::SourceSurface* aSurface,
                                    const char* aReason) final;
 
+<<<<<<< HEAD
  private:
   ~WebRenderDrawEventRecorder() override {}
+||||||| merged common ancestors
+private:
+  ~WebRenderDrawEventRecorder() override
+  { }
+=======
+ private:
+  virtual ~WebRenderDrawEventRecorder() = default;
+>>>>>>> upstream-releases
 };
 
 class WebRenderTranslator final : public gfx::InlineTranslator {

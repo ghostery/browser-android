@@ -8,28 +8,81 @@ const { SocketListener } = require("devtools/shared/security/socket");
 function run_test() {
   // Should get an exception if we try to interact with DebuggerServer
   // before we initialize it...
+<<<<<<< HEAD
   const socketListener = new SocketListener(DebuggerServer, {});
   Assert.throws(() => DebuggerServer.addSocketListener(socketListener),
+||||||| merged common ancestors
+  Assert.throws(() => DebuggerServer.createListener(),
+=======
+  const socketListener = new SocketListener(DebuggerServer, {});
+  Assert.throws(
+    () => DebuggerServer.addSocketListener(socketListener),
+>>>>>>> upstream-releases
     /DebuggerServer has not been initialized/,
+<<<<<<< HEAD
     "addSocketListener should throw before it has been initialized");
   Assert.throws(DebuggerServer.closeAllSocketListeners,
+||||||| merged common ancestors
+    "createListener should throw before it has been initialized");
+  Assert.throws(DebuggerServer.closeAllListeners,
+=======
+    "addSocketListener should throw before it has been initialized"
+  );
+  Assert.throws(
+    DebuggerServer.closeAllSocketListeners,
+>>>>>>> upstream-releases
     /this is undefined/,
+<<<<<<< HEAD
     "closeAllSocketListeners should throw before it has been initialized");
   Assert.throws(DebuggerServer.connectPipe,
+||||||| merged common ancestors
+    "closeAllListeners should throw before it has been initialized");
+  Assert.throws(DebuggerServer.connectPipe,
+=======
+    "closeAllSocketListeners should throw before it has been initialized"
+  );
+  Assert.throws(
+    DebuggerServer.connectPipe,
+>>>>>>> upstream-releases
     /this is undefined/,
-    "connectPipe should throw before it has been initialized");
+    "connectPipe should throw before it has been initialized"
+  );
 
   // Allow incoming connections.
   DebuggerServer.init();
 
   // These should still fail because we haven't added a createRootActor
   // implementation yet.
+<<<<<<< HEAD
   Assert.throws(DebuggerServer.closeAllSocketListeners,
+||||||| merged common ancestors
+  Assert.throws(DebuggerServer.closeAllListeners,
+=======
+  Assert.throws(
+    DebuggerServer.closeAllSocketListeners,
+>>>>>>> upstream-releases
     /this is undefined/,
+<<<<<<< HEAD
     "closeAllSocketListeners should throw if createRootActor hasn't been added");
   Assert.throws(DebuggerServer.connectPipe,
+||||||| merged common ancestors
+    "closeAllListeners should throw if createRootActor hasn't been added");
+  Assert.throws(DebuggerServer.connectPipe,
+=======
+    "closeAllSocketListeners should throw if createRootActor hasn't been added"
+  );
+  Assert.throws(
+    DebuggerServer.connectPipe,
+>>>>>>> upstream-releases
     /this is undefined/,
+<<<<<<< HEAD
     "closeAllSocketListeners should throw if createRootActor hasn't been added");
+||||||| merged common ancestors
+    "closeAllListeners should throw if createRootActor hasn't been added");
+=======
+    "closeAllSocketListeners should throw if createRootActor hasn't been added"
+  );
+>>>>>>> upstream-releases
 
   const { createRootActor } = require("xpcshell-test/testactors");
   DebuggerServer.setRootActor(createRootActor);
@@ -51,8 +104,10 @@ function run_test() {
       client2.hooks = {
         onPacket: function(packet2) {
           Assert.equal(packet2.from, "root");
-          Assert.notEqual(packet1.testConnectionPrefix,
-                          packet2.testConnectionPrefix);
+          Assert.notEqual(
+            packet1.testConnectionPrefix,
+            packet2.testConnectionPrefix
+          );
           client2.close();
         },
         onClosed: function(result) {

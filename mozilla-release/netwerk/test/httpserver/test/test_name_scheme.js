@@ -16,6 +16,7 @@ XPCOMUtils.defineLazyGetter(this, "PREFIX", function() {
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
+<<<<<<< HEAD
     new Test(PREFIX + "/bar.html^",
             null, start_bar_html_, null),
     new Test(PREFIX + "/foo.html^",
@@ -43,10 +44,83 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
     new Test(PREFIX + "/end-caret^/folder^/file.txt",
             null, start_folder__file_txt, null),
     ];
+||||||| merged common ancestors
+    new Test(PREFIX + "/bar.html^",
+            null, start_bar_html_, null),
+    new Test(PREFIX + "/foo.html^",
+            null, start_foo_html_, null),
+    new Test(PREFIX + "/normal-file.txt",
+            null, start_normal_file_txt, null),
+    new Test(PREFIX + "/folder^/file.txt",
+            null, start_folder__file_txt, null),
+
+    new Test(PREFIX + "/foo/bar.html^",
+            null, start_bar_html_, null),
+    new Test(PREFIX + "/foo/foo.html^",
+            null, start_foo_html_, null),
+    new Test(PREFIX + "/foo/normal-file.txt",
+            null, start_normal_file_txt, null),
+    new Test(PREFIX + "/foo/folder^/file.txt",
+            null, start_folder__file_txt, null),
+
+    new Test(PREFIX + "/end-caret^/bar.html^",
+            null, start_bar_html_, null),
+    new Test(PREFIX + "/end-caret^/foo.html^",
+            null, start_foo_html_, null),
+    new Test(PREFIX + "/end-caret^/normal-file.txt",
+            null, start_normal_file_txt, null),
+    new Test(PREFIX + "/end-caret^/folder^/file.txt",
+            null, start_folder__file_txt, null)
+    ];
+=======
+    new Test(PREFIX + "/bar.html^", null, start_bar_html_, null),
+    new Test(PREFIX + "/foo.html^", null, start_foo_html_, null),
+    new Test(PREFIX + "/normal-file.txt", null, start_normal_file_txt, null),
+    new Test(PREFIX + "/folder^/file.txt", null, start_folder__file_txt, null),
+
+    new Test(PREFIX + "/foo/bar.html^", null, start_bar_html_, null),
+    new Test(PREFIX + "/foo/foo.html^", null, start_foo_html_, null),
+    new Test(
+      PREFIX + "/foo/normal-file.txt",
+      null,
+      start_normal_file_txt,
+      null
+    ),
+    new Test(
+      PREFIX + "/foo/folder^/file.txt",
+      null,
+      start_folder__file_txt,
+      null
+    ),
+
+    new Test(PREFIX + "/end-caret^/bar.html^", null, start_bar_html_, null),
+    new Test(PREFIX + "/end-caret^/foo.html^", null, start_foo_html_, null),
+    new Test(
+      PREFIX + "/end-caret^/normal-file.txt",
+      null,
+      start_normal_file_txt,
+      null
+    ),
+    new Test(
+      PREFIX + "/end-caret^/folder^/file.txt",
+      null,
+      start_folder__file_txt,
+      null
+    ),
+  ];
+>>>>>>> upstream-releases
 });
 
+<<<<<<< HEAD
 
 function run_test() {
+||||||| merged common ancestors
+
+function run_test()
+{
+=======
+function run_test() {
+>>>>>>> upstream-releases
   srv = createServer();
 
   // make sure underscores work in directories "mounted" in directories with
@@ -61,25 +135,52 @@ function run_test() {
   runHttpTests(tests, testComplete(srv));
 }
 
-
 // TEST DATA
 
+<<<<<<< HEAD
 function start_bar_html_(ch, cx) {
+||||||| merged common ancestors
+function start_bar_html_(ch, cx)
+{
+=======
+function start_bar_html_(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
 
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/html");
 }
 
+<<<<<<< HEAD
 function start_foo_html_(ch, cx) {
+||||||| merged common ancestors
+function start_foo_html_(ch, cx)
+{
+=======
+function start_foo_html_(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 404);
 }
 
+<<<<<<< HEAD
 function start_normal_file_txt(ch, cx) {
+||||||| merged common ancestors
+function start_normal_file_txt(ch, cx)
+{
+=======
+function start_normal_file_txt(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/plain");
 }
 
+<<<<<<< HEAD
 function start_folder__file_txt(ch, cx) {
+||||||| merged common ancestors
+function start_folder__file_txt(ch, cx)
+{
+=======
+function start_folder__file_txt(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/plain");
 }

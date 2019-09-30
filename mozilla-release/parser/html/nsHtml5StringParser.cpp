@@ -8,8 +8,10 @@
 #include "nsHtml5TreeBuilder.h"
 #include "nsHtml5TreeOpExecutor.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/DocumentFragment.h"
+
+using mozilla::dom::Document;
 
 NS_IMPL_ISUPPORTS0(nsHtml5StringParser)
 
@@ -30,7 +32,7 @@ nsresult nsHtml5StringParser::ParseFragment(const nsAString& aSourceBuffer,
                                             bool aPreventScriptExecution) {
   NS_ENSURE_TRUE(aSourceBuffer.Length() <= INT32_MAX, NS_ERROR_OUT_OF_MEMORY);
 
-  nsIDocument* doc = aTargetNode->OwnerDoc();
+  Document* doc = aTargetNode->OwnerDoc();
   nsIURI* uri = doc->GetDocumentURI();
   NS_ENSURE_TRUE(uri, NS_ERROR_NOT_AVAILABLE);
 
@@ -53,9 +55,21 @@ nsresult nsHtml5StringParser::ParseFragment(const nsAString& aSourceBuffer,
   return Tokenize(aSourceBuffer, doc, true);
 }
 
+<<<<<<< HEAD
 nsresult nsHtml5StringParser::ParseDocument(
     const nsAString& aSourceBuffer, nsIDocument* aTargetDoc,
     bool aScriptingEnabledForNoscriptParsing) {
+||||||| merged common ancestors
+nsresult
+nsHtml5StringParser::ParseDocument(const nsAString& aSourceBuffer,
+                                   nsIDocument* aTargetDoc,
+                                   bool aScriptingEnabledForNoscriptParsing)
+{
+=======
+nsresult nsHtml5StringParser::ParseDocument(
+    const nsAString& aSourceBuffer, Document* aTargetDoc,
+    bool aScriptingEnabledForNoscriptParsing) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!aTargetDoc->GetFirstChild());
 
   NS_ENSURE_TRUE(aSourceBuffer.Length() <= INT32_MAX, NS_ERROR_OUT_OF_MEMORY);
@@ -68,9 +82,22 @@ nsresult nsHtml5StringParser::ParseDocument(
                   aScriptingEnabledForNoscriptParsing);
 }
 
+<<<<<<< HEAD
 nsresult nsHtml5StringParser::Tokenize(
     const nsAString& aSourceBuffer, nsIDocument* aDocument,
     bool aScriptingEnabledForNoscriptParsing) {
+||||||| merged common ancestors
+nsresult
+nsHtml5StringParser::Tokenize(const nsAString& aSourceBuffer,
+                              nsIDocument* aDocument,
+                              bool aScriptingEnabledForNoscriptParsing)
+{
+
+=======
+nsresult nsHtml5StringParser::Tokenize(
+    const nsAString& aSourceBuffer, Document* aDocument,
+    bool aScriptingEnabledForNoscriptParsing) {
+>>>>>>> upstream-releases
   nsIURI* uri = aDocument->GetDocumentURI();
 
   mBuilder->Init(aDocument, uri, nullptr, nullptr);

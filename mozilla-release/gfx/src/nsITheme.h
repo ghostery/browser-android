@@ -28,8 +28,16 @@ class ComputedStyle;
 enum class StyleAppearance : uint8_t;
 namespace layers {
 class StackingContextHelper;
+<<<<<<< HEAD
 class WebRenderLayerManager;
 }  // namespace layers
+||||||| merged common ancestors
+class WebRenderLayerManager;
+}
+=======
+class RenderRootStateManager;
+}  // namespace layers
+>>>>>>> upstream-releases
 namespace wr {
 class DisplayListBuilder;
 class IpcResourceUpdateQueue;
@@ -82,6 +90,7 @@ class nsITheme : public nsISupports {
    *         given widget type, false if DrawWidgetBackground need sto be called
    *         instead.
    */
+<<<<<<< HEAD
   virtual bool CreateWebRenderCommandsForWidget(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -90,6 +99,24 @@ class nsITheme : public nsISupports {
       StyleAppearance aWidgetType, const nsRect& aRect) {
     return false;
   }
+||||||| merged common ancestors
+  virtual bool CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
+                                                mozilla::wr::IpcResourceUpdateQueue& aResources,
+                                                const mozilla::layers::StackingContextHelper& aSc,
+                                                mozilla::layers::WebRenderLayerManager* aManager,
+                                                nsIFrame* aFrame,
+                                                WidgetType aWidgetType,
+                                                const nsRect& aRect) { return false; }
+=======
+  virtual bool CreateWebRenderCommandsForWidget(
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const mozilla::layers::StackingContextHelper& aSc,
+      mozilla::layers::RenderRootStateManager* aManager, nsIFrame* aFrame,
+      StyleAppearance aWidgetType, const nsRect& aRect) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   /**
    * Return the border for the widget, in device pixels.

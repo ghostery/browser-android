@@ -1,2 +1,9 @@
+<<<<<<< HEAD
 mozprocess == 0.26
 selenium==3.141.0
+||||||| merged common ancestors
+mozprocess == 0.26
+selenium==3.14.1
+=======
+mozprocess==1.0.0
+>>>>>>> upstream-releases

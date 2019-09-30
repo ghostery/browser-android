@@ -5,11 +5,25 @@
 //! Parsing for media feature expressions, like `(foo: bar)` or
 //! `(width >= 400px)`.
 
+<<<<<<< HEAD
+use super::media_feature::{Evaluator, MediaFeatureDescription};
+use super::media_feature::{KeywordDiscriminant, ParsingRequirements};
+use super::Device;
+use crate::context::QuirksMode;
+||||||| merged common ancestors
+use Atom;
+use context::QuirksMode;
+use cssparser::{Parser, Token};
+=======
 use super::media_feature::{Evaluator, MediaFeatureDescription};
 use super::media_feature::{KeywordDiscriminant, ParsingRequirements};
 use super::Device;
 use crate::context::QuirksMode;
 #[cfg(feature = "gecko")]
+use crate::gecko::media_features::MEDIA_FEATURES;
+>>>>>>> upstream-releases
+#[cfg(feature = "gecko")]
+<<<<<<< HEAD
 use crate::gecko::media_features::MEDIA_FEATURES;
 #[cfg(feature = "gecko")]
 use crate::gecko_bindings::structs;
@@ -25,11 +39,29 @@ use crate::Atom;
 use cssparser::{Parser, Token};
 use num_traits::Zero;
 use std::cmp::{Ordering, PartialOrd};
+||||||| merged common ancestors
+use gecko_bindings::structs;
+use num_traits::Zero;
+use parser::{Parse, ParserContext};
+use std::cmp::{PartialOrd, Ordering};
+=======
+use crate::gecko_bindings::structs;
+use crate::parser::{Parse, ParserContext};
+#[cfg(feature = "servo")]
+use crate::servo::media_queries::MEDIA_FEATURES;
+use crate::str::{starts_with_ignore_ascii_case, string_as_ascii_lowercase};
+use crate::values::computed::{self, ToComputedValue};
+use crate::values::specified::{Integer, Length, Number, Resolution};
+use crate::values::{serialize_atom_identifier, CSSFloat};
+use crate::{Atom, Zero};
+use cssparser::{Parser, Token};
+use std::cmp::{Ordering, PartialOrd};
+>>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
 
 /// An aspect ratio, with a numerator and denominator.
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToShmem)]
 pub struct AspectRatio(pub u32, pub u32);
 
 impl ToCss for AspectRatio {
@@ -53,7 +85,7 @@ impl PartialOrd for AspectRatio {
 }
 
 /// The kind of matching that should be performed on a media feature value.
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToShmem)]
 pub enum Range {
     /// At least the specified value.
     Min,
@@ -62,7 +94,7 @@ pub enum Range {
 }
 
 /// The operator that was specified in this media feature.
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToShmem)]
 pub enum Operator {
     /// =
     Equal,
@@ -95,7 +127,7 @@ impl ToCss for Operator {
 ///
 /// Ranged media features are not allowed with operations (that'd make no
 /// sense).
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToShmem)]
 pub enum RangeOrOperator {
     /// A `Range`.
     Range(Range),
@@ -134,10 +166,11 @@ impl RangeOrOperator {
 
         match range_or_op {
             RangeOrOperator::Range(range) => {
-                cmp == Ordering::Equal || match range {
-                    Range::Min => cmp == Ordering::Greater,
-                    Range::Max => cmp == Ordering::Less,
-                }
+                cmp == Ordering::Equal ||
+                    match range {
+                        Range::Min => cmp == Ordering::Greater,
+                        Range::Max => cmp == Ordering::Less,
+                    }
             },
             RangeOrOperator::Operator(op) => match op {
                 Operator::Equal => cmp == Ordering::Equal,
@@ -152,7 +185,7 @@ impl RangeOrOperator {
 
 /// A feature expression contains a reference to the media feature, the value
 /// the media query contained, and the range to evaluate.
-#[derive(Clone, Debug, MallocSizeOf)]
+#[derive(Clone, Debug, MallocSizeOf, ToShmem)]
 pub struct MediaFeatureExpression {
     feature_index: usize,
     value: Option<MediaExpressionValue>,
@@ -290,7 +323,7 @@ impl MediaFeatureExpression {
 
             let mut requirements = ParsingRequirements::empty();
 
-            if context.chrome_rules_enabled() || context.stylesheet_origin == Origin::UserAgent {
+            if context.in_ua_or_chrome_sheet() {
                 requirements.insert(ParsingRequirements::CHROME_AND_UA_ONLY);
             }
 
@@ -299,13 +332,11 @@ impl MediaFeatureExpression {
 
                 #[cfg(feature = "gecko")]
                 {
-                    if unsafe { structs::StaticPrefs_sVarCache_layout_css_prefixes_webkit } &&
-                        starts_with_ignore_ascii_case(feature_name, "-webkit-")
-                    {
+                    if starts_with_ignore_ascii_case(feature_name, "-webkit-") {
                         feature_name = &feature_name[8..];
                         requirements.insert(ParsingRequirements::WEBKIT_PREFIX);
                         if unsafe {
-                            structs::StaticPrefs_sVarCache_layout_css_prefixes_device_pixel_ratio_webkit
+                            structs::StaticPrefs::sVarCache_layout_css_prefixes_device_pixel_ratio_webkit
                         } {
                             requirements.insert(
                                 ParsingRequirements::WEBKIT_DEVICE_PIXEL_RATIO_PREF_ENABLED,
@@ -344,7 +375,7 @@ impl MediaFeatureExpression {
                 Err(()) => {
                     return Err(location.new_custom_error(
                         StyleParseErrorKind::MediaQueryExpectedFeatureName(ident.clone()),
-                    ))
+                    ));
                 },
             }
 
@@ -468,7 +499,7 @@ impl MediaFeatureExpression {
 /// If the first, this would need to store the relevant values.
 ///
 /// See: https://github.com/w3c/csswg-drafts/issues/1968
-#[derive(Clone, Debug, MallocSizeOf, PartialEq)]
+#[derive(Clone, Debug, MallocSizeOf, PartialEq, ToShmem)]
 pub enum MediaExpressionValue {
     /// A length.
     Length(Length),

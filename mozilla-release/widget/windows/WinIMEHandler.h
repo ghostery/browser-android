@@ -57,8 +57,54 @@ class IMEHandler final {
    * When the message is not needed to handle anymore by the caller, this
    * returns true.  Otherwise, false.
    */
+<<<<<<< HEAD
   static bool ProcessMessage(nsWindow* aWindow, UINT aMessage, WPARAM& aWParam,
                              LPARAM& aLParam, MSGResult& aResult);
+||||||| merged common ancestors
+  static bool ProcessMessage(nsWindow* aWindow, UINT aMessage,
+                             WPARAM& aWParam, LPARAM& aLParam,
+                             MSGResult& aResult);
+=======
+  static bool ProcessMessage(nsWindow* aWindow, UINT aMessage, WPARAM& aWParam,
+                             LPARAM& aLParam, MSGResult& aResult);
+
+  /**
+   * IsA11yHandlingNativeCaret() returns true if a11y is handling
+   * native caret.  In such case, IME modules shouldn't touch native caret.
+   **/
+  static bool IsA11yHandlingNativeCaret();
+
+  /**
+   * NeedsToCreateNativeCaret() returns true if IME handler needs to create
+   * native caret for other applications which requests OBJID_CARET with
+   * WM_GETOBJECT and a11y module isn't active (if a11y module is active,
+   * it always creates native caret, i.e., even if no editor has focus).
+   */
+  static bool NeedsToCreateNativeCaret() {
+    return sHasNativeCaretBeenRequested && !IsA11yHandlingNativeCaret();
+  }
+
+  /**
+   * CreateNativeCaret() create native caret if this has been created it.
+   *
+   * @param aWindow     The window which owns the caret.
+   * @param aCaretRect  The caret rect relative to aWindow.
+   */
+  static bool CreateNativeCaret(nsWindow* aWindow,
+                                const LayoutDeviceIntRect& aCaretRect);
+
+  /**
+   * MaybeDestroyNativeCaret() destroies native caret if it has been created
+   * by IMEHandler.
+   */
+  static void MaybeDestroyNativeCaret();
+
+  /**
+   * HasNativeCaret() returns true if there is native caret and it was created
+   * by IMEHandler.
+   */
+  static bool HasNativeCaret() { return sNativeCaretIsCreated; }
+>>>>>>> upstream-releases
 
   /**
    * When there is a composition, returns true.  Otherwise, false.
@@ -143,8 +189,20 @@ class IMEHandler final {
   static nsWindow* sFocusedWindow;
   static InputContextAction::Cause sLastContextActionCause;
 
+  static bool sMaybeEditable;
   static bool sForceDisableCurrentIMM_IME;
   static bool sPluginHasFocus;
+  static bool sNativeCaretIsCreated;
+  static bool sHasNativeCaretBeenRequested;
+
+  /**
+   * MaybeCreateNativeCaret() may create native caret over our caret if
+   * focused content is text editable and we need to create native caret
+   * for other applications.
+   *
+   * @param aWindow     The window which owns the native caret.
+   */
+  static bool MaybeCreateNativeCaret(nsWindow* aWindow);
 
 #ifdef NS_ENABLE_TSF
   static decltype(SetInputScopes)* sSetInputScopes;

@@ -10,7 +10,7 @@
 #include "nsScriptSecurityManager.h"
 #include "jsfriendapi.h"
 #ifdef MOZ_THREADSTACKHELPER_PROFILING_STACK
-#include "js/ProfilingStack.h"
+#  include "js/ProfilingStack.h"
 #endif
 
 #include "mozilla/Assertions.h"
@@ -25,12 +25,26 @@
 #include "mozilla/HangTypes.h"
 
 #ifdef __GNUC__
+<<<<<<< HEAD
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
+||||||| merged common ancestors
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wshadow"
+=======
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wshadow"
+>>>>>>> upstream-releases
 #endif
 
 #if defined(MOZ_VALGRIND)
+<<<<<<< HEAD
 #include <valgrind/valgrind.h>
+||||||| merged common ancestors
+# include <valgrind/valgrind.h>
+=======
+#  include <valgrind/valgrind.h>
+>>>>>>> upstream-releases
 #endif
 
 #include <string.h>
@@ -38,30 +52,50 @@
 #include <cstdlib>
 
 #ifdef XP_LINUX
-#include <ucontext.h>
-#include <unistd.h>
-#include <sys/syscall.h>
+#  include <ucontext.h>
+#  include <unistd.h>
+#  include <sys/syscall.h>
 #endif
 
 #ifdef __GNUC__
+<<<<<<< HEAD
 #pragma GCC diagnostic pop  // -Wshadow
+||||||| merged common ancestors
+# pragma GCC diagnostic pop // -Wshadow
+=======
+#  pragma GCC diagnostic pop  // -Wshadow
+>>>>>>> upstream-releases
 #endif
 
 #if defined(XP_LINUX) || defined(XP_MACOSX)
-#include <pthread.h>
+#  include <pthread.h>
 #endif
 
 #ifdef ANDROID
-#ifndef SYS_gettid
-#define SYS_gettid __NR_gettid
-#endif
-#if defined(__arm__) && !defined(__NR_rt_tgsigqueueinfo)
+#  ifndef SYS_gettid
+#    define SYS_gettid __NR_gettid
+#  endif
+#  if defined(__arm__) && !defined(__NR_rt_tgsigqueueinfo)
 // Some NDKs don't define this constant even though the kernel supports it.
+<<<<<<< HEAD
 #define __NR_rt_tgsigqueueinfo (__NR_SYSCALL_BASE + 363)
 #endif
 #ifndef SYS_rt_tgsigqueueinfo
 #define SYS_rt_tgsigqueueinfo __NR_rt_tgsigqueueinfo
 #endif
+||||||| merged common ancestors
+#define __NR_rt_tgsigqueueinfo (__NR_SYSCALL_BASE+363)
+#endif
+#ifndef SYS_rt_tgsigqueueinfo
+#define SYS_rt_tgsigqueueinfo __NR_rt_tgsigqueueinfo
+#endif
+=======
+#    define __NR_rt_tgsigqueueinfo (__NR_SYSCALL_BASE + 363)
+#  endif
+#  ifndef SYS_rt_tgsigqueueinfo
+#    define SYS_rt_tgsigqueueinfo __NR_rt_tgsigqueueinfo
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -210,12 +244,19 @@ namespace {
 bool IsChromeJSScript(JSScript* aScript) {
   // May be called from another thread or inside a signal handler.
   // We assume querying the script is safe but we must not manipulate it.
+<<<<<<< HEAD
   nsIScriptSecurityManager* const secman =
       nsScriptSecurityManager::GetScriptSecurityManager();
   NS_ENSURE_TRUE(secman, false);
+||||||| merged common ancestors
+  nsIScriptSecurityManager* const secman =
+    nsScriptSecurityManager::GetScriptSecurityManager();
+  NS_ENSURE_TRUE(secman, false);
+=======
+>>>>>>> upstream-releases
 
   JSPrincipals* const principals = JS_GetScriptPrincipals(aScript);
-  return secman->IsSystemPrincipal(nsJSPrincipals::get(principals));
+  return nsJSPrincipals::get(principals)->IsSystemPrincipal();
 }
 
 // Get the full path after the URI scheme, if the URI matches the scheme.

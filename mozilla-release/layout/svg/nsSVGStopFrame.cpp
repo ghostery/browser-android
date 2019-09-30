@@ -9,6 +9,7 @@
 #include "nsFrame.h"
 #include "nsGkAtoms.h"
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "SVGObserverUtils.h"
 
 using namespace mozilla;
@@ -17,6 +18,7 @@ using namespace mozilla;
 // events and propagate them to the parent.  Most of the heavy lifting is done
 // within the nsSVGGradientFrame, which is the parent for this frame
 
+<<<<<<< HEAD
 class nsSVGStopFrame : public nsFrame {
   friend nsIFrame* NS_NewSVGStopFrame(nsIPresShell* aPresShell,
                                       ComputedStyle* aStyle);
@@ -24,6 +26,26 @@ class nsSVGStopFrame : public nsFrame {
  protected:
   explicit nsSVGStopFrame(ComputedStyle* aStyle) : nsFrame(aStyle, kClassID) {
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
+||||||| merged common ancestors
+class nsSVGStopFrame : public nsFrame
+{
+  friend nsIFrame*
+  NS_NewSVGStopFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+protected:
+  explicit nsSVGStopFrame(ComputedStyle* aStyle)
+    : nsFrame(aStyle, kClassID)
+  {
+    AddStateBits(NS_FRAME_IS_NONDISPLAY);
+=======
+class nsSVGStopFrame : public nsFrame {
+  friend nsIFrame* NS_NewSVGStopFrame(mozilla::PresShell* aPresShell,
+                                      ComputedStyle* aStyle);
+
+ protected:
+  explicit nsSVGStopFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsFrame(aStyle, aPresContext, kClassID) {
+    AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
+>>>>>>> upstream-releases
   }
 
  public:
@@ -92,6 +114,16 @@ nsresult nsSVGStopFrame::AttributeChanged(int32_t aNameSpaceID,
 // Public functions
 // -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsIFrame* NS_NewSVGStopFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGStopFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame* NS_NewSVGStopFrame(nsIPresShell*   aPresShell,
+                             ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSVGStopFrame(aStyle);
+=======
+nsIFrame* NS_NewSVGStopFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsSVGStopFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }

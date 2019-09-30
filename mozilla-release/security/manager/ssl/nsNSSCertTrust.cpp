@@ -30,7 +30,14 @@ nsNSSCertTrust::nsNSSCertTrust(unsigned int ssl, unsigned int email) {
   addTrust(&mTrust.emailFlags, email);
 }
 
+<<<<<<< HEAD
 nsNSSCertTrust::nsNSSCertTrust(CERTCertTrust *t) {
+||||||| merged common ancestors
+nsNSSCertTrust::nsNSSCertTrust(CERTCertTrust *t)
+{
+=======
+nsNSSCertTrust::nsNSSCertTrust(CERTCertTrust* t) {
+>>>>>>> upstream-releases
   if (t)
     memcpy(&mTrust, t, sizeof(CERTCertTrust));
   else
@@ -114,7 +121,17 @@ bool nsNSSCertTrust::HasTrustedPeer(bool checkSSL, bool checkEmail) {
   return true;
 }
 
+<<<<<<< HEAD
 void nsNSSCertTrust::addTrust(unsigned int *t, unsigned int v) { *t |= v; }
+||||||| merged common ancestors
+void
+nsNSSCertTrust::addTrust(unsigned int *t, unsigned int v)
+{
+  *t |= v;
+}
+=======
+void nsNSSCertTrust::addTrust(unsigned int* t, unsigned int v) { *t |= v; }
+>>>>>>> upstream-releases
 
 bool nsNSSCertTrust::hasTrust(unsigned int t, unsigned int v) {
   return !!(t & v);

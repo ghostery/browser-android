@@ -11,6 +11,7 @@
 
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/RegisterWorkletBindings.h"
+#include "mozilla/dom/ScriptSettings.h"
 #include "mozilla/dom/WorkletBinding.h"
 
 namespace mozilla {
@@ -42,7 +43,7 @@ WorkletLoadInfo::~WorkletLoadInfo() {
 WorkletImpl::WorkletImpl(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal)
     : mWorkletLoadInfo(aWindow, aPrincipal), mTerminated(false) {}
 
-WorkletImpl::~WorkletImpl() = default;
+WorkletImpl::~WorkletImpl() { MOZ_ASSERT(!mGlobalScope); }
 
 JSObject* WorkletImpl::WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
                                    JS::Handle<JSObject*> aGivenProto) {
@@ -50,38 +51,125 @@ JSObject* WorkletImpl::WrapWorklet(JSContext* aCx, dom::Worklet* aWorklet,
   return dom::Worklet_Binding::Wrap(aCx, aWorklet, aGivenProto);
 }
 
+<<<<<<< HEAD
 already_AddRefed<dom::WorkletGlobalScope> WorkletImpl::CreateGlobalScope(
     JSContext* aCx) {
+||||||| merged common ancestors
+already_AddRefed<dom::WorkletGlobalScope>
+WorkletImpl::CreateGlobalScope(JSContext* aCx)
+{
+=======
+dom::WorkletGlobalScope* WorkletImpl::GetGlobalScope() {
+>>>>>>> upstream-releases
   dom::WorkletThread::AssertIsOnWorkletThread();
 
-  RefPtr<dom::WorkletGlobalScope> scope = ConstructGlobalScope();
+  if (mGlobalScope) {
+    return mGlobalScope;
+  }
 
-  JS::Rooted<JSObject*> global(aCx);
-  NS_ENSURE_TRUE(scope->WrapGlobalObject(aCx, &global), nullptr);
+  dom::AutoJSAPI jsapi;
+  jsapi.Init();
+  JSContext* cx = jsapi.cx();
 
-  JSAutoRealm ar(aCx, global);
+  mGlobalScope = ConstructGlobalScope();
+
+  JS::Rooted<JSObject*> global(cx);
+  NS_ENSURE_TRUE(mGlobalScope->WrapGlobalObject(cx, &global), nullptr);
+
+  JSAutoRealm ar(cx, global);
 
   // Init Web IDL bindings
-  if (!dom::RegisterWorkletBindings(aCx, global)) {
+  if (!dom::RegisterWorkletBindings(cx, global)) {
     return nullptr;
   }
 
-  JS_FireOnNewGlobalObject(aCx, global);
+  JS_FireOnNewGlobalObject(cx, global);
 
-  return scope.forget();
+  return mGlobalScope;
 }
 
 void WorkletImpl::NotifyWorkletFinished() {
   MOZ_ASSERT(NS_IsMainThread());
 
+<<<<<<< HEAD
   mTerminated = true;
   if (mWorkletThread) {
     mWorkletThread->Terminate();
     mWorkletThread = nullptr;
+||||||| merged common ancestors
+  if (!mWorkletThread) {
+    // Thread creation. FIXME: this will change.
+    mWorkletThread = dom::WorkletThread::Create();
+=======
+  if (mTerminated) {
+    return;
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   mWorkletLoadInfo.mPrincipal = nullptr;
 }
+||||||| merged common ancestors
 
+  return mWorkletThread;
+}
+=======
+
+  // Release global scope on its thread.
+  SendControlMessage(NS_NewRunnableFunction(
+      "WorkletImpl::NotifyWorkletFinished",
+      [self = RefPtr<WorkletImpl>(this)]() { self->mGlobalScope = nullptr; }));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+nsresult WorkletImpl::SendControlMessage(
+    already_AddRefed<nsIRunnable> aRunnable) {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  // TODO: bug 1492011 re ConsoleWorkletRunnable.
+  if (mTerminated) {
+    return NS_ERROR_ILLEGAL_DURING_SHUTDOWN;
+||||||| merged common ancestors
+void
+WorkletImpl::TerminateThread()
+{
+  MOZ_ASSERT(NS_IsMainThread());
+  if (!mWorkletThread) {
+    return;
+=======
+  mTerminated = true;
+  if (mWorkletThread) {
+    mWorkletThread->Terminate();
+    mWorkletThread = nullptr;
+>>>>>>> upstream-releases
+  }
+<<<<<<< HEAD
+
+  if (!mWorkletThread) {
+    // Thread creation. FIXME: this will change.
+    mWorkletThread = dom::WorkletThread::Create();
+    if (!mWorkletThread) {
+      return NS_ERROR_UNEXPECTED;
+    }
+  }
+||||||| merged common ancestors
+
+  mWorkletThread->Terminate();
+  mWorkletThread = nullptr;
+  mWorkletLoadInfo.mPrincipal = nullptr;
+}
+=======
+  mWorkletLoadInfo.mPrincipal = nullptr;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+||||||| merged common ancestors
+nsresult
+WorkletImpl::DispatchRunnable(already_AddRefed<nsIRunnable> aRunnable)
+{
+  // TODO: bug 1492011 re ConsoleWorkletRunnable.
+  MOZ_ASSERT(mWorkletThread);
+=======
 nsresult WorkletImpl::SendControlMessage(
     already_AddRefed<nsIRunnable> aRunnable) {
   MOZ_ASSERT(NS_IsMainThread());
@@ -93,12 +181,13 @@ nsresult WorkletImpl::SendControlMessage(
 
   if (!mWorkletThread) {
     // Thread creation. FIXME: this will change.
-    mWorkletThread = dom::WorkletThread::Create();
+    mWorkletThread = dom::WorkletThread::Create(this);
     if (!mWorkletThread) {
       return NS_ERROR_UNEXPECTED;
     }
   }
 
+>>>>>>> upstream-releases
   return mWorkletThread->DispatchRunnable(std::move(aRunnable));
 }
 

@@ -26,9 +26,21 @@
 enum GPFlag {
     kColorAttribute_GPFlag          = 0x1,
     kColorAttributeIsSkColor_GPFlag = 0x2,
+<<<<<<< HEAD
     kLocalCoordAttribute_GPFlag     = 0x4,
     kCoverageAttribute_GPFlag       = 0x8,
     kBonesAttribute_GPFlag          = 0x10,
+||||||| merged common ancestors
+    kLocalCoordAttribute_GPFlag     = 0x4,
+    kCoverageAttribute_GPFlag       = 0x8,
+
+    kLinearizeColorAttribute_GPFlag = 0x10,
+=======
+    kColorAttributeIsWide_GPFlag    = 0x4,
+    kLocalCoordAttribute_GPFlag     = 0x8,
+    kCoverageAttribute_GPFlag       = 0x10,
+    kCoverageAttributeTweak_GPFlag  = 0x20,
+>>>>>>> upstream-releases
 };
 
 static constexpr int kNumVec2sPerBone = 3; // Our bone matrices are 3x2 matrices passed in as
@@ -37,9 +49,18 @@ static constexpr int kNumVec2sPerBone = 3; // Our bone matrices are 3x2 matrices
 
 class DefaultGeoProc : public GrGeometryProcessor {
 public:
+<<<<<<< HEAD
     static sk_sp<GrGeometryProcessor> Make(const GrShaderCaps* shaderCaps,
                                            uint32_t gpTypeFlags,
                                            GrColor color,
+||||||| merged common ancestors
+    static sk_sp<GrGeometryProcessor> Make(uint32_t gpTypeFlags,
+                                           GrColor color,
+=======
+    static sk_sp<GrGeometryProcessor> Make(const GrShaderCaps* shaderCaps,
+                                           uint32_t gpTypeFlags,
+                                           const SkPMColor4f& color,
+>>>>>>> upstream-releases
                                            sk_sp<GrColorSpaceXform> colorSpaceXform,
                                            const SkMatrix& viewMatrix,
                                            const SkMatrix& localMatrix,
@@ -48,27 +69,61 @@ public:
                                            const float* bones,
                                            int boneCount) {
         return sk_sp<GrGeometryProcessor>(new DefaultGeoProc(
+<<<<<<< HEAD
                 shaderCaps, gpTypeFlags, color, std::move(colorSpaceXform), viewMatrix, localMatrix,
                 coverage, localCoordsWillBeRead, bones, boneCount));
+||||||| merged common ancestors
+                gpTypeFlags, color, std::move(colorSpaceXform), viewMatrix, localMatrix, coverage,
+                localCoordsWillBeRead));
+=======
+                shaderCaps, gpTypeFlags, color, std::move(colorSpaceXform), viewMatrix, localMatrix,
+                coverage, localCoordsWillBeRead));
+>>>>>>> upstream-releases
     }
 
     const char* name() const override { return "DefaultGeometryProcessor"; }
 
+<<<<<<< HEAD
     GrColor color() const { return fColor; }
     bool hasVertexColor() const { return fInColor.isInitialized(); }
+||||||| merged common ancestors
+    const Attribute* inPosition() const { return fInPosition; }
+    const Attribute* inColor() const { return fInColor; }
+    const Attribute* inLocalCoords() const { return fInLocalCoords; }
+    const Attribute* inCoverage() const { return fInCoverage; }
+    GrColor color() const { return fColor; }
+    bool hasVertexColor() const { return SkToBool(fInColor); }
+=======
+    const SkPMColor4f& color() const { return fColor; }
+    bool hasVertexColor() const { return fInColor.isInitialized(); }
+>>>>>>> upstream-releases
     const SkMatrix& viewMatrix() const { return fViewMatrix; }
     const SkMatrix& localMatrix() const { return fLocalMatrix; }
     bool localCoordsWillBeRead() const { return fLocalCoordsWillBeRead; }
     uint8_t coverage() const { return fCoverage; }
+<<<<<<< HEAD
     bool hasVertexCoverage() const { return fInCoverage.isInitialized(); }
     const float* bones() const { return fBones; }
     int boneCount() const { return fBoneCount; }
     bool hasBones() const { return SkToBool(fBones); }
+||||||| merged common ancestors
+    bool hasVertexCoverage() const { return SkToBool(fInCoverage); }
+    bool linearizeColor() const {
+        // Linearization should only happen with SkColor
+        bool linearize = SkToBool(fFlags & kLinearizeColorAttribute_GPFlag);
+        SkASSERT(!linearize || (fFlags & kColorAttributeIsSkColor_GPFlag));
+        return linearize;
+    }
+=======
+    bool hasVertexCoverage() const { return fInCoverage.isInitialized(); }
+>>>>>>> upstream-releases
 
     class GLSLProcessor : public GrGLSLGeometryProcessor {
     public:
         GLSLProcessor()
-            : fViewMatrix(SkMatrix::InvalidMatrix()), fColor(GrColor_ILLEGAL), fCoverage(0xff) {}
+            : fViewMatrix(SkMatrix::InvalidMatrix())
+            , fColor(SK_PMColor4fILLEGAL)
+            , fCoverage(0xff) {}
 
         void onEmitCode(EmitArgs& args, GrGPArgs* gpArgs) override {
             const DefaultGeoProc& gp = args.fGP.cast<DefaultGeoProc>();
@@ -80,13 +135,54 @@ public:
             // emit attributes
             varyingHandler->emitAttributes(gp);
 
+            bool tweakAlpha = SkToBool(gp.fFlags & kCoverageAttributeTweak_GPFlag);
+            SkASSERT(!tweakAlpha || gp.hasVertexCoverage());
+
             // Setup pass through color
-            if (gp.hasVertexColor()) {
+            if (gp.hasVertexColor() || tweakAlpha) {
                 GrGLSLVarying varying(kHalf4_GrSLType);
                 varyingHandler->addVarying("color", &varying);
 
+<<<<<<< HEAD
                 // There are several optional steps to process the color. Start with the attribute:
                 vertBuilder->codeAppendf("half4 color = %s;", gp.fInColor.name());
+||||||| merged common ancestors
+                // There are several optional steps to process the color. Start with the attribute:
+                vertBuilder->codeAppendf("half4 color = %s;", gp.inColor()->fName);
+
+                // Linearize
+                if (gp.linearizeColor()) {
+                    SkString srgbFuncName;
+                    static const GrShaderVar gSrgbArgs[] = {
+                        GrShaderVar("x", kHalf_GrSLType),
+                    };
+                    vertBuilder->emitFunction(kHalf_GrSLType,
+                                              "srgb_to_linear",
+                                              SK_ARRAY_COUNT(gSrgbArgs),
+                                              gSrgbArgs,
+                                              "return (x <= 0.04045) ? (x / 12.92) "
+                                              ": pow((x + 0.055) / 1.055, 2.4);",
+                                              &srgbFuncName);
+                    vertBuilder->codeAppendf("color = half4(%s(%s.r), %s(%s.g), %s(%s.b), %s.a);",
+                                             srgbFuncName.c_str(), gp.inColor()->fName,
+                                             srgbFuncName.c_str(), gp.inColor()->fName,
+                                             srgbFuncName.c_str(), gp.inColor()->fName,
+                                             gp.inColor()->fName);
+                }
+=======
+                // There are several optional steps to process the color. Start with the attribute,
+                // or with uniform color (in the case of folding coverage into a uniform color):
+                if (gp.hasVertexColor()) {
+                    vertBuilder->codeAppendf("half4 color = %s;", gp.fInColor.name());
+                } else {
+                    const char* colorUniformName;
+                    fColorUniform = uniformHandler->addUniform(kVertex_GrShaderFlag,
+                                                               kHalf4_GrSLType,
+                                                               "Color",
+                                                               &colorUniformName);
+                    vertBuilder->codeAppendf("half4 color = %s;", colorUniformName);
+                }
+>>>>>>> upstream-releases
 
                 // For SkColor, do a red/blue swap, possible color space conversion, and premul
                 if (gp.fFlags & kColorAttributeIsSkColor_GPFlag) {
@@ -100,8 +196,19 @@ public:
                                                            &fColorSpaceHelper);
                         vertBuilder->codeAppendf("color = %s;", xformedColor.c_str());
                     }
+<<<<<<< HEAD
 
                     vertBuilder->codeAppend("color = half4(color.rgb * color.a, color.a);");
+||||||| merged common ancestors
+=======
+
+                    vertBuilder->codeAppend("color = half4(color.rgb * color.a, color.a);");
+                }
+
+                // Optionally fold coverage into alpha (color).
+                if (tweakAlpha) {
+                    vertBuilder->codeAppendf("color = color * %s;", gp.fInCoverage.name());
+>>>>>>> upstream-releases
                 }
 
                 vertBuilder->codeAppendf("%s = color;\n", varying.vsOut());
@@ -166,7 +273,13 @@ public:
             this->writeOutputPosition(vertBuilder,
                                       uniformHandler,
                                       gpArgs,
+<<<<<<< HEAD
                                       transformedPositionName,
+||||||| merged common ancestors
+                                      gp.inPosition()->fName,
+=======
+                                      gp.fInPosition.name(),
+>>>>>>> upstream-releases
                                       gp.viewMatrix(),
                                       &fViewMatrixUniform);
 
@@ -189,7 +302,7 @@ public:
             }
 
             // Setup coverage as pass through
-            if (gp.hasVertexCoverage()) {
+            if (gp.hasVertexCoverage() && !tweakAlpha) {
                 fragBuilder->codeAppendf("half alpha = 1.0;");
                 varyingHandler->addPassThroughAttribute(gp.fInCoverage, "alpha");
                 fragBuilder->codeAppendf("%s = half4(alpha);", args.fOutputCoverage);
@@ -210,8 +323,16 @@ public:
                                   GrProcessorKeyBuilder* b) {
             const DefaultGeoProc& def = gp.cast<DefaultGeoProc>();
             uint32_t key = def.fFlags;
+<<<<<<< HEAD
             key |= (def.coverage() == 0xff) ? 0x20 : 0;
             key |= (def.localCoordsWillBeRead() && def.localMatrix().hasPerspective()) ? 0x40 : 0x0;
+||||||| merged common ancestors
+            key |= (def.coverage() == 0xff) ? 0x10 : 0;
+            key |= (def.localCoordsWillBeRead() && def.localMatrix().hasPerspective()) ? 0x20 : 0x0;
+=======
+            key |= (def.coverage() == 0xff) ? 0x80 : 0;
+            key |= (def.localCoordsWillBeRead() && def.localMatrix().hasPerspective()) ? 0x100 : 0;
+>>>>>>> upstream-releases
             key |= ComputePosKey(def.viewMatrix()) << 20;
             b->add32(key);
             b->add32(GrColorSpaceXform::XformKey(def.fColorSpaceXform.get()));
@@ -229,10 +350,8 @@ public:
                 pdman.setMatrix3f(fViewMatrixUniform, viewMatrix);
             }
 
-            if (dgp.color() != fColor && !dgp.hasVertexColor()) {
-                float c[4];
-                GrColorToRGBAFloat(dgp.color(), c);
-                pdman.set4fv(fColorUniform, 1, c);
+            if (!dgp.hasVertexColor() && dgp.color() != fColor) {
+                pdman.set4fv(fColorUniform, 1, dgp.color().vec());
                 fColor = dgp.color();
             }
 
@@ -242,11 +361,19 @@ public:
             }
             this->setTransformDataHelper(dgp.fLocalMatrix, pdman, &transformIter);
 
+<<<<<<< HEAD
             fColorSpaceHelper.setData(pdman, dgp.fColorSpaceXform.get());
 
             if (dgp.hasBones()) {
                 pdman.set2fv(fBonesUniform, dgp.boneCount() * kNumVec2sPerBone, dgp.bones());
             }
+||||||| merged common ancestors
+            if (dgp.linearizeColor() && dgp.fColorSpaceXform) {
+                fColorSpaceHelper.setData(pdman, dgp.fColorSpaceXform.get());
+            }
+=======
+            fColorSpaceHelper.setData(pdman, dgp.fColorSpaceXform.get());
+>>>>>>> upstream-releases
         }
 
     private:
@@ -281,7 +408,7 @@ public:
 
     private:
         SkMatrix fViewMatrix;
-        GrColor fColor;
+        SkPMColor4f fColor;
         uint8_t fCoverage;
         UniformHandle fViewMatrixUniform;
         UniformHandle fColorUniform;
@@ -301,9 +428,18 @@ public:
     }
 
 private:
+<<<<<<< HEAD
     DefaultGeoProc(const GrShaderCaps* shaderCaps,
                    uint32_t gpTypeFlags,
                    GrColor color,
+||||||| merged common ancestors
+    DefaultGeoProc(uint32_t gpTypeFlags,
+                   GrColor color,
+=======
+    DefaultGeoProc(const GrShaderCaps* shaderCaps,
+                   uint32_t gpTypeFlags,
+                   const SkPMColor4f& color,
+>>>>>>> upstream-releases
                    sk_sp<GrColorSpaceXform> colorSpaceXform,
                    const SkMatrix& viewMatrix,
                    const SkMatrix& localMatrix,
@@ -318,21 +454,45 @@ private:
             , fCoverage(coverage)
             , fFlags(gpTypeFlags)
             , fLocalCoordsWillBeRead(localCoordsWillBeRead)
+<<<<<<< HEAD
             , fColorSpaceXform(std::move(colorSpaceXform))
             , fBones(bones)
             , fBoneCount(boneCount) {
         fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
         int cnt = 1;
+||||||| merged common ancestors
+            , fColorSpaceXform(std::move(colorSpaceXform)) {
+        fInPosition = &this->addVertexAttrib("inPosition", kFloat2_GrVertexAttribType);
+=======
+            , fColorSpaceXform(std::move(colorSpaceXform)) {
+        fInPosition = {"inPosition", kFloat2_GrVertexAttribType, kFloat2_GrSLType};
+>>>>>>> upstream-releases
         if (fFlags & kColorAttribute_GPFlag) {
+<<<<<<< HEAD
             fInColor = {"inColor", kUByte4_norm_GrVertexAttribType, kHalf4_GrSLType};
             ++cnt;
+||||||| merged common ancestors
+            fInColor = &this->addVertexAttrib("inColor", kUByte4_norm_GrVertexAttribType);
+=======
+            fInColor = MakeColorAttribute("inColor",
+                                          SkToBool(fFlags & kColorAttributeIsWide_GPFlag));
+>>>>>>> upstream-releases
         }
         if (fFlags & kLocalCoordAttribute_GPFlag) {
+<<<<<<< HEAD
             fInLocalCoords = {"inLocalCoord", kFloat2_GrVertexAttribType,
                                               kFloat2_GrSLType};
             ++cnt;
+||||||| merged common ancestors
+            fInLocalCoords = &this->addVertexAttrib("inLocalCoord", kFloat2_GrVertexAttribType);
+            this->setHasExplicitLocalCoords();
+=======
+            fInLocalCoords = {"inLocalCoord", kFloat2_GrVertexAttribType,
+                                              kFloat2_GrSLType};
+>>>>>>> upstream-releases
         }
         if (fFlags & kCoverageAttribute_GPFlag) {
+<<<<<<< HEAD
             fInCoverage = {"inCoverage", kFloat_GrVertexAttribType, kHalf_GrSLType};
             ++cnt;
         }
@@ -350,10 +510,21 @@ private:
             fInBoneWeights = {"inBoneWeights", kUByte4_norm_GrVertexAttribType,
                                                kHalf4_GrSLType};
             ++cnt;
+||||||| merged common ancestors
+            fInCoverage = &this->addVertexAttrib("inCoverage", kHalf_GrVertexAttribType);
+=======
+            fInCoverage = {"inCoverage", kFloat_GrVertexAttribType, kHalf_GrSLType};
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
         this->setVertexAttributeCnt(cnt);
+||||||| merged common ancestors
+=======
+        this->setVertexAttributes(&fInPosition, 4);
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     const Attribute& onVertexAttribute(int i) const override {
         return IthInitializedAttribute(i,
                                        fInPosition,
@@ -371,6 +542,19 @@ private:
     Attribute fInBoneIndices;
     Attribute fInBoneWeights;
     GrColor fColor;
+||||||| merged common ancestors
+    const Attribute* fInPosition = nullptr;
+    const Attribute* fInColor = nullptr;
+    const Attribute* fInLocalCoords = nullptr;
+    const Attribute* fInCoverage = nullptr;
+    GrColor fColor;
+=======
+    Attribute fInPosition;
+    Attribute fInColor;
+    Attribute fInLocalCoords;
+    Attribute fInCoverage;
+    SkPMColor4f fColor;
+>>>>>>> upstream-releases
     SkMatrix fViewMatrix;
     SkMatrix fLocalMatrix;
     uint8_t fCoverage;
@@ -406,7 +590,13 @@ sk_sp<GrGeometryProcessor> DefaultGeoProc::TestCreate(GrProcessorTestData* d) {
         flags |= kColorAttributeIsSkColor_GPFlag;
     }
     if (d->fRandom->nextBool()) {
+        flags |= kColorAttributeIsWide_GPFlag;
+    }
+    if (d->fRandom->nextBool()) {
         flags |= kCoverageAttribute_GPFlag;
+        if (d->fRandom->nextBool()) {
+            flags |= kCoverageAttributeTweak_GPFlag;
+        }
     }
     if (d->fRandom->nextBool()) {
         flags |= kLocalCoordAttribute_GPFlag;
@@ -415,9 +605,18 @@ sk_sp<GrGeometryProcessor> DefaultGeoProc::TestCreate(GrProcessorTestData* d) {
         flags |= kBonesAttribute_GPFlag;
     }
 
+<<<<<<< HEAD
     return DefaultGeoProc::Make(d->caps()->shaderCaps(),
                                 flags,
                                 GrRandomColor(d->fRandom),
+||||||| merged common ancestors
+    return DefaultGeoProc::Make(flags,
+                                GrRandomColor(d->fRandom),
+=======
+    return DefaultGeoProc::Make(d->caps()->shaderCaps(),
+                                flags,
+                                SkPMColor4f::FromBytes_RGBA(GrRandomColor(d->fRandom)),
+>>>>>>> upstream-releases
                                 GrTest::TestColorXform(d->fRandom),
                                 GrTest::TestMatrix(d->fRandom),
                                 GrTest::TestMatrix(d->fRandom),
@@ -438,17 +637,45 @@ sk_sp<GrGeometryProcessor> GrDefaultGeoProcFactory::Make(const GrShaderCaps* sha
         flags |= kColorAttribute_GPFlag;
     } else if (Color::kUnpremulSkColorAttribute_Type == color.fType) {
         flags |= kColorAttribute_GPFlag | kColorAttributeIsSkColor_GPFlag;
+    } else if (Color::kPremulWideColorAttribute_Type == color.fType) {
+        flags |= kColorAttribute_GPFlag | kColorAttributeIsWide_GPFlag;
+    }
+<<<<<<< HEAD
+    flags |= coverage.fType == Coverage::kAttribute_Type ? kCoverageAttribute_GPFlag : 0;
+||||||| merged common ancestors
+    if (color.fLinearize) {
+        // It only makes sense to linearize SkColors (which are always sRGB). GrColor values should
+        // have been linearized and gamut-converted during paint conversion
+        SkASSERT(Color::kUnpremulSkColorAttribute_Type == color.fType);
+        flags |= kLinearizeColorAttribute_GPFlag;
     }
     flags |= coverage.fType == Coverage::kAttribute_Type ? kCoverageAttribute_GPFlag : 0;
+=======
+    if (Coverage::kAttribute_Type == coverage.fType) {
+        flags |= kCoverageAttribute_GPFlag;
+    } else if (Coverage::kAttributeTweakAlpha_Type == coverage.fType) {
+        flags |= kCoverageAttribute_GPFlag | kCoverageAttributeTweak_GPFlag;
+    }
+>>>>>>> upstream-releases
     flags |= localCoords.fType == LocalCoords::kHasExplicit_Type ? kLocalCoordAttribute_GPFlag : 0;
 
     uint8_t inCoverage = coverage.fCoverage;
     bool localCoordsWillBeRead = localCoords.fType != LocalCoords::kUnused_Type;
 
+<<<<<<< HEAD
     GrColor inColor = color.fColor;
     return DefaultGeoProc::Make(shaderCaps,
                                 flags,
                                 inColor,
+||||||| merged common ancestors
+    GrColor inColor = color.fColor;
+    return DefaultGeoProc::Make(flags,
+                                inColor,
+=======
+    return DefaultGeoProc::Make(shaderCaps,
+                                flags,
+                                color.fColor,
+>>>>>>> upstream-releases
                                 color.fColorSpaceXform,
                                 viewMatrix,
                                 localCoords.fMatrix ? *localCoords.fMatrix : SkMatrix::I(),
@@ -472,11 +699,12 @@ sk_sp<GrGeometryProcessor> GrDefaultGeoProcFactory::MakeForDeviceSpace(
         }
 
         if (localCoords.hasLocalMatrix()) {
-            invert.preConcat(*localCoords.fMatrix);
+            invert.postConcat(*localCoords.fMatrix);
         }
     }
 
     LocalCoords inverted(LocalCoords::kUsePosition_Type, &invert);
+<<<<<<< HEAD
     return Make(shaderCaps, color, coverage, inverted, SkMatrix::I());
 }
 
@@ -510,4 +738,9 @@ sk_sp<GrGeometryProcessor> GrDefaultGeoProcFactory::MakeWithBones(const GrShader
                                 inCoverage,
                                 bones.fBones,
                                 bones.fBoneCount);
+||||||| merged common ancestors
+    return Make(color, coverage, inverted, SkMatrix::I());
+=======
+    return Make(shaderCaps, color, coverage, inverted, SkMatrix::I());
+>>>>>>> upstream-releases
 }

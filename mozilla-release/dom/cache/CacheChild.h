@@ -23,9 +23,24 @@ namespace cache {
 class Cache;
 class CacheOpArgs;
 
+<<<<<<< HEAD
 class CacheChild final : public PCacheChild, public ActorChild {
  public:
   class MOZ_RAII AutoLock final {
+||||||| merged common ancestors
+class CacheChild final : public PCacheChild
+                       , public ActorChild
+{
+public:
+  class MOZ_RAII AutoLock final
+  {
+=======
+class CacheChild final : public PCacheChild, public ActorChild {
+  friend class PCacheChild;
+
+ public:
+  class MOZ_RAII AutoLock final {
+>>>>>>> upstream-releases
     CacheChild* mActor;
 
    public:
@@ -62,10 +77,24 @@ class CacheChild final : public PCacheChild, public ActorChild {
   // PCacheChild methods
   virtual void ActorDestroy(ActorDestroyReason aReason) override;
 
+<<<<<<< HEAD
   virtual PCacheOpChild* AllocPCacheOpChild(
       const CacheOpArgs& aOpArgs) override;
+||||||| merged common ancestors
+  virtual PCacheOpChild*
+  AllocPCacheOpChild(const CacheOpArgs& aOpArgs) override;
+=======
+  PCacheOpChild* AllocPCacheOpChild(const CacheOpArgs& aOpArgs);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPCacheOpChild(PCacheOpChild* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPCacheOpChild(PCacheOpChild* aActor) override;
+=======
+  bool DeallocPCacheOpChild(PCacheOpChild* aActor);
+>>>>>>> upstream-releases
 
   // utility methods
   void NoteDeletedActor();

@@ -65,6 +65,10 @@ nsresult CheckedPrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
     return rv;
   }
 
+  if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(aPrincipalInfo))) {
+    return NS_ERROR_FAILURE;
+  }
+
   if (aPrincipalInfo.type() != PrincipalInfo::TContentPrincipalInfo &&
       aPrincipalInfo.type() != PrincipalInfo::TSystemPrincipalInfo) {
     return NS_ERROR_UNEXPECTED;
@@ -73,6 +77,7 @@ nsresult CheckedPrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult GetClearResetOriginParams(nsIPrincipal* aPrincipal,
                                    const nsACString& aPersistenceType,
                                    const nsAString& aClientType, bool aMatchAll,
@@ -119,15 +124,79 @@ nsresult GetClearResetOriginParams(nsIPrincipal* aPrincipal,
 
 class AbortOperationsRunnable final : public Runnable {
   ContentParentId mContentParentId;
+||||||| merged common ancestors
+class AbortOperationsRunnable final
+  : public Runnable
+{
+  ContentParentId mContentParentId;
+=======
+nsresult GetClearResetOriginParams(nsIPrincipal* aPrincipal,
+                                   const nsACString& aPersistenceType,
+                                   const nsAString& aClientType, bool aMatchAll,
+                                   ClearResetOriginParams& aParams) {
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(aPrincipal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   explicit AbortOperationsRunnable(ContentParentId aContentParentId)
       : Runnable("dom::quota::AbortOperationsRunnable"),
         mContentParentId(aContentParentId) {}
+||||||| merged common ancestors
+public:
+  explicit AbortOperationsRunnable(ContentParentId aContentParentId)
+    : Runnable("dom::quota::AbortOperationsRunnable")
+    , mContentParentId(aContentParentId)
+  { }
+=======
+  nsresult rv =
+      CheckedPrincipalToPrincipalInfo(aPrincipal, aParams.principalInfo());
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   NS_DECL_NSIRUNNABLE
 };
+||||||| merged common ancestors
+private:
+  NS_DECL_NSIRUNNABLE
+};
+=======
+  Nullable<PersistenceType> persistenceType;
+  rv = NullablePersistenceTypeFromText(aPersistenceType, &persistenceType);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  if (persistenceType.IsNull()) {
+    aParams.persistenceTypeIsExplicit() = false;
+  } else {
+    aParams.persistenceType() = persistenceType.Value();
+    aParams.persistenceTypeIsExplicit() = true;
+  }
+
+  Nullable<Client::Type> clientType;
+  rv = Client::NullableTypeFromText(aClientType, &clientType);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  if (clientType.IsNull()) {
+    aParams.clientTypeIsExplicit() = false;
+  } else {
+    aParams.clientType() = clientType.Value();
+    aParams.clientTypeIsExplicit() = true;
+  }
+
+  aParams.matchAll() = aMatchAll;
+
+  return NS_OK;
+}
+>>>>>>> upstream-releases
 
 }  // namespace
 
@@ -240,6 +309,7 @@ void QuotaManagerService::ClearBackgroundActor() {
   mBackgroundActor = nullptr;
 }
 
+<<<<<<< HEAD
 void QuotaManagerService::NoteLiveManager(QuotaManager* aManager) {
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
@@ -249,9 +319,28 @@ void QuotaManagerService::NoteLiveManager(QuotaManager* aManager) {
 }
 
 void QuotaManagerService::NoteShuttingDownManager() {
+||||||| merged common ancestors
+void
+QuotaManagerService::NoteLiveManager(QuotaManager* aManager)
+{
+  MOZ_ASSERT(XRE_IsParentProcess());
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(aManager);
+
+  mBackgroundThread = aManager->OwningThread();
+}
+
+void
+QuotaManagerService::NoteShuttingDownManager()
+{
+=======
+void QuotaManagerService::AbortOperationsForProcess(
+    ContentParentId aContentParentId) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
 
+<<<<<<< HEAD
   mBackgroundThread = nullptr;
 }
 
@@ -261,14 +350,42 @@ void QuotaManagerService::AbortOperationsForProcess(
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!mBackgroundThread) {
+||||||| merged common ancestors
+  mBackgroundThread = nullptr;
+}
+
+void
+QuotaManagerService::AbortOperationsForProcess(ContentParentId aContentParentId)
+{
+  MOZ_ASSERT(XRE_IsParentProcess());
+  MOZ_ASSERT(NS_IsMainThread());
+
+  if (!mBackgroundThread) {
+=======
+  nsresult rv = EnsureBackgroundActor();
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+>>>>>>> upstream-releases
     return;
   }
 
+<<<<<<< HEAD
   RefPtr<AbortOperationsRunnable> runnable =
       new AbortOperationsRunnable(aContentParentId);
 
   MOZ_ALWAYS_SUCCEEDS(
       mBackgroundThread->Dispatch(runnable, NS_DISPATCH_NORMAL));
+||||||| merged common ancestors
+  RefPtr<AbortOperationsRunnable> runnable =
+    new AbortOperationsRunnable(aContentParentId);
+
+  MOZ_ALWAYS_SUCCEEDS(
+    mBackgroundThread->Dispatch(runnable, NS_DISPATCH_NORMAL));
+=======
+  if (NS_WARN_IF(
+          !mBackgroundActor->SendAbortOperationsForProcess(aContentParentId))) {
+    return;
+  }
+>>>>>>> upstream-releases
 }
 
 nsresult QuotaManagerService::Init() {
@@ -306,8 +423,18 @@ void QuotaManagerService::Destroy() {
   delete this;
 }
 
+<<<<<<< HEAD
 nsresult QuotaManagerService::InitiateRequest(
     nsAutoPtr<PendingRequestInfo>& aInfo) {
+||||||| merged common ancestors
+nsresult
+QuotaManagerService::InitiateRequest(nsAutoPtr<PendingRequestInfo>& aInfo)
+{
+=======
+nsresult QuotaManagerService::EnsureBackgroundActor() {
+  MOZ_ASSERT(NS_IsMainThread());
+
+>>>>>>> upstream-releases
   // Nothing can be done here if we have previously failed to create a
   // background actor.
   if (mBackgroundActorFailed) {
@@ -335,8 +462,17 @@ nsresult QuotaManagerService::InitiateRequest(
     return NS_ERROR_FAILURE;
   }
 
-  // If we already have a background actor then we can start this request now.
-  nsresult rv = aInfo->InitiateRequest(mBackgroundActor);
+  return NS_OK;
+}
+
+nsresult QuotaManagerService::InitiateRequest(
+    nsAutoPtr<PendingRequestInfo>& aInfo) {
+  nsresult rv = EnsureBackgroundActor();
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+
+  rv = aInfo->InitiateRequest(mBackgroundActor);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -582,6 +718,7 @@ QuotaManagerService::Clear(nsIQuotaRequest** _retval) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 QuotaManagerService::ClearStoragesForOriginAttributesPattern(
     const nsAString& aPattern, nsIQuotaRequest** _retval) {
   MOZ_ASSERT(NS_IsMainThread());
@@ -607,6 +744,42 @@ NS_IMETHODIMP
 QuotaManagerService::ClearStoragesForPrincipal(
     nsIPrincipal* aPrincipal, const nsACString& aPersistenceType,
     const nsAString& aClientType, bool aClearAll, nsIQuotaRequest** _retval) {
+||||||| merged common ancestors
+QuotaManagerService::ClearStoragesForPrincipal(nsIPrincipal* aPrincipal,
+                                               const nsACString& aPersistenceType,
+                                               bool aClearAll,
+                                               nsIQuotaRequest** _retval)
+{
+=======
+QuotaManagerService::ClearStoragesForOriginAttributesPattern(
+    const nsAString& aPattern, nsIQuotaRequest** _retval) {
+  MOZ_ASSERT(NS_IsMainThread());
+
+  OriginAttributesPattern pattern;
+  MOZ_ALWAYS_TRUE(pattern.Init(aPattern));
+
+  RefPtr<Request> request = new Request();
+
+  ClearDataParams params;
+
+  params.pattern() = pattern;
+
+  nsAutoPtr<PendingRequestInfo> info(new RequestInfo(request, params));
+
+  nsresult rv = InitiateRequest(info);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+
+  request.forget(_retval);
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+QuotaManagerService::ClearStoragesForPrincipal(
+    nsIPrincipal* aPrincipal, const nsACString& aPersistenceType,
+    const nsAString& aClientType, bool aClearAll, nsIQuotaRequest** _retval) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aPrincipal);
 
@@ -767,8 +940,39 @@ QuotaManagerService::Persist(nsIPrincipal* aPrincipal,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 QuotaManagerService::Observe(nsISupports* aSubject, const char* aTopic,
                              const char16_t* aData) {
+||||||| merged common ancestors
+QuotaManagerService::Observe(nsISupports* aSubject,
+                             const char* aTopic,
+                             const char16_t* aData)
+{
+=======
+QuotaManagerService::ListInitializedOrigins(nsIQuotaCallback* aCallback,
+                                            nsIQuotaRequest** _retval) {
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(aCallback);
+
+  RefPtr<Request> request = new Request(aCallback);
+
+  ListInitializedOriginsParams params;
+
+  nsAutoPtr<PendingRequestInfo> info(new RequestInfo(request, params));
+
+  nsresult rv = InitiateRequest(info);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+
+  request.forget(_retval);
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+QuotaManagerService::Observe(nsISupports* aSubject, const char* aTopic,
+                             const char16_t* aData) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -828,6 +1032,7 @@ void QuotaManagerService::Notify(const hal::BatteryInformation& aBatteryInfo) {
   // deal with this notification.
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 AbortOperationsRunnable::Run() {
   AssertIsOnBackgroundThread();
@@ -848,6 +1053,34 @@ AbortOperationsRunnable::Run() {
 
 nsresult QuotaManagerService::UsageRequestInfo::InitiateRequest(
     QuotaChild* aActor) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+AbortOperationsRunnable::Run()
+{
+  AssertIsOnBackgroundThread();
+
+  if (QuotaManager::IsShuttingDown()) {
+    return NS_OK;
+  }
+
+  QuotaManager* quotaManager = QuotaManager::Get();
+  if (!quotaManager) {
+    return NS_OK;
+  }
+
+  quotaManager->AbortOperationsForProcess(mContentParentId);
+
+  return NS_OK;
+}
+
+nsresult
+QuotaManagerService::
+UsageRequestInfo::InitiateRequest(QuotaChild* aActor)
+{
+=======
+nsresult QuotaManagerService::UsageRequestInfo::InitiateRequest(
+    QuotaChild* aActor) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aActor);
 
   auto request = static_cast<UsageRequest*>(mRequest.get());

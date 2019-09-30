@@ -83,8 +83,17 @@ class OSKeyStore final : public nsIOSKeyStore, public nsIObserver {
   nsresult RecoverSecret(const nsACString& aLabel,
                          const nsACString& aRecoveryPhrase);
   nsresult DeleteSecret(const nsACString& aLabel);
+<<<<<<< HEAD
   nsresult EncryptBytes(const nsACString& aLabel, uint32_t inLen,
                         uint8_t* inBytes,
+||||||| merged common ancestors
+  nsresult EncryptBytes(const nsACString& aLabel,
+                        uint32_t inLen,
+                        uint8_t* inBytes,
+=======
+  nsresult EncryptBytes(const nsACString& aLabel,
+                        const std::vector<uint8_t>& aInBytes,
+>>>>>>> upstream-releases
                         /*out*/ nsACString& aEncryptedBase64Text);
   nsresult DecryptBytes(const nsACString& aLabel,
                         const nsACString& aEncryptedBase64Text,

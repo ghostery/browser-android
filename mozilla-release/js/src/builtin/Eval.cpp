@@ -42,24 +42,85 @@ static void AssertInnerizedEnvironmentChain(JSContext* cx, JSObject& env) {
 #endif
 }
 
+<<<<<<< HEAD
 static bool IsEvalCacheCandidate(JSScript* script) {
   // Make sure there are no inner objects which might use the wrong parent
   // and/or call scope by reusing the previous eval's script.
   return script->isDirectEvalInFunction() && !script->hasSingletons() &&
          !script->hasObjects();
+||||||| merged common ancestors
+static bool
+IsEvalCacheCandidate(JSScript* script)
+{
+    // Make sure there are no inner objects which might use the wrong parent
+    // and/or call scope by reusing the previous eval's script.
+    return script->isDirectEvalInFunction() &&
+           !script->hasSingletons() &&
+           !script->hasObjects();
+=======
+static bool IsEvalCacheCandidate(JSScript* script) {
+  if (!script->isDirectEvalInFunction()) {
+    return false;
+  }
+
+  // Make sure there are no inner objects which might use the wrong parent
+  // and/or call scope by reusing the previous eval's script.
+  if (script->hasSingletons()) {
+    return false;
+  }
+
+  for (JS::GCCellPtr gcThing : script->gcthings()) {
+    if (gcThing.is<JSObject>()) {
+      return false;
+    }
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ HashNumber EvalCacheHashPolicy::hash(const EvalCacheLookup& l) {
   AutoCheckCannotGC nogc;
   uint32_t hash = l.str->hasLatin1Chars()
                       ? HashString(l.str->latin1Chars(nogc), l.str->length())
                       : HashString(l.str->twoByteChars(nogc), l.str->length());
   return AddToHash(hash, l.callerScript.get(), l.pc);
+||||||| merged common ancestors
+/* static */ HashNumber
+EvalCacheHashPolicy::hash(const EvalCacheLookup& l)
+{
+    AutoCheckCannotGC nogc;
+    uint32_t hash = l.str->hasLatin1Chars()
+                    ? HashString(l.str->latin1Chars(nogc), l.str->length())
+                    : HashString(l.str->twoByteChars(nogc), l.str->length());
+    return AddToHash(hash, l.callerScript.get(), l.pc);
+=======
+/* static */
+HashNumber EvalCacheHashPolicy::hash(const EvalCacheLookup& l) {
+  AutoCheckCannotGC nogc;
+  uint32_t hash = l.str->hasLatin1Chars()
+                      ? HashString(l.str->latin1Chars(nogc), l.str->length())
+                      : HashString(l.str->twoByteChars(nogc), l.str->length());
+  return AddToHash(hash, l.callerScript.get(), l.pc);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 /* static */ bool EvalCacheHashPolicy::match(const EvalCacheEntry& cacheEntry,
                                              const EvalCacheLookup& l) {
   MOZ_ASSERT(IsEvalCacheCandidate(cacheEntry.script));
+||||||| merged common ancestors
+/* static */ bool
+EvalCacheHashPolicy::match(const EvalCacheEntry& cacheEntry, const EvalCacheLookup& l)
+{
+    MOZ_ASSERT(IsEvalCacheCandidate(cacheEntry.script));
+=======
+/* static */
+bool EvalCacheHashPolicy::match(const EvalCacheEntry& cacheEntry,
+                                const EvalCacheLookup& l) {
+  MOZ_ASSERT(IsEvalCacheCandidate(cacheEntry.script));
+>>>>>>> upstream-releases
 
   return EqualStrings(cacheEntry.str, l.str) &&
          cacheEntry.callerScript == l.callerScript && cacheEntry.pc == l.pc;
@@ -93,6 +154,7 @@ class EvalScriptGuard {
         }
       }
     }
+<<<<<<< HEAD
   }
 
   void lookupInEvalCache(JSLinearString* str, JSScript* callerScript,
@@ -106,15 +168,58 @@ class EvalScriptGuard {
       script_ = (*p_)->script;
       p_->remove(cx_, cx_->caches().evalCache, lookup_);
       script_->uncacheForEval();
+||||||| merged common ancestors
+
+    void lookupInEvalCache(JSLinearString* str, JSScript* callerScript, jsbytecode* pc)
+    {
+        lookupStr_ = str;
+        lookup_.str = str;
+        lookup_.callerScript = callerScript;
+        lookup_.pc = pc;
+        p_.emplace(cx_, cx_->caches().evalCache, lookup_);
+        if (*p_) {
+            script_ = (*p_)->script;
+            p_->remove(cx_, cx_->caches().evalCache, lookup_);
+            script_->uncacheForEval();
+        }
+=======
+  }
+
+  void lookupInEvalCache(JSLinearString* str, JSScript* callerScript,
+                         jsbytecode* pc) {
+    lookupStr_ = str;
+    lookup_.str = str;
+    lookup_.callerScript = callerScript;
+    lookup_.pc = pc;
+    p_.emplace(cx_, cx_->caches().evalCache, lookup_);
+    if (*p_) {
+      script_ = (*p_)->script;
+      p_->remove(cx_, cx_->caches().evalCache, lookup_);
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   void setNewScript(JSScript* script) {
     // JSScript::initFromEmitter has already called js_CallNewScriptHook.
     MOZ_ASSERT(!script_ && script);
     script_ = script;
     script_->setActiveEval();
   }
+||||||| merged common ancestors
+    void setNewScript(JSScript* script) {
+        // JSScript::initFromEmitter has already called js_CallNewScriptHook.
+        MOZ_ASSERT(!script_ && script);
+        script_ = script;
+        script_->setActiveEval();
+    }
+=======
+  void setNewScript(JSScript* script) {
+    // JSScript::initFromEmitter has already called js_CallNewScriptHook.
+    MOZ_ASSERT(!script_ && script);
+    script_ = script;
+  }
+>>>>>>> upstream-releases
 
   bool foundScript() { return !!script_; }
 
@@ -269,6 +374,7 @@ static bool EvalKernel(JSContext* cx, HandleValue v, EvalType evalType,
                                            &pcOffset, &mutedErrors);
     }
 
+<<<<<<< HEAD
     const char* introducerFilename = filename;
     if (maybeScript && maybeScript->scriptSource()->introducerFilename()) {
       introducerFilename = maybeScript->scriptSource()->introducerFilename();
@@ -286,6 +392,120 @@ static bool EvalKernel(JSContext* cx, HandleValue v, EvalType evalType,
         .setNoScriptRval(false)
         .setMutedErrors(mutedErrors)
         .maybeMakeStrictMode(evalType == DIRECT_EVAL && IsStrictEvalPC(pc));
+||||||| merged common ancestors
+    if (!esg.foundScript()) {
+        RootedScript maybeScript(cx);
+        unsigned lineno;
+        const char* filename;
+        bool mutedErrors;
+        uint32_t pcOffset;
+        if (evalType == DIRECT_EVAL) {
+            DescribeScriptedCallerForDirectEval(cx, callerScript, pc, &filename, &lineno,
+                                                &pcOffset, &mutedErrors);
+            maybeScript = callerScript;
+        } else {
+            DescribeScriptedCallerForCompilation(cx, &maybeScript, &filename, &lineno, &pcOffset,
+                                                 &mutedErrors);
+        }
+
+        const char* introducerFilename = filename;
+        if (maybeScript && maybeScript->scriptSource()->introducerFilename()) {
+            introducerFilename = maybeScript->scriptSource()->introducerFilename();
+        }
+
+        RootedScope enclosing(cx);
+        if (evalType == DIRECT_EVAL) {
+            enclosing = callerScript->innermostScope(pc);
+        } else {
+            enclosing = &cx->global()->emptyGlobalScope();
+        }
+
+        CompileOptions options(cx);
+        options.setIsRunOnce(true)
+               .setNoScriptRval(false)
+               .setMutedErrors(mutedErrors)
+               .maybeMakeStrictMode(evalType == DIRECT_EVAL && IsStrictEvalPC(pc));
+
+        if (introducerFilename) {
+            options.setFileAndLine(filename, 1);
+            options.setIntroductionInfo(introducerFilename, "eval", lineno, maybeScript, pcOffset);
+        } else {
+            options.setFileAndLine("eval", 1);
+            options.setIntroductionType("eval");
+        }
+
+        AutoStableStringChars linearChars(cx);
+        if (!linearChars.initTwoByte(cx, linearStr)) {
+            return false;
+        }
+
+        const char16_t* chars = linearChars.twoByteRange().begin().get();
+        SourceBufferHolder::Ownership ownership = linearChars.maybeGiveOwnershipToCaller()
+                                                  ? SourceBufferHolder::GiveOwnership
+                                                  : SourceBufferHolder::NoOwnership;
+        SourceBufferHolder srcBuf(chars, linearStr->length(), ownership);
+        JSScript* compiled = frontend::CompileEvalScript(cx, cx->tempLifoAlloc(),
+                                                         env, enclosing,
+                                                         options, srcBuf);
+        if (!compiled) {
+            return false;
+        }
+=======
+    const char* introducerFilename = filename;
+    if (maybeScript && maybeScript->scriptSource()->introducerFilename()) {
+      introducerFilename = maybeScript->scriptSource()->introducerFilename();
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (introducerFilename) {
+      options.setFileAndLine(filename, 1);
+      options.setIntroductionInfo(introducerFilename, "eval", lineno,
+                                  maybeScript, pcOffset);
+    } else {
+      options.setFileAndLine("eval", 1);
+      options.setIntroductionType("eval");
+||||||| merged common ancestors
+        esg.setNewScript(compiled);
+=======
+    RootedScope enclosing(cx);
+    if (evalType == DIRECT_EVAL) {
+      enclosing = callerScript->innermostScope(pc);
+    } else {
+      enclosing = &cx->global()->emptyGlobalScope();
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
+    AutoStableStringChars linearChars(cx);
+    if (!linearChars.initTwoByte(cx, linearStr)) {
+      return false;
+||||||| merged common ancestors
+    // Look up the newTarget from the frame iterator.
+    Value newTargetVal = NullValue();
+    return ExecuteKernel(cx, esg.script(), *env, newTargetVal,
+                         NullFramePtr() /* evalInFrame */, vp.address());
+}
+
+bool
+js::DirectEvalStringFromIon(JSContext* cx,
+                            HandleObject env, HandleScript callerScript,
+                            HandleValue newTargetValue, HandleString str,
+                            jsbytecode* pc, MutableHandleValue vp)
+{
+    AssertInnerizedEnvironmentChain(cx, *env);
+
+    RootedValue v(cx, StringValue(str));
+    if (!GlobalObject::isRuntimeCodeGenEnabled(cx, v, cx->global())) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_CSP_BLOCKED_EVAL);
+        return false;
+=======
+    CompileOptions options(cx);
+    options.setIsRunOnce(true)
+        .setNoScriptRval(false)
+        .setMutedErrors(mutedErrors)
+        .maybeMakeStrictMode(evalType == DIRECT_EVAL && IsStrictEvalPC(pc))
+        .setScriptOrModule(maybeScript);
 
     if (introducerFilename) {
       options.setFileAndLine(filename, 1);
@@ -299,6 +519,7 @@ static bool EvalKernel(JSContext* cx, HandleValue v, EvalType evalType,
     AutoStableStringChars linearChars(cx);
     if (!linearChars.initTwoByte(cx, linearStr)) {
       return false;
+>>>>>>> upstream-releases
     }
 
     SourceText<char16_t> srcBuf;
@@ -311,10 +532,21 @@ static bool EvalKernel(JSContext* cx, HandleValue v, EvalType evalType,
       return false;
     }
 
+<<<<<<< HEAD
     frontend::EvalScriptInfo info(cx, options, env, enclosing);
     JSScript* compiled = frontend::CompileEvalScript(info, srcBuf);
     if (!compiled) {
       return false;
+||||||| merged common ancestors
+    EvalJSONResult ejr = TryEvalJSON(cx, linearStr, vp);
+    if (ejr != EvalJSON_NotJSON) {
+        return ejr == EvalJSON_Success;
+=======
+    frontend::EvalScriptInfo info(cx, options, env, enclosing);
+    RootedScript compiled(cx, frontend::CompileEvalScript(info, srcBuf));
+    if (!compiled) {
+      return false;
+>>>>>>> upstream-releases
     }
 
     esg.setNewScript(compiled);
@@ -390,6 +622,7 @@ bool js::DirectEvalStringFromIon(JSContext* cx, HandleObject env,
       return false;
     }
 
+<<<<<<< HEAD
     SourceText<char16_t> srcBuf;
 
     const char16_t* chars = linearChars.twoByteRange().begin().get();
@@ -399,20 +632,102 @@ bool js::DirectEvalStringFromIon(JSContext* cx, HandleObject env,
     if (!srcBuf.init(cx, chars, linearStr->length(), ownership)) {
       return false;
     }
+||||||| merged common ancestors
+    return ExecuteKernel(cx, esg.script(), *env, newTargetValue,
+                         NullFramePtr() /* evalInFrame */, vp.address());
+}
+=======
+    SourceText<char16_t> srcBuf;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     frontend::EvalScriptInfo info(cx, options, env, enclosing);
     JSScript* compiled = frontend::CompileEvalScript(info, srcBuf);
     if (!compiled) {
       return false;
     }
+||||||| merged common ancestors
+bool
+js::IndirectEval(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+=======
+    const char16_t* chars = linearChars.twoByteRange().begin().get();
+    SourceOwnership ownership = linearChars.maybeGiveOwnershipToCaller()
+                                    ? SourceOwnership::TakeOwnership
+                                    : SourceOwnership::Borrowed;
+    if (!srcBuf.init(cx, chars, linearStr->length(), ownership)) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     esg.setNewScript(compiled);
   }
+||||||| merged common ancestors
+    RootedObject globalLexical(cx, &cx->global()->lexicalEnvironment());
+=======
+    frontend::EvalScriptInfo info(cx, options, env, enclosing);
+    JSScript* compiled = frontend::CompileEvalScript(info, srcBuf);
+    if (!compiled) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return ExecuteKernel(cx, esg.script(), *env, newTargetValue,
                        NullFramePtr() /* evalInFrame */, vp.address());
 }
+||||||| merged common ancestors
+    // Note we'll just pass |undefined| here, then return it directly (or throw
+    // if runtime codegen is disabled), if no argument is provided.
+    return EvalKernel(cx, args.get(0), INDIRECT_EVAL, NullFramePtr(), globalLexical, nullptr,
+                      args.rval());
+}
+=======
+    esg.setNewScript(compiled);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+bool js::IndirectEval(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+
+  RootedObject globalLexical(cx, &cx->global()->lexicalEnvironment());
+||||||| merged common ancestors
+bool
+js::DirectEval(JSContext* cx, HandleValue v, MutableHandleValue vp)
+{
+    // Direct eval can assume it was called from an interpreted or baseline frame.
+    ScriptFrameIter iter(cx);
+    AbstractFramePtr caller = iter.abstractFramePtr();
+
+    MOZ_ASSERT(JSOp(*iter.pc()) == JSOP_EVAL ||
+               JSOp(*iter.pc()) == JSOP_STRICTEVAL ||
+               JSOp(*iter.pc()) == JSOP_SPREADEVAL ||
+               JSOp(*iter.pc()) == JSOP_STRICTSPREADEVAL);
+    MOZ_ASSERT(caller.realm() == caller.script()->realm());
+
+    RootedObject envChain(cx, caller.environmentChain());
+    return EvalKernel(cx, v, DIRECT_EVAL, caller, envChain, iter.pc(), vp);
+}
+=======
+  return ExecuteKernel(cx, esg.script(), *env, newTargetValue,
+                       NullFramePtr() /* evalInFrame */, vp.address());
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Note we'll just pass |undefined| here, then return it directly (or throw
+  // if runtime codegen is disabled), if no argument is provided.
+  return EvalKernel(cx, args.get(0), INDIRECT_EVAL, NullFramePtr(),
+                    globalLexical, nullptr, args.rval());
+||||||| merged common ancestors
+bool
+js::IsAnyBuiltinEval(JSFunction* fun)
+{
+    return fun->maybeNative() == IndirectEval;
+=======
 bool js::IndirectEval(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -422,6 +737,7 @@ bool js::IndirectEval(JSContext* cx, unsigned argc, Value* vp) {
   // if runtime codegen is disabled), if no argument is provided.
   return EvalKernel(cx, args.get(0), INDIRECT_EVAL, NullFramePtr(),
                     globalLexical, nullptr, args.rval());
+>>>>>>> upstream-releases
 }
 
 bool js::DirectEval(JSContext* cx, HandleValue v, MutableHandleValue vp) {
@@ -439,6 +755,25 @@ bool js::DirectEval(JSContext* cx, HandleValue v, MutableHandleValue vp) {
   return EvalKernel(cx, v, DIRECT_EVAL, caller, envChain, iter.pc(), vp);
 }
 
+<<<<<<< HEAD
+bool js::IsAnyBuiltinEval(JSFunction* fun) {
+  return fun->maybeNative() == IndirectEval;
+}
+||||||| merged common ancestors
+JS_FRIEND_API(bool)
+js::ExecuteInFrameScriptEnvironment(JSContext* cx, HandleObject objArg, HandleScript scriptArg,
+                                    MutableHandleObject envArg)
+{
+    RootedObject varEnv(cx, NonSyntacticVariablesObject::create(cx));
+    if (!varEnv) {
+        return false;
+    }
+
+    AutoObjectVector envChain(cx);
+    if (!envChain.append(objArg)) {
+        return false;
+    }
+=======
 bool js::IsAnyBuiltinEval(JSFunction* fun) {
   return fun->maybeNative() == IndirectEval;
 }
@@ -457,7 +792,34 @@ static bool ExecuteInExtensibleLexicalEnvironment(JSContext* cx,
     if (!script) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static bool ExecuteInExtensibleLexicalEnvironment(JSContext* cx,
+                                                  HandleScript scriptArg,
+                                                  HandleObject env) {
+  CHECK_THREAD(cx);
+  cx->check(env);
+  MOZ_ASSERT(IsExtensibleLexicalEnvironment(env));
+  MOZ_RELEASE_ASSERT(scriptArg->hasNonSyntacticScope());
+
+  RootedScript script(cx, scriptArg);
+  if (script->realm() != cx->realm()) {
+    script = CloneGlobalScript(cx, ScopeKind::NonSyntactic, script);
+    if (!script) {
+      return false;
+    }
+||||||| merged common ancestors
+    RootedObject env(cx);
+    if (!js::CreateObjectsForEnvironmentChain(cx, envChain, varEnv, &env)) {
+        return false;
+    }
+=======
+    Debugger::onNewScript(cx, script);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     Debugger::onNewScript(cx, script);
   }
 
@@ -465,7 +827,29 @@ static bool ExecuteInExtensibleLexicalEnvironment(JSContext* cx,
   return ExecuteKernel(cx, script, *env, UndefinedValue(),
                        NullFramePtr() /* evalInFrame */, rval.address());
 }
+||||||| merged common ancestors
+    // Create lexical environment with |this| == objArg, which should be a Gecko
+    // MessageManager.
+    // NOTE: This is required behavior for Gecko FrameScriptLoader, where some
+    // callers try to bind methods from the message manager in their scope chain
+    // to |this|, and will fail if it is not bound to a message manager.
+    ObjectRealm& realm = ObjectRealm::get(varEnv);
+    env = realm.getOrCreateNonSyntacticLexicalEnvironment(cx, env, varEnv, objArg);
+    if (!env) {
+        return false;
+    }
 
+    if (!ExecuteInExtensibleLexicalEnvironment(cx, scriptArg, env)) {
+        return false;
+    }
+=======
+  RootedValue rval(cx);
+  return ExecuteKernel(cx, script, *env, UndefinedValue(),
+                       NullFramePtr() /* evalInFrame */, rval.address());
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 JS_FRIEND_API bool js::ExecuteInFrameScriptEnvironment(
     JSContext* cx, HandleObject objArg, HandleScript scriptArg,
     MutableHandleObject envArg) {
@@ -502,6 +886,47 @@ JS_FRIEND_API bool js::ExecuteInFrameScriptEnvironment(
 
   envArg.set(env);
   return true;
+||||||| merged common ancestors
+    envArg.set(env);
+    return true;
+=======
+JS_FRIEND_API bool js::ExecuteInFrameScriptEnvironment(
+    JSContext* cx, HandleObject objArg, HandleScript scriptArg,
+    MutableHandleObject envArg) {
+  RootedObject varEnv(cx, NonSyntacticVariablesObject::create(cx));
+  if (!varEnv) {
+    return false;
+  }
+
+  RootedObjectVector envChain(cx);
+  if (!envChain.append(objArg)) {
+    return false;
+  }
+
+  RootedObject env(cx);
+  if (!js::CreateObjectsForEnvironmentChain(cx, envChain, varEnv, &env)) {
+    return false;
+  }
+
+  // Create lexical environment with |this| == objArg, which should be a Gecko
+  // MessageManager.
+  // NOTE: This is required behavior for Gecko FrameScriptLoader, where some
+  // callers try to bind methods from the message manager in their scope chain
+  // to |this|, and will fail if it is not bound to a message manager.
+  ObjectRealm& realm = ObjectRealm::get(varEnv);
+  env =
+      realm.getOrCreateNonSyntacticLexicalEnvironment(cx, env, varEnv, objArg);
+  if (!env) {
+    return false;
+  }
+
+  if (!ExecuteInExtensibleLexicalEnvironment(cx, scriptArg, env)) {
+    return false;
+  }
+
+  envArg.set(env);
+  return true;
+>>>>>>> upstream-releases
 }
 
 JS_FRIEND_API JSObject* js::NewJSMEnvironment(JSContext* cx) {
@@ -520,13 +945,28 @@ JS_FRIEND_API JSObject* js::NewJSMEnvironment(JSContext* cx) {
   return varEnv;
 }
 
+<<<<<<< HEAD
 JS_FRIEND_API bool js::ExecuteInJSMEnvironment(JSContext* cx,
                                                HandleScript scriptArg,
                                                HandleObject varEnv) {
   AutoObjectVector emptyChain(cx);
   return ExecuteInJSMEnvironment(cx, scriptArg, varEnv, emptyChain);
+||||||| merged common ancestors
+JS_FRIEND_API(bool)
+js::ExecuteInJSMEnvironment(JSContext* cx, HandleScript scriptArg, HandleObject varEnv)
+{
+    AutoObjectVector emptyChain(cx);
+    return ExecuteInJSMEnvironment(cx, scriptArg, varEnv, emptyChain);
+=======
+JS_FRIEND_API bool js::ExecuteInJSMEnvironment(JSContext* cx,
+                                               HandleScript scriptArg,
+                                               HandleObject varEnv) {
+  RootedObjectVector emptyChain(cx);
+  return ExecuteInJSMEnvironment(cx, scriptArg, varEnv, emptyChain);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 JS_FRIEND_API bool js::ExecuteInJSMEnvironment(JSContext* cx,
                                                HandleScript scriptArg,
                                                HandleObject varEnv,
@@ -552,6 +992,63 @@ JS_FRIEND_API bool js::ExecuteInJSMEnvironment(JSContext* cx,
     //  (*) This environment intentionally intercepts JSOP_GLOBALTHIS, but
     //  not JSOP_FUNCTIONTHIS (which instead will fallback to the NSVO). I
     //  don't make the rules, I just record them.
+||||||| merged common ancestors
+JS_FRIEND_API(bool)
+js::ExecuteInJSMEnvironment(JSContext* cx, HandleScript scriptArg, HandleObject varEnv,
+                            AutoObjectVector& targetObj)
+{
+    cx->check(varEnv);
+    MOZ_ASSERT(ObjectRealm::get(varEnv).getNonSyntacticLexicalEnvironment(varEnv));
+    MOZ_DIAGNOSTIC_ASSERT(scriptArg->noScriptRval());
+
+    RootedObject env(cx, JS_ExtensibleLexicalEnvironment(varEnv));
+
+    // If the Gecko subscript loader specifies target objects, we need to add
+    // them to the environment. These are added after the NSVO environment.
+    if (!targetObj.empty()) {
+        // The environment chain will be as follows:
+        //      GlobalObject / BackstagePass
+        //      LexicalEnvironmentObject[this=global]
+        //      NonSyntacticVariablesObject (the JSMEnvironment)
+        //      LexicalEnvironmentObject[this=nsvo]
+        //      WithEnvironmentObject[target=targetObj]
+        //      LexicalEnvironmentObject[this=targetObj] (*)
+        //
+        //  (*) This environment intentionally intercepts JSOP_GLOBALTHIS, but
+        //  not JSOP_FUNCTIONTHIS (which instead will fallback to the NSVO). I
+        //  don't make the rules, I just record them.
+
+        // Wrap the target objects in WithEnvironments.
+        if (!js::CreateObjectsForEnvironmentChain(cx, targetObj, env, &env)) {
+            return false;
+        }
+=======
+JS_FRIEND_API bool js::ExecuteInJSMEnvironment(JSContext* cx,
+                                               HandleScript scriptArg,
+                                               HandleObject varEnv,
+                                               HandleObjectVector targetObj) {
+  cx->check(varEnv);
+  MOZ_ASSERT(
+      ObjectRealm::get(varEnv).getNonSyntacticLexicalEnvironment(varEnv));
+  MOZ_DIAGNOSTIC_ASSERT(scriptArg->noScriptRval());
+
+  RootedObject env(cx, JS_ExtensibleLexicalEnvironment(varEnv));
+
+  // If the Gecko subscript loader specifies target objects, we need to add
+  // them to the environment. These are added after the NSVO environment.
+  if (!targetObj.empty()) {
+    // The environment chain will be as follows:
+    //      GlobalObject / BackstagePass
+    //      LexicalEnvironmentObject[this=global]
+    //      NonSyntacticVariablesObject (the JSMEnvironment)
+    //      LexicalEnvironmentObject[this=nsvo]
+    //      WithEnvironmentObject[target=targetObj]
+    //      LexicalEnvironmentObject[this=targetObj] (*)
+    //
+    //  (*) This environment intentionally intercepts JSOP_GLOBALTHIS, but
+    //  not JSOP_FUNCTIONTHIS (which instead will fallback to the NSVO). I
+    //  don't make the rules, I just record them.
+>>>>>>> upstream-releases
 
     // Wrap the target objects in WithEnvironments.
     if (!js::CreateObjectsForEnvironmentChain(cx, targetObj, env, &env)) {

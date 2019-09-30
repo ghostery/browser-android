@@ -11,11 +11,24 @@
 using JS::ubi::EdgeRange;
 using JS::ubi::SimpleEdgeRange;
 
+<<<<<<< HEAD
 const char16_t JS::ubi::Concrete<nsIDocument>::concreteTypeName[] =
     u"nsIDocument";
 const char16_t JS::ubi::Concrete<nsIContent>::concreteTypeName[] =
     u"nsIContent";
 const char16_t JS::ubi::Concrete<Attr>::concreteTypeName[] = u"Attr";
+||||||| merged common ancestors
+const char16_t JS::ubi::Concrete<nsIDocument>::concreteTypeName[] = u"nsIDocument";
+const char16_t JS::ubi::Concrete<nsIContent>::concreteTypeName[] = u"nsIContent";
+const char16_t JS::ubi::Concrete<Attr>::concreteTypeName[] = u"Attr";
+=======
+const char16_t JS::ubi::Concrete<mozilla::dom::Document>::concreteTypeName[] =
+    u"Document";
+const char16_t JS::ubi::Concrete<nsIContent>::concreteTypeName[] =
+    u"nsIContent";
+const char16_t JS::ubi::Concrete<mozilla::dom::Attr>::concreteTypeName[] =
+    u"Attr";
+>>>>>>> upstream-releases
 
 void JS::ubi::Concrete<nsINode>::construct(void* storage, nsINode* ptr) {
   // nsINode is abstract, and all of its inherited instances have
@@ -66,8 +79,17 @@ const char16_t* JS::ubi::Concrete<nsINode>::descriptiveTypeName() const {
   return get().NodeName().get();
 }
 
+<<<<<<< HEAD
 JS::ubi::Node::Size JS::ubi::Concrete<nsIDocument>::size(
     mozilla::MallocSizeOf mallocSizeOf) const {
+||||||| merged common ancestors
+JS::ubi::Node::Size
+JS::ubi::Concrete<nsIDocument>::size(mozilla::MallocSizeOf mallocSizeOf) const
+{
+=======
+JS::ubi::Node::Size JS::ubi::Concrete<mozilla::dom::Document>::size(
+    mozilla::MallocSizeOf mallocSizeOf) const {
+>>>>>>> upstream-releases
   AutoSuppressGCAnalysis suppress;
   mozilla::SizeOfState sz(mallocSizeOf);
   nsWindowSizes wn(sz);

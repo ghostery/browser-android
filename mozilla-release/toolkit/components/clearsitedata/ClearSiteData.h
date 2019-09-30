@@ -42,7 +42,6 @@ class ClearSiteData final : public nsIObserver {
     eCache = 0x01,
     eCookies = 0x02,
     eStorage = 0x04,
-    eExecutionContexts = 0x08,
   };
 
   // This method writes a console message when a cleanup operation is going to
@@ -58,12 +57,25 @@ class ClearSiteData final : public nsIObserver {
                             const nsTArray<nsString>& aParams) const;
 
   // This method converts a Type to the corrisponding string format.
+<<<<<<< HEAD
   void TypeToString(Type aType, nsAString& aStr) const;
 
   // When called, after the cleanup, PendingCleanupHolder will reload all the
   // browsing contexts.
   void BrowsingContextsReload(PendingCleanupHolder* aHolder,
                               nsIPrincipal* aPrincipal) const;
+||||||| merged common ancestors
+  void
+  TypeToString(Type aType, nsAString& aStr) const;
+
+  // When called, after the cleanup, PendingCleanupHolder will reload all the
+  // browsing contexts.
+  void
+  BrowsingContextsReload(PendingCleanupHolder* aHolder,
+                         nsIPrincipal* aPrincipal) const;
+=======
+  void TypeToString(Type aType, nsAString& aStr) const;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

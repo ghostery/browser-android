@@ -6,9 +6,21 @@
 #define CRASHREPORTER_H__
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(push)
+||||||| merged common ancestors
+# pragma warning( push )
+=======
+#  pragma warning(push)
+>>>>>>> upstream-releases
 // Disable exception handler warnings.
+<<<<<<< HEAD
 #pragma warning(disable : 4530)
+||||||| merged common ancestors
+# pragma warning( disable : 4530 )
+=======
+#  pragma warning(disable : 4530)
+>>>>>>> upstream-releases
 #endif
 
 #include <string>
@@ -21,28 +33,28 @@
 
 #define MAX_COMMENT_LENGTH 500
 
-#if defined(XP_WIN32)
+#if defined(XP_WIN)
 
-#include <windows.h>
+#  include <windows.h>
 
-#define UI_SNPRINTF _snprintf
-#define UI_DIR_SEPARATOR "\\"
+#  define UI_SNPRINTF _snprintf
+#  define UI_DIR_SEPARATOR "\\"
 
 std::string WideToUTF8(const std::wstring& wide, bool* success = 0);
 
 #else
 
-#define UI_SNPRINTF snprintf
-#define UI_DIR_SEPARATOR "/"
+#  define UI_SNPRINTF snprintf
+#  define UI_DIR_SEPARATOR "/"
 
 #endif
 
 #define UI_CRASH_REPORTER_FILENAME "crashreporter"
 #define UI_MINIDUMP_ANALYZER_FILENAME "minidump-analyzer"
 #ifndef XP_MACOSX
-#define UI_PING_SENDER_FILENAME "pingsender"
+#  define UI_PING_SENDER_FILENAME "pingsender"
 #else
-#define UI_PING_SENDER_FILENAME "../../../pingsender"
+#  define UI_PING_SENDER_FILENAME "../../../pingsender"
 #endif
 
 typedef std::map<std::string, std::string> StringTable;
@@ -88,6 +100,7 @@ typedef std::map<std::string, std::string> StringTable;
 //=============================================================================
 
 namespace CrashReporter {
+<<<<<<< HEAD
 extern StringTable gStrings;
 extern std::string gSettingsPath;
 extern std::string gEventsPath;
@@ -116,6 +129,68 @@ bool SendCrashPing(StringTable& strings, const std::string& hash,
 
 static const unsigned int kSaveCount = 10;
 }  // namespace CrashReporter
+||||||| merged common ancestors
+  extern StringTable  gStrings;
+  extern std::string  gSettingsPath;
+  extern std::string  gEventsPath;
+  extern int          gArgc;
+  extern char**       gArgv;
+  extern bool         gAutoSubmit;
+
+  void UIError(const std::string& message);
+
+  // The UI finished sending the report
+  void SendCompleted(bool success, const std::string& serverResponse);
+
+  bool ReadStrings(std::istream& in,
+                   StringTable& strings,
+                   bool unescape);
+  bool ReadStringsFromFile(const std::string& path,
+                           StringTable& strings,
+                           bool unescape);
+  bool WriteStrings(std::ostream& out,
+                    const std::string& header,
+                    StringTable& strings,
+                    bool escape);
+  bool WriteStringsToFile(const std::string& path,
+                          const std::string& header,
+                          StringTable& strings,
+                          bool escape);
+  void LogMessage(const std::string& message);
+  void DeleteDump();
+
+  // Telemetry ping
+  bool SendCrashPing(StringTable& strings, const std::string& hash,
+                     std::string& pingUuid, const std::string& pingDir);
+
+  static const unsigned int kSaveCount = 10;
+}
+=======
+extern StringTable gStrings;
+extern std::string gSettingsPath;
+extern std::string gEventsPath;
+extern int gArgc;
+extern char** gArgv;
+extern bool gAutoSubmit;
+
+void UIError(const std::string& message);
+
+// The UI finished sending the report
+void SendCompleted(bool success, const std::string& serverResponse);
+
+bool ReadStrings(std::istream& in, StringTable& strings, bool unescape);
+bool ReadStringsFromFile(const std::string& path, StringTable& strings,
+                         bool unescape);
+void LogMessage(const std::string& message);
+void DeleteDump();
+
+// Telemetry ping
+bool SendCrashPing(StringTable& strings, const std::string& hash,
+                   std::string& pingUuid, const std::string& pingDir);
+
+static const unsigned int kSaveCount = 10;
+}  // namespace CrashReporter
+>>>>>>> upstream-releases
 
 //=============================================================================
 // implemented in the platform-specific files
@@ -143,9 +218,21 @@ bool UIEnsurePathExists(const std::string& path);
 bool UIFileExists(const std::string& path);
 bool UIMoveFile(const std::string& oldfile, const std::string& newfile);
 bool UIDeleteFile(const std::string& oldfile);
+<<<<<<< HEAD
 std::ifstream* UIOpenRead(const std::string& filename, bool binary = false);
 std::ofstream* UIOpenWrite(const std::string& filename, bool append = false,
                            bool binary = false);
+||||||| merged common ancestors
+std::ifstream* UIOpenRead(const std::string& filename, bool binary = false);
+std::ofstream* UIOpenWrite(const std::string& filename,
+                           bool append=false,
+                           bool binary=false);
+=======
+std::ifstream* UIOpenRead(const std::string& filename,
+                          std::ios_base::openmode mode);
+std::ofstream* UIOpenWrite(const std::string& filename,
+                           std::ios_base::openmode mode);
+>>>>>>> upstream-releases
 void UIPruneSavedDumps(const std::string& directory);
 
 // Run the program specified by exename, passing it the parameters in arg.
@@ -159,7 +246,13 @@ bool UIRunProgram(const std::string& exename,
 std::string UIGetEnv(const std::string& name);
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 #pragma warning(pop)
+||||||| merged common ancestors
+# pragma warning( pop )
+=======
+#  pragma warning(pop)
+>>>>>>> upstream-releases
 #endif
 
 #endif

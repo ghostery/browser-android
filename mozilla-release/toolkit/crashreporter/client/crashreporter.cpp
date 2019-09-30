@@ -7,7 +7,13 @@
 
 #ifdef _MSC_VER
 // Disable exception handler warnings.
+<<<<<<< HEAD
 #pragma warning(disable : 4530)
+||||||| merged common ancestors
+# pragma warning( disable : 4530 )
+=======
+#  pragma warning(disable : 4530)
+>>>>>>> upstream-releases
 #endif
 
 #include <fstream>
@@ -20,7 +26,7 @@
 #include <string>
 
 #ifdef XP_LINUX
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 #include "nss.h"
@@ -28,7 +34,13 @@
 
 using std::auto_ptr;
 using std::ifstream;
+<<<<<<< HEAD
 using std::istream;
+||||||| merged common ancestors
+=======
+using std::ios;
+using std::istream;
+>>>>>>> upstream-releases
 using std::istringstream;
 using std::ofstream;
 using std::ostream;
@@ -94,6 +106,7 @@ static string Unescape(const string& str) {
   return ret;
 }
 
+<<<<<<< HEAD
 static string Escape(const string& str) {
   string ret;
   for (string::const_iterator iter = str.begin(); iter != str.end(); iter++) {
@@ -112,6 +125,32 @@ static string Escape(const string& str) {
 }
 
 bool ReadStrings(istream& in, StringTable& strings, bool unescape) {
+||||||| merged common ancestors
+static string Escape(const string& str)
+{
+  string ret;
+  for (string::const_iterator iter = str.begin();
+       iter != str.end();
+       iter++) {
+    if (*iter == '\\') {
+      ret += "\\\\";
+    } else if (*iter == '\n') {
+      ret += "\\n";
+    } else if (*iter == '\t') {
+      ret += "\\t";
+    } else {
+      ret.push_back(*iter);
+    }
+  }
+
+  return ret;
+}
+
+bool ReadStrings(istream& in, StringTable& strings, bool unescape)
+{
+=======
+bool ReadStrings(istream& in, StringTable& strings, bool unescape) {
+>>>>>>> upstream-releases
   string currentSection;
   while (!in.eof()) {
     string line;
@@ -129,9 +168,21 @@ bool ReadStrings(istream& in, StringTable& strings, bool unescape) {
   return true;
 }
 
+<<<<<<< HEAD
 bool ReadStringsFromFile(const string& path, StringTable& strings,
                          bool unescape) {
   ifstream* f = UIOpenRead(path);
+||||||| merged common ancestors
+bool ReadStringsFromFile(const string& path,
+                         StringTable& strings,
+                         bool unescape)
+{
+  ifstream* f = UIOpenRead(path);
+=======
+bool ReadStringsFromFile(const string& path, StringTable& strings,
+                         bool unescape) {
+  ifstream* f = UIOpenRead(path, ios::in);
+>>>>>>> upstream-releases
   bool success = false;
   if (f->is_open()) {
     success = ReadStrings(*f, strings, unescape);
@@ -142,6 +193,7 @@ bool ReadStringsFromFile(const string& path, StringTable& strings,
   return success;
 }
 
+<<<<<<< HEAD
 bool WriteStrings(ostream& out, const string& header, StringTable& strings,
                   bool escape) {
   out << "[" << header << "]" << std::endl;
@@ -173,6 +225,49 @@ bool WriteStringsToFile(const string& path, const string& header,
 }
 
 static string Basename(const string& file) {
+||||||| merged common ancestors
+bool WriteStrings(ostream& out,
+                  const string& header,
+                  StringTable& strings,
+                  bool escape)
+{
+  out << "[" << header << "]" << std::endl;
+  for (StringTable::iterator iter = strings.begin();
+       iter != strings.end();
+       iter++) {
+    out << iter->first << "=";
+    if (escape)
+      out << Escape(iter->second);
+    else
+      out << iter->second;
+
+    out << std::endl;
+  }
+
+  return true;
+}
+
+bool WriteStringsToFile(const string& path,
+                        const string& header,
+                        StringTable& strings,
+                        bool escape)
+{
+  ofstream* f = UIOpenWrite(path.c_str());
+  bool success = false;
+  if (f->is_open()) {
+    success = WriteStrings(*f, header, strings, escape);
+    f->close();
+  }
+
+  delete f;
+  return success;
+}
+
+static string Basename(const string& file)
+{
+=======
+static string Basename(const string& file) {
+>>>>>>> upstream-releases
   string::size_type slashIndex = file.rfind(UI_DIR_SEPARATOR);
   if (slashIndex != string::npos)
     return file.substr(slashIndex + 1);
@@ -199,7 +294,7 @@ static void AppendToEventFile(const string& aKey, const string& aValue) {
 
   string localId = GetDumpLocalID();
   string path = gEventsPath + UI_DIR_SEPARATOR + localId;
-  ofstream* f = UIOpenWrite(path.c_str(), true);
+  ofstream* f = UIOpenWrite(path, ios::app);
 
   if (f->is_open()) {
     *f << aKey << "=" << aValue << std::endl;
@@ -218,7 +313,7 @@ static void WriteSubmissionEvent(SubmissionResult result,
 
   string localId = GetDumpLocalID();
   string fpath = gEventsPath + UI_DIR_SEPARATOR + localId + "-submission";
-  ofstream* f = UIOpenWrite(fpath.c_str(), false, true);
+  ofstream* f = UIOpenWrite(fpath, ios::binary);
   time_t tm;
   time(&tm);
 
@@ -248,7 +343,7 @@ void LogMessage(const std::string& message) {
 
 static void OpenLogFile() {
   string logPath = gSettingsPath + UI_DIR_SEPARATOR + "submit.log";
-  gLogStream.reset(UIOpenWrite(logPath.c_str(), true));
+  gLogStream.reset(UIOpenWrite(logPath, ios::app));
 }
 
 static bool ReadConfig() {
@@ -323,7 +418,7 @@ static bool AddSubmittedReport(const string& serverResponse) {
     string reportPath = gSettingsPath + UI_DIR_SEPARATOR + "EndOfLife" +
                         responseItems["StopSendingReportsFor"];
 
-    ofstream* reportFile = UIOpenWrite(reportPath);
+    ofstream* reportFile = UIOpenWrite(reportPath, ios::trunc);
     if (reportFile->is_open()) {
       // don't really care about the contents
       *reportFile << 1 << "\n";
@@ -348,7 +443,7 @@ static bool AddSubmittedReport(const string& serverResponse) {
   string path =
       submittedDir + UI_DIR_SEPARATOR + responseItems["CrashID"] + ".txt";
 
-  ofstream* file = UIOpenWrite(path);
+  ofstream* file = UIOpenWrite(path, ios::trunc);
   if (!file->is_open()) {
     delete file;
     return false;
@@ -403,11 +498,25 @@ static string ComputeDumpHash() {
   // On Linux we rely on the system-provided libcurl which uses nss so we have
   // to also use the system-provided nss instead of the ones we have bundled.
   const char* libnssNames[] = {
+<<<<<<< HEAD
       "libnss3.so",
 #ifndef HAVE_64BIT_BUILD
       // 32-bit versions on 64-bit hosts
       "/usr/lib32/libnss3.so",
 #endif
+||||||| merged common ancestors
+    "libnss3.so",
+#ifndef HAVE_64BIT_BUILD
+    // 32-bit versions on 64-bit hosts
+    "/usr/lib32/libnss3.so",
+#endif
+=======
+      "libnss3.so",
+#  ifndef HAVE_64BIT_BUILD
+      // 32-bit versions on 64-bit hosts
+      "/usr/lib32/libnss3.so",
+#  endif
+>>>>>>> upstream-releases
   };
   void* lib = nullptr;
 
@@ -458,7 +567,7 @@ static string ComputeDumpHash() {
 
   HASH_Begin(hashContext);
 
-  ifstream* f = UIOpenRead(gReporterDumpFile, /* binary */ true);
+  ifstream* f = UIOpenRead(gReporterDumpFile, ios::binary);
   bool error = false;
 
   // Read the minidump contents
@@ -774,7 +883,7 @@ int main(int argc, char** argv) {
 }
 
 #if defined(XP_WIN) && !defined(__GNUC__)
-#include <windows.h>
+#  include <windows.h>
 
 // We need WinMain in order to not be a console app.  This function is unused
 // if we are a console application.

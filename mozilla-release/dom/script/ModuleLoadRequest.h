@@ -36,22 +36,76 @@ class ModuleLoadRequest final : public ScriptLoadRequest {
   ModuleLoadRequest(const ModuleLoadRequest& aOther) = delete;
   ModuleLoadRequest(ModuleLoadRequest&& aOther) = delete;
 
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  ModuleLoadRequest(nsIURI* aURI, ScriptFetchOptions* aFetchOptions,
+                    const SRIMetadata& aIntegrity, nsIURI* aReferrer,
+                    bool aIsTopLevel, bool aIsDynamicImport,
+                    ScriptLoader* aLoader, VisitedURLSet* aVisitedSet);
+
+ public:
+>>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(ModuleLoadRequest, ScriptLoadRequest)
+  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(ModuleLoadRequest,
+                                                         ScriptLoadRequest)
 
   // Create a top-level module load request.
+<<<<<<< HEAD
   ModuleLoadRequest(nsIURI* aURI, ScriptFetchOptions* aFetchOptions,
                     const SRIMetadata& aIntegrity, nsIURI* aReferrer,
                     ScriptLoader* aLoader);
+||||||| merged common ancestors
+  ModuleLoadRequest(nsIURI* aURI,
+                    ScriptFetchOptions* aFetchOptions,
+                    const SRIMetadata& aIntegrity,
+                    nsIURI* aReferrer,
+                    ScriptLoader* aLoader);
+=======
+  static ModuleLoadRequest* CreateTopLevel(nsIURI* aURI,
+                                           ScriptFetchOptions* aFetchOptions,
+                                           const SRIMetadata& aIntegrity,
+                                           nsIURI* aReferrer,
+                                           ScriptLoader* aLoader);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Create a module load request for an imported module.
   ModuleLoadRequest(nsIURI* aURI, ModuleLoadRequest* aParent);
+||||||| merged common ancestors
+  // Create a module load request for an imported module.
+  ModuleLoadRequest(nsIURI* aURI,
+                    ModuleLoadRequest* aParent);
+=======
+  // Create a module load request for a static module import.
+  static ModuleLoadRequest* CreateStaticImport(nsIURI* aURI,
+                                               ModuleLoadRequest* aParent);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool IsTopLevel() const override { return mIsTopLevel; }
+||||||| merged common ancestors
+  bool IsTopLevel() const override
+  {
+    return mIsTopLevel;
+  }
+=======
+  // Create a module load request for dynamic module import.
+  static ModuleLoadRequest* CreateDynamicImport(
+      nsIURI* aURI, ScriptFetchOptions* aFetchOptions, nsIURI* aBaseURL,
+      ScriptLoader* aLoader, JS::Handle<JS::Value> aReferencingPrivate,
+      JS::Handle<JSString*> aSpecifier, JS::Handle<JSObject*> aPromise);
 
   bool IsTopLevel() const override { return mIsTopLevel; }
 
+  bool IsDynamicImport() const { return mIsDynamicImport; }
+>>>>>>> upstream-releases
+
   void SetReady() override;
   void Cancel() override;
+  void ClearDynamicImport();
 
   void ModuleLoaded();
   void ModuleErrored();
@@ -66,8 +120,8 @@ class ModuleLoadRequest final : public ScriptLoadRequest {
   // Is this a request for a top level module script or an import?
   const bool mIsTopLevel;
 
-  // The base URL used for resolving relative module imports.
-  nsCOMPtr<nsIURI> mBaseURL;
+  // Is this the top level request for a dynamic module import?
+  const bool mIsDynamicImport;
 
   // Pointer to the script loader, used to trigger actions when the module load
   // finishes.
@@ -88,6 +142,11 @@ class ModuleLoadRequest final : public ScriptLoadRequest {
   // Set of module URLs visited while fetching the module graph this request is
   // part of.
   RefPtr<VisitedURLSet> mVisitedSet;
+
+  // For dynamic imports, the details to pass to FinishDynamicImport.
+  JS::Heap<JS::Value> mDynamicReferencingPrivate;
+  JS::Heap<JSString*> mDynamicSpecifier;
+  JS::Heap<JSObject*> mDynamicPromise;
 };
 
 }  // namespace dom

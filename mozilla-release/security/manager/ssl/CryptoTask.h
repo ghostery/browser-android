@@ -21,6 +21,7 @@ namespace mozilla {
  *   (2) Override CallCallback() for the on-the-main-thread call of the
  *       callback.
  */
+<<<<<<< HEAD
 class CryptoTask : public Runnable {
  public:
   template <size_t LEN>
@@ -28,11 +29,41 @@ class CryptoTask : public Runnable {
     static_assert(LEN <= 15, "Thread name must be no more than 15 characters");
     return Dispatch(nsDependentCString(taskThreadName, LEN - 1));
   }
+||||||| merged common ancestors
+class CryptoTask : public Runnable
+{
+public:
+  template <size_t LEN>
+  nsresult Dispatch(const char (&taskThreadName)[LEN])
+  {
+    static_assert(LEN <= 15,
+                  "Thread name must be no more than 15 characters");
+    return Dispatch(nsDependentCString(taskThreadName, LEN - 1));
+  }
+=======
+class CryptoTask : public Runnable {
+ public:
+  nsresult Dispatch();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult Dispatch(const nsACString& taskThreadName);
 
  protected:
   CryptoTask() : Runnable("CryptoTask"), mRv(NS_ERROR_NOT_INITIALIZED) {}
+||||||| merged common ancestors
+  nsresult Dispatch(const nsACString& taskThreadName);
+
+protected:
+  CryptoTask()
+    : Runnable("CryptoTask")
+    , mRv(NS_ERROR_NOT_INITIALIZED)
+  {
+  }
+=======
+ protected:
+  CryptoTask() : Runnable("CryptoTask"), mRv(NS_ERROR_NOT_INITIALIZED) {}
+>>>>>>> upstream-releases
 
   virtual ~CryptoTask() {}
 
@@ -51,7 +82,6 @@ class CryptoTask : public Runnable {
   NS_IMETHOD Run() final;
 
   nsresult mRv;
-  nsCOMPtr<nsIThread> mThread;
 };
 
 }  // namespace mozilla

@@ -316,12 +316,31 @@ Result<Ok, nsresult> URLPreloader::ReadCache(
   return Ok();
 }
 
+<<<<<<< HEAD
 void URLPreloader::BackgroundReadFiles() {
   auto cleanup = MakeScopeExit([&]() {
     NS_DispatchToMainThread(NewRunnableMethod(
         "nsIThread::Shutdown", mReaderThread, &nsIThread::Shutdown));
     mReaderThread = nullptr;
   });
+||||||| merged common ancestors
+void
+URLPreloader::BackgroundReadFiles()
+{
+    auto cleanup = MakeScopeExit([&] () {
+        NS_DispatchToMainThread(
+            NewRunnableMethod("nsIThread::Shutdown",
+                              mReaderThread, &nsIThread::Shutdown));
+        mReaderThread = nullptr;
+    });
+=======
+void URLPreloader::BackgroundReadFiles() {
+  auto cleanup = MakeScopeExit([&]() {
+    NS_DispatchToMainThread(NewRunnableMethod(
+        "nsIThread::AsyncShutdown", mReaderThread, &nsIThread::AsyncShutdown));
+    mReaderThread = nullptr;
+  });
+>>>>>>> upstream-releases
 
   Vector<nsZipCursor> cursors;
   LinkedList<URLEntry> pendingURLs;

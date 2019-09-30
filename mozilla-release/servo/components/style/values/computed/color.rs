@@ -4,21 +4,41 @@
 
 //! Computed color values.
 
+<<<<<<< HEAD
 use crate::values::animated::color::RGBA as AnimatedRGBA;
 use crate::values::animated::ToAnimatedValue;
 use crate::values::generics::color::Color as GenericColor;
+||||||| merged common ancestors
+=======
+use crate::values::animated::color::RGBA as AnimatedRGBA;
+use crate::values::animated::ToAnimatedValue;
+use crate::values::generics::color::{Color as GenericColor, ColorOrAuto as GenericColorOrAuto};
+>>>>>>> upstream-releases
 use cssparser::{Color as CSSParserColor, RGBA};
 use std::fmt;
 use style_traits::{CssWriter, ToCss};
+<<<<<<< HEAD
 
 /// Computed value type for the specified RGBAColor.
 pub type RGBAColor = RGBA;
+||||||| merged common ancestors
+use values::animated::ToAnimatedValue;
+use values::animated::color::RGBA as AnimatedRGBA;
+use values::generics::color::Color as GenericColor;
+
+/// Computed value type for the specified RGBAColor.
+pub type RGBAColor = RGBA;
+=======
+>>>>>>> upstream-releases
 
 /// The computed value of the `color` property.
 pub type ColorPropertyValue = RGBA;
 
+/// The computed value of `-moz-font-smoothing-background-color`.
+pub type MozFontSmoothingBackgroundColor = RGBA;
+
 /// A computed value for `<color>`.
-pub type Color = GenericColor<RGBAColor>;
+pub type Color = GenericColor<RGBA>;
 
 impl Color {
     /// Returns a complex color value representing transparent.
@@ -33,8 +53,8 @@ impl Color {
             // Common cases that the complex color is either pure numeric
             // color or pure currentcolor.
             GenericColor::Numeric(color) => return color,
-            GenericColor::Foreground => return fg_color,
-            GenericColor::Complex(color, ratios) => (color, ratios),
+            GenericColor::CurrentColor => return fg_color,
+            GenericColor::Complex { color, ratios } => (color, ratios),
         };
 
         // For the more complicated case that the alpha value differs,
@@ -76,7 +96,7 @@ impl ToCss for Color {
     {
         match *self {
             GenericColor::Numeric(color) => color.to_css(dest),
-            GenericColor::Foreground => CSSParserColor::CurrentColor.to_css(dest),
+            GenericColor::CurrentColor => CSSParserColor::CurrentColor.to_css(dest),
             _ => Ok(()),
         }
     }
@@ -101,3 +121,6 @@ impl ToAnimatedValue for RGBA {
         RGBA::from_floats(animated.red, animated.green, animated.blue, animated.alpha)
     }
 }
+
+/// auto | <color>
+pub type ColorOrAuto = GenericColorOrAuto<Color>;

@@ -10,12 +10,18 @@
 #include "base/basictypes.h"
 
 #if defined(OS_MACOSX)
-#if defined(__OBJC__)
+#  if defined(__OBJC__)
 @class NSAutoreleasePool;
+<<<<<<< HEAD
 #else   // __OBJC__
+||||||| merged common ancestors
+#else  // __OBJC__
+=======
+#  else   // __OBJC__
+>>>>>>> upstream-releases
 class NSAutoreleasePool;
-#endif  // __OBJC__
-#endif  // OS_MACOSX
+#  endif  // __OBJC__
+#endif    // OS_MACOSX
 
 namespace base {
 

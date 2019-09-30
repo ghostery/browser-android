@@ -42,7 +42,14 @@ static uint32_t gFailCount = 0;
  * "TEST-UNEXPECTED-FAIL " for the benefit of the test harness and
  * appending "\n" to eliminate having to type it at each call site.
  */
+<<<<<<< HEAD
 MOZ_FORMAT_PRINTF(1, 2) void fail(const char *msg, ...) {
+||||||| merged common ancestors
+MOZ_FORMAT_PRINTF(1, 2) void fail(const char* msg, ...)
+{
+=======
+MOZ_FORMAT_PRINTF(1, 2) void fail(const char* msg, ...) {
+>>>>>>> upstream-releases
   va_list ap;
 
   printf("TEST-UNEXPECTED-FAIL | ");
@@ -57,6 +64,7 @@ MOZ_FORMAT_PRINTF(1, 2) void fail(const char *msg, ...) {
 
 //-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
  public:
   NS_DECL_ISUPPORTS
@@ -73,6 +81,44 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
            static_cast<uint32_t>(rv));
       mServMgr = nullptr;
       return;
+||||||| merged common ancestors
+class ScopedXPCOM : public nsIDirectoryServiceProvider2
+{
+  public:
+    NS_DECL_ISUPPORTS
+
+    explicit ScopedXPCOM(const char* testName,
+                         nsIDirectoryServiceProvider *dirSvcProvider = nullptr)
+    : mDirSvcProvider(dirSvcProvider)
+    {
+      mTestName = testName;
+      printf("Running %s tests...\n", mTestName);
+
+      nsresult rv = NS_InitXPCOM2(&mServMgr, nullptr, this);
+      if (NS_FAILED(rv))
+      {
+        fail("NS_InitXPCOM2 returned failure code 0x%" PRIx32, static_cast<uint32_t>(rv));
+        mServMgr = nullptr;
+        return;
+      }
+=======
+class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
+ public:
+  NS_DECL_ISUPPORTS
+
+  explicit ScopedXPCOM(const char* testName,
+                       nsIDirectoryServiceProvider* dirSvcProvider = nullptr)
+      : mDirSvcProvider(dirSvcProvider) {
+    mTestName = testName;
+    printf("Running %s tests...\n", mTestName);
+
+    nsresult rv = NS_InitXPCOM(&mServMgr, nullptr, this);
+    if (NS_FAILED(rv)) {
+      fail("NS_InitXPCOM returned failure code 0x%" PRIx32,
+           static_cast<uint32_t>(rv));
+      mServMgr = nullptr;
+      return;
+>>>>>>> upstream-releases
     }
   }
 
@@ -145,11 +191,32 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
       return copy.forget();
     }
 
+<<<<<<< HEAD
     char *env = PR_GetEnv("MOZ_XRE_DIR");
     nsCOMPtr<nsIFile> greD;
     if (env) {
       NS_NewLocalFile(NS_ConvertUTF8toUTF16(env), false, getter_AddRefs(greD));
     }
+||||||| merged common ancestors
+    already_AddRefed<nsIFile> GetGREBinDirectory()
+    {
+      if (mGREBinD) {
+        nsCOMPtr<nsIFile> copy = mGREBinD;
+        return copy.forget();
+      }
+
+      nsCOMPtr<nsIFile> greD = GetGREDirectory();
+      if (!greD) {
+        return greD.forget();
+      }
+      greD->Clone(getter_AddRefs(mGREBinD));
+=======
+    char* env = PR_GetEnv("MOZ_XRE_DIR");
+    nsCOMPtr<nsIFile> greD;
+    if (env) {
+      NS_NewLocalFile(NS_ConvertUTF8toUTF16(env), false, getter_AddRefs(greD));
+    }
+>>>>>>> upstream-releases
 
     mGRED = greD;
     return greD.forget();
@@ -182,12 +249,23 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
   ////////////////////////////////////////////////////////////////////////////
   //// nsIDirectoryServiceProvider
 
+<<<<<<< HEAD
   NS_IMETHODIMP GetFile(const char *aProperty, bool *_persistent,
                         nsIFile **_result) override {
     // If we were supplied a directory service provider, ask it first.
     if (mDirSvcProvider && NS_SUCCEEDED(mDirSvcProvider->GetFile(
                                aProperty, _persistent, _result))) {
       return NS_OK;
+||||||| merged common ancestors
+      return NS_ERROR_FAILURE;
+=======
+  NS_IMETHODIMP GetFile(const char* aProperty, bool* _persistent,
+                        nsIFile** _result) override {
+    // If we were supplied a directory service provider, ask it first.
+    if (mDirSvcProvider && NS_SUCCEEDED(mDirSvcProvider->GetFile(
+                               aProperty, _persistent, _result))) {
+      return NS_OK;
+>>>>>>> upstream-releases
     }
 
     // Otherwise, the test harness provides some directories automatically.
@@ -226,10 +304,22 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
   ////////////////////////////////////////////////////////////////////////////
   //// nsIDirectoryServiceProvider2
 
+<<<<<<< HEAD
   NS_IMETHODIMP GetFiles(const char *aProperty,
                          nsISimpleEnumerator **_enum) override {
     // If we were supplied a directory service provider, ask it first.
     nsCOMPtr<nsIDirectoryServiceProvider2> provider =
+||||||| merged common ancestors
+    NS_IMETHODIMP GetFiles(const char *aProperty, nsISimpleEnumerator **_enum) override
+    {
+      // If we were supplied a directory service provider, ask it first.
+      nsCOMPtr<nsIDirectoryServiceProvider2> provider =
+=======
+  NS_IMETHODIMP GetFiles(const char* aProperty,
+                         nsISimpleEnumerator** _enum) override {
+    // If we were supplied a directory service provider, ask it first.
+    nsCOMPtr<nsIDirectoryServiceProvider2> provider =
+>>>>>>> upstream-releases
         do_QueryInterface(mDirSvcProvider);
     if (provider && NS_SUCCEEDED(provider->GetFiles(aProperty, _enum))) {
       return NS_OK;
@@ -238,6 +328,7 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
     return NS_ERROR_FAILURE;
   }
 
+<<<<<<< HEAD
  private:
   const char *mTestName;
   nsIServiceManager *mServMgr;
@@ -245,6 +336,23 @@ class ScopedXPCOM : public nsIDirectoryServiceProvider2 {
   nsCOMPtr<nsIFile> mProfD;
   nsCOMPtr<nsIFile> mGRED;
   nsCOMPtr<nsIFile> mGREBinD;
+||||||| merged common ancestors
+  private:
+    const char* mTestName;
+    nsIServiceManager* mServMgr;
+    nsCOMPtr<nsIDirectoryServiceProvider> mDirSvcProvider;
+    nsCOMPtr<nsIFile> mProfD;
+    nsCOMPtr<nsIFile> mGRED;
+    nsCOMPtr<nsIFile> mGREBinD;
+=======
+ private:
+  const char* mTestName;
+  nsIServiceManager* mServMgr;
+  nsCOMPtr<nsIDirectoryServiceProvider> mDirSvcProvider;
+  nsCOMPtr<nsIFile> mProfD;
+  nsCOMPtr<nsIFile> mGRED;
+  nsCOMPtr<nsIFile> mGREBinD;
+>>>>>>> upstream-releases
 };
 
 NS_IMPL_QUERY_INTERFACE(ScopedXPCOM, nsIDirectoryServiceProvider,

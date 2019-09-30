@@ -33,7 +33,12 @@ class nsIPrincipal;
 
 namespace mozilla {
 class MediaPipelineFilter;
+<<<<<<< HEAD
 class MediaTransportBase;
+||||||| merged common ancestors
+=======
+class MediaTransportHandler;
+>>>>>>> upstream-releases
 class PeerIdentity;
 class AudioProxyThread;
 class VideoFrameConverter;
@@ -76,11 +81,38 @@ class SourceMediaStream;
 // For a receiving conduit, "input" is RTP and "output" is RTCP.
 //
 
+<<<<<<< HEAD
 class MediaPipeline : public sigslot::has_slots<> {
  public:
   enum class DirectionType { TRANSMIT, RECEIVE };
   MediaPipeline(const std::string& aPc, MediaTransportBase* aTransportHandler,
                 DirectionType aDirection, nsCOMPtr<nsIEventTarget> aMainThread,
+||||||| merged common ancestors
+class MediaPipeline : public sigslot::has_slots<>
+{
+public:
+  enum class DirectionType
+  {
+    TRANSMIT,
+    RECEIVE
+  };
+  enum class StateType
+  {
+    MP_CONNECTING,
+    MP_OPEN,
+    MP_CLOSED
+  };
+  MediaPipeline(const std::string& aPc,
+                DirectionType aDirection,
+                nsCOMPtr<nsIEventTarget> aMainThread,
+=======
+class MediaPipeline : public sigslot::has_slots<> {
+ public:
+  enum class DirectionType { TRANSMIT, RECEIVE };
+  MediaPipeline(const std::string& aPc,
+                MediaTransportHandler* aTransportHandler,
+                DirectionType aDirection, nsCOMPtr<nsIEventTarget> aMainThread,
+>>>>>>> upstream-releases
                 nsCOMPtr<nsIEventTarget> aStsThread,
                 RefPtr<MediaSessionConduit> aConduit);
 
@@ -196,7 +228,14 @@ class MediaPipeline : public sigslot::has_slots<> {
   virtual void OnRtpPacketReceived(){};
   void IncrementRtcpPacketsReceived();
 
+<<<<<<< HEAD
   virtual void SendPacket(MediaPacket& packet);
+||||||| merged common ancestors
+  virtual nsresult SendPacket(TransportLayer* aLayer,
+                              MediaPacket& packet);
+=======
+  virtual void SendPacket(MediaPacket&& packet);
+>>>>>>> upstream-releases
 
   // Process slots on transports
   void RtpStateChange(const std::string& aTransportId, TransportLayer::State);
@@ -214,10 +253,20 @@ class MediaPipeline : public sigslot::has_slots<> {
 
   const DirectionType mDirection;
   size_t mLevel;
+<<<<<<< HEAD
   std::string mTransportId;
   RefPtr<MediaTransportBase> mTransportHandler;
   RefPtr<MediaSessionConduit> mConduit;  // Our conduit. Written on the main
                                          // thread. Read on STS thread.
+||||||| merged common ancestors
+  RefPtr<MediaSessionConduit> mConduit; // Our conduit. Written on the main
+                                        // thread. Read on STS thread.
+=======
+  std::string mTransportId;
+  RefPtr<MediaTransportHandler> mTransportHandler;
+  RefPtr<MediaSessionConduit> mConduit;  // Our conduit. Written on the main
+                                         // thread. Read on STS thread.
+>>>>>>> upstream-releases
 
   TransportLayer::State mRtpState = TransportLayer::TS_NONE;
   TransportLayer::State mRtcpState = TransportLayer::TS_NONE;
@@ -259,6 +308,11 @@ class MediaPipeline : public sigslot::has_slots<> {
   bool IsRtp(const unsigned char* aData, size_t aLen) const;
   // Must be called on the STS thread.  Must be called after DetachMedia().
   void DetachTransport_s();
+
+  // Cached preferences are not tolerant of being registered more than once
+  static Atomic<bool, ReleaseAcquire> sPrefsRegistered;
+  // Cached pref media.webrtc.net.force_disable_rtcp_reception
+  static Atomic<bool, ReleaseAcquire> sForceDisableRtcpReceptionPref;
 };
 
 // A specialization of pipeline for reading from an input device
@@ -267,7 +321,12 @@ class MediaPipelineTransmit : public MediaPipeline {
  public:
   // Set aRtcpTransport to nullptr to use rtcp-mux
   MediaPipelineTransmit(const std::string& aPc,
+<<<<<<< HEAD
                         MediaTransportBase* aTransportHandler,
+||||||| merged common ancestors
+=======
+                        MediaTransportHandler* aTransportHandler,
+>>>>>>> upstream-releases
                         nsCOMPtr<nsIEventTarget> aMainThread,
                         nsCOMPtr<nsIEventTarget> aStsThread, bool aIsVideo,
                         RefPtr<MediaSessionConduit> aConduit);
@@ -324,7 +383,12 @@ class MediaPipelineReceive : public MediaPipeline {
  public:
   // Set aRtcpTransport to nullptr to use rtcp-mux
   MediaPipelineReceive(const std::string& aPc,
+<<<<<<< HEAD
                        MediaTransportBase* aTransportHandler,
+||||||| merged common ancestors
+=======
+                       MediaTransportHandler* aTransportHandler,
+>>>>>>> upstream-releases
                        nsCOMPtr<nsIEventTarget> aMainThread,
                        nsCOMPtr<nsIEventTarget> aStsThread,
                        RefPtr<MediaSessionConduit> aConduit);
@@ -343,7 +407,12 @@ class MediaPipelineReceive : public MediaPipeline {
 class MediaPipelineReceiveAudio : public MediaPipelineReceive {
  public:
   MediaPipelineReceiveAudio(const std::string& aPc,
+<<<<<<< HEAD
                             MediaTransportBase* aTransportHandler,
+||||||| merged common ancestors
+=======
+                            MediaTransportHandler* aTransportHandler,
+>>>>>>> upstream-releases
                             nsCOMPtr<nsIEventTarget> aMainThread,
                             nsCOMPtr<nsIEventTarget> aStsThread,
                             RefPtr<AudioSessionConduit> aConduit,
@@ -372,7 +441,12 @@ class MediaPipelineReceiveAudio : public MediaPipelineReceive {
 class MediaPipelineReceiveVideo : public MediaPipelineReceive {
  public:
   MediaPipelineReceiveVideo(const std::string& aPc,
+<<<<<<< HEAD
                             MediaTransportBase* aTransportHandler,
+||||||| merged common ancestors
+=======
+                            MediaTransportHandler* aTransportHandler,
+>>>>>>> upstream-releases
                             nsCOMPtr<nsIEventTarget> aMainThread,
                             nsCOMPtr<nsIEventTarget> aStsThread,
                             RefPtr<VideoSessionConduit> aConduit,

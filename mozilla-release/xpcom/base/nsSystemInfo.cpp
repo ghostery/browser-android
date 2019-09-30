@@ -11,9 +11,13 @@
 #include "prio.h"
 #include "mozilla/SSE.h"
 #include "mozilla/arm.h"
+#include "mozilla/LazyIdleThread.h"
 #include "mozilla/Sprintf.h"
+#include "jsapi.h"
+#include "mozilla/dom/Promise.h"
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <comutil.h>
 #include <time.h>
 #ifndef __MINGW32__
@@ -30,48 +34,91 @@
 #include "nsDirectoryServiceUtils.h"
 #include "nsIObserverService.h"
 #include "nsWindowsHelpers.h"
+||||||| merged common ancestors
+#include <comutil.h>
+#include <time.h>
+#ifndef __MINGW32__
+#include <iwscapi.h>
+#endif // __MINGW32__
+#include <windows.h>
+#include <winioctl.h>
+#ifndef __MINGW32__
+#include <wscapi.h>
+#endif // __MINGW32__
+#include "base/scoped_handle_win.h"
+#include "nsAppDirectoryServiceDefs.h"
+#include "nsDirectoryServiceDefs.h"
+#include "nsDirectoryServiceUtils.h"
+#include "nsIObserverService.h"
+#include "nsWindowsHelpers.h"
+=======
+#  include <comutil.h>
+#  include <time.h>
+#  ifndef __MINGW32__
+#    include <iwscapi.h>
+#  endif  // __MINGW32__
+#  include <windows.h>
+#  include <winioctl.h>
+#  ifndef __MINGW32__
+#    include <wscapi.h>
+#  endif  // __MINGW32__
+#  include "base/scoped_handle_win.h"
+#  include "nsAppDirectoryServiceDefs.h"
+#  include "nsDirectoryServiceDefs.h"
+#  include "nsDirectoryServiceUtils.h"
+#  include "nsWindowsHelpers.h"
+>>>>>>> upstream-releases
 
 #endif
 
 #ifdef XP_MACOSX
-#include "MacHelpers.h"
+#  include "MacHelpers.h"
 #endif
 
 #ifdef MOZ_WIDGET_GTK
-#include <gtk/gtk.h>
-#include <dlfcn.h>
+#  include <gtk/gtk.h>
+#  include <dlfcn.h>
 #endif
 
+<<<<<<< HEAD
 #if defined(XP_LINUX) && !defined(ANDROID)
 #include <unistd.h>
 #include <fstream>
 #include "mozilla/Tokenizer.h"
 #include "nsCharSeparatedTokenizer.h"
+||||||| merged common ancestors
+#if defined (XP_LINUX) && !defined (ANDROID)
+#include <unistd.h>
+#include <fstream>
+#include "mozilla/Tokenizer.h"
+#include "nsCharSeparatedTokenizer.h"
+=======
+#if defined(XP_LINUX) && !defined(ANDROID)
+#  include <unistd.h>
+#  include <fstream>
+#  include "mozilla/Tokenizer.h"
+#  include "nsCharSeparatedTokenizer.h"
+>>>>>>> upstream-releases
 
-#include <map>
-#include <string>
+#  include <map>
+#  include <string>
 #endif
 
 #ifdef MOZ_WIDGET_ANDROID
-#include "AndroidBridge.h"
-#include "mozilla/dom/ContentChild.h"
-#endif
-
-#ifdef ANDROID
-extern "C" {
-NS_EXPORT int android_sdk_version;
-}
+#  include "AndroidBuild.h"
+#  include "GeneratedJNIWrappers.h"
+#  include "mozilla/jni/Utils.h"
 #endif
 
 #ifdef XP_MACOSX
-#include <sys/sysctl.h>
+#  include <sys/sysctl.h>
 #endif
 
 #if defined(XP_LINUX) && defined(MOZ_SANDBOX)
-#include "mozilla/SandboxInfo.h"
+#  include "mozilla/SandboxInfo.h"
 #endif
 
-// Slot for NS_InitXPCOM2 to pass information to nsSystemInfo::Init.
+// Slot for NS_InitXPCOM to pass information to nsSystemInfo::Init.
 // Only set to nonzero (potentially) if XP_UNIX.  On such systems, the
 // system call to discover the appropriate value is not thread-safe,
 // so we must call it before going multithreaded, but nsSystemInfo::Init
@@ -105,10 +152,25 @@ static void SimpleParseKeyValuePairs(
 
 #if defined(XP_WIN)
 namespace {
+<<<<<<< HEAD
 nsresult GetHDDInfo(const char* aSpecialDirName, nsAutoCString& aModel,
                     nsAutoCString& aRevision) {
   aModel.Truncate();
   aRevision.Truncate();
+||||||| merged common ancestors
+nsresult
+GetHDDInfo(const char* aSpecialDirName, nsAutoCString& aModel,
+           nsAutoCString& aRevision)
+{
+  aModel.Truncate();
+  aRevision.Truncate();
+=======
+static nsresult GetFolderDiskInfo(const char* aSpecialDirName,
+                                  FolderDiskInfo& info) {
+  info.model.Truncate();
+  info.revision.Truncate();
+  info.isSSD = false;
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIFile> profDir;
   nsresult rv =
@@ -154,28 +216,105 @@ nsresult GetHDDInfo(const char* aSpecialDirName, nsAutoCString& aModel,
     free(deviceOutput);
     return NS_ERROR_FAILURE;
   }
+
+  queryParameters.PropertyId = StorageDeviceTrimProperty;
+  bytesRead = 0;
+  bool isSSD = false;
+  DEVICE_TRIM_DESCRIPTOR trimDescriptor = {sizeof(DEVICE_TRIM_DESCRIPTOR)};
+  if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &queryParameters,
+                        sizeof(queryParameters), &trimDescriptor,
+                        sizeof(trimDescriptor), &bytesRead, nullptr)) {
+    if (trimDescriptor.TrimEnabled) {
+      isSSD = true;
+    }
+  }
+
+  if (isSSD) {
+    // Get Seek Penalty
+    queryParameters.PropertyId = StorageDeviceSeekPenaltyProperty;
+    bytesRead = 0;
+    DEVICE_SEEK_PENALTY_DESCRIPTOR seekPenaltyDescriptor = {
+        sizeof(DEVICE_SEEK_PENALTY_DESCRIPTOR)};
+    if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY,
+                          &queryParameters, sizeof(queryParameters),
+                          &seekPenaltyDescriptor, sizeof(seekPenaltyDescriptor),
+                          &bytesRead, nullptr)) {
+      // It is possible that the disk has TrimEnabled, but also
+      // IncursSeekPenalty; In this case, this is an HDD
+      if (seekPenaltyDescriptor.IncursSeekPenalty) {
+        isSSD = false;
+      }
+    }
+  }
+
   // Some HDDs are including product ID info in the vendor field. Since PNP
   // IDs include vendor info and product ID concatenated together, we'll do
   // that here and interpret the result as a unique ID for the HDD model.
   if (deviceOutput->VendorIdOffset) {
+<<<<<<< HEAD
     aModel =
         reinterpret_cast<char*>(deviceOutput) + deviceOutput->VendorIdOffset;
+||||||| merged common ancestors
+    aModel = reinterpret_cast<char*>(deviceOutput) +
+      deviceOutput->VendorIdOffset;
+=======
+    info.model =
+        reinterpret_cast<char*>(deviceOutput) + deviceOutput->VendorIdOffset;
+>>>>>>> upstream-releases
   }
   if (deviceOutput->ProductIdOffset) {
+<<<<<<< HEAD
     aModel +=
         reinterpret_cast<char*>(deviceOutput) + deviceOutput->ProductIdOffset;
+||||||| merged common ancestors
+    aModel += reinterpret_cast<char*>(deviceOutput) +
+      deviceOutput->ProductIdOffset;
+=======
+    info.model +=
+        reinterpret_cast<char*>(deviceOutput) + deviceOutput->ProductIdOffset;
+>>>>>>> upstream-releases
   }
-  aModel.CompressWhitespace();
+  info.model.CompressWhitespace();
   if (deviceOutput->ProductRevisionOffset) {
+<<<<<<< HEAD
     aRevision = reinterpret_cast<char*>(deviceOutput) +
                 deviceOutput->ProductRevisionOffset;
     aRevision.CompressWhitespace();
+||||||| merged common ancestors
+    aRevision = reinterpret_cast<char*>(deviceOutput) +
+      deviceOutput->ProductRevisionOffset;
+    aRevision.CompressWhitespace();
+=======
+    info.revision = reinterpret_cast<char*>(deviceOutput) +
+                    deviceOutput->ProductRevisionOffset;
+    info.revision.CompressWhitespace();
+>>>>>>> upstream-releases
   }
+  info.isSSD = isSSD;
   free(deviceOutput);
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult GetInstallYear(uint32_t& aYear) {
+||||||| merged common ancestors
+nsresult GetInstallYear(uint32_t& aYear)
+{
+=======
+static nsresult CollectDiskInfo(DiskInfo& info) {
+  nsresult rv = GetFolderDiskInfo(NS_GRE_DIR, info.binary);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  rv = GetFolderDiskInfo(NS_WIN_WINDOWS_DIR, info.system);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+  return GetFolderDiskInfo(NS_APP_USER_PROFILE_50_DIR, info.profile);
+}
+
+nsresult GetInstallYear(uint32_t& aYear) {
+>>>>>>> upstream-releases
   HKEY hKey;
   LONG status = RegOpenKeyExW(
       HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0,
@@ -237,7 +376,7 @@ nsresult GetCountryCode(nsAString& aCountryCode) {
 
 }  // namespace
 
-#ifndef __MINGW32__
+#  ifndef __MINGW32__
 
 static HRESULT EnumWSCProductList(nsAString& aOutput,
                                   NotNull<IWSCProductList*> aProdList) {
@@ -334,7 +473,13 @@ static nsresult GetWindowsSecurityCenterInfo(nsAString& aAVInfo,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #endif  // __MINGW32__
+||||||| merged common ancestors
+#endif // __MINGW32__
+=======
+#  endif  // __MINGW32__
+>>>>>>> upstream-releases
 
 #endif  // defined(XP_WIN)
 
@@ -444,8 +589,17 @@ static void GetProcessorInformation(int* physical_cpus, int* cache_size_L2,
 }
 #endif
 
+<<<<<<< HEAD
 nsresult nsSystemInfo::Init() {
   // This uses the observer service on Windows, so for simplicity
+||||||| merged common ancestors
+nsresult
+nsSystemInfo::Init()
+{
+  // This uses the observer service on Windows, so for simplicity
+=======
+nsresult nsSystemInfo::Init() {
+>>>>>>> upstream-releases
   // check that it is called from the main thread on all platforms.
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -736,23 +890,60 @@ nsresult nsSystemInfo::Init() {
   }
 
 #ifdef XP_WIN
-  BOOL isWow64;
-  BOOL gotWow64Value = IsWow64Process(GetCurrentProcess(), &isWow64);
+  // IsWow64Process2 is only available on Windows 10+, so we have to dynamically
+  // check for its existence.
+  typedef BOOL(WINAPI * LPFN_IWP2)(HANDLE, USHORT*, USHORT*);
+  LPFN_IWP2 iwp2 = reinterpret_cast<LPFN_IWP2>(
+      GetProcAddress(GetModuleHandle(L"kernel32"), "IsWow64Process2"));
+  BOOL isWow64 = false;
+  USHORT processMachine = IMAGE_FILE_MACHINE_UNKNOWN;
+  USHORT nativeMachine = IMAGE_FILE_MACHINE_UNKNOWN;
+  BOOL gotWow64Value;
+  if (iwp2) {
+    gotWow64Value = iwp2(GetCurrentProcess(), &processMachine, &nativeMachine);
+    if (gotWow64Value) {
+      isWow64 = (processMachine != IMAGE_FILE_MACHINE_UNKNOWN);
+    }
+  } else {
+    gotWow64Value = IsWow64Process(GetCurrentProcess(), &isWow64);
+    // The function only indicates a WOW64 environment if it's 32-bit x86
+    // running on x86-64, so emulate what IsWow64Process2 would have given.
+    if (gotWow64Value && isWow64) {
+      processMachine = IMAGE_FILE_MACHINE_I386;
+      nativeMachine = IMAGE_FILE_MACHINE_AMD64;
+    }
+  }
   NS_WARNING_ASSERTION(gotWow64Value, "IsWow64Process failed");
   if (gotWow64Value) {
+    // Set this always, even for the x86-on-arm64 case.
     rv = SetPropertyAsBool(NS_LITERAL_STRING("isWow64"), !!isWow64);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
+<<<<<<< HEAD
   }
   if (NS_FAILED(GetProfileHDDInfo())) {
     // We might have been called before profile-do-change. We'll observe that
     // event so that we can fill this in later.
     nsCOMPtr<nsIObserverService> obsService =
         do_GetService(NS_OBSERVERSERVICE_CONTRACTID, &rv);
+||||||| merged common ancestors
+  }
+  if (NS_FAILED(GetProfileHDDInfo())) {
+    // We might have been called before profile-do-change. We'll observe that
+    // event so that we can fill this in later.
+    nsCOMPtr<nsIObserverService> obsService =
+      do_GetService(NS_OBSERVERSERVICE_CONTRACTID, &rv);
+=======
+    // Additional information if we're running x86-on-arm64
+    bool isWowARM64 = (processMachine == IMAGE_FILE_MACHINE_I386 &&
+                       nativeMachine == IMAGE_FILE_MACHINE_ARM64);
+    rv = SetPropertyAsBool(NS_LITERAL_STRING("isWowARM64"), !!isWowARM64);
+>>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
+<<<<<<< HEAD
     rv = obsService->AddObserver(this, "profile-do-change", false);
     if (NS_FAILED(rv)) {
       return rv;
@@ -772,6 +963,28 @@ nsresult nsSystemInfo::Init() {
     rv =
         SetPropertyAsACString(NS_LITERAL_STRING("winHDDRevision"), hddRevision);
     NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+    rv = obsService->AddObserver(this, "profile-do-change", false);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+  }
+  nsAutoCString hddModel, hddRevision;
+  if (NS_SUCCEEDED(GetHDDInfo(NS_GRE_DIR, hddModel, hddRevision))) {
+    rv = SetPropertyAsACString(NS_LITERAL_STRING("binHDDModel"), hddModel);
+    NS_ENSURE_SUCCESS(rv, rv);
+    rv = SetPropertyAsACString(NS_LITERAL_STRING("binHDDRevision"),
+                               hddRevision);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  if (NS_SUCCEEDED(GetHDDInfo(NS_WIN_WINDOWS_DIR, hddModel, hddRevision))) {
+    rv = SetPropertyAsACString(NS_LITERAL_STRING("winHDDModel"), hddModel);
+    NS_ENSURE_SUCCESS(rv, rv);
+    rv = SetPropertyAsACString(NS_LITERAL_STRING("winHDDRevision"),
+                               hddRevision);
+    NS_ENSURE_SUCCESS(rv, rv);
+=======
+>>>>>>> upstream-releases
   }
 
   nsAutoString countryCode;
@@ -788,7 +1001,7 @@ nsresult nsSystemInfo::Init() {
     }
   }
 
-#ifndef __MINGW32__
+#  ifndef __MINGW32__
   nsAutoString avInfo, antiSpyInfo, firewallInfo;
   if (NS_SUCCEEDED(
           GetWindowsSecurityCenterInfo(avInfo, antiSpyInfo, firewallInfo))) {
@@ -816,7 +1029,13 @@ nsresult nsSystemInfo::Init() {
       }
     }
   }
+<<<<<<< HEAD
 #endif  // __MINGW32__
+||||||| merged common ancestors
+#endif // __MINGW32__
+=======
+#  endif  // __MINGW32__
+>>>>>>> upstream-releases
 #endif
 
 #if defined(XP_MACOSX)
@@ -876,16 +1095,8 @@ nsresult nsSystemInfo::Init() {
 
 #ifdef MOZ_WIDGET_ANDROID
   AndroidSystemInfo info;
-  if (XRE_IsContentProcess()) {
-    dom::ContentChild* child = dom::ContentChild::GetSingleton();
-    if (child) {
-      child->SendGetAndroidSystemInfo(&info);
-      SetupAndroidInfo(info);
-    }
-  } else {
-    GetAndroidSystemInfo(&info);
-    SetupAndroidInfo(info);
-  }
+  GetAndroidSystemInfo(&info);
+  SetupAndroidInfo(info);
 #endif
 
 #if defined(XP_LINUX) && defined(MOZ_SANDBOX)
@@ -922,17 +1133,31 @@ nsresult nsSystemInfo::Init() {
 // This version will need to be updated whenever there is a new official
 // Android release.
 // See: https://cs.chromium.org/chromium/src/base/sys_info_android.cc?l=61
-#define DEFAULT_ANDROID_VERSION "6.0.99"
+#  define DEFAULT_ANDROID_VERSION "6.0.99"
 
 /* static */
+<<<<<<< HEAD
 void nsSystemInfo::GetAndroidSystemInfo(AndroidSystemInfo* aInfo) {
   MOZ_ASSERT(XRE_IsParentProcess());
 
   if (!mozilla::AndroidBridge::Bridge()) {
+||||||| merged common ancestors
+void
+nsSystemInfo::GetAndroidSystemInfo(AndroidSystemInfo* aInfo)
+{
+  MOZ_ASSERT(XRE_IsParentProcess());
+
+  if (!mozilla::AndroidBridge::Bridge()) {
+=======
+void nsSystemInfo::GetAndroidSystemInfo(AndroidSystemInfo* aInfo) {
+  if (!jni::IsAvailable()) {
+    // called from xpcshell etc.
+>>>>>>> upstream-releases
     aInfo->sdk_version() = 0;
     return;
   }
 
+<<<<<<< HEAD
   nsAutoString str;
   if (mozilla::AndroidBridge::Bridge()->GetStaticStringField("android/os/Build",
                                                              "MODEL", str)) {
@@ -963,8 +1188,62 @@ void nsSystemInfo::GetAndroidSystemInfo(AndroidSystemInfo* aInfo) {
   if (!mozilla::AndroidBridge::Bridge()->GetStaticIntField(
           "android/os/Build$VERSION", "SDK_INT", &sdk_version)) {
     sdk_version = 0;
+||||||| merged common ancestors
+  nsAutoString str;
+  if (mozilla::AndroidBridge::Bridge()->GetStaticStringField(
+      "android/os/Build", "MODEL", str)) {
+    aInfo->device() = str;
   }
-  aInfo->sdk_version() = sdk_version;
+  if (mozilla::AndroidBridge::Bridge()->GetStaticStringField(
+      "android/os/Build", "MANUFACTURER", str)) {
+    aInfo->manufacturer() = str;
+  }
+  if (mozilla::AndroidBridge::Bridge()->GetStaticStringField(
+      "android/os/Build$VERSION", "RELEASE", str)) {
+    int major_version;
+    int minor_version;
+    int bugfix_version;
+    int num_read = sscanf(NS_ConvertUTF16toUTF8(str).get(), "%d.%d.%d", &major_version, &minor_version, &bugfix_version);
+    if (num_read == 0) {
+      aInfo->release_version() = NS_LITERAL_STRING(DEFAULT_ANDROID_VERSION);
+    } else {
+      aInfo->release_version() = str;
+    }
+  }
+  if (mozilla::AndroidBridge::Bridge()->GetStaticStringField(
+      "android/os/Build", "HARDWARE", str)) {
+    aInfo->hardware() = str;
+  }
+  int32_t sdk_version;
+  if (!mozilla::AndroidBridge::Bridge()->GetStaticIntField(
+      "android/os/Build$VERSION", "SDK_INT", &sdk_version)) {
+    sdk_version = 0;
+=======
+  jni::String::LocalRef model = java::sdk::Build::MODEL();
+  aInfo->device() = model->ToString();
+
+  jni::String::LocalRef manufacturer =
+      mozilla::java::sdk::Build::MANUFACTURER();
+  aInfo->manufacturer() = manufacturer->ToString();
+
+  jni::String::LocalRef hardware = java::sdk::Build::HARDWARE();
+  aInfo->hardware() = hardware->ToString();
+
+  jni::String::LocalRef release = java::sdk::VERSION::RELEASE();
+  nsString str(release->ToString());
+  int major_version;
+  int minor_version;
+  int bugfix_version;
+  int num_read = sscanf(NS_ConvertUTF16toUTF8(str).get(), "%d.%d.%d",
+                        &major_version, &minor_version, &bugfix_version);
+  if (num_read == 0) {
+    aInfo->release_version() = NS_LITERAL_STRING(DEFAULT_ANDROID_VERSION);
+  } else {
+    aInfo->release_version() = str;
+>>>>>>> upstream-releases
+  }
+
+  aInfo->sdk_version() = jni::GetAPIVersion();
   aInfo->isTablet() = java::GeckoAppShell::IsTablet();
 }
 
@@ -989,14 +1268,19 @@ void nsSystemInfo::SetupAndroidInfo(const AndroidSystemInfo& aInfo) {
   if (NS_SUCCEEDED(rv)) {
     SetPropertyAsAString(NS_LITERAL_STRING("kernel_version"), str);
   }
+<<<<<<< HEAD
   // When AndroidBridge is not available (eg. in xpcshell tests), sdk_version is
   // 0.
+||||||| merged common ancestors
+  // When AndroidBridge is not available (eg. in xpcshell tests), sdk_version is 0.
+=======
+  // When JNI is not available (eg. in xpcshell tests), sdk_version is 0.
+>>>>>>> upstream-releases
   if (aInfo.sdk_version() != 0) {
-    android_sdk_version = aInfo.sdk_version();
-    if (android_sdk_version >= 8 && !aInfo.hardware().IsEmpty()) {
+    if (!aInfo.hardware().IsEmpty()) {
       SetPropertyAsAString(NS_LITERAL_STRING("hardware"), aInfo.hardware());
     }
-    SetPropertyAsInt32(NS_LITERAL_STRING("version"), android_sdk_version);
+    SetPropertyAsInt32(NS_LITERAL_STRING("version"), aInfo.sdk_version());
   }
 }
 #endif  // MOZ_WIDGET_ANDROID
@@ -1036,6 +1320,7 @@ void nsSystemInfo::SetUint64Property(const nsAString& aPropertyName,
   }
 }
 
+<<<<<<< HEAD
 #if defined(XP_WIN)
 NS_IMETHODIMP
 nsSystemInfo::Observe(nsISupports* aSubject, const char* aTopic,
@@ -1052,24 +1337,161 @@ nsSystemInfo::Observe(nsISupports* aSubject, const char* aTopic,
       return rv;
     }
     return GetProfileHDDInfo();
-  }
-  return NS_OK;
-}
+||||||| merged common ancestors
+#if defined(XP_WIN)
+NS_IMETHODIMP
+nsSystemInfo::Observe(nsISupports* aSubject, const char* aTopic,
+                      const char16_t* aData)
+{
+  if (!strcmp(aTopic, "profile-do-change")) {
+    nsresult rv;
+    nsCOMPtr<nsIObserverService> obsService =
+      do_GetService(NS_OBSERVERSERVICE_CONTRACTID, &rv);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    rv = obsService->RemoveObserver(this, "profile-do-change");
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    return GetProfileHDDInfo();
+=======
+#ifdef XP_WIN
 
+static bool GetJSObjForDiskInfo(JSContext* aCx, JS::Handle<JSObject*> aParent,
+                                const FolderDiskInfo& info,
+                                const char* propName) {
+  JS::Rooted<JSObject*> jsInfo(aCx, JS_NewPlainObject(aCx));
+  if (!jsInfo) {
+    return false;
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
 nsresult nsSystemInfo::GetProfileHDDInfo() {
   nsAutoCString hddModel, hddRevision;
   nsresult rv = GetHDDInfo(NS_APP_USER_PROFILE_50_DIR, hddModel, hddRevision);
   if (NS_FAILED(rv)) {
     return rv;
-  }
-  rv = SetPropertyAsACString(NS_LITERAL_STRING("profileHDDModel"), hddModel);
+||||||| merged common ancestors
+nsresult
+nsSystemInfo::GetProfileHDDInfo()
+{
+  nsAutoCString hddModel, hddRevision;
+  nsresult rv = GetHDDInfo(NS_APP_USER_PROFILE_50_DIR, hddModel, hddRevision);
   if (NS_FAILED(rv)) {
     return rv;
+=======
+  JSString* strModel =
+      JS_NewStringCopyN(aCx, info.model.get(), info.model.Length());
+  if (!strModel) {
+    return false;
+>>>>>>> upstream-releases
   }
-  rv = SetPropertyAsACString(NS_LITERAL_STRING("profileHDDRevision"),
-                             hddRevision);
-  return rv;
-}
+  JS::Rooted<JS::Value> valModel(aCx, JS::StringValue(strModel));
+  if (!JS_SetProperty(aCx, jsInfo, "model", valModel)) {
+    return false;
+  }
 
+  JSString* strRevision =
+      JS_NewStringCopyN(aCx, info.revision.get(), info.revision.Length());
+  if (!strRevision) {
+    return false;
+  }
+  JS::Rooted<JS::Value> valRevision(aCx, JS::StringValue(strRevision));
+  if (!JS_SetProperty(aCx, jsInfo, "revision", valRevision)) {
+    return false;
+  }
+
+  JSString* strSSD = JS_NewStringCopyZ(aCx, info.isSSD ? "SSD" : "HDD");
+  if (!strSSD) {
+    return false;
+  }
+  JS::Rooted<JS::Value> valSSD(aCx, JS::StringValue(strSSD));
+  if (!JS_SetProperty(aCx, jsInfo, "type", valSSD)) {
+    return false;
+  }
+
+  JS::Rooted<JS::Value> val(aCx, JS::ObjectValue(*jsInfo));
+  return JS_SetProperty(aCx, aParent, propName, val);
+}
+#endif
+
+NS_IMETHODIMP
+nsSystemInfo::GetDiskInfo(JSContext* aCx, Promise** aResult) {
+  NS_ENSURE_ARG_POINTER(aResult);
+  *aResult = nullptr;
+  if (!XRE_IsParentProcess()) {
+    return NS_ERROR_FAILURE;
+  }
+#ifdef XP_WIN
+  nsIGlobalObject* global = xpc::CurrentNativeGlobal(aCx);
+  if (NS_WARN_IF(!global)) {
+    return NS_ERROR_FAILURE;
+  }
+  ErrorResult erv;
+  RefPtr<Promise> promise = Promise::Create(global, erv);
+  if (NS_WARN_IF(erv.Failed())) {
+    return erv.StealNSResult();
+  }
+
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS_INHERITED(nsSystemInfo, nsHashPropertyBag, nsIObserver)
 #endif  // defined(XP_WIN)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS_INHERITED(nsSystemInfo, nsHashPropertyBag, nsIObserver)
+#endif // defined(XP_WIN)
+
+=======
+  if (!mDiskInfoPromise) {
+    RefPtr<LazyIdleThread> lazyIOThread =
+        new LazyIdleThread(3000, NS_LITERAL_CSTRING("SystemInfoIdleThread"));
+    mDiskInfoPromise = InvokeAsync(lazyIOThread, __func__, []() {
+      DiskInfo info;
+      nsresult rv = CollectDiskInfo(info);
+      if (NS_SUCCEEDED(rv)) {
+        return DiskInfoPromise::CreateAndResolve(info, __func__);
+      }
+      return DiskInfoPromise::CreateAndReject(rv, __func__);
+    });
+  }
+
+  // Chain the new promise to the extant mozpromise.
+  RefPtr<Promise> capturedPromise = promise;
+  mDiskInfoPromise->Then(
+      GetMainThreadSerialEventTarget(), __func__,
+      [capturedPromise](const DiskInfo& info) {
+        RefPtr<nsIGlobalObject> global = capturedPromise->GetGlobalObject();
+        AutoJSAPI jsapi;
+        if (!global || !jsapi.Init(global)) {
+          capturedPromise->MaybeReject(NS_ERROR_UNEXPECTED);
+          return;
+        }
+        JSContext* cx = jsapi.cx();
+        JS::Rooted<JSObject*> jsInfo(cx, JS_NewPlainObject(cx));
+        // Store data in the rv:
+        bool succeededSettingAllObjects =
+            jsInfo && GetJSObjForDiskInfo(cx, jsInfo, info.binary, "binary") &&
+            GetJSObjForDiskInfo(cx, jsInfo, info.profile, "profile") &&
+            GetJSObjForDiskInfo(cx, jsInfo, info.system, "system");
+        // The above can fail due to OOM
+        if (!succeededSettingAllObjects) {
+          JS_ClearPendingException(cx);
+          capturedPromise->MaybeReject(NS_ERROR_FAILURE);
+          return;
+        }
+
+        JS::Rooted<JS::Value> val(cx, JS::ObjectValue(*jsInfo));
+        capturedPromise->MaybeResolve(val);
+      },
+      [capturedPromise](const nsresult rv) {
+        capturedPromise->MaybeReject(rv);
+      });
+
+  promise.forget(aResult);
+#endif
+  return NS_OK;
+}
+
+NS_IMPL_ISUPPORTS_INHERITED(nsSystemInfo, nsHashPropertyBag, nsISystemInfo)
+>>>>>>> upstream-releases

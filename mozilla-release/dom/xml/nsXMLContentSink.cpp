@@ -7,7 +7,7 @@
 #include "nsCOMPtr.h"
 #include "nsXMLContentSink.h"
 #include "nsIParser.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIContent.h"
 #include "nsIURI.h"
 #include "nsNetUtil.h"
@@ -45,7 +45,6 @@
 #include "nsError.h"
 #include "nsNodeUtils.h"
 #include "nsIScriptGlobalObject.h"
-#include "nsIHTMLDocument.h"
 #include "mozAutoDocUpdate.h"
 #include "nsMimeTypes.h"
 #include "nsHtml5SVGLoadDispatcher.h"
@@ -72,9 +71,23 @@ using namespace mozilla::dom;
 //    increase as we support more and more HTML elements. How can code
 //    from the code be factored?
 
+<<<<<<< HEAD
 nsresult NS_NewXMLContentSink(nsIXMLContentSink** aResult, nsIDocument* aDoc,
                               nsIURI* aURI, nsISupports* aContainer,
                               nsIChannel* aChannel) {
+||||||| merged common ancestors
+nsresult
+NS_NewXMLContentSink(nsIXMLContentSink** aResult,
+                     nsIDocument* aDoc,
+                     nsIURI* aURI,
+                     nsISupports* aContainer,
+                     nsIChannel* aChannel)
+{
+=======
+nsresult NS_NewXMLContentSink(nsIXMLContentSink** aResult, Document* aDoc,
+                              nsIURI* aURI, nsISupports* aContainer,
+                              nsIChannel* aChannel) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(nullptr != aResult, "null ptr");
   if (nullptr == aResult) {
     return NS_ERROR_NULL_POINTER;
@@ -102,8 +115,20 @@ nsXMLContentSink::nsXMLContentSink()
 
 nsXMLContentSink::~nsXMLContentSink() {}
 
+<<<<<<< HEAD
 nsresult nsXMLContentSink::Init(nsIDocument* aDoc, nsIURI* aURI,
                                 nsISupports* aContainer, nsIChannel* aChannel) {
+||||||| merged common ancestors
+nsresult
+nsXMLContentSink::Init(nsIDocument* aDoc,
+                       nsIURI* aURI,
+                       nsISupports* aContainer,
+                       nsIChannel* aChannel)
+{
+=======
+nsresult nsXMLContentSink::Init(Document* aDoc, nsIURI* aURI,
+                                nsISupports* aContainer, nsIChannel* aChannel) {
+>>>>>>> upstream-releases
   nsresult rv = nsContentSink::Init(aDoc, aURI, aContainer, aChannel);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -241,7 +266,7 @@ NS_IMETHODIMP
 nsXMLContentSink::DidBuildModel(bool aTerminated) {
   if (!mParser) {
     // If mParser is null, this parse has already been terminated and must
-    // not been terminated again. However, nsDocument may still think that
+    // not been terminated again. However, Document may still think that
     // the parse has not been terminated and call back into here in the case
     // where the XML parser has finished but the XSLT transform associated
     // with the document has not.
@@ -319,13 +344,17 @@ nsXMLContentSink::DidBuildModel(bool aTerminated) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXMLContentSink::OnDocumentCreated(nsIDocument* aResultDocument) {
+||||||| merged common ancestors
+nsXMLContentSink::OnDocumentCreated(nsIDocument* aResultDocument)
+{
+=======
+nsXMLContentSink::OnDocumentCreated(Document* aResultDocument) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aResultDocument);
 
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(aResultDocument);
-  if (htmlDoc) {
-    htmlDoc->SetDocWriteDisabled(true);
-  }
+  aResultDocument->SetDocWriteDisabled(true);
 
   nsCOMPtr<nsIContentViewer> contentViewer;
   mDocShell->GetContentViewer(getter_AddRefs(contentViewer));
@@ -336,10 +365,21 @@ nsXMLContentSink::OnDocumentCreated(nsIDocument* aResultDocument) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXMLContentSink::OnTransformDone(nsresult aResult,
                                   nsIDocument* aResultDocument) {
   MOZ_ASSERT(aResultDocument,
              "Don't notify about transform end without a document.");
+||||||| merged common ancestors
+nsXMLContentSink::OnTransformDone(nsresult aResult,
+                                  nsIDocument* aResultDocument)
+{
+  MOZ_ASSERT(aResultDocument, "Don't notify about transform end without a document.");
+=======
+nsXMLContentSink::OnTransformDone(nsresult aResult, Document* aResultDocument) {
+  MOZ_ASSERT(aResultDocument,
+             "Don't notify about transform end without a document.");
+>>>>>>> upstream-releases
 
   mDocumentChildren.Clear();
 
@@ -353,7 +393,7 @@ nsXMLContentSink::OnTransformDone(nsresult aResult,
     contentViewer->SetDocument(aResultDocument);
   }
 
-  nsCOMPtr<nsIDocument> originalDocument = mDocument;
+  RefPtr<Document> originalDocument = mDocument;
   bool blockingOnload = mIsBlockingOnload;
   if (!mRunsToCompletion) {
     // This BlockOnload call corresponds to the UnblockOnload call in
@@ -363,10 +403,7 @@ nsXMLContentSink::OnTransformDone(nsresult aResult,
   }
   // Transform succeeded, or it failed and we have an error document to display.
   mDocument = aResultDocument;
-  nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(mDocument);
-  if (htmlDoc) {
-    htmlDoc->SetDocWriteDisabled(false);
-  }
+  aResultDocument->SetDocWriteDisabled(false);
 
   // Notify document observers that all the content has been stuck
   // into the document.
@@ -737,7 +774,17 @@ void nsXMLContentSink::SetDocumentCharset(NotNull<const Encoding*> aEncoding) {
   }
 }
 
+<<<<<<< HEAD
 nsISupports* nsXMLContentSink::GetTarget() { return mDocument; }
+||||||| merged common ancestors
+nsISupports *
+nsXMLContentSink::GetTarget()
+{
+  return mDocument;
+}
+=======
+nsISupports* nsXMLContentSink::GetTarget() { return ToSupports(mDocument); }
+>>>>>>> upstream-releases
 
 bool nsXMLContentSink::IsScriptExecuting() { return IsScriptExecutingImpl(); }
 
@@ -1074,6 +1121,8 @@ nsresult nsXMLContentSink::HandleEndElement(const char16_t* aName,
     // probably need to deal here.... (and stop appending them on open).
     mState = eXMLContentSinkState_InEpilog;
 
+    mDocument->TriggerInitialDocumentTranslation();
+
     // We might have had no occasion to start layout yet.  Do so now.
     MaybeStartLayout(false);
   }
@@ -1408,7 +1457,19 @@ nsresult nsXMLContentSink::AddText(const char16_t* aText, int32_t aLength) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsXMLContentSink::FlushPendingNotifications(FlushType aType) {
+||||||| merged common ancestors
+void
+nsXMLContentSink::FlushPendingNotifications(FlushType aType)
+{
+=======
+void nsXMLContentSink::InitialDocumentTranslationCompleted() {
+  StartLayout(false);
+}
+
+void nsXMLContentSink::FlushPendingNotifications(FlushType aType) {
+>>>>>>> upstream-releases
   // Only flush tags if we're not doing the notification ourselves
   // (since we aren't reentrant)
   if (!mInNotification) {
@@ -1440,7 +1501,6 @@ void nsXMLContentSink::FlushPendingNotifications(FlushType aType) {
  */
 nsresult nsXMLContentSink::FlushTags() {
   mDeferredFlushTags = false;
-  bool oldBeganUpdate = mBeganUpdate;
   uint32_t oldUpdates = mUpdatesInNotification;
 
   mUpdatesInNotification = 0;
@@ -1448,7 +1508,6 @@ nsresult nsXMLContentSink::FlushTags() {
   {
     // Scope so we call EndUpdate before we decrease mInNotification
     mozAutoDocUpdate updateBatch(mDocument, true);
-    mBeganUpdate = true;
 
     // Don't release last text node in case we need to add to it again
     FlushText(false);
@@ -1483,8 +1542,6 @@ nsresult nsXMLContentSink::FlushTags() {
   }
 
   mUpdatesInNotification = oldUpdates;
-  mBeganUpdate = oldBeganUpdate;
-
   return NS_OK;
 }
 

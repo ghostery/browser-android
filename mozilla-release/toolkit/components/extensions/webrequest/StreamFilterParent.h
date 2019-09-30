@@ -39,12 +39,32 @@ namespace extensions {
 using namespace mozilla::dom;
 using mozilla::ipc::IPCResult;
 
+<<<<<<< HEAD
 class StreamFilterParent final : public PStreamFilterParent,
                                  public nsIStreamListener,
                                  public nsIThreadRetargetableStreamListener,
                                  public nsIRequest,
                                  public StreamFilterBase {
  public:
+||||||| merged common ancestors
+class StreamFilterParent final
+  : public PStreamFilterParent
+  , public nsIStreamListener
+  , public nsIThreadRetargetableStreamListener
+  , public nsIRequest
+  , public StreamFilterBase
+{
+public:
+=======
+class StreamFilterParent final : public PStreamFilterParent,
+                                 public nsIStreamListener,
+                                 public nsIThreadRetargetableStreamListener,
+                                 public nsIRequest,
+                                 public StreamFilterBase {
+  friend class PStreamFilterParent;
+
+ public:
+>>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSISTREAMLISTENER
   NS_DECL_NSIREQUEST
@@ -86,6 +106,7 @@ class StreamFilterParent final : public PStreamFilterParent,
  protected:
   virtual ~StreamFilterParent();
 
+<<<<<<< HEAD
   virtual IPCResult RecvWrite(Data&& aData) override;
   virtual IPCResult RecvFlushedData() override;
   virtual IPCResult RecvSuspend() override;
@@ -99,6 +120,37 @@ class StreamFilterParent final : public PStreamFilterParent,
  private:
   bool IPCActive() {
     return (mState != State::Closed && mState != State::Disconnecting &&
+||||||| merged common ancestors
+  virtual IPCResult RecvWrite(Data&& aData) override;
+  virtual IPCResult RecvFlushedData() override;
+  virtual IPCResult RecvSuspend() override;
+  virtual IPCResult RecvResume() override;
+  virtual IPCResult RecvClose() override;
+  virtual IPCResult RecvDisconnect() override;
+  virtual IPCResult RecvDestroy() override;
+
+  virtual void DeallocPStreamFilterParent() override;
+
+private:
+  bool IPCActive()
+  {
+    return (mState != State::Closed &&
+            mState != State::Disconnecting &&
+=======
+  IPCResult RecvWrite(Data&& aData);
+  IPCResult RecvFlushedData();
+  IPCResult RecvSuspend();
+  IPCResult RecvResume();
+  IPCResult RecvClose();
+  IPCResult RecvDisconnect();
+  IPCResult RecvDestroy();
+
+  virtual void ActorDealloc() override;
+
+ private:
+  bool IPCActive() {
+    return (mState != State::Closed && mState != State::Disconnecting &&
+>>>>>>> upstream-releases
             mState != State::Disconnected);
   }
 

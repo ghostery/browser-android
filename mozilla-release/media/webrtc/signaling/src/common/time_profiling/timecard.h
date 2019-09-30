@@ -30,42 +30,75 @@ extern "C" {
 
 typedef struct {
   PRTime timestamp;
-  const char *event;
-  const char *file;
+  const char* event;
+  const char* file;
   unsigned int line;
-  const char *function;
+  const char* function;
 } TimecardEntry;
 
 typedef struct Timecard {
   size_t curr_entry;
   size_t entries_allocated;
-  TimecardEntry *entries;
+  TimecardEntry* entries;
   PRTime start_time;
 } Timecard;
 
 /**
  * Creates a new Timecard structure for tracking events.
  */
+<<<<<<< HEAD
 Timecard *create_timecard();
+||||||| merged common ancestors
+Timecard *
+create_timecard();
+=======
+Timecard* create_timecard();
+>>>>>>> upstream-releases
 
 /**
  * Frees the memory associated with a timecard. After returning, the
  * timecard pointed to by tc is no longer valid.
  */
+<<<<<<< HEAD
 void destroy_timecard(Timecard *tc);
+||||||| merged common ancestors
+void
+destroy_timecard(Timecard *tc);
+=======
+void destroy_timecard(Timecard* tc);
+>>>>>>> upstream-releases
 
 /**
  * Records a new event in the indicated timecard. This should not be
  * called directly; code should instead use the STAMP_TIMECARD macro,
  * above.
  */
+<<<<<<< HEAD
 void stamp_timecard(Timecard *tc, const char *event, const char *file,
                     unsigned int line, const char *function);
+||||||| merged common ancestors
+void
+stamp_timecard(Timecard *tc,
+               const char *event,
+               const char *file,
+               unsigned int line,
+               const char *function);
+=======
+void stamp_timecard(Timecard* tc, const char* event, const char* file,
+                    unsigned int line, const char* function);
+>>>>>>> upstream-releases
 
 /**
  * Formats and outputs the contents of a timecard onto stdout.
  */
+<<<<<<< HEAD
 void print_timecard(Timecard *tc);
+||||||| merged common ancestors
+void
+print_timecard(Timecard *tc);
+=======
+void print_timecard(Timecard* tc);
+>>>>>>> upstream-releases
 
 #ifdef __cplusplus
 }

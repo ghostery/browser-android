@@ -24,7 +24,7 @@
 #include "nsHashKeys.h"
 
 #ifdef MOZ_WIDGET_COCOA
-#include "PluginInterposeOSX.h"
+#  include "PluginInterposeOSX.h"
 #endif
 
 #include "mozilla/plugins/PPluginModuleChild.h"
@@ -40,6 +40,7 @@ namespace plugins {
 
 class PluginInstanceChild;
 
+<<<<<<< HEAD
 class PluginModuleChild : public PPluginModuleChild {
  protected:
   virtual mozilla::ipc::RacyInterruptPolicy MediateInterruptRace(
@@ -115,6 +116,164 @@ class PluginModuleChild : public PPluginModuleChild {
   virtual ~PluginModuleChild();
 
   void CommonInit();
+||||||| merged common ancestors
+class PluginModuleChild : public PPluginModuleChild
+{
+protected:
+    virtual mozilla::ipc::RacyInterruptPolicy
+    MediateInterruptRace(const MessageInfo& parent,
+                         const MessageInfo& child) override
+    {
+        return MediateRace(parent, child);
+    }
+
+    virtual bool ShouldContinueFromReplyTimeout() override;
+
+    virtual mozilla::ipc::IPCResult RecvSettingChanged(const PluginSettings& aSettings) override;
+
+    // Implement the PPluginModuleChild interface
+    virtual mozilla::ipc::IPCResult RecvInitProfiler(Endpoint<mozilla::PProfilerChild>&& aEndpoint) override;
+    virtual mozilla::ipc::IPCResult RecvDisableFlashProtectedMode() override;
+    virtual mozilla::ipc::IPCResult AnswerNP_GetEntryPoints(NPError* rv) override;
+    virtual mozilla::ipc::IPCResult AnswerNP_Initialize(const PluginSettings& aSettings, NPError* rv) override;
+    virtual mozilla::ipc::IPCResult AnswerSyncNPP_New(PPluginInstanceChild* aActor, NPError* rv)
+                                   override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvInitPluginModuleChild(Endpoint<PPluginModuleChild>&& endpoint) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvInitPluginFunctionBroker(Endpoint<PFunctionBrokerChild>&& endpoint) override;
+
+    virtual PPluginInstanceChild*
+    AllocPPluginInstanceChild(const nsCString& aMimeType,
+                              const InfallibleTArray<nsCString>& aNames,
+                              const InfallibleTArray<nsCString>& aValues)
+                              override;
+
+    virtual bool
+    DeallocPPluginInstanceChild(PPluginInstanceChild* aActor) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvPPluginInstanceConstructor(PPluginInstanceChild* aActor,
+                                   const nsCString& aMimeType,
+                                   InfallibleTArray<nsCString>&& aNames,
+                                   InfallibleTArray<nsCString>&& aValues)
+                                   override;
+    virtual mozilla::ipc::IPCResult
+    AnswerNP_Shutdown(NPError *rv) override;
+
+    virtual mozilla::ipc::IPCResult
+    AnswerOptionalFunctionsSupported(bool *aURLRedirectNotify,
+                                     bool *aClearSiteData,
+                                     bool *aGetSitesWithData) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvNPP_ClearSiteData(const nsCString& aSite,
+                            const uint64_t& aFlags,
+                            const uint64_t& aMaxAge,
+                            const uint64_t& aCallbackId) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvNPP_GetSitesWithData(const uint64_t& aCallbackId) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvSetAudioSessionData(const nsID& aId,
+                            const nsString& aDisplayName,
+                            const nsString& aIconPath) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvSetParentHangTimeout(const uint32_t& aSeconds) override;
+
+    virtual mozilla::ipc::IPCResult
+    AnswerInitCrashReporter(Shmem&& aShmem, mozilla::dom::NativeThreadId* aId) override;
+
+    virtual void
+    ActorDestroy(ActorDestroyReason why) override;
+
+    virtual mozilla::ipc::IPCResult
+    RecvProcessNativeEventsInInterruptCall() override;
+
+    virtual mozilla::ipc::IPCResult
+    AnswerModuleSupportsAsyncRender(bool* aResult) override;
+public:
+    explicit PluginModuleChild(bool aIsChrome);
+    virtual ~PluginModuleChild();
+
+    void CommonInit();
+=======
+class PluginModuleChild : public PPluginModuleChild {
+  friend class PPluginModuleChild;
+
+ protected:
+  virtual mozilla::ipc::RacyInterruptPolicy MediateInterruptRace(
+      const MessageInfo& parent, const MessageInfo& child) override {
+    return MediateRace(parent, child);
+  }
+
+  virtual bool ShouldContinueFromReplyTimeout() override;
+
+  mozilla::ipc::IPCResult RecvSettingChanged(const PluginSettings& aSettings);
+
+  // Implement the PPluginModuleChild interface
+  mozilla::ipc::IPCResult RecvInitProfiler(
+      Endpoint<mozilla::PProfilerChild>&& aEndpoint);
+  mozilla::ipc::IPCResult RecvDisableFlashProtectedMode();
+  mozilla::ipc::IPCResult AnswerNP_GetEntryPoints(NPError* rv);
+  mozilla::ipc::IPCResult AnswerNP_Initialize(const PluginSettings& aSettings,
+                                              NPError* rv);
+  mozilla::ipc::IPCResult AnswerSyncNPP_New(PPluginInstanceChild* aActor,
+                                            NPError* rv);
+
+  mozilla::ipc::IPCResult RecvInitPluginModuleChild(
+      Endpoint<PPluginModuleChild>&& endpoint);
+
+  mozilla::ipc::IPCResult RecvInitPluginFunctionBroker(
+      Endpoint<PFunctionBrokerChild>&& endpoint);
+
+  PPluginInstanceChild* AllocPPluginInstanceChild(
+      const nsCString& aMimeType, const InfallibleTArray<nsCString>& aNames,
+      const InfallibleTArray<nsCString>& aValues);
+
+  bool DeallocPPluginInstanceChild(PPluginInstanceChild* aActor);
+
+  mozilla::ipc::IPCResult RecvPPluginInstanceConstructor(
+      PPluginInstanceChild* aActor, const nsCString& aMimeType,
+      InfallibleTArray<nsCString>&& aNames,
+      InfallibleTArray<nsCString>&& aValues) override;
+  mozilla::ipc::IPCResult AnswerNP_Shutdown(NPError* rv);
+
+  mozilla::ipc::IPCResult AnswerOptionalFunctionsSupported(
+      bool* aURLRedirectNotify, bool* aClearSiteData, bool* aGetSitesWithData);
+
+  mozilla::ipc::IPCResult RecvNPP_ClearSiteData(const nsCString& aSite,
+                                                const uint64_t& aFlags,
+                                                const uint64_t& aMaxAge,
+                                                const uint64_t& aCallbackId);
+
+  mozilla::ipc::IPCResult RecvNPP_GetSitesWithData(const uint64_t& aCallbackId);
+
+  mozilla::ipc::IPCResult RecvSetAudioSessionData(const nsID& aId,
+                                                  const nsString& aDisplayName,
+                                                  const nsString& aIconPath);
+
+  mozilla::ipc::IPCResult RecvSetParentHangTimeout(const uint32_t& aSeconds);
+
+  mozilla::ipc::IPCResult AnswerInitCrashReporter(
+      Shmem&& aShmem, mozilla::dom::NativeThreadId* aId);
+
+  virtual void ActorDestroy(ActorDestroyReason why) override;
+
+  mozilla::ipc::IPCResult RecvProcessNativeEventsInInterruptCall();
+
+  mozilla::ipc::IPCResult AnswerModuleSupportsAsyncRender(bool* aResult);
+
+ public:
+  explicit PluginModuleChild(bool aIsChrome);
+  virtual ~PluginModuleChild();
+
+  void CommonInit();
+>>>>>>> upstream-releases
 
 #if defined(OS_WIN) && defined(MOZ_SANDBOX)
   // Path to the roaming Flash Player folder.  This is used to restore some
@@ -194,12 +353,28 @@ class PluginModuleChild : public PPluginModuleChild {
 
   const PluginSettings& Settings() const { return mCachedSettings; }
 
+<<<<<<< HEAD
   NPError PluginRequiresAudioDeviceChanges(PluginInstanceChild* aInstance,
                                            NPBool aShouldRegister);
   mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceChangeDetails(
       const NPAudioDeviceChangeDetailsIPC& detailsIPC) override;
   mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceStateChanged(
       const NPAudioDeviceStateChangedIPC& aDeviceStateIPC) override;
+||||||| merged common ancestors
+    NPError PluginRequiresAudioDeviceChanges(PluginInstanceChild* aInstance,
+                                             NPBool aShouldRegister);
+    mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceChangeDetails(
+        const NPAudioDeviceChangeDetailsIPC& detailsIPC) override;
+    mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceStateChanged(
+      const NPAudioDeviceStateChangedIPC& aDeviceStateIPC) override;
+=======
+  NPError PluginRequiresAudioDeviceChanges(PluginInstanceChild* aInstance,
+                                           NPBool aShouldRegister);
+  mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceChangeDetails(
+      const NPAudioDeviceChangeDetailsIPC& detailsIPC);
+  mozilla::ipc::IPCResult RecvNPP_SetValue_NPNVaudioDeviceStateChanged(
+      const NPAudioDeviceStateChangedIPC& aDeviceStateIPC);
+>>>>>>> upstream-releases
 
  private:
   NPError DoNP_Initialize(const PluginSettings& aSettings);
@@ -244,6 +419,7 @@ class PluginModuleChild : public PPluginModuleChild {
   PluginSettings mCachedSettings;
 
 #if defined(MOZ_WIDGET_GTK)
+<<<<<<< HEAD
   // If a plugin spins a nested glib event loop in response to a
   // synchronous IPC message from the browser, the loop might break
   // only after the browser responds to a request sent by the
@@ -281,6 +457,83 @@ class PluginModuleChild : public PPluginModuleChild {
   // MessagePumpForUI.
   int mTopLoopDepth;
 #endif
+||||||| merged common ancestors
+    // If a plugin spins a nested glib event loop in response to a
+    // synchronous IPC message from the browser, the loop might break
+    // only after the browser responds to a request sent by the
+    // plugin.  This can happen if a plugin uses gtk's synchronous
+    // copy/paste, for example.  But because the browser is blocked on
+    // a condvar, it can't respond to the request.  This situation
+    // isn't technically a deadlock, but the symptoms are basically
+    // the same from the user's perspective.
+    //
+    // We take two steps to prevent this
+    //
+    //  (1) Detect nested event loops spun by the plugin.  This is
+    //      done by scheduling a glib timer event in the plugin
+    //      process whenever the browser might block on the plugin.
+    //      If the plugin indeed spins a nested loop, this timer event
+    //      will fire "soon" thereafter.
+    //
+    //  (2) When a nested loop is detected, deschedule the
+    //      nested-loop-detection timer and in its place, schedule
+    //      another timer that periodically calls back into the
+    //      browser and spins a mini event loop.  This mini event loop
+    //      processes a handful of pending native events.
+    //
+    // Because only timer (1) or (2) (or neither) may be active at any
+    // point in time, we use the same member variable
+    // |mNestedLoopTimerId| to refer to both.
+    //
+    // When the browser no longer might be blocked on a plugin's IPC
+    // response, we deschedule whichever of (1) or (2) is active.
+    guint mNestedLoopTimerId;
+#  ifdef DEBUG
+    // Depth of the stack of calls to g_main_context_dispatch before any
+    // nested loops are run.  This is 1 when IPC calls are dispatched from
+    // g_main_context_iteration, or 0 when dispatched directly from
+    // MessagePumpForUI.
+    int mTopLoopDepth;
+#  endif
+=======
+  // If a plugin spins a nested glib event loop in response to a
+  // synchronous IPC message from the browser, the loop might break
+  // only after the browser responds to a request sent by the
+  // plugin.  This can happen if a plugin uses gtk's synchronous
+  // copy/paste, for example.  But because the browser is blocked on
+  // a condvar, it can't respond to the request.  This situation
+  // isn't technically a deadlock, but the symptoms are basically
+  // the same from the user's perspective.
+  //
+  // We take two steps to prevent this
+  //
+  //  (1) Detect nested event loops spun by the plugin.  This is
+  //      done by scheduling a glib timer event in the plugin
+  //      process whenever the browser might block on the plugin.
+  //      If the plugin indeed spins a nested loop, this timer event
+  //      will fire "soon" thereafter.
+  //
+  //  (2) When a nested loop is detected, deschedule the
+  //      nested-loop-detection timer and in its place, schedule
+  //      another timer that periodically calls back into the
+  //      browser and spins a mini event loop.  This mini event loop
+  //      processes a handful of pending native events.
+  //
+  // Because only timer (1) or (2) (or neither) may be active at any
+  // point in time, we use the same member variable
+  // |mNestedLoopTimerId| to refer to both.
+  //
+  // When the browser no longer might be blocked on a plugin's IPC
+  // response, we deschedule whichever of (1) or (2) is active.
+  guint mNestedLoopTimerId;
+#  ifdef DEBUG
+  // Depth of the stack of calls to g_main_context_dispatch before any
+  // nested loops are run.  This is 1 when IPC calls are dispatched from
+  // g_main_context_iteration, or 0 when dispatched directly from
+  // MessagePumpForUI.
+  int mTopLoopDepth;
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 #if defined(XP_WIN)

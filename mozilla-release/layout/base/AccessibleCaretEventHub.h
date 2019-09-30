@@ -19,12 +19,11 @@
 #include "mozilla/RefPtr.h"
 #include "nsWeakReference.h"
 
-class nsIPresShell;
 class nsITimer;
-class nsIDocument;
 
 namespace mozilla {
 class AccessibleCaretManager;
+class PresShell;
 class WidgetKeyboardEvent;
 class WidgetMouseEvent;
 class WidgetTouchEvent;
@@ -60,11 +59,27 @@ class WidgetTouchEvent;
 // Please see the wiki page for more information.
 // https://wiki.mozilla.org/AccessibleCaret
 //
+<<<<<<< HEAD
 class AccessibleCaretEventHub : public nsIReflowObserver,
                                 public nsIScrollObserver,
                                 public nsSupportsWeakReference {
  public:
   explicit AccessibleCaretEventHub(nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class AccessibleCaretEventHub
+  : public nsIReflowObserver
+  , public nsIScrollObserver
+  , public nsSupportsWeakReference
+{
+public:
+  explicit AccessibleCaretEventHub(nsIPresShell* aPresShell);
+=======
+class AccessibleCaretEventHub : public nsIReflowObserver,
+                                public nsIScrollObserver,
+                                public nsSupportsWeakReference {
+ public:
+  explicit AccessibleCaretEventHub(PresShell* aPresShell);
+>>>>>>> upstream-releases
   void Init();
   void Terminate();
 
@@ -97,7 +112,14 @@ class AccessibleCaretEventHub : public nsIReflowObserver,
   State* GetState() const;
 
   MOZ_CAN_RUN_SCRIPT
+<<<<<<< HEAD
   void OnSelectionChange(nsIDocument* aDocument, dom::Selection* aSelection,
+||||||| merged common ancestors
+  void OnSelectionChange(nsIDocument* aDocument,
+                         dom::Selection* aSelection,
+=======
+  void OnSelectionChange(dom::Document* aDocument, dom::Selection* aSelection,
+>>>>>>> upstream-releases
                          int16_t aReason);
 
  protected:
@@ -152,7 +174,7 @@ class AccessibleCaretEventHub : public nsIReflowObserver,
   State* mState = NoActionState();
 
   // Will be set to nullptr in Terminate().
-  nsIPresShell* MOZ_NON_OWNING_REF mPresShell = nullptr;
+  PresShell* MOZ_NON_OWNING_REF mPresShell = nullptr;
 
   UniquePtr<AccessibleCaretManager> mManager;
 
@@ -188,34 +210,51 @@ class AccessibleCaretEventHub::State {
  public:
   virtual const char* Name() const { return ""; }
 
+  MOZ_CAN_RUN_SCRIPT
   virtual nsEventStatus OnPress(AccessibleCaretEventHub* aContext,
                                 const nsPoint& aPoint, int32_t aTouchId,
                                 EventClassID aEventClass) {
     return nsEventStatus_eIgnore;
   }
 
+  MOZ_CAN_RUN_SCRIPT
   virtual nsEventStatus OnMove(AccessibleCaretEventHub* aContext,
                                const nsPoint& aPoint) {
     return nsEventStatus_eIgnore;
   }
 
+<<<<<<< HEAD
   virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext) {
+||||||| merged common ancestors
+  virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext)
+  {
+=======
+  MOZ_CAN_RUN_SCRIPT
+  virtual nsEventStatus OnRelease(AccessibleCaretEventHub* aContext) {
+>>>>>>> upstream-releases
     return nsEventStatus_eIgnore;
   }
 
+  MOZ_CAN_RUN_SCRIPT
   virtual nsEventStatus OnLongTap(AccessibleCaretEventHub* aContext,
                                   const nsPoint& aPoint) {
     return nsEventStatus_eIgnore;
   }
 
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnScrollStart(AccessibleCaretEventHub* aContext) {}
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnScrollEnd(AccessibleCaretEventHub* aContext) {}
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnScrollPositionChanged(AccessibleCaretEventHub* aContext) {}
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnBlur(AccessibleCaretEventHub* aContext,
                       bool aIsLeavingDocument) {}
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnSelectionChanged(AccessibleCaretEventHub* aContext,
-                                  nsIDocument* aDoc, dom::Selection* aSel,
+                                  dom::Document* aDoc, dom::Selection* aSel,
                                   int16_t aReason) {}
+  MOZ_CAN_RUN_SCRIPT
   virtual void OnReflow(AccessibleCaretEventHub* aContext) {}
   virtual void Enter(AccessibleCaretEventHub* aContext) {}
   virtual void Leave(AccessibleCaretEventHub* aContext) {}

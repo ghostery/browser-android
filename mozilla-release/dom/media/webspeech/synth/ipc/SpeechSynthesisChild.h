@@ -19,34 +19,78 @@ class SpeechTaskChild;
 
 class SpeechSynthesisChild : public PSpeechSynthesisChild {
   friend class nsSynthVoiceRegistry;
+  friend class PSpeechSynthesisChild;
 
+<<<<<<< HEAD
  public:
   mozilla::ipc::IPCResult RecvInitialVoicesAndState(
       nsTArray<RemoteVoice>&& aVoices, nsTArray<nsString>&& aDefaults,
       const bool& aIsSpeaking) override;
+||||||| merged common ancestors
+public:
+  mozilla::ipc::IPCResult RecvInitialVoicesAndState(nsTArray<RemoteVoice>&& aVoices,
+                                                    nsTArray<nsString>&& aDefaults,
+                                                    const bool& aIsSpeaking) override;
+=======
+ public:
+  mozilla::ipc::IPCResult RecvInitialVoicesAndState(
+      nsTArray<RemoteVoice>&& aVoices, nsTArray<nsString>&& aDefaults,
+      const bool& aIsSpeaking);
+>>>>>>> upstream-releases
 
-  mozilla::ipc::IPCResult RecvVoiceAdded(const RemoteVoice& aVoice) override;
+  mozilla::ipc::IPCResult RecvVoiceAdded(const RemoteVoice& aVoice);
 
-  mozilla::ipc::IPCResult RecvVoiceRemoved(const nsString& aUri) override;
+  mozilla::ipc::IPCResult RecvVoiceRemoved(const nsString& aUri);
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvSetDefaultVoice(const nsString& aUri,
                                               const bool& aIsDefault) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvSetDefaultVoice(const nsString& aUri, const bool& aIsDefault) override;
+=======
+  mozilla::ipc::IPCResult RecvSetDefaultVoice(const nsString& aUri,
+                                              const bool& aIsDefault);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvIsSpeakingChanged(
       const bool& aIsSpeaking) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvIsSpeakingChanged(const bool& aIsSpeaking) override;
+=======
+  mozilla::ipc::IPCResult RecvIsSpeakingChanged(const bool& aIsSpeaking);
+>>>>>>> upstream-releases
 
-  mozilla::ipc::IPCResult RecvNotifyVoicesChanged() override;
+  mozilla::ipc::IPCResult RecvNotifyVoicesChanged();
 
  protected:
   SpeechSynthesisChild();
   virtual ~SpeechSynthesisChild();
 
+<<<<<<< HEAD
   PSpeechSynthesisRequestChild* AllocPSpeechSynthesisRequestChild(
       const nsString& aLang, const nsString& aUri, const nsString& aText,
       const float& aVolume, const float& aPitch, const float& aRate,
       const bool& aIsChrome) override;
   bool DeallocPSpeechSynthesisRequestChild(
       PSpeechSynthesisRequestChild* aActor) override;
+||||||| merged common ancestors
+  PSpeechSynthesisRequestChild* AllocPSpeechSynthesisRequestChild(const nsString& aLang,
+                                                                  const nsString& aUri,
+                                                                  const nsString& aText,
+                                                                  const float& aVolume,
+                                                                  const float& aPitch,
+                                                                  const float& aRate,
+                                                                  const bool& aIsChrome) override;
+  bool DeallocPSpeechSynthesisRequestChild(PSpeechSynthesisRequestChild* aActor) override;
+=======
+  PSpeechSynthesisRequestChild* AllocPSpeechSynthesisRequestChild(
+      const nsString& aLang, const nsString& aUri, const nsString& aText,
+      const float& aVolume, const float& aPitch, const float& aRate,
+      const bool& aIsChrome);
+  bool DeallocPSpeechSynthesisRequestChild(
+      PSpeechSynthesisRequestChild* aActor);
+>>>>>>> upstream-releases
 };
 
 class SpeechSynthesisRequestChild : public PSpeechSynthesisRequestChild {

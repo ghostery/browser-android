@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
  :root {
   --flex-basis-outline-border-color: var(--blue-40);
   --flex-basis-outline-background-color: rgba(69, 161, 255, 0.25);
@@ -16,6 +17,25 @@
   --flex-shrinking-delta-outline-background-color: #322952;
 }
 
+||||||| merged common ancestors
+=======
+ :root {
+  --flex-basis-outline-border-color: var(--blue-40);
+  --flex-basis-outline-background-color: rgba(69, 161, 255, 0.25);
+  --flex-growing-delta-outline-background-color: rgba(221, 0, 169, 0.13);
+  --flex-shrinking-delta-outline-background-color: #E9E3FF;
+  --flex-min-max-properties-color: var(--purple-60);
+}
+
+:root.theme-dark {
+  --flex-basis-outline-border-color: rgba(10, 132, 255, 0.85);
+  --flex-basis-outline-background-color: rgba(10, 132, 255, 0.3);
+  --flex-growing-delta-outline-background-color: rgba(255, 26, 217, 0.25);
+  --flex-shrinking-delta-outline-background-color: #322952;
+  --flex-min-max-properties-color: var(--theme-highlight-purple);
+}
+
+>>>>>>> upstream-releases
 .layout-container {
   height: 100%;
   width: 100%;
@@ -37,6 +57,10 @@
 /**
  * Common styles for the layout container
  */
+
+.layout-container ul {
+  list-style: none;
+}
 
 .layout-container li {
   padding: 3px 0;
@@ -272,6 +296,7 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
   max-width: 450px;
 }
 
+<<<<<<< HEAD
 .flex-outline > * {
   /* To make sure very small distances on the outline still have enough room to be
      represented and to avoid overlapping labels, we make sure each grid item is at least
@@ -281,7 +306,28 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 }
 
 .flex-outline.column {
+||||||| merged common ancestors
+.flex-outline.column {
+=======
+.flex-outline > * {
+  /* To make sure very small distances on the outline still have enough room to be
+     represented and to avoid overlapping labels, we make sure each grid item is at least
+     10px wide. This might sometimes render the outline in a different way than the item
+     but the information shown will still be correct, and will be more easily visible */
+  min-width: 10px;
+}
+
+.flex-outline.vertical-tb {
+>>>>>>> upstream-releases
   transform: translate(50%, -2em) rotate(.25turn);
+}
+
+.flex-outline.vertical-bt {
+  transform:translate(50%, 12em) rotate(0.75turn);
+}
+
+.flex-outline.vertical-tb,
+.flex-outline.vertical-bt {
   transform-origin: center left;
   flex-basis: 150px;
   margin-bottom: 120px;
@@ -305,7 +351,7 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
   background-size: 16px;
   background-repeat: no-repeat;
   background-position: center 1px;
-  fill: currentColor;
+  fill: var(--flex-min-max-properties-color);
   -moz-context-properties: fill;
   width: 20px;
   height: 20px;
@@ -321,8 +367,12 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
     drop-shadow(0px -1px 0px var(--theme-body-background));
 }
 
-.flex-outline.column .flex-outline-final.clamped::after {
+.flex-outline.vertical-tb .flex-outline-final.clamped::after {
   transform: rotate(-.25turn);
+}
+
+.flex-outline.vertical-bt .flex-outline-final.clamped::after {
+  transform: rotate(-.75turn);
 }
 
 .flex-outline-basis {
@@ -400,12 +450,40 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 .flex-outline-point {
   position: relative;
   -moz-user-select: none;
+<<<<<<< HEAD
+  grid-row: 1;
+  display: grid;
+||||||| merged common ancestors
+}
+
+.flex-outline-point {
+  grid-row: 1;
+=======
   grid-row: 1;
   display: grid;
 }
 
+.flex-outline.horizontal-rl .flex-outline-point {
+  justify-self: start;
+}
+
+.flex-outline.vertical-bt .flex-outline-point {
+  transform: rotate(180deg);
+  justify-content: end;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 .flex-outline-point.basis,
 .flex-outline-point.basisfinal {
+||||||| merged common ancestors
+.flex-outline-point.basis {
+=======
+.flex-outline-point.basis,
+.flex-outline-point.basisfinal,
+.flex-outline.horizontal-rl .flex-outline-point.basis,
+.flex-outline.horizontal-rl .flex-outline-point.basisfinal {
+>>>>>>> upstream-releases
   grid-column-end: basis-end;
   justify-self: end;
   color: var(--theme-highlight-blue);
@@ -414,6 +492,11 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 .flex-outline.shrinking .flex-outline-point.basis {
   grid-column-start: basis-end;
   justify-self: start;
+}
+
+.flex-outline.horizontal-rl.shrinking .flex-outline-point.basis {
+  grid-column-start: basis-start;
+  justify-self: unset;
 }
 
 .flex-outline-point.final {
@@ -427,13 +510,20 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
   justify-self: end;
 }
 
+.flex-outline-point.min,
+.flex-outline-point.max {
+  color: var(--flex-min-max-properties-color);
+}
+
 .flex-outline-point.min {
   grid-column: min;
   place-self: end;
+  left: -4px;
 }
 
 .flex-outline.shrinking .flex-outline-point.min {
   place-self: end start;
+  left: -1px;
 }
 
 .flex-outline-point.max {
@@ -451,9 +541,11 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
   border-color: currentColor;
   border-style: solid;
   border-width: 0;
+  line-height: 1;
 }
 
-.flex-outline.column .flex-outline-point::before {
+.flex-outline.vertical-tb .flex-outline-point::before,
+.flex-outline.vertical-bt .flex-outline-point::before {
   padding: 0;
   writing-mode: sideways-lr;
 }
@@ -469,23 +561,71 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
   bottom: -12px;
 }
 
+<<<<<<< HEAD
 .flex-outline.column .flex-outline-point.max::before,
 .flex-outline.column .flex-outline-point.min::before {
+||||||| merged common ancestors
+.flex-outline.column .flex-outline-point.min::before,
+.flex-outline.column .flex-outline-point.min::before {
+=======
+.flex-outline.horizontal-rl .flex-outline-point.min::before,
+.flex-outline.horizontal-rl .flex-outline-point.max::before,
+.flex-outline.vertical-bt .flex-outline-point.min::before,
+.flex-outline.vertical-bt .flex-outline-point.max::before {
+  bottom: -37px;
+}
+
+.flex-outline.vertical-tb .flex-outline-point.max::before,
+.flex-outline.vertical-tb .flex-outline-point.min::before,
+.flex-outline.vertical-bt .flex-outline-point.max::before,
+.flex-outline.vertical-bt .flex-outline-point.min::before {
+>>>>>>> upstream-releases
   text-indent: -12px;
 }
 
 .flex-outline-point.final::before,
-.flex-outline.shrinking .flex-outline-point.min::before,
+.flex-outline-point.min::before,
 .flex-outline-point.max::before,
-.flex-outline.shrinking .flex-outline-point.basis::before {
-  border-width: 0 0 0 1px;
+.flex-outline.shrinking .flex-outline-point.basis::before,
+.flex-outline.horizontal-rl .flex-outline-point.basis::before,
+.flex-outline.horizontal-rl .flex-outline-point.basisfinal::before,
+.flex-outline.horizontal-rl.shrinking .flex-outline-point.final::before,
+.flex-outline.vertical-bt .flex-outline-point.basis::before,
+.flex-outline.vertical-bt .flex-outline-point.basisfinal::before,
+.flex-outline.vertical-bt.shrinking .flex-outline-point.final::before {
+  border-left-width: 1px;
+  border-right-width: 0;
 }
 
 .flex-outline-point.basis::before,
+<<<<<<< HEAD
 .flex-outline-point.min::before,
 .flex-outline.shrinking .flex-outline-point.final::before,
 .flex-outline-point.basisfinal::before {
   border-width: 0 1px 0 0;
+||||||| merged common ancestors
+.flex-outline-point.min::before,
+.flex-outline.shrinking .flex-outline-point.final::before {
+  border-width: 0 1px 0 0;
+=======
+.flex-outline.shrinking .flex-outline-point.final::before,
+.flex-outline-point.basisfinal::before,
+.flex-outline.horizontal-rl .flex-outline-point.final::before,
+.flex-outline.horizontal-rl .flex-outline-point.min::before,
+.flex-outline.horizontal-rl .flex-outline-point.max::before,
+.flex-outline.vertical-bt.shrinking .flex-outline-point.basis::before,
+.flex-outline.vertical-bt .flex-outline-point.final::before,
+.flex-outline.vertical-bt .flex-outline-point.min::before,
+.flex-outline.vertical-bt .flex-outline-point.max::before {
+  border-right-width: 1px;
+  border-left-width: 0;
+}
+
+.flex-outline.horizontal-rl,
+.flex-outline.horizontal-rl .flex-outline-point,
+.flex-outline.horizontal-rl .flex-outline-final.clamped::after {
+  transform: rotate(.5turn);
+>>>>>>> upstream-releases
 }
 
 /**
@@ -514,6 +654,7 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 .flex-item-sizing .name {
   font-weight: 600;
   grid-column: 1;
+<<<<<<< HEAD
   display: grid;
   grid-template-columns: max-content max-content;
   gap: .5em;
@@ -527,6 +668,25 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 
 .flex-item-sizing .base .name {
   color: var(--theme-highlight-blue);
+||||||| merged common ancestors
+=======
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: .5em;
+}
+
+.flex-item-sizing .flexibility .name {
+  color: var(--theme-highlight-red);
+}
+
+.flex-item-sizing .base .name {
+  color: var(--theme-highlight-blue);
+}
+
+.flex-item-sizing .min .name,
+.flex-item-sizing .max .name {
+  color: var(--flex-min-max-properties-color);
+>>>>>>> upstream-releases
 }
 
 .flex-item-sizing .value {
@@ -582,9 +742,12 @@ html[dir="rtl"] .flex-item-list .devtools-button::after {
 }
 
 .grid-container > ul {
-  list-style: none;
   margin: 0;
   padding: 0;
+}
+
+#grid-list ul {
+  padding-inline-start: 20px;
 }
 
 /**

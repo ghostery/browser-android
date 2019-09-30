@@ -230,11 +230,18 @@ MediaSourceDemuxer::~MediaSourceDemuxer() {
   mInitPromise.RejectIfExists(NS_ERROR_DOM_MEDIA_CANCELED, __func__);
 }
 
+<<<<<<< HEAD
 void MediaSourceDemuxer::GetMozDebugReaderData(nsACString& aString) {
+||||||| merged common ancestors
+void
+MediaSourceDemuxer::GetMozDebugReaderData(nsACString& aString)
+{
+=======
+void MediaSourceDemuxer::GetDebugInfo(dom::MediaSourceDemuxerDebugInfo& aInfo) {
+>>>>>>> upstream-releases
   MonitorAutoLock mon(mMonitor);
-  nsAutoCString result;
-  result += nsPrintfCString("Dumping Data for Demuxer: %p\n", this);
   if (mAudioTrack) {
+<<<<<<< HEAD
     result += nsPrintfCString(
         "\tDumping Audio Track Buffer(%s): mLastAudioTime=%f\n"
         "\t\tAudio Track Buffer Details: NumSamples=%zu"
@@ -252,8 +259,29 @@ void MediaSourceDemuxer::GetMozDebugReaderData(nsACString& aString) {
         "\t\tAudio Track Buffered: ranges=%s\n",
         DumpTimeRanges(mAudioTrack->SafeBuffered(TrackInfo::kAudioTrack))
             .get());
+||||||| merged common ancestors
+    result += nsPrintfCString(
+      "\tDumping Audio Track Buffer(%s): mLastAudioTime=%f\n"
+      "\t\tAudio Track Buffer Details: NumSamples=%zu"
+      " Size=%u Evictable=%u "
+      "NextGetSampleIndex=%u NextInsertionIndex=%d\n",
+      mAudioTrack->mType.Type().AsString().get(),
+      mAudioTrack->mAudioTracks.mNextSampleTime.ToSeconds(),
+      mAudioTrack->mAudioTracks.mBuffers[0].Length(),
+      mAudioTrack->mAudioTracks.mSizeBuffer,
+      mAudioTrack->Evictable(TrackInfo::kAudioTrack),
+      mAudioTrack->mAudioTracks.mNextGetSampleIndex.valueOr(-1),
+      mAudioTrack->mAudioTracks.mNextInsertionIndex.valueOr(-1));
+
+    result += nsPrintfCString(
+      "\t\tAudio Track Buffered: ranges=%s\n",
+      DumpTimeRanges(mAudioTrack->SafeBuffered(TrackInfo::kAudioTrack)).get());
+=======
+    mAudioTrack->GetDebugInfo(aInfo.mAudioTrack);
+>>>>>>> upstream-releases
   }
   if (mVideoTrack) {
+<<<<<<< HEAD
     result += nsPrintfCString(
         "\tDumping Video Track Buffer(%s): mLastVideoTime=%f\n"
         "\t\tVideo Track Buffer Details: NumSamples=%zu"
@@ -271,8 +299,27 @@ void MediaSourceDemuxer::GetMozDebugReaderData(nsACString& aString) {
         "\t\tVideo Track Buffered: ranges=%s\n",
         DumpTimeRanges(mVideoTrack->SafeBuffered(TrackInfo::kVideoTrack))
             .get());
+||||||| merged common ancestors
+    result += nsPrintfCString(
+      "\tDumping Video Track Buffer(%s): mLastVideoTime=%f\n"
+      "\t\tVideo Track Buffer Details: NumSamples=%zu"
+      " Size=%u Evictable=%u "
+      "NextGetSampleIndex=%u NextInsertionIndex=%d\n",
+      mVideoTrack->mType.Type().AsString().get(),
+      mVideoTrack->mVideoTracks.mNextSampleTime.ToSeconds(),
+      mVideoTrack->mVideoTracks.mBuffers[0].Length(),
+      mVideoTrack->mVideoTracks.mSizeBuffer,
+      mVideoTrack->Evictable(TrackInfo::kVideoTrack),
+      mVideoTrack->mVideoTracks.mNextGetSampleIndex.valueOr(-1),
+      mVideoTrack->mVideoTracks.mNextInsertionIndex.valueOr(-1));
+
+    result += nsPrintfCString(
+      "\t\tVideo Track Buffered: ranges=%s\n",
+      DumpTimeRanges(mVideoTrack->SafeBuffered(TrackInfo::kVideoTrack)).get());
+=======
+    mVideoTrack->GetDebugInfo(aInfo.mVideoTrack);
+>>>>>>> upstream-releases
   }
-  aString += result;
 }
 
 MediaSourceTrackDemuxer::MediaSourceTrackDemuxer(MediaSourceDemuxer* aParent,

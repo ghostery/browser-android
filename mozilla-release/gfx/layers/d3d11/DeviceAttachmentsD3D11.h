@@ -20,7 +20,14 @@ namespace layers {
 
 struct ShaderBytes;
 
+<<<<<<< HEAD
 class DeviceAttachmentsD3D11 {
+||||||| merged common ancestors
+class DeviceAttachmentsD3D11
+{
+=======
+class DeviceAttachmentsD3D11 final {
+>>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(DeviceAttachmentsD3D11);
 
  public:

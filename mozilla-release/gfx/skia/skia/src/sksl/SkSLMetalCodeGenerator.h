@@ -94,6 +94,7 @@ protected:
     static constexpr Requirements kInputs_Requirement   = 1 << 0;
     static constexpr Requirements kOutputs_Requirement  = 1 << 1;
     static constexpr Requirements kUniforms_Requirement = 1 << 2;
+<<<<<<< HEAD
     static constexpr Requirements kGlobals_Requirement  = 1 << 3;
 
     enum IntrinsicKind {
@@ -114,6 +115,31 @@ protected:
     };
 
     void setupIntrinsics();
+||||||| merged common ancestors
+=======
+    static constexpr Requirements kGlobals_Requirement  = 1 << 3;
+
+    enum IntrinsicKind {
+        kSpecial_IntrinsicKind,
+        kMetal_IntrinsicKind,
+    };
+
+    enum SpecialIntrinsic {
+        kTexture_SpecialIntrinsic,
+        kMod_SpecialIntrinsic,
+    };
+
+    enum MetalIntrinsic {
+        kEqual_MetalIntrinsic,
+        kNotEqual_MetalIntrinsic,
+        kLessThan_MetalIntrinsic,
+        kLessThanEqual_MetalIntrinsic,
+        kGreaterThan_MetalIntrinsic,
+        kGreaterThanEqual_MetalIntrinsic,
+    };
+
+    void setupIntrinsics();
+>>>>>>> upstream-releases
 
     void write(const char* s);
 
@@ -182,9 +208,25 @@ protected:
 
     void writeFunctionCall(const FunctionCall& c);
 
+<<<<<<< HEAD
     void writeSpecialIntrinsic(const FunctionCall& c, SpecialIntrinsic kind);
 
     void writeConstructor(const Constructor& c);
+||||||| merged common ancestors
+    void writeConstructor(const Constructor& c);
+=======
+    void writeInverseHack(const Expression& mat);
+
+    String getMatrixConstructHelper(const Type& matrix, const Type& arg);
+
+    void writeMatrixTimesEqualHelper(const Type& left, const Type& right, const Type& result);
+
+    void writeSpecialIntrinsic(const FunctionCall& c, SpecialIntrinsic kind);
+
+    bool canCoerce(const Type& t1, const Type& t2);
+
+    void writeConstructor(const Constructor& c, Precedence parentPrecedence);
+>>>>>>> upstream-releases
 
     void writeFieldAccess(const FieldAccess& f);
 
@@ -250,6 +292,7 @@ protected:
     const Context& fContext;
     StringStream fHeader;
     String fFunctionHeader;
+    StringStream fExtraFunctions;
     Program::Kind fProgramKind;
     int fVarCount = 0;
     int fIndentation = 0;
@@ -258,12 +301,14 @@ protected:
     // more than one or two structs per shader, a simple linear search will be faster than anything
     // fancier.
     std::vector<const Type*> fWrittenStructs;
+    std::set<String> fWrittenIntrinsics;
     // true if we have run into usages of dFdx / dFdy
     bool fFoundDerivatives = false;
     bool fFoundImageDecl = false;
     std::unordered_map<const FunctionDeclaration*, Requirements> fRequirements;
     bool fSetupFragPositionGlobal = false;
     bool fSetupFragPositionLocal = false;
+    std::unordered_map<String, String> fHelpers;
     int fUniformBuffer = -1;
 
     typedef CodeGenerator INHERITED;

@@ -47,15 +47,37 @@ nsresult nsUnknownDecoder::ConvertedStreamListener::AppendDataToString(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUnknownDecoder::ConvertedStreamListener::OnStartRequest(
     nsIRequest* request, nsISupports* context) {
+||||||| merged common ancestors
+nsUnknownDecoder::ConvertedStreamListener::OnStartRequest(nsIRequest* request,
+                                                          nsISupports* context)
+{
+=======
+nsUnknownDecoder::ConvertedStreamListener::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUnknownDecoder::ConvertedStreamListener::OnDataAvailable(
     nsIRequest* request, nsISupports* context, nsIInputStream* stream,
     uint64_t offset, uint32_t count) {
+||||||| merged common ancestors
+nsUnknownDecoder::ConvertedStreamListener::
+                  OnDataAvailable(nsIRequest* request,
+                                  nsISupports* context,
+                                  nsIInputStream* stream,
+                                  uint64_t offset,
+                                  uint32_t count)
+{
+=======
+nsUnknownDecoder::ConvertedStreamListener::OnDataAvailable(
+    nsIRequest* request, nsIInputStream* stream, uint64_t offset,
+    uint32_t count) {
+>>>>>>> upstream-releases
   uint32_t read;
   nsAutoCString decodedData;
   {
@@ -74,8 +96,16 @@ nsUnknownDecoder::ConvertedStreamListener::OnDataAvailable(
 
 NS_IMETHODIMP
 nsUnknownDecoder::ConvertedStreamListener::OnStopRequest(nsIRequest* request,
+<<<<<<< HEAD
                                                          nsISupports* context,
                                                          nsresult status) {
+||||||| merged common ancestors
+                                                         nsISupports* context,
+                                                         nsresult status)
+{
+=======
+                                                         nsresult status) {
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -153,9 +183,21 @@ nsUnknownDecoder::AsyncConvertData(const char* aFromType, const char* aToType,
 // ----
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUnknownDecoder::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
                                   nsIInputStream* aStream,
                                   uint64_t aSourceOffset, uint32_t aCount) {
+||||||| merged common ancestors
+nsUnknownDecoder::OnDataAvailable(nsIRequest* request,
+                                  nsISupports *aCtxt,
+                                  nsIInputStream *aStream,
+                                  uint64_t aSourceOffset,
+                                  uint32_t aCount)
+{
+=======
+nsUnknownDecoder::OnDataAvailable(nsIRequest* request, nsIInputStream* aStream,
+                                  uint64_t aSourceOffset, uint32_t aCount) {
+>>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   bool contentTypeEmpty;
@@ -199,7 +241,7 @@ nsUnknownDecoder::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
 
       DetermineContentType(request);
 
-      rv = FireListenerNotifications(request, aCtxt);
+      rv = FireListenerNotifications(request, nullptr);
     }
   }
 
@@ -228,8 +270,15 @@ nsUnknownDecoder::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
       MutexAutoLock lock(mMutex);
       listener = mNextListener;
     }
+<<<<<<< HEAD
     rv = listener->OnDataAvailable(request, aCtxt, aStream, aSourceOffset,
                                    aCount);
+||||||| merged common ancestors
+    rv = listener->OnDataAvailable(request, aCtxt, aStream,
+                                   aSourceOffset, aCount);
+=======
+    rv = listener->OnDataAvailable(request, aStream, aSourceOffset, aCount);
+>>>>>>> upstream-releases
   }
 
   return rv;
@@ -242,7 +291,14 @@ nsUnknownDecoder::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
 // ----
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUnknownDecoder::OnStartRequest(nsIRequest* request, nsISupports* aCtxt) {
+||||||| merged common ancestors
+nsUnknownDecoder::OnStartRequest(nsIRequest* request, nsISupports *aCtxt)
+{
+=======
+nsUnknownDecoder::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   {
@@ -269,8 +325,16 @@ nsUnknownDecoder::OnStartRequest(nsIRequest* request, nsISupports* aCtxt) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsUnknownDecoder::OnStopRequest(nsIRequest* request, nsISupports* aCtxt,
                                 nsresult aStatus) {
+||||||| merged common ancestors
+nsUnknownDecoder::OnStopRequest(nsIRequest* request, nsISupports *aCtxt,
+                                nsresult aStatus)
+{
+=======
+nsUnknownDecoder::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+>>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   bool contentTypeEmpty;
@@ -297,7 +361,7 @@ nsUnknownDecoder::OnStopRequest(nsIRequest* request, nsISupports* aCtxt,
       forcePendingChannel->ForcePending(true);
     }
 
-    rv = FireListenerNotifications(request, aCtxt);
+    rv = FireListenerNotifications(request, nullptr);
 
     if (NS_FAILED(rv)) {
       aStatus = rv;
@@ -315,7 +379,7 @@ nsUnknownDecoder::OnStopRequest(nsIRequest* request, nsISupports* aCtxt,
     listener = mNextListener;
     mNextListener = nullptr;
   }
-  rv = listener->OnStopRequest(request, aCtxt, aStatus);
+  rv = listener->OnStopRequest(request, aStatus);
 
   return rv;
 }
@@ -689,7 +753,7 @@ nsresult nsUnknownDecoder::FireListenerNotifications(nsIRequest* request,
       // Cancel the request to make sure it has the correct status if
       // mNextListener looks at it.
       request->Cancel(rv);
-      listener->OnStartRequest(request, aCtxt);
+      listener->OnStartRequest(request);
 
       nsCOMPtr<nsIDivertableChannel> divertable = do_QueryInterface(request);
       if (divertable) {
@@ -701,6 +765,7 @@ nsresult nsUnknownDecoder::FireListenerNotifications(nsIRequest* request,
   }
 
   // Fire the OnStartRequest(...)
+<<<<<<< HEAD
   rv = listener->OnStartRequest(request, aCtxt);
 
   nsCOMPtr<nsIDivertableChannel> divertable = do_QueryInterface(request);
@@ -713,6 +778,33 @@ nsresult nsUnknownDecoder::FireListenerNotifications(nsIRequest* request,
       return rv;
     }
   }
+||||||| merged common ancestors
+  rv = listener->OnStartRequest(request, aCtxt);
+
+   nsCOMPtr<nsIDivertableChannel> divertable = do_QueryInterface(request);
+   if (divertable) {
+     rv = divertable->UnknownDecoderInvolvedOnStartRequestCalled();
+     bool diverting;
+     divertable->GetDivertingToParent(&diverting);
+     if (diverting) {
+       // The channel is diverted to the parent do not send any more data here.
+       return rv;
+     }
+   }
+=======
+  rv = listener->OnStartRequest(request);
+
+  nsCOMPtr<nsIDivertableChannel> divertable = do_QueryInterface(request);
+  if (divertable) {
+    rv = divertable->UnknownDecoderInvolvedOnStartRequestCalled();
+    bool diverting;
+    divertable->GetDivertingToParent(&diverting);
+    if (diverting) {
+      // The channel is diverted to the parent do not send any more data here.
+      return rv;
+    }
+  }
+>>>>>>> upstream-releases
 
   if (NS_SUCCEEDED(rv)) {
     // install stream converter if required
@@ -750,7 +842,7 @@ nsresult nsUnknownDecoder::FireListenerNotifications(nsIRequest* request,
       rv = out->Write(mBuffer, mBufferLen, &len);
       if (NS_SUCCEEDED(rv)) {
         if (len == mBufferLen) {
-          rv = listener->OnDataAvailable(request, aCtxt, in, 0, len);
+          rv = listener->OnDataAvailable(request, in, 0, len);
         } else {
           NS_ERROR("Unable to write all the data into the pipe.");
           rv = NS_ERROR_FAILURE;
@@ -789,7 +881,7 @@ nsresult nsUnknownDecoder::ConvertEncodedData(nsIRequest* request,
     }
 
     if (listener) {
-      listener->OnStartRequest(request, nullptr);
+      listener->OnStartRequest(request);
 
       if (length) {
         nsCOMPtr<nsIStringInputStream> rawStream =
@@ -799,11 +891,18 @@ nsresult nsUnknownDecoder::ConvertEncodedData(nsIRequest* request,
         rv = rawStream->SetData((const char*)data, length);
         NS_ENSURE_SUCCESS(rv, rv);
 
+<<<<<<< HEAD
         rv = listener->OnDataAvailable(request, nullptr, rawStream, 0, length);
+||||||| merged common ancestors
+        rv = listener->OnDataAvailable(request, nullptr, rawStream, 0,
+                                       length);
+=======
+        rv = listener->OnDataAvailable(request, rawStream, 0, length);
+>>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, rv);
       }
 
-      listener->OnStopRequest(request, nullptr, NS_OK);
+      listener->OnStopRequest(request, NS_OK);
     }
   }
   return rv;

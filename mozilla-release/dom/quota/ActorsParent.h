@@ -13,12 +13,46 @@ namespace quota {
 
 class PQuotaParent;
 
+<<<<<<< HEAD
 PQuotaParent* AllocPQuotaParent();
+||||||| merged common ancestors
+PQuotaParent*
+AllocPQuotaParent();
+=======
+void InitializeQuotaManager();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 bool DeallocPQuotaParent(PQuotaParent* aActor);
+||||||| merged common ancestors
+bool
+DeallocPQuotaParent(PQuotaParent* aActor);
+=======
+PQuotaParent* AllocPQuotaParent();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+}  // namespace quota
+}  // namespace dom
+}  // namespace mozilla
+||||||| merged common ancestors
+} // namespace quota
+} // namespace dom
+} // namespace mozilla
+=======
+bool DeallocPQuotaParent(PQuotaParent* aActor);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#endif  // mozilla_dom_quota_ActorsParent_h
+||||||| merged common ancestors
+#endif // mozilla_dom_quota_ActorsParent_h
+=======
+bool RecvShutdownQuotaManager();
 
 }  // namespace quota
 }  // namespace dom
 }  // namespace mozilla
 
 #endif  // mozilla_dom_quota_ActorsParent_h
+>>>>>>> upstream-releases

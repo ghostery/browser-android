@@ -8,6 +8,7 @@
 
 #include "gfx2DGlue.h"
 #include "gfxUtils.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/PathHelpers.h"
 #include "nsPresContext.h"
@@ -39,13 +40,26 @@ static const uint8_t kArrowHeadSize = 10;
 // phasorangle
 static const uint8_t kPhasorangleWidth = 8;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewMathMLmencloseFrame(nsIPresShell* aPresShell,
                                     ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmencloseFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMathMLmencloseFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmencloseFrame(aStyle);
+=======
+nsIFrame* NS_NewMathMLmencloseFrame(PresShell* aPresShell,
+                                    ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmencloseFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmencloseFrame)
 
+<<<<<<< HEAD
 nsMathMLmencloseFrame::nsMathMLmencloseFrame(ComputedStyle* aStyle, ClassID aID)
     : nsMathMLContainerFrame(aStyle, aID),
       mRuleThickness(0),
@@ -53,6 +67,24 @@ nsMathMLmencloseFrame::nsMathMLmencloseFrame(ComputedStyle* aStyle, ClassID aID)
       mLongDivCharIndex(-1),
       mRadicalCharIndex(-1),
       mContentWidth(0) {}
+||||||| merged common ancestors
+nsMathMLmencloseFrame::nsMathMLmencloseFrame(ComputedStyle* aStyle, ClassID aID) :
+  nsMathMLContainerFrame(aStyle, aID),
+  mRuleThickness(0), mRadicalRuleThickness(0),
+  mLongDivCharIndex(-1), mRadicalCharIndex(-1), mContentWidth(0)
+{
+}
+=======
+nsMathMLmencloseFrame::nsMathMLmencloseFrame(ComputedStyle* aStyle,
+                                             nsPresContext* aPresContext,
+                                             ClassID aID)
+    : nsMathMLContainerFrame(aStyle, aPresContext, aID),
+      mRuleThickness(0),
+      mRadicalRuleThickness(0),
+      mLongDivCharIndex(-1),
+      mRadicalCharIndex(-1),
+      mContentWidth(0) {}
+>>>>>>> upstream-releases
 
 nsMathMLmencloseFrame::~nsMathMLmencloseFrame() {}
 
@@ -292,19 +324,58 @@ void nsMathMLmencloseFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmencloseFrame::MeasureForWidth(
     DrawTarget* aDrawTarget, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmencloseFrame::MeasureForWidth(DrawTarget* aDrawTarget,
+                                       ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLmencloseFrame::MeasureForWidth(DrawTarget* aDrawTarget,
+                                                ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   return PlaceInternal(aDrawTarget, false, aDesiredSize, true);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmencloseFrame::Place(
     DrawTarget* aDrawTarget, bool aPlaceOrigin, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmencloseFrame::Place(DrawTarget*          aDrawTarget,
+                             bool                 aPlaceOrigin,
+                             ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLmencloseFrame::Place(DrawTarget* aDrawTarget,
+                                      bool aPlaceOrigin,
+                                      ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   return PlaceInternal(aDrawTarget, aPlaceOrigin, aDesiredSize, false);
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmencloseFrame::PlaceInternal(
     DrawTarget* aDrawTarget, bool aPlaceOrigin, ReflowOutput& aDesiredSize,
     bool aWidthOnly) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmencloseFrame::PlaceInternal(DrawTarget*          aDrawTarget,
+                                     bool                 aPlaceOrigin,
+                                     ReflowOutput& aDesiredSize,
+                                     bool                 aWidthOnly)
+{
+=======
+/* virtual */
+nsresult nsMathMLmencloseFrame::PlaceInternal(DrawTarget* aDrawTarget,
+                                              bool aPlaceOrigin,
+                                              ReflowOutput& aDesiredSize,
+                                              bool aWidthOnly) {
+>>>>>>> upstream-releases
   ///////////////
   // Measure the size of our content using the base class to format like an
   // inferred mrow.
@@ -692,6 +763,7 @@ void nsMathMLmencloseFrame::SetAdditionalComputedStyle(
     mMathMLChar[aIndex].SetComputedStyle(aComputedStyle);
 }
 
+<<<<<<< HEAD
 class nsDisplayNotation final : public nsDisplayItem {
  public:
   nsDisplayNotation(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
@@ -701,15 +773,33 @@ class nsDisplayNotation final : public nsDisplayItem {
         mRect(aRect),
         mThickness(aThickness),
         mType(aType) {
+||||||| merged common ancestors
+class nsDisplayNotation final : public nsDisplayItem
+{
+public:
+  nsDisplayNotation(nsDisplayListBuilder* aBuilder,
+                    nsIFrame* aFrame, const nsRect& aRect,
+                    nscoord aThickness, nsMencloseNotation aType)
+    : nsDisplayItem(aBuilder, aFrame), mRect(aRect),
+      mThickness(aThickness), mType(aType) {
+=======
+class nsDisplayNotation final : public nsPaintedDisplayItem {
+ public:
+  nsDisplayNotation(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
+                    const nsRect& aRect, nscoord aThickness,
+                    nsMencloseNotation aType)
+      : nsPaintedDisplayItem(aBuilder, aFrame),
+        mRect(aRect),
+        mThickness(aThickness),
+        mType(aType) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayNotation);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
   virtual ~nsDisplayNotation() { MOZ_COUNT_DTOR(nsDisplayNotation); }
 #endif
 
-  virtual uint32_t GetPerFrameKey() const override {
-    return (mType << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
-  }
+  virtual uint16_t CalculatePerFrameKey() const override { return mType; }
 
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
   NS_DISPLAY_DECL_NAME("MathMLMencloseNotation", TYPE_MATHML_MENCLOSE_NOTATION)
@@ -821,6 +911,14 @@ void nsMathMLmencloseFrame::DisplayNotation(nsDisplayListBuilder* aBuilder,
       aThickness <= 0)
     return;
 
+<<<<<<< HEAD
   aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayNotation>(
       aBuilder, aFrame, aRect, aThickness, aType));
+||||||| merged common ancestors
+  aLists.Content()->AppendToTop(
+    MakeDisplayItem<nsDisplayNotation>(aBuilder, aFrame, aRect, aThickness, aType));
+=======
+  aLists.Content()->AppendNewToTop<nsDisplayNotation>(aBuilder, aFrame, aRect,
+                                                      aThickness, aType);
+>>>>>>> upstream-releases
 }

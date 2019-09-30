@@ -739,6 +739,7 @@ class MIRGraph {
         osrBlock_(nullptr),
         numBlocks_(0),
         hasTryBlock_(false),
+<<<<<<< HEAD
         phiFreeListLength_(0) {}
 
   TempAllocator& alloc() const { return *alloc_; }
@@ -827,6 +828,218 @@ class MIRGraph {
     phiFreeListLength_--;
     return phiFreeList_.popBack();
   }
+||||||| merged common ancestors
+        phiFreeListLength_(0)
+    { }
+
+    TempAllocator& alloc() const {
+        return *alloc_;
+    }
+
+    void addBlock(MBasicBlock* block);
+    void insertBlockAfter(MBasicBlock* at, MBasicBlock* block);
+    void insertBlockBefore(MBasicBlock* at, MBasicBlock* block);
+
+    void renumberBlocksAfter(MBasicBlock* at);
+
+    void unmarkBlocks();
+
+    void setReturnAccumulator(MIRGraphReturns* accum) {
+        returnAccumulator_ = accum;
+    }
+    MIRGraphReturns* returnAccumulator() const {
+        return returnAccumulator_;
+    }
+
+    MOZ_MUST_USE bool addReturn(MBasicBlock* returnBlock) {
+        if (!returnAccumulator_) {
+            return true;
+        }
+
+        return returnAccumulator_->append(returnBlock);
+    }
+
+    MBasicBlock* entryBlock() {
+        return *blocks_.begin();
+    }
+    MBasicBlockIterator begin() {
+        return blocks_.begin();
+    }
+    MBasicBlockIterator begin(MBasicBlock* at) {
+        return blocks_.begin(at);
+    }
+    MBasicBlockIterator end() {
+        return blocks_.end();
+    }
+    PostorderIterator poBegin() {
+        return blocks_.rbegin();
+    }
+    PostorderIterator poBegin(MBasicBlock* at) {
+        return blocks_.rbegin(at);
+    }
+    PostorderIterator poEnd() {
+        return blocks_.rend();
+    }
+    ReversePostorderIterator rpoBegin() {
+        return blocks_.begin();
+    }
+    ReversePostorderIterator rpoBegin(MBasicBlock* at) {
+        return blocks_.begin(at);
+    }
+    ReversePostorderIterator rpoEnd() {
+        return blocks_.end();
+    }
+    MOZ_MUST_USE bool removeSuccessorBlocks(MBasicBlock* block);
+    void removeBlock(MBasicBlock* block);
+    void removeBlockIncludingPhis(MBasicBlock* block);
+    void moveBlockToEnd(MBasicBlock* block) {
+        blocks_.remove(block);
+        MOZ_ASSERT_IF(!blocks_.empty(), block->id());
+        blocks_.pushBack(block);
+    }
+    void moveBlockBefore(MBasicBlock* at, MBasicBlock* block) {
+        MOZ_ASSERT(block->id());
+        blocks_.remove(block);
+        blocks_.insertBefore(at, block);
+    }
+    void removeBlockFromList(MBasicBlock* block) {
+        blocks_.remove(block);
+        numBlocks_--;
+    }
+    size_t numBlocks() const {
+        return numBlocks_;
+    }
+    uint32_t numBlockIds() const {
+        return blockIdGen_;
+    }
+    void allocDefinitionId(MDefinition* ins) {
+        ins->setId(idGen_++);
+    }
+    uint32_t getNumInstructionIds() {
+        return idGen_;
+    }
+    MResumePoint* entryResumePoint() {
+        return entryBlock()->entryResumePoint();
+    }
+
+    void copyIds(const MIRGraph& other) {
+        idGen_ = other.idGen_;
+        blockIdGen_ = other.blockIdGen_;
+        numBlocks_ = other.numBlocks_;
+    }
+
+    void setOsrBlock(MBasicBlock* osrBlock) {
+        MOZ_ASSERT(!osrBlock_);
+        osrBlock_ = osrBlock;
+    }
+    MBasicBlock* osrBlock() {
+        return osrBlock_;
+    }
+
+    bool hasTryBlock() const {
+        return hasTryBlock_;
+    }
+    void setHasTryBlock() {
+        hasTryBlock_ = true;
+    }
+
+    void dump(GenericPrinter& out);
+    void dump();
+
+    void addPhiToFreeList(MPhi* phi) {
+        phiFreeList_.pushBack(phi);
+        phiFreeListLength_++;
+    }
+    size_t phiFreeListLength() const {
+        return phiFreeListLength_;
+    }
+    MPhi* takePhiFromFreeList() {
+        MOZ_ASSERT(phiFreeListLength_ > 0);
+        phiFreeListLength_--;
+        return phiFreeList_.popBack();
+    }
+=======
+        phiFreeListLength_(0) {}
+
+  TempAllocator& alloc() const { return *alloc_; }
+
+  void addBlock(MBasicBlock* block);
+  void insertBlockAfter(MBasicBlock* at, MBasicBlock* block);
+  void insertBlockBefore(MBasicBlock* at, MBasicBlock* block);
+
+  void unmarkBlocks();
+
+  void setReturnAccumulator(MIRGraphReturns* accum) {
+    returnAccumulator_ = accum;
+  }
+  MIRGraphReturns* returnAccumulator() const { return returnAccumulator_; }
+
+  MOZ_MUST_USE bool addReturn(MBasicBlock* returnBlock) {
+    if (!returnAccumulator_) {
+      return true;
+    }
+
+    return returnAccumulator_->append(returnBlock);
+  }
+
+  MBasicBlock* entryBlock() { return *blocks_.begin(); }
+  MBasicBlockIterator begin() { return blocks_.begin(); }
+  MBasicBlockIterator begin(MBasicBlock* at) { return blocks_.begin(at); }
+  MBasicBlockIterator end() { return blocks_.end(); }
+  PostorderIterator poBegin() { return blocks_.rbegin(); }
+  PostorderIterator poBegin(MBasicBlock* at) { return blocks_.rbegin(at); }
+  PostorderIterator poEnd() { return blocks_.rend(); }
+  ReversePostorderIterator rpoBegin() { return blocks_.begin(); }
+  ReversePostorderIterator rpoBegin(MBasicBlock* at) {
+    return blocks_.begin(at);
+  }
+  ReversePostorderIterator rpoEnd() { return blocks_.end(); }
+  MOZ_MUST_USE bool removeSuccessorBlocks(MBasicBlock* block);
+  void removeBlock(MBasicBlock* block);
+  void removeBlockIncludingPhis(MBasicBlock* block);
+  void moveBlockToEnd(MBasicBlock* block) {
+    blocks_.remove(block);
+    MOZ_ASSERT_IF(!blocks_.empty(), block->id());
+    blocks_.pushBack(block);
+  }
+  void moveBlockBefore(MBasicBlock* at, MBasicBlock* block) {
+    MOZ_ASSERT(block->id());
+    blocks_.remove(block);
+    blocks_.insertBefore(at, block);
+  }
+  void removeBlockFromList(MBasicBlock* block) {
+    blocks_.remove(block);
+    numBlocks_--;
+  }
+  size_t numBlocks() const { return numBlocks_; }
+  uint32_t numBlockIds() const { return blockIdGen_; }
+  void allocDefinitionId(MDefinition* ins) { ins->setId(idGen_++); }
+  uint32_t getNumInstructionIds() { return idGen_; }
+  MResumePoint* entryResumePoint() { return entryBlock()->entryResumePoint(); }
+
+  void setOsrBlock(MBasicBlock* osrBlock) {
+    MOZ_ASSERT(!osrBlock_);
+    osrBlock_ = osrBlock;
+  }
+  MBasicBlock* osrBlock() { return osrBlock_; }
+
+  bool hasTryBlock() const { return hasTryBlock_; }
+  void setHasTryBlock() { hasTryBlock_ = true; }
+
+  void dump(GenericPrinter& out);
+  void dump();
+
+  void addPhiToFreeList(MPhi* phi) {
+    phiFreeList_.pushBack(phi);
+    phiFreeListLength_++;
+  }
+  size_t phiFreeListLength() const { return phiFreeListLength_; }
+  MPhi* takePhiFromFreeList() {
+    MOZ_ASSERT(phiFreeListLength_ > 0);
+    phiFreeListLength_--;
+    return phiFreeList_.popBack();
+  }
+>>>>>>> upstream-releases
 };
 
 class MDefinitionIterator {

@@ -9,7 +9,14 @@
 
 namespace mozilla {
 
+<<<<<<< HEAD
 enum LayerState {
+||||||| merged common ancestors
+enum LayerState
+{
+=======
+enum class LayerState : uint8_t {
+>>>>>>> upstream-releases
   LAYER_NONE,
   LAYER_INACTIVE,
   LAYER_ACTIVE,

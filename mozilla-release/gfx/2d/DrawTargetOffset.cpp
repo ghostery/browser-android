@@ -24,8 +24,18 @@ bool DrawTargetOffset::Init(DrawTarget* aDrawTarget, IntPoint aOrigin) {
   return true;
 }
 
+<<<<<<< HEAD
 already_AddRefed<SourceSurface> DrawTargetOffset::Snapshot() {
   return mDrawTarget->Snapshot();
+||||||| merged common ancestors
+already_AddRefed<SourceSurface>
+DrawTargetOffset::Snapshot()
+{
+  return mDrawTarget->Snapshot();
+=======
+already_AddRefed<SourceSurface> DrawTargetOffset::Snapshot() {
+  return MakeAndAddRef<SourceSurfaceOffset>(mDrawTarget->Snapshot(), mOrigin);
+>>>>>>> upstream-releases
 }
 
 void DrawTargetOffset::DetachAllSnapshots() {}
@@ -35,6 +45,23 @@ void DrawTargetOffset::DetachAllSnapshots() {}
 #define OFFSET_COMMAND(command) \
   void DrawTargetOffset::command() { mDrawTarget->command(); }
 #define OFFSET_COMMAND1(command, type1) \
+<<<<<<< HEAD
+  void DrawTargetOffset::command(type1 arg1) { mDrawTarget->command(arg1); }
+#define OFFSET_COMMAND3(command, type1, type2, type3)                  \
+  void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3) { \
+    mDrawTarget->command(arg1, arg2, arg3);                            \
+||||||| merged common ancestors
+  void \
+  DrawTargetOffset::command(type1 arg1) \
+  { \
+    mDrawTarget->command(arg1); \
+  }
+#define OFFSET_COMMAND3(command, type1, type2, type3) \
+  void \
+  DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3) \
+  { \
+    mDrawTarget->command(arg1, arg2, arg3); \
+=======
   void DrawTargetOffset::command(type1 arg1) { mDrawTarget->command(arg1); }
 #define OFFSET_COMMAND3(command, type1, type2, type3)                  \
   void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3) { \
@@ -44,19 +71,64 @@ void DrawTargetOffset::DetachAllSnapshots() {}
   void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, \
                                  type4 arg4) {                       \
     mDrawTarget->command(arg1, arg2, arg3, arg4);                    \
+>>>>>>> upstream-releases
+  }
+<<<<<<< HEAD
+#define OFFSET_COMMAND4(command, type1, type2, type3, type4)         \
+  void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, \
+                                 type4 arg4) {                       \
+    mDrawTarget->command(arg1, arg2, arg3, arg4);                    \
   }
 #define OFFSET_COMMAND5(command, type1, type2, type3, type4, type5)  \
   void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, \
                                  type4 arg4, type5 arg5) {           \
     mDrawTarget->command(arg1, arg2, arg3, arg4, arg5);              \
+||||||| merged common ancestors
+#define OFFSET_COMMAND4(command, type1, type2, type3, type4) \
+  void \
+  DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, type4 arg4) \
+  { \
+    mDrawTarget->command(arg1, arg2, arg3, arg4); \
+  }
+#define OFFSET_COMMAND5(command, type1, type2, type3, type4, type5) \
+  void \
+  DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, type4 arg4, type5 arg5) \
+  { \
+    mDrawTarget->command(arg1, arg2, arg3, arg4, arg5); \
+=======
+#define OFFSET_COMMAND5(command, type1, type2, type3, type4, type5)  \
+  void DrawTargetOffset::command(type1 arg1, type2 arg2, type3 arg3, \
+                                 type4 arg4, type5 arg5) {           \
+    mDrawTarget->command(arg1, arg2, arg3, arg4, arg5);              \
+>>>>>>> upstream-releases
   }
 
 OFFSET_COMMAND(Flush)
 OFFSET_COMMAND1(ClearRect, const Rect&)
+<<<<<<< HEAD
 OFFSET_COMMAND4(MaskSurface, const Pattern&, SourceSurface*, Point,
                 const DrawOptions&)
 OFFSET_COMMAND4(FillGlyphs, ScaledFont*, const GlyphBuffer&, const Pattern&,
                 const DrawOptions&)
+||||||| merged common ancestors
+OFFSET_COMMAND4(MaskSurface, const Pattern&, SourceSurface*, Point, const DrawOptions&)
+OFFSET_COMMAND4(FillGlyphs, ScaledFont*, const GlyphBuffer&, const Pattern&, const DrawOptions&)
+=======
+OFFSET_COMMAND4(MaskSurface, const Pattern&, SourceSurface*, Point,
+                const DrawOptions&)
+OFFSET_COMMAND4(FillGlyphs, ScaledFont*, const GlyphBuffer&, const Pattern&,
+                const DrawOptions&)
+OFFSET_COMMAND5(StrokeGlyphs, ScaledFont*, const GlyphBuffer&, const Pattern&,
+                const StrokeOptions&, const DrawOptions&)
+OFFSET_COMMAND3(FillRoundedRect, const RoundedRect&, const Pattern&,
+                const DrawOptions&)
+
+bool DrawTargetOffset::Draw3DTransformedSurface(SourceSurface *aSrc,
+                                                const Matrix4x4& aMatrix) {
+    return mDrawTarget->Draw3DTransformedSurface(aSrc, aMatrix);
+}
+
+>>>>>>> upstream-releases
 OFFSET_COMMAND3(Mask, const Pattern&, const Pattern&, const DrawOptions&)
 
 void DrawTargetOffset::DrawFilter(FilterNode* aNode, const Rect& aSourceRect,
@@ -154,6 +226,7 @@ void DrawTargetOffset::Fill(const Path* aPath, const Pattern& aPattern,
   mDrawTarget->Fill(aPath, aPattern, aDrawOptions);
 }
 
+<<<<<<< HEAD
 void DrawTargetOffset::PushLayer(bool aOpaque, Float aOpacity,
                                  SourceSurface* aMask,
                                  const Matrix& aMaskTransform,
@@ -179,6 +252,66 @@ void DrawTargetOffset::PushLayerWithBlend(bool aOpaque, Float aOpacity,
 }
 
 void DrawTargetOffset::PopLayer() {
+||||||| merged common ancestors
+void
+DrawTargetOffset::PushLayer(bool aOpaque, Float aOpacity, SourceSurface* aMask,
+                           const Matrix& aMaskTransform, const IntRect& aBounds,
+                           bool aCopyBackground)
+{
+  IntRect bounds = aBounds;
+  bounds.MoveBy(mOrigin);
+  mDrawTarget->PushLayer(aOpaque, aOpacity, aMask, aMaskTransform, bounds, aCopyBackground);
+}
+
+void
+DrawTargetOffset::PushLayerWithBlend(bool aOpaque, Float aOpacity,
+                                    SourceSurface* aMask,
+                                    const Matrix& aMaskTransform,
+                                    const IntRect& aBounds,
+                                    bool aCopyBackground,
+                                    CompositionOp aOp)
+{
+  IntRect bounds = aBounds;
+  bounds.MoveBy(mOrigin);
+  mDrawTarget->PushLayerWithBlend(aOpaque, aOpacity, aMask, aMaskTransform, bounds, aCopyBackground, aOp);
+}
+
+void
+DrawTargetOffset::PopLayer()
+{
+=======
+void DrawTargetOffset::PushLayer(bool aOpaque, Float aOpacity,
+                                 SourceSurface* aMask,
+                                 const Matrix& aMaskTransform,
+                                 const IntRect& aBounds, bool aCopyBackground) {
+  IntRect bounds = aBounds - mOrigin;
+
+  mDrawTarget->PushLayer(aOpaque, aOpacity, aMask, aMaskTransform, bounds,
+                         aCopyBackground);
+  SetPermitSubpixelAA(mDrawTarget->GetPermitSubpixelAA());
+}
+
+already_AddRefed<SourceSurface> DrawTargetOffset::IntoLuminanceSource(
+    LuminanceType aLuminanceType, float aOpacity) {
+  return MakeAndAddRef<SourceSurfaceOffset>(
+      mDrawTarget->IntoLuminanceSource(aLuminanceType, aOpacity), mOrigin);
+}
+
+void DrawTargetOffset::PushLayerWithBlend(bool aOpaque, Float aOpacity,
+                                          SourceSurface* aMask,
+                                          const Matrix& aMaskTransform,
+                                          const IntRect& aBounds,
+                                          bool aCopyBackground,
+                                          CompositionOp aOp) {
+  IntRect bounds = aBounds - mOrigin;
+
+  mDrawTarget->PushLayerWithBlend(aOpaque, aOpacity, aMask, aMaskTransform,
+                                  bounds, aCopyBackground, aOp);
+  SetPermitSubpixelAA(mDrawTarget->GetPermitSubpixelAA());
+}
+
+void DrawTargetOffset::PopLayer() {
+>>>>>>> upstream-releases
   mDrawTarget->PopLayer();
   SetPermitSubpixelAA(mDrawTarget->GetPermitSubpixelAA());
 }

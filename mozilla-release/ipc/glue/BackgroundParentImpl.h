@@ -61,6 +61,57 @@ class BackgroundParentImpl : public PBackgroundParent {
       PBackgroundSDBConnectionParent* aActor,
       const PrincipalInfo& aPrincipalInfo) override;
 
+<<<<<<< HEAD
+  virtual bool DeallocPBackgroundSDBConnectionParent(
+      PBackgroundSDBConnectionParent* aActor) override;
+
+  virtual PBackgroundLSDatabaseParent* AllocPBackgroundLSDatabaseParent(
+      const PrincipalInfo& aPrincipalInfo, const uint32_t& aPrivateBrowsingId,
+      const uint64_t& aDatastoreId) override;
+
+  virtual mozilla::ipc::IPCResult RecvPBackgroundLSDatabaseConstructor(
+      PBackgroundLSDatabaseParent* aActor, const PrincipalInfo& aPrincipalInfo,
+      const uint32_t& aPrivateBrowsingId,
+      const uint64_t& aDatastoreId) override;
+
+  virtual bool DeallocPBackgroundLSDatabaseParent(
+      PBackgroundLSDatabaseParent* aActor) override;
+
+  virtual PBackgroundLSObserverParent* AllocPBackgroundLSObserverParent(
+      const uint64_t& aObserverId) override;
+
+  virtual mozilla::ipc::IPCResult RecvPBackgroundLSObserverConstructor(
+      PBackgroundLSObserverParent* aActor,
+      const uint64_t& aObserverId) override;
+
+  virtual bool DeallocPBackgroundLSObserverParent(
+      PBackgroundLSObserverParent* aActor) override;
+
+  virtual PBackgroundLSRequestParent* AllocPBackgroundLSRequestParent(
+      const LSRequestParams& aParams) override;
+
+  virtual mozilla::ipc::IPCResult RecvPBackgroundLSRequestConstructor(
+      PBackgroundLSRequestParent* aActor,
+      const LSRequestParams& aParams) override;
+
+  virtual bool DeallocPBackgroundLSRequestParent(
+      PBackgroundLSRequestParent* aActor) override;
+
+  virtual PBackgroundLSSimpleRequestParent*
+  AllocPBackgroundLSSimpleRequestParent(
+      const LSSimpleRequestParams& aParams) override;
+
+  virtual mozilla::ipc::IPCResult RecvPBackgroundLSSimpleRequestConstructor(
+      PBackgroundLSSimpleRequestParent* aActor,
+      const LSSimpleRequestParams& aParams) override;
+
+  virtual bool DeallocPBackgroundLSSimpleRequestParent(
+      PBackgroundLSSimpleRequestParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPBackgroundSDBConnectionParent(PBackgroundSDBConnectionParent* aActor)
+                                        override;
+=======
   virtual bool DeallocPBackgroundSDBConnectionParent(
       PBackgroundSDBConnectionParent* aActor) override;
 
@@ -107,7 +158,20 @@ class BackgroundParentImpl : public PBackgroundParent {
   virtual bool DeallocPBackgroundLSSimpleRequestParent(
       PBackgroundLSSimpleRequestParent* aActor) override;
 
+  virtual mozilla::ipc::IPCResult RecvLSClearPrivateBrowsing() override;
+>>>>>>> upstream-releases
+
   virtual PBackgroundLocalStorageCacheParent*
+<<<<<<< HEAD
+  AllocPBackgroundLocalStorageCacheParent(
+      const PrincipalInfo& aPrincipalInfo, const nsCString& aOriginKey,
+      const uint32_t& aPrivateBrowsingId) override;
+||||||| merged common ancestors
+  AllocPBackgroundLocalStorageCacheParent(const PrincipalInfo& aPrincipalInfo,
+                                          const nsCString& aOriginKey,
+                                          const uint32_t& aPrivateBrowsingId)
+                                          override;
+=======
   AllocPBackgroundLocalStorageCacheParent(
       const PrincipalInfo& aPrincipalInfo, const nsCString& aOriginKey,
       const uint32_t& aPrivateBrowsingId) override;
@@ -119,89 +183,394 @@ class BackgroundParentImpl : public PBackgroundParent {
 
   virtual bool DeallocPBackgroundLocalStorageCacheParent(
       PBackgroundLocalStorageCacheParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual mozilla::ipc::IPCResult RecvPBackgroundLocalStorageCacheConstructor(
+      PBackgroundLocalStorageCacheParent* aActor,
+      const PrincipalInfo& aPrincipalInfo, const nsCString& aOriginKey,
+      const uint32_t& aPrivateBrowsingId) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPBackgroundLocalStorageCacheConstructor(
+                                     PBackgroundLocalStorageCacheParent* aActor,
+                                     const PrincipalInfo& aPrincipalInfo,
+                                     const nsCString& aOriginKey,
+                                     const uint32_t& aPrivateBrowsingId)
+                                     override;
+=======
   virtual PBackgroundStorageParent* AllocPBackgroundStorageParent(
       const nsString& aProfilePath) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool DeallocPBackgroundLocalStorageCacheParent(
+      PBackgroundLocalStorageCacheParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPBackgroundLocalStorageCacheParent(
+                                     PBackgroundLocalStorageCacheParent* aActor)
+                                     override;
+=======
   virtual mozilla::ipc::IPCResult RecvPBackgroundStorageConstructor(
       PBackgroundStorageParent* aActor, const nsString& aProfilePath) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PBackgroundStorageParent* AllocPBackgroundStorageParent(
+      const nsString& aProfilePath) override;
+||||||| merged common ancestors
+  virtual PBackgroundStorageParent*
+  AllocPBackgroundStorageParent(const nsString& aProfilePath) override;
+=======
   virtual bool DeallocPBackgroundStorageParent(
       PBackgroundStorageParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual mozilla::ipc::IPCResult RecvPBackgroundStorageConstructor(
+      PBackgroundStorageParent* aActor, const nsString& aProfilePath) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPBackgroundStorageConstructor(PBackgroundStorageParent* aActor,
+                                    const nsString& aProfilePath) override;
+=======
   virtual PPendingIPCBlobParent* AllocPPendingIPCBlobParent(
       const IPCBlob& aBlob) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool DeallocPBackgroundStorageParent(
+      PBackgroundStorageParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPBackgroundStorageParent(PBackgroundStorageParent* aActor) override;
+=======
   virtual bool DeallocPPendingIPCBlobParent(
       PPendingIPCBlobParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PPendingIPCBlobParent* AllocPPendingIPCBlobParent(
+      const IPCBlob& aBlob) override;
+||||||| merged common ancestors
+  virtual PPendingIPCBlobParent*
+  AllocPPendingIPCBlobParent(const IPCBlob& aBlob) override;
+=======
   virtual PIPCBlobInputStreamParent* AllocPIPCBlobInputStreamParent(
       const nsID& aID, const uint64_t& aSize) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool DeallocPPendingIPCBlobParent(
+      PPendingIPCBlobParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPPendingIPCBlobParent(PPendingIPCBlobParent* aActor) override;
+=======
   virtual mozilla::ipc::IPCResult RecvPIPCBlobInputStreamConstructor(
       PIPCBlobInputStreamParent* aActor, const nsID& aID,
       const uint64_t& aSize) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PIPCBlobInputStreamParent* AllocPIPCBlobInputStreamParent(
+      const nsID& aID, const uint64_t& aSize) override;
+||||||| merged common ancestors
+  virtual PIPCBlobInputStreamParent*
+  AllocPIPCBlobInputStreamParent(const nsID& aID,
+                                 const uint64_t& aSize) override;
+=======
   virtual bool DeallocPIPCBlobInputStreamParent(
       PIPCBlobInputStreamParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual mozilla::ipc::IPCResult RecvPIPCBlobInputStreamConstructor(
+      PIPCBlobInputStreamParent* aActor, const nsID& aID,
+      const uint64_t& aSize) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPIPCBlobInputStreamConstructor(PIPCBlobInputStreamParent* aActor,
+                                     const nsID& aID,
+                                     const uint64_t& aSize) override;
+=======
   virtual PTemporaryIPCBlobParent* AllocPTemporaryIPCBlobParent() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool DeallocPIPCBlobInputStreamParent(
+      PIPCBlobInputStreamParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPIPCBlobInputStreamParent(PIPCBlobInputStreamParent* aActor) override;
+=======
   virtual mozilla::ipc::IPCResult RecvPTemporaryIPCBlobConstructor(
       PTemporaryIPCBlobParent* actor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PTemporaryIPCBlobParent* AllocPTemporaryIPCBlobParent() override;
+||||||| merged common ancestors
+  virtual PTemporaryIPCBlobParent*
+  AllocPTemporaryIPCBlobParent() override;
+=======
   virtual bool DeallocPTemporaryIPCBlobParent(
       PTemporaryIPCBlobParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual mozilla::ipc::IPCResult RecvPTemporaryIPCBlobConstructor(
+      PTemporaryIPCBlobParent* actor) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPTemporaryIPCBlobConstructor(PTemporaryIPCBlobParent* actor) override;
+=======
+  virtual PFileCreatorParent* AllocPFileCreatorParent(
+      const nsString& aFullPath, const nsString& aType, const nsString& aName,
+      const Maybe<int64_t>& aLastModified, const bool& aExistenceCheck,
+      const bool& aIsFromNsIFile) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual bool DeallocPTemporaryIPCBlobParent(
+      PTemporaryIPCBlobParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPTemporaryIPCBlobParent(PTemporaryIPCBlobParent* aActor) override;
+=======
+  virtual mozilla::ipc::IPCResult RecvPFileCreatorConstructor(
+      PFileCreatorParent* actor, const nsString& aFullPath,
+      const nsString& aType, const nsString& aName,
+      const Maybe<int64_t>& aLastModified, const bool& aExistenceCheck,
+      const bool& aIsFromNsIFile) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual mozilla::dom::PRemoteWorkerParent* AllocPRemoteWorkerParent(
       const RemoteWorkerData& aData) override;
+||||||| merged common ancestors
+  virtual PFileDescriptorSetParent*
+  AllocPFileDescriptorSetParent(const FileDescriptor& aFileDescriptor)
+                                override;
+=======
+  virtual bool DeallocPFileCreatorParent(PFileCreatorParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPRemoteWorkerParent(PRemoteWorkerParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPFileDescriptorSetParent(PFileDescriptorSetParent* aActor)
+                                  override;
+=======
+  virtual mozilla::dom::PRemoteWorkerParent* AllocPRemoteWorkerParent(
+      const RemoteWorkerData& aData) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::dom::PRemoteWorkerServiceParent*
   AllocPRemoteWorkerServiceParent() override;
+||||||| merged common ancestors
+  virtual PVsyncParent*
+  AllocPVsyncParent() override;
+=======
+  virtual bool DeallocPRemoteWorkerParent(PRemoteWorkerParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPRemoteWorkerServiceConstructor(
       PRemoteWorkerServiceParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPVsyncParent(PVsyncParent* aActor) override;
+=======
+  virtual mozilla::dom::PRemoteWorkerServiceParent*
+  AllocPRemoteWorkerServiceParent() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPRemoteWorkerServiceParent(
       PRemoteWorkerServiceParent* aActor) override;
+||||||| merged common ancestors
+  virtual PBroadcastChannelParent*
+  AllocPBroadcastChannelParent(const PrincipalInfo& aPrincipalInfo,
+                               const nsCString& aOrigin,
+                               const nsString& aChannel) override;
+=======
+  virtual mozilla::ipc::IPCResult RecvPRemoteWorkerServiceConstructor(
+      PRemoteWorkerServiceParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::dom::PSharedWorkerParent* AllocPSharedWorkerParent(
       const mozilla::dom::RemoteWorkerData& aData, const uint64_t& aWindowID,
       const mozilla::dom::MessagePortIdentifier& aPortIdentifier) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPBroadcastChannelConstructor(PBroadcastChannelParent* actor,
+                                   const PrincipalInfo& aPrincipalInfo,
+                                   const nsCString& origin,
+                                   const nsString& channel) override;
+=======
+  virtual bool DeallocPRemoteWorkerServiceParent(
+      PRemoteWorkerServiceParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPSharedWorkerConstructor(
       PSharedWorkerParent* aActor, const mozilla::dom::RemoteWorkerData& aData,
       const uint64_t& aWindowID,
       const mozilla::dom::MessagePortIdentifier& aPortIdentifier) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPBroadcastChannelParent(PBroadcastChannelParent* aActor) override;
+=======
+  virtual mozilla::dom::PSharedWorkerParent* AllocPSharedWorkerParent(
+      const mozilla::dom::RemoteWorkerData& aData, const uint64_t& aWindowID,
+      const mozilla::dom::MessagePortIdentifier& aPortIdentifier) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPSharedWorkerParent(PSharedWorkerParent* aActor) override;
+||||||| merged common ancestors
+  virtual PChildToParentStreamParent*
+  AllocPChildToParentStreamParent() override;
+=======
+  virtual mozilla::ipc::IPCResult RecvPSharedWorkerConstructor(
+      PSharedWorkerParent* aActor, const mozilla::dom::RemoteWorkerData& aData,
+      const uint64_t& aWindowID,
+      const mozilla::dom::MessagePortIdentifier& aPortIdentifier) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual PFileDescriptorSetParent* AllocPFileDescriptorSetParent(
       const FileDescriptor& aFileDescriptor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPChildToParentStreamParent(PChildToParentStreamParent* aActor) override;
+=======
+  virtual bool DeallocPSharedWorkerParent(PSharedWorkerParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPFileDescriptorSetParent(
       PFileDescriptorSetParent* aActor) override;
+||||||| merged common ancestors
+  virtual PParentToChildStreamParent*
+  AllocPParentToChildStreamParent() override;
+=======
+  virtual PFileDescriptorSetParent* AllocPFileDescriptorSetParent(
+      const FileDescriptor& aFileDescriptor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual PVsyncParent* AllocPVsyncParent() override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPParentToChildStreamParent(PParentToChildStreamParent* aActor) override;
+=======
+  virtual bool DeallocPFileDescriptorSetParent(
+      PFileDescriptorSetParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPVsyncParent(PVsyncParent* aActor) override;
+||||||| merged common ancestors
+  virtual PServiceWorkerManagerParent*
+  AllocPServiceWorkerManagerParent() override;
+=======
+  virtual PVsyncParent* AllocPVsyncParent() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual PBroadcastChannelParent* AllocPBroadcastChannelParent(
       const PrincipalInfo& aPrincipalInfo, const nsCString& aOrigin,
       const nsString& aChannel) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPServiceWorkerManagerParent(PServiceWorkerManagerParent* aActor) override;
+=======
+  virtual bool DeallocPVsyncParent(PVsyncParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPBroadcastChannelConstructor(
       PBroadcastChannelParent* actor, const PrincipalInfo& aPrincipalInfo,
       const nsCString& origin, const nsString& channel) override;
+||||||| merged common ancestors
+  virtual PCamerasParent*
+  AllocPCamerasParent() override;
+=======
+  virtual PBroadcastChannelParent* AllocPBroadcastChannelParent(
+      const PrincipalInfo& aPrincipalInfo, const nsCString& aOrigin,
+      const nsString& aChannel) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPBroadcastChannelParent(
       PBroadcastChannelParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPCamerasParent(PCamerasParent* aActor) override;
+=======
+  virtual mozilla::ipc::IPCResult RecvPBroadcastChannelConstructor(
+      PBroadcastChannelParent* actor, const PrincipalInfo& aPrincipalInfo,
+      const nsCString& origin, const nsString& channel) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual PChildToParentStreamParent* AllocPChildToParentStreamParent()
       override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvShutdownServiceWorkerRegistrar() override;
+=======
+  virtual bool DeallocPBroadcastChannelParent(
+      PBroadcastChannelParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual bool DeallocPChildToParentStreamParent(
+      PChildToParentStreamParent* aActor) override;
+||||||| merged common ancestors
+  virtual dom::cache::PCacheStorageParent*
+  AllocPCacheStorageParent(const dom::cache::Namespace& aNamespace,
+                           const PrincipalInfo& aPrincipalInfo) override;
+=======
+  virtual PChildToParentStreamParent* AllocPChildToParentStreamParent()
+      override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual PParentToChildStreamParent* AllocPParentToChildStreamParent()
+      override;
+
+  virtual bool DeallocPParentToChildStreamParent(
+      PParentToChildStreamParent* aActor) override;
+
+  virtual PServiceWorkerManagerParent* AllocPServiceWorkerManagerParent()
+      override;
+
+  virtual bool DeallocPServiceWorkerManagerParent(
+      PServiceWorkerManagerParent* aActor) override;
+
+  virtual PCamerasParent* AllocPCamerasParent() override;
+
+  virtual bool DeallocPCamerasParent(PCamerasParent* aActor) override;
+
+  virtual mozilla::ipc::IPCResult RecvShutdownServiceWorkerRegistrar() override;
+
+  virtual dom::cache::PCacheStorageParent* AllocPCacheStorageParent(
+      const dom::cache::Namespace& aNamespace,
+      const PrincipalInfo& aPrincipalInfo) override;
+
+  virtual bool DeallocPCacheStorageParent(
+      dom::cache::PCacheStorageParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPCacheStorageParent(dom::cache::PCacheStorageParent* aActor) override;
+=======
   virtual bool DeallocPChildToParentStreamParent(
       PChildToParentStreamParent* aActor) override;
 
@@ -229,6 +598,7 @@ class BackgroundParentImpl : public PBackgroundParent {
 
   virtual bool DeallocPCacheStorageParent(
       dom::cache::PCacheStorageParent* aActor) override;
+>>>>>>> upstream-releases
 
   virtual dom::cache::PCacheParent* AllocPCacheParent() override;
 
@@ -240,12 +610,31 @@ class BackgroundParentImpl : public PBackgroundParent {
   virtual bool DeallocPCacheStreamControlParent(
       dom::cache::PCacheStreamControlParent* aActor) override;
 
+<<<<<<< HEAD
   virtual PUDPSocketParent* AllocPUDPSocketParent(
       const OptionalPrincipalInfo& pInfo, const nsCString& aFilter) override;
   virtual mozilla::ipc::IPCResult RecvPUDPSocketConstructor(
       PUDPSocketParent*, const OptionalPrincipalInfo& aPrincipalInfo,
       const nsCString& aFilter) override;
   virtual bool DeallocPUDPSocketParent(PUDPSocketParent*) override;
+||||||| merged common ancestors
+  virtual PUDPSocketParent*
+  AllocPUDPSocketParent(const OptionalPrincipalInfo& pInfo,
+                        const nsCString& aFilter) override;
+  virtual mozilla::ipc::IPCResult
+  RecvPUDPSocketConstructor(PUDPSocketParent*,
+                            const OptionalPrincipalInfo& aPrincipalInfo,
+                            const nsCString& aFilter) override;
+  virtual bool
+  DeallocPUDPSocketParent(PUDPSocketParent*) override;
+=======
+  virtual PUDPSocketParent* AllocPUDPSocketParent(
+      const Maybe<PrincipalInfo>& pInfo, const nsCString& aFilter) override;
+  virtual mozilla::ipc::IPCResult RecvPUDPSocketConstructor(
+      PUDPSocketParent*, const Maybe<PrincipalInfo>& aPrincipalInfo,
+      const nsCString& aFilter) override;
+  virtual bool DeallocPUDPSocketParent(PUDPSocketParent*) override;
+>>>>>>> upstream-releases
 
   virtual PMessagePortParent* AllocPMessagePortParent(
       const nsID& aUUID, const nsID& aDestinationUUID,
@@ -261,26 +650,77 @@ class BackgroundParentImpl : public PBackgroundParent {
       const nsID& aUUID, const nsID& aDestinationUUID,
       const uint32_t& aSequenceID) override;
 
+<<<<<<< HEAD
   virtual PAsmJSCacheEntryParent* AllocPAsmJSCacheEntryParent(
       const dom::asmjscache::OpenMode& aOpenMode,
       const dom::asmjscache::WriteParams& aWriteParams,
       const PrincipalInfo& aPrincipalInfo) override;
+||||||| merged common ancestors
+  virtual PAsmJSCacheEntryParent*
+  AllocPAsmJSCacheEntryParent(const dom::asmjscache::OpenMode& aOpenMode,
+                              const dom::asmjscache::WriteParams& aWriteParams,
+                              const PrincipalInfo& aPrincipalInfo) override;
+=======
+  virtual PQuotaParent* AllocPQuotaParent() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPAsmJSCacheEntryParent(
       PAsmJSCacheEntryParent* aActor) override;
-
-  virtual PQuotaParent* AllocPQuotaParent() override;
-
+||||||| merged common ancestors
+  virtual bool
+  DeallocPAsmJSCacheEntryParent(PAsmJSCacheEntryParent* aActor) override;
+=======
   virtual bool DeallocPQuotaParent(PQuotaParent* aActor) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PQuotaParent* AllocPQuotaParent() override;
+||||||| merged common ancestors
+  virtual PQuotaParent*
+  AllocPQuotaParent() override;
+=======
+  virtual mozilla::ipc::IPCResult RecvShutdownQuotaManager() override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual bool DeallocPQuotaParent(PQuotaParent* aActor) override;
+||||||| merged common ancestors
+  virtual bool
+  DeallocPQuotaParent(PQuotaParent* aActor) override;
+=======
   virtual PFileSystemRequestParent* AllocPFileSystemRequestParent(
       const FileSystemParams&) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  virtual PFileSystemRequestParent* AllocPFileSystemRequestParent(
+      const FileSystemParams&) override;
+||||||| merged common ancestors
+  virtual PFileSystemRequestParent*
+  AllocPFileSystemRequestParent(const FileSystemParams&) override;
+=======
+  virtual mozilla::ipc::IPCResult RecvPFileSystemRequestConstructor(
+      PFileSystemRequestParent* actor, const FileSystemParams& params) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPFileSystemRequestConstructor(
       PFileSystemRequestParent* actor, const FileSystemParams& params) override;
 
   virtual bool DeallocPFileSystemRequestParent(
       PFileSystemRequestParent*) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvPFileSystemRequestConstructor(PFileSystemRequestParent* actor,
+                                    const FileSystemParams& params) override;
+
+  virtual bool
+  DeallocPFileSystemRequestParent(PFileSystemRequestParent*) override;
+=======
+  virtual bool DeallocPFileSystemRequestParent(
+      PFileSystemRequestParent*) override;
+>>>>>>> upstream-releases
 
   // Gamepad API Background IPC
   virtual PGamepadEventChannelParent* AllocPGamepadEventChannelParent()

@@ -51,12 +51,18 @@ class VelocityTracker {
    * Record a new position along this axis, at the given timestamp.
    * Returns the average velocity between the last sample and this one, or
    * or Nothing() if a reasonable average cannot be computed.
-   * If |aIsAxisLocked| is true, no movement is happening along this axis,
-   * and this should be reflected both in the returned instantaneous velocity,
-   * and the internal state maintained for calling ComputeVelocity() later.
    */
+<<<<<<< HEAD
   virtual Maybe<float> AddPosition(ParentLayerCoord aPos, uint32_t aTimestampMs,
                                    bool aIsAxisLocked) = 0;
+||||||| merged common ancestors
+  virtual Maybe<float> AddPosition(ParentLayerCoord aPos,
+                                   uint32_t aTimestampMs,
+                                   bool aIsAxisLocked) = 0;
+=======
+  virtual Maybe<float> AddPosition(ParentLayerCoord aPos,
+                                   uint32_t aTimestampMs) = 0;
+>>>>>>> upstream-releases
   /**
    * Record movement of the dynamic toolbar along this axis by |aDelta|
    * over the given time range. Movement of the dynamic toolbar means
@@ -347,6 +353,7 @@ class Axis {
 class AxisX : public Axis {
  public:
   explicit AxisX(AsyncPanZoomController* mAsyncPanZoomController);
+<<<<<<< HEAD
   virtual ParentLayerCoord GetPointOffset(
       const ParentLayerPoint& aPoint) const override;
   virtual ParentLayerCoord GetRectLength(
@@ -357,15 +364,42 @@ class AxisX : public Axis {
       const CSSToParentLayerScale2D& aScale) const override;
   virtual ScreenPoint MakePoint(ScreenCoord aCoord) const override;
   virtual const char* Name() const override;
+||||||| merged common ancestors
+  virtual ParentLayerCoord GetPointOffset(const ParentLayerPoint& aPoint) const override;
+  virtual ParentLayerCoord GetRectLength(const ParentLayerRect& aRect) const override;
+  virtual ParentLayerCoord GetRectOffset(const ParentLayerRect& aRect) const override;
+  virtual CSSToParentLayerScale GetScaleForAxis(const CSSToParentLayerScale2D& aScale) const override;
+  virtual ScreenPoint MakePoint(ScreenCoord aCoord) const override;
+  virtual const char* Name() const override;
+=======
+  ParentLayerCoord GetPointOffset(
+      const ParentLayerPoint& aPoint) const override;
+  ParentLayerCoord GetRectLength(const ParentLayerRect& aRect) const override;
+  ParentLayerCoord GetRectOffset(const ParentLayerRect& aRect) const override;
+  CSSToParentLayerScale GetScaleForAxis(
+      const CSSToParentLayerScale2D& aScale) const override;
+  ScreenPoint MakePoint(ScreenCoord aCoord) const override;
+  const char* Name() const override;
+>>>>>>> upstream-releases
   bool CanScrollTo(Side aSide) const;
+<<<<<<< HEAD
 
  private:
   virtual OverscrollBehavior GetOverscrollBehavior() const override;
+||||||| merged common ancestors
+private:
+  virtual OverscrollBehavior GetOverscrollBehavior() const override;
+=======
+
+ private:
+  OverscrollBehavior GetOverscrollBehavior() const override;
+>>>>>>> upstream-releases
 };
 
 class AxisY : public Axis {
  public:
   explicit AxisY(AsyncPanZoomController* mAsyncPanZoomController);
+<<<<<<< HEAD
   virtual ParentLayerCoord GetPointOffset(
       const ParentLayerPoint& aPoint) const override;
   virtual ParentLayerCoord GetRectLength(
@@ -376,10 +410,36 @@ class AxisY : public Axis {
       const CSSToParentLayerScale2D& aScale) const override;
   virtual ScreenPoint MakePoint(ScreenCoord aCoord) const override;
   virtual const char* Name() const override;
+||||||| merged common ancestors
+  virtual ParentLayerCoord GetPointOffset(const ParentLayerPoint& aPoint) const override;
+  virtual ParentLayerCoord GetRectLength(const ParentLayerRect& aRect) const override;
+  virtual ParentLayerCoord GetRectOffset(const ParentLayerRect& aRect) const override;
+  virtual CSSToParentLayerScale GetScaleForAxis(const CSSToParentLayerScale2D& aScale) const override;
+  virtual ScreenPoint MakePoint(ScreenCoord aCoord) const override;
+  virtual const char* Name() const override;
+=======
+  ParentLayerCoord GetPointOffset(
+      const ParentLayerPoint& aPoint) const override;
+  ParentLayerCoord GetRectLength(const ParentLayerRect& aRect) const override;
+  ParentLayerCoord GetRectOffset(const ParentLayerRect& aRect) const override;
+  CSSToParentLayerScale GetScaleForAxis(
+      const CSSToParentLayerScale2D& aScale) const override;
+  ScreenPoint MakePoint(ScreenCoord aCoord) const override;
+  const char* Name() const override;
+>>>>>>> upstream-releases
   bool CanScrollTo(Side aSide) const;
+<<<<<<< HEAD
 
  private:
   virtual OverscrollBehavior GetOverscrollBehavior() const override;
+||||||| merged common ancestors
+private:
+  virtual OverscrollBehavior GetOverscrollBehavior() const override;
+=======
+
+ private:
+  OverscrollBehavior GetOverscrollBehavior() const override;
+>>>>>>> upstream-releases
 };
 
 }  // namespace layers

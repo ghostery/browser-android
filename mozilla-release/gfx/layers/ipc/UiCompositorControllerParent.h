@@ -8,8 +8,16 @@
 
 #include "mozilla/layers/PUiCompositorControllerParent.h"
 #if defined(MOZ_WIDGET_ANDROID)
+<<<<<<< HEAD
 #include "mozilla/layers/AndroidDynamicToolbarAnimator.h"
 #endif  // defined(MOZ_WIDGET_ANDROID)
+||||||| merged common ancestors
+#include "mozilla/layers/AndroidDynamicToolbarAnimator.h"
+#endif // defined(MOZ_WIDGET_ANDROID)
+=======
+#  include "mozilla/layers/AndroidDynamicToolbarAnimator.h"
+#endif  // defined(MOZ_WIDGET_ANDROID)
+>>>>>>> upstream-releases
 #include "mozilla/ipc/Shmem.h"
 #include "mozilla/RefPtr.h"
 
@@ -34,6 +42,7 @@ class UiCompositorControllerParent final
       Endpoint<PUiCompositorControllerParent>&& aEndpoint);
 
   // PUiCompositorControllerParent functions
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvPause() override;
   mozilla::ipc::IPCResult RecvResume() override;
   mozilla::ipc::IPCResult RecvResumeAndResize(const int32_t& aX,
@@ -53,8 +62,42 @@ class UiCompositorControllerParent final
       const bool& aEnable) override;
   mozilla::ipc::IPCResult RecvToolbarPixelsToCompositor(
       Shmem&& aMem, const ScreenIntSize& aSize) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvPause() override;
+  mozilla::ipc::IPCResult RecvResume() override;
+  mozilla::ipc::IPCResult RecvResumeAndResize(const int32_t& aHeight,
+                                              const int32_t& aWidth) override;
+  mozilla::ipc::IPCResult RecvInvalidateAndRender() override;
+  mozilla::ipc::IPCResult RecvMaxToolbarHeight(const int32_t& aHeight) override;
+  mozilla::ipc::IPCResult RecvPinned(const bool& aPinned, const int32_t& aReason) override;
+  mozilla::ipc::IPCResult RecvToolbarAnimatorMessageFromUI(const int32_t& aMessage) override;
+  mozilla::ipc::IPCResult RecvDefaultClearColor(const uint32_t& aColor) override;
+  mozilla::ipc::IPCResult RecvRequestScreenPixels() override;
+  mozilla::ipc::IPCResult RecvEnableLayerUpdateNotifications(const bool& aEnable) override;
+  mozilla::ipc::IPCResult RecvToolbarPixelsToCompositor(Shmem&& aMem, const ScreenIntSize& aSize) override;
+=======
+  mozilla::ipc::IPCResult RecvPause();
+  mozilla::ipc::IPCResult RecvResume();
+  mozilla::ipc::IPCResult RecvResumeAndResize(const int32_t& aX,
+                                              const int32_t& aY,
+                                              const int32_t& aHeight,
+                                              const int32_t& aWidth);
+  mozilla::ipc::IPCResult RecvInvalidateAndRender();
+  mozilla::ipc::IPCResult RecvMaxToolbarHeight(const int32_t& aHeight);
+  mozilla::ipc::IPCResult RecvFixedBottomOffset(const int32_t& aOffset);
+  mozilla::ipc::IPCResult RecvPinned(const bool& aPinned,
+                                     const int32_t& aReason);
+  mozilla::ipc::IPCResult RecvToolbarAnimatorMessageFromUI(
+      const int32_t& aMessage);
+  mozilla::ipc::IPCResult RecvDefaultClearColor(const uint32_t& aColor);
+  mozilla::ipc::IPCResult RecvRequestScreenPixels();
+  mozilla::ipc::IPCResult RecvEnableLayerUpdateNotifications(
+      const bool& aEnable);
+  mozilla::ipc::IPCResult RecvToolbarPixelsToCompositor(
+      Shmem&& aMem, const ScreenIntSize& aSize);
+>>>>>>> upstream-releases
   void ActorDestroy(ActorDestroyReason aWhy) override;
-  void DeallocPUiCompositorControllerParent() override;
+  void ActorDealloc() override;
 
   // Class specific functions
 #if defined(MOZ_WIDGET_ANDROID)
@@ -72,7 +115,7 @@ class UiCompositorControllerParent final
 
  private:
   explicit UiCompositorControllerParent(const LayersId& aRootLayerTreeId);
-  ~UiCompositorControllerParent();
+  virtual ~UiCompositorControllerParent();
   void InitializeForSameProcess();
   void InitializeForOutOfProcess();
   void Initialize();

@@ -22,12 +22,27 @@ class SkStrikeCache;
 
 class SkScalerContextProxy : public SkScalerContext {
 public:
+<<<<<<< HEAD
     SkScalerContextProxy(sk_sp<SkTypeface> tf,
                          const SkScalerContextEffects& effects,
                          const SkDescriptor* desc,
                          sk_sp<SkStrikeClient::DiscardableHandleManager> manager);
 
     void initCache(SkGlyphCache*, SkStrikeCache*);
+||||||| merged common ancestors
+    SkScalerContextProxy(
+            sk_sp<SkTypeface> tf,
+            const SkScalerContextEffects& effects,
+            const SkDescriptor* desc,
+            SkRemoteScalerContext* rsc);
+=======
+    SkScalerContextProxy(sk_sp<SkTypeface> tf,
+                         const SkScalerContextEffects& effects,
+                         const SkDescriptor* desc,
+                         sk_sp<SkStrikeClient::DiscardableHandleManager> manager);
+
+    void initCache(SkStrike*, SkStrikeCache*);
+>>>>>>> upstream-releases
 
 protected:
     unsigned generateGlyphCount() override;
@@ -35,14 +50,39 @@ protected:
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
+<<<<<<< HEAD
     bool generatePath(SkGlyphID glyphID, SkPath* path) override;
     void generateFontMetrics(SkPaint::FontMetrics* metrics) override;
     SkTypefaceProxy* getProxyTypeface() const;
+||||||| merged common ancestors
+    void generatePath(SkGlyphID glyphID, SkPath* path) override;
+    void generateFontMetrics(SkPaint::FontMetrics* metrics) override;
+=======
+    bool generatePath(SkGlyphID glyphID, SkPath* path) override;
+    void generateFontMetrics(SkFontMetrics* metrics) override;
+    SkTypefaceProxy* getProxyTypeface() const;
+>>>>>>> upstream-releases
 
 private:
+<<<<<<< HEAD
     sk_sp<SkStrikeClient::DiscardableHandleManager> fDiscardableManager;
     SkGlyphCache* fCache = nullptr;
     SkStrikeCache* fStrikeCache = nullptr;
+||||||| merged common ancestors
+    // Copied from SkGlyphCache
+    // so we don't grow our arrays a lot
+    static constexpr size_t kMinGlyphCount = 8;
+    static constexpr size_t kMinGlyphImageSize = 16 /* height */ * 8 /* width */;
+    static constexpr size_t kMinAllocAmount = kMinGlyphImageSize * kMinGlyphCount;
+    SkArenaAlloc  fAlloc{kMinAllocAmount};
+
+    SkTypefaceProxy* typefaceProxy();
+    SkRemoteScalerContext* const fRemote;
+=======
+    sk_sp<SkStrikeClient::DiscardableHandleManager> fDiscardableManager;
+    SkStrike* fCache = nullptr;
+    SkStrikeCache* fStrikeCache = nullptr;
+>>>>>>> upstream-releases
     typedef SkScalerContext INHERITED;
 };
 
@@ -65,7 +105,7 @@ public:
 
 protected:
     int onGetUPEM() const override { SK_ABORT("Should never be called."); return 0; }
-    SkStreamAsset* onOpenStream(int* ttcIndex) const override {
+    std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override {
         SK_ABORT("Should never be called.");
         return nullptr;
     }

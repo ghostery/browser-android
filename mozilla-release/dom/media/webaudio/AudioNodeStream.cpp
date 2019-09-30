@@ -43,8 +43,6 @@ AudioNodeStream::AudioNodeStream(AudioNodeEngine* aEngine, Flags aFlags,
   mSuspendedCount = !(mIsActive || mFlags & EXTERNAL_OUTPUT);
   mChannelCountMode = ChannelCountMode::Max;
   mChannelInterpretation = ChannelInterpretation::Speakers;
-  // AudioNodes are always producing data
-  mHasCurrentData = true;
   mLastChunks.SetLength(std::max(uint16_t(1), mEngine->OutputCount()));
   MOZ_COUNT_CTOR(AudioNodeStream);
 }
@@ -62,9 +60,21 @@ void AudioNodeStream::DestroyImpl() {
   ProcessedMediaStream::DestroyImpl();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<AudioNodeStream> AudioNodeStream::Create(
     AudioContext* aCtx, AudioNodeEngine* aEngine, Flags aFlags,
     MediaStreamGraph* aGraph) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<AudioNodeStream>
+AudioNodeStream::Create(AudioContext* aCtx, AudioNodeEngine* aEngine,
+                        Flags aFlags, MediaStreamGraph* aGraph)
+{
+=======
+/* static */
+already_AddRefed<AudioNodeStream> AudioNodeStream::Create(
+    AudioContext* aCtx, AudioNodeEngine* aEngine, Flags aFlags,
+    MediaStreamGraph* aGraph) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_RELEASE_ASSERT(aGraph);
 
@@ -290,9 +300,35 @@ void AudioNodeStream::SetPassThrough(bool aPassThrough) {
   GraphImpl()->AppendMessage(MakeUnique<Message>(this, aPassThrough));
 }
 
+<<<<<<< HEAD
 void AudioNodeStream::SetChannelMixingParametersImpl(
     uint32_t aNumberOfChannels, ChannelCountMode aChannelCountMode,
     ChannelInterpretation aChannelInterpretation) {
+||||||| merged common ancestors
+void
+AudioNodeStream::SetChannelMixingParametersImpl(uint32_t aNumberOfChannels,
+                                                ChannelCountMode aChannelCountMode,
+                                                ChannelInterpretation aChannelInterpretation)
+{
+=======
+void AudioNodeStream::SendRunnable(already_AddRefed<nsIRunnable> aRunnable) {
+  class Message final : public ControlMessage {
+   public:
+    Message(MediaStream* aStream, already_AddRefed<nsIRunnable> aRunnable)
+        : ControlMessage(aStream), mRunnable(aRunnable) {}
+    void Run() override { mRunnable->Run(); }
+
+   private:
+    nsCOMPtr<nsIRunnable> mRunnable;
+  };
+
+  GraphImpl()->AppendMessage(MakeUnique<Message>(this, std::move(aRunnable)));
+}
+
+void AudioNodeStream::SetChannelMixingParametersImpl(
+    uint32_t aNumberOfChannels, ChannelCountMode aChannelCountMode,
+    ChannelInterpretation aChannelInterpretation) {
+>>>>>>> upstream-releases
   mNumberOfInputChannels = aNumberOfChannels;
   mChannelCountMode = aChannelCountMode;
   mChannelInterpretation = aChannelInterpretation;

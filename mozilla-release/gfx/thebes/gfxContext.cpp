@@ -17,7 +17,7 @@
 #include "gfxASurface.h"
 #include "gfxPattern.h"
 #include "gfxPlatform.h"
-#include "gfxPrefs.h"
+
 #include "GeckoProfiler.h"
 #include "gfx2DGlue.h"
 #include "mozilla/gfx/PathHelpers.h"
@@ -26,8 +26,8 @@
 #include "TextDrawTarget.h"
 
 #if XP_WIN
-#include "gfxWindowsPlatform.h"
-#include "mozilla/gfx/DeviceManagerDx.h"
+#  include "gfxWindowsPlatform.h"
+#  include "mozilla/gfx/DeviceManagerDx.h"
 #endif
 
 using namespace mozilla;
@@ -36,9 +36,22 @@ using namespace mozilla::gfx;
 UserDataKey gfxContext::sDontUseAsSourceKey;
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #define CURRENTSTATE_CHANGED() CurrentState().mContentChanged = true;
+||||||| merged common ancestors
+  #define CURRENTSTATE_CHANGED() \
+    CurrentState().mContentChanged = true;
+=======
+#  define CURRENTSTATE_CHANGED() CurrentState().mContentChanged = true;
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define CURRENTSTATE_CHANGED()
+||||||| merged common ancestors
+  #define CURRENTSTATE_CHANGED()
+=======
+#  define CURRENTSTATE_CHANGED()
+>>>>>>> upstream-releases
 #endif
 
 PatternFromState::operator mozilla::gfx::Pattern&() {
@@ -66,8 +79,19 @@ gfxContext::gfxContext(DrawTarget* aTarget, const Point& aDeviceOffset)
   mDT->SetTransform(GetDTTransform());
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<gfxContext> gfxContext::CreateOrNull(
     DrawTarget* aTarget, const mozilla::gfx::Point& aDeviceOffset) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<gfxContext>
+gfxContext::CreateOrNull(DrawTarget* aTarget,
+                         const mozilla::gfx::Point& aDeviceOffset)
+{
+=======
+/* static */
+already_AddRefed<gfxContext> gfxContext::CreateOrNull(
+    DrawTarget* aTarget, const mozilla::gfx::Point& aDeviceOffset) {
+>>>>>>> upstream-releases
   if (!aTarget || !aTarget->IsValid()) {
     gfxCriticalNote << "Invalid target in gfxContext::CreateOrNull "
                     << hexa(aTarget);
@@ -78,8 +102,18 @@ gfxContext::gfxContext(DrawTarget* aTarget, const Point& aDeviceOffset)
   return result.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<gfxContext>
 gfxContext::CreatePreservingTransformOrNull(DrawTarget* aTarget) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<gfxContext>
+gfxContext::CreatePreservingTransformOrNull(DrawTarget* aTarget)
+{
+=======
+/* static */
+already_AddRefed<gfxContext> gfxContext::CreatePreservingTransformOrNull(
+    DrawTarget* aTarget) {
+>>>>>>> upstream-releases
   if (!aTarget || !aTarget->IsValid()) {
     gfxCriticalNote
         << "Invalid target in gfxContext::CreatePreservingTransformOrNull "
@@ -187,8 +221,16 @@ already_AddRefed<Path> gfxContext::GetPath() {
 void gfxContext::SetPath(Path* path) {
   MOZ_ASSERT(path->GetBackendType() == mDT->GetBackendType() ||
              path->GetBackendType() == BackendType::RECORDING ||
+<<<<<<< HEAD
              (mDT->GetBackendType() == BackendType::DIRECT2D1_1 &&
               path->GetBackendType() == BackendType::DIRECT2D));
+||||||| merged common ancestors
+             (mDT->GetBackendType() == BackendType::DIRECT2D1_1 && path->GetBackendType() == BackendType::DIRECT2D));
+=======
+             (mDT->GetBackendType() == BackendType::DIRECT2D1_1 &&
+              path->GetBackendType() == BackendType::DIRECT2D) ||
+             path->GetBackendType() == BackendType::CAPTURE);
+>>>>>>> upstream-releases
   mPath = path;
   mPathBuilder = nullptr;
   mPathIsRect = false;
@@ -288,9 +330,22 @@ void gfxContext::SnappedClip(const gfxRect& rect) {
 }
 
 // transform stuff
+<<<<<<< HEAD
 void gfxContext::Multiply(const gfxMatrix& matrix) {
+||||||| merged common ancestors
+void
+gfxContext::Multiply(const gfxMatrix& matrix)
+{
+=======
+void gfxContext::Multiply(const gfxMatrix& matrix) {
+  Multiply(ToMatrix(matrix));
+}
+
+// transform stuff
+void gfxContext::Multiply(const Matrix& matrix) {
+>>>>>>> upstream-releases
   CURRENTSTATE_CHANGED()
-  ChangeTransform(ToMatrix(matrix) * mTransform);
+  ChangeTransform(matrix * mTransform);
 }
 
 void gfxContext::SetMatrix(const gfx::Matrix& matrix) {
@@ -849,8 +904,19 @@ void gfxContext::ChangeTransform(const Matrix& aNewMatrix,
   mDT->SetTransform(GetDTTransform());
 }
 
+<<<<<<< HEAD
 Rect gfxContext::GetAzureDeviceSpaceClipBounds() const {
   Rect rect(CurrentState().deviceOffset.x, CurrentState().deviceOffset.y,
+||||||| merged common ancestors
+Rect
+gfxContext::GetAzureDeviceSpaceClipBounds() const
+{
+  Rect rect(CurrentState().deviceOffset.x, CurrentState().deviceOffset.y,
+=======
+Rect gfxContext::GetAzureDeviceSpaceClipBounds() const {
+  Rect rect(CurrentState().deviceOffset.x + Float(mDT->GetRect().x),
+            CurrentState().deviceOffset.y + Float(mDT->GetRect().y),
+>>>>>>> upstream-releases
             Float(mDT->GetSize().width), Float(mDT->GetSize().height));
   for (unsigned int i = 0; i < mStateStack.Length(); i++) {
     for (unsigned int c = 0; c < mStateStack[i].pushedClips.Length(); c++) {
@@ -871,6 +937,7 @@ Point gfxContext::GetDeviceOffset() const {
   return CurrentState().deviceOffset;
 }
 
+<<<<<<< HEAD
 void gfxContext::SetDeviceOffset(const Point& aOffset) {
   CurrentState().deviceOffset = aOffset;
 }
@@ -878,6 +945,16 @@ void gfxContext::SetDeviceOffset(const Point& aOffset) {
 Matrix gfxContext::GetDeviceTransform() const {
   return Matrix::Translation(-CurrentState().deviceOffset.x,
                              -CurrentState().deviceOffset.y);
+||||||| merged common ancestors
+Matrix
+gfxContext::GetDeviceTransform() const
+{
+  return Matrix::Translation(-CurrentState().deviceOffset.x,
+                             -CurrentState().deviceOffset.y);
+=======
+void gfxContext::SetDeviceOffset(const Point& aOffset) {
+  CurrentState().deviceOffset = aOffset;
+>>>>>>> upstream-releases
 }
 
 Matrix gfxContext::GetDTTransform() const {

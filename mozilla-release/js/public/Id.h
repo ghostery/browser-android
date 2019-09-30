@@ -20,6 +20,8 @@
 // A jsid is not implicitly convertible to or from a Value; JS_ValueToId or
 // JS_IdToValue must be used instead.
 
+#include "mozilla/Maybe.h"
+
 #include "jstypes.h"
 
 #include "js/HeapAPI.h"
@@ -32,6 +34,44 @@
 #define JSID_TYPE_INT_BIT 0x1
 
 // Use 0 for JSID_TYPE_STRING to avoid a bitwise op for atom <-> id conversions.
+<<<<<<< HEAD
+#define JSID_TYPE_STRING 0x0
+#define JSID_TYPE_VOID 0x2
+#define JSID_TYPE_SYMBOL 0x4
+#define JSID_TYPE_EMPTY 0x6
+#define JSID_TYPE_MASK 0x7
+
+namespace JS {
+
+struct PropertyKey {
+  size_t asBits;
+
+  constexpr PropertyKey() : asBits(JSID_TYPE_VOID) {}
+
+  static constexpr MOZ_ALWAYS_INLINE PropertyKey fromRawBits(size_t bits) {
+    PropertyKey id;
+    id.asBits = bits;
+    return id;
+  }
+||||||| merged common ancestors
+#define JSID_TYPE_STRING                 0x0
+#define JSID_TYPE_VOID                   0x2
+#define JSID_TYPE_SYMBOL                 0x4
+#define JSID_TYPE_EMPTY                  0x6
+#define JSID_TYPE_MASK                   0x7
+
+struct jsid
+{
+    size_t asBits;
+
+    constexpr jsid() : asBits(JSID_TYPE_VOID) {}
+
+    static constexpr MOZ_ALWAYS_INLINE jsid fromRawBits(size_t bits) {
+        jsid id;
+        id.asBits = bits;
+        return id;
+    }
+=======
 #define JSID_TYPE_STRING 0x0
 #define JSID_TYPE_VOID 0x2
 #define JSID_TYPE_SYMBOL 0x4
@@ -53,6 +93,20 @@ struct PropertyKey {
 
   bool operator==(const PropertyKey& rhs) const { return asBits == rhs.asBits; }
   bool operator!=(const PropertyKey& rhs) const { return asBits != rhs.asBits; }
+
+  MOZ_ALWAYS_INLINE bool isInt() const {
+    return !!(asBits & JSID_TYPE_INT_BIT);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool operator==(const PropertyKey& rhs) const { return asBits == rhs.asBits; }
+  bool operator!=(const PropertyKey& rhs) const { return asBits != rhs.asBits; }
+||||||| merged common ancestors
+    bool operator==(const jsid& rhs) const { return asBits == rhs.asBits; }
+    bool operator!=(const jsid& rhs) const { return asBits != rhs.asBits; }
+=======
+>>>>>>> upstream-releases
 } JS_HAZ_GC_POINTER;
 
 }  // namespace JS
@@ -89,10 +143,25 @@ static MOZ_ALWAYS_INLINE bool JSID_IS_INT(jsid id) {
   return !!(JSID_BITS(id) & JSID_TYPE_INT_BIT);
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE int32_t JSID_TO_INT(jsid id) {
   MOZ_ASSERT(JSID_IS_INT(id));
   uint32_t bits = static_cast<uint32_t>(JSID_BITS(id)) >> 1;
   return static_cast<int32_t>(bits);
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE int32_t
+JSID_TO_INT(jsid id)
+{
+    MOZ_ASSERT(JSID_IS_INT(id));
+    uint32_t bits = static_cast<uint32_t>(JSID_BITS(id)) >> 1;
+    return static_cast<int32_t>(bits);
+=======
+static MOZ_ALWAYS_INLINE int32_t JSID_TO_INT(jsid id) {
+  MOZ_ASSERT(JSID_IS_INT(id));
+  MOZ_ASSERT(id.isInt());
+  uint32_t bits = static_cast<uint32_t>(JSID_BITS(id)) >> 1;
+  return static_cast<int32_t>(bits);
+>>>>>>> upstream-releases
 }
 
 #define JSID_INT_MIN 0
@@ -171,12 +240,28 @@ struct GCPolicy<jsid> {
 };
 
 #ifdef DEBUG
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool IdIsNotGray(jsid id) {
   if (!JSID_IS_GCTHING(id)) {
     return true;
   }
 
   return CellIsNotGray(JSID_TO_GCTHING(id).asCell());
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+IdIsNotGray(jsid id)
+{
+    if (!JSID_IS_GCTHING(id)) {
+        return true;
+    }
+
+    return CellIsNotGray(JSID_TO_GCTHING(id).asCell());
+=======
+MOZ_ALWAYS_INLINE void AssertIdIsNotGray(jsid id) {
+  if (JSID_IS_GCTHING(id)) {
+    AssertCellIsNotGray(JSID_TO_GCTHING(id).asCell());
+  }
+>>>>>>> upstream-releases
 }
 #endif
 
@@ -185,6 +270,7 @@ MOZ_ALWAYS_INLINE bool IdIsNotGray(jsid id) {
 namespace js {
 
 template <>
+<<<<<<< HEAD
 struct BarrierMethods<jsid> {
   static gc::Cell* asGCThingOrNull(jsid id) {
     if (JSID_IS_STRING(id)) {
@@ -217,6 +303,93 @@ auto DispatchTyped(F f, const jsid& id, Args&&... args)
   }
   MOZ_ASSERT(!JSID_IS_GCTHING(id));
   return F::defaultValue(id);
+||||||| merged common ancestors
+struct BarrierMethods<jsid>
+{
+    static gc::Cell* asGCThingOrNull(jsid id) {
+        if (JSID_IS_STRING(id)) {
+            return reinterpret_cast<gc::Cell*>(JSID_TO_STRING(id));
+        }
+        if (JSID_IS_SYMBOL(id)) {
+            return reinterpret_cast<gc::Cell*>(JSID_TO_SYMBOL(id));
+        }
+        return nullptr;
+    }
+    static void postBarrier(jsid* idp, jsid prev, jsid next) {}
+    static void exposeToJS(jsid id) {
+        if (JSID_IS_GCTHING(id)) {
+            js::gc::ExposeGCThingToActiveJS(JSID_TO_GCTHING(id));
+        }
+    }
+};
+
+// If the jsid is a GC pointer type, convert to that type and call |f| with
+// the pointer. If the jsid is not a GC type, calls F::defaultValue.
+template <typename F, typename... Args>
+auto
+DispatchTyped(F f, const jsid& id, Args&&... args)
+  -> decltype(f(static_cast<JSString*>(nullptr), std::forward<Args>(args)...))
+{
+    if (JSID_IS_STRING(id)) {
+        return f(JSID_TO_STRING(id), std::forward<Args>(args)...);
+    }
+    if (JSID_IS_SYMBOL(id)) {
+        return f(JSID_TO_SYMBOL(id), std::forward<Args>(args)...);
+    }
+    MOZ_ASSERT(!JSID_IS_GCTHING(id));
+    return F::defaultValue(id);
+=======
+struct BarrierMethods<jsid> {
+  static gc::Cell* asGCThingOrNull(jsid id) {
+    if (JSID_IS_STRING(id)) {
+      return reinterpret_cast<gc::Cell*>(JSID_TO_STRING(id));
+    }
+    if (JSID_IS_SYMBOL(id)) {
+      return reinterpret_cast<gc::Cell*>(JSID_TO_SYMBOL(id));
+    }
+    return nullptr;
+  }
+  static void writeBarriers(jsid* idp, jsid prev, jsid next) {
+    if (JSID_IS_STRING(prev)) {
+      JS::IncrementalPreWriteBarrier(JS::GCCellPtr(JSID_TO_STRING(prev)));
+    }
+    if (JSID_IS_SYMBOL(prev)) {
+      JS::IncrementalPreWriteBarrier(JS::GCCellPtr(JSID_TO_SYMBOL(prev)));
+    }
+  }
+  static void exposeToJS(jsid id) {
+    if (JSID_IS_GCTHING(id)) {
+      js::gc::ExposeGCThingToActiveJS(JSID_TO_GCTHING(id));
+    }
+  }
+};
+
+// If the jsid is a GC pointer type, convert to that type and call |f| with the
+// pointer and return the result wrapped in a Maybe, otherwise return None().
+template <typename F>
+auto MapGCThingTyped(const jsid& id, F&& f) {
+  if (JSID_IS_STRING(id)) {
+    return mozilla::Some(f(JSID_TO_STRING(id)));
+  }
+  if (JSID_IS_SYMBOL(id)) {
+    return mozilla::Some(f(JSID_TO_SYMBOL(id)));
+  }
+  MOZ_ASSERT(!JSID_IS_GCTHING(id));
+  using ReturnType = decltype(f(static_cast<JSString*>(nullptr)));
+  return mozilla::Maybe<ReturnType>();
+}
+
+// If the jsid is a GC pointer type, convert to that type and call |f| with the
+// pointer. Return whether this happened.
+template <typename F>
+bool ApplyGCThingTyped(const jsid& id, F&& f) {
+  return MapGCThingTyped(id,
+                         [&f](auto t) {
+                           f(t);
+                           return true;
+                         })
+      .isSome();
+>>>>>>> upstream-releases
 }
 
 #undef id

@@ -6,6 +6,7 @@
 #include "WebGLContext.h"
 
 #include "GLContext.h"
+#include "mozilla/Casting.h"
 #include "mozilla/CheckedInt.h"
 #include "WebGLBuffer.h"
 #include "WebGLFramebuffer.h"
@@ -360,6 +361,7 @@ void WebGLContext::VertexAttribAnyPointer(bool isFuncInt, GLuint index,
       typeAlignment = 4;
       break;
 
+<<<<<<< HEAD
     default:
       isTypeValid = false;
       break;
@@ -404,6 +406,57 @@ void WebGLContext::VertexAttribAnyPointer(bool isFuncInt, GLuint index,
   vd.VertexAttribPointer(isFuncInt, buffer, size, type, normalized, stride,
                          byteOffset);
   mBoundVertexArray->InvalidateCaches();
+||||||| merged common ancestors
+    if (isFuncInt) {
+        gl->fVertexAttribIPointer(index, size, type, stride,
+                                  reinterpret_cast<void*>(byteOffset));
+    } else {
+        gl->fVertexAttribPointer(index, size, type, normalized, stride,
+                                 reinterpret_cast<void*>(byteOffset));
+    }
+
+    WebGLVertexAttribData& vd = mBoundVertexArray->mAttribs[index];
+    vd.VertexAttribPointer(isFuncInt, buffer, size, type, normalized, stride, byteOffset);
+    mBoundVertexArray->InvalidateCaches();
+=======
+    default:
+      isTypeValid = false;
+      break;
+  }
+  if (!isTypeValid) {
+    ErrorInvalidEnumInfo("type", type);
+    return;
+  }
+
+  ////
+
+  // `alignment` should always be a power of two.
+  MOZ_ASSERT(IsPowerOfTwo(typeAlignment));
+  const GLsizei typeAlignmentMask = typeAlignment - 1;
+
+  if (stride & typeAlignmentMask || byteOffset & typeAlignmentMask) {
+    ErrorInvalidOperation(
+        "`stride` and `byteOffset` must satisfy the alignment"
+        " requirement of `type`.");
+    return;
+  }
+
+  ////
+
+  const auto& buffer = mBoundArrayBuffer;
+  if (!buffer && byteOffset) {
+    ErrorInvalidOperation("If ARRAY_BUFFER is null, byteOffset must be zero.");
+    return;
+  }
+
+  ////
+
+  WebGLVertexAttribData& vd = mBoundVertexArray->mAttribs[index];
+  vd.VertexAttribPointer(isFuncInt, buffer, AutoAssertCast(size), type,
+                         normalized, stride, byteOffset);
+  vd.DoVertexAttribPointer(gl, index);
+  mBoundVertexArray->InvalidateCaches();
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////

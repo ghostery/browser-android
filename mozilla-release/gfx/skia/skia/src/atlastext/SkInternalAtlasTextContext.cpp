@@ -10,7 +10,13 @@
 #include "GrContextPriv.h"
 #include "SkAtlasTextContext.h"
 #include "SkAtlasTextRenderer.h"
+<<<<<<< HEAD
 #include "text/GrGlyphCache.h"
+||||||| merged common ancestors
+#include "text/GrAtlasGlyphCache.h"
+=======
+#include "text/GrStrikeCache.h"
+>>>>>>> upstream-releases
 
 SkAtlasTextRenderer* SkGetAtlasTextRendererFromInternalContext(
         class SkInternalAtlasTextContext& internal) {
@@ -38,23 +44,45 @@ SkInternalAtlasTextContext::SkInternalAtlasTextContext(sk_sp<SkAtlasTextRenderer
 SkInternalAtlasTextContext::~SkInternalAtlasTextContext() {
     if (fDistanceFieldAtlas.fProxy) {
 #ifdef SK_DEBUG
+<<<<<<< HEAD
         auto atlasManager = fGrContext->contextPriv().getAtlasManager();
         if (atlasManager) {
             unsigned int numProxies;
             atlasManager->getProxies(kA8_GrMaskFormat, &numProxies);
             SkASSERT(1 == numProxies);
         }
+||||||| merged common ancestors
+        auto atlasGlyphCache = fGrContext->contextPriv().getAtlasGlyphCache();
+        unsigned int numProxies;
+        atlasGlyphCache->getProxies(kA8_GrMaskFormat, &numProxies);
+        SkASSERT(1 == numProxies);
+=======
+        auto atlasManager = fGrContext->priv().getAtlasManager();
+        if (atlasManager) {
+            unsigned int numProxies;
+            atlasManager->getProxies(kA8_GrMaskFormat, &numProxies);
+            SkASSERT(1 == numProxies);
+        }
+>>>>>>> upstream-releases
 #endif
         fRenderer->deleteTexture(fDistanceFieldAtlas.fTextureHandle);
     }
 }
 
+<<<<<<< HEAD
 GrGlyphCache* SkInternalAtlasTextContext::glyphCache() {
     return fGrContext->contextPriv().getGlyphCache();
+||||||| merged common ancestors
+GrAtlasGlyphCache* SkInternalAtlasTextContext::atlasGlyphCache() {
+    return fGrContext->contextPriv().getAtlasGlyphCache();
+=======
+GrStrikeCache* SkInternalAtlasTextContext::glyphCache() {
+    return fGrContext->priv().getGrStrikeCache();
+>>>>>>> upstream-releases
 }
 
 GrTextBlobCache* SkInternalAtlasTextContext::textBlobCache() {
-    return fGrContext->contextPriv().getTextBlobCache();
+    return fGrContext->priv().getTextBlobCache();
 }
 
 GrDeferredUploadToken SkInternalAtlasTextContext::addInlineUpload(
@@ -88,7 +116,13 @@ void SkInternalAtlasTextContext::recordDraw(const void* srcVertexData, int glyph
 }
 
 void SkInternalAtlasTextContext::flush() {
+<<<<<<< HEAD
     auto* atlasManager = fGrContext->contextPriv().getAtlasManager();
+||||||| merged common ancestors
+    auto* atlasGlyphCache = fGrContext->contextPriv().getAtlasGlyphCache();
+=======
+    auto* atlasManager = fGrContext->priv().getAtlasManager();
+>>>>>>> upstream-releases
     if (!fDistanceFieldAtlas.fProxy) {
         unsigned int numProxies;
         fDistanceFieldAtlas.fProxy = atlasManager->getProxies(kA8_GrMaskFormat, &numProxies)->get();

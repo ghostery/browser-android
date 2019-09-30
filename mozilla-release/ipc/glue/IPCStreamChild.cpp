@@ -8,7 +8,7 @@
 #include "IPCStreamSource.h"
 
 #include "mozilla/Unused.h"
-#include "mozilla/dom/nsIContentChild.h"
+#include "mozilla/dom/ContentChild.h"
 #include "mozilla/ipc/PBackgroundChild.h"
 #include "mozilla/ipc/PChildToParentStreamChild.h"
 #include "mozilla/ipc/PParentToChildStreamChild.h"
@@ -66,8 +66,19 @@ class IPCStreamSourceChild final : public PChildToParentStreamChild,
 
 }  // anonymous namespace
 
+<<<<<<< HEAD
 /* static */ PChildToParentStreamChild* IPCStreamSource::Create(
     nsIAsyncInputStream* aInputStream, dom::nsIContentChild* aManager) {
+||||||| merged common ancestors
+/* static */ PChildToParentStreamChild*
+IPCStreamSource::Create(nsIAsyncInputStream* aInputStream,
+                        dom::nsIContentChild* aManager)
+{
+=======
+/* static */
+PChildToParentStreamChild* IPCStreamSource::Create(
+    nsIAsyncInputStream* aInputStream, dom::ContentChild* aManager) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aInputStream);
   MOZ_ASSERT(aManager);
 
@@ -87,8 +98,19 @@ class IPCStreamSourceChild final : public PChildToParentStreamChild,
   return source;
 }
 
+<<<<<<< HEAD
 /* static */ PChildToParentStreamChild* IPCStreamSource::Create(
     nsIAsyncInputStream* aInputStream, PBackgroundChild* aManager) {
+||||||| merged common ancestors
+/* static */ PChildToParentStreamChild*
+IPCStreamSource::Create(nsIAsyncInputStream* aInputStream,
+                        PBackgroundChild* aManager)
+{
+=======
+/* static */
+PChildToParentStreamChild* IPCStreamSource::Create(
+    nsIAsyncInputStream* aInputStream, PBackgroundChild* aManager) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aInputStream);
   MOZ_ASSERT(aManager);
 
@@ -105,8 +127,17 @@ class IPCStreamSourceChild final : public PChildToParentStreamChild,
   return source;
 }
 
+<<<<<<< HEAD
 /* static */ IPCStreamSource* IPCStreamSource::Cast(
     PChildToParentStreamChild* aActor) {
+||||||| merged common ancestors
+/* static */ IPCStreamSource*
+IPCStreamSource::Cast(PChildToParentStreamChild* aActor)
+{
+=======
+/* static */
+IPCStreamSource* IPCStreamSource::Cast(PChildToParentStreamChild* aActor) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aActor);
   return static_cast<IPCStreamSourceChild*>(aActor);
 }
@@ -167,8 +198,18 @@ void DeallocPParentToChildStreamChild(PParentToChildStreamChild* aActor) {
   delete aActor;
 }
 
+<<<<<<< HEAD
 /* static */ IPCStreamDestination* IPCStreamDestination::Cast(
     PParentToChildStreamChild* aActor) {
+||||||| merged common ancestors
+/* static */ IPCStreamDestination*
+IPCStreamDestination::Cast(PParentToChildStreamChild* aActor)
+{
+=======
+/* static */
+IPCStreamDestination* IPCStreamDestination::Cast(
+    PParentToChildStreamChild* aActor) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aActor);
   return static_cast<IPCStreamDestinationChild*>(aActor);
 }

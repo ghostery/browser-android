@@ -6,8 +6,47 @@
 
 /* eslint-env webextensions */
 
+<<<<<<< HEAD
 const Quitter = {
   quit() { browser.runtime.sendMessage("quit"); },
 };
 
 window.wrappedJSObject.Quitter = cloneInto(Quitter, window, {cloneFunctions: true});
+||||||| merged common ancestors
+Quitter.prototype = {
+  toString() { return "[Quitter]"; },
+  quit() { sendSyncMessage("Quitter.Quit", {}); },
+};
+
+// This is a frame script, so it may be running in a content process.
+// In any event, it is targeted at a specific "tab", so we listen for
+// the DOMWindowCreated event to be notified about content windows
+// being created in this context.
+
+function QuitterManager() {
+  addEventListener("DOMWindowCreated", this, false);
+}
+
+QuitterManager.prototype = {
+  handleEvent: function handleEvent(aEvent) {
+    var quitter = new Quitter(window);
+    var window = aEvent.target.defaultView;
+    window.wrappedJSObject.Quitter = Cu.cloneInto({
+      toString: quitter.toString.bind(quitter),
+      quit: quitter.quit.bind(quitter),
+    }, window, {cloneFunctions: true});
+  },
+};
+
+var quittermanager = new QuitterManager();
+=======
+const Quitter = {
+  quit() {
+    browser.runtime.sendMessage("quit");
+  },
+};
+
+window.wrappedJSObject.Quitter = cloneInto(Quitter, window, {
+  cloneFunctions: true,
+});
+>>>>>>> upstream-releases

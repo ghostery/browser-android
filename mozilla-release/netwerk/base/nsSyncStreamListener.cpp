@@ -50,9 +50,20 @@ NS_IMPL_ISUPPORTS(nsSyncStreamListener, nsIStreamListener, nsIRequestObserver,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::GetInputStream(nsIInputStream **result) {
   NS_ADDREF(*result = this);
   return NS_OK;
+||||||| merged common ancestors
+nsSyncStreamListener::GetInputStream(nsIInputStream **result)
+{
+    NS_ADDREF(*result = this);
+    return NS_OK;
+=======
+nsSyncStreamListener::GetInputStream(nsIInputStream** result) {
+  NS_ADDREF(*result = this);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -60,12 +71,23 @@ nsSyncStreamListener::GetInputStream(nsIInputStream **result) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::OnStartRequest(nsIRequest *request,
                                      nsISupports *context) {
   return NS_OK;
 }
+||||||| merged common ancestors
+nsSyncStreamListener::OnStartRequest(nsIRequest  *request,
+                                     nsISupports *context)
+{
+    return NS_OK;
+}
+=======
+nsSyncStreamListener::OnStartRequest(nsIRequest* request) { return NS_OK; }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::OnDataAvailable(nsIRequest *request, nsISupports *context,
                                       nsIInputStream *stream, uint64_t offset,
                                       uint32_t count) {
@@ -85,15 +107,77 @@ nsSyncStreamListener::OnDataAvailable(nsIRequest *request, nsISupports *context,
 
   mKeepWaiting = false;  // unblock Read
   return NS_OK;
+||||||| merged common ancestors
+nsSyncStreamListener::OnDataAvailable(nsIRequest     *request,
+                                      nsISupports    *context,
+                                      nsIInputStream *stream,
+                                      uint64_t        offset,
+                                      uint32_t        count)
+{
+    uint32_t bytesWritten;
+
+    nsresult rv = mPipeOut->WriteFrom(stream, count, &bytesWritten);
+
+    // if we get an error, then return failure.  this will cause the
+    // channel to be canceled, and as a result our OnStopRequest method
+    // will be called immediately.  because of this we do not need to
+    // set mStatus or mKeepWaiting here.
+    if (NS_FAILED(rv))
+        return rv;
+
+    // we expect that all data will be written to the pipe because
+    // the pipe was created to have "infinite" room.
+    NS_ASSERTION(bytesWritten == count, "did not write all data");
+
+    mKeepWaiting = false; // unblock Read
+    return NS_OK;
+=======
+nsSyncStreamListener::OnDataAvailable(nsIRequest* request,
+                                      nsIInputStream* stream, uint64_t offset,
+                                      uint32_t count) {
+  uint32_t bytesWritten;
+
+  nsresult rv = mPipeOut->WriteFrom(stream, count, &bytesWritten);
+
+  // if we get an error, then return failure.  this will cause the
+  // channel to be canceled, and as a result our OnStopRequest method
+  // will be called immediately.  because of this we do not need to
+  // set mStatus or mKeepWaiting here.
+  if (NS_FAILED(rv)) return rv;
+
+  // we expect that all data will be written to the pipe because
+  // the pipe was created to have "infinite" room.
+  NS_ASSERTION(bytesWritten == count, "did not write all data");
+
+  mKeepWaiting = false;  // unblock Read
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::OnStopRequest(nsIRequest *request, nsISupports *context,
                                     nsresult status) {
   mStatus = status;
   mKeepWaiting = false;  // unblock Read
   mDone = true;
   return NS_OK;
+||||||| merged common ancestors
+nsSyncStreamListener::OnStopRequest(nsIRequest  *request,
+                                    nsISupports *context,
+                                    nsresult     status)
+{
+    mStatus = status;
+    mKeepWaiting = false; // unblock Read
+    mDone = true;
+    return NS_OK;
+=======
+nsSyncStreamListener::OnStopRequest(nsIRequest* request, nsresult status) {
+  mStatus = status;
+  mKeepWaiting = false;  // unblock Read
+  mDone = true;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
@@ -116,6 +200,7 @@ nsSyncStreamListener::Close() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::Available(uint64_t *result) {
   if (NS_FAILED(mStatus)) return mStatus;
 
@@ -125,9 +210,34 @@ nsSyncStreamListener::Available(uint64_t *result) {
     if (NS_SUCCEEDED(mStatus)) mStatus = mPipeIn->Available(result);
   }
   return mStatus;
+||||||| merged common ancestors
+nsSyncStreamListener::Available(uint64_t *result)
+{
+    if (NS_FAILED(mStatus))
+        return mStatus;
+
+    mStatus = mPipeIn->Available(result);
+    if (NS_SUCCEEDED(mStatus) && (*result == 0) && !mDone) {
+        mStatus = WaitForData();
+        if (NS_SUCCEEDED(mStatus))
+            mStatus = mPipeIn->Available(result);
+    }
+    return mStatus;
+=======
+nsSyncStreamListener::Available(uint64_t* result) {
+  if (NS_FAILED(mStatus)) return mStatus;
+
+  mStatus = mPipeIn->Available(result);
+  if (NS_SUCCEEDED(mStatus) && (*result == 0) && !mDone) {
+    mStatus = WaitForData();
+    if (NS_SUCCEEDED(mStatus)) mStatus = mPipeIn->Available(result);
+  }
+  return mStatus;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::Read(char *buf, uint32_t bufLen, uint32_t *result) {
   if (mStatus == NS_BASE_STREAM_CLOSED) {
     *result = 0;
@@ -140,9 +250,41 @@ nsSyncStreamListener::Read(char *buf, uint32_t bufLen, uint32_t *result) {
   uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)bufLen);
   mStatus = mPipeIn->Read(buf, avail, result);
   return mStatus;
+||||||| merged common ancestors
+nsSyncStreamListener::Read(char     *buf,
+                           uint32_t  bufLen,
+                           uint32_t *result)
+{
+    if (mStatus == NS_BASE_STREAM_CLOSED) {
+        *result = 0;
+        return NS_OK;
+    }
+
+    uint64_t avail64;
+    if (NS_FAILED(Available(&avail64)))
+        return mStatus;
+
+    uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)bufLen);
+    mStatus = mPipeIn->Read(buf, avail, result);
+    return mStatus;
+=======
+nsSyncStreamListener::Read(char* buf, uint32_t bufLen, uint32_t* result) {
+  if (mStatus == NS_BASE_STREAM_CLOSED) {
+    *result = 0;
+    return NS_OK;
+  }
+
+  uint64_t avail64;
+  if (NS_FAILED(Available(&avail64))) return mStatus;
+
+  uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)bufLen);
+  mStatus = mPipeIn->Read(buf, avail, result);
+  return mStatus;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::ReadSegments(nsWriteSegmentFun writer, void *closure,
                                    uint32_t count, uint32_t *result) {
   if (mStatus == NS_BASE_STREAM_CLOSED) {
@@ -156,10 +298,54 @@ nsSyncStreamListener::ReadSegments(nsWriteSegmentFun writer, void *closure,
   uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)count);
   mStatus = mPipeIn->ReadSegments(writer, closure, avail, result);
   return mStatus;
+||||||| merged common ancestors
+nsSyncStreamListener::ReadSegments(nsWriteSegmentFun  writer,
+                                   void              *closure,
+                                   uint32_t           count,
+                                   uint32_t          *result)
+{
+    if (mStatus == NS_BASE_STREAM_CLOSED) {
+        *result = 0;
+        return NS_OK;
+    }
+
+    uint64_t avail64;
+    if (NS_FAILED(Available(&avail64)))
+        return mStatus;
+
+    uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)count);
+    mStatus = mPipeIn->ReadSegments(writer, closure, avail, result);
+    return mStatus;
+=======
+nsSyncStreamListener::ReadSegments(nsWriteSegmentFun writer, void* closure,
+                                   uint32_t count, uint32_t* result) {
+  if (mStatus == NS_BASE_STREAM_CLOSED) {
+    *result = 0;
+    return NS_OK;
+  }
+
+  uint64_t avail64;
+  if (NS_FAILED(Available(&avail64))) return mStatus;
+
+  uint32_t avail = (uint32_t)std::min(avail64, (uint64_t)count);
+  mStatus = mPipeIn->ReadSegments(writer, closure, avail, result);
+  return mStatus;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSyncStreamListener::IsNonBlocking(bool *result) {
   *result = false;
   return NS_OK;
+||||||| merged common ancestors
+nsSyncStreamListener::IsNonBlocking(bool *result)
+{
+    *result = false;
+    return NS_OK;
+=======
+nsSyncStreamListener::IsNonBlocking(bool* result) {
+  *result = false;
+  return NS_OK;
+>>>>>>> upstream-releases
 }

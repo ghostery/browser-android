@@ -44,38 +44,106 @@ OSVR_EXTERN_C_BEGIN
 /** @addtogroup UtilMath
     @{
 */
+<<<<<<< HEAD
 OSVR_INLINE void osvrQuatToQuatlib(q_type dest, OSVR_Quaternion const *src) {
   dest[Q_W] = osvrQuatGetW(src);
   dest[Q_X] = osvrQuatGetX(src);
   dest[Q_Y] = osvrQuatGetY(src);
   dest[Q_Z] = osvrQuatGetZ(src);
+||||||| merged common ancestors
+OSVR_INLINE void osvrQuatToQuatlib(q_type dest, OSVR_Quaternion const *src) {
+    dest[Q_W] = osvrQuatGetW(src);
+    dest[Q_X] = osvrQuatGetX(src);
+    dest[Q_Y] = osvrQuatGetY(src);
+    dest[Q_Z] = osvrQuatGetZ(src);
+=======
+OSVR_INLINE void osvrQuatToQuatlib(q_type dest, OSVR_Quaternion const* src) {
+  dest[Q_W] = osvrQuatGetW(src);
+  dest[Q_X] = osvrQuatGetX(src);
+  dest[Q_Y] = osvrQuatGetY(src);
+  dest[Q_Z] = osvrQuatGetZ(src);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 OSVR_INLINE void osvrQuatFromQuatlib(OSVR_Quaternion *dest, q_type const src) {
   osvrQuatSetW(dest, src[Q_W]);
   osvrQuatSetX(dest, src[Q_X]);
   osvrQuatSetY(dest, src[Q_Y]);
   osvrQuatSetZ(dest, src[Q_Z]);
+||||||| merged common ancestors
+OSVR_INLINE void osvrQuatFromQuatlib(OSVR_Quaternion *dest, q_type const src) {
+    osvrQuatSetW(dest, src[Q_W]);
+    osvrQuatSetX(dest, src[Q_X]);
+    osvrQuatSetY(dest, src[Q_Y]);
+    osvrQuatSetZ(dest, src[Q_Z]);
+=======
+OSVR_INLINE void osvrQuatFromQuatlib(OSVR_Quaternion* dest, q_type const src) {
+  osvrQuatSetW(dest, src[Q_W]);
+  osvrQuatSetX(dest, src[Q_X]);
+  osvrQuatSetY(dest, src[Q_Y]);
+  osvrQuatSetZ(dest, src[Q_Z]);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 OSVR_INLINE void osvrVec3ToQuatlib(q_vec_type dest, OSVR_Vec3 const *src) {
   memcpy((void *)(dest), (void const *)(src->data), sizeof(double) * 3);
+||||||| merged common ancestors
+OSVR_INLINE void osvrVec3ToQuatlib(q_vec_type dest, OSVR_Vec3 const *src) {
+    memcpy((void *)(dest), (void const *)(src->data), sizeof(double) * 3);
+=======
+OSVR_INLINE void osvrVec3ToQuatlib(q_vec_type dest, OSVR_Vec3 const* src) {
+  memcpy((void*)(dest), (void const*)(src->data), sizeof(double) * 3);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 OSVR_INLINE void osvrVec3FromQuatlib(OSVR_Vec3 *dest, q_vec_type const src) {
   memcpy((void *)(dest->data), (void const *)(src), sizeof(double) * 3);
+||||||| merged common ancestors
+OSVR_INLINE void osvrVec3FromQuatlib(OSVR_Vec3 *dest, q_vec_type const src) {
+    memcpy((void *)(dest->data), (void const *)(src), sizeof(double) * 3);
+=======
+OSVR_INLINE void osvrVec3FromQuatlib(OSVR_Vec3* dest, q_vec_type const src) {
+  memcpy((void*)(dest->data), (void const*)(src), sizeof(double) * 3);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 OSVR_INLINE void osvrPose3ToQuatlib(q_xyz_quat_type *dest,
                                     OSVR_Pose3 const *src) {
   osvrVec3ToQuatlib(dest->xyz, &(src->translation));
   osvrQuatToQuatlib(dest->quat, &(src->rotation));
+||||||| merged common ancestors
+OSVR_INLINE void osvrPose3ToQuatlib(q_xyz_quat_type *dest,
+                                    OSVR_Pose3 const *src) {
+    osvrVec3ToQuatlib(dest->xyz, &(src->translation));
+    osvrQuatToQuatlib(dest->quat, &(src->rotation));
+=======
+OSVR_INLINE void osvrPose3ToQuatlib(q_xyz_quat_type* dest,
+                                    OSVR_Pose3 const* src) {
+  osvrVec3ToQuatlib(dest->xyz, &(src->translation));
+  osvrQuatToQuatlib(dest->quat, &(src->rotation));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 OSVR_INLINE void osvrPose3FromQuatlib(OSVR_Pose3 *dest,
                                       q_xyz_quat_type const *src) {
   osvrVec3FromQuatlib(&(dest->translation), src->xyz);
   osvrQuatFromQuatlib(&(dest->rotation), src->quat);
+||||||| merged common ancestors
+OSVR_INLINE void osvrPose3FromQuatlib(OSVR_Pose3 *dest,
+                                      q_xyz_quat_type const *src) {
+    osvrVec3FromQuatlib(&(dest->translation), src->xyz);
+    osvrQuatFromQuatlib(&(dest->rotation), src->quat);
+=======
+OSVR_INLINE void osvrPose3FromQuatlib(OSVR_Pose3* dest,
+                                      q_xyz_quat_type const* src) {
+  osvrVec3FromQuatlib(&(dest->translation), src->xyz);
+  osvrQuatFromQuatlib(&(dest->rotation), src->quat);
+>>>>>>> upstream-releases
 }
 
 /** @} */

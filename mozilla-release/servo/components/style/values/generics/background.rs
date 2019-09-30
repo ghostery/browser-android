@@ -4,10 +4,16 @@
 
 //! Generic types for CSS values related to backgrounds.
 
+<<<<<<< HEAD
 use crate::values::IsAuto;
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
 
+||||||| merged common ancestors
+=======
+use crate::values::generics::length::{GenericLengthPercentageOrAuto, LengthPercentageOrAuto};
+
+>>>>>>> upstream-releases
 /// A generic value for the `background-size` property.
 #[derive(
     Animate,
@@ -21,14 +27,24 @@ use style_traits::{CssWriter, ToCss};
     ToAnimatedValue,
     ToAnimatedZero,
     ToComputedValue,
+<<<<<<< HEAD
+||||||| merged common ancestors
+    ToCss,
+=======
+    ToCss,
+    ToResolvedValue,
+    ToShmem,
+>>>>>>> upstream-releases
 )]
-pub enum BackgroundSize<LengthOrPercentageOrAuto> {
+#[repr(C, u8)]
+pub enum GenericBackgroundSize<LengthPercent> {
     /// `<width> <height>`
-    Explicit {
+    ExplicitSize {
         /// Explicit width.
-        width: LengthOrPercentageOrAuto,
+        width: GenericLengthPercentageOrAuto<LengthPercent>,
         /// Explicit height.
-        height: LengthOrPercentageOrAuto,
+        #[css(skip_if = "GenericLengthPercentageOrAuto::is_auto")]
+        height: GenericLengthPercentageOrAuto<LengthPercent>,
     },
     /// `cover`
     #[animation(error)]
@@ -37,6 +53,7 @@ pub enum BackgroundSize<LengthOrPercentageOrAuto> {
     #[animation(error)]
     Contain,
 }
+<<<<<<< HEAD
 
 impl<LengthOrPercentageOrAuto> ToCss for BackgroundSize<LengthOrPercentageOrAuto>
 where
@@ -63,3 +80,18 @@ where
         }
     }
 }
+||||||| merged common ancestors
+=======
+
+pub use self::GenericBackgroundSize as BackgroundSize;
+
+impl<LengthPercentage> BackgroundSize<LengthPercentage> {
+    /// Returns `auto auto`.
+    pub fn auto() -> Self {
+        GenericBackgroundSize::ExplicitSize {
+            width: LengthPercentageOrAuto::Auto,
+            height: LengthPercentageOrAuto::Auto,
+        }
+    }
+}
+>>>>>>> upstream-releases

@@ -177,6 +177,7 @@ protected:
 
 class SkOpSpanBase {
 public:
+<<<<<<< HEAD
     enum class Collapsed {
         kNo,
         kYes,
@@ -184,6 +185,18 @@ public:
     };
 
     void addOpp(SkOpSpanBase* opp);
+||||||| merged common ancestors
+    SkOpSpanBase* active();
+    void addOpp(SkOpSpanBase* opp);
+=======
+    enum class Collapsed {
+        kNo,
+        kYes,
+        kError,
+    };
+
+    bool addOpp(SkOpSpanBase* opp);
+>>>>>>> upstream-releases
 
     void bumpSpanAdds() {
         ++fSpanAdds;
@@ -293,7 +306,7 @@ public:
     }
 
     void merge(SkOpSpan* span);
-    void mergeMatches(SkOpSpanBase* opp);
+    bool mergeMatches(SkOpSpanBase* opp);
 
     const SkOpSpan* prev() const {
         return fPrev;

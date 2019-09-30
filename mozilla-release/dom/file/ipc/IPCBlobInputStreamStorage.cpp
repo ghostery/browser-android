@@ -35,11 +35,31 @@ IPCBlobInputStreamStorage::IPCBlobInputStreamStorage() {}
 
 IPCBlobInputStreamStorage::~IPCBlobInputStreamStorage() {}
 
+<<<<<<< HEAD
 /* static */ IPCBlobInputStreamStorage* IPCBlobInputStreamStorage::Get() {
   return gStorage;
 }
+||||||| merged common ancestors
+/* static */ IPCBlobInputStreamStorage*
+IPCBlobInputStreamStorage::Get()
+{
+  return gStorage;
+}
+=======
+/* static */
+IPCBlobInputStreamStorage* IPCBlobInputStreamStorage::Get() { return gStorage; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ void IPCBlobInputStreamStorage::Initialize() {
+||||||| merged common ancestors
+/* static */ void
+IPCBlobInputStreamStorage::Initialize()
+{
+=======
+/* static */
+void IPCBlobInputStreamStorage::Initialize() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!gStorage);
 
   gStorage = new IPCBlobInputStreamStorage();

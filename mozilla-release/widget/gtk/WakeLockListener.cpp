@@ -7,24 +7,50 @@
 
 #ifdef MOZ_ENABLE_DBUS
 
-#include "WakeLockListener.h"
+#  include "WakeLockListener.h"
 
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib-lowlevel.h>
+#  include <dbus/dbus.h>
+#  include <dbus/dbus-glib-lowlevel.h>
 
-#if defined(MOZ_X11)
-#include "prlink.h"
-#endif
+#  if defined(MOZ_X11)
+#    include "prlink.h"
+#  endif
 
+<<<<<<< HEAD
 #define FREEDESKTOP_SCREENSAVER_TARGET "org.freedesktop.ScreenSaver"
 #define FREEDESKTOP_SCREENSAVER_OBJECT "/ScreenSaver"
 #define FREEDESKTOP_SCREENSAVER_INTERFACE "org.freedesktop.ScreenSaver"
+||||||| merged common ancestors
+#define FREEDESKTOP_SCREENSAVER_TARGET    "org.freedesktop.ScreenSaver"
+#define FREEDESKTOP_SCREENSAVER_OBJECT    "/ScreenSaver"
+#define FREEDESKTOP_SCREENSAVER_INTERFACE "org.freedesktop.ScreenSaver"
+=======
+#  define FREEDESKTOP_SCREENSAVER_TARGET "org.freedesktop.ScreenSaver"
+#  define FREEDESKTOP_SCREENSAVER_OBJECT "/ScreenSaver"
+#  define FREEDESKTOP_SCREENSAVER_INTERFACE "org.freedesktop.ScreenSaver"
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define SESSION_MANAGER_TARGET "org.gnome.SessionManager"
 #define SESSION_MANAGER_OBJECT "/org/gnome/SessionManager"
 #define SESSION_MANAGER_INTERFACE "org.gnome.SessionManager"
+||||||| merged common ancestors
+#define SESSION_MANAGER_TARGET            "org.gnome.SessionManager"
+#define SESSION_MANAGER_OBJECT            "/org/gnome/SessionManager"
+#define SESSION_MANAGER_INTERFACE         "org.gnome.SessionManager"
+=======
+#  define SESSION_MANAGER_TARGET "org.gnome.SessionManager"
+#  define SESSION_MANAGER_OBJECT "/org/gnome/SessionManager"
+#  define SESSION_MANAGER_INTERFACE "org.gnome.SessionManager"
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define DBUS_TIMEOUT (-1)
+||||||| merged common ancestors
+#define DBUS_TIMEOUT                      (-1)
+=======
+#  define DBUS_TIMEOUT (-1)
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 
@@ -35,9 +61,9 @@ StaticRefPtr<WakeLockListener> WakeLockListener::sSingleton;
 enum DesktopEnvironment {
   FreeDesktop,
   GNOME,
-#if defined(MOZ_X11)
+#  if defined(MOZ_X11)
   XScreenSaver,
-#endif
+#  endif
   Unsupported,
 };
 
@@ -62,10 +88,10 @@ class WakeLockTopic {
   bool SendGNOMEInhibitMessage();
   bool SendMessage(DBusMessage* aMessage);
 
-#if defined(MOZ_X11)
+#  if defined(MOZ_X11)
   static bool CheckXScreenSaverSupport();
   static bool InhibitXScreenSaver(bool inhibit);
-#endif
+#  endif
 
   static void ReceiveInhibitReply(DBusPendingCall* aPending, void* aUserData);
   void InhibitFailed();
@@ -135,7 +161,14 @@ bool WakeLockTopic::SendGNOMEInhibitMessage() {
   return SendMessage(message);
 }
 
+<<<<<<< HEAD
 #if defined(MOZ_X11)
+||||||| merged common ancestors
+
+#if defined(MOZ_X11)
+=======
+#  if defined(MOZ_X11)
+>>>>>>> upstream-releases
 
 typedef Bool (*_XScreenSaverQueryExtension_fn)(Display* dpy, int* event_base,
                                                int* error_base);
@@ -148,7 +181,16 @@ static _XScreenSaverQueryExtension_fn _XSSQueryExtension = nullptr;
 static _XScreenSaverQueryVersion_fn _XSSQueryVersion = nullptr;
 static _XScreenSaverSuspend_fn _XSSSuspend = nullptr;
 
+<<<<<<< HEAD
 /* static */ bool WakeLockTopic::CheckXScreenSaverSupport() {
+||||||| merged common ancestors
+/* static */ bool
+WakeLockTopic::CheckXScreenSaverSupport()
+{
+=======
+/* static */
+bool WakeLockTopic::CheckXScreenSaverSupport() {
+>>>>>>> upstream-releases
   if (!sXssLib) {
     sXssLib = PR_LoadLibrary("libXss.so.1");
     if (!sXssLib) {
@@ -182,7 +224,16 @@ static _XScreenSaverSuspend_fn _XSSSuspend = nullptr;
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool WakeLockTopic::InhibitXScreenSaver(bool inhibit) {
+||||||| merged common ancestors
+/* static */ bool
+WakeLockTopic::InhibitXScreenSaver(bool inhibit)
+{
+=======
+/* static */
+bool WakeLockTopic::InhibitXScreenSaver(bool inhibit) {
+>>>>>>> upstream-releases
   // Should only be called if CheckXScreenSaverSupport returns true.
   // There's a couple of safety checks here nonetheless.
   if (!_XSSSuspend) return false;
@@ -193,11 +244,12 @@ static _XScreenSaverSuspend_fn _XSSSuspend = nullptr;
   return true;
 }
 
-#endif
+#  endif
 
 bool WakeLockTopic::SendInhibit() {
   bool sendOk = false;
 
+<<<<<<< HEAD
   switch (mDesktopEnvironment) {
     case FreeDesktop:
       sendOk = SendFreeDesktopInhibitMessage();
@@ -211,6 +263,36 @@ bool WakeLockTopic::SendInhibit() {
 #endif
     case Unsupported:
       return false;
+||||||| merged common ancestors
+  switch (mDesktopEnvironment)
+  {
+  case FreeDesktop:
+    sendOk = SendFreeDesktopInhibitMessage();
+    break;
+  case GNOME:
+    sendOk = SendGNOMEInhibitMessage();
+    break;
+#if defined(MOZ_X11)
+  case XScreenSaver:
+    return InhibitXScreenSaver(true);
+#endif
+  case Unsupported:
+    return false;
+=======
+  switch (mDesktopEnvironment) {
+    case FreeDesktop:
+      sendOk = SendFreeDesktopInhibitMessage();
+      break;
+    case GNOME:
+      sendOk = SendGNOMEInhibitMessage();
+      break;
+#  if defined(MOZ_X11)
+    case XScreenSaver:
+      return InhibitXScreenSaver(true);
+#  endif
+    case Unsupported:
+      return false;
+>>>>>>> upstream-releases
   }
 
   if (sendOk) {
@@ -232,11 +314,11 @@ bool WakeLockTopic::SendUninhibit() {
         SESSION_MANAGER_TARGET, SESSION_MANAGER_OBJECT,
         SESSION_MANAGER_INTERFACE, "Uninhibit"));
   }
-#if defined(MOZ_X11)
+#  if defined(MOZ_X11)
   else if (mDesktopEnvironment == XScreenSaver) {
     return InhibitXScreenSaver(false);
   }
-#endif
+#  endif
 
   if (!message) {
     return false;
@@ -294,10 +376,10 @@ void WakeLockTopic::InhibitFailed() {
 
   if (mDesktopEnvironment == FreeDesktop) {
     mDesktopEnvironment = GNOME;
-#if defined(MOZ_X11)
+#  if defined(MOZ_X11)
   } else if (mDesktopEnvironment == GNOME && CheckXScreenSaverSupport()) {
     mDesktopEnvironment = XScreenSaver;
-#endif
+#  endif
   } else {
     mDesktopEnvironment = Unsupported;
     mShouldInhibit = false;
@@ -323,8 +405,18 @@ void WakeLockTopic::InhibitSucceeded(uint32_t aInhibitRequest) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void WakeLockTopic::ReceiveInhibitReply(DBusPendingCall* pending,
                                                      void* user_data) {
+||||||| merged common ancestors
+/* static */ void
+WakeLockTopic::ReceiveInhibitReply(DBusPendingCall* pending, void* user_data)
+{
+=======
+/* static */
+void WakeLockTopic::ReceiveInhibitReply(DBusPendingCall* pending,
+                                        void* user_data) {
+>>>>>>> upstream-releases
   if (!WakeLockListener::GetSingleton(false)) {
     // The WakeLockListener (and therefore our topic) was deleted while we were
     // waiting for a reply.
@@ -353,7 +445,21 @@ void WakeLockTopic::InhibitSucceeded(uint32_t aInhibitRequest) {
 
 WakeLockListener::WakeLockListener() : mConnection(nullptr) {}
 
+<<<<<<< HEAD
 /* static */ WakeLockListener* WakeLockListener::GetSingleton(bool aCreate) {
+||||||| merged common ancestors
+WakeLockListener::WakeLockListener()
+  : mConnection(nullptr)
+{
+}
+
+/* static */ WakeLockListener*
+WakeLockListener::GetSingleton(bool aCreate)
+{
+=======
+/* static */
+WakeLockListener* WakeLockListener::GetSingleton(bool aCreate) {
+>>>>>>> upstream-releases
   if (!sSingleton && aCreate) {
     sSingleton = new WakeLockListener();
   }
@@ -361,7 +467,18 @@ WakeLockListener::WakeLockListener() : mConnection(nullptr) {}
   return sSingleton;
 }
 
+<<<<<<< HEAD
 /* static */ void WakeLockListener::Shutdown() { sSingleton = nullptr; }
+||||||| merged common ancestors
+/* static */ void
+WakeLockListener::Shutdown()
+{
+  sSingleton = nullptr;
+}
+=======
+/* static */
+void WakeLockListener::Shutdown() { sSingleton = nullptr; }
+>>>>>>> upstream-releases
 
 bool WakeLockListener::EnsureDBusConnection() {
   if (!mConnection) {

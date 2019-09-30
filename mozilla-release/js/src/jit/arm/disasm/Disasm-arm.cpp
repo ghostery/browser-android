@@ -29,11 +29,11 @@
 
 #ifdef JS_DISASM_ARM
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
+#  include <stdarg.h>
+#  include <stdio.h>
+#  include <string.h>
 
-#include "jit/arm/disasm/Constants-arm.h"
+#  include "jit/arm/disasm/Constants-arm.h"
 
 namespace js {
 namespace jit {
@@ -130,9 +130,20 @@ class Decoder {
 };
 
 // Support for assertions in the Decoder formatting functions.
+<<<<<<< HEAD
 #define STRING_STARTS_WITH(string, compare_string) \
   (strncmp(string, compare_string, strlen(compare_string)) == 0)
 
+||||||| merged common ancestors
+#define STRING_STARTS_WITH(string, compare_string) \
+    (strncmp(string, compare_string, strlen(compare_string)) == 0)
+
+
+=======
+#  define STRING_STARTS_WITH(string, compare_string) \
+    (strncmp(string, compare_string, strlen(compare_string)) == 0)
+
+>>>>>>> upstream-releases
 // Append the ch to the output buffer.
 void Decoder::PrintChar(const char ch) { out_buffer_[out_buffer_pos_++] = ch; }
 
@@ -650,12 +661,29 @@ void Decoder::Format(Instruction* instr, const char* format) {
 
 // The disassembler may end up decoding data inlined in the code. We do not want
 // it to crash if the data does not ressemble any known instruction.
+<<<<<<< HEAD
 #define VERIFY(condition) \
   if (!(condition)) {     \
     Unknown(instr);       \
     return;               \
   }
 
+||||||| merged common ancestors
+#define VERIFY(condition) \
+    if(!(condition)) {    \
+        Unknown(instr);   \
+        return;           \
+    }
+
+
+=======
+#  define VERIFY(condition) \
+    if (!(condition)) {     \
+      Unknown(instr);       \
+      return;               \
+    }
+
+>>>>>>> upstream-releases
 // For currently unimplemented decodings the disassembler calls Unknown(instr)
 // which will just print "unknown" of the instruction bits.
 void Decoder::Unknown(Instruction* instr) { Format(instr, "unknown"); }
@@ -714,6 +742,7 @@ void Decoder::DecodeType01(Instruction* instr) {
                 Format(instr, "ldrexh'cond 'rt, ['rn]");
                 break;
             }
+<<<<<<< HEAD
           } else {
             // The documentation names the low four bits of the
             // store-exclusive instructions "Rt" but canonically
@@ -724,12 +753,60 @@ void Decoder::DecodeType01(Instruction* instr) {
                 break;
               case ExclusiveDouble:
                 Format(instr, "strexd'cond 'rd, 'rm, ['rn]");
+||||||| merged common ancestors
+            return;
+        }
+    } else if ((type == 0) && instr->IsMiscType0()) {
+        if (instr->Bits(22, 21) == 1) {
+            switch (instr->BitField(7, 4)) {
+              case BX:
+                Format(instr, "bx'cond 'rm");
                 break;
+              case BLX:
+                Format(instr, "blx'cond 'rm");
+=======
+          } else {
+            // The documentation names the low four bits of the
+            // store-exclusive instructions "Rt" but canonically
+            // for disassembly they are really "Rm".
+            switch (instr->Bits(ExclusiveSizeHi, ExclusiveSizeLo)) {
+              case ExclusiveWord:
+                Format(instr, "strex'cond 'rd, 'rm, ['rn]");
+>>>>>>> upstream-releases
+                break;
+<<<<<<< HEAD
+              case ExclusiveByte:
+                Format(instr, "strexb'cond 'rd, 'rm, ['rn]");
+||||||| merged common ancestors
+              case BKPT:
+                Format(instr, "bkpt 'off0to3and8to19");
+=======
+              case ExclusiveDouble:
+                Format(instr, "strexd'cond 'rd, 'rm, ['rn]");
+>>>>>>> upstream-releases
+                break;
+<<<<<<< HEAD
+              case ExclusiveHalf:
+                Format(instr, "strexh'cond 'rd, 'rm, ['rn]");
+||||||| merged common ancestors
+              default:
+                Unknown(instr);  // not used by V8
+                break;
+            }
+        } else if (instr->Bits(22, 21) == 3) {
+            switch (instr->BitField(7, 4)) {
+              case CLZ:
+                Format(instr, "clz'cond 'rd, 'rm");
+                break;
+              default:
+                Unknown(instr);  // not used by V8
+=======
               case ExclusiveByte:
                 Format(instr, "strexb'cond 'rd, 'rm, ['rn]");
                 break;
               case ExclusiveHalf:
                 Format(instr, "strexh'cond 'rd, 'rm, ['rn]");
+>>>>>>> upstream-releases
                 break;
             }
           }
@@ -811,8 +888,23 @@ void Decoder::DecodeType01(Instruction* instr) {
           } else {
             Format(instr, "'memop'cond'sign'h 'rd, ['rn, #+'off8]'w");
           }
+<<<<<<< HEAD
           break;
         }
+        default: {
+          // The PU field is a 2-bit field.
+          MOZ_CRASH();
+          break;
+||||||| merged common ancestors
+=======
+          break;
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+      }
+      return;
+||||||| merged common ancestors
+=======
         default: {
           // The PU field is a 2-bit field.
           MOZ_CRASH();
@@ -820,7 +912,9 @@ void Decoder::DecodeType01(Instruction* instr) {
         }
       }
       return;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   } else if ((type == 0) && instr->IsMiscType0()) {
     if (instr->Bits(22, 21) == 1) {
       switch (instr->BitField(7, 4)) {
@@ -902,6 +996,123 @@ void Decoder::DecodeType01(Instruction* instr) {
           // Other instructions matching this pattern are handled in the
           // miscellaneous instructions part above.
           MOZ_CRASH();
+||||||| merged common ancestors
+}
+
+
+void
+Decoder::DecodeType2(Instruction* instr)
+{
+    switch (instr->PUField()) {
+      case da_x: {
+        if (instr->HasW()) {
+            Unknown(instr);  // not used in V8
+            return;
+=======
+  } else if ((type == 0) && instr->IsMiscType0()) {
+    if (instr->Bits(22, 21) == 1) {
+      switch (instr->BitField(7, 4)) {
+        case BX:
+          Format(instr, "bx'cond 'rm");
+          break;
+        case BLX:
+          Format(instr, "blx'cond 'rm");
+          break;
+        case BKPT:
+          Format(instr, "bkpt 'off0to3and8to19");
+          break;
+        default:
+          Unknown(instr);  // not used by V8
+          break;
+      }
+    } else if (instr->Bits(22, 21) == 3) {
+      switch (instr->BitField(7, 4)) {
+        case CLZ:
+          Format(instr, "clz'cond 'rd, 'rm");
+          break;
+        default:
+          Unknown(instr);  // not used by V8
+          break;
+      }
+    } else {
+      Unknown(instr);  // not used by V8
+    }
+  } else if ((type == 1) && instr->IsNopType1()) {
+    Format(instr, "nop'cond");
+  } else if ((type == 1) && instr->IsCsdbType1()) {
+    Format(instr, "csdb'cond");
+  } else {
+    switch (instr->OpcodeField()) {
+      case AND: {
+        Format(instr, "and'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case EOR: {
+        Format(instr, "eor'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case SUB: {
+        Format(instr, "sub'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case RSB: {
+        Format(instr, "rsb'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case ADD: {
+        Format(instr, "add'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case ADC: {
+        Format(instr, "adc'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case SBC: {
+        Format(instr, "sbc'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case RSC: {
+        Format(instr, "rsc'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case TST: {
+        if (instr->HasS()) {
+          Format(instr, "tst'cond 'rn, 'shift_op");
+        } else {
+          Format(instr, "movw'cond 'mw");
+>>>>>>> upstream-releases
+        }
+        break;
+      }
+<<<<<<< HEAD
+      case CMP: {
+        if (instr->HasS()) {
+          Format(instr, "cmp'cond 'rn, 'shift_op");
+        } else {
+          Format(instr, "movt'cond 'mw");
+        }
+        break;
+      }
+      case CMN: {
+        if (instr->HasS()) {
+          Format(instr, "cmn'cond 'rn, 'shift_op");
+        } else {
+          // Other instructions matching this pattern are handled in the
+          // miscellaneous instructions part above.
+          MOZ_CRASH();
+||||||| merged common ancestors
+      case ia_x: {
+          if (instr->HasW()) {
+            Unknown(instr);  // not used in V8
+            return;
+=======
+      case TEQ: {
+        if (instr->HasS()) {
+          Format(instr, "teq'cond 'rn, 'shift_op");
+        } else {
+          // Other instructions matching this pattern are handled in the
+          // miscellaneous instructions part above.
+          MOZ_CRASH();
         }
         break;
       }
@@ -920,13 +1131,37 @@ void Decoder::DecodeType01(Instruction* instr) {
           // Other instructions matching this pattern are handled in the
           // miscellaneous instructions part above.
           MOZ_CRASH();
+>>>>>>> upstream-releases
         }
         break;
       }
+<<<<<<< HEAD
       case ORR: {
         Format(instr, "orr'cond's 'rd, 'rn, 'shift_op");
         break;
       }
+      case MOV: {
+        Format(instr, "mov'cond's 'rd, 'shift_op");
+||||||| merged common ancestors
+      case db_x: {
+        Format(instr, "'memop'cond'b 'rd, ['rn, #-'off12]'w");
+=======
+      case ORR: {
+        Format(instr, "orr'cond's 'rd, 'rn, 'shift_op");
+>>>>>>> upstream-releases
+        break;
+      }
+<<<<<<< HEAD
+      case BIC: {
+        Format(instr, "bic'cond's 'rd, 'rn, 'shift_op");
+        break;
+      }
+      case MVN: {
+        Format(instr, "mvn'cond's 'rd, 'shift_op");
+||||||| merged common ancestors
+      case ib_x: {
+        Format(instr, "'memop'cond'b 'rd, ['rn, #+'off12]'w");
+=======
       case MOV: {
         Format(instr, "mov'cond's 'rd, 'shift_op");
         break;
@@ -937,6 +1172,7 @@ void Decoder::DecodeType01(Instruction* instr) {
       }
       case MVN: {
         Format(instr, "mvn'cond's 'rd, 'shift_op");
+>>>>>>> upstream-releases
         break;
       }
       default: {
@@ -948,6 +1184,7 @@ void Decoder::DecodeType01(Instruction* instr) {
   }
 }
 
+<<<<<<< HEAD
 void Decoder::DecodeType2(Instruction* instr) {
   switch (instr->PUField()) {
     case da_x: {
@@ -955,6 +1192,95 @@ void Decoder::DecodeType2(Instruction* instr) {
         Unknown(instr);  // not used in V8
         return;
       }
+      Format(instr, "'memop'cond'b 'rd, ['rn], #-'off12");
+      break;
+    }
+    case ia_x: {
+      if (instr->HasW()) {
+        Unknown(instr);  // not used in V8
+        return;
+||||||| merged common ancestors
+
+void
+Decoder::DecodeType3(Instruction* instr)
+{
+    switch (instr->PUField()) {
+      case da_x: {
+        VERIFY(!instr->HasW());
+        Format(instr, "'memop'cond'b 'rd, ['rn], -'shift_rm");
+        break;
+=======
+void Decoder::DecodeType2(Instruction* instr) {
+  switch (instr->PUField()) {
+    case da_x: {
+      if (instr->HasW()) {
+        Unknown(instr);  // not used in V8
+        return;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+      Format(instr, "'memop'cond'b 'rd, ['rn], #+'off12");
+      break;
+    }
+    case db_x: {
+      Format(instr, "'memop'cond'b 'rd, ['rn, #-'off12]'w");
+      break;
+    }
+    case ib_x: {
+      Format(instr, "'memop'cond'b 'rd, ['rn, #+'off12]'w");
+      break;
+    }
+    default: {
+      // The PU field is a 2-bit field.
+      MOZ_CRASH();
+      break;
+    }
+  }
+}
+
+void Decoder::DecodeType3(Instruction* instr) {
+  switch (instr->PUField()) {
+    case da_x: {
+      VERIFY(!instr->HasW());
+      Format(instr, "'memop'cond'b 'rd, ['rn], -'shift_rm");
+      break;
+    }
+    case ia_x: {
+      if (instr->Bit(4) == 0) {
+        Format(instr, "'memop'cond'b 'rd, ['rn], +'shift_rm");
+      } else {
+        if (instr->Bit(5) == 0) {
+          switch (instr->Bits(22, 21)) {
+            case 0:
+              if (instr->Bit(20) == 0) {
+                if (instr->Bit(6) == 0) {
+                  Format(instr, "pkhbt'cond 'rd, 'rn, 'rm, lsl #'imm05@07");
+                } else {
+                  if (instr->Bits(11, 7) == 0) {
+                    Format(instr, "pkhtb'cond 'rd, 'rn, 'rm, asr #32");
+                  } else {
+                    Format(instr, "pkhtb'cond 'rd, 'rn, 'rm, asr #'imm05@07");
+                  }
+                }
+              } else {
+                MOZ_CRASH();
+              }
+              break;
+            case 1:
+              MOZ_CRASH();
+              break;
+            case 2:
+              MOZ_CRASH();
+              break;
+            case 3:
+              Format(instr, "usat 'rd, #'imm05@16, 'rm'shift_sat");
+              break;
+          }
+||||||| merged common ancestors
+      case ia_x: {
+        if (instr->Bit(4) == 0) {
+            Format(instr, "'memop'cond'b 'rd, ['rn], +'shift_rm");
+=======
       Format(instr, "'memop'cond'b 'rd, ['rn], #-'off12");
       break;
     }
@@ -1020,6 +1346,7 @@ void Decoder::DecodeType3(Instruction* instr) {
               Format(instr, "usat 'rd, #'imm05@16, 'rm'shift_sat");
               break;
           }
+>>>>>>> upstream-releases
         } else {
           switch (instr->Bits(22, 21)) {
             case 0:
@@ -1848,7 +2175,7 @@ void Decoder::DecodeSpecialCondition(Instruction* instr) {
   }
 }
 
-#undef VERIFIY
+#  undef VERIFIY
 
 bool Decoder::IsConstantPoolAt(uint8_t* instr_ptr) {
   int instruction_bits = *(reinterpret_cast<int*>(instr_ptr));
@@ -1929,9 +2256,21 @@ int Decoder::InstructionDecode(uint8_t* instr_ptr) {
 
 }  // namespace disasm
 
+<<<<<<< HEAD
 #undef STRING_STARTS_WITH
 #undef VERIFY
 
+||||||| merged common ancestors
+
+#undef STRING_STARTS_WITH
+#undef VERIFY
+
+
+=======
+#  undef STRING_STARTS_WITH
+#  undef VERIFY
+
+>>>>>>> upstream-releases
 //------------------------------------------------------------------------------
 
 namespace disasm {

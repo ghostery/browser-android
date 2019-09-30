@@ -440,19 +440,94 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
         }
         try {
             final JSONObject json = new JSONObject(FileUtils.readStringFromInputStreamAndCloseStream(in, MAX_LISTJSON_SIZE));
+<<<<<<< HEAD
 
             // Get the current language
             final String languageTag = Locales.getLanguageTag(Locale.getDefault());
 
             // Get the current region
             String region = fetchCountryCode();
+||||||| merged common ancestors
+
+            // Get the region used to fence search engines.
+            String region = fetchCountryCode();
+=======
+            final String region = fetchCountryCode();
+>>>>>>> upstream-releases
 
             // Store the result, even if it's empty. If we fail to get a region, we never
             // try to get it again, and we will always fallback to the non-region engine.
             GeckoSharedPrefs.forApp(context)
+<<<<<<< HEAD
                             .edit()
                             .putString(PREF_REGION_KEY, (region == null ? "" : region))
                             .apply();
+
+            final JSONObject locales = json.getJSONObject("locales");
+||||||| merged common ancestors
+                            .edit()
+                            .putString(PREF_REGION_KEY, (region == null ? "" : region))
+                            .apply();
+
+            if (region != null) {
+                if (json.has(region)) {
+                    final JSONObject regionData = json.getJSONObject(region);
+                    if (regionData.has("searchDefault")) {
+                        Log.d(LOG_TAG, "Found region-specific default engine name in browsersearch.json.");
+                        return regionData.getString("searchDefault");
+                    }
+                }
+            }
+=======
+                    .edit()
+                    .putString(PREF_REGION_KEY, (region == null ? "" : region))
+                    .apply();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+            if (locales.has(languageTag)) {
+                final JSONObject regions = locales.getJSONObject(languageTag);
+                if (!regions.has(region)) {
+                    // Region doesn't exist, use default.
+                    // default always exists.
+                    region = "default";
+                }
+                final JSONObject regionData = regions.getJSONObject(region);
+                if (regionData.has("searchDefault")) {
+                    return regionData.getString("searchDefault");
+                }
+            }
+            // Falling back to the overall default
+            final JSONObject defaultData = json.getJSONObject("default");
+            return defaultData.getString("searchDefault");
+||||||| merged common ancestors
+            // Either we have no geoip region, or we didn't find the right region and we are falling back to the default.
+            if (json.has("default")) {
+                final JSONObject defaultData = json.getJSONObject("default");
+                if (defaultData.has("searchDefault")) {
+                  Log.d(LOG_TAG, "Found default engine name in list.json.");
+                  return defaultData.getString("searchDefault");
+                }
+            }
+            // We should never get here
+            Log.e(LOG_TAG, "Error missing defaultSearch in list.json");
+=======
+            return getDefaultEngineNameFromJSON(region, json);
+>>>>>>> upstream-releases
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error getting search engine name from list.json", e);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Error parsing list.json", e);
+        } finally {
+            IOUtils.safeStreamClose(in);
+        }
+        return null;
+    }
+
+    public static String getDefaultEngineNameFromJSON(String region, JSONObject json) {
+        try {
+            // Get the current language
+            final String languageTag = Locales.getLanguageTag(Locale.getDefault());
 
             final JSONObject locales = json.getJSONObject("locales");
 
@@ -471,12 +546,8 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
             // Falling back to the overall default
             final JSONObject defaultData = json.getJSONObject("default");
             return defaultData.getString("searchDefault");
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error getting search engine name from list.json", e);
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error parsing list.json", e);
-        } finally {
-            IOUtils.safeStreamClose(in);
         }
         return null;
     }
@@ -603,8 +674,14 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
             IOUtils.safeStreamClose(in);
         }
         try {
+<<<<<<< HEAD
             final String languageTag = Locales.getLanguageTag(Locale.getDefault());
+||||||| merged common ancestors
+            String region = GeckoSharedPrefs.forApp(context).getString(PREF_REGION_KEY, null);
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
             String region = fetchCountryCode();
 
             final JSONObject locales = json.getJSONObject("locales");
@@ -642,6 +719,21 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
 
             for (int i = 0; i < engines.size(); i++) {
                 final InputStream pluginIn = getInputStreamFromSearchPluginsJar(engines.get(i) + ".xml");
+||||||| merged common ancestors
+            JSONArray engines;
+            if (json.has(region)) {
+                engines = json.getJSONObject(region).getJSONArray("visibleDefaultEngines");
+            } else {
+                engines = json.getJSONObject("default").getJSONArray("visibleDefaultEngines");
+            }
+            for (int i = 0; i < engines.length(); i++) {
+                final InputStream pluginIn = getInputStreamFromSearchPluginsJar(engines.getString(i) + ".xml");
+=======
+            ArrayList<String> engines = getEngineListFromJSON(fetchCountryCode(), json);
+
+            for (int i = 0; i < engines.size(); i++) {
+                final InputStream pluginIn = getInputStreamFromSearchPluginsJar(engines.get(i) + ".xml");
+>>>>>>> upstream-releases
                 if (pluginIn != null) {
                     final SearchEngine engine = createEngineFromInputStream(engines.get(i), pluginIn);
                     if (engine != null && engine.getName().equals(name)) {
@@ -651,6 +743,52 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
             }
         } catch (Throwable e) {
             Log.e(LOG_TAG, "Error creating shipped search engine from name: " + name, e);
+        }
+        return null;
+    }
+
+    public static ArrayList<String> getEngineListFromJSON(String originalRegion, JSONObject json) {
+        try {
+            final String languageTag = Locales.getLanguageTag(Locale.getDefault());
+
+            String region = originalRegion;
+
+            final JSONObject locales = json.getJSONObject("locales");
+
+            JSONArray jsonEngines;
+            if (locales.has(languageTag)) {
+                final JSONObject regions = locales.getJSONObject(languageTag);
+                if (!regions.has(originalRegion)) {
+                    // Region doesn't exist, use default.
+                    // default always exists.
+                    region = "default";
+                }
+                jsonEngines = regions.getJSONObject(region).getJSONArray("visibleDefaultEngines");
+            } else {
+                // Falling back to the overall default
+                jsonEngines = locales.getJSONObject("default").getJSONArray("visibleDefaultEngines");
+            }
+
+            ArrayList<String> engines = new ArrayList<String>();
+
+            for (int i = 0; i < jsonEngines.length(); i++) {
+                engines.add(jsonEngines.getString(i));
+            }
+
+            if (json.getJSONObject("regionOverrides").has(originalRegion)) {
+                final JSONObject regionOverride = json.getJSONObject("regionOverrides").getJSONObject(originalRegion);
+                for (int i = 0; i < engines.size(); i++) {
+                    final String engineName = engines.get(i);
+                    if (regionOverride.has(engineName)) {
+                        engines.set(i, regionOverride.getString(engineName));
+                    }
+                }
+            }
+
+            return engines;
+
+        } catch (Throwable e) {
+            Log.e(LOG_TAG, "Error getting engine list", e);
         }
         return null;
     }

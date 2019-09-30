@@ -8,15 +8,17 @@
 
 #include "shell/OSObject.h"
 
+#include "mozilla/TextUtils.h"
+
 #include <errno.h>
 #include <stdlib.h>
 #ifdef XP_WIN
-#include <direct.h>
-#include <process.h>
-#include <string.h>
+#  include <direct.h>
+#  include <process.h>
+#  include <string.h>
 #else
-#include <sys/wait.h>
-#include <unistd.h>
+#  include <sys/wait.h>
+#  include <unistd.h>
 #endif
 
 #include "jsapi.h"
@@ -27,6 +29,7 @@
 #include "gc/FreeOp.h"
 #include "js/CharacterEncoding.h"
 #include "js/Conversions.h"
+#include "js/PropertySpec.h"
 #include "js/Wrapper.h"
 #include "shell/jsshell.h"
 #include "util/StringBuffer.h"
@@ -38,12 +41,30 @@
 #include "vm/JSObject-inl.h"
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #ifndef PATH_MAX
 #define PATH_MAX (MAX_PATH > _MAX_DIR ? MAX_PATH : _MAX_DIR)
 #endif
 #define getcwd _getcwd
+||||||| merged common ancestors
+# ifndef PATH_MAX
+#  define PATH_MAX (MAX_PATH > _MAX_DIR ? MAX_PATH : _MAX_DIR)
+# endif
+# define getcwd _getcwd
+=======
+#  ifndef PATH_MAX
+#    define PATH_MAX (MAX_PATH > _MAX_DIR ? MAX_PATH : _MAX_DIR)
+#  endif
+#  define getcwd _getcwd
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #include <libgen.h>
+||||||| merged common ancestors
+# include <libgen.h>
+=======
+#  include <libgen.h>
+>>>>>>> upstream-releases
 #endif
 
 using js::shell::RCFile;
@@ -65,6 +86,7 @@ static bool IsAbsolutePath(const UniqueChars& filename) {
   }
 
 #ifdef XP_WIN
+<<<<<<< HEAD
   // On Windows there are various forms of absolute paths (see
   // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
   // for details):
@@ -80,6 +102,40 @@ static bool IsAbsolutePath(const UniqueChars& filename) {
        pathname[2] == '\\')) {
     return true;
   }
+||||||| merged common ancestors
+    // On Windows there are various forms of absolute paths (see
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
+    // for details):
+    //
+    //   "\..."
+    //   "\\..."
+    //   "C:\..."
+    //
+    // The first two cases are handled by the test above so we only need a test
+    // for the last one here.
+
+    if ((strlen(pathname) > 3 &&
+        isalpha(pathname[0]) && pathname[1] == ':' && pathname[2] == '\\'))
+    {
+        return true;
+    }
+=======
+  // On Windows there are various forms of absolute paths (see
+  // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
+  // for details):
+  //
+  //   "\..."
+  //   "\\..."
+  //   "C:\..."
+  //
+  // The first two cases are handled by the test above so we only need a test
+  // for the last one here.
+
+  if ((strlen(pathname) > 3 && mozilla::IsAsciiAlpha(pathname[0]) &&
+       pathname[1] == ':' && pathname[2] == '\\')) {
+    return true;
+  }
+>>>>>>> upstream-releases
 #endif
 
   return false;
@@ -379,12 +435,29 @@ static bool osfile_writeTypedArrayToFile(JSContext* cx, unsigned argc,
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ RCFile* RCFile::create(JSContext* cx, const char* filename,
                                     const char* mode) {
   FILE* fp = fopen(filename, mode);
   if (!fp) {
     return nullptr;
   }
+||||||| merged common ancestors
+/* static */ RCFile*
+RCFile::create(JSContext* cx, const char* filename, const char* mode)
+{
+    FILE* fp = fopen(filename, mode);
+    if (!fp) {
+        return nullptr;
+    }
+=======
+/* static */
+RCFile* RCFile::create(JSContext* cx, const char* filename, const char* mode) {
+  FILE* fp = fopen(filename, mode);
+  if (!fp) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   RCFile* file = cx->new_<RCFile>(fp);
   if (!file) {
@@ -410,6 +483,45 @@ bool RCFile::release() {
   return true;
 }
 
+<<<<<<< HEAD
+class FileObject : public NativeObject {
+  enum : uint32_t { FILE_SLOT = 0, NUM_SLOTS };
+||||||| merged common ancestors
+class FileObject : public NativeObject
+{
+    enum : uint32_t {
+        FILE_SLOT = 0,
+        NUM_SLOTS
+    };
+
+  public:
+    static const js::Class class_;
+
+    static FileObject* create(JSContext* cx, RCFile* file) {
+        FileObject* obj = js::NewBuiltinClassInstance<FileObject>(cx);
+        if (!obj) {
+            return nullptr;
+        }
+
+        obj->setRCFile(file);
+        file->acquire();
+        return obj;
+    }
+
+    static void finalize(FreeOp* fop, JSObject* obj) {
+        FileObject* fileObj = &obj->as<FileObject>();
+        RCFile* file = fileObj->rcFile();
+        if (file->release()) {
+            fileObj->setRCFile(nullptr);
+            fop->delete_(file);
+        }
+    }
+
+    bool isOpen() {
+        RCFile* file = rcFile();
+        return file && file->isOpen();
+    }
+=======
 class FileObject : public NativeObject {
   enum : uint32_t { FILE_SLOT = 0, NUM_SLOTS };
 
@@ -422,6 +534,56 @@ class FileObject : public NativeObject {
       return nullptr;
     }
 
+    InitReservedSlot(obj, FILE_SLOT, file, MemoryUse::FileObjectFile);
+    file->acquire();
+    return obj;
+  }
+
+  static void finalize(FreeOp* fop, JSObject* obj) {
+    FileObject* fileObj = &obj->as<FileObject>();
+    RCFile* file = fileObj->rcFile();
+    RemoveCellMemory(obj, sizeof(*file), MemoryUse::FileObjectFile);
+    if (file->release()) {
+      fop->delete_(file);
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+  static const js::Class class_;
+||||||| merged common ancestors
+    void close() {
+        if (!isOpen()) {
+            return;
+        }
+        rcFile()->close();
+    }
+=======
+  bool isOpen() {
+    RCFile* file = rcFile();
+    return file && file->isOpen();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static FileObject* create(JSContext* cx, RCFile* file) {
+    FileObject* obj = js::NewBuiltinClassInstance<FileObject>(cx);
+    if (!obj) {
+      return nullptr;
+||||||| merged common ancestors
+    RCFile* rcFile() {
+        return reinterpret_cast<RCFile*>(js::GetReservedSlot(this, FILE_SLOT).toPrivate());
+=======
+  void close() {
+    if (!isOpen()) {
+      return;
+>>>>>>> upstream-releases
+    }
+    rcFile()->close();
+  }
+
+<<<<<<< HEAD
     obj->setRCFile(file);
     file->acquire();
     return obj;
@@ -457,6 +619,18 @@ class FileObject : public NativeObject {
   void setRCFile(RCFile* file) {
     js::SetReservedSlot(this, FILE_SLOT, PrivateValue(file));
   }
+||||||| merged common ancestors
+  private:
+
+    void setRCFile(RCFile* file) {
+        js::SetReservedSlot(this, FILE_SLOT, PrivateValue(file));
+    }
+=======
+  RCFile* rcFile() {
+    return reinterpret_cast<RCFile*>(
+        js::GetReservedSlot(this, FILE_SLOT).toPrivate());
+  }
+>>>>>>> upstream-releases
 };
 
 static const js::ClassOps FileObjectClassOps = {
@@ -535,23 +709,66 @@ static bool Redirect(JSContext* cx, const CallArgs& args, RCFile** outFile) {
     return true;
   }
 
+<<<<<<< HEAD
   if (args[0].isObject()) {
     RootedObject fileObj(cx, js::CheckedUnwrap(&args[0].toObject()));
     if (!fileObj) {
       return false;
     }
+||||||| merged common ancestors
+    if (args[0].isObject()) {
+        RootedObject fileObj(cx, js::CheckedUnwrap(&args[0].toObject()));
+        if (!fileObj) {
+            return false;
+        }
+=======
+  if (args[0].isObject()) {
+    Rooted<FileObject*> fileObj(cx,
+                                args[0].toObject().maybeUnwrapIf<FileObject>());
+    if (!fileObj) {
+      JS_ReportErrorNumberASCII(cx, js::shell::my_GetErrorMessage, nullptr,
+                                JSSMSG_INVALID_ARGS, "redirect");
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (fileObj->is<FileObject>()) {
       // Passed in a FileObject. Create a FileObject for the previous
       // global file, and set the global file to the passed-in one.
       *outFile = fileObj->as<FileObject>().rcFile();
       (*outFile)->acquire();
       oldFile->release();
+||||||| merged common ancestors
+        if (fileObj->is<FileObject>()) {
+            // Passed in a FileObject. Create a FileObject for the previous
+            // global file, and set the global file to the passed-in one.
+            *outFile = fileObj->as<FileObject>().rcFile();
+            (*outFile)->acquire();
+            oldFile->release();
+=======
+    // Passed in a FileObject. Create a FileObject for the previous
+    // global file, and set the global file to the passed-in one.
+    *outFile = fileObj->rcFile();
+    (*outFile)->acquire();
+    oldFile->release();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       args.rval().setObject(*oldFileObj);
       return true;
     }
   }
+||||||| merged common ancestors
+            args.rval().setObject(*oldFileObj);
+            return true;
+        }
+    }
+=======
+    args.rval().setObject(*oldFileObj);
+    return true;
+  }
+>>>>>>> upstream-releases
 
   RootedString filename(cx);
   if (!args[0].isNull()) {
@@ -584,6 +801,7 @@ static bool osfile_redirectError(JSContext* cx, unsigned argc, Value* vp) {
 static bool osfile_close(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
 
+<<<<<<< HEAD
   Rooted<FileObject*> fileObj(cx);
   if (args.get(0).isObject()) {
     JSObject* obj = js::CheckedUnwrap(&args[0].toObject());
@@ -591,6 +809,20 @@ static bool osfile_close(JSContext* cx, unsigned argc, Value* vp) {
       fileObj = &obj->as<FileObject>();
     }
   }
+||||||| merged common ancestors
+    Rooted<FileObject*> fileObj(cx);
+    if (args.get(0).isObject()) {
+        JSObject *obj = js::CheckedUnwrap(&args[0].toObject());
+        if (obj->is<FileObject>()) {
+            fileObj = &obj->as<FileObject>();
+        }
+    }
+=======
+  Rooted<FileObject*> fileObj(cx);
+  if (args.get(0).isObject()) {
+    fileObj = args[0].toObject().maybeUnwrapIf<FileObject>();
+  }
+>>>>>>> upstream-releases
 
   if (!fileObj) {
     JS_ReportErrorNumberASCII(cx, js::shell::my_GetErrorMessage, nullptr,
@@ -675,7 +907,17 @@ static bool ospath_join(JSContext* cx, unsigned argc, Value* vp) {
   // This function doesn't take into account some aspects of Windows paths,
   // e.g. the drive letter is always reset when an absolute path is appended.
 
+<<<<<<< HEAD
   StringBuffer buffer(cx);
+||||||| merged common ancestors
+    for (unsigned i = 0; i < args.length(); i++) {
+        if (!args[i].isString()) {
+            JS_ReportErrorASCII(cx, "join expects string arguments only");
+            return false;
+        }
+=======
+  JSStringBuilder buffer(cx);
+>>>>>>> upstream-releases
 
   for (unsigned i = 0; i < args.length(); i++) {
     if (!args[i].isString()) {

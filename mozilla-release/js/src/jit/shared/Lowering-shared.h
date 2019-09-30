@@ -148,6 +148,7 @@ class LIRGeneratorShared {
   inline void fillBoxUses(LInstruction* lir, size_t n, MDefinition* mir);
 #endif
 
+<<<<<<< HEAD
   // These create temporary register requests.
   inline LDefinition temp(LDefinition::Type type = LDefinition::GENERAL,
                           LDefinition::Policy policy = LDefinition::REGISTER);
@@ -269,6 +270,217 @@ class LIRGeneratorShared {
     if (vreg + 1 >= MAX_VIRTUAL_REGISTERS) {
       abort(AbortReason::Alloc, "max virtual registers");
       return 1;
+||||||| merged common ancestors
+    // These create temporary register requests.
+    inline LDefinition temp(LDefinition::Type type = LDefinition::GENERAL,
+                            LDefinition::Policy policy = LDefinition::REGISTER);
+    inline LInt64Definition tempInt64(LDefinition::Policy policy = LDefinition::REGISTER);
+    inline LDefinition tempFloat32();
+    inline LDefinition tempDouble();
+    inline LDefinition tempCopy(MDefinition* input, uint32_t reusedInput);
+
+    // Note that the fixed register has a GENERAL type,
+    // unless the arg is of FloatRegister type
+    inline LDefinition tempFixed(Register reg);
+    inline LDefinition tempFixed(FloatRegister reg);
+
+
+    template <size_t Ops, size_t Temps>
+    inline void defineFixed(LInstructionHelper<1, Ops, Temps>* lir, MDefinition* mir,
+                            const LAllocation& output);
+
+    template <size_t Temps>
+    inline void defineBox(details::LInstructionFixedDefsTempsHelper<BOX_PIECES, Temps>* lir,
+                          MDefinition* mir, LDefinition::Policy policy = LDefinition::REGISTER);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineInt64(LInstructionHelper<INT64_PIECES, Ops, Temps>* lir, MDefinition* mir,
+                            LDefinition::Policy policy = LDefinition::REGISTER);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineInt64Fixed(LInstructionHelper<INT64_PIECES, Ops, Temps>* lir, MDefinition* mir,
+                                 const LInt64Allocation& output);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineSinCos(LInstructionHelper<2, Ops, Temps> *lir, MDefinition *mir,
+                             LDefinition::Policy policy = LDefinition::REGISTER);
+
+    inline void defineReturn(LInstruction* lir, MDefinition* mir);
+
+    template <size_t X>
+    inline void define(details::LInstructionFixedDefsTempsHelper<1, X>* lir, MDefinition* mir,
+                       LDefinition::Policy policy = LDefinition::REGISTER);
+    template <size_t X>
+    inline void define(details::LInstructionFixedDefsTempsHelper<1, X>* lir, MDefinition* mir,
+                       const LDefinition& def);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineReuseInput(LInstructionHelper<1, Ops, Temps>* lir, MDefinition* mir,
+                                 uint32_t operand);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineBoxReuseInput(LInstructionHelper<BOX_PIECES, Ops, Temps>* lir,
+                                    MDefinition* mir, uint32_t operand);
+
+    template <size_t Ops, size_t Temps>
+    inline void defineInt64ReuseInput(LInstructionHelper<INT64_PIECES, Ops, Temps>* lir,
+                                      MDefinition* mir, uint32_t operand);
+
+    // Returns a box allocation for a Value-typed instruction.
+    inline LBoxAllocation useBox(MDefinition* mir, LUse::Policy policy = LUse::REGISTER,
+                                 bool useAtStart = false);
+
+    // Returns a box allocation. The use is either typed, a Value, or
+    // a constant (if useConstant is true).
+    inline LBoxAllocation useBoxOrTypedOrConstant(MDefinition* mir, bool useConstant);
+    inline LBoxAllocation useBoxOrTyped(MDefinition* mir);
+
+    // Returns an int64 allocation for an Int64-typed instruction.
+    inline LInt64Allocation useInt64(MDefinition* mir, LUse::Policy policy, bool useAtStart);
+    inline LInt64Allocation useInt64(MDefinition* mir, bool useAtStart = false);
+    inline LInt64Allocation useInt64AtStart(MDefinition* mir);
+    inline LInt64Allocation useInt64OrConstant(MDefinition* mir, bool useAtStart = false);
+    inline LInt64Allocation useInt64Register(MDefinition* mir, bool useAtStart = false);
+    inline LInt64Allocation useInt64RegisterOrConstant(MDefinition* mir, bool useAtStart = false);
+    inline LInt64Allocation useInt64Fixed(MDefinition* mir, Register64 regs, bool useAtStart = false);
+    inline LInt64Allocation useInt64FixedAtStart(MDefinition* mir, Register64 regs);
+
+    LInt64Allocation useInt64RegisterAtStart(MDefinition* mir) {
+        return useInt64Register(mir, /* useAtStart = */ true);
+    }
+    LInt64Allocation useInt64RegisterOrConstantAtStart(MDefinition* mir) {
+        return useInt64RegisterOrConstant(mir, /* useAtStart = */ true);
+    }
+    LInt64Allocation useInt64OrConstantAtStart(MDefinition* mir) {
+        return useInt64OrConstant(mir, /* useAtStart = */ true);
+    }
+
+    // Rather than defining a new virtual register, sets |ins| to have the same
+    // virtual register as |as|.
+    inline void redefine(MDefinition* ins, MDefinition* as);
+
+    // Redefine a sin/cos call to sincos.
+    inline void redefine(MDefinition* def, MDefinition* as, MMathFunction::Function func);
+
+    template <typename LClass, typename... Args>
+    inline LClass* allocateVariadic(uint32_t numOperands, Args&&... args);
+
+    TempAllocator& alloc() const {
+        return graph.alloc();
+=======
+  // These create temporary register requests.
+  inline LDefinition temp(LDefinition::Type type = LDefinition::GENERAL,
+                          LDefinition::Policy policy = LDefinition::REGISTER);
+  inline LInt64Definition tempInt64(
+      LDefinition::Policy policy = LDefinition::REGISTER);
+  inline LDefinition tempFloat32();
+  inline LDefinition tempDouble();
+  inline LDefinition tempCopy(MDefinition* input, uint32_t reusedInput);
+
+  // Note that the fixed register has a GENERAL type,
+  // unless the arg is of FloatRegister type
+  inline LDefinition tempFixed(Register reg);
+  inline LDefinition tempFixed(FloatRegister reg);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineFixed(LInstructionHelper<1, Ops, Temps>* lir,
+                          MDefinition* mir, const LAllocation& output);
+
+  template <size_t Temps>
+  inline void defineBox(
+      details::LInstructionFixedDefsTempsHelper<BOX_PIECES, Temps>* lir,
+      MDefinition* mir, LDefinition::Policy policy = LDefinition::REGISTER);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineInt64(LInstructionHelper<INT64_PIECES, Ops, Temps>* lir,
+                          MDefinition* mir,
+                          LDefinition::Policy policy = LDefinition::REGISTER);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineInt64Fixed(
+      LInstructionHelper<INT64_PIECES, Ops, Temps>* lir, MDefinition* mir,
+      const LInt64Allocation& output);
+
+  inline void defineReturn(LInstruction* lir, MDefinition* mir);
+
+  template <size_t X>
+  inline void define(details::LInstructionFixedDefsTempsHelper<1, X>* lir,
+                     MDefinition* mir,
+                     LDefinition::Policy policy = LDefinition::REGISTER);
+  template <size_t X>
+  inline void define(details::LInstructionFixedDefsTempsHelper<1, X>* lir,
+                     MDefinition* mir, const LDefinition& def);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineReuseInput(LInstructionHelper<1, Ops, Temps>* lir,
+                               MDefinition* mir, uint32_t operand);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineBoxReuseInput(
+      LInstructionHelper<BOX_PIECES, Ops, Temps>* lir, MDefinition* mir,
+      uint32_t operand);
+
+  template <size_t Ops, size_t Temps>
+  inline void defineInt64ReuseInput(
+      LInstructionHelper<INT64_PIECES, Ops, Temps>* lir, MDefinition* mir,
+      uint32_t operand);
+
+  // Returns a box allocation for a Value-typed instruction.
+  inline LBoxAllocation useBox(MDefinition* mir,
+                               LUse::Policy policy = LUse::REGISTER,
+                               bool useAtStart = false);
+
+  // Returns a box allocation. The use is either typed, a Value, or
+  // a constant (if useConstant is true).
+  inline LBoxAllocation useBoxOrTypedOrConstant(MDefinition* mir,
+                                                bool useConstant);
+  inline LBoxAllocation useBoxOrTyped(MDefinition* mir);
+
+  // Returns an int64 allocation for an Int64-typed instruction.
+  inline LInt64Allocation useInt64(MDefinition* mir, LUse::Policy policy,
+                                   bool useAtStart);
+  inline LInt64Allocation useInt64(MDefinition* mir, bool useAtStart = false);
+  inline LInt64Allocation useInt64AtStart(MDefinition* mir);
+  inline LInt64Allocation useInt64OrConstant(MDefinition* mir,
+                                             bool useAtStart = false);
+  inline LInt64Allocation useInt64Register(MDefinition* mir,
+                                           bool useAtStart = false);
+  inline LInt64Allocation useInt64RegisterOrConstant(MDefinition* mir,
+                                                     bool useAtStart = false);
+  inline LInt64Allocation useInt64Fixed(MDefinition* mir, Register64 regs,
+                                        bool useAtStart = false);
+  inline LInt64Allocation useInt64FixedAtStart(MDefinition* mir,
+                                               Register64 regs);
+
+  LInt64Allocation useInt64RegisterAtStart(MDefinition* mir) {
+    return useInt64Register(mir, /* useAtStart = */ true);
+  }
+  LInt64Allocation useInt64RegisterOrConstantAtStart(MDefinition* mir) {
+    return useInt64RegisterOrConstant(mir, /* useAtStart = */ true);
+  }
+  LInt64Allocation useInt64OrConstantAtStart(MDefinition* mir) {
+    return useInt64OrConstant(mir, /* useAtStart = */ true);
+  }
+
+  // Rather than defining a new virtual register, sets |ins| to have the same
+  // virtual register as |as|.
+  inline void redefine(MDefinition* ins, MDefinition* as);
+
+  template <typename LClass, typename... Args>
+  inline LClass* allocateVariadic(uint32_t numOperands, Args&&... args);
+
+  TempAllocator& alloc() const { return graph.alloc(); }
+
+  uint32_t getVirtualRegister() {
+    uint32_t vreg = lirGraph_.getVirtualRegister();
+
+    // If we run out of virtual registers, mark code generation as having
+    // failed and return a dummy vreg. Include a + 1 here for NUNBOX32
+    // platforms that expect Value vregs to be adjacent.
+    if (vreg + 1 >= MAX_VIRTUAL_REGISTERS) {
+      abort(AbortReason::Alloc, "max virtual registers");
+      return 1;
+>>>>>>> upstream-releases
     }
     return vreg;
   }
@@ -298,6 +510,7 @@ class LIRGeneratorShared {
     // One register containing the full Value.
     definePhiOneRegister(phi, lirIndex);
 #endif
+<<<<<<< HEAD
   }
 
   LOsiPoint* popOsiPoint() {
@@ -333,6 +546,83 @@ class LIRGeneratorShared {
  public:
   // Whether to generate typed reads for element accesses with hole checks.
   static bool allowTypedElementHoleCheck() { return false; }
+||||||| merged common ancestors
+    }
+
+    LOsiPoint* popOsiPoint() {
+        LOsiPoint* tmp = osiPoint_;
+        osiPoint_ = nullptr;
+        return tmp;
+    }
+
+    LRecoverInfo* getRecoverInfo(MResumePoint* rp);
+    LSnapshot* buildSnapshot(LInstruction* ins, MResumePoint* rp, BailoutKind kind);
+    bool assignPostSnapshot(MInstruction* mir, LInstruction* ins);
+
+    // Marks this instruction as fallible, meaning that before it performs
+    // effects (if any), it may check pre-conditions and bailout if they do not
+    // hold. This function informs the register allocator that it will need to
+    // capture appropriate state.
+    void assignSnapshot(LInstruction* ins, BailoutKind kind);
+
+    // Marks this instruction as needing to call into either the VM or GC. This
+    // function may build a snapshot that captures the result of its own
+    // instruction, and as such, should generally be called after define*().
+    void assignSafepoint(LInstruction* ins, MInstruction* mir,
+                         BailoutKind kind = Bailout_DuringVMCall);
+
+    void lowerConstantDouble(double d, MInstruction* mir) {
+        define(new(alloc()) LDouble(d), mir);
+    }
+    void lowerConstantFloat32(float f, MInstruction* mir) {
+        define(new(alloc()) LFloat32(f), mir);
+    }
+
+  public:
+    // Whether to generate typed reads for element accesses with hole checks.
+    static bool allowTypedElementHoleCheck() {
+        return false;
+    }
+=======
+  }
+
+  LOsiPoint* popOsiPoint() {
+    LOsiPoint* tmp = osiPoint_;
+    osiPoint_ = nullptr;
+    return tmp;
+  }
+
+  LRecoverInfo* getRecoverInfo(MResumePoint* rp);
+  LSnapshot* buildSnapshot(LInstruction* ins, MResumePoint* rp,
+                           BailoutKind kind);
+  bool assignPostSnapshot(MInstruction* mir, LInstruction* ins);
+
+  // Marks this instruction as fallible, meaning that before it performs
+  // effects (if any), it may check pre-conditions and bailout if they do not
+  // hold. This function informs the register allocator that it will need to
+  // capture appropriate state.
+  void assignSnapshot(LInstruction* ins, BailoutKind kind);
+
+  // Marks this instruction as needing to call into either the VM or GC. This
+  // function may build a snapshot that captures the result of its own
+  // instruction, and as such, should generally be called after define*().
+  void assignSafepoint(LInstruction* ins, MInstruction* mir,
+                       BailoutKind kind = Bailout_DuringVMCall);
+
+  // Marks this instruction as needing a wasm safepoint.
+  void assignWasmSafepoint(LInstruction* ins, MInstruction* mir);
+
+  void lowerConstantDouble(double d, MInstruction* mir) {
+    define(new (alloc()) LDouble(d), mir);
+  }
+  void lowerConstantFloat32(float f, MInstruction* mir) {
+    define(new (alloc()) LFloat32(f), mir);
+  }
+
+ public:
+  // Whether to generate typed reads for element accesses with hole checks.
+  static bool allowTypedElementHoleCheck() { return false; }
+>>>>>>> upstream-releases
 };
 
 }  // namespace jit

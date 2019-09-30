@@ -6,16 +6,16 @@
 #ifndef nsResProtocolHandler_h___
 #define nsResProtocolHandler_h___
 
-#include "SubstitutingProtocolHandler.h"
+#include "mozilla/net/SubstitutingProtocolHandler.h"
 
 #include "nsIResProtocolHandler.h"
 #include "nsInterfaceHashtable.h"
 #include "nsWeakReference.h"
-#include "nsStandardURL.h"
 
 class nsISubstitutionObserver;
 
 struct SubstitutionMapping;
+<<<<<<< HEAD
 class nsResProtocolHandler final
     : public nsIResProtocolHandler,
       public mozilla::net::SubstitutingProtocolHandler,
@@ -78,6 +78,139 @@ class nsResProtocolHandler final
  private:
   nsCString mAppURI;
   nsCString mGREURI;
+||||||| merged common ancestors
+class nsResProtocolHandler final : public nsIResProtocolHandler,
+                                   public mozilla::net::SubstitutingProtocolHandler,
+                                   public nsSupportsWeakReference
+{
+public:
+    NS_DECL_ISUPPORTS_INHERITED
+    NS_DECL_NSIRESPROTOCOLHANDLER
+
+    NS_FORWARD_NSIPROTOCOLHANDLER(mozilla::net::SubstitutingProtocolHandler::)
+
+    nsResProtocolHandler()
+      : mozilla::net::SubstitutingProtocolHandler("resource", URI_STD |
+                                                  URI_IS_UI_RESOURCE |
+                                                  URI_IS_LOCAL_RESOURCE |
+                                                  URI_IS_POTENTIALLY_TRUSTWORTHY,
+                                                  /* aEnforceFileOrJar = */ false)
+    {}
+
+    MOZ_MUST_USE nsresult Init();
+
+    NS_IMETHOD SetSubstitution(const nsACString& aRoot, nsIURI* aBaseURI) override;
+    NS_IMETHOD SetSubstitutionWithFlags(const nsACString& aRoot, nsIURI* aBaseURI, uint32_t aFlags) override;
+
+    NS_IMETHOD GetSubstitution(const nsACString& aRoot, nsIURI** aResult) override
+    {
+        return mozilla::net::SubstitutingProtocolHandler::GetSubstitution(aRoot, aResult);
+    }
+
+    NS_IMETHOD HasSubstitution(const nsACString& aRoot, bool* aResult) override
+    {
+        return mozilla::net::SubstitutingProtocolHandler::HasSubstitution(aRoot, aResult);
+    }
+
+    NS_IMETHOD ResolveURI(nsIURI *aResURI, nsACString& aResult) override
+    {
+        return mozilla::net::SubstitutingProtocolHandler::ResolveURI(aResURI, aResult);
+    }
+
+    NS_IMETHOD AddObserver(nsISubstitutionObserver *aObserver) override
+    {
+        return mozilla::net::SubstitutingProtocolHandler::AddObserver(aObserver);
+    }
+
+    NS_IMETHOD RemoveObserver(nsISubstitutionObserver *aObserver) override
+    {
+        return mozilla::net::SubstitutingProtocolHandler::RemoveObserver(aObserver);
+    }
+
+protected:
+    MOZ_MUST_USE nsresult GetSubstitutionInternal(const nsACString& aRoot, nsIURI** aResult, uint32_t* aFlags) override;
+    virtual ~nsResProtocolHandler() = default;
+
+    MOZ_MUST_USE bool ResolveSpecialCases(const nsACString& aHost,
+                                          const nsACString& aPath,
+                                          const nsACString& aPathname,
+                                          nsACString& aResult) override;
+
+private:
+    nsCString mAppURI;
+    nsCString mGREURI;
+=======
+class nsResProtocolHandler final
+    : public nsIResProtocolHandler,
+      public mozilla::net::SubstitutingProtocolHandler,
+      public nsSupportsWeakReference {
+ public:
+  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_NSIRESPROTOCOLHANDLER
+
+  static already_AddRefed<nsResProtocolHandler> GetSingleton();
+
+  NS_FORWARD_NSIPROTOCOLHANDLER(mozilla::net::SubstitutingProtocolHandler::)
+
+  nsResProtocolHandler()
+      : mozilla::net::SubstitutingProtocolHandler(
+            "resource",
+            URI_STD | URI_IS_UI_RESOURCE | URI_IS_LOCAL_RESOURCE |
+                URI_IS_POTENTIALLY_TRUSTWORTHY,
+            /* aEnforceFileOrJar = */ false) {}
+
+  NS_IMETHOD SetSubstitution(const nsACString& aRoot,
+                             nsIURI* aBaseURI) override;
+  NS_IMETHOD SetSubstitutionWithFlags(const nsACString& aRoot, nsIURI* aBaseURI,
+                                      uint32_t aFlags) override;
+  NS_IMETHOD HasSubstitution(const nsACString& aRoot, bool* aResult) override;
+
+  NS_IMETHOD GetSubstitution(const nsACString& aRoot,
+                             nsIURI** aResult) override {
+    return mozilla::net::SubstitutingProtocolHandler::GetSubstitution(aRoot,
+                                                                      aResult);
+  }
+
+  NS_IMETHOD ResolveURI(nsIURI* aResURI, nsACString& aResult) override {
+    return mozilla::net::SubstitutingProtocolHandler::ResolveURI(aResURI,
+                                                                 aResult);
+  }
+
+  NS_IMETHOD AddObserver(nsISubstitutionObserver* aObserver) override {
+    return mozilla::net::SubstitutingProtocolHandler::AddObserver(aObserver);
+  }
+
+  NS_IMETHOD RemoveObserver(nsISubstitutionObserver* aObserver) override {
+    return mozilla::net::SubstitutingProtocolHandler::RemoveObserver(aObserver);
+  }
+
+ protected:
+  MOZ_MUST_USE nsresult GetSubstitutionInternal(const nsACString& aRoot,
+                                                nsIURI** aResult,
+                                                uint32_t* aFlags) override;
+  virtual ~nsResProtocolHandler() = default;
+
+  MOZ_MUST_USE bool ResolveSpecialCases(const nsACString& aHost,
+                                        const nsACString& aPath,
+                                        const nsACString& aPathname,
+                                        nsACString& aResult) override;
+
+  virtual MOZ_MUST_USE bool MustResolveJAR(const nsACString& aRoot) override {
+    return aRoot.EqualsLiteral("android");
+  }
+
+ private:
+  MOZ_MUST_USE nsresult Init();
+  static mozilla::StaticRefPtr<nsResProtocolHandler> sSingleton;
+
+  nsCString mAppURI;
+  nsCString mGREURI;
+#ifdef ANDROID
+  // Used for resource://android URIs
+  nsCString mApkURI;
+  nsresult GetApkURI(nsACString& aResult);
+#endif
+>>>>>>> upstream-releases
 };
 
 #endif /* nsResProtocolHandler_h___ */

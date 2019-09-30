@@ -11,6 +11,7 @@
 #include "mozilla/ArenaObjectID.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/Likely.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Sprintf.h"
 #include "mozilla/WritingModes.h"
 #include "nsBidiPresUtils.h"
@@ -75,13 +76,32 @@ nsLineBox::~nsLineBox() {
   Cleanup();
 }
 
+<<<<<<< HEAD
 nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell, nsIFrame* aFrame,
                          bool aIsBlock) {
+||||||| merged common ancestors
+nsLineBox*
+NS_NewLineBox(nsIPresShell* aPresShell, nsIFrame* aFrame, bool aIsBlock)
+{
+=======
+nsLineBox* NS_NewLineBox(PresShell* aPresShell, nsIFrame* aFrame,
+                         bool aIsBlock) {
+>>>>>>> upstream-releases
   return new (aPresShell) nsLineBox(aFrame, 1, aIsBlock);
 }
 
+<<<<<<< HEAD
 nsLineBox* NS_NewLineBox(nsIPresShell* aPresShell, nsLineBox* aFromLine,
                          nsIFrame* aFrame, int32_t aCount) {
+||||||| merged common ancestors
+nsLineBox*
+NS_NewLineBox(nsIPresShell* aPresShell, nsLineBox* aFromLine,
+              nsIFrame* aFrame, int32_t aCount)
+{
+=======
+nsLineBox* NS_NewLineBox(PresShell* aPresShell, nsLineBox* aFromLine,
+                         nsIFrame* aFrame, int32_t aCount) {
+>>>>>>> upstream-releases
   nsLineBox* newLine = new (aPresShell) nsLineBox(aFrame, aCount, false);
   newLine->NoteFramesMovedFrom(aFromLine);
   newLine->mContainerSize = aFromLine->mContainerSize;
@@ -153,11 +173,27 @@ void nsLineBox::NoteFramesMovedFrom(nsLineBox* aFromLine) {
   }
 }
 
+<<<<<<< HEAD
 void* nsLineBox::operator new(size_t sz, nsIPresShell* aPresShell) {
+||||||| merged common ancestors
+void*
+nsLineBox::operator new(size_t sz, nsIPresShell* aPresShell)
+{
+=======
+void* nsLineBox::operator new(size_t sz, PresShell* aPresShell) {
+>>>>>>> upstream-releases
   return aPresShell->AllocateByObjectID(eArenaObjectID_nsLineBox, sz);
 }
 
+<<<<<<< HEAD
 void nsLineBox::Destroy(nsIPresShell* aPresShell) {
+||||||| merged common ancestors
+void
+nsLineBox::Destroy(nsIPresShell* aPresShell)
+{
+=======
+void nsLineBox::Destroy(PresShell* aPresShell) {
+>>>>>>> upstream-releases
   this->nsLineBox::~nsLineBox();
   aPresShell->FreeByObjectID(eArenaObjectID_nsLineBox, this);
 }
@@ -310,7 +346,7 @@ bool nsLineBox::IsEmpty() const {
        --n, kid = kid->GetNextSibling()) {
     if (!kid->IsEmpty()) return false;
   }
-  if (HasBullet()) {
+  if (HasMarker()) {
     return false;
   }
   return true;
@@ -338,8 +374,15 @@ bool nsLineBox::CachedIsEmpty() {
         result = false;
         break;
       }
+<<<<<<< HEAD
     }
     if (HasBullet()) {
+||||||| merged common ancestors
+    if (HasBullet()) {
+=======
+    }
+    if (HasMarker()) {
+>>>>>>> upstream-releases
       result = false;
     }
   }
@@ -349,10 +392,24 @@ bool nsLineBox::CachedIsEmpty() {
   return result;
 }
 
+<<<<<<< HEAD
 void nsLineBox::DeleteLineList(nsPresContext* aPresContext, nsLineList& aLines,
                                nsIFrame* aDestructRoot, nsFrameList* aFrames,
                                PostDestroyData& aPostDestroyData) {
   nsIPresShell* shell = aPresContext->PresShell();
+||||||| merged common ancestors
+void
+nsLineBox::DeleteLineList(nsPresContext* aPresContext, nsLineList& aLines,
+                          nsIFrame* aDestructRoot, nsFrameList* aFrames,
+                          PostDestroyData& aPostDestroyData)
+{
+  nsIPresShell* shell = aPresContext->PresShell();
+=======
+void nsLineBox::DeleteLineList(nsPresContext* aPresContext, nsLineList& aLines,
+                               nsIFrame* aDestructRoot, nsFrameList* aFrames,
+                               PostDestroyData& aPostDestroyData) {
+  PresShell* presShell = aPresContext->PresShell();
+>>>>>>> upstream-releases
 
   // Keep our line list and frame list up to date as we
   // remove frames, in case something wants to traverse the
@@ -373,7 +430,7 @@ void nsLineBox::DeleteLineList(nsPresContext* aPresContext, nsLineList& aLines,
     MOZ_DIAGNOSTIC_ASSERT(line == aLines.front(),
                           "destroying child frames messed up our lines!");
     aLines.pop_front();
-    line->Destroy(shell);
+    line->Destroy(presShell);
   }
 }
 
@@ -555,7 +612,18 @@ nsLineIterator::~nsLineIterator() {
   }
 }
 
+<<<<<<< HEAD
 /* virtual */ void nsLineIterator::DisposeLineIterator() { delete this; }
+||||||| merged common ancestors
+/* virtual */ void
+nsLineIterator::DisposeLineIterator()
+{
+  delete this;
+}
+=======
+/* virtual */
+void nsLineIterator::DisposeLineIterator() { delete this; }
+>>>>>>> upstream-releases
 
 nsresult nsLineIterator::Init(nsLineList& aLines, bool aRightToLeft) {
   mRightToLeft = aRightToLeft;

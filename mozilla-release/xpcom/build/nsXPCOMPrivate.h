@@ -9,18 +9,13 @@
 
 #include "nscore.h"
 #include "nsXPCOM.h"
+#include "mozilla/Attributes.h"
 
 /**
  * During this shutdown notification all threads which run XPCOM code must
  * be joined.
  */
 #define NS_XPCOM_SHUTDOWN_THREADS_OBSERVER_ID "xpcom-shutdown-threads"
-
-/**
- * During this shutdown notification all module loaders must unload XPCOM
- * modules.
- */
-#define NS_XPCOM_SHUTDOWN_LOADERS_OBSERVER_ID "xpcom-shutdown-loaders"
 
 // PUBLIC
 namespace mozilla {
@@ -36,13 +31,17 @@ namespace mozilla {
  *         other error codes indicate a failure during shutdown
  *
  */
+<<<<<<< HEAD
 nsresult ShutdownXPCOM(nsIServiceManager* aServMgr);
+||||||| merged common ancestors
+nsresult
+ShutdownXPCOM(nsIServiceManager* aServMgr);
+=======
+MOZ_CAN_RUN_SCRIPT
+nsresult ShutdownXPCOM(nsIServiceManager* aServMgr);
+>>>>>>> upstream-releases
 
 void SetICUMemoryFunctions();
-
-#ifdef ENABLE_BIGINT
-void SetGMPMemoryFunctions();
-#endif
 
 /**
  * C++ namespaced version of NS_LogTerm.
@@ -60,8 +59,9 @@ void LogTerm();
  * GRE_CONF_NAME          - Name of the GRE Configuration file
  */
 
-#if defined(XP_WIN32)
+#if defined(XP_WIN)
 
+<<<<<<< HEAD
 #define XPCOM_SEARCH_KEY "PATH"
 #define GRE_CONF_NAME "gre.config"
 #define GRE_WIN_REG_LOC L"Software\\mozilla.org\\GRE"
@@ -69,13 +69,45 @@ void LogTerm();
 #define LXPCOM_DLL LXUL_DLL
 #define XUL_DLL "xul.dll"
 #define LXUL_DLL L"xul.dll"
+||||||| merged common ancestors
+#define XPCOM_SEARCH_KEY  "PATH"
+#define GRE_CONF_NAME     "gre.config"
+#define GRE_WIN_REG_LOC   L"Software\\mozilla.org\\GRE"
+#define XPCOM_DLL         XUL_DLL
+#define LXPCOM_DLL        LXUL_DLL
+#define XUL_DLL           "xul.dll"
+#define LXUL_DLL          L"xul.dll"
+=======
+#  define XPCOM_SEARCH_KEY "PATH"
+#  define GRE_CONF_NAME "gre.config"
+#  define GRE_WIN_REG_LOC L"Software\\mozilla.org\\GRE"
+#  define XPCOM_DLL XUL_DLL
+#  define LXPCOM_DLL LXUL_DLL
+#  define XUL_DLL "xul.dll"
+#  define LXUL_DLL L"xul.dll"
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #else                // Unix
 #include <limits.h>  // for PATH_MAX
+||||||| merged common ancestors
+#else // Unix
+#include <limits.h> // for PATH_MAX
+=======
+#else                  // Unix
+#  include <limits.h>  // for PATH_MAX
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define XPCOM_DLL XUL_DLL
+||||||| merged common ancestors
+#define XPCOM_DLL         XUL_DLL
+=======
+#  define XPCOM_DLL XUL_DLL
+>>>>>>> upstream-releases
 
 // you have to love apple..
+<<<<<<< HEAD
 #ifdef XP_MACOSX
 #define XPCOM_SEARCH_KEY "DYLD_LIBRARY_PATH"
 #define GRE_FRAMEWORK_NAME "XUL.framework"
@@ -89,32 +121,83 @@ void LogTerm();
 #define GRE_CONF_PATH "/etc/gre.conf"
 #define GRE_CONF_DIR "/etc/gre.d"
 #define GRE_USER_CONF_DIR ".gre.d"
+||||||| merged common ancestors
+#ifdef XP_MACOSX
+#define XPCOM_SEARCH_KEY  "DYLD_LIBRARY_PATH"
+#define GRE_FRAMEWORK_NAME "XUL.framework"
+#define XUL_DLL            "XUL"
+#else
+#define XPCOM_SEARCH_KEY  "LD_LIBRARY_PATH"
+#define XUL_DLL   "libxul" MOZ_DLL_SUFFIX
+#endif
+
+#define GRE_CONF_NAME ".gre.config"
+#define GRE_CONF_PATH "/etc/gre.conf"
+#define GRE_CONF_DIR  "/etc/gre.d"
+#define GRE_USER_CONF_DIR ".gre.d"
+=======
+#  ifdef XP_MACOSX
+#    define XPCOM_SEARCH_KEY "DYLD_LIBRARY_PATH"
+#    define GRE_FRAMEWORK_NAME "XUL.framework"
+#    define XUL_DLL "XUL"
+#  else
+#    define XPCOM_SEARCH_KEY "LD_LIBRARY_PATH"
+#    define XUL_DLL "libxul" MOZ_DLL_SUFFIX
+#  endif
+
+#  define GRE_CONF_NAME ".gre.config"
+#  define GRE_CONF_PATH "/etc/gre.conf"
+#  define GRE_CONF_DIR "/etc/gre.d"
+#  define GRE_USER_CONF_DIR ".gre.d"
+>>>>>>> upstream-releases
 #endif
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #define XPCOM_FILE_PATH_SEPARATOR "\\"
 #define XPCOM_ENV_PATH_SEPARATOR ";"
+||||||| merged common ancestors
+  #define XPCOM_FILE_PATH_SEPARATOR       "\\"
+  #define XPCOM_ENV_PATH_SEPARATOR        ";"
+=======
+#  define XPCOM_FILE_PATH_SEPARATOR "\\"
+#  define XPCOM_ENV_PATH_SEPARATOR ";"
+>>>>>>> upstream-releases
 #elif defined(XP_UNIX)
+<<<<<<< HEAD
 #define XPCOM_FILE_PATH_SEPARATOR "/"
 #define XPCOM_ENV_PATH_SEPARATOR ":"
+||||||| merged common ancestors
+  #define XPCOM_FILE_PATH_SEPARATOR       "/"
+  #define XPCOM_ENV_PATH_SEPARATOR        ":"
+=======
+#  define XPCOM_FILE_PATH_SEPARATOR "/"
+#  define XPCOM_ENV_PATH_SEPARATOR ":"
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #error need_to_define_your_file_path_separator_and_illegal_characters
+||||||| merged common ancestors
+  #error need_to_define_your_file_path_separator_and_illegal_characters
+=======
+#  error need_to_define_your_file_path_separator_and_illegal_characters
+>>>>>>> upstream-releases
 #endif
 
 #ifdef AIX
-#include <sys/param.h>
+#  include <sys/param.h>
 #endif
 
 #ifndef MAXPATHLEN
-#ifdef PATH_MAX
-#define MAXPATHLEN PATH_MAX
-#elif defined(_MAX_PATH)
-#define MAXPATHLEN _MAX_PATH
-#elif defined(CCHMAXPATH)
-#define MAXPATHLEN CCHMAXPATH
-#else
-#define MAXPATHLEN 1024
-#endif
+#  ifdef PATH_MAX
+#    define MAXPATHLEN PATH_MAX
+#  elif defined(_MAX_PATH)
+#    define MAXPATHLEN _MAX_PATH
+#  elif defined(CCHMAXPATH)
+#    define MAXPATHLEN CCHMAXPATH
+#  else
+#    define MAXPATHLEN 1024
+#  endif
 #endif
 
 // Needed by the IPC layer from off the main thread

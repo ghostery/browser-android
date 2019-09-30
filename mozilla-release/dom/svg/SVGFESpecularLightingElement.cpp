@@ -9,7 +9,7 @@
 #include "nsSVGUtils.h"
 #include "nsSVGFilterInstance.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FESpecularLighting)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FESpecularLighting)
 
 using namespace mozilla::gfx;
 
@@ -26,39 +26,104 @@ JSObject* SVGFESpecularLightingElement::WrapNode(
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFESpecularLightingElement)
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGFESpecularLightingElement::In1() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGFESpecularLightingElement::In1()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGFESpecularLightingElement::In1() {
+>>>>>>> upstream-releases
   return mStringAttributes[IN1].ToDOMAnimatedString(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFESpecularLightingElement::SurfaceScale() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpecularLightingElement::SurfaceScale()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpecularLightingElement::SurfaceScale() {
+>>>>>>> upstream-releases
   return mNumberAttributes[SURFACE_SCALE].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFESpecularLightingElement::SpecularConstant() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpecularLightingElement::SpecularConstant()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpecularLightingElement::SpecularConstant() {
+>>>>>>> upstream-releases
   return mNumberAttributes[SPECULAR_CONSTANT].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFESpecularLightingElement::SpecularExponent() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpecularLightingElement::SpecularExponent()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpecularLightingElement::SpecularExponent() {
+>>>>>>> upstream-releases
   return mNumberAttributes[SPECULAR_EXPONENT].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFESpecularLightingElement::KernelUnitLengthX() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpecularLightingElement::KernelUnitLengthX()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpecularLightingElement::KernelUnitLengthX() {
+>>>>>>> upstream-releases
   return mNumberPairAttributes[KERNEL_UNIT_LENGTH].ToDOMAnimatedNumber(
+<<<<<<< HEAD
       nsSVGNumberPair::eFirst, this);
+||||||| merged common ancestors
+    nsSVGNumberPair::eFirst, this);
+=======
+      SVGAnimatedNumberPair::eFirst, this);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber>
 SVGFESpecularLightingElement::KernelUnitLengthY() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpecularLightingElement::KernelUnitLengthY()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpecularLightingElement::KernelUnitLengthY() {
+>>>>>>> upstream-releases
   return mNumberPairAttributes[KERNEL_UNIT_LENGTH].ToDOMAnimatedNumber(
+<<<<<<< HEAD
       nsSVGNumberPair::eSecond, this);
+||||||| merged common ancestors
+    nsSVGNumberPair::eSecond, this);
+=======
+      SVGAnimatedNumberPair::eSecond, this);
+>>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
 FilterPrimitiveDescription
 SVGFESpecularLightingElement::GetPrimitiveDescription(

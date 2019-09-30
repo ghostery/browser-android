@@ -22,7 +22,7 @@
 #include "mozilla/layers/ImageDataSerializer.h"
 #include "mozilla/layers/TextureClient.h"
 #ifdef XP_DARWIN
-#include "mozilla/layers/TextureSync.h"
+#  include "mozilla/layers/TextureSync.h"
 #endif
 #include "mozilla/layers/GPUVideoTextureHost.h"
 #include "mozilla/layers/WebRenderTextureHost.h"
@@ -36,32 +36,41 @@
 #include "mozilla/Unused.h"
 #include <limits>
 #include "../opengl/CompositorOGL.h"
-#include "gfxPrefs.h"
+
 #include "gfxUtils.h"
 #include "IPDLActor.h"
 
 #ifdef MOZ_ENABLE_D3D10_LAYER
-#include "../d3d11/CompositorD3D11.h"
+#  include "../d3d11/CompositorD3D11.h"
 #endif
 
 #ifdef MOZ_X11
-#include "mozilla/layers/X11TextureHost.h"
+#  include "mozilla/layers/X11TextureHost.h"
 #endif
 
 #ifdef XP_MACOSX
-#include "../opengl/MacIOSurfaceTextureHostOGL.h"
+#  include "../opengl/MacIOSurfaceTextureHostOGL.h"
 #endif
 
 #ifdef XP_WIN
-#include "mozilla/layers/TextureDIB.h"
+#  include "mozilla/layers/TextureD3D11.h"
+#  include "mozilla/layers/TextureDIB.h"
 #endif
 
 #if 0
-#define RECYCLE_LOG(...) printf_stderr(__VA_ARGS__)
+#  define RECYCLE_LOG(...) printf_stderr(__VA_ARGS__)
 #else
+<<<<<<< HEAD
 #define RECYCLE_LOG(...) \
   do {                   \
   } while (0)
+||||||| merged common ancestors
+#define RECYCLE_LOG(...) do { } while (0)
+=======
+#  define RECYCLE_LOG(...) \
+    do {                   \
+    } while (0)
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -72,12 +81,24 @@ namespace layers {
  * TextureHost. It is an IPDL actor just like LayerParent, CompositableParent,
  * etc.
  */
+<<<<<<< HEAD
 class TextureParent : public ParentActor<PTextureParent> {
  public:
   explicit TextureParent(HostIPCAllocator* aAllocator, uint64_t aSerial,
                          const wr::MaybeExternalImageId& aExternalImageId);
+||||||| merged common ancestors
+class TextureParent : public ParentActor<PTextureParent>
+{
+public:
+  explicit TextureParent(HostIPCAllocator* aAllocator, uint64_t aSerial, const wr::MaybeExternalImageId& aExternalImageId);
+=======
+class TextureParent : public ParentActor<PTextureParent> {
+ public:
+  TextureParent(HostIPCAllocator* aAllocator, uint64_t aSerial,
+                const wr::MaybeExternalImageId& aExternalImageId);
+>>>>>>> upstream-releases
 
-  ~TextureParent();
+  virtual ~TextureParent();
 
   bool Init(const SurfaceDescriptor& aSharedData,
             const ReadLockDescriptor& aReadLock,
@@ -85,12 +106,19 @@ class TextureParent : public ParentActor<PTextureParent> {
 
   void NotifyNotUsed(uint64_t aTransactionId);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvRecycleTexture(
       const TextureFlags& aTextureFlags) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvRecycleTexture(const TextureFlags& aTextureFlags) override;
+=======
+  mozilla::ipc::IPCResult RecvRecycleTexture(
+      const TextureFlags& aTextureFlags) final;
+>>>>>>> upstream-releases
 
   TextureHost* GetTextureHost() { return mTextureHost; }
 
-  virtual void Destroy() override;
+  void Destroy() override;
 
   uint64_t GetSerial() const { return mSerial; }
 
@@ -163,6 +191,7 @@ void TextureHost::SetLastFwdTransactionId(uint64_t aTransactionId) {
   mFwdTransactionId = aTransactionId;
 }
 
+<<<<<<< HEAD
 // implemented in TextureHostOGL.cpp
 already_AddRefed<TextureHost> CreateTextureHostOGL(
     const SurfaceDescriptor& aDesc, ISurfaceAllocator* aDeallocator,
@@ -182,6 +211,39 @@ already_AddRefed<TextureHost> TextureHost::Create(
     const SurfaceDescriptor& aDesc, const ReadLockDescriptor& aReadLock,
     ISurfaceAllocator* aDeallocator, LayersBackend aBackend,
     TextureFlags aFlags, wr::MaybeExternalImageId& aExternalImageId) {
+||||||| merged common ancestors
+// implemented in TextureHostOGL.cpp
+already_AddRefed<TextureHost> CreateTextureHostOGL(const SurfaceDescriptor& aDesc,
+                                                   ISurfaceAllocator* aDeallocator,
+                                                   LayersBackend aBackend,
+                                                   TextureFlags aFlags);
+
+// implemented in TextureHostBasic.cpp
+already_AddRefed<TextureHost> CreateTextureHostBasic(const SurfaceDescriptor& aDesc,
+                                                     ISurfaceAllocator* aDeallocator,
+                                                     LayersBackend aBackend,
+                                                     TextureFlags aFlags);
+
+// implemented in TextureD3D11.cpp
+already_AddRefed<TextureHost> CreateTextureHostD3D11(const SurfaceDescriptor& aDesc,
+                                                     ISurfaceAllocator* aDeallocator,
+                                                     LayersBackend aBackend,
+                                                     TextureFlags aFlags);
+
+already_AddRefed<TextureHost>
+TextureHost::Create(const SurfaceDescriptor& aDesc,
+                    const ReadLockDescriptor& aReadLock,
+                    ISurfaceAllocator* aDeallocator,
+                    LayersBackend aBackend,
+                    TextureFlags aFlags,
+                    wr::MaybeExternalImageId& aExternalImageId)
+{
+=======
+already_AddRefed<TextureHost> TextureHost::Create(
+    const SurfaceDescriptor& aDesc, const ReadLockDescriptor& aReadLock,
+    ISurfaceAllocator* aDeallocator, LayersBackend aBackend,
+    TextureFlags aFlags, wr::MaybeExternalImageId& aExternalImageId) {
+>>>>>>> upstream-releases
   RefPtr<TextureHost> result;
 
   switch (aDesc.type()) {
@@ -230,6 +292,16 @@ already_AddRefed<TextureHost> TextureHost::Create(
       result = CreateTextureHostD3D11(aDesc, aDeallocator, aBackend, aFlags);
       break;
 #endif
+    case SurfaceDescriptor::TSurfaceDescriptorRecorded: {
+      const SurfaceDescriptorRecorded& desc =
+          aDesc.get_SurfaceDescriptorRecorded();
+      UniquePtr<SurfaceDescriptor> realDesc =
+          aDeallocator->AsCompositorBridgeParentBase()
+              ->LookupSurfaceDescriptorForClientDrawTarget(desc.drawTarget());
+      result = TextureHost::Create(*realDesc, aReadLock, aDeallocator, aBackend,
+                                   aFlags, aExternalImageId);
+      return result.forget();
+    }
     default:
       MOZ_CRASH("GFX: Unsupported Surface type host");
   }
@@ -443,7 +515,7 @@ void TextureHost::PrintInfo(std::stringstream& aStream, const char* aPrefix) {
   }
   AppendToString(aStream, mFlags, " [flags=", "]");
 #ifdef MOZ_DUMP_PAINTING
-  if (gfxPrefs::LayersDumpTexture()) {
+  if (StaticPrefs::layers_dump_texture()) {
     nsAutoCString pfx(aPrefix);
     pfx += "  ";
 
@@ -456,20 +528,55 @@ void TextureHost::PrintInfo(std::stringstream& aStream, const char* aPrefix) {
 #endif
 }
 
+<<<<<<< HEAD
 void TextureHost::Updated(const nsIntRegion* aRegion) {
   LayerScope::ContentChanged(this);
   UpdatedInternal(aRegion);
 }
 
 TextureSource::TextureSource() : mCompositableCount(0) {}
+||||||| merged common ancestors
+void
+TextureHost::Updated(const nsIntRegion* aRegion)
+{
+    LayerScope::ContentChanged(this);
+    UpdatedInternal(aRegion);
+}
 
+TextureSource::TextureSource()
+: mCompositableCount(0)
+{
+}
+=======
+void TextureHost::Updated(const nsIntRegion* aRegion) {
+  LayerScope::ContentChanged(this);
+  UpdatedInternal(aRegion);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 TextureSource::~TextureSource() {}
 
 const char* TextureSource::Name() const {
   MOZ_CRASH("GFX: TextureSource without class name");
   return "TextureSource";
 }
+||||||| merged common ancestors
+TextureSource::~TextureSource()
+{
+}
 
+const char*
+TextureSource::Name() const
+{
+  MOZ_CRASH("GFX: TextureSource without class name");
+  return "TextureSource";
+}
+=======
+TextureSource::TextureSource() : mCompositableCount(0) {}
+>>>>>>> upstream-releases
+
+TextureSource::~TextureSource() {}
 BufferTextureHost::BufferTextureHost(const BufferDescriptor& aDesc,
                                      TextureFlags aFlags)
     : TextureHost(aFlags),
@@ -580,7 +687,15 @@ void BufferTextureHost::CreateRenderTexture(
                                                  texture.forget());
 }
 
+<<<<<<< HEAD
 uint32_t BufferTextureHost::NumSubTextures() const {
+||||||| merged common ancestors
+uint32_t
+BufferTextureHost::NumSubTextures() const
+{
+=======
+uint32_t BufferTextureHost::NumSubTextures() {
+>>>>>>> upstream-releases
   if (GetFormat() == gfx::SurfaceFormat::YUV) {
     return 3;
   }
@@ -588,6 +703,7 @@ uint32_t BufferTextureHost::NumSubTextures() const {
   return 1;
 }
 
+<<<<<<< HEAD
 void BufferTextureHost::PushResourceUpdates(
     wr::TransactionBuilder& aResources, ResourceUpdateOp aOp,
     const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
@@ -595,15 +711,47 @@ void BufferTextureHost::PushResourceUpdates(
                     ? &wr::TransactionBuilder::AddExternalImage
                     : &wr::TransactionBuilder::UpdateExternalImage;
   auto bufferType = wr::WrExternalImageBufferType::ExternalBuffer;
+||||||| merged common ancestors
+void
+BufferTextureHost::PushResourceUpdates(wr::TransactionBuilder& aResources,
+                                       ResourceUpdateOp aOp,
+                                       const Range<wr::ImageKey>& aImageKeys,
+                                       const wr::ExternalImageId& aExtID)
+{
+  auto method = aOp == TextureHost::ADD_IMAGE ? &wr::TransactionBuilder::AddExternalImage
+                                              : &wr::TransactionBuilder::UpdateExternalImage;
+  auto bufferType = wr::WrExternalImageBufferType::ExternalBuffer;
+=======
+void BufferTextureHost::PushResourceUpdates(
+    wr::TransactionBuilder& aResources, ResourceUpdateOp aOp,
+    const Range<wr::ImageKey>& aImageKeys, const wr::ExternalImageId& aExtID) {
+  auto method = aOp == TextureHost::ADD_IMAGE
+                    ? &wr::TransactionBuilder::AddExternalImage
+                    : &wr::TransactionBuilder::UpdateExternalImage;
+  auto imageType = wr::ExternalImageType::Buffer();
+>>>>>>> upstream-releases
 
   if (GetFormat() != gfx::SurfaceFormat::YUV) {
     MOZ_ASSERT(aImageKeys.length() == 1);
 
+<<<<<<< HEAD
     wr::ImageDescriptor descriptor(
         GetSize(),
         ImageDataSerializer::ComputeRGBStride(GetFormat(), GetSize().width),
         GetFormat());
     (aResources.*method)(aImageKeys[0], descriptor, aExtID, bufferType, 0);
+||||||| merged common ancestors
+    wr::ImageDescriptor descriptor(GetSize(),
+                                   ImageDataSerializer::ComputeRGBStride(GetFormat(), GetSize().width),
+                                   GetFormat());
+    (aResources.*method)(aImageKeys[0], descriptor, aExtID, bufferType, 0);
+=======
+    wr::ImageDescriptor descriptor(
+        GetSize(),
+        ImageDataSerializer::ComputeRGBStride(GetFormat(), GetSize().width),
+        GetFormat());
+    (aResources.*method)(aImageKeys[0], descriptor, aExtID, imageType, 0);
+>>>>>>> upstream-releases
   } else {
     MOZ_ASSERT(aImageKeys.length() == 3);
 
@@ -612,11 +760,26 @@ void BufferTextureHost::PushResourceUpdates(
         desc.ySize(), desc.yStride(),
         SurfaceFormatForColorDepth(desc.colorDepth()));
     wr::ImageDescriptor cbcrDescriptor(
+<<<<<<< HEAD
         desc.cbCrSize(), desc.cbCrStride(),
         SurfaceFormatForColorDepth(desc.colorDepth()));
     (aResources.*method)(aImageKeys[0], yDescriptor, aExtID, bufferType, 0);
     (aResources.*method)(aImageKeys[1], cbcrDescriptor, aExtID, bufferType, 1);
     (aResources.*method)(aImageKeys[2], cbcrDescriptor, aExtID, bufferType, 2);
+||||||| merged common ancestors
+      desc.cbCrSize(),
+      desc.cbCrStride(),
+      SurfaceFormatForColorDepth(desc.colorDepth()));
+    (aResources.*method)(aImageKeys[0], yDescriptor, aExtID, bufferType, 0);
+    (aResources.*method)(aImageKeys[1], cbcrDescriptor, aExtID, bufferType, 1);
+    (aResources.*method)(aImageKeys[2], cbcrDescriptor, aExtID, bufferType, 2);
+=======
+        desc.cbCrSize(), desc.cbCrStride(),
+        SurfaceFormatForColorDepth(desc.colorDepth()));
+    (aResources.*method)(aImageKeys[0], yDescriptor, aExtID, imageType, 0);
+    (aResources.*method)(aImageKeys[1], cbcrDescriptor, aExtID, imageType, 1);
+    (aResources.*method)(aImageKeys[2], cbcrDescriptor, aExtID, imageType, 2);
+>>>>>>> upstream-releases
   }
 }
 
@@ -668,7 +831,19 @@ void TextureHost::ReadUnlock() {
   }
 }
 
+<<<<<<< HEAD
 bool BufferTextureHost::EnsureWrappingTextureSource() {
+||||||| merged common ancestors
+bool
+BufferTextureHost::EnsureWrappingTextureSource()
+{
+=======
+bool TextureHost::NeedsYFlip() const {
+  return bool(mFlags & TextureFlags::ORIGIN_BOTTOM_LEFT);
+}
+
+bool BufferTextureHost::EnsureWrappingTextureSource() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mHasIntermediateBuffer);
 
   if (mFirstSource && mFirstSource->IsOwnedBy(this)) {
@@ -751,8 +926,22 @@ static bool IsCompatibleTextureSource(TextureSource* aTexture,
     }
     case BufferDescriptor::TRGBDescriptor: {
       const RGBDescriptor& rgb = aDescriptor.get_RGBDescriptor();
+<<<<<<< HEAD
       return aTexture->GetFormat() == rgb.format() &&
              aTexture->GetSize() == rgb.size();
+||||||| merged common ancestors
+      return aTexture->GetFormat() == rgb.format()
+          && aTexture->GetSize() == rgb.size();
+    }
+    default: {
+      return false;
+=======
+      return aTexture->GetFormat() == rgb.format() &&
+             aTexture->GetSize() == rgb.size();
+    }
+    default: {
+      return false;
+>>>>>>> upstream-releases
     }
     default: { return false; }
   }
@@ -879,12 +1068,20 @@ gfx::SurfaceFormat BufferTextureHost::GetFormat() const {
   return mFormat;
 }
 
+<<<<<<< HEAD
 YUVColorSpace BufferTextureHost::GetYUVColorSpace() const {
+||||||| merged common ancestors
+YUVColorSpace
+BufferTextureHost::GetYUVColorSpace() const
+{
+=======
+gfx::YUVColorSpace BufferTextureHost::GetYUVColorSpace() const {
+>>>>>>> upstream-releases
   if (mFormat == gfx::SurfaceFormat::YUV) {
     const YCbCrDescriptor& desc = mDescriptor.get_YCbCrDescriptor();
     return desc.yUVColorSpace();
   }
-  return YUVColorSpace::UNKNOWN;
+  return gfx::YUVColorSpace::UNKNOWN;
 }
 
 gfx::ColorDepth BufferTextureHost::GetColorDepth() const {

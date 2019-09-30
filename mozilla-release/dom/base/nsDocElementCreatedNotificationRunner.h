@@ -12,20 +12,37 @@
 
 #include "nsContentSink.h"
 #include "nsCOMPtr.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 
+<<<<<<< HEAD
 class nsDocElementCreatedNotificationRunner : public mozilla::Runnable {
  public:
   explicit nsDocElementCreatedNotificationRunner(nsIDocument* aDoc)
       : mozilla::Runnable("nsDocElementCreatedNotificationRunner"),
         mDoc(aDoc) {}
+||||||| merged common ancestors
+class nsDocElementCreatedNotificationRunner : public mozilla::Runnable
+{
+public:
+  explicit nsDocElementCreatedNotificationRunner(nsIDocument* aDoc)
+    : mozilla::Runnable("nsDocElementCreatedNotificationRunner")
+    , mDoc(aDoc)
+  {
+  }
+=======
+class nsDocElementCreatedNotificationRunner : public mozilla::Runnable {
+ public:
+  explicit nsDocElementCreatedNotificationRunner(mozilla::dom::Document* aDoc)
+      : mozilla::Runnable("nsDocElementCreatedNotificationRunner"),
+        mDoc(aDoc) {}
+>>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     nsContentSink::NotifyDocElementCreated(mDoc);
     return NS_OK;
   }
 
-  nsCOMPtr<nsIDocument> mDoc;
+  RefPtr<mozilla::dom::Document> mDoc;
 };
 
 #endif /* nsDocElementCreatedNotificationRunner_h */

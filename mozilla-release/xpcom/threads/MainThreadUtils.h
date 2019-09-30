@@ -29,15 +29,34 @@ extern nsIThread* NS_GetCurrentThread();
 
 #ifdef MOZILLA_INTERNAL_API
 bool NS_IsMainThreadTLSInitialized();
+extern "C" {
 bool NS_IsMainThread();
+}
 
 namespace mozilla {
 
+<<<<<<< HEAD
 #ifdef DEBUG
 void AssertIsOnMainThread();
 #else
 inline void AssertIsOnMainThread() {}
 #endif
+||||||| merged common ancestors
+#ifdef DEBUG
+void
+AssertIsOnMainThread();
+#else
+inline void
+AssertIsOnMainThread()
+{ }
+#endif
+=======
+#  ifdef DEBUG
+void AssertIsOnMainThread();
+#  else
+inline void AssertIsOnMainThread() {}
+#  endif
+>>>>>>> upstream-releases
 
 }  // namespace mozilla
 

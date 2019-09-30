@@ -48,19 +48,35 @@ nsLayoutHistoryState::GetHasStates(bool* aHasStates) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsLayoutHistoryState::GetKeys(uint32_t* aCount, char*** aKeys) {
+||||||| merged common ancestors
+nsLayoutHistoryState::GetKeys(uint32_t* aCount, char*** aKeys)
+{
+=======
+nsLayoutHistoryState::GetKeys(nsTArray<nsCString>& aKeys) {
+>>>>>>> upstream-releases
   if (!HasStates()) {
     return NS_ERROR_FAILURE;
   }
 
+<<<<<<< HEAD
   char** keys =
       static_cast<char**>(moz_xmalloc(sizeof(char*) * mStates.Count()));
   *aCount = mStates.Count();
   *aKeys = keys;
 
+||||||| merged common ancestors
+  char** keys =
+    static_cast<char**>(moz_xmalloc(sizeof(char*) * mStates.Count()));
+  *aCount = mStates.Count();
+  *aKeys = keys;
+
+=======
+  aKeys.SetCapacity(mStates.Count());
+>>>>>>> upstream-releases
   for (auto iter = mStates.Iter(); !iter.Done(); iter.Next()) {
-    *keys = ToNewCString(iter.Key());
-    keys++;
+    aKeys.AppendElement(iter.Key());
   }
 
   return NS_OK;
@@ -70,7 +86,14 @@ NS_IMETHODIMP
 nsLayoutHistoryState::GetPresState(const nsACString& aKey, float* aScrollX,
                                    float* aScrollY,
                                    bool* aAllowScrollOriginDowngrade,
+<<<<<<< HEAD
                                    float* aRes, bool* aScaleToRes) {
+||||||| merged common ancestors
+                                   float* aRes, bool* aScaleToRes)
+{
+=======
+                                   float* aRes) {
+>>>>>>> upstream-releases
   PresState* state = GetState(nsCString(aKey));
 
   if (!state) {
@@ -81,7 +104,6 @@ nsLayoutHistoryState::GetPresState(const nsACString& aKey, float* aScrollX,
   *aScrollY = state->scrollState().y;
   *aAllowScrollOriginDowngrade = state->allowScrollOriginDowngrade();
   *aRes = state->resolution();
-  *aScaleToRes = state->scaleToResolution();
 
   return NS_OK;
 }
@@ -90,12 +112,18 @@ NS_IMETHODIMP
 nsLayoutHistoryState::AddNewPresState(const nsACString& aKey, float aScrollX,
                                       float aScrollY,
                                       bool aAllowScrollOriginDowngrade,
+<<<<<<< HEAD
                                       float aRes, bool aScaleToRes) {
+||||||| merged common ancestors
+                                      float aRes, bool aScaleToRes)
+{
+=======
+                                      float aRes) {
+>>>>>>> upstream-releases
   UniquePtr<PresState> newState = NewPresState();
   newState->scrollState() = nsPoint(aScrollX, aScrollY);
   newState->allowScrollOriginDowngrade() = aAllowScrollOriginDowngrade;
   newState->resolution() = aRes;
-  newState->scaleToResolution() = aScaleToRes;
 
   mStates.Put(nsCString(aKey), std::move(newState));
 
@@ -149,7 +177,6 @@ UniquePtr<PresState> NewPresState() {
       /* scrollState */ nsPoint(0, 0),
       /* allowScrollOriginDowngrade */ true,
       /* resolution */ 1.0,
-      /* scaleToResolution */ false,
       /* disabledSet */ false,
       /* disabled */ false,
       /* droppedDown */ false);

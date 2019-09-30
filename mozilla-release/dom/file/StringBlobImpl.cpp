@@ -12,8 +12,18 @@ namespace dom {
 
 NS_IMPL_ISUPPORTS_INHERITED(StringBlobImpl, BlobImpl, nsIMemoryReporter)
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<StringBlobImpl> StringBlobImpl::Create(
     const nsACString& aData, const nsAString& aContentType) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<StringBlobImpl>
+StringBlobImpl::Create(const nsACString& aData, const nsAString& aContentType)
+{
+=======
+/* static */
+already_AddRefed<StringBlobImpl> StringBlobImpl::Create(
+    const nsACString& aData, const nsAString& aContentType) {
+>>>>>>> upstream-releases
   RefPtr<StringBlobImpl> blobImpl = new StringBlobImpl(aData, aContentType);
   RegisterWeakMemoryReporter(blobImpl);
   return blobImpl.forget();
@@ -21,7 +31,18 @@ NS_IMPL_ISUPPORTS_INHERITED(StringBlobImpl, BlobImpl, nsIMemoryReporter)
 
 StringBlobImpl::StringBlobImpl(const nsACString& aData,
                                const nsAString& aContentType)
+<<<<<<< HEAD
     : BaseBlobImpl(aContentType, aData.Length()), mData(aData) {}
+||||||| merged common ancestors
+  : BaseBlobImpl(aContentType, aData.Length())
+  , mData(aData)
+{
+}
+=======
+    : BaseBlobImpl(NS_LITERAL_STRING("StringBlobImpl"), aContentType,
+                   aData.Length()),
+      mData(aData) {}
+>>>>>>> upstream-releases
 
 StringBlobImpl::~StringBlobImpl() { UnregisterWeakMemoryReporter(this); }
 

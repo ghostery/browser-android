@@ -8,6 +8,7 @@
 %include ../../shared/notification.inc.css
 %include ../../shared/popupnotification.inc.css
 
+<<<<<<< HEAD
 .popup-notification-button:-moz-focusring {
   outline: 2px -moz-mac-focusring solid;
   outline-offset: -2px;
@@ -18,5 +19,19 @@
 }
 
 .popup-notification-secondary-button:not([hidden="true"]) ~ .popup-notification-primary-button:not([default]) {
+||||||| merged common ancestors
+.popup-notification-button:-moz-focusring {
+  outline: 2px -moz-mac-focusring solid;
+  outline-offset: -2px;
+}
+
+.popup-notification-warning {
+  color: #aa1b08;
+}
+
+.popup-notification-button[anonid="secondarybutton"]:not([hidden="true"])  ~ .popup-notification-button[default]:not([highlight="true"]) {
+=======
+.popup-notification-secondary-button:not([hidden="true"]) ~ .popup-notification-primary-button:not([default]) {
+>>>>>>> upstream-releases
   border-inline-start: 1px solid var(--panel-separator-color);
 }

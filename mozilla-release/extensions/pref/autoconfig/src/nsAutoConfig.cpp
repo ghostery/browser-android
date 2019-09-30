@@ -57,16 +57,39 @@ nsresult nsAutoConfig::Init() {
 
 nsAutoConfig::~nsAutoConfig() {}
 
+<<<<<<< HEAD
 void nsAutoConfig::SetConfigURL(const char *aConfigURL) {
   mConfigURL.Assign(aConfigURL);
+||||||| merged common ancestors
+void
+nsAutoConfig::SetConfigURL(const char *aConfigURL)
+{
+    mConfigURL.Assign(aConfigURL);
+=======
+void nsAutoConfig::SetConfigURL(const char* aConfigURL) {
+  mConfigURL.Assign(aConfigURL);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAutoConfig::OnStartRequest(nsIRequest *request, nsISupports *context) {
   return NS_OK;
 }
 
+||||||| merged common ancestors
+nsAutoConfig::OnStartRequest(nsIRequest *request, nsISupports *context)
+{
+    return NS_OK;
+}
+
+
+=======
+nsAutoConfig::OnStartRequest(nsIRequest* request) { return NS_OK; }
+
+>>>>>>> upstream-releases
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAutoConfig::OnDataAvailable(nsIRequest *request, nsISupports *context,
                               nsIInputStream *aIStream, uint64_t aSourceOffset,
                               uint32_t aLength) {
@@ -82,9 +105,46 @@ nsAutoConfig::OnDataAvailable(nsIRequest *request, nsISupports *context,
     aLength -= amt;
   }
   return NS_OK;
+||||||| merged common ancestors
+nsAutoConfig::OnDataAvailable(nsIRequest *request,
+                              nsISupports *context,
+                              nsIInputStream *aIStream,
+                              uint64_t aSourceOffset,
+                              uint32_t aLength)
+{
+    uint32_t amt, size;
+    nsresult rv;
+    char buf[1024];
+
+    while (aLength) {
+        size = std::min<size_t>(aLength, sizeof(buf));
+        rv = aIStream->Read(buf, size, &amt);
+        if (NS_FAILED(rv))
+            return rv;
+        mBuf.Append(buf, amt);
+        aLength -= amt;
+    }
+    return NS_OK;
+=======
+nsAutoConfig::OnDataAvailable(nsIRequest* request, nsIInputStream* aIStream,
+                              uint64_t aSourceOffset, uint32_t aLength) {
+  uint32_t amt, size;
+  nsresult rv;
+  char buf[1024];
+
+  while (aLength) {
+    size = std::min<size_t>(aLength, sizeof(buf));
+    rv = aIStream->Read(buf, size, &amt);
+    if (NS_FAILED(rv)) return rv;
+    mBuf.Append(buf, amt);
+    aLength -= amt;
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAutoConfig::OnStopRequest(nsIRequest *request, nsISupports *context,
                             nsresult aStatus) {
   nsresult rv;
@@ -106,6 +166,51 @@ nsAutoConfig::OnStopRequest(nsIRequest *request, nsISupports *context,
       MOZ_LOG(MCD, LogLevel::Debug,
               ("mcd http request failed with status %x\n", httpStatus));
       return readOfflineFile();
+||||||| merged common ancestors
+nsAutoConfig::OnStopRequest(nsIRequest *request, nsISupports *context,
+                            nsresult aStatus)
+{
+    nsresult rv;
+
+    // If the request is failed, go read the failover.jsc file
+    if (NS_FAILED(aStatus)) {
+        MOZ_LOG(MCD, LogLevel::Debug, ("mcd request failed with status %" PRIx32 "\n",
+                                       static_cast<uint32_t>(aStatus)));
+        return readOfflineFile();
+    }
+
+    // Checking for the http response, if failure go read the failover file.
+    nsCOMPtr<nsIHttpChannel> pHTTPCon(do_QueryInterface(request));
+    if (pHTTPCon) {
+        uint32_t httpStatus;
+        rv = pHTTPCon->GetResponseStatus(&httpStatus);
+        if (NS_FAILED(rv) || httpStatus != 200)
+        {
+            MOZ_LOG(MCD, LogLevel::Debug, ("mcd http request failed with status %x\n", httpStatus));
+            return readOfflineFile();
+        }
+=======
+nsAutoConfig::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+  nsresult rv;
+
+  // If the request is failed, go read the failover.jsc file
+  if (NS_FAILED(aStatus)) {
+    MOZ_LOG(MCD, LogLevel::Debug,
+            ("mcd request failed with status %" PRIx32 "\n",
+             static_cast<uint32_t>(aStatus)));
+    return readOfflineFile();
+  }
+
+  // Checking for the http response, if failure go read the failover file.
+  nsCOMPtr<nsIHttpChannel> pHTTPCon(do_QueryInterface(request));
+  if (pHTTPCon) {
+    uint32_t httpStatus;
+    rv = pHTTPCon->GetResponseStatus(&httpStatus);
+    if (NS_FAILED(rv) || httpStatus != 200) {
+      MOZ_LOG(MCD, LogLevel::Debug,
+              ("mcd http request failed with status %x\n", httpStatus));
+      return readOfflineFile();
+>>>>>>> upstream-releases
     }
   }
 
@@ -132,13 +237,31 @@ nsAutoConfig::OnStopRequest(nsIRequest *request, nsISupports *context,
 }
 
 // Notify method as a TimerCallBack function
+<<<<<<< HEAD
 NS_IMETHODIMP nsAutoConfig::Notify(nsITimer *timer) {
   downloadAutoConfig();
   return NS_OK;
+||||||| merged common ancestors
+NS_IMETHODIMP nsAutoConfig::Notify(nsITimer *timer)
+{
+    downloadAutoConfig();
+    return NS_OK;
+=======
+NS_IMETHODIMP nsAutoConfig::Notify(nsITimer* timer) {
+  downloadAutoConfig();
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsAutoConfig::GetName(nsACString &aName) {
+||||||| merged common ancestors
+nsAutoConfig::GetName(nsACString& aName)
+{
+=======
+nsAutoConfig::GetName(nsACString& aName) {
+>>>>>>> upstream-releases
   aName.AssignLiteral("nsAutoConfig");
   return NS_OK;
 }
@@ -148,6 +271,7 @@ nsAutoConfig::GetName(nsACString &aName) {
    creation time. Second time it calls  downloadAutoConfig().
 */
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsAutoConfig::Observe(nsISupports *aSubject, const char *aTopic,
                                     const char16_t *someData) {
   nsresult rv = NS_OK;
@@ -155,6 +279,22 @@ NS_IMETHODIMP nsAutoConfig::Observe(nsISupports *aSubject, const char *aTopic,
     // We will be calling downloadAutoConfig even if there is no profile
     // name. Nothing will be passed as a parameter to the URL and the
     // default case will be picked up by the script.
+||||||| merged common ancestors
+NS_IMETHODIMP nsAutoConfig::Observe(nsISupports *aSubject,
+                                    const char *aTopic,
+                                    const char16_t *someData)
+{
+    nsresult rv = NS_OK;
+    if (!nsCRT::strcmp(aTopic, "profile-after-change")) {
+=======
+NS_IMETHODIMP nsAutoConfig::Observe(nsISupports* aSubject, const char* aTopic,
+                                    const char16_t* someData) {
+  nsresult rv = NS_OK;
+  if (!nsCRT::strcmp(aTopic, "profile-after-change")) {
+    // We will be calling downloadAutoConfig even if there is no profile
+    // name. Nothing will be passed as a parameter to the URL and the
+    // default case will be picked up by the script.
+>>>>>>> upstream-releases
 
     rv = downloadAutoConfig();
   }
@@ -228,6 +368,7 @@ nsresult nsAutoConfig::downloadAutoConfig() {
       mConfigURL.Append('?');
       mConfigURL.Append(emailAddr);
     }
+<<<<<<< HEAD
   }
 
   // create a new url
@@ -275,6 +416,62 @@ nsresult nsAutoConfig::downloadAutoConfig() {
        onStopRequest or readOfflineFile methods
        There is a possibility of deadlock so we need to make sure
        that mLoaded will be set to true in any case (success/failure)
+||||||| merged common ancestors
+
+    /* Append user's identity at the end of the URL if the pref says so.
+       First we are checking for the user's email address but if it is not
+       available in the case where the client is used without messenger, user's
+       profile name will be used as an unique identifier
+=======
+  }
+
+  // create a new url
+  nsCOMPtr<nsIURI> url;
+  nsCOMPtr<nsIChannel> channel;
+
+  rv = NS_NewURI(getter_AddRefs(url), mConfigURL.get(), nullptr, nullptr);
+  if (NS_FAILED(rv)) {
+    MOZ_LOG(
+        MCD, LogLevel::Debug,
+        ("failed to create URL - is autoadmin.global_config_url valid? - %s\n",
+         mConfigURL.get()));
+    return rv;
+  }
+
+  MOZ_LOG(MCD, LogLevel::Debug, ("running MCD url %s\n", mConfigURL.get()));
+  // open a channel for the url
+  rv = NS_NewChannel(
+      getter_AddRefs(channel), url, nsContentUtils::GetSystemPrincipal(),
+      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
+      nsIContentPolicy::TYPE_OTHER,
+      nullptr,  // nsICookieSettings
+      nullptr,  // PerformanceStorage
+      nullptr,  // loadGroup
+      nullptr,  // aCallbacks
+      nsIRequest::INHIBIT_PERSISTENT_CACHING | nsIRequest::LOAD_BYPASS_CACHE);
+
+  if (NS_FAILED(rv)) return rv;
+
+  rv = channel->AsyncOpen(this);
+  if (NS_FAILED(rv)) {
+    readOfflineFile();
+    return rv;
+  }
+
+  // Set a repeating timer if the pref is set.
+  // This is to be done only once.
+  // Also We are having the event queue processing only for the startup
+  // It is not needed with the repeating timer.
+  if (firstTime) {
+    firstTime = false;
+
+    /* process events until we're finished. AutoConfig.jsc reading needs
+       to be finished before the browser starts loading up
+       We are waiting for the mLoaded which will be set through
+       onStopRequest or readOfflineFile methods
+       There is a possibility of deadlock so we need to make sure
+       that mLoaded will be set to true in any case (success/failure)
+>>>>>>> upstream-releases
     */
 
     if (!mozilla::SpinEventLoopUntil([&]() { return mLoaded; })) {
@@ -347,6 +544,7 @@ nsresult nsAutoConfig::readOfflineFile() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsAutoConfig::evaluateLocalFile(nsIFile *file) {
   nsresult rv;
   nsCOMPtr<nsIInputStream> inStr;
@@ -368,6 +566,55 @@ nsresult nsAutoConfig::evaluateLocalFile(nsIFile *file) {
   inStr->Close();
   free(buf);
   return rv;
+||||||| merged common ancestors
+nsresult nsAutoConfig::evaluateLocalFile(nsIFile *file)
+{
+    nsresult rv;
+    nsCOMPtr<nsIInputStream> inStr;
+
+    rv = NS_NewLocalFileInputStream(getter_AddRefs(inStr), file);
+    if (NS_FAILED(rv))
+        return rv;
+
+    int64_t fileSize;
+    file->GetFileSize(&fileSize);
+    uint32_t fs = fileSize; // Converting 64 bit structure to unsigned int
+    char* buf = (char*) malloc(fs * sizeof(char));
+    if (!buf)
+        return NS_ERROR_OUT_OF_MEMORY;
+
+    uint32_t amt = 0;
+    rv = inStr->Read(buf, fs, &amt);
+    if (NS_SUCCEEDED(rv)) {
+      EvaluateAdminConfigScript(buf, fs, nullptr, false,
+                                true, false);
+    }
+    inStr->Close();
+    free(buf);
+    return rv;
+=======
+nsresult nsAutoConfig::evaluateLocalFile(nsIFile* file) {
+  nsresult rv;
+  nsCOMPtr<nsIInputStream> inStr;
+
+  rv = NS_NewLocalFileInputStream(getter_AddRefs(inStr), file);
+  if (NS_FAILED(rv)) return rv;
+
+  int64_t fileSize;
+  file->GetFileSize(&fileSize);
+  uint32_t fs = fileSize;  // Converting 64 bit structure to unsigned int
+  char* buf = (char*)malloc(fs * sizeof(char));
+  if (!buf) return NS_ERROR_OUT_OF_MEMORY;
+
+  uint32_t amt = 0;
+  rv = inStr->Read(buf, fs, &amt);
+  if (NS_SUCCEEDED(rv)) {
+    EvaluateAdminConfigScript(buf, fs, nullptr, false, true, false);
+  }
+  inStr->Close();
+  free(buf);
+  return rv;
+>>>>>>> upstream-releases
 }
 
 nsresult nsAutoConfig::writeFailoverFile() {
@@ -389,6 +636,7 @@ nsresult nsAutoConfig::writeFailoverFile() {
   return rv;
 }
 
+<<<<<<< HEAD
 nsresult nsAutoConfig::getEmailAddr(nsACString &emailAddr) {
   nsresult rv;
   nsAutoCString prefValue;
@@ -406,6 +654,27 @@ nsresult nsAutoConfig::getEmailAddr(nsACString &emailAddr) {
     emailAddr = NS_LITERAL_CSTRING("mail.account.") + prefValue +
                 NS_LITERAL_CSTRING(".identities");
     rv = mPrefBranch->GetCharPref(PromiseFlatCString(emailAddr).get(),
+||||||| merged common ancestors
+    rv = mPrefBranch->GetCharPref("mail.accountmanager.defaultaccount",
+=======
+nsresult nsAutoConfig::getEmailAddr(nsACString& emailAddr) {
+  nsresult rv;
+  nsAutoCString prefValue;
+
+  /* Getting an email address through set of three preferences:
+     First getting a default account with
+     "mail.accountmanager.defaultaccount"
+     second getting an associated id with the default account
+     Third getting an email address with id
+  */
+
+  rv =
+      mPrefBranch->GetCharPref("mail.accountmanager.defaultaccount", prefValue);
+  if (NS_SUCCEEDED(rv) && !prefValue.IsEmpty()) {
+    emailAddr = NS_LITERAL_CSTRING("mail.account.") + prefValue +
+                NS_LITERAL_CSTRING(".identities");
+    rv = mPrefBranch->GetCharPref(PromiseFlatCString(emailAddr).get(),
+>>>>>>> upstream-releases
                                   prefValue);
     if (NS_FAILED(rv) || prefValue.IsEmpty())
       return PromptForEMailAddress(emailAddr);
@@ -430,6 +699,7 @@ nsresult nsAutoConfig::getEmailAddr(nsACString &emailAddr) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsAutoConfig::PromptForEMailAddress(nsACString &emailAddress) {
   nsresult rv;
   nsCOMPtr<nsIPromptService> promptService =
@@ -462,4 +732,68 @@ nsresult nsAutoConfig::PromptForEMailAddress(nsACString &emailAddress) {
   NS_ENSURE_SUCCESS(rv, rv);
   LossyCopyUTF16toASCII(emailResult, emailAddress);
   return NS_OK;
+||||||| merged common ancestors
+nsresult nsAutoConfig::PromptForEMailAddress(nsACString &emailAddress)
+{
+    nsresult rv;
+    nsCOMPtr<nsIPromptService> promptService = do_GetService("@mozilla.org/embedcomp/prompt-service;1", &rv);
+    NS_ENSURE_SUCCESS(rv, rv);
+    nsCOMPtr<nsIStringBundleService> bundleService = do_GetService(NS_STRINGBUNDLE_CONTRACTID, &rv);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsCOMPtr<nsIStringBundle> bundle;
+    rv = bundleService->CreateBundle("chrome://autoconfig/locale/autoconfig.properties",
+                                getter_AddRefs(bundle));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsAutoString title;
+    rv = bundle->GetStringFromName("emailPromptTitle", title);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    nsAutoString err;
+    rv = bundle->GetStringFromName("emailPromptMsg", err);
+    NS_ENSURE_SUCCESS(rv, rv);
+    bool check = false;
+    nsString emailResult;
+    bool success;
+    rv = promptService->Prompt(nullptr, title.get(), err.get(), getter_Copies(emailResult), nullptr, &check, &success);
+    if (!success)
+      return NS_ERROR_FAILURE;
+    NS_ENSURE_SUCCESS(rv, rv);
+    LossyCopyUTF16toASCII(emailResult, emailAddress);
+    return NS_OK;
+=======
+nsresult nsAutoConfig::PromptForEMailAddress(nsACString& emailAddress) {
+  nsresult rv;
+  nsCOMPtr<nsIPromptService> promptService =
+      do_GetService("@mozilla.org/embedcomp/prompt-service;1", &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+  nsCOMPtr<nsIStringBundleService> bundleService =
+      do_GetService(NS_STRINGBUNDLE_CONTRACTID, &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIStringBundle> bundle;
+  rv = bundleService->CreateBundle(
+      "chrome://autoconfig/locale/autoconfig.properties",
+      getter_AddRefs(bundle));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsAutoString title;
+  rv = bundle->GetStringFromName("emailPromptTitle", title);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsAutoString err;
+  rv = bundle->GetStringFromName("emailPromptMsg", err);
+  NS_ENSURE_SUCCESS(rv, rv);
+  bool check = false;
+  nsString emailResult;
+  bool success;
+  rv = promptService->Prompt(nullptr, title.get(), err.get(),
+                             getter_Copies(emailResult), nullptr, &check,
+                             &success);
+  if (!success) return NS_ERROR_FAILURE;
+  NS_ENSURE_SUCCESS(rv, rv);
+  LossyCopyUTF16toASCII(emailResult, emailAddress);
+  return NS_OK;
+>>>>>>> upstream-releases
 }

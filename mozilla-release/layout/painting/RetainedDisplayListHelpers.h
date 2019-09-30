@@ -32,8 +32,20 @@ class DisplayItemHashEntry : public PLDHashEntryHdr {
   bool KeyEquals(KeyTypePointer aKey) const { return mKey == *aKey; }
 
   static KeyTypePointer KeyToPointer(KeyType& aKey) { return &aKey; }
+<<<<<<< HEAD
   static PLDHashNumber HashKey(KeyTypePointer aKey) {
     if (!aKey) return 0;
+||||||| merged common ancestors
+  static PLDHashNumber HashKey(KeyTypePointer aKey)
+  {
+    if (!aKey)
+      return 0;
+=======
+  static PLDHashNumber HashKey(KeyTypePointer aKey) {
+    if (!aKey) {
+      return 0;
+    }
+>>>>>>> upstream-releases
 
     return mozilla::HashGeneric(aKey->mFrame, aKey->mPerFrameKey);
   }
@@ -55,16 +67,38 @@ bool SpanContains(mozilla::Span<const T>& aSpan, T aItem) {
 class OldListUnits {};
 class MergedListUnits {};
 
+<<<<<<< HEAD
 template <typename Units>
 struct Index {
   Index() : val(0) {}
   explicit Index(size_t aVal) : val(aVal) {}
+||||||| merged common ancestors
+template<typename Units>
+struct Index
+{
+  Index()
+    : val(0)
+  {
+  }
+  explicit Index(size_t aVal)
+    : val(aVal)
+  {
+  }
+=======
+template <typename Units>
+struct Index {
+  Index() : val(0) {}
+  explicit Index(size_t aVal) : val(aVal) {
+    MOZ_RELEASE_ASSERT(aVal < std::numeric_limits<uint32_t>::max(),
+                       "List index overflowed");
+  }
+>>>>>>> upstream-releases
 
   bool operator==(const Index<Units>& aOther) const {
     return val == aOther.val;
   }
 
-  size_t val;
+  uint32_t val;
 };
 typedef Index<OldListUnits> OldListIndex;
 typedef Index<MergedListUnits> MergedListIndex;
@@ -138,9 +172,23 @@ class DirectedAcyclicGraph {
 struct RetainedDisplayListBuilder;
 class nsDisplayItem;
 
+<<<<<<< HEAD
 struct OldItemInfo {
   explicit OldItemInfo(nsDisplayItem* aItem)
       : mItem(aItem), mUsed(false), mDiscarded(false) {}
+||||||| merged common ancestors
+struct OldItemInfo
+{
+  explicit OldItemInfo(nsDisplayItem* aItem)
+    : mItem(aItem)
+    , mUsed(false)
+    , mDiscarded(false)
+  {
+  }
+=======
+struct OldItemInfo {
+  explicit OldItemInfo(nsDisplayItem* aItem);
+>>>>>>> upstream-releases
 
   void AddedToMergedList(MergedListIndex aIndex) {
     MOZ_ASSERT(!IsUsed());
@@ -163,10 +211,20 @@ struct OldItemInfo {
   bool IsChanged();
 
   nsDisplayItem* mItem;
+  nsTArray<MergedListIndex> mDirectPredecessors;
+  MergedListIndex mIndex;
   bool mUsed;
   bool mDiscarded;
-  MergedListIndex mIndex;
-  nsTArray<MergedListIndex> mDirectPredecessors;
+  bool mOwnsItem;
 };
 
+<<<<<<< HEAD
 #endif  // RETAINEDDISPLAYLISTHELPERS_H_
+||||||| merged common ancestors
+#endif // RETAINEDDISPLAYLISTHELPERS_H_
+=======
+bool AnyContentAncestorModified(nsIFrame* aFrame,
+                                nsIFrame* aStopAtFrame = nullptr);
+
+#endif  // RETAINEDDISPLAYLISTHELPERS_H_
+>>>>>>> upstream-releases

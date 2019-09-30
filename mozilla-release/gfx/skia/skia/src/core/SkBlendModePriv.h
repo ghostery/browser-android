@@ -9,8 +9,15 @@
 #define SkBlendModePriv_DEFINED
 
 #include "SkBlendMode.h"
+<<<<<<< HEAD
 #include "SkColor.h"
 #include "SkPM4f.h"
+||||||| merged common ancestors
+#include "SkPM4f.h"
+=======
+#include "SkColor.h"
+#include "SkColorData.h"
+>>>>>>> upstream-releases
 
 class SkRasterPipeline;
 

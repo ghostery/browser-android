@@ -18,8 +18,15 @@
 
 class SkExecutor;
 
+<<<<<<< HEAD
 #if SK_SUPPORT_GPU
 struct GrContextOptions {
+||||||| merged common ancestors
+struct GrContextOptions {
+=======
+#if SK_SUPPORT_GPU
+struct SK_API GrContextOptions {
+>>>>>>> upstream-releases
     enum class Enable {
         /** Forces an option to be disabled. */
         kNo,
@@ -36,7 +43,7 @@ struct GrContextOptions {
      * Skia stores compiled shader binaries (only when glProgramBinary / glGetProgramBinary are
      * supported) when provided a persistent cache, but this may extend to other data in the future.
      */
-    class PersistentCache {
+    class SK_API PersistentCache {
     public:
         virtual ~PersistentCache() {}
 
@@ -153,10 +160,9 @@ struct GrContextOptions {
     bool fSharpenMipmappedTextures = false;
 
     /**
-     * Enables driver workaround to use draws instead of glClear. This only applies to
-     * kOpenGL_GrBackend.
+     * Enables driver workaround to use draws instead of HW clears, e.g. glClear on the GL backend.
      */
-    Enable fUseDrawInsteadOfGLClear = Enable::kDefault;
+    Enable fUseDrawInsteadOfClear = Enable::kDefault;
 
     /**
      * Allow Ganesh to explicitly allocate resources at flush time rather than incrementally while
@@ -197,6 +203,14 @@ struct GrContextOptions {
      */
     PersistentCache* fPersistentCache = nullptr;
 
+    /**
+     * This affects the usage of the PersistentCache. If this is set to true GLSL shader strings
+     * rather than GL program binaries will be cached. It is intended to be used when the driver's
+     * binary loading/storing is believed to have bugs. Caching GLSL strings still saves a
+     * significant amount of CPU work when a GL program is created.
+     */
+     bool fDisallowGLSLBinaryCaching = false;
+
 #if GR_TEST_UTILS
     /**
      * Private options that are only meant for testing within Skia's tools.
@@ -231,6 +245,7 @@ struct GrContextOptions {
     /**
      * Include or exclude specific GPU path renderers.
      */
+<<<<<<< HEAD
     GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kAll;
 
     /**
@@ -238,6 +253,17 @@ struct GrContextOptions {
      * supported GPUs.
      */
     bool fDisableImageMultitexturing = false;
+||||||| merged common ancestors
+    GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kDefault;
+
+    /**
+     * Disables using multiple texture units to batch multiple images into a single draw on
+     * supported GPUs.
+     */
+    bool fDisableImageMultitexturing = false;
+=======
+    GpuPathRenderers fGpuPathRenderers = GpuPathRenderers::kAll;
+>>>>>>> upstream-releases
 #endif
 
 #if SK_SUPPORT_ATLAS_TEXT

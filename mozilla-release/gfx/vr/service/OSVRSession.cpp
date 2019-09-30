@@ -6,19 +6,29 @@
 
 #include "OSVRSession.h"
 #include "prenv.h"
-#include "gfxPrefs.h"
 #include "nsString.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/SharedLibrary.h"
 #include "mozilla/gfx/Quaternion.h"
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include <d3d11.h>
 #include "mozilla/gfx/DeviceManagerDx.h"
 #endif  // defined(XP_WIN)
+||||||| merged common ancestors
+#include <d3d11.h>
+#include "mozilla/gfx/DeviceManagerDx.h"
+#endif // defined(XP_WIN)
+=======
+#  include <d3d11.h>
+#  include "mozilla/gfx/DeviceManagerDx.h"
+#endif  // defined(XP_WIN)
+>>>>>>> upstream-releases
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#  define M_PI 3.14159265358979323846
 #endif
 
 using namespace mozilla;
@@ -197,6 +207,7 @@ mozilla::gfx::VRFieldOfView SetFromTanRadians(double left, double right,
 }
 
 OSVRSession::OSVRSession()
+<<<<<<< HEAD
     : VRSession(),
       mRuntimeLoaded(false),
       mOSVRInitialized(false),
@@ -210,6 +221,43 @@ OSVRSession::~OSVRSession() { Shutdown(); }
 
 bool OSVRSession::Initialize(mozilla::gfx::VRSystemState& aSystemState) {
   if (!gfxPrefs::VREnabled() || !gfxPrefs::VROSVREnabled()) {
+||||||| merged common ancestors
+  : VRSession()
+  , mRuntimeLoaded(false)
+  , mOSVRInitialized(false)
+  , mClientContextInitialized(false)
+  , mDisplayConfigInitialized(false)
+  , mInterfaceInitialized(false)
+  , m_ctx(nullptr)
+  , m_iface(nullptr)
+  , m_display(nullptr)
+{
+
+}
+OSVRSession::~OSVRSession()
+{
+  Shutdown();
+}
+
+bool
+OSVRSession::Initialize(mozilla::gfx::VRSystemState& aSystemState)
+{
+  if (!gfxPrefs::VREnabled() || !gfxPrefs::VROSVREnabled()) {
+=======
+    : VRSession(),
+      mRuntimeLoaded(false),
+      mOSVRInitialized(false),
+      mClientContextInitialized(false),
+      mDisplayConfigInitialized(false),
+      mInterfaceInitialized(false),
+      m_ctx(nullptr),
+      m_iface(nullptr),
+      m_display(nullptr) {}
+OSVRSession::~OSVRSession() { Shutdown(); }
+
+bool OSVRSession::Initialize(mozilla::gfx::VRSystemState& aSystemState) {
+  if (!StaticPrefs::dom_vr_enabled() || !StaticPrefs::dom_vr_osvr_enabled()) {
+>>>>>>> upstream-releases
     return false;
   }
   if (mOSVRInitialized) {
@@ -336,6 +384,7 @@ void OSVRSession::InitializeDisplay() {
 
 bool OSVRSession::InitState(mozilla::gfx::VRSystemState& aSystemState) {
   VRDisplayState& state = aSystemState.displayState;
+<<<<<<< HEAD
   strncpy(state.mDisplayName, "OSVR HMD", kVRDisplayNameMaxLen);
   state.mEightCC = GFX_VR_EIGHTCC('O', 'S', 'V', 'R', ' ', ' ', ' ', ' ');
   state.mIsConnected = true;
@@ -347,6 +396,30 @@ bool OSVRSession::InitState(mozilla::gfx::VRSystemState& aSystemState) {
       (int)VRDisplayCapabilityFlags::Cap_External |
       (int)VRDisplayCapabilityFlags::Cap_Present);
   state.mReportsDroppedFrames = false;
+||||||| merged common ancestors
+  strncpy(state.mDisplayName, "OSVR HMD", kVRDisplayNameMaxLen);
+  state.mEightCC = GFX_VR_EIGHTCC('O', 'S', 'V', 'R', ' ', ' ', ' ', ' ');
+  state.mIsConnected = true;
+  state.mIsMounted = false;
+  state.mCapabilityFlags = (VRDisplayCapabilityFlags)((int)VRDisplayCapabilityFlags::Cap_None |
+    (int)VRDisplayCapabilityFlags::Cap_Orientation |
+    (int)VRDisplayCapabilityFlags::Cap_Position |
+    (int)VRDisplayCapabilityFlags::Cap_External |
+    (int)VRDisplayCapabilityFlags::Cap_Present);
+  state.mReportsDroppedFrames = false;
+=======
+  strncpy(state.displayName, "OSVR HMD", kVRDisplayNameMaxLen);
+  state.eightCC = GFX_VR_EIGHTCC('O', 'S', 'V', 'R', ' ', ' ', ' ', ' ');
+  state.isConnected = true;
+  state.isMounted = false;
+  state.capabilityFlags = (VRDisplayCapabilityFlags)(
+      (int)VRDisplayCapabilityFlags::Cap_None |
+      (int)VRDisplayCapabilityFlags::Cap_Orientation |
+      (int)VRDisplayCapabilityFlags::Cap_Position |
+      (int)VRDisplayCapabilityFlags::Cap_External |
+      (int)VRDisplayCapabilityFlags::Cap_Present);
+  state.reportsDroppedFrames = false;
+>>>>>>> upstream-releases
 
   // XXX OSVR display topology allows for more than one viewer
   // will assume only one viewer for now (most likely stay that way)
@@ -358,8 +431,17 @@ bool OSVRSession::InitState(mozilla::gfx::VRSystemState& aSystemState) {
     double left, right, bottom, top;
     // XXX for now there is only one surface per eye
     osvr_ClientGetViewerEyeSurfaceProjectionClippingPlanes(
+<<<<<<< HEAD
         m_display, 0, eye, 0, &left, &right, &bottom, &top);
     state.mEyeFOV[eye] = SetFromTanRadians(-left, right, -bottom, top);
+||||||| merged common ancestors
+      m_display, 0, eye, 0, &left, &right, &bottom, &top);
+    state.mEyeFOV[eye] =
+      SetFromTanRadians(-left, right, -bottom, top);
+=======
+        m_display, 0, eye, 0, &left, &right, &bottom, &top);
+    state.eyeFOV[eye] = SetFromTanRadians(-left, right, -bottom, top);
+>>>>>>> upstream-releases
   }
 
   // XXX Assuming there is only one display input for now
@@ -371,8 +453,8 @@ bool OSVRSession::InitState(mozilla::gfx::VRSystemState& aSystemState) {
     OSVR_ViewportDimension l, b, w, h;
     osvr_ClientGetRelativeViewportForViewerEyeSurface(m_display, 0, eye, 0, &l,
                                                       &b, &w, &h);
-    state.mEyeResolution.width = w;
-    state.mEyeResolution.height = h;
+    state.eyeResolution.width = w;
+    state.eyeResolution.height = h;
     OSVR_Pose3 eyePose;
     // Viewer eye pose may not be immediately available, update client context
     // until we get it
@@ -382,9 +464,9 @@ bool OSVRSession::InitState(mozilla::gfx::VRSystemState& aSystemState) {
       osvr_ClientUpdate(m_ctx);
       ret = osvr_ClientGetViewerEyePose(m_display, 0, eye, &eyePose);
     }
-    state.mEyeTranslation[eye].x = eyePose.translation.data[0];
-    state.mEyeTranslation[eye].y = eyePose.translation.data[1];
-    state.mEyeTranslation[eye].z = eyePose.translation.data[2];
+    state.eyeTranslation[eye].x = eyePose.translation.data[0];
+    state.eyeTranslation[eye].y = eyePose.translation.data[1];
+    state.eyeTranslation[eye].z = eyePose.translation.data[2];
 
     Matrix4x4 pose;
     pose.SetRotationFromQuaternion(gfx::Quaternion(
@@ -494,4 +576,10 @@ void OSVRSession::VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
 
 void OSVRSession::StopVibrateHaptic(uint32_t aControllerIdx) {}
 
+<<<<<<< HEAD
 void OSVRSession::StopAllHaptics() {}
+||||||| merged common ancestors
+}
+=======
+void OSVRSession::StopAllHaptics() {}
+>>>>>>> upstream-releases

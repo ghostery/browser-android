@@ -23,16 +23,17 @@ class nsFrameSelection;
 class nsIContent;
 class nsIFrame;
 class nsINode;
-class nsIPresShell;
 class nsITimer;
 
 namespace mozilla {
+class PresShell;
 namespace gfx {
 class DrawTarget;
 }  // namespace gfx
 }  // namespace mozilla
 
 //-----------------------------------------------------------------------------
+<<<<<<< HEAD
 class nsCaret final : public nsISelectionListener {
   typedef mozilla::gfx::DrawTarget DrawTarget;
 
@@ -77,6 +78,99 @@ class nsCaret final : public nsISelectionListener {
     if (!mVisible || mHideCount) {
       return false;
     }
+||||||| merged common ancestors
+class nsCaret final : public nsISelectionListener
+{
+    typedef mozilla::gfx::DrawTarget DrawTarget;
+
+  public:
+    nsCaret();
+
+  protected:
+    virtual ~nsCaret();
+
+  public:
+    NS_DECL_ISUPPORTS
+
+    typedef mozilla::CaretAssociationHint CaretAssociationHint;
+
+    nsresult Init(nsIPresShell *inPresShell);
+    void Terminate();
+
+    void SetSelection(mozilla::dom::Selection *aDOMSel);
+    mozilla::dom::Selection* GetSelection();
+
+    /**
+     * Sets whether the caret should only be visible in nodes that are not
+     * user-modify: read-only, or whether it should be visible in all nodes.
+     *
+     * @param aIgnoreUserModify true to have the cursor visible in all nodes,
+     *                          false to have it visible in all nodes except
+     *                          those with user-modify: read-only
+     */
+    void SetIgnoreUserModify(bool aIgnoreUserModify);
+    /** SetVisible will set the visibility of the caret
+     *  @param inMakeVisible true to show the caret, false to hide it
+     */
+    void SetVisible(bool intMakeVisible);
+    /** IsVisible will get the visibility of the caret.
+     *  This returns false if the caret is hidden because it was set
+     *  to not be visible, or because the selection is not collapsed, or
+     *  because an open popup is hiding the caret.
+     *  It does not take account of blinking or the caret being hidden
+     *  because we're in non-editable/disabled content.
+     */
+    bool IsVisible(mozilla::dom::Selection* aSelection = nullptr)
+    {
+      if (!mVisible || mHideCount) {
+        return false;
+      }
+=======
+class nsCaret final : public nsISelectionListener {
+  typedef mozilla::gfx::DrawTarget DrawTarget;
+
+ public:
+  nsCaret();
+
+ protected:
+  virtual ~nsCaret();
+
+ public:
+  NS_DECL_ISUPPORTS
+
+  typedef mozilla::CaretAssociationHint CaretAssociationHint;
+
+  nsresult Init(mozilla::PresShell* aPresShell);
+  void Terminate();
+
+  void SetSelection(mozilla::dom::Selection* aDOMSel);
+  mozilla::dom::Selection* GetSelection();
+
+  /**
+   * Sets whether the caret should only be visible in nodes that are not
+   * user-modify: read-only, or whether it should be visible in all nodes.
+   *
+   * @param aIgnoreUserModify true to have the cursor visible in all nodes,
+   *                          false to have it visible in all nodes except
+   *                          those with user-modify: read-only
+   */
+  void SetIgnoreUserModify(bool aIgnoreUserModify);
+  /** SetVisible will set the visibility of the caret
+   *  @param inMakeVisible true to show the caret, false to hide it
+   */
+  void SetVisible(bool intMakeVisible);
+  /** IsVisible will get the visibility of the caret.
+   *  This returns false if the caret is hidden because it was set
+   *  to not be visible, or because the selection is not collapsed, or
+   *  because an open popup is hiding the caret.
+   *  It does not take account of blinking or the caret being hidden
+   *  because we're in non-editable/disabled content.
+   */
+  bool IsVisible(mozilla::dom::Selection* aSelection = nullptr) {
+    if (!mVisible || mHideCount) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
     if (!mShowDuringSelection) {
       mozilla::dom::Selection* selection;

@@ -19,7 +19,13 @@ struct already_AddRefed;
  * beta.
  */
 #if (defined(DEBUG) || defined(NIGHTLY_BUILD)) && !defined(MOZ_ASAN)
+<<<<<<< HEAD
 #define STRING_BUFFER_CANARY 1
+||||||| merged common ancestors
+# define STRING_BUFFER_CANARY 1
+=======
+#  define STRING_BUFFER_CANARY 1
+>>>>>>> upstream-releases
 #endif
 
 #ifdef STRING_BUFFER_CANARY

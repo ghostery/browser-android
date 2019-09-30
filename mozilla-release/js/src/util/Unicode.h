@@ -80,7 +80,6 @@ constexpr char16_t GREEK_SMALL_LETTER_SIGMA = 0x03C3;
 constexpr char16_t LINE_SEPARATOR = 0x2028;
 constexpr char16_t PARA_SEPARATOR = 0x2029;
 constexpr char16_t REPLACEMENT_CHARACTER = 0xFFFD;
-constexpr char16_t BYTE_ORDER_MARK2 = 0xFFFE;
 
 const char16_t LeadSurrogateMin = 0xD800;
 const char16_t LeadSurrogateMax = 0xDBFF;
@@ -204,6 +203,7 @@ inline bool IsUnicodeIDStart(uint32_t codePoint) {
   return IsUnicodeIDStart(char16_t(codePoint));
 }
 
+<<<<<<< HEAD
 inline bool IsSpace(char16_t ch) {
   /*
    * IsSpace checks if some character is included in the merged set
@@ -216,7 +216,28 @@ inline bool IsSpace(char16_t ch) {
    * NO-BREAK SPACE is supposed to be the most common character not in
    * this range, so we inline this case, too.
    */
+||||||| merged common ancestors
+inline bool
+IsSpaceOrBOM2(char16_t ch)
+{
+    if (ch < 128) {
+        return js_isspace[ch];
+    }
+=======
+// IsSpace checks if a code point is included in the merged set of WhiteSpace
+// and LineTerminator specified by #sec-white-space and #sec-line-terminators.
+// We combine them because nearly every calling function wants this, excepting
+// only some tokenizer code that necessarily handles LineTerminator specially
+// due to UTF-8/UTF-16 template specialization.
+inline bool IsSpace(char16_t ch) {
+  // ASCII code points are very common and must be handled quickly, so use a
+  // lookup table for them.
+  if (ch < 128) {
+    return js_isspace[ch];
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (ch < 128) {
     return js_isspace[ch];
   }
@@ -237,8 +258,59 @@ inline bool IsSpaceOrBOM2(char16_t ch) {
   if (ch == NO_BREAK_SPACE || ch == BYTE_ORDER_MARK2) {
     return true;
   }
+||||||| merged common ancestors
+    /* We accept BOM2 (0xFFFE) for compatibility reasons in the parser. */
+    if (ch == NO_BREAK_SPACE || ch == BYTE_ORDER_MARK2) {
+        return true;
+    }
+=======
+  // NO-BREAK SPACE is supposed to be the most common non-ASCII WhiteSpace code
+  // point, so inline its handling too.
+  if (ch == NO_BREAK_SPACE) {
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return CharInfo(ch).isSpace();
+||||||| merged common ancestors
+    return CharInfo(ch).isSpace();
+=======
+  return CharInfo(ch).isSpace();
+}
+
+inline bool IsSpace(JS::Latin1Char ch) {
+  if (ch < 128) {
+    return js_isspace[ch];
+  }
+
+  if (ch == NO_BREAK_SPACE) {
+    return true;
+  }
+
+  MOZ_ASSERT(!CharInfo(ch).isSpace());
+  return false;
+}
+
+inline bool IsSpace(char ch) {
+  return IsSpace(static_cast<JS::Latin1Char>(ch));
+}
+
+inline bool IsSpace(char32_t ch) {
+  if (ch < 128) {
+    return js_isspace[ch];
+  }
+
+  if (ch == NO_BREAK_SPACE) {
+    return true;
+  }
+
+  if (ch >= NonBMPMin) {
+    return false;
+  }
 
   return CharInfo(ch).isSpace();
+>>>>>>> upstream-releases
 }
 
 /*

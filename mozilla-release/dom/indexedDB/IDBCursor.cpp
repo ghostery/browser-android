@@ -29,6 +29,7 @@ using namespace indexedDB;
 
 IDBCursor::IDBCursor(Type aType, BackgroundCursorChild* aBackgroundActor,
                      const Key& aKey)
+<<<<<<< HEAD
     : mBackgroundActor(aBackgroundActor),
       mRequest(aBackgroundActor->GetRequest()),
       mSourceObjectStore(aBackgroundActor->GetObjectStore()),
@@ -47,6 +48,45 @@ IDBCursor::IDBCursor(Type aType, BackgroundCursorChild* aBackgroundActor,
       mRooted(false),
       mContinueCalled(false),
       mHaveValue(true) {
+||||||| merged common ancestors
+  : mBackgroundActor(aBackgroundActor)
+  , mRequest(aBackgroundActor->GetRequest())
+  , mSourceObjectStore(aBackgroundActor->GetObjectStore())
+  , mSourceIndex(aBackgroundActor->GetIndex())
+  , mTransaction(mRequest->GetTransaction())
+  , mScriptOwner(mTransaction->Database()->GetScriptOwner())
+  , mCachedKey(JS::UndefinedValue())
+  , mCachedPrimaryKey(JS::UndefinedValue())
+  , mCachedValue(JS::UndefinedValue())
+  , mKey(aKey)
+  , mType(aType)
+  , mDirection(aBackgroundActor->GetDirection())
+  , mHaveCachedKey(false)
+  , mHaveCachedPrimaryKey(false)
+  , mHaveCachedValue(false)
+  , mRooted(false)
+  , mContinueCalled(false)
+  , mHaveValue(true)
+{
+=======
+    : mBackgroundActor(aBackgroundActor),
+      mRequest(aBackgroundActor->GetRequest()),
+      mSourceObjectStore(aBackgroundActor->GetObjectStore()),
+      mSourceIndex(aBackgroundActor->GetIndex()),
+      mTransaction(mRequest->GetTransaction()),
+      mCachedKey(JS::UndefinedValue()),
+      mCachedPrimaryKey(JS::UndefinedValue()),
+      mCachedValue(JS::UndefinedValue()),
+      mKey(aKey),
+      mType(aType),
+      mDirection(aBackgroundActor->GetDirection()),
+      mHaveCachedKey(false),
+      mHaveCachedPrimaryKey(false),
+      mHaveCachedValue(false),
+      mRooted(false),
+      mContinueCalled(false),
+      mHaveValue(true) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aBackgroundActor);
   aBackgroundActor->AssertIsOnOwningThread();
   MOZ_ASSERT(mRequest);
@@ -55,12 +95,6 @@ IDBCursor::IDBCursor(Type aType, BackgroundCursorChild* aBackgroundActor,
   MOZ_ASSERT_IF(aType == Type_Index || aType == Type_IndexKey, mSourceIndex);
   MOZ_ASSERT(mTransaction);
   MOZ_ASSERT(!aKey.IsUnset());
-  MOZ_ASSERT(mScriptOwner);
-
-  if (mScriptOwner) {
-    mozilla::HoldJSObjects(this);
-    mRooted = true;
-  }
 }
 
 bool IDBCursor::IsLocaleAware() const {
@@ -190,7 +224,6 @@ void IDBCursor::DropJSObjects() {
     return;
   }
 
-  mScriptOwner = nullptr;
   mRooted = false;
 
   mozilla::DropJSObjects(this);
@@ -234,7 +267,15 @@ void IDBCursor::Reset() {
   mContinueCalled = false;
 }
 
+<<<<<<< HEAD
 nsPIDOMWindowInner* IDBCursor::GetParentObject() const {
+||||||| merged common ancestors
+nsPIDOMWindowInner*
+IDBCursor::GetParentObject() const
+{
+=======
+nsIGlobalObject* IDBCursor::GetParentObject() const {
+>>>>>>> upstream-releases
   AssertIsOnOwningThread();
   MOZ_ASSERT(mTransaction);
 
@@ -389,15 +430,21 @@ void IDBCursor::Continue(JSContext* aCx, JS::Handle<JS::Value> aKey,
   }
 
   Key key;
-  aRv = key.SetFromJSVal(aCx, aKey);
-  if (aRv.Failed()) {
+  auto result = key.SetFromJSVal(aCx, aKey, aRv);
+  if (!result.Is(Ok, aRv)) {
+    if (result.Is(Invalid, aRv)) {
+      aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    }
     return;
   }
 
   if (IsLocaleAware() && !key.IsUnset()) {
     Key tmp;
-    aRv = key.ToLocaleBasedKey(tmp, mSourceIndex->Locale());
-    if (aRv.Failed()) {
+    result = key.ToLocaleBasedKey(tmp, mSourceIndex->Locale(), aRv);
+    if (!result.Is(Ok, aRv)) {
+      if (result.Is(Invalid, aRv)) {
+        aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+      }
       return;
     }
     key = tmp;
@@ -487,15 +534,21 @@ void IDBCursor::ContinuePrimaryKey(JSContext* aCx, JS::Handle<JS::Value> aKey,
   }
 
   Key key;
-  aRv = key.SetFromJSVal(aCx, aKey);
-  if (aRv.Failed()) {
+  auto result = key.SetFromJSVal(aCx, aKey, aRv);
+  if (!result.Is(Ok, aRv)) {
+    if (result.Is(Invalid, aRv)) {
+      aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    }
     return;
   }
 
   if (IsLocaleAware() && !key.IsUnset()) {
     Key tmp;
-    aRv = key.ToLocaleBasedKey(tmp, mSourceIndex->Locale());
-    if (aRv.Failed()) {
+    result = key.ToLocaleBasedKey(tmp, mSourceIndex->Locale(), aRv);
+    if (!result.Is(Ok, aRv)) {
+      if (result.Is(Invalid, aRv)) {
+        aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+      }
       return;
     }
     key = tmp;
@@ -509,8 +562,11 @@ void IDBCursor::ContinuePrimaryKey(JSContext* aCx, JS::Handle<JS::Value> aKey,
   }
 
   Key primaryKey;
-  aRv = primaryKey.SetFromJSVal(aCx, aPrimaryKey);
-  if (aRv.Failed()) {
+  result = primaryKey.SetFromJSVal(aCx, aPrimaryKey, aRv);
+  if (!result.Is(Ok, aRv)) {
+    if (result.Is(Invalid, aRv)) {
+      aRv.Throw(NS_ERROR_DOM_INDEXEDDB_DATA_ERR);
+    }
     return;
   }
 
@@ -873,7 +929,6 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(IDBCursor)
   MOZ_ASSERT_IF(!tmp->mHaveCachedValue, tmp->mCachedValue.isUndefined());
 
   NS_IMPL_CYCLE_COLLECTION_TRACE_PRESERVED_WRAPPER
-  NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mScriptOwner)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mCachedKey)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mCachedPrimaryKey)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mCachedValue)

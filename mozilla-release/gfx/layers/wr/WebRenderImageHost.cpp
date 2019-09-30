@@ -13,6 +13,7 @@
 #include "mozilla/layers/Effects.h"  // for TexturedEffect, Effect, etc
 #include "mozilla/layers/LayerManagerComposite.h"  // for TexturedEffect, Effect, etc
 #include "mozilla/layers/WebRenderBridgeParent.h"
+#include "mozilla/layers/WebRenderTextureHost.h"
 #include "mozilla/layers/AsyncImagePipelineManager.h"
 #include "nsAString.h"
 #include "nsDebug.h"          // for NS_WARNING, NS_ASSERTION
@@ -28,6 +29,7 @@ namespace layers {
 class ISurfaceAllocator;
 
 WebRenderImageHost::WebRenderImageHost(const TextureInfo& aTextureInfo)
+<<<<<<< HEAD
     : CompositableHost(aTextureInfo),
       ImageComposite(),
       mWrBridge(nullptr),
@@ -35,6 +37,23 @@ WebRenderImageHost::WebRenderImageHost(const TextureInfo& aTextureInfo)
       mUseAsyncImagePipeline(false) {}
 
 WebRenderImageHost::~WebRenderImageHost() { MOZ_ASSERT(!mWrBridge); }
+||||||| merged common ancestors
+  : CompositableHost(aTextureInfo)
+  , ImageComposite()
+  , mWrBridge(nullptr)
+  , mWrBridgeBindings(0)
+  , mUseAsyncImagePipeline(false)
+{}
+
+WebRenderImageHost::~WebRenderImageHost()
+{
+  MOZ_ASSERT(!mWrBridge);
+}
+=======
+    : CompositableHost(aTextureInfo), ImageComposite(), mWrBridgeBindings(0) {}
+
+WebRenderImageHost::~WebRenderImageHost() { MOZ_ASSERT(!mWrBridge); }
+>>>>>>> upstream-releases
 
 void WebRenderImageHost::UseTextureHost(
     const nsTArray<TimedTexture>& aTextures) {
@@ -166,7 +185,6 @@ void WebRenderImageHost::SetCurrentTextureHost(TextureHost* aTexture) {
   if (aTexture == mCurrentTextureHost.get()) {
     return;
   }
-
   mCurrentTextureHost = aTexture;
 }
 
@@ -251,10 +269,23 @@ void WebRenderImageHost::SetWrBridge(WebRenderBridgeParent* aWrBridge) {
   ++mWrBridgeBindings;
 }
 
+<<<<<<< HEAD
 void WebRenderImageHost::ClearWrBridge() {
+||||||| merged common ancestors
+void
+WebRenderImageHost::ClearWrBridge()
+{
+=======
+void WebRenderImageHost::ClearWrBridge(WebRenderBridgeParent* aWrBridge) {
+  MOZ_ASSERT(aWrBridge);
+>>>>>>> upstream-releases
   MOZ_ASSERT(mWrBridgeBindings > 0);
   --mWrBridgeBindings;
   if (mWrBridgeBindings == 0) {
+    MOZ_ASSERT(aWrBridge == mWrBridge);
+    if (aWrBridge != mWrBridge) {
+      gfxCriticalNote << "WrBridge mismatch happened";
+    }
     SetCurrentTextureHost(nullptr);
     mWrBridge = nullptr;
   }

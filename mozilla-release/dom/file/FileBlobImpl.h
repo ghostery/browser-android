@@ -29,16 +29,16 @@ class FileBlobImpl : public BaseBlobImpl {
                uint64_t aLength, nsIFile* aFile, int64_t aLastModificationDate);
 
   // Create as a file with custom name
-  FileBlobImpl(nsIFile* aFile, const nsAString& aName,
-               const nsAString& aContentType);
+  FileBlobImpl(
+      nsIFile* aFile, const nsAString& aName, const nsAString& aContentType,
+      const nsAString& aBlobImplType = NS_LITERAL_STRING("FileBlobImpl"));
 
   // Overrides
   virtual uint64_t GetSize(ErrorResult& aRv) override;
   virtual void GetType(nsAString& aType) override;
   virtual int64_t GetLastModified(ErrorResult& aRv) override;
-  virtual void SetLastModified(int64_t aLastModified) override;
   virtual void GetMozFullPathInternal(nsAString& aFullPath,
-                                      ErrorResult& aRv) const override;
+                                      ErrorResult& aRv) override;
   virtual void CreateInputStream(nsIInputStream** aInputStream,
                                  ErrorResult& aRv) override;
 
@@ -48,13 +48,53 @@ class FileBlobImpl : public BaseBlobImpl {
   virtual bool IsSizeUnknown() const override { return false; }
   virtual bool IsDateUnknown() const override { return false; }
 
+<<<<<<< HEAD
+  void SetName(const nsAString& aName) { mName = aName; }
+||||||| merged common ancestors
+  void SetName(const nsAString& aName)
+  {
+    mName = aName;
+  }
+=======
   void SetName(const nsAString& aName) { mName = aName; }
 
   void SetType(const nsAString& aType) { mContentType = aType; }
 
   int64_t GetFileId() override { return mFileId; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void SetType(const nsAString& aType) { mContentType = aType; }
+||||||| merged common ancestors
+  void SetType(const nsAString& aType)
+  {
+    mContentType = aType;
+  }
+=======
   void SetFileId(int64_t aFileId) { mFileId = aFileId; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  int64_t GetFileId() override { return mFileId; }
+||||||| merged common ancestors
+  int64_t GetFileId() override
+  {
+    return mFileId;
+  }
+=======
+  void SetEmptySize() { mLength = 0; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void SetFileId(int64_t aFileId) { mFileId = aFileId; }
+||||||| merged common ancestors
+  void SetFileId(int64_t aFileId)
+  {
+    mFileId = aFileId;
+  }
+=======
+  void SetMozFullPath(const nsAString& aPath) { mMozFullPath = aPath; }
+>>>>>>> upstream-releases
 
  protected:
   virtual ~FileBlobImpl() = default;
@@ -69,8 +109,9 @@ class FileBlobImpl : public BaseBlobImpl {
                                                  ErrorResult& aRv) override;
 
   nsCOMPtr<nsIFile> mFile;
-  bool mWholeFile;
+  nsString mMozFullPath;
   int64_t mFileId;
+  bool mWholeFile;
 };
 
 }  // namespace dom

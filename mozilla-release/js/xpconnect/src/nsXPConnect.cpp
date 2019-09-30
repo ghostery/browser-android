@@ -24,7 +24,6 @@
 
 #include "mozilla/dom/BindingUtils.h"
 #include "mozilla/dom/DOMException.h"
-#include "mozilla/dom/DOMPrefs.h"
 #include "mozilla/dom/Exceptions.h"
 #include "mozilla/dom/Promise.h"
 
@@ -38,6 +37,7 @@
 #include "nsIScriptError.h"
 #include "nsContentUtils.h"
 #include "nsScriptError.h"
+#include "nsJSUtils.h"
 
 using namespace mozilla;
 using namespace mozilla::dom;
@@ -85,6 +85,7 @@ nsXPConnect::~nsXPConnect() {
 
   mRuntime->DeleteSingletonScopes();
 
+<<<<<<< HEAD
   // In order to clean up everything properly, we need to GC twice: once now,
   // to clean anything that can go away on its own (like the Junk Scope, which
   // we unrooted above), and once after forcing a bunch of shutdown in
@@ -92,16 +93,47 @@ nsXPConnect::~nsXPConnect() {
   // shutdown code defaults to leaking in a number of situations, so we can't
   // get by with only the second GC. :-(
   mRuntime->GarbageCollect(JS::gcreason::XPCONNECT_SHUTDOWN);
+||||||| merged common ancestors
+    // In order to clean up everything properly, we need to GC twice: once now,
+    // to clean anything that can go away on its own (like the Junk Scope, which
+    // we unrooted above), and once after forcing a bunch of shutdown in
+    // XPConnect, to clean the stuff we forcibly disconnected. The forced
+    // shutdown code defaults to leaking in a number of situations, so we can't
+    // get by with only the second GC. :-(
+    mRuntime->GarbageCollect(JS::gcreason::XPCONNECT_SHUTDOWN);
+=======
+  // In order to clean up everything properly, we need to GC twice: once now,
+  // to clean anything that can go away on its own (like the Junk Scope, which
+  // we unrooted above), and once after forcing a bunch of shutdown in
+  // XPConnect, to clean the stuff we forcibly disconnected. The forced
+  // shutdown code defaults to leaking in a number of situations, so we can't
+  // get by with only the second GC. :-(
+  mRuntime->GarbageCollect(JS::GCReason::XPCONNECT_SHUTDOWN);
+>>>>>>> upstream-releases
 
   mShuttingDown = true;
   XPCWrappedNativeScope::SystemIsBeingShutDown();
   mRuntime->SystemIsBeingShutDown();
 
+<<<<<<< HEAD
   // The above causes us to clean up a bunch of XPConnect data structures,
   // after which point we need to GC to clean everything up. We need to do
   // this before deleting the XPCJSContext, because doing so destroys the
   // maps that our finalize callback depends on.
   mRuntime->GarbageCollect(JS::gcreason::XPCONNECT_SHUTDOWN);
+||||||| merged common ancestors
+    // The above causes us to clean up a bunch of XPConnect data structures,
+    // after which point we need to GC to clean everything up. We need to do
+    // this before deleting the XPCJSContext, because doing so destroys the
+    // maps that our finalize callback depends on.
+    mRuntime->GarbageCollect(JS::gcreason::XPCONNECT_SHUTDOWN);
+=======
+  // The above causes us to clean up a bunch of XPConnect data structures,
+  // after which point we need to GC to clean everything up. We need to do
+  // this before deleting the XPCJSContext, because doing so destroys the
+  // maps that our finalize callback depends on.
+  mRuntime->GarbageCollect(JS::GCReason::XPCONNECT_SHUTDOWN);
+>>>>>>> upstream-releases
 
   NS_RELEASE(gSystemPrincipal);
   gScriptSecurityManager = nullptr;
@@ -180,8 +212,17 @@ void xpc::ErrorBase::Init(JSErrorBase* aReport) {
     CopyUTF8toUTF16(mozilla::MakeStringSpan(aReport->filename), mFileName);
   }
 
+<<<<<<< HEAD
   mLineNumber = aReport->lineno;
   mColumn = aReport->column;
+||||||| merged common ancestors
+    mLineNumber = aReport->lineno;
+    mColumn = aReport->column;
+=======
+  mSourceId = aReport->sourceId;
+  mLineNumber = aReport->lineno;
+  mColumn = aReport->column;
+>>>>>>> upstream-releases
 }
 
 void xpc::ErrorNote::Init(JSErrorNotes::Note* aNote) {
@@ -190,6 +231,40 @@ void xpc::ErrorNote::Init(JSErrorNotes::Note* aNote) {
   ErrorNoteToMessageString(aNote, mErrorMsg);
 }
 
+<<<<<<< HEAD
+void xpc::ErrorReport::Init(JSErrorReport* aReport, const char* aToStringResult,
+                            bool aIsChrome, uint64_t aWindowID) {
+  xpc::ErrorBase::Init(aReport);
+  mCategory = aIsChrome ? NS_LITERAL_CSTRING("chrome javascript")
+                        : NS_LITERAL_CSTRING("content javascript");
+  mWindowID = aWindowID;
+||||||| merged common ancestors
+void
+xpc::ErrorReport::Init(JSErrorReport* aReport, const char* aToStringResult,
+                       bool aIsChrome, uint64_t aWindowID)
+{
+    xpc::ErrorBase::Init(aReport);
+    mCategory = aIsChrome ? NS_LITERAL_CSTRING("chrome javascript")
+                          : NS_LITERAL_CSTRING("content javascript");
+    mWindowID = aWindowID;
+
+    ErrorReportToMessageString(aReport, mErrorMsg);
+    if (mErrorMsg.IsEmpty() && aToStringResult) {
+      AppendUTF8toUTF16(mozilla::MakeStringSpan(aToStringResult), mErrorMsg);
+    }
+
+    mSourceLine.Assign(aReport->linebuf(), aReport->linebufLength());
+    const JSErrorFormatString* efs = js::GetErrorMessage(nullptr, aReport->errorNumber);
+
+    if (efs == nullptr) {
+        mErrorMsgName.AssignLiteral("");
+    } else {
+        mErrorMsgName.AssignASCII(efs->name);
+    }
+
+    mFlags = aReport->flags;
+    mIsMuted = aReport->isMuted;
+=======
 void xpc::ErrorReport::Init(JSErrorReport* aReport, const char* aToStringResult,
                             bool aIsChrome, uint64_t aWindowID) {
   xpc::ErrorBase::Init(aReport);
@@ -201,10 +276,35 @@ void xpc::ErrorReport::Init(JSErrorReport* aReport, const char* aToStringResult,
   if (mErrorMsg.IsEmpty() && aToStringResult) {
     AppendUTF8toUTF16(mozilla::MakeStringSpan(aToStringResult), mErrorMsg);
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ErrorReportToMessageString(aReport, mErrorMsg);
+  if (mErrorMsg.IsEmpty() && aToStringResult) {
+    AppendUTF8toUTF16(mozilla::MakeStringSpan(aToStringResult), mErrorMsg);
+  }
 
   mSourceLine.Assign(aReport->linebuf(), aReport->linebufLength());
   const JSErrorFormatString* efs =
       js::GetErrorMessage(nullptr, aReport->errorNumber);
+||||||| merged common ancestors
+    if (aReport->notes) {
+        if (!mNotes.SetLength(aReport->notes->length(), fallible)) {
+            return;
+        }
+
+        size_t i = 0;
+        for (auto&& note : *aReport->notes) {
+            mNotes.ElementAt(i).Init(note.get());
+            i++;
+        }
+    }
+}
+=======
+  mSourceLine.Assign(aReport->linebuf(), aReport->linebufLength());
+  const JSErrorFormatString* efs =
+      js::GetErrorMessage(nullptr, aReport->errorNumber);
+>>>>>>> upstream-releases
 
   if (efs == nullptr) {
     mErrorMsgName.AssignLiteral("");
@@ -219,11 +319,43 @@ void xpc::ErrorReport::Init(JSErrorReport* aReport, const char* aToStringResult,
     if (!mNotes.SetLength(aReport->notes->length(), fallible)) {
       return;
     }
+<<<<<<< HEAD
 
     size_t i = 0;
     for (auto&& note : *aReport->notes) {
       mNotes.ElementAt(i).Init(note.get());
       i++;
+||||||| merged common ancestors
+    mLineNumber = aException->LineNumber(aCx);
+    mColumn = aException->ColumnNumber();
+
+    mFlags = JSREPORT_EXCEPTION;
+}
+
+static LazyLogModule gJSDiagnostics("JSDiagnostics");
+
+void
+xpc::ErrorBase::AppendErrorDetailsTo(nsCString& error)
+{
+    AppendUTF16toUTF8(mFileName, error);
+    error.AppendLiteral(", line ");
+    error.AppendInt(mLineNumber, 10);
+    error.AppendLiteral(": ");
+    AppendUTF16toUTF8(mErrorMsg, error);
+}
+
+void
+xpc::ErrorNote::LogToStderr()
+{
+    if (!DOMPrefs::DumpEnabled()) {
+        return;
+=======
+
+    size_t i = 0;
+    for (auto&& note : *aReport->notes) {
+      mNotes.ElementAt(i).Init(note.get());
+      i++;
+>>>>>>> upstream-releases
     }
   }
 }
@@ -236,18 +368,77 @@ void xpc::ErrorReport::Init(JSContext* aCx, mozilla::dom::Exception* aException,
 
   aException->GetErrorMessage(mErrorMsg);
 
+<<<<<<< HEAD
   aException->GetFilename(aCx, mFileName);
   if (mFileName.IsEmpty()) {
     mFileName.SetIsVoid(true);
   }
   mLineNumber = aException->LineNumber(aCx);
   mColumn = aException->ColumnNumber();
+||||||| merged common ancestors
+    fprintf(stderr, "%s\n", error.get());
+    fflush(stderr);
+=======
+  aException->GetFilename(aCx, mFileName);
+  if (mFileName.IsEmpty()) {
+    mFileName.SetIsVoid(true);
+  }
+  mSourceId = aException->SourceId(aCx);
+  mLineNumber = aException->LineNumber(aCx);
+  mColumn = aException->ColumnNumber();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mFlags = JSREPORT_EXCEPTION;
 }
 
 static LazyLogModule gJSDiagnostics("JSDiagnostics");
+||||||| merged common ancestors
+    for (size_t i = 0, len = mNotes.Length(); i < len; i++) {
+        ErrorNote& note = mNotes[i];
+        note.LogToStderr();
+    }
+}
 
+void
+xpc::ErrorReport::LogToConsole()
+{
+    LogToConsoleWithStack(nullptr, nullptr);
+}
+
+void
+xpc::ErrorReport::LogToConsoleWithStack(JS::HandleObject aStack,
+                                        JS::HandleObject aStackGlobal,
+                                        uint64_t aTimeWarpTarget /* = 0 */)
+{
+    // Don't log failures after diverging from a recording during replay, as
+    // this will cause the associated debugger operation to fail.
+    if (recordreplay::HasDivergedFromRecording()) {
+        return;
+    }
+
+    if (aStack) {
+        MOZ_ASSERT(aStackGlobal);
+        MOZ_ASSERT(JS_IsGlobalObject(aStackGlobal));
+        js::AssertSameCompartment(aStack, aStackGlobal);
+    } else {
+        MOZ_ASSERT(!aStackGlobal);
+    }
+
+    LogToStderr();
+
+    MOZ_LOG(gJSDiagnostics,
+            JSREPORT_IS_WARNING(mFlags) ? LogLevel::Warning : LogLevel::Error,
+            ("file %s, line %u\n%s", NS_ConvertUTF16toUTF8(mFileName).get(),
+             mLineNumber, NS_ConvertUTF16toUTF8(mErrorMsg).get()));
+=======
+  mFlags = JSREPORT_EXCEPTION;
+}
+
+static LazyLogModule gJSDiagnostics("JSDiagnostics");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void xpc::ErrorBase::AppendErrorDetailsTo(nsCString& error) {
   AppendUTF16toUTF8(mFileName, error);
   error.AppendLiteral(", line ");
@@ -327,7 +518,94 @@ void xpc::ErrorReport::LogToConsoleWithStack(
   // there's no console service without affecting the other reporting
   // mechanisms.
   nsCOMPtr<nsIConsoleService> consoleService =
+||||||| merged common ancestors
+    // Log to the console. We do this last so that we can simply return if
+    // there's no console service without affecting the other reporting
+    // mechanisms.
+    nsCOMPtr<nsIConsoleService> consoleService =
+=======
+void xpc::ErrorBase::AppendErrorDetailsTo(nsCString& error) {
+  AppendUTF16toUTF8(mFileName, error);
+  error.AppendLiteral(", line ");
+  error.AppendInt(mLineNumber, 10);
+  error.AppendLiteral(": ");
+  AppendUTF16toUTF8(mErrorMsg, error);
+}
+
+void xpc::ErrorNote::LogToStderr() {
+  if (!nsJSUtils::DumpEnabled()) {
+    return;
+  }
+
+  nsAutoCString error;
+  error.AssignLiteral("JavaScript note: ");
+  AppendErrorDetailsTo(error);
+
+  fprintf(stderr, "%s\n", error.get());
+  fflush(stderr);
+}
+
+void xpc::ErrorReport::LogToStderr() {
+  if (!nsJSUtils::DumpEnabled()) {
+    return;
+  }
+
+  nsAutoCString error;
+  error.AssignLiteral("JavaScript ");
+  if (JSREPORT_IS_STRICT(mFlags)) {
+    error.AppendLiteral("strict ");
+  }
+  if (JSREPORT_IS_WARNING(mFlags)) {
+    error.AppendLiteral("warning: ");
+  } else {
+    error.AppendLiteral("error: ");
+  }
+  AppendErrorDetailsTo(error);
+
+  fprintf(stderr, "%s\n", error.get());
+  fflush(stderr);
+
+  for (size_t i = 0, len = mNotes.Length(); i < len; i++) {
+    ErrorNote& note = mNotes[i];
+    note.LogToStderr();
+  }
+}
+
+void xpc::ErrorReport::LogToConsole() {
+  LogToConsoleWithStack(nullptr, nullptr);
+}
+
+void xpc::ErrorReport::LogToConsoleWithStack(
+    JS::HandleObject aStack, JS::HandleObject aStackGlobal,
+    uint64_t aTimeWarpTarget /* = 0 */) {
+  // Don't log failures after diverging from a recording during replay, as
+  // this will cause the associated debugger operation to fail.
+  if (recordreplay::HasDivergedFromRecording()) {
+    return;
+  }
+
+  if (aStack) {
+    MOZ_ASSERT(aStackGlobal);
+    MOZ_ASSERT(JS_IsGlobalObject(aStackGlobal));
+    js::AssertSameCompartment(aStack, aStackGlobal);
+  } else {
+    MOZ_ASSERT(!aStackGlobal);
+  }
+
+  LogToStderr();
+
+  MOZ_LOG(gJSDiagnostics,
+          JSREPORT_IS_WARNING(mFlags) ? LogLevel::Warning : LogLevel::Error,
+          ("file %s, line %u\n%s", NS_ConvertUTF16toUTF8(mFileName).get(),
+           mLineNumber, NS_ConvertUTF16toUTF8(mErrorMsg).get()));
+
+  // Log to the console. We do this last so that we can simply return if
+  // there's no console service without affecting the other reporting
+  // mechanisms.
+  nsCOMPtr<nsIConsoleService> consoleService =
+>>>>>>> upstream-releases
       do_GetService(NS_CONSOLESERVICE_CONTRACTID);
+<<<<<<< HEAD
   NS_ENSURE_TRUE_VOID(consoleService);
 
   RefPtr<nsScriptErrorBase> errorObject;
@@ -358,6 +636,74 @@ void xpc::ErrorReport::LogToConsoleWithStack(
   }
 
   consoleService->LogMessage(errorObject);
+||||||| merged common ancestors
+    NS_ENSURE_TRUE_VOID(consoleService);
+
+    RefPtr<nsScriptErrorBase> errorObject;
+    if (mWindowID && aStack) {
+      // Only set stack on messages related to a document
+      // As we cache messages in the console service,
+      // we have to ensure not leaking them after the related
+      // context is destroyed and we only track document lifecycle for now.
+      errorObject = new nsScriptErrorWithStack(aStack, aStackGlobal);
+    } else {
+      errorObject = new nsScriptError();
+    }
+    errorObject->SetErrorMessageName(mErrorMsgName);
+    errorObject->SetTimeWarpTarget(aTimeWarpTarget);
+
+    nsresult rv = errorObject->InitWithWindowID(mErrorMsg, mFileName, mSourceLine,
+                                                mLineNumber, mColumn, mFlags,
+                                                mCategory, mWindowID);
+    NS_ENSURE_SUCCESS_VOID(rv);
+
+    for (size_t i = 0, len = mNotes.Length(); i < len; i++) {
+        ErrorNote& note = mNotes[i];
+
+        nsScriptErrorNote* noteObject = new nsScriptErrorNote();
+        noteObject->Init(note.mErrorMsg, note.mFileName,
+                         note.mLineNumber, note.mColumn);
+        errorObject->AddNote(noteObject);
+    }
+
+    consoleService->LogMessage(errorObject);
+
+=======
+  NS_ENSURE_TRUE_VOID(consoleService);
+
+  RefPtr<nsScriptErrorBase> errorObject;
+  if (mWindowID && aStack) {
+    // Only set stack on messages related to a document
+    // As we cache messages in the console service,
+    // we have to ensure not leaking them after the related
+    // context is destroyed and we only track document lifecycle for now.
+    errorObject = new nsScriptErrorWithStack(aStack, aStackGlobal);
+  } else {
+    errorObject = new nsScriptError();
+  }
+  errorObject->SetErrorMessageName(mErrorMsgName);
+  errorObject->SetTimeWarpTarget(aTimeWarpTarget);
+
+  nsresult rv = errorObject->InitWithWindowID(
+      mErrorMsg, mFileName, mSourceLine, mLineNumber, mColumn, mFlags,
+      mCategory, mWindowID,
+      mCategory.Equals(NS_LITERAL_CSTRING("chrome javascript")));
+  NS_ENSURE_SUCCESS_VOID(rv);
+
+  rv = errorObject->InitSourceId(mSourceId);
+  NS_ENSURE_SUCCESS_VOID(rv);
+
+  for (size_t i = 0, len = mNotes.Length(); i < len; i++) {
+    ErrorNote& note = mNotes[i];
+
+    nsScriptErrorNote* noteObject = new nsScriptErrorNote();
+    noteObject->Init(note.mErrorMsg, note.mFileName, note.mSourceId,
+                     note.mLineNumber, note.mColumn);
+    errorObject->AddNote(noteObject);
+  }
+
+  consoleService->LogMessage(errorObject);
+>>>>>>> upstream-releases
 }
 
 /* static */
@@ -411,6 +757,7 @@ void xpc::TraceXPCGlobal(JSTracer* trc, JSObject* obj) {
     mozilla::dom::TraceProtoAndIfaceCache(trc, obj);
   }
 
+<<<<<<< HEAD
   // We might be called from a GC during the creation of a global, before we've
   // been able to set up the compartment private or the XPCWrappedNativeScope,
   // so we need to null-check those.
@@ -418,10 +765,27 @@ void xpc::TraceXPCGlobal(JSTracer* trc, JSObject* obj) {
   if (realmPrivate && realmPrivate->scope) {
     realmPrivate->scope->TraceInside(trc);
   }
+||||||| merged common ancestors
+    // We might be called from a GC during the creation of a global, before we've
+    // been able to set up the compartment private or the XPCWrappedNativeScope,
+    // so we need to null-check those.
+    xpc::RealmPrivate* realmPrivate = xpc::RealmPrivate::Get(obj);
+    if (realmPrivate && realmPrivate->scope) {
+        realmPrivate->scope->TraceInside(trc);
+    }
+=======
+  // We might be called from a GC during the creation of a global, before we've
+  // been able to set up the compartment private.
+  if (xpc::CompartmentPrivate* priv = xpc::CompartmentPrivate::Get(obj)) {
+    MOZ_ASSERT(priv->GetScope());
+    priv->GetScope()->TraceInside(trc);
+  }
+>>>>>>> upstream-releases
 }
 
 namespace xpc {
 
+<<<<<<< HEAD
 JSObject* CreateGlobalObject(JSContext* cx, const JSClass* clasp,
                              nsIPrincipal* principal,
                              JS::RealmOptions& aOptions) {
@@ -449,6 +813,61 @@ JSObject* CreateGlobalObject(JSContext* cx, const JSClass* clasp,
   (void)new XPCWrappedNativeScope(cx, global, site);
 
   if (clasp->flags & JSCLASS_DOM_GLOBAL) {
+||||||| merged common ancestors
+JSObject*
+CreateGlobalObject(JSContext* cx, const JSClass* clasp, nsIPrincipal* principal,
+                   JS::RealmOptions& aOptions)
+{
+    MOZ_ASSERT(NS_IsMainThread(), "using a principal off the main thread?");
+    MOZ_ASSERT(principal);
+
+    MOZ_RELEASE_ASSERT(principal != nsContentUtils::GetNullSubjectPrincipal(),
+                       "The null subject principal is getting inherited - fix that!");
+
+    SiteIdentifier site;
+    nsresult rv = BasePrincipal::Cast(principal)->GetSiteIdentifier(site);
+    NS_ENSURE_SUCCESS(rv, nullptr);
+
+    RootedObject global(cx,
+                        JS_NewGlobalObject(cx, clasp, nsJSPrincipals::get(principal),
+                                           JS::DontFireOnNewGlobalHook, aOptions));
+    if (!global) {
+        return nullptr;
+    }
+    JSAutoRealm ar(cx, global);
+
+    // The constructor automatically attaches the scope to the realm private
+    // of |global|.
+    (void) new XPCWrappedNativeScope(cx, global, site);
+
+    if (clasp->flags & JSCLASS_DOM_GLOBAL) {
+=======
+JSObject* CreateGlobalObject(JSContext* cx, const JSClass* clasp,
+                             nsIPrincipal* principal,
+                             JS::RealmOptions& aOptions) {
+  MOZ_ASSERT(NS_IsMainThread(), "using a principal off the main thread?");
+  MOZ_ASSERT(principal);
+
+  MOZ_RELEASE_ASSERT(
+      principal != nsContentUtils::GetNullSubjectPrincipal(),
+      "The null subject principal is getting inherited - fix that!");
+
+  SiteIdentifier site;
+  nsresult rv = BasePrincipal::Cast(principal)->GetSiteIdentifier(site);
+  NS_ENSURE_SUCCESS(rv, nullptr);
+
+  RootedObject global(
+      cx, JS_NewGlobalObject(cx, clasp, nsJSPrincipals::get(principal),
+                             JS::DontFireOnNewGlobalHook, aOptions));
+  if (!global) {
+    return nullptr;
+  }
+  JSAutoRealm ar(cx, global);
+
+  RealmPrivate::Init(global, site);
+
+  if (clasp->flags & JSCLASS_DOM_GLOBAL) {
+>>>>>>> upstream-releases
 #ifdef DEBUG
     // Verify that the right trace hook is called. Note that this doesn't
     // work right for wrapped globals, since the tracing situation there is
@@ -501,6 +920,34 @@ void InitGlobalObjectOptions(JS::RealmOptions& aOptions,
   }
 }
 
+<<<<<<< HEAD
+bool InitGlobalObject(JSContext* aJSContext, JS::Handle<JSObject*> aGlobal,
+                      uint32_t aFlags) {
+  // Immediately enter the global's realm so that everything we create
+  // ends up there.
+  JSAutoRealm ar(aJSContext, aGlobal);
+
+  // Stuff coming through this path always ends up as a DOM global.
+  MOZ_ASSERT(js::GetObjectClass(aGlobal)->flags & JSCLASS_DOM_GLOBAL);
+||||||| merged common ancestors
+bool
+InitGlobalObject(JSContext* aJSContext, JS::Handle<JSObject*> aGlobal, uint32_t aFlags)
+{
+    // Immediately enter the global's realm so that everything we create
+    // ends up there.
+    JSAutoRealm ar(aJSContext, aGlobal);
+
+    // Stuff coming through this path always ends up as a DOM global.
+    MOZ_ASSERT(js::GetObjectClass(aGlobal)->flags & JSCLASS_DOM_GLOBAL);
+
+    if (!(aFlags & xpc::OMIT_COMPONENTS_OBJECT)) {
+        // XPCCallContext gives us an active request needed to save/restore.
+        if (!RealmPrivate::Get(aGlobal)->scope->AttachComponentsObject(aJSContext) ||
+            !XPCNativeWrapper::AttachNewConstructorObject(aJSContext, aGlobal)) {
+            return UnexpectedFailure(false);
+        }
+    }
+=======
 bool InitGlobalObject(JSContext* aJSContext, JS::Handle<JSObject*> aGlobal,
                       uint32_t aFlags) {
   // Immediately enter the global's realm so that everything we create
@@ -512,20 +959,74 @@ bool InitGlobalObject(JSContext* aJSContext, JS::Handle<JSObject*> aGlobal,
 
   if (!(aFlags & xpc::OMIT_COMPONENTS_OBJECT)) {
     // XPCCallContext gives us an active request needed to save/restore.
+    if (!ObjectScope(aGlobal)->AttachComponentsObject(aJSContext) ||
+        !XPCNativeWrapper::AttachNewConstructorObject(aJSContext, aGlobal)) {
+      return UnexpectedFailure(false);
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!(aFlags & xpc::OMIT_COMPONENTS_OBJECT)) {
+    // XPCCallContext gives us an active request needed to save/restore.
     if (!RealmPrivate::Get(aGlobal)->scope->AttachComponentsObject(
             aJSContext) ||
         !XPCNativeWrapper::AttachNewConstructorObject(aJSContext, aGlobal)) {
       return UnexpectedFailure(false);
     }
   }
+||||||| merged common ancestors
+    if (!(aFlags & xpc::DONT_FIRE_ONNEWGLOBALHOOK)) {
+        JS_FireOnNewGlobalObject(aJSContext, aGlobal);
+    }
+=======
+  if (!(aFlags & xpc::DONT_FIRE_ONNEWGLOBALHOOK)) {
+    JS_FireOnNewGlobalObject(aJSContext, aGlobal);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!(aFlags & xpc::DONT_FIRE_ONNEWGLOBALHOOK)) {
     JS_FireOnNewGlobalObject(aJSContext, aGlobal);
   }
 
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+nsresult InitClassesWithNewWrappedGlobal(JSContext* aJSContext,
+                                         nsISupports* aCOMObj,
+                                         nsIPrincipal* aPrincipal,
+                                         uint32_t aFlags,
+                                         JS::RealmOptions& aOptions,
+                                         MutableHandleObject aNewGlobal) {
+  MOZ_ASSERT(aJSContext, "bad param");
+  MOZ_ASSERT(aCOMObj, "bad param");
+||||||| merged common ancestors
+nsresult
+InitClassesWithNewWrappedGlobal(JSContext* aJSContext,
+                                nsISupports* aCOMObj,
+                                nsIPrincipal* aPrincipal,
+                                uint32_t aFlags,
+                                JS::RealmOptions& aOptions,
+                                MutableHandleObject aNewGlobal)
+{
+    MOZ_ASSERT(aJSContext, "bad param");
+    MOZ_ASSERT(aCOMObj, "bad param");
+
+    // We pass null for the 'extra' pointer during global object creation, so
+    // we need to have a principal.
+    MOZ_ASSERT(aPrincipal);
+
+    if (!SystemBindingInitIds(aJSContext)) {
+      return NS_ERROR_FAILURE;
+    }
+=======
 nsresult InitClassesWithNewWrappedGlobal(JSContext* aJSContext,
                                          nsISupports* aCOMObj,
                                          nsIPrincipal* aPrincipal,
@@ -539,6 +1040,62 @@ nsresult InitClassesWithNewWrappedGlobal(JSContext* aJSContext,
   // we need to have a principal.
   MOZ_ASSERT(aPrincipal);
 
+  InitGlobalObjectOptions(aOptions, aPrincipal);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // We pass null for the 'extra' pointer during global object creation, so
+  // we need to have a principal.
+  MOZ_ASSERT(aPrincipal);
+||||||| merged common ancestors
+    InitGlobalObjectOptions(aOptions, aPrincipal);
+
+    // Call into XPCWrappedNative to make a new global object, scope, and global
+    // prototype.
+    xpcObjectHelper helper(aCOMObj);
+    MOZ_ASSERT(helper.GetScriptableFlags() & XPC_SCRIPTABLE_IS_GLOBAL_OBJECT);
+    RefPtr<XPCWrappedNative> wrappedGlobal;
+    nsresult rv =
+        XPCWrappedNative::WrapNewGlobal(helper, aPrincipal,
+                                        aFlags & xpc::INIT_JS_STANDARD_CLASSES,
+                                        aOptions, getter_AddRefs(wrappedGlobal));
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Grab a copy of the global and enter its compartment.
+    RootedObject global(aJSContext, wrappedGlobal->GetFlatJSObject());
+    MOZ_ASSERT(JS_IsGlobalObject(global));
+
+    if (!InitGlobalObject(aJSContext, global, aFlags)) {
+        return UnexpectedFailure(NS_ERROR_FAILURE);
+    }
+=======
+  // Call into XPCWrappedNative to make a new global object, scope, and global
+  // prototype.
+  xpcObjectHelper helper(aCOMObj);
+  MOZ_ASSERT(helper.GetScriptableFlags() & XPC_SCRIPTABLE_IS_GLOBAL_OBJECT);
+  RefPtr<XPCWrappedNative> wrappedGlobal;
+  nsresult rv = XPCWrappedNative::WrapNewGlobal(
+      aJSContext, helper, aPrincipal, aFlags & xpc::INIT_JS_STANDARD_CLASSES,
+      aOptions, getter_AddRefs(wrappedGlobal));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Grab a copy of the global and enter its compartment.
+  RootedObject global(aJSContext, wrappedGlobal->GetFlatJSObject());
+  MOZ_ASSERT(JS_IsGlobalObject(global));
+
+  if (!InitGlobalObject(aJSContext, global, aFlags)) {
+    return UnexpectedFailure(NS_ERROR_FAILURE);
+  }
+
+  {  // Scope for JSAutoRealm
+    JSAutoRealm ar(aJSContext, global);
+    if (!JS_DefineProfilingFunctions(aJSContext, global)) {
+      return UnexpectedFailure(NS_ERROR_OUT_OF_MEMORY);
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   InitGlobalObjectOptions(aOptions, aPrincipal);
 
   // Call into XPCWrappedNative to make a new global object, scope, and global
@@ -561,10 +1118,55 @@ nsresult InitClassesWithNewWrappedGlobal(JSContext* aJSContext,
 
   aNewGlobal.set(global);
   return NS_OK;
+||||||| merged common ancestors
+    aNewGlobal.set(global);
+    return NS_OK;
+=======
+  aNewGlobal.set(global);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+}  // namespace xpc
+||||||| merged common ancestors
+} // namespace xpc
+
+static nsresult
+NativeInterface2JSObject(HandleObject aScope,
+                         nsISupports* aCOMObj,
+                         nsWrapperCache* aCache,
+                         const nsIID * aIID,
+                         bool aAllowWrapping,
+                         MutableHandleValue aVal)
+{
+    AutoJSContext cx;
+    JSAutoRealm ar(cx, aScope);
+
+    nsresult rv;
+    xpcObjectHelper helper(aCOMObj, aCache);
+    if (!XPCConvert::NativeInterface2JSObject(aVal, helper, aIID, aAllowWrapping, &rv)) {
+        return rv;
+    }
+=======
 }  // namespace xpc
 
+static nsresult NativeInterface2JSObject(JSContext* aCx, HandleObject aScope,
+                                         nsISupports* aCOMObj,
+                                         nsWrapperCache* aCache,
+                                         const nsIID* aIID, bool aAllowWrapping,
+                                         MutableHandleValue aVal) {
+  JSAutoRealm ar(aCx, aScope);
+
+  nsresult rv;
+  xpcObjectHelper helper(aCOMObj, aCache);
+  if (!XPCConvert::NativeInterface2JSObject(aCx, aVal, helper, aIID,
+                                            aAllowWrapping, &rv)) {
+    return rv;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 static nsresult NativeInterface2JSObject(HandleObject aScope,
                                          nsISupports* aCOMObj,
                                          nsWrapperCache* aCache,
@@ -572,7 +1174,16 @@ static nsresult NativeInterface2JSObject(HandleObject aScope,
                                          MutableHandleValue aVal) {
   AutoJSContext cx;
   JSAutoRealm ar(cx, aScope);
+||||||| merged common ancestors
+    MOZ_ASSERT(aAllowWrapping || !xpc::WrapperFactory::IsXrayWrapper(&aVal.toObject()),
+               "Shouldn't be returning a xray wrapper here");
+=======
+  MOZ_ASSERT(
+      aAllowWrapping || !xpc::WrapperFactory::IsXrayWrapper(&aVal.toObject()),
+      "Shouldn't be returning a xray wrapper here");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult rv;
   xpcObjectHelper helper(aCOMObj, aCache);
   if (!XPCConvert::NativeInterface2JSObject(aVal, helper, aIID, aAllowWrapping,
@@ -585,9 +1196,15 @@ static nsresult NativeInterface2JSObject(HandleObject aScope,
       "Shouldn't be returning a xray wrapper here");
 
   return NS_OK;
+||||||| merged common ancestors
+    return NS_OK;
+=======
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPConnect::WrapNative(JSContext* aJSContext, JSObject* aScopeArg,
                         nsISupports* aCOMObj, const nsIID& aIID,
                         JSObject** aRetVal) {
@@ -602,6 +1219,40 @@ nsXPConnect::WrapNative(JSContext* aJSContext, JSObject* aScopeArg,
   if (NS_FAILED(rv)) {
     return rv;
   }
+||||||| merged common ancestors
+nsXPConnect::WrapNative(JSContext * aJSContext,
+                        JSObject * aScopeArg,
+                        nsISupports* aCOMObj,
+                        const nsIID & aIID,
+                        JSObject** aRetVal)
+{
+    MOZ_ASSERT(aJSContext, "bad param");
+    MOZ_ASSERT(aScopeArg, "bad param");
+    MOZ_ASSERT(aCOMObj, "bad param");
+
+    RootedObject aScope(aJSContext, aScopeArg);
+    RootedValue v(aJSContext);
+    nsresult rv = NativeInterface2JSObject(aScope, aCOMObj, nullptr, &aIID,
+                                           true, &v);
+    if (NS_FAILED(rv)) {
+        return rv;
+    }
+=======
+nsXPConnect::WrapNative(JSContext* aJSContext, JSObject* aScopeArg,
+                        nsISupports* aCOMObj, const nsIID& aIID,
+                        JSObject** aRetVal) {
+  MOZ_ASSERT(aJSContext, "bad param");
+  MOZ_ASSERT(aScopeArg, "bad param");
+  MOZ_ASSERT(aCOMObj, "bad param");
+
+  RootedObject aScope(aJSContext, aScopeArg);
+  RootedValue v(aJSContext);
+  nsresult rv = NativeInterface2JSObject(aJSContext, aScope, aCOMObj, nullptr,
+                                         &aIID, true, &v);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+>>>>>>> upstream-releases
 
   if (!v.isObjectOrNull()) {
     return NS_ERROR_FAILURE;
@@ -612,6 +1263,7 @@ nsXPConnect::WrapNative(JSContext* aJSContext, JSObject* aScopeArg,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPConnect::WrapNativeToJSVal(JSContext* aJSContext, JSObject* aScopeArg,
                                nsISupports* aCOMObj, nsWrapperCache* aCache,
                                const nsIID* aIID, bool aAllowWrapping,
@@ -623,6 +1275,35 @@ nsXPConnect::WrapNativeToJSVal(JSContext* aJSContext, JSObject* aScopeArg,
   RootedObject aScope(aJSContext, aScopeArg);
   return NativeInterface2JSObject(aScope, aCOMObj, aCache, aIID, aAllowWrapping,
                                   aVal);
+||||||| merged common ancestors
+nsXPConnect::WrapNativeToJSVal(JSContext* aJSContext,
+                               JSObject* aScopeArg,
+                               nsISupports* aCOMObj,
+                               nsWrapperCache* aCache,
+                               const nsIID* aIID,
+                               bool aAllowWrapping,
+                               MutableHandleValue aVal)
+{
+    MOZ_ASSERT(aJSContext, "bad param");
+    MOZ_ASSERT(aScopeArg, "bad param");
+    MOZ_ASSERT(aCOMObj, "bad param");
+
+    RootedObject aScope(aJSContext, aScopeArg);
+    return NativeInterface2JSObject(aScope, aCOMObj, aCache, aIID,
+                                    aAllowWrapping, aVal);
+=======
+nsXPConnect::WrapNativeToJSVal(JSContext* aJSContext, JSObject* aScopeArg,
+                               nsISupports* aCOMObj, nsWrapperCache* aCache,
+                               const nsIID* aIID, bool aAllowWrapping,
+                               MutableHandleValue aVal) {
+  MOZ_ASSERT(aJSContext, "bad param");
+  MOZ_ASSERT(aScopeArg, "bad param");
+  MOZ_ASSERT(aCOMObj, "bad param");
+
+  RootedObject aScope(aJSContext, aScopeArg);
+  return NativeInterface2JSObject(aJSContext, aScope, aCOMObj, aCache, aIID,
+                                  aAllowWrapping, aVal);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -676,6 +1357,7 @@ nsXPConnect::WrapJSAggregatedToNative(nsISupports* aOuter,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPConnect::GetWrappedNativeOfJSObject(JSContext* aJSContext,
                                         JSObject* aJSObjArg,
                                         nsIXPConnectWrappedNative** _retval) {
@@ -689,12 +1371,44 @@ nsXPConnect::GetWrappedNativeOfJSObject(JSContext* aJSContext,
     *_retval = nullptr;
     return NS_ERROR_FAILURE;
   }
+||||||| merged common ancestors
+nsXPConnect::GetWrappedNativeOfJSObject(JSContext * aJSContext,
+                                        JSObject * aJSObjArg,
+                                        nsIXPConnectWrappedNative** _retval)
+{
+    MOZ_ASSERT(aJSContext, "bad param");
+    MOZ_ASSERT(aJSObjArg, "bad param");
+    MOZ_ASSERT(_retval, "bad param");
+
+    RootedObject aJSObj(aJSContext, aJSObjArg);
+    aJSObj = js::CheckedUnwrap(aJSObj, /* stopAtWindowProxy = */ false);
+    if (!aJSObj || !IS_WN_REFLECTOR(aJSObj)) {
+        *_retval = nullptr;
+        return NS_ERROR_FAILURE;
+    }
+=======
+nsXPConnect::GetWrappedNativeOfJSObject(JSContext* aJSContext,
+                                        JSObject* aJSObjArg,
+                                        nsIXPConnectWrappedNative** _retval) {
+  MOZ_ASSERT(aJSContext, "bad param");
+  MOZ_ASSERT(aJSObjArg, "bad param");
+  MOZ_ASSERT(_retval, "bad param");
+
+  RootedObject aJSObj(aJSContext, aJSObjArg);
+  aJSObj = js::CheckedUnwrapDynamic(aJSObj, aJSContext,
+                                    /* stopAtWindowProxy = */ false);
+  if (!aJSObj || !IS_WN_REFLECTOR(aJSObj)) {
+    *_retval = nullptr;
+    return NS_ERROR_FAILURE;
+  }
+>>>>>>> upstream-releases
 
   RefPtr<XPCWrappedNative> temp = XPCWrappedNative::Get(aJSObj);
   temp.forget(_retval);
   return NS_OK;
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsISupports> xpc::UnwrapReflectorToISupports(
     JSObject* reflector) {
   // Unwrap security wrappers, if allowed.
@@ -702,6 +1416,21 @@ already_AddRefed<nsISupports> xpc::UnwrapReflectorToISupports(
   if (!reflector) {
     return nullptr;
   }
+||||||| merged common ancestors
+already_AddRefed<nsISupports>
+xpc::UnwrapReflectorToISupports(JSObject* reflector)
+{
+    // Unwrap security wrappers, if allowed.
+    reflector = js::CheckedUnwrap(reflector, /* stopAtWindowProxy = */ false);
+    if (!reflector) {
+        return nullptr;
+    }
+=======
+static already_AddRefed<nsISupports> ReflectorToISupports(JSObject* reflector) {
+  if (!reflector) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   // Try XPCWrappedNatives.
   if (IS_WN_REFLECTOR(reflector)) {
@@ -713,12 +1442,42 @@ already_AddRefed<nsISupports> xpc::UnwrapReflectorToISupports(
     return native.forget();
   }
 
+<<<<<<< HEAD
   // Try DOM objects.  This QI without taking a ref first is safe, because
   // this if non-null our thing will definitely be a DOM object, and we know
   // their QI to nsISupports doesn't do anything weird.
   nsCOMPtr<nsISupports> canonical =
       do_QueryInterface(mozilla::dom::UnwrapDOMObjectToISupports(reflector));
   return canonical.forget();
+||||||| merged common ancestors
+    // Try DOM objects.  This QI without taking a ref first is safe, because
+    // this if non-null our thing will definitely be a DOM object, and we know
+    // their QI to nsISupports doesn't do anything weird.
+    nsCOMPtr<nsISupports> canonical =
+        do_QueryInterface(mozilla::dom::UnwrapDOMObjectToISupports(reflector));
+    return canonical.forget();
+=======
+  // Try DOM objects.  This QI without taking a ref first is safe, because
+  // this if non-null our thing will definitely be a DOM object, and we know
+  // their QI to nsISupports doesn't do anything weird.
+  nsCOMPtr<nsISupports> canonical =
+      do_QueryInterface(mozilla::dom::UnwrapDOMObjectToISupports(reflector));
+  return canonical.forget();
+}
+
+already_AddRefed<nsISupports> xpc::ReflectorToISupportsStatic(
+    JSObject* reflector) {
+  // Unwrap security wrappers, if allowed.
+  return ReflectorToISupports(js::CheckedUnwrapStatic(reflector));
+}
+
+already_AddRefed<nsISupports> xpc::ReflectorToISupportsDynamic(
+    JSObject* reflector, JSContext* cx) {
+  // Unwrap security wrappers, if allowed.
+  return ReflectorToISupports(
+      js::CheckedUnwrapDynamic(reflector, cx,
+                               /* stopAtWindowProxy = */ false));
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -775,12 +1534,51 @@ nsXPConnect::DebugDump(int16_t depth) {
 NS_IMETHODIMP
 nsXPConnect::DebugDumpObject(nsISupports* p, int16_t depth) {
 #ifdef DEBUG
+<<<<<<< HEAD
   if (!depth) {
     return NS_OK;
   }
   if (!p) {
     XPC_LOG_ALWAYS(("*** Cound not dump object with NULL address"));
+||||||| merged common ancestors
+    if (!depth) {
+        return NS_OK;
+    }
+    if (!p) {
+        XPC_LOG_ALWAYS(("*** Cound not dump object with NULL address"));
+        return NS_OK;
+    }
+
+    nsCOMPtr<nsIXPConnect> xpc;
+    nsCOMPtr<nsIXPCWrappedJSClass> wjsc;
+    nsCOMPtr<nsIXPConnectWrappedNative> wn;
+    nsCOMPtr<nsIXPConnectWrappedJS> wjs;
+
+    if (NS_SUCCEEDED(p->QueryInterface(NS_GET_IID(nsIXPConnect),
+                                       getter_AddRefs(xpc)))) {
+        XPC_LOG_ALWAYS(("Dumping a nsIXPConnect..."));
+        xpc->DebugDump(depth);
+    } else if (NS_SUCCEEDED(p->QueryInterface(NS_GET_IID(nsIXPCWrappedJSClass),
+                                              getter_AddRefs(wjsc)))) {
+        XPC_LOG_ALWAYS(("Dumping a nsIXPCWrappedJSClass..."));
+        wjsc->DebugDump(depth);
+    } else if (NS_SUCCEEDED(p->QueryInterface(NS_GET_IID(nsIXPConnectWrappedNative),
+                                              getter_AddRefs(wn)))) {
+        XPC_LOG_ALWAYS(("Dumping a nsIXPConnectWrappedNative..."));
+        wn->DebugDump(depth);
+    } else if (NS_SUCCEEDED(p->QueryInterface(NS_GET_IID(nsIXPConnectWrappedJS),
+                                              getter_AddRefs(wjs)))) {
+        XPC_LOG_ALWAYS(("Dumping a nsIXPConnectWrappedJS..."));
+        wjs->DebugDump(depth);
+    } else {
+        XPC_LOG_ALWAYS(("*** Could not dump the nsISupports @ %p", p));
+    }
+#endif
+=======
+  if (!depth) {
+>>>>>>> upstream-releases
     return NS_OK;
+<<<<<<< HEAD
   }
 
   nsCOMPtr<nsIXPConnect> xpc;
@@ -809,6 +1607,36 @@ nsXPConnect::DebugDumpObject(nsISupports* p, int16_t depth) {
   }
 #endif
   return NS_OK;
+||||||| merged common ancestors
+=======
+  }
+  if (!p) {
+    XPC_LOG_ALWAYS(("*** Cound not dump object with NULL address"));
+    return NS_OK;
+  }
+
+  nsCOMPtr<nsIXPConnect> xpc;
+  nsCOMPtr<nsIXPConnectWrappedNative> wn;
+  nsCOMPtr<nsIXPConnectWrappedJS> wjs;
+
+  if (NS_SUCCEEDED(
+          p->QueryInterface(NS_GET_IID(nsIXPConnect), getter_AddRefs(xpc)))) {
+    XPC_LOG_ALWAYS(("Dumping a nsIXPConnect..."));
+    xpc->DebugDump(depth);
+  } else if (NS_SUCCEEDED(p->QueryInterface(
+                 NS_GET_IID(nsIXPConnectWrappedNative), getter_AddRefs(wn)))) {
+    XPC_LOG_ALWAYS(("Dumping a nsIXPConnectWrappedNative..."));
+    wn->DebugDump(depth);
+  } else if (NS_SUCCEEDED(p->QueryInterface(NS_GET_IID(nsIXPConnectWrappedJS),
+                                            getter_AddRefs(wjs)))) {
+    XPC_LOG_ALWAYS(("Dumping a nsIXPConnectWrappedJS..."));
+    wjs->DebugDump(depth);
+  } else {
+    XPC_LOG_ALWAYS(("*** Could not dump the nsISupports @ %p", p));
+  }
+#endif
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -821,6 +1649,21 @@ nsXPConnect::DebugDumpJSStack(bool showArgs, bool showLocals,
 
 NS_IMETHODIMP
 nsXPConnect::VariantToJS(JSContext* ctx, JSObject* scopeArg, nsIVariant* value,
+<<<<<<< HEAD
+                         MutableHandleValue _retval) {
+  MOZ_ASSERT(ctx, "bad param");
+  MOZ_ASSERT(scopeArg, "bad param");
+  MOZ_ASSERT(value, "bad param");
+||||||| merged common ancestors
+                         MutableHandleValue _retval)
+{
+    MOZ_ASSERT(ctx, "bad param");
+    MOZ_ASSERT(scopeArg, "bad param");
+    MOZ_ASSERT(value, "bad param");
+
+    RootedObject scope(ctx, scopeArg);
+    MOZ_ASSERT(js::IsObjectInContextCompartment(scope, ctx));
+=======
                          MutableHandleValue _retval) {
   MOZ_ASSERT(ctx, "bad param");
   MOZ_ASSERT(scopeArg, "bad param");
@@ -828,11 +1671,30 @@ nsXPConnect::VariantToJS(JSContext* ctx, JSObject* scopeArg, nsIVariant* value,
 
   RootedObject scope(ctx, scopeArg);
   MOZ_ASSERT(js::IsObjectInContextCompartment(scope, ctx));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedObject scope(ctx, scopeArg);
+  MOZ_ASSERT(js::IsObjectInContextCompartment(scope, ctx));
 
   nsresult rv = NS_OK;
   if (!XPCVariant::VariantDataToJS(value, &rv, _retval)) {
     if (NS_FAILED(rv)) {
       return rv;
+||||||| merged common ancestors
+    nsresult rv = NS_OK;
+    if (!XPCVariant::VariantDataToJS(value, &rv, _retval)) {
+        if (NS_FAILED(rv)) {
+            return rv;
+        }
+
+        return NS_ERROR_FAILURE;
+=======
+  nsresult rv = NS_OK;
+  if (!XPCVariant::VariantDataToJS(ctx, value, &rv, _retval)) {
+    if (NS_FAILED(rv)) {
+      return rv;
+>>>>>>> upstream-releases
     }
 
     return NS_ERROR_FAILURE;
@@ -915,6 +1777,7 @@ void SetLocationForGlobal(JSObject* global, nsIURI* locationURI) {
 
 }  // namespace xpc
 
+<<<<<<< HEAD
 static nsresult WriteScriptOrFunction(nsIObjectOutputStream* stream,
                                       JSContext* cx, JSScript* scriptArg,
                                       HandleObject functionObj) {
@@ -926,6 +1789,38 @@ static nsresult WriteScriptOrFunction(nsIObjectOutputStream* stream,
     RootedFunction fun(cx, JS_GetObjectFunction(functionObj));
     script.set(JS_GetFunctionScript(cx, fun));
   }
+||||||| merged common ancestors
+static nsresult
+WriteScriptOrFunction(nsIObjectOutputStream* stream, JSContext* cx,
+                      JSScript* scriptArg, HandleObject functionObj)
+{
+    // Exactly one of script or functionObj must be given
+    MOZ_ASSERT(!scriptArg != !functionObj);
+
+    RootedScript script(cx, scriptArg);
+    if (!script) {
+        RootedFunction fun(cx, JS_GetObjectFunction(functionObj));
+        script.set(JS_GetFunctionScript(cx, fun));
+    }
+
+    uint8_t flags = 0; // We don't have flags anymore.
+    nsresult rv = stream->Write8(flags);
+    if (NS_FAILED(rv)) {
+        return rv;
+    }
+=======
+static nsresult WriteScriptOrFunction(nsIObjectOutputStream* stream,
+                                      JSContext* cx, JSScript* scriptArg,
+                                      HandleObject functionObj) {
+  // Exactly one of script or functionObj must be given
+  MOZ_ASSERT(!scriptArg != !functionObj);
+
+  RootedScript script(cx, scriptArg);
+  if (!script) {
+    RootedFunction fun(cx, JS_GetObjectFunction(functionObj));
+    script.set(JS_GetFunctionScript(cx, fun));
+  }
+>>>>>>> upstream-releases
 
   uint8_t flags = 0;  // We don't have flags anymore.
   nsresult rv = stream->Write8(flags);
@@ -1127,6 +2022,7 @@ bool IsXrayWrapper(JSObject* obj) { return WrapperFactory::IsXrayWrapper(obj); }
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 bool IsChromeOrXBL(JSContext* cx, JSObject* /* unused */) {
   MOZ_ASSERT(NS_IsMainThread());
   JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
@@ -1156,6 +2052,94 @@ bool IsChromeOrXBLOrUAWidget(JSContext* cx, JSObject* /* unused */) {
   if (IsChromeOrXBL(cx, nullptr)) {
     return true;
   }
+||||||| merged common ancestors
+bool
+IsChromeOrXBL(JSContext* cx, JSObject* /* unused */)
+{
+    MOZ_ASSERT(NS_IsMainThread());
+    JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+    MOZ_ASSERT(realm);
+    JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+
+    // For remote XUL, we run XBL in the XUL scope. Given that we care about
+    // compat and not security for remote XUL, we just always claim to be XBL.
+    //
+    // Note that, for performance, we don't check AllowXULXBLForPrincipal here,
+    // and instead rely on the fact that AllowContentXBLScope() only returns false in
+    // remote XUL situations.
+    return AccessCheck::isChrome(c) || IsContentXBLCompartment(c) || !AllowContentXBLScope(realm);
+}
+
+bool
+IsNotUAWidget(JSContext* cx, JSObject* /* unused */)
+{
+    MOZ_ASSERT(NS_IsMainThread());
+    JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+    MOZ_ASSERT(realm);
+    JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+
+    return !IsUAWidgetCompartment(c);
+}
+
+bool
+IsChromeOrXBLOrUAWidget(JSContext* cx, JSObject* /* unused */)
+{
+    if (IsChromeOrXBL(cx, nullptr)) {
+      return true;
+    }
+=======
+bool IsChromeOrXBL(JSContext* cx, JSObject* /* unused */) {
+  MOZ_ASSERT(NS_IsMainThread());
+  JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+  MOZ_ASSERT(realm);
+  JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+
+  // For remote XUL, we run XBL in the XUL scope. Given that we care about
+  // compat and not security for remote XUL, we just always claim to be XBL.
+  //
+  // Note that, for performance, we don't check AllowXULXBLForPrincipal here,
+  // and instead rely on the fact that AllowContentXBLScope() only returns false
+  // in remote XUL situations.
+  return AccessCheck::isChrome(c) || IsContentXBLCompartment(c) ||
+         !AllowContentXBLScope(realm);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  MOZ_ASSERT(NS_IsMainThread());
+  JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+  MOZ_ASSERT(realm);
+  JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+||||||| merged common ancestors
+    MOZ_ASSERT(NS_IsMainThread());
+    JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+    MOZ_ASSERT(realm);
+    JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+=======
+bool IsNotUAWidget(JSContext* cx, JSObject* /* unused */) {
+  MOZ_ASSERT(NS_IsMainThread());
+  JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
+  MOZ_ASSERT(realm);
+  JS::Compartment* c = JS::GetCompartmentForRealm(realm);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return IsUAWidgetCompartment(c);
+||||||| merged common ancestors
+    return IsUAWidgetCompartment(c);
+=======
+  return !IsUAWidgetCompartment(c);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+bool IsChromeOrXBLOrUAWidget(JSContext* cx, JSObject* /* unused */) {
+  if (IsChromeOrXBL(cx, nullptr)) {
+    return true;
+  }
 
   MOZ_ASSERT(NS_IsMainThread());
   JS::Realm* realm = JS::GetCurrentRealmOrNull(cx);
@@ -1165,6 +2149,7 @@ bool IsChromeOrXBLOrUAWidget(JSContext* cx, JSObject* /* unused */) {
   return IsUAWidgetCompartment(c);
 }
 
+>>>>>>> upstream-releases
 extern bool IsCurrentThreadRunningChromeWorker();
 
 bool ThreadSafeIsChromeOrXBLOrUAWidget(JSContext* cx, JSObject* obj) {

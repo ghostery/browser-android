@@ -22,12 +22,11 @@
 
 class nsFrameSelection;
 class nsIContent;
-class nsIDocument;
-class nsIPresShell;
+
 struct nsPoint;
 
 namespace mozilla {
-
+class PresShell;
 namespace dom {
 class Element;
 class Selection;
@@ -46,9 +45,20 @@ class Selection;
 // Please see the wiki page for more information.
 // https://wiki.mozilla.org/AccessibleCaret
 //
+<<<<<<< HEAD
 class AccessibleCaretManager {
  public:
   explicit AccessibleCaretManager(nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class AccessibleCaretManager
+{
+public:
+  explicit AccessibleCaretManager(nsIPresShell* aPresShell);
+=======
+class AccessibleCaretManager {
+ public:
+  explicit AccessibleCaretManager(PresShell* aPresShell);
+>>>>>>> upstream-releases
   virtual ~AccessibleCaretManager();
 
   // Called by AccessibleCaretEventHub to inform us that PresShell is destroyed.
@@ -104,7 +114,14 @@ class AccessibleCaretManager {
 
   // Handle NotifySelectionChanged event from nsISelectionListener.
   MOZ_CAN_RUN_SCRIPT
+<<<<<<< HEAD
   virtual nsresult OnSelectionChanged(nsIDocument* aDoc, dom::Selection* aSel,
+||||||| merged common ancestors
+  virtual nsresult OnSelectionChanged(nsIDocument* aDoc,
+                                      dom::Selection* aSel,
+=======
+  virtual nsresult OnSelectionChanged(dom::Document* aDoc, dom::Selection* aSel,
+>>>>>>> upstream-releases
                                       int16_t aReason);
   // Handle key event.
   MOZ_CAN_RUN_SCRIPT
@@ -181,6 +198,7 @@ class AccessibleCaretManager {
   // then re-focus the window.
   void ChangeFocusToOrClearOldFocus(nsIFrame* aFrame) const;
 
+  MOZ_CAN_RUN_SCRIPT
   nsresult SelectWord(nsIFrame* aFrame, const nsPoint& aPoint) const;
   void SetSelectionDragState(bool aState) const;
 
@@ -189,9 +207,11 @@ class AccessibleCaretManager {
 
   // Extend the current selection forwards and backwards if it's already a
   // phone number.
+  MOZ_CAN_RUN_SCRIPT
   void SelectMoreIfPhoneNumber() const;
 
   // Extend the current phone number selection in the requested direction.
+  MOZ_CAN_RUN_SCRIPT
   void ExtendPhoneNumberSelection(const nsAString& aDirection) const;
 
   void SetSelectionDirection(nsDirection aDir) const;
@@ -210,6 +230,7 @@ class AccessibleCaretManager {
 
   // Start the selection scroll timer if the caret is being dragged out of
   // the scroll port.
+  MOZ_CAN_RUN_SCRIPT
   void StartSelectionAutoScrollTimer(const nsPoint& aPoint) const;
   void StopSelectionAutoScrollTimer() const;
 
@@ -226,6 +247,8 @@ class AccessibleCaretManager {
   dom::Element* GetEditingHostForFrame(nsIFrame* aFrame) const;
   dom::Selection* GetSelection() const;
   already_AddRefed<nsFrameSelection> GetFrameSelection() const;
+
+  MOZ_CAN_RUN_SCRIPT
   nsAutoString StringifiedSelection() const;
 
   // Get the union of all the child frame scrollable overflow rects for aFrame,
@@ -290,7 +313,7 @@ class AccessibleCaretManager {
   //
   // mPresShell will be set to nullptr in Terminate(). Therefore mPresShell is
   // nullptr either we are in gtest or PresShell::IsDestroying() is true.
-  nsIPresShell* MOZ_NON_OWNING_REF mPresShell = nullptr;
+  PresShell* MOZ_NON_OWNING_REF mPresShell = nullptr;
 
   // First caret is attached to nsCaret in cursor mode, and is attached to
   // selection highlight as the left caret in selection mode.
@@ -317,6 +340,10 @@ class AccessibleCaretManager {
 
   // Whether we're flushing layout, used for sanity-checking.
   bool mFlushingLayout = false;
+
+  // Set to false to disallow flushing layout in some callbacks such as
+  // OnReflow(), OnScrollStart(), OnScrollStart(), or OnScrollPositionChanged().
+  bool mAllowFlushingLayout = true;
 
   static const int32_t kAutoScrollTimerDelay = 30;
 

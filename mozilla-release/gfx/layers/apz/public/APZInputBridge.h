@@ -94,7 +94,7 @@ class APZInputBridge {
   // synchronous scroll.
   //
   // Even if this returns Nothing(), all wheel events in APZ-aware widgets must
-  // be sent through APZ so they are transformed correctly for TabParent.
+  // be sent through APZ so they are transformed correctly for BrowserParent.
   static Maybe<APZWheelAction> ActionForWheelEvent(WidgetWheelEvent* aEvent);
 
  protected:
@@ -103,14 +103,32 @@ class APZInputBridge {
   // Methods to help process WidgetInputEvents (or manage conversion to/from
   // InputData)
 
+<<<<<<< HEAD
   virtual void ProcessUnhandledEvent(LayoutDeviceIntPoint* aRefPoint,
                                      ScrollableLayerGuid* aOutTargetGuid,
                                      uint64_t* aOutFocusSequenceNumber) = 0;
+||||||| merged common ancestors
+  virtual void ProcessUnhandledEvent(
+      LayoutDeviceIntPoint* aRefPoint,
+      ScrollableLayerGuid* aOutTargetGuid,
+      uint64_t* aOutFocusSequenceNumber) = 0;
+=======
+  virtual void ProcessUnhandledEvent(LayoutDeviceIntPoint* aRefPoint,
+                                     ScrollableLayerGuid* aOutTargetGuid,
+                                     uint64_t* aOutFocusSequenceNumber,
+                                     LayersId* aOutLayersId) = 0;
+>>>>>>> upstream-releases
 
   virtual void UpdateWheelTransaction(LayoutDeviceIntPoint aRefPoint,
                                       EventMessage aEventMessage) = 0;
 
+<<<<<<< HEAD
   virtual ~APZInputBridge() {}
+||||||| merged common ancestors
+  virtual ~APZInputBridge() { }
+=======
+  virtual ~APZInputBridge() = default;
+>>>>>>> upstream-releases
 };
 
 }  // namespace layers

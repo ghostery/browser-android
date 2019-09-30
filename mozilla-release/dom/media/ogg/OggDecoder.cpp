@@ -13,8 +13,18 @@
 namespace mozilla {
 
 /* static */
+<<<<<<< HEAD
 bool OggDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   if (!StaticPrefs::MediaOggEnabled()) {
+||||||| merged common ancestors
+bool
+OggDecoder::IsSupportedType(const MediaContainerType& aContainerType)
+{
+  if (!StaticPrefs::MediaOggEnabled()) {
+=======
+bool OggDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
+  if (!StaticPrefs::media_ogg_enabled()) {
+>>>>>>> upstream-releases
     return false;
   }
 
@@ -49,8 +59,18 @@ bool OggDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ nsTArray<UniquePtr<TrackInfo>> OggDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
+||||||| merged common ancestors
+/* static */ nsTArray<UniquePtr<TrackInfo>>
+OggDecoder::GetTracksInfo(const MediaContainerType& aType)
+{
+=======
+/* static */
+nsTArray<UniquePtr<TrackInfo>> OggDecoder::GetTracksInfo(
+    const MediaContainerType& aType) {
+>>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   if (!IsSupportedType(aType)) {
     return tracks;

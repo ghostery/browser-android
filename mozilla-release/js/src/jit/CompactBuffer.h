@@ -25,6 +25,7 @@ class CompactBufferWriter;
 // Fixed-width integers are also available, in case the actual value will not
 // be known until later.
 
+<<<<<<< HEAD
 class CompactBufferReader {
   const uint8_t* buffer_;
   const uint8_t* end_;
@@ -104,6 +105,174 @@ class CompactBufferReader {
   }
 
   const uint8_t* currentPosition() const { return buffer_; }
+||||||| merged common ancestors
+class CompactBufferReader
+{
+    const uint8_t* buffer_;
+    const uint8_t* end_;
+
+    uint32_t readVariableLength() {
+        uint32_t val = 0;
+        uint32_t shift = 0;
+        uint8_t byte;
+        while (true) {
+            MOZ_ASSERT(shift < 32);
+            byte = readByte();
+            val |= (uint32_t(byte) >> 1) << shift;
+            shift += 7;
+            if (!(byte & 1)) {
+                return val;
+            }
+        }
+    }
+
+  public:
+    CompactBufferReader(const uint8_t* start, const uint8_t* end)
+      : buffer_(start),
+        end_(end)
+    { }
+    inline explicit CompactBufferReader(const CompactBufferWriter& writer);
+    uint8_t readByte() {
+        MOZ_ASSERT(buffer_ < end_);
+        return *buffer_++;
+    }
+    uint32_t readFixedUint32_t() {
+        uint32_t b0 = readByte();
+        uint32_t b1 = readByte();
+        uint32_t b2 = readByte();
+        uint32_t b3 = readByte();
+        return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
+    }
+    uint16_t readFixedUint16_t() {
+        uint32_t b0 = readByte();
+        uint32_t b1 = readByte();
+        return b0 | (b1 << 8);
+    }
+    uint32_t readNativeEndianUint32_t() {
+        // Must be at 4-byte boundary
+        MOZ_ASSERT(uintptr_t(buffer_) % sizeof(uint32_t) == 0);
+        return *reinterpret_cast<const uint32_t*>(buffer_);
+    }
+    uint32_t readUnsigned() {
+        return readVariableLength();
+    }
+    int32_t readSigned() {
+        uint8_t b = readByte();
+        bool isNegative = !!(b & (1 << 0));
+        bool more = !!(b & (1 << 1));
+        int32_t result = b >> 2;
+        if (more) {
+            result |= readUnsigned() << 6;
+        }
+        if (isNegative) {
+            return -result;
+        }
+        return result;
+    }
+
+    void* readRawPointer() {
+        uintptr_t ptrWord = 0;
+        for (unsigned i = 0; i < sizeof(uintptr_t); i++) {
+            ptrWord |= static_cast<uintptr_t>(readByte()) << (i*8);
+        }
+        return reinterpret_cast<void*>(ptrWord);
+    }
+
+    bool more() const {
+        MOZ_ASSERT(buffer_ <= end_);
+        return buffer_ < end_;
+    }
+
+    void seek(const uint8_t* start, uint32_t offset) {
+        buffer_ = start + offset;
+        MOZ_ASSERT(start < end_);
+        MOZ_ASSERT(buffer_ < end_);
+    }
+
+    const uint8_t* currentPosition() const {
+        return buffer_;
+    }
+=======
+class CompactBufferReader {
+  const uint8_t* buffer_;
+  const uint8_t* end_;
+
+  uint32_t readVariableLength() {
+    uint32_t val = 0;
+    uint32_t shift = 0;
+    uint8_t byte;
+    while (true) {
+      MOZ_ASSERT(shift < 32);
+      byte = readByte();
+      val |= (uint32_t(byte) >> 1) << shift;
+      shift += 7;
+      if (!(byte & 1)) {
+        return val;
+      }
+    }
+  }
+
+ public:
+  CompactBufferReader(const uint8_t* start, const uint8_t* end)
+      : buffer_(start), end_(end) {}
+  inline explicit CompactBufferReader(const CompactBufferWriter& writer);
+  uint8_t readByte() {
+    MOZ_ASSERT(buffer_ < end_);
+    return *buffer_++;
+  }
+  uint32_t readFixedUint32_t() {
+    uint32_t b0 = readByte();
+    uint32_t b1 = readByte();
+    uint32_t b2 = readByte();
+    uint32_t b3 = readByte();
+    return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
+  }
+  uint16_t readFixedUint16_t() {
+    uint32_t b0 = readByte();
+    uint32_t b1 = readByte();
+    return b0 | (b1 << 8);
+  }
+  uint32_t readNativeEndianUint32_t() {
+    // Must be at 4-byte boundary
+    MOZ_ASSERT(uintptr_t(buffer_) % sizeof(uint32_t) == 0);
+    return *reinterpret_cast<const uint32_t*>(buffer_);
+  }
+  uint32_t readUnsigned() { return readVariableLength(); }
+  int32_t readSigned() {
+    uint8_t b = readByte();
+    bool isNegative = !!(b & (1 << 0));
+    bool more = !!(b & (1 << 1));
+    int32_t result = b >> 2;
+    if (more) {
+      result |= readUnsigned() << 6;
+    }
+    if (isNegative) {
+      return -result;
+    }
+    return result;
+  }
+
+  void* readRawPointer() {
+    uintptr_t ptrWord = 0;
+    for (unsigned i = 0; i < sizeof(uintptr_t); i++) {
+      ptrWord |= static_cast<uintptr_t>(readByte()) << (i * 8);
+    }
+    return reinterpret_cast<void*>(ptrWord);
+  }
+
+  bool more() const {
+    MOZ_ASSERT(buffer_ <= end_);
+    return buffer_ < end_;
+  }
+
+  void seek(const uint8_t* start, uint32_t offset) {
+    buffer_ = start + offset;
+    MOZ_ASSERT(start < end_);
+    MOZ_ASSERT(buffer_ <= end_);
+  }
+
+  const uint8_t* currentPosition() const { return buffer_; }
+>>>>>>> upstream-releases
 };
 
 class CompactBufferWriter {

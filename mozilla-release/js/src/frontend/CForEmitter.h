@@ -7,14 +7,14 @@
 #ifndef frontend_CForEmitter_h
 #define frontend_CForEmitter_h
 
-#include "mozilla/Attributes.h"
-#include "mozilla/Maybe.h"
+#include "mozilla/Attributes.h"  // MOZ_STACK_CLASS, MOZ_MUST_USE
+#include "mozilla/Maybe.h"       // mozilla::Maybe
 
-#include <stddef.h>
-#include <stdint.h>
+#include <stdint.h>  // uint32_t
 
-#include "frontend/BytecodeControlStructures.h"
-#include "frontend/TDZCheckCache.h"
+#include "frontend/BytecodeControlStructures.h"  // LoopControl
+#include "frontend/BytecodeOffset.h"             // BytecodeOffset
+#include "frontend/TDZCheckCache.h"              // TDZCheckCache
 
 namespace js {
 namespace frontend {
@@ -51,6 +51,7 @@ class EmitterScope;
 //                   Some(offset_of_end));
 //     cfor.emitEnd();
 //
+<<<<<<< HEAD
 class MOZ_STACK_CLASS CForEmitter {
   // Basic structure of the bytecode (not complete).
   //
@@ -118,6 +119,150 @@ class MOZ_STACK_CLASS CForEmitter {
   const EmitterScope* headLexicalEmitterScopeForLet_;
 
   mozilla::Maybe<TDZCheckCache> tdzCache_;
+||||||| merged common ancestors
+class MOZ_STACK_CLASS CForEmitter
+{
+    // Basic structure of the bytecode (not complete).
+    //
+    // If `cond` is not empty:
+    //     {init}
+    //     JSOP_GOTO entry
+    //   loop:
+    //     {body}
+    //     {update}
+    //   entry:
+    //     {cond}
+    //     JSOP_IFNE loop
+    //
+    // If `cond` is empty:
+    //     {init}
+    //   loop:
+    //     {body}
+    //     {update}
+    //     JSOP_GOTO loop
+    //
+  public:
+    enum class Cond {
+        Missing,
+        Present
+    };
+    enum class Update {
+        Missing,
+        Present
+    };
+
+  private:
+    BytecodeEmitter* bce_;
+
+    // The source note index for SRC_FOR.
+    unsigned noteIndex_ = 0;
+
+    // The bytecode offset of loop condition.
+    // Not the bytecode offset of loop condition expression itself.
+    ptrdiff_t condOffset_ = 0;
+
+    // The base bytecode offset used by SRC_FOR.
+    ptrdiff_t biasedTop_ = 0;
+
+    // Whether the c-style for loop has `cond` and `update`.
+    Cond cond_ = Cond::Missing;
+    Update update_ = Update::Missing;
+
+    mozilla::Maybe<LoopControl> loopInfo_;
+
+    // The lexical scope to be freshened for each iteration.
+    // See the comment in `emitBody` for more details.
+    //
+    // ### Scope freshening
+    //
+    // Each iteration of a `for (let V...)` loop creates a fresh loop variable
+    // binding for V, even if the loop is a C-style `for(;;)` loop:
+    //
+    //     var funcs = [];
+    //     for (let i = 0; i < 2; i++)
+    //         funcs.push(function() { return i; });
+    //     assertEq(funcs[0](), 0);  // the two closures capture...
+    //     assertEq(funcs[1](), 1);  // ...two different `i` bindings
+    //
+    // This is implemented by "freshening" the implicit block -- changing the
+    // scope chain to a fresh clone of the instantaneous block object -- each
+    // iteration, just before evaluating the "update" in for(;;) loops.
+    //
+    // ECMAScript doesn't freshen in `for (const ...;;)`.  Lack of freshening
+    // isn't directly observable in-language because `const`s can't be mutated,
+    // but it *can* be observed in the Debugger API.
+    const EmitterScope* headLexicalEmitterScopeForLet_;
+
+    mozilla::Maybe<TDZCheckCache> tdzCache_;
+=======
+class MOZ_STACK_CLASS CForEmitter {
+  // Basic structure of the bytecode (not complete).
+  //
+  // If `cond` is not empty:
+  //     {init}
+  //     JSOP_GOTO entry
+  //   loop:
+  //     {body}
+  //     {update}
+  //   entry:
+  //     {cond}
+  //     JSOP_IFNE loop
+  //
+  // If `cond` is empty:
+  //     {init}
+  //   loop:
+  //     {body}
+  //     {update}
+  //     JSOP_GOTO loop
+  //
+ public:
+  enum class Cond { Missing, Present };
+  enum class Update { Missing, Present };
+
+ private:
+  BytecodeEmitter* bce_;
+
+  // The source note index for SRC_FOR.
+  unsigned noteIndex_ = 0;
+
+  // The bytecode offset of loop condition.
+  // Not the bytecode offset of loop condition expression itself.
+  BytecodeOffset condOffset_;
+
+  // The base bytecode offset used by SRC_FOR.
+  BytecodeOffset biasedTop_;
+
+  // Whether the c-style for loop has `cond` and `update`.
+  Cond cond_ = Cond::Missing;
+  Update update_ = Update::Missing;
+
+  mozilla::Maybe<LoopControl> loopInfo_;
+
+  // The lexical scope to be freshened for each iteration.
+  // See the comment in `emitBody` for more details.
+  //
+  // ### Scope freshening
+  //
+  // Each iteration of a `for (let V...)` loop creates a fresh loop variable
+  // binding for V, even if the loop is a C-style `for(;;)` loop:
+  //
+  //     var funcs = [];
+  //     for (let i = 0; i < 2; i++)
+  //         funcs.push(function() { return i; });
+  //     assertEq(funcs[0](), 0);  // the two closures capture...
+  //     assertEq(funcs[1](), 1);  // ...two different `i` bindings
+  //
+  // This is implemented by "freshening" the implicit block -- changing the
+  // scope chain to a fresh clone of the instantaneous block object -- each
+  // iteration, just before evaluating the "update" in for(;;) loops.
+  //
+  // ECMAScript doesn't freshen in `for (const ...;;)`.  Lack of freshening
+  // isn't directly observable in-language because `const`s can't be mutated,
+  // but it *can* be observed in the Debugger API.
+  const EmitterScope* headLexicalEmitterScopeForLet_;
+
+  mozilla::Maybe<TDZCheckCache> tdzCache_;
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   // The state of this emitter.

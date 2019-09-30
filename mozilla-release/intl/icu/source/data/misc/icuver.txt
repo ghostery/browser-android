@@ -8,6 +8,14 @@
 // ***************************************************************************
 
 icuver:table(nofallback){ 
+<<<<<<< HEAD
     DataVersion { "63.1.0.0" }
     ICUVersion  { "63.1.0.0" }
+||||||| merged common ancestors
+    DataVersion { "62.1.0.0" }
+    ICUVersion  { "62.1.0.0" }
+=======
+    DataVersion { "64.2.0.0" }
+    ICUVersion  { "64.2.0.0" }
+>>>>>>> upstream-releases
 }

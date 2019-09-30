@@ -12,6 +12,7 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class BaseBlobImpl : public BlobImpl {
  public:
   BaseBlobImpl(const nsAString& aName, const nsAString& aContentType,
@@ -24,10 +25,42 @@ class BaseBlobImpl : public BlobImpl {
         mLength(aLength),
         mLastModificationDate(aLastModifiedDate),
         mSerialNumber(NextSerialNumber()) {
+||||||| merged common ancestors
+class BaseBlobImpl : public BlobImpl
+{
+public:
+  BaseBlobImpl(const nsAString& aName, const nsAString& aContentType,
+               uint64_t aLength, int64_t aLastModifiedDate)
+    : mIsFile(true)
+    , mImmutable(false)
+    , mContentType(aContentType)
+    , mName(aName)
+    , mStart(0)
+    , mLength(aLength)
+    , mLastModificationDate(aLastModifiedDate)
+    , mSerialNumber(NextSerialNumber())
+  {
+=======
+class BaseBlobImpl : public BlobImpl {
+ public:
+  BaseBlobImpl(const nsAString& aBlobImplType, const nsAString& aName,
+               const nsAString& aContentType, uint64_t aLength,
+               int64_t aLastModifiedDate)
+      : mBlobImplType(aBlobImplType),
+        mIsFile(true),
+        mImmutable(false),
+        mContentType(aContentType),
+        mName(aName),
+        mStart(0),
+        mLength(aLength),
+        mLastModificationDate(aLastModifiedDate),
+        mSerialNumber(NextSerialNumber()) {
+>>>>>>> upstream-releases
     // Ensure non-null mContentType by default
     mContentType.SetIsVoid(false);
   }
 
+<<<<<<< HEAD
   BaseBlobImpl(const nsAString& aName, const nsAString& aContentType,
                uint64_t aLength)
       : mIsFile(true),
@@ -38,10 +71,36 @@ class BaseBlobImpl : public BlobImpl {
         mLength(aLength),
         mLastModificationDate(INT64_MAX),
         mSerialNumber(NextSerialNumber()) {
+||||||| merged common ancestors
+  BaseBlobImpl(const nsAString& aName, const nsAString& aContentType,
+               uint64_t aLength)
+    : mIsFile(true)
+    , mImmutable(false)
+    , mContentType(aContentType)
+    , mName(aName)
+    , mStart(0)
+    , mLength(aLength)
+    , mLastModificationDate(INT64_MAX)
+    , mSerialNumber(NextSerialNumber())
+  {
+=======
+  BaseBlobImpl(const nsAString& aBlobImplType, const nsAString& aName,
+               const nsAString& aContentType, uint64_t aLength)
+      : mBlobImplType(aBlobImplType),
+        mIsFile(true),
+        mImmutable(false),
+        mContentType(aContentType),
+        mName(aName),
+        mStart(0),
+        mLength(aLength),
+        mLastModificationDate(INT64_MAX),
+        mSerialNumber(NextSerialNumber()) {
+>>>>>>> upstream-releases
     // Ensure non-null mContentType by default
     mContentType.SetIsVoid(false);
   }
 
+<<<<<<< HEAD
   BaseBlobImpl(const nsAString& aContentType, uint64_t aLength)
       : mIsFile(false),
         mImmutable(false),
@@ -50,10 +109,33 @@ class BaseBlobImpl : public BlobImpl {
         mLength(aLength),
         mLastModificationDate(INT64_MAX),
         mSerialNumber(NextSerialNumber()) {
+||||||| merged common ancestors
+  BaseBlobImpl(const nsAString& aContentType, uint64_t aLength)
+    : mIsFile(false)
+    , mImmutable(false)
+    , mContentType(aContentType)
+    , mStart(0)
+    , mLength(aLength)
+    , mLastModificationDate(INT64_MAX)
+    , mSerialNumber(NextSerialNumber())
+  {
+=======
+  BaseBlobImpl(const nsAString& aBlobImplType, const nsAString& aContentType,
+               uint64_t aLength)
+      : mBlobImplType(aBlobImplType),
+        mIsFile(false),
+        mImmutable(false),
+        mContentType(aContentType),
+        mStart(0),
+        mLength(aLength),
+        mLastModificationDate(INT64_MAX),
+        mSerialNumber(NextSerialNumber()) {
+>>>>>>> upstream-releases
     // Ensure non-null mContentType by default
     mContentType.SetIsVoid(false);
   }
 
+<<<<<<< HEAD
   BaseBlobImpl(const nsAString& aContentType, uint64_t aStart, uint64_t aLength)
       : mIsFile(false),
         mImmutable(false),
@@ -62,6 +144,29 @@ class BaseBlobImpl : public BlobImpl {
         mLength(aLength),
         mLastModificationDate(INT64_MAX),
         mSerialNumber(NextSerialNumber()) {
+||||||| merged common ancestors
+  BaseBlobImpl(const nsAString& aContentType, uint64_t aStart,
+               uint64_t aLength)
+    : mIsFile(false)
+    , mImmutable(false)
+    , mContentType(aContentType)
+    , mStart(aStart)
+    , mLength(aLength)
+    , mLastModificationDate(INT64_MAX)
+    , mSerialNumber(NextSerialNumber())
+  {
+=======
+  BaseBlobImpl(const nsAString& aBlobImplType, const nsAString& aContentType,
+               uint64_t aStart, uint64_t aLength)
+      : mBlobImplType(aBlobImplType),
+        mIsFile(false),
+        mImmutable(false),
+        mContentType(aContentType),
+        mStart(aStart),
+        mLength(aLength),
+        mLastModificationDate(INT64_MAX),
+        mSerialNumber(NextSerialNumber()) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(aLength != UINT64_MAX, "Must know length when creating slice");
     // Ensure non-null mContentType by default
     mContentType.SetIsVoid(false);
@@ -79,10 +184,10 @@ class BaseBlobImpl : public BlobImpl {
 
   virtual void GetMozFullPath(nsAString& aName,
                               SystemCallerGuarantee /* unused */,
-                              ErrorResult& aRv) const override;
+                              ErrorResult& aRv) override;
 
   virtual void GetMozFullPathInternal(nsAString& aFileName,
-                                      ErrorResult& aRv) const override;
+                                      ErrorResult& aRv) override;
 
   virtual uint64_t GetSize(ErrorResult& aRv) override { return mLength; }
 
@@ -141,7 +246,20 @@ class BaseBlobImpl : public BlobImpl {
 
   virtual bool IsFile() const override { return mIsFile; }
 
+<<<<<<< HEAD
   virtual bool IsSizeUnknown() const override { return mLength == UINT64_MAX; }
+||||||| merged common ancestors
+  virtual bool IsSizeUnknown() const override
+  {
+    return mLength == UINT64_MAX;
+  }
+=======
+  virtual bool IsSizeUnknown() const override { return mLength == UINT64_MAX; }
+
+  virtual void GetBlobImplType(nsAString& aBlobImplType) const override {
+    aBlobImplType = mBlobImplType;
+  }
+>>>>>>> upstream-releases
 
  protected:
   virtual ~BaseBlobImpl() {}
@@ -152,6 +270,8 @@ class BaseBlobImpl : public BlobImpl {
    * The implementation is thread safe.
    */
   static uint64_t NextSerialNumber();
+
+  const nsString mBlobImplType;
 
   bool mIsFile;
   bool mImmutable;

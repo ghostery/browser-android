@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 . "$topsrcdir/build/mozconfig.win-common"
 . "$topsrcdir/browser/config/mozconfigs/win64-aarch64/common-win64"
 . "$topsrcdir/browser/config/mozconfigs/win64-aarch64/common-opt"
@@ -8,3 +9,17 @@ ac_add_options --enable-dmd
 ac_add_options --with-branding=browser/branding/nightly
 
 . "$topsrcdir/build/mozconfig.common.override"
+||||||| merged common ancestors
+=======
+. "$topsrcdir/build/mozconfig.win-common"
+. "$topsrcdir/browser/config/mozconfigs/win64-aarch64/common-win64"
+. "$topsrcdir/browser/config/mozconfigs/win64-aarch64/common-opt"
+
+export MOZ_LTO=1
+
+ac_add_options --with-branding=browser/branding/nightly
+
+unset ENABLE_CLANG_PLUGIN
+
+. "$topsrcdir/build/mozconfig.common.override"
+>>>>>>> upstream-releases

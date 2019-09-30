@@ -144,10 +144,25 @@ void MessagePortParent::Close() {
   mEntangled = false;
 }
 
+<<<<<<< HEAD
 /* static */ bool MessagePortParent::ForceClose(const nsID& aUUID,
                                                 const nsID& aDestinationUUID,
                                                 const uint32_t& aSequenceID) {
   MessagePortService* service = MessagePortService::Get();
+||||||| merged common ancestors
+/* static */ bool
+MessagePortParent::ForceClose(const nsID& aUUID,
+                              const nsID& aDestinationUUID,
+                              const uint32_t& aSequenceID)
+{
+  MessagePortService* service =  MessagePortService::Get();
+=======
+/* static */
+bool MessagePortParent::ForceClose(const nsID& aUUID,
+                                   const nsID& aDestinationUUID,
+                                   const uint32_t& aSequenceID) {
+  MessagePortService* service = MessagePortService::Get();
+>>>>>>> upstream-releases
   if (!service) {
     NS_WARNING(
         "The service must exist if we want to close an existing MessagePort.");

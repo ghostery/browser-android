@@ -8,14 +8,16 @@
 
 // There are shutdown issues for which multiple rejections are left uncaught.
 // See bug 1018184 for resolving these issues.
-const { PromiseTestUtils } = scopedCuImport("resource://testing-common/PromiseTestUtils.jsm");
+const { PromiseTestUtils } = ChromeUtils.import(
+  "resource://testing-common/PromiseTestUtils.jsm"
+);
 PromiseTestUtils.whitelistRejectionsGlobally(/Connection closed/);
 
 add_task(async function() {
   await addTab(`data:text/html;charset=utf-8,
                 <style>h1 { color: red; }</style>
                 <h1 id="title">textbox context menu test</h1>`);
-  const {toolbox, inspector} = await openInspector();
+  const { toolbox, inspector } = await openInspector();
   await selectNode("h1", inspector);
 
   info("Testing the markup-view tagname");
@@ -45,7 +47,11 @@ add_task(async function() {
   info("Testing the rule-view selector");
   const ruleView = inspector.getPanel("ruleview").view;
   const cssRuleEditor = getRuleViewRuleEditor(ruleView, 1);
-  EventUtils.synthesizeMouseAtCenter(cssRuleEditor.selectorText, {}, inspector.panelWin);
+  EventUtils.synthesizeMouseAtCenter(
+    cssRuleEditor.selectorText,
+    {},
+    inspector.panelWin
+  );
   await checkTextBox(inspector.panelDoc.activeElement, toolbox);
 
   info("Testing the rule-view property name");
@@ -71,7 +77,8 @@ add_task(async function() {
 
   info("Testing the box-model region");
   const margin = inspector.panelDoc.querySelector(
-    ".boxmodel-margin.boxmodel-top > span");
+    ".boxmodel-margin.boxmodel-top > span"
+  );
   EventUtils.synthesizeMouseAtCenter(margin, {}, inspector.panelWin);
   await checkTextBox(inspector.panelDoc.activeElement, toolbox);
 
@@ -80,23 +87,59 @@ add_task(async function() {
   EventUtils.synthesizeMouseAtCenter(tag, {}, inspector.panelWin);
 });
 
+<<<<<<< HEAD
 async function checkTextBox(textBox, toolbox) {
   let textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
   ok(!textboxContextMenu, "The menu is  closed");
+||||||| merged common ancestors
+async function checkTextBox(textBox, {textBoxContextMenuPopup}) {
+  is(textBoxContextMenuPopup.state, "closed", "The menu is closed");
+=======
+async function checkTextBox(textBox, toolbox) {
+  let textboxContextMenu = toolbox.getTextBoxContextMenu();
+  ok(!textboxContextMenu, "The menu is closed");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   info("Simulating context click on the textbox and expecting the menu to open");
   const onContextMenu = toolbox.once("menu-open");
   synthesizeContextMenuEvent(textBox);
+||||||| merged common ancestors
+  info("Simulating context click on the textbox and expecting the menu to open");
+  const onContextMenu = once(textBoxContextMenuPopup, "popupshown");
+  EventUtils.synthesizeMouse(textBox, 2, 2, {type: "contextmenu", button: 2},
+                             textBox.ownerDocument.defaultView);
+=======
+  info(
+    "Simulating context click on the textbox and expecting the menu to open"
+  );
+  const onContextMenu = toolbox.once("menu-open");
+  synthesizeContextMenuEvent(textBox);
+>>>>>>> upstream-releases
   await onContextMenu;
 
+<<<<<<< HEAD
   textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
   ok(textboxContextMenu, "The menu is now visible");
+||||||| merged common ancestors
+  is(textBoxContextMenuPopup.state, "open", "The menu is now visible");
+=======
+  textboxContextMenu = toolbox.getTextBoxContextMenu();
+  ok(textboxContextMenu, "The menu is now visible");
+>>>>>>> upstream-releases
 
   info("Closing the menu");
   const onContextMenuHidden = toolbox.once("menu-close");
   EventUtils.sendKey("ESCAPE", toolbox.win);
   await onContextMenuHidden;
 
+<<<<<<< HEAD
   textboxContextMenu = toolbox.doc.getElementById("toolbox-menu");
   ok(!textboxContextMenu, "The menu is closed again");
+||||||| merged common ancestors
+  is(textBoxContextMenuPopup.state, "closed", "The menu is closed again");
+=======
+  textboxContextMenu = toolbox.getTextBoxContextMenu();
+  ok(!textboxContextMenu, "The menu is closed again");
+>>>>>>> upstream-releases
 }

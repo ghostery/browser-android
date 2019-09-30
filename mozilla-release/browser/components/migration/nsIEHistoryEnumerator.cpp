@@ -93,7 +93,28 @@ NS_IMETHODIMP
 nsIEHistoryEnumerator::GetNext(nsISupports** _retval) {
   *_retval = nullptr;
 
+<<<<<<< HEAD
   if (!mCachedNextEntry) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+  if (!mCachedNextEntry)
+    return NS_ERROR_FAILURE;
+=======
+  EnsureInitialized();
+  MOZ_ASSERT(mURLEnumerator,
+             "Should have instanced an IE History URLEnumerator");
+  if (!mURLEnumerator) return NS_OK;
+
+  if (!mCachedNextEntry) {
+    bool hasMore = false;
+    nsresult rv = this->HasMoreElements(&hasMore);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+    if (!hasMore) {
+      return NS_ERROR_FAILURE;
+    }
+  }
+>>>>>>> upstream-releases
 
   NS_ADDREF(*_retval = mCachedNextEntry);
   // Release the cached entry, so it can't be returned twice.

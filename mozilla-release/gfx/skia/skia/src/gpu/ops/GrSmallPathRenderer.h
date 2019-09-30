@@ -17,7 +17,10 @@
 #include "SkOpts.h"
 #include "SkTDynamicHash.h"
 
-class GrContext;
+class GrRecordingContext;
+
+class ShapeData;
+class ShapeDataKey;
 
 class ShapeData;
 class ShapeDataKey;
@@ -47,6 +50,7 @@ public:
         }
     }
 
+<<<<<<< HEAD
     using ShapeCache = SkTDynamicHash<ShapeData, ShapeDataKey>;
     typedef SkTInternalLList<ShapeData> ShapeDataList;
 
@@ -61,6 +65,23 @@ public:
                                                           const GrUserStencilSettings*);
     struct PathTestStruct;
 
+||||||| merged common ancestors
+=======
+    using ShapeCache = SkTDynamicHash<ShapeData, ShapeDataKey>;
+    typedef SkTInternalLList<ShapeData> ShapeDataList;
+
+    static std::unique_ptr<GrDrawOp> createOp_TestingOnly(GrRecordingContext*,
+                                                          GrPaint&&,
+                                                          const GrShape&,
+                                                          const SkMatrix& viewMatrix,
+                                                          GrDrawOpAtlas* atlas,
+                                                          ShapeCache*,
+                                                          ShapeDataList*,
+                                                          bool gammaCorrect,
+                                                          const GrUserStencilSettings*);
+    struct PathTestStruct;
+
+>>>>>>> upstream-releases
 private:
     class SmallPathOp;
 

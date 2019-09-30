@@ -10,17 +10,23 @@
 #include "SkGlyphRun.h"
 #include "SkImageFilter.h"
 #include "SkImageFilterCache.h"
+<<<<<<< HEAD
 #include "SkMallocPixelRef.h"
 #include "SkMakeUnique.h"
+||||||| merged common ancestors
+#include "SkMallocPixelRef.h"
+=======
+#include "SkMakeUnique.h"
+>>>>>>> upstream-releases
 #include "SkMatrix.h"
 #include "SkPaint.h"
 #include "SkPath.h"
-#include "SkPixelRef.h"
 #include "SkPixmap.h"
 #include "SkRasterClip.h"
 #include "SkRasterHandleAllocator.h"
 #include "SkShader.h"
 #include "SkSpecialImage.h"
+#include "SkStrikeCache.h"
 #include "SkSurface.h"
 #include "SkTLazy.h"
 #include "SkVertices.h"
@@ -74,6 +80,7 @@ public:
             fRootPixmap.reset(dev->imageInfo(), nullptr, 0);
         }
 
+<<<<<<< HEAD
         // do a quick check, so we don't even have to process "bounds" if there is no need
         const SkIRect clipR = dev->fRCStack.rc().getBounds();
         fNeedsTiling = clipR.right() > kMaxDim || clipR.bottom() > kMaxDim;
@@ -93,6 +100,42 @@ public:
                 fSrcBounds = clipR;
             }
         }
+||||||| merged common ancestors
+        fDone = false;
+        fNeedsTiling = fRootPixmap.width() > kMaxDim || fRootPixmap.height() > kMaxDim;
+        fOrigin.set(0, 0);
+        fCurrOrigin = fOrigin;
+=======
+        // do a quick check, so we don't even have to process "bounds" if there is no need
+        const SkIRect clipR = dev->fRCStack.rc().getBounds();
+        fNeedsTiling = clipR.right() > kMaxDim || clipR.bottom() > kMaxDim;
+        if (fNeedsTiling) {
+            if (bounds) {
+                // Make sure we round first, and then intersect. We can't rely on promoting the
+                // clipR to floats (and then intersecting with devBounds) since promoting
+                // int --> float can make the float larger than the int.
+                // rounding(out) first runs the risk of clamping if the float is larger an intmax
+                // but our roundOut() is saturating, which is fine for this use case
+                //
+                // e.g. the older version of this code did this:
+                //    devBounds = mapRect(bounds);
+                //    if (devBounds.intersect(SkRect::Make(clipR))) {
+                //        fSrcBounds = devBounds.roundOut();
+                // The problem being that the promotion of clipR to SkRect was unreliable
+                //
+                fSrcBounds = dev->ctm().mapRect(*bounds).roundOut();
+                if (fSrcBounds.intersect(clipR)) {
+                    // Check again, now that we have computed srcbounds.
+                    fNeedsTiling = fSrcBounds.right() > kMaxDim || fSrcBounds.bottom() > kMaxDim;
+                } else {
+                    fNeedsTiling = false;
+                    fDone = true;
+                }
+            } else {
+                fSrcBounds = clipR;
+            }
+        }
+>>>>>>> upstream-releases
 
         if (fNeedsTiling) {
             // fDraw.fDst is reset each time in setupTileDraw()
@@ -190,10 +233,11 @@ public:
 
 static bool valid_for_bitmap_device(const SkImageInfo& info,
                                     SkAlphaType* newAlphaType) {
-    if (info.width() < 0 || info.height() < 0) {
+    if (info.width() < 0 || info.height() < 0 || kUnknown_SkColorType == info.colorType()) {
         return false;
     }
 
+<<<<<<< HEAD
     // TODO: can we stop supporting kUnknown in SkBitmkapDevice?
     if (kUnknown_SkColorType == info.colorType()) {
         if (newAlphaType) {
@@ -223,9 +267,42 @@ static bool valid_for_bitmap_device(const SkImageInfo& info,
             return false;
     }
 
-    if (newAlphaType) {
-        *newAlphaType = canonicalAlphaType;
+||||||| merged common ancestors
+    // TODO: can we stop supporting kUnknown in SkBitmkapDevice?
+    if (kUnknown_SkColorType == info.colorType()) {
+        if (newAlphaType) {
+            *newAlphaType = kUnknown_SkAlphaType;
+        }
+        return true;
     }
+
+    SkAlphaType canonicalAlphaType = info.alphaType();
+
+    switch (info.colorType()) {
+        case kAlpha_8_SkColorType:
+        case kARGB_4444_SkColorType:
+        case kRGBA_8888_SkColorType:
+        case kBGRA_8888_SkColorType:
+        case kRGBA_1010102_SkColorType:
+        case kRGBA_F16_SkColorType:
+            break;
+        case kGray_8_SkColorType:
+        case kRGB_565_SkColorType:
+        case kRGB_888x_SkColorType:
+        case kRGB_101010x_SkColorType:
+            canonicalAlphaType = kOpaque_SkAlphaType;
+            break;
+        default:
+            return false;
+    }
+
+=======
+>>>>>>> upstream-releases
+    if (newAlphaType) {
+        *newAlphaType = SkColorTypeIsAlwaysOpaque(info.colorType()) ? kOpaque_SkAlphaType
+                                                                    : info.alphaType();
+    }
+
     return true;
 }
 
@@ -242,11 +319,26 @@ static SkScalerContextFlags scaler_context_flags(const SkBitmap& bitmap)  {
 }
 
 SkBitmapDevice::SkBitmapDevice(const SkBitmap& bitmap)
+<<<<<<< HEAD
     : INHERITED(bitmap.info(), SkSurfaceProps(SkSurfaceProps::kLegacyFontHost_InitType))
     , fBitmap(bitmap)
     , fRCStack(bitmap.width(), bitmap.height())
     , fGlyphPainter(this->surfaceProps(), bitmap.colorType(), scaler_context_flags(bitmap))
 {
+||||||| merged common ancestors
+    : INHERITED(bitmap.info(), SkSurfaceProps(SkSurfaceProps::kLegacyFontHost_InitType))
+    , fBitmap(bitmap)
+    , fRCStack(bitmap.width(), bitmap.height())
+{
+=======
+        : INHERITED(bitmap.info(), SkSurfaceProps(SkSurfaceProps::kLegacyFontHost_InitType))
+        , fBitmap(bitmap)
+        , fRCStack(bitmap.width(), bitmap.height())
+        , fGlyphPainter(this->surfaceProps(),
+                        bitmap.colorType(),
+                        bitmap.colorSpace(),
+                        SkStrikeCache::GlobalStrikeCache()) {
+>>>>>>> upstream-releases
     SkASSERT(valid_for_bitmap_device(bitmap.info(), nullptr));
 }
 
@@ -255,6 +347,7 @@ SkBitmapDevice* SkBitmapDevice::Create(const SkImageInfo& info) {
 }
 
 SkBitmapDevice::SkBitmapDevice(const SkBitmap& bitmap, const SkSurfaceProps& surfaceProps,
+<<<<<<< HEAD
                                SkRasterHandleAllocator::Handle hndl, const SkBitmap* coverage)
     : INHERITED(bitmap.info(), surfaceProps)
     , fBitmap(bitmap)
@@ -262,6 +355,24 @@ SkBitmapDevice::SkBitmapDevice(const SkBitmap& bitmap, const SkSurfaceProps& sur
     , fRCStack(bitmap.width(), bitmap.height())
     , fGlyphPainter(this->surfaceProps(), bitmap.colorType(), scaler_context_flags(bitmap))
 {
+||||||| merged common ancestors
+                               SkRasterHandleAllocator::Handle hndl)
+    : INHERITED(bitmap.info(), surfaceProps)
+    , fBitmap(bitmap)
+    , fRasterHandle(hndl)
+    , fRCStack(bitmap.width(), bitmap.height())
+{
+=======
+                               SkRasterHandleAllocator::Handle hndl, const SkBitmap* coverage)
+        : INHERITED(bitmap.info(), surfaceProps)
+        , fBitmap(bitmap)
+        , fRasterHandle(hndl)
+        , fRCStack(bitmap.width(), bitmap.height())
+        , fGlyphPainter(this->surfaceProps(),
+                        bitmap.colorType(),
+                        bitmap.colorSpace(),
+                        SkStrikeCache::GlobalStrikeCache()) {
+>>>>>>> upstream-releases
     SkASSERT(valid_for_bitmap_device(bitmap.info(), nullptr));
 
     if (coverage) {
@@ -418,6 +529,7 @@ void SkBitmapDevice::drawPath(const SkPath& path,
     }
 }
 
+<<<<<<< HEAD
 void SkBitmapDevice::drawBitmap(const SkBitmap& bitmap, SkScalar x, SkScalar y,
                                 const SkPaint& paint) {
     SkMatrix matrix = SkMatrix::MakeTrans(x, y);
@@ -438,6 +550,27 @@ void SkBitmapDevice::drawBitmap(const SkBitmap& bitmap, const SkMatrix& matrix,
         }
     }
     LOOP_TILER(drawBitmap(bitmap, matrix, dstOrNull, paint), bounds);
+||||||| merged common ancestors
+void SkBitmapDevice::drawBitmap(const SkBitmap& bitmap, SkScalar x, SkScalar y,
+                                const SkPaint& paint) {
+    SkMatrix matrix = SkMatrix::MakeTrans(x, y);
+    LogDrawScaleFactor(SkMatrix::Concat(this->ctm(), matrix), paint.getFilterQuality());
+    LOOP_TILER( drawBitmap(bitmap, matrix, nullptr, paint))
+=======
+void SkBitmapDevice::drawBitmap(const SkBitmap& bitmap, const SkMatrix& matrix,
+                                const SkRect* dstOrNull, const SkPaint& paint) {
+    const SkRect* bounds = dstOrNull;
+    SkRect storage;
+    if (!bounds && SkDrawTiler::NeedsTiling(this)) {
+        matrix.mapRect(&storage, SkRect::MakeIWH(bitmap.width(), bitmap.height()));
+        Bounder b(storage, paint);
+        if (b.hasBounds()) {
+            storage = *b.bounds();
+            bounds = &storage;
+        }
+    }
+    LOOP_TILER(drawBitmap(bitmap, matrix, dstOrNull, paint), bounds)
+>>>>>>> upstream-releases
 }
 
 static inline bool CanApplyDstMatrixAsCTM(const SkMatrix& m, const SkPaint& paint) {
@@ -469,7 +602,7 @@ void SkBitmapDevice::drawBitmapRect(const SkBitmap& bitmap,
     }
     matrix.setRectToRect(tmpSrc, dst, SkMatrix::kFill_ScaleToFit);
 
-    LogDrawScaleFactor(SkMatrix::Concat(this->ctm(), matrix), paint.getFilterQuality());
+    LogDrawScaleFactor(this->ctm(), matrix, paint.getFilterQuality());
 
     const SkRect* dstPtr = &dst;
     const SkBitmap* bitmapPtr = &bitmap;
@@ -570,10 +703,22 @@ void SkBitmapDevice::drawSprite(const SkBitmap& bitmap, int x, int y, const SkPa
     BDDraw(this).drawSprite(bitmap, x, y, paint);
 }
 
+<<<<<<< HEAD
 void SkBitmapDevice::drawGlyphRunList(const SkGlyphRunList& glyphRunList) {
 #if defined(SK_SUPPORT_LEGACY_TEXT_BLOB)
     auto blob = glyphRunList.blob();
+||||||| merged common ancestors
+void SkBitmapDevice::drawText(const void* text, size_t len,
+                              SkScalar x, SkScalar y, const SkPaint& paint) {
+    LOOP_TILER( drawText((const char*)text, len, x, y, paint, &fSurfaceProps))
+}
+=======
+void SkBitmapDevice::drawGlyphRunList(const SkGlyphRunList& glyphRunList) {
+    LOOP_TILER( drawGlyphRunList(glyphRunList, &fGlyphPainter), nullptr )
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (blob == nullptr) {
         glyphRunList.temporaryShuntToDrawPosText(this, SkPoint::Make(0, 0));
     } else {
@@ -592,6 +737,26 @@ void SkBitmapDevice::drawVertices(const SkVertices* vertices, const SkVertices::
                               vertices->texCoords(), vertices->colors(), vertices->boneIndices(),
                               vertices->boneWeights(), bmode, vertices->indices(),
                               vertices->indexCount(), paint, bones, boneCount);
+||||||| merged common ancestors
+void SkBitmapDevice::drawPosText(const void* text, size_t len, const SkScalar xpos[],
+                                 int scalarsPerPos, const SkPoint& offset, const SkPaint& paint) {
+    LOOP_TILER( drawPosText((const char*)text, len, xpos, scalarsPerPos, offset, paint,
+                            &fSurfaceProps))
+}
+
+void SkBitmapDevice::drawVertices(const SkVertices* vertices, SkBlendMode bmode,
+                                  const SkPaint& paint) {
+    LOOP_TILER( drawVertices(vertices->mode(), vertices->vertexCount(), vertices->positions(),
+                             vertices->texCoords(), vertices->colors(), bmode,
+                             vertices->indices(), vertices->indexCount(), paint))
+=======
+void SkBitmapDevice::drawVertices(const SkVertices* vertices, const SkVertices::Bone bones[],
+                                  int boneCount, SkBlendMode bmode, const SkPaint& paint) {
+    BDDraw(this).drawVertices(vertices->mode(), vertices->vertexCount(), vertices->positions(),
+                              vertices->texCoords(), vertices->colors(), vertices->boneIndices(),
+                              vertices->boneWeights(), bmode, vertices->indices(),
+                              vertices->indexCount(), paint, bones, boneCount);
+>>>>>>> upstream-releases
 }
 
 void SkBitmapDevice::drawDevice(SkBaseDevice* device, int x, int y, const SkPaint& origPaint) {
@@ -735,7 +900,10 @@ void SkBitmapDevice::drawSpecial(SkSpecialImage* src, int x, int y, const SkPain
 
     SkAutoDeviceCTMRestore adctmr(this, maskMatrix);
     paint.writable()->setShader(srcImage->makeShader(&shaderMatrix));
-    this->drawImage(mask.get(), maskBounds.x(), maskBounds.y(), *paint);
+    this->drawImageRect(mask.get(), nullptr,
+                        SkRect::MakeXYWH(maskBounds.x(), maskBounds.y(),
+                                         mask->width(), mask->height()),
+                        *paint, SkCanvas::kFast_SrcRectConstraint);
 }
 
 sk_sp<SkSpecialImage> SkBitmapDevice::makeSpecial(const SkBitmap& bitmap) {
@@ -743,14 +911,30 @@ sk_sp<SkSpecialImage> SkBitmapDevice::makeSpecial(const SkBitmap& bitmap) {
 }
 
 sk_sp<SkSpecialImage> SkBitmapDevice::makeSpecial(const SkImage* image) {
-    return SkSpecialImage::MakeFromImage(SkIRect::MakeWH(image->width(), image->height()),
-                                         image->makeNonTextureImage(), fBitmap.colorSpace());
+    return SkSpecialImage::MakeFromImage(nullptr, SkIRect::MakeWH(image->width(), image->height()),
+                                         image->makeNonTextureImage());
 }
 
 sk_sp<SkSpecialImage> SkBitmapDevice::snapSpecial() {
     return this->makeSpecial(fBitmap);
 }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+sk_sp<SkImage> SkBitmapDevice::snapshotImage() {
+    SkPixmap pixmap;
+    if (peekPixels(&pixmap)) {
+        return SkImage::MakeFromRaster(pixmap, nullptr, nullptr);
+    }
+    return nullptr;
+}
+
+=======
+sk_sp<SkSpecialImage> SkBitmapDevice::snapBackImage(const SkIRect& bounds) {
+    return SkSpecialImage::CopyFromRaster(bounds, fBitmap, &this->surfaceProps());
+}
+
+>>>>>>> upstream-releases
 ///////////////////////////////////////////////////////////////////////////////
 
 sk_sp<SkSurface> SkBitmapDevice::makeSurface(const SkImageInfo& info, const SkSurfaceProps& props) {

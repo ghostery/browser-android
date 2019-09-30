@@ -63,7 +63,15 @@ class XMLHttpRequestWorker final : public XMLHttpRequest {
   bool mMozAnon;
   bool mMozSystem;
 
+<<<<<<< HEAD
  public:
+||||||| merged common ancestors
+public:
+=======
+  nsString mMimeTypeOverride;
+
+ public:
+>>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(XMLHttpRequestWorker,
                                                          XMLHttpRequest)
@@ -72,9 +80,27 @@ class XMLHttpRequestWorker final : public XMLHttpRequest {
       const GlobalObject& aGlobal, const MozXMLHttpRequestParameters& aParams,
       ErrorResult& aRv);
 
+<<<<<<< HEAD
   void Unpin();
 
   virtual uint16_t ReadyState() const override {
+||||||| merged common ancestors
+  static already_AddRefed<XMLHttpRequest>
+  Construct(const GlobalObject& aGlobal,
+            const MozXMLHttpRequestParameters& aParams,
+            ErrorResult& aRv);
+
+  void
+  Unpin();
+
+  virtual uint16_t
+  ReadyState() const override
+  {
+=======
+  void Unpin();
+
+  virtual uint16_t ReadyState() const override {
+>>>>>>> upstream-releases
     return mStateData.mReadyState;
   }
 
@@ -176,13 +202,33 @@ class XMLHttpRequestWorker final : public XMLHttpRequest {
   virtual void GetResponseText(DOMString& aResponseText,
                                ErrorResult& aRv) override;
 
+<<<<<<< HEAD
   virtual nsIDocument* GetResponseXML(ErrorResult& aRv) override {
+||||||| merged common ancestors
+  virtual nsIDocument*
+  GetResponseXML(ErrorResult& aRv) override
+  {
+=======
+  virtual Document* GetResponseXML(ErrorResult& aRv) override {
+>>>>>>> upstream-releases
     MOZ_CRASH("This method should not be called.");
   }
 
+<<<<<<< HEAD
   virtual void GetInterface(JSContext* aCx, nsIJSID* aIID,
                             JS::MutableHandle<JS::Value> aRetval,
                             ErrorResult& aRv) override {
+||||||| merged common ancestors
+  virtual void
+  GetInterface(JSContext* aCx, nsIJSID* aIID,
+               JS::MutableHandle<JS::Value> aRetval,
+               ErrorResult& aRv) override
+  {
+=======
+  virtual void GetInterface(JSContext* aCx, JS::Handle<JS::Value> aIID,
+                            JS::MutableHandle<JS::Value> aRetval,
+                            ErrorResult& aRv) override {
+>>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_FAILURE);
   }
 

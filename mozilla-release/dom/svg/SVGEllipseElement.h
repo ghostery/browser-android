@@ -7,17 +7,21 @@
 #ifndef mozilla_dom_SVGEllipseElement_h
 #define mozilla_dom_SVGEllipseElement_h
 
+#include "nsCSSPropertyID.h"
+#include "SVGAnimatedLength.h"
 #include "SVGGeometryElement.h"
-#include "nsSVGLength2.h"
 
 nsresult NS_NewSVGEllipseElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
 namespace mozilla {
+class ComputedStyle;
+
 namespace dom {
 
 typedef SVGGeometryElement SVGEllipseElementBase;
 
+<<<<<<< HEAD
 class SVGEllipseElement final : public SVGEllipseElementBase {
  protected:
   explicit SVGEllipseElement(
@@ -29,6 +33,31 @@ class SVGEllipseElement final : public SVGEllipseElementBase {
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
 
  public:
+||||||| merged common ancestors
+class SVGEllipseElement final : public SVGEllipseElementBase
+{
+protected:
+  explicit SVGEllipseElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
+  friend nsresult (::NS_NewSVGEllipseElement(nsIContent **aResult,
+                                             already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+
+public:
+=======
+class SVGEllipseElement final : public SVGEllipseElementBase {
+ protected:
+  explicit SVGEllipseElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+  virtual JSObject* WrapNode(JSContext* cx,
+                             JS::Handle<JSObject*> aGivenProto) override;
+  friend nsresult(::NS_NewSVGEllipseElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+
+ public:
+  NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
+
+>>>>>>> upstream-releases
   // nsSVGSVGElement methods:
   virtual bool HasValidDimensions() const override;
 
@@ -41,17 +70,28 @@ class SVGEllipseElement final : public SVGEllipseElementBase {
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
+  static bool IsLengthChangedViaCSS(const ComputedStyle& aNewStyle,
+                                    const ComputedStyle& aOldStyle);
+  static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
+
+<<<<<<< HEAD
+ protected:
+||||||| merged common ancestors
+protected:
+
+=======
   // WebIDL
-  already_AddRefed<SVGAnimatedLength> Cx();
-  already_AddRefed<SVGAnimatedLength> Cy();
-  already_AddRefed<SVGAnimatedLength> Rx();
-  already_AddRefed<SVGAnimatedLength> Ry();
+  already_AddRefed<DOMSVGAnimatedLength> Cx();
+  already_AddRefed<DOMSVGAnimatedLength> Cy();
+  already_AddRefed<DOMSVGAnimatedLength> Rx();
+  already_AddRefed<DOMSVGAnimatedLength> Ry();
 
  protected:
+>>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { CX, CY, RX, RY };
-  nsSVGLength2 mLengthAttributes[4];
+  SVGAnimatedLength mLengthAttributes[4];
   static LengthInfo sLengthInfo[4];
 };
 

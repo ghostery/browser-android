@@ -132,8 +132,18 @@ void ConsoleReportCollector::FlushReportsToConsoleForServiceWorkerScope(
   }
 }
 
+<<<<<<< HEAD
 void ConsoleReportCollector::FlushConsoleReports(nsIDocument* aDocument,
                                                  ReportAction aAction) {
+||||||| merged common ancestors
+void
+ConsoleReportCollector::FlushConsoleReports(nsIDocument* aDocument,
+                                            ReportAction aAction)
+{
+=======
+void ConsoleReportCollector::FlushConsoleReports(dom::Document* aDocument,
+                                                 ReportAction aAction) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   FlushReportsToConsole(aDocument ? aDocument->InnerWindowID() : 0, aAction);

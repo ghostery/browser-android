@@ -13,6 +13,7 @@
 #include "mozilla/TextUtils.h"
 
 #include <stdint.h>
+#include <utility>
 
 #include "builtin/intl/CommonFunctions.h"
 #include "builtin/intl/ICUStubs.h"
@@ -107,11 +108,30 @@ static bool IsLegacyICUTimeZone(const char* timeZone) {
   return false;
 }
 
+<<<<<<< HEAD
+bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
+  if (timeZoneDataInitialized) {
+    return true;
+  }
+||||||| merged common ancestors
+bool
+js::intl::SharedIntlData::ensureTimeZones(JSContext* cx)
+{
+    if (timeZoneDataInitialized) {
+        return true;
+    }
+=======
 bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
   if (timeZoneDataInitialized) {
     return true;
   }
 
+  // If ensureTimeZones() was called previously, but didn't complete due to
+  // OOM, clear all sets/maps and start from scratch.
+  availableTimeZones.clearAndCompact();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // If ensureTimeZones() was called previously, but didn't complete due to
   // OOM, clear all sets/maps and start from scratch.
   availableTimeZones.clearAndCompact();
@@ -123,12 +143,26 @@ bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
     return false;
   }
   ScopedICUObject<UEnumeration, uenum_close> toClose(values);
+||||||| merged common ancestors
+    // If ensureTimeZones() was called previously, but didn't complete due to
+    // OOM, clear all sets/maps and start from scratch.
+    availableTimeZones.clearAndCompact();
+=======
+  UErrorCode status = U_ZERO_ERROR;
+  UEnumeration* values = ucal_openTimeZones(&status);
+  if (U_FAILURE(status)) {
+    ReportInternalError(cx);
+    return false;
+  }
+  ScopedICUObject<UEnumeration, uenum_close> toClose(values);
+>>>>>>> upstream-releases
 
   RootedAtom timeZone(cx);
   while (true) {
     int32_t size;
     const char* rawTimeZone = uenum_next(values, &size, &status);
     if (U_FAILURE(status)) {
+<<<<<<< HEAD
       ReportInternalError(cx);
       return false;
     }
@@ -140,17 +174,76 @@ bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
     // Skip legacy ICU time zone names.
     if (IsLegacyICUTimeZone(rawTimeZone)) {
       continue;
+||||||| merged common ancestors
+        ReportInternalError(cx);
+        return false;
+=======
+      ReportInternalError(cx);
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     MOZ_ASSERT(size >= 0);
     timeZone = Atomize(cx, rawTimeZone, size_t(size));
     if (!timeZone) {
       return false;
+||||||| merged common ancestors
+    ScopedICUObject<UEnumeration, uenum_close> toClose(values);
+
+    RootedAtom timeZone(cx);
+    while (true) {
+        int32_t size;
+        const char* rawTimeZone = uenum_next(values, &size, &status);
+        if (U_FAILURE(status)) {
+            ReportInternalError(cx);
+            return false;
+        }
+
+        if (rawTimeZone == nullptr) {
+            break;
+        }
+
+        // Skip legacy ICU time zone names.
+        if (IsLegacyICUTimeZone(rawTimeZone)) {
+            continue;
+        }
+
+        MOZ_ASSERT(size >= 0);
+        timeZone = Atomize(cx, rawTimeZone, size_t(size));
+        if (!timeZone) {
+            return false;
+        }
+
+        TimeZoneHasher::Lookup lookup(timeZone);
+        TimeZoneSet::AddPtr p = availableTimeZones.lookupForAdd(lookup);
+
+        // ICU shouldn't report any duplicate time zone names, but if it does,
+        // just ignore the duplicate name.
+        if (!p && !availableTimeZones.add(p, timeZone)) {
+            ReportOutOfMemory(cx);
+            return false;
+        }
+=======
+
+    if (rawTimeZone == nullptr) {
+      break;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     TimeZoneHasher::Lookup lookup(timeZone);
     TimeZoneSet::AddPtr p = availableTimeZones.lookupForAdd(lookup);
+||||||| merged common ancestors
+    ianaZonesTreatedAsLinksByICU.clearAndCompact();
+=======
+    // Skip legacy ICU time zone names.
+    if (IsLegacyICUTimeZone(rawTimeZone)) {
+      continue;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // ICU shouldn't report any duplicate time zone names, but if it does,
     // just ignore the duplicate name.
     if (!p && !availableTimeZones.add(p, timeZone)) {
@@ -158,16 +251,54 @@ bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
       return false;
     }
   }
+||||||| merged common ancestors
+    for (const char* rawTimeZone : timezone::ianaZonesTreatedAsLinksByICU) {
+        MOZ_ASSERT(rawTimeZone != nullptr);
+        timeZone = Atomize(cx, rawTimeZone, strlen(rawTimeZone));
+        if (!timeZone) {
+            return false;
+        }
+=======
+    MOZ_ASSERT(size >= 0);
+    timeZone = Atomize(cx, rawTimeZone, size_t(size));
+    if (!timeZone) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ianaZonesTreatedAsLinksByICU.clearAndCompact();
+||||||| merged common ancestors
+        TimeZoneHasher::Lookup lookup(timeZone);
+        TimeZoneSet::AddPtr p = ianaZonesTreatedAsLinksByICU.lookupForAdd(lookup);
+        MOZ_ASSERT(!p, "Duplicate entry in timezone::ianaZonesTreatedAsLinksByICU");
+=======
+    TimeZoneHasher::Lookup lookup(timeZone);
+    TimeZoneSet::AddPtr p = availableTimeZones.lookupForAdd(lookup);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   for (const char* rawTimeZone : timezone::ianaZonesTreatedAsLinksByICU) {
     MOZ_ASSERT(rawTimeZone != nullptr);
     timeZone = Atomize(cx, rawTimeZone, strlen(rawTimeZone));
     if (!timeZone) {
       return false;
+||||||| merged common ancestors
+        if (!ianaZonesTreatedAsLinksByICU.add(p, timeZone)) {
+            ReportOutOfMemory(cx);
+            return false;
+        }
+=======
+    // ICU shouldn't report any duplicate time zone names, but if it does,
+    // just ignore the duplicate name.
+    if (!p && !availableTimeZones.add(p, timeZone)) {
+      ReportOutOfMemory(cx);
+      return false;
+>>>>>>> upstream-releases
     }
+  }
 
+<<<<<<< HEAD
     TimeZoneHasher::Lookup lookup(timeZone);
     TimeZoneSet::AddPtr p = ianaZonesTreatedAsLinksByICU.lookupForAdd(lookup);
     MOZ_ASSERT(!p, "Duplicate entry in timezone::ianaZonesTreatedAsLinksByICU");
@@ -175,11 +306,91 @@ bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
     if (!ianaZonesTreatedAsLinksByICU.add(p, timeZone)) {
       ReportOutOfMemory(cx);
       return false;
+||||||| merged common ancestors
+    ianaLinksCanonicalizedDifferentlyByICU.clearAndCompact();
+
+    RootedAtom linkName(cx);
+    RootedAtom& target = timeZone;
+    for (const auto& linkAndTarget : timezone::ianaLinksCanonicalizedDifferentlyByICU) {
+        const char* rawLinkName = linkAndTarget.link;
+        const char* rawTarget = linkAndTarget.target;
+
+        MOZ_ASSERT(rawLinkName != nullptr);
+        linkName = Atomize(cx, rawLinkName, strlen(rawLinkName));
+        if (!linkName) {
+            return false;
+        }
+
+        MOZ_ASSERT(rawTarget != nullptr);
+        target = Atomize(cx, rawTarget, strlen(rawTarget));
+        if (!target) {
+            return false;
+        }
+
+        TimeZoneHasher::Lookup lookup(linkName);
+        TimeZoneMap::AddPtr p = ianaLinksCanonicalizedDifferentlyByICU.lookupForAdd(lookup);
+        MOZ_ASSERT(!p, "Duplicate entry in timezone::ianaLinksCanonicalizedDifferentlyByICU");
+
+        if (!ianaLinksCanonicalizedDifferentlyByICU.add(p, linkName, target)) {
+            ReportOutOfMemory(cx);
+            return false;
+        }
+=======
+  ianaZonesTreatedAsLinksByICU.clearAndCompact();
+
+  for (const char* rawTimeZone : timezone::ianaZonesTreatedAsLinksByICU) {
+    MOZ_ASSERT(rawTimeZone != nullptr);
+    timeZone = Atomize(cx, rawTimeZone, strlen(rawTimeZone));
+    if (!timeZone) {
+      return false;
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  ianaLinksCanonicalizedDifferentlyByICU.clearAndCompact();
+||||||| merged common ancestors
+    MOZ_ASSERT(!timeZoneDataInitialized, "ensureTimeZones is neither reentrant nor thread-safe");
+    timeZoneDataInitialized = true;
+=======
+    TimeZoneHasher::Lookup lookup(timeZone);
+    TimeZoneSet::AddPtr p = ianaZonesTreatedAsLinksByICU.lookupForAdd(lookup);
+    MOZ_ASSERT(!p, "Duplicate entry in timezone::ianaZonesTreatedAsLinksByICU");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedAtom linkName(cx);
+  RootedAtom& target = timeZone;
+  for (const auto& linkAndTarget :
+       timezone::ianaLinksCanonicalizedDifferentlyByICU) {
+    const char* rawLinkName = linkAndTarget.link;
+    const char* rawTarget = linkAndTarget.target;
+||||||| merged common ancestors
+    return true;
+}
+=======
+    if (!ianaZonesTreatedAsLinksByICU.add(p, timeZone)) {
+      ReportOutOfMemory(cx);
+      return false;
     }
   }
 
   ianaLinksCanonicalizedDifferentlyByICU.clearAndCompact();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    MOZ_ASSERT(rawLinkName != nullptr);
+    linkName = Atomize(cx, rawLinkName, strlen(rawLinkName));
+    if (!linkName) {
+      return false;
+||||||| merged common ancestors
+bool
+js::intl::SharedIntlData::validateTimeZoneName(JSContext* cx, HandleString timeZone,
+                                               MutableHandleAtom result)
+{
+    if (!ensureTimeZones(cx)) {
+        return false;
+=======
   RootedAtom linkName(cx);
   RootedAtom& target = timeZone;
   for (const auto& linkAndTarget :
@@ -191,6 +402,7 @@ bool js::intl::SharedIntlData::ensureTimeZones(JSContext* cx) {
     linkName = Atomize(cx, rawLinkName, strlen(rawLinkName));
     if (!linkName) {
       return false;
+>>>>>>> upstream-releases
     }
 
     MOZ_ASSERT(rawTarget != nullptr);
@@ -304,6 +516,7 @@ bool js::intl::SharedIntlData::LocaleHasher::match(Locale key,
   return EqualChars(keyChars, lookup.twoByteChars, lookup.length);
 }
 
+<<<<<<< HEAD
 bool js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx) {
   if (upperCaseFirstInitialized) {
     return true;
@@ -312,7 +525,47 @@ bool js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx) {
   // If ensureUpperCaseFirstLocales() was called previously, but didn't
   // complete due to OOM, clear all data and start from scratch.
   upperCaseFirstLocales.clearAndCompact();
+||||||| merged common ancestors
+bool
+js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx)
+{
+    if (upperCaseFirstInitialized) {
+        return true;
+    }
+=======
+bool js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx) {
+  if (upperCaseFirstInitialized) {
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  UErrorCode status = U_ZERO_ERROR;
+  UEnumeration* available = ucol_openAvailableLocales(&status);
+  if (U_FAILURE(status)) {
+    ReportInternalError(cx);
+    return false;
+  }
+  ScopedICUObject<UEnumeration, uenum_close> toClose(available);
+||||||| merged common ancestors
+    // If ensureUpperCaseFirstLocales() was called previously, but didn't
+    // complete due to OOM, clear all data and start from scratch.
+    upperCaseFirstLocales.clearAndCompact();
+=======
+  // If ensureUpperCaseFirstLocales() was called previously, but didn't
+  // complete due to OOM, clear all data and start from scratch.
+  upperCaseFirstLocales.clearAndCompact();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RootedAtom locale(cx);
+  while (true) {
+    int32_t size;
+    const char* rawLocale = uenum_next(available, &size, &status);
+||||||| merged common ancestors
+    UErrorCode status = U_ZERO_ERROR;
+    UEnumeration* available = ucol_openAvailableLocales(&status);
+=======
   UErrorCode status = U_ZERO_ERROR;
   UEnumeration* available = ucol_openAvailableLocales(&status);
   if (U_FAILURE(status)) {
@@ -325,42 +578,178 @@ bool js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx) {
   while (true) {
     int32_t size;
     const char* rawLocale = uenum_next(available, &size, &status);
+>>>>>>> upstream-releases
     if (U_FAILURE(status)) {
+<<<<<<< HEAD
       ReportInternalError(cx);
       return false;
     }
 
     if (rawLocale == nullptr) {
       break;
+||||||| merged common ancestors
+        ReportInternalError(cx);
+        return false;
+=======
+      ReportInternalError(cx);
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     UCollator* collator = ucol_open(rawLocale, &status);
     if (U_FAILURE(status)) {
       ReportInternalError(cx);
       return false;
+||||||| merged common ancestors
+    ScopedICUObject<UEnumeration, uenum_close> toClose(available);
+
+    RootedAtom locale(cx);
+    while (true) {
+        int32_t size;
+        const char* rawLocale = uenum_next(available, &size, &status);
+        if (U_FAILURE(status)) {
+            ReportInternalError(cx);
+            return false;
+        }
+
+        if (rawLocale == nullptr) {
+            break;
+        }
+
+        UCollator* collator = ucol_open(rawLocale, &status);
+        if (U_FAILURE(status)) {
+            ReportInternalError(cx);
+            return false;
+        }
+        ScopedICUObject<UCollator, ucol_close> toCloseCollator(collator);
+
+        UColAttributeValue caseFirst = ucol_getAttribute(collator, UCOL_CASE_FIRST, &status);
+        if (U_FAILURE(status)) {
+            ReportInternalError(cx);
+            return false;
+        }
+
+        if (caseFirst != UCOL_UPPER_FIRST) {
+            continue;
+        }
+
+        MOZ_ASSERT(size >= 0);
+        locale = Atomize(cx, rawLocale, size_t(size));
+        if (!locale) {
+            return false;
+        }
+
+        LocaleHasher::Lookup lookup(locale);
+        LocaleSet::AddPtr p = upperCaseFirstLocales.lookupForAdd(lookup);
+
+        // ICU shouldn't report any duplicate locales, but if it does, just
+        // ignore the duplicated locale.
+        if (!p && !upperCaseFirstLocales.add(p, locale)) {
+            ReportOutOfMemory(cx);
+            return false;
+        }
+=======
+
+    if (rawLocale == nullptr) {
+      break;
+>>>>>>> upstream-releases
     }
     ScopedICUObject<UCollator, ucol_close> toCloseCollator(collator);
 
+<<<<<<< HEAD
     UColAttributeValue caseFirst =
         ucol_getAttribute(collator, UCOL_CASE_FIRST, &status);
     if (U_FAILURE(status)) {
       ReportInternalError(cx);
       return false;
     }
+||||||| merged common ancestors
+    MOZ_ASSERT(!upperCaseFirstInitialized,
+               "ensureUpperCaseFirstLocales is neither reentrant nor thread-safe");
+    upperCaseFirstInitialized = true;
+=======
+    UCollator* collator = ucol_open(rawLocale, &status);
+    if (U_FAILURE(status)) {
+      ReportInternalError(cx);
+      return false;
+    }
+    ScopedICUObject<UCollator, ucol_close> toCloseCollator(collator);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (caseFirst != UCOL_UPPER_FIRST) {
       continue;
     }
+||||||| merged common ancestors
+    return true;
+}
+=======
+    UColAttributeValue caseFirst =
+        ucol_getAttribute(collator, UCOL_CASE_FIRST, &status);
+    if (U_FAILURE(status)) {
+      ReportInternalError(cx);
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     MOZ_ASSERT(size >= 0);
     locale = Atomize(cx, rawLocale, size_t(size));
     if (!locale) {
       return false;
+||||||| merged common ancestors
+bool
+js::intl::SharedIntlData::isUpperCaseFirst(JSContext* cx, HandleString locale, bool* isUpperFirst)
+{
+    if (!ensureUpperCaseFirstLocales(cx)) {
+        return false;
+=======
+    if (caseFirst != UCOL_UPPER_FIRST) {
+      continue;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     LocaleHasher::Lookup lookup(locale);
     LocaleSet::AddPtr p = upperCaseFirstLocales.lookupForAdd(lookup);
 
+    // ICU shouldn't report any duplicate locales, but if it does, just
+    // ignore the duplicated locale.
+    if (!p && !upperCaseFirstLocales.add(p, locale)) {
+      ReportOutOfMemory(cx);
+      return false;
+||||||| merged common ancestors
+    RootedLinearString localeLinear(cx, locale->ensureLinear(cx));
+    if (!localeLinear) {
+        return false;
+=======
+    MOZ_ASSERT(size >= 0);
+    locale = Atomize(cx, rawLocale, size_t(size));
+    if (!locale) {
+      return false;
+>>>>>>> upstream-releases
+    }
+  }
+
+<<<<<<< HEAD
+  MOZ_ASSERT(
+      !upperCaseFirstInitialized,
+      "ensureUpperCaseFirstLocales is neither reentrant nor thread-safe");
+  upperCaseFirstInitialized = true;
+||||||| merged common ancestors
+    LocaleHasher::Lookup lookup(localeLinear);
+    *isUpperFirst = upperCaseFirstLocales.has(lookup);
+=======
+    LocaleHasher::Lookup lookup(locale);
+    LocaleSet::AddPtr p = upperCaseFirstLocales.lookupForAdd(lookup);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return true;
+||||||| merged common ancestors
+    return true;
+=======
     // ICU shouldn't report any duplicate locales, but if it does, just
     // ignore the duplicated locale.
     if (!p && !upperCaseFirstLocales.add(p, locale)) {
@@ -375,6 +764,7 @@ bool js::intl::SharedIntlData::ensureUpperCaseFirstLocales(JSContext* cx) {
   upperCaseFirstInitialized = true;
 
   return true;
+>>>>>>> upstream-releases
 }
 
 bool js::intl::SharedIntlData::isUpperCaseFirst(JSContext* cx,
@@ -395,6 +785,7 @@ bool js::intl::SharedIntlData::isUpperCaseFirst(JSContext* cx,
   return true;
 }
 
+<<<<<<< HEAD
 void js::intl::SharedIntlData::destroyInstance() {
   availableTimeZones.clearAndCompact();
   ianaZonesTreatedAsLinksByICU.clearAndCompact();
@@ -410,8 +801,70 @@ void js::intl::SharedIntlData::trace(JSTracer* trc) {
     ianaLinksCanonicalizedDifferentlyByICU.trace(trc);
     upperCaseFirstLocales.trace(trc);
   }
+||||||| merged common ancestors
+void
+js::intl::SharedIntlData::trace(JSTracer* trc)
+{
+    // Atoms are always tenured.
+    if (!JS::RuntimeHeapIsMinorCollecting()) {
+        availableTimeZones.trace(trc);
+        ianaZonesTreatedAsLinksByICU.trace(trc);
+        ianaLinksCanonicalizedDifferentlyByICU.trace(trc);
+        upperCaseFirstLocales.trace(trc);
+    }
+=======
+void js::intl::DateTimePatternGeneratorDeleter::operator()(
+    UDateTimePatternGenerator* ptr) {
+  udatpg_close(ptr);
 }
 
+UDateTimePatternGenerator*
+js::intl::SharedIntlData::getDateTimePatternGenerator(JSContext* cx,
+                                                      const char* locale) {
+  // Return the cached instance if the requested locale matches the locale
+  // of the cached generator.
+  if (dateTimePatternGeneratorLocale &&
+      StringsAreEqual(dateTimePatternGeneratorLocale.get(), locale)) {
+    return dateTimePatternGenerator.get();
+  }
+
+  UErrorCode status = U_ZERO_ERROR;
+  UniqueUDateTimePatternGenerator gen(udatpg_open(IcuLocale(locale), &status));
+  if (U_FAILURE(status)) {
+    intl::ReportInternalError(cx);
+    return nullptr;
+  }
+
+  JS::UniqueChars localeCopy = js::DuplicateString(cx, locale);
+  if (!localeCopy) {
+    return nullptr;
+  }
+
+  dateTimePatternGenerator = std::move(gen);
+  dateTimePatternGeneratorLocale = std::move(localeCopy);
+
+  return dateTimePatternGenerator.get();
+}
+
+void js::intl::SharedIntlData::destroyInstance() {
+  availableTimeZones.clearAndCompact();
+  ianaZonesTreatedAsLinksByICU.clearAndCompact();
+  ianaLinksCanonicalizedDifferentlyByICU.clearAndCompact();
+  upperCaseFirstLocales.clearAndCompact();
+}
+
+void js::intl::SharedIntlData::trace(JSTracer* trc) {
+  // Atoms are always tenured.
+  if (!JS::RuntimeHeapIsMinorCollecting()) {
+    availableTimeZones.trace(trc);
+    ianaZonesTreatedAsLinksByICU.trace(trc);
+    ianaLinksCanonicalizedDifferentlyByICU.trace(trc);
+    upperCaseFirstLocales.trace(trc);
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 size_t js::intl::SharedIntlData::sizeOfExcludingThis(
     mozilla::MallocSizeOf mallocSizeOf) const {
   return availableTimeZones.shallowSizeOfExcludingThis(mallocSizeOf) +
@@ -419,4 +872,22 @@ size_t js::intl::SharedIntlData::sizeOfExcludingThis(
          ianaLinksCanonicalizedDifferentlyByICU.shallowSizeOfExcludingThis(
              mallocSizeOf) +
          upperCaseFirstLocales.shallowSizeOfExcludingThis(mallocSizeOf);
+||||||| merged common ancestors
+size_t
+js::intl::SharedIntlData::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
+{
+    return availableTimeZones.shallowSizeOfExcludingThis(mallocSizeOf) +
+           ianaZonesTreatedAsLinksByICU.shallowSizeOfExcludingThis(mallocSizeOf) +
+           ianaLinksCanonicalizedDifferentlyByICU.shallowSizeOfExcludingThis(mallocSizeOf) +
+           upperCaseFirstLocales.shallowSizeOfExcludingThis(mallocSizeOf);
+=======
+size_t js::intl::SharedIntlData::sizeOfExcludingThis(
+    mozilla::MallocSizeOf mallocSizeOf) const {
+  return availableTimeZones.shallowSizeOfExcludingThis(mallocSizeOf) +
+         ianaZonesTreatedAsLinksByICU.shallowSizeOfExcludingThis(mallocSizeOf) +
+         ianaLinksCanonicalizedDifferentlyByICU.shallowSizeOfExcludingThis(
+             mallocSizeOf) +
+         upperCaseFirstLocales.shallowSizeOfExcludingThis(mallocSizeOf) +
+         mallocSizeOf(dateTimePatternGeneratorLocale.get());
+>>>>>>> upstream-releases
 }

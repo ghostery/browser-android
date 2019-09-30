@@ -14,10 +14,26 @@
 namespace mozilla {
 namespace gl {
 
+<<<<<<< HEAD
 /*static*/ UniquePtr<SharedSurface_IOSurface> SharedSurface_IOSurface::Create(
     const RefPtr<MacIOSurface>& ioSurf, GLContext* gl, bool hasAlpha) {
   MOZ_ASSERT(ioSurf);
   MOZ_ASSERT(gl);
+||||||| merged common ancestors
+/*static*/ UniquePtr<SharedSurface_IOSurface>
+SharedSurface_IOSurface::Create(const RefPtr<MacIOSurface>& ioSurf,
+                                GLContext* gl,
+                                bool hasAlpha)
+{
+    MOZ_ASSERT(ioSurf);
+    MOZ_ASSERT(gl);
+=======
+/*static*/
+UniquePtr<SharedSurface_IOSurface> SharedSurface_IOSurface::Create(
+    const RefPtr<MacIOSurface>& ioSurf, GLContext* gl, bool hasAlpha) {
+  MOZ_ASSERT(ioSurf);
+  MOZ_ASSERT(gl);
+>>>>>>> upstream-releases
 
   auto size = gfx::IntSize::Truncate(ioSurf->GetWidth(), ioSurf->GetHeight());
 
@@ -112,6 +128,7 @@ bool SharedSurface_IOSurface::ReadPixels(GLint x, GLint y, GLsizei width,
   return true;
 }
 
+<<<<<<< HEAD
 static void BackTextureWithIOSurf(GLContext* gl, GLuint tex,
                                   MacIOSurface* ioSurf) {
   MOZ_ASSERT(gl->IsCurrent());
@@ -126,11 +143,61 @@ static void BackTextureWithIOSurf(GLContext* gl, GLuint tex,
                      LOCAL_GL_CLAMP_TO_EDGE);
   gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB, LOCAL_GL_TEXTURE_WRAP_T,
                      LOCAL_GL_CLAMP_TO_EDGE);
+||||||| merged common ancestors
+static void
+BackTextureWithIOSurf(GLContext* gl, GLuint tex, MacIOSurface* ioSurf)
+{
+    MOZ_ASSERT(gl->IsCurrent());
 
+    ScopedBindTexture texture(gl, tex, LOCAL_GL_TEXTURE_RECTANGLE_ARB);
+
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                        LOCAL_GL_TEXTURE_MIN_FILTER,
+                        LOCAL_GL_LINEAR);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                        LOCAL_GL_TEXTURE_MAG_FILTER,
+                        LOCAL_GL_LINEAR);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                        LOCAL_GL_TEXTURE_WRAP_S,
+                        LOCAL_GL_CLAMP_TO_EDGE);
+    gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                        LOCAL_GL_TEXTURE_WRAP_T,
+                        LOCAL_GL_CLAMP_TO_EDGE);
+=======
+static void BackTextureWithIOSurf(GLContext* gl, GLuint tex,
+                                  MacIOSurface* ioSurf) {
+  MOZ_ASSERT(gl->IsCurrent());
+
+  ScopedBindTexture texture(gl, tex, LOCAL_GL_TEXTURE_RECTANGLE_ARB);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  CGLContextObj cgl = GLContextCGL::Cast(gl)->GetCGLContext();
+  MOZ_ASSERT(cgl);
+||||||| merged common ancestors
+    CGLContextObj cgl = GLContextCGL::Cast(gl)->GetCGLContext();
+    MOZ_ASSERT(cgl);
+=======
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                     LOCAL_GL_TEXTURE_MIN_FILTER, LOCAL_GL_LINEAR);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB,
+                     LOCAL_GL_TEXTURE_MAG_FILTER, LOCAL_GL_LINEAR);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB, LOCAL_GL_TEXTURE_WRAP_S,
+                     LOCAL_GL_CLAMP_TO_EDGE);
+  gl->fTexParameteri(LOCAL_GL_TEXTURE_RECTANGLE_ARB, LOCAL_GL_TEXTURE_WRAP_T,
+                     LOCAL_GL_CLAMP_TO_EDGE);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ioSurf->CGLTexImageIOSurface2D(gl, cgl, 0);
+||||||| merged common ancestors
+    ioSurf->CGLTexImageIOSurface2D(gl, cgl, 0);
+=======
   CGLContextObj cgl = GLContextCGL::Cast(gl)->GetCGLContext();
   MOZ_ASSERT(cgl);
 
   ioSurf->CGLTexImageIOSurface2D(gl, cgl, 0);
+>>>>>>> upstream-releases
 }
 
 SharedSurface_IOSurface::SharedSurface_IOSurface(
@@ -151,12 +218,31 @@ SharedSurface_IOSurface::~SharedSurface_IOSurface() {
   mGL->fDeleteTextures(1, &mProdTex);
 }
 
+<<<<<<< HEAD
 bool SharedSurface_IOSurface::ToSurfaceDescriptor(
     layers::SurfaceDescriptor* const out_descriptor) {
   bool isOpaque = !mHasAlpha;
   *out_descriptor = layers::SurfaceDescriptorMacIOSurface(
       mIOSurf->GetIOSurfaceID(), mIOSurf->GetContentsScaleFactor(), isOpaque);
   return true;
+||||||| merged common ancestors
+bool
+SharedSurface_IOSurface::ToSurfaceDescriptor(layers::SurfaceDescriptor* const out_descriptor)
+{
+    bool isOpaque = !mHasAlpha;
+    *out_descriptor = layers::SurfaceDescriptorMacIOSurface(mIOSurf->GetIOSurfaceID(),
+                                                            mIOSurf->GetContentsScaleFactor(),
+                                                            isOpaque);
+    return true;
+=======
+bool SharedSurface_IOSurface::ToSurfaceDescriptor(
+    layers::SurfaceDescriptor* const out_descriptor) {
+  bool isOpaque = !mHasAlpha;
+  *out_descriptor = layers::SurfaceDescriptorMacIOSurface(
+      mIOSurf->GetIOSurfaceID(), mIOSurf->GetContentsScaleFactor(), isOpaque,
+      mIOSurf->GetYUVColorSpace());
+  return true;
+>>>>>>> upstream-releases
 }
 
 bool SharedSurface_IOSurface::ReadbackBySharedHandle(
@@ -187,6 +273,7 @@ bool SharedSurface_IOSurface::ReadbackBySharedHandle(
 ////////////////////////////////////////////////////////////////////////
 // SurfaceFactory_IOSurface
 
+<<<<<<< HEAD
 /*static*/ UniquePtr<SurfaceFactory_IOSurface> SurfaceFactory_IOSurface::Create(
     GLContext* gl, const SurfaceCaps& caps,
     const RefPtr<layers::LayersIPCChannel>& allocator,
@@ -197,6 +284,31 @@ bool SharedSurface_IOSurface::ReadbackBySharedHandle(
   typedef SurfaceFactory_IOSurface ptrT;
   UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, maxDims));
   return ret;
+||||||| merged common ancestors
+/*static*/ UniquePtr<SurfaceFactory_IOSurface>
+SurfaceFactory_IOSurface::Create(GLContext* gl, const SurfaceCaps& caps,
+                                 const RefPtr<layers::LayersIPCChannel>& allocator,
+                                 const layers::TextureFlags& flags)
+{
+    auto maxDims = gfx::IntSize::Truncate(MacIOSurface::GetMaxWidth(),
+                                          MacIOSurface::GetMaxHeight());
+
+    typedef SurfaceFactory_IOSurface ptrT;
+    UniquePtr<ptrT> ret( new ptrT(gl, caps, allocator, flags, maxDims) );
+    return ret;
+=======
+/*static*/
+UniquePtr<SurfaceFactory_IOSurface> SurfaceFactory_IOSurface::Create(
+    GLContext* gl, const SurfaceCaps& caps,
+    const RefPtr<layers::LayersIPCChannel>& allocator,
+    const layers::TextureFlags& flags) {
+  auto maxDims = gfx::IntSize::Truncate(MacIOSurface::GetMaxWidth(),
+                                        MacIOSurface::GetMaxHeight());
+
+  typedef SurfaceFactory_IOSurface ptrT;
+  UniquePtr<ptrT> ret(new ptrT(gl, caps, allocator, flags, maxDims));
+  return ret;
+>>>>>>> upstream-releases
 }
 
 UniquePtr<SharedSurface> SurfaceFactory_IOSurface::CreateShared(

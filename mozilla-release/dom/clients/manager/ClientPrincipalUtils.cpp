@@ -35,7 +35,18 @@ bool ClientMatchPrincipalInfo(const PrincipalInfo& aLeft,
       // null principal never matches
       return false;
     }
+<<<<<<< HEAD
     default: { break; }
+||||||| merged common ancestors
+    default:
+    {
+      break;
+    }
+=======
+    default: {
+      break;
+    }
+>>>>>>> upstream-releases
   }
 
   // Clients (windows/workers) should never have an expanded principal type.

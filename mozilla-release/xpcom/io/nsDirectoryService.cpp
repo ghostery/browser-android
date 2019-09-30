@@ -19,19 +19,19 @@
 #include "nsISimpleEnumerator.h"
 
 #if defined(XP_WIN)
-#include <windows.h>
-#include <shlobj.h>
-#include <stdlib.h>
-#include <stdio.h>
+#  include <windows.h>
+#  include <shlobj.h>
+#  include <stdlib.h>
+#  include <stdio.h>
 #elif defined(XP_UNIX)
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/param.h>
-#include "prenv.h"
-#ifdef MOZ_WIDGET_COCOA
-#include <CoreServices/CoreServices.h>
-#include <Carbon/Carbon.h>
-#endif
+#  include <unistd.h>
+#  include <stdlib.h>
+#  include <sys/param.h>
+#  include "prenv.h"
+#  ifdef MOZ_WIDGET_COCOA
+#    include <CoreServices/CoreServices.h>
+#    include <Carbon/Carbon.h>
+#  endif
 #endif
 
 #include "SpecialSystemDirectory.h"
@@ -122,7 +122,14 @@ nsDirectoryService::Undefine(const char* aProp) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDirectoryService::GetKeys(uint32_t* aCount, char*** aKeys) {
+||||||| merged common ancestors
+nsDirectoryService::GetKeys(uint32_t* aCount, char*** aKeys)
+{
+=======
+nsDirectoryService::GetKeys(nsTArray<nsCString>& aKeys) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -308,8 +315,18 @@ nsDirectoryService::UnregisterProvider(nsIDirectoryServiceProvider* aProv) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX) && defined(XP_WIN)
 static nsresult GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase) {
+||||||| merged common ancestors
+#if defined(MOZ_CONTENT_SANDBOX) && defined(XP_WIN)
+static nsresult
+GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase)
+{
+=======
+#if defined(MOZ_SANDBOX) && defined(XP_WIN)
+static nsresult GetLowIntegrityTempBase(nsIFile** aLowIntegrityTempBase) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIFile> localFile;
   nsresult rv =
       GetSpecialSystemDirectory(Win_LocalAppdataLow, getter_AddRefs(localFile));
@@ -418,13 +435,13 @@ nsDirectoryService::GetFile(const char* aProp, bool* aPersistent,
     rv = GetSpecialSystemDirectory(Win_Appdata, getter_AddRefs(localFile));
   } else if (inAtom == nsGkAtoms::DirectoryService_LocalAppdata) {
     rv = GetSpecialSystemDirectory(Win_LocalAppdata, getter_AddRefs(localFile));
-#if defined(MOZ_CONTENT_SANDBOX)
+#  if defined(MOZ_SANDBOX)
   } else if (inAtom == nsGkAtoms::DirectoryService_LocalAppdataLow) {
     rv = GetSpecialSystemDirectory(Win_LocalAppdataLow,
                                    getter_AddRefs(localFile));
   } else if (inAtom == nsGkAtoms::DirectoryService_LowIntegrityTempBase) {
     rv = GetLowIntegrityTempBase(getter_AddRefs(localFile));
-#endif
+#  endif
   } else if (inAtom == nsGkAtoms::DirectoryService_WinCookiesDirectory) {
     rv = GetSpecialSystemDirectory(Win_Cookies, getter_AddRefs(localFile));
   } else if (inAtom == nsGkAtoms::DirectoryService_DefaultDownloadDirectory) {

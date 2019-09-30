@@ -7,7 +7,7 @@
 #include "mozilla/dom/HTMLDialogElement.h"
 #include "mozilla/dom/HTMLDialogElementBinding.h"
 #include "mozilla/dom/HTMLUnknownElement.h"
-#include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 
 // Expand NS_IMPL_NS_NEW_HTML_ELEMENT(Dialog) with pref check
 nsGenericHTMLElement* NS_NewHTMLDialogElement(
@@ -27,6 +27,7 @@ HTMLDialogElement::~HTMLDialogElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLDialogElement)
 
+<<<<<<< HEAD
 bool HTMLDialogElement::IsDialogEnabled() {
   static bool isDialogEnabled = false;
   static bool added = false;
@@ -38,6 +39,24 @@ bool HTMLDialogElement::IsDialogEnabled() {
   }
 
   return isDialogEnabled;
+||||||| merged common ancestors
+bool
+HTMLDialogElement::IsDialogEnabled()
+{
+  static bool isDialogEnabled = false;
+  static bool added = false;
+
+  if (!added) {
+    Preferences::AddBoolVarCache(&isDialogEnabled,
+                                 "dom.dialog_element.enabled");
+    added = true;
+  }
+
+  return isDialogEnabled;
+=======
+bool HTMLDialogElement::IsDialogEnabled() {
+  return StaticPrefs::dom_dialog_element_enabled();
+>>>>>>> upstream-releases
 }
 
 void HTMLDialogElement::Close(

@@ -13,7 +13,7 @@
 namespace mozilla {
 
 namespace dom {
-class TabParent;
+class BrowserParent;
 }
 
 namespace layers {
@@ -38,54 +38,137 @@ class RemoteContentController : public GeckoContentController,
 
   virtual ~RemoteContentController();
 
+<<<<<<< HEAD
   virtual void RequestContentRepaint(const RepaintRequest& aRequest) override;
+||||||| merged common ancestors
+  virtual void RequestContentRepaint(const FrameMetrics& aFrameMetrics) override;
+=======
+  void NotifyLayerTransforms(
+      const nsTArray<MatrixMessage>& aTransforms) override;
 
+  void RequestContentRepaint(const RepaintRequest& aRequest) override;
+
+  void HandleTap(TapType aTapType, const LayoutDevicePoint& aPoint,
+                 Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
+                 uint64_t aInputBlockId) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   virtual void HandleTap(TapType aTapType, const LayoutDevicePoint& aPoint,
                          Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
                          uint64_t aInputBlockId) override;
+||||||| merged common ancestors
+  virtual void HandleTap(TapType aTapType,
+                         const LayoutDevicePoint& aPoint,
+                         Modifiers aModifiers,
+                         const ScrollableLayerGuid& aGuid,
+                         uint64_t aInputBlockId) override;
+=======
+  void NotifyPinchGesture(PinchGestureInput::PinchGestureType aType,
+                          const ScrollableLayerGuid& aGuid,
+                          LayoutDeviceCoord aSpanChange,
+                          Modifiers aModifiers) override;
+>>>>>>> upstream-releases
 
-  virtual void NotifyPinchGesture(PinchGestureInput::PinchGestureType aType,
-                                  const ScrollableLayerGuid& aGuid,
-                                  LayoutDeviceCoord aSpanChange,
-                                  Modifiers aModifiers) override;
+  void PostDelayedTask(already_AddRefed<Runnable> aTask, int aDelayMs) override;
 
+<<<<<<< HEAD
   virtual void PostDelayedTask(already_AddRefed<Runnable> aTask,
                                int aDelayMs) override;
+||||||| merged common ancestors
+  virtual void PostDelayedTask(already_AddRefed<Runnable> aTask, int aDelayMs) override;
+=======
+  bool IsRepaintThread() override;
+>>>>>>> upstream-releases
 
-  virtual bool IsRepaintThread() override;
+  void DispatchToRepaintThread(already_AddRefed<Runnable> aTask) override;
 
+<<<<<<< HEAD
   virtual void DispatchToRepaintThread(
       already_AddRefed<Runnable> aTask) override;
+||||||| merged common ancestors
+  virtual void DispatchToRepaintThread(already_AddRefed<Runnable> aTask) override;
+=======
+  void NotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
+                            APZStateChange aChange, int aArg) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void NotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
                                     APZStateChange aChange, int aArg) override;
+||||||| merged common ancestors
+  virtual void NotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
+                                    APZStateChange aChange,
+                                    int aArg) override;
+=======
+  void UpdateOverscrollVelocity(float aX, float aY,
+                                bool aIsRootContent) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void UpdateOverscrollVelocity(float aX, float aY,
                                         bool aIsRootContent) override;
+||||||| merged common ancestors
+  virtual void UpdateOverscrollVelocity(float aX, float aY, bool aIsRootContent) override;
+=======
+  void UpdateOverscrollOffset(float aX, float aY, bool aIsRootContent) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void UpdateOverscrollOffset(float aX, float aY,
                                       bool aIsRootContent) override;
+||||||| merged common ancestors
+  virtual void UpdateOverscrollOffset(float aX, float aY, bool aIsRootContent) override;
+=======
+  void NotifyMozMouseScrollEvent(const ScrollableLayerGuid::ViewID& aScrollId,
+                                 const nsString& aEvent) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void NotifyMozMouseScrollEvent(
       const ScrollableLayerGuid::ViewID& aScrollId,
       const nsString& aEvent) override;
+||||||| merged common ancestors
+  virtual void NotifyMozMouseScrollEvent(const FrameMetrics::ViewID& aScrollId,
+                                         const nsString& aEvent) override;
+=======
+  void NotifyFlushComplete() override;
+>>>>>>> upstream-releases
 
-  virtual void NotifyFlushComplete() override;
+  void NotifyAsyncScrollbarDragInitiated(
+      uint64_t aDragBlockId, const ScrollableLayerGuid::ViewID& aScrollId,
+      ScrollDirection aDirection) override;
+  void NotifyAsyncScrollbarDragRejected(
+      const ScrollableLayerGuid::ViewID& aScrollId) override;
 
+<<<<<<< HEAD
   virtual void NotifyAsyncScrollbarDragInitiated(
       uint64_t aDragBlockId, const ScrollableLayerGuid::ViewID& aScrollId,
       ScrollDirection aDirection) override;
   virtual void NotifyAsyncScrollbarDragRejected(
       const ScrollableLayerGuid::ViewID& aScrollId) override;
+||||||| merged common ancestors
+  virtual void NotifyAsyncScrollbarDragRejected(const FrameMetrics::ViewID& aScrollId) override;
+=======
+  void NotifyAsyncAutoscrollRejected(
+      const ScrollableLayerGuid::ViewID& aScrollId) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void NotifyAsyncAutoscrollRejected(
       const ScrollableLayerGuid::ViewID& aScrollId) override;
+||||||| merged common ancestors
+  virtual void NotifyAsyncAutoscrollRejected(const FrameMetrics::ViewID& aScrollId) override;
+=======
+  void CancelAutoscroll(const ScrollableLayerGuid& aScrollId) override;
+>>>>>>> upstream-releases
 
-  virtual void CancelAutoscroll(const ScrollableLayerGuid& aScrollId) override;
+  void ActorDestroy(ActorDestroyReason aWhy) override;
 
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
+  void Destroy() override;
+  mozilla::ipc::IPCResult RecvDestroy();
 
-  virtual void Destroy() override;
+  bool IsRemote() override;
 
  private:
   MessageLoop* mCompositorThread;

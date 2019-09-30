@@ -97,6 +97,7 @@ BEGIN_TEST(testGCUID) {
     if (i % 2 == 1) {
       CHECK(vec2.append(vec[i]));
     }
+<<<<<<< HEAD
   }
   vec.clear();
 
@@ -122,5 +123,53 @@ BEGIN_TEST(testGCUID) {
   CHECK(uid == tmp);
 
   return true;
+||||||| merged common ancestors
+    vec.clear();
+    MinimizeHeap(cx);
+
+    // Grab the last object in the vector as our object of interest.
+    obj = vec2.back();
+    CHECK(obj);
+    tenuredAddr = uintptr_t(obj.get());
+    CHECK(obj->zone()->getOrCreateUniqueId(obj, &uid));
+
+    // Force a compaction to move the object and check that the uid moved to
+    // the new tenured heap location.
+    JS::PrepareForFullGC(cx);
+    JS::NonIncrementalGC(cx, GC_SHRINK, JS::gcreason::API);
+    MinimizeHeap(cx);
+    CHECK(uintptr_t(obj.get()) != tenuredAddr);
+    CHECK(obj->zone()->hasUniqueId(obj));
+    CHECK(obj->zone()->getOrCreateUniqueId(obj, &tmp));
+    CHECK(uid == tmp);
+
+    return true;
+=======
+  }
+  vec.clear();
+
+  // Grab the last object in the vector as our object of interest.
+  obj = vec2.back();
+  CHECK(obj);
+  CHECK(!js::gc::IsInsideNursery(obj));
+  tenuredAddr = uintptr_t(obj.get());
+  CHECK(obj->zone()->getOrCreateUniqueId(obj, &uid));
+
+  // Force a compaction to move the object and check that the uid moved to
+  // the new tenured heap location.
+  JS::PrepareForFullGC(cx);
+  JS::NonIncrementalGC(cx, GC_SHRINK, JS::GCReason::API);
+
+  // There's a very low probability that this check could fail, but it is
+  // possible.  If it becomes an annoying intermittent then we should make
+  // this test more robust by recording IDs of many objects and then checking
+  // that some have moved.
+  CHECK(uintptr_t(obj.get()) != tenuredAddr);
+  CHECK(obj->zone()->hasUniqueId(obj));
+  CHECK(obj->zone()->getOrCreateUniqueId(obj, &tmp));
+  CHECK(uid == tmp);
+
+  return true;
+>>>>>>> upstream-releases
 }
 END_TEST(testGCUID)

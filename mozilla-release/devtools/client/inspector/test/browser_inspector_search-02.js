@@ -15,15 +15,31 @@ const TEST_URL = URL_ROOT + "doc_inspector_search-suggestions.html";
 const TEST_DATA = [
   {
     key: "d",
+<<<<<<< HEAD
     suggestions: [
       {label: "div"},
       {label: "#d1"},
       {label: "#d2"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div"},
+      {label: "#d1"},
+      {label: "#d2"}
+    ]
+=======
+    suggestions: [{ label: "div" }, { label: "#d1" }, { label: "#d2" }],
+>>>>>>> upstream-releases
   },
   {
     key: "i",
+<<<<<<< HEAD
     suggestions: [{label: "div"}],
+||||||| merged common ancestors
+    suggestions: [{label: "div"}]
+=======
+    suggestions: [{ label: "div" }],
+>>>>>>> upstream-releases
   },
   {
     key: "v",
@@ -31,35 +47,77 @@ const TEST_DATA = [
   },
   {
     key: " ",
+<<<<<<< HEAD
     suggestions: [
       {label: "div div"},
       {label: "div span"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div div"},
+      {label: "div span"}
+    ]
+=======
+    suggestions: [{ label: "div div" }, { label: "div span" }],
+>>>>>>> upstream-releases
   },
   {
     key: ">",
+<<<<<<< HEAD
     suggestions: [
       {label: "div >div"},
       {label: "div >span"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div >div"},
+      {label: "div >span"}
+    ]
+=======
+    suggestions: [{ label: "div >div" }, { label: "div >span" }],
+>>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
+<<<<<<< HEAD
     suggestions: [
       {label: "div div"},
       {label: "div span"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div div"},
+      {label: "div span"}
+    ]
+=======
+    suggestions: [{ label: "div div" }, { label: "div span" }],
+>>>>>>> upstream-releases
   },
   {
     key: "+",
+<<<<<<< HEAD
     suggestions: [{label: "div +span"}],
+||||||| merged common ancestors
+    suggestions: [{label: "div +span"}]
+=======
+    suggestions: [{ label: "div +span" }],
+>>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
+<<<<<<< HEAD
     suggestions: [
       {label: "div div"},
       {label: "div span"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div div"},
+      {label: "div span"}
+    ]
+=======
+    suggestions: [{ label: "div div" }, { label: "div span" }],
+>>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
@@ -67,15 +125,31 @@ const TEST_DATA = [
   },
   {
     key: "VK_BACK_SPACE",
+<<<<<<< HEAD
     suggestions: [{label: "div"}],
+||||||| merged common ancestors
+    suggestions: [{label: "div"}]
+=======
+    suggestions: [{ label: "div" }],
+>>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
+<<<<<<< HEAD
     suggestions: [
       {label: "div"},
       {label: "#d1"},
       {label: "#d2"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "div"},
+      {label: "#d1"},
+      {label: "#d2"}
+    ]
+=======
+    suggestions: [{ label: "div" }, { label: "#d1" }, { label: "#d2" }],
+>>>>>>> upstream-releases
   },
   {
     key: "VK_BACK_SPACE",
@@ -84,42 +158,101 @@ const TEST_DATA = [
   {
     key: "p",
     suggestions: [
+<<<<<<< HEAD
       {label: "p"},
       {label: "#p1"},
       {label: "#p2"},
       {label: "#p3"},
     ],
+||||||| merged common ancestors
+      {label: "p"},
+      {label: "#p1"},
+      {label: "#p2"},
+      {label: "#p3"},
+    ]
+=======
+      { label: "p" },
+      { label: "#p1" },
+      { label: "#p2" },
+      { label: "#p3" },
+    ],
+>>>>>>> upstream-releases
   },
   {
     key: " ",
+<<<<<<< HEAD
     suggestions: [{label: "p strong"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p strong"}]
+=======
+    suggestions: [{ label: "p strong" }],
+>>>>>>> upstream-releases
   },
   {
     key: "+",
+<<<<<<< HEAD
     suggestions: [
       {label: "p +button" },
       {label: "p +p"},
     ],
+||||||| merged common ancestors
+    suggestions: [
+      {label: "p +button" },
+      {label: "p +p"}
+    ]
+=======
+    suggestions: [{ label: "p +button" }, { label: "p +p" }],
+>>>>>>> upstream-releases
   },
   {
     key: "b",
+<<<<<<< HEAD
     suggestions: [{label: "p +button"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p +button"}]
+=======
+    suggestions: [{ label: "p +button" }],
+>>>>>>> upstream-releases
   },
   {
     key: "u",
+<<<<<<< HEAD
     suggestions: [{label: "p +button"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p +button"}]
+=======
+    suggestions: [{ label: "p +button" }],
+>>>>>>> upstream-releases
   },
   {
     key: "t",
+<<<<<<< HEAD
     suggestions: [{label: "p +button"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p +button"}]
+=======
+    suggestions: [{ label: "p +button" }],
+>>>>>>> upstream-releases
   },
   {
     key: "t",
+<<<<<<< HEAD
     suggestions: [{label: "p +button"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p +button"}]
+=======
+    suggestions: [{ label: "p +button" }],
+>>>>>>> upstream-releases
   },
   {
     key: "o",
+<<<<<<< HEAD
     suggestions: [{label: "p +button"}],
+||||||| merged common ancestors
+    suggestions: [{label: "p +button"}]
+=======
+    suggestions: [{ label: "p +button" }],
+>>>>>>> upstream-releases
   },
   {
     key: "n",
@@ -127,8 +260,16 @@ const TEST_DATA = [
   },
   {
     key: "+",
+<<<<<<< HEAD
     suggestions: [{label: "p +button+p"}],
   },
+||||||| merged common ancestors
+    suggestions: [{label: "p +button+p"}]
+  }
+=======
+    suggestions: [{ label: "p +button+p" }],
+  },
+>>>>>>> upstream-releases
 ];
 
 add_task(async function() {
@@ -148,22 +289,30 @@ add_task(async function() {
     info("Waiting for search query to complete");
     await inspector.searchSuggestions._lastQuery;
 
-    info("Query completed. Performing checks for input '" + searchBox.value +
-      "' - key pressed: " + key);
+    info(
+      "Query completed. Performing checks for input '" +
+        searchBox.value +
+        "' - key pressed: " +
+        key
+    );
     const actualSuggestions = popup.getItems();
 
-    is(popup.isOpen ? actualSuggestions.length : 0, suggestions.length,
-       "There are expected number of suggestions.");
+    is(
+      popup.isOpen ? actualSuggestions.length : 0,
+      suggestions.length,
+      "There are expected number of suggestions."
+    );
 
     for (let i = 0; i < suggestions.length; i++) {
-      is(actualSuggestions[i].label, suggestions[i].label,
-         "The suggestion at " + i + "th index is correct.");
+      is(
+        actualSuggestions[i].label,
+        suggestions[i].label,
+        "The suggestion at " + i + "th index is correct."
+      );
     }
   }
 });
 
 function formatSuggestions(suggestions) {
-  return "[" + suggestions
-                .map(s => "'" + s.label + "'")
-                .join(", ") + "]";
+  return "[" + suggestions.map(s => "'" + s.label + "'").join(", ") + "]";
 }

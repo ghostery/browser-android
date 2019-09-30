@@ -5,12 +5,12 @@
 // itself.
 
 const searchPopup = document.getElementById("PopupSearchAutoComplete");
-const oneOffsContainer =
-  document.getAnonymousElementByAttribute(searchPopup, "anonid",
-                                          "search-one-off-buttons");
+const oneOffsContainer = searchPopup.searchOneOffsContainer;
 
 add_task(async function test_setup() {
   await gCUITestUtils.addSearchBar();
+
+  await Services.search.init();
   registerCleanupFunction(() => {
     gCUITestUtils.removeSearchBar();
   });
@@ -37,7 +37,7 @@ add_task(async function test() {
   Assert.equal(menuButton.type, "menu", "A menu button");
 
   // Mouse over the menu button to open it.
-  let buttonPopup = menuButton.firstElementChild;
+  let buttonPopup = menuButton.menupopup;
   promise = promiseEvent(buttonPopup, "popupshown");
   EventUtils.synthesizeMouse(menuButton, 5, 5, { type: "mousemove" });
   await promise;
@@ -48,8 +48,11 @@ add_task(async function test() {
   Assert.equal(buttonPopup.children.length, 6, "Expected number of engines");
   for (let i = 0; i < buttonPopup.children.length; i++) {
     let item = buttonPopup.children[i];
-    Assert.equal(item.getAttribute("title"), "engine" + (i + 1),
-                 "Expected engine title");
+    Assert.equal(
+      item.getAttribute("title"),
+      "engine" + (i + 1),
+      "Expected engine title"
+    );
   }
 
   // Mouse out of the menu button to close it.
@@ -60,9 +63,11 @@ add_task(async function test() {
   Assert.ok(!menuButton.open, "Submenu should be closed");
 
   // Key up until the menu button is selected.
-  for (let button = null;
-       button != menuButton;
-       button = searchbar.textbox.popup.oneOffButtons.selectedButton) {
+  for (
+    let button = null;
+    button != menuButton;
+    button = searchbar.textbox.popup.oneOffButtons.selectedButton
+  ) {
     EventUtils.synthesizeKey("KEY_ArrowUp");
   }
 
@@ -86,9 +91,24 @@ add_task(async function test() {
 function getOpenSearchItems() {
   let os = [];
 
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_tooManyEnginesOffered.js
   let addEngineList = oneOffsContainer.querySelector(".search-add-engines");
   for (let item = addEngineList.firstElementChild; item; item = item.nextElementSibling)
+||||||| merged common ancestors
+  let addEngineList =
+    document.getAnonymousElementByAttribute(oneOffsContainer, "anonid",
+                                            "add-engines");
+  for (let item = addEngineList.firstElementChild; item; item = item.nextElementSibling)
+=======
+  let addEngineList = oneOffsContainer.querySelector(".search-add-engines");
+  for (
+    let item = addEngineList.firstElementChild;
+    item;
+    item = item.nextElementSibling
+  ) {
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_tooManyEnginesOffered.js
     os.push(item);
+  }
 
   return os;
 }

@@ -12,7 +12,7 @@
 #include "nsString.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/ErrorResult.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 
 class nsINode;
 class txIParseContext;
@@ -29,11 +29,25 @@ class XPathResult;
 /**
  * A class for evaluating an XPath expression string
  */
+<<<<<<< HEAD
 class XPathEvaluator final : public NonRefcountedDOMObject {
  public:
   explicit XPathEvaluator(nsIDocument* aDocument = nullptr);
   ~XPathEvaluator();
+||||||| merged common ancestors
+class XPathEvaluator final : public NonRefcountedDOMObject
+{
+public:
+    explicit XPathEvaluator(nsIDocument* aDocument = nullptr);
+    ~XPathEvaluator();
+=======
+class XPathEvaluator final : public NonRefcountedDOMObject {
+ public:
+  explicit XPathEvaluator(Document* aDocument = nullptr);
+  ~XPathEvaluator();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // WebIDL API
   bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
                   JS::MutableHandle<JSObject*> aReflector);
@@ -53,7 +67,65 @@ class XPathEvaluator final : public NonRefcountedDOMObject {
       JSContext* aCx, const nsAString& aExpression, nsINode& aContextNode,
       XPathNSResolver* aResolver, uint16_t aType, JS::Handle<JSObject*> aResult,
       ErrorResult& rv);
+||||||| merged common ancestors
+    // WebIDL API
+    bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto, JS::MutableHandle<JSObject*> aReflector);
+    nsIDocument* GetParentObject()
+    {
+        nsCOMPtr<nsIDocument> doc = do_QueryReferent(mDocument);
+        return doc;
+    }
+    static XPathEvaluator*
+        Constructor(const GlobalObject& aGlobal, ErrorResult& rv);
+    XPathExpression*
+        CreateExpression(const nsAString& aExpression,
+                         XPathNSResolver* aResolver,
+                         ErrorResult& rv);
+    XPathExpression*
+        CreateExpression(const nsAString& aExpression,
+                         nsINode* aResolver,
+                         ErrorResult& aRv);
+    nsINode* CreateNSResolver(nsINode& aNodeResolver)
+    {
+        return &aNodeResolver;
+    }
+    already_AddRefed<XPathResult>
+        Evaluate(JSContext* aCx, const nsAString& aExpression,
+                 nsINode& aContextNode, XPathNSResolver* aResolver,
+                 uint16_t aType, JS::Handle<JSObject*> aResult,
+                 ErrorResult& rv);
+private:
+    XPathExpression*
+        CreateExpression(const nsAString& aExpression,
+                         txIParseContext* aContext,
+                         nsIDocument* aDocument,
+                         ErrorResult& aRv);
+=======
+  // WebIDL API
+  bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
+                  JS::MutableHandle<JSObject*> aReflector);
+  Document* GetParentObject() {
+    nsCOMPtr<Document> doc = do_QueryReferent(mDocument);
+    return doc;
+  }
+  static XPathEvaluator* Constructor(const GlobalObject& aGlobal,
+                                     ErrorResult& rv);
+  XPathExpression* CreateExpression(const nsAString& aExpression,
+                                    XPathNSResolver* aResolver,
+                                    ErrorResult& rv);
+  XPathExpression* CreateExpression(const nsAString& aExpression,
+                                    nsINode* aResolver, ErrorResult& aRv);
+  XPathExpression* CreateExpression(const nsAString& aExpression,
+                                    txIParseContext* aContext,
+                                    Document* aDocument, ErrorResult& aRv);
+  nsINode* CreateNSResolver(nsINode& aNodeResolver) { return &aNodeResolver; }
+  already_AddRefed<XPathResult> Evaluate(
+      JSContext* aCx, const nsAString& aExpression, nsINode& aContextNode,
+      XPathNSResolver* aResolver, uint16_t aType, JS::Handle<JSObject*> aResult,
+      ErrorResult& rv);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   XPathExpression* CreateExpression(const nsAString& aExpression,
                                     txIParseContext* aContext,
@@ -61,6 +133,14 @@ class XPathEvaluator final : public NonRefcountedDOMObject {
 
   nsWeakPtr mDocument;
   RefPtr<txResultRecycler> mRecycler;
+||||||| merged common ancestors
+    nsWeakPtr mDocument;
+    RefPtr<txResultRecycler> mRecycler;
+=======
+ private:
+  nsWeakPtr mDocument;
+  RefPtr<txResultRecycler> mRecycler;
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

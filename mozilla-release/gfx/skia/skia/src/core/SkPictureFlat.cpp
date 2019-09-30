@@ -15,9 +15,43 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 SkTypefacePlayback::~SkTypefacePlayback() {}
 
 void SkTypefacePlayback::setCount(size_t count) {
+||||||| merged common ancestors
+SkTypefacePlayback::SkTypefacePlayback() : fCount(0), fArray(nullptr) {}
+
+SkTypefacePlayback::~SkTypefacePlayback() {
+    this->reset(nullptr);
+}
+
+void SkTypefacePlayback::reset(const SkRefCntSet* rec) {
+    for (int i = 0; i < fCount; i++) {
+        SkASSERT(fArray[i]);
+        fArray[i]->unref();
+    }
+    delete[] fArray;
+
+    if (rec!= nullptr && rec->count() > 0) {
+        fCount = rec->count();
+        fArray = new SkRefCnt* [fCount];
+        rec->copyToArray(fArray);
+        for (int i = 0; i < fCount; i++) {
+            fArray[i]->ref();
+        }
+    } else {
+        fCount = 0;
+        fArray = nullptr;
+    }
+}
+
+void SkTypefacePlayback::setCount(int count) {
+    this->reset(nullptr);
+
+=======
+void SkTypefacePlayback::setCount(size_t count) {
+>>>>>>> upstream-releases
     fCount = count;
     fArray.reset(new sk_sp<SkTypeface>[count]);
 }

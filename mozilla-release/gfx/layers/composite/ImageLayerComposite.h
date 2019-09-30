@@ -33,38 +33,61 @@ class ImageLayerComposite : public ImageLayer, public LayerComposite {
  protected:
   virtual ~ImageLayerComposite();
 
+<<<<<<< HEAD
  public:
   virtual void Disconnect() override;
+||||||| merged common ancestors
+public:
+  virtual void Disconnect() override;
+=======
+ public:
+  void Disconnect() override;
+>>>>>>> upstream-releases
 
-  virtual bool SetCompositableHost(CompositableHost* aHost) override;
+  bool SetCompositableHost(CompositableHost* aHost) override;
 
-  virtual Layer* GetLayer() override;
+  Layer* GetLayer() override;
 
-  virtual void SetLayerManager(HostLayerManager* aManager) override;
+  void SetLayerManager(HostLayerManager* aManager) override;
 
-  virtual void RenderLayer(const gfx::IntRect& aClipRect,
-                           const Maybe<gfx::Polygon>& aGeometry) override;
+  void RenderLayer(const gfx::IntRect& aClipRect,
+                   const Maybe<gfx::Polygon>& aGeometry) override;
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
+=======
+  void ComputeEffectiveTransforms(
+      const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
+>>>>>>> upstream-releases
 
-  virtual void CleanupResources() override;
+  void CleanupResources() override;
 
   CompositableHost* GetCompositableHost() override;
 
-  virtual void GenEffectChain(EffectChain& aEffect) override;
+  void GenEffectChain(EffectChain& aEffect) override;
 
-  virtual HostLayer* AsHostLayer() override { return this; }
+  HostLayer* AsHostLayer() override { return this; }
 
-  virtual const char* Name() const override { return "ImageLayerComposite"; }
+  const char* Name() const override { return "ImageLayerComposite"; }
 
-  virtual bool IsOpaque() override;
+  bool IsOpaque() override;
 
-  virtual nsIntRegion GetFullyRenderedRegion() override;
+  nsIntRegion GetFullyRenderedRegion() override;
 
+<<<<<<< HEAD
  protected:
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+protected:
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+ protected:
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
  private:
   gfx::SamplingFilter GetSamplingFilter();

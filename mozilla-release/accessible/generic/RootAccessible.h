@@ -11,16 +11,25 @@
 
 #include "nsIDOMEventListener.h"
 
-class nsIDocument;
-
 namespace mozilla {
+
+class PresShell;
+
 namespace a11y {
 
 class RootAccessible : public DocAccessibleWrap, public nsIDOMEventListener {
   NS_DECL_ISUPPORTS_INHERITED
 
+<<<<<<< HEAD
  public:
   RootAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
+||||||| merged common ancestors
+public:
+  RootAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
+=======
+ public:
+  RootAccessible(dom::Document* aDocument, PresShell* aPresShell);
+>>>>>>> upstream-releases
 
   // nsIDOMEventListener
   NS_DECL_NSIDOMEVENTLISTENER
@@ -56,7 +65,7 @@ class RootAccessible : public DocAccessibleWrap, public nsIDOMEventListener {
   /**
    * Process the DOM event.
    */
-  void ProcessDOMEvent(dom::Event* aEvent);
+  void ProcessDOMEvent(dom::Event* aDOMEvent, nsINode* aTarget);
 
   /**
    * Process "popupshown" event. Used by HandleEvent().

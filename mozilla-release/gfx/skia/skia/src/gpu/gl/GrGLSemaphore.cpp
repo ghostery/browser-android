@@ -9,9 +9,19 @@
 
 #include "GrGLGpu.h"
 
+<<<<<<< HEAD
 GrGLSemaphore::GrGLSemaphore(GrGLGpu* gpu, bool isOwned)
         : INHERITED(gpu), fSync(0), fIsOwned(isOwned) {
     isOwned ? this->registerWithCache(SkBudgeted::kNo) : this->registerWithCacheWrapped();
+||||||| merged common ancestors
+GrGLSemaphore::GrGLSemaphore(const GrGLGpu* gpu, bool isOwned)
+    : INHERITED(gpu), fSync(0), fIsOwned(isOwned) {
+=======
+GrGLSemaphore::GrGLSemaphore(GrGLGpu* gpu, bool isOwned)
+        : INHERITED(gpu), fSync(0), fIsOwned(isOwned) {
+    isOwned ? this->registerWithCache(SkBudgeted::kNo)
+            : this->registerWithCacheWrapped(GrWrapCacheable::kNo);
+>>>>>>> upstream-releases
 }
 
 void GrGLSemaphore::onRelease() {

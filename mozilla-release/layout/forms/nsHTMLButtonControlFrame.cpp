@@ -6,6 +6,7 @@
 
 #include "nsHTMLButtonControlFrame.h"
 
+#include "mozilla/PresShell.h"
 #include "nsContainerFrame.h"
 #include "nsIFormControlFrame.h"
 #include "nsIFrameInlines.h"
@@ -20,16 +21,37 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 nsContainerFrame* NS_NewHTMLButtonControlFrame(nsIPresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell) nsHTMLButtonControlFrame(aStyle);
+||||||| merged common ancestors
+nsContainerFrame*
+NS_NewHTMLButtonControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsHTMLButtonControlFrame(aStyle);
+=======
+nsContainerFrame* NS_NewHTMLButtonControlFrame(PresShell* aPresShell,
+                                               ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsHTMLButtonControlFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsHTMLButtonControlFrame)
 
 nsHTMLButtonControlFrame::nsHTMLButtonControlFrame(ComputedStyle* aStyle,
+                                                   nsPresContext* aPresContext,
                                                    nsIFrame::ClassID aID)
+<<<<<<< HEAD
     : nsContainerFrame(aStyle, aID) {}
+||||||| merged common ancestors
+  : nsContainerFrame(aStyle, aID)
+{
+}
+=======
+    : nsContainerFrame(aStyle, aPresContext, aID) {}
+>>>>>>> upstream-releases
 
 nsHTMLButtonControlFrame::~nsHTMLButtonControlFrame() {}
 
@@ -71,10 +93,21 @@ nsresult nsHTMLButtonControlFrame::HandleEvent(nsPresContext* aPresContext,
   return nsFrame::HandleEvent(aPresContext, aEvent, aEventStatus);
 }
 
+<<<<<<< HEAD
 bool nsHTMLButtonControlFrame::ShouldClipPaintingToBorderBox() {
   return IsInput() || StyleDisplay()->mOverflowX != NS_STYLE_OVERFLOW_VISIBLE;
+||||||| merged common ancestors
+bool
+nsHTMLButtonControlFrame::ShouldClipPaintingToBorderBox()
+{
+  return IsInput() || StyleDisplay()->mOverflowX != NS_STYLE_OVERFLOW_VISIBLE;
+=======
+bool nsHTMLButtonControlFrame::ShouldClipPaintingToBorderBox() {
+  return IsInput() || StyleDisplay()->mOverflowX != StyleOverflow::Visible;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void nsHTMLButtonControlFrame::BuildDisplayList(
     nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) {
   // Clip to our border area for event hit testing.
@@ -89,15 +122,51 @@ void nsHTMLButtonControlFrame::BuildDisplayList(
                                                    hasRadii ? radii : nullptr);
   }
 
+||||||| merged common ancestors
+void
+nsHTMLButtonControlFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                                           const nsDisplayListSet& aLists)
+{
+  // Clip to our border area for event hit testing.
+  Maybe<DisplayListClipState::AutoSaveRestore> eventClipState;
+  const bool isForEventDelivery = aBuilder->IsForEventDelivery();
+  if (isForEventDelivery) {
+    eventClipState.emplace(aBuilder);
+    nsRect rect(aBuilder->ToReferenceFrame(this), GetSize());
+    nscoord radii[8];
+    bool hasRadii = GetBorderRadii(radii);
+    eventClipState->ClipContainingBlockDescendants(rect, hasRadii ? radii : nullptr);
+  }
+
+=======
+void nsHTMLButtonControlFrame::BuildDisplayList(
+    nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) {
+>>>>>>> upstream-releases
   nsDisplayList onTop;
+<<<<<<< HEAD
   if (IsVisibleForPainting()) {
+||||||| merged common ancestors
+  if (IsVisibleForPainting(aBuilder)) {
+=======
+  if (IsVisibleForPainting()) {
+    // Clip the button itself to its border area for event hit testing.
+    Maybe<DisplayListClipState::AutoSaveRestore> eventClipState;
+    if (aBuilder->IsForEventDelivery()) {
+      eventClipState.emplace(aBuilder);
+      nsRect rect(aBuilder->ToReferenceFrame(this), GetSize());
+      nscoord radii[8];
+      bool hasRadii = GetBorderRadii(radii);
+      eventClipState->ClipContainingBlockDescendants(
+          rect, hasRadii ? radii : nullptr);
+    }
+
+>>>>>>> upstream-releases
     mRenderer.DisplayButton(aBuilder, aLists.BorderBackground(), &onTop);
   }
 
   nsDisplayListCollection set(aBuilder);
 
-  // Do not allow the child subtree to receive events.
-  if (!isForEventDelivery || aBuilder->HitTestIsForVisibility()) {
+  {
     DisplayListClipState::AutoSaveRestore clipState(aBuilder);
 
     if (ShouldClipPaintingToBorderBox()) {
@@ -112,7 +181,6 @@ void nsHTMLButtonControlFrame::BuildDisplayList(
 
     BuildDisplayListForChild(aBuilder, mFrames.FirstChild(), set,
                              DISPLAY_CHILD_FORCE_PSEUDO_STACKING_CONTEXT);
-    // That should put the display items in set.Content()
   }
 
   // Put the foreground outline and focus rects on top of the children
@@ -170,8 +238,18 @@ void nsHTMLButtonControlFrame::Reflow(nsPresContext* aPresContext,
   MOZ_ASSERT(firstKid, "Button should have a child frame for its contents");
   MOZ_ASSERT(!firstKid->GetNextSibling(),
              "Button should have exactly one child frame");
+<<<<<<< HEAD
   MOZ_ASSERT(firstKid->Style()->GetPseudo() == nsCSSAnonBoxes::buttonContent(),
              "Button's child frame has unexpected pseudo type!");
+||||||| merged common ancestors
+  MOZ_ASSERT(firstKid->Style()->GetPseudo() ==
+             nsCSSAnonBoxes::buttonContent(),
+             "Button's child frame has unexpected pseudo type!");
+=======
+  MOZ_ASSERT(
+      firstKid->Style()->GetPseudoType() == PseudoStyleType::buttonContent,
+      "Button's child frame has unexpected pseudo type!");
+>>>>>>> upstream-releases
 
   // XXXbz Eventually we may want to check-and-bail if
   // !aReflowInput.ShouldReflowAllKids() &&
@@ -204,7 +282,7 @@ void nsHTMLButtonControlFrame::ReflowButtonContents(
     const ReflowInput& aButtonReflowInput, nsIFrame* aFirstKid) {
   WritingMode wm = GetWritingMode();
   LogicalSize availSize = aButtonReflowInput.ComputedSize(wm);
-  availSize.BSize(wm) = NS_INTRINSICSIZE;
+  availSize.BSize(wm) = NS_UNCONSTRAINEDSIZE;
 
   // shorthand for a value we need to use in a bunch of places
   const LogicalMargin& clbp = aButtonReflowInput.ComputedLogicalBorderPadding();
@@ -242,7 +320,7 @@ void nsHTMLButtonControlFrame::ReflowButtonContents(
 
   // Compute the button's content-box size:
   LogicalSize buttonContentBox(wm);
-  if (aButtonReflowInput.ComputedBSize() != NS_INTRINSICSIZE) {
+  if (aButtonReflowInput.ComputedBSize() != NS_UNCONSTRAINEDSIZE) {
     // Button has a fixed block-size -- that's its content-box bSize.
     buttonContentBox.BSize(wm) = aButtonReflowInput.ComputedBSize();
   } else if (aButtonReflowInput.mStyleDisplay->IsContainSize()) {
@@ -264,7 +342,7 @@ void nsHTMLButtonControlFrame::ReflowButtonContents(
         buttonContentBox.BSize(wm), aButtonReflowInput.ComputedMinBSize(),
         aButtonReflowInput.ComputedMaxBSize());
   }
-  if (aButtonReflowInput.ComputedISize() != NS_INTRINSICSIZE) {
+  if (aButtonReflowInput.ComputedISize() != NS_UNCONSTRAINEDSIZE) {
     buttonContentBox.ISize(wm) = aButtonReflowInput.ComputedISize();
   } else if (aButtonReflowInput.mStyleDisplay->IsContainSize()) {
     buttonContentBox.ISize(wm) = aButtonReflowInput.ComputedMinISize();
@@ -310,6 +388,7 @@ void nsHTMLButtonControlFrame::ReflowButtonContents(
   // within our frame... unless it's orthogonal, in which case we'll use the
   // contents inline-size as an approximation for now.
   // XXX is there a better strategy? should we include border-padding?
+<<<<<<< HEAD
   if (aButtonReflowInput.mStyleDisplay->IsContainSize()) {
     // If we're size-contained, we should pretend our contents had 0 height
     // (as they would, if we had no children). This case is identical to the
@@ -323,6 +402,30 @@ void nsHTMLButtonControlFrame::ReflowButtonContents(
     aButtonDesiredSize.SetBlockStartAscent(
         contentsDesiredSize.BlockStartAscent() + childPos.B(wm));
   }
+||||||| merged common ancestors
+  if (aButtonReflowInput.mStyleDisplay->IsContainSize()) {
+    // If we're size-contained, we should pretend our contents had 0 height
+    // (as they would, if we had no children). This case is identical to the
+    // final else case, but uses only our specified button height for ascent
+    // (ie. it ignores the height returned in contentsDesiredSize).
+    nscoord containAscent = (buttonContentBox.BSize(wm) / 2) + clbp.BStart(wm);
+    aButtonDesiredSize.SetBlockStartAscent(containAscent);
+  } else if (aButtonDesiredSize.GetWritingMode().IsOrthogonalTo(wm)) {
+    aButtonDesiredSize.SetBlockStartAscent(contentsDesiredSize.ISize(wm));
+  } else {
+    aButtonDesiredSize.SetBlockStartAscent(contentsDesiredSize.BlockStartAscent() +
+                                           childPos.B(wm));
+  }
+=======
+  if (!aButtonReflowInput.mStyleDisplay->IsContainLayout()) {
+    if (aButtonDesiredSize.GetWritingMode().IsOrthogonalTo(wm)) {
+      aButtonDesiredSize.SetBlockStartAscent(contentsDesiredSize.ISize(wm));
+    } else {
+      aButtonDesiredSize.SetBlockStartAscent(
+          contentsDesiredSize.BlockStartAscent() + childPos.B(wm));
+    }
+  }  // else: we're layout-contained, and so we have no baseline.
+>>>>>>> upstream-releases
 
   aButtonDesiredSize.SetOverflowAreasToDesiredBounds();
 }
@@ -335,8 +438,16 @@ bool nsHTMLButtonControlFrame::GetVerticalAlignBaseline(
   }
   if (!inner->GetVerticalAlignBaseline(aWM, aBaseline)) {
     // <input type=color> has an empty block frame as inner frame
+<<<<<<< HEAD
     *aBaseline = inner->SynthesizeBaselineBOffsetFromBorderBox(
         aWM, BaselineSharingGroup::eFirst);
+||||||| merged common ancestors
+    *aBaseline = inner->
+      SynthesizeBaselineBOffsetFromBorderBox(aWM, BaselineSharingGroup::eFirst);
+=======
+    *aBaseline = inner->SynthesizeBaselineBOffsetFromBorderBox(
+        aWM, BaselineSharingGroup::First);
+>>>>>>> upstream-releases
   }
   nscoord innerBStart = inner->BStart(aWM, GetSize());
   *aBaseline += innerBStart;
@@ -356,7 +467,7 @@ bool nsHTMLButtonControlFrame::GetNaturalBaselineBOffset(
         inner->SynthesizeBaselineBOffsetFromBorderBox(aWM, aBaselineGroup);
   }
   nscoord innerBStart = inner->BStart(aWM, GetSize());
-  if (aBaselineGroup == BaselineSharingGroup::eFirst) {
+  if (aBaselineGroup == BaselineSharingGroup::First) {
     *aBaseline += innerBStart;
   } else {
     *aBaseline += BSize(aWM) - (innerBStart + inner->BSize(aWM));

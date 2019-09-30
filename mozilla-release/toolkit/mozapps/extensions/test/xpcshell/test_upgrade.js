@@ -8,9 +8,10 @@
 Services.prefs.setBoolPref(PREF_EM_STRICT_COMPATIBILITY, false);
 
 // Enable loading extensions from the application scope
-Services.prefs.setIntPref("extensions.enabledScopes",
-                          AddonManager.SCOPE_PROFILE +
-                          AddonManager.SCOPE_APPLICATION);
+Services.prefs.setIntPref(
+  "extensions.enabledScopes",
+  AddonManager.SCOPE_PROFILE + AddonManager.SCOPE_APPLICATION
+);
 
 const profileDir = gProfD.clone();
 profileDir.append("extensions");
@@ -31,6 +32,7 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   // Will be compatible in the first version and incompatible in subsequent versions
+<<<<<<< HEAD
   let xpi = await createAddon({
     id: ID1,
     targetApplications: [{
@@ -41,12 +43,45 @@ add_task(async function setup() {
     targetPlatforms: [
       {os: "XPCShell"},
       {os: "WINNT_x86"},
+||||||| merged common ancestors
+  await promiseWriteInstallRDFForExtension({
+    id: "addon1@tests.mozilla.org",
+    version: "1.0",
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "1",
+      maxVersion: "1",
+    }],
+    name: "Test Addon 1",
+    targetPlatforms: [
+      "XPCShell",
+      "WINNT_x86",
+=======
+  let xpi = await createAddon({
+    id: ID1,
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "1",
+        maxVersion: "1",
+      },
+>>>>>>> upstream-releases
     ],
+<<<<<<< HEAD
   });
   await manuallyInstall(xpi, profileDir, ID1);
 
+||||||| merged common ancestors
+  }, profileDir);
+=======
+    targetPlatforms: [{ os: "XPCShell" }, { os: "WINNT_x86" }],
+  });
+  await manuallyInstall(xpi, profileDir, ID1);
+>>>>>>> upstream-releases
 
   // Works in all tested versions
+<<<<<<< HEAD
   xpi = await createAddon({
     id: ID2,
     targetApplications: [{
@@ -54,6 +89,28 @@ add_task(async function setup() {
       minVersion: "1",
       maxVersion: "2",
     }],
+||||||| merged common ancestors
+  await promiseWriteInstallRDFForExtension({
+    id: "addon2@tests.mozilla.org",
+    version: "1.0",
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "1",
+      maxVersion: "2",
+    }],
+    name: "Test Addon 2",
+=======
+  xpi = await createAddon({
+    id: ID2,
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "1",
+        maxVersion: "2",
+      },
+    ],
+>>>>>>> upstream-releases
     targetPlatforms: [
       {
         os: "XPCShell",
@@ -64,6 +121,7 @@ add_task(async function setup() {
   await manuallyInstall(xpi, profileDir, ID2);
 
   // Will be disabled in the first version and enabled in the second.
+<<<<<<< HEAD
   xpi = createAddon({
     id: ID3,
     targetApplications: [{
@@ -73,11 +131,37 @@ add_task(async function setup() {
     }],
   });
   await manuallyInstall(xpi, profileDir, ID3);
+||||||| merged common ancestors
+  await promiseWriteInstallRDFForExtension({
+    id: "addon3@tests.mozilla.org",
+    version: "1.0",
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "2",
+      maxVersion: "2",
+    }],
+    name: "Test Addon 3",
+  }, profileDir);
+=======
+  xpi = createAddon({
+    id: ID3,
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "2",
+        maxVersion: "2",
+      },
+    ],
+  });
+  await manuallyInstall(xpi, profileDir, ID3);
+>>>>>>> upstream-releases
 
   // Will be compatible in both versions but will change version in between
   xpi = await createAddon({
     id: ID4,
     version: "1.0",
+<<<<<<< HEAD
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
@@ -86,6 +170,28 @@ add_task(async function setup() {
   });
   await manuallyInstall(xpi, globalDir, ID4);
   await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
+||||||| merged common ancestors
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "1",
+      maxVersion: "1",
+    }],
+    name: "Test Addon 4",
+  }, globalDir);
+  setExtensionModifiedTime(dest, gInstallTime);
+=======
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "1",
+        maxVersion: "1",
+      },
+    ],
+  });
+  await manuallyInstall(xpi, globalDir, ID4);
+  await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
+>>>>>>> upstream-releases
 });
 
 registerCleanupFunction(function end_test() {
@@ -125,6 +231,7 @@ add_task(async function test_2() {
   let xpi = createAddon({
     id: ID4,
     version: "2.0",
+<<<<<<< HEAD
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "2",
@@ -133,6 +240,28 @@ add_task(async function test_2() {
   });
   await manuallyInstall(xpi, globalDir, ID4);
   await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
+||||||| merged common ancestors
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "2",
+      maxVersion: "2",
+    }],
+    name: "Test Addon 4",
+  }, globalDir);
+  setExtensionModifiedTime(dest, gInstallTime);
+=======
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "2",
+        maxVersion: "2",
+      },
+    ],
+  });
+  await manuallyInstall(xpi, globalDir, ID4);
+  await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
+>>>>>>> upstream-releases
 
   await promiseStartupManager("2");
   let [a1, a2, a3, a4] = await promiseAddonsByIDs([ID1, ID2, ID3, ID4]);
@@ -158,6 +287,7 @@ add_task(async function test_3() {
   let xpi = createAddon({
     id: ID4,
     version: "3.0",
+<<<<<<< HEAD
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "3",
@@ -168,6 +298,33 @@ add_task(async function test_3() {
   await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
 
   // Simulates a simple Build ID change
+||||||| merged common ancestors
+    bootstrap: true,
+    targetApplications: [{
+      id: "xpcshell@tests.mozilla.org",
+      minVersion: "3",
+      maxVersion: "3",
+    }],
+    name: "Test Addon 4",
+  }, globalDir);
+  setExtensionModifiedTime(dest, gInstallTime);
+
+  // Simulates a simple Build ID change, the platform deletes extensions.ini
+  // whenever the application is changed.
+=======
+    targetApplications: [
+      {
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "3",
+        maxVersion: "3",
+      },
+    ],
+  });
+  await manuallyInstall(xpi, globalDir, ID4);
+  await promiseSetExtensionModifiedTime(PATH4, gInstallTime);
+
+  // Simulates a simple Build ID change
+>>>>>>> upstream-releases
   gAddonStartup.remove(true);
   await promiseStartupManager();
 

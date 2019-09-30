@@ -13,7 +13,24 @@ DIRS += [
 ]
 
 DevToolsModules(
+<<<<<<< HEAD
+||||||| merged common ancestors
+    'ChangesManager.js',
+=======
+    'ChangesContextMenu.js',
+>>>>>>> upstream-releases
     'ChangesView.js',
+    'constants.js',
 )
+<<<<<<< HEAD
 
 BROWSER_CHROME_MANIFESTS += ['test/browser.ini']
+||||||| merged common ancestors
+=======
+
+BROWSER_CHROME_MANIFESTS += ['test/browser.ini']
+XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']
+
+with Files('**'):
+    BUG_COMPONENT = ('DevTools', 'Inspector: Changes')
+>>>>>>> upstream-releases

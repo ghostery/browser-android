@@ -18,10 +18,22 @@ pt_PT{
             "AMD",
             "Dram arménio",
         }
+<<<<<<< HEAD
         AOA{
             "AOA",
             "kwanza angolano",
         }
+||||||| merged common ancestors
+=======
+        ANG{
+            "ANG",
+            "Florim das Antilhas Holandesas",
+        }
+        AOA{
+            "AOA",
+            "kwanza angolano",
+        }
+>>>>>>> upstream-releases
         ARS{
             "ARS",
             "peso argentino",
@@ -102,6 +114,10 @@ pt_PT{
             "BYN",
             "rublo bielorrusso",
         }
+        BYR{
+            "BYR",
+            "Rublo bielorrusso (2000–2016)",
+        }
         BZD{
             "BZD",
             "dólar belizense",
@@ -166,6 +182,10 @@ pt_PT{
             "DKK",
             "coroa dinamarquesa",
         }
+        DOP{
+            "DOP",
+            "Peso dominicano",
+        }
         DZD{
             "DZD",
             "dinar argelino",
@@ -202,6 +222,10 @@ pt_PT{
             "£",
             "libra esterlina britânica",
         }
+        GEL{
+            "GEL",
+            "Lari georgiano",
+        }
         GHS{
             "GHS",
             "cedi ganês",
@@ -226,6 +250,10 @@ pt_PT{
             "GYD",
             "dólar da Guiana",
         }
+        HKD{
+            "HK$",
+            "Dólar de Hong Kong",
+        }
         HNL{
             "HNL",
             "lempira das Honduras",
@@ -234,30 +262,102 @@ pt_PT{
             "HRK",
             "kuna croata",
         }
+        HTG{
+            "HTG",
+            "Gourde haitiano",
+        }
         HUF{
             "HUF",
             "forint húngaro",
+        }
+<<<<<<< HEAD
+        ILS{
+            "₪",
+            "Sheqel novo israelita",
+        }
+||||||| merged common ancestors
+=======
+        IDR{
+            "IDR",
+            "Rupia indonésia",
         }
         ILS{
             "₪",
             "Sheqel novo israelita",
         }
+        INR{
+            "₹",
+            "Rupia indiana",
+        }
+        IQD{
+            "IQD",
+            "Dinar iraquiano",
+        }
+        IRR{
+            "IRR",
+            "Rial iraniano",
+        }
+>>>>>>> upstream-releases
         ISK{
             "ISK",
             "coroa islandesa",
+        }
+<<<<<<< HEAD
+        KES{
+            "KES",
+            "xelim queniano",
+        }
+||||||| merged common ancestors
+=======
+        JMD{
+            "JMD",
+            "Dólar jamaicano",
+        }
+        JOD{
+            "JOD",
+            "Dinar jordaniano",
+        }
+        JPY{
+            "JP¥",
+            "Iene japonês",
         }
         KES{
             "KES",
             "xelim queniano",
         }
+>>>>>>> upstream-releases
         KGS{
             "KGS",
             "Som do Quirguistão",
+        }
+<<<<<<< HEAD
+        KMF{
+            "KMF",
+            "franco comoriano",
+        }
+||||||| merged common ancestors
+=======
+        KHR{
+            "KHR",
+            "Riel cambojano",
         }
         KMF{
             "KMF",
             "franco comoriano",
         }
+        KPW{
+            "KPW",
+            "Won norte-coreano",
+        }
+        KRW{
+            "₩",
+            "Won sul-coreano",
+        }
+        KWD{
+            "KWD",
+            "Dinar kuwaitiano",
+        }
+>>>>>>> upstream-releases
         KYD{
             "KYD",
             "Dólar das Ilhas Caimão",
@@ -269,6 +369,24 @@ pt_PT{
         LAK{
             "LAK",
             "Kip de Laos",
+        }
+<<<<<<< HEAD
+        LRD{
+            "LRD",
+            "dólar liberiano",
+||||||| merged common ancestors
+        LKR{
+            "LKR",
+            "Rupia do Sri Lanka",
+=======
+        LBP{
+            "LBP",
+            "Libra libanesa",
+        }
+        LKR{
+            "LKR",
+            "Rupia do Sri Lanka",
+>>>>>>> upstream-releases
         }
         LRD{
             "LRD",
@@ -342,6 +460,10 @@ pt_PT{
             "MXV",
             "Unidad de Inversion (UDI) mexicana",
         }
+        MYR{
+            "MYR",
+            "Ringgit malaio",
+        }
         MZN{
             "MZN",
             "metical moçambicano",
@@ -349,6 +471,10 @@ pt_PT{
         NAD{
             "NAD",
             "Dólar da Namíbia",
+        }
+        NGN{
+            "NGN",
+            "Naira nigeriana",
         }
         NIC{
             "NIC",
@@ -361,6 +487,14 @@ pt_PT{
         NOK{
             "NOK",
             "coroa norueguesa",
+        }
+        NPR{
+            "NPR",
+            "Rupia nepalesa",
+        }
+        NZD{
+            "NZ$",
+            "Dólar neozelandês",
         }
         OMR{
             "OMR",
@@ -377,6 +511,14 @@ pt_PT{
         PGK{
             "PGK",
             "Kina da Papua-Nova Guiné",
+        }
+        PHP{
+            "PHP",
+            "Peso filipino",
+        }
+        PKR{
+            "PKR",
+            "Rupia paquistanesa",
         }
         PLN{
             "PLN",
@@ -419,10 +561,22 @@ pt_PT{
             "SAR",
             "Rial saudita",
         }
+<<<<<<< HEAD
         SCR{
             "SCR",
             "rupia seichelense",
         }
+||||||| merged common ancestors
+=======
+        SBD{
+            "SBD",
+            "Dólar das Ilhas Salomão",
+        }
+        SCR{
+            "SCR",
+            "rupia seichelense",
+        }
+>>>>>>> upstream-releases
         SDG{
             "SDG",
             "libra sudanesa",
@@ -435,10 +589,22 @@ pt_PT{
             "SGD",
             "Dólar de Singapura",
         }
+<<<<<<< HEAD
         SHP{
             "SHP",
             "libra santa-helenense",
         }
+||||||| merged common ancestors
+=======
+        SHP{
+            "SHP",
+            "libra santa-helenense",
+        }
+        SLL{
+            "SLL",
+            "Leone de Serra Leoa",
+        }
+>>>>>>> upstream-releases
         SOS{
             "SOS",
             "xelim somali",
@@ -447,13 +613,35 @@ pt_PT{
             "SRD",
             "dólar do Suriname",
         }
+<<<<<<< HEAD
         SSP{
             "SSP",
             "libra sul-sudanesa",
         }
+||||||| merged common ancestors
+=======
+        SSP{
+            "SSP",
+            "libra sul-sudanesa",
+        }
+        STD{
+            "STD",
+            "Dobra de São Tomé e Príncipe (1977–2017)",
+        }
+>>>>>>> upstream-releases
         STN{
             "STN",
+<<<<<<< HEAD
             "dobra de São Tomé e Príncipe",
+||||||| merged common ancestors
+            "São Tomé & Príncipe Dobra (2018)",
+=======
+            "dobra de São Tomé e Príncipe",
+        }
+        SYP{
+            "SYP",
+            "Libra síria",
+>>>>>>> upstream-releases
         }
         SZL{
             "SZL",
@@ -479,13 +667,29 @@ pt_PT{
             "TOP",
             "Paʻanga de Tonga",
         }
+        TRY{
+            "TRY",
+            "Lira turca",
+        }
         TTD{
             "TTD",
             "Dólar de Trindade e Tobago",
         }
+        TWD{
+            "NT$",
+            "Novo dólar taiwanês",
+        }
+        TZS{
+            "TZS",
+            "Xelim tanzaniano",
+        }
         UAH{
             "UAH",
             "hryvnia ucraniano",
+        }
+        UGX{
+            "UGX",
+            "Xelim ugandense",
         }
         USD{
             "US$",
@@ -501,11 +705,39 @@ pt_PT{
         }
         VEF{
             "VEF",
+<<<<<<< HEAD
+            "bolívar (2008–2018)",
+||||||| merged common ancestors
+            "bolívar",
+=======
             "bolívar (2008–2018)",
         }
         VES{
             "VES",
             "bolívar",
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+        VES{
+            "VES",
+            "bolívar",
+||||||| merged common ancestors
+        VUV{
+            "VUV",
+            "Vatu de Vanuatu",
+=======
+        VND{
+            "₫",
+            "Dong vietnamita",
+        }
+        VUV{
+            "VUV",
+            "Vatu de Vanuatu",
+>>>>>>> upstream-releases
+        }
+        WST{
+            "WST",
+            "Tala samoano",
         }
         XAF{
             "FCFA",
@@ -519,14 +751,35 @@ pt_PT{
             "CFA",
             "franco CFA (BCEAO)",
         }
+        XPF{
+            "CFPF",
+            "Franco CFP",
+        }
         XXX{
             "¤",
             "moeda desconhecida",
+        }
+        YER{
+            "YER",
+            "Rial iemenita",
+        }
+        ZAR{
+            "ZAR",
+            "Rand sul-africano",
         }
         ZMK{
             "ZMK",
             "Kwacha zambiano (1968–2012)",
         }
+        ZMW{
+            "ZMW",
+            "Kwacha zambiano",
+        }
+    }
+    Currencies%narrow{
+        HKD{"$"}
+        INR{"₹"}
+        SYP{"£"}
     }
     Currencies%narrow{
         SYP{"£"}
@@ -1029,5 +1282,11 @@ pt_PT{
             other{"Kwachas zambianos (1968–2012)"}
         }
     }
+<<<<<<< HEAD
     Version{"2.1.44.9"}
+||||||| merged common ancestors
+    Version{"2.1.41.97"}
+=======
+    Version{"2.1.49.82"}
+>>>>>>> upstream-releases
 }

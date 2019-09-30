@@ -22,6 +22,7 @@
 
 namespace {
 
+<<<<<<< HEAD
 // System pagesize. This value remains constant on x86/64 architectures.
 const int PAGESIZE_KB = 4;
 
@@ -39,6 +40,46 @@ typedef BOOL(WINAPI* UpdateProcThreadAttributeFn)(
     LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList, DWORD dwFlags,
     DWORD_PTR Attribute, PVOID lpValue, SIZE_T cbSize, PVOID lpPreviousValue,
     PSIZE_T lpReturnSize);
+||||||| merged common ancestors
+// System pagesize. This value remains constant on x86/64 architectures.
+const int PAGESIZE_KB = 4;
+
+// HeapSetInformation function pointer.
+typedef BOOL (WINAPI* HeapSetFn)(HANDLE, HEAP_INFORMATION_CLASS, PVOID, SIZE_T);
+
+typedef BOOL (WINAPI * InitializeProcThreadAttributeListFn)(
+  LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList,
+  DWORD dwAttributeCount,
+  DWORD dwFlags,
+  PSIZE_T lpSize
+);
+
+typedef BOOL (WINAPI * DeleteProcThreadAttributeListFn)(
+  LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList
+);
+
+typedef BOOL (WINAPI * UpdateProcThreadAttributeFn)(
+  LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList,
+  DWORD dwFlags,
+  DWORD_PTR Attribute,
+  PVOID lpValue,
+  SIZE_T cbSize,
+  PVOID lpPreviousValue,
+  PSIZE_T lpReturnSize
+);
+=======
+typedef BOOL(WINAPI* InitializeProcThreadAttributeListFn)(
+    LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList, DWORD dwAttributeCount,
+    DWORD dwFlags, PSIZE_T lpSize);
+
+typedef BOOL(WINAPI* DeleteProcThreadAttributeListFn)(
+    LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList);
+
+typedef BOOL(WINAPI* UpdateProcThreadAttributeFn)(
+    LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList, DWORD dwFlags,
+    DWORD_PTR Attribute, PVOID lpValue, SIZE_T cbSize, PVOID lpPreviousValue,
+    PSIZE_T lpReturnSize);
+>>>>>>> upstream-releases
 
 static InitializeProcThreadAttributeListFn InitializeProcThreadAttributeListPtr;
 static DeleteProcThreadAttributeListFn DeleteProcThreadAttributeListPtr;

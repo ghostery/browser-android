@@ -7,13 +7,33 @@ interface nsIDocShell;
 
 [Exposed=Window, ChromeOnly]
 interface BrowsingContext {
+  static BrowsingContext? get(unsigned long long aId);
+
+  static BrowsingContext? getFromWindow(WindowProxy window);
+
+  BrowsingContext? findChildWithName(DOMString name);
+  BrowsingContext? findWithName(DOMString name);
+
+  readonly attribute DOMString name;
+
   readonly attribute BrowsingContext? parent;
+
+  readonly attribute BrowsingContext top;
 
   sequence<BrowsingContext> getChildren();
 
+<<<<<<< HEAD
   readonly attribute nsIDocShell? docShell;
 
+||||||| merged common ancestors
+=======
+  readonly attribute nsIDocShell? docShell;
+
+  readonly attribute Element? embedderElement;
+
+>>>>>>> upstream-releases
   readonly attribute unsigned long long id;
+<<<<<<< HEAD
 
   readonly attribute BrowsingContext? opener;
 };
@@ -23,4 +43,34 @@ interface ChromeBrowsingContext : BrowsingContext {
   sequence<WindowGlobalParent> getWindowGlobals();
 
   readonly attribute WindowGlobalParent? currentWindowGlobal;
+||||||| merged common ancestors
+=======
+
+  readonly attribute BrowsingContext? opener;
+
+  readonly attribute BrowsingContextGroup group;
+};
+
+[Exposed=Window, ChromeOnly]
+interface CanonicalBrowsingContext : BrowsingContext {
+  sequence<WindowGlobalParent> getWindowGlobals();
+
+  readonly attribute WindowGlobalParent? currentWindowGlobal;
+
+  // XXX(nika): This feels kinda hacky, but will do for now while we don't
+  // synchronously create WindowGlobalParent. It can throw if somehow the
+  // content process has died.
+  [Throws]
+  readonly attribute DOMString? currentRemoteType;
+
+  readonly attribute WindowGlobalParent? embedderWindowGlobal;
+
+  void notifyStartDelayedAutoplayMedia();
+  void notifyMediaMutedChanged(boolean muted);
+};
+
+[Exposed=Window, ChromeOnly]
+interface BrowsingContextGroup {
+  sequence<BrowsingContext> getToplevels();
+>>>>>>> upstream-releases
 };

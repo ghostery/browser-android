@@ -18,11 +18,37 @@ WebGLExtensionFragDepth::WebGLExtensionFragDepth(WebGLContext* webgl)
 
 WebGLExtensionFragDepth::~WebGLExtensionFragDepth() {}
 
+<<<<<<< HEAD
 bool WebGLExtensionFragDepth::IsSupported(const WebGLContext* webgl) {
   gl::GLContext* gl = webgl->GL();
   return gl->IsSupported(gl::GLFeature::frag_depth);
 }
+||||||| merged common ancestors
+bool
+WebGLExtensionFragDepth::IsSupported(const WebGLContext* webgl)
+{
+    gl::GLContext* gl = webgl->GL();
+    return gl->IsSupported(gl::GLFeature::frag_depth);
+}
+=======
+bool WebGLExtensionFragDepth::IsSupported(const WebGLContext* webgl) {
+  if (webgl->IsWebGL2()) return false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+  gl::GLContext* gl = webgl->GL();
+  if (gl->IsGLES() && gl->Version() >= 300) {
+    // ANGLE's shader translator can't translate ESSL1 exts to ESSL3. (bug
+    // 1524804)
+    return false;
+  }
+  return gl->IsSupported(gl::GLFeature::frag_depth);
+}
+
+>>>>>>> upstream-releases
 IMPL_WEBGL_EXTENSION_GOOP(WebGLExtensionFragDepth, EXT_frag_depth)
 
 }  // namespace mozilla

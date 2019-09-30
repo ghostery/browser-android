@@ -180,8 +180,19 @@ void Touch::SetTouchTarget(EventTarget* aTarget) {
   mTarget = aTarget;
 }
 
+<<<<<<< HEAD
 bool Touch::Equals(Touch* aTouch) {
   return mRefPoint == aTouch->mRefPoint && mForce == aTouch->mForce &&
+||||||| merged common ancestors
+bool
+Touch::Equals(Touch* aTouch)
+{
+  return mRefPoint == aTouch->mRefPoint &&
+         mForce == aTouch->mForce &&
+=======
+bool Touch::Equals(Touch* aTouch) const {
+  return mRefPoint == aTouch->mRefPoint && mForce == aTouch->mForce &&
+>>>>>>> upstream-releases
          mRotationAngle == aTouch->mRotationAngle &&
          mRadius.x == aTouch->mRadius.x && mRadius.y == aTouch->mRadius.y;
 }

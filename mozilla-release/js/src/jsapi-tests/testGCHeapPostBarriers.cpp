@@ -8,6 +8,7 @@
 #include "mozilla/TypeTraits.h"
 #include "mozilla/UniquePtr.h"
 
+#include "js/ArrayBuffer.h"  // JS::NewArrayBuffer
 #include "js/RootingAPI.h"
 #include "jsapi-tests/tests.h"
 #include "vm/Runtime.h"
@@ -131,7 +132,13 @@ bool TestHeapPostBarrierUpdate() {
     ptr = testStruct.release();
   }
 
+<<<<<<< HEAD
   cx->minorGC(JS::gcreason::API);
+||||||| merged common ancestors
+    cx->minorGC(JS::gcreason::API);
+=======
+  cx->minorGC(JS::GCReason::API);
+>>>>>>> upstream-releases
 
   W& wrapper = ptr->wrapper;
   CHECK(uintptr_t(wrapper.get()) != initialObjAsInt);
@@ -140,7 +147,13 @@ bool TestHeapPostBarrierUpdate() {
 
   JS::DeletePolicy<TestStruct<W>>()(ptr);
 
+<<<<<<< HEAD
   cx->minorGC(JS::gcreason::API);
+||||||| merged common ancestors
+    cx->minorGC(JS::gcreason::API);
+=======
+  cx->minorGC(JS::GCReason::API);
+>>>>>>> upstream-releases
 
   return true;
 }
@@ -166,7 +179,13 @@ bool TestHeapPostBarrierInitFailure() {
     // testStruct deleted here, as if we left this block due to an error.
   }
 
+<<<<<<< HEAD
   cx->minorGC(JS::gcreason::API);
+||||||| merged common ancestors
+    cx->minorGC(JS::gcreason::API);
+=======
+  cx->minorGC(JS::GCReason::API);
+>>>>>>> upstream-releases
 
   return true;
 }
@@ -178,6 +197,7 @@ BEGIN_TEST(testUnbarrieredEquality) {
   AutoLeaveZeal nozeal(cx);
 #endif /* JS_GC_ZEAL */
 
+<<<<<<< HEAD
   // Use ArrayBuffers because they have finalizers, which allows using them
   // in ObjectPtr without awkward conversations about nursery allocatability.
   JS::RootedObject robj(cx, JS_NewArrayBuffer(cx, 20));
@@ -234,6 +254,112 @@ BEGIN_TEST(testUnbarrieredEquality) {
   }
 
   return true;
+||||||| merged common ancestors
+    // Use ArrayBuffers because they have finalizers, which allows using them
+    // in ObjectPtr without awkward conversations about nursery allocatability.
+    JS::RootedObject robj(cx, JS_NewArrayBuffer(cx, 20));
+    JS::RootedObject robj2(cx, JS_NewArrayBuffer(cx, 30));
+    cx->runtime()->gc.evictNursery(); // Need tenured objects
+
+    // Need some bare pointers to compare against.
+    JSObject* obj = robj;
+    JSObject* obj2 = robj2;
+    const JSObject* constobj = robj;
+    const JSObject* constobj2 = robj2;
+
+    // Make them gray. We will make sure they stay gray. (For most reads, the
+    // barrier will unmark gray.)
+    using namespace js::gc;
+    TenuredCell* cell = &obj->asTenured();
+    TenuredCell* cell2 = &obj2->asTenured();
+    cell->markIfUnmarked(MarkColor::Gray);
+    cell2->markIfUnmarked(MarkColor::Gray);
+    MOZ_ASSERT(cell->isMarkedGray());
+    MOZ_ASSERT(cell2->isMarkedGray());
+
+    {
+        JS::Heap<JSObject*> heap(obj);
+        JS::Heap<JSObject*> heap2(obj2);
+        CHECK(TestWrapper(obj, obj2, heap, heap2));
+        CHECK(TestWrapper(constobj, constobj2, heap, heap2));
+    }
+
+    {
+        JS::TenuredHeap<JSObject*> heap(obj);
+        JS::TenuredHeap<JSObject*> heap2(obj2);
+        CHECK(TestWrapper(obj, obj2, heap, heap2));
+        CHECK(TestWrapper(constobj, constobj2, heap, heap2));
+    }
+
+    {
+        JS::ObjectPtr objptr(obj);
+        JS::ObjectPtr objptr2(obj2);
+        CHECK(TestWrapper(obj, obj2, objptr, objptr2));
+        CHECK(TestWrapper(constobj, constobj2, objptr, objptr2));
+        objptr.finalize(cx);
+        objptr2.finalize(cx);
+    }
+
+    // Sanity check that the barriers normally mark things black.
+    {
+        JS::Heap<JSObject*> heap(obj);
+        JS::Heap<JSObject*> heap2(obj2);
+        heap.get();
+        heap2.get();
+        CHECK(cell->isMarkedBlack());
+        CHECK(cell2->isMarkedBlack());
+    }
+
+    return true;
+=======
+  // Use ArrayBuffers because they have finalizers, which allows using them in
+  // TenuredHeap<> without awkward conversations about nursery allocatability.
+  JS::RootedObject robj(cx, JS::NewArrayBuffer(cx, 20));
+  JS::RootedObject robj2(cx, JS::NewArrayBuffer(cx, 30));
+  cx->runtime()->gc.evictNursery();  // Need tenured objects
+
+  // Need some bare pointers to compare against.
+  JSObject* obj = robj;
+  JSObject* obj2 = robj2;
+  const JSObject* constobj = robj;
+  const JSObject* constobj2 = robj2;
+
+  // Make them gray. We will make sure they stay gray. (For most reads, the
+  // barrier will unmark gray.)
+  using namespace js::gc;
+  TenuredCell* cell = &obj->asTenured();
+  TenuredCell* cell2 = &obj2->asTenured();
+  cell->markIfUnmarked(MarkColor::Gray);
+  cell2->markIfUnmarked(MarkColor::Gray);
+  MOZ_ASSERT(cell->isMarkedGray());
+  MOZ_ASSERT(cell2->isMarkedGray());
+
+  {
+    JS::Heap<JSObject*> heap(obj);
+    JS::Heap<JSObject*> heap2(obj2);
+    CHECK(TestWrapper(obj, obj2, heap, heap2));
+    CHECK(TestWrapper(constobj, constobj2, heap, heap2));
+  }
+
+  {
+    JS::TenuredHeap<JSObject*> heap(obj);
+    JS::TenuredHeap<JSObject*> heap2(obj2);
+    CHECK(TestWrapper(obj, obj2, heap, heap2));
+    CHECK(TestWrapper(constobj, constobj2, heap, heap2));
+  }
+
+  // Sanity check that the barriers normally mark things black.
+  {
+    JS::Heap<JSObject*> heap(obj);
+    JS::Heap<JSObject*> heap2(obj2);
+    heap.get();
+    heap2.get();
+    CHECK(cell->isMarkedBlack());
+    CHECK(cell2->isMarkedBlack());
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
 template <typename ObjectT, typename WrapperT>

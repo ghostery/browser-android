@@ -38,10 +38,20 @@ class XULSelectControlAccessible : public AccessibleWrap {
   virtual Accessible* CurrentItem() const override;
   virtual void SetCurrentItem(const Accessible* aItem) override;
 
+<<<<<<< HEAD
  protected:
   // nsIDOMXULMultiSelectControlElement inherits from this, so we'll always have
   // one of these if the widget is valid and not defunct
   nsCOMPtr<nsIDOMXULSelectControlElement> mSelectControl;
+||||||| merged common ancestors
+protected:
+  // nsIDOMXULMultiSelectControlElement inherits from this, so we'll always have
+  // one of these if the widget is valid and not defunct
+  nsCOMPtr<nsIDOMXULSelectControlElement> mSelectControl;
+=======
+ protected:
+  RefPtr<Element> mSelectControl;
+>>>>>>> upstream-releases
 };
 
 }  // namespace a11y

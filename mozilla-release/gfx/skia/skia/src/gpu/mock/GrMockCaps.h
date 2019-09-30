@@ -9,6 +9,7 @@
 #define GrMockCaps_DEFINED
 
 #include "GrCaps.h"
+#include "SkGr.h"
 #include "mock/GrMockTypes.h"
 
 class GrMockCaps : public GrCaps {
@@ -16,6 +17,7 @@ public:
     GrMockCaps(const GrContextOptions& contextOptions, const GrMockOptions& options)
             : INHERITED(contextOptions), fOptions(options) {
         fInstanceAttribSupport = options.fInstanceAttribSupport;
+        fHalfFloatVertexAttributeSupport = options.fHalfFloatVertexAttributeSupport;
         fMapBufferFlags = options.fMapBufferFlags;
         fBufferMapThreshold = SK_MaxS32; // Overridable in GrContextOptions.
         fMaxTextureSize = options.fMaxTextureSize;
@@ -65,19 +67,32 @@ public:
         return 0;
     }
 
+<<<<<<< HEAD
     bool surfaceSupportsWritePixels(const GrSurface*) const override { return true; }
     bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
+||||||| merged common ancestors
+    bool surfaceSupportsWritePixels(const GrSurface* surface) const override { return true; }
+=======
+    bool surfaceSupportsReadPixels(const GrSurface*) const override { return true; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     bool canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
                         const SkIRect& srcRect, const SkIPoint& dstPoint) const override {
         return true;
     }
 
     bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
+||||||| merged common ancestors
+    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
+=======
+    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
+>>>>>>> upstream-releases
                             bool* rectsMustMatch, bool* disallowSubrect) const override {
         return false;
     }
 
+<<<<<<< HEAD
     bool validateBackendTexture(const GrBackendTexture& tex, SkColorType,
                                 GrPixelConfig* config) const override {
         GrMockTextureInfo texInfo;
@@ -87,24 +102,51 @@ public:
 
         *config = texInfo.fConfig;
         return true;
-    }
-
-    bool validateBackendRenderTarget(const GrBackendRenderTarget& rt, SkColorType,
-                                     GrPixelConfig*) const override {
-        return false;
-    }
-
-    bool getConfigFromBackendFormat(const GrBackendFormat& format, SkColorType ct,
-                                    GrPixelConfig* config) const override {
-        const GrPixelConfig* mockFormat = format.getMockFormat();
-        if (!mockFormat) {
+||||||| merged common ancestors
+    bool validateBackendTexture(const GrBackendTexture& tex, SkColorType,
+                                GrPixelConfig* config) const override {
+        const GrMockTextureInfo* texInfo = tex.getMockTextureInfo();
+        if (!texInfo) {
             return false;
         }
-        *config = *mockFormat;
+
+        *config = texInfo->fConfig;
         return true;
+=======
+    GrPixelConfig validateBackendRenderTarget(const GrBackendRenderTarget&,
+                                              SkColorType) const override {
+        return kUnknown_GrPixelConfig;
+>>>>>>> upstream-releases
+    }
+
+    GrPixelConfig getConfigFromBackendFormat(const GrBackendFormat& format,
+                                             SkColorType ct) const override {
+        const GrPixelConfig* mockFormat = format.getMockFormat();
+        if (!mockFormat) {
+            return kUnknown_GrPixelConfig;
+        }
+        return *mockFormat;
+    }
+
+    GrPixelConfig getYUVAConfigFromBackendFormat(const GrBackendFormat& format) const override {
+        const GrPixelConfig* mockFormat = format.getMockFormat();
+        if (!mockFormat) {
+            return kUnknown_GrPixelConfig;
+        }
+        return *mockFormat;
+    }
+
+    GrBackendFormat getBackendFormatFromGrColorType(GrColorType ct,
+                                                    GrSRGBEncoded srgbEncoded) const override {
+        GrPixelConfig config = GrColorTypeToPixelConfig(ct, srgbEncoded);
+        if (config == kUnknown_GrPixelConfig) {
+            return GrBackendFormat();
+        }
+        return GrBackendFormat::MakeMock(config);
     }
 
 private:
+<<<<<<< HEAD
 #ifdef GR_TEST_UTILS
     GrBackendFormat onCreateFormatFromBackendTexture(
             const GrBackendTexture& backendTex) const override {
@@ -114,6 +156,15 @@ private:
     }
 #endif
 
+||||||| merged common ancestors
+=======
+    bool onSurfaceSupportsWritePixels(const GrSurface*) const override { return true; }
+    bool onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
+                          const SkIRect& srcRect, const SkIPoint& dstPoint) const override {
+        return true;
+    }
+
+>>>>>>> upstream-releases
     static const int kMaxSampleCnt = 16;
 
     GrMockOptions fOptions;

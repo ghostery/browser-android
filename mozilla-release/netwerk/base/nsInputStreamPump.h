@@ -33,11 +33,27 @@ class nsInputStreamPump final : public nsIInputStreamPump,
 
   nsInputStreamPump();
 
+<<<<<<< HEAD
   static nsresult Create(nsInputStreamPump **result, nsIInputStream *stream,
                          uint32_t segsize = 0, uint32_t segcount = 0,
                          bool closeWhenDone = false,
                          nsIEventTarget *mainThreadTarget = nullptr);
+||||||| merged common ancestors
+    static nsresult
+                      Create(nsInputStreamPump  **result,
+                             nsIInputStream      *stream,
+                             uint32_t             segsize = 0,
+                             uint32_t             segcount = 0,
+                             bool                 closeWhenDone = false,
+                             nsIEventTarget      *mainThreadTarget = nullptr);
+=======
+  static nsresult Create(nsInputStreamPump** result, nsIInputStream* stream,
+                         uint32_t segsize = 0, uint32_t segcount = 0,
+                         bool closeWhenDone = false,
+                         nsIEventTarget* mainThreadTarget = nullptr);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   typedef void (*PeekSegmentFun)(void *closure, const uint8_t *buf,
                                  uint32_t bufLen);
   /**
@@ -51,6 +67,35 @@ class nsInputStreamPump final : public nsIInputStreamPump,
    * Do not call before asyncRead. Do not call after onStopRequest.
    */
   nsresult PeekStream(PeekSegmentFun callback, void *closure);
+||||||| merged common ancestors
+    typedef void (*PeekSegmentFun)(void *closure, const uint8_t *buf,
+                                   uint32_t bufLen);
+    /**
+     * Peek into the first chunk of data that's in the stream. Note that this
+     * method will not call the callback when there is no data in the stream.
+     * The callback will be called at most once.
+     *
+     * The data from the stream will not be consumed, i.e. the pump's listener
+     * can still read all the data.
+     *
+     * Do not call before asyncRead. Do not call after onStopRequest.
+     */
+    nsresult PeekStream(PeekSegmentFun callback, void *closure);
+=======
+  typedef void (*PeekSegmentFun)(void* closure, const uint8_t* buf,
+                                 uint32_t bufLen);
+  /**
+   * Peek into the first chunk of data that's in the stream. Note that this
+   * method will not call the callback when there is no data in the stream.
+   * The callback will be called at most once.
+   *
+   * The data from the stream will not be consumed, i.e. the pump's listener
+   * can still read all the data.
+   *
+   * Do not call before asyncRead. Do not call after onStopRequest.
+   */
+  nsresult PeekStream(PeekSegmentFun callback, void* closure);
+>>>>>>> upstream-releases
 
   /**
    * Dispatched (to the main thread) by OnStateStop if it's called off main
@@ -67,6 +112,7 @@ class nsInputStreamPump final : public nsIInputStreamPump,
   uint32_t OnStateStop();
   nsresult CreateBufferedStreamIfNeeded();
 
+<<<<<<< HEAD
   uint32_t mState;
   nsCOMPtr<nsILoadGroup> mLoadGroup;
   nsCOMPtr<nsIStreamListener> mListener;
@@ -93,6 +139,66 @@ class nsInputStreamPump final : public nsIInputStreamPump,
   bool mAsyncStreamIsBuffered;
   // Protects state/member var accesses across multiple threads.
   mozilla::RecursiveMutex mMutex;
+||||||| merged common ancestors
+    nsresult EnsureWaiting();
+    uint32_t OnStateStart();
+    uint32_t OnStateTransfer();
+    uint32_t OnStateStop();
+    nsresult CreateBufferedStreamIfNeeded();
+
+    uint32_t                      mState;
+    nsCOMPtr<nsILoadGroup>        mLoadGroup;
+    nsCOMPtr<nsIStreamListener>   mListener;
+    nsCOMPtr<nsISupports>         mListenerContext;
+    nsCOMPtr<nsIEventTarget>      mTargetThread;
+    nsCOMPtr<nsIEventTarget>      mLabeledMainThreadTarget;
+    nsCOMPtr<nsIInputStream>      mStream;
+    nsCOMPtr<nsIAsyncInputStream> mAsyncStream;
+    uint64_t                      mStreamOffset;
+    uint64_t                      mStreamLength;
+    uint32_t                      mSegSize;
+    uint32_t                      mSegCount;
+    nsresult                      mStatus;
+    uint32_t                      mSuspendCount;
+    uint32_t                      mLoadFlags;
+    bool                          mIsPending;
+    // True while in OnInputStreamReady, calling OnStateStart, OnStateTransfer
+    // and OnStateStop. Used to prevent calls to AsyncWait during callbacks.
+    bool                          mProcessingCallbacks;
+    // True if waiting on the "input stream ready" callback.
+    bool                          mWaitingForInputStreamReady;
+    bool                          mCloseWhenDone;
+    bool                          mRetargeting;
+    bool                          mAsyncStreamIsBuffered;
+    // Protects state/member var accesses across multiple threads.
+    mozilla::RecursiveMutex       mMutex;
+=======
+  uint32_t mState;
+  nsCOMPtr<nsILoadGroup> mLoadGroup;
+  nsCOMPtr<nsIStreamListener> mListener;
+  nsCOMPtr<nsIEventTarget> mTargetThread;
+  nsCOMPtr<nsIEventTarget> mLabeledMainThreadTarget;
+  nsCOMPtr<nsIInputStream> mStream;
+  nsCOMPtr<nsIAsyncInputStream> mAsyncStream;
+  uint64_t mStreamOffset;
+  uint64_t mStreamLength;
+  uint32_t mSegSize;
+  uint32_t mSegCount;
+  nsresult mStatus;
+  uint32_t mSuspendCount;
+  uint32_t mLoadFlags;
+  bool mIsPending;
+  // True while in OnInputStreamReady, calling OnStateStart, OnStateTransfer
+  // and OnStateStop. Used to prevent calls to AsyncWait during callbacks.
+  bool mProcessingCallbacks;
+  // True if waiting on the "input stream ready" callback.
+  bool mWaitingForInputStreamReady;
+  bool mCloseWhenDone;
+  bool mRetargeting;
+  bool mAsyncStreamIsBuffered;
+  // Protects state/member var accesses across multiple threads.
+  mozilla::RecursiveMutex mMutex;
+>>>>>>> upstream-releases
 };
 
 #endif  // !nsInputStreamChannel_h__

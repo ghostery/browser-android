@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: sync-xhr-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: sync-xhr 'none'
+>>>>>>> upstream-releases

@@ -26,14 +26,30 @@ MOZ_MTLOG_MODULE("sdp")
     MOZ_MTLOG(ML_ERROR, mLastError); \
   } while (0);
 
+<<<<<<< HEAD
 nsresult SdpHelper::CopyTransportParams(size_t numComponents,
                                         const SdpMediaSection& oldLocal,
                                         SdpMediaSection* newLocal) {
+||||||| merged common ancestors
+nsresult
+SdpHelper::CopyTransportParams(size_t numComponents,
+                               const SdpMediaSection& oldLocal,
+                               SdpMediaSection* newLocal)
+{
+=======
+nsresult SdpHelper::CopyTransportParams(size_t numComponents,
+                                        const SdpMediaSection& oldLocal,
+                                        SdpMediaSection* newLocal) {
+  const SdpAttributeList& oldLocalAttrs = oldLocal.GetAttributeList();
+>>>>>>> upstream-releases
   // Copy over m-section details
-  newLocal->SetPort(oldLocal.GetPort());
+  if (!oldLocalAttrs.HasAttribute(SdpAttribute::kBundleOnlyAttribute)) {
+    // Do not copy port 0 from an offer with a=bundle-only; this could cause
+    // an answer msection to be erroneously rejected.
+    newLocal->SetPort(oldLocal.GetPort());
+  }
   newLocal->GetConnection() = oldLocal.GetConnection();
 
-  const SdpAttributeList& oldLocalAttrs = oldLocal.GetAttributeList();
   SdpAttributeList& newLocalAttrs = newLocal->GetAttributeList();
 
   // Now we copy over attributes that won't be added by the usual logic
@@ -52,6 +68,11 @@ nsresult SdpHelper::CopyTransportParams(size_t numComponents,
     if (!candidateAttrs->mValues.empty()) {
       newLocalAttrs.SetAttribute(candidateAttrs.release());
     }
+  }
+
+  if (oldLocalAttrs.HasAttribute(SdpAttribute::kEndOfCandidatesAttribute)) {
+    newLocalAttrs.SetAttribute(
+        new SdpFlagAttribute(SdpAttribute::kEndOfCandidatesAttribute));
   }
 
   if (numComponents == 2 &&
@@ -269,12 +290,42 @@ nsresult SdpHelper::GetMidFromLevel(const Sdp& sdp, uint16_t level,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult SdpHelper::AddCandidateToSdp(Sdp* sdp,
                                       const std::string& candidateUntrimmed,
                                       uint16_t level) {
+||||||| merged common ancestors
+nsresult
+SdpHelper::AddCandidateToSdp(Sdp* sdp,
+                             const std::string& candidateUntrimmed,
+                             uint16_t level)
+{
+
+=======
+nsresult SdpHelper::AddCandidateToSdp(Sdp* sdp,
+                                      const std::string& candidateUntrimmed,
+                                      uint16_t level,
+                                      const std::string& ufrag) {
+>>>>>>> upstream-releases
   if (level >= sdp->GetMediaSectionCount()) {
     SDP_SET_ERROR("Index " << level << " out of range");
     return NS_ERROR_INVALID_ARG;
+  }
+
+  SdpMediaSection& msection = sdp->GetMediaSection(level);
+  SdpAttributeList& attrList = msection.GetAttributeList();
+
+  if (!ufrag.empty()) {
+    if (!attrList.HasAttribute(SdpAttribute::kIceUfragAttribute) ||
+        attrList.GetIceUfrag() != ufrag) {
+      SDP_SET_ERROR("Unknown ufrag (" << ufrag << ")");
+      return NS_ERROR_INVALID_ARG;
+    }
+  }
+
+  if (candidateUntrimmed.empty()) {
+    SetIceGatheringComplete(sdp, level, ufrag);
+    return NS_OK;
   }
 
   // Trim off '[a=]candidate:'
@@ -287,9 +338,6 @@ nsresult SdpHelper::AddCandidateToSdp(Sdp* sdp,
 
   std::string candidate = candidateUntrimmed.substr(begin);
 
-  SdpMediaSection& msection = sdp->GetMediaSection(level);
-
-  SdpAttributeList& attrList = msection.GetAttributeList();
   UniquePtr<SdpMultiStringAttribute> candidates;
   if (!attrList.HasAttribute(SdpAttribute::kCandidateAttribute)) {
     // Create new
@@ -307,14 +355,46 @@ nsresult SdpHelper::AddCandidateToSdp(Sdp* sdp,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SdpHelper::SetIceGatheringComplete(Sdp* sdp, uint16_t level) {
-  SdpMediaSection& msection = sdp->GetMediaSection(level);
+||||||| merged common ancestors
+void
+SdpHelper::SetIceGatheringComplete(Sdp* sdp, uint16_t level)
+{
+=======
+nsresult SdpHelper::SetIceGatheringComplete(Sdp* sdp,
+                                            const std::string& ufrag) {
+  for (uint16_t i = 0; i < sdp->GetMediaSectionCount(); ++i) {
+    nsresult rv = SetIceGatheringComplete(sdp, i, ufrag);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  return NS_OK;
+}
 
-  SdpAttributeList& attrs = msection.GetAttributeList();
-  attrs.SetAttribute(
+nsresult SdpHelper::SetIceGatheringComplete(Sdp* sdp, uint16_t level,
+                                            const std::string& ufrag) {
+  if (level >= sdp->GetMediaSectionCount()) {
+    SDP_SET_ERROR("Index " << level << " out of range");
+    return NS_ERROR_INVALID_ARG;
+  }
+
+>>>>>>> upstream-releases
+  SdpMediaSection& msection = sdp->GetMediaSection(level);
+  SdpAttributeList& attrList = msection.GetAttributeList();
+
+  if (!ufrag.empty()) {
+    if (!attrList.HasAttribute(SdpAttribute::kIceUfragAttribute) ||
+        attrList.GetIceUfrag() != ufrag) {
+      SDP_SET_ERROR("Unknown ufrag (" << ufrag << ")");
+      return NS_ERROR_INVALID_ARG;
+    }
+  }
+
+  attrList.SetAttribute(
       new SdpFlagAttribute(SdpAttribute::kEndOfCandidatesAttribute));
   // Remove trickle-ice option
-  attrs.RemoveAttribute(SdpAttribute::kIceOptionsAttribute);
+  attrList.RemoveAttribute(SdpAttribute::kIceOptionsAttribute);
+  return NS_OK;
 }
 
 void SdpHelper::SetDefaultAddresses(const std::string& defaultCandidateAddr,
@@ -337,6 +417,7 @@ void SdpHelper::SetDefaultAddresses(const std::string& defaultCandidateAddr,
   }
 }
 
+<<<<<<< HEAD
 nsresult SdpHelper::GetIdsFromMsid(const Sdp& sdp,
                                    const SdpMediaSection& msection,
                                    std::vector<std::string>* streamIds,
@@ -347,26 +428,33 @@ nsresult SdpHelper::GetIdsFromMsid(const Sdp& sdp,
   }
 
   auto& msidSemantics = sdp.GetAttributeList().GetMsidSemantic().mMsidSemantics;
+||||||| merged common ancestors
+nsresult
+SdpHelper::GetIdsFromMsid(const Sdp& sdp,
+                          const SdpMediaSection& msection,
+                          std::vector<std::string>* streamIds,
+                          std::string* trackId)
+{
+  if (!sdp.GetAttributeList().HasAttribute(
+        SdpAttribute::kMsidSemanticAttribute)) {
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+
+  auto& msidSemantics = sdp.GetAttributeList().GetMsidSemantic().mMsidSemantics;
+=======
+nsresult SdpHelper::GetIdsFromMsid(const Sdp& sdp,
+                                   const SdpMediaSection& msection,
+                                   std::vector<std::string>* streamIds) {
+>>>>>>> upstream-releases
   std::vector<SdpMsidAttributeList::Msid> allMsids;
   nsresult rv = GetMsids(msection, &allMsids);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  bool allMsidsAreWebrtc = false;
-  std::set<std::string> webrtcMsids;
-
-  for (auto i = msidSemantics.begin(); i != msidSemantics.end(); ++i) {
-    if (i->semantic == "WMS") {
-      for (auto j = i->msids.begin(); j != i->msids.end(); ++j) {
-        if (*j == "*") {
-          allMsidsAreWebrtc = true;
-        } else {
-          webrtcMsids.insert(*j);
-        }
-      }
-      break;
-    }
+  if (allMsids.empty()) {
+    return NS_ERROR_NOT_AVAILABLE;
   }
 
+<<<<<<< HEAD
   bool found = false;
 
   for (auto i = allMsids.begin(); i != allMsids.end(); ++i) {
@@ -386,11 +474,40 @@ nsresult SdpHelper::GetIdsFromMsid(const Sdp& sdp,
       if (i->identifier != "-") {
         streamIds->push_back(i->identifier);
       }
-    }
-  }
+||||||| merged common ancestors
+  bool found = false;
 
-  if (!found) {
-    return NS_ERROR_NOT_AVAILABLE;
+  for (auto i = allMsids.begin(); i != allMsids.end(); ++i) {
+    if (allMsidsAreWebrtc || webrtcMsids.count(i->identifier)) {
+      if (i->appdata.empty()) {
+        SDP_SET_ERROR("Invalid webrtc msid at level " << msection.GetLevel()
+                       << ": Missing track id.");
+        return NS_ERROR_INVALID_ARG;
+      }
+      if (!found) {
+        *trackId = i->appdata;
+        streamIds->clear();
+        found = true;
+      } else if ((*trackId != i->appdata)) {
+        SDP_SET_ERROR("Found multiple different webrtc track ids in m-section "
+                       << msection.GetLevel() << ". The behavior here is "
+                       "undefined.");
+        return NS_ERROR_INVALID_ARG;
+      }
+      // "-" means no stream, see draft-ietf-mmusic-msid
+      if (i->identifier != "-") {
+        streamIds->push_back(i->identifier);
+      }
+=======
+  streamIds->clear();
+  for (const auto& msid : allMsids) {
+    // "-" means no stream, see draft-ietf-mmusic-msid
+    // Remove duplicates, but leave order the same
+    if (msid.identifier != "-" &&
+        !std::count(streamIds->begin(), streamIds->end(), msid.identifier)) {
+      streamIds->push_back(msid.identifier);
+>>>>>>> upstream-releases
+    }
   }
 
   return NS_OK;
@@ -400,9 +517,10 @@ nsresult SdpHelper::GetMsids(const SdpMediaSection& msection,
                              std::vector<SdpMsidAttributeList::Msid>* msids) {
   if (msection.GetAttributeList().HasAttribute(SdpAttribute::kMsidAttribute)) {
     *msids = msection.GetAttributeList().GetMsid().mMsids;
+    return NS_OK;
   }
 
-  // Can we find some additional msids in ssrc attributes?
+  // If there are no a=msid, can we find msids in ssrc attributes?
   // (Chrome does not put plain-old msid attributes in its SDP)
   if (msection.GetAttributeList().HasAttribute(SdpAttribute::kSsrcAttribute)) {
     auto& ssrcs = msection.GetAttributeList().GetSsrc().mSsrcs;
@@ -532,6 +650,7 @@ bool SdpHelper::HasRtcp(SdpMediaSection::Protocol proto) const {
     case SdpMediaSection::kRtpSavpf:
     case SdpMediaSection::kUdpTlsRtpSavpf:
     case SdpMediaSection::kTcpTlsRtpSavpf:
+    case SdpMediaSection::kTcpDtlsRtpSavpf:
     case SdpMediaSection::kDccpTlsRtpSavpf:
       return true;
     case SdpMediaSection::kRtpAvp:
@@ -553,6 +672,7 @@ bool SdpHelper::HasRtcp(SdpMediaSection::Protocol proto) const {
     case SdpMediaSection::kDccpRtpSavp:
     case SdpMediaSection::kUdpTlsRtpSavp:
     case SdpMediaSection::kTcpTlsRtpSavp:
+    case SdpMediaSection::kTcpDtlsRtpSavp:
     case SdpMediaSection::kDccpTlsRtpSavp:
     case SdpMediaSection::kUdpMbmsFecRtpAvp:
     case SdpMediaSection::kUdpMbmsFecRtpSavp:
@@ -592,8 +712,17 @@ void SdpHelper::appendSdpParseErrors(
   *aErrorString += os.str();
 }
 
+<<<<<<< HEAD
 /* static */ bool SdpHelper::GetPtAsInt(const std::string& ptString,
                                         uint16_t* ptOutparam) {
+||||||| merged common ancestors
+/* static */ bool
+SdpHelper::GetPtAsInt(const std::string& ptString, uint16_t* ptOutparam)
+{
+=======
+/* static */
+bool SdpHelper::GetPtAsInt(const std::string& ptString, uint16_t* ptOutparam) {
+>>>>>>> upstream-releases
   char* end;
   unsigned long pt = strtoul(ptString.c_str(), &end, 10);
   size_t length = static_cast<size_t>(end - ptString.c_str());

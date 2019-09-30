@@ -15,6 +15,7 @@
 #include "nsError.h"
 #include "prsystem.h"
 #include "ImageContainer.h"
+#include "nsThreadUtils.h"
 
 #include <algorithm>
 
@@ -47,18 +48,26 @@ static MediaResult InitContext(AOMDecoder& aAOMDecoder, aom_codec_ctx_t* aCtx,
                        RESULT_DETAIL("Couldn't get AV1 decoder interface."));
   }
 
-  int decode_threads = 2;
+  size_t decode_threads = 2;
   if (aInfo.mDisplay.width >= 2048) {
     decode_threads = 8;
   } else if (aInfo.mDisplay.width >= 1024) {
     decode_threads = 4;
   }
-  decode_threads = std::min(decode_threads, PR_GetNumberOfProcessors());
+  decode_threads = std::min(decode_threads, GetNumberOfProcessors());
 
   aom_codec_dec_cfg_t config;
   PodZero(&config);
+<<<<<<< HEAD
   config.threads = decode_threads;
   config.w = config.h = 0;  // set after decode
+||||||| merged common ancestors
+  config.threads = decode_threads;
+  config.w = config.h = 0; // set after decode
+=======
+  config.threads = static_cast<unsigned int>(decode_threads);
+  config.w = config.h = 0;  // set after decode
+>>>>>>> upstream-releases
   config.allow_lowbitdepth = true;
 
   aom_codec_flags_t flags = 0;
@@ -109,6 +118,7 @@ RefPtr<MediaDataDecoder::FlushPromise> AOMDecoder::Flush() {
   });
 }
 
+<<<<<<< HEAD
 // Ported from third_party/aom/tools_common.c.
 static aom_codec_err_t highbd_img_downshift(aom_image_t* dst, aom_image_t* src,
                                             int down_shift) {
@@ -157,6 +167,59 @@ static aom_codec_err_t highbd_img_downshift(aom_image_t* dst, aom_image_t* src,
   return AOM_CODEC_OK;
 }
 
+||||||| merged common ancestors
+// Ported from third_party/aom/tools_common.c.
+static aom_codec_err_t
+highbd_img_downshift(aom_image_t *dst, aom_image_t *src, int down_shift) {
+  int plane;
+  if (dst->d_w != src->d_w || dst->d_h != src->d_h)
+    return AOM_CODEC_INVALID_PARAM;
+  if (dst->x_chroma_shift != src->x_chroma_shift)
+    return AOM_CODEC_INVALID_PARAM;
+  if (dst->y_chroma_shift != src->y_chroma_shift)
+    return AOM_CODEC_INVALID_PARAM;
+  if (dst->fmt != (src->fmt & ~AOM_IMG_FMT_HIGHBITDEPTH))
+    return AOM_CODEC_INVALID_PARAM;
+  if (down_shift < 0)
+      return AOM_CODEC_INVALID_PARAM;
+  switch (dst->fmt) {
+    case AOM_IMG_FMT_I420:
+    case AOM_IMG_FMT_I422:
+    case AOM_IMG_FMT_I444:
+      break;
+    default:
+      return AOM_CODEC_INVALID_PARAM;
+  }
+  switch (src->fmt) {
+    case AOM_IMG_FMT_I42016:
+    case AOM_IMG_FMT_I42216:
+    case AOM_IMG_FMT_I44416:
+      break;
+    default:
+      // We don't support anything that's not 16 bit
+      return AOM_CODEC_UNSUP_BITSTREAM;
+  }
+  for (plane = 0; plane < 3; plane++) {
+    int w = src->d_w;
+    int h = src->d_h;
+    int x, y;
+    if (plane) {
+      w = (w + src->x_chroma_shift) >> src->x_chroma_shift;
+      h = (h + src->y_chroma_shift) >> src->y_chroma_shift;
+    }
+    for (y = 0; y < h; y++) {
+      uint16_t *p_src =
+          (uint16_t *)(src->planes[plane] + y * src->stride[plane]);
+      uint8_t *p_dst =
+          dst->planes[plane] + y * dst->stride[plane];
+      for (x = 0; x < w; x++) *p_dst++ = (*p_src++ >> down_shift) & 0xFF;
+    }
+  }
+  return AOM_CODEC_OK;
+}
+
+=======
+>>>>>>> upstream-releases
 // UniquePtr dtor wrapper for aom_image_t.
 struct AomImageFree {
   void operator()(aom_image_t* img) { aom_img_free(img); }
@@ -188,6 +251,7 @@ RefPtr<MediaDataDecoder::DecodePromise> AOMDecoder::ProcessDecode(
   DecodedData results;
 
   while ((img = aom_codec_get_frame(&mCodec, &iter))) {
+<<<<<<< HEAD
     // Track whether the underlying buffer is 8 or 16 bits per channel.
     bool highbd = bool(img->fmt & AOM_IMG_FMT_HIGHBITDEPTH);
     if (highbd) {
@@ -226,6 +290,47 @@ RefPtr<MediaDataDecoder::DecodePromise> AOMDecoder::ProcessDecode(
         img->fmt == AOM_IMG_FMT_I420 || img->fmt == AOM_IMG_FMT_I42016 ||
             img->fmt == AOM_IMG_FMT_I444 || img->fmt == AOM_IMG_FMT_I44416,
         "AV1 image format not I420 or I444");
+||||||| merged common ancestors
+    // Track whether the underlying buffer is 8 or 16 bits per channel.
+    bool highbd = bool(img->fmt & AOM_IMG_FMT_HIGHBITDEPTH);
+    if (highbd) {
+      // Downsample images with more than 8 bits per channel.
+      aom_img_fmt_t fmt8 = static_cast<aom_img_fmt_t>(img->fmt ^ AOM_IMG_FMT_HIGHBITDEPTH);
+      img8.reset(aom_img_alloc(NULL, fmt8, img->d_w, img->d_h, 16));
+      if (img8 == nullptr) {
+        LOG("Couldn't allocate bitdepth reduction target!");
+        return DecodePromise::CreateAndReject(
+          MediaResult(NS_ERROR_OUT_OF_MEMORY,
+                      RESULT_DETAIL("Couldn't allocate conversion buffer for AV1 frame")),
+                      __func__);
+      }
+      if (aom_codec_err_t r = highbd_img_downshift(img8.get(), img, img->bit_depth - 8)) {
+        LOG_RESULT(r, "Image downconversion failed");
+        return DecodePromise::CreateAndReject(
+          MediaResult(NS_ERROR_DOM_MEDIA_DECODE_ERR,
+                      RESULT_DETAIL("Error converting AV1 frame to 8 bits: %s",
+                                    aom_codec_err_to_string(r))),
+          __func__);
+      }
+      // img normally points to storage owned by mCodec, so it is not freed.
+      // To copy out the contents of img8 we can overwrite img with an alias.
+      // Since img is assigned at the start of the while loop and img8 is held
+      // outside that loop, the alias won't outlive the storage it points to.
+      img = img8.get();
+      highbd = false;
+    }
+
+    NS_ASSERTION(img->fmt == AOM_IMG_FMT_I420 ||
+                 img->fmt == AOM_IMG_FMT_I42016 ||
+                 img->fmt == AOM_IMG_FMT_I444 ||
+                 img->fmt == AOM_IMG_FMT_I44416,
+                 "AV1 image format not I420 or I444");
+=======
+    NS_ASSERTION(
+        img->fmt == AOM_IMG_FMT_I420 || img->fmt == AOM_IMG_FMT_I42016 ||
+            img->fmt == AOM_IMG_FMT_I444 || img->fmt == AOM_IMG_FMT_I44416,
+        "AV1 image format not I420 or I444");
+>>>>>>> upstream-releases
 
     // Chroma shifts are rounded down as per the decoding examples in the SDK
     VideoData::YCbCrBuffer b;
@@ -234,17 +339,17 @@ RefPtr<MediaDataDecoder::DecodePromise> AOMDecoder::ProcessDecode(
     b.mPlanes[0].mHeight = img->d_h;
     b.mPlanes[0].mWidth = img->d_w;
     b.mPlanes[0].mOffset = 0;
-    b.mPlanes[0].mSkip = highbd ? 1 : 0;
+    b.mPlanes[0].mSkip = 0;
 
     b.mPlanes[1].mData = img->planes[1];
     b.mPlanes[1].mStride = img->stride[1];
     b.mPlanes[1].mOffset = 0;
-    b.mPlanes[1].mSkip = highbd ? 1 : 0;
+    b.mPlanes[1].mSkip = 0;
 
     b.mPlanes[2].mData = img->planes[2];
     b.mPlanes[2].mStride = img->stride[2];
     b.mPlanes[2].mOffset = 0;
-    b.mPlanes[2].mSkip = highbd ? 1 : 0;
+    b.mPlanes[2].mSkip = 0;
 
     if (img->fmt == AOM_IMG_FMT_I420 || img->fmt == AOM_IMG_FMT_I42016) {
       b.mPlanes[1].mHeight = (img->d_h + 1) >> img->y_chroma_shift;
@@ -252,7 +357,7 @@ RefPtr<MediaDataDecoder::DecodePromise> AOMDecoder::ProcessDecode(
 
       b.mPlanes[2].mHeight = (img->d_h + 1) >> img->y_chroma_shift;
       b.mPlanes[2].mWidth = (img->d_w + 1) >> img->x_chroma_shift;
-    } else if (img->fmt == AOM_IMG_FMT_I444) {
+    } else if (img->fmt == AOM_IMG_FMT_I444 || img->fmt == AOM_IMG_FMT_I44416) {
       b.mPlanes[1].mHeight = img->d_h;
       b.mPlanes[1].mWidth = img->d_w;
 
@@ -261,9 +366,40 @@ RefPtr<MediaDataDecoder::DecodePromise> AOMDecoder::ProcessDecode(
     } else {
       LOG("AOM Unknown image format");
       return DecodePromise::CreateAndReject(
+<<<<<<< HEAD
           MediaResult(NS_ERROR_DOM_MEDIA_DECODE_ERR,
                       RESULT_DETAIL("AOM Unknown image format")),
           __func__);
+||||||| merged common ancestors
+        MediaResult(NS_ERROR_DOM_MEDIA_DECODE_ERR,
+                    RESULT_DETAIL("AOM Unknown image format")),
+        __func__);
+=======
+          MediaResult(NS_ERROR_DOM_MEDIA_DECODE_ERR,
+                      RESULT_DETAIL("AOM Unknown image format")),
+          __func__);
+    }
+
+    if (img->bit_depth == 10) {
+      b.mColorDepth = ColorDepth::COLOR_10;
+    } else if (img->bit_depth == 12) {
+      b.mColorDepth = ColorDepth::COLOR_12;
+    }
+
+    switch (img->mc) {
+      case AOM_CICP_MC_BT_601:
+        b.mYUVColorSpace = YUVColorSpace::BT601;
+        break;
+      case AOM_CICP_MC_BT_2020_NCL:
+      case AOM_CICP_MC_BT_2020_CL:
+        b.mYUVColorSpace = YUVColorSpace::BT2020;
+        break;
+      case AOM_CICP_MC_BT_709:
+      default:
+        // Set 709 as default, as it's the most sane default.
+        b.mYUVColorSpace = YUVColorSpace::BT709;
+        break;
+>>>>>>> upstream-releases
     }
 
     RefPtr<VideoData> v;

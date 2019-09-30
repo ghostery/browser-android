@@ -35,11 +35,31 @@ inline imgIContainer* nsStyleImage::GetSubImage(uint8_t aIndex) const {
   return (mCachedBIData) ? mCachedBIData->GetSubImage(aIndex) : nullptr;
 }
 
+<<<<<<< HEAD
 bool nsStyleText::HasTextShadow() const { return mTextShadow; }
 
 nsCSSShadowArray* nsStyleText::GetTextShadow() const { return mTextShadow; }
 
 bool nsStyleText::NewlineIsSignificant(const nsTextFrame* aContextFrame) const {
+||||||| merged common ancestors
+bool
+nsStyleText::HasTextShadow() const
+{
+  return mTextShadow;
+}
+
+nsCSSShadowArray*
+nsStyleText::GetTextShadow() const
+{
+  return mTextShadow;
+}
+
+bool
+nsStyleText::NewlineIsSignificant(const nsTextFrame* aContextFrame) const
+{
+=======
+bool nsStyleText::NewlineIsSignificant(const nsTextFrame* aContextFrame) const {
+>>>>>>> upstream-releases
   NS_ASSERTION(aContextFrame->StyleText() == this, "unexpected aContextFrame");
   return NewlineIsSignificantStyle() &&
          !aContextFrame->ShouldSuppressLineBreak() &&
@@ -129,17 +149,27 @@ bool nsStyleDisplay::HasPerspective(const nsIFrame* aContextFrame) const {
          aContextFrame->IsFrameOfType(nsIFrame::eSupportsCSSTransforms);
 }
 
+<<<<<<< HEAD
 bool nsStyleDisplay::IsFixedPosContainingBlockForNonSVGTextFrames(
     mozilla::ComputedStyle& aStyle) const {
+||||||| merged common ancestors
+bool
+nsStyleDisplay::IsFixedPosContainingBlockForNonSVGTextFrames(
+  mozilla::ComputedStyle& aStyle) const
+{
+=======
+bool nsStyleDisplay::IsFixedPosContainingBlockForNonSVGTextFrames(
+    const mozilla::ComputedStyle& aStyle) const {
+>>>>>>> upstream-releases
   // NOTE: Any CSS properties that influence the output of this function
   // should have the FIXPOS_CB flag set on them.
-  NS_ASSERTION(aStyle.ThreadsafeStyleDisplay() == this, "unexpected aStyle");
+  NS_ASSERTION(aStyle.StyleDisplay() == this, "unexpected aStyle");
 
-  if (mWillChangeBitField & NS_STYLE_WILL_CHANGE_FIXPOS_CB) {
+  if (mWillChange.bits & mozilla::StyleWillChangeBits_FIXPOS_CB) {
     return true;
   }
 
-  return aStyle.ThreadsafeStyleEffects()->HasFilters();
+  return aStyle.StyleEffects()->HasFilters();
 }
 
 bool nsStyleDisplay::
@@ -157,8 +187,7 @@ bool nsStyleDisplay::IsFixedPosContainingBlockForTransformSupportingFrames()
 bool nsStyleDisplay::IsFixedPosContainingBlock(
     const nsIFrame* aContextFrame) const {
   mozilla::ComputedStyle* style = aContextFrame->Style();
-  NS_ASSERTION(style->ThreadsafeStyleDisplay() == this,
-               "unexpected aContextFrame");
+  NS_ASSERTION(style->StyleDisplay() == this, "unexpected aContextFrame");
   // NOTE: Any CSS properties that influence the output of this function
   // should have the FIXPOS_CB flag set on them.
   if (!IsFixedPosContainingBlockForNonSVGTextFrames(*style) &&
@@ -169,21 +198,49 @@ bool nsStyleDisplay::IsFixedPosContainingBlock(
        !aContextFrame->IsFrameOfType(nsIFrame::eSupportsCSSTransforms))) {
     return false;
   }
-  return !nsSVGUtils::IsInSVGTextSubtree(aContextFrame);
+  if (nsSVGUtils::IsInSVGTextSubtree(aContextFrame)) {
+    return false;
+  }
+  MOZ_ASSERT(IsAbsPosContainingBlock(aContextFrame),
+             "Any fixed-pos CB should also be an abs-pos CB");
+  return true;
 }
 
 bool nsStyleDisplay::IsAbsPosContainingBlockForNonSVGTextFrames() const {
   // NOTE: Any CSS properties that influence the output of this function
   // should have the ABSPOS_CB set on them.
+<<<<<<< HEAD
   return IsAbsolutelyPositionedStyle() || IsRelativelyPositionedStyle() ||
          (mWillChangeBitField & NS_STYLE_WILL_CHANGE_ABSPOS_CB);
+||||||| merged common ancestors
+  return IsAbsolutelyPositionedStyle() ||
+         IsRelativelyPositionedStyle() ||
+         (mWillChangeBitField & NS_STYLE_WILL_CHANGE_ABSPOS_CB);
+=======
+  return IsAbsolutelyPositionedStyle() || IsRelativelyPositionedStyle() ||
+         (mWillChange.bits & mozilla::StyleWillChangeBits_ABSPOS_CB);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool nsStyleDisplay::IsAbsPosContainingBlock(
     const nsIFrame* aContextFrame) const {
   mozilla::ComputedStyle* style = aContextFrame->Style();
   NS_ASSERTION(style->ThreadsafeStyleDisplay() == this,
                "unexpected aContextFrame");
+||||||| merged common ancestors
+bool
+nsStyleDisplay::IsAbsPosContainingBlock(const nsIFrame* aContextFrame) const
+{
+  mozilla::ComputedStyle *style = aContextFrame->Style();
+  NS_ASSERTION(style->ThreadsafeStyleDisplay() == this,
+               "unexpected aContextFrame");
+=======
+bool nsStyleDisplay::IsAbsPosContainingBlock(
+    const nsIFrame* aContextFrame) const {
+  mozilla::ComputedStyle* style = aContextFrame->Style();
+  NS_ASSERTION(style->StyleDisplay() == this, "unexpected aContextFrame");
+>>>>>>> upstream-releases
   // NOTE: Any CSS properties that influence the output of this function
   // should have the ABSPOS_CB set on them.
   if (!IsAbsPosContainingBlockForNonSVGTextFrames() &&
@@ -206,10 +263,29 @@ bool nsStyleDisplay::IsRelativelyPositioned(
          !nsSVGUtils::IsInSVGTextSubtree(aContextFrame);
 }
 
+<<<<<<< HEAD
 bool nsStyleDisplay::IsAbsolutelyPositioned(
     const nsIFrame* aContextFrame) const {
   NS_ASSERTION(aContextFrame->StyleDisplay() == this,
                "unexpected aContextFrame");
+||||||| merged common ancestors
+bool
+nsStyleDisplay::IsAbsolutelyPositioned(const nsIFrame* aContextFrame) const
+{
+  NS_ASSERTION(aContextFrame->StyleDisplay() == this, "unexpected aContextFrame");
+=======
+bool nsStyleDisplay::IsStickyPositioned(const nsIFrame* aContextFrame) const {
+  NS_ASSERTION(aContextFrame->StyleDisplay() == this,
+               "unexpected aContextFrame");
+  return IsStickyPositionedStyle() &&
+         !nsSVGUtils::IsInSVGTextSubtree(aContextFrame);
+}
+
+bool nsStyleDisplay::IsAbsolutelyPositioned(
+    const nsIFrame* aContextFrame) const {
+  NS_ASSERTION(aContextFrame->StyleDisplay() == this,
+               "unexpected aContextFrame");
+>>>>>>> upstream-releases
   return IsAbsolutelyPositionedStyle() &&
          !nsSVGUtils::IsInSVGTextSubtree(aContextFrame);
 }

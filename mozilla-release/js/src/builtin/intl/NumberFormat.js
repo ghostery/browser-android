@@ -418,14 +418,27 @@ function numberFormatFormatToBind(value) {
  *
  * Spec: ECMAScript Internationalization API Specification, 11.4.3.
  */
-function Intl_NumberFormat_format_get() {
+// Uncloned functions with `$` prefix are allocated as extended function
+// to store the original name in `_SetCanonicalName`.
+function $Intl_NumberFormat_format_get() {
     // Steps 1-3.
+<<<<<<< HEAD
     var thisArg = UnwrapNumberFormat(this);
     var nf = thisArg;
     if (!IsObject(nf) || (nf = GuardToNumberFormat(nf)) === null) {
         return callFunction(CallNumberFormatMethodIfWrapped, thisArg,
                             "Intl_NumberFormat_format_get");
     }
+||||||| merged common ancestors
+    var nf = UnwrapNumberFormat(this, "format");
+=======
+    var thisArg = UnwrapNumberFormat(this);
+    var nf = thisArg;
+    if (!IsObject(nf) || (nf = GuardToNumberFormat(nf)) === null) {
+        return callFunction(CallNumberFormatMethodIfWrapped, thisArg,
+                            "$Intl_NumberFormat_format_get");
+    }
+>>>>>>> upstream-releases
 
     var internals = getNumberFormatInternals(nf);
 
@@ -441,7 +454,7 @@ function Intl_NumberFormat_format_get() {
     // Step 5.
     return internals.boundFormat;
 }
-_SetCanonicalName(Intl_NumberFormat_format_get, "get format");
+_SetCanonicalName($Intl_NumberFormat_format_get, "get format");
 
 /**
  * 11.4.4 Intl.NumberFormat.prototype.formatToParts ( value )

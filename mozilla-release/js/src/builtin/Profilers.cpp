@@ -14,21 +14,46 @@
 #include <stdarg.h>
 
 #ifdef MOZ_CALLGRIND
+<<<<<<< HEAD
 #include <valgrind/callgrind.h>
+||||||| merged common ancestors
+# include <valgrind/callgrind.h>
+=======
+#  include <valgrind/callgrind.h>
+>>>>>>> upstream-releases
 #endif
 
 #ifdef __APPLE__
+<<<<<<< HEAD
 #ifdef MOZ_INSTRUMENTS
 #include "devtools/Instruments.h"
 #endif
+||||||| merged common ancestors
+#ifdef MOZ_INSTRUMENTS
+# include "devtools/Instruments.h"
+#endif
+=======
+#  ifdef MOZ_INSTRUMENTS
+#    include "devtools/Instruments.h"
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <process.h>
 #define getpid _getpid
+||||||| merged common ancestors
+# include <process.h>
+# define getpid _getpid
+=======
+#  include <process.h>
+#  define getpid _getpid
+>>>>>>> upstream-releases
 #endif
 
 #include "js/CharacterEncoding.h"
+#include "js/PropertySpec.h"
 #include "js/Utility.h"
 #include "util/Text.h"
 #include "vm/Probes.h"
@@ -57,6 +82,7 @@ JS_PUBLIC_API const char* JS_UnsafeGetLastProfilingError() {
 }
 
 #ifdef __APPLE__
+<<<<<<< HEAD
 static bool StartOSXProfiling(const char* profileName, pid_t pid) {
   bool ok = true;
   const char* profiler = nullptr;
@@ -69,6 +95,37 @@ static bool StartOSXProfiling(const char* profileName, pid_t pid) {
       UnsafeError("Failed to start %s for %s", profiler, profileName);
     } else {
       UnsafeError("Failed to start %s", profiler);
+||||||| merged common ancestors
+static bool
+StartOSXProfiling(const char* profileName, pid_t pid)
+{
+    bool ok = true;
+    const char* profiler = nullptr;
+#ifdef MOZ_INSTRUMENTS
+    ok = Instruments::Start(pid);
+    profiler = "Instruments";
+#endif
+    if (!ok) {
+        if (profileName) {
+            UnsafeError("Failed to start %s for %s", profiler, profileName);
+        } else {
+            UnsafeError("Failed to start %s", profiler);
+        }
+        return false;
+=======
+static bool StartOSXProfiling(const char* profileName, pid_t pid) {
+  bool ok = true;
+  const char* profiler = nullptr;
+#  ifdef MOZ_INSTRUMENTS
+  ok = Instruments::Start(pid);
+  profiler = "Instruments";
+#  endif
+  if (!ok) {
+    if (profileName) {
+      UnsafeError("Failed to start %s for %s", profiler, profileName);
+    } else {
+      UnsafeError("Failed to start %s", profiler);
+>>>>>>> upstream-releases
     }
     return false;
   }
@@ -92,9 +149,19 @@ JS_PUBLIC_API bool JS_StartProfiling(const char* profileName, pid_t pid) {
 JS_PUBLIC_API bool JS_StopProfiling(const char* profileName) {
   bool ok = true;
 #ifdef __APPLE__
+<<<<<<< HEAD
 #ifdef MOZ_INSTRUMENTS
   Instruments::Stop(profileName);
 #endif
+||||||| merged common ancestors
+#ifdef MOZ_INSTRUMENTS
+    Instruments::Stop(profileName);
+#endif
+=======
+#  ifdef MOZ_INSTRUMENTS
+  Instruments::Stop(profileName);
+#  endif
+>>>>>>> upstream-releases
 #endif
 #ifdef __linux__
   if (!js_StopPerf()) {
@@ -113,6 +180,7 @@ static bool ControlProfilers(bool toState) {
 
   if (!probes::ProfilingActive && toState) {
 #ifdef __APPLE__
+<<<<<<< HEAD
 #if defined(MOZ_INSTRUMENTS)
     const char* profiler;
 #ifdef MOZ_INSTRUMENTS
@@ -123,6 +191,29 @@ static bool ControlProfilers(bool toState) {
       UnsafeError("Failed to start %s", profiler);
     }
 #endif
+||||||| merged common ancestors
+#if defined(MOZ_INSTRUMENTS)
+        const char* profiler;
+#ifdef MOZ_INSTRUMENTS
+        ok = Instruments::Resume();
+        profiler = "Instruments";
+#endif
+        if (!ok) {
+            UnsafeError("Failed to start %s", profiler);
+        }
+#endif
+=======
+#  if defined(MOZ_INSTRUMENTS)
+    const char* profiler;
+#    ifdef MOZ_INSTRUMENTS
+    ok = Instruments::Resume();
+    profiler = "Instruments";
+#    endif
+    if (!ok) {
+      UnsafeError("Failed to start %s", profiler);
+    }
+#  endif
+>>>>>>> upstream-releases
 #endif
 #ifdef MOZ_CALLGRIND
     if (!js_StartCallgrind()) {
@@ -132,9 +223,19 @@ static bool ControlProfilers(bool toState) {
 #endif
   } else if (probes::ProfilingActive && !toState) {
 #ifdef __APPLE__
+<<<<<<< HEAD
 #ifdef MOZ_INSTRUMENTS
     Instruments::Pause();
 #endif
+||||||| merged common ancestors
+#ifdef MOZ_INSTRUMENTS
+        Instruments::Pause();
+#endif
+=======
+#  ifdef MOZ_INSTRUMENTS
+    Instruments::Pause();
+#  endif
+>>>>>>> upstream-releases
 #endif
 #ifdef MOZ_CALLGRIND
     if (!js_StopCallgrind()) {
@@ -305,7 +406,7 @@ static bool ClearMaxGCPauseAccumulator(JSContext* cx, unsigned argc,
   return true;
 }
 
-#if defined(MOZ_INSTRUMENTS)
+#  if defined(MOZ_INSTRUMENTS)
 
 static bool IgnoreAndReturnTrue(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
@@ -313,13 +414,29 @@ static bool IgnoreAndReturnTrue(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-#endif
+#  endif
 
+<<<<<<< HEAD
 #ifdef MOZ_CALLGRIND
 static bool StartCallgrind(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
   args.rval().setBoolean(js_StartCallgrind());
   return true;
+||||||| merged common ancestors
+#ifdef MOZ_CALLGRIND
+static bool
+StartCallgrind(JSContext* cx, unsigned argc, Value* vp)
+{
+    CallArgs args = CallArgsFromVp(argc, vp);
+    args.rval().setBoolean(js_StartCallgrind());
+    return true;
+=======
+#  ifdef MOZ_CALLGRIND
+static bool StartCallgrind(JSContext* cx, unsigned argc, Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  args.rval().setBoolean(js_StartCallgrind());
+  return true;
+>>>>>>> upstream-releases
 }
 
 static bool StopCallgrind(JSContext* cx, unsigned argc, Value* vp) {
@@ -343,7 +460,7 @@ static bool DumpCallgrind(JSContext* cx, unsigned argc, Value* vp) {
   args.rval().setBoolean(js_DumpCallgrind(outFile.get()));
   return true;
 }
-#endif
+#  endif
 
 static const JSFunctionSpec profiling_functions[] = {
     JS_FN("startProfiling", StartProfiling, 1, 0),
@@ -353,8 +470,9 @@ static const JSFunctionSpec profiling_functions[] = {
     JS_FN("dumpProfile", DumpProfile, 2, 0),
     JS_FN("getMaxGCPauseSinceClear", GetMaxGCPauseSinceClear, 0, 0),
     JS_FN("clearMaxGCPauseAccumulator", ClearMaxGCPauseAccumulator, 0, 0),
-#if defined(MOZ_INSTRUMENTS)
+#  if defined(MOZ_INSTRUMENTS)
     /* Keep users of the old shark API happy. */
+<<<<<<< HEAD
     JS_FN("connectShark", IgnoreAndReturnTrue, 0, 0),
     JS_FN("disconnectShark", IgnoreAndReturnTrue, 0, 0),
     JS_FN("startShark", StartProfiling, 0, 0),
@@ -366,6 +484,32 @@ static const JSFunctionSpec profiling_functions[] = {
     JS_FN("dumpCallgrind", DumpCallgrind, 1, 0),
 #endif
     JS_FS_END};
+||||||| merged common ancestors
+    JS_FN("connectShark",    IgnoreAndReturnTrue, 0,0),
+    JS_FN("disconnectShark", IgnoreAndReturnTrue, 0,0),
+    JS_FN("startShark",      StartProfiling,      0,0),
+    JS_FN("stopShark",       StopProfiling,       0,0),
+#endif
+#ifdef MOZ_CALLGRIND
+    JS_FN("startCallgrind", StartCallgrind,       0,0),
+    JS_FN("stopCallgrind",  StopCallgrind,        0,0),
+    JS_FN("dumpCallgrind",  DumpCallgrind,        1,0),
+#endif
+    JS_FS_END
+};
+=======
+    JS_FN("connectShark", IgnoreAndReturnTrue, 0, 0),
+    JS_FN("disconnectShark", IgnoreAndReturnTrue, 0, 0),
+    JS_FN("startShark", StartProfiling, 0, 0),
+    JS_FN("stopShark", StopProfiling, 0, 0),
+#  endif
+#  ifdef MOZ_CALLGRIND
+    JS_FN("startCallgrind", StartCallgrind, 0, 0),
+    JS_FN("stopCallgrind", StopCallgrind, 0, 0),
+    JS_FN("dumpCallgrind", DumpCallgrind, 1, 0),
+#  endif
+    JS_FS_END};
+>>>>>>> upstream-releases
 
 #endif
 
@@ -382,6 +526,7 @@ JS_PUBLIC_API bool JS_DefineProfilingFunctions(JSContext* cx,
 #ifdef MOZ_CALLGRIND
 
 /* Wrapper for various macros to stop warnings coming from their expansions. */
+<<<<<<< HEAD
 #if defined(__clang__)
 #define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                                \
   JS_BEGIN_MACRO                                                             \
@@ -413,6 +558,74 @@ JS_FRIEND_API bool js_StartCallgrind() {
   JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_START_INSTRUMENTATION);
   JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_ZERO_STATS);
   return true;
+||||||| merged common ancestors
+#if defined(__clang__)
+# define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                                \
+    JS_BEGIN_MACRO                                                            \
+        _Pragma("clang diagnostic push")                                      \
+        /* If these _Pragmas cause warnings for you, try disabling ccache. */ \
+        _Pragma("clang diagnostic ignored \"-Wunused-value\"")                \
+        { expr; }                                                             \
+        _Pragma("clang diagnostic pop")                                       \
+    JS_END_MACRO
+#elif MOZ_IS_GCC
+
+# define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                                \
+    JS_BEGIN_MACRO                                                            \
+        _Pragma("GCC diagnostic push")                                        \
+        _Pragma("GCC diagnostic ignored \"-Wunused-but-set-variable\"")       \
+        expr;                                                                 \
+        _Pragma("GCC diagnostic pop")                                         \
+    JS_END_MACRO
+#endif
+
+#if !defined(JS_SILENCE_UNUSED_VALUE_IN_EXPR)
+# define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                                \
+    JS_BEGIN_MACRO                                                            \
+        expr;                                                                 \
+    JS_END_MACRO
+#endif
+
+JS_FRIEND_API(bool)
+js_StartCallgrind()
+{
+    JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_START_INSTRUMENTATION);
+    JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_ZERO_STATS);
+    return true;
+=======
+#  if defined(__clang__)
+#    define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                             \
+      JS_BEGIN_MACRO                                                          \
+        _Pragma("clang diagnostic push") /* If these _Pragmas cause warnings  \
+                                            for you, try disabling ccache. */ \
+            _Pragma("clang diagnostic ignored \"-Wunused-value\"") {          \
+          expr;                                                               \
+        }                                                                     \
+        _Pragma("clang diagnostic pop")                                       \
+      JS_END_MACRO
+#  elif MOZ_IS_GCC
+
+#    define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr)                           \
+      JS_BEGIN_MACRO                                                        \
+        _Pragma("GCC diagnostic push")                                      \
+            _Pragma("GCC diagnostic ignored \"-Wunused-but-set-variable\"") \
+                expr;                                                       \
+        _Pragma("GCC diagnostic pop")                                       \
+      JS_END_MACRO
+#  endif
+
+#  if !defined(JS_SILENCE_UNUSED_VALUE_IN_EXPR)
+#    define JS_SILENCE_UNUSED_VALUE_IN_EXPR(expr) \
+      JS_BEGIN_MACRO                              \
+        expr;                                     \
+      JS_END_MACRO
+#  endif
+
+JS_FRIEND_API bool js_StartCallgrind() {
+  JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_START_INSTRUMENTATION);
+  JS_SILENCE_UNUSED_VALUE_IN_EXPR(CALLGRIND_ZERO_STATS);
+  return true;
+>>>>>>> upstream-releases
 }
 
 JS_FRIEND_API bool js_StopCallgrind() {
@@ -455,9 +668,9 @@ JS_FRIEND_API bool js_DumpCallgrind(const char* outfile) {
  * MOZ_PROFILE_PERF_FLAGS="-e 'foo bar'").
  */
 
-#include <signal.h>
-#include <sys/wait.h>
-#include <unistd.h>
+#  include <signal.h>
+#  include <sys/wait.h>
+#  include <unistd.h>
 
 static bool perfInitialized = false;
 static pid_t perfPid = 0;
@@ -530,6 +743,7 @@ bool js_StartPerf() {
 
     execvp("perf", const_cast<char**>(args.begin()));
 
+<<<<<<< HEAD
     /* Reached only if execlp fails. */
     fprintf(stderr, "Unable to start perf.\n");
     exit(1);
@@ -540,6 +754,53 @@ bool js_StartPerf() {
     /* Give perf a chance to warm up. */
     usleep(500 * 1000);
     return true;
+  }
+  UnsafeError("js_StartPerf: fork() failed\n");
+  return false;
+}
+||||||| merged common ancestors
+        // Try to reap the process anyway.
+        waitpid(perfPid, nullptr, WNOHANG);
+    }
+    else {
+        waitpid(perfPid, nullptr, 0);
+    }
+=======
+    /* Reached only if execlp fails. */
+    fprintf(stderr, "Unable to start perf.\n");
+    exit(1);
+  }
+  if (childPid > 0) {
+    perfPid = childPid;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool js_StopPerf() {
+  if (perfPid == 0) {
+    UnsafeError("js_StopPerf: perf is not running.\n");
+||||||| merged common ancestors
+    perfPid = 0;
+=======
+    /* Give perf a chance to warm up. */
+    usleep(500 * 1000);
+>>>>>>> upstream-releases
+    return true;
+<<<<<<< HEAD
+  }
+
+  if (kill(perfPid, SIGINT)) {
+    UnsafeError("js_StopPerf: kill failed\n");
+
+    // Try to reap the process anyway.
+    waitpid(perfPid, nullptr, WNOHANG);
+  } else {
+    waitpid(perfPid, nullptr, 0);
+  }
+
+  perfPid = 0;
+  return true;
+||||||| merged common ancestors
+=======
   }
   UnsafeError("js_StartPerf: fork() failed\n");
   return false;
@@ -562,6 +823,7 @@ bool js_StopPerf() {
 
   perfPid = 0;
   return true;
+>>>>>>> upstream-releases
 }
 
 #endif /* __linux__ */

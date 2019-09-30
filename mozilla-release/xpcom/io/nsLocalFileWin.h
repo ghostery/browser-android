@@ -14,7 +14,6 @@
 #include "nsIFile.h"
 #include "nsIFactory.h"
 #include "nsILocalFileWin.h"
-#include "nsIHashable.h"
 #include "nsIClassInfoImpl.h"
 #include "prio.h"
 
@@ -25,8 +24,19 @@
 
 #include <sys/stat.h>
 
+<<<<<<< HEAD
 class nsLocalFile final : public nsILocalFileWin, public nsIHashable {
  public:
+||||||| merged common ancestors
+class nsLocalFile final
+  : public nsILocalFileWin
+  , public nsIHashable
+{
+public:
+=======
+class nsLocalFile final : public nsILocalFileWin {
+ public:
+>>>>>>> upstream-releases
   NS_DEFINE_STATIC_CID_ACCESSOR(NS_LOCAL_FILE_CID)
 
   nsLocalFile();
@@ -44,12 +54,24 @@ class nsLocalFile final : public nsILocalFileWin, public nsIHashable {
   // nsILocalFileWin interface
   NS_DECL_NSILOCALFILEWIN
 
+<<<<<<< HEAD
   // nsIHashable interface
   NS_DECL_NSIHASHABLE
 
  public:
   // Removes registry command handler parameters, quotes, and expands
   // environment strings.
+||||||| merged common ancestors
+  // nsIHashable interface
+  NS_DECL_NSIHASHABLE
+
+public:
+  // Removes registry command handler parameters, quotes, and expands environment strings.
+=======
+ public:
+  // Removes registry command handler parameters, quotes, and expands
+  // environment strings.
+>>>>>>> upstream-releases
   static bool CleanupCmdHandlerPath(nsAString& aCommandHandler);
 
  private:

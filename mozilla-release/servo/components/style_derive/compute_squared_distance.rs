@@ -2,10 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 use crate::animate::{AnimationFieldAttrs, AnimationInputAttrs, AnimationVariantAttrs};
 use crate::cg;
 use proc_macro2::TokenStream;
 use quote::TokenStreamExt;
+||||||| merged common ancestors
+use animate::{AnimationInputAttrs, AnimationVariantAttrs, AnimationFieldAttrs};
+use cg;
+use quote::Tokens;
+=======
+use crate::animate::{AnimationFieldAttrs, AnimationInputAttrs, AnimationVariantAttrs};
+use derive_common::cg;
+use proc_macro2::TokenStream;
+use quote::TokenStreamExt;
+>>>>>>> upstream-releases
 use syn::{DeriveInput, Path};
 use synstructure;
 

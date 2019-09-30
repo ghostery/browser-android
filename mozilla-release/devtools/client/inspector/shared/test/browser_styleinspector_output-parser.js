@@ -10,8 +10,11 @@
 // tested with an xpcshell test as the output-parser requires the DOM to work.
 
 const OutputParser = require("devtools/client/shared/output-parser");
-const { CSS_PROPERTIES_DB} = require("devtools/shared/css/properties-db");
-const {initCssProperties, getCssProperties} = require("devtools/shared/fronts/css-properties");
+const { CSS_PROPERTIES_DB } = require("devtools/shared/css/properties-db");
+const {
+  initCssProperties,
+  getCssProperties,
+} = require("devtools/shared/fronts/css-properties");
 
 const COLOR_CLASS = "color-class";
 const URL_CLASS = "url-class";
@@ -43,7 +46,7 @@ const TEST_DATA = [
   },
   {
     name: "content",
-    value: "\"blue\"",
+    value: '"blue"',
     test: fragment => {
       is(countAll(fragment), 0);
     },
@@ -121,7 +124,7 @@ const TEST_DATA = [
   },
   {
     name: "list-style-image",
-    value: "url(\"images/arrow.gif\")",
+    value: 'url("images/arrow.gif")',
     test: fragment => {
       is(countAll(fragment), 1);
       is(getUrl(fragment), "images/arrow.gif");
@@ -129,12 +132,20 @@ const TEST_DATA = [
   },
   {
     name: "list-style-image",
-    value: "url(\"images/arrow.gif\")!important",
+    value: 'url("images/arrow.gif")!important',
     test: fragment => {
       is(countAll(fragment), 1);
       is(getUrl(fragment), "images/arrow.gif");
+<<<<<<< HEAD
       is(fragment.textContent, "url(\"images/arrow.gif\")!important");
     },
+||||||| merged common ancestors
+      is(fragment.textContent, "url(\"images/arrow.gif\")!important");
+    }
+=======
+      is(fragment.textContent, 'url("images/arrow.gif")!important');
+    },
+>>>>>>> upstream-releases
   },
   {
     name: "-moz-binding",
@@ -147,9 +158,10 @@ const TEST_DATA = [
   },
   {
     name: "background",
-    value: "linear-gradient(to right, rgba(183,222,237,1) 0%, " +
-           "rgba(33,180,226,1) 30%, rgba(31,170,217,.5) 44%, " +
-           "#F06 75%, red 100%)",
+    value:
+      "linear-gradient(to right, rgba(183,222,237,1) 0%, " +
+      "rgba(33,180,226,1) 30%, rgba(31,170,217,.5) 44%, " +
+      "#F06 75%, red 100%)",
     test: fragment => {
       is(countAll(fragment), 10);
       const allSwatches = fragment.querySelectorAll("." + COLOR_CLASS);
@@ -163,7 +175,8 @@ const TEST_DATA = [
   },
   {
     name: "background",
-    value: "radial-gradient(circle closest-side at center, orange 0%, red 100%)",
+    value:
+      "radial-gradient(circle closest-side at center, orange 0%, red 100%)",
     test: fragment => {
       is(countAll(fragment), 4);
       const colorSwatches = fragment.querySelectorAll("." + COLOR_CLASS);
@@ -183,11 +196,23 @@ const TEST_DATA = [
   },
   {
     name: "background",
-    value: "url(\"http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t\")",
+    value:
+      'url("http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t")',
     test: fragment => {
       is(countAll(fragment), 1);
+<<<<<<< HEAD
       is(getUrl(fragment), "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t");
     },
+||||||| merged common ancestors
+      is(getUrl(fragment), "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t");
+    }
+=======
+      is(
+        getUrl(fragment),
+        "http://test.com/wow_such_(oh-noes)image.png?testid=1&color=red#w00t"
+      );
+    },
+>>>>>>> upstream-releases
   },
   {
     name: "background-image",
@@ -199,7 +224,8 @@ const TEST_DATA = [
   },
   {
     name: "background",
-    value: "red url(    \"http://wow.com/cool/../../../you're(doingit)wrong\"   ) repeat center",
+    value:
+      'red url(    "http://wow.com/cool/../../../you\'re(doingit)wrong"   ) repeat center',
     test: fragment => {
       is(countAll(fragment), 3);
       is(countColors(fragment), 1);
@@ -208,13 +234,26 @@ const TEST_DATA = [
   },
   {
     name: "background-image",
-    value: "url(../../../look/at/this/folder/structure/../" +
-           "../red.blue.green.svg   )",
+    value:
+      "url(../../../look/at/this/folder/structure/../" +
+      "../red.blue.green.svg   )",
     test: fragment => {
       is(countAll(fragment), 1);
+<<<<<<< HEAD
       is(getUrl(fragment), "../../../look/at/this/folder/structure/../" +
                            "../red.blue.green.svg");
     },
+||||||| merged common ancestors
+      is(getUrl(fragment), "../../../look/at/this/folder/structure/../" +
+                           "../red.blue.green.svg");
+    }
+=======
+      is(
+        getUrl(fragment),
+        "../../../look/at/this/folder/structure/../" + "../red.blue.green.svg"
+      );
+    },
+>>>>>>> upstream-releases
   },
   {
     name: "transition-timing-function",
@@ -289,8 +328,24 @@ const TEST_DATA = [
     value: "rgb(255, var(--g-value, 0), 192)",
     test: fragment => {
       is(fragment.textContent, "rgb(255, var(--g-value, 0), 192)");
+<<<<<<< HEAD
     },
   },
+||||||| merged common ancestors
+    }
+  }
+=======
+    },
+  },
+  {
+    name: "--url",
+    value: "url(())",
+    test: fragment => {
+      is(countAll(fragment), 0);
+      is(fragment.textContent, "url(())");
+    },
+  },
+>>>>>>> upstream-releases
 ];
 
 add_task(async function() {
@@ -299,8 +354,16 @@ add_task(async function() {
     target: {
       client: {},
       hasActor: () => false,
+<<<<<<< HEAD
       getFront: typeName => ({getCSSDatabase: () => CSS_PROPERTIES_DB}),
     },
+||||||| merged common ancestors
+      getFront: typeName => ({getCSSDatabase: () => CSS_PROPERTIES_DB})
+    }
+=======
+      getFront: typeName => ({ getCSSDatabase: () => CSS_PROPERTIES_DB }),
+    },
+>>>>>>> upstream-releases
   };
   await initCssProperties(toolbox);
   const cssProperties = getCssProperties(toolbox);
@@ -308,6 +371,7 @@ add_task(async function() {
   const parser = new OutputParser(document, cssProperties);
   for (let i = 0; i < TEST_DATA.length; i++) {
     const data = TEST_DATA[i];
+<<<<<<< HEAD
     info("Output-parser test data " + i + ". {" + data.name + " : " +
       data.value + ";}");
     data.test(parser.parseCssProperty(data.name, data.value, {
@@ -316,6 +380,35 @@ add_task(async function() {
       bezierClass: CUBIC_BEZIER_CLASS,
       angleClass: ANGLE_CLASS,
     }));
+||||||| merged common ancestors
+    info("Output-parser test data " + i + ". {" + data.name + " : " +
+      data.value + ";}");
+    data.test(parser.parseCssProperty(data.name, data.value, {
+      colorClass: COLOR_CLASS,
+      urlClass: URL_CLASS,
+      bezierClass: CUBIC_BEZIER_CLASS,
+      angleClass: ANGLE_CLASS,
+      defaultColorType: false
+    }));
+=======
+    info(
+      "Output-parser test data " +
+        i +
+        ". {" +
+        data.name +
+        " : " +
+        data.value +
+        ";}"
+    );
+    data.test(
+      parser.parseCssProperty(data.name, data.value, {
+        colorClass: COLOR_CLASS,
+        urlClass: URL_CLASS,
+        bezierClass: CUBIC_BEZIER_CLASS,
+        angleClass: ANGLE_CLASS,
+      })
+    );
+>>>>>>> upstream-releases
   }
 });
 
@@ -332,12 +425,12 @@ function countCubicBeziers(fragment) {
   return fragment.querySelectorAll("." + CUBIC_BEZIER_CLASS).length;
 }
 function getColor(fragment, index) {
-  return fragment.querySelectorAll("." + COLOR_CLASS)[index||0].textContent;
+  return fragment.querySelectorAll("." + COLOR_CLASS)[index || 0].textContent;
 }
 function getUrl(fragment, index) {
-  return fragment.querySelectorAll("." + URL_CLASS)[index||0].textContent;
+  return fragment.querySelectorAll("." + URL_CLASS)[index || 0].textContent;
 }
 function getCubicBezier(fragment, index) {
-  return fragment.querySelectorAll("." + CUBIC_BEZIER_CLASS)[index||0]
+  return fragment.querySelectorAll("." + CUBIC_BEZIER_CLASS)[index || 0]
     .textContent;
 }

@@ -26,12 +26,19 @@ class WebrtcTelemetry {
 
   void RecordIceCandidateMask(const uint32_t iceCandidateBitmask, bool success);
 
-  bool GetWebrtcStats(JSContext *cx, JS::MutableHandle<JS::Value> ret);
+  bool GetWebrtcStats(JSContext* cx, JS::MutableHandle<JS::Value> ret);
 
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
+<<<<<<< HEAD
  private:
   bool AddIceInfo(JSContext *cx, JS::Handle<JSObject *> rootObj);
+||||||| merged common ancestors
+private:
+=======
+ private:
+  bool AddIceInfo(JSContext* cx, JS::Handle<JSObject*> rootObj);
+>>>>>>> upstream-releases
 
   mozilla::Telemetry::Common::AutoHashtable<WebrtcIceCandidateType>
       mWebrtcIceCandidates;

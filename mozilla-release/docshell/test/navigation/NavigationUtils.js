@@ -36,7 +36,8 @@ function navigateByForm(name) {
   var form = document.createElement("form");
   form.action = target_url;
   form.method = "POST";
-  form.target = name; document.body.appendChild(form);
+  form.target = name;
+  document.body.appendChild(form);
   form.submit();
 }
 
@@ -48,18 +49,34 @@ function navigateByHyperlink(name) {
   link.target = name;
   link.id = "navigation_hyperlink_" + hyperlink_count++;
   document.body.appendChild(link);
+<<<<<<< HEAD
   sendMouseEvent({type: "click"}, link.id);
+||||||| merged common ancestors
+  sendMouseEvent({type:"click"}, link.id);
+=======
+  sendMouseEvent({ type: "click" }, link.id);
+>>>>>>> upstream-releases
 }
 
 // /////////////////////////////////////////////////////////////////////////
 // Functions that call into Mochitest framework
 // /////////////////////////////////////////////////////////////////////////
 
-function isNavigated(wnd, message) {
+async function isNavigated(wnd, message) {
   var result = null;
   try {
+<<<<<<< HEAD
     result = SpecialPowers.wrap(wnd).document.body.innerHTML.trim();
   } catch (ex) {
+||||||| merged common ancestors
+    result = SpecialPowers.wrap(wnd).document.body.innerHTML.trim();
+  } catch(ex) {
+=======
+    result = await SpecialPowers.spawn(wnd, [], () =>
+      this.content.document.body.innerHTML.trim()
+    );
+  } catch (ex) {
+>>>>>>> upstream-releases
     result = ex;
   }
   is(result, body, message);
@@ -99,10 +116,10 @@ function isInaccessible(wnd, message) {
 // Replacing the getService with Services.ww format causes test errors, so ignore for now
 /* eslint-disable mozilla/use-services */
 function xpcEnumerateContentWindows(callback) {
-
   var Ci = SpecialPowers.Ci;
-  var ww = SpecialPowers.Cc["@mozilla.org/embedcomp/window-watcher;1"]
-                        .getService(Ci.nsIWindowWatcher);
+  var ww = SpecialPowers.Cc[
+    "@mozilla.org/embedcomp/window-watcher;1"
+  ].getService(Ci.nsIWindowWatcher);
 
   var contentWindows = [];
 
@@ -114,8 +131,12 @@ function xpcEnumerateContentWindows(callback) {
         var childTreeNode = docshellTreeNode.getChildAt(i);
 
         // we're only interested in content docshells
-        if (SpecialPowers.unwrap(childTreeNode.itemType) != Ci.nsIDocShellTreeItem.typeContent)
+        if (
+          SpecialPowers.unwrap(childTreeNode.itemType) !=
+          Ci.nsIDocShellTreeItem.typeContent
+        ) {
           continue;
+        }
 
         var webNav = childTreeNode.QueryInterface(Ci.nsIWebNavigation);
         contentWindows.push(webNav.document.defaultView);
@@ -125,8 +146,9 @@ function xpcEnumerateContentWindows(callback) {
     }
   }
 
-  while (contentWindows.length > 0)
+  while (contentWindows.length > 0) {
     callback(contentWindows.pop());
+  }
 }
 /* eslint-enable mozilla/use-services */
 
@@ -135,8 +157,9 @@ function xpcGetFramesByName(name) {
   var results = [];
 
   xpcEnumerateContentWindows(function(win) {
-    if (win.name == name)
+    if (win.name == name) {
       results.push(win);
+    }
   });
 
   return results;
@@ -144,9 +167,11 @@ function xpcGetFramesByName(name) {
 
 function xpcCleanupWindows() {
   xpcEnumerateContentWindows(function(win) {
-    if (win.location &&
-        (win.location.href.endsWith(target_url) ||
-         win.location.href.endsWith(target_popup_url))) {
+    if (
+      win.location &&
+      (win.location.href.endsWith(target_url) ||
+        win.location.href.endsWith(target_popup_url))
+    ) {
       win.close();
     }
   });
@@ -163,21 +188,24 @@ function xpcWaitForFinishedFrames(callback, numFrames) {
       return;
     }
 
-    if (finishedFrameCount > numFrames)
-      throw "Too many frames loaded.";
+    if (finishedFrameCount > numFrames) {
+      throw new Error("Too many frames loaded.");
+    }
   }
 
   var finishedWindows = [];
 
   function contains(obj, arr) {
     for (var i = 0; i < arr.length; i++) {
-      if (obj === arr[i])
+      if (obj === arr[i]) {
         return true;
+      }
     }
     return false;
   }
 
   function searchForFinishedFrames(win) {
+<<<<<<< HEAD
     if ((win.location.href.endsWith(target_url) ||
          win.location.href.endsWith(target_popup_url)) &&
         win.document &&
@@ -186,14 +214,35 @@ function xpcWaitForFinishedFrames(callback, numFrames) {
          win.document.body.textContent.trim() == popup_body) &&
         win.document.readyState == "complete") {
 
+||||||| merged common ancestors
+    if ((win.location.href.endsWith(target_url) ||
+         win.location.href.endsWith(target_popup_url)) &&
+        win.document && 
+        win.document.body && 
+        (win.document.body.textContent.trim() == body ||
+         win.document.body.textContent.trim() == popup_body) && 
+        win.document.readyState == "complete") {
+
+=======
+    if (
+      (win.location.href.endsWith(target_url) ||
+        win.location.href.endsWith(target_popup_url)) &&
+      win.document &&
+      win.document.body &&
+      (win.document.body.textContent.trim() == body ||
+        win.document.body.textContent.trim() == popup_body) &&
+      win.document.readyState == "complete"
+    ) {
+>>>>>>> upstream-releases
       var windowId = win.windowUtils.outerWindowID;
       if (!contains(windowId, finishedWindows)) {
         finishedWindows.push(windowId);
         frameFinished();
       }
     }
-    for (var i = 0; i < win.frames.length; i++)
+    for (var i = 0; i < win.frames.length; i++) {
       searchForFinishedFrames(win.frames[i]);
+    }
   }
 
   function poll() {

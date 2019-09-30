@@ -80,11 +80,26 @@ enum TelemetryAlgorithm {
   TA_SHA_384 = 17,
   TA_SHA_512 = 18,
   // Later additions
+<<<<<<< HEAD
   TA_AES_KW = 19,
   TA_ECDH = 20,
   TA_PBKDF2 = 21,
   TA_ECDSA = 22,
   TA_HKDF = 23,
+||||||| merged common ancestors
+  TA_AES_KW          = 19,
+  TA_ECDH            = 20,
+  TA_PBKDF2          = 21,
+  TA_ECDSA           = 22,
+  TA_HKDF            = 23,
+=======
+  TA_AES_KW = 19,
+  TA_ECDH = 20,
+  TA_PBKDF2 = 21,
+  TA_ECDSA = 22,
+  TA_HKDF = 23,
+  TA_DH = 24,
+>>>>>>> upstream-releases
 };
 
 // Convenience functions for extracting / converting information
@@ -2882,7 +2897,15 @@ class DeriveDhBitsTask : public ReturnArrayBufferViewTask {
     }
   }
 
+<<<<<<< HEAD
   void Init(JSContext* aCx, const ObjectOrString& aAlgorithm, CryptoKey& aKey) {
+||||||| merged common ancestors
+  void Init(JSContext* aCx, const ObjectOrString& aAlgorithm, CryptoKey& aKey)
+  {
+=======
+  void Init(JSContext* aCx, const ObjectOrString& aAlgorithm, CryptoKey& aKey) {
+    Telemetry::Accumulate(Telemetry::WEBCRYPTO_ALG, TA_DH);
+>>>>>>> upstream-releases
     CHECK_KEY_ALGORITHM(aKey.Algorithm(), WEBCRYPTO_ALG_DH);
 
     // Check that we have a private key.

@@ -34,8 +34,17 @@ nsresult SVGTransformList::CopyFrom(const SVGTransformList& rhs) {
   return CopyFrom(rhs.mItems);
 }
 
+<<<<<<< HEAD
 nsresult SVGTransformList::CopyFrom(
     const nsTArray<nsSVGTransform>& aTransformArray) {
+||||||| merged common ancestors
+nsresult
+SVGTransformList::CopyFrom(const nsTArray<nsSVGTransform>& aTransformArray)
+{
+=======
+nsresult SVGTransformList::CopyFrom(
+    const nsTArray<SVGTransform>& aTransformArray) {
+>>>>>>> upstream-releases
   if (!mItems.Assign(aTransformArray, fallible)) {
     return NS_ERROR_OUT_OF_MEMORY;
   }

@@ -7,6 +7,7 @@
 #include "mozilla/dom/HTMLAreaElement.h"
 
 #include "mozilla/Attributes.h"
+#include "mozilla/dom/BindContext.h"
 #include "mozilla/dom/HTMLAnchorElement.h"
 #include "mozilla/dom/HTMLAreaElementBinding.h"
 #include "mozilla/EventDispatcher.h"
@@ -66,27 +67,54 @@ nsDOMTokenList* HTMLAreaElement::RelList() {
   return mRelList;
 }
 
+<<<<<<< HEAD
 nsresult HTMLAreaElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+HTMLAreaElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+=======
+nsresult HTMLAreaElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+>>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
+<<<<<<< HEAD
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsIDocument* doc = GetComposedDoc();
-  if (doc) {
-    doc->RegisterPendingLinkUpdate(this);
+  if (IsInComposedDoc()) {
+    aContext.OwnerDoc().RegisterPendingLinkUpdate(this);
   }
   return rv;
 }
 
+<<<<<<< HEAD
 void HTMLAreaElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   // If this link is ever reinserted into a document, it might
   // be under a different xml:base, so forget the cached state now.
+||||||| merged common ancestors
+void
+HTMLAreaElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  // If this link is ever reinserted into a document, it might
+  // be under a different xml:base, so forget the cached state now.
+=======
+void HTMLAreaElement::UnbindFromTree(bool aNullParent) {
+  // Without removing the link state we risk a dangling pointer
+  // in the mStyledLinks hashtable
+>>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 }
 
 nsresult HTMLAreaElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,

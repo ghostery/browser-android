@@ -5,12 +5,21 @@
 //! Module only available when pathfinder is deactivated when webrender is
 //! compiled regularly (i.e. any configuration without feature = "pathfinder")
 
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 use api::{ImageDescriptor, ImageFormat, DirtyRect};
 use device::TextureFilter;
+||||||| merged common ancestors
+use api::{ImageData, ImageDescriptor, ImageFormat};
+use device::TextureFilter;
+=======
+use api::{ImageDescriptor, ImageFormat, DirtyRect};
+use crate::device::TextureFilter;
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 use euclid::size2;
-use gpu_types::UvRectKind;
+use crate::gpu_types::UvRectKind;
 use rayon::prelude::*;
 use std::sync::{Arc, MutexGuard};
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 use platform::font::FontContext;
 use glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
 use glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs, GlyphRasterResult};
@@ -22,6 +31,28 @@ use render_task::{RenderTaskTree, RenderTaskCache};
 use tiling::SpecialRenderPasses;
 use profiler::TextureCacheProfileCounters;
 use std::collections::hash_map::Entry;
+||||||| merged common ancestors
+use platform::font::FontContext;
+use glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
+use glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs, GlyphRasterResult};
+use glyph_cache::{GlyphCache, CachedGlyphInfo, GlyphCacheEntry};
+use texture_cache::{TextureCache, TextureCacheHandle, Eviction};
+use gpu_cache::GpuCache;
+use render_task::{RenderTaskTree, RenderTaskCache};
+use tiling::SpecialRenderPasses;
+use profiler::TextureCacheProfileCounters;
+use std::collections::hash_map::Entry;
+=======
+use crate::platform::font::FontContext;
+use crate::glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
+use crate::glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs};
+use crate::glyph_cache::{GlyphCache, CachedGlyphInfo, GlyphCacheEntry};
+use crate::resource_cache::CachedImageData;
+use crate::texture_cache::{TextureCache, TextureCacheHandle, Eviction};
+use crate::gpu_cache::GpuCache;
+use crate::render_task::{RenderTaskGraph, RenderTaskCache};
+use crate::profiler::TextureCacheProfileCounters;
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 
 impl FontContexts {
     /// Get access to the font context associated to the current thread.
@@ -45,8 +76,7 @@ impl GlyphRasterizer {
         texture_cache: &mut TextureCache,
         gpu_cache: &mut GpuCache,
         _: &mut RenderTaskCache,
-        _: &mut RenderTaskTree,
-        _: &mut SpecialRenderPasses,
+        _: &mut RenderTaskGraph,
     ) {
         assert!(
             self.font_contexts
@@ -59,32 +89,23 @@ impl GlyphRasterizer {
 
         // select glyphs that have not been requested yet.
         for key in glyph_keys {
-            match glyph_key_cache.entry(key.clone()) {
-                Entry::Occupied(mut entry) => {
-                    let value = entry.into_mut();
-                    match *value {
-                        GlyphCacheEntry::Cached(ref glyph) => {
-                            // Skip the glyph if it is already has a valid texture cache handle.
-                            if !texture_cache.request(&glyph.texture_cache_handle, gpu_cache) {
-                                continue;
-                            }
+            if let Some(entry) = glyph_key_cache.try_get(key) {
+                match entry {
+                    GlyphCacheEntry::Cached(ref glyph) => {
+                        // Skip the glyph if it is already has a valid texture cache handle.
+                        if !texture_cache.request(&glyph.texture_cache_handle, gpu_cache) {
+                            continue;
                         }
-                        // Otherwise, skip the entry if it is blank or pending.
-                        GlyphCacheEntry::Blank | GlyphCacheEntry::Pending => continue,
+                        // This case gets hit when we already rasterized the glyph, but the
+                        // glyph has been evicted from the texture cache. Just force it to
+                        // pending so it gets rematerialized.
                     }
-
-                    // This case gets hit when we already rasterized the glyph, but the
-                    // glyph has been evicted from the texture cache. Just force it to
-                    // pending so it gets rematerialized.
-                    *value = GlyphCacheEntry::Pending;
-                    new_glyphs.push((*key).clone());
-                }
-                Entry::Vacant(entry) => {
-                    // This is the first time we've seen the glyph, so mark it as pending.
-                    entry.insert(GlyphCacheEntry::Pending);
-                    new_glyphs.push((*key).clone());
+                    // Otherwise, skip the entry if it is blank or pending.
+                    GlyphCacheEntry::Blank | GlyphCacheEntry::Pending => continue,
                 }
             }
+            new_glyphs.push(key.clone());
+            glyph_key_cache.add_glyph(key.clone(), GlyphCacheEntry::Pending);
         }
 
         if new_glyphs.is_empty() {
@@ -109,18 +130,22 @@ impl GlyphRasterizer {
                 .map(|key: &GlyphKey| {
                     profile_scope!("glyph-raster");
                     let mut context = font_contexts.lock_current_context();
-                    let job = GlyphRasterJob {
+                    let mut job = GlyphRasterJob {
                         key: key.clone(),
                         result: context.rasterize_glyph(&font, key),
                     };
 
-                    // Sanity check.
-                    if let GlyphRasterResult::Bitmap(ref glyph) = job.result {
+                    if let Ok(ref mut glyph) = job.result {
+                        // Sanity check.
                         let bpp = 4; // We always render glyphs in 32 bits RGBA format.
                         assert_eq!(
                             glyph.bytes.len(),
                             bpp * (glyph.width * glyph.height) as usize
                         );
+                        assert_eq!((glyph.left.fract(), glyph.top.fract()), (0.0, 0.0));
+
+                        // Check if the glyph has a bitmap that needs to be downscaled.
+                        glyph.downscale_bitmap_if_required(&font);
                     }
 
                     job
@@ -137,7 +162,7 @@ impl GlyphRasterizer {
         texture_cache: &mut TextureCache,
         gpu_cache: &mut GpuCache,
         _: &mut RenderTaskCache,
-        _: &mut RenderTaskTree,
+        _: &mut RenderTaskGraph,
         _: &mut TextureCacheProfileCounters,
     ) {
         // Pull rasterized glyphs from the queue and update the caches.
@@ -163,14 +188,22 @@ impl GlyphRasterizer {
 
             for GlyphRasterJob { key, result } in jobs {
                 let glyph_info = match result {
-                    GlyphRasterResult::LoadFailed => GlyphCacheEntry::Blank,
-                    GlyphRasterResult::Bitmap(ref glyph) if glyph.width == 0 ||
-                                                            glyph.height == 0 => {
+                    Err(_) => GlyphCacheEntry::Blank,
+                    Ok(ref glyph) if glyph.width == 0 || glyph.height == 0 => {
                         GlyphCacheEntry::Blank
                     }
+<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
                     GlyphRasterResult::Bitmap(glyph) => {
                         assert_eq!((glyph.left.fract(), glyph.top.fract()), (0.0, 0.0));
                         let mut texture_cache_handle = TextureCacheHandle::invalid();
+||||||| merged common ancestors
+                    GlyphRasterResult::Bitmap(glyph) => {
+                        assert_eq!((glyph.left.fract(), glyph.top.fract()), (0.0, 0.0));
+                        let mut texture_cache_handle = TextureCacheHandle::new();
+=======
+                    Ok(glyph) => {
+                        let mut texture_cache_handle = TextureCacheHandle::invalid();
+>>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
                         texture_cache.request(&texture_cache_handle, gpu_cache);
                         texture_cache.update(
                             &mut texture_cache_handle,
@@ -197,7 +230,7 @@ impl GlyphRasterizer {
                         })
                     }
                 };
-                glyph_key_cache.insert(key, glyph_info);
+                glyph_key_cache.add_glyph(key, glyph_info);
             }
         }
 

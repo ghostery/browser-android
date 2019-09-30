@@ -30,10 +30,23 @@ class CoalescedMouseData final : public CoalescedInputData<WidgetMouseEvent> {
 };
 
 class CoalescedMouseMoveFlusher final : public nsARefreshObserver {
+<<<<<<< HEAD
  public:
   explicit CoalescedMouseMoveFlusher(TabChild* aTabChild)
       : mTabChild(aTabChild) {
     MOZ_ASSERT(mTabChild);
+||||||| merged common ancestors
+public:
+  explicit CoalescedMouseMoveFlusher(TabChild* aTabChild)
+    : mTabChild(aTabChild)
+  {
+    MOZ_ASSERT(mTabChild);
+=======
+ public:
+  explicit CoalescedMouseMoveFlusher(BrowserChild* aBrowserChild)
+      : mBrowserChild(aBrowserChild) {
+    MOZ_ASSERT(mBrowserChild);
+>>>>>>> upstream-releases
   }
 
   virtual void WillRefresh(mozilla::TimeStamp aTime) override;
@@ -48,7 +61,7 @@ class CoalescedMouseMoveFlusher final : public nsARefreshObserver {
 
   nsRefreshDriver* GetRefreshDriver();
 
-  TabChild* mTabChild;
+  BrowserChild* mBrowserChild;
   RefPtr<nsRefreshDriver> mRefreshDriver;
 };
 

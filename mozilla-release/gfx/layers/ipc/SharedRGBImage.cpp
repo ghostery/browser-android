@@ -27,9 +27,43 @@
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 already_AddRefed<Image> CreateSharedRGBImage(ImageContainer* aImageContainer,
                                              gfx::IntSize aSize,
                                              gfxImageFormat aImageFormat) {
+||||||| merged common ancestors
+already_AddRefed<Image>
+CreateSharedRGBImage(ImageContainer *aImageContainer,
+                     gfx::IntSize aSize,
+                     gfxImageFormat aImageFormat)
+{
+=======
+class TextureClientForRawBufferAccessAllocationHelper
+    : public ITextureClientAllocationHelper {
+ public:
+  TextureClientForRawBufferAccessAllocationHelper(gfx::SurfaceFormat aFormat,
+                                                  gfx::IntSize aSize,
+                                                  TextureFlags aTextureFlags)
+      : ITextureClientAllocationHelper(aFormat, aSize, BackendSelector::Content,
+                                       aTextureFlags, ALLOC_DEFAULT) {}
+
+  bool IsCompatible(TextureClient* aTextureClient) override {
+    bool ret = aTextureClient->GetFormat() == mFormat &&
+               aTextureClient->GetSize() == mSize;
+    return ret;
+  }
+
+  already_AddRefed<TextureClient> Allocate(
+      KnowsCompositor* aAllocator) override {
+    return TextureClient::CreateForRawBufferAccess(
+        aAllocator, mFormat, mSize, gfx::BackendType::NONE, mTextureFlags);
+  }
+};
+
+already_AddRefed<Image> CreateSharedRGBImage(ImageContainer* aImageContainer,
+                                             gfx::IntSize aSize,
+                                             gfxImageFormat aImageFormat) {
+>>>>>>> upstream-releases
   NS_ASSERTION(aImageFormat == gfx::SurfaceFormat::A8R8G8B8_UINT32 ||
                    aImageFormat == gfx::SurfaceFormat::X8R8G8B8_UINT32 ||
                    aImageFormat == gfx::SurfaceFormat::R5G6B5_UINT16,
@@ -60,24 +94,83 @@ SharedRGBImage::SharedRGBImage(ImageClient* aCompositable)
 
 SharedRGBImage::~SharedRGBImage() { MOZ_COUNT_DTOR(SharedRGBImage); }
 
+<<<<<<< HEAD
 bool SharedRGBImage::Allocate(gfx::IntSize aSize, gfx::SurfaceFormat aFormat) {
+||||||| merged common ancestors
+bool
+SharedRGBImage::Allocate(gfx::IntSize aSize, gfx::SurfaceFormat aFormat)
+{
+=======
+bool SharedRGBImage::Allocate(gfx::IntSize aSize, gfx::SurfaceFormat aFormat) {
+  static const uint32_t MAX_POOLED_VIDEO_COUNT = 5;
+>>>>>>> upstream-releases
   mSize = aSize;
+<<<<<<< HEAD
   mTextureClient = mCompositable->CreateBufferTextureClient(
       aFormat, aSize, gfx::BackendType::NONE, TextureFlags::DEFAULT);
   return !!mTextureClient;
 }
+||||||| merged common ancestors
+  mTextureClient = mCompositable->CreateBufferTextureClient(aFormat, aSize,
+                                                            gfx::BackendType::NONE,
+                                                            TextureFlags::DEFAULT);
+  return !!mTextureClient;
+}
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 uint8_t* SharedRGBImage::GetBuffer() const {
   MappedTextureData mapped;
   if (mTextureClient && mTextureClient->BorrowMappedData(mapped)) {
     return mapped.data;
+||||||| merged common ancestors
+uint8_t*
+SharedRGBImage::GetBuffer() const
+{
+  MappedTextureData mapped;
+  if (mTextureClient && mTextureClient->BorrowMappedData(mapped)) {
+    return mapped.data;
+=======
+  if (!mCompositable->HasTextureClientRecycler()) {
+    // Initialize TextureClientRecycler
+    mCompositable->GetTextureClientRecycler()->SetMaxPoolSize(
+        MAX_POOLED_VIDEO_COUNT);
   }
-  return 0;
-}
 
+  {
+    TextureClientForRawBufferAccessAllocationHelper helper(
+        aFormat, aSize, mCompositable->GetTextureFlags());
+    mTextureClient =
+        mCompositable->GetTextureClientRecycler()->CreateOrRecycle(helper);
+>>>>>>> upstream-releases
+  }
+
+<<<<<<< HEAD
+gfx::IntSize SharedRGBImage::GetSize() const { return mSize; }
+||||||| merged common ancestors
+gfx::IntSize
+SharedRGBImage::GetSize() const
+{
+  return mSize;
+}
+=======
+  return !!mTextureClient;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+TextureClient* SharedRGBImage::GetTextureClient(KnowsCompositor* aForwarder) {
+||||||| merged common ancestors
+TextureClient*
+SharedRGBImage::GetTextureClient(KnowsCompositor* aForwarder)
+{
+=======
 gfx::IntSize SharedRGBImage::GetSize() const { return mSize; }
 
-TextureClient* SharedRGBImage::GetTextureClient(KnowsCompositor* aForwarder) {
+TextureClient* SharedRGBImage::GetTextureClient(
+    KnowsCompositor* aKnowsCompositor) {
+>>>>>>> upstream-releases
   return mTextureClient.get();
 }
 

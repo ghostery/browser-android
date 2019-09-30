@@ -16,11 +16,11 @@
 
 #if defined(MOZILLA_INTERNAL_API)
 
-#include "MainThreadUtils.h"
-#include "mozilla/SystemGroup.h"
-#include "nsISupportsImpl.h"
-#include "nsString.h"
-#include "nsThreadUtils.h"
+#  include "MainThreadUtils.h"
+#  include "mozilla/SystemGroup.h"
+#  include "nsISupportsImpl.h"
+#  include "nsString.h"
+#  include "nsThreadUtils.h"
 
 #endif  // defined(MOZILLA_INTERNAL_API)
 
@@ -29,6 +29,7 @@
 
 namespace mozilla {
 namespace glue {
+<<<<<<< HEAD
 
 // Holds data about a top-level DLL load event, for the purposes of later
 // evaluating the DLLs for trustworthiness. DLLs are loaded recursively,
@@ -66,6 +67,47 @@ class ModuleLoadEvent {
   Vector<uintptr_t, 0, InfallibleAllocPolicy> mStack;
 };
 
+||||||| merged common ancestors
+=======
+
+// Holds data about a top-level DLL load event, for the purposes of later
+// evaluating the DLLs for trustworthiness. DLLs are loaded recursively,
+// so we hold the top-level DLL and all child DLLs in mModules.
+class ModuleLoadEvent {
+ public:
+  class ModuleInfo {
+   public:
+    ModuleInfo() = default;
+    ~ModuleInfo() = default;
+    ModuleInfo(const ModuleInfo& aOther) = delete;
+    ModuleInfo(ModuleInfo&& aOther) = default;
+
+    ModuleInfo operator=(const ModuleInfo& aOther) = delete;
+    ModuleInfo operator=(ModuleInfo&& aOther) = delete;
+
+    uintptr_t mBase;
+    UniquePtr<wchar_t[]> mLdrName;
+    UniquePtr<wchar_t[]> mFullPath;
+    double mLoadDurationMS;
+  };
+
+  ModuleLoadEvent() = default;
+  ~ModuleLoadEvent() = default;
+  ModuleLoadEvent(const ModuleLoadEvent& aOther) = delete;
+  ModuleLoadEvent(ModuleLoadEvent&& aOther) = default;
+
+  ModuleLoadEvent& operator=(const ModuleLoadEvent& aOther) = delete;
+  ModuleLoadEvent& operator=(ModuleLoadEvent&& aOther) = delete;
+
+  DWORD mThreadID;
+  uint64_t mProcessUptimeMS;
+  Vector<ModuleInfo, 0, InfallibleAllocPolicy> mModules;
+
+  // Stores instruction pointers, top-to-bottom.
+  Vector<uintptr_t, 0, InfallibleAllocPolicy> mStack;
+};
+
+>>>>>>> upstream-releases
 namespace detail {
 
 class DllServicesBase : public Authenticode {
@@ -109,7 +151,16 @@ class DllServicesBase : public Authenticode {
     return mAuthenticode->GetBinaryOrgName(aFilePath);
   }
 
+<<<<<<< HEAD
   void Disable() { DllBlocklist_SetDllServices(nullptr); }
+||||||| merged common ancestors
+  void Disable()
+  {
+    DllBlocklist_SetDllServices(nullptr);
+  }
+=======
+  void DisableFull() { DllBlocklist_SetFullDllServices(nullptr); }
+>>>>>>> upstream-releases
 
   DllServicesBase(const DllServicesBase&) = delete;
   DllServicesBase(DllServicesBase&&) = delete;
@@ -121,7 +172,17 @@ class DllServicesBase : public Authenticode {
 
   virtual ~DllServicesBase() = default;
 
+<<<<<<< HEAD
   void Enable() { DllBlocklist_SetDllServices(this); }
+||||||| merged common ancestors
+  void Enable()
+  {
+    DllBlocklist_SetDllServices(this);
+  }
+=======
+  void EnableFull() { DllBlocklist_SetFullDllServices(this); }
+  void EnableBasic() { DllBlocklist_SetBasicDllServices(this); }
+>>>>>>> upstream-releases
 
  private:
   Authenticode* mAuthenticode;
@@ -144,14 +205,29 @@ class DllServices : public detail::DllServicesBase {
     SystemGroup::Dispatch(TaskCategory::Other, runnable.forget());
   }
 
+<<<<<<< HEAD
 #if defined(DEBUG)
   UniquePtr<wchar_t[]> GetBinaryOrgName(const wchar_t* aFilePath) final {
+||||||| merged common ancestors
+#if defined(DEBUG)
+  UniquePtr<wchar_t[]> GetBinaryOrgName(const wchar_t* aFilePath) final
+  {
+=======
+#  if defined(DEBUG)
+  UniquePtr<wchar_t[]> GetBinaryOrgName(const wchar_t* aFilePath) final {
+>>>>>>> upstream-releases
     // This function may perform disk I/O, so we should never call it on the
     // main thread.
     MOZ_ASSERT(!NS_IsMainThread());
     return detail::DllServicesBase::GetBinaryOrgName(aFilePath);
   }
+<<<<<<< HEAD
 #endif  // defined(DEBUG)
+||||||| merged common ancestors
+#endif // defined(DEBUG)
+=======
+#  endif  // defined(DEBUG)
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_VIRTUAL_REFCOUNTING(DllServices)
 
@@ -165,13 +241,38 @@ class DllServices : public detail::DllServicesBase {
 
 #else
 
+<<<<<<< HEAD
 class BasicDllServices : public detail::DllServicesBase {
  public:
   BasicDllServices() { Enable(); }
+||||||| merged common ancestors
+class BasicDllServices : public detail::DllServicesBase
+{
+public:
+  BasicDllServices()
+  {
+    Enable();
+  }
+=======
+class BasicDllServices final : public detail::DllServicesBase {
+ public:
+  BasicDllServices() { EnableBasic(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ~BasicDllServices() { Disable(); }
 
   virtual void DispatchDllLoadNotification(PCUNICODE_STRING aDllName) override {
+||||||| merged common ancestors
+  ~BasicDllServices()
+  {
+    Disable();
+=======
+  ~BasicDllServices() = default;
+
+  // Not useful in this class, so provide a default implementation
+  virtual void DispatchDllLoadNotification(PCUNICODE_STRING aDllName) override {
+>>>>>>> upstream-releases
   }
 
   virtual void NotifyUntrustedModuleLoads(

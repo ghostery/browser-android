@@ -9,7 +9,13 @@ import("//build/config/arm.gni")
 import("//build/config/features.gni")
 import("//build/config/mips.gni")
 import("//build/config/sanitizers/sanitizers.gni")
+<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
 import("//build/config/ui.gni")
+||||||| merged common ancestors
+=======
+import("//build/config/sysroot.gni")
+import("//build/config/ui.gni")
+>>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
 import("//build_overrides/build.gni")
 
 if (!build_with_chromium && is_component_build) {
@@ -69,6 +75,29 @@ declare_args() {
   # Set this to true to enable BWE test logging.
   rtc_enable_bwe_test_logging = false
 
+<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
+||||||| merged common ancestors
+  # Set this to disable building with support for SCTP data channels.
+  rtc_enable_sctp = !build_with_mozilla
+
+  # Disable these to not build components which can be externally provided.
+  rtc_build_expat = !build_with_mozilla
+  rtc_build_json = !build_with_mozilla
+  rtc_build_libjpeg = !build_with_mozilla
+  rtc_build_libsrtp = !build_with_mozilla
+  rtc_build_libvpx = !build_with_mozilla
+  rtc_libvpx_build_vp9 = true
+  rtc_build_libyuv = !build_with_mozilla
+  rtc_build_openmax_dl = !build_with_mozilla
+  rtc_build_opus = !build_with_mozilla
+  rtc_build_ssl = !build_with_mozilla
+  rtc_build_usrsctp = !build_with_mozilla
+
+=======
+  # Set this to use PipeWire on the Wayland display server.
+  rtc_use_pipewire = false
+
+>>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
   rtc_enable_android_opensl = false
 
   # Link-Time Optimizations.
@@ -190,12 +219,31 @@ declare_args() {
 
 # Make it possible to provide custom locations for some libraries (move these
 # up into declare_args should we need to actually use them for the GN build).
+<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
 rtc_libvpx_dir = "//third_party/libvpx"
 rtc_libyuv_dir = "/media/libyuv/libyuv"
 rtc_opus_dir = "//third_party/opus"
 
 # Desktop capturer is supported only on Windows, OSX and Linux.
 rtc_desktop_capture_supported = is_win || is_mac || (is_linux && use_x11) || is_bsd
+||||||| merged common ancestors
+if (build_with_mozilla) {
+  rtc_libevent_dir = "/ipc/chromium/src/third_party/libevent"
+  rtc_libyuv_dir = "/media/libyuv/libyuv"
+} else {
+  rtc_libvpx_dir = "//third_party/libvpx"
+  rtc_libyuv_dir = "//third_party/libyuv"
+  rtc_opus_dir = "//third_party/opus"
+}
+=======
+rtc_libvpx_dir = "//third_party/libvpx"
+rtc_libyuv_dir = "/media/libyuv/libyuv"
+rtc_opus_dir = "//third_party/opus"
+
+# Desktop capturer is supported only on Windows, OSX and Linux.
+rtc_desktop_capture_supported =
+    is_win || is_mac || (is_linux && use_x11) || is_bsd || rtc_use_pipewire
+>>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/webrtc.gni
 
 ###############################################################################
 # Templates

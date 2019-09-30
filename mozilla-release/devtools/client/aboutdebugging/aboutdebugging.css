@@ -31,11 +31,23 @@ button {
   background-color: transparent;
   display: flex;
   flex-direction: row;
+<<<<<<< HEAD
 }
 
 .category.selected {
   /* Override a `color: inherit !important` forced on all buttons by common.inc.css */
   color: var(--in-content-category-text-selected) !important;
+||||||| merged common ancestors
+  align-items: center;
+=======
+  /* Override button min-width set by common.inc.css for compact width case */
+  min-width: initial;
+}
+
+.category.selected {
+  /* Override a `color: inherit !important` forced on all buttons by common.inc.css */
+  color: var(--in-content-category-text-selected) !important;
+>>>>>>> upstream-releases
 }
 
 .category-name {
@@ -59,6 +71,13 @@ button {
 }
 
 /* Targets */
+
+.target-icon,
+.addons-tip-icon,
+.warning {
+  -moz-context-properties: fill;
+  fill: currentColor;
+}
 
 .target-list {
   margin: 0;
@@ -144,11 +163,13 @@ button {
 }
 
 .target-status-stopped {
+  color: var(--grey-90);
   border-color: grey;
   background-color: lightgrey;
 }
 
 .target-status-running {
+  color: var(--grey-90);
   border-color: limegreen;
   background-color: palegreen;
 }
@@ -173,13 +194,13 @@ button {
 
 .addons-install-error {
   align-items: center;
-  background-color: #f3b0b0;
+  background-color: rgb(222, 33, 33, 0.3);
   display: flex;
   justify-content: space-between;
 }
 
 .service-worker-multi-process {
-  background-color: #ffeebb;
+  background-color: rgb(255, 191, 0, 0.3);
   line-height: 1.5em;
 }
 
@@ -191,6 +212,7 @@ button {
   display: inline-block;
   width: 12px;
   height: 12px;
+<<<<<<< HEAD
   vertical-align: 0;
   margin-inline-end: 8px;
   background-image: url(chrome://devtools/skin/images/alert.svg);
@@ -198,13 +220,41 @@ button {
   background-size: contain;
   -moz-context-properties: fill;
   fill: #d7b600;
+||||||| merged common ancestors
+  margin-inline-end: 10px;
 }
 
+@media (min-resolution: 1.1dppx) {
+  .warning {
+    background-image: url(chrome://devtools/skin/images/alerticon-warning@2x.png);
+  }
+=======
+  vertical-align: 0;
+  margin-inline-end: 8px;
+  background-image: url(chrome://devtools/skin/images/alert-small.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 .addons-install-error .warning,
 .service-worker-multi-process .warning {
   /* The warning icon can be hard to see on red / yellow backgrounds, this turns the icon
   to a black icon. */
   fill: #0c0c0d;
+||||||| merged common ancestors
+.addons-install-error .warning,
+.service-worker-multi-process .warning {
+  /* The warning icon can be hard to see on red / yellow backgrounds, this turns the icon
+  to a black icon. */
+  filter: brightness(0%);
+=======
+.addons-install-error__additional-errors {
+  font-family: monospace;
+  font-size: 13px;
+  margin-block: 8px;
+>>>>>>> upstream-releases
 }
 
 .addons-options {
@@ -279,7 +329,7 @@ button {
 }
 
 .target-card-actions {
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--in-content-border-color);
   padding-top: 16px;
 }
 

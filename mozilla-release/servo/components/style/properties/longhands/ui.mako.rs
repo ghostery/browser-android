@@ -31,13 +31,34 @@ ${helpers.single_keyword(
     spec="https://drafts.csswg.org/css-scrollbars-1/#scrollbar-width"
 )}
 
+<<<<<<< HEAD
 ${helpers.predefined_type(
     "-moz-user-select",
     "UserSelect",
     "computed::UserSelect::Auto",
+||||||| merged common ancestors
+${helpers.single_keyword(
+    "-moz-user-select",
+    "auto text none all element elements toggle tri-state -moz-all -moz-text",
+=======
+${helpers.predefined_type(
+    "user-select",
+    "UserSelect",
+    "computed::UserSelect::Auto",
+>>>>>>> upstream-releases
     products="gecko",
+<<<<<<< HEAD
     gecko_ffi_name="mUserSelect",
     alias="-webkit-user-select",
+||||||| merged common ancestors
+    alias="-webkit-user-select",
+    gecko_ffi_name="mUserSelect",
+    gecko_enum_prefix="StyleUserSelect",
+    gecko_strip_moz_prefix=False,
+    aliases="-moz-none=none",
+=======
+    extra_prefixes="moz webkit",
+>>>>>>> upstream-releases
     animation_value_type="discrete",
     needs_context=False,
     spec="https://drafts.csswg.org/css-ui-4/#propdef-user-select",
@@ -81,7 +102,6 @@ ${helpers.predefined_type(
     "Transform",
     "generics::transform::Transform::none()",
     products="gecko",
-    gecko_ffi_name="mSpecifiedWindowTransform",
     flags="GETCS_NEEDS_LAYOUT_FLUSH",
     animation_value_type="ComputedValue",
     spec="None (Nonstandard internal property)",

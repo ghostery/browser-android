@@ -38,9 +38,20 @@ namespace dom {
 // (through its DocGroups) the documents from one or more tabs related by
 // window.opener. A DocGroup is a member of exactly one TabGroup.
 
+<<<<<<< HEAD
 class DocGroup final {
  public:
   typedef nsTArray<nsIDocument*>::iterator Iterator;
+||||||| merged common ancestors
+class DocGroup final
+{
+public:
+  typedef nsTArray<nsIDocument*>::iterator Iterator;
+=======
+class DocGroup final {
+ public:
+  typedef nsTArray<Document*>::iterator Iterator;
+>>>>>>> upstream-releases
   friend class TabGroup;
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(DocGroup)
@@ -66,7 +77,7 @@ class DocGroup final {
 
     return mReactionsStack;
   }
-  void RemoveDocument(nsIDocument* aWindow);
+  void RemoveDocument(Document* aWindow);
 
   // Iterators for iterating over every document within the DocGroup
   Iterator begin() {
@@ -105,18 +116,33 @@ class DocGroup final {
   // Returns true if any of its documents are active but not in the bfcache.
   bool IsActive() const;
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+  nsresult QueueIframePostMessages(already_AddRefed<nsIRunnable>&& aRunnable,
+                                   uint64_t aWindowId);
+
+  void TryFlushIframePostMessages(uint64_t aWindowId);
+
+  static bool TryToLoadIframesInBackground();
+
+ private:
+>>>>>>> upstream-releases
   DocGroup(TabGroup* aTabGroup, const nsACString& aKey);
   ~DocGroup();
 
+  void FlushIframePostMessageQueue();
   nsCString mKey;
   RefPtr<TabGroup> mTabGroup;
-  nsTArray<nsIDocument*> mDocuments;
+  nsTArray<Document*> mDocuments;
   RefPtr<mozilla::dom::CustomElementReactionsStack> mReactionsStack;
   nsTArray<RefPtr<HTMLSlotElement>> mSignalSlotList;
-  // This pointer will be null if dom.performance.enable_scheduler_timing is
-  // false (default value)
   RefPtr<mozilla::PerformanceCounter> mPerformanceCounter;
+
+  RefPtr<mozilla::ThrottledEventQueue> mIframePostMessageQueue;
+  nsTHashtable<nsUint64HashKey> mIframesUsedPostMessageQueue;
 };
 
 }  // namespace dom

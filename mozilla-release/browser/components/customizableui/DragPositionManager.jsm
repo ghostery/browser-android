@@ -88,8 +88,15 @@ AreaPositionManager.prototype = {
       // Check if we're closer to the next target than to this one:
       // Only move if we're not targeting a node in a different row:
       if (aY > targetBounds.top && aY < targetBounds.bottom) {
+<<<<<<< HEAD
         if ((!this._rtl && aX > outsideX) ||
             (this._rtl && aX < outsideX)) {
+||||||| merged common ancestors
+        if ((this._dir == "ltr" && aX > outsideX) ||
+            (this._dir == "rtl" && aX < outsideX)) {
+=======
+        if ((!this._rtl && aX > outsideX) || (this._rtl && aX < outsideX)) {
+>>>>>>> upstream-releases
           return closest.nextElementSibling || aContainer;
         }
       }
@@ -127,8 +134,11 @@ AreaPositionManager.prototype = {
         child.style.transform = "";
       }
     }
-    if (aContainer.lastElementChild && aIsFromThisArea &&
-        !this._lastPlaceholderInsertion) {
+    if (
+      aContainer.lastElementChild &&
+      aIsFromThisArea &&
+      !this._lastPlaceholderInsertion
+    ) {
       // Flush layout:
       aContainer.lastElementChild.getBoundingClientRect();
       // then remove all the [notransition]
@@ -225,9 +235,21 @@ AreaPositionManager.prototype = {
     // If, however, this means we move outside the container's box
     // (i.e. the row in which this item is placed is full)
     // we should move it to align with the first item in the next row instead
+<<<<<<< HEAD
     let bound = this._containerInfo[this._rtl ? "left" : "right"];
     if ((!this._rtl && xDiff + aNodeBounds.right > bound) ||
         (this._rtl && xDiff + aNodeBounds.left < bound)) {
+||||||| merged common ancestors
+    let bound = this._containerInfo[this._dir == "ltr" ? "right" : "left"];
+    if ((this._dir == "ltr" && xDiff + aNodeBounds.right > bound) ||
+        (this._dir == "rtl" && xDiff + aNodeBounds.left < bound)) {
+=======
+    let bound = this._containerInfo[this._rtl ? "left" : "right"];
+    if (
+      (!this._rtl && xDiff + aNodeBounds.right > bound) ||
+      (this._rtl && xDiff + aNodeBounds.left < bound)
+    ) {
+>>>>>>> upstream-releases
       xDiff = this._lazyStoreGet(aFirstNodeInRow)[side] - aNodeBounds[side];
     }
     return xDiff;

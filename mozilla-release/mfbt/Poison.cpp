@@ -13,8 +13,15 @@
 
 #include "mozilla/Assertions.h"
 #ifdef _WIN32
+<<<<<<< HEAD
 #include <windows.h>
+||||||| merged common ancestors
+# include <windows.h>
+=======
+#  include <windows.h>
+>>>>>>> upstream-releases
 #elif !defined(__OS2__)
+<<<<<<< HEAD
 #include <unistd.h>
 #include <sys/mman.h>
 #ifndef MAP_ANON
@@ -24,6 +31,27 @@
 #error "Don't know how to get anonymous memory"
 #endif
 #endif
+||||||| merged common ancestors
+# include <unistd.h>
+# include <sys/mman.h>
+# ifndef MAP_ANON
+#  ifdef MAP_ANONYMOUS
+#   define MAP_ANON MAP_ANONYMOUS
+#  else
+#   error "Don't know how to get anonymous memory"
+#  endif
+# endif
+=======
+#  include <unistd.h>
+#  include <sys/mman.h>
+#  ifndef MAP_ANON
+#    ifdef MAP_ANONYMOUS
+#      define MAP_ANON MAP_ANONYMOUS
+#    else
+#      error "Don't know how to get anonymous memory"
+#    endif
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 extern "C" {
@@ -66,7 +94,7 @@ static uintptr_t GetDesiredRegionSize() {
   return sinfo.dwAllocationGranularity;
 }
 
-#define RESERVE_FAILED 0
+#  define RESERVE_FAILED 0
 
 #elif defined(__OS2__)
 static void* ReserveRegion(uintptr_t aRegion, uintptr_t aSize) {
@@ -88,11 +116,11 @@ static uintptr_t GetDesiredRegionSize() {
   return 0x1000;
 }
 
-#define RESERVE_FAILED 0
+#  define RESERVE_FAILED 0
 
 #else  // Unix
 
-#include "mozilla/TaggedAnonymousMemory.h"
+#  include "mozilla/TaggedAnonymousMemory.h"
 
 static void* ReserveRegion(uintptr_t aRegion, uintptr_t aSize) {
   return MozTaggedAnonymousMmap(reinterpret_cast<void*>(aRegion), aSize,
@@ -104,13 +132,28 @@ static void ReleaseRegion(void* aRegion, uintptr_t aSize) {
   munmap(aRegion, aSize);
 }
 
+<<<<<<< HEAD
 static bool ProbeRegion(uintptr_t aRegion, uintptr_t aSize) {
 #ifdef XP_SOLARIS
   if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize,
                     POSIX_MADV_NORMAL)) {
 #else
+||||||| merged common ancestors
+static bool
+ProbeRegion(uintptr_t aRegion, uintptr_t aSize)
+{
+#ifdef XP_SOLARIS
+  if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize, POSIX_MADV_NORMAL)) {
+#else
+=======
+static bool ProbeRegion(uintptr_t aRegion, uintptr_t aSize) {
+#  ifdef XP_SOLARIS
+  if (posix_madvise(reinterpret_cast<void*>(aRegion), aSize,
+                    POSIX_MADV_NORMAL)) {
+#  else
+>>>>>>> upstream-releases
   if (madvise(reinterpret_cast<void*>(aRegion), aSize, MADV_NORMAL)) {
-#endif
+#  endif
     return true;
   } else {
     return false;
@@ -119,7 +162,7 @@ static bool ProbeRegion(uintptr_t aRegion, uintptr_t aSize) {
 
 static uintptr_t GetDesiredRegionSize() { return sysconf(_SC_PAGESIZE); }
 
-#define RESERVE_FAILED MAP_FAILED
+#  define RESERVE_FAILED MAP_FAILED
 
 #endif  // system dependencies
 

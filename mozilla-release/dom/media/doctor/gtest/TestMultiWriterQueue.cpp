@@ -155,7 +155,18 @@ static void TestMultiWriterQueueMT(int aWriterThreads, int aReaderThreads,
       q.AllocatedBuffersStats().mWatermark);
 }
 
+<<<<<<< HEAD
 TEST(MultiWriterQueue, MultiWriterSingleReader) {
+||||||| merged common ancestors
+TEST(MultiWriterQueue, MultiWriterSingleReader)
+{
+=======
+// skip test on windows10-aarch64 due to unexpected test timeout at
+// MultiWriterSingleReader, bug 1526001
+#if !defined(_M_ARM64)
+TEST(MultiWriterQueue, MultiWriterSingleReader)
+{
+>>>>>>> upstream-releases
   // Small BufferSize, to exercize the buffer management code.
   TestMultiWriterQueueMT<
       MultiWriterQueue<int, 10, MultiWriterQueueReaderLocking_None>>(
@@ -213,8 +224,20 @@ TEST(MultiWriterQueue, MultiWriterSingleReader) {
   //   MultiWriterQueue<int, MultiWriterQueueDefaultBufferSize,
   //   MultiWriterQueueReaderLocking_None>>(64, 2, 2*1024*1024);
 }
+#endif
 
+<<<<<<< HEAD
 TEST(MultiWriterQueue, MultiWriterMultiReader) {
+||||||| merged common ancestors
+TEST(MultiWriterQueue, MultiWriterMultiReader)
+{
+=======
+// skip test on windows10-aarch64 due to unexpected test timeout at
+// MultiWriterMultiReade, bug 1526001
+#if !defined(_M_ARM64)
+TEST(MultiWriterQueue, MultiWriterMultiReader)
+{
+>>>>>>> upstream-releases
   static_assert(
       mozilla::IsSame<MultiWriterQueue<int, 10>,
                       MultiWriterQueue<
@@ -269,6 +292,7 @@ TEST(MultiWriterQueue, MultiWriterMultiReader) {
       64, 32, 1024 * 1024,
       "MultiWriterQueue<int, DefaultBufferSize, Locking_Mutex>");
 }
+#endif
 
 // Single-threaded use only.
 struct DequeWrapperST {
@@ -343,6 +367,7 @@ struct DequeWrapperMT : DequeWrapperMW {
   }
 };
 
+<<<<<<< HEAD
 TEST(MultiWriterQueue, nsDequeBenchmark) {
   TestMultiWriterQueueMT<DequeWrapperST>(1, 0, 2 * 1024 * 1024,
                                          "DequeWrapperST ");
@@ -364,4 +389,51 @@ TEST(MultiWriterQueue, nsDequeBenchmark) {
                                          "DequeWrapperMT ");
   TestMultiWriterQueueMT<DequeWrapperMT>(8, 1, 2 * 1024 * 1024,
                                          "DequeWrapperMT ");
+||||||| merged common ancestors
+TEST(MultiWriterQueue, nsDequeBenchmark)
+{
+  TestMultiWriterQueueMT<DequeWrapperST>(
+    1, 0, 2 * 1024 * 1024, "DequeWrapperST ");
+
+  TestMultiWriterQueueMT<DequeWrapperAW>(
+    1, 0, 2 * 1024 * 1024, "DequeWrapperAW ");
+  TestMultiWriterQueueMT<DequeWrapperMW>(
+    1, 0, 2 * 1024 * 1024, "DequeWrapperMW ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(
+    1, 0, 2 * 1024 * 1024, "DequeWrapperMT ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(
+    1, 1, 2 * 1024 * 1024, "DequeWrapperMT ");
+
+  TestMultiWriterQueueMT<DequeWrapperAW>(
+    8, 0, 2 * 1024 * 1024, "DequeWrapperAW ");
+  TestMultiWriterQueueMT<DequeWrapperMW>(
+    8, 0, 2 * 1024 * 1024, "DequeWrapperMW ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(
+    8, 0, 2 * 1024 * 1024, "DequeWrapperMT ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(
+    8, 1, 2 * 1024 * 1024, "DequeWrapperMT ");
+=======
+TEST(MultiWriterQueue, nsDequeBenchmark)
+{
+  TestMultiWriterQueueMT<DequeWrapperST>(1, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperST ");
+
+  TestMultiWriterQueueMT<DequeWrapperAW>(1, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperAW ");
+  TestMultiWriterQueueMT<DequeWrapperMW>(1, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperMW ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(1, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperMT ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(1, 1, 2 * 1024 * 1024,
+                                         "DequeWrapperMT ");
+
+  TestMultiWriterQueueMT<DequeWrapperAW>(8, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperAW ");
+  TestMultiWriterQueueMT<DequeWrapperMW>(8, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperMW ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(8, 0, 2 * 1024 * 1024,
+                                         "DequeWrapperMT ");
+  TestMultiWriterQueueMT<DequeWrapperMT>(8, 1, 2 * 1024 * 1024,
+                                         "DequeWrapperMT ");
+>>>>>>> upstream-releases
 }

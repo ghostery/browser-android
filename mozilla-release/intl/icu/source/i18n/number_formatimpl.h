@@ -64,6 +64,7 @@ class NumberFormatterImpl : public UMemory {
     int32_t getPrefixSuffix(int8_t signum, StandardPlural::Form plural, NumberStringBuilder& outString,
                             UErrorCode& status) const;
 
+<<<<<<< HEAD
     /**
      * Synthesizes the output string from a MicroProps and DecimalQuantity.
      * This method formats only the main number, not affixes.
@@ -77,6 +78,26 @@ class NumberFormatterImpl : public UMemory {
     static int32_t writeAffixes(const MicroProps& micros, NumberStringBuilder& string, int32_t start,
                                 int32_t end, UErrorCode& status);
 
+||||||| merged common ancestors
+=======
+    const MicroProps& getRawMicroProps() const {
+        return fMicros;
+    }
+
+    /**
+     * Synthesizes the output string from a MicroProps and DecimalQuantity.
+     * This method formats only the main number, not affixes.
+     */
+    static int32_t writeNumber(const MicroProps& micros, DecimalQuantity& quantity,
+                               NumberStringBuilder& string, int32_t index, UErrorCode& status);
+
+    /**
+     * Adds the affixes.  Intended to be called immediately after formatNumber.
+     */
+    static int32_t writeAffixes(const MicroProps& micros, NumberStringBuilder& string, int32_t start,
+                                int32_t end, UErrorCode& status);
+
+>>>>>>> upstream-releases
   private:
     // Head of the MicroPropsGenerator linked list:
     const MicroPropsGenerator *fMicroPropsGenerator = nullptr;

@@ -23,12 +23,24 @@ class nsDragService : public nsBaseDragService {
   virtual ~nsDragService();
 
   // nsBaseDragService
+<<<<<<< HEAD
   virtual nsresult InvokeDragSessionImpl(
       nsIArray* anArrayTransferables,
       const mozilla::Maybe<mozilla::CSSIntRegion>& aRegion,
       uint32_t aActionType);
+||||||| merged common ancestors
+  virtual nsresult InvokeDragSessionImpl(nsIArray* anArrayTransferables,
+                                         const mozilla::Maybe<mozilla::CSSIntRegion>& aRegion,
+                                         uint32_t aActionType);
+=======
+  MOZ_CAN_RUN_SCRIPT virtual nsresult InvokeDragSessionImpl(
+      nsIArray* anArrayTransferables,
+      const mozilla::Maybe<mozilla::CSSIntRegion>& aRegion,
+      uint32_t aActionType);
+>>>>>>> upstream-releases
 
   // nsIDragSession
+<<<<<<< HEAD
   NS_IMETHOD GetData(nsITransferable* aTransferable, uint32_t anItem) override;
   NS_IMETHOD GetNumDropItems(uint32_t* aNumItems) override;
   NS_IMETHOD IsDataFlavorSupported(const char* aDataFlavor,
@@ -36,11 +48,37 @@ class nsDragService : public nsBaseDragService {
   NS_IMETHOD EndDragSession(bool aDoneDrag, uint32_t aKeyModifiers) override;
   NS_IMETHOD UpdateDragImage(nsINode* aImage, int32_t aImageX,
                              int32_t aImageY) override;
+||||||| merged common ancestors
+  NS_IMETHOD GetData(nsITransferable * aTransferable, uint32_t anItem) override;
+  NS_IMETHOD GetNumDropItems(uint32_t * aNumItems) override;
+  NS_IMETHOD IsDataFlavorSupported(const char *aDataFlavor, bool *_retval) override;
+  NS_IMETHOD EndDragSession(bool aDoneDrag, uint32_t aKeyModifiers) override;
+  NS_IMETHOD UpdateDragImage(nsINode* aImage, int32_t aImageX, int32_t aImageY) override;
+=======
+  NS_IMETHOD GetData(nsITransferable* aTransferable, uint32_t anItem) override;
+  NS_IMETHOD GetNumDropItems(uint32_t* aNumItems) override;
+  NS_IMETHOD IsDataFlavorSupported(const char* aDataFlavor,
+                                   bool* _retval) override;
+  MOZ_CAN_RUN_SCRIPT NS_IMETHOD EndDragSession(bool aDoneDrag,
+                                               uint32_t aKeyModifiers) override;
+  NS_IMETHOD UpdateDragImage(nsINode* aImage, int32_t aImageX,
+                             int32_t aImageY) override;
+>>>>>>> upstream-releases
 
   // native impl.
+<<<<<<< HEAD
   NS_IMETHOD SetIDataObject(IDataObject* aDataObj);
   NS_IMETHOD StartInvokingDragSession(IDataObject* aDataObj,
                                       uint32_t aActionType);
+||||||| merged common ancestors
+  NS_IMETHOD SetIDataObject(IDataObject * aDataObj);
+  NS_IMETHOD StartInvokingDragSession(IDataObject * aDataObj,
+                                      uint32_t aActionType);
+=======
+  NS_IMETHOD SetIDataObject(IDataObject* aDataObj);
+  MOZ_CAN_RUN_SCRIPT nsresult StartInvokingDragSession(IDataObject* aDataObj,
+                                                       uint32_t aActionType);
+>>>>>>> upstream-releases
 
   // A drop occurred within the application vs. outside of it.
   void SetDroppedLocal();

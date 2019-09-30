@@ -8,11 +8,28 @@
 #include <atk/atk.h>
 #include "maiRedundantObjectFactory.h"
 
+<<<<<<< HEAD
 static void mai_redundant_object_factory_class_init(
     maiRedundantObjectFactoryClass *klass);
+||||||| merged common ancestors
+static void mai_redundant_object_factory_class_init (
+                              maiRedundantObjectFactoryClass *klass);
+=======
+static void mai_redundant_object_factory_class_init(
+    maiRedundantObjectFactoryClass* klass);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static AtkObject *mai_redundant_object_factory_create_accessible(GObject *obj);
 static GType mai_redundant_object_factory_get_accessible_type(void);
+||||||| merged common ancestors
+static AtkObject* mai_redundant_object_factory_create_accessible (
+                              GObject *obj);
+static GType mai_redundant_object_factory_get_accessible_type (void);
+=======
+static AtkObject* mai_redundant_object_factory_create_accessible(GObject* obj);
+static GType mai_redundant_object_factory_get_accessible_type(void);
+>>>>>>> upstream-releases
 
 GType mai_redundant_object_factory_get_type(void) {
   static GType type = 0;
@@ -38,9 +55,20 @@ GType mai_redundant_object_factory_get_type(void) {
   return type;
 }
 
+<<<<<<< HEAD
 static void mai_redundant_object_factory_class_init(
     maiRedundantObjectFactoryClass *klass) {
   AtkObjectFactoryClass *class = ATK_OBJECT_FACTORY_CLASS(klass);
+||||||| merged common ancestors
+static void
+mai_redundant_object_factory_class_init (maiRedundantObjectFactoryClass *klass)
+{
+  AtkObjectFactoryClass *class = ATK_OBJECT_FACTORY_CLASS (klass);
+=======
+static void mai_redundant_object_factory_class_init(
+    maiRedundantObjectFactoryClass* klass) {
+  AtkObjectFactoryClass* class = ATK_OBJECT_FACTORY_CLASS(klass);
+>>>>>>> upstream-releases
 
   class->create_accessible = mai_redundant_object_factory_create_accessible;
   class->get_accessible_type = mai_redundant_object_factory_get_accessible_type;
@@ -54,8 +82,18 @@ static void mai_redundant_object_factory_class_init(
  *
  * Returns: an instance of an #AtkObjectFactory
  **/
+<<<<<<< HEAD
 AtkObjectFactory *mai_redundant_object_factory_new() {
   GObject *factory;
+||||||| merged common ancestors
+AtkObjectFactory*
+mai_redundant_object_factory_new ()
+{
+  GObject *factory;
+=======
+AtkObjectFactory* mai_redundant_object_factory_new() {
+  GObject* factory;
+>>>>>>> upstream-releases
 
   factory = g_object_new(mai_redundant_object_factory_get_type(), NULL);
 
@@ -63,8 +101,18 @@ AtkObjectFactory *mai_redundant_object_factory_new() {
   return ATK_OBJECT_FACTORY(factory);
 }
 
+<<<<<<< HEAD
 static AtkObject *mai_redundant_object_factory_create_accessible(GObject *obj) {
   AtkObject *accessible;
+||||||| merged common ancestors
+static AtkObject*
+mai_redundant_object_factory_create_accessible (GObject   *obj)
+{
+  AtkObject *accessible;
+=======
+static AtkObject* mai_redundant_object_factory_create_accessible(GObject* obj) {
+  AtkObject* accessible;
+>>>>>>> upstream-releases
 
   g_return_val_if_fail(obj != NULL, NULL);
 

@@ -11,6 +11,7 @@
 #ifndef __MMI_HELPERS_H__
 #define __MMI_HELPERS_H__
 
+<<<<<<< HEAD
 #define __mm_packxxxx(_f, _D, _d, _s, _t)                                     \
 #_f " %[" #_t "], %[" #_d "h], %[" #_s "h] \n\t" #_f " %[" #_D "l], %[" #_d \
       "l], %[" #_s                                                            \
@@ -33,6 +34,48 @@
   "and %[" #_D "h], %[" #_d "h], %[" #_s \
   "h] \n\t"                              \
   "and %[" #_D "l], %[" #_d "l], %[" #_s "l] \n\t"
+||||||| merged common ancestors
+#define __mm_packxxxx(_f, _D, _d, _s, _t)                   \
+	#_f" %["#_t"], %["#_d"h], %["#_s"h] \n\t"           \
+	#_f" %["#_D"l], %["#_d"l], %["#_s"l] \n\t"          \
+	"punpckhwd %["#_D"h], %["#_D"l], %["#_t"] \n\t"     \
+	"punpcklwd %["#_D"l], %["#_D"l], %["#_t"] \n\t"
+
+#define _mm_or(_D, _d, _s)                                  \
+	"or %["#_D"h], %["#_d"h], %["#_s"h] \n\t"           \
+	"or %["#_D"l], %["#_d"l], %["#_s"l] \n\t"
+
+#define _mm_xor(_D, _d, _s)                                 \
+	"xor %["#_D"h], %["#_d"h], %["#_s"h] \n\t"          \
+	"xor %["#_D"l], %["#_d"l], %["#_s"l] \n\t"
+
+#define _mm_and(_D, _d, _s)                                 \
+	"and %["#_D"h], %["#_d"h], %["#_s"h] \n\t"          \
+	"and %["#_D"l], %["#_d"l], %["#_s"l] \n\t"
+=======
+#define __mm_packxxxx(_f, _D, _d, _s, _t)                                  \
+#  _f " %[" #  _t "], %[" #  _d "h], %[" #  _s "h] \n\t" #  _f " %[" #  _D \
+      "l], %[" #  _d "l], %[" #  _s                                        \
+      "l] \n\t"                                                            \
+      "punpckhwd %[" #  _D "h], %[" #  _D "l], %[" #  _t                   \
+      "] \n\t"                                                             \
+      "punpcklwd %[" #  _D "l], %[" #  _D "l], %[" #  _t "] \n\t"
+
+#define _mm_or(_D, _d, _s)              \
+  "or %[" #_D "h], %[" #_d "h], %[" #_s \
+  "h] \n\t"                             \
+  "or %[" #_D "l], %[" #_d "l], %[" #_s "l] \n\t"
+
+#define _mm_xor(_D, _d, _s)              \
+  "xor %[" #_D "h], %[" #_d "h], %[" #_s \
+  "h] \n\t"                              \
+  "xor %[" #_D "l], %[" #_d "l], %[" #_s "l] \n\t"
+
+#define _mm_and(_D, _d, _s)              \
+  "and %[" #_D "h], %[" #_d "h], %[" #_s \
+  "h] \n\t"                              \
+  "and %[" #_D "l], %[" #_d "l], %[" #_s "l] \n\t"
+>>>>>>> upstream-releases
 
 /* SSE: pandn */
 #define _mm_pandn(_D, _d, _s)              \

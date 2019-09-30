@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "mozilla/ClearOnShutdown.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/StaticPtr.h"
 
 namespace mozilla {
@@ -31,8 +32,17 @@ static double ComputeDeceleration(float aDPI) {
 const float kDecelerationRate = 2.3582018f;
 
 // Default friction constant in android.view.ViewConfiguration.
+<<<<<<< HEAD
 static float GetFlingFriction() {
   return gfxPrefs::APZChromeFlingPhysicsFriction();
+||||||| merged common ancestors
+static float GetFlingFriction()
+{
+  return gfxPrefs::APZChromeFlingPhysicsFriction();
+=======
+static float GetFlingFriction() {
+  return StaticPrefs::apz_android_chrome_fling_physics_friction();
+>>>>>>> upstream-releases
 }
 
 // Tension lines cross at (GetInflexion(), 1).
@@ -40,7 +50,8 @@ static float GetInflexion() {
   // Clamp the inflexion to the range [0,1]. Values outside of this range
   // do not make sense in the physics model, and for negative values the
   // approximation used to compute the spline curve does not converge.
-  const float inflexion = gfxPrefs::APZChromeFlingPhysicsInflexion();
+  const float inflexion =
+      StaticPrefs::apz_android_chrome_fling_physics_inflexion();
   if (inflexion < 0.0f) {
     return 0.0f;
   }
@@ -52,8 +63,17 @@ static float GetInflexion() {
 
 // Fling scroll is stopped when the scroll position is |kThresholdForFlingEnd|
 // pixels or closer from the end.
+<<<<<<< HEAD
 static float GetThresholdForFlingEnd() {
   return gfxPrefs::APZChromeFlingPhysicsStopThreshold();
+||||||| merged common ancestors
+static float GetThresholdForFlingEnd()
+{
+  return gfxPrefs::APZChromeFlingPhysicsStopThreshold();
+=======
+static float GetThresholdForFlingEnd() {
+  return StaticPrefs::apz_android_chrome_fling_physics_stop_threshold();
+>>>>>>> upstream-releases
 }
 
 static double ComputeSplineDeceleration(ParentLayerCoord aVelocity,
@@ -137,7 +157,15 @@ struct SplineConstants {
 
 StaticAutoPtr<SplineConstants> gSplineConstants;
 
+<<<<<<< HEAD
 /* static */ void AndroidFlingPhysics::InitializeGlobalState() {
+||||||| merged common ancestors
+/* static */ void AndroidFlingPhysics::InitializeGlobalState()
+{
+=======
+/* static */
+void AndroidFlingPhysics::InitializeGlobalState() {
+>>>>>>> upstream-releases
   gSplineConstants = new SplineConstants();
   ClearOnShutdown(&gSplineConstants);
 }

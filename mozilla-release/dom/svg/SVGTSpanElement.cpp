@@ -7,7 +7,7 @@
 #include "mozilla/dom/SVGTSpanElement.h"
 #include "mozilla/dom/SVGTSpanElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(TSpan)
+NS_IMPL_NS_NEW_SVG_ELEMENT(TSpan)
 
 namespace mozilla {
 namespace dom {
@@ -24,11 +24,30 @@ SVGTSpanElement::SVGTSpanElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGTSpanElementBase(std::move(aNodeInfo)) {}
 
+<<<<<<< HEAD
 nsSVGElement::EnumAttributesInfo SVGTSpanElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+||||||| merged common ancestors
+nsSVGElement::EnumAttributesInfo
+SVGTSpanElement::GetEnumInfo()
+{
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
+                            ArrayLength(sEnumInfo));
+=======
+SVGElement::EnumAttributesInfo SVGTSpanElement::GetEnumInfo() {
+  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsSVGElement::LengthAttributesInfo SVGTSpanElement::GetLengthInfo() {
+||||||| merged common ancestors
+nsSVGElement::LengthAttributesInfo
+SVGTSpanElement::GetLengthInfo()
+{
+=======
+SVGElement::LengthAttributesInfo SVGTSpanElement::GetLengthInfo() {
+>>>>>>> upstream-releases
   return LengthAttributesInfo(mLengthAttributes, sLengthInfo,
                               ArrayLength(sLengthInfo));
 }

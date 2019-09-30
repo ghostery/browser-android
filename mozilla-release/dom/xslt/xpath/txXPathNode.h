@@ -8,13 +8,14 @@
 
 #include "nsAutoPtr.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsINode.h"
 #include "nsNameSpaceManager.h"
 #include "nsContentUtils.h"  // For NameSpaceManager().
 
 typedef nsINode txXPathNodeType;
 
+<<<<<<< HEAD
 class txXPathNode {
  public:
   bool operator==(const txXPathNode& aNode) const;
@@ -38,6 +39,39 @@ class txXPathNode {
     MOZ_COUNT_CTOR(txXPathNode);
     if (aRoot) {
       NS_ADDREF(aRoot);
+||||||| merged common ancestors
+class txXPathNode
+{
+public:
+    bool operator==(const txXPathNode& aNode) const;
+    bool operator!=(const txXPathNode& aNode) const
+    {
+        return !(*this == aNode);
+=======
+class txXPathNode {
+ public:
+  bool operator==(const txXPathNode& aNode) const;
+  bool operator!=(const txXPathNode& aNode) const { return !(*this == aNode); }
+  ~txXPathNode();
+
+ private:
+  friend class txNodeSet;
+  friend class txXPathNativeNode;
+  friend class txXPathNodeUtils;
+  friend class txXPathTreeWalker;
+
+  txXPathNode(const txXPathNode& aNode);
+
+  explicit txXPathNode(mozilla::dom::Document* aDocument)
+      : mNode(aDocument), mRefCountRoot(0), mIndex(eDocument) {
+    MOZ_COUNT_CTOR(txXPathNode);
+  }
+  txXPathNode(nsINode* aNode, uint32_t aIndex, nsINode* aRoot)
+      : mNode(aNode), mRefCountRoot(aRoot ? 1 : 0), mIndex(aIndex) {
+    MOZ_COUNT_CTOR(txXPathNode);
+    if (aRoot) {
+      NS_ADDREF(aRoot);
+>>>>>>> upstream-releases
     }
   }
 
@@ -46,6 +80,7 @@ class txXPathNode {
     while ((ancestor = root->GetParentNode())) {
       root = ancestor;
     }
+<<<<<<< HEAD
     return root;
   }
   nsINode* Root() const { return RootOf(mNode); }
@@ -69,6 +104,42 @@ class txXPathNode {
   nsINode* mNode;
   uint32_t mRefCountRoot : 1;
   uint32_t mIndex : 31;
+||||||| merged common ancestors
+
+    enum PositionType
+    {
+        eDocument = (1 << 30),
+        eContent = eDocument - 1
+    };
+
+    nsINode* mNode;
+    uint32_t mRefCountRoot : 1;
+    uint32_t mIndex : 31;
+=======
+    return root;
+  }
+  nsINode* Root() const { return RootOf(mNode); }
+  nsINode* GetRootToAddRef() const { return mRefCountRoot ? Root() : nullptr; }
+
+  bool isDocument() const { return mIndex == eDocument; }
+  bool isContent() const { return mIndex == eContent; }
+  bool isAttribute() const { return mIndex != eDocument && mIndex != eContent; }
+
+  nsIContent* Content() const {
+    NS_ASSERTION(isContent() || isAttribute(), "wrong type");
+    return static_cast<nsIContent*>(mNode);
+  }
+  mozilla::dom::Document* Document() const {
+    NS_ASSERTION(isDocument(), "wrong type");
+    return static_cast<mozilla::dom::Document*>(mNode);
+  }
+
+  enum PositionType { eDocument = (1 << 30), eContent = eDocument - 1 };
+
+  nsINode* mNode;
+  uint32_t mRefCountRoot : 1;
+  uint32_t mIndex : 31;
+>>>>>>> upstream-releases
 };
 
 class txNamespaceManager {

@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #ifdef DEBUG
-#define ENABLE_STRING_STATS
+#  define ENABLE_STRING_STATS
 #endif
 
 #include "mozilla/Atomics.h"
 #include "mozilla/MemoryReporting.h"
 
 #ifdef ENABLE_STRING_STATS
-#include <stdio.h>
+#  include <stdio.h>
 #endif
 
 #include <stdlib.h>
@@ -27,26 +27,52 @@
 
 #include "mozilla/IntegerPrintfMacros.h"
 #ifdef XP_WIN
-#include <windows.h>
-#include <process.h>
-#define getpid() _getpid()
-#define pthread_self() GetCurrentThreadId()
+#  include <windows.h>
+#  include <process.h>
+#  define getpid() _getpid()
+#  define pthread_self() GetCurrentThreadId()
 #else
-#include <pthread.h>
-#include <unistd.h>
+#  include <pthread.h>
+#  include <unistd.h>
 #endif
 
 #ifdef STRING_BUFFER_CANARY
+<<<<<<< HEAD
 #define CHECK_STRING_BUFFER_CANARY(c)                      \
   do {                                                     \
     if ((c) != CANARY_OK) {                                \
       MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c); \
     }                                                      \
   } while (0)
+||||||| merged common ancestors
+#define CHECK_STRING_BUFFER_CANARY(c)                                     \
+  do {                                                                    \
+    if ((c) != CANARY_OK) {                                               \
+      MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c);                  \
+    }                                                                     \
+  } while(0)
+=======
+#  define CHECK_STRING_BUFFER_CANARY(c)                      \
+    do {                                                     \
+      if ((c) != CANARY_OK) {                                \
+        MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c); \
+      }                                                      \
+    } while (0)
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define CHECK_STRING_BUFFER_CANARY(c) \
   do {                                \
   } while (0)
+||||||| merged common ancestors
+#define CHECK_STRING_BUFFER_CANARY(c)                                     \
+  do {                                                                    \
+  } while(0)
+=======
+#  define CHECK_STRING_BUFFER_CANARY(c) \
+    do {                                \
+    } while (0)
+>>>>>>> upstream-releases
 #endif
 
 using mozilla::Atomic;
@@ -109,9 +135,15 @@ class nsStringStats {
   AtomicInt mAdoptFreeCount;
 };
 static nsStringStats gStringStats;
+<<<<<<< HEAD
 #define STRING_STAT_INCREMENT(_s) (gStringStats.m##_s##Count)++
+||||||| merged common ancestors
+#define STRING_STAT_INCREMENT(_s) (gStringStats.m ## _s ## Count)++
+=======
+#  define STRING_STAT_INCREMENT(_s) (gStringStats.m##_s##Count)++
+>>>>>>> upstream-releases
 #else
-#define STRING_STAT_INCREMENT(_s)
+#  define STRING_STAT_INCREMENT(_s)
 #endif
 
 // ---------------------------------------------------------------------------

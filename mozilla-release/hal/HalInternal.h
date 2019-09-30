@@ -18,7 +18,13 @@
  */
 
 #ifndef MOZ_HAL_NAMESPACE
+<<<<<<< HEAD
 #error "You shouldn't directly include HalInternal.h!"
+||||||| merged common ancestors
+# error "You shouldn't directly include HalInternal.h!"
+=======
+#  error "You shouldn't directly include HalInternal.h!"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {

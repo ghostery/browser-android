@@ -28,8 +28,27 @@ template <typename T>
 class PlacementArray;
 
 namespace gl {
+<<<<<<< HEAD
 class GLContext;
 }  // namespace gl
+||||||| merged common ancestors
+    class GLContext;
+} // namespace gl
+=======
+class GLContext;
+}  // namespace gl
+
+namespace webgl {
+struct FbAttachInfo final {
+  WebGLRenderbuffer* rb = nullptr;
+  WebGLTexture* tex = nullptr;
+  GLint mipLevel = 0;
+  GLint zLayer = 0;
+  GLsizei zLayerCount = 1;
+  bool isMultiview = false;
+};
+}  // namespace webgl
+>>>>>>> upstream-releases
 
 class WebGLFBAttachPoint final {
   friend class WebGLFramebuffer;
@@ -38,12 +57,24 @@ class WebGLFBAttachPoint final {
   const GLenum mAttachmentPoint = 0;
   const bool mDeferAttachment = false;
 
+<<<<<<< HEAD
  private:
   WebGLRefPtr<WebGLTexture> mTexturePtr;
   WebGLRefPtr<WebGLRenderbuffer> mRenderbufferPtr;
   TexImageTarget mTexImageTarget = 0;
   GLint mTexImageLayer = 0;
   uint32_t mTexImageLevel = 0;
+||||||| merged common ancestors
+    ////
+=======
+ private:
+  WebGLRefPtr<WebGLTexture> mTexturePtr;
+  WebGLRefPtr<WebGLRenderbuffer> mRenderbufferPtr;
+  uint32_t mTexImageLayer = 0;
+  uint8_t mTexImageZLayerCount = 1;
+  uint8_t mTexImageLevel = 0;
+  bool mIsMultiview = false;
+>>>>>>> upstream-releases
 
   ////
 
@@ -67,10 +98,18 @@ class WebGLFBAttachPoint final {
 
   void Clear();
 
+<<<<<<< HEAD
   void SetTexImage(gl::GLContext* gl, WebGLTexture* tex, TexImageTarget target,
                    GLint level, GLint layer = 0);
   void SetRenderbuffer(gl::GLContext* gl, WebGLRenderbuffer* rb);
+||||||| merged common ancestors
+    WebGLTexture* Texture() const { return mTexturePtr; }
+    WebGLRenderbuffer* Renderbuffer() const { return mRenderbufferPtr; }
+=======
+  void Set(gl::GLContext* gl, const webgl::FbAttachInfo&);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   WebGLTexture* Texture() const { return mTexturePtr; }
   WebGLRenderbuffer* Renderbuffer() const { return mRenderbufferPtr; }
 
@@ -78,6 +117,28 @@ class WebGLFBAttachPoint final {
   GLint Layer() const { return mTexImageLayer; }
   uint32_t MipLevel() const { return mTexImageLevel; }
   void AttachmentName(nsCString* out) const;
+||||||| merged common ancestors
+    TexImageTarget ImageTarget() const {
+        return mTexImageTarget;
+    }
+    GLint Layer() const {
+        return mTexImageLayer;
+    }
+    uint32_t MipLevel() const {
+        return mTexImageLevel;
+    }
+    void AttachmentName(nsCString* out) const;
+=======
+  WebGLTexture* Texture() const { return mTexturePtr; }
+  WebGLRenderbuffer* Renderbuffer() const { return mRenderbufferPtr; }
+
+  auto Layer() const { return mTexImageLayer; }
+  auto ZLayerCount() const { return mTexImageZLayerCount; }
+  auto MipLevel() const { return mTexImageLevel; }
+  const auto& IsMultiview() const { return mIsMultiview; }
+
+  void AttachmentName(nsCString* out) const;
+>>>>>>> upstream-releases
 
   const webgl::ImageInfo* GetImageInfo() const;
 
@@ -93,8 +154,19 @@ class WebGLFBAttachPoint final {
     if (!HasAttachment() | !other.HasAttachment()) return false;
 
 #define _(X) (X == other.X)
+<<<<<<< HEAD
     return (_(mRenderbufferPtr) & _(mTexturePtr) & _(mTexImageTarget.get()) &
             _(mTexImageLevel) & _(mTexImageLayer));
+||||||| merged common ancestors
+        return ( _(mRenderbufferPtr) &
+                 _(mTexturePtr) &
+                 _(mTexImageTarget.get()) &
+                 _(mTexImageLevel) &
+                 _(mTexImageLayer) );
+=======
+    return (_(mRenderbufferPtr) && _(mTexturePtr) && _(mTexImageLevel) &&
+            _(mTexImageLayer) && _(mTexImageZLayerCount));
+>>>>>>> upstream-releases
 #undef _
   }
 
@@ -111,11 +183,25 @@ class WebGLFBAttachPoint final {
 #define ORDER_BY(X) \
   if (X != other.X) return X < other.X;
 
+<<<<<<< HEAD
       ORDER_BY(mRef.mRenderbufferPtr)
       ORDER_BY(mRef.mTexturePtr)
       ORDER_BY(mRef.mTexImageTarget.get())
       ORDER_BY(mRef.mTexImageLevel)
       ORDER_BY(mRef.mTexImageLayer)
+||||||| merged common ancestors
+            ORDER_BY(mRef.mRenderbufferPtr)
+            ORDER_BY(mRef.mTexturePtr)
+            ORDER_BY(mRef.mTexImageTarget.get())
+            ORDER_BY(mRef.mTexImageLevel)
+            ORDER_BY(mRef.mTexImageLayer)
+=======
+      ORDER_BY(mRef.mRenderbufferPtr)
+      ORDER_BY(mRef.mTexturePtr)
+      ORDER_BY(mRef.mTexImageLevel)
+      ORDER_BY(mRef.mTexImageLayer)
+      ORDER_BY(mRef.mTexImageZLayerCount)
+>>>>>>> upstream-releases
 
 #undef ORDER_BY
       return false;
@@ -161,11 +247,29 @@ class WebGLFramebuffer final : public nsWrapperCache,
 
   ////
 
+<<<<<<< HEAD
   struct CompletenessInfo final {
     const WebGLFramebuffer& fb;
+||||||| merged common ancestors
+    std::vector<const WebGLFBAttachPoint*> mColorDrawBuffers; // Non-null
+    const WebGLFBAttachPoint* mColorReadBuffer; // Null if NONE
+=======
+  struct CompletenessInfo final {
+    const WebGLFramebuffer* fb = nullptr;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     uint32_t width = 0;
     uint32_t height = 0;
+||||||| merged common ancestors
+    ////
+=======
+    uint32_t width = 0;
+    uint32_t height = 0;
+    bool hasFloat32 = false;
+    uint8_t zLayerCount = 1;
+    bool isMultiview = false;
+>>>>>>> upstream-releases
 
     // IsFeedback
     std::vector<const WebGLFBAttachPoint*> texAttachments;  // Non-null
@@ -215,12 +319,28 @@ class WebGLFramebuffer final : public nsWrapperCache,
   void RefreshReadBuffer() const;
   void ResolveAttachmentData() const;
 
+<<<<<<< HEAD
  public:
   void DetachTexture(const WebGLTexture* tex);
   void DetachRenderbuffer(const WebGLRenderbuffer* rb);
   bool ValidateAndInitAttachments() const;
   bool ValidateClearBufferType(GLenum buffer, uint32_t drawBuffer,
                                GLenum funcType) const;
+||||||| merged common ancestors
+    bool HasDuplicateAttachments() const;
+    bool HasDefinedAttachments() const;
+    bool HasIncompleteAttachments(nsCString* const out_info) const;
+    bool AllImageRectsMatch() const;
+    bool AllImageSamplesMatch() const;
+    FBStatus PrecheckFramebufferStatus(nsCString* const out_info) const;
+=======
+ public:
+  void DetachTexture(const WebGLTexture* tex);
+  void DetachRenderbuffer(const WebGLRenderbuffer* rb);
+  bool ValidateAndInitAttachments(GLenum incompleteFbError) const;
+  bool ValidateClearBufferType(GLenum buffer, uint32_t drawBuffer,
+                               GLenum funcType) const;
+>>>>>>> upstream-releases
 
   bool ValidateForColorRead(const webgl::FormatUsageInfo** out_format,
                             uint32_t* out_width, uint32_t* out_height) const;
@@ -254,6 +374,7 @@ class WebGLFramebuffer final : public nsWrapperCache,
     return CheckFramebufferStatus() == LOCAL_GL_FRAMEBUFFER_COMPLETE;
   }
 
+<<<<<<< HEAD
   FBStatus CheckFramebufferStatus() const;
   void FramebufferRenderbuffer(GLenum attachment, GLenum rbtarget,
                                WebGLRenderbuffer* rb);
@@ -263,6 +384,16 @@ class WebGLFramebuffer final : public nsWrapperCache,
                                GLint level, GLint layer);
   void DrawBuffers(const dom::Sequence<GLenum>& buffers);
   void ReadBuffer(GLenum attachPoint);
+||||||| merged common ancestors
+    ////////////////
+    // WebGL funcs
+=======
+  FBStatus CheckFramebufferStatus() const;
+  void FramebufferAttach(GLenum attachEnum,
+                         const webgl::FbAttachInfo& toAttach);
+  void DrawBuffers(const dom::Sequence<GLenum>& buffers);
+  void ReadBuffer(GLenum attachPoint);
+>>>>>>> upstream-releases
 
   JS::Value GetAttachmentParameter(JSContext* cx, GLenum target,
                                    GLenum attachment, GLenum pname,

@@ -9,6 +9,7 @@
 #include <stdint.h>
 
 #include "mozilla/dom/EventTarget.h"
+#include "mozilla/layers/LayersTypes.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/TimeStamp.h"
 #include "nsCOMPtr.h"
@@ -19,8 +20,16 @@
 #include "Units.h"
 
 #ifdef DEBUG
+<<<<<<< HEAD
 #include "nsXULAppAPI.h"
 #endif  // #ifdef DEBUG
+||||||| merged common ancestors
+#include "nsXULAppAPI.h"
+#endif // #ifdef DEBUG
+=======
+#  include "nsXULAppAPI.h"
+#endif  // #ifdef DEBUG
+>>>>>>> upstream-releases
 
 namespace IPC {
 template <typename T>
@@ -92,7 +101,15 @@ struct BaseEventFlags {
   // For example, when a <label> element is in another <label> element and
   // the first <label> element is clicked, that one may set this true.
   // Then, the second <label> element won't handle the event.
+<<<<<<< HEAD
   bool mMultipleActionsPrevented : 1;
+||||||| merged common ancestors
+  bool    mMultipleActionsPrevented : 1;
+=======
+  bool mMultipleActionsPrevented : 1;
+  // Similar to above but expected to be used during PreHandleEvent phase.
+  bool mMultiplePreActionsPrevented : 1;
+>>>>>>> upstream-releases
   // If mIsBeingDispatched is true, the DOM event created from the event is
   // dispatching into the DOM tree and not completed.
   bool mIsBeingDispatched : 1;
@@ -128,7 +145,16 @@ struct BaseEventFlags {
   // Be aware, if this is true, EventDispatcher needs to check if each event
   // listener is added to chrome node, so, don't set this to true for the
   // events which are fired a lot of times like eMouseMove.
+<<<<<<< HEAD
   bool mOnlySystemGroupDispatchInContent : 1;
+||||||| merged common ancestors
+  bool    mOnlySystemGroupDispatchInContent : 1;
+=======
+  bool mOnlySystemGroupDispatchInContent : 1;
+  // If mOnlySystemGroupDispatch is true, the event will be dispatched only to
+  // event listeners added in the system group.
+  bool mOnlySystemGroupDispatch : 1;
+>>>>>>> upstream-releases
   // The event's action will be handled by APZ. The main thread should not
   // perform its associated action.
   bool mHandledByAPZ : 1;
@@ -318,7 +344,7 @@ struct BaseEventFlags {
    * ParamTraits<mozilla::WidgetEvent>.  Therefore, it *might* be possible
    * that posting the event failed even if this returns true.  But that must
    * really rare.  If that'd be problem for you, you should unmark this in
-   * TabParent or somewhere.
+   * BrowserParent or somewhere.
    */
   inline bool HasBeenPostedToRemoteProcess() const {
     return mPostedToRemoteProcess;
@@ -452,7 +478,14 @@ class WidgetEvent : public WidgetEventTime {
         mFlags.mBubbles = true;
         break;
       default:
+<<<<<<< HEAD
         if (mMessage == eResize || mMessage == eEditorInput) {
+||||||| merged common ancestors
+        if (mMessage == eResize) {
+=======
+        if (mMessage == eResize || mMessage == eMozVisualResize ||
+            mMessage == eMozVisualScroll || mMessage == eEditorInput) {
+>>>>>>> upstream-releases
           mFlags.mCancelable = false;
         } else {
           mFlags.mCancelable = true;
@@ -465,6 +498,7 @@ class WidgetEvent : public WidgetEventTime {
  protected:
   WidgetEvent(bool aIsTrusted, EventMessage aMessage,
               EventClassID aEventClassID)
+<<<<<<< HEAD
       : WidgetEventTime(),
         mClass(aEventClassID),
         mMessage(aMessage),
@@ -473,6 +507,27 @@ class WidgetEvent : public WidgetEventTime {
         mFocusSequenceNumber(0),
         mSpecifiedEventType(nullptr),
         mPath(nullptr) {
+||||||| merged common ancestors
+    : WidgetEventTime()
+    , mClass(aEventClassID)
+    , mMessage(aMessage)
+    , mRefPoint(0, 0)
+    , mLastRefPoint(0, 0)
+    , mFocusSequenceNumber(0)
+    , mSpecifiedEventType(nullptr)
+    , mPath(nullptr)
+  {
+=======
+      : WidgetEventTime(),
+        mClass(aEventClassID),
+        mMessage(aMessage),
+        mRefPoint(0, 0),
+        mLastRefPoint(0, 0),
+        mFocusSequenceNumber(0),
+        mSpecifiedEventType(nullptr),
+        mPath(nullptr),
+        mLayersId(layers::LayersId{0}) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(WidgetEvent);
     mFlags.Clear();
     mFlags.mIsTrusted = aIsTrusted;
@@ -564,6 +619,11 @@ class WidgetEvent : public WidgetEventTime {
 
   nsTArray<EventTargetChainItem>* mPath;
 
+  // The LayersId of the content process that this event should be
+  // dispatched to. This field is only used in the chrome process
+  // and doesn't get remoted to child processes.
+  layers::LayersId mLayersId;
+
   dom::EventTarget* GetDOMEventTarget() const;
   dom::EventTarget* GetCurrentDOMEventTarget() const;
   dom::EventTarget* GetOriginalDOMEventTarget() const;
@@ -574,6 +634,7 @@ class WidgetEvent : public WidgetEventTime {
     mRefPoint = aEvent.mRefPoint;
     // mLastRefPoint doesn't need to be copied.
     mFocusSequenceNumber = aEvent.mFocusSequenceNumber;
+    // mLayersId intentionally not copied, since it's not used within content
     AssignEventTime(aEvent);
     // mFlags should be copied manually if it's necessary.
     mSpecifiedEventType = aEvent.mSpecifiedEventType;
@@ -821,9 +882,9 @@ class WidgetEvent : public WidgetEventTime {
   void SetDefaultComposed() {
     switch (mClass) {
       case eCompositionEventClass:
-        mFlags.mComposed = mMessage == eCompositionStart ||
-                           mMessage == eCompositionUpdate ||
-                           mMessage == eCompositionEnd;
+        mFlags.mComposed =
+            mMessage == eCompositionStart || mMessage == eCompositionUpdate ||
+            mMessage == eCompositionChange || mMessage == eCompositionEnd;
         break;
       case eDragEventClass:
         // All drag & drop events are composed
@@ -844,12 +905,14 @@ class WidgetEvent : public WidgetEventTime {
             mMessage == eKeyDown || mMessage == eKeyUp || mMessage == eKeyPress;
         break;
       case eMouseEventClass:
-        mFlags.mComposed = mMessage == eMouseClick ||
-                           mMessage == eMouseDoubleClick ||
-                           mMessage == eMouseAuxClick ||
-                           mMessage == eMouseDown || mMessage == eMouseUp ||
-                           mMessage == eMouseOver || mMessage == eMouseOut ||
-                           mMessage == eMouseMove || mMessage == eContextMenu;
+        mFlags.mComposed =
+            mMessage == eMouseClick || mMessage == eMouseDoubleClick ||
+            mMessage == eMouseAuxClick || mMessage == eMouseDown ||
+            mMessage == eMouseUp || mMessage == eMouseOver ||
+            mMessage == eMouseOut || mMessage == eMouseMove ||
+            mMessage == eContextMenu || mMessage == eXULPopupShowing ||
+            mMessage == eXULPopupHiding || mMessage == eXULPopupShown ||
+            mMessage == eXULPopupHidden || mMessage == eXULPopupPositioned;
         break;
       case ePointerEventClass:
         // All pointer events are composed
@@ -879,6 +942,7 @@ class WidgetEvent : public WidgetEventTime {
     }
   }
 
+<<<<<<< HEAD
   void SetComposed(const nsAString& aEventTypeArg) {
     mFlags.mComposed =  // composition events
         aEventTypeArg.EqualsLiteral("compositionstart") ||
@@ -943,6 +1007,143 @@ class WidgetEvent : public WidgetEventTime {
   void SetComposed(bool aComposed) { mFlags.mComposed = aComposed; }
 
   void SetDefaultComposedInNativeAnonymousContent() {
+||||||| merged common ancestors
+  void SetComposed(const nsAString& aEventTypeArg)
+  {
+    mFlags.mComposed = // composition events
+                       aEventTypeArg.EqualsLiteral("compositionstart") ||
+                       aEventTypeArg.EqualsLiteral("compositionupdate") ||
+                       aEventTypeArg.EqualsLiteral("compositionend") ||
+                       // drag and drop events
+                       aEventTypeArg.EqualsLiteral("dragstart") ||
+                       aEventTypeArg.EqualsLiteral("drag") ||
+                       aEventTypeArg.EqualsLiteral("dragenter") ||
+                       aEventTypeArg.EqualsLiteral("dragexit") ||
+                       aEventTypeArg.EqualsLiteral("dragleave") ||
+                       aEventTypeArg.EqualsLiteral("dragover") ||
+                       aEventTypeArg.EqualsLiteral("drop") ||
+                       aEventTypeArg.EqualsLiteral("dropend") ||
+                       // editor input events
+                       aEventTypeArg.EqualsLiteral("input") ||
+                       aEventTypeArg.EqualsLiteral("beforeinput") ||
+                       // focus events
+                       aEventTypeArg.EqualsLiteral("blur") ||
+                       aEventTypeArg.EqualsLiteral("focus") ||
+                       aEventTypeArg.EqualsLiteral("focusin") ||
+                       aEventTypeArg.EqualsLiteral("focusout") ||
+                       // keyboard events
+                       aEventTypeArg.EqualsLiteral("keydown") ||
+                       aEventTypeArg.EqualsLiteral("keyup") ||
+                       aEventTypeArg.EqualsLiteral("keypress") ||
+                       // mouse events
+                       aEventTypeArg.EqualsLiteral("click") ||
+                       aEventTypeArg.EqualsLiteral("dblclick") ||
+                       aEventTypeArg.EqualsLiteral("mousedown") ||
+                       aEventTypeArg.EqualsLiteral("mouseup") ||
+                       aEventTypeArg.EqualsLiteral("mouseenter") ||
+                       aEventTypeArg.EqualsLiteral("mouseleave") ||
+                       aEventTypeArg.EqualsLiteral("mouseover") ||
+                       aEventTypeArg.EqualsLiteral("mouseout") ||
+                       aEventTypeArg.EqualsLiteral("mousemove") ||
+                       aEventTypeArg.EqualsLiteral("contextmenu") ||
+                       // pointer events
+                       aEventTypeArg.EqualsLiteral("pointerdown") ||
+                       aEventTypeArg.EqualsLiteral("pointermove") ||
+                       aEventTypeArg.EqualsLiteral("pointerup") ||
+                       aEventTypeArg.EqualsLiteral("pointercancel") ||
+                       aEventTypeArg.EqualsLiteral("pointerover") ||
+                       aEventTypeArg.EqualsLiteral("pointerout") ||
+                       aEventTypeArg.EqualsLiteral("pointerenter") ||
+                       aEventTypeArg.EqualsLiteral("pointerleave") ||
+                       aEventTypeArg.EqualsLiteral("gotpointercapture") ||
+                       aEventTypeArg.EqualsLiteral("lostpointercapture") ||
+                       // touch events
+                       aEventTypeArg.EqualsLiteral("touchstart") ||
+                       aEventTypeArg.EqualsLiteral("touchend") ||
+                       aEventTypeArg.EqualsLiteral("touchmove") ||
+                       aEventTypeArg.EqualsLiteral("touchcancel") ||
+                       // UI legacy events
+                       aEventTypeArg.EqualsLiteral("DOMFocusIn") ||
+                       aEventTypeArg.EqualsLiteral("DOMFocusOut") ||
+                       aEventTypeArg.EqualsLiteral("DOMActivate") ||
+                       // wheel events
+                       aEventTypeArg.EqualsLiteral("wheel");
+  }
+
+  void SetComposed(bool aComposed)
+  {
+    mFlags.mComposed = aComposed;
+  }
+
+  void SetDefaultComposedInNativeAnonymousContent()
+  {
+=======
+  void SetComposed(const nsAString& aEventTypeArg) {
+    mFlags.mComposed =  // composition events
+        aEventTypeArg.EqualsLiteral("compositionstart") ||
+        aEventTypeArg.EqualsLiteral("compositionupdate") ||
+        aEventTypeArg.EqualsLiteral("compositionend") ||
+        aEventTypeArg.EqualsLiteral("text") ||
+        // drag and drop events
+        aEventTypeArg.EqualsLiteral("dragstart") ||
+        aEventTypeArg.EqualsLiteral("drag") ||
+        aEventTypeArg.EqualsLiteral("dragenter") ||
+        aEventTypeArg.EqualsLiteral("dragexit") ||
+        aEventTypeArg.EqualsLiteral("dragleave") ||
+        aEventTypeArg.EqualsLiteral("dragover") ||
+        aEventTypeArg.EqualsLiteral("drop") ||
+        aEventTypeArg.EqualsLiteral("dropend") ||
+        // editor input events
+        aEventTypeArg.EqualsLiteral("input") ||
+        aEventTypeArg.EqualsLiteral("beforeinput") ||
+        // focus events
+        aEventTypeArg.EqualsLiteral("blur") ||
+        aEventTypeArg.EqualsLiteral("focus") ||
+        aEventTypeArg.EqualsLiteral("focusin") ||
+        aEventTypeArg.EqualsLiteral("focusout") ||
+        // keyboard events
+        aEventTypeArg.EqualsLiteral("keydown") ||
+        aEventTypeArg.EqualsLiteral("keyup") ||
+        aEventTypeArg.EqualsLiteral("keypress") ||
+        // mouse events
+        aEventTypeArg.EqualsLiteral("click") ||
+        aEventTypeArg.EqualsLiteral("dblclick") ||
+        aEventTypeArg.EqualsLiteral("mousedown") ||
+        aEventTypeArg.EqualsLiteral("mouseup") ||
+        aEventTypeArg.EqualsLiteral("mouseenter") ||
+        aEventTypeArg.EqualsLiteral("mouseleave") ||
+        aEventTypeArg.EqualsLiteral("mouseover") ||
+        aEventTypeArg.EqualsLiteral("mouseout") ||
+        aEventTypeArg.EqualsLiteral("mousemove") ||
+        aEventTypeArg.EqualsLiteral("contextmenu") ||
+        // pointer events
+        aEventTypeArg.EqualsLiteral("pointerdown") ||
+        aEventTypeArg.EqualsLiteral("pointermove") ||
+        aEventTypeArg.EqualsLiteral("pointerup") ||
+        aEventTypeArg.EqualsLiteral("pointercancel") ||
+        aEventTypeArg.EqualsLiteral("pointerover") ||
+        aEventTypeArg.EqualsLiteral("pointerout") ||
+        aEventTypeArg.EqualsLiteral("pointerenter") ||
+        aEventTypeArg.EqualsLiteral("pointerleave") ||
+        aEventTypeArg.EqualsLiteral("gotpointercapture") ||
+        aEventTypeArg.EqualsLiteral("lostpointercapture") ||
+        // touch events
+        aEventTypeArg.EqualsLiteral("touchstart") ||
+        aEventTypeArg.EqualsLiteral("touchend") ||
+        aEventTypeArg.EqualsLiteral("touchmove") ||
+        aEventTypeArg.EqualsLiteral("touchcancel") ||
+        // UI legacy events
+        aEventTypeArg.EqualsLiteral("DOMFocusIn") ||
+        aEventTypeArg.EqualsLiteral("DOMFocusOut") ||
+        aEventTypeArg.EqualsLiteral("DOMActivate") ||
+        // wheel events
+        aEventTypeArg.EqualsLiteral("wheel");
+  }
+
+  void SetComposed(bool aComposed) { mFlags.mComposed = aComposed; }
+
+  void SetDefaultComposedInNativeAnonymousContent() {
+>>>>>>> upstream-releases
     // For compatibility concerns, we set mComposedInNativeAnonymousContent to
     // false for those events we want to stop propagation.
     //

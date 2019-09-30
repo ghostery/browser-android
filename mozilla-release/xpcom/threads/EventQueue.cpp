@@ -9,23 +9,53 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 EventQueue::EventQueue(EventPriority aPriority) {}
+||||||| merged common ancestors
+EventQueue::EventQueue(EventPriority aPriority)
+{
+}
+=======
+EventQueue::EventQueue(EventQueuePriority aPriority) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 void EventQueue::PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
                           EventPriority aPriority,
                           const MutexAutoLock& aProofOfLock) {
+||||||| merged common ancestors
+void
+EventQueue::PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                     EventPriority aPriority,
+                     const MutexAutoLock& aProofOfLock)
+{
+=======
+void EventQueue::PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
+                          EventQueuePriority aPriority,
+                          const MutexAutoLock& aProofOfLock) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> event(aEvent);
   mQueue.Push(std::move(event));
 }
 
+<<<<<<< HEAD
 already_AddRefed<nsIRunnable> EventQueue::GetEvent(
     EventPriority* aPriority, const MutexAutoLock& aProofOfLock) {
+||||||| merged common ancestors
+already_AddRefed<nsIRunnable>
+EventQueue::GetEvent(EventPriority* aPriority,
+                     const MutexAutoLock& aProofOfLock)
+{
+=======
+already_AddRefed<nsIRunnable> EventQueue::GetEvent(
+    EventQueuePriority* aPriority, const MutexAutoLock& aProofOfLock) {
+>>>>>>> upstream-releases
   if (mQueue.IsEmpty()) {
     return nullptr;
   }
 
   if (aPriority) {
-    *aPriority = EventPriority::Normal;
+    *aPriority = EventQueuePriority::Normal;
   }
 
   nsCOMPtr<nsIRunnable> result = mQueue.Pop();

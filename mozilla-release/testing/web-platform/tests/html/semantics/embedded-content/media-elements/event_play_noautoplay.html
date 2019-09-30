@@ -14,8 +14,16 @@
   </video>
   <div id="log"></div>
   <script>
+<<<<<<< HEAD
 promise_test(function(t) {
   var async_t = async_test("calling play() on audio should trigger play event", {timeout:5000});
+||||||| merged common ancestors
+test(function() {
+  var t = async_test("calling play() on audio should trigger play event", {timeout:5000});
+=======
+promise_test(function(t) {
+  var async_t = async_test("calling play() on audio should trigger play event");
+>>>>>>> upstream-releases
   var a = document.getElementById("a");
   a.addEventListener("play", async_t.step_func(function() {
     a.pause();
@@ -25,8 +33,16 @@ promise_test(function(t) {
   return promise_rejects(t, "AbortError", a.play(), "pause() should reject all pending play Promises");
 }, "audio events - play");
 
+<<<<<<< HEAD
 promise_test(function(t) {
   var async_t = async_test("calling play() on video should trigger play event", {timeout:5000});
+||||||| merged common ancestors
+test(function() {
+  var t = async_test("calling play() on video should trigger play event", {timeout:5000});
+=======
+promise_test(function(t) {
+  var async_t = async_test("calling play() on video should trigger play event");
+>>>>>>> upstream-releases
   var v = document.getElementById("v");
   v.addEventListener("play", async_t.step_func(function() {
     v.pause();

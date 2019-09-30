@@ -14,18 +14,37 @@ namespace mozilla {
 namespace dom {
 
 MediaElementAudioSourceNode::MediaElementAudioSourceNode(AudioContext* aContext)
+<<<<<<< HEAD
     : MediaStreamAudioSourceNode(aContext) {}
+||||||| merged common ancestors
+  : MediaStreamAudioSourceNode(aContext)
+{
+}
+=======
+    : MediaStreamAudioSourceNode(aContext, TrackChangeBehavior::FollowChanges) {
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MediaElementAudioSourceNode>
 MediaElementAudioSourceNode::Create(
     AudioContext& aAudioContext, const MediaElementAudioSourceOptions& aOptions,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MediaElementAudioSourceNode>
+MediaElementAudioSourceNode::Create(AudioContext& aAudioContext,
+                                    const MediaElementAudioSourceOptions& aOptions,
+                                    ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MediaElementAudioSourceNode>
+MediaElementAudioSourceNode::Create(
+    AudioContext& aAudioContext, const MediaElementAudioSourceOptions& aOptions,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (aAudioContext.IsOffline()) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
-    return nullptr;
-  }
-
-  if (aAudioContext.CheckClosed(aRv)) {
     return nullptr;
   }
 
@@ -43,6 +62,7 @@ MediaElementAudioSourceNode::Create(
     return nullptr;
   }
 
+  node->ListenForAllowedToPlay(aOptions);
   return node.forget();
 }
 
@@ -51,5 +71,34 @@ JSObject* MediaElementAudioSourceNode::WrapObject(
   return MediaElementAudioSourceNode_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace dom
+} // namespace mozilla
+=======
+void MediaElementAudioSourceNode::ListenForAllowedToPlay(
+    const MediaElementAudioSourceOptions& aOptions) {
+  aOptions.mMediaElement->GetAllowedToPlayPromise()
+      ->Then(
+          GetAbstractMainThread(), __func__,
+          // Capture by reference to bypass the mozilla-refcounted-inside-lambda
+          // static analysis. We capture a non-owning reference so as to allow
+          // cycle collection of the node. The reference is cleared via
+          // DisconnectIfExists() from Destroy() when the node is collected.
+          [& self = *this]() {
+            self.Context()->StartBlockedAudioContextIfAllowed();
+            self.mAllowedToPlayRequest.Complete();
+          })
+      ->Track(mAllowedToPlayRequest);
+}
+
+void MediaElementAudioSourceNode::Destroy() {
+  mAllowedToPlayRequest.DisconnectIfExists();
+  MediaStreamAudioSourceNode::Destroy();
+}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

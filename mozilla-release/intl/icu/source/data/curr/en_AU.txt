@@ -99,6 +99,10 @@ en_AU{
             "UYU",
             "Peso Uruguayo",
         }
+        VES{
+            "VES",
+            "VES",
+        }
         VND{
             "VND",
             "Vietnamese Dong",
@@ -198,10 +202,22 @@ en_AU{
             one{"Uzbekistani som"}
             other{"Uzbekistani soms"}
         }
+<<<<<<< HEAD
         VEF{
             one{"Venezuelan bolívar"}
             other{"Venezuelan bolívars"}
         }
+||||||| merged common ancestors
+=======
+        VEF{
+            one{"Venezuelan bolívar"}
+            other{"Venezuelan bolívars"}
+        }
+        VES{
+            one{"VES"}
+            other{"VES"}
+        }
+>>>>>>> upstream-releases
         VND{
             one{"Vietnamese dong"}
             other{"Vietnamese dongs"}
@@ -210,6 +226,15 @@ en_AU{
             one{"Samoan tala"}
             other{"Samoan talas"}
         }
+        XXX{
+            other{"(unknown currency)"}
+        }
     }
+<<<<<<< HEAD
     Version{"2.1.44.18"}
+||||||| merged common ancestors
+    Version{"2.1.38.73"}
+=======
+    Version{"2.1.48.43"}
+>>>>>>> upstream-releases
 }

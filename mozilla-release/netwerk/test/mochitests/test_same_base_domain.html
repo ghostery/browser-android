@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Cross domain access to properties</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>        
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<<<<<<< HEAD:mozilla-release/extensions/cookie/test/test_same_base_domain_6.html
+<body onload="runThisTest()">
+||||||| merged common ancestors
+<body onload="setupTest('http://127.0.0.1:8888/tests/extensions/cookie/test/file_loopback_inner.html', 5, 2)">
+=======
+<body onload="setupTest('http://test1.example.org/tests/netwerk/test/mochitests/file_domain_inner.html', 5, 2)">
+>>>>>>> upstream-releases:mozilla-release/netwerk/test/mochitests/test_same_base_domain.html
+<p id="display"></p>
+<pre id="test">
+  <script>
+    function runThisTest() {
+      // By default, proxies don't apply to 127.0.0.1.
+      // We need them to for this test (at least on android), though:
+      SpecialPowers.pushPrefEnv({set: [
+        ["network.proxy.no_proxies_on", ""]
+      ]}).then(function() {
+        setupTest('http://127.0.0.1:8888/tests/extensions/cookie/test/file_loopback_inner.html', 5, 2);
+      });
+    }
+  </script>
+<script class="testbody" type="text/javascript" src="file_testcommon.js">
+</script>
+</pre>
+</body>
+</html>

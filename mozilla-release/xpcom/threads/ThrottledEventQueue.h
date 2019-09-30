@@ -67,8 +67,17 @@ class ThrottledEventQueue final : public nsISerialEventTarget {
 
  public:
   // Create a ThrottledEventQueue for the given target.
+<<<<<<< HEAD
   static already_AddRefed<ThrottledEventQueue> Create(
       nsISerialEventTarget* aBaseTarget);
+||||||| merged common ancestors
+  static already_AddRefed<ThrottledEventQueue>
+  Create(nsISerialEventTarget* aBaseTarget);
+=======
+  static already_AddRefed<ThrottledEventQueue> Create(
+      nsISerialEventTarget* aBaseTarget, const char* aName,
+      uint32_t aPriority = nsIRunnablePriority::PRIORITY_NORMAL);
+>>>>>>> upstream-releases
 
   // Determine if there are any events pending in the queue.
   bool IsEmpty() const;
@@ -76,9 +85,20 @@ class ThrottledEventQueue final : public nsISerialEventTarget {
   // Determine how many events are pending in the queue.
   uint32_t Length() const;
 
+<<<<<<< HEAD
   // Block the current thread until the queue is empty. This may not be called
   // on the main thread or the base target. The ThrottledEventQueue must not be
   // paused.
+||||||| merged common ancestors
+  // Block the current thread until the queue is empty.  This may not
+  // be called on the main thread or the base target.
+=======
+  already_AddRefed<nsIRunnable> GetEvent();
+
+  // Block the current thread until the queue is empty. This may not be called
+  // on the main thread or the base target. The ThrottledEventQueue must not be
+  // paused.
+>>>>>>> upstream-releases
   void AwaitIdle() const;
 
   // If |aIsPaused| is true, pause execution of events from this queue. No

@@ -29,13 +29,27 @@ NS_IMPL_ISUPPORTS(nsDownloader, nsIDownloader, nsIStreamListener,
                   nsIRequestObserver)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDownloader::Init(nsIDownloadObserver *observer, nsIFile *location) {
   mObserver = observer;
   mLocation = location;
   return NS_OK;
+||||||| merged common ancestors
+nsDownloader::Init(nsIDownloadObserver *observer, nsIFile *location)
+{
+    mObserver = observer;
+    mLocation = location;
+    return NS_OK;
+=======
+nsDownloader::Init(nsIDownloadObserver* observer, nsIFile* location) {
+  mObserver = observer;
+  mLocation = location;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDownloader::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
   nsresult rv;
   if (!mLocation) {
@@ -48,6 +62,41 @@ nsDownloader::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
     memcpy(buf + 8, ".tmp", 5);
     rv = location->AppendNative(nsDependentCString(buf, 12));
     if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+nsDownloader::OnStartRequest(nsIRequest *request, nsISupports *ctxt)
+{
+    nsresult rv;
+    if (!mLocation) {
+        nsCOMPtr<nsIFile> location;
+        rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(location));
+        if (NS_FAILED(rv)) return rv;
+
+        char buf[13];
+        NS_MakeRandomString(buf, 8);
+        memcpy(buf+8, ".tmp", 5);
+        rv = location->AppendNative(nsDependentCString(buf, 12));
+        if (NS_FAILED(rv)) return rv;
+
+        rv = location->CreateUnique(nsIFile::NORMAL_FILE_TYPE, 0600);
+        if (NS_FAILED(rv)) return rv;
+
+        location.swap(mLocation);
+        mLocationIsTemp = true;
+    }
+=======
+nsDownloader::OnStartRequest(nsIRequest* request) {
+  nsresult rv;
+  if (!mLocation) {
+    nsCOMPtr<nsIFile> location;
+    rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(location));
+    if (NS_FAILED(rv)) return rv;
+
+    char buf[13];
+    NS_MakeRandomString(buf, 8);
+    memcpy(buf + 8, ".tmp", 5);
+    rv = location->AppendNative(nsDependentCString(buf, 12));
+    if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
     rv = location->CreateUnique(nsIFile::NORMAL_FILE_TYPE, 0600);
     if (NS_FAILED(rv)) return rv;
@@ -67,19 +116,45 @@ nsDownloader::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDownloader::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
                             nsresult status) {
   if (mSink) {
     mSink->Close();
     mSink = nullptr;
   }
+||||||| merged common ancestors
+nsDownloader::OnStopRequest(nsIRequest  *request,
+                            nsISupports *ctxt,
+                            nsresult     status)
+{
+    if (mSink) {
+        mSink->Close();
+        mSink = nullptr;
+    }
+=======
+nsDownloader::OnStopRequest(nsIRequest* request, nsresult status) {
+  if (mSink) {
+    mSink->Close();
+    mSink = nullptr;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mObserver->OnDownloadComplete(this, request, ctxt, status, mLocation);
   mObserver = nullptr;
+||||||| merged common ancestors
+    mObserver->OnDownloadComplete(this, request, ctxt, status, mLocation);
+    mObserver = nullptr;
+=======
+  mObserver->OnDownloadComplete(this, request, nullptr, status, mLocation);
+  mObserver = nullptr;
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsDownloader::ConsumeData(nsIInputStream *in, void *closure,
                                    const char *fromRawSegment,
                                    uint32_t toOffset, uint32_t count,
@@ -89,12 +164,52 @@ nsresult nsDownloader::ConsumeData(nsIInputStream *in, void *closure,
 
   *writeCount = count;
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+nsDownloader::ConsumeData(nsIInputStream* in,
+                          void* closure,
+                          const char* fromRawSegment,
+                          uint32_t toOffset,
+                          uint32_t count,
+                          uint32_t *writeCount)
+{
+    nsDownloader *self = (nsDownloader *) closure;
+    if (self->mSink)
+        return self->mSink->Write(fromRawSegment, count, writeCount);
+
+    *writeCount = count;
+    return NS_OK;
+=======
+nsresult nsDownloader::ConsumeData(nsIInputStream* in, void* closure,
+                                   const char* fromRawSegment,
+                                   uint32_t toOffset, uint32_t count,
+                                   uint32_t* writeCount) {
+  nsDownloader* self = (nsDownloader*)closure;
+  if (self->mSink) return self->mSink->Write(fromRawSegment, count, writeCount);
+
+  *writeCount = count;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDownloader::OnDataAvailable(nsIRequest *request, nsISupports *ctxt,
                               nsIInputStream *inStr, uint64_t sourceOffset,
                               uint32_t count) {
   uint32_t n;
   return inStr->ReadSegments(ConsumeData, this, count, &n);
+||||||| merged common ancestors
+nsDownloader::OnDataAvailable(nsIRequest *request, nsISupports *ctxt,
+                              nsIInputStream *inStr,
+                              uint64_t sourceOffset, uint32_t count)
+{
+    uint32_t n;
+    return inStr->ReadSegments(ConsumeData, this, count, &n);
+=======
+nsDownloader::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
+                              uint64_t sourceOffset, uint32_t count) {
+  uint32_t n;
+  return inStr->ReadSegments(ConsumeData, this, count, &n);
+>>>>>>> upstream-releases
 }

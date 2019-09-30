@@ -13,7 +13,7 @@
 #include "mozilla/ReentrancyGuard.h"
 #include "mozilla/Likely.h"
 #include "nsDebug.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIFrame.h"
 
 namespace mozilla {
@@ -149,16 +149,37 @@ class MOZ_RAII AutoReferenceChainGuard {
 
  private:
   void ReportErrorToConsole() {
-    nsAutoString tag, id;
+    AutoTArray<nsString, 2> params;
     dom::Element* element = mFrame->GetContent()->AsElement();
+<<<<<<< HEAD
     element->GetTagName(tag);
     element->GetId(id);
     const char16_t* params[] = {tag.get(), id.get()};
+||||||| merged common ancestors
+    element->GetTagName(tag);
+    element->GetId(id);
+    const char16_t* params[] = { tag.get(), id.get() };
+=======
+    element->GetTagName(*params.AppendElement());
+    element->GetId(*params.AppendElement());
+>>>>>>> upstream-releases
     auto doc = mFrame->GetContent()->OwnerDoc();
+<<<<<<< HEAD
     auto warning = *mFrameInUse ? nsIDocument::eSVGRefLoop
                                 : nsIDocument::eSVGRefChainLengthExceeded;
     doc->WarnOnceAbout(warning, /* asError */ true, params,
                        ArrayLength(params));
+||||||| merged common ancestors
+    auto warning = *mFrameInUse ?
+                     nsIDocument::eSVGRefLoop :
+                     nsIDocument::eSVGRefChainLengthExceeded;
+    doc->WarnOnceAbout(warning, /* asError */ true,
+                       params, ArrayLength(params));
+=======
+    auto warning = *mFrameInUse ? dom::Document::eSVGRefLoop
+                                : dom::Document::eSVGRefChainLengthExceeded;
+    doc->WarnOnceAbout(warning, /* asError */ true, params);
+>>>>>>> upstream-releases
   }
 
   nsIFrame* mFrame;

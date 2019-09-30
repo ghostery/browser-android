@@ -17,11 +17,37 @@
 #include "vm/JSObject.h"
 #include "vm/SharedArrayObject.h"
 
+<<<<<<< HEAD
 #define JS_FOR_EACH_TYPED_ARRAY(macro)                                      \
   macro(int8_t, Int8) macro(uint8_t, Uint8) macro(int16_t, Int16)           \
       macro(uint16_t, Uint16) macro(int32_t, Int32) macro(uint32_t, Uint32) \
           macro(float, Float32) macro(double, Float64)                      \
               macro(uint8_clamped, Uint8Clamped)
+||||||| merged common ancestors
+#define JS_FOR_EACH_TYPED_ARRAY(macro) \
+    macro(int8_t, Int8) \
+    macro(uint8_t, Uint8) \
+    macro(int16_t, Int16) \
+    macro(uint16_t, Uint16) \
+    macro(int32_t, Int32) \
+    macro(uint32_t, Uint32) \
+    macro(float, Float32) \
+    macro(double, Float64) \
+    macro(uint8_clamped, Uint8Clamped)
+=======
+#define JS_FOR_EACH_TYPED_ARRAY(MACRO) \
+  MACRO(int8_t, Int8)                  \
+  MACRO(uint8_t, Uint8)                \
+  MACRO(int16_t, Int16)                \
+  MACRO(uint16_t, Uint16)              \
+  MACRO(int32_t, Int32)                \
+  MACRO(uint32_t, Uint32)              \
+  MACRO(float, Float32)                \
+  MACRO(double, Float64)               \
+  MACRO(uint8_clamped, Uint8Clamped)   \
+  MACRO(int64_t, BigInt64)             \
+  MACRO(uint64_t, BigUint64)
+>>>>>>> upstream-releases
 
 namespace js {
 
@@ -33,6 +59,7 @@ namespace js {
  * the subclasses.
  */
 
+<<<<<<< HEAD
 class TypedArrayObject : public ArrayBufferViewObject {
  public:
   static int lengthOffset();
@@ -51,8 +78,97 @@ class TypedArrayObject : public ArrayBufferViewObject {
     // Shared buffers.
     if (a->isSharedMemory() && b->isSharedMemory()) {
       return a->bufferShared()->globalID() == b->bufferShared()->globalID();
+||||||| merged common ancestors
+class TypedArrayObject : public ArrayBufferViewObject
+{
+  public:
+    static int lengthOffset();
+    static int dataOffset();
+
+    static_assert(js::detail::TypedArrayLengthSlot == LENGTH_SLOT,
+                  "bad inlined constant in jsfriendapi.h");
+
+    static bool sameBuffer(Handle<TypedArrayObject*> a, Handle<TypedArrayObject*> b) {
+        // Inline buffers.
+        if (!a->hasBuffer() || !b->hasBuffer()) {
+            return a.get() == b.get();
+        }
+
+        // Shared buffers.
+        if (a->isSharedMemory() && b->isSharedMemory()) {
+            return (a->bufferObject()->as<SharedArrayBufferObject>().globalID() ==
+                    b->bufferObject()->as<SharedArrayBufferObject>().globalID());
+        }
+
+        return a->bufferObject() == b->bufferObject();
     }
 
+    static const Class classes[Scalar::MaxTypedArrayViewType];
+    static const Class protoClasses[Scalar::MaxTypedArrayViewType];
+    static const Class sharedTypedArrayPrototypeClass;
+
+    static const Class* classForType(Scalar::Type type) {
+        MOZ_ASSERT(type < Scalar::MaxTypedArrayViewType);
+        return &classes[type];
+    }
+
+    static const Class* protoClassForType(Scalar::Type type) {
+        MOZ_ASSERT(type < Scalar::MaxTypedArrayViewType);
+        return &protoClasses[type];
+    }
+
+    static const size_t FIXED_DATA_START = DATA_SLOT + 1;
+
+    // For typed arrays which can store their data inline, the array buffer
+    // object is created lazily.
+    static const uint32_t INLINE_BUFFER_LIMIT =
+        (NativeObject::MAX_FIXED_SLOTS - FIXED_DATA_START) * sizeof(Value);
+
+    static inline gc::AllocKind AllocKindForLazyBuffer(size_t nbytes);
+
+    inline Scalar::Type type() const;
+    inline size_t bytesPerElement() const;
+
+    static Value byteOffsetValue(const TypedArrayObject* tarr) {
+        Value v = tarr->getFixedSlot(BYTEOFFSET_SLOT);
+        MOZ_ASSERT(v.toInt32() >= 0);
+        return v;
+    }
+    static Value byteLengthValue(const TypedArrayObject* tarr) {
+        return Int32Value(tarr->getFixedSlot(LENGTH_SLOT).toInt32() * tarr->bytesPerElement());
+    }
+    static Value lengthValue(const TypedArrayObject* tarr) {
+        return tarr->getFixedSlot(LENGTH_SLOT);
+=======
+class TypedArrayObject : public ArrayBufferViewObject {
+ public:
+  static constexpr int lengthOffset() {
+    return NativeObject::getFixedSlotOffset(LENGTH_SLOT);
+  }
+  static constexpr int byteOffsetOffset() {
+    return NativeObject::getFixedSlotOffset(BYTEOFFSET_SLOT);
+  }
+  static constexpr int dataOffset() {
+    return NativeObject::getPrivateDataOffset(DATA_SLOT);
+  }
+
+  static_assert(js::detail::TypedArrayLengthSlot == LENGTH_SLOT,
+                "bad inlined constant in jsfriendapi.h");
+
+  static bool sameBuffer(Handle<TypedArrayObject*> a,
+                         Handle<TypedArrayObject*> b) {
+    // Inline buffers.
+    if (!a->hasBuffer() || !b->hasBuffer()) {
+      return a.get() == b.get();
+    }
+
+    // Shared buffers.
+    if (a->isSharedMemory() && b->isSharedMemory()) {
+      return a->bufferShared()->globalID() == b->bufferShared()->globalID();
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     return a->bufferEither() == b->bufferEither();
   }
 
@@ -110,6 +226,88 @@ class TypedArrayObject : public ArrayBufferViewObject {
     assertZeroLengthArrayData();
     return elementsRaw();
   }
+||||||| merged common ancestors
+    static bool
+    ensureHasBuffer(JSContext* cx, Handle<TypedArrayObject*> tarray);
+
+    uint32_t byteOffset() const {
+        return byteOffsetValue(this).toInt32();
+    }
+    uint32_t byteLength() const {
+        return byteLengthValue(this).toInt32();
+    }
+    uint32_t length() const {
+        return lengthValue(this).toInt32();
+    }
+
+    bool hasInlineElements() const;
+    void setInlineElements();
+    uint8_t* elementsRaw() const {
+        return *(uint8_t **)((((char *)this) + js::TypedArrayObject::dataOffset()));
+    }
+    uint8_t* elements() const {
+        assertZeroLengthArrayData();
+        return elementsRaw();
+    }
+=======
+    return a->bufferEither() == b->bufferEither();
+  }
+
+  static const Class classes[Scalar::MaxTypedArrayViewType];
+  static const Class protoClasses[Scalar::MaxTypedArrayViewType];
+  static const Class sharedTypedArrayPrototypeClass;
+
+  static const Class* classForType(Scalar::Type type) {
+    MOZ_ASSERT(type < Scalar::MaxTypedArrayViewType);
+    return &classes[type];
+  }
+
+  static const Class* protoClassForType(Scalar::Type type) {
+    MOZ_ASSERT(type < Scalar::MaxTypedArrayViewType);
+    return &protoClasses[type];
+  }
+
+  static constexpr size_t FIXED_DATA_START = DATA_SLOT + 1;
+
+  // For typed arrays which can store their data inline, the array buffer
+  // object is created lazily.
+  static constexpr uint32_t INLINE_BUFFER_LIMIT =
+      (NativeObject::MAX_FIXED_SLOTS - FIXED_DATA_START) * sizeof(Value);
+
+  static inline gc::AllocKind AllocKindForLazyBuffer(size_t nbytes);
+
+  inline Scalar::Type type() const;
+  inline size_t bytesPerElement() const;
+
+  static Value byteOffsetValue(const TypedArrayObject* tarr) {
+    Value v = tarr->getFixedSlot(BYTEOFFSET_SLOT);
+    MOZ_ASSERT(v.toInt32() >= 0);
+    return v;
+  }
+  static Value byteLengthValue(const TypedArrayObject* tarr) {
+    return Int32Value(tarr->getFixedSlot(LENGTH_SLOT).toInt32() *
+                      tarr->bytesPerElement());
+  }
+  static Value lengthValue(const TypedArrayObject* tarr) {
+    return tarr->getFixedSlot(LENGTH_SLOT);
+  }
+
+  static bool ensureHasBuffer(JSContext* cx, Handle<TypedArrayObject*> tarray);
+
+  uint32_t byteOffset() const { return byteOffsetValue(this).toInt32(); }
+  uint32_t byteLength() const { return byteLengthValue(this).toInt32(); }
+  uint32_t length() const { return lengthValue(this).toInt32(); }
+
+  bool hasInlineElements() const;
+  void setInlineElements();
+  uint8_t* elementsRaw() const {
+    return *(uint8_t**)((((char*)this) + js::TypedArrayObject::dataOffset()));
+  }
+  uint8_t* elements() const {
+    assertZeroLengthArrayData();
+    return elementsRaw();
+  }
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   void assertZeroLengthArrayData() const;
@@ -117,32 +315,139 @@ class TypedArrayObject : public ArrayBufferViewObject {
   void assertZeroLengthArrayData() const {};
 #endif
 
+<<<<<<< HEAD
   Value getElement(uint32_t index);
   static void setElement(TypedArrayObject& obj, uint32_t index, double d);
+||||||| merged common ancestors
+    Value getElement(uint32_t index);
+    static void setElement(TypedArrayObject& obj, uint32_t index, double d);
+=======
+  template <AllowGC allowGC>
+  bool getElement(JSContext* cx, uint32_t index,
+                  typename MaybeRooted<Value, allowGC>::MutableHandleType val);
+  bool getElementPure(uint32_t index, Value* vp);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /*
    * Copy all elements from this typed array to vp. vp must point to rooted
    * memory.
    */
   void getElements(Value* vp);
+||||||| merged common ancestors
+    /*
+     * Copy all elements from this typed array to vp. vp must point to rooted
+     * memory.
+     */
+    void getElements(Value* vp);
+=======
+  /*
+   * Copy all elements from this typed array to vp. vp must point to rooted
+   * memory.
+   */
+  static bool getElements(JSContext* cx, Handle<TypedArrayObject*> tarray,
+                          Value* vp);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static bool GetTemplateObjectForNative(JSContext* cx, Native native,
                                          uint32_t len, MutableHandleObject res);
+||||||| merged common ancestors
+    static bool
+    GetTemplateObjectForNative(JSContext* cx, Native native, uint32_t len,
+                               MutableHandleObject res);
+=======
+  static bool GetTemplateObjectForNative(JSContext* cx, Native native,
+                                         const JS::HandleValueArray args,
+                                         MutableHandleObject res);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /*
    * Byte length above which created typed arrays will have singleton types
    * regardless of the context in which they are created. This only applies to
    * typed arrays created with an existing ArrayBuffer.
    */
   static const uint32_t SINGLETON_BYTE_LENGTH = 1024 * 1024 * 10;
+||||||| merged common ancestors
+    /*
+     * Byte length above which created typed arrays will have singleton types
+     * regardless of the context in which they are created. This only applies to
+     * typed arrays created with an existing ArrayBuffer.
+     */
+    static const uint32_t SINGLETON_BYTE_LENGTH = 1024 * 1024 * 10;
+=======
+  /*
+   * Byte length above which created typed arrays will have singleton types.
+   * This only applies to typed arrays created with an existing ArrayBuffer and
+   * when not inlined from Ion.
+   */
+  static constexpr uint32_t SINGLETON_BYTE_LENGTH = 1024 * 1024 * 10;
+>>>>>>> upstream-releases
 
   static bool isOriginalLengthGetter(Native native);
 
+<<<<<<< HEAD
   static void finalize(FreeOp* fop, JSObject* obj);
   static size_t objectMoved(JSObject* obj, JSObject* old);
+||||||| merged common ancestors
+    static void finalize(FreeOp* fop, JSObject* obj);
+    static size_t objectMoved(JSObject* obj, JSObject* old);
+=======
+  static bool isOriginalByteOffsetGetter(Native native);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /* Initialization bits */
+||||||| merged common ancestors
+    /* Initialization bits */
+=======
+  static void finalize(FreeOp* fop, JSObject* obj);
+  static size_t objectMoved(JSObject* obj, JSObject* old);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  template <Value ValueGetter(const TypedArrayObject* tarr)>
+  static bool GetterImpl(JSContext* cx, const CallArgs& args) {
+    MOZ_ASSERT(is(args.thisv()));
+    args.rval().set(
+        ValueGetter(&args.thisv().toObject().as<TypedArrayObject>()));
+    return true;
+  }
+||||||| merged common ancestors
+    template<Value ValueGetter(const TypedArrayObject* tarr)>
+    static bool
+    GetterImpl(JSContext* cx, const CallArgs& args)
+    {
+        MOZ_ASSERT(is(args.thisv()));
+        args.rval().set(ValueGetter(&args.thisv().toObject().as<TypedArrayObject>()));
+        return true;
+    }
+=======
+  /* Initialization bits */
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // ValueGetter is a function that takes an unwrapped typed array object and
+  // returns a Value. Given such a function, Getter<> is a native that
+  // retrieves a given Value, probably from a slot on the object.
+  template <Value ValueGetter(const TypedArrayObject* tarr)>
+  static bool Getter(JSContext* cx, unsigned argc, Value* vp) {
+    CallArgs args = CallArgsFromVp(argc, vp);
+    return CallNonGenericMethod<is, GetterImpl<ValueGetter>>(cx, args);
+  }
+||||||| merged common ancestors
+    // ValueGetter is a function that takes an unwrapped typed array object and
+    // returns a Value. Given such a function, Getter<> is a native that
+    // retrieves a given Value, probably from a slot on the object.
+    template<Value ValueGetter(const TypedArrayObject* tarr)>
+    static bool
+    Getter(JSContext* cx, unsigned argc, Value* vp)
+    {
+        CallArgs args = CallArgsFromVp(argc, vp);
+        return CallNonGenericMethod<is, GetterImpl<ValueGetter>>(cx, args);
+    }
+=======
   template <Value ValueGetter(const TypedArrayObject* tarr)>
   static bool GetterImpl(JSContext* cx, const CallArgs& args) {
     MOZ_ASSERT(is(args.thisv()));
@@ -159,6 +464,7 @@ class TypedArrayObject : public ArrayBufferViewObject {
     CallArgs args = CallArgsFromVp(argc, vp);
     return CallNonGenericMethod<is, GetterImpl<ValueGetter>>(cx, args);
   }
+>>>>>>> upstream-releases
 
   static const JSFunctionSpec protoFunctions[];
   static const JSPropertySpec protoAccessors[];
@@ -171,16 +477,48 @@ class TypedArrayObject : public ArrayBufferViewObject {
 
   static bool set(JSContext* cx, unsigned argc, Value* vp);
 
+<<<<<<< HEAD
  private:
   static bool set_impl(JSContext* cx, const CallArgs& args);
+||||||| merged common ancestors
+  private:
+    static bool set_impl(JSContext* cx, const CallArgs& args);
+=======
+  bool convertForSideEffect(JSContext* cx, HandleValue v) const;
+
+ private:
+  static bool set_impl(JSContext* cx, const CallArgs& args);
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
+MOZ_MUST_USE bool TypedArray_bufferGetter(JSContext* cx, unsigned argc,
+                                          Value* vp);
+||||||| merged common ancestors
+MOZ_MUST_USE bool TypedArray_bufferGetter(JSContext* cx, unsigned argc, Value* vp);
+=======
 MOZ_MUST_USE bool TypedArray_bufferGetter(JSContext* cx, unsigned argc,
                                           Value* vp);
 
+extern TypedArrayObject* NewTypedArrayWithTemplateAndLength(
+    JSContext* cx, HandleObject templateObj, int32_t len);
+
+extern TypedArrayObject* NewTypedArrayWithTemplateAndArray(
+    JSContext* cx, HandleObject templateObj, HandleObject array);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 extern TypedArrayObject* TypedArrayCreateWithTemplate(JSContext* cx,
                                                       HandleObject templateObj,
                                                       int32_t len);
+||||||| merged common ancestors
+extern TypedArrayObject*
+TypedArrayCreateWithTemplate(JSContext* cx, HandleObject templateObj, int32_t len);
+=======
+extern TypedArrayObject* NewTypedArrayWithTemplateAndBuffer(
+    JSContext* cx, HandleObject templateObj, HandleObject arrayBuffer,
+    HandleValue byteOffset, HandleValue length);
+>>>>>>> upstream-releases
 
 inline bool IsTypedArrayClass(const Class* clasp) {
   return &TypedArrayObject::classes[0] <= clasp &&
@@ -192,7 +530,16 @@ inline Scalar::Type GetTypedArrayClassType(const Class* clasp) {
   return static_cast<Scalar::Type>(clasp - &TypedArrayObject::classes[0]);
 }
 
+<<<<<<< HEAD
 bool IsTypedArrayConstructor(HandleValue v, uint32_t type);
+||||||| merged common ancestors
+bool
+IsTypedArrayConstructor(HandleValue v, uint32_t type);
+=======
+bool IsTypedArrayConstructor(const JSObject* obj);
+
+bool IsTypedArrayConstructor(HandleValue v, uint32_t type);
+>>>>>>> upstream-releases
 
 // In WebIDL terminology, a BufferSource is either an ArrayBuffer or a typed
 // array view. In either case, extract the dataPointer/byteLength.
@@ -244,10 +591,15 @@ inline bool IsTypedArrayIndex(jsid id, uint64_t* indexp) {
   return StringIsTypedArrayIndex(s, length, indexp);
 }
 
+bool SetTypedArrayElement(JSContext* cx, Handle<TypedArrayObject*> obj,
+                          uint64_t index, HandleValue v,
+                          ObjectOpResult& result);
+
 /*
  * Implements [[DefineOwnProperty]] for TypedArrays when the property
  * key is a TypedArray index.
  */
+<<<<<<< HEAD
 bool DefineTypedArrayElement(JSContext* cx, HandleObject arr, uint64_t index,
                              Handle<PropertyDescriptor> desc,
                              ObjectOpResult& result);
@@ -271,6 +623,59 @@ static inline unsigned TypedArrayShift(Scalar::Type viewType) {
     default:;
   }
   MOZ_CRASH("Unexpected array type");
+||||||| merged common ancestors
+bool
+DefineTypedArrayElement(JSContext* cx, HandleObject arr, uint64_t index,
+                        Handle<PropertyDescriptor> desc, ObjectOpResult& result);
+
+static inline unsigned
+TypedArrayShift(Scalar::Type viewType)
+{
+    switch (viewType) {
+      case Scalar::Int8:
+      case Scalar::Uint8:
+      case Scalar::Uint8Clamped:
+        return 0;
+      case Scalar::Int16:
+      case Scalar::Uint16:
+        return 1;
+      case Scalar::Int32:
+      case Scalar::Uint32:
+      case Scalar::Float32:
+        return 2;
+      case Scalar::Int64:
+      case Scalar::Float64:
+        return 3;
+      default:;
+    }
+    MOZ_CRASH("Unexpected array type");
+=======
+bool DefineTypedArrayElement(JSContext* cx, HandleObject arr, uint64_t index,
+                             Handle<PropertyDescriptor> desc,
+                             ObjectOpResult& result);
+
+static inline constexpr unsigned TypedArrayShift(Scalar::Type viewType) {
+  switch (viewType) {
+    case Scalar::Int8:
+    case Scalar::Uint8:
+    case Scalar::Uint8Clamped:
+      return 0;
+    case Scalar::Int16:
+    case Scalar::Uint16:
+      return 1;
+    case Scalar::Int32:
+    case Scalar::Uint32:
+    case Scalar::Float32:
+      return 2;
+    case Scalar::BigInt64:
+    case Scalar::BigUint64:
+    case Scalar::Int64:
+    case Scalar::Float64:
+      return 3;
+    default:
+      MOZ_CRASH("Unexpected array type");
+  }
+>>>>>>> upstream-releases
 }
 
 static inline unsigned TypedArrayElemSize(Scalar::Type viewType) {

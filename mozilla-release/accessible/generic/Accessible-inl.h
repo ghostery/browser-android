@@ -10,9 +10,10 @@
 #include "DocAccessible.h"
 #include "ARIAMap.h"
 #include "nsCoreUtils.h"
+#include "mozilla/PresShell.h"
 
 #ifdef A11Y_LOG
-#include "Logging.h"
+#  include "Logging.h"
 #endif
 
 namespace mozilla {
@@ -89,8 +90,23 @@ inline bool Accessible::IsDefunct() const {
   return mStateFlags & eIsDefunct;
 }
 
+<<<<<<< HEAD
 inline void Accessible::ScrollTo(uint32_t aHow) const {
   if (mContent) nsCoreUtils::ScrollTo(mDoc->PresShell(), mContent, aHow);
+||||||| merged common ancestors
+inline void
+Accessible::ScrollTo(uint32_t aHow) const
+{
+  if (mContent)
+    nsCoreUtils::ScrollTo(mDoc->PresShell(), mContent, aHow);
+=======
+inline void Accessible::ScrollTo(uint32_t aHow) const {
+  if (mContent) {
+    RefPtr<PresShell> presShell = mDoc->PresShellPtr();
+    nsCOMPtr<nsIContent> content = mContent;
+    nsCoreUtils::ScrollTo(presShell, content, aHow);
+  }
+>>>>>>> upstream-releases
 }
 
 inline bool Accessible::InsertAfter(Accessible* aNewChild,

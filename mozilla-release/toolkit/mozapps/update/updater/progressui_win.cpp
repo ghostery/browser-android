@@ -13,7 +13,7 @@
 #include "resource.h"
 #include "progressui.h"
 #include "readstrings.h"
-#include "errors.h"
+#include "updatererrors.h"
 
 #define TIMER_ID 1
 #define TIMER_INTERVAL 100
@@ -44,11 +44,35 @@ static BOOL sQuit = FALSE;
 static BOOL sIndeterminate = FALSE;
 static StringTable sUIStrings;
 
+<<<<<<< HEAD
 static BOOL GetStringsFile(WCHAR filename[MAX_PATH]) {
   if (!GetModuleFileNameW(nullptr, filename, MAX_PATH)) return FALSE;
+||||||| merged common ancestors
+static BOOL
+GetStringsFile(WCHAR filename[MAX_PATH])
+{
+  if (!GetModuleFileNameW(nullptr, filename, MAX_PATH))
+    return FALSE;
+=======
+static BOOL GetStringsFile(WCHAR filename[MAX_PATH]) {
+  if (!GetModuleFileNameW(nullptr, filename, MAX_PATH)) {
+    return FALSE;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   WCHAR *dot = wcsrchr(filename, '.');
   if (!dot || wcsicmp(dot + 1, L"exe")) return FALSE;
+||||||| merged common ancestors
+  WCHAR *dot = wcsrchr(filename, '.');
+  if (!dot || wcsicmp(dot + 1, L"exe"))
+    return FALSE;
+=======
+  WCHAR* dot = wcsrchr(filename, '.');
+  if (!dot || wcsicmp(dot + 1, L"exe")) {
+    return FALSE;
+  }
+>>>>>>> upstream-releases
 
   wcscpy(dot + 1, L"ini");
   return TRUE;
@@ -102,8 +126,20 @@ static void InitDialog(HWND hDlg) {
   SetWindowTextW(GetDlgItem(hDlg, IDC_INFO), szwInfo);
 
   // Set dialog icon
+<<<<<<< HEAD
   HICON hIcon = LoadIcon(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_DIALOG));
   if (hIcon) SendMessage(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+||||||| merged common ancestors
+  HICON hIcon = LoadIcon(GetModuleHandle(nullptr),
+                         MAKEINTRESOURCE(IDI_DIALOG));
+  if (hIcon)
+    SendMessage(hDlg, WM_SETICON, ICON_BIG, (LPARAM) hIcon);
+=======
+  HICON hIcon = LoadIcon(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_DIALOG));
+  if (hIcon) {
+    SendMessage(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+  }
+>>>>>>> upstream-releases
 
   HWND hWndPro = GetDlgItem(hDlg, IDC_PROGRESS);
   SendMessage(hWndPro, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
@@ -122,7 +158,16 @@ static void InitDialog(HWND hDlg) {
   HFONT hInfoFont, hOldFont = NULL;
   hInfoFont = (HFONT)SendMessage(hWndInfo, WM_GETFONT, 0, 0);
 
+<<<<<<< HEAD
   if (hInfoFont) hOldFont = (HFONT)SelectObject(hDCInfo, hInfoFont);
+||||||| merged common ancestors
+  if (hInfoFont)
+    hOldFont = (HFONT)SelectObject(hDCInfo, hInfoFont);
+=======
+  if (hInfoFont) {
+    hOldFont = (HFONT)SelectObject(hDCInfo, hInfoFont);
+  }
+>>>>>>> upstream-releases
 
   // Measure the space needed for the text on a single line. DT_CALCRECT means
   // nothing is drawn.
@@ -133,12 +178,34 @@ static void InitDialog(HWND hDlg) {
     // Calculate the additional space needed for the text by subtracting from
     // the rectangle returned by DrawText the existing client rectangle's width
     // and height.
+<<<<<<< HEAD
     extra.cx =
         (textSize.right - textSize.left) - (infoSize.right - infoSize.left);
     extra.cy =
         (textSize.bottom - textSize.top) - (infoSize.bottom - infoSize.top);
     if (extra.cx < 0) extra.cx = 0;
     if (extra.cy < 0) extra.cy = 0;
+||||||| merged common ancestors
+    extra.cx = (textSize.right - textSize.left) - \
+               (infoSize.right - infoSize.left);
+    extra.cy = (textSize.bottom - textSize.top) - \
+               (infoSize.bottom - infoSize.top);
+    if (extra.cx < 0)
+      extra.cx = 0;
+    if (extra.cy < 0)
+      extra.cy = 0;
+=======
+    extra.cx =
+        (textSize.right - textSize.left) - (infoSize.right - infoSize.left);
+    extra.cy =
+        (textSize.bottom - textSize.top) - (infoSize.bottom - infoSize.top);
+    if (extra.cx < 0) {
+      extra.cx = 0;
+    }
+    if (extra.cy < 0) {
+      extra.cy = 0;
+    }
+>>>>>>> upstream-releases
     if ((extra.cx > 0) || (extra.cy > 0)) {
       RESIZE_WINDOW(hDlg, extra.cx, extra.cy);
       RESIZE_WINDOW(hWndInfo, extra.cx, extra.cy);
@@ -147,7 +214,16 @@ static void InitDialog(HWND hDlg) {
     }
   }
 
+<<<<<<< HEAD
   if (hOldFont) SelectObject(hDCInfo, hOldFont);
+||||||| merged common ancestors
+  if (hOldFont)
+    SelectObject(hDCInfo, hOldFont);
+=======
+  if (hOldFont) {
+    SelectObject(hDCInfo, hOldFont);
+  }
+>>>>>>> upstream-releases
 
   ReleaseDC(hWndInfo, hDCInfo);
 
@@ -178,7 +254,17 @@ static LRESULT CALLBACK DialogProc(HWND hDlg, UINT message, WPARAM wParam,
   return FALSE;
 }
 
+<<<<<<< HEAD
 int InitProgressUI(int *argc, WCHAR ***argv) { return 0; }
+||||||| merged common ancestors
+int
+InitProgressUI(int *argc, WCHAR ***argv)
+{
+  return 0;
+}
+=======
+int InitProgressUI(int* argc, WCHAR*** argv) { return 0; }
+>>>>>>> upstream-releases
 
 /**
  * Initializes the progress UI strings
@@ -213,7 +299,16 @@ int ShowProgressUI(bool indeterminate, bool initUIStrings) {
     // ShowProgressUI is called sProgress is less than 70.
     Sleep(500);
 
+<<<<<<< HEAD
     if (sQuit || sProgress > 70.0f) return 0;
+||||||| merged common ancestors
+    if (sQuit || sProgress > 70.0f)
+      return 0;
+=======
+    if (sQuit || sProgress > 70.0f) {
+      return 0;
+    }
+>>>>>>> upstream-releases
   }
 
   // Don't load the UI if there's an <exe_name>.Local directory for redirection.

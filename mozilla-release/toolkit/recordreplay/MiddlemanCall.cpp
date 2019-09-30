@@ -11,26 +11,42 @@
 namespace mozilla {
 namespace recordreplay {
 
-// In a replaying or middleman process, all middleman calls that have been
-// encountered, indexed by their ID.
-static StaticInfallibleVector<MiddlemanCall*> gMiddlemanCalls;
-
-// In a replaying or middleman process, association between values produced by
-// a middleman call and the call itself.
 typedef std::unordered_map<const void*, MiddlemanCall*> MiddlemanCallMap;
-static MiddlemanCallMap* gMiddlemanCallMap;
 
-// In a middleman process, any buffers allocated for performed calls.
-static StaticInfallibleVector<void*> gAllocatedBuffers;
+// State used for keeping track of middleman calls in either a replaying
+// process or middleman process.
+struct MiddlemanCallState {
+  // In a replaying or middleman process, all middleman calls that have been
+  // encountered, indexed by their ID.
+  InfallibleVector<MiddlemanCall*> mCalls;
 
-// Lock protecting middleman call state.
+  // In a replaying or middleman process, association between values produced by
+  // a middleman call and the call itself.
+  MiddlemanCallMap mCallMap;
+
+  // In a middleman process, any buffers allocated for performed calls.
+  InfallibleVector<void*> mAllocatedBuffers;
+};
+
+// In a replaying process, all middleman call state. In a middleman process,
+// state for the child currently being processed.
+static MiddlemanCallState* gState;
+
+// In a middleman process, middleman call state for each child process, indexed
+// by the child ID.
+static StaticInfallibleVector<MiddlemanCallState*> gStatePerChild;
+
+// In a replaying process, lock protecting middleman call state. In the
+// middleman, all accesses occur on the main thread.
 static Monitor* gMonitor;
 
 void InitializeMiddlemanCalls() {
   MOZ_RELEASE_ASSERT(IsRecordingOrReplaying() || IsMiddleman());
 
-  gMiddlemanCallMap = new MiddlemanCallMap();
-  gMonitor = new Monitor();
+  if (IsReplaying()) {
+    gState = new MiddlemanCallState();
+    gMonitor = new Monitor();
+  }
 }
 
 // Apply the ReplayInput phase to aCall and any calls it depends on that have
@@ -79,9 +95,9 @@ bool SendCallToMiddleman(size_t aCallId, CallArguments* aArguments,
   MonitorAutoLock lock(*gMonitor);
 
   // Allocate and fill in a new MiddlemanCall.
-  size_t id = gMiddlemanCalls.length();
+  size_t id = gState->mCalls.length();
   MiddlemanCall* newCall = new MiddlemanCall();
-  gMiddlemanCalls.emplaceBack(newCall);
+  gState->mCalls.emplaceBack(newCall);
   newCall->mId = id;
   newCall->mCallId = aCallId;
   newCall->mArguments.CopyFrom(aArguments);
@@ -93,12 +109,23 @@ bool SendCallToMiddleman(size_t aCallId, CallArguments* aArguments,
     redirection.mMiddlemanCall(cx);
     if (cx.mFailed) {
       delete newCall;
+<<<<<<< HEAD
       gMiddlemanCalls.popBack();
       if (child::CurrentRepaintCannotFail()) {
         child::ReportFatalError(Nothing(),
                                 "Middleman call preface failed: %s\n",
                                 redirection.mName);
       }
+||||||| merged common ancestors
+      gMiddlemanCalls.popBack();
+=======
+      gState->mCalls.popBack();
+      if (child::CurrentRepaintCannotFail()) {
+        child::ReportFatalError(Nothing(),
+                                "Middleman call preface failed: %s\n",
+                                redirection.mName);
+      }
+>>>>>>> upstream-releases
       return false;
     }
   }
@@ -154,9 +181,28 @@ bool SendCallToMiddleman(size_t aCallId, CallArguments* aArguments,
   return true;
 }
 
+<<<<<<< HEAD
 void ProcessMiddlemanCall(const char* aInputData, size_t aInputSize,
                           InfallibleVector<char>* aOutputData) {
+||||||| merged common ancestors
+void
+ProcessMiddlemanCall(const char* aInputData, size_t aInputSize,
+                     InfallibleVector<char>* aOutputData)
+{
+=======
+void ProcessMiddlemanCall(size_t aChildId, const char* aInputData,
+                          size_t aInputSize,
+                          InfallibleVector<char>* aOutputData) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(IsMiddleman());
+
+  while (aChildId >= gStatePerChild.length()) {
+    gStatePerChild.append(nullptr);
+  }
+  if (!gStatePerChild[aChildId]) {
+    gStatePerChild[aChildId] = new MiddlemanCallState();
+  }
+  gState = gStatePerChild[aChildId];
 
   BufferStream inputStream(aInputData, aInputSize);
   BufferStream outputStream(aOutputData);
@@ -192,12 +238,14 @@ void ProcessMiddlemanCall(const char* aInputData, size_t aInputSize,
     call->mArguments.CopyFrom(&arguments);
     call->EncodeOutput(outputStream);
 
-    while (call->mId >= gMiddlemanCalls.length()) {
-      gMiddlemanCalls.emplaceBack(nullptr);
+    while (call->mId >= gState->mCalls.length()) {
+      gState->mCalls.emplaceBack(nullptr);
     }
-    MOZ_RELEASE_ASSERT(!gMiddlemanCalls[call->mId]);
-    gMiddlemanCalls[call->mId] = call;
+    MOZ_RELEASE_ASSERT(!gState->mCalls[call->mId]);
+    gState->mCalls[call->mId] = call;
   }
+
+  gState = nullptr;
 }
 
 void* MiddlemanCallContext::AllocateBytes(size_t aSize) {
@@ -209,16 +257,33 @@ void* MiddlemanCallContext::AllocateBytes(size_t aSize) {
   // of the MiddlemanCall itself) or will be recovered when we rewind after we
   // are done with our divergence from the recording (any other phase).
   if (IsMiddleman()) {
-    gAllocatedBuffers.append(rv);
+    gState->mAllocatedBuffers.append(rv);
   }
 
   return rv;
 }
 
+<<<<<<< HEAD
 void ResetMiddlemanCalls() {
+||||||| merged common ancestors
+void
+ResetMiddlemanCalls()
+{
+=======
+void ResetMiddlemanCalls(size_t aChildId) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(IsMiddleman());
 
-  for (MiddlemanCall* call : gMiddlemanCalls) {
+  if (aChildId >= gStatePerChild.length()) {
+    return;
+  }
+
+  gState = gStatePerChild[aChildId];
+  if (!gState) {
+    return;
+  }
+
+  for (MiddlemanCall* call : gState->mCalls) {
     if (call) {
       CallArguments arguments;
       call->mArguments.CopyTo(&arguments);
@@ -229,6 +294,7 @@ void ResetMiddlemanCalls() {
     }
   }
 
+<<<<<<< HEAD
   // Delete the calls in a second pass. The MiddlemanRelease phase depends on
   // previous middleman calls still existing.
   for (MiddlemanCall* call : gMiddlemanCalls) {
@@ -237,24 +303,70 @@ void ResetMiddlemanCalls() {
 
   gMiddlemanCalls.clear();
   for (auto buffer : gAllocatedBuffers) {
+||||||| merged common ancestors
+  gMiddlemanCalls.clear();
+  for (auto buffer : gAllocatedBuffers) {
+=======
+  // Delete the calls in a second pass. The MiddlemanRelease phase depends on
+  // previous middleman calls still existing.
+  for (MiddlemanCall* call : gState->mCalls) {
+    delete call;
+  }
+
+  gState->mCalls.clear();
+  for (auto buffer : gState->mAllocatedBuffers) {
+>>>>>>> upstream-releases
     free(buffer);
   }
+<<<<<<< HEAD
   gAllocatedBuffers.clear();
   gMiddlemanCallMap->clear();
+||||||| merged common ancestors
+  gAllocatedBuffers.clear();
+=======
+  gState->mAllocatedBuffers.clear();
+  gState->mCallMap.clear();
+
+  gState = nullptr;
+>>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // System Values
 ///////////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 static void AddMiddlemanCallValue(const void* aThing, MiddlemanCall* aCall) {
   gMiddlemanCallMap->erase(aThing);
   gMiddlemanCallMap->insert(MiddlemanCallMap::value_type(aThing, aCall));
+||||||| merged common ancestors
+static void
+AddMiddlemanCallValue(const void* aThing, MiddlemanCall* aCall)
+{
+  gMiddlemanCallMap->erase(aThing);
+  gMiddlemanCallMap->insert(MiddlemanCallMap::value_type(aThing, aCall));
+=======
+static void AddMiddlemanCallValue(const void* aThing, MiddlemanCall* aCall) {
+  gState->mCallMap.erase(aThing);
+  gState->mCallMap.insert(MiddlemanCallMap::value_type(aThing, aCall));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MiddlemanCall* LookupMiddlemanCall(const void* aThing) {
   MiddlemanCallMap::const_iterator iter = gMiddlemanCallMap->find(aThing);
   if (iter != gMiddlemanCallMap->end()) {
+||||||| merged common ancestors
+static MiddlemanCall*
+LookupMiddlemanCall(const void* aThing)
+{
+  MiddlemanCallMap::const_iterator iter = gMiddlemanCallMap->find(aThing);
+  if (iter != gMiddlemanCallMap->end()) {
+=======
+static MiddlemanCall* LookupMiddlemanCall(const void* aThing) {
+  MiddlemanCallMap::const_iterator iter = gState->mCallMap.find(aThing);
+  if (iter != gState->mCallMap.end()) {
+>>>>>>> upstream-releases
     return iter->second;
   }
   return nullptr;
@@ -262,9 +374,20 @@ static MiddlemanCall* LookupMiddlemanCall(const void* aThing) {
 
 static const void* GetMiddlemanCallValue(size_t aId) {
   MOZ_RELEASE_ASSERT(IsMiddleman());
+<<<<<<< HEAD
   MOZ_RELEASE_ASSERT(aId < gMiddlemanCalls.length() && gMiddlemanCalls[aId] &&
                      gMiddlemanCalls[aId]->mMiddlemanValue.isSome());
   return gMiddlemanCalls[aId]->mMiddlemanValue.ref();
+||||||| merged common ancestors
+  MOZ_RELEASE_ASSERT(aId < gMiddlemanCalls.length() &&
+                     gMiddlemanCalls[aId] &&
+                     gMiddlemanCalls[aId]->mMiddlemanValue.isSome());
+  return gMiddlemanCalls[aId]->mMiddlemanValue.ref();
+=======
+  MOZ_RELEASE_ASSERT(aId < gState->mCalls.length() && gState->mCalls[aId] &&
+                     gState->mCalls[aId]->mMiddlemanValue.isSome());
+  return gState->mCalls[aId]->mMiddlemanValue.ref();
+>>>>>>> upstream-releases
 }
 
 bool MM_SystemInput(MiddlemanCallContext& aCx, const void** aThingPtr) {
@@ -290,6 +413,7 @@ bool MM_SystemInput(MiddlemanCallContext& aCx, const void** aThingPtr) {
   switch (aCx.mPhase) {
     case MiddlemanCallPhase::ReplayPreface:
       return true;
+<<<<<<< HEAD
     case MiddlemanCallPhase::ReplayInput:
       if (callId.isSome()) {
         aCx.WriteInputScalar(callId.ref());
@@ -306,6 +430,36 @@ bool MM_SystemInput(MiddlemanCallContext& aCx, const void** aThingPtr) {
       return false;
     default:
       MOZ_CRASH("Bad phase");
+||||||| merged common ancestors
+    }
+    return false;
+  case MiddlemanCallPhase::MiddlemanInput:
+    if (callId.isSome()) {
+      size_t callIndex = aCx.ReadInputScalar();
+      *aThingPtr = GetMiddlemanCallValue(callIndex);
+      return true;
+    }
+    return false;
+  default:
+    MOZ_CRASH("Bad phase");
+=======
+    case MiddlemanCallPhase::ReplayInput:
+      if (callId.isSome()) {
+        aCx.WriteInputScalar(callId.ref());
+        aCx.mDependentCalls->append(gState->mCalls[callId.ref()]);
+        return true;
+      }
+      return false;
+    case MiddlemanCallPhase::MiddlemanInput:
+      if (callId.isSome()) {
+        size_t callIndex = aCx.ReadInputScalar();
+        *aThingPtr = GetMiddlemanCallValue(callIndex);
+        return true;
+      }
+      return false;
+    default:
+      MOZ_CRASH("Bad phase");
+>>>>>>> upstream-releases
   }
 }
 

@@ -14,7 +14,6 @@ class nsIPrincipal;
 
 namespace mozilla {
 class DOMMediaStream;
-class MediaStreamListener;
 class SourceMediaStream;
 
 namespace layers {
@@ -44,8 +43,11 @@ class OutputStreamFrameListener;
  * | Canvas |  SetFrameCapture()        | (FrameCaptureListener) |
  * |________| ------------------------> |________________________|
  *                                                  |
- *                                                  | SetImage()
+ *                                                  | SetImage() -
+ *                                                  | AppendToTrack()
+ *                                                  |
  *                                                  v
+<<<<<<< HEAD
  *                                         ____________________
  *                                        |Stream/TrackListener|
  * ---------------------------------------| (All image access  |---------------
@@ -54,6 +56,17 @@ class OutputStreamFrameListener;
  *                                              ^       |
  *                                 NotifyPull() |       | AppendToTrack()
  *                                              |       v
+||||||| merged common ancestors
+ *                                         ___________________
+ *                                        |   StreamListener  |
+ * ---------------------------------------| (All image access |----------------
+ *     === MediaStreamGraph Thread ===    |   Mutex Guarded)  |
+ *                                        |___________________|
+ *                                              ^       |
+ *                                 NotifyPull() |       | AppendToTrack()
+ *                                              |       v
+=======
+>>>>>>> upstream-releases
  *                                      ___________________________
  *                                     |                           |
  *                                     |  MSG / SourceMediaStream  |
@@ -93,12 +106,28 @@ class OutputStreamDriver : public FrameCaptureListener {
 
  protected:
   virtual ~OutputStreamDriver();
+<<<<<<< HEAD
   class StreamListener;
   class TrackListener;
+||||||| merged common ancestors
+  class StreamListener;
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   const RefPtr<SourceMediaStream> mSourceStream;
   const RefPtr<TrackListener> mTrackListener;
+||||||| merged common ancestors
+private:
+  RefPtr<SourceMediaStream> mSourceStream;
+  RefPtr<StreamListener> mStreamListener;
+=======
+ private:
+  const TrackID mTrackId;
+  const RefPtr<SourceMediaStream> mSourceStream;
+  const PrincipalHandle mPrincipalHandle;
+>>>>>>> upstream-releases
 };
 
 class CanvasCaptureMediaStream : public DOMMediaStream {

@@ -6,7 +6,7 @@ In Firefox, the Telemetry system collects various measures of Firefox performanc
 
 .. important::
 
-    Every new data collection in Firefox needs a `data collection review <https://wiki.mozilla.org/Firefox/Data_Collection#Requesting_Approval>`_ from a data collection peer. Just set the feedback? flag for one of the data peers. We try to reply within a business day.
+    Every new or changed data collection in Firefox needs a `data collection review <https://wiki.mozilla.org/Firefox/Data_Collection>`__ from a Data Steward.
 
 The following sections explain how to add a new measurement to Telemetry.
 
@@ -222,7 +222,7 @@ Optional. This is one of:
     Because they are collected by default, opt-out probes need to meet a higher "user benefit" threshold than opt-in probes during data collection review.
 
 
-    **Every** new data collection in Firefox needs a `data collection review <https://wiki.mozilla.org/Firefox/Data_Collection#Requesting_Approval>`_ from a data collection peer. Just set the feedback? flag for one of the data peers.
+    Every new or changed data collection in Firefox needs a `data collection review <https://wiki.mozilla.org/Firefox/Data_Collection>`__ from a Data Steward.
 
 ``products``
 -------------
@@ -235,6 +235,7 @@ Optional. This field is a list of products this histogram can be recorded on. Cu
 
 If this field is left out it defaults to ``all``.
 
+<<<<<<< HEAD
 ``record_into_store``
 ---------------------
 
@@ -245,6 +246,15 @@ If this field is left out it defaults to ``all``.
 Optional. This field is a list of stores this histogram should be recorded into.
 If this field is left out it defaults to ``[main]``.
 
+||||||| merged common ancestors
+=======
+``record_into_store``
+---------------------
+
+Optional. This field is a list of stores this histogram should be recorded into.
+If this field is left out it defaults to ``[main]``.
+
+>>>>>>> upstream-releases
 Changing a histogram
 ====================
 Changing histogram declarations after the histogram has been released is tricky. Many tools (like `the aggregator <https://github.com/mozilla/python_mozaggregator>`_) assume histograms don't change. The current recommended procedure is to change the name of the histogram.

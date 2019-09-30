@@ -67,9 +67,21 @@ class ClientThing {
   }
 
   // Conditionally execute the given callable based on the current state.
+<<<<<<< HEAD
   template <typename Callable>
   void MaybeExecute(const Callable& aSuccess,
                     const std::function<void()>& aFailure = [] {}) {
+||||||| merged common ancestors
+  template<typename Callable>
+  void
+  MaybeExecute(const Callable& aSuccess,
+               const std::function<void()>& aFailure = []{})
+  {
+=======
+  template <typename Callable>
+  void MaybeExecute(
+      const Callable& aSuccess, const std::function<void()>& aFailure = [] {}) {
+>>>>>>> upstream-releases
     AssertIsValid();
     if (mShutdown) {
       aFailure();

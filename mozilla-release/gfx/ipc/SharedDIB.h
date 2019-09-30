@@ -38,10 +38,18 @@ class SharedDIB {
   nsresult Attach(Handle aHandle, uint32_t aSize);
 
   // Returns a SharedMemoryHandle suitable for sharing with another process.
-  nsresult ShareToProcess(base::ProcessId aTargetPid, Handle *aNewHandle);
+  nsresult ShareToProcess(base::ProcessId aTargetPid, Handle* aNewHandle);
 
+<<<<<<< HEAD
  protected:
   base::SharedMemory *mShMem;
+||||||| merged common ancestors
+protected:
+  base::SharedMemory *mShMem;
+=======
+ protected:
+  base::SharedMemory* mShMem;
+>>>>>>> upstream-releases
 };
 
 }  // namespace gfx

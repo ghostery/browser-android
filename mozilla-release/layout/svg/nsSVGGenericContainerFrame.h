@@ -16,17 +16,49 @@
 
 class nsAtom;
 class nsIFrame;
-class nsIPresShell;
 
+<<<<<<< HEAD
 class nsSVGGenericContainerFrame final : public nsSVGDisplayContainerFrame {
   friend nsIFrame* NS_NewSVGGenericContainerFrame(nsIPresShell* aPresShell,
                                                   ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGGenericContainerFrame final : public nsSVGDisplayContainerFrame
+{
+  friend nsIFrame*
+  NS_NewSVGGenericContainerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  protected:
   explicit nsSVGGenericContainerFrame(ComputedStyle* aStyle)
       : nsSVGDisplayContainerFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+protected:
+  explicit nsSVGGenericContainerFrame(ComputedStyle* aStyle)
+    : nsSVGDisplayContainerFrame(aStyle, kClassID)
+  {}
+=======
+class nsSVGGenericContainerFrame final : public nsSVGDisplayContainerFrame {
+  friend nsIFrame* NS_NewSVGGenericContainerFrame(
+      mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+||||||| merged common ancestors
+public:
+=======
+ protected:
+  explicit nsSVGGenericContainerFrame(ComputedStyle* aStyle,
+                                      nsPresContext* aPresContext)
+      : nsSVGDisplayContainerFrame(aStyle, aPresContext, kClassID) {}
 
  public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGGenericContainerFrame)
 
   // nsIFrame:

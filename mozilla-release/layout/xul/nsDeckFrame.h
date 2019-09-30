@@ -18,12 +18,25 @@ one time. So the can be flipped though like a deck of cards.
 #include "mozilla/Attributes.h"
 #include "nsBoxFrame.h"
 
+<<<<<<< HEAD
 class nsDeckFrame final : public nsBoxFrame {
  public:
+||||||| merged common ancestors
+class nsDeckFrame final : public nsBoxFrame
+{
+public:
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsDeckFrame final : public nsBoxFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsDeckFrame)
 
-  friend nsIFrame* NS_NewDeckFrame(nsIPresShell* aPresShell,
+  friend nsIFrame* NS_NewDeckFrame(mozilla::PresShell* aPresShell,
                                    ComputedStyle* aStyle);
 
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
@@ -48,7 +61,7 @@ class nsDeckFrame final : public nsBoxFrame {
   }
 #endif
 
-  explicit nsDeckFrame(ComputedStyle* aStyle);
+  explicit nsDeckFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
 
   nsIFrame* GetSelectedBox();
 
@@ -56,10 +69,26 @@ class nsDeckFrame final : public nsBoxFrame {
   void IndexChanged();
   int32_t GetSelectedIndex();
   void HideBox(nsIFrame* aBox);
+  void ShowBox(nsIFrame* aBox);
 
  private:
   int32_t mIndex;
 
+<<<<<<< HEAD
+};  // class nsDeckFrame
+||||||| merged common ancestors
+}; // class nsDeckFrame
+=======
+  void Animate(nsIFrame*, bool);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#endif
+||||||| merged common ancestors
+#endif
+
+=======
 };  // class nsDeckFrame
 
 #endif
+>>>>>>> upstream-releases

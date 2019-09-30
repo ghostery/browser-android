@@ -293,7 +293,21 @@ def valid_scale(iform):
 
 # A null unary instruction that takes a GPR register. Can be used for identity
 # copies and no-op conversions.
+<<<<<<< HEAD
 null = EncRecipe('null', Unary, base_size=0, ins=GPR, outs=0, emit='')
+||||||| merged common ancestors
+null = EncRecipe('null', Unary, size=0, ins=GPR, outs=0, emit='')
+=======
+null = EncRecipe('null', Unary, base_size=0, ins=GPR, outs=0, emit='')
+
+stacknull = EncRecipe('stacknull', Unary, base_size=0, ins=StackGPR32,
+                      outs=StackGPR32, emit='')
+
+debugtrap = EncRecipe('debugtrap', NullAry, base_size=1, ins=(), outs=(),
+                      emit='''
+                      sink.put1(0xcc);
+                      ''')
+>>>>>>> upstream-releases
 
 # XX opcode, no ModR/M.
 trap = TailRecipe(
@@ -1929,7 +1943,7 @@ icscc = TailRecipe(
         PUT_OP(bits, rex2(in_reg0, in_reg1), sink);
         modrm_rr(in_reg0, in_reg1, sink);
         // `setCC` instruction, no REX.
-        use ir::condcodes::IntCC::*;
+        use crate::ir::condcodes::IntCC::*;
         let setcc = match cond {
             Equal => 0x94,
             NotEqual => 0x95,
@@ -1957,7 +1971,7 @@ icscc_ib = TailRecipe(
         let imm: i64 = imm.into();
         sink.put1(imm as u8);
         // `setCC` instruction, no REX.
-        use ir::condcodes::IntCC::*;
+        use crate::ir::condcodes::IntCC::*;
         let setcc = match cond {
             Equal => 0x94,
             NotEqual => 0x95,
@@ -1985,7 +1999,7 @@ icscc_id = TailRecipe(
         let imm: i64 = imm.into();
         sink.put4(imm as u32);
         // `setCC` instruction, no REX.
-        use ir::condcodes::IntCC::*;
+        use crate::ir::condcodes::IntCC::*;
         let setcc = match cond {
             Equal => 0x94,
             NotEqual => 0x95,
@@ -2025,7 +2039,7 @@ fcscc = TailRecipe(
         PUT_OP(bits, rex2(in_reg1, in_reg0), sink);
         modrm_rr(in_reg1, in_reg0, sink);
         // `setCC` instruction, no REX.
-        use ir::condcodes::FloatCC::*;
+        use crate::ir::condcodes::FloatCC::*;
         let setcc = match cond {
             Ordered                    => 0x9b, // EQ|LT|GT => setnp (P=0)
             Unordered                  => 0x9a, // UN       => setp  (P=1)

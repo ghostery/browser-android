@@ -11,15 +11,32 @@
 
 #include "gc/Barrier.h"
 #include "gc/Marking.h"
+#include "vm/EnvironmentObject.h"
 #include "vm/GlobalObject.h"
 #include "vm/Iteration.h"
 
 #include "vm/JSContext-inl.h"
 
+<<<<<<< HEAD
 inline void JS::Realm::initGlobal(js::GlobalObject& global) {
   MOZ_ASSERT(global.realm() == this);
   MOZ_ASSERT(!global_);
   global_.set(&global);
+||||||| merged common ancestors
+inline void
+JS::Realm::initGlobal(js::GlobalObject& global)
+{
+    MOZ_ASSERT(global.realm() == this);
+    MOZ_ASSERT(!global_);
+    global_.set(&global);
+=======
+inline void JS::Realm::initGlobal(js::GlobalObject& global,
+                                  js::LexicalEnvironmentObject& lexicalEnv) {
+  MOZ_ASSERT(global.realm() == this);
+  MOZ_ASSERT(!global_);
+  global_.set(&global);
+  lexicalEnv_.set(&lexicalEnv);
+>>>>>>> upstream-releases
 }
 
 js::GlobalObject* JS::Realm::maybeGlobal() const {
@@ -31,10 +48,53 @@ js::GlobalObject* JS::Realm::unsafeUnbarrieredMaybeGlobal() const {
   return *global_.unsafeGet();
 }
 
+<<<<<<< HEAD
 inline bool JS::Realm::globalIsAboutToBeFinalized() {
   MOZ_ASSERT(zone_->isGCSweeping());
   return global_ &&
          js::gc::IsAboutToBeFinalizedUnbarriered(global_.unsafeGet());
+||||||| merged common ancestors
+inline bool
+JS::Realm::globalIsAboutToBeFinalized()
+{
+    MOZ_ASSERT(zone_->isGCSweeping());
+    return global_ && js::gc::IsAboutToBeFinalizedUnbarriered(global_.unsafeGet());
+=======
+js::LexicalEnvironmentObject* JS::Realm::unbarrieredLexicalEnvironment() const {
+  return *lexicalEnv_.unsafeGet();
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+/* static */ inline js::ObjectRealm& js::ObjectRealm::get(const JSObject* obj) {
+  // Note: obj might be a CCW if we're accessing ObjectRealm::enumerators.
+  // CCWs here are fine because we always return the same ObjectRealm for a
+  // particular (CCW) object.
+  return obj->maybeCCWRealm()->objects_;
+||||||| merged common ancestors
+/* static */ inline js::ObjectRealm&
+js::ObjectRealm::get(const JSObject* obj)
+{
+    // Note: obj might be a CCW if we're accessing ObjectRealm::enumerators.
+    // CCWs here are fine because we always return the same ObjectRealm for a
+    // particular (CCW) object.
+    return obj->maybeCCWRealm()->objects_;
+=======
+inline bool JS::Realm::globalIsAboutToBeFinalized() {
+  MOZ_ASSERT(zone_->isGCSweeping());
+  return global_ &&
+         js::gc::IsAboutToBeFinalizedUnbarriered(global_.unsafeGet());
+}
+
+inline bool JS::Realm::hasLiveGlobal() const {
+  js::GlobalObject* global = unsafeUnbarrieredMaybeGlobal();
+  return global && !js::gc::IsAboutToBeFinalizedUnbarriered(&global);
+}
+
+inline bool JS::Realm::marked() const {
+  // Preserve this Realm if it has a live global or if it has been entered (to
+  // ensure we don't destroy the Realm while we're allocating its global).
+  return hasLiveGlobal() || hasBeenEnteredIgnoringJit();
 }
 
 /* static */ inline js::ObjectRealm& js::ObjectRealm::get(const JSObject* obj) {
@@ -42,6 +102,7 @@ inline bool JS::Realm::globalIsAboutToBeFinalized() {
   // CCWs here are fine because we always return the same ObjectRealm for a
   // particular (CCW) object.
   return obj->maybeCCWRealm()->objects_;
+>>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -63,8 +124,30 @@ js::AutoAllocInAtomsZone::AutoAllocInAtomsZone(JSContext* cx)
   cx_->enterAtomsZone();
 }
 
+<<<<<<< HEAD
 js::AutoAllocInAtomsZone::~AutoAllocInAtomsZone() {
   cx_->leaveAtomsZone(origin_);
+||||||| merged common ancestors
+js::AutoAllocInAtomsZone::~AutoAllocInAtomsZone()
+{
+    cx_->leaveAtomsZone(origin_);
+=======
+js::AutoAllocInAtomsZone::~AutoAllocInAtomsZone() {
+  cx_->leaveAtomsZone(origin_);
+}
+
+js::AutoMaybeLeaveAtomsZone::AutoMaybeLeaveAtomsZone(JSContext* cx)
+    : cx_(cx), wasInAtomsZone_(cx->zone() && cx->zone()->isAtomsZone()) {
+  if (wasInAtomsZone_) {
+    cx_->leaveAtomsZone(nullptr);
+  }
+}
+
+js::AutoMaybeLeaveAtomsZone::~AutoMaybeLeaveAtomsZone() {
+  if (wasInAtomsZone_) {
+    cx_->enterAtomsZone();
+  }
+>>>>>>> upstream-releases
 }
 
 js::AutoRealmUnchecked::AutoRealmUnchecked(JSContext* cx, JS::Realm* target)

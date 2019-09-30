@@ -22,36 +22,95 @@ class GeckoContentController;
 class APZChild final : public PAPZChild {
  public:
   explicit APZChild(RefPtr<GeckoContentController> aController);
-  ~APZChild();
+  virtual ~APZChild();
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvRequestContentRepaint(
       const RepaintRequest& aRequest) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvRequestContentRepaint(const FrameMetrics& frame) override;
+=======
+  mozilla::ipc::IPCResult RecvLayerTransforms(
+      const nsTArray<MatrixMessage>& aTransforms);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvUpdateOverscrollVelocity(
       const float& aX, const float& aY, const bool& aIsRootContent) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvUpdateOverscrollVelocity(const float& aX, const float& aY, const bool& aIsRootContent) override;
+=======
+  mozilla::ipc::IPCResult RecvRequestContentRepaint(
+      const RepaintRequest& aRequest);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvUpdateOverscrollOffset(
       const float& aX, const float& aY, const bool& aIsRootContent) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvUpdateOverscrollOffset(const float& aX, const float& aY, const bool& aIsRootContent) override;
+=======
+  mozilla::ipc::IPCResult RecvUpdateOverscrollVelocity(
+      const float& aX, const float& aY, const bool& aIsRootContent);
 
+  mozilla::ipc::IPCResult RecvUpdateOverscrollOffset(
+      const float& aX, const float& aY, const bool& aIsRootContent);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvNotifyMozMouseScrollEvent(
       const ViewID& aScrollId, const nsString& aEvent) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvNotifyMozMouseScrollEvent(const ViewID& aScrollId,
+                                                        const nsString& aEvent) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyMozMouseScrollEvent(const ViewID& aScrollId,
+                                                        const nsString& aEvent);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvNotifyAPZStateChange(
       const ScrollableLayerGuid& aGuid, const APZStateChange& aChange,
       const int& aArg) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvNotifyAPZStateChange(const ScrollableLayerGuid& aGuid,
+                                                   const APZStateChange& aChange,
+                                                   const int& aArg) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyAPZStateChange(
+      const ScrollableLayerGuid& aGuid, const APZStateChange& aChange,
+      const int& aArg);
+>>>>>>> upstream-releases
 
-  mozilla::ipc::IPCResult RecvNotifyFlushComplete() override;
+  mozilla::ipc::IPCResult RecvNotifyFlushComplete();
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvNotifyAsyncScrollbarDragInitiated(
       const uint64_t& aDragBlockId, const ViewID& aScrollId,
       const ScrollDirection& aDirection) override;
   mozilla::ipc::IPCResult RecvNotifyAsyncScrollbarDragRejected(
       const ViewID& aScrollId) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvNotifyAsyncScrollbarDragRejected(const ViewID& aScrollId) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyAsyncScrollbarDragInitiated(
+      const uint64_t& aDragBlockId, const ViewID& aScrollId,
+      const ScrollDirection& aDirection);
+  mozilla::ipc::IPCResult RecvNotifyAsyncScrollbarDragRejected(
+      const ViewID& aScrollId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   mozilla::ipc::IPCResult RecvNotifyAsyncAutoscrollRejected(
       const ViewID& aScrollId) override;
+||||||| merged common ancestors
+  mozilla::ipc::IPCResult RecvNotifyAsyncAutoscrollRejected(const ViewID& aScrollId) override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyAsyncAutoscrollRejected(
+      const ViewID& aScrollId);
+>>>>>>> upstream-releases
 
-  mozilla::ipc::IPCResult RecvDestroy() override;
+  mozilla::ipc::IPCResult RecvDestroy();
 
  private:
   RefPtr<GeckoContentController> mController;

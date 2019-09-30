@@ -27,6 +27,7 @@ enum class SurfaceType : int8_t {
   CAIRO_IMAGE,            /* Data surface wrapping a cairo image surface */
   COREGRAPHICS_IMAGE,     /* Surface wrapping a CoreGraphics Image */
   COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
+<<<<<<< HEAD
   SKIA,                   /* Surface wrapping a Skia bitmap */
   DUAL_DT,                /* Snapshot of a dual drawtarget */
   D2D1_1_IMAGE,           /* A D2D 1.1 ID2D1Image SourceSurface */
@@ -35,6 +36,25 @@ enum class SurfaceType : int8_t {
   DATA_SHARED,            /* Data surface using shared memory */
   CAPTURE,                /* Data from a DrawTargetCapture */
   DATA_RECYCLING_SHARED   /* Data surface using shared memory */
+||||||| merged common ancestors
+  SKIA, /* Surface wrapping a Skia bitmap */
+  DUAL_DT, /* Snapshot of a dual drawtarget */
+  D2D1_1_IMAGE, /* A D2D 1.1 ID2D1Image SourceSurface */
+  RECORDING, /* Surface used for recording */
+  TILED, /* Surface from a tiled DrawTarget */
+  DATA_SHARED, /* Data surface using shared memory */
+  CAPTURE /* Data from a DrawTargetCapture */
+=======
+  SKIA,                   /* Surface wrapping a Skia bitmap */
+  DUAL_DT,                /* Snapshot of a dual drawtarget */
+  D2D1_1_IMAGE,           /* A D2D 1.1 ID2D1Image SourceSurface */
+  RECORDING,              /* Surface used for recording */
+  TILED,                  /* Surface from a tiled DrawTarget */
+  DATA_SHARED,            /* Data surface using shared memory */
+  CAPTURE,                /* Data from a DrawTargetCapture */
+  DATA_RECYCLING_SHARED,  /* Data surface using shared memory */
+  OFFSET,                 /* Offset */
+>>>>>>> upstream-releases
 };
 
 enum class SurfaceFormat : int8_t {
@@ -62,6 +82,7 @@ enum class SurfaceFormat : int8_t {
   A16,
 
   R8G8,
+  R16G16,
 
   // These ones are their own special cases.
   YUV,
@@ -90,7 +111,13 @@ enum class SurfaceFormat : int8_t {
   A8R8G8B8_UINT32 = A8R8G8B8,  // 0xAARRGGBB
   X8R8G8B8_UINT32 = X8R8G8B8   // 0x00RRGGBB
 #else
+<<<<<<< HEAD
 #error "bad endianness"
+||||||| merged common ancestors
+# error "bad endianness"
+=======
+#  error "bad endianness"
+>>>>>>> upstream-releases
 #endif
 };
 
@@ -136,6 +163,15 @@ inline bool IsOpaque(SurfaceFormat aFormat) {
       return false;
   }
 }
+
+enum class YUVColorSpace : uint8_t {
+  BT601,
+  BT709,
+  BT2020,
+  // This represents the unknown format and is a valid value.
+  UNKNOWN,
+  _NUM_COLORSPACE
+};
 
 enum class ColorDepth : uint8_t {
   COLOR_8,
@@ -266,6 +302,7 @@ enum class BackendType : int8_t {
   RECORDING,
   DIRECT2D1_1,
   WEBRENDER_TEXT,
+  CAPTURE,  // Used for paths
 
   // Add new entries above this line.
   BACKEND_LAST
@@ -442,13 +479,13 @@ enum class JobStatus { Complete, Wait, Yield, Error };
 typedef mozilla::gfx::SurfaceFormat gfxImageFormat;
 
 #if defined(XP_WIN) && defined(MOZ_GFX)
-#ifdef GFX2D_INTERNAL
-#define GFX2D_API __declspec(dllexport)
+#  ifdef GFX2D_INTERNAL
+#    define GFX2D_API __declspec(dllexport)
+#  else
+#    define GFX2D_API __declspec(dllimport)
+#  endif
 #else
-#define GFX2D_API __declspec(dllimport)
-#endif
-#else
-#define GFX2D_API
+#  define GFX2D_API
 #endif
 
 namespace mozilla {
@@ -516,7 +553,7 @@ static inline Corner operator++(Corner& aCorner) {
 }
 
 // Indices into "half corner" arrays (nsStyleCorners e.g.)
-enum HalfCorner {
+enum HalfCorner : uint8_t {
   // This order is important!
   eCornerTopLeftX = 0,
   eCornerTopLeftY = 1,
@@ -548,7 +585,7 @@ static inline HalfCorner operator++(HalfCorner& aHalfCorner) {
 }
 
 // The result of these conversion functions are exhaustively checked in
-// nsStyleCoord.cpp, which also serves as usage examples.
+// nsFrame.cpp, which also serves as usage examples.
 
 constexpr bool HalfCornerIsX(HalfCorner aHalfCorner) {
   return !(aHalfCorner % 2);

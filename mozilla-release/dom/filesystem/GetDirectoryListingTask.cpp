@@ -26,7 +26,8 @@ namespace dom {
  * GetDirectoryListingTaskChild
  */
 
-/* static */ already_AddRefed<GetDirectoryListingTaskChild>
+/* static */
+already_AddRefed<GetDirectoryListingTaskChild>
 GetDirectoryListingTaskChild::Create(FileSystemBase* aFileSystem,
                                      Directory* aDirectory,
                                      nsIFile* aTargetPath,
@@ -171,11 +172,27 @@ void GetDirectoryListingTaskChild::HandlerCallback() {
  * GetDirectoryListingTaskParent
  */
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<GetDirectoryListingTaskParent>
 GetDirectoryListingTaskParent::Create(
     FileSystemBase* aFileSystem,
     const FileSystemGetDirectoryListingParams& aParam,
     FileSystemRequestParent* aParent, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<GetDirectoryListingTaskParent>
+GetDirectoryListingTaskParent::Create(FileSystemBase* aFileSystem,
+                                      const FileSystemGetDirectoryListingParams& aParam,
+                                      FileSystemRequestParent* aParent,
+                                      ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<GetDirectoryListingTaskParent>
+GetDirectoryListingTaskParent::Create(
+    FileSystemBase* aFileSystem,
+    const FileSystemGetDirectoryListingParams& aParam,
+    FileSystemRequestParent* aParent, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess(), "Only call from parent process!");
   AssertIsOnBackgroundThread();
   MOZ_ASSERT(aFileSystem);

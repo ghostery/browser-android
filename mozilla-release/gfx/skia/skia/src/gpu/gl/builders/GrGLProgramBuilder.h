@@ -35,8 +35,18 @@ public:
      * the surface origin.
      * @return true if generation was successful.
      */
+<<<<<<< HEAD
     static GrGLProgram* CreateProgram(const GrPrimitiveProcessor&,
                                       const GrPipeline&,
+||||||| merged common ancestors
+    static GrGLProgram* CreateProgram(const GrPipeline&,
+                                      const GrPrimitiveProcessor&,
+=======
+    static GrGLProgram* CreateProgram(GrRenderTarget*, GrSurfaceOrigin,
+                                      const GrPrimitiveProcessor&,
+                                      const GrTextureProxy* const primProcProxies[],
+                                      const GrPipeline&,
+>>>>>>> upstream-releases
                                       GrProgramDesc*,
                                       GrGLGpu*);
 
@@ -45,8 +55,9 @@ public:
     GrGLGpu* gpu() const { return fGpu; }
 
 private:
-    GrGLProgramBuilder(GrGLGpu*, const GrPipeline&, const GrPrimitiveProcessor&,
-                       GrProgramDesc*);
+    GrGLProgramBuilder(GrGLGpu*, GrRenderTarget*, GrSurfaceOrigin,
+                       const GrPipeline&, const GrPrimitiveProcessor&,
+                       const GrTextureProxy* const primProcProxies[], GrProgramDesc*);
 
     void addInputVars(const SkSL::Program::Inputs& inputs);
     bool compileAndAttachShaders(const char* glsl,
@@ -63,8 +74,16 @@ private:
                                  SkTDArray<GrGLuint>* shaderIds,
                                  const SkSL::Program::Settings& settings,
                                  SkSL::Program::Inputs* outInputs);
+<<<<<<< HEAD
     void computeCountsAndStrides(GrGLuint programID, const GrPrimitiveProcessor& primProc,
                                  bool bindAttribLocations);
+||||||| merged common ancestors
+=======
+    void computeCountsAndStrides(GrGLuint programID, const GrPrimitiveProcessor& primProc,
+                                 bool bindAttribLocations);
+    void storeShaderInCache(const SkSL::Program::Inputs& inputs, GrGLuint programID,
+                            const SkSL::String& glsl);
+>>>>>>> upstream-releases
     GrGLProgram* finalize();
     void bindProgramResourceLocations(GrGLuint programID);
     bool checkLinkStatus(GrGLuint programID);

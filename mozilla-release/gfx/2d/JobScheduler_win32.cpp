@@ -22,7 +22,14 @@ class WorkerThreadWin32 : public WorkerThread {
                              static_cast<WorkerThread*>(this), 0, nullptr);
   }
 
+<<<<<<< HEAD
   ~WorkerThreadWin32() {
+||||||| merged common ancestors
+  ~WorkerThreadWin32()
+  {
+=======
+  virtual ~WorkerThreadWin32() {
+>>>>>>> upstream-releases
     ::WaitForSingleObject(mThread, INFINITE);
     ::CloseHandle(mThread);
   }

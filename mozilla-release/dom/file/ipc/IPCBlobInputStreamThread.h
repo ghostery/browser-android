@@ -27,15 +27,51 @@ class IPCBlobInputStreamThread final : public nsIObserver,
 
   static bool IsOnFileEventTarget(nsIEventTarget* aEventTarget);
 
+<<<<<<< HEAD
   static IPCBlobInputStreamThread* GetOrCreate();
+||||||| merged common ancestors
+  static IPCBlobInputStreamThread*
+  GetOrCreate();
+=======
+  static IPCBlobInputStreamThread* Get();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void MigrateActor(IPCBlobInputStreamChild* aActor);
+||||||| merged common ancestors
+  void
+  MigrateActor(IPCBlobInputStreamChild* aActor);
+=======
+  static IPCBlobInputStreamThread* GetOrCreate();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool Initialize();
+||||||| merged common ancestors
+  bool
+  Initialize();
+=======
+  void MigrateActor(IPCBlobInputStreamChild* aActor);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void InitializeOnMainThread();
+||||||| merged common ancestors
+  void
+  InitializeOnMainThread();
+=======
+  bool Initialize();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+||||||| merged common ancestors
+private:
+=======
   void InitializeOnMainThread();
 
  private:
+>>>>>>> upstream-releases
   ~IPCBlobInputStreamThread() = default;
 
   void MigrateActorInternal(IPCBlobInputStreamChild* aActor);
@@ -47,11 +83,29 @@ class IPCBlobInputStreamThread final : public nsIObserver,
   nsTArray<RefPtr<IPCBlobInputStreamChild>> mPendingActors;
 };
 
+<<<<<<< HEAD
+bool IsOnDOMFileThread();
+||||||| merged common ancestors
+} // dom namespace
+} // mozilla namespace
+=======
 bool IsOnDOMFileThread();
 
 void AssertIsOnDOMFileThread();
 
 }  // namespace dom
 }  // namespace mozilla
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void AssertIsOnDOMFileThread();
+
+}  // namespace dom
+}  // namespace mozilla
 
 #endif  // mozilla_dom_IPCBlobInputStreamThread_h
+||||||| merged common ancestors
+#endif // mozilla_dom_IPCBlobInputStreamThread_h
+=======
+#endif  // mozilla_dom_IPCBlobInputStreamThread_h
+>>>>>>> upstream-releases

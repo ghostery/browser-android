@@ -14,7 +14,7 @@
 #include "nsISupportsImpl.h"     // for MOZ_COUNT_CTOR
 
 #ifndef MOZILLA_LAYERS_SHAREDPLANARYCBCRIMAGE_H
-#define MOZILLA_LAYERS_SHAREDPLANARYCBCRIMAGE_H
+#  define MOZILLA_LAYERS_SHAREDPLANARYCBCRIMAGE_H
 
 namespace mozilla {
 namespace layers {
@@ -29,9 +29,18 @@ class SharedPlanarYCbCrImage : public PlanarYCbCrImage {
  protected:
   virtual ~SharedPlanarYCbCrImage();
 
+<<<<<<< HEAD
  public:
   TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
   uint8_t* GetBuffer() const override;
+||||||| merged common ancestors
+public:
+  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
+  uint8_t* GetBuffer() const override;
+=======
+ public:
+  TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) override;
+>>>>>>> upstream-releases
 
   already_AddRefed<gfx::SourceSurface> GetAsSourceSurface() override;
   bool CopyData(const PlanarYCbCrData& aData) override;

@@ -11,7 +11,6 @@
 #include "mozilla/AddonManagerWebAPI.h"
 #include "mozilla/ResultExtensions.h"
 #include "nsEscape.h"
-#include "nsIDocShell.h"
 #include "nsIObserver.h"
 #include "nsISubstitutingProtocolHandler.h"
 #include "nsNetUtil.h"
@@ -139,6 +138,10 @@ WebExtensionPolicy::WebExtensionPolicy(GlobalObject& aGlobal,
     return;
   }
 
+  // We set this here to prevent this policy changing after creation.
+  mAllowPrivateBrowsingByDefault =
+      StaticPrefs::extensions_allowPrivateBrowsingByDefault();
+
   MatchPatternOptions options;
   options.mRestrictSchemes = !HasPermission(nsGkAtoms::mozillaAddons);
 
@@ -174,6 +177,10 @@ WebExtensionPolicy::WebExtensionPolicy(GlobalObject& aGlobal,
     mContentScripts.AppendElement(std::move(contentScript));
   }
 
+  if (aInit.mReadyPromise.WasPassed()) {
+    mReadyPromise = &aInit.mReadyPromise.Value();
+  }
+
   nsresult rv = NS_NewURI(getter_AddRefs(mBaseURI), aInit.mBaseURL);
   if (NS_FAILED(rv)) {
     aRv.Throw(rv);
@@ -190,25 +197,68 @@ already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::Constructor(
   return policy.forget();
 }
 
+<<<<<<< HEAD
 /* static */ void WebExtensionPolicy::GetActiveExtensions(
     dom::GlobalObject& aGlobal,
     nsTArray<RefPtr<WebExtensionPolicy>>& aResults) {
+||||||| merged common ancestors
+
+/* static */ void
+WebExtensionPolicy::GetActiveExtensions(dom::GlobalObject& aGlobal,
+                                        nsTArray<RefPtr<WebExtensionPolicy>>& aResults)
+{
+=======
+/* static */
+void WebExtensionPolicy::GetActiveExtensions(
+    dom::GlobalObject& aGlobal,
+    nsTArray<RefPtr<WebExtensionPolicy>>& aResults) {
+>>>>>>> upstream-releases
   EPS().GetAll(aResults);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::GetByID(
     dom::GlobalObject& aGlobal, const nsAString& aID) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<WebExtensionPolicy>
+WebExtensionPolicy::GetByID(dom::GlobalObject& aGlobal, const nsAString& aID)
+{
+=======
+/* static */
+already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::GetByID(
+    dom::GlobalObject& aGlobal, const nsAString& aID) {
+>>>>>>> upstream-releases
   return do_AddRef(EPS().GetByID(aID));
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<WebExtensionPolicy>
 WebExtensionPolicy::GetByHostname(dom::GlobalObject& aGlobal,
                                   const nsACString& aHostname) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<WebExtensionPolicy>
+WebExtensionPolicy::GetByHostname(dom::GlobalObject& aGlobal, const nsACString& aHostname)
+{
+=======
+/* static */
+already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::GetByHostname(
+    dom::GlobalObject& aGlobal, const nsACString& aHostname) {
+>>>>>>> upstream-releases
   return do_AddRef(EPS().GetByHost(aHostname));
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::GetByURI(
     dom::GlobalObject& aGlobal, nsIURI* aURI) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<WebExtensionPolicy>
+WebExtensionPolicy::GetByURI(dom::GlobalObject& aGlobal, nsIURI* aURI)
+{
+=======
+/* static */
+already_AddRefed<WebExtensionPolicy> WebExtensionPolicy::GetByURI(
+    dom::GlobalObject& aGlobal, nsIURI* aURI) {
+>>>>>>> upstream-releases
   return do_AddRef(EPS().GetByURL(aURI));
 }
 
@@ -309,13 +359,31 @@ void WebExtensionPolicy::InjectContentScripts(ErrorResult& aRv) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool WebExtensionPolicy::UseRemoteWebExtensions(
     GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ bool
+WebExtensionPolicy::UseRemoteWebExtensions(GlobalObject& aGlobal)
+{
+=======
+/* static */
+bool WebExtensionPolicy::UseRemoteWebExtensions(GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   return EPS().UseRemoteExtensions();
 }
 
+<<<<<<< HEAD
 /* static */ bool WebExtensionPolicy::IsExtensionProcess(
     GlobalObject& aGlobal) {
+||||||| merged common ancestors
+/* static */ bool
+WebExtensionPolicy::IsExtensionProcess(GlobalObject& aGlobal)
+{
+=======
+/* static */
+bool WebExtensionPolicy::IsExtensionProcess(GlobalObject& aGlobal) {
+>>>>>>> upstream-releases
   return EPS().IsExtensionProcess();
 }
 
@@ -375,7 +443,16 @@ AtomSetPref::Observe(nsISupports* aSubject, const char* aTopic,
 NS_IMPL_ISUPPORTS(AtomSetPref, nsIObserver, nsISupportsWeakReference)
 };  // namespace
 
+<<<<<<< HEAD
 /* static */ bool WebExtensionPolicy::IsRestrictedDoc(const DocInfo& aDoc) {
+||||||| merged common ancestors
+/* static */ bool
+WebExtensionPolicy::IsRestrictedDoc(const DocInfo& aDoc)
+{
+=======
+/* static */
+bool WebExtensionPolicy::IsRestrictedDoc(const DocInfo& aDoc) {
+>>>>>>> upstream-releases
   // With the exception of top-level about:blank documents with null
   // principals, we never match documents that have non-codebase principals,
   // including those with null principals or system principals.
@@ -386,7 +463,16 @@ NS_IMPL_ISUPPORTS(AtomSetPref, nsIObserver, nsISupportsWeakReference)
   return IsRestrictedURI(aDoc.PrincipalURL());
 }
 
+<<<<<<< HEAD
 /* static */ bool WebExtensionPolicy::IsRestrictedURI(const URLInfo& aURI) {
+||||||| merged common ancestors
+/* static */ bool
+WebExtensionPolicy::IsRestrictedURI(const URLInfo &aURI)
+{
+=======
+/* static */
+bool WebExtensionPolicy::IsRestrictedURI(const URLInfo& aURI) {
+>>>>>>> upstream-releases
   static RefPtr<AtomSetPref> domains;
   if (!domains) {
     domains = AtomSetPref::Create(nsLiteralCString(kRestrictedDomainPref));
@@ -425,9 +511,21 @@ nsCString WebExtensionPolicy::BackgroundPageHTML() const {
   return result;
 }
 
+<<<<<<< HEAD
 void WebExtensionPolicy::Localize(const nsAString& aInput,
                                   nsString& aOutput) const {
   mLocalizeCallback->Call(aInput, aOutput);
+||||||| merged common ancestors
+void
+WebExtensionPolicy::Localize(const nsAString& aInput, nsString& aOutput) const
+{
+  mLocalizeCallback->Call(aInput, aOutput);
+=======
+void WebExtensionPolicy::Localize(const nsAString& aInput,
+                                  nsString& aOutput) const {
+  RefPtr<WebExtensionLocalizeCallback> callback(mLocalizeCallback);
+  callback->Call(aInput, aOutput);
+>>>>>>> upstream-releases
 }
 
 JSObject* WebExtensionPolicy::WrapObject(JSContext* aCx,
@@ -440,6 +538,36 @@ void WebExtensionPolicy::GetContentScripts(
   aScripts.AppendElements(mContentScripts);
 }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+bool WebExtensionPolicy::CanAccessContext(nsILoadContext* aContext) const {
+  MOZ_ASSERT(aContext);
+  return PrivateBrowsingAllowed() || !aContext->UsePrivateBrowsing();
+}
+
+bool WebExtensionPolicy::CanAccessWindow(
+    const dom::WindowProxyHolder& aWindow) const {
+  if (PrivateBrowsingAllowed()) {
+    return true;
+  }
+  // match browsing mode with policy
+  nsIDocShell* docShell = aWindow.get()->GetDocShell();
+  nsCOMPtr<nsILoadContext> loadContext = do_QueryInterface(docShell);
+  return !(loadContext && loadContext->UsePrivateBrowsing());
+}
+
+void WebExtensionPolicy::GetReadyPromise(
+    JSContext* aCx, JS::MutableHandleObject aResult) const {
+  if (mReadyPromise) {
+    aResult.set(mReadyPromise->PromiseObj());
+  } else {
+    aResult.set(nullptr);
+  }
+}
+
+>>>>>>> upstream-releases
 NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(WebExtensionPolicy, mParent,
                                       mLocalizeCallback, mHostPermissions,
                                       mWebAccessiblePaths, mContentScripts)
@@ -456,19 +584,37 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(WebExtensionPolicy)
  * WebExtensionContentScript / MozDocumentMatcher
  *****************************************************************************/
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MozDocumentMatcher>
 MozDocumentMatcher::Constructor(GlobalObject& aGlobal,
                                 const dom::MozDocumentMatcherInit& aInit,
                                 ErrorResult& aRv) {
   RefPtr<MozDocumentMatcher> matcher =
       new MozDocumentMatcher(aGlobal, aInit, false, aRv);
+||||||| merged common ancestors
+/* static */ already_AddRefed<MozDocumentMatcher>
+MozDocumentMatcher::Constructor(GlobalObject& aGlobal,
+                                const dom::MozDocumentMatcherInit& aInit,
+                                ErrorResult& aRv)
+{
+  RefPtr<MozDocumentMatcher> matcher = new MozDocumentMatcher(aGlobal, aInit,
+                                                              false, aRv);
+=======
+/* static */
+already_AddRefed<MozDocumentMatcher> MozDocumentMatcher::Constructor(
+    GlobalObject& aGlobal, const dom::MozDocumentMatcherInit& aInit,
+    ErrorResult& aRv) {
+  RefPtr<MozDocumentMatcher> matcher =
+      new MozDocumentMatcher(aGlobal, aInit, false, aRv);
+>>>>>>> upstream-releases
   if (aRv.Failed()) {
     return nullptr;
   }
   return matcher.forget();
 }
 
-/* static */ already_AddRefed<WebExtensionContentScript>
+/* static */
+already_AddRefed<WebExtensionContentScript>
 WebExtensionContentScript::Constructor(GlobalObject& aGlobal,
                                        WebExtensionPolicy& aExtension,
                                        const ContentScriptInit& aInit,
@@ -543,6 +689,12 @@ bool MozDocumentMatcher::Matches(const DocInfo& aDoc) const {
     if (!mAllFrames && !aDoc.IsTopLevel()) {
       return false;
     }
+  }
+
+  // match browsing mode with policy
+  nsCOMPtr<nsILoadContext> loadContext = aDoc.GetLoadContext();
+  if (loadContext && mExtension && !mExtension->CanAccessContext(loadContext)) {
+    return false;
   }
 
   if (!mMatchAboutBlank && aDoc.URL().InheritsPrincipal()) {
@@ -622,11 +774,27 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(MozDocumentMatcher)
  * MozDocumentObserver
  *****************************************************************************/
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DocumentObserver> DocumentObserver::Constructor(
     GlobalObject& aGlobal, dom::MozDocumentCallback& aCallbacks,
     ErrorResult& aRv) {
   RefPtr<DocumentObserver> matcher =
       new DocumentObserver(aGlobal.GetAsSupports(), aCallbacks);
+||||||| merged common ancestors
+/* static */ already_AddRefed<DocumentObserver>
+DocumentObserver::Constructor(GlobalObject& aGlobal,
+                              dom::MozDocumentCallback& aCallbacks,
+                              ErrorResult& aRv)
+{
+  RefPtr<DocumentObserver> matcher = new DocumentObserver(aGlobal.GetAsSupports(), aCallbacks);
+=======
+/* static */
+already_AddRefed<DocumentObserver> DocumentObserver::Constructor(
+    GlobalObject& aGlobal, dom::MozDocumentCallback& aCallbacks,
+    ErrorResult& aRv) {
+  RefPtr<DocumentObserver> matcher =
+      new DocumentObserver(aGlobal.GetAsSupports(), aCallbacks);
+>>>>>>> upstream-releases
   return matcher.forget();
 }
 
@@ -653,7 +821,8 @@ void DocumentObserver::Disconnect() {
 void DocumentObserver::NotifyMatch(MozDocumentMatcher& aMatcher,
                                    nsPIDOMWindowOuter* aWindow) {
   IgnoredErrorResult rv;
-  mCallbacks->OnNewDocument(aMatcher, aWindow, rv);
+  mCallbacks->OnNewDocument(
+      aMatcher, WindowProxyHolder(aWindow->GetBrowsingContext()), rv);
 }
 
 void DocumentObserver::NotifyMatch(MozDocumentMatcher& aMatcher,
@@ -690,9 +859,22 @@ DocInfo::DocInfo(nsPIDOMWindowOuter* aWindow)
 
 bool DocInfo::IsTopLevel() const {
   if (mIsTopLevel.isNothing()) {
+<<<<<<< HEAD
     struct Matcher {
       bool match(Window aWin) { return aWin->IsTopLevelWindow(); }
       bool match(LoadInfo aLoadInfo) { return aLoadInfo->GetIsTopLevelLoad(); }
+||||||| merged common ancestors
+    struct Matcher
+    {
+      bool match(Window aWin) { return aWin->IsTopLevelWindow(); }
+      bool match(LoadInfo aLoadInfo) { return aLoadInfo->GetIsTopLevelLoad(); }
+=======
+    struct Matcher {
+      bool operator()(Window aWin) { return aWin->IsTopLevelWindow(); }
+      bool operator()(LoadInfo aLoadInfo) {
+        return aLoadInfo->GetIsTopLevelLoad();
+      }
+>>>>>>> upstream-releases
     };
     mIsTopLevel.emplace(mObj.match(Matcher()));
   }
@@ -709,7 +891,7 @@ bool WindowShouldMatchActiveTab(nsPIDOMWindowOuter* aWin) {
     return false;
   }
 
-  nsIDocument* doc = aWin->GetExtantDoc();
+  Document* doc = aWin->GetExtantDoc();
   if (!doc) {
     return false;
   }
@@ -719,12 +901,7 @@ bool WindowShouldMatchActiveTab(nsPIDOMWindowOuter* aWin) {
     return false;
   }
 
-  nsCOMPtr<nsILoadInfo> loadInfo = channel->GetLoadInfo();
-
-  if (!loadInfo) {
-    return false;
-  }
-
+  nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
   if (!loadInfo->GetOriginalFrameSrcLoad()) {
     return false;
   }
@@ -734,10 +911,25 @@ bool WindowShouldMatchActiveTab(nsPIDOMWindowOuter* aWin) {
   return WindowShouldMatchActiveTab(parent);
 }
 
+<<<<<<< HEAD
 bool DocInfo::ShouldMatchActiveTabPermission() const {
   struct Matcher {
     bool match(Window aWin) { return WindowShouldMatchActiveTab(aWin); }
     bool match(LoadInfo aLoadInfo) { return false; }
+||||||| merged common ancestors
+bool
+DocInfo::ShouldMatchActiveTabPermission() const
+{
+  struct Matcher
+  {
+    bool match(Window aWin) { return WindowShouldMatchActiveTab(aWin); }
+    bool match(LoadInfo aLoadInfo) { return false; }
+=======
+bool DocInfo::ShouldMatchActiveTabPermission() const {
+  struct Matcher {
+    bool operator()(Window aWin) { return WindowShouldMatchActiveTab(aWin); }
+    bool operator()(LoadInfo aLoadInfo) { return false; }
+>>>>>>> upstream-releases
   };
   return mObj.match(Matcher());
 }
@@ -747,11 +939,24 @@ uint64_t DocInfo::FrameID() const {
     if (IsTopLevel()) {
       mFrameID.emplace(0);
     } else {
+<<<<<<< HEAD
       struct Matcher {
         uint64_t match(Window aWin) { return aWin->WindowID(); }
         uint64_t match(LoadInfo aLoadInfo) {
           return aLoadInfo->GetOuterWindowID();
         }
+||||||| merged common ancestors
+      struct Matcher
+      {
+        uint64_t match(Window aWin) { return aWin->WindowID(); }
+        uint64_t match(LoadInfo aLoadInfo) { return aLoadInfo->GetOuterWindowID(); }
+=======
+      struct Matcher {
+        uint64_t operator()(Window aWin) { return aWin->WindowID(); }
+        uint64_t operator()(LoadInfo aLoadInfo) {
+          return aLoadInfo->GetOuterWindowID();
+        }
+>>>>>>> upstream-releases
       };
       mFrameID.emplace(mObj.match(Matcher()));
     }
@@ -765,13 +970,32 @@ nsIPrincipal* DocInfo::Principal() const {
       explicit Matcher(const DocInfo& aThis) : mThis(aThis) {}
       const DocInfo& mThis;
 
+<<<<<<< HEAD
       nsIPrincipal* match(Window aWin) {
         nsCOMPtr<nsIDocument> doc = aWin->GetDoc();
+||||||| merged common ancestors
+      nsIPrincipal* match(Window aWin)
+      {
+        nsCOMPtr<nsIDocument> doc = aWin->GetDoc();
+=======
+      nsIPrincipal* operator()(Window aWin) {
+        RefPtr<Document> doc = aWin->GetDoc();
+>>>>>>> upstream-releases
         return doc->NodePrincipal();
       }
+<<<<<<< HEAD
       nsIPrincipal* match(LoadInfo aLoadInfo) {
         if (!(mThis.URL().InheritsPrincipal() ||
               aLoadInfo->GetForceInheritPrincipal())) {
+||||||| merged common ancestors
+      nsIPrincipal* match(LoadInfo aLoadInfo)
+      {
+        if (!(mThis.URL().InheritsPrincipal() || aLoadInfo->GetForceInheritPrincipal())) {
+=======
+      nsIPrincipal* operator()(LoadInfo aLoadInfo) {
+        if (!(mThis.URL().InheritsPrincipal() ||
+              aLoadInfo->GetForceInheritPrincipal())) {
+>>>>>>> upstream-releases
           return nullptr;
         }
         if (auto principal = aLoadInfo->PrincipalToInherit()) {

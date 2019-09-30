@@ -9,7 +9,7 @@
 #include "mozilla/Atomics.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/Mutex.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIObserver.h"
 
 #include "nsDataHashtable.h"
@@ -19,38 +19,108 @@
 // are returned when 'privacy.resistFingerprinting' is true.
 // We decided to give different spoofed values according to the platform. The
 // reason is that it is easy to detect the real platform. So there is no benefit
+<<<<<<< HEAD
 // for hiding the platform: it only brings breakages, like keyboard shortcuts
 // won't work in MAC OS if we spoof it as a window platform.
+||||||| merged common ancestors
+// for hiding the platform: it only brings breakages, like keyboard shortcuts won't
+// work in MAC OS if we spoof it as a window platform.
+=======
+// for hiding the platform: it only brings breakages, like keyboard shortcuts
+// won't work in macOS if we spoof it as a Windows platform.
+>>>>>>> upstream-releases
 #ifdef XP_WIN
+<<<<<<< HEAD
 #define SPOOFED_UA_OS "Windows NT 6.1; Win64; x64"
 #define SPOOFED_APPVERSION "5.0 (Windows)"
 #define SPOOFED_OSCPU "Windows NT 6.1; Win64; x64"
 #define SPOOFED_PLATFORM "Win32"
+||||||| merged common ancestors
+#define SPOOFED_UA_OS      "Windows NT 6.1; Win64; x64"
+#define SPOOFED_APPVERSION "5.0 (Windows)"
+#define SPOOFED_OSCPU      "Windows NT 6.1; Win64; x64"
+#define SPOOFED_PLATFORM   "Win32"
+=======
+#  define SPOOFED_UA_OS "Windows NT 10.0; Win64; x64"
+#  define SPOOFED_APPVERSION "5.0 (Windows)"
+#  define SPOOFED_OSCPU "Windows NT 10.0; Win64; x64"
+#  define SPOOFED_PLATFORM "Win32"
+>>>>>>> upstream-releases
 #elif defined(XP_MACOSX)
+<<<<<<< HEAD
 #define SPOOFED_UA_OS "Macintosh; Intel Mac OS X 10.13"
 #define SPOOFED_APPVERSION "5.0 (Macintosh)"
 #define SPOOFED_OSCPU "Intel Mac OS X 10.13"
 #define SPOOFED_PLATFORM "MacIntel"
+||||||| merged common ancestors
+#define SPOOFED_UA_OS      "Macintosh; Intel Mac OS X 10.13"
+#define SPOOFED_APPVERSION "5.0 (Macintosh)"
+#define SPOOFED_OSCPU      "Intel Mac OS X 10.13"
+#define SPOOFED_PLATFORM   "MacIntel"
+=======
+#  define SPOOFED_UA_OS "Macintosh; Intel Mac OS X 10.14"
+#  define SPOOFED_APPVERSION "5.0 (Macintosh)"
+#  define SPOOFED_OSCPU "Intel Mac OS X 10.14"
+#  define SPOOFED_PLATFORM "MacIntel"
+>>>>>>> upstream-releases
 #elif defined(MOZ_WIDGET_ANDROID)
+<<<<<<< HEAD
 #define SPOOFED_UA_OS "Android 6.0; Mobile"
 #define SPOOFED_APPVERSION "5.0 (Android 6.0)"
 #define SPOOFED_OSCPU "Linux armv7l"
 #define SPOOFED_PLATFORM "Linux armv7l"
+||||||| merged common ancestors
+#define SPOOFED_UA_OS      "Android 6.0; Mobile"
+#define SPOOFED_APPVERSION "5.0 (Android 6.0)"
+#define SPOOFED_OSCPU      "Linux armv7l"
+#define SPOOFED_PLATFORM   "Linux armv7l"
+=======
+#  define SPOOFED_UA_OS "Android 8.1; Mobile"
+#  define SPOOFED_APPVERSION "5.0 (Android 8.1)"
+#  define SPOOFED_OSCPU "Linux armv7l"
+#  define SPOOFED_PLATFORM "Linux armv7l"
+>>>>>>> upstream-releases
 #else
 // For Linux and other platforms, like BSDs, SunOS and etc, we will use Linux
 // platform.
+<<<<<<< HEAD
 #define SPOOFED_UA_OS "X11; Linux x86_64"
 #define SPOOFED_APPVERSION "5.0 (X11)"
 #define SPOOFED_OSCPU "Linux x86_64"
 #define SPOOFED_PLATFORM "Linux x86_64"
+||||||| merged common ancestors
+#define SPOOFED_UA_OS      "X11; Linux x86_64"
+#define SPOOFED_APPVERSION "5.0 (X11)"
+#define SPOOFED_OSCPU      "Linux x86_64"
+#define SPOOFED_PLATFORM   "Linux x86_64"
+=======
+#  define SPOOFED_UA_OS "X11; Linux x86_64"
+#  define SPOOFED_APPVERSION "5.0 (X11)"
+#  define SPOOFED_OSCPU "Linux x86_64"
+#  define SPOOFED_PLATFORM "Linux x86_64"
+>>>>>>> upstream-releases
 #endif
 
 #define SPOOFED_APPNAME "Netscape"
 #define LEGACY_BUILD_ID "20181001000000"
 #define LEGACY_UA_GECKO_TRAIL "20100101"
 
+<<<<<<< HEAD
 #define SPOOFED_POINTER_INTERFACE MouseEvent_Binding::MOZ_SOURCE_MOUSE
 
+||||||| merged common ancestors
+=======
+#define SPOOFED_POINTER_INTERFACE MouseEvent_Binding::MOZ_SOURCE_MOUSE
+
+// For the HTTP User-Agent header, we use a simpler set of spoofed values
+// that do not reveal the specific desktop platform.
+#if defined(MOZ_WIDGET_ANDROID)
+#  define SPOOFED_HTTP_UA_OS "Android 6.0; Mobile"
+#else
+#  define SPOOFED_HTTP_UA_OS "Windows NT 10.0"
+#endif
+
+>>>>>>> upstream-releases
 // Forward declare LRUCache, defined in nsRFPService.cpp
 class LRUCache;
 
@@ -98,6 +168,31 @@ class KeyboardHashKey : public PLDHashEntryHdr {
         mKey(aOther->mKey) {}
 
   KeyboardHashKey(KeyboardHashKey&& aOther)
+<<<<<<< HEAD
+      : PLDHashEntryHdr(std::move(aOther)),
+        mLang(std::move(aOther.mLang)),
+        mRegion(std::move(aOther.mRegion)),
+        mKeyIdx(std::move(aOther.mKeyIdx)),
+        mKey(std::move(aOther.mKey)) {}
+||||||| merged common ancestors
+    : PLDHashEntryHdr(std::move(aOther))
+    , mLang(std::move(aOther.mLang))
+    , mRegion(std::move(aOther.mRegion))
+    , mKeyIdx(std::move(aOther.mKeyIdx))
+    , mKey(std::move(aOther.mKey))
+  {}
+
+  ~KeyboardHashKey()
+  {}
+
+  bool KeyEquals(KeyTypePointer aOther) const
+  {
+    return mLang == aOther->mLang &&
+           mRegion == aOther->mRegion &&
+           mKeyIdx == aOther->mKeyIdx &&
+           mKey == aOther->mKey;
+  }
+=======
       : PLDHashEntryHdr(std::move(aOther)),
         mLang(std::move(aOther.mLang)),
         mRegion(std::move(aOther.mRegion)),
@@ -105,10 +200,23 @@ class KeyboardHashKey : public PLDHashEntryHdr {
         mKey(std::move(aOther.mKey)) {}
 
   ~KeyboardHashKey() {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ~KeyboardHashKey() {}
 
   bool KeyEquals(KeyTypePointer aOther) const {
     return mLang == aOther->mLang && mRegion == aOther->mRegion &&
            mKeyIdx == aOther->mKeyIdx && mKey == aOther->mKey;
+||||||| merged common ancestors
+  static KeyTypePointer KeyToPointer(KeyType aKey)
+  {
+    return &aKey;
+=======
+  bool KeyEquals(KeyTypePointer aOther) const {
+    return mLang == aOther->mLang && mRegion == aOther->mRegion &&
+           mKeyIdx == aOther->mKeyIdx && mKey == aOther->mKey;
+>>>>>>> upstream-releases
   }
 
   static KeyTypePointer KeyToPointer(KeyType aKey) { return &aKey; }
@@ -177,7 +285,13 @@ class nsRFPService final : public nsIObserver {
                                             uint32_t aHeight);
 
   // This method generates the spoofed value of User Agent.
+<<<<<<< HEAD
   static nsresult GetSpoofedUserAgent(nsACString& userAgent);
+||||||| merged common ancestors
+  static nsresult GetSpoofedUserAgent(nsACString &userAgent);
+=======
+  static void GetSpoofedUserAgent(nsACString& userAgent, bool isForHTTPHeader);
+>>>>>>> upstream-releases
 
   /**
    * This method for getting spoofed modifier states for the given keyboard
@@ -190,9 +304,21 @@ class nsRFPService final : public nsIObserver {
    * @param aOut           [out] the spoofed state for the given modifier.
    * @return               true if there is a spoofed state for the modifier.
    */
+<<<<<<< HEAD
   static bool GetSpoofedModifierStates(
       const nsIDocument* aDoc, const WidgetKeyboardEvent* aKeyboardEvent,
       const Modifiers aModifier, bool& aOut);
+||||||| merged common ancestors
+  static bool GetSpoofedModifierStates(const nsIDocument* aDoc,
+                                       const WidgetKeyboardEvent* aKeyboardEvent,
+                                       const Modifiers aModifier,
+                                       bool& aOut);
+=======
+  static bool GetSpoofedModifierStates(
+      const mozilla::dom::Document* aDoc,
+      const WidgetKeyboardEvent* aKeyboardEvent, const Modifiers aModifier,
+      bool& aOut);
+>>>>>>> upstream-releases
 
   /**
    * This method for getting spoofed code for the given keyboard event.
@@ -204,7 +330,7 @@ class nsRFPService final : public nsIObserver {
    * @return               true if there is a spoofed code in the fake keyboard
    *                       layout.
    */
-  static bool GetSpoofedCode(const nsIDocument* aDoc,
+  static bool GetSpoofedCode(const dom::Document* aDoc,
                              const WidgetKeyboardEvent* aKeyboardEvent,
                              nsAString& aOut);
 
@@ -218,7 +344,7 @@ class nsRFPService final : public nsIObserver {
    * @return               true if there is a spoofed keyCode in the fake
    *                       keyboard layout.
    */
-  static bool GetSpoofedKeyCode(const nsIDocument* aDoc,
+  static bool GetSpoofedKeyCode(const mozilla::dom::Document* aDoc,
                                 const WidgetKeyboardEvent* aKeyboardEvent,
                                 uint32_t& aOut);
 
@@ -242,7 +368,7 @@ class nsRFPService final : public nsIObserver {
   static void GetKeyboardLangAndRegion(const nsAString& aLanguage,
                                        KeyboardLangs& aLang,
                                        KeyboardRegions& aRegion);
-  static bool GetSpoofedKeyCodeInfo(const nsIDocument* aDoc,
+  static bool GetSpoofedKeyCodeInfo(const mozilla::dom::Document* aDoc,
                                     const WidgetKeyboardEvent* aKeyboardEvent,
                                     SpoofingKeyboardCode& aOut);
 

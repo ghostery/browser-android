@@ -9,7 +9,12 @@ const { Cu } = require("chrome");
 const ObjectClient = require("devtools/shared/client/object-client");
 
 const EventEmitter = require("devtools/shared/event-emitter");
-loader.lazyRequireGetter(this, "openContentLink", "devtools/client/shared/link", true);
+loader.lazyRequireGetter(
+  this,
+  "openContentLink",
+  "devtools/client/shared/link",
+  true
+);
 
 /**
  * This object represents DOM panel. It's responsibility is to
@@ -47,14 +52,18 @@ DomPanel.prototype = {
   // Initialization
 
   initialize: function() {
-    this.panelWin.addEventListener("devtools/content/message",
-      this.onContentMessage, true);
+    this.panelWin.addEventListener(
+      "devtools/content/message",
+      this.onContentMessage,
+      true
+    );
 
     this.target.on("navigate", this.onTabNavigated);
     this._toolbox.on("select", this.onPanelVisibilityChange);
 
     // Export provider object with useful API for DOM panel.
     const provider = {
+      getToolbox: this.getToolbox.bind(this),
       getPrototypeAndProperties: this.getPrototypeAndProperties.bind(this),
       openLink: this.openLink.bind(this),
     };
@@ -166,8 +175,21 @@ DomPanel.prototype = {
   getRootGrip: async function() {
     // Attach Console. It might involve RDP communication, so wait
     // asynchronously for the result
+<<<<<<< HEAD
     const { result } = await this.target.activeConsole.evaluateJSAsync("window");
     return result;
+||||||| merged common ancestors
+    this.target.activeConsole.evaluateJSAsync("window", res => {
+      deferred.resolve(res.result);
+    });
+
+    return deferred.promise;
+=======
+    const { result } = await this.target.activeConsole.evaluateJSAsync(
+      "window"
+    );
+    return result;
+>>>>>>> upstream-releases
   },
 
   postContentMessage: function(type, args) {
@@ -191,6 +213,10 @@ DomPanel.prototype = {
     if (typeof this[method] == "function") {
       this[method](data.args);
     }
+  },
+
+  getToolbox: function() {
+    return this._toolbox;
   },
 
   get target() {

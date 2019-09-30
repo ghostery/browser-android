@@ -21,19 +21,41 @@ nsBidiKeyboard::Reset() {
   // simply assume that we don't have bidi keyboards.
   mHaveBidiKeyboards = false;
 
+<<<<<<< HEAD
   GdkDisplay *display = gdk_display_get_default();
   if (!display) return NS_OK;
 
   GdkKeymap *keymap = gdk_keymap_get_for_display(display);
   mHaveBidiKeyboards = keymap && gdk_keymap_have_bidi_layouts(keymap);
   return NS_OK;
+||||||| merged common ancestors
+nsBidiKeyboard::~nsBidiKeyboard()
+{
+=======
+  GdkDisplay* display = gdk_display_get_default();
+  if (!display) return NS_OK;
+
+  GdkKeymap* keymap = gdk_keymap_get_for_display(display);
+  mHaveBidiKeyboards = keymap && gdk_keymap_have_bidi_layouts(keymap);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsBidiKeyboard::~nsBidiKeyboard() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsBidiKeyboard::IsLangRTL(bool *aIsRTL) {
   if (!mHaveBidiKeyboards) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+nsBidiKeyboard::IsLangRTL(bool *aIsRTL)
+{
+    if (!mHaveBidiKeyboards)
+        return NS_ERROR_FAILURE;
+=======
+nsBidiKeyboard::IsLangRTL(bool* aIsRTL) {
+  if (!mHaveBidiKeyboards) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
   *aIsRTL = (gdk_keymap_get_direction(gdk_keymap_get_default()) ==
              PANGO_DIRECTION_RTL);
@@ -41,7 +63,14 @@ nsBidiKeyboard::IsLangRTL(bool *aIsRTL) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsBidiKeyboard::GetHaveBidiKeyboards(bool *aResult) {
+||||||| merged common ancestors
+NS_IMETHODIMP nsBidiKeyboard::GetHaveBidiKeyboards(bool* aResult)
+{
+=======
+NS_IMETHODIMP nsBidiKeyboard::GetHaveBidiKeyboards(bool* aResult) {
+>>>>>>> upstream-releases
   // not implemented yet
   return NS_ERROR_NOT_IMPLEMENTED;
 }

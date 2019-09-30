@@ -12,8 +12,13 @@
 #include "SkFlattenablePriv.h"
 #include "SkMask.h"
 #include "SkMatrix.h"
+<<<<<<< HEAD
 #include "SkNoncopyable.h"
 #include "SkPM4f.h"
+||||||| merged common ancestors
+=======
+#include "SkNoncopyable.h"
+>>>>>>> upstream-releases
 #include "SkShader.h"
 #include "SkTLazy.h"
 
@@ -65,16 +70,36 @@ public:
      */
     struct ContextRec {
         ContextRec(const SkPaint& paint, const SkMatrix& matrix, const SkMatrix* localM,
+<<<<<<< HEAD
                    SkColorSpace* dstColorSpace)
+||||||| merged common ancestors
+                   DstType dstType, SkColorSpace* dstColorSpace)
+=======
+                   SkColorType dstColorType, SkColorSpace* dstColorSpace)
+>>>>>>> upstream-releases
             : fPaint(&paint)
             , fMatrix(&matrix)
             , fLocalMatrix(localM)
+<<<<<<< HEAD
+||||||| merged common ancestors
+            , fPreferredDstType(dstType)
+=======
+            , fDstColorType(dstColorType)
+>>>>>>> upstream-releases
             , fDstColorSpace(dstColorSpace) {}
 
         const SkPaint*  fPaint;            // the current paint associated with the draw
         const SkMatrix* fMatrix;           // the current matrix in the canvas
         const SkMatrix* fLocalMatrix;      // optional local matrix
+<<<<<<< HEAD
+||||||| merged common ancestors
+        const DstType   fPreferredDstType; // the "natural" client dest type
+=======
+        SkColorType     fDstColorType;     // the color type of the dest surface
+>>>>>>> upstream-releases
         SkColorSpace*   fDstColorSpace;    // the color space of the dest surface (if any)
+
+        bool isLegacyCompatible(SkColorSpace* shadersColorSpace) const;
     };
 
     class Context : public ::SkNoncopyable {
@@ -99,11 +124,20 @@ public:
          */
         virtual void shadeSpan(int x, int y, SkPMColor[], int count) = 0;
 
+<<<<<<< HEAD
         virtual void shadeSpan4f(int x, int y, SkPMColor4f[], int count);
 
         // Notification from blitter::blitMask in case we need to see the non-alpha channels
         virtual void set3DMask(const SkMask*) {}
 
+||||||| merged common ancestors
+        virtual void shadeSpan4f(int x, int y, SkPM4f[], int count);
+
+        // Notification from blitter::blitMask in case we need to see the non-alpha channels
+        virtual void set3DMask(const SkMask*) {}
+
+=======
+>>>>>>> upstream-releases
     protected:
         // Reference to shader, so we don't have to dupe information.
         const SkShaderBase& fShader;
@@ -126,15 +160,6 @@ public:
      * @return pointer to context or nullptr if can't be created
      */
     Context* makeContext(const ContextRec&, SkArenaAlloc*) const;
-
-    /**
-     * Shaders may opt-in for burst mode, if they can operate
-     * significantly more efficiently in that mode.
-     *
-     * Burst mode is prioritized in SkRasterPipelineBlitter over
-     * regular (appendStages) pipeline operation.
-     */
-    Context* makeBurstPipelineContext(const ContextRec&, SkArenaAlloc*) const;
 
 #if SK_SUPPORT_GPU
     /**
@@ -173,6 +198,7 @@ public:
     struct StageRec {
         SkRasterPipeline*   fPipeline;
         SkArenaAlloc*       fAlloc;
+        SkColorType         fDstColorType;
         SkColorSpace*       fDstCS;         // may be nullptr
         const SkPaint&      fPaint;
         const SkMatrix*     fLocalM;        // may be nullptr
@@ -182,6 +208,7 @@ public:
     // If this returns false, then we draw nothing (do not fall back to shader context)
     bool appendStages(const StageRec&) const;
 
+<<<<<<< HEAD
     bool SK_WARN_UNUSED_RESULT computeTotalInverse(const SkMatrix& ctm,
                                                    const SkMatrix* outerLocalMatrix,
                                                    SkMatrix* totalInverse) const;
@@ -192,25 +219,53 @@ public:
     //
     SkTCopyOnFirstWrite<SkMatrix> totalLocalMatrix(const SkMatrix* preLocalMatrix,
                                                    const SkMatrix* postLocalMatrix = nullptr) const;
+||||||| merged common ancestors
+    bool computeTotalInverse(const SkMatrix& ctm,
+                             const SkMatrix* outerLocalMatrix,
+                             SkMatrix* totalInverse) const;
+=======
+    bool SK_WARN_UNUSED_RESULT computeTotalInverse(const SkMatrix& ctm,
+                                                   const SkMatrix* outerLocalMatrix,
+                                                   SkMatrix* totalInverse) const;
+>>>>>>> upstream-releases
 
-#ifdef SK_SUPPORT_LEGACY_SHADER_ISABITMAP
-    virtual bool onIsABitmap(SkBitmap*, SkMatrix*, TileMode[2]) const {
-        return false;
-    }
-#endif
+    // Returns the total local matrix for this shader:
+    //
+    //   M = postLocalMatrix x shaderLocalMatrix x preLocalMatrix
+    //
+    SkTCopyOnFirstWrite<SkMatrix> totalLocalMatrix(const SkMatrix* preLocalMatrix,
+                                                   const SkMatrix* postLocalMatrix = nullptr) const;
 
     virtual SkImage* onIsAImage(SkMatrix*, TileMode[2]) const {
         return nullptr;
     }
 
+<<<<<<< HEAD
     SK_DEFINE_FLATTENABLE_TYPE(SkShaderBase)
     SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
+||||||| merged common ancestors
+    SK_TO_STRING_VIRT()
+
+    SK_DEFINE_FLATTENABLE_TYPE(SkShaderBase)
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
+=======
+    static Type GetFlattenableType() { return kSkShaderBase_Type; }
+    Type getFlattenableType() const override { return GetFlattenableType(); }
+
+    static sk_sp<SkShaderBase> Deserialize(const void* data, size_t size,
+                                             const SkDeserialProcs* procs = nullptr) {
+        return sk_sp<SkShaderBase>(static_cast<SkShaderBase*>(
+                SkFlattenable::Deserialize(GetFlattenableType(), data, size, procs).release()));
+    }
+    static void RegisterFlattenables();
+>>>>>>> upstream-releases
 
 protected:
     SkShaderBase(const SkMatrix* localMatrix = nullptr);
 
     void flatten(SkWriteBuffer&) const override;
 
+#ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
     /**
      * Specialize creating a SkShader context using the supplied allocator.
      * @return pointer to context owned by the arena allocator.
@@ -225,6 +280,7 @@ protected:
     virtual Context* onMakeBurstPipelineContext(const ContextRec&, SkArenaAlloc*) const {
         return nullptr;
     }
+#endif
 
     virtual bool onAsLuminanceColor(SkColor*) const {
         return false;

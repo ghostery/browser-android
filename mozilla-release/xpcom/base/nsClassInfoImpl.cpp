@@ -16,8 +16,17 @@ GenericClassInfo::Release() { return 1; }
 NS_IMPL_QUERY_INTERFACE(GenericClassInfo, nsIClassInfo)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 GenericClassInfo::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   return mData->getinterfaces(aCount, aArray);
+||||||| merged common ancestors
+GenericClassInfo::GetInterfaces(uint32_t* aCount, nsIID*** aArray)
+{
+  return mData->getinterfaces(aCount, aArray);
+=======
+GenericClassInfo::GetInterfaces(nsTArray<nsIID>& aArray) {
+  return mData->getinterfaces(aArray);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

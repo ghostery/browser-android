@@ -60,11 +60,26 @@ already_AddRefed<Headers> Headers::Constructor(
   return Create(global, aInit, aRv);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<Headers> Headers::Create(
     nsIGlobalObject* aGlobal,
     const OwningHeadersOrByteStringSequenceSequenceOrByteStringByteStringRecord&
         aInit,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<Headers>
+Headers::Create(nsIGlobalObject* aGlobal,
+                const OwningHeadersOrByteStringSequenceSequenceOrByteStringByteStringRecord& aInit,
+                ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<Headers> Headers::Create(
+    nsIGlobalObject* aGlobal,
+    const OwningHeadersOrByteStringSequenceSequenceOrByteStringByteStringRecord&
+        aInit,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<InternalHeaders> ih = new InternalHeaders();
   RefPtr<Headers> headers = new Headers(aGlobal, ih);
 

@@ -10,19 +10,38 @@
 #include "mozilla/dom/cache/ActorUtils.h"
 #include "mozilla/dom/cache/CacheOpParent.h"
 #include "mozilla/dom/cache/ManagerId.h"
+#include "mozilla/dom/quota/QuotaManager.h"
 #include "mozilla/ipc/PBackgroundParent.h"
 
 namespace mozilla {
 namespace dom {
 namespace cache {
 
+using mozilla::dom::quota::QuotaManager;
 using mozilla::ipc::PBackgroundParent;
 using mozilla::ipc::PrincipalInfo;
 
 // declared in ActorUtils.h
+<<<<<<< HEAD
 PCacheStorageParent* AllocPCacheStorageParent(
     PBackgroundParent* aManagingActor, Namespace aNamespace,
     const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
+||||||| merged common ancestors
+PCacheStorageParent*
+AllocPCacheStorageParent(PBackgroundParent* aManagingActor,
+                         Namespace aNamespace,
+                         const mozilla::ipc::PrincipalInfo& aPrincipalInfo)
+{
+=======
+PCacheStorageParent* AllocPCacheStorageParent(
+    PBackgroundParent* aManagingActor, Namespace aNamespace,
+    const mozilla::ipc::PrincipalInfo& aPrincipalInfo) {
+  if (NS_WARN_IF(!QuotaManager::IsPrincipalInfoValid(aPrincipalInfo))) {
+    MOZ_ASSERT(false);
+    return nullptr;
+  }
+
+>>>>>>> upstream-releases
   return new CacheStorageParent(aManagingActor, aNamespace, aPrincipalInfo);
 }
 

@@ -12,9 +12,10 @@ use ascii::ascii_to_basic_latin;
 use ascii::basic_latin_to_ascii;
 use ascii::validate_ascii;
 use handles::*;
+use mem::convert_utf16_to_utf8_partial;
 use variant::*;
 
-cfg_if!{
+cfg_if! {
     if #[cfg(feature = "simd-accel")] {
         use ::std::intrinsics::unlikely;
         use ::std::intrinsics::likely;
@@ -417,12 +418,74 @@ pub fn convert_utf8_to_utf16_up_to_invalid(src: &[u8], dst: &mut [u16]) -> (usiz
                     break 'outer;
                 }
                 let second = src[read + 1];
+<<<<<<< HEAD
+                if !in_inclusive_range8(second, 0x80, 0xBF) {
+||||||| merged common ancestors
+                if (UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL) != 0 {
+                    break 'outer;
+                }
+                let point = (((byte as u32) & 0x1Fu32) << 6) | (second as u32 & 0x3Fu32);
+                dst[written] = point as u16;
+                read = new_read;
+                written += 1;
+            }
+            0xE1...0xEC | 0xEE...0xEF => {
+                // Three-byte normal
+                let new_read = read + 3;
+                if new_read > src.len() {
+                    break 'outer;
+                }
+                let second = src[read + 1];
+                let third = src[read + 2];
+                if ((UTF8_TRAIL_INVALID[second as usize] & UTF8_NORMAL_TRAIL)
+                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
+                    != 0
+                {
+=======
                 if !in_inclusive_range8(second, 0x80, 0xBF) {
                     break 'outer;
                 }
                 dst[written] = ((u16::from(byte) & 0x1F) << 6) | (u16::from(second) & 0x3F);
                 read += 2;
                 written += 1;
+                continue 'tail;
+            }
+            // We need to exclude valid four byte lead bytes, because
+            // `UTF8_DATA.second_mask` covers
+            if byte < 0xF0 {
+                // Three-byte
+                let new_read = read + 3;
+                if new_read > src.len() {
+                    break 'outer;
+                }
+                let second = src[read + 1];
+                let third = src[read + 2];
+                if ((UTF8_DATA.table[usize::from(second)]
+                    & unsafe { *(UTF8_DATA.table.get_unchecked(byte as usize + 0x80)) })
+                    | (third >> 6))
+                    != 2
+                {
+>>>>>>> upstream-releases
+                    break 'outer;
+                }
+<<<<<<< HEAD
+                dst[written] = ((u16::from(byte) & 0x1F) << 6) | (u16::from(second) & 0x3F);
+                read += 2;
+||||||| merged common ancestors
+                let point = (((byte as u32) & 0xFu32) << 12)
+                    | ((second as u32 & 0x3Fu32) << 6)
+                    | (third as u32 & 0x3Fu32);
+                dst[written] = point as u16;
+                read = new_read;
+=======
+                let point = ((u16::from(byte) & 0xF) << 12)
+                    | ((u16::from(second) & 0x3F) << 6)
+                    | (u16::from(third) & 0x3F);
+                dst[written] = point;
+                read += 3;
+>>>>>>> upstream-releases
+                written += 1;
+<<<<<<< HEAD
                 continue 'tail;
             }
             // We need to exclude valid four byte lead bytes, because
@@ -450,6 +513,58 @@ pub fn convert_utf8_to_utf16_up_to_invalid(src: &[u8], dst: &mut [u16]) -> (usiz
                 written += 1;
                 // `'tail` handles sequences shorter than 4, so
                 // there can't be another sequence after this one.
+||||||| merged common ancestors
+            }
+            0xE0 => {
+                // Three-byte special lower bound
+                let new_read = read + 3;
+                if new_read > src.len() {
+                    break 'outer;
+                }
+                let second = src[read + 1];
+                let third = src[read + 2];
+                if ((UTF8_TRAIL_INVALID[second as usize]
+                    & UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL)
+                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
+                    != 0
+                {
+                    break 'outer;
+                }
+                let point = (((byte as u32) & 0xFu32) << 12)
+                    | ((second as u32 & 0x3Fu32) << 6)
+                    | (third as u32 & 0x3Fu32);
+                dst[written] = point as u16;
+                read = new_read;
+                written += 1;
+            }
+            0xED => {
+                // Three-byte special upper bound
+                let new_read = read + 3;
+                if new_read > src.len() {
+                    break 'outer;
+                }
+                let second = src[read + 1];
+                let third = src[read + 2];
+                if ((UTF8_TRAIL_INVALID[second as usize]
+                    & UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL)
+                    | (UTF8_TRAIL_INVALID[third as usize] & UTF8_NORMAL_TRAIL))
+                    != 0
+                {
+                    break 'outer;
+                }
+                let point = (((byte as u32) & 0xFu32) << 12)
+                    | ((second as u32 & 0x3Fu32) << 6)
+                    | (third as u32 & 0x3Fu32);
+                dst[written] = point as u16;
+                read = new_read;
+                written += 1;
+            }
+            _ => {
+                // Invalid lead or 4-byte lead
+=======
+                // `'tail` handles sequences shorter than 4, so
+                // there can't be another sequence after this one.
+>>>>>>> upstream-releases
                 break 'outer;
             }
             break 'outer;
@@ -612,6 +727,223 @@ impl Utf8Decoder {
     );
 }
 
+#[cfg_attr(feature = "cargo-clippy", allow(never_loop))]
+#[inline(never)]
+pub fn convert_utf16_to_utf16_partial_inner(src: &[u16], dst: &mut [u8]) -> (usize, usize) {
+    let mut read = 0;
+    let mut written = 0;
+    'outer: loop {
+        let mut unit = {
+            let src_remaining = &src[read..];
+            let dst_remaining = &mut dst[written..];
+            let length = if dst_remaining.len() < src_remaining.len() {
+                dst_remaining.len()
+            } else {
+                src_remaining.len()
+            };
+            match unsafe {
+                basic_latin_to_ascii(src_remaining.as_ptr(), dst_remaining.as_mut_ptr(), length)
+            } {
+                None => {
+                    read += length;
+                    written += length;
+                    return (read, written);
+                }
+                Some((non_ascii, consumed)) => {
+                    read += consumed;
+                    written += consumed;
+                    non_ascii
+                }
+            }
+        };
+        'inner: loop {
+            // The following loop is only broken out of as a goto forward.
+            loop {
+                // Unfortunately, this check isn't enough for the compiler to elide
+                // the bound checks on writes to dst, which is why they are manually
+                // elided, which makes a measurable difference.
+                if written.checked_add(4).unwrap() > dst.len() {
+                    return (read, written);
+                }
+                read += 1;
+                if unit < 0x800 {
+                    unsafe {
+                        *(dst.get_unchecked_mut(written)) = (unit >> 6) as u8 | 0xC0u8;
+                        written += 1;
+                        *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
+                        written += 1;
+                    }
+                    break;
+                }
+                let unit_minus_surrogate_start = unit.wrapping_sub(0xD800);
+                if unsafe { likely(unit_minus_surrogate_start > (0xDFFF - 0xD800)) } {
+                    unsafe {
+                        *(dst.get_unchecked_mut(written)) = (unit >> 12) as u8 | 0xE0u8;
+                        written += 1;
+                        *(dst.get_unchecked_mut(written)) = ((unit & 0xFC0) >> 6) as u8 | 0x80u8;
+                        written += 1;
+                        *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
+                        written += 1;
+                    }
+                    break;
+                }
+                if unsafe { likely(unit_minus_surrogate_start <= (0xDBFF - 0xD800)) } {
+                    // high surrogate
+                    // read > src.len() is impossible, but using
+                    // >= instead of == allows the compiler to elide a bound check.
+                    if read >= src.len() {
+                        debug_assert_eq!(read, src.len());
+                        // Unpaired surrogate at the end of the buffer.
+                        unsafe {
+                            *(dst.get_unchecked_mut(written)) = 0xEFu8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = 0xBFu8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = 0xBDu8;
+                            written += 1;
+                        }
+                        return (read, written);
+                    }
+                    let second = src[read];
+                    let second_minus_low_surrogate_start = second.wrapping_sub(0xDC00);
+                    if unsafe { likely(second_minus_low_surrogate_start <= (0xDFFF - 0xDC00)) } {
+                        // The next code unit is a low surrogate. Advance position.
+                        read += 1;
+                        let astral = (u32::from(unit) << 10) + u32::from(second)
+                            - (((0xD800u32 << 10) - 0x10000u32) + 0xDC00u32);
+                        unsafe {
+                            *(dst.get_unchecked_mut(written)) = (astral >> 18) as u8 | 0xF0u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) =
+                                ((astral & 0x3F000u32) >> 12) as u8 | 0x80u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) =
+                                ((astral & 0xFC0u32) >> 6) as u8 | 0x80u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = (astral & 0x3F) as u8 | 0x80u8;
+                            written += 1;
+                        }
+                        break;
+                    }
+                    // The next code unit is not a low surrogate. Don't advance
+                    // position and treat the high surrogate as unpaired.
+                    // Fall through
+                }
+                // Unpaired low surrogate
+                unsafe {
+                    *(dst.get_unchecked_mut(written)) = 0xEFu8;
+                    written += 1;
+                    *(dst.get_unchecked_mut(written)) = 0xBFu8;
+                    written += 1;
+                    *(dst.get_unchecked_mut(written)) = 0xBDu8;
+                    written += 1;
+                }
+                break;
+            }
+            // Now see if the next unit is Basic Latin
+            // read > src.len() is impossible, but using
+            // >= instead of == allows the compiler to elide a bound check.
+            if read >= src.len() {
+                debug_assert_eq!(read, src.len());
+                return (read, written);
+            }
+            unit = src[read];
+            if unsafe { unlikely(unit < 0x80) } {
+                // written > dst.len() is impossible, but using
+                // >= instead of == allows the compiler to elide a bound check.
+                if written >= dst.len() {
+                    debug_assert_eq!(written, dst.len());
+                    return (read, written);
+                }
+                dst[written] = unit as u8;
+                read += 1;
+                written += 1;
+                // Mysteriously, adding a punctuation check here makes
+                // the expected benificiary cases *slower*!
+                continue 'outer;
+            }
+            continue 'inner;
+        }
+    }
+}
+
+#[inline(never)]
+pub fn convert_utf16_to_utf16_partial_tail(src: &[u16], dst: &mut [u8]) -> (usize, usize) {
+    // Everything below is cold code!
+    let mut read = 0;
+    let mut written = 0;
+    let mut unit = src[read];
+    // We now have up to 3 output slots, so an astral character
+    // will not fit.
+    if unit < 0x800 {
+        loop {
+            if unit < 0x80 {
+                if written >= dst.len() {
+                    return (read, written);
+                }
+                read += 1;
+                dst[written] = unit as u8;
+                written += 1;
+            } else if unit < 0x800 {
+                if written + 2 > dst.len() {
+                    return (read, written);
+                }
+                read += 1;
+                dst[written] = (unit >> 6) as u8 | 0xC0u8;
+                written += 1;
+                dst[written] = (unit & 0x3F) as u8 | 0x80u8;
+                written += 1;
+            } else {
+                return (read, written);
+            }
+            // read > src.len() is impossible, but using
+            // >= instead of == allows the compiler to elide a bound check.
+            if read >= src.len() {
+                debug_assert_eq!(read, src.len());
+                return (read, written);
+            }
+            unit = src[read];
+        }
+    }
+    // Could be an unpaired surrogate, but we'll need 3 output
+    // slots in any case.
+    if written + 3 > dst.len() {
+        return (read, written);
+    }
+    read += 1;
+    let unit_minus_surrogate_start = unit.wrapping_sub(0xD800);
+    if unit_minus_surrogate_start <= (0xDFFF - 0xD800) {
+        // Got surrogate
+        if unit_minus_surrogate_start <= (0xDBFF - 0xD800) {
+            // Got high surrogate
+            if read >= src.len() {
+                // Unpaired high surrogate
+                unit = 0xFFFD;
+            } else {
+                let second = src[read];
+                if in_inclusive_range16(second, 0xDC00, 0xDFFF) {
+                    // Valid surrogate pair, but we know it won't fit.
+                    read -= 1;
+                    return (read, written);
+                }
+                // Unpaired high
+                unit = 0xFFFD;
+            }
+        } else {
+            // Unpaired low
+            unit = 0xFFFD;
+        }
+    }
+    dst[written] = (unit >> 12) as u8 | 0xE0u8;
+    written += 1;
+    dst[written] = ((unit & 0xFC0) >> 6) as u8 | 0x80u8;
+    written += 1;
+    dst[written] = (unit & 0x3F) as u8 | 0x80u8;
+    written += 1;
+    debug_assert_eq!(written, dst.len());
+    (read, written)
+}
+
 pub struct Utf8Encoder;
 
 impl Utf8Encoder {
@@ -623,7 +955,7 @@ impl Utf8Encoder {
         &self,
         u16_length: usize,
     ) -> Option<usize> {
-        checked_add(1, u16_length.checked_mul(3))
+        u16_length.checked_mul(3)
     }
 
     pub fn max_buffer_length_from_utf8_without_replacement(
@@ -633,13 +965,13 @@ impl Utf8Encoder {
         Some(byte_length)
     }
 
-    #[cfg_attr(feature = "cargo-clippy", allow(never_loop))]
     pub fn encode_from_utf16_raw(
         &mut self,
         src: &[u16],
         dst: &mut [u8],
         _last: bool,
     ) -> (EncoderResult, usize, usize) {
+<<<<<<< HEAD
         let mut read = 0;
         let mut written = 0;
         'outer: loop {
@@ -777,6 +1109,152 @@ impl Utf8Encoder {
                 continue 'inner;
             }
         }
+||||||| merged common ancestors
+        let mut read = 0;
+        let mut written = 0;
+        'outer: loop {
+            let mut unit = {
+                let src_remaining = &src[read..];
+                let dst_remaining = &mut dst[written..];
+                let (pending, length) = if dst_remaining.len() < src_remaining.len() {
+                    (EncoderResult::OutputFull, dst_remaining.len())
+                } else {
+                    (EncoderResult::InputEmpty, src_remaining.len())
+                };
+                match unsafe {
+                    basic_latin_to_ascii(src_remaining.as_ptr(), dst_remaining.as_mut_ptr(), length)
+                } {
+                    None => {
+                        read += length;
+                        written += length;
+                        return (pending, read, written);
+                    }
+                    Some((non_ascii, consumed)) => {
+                        read += consumed;
+                        written += consumed;
+                        non_ascii
+                    }
+                }
+            };
+            'inner: loop {
+                // The following loop is only broken out of as a goto forward.
+                loop {
+                    // Unfortunately, this check isn't enough for the compiler to elide
+                    // the bound checks on writes to dst, which is why they are manually
+                    // elided, which makes a measurable difference.
+                    if written.checked_add(4).unwrap() > dst.len() {
+                        return (EncoderResult::OutputFull, read, written);
+                    }
+                    read += 1;
+                    if unit < 0x800 {
+                        unsafe {
+                            *(dst.get_unchecked_mut(written)) = (unit >> 6) as u8 | 0xC0u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
+                            written += 1;
+                        }
+                        break;
+                    }
+                    let unit_minus_surrogate_start = unit.wrapping_sub(0xD800);
+                    if unsafe { likely(unit_minus_surrogate_start > (0xDFFF - 0xD800)) } {
+                        unsafe {
+                            *(dst.get_unchecked_mut(written)) = (unit >> 12) as u8 | 0xE0u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = ((unit & 0xFC0) >> 6) as u8 | 0x80u8;
+                            written += 1;
+                            *(dst.get_unchecked_mut(written)) = (unit & 0x3F) as u8 | 0x80u8;
+                            written += 1;
+                        }
+                        break;
+                    }
+                    if unsafe { likely(unit_minus_surrogate_start <= (0xDBFF - 0xD800)) } {
+                        // high surrogate
+                        // read > src.len() is impossible, but using
+                        // >= instead of == allows the compiler to elide a bound check.
+                        if read >= src.len() {
+                            debug_assert_eq!(read, src.len());
+                            // Unpaired surrogate at the end of the buffer.
+                            unsafe {
+                                *(dst.get_unchecked_mut(written)) = 0xEFu8;
+                                written += 1;
+                                *(dst.get_unchecked_mut(written)) = 0xBFu8;
+                                written += 1;
+                                *(dst.get_unchecked_mut(written)) = 0xBDu8;
+                                written += 1;
+                            }
+                            return (EncoderResult::InputEmpty, read, written);
+                        }
+                        let second = src[read];
+                        let second_minus_low_surrogate_start = second.wrapping_sub(0xDC00);
+                        if unsafe { likely(second_minus_low_surrogate_start <= (0xDFFF - 0xDC00)) } {
+                            // The next code unit is a low surrogate. Advance position.
+                            read += 1;
+                            let astral = ((unit as u32) << 10) + second as u32
+                                - (((0xD800u32 << 10) - 0x10000u32) + 0xDC00u32);
+                            unsafe {
+                                *(dst.get_unchecked_mut(written)) = (astral >> 18) as u8 | 0xF0u8;
+                                written += 1;
+                                *(dst.get_unchecked_mut(written)) = ((astral & 0x3F000u32) >> 12) as u8 | 0x80u8;
+                                written += 1;
+                                *(dst.get_unchecked_mut(written)) = ((astral & 0xFC0u32) >> 6) as u8 | 0x80u8;
+                                written += 1;
+                                *(dst.get_unchecked_mut(written)) = (astral & 0x3Fu32) as u8 | 0x80u8;
+                                written += 1;
+                            }
+                            break;
+                        }
+                        // The next code unit is not a low surrogate. Don't advance
+                        // position and treat the high surrogate as unpaired.
+                        // Fall through
+                    }
+                    // Unpaired low surrogate
+                    unsafe {
+                        *(dst.get_unchecked_mut(written)) = 0xEFu8;
+                        written += 1;
+                        *(dst.get_unchecked_mut(written)) = 0xBFu8;
+                        written += 1;
+                        *(dst.get_unchecked_mut(written)) = 0xBDu8;
+                        written += 1;
+                    }
+                    break;
+                }
+                // Now see if the next unit is Basic Latin
+                // read > src.len() is impossible, but using
+                // >= instead of == allows the compiler to elide a bound check.
+                if read >= src.len() {
+                    debug_assert_eq!(read, src.len());
+                    return (EncoderResult::InputEmpty, read, written);
+                }
+                unit = src[read];
+                if unsafe { unlikely(unit < 0x80) } {
+                    // written > dst.len() is impossible, but using
+                    // >= instead of == allows the compiler to elide a bound check.
+                    if written >= dst.len() {
+                        debug_assert_eq!(written, dst.len());
+                        return (EncoderResult::OutputFull, read, written);
+                    }
+                    dst[written] = unit as u8;
+                    read += 1;
+                    written += 1;
+                    // Mysteriously, adding a punctuation check here makes
+                    // the expected benificiary cases *slower*!
+                    continue 'outer;
+                }
+                continue 'inner;
+            }
+        }
+=======
+        let (read, written) = convert_utf16_to_utf8_partial(src, dst);
+        (
+            if read == src.len() {
+                EncoderResult::InputEmpty
+            } else {
+                EncoderResult::OutputFull
+            },
+            read,
+            written,
+        )
+>>>>>>> upstream-releases
     }
 
     pub fn encode_from_utf8_raw(
@@ -827,6 +1305,39 @@ mod tests {
 
     fn encode_utf8_from_utf8(string: &str, expect: &[u8]) {
         encode_from_utf8(UTF_8, string, expect);
+    }
+
+    fn encode_utf8_from_utf16_with_output_limit(
+        string: &[u16],
+        expect: &str,
+        limit: usize,
+        expect_result: EncoderResult,
+    ) {
+        let mut dst = Vec::new();
+        {
+            dst.resize(limit, 0u8);
+            let mut encoder = UTF_8.new_encoder();
+            let (result, read, written) =
+                encoder.encode_from_utf16_without_replacement(string, &mut dst, false);
+            assert_eq!(result, expect_result);
+            if expect_result == EncoderResult::InputEmpty {
+                assert_eq!(read, string.len());
+            }
+            assert_eq!(&dst[..written], expect.as_bytes());
+        }
+        {
+            dst.resize(64, 0u8);
+            for (i, elem) in dst.iter_mut().enumerate() {
+                *elem = i as u8;
+            }
+            let mut encoder = UTF_8.new_encoder();
+            let (_, _, mut j) =
+                encoder.encode_from_utf16_without_replacement(string, &mut dst, false);
+            while j < dst.len() {
+                assert_eq!(usize::from(dst[j]), j);
+                j += 1;
+            }
+        }
     }
 
     #[test]
@@ -1014,6 +1525,404 @@ mod tests {
     }
 
     #[test]
+    fn test_encode_utf8_from_utf16_with_output_limit() {
+        encode_utf8_from_utf16_with_output_limit(&[0x0062], "\u{62}", 1, EncoderResult::InputEmpty);
+        encode_utf8_from_utf16_with_output_limit(&[0x00A7], "\u{A7}", 2, EncoderResult::InputEmpty);
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x2603],
+            "\u{2603}",
+            3,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDCA9],
+            "\u{1F4A9}",
+            4,
+            EncoderResult::InputEmpty,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(&[0x00A7], "", 1, EncoderResult::OutputFull);
+        encode_utf8_from_utf16_with_output_limit(&[0x2603], "", 2, EncoderResult::OutputFull);
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDCA9],
+            "",
+            3,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x0062],
+            "\u{63}\u{62}",
+            2,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00A7],
+            "\u{63}\u{A7}",
+            3,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x2603],
+            "\u{63}\u{2603}",
+            4,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0xD83D, 0xDCA9],
+            "\u{63}\u{1F4A9}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00A7],
+            "\u{63}",
+            2,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x2603],
+            "\u{63}",
+            3,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0xD83D, 0xDCA9],
+            "\u{63}",
+            4,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0x0062],
+            "\u{B6}\u{62}",
+            3,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0x00A7],
+            "\u{B6}\u{A7}",
+            4,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0x2603],
+            "\u{B6}\u{2603}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0xD83D, 0xDCA9],
+            "\u{B6}\u{1F4A9}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0x00A7],
+            "\u{B6}",
+            3,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0x2603],
+            "\u{B6}",
+            4,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x00B6, 0xD83D, 0xDCA9],
+            "\u{B6}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062],
+            "\u{263A}\u{62}",
+            4,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x00A7],
+            "\u{263A}\u{A7}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x2603],
+            "\u{263A}\u{2603}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xD83D, 0xDCA9],
+            "\u{263A}\u{1F4A9}",
+            7,
+            EncoderResult::InputEmpty,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x00A7],
+            "\u{263A}",
+            4,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x2603],
+            "\u{263A}",
+            5,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xD83D, 0xDCA9],
+            "\u{263A}",
+            6,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0x0062],
+            "\u{1F60E}\u{62}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0x00A7],
+            "\u{1F60E}\u{A7}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0x2603],
+            "\u{1F60E}\u{2603}",
+            7,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0xD83D, 0xDCA9],
+            "\u{1F60E}\u{1F4A9}",
+            8,
+            EncoderResult::InputEmpty,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0x00A7],
+            "\u{1F60E}",
+            5,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0x2603],
+            "\u{1F60E}",
+            6,
+            EncoderResult::OutputFull,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0xD83D, 0xDE0E, 0xD83D, 0xDCA9],
+            "\u{1F60E}",
+            7,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x0062],
+            "\u{63}\u{B6}\u{62}\u{62}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x0062],
+            "\u{63}\u{B6}\u{62}",
+            4,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x0062, 0x0062],
+            "\u{63}\u{B6}\u{62}\u{62}\u{62}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x0062, 0x0062],
+            "\u{63}\u{B6}\u{62}\u{62}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x0062],
+            "\u{263A}\u{62}\u{62}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x0062],
+            "\u{263A}\u{62}",
+            4,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x0062, 0x0062],
+            "\u{263A}\u{62}\u{62}\u{62}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x0062, 0x0062],
+            "\u{263A}\u{62}\u{62}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x00A7],
+            "\u{63}\u{B6}\u{A7}",
+            5,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x00A7],
+            "\u{63}\u{B6}",
+            4,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x00A7, 0x0062],
+            "\u{63}\u{B6}\u{A7}\u{62}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x00A7, 0x0062],
+            "\u{63}\u{B6}\u{A7}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x00A7, 0x0062],
+            "\u{263A}\u{A7}\u{62}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x00A7, 0x0062],
+            "\u{263A}\u{A7}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x00A7],
+            "\u{63}\u{B6}\u{62}\u{A7}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x0062, 0x00A7],
+            "\u{63}\u{B6}\u{62}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x00A7],
+            "\u{263A}\u{62}\u{A7}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x0062, 0x00A7],
+            "\u{263A}\u{62}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x2603],
+            "\u{63}\u{B6}\u{2603}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0x2603],
+            "\u{63}\u{B6}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x2603],
+            "\u{263A}\u{2603}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0x2603],
+            "\u{263A}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0xD83D],
+            "\u{63}\u{B6}\u{FFFD}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0xD83D],
+            "\u{63}\u{B6}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xD83D],
+            "\u{263A}\u{FFFD}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xD83D],
+            "\u{263A}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0xDCA9],
+            "\u{63}\u{B6}\u{FFFD}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x0063, 0x00B6, 0xDCA9],
+            "\u{63}\u{B6}",
+            5,
+            EncoderResult::OutputFull,
+        );
+
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xDCA9],
+            "\u{263A}\u{FFFD}",
+            6,
+            EncoderResult::InputEmpty,
+        );
+        encode_utf8_from_utf16_with_output_limit(
+            &[0x263A, 0xDCA9],
+            "\u{263A}",
+            5,
+            EncoderResult::OutputFull,
+        );
+    }
+
+    #[test]
     fn test_utf8_max_length_from_utf16() {
         let mut encoder = UTF_8.new_encoder();
         let mut output = [0u8; 13];
@@ -1101,6 +2010,7 @@ mod tests {
         }
     }
 
+<<<<<<< HEAD
     #[test]
     fn test_tail() {
         let mut output = [0u16; 1];
@@ -1117,4 +2027,22 @@ mod tests {
 
     }
 
+||||||| merged common ancestors
+=======
+    #[test]
+    fn test_tail() {
+        let mut output = [0u16; 1];
+        let mut decoder = UTF_8.new_decoder_without_bom_handling();
+        {
+            let (result, read, written, had_errors) =
+                decoder.decode_to_utf16("\u{E4}a".as_bytes(), &mut output[..], false);
+            assert_eq!(result, CoderResult::OutputFull);
+            assert_eq!(read, 2);
+            assert_eq!(written, 1);
+            assert!(!had_errors);
+            assert_eq!(output[0], 0x00E4);
+        }
+    }
+
+>>>>>>> upstream-releases
 }

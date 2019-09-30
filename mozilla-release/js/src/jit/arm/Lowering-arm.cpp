@@ -299,6 +299,65 @@ template void LIRGeneratorARM::lowerForShiftInt64(
     LInstructionHelper<INT64_PIECES, INT64_PIECES + 1, 0>* ins,
     MDefinition* mir, MDefinition* lhs, MDefinition* rhs);
 template void LIRGeneratorARM::lowerForShiftInt64(
+<<<<<<< HEAD
+    LInstructionHelper<INT64_PIECES, INT64_PIECES + 1, 1>* ins,
+    MDefinition* mir, MDefinition* lhs, MDefinition* rhs);
+
+void LIRGeneratorARM::lowerDivI(MDiv* div) {
+  if (div->isUnsigned()) {
+    lowerUDiv(div);
+    return;
+  }
+
+  // Division instructions are slow. Division by constant denominators can be
+  // rewritten to use other instructions.
+  if (div->rhs()->isConstant()) {
+    int32_t rhs = div->rhs()->toConstant()->toInt32();
+    // Check for division by a positive power of two, which is an easy and
+    // important case to optimize. Note that other optimizations are also
+    // possible; division by negative powers of two can be optimized in a
+    // similar manner as positive powers of two, and division by other
+    // constants can be optimized by a reciprocal multiplication technique.
+    int32_t shift = FloorLog2(rhs);
+    if (rhs > 0 && 1 << shift == rhs) {
+      LDivPowTwoI* lir =
+          new (alloc()) LDivPowTwoI(useRegisterAtStart(div->lhs()), shift);
+      if (div->fallible()) {
+        assignSnapshot(lir, Bailout_DoubleOutput);
+      }
+      define(lir, div);
+      return;
+||||||| merged common ancestors
+    LInstructionHelper<INT64_PIECES, INT64_PIECES+1, 1>* ins, MDefinition* mir,
+    MDefinition* lhs, MDefinition* rhs);
+
+void
+LIRGeneratorARM::lowerDivI(MDiv* div)
+{
+    if (div->isUnsigned()) {
+        lowerUDiv(div);
+        return;
+    }
+
+    // Division instructions are slow. Division by constant denominators can be
+    // rewritten to use other instructions.
+    if (div->rhs()->isConstant()) {
+        int32_t rhs = div->rhs()->toConstant()->toInt32();
+        // Check for division by a positive power of two, which is an easy and
+        // important case to optimize. Note that other optimizations are also
+        // possible; division by negative powers of two can be optimized in a
+        // similar manner as positive powers of two, and division by other
+        // constants can be optimized by a reciprocal multiplication technique.
+        int32_t shift = FloorLog2(rhs);
+        if (rhs > 0 && 1 << shift == rhs) {
+            LDivPowTwoI* lir = new(alloc()) LDivPowTwoI(useRegisterAtStart(div->lhs()), shift);
+            if (div->fallible()) {
+                assignSnapshot(lir, Bailout_DoubleOutput);
+            }
+            define(lir, div);
+            return;
+        }
+=======
     LInstructionHelper<INT64_PIECES, INT64_PIECES + 1, 1>* ins,
     MDefinition* mir, MDefinition* lhs, MDefinition* rhs);
 
@@ -334,19 +393,68 @@ void LIRGeneratorARM::lowerDivI(MDiv* div) {
         LDivI(useRegister(div->lhs()), useRegister(div->rhs()), temp());
     if (div->fallible()) {
       assignSnapshot(lir, Bailout_DoubleOutput);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    define(lir, div);
+    return;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (HasIDIV()) {
+    LDivI* lir = new (alloc())
+        LDivI(useRegister(div->lhs()), useRegister(div->rhs()), temp());
+    if (div->fallible()) {
+      assignSnapshot(lir, Bailout_DoubleOutput);
     }
     define(lir, div);
     return;
   }
-
+||||||| merged common ancestors
+    if (HasIDIV()) {
+        LDivI* lir = new(alloc()) LDivI(useRegister(div->lhs()), useRegister(div->rhs()), temp());
+        if (div->fallible()) {
+            assignSnapshot(lir, Bailout_DoubleOutput);
+        }
+        define(lir, div);
+        return;
+    }
+=======
   LSoftDivI* lir = new (alloc()) LSoftDivI(useFixedAtStart(div->lhs(), r0),
                                            useFixedAtStart(div->rhs(), r1));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  LSoftDivI* lir = new (alloc()) LSoftDivI(useFixedAtStart(div->lhs(), r0),
+                                           useFixedAtStart(div->rhs(), r1));
+||||||| merged common ancestors
+    LSoftDivI* lir = new(alloc()) LSoftDivI(useFixedAtStart(div->lhs(), r0),
+                                            useFixedAtStart(div->rhs(), r1));
+=======
+  if (div->fallible()) {
+    assignSnapshot(lir, Bailout_DoubleOutput);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (div->fallible()) {
     assignSnapshot(lir, Bailout_DoubleOutput);
   }
 
   defineReturn(lir, div);
+||||||| merged common ancestors
+    if (div->fallible()) {
+        assignSnapshot(lir, Bailout_DoubleOutput);
+    }
+
+    defineReturn(lir, div);
+=======
+  defineReturn(lir, div);
+>>>>>>> upstream-releases
 }
 
 void LIRGeneratorARM::lowerMulI(MMul* mul, MDefinition* lhs, MDefinition* rhs) {
@@ -471,6 +579,7 @@ void LIRGeneratorARM::lowerUrshD(MUrsh* mir) {
   define(lir, mir);
 }
 
+<<<<<<< HEAD
 void LIRGenerator::visitWasmSelect(MWasmSelect* ins) {
   if (ins->type() == MIRType::Int64) {
     auto* lir = new (alloc()) LWasmSelectI64(
@@ -486,8 +595,38 @@ void LIRGenerator::visitWasmSelect(MWasmSelect* ins) {
                   useRegister(ins->falseExpr()), useRegister(ins->condExpr()));
 
   defineReuseInput(lir, ins, LWasmSelect::TrueExprIndex);
+||||||| merged common ancestors
+void
+LIRGenerator::visitWasmSelect(MWasmSelect* ins)
+{
+    if (ins->type() == MIRType::Int64) {
+        auto* lir = new(alloc()) LWasmSelectI64(useInt64RegisterAtStart(ins->trueExpr()),
+                                                useInt64(ins->falseExpr()),
+                                                useRegister(ins->condExpr()));
+
+        defineInt64ReuseInput(lir, ins, LWasmSelectI64::TrueExprIndex);
+        return;
+    }
+
+    auto* lir = new(alloc()) LWasmSelect(useRegisterAtStart(ins->trueExpr()),
+                                         useRegister(ins->falseExpr()),
+                                         useRegister(ins->condExpr()));
+
+    defineReuseInput(lir, ins, LWasmSelect::TrueExprIndex);
+=======
+void LIRGenerator::visitWasmNeg(MWasmNeg* ins) {
+  if (ins->type() == MIRType::Int32) {
+    define(new (alloc()) LNegI(useRegisterAtStart(ins->input())), ins);
+  } else if (ins->type() == MIRType::Float32) {
+    define(new (alloc()) LNegF(useRegisterAtStart(ins->input())), ins);
+  } else {
+    MOZ_ASSERT(ins->type() == MIRType::Double);
+    define(new (alloc()) LNegD(useRegisterAtStart(ins->input())), ins);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void LIRGenerator::visitWasmNeg(MWasmNeg* ins) {
   if (ins->type() == MIRType::Int32) {
     define(new (alloc()) LNegI(useRegisterAtStart(ins->input())), ins);
@@ -498,11 +637,50 @@ void LIRGenerator::visitWasmNeg(MWasmNeg* ins) {
     define(new (alloc()) LNegD(useRegisterAtStart(ins->input())), ins);
   }
 }
-
+||||||| merged common ancestors
+void
+LIRGenerator::visitWasmNeg(MWasmNeg* ins)
+{
+    if (ins->type() == MIRType::Int32) {
+        define(new(alloc()) LNegI(useRegisterAtStart(ins->input())), ins);
+    } else if (ins->type() == MIRType::Float32) {
+        define(new(alloc()) LNegF(useRegisterAtStart(ins->input())), ins);
+    } else {
+        MOZ_ASSERT(ins->type() == MIRType::Double);
+        define(new(alloc()) LNegD(useRegisterAtStart(ins->input())), ins);
+    }
+}
+=======
 void LIRGeneratorARM::lowerUDiv(MDiv* div) {
   MDefinition* lhs = div->getOperand(0);
   MDefinition* rhs = div->getOperand(1);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void LIRGeneratorARM::lowerUDiv(MDiv* div) {
+  MDefinition* lhs = div->getOperand(0);
+  MDefinition* rhs = div->getOperand(1);
+||||||| merged common ancestors
+void
+LIRGeneratorARM::lowerUDiv(MDiv* div)
+{
+    MDefinition* lhs = div->getOperand(0);
+    MDefinition* rhs = div->getOperand(1);
+
+    if (HasIDIV()) {
+        LUDiv* lir = new(alloc()) LUDiv;
+        lir->setOperand(0, useRegister(lhs));
+        lir->setOperand(1, useRegister(rhs));
+        if (div->fallible()) {
+            assignSnapshot(lir, Bailout_DoubleOutput);
+        }
+        define(lir, div);
+        return;
+    }
+
+    LSoftUDivOrMod* lir = new(alloc()) LSoftUDivOrMod(useFixedAtStart(lhs, r0),
+                                                      useFixedAtStart(rhs, r1));
+=======
   if (HasIDIV()) {
     LUDiv* lir = new (alloc()) LUDiv;
     lir->setOperand(0, useRegister(lhs));
@@ -516,7 +694,41 @@ void LIRGeneratorARM::lowerUDiv(MDiv* div) {
 
   LSoftUDivOrMod* lir = new (alloc())
       LSoftUDivOrMod(useFixedAtStart(lhs, r0), useFixedAtStart(rhs, r1));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (HasIDIV()) {
+    LUDiv* lir = new (alloc()) LUDiv;
+    lir->setOperand(0, useRegister(lhs));
+    lir->setOperand(1, useRegister(rhs));
+    if (div->fallible()) {
+      assignSnapshot(lir, Bailout_DoubleOutput);
+    }
+    define(lir, div);
+    return;
+  }
+||||||| merged common ancestors
+    if (div->fallible()) {
+        assignSnapshot(lir, Bailout_DoubleOutput);
+    }
+=======
+  if (div->fallible()) {
+    assignSnapshot(lir, Bailout_DoubleOutput);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  LSoftUDivOrMod* lir = new (alloc())
+      LSoftUDivOrMod(useFixedAtStart(lhs, r0), useFixedAtStart(rhs, r1));
+||||||| merged common ancestors
+    defineReturn(lir, div);
+}
+=======
+  defineReturn(lir, div);
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (div->fallible()) {
     assignSnapshot(lir, Bailout_DoubleOutput);
   }
@@ -527,6 +739,31 @@ void LIRGeneratorARM::lowerUDiv(MDiv* div) {
 void LIRGeneratorARM::lowerUMod(MMod* mod) {
   MDefinition* lhs = mod->getOperand(0);
   MDefinition* rhs = mod->getOperand(1);
+||||||| merged common ancestors
+void
+LIRGeneratorARM::lowerUMod(MMod* mod)
+{
+    MDefinition* lhs = mod->getOperand(0);
+    MDefinition* rhs = mod->getOperand(1);
+
+    if (HasIDIV()) {
+        LUMod* lir = new(alloc()) LUMod;
+        lir->setOperand(0, useRegister(lhs));
+        lir->setOperand(1, useRegister(rhs));
+        if (mod->fallible()) {
+            assignSnapshot(lir, Bailout_DoubleOutput);
+        }
+        define(lir, mod);
+        return;
+    }
+
+    LSoftUDivOrMod* lir = new(alloc()) LSoftUDivOrMod(useFixedAtStart(lhs, r0),
+                                                      useFixedAtStart(rhs, r1));
+=======
+void LIRGeneratorARM::lowerUMod(MMod* mod) {
+  MDefinition* lhs = mod->getOperand(0);
+  MDefinition* rhs = mod->getOperand(1);
+>>>>>>> upstream-releases
 
   if (HasIDIV()) {
     LUMod* lir = new (alloc()) LUMod;
@@ -535,6 +772,12 @@ void LIRGeneratorARM::lowerUMod(MMod* mod) {
     if (mod->fallible()) {
       assignSnapshot(lir, Bailout_DoubleOutput);
     }
+<<<<<<< HEAD
+    define(lir, mod);
+    return;
+  }
+||||||| merged common ancestors
+=======
     define(lir, mod);
     return;
   }
@@ -545,8 +788,22 @@ void LIRGeneratorARM::lowerUMod(MMod* mod) {
   if (mod->fallible()) {
     assignSnapshot(lir, Bailout_DoubleOutput);
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  LSoftUDivOrMod* lir = new (alloc())
+      LSoftUDivOrMod(useFixedAtStart(lhs, r0), useFixedAtStart(rhs, r1));
+
+  if (mod->fallible()) {
+    assignSnapshot(lir, Bailout_DoubleOutput);
+  }
 
   defineReturn(lir, mod);
+||||||| merged common ancestors
+    defineReturn(lir, mod);
+=======
+  defineReturn(lir, mod);
+>>>>>>> upstream-releases
 }
 
 void LIRGenerator::visitWasmUnsignedToDouble(MWasmUnsignedToDouble* ins) {
@@ -567,6 +824,48 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
   MDefinition* base = ins->base();
   MOZ_ASSERT(base->type() == MIRType::Int32);
 
+<<<<<<< HEAD
+  if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
+    auto* lir = new (alloc()) LWasmAtomicLoadI64(useRegisterAtStart(base));
+    defineInt64Fixed(lir, ins,
+                     LInt64Allocation(LAllocation(AnyRegister(IntArgReg1)),
+                                      LAllocation(AnyRegister(IntArgReg0))));
+    return;
+  }
+
+  LAllocation ptr = useRegisterAtStart(base);
+||||||| merged common ancestors
+    LAllocation ptr = useRegisterAtStart(base);
+
+    if (IsUnaligned(ins->access())) {
+        MOZ_ASSERT(!ins->access().isAtomic());
+
+        // Unaligned access expected! Revert to a byte load.
+        LDefinition ptrCopy = tempCopy(base, 0);
+
+        LDefinition noTemp = LDefinition::BogusTemp();
+        if (ins->type() == MIRType::Int64) {
+            auto* lir = new(alloc()) LWasmUnalignedLoadI64(ptr, ptrCopy, temp(), noTemp, noTemp);
+            defineInt64(lir, ins);
+            return;
+        }
+
+        LDefinition temp2 = noTemp;
+        LDefinition temp3 = noTemp;
+        if (IsFloatingPointType(ins->type())) {
+            // For putting the low value in a GPR.
+            temp2 = temp();
+            // For putting the high value in a GPR.
+            if (ins->type() == MIRType::Double) {
+                temp3 = temp();
+            }
+        }
+
+        auto* lir = new(alloc()) LWasmUnalignedLoad(ptr, ptrCopy, temp(), temp2, temp3);
+        define(lir, ins);
+        return;
+    }
+=======
   if (ins->access().type() == Scalar::Int64 && ins->access().isAtomic()) {
     auto* lir = new (alloc()) LWasmAtomicLoadI64(useRegisterAtStart(base));
     defineInt64Fixed(lir, ins,
@@ -582,8 +881,20 @@ void LIRGenerator::visitWasmLoad(MWasmLoad* ins) {
 
     // Unaligned access expected! Revert to a byte load.
     LDefinition ptrCopy = tempCopy(base, 0);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (IsUnaligned(ins->access())) {
+    MOZ_ASSERT(!ins->access().isAtomic());
+
+    // Unaligned access expected! Revert to a byte load.
+    LDefinition ptrCopy = tempCopy(base, 0);
 
     LDefinition noTemp = LDefinition::BogusTemp();
+||||||| merged common ancestors
+=======
+    LDefinition noTemp = LDefinition::BogusTemp();
+>>>>>>> upstream-releases
     if (ins->type() == MIRType::Int64) {
       auto* lir = new (alloc())
           LWasmUnalignedLoadI64(ptr, ptrCopy, temp(), noTemp, noTemp);
@@ -640,9 +951,23 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
 
   LAllocation ptr = useRegisterAtStart(base);
 
+<<<<<<< HEAD
+  if (IsUnaligned(ins->access())) {
+    MOZ_ASSERT(!ins->access().isAtomic());
+||||||| merged common ancestors
+        auto* lir = new(alloc()) LWasmUnalignedStore(ptr, value, ptrCopy, valueHelper);
+        add(lir, ins);
+        return;
+    }
+=======
   if (IsUnaligned(ins->access())) {
     MOZ_ASSERT(!ins->access().isAtomic());
 
+    // Unaligned access expected! Revert to a byte store.
+    LDefinition ptrCopy = tempCopy(base, 0);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // Unaligned access expected! Revert to a byte store.
     LDefinition ptrCopy = tempCopy(base, 0);
 
@@ -653,6 +978,24 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
           new (alloc()) LWasmUnalignedStoreI64(ptr, value, ptrCopy, temp());
       add(lir, ins);
       return;
+||||||| merged common ancestors
+    if (ins->value()->type() == MIRType::Int64) {
+        LInt64Allocation value = useInt64RegisterAtStart(ins->value());
+        auto* lir = new(alloc()) LWasmStoreI64(ptr, value);
+        if (ins->access().offset() || ins->access().type() == Scalar::Int64) {
+            lir->setTemp(0, tempCopy(base, 0));
+        }
+        add(lir, ins);
+        return;
+=======
+    MIRType valueType = ins->value()->type();
+    if (valueType == MIRType::Int64) {
+      LInt64Allocation value = useInt64RegisterAtStart(ins->value());
+      auto* lir =
+          new (alloc()) LWasmUnalignedStoreI64(ptr, value, ptrCopy, temp());
+      add(lir, ins);
+      return;
+>>>>>>> upstream-releases
     }
 
     LAllocation value = useRegisterAtStart(ins->value());
@@ -686,12 +1029,40 @@ void LIRGenerator::visitWasmStore(MWasmStore* ins) {
   add(lir, ins);
 }
 
+<<<<<<< HEAD
+void LIRGenerator::visitAsmJSLoadHeap(MAsmJSLoadHeap* ins) {
+  MOZ_ASSERT(ins->offset() == 0);
+||||||| merged common ancestors
+void
+LIRGenerator::visitAtomicExchangeTypedArrayElement(MAtomicExchangeTypedArrayElement* ins)
+{
+    MOZ_ASSERT(HasLDSTREXBHD());
+    MOZ_ASSERT(ins->arrayType() <= Scalar::Uint32);
+
+    MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
+    MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
+=======
 void LIRGenerator::visitAsmJSLoadHeap(MAsmJSLoadHeap* ins) {
   MOZ_ASSERT(ins->offset() == 0);
 
   MDefinition* base = ins->base();
   MOZ_ASSERT(base->type() == MIRType::Int32);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MDefinition* base = ins->base();
+  MOZ_ASSERT(base->type() == MIRType::Int32);
+||||||| merged common ancestors
+    const LUse elements = useRegister(ins->elements());
+    const LAllocation index = useRegisterOrConstant(ins->index());
+=======
+  // For the ARM it is best to keep the 'base' in a register if a bounds check
+  // is needed.
+  LAllocation baseAlloc;
+  LAllocation limitAlloc;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // For the ARM it is best to keep the 'base' in a register if a bounds check
   // is needed.
   LAllocation baseAlloc;
@@ -707,6 +1078,27 @@ void LIRGenerator::visitAsmJSLoadHeap(MAsmJSLoadHeap* ins) {
       MDefinition* boundsCheckLimit = ins->boundsCheckLimit();
       MOZ_ASSERT(boundsCheckLimit->type() == MIRType::Int32);
       limitAlloc = useRegisterAtStart(boundsCheckLimit);
+||||||| merged common ancestors
+    // If the target is a floating register then we need a temp at the
+    // CodeGenerator level for creating the result.
+
+    const LAllocation value = useRegister(ins->value());
+    LDefinition tempDef = LDefinition::BogusTemp();
+    if (ins->arrayType() == Scalar::Uint32) {
+        MOZ_ASSERT(ins->type() == MIRType::Double);
+        tempDef = temp();
+=======
+  if (base->isConstant() && !ins->needsBoundsCheck()) {
+    // A bounds check is only skipped for a positive index.
+    MOZ_ASSERT(base->toConstant()->toInt32() >= 0);
+    baseAlloc = LAllocation(base->toConstant());
+  } else {
+    baseAlloc = useRegisterAtStart(base);
+    if (ins->needsBoundsCheck()) {
+      MDefinition* boundsCheckLimit = ins->boundsCheckLimit();
+      MOZ_ASSERT(boundsCheckLimit->type() == MIRType::Int32);
+      limitAlloc = useRegisterAtStart(boundsCheckLimit);
+>>>>>>> upstream-releases
     }
   }
 
@@ -805,6 +1197,7 @@ void LIRGenerator::visitAtomicTypedArrayElementBinop(
     return;
   }
 
+<<<<<<< HEAD
   // For a Uint32Array with a known double result we need a temp for
   // the intermediate output.
   //
@@ -936,6 +1329,146 @@ void LIRGenerator::visitWasmAtomicBinopHeap(MWasmAtomicBinopHeap* ins) {
                            /* temp = */ LDefinition::BogusTemp(),
                            /* flagTemp= */ temp());
   define(lir, ins);
+||||||| merged common ancestors
+    LWasmAtomicBinopHeap* lir =
+        new(alloc()) LWasmAtomicBinopHeap(useRegister(base),
+                                          useRegister(ins->value()),
+                                          /* temp = */ LDefinition::BogusTemp(),
+                                          /* flagTemp= */ temp());
+    define(lir, ins);
+=======
+  // For a Uint32Array with a known double result we need a temp for
+  // the intermediate output.
+  //
+  // Optimization opportunity (bug 1077317): We can do better by
+  // allowing 'value' to remain as an imm32 if it is small enough to
+  // fit in an instruction.
+
+  LDefinition flagTemp = temp();
+  LDefinition outTemp = LDefinition::BogusTemp();
+
+  if (ins->arrayType() == Scalar::Uint32 && IsFloatingPointType(ins->type())) {
+    outTemp = temp();
+  }
+
+  // On arm, map flagTemp to temp1 and outTemp to temp2, at least for now.
+
+  LAtomicTypedArrayElementBinop* lir = new (alloc())
+      LAtomicTypedArrayElementBinop(elements, index, value, flagTemp, outTemp);
+  define(lir, ins);
+}
+
+void LIRGenerator::visitCompareExchangeTypedArrayElement(
+    MCompareExchangeTypedArrayElement* ins) {
+  MOZ_ASSERT(ins->arrayType() != Scalar::Float32);
+  MOZ_ASSERT(ins->arrayType() != Scalar::Float64);
+
+  MOZ_ASSERT(ins->elements()->type() == MIRType::Elements);
+  MOZ_ASSERT(ins->index()->type() == MIRType::Int32);
+
+  const LUse elements = useRegister(ins->elements());
+  const LAllocation index = useRegisterOrConstant(ins->index());
+
+  // If the target is a floating register then we need a temp at the
+  // CodeGenerator level for creating the result.
+  //
+  // Optimization opportunity (bug 1077317): We could do better by
+  // allowing oldval to remain an immediate, if it is small enough
+  // to fit in an instruction.
+
+  const LAllocation newval = useRegister(ins->newval());
+  const LAllocation oldval = useRegister(ins->oldval());
+  LDefinition tempDef = LDefinition::BogusTemp();
+  if (ins->arrayType() == Scalar::Uint32 && IsFloatingPointType(ins->type())) {
+    tempDef = temp();
+  }
+
+  LCompareExchangeTypedArrayElement* lir =
+      new (alloc()) LCompareExchangeTypedArrayElement(elements, index, oldval,
+                                                      newval, tempDef);
+
+  define(lir, ins);
+}
+
+void LIRGenerator::visitWasmCompareExchangeHeap(MWasmCompareExchangeHeap* ins) {
+  MDefinition* base = ins->base();
+  MOZ_ASSERT(base->type() == MIRType::Int32);
+
+  if (ins->access().type() == Scalar::Int64) {
+    // The three register pairs must be distinct.
+    auto* lir = new (alloc()) LWasmCompareExchangeI64(
+        useRegister(base), useInt64Fixed(ins->oldValue(), CmpXchgOld64),
+        useInt64Fixed(ins->newValue(), CmpXchgNew64));
+    defineInt64Fixed(lir, ins,
+                     LInt64Allocation(LAllocation(AnyRegister(CmpXchgOutHi)),
+                                      LAllocation(AnyRegister(CmpXchgOutLo))));
+    return;
+  }
+
+  MOZ_ASSERT(ins->access().type() < Scalar::Float32);
+  MOZ_ASSERT(HasLDSTREXBHD(), "by HasCompilerSupport() constraints");
+
+  LWasmCompareExchangeHeap* lir = new (alloc())
+      LWasmCompareExchangeHeap(useRegister(base), useRegister(ins->oldValue()),
+                               useRegister(ins->newValue()));
+
+  define(lir, ins);
+}
+
+void LIRGenerator::visitWasmAtomicExchangeHeap(MWasmAtomicExchangeHeap* ins) {
+  MOZ_ASSERT(ins->base()->type() == MIRType::Int32);
+
+  if (ins->access().type() == Scalar::Int64) {
+    auto* lir = new (alloc()) LWasmAtomicExchangeI64(
+        useRegister(ins->base()), useInt64Fixed(ins->value(), XchgNew64),
+        ins->access());
+    defineInt64Fixed(lir, ins,
+                     LInt64Allocation(LAllocation(AnyRegister(XchgOutHi)),
+                                      LAllocation(AnyRegister(XchgOutLo))));
+    return;
+  }
+
+  MOZ_ASSERT(ins->access().type() < Scalar::Float32);
+  MOZ_ASSERT(HasLDSTREXBHD(), "by HasCompilerSupport() constraints");
+
+  const LAllocation base = useRegister(ins->base());
+  const LAllocation value = useRegister(ins->value());
+  define(new (alloc()) LWasmAtomicExchangeHeap(base, value), ins);
+}
+
+void LIRGenerator::visitWasmAtomicBinopHeap(MWasmAtomicBinopHeap* ins) {
+  if (ins->access().type() == Scalar::Int64) {
+    auto* lir = new (alloc()) LWasmAtomicBinopI64(
+        useRegister(ins->base()), useInt64Fixed(ins->value(), FetchOpVal64),
+        tempFixed(FetchOpTmpLo), tempFixed(FetchOpTmpHi), ins->access(),
+        ins->operation());
+    defineInt64Fixed(lir, ins,
+                     LInt64Allocation(LAllocation(AnyRegister(FetchOpOutHi)),
+                                      LAllocation(AnyRegister(FetchOpOutLo))));
+    return;
+  }
+
+  MOZ_ASSERT(ins->access().type() < Scalar::Float32);
+  MOZ_ASSERT(HasLDSTREXBHD(), "by HasCompilerSupport() constraints");
+
+  MDefinition* base = ins->base();
+  MOZ_ASSERT(base->type() == MIRType::Int32);
+
+  if (!ins->hasUses()) {
+    LWasmAtomicBinopHeapForEffect* lir =
+        new (alloc()) LWasmAtomicBinopHeapForEffect(useRegister(base),
+                                                    useRegister(ins->value()),
+                                                    /* flagTemp= */ temp());
+    add(lir, ins);
+    return;
+  }
+
+  LWasmAtomicBinopHeap* lir = new (alloc())
+      LWasmAtomicBinopHeap(useRegister(base), useRegister(ins->value()),
+                           /* temp = */ LDefinition::BogusTemp(),
+                           /* flagTemp= */ temp());
+  define(lir, ins);
+>>>>>>> upstream-releases
 }
 
 void LIRGenerator::visitSubstr(MSubstr* ins) {

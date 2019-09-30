@@ -26,6 +26,7 @@ class CacheOpChild final : public PCacheOpChild,
                            public TypeUtils {
   friend class CacheChild;
   friend class CacheStorageChild;
+  friend class PCacheOpChild;
 
  private:
   // This class must be constructed by CacheChild or CacheStorageChild using
@@ -53,7 +54,14 @@ class CacheOpChild final : public PCacheOpChild,
   virtual mozilla::ipc::PBackgroundChild* GetIPCManager() override;
 
   // Utility methods
+<<<<<<< HEAD
   void HandleResponse(const CacheResponseOrVoid& aResponseOrVoid);
+||||||| merged common ancestors
+  void
+  HandleResponse(const CacheResponseOrVoid& aResponseOrVoid);
+=======
+  void HandleResponse(const Maybe<CacheResponse>& aMaybeResponse);
+>>>>>>> upstream-releases
 
   void HandleResponseList(const nsTArray<CacheResponse>& aResponseList);
 

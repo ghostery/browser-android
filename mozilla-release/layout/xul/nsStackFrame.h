@@ -18,11 +18,24 @@ one time. So the can be flipped though like a Stack of cards.
 #include "mozilla/Attributes.h"
 #include "nsBoxFrame.h"
 
+<<<<<<< HEAD
 class nsStackFrame final : public nsBoxFrame {
  public:
+||||||| merged common ancestors
+class nsStackFrame final : public nsBoxFrame
+{
+public:
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsStackFrame final : public nsBoxFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsStackFrame)
 
-  friend nsIFrame* NS_NewStackFrame(nsIPresShell* aPresShell,
+  friend nsIFrame* NS_NewStackFrame(mozilla::PresShell* aPresShell,
                                     ComputedStyle* aStyle);
 
 #ifdef DEBUG_FRAME_DUMP
@@ -31,11 +44,29 @@ class nsStackFrame final : public nsBoxFrame {
   }
 #endif
 
+<<<<<<< HEAD
   virtual void BuildDisplayListForChildren(
       nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) override;
 
  protected:
   explicit nsStackFrame(ComputedStyle* aStyle);
 };  // class nsStackFrame
+||||||| merged common ancestors
+  virtual void BuildDisplayListForChildren(nsDisplayListBuilder*   aBuilder,
+                                           const nsDisplayListSet& aLists) override;
+
+protected:
+  explicit nsStackFrame(ComputedStyle* aStyle);
+}; // class nsStackFrame
+
+
+=======
+  virtual void BuildDisplayListForChildren(
+      nsDisplayListBuilder* aBuilder, const nsDisplayListSet& aLists) override;
+
+ protected:
+  explicit nsStackFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
+};  // class nsStackFrame
+>>>>>>> upstream-releases
 
 #endif

@@ -89,15 +89,39 @@ bool DebugState::getOffsetLocation(uint32_t offset, size_t* lineno,
   return true;
 }
 
+<<<<<<< HEAD
 bool DebugState::stepModeEnabled(uint32_t funcIndex) const {
   return stepModeCounters_.lookup(funcIndex).found();
+||||||| merged common ancestors
+uint32_t
+DebugState::totalSourceLines()
+{
+    return binarySource_ ? bytecode().length() : 0;
+=======
+bool DebugState::stepModeEnabled(uint32_t funcIndex) const {
+  return stepperCounters_.lookup(funcIndex).found();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool DebugState::incrementStepModeCount(JSContext* cx, uint32_t funcIndex) {
   const CodeRange& codeRange =
       codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
   MOZ_ASSERT(codeRange.isFunction());
+||||||| merged common ancestors
+bool
+DebugState::stepModeEnabled(uint32_t funcIndex) const
+{
+    return stepModeCounters_.lookup(funcIndex).found();
+}
+=======
+bool DebugState::incrementStepperCount(JSContext* cx, uint32_t funcIndex) {
+  const CodeRange& codeRange =
+      codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
+  MOZ_ASSERT(codeRange.isFunction());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   StepModeCounters::AddPtr p = stepModeCounters_.lookupForAdd(funcIndex);
   if (p) {
     MOZ_ASSERT(p->value() > 0);
@@ -117,6 +141,39 @@ bool DebugState::incrementStepModeCount(JSContext* cx, uint32_t funcIndex) {
   for (const CallSite& callSite : callSites(Tier::Debug)) {
     if (callSite.kind() != CallSite::Breakpoint) {
       continue;
+||||||| merged common ancestors
+bool
+DebugState::incrementStepModeCount(JSContext* cx, uint32_t funcIndex)
+{
+    const CodeRange& codeRange = codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
+    MOZ_ASSERT(codeRange.isFunction());
+
+    StepModeCounters::AddPtr p = stepModeCounters_.lookupForAdd(funcIndex);
+    if (p) {
+        MOZ_ASSERT(p->value() > 0);
+        p->value()++;
+        return true;
+=======
+  StepperCounters::AddPtr p = stepperCounters_.lookupForAdd(funcIndex);
+  if (p) {
+    MOZ_ASSERT(p->value() > 0);
+    p->value()++;
+    return true;
+  }
+  if (!stepperCounters_.add(p, funcIndex, 1)) {
+    ReportOutOfMemory(cx);
+    return false;
+  }
+
+  AutoWritableJitCode awjc(
+      cx->runtime(), code_->segment(Tier::Debug).base() + codeRange.begin(),
+      codeRange.end() - codeRange.begin());
+  AutoFlushICache afc("Code::incrementStepperCount");
+
+  for (const CallSite& callSite : callSites(Tier::Debug)) {
+    if (callSite.kind() != CallSite::Breakpoint) {
+      continue;
+>>>>>>> upstream-releases
     }
     uint32_t offset = callSite.returnAddressOffset();
     if (codeRange.begin() <= offset && offset <= codeRange.end()) {
@@ -126,6 +183,7 @@ bool DebugState::incrementStepModeCount(JSContext* cx, uint32_t funcIndex) {
   return true;
 }
 
+<<<<<<< HEAD
 bool DebugState::decrementStepModeCount(FreeOp* fop, uint32_t funcIndex) {
   const CodeRange& codeRange =
       codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
@@ -135,15 +193,62 @@ bool DebugState::decrementStepModeCount(FreeOp* fop, uint32_t funcIndex) {
   StepModeCounters::Ptr p = stepModeCounters_.lookup(funcIndex);
   MOZ_ASSERT(p);
   if (--p->value()) {
+||||||| merged common ancestors
+    AutoWritableJitCode awjc(cx->runtime(), code_->segment(Tier::Debug).base() + codeRange.begin(),
+                             codeRange.end() - codeRange.begin());
+    AutoFlushICache afc("Code::incrementStepModeCount");
+
+    for (const CallSite& callSite : callSites(Tier::Debug)) {
+        if (callSite.kind() != CallSite::Breakpoint) {
+            continue;
+        }
+        uint32_t offset = callSite.returnAddressOffset();
+        if (codeRange.begin() <= offset && offset <= codeRange.end()) {
+            toggleDebugTrap(offset, true);
+        }
+    }
+=======
+bool DebugState::decrementStepperCount(FreeOp* fop, uint32_t funcIndex) {
+  const CodeRange& codeRange =
+      codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
+  MOZ_ASSERT(codeRange.isFunction());
+
+  MOZ_ASSERT(!stepperCounters_.empty());
+  StepperCounters::Ptr p = stepperCounters_.lookup(funcIndex);
+  MOZ_ASSERT(p);
+  if (--p->value()) {
+>>>>>>> upstream-releases
     return true;
   }
 
+<<<<<<< HEAD
   stepModeCounters_.remove(p);
 
   AutoWritableJitCode awjc(
       fop->runtime(), code_->segment(Tier::Debug).base() + codeRange.begin(),
       codeRange.end() - codeRange.begin());
   AutoFlushICache afc("Code::decrementStepModeCount");
+||||||| merged common ancestors
+bool
+DebugState::decrementStepModeCount(FreeOp* fop, uint32_t funcIndex)
+{
+    const CodeRange& codeRange = codeRanges(Tier::Debug)[funcToCodeRangeIndex(funcIndex)];
+    MOZ_ASSERT(codeRange.isFunction());
+
+    MOZ_ASSERT(!stepModeCounters_.empty());
+    StepModeCounters::Ptr p = stepModeCounters_.lookup(funcIndex);
+    MOZ_ASSERT(p);
+    if (--p->value()) {
+        return true;
+    }
+=======
+  stepperCounters_.remove(p);
+
+  AutoWritableJitCode awjc(
+      fop->runtime(), code_->segment(Tier::Debug).base() + codeRange.begin(),
+      codeRange.end() - codeRange.begin());
+  AutoFlushICache afc("Code::decrementStepperCount");
+>>>>>>> upstream-releases
 
   for (const CallSite& callSite : callSites(Tier::Debug)) {
     if (callSite.kind() != CallSite::Breakpoint) {
@@ -162,6 +267,7 @@ bool DebugState::hasBreakpointTrapAtOffset(uint32_t offset) {
   return SlowCallSiteSearchByOffset(metadata(Tier::Debug), offset);
 }
 
+<<<<<<< HEAD
 void DebugState::toggleBreakpointTrap(JSRuntime* rt, uint32_t offset,
                                       bool enabled) {
   const CallSite* callSite =
@@ -186,6 +292,41 @@ void DebugState::toggleBreakpointTrap(JSRuntime* rt, uint32_t offset,
                             codeSegment.length());
   toggleDebugTrap(debugTrapOffset, enabled);
 }
+||||||| merged common ancestors
+void
+DebugState::toggleBreakpointTrap(JSRuntime* rt, uint32_t offset, bool enabled)
+{
+    const CallSite* callSite = SlowCallSiteSearchByOffset(metadata(Tier::Debug), offset);
+    if (!callSite) {
+        return;
+    }
+    size_t debugTrapOffset = callSite->returnAddressOffset();
+=======
+void DebugState::toggleBreakpointTrap(JSRuntime* rt, uint32_t offset,
+                                      bool enabled) {
+  const CallSite* callSite =
+      SlowCallSiteSearchByOffset(metadata(Tier::Debug), offset);
+  if (!callSite) {
+    return;
+  }
+  size_t debugTrapOffset = callSite->returnAddressOffset();
+
+  const ModuleSegment& codeSegment = code_->segment(Tier::Debug);
+  const CodeRange* codeRange =
+      code_->lookupFuncRange(codeSegment.base() + debugTrapOffset);
+  MOZ_ASSERT(codeRange);
+
+  if (stepperCounters_.lookup(codeRange->funcIndex())) {
+    return;  // no need to toggle when step mode is enabled
+  }
+
+  AutoWritableJitCode awjc(rt, codeSegment.base(), codeSegment.length());
+  AutoFlushICache afc("Code::toggleBreakpointTrap");
+  AutoFlushICache::setRange(uintptr_t(codeSegment.base()),
+                            codeSegment.length());
+  toggleDebugTrap(debugTrapOffset, enabled);
+}
+>>>>>>> upstream-releases
 
 WasmBreakpointSite* DebugState::getOrCreateBreakpointSite(JSContext* cx,
                                                           uint32_t offset) {

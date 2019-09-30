@@ -9,7 +9,8 @@
 #include "nsIServiceManager.h"
 #include "nsResizerFrame.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/Document.h"
 #include "nsGkAtoms.h"
 #include "nsNameSpaceManager.h"
 
@@ -37,14 +38,35 @@ using namespace mozilla;
 //
 // Creates a new Resizer frame and returns it
 //
+<<<<<<< HEAD
 nsIFrame* NS_NewResizerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsResizerFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewResizerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsResizerFrame(aStyle);
+=======
+nsIFrame* NS_NewResizerFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsResizerFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsResizerFrame)
 
+<<<<<<< HEAD
 nsResizerFrame::nsResizerFrame(ComputedStyle* aStyle)
     : nsTitleBarFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+nsResizerFrame::nsResizerFrame(ComputedStyle* aStyle)
+  : nsTitleBarFrame(aStyle, kClassID)
+{
+}
+=======
+nsResizerFrame::nsResizerFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+    : nsTitleBarFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
 nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
                                      WidgetGUIEvent* aEvent,
@@ -62,9 +84,9 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
     case eMouseDown: {
       if (aEvent->mClass == eTouchEventClass ||
           (aEvent->mClass == eMouseEventClass &&
-           aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton)) {
+           aEvent->AsMouseEvent()->mButton == MouseButton::eLeft)) {
         nsCOMPtr<nsIBaseWindow> window;
-        nsIPresShell* presShell = aPresContext->GetPresShell();
+        mozilla::PresShell* presShell = aPresContext->GetPresShell();
         nsIContent* contentToResize =
             GetContentToResize(presShell, getter_AddRefs(window));
         if (contentToResize) {
@@ -111,10 +133,12 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
         // we're tracking
         mTrackingMouseMove = true;
 
-        nsIPresShell::SetCapturingContent(GetContent(), CAPTURE_IGNOREALLOWED);
+        PresShell::SetCapturingContent(GetContent(),
+                                       CaptureFlags::IgnoreAllowedState);
       }
     } break;
 
+<<<<<<< HEAD
     case eTouchEnd:
     case eMouseUp: {
       if (aEvent->mClass == eTouchEventClass ||
@@ -122,13 +146,37 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
            aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton)) {
         // we're done tracking.
         mTrackingMouseMove = false;
+||||||| merged common ancestors
+  case eTouchEnd:
+  case eMouseUp: {
+    if (aEvent->mClass == eTouchEventClass ||
+        (aEvent->mClass == eMouseEventClass &&
+         aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton)) {
+      // we're done tracking.
+      mTrackingMouseMove = false;
+=======
+    case eTouchEnd:
+    case eMouseUp: {
+      if (aEvent->mClass == eTouchEventClass ||
+          (aEvent->mClass == eMouseEventClass &&
+           aEvent->AsMouseEvent()->mButton == MouseButton::eLeft)) {
+        // we're done tracking.
+        mTrackingMouseMove = false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         nsIPresShell::SetCapturingContent(nullptr, 0);
+||||||| merged common ancestors
+      nsIPresShell::SetCapturingContent(nullptr, 0);
+=======
+        PresShell::ReleaseCapturingContent();
+>>>>>>> upstream-releases
 
         doDefault = false;
       }
     } break;
 
+<<<<<<< HEAD
     case eTouchMove:
     case eMouseMove: {
       if (mTrackingMouseMove) {
@@ -136,6 +184,41 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
         nsIPresShell* presShell = aPresContext->GetPresShell();
         nsCOMPtr<nsIContent> contentToResize =
             GetContentToResize(presShell, getter_AddRefs(window));
+||||||| merged common ancestors
+      // both MouseMove and direction are negative when pointing to the
+      // top and left, and positive when pointing to the bottom and right
+
+      // retrieve the offset of the mousemove event relative to the mousedown.
+      // The difference is how much the resize needs to be
+      LayoutDeviceIntPoint refPoint;
+      if (!GetEventPoint(aEvent, refPoint))
+        return NS_OK;
+      LayoutDeviceIntPoint screenPoint =
+        refPoint + aEvent->mWidget->WidgetToScreenOffset();
+      LayoutDeviceIntPoint mouseMove(screenPoint - mMouseDownPoint);
+
+      // Determine which direction to resize by checking the dir attribute.
+      // For windows and menus, ensure that it can be resized in that direction.
+      Direction direction = GetDirection();
+      if (window || menuPopupFrame) {
+        if (menuPopupFrame) {
+          menuPopupFrame->CanAdjustEdges(
+            (direction.mHorizontal == -1) ? eSideLeft : eSideRight,
+            (direction.mVertical == -1) ? eSideTop : eSideBottom, mouseMove);
+        }
+      }
+      else if (!contentToResize) {
+        break; // don't do anything if there's nothing to resize
+      }
+=======
+    case eTouchMove:
+    case eMouseMove: {
+      if (mTrackingMouseMove) {
+        nsCOMPtr<nsIBaseWindow> window;
+        mozilla::PresShell* presShell = aPresContext->GetPresShell();
+        nsCOMPtr<nsIContent> contentToResize =
+            GetContentToResize(presShell, getter_AddRefs(window));
+>>>>>>> upstream-releases
 
         // check if the returned content really is a menupopup
         nsMenuPopupFrame* menuPopupFrame = nullptr;
@@ -288,6 +371,7 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
       }
       break;
     }
+<<<<<<< HEAD
     case eMouseDoubleClick:
       if (aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
         nsCOMPtr<nsIBaseWindow> window;
@@ -300,6 +384,23 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
           if (menuPopupFrame)
             break;  // Don't restore original sizing for menupopup frames until
                     // we handle screen constraints here. (Bug 357725)
+||||||| merged common ancestors
+  }
+  break;
+=======
+    case eMouseDoubleClick:
+      if (aEvent->AsMouseEvent()->mButton == MouseButton::eLeft) {
+        nsCOMPtr<nsIBaseWindow> window;
+        mozilla::PresShell* presShell = aPresContext->GetPresShell();
+        nsIContent* contentToResize =
+            GetContentToResize(presShell, getter_AddRefs(window));
+        if (contentToResize) {
+          nsMenuPopupFrame* menuPopupFrame =
+              do_QueryFrame(contentToResize->GetPrimaryFrame());
+          if (menuPopupFrame)
+            break;  // Don't restore original sizing for menupopup frames until
+                    // we handle screen constraints here. (Bug 357725)
+>>>>>>> upstream-releases
 
           RestoreOriginalSize(contentToResize);
         }
@@ -318,8 +419,17 @@ nsresult nsResizerFrame::HandleEvent(nsPresContext* aPresContext,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsIContent* nsResizerFrame::GetContentToResize(nsIPresShell* aPresShell,
                                                nsIBaseWindow** aWindow) {
+||||||| merged common ancestors
+nsIContent*
+nsResizerFrame::GetContentToResize(nsIPresShell* aPresShell, nsIBaseWindow** aWindow)
+{
+=======
+nsIContent* nsResizerFrame::GetContentToResize(mozilla::PresShell* aPresShell,
+                                               nsIBaseWindow** aWindow) {
+>>>>>>> upstream-releases
   *aWindow = nullptr;
 
   nsAutoString elementid;
@@ -393,10 +503,23 @@ void nsResizerFrame::AdjustDimensions(int32_t* aPos, int32_t* aSize,
   if (aResizerDirection == -1) *aPos += oldSize - *aSize;
 }
 
+<<<<<<< HEAD
 /* static */ void nsResizerFrame::ResizeContent(nsIContent* aContent,
                                                 const Direction& aDirection,
                                                 const SizeInfo& aSizeInfo,
                                                 SizeInfo* aOriginalSizeInfo) {
+||||||| merged common ancestors
+/* static */ void
+nsResizerFrame::ResizeContent(nsIContent* aContent, const Direction& aDirection,
+                              const SizeInfo& aSizeInfo, SizeInfo* aOriginalSizeInfo)
+{
+=======
+/* static */
+void nsResizerFrame::ResizeContent(nsIContent* aContent,
+                                   const Direction& aDirection,
+                                   const SizeInfo& aSizeInfo,
+                                   SizeInfo* aOriginalSizeInfo) {
+>>>>>>> upstream-releases
   // for XUL elements, just set the width and height attributes. For
   // other elements, set style.width and style.height
   if (aContent->IsXULElement()) {
@@ -449,8 +572,19 @@ void nsResizerFrame::AdjustDimensions(int32_t* aPos, int32_t* aSize,
   }
 }
 
+<<<<<<< HEAD
 /* static */ void nsResizerFrame::MaybePersistOriginalSize(
     nsIContent* aContent, const SizeInfo& aSizeInfo) {
+||||||| merged common ancestors
+/* static */ void
+nsResizerFrame::MaybePersistOriginalSize(nsIContent* aContent,
+                                         const SizeInfo& aSizeInfo)
+{
+=======
+/* static */
+void nsResizerFrame::MaybePersistOriginalSize(nsIContent* aContent,
+                                              const SizeInfo& aSizeInfo) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   aContent->GetProperty(nsGkAtoms::_moz_original_size, &rv);
@@ -462,7 +596,16 @@ void nsResizerFrame::AdjustDimensions(int32_t* aPos, int32_t* aSize,
   if (NS_SUCCEEDED(rv)) sizeInfo.forget();
 }
 
+<<<<<<< HEAD
 /* static */ void nsResizerFrame::RestoreOriginalSize(nsIContent* aContent) {
+||||||| merged common ancestors
+/* static */ void
+nsResizerFrame::RestoreOriginalSize(nsIContent* aContent)
+{
+=======
+/* static */
+void nsResizerFrame::RestoreOriginalSize(nsIContent* aContent) {
+>>>>>>> upstream-releases
   nsresult rv;
   SizeInfo* sizeInfo = static_cast<SizeInfo*>(
       aContent->GetProperty(nsGkAtoms::_moz_original_size, &rv));
@@ -522,7 +665,19 @@ nsResizerFrame::Direction nsResizerFrame::GetDirection() {
 
 void nsResizerFrame::MouseClicked(WidgetMouseEvent* aEvent) {
   // Execute the oncommand event handler.
+<<<<<<< HEAD
   nsContentUtils::DispatchXULCommand(
       mContent, false, nullptr, nullptr, aEvent->IsControl(), aEvent->IsAlt(),
       aEvent->IsShift(), aEvent->IsMeta(), aEvent->inputSource);
+||||||| merged common ancestors
+  nsContentUtils::DispatchXULCommand(mContent, false, nullptr,
+                                     nullptr, aEvent->IsControl(),
+                                     aEvent->IsAlt(), aEvent->IsShift(),
+                                     aEvent->IsMeta(), aEvent->inputSource);
+=======
+  nsCOMPtr<nsIContent> content = mContent;
+  nsContentUtils::DispatchXULCommand(
+      content, false, nullptr, nullptr, aEvent->IsControl(), aEvent->IsAlt(),
+      aEvent->IsShift(), aEvent->IsMeta(), aEvent->mInputSource);
+>>>>>>> upstream-releases
 }

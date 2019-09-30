@@ -4,11 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "ModuleLoadRequest.h"
+#include "ScriptLoadRequest.h"
 
 #include "mozilla/HoldDropJSObjects.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Unused.h"
+#include "mozilla/Utf8.h"  // mozilla::Utf8Unit
 
+#include "nsContentUtils.h"
 #include "nsICacheInfoChannel.h"
 #include "ScriptLoadRequest.h"
 #include "ScriptSettings.h"
@@ -25,6 +28,7 @@ NS_IMPL_CYCLE_COLLECTION(ScriptFetchOptions, mElement, mTriggeringPrincipal)
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(ScriptFetchOptions, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(ScriptFetchOptions, Release)
 
+<<<<<<< HEAD
 ScriptFetchOptions::ScriptFetchOptions(
     mozilla::CORSMode aCORSMode, mozilla::net::ReferrerPolicy aReferrerPolicy,
     nsIScriptElement* aElement, nsIPrincipal* aTriggeringPrincipal)
@@ -32,6 +36,26 @@ ScriptFetchOptions::ScriptFetchOptions(
       mReferrerPolicy(aReferrerPolicy),
       mElement(aElement),
       mTriggeringPrincipal(aTriggeringPrincipal) {
+||||||| merged common ancestors
+ScriptFetchOptions::ScriptFetchOptions(mozilla::CORSMode aCORSMode,
+                                       mozilla::net::ReferrerPolicy aReferrerPolicy,
+                                       nsIScriptElement* aElement,
+                                       nsIPrincipal* aTriggeringPrincipal)
+  : mCORSMode(aCORSMode)
+  , mReferrerPolicy(aReferrerPolicy)
+  , mElement(aElement)
+  , mTriggeringPrincipal(aTriggeringPrincipal)
+{
+=======
+ScriptFetchOptions::ScriptFetchOptions(
+    mozilla::CORSMode aCORSMode, mozilla::net::ReferrerPolicy aReferrerPolicy,
+    nsIScriptElement* aElement, nsIPrincipal* aTriggeringPrincipal)
+    : mCORSMode(aCORSMode),
+      mReferrerPolicy(aReferrerPolicy),
+      mIsPreload(false),
+      mElement(aElement),
+      mTriggeringPrincipal(aTriggeringPrincipal) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mTriggeringPrincipal);
 }
 
@@ -50,14 +74,13 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(ScriptLoadRequest)
 NS_IMPL_CYCLE_COLLECTION_CLASS(ScriptLoadRequest)
 
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(ScriptLoadRequest)
-  NS_IMPL_CYCLE_COLLECTION_UNLINK(mFetchOptions)
-  NS_IMPL_CYCLE_COLLECTION_UNLINK(mCacheInfo)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mFetchOptions, mCacheInfo)
+  tmp->mScript = nullptr;
   tmp->DropBytecodeCacheReferences();
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(ScriptLoadRequest)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFetchOptions)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mCacheInfo)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFetchOptions, mCacheInfo)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(ScriptLoadRequest)
@@ -68,6 +91,7 @@ ScriptLoadRequest::ScriptLoadRequest(ScriptKind aKind, nsIURI* aURI,
                                      ScriptFetchOptions* aFetchOptions,
                                      const SRIMetadata& aIntegrity,
                                      nsIURI* aReferrer)
+<<<<<<< HEAD
     : mKind(aKind),
       mScriptMode(ScriptMode::eBlocking),
       mProgress(Progress::eLoading),
@@ -91,6 +115,57 @@ ScriptLoadRequest::ScriptLoadRequest(ScriptKind aKind, nsIURI* aURI,
       mLineNo(1),
       mIntegrity(aIntegrity),
       mReferrer(aReferrer) {
+||||||| merged common ancestors
+  : mKind(aKind)
+  , mScriptMode(ScriptMode::eBlocking)
+  , mProgress(Progress::eLoading)
+  , mDataType(DataType::eUnknown)
+  , mScriptFromHead(false)
+  , mIsInline(true)
+  , mHasSourceMapURL(false)
+  , mInDeferList(false)
+  , mInAsyncList(false)
+  , mIsNonAsyncScriptInserted(false)
+  , mIsXSLT(false)
+  , mIsCanceled(false)
+  , mWasCompiledOMT(false)
+  , mIsTracking(false)
+  , mFetchOptions(aFetchOptions)
+  , mOffThreadToken(nullptr)
+  , mScriptTextLength(0)
+  , mScriptBytecode()
+  , mBytecodeOffset(0)
+  , mURI(aURI)
+  , mLineNo(1)
+  , mIntegrity(aIntegrity)
+  , mReferrer(aReferrer)
+{
+=======
+    : mKind(aKind),
+      mScriptMode(ScriptMode::eBlocking),
+      mProgress(Progress::eLoading),
+      mDataType(DataType::eUnknown),
+      mScriptFromHead(false),
+      mIsInline(true),
+      mHasSourceMapURL(false),
+      mInDeferList(false),
+      mInAsyncList(false),
+      mIsNonAsyncScriptInserted(false),
+      mIsXSLT(false),
+      mIsCanceled(false),
+      mWasCompiledOMT(false),
+      mIsTracking(false),
+      mFetchOptions(aFetchOptions),
+      mOffThreadToken(nullptr),
+      mScriptTextLength(0),
+      mScriptBytecode(),
+      mBytecodeOffset(0),
+      mURI(aURI),
+      mLineNo(1),
+      mIntegrity(aIntegrity),
+      mReferrer(aReferrer),
+      mUnreportedPreloadError(NS_OK) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mFetchOptions);
 }
 
@@ -105,6 +180,8 @@ ScriptLoadRequest::~ScriptLoadRequest() {
   if (mScript) {
     DropBytecodeCacheReferences();
   }
+
+  DropJSObjects(this);
 }
 
 void ScriptLoadRequest::SetReady() {
@@ -166,7 +243,11 @@ void ScriptLoadRequest::SetUnknownDataType() {
 void ScriptLoadRequest::SetTextSource() {
   MOZ_ASSERT(IsUnknownDataType());
   mDataType = DataType::eTextSource;
-  mScriptData.emplace(VariantType<ScriptTextBuffer>());
+  if (StaticPrefs::dom_script_loader_external_scripts_utf8_parsing_enabled()) {
+    mScriptData.emplace(VariantType<ScriptTextBuffer<Utf8Unit>>());
+  } else {
+    mScriptData.emplace(VariantType<ScriptTextBuffer<char16_t>>());
+  }
 }
 
 void ScriptLoadRequest::SetBinASTSource() {
@@ -193,7 +274,18 @@ bool ScriptLoadRequest::ShouldAcceptBinASTEncoding() const {
   MOZ_ASSERT(NS_SUCCEEDED(rv));
   Unused << rv;
 
-  return isHTTPS;
+  if (!isHTTPS) {
+    return false;
+  }
+
+  if (StaticPrefs::dom_script_loader_binast_encoding_domain_restrict()) {
+    if (!nsContentUtils::IsURIInPrefList(
+            mURI, "dom.script_loader.binast_encoding.domain.restrict.list")) {
+      return false;
+    }
+  }
+
+  return true;
 #else
   MOZ_CRASH("BinAST not supported");
 #endif
@@ -201,10 +293,16 @@ bool ScriptLoadRequest::ShouldAcceptBinASTEncoding() const {
 
 void ScriptLoadRequest::ClearScriptSource() {
   if (IsTextSource()) {
-    ScriptText().clearAndFree();
+    ClearScriptText();
   } else if (IsBinASTSource()) {
     ScriptBinASTData().clearAndFree();
   }
+}
+
+void ScriptLoadRequest::SetScript(JSScript* aScript) {
+  MOZ_ASSERT(!mScript);
+  mScript = aScript;
+  HoldJSObjects(this);
 }
 
 //////////////////////////////////////////////////////////////

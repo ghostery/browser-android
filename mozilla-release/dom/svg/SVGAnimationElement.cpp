@@ -6,10 +6,11 @@
 
 #include "mozilla/dom/SVGAnimationElement.h"
 #include "mozilla/dom/SVGSVGElement.h"
+#include "mozilla/dom/BindContext.h"
 #include "mozilla/dom/ElementInlines.h"
-#include "nsSMILTimeContainer.h"
-#include "nsSMILAnimationController.h"
-#include "nsSMILAnimationFunction.h"
+#include "mozilla/SMILAnimationController.h"
+#include "mozilla/SMILAnimationFunction.h"
+#include "mozilla/SMILTimeContainer.h"
 #include "nsContentUtils.h"
 #include "nsIContentInlines.h"
 #include "nsIURI.h"
@@ -34,11 +35,27 @@ NS_IMPL_CYCLE_COLLECTION_INHERITED(SVGAnimationElement, SVGAnimationElementBase,
 //----------------------------------------------------------------------
 // Implementation
 
+<<<<<<< HEAD
 SVGAnimationElement::SVGAnimationElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGAnimationElementBase(std::move(aNodeInfo)), mHrefTarget(this) {}
 
 SVGAnimationElement::~SVGAnimationElement() {}
+||||||| merged common ancestors
+SVGAnimationElement::SVGAnimationElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+  : SVGAnimationElementBase(std::move(aNodeInfo)),
+    mHrefTarget(this)
+{
+}
+
+SVGAnimationElement::~SVGAnimationElement()
+{
+}
+=======
+SVGAnimationElement::SVGAnimationElement(
+    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : SVGAnimationElementBase(std::move(aNodeInfo)), mHrefTarget(this) {}
+>>>>>>> upstream-releases
 
 nsresult SVGAnimationElement::Init() {
   nsresult rv = SVGAnimationElementBase::Init();
@@ -83,24 +100,50 @@ bool SVGAnimationElement::GetTargetAttributeName(int32_t* aNamespaceID,
       aLocalName));
 }
 
+<<<<<<< HEAD
 nsSMILTimedElement& SVGAnimationElement::TimedElement() {
   return mTimedElement;
 }
+||||||| merged common ancestors
+nsSMILTimedElement&
+SVGAnimationElement::TimedElement()
+{
+  return mTimedElement;
+}
+=======
+SMILTimedElement& SVGAnimationElement::TimedElement() { return mTimedElement; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsSVGElement* SVGAnimationElement::GetTargetElement() {
+||||||| merged common ancestors
+nsSVGElement*
+SVGAnimationElement::GetTargetElement()
+{
+=======
+SVGElement* SVGAnimationElement::GetTargetElement() {
+>>>>>>> upstream-releases
   FlushAnimations();
 
   // We'll just call the other GetTargetElement method, and QI to the right type
   nsIContent* target = GetTargetElementContent();
 
+<<<<<<< HEAD
   return (target && target->IsSVGElement()) ? static_cast<nsSVGElement*>(target)
                                             : nullptr;
+||||||| merged common ancestors
+  return (target && target->IsSVGElement())
+           ? static_cast<nsSVGElement*>(target) : nullptr;
+=======
+  return (target && target->IsSVGElement()) ? static_cast<SVGElement*>(target)
+                                            : nullptr;
+>>>>>>> upstream-releases
 }
 
 float SVGAnimationElement::GetStartTime(ErrorResult& rv) {
   FlushAnimations();
 
-  nsSMILTimeValue startTime = mTimedElement.GetStartTime();
+  SMILTimeValue startTime = mTimedElement.GetStartTime();
   if (!startTime.IsDefinite()) {
     rv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return 0.f;
@@ -109,12 +152,20 @@ float SVGAnimationElement::GetStartTime(ErrorResult& rv) {
   return float(double(startTime.GetMillis()) / PR_MSEC_PER_SEC);
 }
 
+<<<<<<< HEAD
 float SVGAnimationElement::GetCurrentTime() {
+||||||| merged common ancestors
+float
+SVGAnimationElement::GetCurrentTime()
+{
+=======
+float SVGAnimationElement::GetCurrentTimeAsFloat() {
+>>>>>>> upstream-releases
   // Not necessary to call FlushAnimations() for this
 
-  nsSMILTimeContainer* root = GetTimeContainer();
+  SMILTimeContainer* root = GetTimeContainer();
   if (root) {
-    return float(double(root->GetCurrentTime()) / PR_MSEC_PER_SEC);
+    return float(double(root->GetCurrentTimeAsSMILTime()) / PR_MSEC_PER_SEC);
   }
 
   return 0.0f;
@@ -123,7 +174,7 @@ float SVGAnimationElement::GetCurrentTime() {
 float SVGAnimationElement::GetSimpleDuration(ErrorResult& rv) {
   // Not necessary to call FlushAnimations() for this
 
-  nsSMILTimeValue simpleDur = mTimedElement.GetSimpleDuration();
+  SMILTimeValue simpleDur = mTimedElement.GetSimpleDuration();
   if (!simpleDur.IsDefinite()) {
     rv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return 0.f;
@@ -135,19 +186,38 @@ float SVGAnimationElement::GetSimpleDuration(ErrorResult& rv) {
 //----------------------------------------------------------------------
 // nsIContent methods
 
+<<<<<<< HEAD
 nsresult SVGAnimationElement::BindToTree(nsIDocument* aDocument,
                                          nsIContent* aParent,
                                          nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+SVGAnimationElement::BindToTree(nsIDocument* aDocument,
+                                nsIContent* aParent,
+                                nsIContent* aBindingParent)
+{
+=======
+nsresult SVGAnimationElement::BindToTree(BindContext& aContext,
+                                         nsINode& aParent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!mHrefTarget.get(),
              "Shouldn't have href-target yet (or it should've been cleared)");
+<<<<<<< HEAD
   nsresult rv =
       SVGAnimationElementBase::BindToTree(aDocument, aParent, aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  nsresult rv = SVGAnimationElementBase::BindToTree(aDocument, aParent,
+                                                    aBindingParent);
+  NS_ENSURE_SUCCESS(rv,rv);
+=======
+  nsresult rv = SVGAnimationElementBase::BindToTree(aContext, aParent);
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
   // Add myself to the animation controller's master set of animation elements.
-  if (nsIDocument* doc = GetComposedDoc()) {
-    nsSMILAnimationController* controller = doc->GetAnimationController();
-    if (controller) {
+  if (Document* doc = aContext.GetComposedDoc()) {
+    if (SMILAnimationController* controller = doc->GetAnimationController()) {
       controller->RegisterAnimationElement(this);
     }
     const nsAttrValue* href =
@@ -169,8 +239,18 @@ nsresult SVGAnimationElement::BindToTree(nsIDocument* aDocument,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void SVGAnimationElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsSMILAnimationController* controller = OwnerDoc()->GetAnimationController();
+||||||| merged common ancestors
+void
+SVGAnimationElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsSMILAnimationController* controller = OwnerDoc()->GetAnimationController();
+=======
+void SVGAnimationElement::UnbindFromTree(bool aNullParent) {
+  SMILAnimationController* controller = OwnerDoc()->GetAnimationController();
+>>>>>>> upstream-releases
   if (controller) {
     controller->UnregisterAnimationElement(this);
   }
@@ -180,7 +260,7 @@ void SVGAnimationElement::UnbindFromTree(bool aDeep, bool aNullParent) {
 
   AnimationNeedsResample();
 
-  SVGAnimationElementBase::UnbindFromTree(aDeep, aNullParent);
+  SVGAnimationElementBase::UnbindFromTree(aNullParent);
 }
 
 bool SVGAnimationElement::ParseAttribute(int32_t aNamespaceID,
@@ -299,9 +379,9 @@ void SVGAnimationElement::ActivateByHyperlink() {
   // The behavior for when the target is an animation element is defined in
   // SMIL Animation:
   //   http://www.w3.org/TR/smil-animation/#HyperlinkSemantics
-  nsSMILTimeValue seekTime = mTimedElement.GetHyperlinkTime();
+  SMILTimeValue seekTime = mTimedElement.GetHyperlinkTime();
   if (seekTime.IsDefinite()) {
-    nsSMILTimeContainer* timeContainer = GetTimeContainer();
+    SMILTimeContainer* timeContainer = GetTimeContainer();
     if (timeContainer) {
       timeContainer->SetCurrentTime(seekTime.GetMillis());
       AnimationNeedsResample();
@@ -319,8 +399,18 @@ void SVGAnimationElement::ActivateByHyperlink() {
 //----------------------------------------------------------------------
 // Implementation helpers
 
+<<<<<<< HEAD
 nsSMILTimeContainer* SVGAnimationElement::GetTimeContainer() {
   SVGSVGElement* element = SVGContentUtils::GetOuterSVGElement(this);
+||||||| merged common ancestors
+nsSMILTimeContainer*
+SVGAnimationElement::GetTimeContainer()
+{
+  SVGSVGElement *element = SVGContentUtils::GetOuterSVGElement(this);
+=======
+SMILTimeContainer* SVGAnimationElement::GetTimeContainer() {
+  SVGSVGElement* element = SVGContentUtils::GetOuterSVGElement(this);
+>>>>>>> upstream-releases
 
   if (element) {
     return element->GetTimedDocumentRoot();

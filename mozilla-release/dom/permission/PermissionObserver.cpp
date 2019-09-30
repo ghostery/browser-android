@@ -31,8 +31,17 @@ PermissionObserver::~PermissionObserver() {
   gInstance = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PermissionObserver>
 PermissionObserver::GetInstance() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PermissionObserver>
+PermissionObserver::GetInstance()
+{
+=======
+/* static */
+already_AddRefed<PermissionObserver> PermissionObserver::GetInstance() {
+>>>>>>> upstream-releases
   RefPtr<PermissionObserver> instance = gInstance;
   if (!instance) {
     instance = new PermissionObserver();
@@ -105,7 +114,7 @@ PermissionObserver::Observe(nsISupports* aSubject, const char* aTopic,
 
   nsAutoCString type;
   perm->GetType(type);
-  Maybe<PermissionName> permission = TypeToPermissionName(type.get());
+  Maybe<PermissionName> permission = TypeToPermissionName(type);
   if (permission) {
     Notify(permission.value(), *principal);
   }

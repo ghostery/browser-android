@@ -16,6 +16,7 @@
 #include "mozilla/dom/MessageEvent.h"
 #include "mozilla/dom/MessageEventBinding.h"
 #include "mozilla/dom/ScriptSettings.h"
+#include "mozilla/dom/Blob.h"
 
 #include "nsError.h"
 #include "nsContentUtils.h"
@@ -33,7 +34,7 @@
 // Since we've moved the windows.h include down here, we have to explicitly
 // undef GetBinaryType, otherwise we'll get really odd conflicts
 #ifdef GetBinaryType
-#undef GetBinaryType
+#  undef GetBinaryType
 #endif
 
 using namespace mozilla;
@@ -48,8 +49,18 @@ nsDOMDataChannel::~nsDOMDataChannel() {
   mDataChannel->Close();
 }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* nsDOMDataChannel::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+nsDOMDataChannel::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* nsDOMDataChannel::WrapObject(JSContext* aCx,
+                                       JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return RTCDataChannel_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -97,10 +108,21 @@ nsresult nsDOMDataChannel::Init(nsPIDOMWindowInner* aDOMWindow) {
   nsCOMPtr<nsIPrincipal> principal = scriptPrincipal->GetPrincipal();
   NS_ENSURE_STATE(principal);
 
+<<<<<<< HEAD
   // Attempt to kill "ghost" DataChannel (if one can happen): but usually too
   // early for check to fail
   rv = CheckInnerWindowCorrectness();
   NS_ENSURE_SUCCESS(rv, rv);
+||||||| merged common ancestors
+  // Attempt to kill "ghost" DataChannel (if one can happen): but usually too early for check to fail
+  rv = CheckInnerWindowCorrectness();
+  NS_ENSURE_SUCCESS(rv,rv);
+=======
+  // Attempt to kill "ghost" DataChannel (if one can happen): but usually too
+  // early for check to fail
+  rv = CheckCurrentGlobalCorrectness();
+  NS_ENSURE_SUCCESS(rv, rv);
+>>>>>>> upstream-releases
 
   rv = nsContentUtils::GetUTFOrigin(principal, mOrigin);
   LOG(("%s: origin = %s\n", __FUNCTION__,
@@ -118,7 +140,23 @@ void nsDOMDataChannel::GetProtocol(nsAString& aProtocol) {
   mDataChannel->GetProtocol(aProtocol);
 }
 
+<<<<<<< HEAD
 uint16_t nsDOMDataChannel::Id() const { return mDataChannel->GetStream(); }
+||||||| merged common ancestors
+uint16_t
+nsDOMDataChannel::Id() const
+{
+  return mDataChannel->GetStream();
+}
+=======
+mozilla::dom::Nullable<uint16_t> nsDOMDataChannel::GetId() const {
+  mozilla::dom::Nullable<uint16_t> result = mDataChannel->GetStream();
+  if (result.Value() == 65535) {
+    result.SetNull();
+  }
+  return result;
+}
+>>>>>>> upstream-releases
 
 // XXX should be GetType()?  Open question for the spec
 bool nsDOMDataChannel::Reliable() const {
@@ -134,9 +172,31 @@ mozilla::dom::Nullable<uint16_t> nsDOMDataChannel::GetMaxRetransmits() const {
   return mDataChannel->GetMaxRetransmits();
 }
 
+<<<<<<< HEAD
+bool nsDOMDataChannel::Ordered() const { return mDataChannel->GetOrdered(); }
+||||||| merged common ancestors
+bool
+nsDOMDataChannel::Ordered() const
+{
+  return mDataChannel->GetOrdered();
+}
+=======
+bool nsDOMDataChannel::Negotiated() const {
+  return mDataChannel->GetNegotiated();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+RTCDataChannelState nsDOMDataChannel::ReadyState() const {
+||||||| merged common ancestors
+RTCDataChannelState
+nsDOMDataChannel::ReadyState() const
+{
+=======
 bool nsDOMDataChannel::Ordered() const { return mDataChannel->GetOrdered(); }
 
 RTCDataChannelState nsDOMDataChannel::ReadyState() const {
+>>>>>>> upstream-releases
   return static_cast<RTCDataChannelState>(mDataChannel->GetReadyState());
 }
 
@@ -163,7 +223,7 @@ void nsDOMDataChannel::Close() {
 // All of the following is copy/pasted from WebSocket.cpp.
 void nsDOMDataChannel::Send(const nsAString& aData, ErrorResult& aRv) {
   NS_ConvertUTF16toUTF8 msgString(aData);
-  Send(nullptr, msgString, false, aRv);
+  Send(nullptr, &msgString, false, aRv);
 }
 
 void nsDOMDataChannel::Send(Blob& aData, ErrorResult& aRv) {
@@ -185,7 +245,7 @@ void nsDOMDataChannel::Send(Blob& aData, ErrorResult& aRv) {
     return;
   }
 
-  Send(msgStream, EmptyCString(), true, aRv);
+  Send(&aData, nullptr, true, aRv);
 }
 
 void nsDOMDataChannel::Send(const ArrayBuffer& aData, ErrorResult& aRv) {
@@ -199,7 +259,7 @@ void nsDOMDataChannel::Send(const ArrayBuffer& aData, ErrorResult& aRv) {
   char* data = reinterpret_cast<char*>(aData.Data());
 
   nsDependentCSubstring msgString(data, len);
-  Send(nullptr, msgString, true, aRv);
+  Send(nullptr, &msgString, true, aRv);
 }
 
 void nsDOMDataChannel::Send(const ArrayBufferView& aData, ErrorResult& aRv) {
@@ -213,12 +273,25 @@ void nsDOMDataChannel::Send(const ArrayBufferView& aData, ErrorResult& aRv) {
   char* data = reinterpret_cast<char*>(aData.Data());
 
   nsDependentCSubstring msgString(data, len);
-  Send(nullptr, msgString, true, aRv);
+  Send(nullptr, &msgString, true, aRv);
 }
 
+<<<<<<< HEAD
 void nsDOMDataChannel::Send(nsIInputStream* aMsgStream,
                             const nsACString& aMsgString, bool aIsBinary,
                             ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+nsDOMDataChannel::Send(nsIInputStream* aMsgStream,
+                       const nsACString& aMsgString,
+                       bool aIsBinary,
+                       ErrorResult& aRv)
+{
+=======
+void nsDOMDataChannel::Send(mozilla::dom::Blob* aMsgBlob,
+                            const nsACString* aMsgString, bool aIsBinary,
+                            mozilla::ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   uint16_t state = mozilla::DataChannel::CLOSED;
   if (!mSentClose) {
@@ -240,13 +313,13 @@ void nsDOMDataChannel::Send(nsIInputStream* aMsgStream,
   MOZ_ASSERT(state == mozilla::DataChannel::OPEN,
              "Unknown state in nsDOMDataChannel::Send");
 
-  if (aMsgStream) {
-    mDataChannel->SendBinaryStream(aMsgStream, aRv);
+  if (aMsgBlob) {
+    mDataChannel->SendBinaryBlob(*aMsgBlob, aRv);
   } else {
     if (aIsBinary) {
-      mDataChannel->SendBinaryMsg(aMsgString, aRv);
+      mDataChannel->SendBinaryMsg(*aMsgString, aRv);
     } else {
-      mDataChannel->SendMsg(aMsgString, aRv);
+      mDataChannel->SendMsg(*aMsgString, aRv);
     }
   }
 }
@@ -260,7 +333,7 @@ nsresult nsDOMDataChannel::DoOnMessageAvailable(const nsACString& aData,
            ? ((mBinaryType == DC_BINARY_TYPE_BLOB) ? " (blob)" : " (binary)")
            : ""));
 
-  nsresult rv = CheckInnerWindowCorrectness();
+  nsresult rv = CheckCurrentGlobalCorrectness();
   if (NS_FAILED(rv)) {
     return NS_OK;
   }
@@ -332,7 +405,7 @@ nsresult nsDOMDataChannel::OnSimpleEvent(nsISupports* aContext,
                                          const nsAString& aName) {
   MOZ_ASSERT(NS_IsMainThread());
 
-  nsresult rv = CheckInnerWindowCorrectness();
+  nsresult rv = CheckCurrentGlobalCorrectness();
   if (NS_FAILED(rv)) {
     return NS_OK;
   }
@@ -385,12 +458,24 @@ nsresult nsDOMDataChannel::NotBuffered(nsISupports* aContext) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsDOMDataChannel::AppReady() {
   if (!mSentClose) {  // may not be possible, simpler to just test anyways
     mDataChannel->AppReady();
   }
 }
 
+||||||| merged common ancestors
+void
+nsDOMDataChannel::AppReady()
+{
+  if (!mSentClose) { // may not be possible, simpler to just test anyways
+    mDataChannel->AppReady();
+  }
+}
+
+=======
+>>>>>>> upstream-releases
 //-----------------------------------------------------------------------------
 // Methods that keep alive the DataChannel object when:
 //   1. the object has registered event listeners that can be triggered
@@ -408,9 +493,20 @@ void nsDOMDataChannel::UpdateMustKeepAlive() {
   bool shouldKeepAlive = false;
   uint16_t readyState = mDataChannel->GetReadyState();
 
+<<<<<<< HEAD
   switch (readyState) {
     case DataChannel::CONNECTING:
     case DataChannel::WAITING_TO_OPEN: {
+||||||| merged common ancestors
+  switch (readyState)
+  {
+    case DataChannel::CONNECTING:
+    case DataChannel::WAITING_TO_OPEN:
+    {
+=======
+  switch (readyState) {
+    case DataChannel::CONNECTING: {
+>>>>>>> upstream-releases
       if (mListenerManager &&
           (mListenerManager->HasListenersFor(nsGkAtoms::onopen) ||
            mListenerManager->HasListenersFor(nsGkAtoms::onmessage) ||

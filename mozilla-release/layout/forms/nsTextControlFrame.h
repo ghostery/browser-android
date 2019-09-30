@@ -21,7 +21,7 @@ class EditorInitializerEntryTracker;
 class nsTextEditorState;
 namespace mozilla {
 class TextEditor;
-enum class CSSPseudoElementType : uint8_t;
+enum class PseudoStyleType : uint8_t;
 namespace dom {
 class Element;
 }  // namespace dom
@@ -36,7 +36,8 @@ class nsTextControlFrame final : public nsContainerFrame,
 
   NS_DECLARE_FRAME_PROPERTY_DELETABLE(ContentScrollPos, nsPoint)
 
-  explicit nsTextControlFrame(ComputedStyle* aStyle);
+  explicit nsTextControlFrame(ComputedStyle* aStyle,
+                              nsPresContext* aPresContext);
   virtual ~nsTextControlFrame();
 
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
@@ -60,20 +61,39 @@ class nsTextControlFrame final : public nsContainerFrame,
                       nsReflowStatus& aStatus) override;
 
   bool GetVerticalAlignBaseline(mozilla::WritingMode aWM,
+<<<<<<< HEAD
                                 nscoord* aBaseline) const override {
     return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst,
                                      aBaseline);
+||||||| merged common ancestors
+                                nscoord* aBaseline) const override
+  {
+    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst, aBaseline);
+=======
+                                nscoord* aBaseline) const override {
+    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::First,
+                                     aBaseline);
+>>>>>>> upstream-releases
   }
 
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
                                  BaselineSharingGroup aBaselineGroup,
+<<<<<<< HEAD
                                  nscoord* aBaseline) const override {
     if (!IsSingleLineTextControl()) {
+||||||| merged common ancestors
+                                 nscoord* aBaseline) const override
+  {
+    if (!IsSingleLineTextControl()) {
+=======
+                                 nscoord* aBaseline) const override {
+    if (StyleDisplay()->IsContainLayout() || !IsSingleLineTextControl()) {
+>>>>>>> upstream-releases
       return false;
     }
-    NS_ASSERTION(mFirstBaseline != NS_INTRINSIC_WIDTH_UNKNOWN,
+    NS_ASSERTION(mFirstBaseline != NS_INTRINSIC_ISIZE_UNKNOWN,
                  "please call Reflow before asking for the baseline");
-    if (aBaselineGroup == BaselineSharingGroup::eFirst) {
+    if (aBaselineGroup == BaselineSharingGroup::First) {
       *aBaseline = mFirstBaseline;
     } else {
       *aBaseline = BSize(aWM) - mFirstBaseline;
@@ -105,7 +125,7 @@ class nsTextControlFrame final : public nsContainerFrame,
 #ifdef DEBUG
   void MarkIntrinsicISizesDirty() override {
     // Need another Reflow to have a correct baseline value again.
-    mFirstBaseline = NS_INTRINSIC_WIDTH_UNKNOWN;
+    mFirstBaseline = NS_INTRINSIC_ISIZE_UNKNOWN;
   }
 #endif
 
@@ -335,8 +355,8 @@ class nsTextControlFrame final : public nsContainerFrame,
   // FIXME(bug 1402545): Consider using an nsAutoString here.
   nsString mCachedValue;
 
-  // Our first baseline, or NS_INTRINSIC_WIDTH_UNKNOWN if we have a pending
-  // Reflow.
+  // Our first baseline, or NS_INTRINSIC_ISIZE_UNKNOWN if we have a pending
+  // Reflow (or if we're contain:layout, which means we have no baseline).
   nscoord mFirstBaseline;
 
   // these packed bools could instead use the high order bits on mState, saving

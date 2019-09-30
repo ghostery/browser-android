@@ -112,6 +112,7 @@ void CacheStreamControlChild::OpenStream(const nsID& aId,
   // worker wants to shut down.
   RefPtr<CacheWorkerHolder> holder = GetWorkerHolder();
 
+<<<<<<< HEAD
   SendOpenStream(aId)->Then(
       GetCurrentThreadSerialEventTarget(), __func__,
       [aResolver, holder](const RefPtr<nsIInputStream>& aOptionalStream) {
@@ -120,6 +121,23 @@ void CacheStreamControlChild::OpenStream(const nsID& aId,
       [aResolver, holder](ResponseRejectReason aReason) {
         aResolver(nullptr);
       });
+||||||| merged common ancestors
+  SendOpenStream(aId)->Then(GetCurrentThreadSerialEventTarget(), __func__,
+  [aResolver, holder](const RefPtr<nsIInputStream>& aOptionalStream) {
+    aResolver(nsCOMPtr<nsIInputStream>(aOptionalStream));
+  }, [aResolver, holder](ResponseRejectReason aReason) {
+    aResolver(nullptr);
+  });
+=======
+  SendOpenStream(aId)->Then(
+      GetCurrentThreadSerialEventTarget(), __func__,
+      [aResolver, holder](RefPtr<nsIInputStream>&& aOptionalStream) {
+        aResolver(nsCOMPtr<nsIInputStream>(aOptionalStream.forget()));
+      },
+      [aResolver, holder](ResponseRejectReason&& aReason) {
+        aResolver(nullptr);
+      });
+>>>>>>> upstream-releases
 }
 
 void CacheStreamControlChild::NoteClosedAfterForget(const nsID& aId) {

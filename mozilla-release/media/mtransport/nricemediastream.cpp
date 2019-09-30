@@ -110,9 +110,26 @@ static bool ToNrIceCandidate(const nr_ice_candidate& candc,
   MOZ_ASSERT(out);
   int r;
   // Const-cast because the internal nICEr code isn't const-correct.
+<<<<<<< HEAD
+  nr_ice_candidate* cand = const_cast<nr_ice_candidate*>(&candc);
+||||||| merged common ancestors
+  nr_ice_candidate *cand = const_cast<nr_ice_candidate *>(&candc);
+=======
   nr_ice_candidate* cand = const_cast<nr_ice_candidate*>(&candc);
 
   if (!ToNrIceAddr(cand->addr, &out->cand_addr)) return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!ToNrIceAddr(cand->addr, &out->cand_addr)) return false;
+||||||| merged common ancestors
+  if (!ToNrIceAddr(cand->addr, &out->cand_addr))
+    return false;
+=======
+  if (cand->mdns_addr) {
+    out->mdns_addr = cand->mdns_addr;
+  }
+>>>>>>> upstream-releases
 
   if (cand->isock) {
     nr_transport_addr addr;
@@ -269,17 +286,42 @@ nsresult NrIceMediaStream::SetIceCredentials(const std::string& ufrag,
 }
 
 // Parse trickle ICE candidate
-nsresult NrIceMediaStream::ParseTrickleCandidate(const std::string& candidate) {
-  // TODO(bug 1490658): This needs to take ufrag into account. For now, trickle
-  // candidates will land on the most recently-created ICE stream.
-  int r;
+nsresult NrIceMediaStream::ParseTrickleCandidate(const std::string& candidate,
+                                                 const std::string& ufrag,
+                                                 const std::string& mdns_addr) {
+  nr_ice_media_stream* stream = GetStreamForRemoteUfrag(ufrag);
+  if (!stream) {
+    return NS_ERROR_FAILURE;
+  }
 
   MOZ_MTLOG(ML_DEBUG, "NrIceCtx(" << ctx_->label << ")/STREAM(" << name()
                                   << ") : parsing trickle candidate "
                                   << candidate);
 
+<<<<<<< HEAD
+  MOZ_MTLOG(ML_DEBUG, "NrIceCtx(" << ctx_->label << ")/STREAM(" << name()
+                                  << ") : parsing trickle candidate "
+                                  << candidate);
+||||||| merged common ancestors
+  MOZ_MTLOG(ML_DEBUG, "NrIceCtx(" << ctx_->label << ")/STREAM(" <<
+            name() << ") : parsing trickle candidate " << candidate);
+=======
+  int r = nr_ice_peer_ctx_parse_trickle_candidate(
+      ctx_peer_, stream, const_cast<char*>(candidate.c_str()),
+      mdns_addr.c_str());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   r = nr_ice_peer_ctx_parse_trickle_candidate(
       ctx_peer_, stream_, const_cast<char*>(candidate.c_str()));
+||||||| merged common ancestors
+  r = nr_ice_peer_ctx_parse_trickle_candidate(ctx_peer_,
+                                              stream_,
+                                              const_cast<char *>(
+                                                candidate.c_str())
+                                              );
+=======
+>>>>>>> upstream-releases
   if (r) {
     if (r == R_ALREADY) {
       MOZ_MTLOG(ML_INFO, "Trickle candidate is redundant for stream '"
@@ -670,4 +712,32 @@ void NrIceMediaStream::DeferredCloseOldStream(const nr_ice_media_stream* old) {
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+}  // close namespace
+=======
+nr_ice_media_stream* NrIceMediaStream::GetStreamForRemoteUfrag(
+    const std::string& aUfrag) {
+  if (aUfrag.empty()) {
+    return stream_;
+  }
+
+  nr_ice_media_stream* peer_stream = nullptr;
+
+  if (!nr_ice_peer_ctx_find_pstream(ctx_peer_, stream_, &peer_stream) &&
+      aUfrag == peer_stream->ufrag) {
+    return stream_;
+  }
+
+  if (old_stream_ &&
+      !nr_ice_peer_ctx_find_pstream(ctx_peer_, old_stream_, &peer_stream) &&
+      aUfrag == peer_stream->ufrag) {
+    return old_stream_;
+  }
+
+  return nullptr;
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

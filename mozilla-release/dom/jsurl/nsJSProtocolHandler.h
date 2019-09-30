@@ -8,7 +8,6 @@
 
 #include "mozilla/Attributes.h"
 #include "nsIProtocolHandler.h"
-#include "nsITextToSubURI.h"
 #include "nsIURI.h"
 #include "nsIMutable.h"
 #include "nsISerializable.h"
@@ -54,15 +53,39 @@ class nsJSProtocolHandler : public nsIProtocolHandler {
 
   nsresult Init();
 
+<<<<<<< HEAD
  protected:
   virtual ~nsJSProtocolHandler();
+||||||| merged common ancestors
+protected:
+    virtual ~nsJSProtocolHandler();
+=======
+  static nsresult CreateNewURI(const nsACString& aSpec, const char* aCharset,
+                               nsIURI* aBaseURI, nsIURI** result);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsresult EnsureUTF8Spec(const nsCString& aSpec, const char* aCharset,
                           nsACString& aUTF8Spec);
+||||||| merged common ancestors
+    nsresult EnsureUTF8Spec(const nsCString& aSpec, const char *aCharset,
+                            nsACString &aUTF8Spec);
+=======
+ protected:
+  virtual ~nsJSProtocolHandler();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsCOMPtr<nsITextToSubURI> mTextToSubURI;
+||||||| merged common ancestors
+    nsCOMPtr<nsITextToSubURI>  mTextToSubURI;
+=======
+  static nsresult EnsureUTF8Spec(const nsCString& aSpec, const char* aCharset,
+                                 nsACString& aUTF8Spec);
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class nsJSURI final : public mozilla::net::nsSimpleURI {
  public:
   using mozilla::net::nsSimpleURI::Read;
@@ -101,6 +124,51 @@ class nsJSURI final : public mozilla::net::nsSimpleURI {
                                   bool* result) override;
   bool Deserialize(const mozilla::ipc::URIParams&);
   nsresult ReadPrivate(nsIObjectInputStream* aStream);
+||||||| merged common ancestors
+class nsJSURI final
+    : public mozilla::net::nsSimpleURI
+{
+public:
+    using mozilla::net::nsSimpleURI::Read;
+    using mozilla::net::nsSimpleURI::Write;
+=======
+class nsJSURI final : public mozilla::net::nsSimpleURI {
+ public:
+  using mozilla::net::nsSimpleURI::Read;
+  using mozilla::net::nsSimpleURI::Write;
+
+  nsIURI* GetBaseURI() const { return mBaseURI; }
+
+  NS_DECL_ISUPPORTS_INHERITED
+
+  // nsIURI overrides
+  virtual mozilla::net::nsSimpleURI* StartClone(
+      RefHandlingEnum refHandlingMode, const nsACString& newRef) override;
+  NS_IMETHOD Mutate(nsIURIMutator** _retval) override;
+  NS_IMETHOD_(void) Serialize(mozilla::ipc::URIParams& aParams) override;
+
+  // nsISerializable overrides
+  NS_IMETHOD Read(nsIObjectInputStream* aStream) override;
+  NS_IMETHOD Write(nsIObjectOutputStream* aStream) override;
+
+  // Override the nsIClassInfo method GetClassIDNoAlloc to make sure our
+  // nsISerializable impl works right.
+  NS_IMETHOD GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) override;
+  // NS_IMETHOD QueryInterface( const nsIID& aIID, void** aInstancePtr )
+  // override;
+
+ protected:
+  nsJSURI() {}
+  explicit nsJSURI(nsIURI* aBaseURI) : mBaseURI(aBaseURI) {}
+
+  virtual ~nsJSURI() {}
+
+  virtual nsresult EqualsInternal(nsIURI* other,
+                                  RefHandlingEnum refHandlingMode,
+                                  bool* result) override;
+  bool Deserialize(const mozilla::ipc::URIParams&);
+  nsresult ReadPrivate(nsIObjectInputStream* aStream);
+>>>>>>> upstream-releases
 
  private:
   nsCOMPtr<nsIURI> mBaseURI;

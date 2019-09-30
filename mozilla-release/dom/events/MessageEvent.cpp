@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/MessageEvent.h"
+#include "mozilla/dom/BrowsingContext.h"
 #include "mozilla/dom/MessageEventBinding.h"
 #include "mozilla/dom/MessagePort.h"
 #include "mozilla/dom/MessagePortBinding.h"
@@ -12,7 +13,12 @@
 
 #include "mozilla/HoldDropJSObjects.h"
 #include "jsapi.h"
+<<<<<<< HEAD
 #include "nsGlobalWindow.h"  // So we can assign an nsGlobalWindow* to mWindowSource
+||||||| merged common ancestors
+#include "nsGlobalWindow.h" // So we can assign an nsGlobalWindow* to mWindowSource
+=======
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -83,16 +89,43 @@ void MessageEvent::GetSource(
   }
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MessageEvent> MessageEvent::Constructor(
     const GlobalObject& aGlobal, const nsAString& aType,
     const MessageEventInit& aParam, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MessageEvent>
+MessageEvent::Constructor(const GlobalObject& aGlobal,
+                          const nsAString& aType,
+                          const MessageEventInit& aParam,
+                          ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MessageEvent> MessageEvent::Constructor(
+    const GlobalObject& aGlobal, const nsAString& aType,
+    const MessageEventInit& aParam, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<EventTarget> t = do_QueryInterface(aGlobal.GetAsSupports());
   return Constructor(t, aType, aParam);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MessageEvent> MessageEvent::Constructor(
     EventTarget* aEventTarget, const nsAString& aType,
     const MessageEventInit& aParam) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MessageEvent>
+MessageEvent::Constructor(EventTarget* aEventTarget,
+                          const nsAString& aType,
+                          const MessageEventInit& aParam)
+{
+=======
+/* static */
+already_AddRefed<MessageEvent> MessageEvent::Constructor(
+    EventTarget* aEventTarget, const nsAString& aType,
+    const MessageEventInit& aParam) {
+>>>>>>> upstream-releases
   RefPtr<MessageEvent> event = new MessageEvent(aEventTarget, nullptr, nullptr);
 
   event->InitEvent(aType, aParam.mBubbles, aParam.mCancelable);
@@ -108,7 +141,7 @@ void MessageEvent::GetSource(
 
   if (!aParam.mSource.IsNull()) {
     if (aParam.mSource.Value().IsWindowProxy()) {
-      event->mWindowSource = aParam.mSource.Value().GetAsWindowProxy();
+      event->mWindowSource = aParam.mSource.Value().GetAsWindowProxy().get();
     } else if (aParam.mSource.Value().IsMessagePort()) {
       event->mPortSource = aParam.mSource.Value().GetAsMessagePort();
     } else {
@@ -144,7 +177,7 @@ void MessageEvent::InitMessageEvent(
 
   if (!aSource.IsNull()) {
     if (aSource.Value().IsWindowProxy()) {
-      mWindowSource = aSource.Value().GetAsWindowProxy();
+      mWindowSource = aSource.Value().GetAsWindowProxy().get();
     } else if (aSource.Value().IsMessagePort()) {
       mPortSource = &aSource.Value().GetAsMessagePort();
     } else {

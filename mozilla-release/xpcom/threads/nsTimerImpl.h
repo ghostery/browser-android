@@ -20,7 +20,7 @@
 #include "mozilla/Variant.h"
 
 #ifdef MOZ_TASK_TRACER
-#include "TracedTaskCommon.h"
+#  include "TracedTaskCommon.h"
 #endif
 
 extern mozilla::LogModule* GetTimerLog();
@@ -67,15 +67,56 @@ class nsTimerImpl {
       mCallback.c = nullptr;
     }
 
-    Callback(const Callback& other) = delete;
-    Callback& operator=(const Callback& other) = delete;
+    Callback(const Callback& other) : Callback() { *this = other; }
 
+    enum class Type : uint8_t {
+      Unknown = 0,
+      Interface = 1,
+      Function = 2,
+      Observer = 3,
+    };
+
+    Callback& operator=(const Callback& other) {
+      if (this != &other) {
+        clear();
+        mType = other.mType;
+        switch (mType) {
+          case Type::Unknown:
+            break;
+          case Type::Interface:
+            mCallback.i = other.mCallback.i;
+            NS_ADDREF(mCallback.i);
+            break;
+          case Type::Function:
+            mCallback.c = other.mCallback.c;
+            break;
+          case Type::Observer:
+            mCallback.o = other.mCallback.o;
+            NS_ADDREF(mCallback.o);
+            break;
+        }
+        mName = other.mName;
+        mClosure = other.mClosure;
+      }
+      return *this;
+    }
+
+    ~Callback() { clear(); }
+
+<<<<<<< HEAD
     ~Callback() {
+||||||| merged common ancestors
+    ~Callback()
+    {
+=======
+    void clear() {
+>>>>>>> upstream-releases
       if (mType == Type::Interface) {
         NS_RELEASE(mCallback.i);
       } else if (mType == Type::Observer) {
         NS_RELEASE(mCallback.o);
       }
+      mType = Type::Unknown;
     }
 
     void swap(Callback& other) {
@@ -85,12 +126,6 @@ class nsTimerImpl {
       std::swap(mClosure, other.mClosure);
     }
 
-    enum class Type : uint8_t {
-      Unknown = 0,
-      Interface = 1,
-      Function = 2,
-      Observer = 3,
-    };
     Type mType;
 
     union CallbackUnion {
@@ -123,10 +158,6 @@ class nsTimerImpl {
 
   Callback& GetCallback() {
     mMutex.AssertCurrentThreadOwns();
-    if (mCallback.mType == Callback::Type::Unknown) {
-      return mCallbackDuringFire;
-    }
-
     return mCallback;
   }
 
@@ -192,8 +223,17 @@ class nsTimerImpl {
   static double sDeltaNum;
   RefPtr<nsITimer> mITimer;
   mozilla::Mutex mMutex;
+<<<<<<< HEAD
   Callback mCallback;
   Callback mCallbackDuringFire;
+||||||| merged common ancestors
+  Callback              mCallback;
+  Callback              mCallbackDuringFire;
+=======
+  Callback mCallback;
+  // Counter because in rare cases we can Fire reentrantly
+  unsigned int mFiring;
+>>>>>>> upstream-releases
 };
 
 class nsTimer final : public nsITimer {

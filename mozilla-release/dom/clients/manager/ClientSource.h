@@ -13,9 +13,10 @@
 #include "mozilla/Variant.h"
 
 #ifdef XP_WIN
-#undef PostMessage
+#  undef PostMessage
 #endif
 
+class nsIContentSecurityPolicy;
 class nsIDocShell;
 class nsIGlobalObject;
 class nsISerialEventTarget;
@@ -148,12 +149,41 @@ class ClientSource final : public ClientThing<ClientSourceChild> {
 
   nsISerialEventTarget* EventTarget() const;
 
+<<<<<<< HEAD
   void Traverse(nsCycleCollectionTraversalCallback& aCallback,
                 const char* aName, uint32_t aFlags);
+||||||| merged common ancestors
+  void
+  Traverse(nsCycleCollectionTraversalCallback& aCallback,
+           const char* aName,
+           uint32_t aFlags);
+=======
+  void SetCsp(nsIContentSecurityPolicy* aCsp);
+  void SetPreloadCsp(nsIContentSecurityPolicy* aPreloadCSP);
+  void SetCspInfo(const mozilla::ipc::CSPInfo& aCSPInfo);
+  const Maybe<mozilla::ipc::CSPInfo>& GetCspInfo();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void NoteCalledRegisterForServiceWorkerScope(const nsACString& aScope);
+||||||| merged common ancestors
+  void
+  NoteCalledRegisterForServiceWorkerScope(const nsACString& aScope);
+=======
+  void Traverse(nsCycleCollectionTraversalCallback& aCallback,
+                const char* aName, uint32_t aFlags);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool CalledRegisterForServiceWorkerScope(const nsACString& aScope);
+||||||| merged common ancestors
+  bool
+  CalledRegisterForServiceWorkerScope(const nsACString& aScope);
+=======
   void NoteCalledRegisterForServiceWorkerScope(const nsACString& aScope);
 
   bool CalledRegisterForServiceWorkerScope(const nsACString& aScope);
+>>>>>>> upstream-releases
 };
 
 inline void ImplCycleCollectionUnlink(UniquePtr<ClientSource>& aField) {

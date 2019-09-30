@@ -16,6 +16,7 @@
 #include "nsCycleCollector.h"
 #include "jsfriendapi.h"
 #include "js/CharacterEncoding.h"
+#include "js/ContextOptions.h"
 #include "js/SavedFrameAPI.h"
 #include "js/StructuredClone.h"
 #include "mozilla/Attributes.h"
@@ -31,7 +32,6 @@
 #include "mozilla/dom/BindingUtils.h"
 #include "mozilla/dom/StructuredCloneTags.h"
 #include "mozilla/dom/WindowBinding.h"
-#include "mozilla/Scheduler.h"
 #include "nsZipArchive.h"
 #include "nsWindowMemoryReporter.h"
 #include "nsICycleCollectorListener.h"
@@ -118,6 +118,7 @@ class nsXPCComponents_Interfaces final : public nsIXPCComponents_Interfaces,
 };
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Interfaces::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   *aCount = 2;
   nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
@@ -126,6 +127,22 @@ nsXPCComponents_Interfaces::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   array[0] = NS_GET_IID(nsIXPCComponents_Interfaces).Clone();
   array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Interfaces::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_Interfaces).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+=======
+nsXPCComponents_Interfaces::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_Interfaces),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -183,12 +200,25 @@ NS_IMPL_ISUPPORTS(nsXPCComponents_Interfaces, nsIXPCComponents_Interfaces,
 NS_IMETHODIMP
 nsXPCComponents_Interfaces::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
                                          JSContext* cx, JSObject* obj,
+<<<<<<< HEAD
                                          JS::AutoIdVector& properties,
                                          bool enumerableOnly, bool* _retval) {
   if (!properties.reserve(nsXPTInterfaceInfo::InterfaceCount())) {
     *_retval = false;
     return NS_OK;
   }
+||||||| merged common ancestors
+                                         JS::AutoIdVector& properties,
+                                         bool* _retval)
+{
+=======
+                                         JS::MutableHandleIdVector properties,
+                                         bool enumerableOnly, bool* _retval) {
+  if (!properties.reserve(nsXPTInterfaceInfo::InterfaceCount())) {
+    *_retval = false;
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
 
   for (uint32_t index = 0; index < nsXPTInterfaceInfo::InterfaceCount();
        index++) {
@@ -222,6 +252,23 @@ nsXPCComponents_Interfaces::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
 
 NS_IMETHODIMP
 nsXPCComponents_Interfaces::Resolve(nsIXPConnectWrappedNative* wrapper,
+<<<<<<< HEAD
+                                    JSContext* cx, JSObject* objArg, jsid idArg,
+                                    bool* resolvedp, bool* _retval) {
+  RootedObject obj(cx, objArg);
+  RootedId id(cx, idArg);
+||||||| merged common ancestors
+                                    JSContext* cx, JSObject* objArg,
+                                    jsid idArg, bool* resolvedp,
+                                    bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    RootedId id(cx, idArg);
+
+    if (!JSID_IS_STRING(id)) {
+        return NS_OK;
+    }
+=======
                                     JSContext* cx, JSObject* objArg, jsid idArg,
                                     bool* resolvedp, bool* _retval) {
   RootedObject obj(cx, objArg);
@@ -230,7 +277,35 @@ nsXPCComponents_Interfaces::Resolve(nsIXPConnectWrappedNative* wrapper,
   if (!JSID_IS_STRING(id)) {
     return NS_OK;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!JSID_IS_STRING(id)) {
+    return NS_OK;
+  }
+||||||| merged common ancestors
+    RootedString str(cx, JSID_TO_STRING(id));
+    JS::UniqueChars name = JS_EncodeStringToLatin1(cx, str);
+
+    // we only allow interfaces by name here
+    if (name && name[0] != '{') {
+        const nsXPTInterfaceInfo* info = nsXPTInterfaceInfo::ByName(name.get());
+        if (!info) {
+            return NS_OK;
+        }
+=======
+  RootedString str(cx, JSID_TO_STRING(id));
+  JS::UniqueChars name = JS_EncodeStringToLatin1(cx, str);
+
+  // we only allow interfaces by name here
+  if (name && name[0] != '{') {
+    const nsXPTInterfaceInfo* info = nsXPTInterfaceInfo::ByName(name.get());
+    if (!info) {
+      return NS_OK;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   RootedString str(cx, JSID_TO_STRING(id));
   JS::UniqueChars name = JS_EncodeStringToLatin1(cx, str);
 
@@ -257,6 +332,34 @@ nsXPCComponents_Interfaces::Resolve(nsIXPConnectWrappedNative* wrapper,
                                         JSPROP_PERMANENT | JSPROP_RESOLVING);
         }
       }
+||||||| merged common ancestors
+        nsCOMPtr<nsIJSIID> nsid = nsJSIID::NewID(info);
+
+        if (nsid) {
+            nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+            RootedObject idobj(cx);
+            if (NS_SUCCEEDED(xpc->WrapNative(cx, obj,
+                                             static_cast<nsIJSIID*>(nsid),
+                                             NS_GET_IID(nsIJSIID),
+                                             idobj.address()))) {
+                if (idobj) {
+                    *resolvedp = true;
+                    *_retval = JS_DefinePropertyById(cx, obj, id, idobj,
+                                                     JSPROP_ENUMERATE |
+                                                     JSPROP_READONLY |
+                                                     JSPROP_PERMANENT |
+                                                     JSPROP_RESOLVING);
+                }
+            }
+        }
+=======
+    RootedValue iidv(cx);
+    if (xpc::IfaceID2JSValue(cx, *info, &iidv)) {
+      *resolvedp = true;
+      *_retval = JS_DefinePropertyById(cx, obj, id, iidv,
+                                       JSPROP_ENUMERATE | JSPROP_READONLY |
+                                           JSPROP_PERMANENT | JSPROP_RESOLVING);
+>>>>>>> upstream-releases
     }
   }
   return NS_OK;
@@ -266,6 +369,7 @@ nsXPCComponents_Interfaces::Resolve(nsIXPConnectWrappedNative* wrapper,
 /***************************************************************************/
 /***************************************************************************/
 
+<<<<<<< HEAD
 class nsXPCComponents_InterfacesByID final
     : public nsIXPCComponents_InterfacesByID,
       public nsIXPCScriptable,
@@ -282,10 +386,46 @@ class nsXPCComponents_InterfacesByID final
 
  private:
   virtual ~nsXPCComponents_InterfacesByID();
+||||||| merged common ancestors
+class nsXPCComponents_InterfacesByID final :
+            public nsIXPCComponents_InterfacesByID,
+            public nsIXPCScriptable,
+            public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_INTERFACESBYID
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCComponents_InterfacesByID();
+
+private:
+    virtual ~nsXPCComponents_InterfacesByID();
+=======
+class nsXPCComponents_Classes final : public nsIXPCComponents_Classes,
+                                      public nsIXPCScriptable,
+                                      public nsIClassInfo {
+ public:
+  // all the interface method declarations...
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIXPCCOMPONENTS_CLASSES
+  NS_DECL_NSIXPCSCRIPTABLE
+  NS_DECL_NSICLASSINFO
+
+ public:
+  nsXPCComponents_Classes();
+
+ private:
+  virtual ~nsXPCComponents_Classes();
+>>>>>>> upstream-releases
 };
 
 /***************************************************************************/
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetInterfaces(uint32_t* aCount,
                                               nsIID*** aArray) {
   *aCount = 2;
@@ -295,63 +435,186 @@ nsXPCComponents_InterfacesByID::GetInterfaces(uint32_t* aCount,
   array[0] = NS_GET_IID(nsIXPCComponents_InterfacesByID).Clone();
   array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_InterfacesByID).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+=======
+nsXPCComponents_Classes::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_Classes),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetScriptableHelper(nsIXPCScriptable** retval) {
   *retval = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Classes::GetScriptableHelper(nsIXPCScriptable** retval) {
+  *retval = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetContractID(nsACString& aContractID) {
   aContractID.SetIsVoid(true);
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Classes::GetContractID(nsACString& aContractID) {
+  aContractID.SetIsVoid(true);
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetClassDescription(
     nsACString& aClassDescription) {
   aClassDescription.AssignLiteral("XPCComponents_InterfacesByID");
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetClassDescription(
+    nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_InterfacesByID");
+    return NS_OK;
+=======
+nsXPCComponents_Classes::GetClassDescription(nsACString& aClassDescription) {
+  aClassDescription.AssignLiteral("XPCComponents_Classes");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetClassID(nsCID** aClassID) {
   *aClassID = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Classes::GetClassID(nsCID** aClassID) {
+  *aClassID = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+=======
+nsXPCComponents_Classes::GetFlags(uint32_t* aFlags) {
+  *aFlags = 0;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Classes::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::nsXPCComponents_InterfacesByID() {}
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::nsXPCComponents_InterfacesByID()
+{
+}
+=======
+nsXPCComponents_Classes::nsXPCComponents_Classes() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::~nsXPCComponents_InterfacesByID() {
   // empty
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::~nsXPCComponents_InterfacesByID()
+{
+    // empty
+=======
+nsXPCComponents_Classes::~nsXPCComponents_Classes() {
+  // empty
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCComponents_InterfacesByID,
                   nsIXPCComponents_InterfacesByID, nsIXPCScriptable,
                   nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCComponents_InterfacesByID,
+                  nsIXPCComponents_InterfacesByID,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+NS_IMPL_ISUPPORTS(nsXPCComponents_Classes, nsIXPCComponents_Classes,
+                  nsIXPCScriptable, nsIClassInfo)
+>>>>>>> upstream-releases
 
 // The nsIXPCScriptable map declaration that will generate stubs for us...
+<<<<<<< HEAD
 #define XPC_MAP_CLASSNAME nsXPCComponents_InterfacesByID
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_InterfacesByID"
 #define XPC_MAP_FLAGS                                               \
   (XPC_SCRIPTABLE_WANT_RESOLVE | XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
    XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+||||||| merged common ancestors
+#define XPC_MAP_CLASSNAME         nsXPCComponents_InterfacesByID
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_InterfacesByID"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_RESOLVE | \
+                       XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+=======
+#define XPC_MAP_CLASSNAME nsXPCComponents_Classes
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Classes"
+#define XPC_MAP_FLAGS                                               \
+  (XPC_SCRIPTABLE_WANT_RESOLVE | XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+   XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+>>>>>>> upstream-releases
 #include "xpc_map_end.h" /* This will #undef the above */
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_InterfacesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
                                              JSContext* cx, JSObject* obj,
                                              JS::AutoIdVector& properties,
@@ -376,13 +639,73 @@ nsXPCComponents_InterfacesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
       *_retval = false;
       return NS_OK;
     }
+||||||| merged common ancestors
+nsXPCComponents_InterfacesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
+                                             JSContext* cx, JSObject* obj,
+                                             JS::AutoIdVector& properties,
+                                             bool* _retval)
+{
 
+    if (!properties.reserve(nsXPTInterfaceInfo::InterfaceCount())) {
+        *_retval = false;
+        return NS_OK;
+    }
+
+    for (uint32_t index = 0; index < nsXPTInterfaceInfo::InterfaceCount(); index++) {
+        const nsXPTInterfaceInfo* interface = nsXPTInterfaceInfo::ByIndex(index);
+        if (!interface) {
+            continue;
+        }
+
+        char idstr[NSID_LENGTH];
+        interface->IID().ToProvidedString(idstr);
+        RootedString jsstr(cx, JS_NewStringCopyZ(cx, idstr));
+        if (!jsstr) {
+            *_retval = false;
+            return NS_OK;
+        }
+
+        RootedId id(cx);
+        if (!JS_StringToId(cx, jsstr, &id)) {
+            *_retval = false;
+            return NS_OK;
+        }
+=======
+nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
+                                      JSContext* cx, JSObject* obj,
+                                      JS::MutableHandleIdVector properties,
+                                      bool enumerableOnly, bool* _retval) {
+  nsCOMPtr<nsIComponentRegistrar> compMgr;
+  if (NS_FAILED(NS_GetComponentRegistrar(getter_AddRefs(compMgr))) ||
+      !compMgr) {
+    return NS_ERROR_UNEXPECTED;
+  }
+
+  nsCOMPtr<nsISimpleEnumerator> e;
+  if (NS_FAILED(compMgr->EnumerateContractIDs(getter_AddRefs(e))) || !e) {
+    return NS_ERROR_UNEXPECTED;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     RootedId id(cx);
     if (!JS_StringToId(cx, jsstr, &id)) {
       *_retval = false;
       return NS_OK;
+||||||| merged common ancestors
+        properties.infallibleAppend(id);
+=======
+  bool hasMore;
+  nsCOMPtr<nsISupports> isup;
+  while (NS_SUCCEEDED(e->HasMoreElements(&hasMore)) && hasMore &&
+         NS_SUCCEEDED(e->GetNext(getter_AddRefs(isup))) && isup) {
+    nsCOMPtr<nsISupportsCString> holder(do_QueryInterface(isup));
+    if (!holder) {
+      continue;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     properties.infallibleAppend(id);
   }
 
@@ -396,16 +719,64 @@ nsXPCComponents_InterfacesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
                                         bool* _retval) {
   RootedObject obj(cx, objArg);
   RootedId id(cx, idArg);
+||||||| merged common ancestors
+    return NS_OK;
+}
 
+NS_IMETHODIMP
+nsXPCComponents_InterfacesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                        JSContext* cx, JSObject* objArg,
+                                        jsid idArg, bool* resolvedp,
+                                        bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    RootedId id(cx, idArg);
+=======
+    nsAutoCString name;
+    if (NS_SUCCEEDED(holder->GetData(name))) {
+      RootedString idstr(cx, JS_NewStringCopyN(cx, name.get(), name.Length()));
+      if (!idstr) {
+        *_retval = false;
+        return NS_OK;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (!JSID_IS_STRING(id)) {
     return NS_OK;
   }
+||||||| merged common ancestors
+    if (!JSID_IS_STRING(id)) {
+        return NS_OK;
+    }
+=======
+      RootedId id(cx);
+      if (!JS_StringToId(cx, idstr, &id)) {
+        *_retval = false;
+        return NS_OK;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   RootedString str(cx, JSID_TO_STRING(id));
   if (38 != JS_GetStringLength(str)) {
     return NS_OK;
   }
+||||||| merged common ancestors
+    RootedString str(cx, JSID_TO_STRING(id));
+    if (38 != JS_GetStringLength(str)) {
+        return NS_OK;
+    }
+=======
+      if (!properties.append(id)) {
+        *_retval = false;
+        return NS_OK;
+      }
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JS::UniqueChars utf8str = JS_EncodeStringToUTF8(cx, str);
   if (utf8str) {
     nsID iid;
@@ -417,13 +788,49 @@ nsXPCComponents_InterfacesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
     if (!info) {
       return NS_OK;
     }
+||||||| merged common ancestors
+    JS::UniqueChars utf8str = JS_EncodeStringToUTF8(cx, str);
+    if (utf8str) {
+        nsID iid;
+        if (!iid.Parse(utf8str.get())) {
+            return NS_OK;
+        }
 
+        const nsXPTInterfaceInfo* info = nsXPTInterfaceInfo::ByIID(iid);
+        if (!info) {
+            return NS_OK;
+        }
+=======
+  return NS_OK;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     nsCOMPtr<nsIJSIID> nsid = nsJSIID::NewID(info);
+||||||| merged common ancestors
+        nsCOMPtr<nsIJSIID> nsid = nsJSIID::NewID(info);
+=======
+NS_IMETHODIMP
+nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                 JSContext* cx, JSObject* objArg, jsid idArg,
+                                 bool* resolvedp, bool* _retval)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (!nsid) {
       return NS_ERROR_OUT_OF_MEMORY;
     }
+||||||| merged common ancestors
+        if (!nsid) {
+            return NS_ERROR_OUT_OF_MEMORY;
+        }
+=======
+{
+  RootedId id(cx, idArg);
+  RootedObject obj(cx, objArg);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     nsIXPConnect* xpc = nsIXPConnect::XPConnect();
     RootedObject idobj(cx);
     if (NS_SUCCEEDED(xpc->WrapNative(cx, obj, static_cast<nsIJSIID*>(nsid),
@@ -438,12 +845,43 @@ nsXPCComponents_InterfacesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
     }
   }
   return NS_OK;
+||||||| merged common ancestors
+        nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+        RootedObject idobj(cx);
+        if (NS_SUCCEEDED(xpc->WrapNative(cx, obj,
+                                         static_cast<nsIJSIID*>(nsid),
+                                         NS_GET_IID(nsIJSIID),
+                                         idobj.address()))) {
+            if (idobj) {
+                *resolvedp = true;
+                *_retval =
+                    JS_DefinePropertyById(cx, obj, id, idobj,
+                                          JSPROP_ENUMERATE |
+                                          JSPROP_READONLY |
+                                          JSPROP_PERMANENT |
+                                          JSPROP_RESOLVING);
+            }
+        }
+    }
+    return NS_OK;
+=======
+  RootedValue cidv(cx);
+  if (JSID_IS_STRING(id) &&
+      xpc::ContractID2JSValue(cx, JSID_TO_STRING(id), &cidv)) {
+    *resolvedp = true;
+    *_retval = JS_DefinePropertyById(cx, obj, id, cidv,
+                                     JSPROP_ENUMERATE | JSPROP_READONLY |
+                                         JSPROP_PERMANENT | JSPROP_RESOLVING);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 /***************************************************************************/
 /***************************************************************************/
 /***************************************************************************/
 
+<<<<<<< HEAD
 class nsXPCComponents_Classes final : public nsIXPCComponents_Classes,
                                       public nsIXPCScriptable,
                                       public nsIClassInfo {
@@ -459,10 +897,51 @@ class nsXPCComponents_Classes final : public nsIXPCComponents_Classes,
 
  private:
   virtual ~nsXPCComponents_Classes();
+||||||| merged common ancestors
+
+
+class nsXPCComponents_Classes final :
+  public nsIXPCComponents_Classes,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_CLASSES
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCComponents_Classes();
+
+private:
+    virtual ~nsXPCComponents_Classes();
+=======
+// Currently the possible results do not change at runtime, so they are only
+// cached once (unlike ContractIDs, CLSIDs, and IIDs)
+
+class nsXPCComponents_Results final : public nsIXPCComponents_Results,
+                                      public nsIXPCScriptable,
+                                      public nsIClassInfo {
+ public:
+  // all the interface method declarations...
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIXPCCOMPONENTS_RESULTS
+  NS_DECL_NSIXPCSCRIPTABLE
+  NS_DECL_NSICLASSINFO
+
+ public:
+  nsXPCComponents_Results();
+
+ private:
+  virtual ~nsXPCComponents_Results();
+>>>>>>> upstream-releases
 };
 
 /***************************************************************************/
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   *aCount = 2;
   nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
@@ -471,63 +950,185 @@ nsXPCComponents_Classes::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   array[0] = NS_GET_IID(nsIXPCComponents_Classes).Clone();
   array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_Classes).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+=======
+nsXPCComponents_Results::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_Results),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetScriptableHelper(nsIXPCScriptable** retval) {
   *retval = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Results::GetScriptableHelper(nsIXPCScriptable** retval) {
+  *retval = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetContractID(nsACString& aContractID) {
   aContractID.SetIsVoid(true);
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Results::GetContractID(nsACString& aContractID) {
+  aContractID.SetIsVoid(true);
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetClassDescription(nsACString& aClassDescription) {
   aClassDescription.AssignLiteral("XPCComponents_Classes");
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_Classes");
+    return NS_OK;
+=======
+nsXPCComponents_Results::GetClassDescription(nsACString& aClassDescription) {
+  aClassDescription.AssignLiteral("XPCComponents_Results");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetClassID(nsCID** aClassID) {
   *aClassID = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Results::GetClassID(nsCID** aClassID) {
+  *aClassID = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+=======
+nsXPCComponents_Results::GetFlags(uint32_t* aFlags) {
+  *aFlags = 0;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_Classes::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Results::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsXPCComponents_Classes::nsXPCComponents_Classes() {}
+||||||| merged common ancestors
+nsXPCComponents_Classes::nsXPCComponents_Classes()
+{
+}
+=======
+nsXPCComponents_Results::nsXPCComponents_Results() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsXPCComponents_Classes::~nsXPCComponents_Classes() {
   // empty
+||||||| merged common ancestors
+nsXPCComponents_Classes::~nsXPCComponents_Classes()
+{
+    // empty
+=======
+nsXPCComponents_Results::~nsXPCComponents_Results() {
+  // empty
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCComponents_Classes, nsIXPCComponents_Classes,
                   nsIXPCScriptable, nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCComponents_Classes,
+                  nsIXPCComponents_Classes,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+NS_IMPL_ISUPPORTS(nsXPCComponents_Results, nsIXPCComponents_Results,
+                  nsIXPCScriptable, nsIClassInfo)
+>>>>>>> upstream-releases
 
 // The nsIXPCScriptable map declaration that will generate stubs for us...
+<<<<<<< HEAD
 #define XPC_MAP_CLASSNAME nsXPCComponents_Classes
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Classes"
 #define XPC_MAP_FLAGS                                               \
   (XPC_SCRIPTABLE_WANT_RESOLVE | XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
    XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+||||||| merged common ancestors
+#define XPC_MAP_CLASSNAME         nsXPCComponents_Classes
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Classes"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_RESOLVE | \
+                       XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+=======
+#define XPC_MAP_CLASSNAME nsXPCComponents_Results
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Results"
+#define XPC_MAP_FLAGS                                               \
+  (XPC_SCRIPTABLE_WANT_RESOLVE | XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+   XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+>>>>>>> upstream-releases
 #include "xpc_map_end.h" /* This will #undef the above */
 
 NS_IMETHODIMP
-nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
+nsXPCComponents_Results::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
                                       JSContext* cx, JSObject* obj,
+<<<<<<< HEAD
                                       JS::AutoIdVector& properties,
                                       bool enumerableOnly, bool* _retval) {
   nsCOMPtr<nsIComponentRegistrar> compMgr;
@@ -535,7 +1136,28 @@ nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
       !compMgr) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+                                      JS::AutoIdVector& properties,
+                                      bool* _retval)
+{
+    nsCOMPtr<nsIComponentRegistrar> compMgr;
+    if (NS_FAILED(NS_GetComponentRegistrar(getter_AddRefs(compMgr))) || !compMgr) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+                                      JS::MutableHandleIdVector properties,
+                                      bool enumerableOnly, bool* _retval) {
+  const char* name;
+  const void* iter = nullptr;
+  while (nsXPCException::IterateNSResults(nullptr, &name, nullptr, &iter)) {
+    RootedString idstr(cx, JS_NewStringCopyZ(cx, name));
+    if (!idstr) {
+      *_retval = false;
+      return NS_OK;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsCOMPtr<nsISimpleEnumerator> e;
   if (NS_FAILED(compMgr->EnumerateContractIDs(getter_AddRefs(e))) || !e) {
     return NS_ERROR_UNEXPECTED;
@@ -548,8 +1170,19 @@ nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
     nsCOMPtr<nsISupportsCString> holder(do_QueryInterface(isup));
     if (!holder) {
       continue;
+||||||| merged common ancestors
+    nsCOMPtr<nsISimpleEnumerator> e;
+    if (NS_FAILED(compMgr->EnumerateContractIDs(getter_AddRefs(e))) || !e) {
+        return NS_ERROR_UNEXPECTED;
+=======
+    RootedId id(cx);
+    if (!JS_StringToId(cx, idstr, &id)) {
+      *_retval = false;
+      return NS_OK;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     nsAutoCString name;
     if (NS_SUCCEEDED(holder->GetData(name))) {
       RootedString idstr(cx, JS_NewStringCopyN(cx, name.get(), name.Length()));
@@ -568,6 +1201,40 @@ nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
         *_retval = false;
         return NS_OK;
       }
+||||||| merged common ancestors
+    bool hasMore;
+    nsCOMPtr<nsISupports> isup;
+    while(NS_SUCCEEDED(e->HasMoreElements(&hasMore)) && hasMore &&
+          NS_SUCCEEDED(e->GetNext(getter_AddRefs(isup))) && isup) {
+        nsCOMPtr<nsISupportsCString> holder(do_QueryInterface(isup));
+        if (!holder) {
+            continue;
+        }
+
+        nsAutoCString name;
+        if (NS_SUCCEEDED(holder->GetData(name))) {
+            RootedString idstr(cx, JS_NewStringCopyN(cx, name.get(), name.Length()));
+            if (!idstr) {
+                *_retval = false;
+                return NS_OK;
+            }
+
+            RootedId id(cx);
+            if (!JS_StringToId(cx, idstr, &id)) {
+                *_retval = false;
+                return NS_OK;
+            }
+
+            if (!properties.append(id)) {
+                *_retval = false;
+                return NS_OK;
+            }
+        }
+=======
+    if (!properties.append(id)) {
+      *_retval = false;
+      return NS_OK;
+>>>>>>> upstream-releases
     }
   }
 
@@ -575,6 +1242,7 @@ nsXPCComponents_Classes::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
                                  JSContext* cx, JSObject* objArg, jsid idArg,
                                  bool* resolvedp, bool* _retval)
@@ -586,7 +1254,31 @@ nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
   if (!JSID_IS_STRING(id)) {
     return NS_OK;
   }
+||||||| merged common ancestors
+nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                 JSContext* cx, JSObject* objArg,
+                                 jsid idArg, bool* resolvedp,
+                                 bool* _retval)
 
+{
+    RootedId id(cx, idArg);
+    RootedObject obj(cx, objArg);
+
+    if (!JSID_IS_STRING(id)) {
+        return NS_OK;
+    }
+=======
+nsXPCComponents_Results::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                 JSContext* cx, JSObject* objArg, jsid idArg,
+                                 bool* resolvedp, bool* _retval) {
+  RootedObject obj(cx, objArg);
+  RootedId id(cx, idArg);
+  if (!JSID_IS_STRING(id)) {
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::UniqueChars name = JS_EncodeStringToLatin1(cx, JSID_TO_STRING(id));
   if (name && name[0] != '{') {  // we only allow contractids here
     nsCOMPtr<nsIJSCID> nsid = nsJSCID::NewID(name.get());
@@ -602,9 +1294,45 @@ nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
               JS_DefinePropertyById(cx, obj, id, idobj,
                                     JSPROP_ENUMERATE | JSPROP_READONLY |
                                         JSPROP_PERMANENT | JSPROP_RESOLVING);
+||||||| merged common ancestors
+    JS::UniqueChars name = JS_EncodeStringToLatin1(cx, JSID_TO_STRING(id));
+    if (name &&
+        name[0] != '{') { // we only allow contractids here
+        nsCOMPtr<nsIJSCID> nsid = nsJSCID::NewID(name.get());
+        if (nsid) {
+            nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+            RootedObject idobj(cx);
+            if (NS_SUCCEEDED(xpc->WrapNative(cx, obj,
+                                             static_cast<nsIJSCID*>(nsid),
+                                             NS_GET_IID(nsIJSCID),
+                                             idobj.address()))) {
+                if (idobj) {
+                    *resolvedp = true;
+                    *_retval = JS_DefinePropertyById(cx, obj, id, idobj,
+                                                     JSPROP_ENUMERATE |
+                                                     JSPROP_READONLY |
+                                                     JSPROP_PERMANENT |
+                                                     JSPROP_RESOLVING);
+                }
+            }
+=======
+  JS::UniqueChars name = JS_EncodeStringToLatin1(cx, JSID_TO_STRING(id));
+  if (name) {
+    const char* rv_name;
+    const void* iter = nullptr;
+    nsresult rv;
+    while (nsXPCException::IterateNSResults(&rv, &rv_name, nullptr, &iter)) {
+      if (!strcmp(name.get(), rv_name)) {
+        *resolvedp = true;
+        if (!JS_DefinePropertyById(cx, obj, id, (uint32_t)rv,
+                                   JSPROP_ENUMERATE | JSPROP_READONLY |
+                                       JSPROP_PERMANENT | JSPROP_RESOLVING)) {
+          return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
         }
       }
     }
+<<<<<<< HEAD
   }
   return NS_OK;
 }
@@ -612,12 +1340,34 @@ nsXPCComponents_Classes::Resolve(nsIXPConnectWrappedNative* wrapper,
 NS_IMETHODIMP
 nsXPCComponents_Classes::Initialize(nsIJSCID* cid, const char* str) {
   return cid->Initialize(str);
+||||||| merged common ancestors
+    return NS_OK;
 }
 
-/***************************************************************************/
-/***************************************************************************/
-/***************************************************************************/
+NS_IMETHODIMP
+nsXPCComponents_Classes::Initialize(nsIJSCID* cid,
+                                    const char* str)
+{
+    return cid->Initialize(str);
+=======
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
+}
 
+<<<<<<< HEAD
+/***************************************************************************/
+/***************************************************************************/
+||||||| merged common ancestors
+
+/***************************************************************************/
+/***************************************************************************/
+=======
+>>>>>>> upstream-releases
+/***************************************************************************/
+// JavaScript Constructor for nsIJSID objects (Components.ID)
+
+<<<<<<< HEAD
 class nsXPCComponents_ClassesByID final : public nsIXPCComponents_ClassesByID,
                                           public nsIXPCScriptable,
                                           public nsIClassInfo {
@@ -633,10 +1383,49 @@ class nsXPCComponents_ClassesByID final : public nsIXPCComponents_ClassesByID,
 
  private:
   virtual ~nsXPCComponents_ClassesByID();
+||||||| merged common ancestors
+class nsXPCComponents_ClassesByID final :
+  public nsIXPCComponents_ClassesByID,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_CLASSESBYID
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCComponents_ClassesByID();
+
+private:
+    virtual ~nsXPCComponents_ClassesByID();
+=======
+class nsXPCComponents_ID final : public nsIXPCComponents_ID,
+                                 public nsIXPCScriptable,
+                                 public nsIClassInfo {
+ public:
+  // all the interface method declarations...
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIXPCCOMPONENTS_ID
+  NS_DECL_NSIXPCSCRIPTABLE
+  NS_DECL_NSICLASSINFO
+
+ public:
+  nsXPCComponents_ID();
+
+ private:
+  virtual ~nsXPCComponents_ID();
+  static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                  JSContext* cx, HandleObject obj,
+                                  const CallArgs& args, bool* _retval);
+>>>>>>> upstream-releases
 };
 
 /***************************************************************************/
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   *aCount = 2;
   nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
@@ -645,62 +1434,185 @@ nsXPCComponents_ClassesByID::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   array[0] = NS_GET_IID(nsIXPCComponents_ClassesByID).Clone();
   array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_ClassesByID).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+=======
+nsXPCComponents_ID::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_ID),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetScriptableHelper(nsIXPCScriptable** retval) {
   *retval = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_ID::GetScriptableHelper(nsIXPCScriptable** retval) {
+  *retval = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetContractID(nsACString& aContractID) {
   aContractID.SetIsVoid(true);
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_ID::GetContractID(nsACString& aContractID) {
+  aContractID.SetIsVoid(true);
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetClassDescription(
     nsACString& aClassDescription) {
   aClassDescription.AssignLiteral("XPCComponents_ClassesByID");
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_ClassesByID");
+    return NS_OK;
+=======
+nsXPCComponents_ID::GetClassDescription(nsACString& aClassDescription) {
+  aClassDescription.AssignLiteral("XPCComponents_ID");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetClassID(nsCID** aClassID) {
   *aClassID = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_ID::GetClassID(nsCID** aClassID) {
+  *aClassID = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+=======
+nsXPCComponents_ID::GetFlags(uint32_t* aFlags) {
+  *aFlags = 0;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_ID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::nsXPCComponents_ClassesByID() {}
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::nsXPCComponents_ClassesByID()
+{
+}
+=======
+nsXPCComponents_ID::nsXPCComponents_ID() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::~nsXPCComponents_ClassesByID() {
   // empty
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::~nsXPCComponents_ClassesByID()
+{
+    // empty
+=======
+nsXPCComponents_ID::~nsXPCComponents_ID() {
+  // empty
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCComponents_ClassesByID, nsIXPCComponents_ClassesByID,
                   nsIXPCScriptable, nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCComponents_ClassesByID,
+                  nsIXPCComponents_ClassesByID,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+NS_IMPL_ISUPPORTS(nsXPCComponents_ID, nsIXPCComponents_ID, nsIXPCScriptable,
+                  nsIClassInfo)
+>>>>>>> upstream-releases
 
 // The nsIXPCScriptable map declaration that will generate stubs for us...
+<<<<<<< HEAD
 #define XPC_MAP_CLASSNAME nsXPCComponents_ClassesByID
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_ClassesByID"
 #define XPC_MAP_FLAGS                                               \
   (XPC_SCRIPTABLE_WANT_RESOLVE | XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
    XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+||||||| merged common ancestors
+#define XPC_MAP_CLASSNAME         nsXPCComponents_ClassesByID
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_ClassesByID"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_RESOLVE | \
+                       XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+=======
+#define XPC_MAP_CLASSNAME nsXPCComponents_ID
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_ID"
+#define XPC_MAP_FLAGS                                         \
+  (XPC_SCRIPTABLE_WANT_CALL | XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+   XPC_SCRIPTABLE_WANT_HASINSTANCE |                          \
+   XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+>>>>>>> upstream-releases
 #include "xpc_map_end.h" /* This will #undef the above */
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
                                           JSContext* cx, JSObject* obj,
                                           JS::AutoIdVector& properties,
@@ -710,12 +1622,42 @@ nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
       !compMgr) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
+                                          JSContext* cx, JSObject* obj,
+                                          JS::AutoIdVector& properties,
+                                          bool* _retval)
+{
+=======
+nsXPCComponents_ID::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
+                         JSObject* objArg, const CallArgs& args,
+                         bool* _retval) {
+  RootedObject obj(cx, objArg);
+  return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsISimpleEnumerator* e;
   if (NS_FAILED(compMgr->EnumerateCIDs(&e)) || !e) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+    nsCOMPtr<nsIComponentRegistrar> compMgr;
+    if (NS_FAILED(NS_GetComponentRegistrar(getter_AddRefs(compMgr))) || !compMgr) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+NS_IMETHODIMP
+nsXPCComponents_ID::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
+                              JSObject* objArg, const CallArgs& args,
+                              bool* _retval) {
+  RootedObject obj(cx, objArg);
+  return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool hasMore;
   nsCOMPtr<nsISupports> isup;
   while (NS_SUCCEEDED(e->HasMoreElements(&hasMore)) && hasMore &&
@@ -724,7 +1666,21 @@ nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
     if (!holder) {
       continue;
     }
+||||||| merged common ancestors
+    nsISimpleEnumerator* e;
+    if (NS_FAILED(compMgr->EnumerateCIDs(&e)) || !e) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+// static
+nsresult nsXPCComponents_ID::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                             JSContext* cx, HandleObject obj,
+                                             const CallArgs& args,
+                                             bool* _retval) {
+  // make sure we have at least one arg
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     char* name;
     if (NS_SUCCEEDED(holder->ToString(&name)) && name) {
       RootedString idstr(cx, JS_NewStringCopyZ(cx, name));
@@ -732,7 +1688,22 @@ nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
         *_retval = false;
         return NS_OK;
       }
+||||||| merged common ancestors
+    bool hasMore;
+    nsCOMPtr<nsISupports> isup;
+    while(NS_SUCCEEDED(e->HasMoreElements(&hasMore)) && hasMore &&
+          NS_SUCCEEDED(e->GetNext(getter_AddRefs(isup))) && isup) {
+        nsCOMPtr<nsISupportsID> holder(do_QueryInterface(isup));
+        if (!holder) {
+            continue;
+        }
+=======
+  if (args.length() < 1) {
+    return ThrowAndFail(NS_ERROR_XPC_NOT_ENOUGH_ARGS, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       RootedId id(cx);
       if (!JS_StringToId(cx, idstr, &id)) {
         *_retval = false;
@@ -745,27 +1716,109 @@ nsXPCComponents_ClassesByID::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
       }
     }
   }
+||||||| merged common ancestors
+        char* name;
+        if (NS_SUCCEEDED(holder->ToString(&name)) && name) {
+            RootedString idstr(cx, JS_NewStringCopyZ(cx, name));
+            if (!idstr) {
+                *_retval = false;
+                return NS_OK;
+            }
 
+            RootedId id(cx);
+            if (!JS_StringToId(cx, idstr, &id)) {
+                *_retval = false;
+                return NS_OK;
+            }
+
+            if (!properties.append(id)) {
+                *_retval = false;
+                return NS_OK;
+            }
+        }
+    }
+=======
+  // Prevent non-chrome code from creating ID objects.
+  if (!nsContentUtils::IsCallerChrome()) {
+    return ThrowAndFail(NS_ERROR_DOM_XPCONNECT_ACCESS_DENIED, cx, _retval);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   return NS_OK;
 }
+||||||| merged common ancestors
+    return NS_OK;
+}
+=======
+  // convert the first argument into a string and see if it looks like an id
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static bool IsRegisteredCLSID(const char* str) {
   bool registered;
   nsID id;
+||||||| merged common ancestors
+static bool
+IsRegisteredCLSID(const char* str)
+{
+    bool registered;
+    nsID id;
+=======
+  JSString* jsstr = ToString(cx, args[0]);
+  if (!jsstr) {
+    return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!id.Parse(str)) {
     return false;
   }
+||||||| merged common ancestors
+    if (!id.Parse(str)) {
+        return false;
+    }
+=======
+  JS::UniqueChars bytes = JS_EncodeStringToLatin1(cx, jsstr);
+  if (!bytes) {
+    return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsCOMPtr<nsIComponentRegistrar> compMgr;
   if (NS_FAILED(NS_GetComponentRegistrar(getter_AddRefs(compMgr))) ||
       !compMgr || NS_FAILED(compMgr->IsCIDRegistered(id, &registered)))
     return false;
+||||||| merged common ancestors
+    nsCOMPtr<nsIComponentRegistrar> compMgr;
+    if (NS_FAILED(NS_GetComponentRegistrar(getter_AddRefs(compMgr))) || !compMgr ||
+        NS_FAILED(compMgr->IsCIDRegistered(id, &registered)))
+        return false;
+=======
+  nsID id;
+  if (!id.Parse(bytes.get())) {
+    return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return registered;
+||||||| merged common ancestors
+    return registered;
+=======
+  // make the new object and return it.
+
+  if (!xpc::ID2JSValue(cx, id, args.rval())) {
+    return NS_ERROR_UNEXPECTED;
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ClassesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
                                      JSContext* cx, JSObject* objArg,
                                      jsid idArg, bool* resolvedp,
@@ -802,8 +1855,62 @@ nsXPCComponents_ClassesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
   return NS_OK;
 }
 
-/***************************************************************************/
+||||||| merged common ancestors
+nsXPCComponents_ClassesByID::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                     JSContext* cx, JSObject* objArg,
+                                     jsid idArg, bool* resolvedp,
+                                     bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    RootedId id(cx, idArg);
 
+    if (!JSID_IS_STRING(id)) {
+        return NS_OK;
+    }
+
+    RootedString str(cx, JSID_TO_STRING(id));
+    JS::UniqueChars name = JS_EncodeStringToLatin1(cx, str);
+    if (name && name[0] == '{' &&
+        IsRegisteredCLSID(name.get())) // we only allow canonical CLSIDs here
+    {
+        nsCOMPtr<nsIJSCID> nsid = nsJSCID::NewID(name.get());
+        if (nsid) {
+            nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+            RootedObject idobj(cx);
+            if (NS_SUCCEEDED(xpc->WrapNative(cx, obj,
+                                             static_cast<nsIJSCID*>(nsid),
+                                             NS_GET_IID(nsIJSCID),
+                                             idobj.address()))) {
+                if (idobj) {
+                    *resolvedp = true;
+                    *_retval = JS_DefinePropertyById(cx, obj, id, idobj,
+                                                     JSPROP_ENUMERATE |
+                                                     JSPROP_READONLY |
+                                                     JSPROP_PERMANENT |
+                                                     JSPROP_RESOLVING);
+                }
+            }
+        }
+    }
+    return NS_OK;
+}
+
+
+=======
+nsXPCComponents_ID::HasInstance(nsIXPConnectWrappedNative* wrapper,
+                                JSContext* cx, JSObject* obj, HandleValue val,
+                                bool* bp, bool* _retval) {
+  if (bp) {
+    *bp = xpc::JSValue2ID(cx, val).isSome();
+  }
+  return NS_OK;
+}
+
+>>>>>>> upstream-releases
+/***************************************************************************/
+// JavaScript Constructor for Exception objects (Components.Exception)
+
+<<<<<<< HEAD
 // Currently the possible results do not change at runtime, so they are only
 // cached once (unlike ContractIDs, CLSIDs, and IIDs)
 
@@ -967,10 +2074,217 @@ class nsXPCComponents_ID final : public nsIXPCComponents_ID,
   static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
                                   JSContext* cx, HandleObject obj,
                                   const CallArgs& args, bool* _retval);
+||||||| merged common ancestors
+// Currently the possible results do not change at runtime, so they are only
+// cached once (unlike ContractIDs, CLSIDs, and IIDs)
+
+class nsXPCComponents_Results final :
+  public nsIXPCComponents_Results,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_RESULTS
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCComponents_Results();
+
+private:
+    virtual ~nsXPCComponents_Results();
 };
 
 /***************************************************************************/
 NS_IMETHODIMP
+nsXPCComponents_Results::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_Results).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_Results");
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+nsXPCComponents_Results::nsXPCComponents_Results()
+{
+}
+
+nsXPCComponents_Results::~nsXPCComponents_Results()
+{
+    // empty
+}
+
+NS_IMPL_ISUPPORTS(nsXPCComponents_Results,
+                  nsIXPCComponents_Results,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+
+// The nsIXPCScriptable map declaration that will generate stubs for us...
+#define XPC_MAP_CLASSNAME         nsXPCComponents_Results
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Results"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_RESOLVE | \
+                       XPC_SCRIPTABLE_WANT_NEWENUMERATE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+#include "xpc_map_end.h" /* This will #undef the above */
+
+NS_IMETHODIMP
+nsXPCComponents_Results::NewEnumerate(nsIXPConnectWrappedNative* wrapper,
+                                      JSContext* cx, JSObject* obj,
+                                      JS::AutoIdVector& properties,
+                                      bool* _retval)
+{
+    const char* name;
+    const void* iter = nullptr;
+    while (nsXPCException::IterateNSResults(nullptr, &name, nullptr, &iter)) {
+        RootedString idstr(cx, JS_NewStringCopyZ(cx, name));
+        if (!idstr) {
+            *_retval = false;
+            return NS_OK;
+        }
+
+        RootedId id(cx);
+        if (!JS_StringToId(cx, idstr, &id)) {
+            *_retval = false;
+            return NS_OK;
+        }
+
+        if (!properties.append(id)) {
+            *_retval = false;
+            return NS_OK;
+        }
+    }
+
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Results::Resolve(nsIXPConnectWrappedNative* wrapper,
+                                 JSContext* cx, JSObject* objArg,
+                                 jsid idArg, bool* resolvedp,
+                                 bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    RootedId id(cx, idArg);
+    if (!JSID_IS_STRING(id)) {
+        return NS_OK;
+    }
+
+    JS::UniqueChars name = JS_EncodeStringToLatin1(cx, JSID_TO_STRING(id));
+    if (name) {
+        const char* rv_name;
+        const void* iter = nullptr;
+        nsresult rv;
+        while (nsXPCException::IterateNSResults(&rv, &rv_name, nullptr, &iter)) {
+            if (!strcmp(name.get(), rv_name)) {
+                *resolvedp = true;
+                if (!JS_DefinePropertyById(cx, obj, id, (uint32_t)rv,
+                                           JSPROP_ENUMERATE |
+                                           JSPROP_READONLY |
+                                           JSPROP_PERMANENT |
+                                           JSPROP_RESOLVING)) {
+                    return NS_ERROR_UNEXPECTED;
+                }
+            }
+        }
+    }
+    return NS_OK;
+}
+
+/***************************************************************************/
+// JavaScript Constructor for nsIJSID objects (Components.ID)
+
+class nsXPCComponents_ID final :
+  public nsIXPCComponents_ID,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_ID
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+
+public:
+    nsXPCComponents_ID();
+
+private:
+    virtual ~nsXPCComponents_ID();
+    static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                    JSContext* cx, HandleObject obj,
+                                    const CallArgs& args, bool* _retval);
+=======
+class nsXPCComponents_Exception final : public nsIXPCComponents_Exception,
+                                        public nsIXPCScriptable,
+                                        public nsIClassInfo {
+ public:
+  // all the interface method declarations...
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIXPCCOMPONENTS_EXCEPTION
+  NS_DECL_NSIXPCSCRIPTABLE
+  NS_DECL_NSICLASSINFO
+
+ public:
+  nsXPCComponents_Exception();
+
+ private:
+  virtual ~nsXPCComponents_Exception();
+  static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                  JSContext* cx, HandleObject obj,
+                                  const CallArgs& args, bool* _retval);
+>>>>>>> upstream-releases
+};
+
+/***************************************************************************/
+NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   *aCount = 2;
   nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
@@ -979,70 +2293,208 @@ nsXPCComponents_ID::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   array[0] = NS_GET_IID(nsIXPCComponents_ID).Clone();
   array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_ID).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+=======
+nsXPCComponents_Exception::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_Exception),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetScriptableHelper(nsIXPCScriptable** retval) {
   *retval = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Exception::GetScriptableHelper(nsIXPCScriptable** retval) {
+  *retval = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetContractID(nsACString& aContractID) {
   aContractID.SetIsVoid(true);
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Exception::GetContractID(nsACString& aContractID) {
+  aContractID.SetIsVoid(true);
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetClassDescription(nsACString& aClassDescription) {
   aClassDescription.AssignLiteral("XPCComponents_ID");
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_ID");
+    return NS_OK;
+=======
+nsXPCComponents_Exception::GetClassDescription(nsACString& aClassDescription) {
+  aClassDescription.AssignLiteral("XPCComponents_Exception");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetClassID(nsCID** aClassID) {
   *aClassID = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Exception::GetClassID(nsCID** aClassID) {
+  *aClassID = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+=======
+nsXPCComponents_Exception::GetFlags(uint32_t* aFlags) {
+  *aFlags = 0;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCComponents_ID::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Exception::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 nsXPCComponents_ID::nsXPCComponents_ID() {}
+||||||| merged common ancestors
+nsXPCComponents_ID::nsXPCComponents_ID()
+{
+}
+=======
+nsXPCComponents_Exception::nsXPCComponents_Exception() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsXPCComponents_ID::~nsXPCComponents_ID() {
   // empty
+||||||| merged common ancestors
+nsXPCComponents_ID::~nsXPCComponents_ID()
+{
+    // empty
+=======
+nsXPCComponents_Exception::~nsXPCComponents_Exception() {
+  // empty
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCComponents_ID, nsIXPCComponents_ID, nsIXPCScriptable,
                   nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCComponents_ID,
+                  nsIXPCComponents_ID,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+NS_IMPL_ISUPPORTS(nsXPCComponents_Exception, nsIXPCComponents_Exception,
+                  nsIXPCScriptable, nsIClassInfo)
+>>>>>>> upstream-releases
 
 // The nsIXPCScriptable map declaration that will generate stubs for us...
+<<<<<<< HEAD
 #define XPC_MAP_CLASSNAME nsXPCComponents_ID
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_ID"
 #define XPC_MAP_FLAGS                                         \
   (XPC_SCRIPTABLE_WANT_CALL | XPC_SCRIPTABLE_WANT_CONSTRUCT | \
    XPC_SCRIPTABLE_WANT_HASINSTANCE |                          \
    XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+||||||| merged common ancestors
+#define XPC_MAP_CLASSNAME         nsXPCComponents_ID
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_ID"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_CALL | \
+                       XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+                       XPC_SCRIPTABLE_WANT_HASINSTANCE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+=======
+#define XPC_MAP_CLASSNAME nsXPCComponents_Exception
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Exception"
+#define XPC_MAP_FLAGS                                         \
+  (XPC_SCRIPTABLE_WANT_CALL | XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+   XPC_SCRIPTABLE_WANT_HASINSTANCE |                          \
+   XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+>>>>>>> upstream-releases
 #include "xpc_map_end.h" /* This will #undef the above */
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
                          JSObject* objArg, const CallArgs& args,
                          bool* _retval) {
   RootedObject obj(cx, objArg);
   return CallOrConstruct(wrapper, cx, obj, args, _retval);
+||||||| merged common ancestors
+nsXPCComponents_ID::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* objArg,
+                         const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+=======
+nsXPCComponents_Exception::Call(nsIXPConnectWrappedNative* wrapper,
+                                JSContext* cx, JSObject* objArg,
+                                const CallArgs& args, bool* _retval) {
+  RootedObject obj(cx, objArg);
+  return CallOrConstruct(wrapper, cx, obj, args, _retval);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_ID::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
                               JSObject* objArg, const CallArgs& args,
                               bool* _retval) {
@@ -1086,18 +2538,169 @@ nsresult nsXPCComponents_ID::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
   if (!id.Parse(bytes.get())) {
     return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
   }
+||||||| merged common ancestors
+nsXPCComponents_ID::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* objArg,
+                              const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
 
+// static
+nsresult
+nsXPCComponents_ID::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                    JSContext* cx, HandleObject obj,
+                                    const CallArgs& args, bool* _retval)
+{
+    // make sure we have at least one arg
+
+    if (args.length() < 1) {
+        return ThrowAndFail(NS_ERROR_XPC_NOT_ENOUGH_ARGS, cx, _retval);
+    }
+
+    // Do the security check if necessary
+
+    if (NS_FAILED(nsXPConnect::SecurityManager()->CanCreateInstance(cx, nsJSID::GetCID()))) {
+        // the security manager vetoed. It should have set an exception.
+        *_retval = false;
+        return NS_OK;
+    }
+
+    // convert the first argument into a string and see if it looks like an id
+
+    JSString* jsstr = ToString(cx, args[0]);
+    if (!jsstr) {
+        return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+    }
+
+    JS::UniqueChars bytes = JS_EncodeStringToLatin1(cx, jsstr);
+    if (!bytes) {
+        return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+    }
+
+    nsID id;
+    if (!id.Parse(bytes.get())) {
+        return ThrowAndFail(NS_ERROR_XPC_BAD_ID_STRING, cx, _retval);
+    }
+=======
+nsXPCComponents_Exception::Construct(nsIXPConnectWrappedNative* wrapper,
+                                     JSContext* cx, JSObject* objArg,
+                                     const CallArgs& args, bool* _retval) {
+  RootedObject obj(cx, objArg);
+  return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+
+struct MOZ_STACK_CLASS ExceptionArgParser {
+  ExceptionArgParser(JSContext* context, nsIXPConnect* xpconnect)
+      : eMsg("exception"),
+        eResult(NS_ERROR_FAILURE),
+        cx(context),
+        xpc(xpconnect) {}
+
+  // Public exception parameter values. During construction, these are
+  // initialized to the appropriate defaults.
+  const char* eMsg;
+  nsresult eResult;
+  nsCOMPtr<nsIStackFrame> eStack;
+  nsCOMPtr<nsISupports> eData;
+
+  // Parse the constructor arguments into the above |eFoo| parameter values.
+  bool parse(const CallArgs& args) {
+    /*
+     * The Components.Exception takes a series of arguments, all of them
+     * optional:
+     *
+     * Argument 0: Exception message (defaults to 'exception').
+     * Argument 1: Result code (defaults to NS_ERROR_FAILURE) _or_ options
+     *             object (see below).
+     * Argument 2: Stack (defaults to the current stack, which we trigger
+     *                    by leaving this nullptr in the parser).
+     * Argument 3: Optional user data (defaults to nullptr).
+     *
+     * To dig our way out of this clunky API, we now support passing an
+     * options object as the second parameter (as opposed to a result code).
+     * If this is the case, all subsequent arguments are ignored, and the
+     * following properties are parsed out of the object (using the
+     * associated default if the property does not exist):
+     *
+     *   result:    Result code (see argument 1).
+     *   stack:     Call stack (see argument 2).
+     *   data:      User data (see argument 3).
+     */
+    if (args.length() > 0 && !parseMessage(args[0])) {
+      return false;
+    }
+    if (args.length() > 1) {
+      if (args[1].isObject()) {
+        RootedObject obj(cx, &args[1].toObject());
+        return parseOptionsObject(obj);
+      }
+      if (!parseResult(args[1])) {
+        return false;
+      }
+    }
+    if (args.length() > 2) {
+      if (!parseStack(args[2])) {
+        return false;
+      }
+    }
+    if (args.length() > 3) {
+      if (!parseData(args[3])) {
+        return false;
+      }
+    }
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // make the new object and return it.
+||||||| merged common ancestors
+    // make the new object and return it.
+=======
+ protected:
+  /*
+   * Parsing helpers.
+   */
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   JSObject* newobj = xpc_NewIDObject(cx, obj, id);
   if (!newobj) {
     return NS_ERROR_UNEXPECTED;
   }
+||||||| merged common ancestors
+    JSObject* newobj = xpc_NewIDObject(cx, obj, id);
+    if (!newobj) {
+        return NS_ERROR_UNEXPECTED;
+    }
+=======
+  bool parseMessage(HandleValue v) {
+    JSString* str = ToString(cx, v);
+    if (!str) {
+      return false;
+    }
+    messageBytes = JS_EncodeStringToLatin1(cx, str);
+    eMsg = messageBytes.get();
+    return !!eMsg;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   args.rval().setObject(*newobj);
   return NS_OK;
 }
+||||||| merged common ancestors
+    args.rval().setObject(*newobj);
+    return NS_OK;
+}
+=======
+  bool parseResult(HandleValue v) {
+    return JS::ToUint32(cx, v, (uint32_t*)&eResult);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsXPCComponents_ID::HasInstance(nsIXPConnectWrappedNative* wrapper,
                                 JSContext* cx, JSObject* obj, HandleValue val,
@@ -1172,7 +2775,101 @@ nsXPCComponents_Exception::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
 }
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsXPCComponents_ID::HasInstance(nsIXPConnectWrappedNative* wrapper,
+                                JSContext* cx, JSObject* obj,
+                                HandleValue val, bool* bp, bool* _retval)
+{
+    if (bp) {
+        *bp = JSValIsInterfaceOfType(cx, val, NS_GET_IID(nsIJSID));
+    }
+    return NS_OK;
+}
 
+/***************************************************************************/
+// JavaScript Constructor for Exception objects (Components.Exception)
+
+class nsXPCComponents_Exception final :
+  public nsIXPCComponents_Exception,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_EXCEPTION
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+
+public:
+    nsXPCComponents_Exception();
+
+private:
+    virtual ~nsXPCComponents_Exception();
+    static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                    JSContext* cx, HandleObject obj,
+                                    const CallArgs& args, bool* _retval);
+};
+
+/***************************************************************************/
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_Exception).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_Exception");
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+}
+=======
+  bool parseStack(HandleValue v) {
+    if (!v.isObject()) {
+      // eStack has already been initialized to null, which is what we want
+      // for any non-object values (including null).
+      return true;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsXPCComponents_Exception::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
@@ -1278,28 +2975,134 @@ struct MOZ_STACK_CLASS ExceptionArgParser {
   /*
    * Parsing helpers.
    */
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsXPCComponents_Exception::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+}
 
-  bool parseMessage(HandleValue v) {
-    JSString* str = ToString(cx, v);
-    if (!str) {
-      return false;
+nsXPCComponents_Exception::nsXPCComponents_Exception()
+{
+}
+
+nsXPCComponents_Exception::~nsXPCComponents_Exception()
+{
+    // empty
+}
+
+NS_IMPL_ISUPPORTS(nsXPCComponents_Exception,
+                  nsIXPCComponents_Exception,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+
+// The nsIXPCScriptable map declaration that will generate stubs for us...
+#define XPC_MAP_CLASSNAME         nsXPCComponents_Exception
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Exception"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_CALL | \
+                       XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+                       XPC_SCRIPTABLE_WANT_HASINSTANCE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+#include "xpc_map_end.h" /* This will #undef the above */
+
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* objArg,
+                                const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Exception::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
+                                     JSObject* objArg, const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+
+struct MOZ_STACK_CLASS ExceptionArgParser
+{
+    ExceptionArgParser(JSContext* context,
+                       nsIXPConnect* xpconnect)
+        : eMsg("exception")
+        , eResult(NS_ERROR_FAILURE)
+        , cx(context)
+        , xpc(xpconnect)
+    {}
+
+    // Public exception parameter values. During construction, these are
+    // initialized to the appropriate defaults.
+    const char*             eMsg;
+    nsresult                eResult;
+    nsCOMPtr<nsIStackFrame> eStack;
+    nsCOMPtr<nsISupports>   eData;
+
+    // Parse the constructor arguments into the above |eFoo| parameter values.
+    bool parse(const CallArgs& args) {
+        /*
+         * The Components.Exception takes a series of arguments, all of them
+         * optional:
+         *
+         * Argument 0: Exception message (defaults to 'exception').
+         * Argument 1: Result code (defaults to NS_ERROR_FAILURE) _or_ options
+         *             object (see below).
+         * Argument 2: Stack (defaults to the current stack, which we trigger
+         *                    by leaving this nullptr in the parser).
+         * Argument 3: Optional user data (defaults to nullptr).
+         *
+         * To dig our way out of this clunky API, we now support passing an
+         * options object as the second parameter (as opposed to a result code).
+         * If this is the case, all subsequent arguments are ignored, and the
+         * following properties are parsed out of the object (using the
+         * associated default if the property does not exist):
+         *
+         *   result:    Result code (see argument 1).
+         *   stack:     Call stack (see argument 2).
+         *   data:      User data (see argument 3).
+         */
+        if (args.length() > 0 && !parseMessage(args[0])) {
+            return false;
+        }
+        if (args.length() > 1) {
+            if (args[1].isObject()) {
+                RootedObject obj(cx, &args[1].toObject());
+                return parseOptionsObject(obj);
+            }
+            if (!parseResult(args[1])) {
+                return false;
+            }
+        }
+        if (args.length() > 2) {
+            if (!parseStack(args[2])) {
+                return false;
+            }
+        }
+        if (args.length() > 3) {
+            if (!parseData(args[3])) {
+                return false;
+            }
+        }
+        return true;
     }
-    messageBytes = JS_EncodeStringToLatin1(cx, str);
-    eMsg = messageBytes.get();
-    return !!eMsg;
-  }
 
-  bool parseResult(HandleValue v) {
-    return JS::ToUint32(cx, v, (uint32_t*)&eResult);
-  }
+  protected:
 
-  bool parseStack(HandleValue v) {
-    if (!v.isObject()) {
-      // eStack has already been initialized to null, which is what we want
-      // for any non-object values (including null).
-      return true;
+    /*
+     * Parsing helpers.
+     */
+
+    bool parseMessage(HandleValue v) {
+        JSString* str = ToString(cx, v);
+        if (!str) {
+           return false;
+        }
+        messageBytes = JS_EncodeStringToLatin1(cx, str);
+        eMsg = messageBytes.get();
+        return !!eMsg;
     }
-
+=======
     return NS_SUCCEEDED(xpc->WrapJS(
         cx, &v.toObject(), NS_GET_IID(nsIStackFrame), getter_AddRefs(eStack)));
   }
@@ -1317,6 +3120,102 @@ struct MOZ_STACK_CLASS ExceptionArgParser {
 
   bool parseOptionsObject(HandleObject obj) {
     RootedValue v(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool parseMessage(HandleValue v) {
+    JSString* str = ToString(cx, v);
+    if (!str) {
+      return false;
+    }
+    messageBytes = JS_EncodeStringToLatin1(cx, str);
+    eMsg = messageBytes.get();
+    return !!eMsg;
+  }
+||||||| merged common ancestors
+    bool parseResult(HandleValue v) {
+        return JS::ToUint32(cx, v, (uint32_t*) &eResult);
+    }
+=======
+    if (!getOption(obj, "result", &v) || (!v.isUndefined() && !parseResult(v)))
+      return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool parseResult(HandleValue v) {
+    return JS::ToUint32(cx, v, (uint32_t*)&eResult);
+  }
+||||||| merged common ancestors
+    bool parseStack(HandleValue v) {
+        if (!v.isObject()) {
+            // eStack has already been initialized to null, which is what we want
+            // for any non-object values (including null).
+            return true;
+        }
+=======
+    if (!getOption(obj, "stack", &v) || (!v.isUndefined() && !parseStack(v)))
+      return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool parseStack(HandleValue v) {
+    if (!v.isObject()) {
+      // eStack has already been initialized to null, which is what we want
+      // for any non-object values (including null).
+      return true;
+    }
+||||||| merged common ancestors
+        return NS_SUCCEEDED(xpc->WrapJS(cx, &v.toObject(),
+                                        NS_GET_IID(nsIStackFrame),
+                                        getter_AddRefs(eStack)));
+    }
+=======
+    if (!getOption(obj, "data", &v) || (!v.isUndefined() && !parseData(v)))
+      return false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    return NS_SUCCEEDED(xpc->WrapJS(
+        cx, &v.toObject(), NS_GET_IID(nsIStackFrame), getter_AddRefs(eStack)));
+  }
+||||||| merged common ancestors
+    bool parseData(HandleValue v) {
+        if (!v.isObject()) {
+            // eData has already been initialized to null, which is what we want
+            // for any non-object values (including null).
+            return true;
+        }
+=======
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool parseData(HandleValue v) {
+    if (!v.isObject()) {
+      // eData has already been initialized to null, which is what we want
+      // for any non-object values (including null).
+      return true;
+||||||| merged common ancestors
+        return NS_SUCCEEDED(xpc->WrapJS(cx, &v.toObject(),
+                                        NS_GET_IID(nsISupports),
+                                        getter_AddRefs(eData)));
+=======
+  bool getOption(HandleObject obj, const char* name, MutableHandleValue rv) {
+    // Look for the property.
+    bool found;
+    if (!JS_HasProperty(cx, obj, name, &found)) {
+      return false;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
+    return NS_SUCCEEDED(xpc->WrapJS(cx, &v.toObject(), NS_GET_IID(nsISupports),
+                                    getter_AddRefs(eData)));
+  }
+
+  bool parseOptionsObject(HandleObject obj) {
+    RootedValue v(cx);
 
     if (!getOption(obj, "result", &v) || (!v.isUndefined() && !parseResult(v)))
       return false;
@@ -1326,7 +3225,33 @@ struct MOZ_STACK_CLASS ExceptionArgParser {
 
     if (!getOption(obj, "data", &v) || (!v.isUndefined() && !parseData(v)))
       return false;
+||||||| merged common ancestors
+    bool parseOptionsObject(HandleObject obj) {
+        RootedValue v(cx);
 
+        if (!getOption(obj, "result", &v) ||
+            (!v.isUndefined() && !parseResult(v)))
+            return false;
+
+        if (!getOption(obj, "stack", &v) ||
+            (!v.isUndefined() && !parseStack(v)))
+            return false;
+
+        if (!getOption(obj, "data", &v) ||
+            (!v.isUndefined() && !parseData(v)))
+            return false;
+
+        return true;
+    }
+=======
+    // If it wasn't found, indicate with undefined.
+    if (!found) {
+      rv.setUndefined();
+      return true;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     return true;
   }
 
@@ -1342,7 +3267,30 @@ struct MOZ_STACK_CLASS ExceptionArgParser {
       rv.setUndefined();
       return true;
     }
+||||||| merged common ancestors
+    bool getOption(HandleObject obj, const char* name, MutableHandleValue rv) {
+        // Look for the property.
+        bool found;
+        if (!JS_HasProperty(cx, obj, name, &found)) {
+            return false;
+        }
 
+        // If it wasn't found, indicate with undefined.
+        if (!found) {
+            rv.setUndefined();
+            return true;
+        }
+
+        // Get the property.
+        return JS_GetProperty(cx, obj, name, rv);
+    }
+=======
+    // Get the property.
+    return JS_GetProperty(cx, obj, name, rv);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // Get the property.
     return JS_GetProperty(cx, obj, name, rv);
   }
@@ -1350,6 +3298,15 @@ struct MOZ_STACK_CLASS ExceptionArgParser {
   /*
    * Internal data members.
    */
+||||||| merged common ancestors
+    /*
+     * Internal data members.
+     */
+=======
+  /*
+   * Internal data members.
+   */
+>>>>>>> upstream-releases
 
   // If there's a non-default exception string, hold onto the allocated bytes.
   JS::UniqueChars messageBytes;
@@ -1402,6 +3359,7 @@ nsXPCComponents_Exception::HasInstance(nsIXPConnectWrappedNative* wrapper,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /***************************************************************************/
 // This class is for the thing returned by "new Component.Constructor".
 
@@ -1444,10 +3402,77 @@ class nsXPCConstructor : public nsIXPCConstructor,
   RefPtr<nsIJSCID> mClassID;
   RefPtr<nsIJSIID> mInterfaceID;
   char* mInitializer;
+||||||| merged common ancestors
+/***************************************************************************/
+// This class is for the thing returned by "new Component.Constructor".
+
+// XXXjband we use this CID for security check, but security system can't see
+// it since it has no registed factory. Security really kicks in when we try
+// to build a wrapper around an instance.
+
+// {B4A95150-E25A-11d3-8F61-0010A4E73D9A}
+#define NS_XPCCONSTRUCTOR_CID                                                 \
+{ 0xb4a95150, 0xe25a, 0x11d3,                                                 \
+    { 0x8f, 0x61, 0x0, 0x10, 0xa4, 0xe7, 0x3d, 0x9a } }
+
+class nsXPCConstructor :
+  public nsIXPCConstructor,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    NS_DEFINE_STATIC_CID_ACCESSOR(NS_XPCCONSTRUCTOR_CID)
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCONSTRUCTOR
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCConstructor() = delete;
+    nsXPCConstructor(nsIJSCID* aClassID,
+                     nsIJSIID* aInterfaceID,
+                     const char* aInitializer);
+
+private:
+    virtual ~nsXPCConstructor();
+    nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                             JSContext* cx, HandleObject obj,
+                             const CallArgs& args, bool* _retval);
+private:
+    RefPtr<nsIJSCID> mClassID;
+    RefPtr<nsIJSIID> mInterfaceID;
+    char*              mInitializer;
+=======
+/*******************************************************/
+// JavaScript Constructor for nsIXPCConstructor objects (Components.Constructor)
+
+class nsXPCComponents_Constructor final : public nsIXPCComponents_Constructor,
+                                          public nsIXPCScriptable,
+                                          public nsIClassInfo {
+ public:
+  // all the interface method declarations...
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIXPCCOMPONENTS_CONSTRUCTOR
+  NS_DECL_NSIXPCSCRIPTABLE
+  NS_DECL_NSICLASSINFO
+
+ public:
+  nsXPCComponents_Constructor();
+
+ private:
+  virtual ~nsXPCComponents_Constructor();
+  static bool InnerConstructor(JSContext* cx, unsigned argc, JS::Value* vp);
+  static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                  JSContext* cx, HandleObject obj,
+                                  const CallArgs& args, bool* _retval);
+>>>>>>> upstream-releases
 };
 
 /***************************************************************************/
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
   *aCount = 2;
   nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
@@ -1462,33 +3487,102 @@ NS_IMETHODIMP
 nsXPCConstructor::GetScriptableHelper(nsIXPCScriptable** retval) {
   *retval = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCConstructor::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCConstructor).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
 }
 
 NS_IMETHODIMP
+nsXPCConstructor::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Constructor::GetInterfaces(nsTArray<nsIID>& aArray) {
+  aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCComponents_Constructor),
+                           NS_GET_IID(nsIXPCScriptable)};
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetContractID(nsACString& aContractID) {
   aContractID.SetIsVoid(true);
   return NS_ERROR_NOT_AVAILABLE;
+||||||| merged common ancestors
+nsXPCConstructor::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+=======
+nsXPCComponents_Constructor::GetScriptableHelper(nsIXPCScriptable** retval) {
+  *retval = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetClassDescription(nsACString& aClassDescription) {
   aClassDescription.AssignLiteral("XPCConstructor");
   return NS_OK;
+||||||| merged common ancestors
+nsXPCConstructor::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCConstructor");
+    return NS_OK;
+=======
+nsXPCComponents_Constructor::GetContractID(nsACString& aContractID) {
+  aContractID.SetIsVoid(true);
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetClassID(nsCID** aClassID) {
   *aClassID = nullptr;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCConstructor::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+=======
+nsXPCComponents_Constructor::GetClassDescription(
+    nsACString& aClassDescription) {
+  aClassDescription.AssignLiteral("XPCComponents_Constructor");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetFlags(uint32_t* aFlags) {
   *aFlags = 0;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCConstructor::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+=======
+nsXPCComponents_Constructor::GetClassID(nsCID** aClassID) {
+  *aClassID = nullptr;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
   return NS_ERROR_NOT_AVAILABLE;
 }
@@ -1503,36 +3597,119 @@ nsXPCConstructor::~nsXPCConstructor() {
   if (mInitializer) {
     free(mInitializer);
   }
+||||||| merged common ancestors
+nsXPCConstructor::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+nsXPCConstructor::nsXPCConstructor(nsIJSCID* aClassID,
+                                   nsIJSIID* aInterfaceID,
+                                   const char* aInitializer)
+    : mClassID(aClassID),
+      mInterfaceID(aInterfaceID)
+{
+    mInitializer = aInitializer ? moz_xstrdup(aInitializer) : nullptr;
+}
+
+nsXPCConstructor::~nsXPCConstructor()
+{
+    if (mInitializer) {
+        free(mInitializer);
+    }
+=======
+nsXPCComponents_Constructor::GetFlags(uint32_t* aFlags) {
+  *aFlags = 0;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCConstructor::GetClassID(nsIJSCID** aClassID) {
   RefPtr<nsIJSCID> rval = mClassID;
   rval.forget(aClassID);
   return NS_OK;
+||||||| merged common ancestors
+nsXPCConstructor::GetClassID(nsIJSCID * *aClassID)
+{
+    RefPtr<nsIJSCID> rval = mClassID;
+    rval.forget(aClassID);
+    return NS_OK;
+=======
+nsXPCComponents_Constructor::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc) {
+  return NS_ERROR_NOT_AVAILABLE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsXPCConstructor::GetInterfaceID(nsIJSIID** aInterfaceID) {
   RefPtr<nsIJSIID> rval = mInterfaceID;
   rval.forget(aInterfaceID);
   return NS_OK;
 }
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsXPCConstructor::GetInterfaceID(nsIJSIID * *aInterfaceID)
+{
+    RefPtr<nsIJSIID> rval = mInterfaceID;
+    rval.forget(aInterfaceID);
+    return NS_OK;
+}
+=======
+nsXPCComponents_Constructor::nsXPCComponents_Constructor() {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsXPCConstructor::GetInitializer(char** aInitializer) {
   XPC_STRING_GETTER_BODY(aInitializer, mInitializer);
+||||||| merged common ancestors
+NS_IMETHODIMP
+nsXPCConstructor::GetInitializer(char * *aInitializer)
+{
+    XPC_STRING_GETTER_BODY(aInitializer, mInitializer);
+=======
+nsXPCComponents_Constructor::~nsXPCComponents_Constructor() {
+  // empty
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCConstructor, nsIXPCConstructor, nsIXPCScriptable,
                   nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCConstructor,
+                  nsIXPCConstructor,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+NS_IMPL_ISUPPORTS(nsXPCComponents_Constructor, nsIXPCComponents_Constructor,
+                  nsIXPCScriptable, nsIClassInfo)
+>>>>>>> upstream-releases
 
 // The nsIXPCScriptable map declaration that will generate stubs for us...
+<<<<<<< HEAD
 #define XPC_MAP_CLASSNAME nsXPCConstructor
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCConstructor"
 #define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_CALL | XPC_SCRIPTABLE_WANT_CONSTRUCT)
+||||||| merged common ancestors
+#define XPC_MAP_CLASSNAME         nsXPCConstructor
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCConstructor"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_CALL | \
+                       XPC_SCRIPTABLE_WANT_CONSTRUCT)
+=======
+#define XPC_MAP_CLASSNAME nsXPCComponents_Constructor
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Constructor"
+#define XPC_MAP_FLAGS                                         \
+  (XPC_SCRIPTABLE_WANT_CALL | XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+   XPC_SCRIPTABLE_WANT_HASINSTANCE |                          \
+   XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+>>>>>>> upstream-releases
 #include "xpc_map_end.h" /* This will #undef the above */
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 nsXPCConstructor::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
                        JSObject* objArg, const CallArgs& args, bool* _retval) {
@@ -1548,7 +3725,29 @@ nsXPCConstructor::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
   return CallOrConstruct(wrapper, cx, obj, args, _retval);
 }
 
+||||||| merged common ancestors
+
+NS_IMETHODIMP
+nsXPCConstructor::Call(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* objArg,
+                       const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+
+}
+
+NS_IMETHODIMP
+nsXPCConstructor::Construct(nsIXPConnectWrappedNative* wrapper, JSContext* cx, JSObject* objArg,
+                            const CallArgs& args, bool* _retval)
+{
+    RootedObject obj(cx, objArg);
+    return CallOrConstruct(wrapper, cx, obj, args, _retval);
+}
+
+=======
+>>>>>>> upstream-releases
 // static
+<<<<<<< HEAD
 nsresult nsXPCConstructor::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
                                            JSContext* cx, HandleObject obj,
                                            const CallArgs& args,
@@ -1678,10 +3877,196 @@ nsXPCComponents_Constructor::nsXPCComponents_Constructor() {}
 nsXPCComponents_Constructor::~nsXPCComponents_Constructor() {
   // empty
 }
+||||||| merged common ancestors
+nsresult
+nsXPCConstructor::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,JSContext* cx,
+                                  HandleObject obj, const CallArgs& args, bool* _retval)
+{
+    nsIXPConnect* xpc = nsIXPConnect::XPConnect();
 
+    // security check not required because we are going to call through the
+    // code which is reflected into JS which will do that for us later.
+
+    RootedObject cidObj(cx);
+    RootedObject iidObj(cx);
+
+    if (NS_FAILED(xpc->WrapNative(cx, obj, mClassID, NS_GET_IID(nsIJSCID), cidObj.address())) || !cidObj ||
+        NS_FAILED(xpc->WrapNative(cx, obj, mInterfaceID, NS_GET_IID(nsIJSIID), iidObj.address())) || !iidObj) {
+        return ThrowAndFail(NS_ERROR_XPC_CANT_CREATE_WN, cx, _retval);
+    }
+
+    JS::Rooted<JS::Value> arg(cx, ObjectValue(*iidObj));
+    RootedValue rval(cx);
+    if (!JS_CallFunctionName(cx, cidObj, "createInstance", JS::HandleValueArray(arg), &rval) ||
+        rval.isPrimitive()) {
+        // createInstance will have thrown an exception
+        *_retval = false;
+        return NS_OK;
+    }
+
+    args.rval().set(rval);
+
+    // call initializer method if supplied
+    if (mInitializer) {
+        RootedObject newObj(cx, &rval.toObject());
+        // first check existence of function property for better error reporting
+        RootedValue fun(cx);
+        if (!JS_GetProperty(cx, newObj, mInitializer, &fun) ||
+            fun.isPrimitive()) {
+            return ThrowAndFail(NS_ERROR_XPC_BAD_INITIALIZER_NAME, cx, _retval);
+        }
+
+        RootedValue dummy(cx);
+        if (!JS_CallFunctionValue(cx, newObj, fun, args, &dummy)) {
+            // function should have thrown an exception
+            *_retval = false;
+            return NS_OK;
+        }
+    }
+
+    return NS_OK;
+}
+
+/*******************************************************/
+// JavaScript Constructor for nsIXPCConstructor objects (Components.Constructor)
+
+class nsXPCComponents_Constructor final :
+  public nsIXPCComponents_Constructor,
+  public nsIXPCScriptable,
+  public nsIClassInfo
+{
+public:
+    // all the interface method declarations...
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIXPCCOMPONENTS_CONSTRUCTOR
+    NS_DECL_NSIXPCSCRIPTABLE
+    NS_DECL_NSICLASSINFO
+
+public:
+    nsXPCComponents_Constructor();
+
+private:
+    virtual ~nsXPCComponents_Constructor();
+    static nsresult CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                    JSContext* cx, HandleObject obj,
+                                    const CallArgs& args, bool* _retval);
+};
+
+/***************************************************************************/
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
+{
+    *aCount = 2;
+    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
+    *aArray = array;
+
+    array[0] = NS_GET_IID(nsIXPCComponents_Constructor).Clone();
+    array[1] = NS_GET_IID(nsIXPCScriptable).Clone();
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetScriptableHelper(nsIXPCScriptable** retval)
+{
+    *retval = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetContractID(nsACString& aContractID)
+{
+    aContractID.SetIsVoid(true);
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetClassDescription(nsACString& aClassDescription)
+{
+    aClassDescription.AssignLiteral("XPCComponents_Constructor");
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetClassID(nsCID * *aClassID)
+{
+    *aClassID = nullptr;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetFlags(uint32_t* aFlags)
+{
+    *aFlags = 0;
+    return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Constructor::GetClassIDNoAlloc(nsCID* aClassIDNoAlloc)
+{
+    return NS_ERROR_NOT_AVAILABLE;
+}
+
+nsXPCComponents_Constructor::nsXPCComponents_Constructor()
+{
+}
+
+nsXPCComponents_Constructor::~nsXPCComponents_Constructor()
+{
+    // empty
+}
+=======
+bool nsXPCComponents_Constructor::InnerConstructor(JSContext* cx, unsigned argc,
+                                                   JS::Value* vp) {
+  CallArgs args = CallArgsFromVp(argc, vp);
+  RootedObject callee(cx, &args.callee());
+
+  // Fetch the property name ids, so we can look them up.
+  XPCJSRuntime* runtime = XPCJSRuntime::Get();
+  HandleId classIDProp = runtime->GetStringID(XPCJSContext::IDX_CLASS_ID);
+  HandleId interfaceIDProp =
+      runtime->GetStringID(XPCJSContext::IDX_INTERFACE_ID);
+  HandleId initializerProp =
+      runtime->GetStringID(XPCJSContext::IDX_INITIALIZER);
+
+  // Get properties ('classID', 'interfaceID', and 'initializer') off the
+  // constructor object.
+  RootedValue classIDv(cx);
+  RootedValue interfaceID(cx);
+  RootedValue initializer(cx);
+  if (!JS_GetPropertyById(cx, callee, classIDProp, &classIDv) ||
+      !JS_GetPropertyById(cx, callee, interfaceIDProp, &interfaceID) ||
+      !JS_GetPropertyById(cx, callee, initializerProp, &initializer)) {
+    return false;
+  }
+  if (!classIDv.isObject() || !interfaceID.isObject()) {
+    XPCThrower::Throw(NS_ERROR_UNEXPECTED, cx);
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NS_IMPL_ISUPPORTS(nsXPCComponents_Constructor, nsIXPCComponents_Constructor,
                   nsIXPCScriptable, nsIClassInfo)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS(nsXPCComponents_Constructor,
+                  nsIXPCComponents_Constructor,
+                  nsIXPCScriptable,
+                  nsIClassInfo)
+=======
+  // Call 'createInstance' on the 'classID' object to create the object.
+  RootedValue instancev(cx);
+  RootedObject classID(cx, &classIDv.toObject());
+  if (!JS_CallFunctionName(cx, classID, "createInstance",
+                           HandleValueArray(interfaceID), &instancev)) {
+    return false;
+  }
+  if (!instancev.isObject()) {
+    XPCThrower::Throw(NS_ERROR_FAILURE, cx);
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 // The nsIXPCScriptable map declaration that will generate stubs for us...
 #define XPC_MAP_CLASSNAME nsXPCComponents_Constructor
 #define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Constructor"
@@ -1690,7 +4075,39 @@ NS_IMPL_ISUPPORTS(nsXPCComponents_Constructor, nsIXPCComponents_Constructor,
    XPC_SCRIPTABLE_WANT_HASINSTANCE |                          \
    XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
 #include "xpc_map_end.h" /* This will #undef the above */
+||||||| merged common ancestors
+// The nsIXPCScriptable map declaration that will generate stubs for us...
+#define XPC_MAP_CLASSNAME         nsXPCComponents_Constructor
+#define XPC_MAP_QUOTED_CLASSNAME "nsXPCComponents_Constructor"
+#define XPC_MAP_FLAGS (XPC_SCRIPTABLE_WANT_CALL | \
+                       XPC_SCRIPTABLE_WANT_CONSTRUCT | \
+                       XPC_SCRIPTABLE_WANT_HASINSTANCE | \
+                       XPC_SCRIPTABLE_ALLOW_PROP_MODS_DURING_RESOLVE)
+#include "xpc_map_end.h" /* This will #undef the above */
+=======
+  // Call the method 'initializer' on the instance, passing in our parameters.
+  if (!initializer.isUndefined()) {
+    RootedValue dummy(cx);
+    RootedValue initfunc(cx);
+    RootedId initid(cx);
+    RootedObject instance(cx, &instancev.toObject());
+    if (!JS_ValueToId(cx, initializer, &initid) ||
+        !JS_GetPropertyById(cx, instance, initid, &initfunc) ||
+        !JS_CallFunctionValue(cx, instance, initfunc, args, &dummy)) {
+      return false;
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+  args.rval().set(instancev);
+  return true;
+}
+
+>>>>>>> upstream-releases
 NS_IMETHODIMP
 nsXPCComponents_Constructor::Call(nsIXPConnectWrappedNative* wrapper,
                                   JSContext* cx, JSObject* objArg,
@@ -1708,6 +4125,7 @@ nsXPCComponents_Constructor::Construct(nsIXPConnectWrappedNative* wrapper,
 }
 
 // static
+<<<<<<< HEAD
 nsresult nsXPCComponents_Constructor::CallOrConstruct(
     nsIXPConnectWrappedNative* wrapper, JSContext* cx, HandleObject obj,
     const CallArgs& args, bool* _retval) {
@@ -1716,57 +4134,220 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
   if (args.length() < 1) {
     return ThrowAndFail(NS_ERROR_XPC_NOT_ENOUGH_ARGS, cx, _retval);
   }
+||||||| merged common ancestors
+nsresult
+nsXPCComponents_Constructor::CallOrConstruct(nsIXPConnectWrappedNative* wrapper,
+                                             JSContext* cx, HandleObject obj,
+                                             const CallArgs& args, bool* _retval)
+{
+    // make sure we have at least one arg
 
+    if (args.length() < 1) {
+        return ThrowAndFail(NS_ERROR_XPC_NOT_ENOUGH_ARGS, cx, _retval);
+    }
+=======
+nsresult nsXPCComponents_Constructor::CallOrConstruct(
+    nsIXPConnectWrappedNative* wrapper, JSContext* cx, HandleObject obj,
+    const CallArgs& args, bool* _retval) {
+  // make sure we have at least one arg
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // get the various other object pointers we need
+||||||| merged common ancestors
+    // get the various other object pointers we need
+=======
+  if (args.length() < 1) {
+    return ThrowAndFail(NS_ERROR_XPC_NOT_ENOUGH_ARGS, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   nsIXPConnect* xpc = nsIXPConnect::XPConnect();
   XPCWrappedNativeScope* scope = ObjectScope(obj);
   nsCOMPtr<nsIXPCComponents> comp;
+||||||| merged common ancestors
+    nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+    XPCWrappedNativeScope* scope = ObjectScope(obj);
+    nsCOMPtr<nsIXPCComponents> comp;
+=======
+  // Fetch the property name ids, so we can look them up.
+  XPCJSRuntime* runtime = XPCJSRuntime::Get();
+  HandleId classIDProp = runtime->GetStringID(XPCJSContext::IDX_CLASS_ID);
+  HandleId interfaceIDProp =
+      runtime->GetStringID(XPCJSContext::IDX_INTERFACE_ID);
+  HandleId initializerProp =
+      runtime->GetStringID(XPCJSContext::IDX_INITIALIZER);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!xpc || !scope || !(comp = do_QueryInterface(scope->GetComponents()))) {
     return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
   }
+||||||| merged common ancestors
+    if (!xpc || !scope || !(comp = do_QueryInterface(scope->GetComponents()))) {
+        return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+    }
+=======
+  // get the various other object pointers we need
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Do the security check if necessary
+||||||| merged common ancestors
+    // Do the security check if necessary
+=======
+  nsIXPConnect* xpc = nsIXPConnect::XPConnect();
+  XPCWrappedNativeScope* scope = ObjectScope(obj);
+  nsCOMPtr<nsIXPCComponents> comp;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (NS_FAILED(nsXPConnect::SecurityManager()->CanCreateInstance(
           cx, nsXPCConstructor::GetCID()))) {
     // the security manager vetoed. It should have set an exception.
     *_retval = false;
     return NS_OK;
   }
+||||||| merged common ancestors
+    if (NS_FAILED(nsXPConnect::SecurityManager()->CanCreateInstance(cx, nsXPCConstructor::GetCID()))) {
+        // the security manager vetoed. It should have set an exception.
+        *_retval = false;
+        return NS_OK;
+    }
+=======
+  if (!xpc || !scope || !(comp = do_QueryInterface(scope->GetComponents()))) {
+    return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // initialization params for the Constructor object we will create
   nsCOMPtr<nsIJSCID> cClassID;
   nsCOMPtr<nsIJSIID> cInterfaceID;
   const char* cInitializer = nullptr;
   JS::UniqueChars cInitializerBytes;
+||||||| merged common ancestors
+    // initialization params for the Constructor object we will create
+    nsCOMPtr<nsIJSCID> cClassID;
+    nsCOMPtr<nsIJSIID> cInterfaceID;
+    const char*        cInitializer = nullptr;
+    JS::UniqueChars cInitializerBytes;
 
+    if (args.length() >= 3) {
+        // args[2] is an initializer function or property name
+        RootedString str(cx, ToString(cx, args[2]));
+        if (!str) {
+            return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
+        }
+=======
+  // Prevent non-chrome code from creating constructor objects.
+  if (!nsContentUtils::IsCallerChrome()) {
+    return ThrowAndFail(NS_ERROR_DOM_XPCONNECT_ACCESS_DENIED, cx, _retval);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (args.length() >= 3) {
     // args[2] is an initializer function or property name
     RootedString str(cx, ToString(cx, args[2]));
     if (!str) {
       return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
     }
+||||||| merged common ancestors
+        cInitializerBytes = JS_EncodeStringToLatin1(cx, str);
+        cInitializer = cInitializerBytes.get();
+        if (!cInitializer) {
+            return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
+        }
+    }
+=======
+  JSFunction* ctorfn = JS_NewFunction(cx, InnerConstructor, 0,
+                                      JSFUN_CONSTRUCTOR, "XPCOM_Constructor");
+  if (!ctorfn) {
+    return ThrowAndFail(NS_ERROR_OUT_OF_MEMORY, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     cInitializerBytes = JS_EncodeStringToLatin1(cx, str);
     cInitializer = cInitializerBytes.get();
     if (!cInitializer) {
       return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
     }
   }
+||||||| merged common ancestors
+    if (args.length() >= 2) {
+        // args[1] is an iid name string
+        // XXXjband support passing "Components.interfaces.foo"?
 
+        nsCOMPtr<nsIXPCComponents_Interfaces> ifaces;
+        RootedObject ifacesObj(cx);
+=======
+  JS::RootedObject ctor(cx, JS_GetFunctionObject(ctorfn));
+
+  if (args.length() >= 3) {
+    // args[2] is an initializer function or property name
+    RootedString str(cx, ToString(cx, args[2]));
+    if (!JS_DefinePropertyById(
+            cx, ctor, initializerProp, str,
+            JSPROP_ENUMERATE | JSPROP_READONLY | JSPROP_PERMANENT)) {
+      return ThrowAndFail(NS_ERROR_FAILURE, cx, _retval);
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (args.length() >= 2) {
     // args[1] is an iid name string
     // XXXjband support passing "Components.interfaces.foo"?
+||||||| merged common ancestors
+        // we do the lookup by asking the Components.interfaces object
+        // for the property with this name - i.e. we let its caching of these
+        // nsIJSIID objects work for us.
+=======
+  RootedString ifaceName(cx);
+  if (args.length() >= 2) {
+    ifaceName = ToString(cx, args[1]);
+  } else {
+    ifaceName = JS_NewStringCopyZ(cx, "nsISupports");
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     nsCOMPtr<nsIXPCComponents_Interfaces> ifaces;
     RootedObject ifacesObj(cx);
+||||||| merged common ancestors
+        if (NS_FAILED(comp->GetInterfaces(getter_AddRefs(ifaces))) ||
+            NS_FAILED(xpc->WrapNative(cx, obj, ifaces,
+                                      NS_GET_IID(nsIXPCComponents_Interfaces),
+                                      ifacesObj.address())) || !ifacesObj) {
+            return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+        }
+=======
+  if (!ifaceName) {
+    return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     // we do the lookup by asking the Components.interfaces object
     // for the property with this name - i.e. we let its caching of these
     // nsIJSIID objects work for us.
+||||||| merged common ancestors
+        RootedString str(cx, ToString(cx, args[1]));
+        RootedId id(cx);
+        if (!str || !JS_StringToId(cx, str, &id)) {
+            return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
+        }
+=======
+  // a new scope to avoid warnings about shadowed names
+  {
+    nsCOMPtr<nsIXPCComponents_Interfaces> ifaces;
+    RootedObject ifacesObj(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (NS_FAILED(comp->GetInterfaces(getter_AddRefs(ifaces))) ||
         NS_FAILED(xpc->WrapNative(cx, obj, ifaces,
                                   NS_GET_IID(nsIXPCComponents_Interfaces),
@@ -1774,18 +4355,62 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
         !ifacesObj) {
       return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
     }
+||||||| merged common ancestors
+        RootedValue val(cx);
+        if (!JS_GetPropertyById(cx, ifacesObj, id, &val) || val.isPrimitive()) {
+            return ThrowAndFail(NS_ERROR_XPC_BAD_IID, cx, _retval);
+        }
+=======
+    // we do the lookup by asking the Components.interfaces object
+    // for the property with this name - i.e. we let its caching of these
+    // nsIJSIID objects work for us.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     RootedString str(cx, ToString(cx, args[1]));
     RootedId id(cx);
     if (!str || !JS_StringToId(cx, str, &id)) {
       return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
     }
+||||||| merged common ancestors
+        nsCOMPtr<nsIXPConnectWrappedNative> wn;
+        if (NS_FAILED(xpc->GetWrappedNativeOfJSObject(cx, &val.toObject(),
+                                                      getter_AddRefs(wn))) || !wn ||
+            !(cInterfaceID = do_QueryInterface(wn->Native()))) {
+            return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+        }
+    } else {
+        const nsXPTInterfaceInfo* info =
+            nsXPTInterfaceInfo::ByIID(NS_GET_IID(nsISupports));
+=======
+    if (NS_FAILED(comp->GetInterfaces(getter_AddRefs(ifaces))) ||
+        NS_FAILED(xpc->WrapNative(cx, obj, ifaces,
+                                  NS_GET_IID(nsIXPCComponents_Interfaces),
+                                  ifacesObj.address())) ||
+        !ifacesObj) {
+      return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     RootedValue val(cx);
     if (!JS_GetPropertyById(cx, ifacesObj, id, &val) || val.isPrimitive()) {
       return ThrowAndFail(NS_ERROR_XPC_BAD_IID, cx, _retval);
+||||||| merged common ancestors
+        if (info) {
+            cInterfaceID = nsJSIID::NewID(info);
+        }
+        if (!cInterfaceID) {
+            return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+        }
+=======
+    RootedId id(cx);
+    if (!JS_StringToId(cx, ifaceName, &id)) {
+      return ThrowAndFail(NS_ERROR_XPC_BAD_CONVERT_JS, cx, _retval);
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     nsCOMPtr<nsIXPConnectWrappedNative> wn;
     if (NS_FAILED(xpc->GetWrappedNativeOfJSObject(cx, &val.toObject(),
                                                   getter_AddRefs(wn))) ||
@@ -1795,7 +4420,19 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
   } else {
     const nsXPTInterfaceInfo* info =
         nsXPTInterfaceInfo::ByIID(NS_GET_IID(nsISupports));
+||||||| merged common ancestors
+    // a new scope to avoid warnings about shadowed names
+    {
+        // argv[0] is a contractid name string
+        // XXXjband support passing "Components.classes.foo"?
+=======
+    RootedValue val(cx);
+    if (!JS_GetPropertyById(cx, ifacesObj, id, &val) || val.isPrimitive()) {
+      return ThrowAndFail(NS_ERROR_XPC_BAD_IID, cx, _retval);
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (info) {
       cInterfaceID = nsJSIID::NewID(info);
     }
@@ -1803,11 +4440,32 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
       return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
     }
   }
+||||||| merged common ancestors
+        // we do the lookup by asking the Components.classes object
+        // for the property with this name - i.e. we let its caching of these
+        // nsIJSCID objects work for us.
+=======
+    if (!JS_DefinePropertyById(
+            cx, ctor, interfaceIDProp, val,
+            JSPROP_ENUMERATE | JSPROP_READONLY | JSPROP_PERMANENT)) {
+      return ThrowAndFail(NS_ERROR_FAILURE, cx, _retval);
+    }
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // a new scope to avoid warnings about shadowed names
   {
     // argv[0] is a contractid name string
     // XXXjband support passing "Components.classes.foo"?
+||||||| merged common ancestors
+        nsCOMPtr<nsIXPCComponents_Classes> classes;
+        RootedObject classesObj(cx);
+=======
+  // a new scope to avoid warnings about shadowed names
+  {
+    // argv[0] is a contractid name string
+>>>>>>> upstream-releases
 
     // we do the lookup by asking the Components.classes object
     // for the property with this name - i.e. we let its caching of these
@@ -1835,14 +4493,25 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
       return ThrowAndFail(NS_ERROR_XPC_BAD_CID, cx, _retval);
     }
 
+<<<<<<< HEAD
     nsCOMPtr<nsIXPConnectWrappedNative> wn;
     if (NS_FAILED(xpc->GetWrappedNativeOfJSObject(cx, val.toObjectOrNull(),
                                                   getter_AddRefs(wn))) ||
         !wn || !(cClassID = do_QueryInterface(wn->Native()))) {
       return ThrowAndFail(NS_ERROR_XPC_UNEXPECTED, cx, _retval);
+||||||| merged common ancestors
+    if (NS_FAILED(xpc->WrapNative(cx, obj, ctor, NS_GET_IID(nsIXPCConstructor), newObj.address())) || !newObj) {
+        return ThrowAndFail(NS_ERROR_XPC_CANT_CREATE_WN, cx, _retval);
+=======
+    if (!JS_DefinePropertyById(
+            cx, ctor, classIDProp, val,
+            JSPROP_ENUMERATE | JSPROP_READONLY | JSPROP_PERMANENT)) {
+      return ThrowAndFail(NS_ERROR_FAILURE, cx, _retval);
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIXPCConstructor> ctor =
       new nsXPCConstructor(cClassID, cInterfaceID, cInitializer);
   RootedObject newObj(cx);
@@ -1855,10 +4524,18 @@ nsresult nsXPCComponents_Constructor::CallOrConstruct(
 
   args.rval().setObject(*newObj);
   return NS_OK;
+||||||| merged common ancestors
+    args.rval().setObject(*newObj);
+    return NS_OK;
+=======
+  args.rval().setObject(*ctor);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
 nsXPCComponents_Constructor::HasInstance(nsIXPConnectWrappedNative* wrapper,
+<<<<<<< HEAD
                                          JSContext* cx, JSObject* obj,
                                          HandleValue val, bool* bp,
                                          bool* _retval) {
@@ -1866,6 +4543,23 @@ nsXPCComponents_Constructor::HasInstance(nsIXPConnectWrappedNative* wrapper,
     *bp = JSValIsInterfaceOfType(cx, val, NS_GET_IID(nsIXPCConstructor));
   }
   return NS_OK;
+||||||| merged common ancestors
+                                         JSContext * cx, JSObject * obj,
+                                         HandleValue val, bool* bp,
+                                         bool* _retval)
+{
+    if (bp) {
+        *bp = JSValIsInterfaceOfType(cx, val, NS_GET_IID(nsIXPCConstructor));
+    }
+    return NS_OK;
+=======
+                                         JSContext* cx, JSObject* obj,
+                                         HandleValue val, bool* isa,
+                                         bool* _retval) {
+  *isa =
+      val.isObject() && JS_IsNativeFunction(&val.toObject(), InnerConstructor);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 class nsXPCComponents_Utils final : public nsIXPCComponents_Utils,
@@ -1916,21 +4610,48 @@ nsXPCComponents_Utils::ReportError(HandleValue error, HandleValue stack,
     return NS_OK;
   }
 
+<<<<<<< HEAD
   nsGlobalWindowInner* globalWin = CurrentWindowOrNull(cx);
   nsPIDOMWindowInner* win = globalWin ? globalWin->AsInner() : nullptr;
   const uint64_t innerWindowID = win ? win->WindowID() : 0;
+||||||| merged common ancestors
+    nsGlobalWindowInner* globalWin = CurrentWindowOrNull(cx);
+    nsPIDOMWindowInner* win = globalWin ? globalWin->AsInner() : nullptr;
+    const uint64_t innerWindowID = win ? win->WindowID() : 0;
+=======
+  nsGlobalWindowInner* win = CurrentWindowOrNull(cx);
+  const uint64_t innerWindowID = win ? win->WindowID() : 0;
+>>>>>>> upstream-releases
 
   RootedObject errorObj(cx, error.isObject() ? &error.toObject() : nullptr);
   JSErrorReport* err = errorObj ? JS_ErrorFromException(cx, errorObj) : nullptr;
 
   nsCOMPtr<nsIScriptError> scripterr;
 
+<<<<<<< HEAD
   if (errorObj) {
     JS::RootedObject stackVal(cx);
     JS::RootedObject stackGlobal(cx);
     FindExceptionStackForConsoleReport(win, error, &stackVal, &stackGlobal);
     if (stackVal) {
       scripterr = new nsScriptErrorWithStack(stackVal, stackGlobal);
+||||||| merged common ancestors
+    if (errorObj) {
+        JS::RootedObject stackVal(cx);
+        JS::RootedObject stackGlobal(cx);
+        FindExceptionStackForConsoleReport(win, error, &stackVal, &stackGlobal);
+        if (stackVal) {
+            scripterr = new nsScriptErrorWithStack(stackVal, stackGlobal);
+        }
+=======
+  if (errorObj) {
+    JS::RootedObject stackVal(cx);
+    JS::RootedObject stackGlobal(cx);
+    FindExceptionStackForConsoleReport(win, error, nullptr, &stackVal,
+                                       &stackGlobal);
+    if (stackVal) {
+      scripterr = new nsScriptErrorWithStack(stackVal, stackGlobal);
+>>>>>>> upstream-releases
     }
   }
 
@@ -1988,6 +4709,7 @@ nsXPCComponents_Utils::ReportError(HandleValue error, HandleValue stack,
     }
   }
 
+<<<<<<< HEAD
   if (!scripterr) {
     scripterr = new nsScriptError();
   }
@@ -1998,8 +4720,57 @@ nsXPCComponents_Utils::ReportError(HandleValue error, HandleValue stack,
     CopyUTF8toUTF16(mozilla::MakeStringSpan(err->filename), fileUni);
 
     uint32_t column = err->tokenOffset();
+||||||| merged common ancestors
+    if (err) {
+        // It's a proper JS Error
+        nsAutoString fileUni;
+        CopyUTF8toUTF16(mozilla::MakeStringSpan(err->filename), fileUni);
+
+        uint32_t column = err->tokenOffset();
+
+        const char16_t* linebuf = err->linebuf();
+
+        nsresult rv = scripterr->InitWithWindowID(
+                err->message() ? NS_ConvertUTF8toUTF16(err->message().c_str())
+                : EmptyString(),
+                fileUni,
+                linebuf ? nsDependentString(linebuf, err->linebufLength()) : EmptyString(),
+                err->lineno,
+                column, err->flags, "XPConnect JavaScript", innerWindowID);
+        NS_ENSURE_SUCCESS(rv, NS_OK);
+=======
+  if (!scripterr) {
+    scripterr = new nsScriptError();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    const char16_t* linebuf = err->linebuf();
+||||||| merged common ancestors
+        console->LogMessage(scripterr);
+        return NS_OK;
+    }
+
+    // It's not a JS Error object, so we synthesize as best we're able.
+    RootedString msgstr(cx, ToString(cx, error));
+    if (!msgstr) {
+        return NS_OK;
+    }
+
+    nsAutoJSString msg;
+    if (!msg.init(cx, msgstr)) {
+        return NS_OK;
+    }
+=======
+  if (err) {
+    // It's a proper JS Error
+    nsAutoString fileUni;
+    CopyUTF8toUTF16(mozilla::MakeStringSpan(err->filename), fileUni);
+
+    uint32_t column = err->tokenOffset();
 
     const char16_t* linebuf = err->linebuf();
+>>>>>>> upstream-releases
 
     nsresult rv = scripterr->InitWithWindowID(
         err->message() ? NS_ConvertUTF8toUTF16(err->message().c_str())
@@ -2084,11 +4855,26 @@ nsXPCComponents_Utils::GetSandboxMetadata(HandleValue sandboxVal, JSContext* cx,
     return NS_ERROR_INVALID_ARG;
   }
 
+<<<<<<< HEAD
   RootedObject sandbox(cx, &sandboxVal.toObject());
   sandbox = js::CheckedUnwrap(sandbox);
   if (!sandbox || !xpc::IsSandbox(sandbox)) {
     return NS_ERROR_INVALID_ARG;
   }
+||||||| merged common ancestors
+    RootedObject sandbox(cx, &sandboxVal.toObject());
+    sandbox = js::CheckedUnwrap(sandbox);
+    if (!sandbox || !xpc::IsSandbox(sandbox)) {
+        return NS_ERROR_INVALID_ARG;
+    }
+=======
+  RootedObject sandbox(cx, &sandboxVal.toObject());
+  // We only care about sandboxes here, so CheckedUnwrapStatic is fine.
+  sandbox = js::CheckedUnwrapStatic(sandbox);
+  if (!sandbox || !xpc::IsSandbox(sandbox)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+>>>>>>> upstream-releases
 
   return xpc::GetSandboxMetadata(cx, sandbox, rval);
 }
@@ -2101,11 +4887,26 @@ nsXPCComponents_Utils::SetSandboxMetadata(HandleValue sandboxVal,
     return NS_ERROR_INVALID_ARG;
   }
 
+<<<<<<< HEAD
   RootedObject sandbox(cx, &sandboxVal.toObject());
   sandbox = js::CheckedUnwrap(sandbox);
   if (!sandbox || !xpc::IsSandbox(sandbox)) {
     return NS_ERROR_INVALID_ARG;
   }
+||||||| merged common ancestors
+    RootedObject sandbox(cx, &sandboxVal.toObject());
+    sandbox = js::CheckedUnwrap(sandbox);
+    if (!sandbox || !xpc::IsSandbox(sandbox)) {
+        return NS_ERROR_INVALID_ARG;
+    }
+=======
+  RootedObject sandbox(cx, &sandboxVal.toObject());
+  // We only care about sandboxes here, so CheckedUnwrapStatic is fine.
+  sandbox = js::CheckedUnwrapStatic(sandbox);
+  if (!sandbox || !xpc::IsSandbox(sandbox)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+>>>>>>> upstream-releases
 
   nsresult rv = xpc::SetSandboxMetadata(cx, sandbox, metadataVal);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -2144,6 +4945,7 @@ nsXPCComponents_Utils::Unload(const nsACString& registryLocation) {
 
 NS_IMETHODIMP
 nsXPCComponents_Utils::ImportGlobalProperties(HandleValue aPropertyList,
+<<<<<<< HEAD
                                               JSContext* cx) {
   RootedObject global(cx, CurrentGlobalOrNull(cx));
   MOZ_ASSERT(global);
@@ -2153,6 +4955,33 @@ nsXPCComponents_Utils::ImportGlobalProperties(HandleValue aPropertyList,
   if (NS_SUCCEEDED(UNWRAP_OBJECT(Window, &global, win))) {
     return NS_ERROR_NOT_AVAILABLE;
   }
+||||||| merged common ancestors
+                                              JSContext* cx)
+{
+    RootedObject global(cx, CurrentGlobalOrNull(cx));
+    MOZ_ASSERT(global);
+
+    // Don't allow doing this if the global is a Window
+    nsGlobalWindowInner* win;
+    if (NS_SUCCEEDED(UNWRAP_OBJECT(Window, &global, win))) {
+        return NS_ERROR_NOT_AVAILABLE;
+    }
+=======
+                                              JSContext* cx) {
+  // Ensure we're working in the scripted caller's realm. This is not guaranteed
+  // to be the current realm because we switch realms when calling cross-realm
+  // functions.
+  RootedObject global(cx, JS::GetScriptedCallerGlobal(cx));
+  MOZ_ASSERT(global);
+  js::AssertSameCompartment(cx, global);
+  JSAutoRealm ar(cx, global);
+
+  // Don't allow doing this if the global is a Window.
+  nsGlobalWindowInner* win;
+  if (NS_SUCCEEDED(UNWRAP_NON_WRAPPER_OBJECT(Window, global, win))) {
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+>>>>>>> upstream-releases
 
   GlobalProperties options;
   NS_ENSURE_TRUE(aPropertyList.isObject(), NS_ERROR_INVALID_ARG);
@@ -2185,11 +5014,26 @@ nsXPCComponents_Utils::GetWeakReference(HandleValue object, JSContext* cx,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::ForceGC() {
   JSContext* cx = XPCJSContext::Get()->Context();
   PrepareForFullGC(cx);
   NonIncrementalGC(cx, GC_NORMAL, gcreason::COMPONENT_UTILS);
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::ForceGC()
+{
+    JSContext* cx = XPCJSContext::Get()->Context();
+    PrepareForFullGC(cx);
+    NonIncrementalGC(cx, GC_NORMAL, gcreason::COMPONENT_UTILS);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::ForceGC() {
+  JSContext* cx = XPCJSContext::Get()->Context();
+  PrepareForFullGC(cx);
+  NonIncrementalGC(cx, GC_NORMAL, GCReason::COMPONENT_UTILS);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2231,45 +5075,127 @@ nsXPCComponents_Utils::ClearMaxCCTime() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::ForceShrinkingGC() {
   JSContext* cx = dom::danger::GetJSContext();
   PrepareForFullGC(cx);
   NonIncrementalGC(cx, GC_SHRINK, gcreason::COMPONENT_UTILS);
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::ForceShrinkingGC()
+{
+    JSContext* cx = dom::danger::GetJSContext();
+    PrepareForFullGC(cx);
+    NonIncrementalGC(cx, GC_SHRINK, gcreason::COMPONENT_UTILS);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::ForceShrinkingGC() {
+  JSContext* cx = dom::danger::GetJSContext();
+  PrepareForFullGC(cx);
+  NonIncrementalGC(cx, GC_SHRINK, GCReason::COMPONENT_UTILS);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 class PreciseGCRunnable : public Runnable {
  public:
   PreciseGCRunnable(ScheduledGCCallback* aCallback, bool aShrinking)
       : mozilla::Runnable("PreciseGCRunnable"),
         mCallback(aCallback),
         mShrinking(aShrinking) {}
+||||||| merged common ancestors
+class PreciseGCRunnable : public Runnable
+{
+  public:
+    PreciseGCRunnable(ScheduledGCCallback* aCallback, bool aShrinking)
+      : mozilla::Runnable("PreciseGCRunnable")
+      , mCallback(aCallback)
+      , mShrinking(aShrinking)
+    {
+    }
+=======
+class PreciseGCRunnable : public Runnable {
+ public:
+  PreciseGCRunnable(nsIScheduledGCCallback* aCallback, bool aShrinking)
+      : mozilla::Runnable("PreciseGCRunnable"),
+        mCallback(aCallback),
+        mShrinking(aShrinking) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   NS_IMETHOD Run() override {
     nsJSContext::GarbageCollectNow(
         gcreason::COMPONENT_UTILS, nsJSContext::NonIncrementalGC,
         mShrinking ? nsJSContext::ShrinkingGC : nsJSContext::NonShrinkingGC);
+||||||| merged common ancestors
+    NS_IMETHOD Run() override
+    {
+        nsJSContext::GarbageCollectNow(gcreason::COMPONENT_UTILS,
+                                       nsJSContext::NonIncrementalGC,
+                                       mShrinking ?
+                                         nsJSContext::ShrinkingGC :
+                                         nsJSContext::NonShrinkingGC);
+=======
+  NS_IMETHOD Run() override {
+    nsJSContext::GarbageCollectNow(
+        GCReason::COMPONENT_UTILS, nsJSContext::NonIncrementalGC,
+        mShrinking ? nsJSContext::ShrinkingGC : nsJSContext::NonShrinkingGC);
+>>>>>>> upstream-releases
 
     mCallback->Callback();
     return NS_OK;
   }
 
+<<<<<<< HEAD
  private:
   RefPtr<ScheduledGCCallback> mCallback;
   bool mShrinking;
+||||||| merged common ancestors
+  private:
+    RefPtr<ScheduledGCCallback> mCallback;
+    bool mShrinking;
+=======
+ private:
+  nsCOMPtr<nsIScheduledGCCallback> mCallback;
+  bool mShrinking;
+>>>>>>> upstream-releases
 };
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::SchedulePreciseGC(ScheduledGCCallback* aCallback) {
   RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, false);
   return NS_DispatchToMainThread(event);
+||||||| merged common ancestors
+nsXPCComponents_Utils::SchedulePreciseGC(ScheduledGCCallback* aCallback)
+{
+    RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, false);
+    return NS_DispatchToMainThread(event);
+=======
+nsXPCComponents_Utils::SchedulePreciseGC(nsIScheduledGCCallback* aCallback) {
+  RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, false);
+  return NS_DispatchToMainThread(event);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::SchedulePreciseShrinkingGC(
     ScheduledGCCallback* aCallback) {
   RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, true);
   return NS_DispatchToMainThread(event);
+||||||| merged common ancestors
+nsXPCComponents_Utils::SchedulePreciseShrinkingGC(ScheduledGCCallback* aCallback)
+{
+    RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, true);
+    return NS_DispatchToMainThread(event);
+=======
+nsXPCComponents_Utils::SchedulePreciseShrinkingGC(
+    nsIScheduledGCCallback* aCallback) {
+  RefPtr<PreciseGCRunnable> event = new PreciseGCRunnable(aCallback, true);
+  return NS_DispatchToMainThread(event);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2284,7 +5210,31 @@ nsXPCComponents_Utils::UnlinkGhostWindows() {
     }
   }
 
+<<<<<<< HEAD
   return NS_OK;
+||||||| merged common ancestors
+    return NS_OK;
+=======
+  return NS_OK;
+#else
+  return NS_ERROR_NOT_IMPLEMENTED;
+#endif
+}
+
+#ifdef NS_FREE_PERMANENT_DATA
+struct IntentionallyLeakedObject {
+  IntentionallyLeakedObject() { MOZ_COUNT_CTOR(IntentionallyLeakedObject); }
+
+  ~IntentionallyLeakedObject() { MOZ_COUNT_DTOR(IntentionallyLeakedObject); }
+};
+#endif
+
+NS_IMETHODIMP
+nsXPCComponents_Utils::IntentionallyLeak() {
+#ifdef NS_FREE_PERMANENT_DATA
+  Unused << new IntentionallyLeakedObject();
+  return NS_OK;
+>>>>>>> upstream-releases
 #else
   return NS_ERROR_NOT_IMPLEMENTED;
 #endif
@@ -2370,9 +5320,22 @@ nsXPCComponents_Utils::IsProxy(HandleValue vobj, JSContext* cx, bool* rval) {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   RootedObject obj(cx, &vobj.toObject());
   obj = js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
   NS_ENSURE_TRUE(obj, NS_ERROR_FAILURE);
+||||||| merged common ancestors
+    RootedObject obj(cx, &vobj.toObject());
+    obj = js::CheckedUnwrap(obj, /* stopAtWindowProxy = */ false);
+    NS_ENSURE_TRUE(obj, NS_ERROR_FAILURE);
+=======
+  RootedObject obj(cx, &vobj.toObject());
+  // We need to do a dynamic unwrap, because we apparently want to treat
+  // "failure to unwrap" differently from "not a proxy" (throw for the former,
+  // return false for the latter).
+  obj = js::CheckedUnwrapDynamic(obj, cx, /* stopAtWindowProxy = */ false);
+  NS_ENSURE_TRUE(obj, NS_ERROR_FAILURE);
+>>>>>>> upstream-releases
 
   *rval = js::IsScriptedProxy(obj);
   return NS_OK;
@@ -2493,12 +5456,30 @@ nsXPCComponents_Utils::PermitCPOWsInScope(HandleValue obj) {
     return NS_ERROR_INVALID_ARG;
   }
 
+<<<<<<< HEAD
   JSObject* scopeObj = js::UncheckedUnwrap(&obj.toObject());
   MOZ_DIAGNOSTIC_ASSERT(
       !mozJSComponentLoader::Get()->IsLoaderGlobal(scopeObj),
       "Don't call Cu.PermitCPOWsInScope() in a JSM that shares its global");
   CompartmentPrivate::Get(scopeObj)->allowCPOWs = true;
   return NS_OK;
+||||||| merged common ancestors
+    JSObject* scopeObj = js::UncheckedUnwrap(&obj.toObject());
+    MOZ_DIAGNOSTIC_ASSERT(!mozJSComponentLoader::Get()->IsLoaderGlobal(scopeObj),
+                          "Don't call Cu.PermitCPOWsInScope() in a JSM that shares its global");
+    CompartmentPrivate::Get(scopeObj)->allowCPOWs = true;
+    return NS_OK;
+=======
+  JSObject* scopeObj = js::UncheckedUnwrap(&obj.toObject());
+  JS::Compartment* scopeComp = js::GetObjectCompartment(scopeObj);
+  JS::Compartment* systemComp =
+      js::GetObjectCompartment(xpc::PrivilegedJunkScope());
+  MOZ_RELEASE_ASSERT(scopeComp != systemComp,
+                     "Don't call Cu.PermitCPOWsInScope() on scopes in the "
+                     "shared system compartment");
+  CompartmentPrivate::Get(scopeComp)->allowCPOWs = true;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2524,6 +5505,7 @@ nsXPCComponents_Utils::RecomputeWrappers(HandleValue vobj, JSContext* cx) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::SetWantXrays(HandleValue vscope, JSContext* cx) {
   if (!vscope.isObject()) {
     return NS_ERROR_INVALID_ARG;
@@ -2538,9 +5520,40 @@ nsXPCComponents_Utils::SetWantXrays(HandleValue vscope, JSContext* cx) {
                                   js::AllCompartments());
   NS_ENSURE_TRUE(ok, NS_ERROR_FAILURE);
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::SetWantXrays(HandleValue vscope, JSContext* cx)
+{
+    if (!vscope.isObject()) {
+        return NS_ERROR_INVALID_ARG;
+    }
+    JSObject* scopeObj = js::UncheckedUnwrap(&vscope.toObject());
+    MOZ_DIAGNOSTIC_ASSERT(!mozJSComponentLoader::Get()->IsLoaderGlobal(scopeObj),
+                          "Don't call Cu.setWantXrays() in a JSM that shares its global");
+    JS::Compartment* compartment = js::GetObjectCompartment(scopeObj);
+    CompartmentPrivate::Get(scopeObj)->wantXrays = true;
+    bool ok = js::RecomputeWrappers(cx, js::SingleCompartment(compartment),
+                                    js::AllCompartments());
+    NS_ENSURE_TRUE(ok, NS_ERROR_FAILURE);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::SetWantXrays(HandleValue vscope, JSContext* cx) {
+  if (!vscope.isObject()) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  JSObject* scopeObj = js::UncheckedUnwrap(&vscope.toObject());
+  MOZ_RELEASE_ASSERT(!AccessCheck::isChrome(scopeObj),
+                     "Don't call setWantXrays on system-principal scopes");
+  JS::Compartment* compartment = js::GetObjectCompartment(scopeObj);
+  CompartmentPrivate::Get(scopeObj)->wantXrays = true;
+  bool ok = js::RecomputeWrappers(cx, js::SingleCompartment(compartment),
+                                  js::AllCompartments());
+  NS_ENSURE_TRUE(ok, NS_ERROR_FAILURE);
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::ForcePermissiveCOWs(JSContext* cx) {
   xpc::CrashIfNotInAutomation();
   JSObject* currentGlobal = CurrentGlobalOrNull(cx);
@@ -2549,6 +5562,26 @@ nsXPCComponents_Utils::ForcePermissiveCOWs(JSContext* cx) {
       "Don't call Cu.forcePermissiveCOWs() in a JSM that shares its global");
   CompartmentPrivate::Get(currentGlobal)->forcePermissiveCOWs = true;
   return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::ForcePermissiveCOWs(JSContext* cx)
+{
+    xpc::CrashIfNotInAutomation();
+    JSObject* currentGlobal = CurrentGlobalOrNull(cx);
+    MOZ_DIAGNOSTIC_ASSERT(!mozJSComponentLoader::Get()->IsLoaderGlobal(currentGlobal),
+                          "Don't call Cu.forcePermissiveCOWs() in a JSM that shares its global");
+    CompartmentPrivate::Get(currentGlobal)->forcePermissiveCOWs = true;
+    return NS_OK;
+=======
+nsXPCComponents_Utils::ForcePermissiveCOWs(JSContext* cx) {
+  xpc::CrashIfNotInAutomation();
+  RootedObject global(cx, GetScriptedCallerGlobal(cx));
+  MOZ_ASSERT(global);
+  MOZ_DIAGNOSTIC_ASSERT(
+      !mozJSComponentLoader::Get()->IsLoaderGlobal(global),
+      "Don't call Cu.forcePermissiveCOWs() in a JSM that shares its global");
+  RealmPrivate::Get(global)->forcePermissiveCOWs = true;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2633,7 +5666,13 @@ nsXPCComponents_Utils::NukeSandbox(HandleValue obj, JSContext* cx) {
   RootedObject sb(cx, UncheckedUnwrap(wrapper));
   NS_ENSURE_TRUE(IsSandbox(sb), NS_ERROR_INVALID_ARG);
 
+<<<<<<< HEAD
   xpc::NukeAllWrappersForCompartment(cx, GetObjectCompartment(sb));
+||||||| merged common ancestors
+    xpc::NukeAllWrappersForCompartment(cx, GetObjectCompartment(sb));
+=======
+  xpc::NukeAllWrappersForRealm(cx, GetNonCCWObjectRealm(sb));
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -2775,7 +5814,7 @@ class WrappedJSHolder : public nsISupports {
 NS_IMPL_ADDREF(WrappedJSHolder)
 NS_IMPL_RELEASE(WrappedJSHolder)
 
-// nsINamed is always supported by nsXPCWrappedJSClass.
+// nsINamed is always supported by nsXPCWrappedJS::DelegatedQueryInterface().
 // We expose this interface only for the identity in telemetry analysis.
 NS_INTERFACE_TABLE_HEAD(WrappedJSHolder)
   if (aIID.Equals(NS_GET_IID(nsINamed))) {
@@ -2846,12 +5885,29 @@ bool xpc::CloneInto(JSContext* aCx, HandleValue aValue, HandleValue aScope,
     return false;
   }
 
+<<<<<<< HEAD
   RootedObject scope(aCx, &aScope.toObject());
   scope = js::CheckedUnwrap(scope);
   if (!scope) {
     JS_ReportErrorASCII(aCx, "Permission denied to clone object into scope");
     return false;
   }
+||||||| merged common ancestors
+    RootedObject scope(aCx, &aScope.toObject());
+    scope = js::CheckedUnwrap(scope);
+    if(!scope) {
+        JS_ReportErrorASCII(aCx, "Permission denied to clone object into scope");
+        return false;
+    }
+=======
+  RootedObject scope(aCx, &aScope.toObject());
+  // The scope could be a Window, so we need to CheckedUnwrapDynamic.
+  scope = js::CheckedUnwrapDynamic(scope, aCx);
+  if (!scope) {
+    JS_ReportErrorASCII(aCx, "Permission denied to clone object into scope");
+    return false;
+  }
+>>>>>>> upstream-releases
 
   if (!aOptions.isUndefined() && !aOptions.isObject()) {
     JS_ReportErrorASCII(aCx, "Invalid argument");
@@ -2903,6 +5959,7 @@ nsXPCComponents_Utils::GetWebIDLCallerPrincipal(nsIPrincipal** aResult) {
 
 NS_IMETHODIMP
 nsXPCComponents_Utils::GetObjectPrincipal(HandleValue val, JSContext* cx,
+<<<<<<< HEAD
                                           nsIPrincipal** result) {
   if (!val.isObject()) {
     return NS_ERROR_INVALID_ARG;
@@ -2910,13 +5967,60 @@ nsXPCComponents_Utils::GetObjectPrincipal(HandleValue val, JSContext* cx,
   RootedObject obj(cx, &val.toObject());
   obj = js::CheckedUnwrap(obj);
   MOZ_ASSERT(obj);
+||||||| merged common ancestors
+                                          nsIPrincipal** result)
+{
+    if (!val.isObject()) {
+        return NS_ERROR_INVALID_ARG;
+    }
+    RootedObject obj(cx, &val.toObject());
+    obj = js::CheckedUnwrap(obj);
+    MOZ_ASSERT(obj);
+=======
+                                          nsIPrincipal** result) {
+  if (!val.isObject()) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  RootedObject obj(cx, &val.toObject());
+  // We need to be able to unwrap to WindowProxy or Location here, so
+  // use CheckedUnwrapDynamic.
+  obj = js::CheckedUnwrapDynamic(obj, cx);
+  MOZ_ASSERT(obj);
 
   nsCOMPtr<nsIPrincipal> prin = nsContentUtils::ObjectPrincipal(obj);
   prin.forget(result);
   return NS_OK;
 }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  nsCOMPtr<nsIPrincipal> prin = nsContentUtils::ObjectPrincipal(obj);
+  prin.forget(result);
+  return NS_OK;
+||||||| merged common ancestors
+    nsCOMPtr<nsIPrincipal> prin = nsContentUtils::ObjectPrincipal(obj);
+    prin.forget(result);
+    return NS_OK;
+=======
+NS_IMETHODIMP
+nsXPCComponents_Utils::GetRealmLocation(HandleValue val, JSContext* cx,
+                                        nsACString& result) {
+  if (!val.isObject()) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  RootedObject obj(cx, &val.toObject());
+  // We need to be able to unwrap to WindowProxy or Location here, so
+  // use CheckedUnwrapDynamic.
+  obj = js::CheckedUnwrapDynamic(obj, cx);
+  MOZ_ASSERT(obj);
+
+  result = xpc::RealmPrivate::Get(obj)->GetLocation();
+  return NS_OK;
+>>>>>>> upstream-releases
+}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::GetRealmLocation(HandleValue val, JSContext* cx,
                                         nsACString& result) {
   if (!val.isObject()) {
@@ -2925,94 +6029,288 @@ nsXPCComponents_Utils::GetRealmLocation(HandleValue val, JSContext* cx,
   RootedObject obj(cx, &val.toObject());
   obj = js::CheckedUnwrap(obj);
   MOZ_ASSERT(obj);
-
-  result = xpc::RealmPrivate::Get(obj)->GetLocation();
-  return NS_OK;
-}
-
-NS_IMETHODIMP
+||||||| merged common ancestors
+nsXPCComponents_Utils::GetRealmLocation(HandleValue val,
+                                        JSContext* cx,
+                                        nsACString& result)
+{
+    if (!val.isObject()) {
+        return NS_ERROR_INVALID_ARG;
+    }
+    RootedObject obj(cx, &val.toObject());
+    obj = js::CheckedUnwrap(obj);
+    MOZ_ASSERT(obj);
+=======
 nsXPCComponents_Utils::ReadUTF8File(nsIFile* aFile, nsACString& aResult) {
   NS_ENSURE_TRUE(aFile, NS_ERROR_INVALID_ARG);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  result = xpc::RealmPrivate::Get(obj)->GetLocation();
+  return NS_OK;
+||||||| merged common ancestors
+    result = xpc::RealmPrivate::Get(obj)->GetLocation();
+    return NS_OK;
+=======
   MOZ_TRY_VAR(aResult, URLPreloader::ReadFile(aFile));
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::ReadUTF8File(nsIFile* aFile, nsACString& aResult) {
+  NS_ENSURE_TRUE(aFile, NS_ERROR_INVALID_ARG);
+||||||| merged common ancestors
+nsXPCComponents_Utils::ReadUTF8File(nsIFile* aFile, nsACString& aResult)
+{
+    NS_ENSURE_TRUE(aFile, NS_ERROR_INVALID_ARG);
+=======
 nsXPCComponents_Utils::ReadUTF8URI(nsIURI* aURI, nsACString& aResult) {
   NS_ENSURE_TRUE(aURI, NS_ERROR_INVALID_ARG);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MOZ_TRY_VAR(aResult, URLPreloader::ReadFile(aFile));
+  return NS_OK;
+||||||| merged common ancestors
+    MOZ_TRY_VAR(aResult, URLPreloader::ReadFile(aFile));
+    return NS_OK;
+=======
   MOZ_TRY_VAR(aResult, URLPreloader::ReadURI(aURI));
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::ReadUTF8URI(nsIURI* aURI, nsACString& aResult) {
+  NS_ENSURE_TRUE(aURI, NS_ERROR_INVALID_ARG);
+||||||| merged common ancestors
+nsXPCComponents_Utils::ReadUTF8URI(nsIURI* aURI, nsACString& aResult)
+{
+    NS_ENSURE_TRUE(aURI, NS_ERROR_INVALID_ARG);
+=======
 nsXPCComponents_Utils::Now(double* aRetval) {
   TimeStamp start = TimeStamp::ProcessCreation();
   *aRetval = (TimeStamp::Now() - start).ToMilliseconds();
   return NS_OK;
 }
+>>>>>>> upstream-releases
 
-NS_IMETHODIMP
-nsXPCComponents_Utils::BlockThreadedExecution(
-    nsIBlockThreadedExecutionCallback* aCallback) {
-  Scheduler::BlockThreadedExecution(aCallback);
+<<<<<<< HEAD
+  MOZ_TRY_VAR(aResult, URLPreloader::ReadURI(aURI));
   return NS_OK;
-}
-
-NS_IMETHODIMP
-nsXPCComponents_Utils::UnblockThreadedExecution() {
-  Scheduler::UnblockThreadedExecution();
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsXPCComponents_Utils::RecordReplayDirective(int aDirective) {
-  recordreplay::RecordReplayDirective(aDirective);
-  return NS_OK;
-}
-
+||||||| merged common ancestors
+    MOZ_TRY_VAR(aResult, URLPreloader::ReadURI(aURI));
+    return NS_OK;
+=======
 NS_IMETHODIMP
 nsXPCComponents_Utils::CreateSpellChecker(nsIEditorSpellCheck** aSpellChecker) {
   NS_ENSURE_ARG_POINTER(aSpellChecker);
   nsCOMPtr<nsIEditorSpellCheck> spellChecker = new mozilla::EditorSpellCheck();
   spellChecker.forget(aSpellChecker);
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::Now(double* aRetval) {
+  TimeStamp start = TimeStamp::ProcessCreation();
+  *aRetval = (TimeStamp::Now() - start).ToMilliseconds();
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::Now(double* aRetval)
+{
+    TimeStamp start = TimeStamp::ProcessCreation();
+    *aRetval = (TimeStamp::Now() - start).ToMilliseconds();
+    return NS_OK;
+=======
 nsXPCComponents_Utils::CreateCommandLine(nsISupports** aCommandLine) {
   NS_ENSURE_ARG_POINTER(aCommandLine);
   nsCOMPtr<nsISupports> commandLine = new nsCommandLine();
   commandLine.forget(aCommandLine);
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::BlockThreadedExecution(
+    nsIBlockThreadedExecutionCallback* aCallback) {
+  Scheduler::BlockThreadedExecution(aCallback);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::BlockThreadedExecution(nsIBlockThreadedExecutionCallback* aCallback)
+{
+    Scheduler::BlockThreadedExecution(aCallback);
+    return NS_OK;
+=======
 nsXPCComponents_Utils::CreateCommandParams(nsICommandParams** aCommandParams) {
   NS_ENSURE_ARG_POINTER(aCommandParams);
   nsCOMPtr<nsICommandParams> commandParams = new nsCommandParams();
   commandParams.forget(aCommandParams);
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::UnblockThreadedExecution() {
+  Scheduler::UnblockThreadedExecution();
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::UnblockThreadedExecution()
+{
+    Scheduler::UnblockThreadedExecution();
+    return NS_OK;
+=======
 nsXPCComponents_Utils::CreateLoadContext(nsILoadContext** aLoadContext) {
   NS_ENSURE_ARG_POINTER(aLoadContext);
   nsCOMPtr<nsILoadContext> loadContext = ::CreateLoadContext();
   loadContext.forget(aLoadContext);
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::RecordReplayDirective(int aDirective) {
+  recordreplay::RecordReplayDirective(aDirective);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::RecordReplayDirective(int aDirective)
+{
+    recordreplay::RecordReplayDirective(aDirective);
+    return NS_OK;
+=======
 nsXPCComponents_Utils::CreatePrivateLoadContext(nsILoadContext** aLoadContext) {
   NS_ENSURE_ARG_POINTER(aLoadContext);
   nsCOMPtr<nsILoadContext> loadContext = ::CreatePrivateLoadContext();
   loadContext.forget(aLoadContext);
   return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::CreateSpellChecker(nsIEditorSpellCheck** aSpellChecker) {
+  NS_ENSURE_ARG_POINTER(aSpellChecker);
+  nsCOMPtr<nsIEditorSpellCheck> spellChecker = new mozilla::EditorSpellCheck();
+  spellChecker.forget(aSpellChecker);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreateSpellChecker(nsIEditorSpellCheck** aSpellChecker)
+{
+    NS_ENSURE_ARG_POINTER(aSpellChecker);
+    nsCOMPtr<nsIEditorSpellCheck> spellChecker =
+        new mozilla::EditorSpellCheck();
+    spellChecker.forget(aSpellChecker);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::CreatePersistentProperties(
+    nsIPersistentProperties** aPersistentProperties) {
+  NS_ENSURE_ARG_POINTER(aPersistentProperties);
+  nsCOMPtr<nsIPersistentProperties> props = new nsPersistentProperties();
+  props.forget(aPersistentProperties);
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::CreateCommandLine(nsISupports** aCommandLine) {
+  NS_ENSURE_ARG_POINTER(aCommandLine);
+  nsCOMPtr<nsISupports> commandLine = new nsCommandLine();
+  commandLine.forget(aCommandLine);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreateCommandLine(nsISupports** aCommandLine)
+{
+    NS_ENSURE_ARG_POINTER(aCommandLine);
+    nsCOMPtr<nsISupports> commandLine = new nsCommandLine();
+    commandLine.forget(aCommandLine);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::CreateDocumentEncoder(
+    const char* aContentType, nsIDocumentEncoder** aDocumentEncoder) {
+  NS_ENSURE_ARG_POINTER(aDocumentEncoder);
+  nsCOMPtr<nsIDocumentEncoder> encoder = do_createDocumentEncoder(aContentType);
+  encoder.forget(aDocumentEncoder);
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::CreateCommandParams(nsICommandParams** aCommandParams) {
+  NS_ENSURE_ARG_POINTER(aCommandParams);
+  nsCOMPtr<nsICommandParams> commandParams = new nsCommandParams();
+  commandParams.forget(aCommandParams);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreateCommandParams(nsICommandParams** aCommandParams)
+{
+    NS_ENSURE_ARG_POINTER(aCommandParams);
+    nsCOMPtr<nsICommandParams> commandParams = new nsCommandParams();
+    commandParams.forget(aCommandParams);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::CreateHTMLCopyEncoder(
+    nsIDocumentEncoder** aDocumentEncoder) {
+  NS_ENSURE_ARG_POINTER(aDocumentEncoder);
+  nsCOMPtr<nsIDocumentEncoder> encoder = do_createHTMLCopyEncoder();
+  encoder.forget(aDocumentEncoder);
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::CreateLoadContext(nsILoadContext** aLoadContext) {
+  NS_ENSURE_ARG_POINTER(aLoadContext);
+  nsCOMPtr<nsILoadContext> loadContext = ::CreateLoadContext();
+  loadContext.forget(aLoadContext);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreateLoadContext(nsILoadContext** aLoadContext)
+{
+    NS_ENSURE_ARG_POINTER(aLoadContext);
+    nsCOMPtr<nsILoadContext> loadContext = ::CreateLoadContext();
+    loadContext.forget(aLoadContext);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::GetLoadedModules(nsTArray<nsCString>& aLoadedModules) {
+  mozJSComponentLoader::Get()->GetLoadedModules(aLoadedModules);
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
+nsXPCComponents_Utils::CreatePrivateLoadContext(nsILoadContext** aLoadContext) {
+  NS_ENSURE_ARG_POINTER(aLoadContext);
+  nsCOMPtr<nsILoadContext> loadContext = ::CreatePrivateLoadContext();
+  loadContext.forget(aLoadContext);
+  return NS_OK;
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreatePrivateLoadContext(nsILoadContext** aLoadContext)
+{
+    NS_ENSURE_ARG_POINTER(aLoadContext);
+    nsCOMPtr<nsILoadContext> loadContext = ::CreatePrivateLoadContext();
+    loadContext.forget(aLoadContext);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::GetLoadedComponents(
+    nsTArray<nsCString>& aLoadedComponents) {
+  mozJSComponentLoader::Get()->GetLoadedComponents(aLoadedComponents);
+  return NS_OK;
+>>>>>>> upstream-releases
+}
+
+NS_IMETHODIMP
+<<<<<<< HEAD
 nsXPCComponents_Utils::CreatePersistentProperties(
     nsIPersistentProperties** aPersistentProperties) {
   NS_ENSURE_ARG_POINTER(aPersistentProperties);
@@ -3062,6 +6360,24 @@ NS_IMETHODIMP
 nsXPCComponents_Utils::GetComponentLoadStack(const nsACString& aLocation,
                                              nsACString& aRetval) {
   return mozJSComponentLoader::Get()->GetComponentLoadStack(aLocation, aRetval);
+||||||| merged common ancestors
+nsXPCComponents_Utils::CreatePersistentProperties(nsIPersistentProperties** aPersistentProperties)
+{
+    NS_ENSURE_ARG_POINTER(aPersistentProperties);
+    nsCOMPtr<nsIPersistentProperties> props = new nsPersistentProperties();
+    props.forget(aPersistentProperties);
+    return NS_OK;
+=======
+nsXPCComponents_Utils::GetModuleImportStack(const nsACString& aLocation,
+                                            nsACString& aRetval) {
+  return mozJSComponentLoader::Get()->GetModuleImportStack(aLocation, aRetval);
+}
+
+NS_IMETHODIMP
+nsXPCComponents_Utils::GetComponentLoadStack(const nsACString& aLocation,
+                                             nsACString& aRetval) {
+  return mozJSComponentLoader::Get()->GetComponentLoadStack(aLocation, aRetval);
+>>>>>>> upstream-releases
 }
 
 /***************************************************************************/
@@ -3080,12 +6396,26 @@ nsXPCComponentsBase::~nsXPCComponentsBase() {}
 
 nsXPCComponents::~nsXPCComponents() {}
 
+<<<<<<< HEAD
 void nsXPCComponentsBase::ClearMembers() {
   mInterfaces = nullptr;
   mInterfacesByID = nullptr;
   mResults = nullptr;
+||||||| merged common ancestors
+void
+nsXPCComponentsBase::ClearMembers()
+{
+    mInterfaces = nullptr;
+    mInterfacesByID = nullptr;
+    mResults = nullptr;
+=======
+void nsXPCComponentsBase::ClearMembers() {
+  mInterfaces = nullptr;
+  mResults = nullptr;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void nsXPCComponents::ClearMembers() {
   mClasses = nullptr;
   mClassesByID = nullptr;
@@ -3093,6 +6423,24 @@ void nsXPCComponents::ClearMembers() {
   mException = nullptr;
   mConstructor = nullptr;
   mUtils = nullptr;
+||||||| merged common ancestors
+void
+nsXPCComponents::ClearMembers()
+{
+    mClasses = nullptr;
+    mClassesByID = nullptr;
+    mID = nullptr;
+    mException = nullptr;
+    mConstructor = nullptr;
+    mUtils = nullptr;
+=======
+void nsXPCComponents::ClearMembers() {
+  mClasses = nullptr;
+  mID = nullptr;
+  mException = nullptr;
+  mConstructor = nullptr;
+  mUtils = nullptr;
+>>>>>>> upstream-releases
 
   nsXPCComponentsBase::ClearMembers();
 }
@@ -3108,9 +6456,7 @@ void nsXPCComponents::ClearMembers() {
   }
 
 XPC_IMPL_GET_OBJ_METHOD(nsXPCComponentsBase, Interfaces)
-XPC_IMPL_GET_OBJ_METHOD(nsXPCComponentsBase, InterfacesByID)
 XPC_IMPL_GET_OBJ_METHOD(nsXPCComponents, Classes)
-XPC_IMPL_GET_OBJ_METHOD(nsXPCComponents, ClassesByID)
 XPC_IMPL_GET_OBJ_METHOD(nsXPCComponentsBase, Results)
 XPC_IMPL_GET_OBJ_METHOD(nsXPCComponents, ID)
 XPC_IMPL_GET_OBJ_METHOD(nsXPCComponents, Exception)
@@ -3231,6 +6577,6 @@ ComponentsSH::PreCreate(nsISupports* nativeObj, JSContext* cx,
         "mScope must not be null when nsXPCComponents::PreCreate is called");
     return NS_ERROR_FAILURE;
   }
-  *parentObj = self->GetScope()->GetGlobalJSObject();
+  *parentObj = self->GetScope()->GetGlobalForWrappedNatives();
   return NS_OK;
 }

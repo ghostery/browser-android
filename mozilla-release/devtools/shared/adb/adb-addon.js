@@ -4,7 +4,7 @@
 
 "use strict";
 
-const {AddonManager} = require("resource://gre/modules/AddonManager.jsm");
+const { AddonManager } = require("resource://gre/modules/AddonManager.jsm");
 const Services = require("Services");
 const EventEmitter = require("devtools/shared/event-emitter");
 
@@ -44,10 +44,8 @@ class ADBAddon extends EventEmitter {
     this._status = ADB_ADDON_STATES.UNKNOWN;
 
     const addonsListener = {};
-    addonsListener.onEnabled =
-    addonsListener.onDisabled =
-    addonsListener.onInstalled =
-    addonsListener.onUninstalled = () => this.updateInstallStatus();
+    addonsListener.onEnabled = addonsListener.onDisabled = addonsListener.onInstalled = addonsListener.onUninstalled = () =>
+      this.updateInstallStatus();
     AddonManager.addAddonListener(addonsListener);
 
     this.updateInstallStatus();
@@ -108,10 +106,20 @@ class ADBAddon extends EventEmitter {
    *        String passed to the AddonManager for telemetry.
    */
   async install(source) {
+<<<<<<< HEAD
     if (!source) {
       throw new Error("Missing mandatory `source` parameter for adb-addon.install");
     }
 
+||||||| merged common ancestors
+=======
+    if (!source) {
+      throw new Error(
+        "Missing mandatory `source` parameter for adb-addon.install"
+      );
+    }
+
+>>>>>>> upstream-releases
     const addon = await this._getAddon();
     if (addon && !addon.userDisabled) {
       this.status = ADB_ADDON_STATES.INSTALLED;
@@ -121,12 +129,9 @@ class ADBAddon extends EventEmitter {
     if (addon && addon.userDisabled) {
       await addon.enable();
     } else {
-      const install = await AddonManager.getInstallForURL(
-        this._getXpiLink(),
-        "application/x-xpinstall",
-        null, null, null, null, null,
-        { source }
-      );
+      const install = await AddonManager.getInstallForURL(this._getXpiLink(), {
+        telemetryInfo: { source },
+      });
       install.addListener(this);
       install.install();
     }
@@ -201,7 +206,7 @@ class ADBAddon extends EventEmitter {
   }
 
   // Expected AddonManager install listener.
-  onInstallEnded({addon}) {
+  onInstallEnded({ addon }) {
     addon.enable();
   }
 }

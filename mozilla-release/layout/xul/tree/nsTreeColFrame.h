@@ -8,17 +8,38 @@
 #include "mozilla/ComputedStyle.h"
 #include "nsBoxFrame.h"
 
-class nsITreeBoxObject;
+namespace mozilla {
+class PresShell;
+namespace dom {
+class XULTreeElement;
+}
+}  // namespace mozilla
 
+<<<<<<< HEAD
 nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell,
                              mozilla::ComputedStyle* aStyle);
+||||||| merged common ancestors
+nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell,
+                             ComputedStyle* aStyle);
+=======
+nsIFrame* NS_NewTreeColFrame(mozilla::PresShell* aPresShell,
+                             mozilla::ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
 class nsTreeColFrame final : public nsBoxFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsTreeColFrame)
 
+<<<<<<< HEAD
   explicit nsTreeColFrame(ComputedStyle* aStyle)
       : nsBoxFrame(aStyle, kClassID) {}
+||||||| merged common ancestors
+  explicit nsTreeColFrame(ComputedStyle* aStyle):
+    nsBoxFrame(aStyle, kClassID) {}
+=======
+  explicit nsTreeColFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBoxFrame(aStyle, aPresContext, kClassID) {}
+>>>>>>> upstream-releases
 
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;
@@ -36,16 +57,16 @@ class nsTreeColFrame final : public nsBoxFrame {
                             const nsRect& aRect,
                             bool aRemoveOverflowArea = false) override;
 
-  friend nsIFrame* NS_NewTreeColFrame(nsIPresShell* aPresShell,
+  friend nsIFrame* NS_NewTreeColFrame(mozilla::PresShell* aPresShell,
                                       ComputedStyle* aStyle);
 
  protected:
   virtual ~nsTreeColFrame();
 
   /**
-   * @return the tree box object of the tree this column belongs to, or nullptr.
+   * @return the tree that this column belongs to, or nullptr.
    */
-  nsITreeBoxObject* GetTreeBoxObject();
+  mozilla::dom::XULTreeElement* GetTree();
 
   /**
    * Helper method that gets the TreeColumns object this column belongs to

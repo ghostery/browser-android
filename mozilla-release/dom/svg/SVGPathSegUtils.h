@@ -71,9 +71,22 @@ struct SVGPathTraversalState {
  * there are multiple different DOM classes for path segs - one for each of the
  * 19 SVG 1.1 segment types.
  */
+<<<<<<< HEAD
 class SVGPathSegUtils {
  private:
   SVGPathSegUtils() {}  // private to prevent instances
+||||||| merged common ancestors
+class SVGPathSegUtils
+{
+private:
+  SVGPathSegUtils(){} // private to prevent instances
+
+public:
+=======
+class SVGPathSegUtils {
+ private:
+  SVGPathSegUtils() = default;  // private to prevent instances
+>>>>>>> upstream-releases
 
  public:
   static void GetValueAsString(const float* aSeg, nsAString& aValue);

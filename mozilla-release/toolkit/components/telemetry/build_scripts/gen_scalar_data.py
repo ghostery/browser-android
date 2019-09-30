@@ -16,6 +16,7 @@ from mozparsers import parse_scalars
 
 import json
 import sys
+import buildconfig
 
 # The banner/text at the top of the generated file.
 banner = """/* This file is auto-generated, only for internal use in TelemetryScalar.h,
@@ -43,6 +44,7 @@ def write_scalar_info(scalar, output, name_index, expiration_index, store_index,
     :param name_index: the index of the scalar name in the strings table.
     :param expiration_index: the index of the expiration version in the strings table.
     """
+<<<<<<< HEAD
     cpp_guard = scalar.cpp_guard
     if cpp_guard:
         print("#if defined(%s)" % cpp_guard, file=output)
@@ -61,6 +63,37 @@ def write_scalar_info(scalar, output, name_index, expiration_index, store_index,
 
     if cpp_guard:
         print("#endif", file=output)
+||||||| merged common ancestors
+    cpp_guard = scalar.cpp_guard
+    if cpp_guard:
+        print("#if defined(%s)" % cpp_guard, file=output)
+
+    print("  {{ {}, {}, {}, {}, {}, {}, {} }},"
+          .format(scalar.nsITelemetry_kind,
+                  name_index,
+                  expiration_index,
+                  scalar.dataset,
+                  " | ".join(scalar.record_in_processes_enum),
+                  "true" if scalar.keyed else "false",
+                  " | ".join(scalar.products_enum)),
+          file=output)
+
+    if cpp_guard:
+        print("#endif", file=output)
+=======
+    if scalar.record_on_os(buildconfig.substs["OS_TARGET"]):
+        print("  {{ {}, {}, {}, {}, {}, {}, {}, {}, {} }},"
+              .format(scalar.nsITelemetry_kind,
+                      name_index,
+                      expiration_index,
+                      scalar.dataset,
+                      " | ".join(scalar.record_in_processes_enum),
+                      "true" if scalar.keyed else "false",
+                      " | ".join(scalar.products_enum),
+                      store_count,
+                      store_index),
+              file=output)
+>>>>>>> upstream-releases
 
 
 def write_scalar_tables(scalars, output):
@@ -147,7 +180,13 @@ def generate_JSON_definitions(output, *filenames):
             # We don't expire dynamic-builtin scalars: they're only meant for
             # use in local developer builds anyway. They will expire when rebuilding.
             'expired': False,
+<<<<<<< HEAD
             'stores': scalar.record_into_store,
+||||||| merged common ancestors
+=======
+            'stores': scalar.record_into_store,
+            'expires': scalar.expires,
+>>>>>>> upstream-releases
         })
 
     json.dump(scalar_definitions, output)

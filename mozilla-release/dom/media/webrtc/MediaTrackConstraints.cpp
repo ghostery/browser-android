@@ -14,10 +14,23 @@
 #include "mozilla/dom/MediaStreamTrackBinding.h"
 #include "mozilla/MediaManager.h"
 
+<<<<<<< HEAD
 mozilla::LogModule* GetMediaManagerLog();
 #undef LOG
 #define LOG(msg, ...) \
   MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Debug, (msg, ##__VA_ARGS__))
+||||||| merged common ancestors
+mozilla::LogModule* GetMediaManagerLog();
+#undef LOG
+#define LOG(msg, ...) MOZ_LOG(GetMediaManagerLog(), mozilla::LogLevel::Debug, (msg, ##__VA_ARGS__))
+=======
+#ifdef MOZ_WEBRTC
+extern mozilla::LazyLogModule gMediaManagerLog;
+#else
+static mozilla::LazyLogModule gMediaManagerLog("MediaManager");
+#endif
+#define LOG(...) MOZ_LOG(gMediaManagerLog, LogLevel::Debug, (__VA_ARGS__))
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -322,9 +335,21 @@ FlattenedConstraints::FlattenedConstraints(const NormalizedConstraints& aOther)
 // First, all devices have a minimum distance based on their deviceId.
 // If you have no other constraints, use this one. Reused by all device types.
 
+<<<<<<< HEAD
 /* static */ bool MediaConstraintsHelper::SomeSettingsFit(
     const NormalizedConstraints& aConstraints,
     const nsTArray<RefPtr<MediaDevice>>& aDevices) {
+||||||| merged common ancestors
+/* static */ bool
+MediaConstraintsHelper::SomeSettingsFit(const NormalizedConstraints &aConstraints,
+                                        const nsTArray<RefPtr<MediaDevice>>& aDevices)
+{
+=======
+/* static */
+bool MediaConstraintsHelper::SomeSettingsFit(
+    const NormalizedConstraints& aConstraints,
+    const nsTArray<RefPtr<MediaDevice>>& aDevices) {
+>>>>>>> upstream-releases
   nsTArray<const NormalizedConstraintSet*> sets;
   sets.AppendElement(&aConstraints);
 
@@ -337,14 +362,39 @@ FlattenedConstraints::FlattenedConstraints(const NormalizedConstraints& aOther)
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t MediaConstraintsHelper::GetMinimumFitnessDistance(
     const NormalizedConstraintSet& aConstraints, const nsString& aDeviceId) {
+||||||| merged common ancestors
+/* static */ uint32_t
+MediaConstraintsHelper::GetMinimumFitnessDistance(
+    const NormalizedConstraintSet &aConstraints,
+    const nsString& aDeviceId)
+{
+=======
+/* static */
+uint32_t MediaConstraintsHelper::GetMinimumFitnessDistance(
+    const NormalizedConstraintSet& aConstraints, const nsString& aDeviceId) {
+>>>>>>> upstream-releases
   return FitnessDistance(aDeviceId, aConstraints.mDeviceId);
 }
 
+<<<<<<< HEAD
 template <class ValueType, class NormalizedRange>
 /* static */ uint32_t MediaConstraintsHelper::FitnessDistance(
     ValueType aN, const NormalizedRange& aRange) {
+||||||| merged common ancestors
+template<class ValueType, class NormalizedRange>
+/* static */ uint32_t
+MediaConstraintsHelper::FitnessDistance(ValueType aN,
+                                        const NormalizedRange& aRange)
+{
+=======
+template <class ValueType, class NormalizedRange>
+/* static */
+uint32_t MediaConstraintsHelper::FitnessDistance(
+    ValueType aN, const NormalizedRange& aRange) {
+>>>>>>> upstream-releases
   if (aRange.mMin > aN || aRange.mMax < aN) {
     return UINT32_MAX;
   }
@@ -356,9 +406,22 @@ template <class ValueType, class NormalizedRange>
                 std::max(std::abs(aN), std::abs(aRange.mIdeal.value()))));
 }
 
+<<<<<<< HEAD
 template <class ValueType, class NormalizedRange>
 /* static */ uint32_t MediaConstraintsHelper::FeasibilityDistance(
     ValueType aN, const NormalizedRange& aRange) {
+||||||| merged common ancestors
+template<class ValueType, class NormalizedRange>
+/* static */ uint32_t
+MediaConstraintsHelper::FeasibilityDistance(ValueType aN,
+                                            const NormalizedRange& aRange)
+{
+=======
+template <class ValueType, class NormalizedRange>
+/* static */
+uint32_t MediaConstraintsHelper::FeasibilityDistance(
+    ValueType aN, const NormalizedRange& aRange) {
+>>>>>>> upstream-releases
   if (aRange.mMin > aN) {
     return UINT32_MAX;
   }
@@ -380,10 +443,25 @@ template <class ValueType, class NormalizedRange>
 
 // Fitness distance returned as integer math * 1000. Infinity = UINT32_MAX
 
+<<<<<<< HEAD
 /* static */ uint32_t MediaConstraintsHelper::FitnessDistance(
     nsString aN, const NormalizedConstraintSet::StringRange& aParams) {
   if (!aParams.mExact.empty() &&
       aParams.mExact.find(aN) == aParams.mExact.end()) {
+||||||| merged common ancestors
+/* static */ uint32_t
+MediaConstraintsHelper::FitnessDistance(
+    nsString aN,
+    const NormalizedConstraintSet::StringRange& aParams)
+{
+  if (!aParams.mExact.empty() && aParams.mExact.find(aN) == aParams.mExact.end()) {
+=======
+/* static */
+uint32_t MediaConstraintsHelper::FitnessDistance(
+    const nsString& aN, const NormalizedConstraintSet::StringRange& aParams) {
+  if (!aParams.mExact.empty() &&
+      aParams.mExact.find(aN) == aParams.mExact.end()) {
+>>>>>>> upstream-releases
     return UINT32_MAX;
   }
   if (!aParams.mIdeal.empty() &&
@@ -433,8 +511,8 @@ template <class ValueType, class NormalizedRange>
 
   // Then apply advanced constraints.
 
-  for (int i = 0; i < int(c.mAdvanced.size()); i++) {
-    aggregateConstraints.AppendElement(&c.mAdvanced[i]);
+  for (const auto& advanced : c.mAdvanced) {
+    aggregateConstraints.AppendElement(&advanced);
     nsTArray<RefPtr<MediaDevice>> rejects;
     for (uint32_t j = 0; j < aDevices.Length();) {
       uint32_t distance =
@@ -510,15 +588,27 @@ template <class ValueType, class NormalizedRange>
     const RefPtr<MediaEngineSource>& aMediaEngineSource,
     const nsString& aDeviceId) {
   AutoTArray<RefPtr<MediaDevice>, 1> devices;
+<<<<<<< HEAD
   devices.AppendElement(
       MakeRefPtr<MediaDevice>(aMediaEngineSource, aMediaEngineSource->GetName(),
                               aDeviceId, NS_LITERAL_STRING("")));
+||||||| merged common ancestors
+  devices.AppendElement(MakeRefPtr<MediaDevice>(aMediaEngineSource,
+                                                aMediaEngineSource->GetName(),
+                                                aDeviceId,
+                                                NS_LITERAL_STRING("")));
+=======
+  devices.AppendElement(MakeRefPtr<MediaDevice>(
+      aMediaEngineSource, aMediaEngineSource->GetName(), aDeviceId,
+      aMediaEngineSource->GetGroupId(), NS_LITERAL_STRING("")));
+>>>>>>> upstream-releases
   return FindBadConstraint(aConstraints, devices);
 }
 
 static void LogConstraintStringRange(
     const NormalizedConstraintSet::StringRange& aRange) {
   if (aRange.mExact.size() <= 1 && aRange.mIdeal.size() <= 1) {
+<<<<<<< HEAD
     LOG("  %s: { exact: [%s], ideal: [%s] }", aRange.mName,
         (aRange.mExact.size()
              ? NS_ConvertUTF16toUTF8(*aRange.mExact.begin()).get()
@@ -526,6 +616,20 @@ static void LogConstraintStringRange(
         (aRange.mIdeal.size()
              ? NS_ConvertUTF16toUTF8(*aRange.mIdeal.begin()).get()
              : ""));
+||||||| merged common ancestors
+    LOG("  %s: { exact: [%s], ideal: [%s] }",
+        aRange.mName,
+        (aRange.mExact.size()? NS_ConvertUTF16toUTF8(*aRange.mExact.begin()).get() : ""),
+        (aRange.mIdeal.size()? NS_ConvertUTF16toUTF8(*aRange.mIdeal.begin()).get() : ""));
+=======
+    LOG("  %s: { exact: [%s], ideal: [%s] }", aRange.mName,
+        (aRange.mExact.empty()
+             ? ""
+             : NS_ConvertUTF16toUTF8(*aRange.mExact.begin()).get()),
+        (aRange.mIdeal.empty()
+             ? ""
+             : NS_ConvertUTF16toUTF8(*aRange.mIdeal.begin()).get()));
+>>>>>>> upstream-releases
   } else {
     LOG("  %s: { exact: [", aRange.mName);
     for (auto& entry : aRange.mExact) {
@@ -560,8 +664,18 @@ void LogConstraintRange(const NormalizedConstraintSet::Range<double>& aRange) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void MediaConstraintsHelper::LogConstraints(
     const NormalizedConstraintSet& aConstraints) {
+||||||| merged common ancestors
+/* static */ void
+MediaConstraintsHelper::LogConstraints(const NormalizedConstraintSet& aConstraints)
+{
+=======
+/* static */
+void MediaConstraintsHelper::LogConstraints(
+    const NormalizedConstraintSet& aConstraints) {
+>>>>>>> upstream-releases
   auto& c = aConstraints;
   LOG("Constraints: {");
   LOG("%s", [&]() {

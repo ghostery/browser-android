@@ -12,8 +12,9 @@
 #include "base/waitable_event.h"
 #include "chrome/common/child_process_host.h"
 
-#include "mozilla/DebugOnly.h"
 #include "mozilla/ipc/FileDescriptor.h"
+#include "mozilla/Atomics.h"
+#include "mozilla/LinkedList.h"
 #include "mozilla/Monitor.h"
 #include "mozilla/MozPromise.h"
 #include "mozilla/StaticPtr.h"
@@ -24,14 +25,31 @@
 #include "nsString.h"
 
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
-#include "sandboxBroker.h"
+#  include "sandboxBroker.h"
 #endif
+
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+#  include "mozilla/Sandbox.h"
+#endif
+
+struct _MacSandboxInfo;
+typedef _MacSandboxInfo MacSandboxInfo;
 
 namespace mozilla {
 namespace ipc {
 
+<<<<<<< HEAD
 class GeckoChildProcessHost : public ChildProcessHost {
  protected:
+||||||| merged common ancestors
+class GeckoChildProcessHost : public ChildProcessHost
+{
+protected:
+=======
+class GeckoChildProcessHost : public ChildProcessHost,
+                              public LinkedListElement<GeckoChildProcessHost> {
+ protected:
+>>>>>>> upstream-releases
   typedef mozilla::Monitor Monitor;
   typedef std::vector<std::string> StringVector;
 
@@ -41,15 +59,31 @@ class GeckoChildProcessHost : public ChildProcessHost {
   explicit GeckoChildProcessHost(GeckoProcessType aProcessType,
                                  bool aIsFileContent = false);
 
-  ~GeckoChildProcessHost();
+  // Causes the object to be deleted, on the I/O thread, after any
+  // pending asynchronous work (like launching) is complete.  This
+  // method can be called from any thread.  If called from the I/O
+  // thread itself, deletion won't happen until the event loop spins;
+  // otherwise, it could happen immediately.
+  //
+  // GeckoChildProcessHost instances must not be deleted except
+  // through this method.
+  void Destroy();
 
   static uint32_t GetUniqueID();
 
   // Does not block.  The IPC channel may not be initialized yet, and
   // the child process may or may not have been created when this
+<<<<<<< HEAD
   // method returns.  This GeckoChildProcessHost must not be destroyed
   // while the launch is in progress.
   bool AsyncLaunch(StringVector aExtraOpts = StringVector());
+||||||| merged common ancestors
+  // method returns.
+  bool AsyncLaunch(StringVector aExtraOpts=StringVector());
+=======
+  // method returns.
+  bool AsyncLaunch(StringVector aExtraOpts = StringVector());
+>>>>>>> upstream-releases
 
   virtual bool WaitUntilConnected(int32_t aTimeoutMs = 0);
 
@@ -122,11 +156,46 @@ class GeckoChildProcessHost : public ChildProcessHost {
   // For bug 943174: Skip the EnsureProcessTerminated call in the destructor.
   void SetAlreadyDead();
 
+<<<<<<< HEAD
   static void EnableSameExecutableForContentProc() {
     sRunSelfAsContentProc = true;
   }
+||||||| merged common ancestors
+  static void EnableSameExecutableForContentProc() { sRunSelfAsContentProc = true; }
+=======
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+  // To allow filling a MacSandboxInfo from the child
+  // process without an instance of RDDProcessHost.
+  // Only needed for late-start sandbox enabling.
+  static bool StaticFillMacSandboxInfo(MacSandboxInfo& aInfo);
 
+  // Start the sandbox from the child process.
+  static bool StartMacSandbox(int aArgc, char** aArgv,
+                              std::string& aErrorMessage);
+
+  // The sandbox type that will be use when sandboxing is
+  // enabled in the derived class and FillMacSandboxInfo
+  // has not been overridden.
+  static MacSandboxType GetDefaultMacSandboxType() {
+    return MacSandboxType_Utility;
+  };
+#endif
+  typedef std::function<void(GeckoChildProcessHost*)> GeckoProcessCallback;
+
+  // Iterates over all instances and calls aCallback with each one of them.
+  // This method will lock any addition/removal of new processes
+  // so you need to make sure the callback is as fast as possible.
+  static void GetAll(const GeckoProcessCallback& aCallback);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+ protected:
+  ~GeckoChildProcessHost();
+>>>>>>> upstream-releases
   GeckoProcessType mProcessType;
   bool mIsFileContent;
   Monitor mMonitor;
@@ -162,13 +231,21 @@ class GeckoChildProcessHost : public ChildProcessHost {
   void InitWindowsGroupID();
   nsString mGroupId;
 
-#ifdef MOZ_SANDBOX
-  SandboxBroker mSandboxBroker;
+#  ifdef MOZ_SANDBOX
+  RefPtr<AbstractSandboxBroker> mSandboxBroker;
   std::vector<std::wstring> mAllowedFilesRead;
   bool mEnableSandboxLogging;
   int32_t mSandboxLevel;
+<<<<<<< HEAD
 #endif
 #endif  // XP_WIN
+||||||| merged common ancestors
+#endif
+#endif // XP_WIN
+=======
+#  endif
+#endif  // XP_WIN
+>>>>>>> upstream-releases
 
   ProcessHandle mChildProcessHandle;
 #if defined(OS_MACOSX)
@@ -178,25 +255,67 @@ class GeckoChildProcessHost : public ChildProcessHost {
 
   bool OpenPrivilegedHandle(base::ProcessId aPid);
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
+  // Override this method to return true to launch the child process
+  // using the Mac utility (by default) sandbox. Override
+  // FillMacSandboxInfo() to change the sandbox type and settings.
+  virtual bool IsMacSandboxLaunchEnabled() { return false; }
+
+  // Fill a MacSandboxInfo to configure the sandbox
+  virtual bool FillMacSandboxInfo(MacSandboxInfo& aInfo);
+
+  // Adds the command line arguments needed to enable
+  // sandboxing of the child process at startup before
+  // the child event loop is up.
+  virtual bool AppendMacSandboxParams(StringVector& aArgs);
+#endif
+
+ private:
+>>>>>>> upstream-releases
   DISALLOW_EVIL_CONSTRUCTORS(GeckoChildProcessHost);
 
-  // Does the actual work for AsyncLaunch, on the IO thread.
-  // (TODO, bug 1487287: move this to its own thread(s).)
+  // Does the actual work for AsyncLaunch; run in a thread pool
+  // (or, on Windows, a dedicated thread).
   bool PerformAsyncLaunch(StringVector aExtraOpts);
 
-  // Also called on the I/O thread; creates channel, launches, and
-  // consolidates error handling.
-  bool RunPerformAsyncLaunch(StringVector aExtraOpts);
+  // Called on the I/O thread; creates channel, dispatches
+  // PerformAsyncLaunch, and consolidates error handling.
+  void RunPerformAsyncLaunch(StringVector aExtraOpts);
 
+<<<<<<< HEAD
   enum class BinaryPathType { Self, PluginContainer };
 
   static BinaryPathType GetPathToBinary(FilePath& exePath,
                                         GeckoProcessType processType);
+||||||| merged common ancestors
+  enum class BinaryPathType {
+    Self,
+    PluginContainer
+  };
+
+  static BinaryPathType GetPathToBinary(FilePath& exePath, GeckoProcessType processType);
+=======
+  static BinPathType GetPathToBinary(FilePath& exePath,
+                                     GeckoProcessType processType);
+>>>>>>> upstream-releases
 
   // The buffer is passed to preserve its lifetime until we are done
   // with launching the sub-process.
+<<<<<<< HEAD
   void GetChildLogName(const char* origLogName, nsACString& buffer);
+||||||| merged common ancestors
+  void GetChildLogName(const char* origLogName, nsACString &buffer);
+=======
+  void GetChildLogName(const char* origLogName, nsACString& buffer);
+
+  // Removes the instance from sGeckoChildProcessHosts
+  void RemoveFromProcessList();
+>>>>>>> upstream-releases
 
   // In between launching the subprocess and handing off its IPC
   // channel, there's a small window of time in which *we* might still
@@ -212,10 +331,12 @@ class GeckoChildProcessHost : public ChildProcessHost {
   nsCString mTmpDirName;
 #endif
 
+  mozilla::Atomic<bool> mDestroying;
+
   static uint32_t sNextUniqueID;
-
-  static bool sRunSelfAsContentProc;
-
+  static StaticAutoPtr<LinkedList<GeckoChildProcessHost>>
+      sGeckoChildProcessHosts;
+  static StaticMutex sMutex;
 #if defined(MOZ_WIDGET_ANDROID)
   void LaunchAndroidService(
       const char* type, const std::vector<std::string>& argv,

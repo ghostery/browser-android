@@ -8,7 +8,7 @@
 #include "mozilla/dom/SVGFESpotLightElementBinding.h"
 #include "nsSVGFilterInstance.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FESpotLight)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FESpotLight)
 
 using namespace mozilla::gfx;
 
@@ -20,6 +20,7 @@ JSObject* SVGFESpotLightElement::WrapNode(JSContext* aCx,
   return SVGFESpotLightElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::NumberInfo SVGFESpotLightElement::sNumberInfo[8] = {
     {nsGkAtoms::x, 0, false},
     {nsGkAtoms::y, 0, false},
@@ -29,6 +30,29 @@ nsSVGElement::NumberInfo SVGFESpotLightElement::sNumberInfo[8] = {
     {nsGkAtoms::pointsAtZ, 0, false},
     {nsGkAtoms::specularExponent, 1, false},
     {nsGkAtoms::limitingConeAngle, 0, false}};
+||||||| merged common ancestors
+nsSVGElement::NumberInfo SVGFESpotLightElement::sNumberInfo[8] =
+{
+  { nsGkAtoms::x, 0, false },
+  { nsGkAtoms::y, 0, false },
+  { nsGkAtoms::z, 0, false },
+  { nsGkAtoms::pointsAtX, 0, false },
+  { nsGkAtoms::pointsAtY, 0, false },
+  { nsGkAtoms::pointsAtZ, 0, false },
+  { nsGkAtoms::specularExponent, 1, false },
+  { nsGkAtoms::limitingConeAngle, 0, false }
+};
+=======
+SVGElement::NumberInfo SVGFESpotLightElement::sNumberInfo[8] = {
+    {nsGkAtoms::x, 0, false},
+    {nsGkAtoms::y, 0, false},
+    {nsGkAtoms::z, 0, false},
+    {nsGkAtoms::pointsAtX, 0, false},
+    {nsGkAtoms::pointsAtY, 0, false},
+    {nsGkAtoms::pointsAtZ, 0, false},
+    {nsGkAtoms::specularExponent, 1, false},
+    {nsGkAtoms::limitingConeAngle, 0, false}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode methods
@@ -71,42 +95,116 @@ LightType SVGFESpotLightElement::ComputeLightAttributes(
   return LightType::Spot;
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::X() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::X()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::X() {
+>>>>>>> upstream-releases
   return mNumberAttributes[ATTR_X].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::Y() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::Y()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::Y() {
+>>>>>>> upstream-releases
   return mNumberAttributes[ATTR_Y].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::Z() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::Z()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::Z() {
+>>>>>>> upstream-releases
   return mNumberAttributes[ATTR_Z].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::PointsAtX() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::PointsAtX()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::PointsAtX() {
+>>>>>>> upstream-releases
   return mNumberAttributes[POINTS_AT_X].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::PointsAtY() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::PointsAtY()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::PointsAtY() {
+>>>>>>> upstream-releases
   return mNumberAttributes[POINTS_AT_Y].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::PointsAtZ() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::PointsAtZ()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber> SVGFESpotLightElement::PointsAtZ() {
+>>>>>>> upstream-releases
   return mNumberAttributes[POINTS_AT_Z].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::SpecularExponent() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::SpecularExponent()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpotLightElement::SpecularExponent() {
+>>>>>>> upstream-releases
   return mNumberAttributes[SPECULAR_EXPONENT].ToDOMAnimatedNumber(this);
 }
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedNumber> SVGFESpotLightElement::LimitingConeAngle() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedNumber>
+SVGFESpotLightElement::LimitingConeAngle()
+{
+=======
+already_AddRefed<DOMSVGAnimatedNumber>
+SVGFESpotLightElement::LimitingConeAngle() {
+>>>>>>> upstream-releases
   return mNumberAttributes[LIMITING_CONE_ANGLE].ToDOMAnimatedNumber(this);
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
+<<<<<<< HEAD
 nsSVGElement::NumberAttributesInfo SVGFESpotLightElement::GetNumberInfo() {
+||||||| merged common ancestors
+nsSVGElement::NumberAttributesInfo
+SVGFESpotLightElement::GetNumberInfo()
+{
+=======
+SVGElement::NumberAttributesInfo SVGFESpotLightElement::GetNumberInfo() {
+>>>>>>> upstream-releases
   return NumberAttributesInfo(mNumberAttributes, sNumberInfo,
                               ArrayLength(sNumberInfo));
 }

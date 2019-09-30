@@ -77,9 +77,22 @@ static bool GetPdbInfo(uintptr_t aStart, nsID& aSignature, uint32_t& aAge,
   return true;
 }
 
+<<<<<<< HEAD
 static bool IsDashOrBraces(char c) { return c == '-' || c == '{' || c == '}'; }
 
 static nsCString GetVersion(WCHAR* dllPath) {
+||||||| merged common ancestors
+static bool IsDashOrBraces(char c)
+{
+  return c == '-' || c == '{' || c == '}';
+}
+
+static nsCString
+GetVersion(WCHAR* dllPath)
+{
+=======
+static nsCString GetVersion(WCHAR* dllPath) {
+>>>>>>> upstream-releases
   DWORD infoSize = GetFileVersionInfoSizeW(dllPath, nullptr);
   if (infoSize == 0) {
     return EmptyCString();

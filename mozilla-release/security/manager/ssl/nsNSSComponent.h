@@ -9,6 +9,7 @@
 
 #include "nsINSSComponent.h"
 
+#include "EnterpriseRoots.h"
 #include "ScopedNSSTypes.h"
 #include "SharedCertVerifier.h"
 #include "mozilla/Attributes.h"
@@ -22,9 +23,19 @@
 #include "sslt.h"
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include "windows.h"  // this needs to be before the following includes
 #include "wincrypt.h"
 #endif  // XP_WIN
+||||||| merged common ancestors
+#include "windows.h" // this needs to be before the following includes
+#include "wincrypt.h"
+#endif // XP_WIN
+=======
+#  include "windows.h"  // this needs to be before the following includes
+#  include "wincrypt.h"
+#endif  // XP_WIN
+>>>>>>> upstream-releases
 
 class nsIDOMWindow;
 class nsIPrompt;
@@ -55,6 +66,9 @@ class nsNSSComponent final : public nsINSSComponent, public nsIObserver {
   // LoadLoadableRootsTask updates mLoadableRootsLoaded and
   // mLoadableRootsLoadedResult and then signals mLoadableRootsLoadedMonitor.
   friend class LoadLoadableRootsTask;
+  // BackgroundImportEnterpriseCertsTask calls ImportEnterpriseRoots and
+  // UpdateCertVerifierWithEnterpriseRoots.
+  friend class BackgroundImportEnterpriseCertsTask;
 
   nsNSSComponent();
 
@@ -79,13 +93,17 @@ class nsNSSComponent final : public nsINSSComponent, public nsIObserver {
 
   void setValidationOptions(bool isInitialSetting,
                             const mozilla::MutexAutoLock& proofOfLock);
+  void UpdateCertVerifierWithEnterpriseRoots();
   nsresult setEnabledTLSVersions();
   nsresult RegisterObservers();
 
   void MaybeImportEnterpriseRoots();
   void ImportEnterpriseRoots();
   void UnloadEnterpriseRoots();
+  nsresult CommonGetEnterpriseCerts(
+      nsTArray<nsTArray<uint8_t>>& enterpriseCerts, bool getRoots);
 
+<<<<<<< HEAD
   void MaybeEnableFamilySafetyCompatibility(uint32_t familySafetyMode);
   void UnloadFamilySafetyRoot();
 
@@ -96,6 +114,20 @@ class nsNSSComponent final : public nsINSSComponent, public nsIObserver {
                                        bool& wasFamilySafetyRoot);
   nsresult LoadFamilySafetyRoot();
 #endif  // XP_WIN
+||||||| merged common ancestors
+  void MaybeEnableFamilySafetyCompatibility(uint32_t familySafetyMode);
+  void UnloadFamilySafetyRoot();
+
+  nsresult TrustLoaded3rdPartyRoots();
+
+#ifdef XP_WIN
+  nsresult MaybeImportFamilySafetyRoot(PCCERT_CONTEXT certificate,
+                                       bool& wasFamilySafetyRoot);
+  nsresult LoadFamilySafetyRoot();
+#endif // XP_WIN
+=======
+  bool ShouldEnableEnterpriseRootsForFamilySafety(uint32_t familySafetyMode);
+>>>>>>> upstream-releases
 
   // mLoadableRootsLoadedMonitor protects mLoadableRootsLoaded.
   mozilla::Monitor mLoadableRootsLoadedMonitor;
@@ -114,8 +146,7 @@ class nsNSSComponent final : public nsINSSComponent, public nsIObserver {
   RefPtr<mozilla::psm::SharedCertVerifier> mDefaultCertVerifier;
   nsString mMitmCanaryIssuer;
   bool mMitmDetecionEnabled;
-  mozilla::UniqueCERTCertList mEnterpriseRoots;
-  mozilla::UniqueCERTCertificate mFamilySafetyRoot;
+  mozilla::Vector<EnterpriseCert> mEnterpriseCerts;
 
   // The following members are accessed only on the main thread:
   static int mInstanceCount;

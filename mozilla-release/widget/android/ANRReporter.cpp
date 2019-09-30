@@ -25,12 +25,30 @@ bool ANRReporter::RequestNativeStack(bool aUnwind) {
                       (aUnwind ? ProfilerFeature::StackWalk : 0) |
                       ProfilerFeature::Threads;
 
+<<<<<<< HEAD
   const char *NATIVE_STACK_THREADS[] = {"GeckoMain", "Compositor"};
+||||||| merged common ancestors
+    const char *NATIVE_STACK_THREADS[] = {"GeckoMain", "Compositor"};
+=======
+  const char* NATIVE_STACK_THREADS[] = {"GeckoMain", "Compositor"};
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Buffer one sample and let the profiler wait a long time
   profiler_start(/* entries */ 100, /* interval */ 10000, features,
                  NATIVE_STACK_THREADS,
                  sizeof(NATIVE_STACK_THREADS) / sizeof(char *));
+||||||| merged common ancestors
+    // Buffer one sample and let the profiler wait a long time
+    profiler_start(/* entries */ 100, /* interval */ 10000, features,
+                   NATIVE_STACK_THREADS,
+                   sizeof(NATIVE_STACK_THREADS) / sizeof(char*));
+=======
+  // Buffer one sample and let the profiler wait a long time
+  profiler_start(/* entries */ PowerOfTwo<uint32_t>(100), /* interval */ 10000,
+                 features, NATIVE_STACK_THREADS,
+                 sizeof(NATIVE_STACK_THREADS) / sizeof(char*));
+>>>>>>> upstream-releases
 #endif
   return true;
 }

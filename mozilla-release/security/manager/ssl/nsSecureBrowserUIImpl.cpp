@@ -8,12 +8,12 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/Logging.h"
 #include "mozilla/Unused.h"
+#include "mozilla/dom/Document.h"
 #include "nsContentUtils.h"
 #include "nsIChannel.h"
-#include "nsIDocShell.h"
+#include "nsDocShell.h"
 #include "nsIDocShellTreeItem.h"
 #include "nsIInterfaceRequestorUtils.h"
-#include "nsISecurityEventSink.h"
 #include "nsITransportSecurityInfo.h"
 #include "nsIWebProgress.h"
 
@@ -21,7 +21,16 @@ using namespace mozilla;
 
 LazyLogModule gSecureBrowserUILog("nsSecureBrowserUI");
 
+<<<<<<< HEAD
 nsSecureBrowserUIImpl::nsSecureBrowserUIImpl() : mState(0) {
+||||||| merged common ancestors
+nsSecureBrowserUIImpl::nsSecureBrowserUIImpl()
+  : mOldState(0)
+  , mState(0)
+{
+=======
+nsSecureBrowserUIImpl::nsSecureBrowserUIImpl() : mState(0), mEvent(0) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 }
 
@@ -66,7 +75,7 @@ nsSecureBrowserUIImpl::GetState(uint32_t* aState) {
   // With respect to mixed content and tracking protection, we won't know when
   // the state of our document (or a subdocument) has changed, so we ask the
   // docShell.
-  CheckForBlockedContent();
+  CheckForMixedContent();
   MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug, ("  mState: %x", mState));
 
   *aState = mState;
@@ -74,7 +83,51 @@ nsSecureBrowserUIImpl::GetState(uint32_t* aState) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsSecureBrowserUIImpl::GetSecInfo(nsITransportSecurityInfo** result) {
+||||||| merged common ancestors
+nsSecureBrowserUIImpl::GetContentBlockingLogJSON(nsAString& aContentBlockingLogJSON)
+{
+  MOZ_ASSERT(NS_IsMainThread());
+
+  MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug, ("GetContentBlockingLogJSON %p", this));
+  aContentBlockingLogJSON.Truncate();
+  nsCOMPtr<nsIDocShell> docShell = do_QueryReferent(mDocShell);
+  if (docShell) {
+    nsIDocument* doc = docShell->GetDocument();
+    if (doc) {
+      aContentBlockingLogJSON = doc->GetContentBlockingLog()->Stringify();
+    }
+  }
+  MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
+          ("  ContentBlockingLogJSON: %s", NS_ConvertUTF16toUTF8(aContentBlockingLogJSON).get()));
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsSecureBrowserUIImpl::GetSecInfo(nsITransportSecurityInfo** result)
+{
+=======
+nsSecureBrowserUIImpl::GetContentBlockingEvent(uint32_t* aEvent) {
+  MOZ_ASSERT(NS_IsMainThread());
+  NS_ENSURE_ARG(aEvent);
+
+  MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
+          ("GetContentBlockingEvent %p", this));
+  // With respect to mixed content and tracking protection, we won't know when
+  // the state of our document (or a subdocument) has changed, so we ask the
+  // docShell.
+  CheckForContentBlockingEvents();
+  MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug, ("  mEvent: %x", mEvent));
+
+  *aEvent = mEvent;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsSecureBrowserUIImpl::GetSecInfo(nsITransportSecurityInfo** result) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   NS_ENSURE_ARG_POINTER(result);
 
@@ -84,11 +137,21 @@ nsSecureBrowserUIImpl::GetSecInfo(nsITransportSecurityInfo** result) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 // Ask the docShell if we've blocked or loaded any mixed or tracking content.
 void nsSecureBrowserUIImpl::CheckForBlockedContent() {
+||||||| merged common ancestors
+// Ask the docShell if we've blocked or loaded any mixed or tracking content.
+void
+nsSecureBrowserUIImpl::CheckForBlockedContent()
+{
+=======
+already_AddRefed<dom::Document>
+nsSecureBrowserUIImpl::PrepareForContentChecks() {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIDocShell> docShell = do_QueryReferent(mDocShell);
   if (!docShell) {
-    return;
+    return nullptr;
   }
 
   // For content docShells, the mixed content security state is set on the root
@@ -103,59 +166,140 @@ void nsSecureBrowserUIImpl::CheckForBlockedContent() {
         "No document shell root tree item from document shell tree item!");
     docShell = do_QueryInterface(sameTypeRoot);
     if (!docShell) {
-      return;
+      return nullptr;
     }
   }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+  mOldState = mState;
+
+=======
+  RefPtr<dom::Document> doc = docShell->GetDocument();
+  return doc.forget();
+}
+
+// Ask the docShell if we've blocked or loaded any mixed content.
+void nsSecureBrowserUIImpl::CheckForMixedContent() {
+  RefPtr<dom::Document> doc = PrepareForContentChecks();
+  if (!doc) {
+    // If the docshell has no document, then there is no need to update mState.
+    return;
+  }
+
+>>>>>>> upstream-releases
   // Has mixed content been loaded or blocked in nsMixedContentBlocker?
+<<<<<<< HEAD
   // This only applies to secure documents even if they're affected by mixed
   // content blocking in which case the STATE_IS_BROKEN bit would be set rather
   // than STATE_IS_SECURE.
   if (((mState & STATE_IS_SECURE) != 0) || ((mState & STATE_IS_BROKEN) != 0)) {
     if (docShell->GetHasMixedActiveContentLoaded()) {
+||||||| merged common ancestors
+  // This only applies to secure documents.
+  if (mState & STATE_IS_SECURE) {
+    if (docShell->GetHasMixedActiveContentLoaded()) {
+=======
+  // This only applies to secure documents even if they're affected by mixed
+  // content blocking in which case the STATE_IS_BROKEN bit would be set rather
+  // than STATE_IS_SECURE.
+  if (((mState & STATE_IS_SECURE) != 0) || ((mState & STATE_IS_BROKEN) != 0)) {
+    if (doc->GetHasMixedActiveContentLoaded()) {
+>>>>>>> upstream-releases
       mState |= STATE_IS_BROKEN | STATE_LOADED_MIXED_ACTIVE_CONTENT;
       mState &= ~STATE_IS_SECURE;
-      mState &= ~STATE_SECURE_HIGH;
     }
 
-    if (docShell->GetHasMixedDisplayContentLoaded()) {
+    if (doc->GetHasMixedDisplayContentLoaded()) {
       mState |= STATE_IS_BROKEN | STATE_LOADED_MIXED_DISPLAY_CONTENT;
       mState &= ~STATE_IS_SECURE;
-      mState &= ~STATE_SECURE_HIGH;
     }
 
-    if (docShell->GetHasMixedActiveContentBlocked()) {
+    if (doc->GetHasMixedActiveContentBlocked()) {
       mState |= STATE_BLOCKED_MIXED_ACTIVE_CONTENT;
     }
 
-    if (docShell->GetHasMixedDisplayContentBlocked()) {
+    if (doc->GetHasMixedDisplayContentBlocked()) {
       mState |= STATE_BLOCKED_MIXED_DISPLAY_CONTENT;
     }
   }
+}
+
+// Ask the docShell if we have any content blocking events.
+void nsSecureBrowserUIImpl::CheckForContentBlockingEvents() {
+  RefPtr<dom::Document> doc = PrepareForContentChecks();
+  if (!doc) {
+    // If the docshell has no document, then there is no need to update mState.
+    return;
+  }
 
   // Has tracking content been blocked or loaded?
-  if (docShell->GetHasTrackingContentBlocked()) {
-    mState |= STATE_BLOCKED_TRACKING_CONTENT;
+  if (doc->GetHasTrackingContentBlocked()) {
+    mEvent |= STATE_BLOCKED_TRACKING_CONTENT;
+  }
+
+  if (doc->GetHasTrackingContentLoaded()) {
+    mEvent |= STATE_LOADED_TRACKING_CONTENT;
+  }
+
+  // Has fingerprinting content been blocked or loaded?
+  if (doc->GetHasFingerprintingContentBlocked()) {
+    mEvent |= STATE_BLOCKED_FINGERPRINTING_CONTENT;
+  }
+
+  if (doc->GetHasFingerprintingContentLoaded()) {
+    mEvent |= STATE_LOADED_FINGERPRINTING_CONTENT;
+  }
+
+<<<<<<< HEAD
+  if (docShell->GetHasTrackingContentLoaded()) {
+    mState |= STATE_LOADED_TRACKING_CONTENT;
+||||||| merged common ancestors
+  if (docShell->GetHasSlowTrackingContentBlocked()) {
+    mState |= STATE_BLOCKED_SLOW_TRACKING_CONTENT;
   }
 
   if (docShell->GetHasTrackingContentLoaded()) {
     mState |= STATE_LOADED_TRACKING_CONTENT;
+=======
+  // Has cryptomining content been blocked or loaded?
+  if (doc->GetHasCryptominingContentBlocked()) {
+    mEvent |= STATE_BLOCKED_CRYPTOMINING_CONTENT;
   }
 
-  if (docShell->GetHasCookiesBlockedByPermission()) {
-    mState |= STATE_COOKIES_BLOCKED_BY_PERMISSION;
+  if (doc->GetHasCryptominingContentLoaded()) {
+    mEvent |= STATE_LOADED_CRYPTOMINING_CONTENT;
+>>>>>>> upstream-releases
   }
 
-  if (docShell->GetHasCookiesBlockedDueToTrackers()) {
-    mState |= STATE_COOKIES_BLOCKED_TRACKER;
+  // Has socialtracking content been blocked or loaded?
+  if (doc->GetHasSocialTrackingContentBlocked()) {
+    mEvent |= STATE_BLOCKED_SOCIALTRACKING_CONTENT;
   }
 
-  if (docShell->GetHasForeignCookiesBeenBlocked()) {
-    mState |= STATE_COOKIES_BLOCKED_FOREIGN;
+  if (doc->GetHasSocialTrackingContentLoaded()) {
+    mEvent |= STATE_LOADED_SOCIALTRACKING_CONTENT;
   }
 
-  if (docShell->GetHasAllCookiesBeenBlocked()) {
-    mState |= STATE_COOKIES_BLOCKED_ALL;
+  // Other block types.
+  if (doc->GetHasCookiesBlockedByPermission()) {
+    mEvent |= STATE_COOKIES_BLOCKED_BY_PERMISSION;
+  }
+
+  if (doc->GetHasTrackingCookiesBlocked()) {
+    mEvent |= STATE_COOKIES_BLOCKED_TRACKER;
+  }
+
+  if (doc->GetHasForeignCookiesBlocked()) {
+    mEvent |= STATE_COOKIES_BLOCKED_FOREIGN;
+  }
+
+  if (doc->GetHasAllCookiesBlocked()) {
+    mEvent |= STATE_COOKIES_BLOCKED_ALL;
+  }
+
+  if (doc->GetHasCookiesLoaded()) {
+    mEvent |= STATE_COOKIES_LOADED;
   }
 
   if (docShell->GetHasCookiesLoaded()) {
@@ -165,11 +309,25 @@ void nsSecureBrowserUIImpl::CheckForBlockedContent() {
 
 // Helper function to determine if the given URI can be considered secure.
 // Essentially, only "https" URIs can be considered secure. However, the URI we
+<<<<<<< HEAD
 // have may be e.g. view-source:https://example.com or
 // wyciwyg://https://example.com, in which case we have to evaluate the
 // innermost URI.
 static nsresult URICanBeConsideredSecure(
     nsIURI* uri, /* out */ bool& canBeConsideredSecure) {
+||||||| merged common ancestors
+// have may be e.g. view-source:https://example.com or
+// wyciwyg://https://example.com, in which case we have to evaluate the
+// innermost URI.
+static nsresult
+URICanBeConsideredSecure(nsIURI* uri, /* out */ bool& canBeConsideredSecure)
+{
+=======
+// have may be e.g. view-source:https://example.com, in which case we have to
+// evaluate the innermost URI.
+static nsresult URICanBeConsideredSecure(
+    nsIURI* uri, /* out */ bool& canBeConsideredSecure) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(uri);
   NS_ENSURE_ARG(uri);
 
@@ -184,38 +342,8 @@ static nsresult URICanBeConsideredSecure(
   MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
           ("  innermost URI is '%s'", innermostURI->GetSpecOrDefault().get()));
 
-  // Unfortunately, wyciwyg URIs don't know about innermost URIs, so we have to
-  // manually get the innermost URI if we have such a URI.
-  bool isWyciwyg;
-  nsresult rv = innermostURI->SchemeIs("wyciwyg", &isWyciwyg);
-  if (NS_FAILED(rv)) {
-    MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
-            ("  nsIURI->SchemeIs failed"));
-    return rv;
-  }
-
-  if (isWyciwyg) {
-    nsCOMPtr<nsIURI> nonWyciwygURI;
-    rv = nsContentUtils::RemoveWyciwygScheme(innermostURI,
-                                             getter_AddRefs(nonWyciwygURI));
-    if (NS_FAILED(rv)) {
-      MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
-              ("  nsContentUtils::RemoveWyciwygScheme failed"));
-      return rv;
-    }
-    if (!nonWyciwygURI) {
-      MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
-              ("  apparently that wasn't a valid wyciwyg URI"));
-      return NS_ERROR_FAILURE;
-    }
-    innermostURI = nonWyciwygURI;
-    MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
-            ("  innermost URI is now '%s'",
-             innermostURI->GetSpecOrDefault().get()));
-  }
-
   bool isHttps;
-  rv = innermostURI->SchemeIs("https", &isHttps);
+  nsresult rv = innermostURI->SchemeIs("https", &isHttps);
   if (NS_FAILED(rv)) {
     MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
             ("  nsIURI->SchemeIs failed"));
@@ -305,6 +433,9 @@ nsresult nsSecureBrowserUIImpl::UpdateStateAndSecurityInfo(nsIChannel* channel,
       MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug, ("  is EV"));
       mState |= STATE_IDENTITY_EV_TOPLEVEL;
     }
+    // Proactively check for mixed content in case GetState() is never called
+    // (this can happen when loading from the BF cache).
+    CheckForMixedContent();
   }
   return NS_OK;
 }
@@ -316,7 +447,7 @@ nsresult nsSecureBrowserUIImpl::UpdateStateAndSecurityInfo(nsIChannel* channel,
 // that nsIWebProgress. We ignore notifications from children because they don't
 // change the top-level state (if children load mixed or tracking content, the
 // docShell will know and will tell us in GetState when we call
-// CheckForBlockedContent).
+// CheckForMixedContent).
 // When we receive a notification from the top-level nsIWebProgress, we extract
 // any relevant security information and set our state accordingly. We then call
 // OnSecurityChange on the docShell corresponding to the nsIWebProgress we were
@@ -352,6 +483,7 @@ nsSecureBrowserUIImpl::OnLocationChange(nsIWebProgress* aWebProgress,
   }
 
   mState = 0;
+  mEvent = 0;
   mTopLevelSecurityInfo = nullptr;
 
   if (aFlags & LOCATION_CHANGE_ERROR_PAGE) {
@@ -378,14 +510,34 @@ nsSecureBrowserUIImpl::OnLocationChange(nsIWebProgress* aWebProgress,
   }
 
   nsCOMPtr<nsIDocShell> docShell = do_QueryReferent(mDocShell);
+<<<<<<< HEAD
   nsCOMPtr<nsISecurityEventSink> eventSink = do_QueryInterface(docShell);
   if (eventSink) {
+||||||| merged common ancestors
+  if (docShell) {
+    nsIDocument* doc = docShell->GetDocument();
+    if (doc) {
+      contentBlockingLog = doc->GetContentBlockingLog();
+    }
+  }
+
+  nsCOMPtr<nsISecurityEventSink> eventSink = do_QueryInterface(docShell);
+  if (eventSink) {
+=======
+  if (docShell) {
+>>>>>>> upstream-releases
     MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
             ("  calling OnSecurityChange %p %x", aRequest, mState));
+<<<<<<< HEAD
     Unused << eventSink->OnSecurityChange(aRequest, mState);
+||||||| merged common ancestors
+    Unused << eventSink->OnSecurityChange(aRequest, mOldState, mState,
+                                          contentBlockingLog);
+=======
+    nsDocShell::Cast(docShell)->nsDocLoader::OnSecurityChange(aRequest, mState);
+>>>>>>> upstream-releases
   } else {
-    MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug,
-            ("  no docShell or couldn't QI it to nsISecurityEventSink?"));
+    MOZ_LOG(gSecureBrowserUILog, LogLevel::Debug, ("  no docShell?"));
   }
 
   return NS_OK;
@@ -406,6 +558,16 @@ nsSecureBrowserUIImpl::OnProgressChange(nsIWebProgress*, nsIRequest*, int32_t,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+nsSecureBrowserUIImpl::OnStatusChange(nsIWebProgress*, nsIRequest*, nsresult,
+                                      const char16_t*) {
+||||||| merged common ancestors
+nsSecureBrowserUIImpl::OnStatusChange(nsIWebProgress*,
+                                      nsIRequest*,
+                                      nsresult,
+                                      const char16_t*)
+{
+=======
 nsSecureBrowserUIImpl::OnStatusChange(nsIWebProgress*, nsIRequest*, nsresult,
                                       const char16_t*) {
   MOZ_ASSERT_UNREACHABLE("Should have been excluded in AddProgressListener()");
@@ -414,6 +576,23 @@ nsSecureBrowserUIImpl::OnStatusChange(nsIWebProgress*, nsIRequest*, nsresult,
 
 nsresult nsSecureBrowserUIImpl::OnSecurityChange(nsIWebProgress*, nsIRequest*,
                                                  uint32_t) {
+>>>>>>> upstream-releases
+  MOZ_ASSERT_UNREACHABLE("Should have been excluded in AddProgressListener()");
+  return NS_OK;
+}
+
+<<<<<<< HEAD
+nsresult nsSecureBrowserUIImpl::OnSecurityChange(nsIWebProgress*, nsIRequest*,
+                                                 uint32_t) {
+||||||| merged common ancestors
+nsresult
+nsSecureBrowserUIImpl::OnSecurityChange(nsIWebProgress*, nsIRequest*, uint32_t,
+                                        uint32_t, const nsAString&)
+{
+=======
+nsresult nsSecureBrowserUIImpl::OnContentBlockingEvent(nsIWebProgress*,
+                                                       nsIRequest*, uint32_t) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("Should have been excluded in AddProgressListener()");
   return NS_OK;
 }

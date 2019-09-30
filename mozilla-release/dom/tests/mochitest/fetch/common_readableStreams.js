@@ -8,7 +8,7 @@ function makeBuffer(size) {
   buffer.fill(42);
 
   let value = 0;
-  for (let i = 0; i < 1000000; i+= 1000) {
+  for (let i = 0; i < 1000000; i += 1000) {
     buffer.set([++value % 255], i);
   }
 
@@ -31,11 +31,22 @@ function apply_compartment(compartment, data) {
 async function test_nativeStream(compartment) {
   info("test_nativeStream");
 
-  let r = await fetch('/');
+  let r = await fetch("/");
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_nativeStream_continue",
                              args: r });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_nativeStream_continue",
+                      args: r });
+=======
+  return apply_compartment(compartment, {
+    func: "test_nativeStream_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_nativeStream_continue(r, that) {
@@ -66,9 +77,20 @@ async function test_timeout(compartment) {
   let blob = new Blob([""]);
   let r = await fetch(URL.createObjectURL(blob));
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_timeout_continue",
                              args: r });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_timeout_continue",
+                      args: r });
+=======
+  return apply_compartment(compartment, {
+    func: "test_timeout_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_timeout_continue(r, that) {
@@ -90,18 +112,36 @@ async function test_nonNativeStream(compartment) {
   let buffer = makeBuffer(BIG_BUFFER_SIZE);
   info("Buffer size: " + buffer.byteLength);
 
-  let r = new Response(new ReadableStream({start : controller => {
-    controller.enqueue(buffer);
-    controller.close();
-  }}));
+  let r = new Response(
+    new ReadableStream({
+      start: controller => {
+        controller.enqueue(buffer);
+        controller.close();
+      },
+    })
+  );
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_nonNativeStream_continue",
                              args: { r, buffer } });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_nonNativeStream_continue",
+                      args: { r, buffer } });
+=======
+  return apply_compartment(compartment, {
+    func: "test_nonNativeStream_continue",
+    args: { r, buffer },
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_nonNativeStream_continue(data, that) {
-  that.ok(data.r.body instanceof that.ReadableStream, "We have a ReadableStream");
+  that.ok(
+    data.r.body instanceof that.ReadableStream,
+    "We have a ReadableStream"
+  );
 
   let a = data.r.clone();
   that.ok(a instanceof that.Response, "We have a cloned Response");
@@ -126,14 +166,29 @@ async function test_nonNativeStream_continue(data, that) {
 async function test_noUint8Array(compartment) {
   info("test_noUint8Array");
 
-  let r = new Response(new ReadableStream({start : controller => {
-    controller.enqueue('hello world!');
-    controller.close();
-  }}));
+  let r = new Response(
+    new ReadableStream({
+      start: controller => {
+        controller.enqueue("hello world!");
+        controller.close();
+      },
+    })
+  );
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_noUint8Array_continue",
                              args: r });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_noUint8Array_continue",
+                      args: r });
+=======
+  return apply_compartment(compartment, {
+    func: "test_noUint8Array_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_noUint8Array_continue(r, that) {
@@ -142,12 +197,19 @@ async function test_noUint8Array_continue(r, that) {
   try {
     await r.blob();
     that.ok(false, "We cannot have a blob here!");
+<<<<<<< HEAD
   } catch {
+||||||| merged common ancestors
+  }, () => {
+=======
+  } catch (ex) {
+>>>>>>> upstream-releases
     that.ok(true, "We cannot have a blob here!");
   }
 }
 
 async function test_pendingStream(compartment) {
+<<<<<<< HEAD
   let r = new Response(new ReadableStream({start : controller => {
     controller.enqueue(makeBuffer(BIG_BUFFER_SIZE));
     // Let's keep this controler open.
@@ -157,6 +219,32 @@ async function test_pendingStream(compartment) {
   return apply_compartment(compartment,
                            { func: "test_pendingStream_continue",
                              args: r });
+||||||| merged common ancestors
+  let r = new Response(new ReadableStream({start : controller => {
+    controller.enqueue(makeBuffer(BIG_BUFFER_SIZE));
+    // Let's keep this controler open.
+    self.ccc = controller;
+  }}));
+
+  apply_compartment(compartment,
+                    { func: "test_pendingStream_continue",
+                      args: r });
+=======
+  let r = new Response(
+    new ReadableStream({
+      start: controller => {
+        controller.enqueue(makeBuffer(BIG_BUFFER_SIZE));
+        // Let's keep this controler open.
+        self.ccc = controller;
+      },
+    })
+  );
+
+  return apply_compartment(compartment, {
+    func: "test_pendingStream_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_pendingStream_continue(r, that) {
@@ -172,17 +260,28 @@ async function test_pendingStream_continue(r, that) {
 async function test_nativeStream_cache(compartment) {
   info("test_nativeStream_cache");
 
-  let origBody = '123456789abcdef';
-  let url = '/nativeStream';
+  let origBody = "123456789abcdef";
+  let url = "/nativeStream";
 
-  let cache = await caches.open('nativeStream');
+  let cache = await caches.open("nativeStream");
 
   info("Storing a body as a string");
   await cache.put(url, new Response(origBody));
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_nativeStream_cache_continue",
                              args: { caches, cache, url, origBody } });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_nativeStream_cache_continue",
+                      args: { caches, cache, url, origBody } });
+=======
+  return apply_compartment(compartment, {
+    func: "test_nativeStream_cache_continue",
+    args: { caches, cache, url, origBody },
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_nativeStream_cache_continue(data, that) {
@@ -194,19 +293,30 @@ async function test_nativeStream_cache_continue(data, that) {
 
   that.is(data.origBody, cacheBody, "Bodies match");
 
+<<<<<<< HEAD
   await data.caches.delete('nativeStream');
 };
+||||||| merged common ancestors
+  await data.caches.delete('nativeStream');
+
+  that.next();
+};
+=======
+  await data.caches.delete("nativeStream");
+}
+>>>>>>> upstream-releases
 
 async function test_nonNativeStream_cache(compartment) {
   info("test_nonNativeStream_cache");
 
-  let url = '/nonNativeStream';
+  let url = "/nonNativeStream";
 
-  let cache = await caches.open('nonNativeStream');
+  let cache = await caches.open("nonNativeStream");
   let buffer = makeBuffer(BIG_BUFFER_SIZE);
   info("Buffer size: " + buffer.byteLength);
 
   info("Storing a body as a string");
+<<<<<<< HEAD
   let r = new Response(new ReadableStream({start : controller => {
     controller.enqueue(buffer);
     controller.close();
@@ -215,6 +325,30 @@ async function test_nonNativeStream_cache(compartment) {
   return apply_compartment(compartment,
                            { func: "test_nonNativeStream_cache_continue",
                              args: { caches, cache, buffer, r } });
+||||||| merged common ancestors
+  let r = new Response(new ReadableStream({start : controller => {
+    controller.enqueue(buffer);
+    controller.close();
+  }}));
+
+  apply_compartment(compartment,
+                    { func: "test_nonNativeStream_cache_continue",
+                      args: { caches, cache, buffer, r } });
+=======
+  let r = new Response(
+    new ReadableStream({
+      start: controller => {
+        controller.enqueue(buffer);
+        controller.close();
+      },
+    })
+  );
+
+  return apply_compartment(compartment, {
+    func: "test_nonNativeStream_cache_continue",
+    args: { caches, cache, buffer, r },
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_nonNativeStream_cache_continue(data, that) {
@@ -230,16 +364,31 @@ async function test_nonNativeStream_cache_continue(data, that) {
   that.is(cacheBody.byteLength, BIG_BUFFER_SIZE, "Body length is correct");
 
   let value = 0;
-  for (let i = 0; i < 1000000; i+= 1000) {
-    that.is(new Uint8Array(cacheBody)[i], ++value % 255, "byte in position " + i + " is correct");
+  for (let i = 0; i < 1000000; i += 1000) {
+    that.is(
+      new Uint8Array(cacheBody)[i],
+      ++value % 255,
+      "byte in position " + i + " is correct"
+    );
   }
 
+<<<<<<< HEAD
   await data.caches.delete('nonNativeStream');
 };
+||||||| merged common ancestors
+  await data.caches.delete('nonNativeStream');
+
+  that.next();
+};
+=======
+  await data.caches.delete("nonNativeStream");
+}
+>>>>>>> upstream-releases
 
 async function test_codeExecution(compartment) {
   info("test_codeExecution");
 
+<<<<<<< HEAD
   let r = new Response(new ReadableStream({
     start(c) {
       controller = c
@@ -252,6 +401,36 @@ async function test_codeExecution(compartment) {
   return apply_compartment(compartment,
                            { func: "test_codeExecution_continue",
                              args: r });
+||||||| merged common ancestors
+  let r = new Response(new ReadableStream({
+    start(c) {
+      controller = c
+    },
+    pull() {
+      console.log("pull called");
+    }
+  }));
+
+  apply_compartment(compartment,
+                    { func: "test_codeExecution_continue",
+                      args: r });
+=======
+  let r = new Response(
+    new ReadableStream({
+      start(c) {
+        controller = c;
+      },
+      pull() {
+        console.log("pull called");
+      },
+    })
+  );
+
+  return apply_compartment(compartment, {
+    func: "test_codeExecution_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_codeExecution_continue(r, that) {
@@ -260,26 +439,34 @@ async function test_codeExecution_continue(r, that) {
   }
 
   var promise = new Promise(resolve => {
-    consoleListener.prototype  = {
+    consoleListener.prototype = {
       observe: function(aSubject, aTopic, aData) {
         that.ok(true, "Something has been received");
         that.is(aTopic, "console-api-log-event");
 
         var obj = aSubject.wrappedJSObject;
-        if (obj.arguments[0] && obj.arguments[0] === 'pull called') {
+        if (obj.arguments[0] && obj.arguments[0] === "pull called") {
           that.ok(true, "Message received!");
           that.SpecialPowers.removeObserver(this, "console-api-log-event");
           resolve();
         }
-      }
-    }
+      },
+    };
   });
 
   var cl = new consoleListener();
 
   r.body.getReader().read();
   await promise;
+<<<<<<< HEAD
 };
+||||||| merged common ancestors
+
+  that.next();
+};
+=======
+}
+>>>>>>> upstream-releases
 
 async function test_global(compartment) {
   info("test_global: " + compartment);
@@ -287,42 +474,68 @@ async function test_global(compartment) {
   self.foo = 42;
   self.iter = ITER_MAX;
 
-  let r = new Response(new ReadableStream({
-    start(c) {
-      self.controller = c;
-    },
-    pull() {
-      if (!("iter" in self) || self.iter < 0 || self.iter > ITER_MAX) {
-        throw "Something bad is happening here!"
-      }
+  let r = new Response(
+    new ReadableStream({
+      start(c) {
+        self.controller = c;
+      },
+      pull() {
+        if (!("iter" in self) || self.iter < 0 || self.iter > ITER_MAX) {
+          throw "Something bad is happening here!";
+        }
 
-      let buffer = new Uint8Array(1);
-      buffer.fill(self.foo);
-      self.controller.enqueue(buffer);
+        let buffer = new Uint8Array(1);
+        buffer.fill(self.foo);
+        self.controller.enqueue(buffer);
 
-      if (--self.iter == 0) {
-        controller.close();
-      }
-    }
-  }));
+        if (--self.iter == 0) {
+          controller.close();
+        }
+      },
+    })
+  );
 
+<<<<<<< HEAD
   return apply_compartment(compartment,
                            { func: "test_global_continue",
                              args: r });
+||||||| merged common ancestors
+  apply_compartment(compartment,
+                    { func: "test_global_continue",
+                    args: r });
+=======
+  return apply_compartment(compartment, {
+    func: "test_global_continue",
+    args: r,
+  });
+>>>>>>> upstream-releases
 }
 
 async function test_global_continue(r, that) {
   let a = await r.arrayBuffer();
 
-  that.is(Object.getPrototypeOf(a), that.ArrayBuffer.prototype, "Body is an array buffer");
+  that.is(
+    Object.getPrototypeOf(a),
+    that.ArrayBuffer.prototype,
+    "Body is an array buffer"
+  );
   that.is(a.byteLength, ITER_MAX, "Body length is correct");
 
   for (let i = 0; i < ITER_MAX; ++i) {
     that.is(new Uint8Array(a)[i], 42, "Byte " + i + " is correct");
   }
+<<<<<<< HEAD
 };
+||||||| merged common ancestors
+
+  that.next();
+};
+=======
+}
+>>>>>>> upstream-releases
 
 function workify(func) {
+<<<<<<< HEAD
   info("Workifying " + func);
 
   return new Promise((resolve, reject) => {
@@ -343,11 +556,65 @@ function workify(func) {
         ok(e.data.test, e.data.message);
         return;
       }
+||||||| merged common ancestors
+  info("Workifing " + func);
 
+  let worker = new Worker('worker_readableStreams.js');
+  worker.postMessage(func);
+  worker.onmessage = function(e) {
+    if (e.data.type == 'done') {
+      next();
+      return;
+    }
+
+    if (e.data.type == 'test') {
+      ok(e.data.test, e.data.message);
+      return;
+    }
+
+    if (e.data.type == 'info') {
+      info(e.data.message);
+      return;
+    }
+  }
+=======
+  info("Workifying " + func);
+
+  return new Promise((resolve, reject) => {
+    let worker = new Worker("worker_readableStreams.js");
+    worker.postMessage(func);
+    worker.onmessage = function(e) {
+      if (e.data.type == "done") {
+        resolve();
+        return;
+      }
+
+      if (e.data.type == "error") {
+        reject(e.data.message);
+        return;
+      }
+
+      if (e.data.type == "test") {
+        ok(e.data.test, e.data.message);
+        return;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       if (e.data.type == 'info') {
         info(e.data.message);
         return;
       }
     }
   });
+||||||| merged common ancestors
+  return worker;
+=======
+      if (e.data.type == "info") {
+        info(e.data.message);
+        return;
+      }
+    };
+  });
+>>>>>>> upstream-releases
 }

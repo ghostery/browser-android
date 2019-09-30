@@ -1093,14 +1093,43 @@ nsresult nsDiscriminatedUnion::ConvertToArray(uint16_t* aType, nsIID* aIID,
 /***************************************************************************/
 // static setter functions...
 
+<<<<<<< HEAD
+#define DATA_SETTER_PROLOGUE Cleanup()
+||||||| merged common ancestors
+#define DATA_SETTER_PROLOGUE                                                  \
+    Cleanup()
+
+#define DATA_SETTER_EPILOGUE(type_)                                           \
+    mType = nsIDataType::type_;
+=======
 #define DATA_SETTER_PROLOGUE Cleanup()
 
+#define DATA_SETTER_EPILOGUE(type_) mType = nsIDataType::type_;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #define DATA_SETTER_EPILOGUE(type_) mType = nsIDataType::type_;
 
 #define DATA_SETTER(type_, member_, value_) \
   DATA_SETTER_PROLOGUE;                     \
   u.member_ = value_;                       \
   DATA_SETTER_EPILOGUE(type_)
+||||||| merged common ancestors
+#define DATA_SETTER(type_, member_, value_)                                   \
+    DATA_SETTER_PROLOGUE;                                                     \
+    u.member_ = value_;                                                       \
+    DATA_SETTER_EPILOGUE(type_)
+
+#define DATA_SETTER_WITH_CAST(type_, member_, cast_, value_)                  \
+    DATA_SETTER_PROLOGUE;                                                     \
+    u.member_ = cast_ value_;                                                 \
+    DATA_SETTER_EPILOGUE(type_)
+=======
+#define DATA_SETTER(type_, member_, value_) \
+  DATA_SETTER_PROLOGUE;                     \
+  u.member_ = value_;                       \
+  DATA_SETTER_EPILOGUE(type_)
+>>>>>>> upstream-releases
 
 #define DATA_SETTER_WITH_CAST(type_, member_, cast_, value_) \
   DATA_SETTER_PROLOGUE;                                      \
@@ -1109,12 +1138,37 @@ nsresult nsDiscriminatedUnion::ConvertToArray(uint16_t* aType, nsIID* aIID,
 
 /********************************************/
 
+<<<<<<< HEAD
 #define CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(type_) {
 #define CASE__SET_FROM_VARIANT_VTYPE__GETTER(member_, name_) \
   rv = aValue->GetAs##name_(&(u.member_));
 
 #define CASE__SET_FROM_VARIANT_VTYPE__GETTER_CAST(cast_, member_, name_) \
   rv = aValue->GetAs##name_(cast_ & (u.member_));
+||||||| merged common ancestors
+#define CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(type_)                          \
+    {                                                                         \
+
+#define CASE__SET_FROM_VARIANT_VTYPE__GETTER(member_, name_)                  \
+        rv = aValue->GetAs##name_ (&(u.member_ ));
+
+#define CASE__SET_FROM_VARIANT_VTYPE__GETTER_CAST(cast_, member_, name_)      \
+        rv = aValue->GetAs##name_ ( cast_ &(u.member_ ));
+
+#define CASE__SET_FROM_VARIANT_VTYPE_EPILOGUE(type_)                          \
+        if (NS_SUCCEEDED(rv)) {                                               \
+          mType  = nsIDataType::type_ ;                                       \
+        }                                                                     \
+        break;                                                                \
+    }
+=======
+#define CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(type_) {
+#define CASE__SET_FROM_VARIANT_VTYPE__GETTER(member_, name_) \
+  rv = aValue->GetAs##name_(&(u.member_));
+
+#define CASE__SET_FROM_VARIANT_VTYPE__GETTER_CAST(cast_, member_, name_) \
+  rv = aValue->GetAs##name_(cast_ & (u.member_));
+>>>>>>> upstream-releases
 
 #define CASE__SET_FROM_VARIANT_VTYPE_EPILOGUE(type_) \
   if (NS_SUCCEEDED(rv)) {                            \
@@ -1161,9 +1215,7 @@ nsresult nsDiscriminatedUnion::SetFromVariant(nsIVariant* aValue) {
     case nsIDataType::VTYPE_WSTRING_SIZE_IS:
       CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(VTYPE_ASTRING);
       u.mAStringValue = new nsString();
-      if (!u.mAStringValue) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
+
       rv = aValue->GetAsAString(*u.mAStringValue);
       if (NS_FAILED(rv)) {
         delete u.mAStringValue;
@@ -1173,9 +1225,7 @@ nsresult nsDiscriminatedUnion::SetFromVariant(nsIVariant* aValue) {
     case nsIDataType::VTYPE_CSTRING:
       CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(VTYPE_CSTRING);
       u.mCStringValue = new nsCString();
-      if (!u.mCStringValue) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
+
       rv = aValue->GetAsACString(*u.mCStringValue);
       if (NS_FAILED(rv)) {
         delete u.mCStringValue;
@@ -1185,9 +1235,7 @@ nsresult nsDiscriminatedUnion::SetFromVariant(nsIVariant* aValue) {
     case nsIDataType::VTYPE_UTF8STRING:
       CASE__SET_FROM_VARIANT_VTYPE_PROLOGUE(VTYPE_UTF8STRING);
       u.mUTF8StringValue = new nsUTF8String();
-      if (!u.mUTF8StringValue) {
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
+
       rv = aValue->GetAsAUTF8String(*u.mUTF8StringValue);
       if (NS_FAILED(rv)) {
         delete u.mUTF8StringValue;

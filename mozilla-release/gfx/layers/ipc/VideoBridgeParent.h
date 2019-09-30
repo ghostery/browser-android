@@ -17,9 +17,19 @@ class CompositorThreadHolder;
 
 class VideoBridgeParent final : public PVideoBridgeParent,
                                 public HostIPCAllocator,
+<<<<<<< HEAD
                                 public ShmemAllocator {
  public:
   VideoBridgeParent();
+||||||| merged common ancestors
+                                public ShmemAllocator
+{
+public:
+  VideoBridgeParent();
+=======
+                                public ShmemAllocator {
+ public:
+>>>>>>> upstream-releases
   ~VideoBridgeParent();
 
   static VideoBridgeParent* GetSingleton();
@@ -31,8 +41,8 @@ class VideoBridgeParent final : public PVideoBridgeParent,
                                       const ReadLockDescriptor& aReadLock,
                                       const LayersBackend& aLayersBackend,
                                       const TextureFlags& aFlags,
-                                      const uint64_t& aSerial) override;
-  bool DeallocPTextureParent(PTextureParent* actor) override;
+                                      const uint64_t& aSerial);
+  bool DeallocPTextureParent(PTextureParent* actor);
 
   // HostIPCAllocator
   base::ProcessId GetChildProcessId() override { return OtherPid(); }
@@ -55,8 +65,20 @@ class VideoBridgeParent final : public PVideoBridgeParent,
 
   void DeallocShmem(ipc::Shmem& aShmem) override;
 
+<<<<<<< HEAD
  private:
   void DeallocPVideoBridgeParent() override;
+||||||| merged common ancestors
+private:
+  void DeallocPVideoBridgeParent() override;
+=======
+  static void Open(Endpoint<PVideoBridgeParent>&& aEndpoint);
+
+ private:
+  VideoBridgeParent();
+
+  void ActorDealloc() override;
+>>>>>>> upstream-releases
 
   // This keeps us alive until ActorDestroy(), at which point we do a
   // deferred destruction of ourselves.

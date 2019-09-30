@@ -10,6 +10,7 @@
 #include "mozilla/CycleCollectedJSContext.h"
 #include "mozilla/dom/CustomElementRegistryBinding.h"
 #include "mozilla/dom/HTMLElementBinding.h"
+#include "mozilla/dom/ShadowIncludingTreeIterator.h"
 #include "mozilla/dom/XULElementBinding.h"
 #include "mozilla/dom/Promise.h"
 #include "mozilla/dom/WebComponentsBinding.h"
@@ -18,6 +19,7 @@
 #include "mozilla/dom/ShadowRoot.h"
 #include "nsHTMLTags.h"
 #include "jsapi.h"
+#include "js/ForOfIterator.h"  // JS::ForOfIterator
 #include "xpcprivate.h"
 #include "nsGlobalWindow.h"
 
@@ -46,12 +48,22 @@ class CustomElementUpgradeReaction final : public CustomElementReaction {
     return aMallocSizeOf(this);
   }
 
+<<<<<<< HEAD
  private:
   virtual void Invoke(Element* aElement, ErrorResult& aRv) override {
+||||||| merged common ancestors
+private:
+  virtual void Invoke(Element* aElement, ErrorResult& aRv) override
+  {
+=======
+ private:
+  MOZ_CAN_RUN_SCRIPT
+  virtual void Invoke(Element* aElement, ErrorResult& aRv) override {
+>>>>>>> upstream-releases
     CustomElementRegistry::Upgrade(aElement, mDefinition, aRv);
   }
 
-  RefPtr<CustomElementDefinition> mDefinition;
+  const RefPtr<CustomElementDefinition> mDefinition;
 };
 
 //-----------------------------------------------------
@@ -98,25 +110,65 @@ size_t LifecycleCallbackArgs::SizeOfExcludingThis(
 
 void CustomElementCallback::Call() {
   switch (mType) {
+<<<<<<< HEAD
     case nsIDocument::eConnected:
       static_cast<LifecycleConnectedCallback*>(mCallback.get())
           ->Call(mThisObject);
+||||||| merged common ancestors
+    case nsIDocument::eConnected:
+      static_cast<LifecycleConnectedCallback *>(mCallback.get())->Call(mThisObject);
+=======
+    case Document::eConnected:
+      static_cast<LifecycleConnectedCallback*>(mCallback.get())
+          ->Call(mThisObject);
+>>>>>>> upstream-releases
       break;
+<<<<<<< HEAD
     case nsIDocument::eDisconnected:
       static_cast<LifecycleDisconnectedCallback*>(mCallback.get())
           ->Call(mThisObject);
+||||||| merged common ancestors
+    case nsIDocument::eDisconnected:
+      static_cast<LifecycleDisconnectedCallback *>(mCallback.get())->Call(mThisObject);
+=======
+    case Document::eDisconnected:
+      static_cast<LifecycleDisconnectedCallback*>(mCallback.get())
+          ->Call(mThisObject);
+>>>>>>> upstream-releases
       break;
+<<<<<<< HEAD
     case nsIDocument::eAdopted:
       static_cast<LifecycleAdoptedCallback*>(mCallback.get())
           ->Call(mThisObject, mAdoptedCallbackArgs.mOldDocument,
                  mAdoptedCallbackArgs.mNewDocument);
+||||||| merged common ancestors
+    case nsIDocument::eAdopted:
+      static_cast<LifecycleAdoptedCallback *>(mCallback.get())->Call(mThisObject,
+        mAdoptedCallbackArgs.mOldDocument, mAdoptedCallbackArgs.mNewDocument);
+=======
+    case Document::eAdopted:
+      static_cast<LifecycleAdoptedCallback*>(mCallback.get())
+          ->Call(mThisObject, mAdoptedCallbackArgs.mOldDocument,
+                 mAdoptedCallbackArgs.mNewDocument);
+>>>>>>> upstream-releases
       break;
+<<<<<<< HEAD
     case nsIDocument::eAttributeChanged:
       static_cast<LifecycleAttributeChangedCallback*>(mCallback.get())
           ->Call(mThisObject, mArgs.name, mArgs.oldValue, mArgs.newValue,
                  mArgs.namespaceURI);
+||||||| merged common ancestors
+    case nsIDocument::eAttributeChanged:
+      static_cast<LifecycleAttributeChangedCallback *>(mCallback.get())->Call(mThisObject,
+        mArgs.name, mArgs.oldValue, mArgs.newValue, mArgs.namespaceURI);
+=======
+    case Document::eAttributeChanged:
+      static_cast<LifecycleAttributeChangedCallback*>(mCallback.get())
+          ->Call(mThisObject, mArgs.name, mArgs.oldValue, mArgs.newValue,
+                 mArgs.namespaceURI);
+>>>>>>> upstream-releases
       break;
-    case nsIDocument::eGetCustomInterface:
+    case Document::eGetCustomInterface:
       MOZ_ASSERT_UNREACHABLE("Don't call GetCustomInterface through callback");
       break;
   }
@@ -148,6 +200,7 @@ size_t CustomElementCallback::SizeOfIncludingThis(
   return n;
 }
 
+<<<<<<< HEAD
 CustomElementCallback::CustomElementCallback(
     Element* aThisObject, nsIDocument::ElementCallbackType aCallbackType,
     mozilla::dom::CallbackFunction* aCallback)
@@ -180,6 +233,51 @@ already_AddRefed<Element> CustomElementConstructor::Construct(
 
   return element.forget();
 }
+||||||| merged common ancestors
+CustomElementCallback::CustomElementCallback(Element* aThisObject,
+                                             nsIDocument::ElementCallbackType aCallbackType,
+                                             mozilla::dom::CallbackFunction* aCallback)
+  : mThisObject(aThisObject),
+    mCallback(aCallback),
+    mType(aCallbackType)
+{
+}
+//-----------------------------------------------------
+// CustomElementConstructor
+
+already_AddRefed<Element>
+CustomElementConstructor::Construct(const char* aExecutionReason,
+                                    ErrorResult& aRv)
+{
+  CallSetup s(this, aRv, aExecutionReason,
+              CallbackFunction::eRethrowExceptions);
+
+  JSContext* cx = s.GetContext();
+  if (!cx) {
+    MOZ_ASSERT(aRv.Failed());
+    return nullptr;
+  }
+
+  JS::Rooted<JSObject*> result(cx);
+  JS::Rooted<JS::Value> constructor(cx, JS::ObjectValue(*mCallback));
+  if (!JS::Construct(cx, constructor, JS::HandleValueArray::empty(), &result)) {
+    aRv.NoteJSContextException(cx);
+    return nullptr;
+  }
+
+  RefPtr<Element> element;
+  if (NS_FAILED(UNWRAP_OBJECT(Element, &result, element))) {
+    return nullptr;
+  }
+
+  return element.forget();
+}
+=======
+CustomElementCallback::CustomElementCallback(
+    Element* aThisObject, Document::ElementCallbackType aCallbackType,
+    mozilla::dom::CallbackFunction* aCallback)
+    : mThisObject(aThisObject), mCallback(aCallback), mType(aCallbackType) {}
+>>>>>>> upstream-releases
 
 //-----------------------------------------------------
 // CustomElementData
@@ -327,8 +425,16 @@ CustomElementRegistry::RunCustomElementCreationCallback::Run() {
   MOZ_ASSERT(NS_SUCCEEDED(er.StealNSResult()),
              "chrome JavaScript error in the callback.");
 
+<<<<<<< HEAD
   CustomElementDefinition* definition =
       mRegistry->mCustomDefinitions.GetWeak(mAtom);
+||||||| merged common ancestors
+  CustomElementDefinition* definition =
+    mRegistry->mCustomDefinitions.GetWeak(mAtom);
+=======
+  RefPtr<CustomElementDefinition> definition =
+      mRegistry->mCustomDefinitions.Get(mAtom);
+>>>>>>> upstream-releases
   MOZ_ASSERT(definition, "Callback should define the definition of type.");
   MOZ_ASSERT(!mRegistry->mElementCreationCallbacks.GetWeak(mAtom),
              "Callback should be removed.");
@@ -377,9 +483,23 @@ CustomElementDefinition* CustomElementRegistry::LookupCustomElementDefinition(
   return nullptr;
 }
 
+<<<<<<< HEAD
 CustomElementDefinition* CustomElementRegistry::LookupCustomElementDefinition(
     JSContext* aCx, JSObject* aConstructor) const {
   JS::Rooted<JSObject*> constructor(aCx, js::CheckedUnwrap(aConstructor));
+||||||| merged common ancestors
+CustomElementDefinition*
+CustomElementRegistry::LookupCustomElementDefinition(JSContext* aCx,
+                                                     JSObject* aConstructor) const
+{
+  JS::Rooted<JSObject*> constructor(aCx, js::CheckedUnwrap(aConstructor));
+=======
+CustomElementDefinition* CustomElementRegistry::LookupCustomElementDefinition(
+    JSContext* aCx, JSObject* aConstructor) const {
+  // We're looking up things that tested true for JS::IsConstructor,
+  // so doing a CheckedUnwrapStatic is fine here.
+  JS::Rooted<JSObject*> constructor(aCx, js::CheckedUnwrapStatic(aConstructor));
+>>>>>>> upstream-releases
 
   const auto& ptr = mConstructors.lookup(constructor);
   if (!ptr) {
@@ -444,12 +564,26 @@ void CustomElementRegistry::UnregisterUnresolvedElement(Element* aElement,
   }
 }
 
-/* static */ UniquePtr<CustomElementCallback>
+/* static */
+UniquePtr<CustomElementCallback>
 CustomElementRegistry::CreateCustomElementCallback(
+<<<<<<< HEAD
     nsIDocument::ElementCallbackType aType, Element* aCustomElement,
     LifecycleCallbackArgs* aArgs,
     LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
     CustomElementDefinition* aDefinition) {
+||||||| merged common ancestors
+  nsIDocument::ElementCallbackType aType, Element* aCustomElement,
+  LifecycleCallbackArgs* aArgs,
+  LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
+  CustomElementDefinition* aDefinition)
+{
+=======
+    Document::ElementCallbackType aType, Element* aCustomElement,
+    LifecycleCallbackArgs* aArgs,
+    LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
+    CustomElementDefinition* aDefinition) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDefinition, "CustomElementDefinition should not be null");
   MOZ_ASSERT(aCustomElement->GetCustomElementData(),
              "CustomElementData should exist");
@@ -457,31 +591,31 @@ CustomElementRegistry::CreateCustomElementCallback(
   // Let CALLBACK be the callback associated with the key NAME in CALLBACKS.
   CallbackFunction* func = nullptr;
   switch (aType) {
-    case nsIDocument::eConnected:
+    case Document::eConnected:
       if (aDefinition->mCallbacks->mConnectedCallback.WasPassed()) {
         func = aDefinition->mCallbacks->mConnectedCallback.Value();
       }
       break;
 
-    case nsIDocument::eDisconnected:
+    case Document::eDisconnected:
       if (aDefinition->mCallbacks->mDisconnectedCallback.WasPassed()) {
         func = aDefinition->mCallbacks->mDisconnectedCallback.Value();
       }
       break;
 
-    case nsIDocument::eAdopted:
+    case Document::eAdopted:
       if (aDefinition->mCallbacks->mAdoptedCallback.WasPassed()) {
         func = aDefinition->mCallbacks->mAdoptedCallback.Value();
       }
       break;
 
-    case nsIDocument::eAttributeChanged:
+    case Document::eAttributeChanged:
       if (aDefinition->mCallbacks->mAttributeChangedCallback.WasPassed()) {
         func = aDefinition->mCallbacks->mAttributeChangedCallback.Value();
       }
       break;
 
-    case nsIDocument::eGetCustomInterface:
+    case Document::eGetCustomInterface:
       MOZ_ASSERT_UNREACHABLE("Don't call GetCustomInterface through callback");
       break;
   }
@@ -505,11 +639,28 @@ CustomElementRegistry::CreateCustomElementCallback(
   return callback;
 }
 
+<<<<<<< HEAD
 /* static */ void CustomElementRegistry::EnqueueLifecycleCallback(
     nsIDocument::ElementCallbackType aType, Element* aCustomElement,
     LifecycleCallbackArgs* aArgs,
     LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
     CustomElementDefinition* aDefinition) {
+||||||| merged common ancestors
+/* static */ void
+CustomElementRegistry::EnqueueLifecycleCallback(nsIDocument::ElementCallbackType aType,
+                                                Element* aCustomElement,
+                                                LifecycleCallbackArgs* aArgs,
+                                                LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
+                                                CustomElementDefinition* aDefinition)
+{
+=======
+/* static */
+void CustomElementRegistry::EnqueueLifecycleCallback(
+    Document::ElementCallbackType aType, Element* aCustomElement,
+    LifecycleCallbackArgs* aArgs,
+    LifecycleAdoptedCallbackArgs* aAdoptedCallbackArgs,
+    CustomElementDefinition* aDefinition) {
+>>>>>>> upstream-releases
   CustomElementDefinition* definition = aDefinition;
   if (!definition) {
     definition = aCustomElement->GetCustomElementDefinition();
@@ -535,7 +686,7 @@ CustomElementRegistry::CreateCustomElementCallback(
     return;
   }
 
-  if (aType == nsIDocument::eAttributeChanged) {
+  if (aType == Document::eAttributeChanged) {
     RefPtr<nsAtom> attrName = NS_Atomize(aArgs->name);
     if (definition->mObservedAttributes.IsEmpty() ||
         !definition->mObservedAttributes.Contains(attrName)) {
@@ -553,20 +704,43 @@ namespace {
 class CandidateFinder {
  public:
   CandidateFinder(nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>& aCandidates,
-                  nsIDocument* aDoc);
+                  Document* aDoc);
   nsTArray<nsCOMPtr<Element>> OrderedCandidates();
 
+<<<<<<< HEAD
  private:
   bool Traverse(Element* aRoot, nsTArray<nsCOMPtr<Element>>& aOrderedElements);
 
   nsCOMPtr<nsIDocument> mDoc;
+||||||| merged common ancestors
+private:
+  bool Traverse(Element* aRoot, nsTArray<nsCOMPtr<Element>>& aOrderedElements);
+
+  nsCOMPtr<nsIDocument> mDoc;
+=======
+ private:
+  nsCOMPtr<Document> mDoc;
+>>>>>>> upstream-releases
   nsInterfaceHashtable<nsPtrHashKey<Element>, Element> mCandidates;
 };
 
+<<<<<<< HEAD
 CandidateFinder::CandidateFinder(
     nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>& aCandidates,
     nsIDocument* aDoc)
     : mDoc(aDoc), mCandidates(aCandidates.Count()) {
+||||||| merged common ancestors
+CandidateFinder::CandidateFinder(nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>& aCandidates,
+                                 nsIDocument* aDoc)
+  : mDoc(aDoc)
+  , mCandidates(aCandidates.Count())
+{
+=======
+CandidateFinder::CandidateFinder(
+    nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>& aCandidates,
+    Document* aDoc)
+    : mDoc(aDoc), mCandidates(aCandidates.Count()) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mDoc);
   for (auto iter = aCandidates.Iter(); !iter.Done(); iter.Next()) {
     nsCOMPtr<Element> elem = do_QueryReferent(iter.Get()->GetKey());
@@ -590,6 +764,7 @@ nsTArray<nsCOMPtr<Element>> CandidateFinder::OrderedCandidates() {
   }
 
   nsTArray<nsCOMPtr<Element>> orderedElements(mCandidates.Count());
+<<<<<<< HEAD
   for (Element* child = mDoc->GetFirstElementChild(); child;
        child = child->GetNextElementSibling()) {
     if (!Traverse(child, orderedElements)) {
@@ -607,28 +782,42 @@ bool CandidateFinder::Traverse(Element* aRoot,
     aOrderedElements.AppendElement(std::move(elem));
     if (mCandidates.Count() == 0) {
       return false;
+||||||| merged common ancestors
+  for (Element* child = mDoc->GetFirstElementChild(); child; child = child->GetNextElementSibling()) {
+    if (!Traverse(child, orderedElements)) {
+      break;
     }
   }
 
-  if (ShadowRoot* root = aRoot->GetShadowRoot()) {
-    // First iterate the children of the shadow root if aRoot is a shadow host.
-    for (Element* child = root->GetFirstElementChild(); child;
-         child = child->GetNextElementSibling()) {
-      if (!Traverse(child, aOrderedElements)) {
-        return false;
+  return orderedElements;
+}
+
+bool
+CandidateFinder::Traverse(Element* aRoot, nsTArray<nsCOMPtr<Element>>& aOrderedElements)
+{
+  nsCOMPtr<Element> elem;
+  if (mCandidates.Remove(aRoot, getter_AddRefs(elem))) {
+    aOrderedElements.AppendElement(std::move(elem));
+    if (mCandidates.Count() == 0) {
+      return false;
+=======
+  for (nsINode* node : ShadowIncludingTreeIterator(*mDoc)) {
+    Element* element = Element::FromNode(node);
+    if (!element) {
+      continue;
+>>>>>>> upstream-releases
+    }
+
+    nsCOMPtr<Element> elem;
+    if (mCandidates.Remove(element, getter_AddRefs(elem))) {
+      orderedElements.AppendElement(std::move(elem));
+      if (mCandidates.Count() == 0) {
+        break;
       }
     }
   }
 
-  // Iterate the explicit children of aRoot.
-  for (Element* child = aRoot->GetFirstElementChild(); child;
-       child = child->GetNextElementSibling()) {
-    if (!Traverse(child, aOrderedElements)) {
-      return false;
-    }
-  }
-
-  return true;
+  return orderedElements;
 }
 
 }  // namespace
@@ -683,14 +872,45 @@ int32_t CustomElementRegistry::InferNamespace(
 }
 
 // https://html.spec.whatwg.org/multipage/scripting.html#element-definition
+<<<<<<< HEAD
 void CustomElementRegistry::Define(JSContext* aCx, const nsAString& aName,
                                    Function& aFunctionConstructor,
                                    const ElementDefinitionOptions& aOptions,
                                    ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+CustomElementRegistry::Define(JSContext* aCx,
+                              const nsAString& aName,
+                              Function& aFunctionConstructor,
+                              const ElementDefinitionOptions& aOptions,
+                              ErrorResult& aRv)
+{
+  // Note: No calls that might run JS or trigger CC before this point, or
+  // there's a (vanishingly small) chance of our constructor being nulled
+  // before we access it.
+=======
+void CustomElementRegistry::Define(
+    JSContext* aCx, const nsAString& aName,
+    CustomElementConstructor& aFunctionConstructor,
+    const ElementDefinitionOptions& aOptions, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   JS::Rooted<JSObject*> constructor(aCx, aFunctionConstructor.CallableOrNull());
 
+<<<<<<< HEAD
   JS::Rooted<JSObject*> constructorUnwrapped(aCx,
                                              js::CheckedUnwrap(constructor));
+||||||| merged common ancestors
+  JS::Rooted<JSObject*> constructorUnwrapped(aCx, js::CheckedUnwrap(constructor));
+=======
+  // We need to do a dynamic unwrap in order to throw the right exception.  We
+  // could probably avoid that if we just threw MSG_NOT_CONSTRUCTOR if unwrap
+  // fails.
+  //
+  // In any case, aCx represents the global we want to be using for the unwrap
+  // here.
+  JS::Rooted<JSObject*> constructorUnwrapped(
+      aCx, js::CheckedUnwrapDynamic(constructor, aCx));
+>>>>>>> upstream-releases
   if (!constructorUnwrapped) {
     // If the caller's compartment does not have permission to access the
     // unwrapped constructor then throw.
@@ -714,7 +934,7 @@ void CustomElementRegistry::Define(JSContext* aCx, const nsAString& aName,
    * 2. If name is not a valid custom element name, then throw a "SyntaxError"
    *    DOMException and abort these steps.
    */
-  nsIDocument* doc = mWindow->GetExtantDoc();
+  Document* doc = mWindow->GetExtantDoc();
   RefPtr<nsAtom> nameAtom(NS_Atomize(aName));
   if (!nsContentUtils::IsCustomElementName(nameAtom, nameSpaceID)) {
     aRv.Throw(NS_ERROR_DOM_SYNTAX_ERR);
@@ -1005,9 +1225,25 @@ void CustomElementRegistry::SetElementCreationCallback(
   return;
 }
 
+<<<<<<< HEAD
 static void TryUpgrade(nsINode& aNode) {
   Element* element = aNode.IsElement() ? aNode.AsElement() : nullptr;
   if (element) {
+||||||| merged common ancestors
+static void
+TryUpgrade(nsINode& aNode)
+{
+  Element* element = aNode.IsElement() ? aNode.AsElement() : nullptr;
+  if (element) {
+=======
+void CustomElementRegistry::Upgrade(nsINode& aRoot) {
+  for (nsINode* node : ShadowIncludingTreeIterator(aRoot)) {
+    Element* element = Element::FromNode(node);
+    if (!element) {
+      continue;
+    }
+
+>>>>>>> upstream-releases
     CustomElementData* ceData = element->GetCustomElementData();
     if (ceData) {
       NodeInfo* nodeInfo = element->NodeInfo();
@@ -1020,25 +1256,29 @@ static void TryUpgrade(nsINode& aNode) {
         nsContentUtils::EnqueueUpgradeReaction(element, definition);
       }
     }
-
-    if (ShadowRoot* root = element->GetShadowRoot()) {
-      for (Element* child = root->GetFirstElementChild(); child;
-           child = child->GetNextElementSibling()) {
-        TryUpgrade(*child);
-      }
-    }
-  }
-
-  for (Element* child = aNode.GetFirstElementChild(); child;
-       child = child->GetNextElementSibling()) {
-    TryUpgrade(*child);
   }
 }
 
+<<<<<<< HEAD
 void CustomElementRegistry::Upgrade(nsINode& aRoot) { TryUpgrade(aRoot); }
 
 void CustomElementRegistry::Get(JSContext* aCx, const nsAString& aName,
                                 JS::MutableHandle<JS::Value> aRetVal) {
+||||||| merged common ancestors
+void
+CustomElementRegistry::Upgrade(nsINode& aRoot)
+{
+  TryUpgrade(aRoot);
+}
+
+void
+CustomElementRegistry::Get(JSContext* aCx, const nsAString& aName,
+                           JS::MutableHandle<JS::Value> aRetVal)
+{
+=======
+void CustomElementRegistry::Get(JSContext* aCx, const nsAString& aName,
+                                JS::MutableHandle<JS::Value> aRetVal) {
+>>>>>>> upstream-releases
   RefPtr<nsAtom> nameAtom(NS_Atomize(aName));
   CustomElementDefinition* data = mCustomDefinitions.GetWeak(nameAtom);
 
@@ -1060,9 +1300,18 @@ already_AddRefed<Promise> CustomElementRegistry::WhenDefined(
   }
 
   RefPtr<nsAtom> nameAtom(NS_Atomize(aName));
+<<<<<<< HEAD
   nsIDocument* doc = mWindow->GetExtantDoc();
   uint32_t nameSpaceID =
       doc ? doc->GetDefaultNamespaceID() : kNameSpaceID_XHTML;
+||||||| merged common ancestors
+  nsIDocument* doc = mWindow->GetExtantDoc();
+  uint32_t nameSpaceID = doc ? doc->GetDefaultNamespaceID() : kNameSpaceID_XHTML;
+=======
+  Document* doc = mWindow->GetExtantDoc();
+  uint32_t nameSpaceID =
+      doc ? doc->GetDefaultNamespaceID() : kNameSpaceID_XHTML;
+>>>>>>> upstream-releases
   if (!nsContentUtils::IsCustomElementName(nameAtom, nameSpaceID)) {
     promise->MaybeReject(NS_ERROR_DOM_SYNTAX_ERR);
     return promise.forget();
@@ -1085,17 +1334,42 @@ already_AddRefed<Promise> CustomElementRegistry::WhenDefined(
 
 namespace {
 
+<<<<<<< HEAD
 static void DoUpgrade(Element* aElement, CustomElementConstructor* aConstructor,
                       ErrorResult& aRv) {
+||||||| merged common ancestors
+static void
+DoUpgrade(Element* aElement,
+          CustomElementConstructor* aConstructor,
+          ErrorResult& aRv)
+{
+=======
+MOZ_CAN_RUN_SCRIPT
+static void DoUpgrade(Element* aElement, CustomElementConstructor* aConstructor,
+                      ErrorResult& aRv) {
+  JS::Rooted<JS::Value> constructResult(RootingCx());
+>>>>>>> upstream-releases
   // Rethrow the exception since it might actually throw the exception from the
   // upgrade steps back out to the caller of document.createElement.
+<<<<<<< HEAD
   RefPtr<Element> constructResult =
       aConstructor->Construct("Custom Element Upgrade", aRv);
+||||||| merged common ancestors
+  RefPtr<Element> constructResult =
+    aConstructor->Construct("Custom Element Upgrade", aRv);
+=======
+  aConstructor->Construct(&constructResult, aRv, "Custom Element Upgrade",
+                          CallbackFunction::eRethrowExceptions);
+>>>>>>> upstream-releases
   if (aRv.Failed()) {
     return;
   }
 
-  if (!constructResult || constructResult.get() != aElement) {
+  Element* element;
+  // constructResult is an ObjectValue because construction with a callback
+  // always forms the return value from a JSObject.
+  if (NS_FAILED(UNWRAP_OBJECT(Element, &constructResult, element)) ||
+      element != aElement) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return;
   }
@@ -1104,8 +1378,21 @@ static void DoUpgrade(Element* aElement, CustomElementConstructor* aConstructor,
 }  // anonymous namespace
 
 // https://html.spec.whatwg.org/multipage/scripting.html#upgrades
+<<<<<<< HEAD
 /* static */ void CustomElementRegistry::Upgrade(
     Element* aElement, CustomElementDefinition* aDefinition, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ void
+CustomElementRegistry::Upgrade(Element* aElement,
+                               CustomElementDefinition* aDefinition,
+                               ErrorResult& aRv)
+{
+=======
+/* static */
+void CustomElementRegistry::Upgrade(Element* aElement,
+                                    CustomElementDefinition* aDefinition,
+                                    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   RefPtr<CustomElementData> data = aElement->GetCustomElementData();
   MOZ_ASSERT(data, "CustomElementData should exist");
 
@@ -1132,26 +1419,50 @@ static void DoUpgrade(Element* aElement, CustomElementConstructor* aConstructor,
                                                             namespaceURI);
 
         LifecycleCallbackArgs args = {
+<<<<<<< HEAD
             nsDependentAtomString(attrName), VoidString(), attrValue,
             (namespaceURI.IsEmpty() ? VoidString() : namespaceURI)};
         nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eAttributeChanged,
                                                  aElement, &args, nullptr,
                                                  aDefinition);
+||||||| merged common ancestors
+          nsDependentAtomString(attrName),
+          VoidString(),
+          attrValue,
+          (namespaceURI.IsEmpty() ? VoidString() : namespaceURI)
+        };
+        nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eAttributeChanged,
+                                                 aElement,
+                                                 &args, nullptr, aDefinition);
+=======
+            nsDependentAtomString(attrName), VoidString(), attrValue,
+            (namespaceURI.IsEmpty() ? VoidString() : namespaceURI)};
+        nsContentUtils::EnqueueLifecycleCallback(
+            Document::eAttributeChanged, aElement, &args, nullptr, aDefinition);
+>>>>>>> upstream-releases
       }
     }
   }
 
   // Step 4.
   if (aElement->IsInComposedDoc()) {
+<<<<<<< HEAD
     nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eConnected, aElement,
                                              nullptr, nullptr, aDefinition);
+||||||| merged common ancestors
+    nsContentUtils::EnqueueLifecycleCallback(nsIDocument::eConnected, aElement,
+      nullptr, nullptr, aDefinition);
+=======
+    nsContentUtils::EnqueueLifecycleCallback(Document::eConnected, aElement,
+                                             nullptr, nullptr, aDefinition);
+>>>>>>> upstream-releases
   }
 
   // Step 5.
   AutoConstructionStackEntry acs(aDefinition->mConstructionStack, aElement);
 
   // Step 6 and step 7.
-  DoUpgrade(aElement, aDefinition->mConstructor, aRv);
+  DoUpgrade(aElement, MOZ_KnownLive(aDefinition->mConstructor), aRv);
   if (aRv.Failed()) {
     data->mState = CustomElementData::State::eFailed;
     // Empty element's custom element reaction queue.
@@ -1171,6 +1482,7 @@ already_AddRefed<nsISupports> CustomElementRegistry::CallGetCustomInterface(
     Element* aElement, const nsIID& aIID) {
   MOZ_ASSERT(aElement);
 
+<<<<<<< HEAD
   if (nsContentUtils::IsChromeDoc(aElement->OwnerDoc())) {
     CustomElementDefinition* definition =
         aElement->GetCustomElementDefinition();
@@ -1200,9 +1512,82 @@ already_AddRefed<nsISupports> CustomElementRegistry::CallGetCustomInterface(
         }
       }
     }
+||||||| merged common ancestors
+  if (nsContentUtils::IsChromeDoc(aElement->OwnerDoc())) {
+    CustomElementDefinition* definition = aElement->GetCustomElementDefinition();
+    if (definition && definition->mCallbacks &&
+        definition->mCallbacks->mGetCustomInterfaceCallback.WasPassed() &&
+        definition->mLocalName == aElement->NodeInfo()->NameAtom()) {
+
+      LifecycleGetCustomInterfaceCallback* func =
+        definition->mCallbacks->mGetCustomInterfaceCallback.Value();
+      JS::Rooted<JSObject*> customInterface(RootingCx());
+
+      nsCOMPtr<nsIJSID> iid = nsJSID::NewID(aIID);
+      func->Call(aElement, iid, &customInterface);
+      JS::Rooted<JSObject*> funcGlobal(RootingCx(), func->CallbackGlobalOrNull());
+      if (customInterface && funcGlobal) {
+        AutoJSAPI jsapi;
+        if (jsapi.Init(funcGlobal)) {
+          nsIXPConnect *xpConnect = nsContentUtils::XPConnect();
+          JSContext* cx = jsapi.cx();
+
+          nsCOMPtr<nsISupports> wrapper;
+          nsresult rv = xpConnect->WrapJSAggregatedToNative(aElement, cx, customInterface,
+                                                            aIID, getter_AddRefs(wrapper));
+          if (NS_SUCCEEDED(rv)) {
+            return wrapper.forget();
+          }
+        }
+      }
+    }
+=======
+  if (!nsContentUtils::IsChromeDoc(aElement->OwnerDoc())) {
+    return nullptr;
+>>>>>>> upstream-releases
   }
 
-  return nullptr;
+  // Try to get our GetCustomInterfaceCallback callback.
+  CustomElementDefinition* definition = aElement->GetCustomElementDefinition();
+  if (!definition || !definition->mCallbacks ||
+      !definition->mCallbacks->mGetCustomInterfaceCallback.WasPassed() ||
+      (definition->mLocalName != aElement->NodeInfo()->NameAtom())) {
+    return nullptr;
+  }
+  LifecycleGetCustomInterfaceCallback* func =
+      definition->mCallbacks->mGetCustomInterfaceCallback.Value();
+
+  // Initialize a AutoJSAPI to enter the compartment of the callback.
+  AutoJSAPI jsapi;
+  JS::RootedObject funcGlobal(RootingCx(), func->CallbackGlobalOrNull());
+  if (!funcGlobal || !jsapi.Init(funcGlobal)) {
+    return nullptr;
+  }
+
+  // Grab our JSContext.
+  JSContext* cx = jsapi.cx();
+
+  // Convert our IID to a JSValue to call our callback.
+  JS::RootedValue jsiid(cx);
+  if (!xpc::ID2JSValue(cx, aIID, &jsiid)) {
+    return nullptr;
+  }
+
+  JS::RootedObject customInterface(cx);
+  func->Call(aElement, jsiid, &customInterface);
+  if (!customInterface) {
+    return nullptr;
+  }
+
+  // Wrap our JSObject into a nsISupports through XPConnect
+  nsCOMPtr<nsISupports> wrapper;
+  nsresult rv = nsContentUtils::XPConnect()->WrapJSAggregatedToNative(
+      aElement, cx, customInterface, aIID, getter_AddRefs(wrapper));
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return nullptr;
+  }
+
+  return wrapper.forget();
 }
 
 //-----------------------------------------------------
@@ -1238,7 +1623,7 @@ void CustomElementReactionsStack::PopAndInvokeElementQueue() {
     // In that case, the exception of callback reactions will be automatically
     // reported in CallSetup.
     nsIGlobalObject* global = GetEntryGlobal();
-    InvokeReactions(elementQueue, global);
+    InvokeReactions(elementQueue, MOZ_KnownLive(global));
   }
 
   // InvokeReactions() might create other custom element reactions, but those
@@ -1346,7 +1731,7 @@ void CustomElementReactionsStack::InvokeReactions(ElementQueue* aElementQueue,
           aes.emplace(global, "custom elements reaction invocation");
         }
         ErrorResult rv;
-        reaction->Invoke(element, rv);
+        reaction->Invoke(MOZ_KnownLive(element), rv);
         if (aes) {
           JSContext* cx = aes->cx();
           if (rv.MaybeSetPendingException(cx)) {
@@ -1415,6 +1800,7 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_END
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(CustomElementDefinition, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(CustomElementDefinition, Release)
 
+<<<<<<< HEAD
 CustomElementDefinition::CustomElementDefinition(
     nsAtom* aType, nsAtom* aLocalName, int32_t aNamespaceID,
     Function* aConstructor, nsTArray<RefPtr<nsAtom>>&& aObservedAttributes,
@@ -1428,3 +1814,38 @@ CustomElementDefinition::CustomElementDefinition(
 
 }  // namespace dom
 }  // namespace mozilla
+||||||| merged common ancestors
+
+CustomElementDefinition::CustomElementDefinition(nsAtom* aType,
+                                                 nsAtom* aLocalName,
+                                                 int32_t aNamespaceID,
+                                                 Function* aConstructor,
+                                                 nsTArray<RefPtr<nsAtom>>&& aObservedAttributes,
+                                                 UniquePtr<LifecycleCallbacks>&& aCallbacks)
+  : mType(aType),
+    mLocalName(aLocalName),
+    mNamespaceID(aNamespaceID),
+    mConstructor(new CustomElementConstructor(aConstructor)),
+    mObservedAttributes(std::move(aObservedAttributes)),
+    mCallbacks(std::move(aCallbacks))
+{
+}
+
+} // namespace dom
+} // namespace mozilla
+=======
+CustomElementDefinition::CustomElementDefinition(
+    nsAtom* aType, nsAtom* aLocalName, int32_t aNamespaceID,
+    CustomElementConstructor* aConstructor,
+    nsTArray<RefPtr<nsAtom>>&& aObservedAttributes,
+    UniquePtr<LifecycleCallbacks>&& aCallbacks)
+    : mType(aType),
+      mLocalName(aLocalName),
+      mNamespaceID(aNamespaceID),
+      mConstructor(aConstructor),
+      mObservedAttributes(std::move(aObservedAttributes)),
+      mCallbacks(std::move(aCallbacks)) {}
+
+}  // namespace dom
+}  // namespace mozilla
+>>>>>>> upstream-releases

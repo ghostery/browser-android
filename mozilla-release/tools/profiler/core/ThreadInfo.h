@@ -8,7 +8,7 @@
 #define ThreadInfo_h
 
 #include "mozilla/TimeStamp.h"
-
+#include "nsISupportsImpl.h"
 #include "nsString.h"
 
 // This class contains information about a thread which needs to be stored
@@ -19,6 +19,7 @@ class ThreadInfo final {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ThreadInfo)
 
+<<<<<<< HEAD
   ThreadInfo(
       const char* aName, int aThreadId, bool aIsMainThread,
       const mozilla::TimeStamp& aRegisterTime = mozilla::TimeStamp::Now())
@@ -26,6 +27,23 @@ class ThreadInfo final {
         mRegisterTime(aRegisterTime),
         mThreadId(aThreadId),
         mIsMainThread(aIsMainThread) {
+||||||| merged common ancestors
+  ThreadInfo(const char* aName, int aThreadId, bool aIsMainThread,
+             const mozilla::TimeStamp& aRegisterTime = mozilla::TimeStamp::Now())
+    : mName(aName)
+    , mRegisterTime(aRegisterTime)
+    , mThreadId(aThreadId)
+    , mIsMainThread(aIsMainThread)
+  {
+=======
+  ThreadInfo(const char* aName, int aThreadId, bool aIsMainThread,
+             const mozilla::TimeStamp& aRegisterTime =
+                 mozilla::TimeStamp::NowUnfuzzed())
+      : mName(aName),
+        mRegisterTime(aRegisterTime),
+        mThreadId(aThreadId),
+        mIsMainThread(aIsMainThread) {
+>>>>>>> upstream-releases
     // I don't know if we can assert this. But we should warn.
     MOZ_ASSERT(aThreadId >= 0, "native thread ID is < 0");
     MOZ_ASSERT(aThreadId <= INT32_MAX, "native thread ID is > INT32_MAX");

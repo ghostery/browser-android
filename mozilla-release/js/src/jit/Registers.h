@@ -11,19 +11,61 @@
 
 #include "jit/IonTypes.h"
 #if defined(JS_CODEGEN_X86) || defined(JS_CODEGEN_X64)
+<<<<<<< HEAD
 #include "jit/x86-shared/Architecture-x86-shared.h"
+||||||| merged common ancestors
+# include "jit/x86-shared/Architecture-x86-shared.h"
+=======
+#  include "jit/x86-shared/Architecture-x86-shared.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM)
+<<<<<<< HEAD
 #include "jit/arm/Architecture-arm.h"
+||||||| merged common ancestors
+# include "jit/arm/Architecture-arm.h"
+=======
+#  include "jit/arm/Architecture-arm.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_ARM64)
+<<<<<<< HEAD
 #include "jit/arm64/Architecture-arm64.h"
+||||||| merged common ancestors
+# include "jit/arm64/Architecture-arm64.h"
+=======
+#  include "jit/arm64/Architecture-arm64.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS32)
+<<<<<<< HEAD
 #include "jit/mips32/Architecture-mips32.h"
+||||||| merged common ancestors
+# include "jit/mips32/Architecture-mips32.h"
+=======
+#  include "jit/mips32/Architecture-mips32.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_MIPS64)
+<<<<<<< HEAD
 #include "jit/mips64/Architecture-mips64.h"
+||||||| merged common ancestors
+# include "jit/mips64/Architecture-mips64.h"
+=======
+#  include "jit/mips64/Architecture-mips64.h"
+>>>>>>> upstream-releases
 #elif defined(JS_CODEGEN_NONE)
+<<<<<<< HEAD
 #include "jit/none/Architecture-none.h"
+||||||| merged common ancestors
+# include "jit/none/Architecture-none.h"
+=======
+#  include "jit/none/Architecture-none.h"
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #error "Unknown architecture!"
+||||||| merged common ancestors
+# error "Unknown architecture!"
+=======
+#  error "Unknown architecture!"
+>>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -235,6 +277,7 @@ class MachineState {
       fpregs_[i] =
           reinterpret_cast<FloatRegisters::RegisterContent*>(i + 0x200);
     }
+<<<<<<< HEAD
 #endif
   }
 
@@ -266,6 +309,43 @@ class MachineState {
   const FloatRegisters::RegisterContent* address(FloatRegister reg) const {
     return fpregs_[reg.code()];
   }
+||||||| merged common ancestors
+=======
+#endif
+  }
+
+  static MachineState FromBailout(RegisterDump::GPRArray& regs,
+                                  RegisterDump::FPUArray& fpregs);
+
+  void setRegisterLocation(Register reg, uintptr_t* up) {
+    regs_[reg.code()] = (Registers::RegisterContent*)up;
+  }
+  void setRegisterLocation(FloatRegister reg, float* fp) {
+    MOZ_ASSERT(reg.isSingle());
+    fpregs_[reg.code()] = (FloatRegisters::RegisterContent*)fp;
+  }
+  void setRegisterLocation(FloatRegister reg, double* dp) {
+    fpregs_[reg.code()] = (FloatRegisters::RegisterContent*)dp;
+  }
+  void setRegisterLocation(FloatRegister reg,
+                           FloatRegisters::RegisterContent* rp) {
+    fpregs_[reg.code()] = rp;
+  }
+
+  bool has(Register reg) const { return regs_[reg.code()] != nullptr; }
+  bool has(FloatRegister reg) const { return fpregs_[reg.code()] != nullptr; }
+  uintptr_t read(Register reg) const { return regs_[reg.code()]->r; }
+  double read(FloatRegister reg) const { return fpregs_[reg.code()]->d; }
+  void write(Register reg, uintptr_t value) const {
+    regs_[reg.code()]->r = value;
+  }
+  const Registers::RegisterContent* address(Register reg) const {
+    return regs_[reg.code()];
+  }
+  const FloatRegisters::RegisterContent* address(FloatRegister reg) const {
+    return fpregs_[reg.code()];
+  }
+>>>>>>> upstream-releases
 };
 
 class MacroAssembler;

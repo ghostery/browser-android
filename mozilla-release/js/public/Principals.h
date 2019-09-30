@@ -18,10 +18,18 @@
 struct JSStructuredCloneReader;
 struct JSStructuredCloneWriter;
 
+<<<<<<< HEAD
 namespace js {
 struct JS_PUBLIC_API PerformanceGroup;
 }  // namespace js
 
+||||||| merged common ancestors
+namespace js {
+    struct JS_PUBLIC_API(PerformanceGroup);
+} // namespace js
+
+=======
+>>>>>>> upstream-releases
 struct JSPrincipals {
   /* Don't call "destroy"; use reference counting macros below. */
   mozilla::Atomic<int32_t, mozilla::SequentiallyConsistent,
@@ -33,6 +41,7 @@ struct JSPrincipals {
   uint32_t debugToken;
 #endif
 
+<<<<<<< HEAD
   JSPrincipals() : refcount(0) {}
 
   void setDebugToken(uint32_t token) {
@@ -52,6 +61,47 @@ struct JSPrincipals {
    * embedding.
    */
   JS_PUBLIC_API void dump();
+||||||| merged common ancestors
+    JSPrincipals() : refcount(0) {}
+
+    void setDebugToken(uint32_t token) {
+# ifdef JS_DEBUG
+        debugToken = token;
+# endif
+    }
+
+    /*
+     * Write the principals with the given |writer|. Return false on failure,
+     * true on success.
+     */
+    virtual bool write(JSContext* cx, JSStructuredCloneWriter* writer) = 0;
+
+    /*
+     * This is not defined by the JS engine but should be provided by the
+     * embedding.
+     */
+    JS_PUBLIC_API(void) dump();
+=======
+  JSPrincipals() : refcount(0) {}
+
+  void setDebugToken(uint32_t token) {
+#ifdef JS_DEBUG
+    debugToken = token;
+#endif
+  }
+
+  /*
+   * Write the principals with the given |writer|. Return false on failure,
+   * true on success.
+   */
+  virtual bool write(JSContext* cx, JSStructuredCloneWriter* writer) = 0;
+
+  /*
+   * This is not defined by the JS engine but should be provided by the
+   * embedding.
+   */
+  JS_PUBLIC_API void dump();
+>>>>>>> upstream-releases
 };
 
 extern JS_PUBLIC_API void JS_HoldPrincipals(JSPrincipals* principals);
@@ -125,7 +175,45 @@ using JSReadPrincipalsOp = bool (*)(JSContext* cx,
  * Initialize the callback that is called to read JSPrincipals instances from a
  * buffer. The initialization can be done only once per JS runtime.
  */
+<<<<<<< HEAD
 extern JS_PUBLIC_API void JS_InitReadPrincipalsCallback(
     JSContext* cx, JSReadPrincipalsOp read);
+||||||| merged common ancestors
+extern JS_PUBLIC_API(void)
+JS_InitReadPrincipalsCallback(JSContext* cx, JSReadPrincipalsOp read);
+
+=======
+extern JS_PUBLIC_API void JS_InitReadPrincipalsCallback(
+    JSContext* cx, JSReadPrincipalsOp read);
+
+namespace JS {
+
+class MOZ_RAII AutoHoldPrincipals {
+  JSContext* cx_;
+  JSPrincipals* principals_ = nullptr;
+
+ public:
+  explicit AutoHoldPrincipals(JSContext* cx, JSPrincipals* principals = nullptr)
+      : cx_(cx) {
+    reset(principals);
+  }
+
+  ~AutoHoldPrincipals() { reset(nullptr); }
+
+  void reset(JSPrincipals* principals) {
+    if (principals) {
+      JS_HoldPrincipals(principals);
+    }
+    if (principals_) {
+      JS_DropPrincipals(cx_, principals_);
+    }
+    principals_ = principals;
+  }
+
+  JSPrincipals* get() const { return principals_; }
+};
+
+}  // namespace JS
+>>>>>>> upstream-releases
 
 #endif /* js_Principals_h */

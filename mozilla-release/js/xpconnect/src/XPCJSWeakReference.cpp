@@ -24,6 +24,7 @@ nsresult xpcJSWeakReference::Init(JSContext* cx, const JS::Value& object) {
 
   XPCCallContext ccx(cx);
 
+<<<<<<< HEAD
   // See if the object is a wrapped native that supports weak references.
   nsCOMPtr<nsISupports> supports = xpc::UnwrapReflectorToISupports(obj);
   nsCOMPtr<nsISupportsWeakReference> supportsWeakRef =
@@ -32,6 +33,38 @@ nsresult xpcJSWeakReference::Init(JSContext* cx, const JS::Value& object) {
     supportsWeakRef->GetWeakReference(getter_AddRefs(mReferent));
     if (mReferent) {
       return NS_OK;
+||||||| merged common ancestors
+    // See if the object is a wrapped native that supports weak references.
+    nsCOMPtr<nsISupports> supports = xpc::UnwrapReflectorToISupports(obj);
+    nsCOMPtr<nsISupportsWeakReference> supportsWeakRef =
+        do_QueryInterface(supports);
+    if (supportsWeakRef) {
+        supportsWeakRef->GetWeakReference(getter_AddRefs(mReferent));
+        if (mReferent) {
+            return NS_OK;
+        }
+    }
+    // If it's not a wrapped native, or it is a wrapped native that does not
+    // support weak references, fall back to getting a weak ref to the object.
+
+    // See if object is a wrapped JSObject.
+    RefPtr<nsXPCWrappedJS> wrapped;
+    nsresult rv = nsXPCWrappedJS::GetNewOrUsed(cx, obj,
+                                               NS_GET_IID(nsISupports),
+                                               getter_AddRefs(wrapped));
+    if (!wrapped) {
+        NS_ERROR("can't get nsISupportsWeakReference wrapper for obj");
+        return rv;
+=======
+  // See if the object is a wrapped native that supports weak references.
+  nsCOMPtr<nsISupports> supports = xpc::ReflectorToISupportsDynamic(obj, cx);
+  nsCOMPtr<nsISupportsWeakReference> supportsWeakRef =
+      do_QueryInterface(supports);
+  if (supportsWeakRef) {
+    supportsWeakRef->GetWeakReference(getter_AddRefs(mReferent));
+    if (mReferent) {
+      return NS_OK;
+>>>>>>> upstream-releases
     }
   }
   // If it's not a wrapped native, or it is a wrapped native that does not

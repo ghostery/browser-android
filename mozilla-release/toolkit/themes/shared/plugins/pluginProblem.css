@@ -31,20 +31,38 @@
   width: 100%;
   height: 100%;
 }
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .hoverBox:active,
 :-moz-handler-vulnerable-no-update .hoverBox:active,
 :host(:-moz-handler-vulnerable-updatable) .hoverBox:active,
 :host(:-moz-handler-vulnerable-no-update) .hoverBox:active {
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .hoverBox:active,
+:-moz-handler-vulnerable-no-update .hoverBox:active {
+=======
+
+:host(:-moz-handler-vulnerable-updatable) .hoverBox:active,
+:host(:-moz-handler-vulnerable-no-update) .hoverBox:active {
+>>>>>>> upstream-releases
   background-color: rgb(65, 65, 65);
 }
 
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .hoverBox:active .msgClickToPlay,
 :-moz-handler-vulnerable-no-update .hoverBox:active .msgClickToPlay,
 :host(:-moz-handler-vulnerable-updatable) .hoverBox:active .msgClickToPlay,
 :host(:-moz-handler-vulnerable-no-update) .hoverBox:active .msgClickToPlay {
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .hoverBox:active .msgClickToPlay,
+:-moz-handler-vulnerable-no-update .hoverBox:active .msgClickToPlay {
+=======
+:host(:-moz-handler-vulnerable-updatable) .hoverBox:active .msgClickToPlay,
+:host(:-moz-handler-vulnerable-no-update) .hoverBox:active .msgClickToPlay {
+>>>>>>> upstream-releases
   color: red;
 }
 
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .hoverBox,
 :-moz-handler-vulnerable-no-update .hoverBox,
 :-moz-handler-blocked .hoverBox,
@@ -54,6 +72,19 @@
 :host(:-moz-handler-blocked) .hoverBox,
 :host(:-moz-handler-crashed) .hoverBox {
   background-image: url(chrome://global/skin/plugins/contentPluginStripe.png);
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .hoverBox,
+:-moz-handler-vulnerable-no-update .hoverBox,
+:-moz-handler-blocked .hoverBox,
+:-moz-handler-crashed .hoverBox {
+  background-image: url(chrome://mozapps/skin/plugins/contentPluginStripe.png);
+=======
+:host(:-moz-handler-vulnerable-updatable) .hoverBox,
+:host(:-moz-handler-vulnerable-no-update) .hoverBox,
+:host(:-moz-handler-blocked) .hoverBox,
+:host(:-moz-handler-crashed) .hoverBox {
+  background-image: url(chrome://global/skin/plugins/contentPluginStripe.png);
+>>>>>>> upstream-releases
 }
 
 html|a {
@@ -73,26 +104,63 @@ html|a {
   -moz-context-properties: fill;
 }
 
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .icon,
 :-moz-handler-vulnerable-no-update .icon,
 :host(:-moz-handler-vulnerable-updatable) .icon,
 :host(:-moz-handler-vulnerable-no-update) .icon {
   background-image: url(chrome://global/skin/plugins/contentPluginBlocked.png);
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .icon,
+:-moz-handler-vulnerable-no-update .icon {
+  background-image: url(chrome://mozapps/skin/plugins/contentPluginBlocked.png);
+=======
+:host(:-moz-handler-vulnerable-updatable) .icon,
+:host(:-moz-handler-vulnerable-no-update) .icon {
+  background-image: url(chrome://global/skin/plugins/contentPluginBlocked.png);
+>>>>>>> upstream-releases
   -moz-user-focus: normal;
 }
+<<<<<<< HEAD
 :-moz-handler-blocked .icon,
 :host(:-moz-handler-blocked) .icon {
   background-image: url(chrome://global/skin/plugins/contentPluginBlocked.png);
+||||||| merged common ancestors
+:-moz-handler-blocked .icon {
+  background-image: url(chrome://mozapps/skin/plugins/contentPluginBlocked.png);
+=======
+
+:host(:-moz-handler-blocked) .icon {
+  background-image: url(chrome://global/skin/plugins/contentPluginBlocked.png);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .icon,
 :host(:-moz-handler-clicktoplay) .icon {
   background-image: url(chrome://global/skin/plugins/plugin.svg);
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .icon {
+  background-image: url(chrome://mozapps/skin/plugins/plugin.svg);
+=======
+
+:host(:-moz-handler-clicktoplay) .icon {
+  background-image: url(chrome://global/skin/plugins/plugin.svg);
+>>>>>>> upstream-releases
   fill: var(--grey-10);
   -moz-user-focus: normal;
 }
+<<<<<<< HEAD
 :-moz-handler-crashed .icon,
 :host(:-moz-handler-crashed) .icon {
   background-image: url(chrome://global/skin/plugins/contentPluginCrashed.png);
+||||||| merged common ancestors
+:-moz-handler-crashed .icon {
+  background-image: url(chrome://mozapps/skin/plugins/contentPluginCrashed.png);
+=======
+
+:host(:-moz-handler-crashed) .icon {
+  background-image: url(chrome://global/skin/plugins/contentPluginCrashed.png);
+>>>>>>> upstream-releases
 }
 
 .throbber {
@@ -109,8 +177,14 @@ html|a {
 }
 
 /* on desktop, don't ever show the tap-to-play UI: that is for mobile only */
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .msgTapToPlay,
 :host(:-moz-handler-clicktoplay) .msgTapToPlay {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .msgTapToPlay {
+=======
+:host(:-moz-handler-clicktoplay) .msgTapToPlay {
+>>>>>>> upstream-releases
   display: none;
 }
 
@@ -204,12 +278,25 @@ html|a {
   background-color: rgb(20, 20, 20);
 }
 
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .action-link,
 :host(:-moz-handler-vulnerable-updatable) .action-link {
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .action-link {
+=======
+:host(:-moz-handler-vulnerable-updatable) .action-link {
+>>>>>>> upstream-releases
   background-color: #a81b0c;
 }
+<<<<<<< HEAD
 :-moz-handler-vulnerable-updatable .action-link:active,
 :host(:-moz-handler-vulnerable-updatable) .action-link:active {
+||||||| merged common ancestors
+:-moz-handler-vulnerable-updatable .action-link:active {
+=======
+
+:host(:-moz-handler-vulnerable-updatable) .action-link:active {
+>>>>>>> upstream-releases
   background-color: #801409;
 }
 
@@ -220,49 +307,108 @@ html|a {
  * redesign for all cases, we can change the CSS directly
  * above instead of writing these super-specific rules.
  */
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox,
 :host(:-moz-handler-clicktoplay) .mainBox {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox {
+>>>>>>> upstream-releases
   background-color: var(--grey-70);
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .msgClickToPlay,
 :host(:-moz-handler-clicktoplay) .msgClickToPlay {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .msgClickToPlay {
+=======
+:host(:-moz-handler-clicktoplay) .msgClickToPlay {
+  /* Triggers overflow event if the container is too small */
+  min-width: 240px;
+>>>>>>> upstream-releases
   font-size: 13px;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[sizing=blank] .hoverBox,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=blank] .hoverBox {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[sizing=blank] .hoverBox {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=oversized] {
+  /* Triggers overflow event when there is a layout */
+  width: 101%;
+}
+
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=blank] .hoverBox {
+>>>>>>> upstream-releases
   visibility: hidden;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[sizing=tiny] .icon,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=tiny] .icon {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[sizing=tiny] .icon {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=tiny] .icon {
+>>>>>>> upstream-releases
   width: 16px;
   height: 16px;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[sizing=reduced] .icon,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=reduced] .icon {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[sizing=reduced] .icon {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=reduced] .icon {
+>>>>>>> upstream-releases
   width: 32px;
   height: 32px;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[sizing=blank] .closeIcon,
 :-moz-handler-clicktoplay .mainBox[sizing=tiny] .closeIcon,
 :-moz-handler-clicktoplay .mainBox[sizing=reduced] .closeIcon,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=blank] .closeIcon,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=tiny] .closeIcon,
 :host(:-moz-handler-clicktoplay) .mainBox[sizing=reduced] .closeIcon {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[sizing=blank] .closeIcon,
+:-moz-handler-clicktoplay .mainBox[sizing=tiny] .closeIcon,
+:-moz-handler-clicktoplay .mainBox[sizing=reduced] .closeIcon {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=blank] .closeIcon,
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=tiny] .closeIcon,
+:host(:-moz-handler-clicktoplay) .mainBox[sizing=reduced] .closeIcon {
+>>>>>>> upstream-releases
   display: none;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[notext] .msgClickToPlay,
 :host(:-moz-handler-clicktoplay) .mainBox[notext] .msgClickToPlay {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[notext] .msgClickToPlay {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[notext] .msgClickToPlay {
+>>>>>>> upstream-releases
   display: none;
 }
 
+<<<<<<< HEAD
 :-moz-handler-clicktoplay .mainBox[notext] .icon,
 :host(:-moz-handler-clicktoplay) .mainBox[notext] .icon {
+||||||| merged common ancestors
+:-moz-handler-clicktoplay .mainBox[notext] .icon {
+=======
+:host(:-moz-handler-clicktoplay) .mainBox[notext] .icon {
+>>>>>>> upstream-releases
   /* Override a `margin-bottom: 6px` now that .msgClickToPlay
    * below the icon is no longer shown, in order to achieve
    * a perfect vertical centering of the icon.
@@ -270,6 +416,6 @@ html|a {
   margin-bottom: 0;
 }
 
-:-moz-handler-clicktoplay .hoverBox:active {
+:host(:-moz-handler-clicktoplay) .hoverBox:active {
   background-color: var(--grey-60);
 }

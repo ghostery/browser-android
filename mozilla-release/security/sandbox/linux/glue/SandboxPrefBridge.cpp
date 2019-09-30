@@ -14,12 +14,20 @@
 namespace mozilla {
 
 /* static */ ContentProcessSandboxParams
+<<<<<<< HEAD
 ContentProcessSandboxParams::ForThisProcess(const dom::MaybeFileDesc& aBroker) {
+||||||| merged common ancestors
+ContentProcessSandboxParams::ForThisProcess(const dom::MaybeFileDesc& aBroker)
+{
+=======
+ContentProcessSandboxParams::ForThisProcess(
+    const Maybe<ipc::FileDescriptor>& aBroker) {
+>>>>>>> upstream-releases
   ContentProcessSandboxParams params;
   params.mLevel = GetEffectiveContentSandboxLevel();
 
-  if (aBroker.type() == dom::MaybeFileDesc::TFileDescriptor) {
-    auto fd = aBroker.get_FileDescriptor().ClonePlatformHandle();
+  if (aBroker.isSome()) {
+    auto fd = aBroker.value().ClonePlatformHandle();
     params.mBrokerFd = fd.release();
     // brokerFd < 0 means to allow direct filesystem access, so
     // make absolutely sure that doesn't happen if the parent

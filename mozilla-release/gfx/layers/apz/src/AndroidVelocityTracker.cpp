@@ -6,7 +6,7 @@
 
 #include "AndroidVelocityTracker.h"
 
-#include "gfxPrefs.h"
+#include "mozilla/StaticPrefs.h"
 
 namespace mozilla {
 namespace layers {
@@ -41,17 +41,22 @@ void AndroidVelocityTracker::StartTracking(ParentLayerCoord aPos,
   mLastEventTime = aTimestampMs;
 }
 
+<<<<<<< HEAD
 Maybe<float> AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
                                                  uint32_t aTimestampMs,
                                                  bool aIsAxisLocked) {
+||||||| merged common ancestors
+Maybe<float>
+AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
+                                    uint32_t aTimestampMs,
+                                    bool aIsAxisLocked)
+{
+=======
+Maybe<float> AndroidVelocityTracker::AddPosition(ParentLayerCoord aPos,
+                                                 uint32_t aTimestampMs) {
+>>>>>>> upstream-releases
   if ((aTimestampMs - mLastEventTime) >= kAssumePointerMoveStoppedTimeMs) {
     Clear();
-  }
-
-  // If we are axis-locked, adjust the position to reflect the fact that
-  // no movement is happening.
-  if (aIsAxisLocked && !mHistory.IsEmpty()) {
-    aPos = mHistory[mHistory.Length() - 1].second - mAdditionalDelta;
   }
 
   aPos += mAdditionalDelta;
@@ -258,7 +263,7 @@ Maybe<float> AndroidVelocityTracker::ComputeVelocity(uint32_t aTimestampMs) {
   float time[kHistorySize];
   uint32_t m = 0;
   int index = mHistory.Length() - 1;
-  const uint32_t horizon = gfxPrefs::APZVelocityRelevanceTime();
+  const uint32_t horizon = StaticPrefs::apz_velocity_relevance_time_ms();
   const auto& newest_movement = mHistory[index];
 
   do {

@@ -23,19 +23,46 @@ CrashReporterClient::~CrashReporterClient() {
   MOZ_COUNT_DTOR(CrashReporterClient);
 }
 
+<<<<<<< HEAD
 void CrashReporterClient::AnnotateCrashReport(CrashReporter::Annotation aKey,
                                               const nsCString& aData) {
+||||||| merged common ancestors
+void
+CrashReporterClient::AnnotateCrashReport(CrashReporter::Annotation aKey,
+                                         const nsCString& aData)
+{
+=======
+void CrashReporterClient::AnnotateCrashReport(CrashReporter::Annotation aKey,
+                                              const nsACString& aData) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sLock);
   mMetadata->AnnotateCrashReport(aKey, aData);
 }
 
+<<<<<<< HEAD
 void CrashReporterClient::AppendAppNotes(const nsCString& aData) {
+||||||| merged common ancestors
+void
+CrashReporterClient::AppendAppNotes(const nsCString& aData)
+{
+=======
+void CrashReporterClient::AppendAppNotes(const nsACString& aData) {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sLock);
   mMetadata->AppendAppNotes(aData);
 }
 
+<<<<<<< HEAD
 /* static */ void CrashReporterClient::InitSingletonWithShmem(
     const Shmem& aShmem) {
+||||||| merged common ancestors
+/* static */ void
+CrashReporterClient::InitSingletonWithShmem(const Shmem& aShmem)
+{
+=======
+/* static */
+void CrashReporterClient::InitSingletonWithShmem(const Shmem& aShmem) {
+>>>>>>> upstream-releases
   {
     StaticMutexAutoLock lock(sLock);
 
@@ -46,12 +73,30 @@ void CrashReporterClient::AppendAppNotes(const nsCString& aData) {
   CrashReporter::NotifyCrashReporterClientCreated();
 }
 
+<<<<<<< HEAD
 /* static */ void CrashReporterClient::DestroySingleton() {
+||||||| merged common ancestors
+/* static */ void
+CrashReporterClient::DestroySingleton()
+{
+=======
+/* static */
+void CrashReporterClient::DestroySingleton() {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sLock);
   sClientSingleton = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ RefPtr<CrashReporterClient> CrashReporterClient::GetSingleton() {
+||||||| merged common ancestors
+/* static */ RefPtr<CrashReporterClient>
+CrashReporterClient::GetSingleton()
+{
+=======
+/* static */
+RefPtr<CrashReporterClient> CrashReporterClient::GetSingleton() {
+>>>>>>> upstream-releases
   StaticMutexAutoLock lock(sLock);
   return sClientSingleton;
 }

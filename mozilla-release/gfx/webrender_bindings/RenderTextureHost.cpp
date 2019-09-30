@@ -25,7 +25,19 @@ void ActivateBindAndTexParameteri(gl::GLContext* aGL, GLenum aActiveTexture,
                           : LOCAL_GL_LINEAR);
 }
 
+<<<<<<< HEAD
 RenderTextureHost::RenderTextureHost() { MOZ_COUNT_CTOR(RenderTextureHost); }
+||||||| merged common ancestors
+RenderTextureHost::RenderTextureHost()
+{
+  MOZ_COUNT_CTOR(RenderTextureHost);
+}
+=======
+RenderTextureHost::RenderTextureHost()
+    : mCachedRendering(wr::ImageRendering::Auto) {
+  MOZ_COUNT_CTOR(RenderTextureHost);
+}
+>>>>>>> upstream-releases
 
 RenderTextureHost::~RenderTextureHost() {
   MOZ_ASSERT(RenderThread::IsInRenderThread());

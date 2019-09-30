@@ -13,30 +13,45 @@
 
 extern crate atomic_refcell;
 extern crate cssparser;
+<<<<<<< HEAD
 #[macro_use]
 extern crate cstr;
+||||||| merged common ancestors
+#[macro_use] extern crate cstr;
+=======
+extern crate cstr;
+>>>>>>> upstream-releases
 extern crate geckoservo;
+<<<<<<< HEAD
 #[macro_use]
 extern crate log;
+||||||| merged common ancestors
+#[macro_use] extern crate log;
+=======
+extern crate log;
+>>>>>>> upstream-releases
 extern crate malloc_size_of;
 extern crate num_traits;
 extern crate selectors;
 extern crate smallvec;
+<<<<<<< HEAD
 #[macro_use]
 extern crate size_of_test;
 #[macro_use]
 extern crate style;
+||||||| merged common ancestors
+#[macro_use] extern crate size_of_test;
+#[macro_use] extern crate style;
+=======
+#[cfg(target_pointer_width = "64")]
+#[macro_use]
+extern crate size_of_test;
+#[cfg_attr(target_pointer_width = "64", macro_use)]
+extern crate style;
+>>>>>>> upstream-releases
 extern crate style_traits;
+extern crate to_shmem;
 
 #[cfg(target_pointer_width = "64")]
 mod size_of;
 mod specified_values;
-
-mod servo_function_signatures;
-
-use style::*;
-
-#[allow(dead_code, improper_ctypes)]
-mod bindings {
-    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
-}

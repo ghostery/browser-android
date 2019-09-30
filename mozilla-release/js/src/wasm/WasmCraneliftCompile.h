@@ -26,11 +26,31 @@
 namespace js {
 namespace wasm {
 
+#ifdef ENABLE_WASM_CRANELIFT
+MOZ_MUST_USE bool CraneliftCanCompile();
+#else
+MOZ_MUST_USE inline bool CraneliftCanCompile() { return false; }
+#endif
+
 // Generates code with Cranelift.
+<<<<<<< HEAD
 MOZ_MUST_USE bool CraneliftCompileFunctions(
     const ModuleEnvironment& env, LifoAlloc& lifo,
     const FuncCompileInputVector& inputs, CompiledCode* code,
     ExclusiveDeferredValidationState& dvs, UniqueChars* error);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+CraneliftCompileFunctions(const ModuleEnvironment& env,
+                         LifoAlloc& lifo,
+                         const FuncCompileInputVector& inputs,
+                         CompiledCode* code,
+                         UniqueChars* error);
+=======
+MOZ_MUST_USE bool CraneliftCompileFunctions(
+    const ModuleEnvironment& env, LifoAlloc& lifo,
+    const FuncCompileInputVector& inputs, CompiledCode* code,
+    UniqueChars* error);
+>>>>>>> upstream-releases
 
 }  // namespace wasm
 }  // namespace js

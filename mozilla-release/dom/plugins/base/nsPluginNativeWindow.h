@@ -32,28 +32,54 @@ class nsPluginNativeWindow : public NPWindow {
    * necessity occur it must be properly casted first.
    */
 
+<<<<<<< HEAD
  public:
   nsresult GetPluginInstance(RefPtr<nsNPAPIPluginInstance> &aPluginInstance) {
+||||||| merged common ancestors
+public:
+  nsresult GetPluginInstance(RefPtr<nsNPAPIPluginInstance> &aPluginInstance) {
+=======
+ public:
+  nsresult GetPluginInstance(RefPtr<nsNPAPIPluginInstance>& aPluginInstance) {
+>>>>>>> upstream-releases
     aPluginInstance = mPluginInstance;
     return NS_OK;
   }
+<<<<<<< HEAD
   nsresult SetPluginInstance(nsNPAPIPluginInstance *aPluginInstance) {
     if (mPluginInstance != aPluginInstance) mPluginInstance = aPluginInstance;
+||||||| merged common ancestors
+  nsresult SetPluginInstance(nsNPAPIPluginInstance *aPluginInstance) {
+    if (mPluginInstance != aPluginInstance)
+      mPluginInstance = aPluginInstance;
+=======
+  nsresult SetPluginInstance(nsNPAPIPluginInstance* aPluginInstance) {
+    if (mPluginInstance != aPluginInstance) mPluginInstance = aPluginInstance;
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
-  nsresult GetPluginWidget(nsIWidget **aWidget) const {
+  nsresult GetPluginWidget(nsIWidget** aWidget) const {
     NS_IF_ADDREF(*aWidget = mWidget);
     return NS_OK;
   }
-  nsresult SetPluginWidget(nsIWidget *aWidget) {
+  nsresult SetPluginWidget(nsIWidget* aWidget) {
     mWidget = aWidget;
     return NS_OK;
   }
 
+<<<<<<< HEAD
  public:
   virtual nsresult CallSetWindow(
       RefPtr<nsNPAPIPluginInstance> &aPluginInstance) {
+||||||| merged common ancestors
+public:
+  virtual nsresult CallSetWindow(RefPtr<nsNPAPIPluginInstance> &aPluginInstance) {
+=======
+ public:
+  virtual nsresult CallSetWindow(
+      RefPtr<nsNPAPIPluginInstance>& aPluginInstance) {
+>>>>>>> upstream-releases
     // null aPluginInstance means that we want to call SetWindow(null)
     if (aPluginInstance)
       aPluginInstance->SetWindow(this);
@@ -69,8 +95,17 @@ class nsPluginNativeWindow : public NPWindow {
   nsCOMPtr<nsIWidget> mWidget;
 };
 
+<<<<<<< HEAD
 nsresult PLUG_NewPluginNativeWindow(nsPluginNativeWindow **aPluginNativeWindow);
 nsresult PLUG_DeletePluginNativeWindow(
     nsPluginNativeWindow *aPluginNativeWindow);
+||||||| merged common ancestors
+nsresult PLUG_NewPluginNativeWindow(nsPluginNativeWindow ** aPluginNativeWindow);
+nsresult PLUG_DeletePluginNativeWindow(nsPluginNativeWindow * aPluginNativeWindow);
+=======
+nsresult PLUG_NewPluginNativeWindow(nsPluginNativeWindow** aPluginNativeWindow);
+nsresult PLUG_DeletePluginNativeWindow(
+    nsPluginNativeWindow* aPluginNativeWindow);
+>>>>>>> upstream-releases
 
 #endif  //_nsPluginNativeWindow_h_

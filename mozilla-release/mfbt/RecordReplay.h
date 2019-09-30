@@ -258,10 +258,6 @@ static inline void RegisterThing(void* aThing);
 static inline void UnregisterThing(void* aThing);
 static inline size_t ThingIndex(void* aThing);
 
-// Give a directive to the record/replay system. For possible values for
-// aDirective, see ProcessRecordReplay.h. This is used for testing purposes.
-static inline void RecordReplayDirective(long aDirective);
-
 // Helper for record/replay asserts, try to determine a name for a C++ object
 // with virtual methods based on its vtable.
 static inline const char* VirtualThingName(void* aThing);
@@ -316,7 +312,7 @@ MFBT_API bool ShouldUpdateProgressCounter(const char* aURL);
 // kind.
 MFBT_API bool DefineRecordReplayControlObject(JSContext* aCx, JSObject* aObj);
 
-// Notify the infrastructure that some URL which contains JavaScript is
+// Notify the infrastructure that some URL which contains JavaScript or CSS is
 // being parsed. This is used to provide the complete contents of the URL to
 // devtools code when it is inspecting the state of this process; that devtools
 // code can't simply fetch the URL itself since it may have been changed since
@@ -362,6 +358,7 @@ static inline void NoteContentParse(const void* aToken, const char* aURL,
 // Define inline wrappers on builds where recording/replaying is enabled.
 #if defined(XP_MACOSX) && defined(NIGHTLY_BUILD)
 
+<<<<<<< HEAD
 #define MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(aName, aFormals, aActuals) \
   MFBT_API void Internal##aName aFormals;                              \
   static inline void aName aFormals {                                  \
@@ -379,21 +376,77 @@ static inline void NoteContentParse(const void* aToken, const char* aURL,
     }                                                                     \
     return aDefaultValue;                                                 \
   }
+||||||| merged common ancestors
+#define MOZ_MakeRecordReplayWrapperVoid(aName, aFormals, aActuals)      \
+  MFBT_API void Internal ##aName aFormals;                              \
+  static inline void aName aFormals                                     \
+  {                                                                     \
+    if (IsRecordingOrReplaying()) {                                     \
+      Internal ##aName aActuals;                                        \
+    }                                                                   \
+  }
+
+#define MOZ_MakeRecordReplayWrapper(aName, aReturnType, aDefaultValue, aFormals, aActuals) \
+  MFBT_API aReturnType Internal ##aName aFormals;                       \
+  static inline aReturnType aName aFormals                              \
+  {                                                                     \
+    if (IsRecordingOrReplaying()) {                                     \
+      return Internal ##aName aActuals;                                 \
+    }                                                                   \
+    return aDefaultValue;                                               \
+  }
+=======
+#  define MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(aName, aFormals, aActuals) \
+    MFBT_API void Internal##aName aFormals;                              \
+    static inline void aName aFormals {                                  \
+      if (IsRecordingOrReplaying()) {                                    \
+        Internal##aName aActuals;                                        \
+      }                                                                  \
+    }
+
+#  define MOZ_MAKE_RECORD_REPLAY_WRAPPER(aName, aReturnType, aDefaultValue, \
+                                         aFormals, aActuals)                \
+    MFBT_API aReturnType Internal##aName aFormals;                          \
+    static inline aReturnType aName aFormals {                              \
+      if (IsRecordingOrReplaying()) {                                       \
+        return Internal##aName aActuals;                                    \
+      }                                                                     \
+      return aDefaultValue;                                                 \
+    }
+>>>>>>> upstream-releases
 
 // Define inline wrappers on other builds. Avoiding references to the out of
 // line method avoids link errors when e.g. using Atomic<> but not linking
 // against MFBT.
 #else
 
+<<<<<<< HEAD
 #define MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(aName, aFormals, aActuals) \
   static inline void aName aFormals {}
+||||||| merged common ancestors
+#define MOZ_MakeRecordReplayWrapperVoid(aName, aFormals, aActuals)      \
+  static inline void aName aFormals {}
+=======
+#  define MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(aName, aFormals, aActuals) \
+    static inline void aName aFormals {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 #define MOZ_MAKE_RECORD_REPLAY_WRAPPER(aName, aReturnType, aDefaultValue, \
                                        aFormals, aActuals)                \
   static inline aReturnType aName aFormals { return aDefaultValue; }
+||||||| merged common ancestors
+#define MOZ_MakeRecordReplayWrapper(aName, aReturnType, aDefaultValue, aFormals, aActuals) \
+  static inline aReturnType aName aFormals { return aDefaultValue; }
+=======
+#  define MOZ_MAKE_RECORD_REPLAY_WRAPPER(aName, aReturnType, aDefaultValue, \
+                                         aFormals, aActuals)                \
+    static inline aReturnType aName aFormals { return aDefaultValue; }
+>>>>>>> upstream-releases
 
 #endif
 
+<<<<<<< HEAD
 MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(BeginOrderedAtomicAccess,
                                     (const void* aValue), (aValue))
 MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(EndOrderedAtomicAccess, (), ())
@@ -445,6 +498,96 @@ MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(RecordReplayDirective, (long aDirective),
 
 #undef MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID
 #undef MOZ_MAKERECORDREPLAYWRAPPER
+||||||| merged common ancestors
+MOZ_MakeRecordReplayWrapperVoid(BeginOrderedAtomicAccess, (), ())
+MOZ_MakeRecordReplayWrapperVoid(EndOrderedAtomicAccess, (), ())
+MOZ_MakeRecordReplayWrapperVoid(BeginPassThroughThreadEvents, (), ())
+MOZ_MakeRecordReplayWrapperVoid(EndPassThroughThreadEvents, (), ())
+MOZ_MakeRecordReplayWrapper(AreThreadEventsPassedThrough, bool, false, (), ())
+MOZ_MakeRecordReplayWrapperVoid(BeginDisallowThreadEvents, (), ())
+MOZ_MakeRecordReplayWrapperVoid(EndDisallowThreadEvents, (), ())
+MOZ_MakeRecordReplayWrapper(AreThreadEventsDisallowed, bool, false, (), ())
+MOZ_MakeRecordReplayWrapper(RecordReplayValue, size_t, aValue, (size_t aValue), (aValue))
+MOZ_MakeRecordReplayWrapperVoid(RecordReplayBytes, (void* aData, size_t aSize), (aData, aSize))
+MOZ_MakeRecordReplayWrapper(HasDivergedFromRecording, bool, false, (), ())
+MOZ_MakeRecordReplayWrapper(GeneratePLDHashTableCallbacks,
+                            const PLDHashTableOps*, aOps, (const PLDHashTableOps* aOps), (aOps))
+MOZ_MakeRecordReplayWrapper(UnwrapPLDHashTableCallbacks,
+                            const PLDHashTableOps*, aOps, (const PLDHashTableOps* aOps), (aOps))
+MOZ_MakeRecordReplayWrapperVoid(DestroyPLDHashTableCallbacks,
+                                (const PLDHashTableOps* aOps), (aOps))
+MOZ_MakeRecordReplayWrapperVoid(MovePLDHashTableContents,
+                                (const PLDHashTableOps* aFirstOps,
+                                 const PLDHashTableOps* aSecondOps),
+                                (aFirstOps, aSecondOps))
+MOZ_MakeRecordReplayWrapperVoid(InvalidateRecording, (const char* aWhy), (aWhy))
+MOZ_MakeRecordReplayWrapperVoid(RegisterWeakPointer,
+                                (const void* aPtr, const std::function<void(bool)>& aCallback),
+                                (aPtr, aCallback))
+MOZ_MakeRecordReplayWrapperVoid(UnregisterWeakPointer, (const void* aPtr), (aPtr))
+MOZ_MakeRecordReplayWrapperVoid(WeakPointerAccess,
+                                (const void* aPtr, bool aSuccess), (aPtr, aSuccess))
+MOZ_MakeRecordReplayWrapperVoid(RecordReplayAssertBytes,
+                                (const void* aData, size_t aSize), (aData, aSize))
+MOZ_MakeRecordReplayWrapperVoid(RegisterThing, (void* aThing), (aThing))
+MOZ_MakeRecordReplayWrapperVoid(UnregisterThing, (void* aThing), (aThing))
+MOZ_MakeRecordReplayWrapper(ThingIndex, size_t, 0, (void* aThing), (aThing))
+MOZ_MakeRecordReplayWrapper(VirtualThingName, const char*, nullptr, (void* aThing), (aThing))
+MOZ_MakeRecordReplayWrapperVoid(RecordReplayDirective, (long aDirective), (aDirective))
+
+#undef MOZ_MakeRecordReplayWrapperVoid
+#undef MOZ_MakeRecordReplayWrapper
+=======
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(BeginOrderedAtomicAccess,
+                                    (const void* aValue), (aValue))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(EndOrderedAtomicAccess, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(BeginPassThroughThreadEvents, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(EndPassThroughThreadEvents, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(AreThreadEventsPassedThrough, bool, false, (),
+                               ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(BeginDisallowThreadEvents, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(EndDisallowThreadEvents, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(AreThreadEventsDisallowed, bool, false, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(RecordReplayValue, size_t, aValue,
+                               (size_t aValue), (aValue))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(RecordReplayBytes,
+                                    (void* aData, size_t aSize), (aData, aSize))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(HasDivergedFromRecording, bool, false, (), ())
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(GeneratePLDHashTableCallbacks,
+                               const PLDHashTableOps*, aOps,
+                               (const PLDHashTableOps* aOps), (aOps))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(UnwrapPLDHashTableCallbacks,
+                               const PLDHashTableOps*, aOps,
+                               (const PLDHashTableOps* aOps), (aOps))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(DestroyPLDHashTableCallbacks,
+                                    (const PLDHashTableOps* aOps), (aOps))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(MovePLDHashTableContents,
+                                    (const PLDHashTableOps* aFirstOps,
+                                     const PLDHashTableOps* aSecondOps),
+                                    (aFirstOps, aSecondOps))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(InvalidateRecording, (const char* aWhy),
+                                    (aWhy))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(
+    RegisterWeakPointer,
+    (const void* aPtr, const std::function<void(bool)>& aCallback),
+    (aPtr, aCallback))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(UnregisterWeakPointer, (const void* aPtr),
+                                    (aPtr))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(WeakPointerAccess,
+                                    (const void* aPtr, bool aSuccess),
+                                    (aPtr, aSuccess))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(RecordReplayAssertBytes,
+                                    (const void* aData, size_t aSize),
+                                    (aData, aSize))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(RegisterThing, (void* aThing), (aThing))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID(UnregisterThing, (void* aThing), (aThing))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(ThingIndex, size_t, 0, (void* aThing), (aThing))
+MOZ_MAKE_RECORD_REPLAY_WRAPPER(VirtualThingName, const char*, nullptr,
+                               (void* aThing), (aThing))
+
+#undef MOZ_MAKE_RECORD_REPLAY_WRAPPER_VOID
+#undef MOZ_MAKERECORDREPLAYWRAPPER
+>>>>>>> upstream-releases
 
 MFBT_API void InternalRecordReplayAssert(const char* aFormat, va_list aArgs);
 

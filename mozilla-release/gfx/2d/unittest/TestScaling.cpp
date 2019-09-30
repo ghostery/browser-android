@@ -24,7 +24,13 @@ void TestScaling::BasicHalfScale() {
   std::vector<uint8_t> data;
   data.resize(500 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 500 + x] = 0xff00ff00;
@@ -53,7 +59,13 @@ void TestScaling::DoubleHalfScale() {
   std::vector<uint8_t> data;
   data.resize(500 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 500 + x] = 0xff00ff00;
@@ -83,7 +95,13 @@ void TestScaling::UnevenHalfScale() {
   // separately.
   data.resize(499 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 500 + x] = 0xff00ff00;
@@ -118,7 +136,13 @@ void TestScaling::OddStrideHalfScale() {
   // Use a 4-byte aligned stride to test if that doesn't cause any issues.
   data.resize(499 * 499 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 499 + x] = 0xff00ff00;
@@ -151,7 +175,13 @@ void TestScaling::VerticalHalfScale() {
   std::vector<uint8_t> data;
   data.resize(500 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 500 + x] = 0xff00ff00;
@@ -180,8 +210,16 @@ void TestScaling::HorizontalHalfScale() {
   std::vector<uint8_t> data;
   data.resize(520 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
   for (int y = 0; y < 500; y++) {
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+  for (int y = 0; y < 500; y ++) {
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+  for (int y = 0; y < 500; y++) {
+>>>>>>> upstream-releases
     for (int x = 0; x < 520; x += 8) {
       pixels[y * 520 + x] = 0xff00ff00;
       pixels[y * 520 + x + 1] = 0xff00ffff;
@@ -215,7 +253,13 @@ void TestScaling::MixedHalfScale() {
   std::vector<uint8_t> data;
   data.resize(500 * 500 * 4);
 
+<<<<<<< HEAD
   uint32_t *pixels = reinterpret_cast<uint32_t *>(&data.front());
+||||||| merged common ancestors
+  uint32_t *pixels = reinterpret_cast<uint32_t*>(&data.front());
+=======
+  uint32_t* pixels = reinterpret_cast<uint32_t*>(&data.front());
+>>>>>>> upstream-releases
   for (int y = 0; y < 500; y += 2) {
     for (int x = 0; x < 500; x += 2) {
       pixels[y * 500 + x] = 0xff00ff00;

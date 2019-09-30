@@ -7,13 +7,13 @@
 #include <string.h>
 
 #if defined(ANDROID)
-#include <fcntl.h>
-#include <linux/ashmem.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#  include <fcntl.h>
+#  include <linux/ashmem.h>
+#  include <sys/ioctl.h>
+#  include <sys/stat.h>
+#  include <sys/types.h>
 #elif defined(XP_DARWIN)
-#include <mach/mach.h>
+#  include <mach/mach.h>
 #endif
 
 using namespace mozilla;
@@ -21,8 +21,10 @@ using namespace mozilla;
 TEST(VolatileBufferTest, HeapVolatileBuffersWork) {
   RefPtr<VolatileBuffer> heapbuf = new VolatileBuffer();
 
-  ASSERT_TRUE(heapbuf) << "Failed to create VolatileBuffer";
-  ASSERT_TRUE(heapbuf->Init(512)) << "Failed to initialize VolatileBuffer";
+  ASSERT_TRUE(heapbuf)
+  << "Failed to create VolatileBuffer";
+  ASSERT_TRUE(heapbuf->Init(512))
+  << "Failed to initialize VolatileBuffer";
 
   VolatileBufferPtr<char> ptr(heapbuf);
 
@@ -34,8 +36,10 @@ TEST(VolatileBufferTest, HeapVolatileBuffersWork) {
 TEST(VolatileBufferTest, RealVolatileBuffersWork) {
   RefPtr<VolatileBuffer> buf = new VolatileBuffer();
 
-  ASSERT_TRUE(buf) << "Failed to create VolatileBuffer";
-  ASSERT_TRUE(buf->Init(16384)) << "Failed to initialize VolatileBuffer";
+  ASSERT_TRUE(buf)
+  << "Failed to create VolatileBuffer";
+  ASSERT_TRUE(buf->Init(16384))
+  << "Failed to initialize VolatileBuffer";
 
   const char teststr[] = "foobar";
 
@@ -50,8 +54,17 @@ TEST(VolatileBufferTest, RealVolatileBuffersWork) {
       VolatileBufferPtr<char> ptr2(buf);
 
       EXPECT_FALSE(ptr.WasBufferPurged())
+<<<<<<< HEAD
           << "Failed to lock buffer again while currently locked";
       ASSERT_TRUE(ptr2) << "Didn't get a pointer on the second lock";
+||||||| merged common ancestors
+        << "Failed to lock buffer again while currently locked";
+      ASSERT_TRUE(ptr2) << "Didn't get a pointer on the second lock";
+=======
+          << "Failed to lock buffer again while currently locked";
+      ASSERT_TRUE(ptr2)
+      << "Didn't get a pointer on the second lock";
+>>>>>>> upstream-releases
 
       strcpy(ptr2, teststr);
     }

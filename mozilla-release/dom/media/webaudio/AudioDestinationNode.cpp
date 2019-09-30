@@ -252,9 +252,17 @@ class DestinationNodeEngine final : public AudioNodeEngine {
         }
       };
 
+<<<<<<< HEAD
       aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
           NS_NewRunnableFunction("dom::WebAudioAudibleStateChangedRunnable",
                                  r));
+||||||| merged common ancestors
+      aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
+        NS_NewRunnableFunction("dom::WebAudioAudibleStateChangedRunnable", r));
+=======
+      aStream->Graph()->DispatchToMainThreadStableState(NS_NewRunnableFunction(
+          "dom::WebAudioAudibleStateChangedRunnable", r));
+>>>>>>> upstream-releases
     }
 
     if (isInputAudible) {
@@ -322,6 +330,7 @@ AudioDestinationNode::AudioDestinationNode(AudioContext* aContext,
                                            bool aIsOffline,
                                            bool aAllowedToStart,
                                            uint32_t aNumberOfChannels,
+<<<<<<< HEAD
                                            uint32_t aLength)
     : AudioNode(aContext, aNumberOfChannels, ChannelCountMode::Explicit,
                 ChannelInterpretation::Speakers),
@@ -343,6 +352,59 @@ AudioDestinationNode::AudioDestinationNode(AudioContext* aContext,
   AudioNodeEngine* engine = new DestinationNodeEngine(this);
 
   mStream = AudioNodeStream::Create(aContext, engine, kStreamFlags, graph);
+||||||| merged common ancestors
+                                           uint32_t aLength,
+                                           float aSampleRate)
+  : AudioNode(aContext, aNumberOfChannels,
+              ChannelCountMode::Explicit, ChannelInterpretation::Speakers)
+  , mFramesToProduce(aLength)
+  , mIsOffline(aIsOffline)
+  , mAudioChannelSuspended(false)
+  , mCaptured(false)
+  , mAudible(AudioChannelService::AudibleState::eAudible)
+  , mCreatedTime(TimeStamp::Now())
+{
+  nsPIDOMWindowInner* window = aContext->GetParentObject();
+  MediaStreamGraph* graph =
+    aIsOffline
+      ? MediaStreamGraph::CreateNonRealtimeInstance(aSampleRate, window)
+      : MediaStreamGraph::GetInstance(
+          MediaStreamGraph::AUDIO_THREAD_DRIVER, window, aSampleRate);
+  AudioNodeEngine* engine = aIsOffline ?
+                            new OfflineDestinationNodeEngine(this, aNumberOfChannels,
+                                                             aLength, aSampleRate) :
+                            static_cast<AudioNodeEngine*>(new DestinationNodeEngine(this));
+
+  AudioNodeStream::Flags flags =
+    AudioNodeStream::NEED_MAIN_THREAD_CURRENT_TIME |
+    AudioNodeStream::NEED_MAIN_THREAD_FINISHED |
+    AudioNodeStream::EXTERNAL_OUTPUT;
+  mStream = AudioNodeStream::Create(aContext, engine, flags, graph);
+=======
+                                           uint32_t aLength)
+    : AudioNode(aContext, aNumberOfChannels, ChannelCountMode::Explicit,
+                ChannelInterpretation::Speakers),
+      mFramesToProduce(aLength),
+      mIsOffline(aIsOffline),
+      mAudioChannelSuspended(false),
+      mCaptured(false),
+      mAudible(AudioChannelService::AudibleState::eAudible),
+      mCreatedTime(TimeStamp::Now()) {
+  if (aIsOffline) {
+    // The stream is created on demand to avoid creating a graph thread that
+    // may not be used.
+    return;
+  }
+
+  // GetParentObject can return nullptr here. This will end up creating another
+  // MediaStreamGraph
+  MediaStreamGraph* graph = MediaStreamGraph::GetInstance(
+      MediaStreamGraph::AUDIO_THREAD_DRIVER, aContext->GetParentObject(),
+      aContext->SampleRate());
+  AudioNodeEngine* engine = new DestinationNodeEngine(this);
+
+  mStream = AudioNodeStream::Create(aContext, engine, kStreamFlags, graph);
+>>>>>>> upstream-releases
   mStream->AddMainThreadListener(this);
   mStream->AddAudioOutput(&gWebAudioOutputKey);
 
@@ -366,6 +428,7 @@ size_t AudioDestinationNode::SizeOfIncludingThis(
   return aMallocSizeOf(this) + SizeOfExcludingThis(aMallocSizeOf);
 }
 
+<<<<<<< HEAD
 AudioNodeStream* AudioDestinationNode::Stream() {
   if (mStream) {
     return mStream;
@@ -389,6 +452,37 @@ AudioNodeStream* AudioDestinationNode::Stream() {
 }
 
 void AudioDestinationNode::DestroyAudioChannelAgent() {
+||||||| merged common ancestors
+void
+AudioDestinationNode::DestroyAudioChannelAgent()
+{
+=======
+AudioNodeStream* AudioDestinationNode::Stream() {
+  if (mStream) {
+    return mStream;
+  }
+
+  AudioContext* context = Context();
+  if (!context) {  // This node has been unlinked.
+    return nullptr;
+  }
+
+  MOZ_ASSERT(mIsOffline, "Realtime streams are created in constructor");
+
+  // GetParentObject can return nullptr here when the document has been
+  // unlinked.
+  MediaStreamGraph* graph = MediaStreamGraph::CreateNonRealtimeInstance(
+      context->SampleRate(), context->GetParentObject());
+  AudioNodeEngine* engine = new OfflineDestinationNodeEngine(this);
+
+  mStream = AudioNodeStream::Create(context, engine, kStreamFlags, graph);
+  mStream->AddMainThreadListener(this);
+
+  return mStream;
+}
+
+void AudioDestinationNode::DestroyAudioChannelAgent() {
+>>>>>>> upstream-releases
   if (mAudioChannelAgent && !Context()->IsOffline()) {
     mAudioChannelAgent->NotifyStoppedPlaying();
     mAudioChannelAgent = nullptr;
@@ -400,7 +494,16 @@ void AudioDestinationNode::DestroyAudioChannelAgent() {
 void AudioDestinationNode::DestroyMediaStream() {
   DestroyAudioChannelAgent();
 
+<<<<<<< HEAD
   if (!mStream) return;
+||||||| merged common ancestors
+  if (!mStream)
+    return;
+=======
+  if (!mStream) return;
+
+  Context()->ShutdownWorklet();
+>>>>>>> upstream-releases
 
   mStream->RemoveMainThreadListener(this);
   MediaStreamGraph* graph = mStream->Graph();
@@ -414,10 +517,23 @@ void AudioDestinationNode::NotifyMainThreadStreamFinished() {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(mStream->IsFinished());
 
+<<<<<<< HEAD
   if (mIsOffline) {
     AbstractMainThread()->Dispatch(NewRunnableMethod(
         "dom::AudioDestinationNode::FireOfflineCompletionEvent", this,
         &AudioDestinationNode::FireOfflineCompletionEvent));
+||||||| merged common ancestors
+  if (mIsOffline) {
+    AbstractMainThread()->Dispatch(
+      NewRunnableMethod("dom::AudioDestinationNode::FireOfflineCompletionEvent",
+                        this,
+                        &AudioDestinationNode::FireOfflineCompletionEvent));
+=======
+  if (mIsOffline && GetAbstractMainThread()) {
+    GetAbstractMainThread()->Dispatch(NewRunnableMethod(
+        "dom::AudioDestinationNode::FireOfflineCompletionEvent", this,
+        &AudioDestinationNode::FireOfflineCompletionEvent));
+>>>>>>> upstream-releases
   }
 }
 

@@ -331,8 +331,16 @@ bool SkMaskFilterBase::canFilterMaskGPU(const GrShape& shape,
     return false;
 }
 
+<<<<<<< HEAD
 bool SkMaskFilterBase::directFilterMaskGPU(GrContext*,
                                            GrRenderTargetContext*,
+||||||| merged common ancestors
+bool SkMaskFilterBase::directFilterMaskGPU(GrContext*,
+                                           GrRenderTargetContext* renderTargetContext,
+=======
+bool SkMaskFilterBase::directFilterMaskGPU(GrRecordingContext*,
+                                           GrRenderTargetContext*,
+>>>>>>> upstream-releases
                                            GrPaint&&,
                                            const GrClip&,
                                            const SkMatrix& viewMatrix,
@@ -340,7 +348,7 @@ bool SkMaskFilterBase::directFilterMaskGPU(GrContext*,
     return false;
 }
 
-sk_sp<GrTextureProxy> SkMaskFilterBase::filterMaskGPU(GrContext*,
+sk_sp<GrTextureProxy> SkMaskFilterBase::filterMaskGPU(GrRecordingContext*,
                                                       sk_sp<GrTextureProxy> srcProxy,
                                                       const SkMatrix& ctm,
                                                       const SkIRect& maskRect) const {
@@ -394,7 +402,13 @@ public:
     }
 
     SkMask::Format getFormat() const override { return SkMask::kA8_Format; }
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkComposeMF)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkComposeMF)
+=======
+>>>>>>> upstream-releases
 
 protected:
 #if SK_SUPPORT_GPU
@@ -415,6 +429,8 @@ protected:
 #endif
 
 private:
+    SK_FLATTENABLE_HOOKS(SkComposeMF)
+
     sk_sp<SkMaskFilter> fOuter;
     sk_sp<SkMaskFilter> fInner;
 
@@ -482,7 +498,14 @@ public:
 
     SkMask::Format getFormat() const override { return SkMask::kA8_Format; }
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkCombineMF)
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkCombineMF)
+=======
+    SK_FLATTENABLE_HOOKS(SkCombineMF)
+>>>>>>> upstream-releases
 
 protected:
 #if SK_SUPPORT_GPU
@@ -631,7 +654,19 @@ public:
 
     SkMask::Format getFormat() const override { return as_MFB(fFilter)->getFormat(); }
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkLocalMatrixMF)
+||||||| merged common ancestors
+#ifndef SK_IGNORE_TO_STRING
+    void toString(SkString* str) const override {
+        str->set("SkLocalMatrixMF:");
+    }
+#endif
+
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkLocalMatrixMF)
+=======
+    SK_FLATTENABLE_HOOKS(SkMatrixMF)
+>>>>>>> upstream-releases
 
 protected:
 #if SK_SUPPORT_GPU
@@ -705,6 +740,7 @@ sk_sp<SkMaskFilter> SkMaskFilter::makeWithMatrix(const SkMatrix& lm) const {
     return sk_sp<SkMaskFilter>(new SkMatrixMF(std::move(me), lm));
 }
 
+<<<<<<< HEAD
 void SkMaskFilter::InitializeFlattenables() {
     SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkMatrixMF)
     SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkComposeMF)
@@ -713,4 +749,19 @@ void SkMaskFilter::InitializeFlattenables() {
 #if SK_SUPPORT_GPU
     gr_register_sdf_maskfilter_createproc();
 #endif
+||||||| merged common ancestors
+void SkMaskFilter::InitializeFlattenables() {
+    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkLocalMatrixMF)
+    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkComposeMF)
+    SK_DEFINE_FLATTENABLE_REGISTRAR_ENTRY(SkCombineMF)
+=======
+void SkMaskFilter::RegisterFlattenables() {
+    SK_REGISTER_FLATTENABLE(SkMatrixMF);
+    SK_REGISTER_FLATTENABLE(SkComposeMF);
+    SK_REGISTER_FLATTENABLE(SkCombineMF);
+    sk_register_blur_maskfilter_createproc();
+#if SK_SUPPORT_GPU
+    gr_register_sdf_maskfilter_createproc();
+#endif
+>>>>>>> upstream-releases
 }

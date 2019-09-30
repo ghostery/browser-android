@@ -58,9 +58,19 @@ class ClientManager final : public ClientThing<ClientManagerChild> {
   // Utility method to perform an IPC operation.  This will create a
   // PClientManagerOp actor tied to a MozPromise.  The promise will
   // resolve or reject with the result of the remote operation.
+<<<<<<< HEAD
   already_AddRefed<ClientOpPromise> StartOp(
       const ClientOpConstructorArgs& aArgs,
       nsISerialEventTarget* aSerialEventTarget);
+||||||| merged common ancestors
+  already_AddRefed<ClientOpPromise>
+  StartOp(const ClientOpConstructorArgs& aArgs,
+          nsISerialEventTarget* aSerialEventTarget);
+=======
+  MOZ_MUST_USE RefPtr<ClientOpPromise> StartOp(
+      const ClientOpConstructorArgs& aArgs,
+      nsISerialEventTarget* aSerialEventTarget);
+>>>>>>> upstream-releases
 
   // Get or create the TLS singleton.  Currently this is only used
   // internally and external code indirectly calls it by invoking

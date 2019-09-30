@@ -6,16 +6,18 @@
 
 #include "mozilla/layers/ProfilerScreenshots.h"
 
+#include "mozilla/SystemGroup.h"
 #include "mozilla/TimeStamp.h"
 
 #include "GeckoProfiler.h"
 #include "gfxUtils.h"
 #include "nsThreadUtils.h"
 #ifdef MOZ_GECKO_PROFILER
-#include "ProfilerMarkerPayload.h"
+#  include "ProfilerMarkerPayload.h"
 #endif
 
 using namespace mozilla;
+using namespace mozilla::gfx;
 using namespace mozilla::layers;
 
 ProfilerScreenshots::ProfilerScreenshots()
@@ -27,15 +29,35 @@ ProfilerScreenshots::~ProfilerScreenshots() {
     // has to happen on an XPCOM thread, and ~ProfilerScreenshots() may not be
     // running on an XPCOM thread - it usually runs on the Compositor thread
     // which is a chromium thread.
+<<<<<<< HEAD
     SystemGroup::Dispatch(
         TaskCategory::Other,
         NewRunnableMethod("ProfilerScreenshots::~ProfilerScreenshots", mThread,
                           &nsIThread::Shutdown));
+||||||| merged common ancestors
+    SystemGroup::Dispatch(TaskCategory::Other,
+                          NewRunnableMethod("ProfilerScreenshots::~ProfilerScreenshots",
+                                            mThread, &nsIThread::Shutdown));
+=======
+    SystemGroup::Dispatch(
+        TaskCategory::Other,
+        NewRunnableMethod("ProfilerScreenshots::~ProfilerScreenshots", mThread,
+                          &nsIThread::AsyncShutdown));
+>>>>>>> upstream-releases
     mThread = nullptr;
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool ProfilerScreenshots::IsEnabled() {
+||||||| merged common ancestors
+/* static */ bool
+ProfilerScreenshots::IsEnabled()
+{
+=======
+/* static */
+bool ProfilerScreenshots::IsEnabled() {
+>>>>>>> upstream-releases
 #ifdef MOZ_GECKO_PROFILER
   return profiler_feature_active(ProfilerFeature::Screenshots);
 #else
@@ -58,8 +80,16 @@ void ProfilerScreenshots::SubmitScreenshot(
   bool succeeded = aPopulateSurface(backingSurface);
 
   if (!succeeded) {
+<<<<<<< HEAD
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because aPopulateSurface callback failed");
+||||||| merged common ancestors
+    PROFILER_ADD_MARKER("NoCompositorScreenshot because aPopulateSurface callback failed");
+=======
+    PROFILER_ADD_MARKER(
+        "NoCompositorScreenshot because aPopulateSurface callback failed",
+        GRAPHICS);
+>>>>>>> upstream-releases
     ReturnSurface(backingSurface);
     return;
   }
@@ -67,9 +97,18 @@ void ProfilerScreenshots::SubmitScreenshot(
   if (!mThread) {
     nsresult rv = NS_NewNamedThread("ProfScreenshot", getter_AddRefs(mThread));
     if (NS_WARN_IF(NS_FAILED(rv))) {
+<<<<<<< HEAD
       PROFILER_ADD_MARKER(
           "NoCompositorScreenshot because ProfilerScreenshots thread creation "
           "failed");
+||||||| merged common ancestors
+      PROFILER_ADD_MARKER("NoCompositorScreenshot because ProfilerScreenshots thread creation failed");
+=======
+      PROFILER_ADD_MARKER(
+          "NoCompositorScreenshot because ProfilerScreenshots thread creation "
+          "failed",
+          DOM);
+>>>>>>> upstream-releases
       ReturnSurface(backingSurface);
       return;
     }
@@ -81,6 +120,7 @@ void ProfilerScreenshots::SubmitScreenshot(
   IntSize scaledSize = aScaledSize;
   TimeStamp timeStamp = aTimeStamp;
 
+<<<<<<< HEAD
   mThread->Dispatch(NS_NewRunnableFunction(
       "ProfilerScreenshots::SubmitScreenshot",
       [this, backingSurface, sourceThread, windowIdentifier, originalSize,
@@ -113,6 +153,75 @@ void ProfilerScreenshots::SubmitScreenshot(
         // Return backingSurface back to the surface pool.
         ReturnSurface(backingSurface);
       }));
+||||||| merged common ancestors
+  mThread->Dispatch(
+    NS_NewRunnableFunction("ProfilerScreenshots::SubmitScreenshot",
+                           [this, backingSurface, sourceThread, windowIdentifier,
+                            originalSize, scaledSize, timeStamp]() {
+    // Create a new surface that wraps backingSurface's data but has the correct
+    // size.
+    {
+      DataSourceSurface::ScopedMap scopedMap(backingSurface, DataSourceSurface::READ);
+      RefPtr<DataSourceSurface> surf =
+        Factory::CreateWrappingDataSourceSurface(
+          scopedMap.GetData(), scopedMap.GetStride(), scaledSize, SurfaceFormat::B8G8R8A8);
+
+      // Encode surf to a JPEG data URL.
+      nsCString dataURL;
+      nsresult rv =
+        gfxUtils::EncodeSourceSurface(surf, NS_LITERAL_CSTRING("image/jpeg"),
+                                      NS_LITERAL_STRING("quality=85"),
+                                      gfxUtils::eDataURIEncode,
+                                      nullptr, &dataURL);
+      if (NS_SUCCEEDED(rv)) {
+        // Add a marker with the data URL.
+        profiler_add_marker_for_thread(
+          sourceThread,
+          "CompositorScreenshot",
+          MakeUnique<ScreenshotPayload>(timeStamp, std::move(dataURL),
+                                        originalSize, windowIdentifier));
+      }
+    }
+
+    // Return backingSurface back to the surface pool.
+    ReturnSurface(backingSurface);
+  }));
+=======
+  RefPtr<ProfilerScreenshots> self = this;
+
+  mThread->Dispatch(NS_NewRunnableFunction(
+      "ProfilerScreenshots::SubmitScreenshot",
+      [self{std::move(self)}, backingSurface, sourceThread, windowIdentifier,
+       originalSize, scaledSize, timeStamp]() {
+        // Create a new surface that wraps backingSurface's data but has the
+        // correct size.
+        {
+          DataSourceSurface::ScopedMap scopedMap(backingSurface,
+                                                 DataSourceSurface::READ);
+          RefPtr<DataSourceSurface> surf =
+              Factory::CreateWrappingDataSourceSurface(
+                  scopedMap.GetData(), scopedMap.GetStride(), scaledSize,
+                  SurfaceFormat::B8G8R8A8);
+
+          // Encode surf to a JPEG data URL.
+          nsCString dataURL;
+          nsresult rv = gfxUtils::EncodeSourceSurface(
+              surf, ImageType::JPEG, NS_LITERAL_STRING("quality=85"),
+              gfxUtils::eDataURIEncode, nullptr, &dataURL);
+          if (NS_SUCCEEDED(rv)) {
+            // Add a marker with the data URL.
+            profiler_add_marker_for_thread(
+                sourceThread, JS::ProfilingCategoryPair::GRAPHICS,
+                "CompositorScreenshot",
+                MakeUnique<ScreenshotPayload>(timeStamp, std::move(dataURL),
+                                              originalSize, windowIdentifier));
+          }
+        }
+
+        // Return backingSurface back to the surface pool.
+        self->ReturnSurface(backingSurface);
+      }));
+>>>>>>> upstream-releases
 #endif
 }
 

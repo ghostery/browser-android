@@ -21,7 +21,6 @@
 #include "nsPIDOMWindow.h"
 #include "nsIDocShell.h"
 #include "nsISelectionController.h"
-#include "nsIPresShell.h"
 #include "mozilla/EventListenerManager.h"
 #include "mozilla/EventStateManager.h"
 #include "mozilla/HTMLEditor.h"
@@ -246,9 +245,25 @@ void nsXBLWindowKeyHandler::RemoveKeyboardEventListenersFrom(
       TrustedEventsAtSystemGroupBubble());
 }
 
+<<<<<<< HEAD
 /* static */ KeyboardMap nsXBLWindowKeyHandler::CollectKeyboardShortcuts() {
   nsXBLPrototypeHandler* handlers =
       ShortcutKeys::GetHandlers(HandlerType::eBrowser);
+||||||| merged common ancestors
+/* static */ KeyboardMap
+nsXBLWindowKeyHandler::CollectKeyboardShortcuts()
+{
+  // Load the XBL handlers
+  EnsureSpecialDocInfo();
+
+  nsXBLPrototypeHandler* handlers = nullptr;
+  sXBLSpecialDocInfo->GetHandlers(NS_LITERAL_CSTRING("browser"), &handlers);
+=======
+/* static */
+KeyboardMap nsXBLWindowKeyHandler::CollectKeyboardShortcuts() {
+  nsXBLPrototypeHandler* handlers =
+      ShortcutKeys::GetHandlers(HandlerType::eBrowser);
+>>>>>>> upstream-releases
 
   // Convert the handlers into keyboard shortcuts, using an AutoTArray with
   // the maximum amount of shortcuts used on any platform to minimize
@@ -382,7 +397,7 @@ bool nsXBLWindowKeyHandler::IsHTMLEditableFieldFocused() {
     return false;
   }
 
-  nsCOMPtr<nsIDocument> doc = htmlEditor->GetDocument();
+  nsCOMPtr<Document> doc = htmlEditor->GetDocument();
   if (doc->HasFlag(NODE_IS_EDITABLE)) {
     // Don't need to perform any checks in designMode documents.
     return true;
@@ -661,7 +676,7 @@ bool nsXBLWindowKeyHandler::GetElementForHandler(
   }
 
   // XXX Shouldn't we check this earlier?
-  nsIDocument* doc = keyElement->GetUncomposedDoc();
+  Document* doc = keyElement->GetUncomposedDoc();
   if (NS_WARN_IF(!doc)) {
     return false;
   }

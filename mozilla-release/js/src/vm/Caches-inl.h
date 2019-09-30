@@ -59,8 +59,31 @@ inline NativeObject* NewObjectCache::newObjectFromHit(JSContext* cx,
     return nullptr;
   }
 
+<<<<<<< HEAD
+  MOZ_ASSERT(!group->hasUnanalyzedPreliminaryObjects());
+||||||| merged common ancestors
+    {
+        AutoSweepObjectGroup sweepGroup(group);
+        if (group->shouldPreTenure(sweepGroup)) {
+            heap = gc::TenuredHeap;
+        }
+    }
+
+    if (cx->runtime()->gc.upcomingZealousGC()) {
+        return nullptr;
+    }
+=======
   MOZ_ASSERT(!group->hasUnanalyzedPreliminaryObjects());
 
+  {
+    AutoSweepObjectGroup sweepGroup(group);
+    if (group->shouldPreTenure(sweepGroup)) {
+      heap = gc::TenuredHeap;
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   {
     AutoSweepObjectGroup sweepGroup(group);
     if (group->shouldPreTenure(sweepGroup)) {
@@ -90,6 +113,48 @@ inline NativeObject* NewObjectCache::newObjectFromHit(JSContext* cx,
   probes::CreateObject(cx, obj);
   gc::gcTracer.traceCreateObject(obj);
   return obj;
+||||||| merged common ancestors
+    NativeObject* obj = static_cast<NativeObject*>(Allocate<JSObject, NoGC>(cx, entry->kind,
+                                                                            /* nDynamicSlots = */ 0,
+                                                                            heap, group->clasp()));
+    if (!obj) {
+        return nullptr;
+    }
+
+    copyCachedToObject(obj, templateObj, entry->kind);
+
+    if (group->clasp()->shouldDelayMetadataBuilder()) {
+        cx->realm()->setObjectPendingMetadata(cx, obj);
+    } else {
+        obj = static_cast<NativeObject*>(SetNewObjectMetadata(cx, obj));
+    }
+
+    probes::CreateObject(cx, obj);
+    gc::gcTracer.traceCreateObject(obj);
+    return obj;
+=======
+  if (cx->runtime()->gc.upcomingZealousGC()) {
+    return nullptr;
+  }
+
+  NativeObject* obj = static_cast<NativeObject*>(AllocateObject<NoGC>(
+      cx, entry->kind, /* nDynamicSlots = */ 0, heap, group->clasp()));
+  if (!obj) {
+    return nullptr;
+  }
+
+  copyCachedToObject(obj, templateObj, entry->kind);
+
+  if (group->clasp()->shouldDelayMetadataBuilder()) {
+    cx->realm()->setObjectPendingMetadata(cx, obj);
+  } else {
+    obj = static_cast<NativeObject*>(SetNewObjectMetadata(cx, obj));
+  }
+
+  probes::CreateObject(cx, obj);
+  gc::gcTracer.traceCreateObject(obj);
+  return obj;
+>>>>>>> upstream-releases
 }
 
 } /* namespace js */

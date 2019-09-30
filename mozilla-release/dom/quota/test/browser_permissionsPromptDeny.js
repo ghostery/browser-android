@@ -6,6 +6,7 @@
 const testPageURL =
   "https://example.com/browser/dom/quota/test/browser_permissionsPrompt.html";
 
+<<<<<<< HEAD
 add_task(async function testPermissionTemporaryDenied() {
   registerPopupEventHandler("popupshowing", function () {
     ok(true, "prompt showing");
@@ -40,17 +41,17 @@ add_task(async function testPermissionTemporaryDenied() {
   removePermission(testPageURL, "persistent-storage");
 });
 
-add_task(async function testPermissionDenied() {
-  removePermission(testPageURL, "persistent-storage");
-
-  registerPopupEventHandler("popupshowing", function () {
+||||||| merged common ancestors
+=======
+add_task(async function testPermissionTemporaryDenied() {
+  registerPopupEventHandler("popupshowing", function() {
     ok(true, "prompt showing");
   });
-  registerPopupEventHandler("popupshown", function () {
+  registerPopupEventHandler("popupshown", function() {
     ok(true, "prompt shown");
-    triggerSecondaryCommand(this, 1);
+    triggerSecondaryCommand(this);
   });
-  registerPopupEventHandler("popuphidden", function () {
+  registerPopupEventHandler("popuphidden", function() {
     ok(true, "prompt hidden");
   });
 
@@ -61,22 +62,67 @@ add_task(async function testPermissionDenied() {
   BrowserTestUtils.loadURI(gBrowser.selectedBrowser, testPageURL);
   await waitForMessage(false, gBrowser);
 
-  is(getPermission(testPageURL, "persistent-storage"),
-     Ci.nsIPermissionManager.DENY_ACTION,
-     "Correct permission set");
+  is(
+    getPermission(testPageURL, "persistent-storage"),
+    Ci.nsIPermissionManager.UNKNOWN_ACTION,
+    "Correct permission set"
+  );
+
+  let tempBlock = SitePermissions.getAllForBrowser(
+    gBrowser.selectedBrowser
+  ).find(
+    p =>
+      p.id == "persistent-storage" &&
+      p.state == SitePermissions.BLOCK &&
+      p.scope == SitePermissions.SCOPE_TEMPORARY
+  );
+  ok(tempBlock, "Should have a temporary block permission on active browser");
+
+  unregisterAllPopupEventHandlers();
+  gBrowser.removeCurrentTab();
+  removePermission(testPageURL, "persistent-storage");
+});
+
+>>>>>>> upstream-releases
+add_task(async function testPermissionDenied() {
+  removePermission(testPageURL, "persistent-storage");
+
+  registerPopupEventHandler("popupshowing", function() {
+    ok(true, "prompt showing");
+  });
+  registerPopupEventHandler("popupshown", function() {
+    ok(true, "prompt shown");
+    triggerSecondaryCommand(this, 1);
+  });
+  registerPopupEventHandler("popuphidden", function() {
+    ok(true, "prompt hidden");
+  });
+
+  info("Creating tab");
+  gBrowser.selectedTab = BrowserTestUtils.addTab(gBrowser);
+
+  info("Loading test page: " + testPageURL);
+  BrowserTestUtils.loadURI(gBrowser.selectedBrowser, testPageURL);
+  await waitForMessage(false, gBrowser);
+
+  is(
+    getPermission(testPageURL, "persistent-storage"),
+    Ci.nsIPermissionManager.DENY_ACTION,
+    "Correct permission set"
+  );
   unregisterAllPopupEventHandlers();
   gBrowser.removeCurrentTab();
   // Keep persistent-storage permission for the next test.
 });
 
 add_task(async function testNoPermissionPrompt() {
-  registerPopupEventHandler("popupshowing", function () {
+  registerPopupEventHandler("popupshowing", function() {
     ok(false, "Shouldn't show a popup this time");
   });
-  registerPopupEventHandler("popupshown", function () {
+  registerPopupEventHandler("popupshown", function() {
     ok(false, "Shouldn't show a popup this time");
   });
-  registerPopupEventHandler("popuphidden", function () {
+  registerPopupEventHandler("popuphidden", function() {
     ok(false, "Shouldn't show a popup this time");
   });
 
@@ -87,24 +133,26 @@ add_task(async function testNoPermissionPrompt() {
   BrowserTestUtils.loadURI(gBrowser.selectedBrowser, testPageURL);
   await waitForMessage(false, gBrowser);
 
-  is(getPermission(testPageURL, "persistent-storage"),
-     Ci.nsIPermissionManager.DENY_ACTION,
-     "Correct permission set");
+  is(
+    getPermission(testPageURL, "persistent-storage"),
+    Ci.nsIPermissionManager.DENY_ACTION,
+    "Correct permission set"
+  );
   unregisterAllPopupEventHandlers();
   gBrowser.removeCurrentTab();
   removePermission(testPageURL, "persistent-storage");
 });
 
 add_task(async function testPermissionDeniedDismiss() {
-  registerPopupEventHandler("popupshowing", function () {
+  registerPopupEventHandler("popupshowing", function() {
     ok(true, "prompt showing");
   });
-  registerPopupEventHandler("popupshown", function () {
+  registerPopupEventHandler("popupshown", function() {
     ok(true, "prompt shown");
     // Dismiss permission prompt.
     dismissNotification(this);
   });
-  registerPopupEventHandler("popuphidden", function () {
+  registerPopupEventHandler("popuphidden", function() {
     ok(true, "prompt hidden");
   });
 
@@ -118,14 +166,20 @@ add_task(async function testPermissionDeniedDismiss() {
   // Pressing ESC results in a temporary block permission on the browser object.
   // So the global permission for the URL should still be unknown, but the browser
   // should have a block permission with a temporary scope.
-  is(getPermission(testPageURL, "persistent-storage"),
-     Ci.nsIPermissionManager.UNKNOWN_ACTION,
-     "Correct permission set");
+  is(
+    getPermission(testPageURL, "persistent-storage"),
+    Ci.nsIPermissionManager.UNKNOWN_ACTION,
+    "Correct permission set"
+  );
 
-  let tempBlock = SitePermissions.getAllForBrowser(gBrowser.selectedBrowser)
-                                 .find(p => p.id == "persistent-storage" &&
-                                            p.state == SitePermissions.BLOCK &&
-                                            p.scope == SitePermissions.SCOPE_TEMPORARY);
+  let tempBlock = SitePermissions.getAllForBrowser(
+    gBrowser.selectedBrowser
+  ).find(
+    p =>
+      p.id == "persistent-storage" &&
+      p.state == SitePermissions.BLOCK &&
+      p.scope == SitePermissions.SCOPE_TEMPORARY
+  );
   ok(tempBlock, "Should have a temporary block permission on active browser");
 
   unregisterAllPopupEventHandlers();

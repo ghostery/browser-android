@@ -36,13 +36,35 @@ inline size_t JSJitFrameIter::prevFrameLocalSize() const {
   return current->prevFrameLocalSize();
 }
 
+<<<<<<< HEAD
 inline JitFrameLayout* JSJitProfilingFrameIterator::framePtr() {
   MOZ_ASSERT(!done());
   return (JitFrameLayout*)fp_;
+||||||| merged common ancestors
+inline JitFrameLayout*
+JSJitProfilingFrameIterator::framePtr()
+{
+    MOZ_ASSERT(!done());
+    return (JitFrameLayout*) fp_;
+=======
+inline JitFrameLayout* JSJitProfilingFrameIterator::framePtr() const {
+  MOZ_ASSERT(!done());
+  return (JitFrameLayout*)fp_;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline JSScript* JSJitProfilingFrameIterator::frameScript() {
   return ScriptFromCalleeToken(framePtr()->calleeToken());
+||||||| merged common ancestors
+inline JSScript*
+JSJitProfilingFrameIterator::frameScript()
+{
+    return ScriptFromCalleeToken(framePtr()->calleeToken());
+=======
+inline JSScript* JSJitProfilingFrameIterator::frameScript() const {
+  return ScriptFromCalleeToken(framePtr()->calleeToken());
+>>>>>>> upstream-releases
 }
 
 inline BaselineFrame* JSJitFrameIter::baselineFrame() const {

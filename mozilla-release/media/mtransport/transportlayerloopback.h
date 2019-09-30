@@ -40,7 +40,7 @@ class TransportLayerLoopback : public TransportLayer {
 
   ~TransportLayerLoopback() {
     while (!packets_.empty()) {
-      MediaPacket *packet = packets_.front();
+      MediaPacket* packet = packets_.front();
       packets_.pop();
       delete packet;
     }
@@ -59,7 +59,7 @@ class TransportLayerLoopback : public TransportLayer {
 
   // Disconnect
   void Disconnect() {
-    TransportLayerLoopback *peer = peer_;
+    TransportLayerLoopback* peer = peer_;
 
     peer_ = nullptr;
     if (peer) {
@@ -84,8 +84,19 @@ class TransportLayerLoopback : public TransportLayer {
   // Fires every 100 ms
   class Deliverer : public nsITimerCallback, public nsINamed {
    public:
+<<<<<<< HEAD
     explicit Deliverer(TransportLayerLoopback *layer) : layer_(layer) {}
     void Detach() { layer_ = nullptr; }
+||||||| merged common ancestors
+    explicit Deliverer(TransportLayerLoopback *layer) :
+        layer_(layer) {}
+    void Detach() {
+      layer_ = nullptr;
+    }
+=======
+    explicit Deliverer(TransportLayerLoopback* layer) : layer_(layer) {}
+    void Detach() { layer_ = nullptr; }
+>>>>>>> upstream-releases
 
     NS_DECL_THREADSAFE_ISUPPORTS
     NS_DECL_NSITIMERCALLBACK
@@ -96,7 +107,7 @@ class TransportLayerLoopback : public TransportLayer {
 
     DISALLOW_COPY_ASSIGN(Deliverer);
 
-    TransportLayerLoopback *layer_;
+    TransportLayerLoopback* layer_;
   };
 
   // Queue a packet for delivery
@@ -104,8 +115,8 @@ class TransportLayerLoopback : public TransportLayer {
 
   TransportLayerLoopback *peer_;
   nsCOMPtr<nsITimer> timer_;
-  std::queue<MediaPacket *> packets_;
-  PRLock *packets_lock_;
+  std::queue<MediaPacket*> packets_;
+  PRLock* packets_lock_;
   RefPtr<Deliverer> deliverer_;
   bool combinePackets_;
 };

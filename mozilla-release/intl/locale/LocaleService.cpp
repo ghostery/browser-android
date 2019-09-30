@@ -11,6 +11,7 @@
 #include "mozilla/Omnijar.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/Services.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/intl/MozLocale.h"
 #include "mozilla/intl/OSPreferences.h"
 #include "nsDirectoryService.h"
@@ -26,8 +27,19 @@
 #define INTL_SYSTEM_LOCALES_CHANGED "intl:system-locales-changed"
 
 #define REQUESTED_LOCALES_PREF "intl.locale.requested"
+#define WEB_EXPOSED_LOCALES_PREF "intl.locale.privacy.web_exposed"
 
+<<<<<<< HEAD
 static const char* kObservedPrefs[] = {REQUESTED_LOCALES_PREF, nullptr};
+||||||| merged common ancestors
+static const char* kObservedPrefs[] = {
+  REQUESTED_LOCALES_PREF,
+  nullptr
+};
+=======
+static const char* kObservedPrefs[] = {REQUESTED_LOCALES_PREF,
+                                       WEB_EXPOSED_LOCALES_PREF, nullptr};
+>>>>>>> upstream-releases
 
 using namespace mozilla::intl;
 using namespace mozilla;
@@ -119,6 +131,25 @@ static void ReadRequestedLocales(nsTArray<nsCString>& aRetVal) {
     aRetVal.AppendElement(defaultLocale);
   }
 }
+
+<<<<<<< HEAD
+LocaleService::LocaleService(bool aIsServer) : mIsServer(aIsServer) {}
+||||||| merged common ancestors
+LocaleService::LocaleService(bool aIsServer)
+  :mIsServer(aIsServer)
+{
+}
+=======
+static void ReadWebExposedLocales(nsTArray<nsCString>& aRetVal) {
+  nsAutoCString str;
+  nsresult rv = Preferences::GetCString(WEB_EXPOSED_LOCALES_PREF, str);
+  if (NS_WARN_IF(NS_FAILED(rv)) || str.Length() == 0) {
+    return;
+  }
+
+  SplitLocaleListStringIntoArray(str, aRetVal);
+}
+>>>>>>> upstream-releases
 
 LocaleService::LocaleService(bool aIsServer) : mIsServer(aIsServer) {}
 
@@ -230,7 +261,25 @@ void LocaleService::RequestedLocalesChanged() {
   }
 }
 
+<<<<<<< HEAD
 void LocaleService::LocalesChanged() {
+||||||| merged common ancestors
+void
+LocaleService::LocalesChanged()
+{
+=======
+void LocaleService::WebExposedLocalesChanged() {
+  MOZ_ASSERT(mIsServer, "This should only be called in the server mode.");
+
+  nsTArray<nsCString> newLocales;
+  ReadWebExposedLocales(newLocales);
+  if (mWebExposedLocales != newLocales) {
+    mWebExposedLocales = std::move(newLocales);
+  }
+}
+
+void LocaleService::LocalesChanged() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mIsServer, "This should only be called in the server mode.");
 
   // if mAppLocales has not been initialized yet, just return
@@ -425,12 +474,15 @@ LocaleService::Observe(nsISupports* aSubject, const char* aTopic,
 
   if (!strcmp(aTopic, INTL_SYSTEM_LOCALES_CHANGED)) {
     RequestedLocalesChanged();
+    WebExposedLocalesChanged();
   } else {
     NS_ConvertUTF16toUTF8 pref(aData);
     // At the moment the only thing we're observing are settings indicating
     // user requested locales.
     if (pref.EqualsLiteral(REQUESTED_LOCALES_PREF)) {
       RequestedLocalesChanged();
+    } else if (pref.EqualsLiteral(WEB_EXPOSED_LOCALES_PREF)) {
+      WebExposedLocalesChanged();
     }
   }
 
@@ -634,6 +686,21 @@ LocaleService::GetRegionalPrefsLocales(nsTArray<nsCString>& aRetVal) {
   // Otherwise use the app locales.
   GetAppLocalesAsBCP47(aRetVal);
   return NS_OK;
+}
+
+NS_IMETHODIMP
+LocaleService::GetWebExposedLocales(nsTArray<nsCString>& aRetVal) {
+  if (StaticPrefs::privacy_spoof_english() == 2) {
+    aRetVal = nsTArray<nsCString>({NS_LITERAL_CSTRING("en-US")});
+    return NS_OK;
+  }
+
+  if (!mWebExposedLocales.IsEmpty()) {
+    aRetVal = mWebExposedLocales;
+    return NS_OK;
+  }
+
+  return GetRegionalPrefsLocales(aRetVal);
 }
 
 NS_IMETHODIMP

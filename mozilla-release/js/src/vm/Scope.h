@@ -82,8 +82,20 @@ enum class ScopeKind : uint8_t {
   WasmFunction
 };
 
+<<<<<<< HEAD
 static inline bool ScopeKindIsCatch(ScopeKind kind) {
   return kind == ScopeKind::SimpleCatch || kind == ScopeKind::Catch;
+||||||| merged common ancestors
+static inline bool
+ScopeKindIsCatch(ScopeKind kind)
+{
+    return kind == ScopeKind::SimpleCatch || kind == ScopeKind::Catch;
+=======
+enum class IsFieldInitializer : bool { No, Yes };
+
+static inline bool ScopeKindIsCatch(ScopeKind kind) {
+  return kind == ScopeKind::SimpleCatch || kind == ScopeKind::Catch;
+>>>>>>> upstream-releases
 }
 
 static inline bool ScopeKindIsInBody(ScopeKind kind) {
@@ -158,6 +170,37 @@ class BindingName {
  * allocate once for data+bindings both, and this does so approximately as
  * elegantly as C++ allows.
  */
+<<<<<<< HEAD
+class TrailingNamesArray {
+ private:
+  alignas(BindingName) unsigned char data_[sizeof(BindingName)];
+
+ private:
+  // Some versions of GCC treat it as a -Wstrict-aliasing violation (ergo a
+  // -Werror compile error) to reinterpret_cast<> |data_| to |T*|, even
+  // through |void*|.  Placing the latter cast in these separate functions
+  // breaks the chain such that affected GCC versions no longer warn/error.
+  void* ptr() { return data_; }
+||||||| merged common ancestors
+class TrailingNamesArray
+{
+  private:
+    alignas(BindingName) unsigned char data_[sizeof(BindingName)];
+
+  private:
+    // Some versions of GCC treat it as a -Wstrict-aliasing violation (ergo a
+    // -Werror compile error) to reinterpret_cast<> |data_| to |T*|, even
+    // through |void*|.  Placing the latter cast in these separate functions
+    // breaks the chain such that affected GCC versions no longer warn/error.
+    void* ptr() {
+        return data_;
+    }
+
+  public:
+    // Explicitly ensure no one accidentally allocates scope data without
+    // poisoning its trailing names.
+    TrailingNamesArray() = delete;
+=======
 class TrailingNamesArray {
  private:
   alignas(BindingName) unsigned char data_[sizeof(BindingName)];
@@ -176,8 +219,9 @@ class TrailingNamesArray {
 
   explicit TrailingNamesArray(size_t nameCount) {
     if (nameCount) {
-      JS_POISON(&data_, 0xCC, sizeof(BindingName) * nameCount,
-                MemCheckKind::MakeUndefined);
+      AlwaysPoison(&data_, JS_SCOPE_DATA_TRAILING_NAMES_PATTERN,
+                   sizeof(BindingName) * nameCount,
+                   MemCheckKind::MakeUndefined);
     }
   }
 
@@ -186,7 +230,27 @@ class TrailingNamesArray {
   BindingName& get(size_t i) { return start()[i]; }
   BindingName& operator[](size_t i) { return get(i); }
 };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  // Explicitly ensure no one accidentally allocates scope data without
+  // poisoning its trailing names.
+  TrailingNamesArray() = delete;
+
+  explicit TrailingNamesArray(size_t nameCount) {
+    if (nameCount) {
+      JS_POISON(&data_, 0xCC, sizeof(BindingName) * nameCount,
+                MemCheckKind::MakeUndefined);
+    }
+  }
+||||||| merged common ancestors
+    explicit TrailingNamesArray(size_t nameCount) {
+        if (nameCount) {
+            JS_POISON(&data_, 0xCC, sizeof(BindingName) * nameCount, MemCheckKind::MakeUndefined);
+        }
+    }
+=======
 class BindingLocation {
  public:
   enum class Kind {
@@ -197,44 +261,206 @@ class BindingLocation {
     Import,
     NamedLambdaCallee
   };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  BindingName* start() { return reinterpret_cast<BindingName*>(ptr()); }
+||||||| merged common ancestors
+    BindingName* start() { return reinterpret_cast<BindingName*>(ptr()); }
+=======
  private:
   Kind kind_;
   uint32_t slot_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  BindingName& get(size_t i) { return start()[i]; }
+  BindingName& operator[](size_t i) { return get(i); }
+};
+||||||| merged common ancestors
+    BindingName& get(size_t i) { return start()[i]; }
+    BindingName& operator[](size_t i) { return get(i); }
+};
+=======
   BindingLocation(Kind kind, uint32_t slot) : kind_(kind), slot_(slot) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+class BindingLocation {
+ public:
+  enum class Kind {
+    Global,
+    Argument,
+    Frame,
+    Environment,
+    Import,
+    NamedLambdaCallee
+  };
+||||||| merged common ancestors
+class BindingLocation
+{
+  public:
+    enum class Kind {
+        Global,
+        Argument,
+        Frame,
+        Environment,
+        Import,
+        NamedLambdaCallee
+    };
+
+  private:
+    Kind kind_;
+    uint32_t slot_;
+
+    BindingLocation(Kind kind, uint32_t slot)
+      : kind_(kind),
+        slot_(slot)
+    { }
+
+  public:
+    static BindingLocation Global() {
+        return BindingLocation(Kind::Global, UINT32_MAX);
+    }
+=======
  public:
   static BindingLocation Global() {
     return BindingLocation(Kind::Global, UINT32_MAX);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ private:
+  Kind kind_;
+  uint32_t slot_;
+||||||| merged common ancestors
+    static BindingLocation Argument(uint16_t slot) {
+        return BindingLocation(Kind::Argument, slot);
+    }
+=======
   static BindingLocation Argument(uint16_t slot) {
     return BindingLocation(Kind::Argument, slot);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  BindingLocation(Kind kind, uint32_t slot) : kind_(kind), slot_(slot) {}
+||||||| merged common ancestors
+    static BindingLocation Frame(uint32_t slot) {
+        MOZ_ASSERT(slot < LOCALNO_LIMIT);
+        return BindingLocation(Kind::Frame, slot);
+    }
+=======
   static BindingLocation Frame(uint32_t slot) {
     MOZ_ASSERT(slot < LOCALNO_LIMIT);
     return BindingLocation(Kind::Frame, slot);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  static BindingLocation Global() {
+    return BindingLocation(Kind::Global, UINT32_MAX);
+  }
+||||||| merged common ancestors
+    static BindingLocation Environment(uint32_t slot) {
+        MOZ_ASSERT(slot < ENVCOORD_SLOT_LIMIT);
+        return BindingLocation(Kind::Environment, slot);
+    }
+=======
   static BindingLocation Environment(uint32_t slot) {
     MOZ_ASSERT(slot < ENVCOORD_SLOT_LIMIT);
     return BindingLocation(Kind::Environment, slot);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static BindingLocation Argument(uint16_t slot) {
+    return BindingLocation(Kind::Argument, slot);
+  }
+||||||| merged common ancestors
+    static BindingLocation Import() {
+        return BindingLocation(Kind::Import, UINT32_MAX);
+    }
+=======
   static BindingLocation Import() {
     return BindingLocation(Kind::Import, UINT32_MAX);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static BindingLocation Frame(uint32_t slot) {
+    MOZ_ASSERT(slot < LOCALNO_LIMIT);
+    return BindingLocation(Kind::Frame, slot);
+  }
+||||||| merged common ancestors
+    static BindingLocation NamedLambdaCallee() {
+        return BindingLocation(Kind::NamedLambdaCallee, UINT32_MAX);
+    }
+=======
   static BindingLocation NamedLambdaCallee() {
     return BindingLocation(Kind::NamedLambdaCallee, UINT32_MAX);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static BindingLocation Environment(uint32_t slot) {
+    MOZ_ASSERT(slot < ENVCOORD_SLOT_LIMIT);
+    return BindingLocation(Kind::Environment, slot);
+  }
+||||||| merged common ancestors
+    bool operator==(const BindingLocation& other) const {
+        return kind_ == other.kind_ && slot_ == other.slot_;
+    }
+=======
   bool operator==(const BindingLocation& other) const {
     return kind_ == other.kind_ && slot_ == other.slot_;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  static BindingLocation Import() {
+    return BindingLocation(Kind::Import, UINT32_MAX);
+  }
+||||||| merged common ancestors
+    bool operator!=(const BindingLocation& other) const {
+        return !operator==(other);
+    }
+=======
+  bool operator!=(const BindingLocation& other) const {
+    return !operator==(other);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  static BindingLocation NamedLambdaCallee() {
+    return BindingLocation(Kind::NamedLambdaCallee, UINT32_MAX);
+  }
+||||||| merged common ancestors
+    Kind kind() const {
+        return kind_;
+    }
+=======
+  Kind kind() const { return kind_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool operator==(const BindingLocation& other) const {
+    return kind_ == other.kind_ && slot_ == other.slot_;
+  }
+||||||| merged common ancestors
+    uint32_t slot() const {
+        MOZ_ASSERT(kind_ == Kind::Frame || kind_ == Kind::Environment);
+        return slot_;
+    }
+=======
+  uint32_t slot() const {
+    MOZ_ASSERT(kind_ == Kind::Frame || kind_ == Kind::Environment);
+    return slot_;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool operator!=(const BindingLocation& other) const {
     return !operator==(other);
   }
@@ -250,6 +476,17 @@ class BindingLocation {
     MOZ_ASSERT(kind_ == Kind::Argument);
     return mozilla::AssertedCast<uint16_t>(slot_);
   }
+||||||| merged common ancestors
+    uint16_t argumentSlot() const {
+        MOZ_ASSERT(kind_ == Kind::Argument);
+        return mozilla::AssertedCast<uint16_t>(slot_);
+    }
+=======
+  uint16_t argumentSlot() const {
+    MOZ_ASSERT(kind_ == Kind::Argument);
+    return mozilla::AssertedCast<uint16_t>(slot_);
+  }
+>>>>>>> upstream-releases
 };
 
 //
@@ -311,30 +548,127 @@ class Scope : public js::gc::TenuredCell {
   template <typename ConcreteScope>
   void initData(MutableHandle<UniquePtr<typename ConcreteScope::Data>> data);
 
+<<<<<<< HEAD
  public:
   static const JS::TraceKind TraceKind = JS::TraceKind::Scope;
+||||||| merged common ancestors
+  public:
+    static const JS::TraceKind TraceKind = JS::TraceKind::Scope;
+=======
+  template <typename F>
+  void applyScopeDataTyped(F&& f);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   template <typename T>
   bool is() const {
     return kind_ == T::classScopeKind_;
   }
+||||||| merged common ancestors
+    template <typename T>
+    bool is() const {
+        return kind_ == T::classScopeKind_;
+    }
+=======
+ public:
+  static const JS::TraceKind TraceKind = JS::TraceKind::Scope;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   template <typename T>
   T& as() {
     MOZ_ASSERT(this->is<T>());
     return *static_cast<T*>(this);
   }
+||||||| merged common ancestors
+    template <typename T>
+    T& as() {
+        MOZ_ASSERT(this->is<T>());
+        return *static_cast<T*>(this);
+    }
+=======
+  template <typename T>
+  bool is() const {
+    return kind_ == T::classScopeKind_;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   template <typename T>
   const T& as() const {
     MOZ_ASSERT(this->is<T>());
     return *static_cast<const T*>(this);
   }
+||||||| merged common ancestors
+    template <typename T>
+    const T& as() const {
+        MOZ_ASSERT(this->is<T>());
+        return *static_cast<const T*>(this);
+    }
+=======
+  template <typename T>
+  T& as() {
+    MOZ_ASSERT(this->is<T>());
+    return *static_cast<T*>(this);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ScopeKind kind() const { return kind_; }
+||||||| merged common ancestors
+    ScopeKind kind() const {
+        return kind_;
+    }
+=======
+  template <typename T>
+  const T& as() const {
+    MOZ_ASSERT(this->is<T>());
+    return *static_cast<const T*>(this);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   Scope* enclosing() const { return enclosing_; }
+||||||| merged common ancestors
+    Scope* enclosing() const {
+        return enclosing_;
+    }
+=======
+  ScopeKind kind() const { return kind_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Shape* environmentShape() const { return environmentShape_; }
+||||||| merged common ancestors
+    Shape* environmentShape() const {
+        return environmentShape_;
+    }
+=======
+  Scope* enclosing() const { return enclosing_; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool hasEnvironment() const {
+    switch (kind()) {
+      case ScopeKind::With:
+      case ScopeKind::Global:
+      case ScopeKind::NonSyntactic:
+        return true;
+      default:
+        // If there's a shape, an environment must be created for this scope.
+        return environmentShape_ != nullptr;
+||||||| merged common ancestors
+    bool hasEnvironment() const {
+        switch (kind()) {
+          case ScopeKind::With:
+          case ScopeKind::Global:
+          case ScopeKind::NonSyntactic:
+            return true;
+          default:
+            // If there's a shape, an environment must be created for this scope.
+            return environmentShape_ != nullptr;
+        }
+=======
   Shape* environmentShape() const { return environmentShape_; }
 
   bool hasEnvironment() const {
@@ -346,6 +680,7 @@ class Scope : public js::gc::TenuredCell {
       default:
         // If there's a shape, an environment must be created for this scope.
         return environmentShape_ != nullptr;
+>>>>>>> upstream-releases
     }
   }
 
@@ -441,12 +776,54 @@ class LexicalScope : public Scope {
     explicit Data(size_t nameCount) : trailingNames(nameCount) {}
     Data() = delete;
 
+<<<<<<< HEAD
     void trace(JSTracer* trc);
   };
 
   static LexicalScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data,
                               uint32_t firstFrameSlot, HandleScope enclosing);
 
+  template <XDRMode mode>
+  static XDRResult XDR(XDRState<mode>* xdr, ScopeKind kind,
+                       HandleScope enclosing, MutableHandleScope scope);
+||||||| merged common ancestors
+    uint32_t nextFrameSlot() const {
+        return data().nextFrameSlot;
+    }
+=======
+    void trace(JSTracer* trc);
+  };
+
+  static LexicalScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data,
+                              uint32_t firstFrameSlot, HandleScope enclosing);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ private:
+  static LexicalScope* createWithData(JSContext* cx, ScopeKind kind,
+                                      MutableHandle<UniquePtr<Data>> data,
+                                      uint32_t firstFrameSlot,
+                                      HandleScope enclosing);
+
+  Data& data() { return *static_cast<Data*>(data_); }
+
+  const Data& data() const { return *static_cast<Data*>(data_); }
+
+  static uint32_t nextFrameSlot(Scope* start);
+
+ public:
+  uint32_t firstFrameSlot() const;
+
+  uint32_t nextFrameSlot() const { return data().nextFrameSlot; }
+
+  // Returns an empty shape for extensible global and non-syntactic lexical
+  // scopes.
+  static Shape* getEmptyExtensibleEnvironmentShape(JSContext* cx);
+||||||| merged common ancestors
+    // Returns an empty shape for extensible global and non-syntactic lexical
+    // scopes.
+    static Shape* getEmptyExtensibleEnvironmentShape(JSContext* cx);
+=======
   template <XDRMode mode>
   static XDRResult XDR(XDRState<mode>* xdr, ScopeKind kind,
                        HandleScope enclosing, MutableHandleScope scope);
@@ -471,6 +848,7 @@ class LexicalScope : public Scope {
   // Returns an empty shape for extensible global and non-syntactic lexical
   // scopes.
   static Shape* getEmptyExtensibleEnvironmentShape(JSContext* cx);
+>>>>>>> upstream-releases
 };
 
 template <>
@@ -498,6 +876,7 @@ inline bool Scope::is<LexicalScope>() const {
 //
 // Corresponds to CallObject on environment chain.
 //
+<<<<<<< HEAD
 class FunctionScope : public Scope {
   friend class GCMarker;
   friend class BindingIter;
@@ -548,6 +927,148 @@ class FunctionScope : public Scope {
     uint16_t nonPositionalFormalStart = 0;
     uint16_t varStart = 0;
     uint32_t length = 0;
+||||||| merged common ancestors
+class FunctionScope : public Scope
+{
+    friend class GCMarker;
+    friend class BindingIter;
+    friend class PositionalFormalParameterIter;
+    friend class Scope;
+    static const ScopeKind classScopeKind_ = ScopeKind::Function;
+
+  public:
+    // Data is public because it is created by the
+    // frontend. See Parser<FullParseHandler>::newFunctionScopeData.
+    struct Data : public BaseScopeData
+    {
+        // The canonical function of the scope, as during a scope walk we
+        // often query properties of the JSFunction (e.g., is the function an
+        // arrow).
+        GCPtrFunction canonicalFunction = {};
+
+        // If parameter expressions are present, parameters act like lexical
+        // bindings.
+        bool hasParameterExprs = false;
+
+        // Bindings are sorted by kind in both frames and environments.
+        //
+        // Positional formal parameter names are those that are not
+        // destructured. They may be referred to by argument slots if
+        // !script()->hasParameterExprs().
+        //
+        // An argument slot that needs to be skipped due to being destructured
+        // or having defaults will have a nullptr name in the name array to
+        // advance the argument slot.
+        //
+        // Rest parameter binding is also included in positional formals.
+        // This also becomes nullptr if destructuring.
+        //
+        // The number of positional formals is equal to function.length if
+        // there's no rest, function.length+1 otherwise.
+        //
+        // Destructuring parameters and destructuring rest are included in
+        // "other formals" below.
+        //
+        // "vars" contains the following:
+        //   * function's top level vars if !script()->hasParameterExprs()
+        //   * special internal names (arguments, .this, .generator) if
+        //     they're used.
+        //
+        // positional formals - [0, nonPositionalFormalStart)
+        //      other formals - [nonPositionalParamStart, varStart)
+        //               vars - [varStart, length)
+        uint16_t nonPositionalFormalStart = 0;
+        uint16_t varStart = 0;
+        uint32_t length = 0;
+
+        // Frame slots [0, nextFrameSlot) are live when this is the innermost
+        // scope.
+        uint32_t nextFrameSlot = 0;
+
+        // The array of tagged JSAtom* names, allocated beyond the end of the
+        // struct.
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
+
+        void trace(JSTracer* trc);
+        Zone* zone() const;
+    };
+
+    static FunctionScope* create(JSContext* cx, Handle<Data*> data,
+                                 bool hasParameterExprs, bool needsEnvironment,
+                                 HandleFunction fun, HandleScope enclosing);
+
+    static FunctionScope* clone(JSContext* cx, Handle<FunctionScope*> scope, HandleFunction fun,
+                                HandleScope enclosing);
+
+    template <XDRMode mode>
+    static XDRResult XDR(XDRState<mode>* xdr, HandleFunction fun, HandleScope enclosing,
+                    MutableHandleScope scope);
+
+  private:
+    static FunctionScope* createWithData(JSContext* cx, MutableHandle<UniquePtr<Data>> data,
+                                         bool hasParameterExprs, bool needsEnvironment,
+                                         HandleFunction fun, HandleScope enclosing);
+
+    Data& data() {
+        return *static_cast<Data*>(data_);
+    }
+=======
+class FunctionScope : public Scope {
+  friend class GCMarker;
+  friend class BindingIter;
+  friend class PositionalFormalParameterIter;
+  friend class Scope;
+  static const ScopeKind classScopeKind_ = ScopeKind::Function;
+
+ public:
+  // Data is public because it is created by the
+  // frontend. See Parser<FullParseHandler>::newFunctionScopeData.
+  struct Data : public BaseScopeData {
+    // The canonical function of the scope, as during a scope walk we
+    // often query properties of the JSFunction (e.g., is the function an
+    // arrow).
+    GCPtrFunction canonicalFunction = {};
+
+    // If parameter expressions are present, parameters act like lexical
+    // bindings.
+    bool hasParameterExprs = false;
+
+    IsFieldInitializer isFieldInitializer = IsFieldInitializer::No;
+
+    // Bindings are sorted by kind in both frames and environments.
+    //
+    // Positional formal parameter names are those that are not
+    // destructured. They may be referred to by argument slots if
+    // !script()->hasParameterExprs().
+    //
+    // An argument slot that needs to be skipped due to being destructured
+    // or having defaults will have a nullptr name in the name array to
+    // advance the argument slot.
+    //
+    // Rest parameter binding is also included in positional formals.
+    // This also becomes nullptr if destructuring.
+    //
+    // The number of positional formals is equal to function.length if
+    // there's no rest, function.length+1 otherwise.
+    //
+    // Destructuring parameters and destructuring rest are included in
+    // "other formals" below.
+    //
+    // "vars" contains the following:
+    //   * function's top level vars if !script()->hasParameterExprs()
+    //   * special internal names (arguments, .this, .generator) if
+    //     they're used.
+    //
+    // positional formals - [0, nonPositionalFormalStart)
+    //      other formals - [nonPositionalParamStart, varStart)
+    //               vars - [varStart, length)
+    uint16_t nonPositionalFormalStart = 0;
+    uint16_t varStart = 0;
+    uint32_t length = 0;
+>>>>>>> upstream-releases
 
     // Frame slots [0, nextFrameSlot) are live when this is the innermost
     // scope.
@@ -560,14 +1081,22 @@ class FunctionScope : public Scope {
     explicit Data(size_t nameCount) : trailingNames(nameCount) {}
     Data() = delete;
 
+<<<<<<< HEAD
     void trace(JSTracer* trc);
     Zone* zone() const;
   };
+||||||| merged common ancestors
+    JSScript* script() const;
+=======
+    void trace(JSTracer* trc);
+  };
+>>>>>>> upstream-releases
 
   static FunctionScope* create(JSContext* cx, Handle<Data*> data,
                                bool hasParameterExprs, bool needsEnvironment,
                                HandleFunction fun, HandleScope enclosing);
 
+<<<<<<< HEAD
   static FunctionScope* clone(JSContext* cx, Handle<FunctionScope*> scope,
                               HandleFunction fun, HandleScope enclosing);
 
@@ -589,9 +1118,35 @@ class FunctionScope : public Scope {
 
  public:
   uint32_t nextFrameSlot() const { return data().nextFrameSlot; }
+||||||| merged common ancestors
+    uint32_t numPositionalFormalParameters() const {
+        return data().nonPositionalFormalStart;
+    }
+=======
+  static FunctionScope* clone(JSContext* cx, Handle<FunctionScope*> scope,
+                              HandleFunction fun, HandleScope enclosing);
+
+  template <XDRMode mode>
+  static XDRResult XDR(XDRState<mode>* xdr, HandleFunction fun,
+                       HandleScope enclosing, MutableHandleScope scope);
+
+ private:
+  static FunctionScope* createWithData(
+      JSContext* cx, MutableHandle<UniquePtr<Data>> data,
+      bool hasParameterExprs, IsFieldInitializer isFieldInitializer,
+      bool needsEnvironment, HandleFunction fun, HandleScope enclosing);
+
+  Data& data() { return *static_cast<Data*>(data_); }
+
+  const Data& data() const { return *static_cast<Data*>(data_); }
+
+ public:
+  uint32_t nextFrameSlot() const { return data().nextFrameSlot; }
+>>>>>>> upstream-releases
 
   JSFunction* canonicalFunction() const { return data().canonicalFunction; }
 
+<<<<<<< HEAD
   JSScript* script() const;
 
   bool hasParameterExprs() const { return data().hasParameterExprs; }
@@ -603,6 +1158,25 @@ class FunctionScope : public Scope {
   static bool isSpecialName(JSContext* cx, JSAtom* name);
 
   static Shape* getEmptyEnvironmentShape(JSContext* cx, bool hasParameterExprs);
+||||||| merged common ancestors
+    static Shape* getEmptyEnvironmentShape(JSContext* cx, bool hasParameterExprs);
+=======
+  JSScript* script() const;
+
+  bool hasParameterExprs() const { return data().hasParameterExprs; }
+
+  IsFieldInitializer isFieldInitializer() const {
+    return data().isFieldInitializer;
+  }
+
+  uint32_t numPositionalFormalParameters() const {
+    return data().nonPositionalFormalStart;
+  }
+
+  static bool isSpecialName(JSContext* cx, JSAtom* name);
+
+  static Shape* getEmptyEnvironmentShape(JSContext* cx, bool hasParameterExprs);
+>>>>>>> upstream-releases
 };
 
 //
@@ -767,12 +1341,35 @@ inline bool Scope::is<GlobalScope>() const {
 // Scope of a 'with' statement. Has no bindings.
 //
 // Corresponds to a WithEnvironmentObject on the environment chain.
+<<<<<<< HEAD
+class WithScope : public Scope {
+  friend class Scope;
+  static const ScopeKind classScopeKind_ = ScopeKind::With;
+||||||| merged common ancestors
+class WithScope : public Scope
+{
+    friend class Scope;
+    static const ScopeKind classScopeKind_ = ScopeKind::With;
+=======
 class WithScope : public Scope {
   friend class Scope;
   static const ScopeKind classScopeKind_ = ScopeKind::With;
 
  public:
   static WithScope* create(JSContext* cx, HandleScope enclosing);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+  static WithScope* create(JSContext* cx, HandleScope enclosing);
+||||||| merged common ancestors
+  public:
+    static WithScope* create(JSContext* cx, HandleScope enclosing);
+=======
+  template <XDRMode mode>
+  static XDRResult XDR(XDRState<mode>* xdr, HandleScope enclosing,
+                       MutableHandleScope scope);
+>>>>>>> upstream-releases
 };
 
 //
@@ -913,6 +1510,7 @@ class ModuleScope : public Scope {
                              Handle<ModuleObject*> module,
                              HandleScope enclosing);
 
+<<<<<<< HEAD
  private:
   static ModuleScope* createWithData(JSContext* cx,
                                      MutableHandle<UniquePtr<Data>> data,
@@ -920,7 +1518,36 @@ class ModuleScope : public Scope {
                                      HandleScope enclosing);
 
   Data& data() { return *static_cast<Data*>(data_); }
+||||||| merged common ancestors
+    ModuleObject* module() const {
+        return data().module;
+    }
+=======
+ private:
+  static ModuleScope* createWithData(JSContext* cx,
+                                     MutableHandle<UniquePtr<Data>> data,
+                                     Handle<ModuleObject*> module,
+                                     HandleScope enclosing);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  const Data& data() const { return *static_cast<Data*>(data_); }
+||||||| merged common ancestors
+    JSScript* script() const;
+=======
+  Data& data() { return *static_cast<Data*>(data_); }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ public:
+  uint32_t nextFrameSlot() const { return data().nextFrameSlot; }
+
+  ModuleObject* module() const { return data().module; }
+
+  static Shape* getEmptyEnvironmentShape(JSContext* cx);
+||||||| merged common ancestors
+    static Shape* getEmptyEnvironmentShape(JSContext* cx);
+=======
   const Data& data() const { return *static_cast<Data*>(data_); }
 
  public:
@@ -929,6 +1556,7 @@ class ModuleScope : public Scope {
   ModuleObject* module() const { return data().module; }
 
   static Shape* getEmptyEnvironmentShape(JSContext* cx);
+>>>>>>> upstream-releases
 };
 
 class WasmInstanceScope : public Scope {
@@ -1010,6 +1638,49 @@ class WasmFunctionScope : public Scope {
 
   static Shape* getEmptyEnvironmentShape(JSContext* cx);
 };
+
+template <typename F>
+void Scope::applyScopeDataTyped(F&& f) {
+  switch (kind()) {
+    case ScopeKind::Function: {
+      f(&as<FunctionScope>().data());
+      break;
+      case ScopeKind::FunctionBodyVar:
+      case ScopeKind::ParameterExpressionVar:
+        f(&as<VarScope>().data());
+        break;
+      case ScopeKind::Lexical:
+      case ScopeKind::SimpleCatch:
+      case ScopeKind::Catch:
+      case ScopeKind::NamedLambda:
+      case ScopeKind::StrictNamedLambda:
+        f(&as<LexicalScope>().data());
+        break;
+      case ScopeKind::With:
+        // With scopes do not have data.
+        break;
+      case ScopeKind::Eval:
+      case ScopeKind::StrictEval:
+        f(&as<EvalScope>().data());
+        break;
+      case ScopeKind::Global:
+      case ScopeKind::NonSyntactic:
+        f(&as<GlobalScope>().data());
+        break;
+      case ScopeKind::Module:
+        f(&as<ModuleScope>().data());
+        break;
+      case ScopeKind::WasmInstance:
+        f(&as<WasmInstanceScope>().data());
+        break;
+      case ScopeKind::WasmFunction:
+        f(&as<WasmFunctionScope>().data());
+        break;
+      default:
+        MOZ_CRASH("Unexpected scope type in ApplyScopeDataTyped");
+    }
+  }
+}
 
 //
 // An iterator for a Scope's bindings. This is the source of truth for frame
@@ -1317,8 +1988,17 @@ class PositionalFormalParameterIter : public BindingIter {
     }
   }
 
+<<<<<<< HEAD
  public:
   explicit PositionalFormalParameterIter(JSScript* script);
+||||||| merged common ancestors
+  public:
+    explicit PositionalFormalParameterIter(JSScript* script);
+=======
+ public:
+  explicit PositionalFormalParameterIter(Scope* scope);
+  explicit PositionalFormalParameterIter(JSScript* script);
+>>>>>>> upstream-releases
 
   void operator++(int) {
     BindingIter::operator++(1);

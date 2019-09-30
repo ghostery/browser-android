@@ -3,7 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "gfxPrefs.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/ContentEvents.h"
 #include "mozilla/EventStateManager.h"
@@ -11,9 +10,11 @@
 #include "mozilla/MiscEvents.h"
 #include "mozilla/MouseEvents.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/TextEvents.h"
 #include "mozilla/TouchEvents.h"
 #include "mozilla/dom/KeyboardEventBinding.h"
+#include "nsCommandParams.h"
 #include "nsContentUtils.h"
 #include "nsIContent.h"
 #include "nsPrintfCString.h"
@@ -75,22 +76,52 @@ const nsCString ToString(CodeNameIndex aCodeNameIndex) {
   return NS_ConvertUTF16toUTF8(codeName);
 }
 
+<<<<<<< HEAD
 const char* ToChar(Command aCommand) {
   if (aCommand == CommandDoNothing) {
+||||||| merged common ancestors
+const char*
+ToChar(Command aCommand)
+{
+  if (aCommand == CommandDoNothing) {
+=======
+const char* ToChar(Command aCommand) {
+  if (aCommand == Command::DoNothing) {
+>>>>>>> upstream-releases
     return "CommandDoNothing";
   }
 
   switch (aCommand) {
 #define NS_DEFINE_COMMAND(aName, aCommandStr) \
+<<<<<<< HEAD
   case Command##aName:                        \
     return "Command" #aName;
+||||||| merged common ancestors
+    case Command##aName: \
+      return "Command" #aName;
+=======
+  case Command::aName:                        \
+    return "Command::" #aName;
+#define NS_DEFINE_COMMAND_WITH_PARAM(aName, aCommandStr, aParam) \
+  case Command::aName:                                           \
+    return "Command::" #aName;
+>>>>>>> upstream-releases
 #define NS_DEFINE_COMMAND_NO_EXEC_COMMAND(aName) \
+<<<<<<< HEAD
   case Command##aName:                           \
     return "Command" #aName;
+||||||| merged common ancestors
+    case Command##aName: \
+      return "Command" #aName;
+=======
+  case Command::aName:                           \
+    return "Command::" #aName;
+>>>>>>> upstream-releases
 
 #include "mozilla/CommandList.h"
 
 #undef NS_DEFINE_COMMAND
+#undef NS_DEFINE_COMMAND_WITH_PARAM
 #undef NS_DEFINE_COMMAND_NO_EXEC_COMMAND
 
     default:
@@ -171,6 +202,77 @@ SelectionType ToSelectionType(TextRangeType aTextRangeType) {
       MOZ_CRASH("TextRangeType is invalid");
       return SelectionType::eNormal;
   }
+}
+
+/******************************************************************************
+ * non class method implementation
+ ******************************************************************************/
+
+static nsDataHashtable<nsDepCharHashKey, Command>* sCommandHashtable = nullptr;
+
+Command GetInternalCommand(const char* aCommandName,
+                           const nsCommandParams* aCommandParams) {
+  if (!aCommandName) {
+    return Command::DoNothing;
+  }
+
+  // Special cases for "cmd_align".  It's mapped to multiple internal commands
+  // with additional param.  Therefore, we cannot handle it with the hashtable.
+  if (!strcmp(aCommandName, "cmd_align")) {
+    if (!aCommandParams) {
+      // Note that if this is called by EditorCommand::IsCommandEnabled(),
+      // it cannot set aCommandParams.  So, don't warn in this case even though
+      // this is illegal case for DoCommandParams().
+      return Command::FormatJustify;
+    }
+    nsAutoCString cValue;
+    nsresult rv = aCommandParams->GetCString("state_attribute", cValue);
+    if (NS_FAILED(rv)) {
+      nsString value;  // Avoid copying the string buffer with using nsString.
+      rv = aCommandParams->GetString("state_attribute", value);
+      if (NS_FAILED(rv)) {
+        return Command::FormatJustifyNone;
+      }
+      cValue = NS_ConvertUTF16toUTF8(value);
+    }
+    if (cValue.LowerCaseEqualsASCII("left")) {
+      return Command::FormatJustifyLeft;
+    }
+    if (cValue.LowerCaseEqualsASCII("right")) {
+      return Command::FormatJustifyRight;
+    }
+    if (cValue.LowerCaseEqualsASCII("center")) {
+      return Command::FormatJustifyCenter;
+    }
+    if (cValue.LowerCaseEqualsASCII("justify")) {
+      return Command::FormatJustifyFull;
+    }
+    if (cValue.IsEmpty()) {
+      return Command::FormatJustifyNone;
+    }
+    return Command::DoNothing;
+  }
+
+  if (!sCommandHashtable) {
+    sCommandHashtable = new nsDataHashtable<nsDepCharHashKey, Command>();
+#define NS_DEFINE_COMMAND(aName, aCommandStr) \
+  sCommandHashtable->Put(#aCommandStr, Command::aName);
+
+#define NS_DEFINE_COMMAND_WITH_PARAM(aName, aCommandStr, aParam)
+
+#define NS_DEFINE_COMMAND_NO_EXEC_COMMAND(aName)
+
+#include "mozilla/CommandList.h"
+
+#undef NS_DEFINE_COMMAND
+#undef NS_DEFINE_COMMAND_WITH_PARAM
+#undef NS_DEFINE_COMMAND_NO_EXEC_COMMAND
+  }
+  Command command = Command::DoNothing;
+  if (!sCommandHashtable->Get(aCommandName, &command)) {
+    return Command::DoNothing;
+  }
+  return command;
 }
 
 /******************************************************************************
@@ -574,7 +676,16 @@ Modifier WidgetInputEvent::AccelModifier() {
  * mozilla::WidgetMouseEvent (MouseEvents.h)
  ******************************************************************************/
 
+<<<<<<< HEAD
 /* static */ bool WidgetMouseEvent::IsMiddleClickPasteEnabled() {
+||||||| merged common ancestors
+/* static */ bool
+WidgetMouseEvent::IsMiddleClickPasteEnabled()
+{
+=======
+/* static */
+bool WidgetMouseEvent::IsMiddleClickPasteEnabled() {
+>>>>>>> upstream-releases
   return Preferences::GetBool("middlemouse.paste", false);
 }
 
@@ -582,14 +693,40 @@ Modifier WidgetInputEvent::AccelModifier() {
  * mozilla::WidgetWheelEvent (MouseEvents.h)
  ******************************************************************************/
 
+<<<<<<< HEAD
 /* static */ double WidgetWheelEvent::ComputeOverriddenDelta(
     double aDelta, bool aIsForVertical) {
   if (!gfxPrefs::MouseWheelHasRootScrollDeltaOverride()) {
+||||||| merged common ancestors
+/* static */ double
+WidgetWheelEvent::ComputeOverriddenDelta(double aDelta, bool aIsForVertical)
+{
+  if (!gfxPrefs::MouseWheelHasRootScrollDeltaOverride()) {
+=======
+/* static */
+double WidgetWheelEvent::ComputeOverriddenDelta(double aDelta,
+                                                bool aIsForVertical) {
+  if (!StaticPrefs::
+          mousewheel_system_scroll_override_on_root_content_enabled()) {
+>>>>>>> upstream-releases
     return aDelta;
   }
+<<<<<<< HEAD
   int32_t intFactor = aIsForVertical
                           ? gfxPrefs::MouseWheelRootScrollVerticalFactor()
                           : gfxPrefs::MouseWheelRootScrollHorizontalFactor();
+||||||| merged common ancestors
+  int32_t intFactor = aIsForVertical
+                      ? gfxPrefs::MouseWheelRootScrollVerticalFactor()
+                      : gfxPrefs::MouseWheelRootScrollHorizontalFactor();
+=======
+  int32_t intFactor =
+      aIsForVertical
+          ? StaticPrefs::
+                mousewheel_system_scroll_override_on_root_content_vertical_factor()
+          : StaticPrefs::
+                mousewheel_system_scroll_override_on_root_content_horizontal_factor();
+>>>>>>> upstream-releases
   // Making the scroll speed slower doesn't make sense. So, ignore odd factor
   // which is less than 1.0.
   if (intFactor <= 100) {
@@ -993,15 +1130,39 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   return sValue;
 }
 
+<<<<<<< HEAD
 /* static */ void WidgetKeyboardEvent::Shutdown() {
+||||||| merged common ancestors
+/* static */ void
+WidgetKeyboardEvent::Shutdown()
+{
+=======
+/* static */
+void WidgetKeyboardEvent::Shutdown() {
+>>>>>>> upstream-releases
   delete sKeyNameIndexHashtable;
   sKeyNameIndexHashtable = nullptr;
   delete sCodeNameIndexHashtable;
   sCodeNameIndexHashtable = nullptr;
+  // Although sCommandHashtable is not a member of WidgetKeyboardEvent, but
+  // let's delete it here since we need to do it at same time.
+  delete sCommandHashtable;
+  sCommandHashtable = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ void WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
                                                      nsAString& aKeyName) {
+||||||| merged common ancestors
+/* static */ void
+WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
+                                   nsAString& aKeyName)
+{
+=======
+/* static */
+void WidgetKeyboardEvent::GetDOMKeyName(KeyNameIndex aKeyNameIndex,
+                                        nsAString& aKeyName) {
+>>>>>>> upstream-releases
   if (aKeyNameIndex >= KEY_NAME_INDEX_USE_STRING) {
     aKeyName.Truncate();
     return;
@@ -1013,8 +1174,19 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   aKeyName = kKeyNames[aKeyNameIndex];
 }
 
+<<<<<<< HEAD
 /* static */ void WidgetKeyboardEvent::GetDOMCodeName(
     CodeNameIndex aCodeNameIndex, nsAString& aCodeName) {
+||||||| merged common ancestors
+/* static */ void
+WidgetKeyboardEvent::GetDOMCodeName(CodeNameIndex aCodeNameIndex,
+                                    nsAString& aCodeName)
+{
+=======
+/* static */
+void WidgetKeyboardEvent::GetDOMCodeName(CodeNameIndex aCodeNameIndex,
+                                         nsAString& aCodeName) {
+>>>>>>> upstream-releases
   if (aCodeNameIndex >= CODE_NAME_INDEX_USE_STRING) {
     aCodeName.Truncate();
     return;
@@ -1026,8 +1198,17 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   aCodeName = kCodeNames[aCodeNameIndex];
 }
 
+<<<<<<< HEAD
 /* static */ KeyNameIndex WidgetKeyboardEvent::GetKeyNameIndex(
     const nsAString& aKeyValue) {
+||||||| merged common ancestors
+/* static */ KeyNameIndex
+WidgetKeyboardEvent::GetKeyNameIndex(const nsAString& aKeyValue)
+{
+=======
+/* static */
+KeyNameIndex WidgetKeyboardEvent::GetKeyNameIndex(const nsAString& aKeyValue) {
+>>>>>>> upstream-releases
   if (!sKeyNameIndexHashtable) {
     sKeyNameIndexHashtable = new KeyNameIndexHashtable(ArrayLength(kKeyNames));
     for (size_t i = 0; i < ArrayLength(kKeyNames); i++) {
@@ -1040,8 +1221,18 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   return result;
 }
 
+<<<<<<< HEAD
 /* static */ CodeNameIndex WidgetKeyboardEvent::GetCodeNameIndex(
     const nsAString& aCodeValue) {
+||||||| merged common ancestors
+/* static */ CodeNameIndex
+WidgetKeyboardEvent::GetCodeNameIndex(const nsAString& aCodeValue)
+{
+=======
+/* static */
+CodeNameIndex WidgetKeyboardEvent::GetCodeNameIndex(
+    const nsAString& aCodeValue) {
+>>>>>>> upstream-releases
   if (!sCodeNameIndexHashtable) {
     sCodeNameIndexHashtable =
         new CodeNameIndexHashtable(ArrayLength(kCodeNames));
@@ -1055,8 +1246,19 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   return result;
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
     CodeNameIndex aCodeNameIndex) {
+||||||| merged common ancestors
+/* static */ uint32_t
+WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
+                       CodeNameIndex aCodeNameIndex)
+{
+=======
+/* static */
+uint32_t WidgetKeyboardEvent::GetFallbackKeyCodeOfPunctuationKey(
+    CodeNameIndex aCodeNameIndex) {
+>>>>>>> upstream-releases
   switch (aCodeNameIndex) {
     case CODE_NAME_INDEX_Semicolon:  // VK_OEM_1 on Windows
       return dom::KeyboardEvent_Binding::DOM_VK_SEMICOLON;
@@ -1091,21 +1293,39 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
 
 /* static */ const char* WidgetKeyboardEvent::GetCommandStr(Command aCommand) {
 #define NS_DEFINE_COMMAND(aName, aCommandStr) , #aCommandStr
+#define NS_DEFINE_COMMAND_WITH_PARAM(aName, aCommandStr, aParam) , #aCommandStr
 #define NS_DEFINE_COMMAND_NO_EXEC_COMMAND(aName)
   static const char* const kCommands[] = {
+<<<<<<< HEAD
       ""  // CommandDoNothing
+||||||| merged common ancestors
+    "" // CommandDoNothing
+=======
+      ""  // DoNothing
+>>>>>>> upstream-releases
 #include "mozilla/CommandList.h"
   };
 #undef NS_DEFINE_COMMAND
+#undef NS_DEFINE_COMMAND_WITH_PARAM
 #undef NS_DEFINE_COMMAND_NO_EXEC_COMMAND
 
   MOZ_RELEASE_ASSERT(static_cast<size_t>(aCommand) < ArrayLength(kCommands),
                      "Illegal command enumeration value");
-  return kCommands[aCommand];
+  return kCommands[static_cast<CommandInt>(aCommand)];
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t WidgetKeyboardEvent::ComputeLocationFromCodeValue(
     CodeNameIndex aCodeNameIndex) {
+||||||| merged common ancestors
+/* static */ uint32_t
+WidgetKeyboardEvent::ComputeLocationFromCodeValue(CodeNameIndex aCodeNameIndex)
+{
+=======
+/* static */
+uint32_t WidgetKeyboardEvent::ComputeLocationFromCodeValue(
+    CodeNameIndex aCodeNameIndex) {
+>>>>>>> upstream-releases
   // Following commented out cases are not defined in PhysicalKeyCodeNameList.h
   // but are defined by D3E spec.  So, they should be uncommented when the
   // code values are defined in the header.
@@ -1154,8 +1374,18 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ uint32_t WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(
     KeyNameIndex aKeyNameIndex) {
+||||||| merged common ancestors
+/* static */ uint32_t
+WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(KeyNameIndex aKeyNameIndex)
+{
+=======
+/* static */
+uint32_t WidgetKeyboardEvent::ComputeKeyCodeFromKeyNameIndex(
+    KeyNameIndex aKeyNameIndex) {
+>>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_Cancel:
       return dom::KeyboardEvent_Binding::DOM_VK_CANCEL;
@@ -1325,9 +1555,21 @@ int32_t WidgetKeyboardEvent::ContentAccessModifierMaskPref() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ CodeNameIndex
 WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
     KeyNameIndex aKeyNameIndex, const Maybe<uint32_t>& aLocation) {
+||||||| merged common ancestors
+/* static */ CodeNameIndex
+WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
+                       KeyNameIndex aKeyNameIndex,
+                       const Maybe<uint32_t>& aLocation)
+{
+=======
+/* static */
+CodeNameIndex WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
+    KeyNameIndex aKeyNameIndex, const Maybe<uint32_t>& aLocation) {
+>>>>>>> upstream-releases
   if (aLocation.isSome() &&
       aLocation.value() ==
           dom::KeyboardEvent_Binding::DOM_KEY_LOCATION_NUMPAD) {
@@ -1559,9 +1801,20 @@ WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
       return CODE_NAME_INDEX_MediaTrackPrevious;
     case KEY_NAME_INDEX_LaunchApplication1:
       return CODE_NAME_INDEX_LaunchApp1;
+<<<<<<< HEAD
 #endif  // #ifndef XP_MACOSX
 
       // Only Windows and GTK supports the following multimedia keys.
+||||||| merged common ancestors
+#endif // #ifndef XP_MACOSX
+
+
+    // Only Windows and GTK supports the following multimedia keys.
+=======
+#endif  // #ifndef XP_MACOSX
+
+      // Only Windows and GTK supports the following multimedia keys.
+>>>>>>> upstream-releases
 #if defined(XP_WIN) || defined(MOZ_WIDGET_GTK)
     case KEY_NAME_INDEX_BrowserHome:
       return CODE_NAME_INDEX_BrowserHome;
@@ -1646,8 +1899,18 @@ WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
   }
 }
 
+<<<<<<< HEAD
 /* static */ Modifier WidgetKeyboardEvent::GetModifierForKeyName(
     KeyNameIndex aKeyNameIndex) {
+||||||| merged common ancestors
+/* static */ Modifier
+WidgetKeyboardEvent::GetModifierForKeyName(KeyNameIndex aKeyNameIndex)
+{
+=======
+/* static */
+Modifier WidgetKeyboardEvent::GetModifierForKeyName(
+    KeyNameIndex aKeyNameIndex) {
+>>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_Alt:
       return MODIFIER_ALT;
@@ -1682,8 +1945,17 @@ WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
   }
 }
 
+<<<<<<< HEAD
 /* static */ bool WidgetKeyboardEvent::IsLockableModifier(
     KeyNameIndex aKeyNameIndex) {
+||||||| merged common ancestors
+/* static */ bool
+WidgetKeyboardEvent::IsLockableModifier(KeyNameIndex aKeyNameIndex)
+{
+=======
+/* static */
+bool WidgetKeyboardEvent::IsLockableModifier(KeyNameIndex aKeyNameIndex) {
+>>>>>>> upstream-releases
   switch (aKeyNameIndex) {
     case KEY_NAME_INDEX_CapsLock:
     case KEY_NAME_INDEX_FnLock:
@@ -1696,4 +1968,63 @@ WidgetKeyboardEvent::ComputeCodeNameIndexFromKeyNameIndex(
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+/******************************************************************************
+ * mozilla::InternalEditorInputEvent (TextEvents.h)
+ ******************************************************************************/
+
+#define NS_DEFINE_INPUTTYPE(aCPPName, aDOMName) (u"" aDOMName),
+const char16_t* const InternalEditorInputEvent::kInputTypeNames[] = {
+#include "mozilla/InputTypeList.h"
+};
+#undef NS_DEFINE_INPUTTYPE
+
+InternalEditorInputEvent::InputTypeHashtable*
+    InternalEditorInputEvent::sInputTypeHashtable = nullptr;
+
+/* static */
+void InternalEditorInputEvent::Shutdown() {
+  delete sInputTypeHashtable;
+  sInputTypeHashtable = nullptr;
+}
+
+/* static */
+void InternalEditorInputEvent::GetDOMInputTypeName(EditorInputType aInputType,
+                                                   nsAString& aInputTypeName) {
+  if (static_cast<size_t>(aInputType) >=
+      static_cast<size_t>(EditorInputType::eUnknown)) {
+    aInputTypeName.Truncate();
+    return;
+  }
+
+  MOZ_RELEASE_ASSERT(
+      static_cast<size_t>(aInputType) < ArrayLength(kInputTypeNames),
+      "Illegal input type enumeration value");
+  aInputTypeName.Assign(kInputTypeNames[static_cast<size_t>(aInputType)]);
+}
+
+/* static */
+EditorInputType InternalEditorInputEvent::GetEditorInputType(
+    const nsAString& aInputType) {
+  if (aInputType.IsEmpty()) {
+    return EditorInputType::eUnknown;
+  }
+
+  if (!sInputTypeHashtable) {
+    sInputTypeHashtable = new InputTypeHashtable(ArrayLength(kInputTypeNames));
+    for (size_t i = 0; i < ArrayLength(kInputTypeNames); i++) {
+      sInputTypeHashtable->Put(nsDependentString(kInputTypeNames[i]),
+                               static_cast<EditorInputType>(i));
+    }
+  }
+  EditorInputType result = EditorInputType::eUnknown;
+  sInputTypeHashtable->Get(aInputType, &result);
+  return result;
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

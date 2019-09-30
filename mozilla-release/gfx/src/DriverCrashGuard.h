@@ -40,6 +40,7 @@ enum class CrashGuardType : uint32_t {
   D3D9Video,
   GLContext,
   D3D11Video,
+  WMFVPXVideo,
   // Add new entries above this line, update the name array in
   // DriverCrashGuard.cpp, and make sure to add an entry in
   // ContentParent.cpp.
@@ -87,7 +88,15 @@ class DriverCrashGuard {
 
  protected:
   virtual void Initialize();
-  virtual bool UpdateEnvironment() = 0;
+  // UpdateEnvironment needs to return true should we need to attempt the
+  // operation once again.
+  // It should return true once only so that in case of a crash, we won't
+  // needlessly attempt the operation over and over again leading to continual
+  // crashes. several times
+  virtual bool UpdateEnvironment() {
+    // We don't care about any extra preferences here.
+    return false;
+  }
   virtual void LogCrashRecovery() = 0;
   virtual void LogFeatureDisabled() = 0;
 
@@ -144,7 +153,6 @@ class D3D9VideoCrashGuard final : public DriverCrashGuard {
   explicit D3D9VideoCrashGuard(dom::ContentParent* aContentParent = nullptr);
 
  protected:
-  bool UpdateEnvironment() override;
   void LogCrashRecovery() override;
   void LogFeatureDisabled() override;
 };
@@ -154,7 +162,6 @@ class D3D11VideoCrashGuard final : public DriverCrashGuard {
   explicit D3D11VideoCrashGuard(dom::ContentParent* aContentParent = nullptr);
 
  protected:
-  bool UpdateEnvironment() override;
   void LogCrashRecovery() override;
   void LogFeatureDisabled() override;
 };
@@ -170,7 +177,26 @@ class GLContextCrashGuard final : public DriverCrashGuard {
   void LogFeatureDisabled() override;
 };
 
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+
+#endif // gfx_src_DriverCrashGuard_h__
+=======
+class WMFVPXVideoCrashGuard final : public DriverCrashGuard {
+ public:
+  explicit WMFVPXVideoCrashGuard(dom::ContentParent* aContentParent = nullptr);
+
+ protected:
+  void LogCrashRecovery() override;
+  void LogFeatureDisabled() override;
+};
+
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases
 
 #endif  // gfx_src_DriverCrashGuard_h__

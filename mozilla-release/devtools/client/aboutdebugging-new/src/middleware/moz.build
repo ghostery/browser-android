@@ -4,8 +4,15 @@
 
 DevToolsModules(
     'debug-target-listener.js',
+<<<<<<< HEAD
     'error-logging.js',
+||||||| merged common ancestors
+=======
+    'error-logging.js',
+    'event-recording.js',
+>>>>>>> upstream-releases
     'extension-component-data.js',
+    'process-component-data.js',
     'tab-component-data.js',
     'worker-component-data.js',
 )

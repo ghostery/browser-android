@@ -8,7 +8,7 @@
 
 const URL = "data:text/html;charset=utf8,test for host sizes";
 
-var {Toolbox} = require("devtools/client/framework/toolbox");
+var { Toolbox } = require("devtools/client/framework/toolbox");
 
 add_task(async function() {
   // Set size prefs to make the hosts way too big, so that the size has
@@ -17,23 +17,79 @@ add_task(async function() {
   Services.prefs.setIntPref("devtools.toolbox.sidebar.width", 10000);
 
   const tab = await addTab(URL);
+<<<<<<< HEAD
   const panel = gBrowser.getPanel();
   const {clientHeight: panelHeight, clientWidth: panelWidth} = panel;
+||||||| merged common ancestors
+  const nbox = gBrowser.getNotificationBox();
+  const {clientHeight: nboxHeight, clientWidth: nboxWidth} = nbox;
+=======
+  const panel = gBrowser.getPanel();
+  const { clientHeight: panelHeight, clientWidth: panelWidth } = panel;
+>>>>>>> upstream-releases
   const target = await TargetFactory.forTab(tab);
   const toolbox = await gDevTools.showToolbox(target);
 
+<<<<<<< HEAD
   is(panel.clientHeight, panelHeight, "Opening the toolbox hasn't changed the height of the panel");
   is(panel.clientWidth, panelWidth, "Opening the toolbox hasn't changed the width of the panel");
 
   let iframe = panel.querySelector(".devtools-toolbox-bottom-iframe");
   is(iframe.clientHeight, panelHeight - 25, "The iframe fits within the available space");
+||||||| merged common ancestors
+  is(nbox.clientHeight, nboxHeight, "Opening the toolbox hasn't changed the height of the nbox");
+  is(nbox.clientWidth, nboxWidth, "Opening the toolbox hasn't changed the width of the nbox");
+
+  let iframe = document.getAnonymousElementByAttribute(nbox, "class", "devtools-toolbox-bottom-iframe");
+  is(iframe.clientHeight, nboxHeight - 25, "The iframe fits within the available space");
+=======
+  is(
+    panel.clientHeight,
+    panelHeight,
+    "Opening the toolbox hasn't changed the height of the panel"
+  );
+  is(
+    panel.clientWidth,
+    panelWidth,
+    "Opening the toolbox hasn't changed the width of the panel"
+  );
+
+  let iframe = panel.querySelector(".devtools-toolbox-bottom-iframe");
+  is(
+    iframe.clientHeight,
+    panelHeight - 25,
+    "The iframe fits within the available space"
+  );
+>>>>>>> upstream-releases
 
   await toolbox.switchHost(Toolbox.HostType.RIGHT);
   iframe = panel.querySelector(".devtools-toolbox-side-iframe");
   iframe.style.minWidth = "1px"; // Disable the min width set in css
+<<<<<<< HEAD
   is(iframe.clientWidth, panelWidth - 25, "The iframe fits within the available space");
 
+||||||| merged common ancestors
+  is(iframe.clientWidth, nboxWidth - 25, "The iframe fits within the available space");
+
+=======
+  is(
+    iframe.clientWidth,
+    panelWidth - 25,
+    "The iframe fits within the available space"
+  );
+
+  // on shutdown, the sidebar width will be set to the clientWidth of the iframe
+  const expectedWidth = iframe.clientWidth;
+>>>>>>> upstream-releases
   await cleanup(toolbox);
+  // Wait until the toolbox-host-manager was destroyed and updated the preferences
+  // to avoid side effects in the next test.
+  await waitUntil(() => {
+    const savedWidth = Services.prefs.getIntPref(
+      "devtools.toolbox.sidebar.width"
+    );
+    return savedWidth === expectedWidth;
+  });
 });
 
 add_task(async function() {
@@ -43,15 +99,43 @@ add_task(async function() {
   Services.prefs.setIntPref("devtools.toolbox.sidebar.width", 100);
 
   const tab = await addTab(URL);
+<<<<<<< HEAD
   const panel = gBrowser.getPanel();
   const {clientHeight: panelHeight, clientWidth: panelWidth} = panel;
+||||||| merged common ancestors
+  const nbox = gBrowser.getNotificationBox();
+  const {clientHeight: nboxHeight, clientWidth: nboxWidth} = nbox;
+=======
+  const panel = gBrowser.getPanel();
+  const { clientHeight: panelHeight, clientWidth: panelWidth } = panel;
+>>>>>>> upstream-releases
   const target = await TargetFactory.forTab(tab);
   const toolbox = await gDevTools.showToolbox(target);
 
+<<<<<<< HEAD
   is(panel.clientHeight, panelHeight, "Opening the toolbox hasn't changed the height of the panel");
   is(panel.clientWidth, panelWidth, "Opening the toolbox hasn't changed the width of the panel");
 
   let iframe = panel.querySelector(".devtools-toolbox-bottom-iframe");
+||||||| merged common ancestors
+  is(nbox.clientHeight, nboxHeight, "Opening the toolbox hasn't changed the height of the nbox");
+  is(nbox.clientWidth, nboxWidth, "Opening the toolbox hasn't changed the width of the nbox");
+
+  let iframe = document.getAnonymousElementByAttribute(nbox, "class", "devtools-toolbox-bottom-iframe");
+=======
+  is(
+    panel.clientHeight,
+    panelHeight,
+    "Opening the toolbox hasn't changed the height of the panel"
+  );
+  is(
+    panel.clientWidth,
+    panelWidth,
+    "Opening the toolbox hasn't changed the width of the panel"
+  );
+
+  let iframe = panel.querySelector(".devtools-toolbox-bottom-iframe");
+>>>>>>> upstream-releases
   is(iframe.clientHeight, 100, "The iframe is resized properly");
 
   await toolbox.switchHost(Toolbox.HostType.RIGHT);

@@ -35,7 +35,13 @@ om{
         native{"latn"}
         traditional{"ethi"}
     }
+<<<<<<< HEAD
     Version{"2.1.43.94"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.82"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -109,8 +115,8 @@ om{
                 MMM{"LLL"}
                 MMMEd{"MMM d, E"}
                 MMMMW{
-                    one{"'week' W 'of' MMM"}
-                    other{"'week' W 'of' MMM"}
+                    one{"'week' W 'of' MMMM"}
+                    other{"'week' W 'of' MMMM"}
                 }
                 MMMMd{"MMMM d"}
                 MMMMdd{"dd MMMM"}

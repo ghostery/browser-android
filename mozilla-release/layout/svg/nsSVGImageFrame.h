@@ -27,21 +27,45 @@
 
 class nsSVGImageFrame;
 
+<<<<<<< HEAD
 class nsSVGImageListener final : public imgINotificationObserver {
  public:
   explicit nsSVGImageListener(nsSVGImageFrame* aFrame);
+||||||| merged common ancestors
+class nsSVGImageListener final : public imgINotificationObserver
+{
+public:
+  explicit nsSVGImageListener(nsSVGImageFrame *aFrame);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsSVGImageListener final : public imgINotificationObserver {
+ public:
+  explicit nsSVGImageListener(nsSVGImageFrame* aFrame);
+>>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_IMGINOTIFICATIONOBSERVER
 
   void SetFrame(nsSVGImageFrame* frame) { mFrame = frame; }
 
+<<<<<<< HEAD
  private:
   ~nsSVGImageListener() {}
+||||||| merged common ancestors
+private:
+  ~nsSVGImageListener() {}
+=======
+ private:
+  ~nsSVGImageListener() = default;
+>>>>>>> upstream-releases
 
   nsSVGImageFrame* mFrame;
 };
 
+<<<<<<< HEAD
 class nsSVGImageFrame final : public mozilla::SVGGeometryFrame,
                               public nsIReflowCallback {
   friend nsIFrame* NS_NewSVGImageFrame(nsIPresShell* aPresShell,
@@ -52,6 +76,32 @@ class nsSVGImageFrame final : public mozilla::SVGGeometryFrame,
       : SVGGeometryFrame(aStyle, kClassID),
         mReflowCallbackPosted(false),
         mForceSyncDecoding(false) {
+||||||| merged common ancestors
+class nsSVGImageFrame final
+  : public mozilla::SVGGeometryFrame
+  , public nsIReflowCallback
+{
+  friend nsIFrame*
+  NS_NewSVGImageFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+
+protected:
+  explicit nsSVGImageFrame(ComputedStyle* aStyle)
+    : SVGGeometryFrame(aStyle, kClassID)
+    , mReflowCallbackPosted(false)
+    , mForceSyncDecoding(false)
+  {
+=======
+class nsSVGImageFrame final : public mozilla::SVGGeometryFrame,
+                              public nsIReflowCallback {
+  friend nsIFrame* NS_NewSVGImageFrame(mozilla::PresShell* aPresShell,
+                                       ComputedStyle* aStyle);
+
+ protected:
+  explicit nsSVGImageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : SVGGeometryFrame(aStyle, aPresContext, kClassID),
+        mReflowCallbackPosted(false),
+        mForceSyncDecoding(false) {
+>>>>>>> upstream-releases
     EnableVisibilityTracking();
   }
 
@@ -72,17 +122,50 @@ class nsSVGImageFrame final : public mozilla::SVGGeometryFrame,
   virtual uint16_t GetHitTestFlags() override;
 
   // nsIFrame interface:
+<<<<<<< HEAD
+  virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
+                                    int32_t aModType) override;
+||||||| merged common ancestors
+  virtual nsresult  AttributeChanged(int32_t         aNameSpaceID,
+                                     nsAtom*        aAttribute,
+                                     int32_t         aModType) override;
+=======
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,
                                     int32_t aModType) override;
 
   void OnVisibilityChange(
       Visibility aNewVisibility,
       const Maybe<OnNonvisible>& aNonvisibleAction = Nothing()) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void OnVisibilityChange(
+      Visibility aNewVisibility,
+      const Maybe<OnNonvisible>& aNonvisibleAction = Nothing()) override;
+||||||| merged common ancestors
+  void OnVisibilityChange(Visibility aNewVisibility,
+                          const Maybe<OnNonvisible>& aNonvisibleAction = Nothing()) override;
+=======
   virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
                     nsIFrame* aPrevInFlow) override;
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
                            PostDestroyData& aPostDestroyData) override;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  virtual void Init(nsIContent* aContent, nsContainerFrame* aParent,
+                    nsIFrame* aPrevInFlow) override;
+  virtual void DestroyFrom(nsIFrame* aDestructRoot,
+                           PostDestroyData& aPostDestroyData) override;
+||||||| merged common ancestors
+  virtual void Init(nsIContent*       aContent,
+                    nsContainerFrame* aParent,
+                    nsIFrame*         aPrevInFlow) override;
+  virtual void DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData) override;
+=======
+  bool GetIntrinsicImageDimensions(mozilla::gfx::Size& aSize,
+                                   mozilla::AspectRatio& aAspectRatio) const;
+>>>>>>> upstream-releases
 
 #ifdef DEBUG_FRAME_DUMP
   virtual nsresult GetFrameName(nsAString& aResult) const override {

@@ -29,7 +29,7 @@
 
 #include "nsXULAppAPI.h"
 
-static nsIAppShell *sAppShell;
+static nsIAppShell* sAppShell;
 
 static nsresult nsAppShellInit() {
   NS_ASSERTION(!sAppShell, "already initialized");
@@ -38,20 +38,46 @@ static nsresult nsAppShellInit() {
   if (!sAppShell) return NS_ERROR_OUT_OF_MEMORY;
   NS_ADDREF(sAppShell);
 
+<<<<<<< HEAD
   nsresult rv;
   rv = static_cast<nsAppShell *>(sAppShell)->Init();
   if (NS_FAILED(rv)) {
     NS_RELEASE(sAppShell);
     return rv;
   }
+||||||| merged common ancestors
+  nsresult rv;
+  rv = static_cast<nsAppShell*>(sAppShell)->Init();
+  if (NS_FAILED(rv)) {
+    NS_RELEASE(sAppShell);
+    return rv;
+  }
+=======
+  nsresult rv = static_cast<nsAppShell*>(sAppShell)->Init();
+  // If we somehow failed to initialize the appshell, it's extremely likely
+  // that we are sufficiently hosed that continuing on is just going to lead
+  // to bad things later.  By crashing early here, the crash report will
+  // potentially contain a little more insight into what's going wrong than
+  // if we waited for a crash further down the line.  See also bug 1545381.
+  MOZ_RELEASE_ASSERT(NS_SUCCEEDED(rv));
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 static void nsAppShellShutdown() { NS_RELEASE(sAppShell); }
 
+<<<<<<< HEAD
 static nsresult nsAppShellConstructor(nsISupports *outer, const nsIID &iid,
                                       void **result) {
+||||||| merged common ancestors
+static nsresult
+nsAppShellConstructor(nsISupports *outer, const nsIID &iid, void **result)
+{
+=======
+nsresult nsAppShellConstructor(nsISupports* outer, const nsIID& iid,
+                               void** result) {
+>>>>>>> upstream-releases
   NS_ENSURE_TRUE(!outer, NS_ERROR_NO_AGGREGATION);
   NS_ENSURE_TRUE(sAppShell, NS_ERROR_NOT_INITIALIZED);
 

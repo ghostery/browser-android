@@ -9,13 +9,13 @@
 #include <string>
 
 #if defined(XP_LINUX)
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/stat.h>
+#  include <fcntl.h>
+#  include <unistd.h>
+#  include <sys/stat.h>
 #elif defined(XP_MACOSX)
-#include <CoreFoundation/CoreFoundation.h>
+#  include <CoreFoundation/CoreFoundation.h>
 #elif defined(XP_WIN)
-#include <objbase.h>
+#  include <objbase.h>
 #endif
 
 #include "json/json.h"
@@ -250,8 +250,18 @@ string GenerateSubmissionUrl(const string& aUrl, const string& aId,
 // Write out the ping into the specified file.
 //
 // Returns true if the ping was written out successfully, false otherwise.
+<<<<<<< HEAD
 static bool WritePing(const string& aPath, const string& aPing) {
   ofstream* f = UIOpenWrite(aPath.c_str());
+||||||| merged common ancestors
+static bool
+WritePing(const string& aPath, const string& aPing)
+{
+  ofstream* f = UIOpenWrite(aPath.c_str());
+=======
+static bool WritePing(const string& aPath, const string& aPing) {
+  ofstream* f = UIOpenWrite(aPath, ios::trunc);
+>>>>>>> upstream-releases
   bool success = false;
 
   if (f->is_open()) {

@@ -73,17 +73,44 @@ nsresult SharedDIBWin::Attach(Handle aHandle, uint32_t aWidth, uint32_t aHeight,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 uint32_t SharedDIBWin::SetupBitmapHeader(uint32_t aWidth, uint32_t aHeight,
                                          bool aTransparent,
                                          BITMAPV4HEADER *aHeader) {
+||||||| merged common ancestors
+uint32_t
+SharedDIBWin::SetupBitmapHeader(uint32_t aWidth, uint32_t aHeight,
+                                bool aTransparent, BITMAPV4HEADER *aHeader)
+{
+=======
+uint32_t SharedDIBWin::SetupBitmapHeader(uint32_t aWidth, uint32_t aHeight,
+                                         bool aTransparent,
+                                         BITMAPV4HEADER* aHeader) {
+>>>>>>> upstream-releases
   // D3D cannot handle an offscreen memory that pitch (SysMemPitch) is negative.
   // So we create top-to-bottom DIB.
+<<<<<<< HEAD
   memset((void *)aHeader, 0, sizeof(BITMAPV4HEADER));
   aHeader->bV4Size = sizeof(BITMAPV4HEADER);
   aHeader->bV4Width = aWidth;
   aHeader->bV4Height = -LONG(aHeight);  // top-to-buttom DIB
   aHeader->bV4Planes = 1;
   aHeader->bV4BitCount = 32;
+||||||| merged common ancestors
+  memset((void*)aHeader, 0, sizeof(BITMAPV4HEADER));
+  aHeader->bV4Size          = sizeof(BITMAPV4HEADER);
+  aHeader->bV4Width         = aWidth;
+  aHeader->bV4Height        = -LONG(aHeight); // top-to-buttom DIB
+  aHeader->bV4Planes        = 1;
+  aHeader->bV4BitCount      = 32;
+=======
+  memset((void*)aHeader, 0, sizeof(BITMAPV4HEADER));
+  aHeader->bV4Size = sizeof(BITMAPV4HEADER);
+  aHeader->bV4Width = aWidth;
+  aHeader->bV4Height = -LONG(aHeight);  // top-to-buttom DIB
+  aHeader->bV4Planes = 1;
+  aHeader->bV4BitCount = 32;
+>>>>>>> upstream-releases
   aHeader->bV4V4Compression = BI_BITFIELDS;
   aHeader->bV4RedMask = 0x00FF0000;
   aHeader->bV4GreenMask = 0x0000FF00;
@@ -95,15 +122,38 @@ uint32_t SharedDIBWin::SetupBitmapHeader(uint32_t aWidth, uint32_t aHeight,
           (-aHeader->bV4Height * aHeader->bV4Width * kBytesPerPixel));
 }
 
+<<<<<<< HEAD
 nsresult SharedDIBWin::SetupSurface(HDC aHdc, BITMAPV4HEADER *aHdr) {
+||||||| merged common ancestors
+nsresult
+SharedDIBWin::SetupSurface(HDC aHdc, BITMAPV4HEADER *aHdr)
+{
+=======
+nsresult SharedDIBWin::SetupSurface(HDC aHdc, BITMAPV4HEADER* aHdr) {
+>>>>>>> upstream-releases
   mSharedHdc = ::CreateCompatibleDC(aHdc);
 
   if (!mSharedHdc) return NS_ERROR_FAILURE;
 
+<<<<<<< HEAD
   mSharedBmp =
       ::CreateDIBSection(mSharedHdc, (BITMAPINFO *)aHdr, DIB_RGB_COLORS,
                          &mBitmapBits, mShMem->handle(), kHeaderBytes);
   if (!mSharedBmp) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+  mSharedBmp = ::CreateDIBSection(mSharedHdc,
+                                  (BITMAPINFO*)aHdr,
+                                  DIB_RGB_COLORS,
+                                  &mBitmapBits,
+                                  mShMem->handle(),
+                                  kHeaderBytes);
+  if (!mSharedBmp)
+    return NS_ERROR_FAILURE;
+=======
+  mSharedBmp = ::CreateDIBSection(mSharedHdc, (BITMAPINFO*)aHdr, DIB_RGB_COLORS,
+                                  &mBitmapBits, mShMem->handle(), kHeaderBytes);
+  if (!mSharedBmp) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
   mOldObj = SelectObject(mSharedHdc, mSharedBmp);
 

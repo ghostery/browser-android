@@ -41,11 +41,26 @@ enum class RenderOrder {
 
 static const uint32_t kInvalidResourceIndex = uint32_t(-1);
 
+<<<<<<< HEAD
 struct ItemInfo {
   explicit ItemInfo(FrameBuilder* aBuilder, RenderViewMLGPU* aView,
                     LayerMLGPU* aLayer, int32_t aSortOrder,
                     const gfx::IntRect& aBounds,
                     Maybe<gfx::Polygon>&& aGeometry);
+||||||| merged common ancestors
+struct ItemInfo {
+  explicit ItemInfo(FrameBuilder* aBuilder,
+                    RenderViewMLGPU* aView,
+                    LayerMLGPU* aLayer,
+                    int32_t aSortOrder,
+                    const gfx::IntRect& aBounds,
+                    Maybe<gfx::Polygon>&& aGeometry);
+=======
+struct ItemInfo final {
+  ItemInfo(FrameBuilder* aBuilder, RenderViewMLGPU* aView, LayerMLGPU* aLayer,
+           int32_t aSortOrder, const gfx::IntRect& aBounds,
+           Maybe<gfx::Polygon>&& aGeometry);
+>>>>>>> upstream-releases
 
   // Return true if a layer can be clipped by the vertex shader; false
   // otherwise. Any kind of textured mask or non-rectilinear transform
@@ -150,7 +165,13 @@ class ShaderRenderPass : public RenderPassMLGPU {
   void PrepareForRendering() override;
   void ExecuteRendering() override;
 
+<<<<<<< HEAD
   virtual Maybe<MLGBlendState> GetBlendState() const override {
+||||||| merged common ancestors
+  virtual Maybe<MLGBlendState> GetBlendState() const override{
+=======
+  Maybe<MLGBlendState> GetBlendState() const override {
+>>>>>>> upstream-releases
     return Some(MLGBlendState::Over);
   }
 
@@ -211,8 +232,16 @@ class BatchRenderPass : public ShaderRenderPass {
   // reject the item, then redraw the same rect again in another batch.
   // To deal with this we use a transaction approach and reject the transaction
   // if we couldn't add everything.
+<<<<<<< HEAD
   class Txn {
    public:
+||||||| merged common ancestors
+  class Txn {
+  public:
+=======
+  class Txn final {
+   public:
+>>>>>>> upstream-releases
     explicit Txn(BatchRenderPass* aPass)
         : mPass(aPass), mPrevInstancePos(aPass->mInstances.GetPosition()) {}
 
@@ -263,8 +292,16 @@ class TexturedRenderPass : public BatchRenderPass<TexturedTraits> {
  public:
   explicit TexturedRenderPass(FrameBuilder* aBuilder, const ItemInfo& aItem);
 
+<<<<<<< HEAD
  protected:
   struct Info {
+||||||| merged common ancestors
+protected:
+  struct Info {
+=======
+ protected:
+  struct Info final {
+>>>>>>> upstream-releases
     Info(const ItemInfo& aItem, PaintedLayerMLGPU* aLayer);
     Info(const ItemInfo& aItem, TexturedLayerMLGPU* aLayer);
     Info(const ItemInfo& aItem, ContainerLayerMLGPU* aLayer);

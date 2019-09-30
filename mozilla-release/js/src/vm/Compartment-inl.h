@@ -49,16 +49,40 @@ inline bool JS::Compartment::wrap(JSContext* cx, JS::MutableHandleValue vp) {
     return true;
   }
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
   if (vp.isBigInt()) {
     JS::RootedBigInt bi(cx, vp.toBigInt());
     if (!wrap(cx, &bi)) {
       return false;
+||||||| merged common ancestors
+#ifdef ENABLE_BIGINT
+    if (vp.isBigInt()) {
+        JS::RootedBigInt bi(cx, vp.toBigInt());
+        if (!wrap(cx, &bi)) {
+            return false;
+        }
+        vp.setBigInt(bi);
+        return true;
+=======
+  if (vp.isBigInt()) {
+    JS::RootedBigInt bi(cx, vp.toBigInt());
+    if (!wrap(cx, &bi)) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     vp.setBigInt(bi);
     return true;
   }
 #endif
+||||||| merged common ancestors
+#endif
+=======
+    vp.setBigInt(bi);
+    return true;
+  }
+>>>>>>> upstream-releases
 
   MOZ_ASSERT(vp.isObject());
 
@@ -83,8 +107,16 @@ inline bool JS::Compartment::wrap(JSContext* cx, JS::MutableHandleValue vp) {
    * that we get the same answer.
    */
 #ifdef DEBUG
+<<<<<<< HEAD
   MOZ_ASSERT(JS::ValueIsNotGray(vp));
   JS::RootedObject cacheResult(cx);
+||||||| merged common ancestors
+    MOZ_ASSERT(JS::ValueIsNotGray(vp));
+    JS::RootedObject cacheResult(cx);
+=======
+  JS::AssertValueIsNotGray(vp);
+  JS::RootedObject cacheResult(cx);
+>>>>>>> upstream-releases
 #endif
   JS::RootedValue v(cx, vp);
   if (js::WrapperMap::Ptr p =
@@ -95,6 +127,7 @@ inline bool JS::Compartment::wrap(JSContext* cx, JS::MutableHandleValue vp) {
     vp.set(p->value().get());
     return true;
 #endif
+<<<<<<< HEAD
   }
 
   JS::RootedObject obj(cx, &vp.toObject());
@@ -127,6 +160,44 @@ MOZ_MUST_USE T* UnwrapAndTypeCheckValueSlowPath(JSContext* cx,
     obj = &value.toObject();
     if (IsWrapper(obj)) {
       obj = CheckedUnwrap(obj);
+      if (!obj) {
+        ReportAccessDenied(cx);
+        return nullptr;
+      }
+||||||| merged common ancestors
+=======
+  }
+
+  JS::RootedObject obj(cx, &vp.toObject());
+  if (!wrap(cx, &obj)) {
+    return false;
+  }
+  vp.setObject(*obj);
+  MOZ_ASSERT_IF(cacheResult, obj == cacheResult);
+  return true;
+}
+
+namespace js {
+namespace detail {
+
+/**
+ * Return the name of class T as a static null-terminated ASCII string constant
+ * (for error messages).
+ */
+template <class T>
+const char* ClassName() {
+  return T::class_.name;
+}
+
+template <class T, class ErrorCallback>
+MOZ_MUST_USE T* UnwrapAndTypeCheckValueSlowPath(JSContext* cx,
+                                                HandleValue value,
+                                                ErrorCallback throwTypeError) {
+  JSObject* obj = nullptr;
+  if (value.isObject()) {
+    obj = &value.toObject();
+    if (IsWrapper(obj)) {
+      obj = CheckedUnwrapStatic(obj);
       if (!obj) {
         ReportAccessDenied(cx);
         return nullptr;
@@ -207,10 +278,177 @@ inline MOZ_MUST_USE T* UnwrapAndTypeCheckArgument(JSContext* cx, CallArgs& args,
           methodName, detail::ClassName<T>(), InformalValueTypeName(val));
     } else {
       ReportOutOfMemory(cx);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
   });
 }
 
+/**
+ * Unwrap an object of a known type.
+ *
+ * If `obj` is an object of class T, this returns a pointer to that object. If
+ * `obj` is a wrapper for such an object, this tries to unwrap the object and
+ * return a pointer to it. If access is denied, or `obj` was a wrapper but has
+ * been nuked, this reports an error and returns null.
+ *
+ * In all other cases, the behavior is undefined, so call this only if `obj` is
+ * known to have been an object of class T, or a wrapper to a T, at some point.
+ */
+template <class T>
+MOZ_MUST_USE T* UnwrapAndDowncastObject(JSContext* cx, JSObject* obj) {
+  static_assert(!std::is_convertible<T*, Wrapper*>::value,
+                "T can't be a Wrapper type; this function discards wrappers");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!obj || !obj->is<T>()) {
+    throwTypeError();
+    return nullptr;
+  }
+
+  return &obj->as<T>();
+}
+
+}  // namespace detail
+
+/**
+ * Remove all wrappers from `val` and try to downcast the result to class `T`.
+ *
+ * DANGER: The result may not be same-compartment with `cx`.
+ *
+ * This calls `throwTypeError` if the value isn't an object, cannot be
+ * unwrapped, or isn't an instance of the expected type. `throwTypeError` must
+ * in fact throw a TypeError (or OOM trying).
+ */
+template <class T, class ErrorCallback>
+inline MOZ_MUST_USE T* UnwrapAndTypeCheckValue(JSContext* cx, HandleValue value,
+                                               ErrorCallback throwTypeError) {
+  static_assert(!std::is_convertible<T*, Wrapper*>::value,
+                "T can't be a Wrapper type; this function discards wrappers");
+  cx->check(value);
+  if (value.isObject() && value.toObject().is<T>()) {
+    return &value.toObject().as<T>();
+  }
+  return detail::UnwrapAndTypeCheckValueSlowPath<T>(cx, value, throwTypeError);
+}
+
+/**
+ * Remove all wrappers from `args.thisv()` and try to downcast the result to
+ * class `T`.
+ *
+ * DANGER: The result may not be same-compartment with `cx`.
+ *
+ * This throws a TypeError if the value isn't an object, cannot be unwrapped,
+ * or isn't an instance of the expected type.
+ */
+template <class T>
+inline MOZ_MUST_USE T* UnwrapAndTypeCheckThis(JSContext* cx, CallArgs& args,
+                                              const char* methodName) {
+  HandleValue thisv = args.thisv();
+  return UnwrapAndTypeCheckValue<T>(cx, thisv, [cx, methodName, thisv] {
+    JS_ReportErrorNumberLatin1(cx, GetErrorMessage, nullptr,
+                               JSMSG_INCOMPATIBLE_PROTO, detail::ClassName<T>(),
+                               methodName, InformalValueTypeName(thisv));
+  });
+}
+
+/**
+ * Remove all wrappers from `args[argIndex]` and try to downcast the result to
+ * class `T`.
+ *
+ * DANGER: The result may not be same-compartment with `cx`.
+ *
+ * This throws a TypeError if the specified argument is missing, isn't an
+ * object, cannot be unwrapped, or isn't an instance of the expected type.
+ */
+template <class T>
+inline MOZ_MUST_USE T* UnwrapAndTypeCheckArgument(JSContext* cx, CallArgs& args,
+                                                  const char* methodName,
+                                                  int argIndex) {
+  HandleValue val = args.get(argIndex);
+  return UnwrapAndTypeCheckValue<T>(cx, val, [cx, val, methodName, argIndex] {
+    ToCStringBuf cbuf;
+    if (char* numStr = NumberToCString(cx, &cbuf, argIndex + 1, 10)) {
+      JS_ReportErrorNumberLatin1(
+          cx, GetErrorMessage, nullptr, JSMSG_WRONG_TYPE_ARG, numStr,
+          methodName, detail::ClassName<T>(), InformalValueTypeName(val));
+    } else {
+      ReportOutOfMemory(cx);
+||||||| merged common ancestors
+    JS::RootedObject obj(cx, &vp.toObject());
+    if (!wrap(cx, &obj)) {
+        return false;
+=======
+  if (IsProxy(obj)) {
+    if (JS_IsDeadWrapper(obj)) {
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_DEAD_OBJECT);
+      return nullptr;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  });
+||||||| merged common ancestors
+    vp.setObject(*obj);
+    MOZ_ASSERT_IF(cacheResult, obj == cacheResult);
+    return true;
+=======
+
+    // It would probably be OK to do an unchecked unwrap here, but we allow
+    // arbitrary security policies, so check anyway.
+    obj = obj->maybeUnwrapAs<T>();
+    if (!obj) {
+      ReportAccessDenied(cx);
+      return nullptr;
+    }
+  }
+
+  return &obj->as<T>();
+}
+
+/**
+ * Unwrap a value of a known type. See UnwrapAndDowncastObject.
+ */
+template <class T>
+inline MOZ_MUST_USE T* UnwrapAndDowncastValue(JSContext* cx,
+                                              const Value& value) {
+  return UnwrapAndDowncastObject<T>(cx, &value.toObject());
+}
+
+/**
+ * Read a private slot that is known to point to a particular type of object.
+ *
+ * Some internal slots specified in various standards effectively have static
+ * types. For example, the [[ownerReadableStream]] slot of a stream reader is
+ * guaranteed to be a ReadableStream. However, because of compartments, we
+ * sometimes store a cross-compartment wrapper in that slot. And since wrappers
+ * can be nuked, that wrapper may become a dead object proxy.
+ *
+ * UnwrapInternalSlot() copes with the cross-compartment and dead object cases,
+ * but not plain bugs where the slot hasn't been initialized or doesn't contain
+ * the expected type of object. Call this only if the slot is certain to
+ * contain either an instance of T, a wrapper for a T, or a dead object.
+ *
+ * `cx` and `unwrappedObj` are not required to be same-compartment.
+ *
+ * DANGER: The result may not be same-compartment with either `cx` or `obj`.
+ */
+template <class T>
+inline MOZ_MUST_USE T* UnwrapInternalSlot(JSContext* cx,
+                                          Handle<NativeObject*> unwrappedObj,
+                                          uint32_t slot) {
+  static_assert(!std::is_convertible<T*, Wrapper*>::value,
+                "T can't be a Wrapper type; this function discards wrappers");
+
+  return UnwrapAndDowncastValue<T>(cx, unwrappedObj->getFixedSlot(slot));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 /**
  * Unwrap an object of a known type.
  *
@@ -301,4 +539,25 @@ MOZ_MUST_USE T* UnwrapCalleeSlot(JSContext* cx, CallArgs& args,
 
 }  // namespace js
 
+||||||| merged common ancestors
+=======
+/**
+ * Read a function slot that is known to point to a particular type of object.
+ *
+ * This is like UnwrapInternalSlot, but for extended function slots. Call this
+ * only if the specified slot is known to have been initialized with an object
+ * of class T or a wrapper for such an object.
+ *
+ * DANGER: The result may not be same-compartment with `cx`.
+ */
+template <class T>
+MOZ_MUST_USE T* UnwrapCalleeSlot(JSContext* cx, CallArgs& args,
+                                 size_t extendedSlot) {
+  JSFunction& func = args.callee().as<JSFunction>();
+  return UnwrapAndDowncastValue<T>(cx, func.getExtendedSlot(extendedSlot));
+}
+
+}  // namespace js
+
+>>>>>>> upstream-releases
 #endif /* vm_Compartment_inl_h */

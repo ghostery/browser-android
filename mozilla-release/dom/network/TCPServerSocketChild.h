@@ -53,8 +53,14 @@ class TCPServerSocketChild : public mozilla::net::PTCPServerSocketChild,
 
   void Close();
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvCallbackAccept(
       PTCPSocketChild* socket) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvCallbackAccept(PTCPSocketChild *socket)  override;
+=======
+  mozilla::ipc::IPCResult RecvCallbackAccept(PTCPSocketChild* socket);
+>>>>>>> upstream-releases
 };
 
 }  // namespace dom

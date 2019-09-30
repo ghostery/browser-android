@@ -91,13 +91,25 @@ void main() {
             alpha = approx_dist > 0.0 ? 0.0 : 1.0;
             break;
         case GrClipEdgeType::kFillAA:
+<<<<<<< HEAD
             alpha = saturate(0.5 - approx_dist);
+||||||| merged common ancestors
+            alpha = clamp(0.5 - approx_dist, 0.0, 1.0);
+=======
+            alpha = saturate(0.5 - half(approx_dist));
+>>>>>>> upstream-releases
             break;
         case GrClipEdgeType::kInverseFillBW:
             alpha = approx_dist > 0.0 ? 1.0 : 0.0;
             break;
         case GrClipEdgeType::kInverseFillAA:
+<<<<<<< HEAD
             alpha = saturate(0.5 + approx_dist);
+||||||| merged common ancestors
+            alpha = clamp(0.5 + approx_dist, 0.0, 1.0);
+=======
+            alpha = saturate(0.5 + half(approx_dist));
+>>>>>>> upstream-releases
             break;
         default:
             // hairline not supported

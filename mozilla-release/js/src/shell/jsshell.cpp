@@ -32,6 +32,7 @@ namespace shell {
 // 'help' or 'usage' properties. Functions are described with their usage
 // strings, if they have them, else with just their names.
 //
+<<<<<<< HEAD
 bool GenerateInterfaceHelp(JSContext* cx, HandleObject obj, const char* name) {
   AutoIdVector idv(cx);
   if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY | JSITER_HIDDEN, &idv)) {
@@ -45,6 +46,28 @@ bool GenerateInterfaceHelp(JSContext* cx, HandleObject obj, const char* name) {
     RootedValue v(cx);
     if (!JS_GetPropertyById(cx, obj, id, &v)) {
       return false;
+||||||| merged common ancestors
+bool
+GenerateInterfaceHelp(JSContext* cx, HandleObject obj, const char* name)
+{
+    AutoIdVector idv(cx);
+    if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY | JSITER_HIDDEN, &idv)) {
+        return false;
+=======
+bool GenerateInterfaceHelp(JSContext* cx, HandleObject obj, const char* name) {
+  RootedIdVector idv(cx);
+  if (!GetPropertyKeys(cx, obj, JSITER_OWNONLY | JSITER_HIDDEN, &idv)) {
+    return false;
+  }
+
+  JSStringBuilder buf(cx);
+  int numEntries = 0;
+  for (size_t i = 0; i < idv.length(); i++) {
+    RootedId id(cx, idv[i]);
+    RootedValue v(cx);
+    if (!JS_GetPropertyById(cx, obj, id, &v)) {
+      return false;
+>>>>>>> upstream-releases
     }
     if (!v.isObject()) {
       continue;

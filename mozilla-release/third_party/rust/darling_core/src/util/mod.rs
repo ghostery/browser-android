@@ -9,13 +9,25 @@ mod ident_list;
 mod ident_string;
 mod ignored;
 mod over_ride;
+<<<<<<< HEAD
 mod with_original;
+||||||| merged common ancestors
+=======
+mod with_original;
+mod spanned_value;
+>>>>>>> upstream-releases
 
 pub use self::ident_list::IdentList;
 pub use self::ident_string::IdentString;
 pub use self::ignored::Ignored;
 pub use self::over_ride::Override;
+<<<<<<< HEAD
 pub use self::with_original::WithOriginal;
+||||||| merged common ancestors
+=======
+pub use self::spanned_value::SpannedValue;
+pub use self::with_original::WithOriginal;
+>>>>>>> upstream-releases
 
 /// Marker type equivalent to `Option<()>` for use in attribute parsing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]

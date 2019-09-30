@@ -104,8 +104,15 @@ NS_IMPL_ISUPPORTS(PSMContentStreamListener, nsIStreamListener,
                   nsIRequestObserver)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 PSMContentStreamListener::OnStartRequest(nsIRequest* request,
                                          nsISupports* context) {
+||||||| merged common ancestors
+PSMContentStreamListener::OnStartRequest(nsIRequest* request, nsISupports* context)
+{
+=======
+PSMContentStreamListener::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("CertDownloader::OnStartRequest\n"));
 
   int64_t contentLength = ComputeContentLength(request);
@@ -119,7 +126,6 @@ PSMContentStreamListener::OnStartRequest(nsIRequest* request,
 
 NS_IMETHODIMP
 PSMContentStreamListener::OnDataAvailable(nsIRequest* request,
-                                          nsISupports* context,
                                           nsIInputStream* aIStream,
                                           uint64_t aSourceOffset,
                                           uint32_t aLength) {
@@ -136,9 +142,18 @@ PSMContentStreamListener::OnDataAvailable(nsIRequest* request,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 PSMContentStreamListener::OnStopRequest(nsIRequest* request,
                                         nsISupports* context,
                                         nsresult aStatus) {
+||||||| merged common ancestors
+PSMContentStreamListener::OnStopRequest(nsIRequest* request,
+                                        nsISupports* context,
+                                        nsresult aStatus)
+{
+=======
+PSMContentStreamListener::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+>>>>>>> upstream-releases
   MOZ_LOG(gPIPNSSLog, LogLevel::Debug, ("CertDownloader::OnStopRequest\n"));
 
   // Because importing the cert can spin the event loop (via alerts), we can't
@@ -233,9 +248,18 @@ mozilla::ipc::IPCResult PSMContentDownloaderParent::RecvOnStopRequest(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 PSMContentDownloaderParent::OnStopRequest(nsIRequest* request,
                                           nsISupports* context, nsresult code) {
   nsresult rv = PSMContentStreamListener::OnStopRequest(request, context, code);
+||||||| merged common ancestors
+PSMContentDownloaderParent::OnStopRequest(nsIRequest* request, nsISupports* context, nsresult code)
+{
+  nsresult rv = PSMContentStreamListener::OnStopRequest(request, context, code);
+=======
+PSMContentDownloaderParent::OnStopRequest(nsIRequest* request, nsresult code) {
+  nsresult rv = PSMContentStreamListener::OnStopRequest(request, code);
+>>>>>>> upstream-releases
 
   if (mIPCOpen) {
     mozilla::Unused << Send__delete__(this);
@@ -267,8 +291,15 @@ PSMContentDownloaderChild::PSMContentDownloaderChild() {}
 PSMContentDownloaderChild::~PSMContentDownloaderChild() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 PSMContentDownloaderChild::OnStartRequest(nsIRequest* request,
                                           nsISupports* context) {
+||||||| merged common ancestors
+PSMContentDownloaderChild::OnStartRequest(nsIRequest* request, nsISupports* context)
+{
+=======
+PSMContentDownloaderChild::OnStartRequest(nsIRequest* request) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIDivertableChannel> divertable = do_QueryInterface(request);
   if (divertable) {
     mozilla::net::ChannelDiverterChild* diverter = nullptr;
@@ -292,7 +323,6 @@ PSMContentDownloaderChild::OnStartRequest(nsIRequest* request,
 
 NS_IMETHODIMP
 PSMContentDownloaderChild::OnDataAvailable(nsIRequest* request,
-                                           nsISupports* context,
                                            nsIInputStream* aIStream,
                                            uint64_t aSourceOffset,
                                            uint32_t aLength) {
@@ -308,8 +338,16 @@ PSMContentDownloaderChild::OnDataAvailable(nsIRequest* request,
 
 NS_IMETHODIMP
 PSMContentDownloaderChild::OnStopRequest(nsIRequest* request,
+<<<<<<< HEAD
                                          nsISupports* context,
                                          nsresult aStatus) {
+||||||| merged common ancestors
+                                         nsISupports* context,
+                                         nsresult aStatus)
+{
+=======
+                                         nsresult aStatus) {
+>>>>>>> upstream-releases
   mozilla::Unused << SendOnStopRequest(aStatus);
   return NS_OK;
 }

@@ -998,6 +998,7 @@
       "label": "OISTE_WISeKey_Global_Root_GC_CA",
       "binNumber": 198,
       "sha256Fingerprint": "hWD5HDYk2rqVcLX+oNvjb/EagyO+lIaFT7PzSlVxGY0="
+<<<<<<< HEAD
     },
     {
       "label": "GTS_Root_R1",
@@ -1033,7 +1034,76 @@
       "label": "Certigna_Root_CA",
       "binNumber": 205,
       "sha256Fingerprint": "1I09I+7bUKRZ5VGXYBwnd0udexjJTVoFlRGhAlC5MWg="
+||||||| merged common ancestors
+=======
+    },
+    {
+      "label": "GTS_Root_R1",
+      "binNumber": 199,
+      "sha256Fingerprint": "KldUceMTQLwhWBy9LPE+FYRjID7OlLz508wZa/CaVHI="
+    },
+    {
+      "label": "GTS_Root_R2",
+      "binNumber": 200,
+      "sha256Fingerprint": "xF17sI5tZ+YuQjURC1ZOX3j9ku8FjIQK6k5kVddYXGA="
+    },
+    {
+      "label": "GTS_Root_R3",
+      "binNumber": 201,
+      "sha256Fingerprint": "FdW4d0YZ6n1Uzhym0LDEA+A3qRfxMeigTh5renG6vOU="
+    },
+    {
+      "label": "GTS_Root_R4",
+      "binNumber": 202,
+      "sha256Fingerprint": "ccylOR+eeUsEgCUws2PhIdqKMEO7JmYv6k3Kf8lRpL0="
+    },
+    {
+      "label": "UCA_Global_G2_Root",
+      "binNumber": 203,
+      "sha256Fingerprint": "m+oRyXb+AUdkwb5WpvkUtaVgMXq9mYg5M4LlFhqgSTw="
+    },
+    {
+      "label": "UCA_Extended_Validation_Root",
+      "binNumber": 204,
+      "sha256Fingerprint": "1Dr5s1RzdVyWhPwG19jLcO5cKOdz+ylOtB7nFyKSTSQ="
+    },
+    {
+      "label": "Certigna_Root_CA",
+      "binNumber": 205,
+      "sha256Fingerprint": "1I09I+7bUKRZ5VGXYBwnd0udexjJTVoFlRGhAlC5MWg="
+    },
+    {
+      "label": "emSign_Root_CA___G1",
+      "binNumber": 206,
+      "sha256Fingerprint": "QPavA0apmqHNHVVaTpzOYsf5Y0YD7kBmFYM9yMjQA2c="
+    },
+    {
+      "label": "emSign_ECC_Root_CA___G3",
+      "binNumber": 207,
+      "sha256Fingerprint": "hqHsugicSo07vic0xhK6NB2BPgQ8+eioYs1cV6Nrvms="
+    },
+    {
+      "label": "emSign_Root_CA___C1",
+      "binNumber": 208,
+      "sha256Fingerprint": "ElYJqjAdoKJJuXqCOctqNCFvRNysnzlUsUKS8ujIYI8="
+    },
+    {
+      "label": "emSign_ECC_Root_CA___C3",
+      "binNumber": 209,
+      "sha256Fingerprint": "vE2AmxUYnXjbPh2M9PlyanldoWQ8pfE1jh3bDtwNfrM="
+    },
+    {
+      "label": "Hongkong_Post_Root_CA_3",
+      "binNumber": 210,
+      "sha256Fingerprint": "Wi/APwyDsJC7+kBgSwmIRGx2Nhg9+YRuFxAaRH+479Y="
+>>>>>>> upstream-releases
     }
   ],
+<<<<<<< HEAD
   "maxBin": 205
+||||||| merged common ancestors
+  "maxBin": 198
+=======
+  "maxBin": 210
+>>>>>>> upstream-releases
 }

@@ -10,12 +10,32 @@
 #include "nsLeafFrame.h"
 #include "nsBox.h"
 
+<<<<<<< HEAD
 class nsLeafBoxFrame : public nsLeafFrame {
  public:
+||||||| merged common ancestors
+class nsLeafBoxFrame : public nsLeafFrame
+{
+public:
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsLeafBoxFrame : public nsLeafFrame {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsLeafBoxFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewLeafBoxFrame(nsIPresShell* aPresShell,
                                       ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewLeafBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewLeafBoxFrame(mozilla::PresShell* aPresShell,
+                                      ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   virtual nsSize GetXULPrefSize(nsBoxLayoutState& aState) override;
   virtual nsSize GetXULMinSize(nsBoxLayoutState& aState) override;
@@ -37,9 +57,18 @@ class nsLeafBoxFrame : public nsLeafFrame {
 
   // nsIHTMLReflow overrides
 
+<<<<<<< HEAD
   virtual void MarkIntrinsicISizesDirty() override;
   virtual nscoord GetMinISize(gfxContext* aRenderingContext) override;
   virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
+||||||| merged common ancestors
+  virtual void MarkIntrinsicISizesDirty() override;
+  virtual nscoord GetMinISize(gfxContext *aRenderingContext) override;
+  virtual nscoord GetPrefISize(gfxContext *aRenderingContext) override;
+=======
+  virtual nscoord GetMinISize(gfxContext* aRenderingContext) override;
+  virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
+>>>>>>> upstream-releases
 
   // Our auto size is that provided by nsFrame, not nsLeafFrame
   virtual mozilla::LogicalSize ComputeAutoSize(
@@ -71,8 +100,22 @@ class nsLeafBoxFrame : public nsLeafFrame {
 
   virtual nscoord GetIntrinsicISize() override;
 
+<<<<<<< HEAD
   explicit nsLeafBoxFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
       : nsLeafFrame(aStyle, aID) {}
+||||||| merged common ancestors
+  explicit nsLeafBoxFrame(ComputedStyle* aStyle, ClassID aID = kClassID)
+    : nsLeafFrame(aStyle, aID)
+  {}
+
+private:
+
+ void UpdateMouseThrough();
+=======
+  explicit nsLeafBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
+                          ClassID aID = kClassID)
+      : nsLeafFrame(aStyle, aPresContext, aID) {}
+>>>>>>> upstream-releases
 
  private:
   void UpdateMouseThrough();

@@ -168,17 +168,19 @@ enum class StyleScrollbarWidth : uint8_t {
   None,
 };
 
-// <shape-radius> for <basic-shape>
-enum class StyleShapeRadius : uint8_t {
-  ClosestSide,
-  FarthestSide,
-};
-
 // Shape source type
 enum class StyleShapeSourceType : uint8_t {
   None,
+<<<<<<< HEAD
   URL,    // clip-path only
   Image,  // shape-outside only
+||||||| merged common ancestors
+  URL,   // clip-path only
+  Image, // shape-outside only
+=======
+  Image,  // shape-outside / clip-path only, and clip-path only uses it for
+          // <url>s
+>>>>>>> upstream-releases
   Shape,
   Box,
   Path,  // SVG path function
@@ -240,6 +242,7 @@ enum class StyleOrient : uint8_t {
   Vertical,
 };
 
+<<<<<<< HEAD
 // See nsStyleDisplay
 //
 // These need to be in sync with WillChangeBits in box.rs.
@@ -250,11 +253,25 @@ enum class StyleOrient : uint8_t {
 #define NS_STYLE_WILL_CHANGE_FIXPOS_CB (1 << 4)
 #define NS_STYLE_WILL_CHANGE_ABSPOS_CB (1 << 5)
 
+||||||| merged common ancestors
+// See nsStyleDisplay
+//
+// These need to be in sync with WillChangeBits in box.rs.
+#define NS_STYLE_WILL_CHANGE_STACKING_CONTEXT   (1<<0)
+#define NS_STYLE_WILL_CHANGE_TRANSFORM          (1<<1)
+#define NS_STYLE_WILL_CHANGE_SCROLL             (1<<2)
+#define NS_STYLE_WILL_CHANGE_OPACITY            (1<<3)
+#define NS_STYLE_WILL_CHANGE_FIXPOS_CB          (1<<4)
+#define NS_STYLE_WILL_CHANGE_ABSPOS_CB          (1<<5)
+
+=======
+>>>>>>> upstream-releases
 // See AnimationEffect.webidl
 // and mozilla/dom/AnimationEffectBinding.h
 namespace dom {
 enum class PlaybackDirection : uint8_t;
 enum class FillMode : uint8_t;
+<<<<<<< HEAD
 }  // namespace dom
 
 // Animation play state
@@ -262,6 +279,46 @@ enum class StyleAnimationPlayState : uint8_t { Running, Paused };
 
 // See nsStyleImageLayers
 enum class StyleImageLayerAttachment : uint8_t { Scroll, Fixed, Local };
+||||||| merged common ancestors
+}
+
+// See nsStyleDisplay
+#define NS_STYLE_ANIMATION_ITERATION_COUNT_INFINITE 0
+
+// See nsStyleDisplay
+#define NS_STYLE_ANIMATION_PLAY_STATE_RUNNING     0
+#define NS_STYLE_ANIMATION_PLAY_STATE_PAUSED      1
+
+// See nsStyleImageLayers
+enum class StyleImageLayerAttachment : uint8_t {
+    Scroll,
+    Fixed,
+    Local
+};
+
+// A magic value that we use for our "pretend that background-clip is
+// 'padding' when we have a solid border" optimization.  This isn't
+// actually equal to NS_STYLE_IMAGELAYER_CLIP_PADDING because using that
+// causes antialiasing seams between the background and border.  This
+// is a backend-only value.
+#define NS_STYLE_IMAGELAYER_CLIP_MOZ_ALMOST_PADDING  127
+
+// See nsStyleImageLayers
+// The parser code depends on |ing these values together.
+#define NS_STYLE_IMAGELAYER_POSITION_CENTER          (1<<0)
+#define NS_STYLE_IMAGELAYER_POSITION_TOP             (1<<1)
+#define NS_STYLE_IMAGELAYER_POSITION_BOTTOM          (1<<2)
+#define NS_STYLE_IMAGELAYER_POSITION_LEFT            (1<<3)
+#define NS_STYLE_IMAGELAYER_POSITION_RIGHT           (1<<4)
+=======
+}  // namespace dom
+
+// Animation play state
+enum class StyleAnimationPlayState : uint8_t { Running, Paused };
+
+// See nsStyleImageLayers
+enum class StyleImageLayerAttachment : uint8_t { Scroll, Fixed, Local };
+>>>>>>> upstream-releases
 
 // See nsStyleImageLayers
 enum class StyleImageLayerRepeat : uint8_t {
@@ -274,19 +331,72 @@ enum class StyleImageLayerRepeat : uint8_t {
 };
 
 // Mask mode
+<<<<<<< HEAD
 #define NS_STYLE_MASK_MODE_ALPHA 0
 #define NS_STYLE_MASK_MODE_LUMINANCE 1
 #define NS_STYLE_MASK_MODE_MATCH_SOURCE 2
+||||||| merged common ancestors
+#define NS_STYLE_MASK_MODE_ALPHA                0
+#define NS_STYLE_MASK_MODE_LUMINANCE            1
+#define NS_STYLE_MASK_MODE_MATCH_SOURCE         2
+
+// See nsStyleBackground
+#define NS_STYLE_BG_INLINE_POLICY_EACH_BOX      0
+#define NS_STYLE_BG_INLINE_POLICY_CONTINUOUS    1
+#define NS_STYLE_BG_INLINE_POLICY_BOUNDING_BOX  2
+=======
+enum class StyleMaskMode : uint8_t { Alpha = 0, Luminance, MatchSource };
+>>>>>>> upstream-releases
 
 // See nsStyleTable
+<<<<<<< HEAD
 #define NS_STYLE_BORDER_COLLAPSE 0
 #define NS_STYLE_BORDER_SEPARATE 1
+||||||| merged common ancestors
+#define NS_STYLE_BORDER_COLLAPSE                0
+#define NS_STYLE_BORDER_SEPARATE                1
+
+// Possible enumerated specified values of border-*-width, used by nsCSSMargin
+#define NS_STYLE_BORDER_WIDTH_THIN              0
+#define NS_STYLE_BORDER_WIDTH_MEDIUM            1
+#define NS_STYLE_BORDER_WIDTH_THICK             2
+// XXX chopping block #define NS_STYLE_BORDER_WIDTH_LENGTH_VALUE      3
+
+// See nsStyleBorder mBorderStyle
+#define NS_STYLE_BORDER_STYLE_NONE              0
+#define NS_STYLE_BORDER_STYLE_GROOVE            1
+#define NS_STYLE_BORDER_STYLE_RIDGE             2
+#define NS_STYLE_BORDER_STYLE_DOTTED            3
+#define NS_STYLE_BORDER_STYLE_DASHED            4
+#define NS_STYLE_BORDER_STYLE_SOLID             5
+#define NS_STYLE_BORDER_STYLE_DOUBLE            6
+#define NS_STYLE_BORDER_STYLE_INSET             7
+#define NS_STYLE_BORDER_STYLE_OUTSET            8
+#define NS_STYLE_BORDER_STYLE_HIDDEN            9
+#define NS_STYLE_BORDER_STYLE_AUTO              10 // for outline-style only
+=======
+enum class StyleBorderCollapse : uint8_t { Collapse, Separate };
+>>>>>>> upstream-releases
 
 // border-image-repeat
+<<<<<<< HEAD
 enum class StyleBorderImageRepeat : uint8_t { Stretch, Repeat, Round, Space };
 
 #define NS_STYLE_BORDER_IMAGE_SLICE_NOFILL 0
 #define NS_STYLE_BORDER_IMAGE_SLICE_FILL 1
+||||||| merged common ancestors
+enum class StyleBorderImageRepeat : uint8_t {
+  Stretch,
+  Repeat,
+  Round,
+  Space
+};
+
+#define NS_STYLE_BORDER_IMAGE_SLICE_NOFILL      0
+#define NS_STYLE_BORDER_IMAGE_SLICE_FILL        1
+=======
+enum class StyleBorderImageRepeat : uint8_t { Stretch, Repeat, Round, Space };
+>>>>>>> upstream-releases
 
 // See nsStyleContent
 enum class StyleContent : uint8_t {
@@ -297,6 +407,7 @@ enum class StyleContent : uint8_t {
   AltContent
 };
 
+<<<<<<< HEAD
 // See nsStyleUI
 #define NS_STYLE_CURSOR_AUTO 1
 #define NS_STYLE_CURSOR_CROSSHAIR 2
@@ -335,6 +446,47 @@ enum class StyleContent : uint8_t {
 #define NS_STYLE_CURSOR_EW_RESIZE 35
 #define NS_STYLE_CURSOR_NONE 36
 
+||||||| merged common ancestors
+// See nsStyleUI
+#define NS_STYLE_CURSOR_AUTO                    1
+#define NS_STYLE_CURSOR_CROSSHAIR               2
+#define NS_STYLE_CURSOR_DEFAULT                 3    // ie: an arrow
+#define NS_STYLE_CURSOR_POINTER                 4    // for links
+#define NS_STYLE_CURSOR_MOVE                    5
+#define NS_STYLE_CURSOR_E_RESIZE                6
+#define NS_STYLE_CURSOR_NE_RESIZE               7
+#define NS_STYLE_CURSOR_NW_RESIZE               8
+#define NS_STYLE_CURSOR_N_RESIZE                9
+#define NS_STYLE_CURSOR_SE_RESIZE               10
+#define NS_STYLE_CURSOR_SW_RESIZE               11
+#define NS_STYLE_CURSOR_S_RESIZE                12
+#define NS_STYLE_CURSOR_W_RESIZE                13
+#define NS_STYLE_CURSOR_TEXT                    14   // ie: i-beam
+#define NS_STYLE_CURSOR_WAIT                    15
+#define NS_STYLE_CURSOR_HELP                    16
+#define NS_STYLE_CURSOR_COPY                    17   // CSS3
+#define NS_STYLE_CURSOR_ALIAS                   18
+#define NS_STYLE_CURSOR_CONTEXT_MENU            19
+#define NS_STYLE_CURSOR_CELL                    20
+#define NS_STYLE_CURSOR_GRAB                    21
+#define NS_STYLE_CURSOR_GRABBING                22
+#define NS_STYLE_CURSOR_SPINNING                23
+#define NS_STYLE_CURSOR_ZOOM_IN                 24
+#define NS_STYLE_CURSOR_ZOOM_OUT                25
+#define NS_STYLE_CURSOR_NOT_ALLOWED             26
+#define NS_STYLE_CURSOR_COL_RESIZE              27
+#define NS_STYLE_CURSOR_ROW_RESIZE              28
+#define NS_STYLE_CURSOR_NO_DROP                 29
+#define NS_STYLE_CURSOR_VERTICAL_TEXT           30
+#define NS_STYLE_CURSOR_ALL_SCROLL              31
+#define NS_STYLE_CURSOR_NESW_RESIZE             32
+#define NS_STYLE_CURSOR_NWSE_RESIZE             33
+#define NS_STYLE_CURSOR_NS_RESIZE               34
+#define NS_STYLE_CURSOR_EW_RESIZE               35
+#define NS_STYLE_CURSOR_NONE                    36
+
+=======
+>>>>>>> upstream-releases
 // See nsStyleVisibility
 #define NS_STYLE_DIRECTION_LTR 0
 #define NS_STYLE_DIRECTION_RTL 1
@@ -352,6 +504,7 @@ enum class StyleContent : uint8_t {
 // values here accidentally use it in their binary representation.)
 #define NS_STYLE_WRITING_MODE_SIDEWAYS_MASK 4
 
+<<<<<<< HEAD
 #define NS_STYLE_WRITING_MODE_SIDEWAYS_RL \
   (NS_STYLE_WRITING_MODE_VERTICAL_RL | NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
 #define NS_STYLE_WRITING_MODE_SIDEWAYS_LR \
@@ -373,6 +526,38 @@ enum class StyleContent : uint8_t {
 // NS_STYLE_CONTAIN_CONTENT_BITS does not correspond to a keyword.
 #define NS_STYLE_CONTAIN_CONTENT_BITS \
   (NS_STYLE_CONTAIN_LAYOUT | NS_STYLE_CONTAIN_STYLE | NS_STYLE_CONTAIN_PAINT)
+||||||| merged common ancestors
+#define NS_STYLE_WRITING_MODE_SIDEWAYS_RL         \
+          (NS_STYLE_WRITING_MODE_VERTICAL_RL |    \
+           NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
+#define NS_STYLE_WRITING_MODE_SIDEWAYS_LR         \
+          (NS_STYLE_WRITING_MODE_VERTICAL_LR |    \
+           NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
+
+// See nsStyleDisplay
+// If these are re-ordered, nsComputedDOMStyle::DoGetContain() must be updated.
+#define NS_STYLE_CONTAIN_NONE                   0
+#define NS_STYLE_CONTAIN_SIZE                   0x01
+#define NS_STYLE_CONTAIN_LAYOUT                 0x02
+#define NS_STYLE_CONTAIN_STYLE                  0x04
+#define NS_STYLE_CONTAIN_PAINT                  0x08
+#define NS_STYLE_CONTAIN_STRICT                 0x10
+#define NS_STYLE_CONTAIN_CONTENT                0x20
+// NS_STYLE_CONTAIN_ALL_BITS does not correspond to a keyword.
+#define NS_STYLE_CONTAIN_ALL_BITS               (NS_STYLE_CONTAIN_LAYOUT | \
+                                                 NS_STYLE_CONTAIN_STYLE  | \
+                                                 NS_STYLE_CONTAIN_PAINT  | \
+                                                 NS_STYLE_CONTAIN_SIZE)
+// NS_STYLE_CONTAIN_CONTENT_BITS does not correspond to a keyword.
+#define NS_STYLE_CONTAIN_CONTENT_BITS           (NS_STYLE_CONTAIN_LAYOUT | \
+                                                 NS_STYLE_CONTAIN_STYLE  | \
+                                                 NS_STYLE_CONTAIN_PAINT)
+=======
+#define NS_STYLE_WRITING_MODE_SIDEWAYS_RL \
+  (NS_STYLE_WRITING_MODE_VERTICAL_RL | NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
+#define NS_STYLE_WRITING_MODE_SIDEWAYS_LR \
+  (NS_STYLE_WRITING_MODE_VERTICAL_LR | NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
+>>>>>>> upstream-releases
 
 // Shared constants for all align/justify properties (nsStylePosition):
 #define NS_STYLE_ALIGN_AUTO 0
@@ -424,10 +609,24 @@ enum class StyleContent : uint8_t {
 #define NS_STYLE_JUSTIFY_ALL_SHIFT NS_STYLE_ALIGN_ALL_SHIFT
 
 // See nsStylePosition
+<<<<<<< HEAD
 #define NS_STYLE_FLEX_DIRECTION_ROW 0
 #define NS_STYLE_FLEX_DIRECTION_ROW_REVERSE 1
 #define NS_STYLE_FLEX_DIRECTION_COLUMN 2
 #define NS_STYLE_FLEX_DIRECTION_COLUMN_REVERSE 3
+||||||| merged common ancestors
+#define NS_STYLE_FLEX_DIRECTION_ROW             0
+#define NS_STYLE_FLEX_DIRECTION_ROW_REVERSE     1
+#define NS_STYLE_FLEX_DIRECTION_COLUMN          2
+#define NS_STYLE_FLEX_DIRECTION_COLUMN_REVERSE  3
+=======
+enum class StyleFlexDirection : uint8_t {
+  Row,
+  RowReverse,
+  Column,
+  ColumnReverse,
+};
+>>>>>>> upstream-releases
 
 // See nsStylePosition
 #define NS_STYLE_FLEX_WRAP_NOWRAP 0
@@ -437,6 +636,7 @@ enum class StyleContent : uint8_t {
 // See nsStylePosition
 // NOTE: This is the initial value of the integer-valued 'order' property
 // (rather than an internal numerical representation of some keyword).
+<<<<<<< HEAD
 #define NS_STYLE_ORDER_INITIAL 0
 
 // See nsStyleFilter
@@ -452,6 +652,43 @@ enum class StyleContent : uint8_t {
 #define NS_STYLE_FILTER_SEPIA 9
 #define NS_STYLE_FILTER_HUE_ROTATE 10
 #define NS_STYLE_FILTER_DROP_SHADOW 11
+||||||| merged common ancestors
+#define NS_STYLE_ORDER_INITIAL                  0
+
+// XXX remove in a later patch after updating flexbox code with the new names
+#define NS_STYLE_JUSTIFY_CONTENT_FLEX_START     NS_STYLE_JUSTIFY_FLEX_START
+#define NS_STYLE_JUSTIFY_CONTENT_FLEX_END       NS_STYLE_JUSTIFY_FLEX_END
+#define NS_STYLE_JUSTIFY_CONTENT_CENTER         NS_STYLE_JUSTIFY_CENTER
+#define NS_STYLE_JUSTIFY_CONTENT_SPACE_BETWEEN  NS_STYLE_JUSTIFY_SPACE_BETWEEN
+#define NS_STYLE_JUSTIFY_CONTENT_SPACE_AROUND   NS_STYLE_JUSTIFY_SPACE_AROUND
+
+// See nsStyleFilter
+#define NS_STYLE_FILTER_NONE                    0
+#define NS_STYLE_FILTER_URL                     1
+#define NS_STYLE_FILTER_BLUR                    2
+#define NS_STYLE_FILTER_BRIGHTNESS              3
+#define NS_STYLE_FILTER_CONTRAST                4
+#define NS_STYLE_FILTER_GRAYSCALE               5
+#define NS_STYLE_FILTER_INVERT                  6
+#define NS_STYLE_FILTER_OPACITY                 7
+#define NS_STYLE_FILTER_SATURATE                8
+#define NS_STYLE_FILTER_SEPIA                   9
+#define NS_STYLE_FILTER_HUE_ROTATE              10
+#define NS_STYLE_FILTER_DROP_SHADOW             11
+
+// See nsStyleFont
+// We should eventually stop using the NS_STYLE_* variants here.
+#define NS_STYLE_FONT_STYLE_NORMAL              NS_FONT_STYLE_NORMAL
+#define NS_STYLE_FONT_STYLE_ITALIC              NS_FONT_STYLE_ITALIC
+#define NS_STYLE_FONT_STYLE_OBLIQUE             NS_FONT_STYLE_OBLIQUE
+
+// See nsStyleFont
+// The constants below appear only in style sheets and not computed style.
+#define NS_STYLE_FONT_WEIGHT_BOLDER             (-1)
+#define NS_STYLE_FONT_WEIGHT_LIGHTER            (-2)
+=======
+#define NS_STYLE_ORDER_INITIAL 0
+>>>>>>> upstream-releases
 
 // See nsStyleFont
 #define NS_STYLE_FONT_SIZE_XXSMALL 0
@@ -513,6 +750,7 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_MATHML_MATHVARIANT_STRETCHED 18
 
 // See nsStyleFont::mMathDisplay
+<<<<<<< HEAD
 #define NS_MATHML_DISPLAYSTYLE_INLINE 0
 #define NS_MATHML_DISPLAYSTYLE_BLOCK 1
 
@@ -527,6 +765,25 @@ enum class StyleGridTrackBreadth : uint8_t {
 // alongside the 'width' ones, to be sure we don't accidentally overload this
 // numeric value with two different meanings if new 'width' keywords are added.
 #define NS_STYLE_FLEX_BASIS_CONTENT 4
+||||||| merged common ancestors
+#define NS_MATHML_DISPLAYSTYLE_INLINE           0
+#define NS_MATHML_DISPLAYSTYLE_BLOCK            1
+
+// See nsStylePosition::mWidth, mMinWidth, mMaxWidth
+#define NS_STYLE_WIDTH_MAX_CONTENT              0
+#define NS_STYLE_WIDTH_MIN_CONTENT              1
+#define NS_STYLE_WIDTH_FIT_CONTENT              2
+#define NS_STYLE_WIDTH_AVAILABLE                3
+// The 'content' keyword is only valid for 'flex-basis' (not for 'width').  But
+// aside from that, the 'flex-basis' property accepts exactly the same values
+// as 'width'. So I'm listing this one 'flex-basis'-specific enumerated value
+// alongside the 'width' ones, to be sure we don't accidentally overload this
+// numeric value with two different meanings if new 'width' keywords are added.
+#define NS_STYLE_FLEX_BASIS_CONTENT             4
+=======
+#define NS_MATHML_DISPLAYSTYLE_INLINE 0
+#define NS_MATHML_DISPLAYSTYLE_BLOCK 1
+>>>>>>> upstream-releases
 
 // See nsStyleDisplay.mPosition
 #define NS_STYLE_POSITION_STATIC 0
@@ -536,6 +793,7 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_POSITION_STICKY 4
 
 // See nsStyleEffects.mClip, mClipFlags
+<<<<<<< HEAD
 #define NS_STYLE_CLIP_AUTO 0x00
 #define NS_STYLE_CLIP_RECT 0x01
 #define NS_STYLE_CLIP_TYPE_MASK 0x0F
@@ -565,6 +823,61 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_OVERFLOW_CLIP 4
 #define NS_STYLE_OVERFLOW_SCROLLBARS_HORIZONTAL 5
 #define NS_STYLE_OVERFLOW_SCROLLBARS_VERTICAL 6
+||||||| merged common ancestors
+#define NS_STYLE_CLIP_AUTO                      0x00
+#define NS_STYLE_CLIP_RECT                      0x01
+#define NS_STYLE_CLIP_TYPE_MASK                 0x0F
+#define NS_STYLE_CLIP_LEFT_AUTO                 0x10
+#define NS_STYLE_CLIP_TOP_AUTO                  0x20
+#define NS_STYLE_CLIP_RIGHT_AUTO                0x40
+#define NS_STYLE_CLIP_BOTTOM_AUTO               0x80
+
+// FRAME/FRAMESET/IFRAME specific values including backward compatibility. Boolean values with
+// the same meaning (e.g. 1 & yes) may need to be distinguished for correct mode processing
+#define NS_STYLE_FRAME_YES                      0
+#define NS_STYLE_FRAME_NO                       1
+#define NS_STYLE_FRAME_0                        2
+#define NS_STYLE_FRAME_1                        3
+#define NS_STYLE_FRAME_ON                       4
+#define NS_STYLE_FRAME_OFF                      5
+#define NS_STYLE_FRAME_AUTO                     6
+#define NS_STYLE_FRAME_SCROLL                   7
+#define NS_STYLE_FRAME_NOSCROLL                 8
+
+// See nsStyleDisplay.mOverflow{X,Y}
+#define NS_STYLE_OVERFLOW_VISIBLE               0
+#define NS_STYLE_OVERFLOW_HIDDEN                1
+#define NS_STYLE_OVERFLOW_SCROLL                2
+#define NS_STYLE_OVERFLOW_AUTO                  3
+#define NS_STYLE_OVERFLOW_CLIP                  4
+#define NS_STYLE_OVERFLOW_SCROLLBARS_HORIZONTAL 5
+#define NS_STYLE_OVERFLOW_SCROLLBARS_VERTICAL   6
+
+// See nsStyleDisplay.mOverflowClipBox
+#define NS_STYLE_OVERFLOW_CLIP_BOX_PADDING_BOX  0
+#define NS_STYLE_OVERFLOW_CLIP_BOX_CONTENT_BOX  1
+=======
+#define NS_STYLE_CLIP_AUTO 0x00
+#define NS_STYLE_CLIP_RECT 0x01
+#define NS_STYLE_CLIP_TYPE_MASK 0x0F
+#define NS_STYLE_CLIP_LEFT_AUTO 0x10
+#define NS_STYLE_CLIP_TOP_AUTO 0x20
+#define NS_STYLE_CLIP_RIGHT_AUTO 0x40
+#define NS_STYLE_CLIP_BOTTOM_AUTO 0x80
+
+// FRAME/FRAMESET/IFRAME specific values including backward compatibility.
+// Boolean values with the same meaning (e.g. 1 & yes) may need to be
+// distinguished for correct mode processing
+#define NS_STYLE_FRAME_YES 0
+#define NS_STYLE_FRAME_NO 1
+#define NS_STYLE_FRAME_0 2
+#define NS_STYLE_FRAME_1 3
+#define NS_STYLE_FRAME_ON 4
+#define NS_STYLE_FRAME_OFF 5
+#define NS_STYLE_FRAME_AUTO 6
+#define NS_STYLE_FRAME_SCROLL 7
+#define NS_STYLE_FRAME_NOSCROLL 8
+>>>>>>> upstream-releases
 
 // See nsStyleList
 #define NS_STYLE_LIST_STYLE_CUSTOM -1  // for @counter-style
@@ -625,6 +938,7 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_OBJECT_FIT_SCALE_DOWN 4
 
 // See nsStyleText
+<<<<<<< HEAD
 #define NS_STYLE_TEXT_ALIGN_START 0
 #define NS_STYLE_TEXT_ALIGN_LEFT 1
 #define NS_STYLE_TEXT_ALIGN_RIGHT 2
@@ -654,8 +968,53 @@ enum class StyleGridTrackBreadth : uint8_t {
   (NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE |     \
    NS_STYLE_TEXT_DECORATION_LINE_OVERLINE |      \
    NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH)
+||||||| merged common ancestors
+#define NS_STYLE_TEXT_ALIGN_START                 0
+#define NS_STYLE_TEXT_ALIGN_LEFT                  1
+#define NS_STYLE_TEXT_ALIGN_RIGHT                 2
+#define NS_STYLE_TEXT_ALIGN_CENTER                3
+#define NS_STYLE_TEXT_ALIGN_JUSTIFY               4
+#define NS_STYLE_TEXT_ALIGN_CHAR                  5   //align based on a certain character, for table cell
+#define NS_STYLE_TEXT_ALIGN_END                   6
+#define NS_STYLE_TEXT_ALIGN_AUTO                  7
+#define NS_STYLE_TEXT_ALIGN_MOZ_CENTER            8
+#define NS_STYLE_TEXT_ALIGN_MOZ_RIGHT             9
+#define NS_STYLE_TEXT_ALIGN_MOZ_LEFT             10
+// NS_STYLE_TEXT_ALIGN_MOZ_CENTER_OR_INHERIT is only used in data structs; it
+// is never present in stylesheets or computed data.
+#define NS_STYLE_TEXT_ALIGN_MOZ_CENTER_OR_INHERIT 11
+#define NS_STYLE_TEXT_ALIGN_UNSAFE                12
+#define NS_STYLE_TEXT_ALIGN_MATCH_PARENT          13
+// Note: make sure that the largest NS_STYLE_TEXT_ALIGN_* value is smaller than
+// the smallest NS_STYLE_VERTICAL_ALIGN_* value below!
+
+// See nsStyleText, nsStyleFont
+#define NS_STYLE_TEXT_DECORATION_LINE_NONE         0
+#define NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE    0x01
+#define NS_STYLE_TEXT_DECORATION_LINE_OVERLINE     0x02
+#define NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH 0x04
+#define NS_STYLE_TEXT_DECORATION_LINE_BLINK        0x08
+// OVERRIDE_ALL does not occur in stylesheets; it only comes from HTML
+// attribute mapping (and thus appears in computed data)
+#define NS_STYLE_TEXT_DECORATION_LINE_OVERRIDE_ALL 0x10
+#define NS_STYLE_TEXT_DECORATION_LINE_LINES_MASK   (NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE | NS_STYLE_TEXT_DECORATION_LINE_OVERLINE | NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH)
+=======
+#define NS_STYLE_TEXT_ALIGN_START 0
+#define NS_STYLE_TEXT_ALIGN_LEFT 1
+#define NS_STYLE_TEXT_ALIGN_RIGHT 2
+#define NS_STYLE_TEXT_ALIGN_CENTER 3
+#define NS_STYLE_TEXT_ALIGN_JUSTIFY 4
+#define NS_STYLE_TEXT_ALIGN_CHAR \
+  5  // align based on a certain character, for table cell
+#define NS_STYLE_TEXT_ALIGN_END 6
+#define NS_STYLE_TEXT_ALIGN_AUTO 7
+#define NS_STYLE_TEXT_ALIGN_MOZ_CENTER 8
+#define NS_STYLE_TEXT_ALIGN_MOZ_RIGHT 9
+#define NS_STYLE_TEXT_ALIGN_MOZ_LEFT 10
+>>>>>>> upstream-releases
 
 // See nsStyleText
+<<<<<<< HEAD
 #define NS_STYLE_TEXT_DECORATION_STYLE_NONE \
   0  // not in CSS spec, mapped to -moz-none
 #define NS_STYLE_TEXT_DECORATION_STYLE_DOTTED 1
@@ -669,8 +1028,32 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_TEXT_OVERFLOW_CLIP 0
 #define NS_STYLE_TEXT_OVERFLOW_ELLIPSIS 1
 #define NS_STYLE_TEXT_OVERFLOW_STRING 2
+||||||| merged common ancestors
+#define NS_STYLE_TEXT_DECORATION_STYLE_NONE     0 // not in CSS spec, mapped to -moz-none
+#define NS_STYLE_TEXT_DECORATION_STYLE_DOTTED   1
+#define NS_STYLE_TEXT_DECORATION_STYLE_DASHED   2
+#define NS_STYLE_TEXT_DECORATION_STYLE_SOLID    3
+#define NS_STYLE_TEXT_DECORATION_STYLE_DOUBLE   4
+#define NS_STYLE_TEXT_DECORATION_STYLE_WAVY     5
+#define NS_STYLE_TEXT_DECORATION_STYLE_MAX      NS_STYLE_TEXT_DECORATION_STYLE_WAVY
+
+// See nsStyleTextOverflow
+#define NS_STYLE_TEXT_OVERFLOW_CLIP     0
+#define NS_STYLE_TEXT_OVERFLOW_ELLIPSIS 1
+#define NS_STYLE_TEXT_OVERFLOW_STRING   2
+=======
+#define NS_STYLE_TEXT_DECORATION_STYLE_NONE \
+  0  // not in CSS spec, mapped to -moz-none
+#define NS_STYLE_TEXT_DECORATION_STYLE_DOTTED 1
+#define NS_STYLE_TEXT_DECORATION_STYLE_DASHED 2
+#define NS_STYLE_TEXT_DECORATION_STYLE_SOLID 3
+#define NS_STYLE_TEXT_DECORATION_STYLE_DOUBLE 4
+#define NS_STYLE_TEXT_DECORATION_STYLE_WAVY 5
+#define NS_STYLE_TEXT_DECORATION_STYLE_MAX NS_STYLE_TEXT_DECORATION_STYLE_WAVY
+>>>>>>> upstream-releases
 
 // See nsStyleText
+<<<<<<< HEAD
 #define NS_STYLE_TEXT_TRANSFORM_NONE 0
 #define NS_STYLE_TEXT_TRANSFORM_CAPITALIZE 1
 #define NS_STYLE_TEXT_TRANSFORM_LOWERCASE 2
@@ -684,8 +1067,31 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_TOUCH_ACTION_PAN_X (1 << 2)
 #define NS_STYLE_TOUCH_ACTION_PAN_Y (1 << 3)
 #define NS_STYLE_TOUCH_ACTION_MANIPULATION (1 << 4)
+||||||| merged common ancestors
+#define NS_STYLE_TEXT_TRANSFORM_NONE            0
+#define NS_STYLE_TEXT_TRANSFORM_CAPITALIZE      1
+#define NS_STYLE_TEXT_TRANSFORM_LOWERCASE       2
+#define NS_STYLE_TEXT_TRANSFORM_UPPERCASE       3
+#define NS_STYLE_TEXT_TRANSFORM_FULL_WIDTH      4
+#define NS_STYLE_TEXT_TRANSFORM_FULL_SIZE_KANA  5
 
 // See nsStyleDisplay
+#define NS_STYLE_TOUCH_ACTION_NONE            (1 << 0)
+#define NS_STYLE_TOUCH_ACTION_AUTO            (1 << 1)
+#define NS_STYLE_TOUCH_ACTION_PAN_X           (1 << 2)
+#define NS_STYLE_TOUCH_ACTION_PAN_Y           (1 << 3)
+#define NS_STYLE_TOUCH_ACTION_MANIPULATION    (1 << 4)
+=======
+#define NS_STYLE_TEXT_TRANSFORM_NONE 0
+#define NS_STYLE_TEXT_TRANSFORM_CAPITALIZE 1
+#define NS_STYLE_TEXT_TRANSFORM_LOWERCASE 2
+#define NS_STYLE_TEXT_TRANSFORM_UPPERCASE 3
+#define NS_STYLE_TEXT_TRANSFORM_FULL_WIDTH 4
+#define NS_STYLE_TEXT_TRANSFORM_FULL_SIZE_KANA 5
+>>>>>>> upstream-releases
+
+// See nsStyleDisplay
+<<<<<<< HEAD
 #define NS_STYLE_TOP_LAYER_NONE 0  // not in the top layer
 #define NS_STYLE_TOP_LAYER_TOP 1   // in the top layer
 
@@ -702,6 +1108,36 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_VERTICAL_ALIGN_TEXT_BOTTOM 20
 #define NS_STYLE_VERTICAL_ALIGN_BOTTOM 21
 #define NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE 22
+||||||| merged common ancestors
+#define NS_STYLE_TOP_LAYER_NONE   0 // not in the top layer
+#define NS_STYLE_TOP_LAYER_TOP    1 // in the top layer
+
+// See nsStyleDisplay
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_EASE         0
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_LINEAR       1
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_EASE_IN      2
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_EASE_OUT     3
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_EASE_IN_OUT  4
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_STEP_START   5
+#define NS_STYLE_TRANSITION_TIMING_FUNCTION_STEP_END     6
+
+// See nsStyleText
+// Note: these values pickup after the text-align values because there
+// are a few html cases where an object can have both types of
+// alignment applied with a single attribute
+#define NS_STYLE_VERTICAL_ALIGN_BASELINE             14
+#define NS_STYLE_VERTICAL_ALIGN_SUB                  15
+#define NS_STYLE_VERTICAL_ALIGN_SUPER                16
+#define NS_STYLE_VERTICAL_ALIGN_TOP                  17
+#define NS_STYLE_VERTICAL_ALIGN_TEXT_TOP             18
+#define NS_STYLE_VERTICAL_ALIGN_MIDDLE               19
+#define NS_STYLE_VERTICAL_ALIGN_TEXT_BOTTOM          20
+#define NS_STYLE_VERTICAL_ALIGN_BOTTOM               21
+#define NS_STYLE_VERTICAL_ALIGN_MIDDLE_WITH_BASELINE 22
+=======
+#define NS_STYLE_TOP_LAYER_NONE 0  // not in the top layer
+#define NS_STYLE_TOP_LAYER_TOP 1   // in the top layer
+>>>>>>> upstream-releases
 
 // See nsStyleVisibility
 #define NS_STYLE_VISIBILITY_HIDDEN 0
@@ -719,13 +1155,27 @@ enum class StyleWhiteSpace : uint8_t {
   PreWrap,
   PreLine,
   PreSpace,
+  BreakSpaces,
 };
 
+<<<<<<< HEAD
 // See nsStyleText
 #define NS_STYLE_WORDBREAK_NORMAL 0
 #define NS_STYLE_WORDBREAK_BREAK_ALL 1
 #define NS_STYLE_WORDBREAK_KEEP_ALL 2
 
+||||||| merged common ancestors
+// See nsStyleText
+#define NS_STYLE_WORDBREAK_NORMAL               0
+#define NS_STYLE_WORDBREAK_BREAK_ALL            1
+#define NS_STYLE_WORDBREAK_KEEP_ALL             2
+
+// See nsStyleText
+#define NS_STYLE_OVERFLOWWRAP_NORMAL            0
+#define NS_STYLE_OVERFLOWWRAP_BREAK_WORD        1
+
+=======
+>>>>>>> upstream-releases
 // ruby-align, see nsStyleText
 #define NS_STYLE_RUBY_ALIGN_START 0
 #define NS_STYLE_RUBY_ALIGN_CENTER 1
@@ -802,6 +1252,7 @@ enum class StyleWhiteSpace : uint8_t {
 #define NS_STYLE_PAGE_BREAK_RIGHT 4
 
 // See nsStyleUIReset
+<<<<<<< HEAD
 #define NS_STYLE_IME_MODE_AUTO 0
 #define NS_STYLE_IME_MODE_NORMAL 1
 #define NS_STYLE_IME_MODE_ACTIVE 2
@@ -818,15 +1269,49 @@ enum class StyleWhiteSpace : uint8_t {
 #define NS_STYLE_GRADIENT_SIZE_FARTHEST_SIDE 2
 #define NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER 3
 #define NS_STYLE_GRADIENT_SIZE_EXPLICIT_SIZE 4
+||||||| merged common ancestors
+#define NS_STYLE_IME_MODE_AUTO                  0
+#define NS_STYLE_IME_MODE_NORMAL                1
+#define NS_STYLE_IME_MODE_ACTIVE                2
+#define NS_STYLE_IME_MODE_DISABLED              3
+#define NS_STYLE_IME_MODE_INACTIVE              4
+
+// See nsStyleGradient
+#define NS_STYLE_GRADIENT_SHAPE_LINEAR          0
+#define NS_STYLE_GRADIENT_SHAPE_ELLIPTICAL      1
+#define NS_STYLE_GRADIENT_SHAPE_CIRCULAR        2
+
+#define NS_STYLE_GRADIENT_SIZE_CLOSEST_SIDE     0
+#define NS_STYLE_GRADIENT_SIZE_CLOSEST_CORNER   1
+#define NS_STYLE_GRADIENT_SIZE_FARTHEST_SIDE    2
+#define NS_STYLE_GRADIENT_SIZE_FARTHEST_CORNER  3
+#define NS_STYLE_GRADIENT_SIZE_EXPLICIT_SIZE    4
+=======
+#define NS_STYLE_IME_MODE_AUTO 0
+#define NS_STYLE_IME_MODE_NORMAL 1
+#define NS_STYLE_IME_MODE_ACTIVE 2
+#define NS_STYLE_IME_MODE_DISABLED 3
+#define NS_STYLE_IME_MODE_INACTIVE 4
+>>>>>>> upstream-releases
 
 // See nsStyleSVG
 
+<<<<<<< HEAD
 // -moz-context-properties
 #define NS_STYLE_CONTEXT_PROPERTY_FILL (1 << 0)
 #define NS_STYLE_CONTEXT_PROPERTY_STROKE (1 << 1)
 #define NS_STYLE_CONTEXT_PROPERTY_FILL_OPACITY (1 << 2)
 #define NS_STYLE_CONTEXT_PROPERTY_STROKE_OPACITY (1 << 3)
 
+||||||| merged common ancestors
+// -moz-context-properties
+#define NS_STYLE_CONTEXT_PROPERTY_FILL          (1 << 0)
+#define NS_STYLE_CONTEXT_PROPERTY_STROKE        (1 << 1)
+#define NS_STYLE_CONTEXT_PROPERTY_FILL_OPACITY   (1 << 2)
+#define NS_STYLE_CONTEXT_PROPERTY_STROKE_OPACITY (1 << 3)
+
+=======
+>>>>>>> upstream-releases
 /*
  * -moz-window-shadow
  * Also used in widget code
@@ -934,8 +1419,18 @@ enum class StyleTextRendering : uint8_t {
 };
 
 // color-adjust
+<<<<<<< HEAD
 #define NS_STYLE_COLOR_ADJUST_ECONOMY 0
 #define NS_STYLE_COLOR_ADJUST_EXACT 1
+||||||| merged common ancestors
+#define NS_STYLE_COLOR_ADJUST_ECONOMY               0
+#define NS_STYLE_COLOR_ADJUST_EXACT                 1
+=======
+enum class StyleColorAdjust : uint8_t {
+  Economy = 0,
+  Exact = 1,
+};
+>>>>>>> upstream-releases
 
 // color-interpolation and color-interpolation-filters
 #define NS_STYLE_COLOR_INTERPOLATION_AUTO 0

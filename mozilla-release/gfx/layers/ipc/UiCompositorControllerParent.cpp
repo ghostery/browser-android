@@ -6,26 +6,46 @@
 #include "UiCompositorControllerParent.h"
 
 #if defined(MOZ_WIDGET_ANDROID)
-#include "apz/src/APZCTreeManager.h"
+#  include "apz/src/APZCTreeManager.h"
+#  include "mozilla/layers/AsyncCompositionManager.h"
 #endif
 #include "mozilla/layers/Compositor.h"
 #include "mozilla/layers/CompositorBridgeParent.h"
 #include "mozilla/layers/CompositorThread.h"
 #include "mozilla/layers/LayerManagerComposite.h"
+#include "mozilla/layers/UiCompositorControllerMessageTypes.h"
 #include "mozilla/gfx/Types.h"
 #include "mozilla/Move.h"
 #include "mozilla/Unused.h"
 
+<<<<<<< HEAD
 #include "FrameMetrics.h"
 
+||||||| merged common ancestors
+=======
+#include "FrameMetrics.h"
+#include "SynchronousTask.h"
+
+>>>>>>> upstream-releases
 namespace mozilla {
 namespace layers {
 
 typedef CompositorBridgeParent::LayerTreeState LayerTreeState;
 
+<<<<<<< HEAD
 /* static */ RefPtr<UiCompositorControllerParent>
 UiCompositorControllerParent::GetFromRootLayerTreeId(
     const LayersId& aRootLayerTreeId) {
+||||||| merged common ancestors
+/* static */ RefPtr<UiCompositorControllerParent>
+UiCompositorControllerParent::GetFromRootLayerTreeId(const LayersId& aRootLayerTreeId)
+{
+=======
+/* static */
+RefPtr<UiCompositorControllerParent>
+UiCompositorControllerParent::GetFromRootLayerTreeId(
+    const LayersId& aRootLayerTreeId) {
+>>>>>>> upstream-releases
   RefPtr<UiCompositorControllerParent> controller;
   CompositorBridgeParent::CallWithIndirectShadowTree(
       aRootLayerTreeId, [&](LayerTreeState& aState) -> void {
@@ -34,12 +54,26 @@ UiCompositorControllerParent::GetFromRootLayerTreeId(
   return controller;
 }
 
+<<<<<<< HEAD
 /* static */ RefPtr<UiCompositorControllerParent>
 UiCompositorControllerParent::Start(
     const LayersId& aRootLayerTreeId,
     Endpoint<PUiCompositorControllerParent>&& aEndpoint) {
   RefPtr<UiCompositorControllerParent> parent =
       new UiCompositorControllerParent(aRootLayerTreeId);
+||||||| merged common ancestors
+/* static */ RefPtr<UiCompositorControllerParent>
+UiCompositorControllerParent::Start(const LayersId& aRootLayerTreeId, Endpoint<PUiCompositorControllerParent>&& aEndpoint)
+{
+  RefPtr<UiCompositorControllerParent> parent = new UiCompositorControllerParent(aRootLayerTreeId);
+=======
+/* static */
+RefPtr<UiCompositorControllerParent> UiCompositorControllerParent::Start(
+    const LayersId& aRootLayerTreeId,
+    Endpoint<PUiCompositorControllerParent>&& aEndpoint) {
+  RefPtr<UiCompositorControllerParent> parent =
+      new UiCompositorControllerParent(aRootLayerTreeId);
+>>>>>>> upstream-releases
 
   RefPtr<Runnable> task =
       NewRunnableMethod<Endpoint<PUiCompositorControllerParent>&&>(
@@ -108,8 +142,37 @@ mozilla::ipc::IPCResult UiCompositorControllerParent::RecvMaxToolbarHeight(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult UiCompositorControllerParent::RecvPinned(
     const bool& aPinned, const int32_t& aReason) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+UiCompositorControllerParent::RecvPinned(const bool& aPinned, const int32_t& aReason)
+{
+=======
+mozilla::ipc::IPCResult UiCompositorControllerParent::RecvFixedBottomOffset(
+    const int32_t& aOffset) {
+#if defined(MOZ_WIDGET_ANDROID)
+  CompositorBridgeParent* parent =
+      CompositorBridgeParent::GetCompositorBridgeParentFromLayersId(
+          mRootLayerTreeId);
+  if (parent) {
+    AsyncCompositionManager* manager = parent->GetCompositionManager(nullptr);
+    if (manager) {
+      manager->SetFixedLayerMargins(0, aOffset);
+    }
+
+    parent->Invalidate();
+    parent->ScheduleComposition();
+  }
+#endif  // defined(MOZ_WIDGET_ANDROID)
+
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult UiCompositorControllerParent::RecvPinned(
+    const bool& aPinned, const int32_t& aReason) {
+>>>>>>> upstream-releases
 #if defined(MOZ_WIDGET_ANDROID)
   if (mAnimator) {
     mAnimator->SetPinned(aPinned, aReason);
@@ -191,7 +254,15 @@ UiCompositorControllerParent::RecvToolbarPixelsToCompositor(
 
 void UiCompositorControllerParent::ActorDestroy(ActorDestroyReason aWhy) {}
 
+<<<<<<< HEAD
 void UiCompositorControllerParent::DeallocPUiCompositorControllerParent() {
+||||||| merged common ancestors
+void
+UiCompositorControllerParent::DeallocPUiCompositorControllerParent()
+{
+=======
+void UiCompositorControllerParent::ActorDealloc() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
   Shutdown();
   Release();  // For AddRef in Initialize()
@@ -277,9 +348,27 @@ void UiCompositorControllerParent::InitializeForSameProcess() {
   // This function is called by UiCompositorControllerChild in the main thread.
   // So dispatch to the compositor thread to Initialize.
   if (!CompositorThreadHolder::IsInCompositorThread()) {
+<<<<<<< HEAD
     CompositorThreadHolder::Loop()->PostTask(NewRunnableMethod(
         "layers::UiCompositorControllerParent::InitializeForSameProcess", this,
         &UiCompositorControllerParent::InitializeForSameProcess));
+||||||| merged common ancestors
+    CompositorThreadHolder::Loop()->PostTask(NewRunnableMethod(
+      "layers::UiCompositorControllerParent::InitializeForSameProcess",
+      this,
+      &UiCompositorControllerParent::InitializeForSameProcess));
+=======
+    SynchronousTask task(
+        "UiCompositorControllerParent::InitializeForSameProcess");
+
+    CompositorThreadHolder::Loop()->PostTask(NS_NewRunnableFunction(
+        "UiCompositorControllerParent::InitializeForSameProcess", [&]() {
+          AutoCompleteTask complete(&task);
+          InitializeForSameProcess();
+        }));
+
+    task.Wait();
+>>>>>>> upstream-releases
     return;
   }
 

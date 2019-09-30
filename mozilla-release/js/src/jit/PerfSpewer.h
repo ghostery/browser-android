@@ -8,8 +8,16 @@
 #define jit_PerfSpewer_h
 
 #ifdef JS_ION_PERF
+<<<<<<< HEAD
 #include <stdio.h>
 #include "jit/MacroAssembler.h"
+||||||| merged common ancestors
+# include <stdio.h>
+# include "jit/MacroAssembler.h"
+=======
+#  include <stdio.h>
+#  include "jit/MacroAssembler.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace {

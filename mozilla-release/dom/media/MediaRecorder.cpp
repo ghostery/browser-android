@@ -32,7 +32,7 @@
 #include "nsContentUtils.h"
 #include "nsDocShell.h"
 #include "nsError.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIPermissionManager.h"
 #include "nsIPrincipal.h"
 #include "nsIScriptError.h"
@@ -41,7 +41,7 @@
 #include "nsTArray.h"
 
 #ifdef LOG
-#undef LOG
+#  undef LOG
 #endif
 
 mozilla::LazyLogModule gMediaRecorderLog("MediaRecorder");
@@ -465,6 +465,7 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
   friend class EncoderErrorNotifierRunnable;
   friend class PushBlobRunnable;
   friend class DestroyRunnable;
+<<<<<<< HEAD
 
  public:
   Session(MediaRecorder* aRecorder, int32_t aTimeSlice)
@@ -472,8 +473,27 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
         mMediaStreamReady(false),
         mTimeSlice(aTimeSlice),
         mRunningState(RunningState::Idling) {
+||||||| merged common ancestors
+  friend class TracksAvailableCallback;
+
+public:
+  Session(MediaRecorder* aRecorder, int32_t aTimeSlice)
+    : mRecorder(aRecorder)
+    , mTimeSlice(aTimeSlice)
+    , mRunningState(RunningState::Idling)
+  {
+=======
+
+ public:
+  Session(MediaRecorder* aRecorder, uint32_t aTimeSlice)
+      : mRecorder(aRecorder),
+        mMediaStreamReady(false),
+        mTimeSlice(aTimeSlice),
+        mRunningState(RunningState::Idling) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
 
+    aRecorder->GetMimeType(mMimeType);
     mMaxMemory = Preferences::GetUint("media.recorder.max_memory",
                                       MAX_ALLOW_MEMORY_BUFFER);
     mLastBlobTimeStamp = TimeStamp::Now();
@@ -572,6 +592,19 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
       mEncoder->Stop();
     }
 
+    // Remove main thread state added in Start().
+    if (mMediaStream) {
+      mMediaStream->UnregisterTrackListener(this);
+      mMediaStream = nullptr;
+    }
+
+    {
+      auto tracks(std::move(mMediaStreamTracks));
+      for (RefPtr<MediaStreamTrack>& track : tracks) {
+        track->RemovePrincipalChangeObserver(this);
+      }
+    }
+
     if (mRunningState.isOk() &&
         mRunningState.unwrap() == RunningState::Idling) {
       LOG(LogLevel::Debug, ("Session.Stop Explicit end task %p", this));
@@ -592,9 +625,17 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
       return NS_ERROR_FAILURE;
     }
 
+<<<<<<< HEAD
     mEncoder->Suspend(TimeStamp::Now());
     NS_DispatchToMainThread(
         new DispatchEventRunnable(this, NS_LITERAL_STRING("pause")));
+||||||| merged common ancestors
+    mEncoder->Suspend(TimeStamp::Now());
+=======
+    mEncoder->Suspend();
+    NS_DispatchToMainThread(
+        new DispatchEventRunnable(this, NS_LITERAL_STRING("pause")));
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -606,9 +647,17 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
       return NS_ERROR_FAILURE;
     }
 
+<<<<<<< HEAD
     mEncoder->Resume(TimeStamp::Now());
     NS_DispatchToMainThread(
         new DispatchEventRunnable(this, NS_LITERAL_STRING("resume")));
+||||||| merged common ancestors
+    mEncoder->Resume(TimeStamp::Now());
+=======
+    mEncoder->Resume();
+    NS_DispatchToMainThread(
+        new DispatchEventRunnable(this, NS_LITERAL_STRING("resume")));
+>>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -766,7 +815,7 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
       // MediaInputPort from the input stream, and let main thread check
       // track principals async later.
       nsPIDOMWindowInner* window = mRecorder->GetParentObject();
-      nsIDocument* document = window ? window->GetExtantDoc() : nullptr;
+      Document* document = window ? window->GetExtantDoc() : nullptr;
       nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                       NS_LITERAL_CSTRING("Media"), document,
                                       nsContentUtils::eDOM_PROPERTIES,
@@ -803,9 +852,21 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
     aTrack.AddPrincipalChangeObserver(this);
   }
 
+<<<<<<< HEAD
   bool PrincipalSubsumes(nsIPrincipal* aPrincipal) {
     if (!mRecorder->GetOwner()) return false;
     nsCOMPtr<nsIDocument> doc = mRecorder->GetOwner()->GetExtantDoc();
+||||||| merged common ancestors
+  bool PrincipalSubsumes(nsIPrincipal* aPrincipal)
+  {
+    if (!mRecorder->GetOwner())
+      return false;
+    nsCOMPtr<nsIDocument> doc = mRecorder->GetOwner()->GetExtantDoc();
+=======
+  bool PrincipalSubsumes(nsIPrincipal* aPrincipal) {
+    if (!mRecorder->GetOwner()) return false;
+    nsCOMPtr<Document> doc = mRecorder->GetOwner()->GetExtantDoc();
+>>>>>>> upstream-releases
     if (!doc) {
       return false;
     }
@@ -831,9 +892,19 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
 
   bool AudioNodePrincipalSubsumes() {
     MOZ_ASSERT(mRecorder->mAudioNode);
+<<<<<<< HEAD
     nsIDocument* doc = mRecorder->mAudioNode->GetOwner()
                            ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
                            : nullptr;
+||||||| merged common ancestors
+    nsIDocument* doc = mRecorder->mAudioNode->GetOwner()
+                       ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
+                       : nullptr;
+=======
+    Document* doc = mRecorder->mAudioNode->GetOwner()
+                        ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
+                        : nullptr;
+>>>>>>> upstream-releases
     nsCOMPtr<nsIPrincipal> principal = doc ? doc->NodePrincipal() : nullptr;
     return PrincipalSubsumes(principal);
   }
@@ -883,6 +954,7 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
             promises.AppendElement(iter.Get()->GetKey()->Shutdown());
           }
           gSessions.Clear();
+<<<<<<< HEAD
           ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)
               ->Then(GetCurrentThreadSerialEventTarget(), __func__,
                      [ticket]() mutable {
@@ -891,6 +963,26 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
                        ticket = nullptr;
                      },
                      []() { MOZ_CRASH("Not reached"); });
+||||||| merged common ancestors
+          ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)->Then(
+            GetCurrentThreadSerialEventTarget(), __func__,
+            [ticket]() mutable {
+              MOZ_ASSERT(gSessions.Count() == 0);
+              // Unblock shutdown
+              ticket = nullptr;
+            },
+            []() { MOZ_CRASH("Not reached"); });
+=======
+          ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)
+              ->Then(
+                  GetCurrentThreadSerialEventTarget(), __func__,
+                  [ticket]() mutable {
+                    MOZ_ASSERT(gSessions.Count() == 0);
+                    // Unblock shutdown
+                    ticket = nullptr;
+                  },
+                  []() { MOZ_CRASH("Not reached"); });
+>>>>>>> upstream-releases
           return NS_OK;
         }
       };
@@ -936,9 +1028,20 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
     // At this stage, the API doesn't allow UA to choose the output mimeType
     // format.
 
+<<<<<<< HEAD
     mEncoder = MediaEncoder::CreateEncoder(
         mEncoderThread, NS_LITERAL_STRING(""), audioBitrate, videoBitrate,
         aTrackTypes, aTrackRate);
+||||||| merged common ancestors
+    mEncoder = MediaEncoder::CreateEncoder(mEncoderThread,
+                                           NS_LITERAL_STRING(""),
+                                           audioBitrate, videoBitrate,
+                                           aTrackTypes, aTrackRate);
+=======
+    mEncoder =
+        MediaEncoder::CreateEncoder(mEncoderThread, mMimeType, audioBitrate,
+                                    videoBitrate, aTrackTypes, aTrackRate);
+>>>>>>> upstream-releases
 
     if (!mEncoder) {
       LOG(LogLevel::Error, ("Session.InitEncoder !mEncoder %p", this));
@@ -1127,7 +1230,7 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
           });
     }
 
-    // Remove main thread state.
+    // Remove main thread state. This could be needed if Stop() wasn't called.
     if (mMediaStream) {
       mMediaStream->UnregisterTrackListener(this);
       mMediaStream = nullptr;
@@ -1209,10 +1312,8 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
   // Timestamp of the last fired dataavailable event.
   TimeStamp mLastBlobTimeStamp;
   // The interval of passing encoded data from MutableBlobStorage to
-  // onDataAvailable handler. "mTimeSlice < 0" means Session object does not
-  // push encoded data to onDataAvailable, instead, it passive wait the client
-  // side pull encoded data by calling requestData API.
-  const int32_t mTimeSlice;
+  // onDataAvailable handler.
+  const uint32_t mTimeSlice;
   // The session's current main thread state. The error type gets setwhen ending
   // a recording with an error. An NS_OK error is invalid.
   // Main thread only.
@@ -1278,8 +1379,17 @@ void MediaRecorder::SetMimeType(const nsString& aMimeType) {
 
 void MediaRecorder::GetMimeType(nsString& aMimeType) { aMimeType = mMimeType; }
 
+<<<<<<< HEAD
 void MediaRecorder::Start(const Optional<int32_t>& aTimeSlice,
                           ErrorResult& aResult) {
+||||||| merged common ancestors
+void
+MediaRecorder::Start(const Optional<int32_t>& aTimeSlice, ErrorResult& aResult)
+{
+=======
+void MediaRecorder::Start(const Optional<uint32_t>& aTimeSlice,
+                          ErrorResult& aResult) {
+>>>>>>> upstream-releases
   LOG(LogLevel::Debug, ("MediaRecorder.Start %p", this));
 
   InitializeDomExceptions();
@@ -1298,25 +1408,30 @@ void MediaRecorder::Start(const Optional<int32_t>& aTimeSlice,
     // to record, we should throw a security error.
     bool subsumes = false;
     nsPIDOMWindowInner* window;
+<<<<<<< HEAD
     nsIDocument* doc;
     if (!(window = GetOwner()) || !(doc = window->GetExtantDoc()) ||
         NS_FAILED(doc->NodePrincipal()->Subsumes(mDOMStream->GetPrincipal(),
                                                  &subsumes)) ||
+||||||| merged common ancestors
+    nsIDocument* doc;
+    if (!(window = GetOwner()) ||
+        !(doc = window->GetExtantDoc()) ||
+        NS_FAILED(doc->NodePrincipal()->Subsumes(
+                    mDOMStream->GetPrincipal(), &subsumes)) ||
+=======
+    Document* doc;
+    if (!(window = GetOwner()) || !(doc = window->GetExtantDoc()) ||
+        NS_FAILED(doc->NodePrincipal()->Subsumes(mDOMStream->GetPrincipal(),
+                                                 &subsumes)) ||
+>>>>>>> upstream-releases
         !subsumes) {
       aResult.Throw(NS_ERROR_DOM_SECURITY_ERR);
       return;
     }
   }
 
-  int32_t timeSlice = 0;
-  if (aTimeSlice.WasPassed()) {
-    if (aTimeSlice.Value() < 0) {
-      aResult.Throw(NS_ERROR_INVALID_ARG);
-      return;
-    }
-
-    timeSlice = aTimeSlice.Value();
-  }
+  uint32_t timeSlice = aTimeSlice.WasPassed() ? aTimeSlice.Value() : 0;
   MediaRecorderReporter::AddMediaRecorder(this);
   mState = RecordingState::Recording;
   // Start a session.
@@ -1397,11 +1512,28 @@ JSObject* MediaRecorder::WrapObject(JSContext* aCx,
   return MediaRecorder_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
     const GlobalObject& aGlobal, DOMMediaStream& aStream,
     const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
       do_QueryInterface(aGlobal.GetAsSupports());
+||||||| merged common ancestors
+/* static */ already_AddRefed<MediaRecorder>
+MediaRecorder::Constructor(const GlobalObject& aGlobal,
+                           DOMMediaStream& aStream,
+                           const MediaRecorderOptions& aInitDict,
+                           ErrorResult& aRv)
+{
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(aGlobal.GetAsSupports());
+=======
+/* static */
+already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
+    const GlobalObject& aGlobal, DOMMediaStream& aStream,
+    const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
+      do_QueryInterface(aGlobal.GetAsSupports());
+>>>>>>> upstream-releases
   if (!ownerWindow) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -1417,9 +1549,24 @@ JSObject* MediaRecorder::WrapObject(JSContext* aCx,
   return object.forget();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
     const GlobalObject& aGlobal, AudioNode& aSrcAudioNode, uint32_t aSrcOutput,
     const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MediaRecorder>
+MediaRecorder::Constructor(const GlobalObject& aGlobal,
+                           AudioNode& aSrcAudioNode,
+                           uint32_t aSrcOutput,
+                           const MediaRecorderOptions& aInitDict,
+                           ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
+    const GlobalObject& aGlobal, AudioNode& aSrcAudioNode, uint32_t aSrcOutput,
+    const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   // Allow recording from audio node only when pref is on.
   if (!Preferences::GetBool("media.recorder.audio_node.enabled", false)) {
     // Pretending that this constructor is not defined.
@@ -1584,7 +1731,7 @@ nsresult MediaRecorder::CreateAndDispatchBlobEvent(Blob* aBlob) {
 
 void MediaRecorder::DispatchSimpleEvent(const nsAString& aStr) {
   MOZ_ASSERT(NS_IsMainThread(), "Not running on main thread");
-  nsresult rv = CheckInnerWindowCorrectness();
+  nsresult rv = CheckCurrentGlobalCorrectness();
   if (NS_FAILED(rv)) {
     return;
   }
@@ -1600,7 +1747,7 @@ void MediaRecorder::DispatchSimpleEvent(const nsAString& aStr) {
 
 void MediaRecorder::NotifyError(nsresult aRv) {
   MOZ_ASSERT(NS_IsMainThread(), "Not running on main thread");
-  nsresult rv = CheckInnerWindowCorrectness();
+  nsresult rv = CheckCurrentGlobalCorrectness();
   if (NS_FAILED(rv)) {
     return;
   }
@@ -1650,7 +1797,7 @@ void MediaRecorder::RemoveSession(Session* aSession) {
 void MediaRecorder::NotifyOwnerDocumentActivityChanged() {
   nsPIDOMWindowInner* window = GetOwner();
   NS_ENSURE_TRUE_VOID(window);
-  nsIDocument* doc = window->GetExtantDoc();
+  Document* doc = window->GetExtantDoc();
   NS_ENSURE_TRUE_VOID(doc);
 
   bool inFrameSwap = false;
@@ -1711,6 +1858,7 @@ RefPtr<MediaRecorder::SizeOfPromise> MediaRecorder::SizeOfExcludingThis(
     promises.AppendElement(session->SizeOfExcludingThis(aMallocSizeOf));
   }
 
+<<<<<<< HEAD
   SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)
       ->Then(GetCurrentThreadSerialEventTarget(), __func__,
              [holder](const nsTArray<size_t>& sizes) {
@@ -1721,6 +1869,32 @@ RefPtr<MediaRecorder::SizeOfPromise> MediaRecorder::SizeOfExcludingThis(
                holder->Resolve(total, __func__);
              },
              []() { MOZ_CRASH("Unexpected reject"); });
+||||||| merged common ancestors
+  SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)->Then(
+    GetCurrentThreadSerialEventTarget(), __func__,
+    [holder](const nsTArray<size_t>& sizes) {
+      size_t total = 0;
+      for (const size_t& size : sizes) {
+        total += size;
+      }
+      holder->Resolve(total, __func__);
+    },
+    []() {
+      MOZ_CRASH("Unexpected reject");
+    });
+=======
+  SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)
+      ->Then(
+          GetCurrentThreadSerialEventTarget(), __func__,
+          [holder](const nsTArray<size_t>& sizes) {
+            size_t total = 0;
+            for (const size_t& size : sizes) {
+              total += size;
+            }
+            holder->Resolve(total, __func__);
+          },
+          []() { MOZ_CRASH("Unexpected reject"); });
+>>>>>>> upstream-releases
 
   return promise;
 }

@@ -34,12 +34,28 @@ class HTMLIFrameElement final : public nsGenericHTMLFrameElement {
   }
 
   // nsIContent
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
   virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                               const nsAString& aValue,
                               nsIPrincipal* aMaybeScriptedPrincipal,
                               nsAttrValue& aResult) override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                              nsIContent* aBindingParent) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID,
+                                nsAtom* aAttribute,
+                                const nsAString& aValue,
+                                nsIPrincipal* aMaybeScriptedPrincipal,
+                                nsAttrValue& aResult) override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
+                              const nsAString& aValue,
+                              nsIPrincipal* aMaybeScriptedPrincipal,
+                              nsAttrValue& aResult) override;
+>>>>>>> upstream-releases
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
   virtual nsMapRuleToAttributesFunc GetAttributeMappingFunction()
       const override;
@@ -137,7 +153,15 @@ class HTMLIFrameElement final : public nsGenericHTMLFrameElement {
   void GetReferrerPolicy(nsAString& aReferrer) {
     GetEnumAttr(nsGkAtoms::referrerpolicy, EmptyCString().get(), aReferrer);
   }
+<<<<<<< HEAD
   nsIDocument* GetSVGDocument(nsIPrincipal& aSubjectPrincipal) {
+||||||| merged common ancestors
+  nsIDocument*
+  GetSVGDocument(nsIPrincipal& aSubjectPrincipal)
+  {
+=======
+  Document* GetSVGDocument(nsIPrincipal& aSubjectPrincipal) {
+>>>>>>> upstream-releases
     return GetContentDocument(aSubjectPrincipal);
   }
   bool Mozbrowser() const { return GetBoolAttr(nsGkAtoms::mozbrowser); }

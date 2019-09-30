@@ -23,12 +23,14 @@ class HTMLLegendElement final : public nsGenericHTMLElement {
   NS_IMPL_FROMNODE_HTML_WITH_TAG(HTMLLegendElement, legend)
 
   using nsGenericHTMLElement::Focus;
-  virtual void Focus(ErrorResult& aError) override;
+  virtual void Focus(const FocusOptions& aOptions,
+                     ErrorResult& aError) override;
 
   virtual bool PerformAccesskey(bool aKeyCausesActivation,
                                 bool aIsTrustedEvent) override;
 
   // nsIContent
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
@@ -37,6 +39,25 @@ class HTMLLegendElement final : public nsGenericHTMLElement {
                               const nsAString& aValue,
                               nsIPrincipal* aMaybeScriptedPrincipal,
                               nsAttrValue& aResult) override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument* aDocument,
+                              nsIContent* aParent,
+                              nsIContent* aBindingParent) override;
+  virtual void UnbindFromTree(bool aDeep = true,
+                              bool aNullParent = true) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID,
+                                nsAtom* aAttribute,
+                                const nsAString& aValue,
+                                nsIPrincipal* aMaybeScriptedPrincipal,
+                                nsAttrValue& aResult) override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
+                              const nsAString& aValue,
+                              nsIPrincipal* aMaybeScriptedPrincipal,
+                              nsAttrValue& aResult) override;
+>>>>>>> upstream-releases
   virtual nsChangeHint GetAttributeChangeHint(const nsAtom* aAttribute,
                                               int32_t aModType) const override;
 

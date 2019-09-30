@@ -23,11 +23,23 @@
 #include "vm/ArrayBufferObject.h"
 
 #if !defined(__clang__) && !defined(__GNUC__)
+<<<<<<< HEAD
 #error "This file only for gcc-compatible compilers"
+||||||| merged common ancestors
+# error "This file only for gcc-compatible compilers"
+=======
+#  error "This file only for gcc-compatible compilers"
+>>>>>>> upstream-releases
 #endif
 
 #if defined(JS_SIMULATOR_MIPS32) && !defined(__i386__)
+<<<<<<< HEAD
 #error "The MIPS32 simulator atomics assume x86"
+||||||| merged common ancestors
+# error "The MIPS32 simulator atomics assume x86"
+=======
+#  error "The MIPS32 simulator atomics assume x86"
+>>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -61,6 +73,46 @@ struct MOZ_RAII AddressGuard {
 }  // namespace jit
 }  // namespace js
 
+<<<<<<< HEAD
+inline bool js::jit::AtomicOperations::hasAtomic8() { return true; }
+||||||| merged common ancestors
+inline bool
+js::jit::AtomicOperations::hasAtomic8()
+{
+    return true;
+}
+=======
+inline bool js::jit::AtomicOperations::Initialize() {
+  // Nothing
+  return true;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+inline bool js::jit::AtomicOperations::isLockfree8() {
+  MOZ_ASSERT(__atomic_always_lock_free(sizeof(int8_t), 0));
+  MOZ_ASSERT(__atomic_always_lock_free(sizeof(int16_t), 0));
+  MOZ_ASSERT(__atomic_always_lock_free(sizeof(int32_t), 0));
+#if defined(JS_64BIT)
+  MOZ_ASSERT(__atomic_always_lock_free(sizeof(int64_t), 0));
+#endif
+  return true;
+||||||| merged common ancestors
+inline bool
+js::jit::AtomicOperations::isLockfree8()
+{
+    MOZ_ASSERT(__atomic_always_lock_free(sizeof(int8_t), 0));
+    MOZ_ASSERT(__atomic_always_lock_free(sizeof(int16_t), 0));
+    MOZ_ASSERT(__atomic_always_lock_free(sizeof(int32_t), 0));
+# if defined(JS_64BIT)
+    MOZ_ASSERT(__atomic_always_lock_free(sizeof(int64_t), 0));
+# endif
+    return true;
+=======
+inline void js::jit::AtomicOperations::ShutDown() {
+  // Nothing
+}
+
 inline bool js::jit::AtomicOperations::hasAtomic8() { return true; }
 
 inline bool js::jit::AtomicOperations::isLockfree8() {
@@ -71,6 +123,7 @@ inline bool js::jit::AtomicOperations::isLockfree8() {
   MOZ_ASSERT(__atomic_always_lock_free(sizeof(int64_t), 0));
 #endif
   return true;
+>>>>>>> upstream-releases
 }
 
 inline void js::jit::AtomicOperations::fenceSeqCst() {

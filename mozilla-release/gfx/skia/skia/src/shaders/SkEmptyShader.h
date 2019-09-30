@@ -20,12 +20,21 @@ class SkEmptyShader : public SkShaderBase {
 public:
     SkEmptyShader() {}
 
+<<<<<<< HEAD
     SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkEmptyShader)
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkEmptyShader)
+
+=======
+>>>>>>> upstream-releases
 protected:
+#ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
     Context* onMakeContext(const ContextRec&, SkArenaAlloc*) const override {
         return nullptr;
     }
+#endif
 
     void flatten(SkWriteBuffer& buffer) const override {
         // Do nothing.
@@ -38,6 +47,8 @@ protected:
     }
 
 private:
+    SK_FLATTENABLE_HOOKS(SkEmptyShader)
+
     typedef SkShaderBase INHERITED;
 };
 

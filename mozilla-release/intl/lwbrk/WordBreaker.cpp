@@ -33,6 +33,7 @@ bool WordBreaker::BreakInBetween(const char16_t* aText1, uint32_t aTextLen1,
   ((' ' == (c)) || ('\t' == (c)) || ('\r' == (c)) || ('\n' == (c)))
 #define IS_ALPHABETICAL_SCRIPT(c) ((c) < 0x2E80)
 
+<<<<<<< HEAD
 // we change the beginning of IS_HAN from 0x4e00 to 0x3400 to relfect
 // Unicode 3.0
 #define IS_HAN(c) \
@@ -43,6 +44,30 @@ bool WordBreaker::BreakInBetween(const char16_t* aText1, uint32_t aTextLen1,
 #define IS_THAI(c) (0x0E00 == (0xFF80 & (c)))  // Look at the higest 9 bits
 
 /* static */ WordBreakClass WordBreaker::GetClass(char16_t c) {
+||||||| merged common ancestors
+// we change the beginning of IS_HAN from 0x4e00 to 0x3400 to relfect Unicode 3.0
+#define IS_HAN(c)              (( 0x3400 <= (c)) && ((c) <= 0x9fff))||(( 0xf900 <= (c)) && ((c) <= 0xfaff))
+#define IS_KATAKANA(c)         (( 0x30A0 <= (c)) && ((c) <= 0x30FF))
+#define IS_HIRAGANA(c)         (( 0x3040 <= (c)) && ((c) <= 0x309F))
+#define IS_HALFWIDTHKATAKANA(c)         (( 0xFF60 <= (c)) && ((c) <= 0xFF9F))
+#define IS_THAI(c)         (0x0E00 == (0xFF80 & (c) )) // Look at the higest 9 bits
+
+/* static */ WordBreakClass
+WordBreaker::GetClass(char16_t c)
+{
+=======
+// we change the beginning of IS_HAN from 0x4e00 to 0x3400 to relfect
+// Unicode 3.0
+#define IS_HAN(c) \
+  ((0x3400 <= (c)) && ((c) <= 0x9fff)) || ((0xf900 <= (c)) && ((c) <= 0xfaff))
+#define IS_KATAKANA(c) ((0x30A0 <= (c)) && ((c) <= 0x30FF))
+#define IS_HIRAGANA(c) ((0x3040 <= (c)) && ((c) <= 0x309F))
+#define IS_HALFWIDTHKATAKANA(c) ((0xFF60 <= (c)) && ((c) <= 0xFF9F))
+#define IS_THAI(c) (0x0E00 == (0xFF80 & (c)))  // Look at the higest 9 bits
+
+/* static */
+WordBreakClass WordBreaker::GetClass(char16_t c) {
+>>>>>>> upstream-releases
   // The pref is cached on first call; changes will require a browser restart.
   static bool sStopAtUnderscore =
       Preferences::GetBool("layout.word_select.stop_at_underscore", false);

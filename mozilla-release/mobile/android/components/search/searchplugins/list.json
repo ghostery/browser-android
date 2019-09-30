@@ -76,7 +76,20 @@
     "bg": {
       "default": {
         "visibleDefaultEngines": [
+<<<<<<< HEAD
           "google-b-m", "bing", "pazaruvaj", "wikipedia-bg"
+||||||| merged common ancestors
+          "google", "bing", "pazaruvaj", "wikipedia-bg"
+=======
+          "google-b-m", "bing", "pazaruvaj", "wikipedia-bg"
+        ]
+      }
+    },
+    "bn": {
+      "default": {
+        "visibleDefaultEngines": [
+          "google-b-m", "bing", "ddg", "wikipedia-bn"
+>>>>>>> upstream-releases
         ]
       }
     },
@@ -812,7 +825,13 @@
     "zh-CN": {
       "default": {
         "visibleDefaultEngines": [
+<<<<<<< HEAD
           "google-b-m", "baidu", "bing", "taobao", "wikipedia-zh-CN"
+||||||| merged common ancestors
+          "google", "baidu", "bing", "taobao", "wikipedia-zh-CN"
+=======
+          "google-b-m", "baidu", "bing", "wikipedia-zh-CN"
+>>>>>>> upstream-releases
         ]
       },
       "CN": {

@@ -30,6 +30,7 @@
 #include "mozilla/Atomics.h"
 
 #if defined(ACCESSIBILITY)
+<<<<<<< HEAD
 #include "mozilla/a11y/Compatibility.h"
 #include "mozilla/a11y/Platform.h"
 #endif  // defined(ACCESSIBILITY)
@@ -39,6 +40,21 @@
 // Printer Properties dialog.
 #define MOZ_WM_PRINTER_PROPERTIES_COMPLETION 0x5b7a
 #define MOZ_WM_PRINTER_PROPERTIES_FAILURE 0x5b7f
+||||||| merged common ancestors
+#include "mozilla/a11y/Compatibility.h"
+#include "mozilla/a11y/Platform.h"
+#endif // defined(ACCESSIBILITY)
+
+// These are two messages that the code in winspool.drv on Windows 7 explicitly
+// waits for while it is pumping other Windows messages, during display of the
+// Printer Properties dialog.
+#define MOZ_WM_PRINTER_PROPERTIES_COMPLETION 0x5b7a
+#define MOZ_WM_PRINTER_PROPERTIES_FAILURE 0x5b7f
+=======
+#  include "mozilla/a11y/Compatibility.h"
+#  include "mozilla/a11y/Platform.h"
+#endif  // defined(ACCESSIBILITY)
+>>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::widget;
@@ -157,6 +173,7 @@ SingleNativeEventPump::AfterProcessNextEvent(nsIThreadInternal* aThread,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 namespace mozilla {
 namespace widget {
 // Native event callback message.
@@ -164,6 +181,20 @@ UINT sAppShellGeckoMsgId = RegisterWindowMessageW(L"nsAppShell:EventID");
 }  // namespace widget
 }  // namespace mozilla
 
+||||||| merged common ancestors
+namespace mozilla {
+namespace widget {
+// Native event callback message.
+UINT sAppShellGeckoMsgId = RegisterWindowMessageW(L"nsAppShell:EventID");
+} }
+
+=======
+// RegisterWindowMessage values
+// Native event callback message
+const wchar_t* kAppShellGeckoEventId = L"nsAppShell:EventID";
+UINT sAppShellGeckoMsgId;
+// Taskbar button creation message
+>>>>>>> upstream-releases
 const wchar_t* kTaskbarButtonEventId = L"TaskbarButtonCreated";
 UINT sTaskbarButtonCreatedMsg;
 
@@ -321,16 +352,34 @@ nsresult nsAppShell::Init() {
 
   hal::Init();
 
+<<<<<<< HEAD
   mozilla::ipc::windows::InitUIThread();
 
   sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
   NS_ASSERTION(sTaskbarButtonCreatedMsg,
                "Could not register taskbar button creation message");
+||||||| merged common ancestors
+  mozilla::ipc::windows::InitUIThread();
+
+  sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
+  NS_ASSERTION(sTaskbarButtonCreatedMsg, "Could not register taskbar button creation message");
+=======
+  if (XRE_Win32kCallsAllowed()) {
+    sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
+    NS_ASSERTION(sTaskbarButtonCreatedMsg,
+                 "Could not register taskbar button creation message");
+  }
+>>>>>>> upstream-releases
 
   // The hidden message window is used for interrupting the processing of native
   // events, so that we can process gecko events. Therefore, we only need it if
-  // we are processing native events.
+  // we are processing native events. Disabling this is required for win32k
+  // syscall lockdown.
   if (XRE_UseNativeEventProcessing()) {
+    sAppShellGeckoMsgId = ::RegisterWindowMessageW(kAppShellGeckoEventId);
+    NS_ASSERTION(sAppShellGeckoMsgId,
+                 "Could not register hidden window event message!");
+
     mLastNativeEventScheduled = TimeStamp::NowLoRes();
 
     WNDCLASSW wc;
@@ -354,7 +403,7 @@ nsresult nsAppShell::Init() {
     mEventWnd = CreateWindowW(kWindowClass, L"nsAppShell:EventWindow", 0, 0, 0,
                               10, 10, HWND_MESSAGE, nullptr, module, nullptr);
     NS_ENSURE_STATE(mEventWnd);
-  } else {
+  } else if (XRE_IsContentProcess()) {
     // We're not generally processing native events, but still using GDI and we
     // still have some internal windows, e.g. from calling CoInitializeEx.
     // So we use a class that will do a single event pump where previously we
@@ -525,14 +574,18 @@ bool nsAppShell::ProcessNextNativeEvent(bool mayWait) {
           continue;  // the message is consumed.
         }
 
-        // Store Printer Properties messages for reposting, because they are not
-        // processed by a window procedure, but are explicitly waited for in the
-        // winspool.drv code that will be further up the stack.
-        if (msg.message == MOZ_WM_PRINTER_PROPERTIES_COMPLETION ||
-            msg.message == MOZ_WM_PRINTER_PROPERTIES_FAILURE) {
+#if defined(_X86_)
+        // Store Printer dialog messages for reposting on x86, because on x86
+        // Windows 7 they are not processed by a window procedure, but are
+        // explicitly waited for in the winspool.drv code that will be further
+        // up the stack (winspool!WaitForCompletionMessage). These are
+        // undocumented Windows Message identifiers found in winspool.drv.
+        if (msg.message == 0x5b7a || msg.message == 0x5b7f ||
+            msg.message == 0x5b80 || msg.message == 0x5b81) {
           mMsgsToRepost.push_back(msg);
           continue;
         }
+#endif
 
         ::TranslateMessage(&msg);
         ::DispatchMessageW(&msg);

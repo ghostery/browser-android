@@ -57,6 +57,7 @@ typedef std::unordered_map<void*, Lock*> LockMap;
 static LockMap* gLocks;
 static ReadWriteSpinLock gLocksLock;
 
+<<<<<<< HEAD
 static Lock* CreateNewLock(Thread* aThread, size_t aId) {
   LockAcquires* info = gLockAcquires.Create(aId);
   info->mAcquires = gRecordingFile->OpenStream(StreamName::Lock, aId);
@@ -69,6 +70,25 @@ static Lock* CreateNewLock(Thread* aThread, size_t aId) {
 }
 
 /* static */ void Lock::New(void* aNativeLock) {
+||||||| merged common ancestors
+/* static */ void
+Lock::New(void* aNativeLock)
+{
+=======
+static Lock* CreateNewLock(Thread* aThread, size_t aId) {
+  LockAcquires* info = gLockAcquires.Create(aId);
+  info->mAcquires = gRecordingFile->OpenStream(StreamName::Lock, aId);
+
+  if (IsReplaying()) {
+    info->ReadAndNotifyNextOwner(aThread);
+  }
+
+  return new Lock(aId);
+}
+
+/* static */
+void Lock::New(void* aNativeLock) {
+>>>>>>> upstream-releases
   Thread* thread = Thread::Current();
   RecordingEventSection res(thread);
   if (!res.CanAccessEvents()) {
@@ -102,7 +122,16 @@ static Lock* CreateNewLock(Thread* aThread, size_t aId) {
   thread->EndDisallowEvents();
 }
 
+<<<<<<< HEAD
 /* static */ void Lock::Destroy(void* aNativeLock) {
+||||||| merged common ancestors
+/* static */ void
+Lock::Destroy(void* aNativeLock)
+{
+=======
+/* static */
+void Lock::Destroy(void* aNativeLock) {
+>>>>>>> upstream-releases
   Lock* lock = nullptr;
   {
     AutoWriteSpinLock ex(gLocksLock);
@@ -117,7 +146,16 @@ static Lock* CreateNewLock(Thread* aThread, size_t aId) {
   delete lock;
 }
 
+<<<<<<< HEAD
 /* static */ Lock* Lock::Find(void* aNativeLock) {
+||||||| merged common ancestors
+/* static */ Lock*
+Lock::Find(void* aNativeLock)
+{
+=======
+/* static */
+Lock* Lock::Find(void* aNativeLock) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(IsRecordingOrReplaying());
 
   Maybe<AutoReadSpinLock> ex;
@@ -195,7 +233,40 @@ void Lock::Exit() {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void Lock::LockAquiresUpdated(size_t aLockId) {
+||||||| merged common ancestors
+struct AtomicLock : public detail::MutexImpl
+{
+  using detail::MutexImpl::lock;
+  using detail::MutexImpl::unlock;
+};
+
+// Lock which is held during code sections that run atomically.
+static AtomicLock* gAtomicLock = nullptr;
+
+/* static */ void
+Lock::InitializeLocks()
+{
+  gNumLocks = gAtomicLockId;
+  gAtomicLock = new AtomicLock();
+
+  AssertEventsAreNotPassedThrough();
+
+  // There should be exactly one recorded lock right now, unless we had an
+  // initialization failure and didn't record the lock just created.
+  MOZ_RELEASE_ASSERT(!IsRecording() ||
+                     gNumLocks == gAtomicLockId + 1 ||
+                     gInitializationFailureMessage);
+}
+
+/* static */ void
+Lock::LockAquiresUpdated(size_t aLockId)
+{
+=======
+/* static */
+void Lock::LockAquiresUpdated(size_t aLockId) {
+>>>>>>> upstream-releases
   LockAcquires* acquires = gLockAcquires.MaybeGet(aLockId);
   if (acquires && acquires->mAcquires &&
       acquires->mNextOwner == LockAcquires::NoNextOwner) {
@@ -203,6 +274,7 @@ void Lock::Exit() {
   }
 }
 
+<<<<<<< HEAD
 // We use a set of Locks to record and replay the order in which atomic
 // accesses occur. Each lock describes the acquire order for a disjoint set of
 // values; this is done to reduce contention between threads, and ensures that
@@ -232,6 +304,39 @@ static SpinLock* gAtomicLockOwners;
   }
 }
 
+||||||| merged common ancestors
+=======
+// We use a set of Locks to record and replay the order in which atomic
+// accesses occur. Each lock describes the acquire order for a disjoint set of
+// values; this is done to reduce contention between threads, and ensures that
+// when the same value pointer is used in two ordered atomic accesses, those
+// accesses will replay in the same order as they did while recording.
+// Instead of using platform mutexes, we manage the Locks directly to avoid
+// overhead in Lock::Find. Atomics accesses are a major source of recording
+// overhead, which we want to minimize.
+static const size_t NumAtomicLocks = 89;
+static Lock** gAtomicLocks;
+
+// While recording, these locks prevent multiple threads from simultaneously
+// owning the same atomic lock.
+static SpinLock* gAtomicLockOwners;
+
+/* static */
+void Lock::InitializeLocks() {
+  Thread* thread = Thread::Current();
+
+  gNumLocks = 1;
+  gAtomicLocks = new Lock*[NumAtomicLocks];
+  for (size_t i = 0; i < NumAtomicLocks; i++) {
+    gAtomicLocks[i] = CreateNewLock(thread, gNumLocks++);
+  }
+  if (IsRecording()) {
+    gAtomicLockOwners = new SpinLock[NumAtomicLocks];
+    PodZero(gAtomicLockOwners, NumAtomicLocks);
+  }
+}
+
+>>>>>>> upstream-releases
 extern "C" {
 
 MOZ_EXPORT void RecordReplayInterface_InternalBeginOrderedAtomicAccess(

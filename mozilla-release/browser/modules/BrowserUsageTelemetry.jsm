@@ -11,10 +11,26 @@ var EXPORTED_SYMBOLS = [
   "URLBAR_SELECTED_RESULT_TYPES",
   "URLBAR_SELECTED_RESULT_METHODS",
   "MINIMUM_TAB_COUNT_INTERVAL_MS",
- ];
+];
 
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
+
+<<<<<<< HEAD
 const {XPCOMUtils} = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", null);
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+=======
+XPCOMUtils.defineLazyModuleGetters(this, {
+  PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
+  SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
+  Services: "resource://gre/modules/Services.jsm",
+  setTimeout: "resource://gre/modules/Timer.jsm",
+});
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 XPCOMUtils.defineLazyModuleGetters(this, {
   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
   SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
@@ -26,24 +42,45 @@ XPCOMUtils.defineLazyModuleGetters(this, {
 XPCOMUtils.defineLazyPreferenceGetter(this,
   "gRecentVisitedOriginsExpiry",
   "browser.engagement.recent_visited_origins.expiry");
+||||||| merged common ancestors
+ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils",
+                               "resource://gre/modules/PrivateBrowsingUtils.jsm");
+=======
+// This pref is in seconds!
+XPCOMUtils.defineLazyPreferenceGetter(
+  this,
+  "gRecentVisitedOriginsExpiry",
+  "browser.engagement.recent_visited_origins.expiry"
+);
+>>>>>>> upstream-releases
 
 // The upper bound for the count of the visited unique domain names.
 const MAX_UNIQUE_VISITED_DOMAINS = 100;
 
 // Observed topic names.
 const TAB_RESTORING_TOPIC = "SSTabRestoring";
-const TELEMETRY_SUBSESSIONSPLIT_TOPIC = "internal-telemetry-after-subsession-split";
+const TELEMETRY_SUBSESSIONSPLIT_TOPIC =
+  "internal-telemetry-after-subsession-split";
 const DOMWINDOW_OPENED_TOPIC = "domwindowopened";
 const AUTOCOMPLETE_ENTER_TEXT_TOPIC = "autocomplete-did-enter-text";
 
 // Probe names.
 const MAX_TAB_COUNT_SCALAR_NAME = "browser.engagement.max_concurrent_tab_count";
-const MAX_WINDOW_COUNT_SCALAR_NAME = "browser.engagement.max_concurrent_window_count";
-const TAB_OPEN_EVENT_COUNT_SCALAR_NAME = "browser.engagement.tab_open_event_count";
-const WINDOW_OPEN_EVENT_COUNT_SCALAR_NAME = "browser.engagement.window_open_event_count";
-const UNIQUE_DOMAINS_COUNT_SCALAR_NAME = "browser.engagement.unique_domains_count";
+const MAX_WINDOW_COUNT_SCALAR_NAME =
+  "browser.engagement.max_concurrent_window_count";
+const TAB_OPEN_EVENT_COUNT_SCALAR_NAME =
+  "browser.engagement.tab_open_event_count";
+const MAX_TAB_PINNED_COUNT_SCALAR_NAME =
+  "browser.engagement.max_concurrent_tab_pinned_count";
+const TAB_PINNED_EVENT_COUNT_SCALAR_NAME =
+  "browser.engagement.tab_pinned_event_count";
+const WINDOW_OPEN_EVENT_COUNT_SCALAR_NAME =
+  "browser.engagement.window_open_event_count";
+const UNIQUE_DOMAINS_COUNT_SCALAR_NAME =
+  "browser.engagement.unique_domains_count";
 const TOTAL_URI_COUNT_SCALAR_NAME = "browser.engagement.total_uri_count";
-const UNFILTERED_URI_COUNT_SCALAR_NAME = "browser.engagement.unfiltered_uri_count";
+const UNFILTERED_URI_COUNT_SCALAR_NAME =
+  "browser.engagement.unfiltered_uri_count";
 
 // A list of known search origins.
 const KNOWN_SEARCH_SOURCES = [
@@ -96,7 +133,6 @@ const URLBAR_SELECTED_RESULT_METHODS = {
   rightClickEnter: 5,
 };
 
-
 const MINIMUM_TAB_COUNT_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes, in ms
 
 function getOpenTabsAndWinsCounts() {
@@ -115,6 +151,17 @@ function getTabCount() {
   return getOpenTabsAndWinsCounts().tabCount;
 }
 
+function getPinnedTabsCount() {
+  let pinnedTabs = 0;
+
+  for (let win of Services.wm.getEnumerator("navigator:browser")) {
+    pinnedTabs += [...win.ownerGlobal.gBrowser.tabs].filter(t => t.pinned)
+      .length;
+  }
+
+  return pinnedTabs;
+}
+
 function getSearchEngineId(engine) {
   if (engine) {
     if (engine.identifier) {
@@ -128,8 +175,10 @@ function getSearchEngineId(engine) {
 }
 
 function shouldRecordSearchCount(tabbrowser) {
-  return !PrivateBrowsingUtils.isWindowPrivate(tabbrowser.ownerGlobal) ||
-         !Services.prefs.getBoolPref("browser.engagement.search_counts.pbm", false);
+  return (
+    !PrivateBrowsingUtils.isWindowPrivate(tabbrowser.ownerGlobal) ||
+    !Services.prefs.getBoolPref("browser.engagement.search_counts.pbm", false)
+  );
 }
 
 let URICountListener = {
@@ -172,14 +221,20 @@ let URICountListener = {
     // loads, we will hit onLocationChange again.
     // We can catch the first case by checking for null requests: be advised that
     // this can also happen when navigating page fragments, so account for it.
-    if (!request &&
-        !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
+    if (
+      !request &&
+      !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)
+    ) {
       return;
     }
 
     // Don't include URI and domain counts when in private mode.
-    let shouldCountURI = !PrivateBrowsingUtils.isWindowPrivate(browser.ownerGlobal) ||
-                         Services.prefs.getBoolPref("browser.engagement.total_uri_count.pbm", false);
+    let shouldCountURI =
+      !PrivateBrowsingUtils.isWindowPrivate(browser.ownerGlobal) ||
+      Services.prefs.getBoolPref(
+        "browser.engagement.total_uri_count.pbm",
+        false
+      );
 
     // Track URI loads, even if they're not http(s).
     let uriSpec = null;
@@ -193,7 +248,6 @@ let URICountListener = {
       }
       return;
     }
-
 
     // Don't count about:blank and similar pages, as they would artificially
     // inflate the counts.
@@ -219,10 +273,23 @@ let URICountListener = {
     if (!this.isHttpURI(uri)) {
       return;
     }
+<<<<<<< HEAD
 
     if (shouldRecordSearchCount(browser.getTabBrowser()) &&
         !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
       SearchTelemetry.updateTrackingStatus(browser, uriSpec);
+||||||| merged common ancestors
+    if (shouldRecordSearchCount(browser.getTabBrowser()) &&
+        !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
+      Services.search.recordSearchURLTelemetry(uriSpec);
+=======
+
+    if (
+      shouldRecordSearchCount(browser.getTabBrowser()) &&
+      !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)
+    ) {
+      SearchTelemetry.updateTrackingStatus(browser, uriSpec);
+>>>>>>> upstream-releases
     }
 
     if (!shouldCountURI) {
@@ -247,6 +314,7 @@ let URICountListener = {
       return;
     }
 
+<<<<<<< HEAD
     // We only want to count the unique domains up to MAX_UNIQUE_VISITED_DOMAINS.
     if (this._domainSet.size < MAX_UNIQUE_VISITED_DOMAINS) {
       this._domainSet.add(baseDomain);
@@ -259,6 +327,25 @@ let URICountListener = {
         this._domain24hrSet.delete(baseDomain);
       }, gRecentVisitedOriginsExpiry * 1000);
     }
+||||||| merged common ancestors
+    Services.telemetry.scalarSet(UNIQUE_DOMAINS_COUNT_SCALAR_NAME, this._domainSet.size);
+=======
+    // We only want to count the unique domains up to MAX_UNIQUE_VISITED_DOMAINS.
+    if (this._domainSet.size < MAX_UNIQUE_VISITED_DOMAINS) {
+      this._domainSet.add(baseDomain);
+      Services.telemetry.scalarSet(
+        UNIQUE_DOMAINS_COUNT_SCALAR_NAME,
+        this._domainSet.size
+      );
+    }
+
+    this._domain24hrSet.add(baseDomain);
+    if (gRecentVisitedOriginsExpiry) {
+      setTimeout(() => {
+        this._domain24hrSet.delete(baseDomain);
+      }, gRecentVisitedOriginsExpiry * 1000);
+    }
+>>>>>>> upstream-releases
   },
 
   /**
@@ -268,6 +355,7 @@ let URICountListener = {
     this._domainSet.clear();
   },
 
+<<<<<<< HEAD
   /**
    * Returns the number of unique domains visited in this session during the
    * last 24 hours.
@@ -285,10 +373,33 @@ let URICountListener = {
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsIWebProgressListener,
                                           Ci.nsISupportsWeakReference]),
+||||||| merged common ancestors
+  QueryInterface: ChromeUtils.generateQI([Ci.nsIWebProgressListener,
+                                          Ci.nsISupportsWeakReference]),
+=======
+  /**
+   * Returns the number of unique domains visited in this session during the
+   * last 24 hours.
+   */
+  get uniqueDomainsVisitedInPast24Hours() {
+    return this._domain24hrSet.size;
+  },
+
+  /**
+   * Resets the number of unique domains visited in this session.
+   */
+  resetUniqueDomainsVisitedInPast24Hours() {
+    this._domain24hrSet.clear();
+  },
+
+  QueryInterface: ChromeUtils.generateQI([
+    Ci.nsIWebProgressListener,
+    Ci.nsISupportsWeakReference,
+  ]),
+>>>>>>> upstream-releases
 };
 
 let urlbarListener = {
-
   // This is needed for recordUrlbarSelectedResultMethod().
   selectedIndex: -1,
 
@@ -303,7 +414,9 @@ let urlbarListener = {
   observe(subject, topic, data) {
     switch (topic) {
       case AUTOCOMPLETE_ENTER_TEXT_TOPIC:
-        this._handleURLBarTelemetry(subject.QueryInterface(Ci.nsIAutoCompleteInput));
+        this._handleURLBarTelemetry(
+          subject.QueryInterface(Ci.nsIAutoCompleteInput)
+        );
         break;
     }
   },
@@ -327,49 +440,55 @@ let urlbarListener = {
     // first result at index 0 is the "heuristic" result that indicates what
     // will happen when you press the Enter key.  Treat it as no selection.
     this.selectedIndex =
-      input.popup.selectedIndex > 0 || !input.popup._isFirstResultHeuristic ?
-      input.popup.selectedIndex :
-      -1;
+      input.popup.selectedIndex > 0 || !input.popup._isFirstResultHeuristic
+        ? input.popup.selectedIndex
+        : -1;
 
-    let controller =
-      input.popup.view.QueryInterface(Ci.nsIAutoCompleteController);
+    let controller = input.popup.view.QueryInterface(
+      Ci.nsIAutoCompleteController
+    );
     let idx = input.popup.selectedIndex;
     let value = controller.getValueAt(idx);
     let action = input._parseActionUrl(value);
     let actionType;
     if (action) {
       actionType =
-        action.type == "searchengine" && action.params.searchSuggestion ?
-          "searchsuggestion" :
-        action.type;
+        action.type == "searchengine" && action.params.searchSuggestion
+          ? "searchsuggestion"
+          : action.type;
     }
     if (!actionType) {
       let styles = new Set(controller.getStyleAt(idx).split(/\s+/));
-      let style = ["preloaded-top-site", "autofill", "tag", "bookmark"].find(s => styles.has(s));
+      let style = ["preloaded-top-site", "autofill", "tag", "bookmark"].find(
+        s => styles.has(s)
+      );
       actionType = style || "history";
     }
 
     Services.telemetry
-            .getHistogramById("FX_URLBAR_SELECTED_RESULT_INDEX")
-            .add(idx);
+      .getHistogramById("FX_URLBAR_SELECTED_RESULT_INDEX")
+      .add(idx);
 
     // You can add values but don't change any of the existing values.
     // Otherwise you'll break our data.
     if (actionType in URLBAR_SELECTED_RESULT_TYPES) {
       Services.telemetry
-              .getHistogramById("FX_URLBAR_SELECTED_RESULT_TYPE")
-              .add(URLBAR_SELECTED_RESULT_TYPES[actionType]);
+        .getHistogramById("FX_URLBAR_SELECTED_RESULT_TYPE")
+        .add(URLBAR_SELECTED_RESULT_TYPES[actionType]);
       Services.telemetry
-              .getKeyedHistogramById("FX_URLBAR_SELECTED_RESULT_INDEX_BY_TYPE")
-              .add(actionType, idx);
+        .getKeyedHistogramById("FX_URLBAR_SELECTED_RESULT_INDEX_BY_TYPE")
+        .add(actionType, idx);
     } else {
-      Cu.reportError("Unknown FX_URLBAR_SELECTED_RESULT_TYPE type: " +
-                     actionType);
+      Cu.reportError(
+        "Unknown FX_URLBAR_SELECTED_RESULT_TYPE type: " + actionType
+      );
     }
   },
 
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIObserver,
-                                          Ci.nsISupportsWeakReference]),
+  QueryInterface: ChromeUtils.generateQI([
+    Ci.nsIObserver,
+    Ci.nsISupportsWeakReference,
+  ]),
 };
 
 let BrowserUsageTelemetry = {
@@ -390,15 +509,23 @@ let BrowserUsageTelemetry = {
     // concurrent tab and window counts so that they reflect the correct value for the
     // new subsession.
     const counts = getOpenTabsAndWinsCounts();
-    Services.telemetry.scalarSetMaximum(MAX_TAB_COUNT_SCALAR_NAME, counts.tabCount);
-    Services.telemetry.scalarSetMaximum(MAX_WINDOW_COUNT_SCALAR_NAME, counts.winCount);
+    Services.telemetry.scalarSetMaximum(
+      MAX_TAB_COUNT_SCALAR_NAME,
+      counts.tabCount
+    );
+    Services.telemetry.scalarSetMaximum(
+      MAX_WINDOW_COUNT_SCALAR_NAME,
+      counts.winCount
+    );
 
     // Reset the URI counter.
     URICountListener.reset();
   },
 
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIObserver,
-                                          Ci.nsISupportsWeakReference]),
+  QueryInterface: ChromeUtils.generateQI([
+    Ci.nsIObserver,
+    Ci.nsISupportsWeakReference,
+  ]),
 
   uninit() {
     if (!this._inited) {
@@ -424,6 +551,9 @@ let BrowserUsageTelemetry = {
     switch (event.type) {
       case "TabOpen":
         this._onTabOpen();
+        break;
+      case "TabPinned":
+        this._onTabPinned();
         break;
       case "unload":
         this._unregisterWindow(event.target);
@@ -479,7 +609,9 @@ let BrowserUsageTelemetry = {
         // code paths because they want to record the search
         // in SEARCH_COUNTS.
         if (["urlbar", "searchbar"].includes(source)) {
-          Services.telemetry.getKeyedHistogramById("SEARCH_COUNTS").add(countId);
+          Services.telemetry
+            .getKeyedHistogramById("SEARCH_COUNTS")
+            .add(countId);
           return;
         }
         throw new Error("Unknown source for one-off search: " + source);
@@ -491,8 +623,10 @@ let BrowserUsageTelemetry = {
       let histogram = Services.telemetry.getKeyedHistogramById("SEARCH_COUNTS");
       histogram.add(countId);
 
-      if (details.alias &&
-          engine.wrappedJSObject._internalAliases.includes(details.alias)) {
+      if (
+        details.alias &&
+        engine.wrappedJSObject._internalAliases.includes(details.alias)
+      ) {
         let aliasCountId = getSearchEngineId(engine) + ".alias";
         histogram.add(aliasCountId);
       }
@@ -504,10 +638,14 @@ let BrowserUsageTelemetry = {
 
   _recordSearch(engine, source, action = null) {
     let scalarKey = action ? "search_" + action : "search";
-    Services.telemetry.keyedScalarAdd("browser.engagement.navigation." + source,
-                                      scalarKey, 1);
-    Services.telemetry.recordEvent("navigation", "search", source, action,
-                                   { engine: getSearchEngineId(engine) });
+    Services.telemetry.keyedScalarAdd(
+      "browser.engagement.navigation." + source,
+      scalarKey,
+      1
+    );
+    Services.telemetry.recordEvent("navigation", "search", source, action, {
+      engine: getSearchEngineId(engine),
+    });
   },
 
   _handleSearchAction(engine, source, details) {
@@ -543,7 +681,7 @@ let BrowserUsageTelemetry = {
     // When using one-offs in the searchbar we get an "unknown" source. See bug
     // 1195733 comment 7 for the context. Fix-up the label here.
     const sourceName =
-      (source === "unknown") ? "searchbar" : source.replace("oneoff-", "");
+      source === "unknown" ? "searchbar" : source.replace("oneoff-", "");
 
     const isOneOff = !!details.isOneOff;
     if (isOneOff) {
@@ -578,7 +716,8 @@ let BrowserUsageTelemetry = {
   },
 
   /**
-   * Records the method by which the user selected a urlbar result.
+   * Records the method by which the user selected a urlbar result for the
+   * legacy urlbar.
    *
    * @param {Event} event
    *        The event that triggered the selection.
@@ -586,7 +725,10 @@ let BrowserUsageTelemetry = {
    *        How the user cycled through results before picking the current match.
    *        Could be one of "tab", "arrow" or "none".
    */
-  recordUrlbarSelectedResultMethod(event, userSelectionBehavior = "none") {
+  recordLegacyUrlbarSelectedResultMethod(
+    event,
+    userSelectionBehavior = "none"
+  ) {
     // The reason this method relies on urlbarListener instead of having the
     // caller pass in an index is that by the time the urlbar handles a
     // selection, the selection in its popup has been cleared, so it's not easy
@@ -595,7 +737,41 @@ let BrowserUsageTelemetry = {
     // before the popup selection is cleared, so just use that.
 
     this._recordUrlOrSearchbarSelectedResultMethod(
-      event, urlbarListener.selectedIndex,
+      event,
+      urlbarListener.selectedIndex,
+      "FX_URLBAR_SELECTED_RESULT_METHOD",
+      userSelectionBehavior
+    );
+  },
+
+  /**
+   * Records the method by which the user selected a urlbar result for the
+   * legacy urlbar.
+   *
+   * @param {Event} event
+   *        The event that triggered the selection.
+   * @param {number} index
+   *        The index that the user chose in the popup, or -1 if there wasn't a
+   *        selection.
+   * @param {string} userSelectionBehavior
+   *        How the user cycled through results before picking the current match.
+   *        Could be one of "tab", "arrow" or "none".
+   */
+  recordUrlbarSelectedResultMethod(
+    event,
+    index,
+    userSelectionBehavior = "none"
+  ) {
+    // The reason this method relies on urlbarListener instead of having the
+    // caller pass in an index is that by the time the urlbar handles a
+    // selection, the selection in its popup has been cleared, so it's not easy
+    // to tell which popup index was selected.  Fortunately this file already
+    // has urlbarListener, which gets notified of selections in the urlbar
+    // before the popup selection is cleared, so just use that.
+
+    this._recordUrlOrSearchbarSelectedResultMethod(
+      event,
+      index,
       "FX_URLBAR_SELECTED_RESULT_METHOD",
       userSelectionBehavior
     );
@@ -612,36 +788,44 @@ let BrowserUsageTelemetry = {
    */
   recordSearchbarSelectedResultMethod(event, highlightedIndex) {
     this._recordUrlOrSearchbarSelectedResultMethod(
-      event, highlightedIndex,
+      event,
+      highlightedIndex,
       "FX_SEARCHBAR_SELECTED_RESULT_METHOD",
       "none"
     );
   },
 
-  _recordUrlOrSearchbarSelectedResultMethod(event, highlightedIndex, histogramID, userSelectionBehavior) {
+  _recordUrlOrSearchbarSelectedResultMethod(
+    event,
+    highlightedIndex,
+    histogramID,
+    userSelectionBehavior
+  ) {
     let histogram = Services.telemetry.getHistogramById(histogramID);
     // command events are from the one-off context menu.  Treat them as clicks.
     // Note that we don't care about MouseEvent subclasses here, since
     // those are not clicks.
-    let isClick = event && (ChromeUtils.getClassName(event) == "MouseEvent" ||
-                            event.type == "command");
+    let isClick =
+      event &&
+      (ChromeUtils.getClassName(event) == "MouseEvent" ||
+        event.type == "command");
     let category;
     if (isClick) {
       category = "click";
     } else if (highlightedIndex >= 0) {
       switch (userSelectionBehavior) {
-      case "tab":
-        category = "tabEnterSelection";
-        break;
-      case "arrow":
-        category = "arrowEnterSelection";
-        break;
-      case "rightClick":
-        // Selected by right mouse button.
-        category = "rightClickEnter";
-        break;
-      default:
-        category = "enterSelection";
+        case "tab":
+          category = "tabEnterSelection";
+          break;
+        case "arrow":
+          category = "arrowEnterSelection";
+          break;
+        case "rightClick":
+          // Selected by right mouse button.
+          category = "rightClickEnter";
+          break;
+        default:
+          category = "enterSelection";
       }
     } else {
       category = "enter";
@@ -666,8 +850,14 @@ let BrowserUsageTelemetry = {
 
     // Get the initial tab and windows max counts.
     const counts = getOpenTabsAndWinsCounts();
-    Services.telemetry.scalarSetMaximum(MAX_TAB_COUNT_SCALAR_NAME, counts.tabCount);
-    Services.telemetry.scalarSetMaximum(MAX_WINDOW_COUNT_SCALAR_NAME, counts.winCount);
+    Services.telemetry.scalarSetMaximum(
+      MAX_TAB_COUNT_SCALAR_NAME,
+      counts.tabCount
+    );
+    Services.telemetry.scalarSetMaximum(
+      MAX_WINDOW_COUNT_SCALAR_NAME,
+      counts.winCount
+    );
   },
 
   /**
@@ -676,6 +866,7 @@ let BrowserUsageTelemetry = {
   _registerWindow(win) {
     win.addEventListener("unload", this);
     win.addEventListener("TabOpen", this, true);
+    win.addEventListener("TabPinned", this, true);
 
     win.gBrowser.tabContainer.addEventListener(TAB_RESTORING_TOPIC, this);
     win.gBrowser.addTabsProgressListener(URICountListener);
@@ -687,8 +878,12 @@ let BrowserUsageTelemetry = {
   _unregisterWindow(win) {
     win.removeEventListener("unload", this);
     win.removeEventListener("TabOpen", this, true);
+    win.removeEventListener("TabPinned", this, true);
 
-    win.defaultView.gBrowser.tabContainer.removeEventListener(TAB_RESTORING_TOPIC, this);
+    win.defaultView.gBrowser.tabContainer.removeEventListener(
+      TAB_RESTORING_TOPIC,
+      this
+    );
     win.defaultView.gBrowser.removeTabsProgressListener(URICountListener);
   },
 
@@ -707,6 +902,17 @@ let BrowserUsageTelemetry = {
     this._recordTabCount(tabCount);
   },
 
+  _onTabPinned(target) {
+    const pinnedTabs = getPinnedTabsCount();
+
+    // Update the "tab pinned" count and its maximum.
+    Services.telemetry.scalarAdd(TAB_PINNED_EVENT_COUNT_SCALAR_NAME, 1);
+    Services.telemetry.scalarSetMaximum(
+      MAX_TAB_PINNED_COUNT_SCALAR_NAME,
+      pinnedTabs
+    );
+  },
+
   /**
    * Tracks the window count and registers the listeners for the tab count.
    * @param{Object} win The window object.
@@ -721,7 +927,10 @@ let BrowserUsageTelemetry = {
       win.removeEventListener("load", onLoad);
 
       // Ignore non browser windows.
-      if (win.document.documentElement.getAttribute("windowtype") != "navigator:browser") {
+      if (
+        win.document.documentElement.getAttribute("windowtype") !=
+        "navigator:browser"
+      ) {
         return;
       }
 
@@ -729,7 +938,10 @@ let BrowserUsageTelemetry = {
       // Track the window open event and check the maximum.
       const counts = getOpenTabsAndWinsCounts();
       Services.telemetry.scalarAdd(WINDOW_OPEN_EVENT_COUNT_SCALAR_NAME, 1);
-      Services.telemetry.scalarSetMaximum(MAX_WINDOW_COUNT_SCALAR_NAME, counts.winCount);
+      Services.telemetry.scalarSetMaximum(
+        MAX_WINDOW_COUNT_SCALAR_NAME,
+        counts.winCount
+      );
 
       // We won't receive the "TabOpen" event for the first tab within a new window.
       // Account for that.
@@ -740,7 +952,10 @@ let BrowserUsageTelemetry = {
 
   _recordTabCount(tabCount) {
     let currentTime = Date.now();
-    if (currentTime > this._lastRecordTabCount + MINIMUM_TAB_COUNT_INTERVAL_MS) {
+    if (
+      currentTime >
+      this._lastRecordTabCount + MINIMUM_TAB_COUNT_INTERVAL_MS
+    ) {
       if (tabCount === undefined) {
         tabCount = getTabCount();
       }

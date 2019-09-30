@@ -65,11 +65,25 @@ class nsAbsoluteContainingBlock {
                    nsIFrame* aOldFrame);
 
   enum class AbsPosReflowFlags {
+<<<<<<< HEAD
     eConstrainHeight = 0x1,
     eCBWidthChanged = 0x2,
     eCBHeightChanged = 0x4,
     eCBWidthAndHeightChanged = eCBWidthChanged | eCBHeightChanged,
     eIsGridContainerCB = 0x8,
+||||||| merged common ancestors
+    eConstrainHeight   = 0x1,
+    eCBWidthChanged    = 0x2,
+    eCBHeightChanged   = 0x4,
+    eCBWidthAndHeightChanged = eCBWidthChanged | eCBHeightChanged,
+    eIsGridContainerCB = 0x8,
+=======
+    ConstrainHeight = 0x1,
+    CBWidthChanged = 0x2,
+    CBHeightChanged = 0x4,
+    CBWidthAndHeightChanged = CBWidthChanged | CBHeightChanged,
+    IsGridContainerCB = 0x8,
+>>>>>>> upstream-releases
   };
 
   /**
@@ -122,7 +136,7 @@ class nsAbsoluteContainingBlock {
   /**
    * After an abspos child's size is known, this method can be used to
    * resolve size-dependent values in the ComputedLogicalOffsets on its
-   * reflow state. (This may involve resolving the inline dimension of
+   * reflow input. (This may involve resolving the inline dimension of
    * aLogicalCBSize, too; hence, that variable is an in/outparam.)
    *
    * aKidSize, aMargin, aOffsets, and aLogicalCBSize are all expected to be

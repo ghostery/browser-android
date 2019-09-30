@@ -37,8 +37,8 @@
 
 // for async loading
 #ifdef ASYNC_LOADING
-#include "nsIBinaryInputStream.h"
-#include "nsIStringStream.h"
+#  include "nsIBinaryInputStream.h"
+#  include "nsIStringStream.h"
 #endif
 
 using namespace mozilla;
@@ -85,9 +85,19 @@ static const char kContentBundles[][52] = {
 
 static bool IsContentBundle(const nsCString& aUrl) {
   size_t index;
+<<<<<<< HEAD
   return BinarySearchIf(kContentBundles, 0, MOZ_ARRAY_LENGTH(kContentBundles),
                         [&](const char* aElem) { return aUrl.Compare(aElem); },
                         &index);
+||||||| merged common ancestors
+  return BinarySearchIf(kContentBundles, 0, MOZ_ARRAY_LENGTH(kContentBundles),
+                        [&] (const char* aElem) { return aUrl.Compare(aElem); },
+                        &index);
+=======
+  return BinarySearchIf(
+      kContentBundles, 0, MOZ_ARRAY_LENGTH(kContentBundles),
+      [&](const char* aElem) { return aUrl.Compare(aElem); }, &index);
+>>>>>>> upstream-releases
 }
 
 namespace {
@@ -286,6 +296,20 @@ RefPtr<T> MakeBundleRefPtr(Args... args) {
 NS_IMPL_ISUPPORTS(nsStringBundleBase, nsIStringBundle, nsIMemoryReporter)
 
 NS_IMPL_ISUPPORTS_INHERITED0(nsStringBundle, nsStringBundleBase)
+<<<<<<< HEAD
+NS_IMPL_ISUPPORTS_INHERITED(SharedStringBundle, nsStringBundleBase,
+                            SharedStringBundle)
+||||||| merged common ancestors
+NS_IMPL_ISUPPORTS_INHERITED(SharedStringBundle, nsStringBundleBase, SharedStringBundle)
+
+nsStringBundleBase::nsStringBundleBase(const char* aURLSpec) :
+  mPropertiesURL(aURLSpec),
+  mMutex("nsStringBundle.mMutex"),
+  mAttemptedLoad(false),
+  mLoaded(false)
+{
+}
+=======
 NS_IMPL_ISUPPORTS_INHERITED(SharedStringBundle, nsStringBundleBase,
                             SharedStringBundle)
 
@@ -294,8 +318,22 @@ nsStringBundleBase::nsStringBundleBase(const char* aURLSpec)
       mMutex("nsStringBundle.mMutex"),
       mAttemptedLoad(false),
       mLoaded(false) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+nsStringBundleBase::nsStringBundleBase(const char* aURLSpec)
+    : mPropertiesURL(aURLSpec),
+      mMutex("nsStringBundle.mMutex"),
+      mAttemptedLoad(false),
+      mLoaded(false) {}
 
 nsStringBundleBase::~nsStringBundleBase() {
+||||||| merged common ancestors
+nsStringBundleBase::~nsStringBundleBase()
+{
+=======
+nsStringBundleBase::~nsStringBundleBase() {
+>>>>>>> upstream-releases
   UnregisterWeakMemoryReporter(this);
 }
 
@@ -304,7 +342,16 @@ void nsStringBundleBase::RegisterMemoryReporter() {
 }
 
 template <typename T, typename... Args>
+<<<<<<< HEAD
 /* static */ already_AddRefed<T> nsStringBundleBase::Create(Args... args) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<T>
+nsStringBundleBase::Create(Args... args)
+{
+=======
+/* static */
+already_AddRefed<T> nsStringBundleBase::Create(Args... args) {
+>>>>>>> upstream-releases
   RefPtr<T> bundle = new T(args...);
   bundle->RegisterMemoryReporter();
   return bundle.forget();
@@ -316,10 +363,25 @@ nsStringBundle::nsStringBundle(const char* aURLSpec)
 nsStringBundle::~nsStringBundle() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStringBundleBase::AsyncPreload() {
   return NS_IdleDispatchToCurrentThread(
       NewIdleRunnableMethod("nsStringBundleBase::LoadProperties", this,
                             &nsStringBundleBase::LoadProperties));
+||||||| merged common ancestors
+nsStringBundleBase::AsyncPreload()
+{
+  return NS_IdleDispatchToCurrentThread(
+    NewIdleRunnableMethod("nsStringBundleBase::LoadProperties",
+                          this,
+                          &nsStringBundleBase::LoadProperties));
+=======
+nsStringBundleBase::AsyncPreload() {
+  return NS_DispatchToCurrentThreadQueue(
+      NewIdleRunnableMethod("nsStringBundleBase::LoadProperties", this,
+                            &nsStringBundleBase::LoadProperties),
+      EventQueuePriority::Idle);
+>>>>>>> upstream-releases
 }
 
 size_t nsStringBundle::SizeOfIncludingThis(
@@ -456,7 +518,7 @@ nsresult nsStringBundleBase::ParseProperties(nsIPersistentProperties** aProps) {
     // It's a string bundle.  We expect a text/plain type, so set that as hint
     channel->SetContentType(NS_LITERAL_CSTRING("text/plain"));
 
-    rv = channel->Open2(getter_AddRefs(in));
+    rv = channel->Open(getter_AddRefs(in));
     if (NS_FAILED(rv)) return rv;
   }
 
@@ -570,37 +632,77 @@ nsresult SharedStringBundle::GetStringImpl(const nsACString& aName,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStringBundleBase::FormatStringFromID(int32_t aID, const char16_t** aParams,
                                        uint32_t aLength, nsAString& aResult) {
+||||||| merged common ancestors
+nsStringBundleBase::FormatStringFromID(int32_t aID,
+                                       const char16_t **aParams,
+                                       uint32_t aLength,
+                                       nsAString& aResult)
+{
+=======
+nsStringBundleBase::FormatStringFromID(int32_t aID,
+                                       const nsTArray<nsString>& aParams,
+                                       nsAString& aResult) {
+>>>>>>> upstream-releases
   nsAutoCString idStr;
   idStr.AppendInt(aID, 10);
-  return FormatStringFromName(idStr.get(), aParams, aLength, aResult);
+  return FormatStringFromName(idStr.get(), aParams, aResult);
 }
 
 // this function supports at most 10 parameters.. see below for why
 NS_IMETHODIMP
 nsStringBundleBase::FormatStringFromAUTF8Name(const nsACString& aName,
+<<<<<<< HEAD
                                               const char16_t** aParams,
                                               uint32_t aLength,
                                               nsAString& aResult) {
   return FormatStringFromName(PromiseFlatCString(aName).get(), aParams, aLength,
                               aResult);
+||||||| merged common ancestors
+                                              const char16_t **aParams,
+                                              uint32_t aLength,
+                                              nsAString& aResult)
+{
+  return FormatStringFromName(PromiseFlatCString(aName).get(), aParams,
+                              aLength, aResult);
+=======
+                                              const nsTArray<nsString>& aParams,
+                                              nsAString& aResult) {
+  return FormatStringFromName(PromiseFlatCString(aName).get(), aParams,
+                              aResult);
+>>>>>>> upstream-releases
 }
 
 // this function supports at most 10 parameters.. see below for why
 NS_IMETHODIMP
 nsStringBundleBase::FormatStringFromName(const char* aName,
+<<<<<<< HEAD
                                          const char16_t** aParams,
                                          uint32_t aLength, nsAString& aResult) {
   NS_ASSERTION(aParams && aLength,
                "FormatStringFromName() without format parameters: use "
                "GetStringFromName() instead");
+||||||| merged common ancestors
+                                         const char16_t** aParams,
+                                         uint32_t aLength,
+                                         nsAString& aResult)
+{
+  NS_ASSERTION(aParams && aLength, "FormatStringFromName() without format parameters: use GetStringFromName() instead");
+=======
+                                         const nsTArray<nsString>& aParams,
+                                         nsAString& aResult) {
+  NS_ASSERTION(!aParams.IsEmpty(),
+               "FormatStringFromName() without format parameters: use "
+               "GetStringFromName() instead");
+>>>>>>> upstream-releases
 
   nsAutoString formatStr;
   nsresult rv = GetStringFromName(aName, formatStr);
   if (NS_FAILED(rv)) return rv;
 
-  return FormatString(formatStr.get(), aParams, aLength, aResult);
+  return FormatString(formatStr.get(), aParams, aResult);
 }
 
 NS_IMETHODIMP
@@ -647,11 +749,27 @@ StringMapEnumerator::GetNext(nsISupports** aNext) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsStringBundleBase::FormatString(const char16_t* aFormatStr,
                                           const char16_t** aParams,
                                           uint32_t aLength,
                                           nsAString& aResult) {
   NS_ENSURE_ARG(aLength <= 10);  // enforce 10-parameter limit
+||||||| merged common ancestors
+
+nsresult
+nsStringBundleBase::FormatString(const char16_t *aFormatStr,
+                                 const char16_t **aParams, uint32_t aLength,
+                                 nsAString& aResult)
+{
+  NS_ENSURE_ARG(aLength <= 10); // enforce 10-parameter limit
+=======
+nsresult nsStringBundleBase::FormatString(const char16_t* aFormatStr,
+                                          const nsTArray<nsString>& aParams,
+                                          nsAString& aResult) {
+  auto length = aParams.Length();
+  NS_ENSURE_ARG(length <= 10);  // enforce 10-parameter limit
+>>>>>>> upstream-releases
 
   // implementation note: you would think you could use vsmprintf
   // to build up an arbitrary length array.. except that there
@@ -659,6 +777,7 @@ nsresult nsStringBundleBase::FormatString(const char16_t* aFormatStr,
   // Don't believe me? See:
   //   http://www.eskimo.com/~scs/C-faq/q15.13.html
   // -alecf
+<<<<<<< HEAD
   nsTextFormatter::ssprintf(
       aResult, aFormatStr, aLength >= 1 ? aParams[0] : nullptr,
       aLength >= 2 ? aParams[1] : nullptr, aLength >= 3 ? aParams[2] : nullptr,
@@ -666,6 +785,31 @@ nsresult nsStringBundleBase::FormatString(const char16_t* aFormatStr,
       aLength >= 6 ? aParams[5] : nullptr, aLength >= 7 ? aParams[6] : nullptr,
       aLength >= 8 ? aParams[7] : nullptr, aLength >= 9 ? aParams[8] : nullptr,
       aLength >= 10 ? aParams[9] : nullptr);
+||||||| merged common ancestors
+  nsTextFormatter::ssprintf(aResult, aFormatStr,
+                            aLength >= 1 ? aParams[0] : nullptr,
+                            aLength >= 2 ? aParams[1] : nullptr,
+                            aLength >= 3 ? aParams[2] : nullptr,
+                            aLength >= 4 ? aParams[3] : nullptr,
+                            aLength >= 5 ? aParams[4] : nullptr,
+                            aLength >= 6 ? aParams[5] : nullptr,
+                            aLength >= 7 ? aParams[6] : nullptr,
+                            aLength >= 8 ? aParams[7] : nullptr,
+                            aLength >= 9 ? aParams[8] : nullptr,
+                            aLength >= 10 ? aParams[9] : nullptr);
+=======
+  nsTextFormatter::ssprintf(aResult, aFormatStr,
+                            length >= 1 ? aParams[0].get() : nullptr,
+                            length >= 2 ? aParams[1].get() : nullptr,
+                            length >= 3 ? aParams[2].get() : nullptr,
+                            length >= 4 ? aParams[3].get() : nullptr,
+                            length >= 5 ? aParams[4].get() : nullptr,
+                            length >= 6 ? aParams[5].get() : nullptr,
+                            length >= 7 ? aParams[6].get() : nullptr,
+                            length >= 8 ? aParams[7].get() : nullptr,
+                            length >= 9 ? aParams[8].get() : nullptr,
+                            length >= 10 ? aParams[9].get() : nullptr);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -898,27 +1042,44 @@ nsStringBundleService::CreateBundle(const char* aURLSpec,
 
 #define GLOBAL_PROPERTIES "chrome://global/locale/global-strres.properties"
 
+<<<<<<< HEAD
 nsresult nsStringBundleService::FormatWithBundle(nsIStringBundle* bundle,
                                                  nsresult aStatus,
                                                  uint32_t argCount,
                                                  char16_t** argArray,
                                                  nsAString& result) {
+||||||| merged common ancestors
+nsresult
+nsStringBundleService::FormatWithBundle(nsIStringBundle* bundle, nsresult aStatus,
+                                        uint32_t argCount, char16_t** argArray,
+                                        nsAString& result)
+{
+=======
+nsresult nsStringBundleService::FormatWithBundle(
+    nsIStringBundle* bundle, nsresult aStatus,
+    const nsTArray<nsString>& argArray, nsAString& result) {
+>>>>>>> upstream-releases
   nsresult rv;
 
   // try looking up the error message with the int key:
   uint16_t code = NS_ERROR_GET_CODE(aStatus);
+<<<<<<< HEAD
   rv = bundle->FormatStringFromID(code, (const char16_t**)argArray, argCount,
                                   result);
+||||||| merged common ancestors
+  rv = bundle->FormatStringFromID(code, (const char16_t**)argArray, argCount, result);
+=======
+  rv = bundle->FormatStringFromID(code, argArray, result);
+>>>>>>> upstream-releases
 
   // If the int key fails, try looking up the default error message. E.g. print:
   //   An unknown error has occurred (0x804B0003).
   if (NS_FAILED(rv)) {
-    nsAutoString statusStr;
-    statusStr.AppendInt(static_cast<uint32_t>(aStatus), 16);
-    const char16_t* otherArgArray[1];
-    otherArgArray[0] = statusStr.get();
+    AutoTArray<nsString, 1> otherArgArray;
+    otherArgArray.AppendElement()->AppendInt(static_cast<uint32_t>(aStatus),
+                                             16);
     uint16_t code = NS_ERROR_GET_CODE(NS_ERROR_FAILURE);
-    rv = bundle->FormatStringFromID(code, otherArgArray, 1, result);
+    rv = bundle->FormatStringFromID(code, otherArgArray, result);
   }
 
   return rv;
@@ -946,17 +1107,36 @@ nsStringBundleService::FormatStatusMessage(nsresult aStatus,
   // format the arguments:
   const nsDependentString args(aStatusArg);
   argCount = args.CountChar(char16_t('\n')) + 1;
+<<<<<<< HEAD
   NS_ENSURE_ARG(argCount <= 10);  // enforce 10-parameter limit
   char16_t* argArray[10];
+||||||| merged common ancestors
+  NS_ENSURE_ARG(argCount <= 10); // enforce 10-parameter limit
+  char16_t* argArray[10];
+=======
+  NS_ENSURE_ARG(argCount <= 10);  // enforce 10-parameter limit
+  AutoTArray<nsString, 10> argArray;
+>>>>>>> upstream-releases
 
-  // convert the aStatusArg into a char16_t array
+  // convert the aStatusArg into an nsString array
   if (argCount == 1) {
+<<<<<<< HEAD
     // avoid construction for the simple case:
     argArray[0] = (char16_t*)aStatusArg;
   } else if (argCount > 1) {
+||||||| merged common ancestors
+    // avoid construction for the simple case:
+    argArray[0] = (char16_t*)aStatusArg;
+  }
+  else if (argCount > 1) {
+=======
+    argArray.AppendElement(aStatusArg);
+  } else if (argCount > 1) {
+>>>>>>> upstream-releases
     int32_t offset = 0;
     for (i = 0; i < argCount; i++) {
       int32_t pos = args.FindChar('\n', offset);
+<<<<<<< HEAD
       if (pos == -1) pos = args.Length();
       argArray[i] = ToNewUnicode(Substring(args, offset, pos - offset));
       if (argArray[i] == nullptr) {
@@ -964,6 +1144,19 @@ nsStringBundleService::FormatStatusMessage(nsresult aStatus,
         argCount = i - 1;  // don't try to free uninitialized memory
         goto done;
       }
+||||||| merged common ancestors
+      if (pos == -1)
+        pos = args.Length();
+      argArray[i] = ToNewUnicode(Substring(args, offset, pos - offset));
+      if (argArray[i] == nullptr) {
+        rv = NS_ERROR_OUT_OF_MEMORY;
+        argCount = i - 1; // don't try to free uninitialized memory
+        goto done;
+      }
+=======
+      if (pos == -1) pos = args.Length();
+      argArray.AppendElement(Substring(args, offset, pos - offset));
+>>>>>>> upstream-releases
       offset = pos + 1;
     }
   }
@@ -973,18 +1166,29 @@ nsStringBundleService::FormatStatusMessage(nsresult aStatus,
                                            getter_Copies(stringBundleURL));
   if (NS_SUCCEEDED(rv)) {
     getStringBundle(stringBundleURL.get(), getter_AddRefs(bundle));
-    rv = FormatWithBundle(bundle, aStatus, argCount, argArray, result);
+    rv = FormatWithBundle(bundle, aStatus, argArray, result);
   }
   if (NS_FAILED(rv)) {
     getStringBundle(GLOBAL_PROPERTIES, getter_AddRefs(bundle));
-    rv = FormatWithBundle(bundle, aStatus, argCount, argArray, result);
+    rv = FormatWithBundle(bundle, aStatus, argArray, result);
   }
 
+<<<<<<< HEAD
 done:
   if (argCount > 1) {
     for (i = 0; i < argCount; i++) {
       if (argArray[i]) free(argArray[i]);
     }
   }
+||||||| merged common ancestors
+done:
+  if (argCount > 1) {
+    for (i = 0; i < argCount; i++) {
+      if (argArray[i])
+        free(argArray[i]);
+    }
+  }
+=======
+>>>>>>> upstream-releases
   return rv;
 }

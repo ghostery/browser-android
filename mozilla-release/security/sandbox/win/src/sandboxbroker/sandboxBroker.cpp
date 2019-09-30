@@ -11,6 +11,7 @@
 #include "base/win/windows_version.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/ClearOnShutdown.h"
+#include "mozilla/ImportDir.h"
 #include "mozilla/Logging.h"
 #include "mozilla/NSPRLogModulesParser.h"
 #include "mozilla/Preferences.h"
@@ -52,6 +53,7 @@ static UniquePtr<nsString> sUserExtensionsDir;
 #endif
 
 // Cached prefs which are needed off main thread.
+static bool sRddWin32kDisable = false;
 static bool sGmpWin32kDisable = false;
 
 static LazyLogModule sSandboxBrokerLog("SandboxBroker");
@@ -96,6 +98,7 @@ static void CacheDirAndAutoClear(nsIProperties* aDirSvc, const char* aDirKey,
 void SandboxBroker::GeckoDependentInitialize() {
   MOZ_ASSERT(NS_IsMainThread());
 
+<<<<<<< HEAD
   // Cache directory paths for use in policy rules, because the directory
   // service must be called on the main thread.
   nsresult rv;
@@ -109,7 +112,37 @@ void SandboxBroker::GeckoDependentInitialize() {
         "Failed to get directory service, cannot cache directories for rules.");
     return;
   }
+||||||| merged common ancestors
+  // Cache directory paths for use in policy rules, because the directory
+  // service must be called on the main thread.
+  nsresult rv;
+  nsCOMPtr<nsIProperties> dirSvc =
+    do_GetService(NS_DIRECTORY_SERVICE_CONTRACTID, &rv);
+  if (NS_FAILED(rv)) {
+    MOZ_ASSERT(false, "Failed to get directory service, cannot cache directories for rules.");
+    LOG_E("Failed to get directory service, cannot cache directories for rules.");
+    return;
+  }
+=======
+  bool haveXPCOM = XRE_GetProcessType() != GeckoProcessType_RemoteSandboxBroker;
+  if (haveXPCOM) {
+    // Cache directory paths for use in policy rules, because the directory
+    // service must be called on the main thread.
+    nsresult rv;
+    nsCOMPtr<nsIProperties> dirSvc =
+        do_GetService(NS_DIRECTORY_SERVICE_CONTRACTID, &rv);
+    if (NS_FAILED(rv)) {
+      MOZ_ASSERT(false,
+                 "Failed to get directory service, cannot cache directories "
+                 "for rules.");
+      LOG_E(
+          "Failed to get directory service, cannot cache directories for "
+          "rules.");
+      return;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   CacheDirAndAutoClear(dirSvc, NS_GRE_DIR, &sBinDir);
   CacheDirAndAutoClear(dirSvc, NS_APP_USER_PROFILE_50_DIR, &sProfileDir);
   CacheDirAndAutoClear(dirSvc, NS_APP_CONTENT_PROCESS_TEMP_DIR,
@@ -119,18 +152,47 @@ void SandboxBroker::GeckoDependentInitialize() {
   CacheDirAndAutoClear(dirSvc, NS_WIN_LOCAL_APPDATA_DIR, &sLocalAppDataDir);
   CacheDirAndAutoClear(dirSvc, XRE_USER_SYS_EXTENSION_DEV_DIR,
                        &sUserExtensionsDevDir);
+||||||| merged common ancestors
+  CacheDirAndAutoClear(dirSvc, NS_GRE_DIR, &sBinDir);
+  CacheDirAndAutoClear(dirSvc, NS_APP_USER_PROFILE_50_DIR, &sProfileDir);
+  CacheDirAndAutoClear(dirSvc, NS_APP_CONTENT_PROCESS_TEMP_DIR, &sContentTempDir);
+  CacheDirAndAutoClear(dirSvc, NS_APP_PLUGIN_PROCESS_TEMP_DIR, &sPluginTempDir);
+  CacheDirAndAutoClear(dirSvc, NS_WIN_APPDATA_DIR, &sRoamingAppDataDir);
+  CacheDirAndAutoClear(dirSvc, NS_WIN_LOCAL_APPDATA_DIR, &sLocalAppDataDir);
+  CacheDirAndAutoClear(dirSvc, XRE_USER_SYS_EXTENSION_DEV_DIR, &sUserExtensionsDevDir);
+=======
+    CacheDirAndAutoClear(dirSvc, NS_GRE_DIR, &sBinDir);
+    CacheDirAndAutoClear(dirSvc, NS_APP_USER_PROFILE_50_DIR, &sProfileDir);
+    CacheDirAndAutoClear(dirSvc, NS_APP_CONTENT_PROCESS_TEMP_DIR,
+                         &sContentTempDir);
+    CacheDirAndAutoClear(dirSvc, NS_APP_PLUGIN_PROCESS_TEMP_DIR,
+                         &sPluginTempDir);
+    CacheDirAndAutoClear(dirSvc, NS_WIN_APPDATA_DIR, &sRoamingAppDataDir);
+    CacheDirAndAutoClear(dirSvc, NS_WIN_LOCAL_APPDATA_DIR, &sLocalAppDataDir);
+    CacheDirAndAutoClear(dirSvc, XRE_USER_SYS_EXTENSION_DEV_DIR,
+                         &sUserExtensionsDevDir);
+>>>>>>> upstream-releases
 #ifdef ENABLE_SYSTEM_EXTENSION_DIRS
-  CacheDirAndAutoClear(dirSvc, XRE_USER_SYS_EXTENSION_DIR, &sUserExtensionsDir);
+    CacheDirAndAutoClear(dirSvc, XRE_USER_SYS_EXTENSION_DIR,
+                         &sUserExtensionsDir);
 #endif
+  }
 
   // Create sLaunchErrors up front because ClearOnShutdown must be called on the
   // main thread.
   sLaunchErrors = MakeUnique<nsTHashtable<nsCStringHashKey>>();
   ClearOnShutdown(&sLaunchErrors);
 
-  // Cache prefs that are needed off main thread.
-  Preferences::AddBoolVarCache(&sGmpWin32kDisable,
-                               "security.sandbox.gmp.win32k-disable");
+  if (haveXPCOM) {
+    // Cache prefs that are needed off main thread.
+    Preferences::AddBoolVarCache(&sRddWin32kDisable,
+                                 "security.sandbox.rdd.win32k-disable");
+    Preferences::AddBoolVarCache(&sGmpWin32kDisable,
+                                 "security.sandbox.gmp.win32k-disable");
+  } else {
+    sRddWin32kDisable = false;
+    sGmpWin32kDisable = false;
+  }
 }
 
 SandboxBroker::SandboxBroker() {
@@ -259,6 +321,52 @@ bool SandboxBroker::LaunchApp(const wchar_t* aPath, const wchar_t* aArguments,
           last_error, last_warning);
   }
 
+  // moduleHandle holds a strong reference to the module, whereas realBase
+  // is weak and might reference a module from another process (and thus must
+  // not be considered valid to pass in to any Win32 APIs from within this
+  // process).
+  nsModuleHandle moduleHandle;
+  HMODULE realBase = nullptr;
+  if (XRE_GetChildProcBinPathType(aProcessType) == BinPathType::Self) {
+    // We use GetModuleHandleEx here so that we increment the module's refcount
+    HMODULE ourExe;
+    if (::GetModuleHandleExW(0, nullptr, &ourExe)) {
+      moduleHandle.own(ourExe);
+      // We can assign ourExe to realBase because the child process's binary is
+      // the same as ours; ASLR will map it to the same address.
+      realBase = ourExe;
+    }
+  } else {
+    // Load the child executable as a datafile so that we can examine its
+    // headers without doing a full load with dependencies and such.
+    moduleHandle.own(
+        ::LoadLibraryExW(aPath, nullptr, LOAD_LIBRARY_AS_DATAFILE));
+    LauncherResult<HMODULE> procExeModule =
+        nt::GetProcessExeModule(targetInfo.hProcess);
+    if (procExeModule.isOk()) {
+      realBase = procExeModule.unwrap();
+    } else {
+      LOG_E("nt::GetProcessExeModule failed with HRESULT 0x%08lX",
+            procExeModule.unwrapErr().AsHResult());
+    }
+  }
+
+  if (moduleHandle && realBase) {
+    nt::PEHeaders exeImage(moduleHandle.get());
+    if (!!exeImage) {
+      LauncherVoidResult importsRestored = RestoreImportDirectory(
+          aPath, exeImage, targetInfo.hProcess, realBase);
+      if (importsRestored.isErr()) {
+        LOG_E("Failed to restore import directory with HRESULT 0x%08lX",
+              importsRestored.unwrapErr().AsHResult());
+        TerminateProcess(targetInfo.hProcess, 1);
+        CloseHandle(targetInfo.hThread);
+        CloseHandle(targetInfo.hProcess);
+        return false;
+      }
+    }
+  }
+
   // The sandboxed process is started in a suspended state, resume it now that
   // we've set things up.
   ResumeThread(targetInfo.hThread);
@@ -354,10 +462,22 @@ static sandbox::ResultCode SetJobLevel(sandbox::TargetPolicy* aPolicy,
   return aPolicy->SetJobLevel(sandbox::JOB_NONE, 0);
 }
 
+<<<<<<< HEAD
 #if defined(MOZ_CONTENT_SANDBOX)
 
 void SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
                                                       bool aIsFileProcess) {
+||||||| merged common ancestors
+#if defined(MOZ_CONTENT_SANDBOX)
+
+void
+SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
+                                                 bool aIsFileProcess)
+{
+=======
+void SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
+                                                      bool aIsFileProcess) {
+>>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(mPolicy, "mPolicy must be set before this call.");
 
   sandbox::JobLevel jobLevel;
@@ -444,10 +564,32 @@ void SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
       "SetDelayedIntegrityLevel should never fail, what happened?");
 
   sandbox::MitigationFlags mitigations =
+<<<<<<< HEAD
       sandbox::MITIGATION_BOTTOM_UP_ASLR | sandbox::MITIGATION_HEAP_TERMINATE |
       sandbox::MITIGATION_SEHOP | sandbox::MITIGATION_DEP_NO_ATL_THUNK |
       sandbox::MITIGATION_DEP | sandbox::MITIGATION_EXTENSION_POINT_DISABLE |
       sandbox::MITIGATION_IMAGE_LOAD_PREFER_SYS32;
+||||||| merged common ancestors
+    sandbox::MITIGATION_BOTTOM_UP_ASLR |
+    sandbox::MITIGATION_HEAP_TERMINATE |
+    sandbox::MITIGATION_SEHOP |
+    sandbox::MITIGATION_DEP_NO_ATL_THUNK |
+    sandbox::MITIGATION_DEP |
+    sandbox::MITIGATION_EXTENSION_POINT_DISABLE |
+    sandbox::MITIGATION_IMAGE_LOAD_PREFER_SYS32;
+=======
+      sandbox::MITIGATION_BOTTOM_UP_ASLR | sandbox::MITIGATION_HEAP_TERMINATE |
+      sandbox::MITIGATION_SEHOP | sandbox::MITIGATION_DEP_NO_ATL_THUNK |
+      sandbox::MITIGATION_DEP | sandbox::MITIGATION_EXTENSION_POINT_DISABLE |
+      sandbox::MITIGATION_IMAGE_LOAD_PREFER_SYS32;
+
+#if defined(_M_ARM64)
+  // Disable CFG on older versions of ARM64 Windows to avoid a crash in COM.
+  if (!IsWin10Sep2018UpdateOrLater()) {
+    mitigations |= sandbox::MITIGATION_CONTROL_FLOW_GUARD_DISABLE;
+  }
+#endif
+>>>>>>> upstream-releases
 
   if (aSandboxLevel > 4) {
     result = mPolicy->SetAlternateDesktop(false);
@@ -495,6 +637,11 @@ void SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
                        "With these static arguments AddRule should never fail, "
                        "what happened?");
   } else {
+    // Add rule to allow access to user specific fonts.
+    AddCachedDirRule(mPolicy, sandbox::TargetPolicy::FILES_ALLOW_READONLY,
+                     sLocalAppDataDir,
+                     NS_LITERAL_STRING("\\Microsoft\\Windows\\Fonts\\*"));
+
     // Add rule to allow read access to installation directory.
     AddCachedDirRule(mPolicy, sandbox::TargetPolicy::FILES_ALLOW_READONLY,
                      sBinDir, NS_LITERAL_STRING("\\*"));
@@ -573,7 +720,6 @@ void SandboxBroker::SetSecurityLevelForContentProcess(int32_t aSandboxLevel,
       sandbox::SBOX_ALL_OK == result,
       "With these static arguments AddRule should never fail, what happened?");
 }
-#endif
 
 void SandboxBroker::SetSecurityLevelForGPUProcess(int32_t aSandboxLevel) {
   MOZ_RELEASE_ASSERT(mPolicy, "mPolicy must be set before this call.");
@@ -586,14 +732,21 @@ void SandboxBroker::SetSecurityLevelForGPUProcess(int32_t aSandboxLevel) {
   // The setting of these levels is pretty arbitrary, but they are a useful (if
   // crude) tool while we are tightening the policy. Gaps are left to try and
   // avoid changing their meaning.
+<<<<<<< HEAD
   MOZ_RELEASE_ASSERT(aSandboxLevel >= 1,
                      "Should not be called with aSandboxLevel < 1");
+||||||| merged common ancestors
+  MOZ_RELEASE_ASSERT(aSandboxLevel >= 1, "Should not be called with aSandboxLevel < 1");
+=======
+>>>>>>> upstream-releases
   if (aSandboxLevel >= 2) {
     jobLevel = sandbox::JOB_NONE;
     accessTokenLevel = sandbox::USER_LIMITED;
     initialIntegrityLevel = sandbox::INTEGRITY_LEVEL_LOW;
     delayedIntegrityLevel = sandbox::INTEGRITY_LEVEL_LOW;
-  } else if (aSandboxLevel == 1) {
+  } else {
+    MOZ_RELEASE_ASSERT(aSandboxLevel >= 1,
+                       "Should not be called with aSandboxLevel < 1");
     jobLevel = sandbox::JOB_NONE;
     accessTokenLevel = sandbox::USER_NON_ADMIN;
     initialIntegrityLevel = sandbox::INTEGRITY_LEVEL_LOW;
@@ -682,6 +835,7 @@ void SandboxBroker::SetSecurityLevelForGPUProcess(int32_t aSandboxLevel) {
     if (sandbox::SBOX_ALL_OK != result) return false;    \
   } while (0)
 
+<<<<<<< HEAD
 bool SandboxBroker::SetSecurityLevelForRDDProcess() {
   if (!mPolicy) {
     return false;
@@ -773,6 +927,113 @@ bool SandboxBroker::SetSecurityLevelForRDDProcess() {
 }
 
 bool SandboxBroker::SetSecurityLevelForPluginProcess(int32_t aSandboxLevel) {
+||||||| merged common ancestors
+bool
+SandboxBroker::SetSecurityLevelForPluginProcess(int32_t aSandboxLevel)
+{
+=======
+bool SandboxBroker::SetSecurityLevelForRDDProcess() {
+  if (!mPolicy) {
+    return false;
+  }
+
+  auto result =
+      SetJobLevel(mPolicy, sandbox::JOB_LOCKDOWN, 0 /* ui_exceptions */);
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "SetJobLevel should never fail with these arguments, what happened?");
+
+  result = mPolicy->SetTokenLevel(sandbox::USER_RESTRICTED_SAME_ACCESS,
+                                  sandbox::USER_LOCKDOWN);
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "SetTokenLevel should never fail with these arguments, what happened?");
+
+  result = mPolicy->SetAlternateDesktop(true);
+  if (NS_WARN_IF(result != sandbox::SBOX_ALL_OK)) {
+    LOG_W("SetAlternateDesktop failed, result: %i, last error: %x", result,
+          ::GetLastError());
+  }
+
+  result = mPolicy->SetIntegrityLevel(sandbox::INTEGRITY_LEVEL_LOW);
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "SetIntegrityLevel should never fail with these "
+                         "arguments, what happened?");
+
+  result =
+      mPolicy->SetDelayedIntegrityLevel(sandbox::INTEGRITY_LEVEL_UNTRUSTED);
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "SetDelayedIntegrityLevel should never fail with "
+                         "these arguments, what happened?");
+
+  sandbox::MitigationFlags mitigations =
+      sandbox::MITIGATION_BOTTOM_UP_ASLR | sandbox::MITIGATION_HEAP_TERMINATE |
+      sandbox::MITIGATION_SEHOP | sandbox::MITIGATION_EXTENSION_POINT_DISABLE |
+      sandbox::MITIGATION_DEP_NO_ATL_THUNK | sandbox::MITIGATION_DEP |
+      sandbox::MITIGATION_IMAGE_LOAD_PREFER_SYS32;
+
+  // On Windows 7, where Win32k lockdown is not supported, the Chromium
+  // sandbox does something weird that breaks COM instantiation.
+  if (sRddWin32kDisable && IsWin8OrLater()) {
+    mitigations |= sandbox::MITIGATION_WIN32K_DISABLE;
+    result =
+        mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_WIN32K_LOCKDOWN,
+                         sandbox::TargetPolicy::FAKE_USER_GDI_INIT, nullptr);
+    SANDBOX_ENSURE_SUCCESS(result, "Failed to set FAKE_USER_GDI_INIT policy.");
+  }
+
+  result = mPolicy->SetProcessMitigations(mitigations);
+  SANDBOX_ENSURE_SUCCESS(result, "Invalid flags for SetProcessMitigations.");
+
+  mitigations = sandbox::MITIGATION_STRICT_HANDLE_CHECKS |
+                sandbox::MITIGATION_DYNAMIC_CODE_DISABLE |
+                sandbox::MITIGATION_DLL_SEARCH_ORDER;
+
+  result = mPolicy->SetDelayedProcessMitigations(mitigations);
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "Invalid flags for SetDelayedProcessMitigations.");
+
+  // Add the policy for the client side of a pipe. It is just a file
+  // in the \pipe\ namespace. We restrict it to pipes that start with
+  // "chrome." so the sandboxed process cannot connect to system services.
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_FILES,
+                            sandbox::TargetPolicy::FILES_ALLOW_ANY,
+                            L"\\??\\pipe\\chrome.*");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  // Add the policy for the client side of the crash server pipe.
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_FILES,
+                            sandbox::TargetPolicy::FILES_ALLOW_ANY,
+                            L"\\??\\pipe\\gecko-crash-server-pipe.*");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  // The process needs to be able to duplicate shared memory handles,
+  // which are Section handles, to the content processes.
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_HANDLES,
+                            sandbox::TargetPolicy::HANDLES_DUP_ANY, L"Section");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  // This section is needed to avoid an assert during crash reporting code
+  // when running mochitests.  The assertion is here:
+  // toolkit/crashreporter/nsExceptionHandler.cpp:2041
+  result =
+      mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_HANDLES,
+                       sandbox::TargetPolicy::HANDLES_DUP_BROKER, L"Section");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  return true;
+}
+
+bool SandboxBroker::SetSecurityLevelForPluginProcess(int32_t aSandboxLevel) {
+>>>>>>> upstream-releases
   if (!mPolicy) {
     return false;
   }
@@ -863,7 +1124,16 @@ bool SandboxBroker::SetSecurityLevelForPluginProcess(int32_t aSandboxLevel) {
     // Access also has to be given to create the parent directories as they may
     // not exist.
     AddCachedDirRule(mPolicy, sandbox::TargetPolicy::FILES_ALLOW_DIR_ANY,
+<<<<<<< HEAD
                      sRoamingAppDataDir, NS_LITERAL_STRING("\\Macromedia"));
+||||||| merged common ancestors
+                     sRoamingAppDataDir,
+                     NS_LITERAL_STRING("\\Macromedia"));
+=======
+                     sRoamingAppDataDir, NS_LITERAL_STRING("\\Macromedia"));
+    AddCachedDirRule(mPolicy, sandbox::TargetPolicy::FILES_ALLOW_QUERY,
+                     sRoamingAppDataDir, NS_LITERAL_STRING("\\Macromedia\\"));
+>>>>>>> upstream-releases
     AddCachedDirRule(mPolicy, sandbox::TargetPolicy::FILES_ALLOW_DIR_ANY,
                      sRoamingAppDataDir,
                      NS_LITERAL_STRING("\\Macromedia\\Flash Player"));
@@ -1067,6 +1337,7 @@ bool SandboxBroker::SetSecurityLevelForGMPlugin(SandboxLevel aLevel) {
   // loading the plugin. Commenting out these policy exceptions did not
   // cause anything to break during initial testing, but might cause
   // unforeseen issues down the road.
+<<<<<<< HEAD
   result = mPolicy->AddRule(
       sandbox::TargetPolicy::SUBSYS_REGISTRY,
       sandbox::TargetPolicy::REG_ALLOW_READONLY,
@@ -1100,6 +1371,65 @@ bool SandboxBroker::SetSecurityLevelForGMPlugin(SandboxLevel aLevel) {
   SANDBOX_ENSURE_SUCCESS(
       result,
       "With these static arguments AddRule should never fail, what happened?");
+||||||| merged common ancestors
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_REGISTRY,
+                            sandbox::TargetPolicy::REG_ALLOW_READONLY,
+                            L"HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\MUI\\Settings");
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_REGISTRY,
+                            sandbox::TargetPolicy::REG_ALLOW_READONLY,
+                            L"HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Control Panel\\Desktop");
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_REGISTRY,
+                            sandbox::TargetPolicy::REG_ALLOW_READONLY,
+                            L"HKEY_CURRENT_USER\\Control Panel\\Desktop\\PreferredUILanguages");
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_REGISTRY,
+                            sandbox::TargetPolicy::REG_ALLOW_READONLY,
+                            L"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SideBySide\\PreferExternalManifest");
+  SANDBOX_ENSURE_SUCCESS(result,
+                         "With these static arguments AddRule should never fail, what happened?");
+=======
+  result = mPolicy->AddRule(
+      sandbox::TargetPolicy::SUBSYS_REGISTRY,
+      sandbox::TargetPolicy::REG_ALLOW_READONLY,
+      L"HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\MUI\\Settings");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(
+      sandbox::TargetPolicy::SUBSYS_REGISTRY,
+      sandbox::TargetPolicy::REG_ALLOW_READONLY,
+      L"HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\Control "
+      L"Panel\\Desktop");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(
+      sandbox::TargetPolicy::SUBSYS_REGISTRY,
+      sandbox::TargetPolicy::REG_ALLOW_READONLY,
+      L"HKEY_CURRENT_USER\\Control Panel\\Desktop\\PreferredUILanguages");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+
+  result = mPolicy->AddRule(sandbox::TargetPolicy::SUBSYS_REGISTRY,
+                            sandbox::TargetPolicy::REG_ALLOW_READONLY,
+                            L"HKEY_LOCAL_"
+                            L"MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVer"
+                            L"sion\\SideBySide\\PreferExternalManifest");
+  SANDBOX_ENSURE_SUCCESS(
+      result,
+      "With these static arguments AddRule should never fail, what happened?");
+>>>>>>> upstream-releases
 
   // The following rules were added to allow a GMP to be loaded when any
   // AppLocker DLL rules are specified. If the rules specifically block the DLL
@@ -1146,7 +1476,16 @@ bool SandboxBroker::AllowReadFile(wchar_t const* file) {
   return true;
 }
 
+<<<<<<< HEAD
 bool SandboxBroker::AddTargetPeer(HANDLE aPeerProcess) {
+||||||| merged common ancestors
+bool
+SandboxBroker::AddTargetPeer(HANDLE aPeerProcess)
+{
+=======
+/* static */
+bool SandboxBroker::AddTargetPeer(HANDLE aPeerProcess) {
+>>>>>>> upstream-releases
   if (!sBrokerService) {
     return false;
   }
@@ -1186,4 +1525,28 @@ SandboxBroker::~SandboxBroker() {
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+}
+=======
+#ifdef _ARM64_
+// We can't include remoteSandboxBroker.h here directly, as it includes
+// IPDL headers, which include a different copy of the chromium base
+// libraries, which leads to conflicts.
+extern AbstractSandboxBroker* CreateRemoteSandboxBroker();
+#endif
+
+// static
+AbstractSandboxBroker* AbstractSandboxBroker::Create(
+    GeckoProcessType aProcessType) {
+#ifdef _ARM64_
+  if (aProcessType == GeckoProcessType_GMPlugin) {
+    return CreateRemoteSandboxBroker();
+  }
+#endif
+  return new SandboxBroker();
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

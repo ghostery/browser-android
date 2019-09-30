@@ -4,16 +4,32 @@
 
 "use strict";
 
-const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
+const {
+  createFactory,
+  PureComponent,
+} = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
+const { connect } = require("devtools/client/shared/vendor/react-redux");
 
 const FluentReact = require("devtools/client/shared/vendor/fluent-react");
+const Localized = createFactory(FluentReact.Localized);
+
+const {
+  getCurrentRuntimeDetails,
+} = require("../../modules/runtimes-state-helper");
 
 const InspectAction = createFactory(require("./InspectAction"));
 
+<<<<<<< HEAD
 const Actions = require("../../actions/index");
 const Types = require("../../types/index");
+||||||| merged common ancestors
+const Actions = require("../../actions/index");
+=======
+const Types = require("../../types/index");
+const { SERVICE_WORKER_STATUSES } = require("../../constants");
+>>>>>>> upstream-releases
 
 /**
  * This component displays buttons for service worker.
@@ -22,61 +38,107 @@ class ServiceWorkerAction extends PureComponent {
   static get propTypes() {
     return {
       dispatch: PropTypes.func.isRequired,
+<<<<<<< HEAD
       // Provided by wrapping the component with FluentReact.withLocalization.
       getString: PropTypes.func.isRequired,
       target: Types.debugTarget.isRequired,
+||||||| merged common ancestors
+      // Provided by wrapping the component with FluentReact.withLocalization.
+      getString: PropTypes.func.isRequired,
+      target: PropTypes.object.isRequired,
+=======
+      // Provided by redux state
+      runtimeDetails: Types.runtimeDetails.isRequired,
+      target: Types.debugTarget.isRequired,
+>>>>>>> upstream-releases
     };
   }
 
-  push() {
-    const { dispatch, target } = this.props;
-    dispatch(Actions.pushServiceWorker(target.id));
-  }
+  _renderInspectAction() {
+    const { status } = this.props.target.details;
+    const shallRenderInspectAction =
+      status === SERVICE_WORKER_STATUSES.RUNNING ||
+      status === SERVICE_WORKER_STATUSES.REGISTERING;
 
-  start() {
-    const { dispatch, target } = this.props;
-    dispatch(Actions.startServiceWorker(target.details.registrationActor));
-  }
-
-  _renderAction() {
-    const { dispatch, target } = this.props;
-    const { isActive, isRunning } = target.details;
-
-    if (!isRunning) {
-      const startLabel = this.props.getString("about-debugging-worker-action-start");
-      return this._renderButton(startLabel, this.start.bind(this));
+    if (!shallRenderInspectAction) {
+      return null;
     }
 
-    if (!isActive) {
-      // Only debug button is available if the service worker is not active.
-      return InspectAction({ dispatch, target });
-    }
-
-    const pushLabel = this.props.getString("about-debugging-worker-action-push");
-    return [
-      this._renderButton(pushLabel, this.push.bind(this)),
-      InspectAction({ dispatch, target }),
-    ];
+    return InspectAction({
+      disabled: this.props.runtimeDetails.isMultiE10s,
+      dispatch: this.props.dispatch,
+      target: this.props.target,
+    });
   }
 
-  _renderButton(label, onClick) {
-    return dom.button(
+  _getStatusLocalizationId(status) {
+    switch (status) {
+      case SERVICE_WORKER_STATUSES.REGISTERING.toLowerCase():
+        return "about-debugging-worker-status-registering";
+      case SERVICE_WORKER_STATUSES.RUNNING.toLowerCase():
+        return "about-debugging-worker-status-running";
+      case SERVICE_WORKER_STATUSES.STOPPED.toLowerCase():
+        return "about-debugging-worker-status-stopped";
+      default:
+        // Assume status is stopped for unknown status value.
+        return "about-debugging-worker-status-stopped";
+    }
+  }
+
+  _renderStatus() {
+    const status = this.props.target.details.status.toLowerCase();
+    const statusClassName =
+      status === SERVICE_WORKER_STATUSES.RUNNING.toLowerCase()
+        ? "service-worker-action__status--running"
+        : "";
+
+    return Localized(
       {
+<<<<<<< HEAD
         className: "default-button",
         onClick: e => onClick(),
+||||||| merged common ancestors
+        className: "aboutdebugging-button",
+        onClick: e => onClick(),
+=======
+        id: this._getStatusLocalizationId(status),
+>>>>>>> upstream-releases
       },
-      label,
+      dom.span(
+        {
+          className: `service-worker-action__status qa-worker-status ${statusClassName}`,
+        },
+        status
+      )
     );
   }
 
   render() {
+<<<<<<< HEAD
     return dom.div(
       {
         className: "toolbar",
       },
       this._renderAction()
     );
+||||||| merged common ancestors
+    return dom.div({}, this._renderAction());
+=======
+    return dom.div(
+      {
+        className: "service-worker-action",
+      },
+      this._renderStatus(),
+      this._renderInspectAction()
+    );
+>>>>>>> upstream-releases
   }
 }
 
-module.exports = FluentReact.withLocalization(ServiceWorkerAction);
+const mapStateToProps = state => {
+  return {
+    runtimeDetails: getCurrentRuntimeDetails(state.runtimes),
+  };
+};
+
+module.exports = connect(mapStateToProps)(ServiceWorkerAction);

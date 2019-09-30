@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // |reftest| 
 // Copyright (C) 2018 Leo Balter. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
@@ -28,3 +29,36 @@ assert.throws(TypeError, () => {
 });
 
 reportCompare(0, 0);
+||||||| merged common ancestors
+=======
+// |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
+// Copyright (C) 2018 Leo Balter. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+/*---
+description: >
+    ImportCall is a CallExpression and can be used before a template literal
+esid: prod-ImportCall
+info: |
+  CallExpression:
+    ImportCall
+    CallExpression TemplateLiteral
+    CallExpression Arguments
+features: [dynamic-import]
+---*/
+
+// valid syntax, but fails on runtime evaluation
+
+assert.throws(TypeError, () => {
+    import('./empty_FIXTURE.js')``;
+});
+
+assert.throws(TypeError, () => {
+    import('./empty_FIXTURE.js')`something`;
+});
+
+assert.throws(TypeError, () => {
+    import('./empty_FIXTURE.js')`${42}`;
+});
+
+reportCompare(0, 0);
+>>>>>>> upstream-releases

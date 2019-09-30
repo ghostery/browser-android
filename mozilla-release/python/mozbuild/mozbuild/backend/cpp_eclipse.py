@@ -2,21 +2,34 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import errno
-import random
+import glob
 import os
 import shutil
 import subprocess
+<<<<<<< HEAD
 import types
 from xml.sax.saxutils import quoteattr
 import xml.etree.ElementTree as ET
+||||||| merged common ancestors
+import types
+import xml.etree.ElementTree as ET
+=======
+from xml.sax.saxutils import quoteattr
+>>>>>>> upstream-releases
 from .common import CommonBackend
 
 from ..frontend.data import (
+<<<<<<< HEAD
     ComputedFlags,
     Defines,
+||||||| merged common ancestors
+    Defines,
+=======
+    ComputedFlags,
+>>>>>>> upstream-releases
 )
 from mozbuild.base import ExecutionSummary
 
@@ -24,6 +37,7 @@ from mozbuild.base import ExecutionSummary
 # /Users/bgirard/mozilla/eclipse/eclipse/eclipse/eclipse -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data $PWD/workspace -importAll $PWD/eclipse
 # Open eclipse:
 # /Users/bgirard/mozilla/eclipse/eclipse/eclipse/eclipse -data $PWD/workspace
+
 
 class CppEclipseBackend(CommonBackend):
     """Backend that generates Cpp Eclipse project files.
@@ -41,6 +55,7 @@ class CppEclipseBackend(CommonBackend):
         self._args_for_dirs = {}
         self._project_name = 'Gecko'
         self._workspace_dir = self._get_workspace_path()
+        self._workspace_lang_dir = os.path.join(self._workspace_dir, '.metadata/.plugins/org.eclipse.cdt.core')
         self._project_dir = os.path.join(self._workspace_dir, self._project_name)
         self._overwriting_workspace = os.path.isdir(self._workspace_dir)
 
@@ -78,6 +93,7 @@ class CppEclipseBackend(CommonBackend):
 
         # Note that unlike VS, Eclipse' indexer seem to crawl the headers and
         # isn't picky about the local includes.
+<<<<<<< HEAD
         if isinstance(obj, ComputedFlags):
             args = self._args_for_dirs.setdefault('tree/' + reldir, {'includes': [], 'defines': []})
             # use the same args for any objdirs we include:
@@ -97,16 +113,41 @@ class CppEclipseBackend(CommonBackend):
                 defs += obj.flags["DEFINES"]
             if "LIBRARY_DEFINES" in obj.flags and obj.flags["LIBRARY_DEFINES"]:
                 defs += obj.flags["LIBRARY_DEFINES"]
+||||||| merged common ancestors
+        if isinstance(obj, Defines):
+            self._paths_to_defines.setdefault(reldir, {}).update(obj.defines)
+=======
+        if isinstance(obj, ComputedFlags):
+            args = self._args_for_dirs.setdefault(
+                'tree/' + reldir, {'includes': [], 'defines': []})
+            # use the same args for any objdirs we include:
+            if reldir == 'dom/bindings':
+                self._args_for_dirs.setdefault('generated-webidl', args)
+            if reldir == 'ipc/ipdl':
+                self._args_for_dirs.setdefault('generated-ipdl', args)
+
+            includes = args["includes"]
+            if "BASE_INCLUDES" in obj.flags and obj.flags["BASE_INCLUDES"]:
+                includes += obj.flags["BASE_INCLUDES"]
+            if "LOCAL_INCLUDES" in obj.flags and obj.flags["LOCAL_INCLUDES"]:
+                includes += obj.flags["LOCAL_INCLUDES"]
+
+            defs = args["defines"]
+            if "DEFINES" in obj.flags and obj.flags["DEFINES"]:
+                defs += obj.flags["DEFINES"]
+            if "LIBRARY_DEFINES" in obj.flags and obj.flags["LIBRARY_DEFINES"]:
+                defs += obj.flags["LIBRARY_DEFINES"]
+>>>>>>> upstream-releases
 
         return True
 
     def consume_finished(self):
         settings_dir = os.path.join(self._project_dir, '.settings')
         launch_dir = os.path.join(self._project_dir, 'RunConfigurations')
-        workspace_settings_dir = os.path.join(self._workspace_dir, '.metadata/.plugins/org.eclipse.core.runtime/.settings')
-        workspace_language_dir = os.path.join(self._workspace_dir, '.metadata/.plugins/org.eclipse.cdt.core')
+        workspace_settings_dir = os.path.join(
+            self._workspace_dir, '.metadata/.plugins/org.eclipse.core.runtime/.settings')
 
-        for dir_name in [self._project_dir, settings_dir, launch_dir, workspace_settings_dir, workspace_language_dir]:
+        for dir_name in [self._project_dir, settings_dir, launch_dir, workspace_settings_dir, self._workspace_lang_dir]:
             try:
                 os.makedirs(dir_name)
             except OSError as e:
@@ -125,25 +166,28 @@ class CppEclipseBackend(CommonBackend):
         with open(language_path, 'wb') as fh:
             self._write_language_settings(fh)
 
-        workspace_language_path = os.path.join(workspace_language_dir, 'language.settings.xml')
+        workspace_language_path = os.path.join(self._workspace_lang_dir, 'language.settings.xml')
         with open(workspace_language_path, 'wb') as fh:
             workspace_lang_settings = WORKSPACE_LANGUAGE_SETTINGS_TEMPLATE
-            workspace_lang_settings = workspace_lang_settings.replace("@COMPILER_FLAGS@", self._cxx + " " + self._cppflags);
+            workspace_lang_settings = workspace_lang_settings.replace(
+                "@COMPILER_FLAGS@", self._cxx + " " + self._cppflags)
             fh.write(workspace_lang_settings)
 
         self._write_launch_files(launch_dir)
 
-        core_resources_prefs_path = os.path.join(workspace_settings_dir, 'org.eclipse.core.resources.prefs')
+        core_resources_prefs_path = os.path.join(
+            workspace_settings_dir, 'org.eclipse.core.resources.prefs')
         with open(core_resources_prefs_path, 'wb') as fh:
-            fh.write(STATIC_CORE_RESOURCES_PREFS);
+            fh.write(STATIC_CORE_RESOURCES_PREFS)
 
-        core_runtime_prefs_path = os.path.join(workspace_settings_dir, 'org.eclipse.core.runtime.prefs')
+        core_runtime_prefs_path = os.path.join(
+            workspace_settings_dir, 'org.eclipse.core.runtime.prefs')
         with open(core_runtime_prefs_path, 'wb') as fh:
-            fh.write(STATIC_CORE_RUNTIME_PREFS);
+            fh.write(STATIC_CORE_RUNTIME_PREFS)
 
         ui_prefs_path = os.path.join(workspace_settings_dir, 'org.eclipse.ui.prefs')
         with open(ui_prefs_path, 'wb') as fh:
-            fh.write(STATIC_UI_PREFS);
+            fh.write(STATIC_UI_PREFS)
 
         cdt_ui_prefs_path = os.path.join(workspace_settings_dir, 'org.eclipse.cdt.ui.prefs')
         cdt_ui_prefs = STATIC_CDT_UI_PREFS
@@ -154,10 +198,11 @@ class CppEclipseBackend(CommonBackend):
         XML_PREF_TEMPLATE = """<setting id\="@PREF_NAME@" value\="@PREF_VAL@"/>\\n"""
         for line in FORMATTER_SETTINGS.splitlines():
             [pref, val] = line.split("=")
-            cdt_ui_prefs += XML_PREF_TEMPLATE.replace("@PREF_NAME@", pref).replace("@PREF_VAL@", val)
+            cdt_ui_prefs += XML_PREF_TEMPLATE.replace("@PREF_NAME@",
+                                                      pref).replace("@PREF_VAL@", val)
         cdt_ui_prefs += "</profile>\\n</profiles>\\n"
         with open(cdt_ui_prefs_path, 'wb') as fh:
-            fh.write(cdt_ui_prefs);
+            fh.write(cdt_ui_prefs)
 
         cdt_core_prefs_path = os.path.join(workspace_settings_dir, 'org.eclipse.cdt.core.prefs')
         with open(cdt_core_prefs_path, 'wb') as fh:
@@ -167,11 +212,11 @@ class CppEclipseBackend(CommonBackend):
             # as the active formatter all its prefs are set in this prefs file,
             # so we need add those now:
             cdt_core_prefs += FORMATTER_SETTINGS
-            fh.write(cdt_core_prefs);
+            fh.write(cdt_core_prefs)
 
-        editor_prefs_path = os.path.join(workspace_settings_dir, "org.eclipse.ui.editors.prefs");
+        editor_prefs_path = os.path.join(workspace_settings_dir, "org.eclipse.ui.editors.prefs")
         with open(editor_prefs_path, 'wb') as fh:
-            fh.write(EDITOR_SETTINGS);
+            fh.write(EDITOR_SETTINGS)
 
         # Now import the project into the workspace
         self._import_project()
@@ -187,7 +232,7 @@ class CppEclipseBackend(CommonBackend):
         self._write_noindex()
 
         try:
-            process = subprocess.check_call(
+            subprocess.check_call(
                              ["eclipse", "-application", "-nosplash",
                               "org.eclipse.cdt.managedbuilder.core.headlessbuild",
                               "-data", self._workspace_dir, "-importAll", self._project_dir])
@@ -207,9 +252,16 @@ class CppEclipseBackend(CommonBackend):
     def _write_noindex(self):
         noindex_path = os.path.join(self._project_dir, '.settings/org.eclipse.cdt.core.prefs')
         with open(noindex_path, 'wb') as fh:
-            fh.write(NOINDEX_TEMPLATE);
+            fh.write(NOINDEX_TEMPLATE)
 
     def _remove_noindex(self):
+        # Below we remove the config file that temporarily disabled the indexer
+        # while we were importing the project. Unfortunately, CDT doesn't
+        # notice indexer settings changes in config files when it restarts. To
+        # work around that we remove the index database here to force it to:
+        for f in glob.glob(os.path.join(self._workspace_lang_dir, "Gecko.*.pdom")):
+            os.remove(f)
+
         noindex_path = os.path.join(self._project_dir, '.settings/org.eclipse.cdt.core.prefs')
         # This may fail if the entire tree has been removed; that's fine.
         try:
@@ -219,6 +271,7 @@ class CppEclipseBackend(CommonBackend):
                 raise
 
     def _write_language_settings(self, fh):
+<<<<<<< HEAD
         def add_abs_include_path(absinclude):
             assert(absinclude[:3] == "-I/")
             return LANGUAGE_SETTINGS_TEMPLATE_DIR_INCLUDE.replace("@INCLUDE_PATH@", absinclude[2:])
@@ -307,6 +360,109 @@ class CppEclipseBackend(CommonBackend):
             fh.write(dirsettings)
 
         fh.write(LANGUAGE_SETTINGS_TEMPLATE_FOOTER.replace("@COMPILER_FLAGS@", self._cxx + " " + self._cppflags))
+||||||| merged common ancestors
+        settings = LANGUAGE_SETTINGS_TEMPLATE
+
+        settings = settings.replace('@GLOBAL_INCLUDE_PATH@', os.path.join(self.environment.topobjdir, 'dist/include'))
+        settings = settings.replace('@NSPR_INCLUDE_PATH@', os.path.join(self.environment.topobjdir, 'dist/include/nspr'))
+        settings = settings.replace('@IPDL_INCLUDE_PATH@', os.path.join(self.environment.topobjdir, 'ipc/ipdl/_ipdlheaders'))
+        settings = settings.replace('@PREINCLUDE_FILE_PATH@', os.path.join(self.environment.topobjdir, 'dist/include/mozilla-config.h'))
+        settings = settings.replace('@DEFINE_MOZILLA_INTERNAL_API@', self._define_entry('MOZILLA_INTERNAL_API', '1'))
+        settings = settings.replace("@COMPILER_FLAGS@", self._cxx + " " + self._cppflags);
+
+        fh.write(settings)
+=======
+        def add_abs_include_path(absinclude):
+            assert(absinclude[:3] == "-I/")
+            return LANGUAGE_SETTINGS_TEMPLATE_DIR_INCLUDE.replace("@INCLUDE_PATH@", absinclude[2:])
+
+        def add_objdir_include_path(relpath):
+            p = os.path.join(self.environment.topobjdir, relpath)
+            return LANGUAGE_SETTINGS_TEMPLATE_DIR_INCLUDE.replace("@INCLUDE_PATH@", p)
+
+        def add_define(name, value):
+            define = LANGUAGE_SETTINGS_TEMPLATE_DIR_DEFINE
+            define = define.replace("@NAME@", name)
+            # We use quoteattr here because some defines contain characters
+            # such as "<" and '"' which need proper XML escaping.
+            define = define.replace("@VALUE@", quoteattr(value))
+            return define
+
+        fh.write(LANGUAGE_SETTINGS_TEMPLATE_HEADER)
+
+        # Unfortunately, whenever we set a user defined include path or define
+        # on a directory, Eclipse ignores user defined include paths and defines
+        # on ancestor directories.  That means that we need to add all the
+        # common include paths and defines to every single directory entry that
+        # we add settings for.  (Fortunately that doesn't appear to have a
+        # noticeable impact on the time it takes to open the generated Eclipse
+        # project.)  We do that by generating a template here that we can then
+        # use for each individual directory in the loop below.
+        #
+        dirsettings_template = LANGUAGE_SETTINGS_TEMPLATE_DIR_HEADER
+
+        # Add OS_COMPILE_CXXFLAGS args (same as OS_COMPILE_CFLAGS):
+        dirsettings_template = dirsettings_template.replace('@PREINCLUDE_FILE_PATH@', os.path.join(
+            self.environment.topobjdir, 'dist/include/mozilla-config.h'))
+        dirsettings_template += add_define('MOZILLA_CLIENT', '1')
+
+        # Add EXTRA_INCLUDES args:
+        dirsettings_template += add_objdir_include_path('dist/include')
+
+        # Add OS_INCLUDES args:
+        # XXX media/webrtc/trunk/webrtc's moz.builds reset this.
+        dirsettings_template += add_objdir_include_path('dist/include/nspr')
+        dirsettings_template += add_objdir_include_path('dist/include/nss')
+
+        # Finally, add anything else that makes things work better.
+        #
+        # Because of https://developer.mozilla.org/en-US/docs/Eclipse_CDT#Headers_are_only_parsed_once
+        # we set MOZILLA_INTERNAL_API for all directories to make sure
+        # headers are indexed with MOZILLA_INTERNAL_API set.  Unfortunately
+        # this means that MOZILLA_EXTERNAL_API code will suffer.
+        #
+        # TODO: If we're doing this for MOZILLA_EXTERNAL_API then we may want
+        # to do it for other LIBRARY_DEFINES's defines too.  Well, at least for
+        # STATIC_EXPORTABLE_JS_API which may be important to JS people.
+        # (The other two LIBRARY_DEFINES defines -- MOZ_HAS_MOZGLUE and
+        # IMPL_LIBXUL -- don't affect much and probably don't matter to anyone).
+        #
+        # TODO: Should we also always set DEBUG so that DEBUG code is always
+        # indexed?  Or is there significant amounts of non-DEBUG code that
+        # would be adversely affected?
+        #
+        # TODO: Investigate whether the ordering of directories in the project
+        # file can be used to our advantage so that the first indexing of
+        # important headers has the defines we want.
+        #
+        dirsettings_template += add_objdir_include_path('ipc/ipdl/_ipdlheaders')
+        dirsettings_template += add_define('MOZILLA_INTERNAL_API', '1')
+
+        for path, args in self._args_for_dirs.items():
+            dirsettings = dirsettings_template
+            dirsettings = dirsettings.replace('@RELATIVE_PATH@', path)
+            for i in args["includes"]:
+                dirsettings += add_abs_include_path(i)
+            for d in args["defines"]:
+                assert(d[:2] == u"-D" or d[:2] == u"-U")
+                if d[:2] == u"-U":
+                    # gfx/harfbuzz/src uses -UDEBUG, at least on Mac
+                    # netwerk/sctp/src uses -U__APPLE__ on Mac
+                    # XXX We should make this code smart enough to remove existing defines.
+                    continue
+                d = d[2:]  # get rid of leading "-D"
+                name_value = d.split("=", 1)
+                name = name_value[0]
+                value = ""
+                if len(name_value) == 2:
+                    value = name_value[1]
+                dirsettings += add_define(name, str(value))
+            dirsettings += LANGUAGE_SETTINGS_TEMPLATE_DIR_FOOTER
+            fh.write(dirsettings)
+
+        fh.write(LANGUAGE_SETTINGS_TEMPLATE_FOOTER.replace(
+            "@COMPILER_FLAGS@", self._cxx + " " + self._cppflags))
+>>>>>>> upstream-releases
 
     def _write_launch_files(self, launch_dir):
         bin_dir = os.path.join(self.environment.topobjdir, 'dist')
@@ -326,21 +482,25 @@ class CppEclipseBackend(CommonBackend):
             launch = launch.replace('@LAUNCH_ARGS@', '-P -no-remote')
             fh.write(launch)
 
-        #TODO Add more launch configs (and delegate calls to mach)
+        # TODO Add more launch configs (and delegate calls to mach)
 
     def _write_project(self, fh):
-        project = PROJECT_TEMPLATE;
+        project = PROJECT_TEMPLATE
 
         project = project.replace('@PROJECT_NAME@', self._project_name)
         project = project.replace('@PROJECT_TOPSRCDIR@', self.environment.topsrcdir)
-        project = project.replace('@GENERATED_IPDL_FILES@', os.path.join(self.environment.topobjdir, "ipc", "ipdl"))
-        project = project.replace('@GENERATED_WEBIDL_FILES@', os.path.join(self.environment.topobjdir, "dom", "bindings"))
+        project = project.replace('@GENERATED_IPDL_FILES@', os.path.join(
+            self.environment.topobjdir, "ipc", "ipdl"))
+        project = project.replace('@GENERATED_WEBIDL_FILES@', os.path.join(
+            self.environment.topobjdir, "dom", "bindings"))
         fh.write(project)
 
     def _write_cproject(self, fh):
         cproject_header = CPROJECT_TEMPLATE_HEADER
-        cproject_header = cproject_header.replace('@PROJECT_TOPSRCDIR@', self.environment.topobjdir)
-        cproject_header = cproject_header.replace('@MACH_COMMAND@', os.path.join(self.environment.topsrcdir, 'mach'))
+        cproject_header = cproject_header.replace(
+            '@PROJECT_TOPSRCDIR@', self.environment.topobjdir)
+        cproject_header = cproject_header.replace(
+            '@MACH_COMMAND@', os.path.join(self.environment.topsrcdir, 'mach'))
         fh.write(cproject_header)
         fh.write(CPROJECT_TEMPLATE_FOOTER)
 
@@ -361,8 +521,8 @@ PROJECT_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
                 <buildCommand>
                         <name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
                         <triggers></triggers>
-			<arguments>
-			</arguments>
+            <arguments>
+            </arguments>
                 </buildCommand>
         </buildSpec>
         <natures>
@@ -460,7 +620,7 @@ CPROJECT_TEMPLATE_HEADER = """<?xml version="1.0" encoding="UTF-8" standalone="n
                                         <folderInfo id="0.1674256904." name="/" resourcePath="">
                                                 <toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1276586933" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
                                                         <targetPlatform archList="all" binaryParser="" id="cdt.managedbuild.targetPlatform.gnu.cross.710759961" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder arguments="--log-no-times build" buildPath="@PROJECT_TOPSRCDIR@" command="@MACH_COMMAND@" enableCleanBuild="false" incrementalBuildTarget="binaries" id="org.eclipse.cdt.build.core.settings.default.builder.1437267827" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+                            <builder arguments="--log-no-times build" buildPath="@PROJECT_TOPSRCDIR@" command="@MACH_COMMAND@" enableCleanBuild="false" incrementalBuildTarget="binaries" id="org.eclipse.cdt.build.core.settings.default.builder.1437267827" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
                                                 </toolChain>
                                         </folderInfo>
 """
@@ -473,11 +633,21 @@ CPROJECT_TEMPLATE_FILEINFO = """                                        <fileInf
                                                 </tool>
                                         </fileInfo>
 """
+<<<<<<< HEAD
 CPROJECT_TEMPLATE_FOOTER = """
 					<sourceEntries>
 						<entry excluding="**/lib*|**/third_party/|tree/*.xcodeproj/|tree/.cargo/|tree/.vscode/|tree/build/|tree/extensions/|tree/gfx/angle/|tree/gfx/cairo/|tree/gfx/skia/skia/|tree/intl/icu/|tree/js/|tree/media/|tree/modules/freetype2|tree/modules/pdfium/|tree/netwerk/|tree/netwerk/sctp|tree/netwerk/srtp|tree/nsprpub/lib|tree/nsprpub/pr/src|tree/other-licenses/|tree/parser/|tree/python/|tree/security/nss/|tree/tools/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
                                 </configuration>
+||||||| merged common ancestors
+CPROJECT_TEMPLATE_FOOTER = """                                </configuration>
+=======
+CPROJECT_TEMPLATE_FOOTER = """
+                    <sourceEntries>
+                        <entry excluding="**/lib*|**/third_party/|tree/*.xcodeproj/|tree/.cargo/|tree/.vscode/|tree/build/|tree/extensions/|tree/gfx/angle/|tree/gfx/cairo/|tree/gfx/skia/skia/|tree/intl/icu/|tree/js/|tree/media/|tree/modules/freetype2|tree/modules/pdfium/|tree/netwerk/|tree/netwerk/sctp|tree/netwerk/srtp|tree/nsprpub/lib|tree/nsprpub/pr/src|tree/other-licenses/|tree/parser/|tree/python/|tree/security/nss/|tree/tools/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+                    </sourceEntries>
+                                </configuration>
+>>>>>>> upstream-releases
                         </storageModule>
                         <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
                 </cconfiguration>
@@ -518,6 +688,7 @@ WORKSPACE_LANGUAGE_SETTINGS_TEMPLATE = """<?xml version="1.0" encoding="UTF-8" s
 
 LANGUAGE_SETTINGS_TEMPLATE_HEADER = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
+<<<<<<< HEAD
 	<configuration id="0.1674256904" name="Default">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true">
@@ -550,6 +721,75 @@ LANGUAGE_SETTINGS_TEMPLATE_FOOTER = """				</language>
 			<provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
 		</extension>
 	</configuration>
+||||||| merged common ancestors
+        <configuration id="0.1674256904" name="Default">
+                <extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+                        <provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true">
+                                <language id="org.eclipse.cdt.core.g++">
+                                        <resource project-relative-path="">
+                                                <entry kind="includePath" name="@GLOBAL_INCLUDE_PATH@">
+                                                        <flag value="LOCAL"/>
+                                                </entry>
+                                                <entry kind="includePath" name="@NSPR_INCLUDE_PATH@">
+                                                        <flag value="LOCAL"/>
+                                                </entry>
+                                                <entry kind="includePath" name="@IPDL_INCLUDE_PATH@">
+                                                        <flag value="LOCAL"/>
+                                                </entry>
+                                                <entry kind="includeFile" name="@PREINCLUDE_FILE_PATH@">
+                                                        <flag value="LOCAL"/>
+                                                </entry>
+                                                <!--
+                                                  Because of https://developer.mozilla.org/en-US/docs/Eclipse_CDT#Headers_are_only_parsed_once
+                                                  we need to make sure headers are parsed with MOZILLA_INTERNAL_API to make sure
+                                                  the indexer gets the version that is used in most of the true. This means that
+                                                  MOZILLA_EXTERNAL_API code will suffer.
+                                                -->
+                                                @DEFINE_MOZILLA_INTERNAL_API@
+                                        </resource>
+                                </language>
+                        </provider>
+                        <provider class="org.eclipse.cdt.internal.build.crossgcc.CrossGCCBuiltinSpecsDetector" console="false" env-hash="-859273372804152468" id="org.eclipse.cdt.build.crossgcc.CrossGCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT Cross GCC Built-in Compiler Settings" parameter="@COMPILER_FLAGS@ -E -P -v -dD &quot;${INPUTS}&quot; -std=c++11" prefer-non-shared="true" store-entries-with-project="true">
+                             <language-scope id="org.eclipse.cdt.core.gcc"/>
+                             <language-scope id="org.eclipse.cdt.core.g++"/>
+                        </provider>
+                        <provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
+                </extension>
+        </configuration>
+=======
+    <configuration id="0.1674256904" name="Default">
+        <extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+            <provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true">
+                <language id="org.eclipse.cdt.core.g++">
+"""
+
+LANGUAGE_SETTINGS_TEMPLATE_DIR_HEADER = """                 <resource project-relative-path="@RELATIVE_PATH@">
+                        <entry kind="includeFile" name="@PREINCLUDE_FILE_PATH@">
+                            <flag value="LOCAL"/>
+                        </entry>
+"""
+
+LANGUAGE_SETTINGS_TEMPLATE_DIR_INCLUDE = """                        <entry kind="includePath" name="@INCLUDE_PATH@">
+                            <flag value="LOCAL"/>
+                        </entry>
+"""
+
+LANGUAGE_SETTINGS_TEMPLATE_DIR_DEFINE = """                        <entry kind="macro" name="@NAME@" value=@VALUE@/>
+"""
+
+LANGUAGE_SETTINGS_TEMPLATE_DIR_FOOTER = """                    </resource>
+"""
+
+LANGUAGE_SETTINGS_TEMPLATE_FOOTER = """                </language>
+                </provider>
+            <provider class="org.eclipse.cdt.internal.build.crossgcc.CrossGCCBuiltinSpecsDetector" console="false" env-hash="-859273372804152468" id="org.eclipse.cdt.build.crossgcc.CrossGCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT Cross GCC Built-in Compiler Settings" parameter="@COMPILER_FLAGS@ -E -P -v -dD &quot;${INPUTS}&quot; -std=c++11" prefer-non-shared="true" store-entries-with-project="true">
+                <language-scope id="org.eclipse.cdt.core.gcc"/>
+                <language-scope id="org.eclipse.cdt.core.g++"/>
+            </provider>
+            <provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
+        </extension>
+    </configuration>
+>>>>>>> upstream-releases
 </project>
 """
 
@@ -607,21 +847,21 @@ undoHistorySize=200
 """
 
 
-STATIC_CORE_RESOURCES_PREFS="""eclipse.preferences.version=1
+STATIC_CORE_RESOURCES_PREFS = """eclipse.preferences.version=1
 refresh.enabled=true
 """
 
-STATIC_CORE_RUNTIME_PREFS="""eclipse.preferences.version=1
+STATIC_CORE_RUNTIME_PREFS = """eclipse.preferences.version=1
 content-types/org.eclipse.cdt.core.cxxSource/file-extensions=mm
 content-types/org.eclipse.core.runtime.xml/file-extensions=xul
 content-types/org.eclipse.wst.jsdt.core.jsSource/file-extensions=jsm
 """
 
-STATIC_UI_PREFS="""eclipse.preferences.version=1
+STATIC_UI_PREFS = """eclipse.preferences.version=1
 showIntro=false
 """
 
-STATIC_CDT_CORE_PREFS="""eclipse.preferences.version=1
+STATIC_CDT_CORE_PREFS = """eclipse.preferences.version=1
 indexer.updatePolicy=0
 """
 
@@ -789,7 +1029,7 @@ org.eclipse.cdt.core.formatter.tabulation.size=2
 org.eclipse.cdt.core.formatter.use_tabs_only_for_leading_indentations=false
 """
 
-STATIC_CDT_UI_PREFS="""eclipse.preferences.version=1
+STATIC_CDT_UI_PREFS = """eclipse.preferences.version=1
 buildConsoleLines=10000
 Console.limitConsoleOutput=false
 ensureNewlineAtEOF=false

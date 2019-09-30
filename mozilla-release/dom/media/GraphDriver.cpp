@@ -7,40 +7,74 @@
 #include <MediaStreamGraphImpl.h>
 #include "mozilla/dom/AudioContext.h"
 #include "mozilla/dom/AudioDeviceInfo.h"
+#include "mozilla/dom/WorkletThread.h"
 #include "mozilla/SharedThreadPool.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/Unused.h"
-#include "CubebUtils.h"
+#include "CubebDeviceEnumerator.h"
 #include "Tracing.h"
 
 #ifdef MOZ_WEBRTC
-#include "webrtc/MediaEngineWebRTC.h"
+#  include "webrtc/MediaEngineWebRTC.h"
 #endif
 
 #ifdef XP_MACOSX
-#include <sys/sysctl.h>
+#  include <sys/sysctl.h>
 #endif
 
 extern mozilla::LazyLogModule gMediaStreamGraphLog;
 #ifdef LOG
+<<<<<<< HEAD
 #undef LOG
 #endif  // LOG
+||||||| merged common ancestors
+#undef LOG
+#endif // LOG
+=======
+#  undef LOG
+#endif  // LOG
+>>>>>>> upstream-releases
 #define LOG(type, msg) MOZ_LOG(gMediaStreamGraphLog, type, msg)
 
 namespace mozilla {
 
 GraphDriver::GraphDriver(MediaStreamGraphImpl* aGraphImpl)
+<<<<<<< HEAD
     : mIterationStart(0),
       mIterationEnd(0),
       mGraphImpl(aGraphImpl),
       mCurrentTimeStamp(TimeStamp::Now()),
       mPreviousDriver(nullptr),
       mNextDriver(nullptr) {}
+||||||| merged common ancestors
+  : mIterationStart(0),
+    mIterationEnd(0),
+    mGraphImpl(aGraphImpl),
+    mCurrentTimeStamp(TimeStamp::Now()),
+    mPreviousDriver(nullptr),
+    mNextDriver(nullptr)
+{ }
+=======
+    : mIterationStart(0),
+      mIterationEnd(0),
+      mGraphImpl(aGraphImpl),
+      mPreviousDriver(nullptr),
+      mNextDriver(nullptr) {}
+>>>>>>> upstream-releases
 
 void GraphDriver::SetGraphTime(GraphDriver* aPreviousDriver,
                                GraphTime aLastSwitchNextIterationStart,
+<<<<<<< HEAD
                                GraphTime aLastSwitchNextIterationEnd) {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+                               GraphTime aLastSwitchNextIterationEnd)
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+                               GraphTime aLastSwitchNextIterationEnd) {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   // We set mIterationEnd here, because the first thing a driver do when it
   // does an iteration is to update graph times, so we are in fact setting
@@ -61,8 +95,17 @@ void GraphDriver::SetGraphTime(GraphDriver* aPreviousDriver,
   SetPreviousDriver(aPreviousDriver);
 }
 
+<<<<<<< HEAD
 void GraphDriver::SwitchAtNextIteration(GraphDriver* aNextDriver) {
   MOZ_ASSERT(OnThread());
+||||||| merged common ancestors
+void GraphDriver::SwitchAtNextIteration(GraphDriver* aNextDriver)
+{
+  MOZ_ASSERT(OnThread());
+=======
+void GraphDriver::SwitchAtNextIteration(GraphDriver* aNextDriver) {
+  MOZ_ASSERT(OnGraphThread());
+>>>>>>> upstream-releases
   MOZ_ASSERT(aNextDriver);
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
 
@@ -84,16 +127,49 @@ GraphTime GraphDriver::StateComputedTime() const {
   return GraphImpl()->mStateComputedTime;
 }
 
+<<<<<<< HEAD
+void GraphDriver::EnsureNextIteration() { GraphImpl()->EnsureNextIteration(); }
+||||||| merged common ancestors
+void GraphDriver::EnsureNextIteration()
+{
+  GraphImpl()->EnsureNextIteration();
+}
+=======
 void GraphDriver::EnsureNextIteration() { GraphImpl()->EnsureNextIteration(); }
 
+#ifdef DEBUG
+bool GraphDriver::OnGraphThread() {
+  return GraphImpl()->RunByGraphDriver(this);
+}
+#endif
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool GraphDriver::Switching() {
   MOZ_ASSERT(OnThread());
+||||||| merged common ancestors
+bool GraphDriver::Switching()
+{
+  MOZ_ASSERT(OnThread());
+=======
+bool GraphDriver::Switching() {
+  MOZ_ASSERT(OnGraphThread());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   return mNextDriver || mPreviousDriver;
 }
 
+<<<<<<< HEAD
 void GraphDriver::SwitchToNextDriver() {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+void GraphDriver::SwitchToNextDriver()
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+void GraphDriver::SwitchToNextDriver() {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   MOZ_ASSERT(NextDriver());
 
@@ -103,20 +179,47 @@ void GraphDriver::SwitchToNextDriver() {
   SetNextDriver(nullptr);
 }
 
+<<<<<<< HEAD
 GraphDriver* GraphDriver::NextDriver() {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+GraphDriver* GraphDriver::NextDriver()
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+GraphDriver* GraphDriver::NextDriver() {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   return mNextDriver;
 }
 
+<<<<<<< HEAD
 GraphDriver* GraphDriver::PreviousDriver() {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+GraphDriver* GraphDriver::PreviousDriver()
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+GraphDriver* GraphDriver::PreviousDriver() {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   return mPreviousDriver;
 }
 
+<<<<<<< HEAD
 void GraphDriver::SetNextDriver(GraphDriver* aNextDriver) {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+void GraphDriver::SetNextDriver(GraphDriver* aNextDriver)
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+void GraphDriver::SetNextDriver(GraphDriver* aNextDriver) {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   MOZ_ASSERT(aNextDriver != this);
   MOZ_ASSERT(aNextDriver != mNextDriver);
@@ -131,8 +234,17 @@ void GraphDriver::SetNextDriver(GraphDriver* aNextDriver) {
   mNextDriver = aNextDriver;
 }
 
+<<<<<<< HEAD
 void GraphDriver::SetPreviousDriver(GraphDriver* aPreviousDriver) {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+void GraphDriver::SetPreviousDriver(GraphDriver* aPreviousDriver)
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+void GraphDriver::SetPreviousDriver(GraphDriver* aPreviousDriver) {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
   mPreviousDriver = aPreviousDriver;
 }
@@ -194,9 +306,17 @@ class MediaStreamGraphInitThreadRunnable : public Runnable {
       mDriver->SetPreviousDriver(nullptr);
     } else {
       MonitorAutoLock mon(mDriver->mGraphImpl->GetMonitor());
+<<<<<<< HEAD
       MOZ_ASSERT(mDriver->mGraphImpl->MessagesQueued() ||
                      mDriver->mGraphImpl->mForceShutDown,
                  "Don't start a graph without messages queued.");
+||||||| merged common ancestors
+      MOZ_ASSERT(mDriver->mGraphImpl->MessagesQueued() ||
+                 mDriver->mGraphImpl->mForceShutDown, "Don't start a graph without messages queued.");
+=======
+      MOZ_ASSERT(mDriver->mGraphImpl->MessagesQueued(),
+                 "Don't start a graph without messages queued.");
+>>>>>>> upstream-releases
       mDriver->mGraphImpl->SwapMessageQueues();
     }
 
@@ -254,18 +374,64 @@ void ThreadedDriver::Shutdown() {
 }
 
 SystemClockDriver::SystemClockDriver(MediaStreamGraphImpl* aGraphImpl)
+<<<<<<< HEAD
     : ThreadedDriver(aGraphImpl),
       mInitialTimeStamp(TimeStamp::Now()),
       mLastTimeStamp(TimeStamp::Now()),
       mIsFallback(false) {}
+||||||| merged common ancestors
+  : ThreadedDriver(aGraphImpl),
+    mInitialTimeStamp(TimeStamp::Now()),
+    mLastTimeStamp(TimeStamp::Now()),
+    mWaitState(WAITSTATE_RUNNING),
+    mIsFallback(false)
+{}
 
+SystemClockDriver::~SystemClockDriver()
+{ }
+
+void
+SystemClockDriver::MarkAsFallback()
+{
+  mIsFallback = true;
+}
+=======
+    : ThreadedDriver(aGraphImpl),
+      mInitialTimeStamp(TimeStamp::Now()),
+      mCurrentTimeStamp(TimeStamp::Now()),
+      mLastTimeStamp(TimeStamp::Now()),
+      mIsFallback(false) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+SystemClockDriver::~SystemClockDriver() {}
+
+void SystemClockDriver::MarkAsFallback() { mIsFallback = true; }
+||||||| merged common ancestors
+bool
+SystemClockDriver::IsFallback()
+{
+  return mIsFallback;
+}
+=======
 SystemClockDriver::~SystemClockDriver() {}
 
 void SystemClockDriver::MarkAsFallback() { mIsFallback = true; }
 
 bool SystemClockDriver::IsFallback() { return mIsFallback; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool SystemClockDriver::IsFallback() { return mIsFallback; }
 
 void ThreadedDriver::RunThread() {
+||||||| merged common ancestors
+void
+ThreadedDriver::RunThread()
+{
+=======
+void ThreadedDriver::RunThread() {
+>>>>>>> upstream-releases
   mThreadRunning = true;
   while (true) {
     mIterationStart = IterationEnd();
@@ -307,6 +473,7 @@ void ThreadedDriver::RunThread() {
     if (!stillProcessing) {
       // Enter shutdown mode. The stable-state handler will detect this
       // and complete shutdown if the graph does not get restarted.
+      dom::WorkletThread::DeleteCycleCollectedJSContext();
       GraphImpl()->SignalMainThreadCleanup();
       break;
     }
@@ -337,12 +504,27 @@ MediaTime SystemClockDriver::GetIntervalForIteration() {
   return interval;
 }
 
+<<<<<<< HEAD
 TimeStamp OfflineClockDriver::GetCurrentTimeStamp() {
   MOZ_CRASH("This driver does not support getting the current timestamp.");
   return TimeStamp();
 }
 
 void ThreadedDriver::WaitForNextIteration() {
+||||||| merged common ancestors
+TimeStamp
+OfflineClockDriver::GetCurrentTimeStamp()
+{
+  MOZ_CRASH("This driver does not support getting the current timestamp.");
+  return TimeStamp();
+}
+
+void
+SystemClockDriver::WaitForNextIteration()
+{
+=======
+void ThreadedDriver::WaitForNextIteration() {
+>>>>>>> upstream-releases
   GraphImpl()->GetMonitor().AssertCurrentThreadOwns();
 
   TimeDuration timeout = TimeDuration::Forever();
@@ -413,12 +595,30 @@ TimeDuration OfflineClockDriver::WaitInterval() {
 
 AsyncCubebTask::AsyncCubebTask(AudioCallbackDriver* aDriver,
                                AsyncCubebOperation aOperation)
+<<<<<<< HEAD
     : Runnable("AsyncCubebTask"),
       mDriver(aDriver),
       mOperation(aOperation),
       mShutdownGrip(aDriver->GraphImpl()) {
   NS_WARNING_ASSERTION(mDriver->mAudioStream || aOperation == INIT,
                        "No audio stream!");
+||||||| merged common ancestors
+  : Runnable("AsyncCubebTask")
+  , mDriver(aDriver)
+  , mOperation(aOperation)
+  , mShutdownGrip(aDriver->GraphImpl())
+{
+  NS_WARNING_ASSERTION(mDriver->mAudioStream || aOperation == INIT,
+                       "No audio stream!");
+=======
+    : Runnable("AsyncCubebTask"),
+      mDriver(aDriver),
+      mOperation(aOperation),
+      mShutdownGrip(aDriver->GraphImpl()) {
+  NS_WARNING_ASSERTION(
+      mDriver->mAudioStream || aOperation == AsyncCubebOperation::INIT,
+      "No audio stream!");
+>>>>>>> upstream-releases
 }
 
 AsyncCubebTask::~AsyncCubebTask() {}
@@ -437,6 +637,19 @@ AsyncCubebTask::Run() {
         return NS_ERROR_FAILURE;
       }
       mDriver->CompleteAudioContextOperations(mOperation);
+      break;
+    }
+    case AsyncCubebOperation::REVIVE: {
+      LOG(LogLevel::Debug, ("%p: AsyncCubebOperation::REVIVE driver=%p",
+                            mDriver->GraphImpl(), mDriver.get()));
+      if (mDriver->IsStarted()) {
+        mDriver->Stop();
+      }
+      if (!mDriver->StartStream()) {
+        LOG(LogLevel::Warning,
+            ("%p: AsyncCubebOperation couldn't start the driver=%p.",
+             mDriver->GraphImpl(), mDriver.get()));
+      }
       break;
     }
     case AsyncCubebOperation::SHUTDOWN: {
@@ -458,6 +671,7 @@ AsyncCubebTask::Run() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 StreamAndPromiseForOperation::StreamAndPromiseForOperation(
     MediaStream* aStream, void* aPromise, dom::AudioContextOperation aOperation)
     : mStream(aStream), mPromise(aPromise), mOperation(aOperation) {
@@ -479,6 +693,57 @@ AudioCallbackDriver::AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl,
       mAudioThreadRunning(false),
       mShouldFallbackIfError(false),
       mFromFallback(false) {
+||||||| merged common ancestors
+StreamAndPromiseForOperation::StreamAndPromiseForOperation(MediaStream* aStream,
+                                          void* aPromise,
+                                          dom::AudioContextOperation aOperation)
+  : mStream(aStream)
+  , mPromise(aPromise)
+  , mOperation(aOperation)
+{
+  // MOZ_ASSERT(aPromise);
+}
+
+AudioCallbackDriver::AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl, uint32_t aInputChannelCount)
+  : GraphDriver(aGraphImpl)
+  , mOutputChannels(0)
+  , mSampleRate(0)
+  , mInputChannelCount(aInputChannelCount)
+  , mIterationDurationMS(MEDIA_GRAPH_TARGET_PERIOD_MS)
+  , mStarted(false)
+  , mInitShutdownThread(SharedThreadPool::Get(NS_LITERAL_CSTRING("CubebOperation"), 1))
+  , mAddedMixer(false)
+  , mAudioThreadId(std::thread::id())
+  , mAudioThreadRunning(false)
+  , mShouldFallbackIfError(false)
+  , mFromFallback(false)
+{
+=======
+StreamAndPromiseForOperation::StreamAndPromiseForOperation(
+    MediaStream* aStream, void* aPromise, dom::AudioContextOperation aOperation,
+    dom::AudioContextOperationFlags aFlags)
+    : mStream(aStream),
+      mPromise(aPromise),
+      mOperation(aOperation),
+      mFlags(aFlags) {}
+
+AudioCallbackDriver::AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl,
+                                         uint32_t aInputChannelCount,
+                                         AudioInputType aAudioInputType)
+    : GraphDriver(aGraphImpl),
+      mOutputChannels(0),
+      mSampleRate(0),
+      mInputChannelCount(aInputChannelCount),
+      mIterationDurationMS(MEDIA_GRAPH_TARGET_PERIOD_MS),
+      mStarted(false),
+      mInitShutdownThread(
+          SharedThreadPool::Get(NS_LITERAL_CSTRING("CubebOperation"), 1)),
+      mAddedMixer(false),
+      mAudioThreadId(std::thread::id()),
+      mAudioThreadRunning(false),
+      mShouldFallbackIfError(false),
+      mFromFallback(false) {
+>>>>>>> upstream-releases
   LOG(LogLevel::Debug, ("%p: AudioCallbackDriver ctor", GraphImpl()));
 
   const uint32_t kIdleThreadTimeoutMs = 2000;
@@ -490,6 +755,13 @@ AudioCallbackDriver::AudioCallbackDriver(MediaStreamGraphImpl* aGraphImpl,
     audio::AudioNotificationReceiver::Register(this);
   }
 #endif
+  if (aAudioInputType == AudioInputType::Voice) {
+    LOG(LogLevel::Debug, ("VOICE."));
+    mInputDevicePreference = CUBEB_DEVICE_PREF_VOICE;
+    CubebUtils::SetInCommunication(true);
+  } else {
+    mInputDevicePreference = CUBEB_DEVICE_PREF_ALL;
+  }
 }
 
 AudioCallbackDriver::~AudioCallbackDriver() {
@@ -500,6 +772,9 @@ AudioCallbackDriver::~AudioCallbackDriver() {
     audio::AudioNotificationReceiver::Unregister(this);
   }
 #endif
+  if (mInputDevicePreference == CUBEB_DEVICE_PREF_VOICE) {
+    CubebUtils::SetInCommunication(false);
+  }
 }
 
 bool IsMacbookOrMacbookAir() {
@@ -570,15 +845,11 @@ bool AudioCallbackDriver::Init() {
 
   char* forcedOutputDeviceName = CubebUtils::GetForcedOutputDevice();
   if (forcedOutputDeviceName) {
-    nsTArray<RefPtr<AudioDeviceInfo>> deviceInfos;
-    GetDeviceCollection(deviceInfos, CubebUtils::Output);
-    for (const auto& device : deviceInfos) {
-      const nsString& name = device->Name();
-      if (name.Equals(NS_ConvertUTF8toUTF16(forcedOutputDeviceName))) {
-        if (device->DeviceID()) {
-          forcedOutputDeviceId = device->DeviceID();
-        }
-      }
+    RefPtr<CubebDeviceEnumerator> enumerator = Enumerator::GetInstance();
+    RefPtr<AudioDeviceInfo> device = enumerator->DeviceInfoFromName(
+        NS_ConvertUTF8toUTF16(forcedOutputDeviceName), EnumeratorSide::OUTPUT);
+    if (device && device->DeviceID()) {
+      forcedOutputDeviceId = device->DeviceID();
     }
   }
 
@@ -589,6 +860,11 @@ bool AudioCallbackDriver::Init() {
   output.channels = mOutputChannels;
   output.layout = CUBEB_LAYOUT_UNDEFINED;
   output.prefs = CubebUtils::GetDefaultStreamPrefs();
+#if !defined(XP_WIN)
+  if (mInputDevicePreference == CUBEB_DEVICE_PREF_VOICE) {
+    output.prefs |= static_cast<cubeb_stream_prefs>(CUBEB_STREAM_PREF_VOICE);
+  }
+#endif
 
   uint32_t latency_frames = CubebUtils::GetCubebMSGLatencyInFrames(&output);
 
@@ -657,7 +933,7 @@ bool AudioCallbackDriver::Init() {
 void AudioCallbackDriver::Start() {
   MOZ_ASSERT(!IsStarted());
   MOZ_ASSERT(NS_IsMainThread() || OnCubebOperationThread() ||
-             (PreviousDriver() && PreviousDriver()->OnThread()));
+             (PreviousDriver() && PreviousDriver()->OnGraphThread()));
   if (mPreviousDriver) {
     if (mPreviousDriver->AsAudioCallbackDriver()) {
       LOG(LogLevel::Debug, ("Releasing audio driver off main thread."));
@@ -699,6 +975,7 @@ void AudioCallbackDriver::Stop() {
   if (cubeb_stream_stop(mAudioStream) != CUBEB_OK) {
     NS_WARNING("Could not stop cubeb stream for MSG.");
   }
+  mStarted = false;
 }
 
 void AudioCallbackDriver::Revive() {
@@ -711,17 +988,40 @@ void AudioCallbackDriver::Revive() {
   if (NextDriver()) {
     SwitchToNextDriver();
   } else {
+<<<<<<< HEAD
     LOG(LogLevel::Debug,
         ("Starting audio threads for MediaStreamGraph %p from a new thread.",
          mGraphImpl.get()));
     RefPtr<AsyncCubebTask> initEvent =
         new AsyncCubebTask(this, AsyncCubebOperation::INIT);
     initEvent->Dispatch();
+||||||| merged common ancestors
+    LOG(LogLevel::Debug,
+        ("Starting audio threads for MediaStreamGraph %p from a new thread.",
+         mGraphImpl.get()));
+    RefPtr<AsyncCubebTask> initEvent =
+      new AsyncCubebTask(this, AsyncCubebOperation::INIT);
+    initEvent->Dispatch();
+=======
+    RefPtr<AsyncCubebTask> reviveEvent =
+        new AsyncCubebTask(this, AsyncCubebOperation::REVIVE);
+    reviveEvent->Dispatch();
+>>>>>>> upstream-releases
   }
 }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::RemoveMixerCallback() {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+void
+AudioCallbackDriver::RemoveMixerCallback()
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+void AudioCallbackDriver::RemoveMixerCallback() {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
 
   if (mAddedMixer) {
     GraphImpl()->mMixer.RemoveCallback(this);
@@ -729,8 +1029,18 @@ void AudioCallbackDriver::RemoveMixerCallback() {
   }
 }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::AddMixerCallback() {
   MOZ_ASSERT(OnThread());
+||||||| merged common ancestors
+void
+AudioCallbackDriver::AddMixerCallback()
+{
+  MOZ_ASSERT(OnThread());
+=======
+void AudioCallbackDriver::AddMixerCallback() {
+  MOZ_ASSERT(OnGraphThread());
+>>>>>>> upstream-releases
 
   if (!mAddedMixer) {
     mGraphImpl->mMixer.AddCallback(this);
@@ -762,25 +1072,60 @@ void AudioCallbackDriver::ResetDefaultDevice() {
 }
 #endif
 
+<<<<<<< HEAD
 /* static */ long AudioCallbackDriver::DataCallback_s(cubeb_stream* aStream,
                                                       void* aUser,
                                                       const void* aInputBuffer,
                                                       void* aOutputBuffer,
                                                       long aFrames) {
+||||||| merged common ancestors
+/* static */ long
+AudioCallbackDriver::DataCallback_s(cubeb_stream* aStream,
+                                    void* aUser,
+                                    const void* aInputBuffer,
+                                    void* aOutputBuffer,
+                                    long aFrames)
+{
+=======
+/* static */
+long AudioCallbackDriver::DataCallback_s(cubeb_stream* aStream, void* aUser,
+                                         const void* aInputBuffer,
+                                         void* aOutputBuffer, long aFrames) {
+>>>>>>> upstream-releases
   AudioCallbackDriver* driver = reinterpret_cast<AudioCallbackDriver*>(aUser);
   return driver->DataCallback(static_cast<const AudioDataValue*>(aInputBuffer),
                               static_cast<AudioDataValue*>(aOutputBuffer),
                               aFrames);
 }
 
+<<<<<<< HEAD
 /* static */ void AudioCallbackDriver::StateCallback_s(cubeb_stream* aStream,
                                                        void* aUser,
                                                        cubeb_state aState) {
+||||||| merged common ancestors
+/* static */ void
+AudioCallbackDriver::StateCallback_s(cubeb_stream* aStream, void * aUser,
+                                     cubeb_state aState)
+{
+=======
+/* static */
+void AudioCallbackDriver::StateCallback_s(cubeb_stream* aStream, void* aUser,
+                                          cubeb_state aState) {
+>>>>>>> upstream-releases
   AudioCallbackDriver* driver = reinterpret_cast<AudioCallbackDriver*>(aUser);
   driver->StateCallback(aState);
 }
 
+<<<<<<< HEAD
 /* static */ void AudioCallbackDriver::DeviceChangedCallback_s(void* aUser) {
+||||||| merged common ancestors
+/* static */ void
+AudioCallbackDriver::DeviceChangedCallback_s(void* aUser)
+{
+=======
+/* static */
+void AudioCallbackDriver::DeviceChangedCallback_s(void* aUser) {
+>>>>>>> upstream-releases
   AudioCallbackDriver* driver = reinterpret_cast<AudioCallbackDriver*>(aUser);
   driver->DeviceChangedCallback();
 }
@@ -868,8 +1213,6 @@ long AudioCallbackDriver::DataCallback(const AudioDataValue* aInputBuffer,
        (uint32_t)durationMS,
        (long)(nextStateComputedTime - stateComputedTime)));
 
-  mCurrentTimeStamp = TimeStamp::Now();
-
   if (stateComputedTime < mIterationEnd) {
     LOG(LogLevel::Error,
         ("%p: Media graph global underrun detected", GraphImpl()));
@@ -946,9 +1289,37 @@ long AudioCallbackDriver::DataCallback(const AudioDataValue* aInputBuffer,
   return aFrames;
 }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::StateCallback(cubeb_state aState) {
   MOZ_ASSERT(!OnThread());
   LOG(LogLevel::Debug, ("AudioCallbackDriver State: %d", aState));
+||||||| merged common ancestors
+void
+AudioCallbackDriver::StateCallback(cubeb_state aState)
+{
+  MOZ_ASSERT(!OnThread());
+  LOG(LogLevel::Debug, ("AudioCallbackDriver State: %d", aState));
+=======
+static const char* StateToString(cubeb_state aState) {
+  switch (aState) {
+    case CUBEB_STATE_STARTED:
+      return "STARTED";
+    case CUBEB_STATE_STOPPED:
+      return "STOPPED";
+    case CUBEB_STATE_DRAINED:
+      return "DRAINED";
+    case CUBEB_STATE_ERROR:
+      return "ERROR";
+    default:
+      MOZ_CRASH("Unexpected state!");
+  }
+}
+
+void AudioCallbackDriver::StateCallback(cubeb_state aState) {
+  MOZ_ASSERT(!OnGraphThread());
+  LOG(LogLevel::Debug,
+      ("AudioCallbackDriver State: %s", StateToString(aState)));
+>>>>>>> upstream-releases
 
   // Clear the flag for the not running
   // states: stopped, drained, error.
@@ -966,11 +1337,28 @@ void AudioCallbackDriver::StateCallback(cubeb_state aState) {
   }
 }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::MixerCallback(AudioDataValue* aMixedBuffer,
                                         AudioSampleFormat aFormat,
                                         uint32_t aChannels, uint32_t aFrames,
                                         uint32_t aSampleRate) {
   MOZ_ASSERT(OnThread());
+||||||| merged common ancestors
+void
+AudioCallbackDriver::MixerCallback(AudioDataValue* aMixedBuffer,
+                                   AudioSampleFormat aFormat,
+                                   uint32_t aChannels,
+                                   uint32_t aFrames,
+                                   uint32_t aSampleRate)
+{
+  MOZ_ASSERT(OnThread());
+=======
+void AudioCallbackDriver::MixerCallback(AudioDataValue* aMixedBuffer,
+                                        AudioSampleFormat aFormat,
+                                        uint32_t aChannels, uint32_t aFrames,
+                                        uint32_t aSampleRate) {
+  MOZ_ASSERT(OnGraphThread());
+>>>>>>> upstream-releases
   uint32_t toWrite = mBuffer.Available();
 
   if (!mBuffer.Available()) {
@@ -1025,8 +1413,18 @@ void AudioCallbackDriver::PanOutputIfNeeded(bool aMicrophoneActive) {
 #endif
 }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::DeviceChangedCallback() {
   MOZ_ASSERT(!OnThread());
+||||||| merged common ancestors
+void
+AudioCallbackDriver::DeviceChangedCallback()
+{
+  MOZ_ASSERT(!OnThread());
+=======
+void AudioCallbackDriver::DeviceChangedCallback() {
+  MOZ_ASSERT(!OnGraphThread());
+>>>>>>> upstream-releases
   // Tell the audio engine the device has changed, it might want to reset some
   // state.
   MonitorAutoLock mon(mGraphImpl->GetMonitor());
@@ -1036,8 +1434,18 @@ void AudioCallbackDriver::DeviceChangedCallback() {
 #endif
 }
 
+<<<<<<< HEAD
 uint32_t AudioCallbackDriver::IterationDuration() {
   MOZ_ASSERT(OnThread());
+||||||| merged common ancestors
+uint32_t
+AudioCallbackDriver::IterationDuration()
+{
+  MOZ_ASSERT(OnThread());
+=======
+uint32_t AudioCallbackDriver::IterationDuration() {
+  MOZ_ASSERT(OnGraphThread());
+>>>>>>> upstream-releases
   // The real fix would be to have an API in cubeb to give us the number. Short
   // of that, we approximate it here. bug 1019507
   return mIterationDurationMS;
@@ -1045,13 +1453,40 @@ uint32_t AudioCallbackDriver::IterationDuration() {
 
 bool AudioCallbackDriver::IsStarted() { return mStarted; }
 
+<<<<<<< HEAD
 void AudioCallbackDriver::EnqueueStreamAndPromiseForOperation(
     MediaStream* aStream, void* aPromise,
     dom::AudioContextOperation aOperation) {
   MOZ_ASSERT(OnThread() || !ThreadRunning());
+||||||| merged common ancestors
+void
+AudioCallbackDriver::EnqueueStreamAndPromiseForOperation(MediaStream* aStream,
+                                          void* aPromise,
+                                          dom::AudioContextOperation aOperation)
+{
+  MOZ_ASSERT(OnThread() || !ThreadRunning());
+=======
+void AudioCallbackDriver::EnqueueStreamAndPromiseForOperation(
+    MediaStream* aStream, void* aPromise, dom::AudioContextOperation aOperation,
+    dom::AudioContextOperationFlags aFlags) {
+  MOZ_ASSERT(OnGraphThread() || !ThreadRunning());
+>>>>>>> upstream-releases
   MonitorAutoLock mon(mGraphImpl->GetMonitor());
+<<<<<<< HEAD
   mPromisesForOperation.AppendElement(
       StreamAndPromiseForOperation(aStream, aPromise, aOperation));
+||||||| merged common ancestors
+  mPromisesForOperation.AppendElement(StreamAndPromiseForOperation(aStream,
+                                                                   aPromise,
+                                                                   aOperation));
+=======
+  MOZ_ASSERT((aFlags | dom::AudioContextOperationFlags::SendStateChange) ||
+             !aPromise);
+  if (aFlags == dom::AudioContextOperationFlags::SendStateChange) {
+    mPromisesForOperation.AppendElement(
+        StreamAndPromiseForOperation(aStream, aPromise, aOperation, aFlags));
+  }
+>>>>>>> upstream-releases
 }
 
 void AudioCallbackDriver::CompleteAudioContextOperations(
@@ -1072,8 +1507,19 @@ void AudioCallbackDriver::CompleteAudioContextOperations(
          s.mOperation == dom::AudioContextOperation::Resume) ||
         (aOperation == AsyncCubebOperation::SHUTDOWN &&
          s.mOperation != dom::AudioContextOperation::Resume)) {
+<<<<<<< HEAD
       GraphImpl()->AudioContextOperationCompleted(s.mStream, s.mPromise,
                                                   s.mOperation);
+||||||| merged common ancestors
+
+      GraphImpl()->AudioContextOperationCompleted(s.mStream,
+                                                  s.mPromise,
+                                                  s.mOperation);
+=======
+      MOZ_ASSERT(s.mFlags == dom::AudioContextOperationFlags::SendStateChange);
+      GraphImpl()->AudioContextOperationCompleted(s.mStream, s.mPromise,
+                                                  s.mOperation, s.mFlags);
+>>>>>>> upstream-releases
       array.RemoveElementAt(i);
       i--;
     }

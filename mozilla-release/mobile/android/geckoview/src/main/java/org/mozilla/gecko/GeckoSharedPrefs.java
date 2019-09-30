@@ -95,6 +95,7 @@ public final class GeckoSharedPrefs {
         DISABLE_MIGRATIONS
     }
 
+<<<<<<< HEAD
     /* Cliqz Start */
     public static SharedPreferences forABTests(Context context) {
         return context.getSharedPreferences(ABTEST_PREFS_NAME, 0);
@@ -102,6 +103,11 @@ public final class GeckoSharedPrefs {
     /* Cliqz End */
 
     public static SharedPreferences forApp(Context context) {
+||||||| merged common ancestors
+    public static SharedPreferences forApp(Context context) {
+=======
+    public static SharedPreferences forApp(final Context context) {
+>>>>>>> upstream-releases
         return forApp(context, EnumSet.noneOf(Flags.class));
     }
 
@@ -109,7 +115,7 @@ public final class GeckoSharedPrefs {
      * Returns an app-scoped SharedPreferences instance. You can disable
      * migrations by using the DISABLE_MIGRATIONS flag.
      */
-    public static SharedPreferences forApp(Context context, EnumSet<Flags> flags) {
+    public static SharedPreferences forApp(final Context context, final EnumSet<Flags> flags) {
         if (flags != null && !flags.contains(Flags.DISABLE_MIGRATIONS)) {
             migrateIfNecessary(context);
         }
@@ -117,7 +123,7 @@ public final class GeckoSharedPrefs {
         return context.getSharedPreferences(APP_PREFS_NAME, 0);
     }
 
-    public static SharedPreferences forCrashReporter(Context context) {
+    public static SharedPreferences forCrashReporter(final Context context) {
         return forCrashReporter(context, EnumSet.noneOf(Flags.class));
     }
 
@@ -125,7 +131,8 @@ public final class GeckoSharedPrefs {
      * Returns a crash-reporter-scoped SharedPreferences instance. You can disable
      * migrations by using the DISABLE_MIGRATIONS flag.
      */
-    public static SharedPreferences forCrashReporter(Context context, EnumSet<Flags> flags) {
+    public static SharedPreferences forCrashReporter(final Context context,
+                                                     final EnumSet<Flags> flags) {
         if (flags != null && !flags.contains(Flags.DISABLE_MIGRATIONS)) {
             migrateIfNecessary(context);
         }
@@ -133,7 +140,7 @@ public final class GeckoSharedPrefs {
         return context.getSharedPreferences(CRASH_PREFS_NAME, 0);
     }
 
-    public static SharedPreferences forProfile(Context context) {
+    public static SharedPreferences forProfile(final Context context) {
         return forProfile(context, EnumSet.noneOf(Flags.class));
     }
 
@@ -142,7 +149,7 @@ public final class GeckoSharedPrefs {
      * in the app. You can disable migrations by using the DISABLE_MIGRATIONS
      * flag.
      */
-    public static SharedPreferences forProfile(Context context, EnumSet<Flags> flags) {
+    public static SharedPreferences forProfile(final Context context, final EnumSet<Flags> flags) {
         String profileName = GeckoProfile.get(context).getName();
         if (profileName == null) {
             throw new IllegalStateException("Could not get current profile name");
@@ -151,7 +158,8 @@ public final class GeckoSharedPrefs {
         return forProfileName(context, profileName, flags);
     }
 
-    public static SharedPreferences forProfileName(Context context, String profileName) {
+    public static SharedPreferences forProfileName(final Context context,
+                                                   final String profileName) {
         return forProfileName(context, profileName, EnumSet.noneOf(Flags.class));
     }
 
@@ -159,8 +167,8 @@ public final class GeckoSharedPrefs {
      * Returns an SharedPreferences instance scoped to the given profile name.
      * You can disable migrations by using the DISABLE_MIGRATION flag.
      */
-    public static SharedPreferences forProfileName(Context context, String profileName,
-            EnumSet<Flags> flags) {
+    public static SharedPreferences forProfileName(final Context context, final String profileName,
+            final EnumSet<Flags> flags) {
         if (flags != null && !flags.contains(Flags.DISABLE_MIGRATIONS)) {
             migrateIfNecessary(context);
         }
@@ -172,7 +180,7 @@ public final class GeckoSharedPrefs {
     /**
      * Returns the current version of the prefs.
      */
-    public static int getVersion(Context context) {
+    public static int getVersion(final Context context) {
         return forApp(context, disableMigrations).getInt(PREFS_VERSION_KEY, 0);
     }
 
@@ -209,7 +217,7 @@ public final class GeckoSharedPrefs {
         migrationDone = true;
     }
 
-    private static void performMigration(Context context) {
+    private static void performMigration(final Context context) {
         final SharedPreferences appPrefs = forApp(context, disableMigrations);
 
         final int currentVersion = appPrefs.getInt(PREFS_VERSION_KEY, 0);
@@ -289,8 +297,10 @@ public final class GeckoSharedPrefs {
      * to either app or profile scopes. The profile-scoped keys are defined
      * in given profileKeys list, all other keys are moved to the app scope.
      */
-    private static Editor migrateFromPreferenceManager(Context context, Editor appEditor,
-            Editor profileEditor, List<String> profileKeys) {
+    private static Editor migrateFromPreferenceManager(final Context context,
+                                                       final Editor appEditor,
+                                                       final Editor profileEditor,
+                                                       final List<String> profileKeys) {
         Log.d(LOGTAG, "Migrating from PreferenceManager");
 
         final SharedPreferences pmPrefs =
@@ -318,8 +328,10 @@ public final class GeckoSharedPrefs {
      * Moves the crash reporter's preferences from the app-wide prefs
      * into its own shared prefs to avoid cross-process pref accesses.
      */
-    private static void migrateCrashReporterSettings(SharedPreferences appPrefs, Editor appEditor,
-                                                    Editor crashEditor, List<String> profileKeys) {
+    private static void migrateCrashReporterSettings(final SharedPreferences appPrefs,
+                                                     final Editor appEditor,
+                                                     final Editor crashEditor,
+                                                     final List<String> profileKeys) {
         Log.d(LOGTAG, "Migrating crash reporter settings");
 
         for (Map.Entry<String, ?> entry : appPrefs.getAll().entrySet()) {
@@ -332,7 +344,7 @@ public final class GeckoSharedPrefs {
         }
     }
 
-    private static void putEntry(Editor to, String key, Object value) {
+    private static void putEntry(final Editor to, final String key, final Object value) {
         Log.d(LOGTAG, "Migrating key = " + key + " with value = " + value);
 
         if (value instanceof String) {

@@ -9,6 +9,7 @@
 #include "nsCExternalHandlerService.h"
 #include "nsExternalHelperAppService.h"
 
+<<<<<<< HEAD
 class nsOSHelperAppService : public nsExternalHelperAppService {
  public:
   nsOSHelperAppService();
@@ -28,6 +29,55 @@ class nsOSHelperAppService : public nsExternalHelperAppService {
       const nsAString& aName, const nsAString& aDescription,
       const nsAString& aPackageName, const nsAString& aClassName,
       const nsACString& aMimeType, const nsAString& aAction = EmptyString());
+||||||| merged common ancestors
+class nsOSHelperAppService : public nsExternalHelperAppService
+{
+public:
+    nsOSHelperAppService();
+    virtual ~nsOSHelperAppService();
+
+    virtual already_AddRefed<nsIMIMEInfo>
+    GetMIMEInfoFromOS(const nsACString& aMIMEType,
+                      const nsACString& aFileExt,
+                      bool* aFound);
+
+    virtual MOZ_MUST_USE nsresult
+    OSProtocolHandlerExists(const char* aScheme,
+                            bool* aExists);
+
+    NS_IMETHOD GetProtocolHandlerInfoFromOS(const nsACString &aScheme,
+                                            bool *found,
+                                            nsIHandlerInfo **_retval);
+
+    static nsIHandlerApp*
+    CreateAndroidHandlerApp(const nsAString& aName,
+                            const nsAString& aDescription,
+                            const nsAString& aPackageName,
+                            const nsAString& aClassName, 
+                            const nsACString& aMimeType,
+                            const nsAString& aAction = EmptyString());
+=======
+class nsOSHelperAppService : public nsExternalHelperAppService {
+ public:
+  nsOSHelperAppService();
+  virtual ~nsOSHelperAppService();
+
+  nsresult GetMIMEInfoFromOS(const nsACString& aMIMEType,
+                             const nsACString& aFileExt, bool* aFound,
+                             nsIMIMEInfo** aMIMEInfo) override;
+
+  MOZ_MUST_USE nsresult OSProtocolHandlerExists(const char* aScheme,
+                                                bool* aExists) override;
+
+  NS_IMETHOD GetProtocolHandlerInfoFromOS(const nsACString& aScheme,
+                                          bool* found,
+                                          nsIHandlerInfo** _retval) override;
+
+  static nsIHandlerApp* CreateAndroidHandlerApp(
+      const nsAString& aName, const nsAString& aDescription,
+      const nsAString& aPackageName, const nsAString& aClassName,
+      const nsACString& aMimeType, const nsAString& aAction = EmptyString());
+>>>>>>> upstream-releases
 };
 
 #endif /* nsOSHelperAppService_h */

@@ -15,19 +15,43 @@
 #include "mozilla/WrappingOperations.h"
 
 #if defined(XP_UNIX)
+<<<<<<< HEAD
 #include <errno.h>
+||||||| merged common ancestors
+# include <errno.h>
+=======
+#  include <errno.h>
+>>>>>>> upstream-releases
 #endif
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include <float.h>
+||||||| merged common ancestors
+# include <float.h>
+=======
+#  include <float.h>
+>>>>>>> upstream-releases
 #endif
 #if defined(SOLARIS)
+<<<<<<< HEAD
 #include <ieeefp.h>
+||||||| merged common ancestors
+# include <ieeefp.h>
+=======
+#  include <ieeefp.h>
+>>>>>>> upstream-releases
 #endif
 #include <limits>
 #include <math.h>
 #include <stdint.h>
 #ifdef HAVE_SSIZE_T
+<<<<<<< HEAD
 #include <sys/types.h>
+||||||| merged common ancestors
+# include <sys/types.h>
+=======
+#  include <sys/types.h>
+>>>>>>> upstream-releases
 #endif
 #include <type_traits>
 
@@ -39,7 +63,10 @@
 #include "gc/FreeOp.h"
 #include "gc/Policy.h"
 #include "jit/AtomicOperations.h"
+#include "js/ArrayBuffer.h"  // JS::{IsArrayBufferObject,GetArrayBufferData,GetArrayBuffer{ByteLength,Data}}
 #include "js/CharacterEncoding.h"
+#include "js/PropertySpec.h"
+#include "js/SharedArrayBuffer.h"  // JS::{GetSharedArrayBuffer{ByteLength,Data},IsSharedArrayBufferObject}
 #include "js/StableStringChars.h"
 #include "js/UniquePtr.h"
 #include "js/Utility.h"
@@ -1911,6 +1938,7 @@ static bool DefineABIConstant(JSContext* cx, HandleObject ctypesObj,
 
 // Set up a single type constructor for
 // ctypes.{Pointer,Array,Struct,Function}Type.
+<<<<<<< HEAD
 static bool InitTypeConstructor(
     JSContext* cx, HandleObject parent, HandleObject CTypeProto,
     HandleObject CDataProto, const JSFunctionSpec spec,
@@ -1919,6 +1947,32 @@ static bool InitTypeConstructor(
     MutableHandleObject typeProto, MutableHandleObject dataProto) {
   JSFunction* fun = js::DefineFunctionWithReserved(
       cx, parent, spec.name, spec.call.op, spec.nargs, spec.flags);
+||||||| merged common ancestors
+static bool
+InitTypeConstructor(JSContext* cx,
+                    HandleObject parent,
+                    HandleObject CTypeProto,
+                    HandleObject CDataProto,
+                    const JSFunctionSpec spec,
+                    const JSFunctionSpec* fns,
+                    const JSPropertySpec* props,
+                    const JSFunctionSpec* instanceFns,
+                    const JSPropertySpec* instanceProps,
+                    MutableHandleObject typeProto,
+                    MutableHandleObject dataProto)
+{
+  JSFunction* fun = js::DefineFunctionWithReserved(cx, parent, spec.name, spec.call.op,
+                      spec.nargs, spec.flags);
+=======
+static bool InitTypeConstructor(
+    JSContext* cx, HandleObject parent, HandleObject CTypeProto,
+    HandleObject CDataProto, const JSFunctionSpec spec,
+    const JSFunctionSpec* fns, const JSPropertySpec* props,
+    const JSFunctionSpec* instanceFns, const JSPropertySpec* instanceProps,
+    MutableHandleObject typeProto, MutableHandleObject dataProto) {
+  JSFunction* fun = js::DefineFunctionWithReserved(
+      cx, parent, spec.name.string(), spec.call.op, spec.nargs, spec.flags);
+>>>>>>> upstream-releases
   if (!fun) {
     return false;
   }
@@ -2026,7 +2080,15 @@ static JSObject* InitInt64Class(JSContext* cx, HandleObject parent,
   return prototype;
 }
 
+<<<<<<< HEAD
 static void AttachProtos(JSObject* proto, const AutoObjectVector& protos) {
+||||||| merged common ancestors
+static void
+AttachProtos(JSObject* proto, const AutoObjectVector& protos)
+{
+=======
+static void AttachProtos(JSObject* proto, HandleObjectVector protos) {
+>>>>>>> upstream-releases
   // For a given 'proto' of [[Class]] "CTypeProto", attach each of the 'protos'
   // to the appropriate CTypeProtoSlot. (SLOT_CTYPES is the last slot
   // of [[Class]] "CTypeProto" that we fill in this automated manner.)
@@ -2099,7 +2161,7 @@ static bool InitTypeClasses(JSContext* cx, HandleObject ctypesObj) {
   //     * [[Class]] "CDataProto"
   //     * __proto__ === 'p', the prototype object from above
   //     * 'constructor' property === 't'
-  AutoObjectVector protos(cx);
+  RootedObjectVector protos(cx);
   if (!protos.resize(CTYPEPROTO_SLOTS)) {
     return false;
   }
@@ -3224,6 +3286,7 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
   TypeCode targetCode = CType::GetTypeCode(targetType);
 
   switch (targetCode) {
+<<<<<<< HEAD
     case TYPE_bool: {
       // Do not implicitly lose bits, but allow the values 0, 1, and -0.
       // Programs can convert explicitly, if needed, using `Boolean(v)` or
@@ -3257,6 +3320,75 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
     break;                                                                   \
   }
       CTYPES_FOR_EACH_CHAR16_TYPE(CHAR16_CASE)
+||||||| merged common ancestors
+  case TYPE_bool: {
+    // Do not implicitly lose bits, but allow the values 0, 1, and -0.
+    // Programs can convert explicitly, if needed, using `Boolean(v)` or `!!v`.
+    bool result;
+    if (!jsvalToBool(cx, val, &result)) {
+      return ConvError(cx, "boolean", val, convType, funObj, argIndex,
+                       arrObj, arrIndex);
+    }
+    *static_cast<bool*>(buffer) = result;
+    break;
+  }
+#define CHAR16_CASE(name, type, ffiType)                                       \
+  case TYPE_##name: {                                                          \
+    /* Convert from a 1-character string, regardless of encoding, */           \
+    /* or from an integer, provided the result fits in 'type'. */              \
+    type result;                                                               \
+    if (val.isString()) {                                                      \
+      JSString* str = val.toString();                                          \
+      if (str->length() != 1)                                                  \
+        return ConvError(cx, #name, val, convType, funObj, argIndex,           \
+                         arrObj, arrIndex);                                    \
+      JSLinearString* linear = str->ensureLinear(cx);                          \
+      if (!linear)                                                             \
+        return false;                                                          \
+      result = linear->latin1OrTwoByteChar(0);                                 \
+    } else if (!jsvalToInteger(cx, val, &result)) {                            \
+      return ConvError(cx, #name, val, convType, funObj, argIndex,             \
+                       arrObj, arrIndex);                                      \
+    }                                                                          \
+    *static_cast<type*>(buffer) = result;                                      \
+    break;                                                                     \
+  }
+  CTYPES_FOR_EACH_CHAR16_TYPE(CHAR16_CASE)
+=======
+    case TYPE_bool: {
+      // Do not implicitly lose bits, but allow the values 0, 1, and -0.
+      // Programs can convert explicitly, if needed, using `Boolean(v)` or
+      // `!!v`.
+      bool result;
+      if (!jsvalToBool(cx, val, &result)) {
+        return ConvError(cx, "boolean", val, convType, funObj, argIndex, arrObj,
+                         arrIndex);
+      }
+      *static_cast<bool*>(buffer) = result;
+      break;
+    }
+#define CHAR16_CASE(name, type, ffiType)                                     \
+  case TYPE_##name: {                                                        \
+    /* Convert from a 1-character string, regardless of encoding, */         \
+    /* or from an integer, provided the result fits in 'type'. */            \
+    type result = 0;                                                         \
+    if (val.isString()) {                                                    \
+      JSString* str = val.toString();                                        \
+      if (str->length() != 1)                                                \
+        return ConvError(cx, #name, val, convType, funObj, argIndex, arrObj, \
+                         arrIndex);                                          \
+      JSLinearString* linear = str->ensureLinear(cx);                        \
+      if (!linear) return false;                                             \
+      result = linear->latin1OrTwoByteChar(0);                               \
+    } else if (!jsvalToInteger(cx, val, &result)) {                          \
+      return ConvError(cx, #name, val, convType, funObj, argIndex, arrObj,   \
+                       arrIndex);                                            \
+    }                                                                        \
+    *static_cast<type*>(buffer) = result;                                    \
+    break;                                                                   \
+  }
+      CTYPES_FOR_EACH_CHAR16_TYPE(CHAR16_CASE)
+>>>>>>> upstream-releases
 #undef CHAR16_CASE
 #define INTEGRAL_CASE(name, type, ffiType)                                 \
   case TYPE_##name: {                                                      \
@@ -3382,6 +3514,7 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
                              arrObj, arrIndex);
         }
         break;
+<<<<<<< HEAD
       } else if (val.isObject() && JS_IsArrayBufferObject(valObj)) {
         // Convert ArrayBuffer to pointer without any copy. This is only valid
         // when converting an argument to a function call, as it is possible for
@@ -3393,8 +3526,40 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
         }
         void* ptr;
         {
+||||||| merged common ancestors
+      }
+      default:
+        return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                         arrObj, arrIndex);
+      }
+      break;
+    } else if (val.isObject() && JS_IsArrayBufferObject(valObj)) {
+      // Convert ArrayBuffer to pointer without any copy. This is only valid
+      // when converting an argument to a function call, as it is possible for
+      // the pointer to be invalidated by anything that runs JS code. (It is
+      // invalid to invoke JS code from a ctypes function call.)
+      if (convType != ConversionType::Argument) {
+        return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                         arrObj, arrIndex);
+      }
+      void* ptr;
+      {
+=======
+      } else if (val.isObject() && JS::IsArrayBufferObject(valObj)) {
+        // Convert ArrayBuffer to pointer without any copy. This is only valid
+        // when converting an argument to a function call, as it is possible for
+        // the pointer to be invalidated by anything that runs JS code. (It is
+        // invalid to invoke JS code from a ctypes function call.)
+        if (convType != ConversionType::Argument) {
+          return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                           arrObj, arrIndex);
+        }
+        void* ptr;
+        {
+>>>>>>> upstream-releases
           JS::AutoCheckCannotGC nogc;
           bool isShared;
+<<<<<<< HEAD
           ptr = JS_GetArrayBufferData(valObj, &isShared, nogc);
           MOZ_ASSERT(!isShared);  // Because ArrayBuffer
         }
@@ -3408,6 +3573,45 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
         // CTypes has not yet opted in to allowing shared memory pointers
         // to escape.  Exporting a pointer to the shared buffer without
         // indicating sharedness would expose client code to races.
+||||||| merged common ancestors
+          ptr = JS_GetArrayBufferData(valObj, &isShared, nogc);
+          MOZ_ASSERT(!isShared); // Because ArrayBuffer
+      }
+      if (!ptr) {
+        return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                         arrObj, arrIndex);
+      }
+      *static_cast<void**>(buffer) = ptr;
+      break;
+    } else if (val.isObject() && JS_IsSharedArrayBufferObject(valObj)) {
+      // CTypes has not yet opted in to allowing shared memory pointers
+      // to escape.  Exporting a pointer to the shared buffer without
+      // indicating sharedness would expose client code to races.
+      return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                       arrObj, arrIndex);
+    } else if (val.isObject() && JS_IsArrayBufferViewObject(valObj)) {
+      // Same as ArrayBuffer, above, though note that this will take the
+      // offset of the view into account.
+      if(!CanConvertTypedArrayItemTo(baseType, valObj, cx)) {
+        return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                         arrObj, arrIndex);
+      }
+      if (convType != ConversionType::Argument) {
+=======
+          ptr = JS::GetArrayBufferData(valObj, &isShared, nogc);
+          MOZ_ASSERT(!isShared);  // Because ArrayBuffer
+        }
+        if (!ptr) {
+          return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                           arrObj, arrIndex);
+        }
+        *static_cast<void**>(buffer) = ptr;
+        break;
+      } else if (val.isObject() && JS::IsSharedArrayBufferObject(valObj)) {
+        // CTypes has not yet opted in to allowing shared memory pointers
+        // to escape.  Exporting a pointer to the shared buffer without
+        // indicating sharedness would expose client code to races.
+>>>>>>> upstream-releases
         return ConvError(cx, targetType, val, convType, funObj, argIndex,
                          arrObj, arrIndex);
       } else if (val.isObject() && JS_IsArrayBufferViewObject(valObj)) {
@@ -3540,6 +3744,7 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
             return false;
           }
 
+<<<<<<< HEAD
           RootedValue item(cx);
           for (uint32_t i = 0; i < sourceLength; ++i) {
             if (!JS_GetElement(cx, valObj, i, &item)) {
@@ -3607,6 +3812,105 @@ static bool ImplicitConvert(JSContext* cx, HandleValue val,
         } else {
           // Don't implicitly convert to string. Users can implicitly convert
           // with `String(x)` or `""+x`.
+||||||| merged common ancestors
+        memcpy(buffer, intermediate.get(), arraySize);
+      } else if (cls == ESClass::ArrayBuffer || cls == ESClass::SharedArrayBuffer) {
+        // Check that array is consistent with type, then
+        // copy the array.
+        const bool bufferShared = cls == ESClass::SharedArrayBuffer;
+        uint32_t sourceLength = bufferShared ? JS_GetSharedArrayBufferByteLength(valObj)
+            : JS_GetArrayBufferByteLength(valObj);
+        size_t elementSize = CType::GetSize(baseType);
+        size_t arraySize = elementSize * targetLength;
+        if (arraySize != size_t(sourceLength)) {
+          MOZ_ASSERT(!funObj);
+          return ArrayLengthMismatch(cx, arraySize, targetType,
+                                     size_t(sourceLength), val, convType);
+        }
+        SharedMem<void*> target = SharedMem<void*>::unshared(buffer);
+        JS::AutoCheckCannotGC nogc;
+        bool isShared;
+        SharedMem<void*> src =
+            (bufferShared ?
+             SharedMem<void*>::shared(JS_GetSharedArrayBufferData(valObj, &isShared, nogc)) :
+             SharedMem<void*>::unshared(JS_GetArrayBufferData(valObj, &isShared, nogc)));
+        MOZ_ASSERT(isShared == bufferShared);
+        jit::AtomicOperations::memcpySafeWhenRacy(target, src, sourceLength);
+        break;
+      } else if (JS_IsTypedArrayObject(valObj)) {
+        // Check that array is consistent with type, then
+        // copy the array.  It is OK to copy from shared to unshared
+        // or vice versa.
+        if (!CanConvertTypedArrayItemTo(baseType, valObj, cx)) {
+=======
+          RootedValue item(cx);
+          for (uint32_t i = 0; i < sourceLength; ++i) {
+            if (!JS_GetElement(cx, valObj, i, &item)) {
+              return false;
+            }
+
+            char* data = intermediate.get() + elementSize * i;
+            if (!ImplicitConvert(cx, item, baseType, data, convType, nullptr,
+                                 funObj, argIndex, targetType, i))
+              return false;
+          }
+
+          memcpy(buffer, intermediate.get(), arraySize);
+        } else if (cls == ESClass::ArrayBuffer ||
+                   cls == ESClass::SharedArrayBuffer) {
+          // Check that array is consistent with type, then
+          // copy the array.
+          const bool bufferShared = cls == ESClass::SharedArrayBuffer;
+          uint32_t sourceLength =
+              bufferShared ? JS::GetSharedArrayBufferByteLength(valObj)
+                           : JS::GetArrayBufferByteLength(valObj);
+          size_t elementSize = CType::GetSize(baseType);
+          size_t arraySize = elementSize * targetLength;
+          if (arraySize != size_t(sourceLength)) {
+            MOZ_ASSERT(!funObj);
+            return ArrayLengthMismatch(cx, arraySize, targetType,
+                                       size_t(sourceLength), val, convType);
+          }
+          SharedMem<void*> target = SharedMem<void*>::unshared(buffer);
+          JS::AutoCheckCannotGC nogc;
+          bool isShared;
+          SharedMem<void*> src =
+              (bufferShared
+                   ? SharedMem<void*>::shared(
+                         JS::GetSharedArrayBufferData(valObj, &isShared, nogc))
+                   : SharedMem<void*>::unshared(
+                         JS::GetArrayBufferData(valObj, &isShared, nogc)));
+          MOZ_ASSERT(isShared == bufferShared);
+          jit::AtomicOperations::memcpySafeWhenRacy(target, src, sourceLength);
+          break;
+        } else if (JS_IsTypedArrayObject(valObj)) {
+          // Check that array is consistent with type, then
+          // copy the array.  It is OK to copy from shared to unshared
+          // or vice versa.
+          if (!CanConvertTypedArrayItemTo(baseType, valObj, cx)) {
+            return ConvError(cx, targetType, val, convType, funObj, argIndex,
+                             arrObj, arrIndex);
+          }
+
+          uint32_t sourceLength = JS_GetTypedArrayByteLength(valObj);
+          size_t elementSize = CType::GetSize(baseType);
+          size_t arraySize = elementSize * targetLength;
+          if (arraySize != size_t(sourceLength)) {
+            MOZ_ASSERT(!funObj);
+            return ArrayLengthMismatch(cx, arraySize, targetType,
+                                       size_t(sourceLength), val, convType);
+          }
+          SharedMem<void*> target = SharedMem<void*>::unshared(buffer);
+          JS::AutoCheckCannotGC nogc;
+          bool isShared;
+          SharedMem<void*> src = SharedMem<void*>::shared(
+              JS_GetArrayBufferViewData(valObj, &isShared, nogc));
+          jit::AtomicOperations::memcpySafeWhenRacy(target, src, sourceLength);
+          break;
+        } else {
+          // Don't implicitly convert to string. Users can implicitly convert
+          // with `String(x)` or `""+x`.
+>>>>>>> upstream-releases
           return ConvError(cx, targetType, val, convType, funObj, argIndex,
                            arrObj, arrIndex);
         }
@@ -3842,6 +4146,7 @@ static JSString* BuildTypeName(JSContext* cx, JSObject* typeObj_) {
         }
         AppendString(cx, result, ")");
 
+<<<<<<< HEAD
         // Set 'typeObj' to the return type, and let the loop process it.
         // 'prevGrouping' doesn't matter here, because functions cannot return
         // arrays -- thus the parenthetical rules don't get tickled.
@@ -3851,6 +4156,42 @@ static JSString* BuildTypeName(JSContext* cx, JSObject* typeObj_) {
       default:
         // Either a basic or struct type. Use the type's name as the base type.
         break;
+||||||| merged common ancestors
+      // Argument list goes on the right.
+      AppendString(cx, result, "(");
+      for (size_t i = 0; i < fninfo->mArgTypes.length(); ++i) {
+        RootedObject argType(cx, fninfo->mArgTypes[i]);
+        JSString* argName = CType::GetName(cx, argType);
+        AppendString(cx, result, argName);
+        if (i != fninfo->mArgTypes.length() - 1 ||
+            fninfo->mIsVariadic)
+          AppendString(cx, result, ", ");
+      }
+      if (fninfo->mIsVariadic) {
+        AppendString(cx, result, "...");
+      }
+      AppendString(cx, result, ")");
+
+      // Set 'typeObj' to the return type, and let the loop process it.
+      // 'prevGrouping' doesn't matter here, because functions cannot return
+      // arrays -- thus the parenthetical rules don't get tickled.
+      typeObj = fninfo->mReturnType;
+      continue;
+    }
+    default:
+      // Either a basic or struct type. Use the type's name as the base type.
+      break;
+=======
+        // Set 'typeObj' to the return type, and let the loop process it.
+        // 'prevGrouping' doesn't matter here, because functions cannot return
+        // arrays -- thus the parenthetical rules don't get tickled.
+        typeObj = fninfo->mReturnType;
+        continue;
+      }
+      default:
+        // Either a basic or struct type. Use the type's name as the base type.
+        break;
+>>>>>>> upstream-releases
     }
     break;
   }
@@ -3902,10 +4243,33 @@ static void BuildTypeSource(JSContext* cx, JSObject* typeObj_, bool makeShort,
         break;
       }
 
+<<<<<<< HEAD
       // Recursively build the source string, and append '.ptr'.
       BuildTypeSource(cx, baseType, makeShort, result);
       AppendString(cx, result, ".ptr");
       break;
+||||||| merged common ancestors
+    switch (GetABICode(fninfo->mABI)) {
+    case ABI_DEFAULT:
+      AppendString(cx, result, "ctypes.default_abi, ");
+      break;
+    case ABI_STDCALL:
+      AppendString(cx, result, "ctypes.stdcall_abi, ");
+      break;
+    case ABI_THISCALL:
+      AppendString(cx, result, "ctypes.thiscall_abi, ");
+      break;
+    case ABI_WINAPI:
+      AppendString(cx, result, "ctypes.winapi_abi, ");
+      break;
+    case INVALID_ABI:
+      MOZ_CRASH("invalid abi");
+=======
+      // Recursively build the source string, and append '.ptr'.
+      BuildTypeSource(cx, baseType, makeShort, result);
+      AppendString(cx, result, ".ptr");
+      break;
+>>>>>>> upstream-releases
     }
     case TYPE_function: {
       FunctionInfo* fninfo = FunctionType::GetFunctionInfo(typeObj);
@@ -3928,10 +4292,36 @@ static void BuildTypeSource(JSContext* cx, JSObject* typeObj_, bool makeShort,
         case INVALID_ABI:
           MOZ_CRASH("invalid abi");
       }
+<<<<<<< HEAD
 
       // Recursively build the source string describing the function return and
       // argument types.
       BuildTypeSource(cx, fninfo->mReturnType, true, result);
+||||||| merged common ancestors
+      AppendString(cx, result, "]");
+    }
+
+    AppendString(cx, result, ")");
+    break;
+  }
+  case TYPE_array: {
+    // Recursively build the source string, and append '.array(n)',
+    // where n is the array length, or the empty string if the array length
+    // is undefined.
+    JSObject* baseType = ArrayType::GetBaseType(typeObj);
+    BuildTypeSource(cx, baseType, makeShort, result);
+    AppendString(cx, result, ".array(");
+
+    size_t length;
+    if (ArrayType::GetSafeLength(typeObj, &length)) {
+      IntegerToString(length, 10, result);
+    }
+=======
+
+      // Recursively build the source string describing the function return and
+      // argument types.
+      BuildTypeSource(cx, fninfo->mReturnType, true, result);
+>>>>>>> upstream-releases
 
       if (fninfo->mArgTypes.length() > 0) {
         AppendString(cx, result, ", [");
@@ -4087,6 +4477,21 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
         return false;
       }
 
+<<<<<<< HEAD
+      // Escape characters, and quote as necessary.
+      RootedValue valStr(cx, StringValue(str));
+      JSString* src = JS_ValueToSource(cx, valStr);
+      if (!src) {
+        return false;
+      }
+||||||| merged common ancestors
+    // Escape characters, and quote as necessary.
+    RootedValue valStr(cx, StringValue(str));
+    JSString* src = JS_ValueToSource(cx, valStr);
+    if (!src) {
+      return false;
+    }
+=======
       // Escape characters, and quote as necessary.
       RootedValue valStr(cx, StringValue(str));
       JSString* src = JS_ValueToSource(cx, valStr);
@@ -4105,7 +4510,23 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
         BuildTypeSource(cx, typeObj, true, result);
         AppendString(cx, result, "(");
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      AppendString(cx, result, src);
+      break;
+||||||| merged common ancestors
+    AppendString(cx, result, src);
+    break;
+  }
+  case TYPE_pointer:
+  case TYPE_function: {
+    if (isImplicit) {
+      // The result must be able to ImplicitConvert successfully.
+      // Wrap in a type constructor, then serialize for ExplicitConvert.
+      BuildTypeSource(cx, typeObj, true, result);
+      AppendString(cx, result, "(");
+=======
       // Serialize the pointer value as a wrapped hexadecimal integer.
       uintptr_t ptr = *static_cast<uintptr_t*>(data);
       AppendString(cx, result, "ctypes.UInt64(\"0x");
@@ -4117,13 +4538,39 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
       }
 
       break;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
+    case TYPE_pointer:
+    case TYPE_function: {
+      if (isImplicit) {
+        // The result must be able to ImplicitConvert successfully.
+        // Wrap in a type constructor, then serialize for ExplicitConvert.
+        BuildTypeSource(cx, typeObj, true, result);
+        AppendString(cx, result, "(");
+      }
+||||||| merged common ancestors
+=======
     case TYPE_array: {
       // Serialize each element of the array recursively. Each element must
       // be able to ImplicitConvert successfully.
       RootedObject baseType(cx, ArrayType::GetBaseType(typeObj));
       AppendString(cx, result, "[");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // Serialize the pointer value as a wrapped hexadecimal integer.
+      uintptr_t ptr = *static_cast<uintptr_t*>(data);
+      AppendString(cx, result, "ctypes.UInt64(\"0x");
+      IntegerToString(ptr, 16, result);
+      AppendString(cx, result, "\")");
+||||||| merged common ancestors
+    // Serialize the pointer value as a wrapped hexadecimal integer.
+    uintptr_t ptr = *static_cast<uintptr_t*>(data);
+    AppendString(cx, result, "ctypes.UInt64(\"0x");
+    IntegerToString(ptr, 16, result);
+    AppendString(cx, result, "\")");
+=======
       size_t length = ArrayType::GetLength(typeObj);
       size_t elementSize = CType::GetSize(baseType);
       for (size_t i = 0; i < length; ++i) {
@@ -4131,7 +4578,31 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
         if (!BuildDataSource(cx, baseType, element, true, result)) {
           return false;
         }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      if (isImplicit) {
+        AppendString(cx, result, ")");
+||||||| merged common ancestors
+    if (isImplicit) {
+      AppendString(cx, result, ")");
+    }
+
+    break;
+  }
+  case TYPE_array: {
+    // Serialize each element of the array recursively. Each element must
+    // be able to ImplicitConvert successfully.
+    RootedObject baseType(cx, ArrayType::GetBaseType(typeObj));
+    AppendString(cx, result, "[");
+
+    size_t length = ArrayType::GetLength(typeObj);
+    size_t elementSize = CType::GetSize(baseType);
+    for (size_t i = 0; i < length; ++i) {
+      char* element = static_cast<char*>(data) + elementSize * i;
+      if (!BuildDataSource(cx, baseType, element, true, result)) {
+        return false;
+=======
         if (i + 1 < length) {
           AppendString(cx, result, ", ");
         }
@@ -4154,12 +4625,135 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
       Vector<const FieldInfoHash::Entry*, 64, SystemAllocPolicy> fieldsArray;
       if (!fieldsArray.resize(length)) {
         return false;
+>>>>>>> upstream-releases
       }
 
+<<<<<<< HEAD
+      break;
+    }
+    case TYPE_array: {
+      // Serialize each element of the array recursively. Each element must
+      // be able to ImplicitConvert successfully.
+      RootedObject baseType(cx, ArrayType::GetBaseType(typeObj));
+      AppendString(cx, result, "[");
+||||||| merged common ancestors
+      if (i + 1 < length) {
+        AppendString(cx, result, ", ");
+      }
+    }
+    AppendString(cx, result, "]");
+    break;
+  }
+  case TYPE_struct: {
+    if (isImplicit) {
+      // The result must be able to ImplicitConvert successfully.
+      // Serialize the data as an object with properties, rather than
+      // a sequence of arguments to the StructType constructor.
+      AppendString(cx, result, "{");
+    }
+=======
       for (FieldInfoHash::Range r = fields->all(); !r.empty(); r.popFront()) {
         fieldsArray[r.front().value().mIndex] = &r.front();
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      size_t length = ArrayType::GetLength(typeObj);
+      size_t elementSize = CType::GetSize(baseType);
+      for (size_t i = 0; i < length; ++i) {
+        char* element = static_cast<char*>(data) + elementSize * i;
+        if (!BuildDataSource(cx, baseType, element, true, result)) {
+          return false;
+        }
+||||||| merged common ancestors
+    // Serialize each field of the struct recursively. Each field must
+    // be able to ImplicitConvert successfully.
+    const FieldInfoHash* fields = StructType::GetFieldInfo(typeObj);
+    size_t length = fields->count();
+    Vector<const FieldInfoHash::Entry*, 64, SystemAllocPolicy> fieldsArray;
+    if (!fieldsArray.resize(length)) {
+      return false;
+    }
+=======
+      for (size_t i = 0; i < length; ++i) {
+        const FieldInfoHash::Entry* entry = fieldsArray[i];
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (i + 1 < length) {
+          AppendString(cx, result, ", ");
+        }
+      }
+      AppendString(cx, result, "]");
+      break;
+    }
+    case TYPE_struct: {
+      if (isImplicit) {
+        // The result must be able to ImplicitConvert successfully.
+        // Serialize the data as an object with properties, rather than
+        // a sequence of arguments to the StructType constructor.
+        AppendString(cx, result, "{");
+      }
+||||||| merged common ancestors
+    for (FieldInfoHash::Range r = fields->all(); !r.empty(); r.popFront()) {
+      fieldsArray[r.front().value().mIndex] = &r.front();
+    }
+
+    for (size_t i = 0; i < length; ++i) {
+      const FieldInfoHash::Entry* entry = fieldsArray[i];
+
+      if (isImplicit) {
+        AppendString(cx, result, "\"");
+        AppendString(cx, result, entry->key());
+        AppendString(cx, result, "\": ");
+      }
+=======
+        if (isImplicit) {
+          AppendString(cx, result, "\"");
+          AppendString(cx, result, entry->key());
+          AppendString(cx, result, "\": ");
+        }
+
+        char* fieldData = static_cast<char*>(data) + entry->value().mOffset;
+        RootedObject entryType(cx, entry->value().mType);
+        if (!BuildDataSource(cx, entryType, fieldData, true, result)) {
+          return false;
+        }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      // Serialize each field of the struct recursively. Each field must
+      // be able to ImplicitConvert successfully.
+      const FieldInfoHash* fields = StructType::GetFieldInfo(typeObj);
+      size_t length = fields->count();
+      Vector<const FieldInfoHash::Entry*, 64, SystemAllocPolicy> fieldsArray;
+      if (!fieldsArray.resize(length)) {
+        return false;
+||||||| merged common ancestors
+      char* fieldData = static_cast<char*>(data) + entry->value().mOffset;
+      RootedObject entryType(cx, entry->value().mType);
+      if (!BuildDataSource(cx, entryType, fieldData, true, result)) {
+        return false;
+=======
+        if (i + 1 != length) {
+          AppendString(cx, result, ", ");
+        }
+>>>>>>> upstream-releases
+      }
+
+<<<<<<< HEAD
+      for (FieldInfoHash::Range r = fields->all(); !r.empty(); r.popFront()) {
+        fieldsArray[r.front().value().mIndex] = &r.front();
+||||||| merged common ancestors
+      if (i + 1 != length) {
+        AppendString(cx, result, ", ");
+=======
+      if (isImplicit) {
+        AppendString(cx, result, "}");
+>>>>>>> upstream-releases
+      }
+
+<<<<<<< HEAD
       for (size_t i = 0; i < length; ++i) {
         const FieldInfoHash::Entry* entry = fieldsArray[i];
 
@@ -4188,6 +4782,21 @@ static MOZ_MUST_USE bool BuildDataSource(JSContext* cx, HandleObject typeObj,
     }
     case TYPE_void_t:
       MOZ_CRASH("invalid type");
+||||||| merged common ancestors
+    if (isImplicit) {
+      AppendString(cx, result, "}");
+    }
+
+    break;
+  }
+  case TYPE_void_t:
+    MOZ_CRASH("invalid type");
+=======
+      break;
+    }
+    case TYPE_void_t:
+      MOZ_CRASH("invalid type");
+>>>>>>> upstream-releases
   }
 
   return true;
@@ -4290,6 +4899,9 @@ JSObject* CType::Create(JSContext* cx, HandleObject typeProto,
   JS_SetReservedSlot(typeObj, SLOT_TYPECODE, Int32Value(type));
   if (ffiType) {
     JS_SetReservedSlot(typeObj, SLOT_FFITYPE, PrivateValue(ffiType));
+    if (type == TYPE_struct || type == TYPE_array) {
+      AddCellMemory(typeObj, sizeof(ffi_type), MemoryUse::CTypeFFIType);
+    }
   }
   if (name) {
     JS_SetReservedSlot(typeObj, SLOT_NAME, StringValue(name));
@@ -4355,7 +4967,24 @@ JSObject* CType::DefineBuiltin(JSContext* cx, HandleObject ctypesObj,
   return typeObj;
 }
 
+<<<<<<< HEAD
 void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
+||||||| merged common ancestors
+void
+CType::Finalize(JSFreeOp* fop, JSObject* obj)
+{
+=======
+static void FinalizeFFIType(JSFreeOp* fop, JSObject* obj, const Value& slot,
+                            size_t elementCount) {
+  ffi_type* ffiType = static_cast<ffi_type*>(slot.toPrivate());
+  size_t size = elementCount * sizeof(ffi_type*);
+  FreeOp::get(fop)->free_(obj, ffiType->elements, size,
+                          MemoryUse::CTypeFFITypeElements);
+  FreeOp::get(fop)->delete_(obj, ffiType, MemoryUse::CTypeFFIType);
+}
+
+void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
+>>>>>>> upstream-releases
   // Make sure our TypeCode slot is legit. If it's not, bail.
   Value slot = JS_GetReservedSlot(obj, SLOT_TYPECODE);
   if (slot.isUndefined()) {
@@ -4364,6 +4993,7 @@ void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
 
   // The contents of our slots depends on what kind of type we are.
   switch (TypeCode(slot.toInt32())) {
+<<<<<<< HEAD
     case TYPE_function: {
       // Free the FunctionInfo.
       slot = JS_GetReservedSlot(obj, SLOT_FNINFO);
@@ -4371,8 +5001,25 @@ void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
         FreeOp::get(fop)->delete_(static_cast<FunctionInfo*>(slot.toPrivate()));
       }
       break;
+||||||| merged common ancestors
+  case TYPE_function: {
+    // Free the FunctionInfo.
+    slot = JS_GetReservedSlot(obj, SLOT_FNINFO);
+    if (!slot.isUndefined()) {
+      FreeOp::get(fop)->delete_(static_cast<FunctionInfo*>(slot.toPrivate()));
+=======
+    case TYPE_function: {
+      // Free the FunctionInfo.
+      slot = JS_GetReservedSlot(obj, SLOT_FNINFO);
+      if (!slot.isUndefined()) {
+        auto fninfo = static_cast<FunctionInfo*>(slot.toPrivate());
+        FreeOp::get(fop)->delete_(obj, fninfo, MemoryUse::CTypeFunctionInfo);
+      }
+      break;
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     case TYPE_struct: {
       // Free the FieldInfoHash table.
       slot = JS_GetReservedSlot(obj, SLOT_FIELDINFO);
@@ -4381,9 +5028,42 @@ void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
         FreeOp::get(fop)->delete_(static_cast<FieldInfoHash*>(info));
       }
     }
+||||||| merged common ancestors
+  case TYPE_struct: {
+    // Free the FieldInfoHash table.
+    slot = JS_GetReservedSlot(obj, SLOT_FIELDINFO);
+    if (!slot.isUndefined()) {
+      void* info = slot.toPrivate();
+      FreeOp::get(fop)->delete_(static_cast<FieldInfoHash*>(info));
+    }
+  }
+=======
+    case TYPE_struct: {
+      size_t fieldCount = 0;
 
+      // Free the FieldInfoHash table.
+      slot = JS_GetReservedSlot(obj, SLOT_FIELDINFO);
+      if (!slot.isUndefined()) {
+        auto info = static_cast<FieldInfoHash*>(slot.toPrivate());
+        fieldCount = info->count();
+        FreeOp::get(fop)->delete_(obj, info, MemoryUse::CTypeFieldInfo);
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       MOZ_FALLTHROUGH;
+||||||| merged common ancestors
+    MOZ_FALLTHROUGH;
+=======
+      // Free the ffi_type info.
+      Value slot = JS_GetReservedSlot(obj, SLOT_FFITYPE);
+      if (!slot.isUndefined()) {
+        size_t elementCount = fieldCount != 0 ? fieldCount + 1 : 2;
+        FinalizeFFIType(fop, obj, slot, elementCount);
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     case TYPE_array: {
       // Free the ffi_type info.
       slot = JS_GetReservedSlot(obj, SLOT_FFITYPE);
@@ -4392,12 +5072,48 @@ void CType::Finalize(JSFreeOp* fop, JSObject* obj) {
         FreeOp::get(fop)->free_(ffiType->elements);
         FreeOp::get(fop)->delete_(ffiType);
       }
+||||||| merged common ancestors
+  case TYPE_array: {
+    // Free the ffi_type info.
+    slot = JS_GetReservedSlot(obj, SLOT_FFITYPE);
+    if (!slot.isUndefined()) {
+      ffi_type* ffiType = static_cast<ffi_type*>(slot.toPrivate());
+      FreeOp::get(fop)->free_(ffiType->elements);
+      FreeOp::get(fop)->delete_(ffiType);
+    }
+=======
+      // Free the ffi_type info.
+      break;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       break;
     }
     default:
       // Nothing to do here.
       break;
+||||||| merged common ancestors
+    break;
+  }
+  default:
+    // Nothing to do here.
+    break;
+=======
+    case TYPE_array: {
+      // Free the ffi_type info.
+      Value slot = JS_GetReservedSlot(obj, SLOT_FFITYPE);
+      if (!slot.isUndefined()) {
+        size_t elementCount = ArrayType::GetLength(obj);
+        FinalizeFFIType(fop, obj, slot, elementCount);
+      }
+      break;
+    }
+
+    default:
+      // Nothing to do here.
+      break;
+>>>>>>> upstream-releases
   }
 }
 
@@ -4430,12 +5146,26 @@ void CType::Trace(JSTracer* trc, JSObject* obj) {
       FunctionInfo* fninfo = static_cast<FunctionInfo*>(slot.toPrivate());
       MOZ_ASSERT(fninfo);
 
+<<<<<<< HEAD
       // Identify our objects to the tracer.
       JS::TraceEdge(trc, &fninfo->mABI, "abi");
       JS::TraceEdge(trc, &fninfo->mReturnType, "returnType");
       for (auto& argType : fninfo->mArgTypes) {
         JS::TraceEdge(trc, &argType, "argType");
       }
+||||||| merged common ancestors
+    // Identify our objects to the tracer.
+    JS::TraceEdge(trc, &fninfo->mABI, "abi");
+    JS::TraceEdge(trc, &fninfo->mReturnType, "returnType");
+    for (auto& argType : fninfo->mArgTypes) {
+      JS::TraceEdge(trc, &argType, "argType");
+    }
+=======
+      // Identify our objects to the tracer.
+      TraceEdge(trc, &fninfo->mABI, "abi");
+      TraceEdge(trc, &fninfo->mReturnType, "returnType");
+      fninfo->mArgTypes.trace(trc);
+>>>>>>> upstream-releases
 
       break;
     }
@@ -4614,7 +5344,8 @@ ffi_type* CType::GetFFIType(JSContext* cx, JSObject* obj) {
   if (!result) {
     return nullptr;
   }
-  JS_SetReservedSlot(obj, SLOT_FFITYPE, PrivateValue(result.get()));
+  JS_InitReservedSlot(obj, SLOT_FFITYPE, result.get(),
+                      JS::MemoryUse::CTypeFFIType);
   return result.release();
 }
 
@@ -5955,8 +6686,8 @@ bool StructType::DefineInternal(JSContext* cx, JSObject* typeObj_,
     JS_ReportOutOfMemory(cx);
     return false;
   }
-  JS_SetReservedSlot(typeObj, SLOT_FIELDINFO, PrivateValue(heapHash));
-
+  JS_InitReservedSlot(typeObj, SLOT_FIELDINFO, heapHash,
+                      JS::MemoryUse::CTypeFieldInfo);
   JS_SetReservedSlot(typeObj, SLOT_SIZE, sizeVal);
   JS_SetReservedSlot(typeObj, SLOT_ALIGN, Int32Value(structAlign));
   // if (!JS_FreezeObject(cx, prototype)0 // XXX fixme - see bug 541212!
@@ -6008,6 +6739,8 @@ UniquePtrFFIType StructType::BuildFFIType(JSContext* cx, JSObject* obj) {
   }
 
   ffiType->elements = elements.release();
+  AddCellMemory(obj, count * sizeof(ffi_type*),
+                MemoryUse::CTypeFFITypeElements);
 
 #ifdef DEBUG
   // Perform a sanity check: the result of our struct size and alignment
@@ -6195,7 +6928,7 @@ JSObject* StructType::BuildFieldsArray(JSContext* cx, JSObject* obj) {
   size_t len = fields->count();
 
   // Prepare a new array for the 'fields' property of the StructType.
-  JS::AutoValueVector fieldsVec(cx);
+  JS::RootedValueVector fieldsVec(cx);
   if (!fieldsVec.resize(len)) {
     return nullptr;
   }
@@ -6221,7 +6954,16 @@ JSObject* StructType::BuildFieldsArray(JSContext* cx, JSObject* obj) {
   return fieldsProp;
 }
 
+<<<<<<< HEAD
 /* static */ bool StructType::IsStruct(HandleValue v) {
+||||||| merged common ancestors
+/* static */ bool
+StructType::IsStruct(HandleValue v)
+{
+=======
+/* static */
+bool StructType::IsStruct(HandleValue v) {
+>>>>>>> upstream-releases
   if (!v.isObject()) {
     return false;
   }
@@ -6429,6 +7171,7 @@ static bool GetABI(JSContext* cx, HandleValue abiType, ffi_abi* result) {
       return true;
     case ABI_THISCALL:
 #if defined(_WIN64)
+<<<<<<< HEAD
 #if defined(_M_X64)
       *result = FFI_WIN64;
 #elif defined(_M_ARM64)
@@ -6437,6 +7180,19 @@ static bool GetABI(JSContext* cx, HandleValue abiType, ffi_abi* result) {
 #error unknown 64-bit Windows platform
 #endif
       return true;
+||||||| merged common ancestors
+    *result = FFI_WIN64;
+    return true;
+=======
+#  if defined(_M_X64)
+      *result = FFI_WIN64;
+#  elif defined(_M_ARM64)
+      *result = FFI_SYSV;
+#  else
+#    error unknown 64-bit Windows platform
+#  endif
+      return true;
+>>>>>>> upstream-releases
 #elif defined(_WIN32)
       *result = FFI_THISCALL;
       return true;
@@ -6449,6 +7205,7 @@ static bool GetABI(JSContext* cx, HandleValue abiType, ffi_abi* result) {
       *result = FFI_STDCALL;
       return true;
 #elif (defined(_WIN64))
+<<<<<<< HEAD
       // We'd like the same code to work across Win32 and Win64, so stdcall_api
       // and winapi_abi become aliases to the lone Win64 ABI.
 #if defined(_M_X64)
@@ -6457,11 +7214,36 @@ static bool GetABI(JSContext* cx, HandleValue abiType, ffi_abi* result) {
       *result = FFI_SYSV;
 #else
 #error unknown 64-bit Windows platform
+||||||| merged common ancestors
+    // We'd like the same code to work across Win32 and Win64, so stdcall_api
+    // and winapi_abi become aliases to the lone Win64 ABI.
+    *result = FFI_WIN64;
+    return true;
+=======
+      // We'd like the same code to work across Win32 and Win64, so stdcall_api
+      // and winapi_abi become aliases to the lone Win64 ABI.
+#  if defined(_M_X64)
+      *result = FFI_WIN64;
+#  elif defined(_M_ARM64)
+      *result = FFI_SYSV;
+#  else
+#    error unknown 64-bit Windows platform
+#  endif
+      return true;
+>>>>>>> upstream-releases
 #endif
+<<<<<<< HEAD
       return true;
 #endif
     case INVALID_ABI:
       break;
+||||||| merged common ancestors
+  case INVALID_ABI:
+    break;
+=======
+    case INVALID_ABI:
+      break;
+>>>>>>> upstream-releases
   }
   return false;
 }
@@ -6594,6 +7376,30 @@ void FunctionType::BuildSymbolName(JSContext* cx, JSString* name,
 
     case ABI_STDCALL: {
 #if (defined(_WIN32) && !defined(_WIN64)) || defined(_OS2)
+<<<<<<< HEAD
+      // On WIN32, stdcall functions look like:
+      //   _foo@40
+      // where 'foo' is the function name, and '40' is the aligned size of the
+      // arguments.
+      AppendString(cx, result, "_");
+      AppendString(cx, result, name);
+      AppendString(cx, result, "@");
+||||||| merged common ancestors
+    // On WIN32, stdcall functions look like:
+    //   _foo@40
+    // where 'foo' is the function name, and '40' is the aligned size of the
+    // arguments.
+    AppendString(cx, result, "_");
+    AppendString(cx, result, name);
+    AppendString(cx, result, "@");
+
+    // Compute the suffix by aligning each argument to sizeof(ffi_arg).
+    size_t size = 0;
+    for (size_t i = 0; i < fninfo->mArgTypes.length(); ++i) {
+      JSObject* argType = fninfo->mArgTypes[i];
+      size += Align(CType::GetSize(argType), sizeof(ffi_arg));
+    }
+=======
       // On WIN32, stdcall functions look like:
       //   _foo@40
       // where 'foo' is the function name, and '40' is the aligned size of the
@@ -6608,8 +7414,22 @@ void FunctionType::BuildSymbolName(JSContext* cx, JSString* name,
         JSObject* argType = fninfo->mArgTypes[i];
         size += Align(CType::GetSize(argType), sizeof(ffi_arg));
       }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      // Compute the suffix by aligning each argument to sizeof(ffi_arg).
+      size_t size = 0;
+      for (size_t i = 0; i < fninfo->mArgTypes.length(); ++i) {
+        JSObject* argType = fninfo->mArgTypes[i];
+        size += Align(CType::GetSize(argType), sizeof(ffi_arg));
+      }
 
       IntegerToString(size, 10, result);
+||||||| merged common ancestors
+    IntegerToString(size, 10, result);
+=======
+      IntegerToString(size, 10, result);
+>>>>>>> upstream-releases
 #elif defined(_WIN64)
       // On Win64, stdcall is an alias to the default ABI for compatibility, so
       // no mangling is done.
@@ -6632,7 +7452,8 @@ static bool CreateFunctionInfo(JSContext* cx, HandleObject typeObj,
   }
 
   // Stash the FunctionInfo in a reserved slot.
-  JS_SetReservedSlot(typeObj, SLOT_FNINFO, PrivateValue(fninfo));
+  JS_InitReservedSlot(typeObj, SLOT_FNINFO, fninfo,
+                      JS::MemoryUse::CTypeFunctionInfo);
 
   ffi_abi abi;
   if (!GetABI(cx, abiType, &abi)) {
@@ -6713,7 +7534,7 @@ bool FunctionType::Create(JSContext* cx, unsigned argc, Value* vp) {
     return ArgumentLengthError(cx, "FunctionType", "two or three", "s");
   }
 
-  AutoValueVector argTypes(cx);
+  JS::RootedValueVector argTypes(cx);
   RootedObject arrayObj(cx, nullptr);
 
   if (args.length() == 3) {
@@ -7076,10 +7897,22 @@ bool FunctionType::ArgTypesGetter(JSContext* cx, const JS::CallArgs& args) {
   // Prepare a new array.
   JS::Rooted<JSObject*> argTypes(cx);
   {
+<<<<<<< HEAD
     JS::AutoValueVector vec(cx);
     if (!vec.resize(len)) {
       return false;
     }
+||||||| merged common ancestors
+      JS::AutoValueVector vec(cx);
+      if (!vec.resize(len)) {
+        return false;
+      }
+=======
+    JS::RootedValueVector vec(cx);
+    if (!vec.resize(len)) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
     for (size_t i = 0; i < len; ++i) {
       vec[i].setObject(*fninfo->mArgTypes[i]);
@@ -7191,7 +8024,8 @@ JSObject* CClosure::Create(JSContext* cx, HandleObject typeObj,
   cinfo->jsfnObj = fnObj;
 
   // Stash the ClosureInfo struct on our new object.
-  JS_SetReservedSlot(result, SLOT_CLOSUREINFO, PrivateValue(cinfo));
+  JS_InitReservedSlot(result, SLOT_CLOSUREINFO, cinfo,
+                      JS::MemoryUse::CClosureInfo);
 
   // Create an ffi_closure object and initialize it.
   void* code;
@@ -7224,13 +8058,10 @@ void CClosure::Trace(JSTracer* trc, JSObject* obj) {
 
   ClosureInfo* cinfo = static_cast<ClosureInfo*>(slot.toPrivate());
 
-  // Identify our objects to the tracer. (There's no need to identify
-  // 'closureObj', since that's us.)
-  JS::TraceEdge(trc, &cinfo->typeObj, "typeObj");
-  JS::TraceEdge(trc, &cinfo->jsfnObj, "jsfnObj");
-  if (cinfo->thisObj) {
-    JS::TraceEdge(trc, &cinfo->thisObj, "thisObj");
-  }
+  TraceEdge(trc, &cinfo->closureObj, "closureObj");
+  TraceEdge(trc, &cinfo->typeObj, "typeObj");
+  TraceEdge(trc, &cinfo->jsfnObj, "jsfnObj");
+  TraceNullableEdge(trc, &cinfo->thisObj, "thisObj");
 }
 
 void CClosure::Finalize(JSFreeOp* fop, JSObject* obj) {
@@ -7241,7 +8072,7 @@ void CClosure::Finalize(JSFreeOp* fop, JSObject* obj) {
   }
 
   ClosureInfo* cinfo = static_cast<ClosureInfo*>(slot.toPrivate());
-  FreeOp::get(fop)->delete_(cinfo);
+  FreeOp::get(fop)->delete_(obj, cinfo, MemoryUse::CClosureInfo);
 }
 
 void CClosure::ClosureStub(ffi_cif* cif, void* result, void** args,
@@ -7305,7 +8136,7 @@ bool CClosure::ArgClosure::operator()(JSContext* cx) {
   }
 
   // Set up an array for converted arguments.
-  JS::AutoValueVector argv(cx);
+  JS::RootedValueVector argv(cx);
   if (!argv.resize(cif->nargs)) {
     JS_ReportOutOfMemory(cx);
     return false;
@@ -7465,10 +8296,13 @@ JSObject* CData::Create(JSContext* cx, HandleObject typeObj,
     } else {
       memcpy(data, source, size);
     }
+
+    AddCellMemory(dataObj, size, MemoryUse::CDataBuffer);
   }
 
   *buffer.get() = data;
-  JS_SetReservedSlot(dataObj, SLOT_DATA, PrivateValue(buffer.release()));
+  JS_InitReservedSlot(dataObj, SLOT_DATA, buffer.release(),
+                      JS::MemoryUse::CDataBufferPtr);
 
   // If this is an array, wrap it in a proxy so we can intercept element
   // gets/sets.
@@ -7500,9 +8334,11 @@ void CData::Finalize(JSFreeOp* fop, JSObject* obj) {
   char** buffer = static_cast<char**>(slot.toPrivate());
 
   if (owns) {
-    FreeOp::get(fop)->free_(*buffer);
+    JSObject* typeObj = &JS_GetReservedSlot(obj, SLOT_CTYPE).toObject();
+    size_t size = CType::GetSize(typeObj);
+    FreeOp::get(fop)->free_(obj, *buffer, size, MemoryUse::CDataBuffer);
   }
-  FreeOp::get(fop)->delete_(buffer);
+  FreeOp::get(fop)->delete_(obj, buffer, MemoryUse::CDataBufferPtr);
 }
 
 JSObject* CData::GetCType(JSObject* dataObj) {
@@ -7667,11 +8503,29 @@ bool CData::GetRuntime(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
+<<<<<<< HEAD
 typedef JS::TwoByteCharsZ (*InflateUTF8Method)(JSContext*, const JS::UTF8Chars,
                                                size_t*);
+||||||| merged common ancestors
+typedef JS::TwoByteCharsZ (*InflateUTF8Method)(JSContext*, const JS::UTF8Chars, size_t*);
+=======
+typedef JS::TwoByteCharsZ (*InflateUTF8Method)(JSContext*, const JS::UTF8Chars,
+                                               size_t*, arena_id_t);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
                              unsigned argc, Value* vp, const char* funName) {
+||||||| merged common ancestors
+static bool
+ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8, unsigned argc,
+                 Value* vp, const char* funName)
+{
+=======
+static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
+                             unsigned argc, Value* vp, const char* funName,
+                             arena_id_t destArenaId) {
+>>>>>>> upstream-releases
   CallArgs args = CallArgsFromVp(argc, vp);
   if (args.length() != 0) {
     return ArgumentLengthError(cx, funName, "no", "s");
@@ -7734,6 +8588,7 @@ static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
   // length in the case of arrays (which may contain embedded nulls).
   JSString* result;
   switch (CType::GetTypeCode(baseType)) {
+<<<<<<< HEAD
     case TYPE_int8_t:
     case TYPE_uint8_t:
     case TYPE_char:
@@ -7748,12 +8603,56 @@ static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
       if (!dst) {
         return false;
       }
+||||||| merged common ancestors
+  case TYPE_int8_t:
+  case TYPE_uint8_t:
+  case TYPE_char:
+  case TYPE_signed_char:
+  case TYPE_unsigned_char: {
+    char* bytes = static_cast<char*>(data);
+    size_t length = strnlen(bytes, maxLength);
 
+    // Determine the length.
+    UniqueTwoByteChars dst(inflateUTF8(cx, JS::UTF8Chars(bytes, length), &length).get());
+    if (!dst) {
+      return false;
+    }
+=======
+    case TYPE_int8_t:
+    case TYPE_uint8_t:
+    case TYPE_char:
+    case TYPE_signed_char:
+    case TYPE_unsigned_char: {
+      char* bytes = static_cast<char*>(data);
+      size_t length = strnlen(bytes, maxLength);
+
+      // Determine the length.
+      UniqueTwoByteChars dst(
+          inflateUTF8(cx, JS::UTF8Chars(bytes, length), &length, destArenaId)
+              .get());
+      if (!dst) {
+        return false;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       result = JS_NewUCString(cx, dst.get(), length);
       if (!result) {
         return false;
       }
+||||||| merged common ancestors
+    result = JS_NewUCString(cx, dst.get(), length);
+    if (!result) {
+      return false;
+    }
+=======
+      result = JS_NewUCString(cx, std::move(dst), length);
+      if (!result) {
+        return false;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       mozilla::Unused << dst.release();
       break;
     }
@@ -7769,6 +8668,38 @@ static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
     }
     default:
       return NonStringBaseError(cx, args.thisv());
+||||||| merged common ancestors
+    mozilla::Unused << dst.release();
+    break;
+  }
+  case TYPE_int16_t:
+  case TYPE_uint16_t:
+  case TYPE_short:
+  case TYPE_unsigned_short:
+  case TYPE_char16_t: {
+    char16_t* chars = static_cast<char16_t*>(data);
+    size_t length = strnlen(chars, maxLength);
+    result = JS_NewUCStringCopyN(cx, chars, length);
+    break;
+  }
+  default:
+    return NonStringBaseError(cx, args.thisv());
+=======
+      break;
+    }
+    case TYPE_int16_t:
+    case TYPE_uint16_t:
+    case TYPE_short:
+    case TYPE_unsigned_short:
+    case TYPE_char16_t: {
+      char16_t* chars = static_cast<char16_t*>(data);
+      size_t length = strnlen(chars, maxLength);
+      result = JS_NewUCStringCopyN(cx, chars, length);
+      break;
+    }
+    default:
+      return NonStringBaseError(cx, args.thisv());
+>>>>>>> upstream-releases
   }
 
   if (!result) {
@@ -7781,19 +8712,21 @@ static bool ReadStringCommon(JSContext* cx, InflateUTF8Method inflateUTF8,
 
 bool CData::ReadString(JSContext* cx, unsigned argc, Value* vp) {
   return ReadStringCommon(cx, JS::UTF8CharsToNewTwoByteCharsZ, argc, vp,
-                          "CData.prototype.readString");
+                          "CData.prototype.readString", js::StringBufferArena);
 }
 
 bool CDataFinalizer::Methods::ReadString(JSContext* cx, unsigned argc,
                                          Value* vp) {
   return ReadStringCommon(cx, JS::UTF8CharsToNewTwoByteCharsZ, argc, vp,
-                          "CDataFinalizer.prototype.readString");
+                          "CDataFinalizer.prototype.readString",
+                          js::StringBufferArena);
 }
 
 bool CData::ReadStringReplaceMalformed(JSContext* cx, unsigned argc,
                                        Value* vp) {
   return ReadStringCommon(cx, JS::LossyUTF8CharsToNewTwoByteCharsZ, argc, vp,
-                          "CData.prototype.readStringReplaceMalformed");
+                          "CData.prototype.readStringReplaceMalformed",
+                          js::StringBufferArena);
 }
 
 JSString* CData::GetSourceString(JSContext* cx, HandleObject typeObj,
@@ -8412,7 +9345,7 @@ JSObject* Int64Base::Construct(JSContext* cx, HandleObject proto, uint64_t data,
     return nullptr;
   }
 
-  JS_SetReservedSlot(result, SLOT_INT64, PrivateValue(buffer));
+  JS_InitReservedSlot(result, SLOT_INT64, buffer, JS::MemoryUse::CTypesInt64);
 
   if (!JS_FreezeObject(cx, result)) {
     return nullptr;
@@ -8427,7 +9360,8 @@ void Int64Base::Finalize(JSFreeOp* fop, JSObject* obj) {
     return;
   }
 
-  FreeOp::get(fop)->delete_(static_cast<uint64_t*>(slot.toPrivate()));
+  uint64_t* buffer = static_cast<uint64_t*>(slot.toPrivate());
+  FreeOp::get(fop)->delete_(obj, buffer, MemoryUse::CTypesInt64);
 }
 
 uint64_t Int64Base::GetInt(JSObject* obj) {

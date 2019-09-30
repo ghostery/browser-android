@@ -20,8 +20,23 @@
 
 class nsICategoryManager;
 class nsIMemoryReporter;
-class nsIPresShell;
 class nsISimpleEnumerator;
+
+<<<<<<< HEAD
+#define NS_STYLESHEETSERVICE_CID                     \
+  {                                                  \
+    0x3b55e72e, 0xab7e, 0x431b, {                    \
+      0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 \
+    }                                                \
+  }
+||||||| merged common ancestors
+#define NS_STYLESHEETSERVICE_CID \
+{ 0x3b55e72e, 0xab7e, 0x431b, \
+  { 0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 } }
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
 
 #define NS_STYLESHEETSERVICE_CID                     \
   {                                                  \
@@ -29,6 +44,7 @@ class nsISimpleEnumerator;
       0x89, 0xc0, 0x3b, 0x06, 0xa8, 0xb1, 0x40, 0x16 \
     }                                                \
   }
+>>>>>>> upstream-releases
 
 #define NS_STYLESHEETSERVICE_CONTRACTID \
   "@mozilla.org/content/style-sheet-service;1"
@@ -50,8 +66,8 @@ class nsStyleSheetService final : public nsIStyleSheetService,
   SheetArray* UserStyleSheets() { return &mSheets[USER_SHEET]; }
   SheetArray* AuthorStyleSheets() { return &mSheets[AUTHOR_SHEET]; }
 
-  void RegisterPresShell(nsIPresShell* aPresShell);
-  void UnregisterPresShell(nsIPresShell* aPresShell);
+  void RegisterPresShell(mozilla::PresShell* aPresShell);
+  void UnregisterPresShell(mozilla::PresShell* aPresShell);
 
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
@@ -76,7 +92,7 @@ class nsStyleSheetService final : public nsIStyleSheetService,
 
   // Registered PresShells that will be notified when sheets are added and
   // removed from the style sheet service.
-  nsTArray<nsCOMPtr<nsIPresShell>> mPresShells;
+  nsTArray<RefPtr<mozilla::PresShell>> mPresShells;
 };
 
 #endif

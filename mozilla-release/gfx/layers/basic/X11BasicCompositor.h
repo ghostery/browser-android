@@ -22,23 +22,29 @@ class X11DataTextureSourceBasic : public DataTextureSource,
  public:
   X11DataTextureSourceBasic(){};
 
+<<<<<<< HEAD
   virtual const char* Name() const override {
     return "X11DataTextureSourceBasic";
   }
+||||||| merged common ancestors
+  virtual const char* Name() const override { return "X11DataTextureSourceBasic"; }
+=======
+  const char* Name() const override { return "X11DataTextureSourceBasic"; }
+>>>>>>> upstream-releases
 
-  virtual bool Update(gfx::DataSourceSurface* aSurface,
-                      nsIntRegion* aDestRegion = nullptr,
-                      gfx::IntPoint* aSrcOffset = nullptr) override;
+  bool Update(gfx::DataSourceSurface* aSurface,
+              nsIntRegion* aDestRegion = nullptr,
+              gfx::IntPoint* aSrcOffset = nullptr) override;
 
-  virtual TextureSourceBasic* AsSourceBasic() override;
+  TextureSourceBasic* AsSourceBasic() override;
 
-  virtual gfx::SourceSurface* GetSurface(gfx::DrawTarget* aTarget) override;
+  gfx::SourceSurface* GetSurface(gfx::DrawTarget* aTarget) override;
 
-  virtual void DeallocateDeviceData() override;
+  void DeallocateDeviceData() override;
 
-  virtual gfx::IntSize GetSize() const override;
+  gfx::IntSize GetSize() const override;
 
-  virtual gfx::SurfaceFormat GetFormat() const override;
+  gfx::SurfaceFormat GetFormat() const override;
 
  private:
   // We are going to buffer layer content on this xlib draw target
@@ -51,15 +57,33 @@ class X11BasicCompositor : public BasicCompositor {
                               widget::CompositorWidget* aWidget)
       : BasicCompositor(aParent, aWidget) {}
 
+<<<<<<< HEAD
   virtual already_AddRefed<DataTextureSource> CreateDataTextureSource(
       TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
+||||||| merged common ancestors
+  virtual already_AddRefed<DataTextureSource>
+  CreateDataTextureSource(TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
+=======
+  already_AddRefed<DataTextureSource> CreateDataTextureSource(
+      TextureFlags aFlags = TextureFlags::NO_FLAGS) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
       gfx::DataSourceSurface* aSurface) override {
     return nullptr;
   }
+||||||| merged common ancestors
+  virtual already_AddRefed<DataTextureSource>
+  CreateDataTextureSourceAround(gfx::DataSourceSurface* aSurface) override { return nullptr; }
+=======
+  already_AddRefed<DataTextureSource> CreateDataTextureSourceAround(
+      gfx::DataSourceSurface* aSurface) override {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
-  virtual void EndFrame() override;
+  void EndFrame() override;
 };
 
 }  // namespace layers

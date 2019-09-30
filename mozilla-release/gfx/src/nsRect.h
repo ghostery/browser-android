@@ -14,6 +14,7 @@
 #include "mozilla/gfx/Rect.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/Logging.h"
+<<<<<<< HEAD
 #include "nsCoord.h"          // for nscoord, etc
 #include "nsISupportsImpl.h"  // for MOZ_COUNT_CTOR, etc
 #include "nsPoint.h"          // for nsIntPoint, nsPoint
@@ -27,6 +28,34 @@
 #else
 #include "emmintrin.h"
 #endif
+||||||| merged common ancestors
+#include "nsCoord.h"                    // for nscoord, etc
+#include "nsISupportsImpl.h"            // for MOZ_COUNT_CTOR, etc
+#include "nsPoint.h"                    // for nsIntPoint, nsPoint
+#include "nsMargin.h"                   // for nsIntMargin, nsMargin
+#include "nsSize.h"                     // for IntSize, nsSize
+#include "nscore.h"                     // for NS_BUILD_REFCNT_LOGGING
+#if !defined(ANDROID) && (defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2))
+#if defined(_MSC_VER) && !defined(__clang__)
+#include "smmintrin.h"
+#else
+#include "emmintrin.h"
+#endif
+=======
+#include "nsCoord.h"          // for nscoord, etc
+#include "nsISupportsImpl.h"  // for MOZ_COUNT_CTOR, etc
+#include "nsPoint.h"          // for nsIntPoint, nsPoint
+#include "nsMargin.h"         // for nsIntMargin, nsMargin
+#include "nsSize.h"           // for IntSize, nsSize
+#include "nscore.h"           // for NS_BUILD_REFCNT_LOGGING
+#if !defined(ANDROID) && (defined(__SSE2__) || defined(_M_X64) || \
+                          (defined(_M_IX86_FP) && _M_IX86_FP >= 2))
+#  if defined(_MSC_VER) && !defined(__clang__)
+#    include "smmintrin.h"
+#  else
+#    include "emmintrin.h"
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 typedef mozilla::gfx::IntRect nsIntRect;
@@ -39,6 +68,7 @@ struct nsRect : public mozilla::gfx::BaseRect<nscoord, nsRect, nsPoint, nsSize,
   static void VERIFY_COORD(nscoord aValue) { ::VERIFY_COORD(aValue); }
 
   // Constructors
+<<<<<<< HEAD
   nsRect() : Super() { MOZ_COUNT_CTOR(nsRect); }
   nsRect(const nsRect& aRect) : Super(aRect) { MOZ_COUNT_CTOR(nsRect); }
   nsRect(const nsPoint& aOrigin, const nsSize& aSize) : Super(aOrigin, aSize) {
@@ -46,6 +76,31 @@ struct nsRect : public mozilla::gfx::BaseRect<nscoord, nsRect, nsPoint, nsSize,
   }
   nsRect(nscoord aX, nscoord aY, nscoord aWidth, nscoord aHeight)
       : Super(aX, aY, aWidth, aHeight) {
+||||||| merged common ancestors
+  nsRect() : Super()
+  {
+    MOZ_COUNT_CTOR(nsRect);
+  }
+  nsRect(const nsRect& aRect) : Super(aRect)
+  {
+    MOZ_COUNT_CTOR(nsRect);
+  }
+  nsRect(const nsPoint& aOrigin, const nsSize &aSize) : Super(aOrigin, aSize)
+  {
+    MOZ_COUNT_CTOR(nsRect);
+  }
+  nsRect(nscoord aX, nscoord aY, nscoord aWidth, nscoord aHeight) :
+      Super(aX, aY, aWidth, aHeight)
+  {
+=======
+  nsRect() : Super() { MOZ_COUNT_CTOR(nsRect); }
+  nsRect(const nsRect& aRect) : Super(aRect) { MOZ_COUNT_CTOR(nsRect); }
+  nsRect(const nsPoint& aOrigin, const nsSize& aSize) : Super(aOrigin, aSize) {
+    MOZ_COUNT_CTOR(nsRect);
+  }
+  nsRect(nscoord aX, nscoord aY, nscoord aWidth, nscoord aHeight)
+      : Super(aX, aY, aWidth, aHeight) {
+>>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsRect);
   }
 
@@ -120,8 +175,15 @@ struct nsRect : public mozilla::gfx::BaseRect<nscoord, nsRect, nsPoint, nsSize,
     *this = aRect1.Union(aRect2);
   }
 
+<<<<<<< HEAD
 #if defined(_MSC_VER) && !defined(__clang__) && \
     (defined(_M_X64) || defined(_M_IX86))
+||||||| merged common ancestors
+#if defined(_MSC_VER) && !defined(__clang__) && (defined(_M_X64) || defined(_M_IX86))
+=======
+#  if defined(_MSC_VER) && !defined(__clang__) && \
+      (defined(_M_X64) || defined(_M_IX86))
+>>>>>>> upstream-releases
   // Only MSVC supports inlining intrinsics for archs you're not compiling for.
   MOZ_MUST_USE nsRect Intersect(const nsRect& aRect) const {
     nsRect result;
@@ -221,7 +283,7 @@ struct nsRect : public mozilla::gfx::BaseRect<nscoord, nsRect, nsPoint, nsSize,
     }
     return true;
   }
-#endif
+#  endif
 #endif
 
   void SaturatingUnionRect(const nsRect& aRect1, const nsRect& aRect2) {

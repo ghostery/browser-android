@@ -65,6 +65,7 @@ static bool IsPIValidForDOM(const webgl::PackingInfo& pi) {
   return true;
 }
 
+<<<<<<< HEAD
 static bool ValidatePIForDOM(WebGLContext* webgl,
                              const webgl::PackingInfo& pi) {
   if (!IsPIValidForDOM(pi)) {
@@ -72,6 +73,24 @@ static bool ValidatePIForDOM(WebGLContext* webgl,
     return false;
   }
   return true;
+||||||| merged common ancestors
+static bool
+ValidatePIForDOM(WebGLContext* webgl, const webgl::PackingInfo& pi)
+{
+    if (!IsPIValidForDOM(pi)) {
+        webgl->ErrorInvalidOperation("Format or type is invalid for DOM sources.");
+        return false;
+    }
+    return true;
+=======
+static bool ValidatePIForDOM(WebGLContext* webgl,
+                             const webgl::PackingInfo& pi) {
+  if (!IsPIValidForDOM(pi)) {
+    webgl->ErrorInvalidValue("Format or type is invalid for DOM sources.");
+    return false;
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
 static WebGLTexelFormat FormatForPackingInfo(const PackingInfo& pi) {
@@ -359,12 +378,28 @@ bool TexUnpackBlob::ConvertIfNeeded(
     return false;
   }
 
+<<<<<<< HEAD
   UniqueBuffer dstBuffer = calloc(1, dstTotalBytes.value());
   if (!dstBuffer.get()) {
     webgl->ErrorOutOfMemory("Failed to allocate dest buffer.");
     return false;
   }
   const auto dstBegin = static_cast<uint8_t*>(dstBuffer.get());
+||||||| merged common ancestors
+    UniqueBuffer dstBuffer = calloc(1, dstTotalBytes.value());
+    if (!dstBuffer.get()) {
+        webgl->ErrorOutOfMemory("Failed to allocate dest buffer.");
+        return false;
+    }
+    const auto dstBegin = static_cast<uint8_t*>(dstBuffer.get());
+=======
+  UniqueBuffer dstBuffer = calloc(1u, (size_t)dstTotalBytes.value());
+  if (!dstBuffer.get()) {
+    webgl->ErrorOutOfMemory("Failed to allocate dest buffer.");
+    return false;
+  }
+  const auto dstBegin = static_cast<uint8_t*>(dstBuffer.get());
+>>>>>>> upstream-releases
 
   ////
 

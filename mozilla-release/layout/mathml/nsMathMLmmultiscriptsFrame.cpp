@@ -5,6 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsMathMLmmultiscriptsFrame.h"
+
+#include "mozilla/PresShell.h"
 #include "nsPresContext.h"
 #include <algorithm>
 #include "gfxContext.h"
@@ -19,9 +21,21 @@ using namespace mozilla;
 // <msup> -- attach a superscript to a base - implementation
 //
 
+<<<<<<< HEAD
 nsIFrame* NS_NewMathMLmmultiscriptsFrame(nsIPresShell* aPresShell,
                                          ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmmultiscriptsFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMathMLmmultiscriptsFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMathMLmmultiscriptsFrame(aStyle);
+=======
+nsIFrame* NS_NewMathMLmmultiscriptsFrame(PresShell* aPresShell,
+                                         ComputedStyle* aStyle) {
+  return new (aPresShell)
+      nsMathMLmmultiscriptsFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmmultiscriptsFrame)
@@ -83,8 +97,21 @@ nsMathMLmmultiscriptsFrame::TransmitAutomaticData() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsresult nsMathMLmmultiscriptsFrame::Place(
     DrawTarget* aDrawTarget, bool aPlaceOrigin, ReflowOutput& aDesiredSize) {
+||||||| merged common ancestors
+/* virtual */ nsresult
+nsMathMLmmultiscriptsFrame::Place(DrawTarget*          aDrawTarget,
+                                  bool                 aPlaceOrigin,
+                                  ReflowOutput& aDesiredSize)
+{
+=======
+/* virtual */
+nsresult nsMathMLmmultiscriptsFrame::Place(DrawTarget* aDrawTarget,
+                                           bool aPlaceOrigin,
+                                           ReflowOutput& aDesiredSize) {
+>>>>>>> upstream-releases
   nscoord subScriptShift = 0;
   nscoord supScriptShift = 0;
   float fontSizeInflation = nsLayoutUtils::FontSizeInflationFor(this);

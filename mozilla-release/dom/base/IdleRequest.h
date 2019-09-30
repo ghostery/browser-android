@@ -28,8 +28,18 @@ class IdleRequest final : public LinkedListElement<RefPtr<IdleRequest>> {
  public:
   IdleRequest(IdleRequestCallback* aCallback, uint32_t aHandle);
 
+<<<<<<< HEAD
   nsresult IdleRun(nsPIDOMWindowInner* aWindow, DOMHighResTimeStamp aDeadline,
                    bool aDidTimeout);
+||||||| merged common ancestors
+  nsresult IdleRun(nsPIDOMWindowInner* aWindow,
+                   DOMHighResTimeStamp aDeadline,
+                   bool aDidTimeout);
+=======
+  MOZ_CAN_RUN_SCRIPT
+  void IdleRun(nsPIDOMWindowInner* aWindow, DOMHighResTimeStamp aDeadline,
+               bool aDidTimeout);
+>>>>>>> upstream-releases
 
   void SetTimeoutHandle(int32_t aHandle);
   bool HasTimeout() const { return mTimeoutHandle.isSome(); }

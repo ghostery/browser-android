@@ -512,7 +512,15 @@ void StreamFilterChild::ActorDestroy(ActorDestroyReason aWhy) {
   mStreamFilter = nullptr;
 }
 
+<<<<<<< HEAD
 void StreamFilterChild::DeallocPStreamFilterChild() {
+||||||| merged common ancestors
+void
+StreamFilterChild::DeallocPStreamFilterChild()
+{
+=======
+void StreamFilterChild::ActorDealloc() {
+>>>>>>> upstream-releases
   RefPtr<StreamFilterChild> self = dont_AddRef(this);
 }
 

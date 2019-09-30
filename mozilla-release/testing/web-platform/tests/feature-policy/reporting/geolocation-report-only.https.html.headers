@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: geolocation-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: geolocation 'none'
+>>>>>>> upstream-releases

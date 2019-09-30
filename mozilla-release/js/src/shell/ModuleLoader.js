@@ -240,8 +240,18 @@ setModuleMetadataHook((module, metaObject) => {
     ReflectLoader.populateImportMeta(module, metaObject);
 });
 
+<<<<<<< HEAD
 setModuleDynamicImportHook((referencingInfo, specifier, promise) => {
     ReflectLoader.dynamicImport(referencingInfo, specifier, promise);
 });
 
 }
+||||||| merged common ancestors
+}
+
+=======
+setModuleDynamicImportHook((referencingInfo, specifier, promise) => {
+    ReflectLoader.dynamicImport(referencingInfo, specifier, promise);
+});
+}
+>>>>>>> upstream-releases

@@ -31,7 +31,6 @@
 #include "nsIStreamListenerTee.h"
 #include "nsIPrefService.h"
 #include "nsIPrefBranch.h"
-#include "nsIStringBundle.h"
 #include "nsAuthInformationHolder.h"
 #include "nsIProtocolProxyService.h"
 #include "nsICancelable.h"
@@ -55,7 +54,15 @@ extern LazyLogModule gFTPLog;
 #define LOG_INFO(args) MOZ_LOG(gFTPLog, mozilla::LogLevel::Info, args)
 
 // remove FTP parameters (starting with ";") from the path
+<<<<<<< HEAD
 static void removeParamsFromPath(nsCString &path) {
+||||||| merged common ancestors
+static void
+removeParamsFromPath(nsCString& path)
+{
+=======
+static void removeParamsFromPath(nsCString& path) {
+>>>>>>> upstream-releases
   int32_t index = path.FindChar(';');
   if (index >= 0) {
     path.SetLength(index);
@@ -67,6 +74,7 @@ NS_IMPL_ISUPPORTS_INHERITED(nsFtpState, nsBaseContentStream,
                             nsIRequestObserver, nsIProtocolProxyCallback)
 
 nsFtpState::nsFtpState()
+<<<<<<< HEAD
     : nsBaseContentStream(true),
       mState(FTP_INIT),
       mNextState(FTP_S_USER),
@@ -96,6 +104,68 @@ nsFtpState::nsFtpState()
 
   // make sure handler stays around
   NS_ADDREF(gFtpHandler);
+||||||| merged common ancestors
+    : nsBaseContentStream(true)
+    , mState(FTP_INIT)
+    , mNextState(FTP_S_USER)
+    , mKeepRunning(true)
+    , mResponseCode(0)
+    , mReceivedControlData(false)
+    , mTryingCachedControl(false)
+    , mRETRFailed(false)
+    , mFileSize(kJS_MAX_SAFE_UINTEGER)
+    , mServerType(FTP_GENERIC_TYPE)
+    , mAction(GET)
+    , mAnonymous(true)
+    , mRetryPass(false)
+    , mStorReplyReceived(false)
+    , mInternalError(NS_OK)
+    , mReconnectAndLoginAgain(false)
+    , mCacheConnection(true)
+    , mPort(21)
+    , mAddressChecked(false)
+    , mServerIsIPv6(false)
+    , mUseUTF8(false)
+    , mControlStatus(NS_OK)
+    , mDeferredCallbackPending(false)
+{
+    this->mServerAddress.raw.family = 0;
+    this->mServerAddress.inet = {};
+    LOG_INFO(("FTP:(%p) nsFtpState created", this));
+
+    // make sure handler stays around
+    NS_ADDREF(gFtpHandler);
+=======
+    : nsBaseContentStream(true),
+      mState(FTP_INIT),
+      mNextState(FTP_S_USER),
+      mKeepRunning(true),
+      mResponseCode(0),
+      mReceivedControlData(false),
+      mTryingCachedControl(false),
+      mRETRFailed(false),
+      mFileSize(kJS_MAX_SAFE_UINTEGER),
+      mServerType(FTP_GENERIC_TYPE),
+      mAction(GET),
+      mAnonymous(true),
+      mRetryPass(false),
+      mStorReplyReceived(false),
+      mInternalError(NS_OK),
+      mReconnectAndLoginAgain(false),
+      mCacheConnection(true),
+      mPort(21),
+      mAddressChecked(false),
+      mServerIsIPv6(false),
+      mUseUTF8(false),
+      mControlStatus(NS_OK),
+      mDeferredCallbackPending(false) {
+  this->mServerAddress.raw.family = 0;
+  this->mServerAddress.inet = {};
+  LOG_INFO(("FTP:(%p) nsFtpState created", this));
+
+  // make sure handler stays around
+  mHandler = gFtpHandler;
+>>>>>>> upstream-releases
 }
 
 nsFtpState::~nsFtpState() {
@@ -103,15 +173,33 @@ nsFtpState::~nsFtpState() {
 
   if (mProxyRequest) mProxyRequest->Cancel(NS_ERROR_FAILURE);
 
+<<<<<<< HEAD
   // release reference to handler
   nsFtpProtocolHandler *handler = gFtpHandler;
   NS_RELEASE(handler);
+||||||| merged common ancestors
+    // release reference to handler
+    nsFtpProtocolHandler *handler = gFtpHandler;
+    NS_RELEASE(handler);
+=======
+  // release reference to handler
+  mHandler = nullptr;
+>>>>>>> upstream-releases
 }
 
 // nsIInputStreamCallback implementation
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::OnInputStreamReady(nsIAsyncInputStream *aInStream) {
   LOG(("FTP:(%p) data stream ready\n", this));
+||||||| merged common ancestors
+nsFtpState::OnInputStreamReady(nsIAsyncInputStream *aInStream)
+{
+    LOG(("FTP:(%p) data stream ready\n", this));
+=======
+nsFtpState::OnInputStreamReady(nsIAsyncInputStream* aInStream) {
+  LOG(("FTP:(%p) data stream ready\n", this));
+>>>>>>> upstream-releases
 
   // We are receiving a notification from our data stream, so just forward it
   // on to our stream callback.
@@ -120,9 +208,21 @@ nsFtpState::OnInputStreamReady(nsIAsyncInputStream *aInStream) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsFtpState::OnControlDataAvailable(const char *aData, uint32_t aDataLen) {
   LOG(("FTP:(%p) control data available [%u]\n", this, aDataLen));
   mControlConnection->WaitData(this);  // queue up another call
+||||||| merged common ancestors
+void
+nsFtpState::OnControlDataAvailable(const char *aData, uint32_t aDataLen)
+{
+    LOG(("FTP:(%p) control data available [%u]\n", this, aDataLen));
+    mControlConnection->WaitData(this);  // queue up another call
+=======
+void nsFtpState::OnControlDataAvailable(const char* aData, uint32_t aDataLen) {
+  LOG(("FTP:(%p) control data available [%u]\n", this, aDataLen));
+  mControlConnection->WaitData(this);  // queue up another call
+>>>>>>> upstream-releases
 
   if (!mReceivedControlData) {
     // parameter can be null cause the channel fills them in.
@@ -141,10 +241,22 @@ void nsFtpState::OnControlDataAvailable(const char *aData, uint32_t aDataLen) {
 
   buffer.Append(aData, aDataLen);
 
+<<<<<<< HEAD
   const char *currLine = buffer.get();
   while (*currLine && mKeepRunning) {
     int32_t eolLength = strcspn(currLine, CRLF);
     int32_t currLineLength = strlen(currLine);
+||||||| merged common ancestors
+    const char* currLine = buffer.get();
+    while (*currLine && mKeepRunning) {
+        int32_t eolLength = strcspn(currLine, CRLF);
+        int32_t currLineLength = strlen(currLine);
+=======
+  const char* currLine = buffer.get();
+  while (*currLine && mKeepRunning) {
+    int32_t eolLength = strcspn(currLine, CRLF);
+    int32_t currLineLength = strlen(currLine);
+>>>>>>> upstream-releases
 
     // if currLine is empty or only contains CR or LF, then bail.  we can
     // sometimes get an ODA event with the full response line + CR without
@@ -315,6 +427,7 @@ void nsFtpState::MoveToNextState(FTP_STATE nextState) {
   }
 }
 
+<<<<<<< HEAD
 nsresult nsFtpState::Process() {
   nsresult rv = NS_OK;
   bool processingRead = true;
@@ -373,220 +486,1047 @@ nsresult nsFtpState::Process() {
         NS_ASSERTION(NS_SUCCEEDED(rv), "StopProcessing failed.");
         processingRead = false;
         break;
+||||||| merged common ancestors
+nsresult
+nsFtpState::Process()
+{
+    nsresult    rv = NS_OK;
+    bool        processingRead = true;
 
+    while (mKeepRunning && processingRead) {
+        switch (mState) {
+          case FTP_COMMAND_CONNECT:
+            KillControlConnection();
+            LOG(("FTP:(%p) establishing CC", this));
+            mInternalError = EstablishControlConnection();  // sets mState
+            if (NS_FAILED(mInternalError)) {
+                mState = FTP_ERROR;
+                LOG(("FTP:(%p) FAILED\n", this));
+            } else {
+                LOG(("FTP:(%p) SUCCEEDED\n", this));
+            }
+            break;
+
+          case FTP_READ_BUF:
+            LOG(("FTP:(%p) Waiting for CC(%p)\n", this,
+                mControlConnection.get()));
+            processingRead = false;
+            break;
+
+          case FTP_ERROR: // xx needs more work to handle dropped control connection cases
+            if ((mTryingCachedControl && mResponseCode == 530 &&
+                mInternalError == NS_ERROR_FTP_PASV) ||
+                (mResponseCode == 425 &&
+                mInternalError == NS_ERROR_FTP_PASV)) {
+                // The user was logged out during an pasv operation
+                // we want to restart this request with a new control
+                // channel.
+                mState = FTP_COMMAND_CONNECT;
+            } else if (mResponseCode == 421 &&
+                       mInternalError != NS_ERROR_FTP_LOGIN) {
+                // The command channel dropped for some reason.
+                // Fire it back up, unless we were trying to login
+                // in which case the server might just be telling us
+                // that the max number of users has been reached...
+                mState = FTP_COMMAND_CONNECT;
+            } else if (mAnonymous &&
+                       mInternalError == NS_ERROR_FTP_LOGIN) {
+                // If the login was anonymous, and it failed, try again with a username
+                // Don't reuse old control connection, see #386167
+                mAnonymous = false;
+                mState = FTP_COMMAND_CONNECT;
+            } else {
+                LOG(("FTP:(%p) FTP_ERROR - calling StopProcessing\n", this));
+                rv = StopProcessing();
+                NS_ASSERTION(NS_SUCCEEDED(rv), "StopProcessing failed.");
+                processingRead = false;
+            }
+            break;
+
+          case FTP_COMPLETE:
+            LOG(("FTP:(%p) COMPLETE\n", this));
+            rv = StopProcessing();
+            NS_ASSERTION(NS_SUCCEEDED(rv), "StopProcessing failed.");
+            processingRead = false;
+            break;
+
+// USER
+          case FTP_S_USER:
+            rv = S_user();
+
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_LOGIN;
+
+            MoveToNextState(FTP_R_USER);
+            break;
+
+          case FTP_R_USER:
+            mState = R_user();
+
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_LOGIN;
+
+            break;
+// PASS
+          case FTP_S_PASS:
+            rv = S_pass();
+
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_LOGIN;
+
+            MoveToNextState(FTP_R_PASS);
+            break;
+
+          case FTP_R_PASS:
+            mState = R_pass();
+
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_LOGIN;
+
+            break;
+// ACCT
+          case FTP_S_ACCT:
+            rv = S_acct();
+
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_LOGIN;
+
+            MoveToNextState(FTP_R_ACCT);
+            break;
+
+          case FTP_R_ACCT:
+            mState = R_acct();
+
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_LOGIN;
+=======
+nsresult nsFtpState::Process() {
+  nsresult rv = NS_OK;
+  bool processingRead = true;
+
+  while (mKeepRunning && processingRead) {
+    switch (mState) {
+      case FTP_COMMAND_CONNECT:
+        KillControlConnection();
+        LOG(("FTP:(%p) establishing CC", this));
+        mInternalError = EstablishControlConnection();  // sets mState
+        if (NS_FAILED(mInternalError)) {
+          mState = FTP_ERROR;
+          LOG(("FTP:(%p) FAILED\n", this));
+        } else {
+          LOG(("FTP:(%p) SUCCEEDED\n", this));
+        }
+        break;
+
+      case FTP_READ_BUF:
+        LOG(("FTP:(%p) Waiting for CC(%p)\n", this, mControlConnection.get()));
+        processingRead = false;
+        break;
+
+      case FTP_ERROR:  // xx needs more work to handle dropped control
+                       // connection cases
+        if ((mTryingCachedControl && mResponseCode == 530 &&
+             mInternalError == NS_ERROR_FTP_PASV) ||
+            (mResponseCode == 425 && mInternalError == NS_ERROR_FTP_PASV)) {
+          // The user was logged out during an pasv operation
+          // we want to restart this request with a new control
+          // channel.
+          mState = FTP_COMMAND_CONNECT;
+        } else if (mResponseCode == 421 &&
+                   mInternalError != NS_ERROR_FTP_LOGIN) {
+          // The command channel dropped for some reason.
+          // Fire it back up, unless we were trying to login
+          // in which case the server might just be telling us
+          // that the max number of users has been reached...
+          mState = FTP_COMMAND_CONNECT;
+        } else if (mAnonymous && mInternalError == NS_ERROR_FTP_LOGIN) {
+          // If the login was anonymous, and it failed, try again with a
+          // username Don't reuse old control connection, see #386167
+          mAnonymous = false;
+          mState = FTP_COMMAND_CONNECT;
+        } else {
+          LOG(("FTP:(%p) FTP_ERROR - calling StopProcessing\n", this));
+          rv = StopProcessing();
+          NS_ASSERTION(NS_SUCCEEDED(rv), "StopProcessing failed.");
+          processingRead = false;
+        }
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // USER
       case FTP_S_USER:
         rv = S_user();
+||||||| merged common ancestors
+            break;
+=======
+      case FTP_COMPLETE:
+        LOG(("FTP:(%p) COMPLETE\n", this));
+        rv = StopProcessing();
+        NS_ASSERTION(NS_SUCCEEDED(rv), "StopProcessing failed.");
+        processingRead = false;
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+// SYST
+          case FTP_S_SYST:
+            rv = S_syst();
+=======
+        // USER
+      case FTP_S_USER:
+        rv = S_user();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_USER);
         break;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_LOGIN;
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_USER:
         mState = R_user();
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_SYST);
+            break;
+=======
+        MoveToNextState(FTP_R_USER);
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+          case FTP_R_SYST:
+            mState = R_syst();
+=======
+      case FTP_R_USER:
+        mState = R_user();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         break;
         // PASS
       case FTP_S_PASS:
         rv = S_pass();
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_LOGIN;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+            break;
+=======
+        break;
+        // PASS
+      case FTP_S_PASS:
+        rv = S_pass();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_PASS);
         break;
+||||||| merged common ancestors
+// TYPE
+          case FTP_S_TYPE:
+            rv = S_type();
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_PASS:
         mState = R_pass();
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        MoveToNextState(FTP_R_PASS);
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_TYPE);
+            break;
+=======
+      case FTP_R_PASS:
+        mState = R_pass();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         break;
         // ACCT
       case FTP_S_ACCT:
         rv = S_acct();
+||||||| merged common ancestors
+          case FTP_R_TYPE:
+            mState = R_type();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        break;
+        // ACCT
+      case FTP_S_ACCT:
+        rv = S_acct();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_ACCT);
         break;
+||||||| merged common ancestors
+            break;
+// CWD
+          case FTP_S_CWD:
+            rv = S_cwd();
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_ACCT:
         mState = R_acct();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
-
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_CWD;
+=======
+        MoveToNextState(FTP_R_ACCT);
         break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_CWD);
+            break;
+=======
+      case FTP_R_ACCT:
+        mState = R_acct();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+          case FTP_R_CWD:
+            mState = R_cwd();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // SYST
       case FTP_S_SYST:
         rv = S_syst();
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_CWD;
+            break;
+=======
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+// LIST
+          case FTP_S_LIST:
+            rv = S_list();
+=======
+        // SYST
+      case FTP_S_SYST:
+        rv = S_syst();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_SYST);
         break;
+||||||| merged common ancestors
+            if (rv == NS_ERROR_NOT_RESUMABLE) {
+                mInternalError = rv;
+            } else if (NS_FAILED(rv)) {
+                mInternalError = NS_ERROR_FTP_CWD;
+            }
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_SYST:
         mState = R_syst();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
-
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_LIST);
+            break;
+=======
+        MoveToNextState(FTP_R_SYST);
         break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+||||||| merged common ancestors
+          case FTP_R_LIST:
+            mState = R_list();
+=======
+      case FTP_R_SYST:
+        mState = R_syst();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_LOGIN;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // TYPE
       case FTP_S_TYPE:
         rv = S_type();
+||||||| merged common ancestors
+            break;
+=======
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = rv;
+||||||| merged common ancestors
+// SIZE
+          case FTP_S_SIZE:
+            rv = S_size();
+=======
+        // TYPE
+      case FTP_S_TYPE:
+        rv = S_type();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_TYPE);
         break;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        if (NS_FAILED(rv)) mInternalError = rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_TYPE:
         mState = R_type();
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_SIZE);
+            break;
+=======
+        MoveToNextState(FTP_R_TYPE);
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+          case FTP_R_SIZE:
+            mState = R_size();
+=======
+      case FTP_R_TYPE:
+        mState = R_type();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         break;
         // CWD
       case FTP_S_CWD:
         rv = S_cwd();
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_CWD;
+||||||| merged common ancestors
+            break;
+=======
+        break;
+        // CWD
+      case FTP_S_CWD:
+        rv = S_cwd();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_CWD);
         break;
+||||||| merged common ancestors
+// REST
+          case FTP_S_REST:
+            rv = S_rest();
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_CWD;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_CWD:
         mState = R_cwd();
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        MoveToNextState(FTP_R_CWD);
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_CWD;
         break;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_REST);
+            break;
+=======
+      case FTP_R_CWD:
+        mState = R_cwd();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         // LIST
       case FTP_S_LIST:
         rv = S_list();
+||||||| merged common ancestors
+          case FTP_R_REST:
+            mState = R_rest();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_CWD;
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (rv == NS_ERROR_NOT_RESUMABLE) {
           mInternalError = rv;
         } else if (NS_FAILED(rv)) {
           mInternalError = NS_ERROR_FTP_CWD;
         }
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        // LIST
+      case FTP_S_LIST:
+        rv = S_list();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_LIST);
         break;
+||||||| merged common ancestors
+            break;
+=======
+        if (rv == NS_ERROR_NOT_RESUMABLE) {
+          mInternalError = rv;
+        } else if (NS_FAILED(rv)) {
+          mInternalError = NS_ERROR_FTP_CWD;
+        }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_LIST:
         mState = R_list();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
-
+||||||| merged common ancestors
+// MDTM
+          case FTP_S_MDTM:
+            rv = S_mdtm();
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+            MoveToNextState(FTP_R_MDTM);
+            break;
+=======
+        MoveToNextState(FTP_R_LIST);
         break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+          case FTP_R_MDTM:
+            mState = R_mdtm();
+=======
+      case FTP_R_LIST:
+        mState = R_list();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            // Don't want to overwrite a more explicit status code
+            if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // SIZE
       case FTP_S_SIZE:
         rv = S_size();
+||||||| merged common ancestors
+            break;
+=======
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = rv;
+||||||| merged common ancestors
+// RETR
+          case FTP_S_RETR:
+            rv = S_retr();
+=======
+        // SIZE
+      case FTP_S_SIZE:
+        rv = S_size();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_SIZE);
         break;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        if (NS_FAILED(rv)) mInternalError = rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_SIZE:
         mState = R_size();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
-
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_RETR);
+            break;
+=======
+        MoveToNextState(FTP_R_SIZE);
         break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+          case FTP_R_RETR:
+=======
+      case FTP_R_SIZE:
+        mState = R_size();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            mState = R_retr();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // REST
       case FTP_S_REST:
         rv = S_rest();
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         if (NS_FAILED(rv)) mInternalError = rv;
+||||||| merged common ancestors
+            break;
+=======
+        // REST
+      case FTP_S_REST:
+        rv = S_rest();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         MoveToNextState(FTP_R_REST);
         break;
+||||||| merged common ancestors
+// STOR
+          case FTP_S_STOR:
+            rv = S_stor();
+=======
+        if (NS_FAILED(rv)) mInternalError = rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_REST:
         mState = R_rest();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
-
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        MoveToNextState(FTP_R_REST);
         break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_STOR);
+            break;
+=======
+      case FTP_R_REST:
+        mState = R_rest();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+          case FTP_R_STOR:
+            mState = R_stor();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // MDTM
       case FTP_S_MDTM:
         rv = S_mdtm();
         if (NS_FAILED(rv)) mInternalError = rv;
         MoveToNextState(FTP_R_MDTM);
         break;
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FAILURE;
+=======
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case FTP_R_MDTM:
         mState = R_mdtm();
+||||||| merged common ancestors
+            break;
+=======
+        // MDTM
+      case FTP_S_MDTM:
+        rv = S_mdtm();
+        if (NS_FAILED(rv)) mInternalError = rv;
+        MoveToNextState(FTP_R_MDTM);
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        // Don't want to overwrite a more explicit status code
+        if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+          mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+// PASV
+          case FTP_S_PASV:
+            rv = S_pasv();
+=======
+      case FTP_R_MDTM:
+        mState = R_mdtm();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_PASV;
+=======
+        // Don't want to overwrite a more explicit status code
+        if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+          mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        // RETR
+      case FTP_S_RETR:
+        rv = S_retr();
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_PASV);
+            break;
+=======
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (NS_FAILED(rv)) mInternalError = rv;
+||||||| merged common ancestors
+          case FTP_R_PASV:
+            mState = R_pasv();
+=======
+        // RETR
+      case FTP_S_RETR:
+        rv = S_retr();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        MoveToNextState(FTP_R_RETR);
+        break;
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_PASV;
+=======
+        if (NS_FAILED(rv)) mInternalError = rv;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      case FTP_R_RETR:
+||||||| merged common ancestors
+            break;
+=======
+        MoveToNextState(FTP_R_RETR);
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        mState = R_retr();
+||||||| merged common ancestors
+// PWD
+          case FTP_S_PWD:
+            rv = S_pwd();
+=======
+      case FTP_R_RETR:
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = NS_ERROR_FTP_PWD;
+=======
+        mState = R_retr();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_PWD);
+            break;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        // STOR
+      case FTP_S_STOR:
+        rv = S_stor();
+||||||| merged common ancestors
+          case FTP_R_PWD:
+            mState = R_pwd();
+=======
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (NS_FAILED(rv)) mInternalError = rv;
+||||||| merged common ancestors
+            if (FTP_ERROR == mState)
+                mInternalError = NS_ERROR_FTP_PWD;
+=======
+        // STOR
+      case FTP_S_STOR:
+        rv = S_stor();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        MoveToNextState(FTP_R_STOR);
+        break;
+||||||| merged common ancestors
+            break;
+=======
+        if (NS_FAILED(rv)) mInternalError = rv;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      case FTP_R_STOR:
+        mState = R_stor();
+||||||| merged common ancestors
+// FEAT for RFC2640 support
+          case FTP_S_FEAT:
+            rv = S_feat();
+=======
+        MoveToNextState(FTP_R_STOR);
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+      case FTP_R_STOR:
+        mState = R_stor();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_FEAT);
+            break;
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        // PASV
+      case FTP_S_PASV:
+        rv = S_pasv();
+||||||| merged common ancestors
+          case FTP_R_FEAT:
+            mState = R_feat();
+=======
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_PASV;
+||||||| merged common ancestors
+            // Don't want to overwrite a more explicit status code
+            if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+                mInternalError = NS_ERROR_FAILURE;
+            break;
+=======
+        // PASV
+      case FTP_S_PASV:
+        rv = S_pasv();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        MoveToNextState(FTP_R_PASV);
+        break;
+||||||| merged common ancestors
+// OPTS for some non-RFC2640-compliant servers support
+          case FTP_S_OPTS:
+            rv = S_opts();
+=======
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_PASV;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      case FTP_R_PASV:
+        mState = R_pasv();
+||||||| merged common ancestors
+            if (NS_FAILED(rv))
+                mInternalError = rv;
+=======
+        MoveToNextState(FTP_R_PASV);
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_PASV;
+||||||| merged common ancestors
+            MoveToNextState(FTP_R_OPTS);
+            break;
+=======
+      case FTP_R_PASV:
+        mState = R_pasv();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        break;
+||||||| merged common ancestors
+          case FTP_R_OPTS:
+            mState = R_opts();
+=======
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_PASV;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        // PWD
+      case FTP_S_PWD:
+        rv = S_pwd();
+||||||| merged common ancestors
+            // Don't want to overwrite a more explicit status code
+            if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+                mInternalError = NS_ERROR_FAILURE;
+            break;
+=======
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_PWD;
+||||||| merged common ancestors
+          default:
+            ;
+=======
+        // PWD
+      case FTP_S_PWD:
+        rv = S_pwd();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+        MoveToNextState(FTP_R_PWD);
+        break;
+
+      case FTP_R_PWD:
+        mState = R_pwd();
+
+        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_PWD;
+
+        break;
+
+        // FEAT for RFC2640 support
+      case FTP_S_FEAT:
+        rv = S_feat();
+
+        if (NS_FAILED(rv)) mInternalError = rv;
+
+        MoveToNextState(FTP_R_FEAT);
+        break;
+
+      case FTP_R_FEAT:
+        mState = R_feat();
 
         // Don't want to overwrite a more explicit status code
         if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
           mInternalError = NS_ERROR_FAILURE;
-
         break;
 
-        // RETR
-      case FTP_S_RETR:
-        rv = S_retr();
+        // OPTS for some non-RFC2640-compliant servers support
+      case FTP_S_OPTS:
+        rv = S_opts();
 
         if (NS_FAILED(rv)) mInternalError = rv;
 
-        MoveToNextState(FTP_R_RETR);
+        MoveToNextState(FTP_R_OPTS);
         break;
 
-      case FTP_R_RETR:
+      case FTP_R_OPTS:
+        mState = R_opts();
 
-        mState = R_retr();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
-
+        // Don't want to overwrite a more explicit status code
+        if (FTP_ERROR == mState && NS_SUCCEEDED(mInternalError))
+          mInternalError = NS_ERROR_FAILURE;
         break;
 
-        // STOR
-      case FTP_S_STOR:
-        rv = S_stor();
-
-        if (NS_FAILED(rv)) mInternalError = rv;
-
-        MoveToNextState(FTP_R_STOR);
-        break;
-
-      case FTP_R_STOR:
-        mState = R_stor();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FAILURE;
-
-        break;
-
-        // PASV
-      case FTP_S_PASV:
-        rv = S_pasv();
-
-        if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_PASV;
-
-        MoveToNextState(FTP_R_PASV);
-        break;
-
-      case FTP_R_PASV:
-        mState = R_pasv();
-
-        if (FTP_ERROR == mState) mInternalError = NS_ERROR_FTP_PASV;
-
-        break;
-
-        // PWD
-      case FTP_S_PWD:
-        rv = S_pwd();
-
+      default:;
+||||||| merged common ancestors
+        }
+=======
         if (NS_FAILED(rv)) mInternalError = NS_ERROR_FTP_PWD;
 
         MoveToNextState(FTP_R_PWD);
@@ -634,6 +1574,7 @@ nsresult nsFtpState::Process() {
         break;
 
       default:;
+>>>>>>> upstream-releases
     }
   }
 
@@ -662,10 +1603,20 @@ nsresult nsFtpState::S_user() {
       if (mChannel->HasLoadFlag(nsIRequest::LOAD_ANONYMOUS))
         return NS_ERROR_FAILURE;
 
+<<<<<<< HEAD
       nsCOMPtr<nsIAuthPrompt2> prompter;
       NS_QueryAuthPrompt2(static_cast<nsIChannel *>(mChannel),
                           getter_AddRefs(prompter));
       if (!prompter) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+    nsresult rv;
+    nsAutoCString usernameStr("USER ");
+=======
+      nsCOMPtr<nsIAuthPrompt2> prompter;
+      NS_QueryAuthPrompt2(static_cast<nsIChannel*>(mChannel),
+                          getter_AddRefs(prompter));
+      if (!prompter) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
       RefPtr<nsAuthInformationHolder> info = new nsAuthInformationHolder(
           nsIAuthInformation::AUTH_HOST, EmptyString(), EmptyCString());
@@ -744,10 +1695,23 @@ nsresult nsFtpState::S_pass() {
       if (mChannel->HasLoadFlag(nsIRequest::LOAD_ANONYMOUS))
         return NS_ERROR_FAILURE;
 
+<<<<<<< HEAD
       nsCOMPtr<nsIAuthPrompt2> prompter;
       NS_QueryAuthPrompt2(static_cast<nsIChannel *>(mChannel),
                           getter_AddRefs(prompter));
       if (!prompter) return NS_ERROR_NOT_INITIALIZED;
+||||||| merged common ancestors
+            nsCOMPtr<nsIAuthPrompt2> prompter;
+            NS_QueryAuthPrompt2(static_cast<nsIChannel*>(mChannel),
+                                getter_AddRefs(prompter));
+            if (!prompter)
+                return NS_ERROR_NOT_INITIALIZED;
+=======
+      nsCOMPtr<nsIAuthPrompt2> prompter;
+      NS_QueryAuthPrompt2(static_cast<nsIChannel*>(mChannel),
+                          getter_AddRefs(prompter));
+      if (!prompter) return NS_ERROR_NOT_INITIALIZED;
+>>>>>>> upstream-releases
 
       RefPtr<nsAuthInformationHolder> info = new nsAuthInformationHolder(
           nsIAuthInformation::AUTH_HOST | nsIAuthInformation::ONLY_PASSWORD,
@@ -833,6 +1797,7 @@ nsresult nsFtpState::S_syst() {
 
 FTP_STATE
 nsFtpState::R_syst() {
+<<<<<<< HEAD
   if (mResponseCode / 100 == 2) {
     if ((mResponseMsg.Find("L8") > -1) || (mResponseMsg.Find("UNIX") > -1) ||
         (mResponseMsg.Find("BSD") > -1) ||
@@ -879,6 +1844,86 @@ nsFtpState::R_syst() {
       // which is displayed to the user.
       mResponseMsg = "";
       return FTP_ERROR;
+||||||| merged common ancestors
+    if (mResponseCode/100 == 2) {
+        if (( mResponseMsg.Find("L8") > -1) ||
+            ( mResponseMsg.Find("UNIX") > -1) ||
+            ( mResponseMsg.Find("BSD") > -1) ||
+            ( mResponseMsg.Find("MACOS Peter's Server") > -1) ||
+            ( mResponseMsg.Find("MACOS WebSTAR FTP") > -1) ||
+            ( mResponseMsg.Find("MVS") > -1) ||
+            ( mResponseMsg.Find("OS/390") > -1) ||
+            ( mResponseMsg.Find("OS/400") > -1)) {
+            mServerType = FTP_UNIX_TYPE;
+        } else if (( mResponseMsg.Find("WIN32", true) > -1) ||
+                   ( mResponseMsg.Find("windows", true) > -1)) {
+            mServerType = FTP_NT_TYPE;
+        } else if (mResponseMsg.Find("OS/2", true) > -1) {
+            mServerType = FTP_OS2_TYPE;
+        } else if (mResponseMsg.Find("VMS", true) > -1) {
+            mServerType = FTP_VMS_TYPE;
+        } else {
+            NS_ERROR("Server type list format unrecognized.");
+            // Guessing causes crashes.
+            // (Of course, the parsing code should be more robust...)
+            nsCOMPtr<nsIStringBundleService> bundleService =
+                do_GetService(NS_STRINGBUNDLE_CONTRACTID);
+            if (!bundleService)
+                return FTP_ERROR;
+
+            nsCOMPtr<nsIStringBundle> bundle;
+            nsresult rv = bundleService->CreateBundle(NECKO_MSGS_URL,
+                                                      getter_AddRefs(bundle));
+            if (NS_FAILED(rv))
+                return FTP_ERROR;
+
+            char16_t* ucs2Response = ToNewUnicode(mResponseMsg);
+            const char16_t *formatStrings[1] = { ucs2Response };
+
+            nsAutoString formattedString;
+            rv = bundle->FormatStringFromName("UnsupportedFTPServer",
+                                              formatStrings, 1,
+                                              formattedString);
+            free(ucs2Response);
+            if (NS_FAILED(rv))
+                return FTP_ERROR;
+
+            // TODO(darin): this code should not be dictating UI like this!
+            nsCOMPtr<nsIPrompt> prompter;
+            mChannel->GetCallback(prompter);
+            if (prompter)
+                prompter->Alert(nullptr, formattedString.get());
+
+            // since we just alerted the user, clear mResponseMsg,
+            // which is displayed to the user.
+            mResponseMsg = "";
+            return FTP_ERROR;
+        }
+
+        return FTP_S_FEAT;
+=======
+  if (mResponseCode / 100 == 2) {
+    if ((mResponseMsg.Find("L8") > -1) || (mResponseMsg.Find("UNIX") > -1) ||
+        (mResponseMsg.Find("BSD") > -1) ||
+        (mResponseMsg.Find("MACOS Peter's Server") > -1) ||
+        (mResponseMsg.Find("MACOS WebSTAR FTP") > -1) ||
+        (mResponseMsg.Find("MVS") > -1) || (mResponseMsg.Find("OS/390") > -1) ||
+        (mResponseMsg.Find("OS/400") > -1)) {
+      mServerType = FTP_UNIX_TYPE;
+    } else if ((mResponseMsg.Find("WIN32", true) > -1) ||
+               (mResponseMsg.Find("windows", true) > -1)) {
+      mServerType = FTP_NT_TYPE;
+    } else if (mResponseMsg.Find("OS/2", true) > -1) {
+      mServerType = FTP_OS2_TYPE;
+    } else if (mResponseMsg.Find("VMS", true) > -1) {
+      mServerType = FTP_VMS_TYPE;
+    } else {
+      NS_ERROR("Server type list format unrecognized.");
+
+      // clear mResponseMsg, which is displayed to the user.
+      mResponseMsg = "";
+      return FTP_ERROR;
+>>>>>>> upstream-releases
     }
 
     return FTP_S_FEAT;
@@ -1074,12 +2119,28 @@ nsresult nsFtpState::S_list() {
 
   mChannel->SetEntityID(EmptyCString());
 
+<<<<<<< HEAD
   const char *listString;
   if (mServerType == FTP_VMS_TYPE) {
     listString = "LIST *.*;0" CRLF;
   } else {
     listString = "LIST" CRLF;
   }
+||||||| merged common ancestors
+    const char *listString;
+    if (mServerType == FTP_VMS_TYPE) {
+        listString = "LIST *.*;0" CRLF;
+    } else {
+        listString = "LIST" CRLF;
+    }
+=======
+  const char* listString;
+  if (mServerType == FTP_VMS_TYPE) {
+    listString = "LIST *.*;0" CRLF;
+  } else {
+    listString = "LIST" CRLF;
+  }
+>>>>>>> upstream-releases
 
   return SendFTPCommand(nsDependentCString(listString));
 }
@@ -1208,6 +2269,7 @@ nsFtpState::R_stor() {
   return FTP_ERROR;
 }
 
+<<<<<<< HEAD
 nsresult nsFtpState::S_pasv() {
   if (!mAddressChecked) {
     // Find socket address
@@ -1242,23 +2304,117 @@ nsresult nsFtpState::S_pasv() {
           if (NS_SUCCEEDED(rv))
             mServerIsIPv6 = (selfAddress.raw.family == AF_INET6) &&
                             !IsIPAddrV4Mapped(&selfAddress);
+||||||| merged common ancestors
+
+nsresult
+nsFtpState::S_pasv() {
+    if (!mAddressChecked) {
+        // Find socket address
+        mAddressChecked = true;
+        mServerAddress.raw.family = AF_INET;
+        mServerAddress.inet.ip = htonl(INADDR_ANY);
+        mServerAddress.inet.port = htons(0);
+
+        nsITransport *controlSocket = mControlConnection->Transport();
+        if (!controlSocket)
+            // XXX Invalid cast of FTP_STATE to nsresult -- FTP_ERROR has
+            // value < 0x80000000 and will pass NS_SUCCEEDED() (bug 778109)
+            return (nsresult)FTP_ERROR;
+
+        nsCOMPtr<nsISocketTransport> sTrans = do_QueryInterface(controlSocket);
+        if (sTrans) {
+            nsresult rv = sTrans->GetPeerAddr(&mServerAddress);
+            if (NS_SUCCEEDED(rv)) {
+                if (!IsIPAddrAny(&mServerAddress))
+                    mServerIsIPv6 = (mServerAddress.raw.family == AF_INET6) &&
+                                    !IsIPAddrV4Mapped(&mServerAddress);
+                else {
+                    /*
+                     * In case of SOCKS5 remote DNS resolution, we do
+                     * not know the remote IP address. Still, if it is
+                     * an IPV6 host, then the external address of the
+                     * socks server should also be IPv6, and this is the
+                     * self address of the transport.
+                     */
+                    NetAddr selfAddress;
+                    rv = sTrans->GetSelfAddr(&selfAddress);
+                    if (NS_SUCCEEDED(rv))
+                        mServerIsIPv6 = (selfAddress.raw.family == AF_INET6) &&
+                                        !IsIPAddrV4Mapped(&selfAddress);
+                }
+            }
+=======
+nsresult nsFtpState::S_pasv() {
+  if (!mAddressChecked) {
+    // Find socket address
+    mAddressChecked = true;
+    mServerAddress.raw.family = AF_INET;
+    mServerAddress.inet.ip = htonl(INADDR_ANY);
+    mServerAddress.inet.port = htons(0);
+
+    nsITransport* controlSocket = mControlConnection->Transport();
+    if (!controlSocket)
+      // XXX Invalid cast of FTP_STATE to nsresult -- FTP_ERROR has
+      // value < 0x80000000 and will pass NS_SUCCEEDED() (bug 778109)
+      return (nsresult)FTP_ERROR;
+
+    nsCOMPtr<nsISocketTransport> sTrans = do_QueryInterface(controlSocket);
+    if (sTrans) {
+      nsresult rv = sTrans->GetPeerAddr(&mServerAddress);
+      if (NS_SUCCEEDED(rv)) {
+        if (!IsIPAddrAny(&mServerAddress))
+          mServerIsIPv6 = (mServerAddress.raw.family == AF_INET6) &&
+                          !IsIPAddrV4Mapped(&mServerAddress);
+        else {
+          /*
+           * In case of SOCKS5 remote DNS resolution, we do
+           * not know the remote IP address. Still, if it is
+           * an IPV6 host, then the external address of the
+           * socks server should also be IPv6, and this is the
+           * self address of the transport.
+           */
+          NetAddr selfAddress;
+          rv = sTrans->GetSelfAddr(&selfAddress);
+          if (NS_SUCCEEDED(rv))
+            mServerIsIPv6 = (selfAddress.raw.family == AF_INET6) &&
+                            !IsIPAddrV4Mapped(&selfAddress);
+>>>>>>> upstream-releases
         }
       }
     }
   }
 
+<<<<<<< HEAD
   const char *string;
   if (mServerIsIPv6) {
     string = "EPSV" CRLF;
   } else {
     string = "PASV" CRLF;
   }
+||||||| merged common ancestors
+    const char *string;
+    if (mServerIsIPv6) {
+        string = "EPSV" CRLF;
+    } else {
+        string = "PASV" CRLF;
+    }
+
+    return SendFTPCommand(nsDependentCString(string));
+=======
+  const char* string;
+  if (mServerIsIPv6) {
+    string = "EPSV" CRLF;
+  } else {
+    string = "PASV" CRLF;
+  }
+>>>>>>> upstream-releases
 
   return SendFTPCommand(nsDependentCString(string));
 }
 
 FTP_STATE
 nsFtpState::R_pasv() {
+<<<<<<< HEAD
   if (mResponseCode / 100 != 2) return FTP_ERROR;
 
   nsresult rv;
@@ -1307,6 +2463,85 @@ nsFtpState::R_pasv() {
       while (*ptr && *ptr != ',') ++ptr;
       if (*ptr) {
         // backup to the start of the digits
+||||||| merged common ancestors
+    if (mResponseCode/100 != 2)
+        return FTP_ERROR;
+
+    nsresult rv;
+    int32_t port;
+
+    nsAutoCString responseCopy(mResponseMsg);
+    char *response = responseCopy.BeginWriting();
+
+    char *ptr = response;
+
+    // Make sure to ignore the address in the PASV response (bug 370559)
+
+    if (mServerIsIPv6) {
+        // The returned string is of the form
+        // text (|||ppp|)
+        // Where '|' can be any single character
+        char delim;
+        while (*ptr && *ptr != '(')
+            ptr++;
+        if (*ptr++ != '(')
+            return FTP_ERROR;
+        delim = *ptr++;
+        if (!delim || *ptr++ != delim ||
+                      *ptr++ != delim ||
+                      *ptr < '0' || *ptr > '9')
+            return FTP_ERROR;
+        port = 0;
+=======
+  if (mResponseCode / 100 != 2) return FTP_ERROR;
+
+  nsresult rv;
+  int32_t port;
+
+  nsAutoCString responseCopy(mResponseMsg);
+  char* response = responseCopy.BeginWriting();
+
+  char* ptr = response;
+
+  // Make sure to ignore the address in the PASV response (bug 370559)
+
+  if (mServerIsIPv6) {
+    // The returned string is of the form
+    // text (|||ppp|)
+    // Where '|' can be any single character
+    char delim;
+    while (*ptr && *ptr != '(') ptr++;
+    if (*ptr++ != '(') return FTP_ERROR;
+    delim = *ptr++;
+    if (!delim || *ptr++ != delim || *ptr++ != delim || *ptr < '0' ||
+        *ptr > '9')
+      return FTP_ERROR;
+    port = 0;
+    do {
+      port = port * 10 + *ptr++ - '0';
+    } while (*ptr >= '0' && *ptr <= '9');
+    if (*ptr++ != delim || *ptr != ')') return FTP_ERROR;
+  } else {
+    // The returned address string can be of the form
+    // (xxx,xxx,xxx,xxx,ppp,ppp) or
+    //  xxx,xxx,xxx,xxx,ppp,ppp (without parens)
+    int32_t h0, h1, h2, h3, p0, p1;
+
+    int32_t fields = 0;
+    // First try with parens
+    while (*ptr && *ptr != '(') ++ptr;
+    if (*ptr) {
+      ++ptr;
+      fields = PR_sscanf(ptr, "%ld,%ld,%ld,%ld,%ld,%ld", &h0, &h1, &h2, &h3,
+                         &p0, &p1);
+    }
+    if (!*ptr || fields < 6) {
+      // OK, lets try w/o parens
+      ptr = response;
+      while (*ptr && *ptr != ',') ++ptr;
+      if (*ptr) {
+        // backup to the start of the digits
+>>>>>>> upstream-releases
         do {
           ptr--;
         } while ((ptr >= response) && (*ptr >= '0') && (*ptr <= '9'));
@@ -1316,9 +2551,35 @@ nsFtpState::R_pasv() {
       }
     }
 
+<<<<<<< HEAD
+    NS_ASSERTION(fields == 6, "Can't parse PASV response");
+    if (fields < 6) return FTP_ERROR;
+||||||| merged common ancestors
+    bool newDataConn = true;
+    if (mDataTransport) {
+        // Reuse this connection only if its still alive, and the port
+        // is the same
+        nsCOMPtr<nsISocketTransport> strans = do_QueryInterface(mDataTransport);
+        if (strans) {
+            int32_t oldPort;
+            nsresult rv = strans->GetPort(&oldPort);
+            if (NS_SUCCEEDED(rv)) {
+                if (oldPort == port) {
+                    bool isAlive;
+                    if (NS_SUCCEEDED(strans->IsAlive(&isAlive)) && isAlive)
+                        newDataConn = false;
+                }
+            }
+        }
+=======
     NS_ASSERTION(fields == 6, "Can't parse PASV response");
     if (fields < 6) return FTP_ERROR;
 
+    port = ((int32_t)(p0 << 8)) + p1;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     port = ((int32_t)(p0 << 8)) + p1;
   }
 
@@ -1335,6 +2596,26 @@ nsFtpState::R_pasv() {
           bool isAlive;
           if (NS_SUCCEEDED(strans->IsAlive(&isAlive)) && isAlive)
             newDataConn = false;
+||||||| merged common ancestors
+        if (newDataConn) {
+            mDataTransport->Close(NS_ERROR_ABORT);
+            mDataTransport = nullptr;
+            mDataStream = nullptr;
+=======
+  bool newDataConn = true;
+  if (mDataTransport) {
+    // Reuse this connection only if its still alive, and the port
+    // is the same
+    nsCOMPtr<nsISocketTransport> strans = do_QueryInterface(mDataTransport);
+    if (strans) {
+      int32_t oldPort;
+      nsresult rv = strans->GetPort(&oldPort);
+      if (NS_SUCCEEDED(rv)) {
+        if (oldPort == port) {
+          bool isAlive;
+          if (NS_SUCCEEDED(strans->IsAlive(&isAlive)) && isAlive)
+            newDataConn = false;
+>>>>>>> upstream-releases
         }
       }
     }
@@ -1373,6 +2654,7 @@ nsFtpState::R_pasv() {
       if (NS_FAILED(rv)) return FTP_ERROR;
     }
 
+<<<<<<< HEAD
     rv = sts->CreateTransport(nullptr, 0, host, port, mChannel->ProxyInfo(),
                               getter_AddRefs(strans));  // the data socket
     if (NS_FAILED(rv)) return FTP_ERROR;
@@ -1438,6 +2720,78 @@ nsFtpState::R_pasv() {
 
   if (mRETRFailed || mPath.IsEmpty() || mPath.Last() == '/') return FTP_S_CWD;
   return FTP_S_SIZE;
+||||||| merged common ancestors
+    if (mRETRFailed || mPath.IsEmpty() || mPath.Last() == '/')
+        return FTP_S_CWD;
+    return FTP_S_SIZE;
+=======
+    rv = sts->CreateTransport(nsTArray<nsCString>(), host, port,
+                              mChannel->ProxyInfo(),
+                              getter_AddRefs(strans));  // the data socket
+    if (NS_FAILED(rv)) return FTP_ERROR;
+    mDataTransport = strans;
+
+    strans->SetQoSBits(gFtpHandler->GetDataQoSBits());
+
+    LOG(("FTP:(%p) created DT (%s:%x)\n", this, host.get(), port));
+
+    // hook ourself up as a proxy for status notifications
+    rv = mDataTransport->SetEventSink(this, GetCurrentThreadEventTarget());
+    NS_ENSURE_SUCCESS(rv, FTP_ERROR);
+
+    if (mAction == PUT) {
+      NS_ASSERTION(!mRETRFailed, "Failed before uploading");
+
+      // nsIUploadChannel requires the upload stream to support ReadSegments.
+      // therefore, we can open an unbuffered socket output stream.
+      nsCOMPtr<nsIOutputStream> output;
+      rv = mDataTransport->OpenOutputStream(nsITransport::OPEN_UNBUFFERED, 0, 0,
+                                            getter_AddRefs(output));
+      if (NS_FAILED(rv)) return FTP_ERROR;
+
+      // perform the data copy on the socket transport thread.  we do this
+      // because "output" is a socket output stream, so the result is that
+      // all work will be done on the socket transport thread.
+      nsCOMPtr<nsIEventTarget> stEventTarget =
+          do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID);
+      if (!stEventTarget) return FTP_ERROR;
+
+      nsCOMPtr<nsIAsyncStreamCopier> copier =
+          do_CreateInstance(NS_ASYNCSTREAMCOPIER_CONTRACTID, &rv);
+      if (NS_SUCCEEDED(rv)) {
+        rv = copier->Init(mChannel->UploadStream(), output, stEventTarget, true,
+                          false /* output is NOT buffered */, 0, true, true);
+      }
+      if (NS_FAILED(rv)) return FTP_ERROR;
+
+      rv = copier->AsyncCopy(this, nullptr);
+      if (NS_FAILED(rv)) return FTP_ERROR;
+
+      // hold a reference to the copier so we can cancel it if necessary.
+      mUploadRequest = copier;
+
+      // update the current working directory before sending the STOR
+      // command.  this is needed since we might be reusing a control
+      // connection.
+      return FTP_S_CWD;
+    }
+
+    //
+    // else, we are reading from the data connection...
+    //
+
+    // open a buffered, asynchronous socket input stream
+    nsCOMPtr<nsIInputStream> input;
+    rv = mDataTransport->OpenInputStream(0, nsIOService::gDefaultSegmentSize,
+                                         nsIOService::gDefaultSegmentCount,
+                                         getter_AddRefs(input));
+    NS_ENSURE_SUCCESS(rv, FTP_ERROR);
+    mDataStream = do_QueryInterface(input);
+  }
+
+  if (mRETRFailed || mPath.IsEmpty() || mPath.Last() == '/') return FTP_S_CWD;
+  return FTP_S_SIZE;
+>>>>>>> upstream-releases
 }
 
 nsresult nsFtpState::S_feat() {
@@ -1474,9 +2828,21 @@ nsFtpState::R_opts() {
 ////////////////////////////////////////////////////////////////////////////////
 // nsIRequest methods:
 
+<<<<<<< HEAD
 nsresult nsFtpState::Init(nsFtpChannel *channel) {
   // parameter validation
   NS_ASSERTION(channel, "FTP: needs a channel");
+||||||| merged common ancestors
+nsresult
+nsFtpState::Init(nsFtpChannel *channel)
+{
+    // parameter validation
+    NS_ASSERTION(channel, "FTP: needs a channel");
+=======
+nsresult nsFtpState::Init(nsFtpChannel* channel) {
+  // parameter validation
+  NS_ASSERTION(channel, "FTP: needs a channel");
+>>>>>>> upstream-releases
 
   mChannel = channel;  // a straight ref ptr to the channel
 
@@ -1519,6 +2885,7 @@ nsresult nsFtpState::Init(nsFtpChannel *channel) {
     mChannel->UpdateURI(outURI);
   }
 
+<<<<<<< HEAD
   // Skip leading slash
   char *fwdPtr = path.BeginWriting();
   if (!fwdPtr) return NS_ERROR_OUT_OF_MEMORY;
@@ -1527,6 +2894,27 @@ nsresult nsFtpState::Init(nsFtpChannel *channel) {
     // now unescape it... %xx reduced inline to resulting character
     int32_t len = NS_UnescapeURL(fwdPtr);
     mPath.Assign(fwdPtr, len);
+||||||| merged common ancestors
+    // Skip leading slash
+    char *fwdPtr = path.BeginWriting();
+    if (!fwdPtr)
+        return NS_ERROR_OUT_OF_MEMORY;
+    if (*fwdPtr == '/')
+        fwdPtr++;
+    if (*fwdPtr != '\0') {
+        // now unescape it... %xx reduced inline to resulting character
+        int32_t len = NS_UnescapeURL(fwdPtr);
+        mPath.Assign(fwdPtr, len);
+=======
+  // Skip leading slash
+  char* fwdPtr = path.BeginWriting();
+  if (!fwdPtr) return NS_ERROR_OUT_OF_MEMORY;
+  if (*fwdPtr == '/') fwdPtr++;
+  if (*fwdPtr != '\0') {
+    // now unescape it... %xx reduced inline to resulting character
+    int32_t len = NS_UnescapeURL(fwdPtr);
+    mPath.Assign(fwdPtr, len);
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
     if (mPath.FindCharInSet(CRLF) >= 0)
@@ -1567,10 +2955,22 @@ nsresult nsFtpState::Init(nsFtpChannel *channel) {
   nsCOMPtr<nsIProtocolProxyService> pps =
       do_GetService(NS_PROTOCOLPROXYSERVICE_CONTRACTID);
 
+<<<<<<< HEAD
   if (pps && !mChannel->ProxyInfo()) {
     pps->AsyncResolve(static_cast<nsIChannel *>(mChannel), 0, this, nullptr,
                       getter_AddRefs(mProxyRequest));
   }
+||||||| merged common ancestors
+    if (pps && !mChannel->ProxyInfo()) {
+        pps->AsyncResolve(static_cast<nsIChannel*>(mChannel), 0, this, nullptr,
+                          getter_AddRefs(mProxyRequest));
+    }
+=======
+  if (pps && !mChannel->ProxyInfo()) {
+    pps->AsyncResolve(static_cast<nsIChannel*>(mChannel), 0, this, nullptr,
+                      getter_AddRefs(mProxyRequest));
+  }
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1629,6 +3029,7 @@ void nsFtpState::KillControlConnection() {
   mControlConnection = nullptr;
 }
 
+<<<<<<< HEAD
 class nsFtpAsyncAlert : public Runnable {
  public:
   nsFtpAsyncAlert(nsIPrompt *aPrompter, nsString aResponseMsg)
@@ -1646,12 +3047,48 @@ class nsFtpAsyncAlert : public Runnable {
     }
     return NS_OK;
   }
+||||||| merged common ancestors
+class nsFtpAsyncAlert : public Runnable
+{
+public:
+  nsFtpAsyncAlert(nsIPrompt* aPrompter, nsString aResponseMsg)
+    : mozilla::Runnable("nsFtpAsyncAlert")
+    , mPrompter(aPrompter)
+    , mResponseMsg(std::move(aResponseMsg))
+  {
+    }
+protected:
+    virtual ~nsFtpAsyncAlert() = default;
+public:
+    NS_IMETHOD Run() override
+    {
+        if (mPrompter) {
+            mPrompter->Alert(nullptr, mResponseMsg.get());
+        }
+        return NS_OK;
+    }
+private:
+    nsCOMPtr<nsIPrompt> mPrompter;
+    nsString mResponseMsg;
+};
+=======
+nsresult nsFtpState::StopProcessing() {
+  // Only do this function once.
+  if (!mKeepRunning) return NS_OK;
+  mKeepRunning = false;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   nsCOMPtr<nsIPrompt> mPrompter;
   nsString mResponseMsg;
 };
+||||||| merged common ancestors
+=======
+  LOG_INFO(("FTP:(%p) nsFtpState stopping", this));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 nsresult nsFtpState::StopProcessing() {
   // Only do this function once.
   if (!mKeepRunning) return NS_OK;
@@ -1681,6 +3118,48 @@ nsresult nsFtpState::StopProcessing() {
     mChannel->GetCallback(ftpChanP);
     if (ftpChanP) {
       ftpChanP->SetErrorMsg(mResponseMsg.get(), mUseUTF8);
+||||||| merged common ancestors
+nsresult
+nsFtpState::StopProcessing()
+{
+    // Only do this function once.
+    if (!mKeepRunning)
+        return NS_OK;
+    mKeepRunning = false;
+
+    LOG_INFO(("FTP:(%p) nsFtpState stopping", this));
+
+    if (NS_FAILED(mInternalError) && !mResponseMsg.IsEmpty()) {
+        // check to see if the control status is bad.
+        // web shell wont throw an alert.  we better:
+
+        // XXX(darin): this code should not be dictating UI like this!
+        nsCOMPtr<nsIPrompt> prompter;
+        mChannel->GetCallback(prompter);
+        if (prompter) {
+            nsCOMPtr<nsIRunnable> alertEvent;
+            if (mUseUTF8) {
+                alertEvent = new nsFtpAsyncAlert(prompter,
+                    NS_ConvertUTF8toUTF16(mResponseMsg));
+            } else {
+                alertEvent = new nsFtpAsyncAlert(prompter,
+                    NS_ConvertASCIItoUTF16(mResponseMsg));
+            }
+            NS_DispatchToMainThread(alertEvent);
+        }
+        nsCOMPtr<nsIFTPChannelParentInternal> ftpChanP;
+        mChannel->GetCallback(ftpChanP);
+        if (ftpChanP) {
+          ftpChanP->SetErrorMsg(mResponseMsg.get(), mUseUTF8);
+        }
+=======
+  if (NS_FAILED(mInternalError) && !mResponseMsg.IsEmpty()) {
+    // check to see if the control status is bad, forward the error message.
+    nsCOMPtr<nsIFTPChannelParentInternal> ftpChanP;
+    mChannel->GetCallback(ftpChanP);
+    if (ftpChanP) {
+      ftpChanP->SetErrorMsg(mResponseMsg.get(), mUseUTF8);
+>>>>>>> upstream-releases
     }
   }
 
@@ -1699,8 +3178,18 @@ nsresult nsFtpState::StopProcessing() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsFtpState::SendFTPCommand(const nsACString &command) {
   NS_ASSERTION(mControlConnection, "null control connection");
+||||||| merged common ancestors
+nsresult
+nsFtpState::SendFTPCommand(const nsACString& command)
+{
+    NS_ASSERTION(mControlConnection, "null control connection");
+=======
+nsresult nsFtpState::SendFTPCommand(const nsACString& command) {
+  NS_ASSERTION(mControlConnection, "null control connection");
+>>>>>>> upstream-releases
 
   // we don't want to log the password:
   nsAutoCString logcmd(command);
@@ -1721,6 +3210,7 @@ nsresult nsFtpState::SendFTPCommand(const nsACString &command) {
 // Convert a unix-style filespec to VMS format
 // /foo/fred/barney/file.txt -> foo:[fred.barney]file.txt
 // /foo/file.txt -> foo:[000000]file.txt
+<<<<<<< HEAD
 void nsFtpState::ConvertFilespecToVMS(nsCString &fileString) {
   int ntok = 1;
   char *t, *nextToken;
@@ -1763,6 +3253,103 @@ void nsFtpState::ConvertFilespecToVMS(nsCString &fileString) {
         for (int i = 2; i < ntok; i++) {
           if (i > 2) fileString.Append('.');
           fileString.Append(nsCRT::strtok(nextToken, "/", &nextToken));
+||||||| merged common ancestors
+void
+nsFtpState::ConvertFilespecToVMS(nsCString& fileString)
+{
+    int ntok=1;
+    char *t, *nextToken;
+    nsAutoCString fileStringCopy;
+
+    // Get a writeable copy we can strtok with.
+    fileStringCopy = fileString;
+    t = nsCRT::strtok(fileStringCopy.BeginWriting(), "/", &nextToken);
+    if (t)
+        while (nsCRT::strtok(nextToken, "/", &nextToken))
+            ntok++; // count number of terms (tokens)
+    LOG(("FTP:(%p) ConvertFilespecToVMS ntok: %d\n", this, ntok));
+    LOG(("FTP:(%p) ConvertFilespecToVMS from: \"%s\"\n", this, fileString.get()));
+
+    if (fileString.First() == '/') {
+        // absolute filespec
+        //   /        -> []
+        //   /a       -> a (doesn't really make much sense)
+        //   /a/b     -> a:[000000]b
+        //   /a/b/c   -> a:[b]c
+        //   /a/b/c/d -> a:[b.c]d
+        if (ntok == 1) {
+            if (fileString.Length() == 1) {
+                // Just a slash
+                fileString.Truncate();
+                fileString.AppendLiteral("[]");
+            } else {
+                // just copy the name part (drop the leading slash)
+                fileStringCopy = fileString;
+                fileString = Substring(fileStringCopy, 1,
+                                       fileStringCopy.Length()-1);
+            }
+        } else {
+            // Get another copy since the last one was written to.
+            fileStringCopy = fileString;
+            fileString.Truncate();
+            fileString.Append(nsCRT::strtok(fileStringCopy.BeginWriting(),
+                              "/", &nextToken));
+            fileString.AppendLiteral(":[");
+            if (ntok > 2) {
+                for (int i=2; i<ntok; i++) {
+                    if (i > 2) fileString.Append('.');
+                    fileString.Append(nsCRT::strtok(nextToken,
+                                      "/", &nextToken));
+                }
+            } else {
+                fileString.AppendLiteral("000000");
+            }
+            fileString.Append(']');
+            fileString.Append(nsCRT::strtok(nextToken, "/", &nextToken));
+=======
+void nsFtpState::ConvertFilespecToVMS(nsCString& fileString) {
+  int ntok = 1;
+  char *t, *nextToken;
+  nsAutoCString fileStringCopy;
+
+  // Get a writeable copy we can strtok with.
+  fileStringCopy = fileString;
+  t = nsCRT::strtok(fileStringCopy.BeginWriting(), "/", &nextToken);
+  if (t)
+    while (nsCRT::strtok(nextToken, "/", &nextToken))
+      ntok++;  // count number of terms (tokens)
+  LOG(("FTP:(%p) ConvertFilespecToVMS ntok: %d\n", this, ntok));
+  LOG(("FTP:(%p) ConvertFilespecToVMS from: \"%s\"\n", this, fileString.get()));
+
+  if (fileString.First() == '/') {
+    // absolute filespec
+    //   /        -> []
+    //   /a       -> a (doesn't really make much sense)
+    //   /a/b     -> a:[000000]b
+    //   /a/b/c   -> a:[b]c
+    //   /a/b/c/d -> a:[b.c]d
+    if (ntok == 1) {
+      if (fileString.Length() == 1) {
+        // Just a slash
+        fileString.Truncate();
+        fileString.AppendLiteral("[]");
+      } else {
+        // just copy the name part (drop the leading slash)
+        fileStringCopy = fileString;
+        fileString = Substring(fileStringCopy, 1, fileStringCopy.Length() - 1);
+      }
+    } else {
+      // Get another copy since the last one was written to.
+      fileStringCopy = fileString;
+      fileString.Truncate();
+      fileString.Append(
+          nsCRT::strtok(fileStringCopy.BeginWriting(), "/", &nextToken));
+      fileString.AppendLiteral(":[");
+      if (ntok > 2) {
+        for (int i = 2; i < ntok; i++) {
+          if (i > 2) fileString.Append('.');
+          fileString.Append(nsCRT::strtok(nextToken, "/", &nextToken));
+>>>>>>> upstream-releases
         }
       } else {
         fileString.AppendLiteral("000000");
@@ -1802,6 +3389,7 @@ void nsFtpState::ConvertFilespecToVMS(nsCString &fileString) {
 // /foo/fred -> foo:[fred]
 // /foo -> foo:[000000]
 // (null) -> (null)
+<<<<<<< HEAD
 void nsFtpState::ConvertDirspecToVMS(nsCString &dirSpec) {
   LOG(("FTP:(%p) ConvertDirspecToVMS from: \"%s\"\n", this, dirSpec.get()));
   if (!dirSpec.IsEmpty()) {
@@ -1812,9 +3400,36 @@ void nsFtpState::ConvertDirspecToVMS(nsCString &dirSpec) {
     dirSpec.Truncate(dirSpec.Length() - 1);
   }
   LOG(("FTP:(%p) ConvertDirspecToVMS   to: \"%s\"\n", this, dirSpec.get()));
+||||||| merged common ancestors
+void
+nsFtpState::ConvertDirspecToVMS(nsCString& dirSpec)
+{
+    LOG(("FTP:(%p) ConvertDirspecToVMS from: \"%s\"\n", this, dirSpec.get()));
+    if (!dirSpec.IsEmpty()) {
+        if (dirSpec.Last() != '/')
+            dirSpec.Append('/');
+        // we can use the filespec routine if we make it look like a file name
+        dirSpec.Append('x');
+        ConvertFilespecToVMS(dirSpec);
+        dirSpec.Truncate(dirSpec.Length()-1);
+    }
+    LOG(("FTP:(%p) ConvertDirspecToVMS   to: \"%s\"\n", this, dirSpec.get()));
+=======
+void nsFtpState::ConvertDirspecToVMS(nsCString& dirSpec) {
+  LOG(("FTP:(%p) ConvertDirspecToVMS from: \"%s\"\n", this, dirSpec.get()));
+  if (!dirSpec.IsEmpty()) {
+    if (dirSpec.Last() != '/') dirSpec.Append('/');
+    // we can use the filespec routine if we make it look like a file name
+    dirSpec.Append('x');
+    ConvertFilespecToVMS(dirSpec);
+    dirSpec.Truncate(dirSpec.Length() - 1);
+  }
+  LOG(("FTP:(%p) ConvertDirspecToVMS   to: \"%s\"\n", this, dirSpec.get()));
+>>>>>>> upstream-releases
 }
 
 // Convert an absolute VMS style dirspec to UNIX format
+<<<<<<< HEAD
 void nsFtpState::ConvertDirspecFromVMS(nsCString &dirSpec) {
   LOG(("FTP:(%p) ConvertDirspecFromVMS from: \"%s\"\n", this, dirSpec.get()));
   if (dirSpec.IsEmpty()) {
@@ -1826,11 +3441,39 @@ void nsFtpState::ConvertDirspecFromVMS(nsCString &dirSpec) {
     dirSpec.ReplaceChar(']', '/');
   }
   LOG(("FTP:(%p) ConvertDirspecFromVMS   to: \"%s\"\n", this, dirSpec.get()));
+||||||| merged common ancestors
+void
+nsFtpState::ConvertDirspecFromVMS(nsCString& dirSpec)
+{
+    LOG(("FTP:(%p) ConvertDirspecFromVMS from: \"%s\"\n", this, dirSpec.get()));
+    if (dirSpec.IsEmpty()) {
+        dirSpec.Insert('.', 0);
+    } else {
+        dirSpec.Insert('/', 0);
+        dirSpec.ReplaceSubstring(":[", "/");
+        dirSpec.ReplaceChar('.', '/');
+        dirSpec.ReplaceChar(']', '/');
+    }
+    LOG(("FTP:(%p) ConvertDirspecFromVMS   to: \"%s\"\n", this, dirSpec.get()));
+=======
+void nsFtpState::ConvertDirspecFromVMS(nsCString& dirSpec) {
+  LOG(("FTP:(%p) ConvertDirspecFromVMS from: \"%s\"\n", this, dirSpec.get()));
+  if (dirSpec.IsEmpty()) {
+    dirSpec.Insert('.', 0);
+  } else {
+    dirSpec.Insert('/', 0);
+    dirSpec.ReplaceSubstring(":[", "/");
+    dirSpec.ReplaceChar('.', '/');
+    dirSpec.ReplaceChar(']', '/');
+  }
+  LOG(("FTP:(%p) ConvertDirspecFromVMS   to: \"%s\"\n", this, dirSpec.get()));
+>>>>>>> upstream-releases
 }
 
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::OnTransportStatus(nsITransport *transport, nsresult status,
                               int64_t progress, int64_t progressMax) {
   // Mix signals from both the control and data connections.
@@ -1847,6 +3490,43 @@ nsFtpState::OnTransportStatus(nsITransport *transport, nsresult status,
         break;
       default:
         return NS_OK;
+||||||| merged common ancestors
+nsFtpState::OnTransportStatus(nsITransport *transport, nsresult status,
+                              int64_t progress, int64_t progressMax)
+{
+    // Mix signals from both the control and data connections.
+
+    // Ignore data transfer events on the control connection.
+    if (mControlConnection && transport == mControlConnection->Transport()) {
+        switch (status) {
+        case NS_NET_STATUS_RESOLVING_HOST:
+        case NS_NET_STATUS_RESOLVED_HOST:
+        case NS_NET_STATUS_CONNECTING_TO:
+        case NS_NET_STATUS_CONNECTED_TO:
+        case NS_NET_STATUS_TLS_HANDSHAKE_STARTING:
+        case NS_NET_STATUS_TLS_HANDSHAKE_ENDED:
+            break;
+        default:
+            return NS_OK;
+        }
+=======
+nsFtpState::OnTransportStatus(nsITransport* transport, nsresult status,
+                              int64_t progress, int64_t progressMax) {
+  // Mix signals from both the control and data connections.
+
+  // Ignore data transfer events on the control connection.
+  if (mControlConnection && transport == mControlConnection->Transport()) {
+    switch (status) {
+      case NS_NET_STATUS_RESOLVING_HOST:
+      case NS_NET_STATUS_RESOLVED_HOST:
+      case NS_NET_STATUS_CONNECTING_TO:
+      case NS_NET_STATUS_CONNECTED_TO:
+      case NS_NET_STATUS_TLS_HANDSHAKE_STARTING:
+      case NS_NET_STATUS_TLS_HANDSHAKE_ENDED:
+        break;
+      default:
+        return NS_OK;
+>>>>>>> upstream-releases
     }
   }
 
@@ -1861,15 +3541,36 @@ nsFtpState::OnTransportStatus(nsITransport *transport, nsresult status,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::OnStartRequest(nsIRequest *request, nsISupports *context) {
   mStorReplyReceived = false;
   return NS_OK;
+||||||| merged common ancestors
+nsFtpState::OnStartRequest(nsIRequest *request, nsISupports *context)
+{
+    mStorReplyReceived = false;
+    return NS_OK;
+=======
+nsFtpState::OnStartRequest(nsIRequest* request) {
+  mStorReplyReceived = false;
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::OnStopRequest(nsIRequest *request, nsISupports *context,
                           nsresult status) {
   mUploadRequest = nullptr;
+||||||| merged common ancestors
+nsFtpState::OnStopRequest(nsIRequest *request, nsISupports *context,
+                          nsresult status)
+{
+    mUploadRequest = nullptr;
+=======
+nsFtpState::OnStopRequest(nsIRequest* request, nsresult status) {
+  mUploadRequest = nullptr;
+>>>>>>> upstream-releases
 
   // Close() will be called when reply to STOR command is received
   // see bug #389394
@@ -1883,17 +3584,48 @@ nsFtpState::OnStopRequest(nsIRequest *request, nsISupports *context,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::Available(uint64_t *result) {
   if (mDataStream) return mDataStream->Available(result);
+||||||| merged common ancestors
+nsFtpState::Available(uint64_t *result)
+{
+    if (mDataStream)
+        return mDataStream->Available(result);
+=======
+nsFtpState::Available(uint64_t* result) {
+  if (mDataStream) return mDataStream->Available(result);
+>>>>>>> upstream-releases
 
   return nsBaseContentStream::Available(result);
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::ReadSegments(nsWriteSegmentFun writer, void *closure,
                          uint32_t count, uint32_t *result) {
   // Insert a thunk here so that the input stream passed to the writer is this
   // input stream instead of mDataStream.
+||||||| merged common ancestors
+nsFtpState::ReadSegments(nsWriteSegmentFun writer, void *closure,
+                         uint32_t count, uint32_t *result)
+{
+    // Insert a thunk here so that the input stream passed to the writer is this
+    // input stream instead of mDataStream.
+
+    if (mDataStream) {
+        nsWriteSegmentThunk thunk = { this, writer, closure };
+        nsresult rv;
+        rv = mDataStream->ReadSegments(NS_WriteSegmentThunk, &thunk, count,
+                                       result);
+        return rv;
+    }
+=======
+nsFtpState::ReadSegments(nsWriteSegmentFun writer, void* closure,
+                         uint32_t count, uint32_t* result) {
+  // Insert a thunk here so that the input stream passed to the writer is this
+  // input stream instead of mDataStream.
+>>>>>>> upstream-releases
 
   if (mDataStream) {
     nsWriteSegmentThunk thunk = {this, writer, closure};
@@ -1906,6 +3638,7 @@ nsFtpState::ReadSegments(nsWriteSegmentFun writer, void *closure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::CloseWithStatus(nsresult status) {
   LOG(("FTP:(%p) close [%" PRIx32 "]\n", this, static_cast<uint32_t>(status)));
 
@@ -1915,6 +3648,29 @@ nsFtpState::CloseWithStatus(nsresult status) {
     if (NS_SUCCEEDED(mInternalError)) mInternalError = status;
     StopProcessing();
   }
+||||||| merged common ancestors
+nsFtpState::CloseWithStatus(nsresult status)
+{
+    LOG(("FTP:(%p) close [%" PRIx32 "]\n", this, static_cast<uint32_t>(status)));
+
+    // Shutdown the control connection processing if we are being closed with an
+    // error.  Note: This method may be called several times.
+    if (!IsClosed() && status != NS_BASE_STREAM_CLOSED && NS_FAILED(status)) {
+        if (NS_SUCCEEDED(mInternalError))
+            mInternalError = status;
+        StopProcessing();
+    }
+=======
+nsFtpState::CloseWithStatus(nsresult status) {
+  LOG(("FTP:(%p) close [%" PRIx32 "]\n", this, static_cast<uint32_t>(status)));
+
+  // Shutdown the control connection processing if we are being closed with an
+  // error.  Note: This method may be called several times.
+  if (!IsClosed() && NS_FAILED(status)) {
+    if (NS_SUCCEEDED(mInternalError)) mInternalError = status;
+    StopProcessing();
+  }
+>>>>>>> upstream-releases
 
   if (mUploadRequest) {
     mUploadRequest->Cancel(NS_ERROR_ABORT);
@@ -1935,11 +3691,27 @@ nsFtpState::CloseWithStatus(nsresult status) {
   return nsBaseContentStream::CloseWithStatus(status);
 }
 
+<<<<<<< HEAD
 static nsresult CreateHTTPProxiedChannel(nsIChannel *channel, nsIProxyInfo *pi,
                                          nsIChannel **newChannel) {
   nsresult rv;
   nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
   if (NS_FAILED(rv)) return rv;
+||||||| merged common ancestors
+static nsresult
+CreateHTTPProxiedChannel(nsIChannel *channel, nsIProxyInfo *pi, nsIChannel **newChannel)
+{
+    nsresult rv;
+    nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+    if (NS_FAILED(rv))
+        return rv;
+=======
+static nsresult CreateHTTPProxiedChannel(nsIChannel* channel, nsIProxyInfo* pi,
+                                         nsIChannel** newChannel) {
+  nsresult rv;
+  nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+  if (NS_FAILED(rv)) return rv;
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIProtocolHandler> handler;
   rv = ioService->GetProtocolHandler("http", getter_AddRefs(handler));
@@ -1951,15 +3723,37 @@ static nsresult CreateHTTPProxiedChannel(nsIChannel *channel, nsIProxyInfo *pi,
   nsCOMPtr<nsIURI> uri;
   channel->GetURI(getter_AddRefs(uri));
 
+<<<<<<< HEAD
   nsCOMPtr<nsILoadInfo> loadInfo;
   channel->GetLoadInfo(getter_AddRefs(loadInfo));
+||||||| merged common ancestors
+    nsCOMPtr<nsILoadInfo> loadInfo;
+    channel->GetLoadInfo(getter_AddRefs(loadInfo));
+=======
+  nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return pph->NewProxiedChannel2(uri, pi, 0, nullptr, loadInfo, newChannel);
+||||||| merged common ancestors
+    return pph->NewProxiedChannel2(uri, pi, 0, nullptr, loadInfo, newChannel);
+=======
+  return pph->NewProxiedChannel(uri, pi, 0, nullptr, loadInfo, newChannel);
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsFtpState::OnProxyAvailable(nsICancelable *request, nsIChannel *channel,
                              nsIProxyInfo *pi, nsresult status) {
+||||||| merged common ancestors
+nsFtpState::OnProxyAvailable(nsICancelable *request, nsIChannel *channel,
+                             nsIProxyInfo *pi, nsresult status)
+{
+=======
+nsFtpState::OnProxyAvailable(nsICancelable* request, nsIChannel* channel,
+                             nsIProxyInfo* pi, nsresult status) {
+>>>>>>> upstream-releases
   mProxyRequest = nullptr;
 
   // failed status code just implies DIRECT processing

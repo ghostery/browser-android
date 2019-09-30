@@ -21,12 +21,12 @@
 namespace mozilla {
 namespace dom {
 
-NS_IMPL_CYCLE_COLLECTING_ADDREF(Request)
-NS_IMPL_CYCLE_COLLECTING_RELEASE(Request)
+NS_IMPL_ADDREF_INHERITED(Request, FetchBody<Request>)
+NS_IMPL_RELEASE_INHERITED(Request, FetchBody<Request>)
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(Request)
 
-NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Request)
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(Request, FetchBody<Request>)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mOwner)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mHeaders)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mSignal)
@@ -34,14 +34,14 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Request)
   NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
-NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(Request)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(Request, FetchBody<Request>)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mOwner)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mHeaders)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSignal)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFollowingSignal)
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
-NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN(Request)
+NS_IMPL_CYCLE_COLLECTION_TRACE_BEGIN_INHERITED(Request, FetchBody<Request>)
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mReadableStreamBody)
   MOZ_DIAGNOSTIC_ASSERT(!tmp->mReadableStreamReader);
   NS_IMPL_CYCLE_COLLECTION_TRACE_JS_MEMBER_CALLBACK(mReadableStreamReader)
@@ -50,8 +50,7 @@ NS_IMPL_CYCLE_COLLECTION_TRACE_END
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(Request)
   NS_WRAPPERCACHE_INTERFACE_MAP_ENTRY
-  NS_INTERFACE_MAP_ENTRY(nsISupports)
-NS_INTERFACE_MAP_END
+NS_INTERFACE_MAP_END_INHERITING(FetchBody<Request>)
 
 Request::Request(nsIGlobalObject* aOwner, InternalRequest* aRequest,
                  AbortSignal* aSignal)
@@ -79,9 +78,20 @@ already_AddRefed<InternalRequest> Request::GetInternalRequest() {
 }
 
 namespace {
+<<<<<<< HEAD
 already_AddRefed<nsIURI> ParseURLFromDocument(nsIDocument* aDocument,
                                               const nsAString& aInput,
                                               ErrorResult& aRv) {
+||||||| merged common ancestors
+already_AddRefed<nsIURI>
+ParseURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
+                     ErrorResult& aRv)
+{
+=======
+already_AddRefed<nsIURI> ParseURLFromDocument(Document* aDocument,
+                                              const nsAString& aInput,
+                                              ErrorResult& aRv) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -93,9 +103,21 @@ already_AddRefed<nsIURI> ParseURLFromDocument(nsIDocument* aDocument,
   }
   return resolvedURI.forget();
 }
+<<<<<<< HEAD
 void GetRequestURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
                                nsAString& aRequestURL, nsACString& aURLfragment,
                                ErrorResult& aRv) {
+||||||| merged common ancestors
+void
+GetRequestURLFromDocument(nsIDocument* aDocument, const nsAString& aInput,
+                          nsAString& aRequestURL, nsACString& aURLfragment,
+                          ErrorResult& aRv)
+{
+=======
+void GetRequestURLFromDocument(Document* aDocument, const nsAString& aInput,
+                               nsAString& aRequestURL, nsACString& aURLfragment,
+                               ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> resolvedURI = ParseURLFromDocument(aDocument, aInput, aRv);
   if (aRv.Failed()) {
     return;
@@ -178,7 +200,8 @@ already_AddRefed<URL> ParseURLFromWorker(const GlobalObject& aGlobal,
   worker->AssertIsOnWorkerThread();
 
   NS_ConvertUTF8toUTF16 baseURL(worker->GetLocationInfo().mHref);
-  RefPtr<URL> url = URL::WorkerConstructor(aGlobal, aInput, baseURL, aRv);
+  RefPtr<URL> url =
+      URL::Constructor(aGlobal.GetAsSupports(), aInput, baseURL, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     aRv.ThrowTypeError<MSG_INVALID_URL>(aInput);
   }
@@ -247,9 +270,24 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
 
 }  // namespace
 
+<<<<<<< HEAD
 /*static*/ already_AddRefed<Request> Request::Constructor(
     const GlobalObject& aGlobal, const RequestOrUSVString& aInput,
     const RequestInit& aInit, ErrorResult& aRv) {
+||||||| merged common ancestors
+/*static*/ already_AddRefed<Request>
+Request::Constructor(const GlobalObject& aGlobal,
+                     const RequestOrUSVString& aInput,
+                     const RequestInit& aInit,
+                     ErrorResult& aRv)
+{
+=======
+/*static*/
+already_AddRefed<Request> Request::Constructor(const GlobalObject& aGlobal,
+                                               const RequestOrUSVString& aInput,
+                                               const RequestInit& aInit,
+                                               ErrorResult& aRv) {
+>>>>>>> upstream-releases
   bool hasCopiedBody = false;
   RefPtr<InternalRequest> request;
 
@@ -286,7 +324,7 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
     nsCString fragment;
     if (NS_IsMainThread()) {
       nsCOMPtr<nsPIDOMWindowInner> inner(do_QueryInterface(global));
-      nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
+      Document* doc = inner ? inner->GetExtantDoc() : nullptr;
       if (doc) {
         GetRequestURLFromDocument(doc, input, requestURL, fragment, aRv);
       } else {
@@ -320,9 +358,20 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
                                        ? aInit.mCredentials.Value()
                                        : fallbackCredentials;
 
+<<<<<<< HEAD
   if (mode == RequestMode::Navigate ||
       (aInit.IsAnyMemberPresent() &&
        request->Mode() == RequestMode::Navigate)) {
+||||||| merged common ancestors
+  if (mode == RequestMode::Navigate ||
+      (aInit.IsAnyMemberPresent() && request->Mode() == RequestMode::Navigate)) {
+=======
+  if (mode == RequestMode::Navigate) {
+    aRv.ThrowTypeError<MSG_INVALID_REQUEST_MODE>(NS_LITERAL_STRING("navigate"));
+    return nullptr;
+  }
+  if (aInit.IsAnyMemberPresent() && request->Mode() == RequestMode::Navigate) {
+>>>>>>> upstream-releases
     mode = RequestMode::Same_origin;
   }
 
@@ -338,7 +387,7 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
       nsAutoString referrerURL;
       if (NS_IsMainThread()) {
         nsCOMPtr<nsPIDOMWindowInner> inner(do_QueryInterface(global));
-        nsIDocument* doc = inner ? inner->GetExtantDoc() : nullptr;
+        Document* doc = inner ? inner->GetExtantDoc() : nullptr;
         nsCOMPtr<nsIURI> uri;
         if (doc) {
           uri = ParseURLFromDocument(doc, referrer, aRv);
@@ -401,22 +450,37 @@ class ReferrerSameOriginChecker final : public WorkerMainThreadRunnable {
     signal = aInit.mSignal.Value();
   }
 
+  UniquePtr<mozilla::ipc::PrincipalInfo> principalInfo;
+
   if (NS_IsMainThread()) {
     nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(global);
     if (window) {
-      nsCOMPtr<nsIDocument> doc;
+      nsCOMPtr<Document> doc;
       doc = window->GetExtantDoc();
       if (doc) {
         request->SetEnvironmentReferrerPolicy(doc->GetReferrerPolicy());
+
+        principalInfo.reset(new mozilla::ipc::PrincipalInfo());
+        nsresult rv =
+            PrincipalToPrincipalInfo(doc->NodePrincipal(), principalInfo.get());
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          aRv.ThrowTypeError<MSG_FETCH_BODY_CONSUMED_ERROR>();
+          return nullptr;
+        }
       }
     }
   } else {
     WorkerPrivate* worker = GetCurrentThreadWorkerPrivate();
     if (worker) {
       worker->AssertIsOnWorkerThread();
-      request->SetEnvironmentReferrerPolicy(worker->GetReferrerPolicy());
+      request->SetEnvironmentReferrerPolicy(
+          static_cast<net::ReferrerPolicy>(worker->GetReferrerPolicy()));
+      principalInfo =
+          MakeUnique<mozilla::ipc::PrincipalInfo>(worker->GetPrincipalInfo());
     }
   }
+
+  request->SetPrincipalInfo(std::move(principalInfo));
 
   if (mode != RequestMode::EndGuard_) {
     request->ClearCreatedByFetchEvent();

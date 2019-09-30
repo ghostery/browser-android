@@ -4,15 +4,36 @@
 
 //! Common handling for the specified value CSS url() values.
 
+<<<<<<< HEAD
 use crate::parser::{Parse, ParserContext};
+||||||| merged common ancestors
+=======
+use crate::parser::{Parse, ParserContext};
+use crate::stylesheets::CorsMode;
+use crate::values::computed::{Context, ToComputedValue};
+>>>>>>> upstream-releases
 use cssparser::Parser;
+<<<<<<< HEAD
+||||||| merged common ancestors
+use parser::{Parse, ParserContext};
+=======
+use servo_arc::Arc;
+>>>>>>> upstream-releases
 use servo_url::ServoUrl;
 use std::fmt::{self, Write};
+<<<<<<< HEAD
 // Note: We use std::sync::Arc rather than servo_arc::Arc here because the
 // nonzero optimization is important in keeping the size of SpecifiedUrl below
 // the threshold.
 use crate::values::computed::{Context, ToComputedValue};
 use std::sync::Arc;
+||||||| merged common ancestors
+// Note: We use std::sync::Arc rather than servo_arc::Arc here because the
+// nonzero optimization is important in keeping the size of SpecifiedUrl below
+// the threshold.
+use std::sync::Arc;
+=======
+>>>>>>> upstream-releases
 use style_traits::{CssWriter, ParseError, ToCss};
 
 /// A CSS url() value for servo.
@@ -26,7 +47,7 @@ use style_traits::{CssWriter, ParseError, ToCss};
 ///
 /// TODO(emilio): This should be shrunk by making CssUrl a wrapper type of an
 /// arc, and keep the serialization in that Arc. See gecko/url.rs for example.
-#[derive(Clone, Debug, Deserialize, MallocSizeOf, Serialize, SpecifiedValueInfo)]
+#[derive(Clone, Debug, Deserialize, MallocSizeOf, Serialize, SpecifiedValueInfo, ToShmem)]
 pub struct CssUrl {
     /// The original URI. This might be optional since we may insert computed
     /// values of images into the cascade directly, and we don't bother to
@@ -44,7 +65,9 @@ pub struct CssUrl {
 impl CssUrl {
     /// Try to parse a URL from a string value that is a valid CSS token for a
     /// URL.
-    pub fn parse_from_string(url: String, context: &ParserContext) -> Self {
+    ///
+    /// FIXME(emilio): Should honor CorsMode.
+    pub fn parse_from_string(url: String, context: &ParserContext, _: CorsMode) -> Self {
         let serialization = Arc::new(url);
         let resolved = context.url_data.join(&serialization).ok();
         CssUrl {
@@ -121,7 +144,11 @@ impl Parse for CssUrl {
         input: &mut Parser<'i, 't>,
     ) -> Result<Self, ParseError<'i>> {
         let url = input.expect_url()?;
-        Ok(Self::parse_from_string(url.as_ref().to_owned(), context))
+        Ok(Self::parse_from_string(
+            url.as_ref().to_owned(),
+            context,
+            CorsMode::None,
+        ))
     }
 }
 

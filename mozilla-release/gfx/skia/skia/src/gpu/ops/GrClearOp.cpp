@@ -11,7 +11,10 @@
 #include "GrMemoryPool.h"
 #include "GrOpFlushState.h"
 #include "GrProxyProvider.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
 
+<<<<<<< HEAD
 std::unique_ptr<GrClearOp> GrClearOp::Make(GrContext* context,
                                            const GrFixedClip& clip,
                                            GrColor color,
@@ -38,6 +41,36 @@ std::unique_ptr<GrClearOp> GrClearOp::Make(GrContext* context,
 }
 
 GrClearOp::GrClearOp(const GrFixedClip& clip, GrColor color, GrSurfaceProxy* proxy)
+||||||| merged common ancestors
+GrClearOp::GrClearOp(const GrFixedClip& clip, GrColor color, GrSurfaceProxy* proxy)
+=======
+std::unique_ptr<GrClearOp> GrClearOp::Make(GrRecordingContext* context,
+                                           const GrFixedClip& clip,
+                                           const SkPMColor4f& color,
+                                           GrSurfaceProxy* dstProxy) {
+    const SkIRect rect = SkIRect::MakeWH(dstProxy->width(), dstProxy->height());
+    if (clip.scissorEnabled() && !SkIRect::Intersects(clip.scissorRect(), rect)) {
+        return nullptr;
+    }
+
+    GrOpMemoryPool* pool = context->priv().opMemoryPool();
+
+    return pool->allocate<GrClearOp>(clip, color, dstProxy);
+}
+
+std::unique_ptr<GrClearOp> GrClearOp::Make(GrRecordingContext* context,
+                                           const SkIRect& rect,
+                                           const SkPMColor4f& color,
+                                           bool fullScreen) {
+    SkASSERT(fullScreen || !rect.isEmpty());
+
+    GrOpMemoryPool* pool = context->priv().opMemoryPool();
+
+    return pool->allocate<GrClearOp>(rect, color, fullScreen);
+}
+
+GrClearOp::GrClearOp(const GrFixedClip& clip, const SkPMColor4f& color, GrSurfaceProxy* proxy)
+>>>>>>> upstream-releases
         : INHERITED(ClassID())
         , fClip(clip)
         , fColor(color) {
@@ -57,7 +90,7 @@ GrClearOp::GrClearOp(const GrFixedClip& clip, GrColor color, GrSurfaceProxy* pro
                     HasAABloat::kNo, IsZeroArea::kNo);
 }
 
-void GrClearOp::onExecute(GrOpFlushState* state) {
+void GrClearOp::onExecute(GrOpFlushState* state, const SkRect& chainBounds) {
     SkASSERT(state->rtCommandBuffer());
     state->rtCommandBuffer()->clear(fClip, fColor);
 }

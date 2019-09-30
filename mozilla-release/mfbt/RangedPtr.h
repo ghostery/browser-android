@@ -17,6 +17,7 @@
 #include "mozilla/Attributes.h"
 
 #include <stdint.h>
+#include <cstddef>
 
 namespace mozilla {
 
@@ -211,7 +212,14 @@ class RangedPtr {
     return *this;
   }
 
+<<<<<<< HEAD
   T& operator[](int aIndex) const {
+||||||| merged common ancestors
+  T& operator[](int aIndex) const
+  {
+=======
+  T& operator[](ptrdiff_t aIndex) const {
+>>>>>>> upstream-releases
     MOZ_ASSERT(size_t(aIndex > 0 ? aIndex : -aIndex) <= size_t(-1) / sizeof(T));
     return *create(mPtr + aIndex);
   }
@@ -245,6 +253,9 @@ class RangedPtr {
   bool operator!=(const U* u) const {
     return !(*this == u);
   }
+
+  bool operator==(std::nullptr_t) const { return mPtr == nullptr; }
+  bool operator!=(std::nullptr_t) const { return mPtr != nullptr; }
 
   template <typename U>
   bool operator<(const RangedPtr<U>& aOther) const {

@@ -18,6 +18,7 @@ from .prefs import Preferences
 from .profile import FirefoxProfile
 from .profile import Profile
 
+<<<<<<< HEAD
 __all__ = ['MozProfileCLI', 'cli', 'KeyValueParseError', 'parse_key_value', 'parse_preferences']
 
 
@@ -69,6 +70,61 @@ def parse_preferences(prefs, context='--setpref='):
         sys.exit(1)
 
     return {k: Preferences.cast(v) for k, v in prefs.items()}
+||||||| merged common ancestors
+__all__ = ['MozProfileCLI', 'cli']
+=======
+__all__ = ['MozProfileCLI', 'cli', 'KeyValueParseError', 'parse_key_value', 'parse_preferences']
+
+
+class KeyValueParseError(Exception):
+    """Error when parsing strings of serialized key-values."""
+
+    def __init__(self, msg, errors=()):
+        self.errors = errors
+        Exception.__init__(self, msg)
+
+
+def parse_key_value(strings, separator='=', context='key, value'):
+    """Parse string-serialized key-value pairs in the form of `key = value`.
+
+    Args:
+        strings (list): List of strings to parse.
+        separator (str): Identifier used to split the strings.
+
+    Returns:
+        list: A list of (<key>, <value>) tuples. Whitespace is not stripped.
+
+    Raises:
+        KeyValueParseError
+    """
+
+    # syntax check
+    missing = [string for string in strings if separator not in string]
+    if missing:
+        raise KeyValueParseError(
+            "Error: syntax error in %s: %s" %
+            (context, ','.join(missing)), errors=missing)
+    return [string.split(separator, 1) for string in strings]
+
+
+def parse_preferences(prefs, context='--setpref='):
+    """Parse preferences specified on the command line.
+
+    Args:
+        prefs (list): A list of strings, usually of the form "<pref>=<value>".
+
+    Returns:
+        dict: A dictionary of the form {<pref>: <value>} where values have been
+              cast.
+    """
+    try:
+        prefs = dict(parse_key_value(prefs, context=context))
+    except KeyValueParseError as e:
+        print(str(e))
+        sys.exit(1)
+
+    return {k: Preferences.cast(v) for k, v in prefs.items()}
+>>>>>>> upstream-releases
 
 
 class MozProfileCLI(object):

@@ -11,6 +11,8 @@
 #ifndef vm_AtomsTable_h
 #define vm_AtomsTable_h
 
+#include <type_traits>  // std::{enable_if,is_const}
+
 #include "js/GCHashTable.h"
 #include "js/TypeDecls.h"
 #include "vm/JSAtom.h"
@@ -37,6 +39,7 @@ class MOZ_RAII AutoLockAllAtoms {
   ~AutoLockAllAtoms();
 };
 
+<<<<<<< HEAD
 class AtomStateEntry {
   uintptr_t bits;
 
@@ -71,6 +74,84 @@ class AtomStateEntry {
     JSAtom* atom = asPtrUnbarriered();
     return gc::IsAboutToBeFinalizedUnbarriered(&atom);
   }
+||||||| merged common ancestors
+class AtomStateEntry
+{
+    uintptr_t bits;
+
+    static const uintptr_t NO_TAG_MASK = uintptr_t(-1) - 1;
+
+  public:
+    AtomStateEntry() : bits(0) {}
+    AtomStateEntry(const AtomStateEntry& other) : bits(other.bits) {}
+    AtomStateEntry(JSAtom* ptr, bool tagged)
+      : bits(uintptr_t(ptr) | uintptr_t(tagged))
+    {
+        MOZ_ASSERT((uintptr_t(ptr) & 0x1) == 0);
+    }
+
+    bool isPinned() const {
+        return bits & 0x1;
+    }
+
+    /*
+     * Non-branching code sequence. Note that the const_cast is safe because
+     * the hash function doesn't consider the tag to be a portion of the key.
+     */
+    void setPinned(bool pinned) const {
+        const_cast<AtomStateEntry*>(this)->bits |= uintptr_t(pinned);
+    }
+
+    JSAtom* asPtrUnbarriered() const {
+        MOZ_ASSERT(bits);
+        return reinterpret_cast<JSAtom*>(bits & NO_TAG_MASK);
+    }
+
+    JSAtom* asPtr(JSContext* cx) const;
+
+    bool needsSweep() {
+        JSAtom* atom = asPtrUnbarriered();
+        return gc::IsAboutToBeFinalizedUnbarriered(&atom);
+    }
+=======
+// This is a tagged pointer to an atom that duplicates the atom's pinned flag so
+// that we don't have to check the atom itself when marking pinned atoms (there
+// can be a great many atoms). See bug 1445196.
+class AtomStateEntry {
+  uintptr_t bits;
+
+  static const uintptr_t NO_TAG_MASK = uintptr_t(-1) - 1;
+
+ public:
+  AtomStateEntry() : bits(0) {}
+  AtomStateEntry(const AtomStateEntry& other) : bits(other.bits) {}
+  AtomStateEntry(JSAtom* ptr, bool tagged)
+      : bits(uintptr_t(ptr) | uintptr_t(tagged)) {
+    MOZ_ASSERT((uintptr_t(ptr) & 0x1) == 0);
+  }
+
+  bool isPinned() const { return bits & 0x1; }
+
+  /*
+   * Non-branching code sequence. Note that the const_cast is safe because
+   * the hash function doesn't consider the tag to be a portion of the key.
+   */
+  void setPinned(bool pinned) const {
+    const_cast<AtomStateEntry*>(this)->bits |= uintptr_t(pinned);
+  }
+
+  JSAtom* asPtrUnbarriered() const {
+    MOZ_ASSERT(bits);
+    return reinterpret_cast<JSAtom*>(bits & NO_TAG_MASK);
+  }
+
+  JSAtom* asPtr(JSContext* cx) const;
+
+  bool needsSweep() {
+    JSAtom* atom = asPtrUnbarriered();
+    return gc::IsAboutToBeFinalizedUnbarriered(&atom);
+  }
+>>>>>>> upstream-releases
 };
 
 struct AtomHasher {
@@ -138,6 +219,13 @@ class AtomsTable {
   bool allPartitionsLocked = false;
 #endif
 
+<<<<<<< HEAD
+ public:
+  class AutoLock;
+||||||| merged common ancestors
+  public:
+    class AutoLock;
+=======
  public:
   class AutoLock;
 
@@ -146,11 +234,36 @@ class AtomsTable {
     AtomsTable& atoms;
     size_t partitionIndex;
     mozilla::Maybe<AtomSet::Enum> atomsIter;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // An iterator used for sweeping atoms incrementally.
+  class SweepIterator {
+    AtomsTable& atoms;
+    size_t partitionIndex;
+    mozilla::Maybe<AtomSet::Enum> atomsIter;
+||||||| merged common ancestors
+    // An iterator used for sweeping atoms incrementally.
+    class SweepIterator
+    {
+        AtomsTable& atoms;
+        size_t partitionIndex;
+        mozilla::Maybe<AtomSet::Enum> atomsIter;
+=======
     void settle();
     void startSweepingPartition();
     void finishSweepingPartition();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    void settle();
+    void startSweepingPartition();
+    void finishSweepingPartition();
+||||||| merged common ancestors
+        void settle();
+        void startSweepingPartition();
+        void finishSweepingPartition();
+=======
    public:
     explicit SweepIterator(AtomsTable& atoms);
     bool empty() const;
@@ -158,15 +271,67 @@ class AtomsTable {
     void removeFront();
     void popFront();
   };
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+   public:
+    explicit SweepIterator(AtomsTable& atoms);
+    bool empty() const;
+    JSAtom* front() const;
+    void removeFront();
+    void popFront();
+  };
+||||||| merged common ancestors
+      public:
+        explicit SweepIterator(AtomsTable& atoms);
+        bool empty() const;
+        JSAtom* front() const;
+        void removeFront();
+        void popFront();
+    };
+=======
   ~AtomsTable();
   bool init();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  ~AtomsTable();
+  bool init();
+||||||| merged common ancestors
+    ~AtomsTable();
+    bool init();
+=======
+  template <typename Chars>
+  MOZ_ALWAYS_INLINE JSAtom* atomizeAndCopyChars(
+      JSContext* cx, Chars chars, size_t length, PinningBehavior pin,
+      const mozilla::Maybe<uint32_t>& indexValue,
+      const AtomHasher::Lookup& lookup);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   template <typename CharT>
   MOZ_ALWAYS_INLINE JSAtom* atomizeAndCopyChars(
       JSContext* cx, const CharT* tbchars, size_t length, PinningBehavior pin,
       const mozilla::Maybe<uint32_t>& indexValue,
       const AtomHasher::Lookup& lookup);
+||||||| merged common ancestors
+    template <typename CharT>
+    MOZ_ALWAYS_INLINE JSAtom* atomizeAndCopyChars(JSContext* cx,
+                                                  const CharT* tbchars, size_t length,
+                                                  PinningBehavior pin,
+                                                  const mozilla::Maybe<uint32_t>& indexValue,
+                                                  const AtomHasher::Lookup& lookup);
+=======
+  template <typename CharT, typename = typename std::enable_if<
+                                !std::is_const<CharT>::value>::type>
+  MOZ_ALWAYS_INLINE JSAtom* atomizeAndCopyChars(
+      JSContext* cx, CharT* chars, size_t length, PinningBehavior pin,
+      const mozilla::Maybe<uint32_t>& indexValue,
+      const AtomHasher::Lookup& lookup) {
+    return atomizeAndCopyChars(cx, const_cast<const CharT*>(chars), length, pin,
+                               indexValue, lookup);
+  }
+>>>>>>> upstream-releases
 
   void pinExistingAtom(JSContext* cx, JSAtom* atom);
 

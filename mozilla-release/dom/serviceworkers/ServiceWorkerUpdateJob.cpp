@@ -42,6 +42,7 @@ namespace {
  * used.  ScopeStringPrefixMode allows the caller to specify the desired
  * behavior.
  */
+<<<<<<< HEAD
 enum ScopeStringPrefixMode { eUseDirectory, eUsePath };
 
 nsresult GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
@@ -50,28 +51,42 @@ nsresult GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
+||||||| merged common ancestors
+enum ScopeStringPrefixMode {
+  eUseDirectory,
+  eUsePath
+};
 
+nsresult
+GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
+                             ScopeStringPrefixMode aPrefixMode)
+{
+  nsresult rv = aScriptURI->GetPrePath(aPrefix);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+=======
+enum ScopeStringPrefixMode { eUseDirectory, eUsePath };
+>>>>>>> upstream-releases
+
+nsresult GetRequiredScopeStringPrefix(nsIURI* aScriptURI, nsACString& aPrefix,
+                                      ScopeStringPrefixMode aPrefixMode) {
+  nsresult rv;
   if (aPrefixMode == eUseDirectory) {
     nsCOMPtr<nsIURL> scriptURL(do_QueryInterface(aScriptURI));
     if (NS_WARN_IF(!scriptURL)) {
       return NS_ERROR_FAILURE;
     }
 
-    nsAutoCString dir;
-    rv = scriptURL->GetDirectory(dir);
+    rv = scriptURL->GetDirectory(aPrefix);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
-
-    aPrefix.Append(dir);
   } else if (aPrefixMode == eUsePath) {
-    nsAutoCString path;
-    rv = aScriptURI->GetPathQueryRef(path);
+    rv = aScriptURI->GetPathQueryRef(aPrefix);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
-
-    aPrefix.Append(path);
   } else {
     MOZ_ASSERT_UNREACHABLE("Invalid value for aPrefixMode");
   }
@@ -150,6 +165,7 @@ class ServiceWorkerUpdateJob::ContinueInstallRunnable final
 };
 
 ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
+<<<<<<< HEAD
     nsIPrincipal* aPrincipal, const nsACString& aScope,
     const nsACString& aScriptSpec, nsILoadGroup* aLoadGroup,
     ServiceWorkerUpdateViaCache aUpdateViaCache)
@@ -157,6 +173,25 @@ ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
       mLoadGroup(aLoadGroup),
       mUpdateViaCache(aUpdateViaCache),
       mOnFailure(OnFailure::DoNothing) {}
+||||||| merged common ancestors
+    nsIPrincipal* aPrincipal,
+    const nsACString& aScope,
+    const nsACString& aScriptSpec,
+    nsILoadGroup* aLoadGroup,
+    ServiceWorkerUpdateViaCache aUpdateViaCache)
+  : ServiceWorkerJob(Type::Update, aPrincipal, aScope, aScriptSpec)
+  , mLoadGroup(aLoadGroup)
+  , mUpdateViaCache(aUpdateViaCache)
+  , mOnFailure(OnFailure::DoNothing)
+{
+}
+=======
+    nsIPrincipal* aPrincipal, const nsACString& aScope,
+    const nsACString& aScriptSpec, ServiceWorkerUpdateViaCache aUpdateViaCache)
+    : ServiceWorkerJob(Type::Update, aPrincipal, aScope, aScriptSpec),
+      mUpdateViaCache(aUpdateViaCache),
+      mOnFailure(OnFailure::DoNothing) {}
+>>>>>>> upstream-releases
 
 already_AddRefed<ServiceWorkerRegistrationInfo>
 ServiceWorkerUpdateJob::GetRegistration() const {
@@ -166,6 +201,7 @@ ServiceWorkerUpdateJob::GetRegistration() const {
 }
 
 ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
+<<<<<<< HEAD
     Type aType, nsIPrincipal* aPrincipal, const nsACString& aScope,
     const nsACString& aScriptSpec, nsILoadGroup* aLoadGroup,
     ServiceWorkerUpdateViaCache aUpdateViaCache)
@@ -173,6 +209,26 @@ ServiceWorkerUpdateJob::ServiceWorkerUpdateJob(
       mLoadGroup(aLoadGroup),
       mUpdateViaCache(aUpdateViaCache),
       mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing) {}
+||||||| merged common ancestors
+    Type aType,
+    nsIPrincipal* aPrincipal,
+    const nsACString& aScope,
+    const nsACString& aScriptSpec,
+    nsILoadGroup* aLoadGroup,
+    ServiceWorkerUpdateViaCache aUpdateViaCache)
+  : ServiceWorkerJob(aType, aPrincipal, aScope, aScriptSpec)
+  , mLoadGroup(aLoadGroup)
+  , mUpdateViaCache(aUpdateViaCache)
+  , mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing)
+{
+}
+=======
+    Type aType, nsIPrincipal* aPrincipal, const nsACString& aScope,
+    const nsACString& aScriptSpec, ServiceWorkerUpdateViaCache aUpdateViaCache)
+    : ServiceWorkerJob(aType, aPrincipal, aScope, aScriptSpec),
+      mUpdateViaCache(aUpdateViaCache),
+      mOnFailure(serviceWorkerScriptCache::OnFailure::DoNothing) {}
+>>>>>>> upstream-releases
 
 ServiceWorkerUpdateJob::~ServiceWorkerUpdateJob() {}
 
@@ -298,9 +354,20 @@ void ServiceWorkerUpdateJob::Update() {
 
   RefPtr<CompareCallback> callback = new CompareCallback(this);
 
+<<<<<<< HEAD
   nsresult rv = serviceWorkerScriptCache::Compare(
       mRegistration, mPrincipal, cacheName, NS_ConvertUTF8toUTF16(mScriptSpec),
       callback, mLoadGroup);
+||||||| merged common ancestors
+  nsresult rv =
+    serviceWorkerScriptCache::Compare(mRegistration, mPrincipal, cacheName,
+                                      NS_ConvertUTF8toUTF16(mScriptSpec),
+                                      callback, mLoadGroup);
+=======
+  nsresult rv = serviceWorkerScriptCache::Compare(
+      mRegistration, mPrincipal, cacheName, NS_ConvertUTF8toUTF16(mScriptSpec),
+      callback);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     FailUpdateJob(rv);
     return;
@@ -376,15 +443,35 @@ void ServiceWorkerUpdateJob::ComparisonResult(nsresult aStatus,
     }
   }
 
-  if (!StringBeginsWith(mRegistration->Scope(), maxPrefix)) {
+  nsCOMPtr<nsIURI> scopeURI;
+  rv = NS_NewURI(getter_AddRefs(scopeURI), mRegistration->Scope(), nullptr,
+                 scriptURI);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    FailUpdateJob(NS_ERROR_FAILURE);
+    return;
+  }
+
+  nsAutoCString scopeString;
+  rv = scopeURI->GetPathQueryRef(scopeString);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    FailUpdateJob(NS_ERROR_FAILURE);
+    return;
+  }
+
+  if (!StringBeginsWith(scopeString, maxPrefix)) {
     nsAutoString message;
     NS_ConvertUTF8toUTF16 reportScope(mRegistration->Scope());
     NS_ConvertUTF8toUTF16 reportMaxPrefix(maxPrefix);
+<<<<<<< HEAD
     const char16_t* params[] = {reportScope.get(), reportMaxPrefix.get()};
+||||||| merged common ancestors
+    const char16_t* params[] = { reportScope.get(), reportMaxPrefix.get() };
+=======
+>>>>>>> upstream-releases
 
-    rv = nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-                                               "ServiceWorkerScopePathMismatch",
-                                               params, message);
+    rv = nsContentUtils::FormatLocalizedString(
+        message, nsContentUtils::eDOM_PROPERTIES,
+        "ServiceWorkerScopePathMismatch", reportScope, reportMaxPrefix);
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to format localized string");
     swm->ReportToAllClients(mScope, message, EmptyString(), EmptyString(), 0, 0,
                             nsIScriptError::errorFlag);

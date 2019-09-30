@@ -30,6 +30,8 @@ void MacroAssembler::move16SignExtend(Register src, Register dest) {
   ma_seh(dest, src);
 }
 
+void MacroAssembler::loadAbiReturnAddress(Register dest) { movePtr(ra, dest); }
+
 // ===============================================================
 // Logical instructions
 
@@ -553,6 +555,10 @@ void MacroAssembler::branchTestPtr(Condition cond, Register lhs, Register rhs,
   } else {
     as_and(ScratchRegister, lhs, rhs);
     ma_b(ScratchRegister, ScratchRegister, label, cond);
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
   }
 }
 
@@ -568,96 +574,331 @@ void MacroAssembler::branchTestPtr(Condition cond, const Address& lhs,
                                    Imm32 rhs, Label* label) {
   loadPtr(lhs, SecondScratchReg);
   branchTestPtr(cond, SecondScratchReg, rhs, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestPtr(Condition cond, Register lhs, Imm32 rhs,
+                                   Label* label) {
+  MOZ_ASSERT(cond == Zero || cond == NonZero || cond == Signed ||
+             cond == NotSigned);
+  ma_and(ScratchRegister, lhs, rhs);
+  ma_b(ScratchRegister, ScratchRegister, label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestPtr(Condition cond, const Address& lhs, Imm32 rhs, Label* label)
+{
+    loadPtr(lhs, SecondScratchReg);
+    branchTestPtr(cond, SecondScratchReg, rhs, label);
+=======
 void MacroAssembler::branchTestUndefined(Condition cond, Register tag,
                                          Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_UNDEFINED), label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestPtr(Condition cond, const Address& lhs,
+                                   Imm32 rhs, Label* label) {
+  loadPtr(lhs, SecondScratchReg);
+  branchTestPtr(cond, SecondScratchReg, rhs, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestUndefined(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_UNDEFINED), label, cond);
+=======
 void MacroAssembler::branchTestUndefined(Condition cond, const Address& address,
                                          Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestUndefined(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestUndefined(Condition cond, Register tag,
+                                         Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_UNDEFINED), label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestUndefined(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestUndefined(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestUndefined(Condition cond,
                                          const BaseIndex& address,
                                          Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestUndefined(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestUndefined(Condition cond, const Address& address,
+                                         Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestUndefined(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestUndefined(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestUndefined(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestInt32(Condition cond, Register tag,
                                      Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_INT32), label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestUndefined(Condition cond,
+                                         const BaseIndex& address,
+                                         Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestUndefined(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestInt32(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_INT32), label, cond);
+=======
 void MacroAssembler::branchTestInt32(Condition cond, const Address& address,
                                      Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestInt32(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestInt32(Condition cond, Register tag,
+                                     Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_INT32), label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestInt32(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestInt32(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestInt32(Condition cond, const BaseIndex& address,
                                      Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestInt32(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestInt32(Condition cond, const Address& address,
+                                     Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestInt32(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestInt32(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestInt32(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestDouble(Condition cond, const Address& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestDouble(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestInt32(Condition cond, const BaseIndex& address,
+                                     Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestInt32(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestDouble(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestDouble(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestDouble(Condition cond, const BaseIndex& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestDouble(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestDouble(Condition cond, const Address& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestDouble(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestDouble(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestDouble(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestDoubleTruthy(bool b, FloatRegister value,
                                             Label* label) {
   ma_lid(ScratchDoubleReg, 0.0);
   DoubleCondition cond = b ? DoubleNotEqual : DoubleEqualOrUnordered;
   ma_bc1d(value, ScratchDoubleReg, label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestDouble(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestDouble(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestDoubleTruthy(bool b, FloatRegister value, Label* label)
+{
+    ma_lid(ScratchDoubleReg, 0.0);
+    DoubleCondition cond = b ? DoubleNotEqual : DoubleEqualOrUnordered;
+    ma_bc1d(value, ScratchDoubleReg, label, cond);
+=======
+void MacroAssembler::branchTestNumber(Condition cond, Register tag,
+                                      Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  Condition actual = cond == Equal ? BelowOrEqual : Above;
+  ma_b(tag, ImmTag(JS::detail::ValueUpperInclNumberTag), label, actual);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestDoubleTruthy(bool b, FloatRegister value,
+                                            Label* label) {
+  ma_lid(ScratchDoubleReg, 0.0);
+  DoubleCondition cond = b ? DoubleNotEqual : DoubleEqualOrUnordered;
+  ma_bc1d(value, ScratchDoubleReg, label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNumber(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    Condition actual = cond == Equal ? BelowOrEqual : Above;
+    ma_b(tag, ImmTag(JSVAL_UPPER_INCL_TAG_OF_NUMBER_SET), label, actual);
+=======
+void MacroAssembler::branchTestBoolean(Condition cond, Register tag,
+                                       Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_BOOLEAN), label, cond);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::branchTestNumber(Condition cond, Register tag,
                                       Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   Condition actual = cond == Equal ? BelowOrEqual : Above;
   ma_b(tag, ImmTag(JSVAL_UPPER_INCL_TAG_OF_NUMBER_SET), label, actual);
-}
-
-void MacroAssembler::branchTestBoolean(Condition cond, Register tag,
-                                       Label* label) {
-  MOZ_ASSERT(cond == Equal || cond == NotEqual);
-  ma_b(tag, ImmTag(JSVAL_TAG_BOOLEAN), label, cond);
-}
-
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestBoolean(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_BOOLEAN), label, cond);
+=======
 void MacroAssembler::branchTestBoolean(Condition cond, const Address& address,
                                        Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestBoolean(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestBoolean(Condition cond, Register tag,
+                                       Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_BOOLEAN), label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestBoolean(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestBoolean(cond, scratch2, label);
+=======
+void MacroAssembler::branchTestBoolean(Condition cond, const BaseIndex& address,
+                                       Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestBoolean(cond, scratch2, label);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestBoolean(Condition cond, const Address& address,
+                                       Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestBoolean(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestBoolean(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestBoolean(cond, scratch2, label);
+=======
+void MacroAssembler::branchTestString(Condition cond, Register tag,
+                                      Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_STRING), label, cond);
+>>>>>>> upstream-releases
+}
+<<<<<<< HEAD
 
 void MacroAssembler::branchTestBoolean(Condition cond, const BaseIndex& address,
                                        Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestBoolean(cond, scratch2, label);
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestString(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_STRING), label, cond);
+=======
+
+void MacroAssembler::branchTestString(Condition cond, const Address& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestString(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
 
 void MacroAssembler::branchTestString(Condition cond, Register tag,
                                       Label* label) {
@@ -670,7 +911,15 @@ void MacroAssembler::branchTestString(Condition cond, const Address& address,
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestString(cond, scratch2, label);
-}
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestString(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestString(cond, scratch2, label);
+=======
 
 void MacroAssembler::branchTestString(Condition cond, const BaseIndex& address,
                                       Label* label) {
@@ -683,55 +932,218 @@ void MacroAssembler::branchTestSymbol(Condition cond, Register tag,
                                       Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_SYMBOL), label, cond);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+
+void MacroAssembler::branchTestString(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestString(cond, scratch2, label);
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestString(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestString(cond, scratch2, label);
+=======
 
 void MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestSymbol(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+
+void MacroAssembler::branchTestSymbol(Condition cond, Register tag,
+                                      Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_SYMBOL), label, cond);
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestSymbol(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_SYMBOL), label, cond);
+=======
 
 void MacroAssembler::branchTestNull(Condition cond, Register tag,
                                     Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_NULL), label, cond);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+
+void MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestSymbol(cond, scratch2, label);
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestSymbol(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestSymbol(cond, scratch2, label);
+=======
 
 void MacroAssembler::branchTestNull(Condition cond, const Address& address,
                                     Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestNull(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
+<<<<<<< HEAD
+
+void MacroAssembler::branchTestNull(Condition cond, Register tag,
+                                    Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_NULL), label, cond);
+||||||| merged common ancestors
+
+void
+MacroAssembler::branchTestNull(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_NULL), label, cond);
+=======
 
 void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
                                     Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestNull(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const Address& address,
+                                    Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestNull(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestNull(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestObject(Condition cond, Register tag,
                                       Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_TAG_OBJECT), label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address,
+                                    Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestNull(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestNull(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestNull(cond, scratch2, label);
+=======
 void MacroAssembler::branchTestObject(Condition cond, const Address& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestObject(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestObject(Condition cond, Register tag,
+                                      Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_OBJECT), label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestObject(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_OBJECT), label, cond);
+=======
 void MacroAssembler::branchTestObject(Condition cond, const BaseIndex& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestObject(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestObject(Condition cond, const Address& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestObject(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestObject(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestObject(cond, scratch2, label);
+=======
+void MacroAssembler::branchTestGCThing(Condition cond, const Address& address,
+                                       Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  ma_b(scratch2, ImmTag(JS::detail::ValueLowerInclGCThingTag), label,
+       (cond == Equal) ? AboveOrEqual : Below);
+}
+void MacroAssembler::branchTestGCThing(Condition cond, const BaseIndex& address,
+                                       Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  ma_b(scratch2, ImmTag(JS::detail::ValueLowerInclGCThingTag), label,
+       (cond == Equal) ? AboveOrEqual : Below);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchTestObject(Condition cond, const BaseIndex& address,
+                                      Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestObject(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestObject(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestObject(cond, scratch2, label);
+=======
+void MacroAssembler::branchTestPrimitive(Condition cond, Register tag,
+                                         Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JS::detail::ValueUpperExclPrimitiveTag), label,
+       (cond == Equal) ? Below : AboveOrEqual);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::branchTestGCThing(Condition cond, const Address& address,
                                        Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
@@ -747,54 +1159,194 @@ void MacroAssembler::branchTestGCThing(Condition cond, const BaseIndex& address,
   extractTag(address, scratch2);
   ma_b(scratch2, ImmTag(JSVAL_LOWER_INCL_TAG_OF_GCTHING_SET), label,
        (cond == Equal) ? AboveOrEqual : Below);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestGCThing(Condition cond, const Address& address, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    ma_b(scratch2, ImmTag(JSVAL_LOWER_INCL_TAG_OF_GCTHING_SET), label,
+         (cond == Equal) ? AboveOrEqual : Below);
+}
+void
+MacroAssembler::branchTestGCThing(Condition cond, const BaseIndex& address, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    ma_b(scratch2, ImmTag(JSVAL_LOWER_INCL_TAG_OF_GCTHING_SET), label,
+         (cond == Equal) ? AboveOrEqual : Below);
+=======
+void MacroAssembler::branchTestMagic(Condition cond, Register tag,
+                                     Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_MAGIC), label, cond);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::branchTestPrimitive(Condition cond, Register tag,
                                          Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(tag, ImmTag(JSVAL_UPPER_EXCL_TAG_OF_PRIMITIVE_SET), label,
        (cond == Equal) ? Below : AboveOrEqual);
-}
-
-void MacroAssembler::branchTestMagic(Condition cond, Register tag,
-                                     Label* label) {
-  MOZ_ASSERT(cond == Equal || cond == NotEqual);
-  ma_b(tag, ImmTag(JSVAL_TAG_MAGIC), label, cond);
-}
-
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestPrimitive(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_UPPER_EXCL_TAG_OF_PRIMITIVE_SET), label,
+         (cond == Equal) ? Below : AboveOrEqual);
+=======
 void MacroAssembler::branchTestMagic(Condition cond, const Address& address,
                                      Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestMagic(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestMagic(Condition cond, Register tag,
+                                     Label* label) {
+  MOZ_ASSERT(cond == Equal || cond == NotEqual);
+  ma_b(tag, ImmTag(JSVAL_TAG_MAGIC), label, cond);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestMagic(Condition cond, Register tag, Label* label)
+{
+    MOZ_ASSERT(cond == Equal || cond == NotEqual);
+    ma_b(tag, ImmTag(JSVAL_TAG_MAGIC), label, cond);
+=======
 void MacroAssembler::branchTestMagic(Condition cond, const BaseIndex& address,
                                      Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   extractTag(address, scratch2);
   branchTestMagic(cond, scratch2, label);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestMagic(Condition cond, const Address& address,
+                                     Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestMagic(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestMagic(Condition cond, const Address& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestMagic(cond, scratch2, label);
+=======
 void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
   loadPtr(addr, ScratchRegister);
   branch(ScratchRegister);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+void MacroAssembler::branchTestMagic(Condition cond, const BaseIndex& address,
+                                     Label* label) {
+  SecondScratchRegisterScope scratch2(*this);
+  extractTag(address, scratch2);
+  branchTestMagic(cond, scratch2, label);
+||||||| merged common ancestors
+void
+MacroAssembler::branchTestMagic(Condition cond, const BaseIndex& address, Label* label)
+{
+    SecondScratchRegisterScope scratch2(*this);
+    extractTag(address, scratch2);
+    branchTestMagic(cond, scratch2, label);
+=======
+void MacroAssembler::cmp32Move32(Condition cond, Register lhs, Register rhs,
+                                 Register src, Register dest) {
+  Register scratch = ScratchRegister;
+  MOZ_ASSERT(src != scratch && dest != scratch);
+  cmp32Set(cond, lhs, rhs, scratch);
+  as_movn(dest, src, scratch);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+void MacroAssembler::branchToComputedAddress(const BaseIndex& addr) {
+  loadPtr(addr, ScratchRegister);
+  branch(ScratchRegister);
+||||||| merged common ancestors
+void
+MacroAssembler::branchToComputedAddress(const BaseIndex& addr)
+{
+    loadPtr(addr, ScratchRegister);
+    branch(ScratchRegister);
+=======
+void MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs,
+                                  Register src, Register dest) {
+  Register scratch = ScratchRegister;
+  MOZ_ASSERT(src != scratch && dest != scratch);
+  cmp32Set(cond, lhs, rhs, scratch);
+  as_movn(dest, src, scratch);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void MacroAssembler::cmp32Move32(Condition cond, Register lhs, Register rhs,
                                  Register src, Register dest) {
   MOZ_CRASH();
+||||||| merged common ancestors
+void
+MacroAssembler::cmp32Move32(Condition cond, Register lhs, Register rhs, Register src,
+                            Register dest)
+{
+    MOZ_CRASH();
+=======
+void MacroAssembler::cmp32Move32(Condition cond, Register lhs,
+                                 const Address& rhs, Register src,
+                                 Register dest) {
+  SecondScratchRegisterScope scratch2(*this);
+  MOZ_ASSERT(lhs != scratch2 && src != scratch2 && dest != scratch2);
+  load32(rhs, scratch2);
+  cmp32Move32(cond, lhs, scratch2, src, dest);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs,
                                   Register src, Register dest) {
   MOZ_CRASH();
+||||||| merged common ancestors
+void
+MacroAssembler::cmp32MovePtr(Condition cond, Register lhs, Imm32 rhs, Register src,
+                             Register dest)
+{
+    MOZ_CRASH();
+=======
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs,
+                                 const Address& rhs, const Address& src,
+                                 Register dest) {
+  // This is never used, but must be present to facilitate linking on mips(64).
+  MOZ_CRASH("No known use cases");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void MacroAssembler::cmp32Move32(Condition cond, Register lhs,
                                  const Address& rhs, Register src,
                                  Register dest) {
   MOZ_CRASH();
+||||||| merged common ancestors
+void
+MacroAssembler::cmp32Move32(Condition cond, Register lhs, const Address& rhs, Register src,
+                            Register dest)
+{
+    MOZ_CRASH();
+=======
+void MacroAssembler::cmp32Load32(Condition cond, Register lhs, Register rhs,
+                                 const Address& src, Register dest) {
+  // This is never used, but must be present to facilitate linking on mips(64).
+  MOZ_CRASH("No known use cases");
+>>>>>>> upstream-releases
 }
 
 void MacroAssembler::test32LoadPtr(Condition cond, const Address& addr,

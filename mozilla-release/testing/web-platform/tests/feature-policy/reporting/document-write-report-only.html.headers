@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 Feature-Policy: document-write-report-only 'none'
+||||||| merged common ancestors
+=======
+Feature-Policy-Report-Only: document-write 'none'
+>>>>>>> upstream-releases

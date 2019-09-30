@@ -8,7 +8,7 @@
 #define MOZILLA_SVGTRANSFORMLISTPARSER_H__
 
 #include "mozilla/Attributes.h"
-#include "nsSVGDataParser.h"
+#include "SVGDataParser.h"
 #include "nsTArray.h"
 
 ////////////////////////////////////////////////////////////////////////
@@ -19,18 +19,31 @@
 
 namespace mozilla {
 
-class nsSVGTransform;
+class SVGTransform;
 
+<<<<<<< HEAD
 class SVGTransformListParser : public nsSVGDataParser {
  public:
+||||||| merged common ancestors
+class SVGTransformListParser : public nsSVGDataParser
+{
+public:
+=======
+class SVGTransformListParser : public SVGDataParser {
+ public:
+>>>>>>> upstream-releases
   explicit SVGTransformListParser(const nsAString& aValue)
+<<<<<<< HEAD
       : nsSVGDataParser(aValue) {}
+||||||| merged common ancestors
+    : nsSVGDataParser(aValue) {}
+=======
+      : SVGDataParser(aValue) {}
+>>>>>>> upstream-releases
 
   bool Parse();
 
-  const nsTArray<nsSVGTransform>& GetTransformList() const {
-    return mTransforms;
-  }
+  const nsTArray<SVGTransform>& GetTransformList() const { return mTransforms; }
 
  private:
   // helpers
@@ -48,7 +61,7 @@ class SVGTransformListParser : public nsSVGDataParser {
   bool ParseSkewY();
   bool ParseMatrix();
 
-  FallibleTArray<nsSVGTransform> mTransforms;
+  FallibleTArray<SVGTransform> mTransforms;
 };
 
 }  // namespace mozilla

@@ -10,6 +10,7 @@
 #include "js/TypeDecls.h"
 #include "jsapi.h"
 #include "js/SavedFrameAPI.h"
+#include "xpcpublic.h"
 #include "mozilla/CycleCollectedJSContext.h"
 #include "mozilla/dom/BindingUtils.h"
 #include "mozilla/dom/DOMException.h"
@@ -41,9 +42,11 @@ static void ThrowExceptionValueIfSafe(JSContext* aCx,
   JS::Rooted<JSObject*> exnObj(aCx, &exnVal.toObject());
   MOZ_ASSERT(js::IsObjectInContextCompartment(exnObj, aCx),
              "exnObj needs to be in the right compartment for the "
-             "CheckedUnwrap thing to make sense");
+             "CheckedUnwrapDynamic thing to make sense");
 
-  if (js::CheckedUnwrap(exnObj)) {
+  // aCx's current Realm is where we're throwing, so using it in the
+  // CheckedUnwrapDynamic check makes sense.
+  if (js::CheckedUnwrapDynamic(exnObj, aCx)) {
     // This is an object we're allowed to work with, so just go ahead and throw
     // it.
     JS_SetPendingException(aCx, exnVal);
@@ -197,8 +200,17 @@ already_AddRefed<nsIStackFrame> GetCurrentJSStack(int32_t aMaxDepth) {
 
 namespace exceptions {
 
+<<<<<<< HEAD
 class JSStackFrame : public nsIStackFrame {
  public:
+||||||| merged common ancestors
+class JSStackFrame : public nsIStackFrame
+{
+public:
+=======
+class JSStackFrame final : public nsIStackFrame, public xpc::JSStackFrameBase {
+ public:
+>>>>>>> upstream-releases
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(JSStackFrame)
   NS_DECL_NSISTACKFRAME
@@ -209,6 +221,12 @@ class JSStackFrame : public nsIStackFrame {
  private:
   virtual ~JSStackFrame();
 
+  void Clear() override { mStack = nullptr; }
+
+  // Remove this frame from the per-realm list of live frames,
+  // and clear out the stack pointer.
+  void UnregisterAndClear();
+
   JS::Heap<JSObject*> mStack;
   nsString mFormattedStack;
 
@@ -217,11 +235,13 @@ class JSStackFrame : public nsIStackFrame {
   nsString mFilename;
   nsString mFunname;
   nsString mAsyncCause;
+  int32_t mSourceId;
   int32_t mLineno;
   int32_t mColNo;
 
   bool mFilenameInitialized;
   bool mFunnameInitialized;
+  bool mSourceIdInitialized;
   bool mLinenoInitialized;
   bool mColNoInitialized;
   bool mAsyncCauseInitialized;
@@ -231,6 +251,7 @@ class JSStackFrame : public nsIStackFrame {
 };
 
 JSStackFrame::JSStackFrame(JS::Handle<JSObject*> aStack)
+<<<<<<< HEAD
     : mStack(aStack),
       mLineno(0),
       mColNo(0),
@@ -242,19 +263,70 @@ JSStackFrame::JSStackFrame(JS::Handle<JSObject*> aStack)
       mAsyncCallerInitialized(false),
       mCallerInitialized(false),
       mFormattedStackInitialized(false) {
+||||||| merged common ancestors
+  : mStack(aStack)
+  , mLineno(0)
+  , mColNo(0)
+  , mFilenameInitialized(false)
+  , mFunnameInitialized(false)
+  , mLinenoInitialized(false)
+  , mColNoInitialized(false)
+  , mAsyncCauseInitialized(false)
+  , mAsyncCallerInitialized(false)
+  , mCallerInitialized(false)
+  , mFormattedStackInitialized(false)
+{
+=======
+    : mStack(aStack),
+      mSourceId(0),
+      mLineno(0),
+      mColNo(0),
+      mFilenameInitialized(false),
+      mFunnameInitialized(false),
+      mSourceIdInitialized(false),
+      mLinenoInitialized(false),
+      mColNoInitialized(false),
+      mAsyncCauseInitialized(false),
+      mAsyncCallerInitialized(false),
+      mCallerInitialized(false),
+      mFormattedStackInitialized(false) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mStack);
   MOZ_ASSERT(JS::IsUnwrappedSavedFrame(mStack));
 
   mozilla::HoldJSObjects(this);
+
+  xpc::RegisterJSStackFrame(js::GetNonCCWObjectRealm(aStack), this);
 }
 
+<<<<<<< HEAD
 JSStackFrame::~JSStackFrame() { mozilla::DropJSObjects(this); }
+||||||| merged common ancestors
+JSStackFrame::~JSStackFrame()
+{
+  mozilla::DropJSObjects(this);
+}
+=======
+JSStackFrame::~JSStackFrame() {
+  UnregisterAndClear();
+  mozilla::DropJSObjects(this);
+}
+>>>>>>> upstream-releases
+
+void JSStackFrame::UnregisterAndClear() {
+  if (!mStack) {
+    return;
+  }
+
+  xpc::UnregisterJSStackFrame(js::GetNonCCWObjectRealm(mStack), this);
+  Clear();
+}
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(JSStackFrame)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(JSStackFrame)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mCaller)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mAsyncCaller)
-  tmp->mStack = nullptr;
+  tmp->UnregisterAndClear();
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(JSStackFrame)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mCaller)
@@ -428,7 +500,43 @@ void JSStackFrame::GetName(JSContext* aCx, nsAString& aFunction) {
   }
 }
 
+<<<<<<< HEAD
 int32_t JSStackFrame::GetLineNumber(JSContext* aCx) {
+||||||| merged common ancestors
+int32_t
+JSStackFrame::GetLineNumber(JSContext* aCx)
+{
+=======
+int32_t JSStackFrame::GetSourceId(JSContext* aCx) {
+  if (!mStack) {
+    return 0;
+  }
+
+  uint32_t id;
+  bool canCache = false, useCachedValue = false;
+  GetValueIfNotCached(aCx, mStack, JS::GetSavedFrameSourceId,
+                      mSourceIdInitialized, &canCache, &useCachedValue, &id);
+
+  if (useCachedValue) {
+    return mSourceId;
+  }
+
+  if (canCache) {
+    mSourceId = id;
+    mSourceIdInitialized = true;
+  }
+
+  return id;
+}
+
+NS_IMETHODIMP
+JSStackFrame::GetSourceIdXPCOM(JSContext* aCx, int32_t* aSourceId) {
+  *aSourceId = GetSourceId(aCx);
+  return NS_OK;
+}
+
+int32_t JSStackFrame::GetLineNumber(JSContext* aCx) {
+>>>>>>> upstream-releases
   if (!mStack) {
     return 0;
   }

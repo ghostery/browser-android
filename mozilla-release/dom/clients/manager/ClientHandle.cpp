@@ -110,6 +110,7 @@ RefPtr<GenericPromise> ClientHandle::Control(
   MOZ_RELEASE_ASSERT(ClientMatchPrincipalInfo(mClientInfo.PrincipalInfo(),
                                               aServiceWorker.PrincipalInfo()));
 
+<<<<<<< HEAD
   StartOp(ClientControlledArgs(aServiceWorker.ToIPC()),
           [outerPromise](const ClientOpResult& aResult) {
             outerPromise->Resolve(true, __func__);
@@ -117,12 +118,31 @@ RefPtr<GenericPromise> ClientHandle::Control(
           [outerPromise](const ClientOpResult& aResult) {
             outerPromise->Reject(aResult.get_nsresult(), __func__);
           });
+||||||| merged common ancestors
+  StartOp(ClientControlledArgs(aServiceWorker.ToIPC()),
+    [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Resolve(true, __func__);
+    },
+    [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Reject(aResult.get_nsresult(), __func__);
+    });
+=======
+  StartOp(
+      ClientControlledArgs(aServiceWorker.ToIPC()),
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Resolve(true, __func__);
+      },
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Reject(aResult.get_nsresult(), __func__);
+      });
+>>>>>>> upstream-releases
 
   return outerPromise.forget();
 }
 
 RefPtr<ClientStatePromise> ClientHandle::Focus() {
   RefPtr<ClientStatePromise::Private> outerPromise =
+<<<<<<< HEAD
       new ClientStatePromise::Private(__func__);
 
   StartOp(ClientFocusArgs(),
@@ -133,34 +153,88 @@ RefPtr<ClientStatePromise> ClientHandle::Focus() {
           [outerPromise](const ClientOpResult& aResult) {
             outerPromise->Reject(aResult.get_nsresult(), __func__);
           });
+||||||| merged common ancestors
+    new ClientStatePromise::Private(__func__);
 
-  RefPtr<ClientStatePromise> ref = outerPromise.get();
-  return ref.forget();
+  StartOp(ClientFocusArgs(),
+    [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Resolve(ClientState::FromIPC(aResult.get_IPCClientState()), __func__);
+    }, [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Reject(aResult.get_nsresult(), __func__);
+    });
+=======
+      new ClientStatePromise::Private(__func__);
+
+  StartOp(
+      ClientFocusArgs(),
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Resolve(
+            ClientState::FromIPC(aResult.get_IPCClientState()), __func__);
+      },
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Reject(aResult.get_nsresult(), __func__);
+      });
+>>>>>>> upstream-releases
+
+  return outerPromise.forget();
 }
 
+<<<<<<< HEAD
 RefPtr<GenericPromise> ClientHandle::PostMessage(
     StructuredCloneData& aData, const ServiceWorkerDescriptor& aSource) {
   RefPtr<GenericPromise> ref;
 
+||||||| merged common ancestors
+RefPtr<GenericPromise>
+ClientHandle::PostMessage(StructuredCloneData& aData,
+                          const ServiceWorkerDescriptor& aSource)
+{
+  RefPtr<GenericPromise> ref;
+
+=======
+RefPtr<GenericPromise> ClientHandle::PostMessage(
+    StructuredCloneData& aData, const ServiceWorkerDescriptor& aSource) {
+>>>>>>> upstream-releases
   if (IsShutdown()) {
+<<<<<<< HEAD
     ref = GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
                                           __func__);
     return ref.forget();
+||||||| merged common ancestors
+    ref = GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
+    return ref.forget();
+=======
+    return GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                           __func__);
+>>>>>>> upstream-releases
   }
 
   ClientPostMessageArgs args;
   args.serviceWorker() = aSource.ToIPC();
 
+<<<<<<< HEAD
   if (!aData.BuildClonedMessageDataForBackgroundChild(
           GetActor()->Manager()->Manager(), args.clonedData())) {
     ref = GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
                                           __func__);
     return ref.forget();
+||||||| merged common ancestors
+  if (!aData.BuildClonedMessageDataForBackgroundChild(GetActor()->Manager()->Manager(),
+                                                      args.clonedData())) {
+    ref = GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
+    return ref.forget();
+=======
+  if (!aData.BuildClonedMessageDataForBackgroundChild(
+          GetActor()->Manager()->Manager(), args.clonedData())) {
+    return GenericPromise::CreateAndReject(NS_ERROR_DOM_INVALID_STATE_ERR,
+                                           __func__);
+>>>>>>> upstream-releases
   }
 
   RefPtr<GenericPromise::Private> outerPromise =
       new GenericPromise::Private(__func__);
 
+<<<<<<< HEAD
   StartOp(args,
           [outerPromise](const ClientOpResult& aResult) {
             outerPromise->Resolve(true, __func__);
@@ -168,9 +242,25 @@ RefPtr<GenericPromise> ClientHandle::PostMessage(
           [outerPromise](const ClientOpResult& aResult) {
             outerPromise->Reject(aResult.get_nsresult(), __func__);
           });
+||||||| merged common ancestors
+  StartOp(args,
+    [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Resolve(true, __func__);
+    }, [outerPromise](const ClientOpResult& aResult) {
+      outerPromise->Reject(aResult.get_nsresult(), __func__);
+    });
+=======
+  StartOp(
+      args,
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Resolve(true, __func__);
+      },
+      [outerPromise](const ClientOpResult& aResult) {
+        outerPromise->Reject(aResult.get_nsresult(), __func__);
+      });
+>>>>>>> upstream-releases
 
-  ref = outerPromise.get();
-  return ref.forget();
+  return outerPromise.forget();
 }
 
 RefPtr<GenericPromise> ClientHandle::OnDetach() {
@@ -183,8 +273,7 @@ RefPtr<GenericPromise> ClientHandle::OnDetach() {
     }
   }
 
-  RefPtr<GenericPromise> ref(mDetachPromise);
-  return ref;
+  return mDetachPromise;
 }
 
 }  // namespace dom

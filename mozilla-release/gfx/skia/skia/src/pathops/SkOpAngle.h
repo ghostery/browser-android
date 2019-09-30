@@ -98,8 +98,13 @@ public:
 private:
     bool after(SkOpAngle* test);
     void alignmentSameSide(const SkOpAngle* test, int* order) const;
+<<<<<<< HEAD
     int allOnOneSide(const SkOpAngle* test);
     int allOnOriginalSide(const SkOpAngle* test);
+||||||| merged common ancestors
+    int allOnOneSide(const SkOpAngle* test);
+=======
+>>>>>>> upstream-releases
     bool checkCrossesZero() const;
     bool checkParallel(SkOpAngle* );
     bool computeSector();
@@ -108,6 +113,10 @@ private:
     bool endsIntersect(SkOpAngle* );
     int findSector(SkPath::Verb verb, double x, double y) const;
     SkOpGlobalState* globalState() const;
+    int lineOnOneSide(const SkDPoint& origin, const SkDVector& line, const SkOpAngle* test,
+                      bool useOriginal) const;
+    int lineOnOneSide(const SkOpAngle* test, bool useOriginal);
+    int linesOnOriginalSide(const SkOpAngle* test);
     bool merge(SkOpAngle* );
     double midT() const;
     bool midToSide(const SkOpAngle* rh, bool* inside) const;

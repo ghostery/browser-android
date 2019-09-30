@@ -15,10 +15,28 @@ namespace dom {
 
 class Grid;
 
+<<<<<<< HEAD
 class GridArea : public nsISupports, public nsWrapperCache {
  public:
   explicit GridArea(Grid* aParent, const nsString& aName, GridDeclaration aType,
                     uint32_t aRowStart, uint32_t aRowEnd, uint32_t aColumnStart,
+||||||| merged common ancestors
+class GridArea : public nsISupports
+               , public nsWrapperCache
+{
+public:
+  explicit GridArea(Grid *aParent,
+                    const nsString& aName,
+                    GridDeclaration aType,
+                    uint32_t aRowStart,
+                    uint32_t aRowEnd,
+                    uint32_t aColumnStart,
+=======
+class GridArea : public nsISupports, public nsWrapperCache {
+ public:
+  explicit GridArea(Grid* aParent, nsAtom* aName, GridDeclaration aType,
+                    uint32_t aRowStart, uint32_t aRowEnd, uint32_t aColumnStart,
+>>>>>>> upstream-releases
                     uint32_t aColumnEnd);
 
  protected:
@@ -41,7 +59,7 @@ class GridArea : public nsISupports, public nsWrapperCache {
 
  protected:
   RefPtr<Grid> mParent;
-  const nsString mName;
+  const RefPtr<nsAtom> mName;
   const GridDeclaration mType;
   const uint32_t mRowStart;
   const uint32_t mRowEnd;

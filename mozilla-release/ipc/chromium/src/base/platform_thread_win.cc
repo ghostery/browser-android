@@ -13,6 +13,7 @@
 
 namespace {
 
+<<<<<<< HEAD
 // The information on how to set the thread name comes from
 // a MSDN article: http://msdn2.microsoft.com/en-us/library/xcb2z8hs.aspx
 const DWORD kVCThreadNameException = 0x406D1388;
@@ -24,6 +25,20 @@ typedef struct tagTHREADNAME_INFO {
   DWORD dwFlags;     // Reserved for future use, must be zero.
 } THREADNAME_INFO;
 
+||||||| merged common ancestors
+// The information on how to set the thread name comes from
+// a MSDN article: http://msdn2.microsoft.com/en-us/library/xcb2z8hs.aspx
+const DWORD kVCThreadNameException = 0x406D1388;
+
+typedef struct tagTHREADNAME_INFO {
+  DWORD dwType;  // Must be 0x1000.
+  LPCSTR szName;  // Pointer to name (in user addr space).
+  DWORD dwThreadID;  // Thread ID (-1=caller thread).
+  DWORD dwFlags;  // Reserved for future use, must be zero.
+} THREADNAME_INFO;
+
+=======
+>>>>>>> upstream-releases
 DWORD __stdcall ThreadFunc(void* closure) {
   PlatformThread::Delegate* delegate =
       static_cast<PlatformThread::Delegate*>(closure);

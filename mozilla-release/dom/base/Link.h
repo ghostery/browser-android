@@ -57,31 +57,41 @@ class Link : public nsISupports {
   /**
    * @return the URI this link is for, if available.
    */
+<<<<<<< HEAD
   nsIURI *GetURI() const;
   virtual nsIURI *GetURIExternal() const { return GetURI(); }
+||||||| merged common ancestors
+  nsIURI* GetURI() const;
+  virtual nsIURI* GetURIExternal() const {
+    return GetURI();
+  }
+=======
+  nsIURI* GetURI() const;
+  virtual nsIURI* GetURIExternal() const { return GetURI(); }
+>>>>>>> upstream-releases
 
   /**
    * Helper methods for modifying and obtaining parts of the URI of the Link.
    */
-  void SetProtocol(const nsAString &aProtocol);
-  void SetUsername(const nsAString &aUsername);
-  void SetPassword(const nsAString &aPassword);
-  void SetHost(const nsAString &aHost);
-  void SetHostname(const nsAString &aHostname);
-  void SetPathname(const nsAString &aPathname);
-  void SetSearch(const nsAString &aSearch);
-  void SetPort(const nsAString &aPort);
-  void SetHash(const nsAString &aHash);
-  void GetOrigin(nsAString &aOrigin);
-  void GetProtocol(nsAString &_protocol);
-  void GetUsername(nsAString &aUsername);
-  void GetPassword(nsAString &aPassword);
-  void GetHost(nsAString &_host);
-  void GetHostname(nsAString &_hostname);
-  void GetPathname(nsAString &_pathname);
-  void GetSearch(nsAString &_search);
-  void GetPort(nsAString &_port);
-  void GetHash(nsAString &_hash);
+  void SetProtocol(const nsAString& aProtocol);
+  void SetUsername(const nsAString& aUsername);
+  void SetPassword(const nsAString& aPassword);
+  void SetHost(const nsAString& aHost);
+  void SetHostname(const nsAString& aHostname);
+  void SetPathname(const nsAString& aPathname);
+  void SetSearch(const nsAString& aSearch);
+  void SetPort(const nsAString& aPort);
+  void SetHash(const nsAString& aHash);
+  void GetOrigin(nsAString& aOrigin);
+  void GetProtocol(nsAString& _protocol);
+  void GetUsername(nsAString& aUsername);
+  void GetPassword(nsAString& aPassword);
+  void GetHost(nsAString& _host);
+  void GetHostname(nsAString& _hostname);
+  void GetPathname(nsAString& _pathname);
+  void GetSearch(nsAString& _search);
+  void GetPort(nsAString& _port);
+  void GetHash(nsAString& _hash);
 
   /**
    * Invalidates any link caching, and resets the state to the default.
@@ -115,7 +125,14 @@ class Link : public nsISupports {
    */
   virtual bool HasDeferredDNSPrefetchRequest() { return true; }
 
+<<<<<<< HEAD
   virtual size_t SizeOfExcludingThis(mozilla::SizeOfState &aState) const;
+||||||| merged common ancestors
+  virtual size_t
+    SizeOfExcludingThis(mozilla::SizeOfState& aState) const;
+=======
+  virtual size_t SizeOfExcludingThis(mozilla::SizeOfState& aState) const;
+>>>>>>> upstream-releases
 
   virtual bool ElementHasHref() const;
 
@@ -138,16 +155,33 @@ class Link : public nsISupports {
   // similar to the one in Element. Overriders must call
   // ClearHasPendingLinkUpdate().
   // If you change this, change also the method in Element.
+<<<<<<< HEAD
   virtual void NodeInfoChanged(nsIDocument *aOldDoc) = 0;
+||||||| merged common ancestors
+  virtual void NodeInfoChanged(nsIDocument* aOldDoc) = 0;
+=======
+  virtual void NodeInfoChanged(Document* aOldDoc) = 0;
+>>>>>>> upstream-releases
 
   bool IsInDNSPrefetch() { return mInDNSPrefetch; }
   void SetIsInDNSPrefetch() { mInDNSPrefetch = true; }
   void ClearIsInDNSPrefetch() { mInDNSPrefetch = false; }
 
+<<<<<<< HEAD
   static void ParseAsValue(const nsAString &aValue, nsAttrValue &aResult);
   static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue &aValue);
 
  protected:
+||||||| merged common ancestors
+  static void ParseAsValue(const nsAString& aValue, nsAttrValue& aResult);
+  static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue& aValue);
+protected:
+=======
+  static void ParseAsValue(const nsAString& aValue, nsAttrValue& aResult);
+  static nsContentPolicyType AsValueToContentPolicy(const nsAttrValue& aValue);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~Link();
 
   /**
@@ -171,15 +205,32 @@ class Link : public nsISupports {
    */
   void UnregisterFromHistory();
 
-  void SetHrefAttribute(nsIURI *aURI);
+  void SetHrefAttribute(nsIURI* aURI);
 
+<<<<<<< HEAD
   void GetContentPolicyMimeTypeMedia(nsAttrValue &aAsAttr,
                                      nsContentPolicyType &aPolicyType,
                                      nsString &aMimeType, nsAString &aMedia);
+||||||| merged common ancestors
+  void GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
+                                     nsContentPolicyType& aPolicyType,
+                                     nsString& aMimeType,
+                                     nsAString& aMedia);
+=======
+  void GetContentPolicyMimeTypeMedia(nsAttrValue& aAsAttr,
+                                     nsContentPolicyType& aPolicyType,
+                                     nsString& aMimeType, nsAString& aMedia);
+>>>>>>> upstream-releases
 
   mutable nsCOMPtr<nsIURI> mCachedURI;
 
+<<<<<<< HEAD
   Element *const mElement;
+||||||| merged common ancestors
+  Element * const mElement;
+=======
+  Element* const mElement;
+>>>>>>> upstream-releases
 
   uint16_t mLinkState;
 

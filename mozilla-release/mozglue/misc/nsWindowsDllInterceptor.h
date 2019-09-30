@@ -256,11 +256,26 @@ class MOZ_ONLY_USED_TO_AVOID_STATIC_CONSTRUCTORS FuncHookCrossProcess final {
                                   sizeof(mOrigFunc), &bytesWritten);
   }
 
+<<<<<<< HEAD
  private:
   FuncPtrT mOrigFunc;
 };
 
 enum { kDefaultTrampolineSize = 128 };
+||||||| merged common ancestors
+private:
+  FuncPtrT  mOrigFunc;
+};
+
+enum
+{
+  kDefaultTrampolineSize = 128
+};
+=======
+ private:
+  FuncPtrT mOrigFunc;
+};
+>>>>>>> upstream-releases
 
 template <typename MMPolicyT, typename InterceptorT>
 struct TypeResolver;
@@ -277,11 +292,26 @@ struct TypeResolver<mozilla::interceptor::MMPolicyOutOfProcess, InterceptorT> {
   using FuncHookType = FuncHookCrossProcess<InterceptorT, FuncPtrT>;
 };
 
+<<<<<<< HEAD
 template <typename VMPolicy = mozilla::interceptor::VMSharingPolicyShared<
               mozilla::interceptor::MMPolicyInProcess, kDefaultTrampolineSize>>
 class WindowsDllInterceptor final
     : public TypeResolver<typename VMPolicy::MMPolicyT,
                           WindowsDllInterceptor<VMPolicy>> {
+||||||| merged common ancestors
+template <typename VMPolicy =
+            mozilla::interceptor::VMSharingPolicyShared<
+              mozilla::interceptor::MMPolicyInProcess, kDefaultTrampolineSize>>
+class WindowsDllInterceptor final : public TypeResolver<typename VMPolicy::MMPolicyT,
+                                                        WindowsDllInterceptor<VMPolicy>>
+{
+=======
+template <typename VMPolicy = mozilla::interceptor::VMSharingPolicyShared<
+              mozilla::interceptor::MMPolicyInProcess, true>>
+class WindowsDllInterceptor final
+    : public TypeResolver<typename VMPolicy::MMPolicyT,
+                          WindowsDllInterceptor<VMPolicy>> {
+>>>>>>> upstream-releases
   typedef WindowsDllInterceptor<VMPolicy> ThisType;
 
   interceptor::WindowsDllDetourPatcher<VMPolicy> mDetourPatcher;
@@ -291,19 +321,32 @@ class WindowsDllInterceptor final
 #endif  // defined(_M_IX86)
 
   HMODULE mModule;
-  int mNHooks;
 
  public:
   template <typename... Args>
   explicit WindowsDllInterceptor(Args... aArgs)
       : mDetourPatcher(std::forward<Args>(aArgs)...)
 #if defined(_M_IX86)
+<<<<<<< HEAD
         ,
         mNopSpacePatcher(std::forward<Args>(aArgs)...)
 #endif  // defined(_M_IX86)
         ,
         mModule(nullptr),
         mNHooks(0) {
+||||||| merged common ancestors
+    , mNopSpacePatcher(std::forward<Args>(aArgs)...)
+#endif // defined(_M_IX86)
+    , mModule(nullptr)
+    , mNHooks(0)
+  {
+=======
+        ,
+        mNopSpacePatcher(std::forward<Args>(aArgs)...)
+#endif  // defined(_M_IX86)
+        ,
+        mModule(nullptr) {
+>>>>>>> upstream-releases
   }
 
   WindowsDllInterceptor(const WindowsDllInterceptor&) = delete;
@@ -314,7 +357,14 @@ class WindowsDllInterceptor final
   ~WindowsDllInterceptor() { Clear(); }
 
   template <size_t N>
+<<<<<<< HEAD
   void Init(const char (&aModuleName)[N], int aNumHooks = 0) {
+||||||| merged common ancestors
+  void Init(const char (&aModuleName)[N], int aNumHooks = 0)
+  {
+=======
+  void Init(const char (&aModuleName)[N]) {
+>>>>>>> upstream-releases
     wchar_t moduleName[N];
 
     for (size_t i = 0; i < N; ++i) {
@@ -323,18 +373,25 @@ class WindowsDllInterceptor final
       moduleName[i] = aModuleName[i];
     }
 
-    Init(moduleName, aNumHooks);
+    Init(moduleName);
   }
 
+<<<<<<< HEAD
   void Init(const wchar_t* aModuleName, int aNumHooks = 0) {
+||||||| merged common ancestors
+  void Init(const wchar_t* aModuleName, int aNumHooks = 0)
+  {
+=======
+  void Init(const wchar_t* aModuleName) {
+>>>>>>> upstream-releases
     if (mModule) {
       return;
     }
 
     mModule = ::LoadLibraryW(aModuleName);
-    mNHooks = aNumHooks;
   }
 
+<<<<<<< HEAD
   /** Force a specific configuration for testing purposes. NOT to be used in
       production code! **/
   void TestOnlyDetourInit(const wchar_t* aModuleName, DetourFlags aFlags,
@@ -347,6 +404,19 @@ class WindowsDllInterceptor final
   }
 
   void Clear() {
+||||||| merged common ancestors
+  void Clear()
+  {
+=======
+  /** Force a specific configuration for testing purposes. NOT to be used in
+      production code! **/
+  void TestOnlyDetourInit(const wchar_t* aModuleName, DetourFlags aFlags) {
+    Init(aModuleName);
+    mDetourPatcher.Init(aFlags);
+  }
+
+  void Clear() {
+>>>>>>> upstream-releases
     if (!mModule) {
       return;
     }
@@ -419,13 +489,8 @@ class WindowsDllInterceptor final
   bool AddDetour(FARPROC aProc, intptr_t aHookDest, void** aOrigFunc) {
     MOZ_ASSERT(mModule && aProc);
 
-#if defined(_M_ARM64)
-    // XXX: this is just to get things compiling; we'll have to add real
-    // support at some future point.
-    return false;
-#endif
-
     if (!mDetourPatcher.Initialized()) {
+<<<<<<< HEAD
       DetourFlags flags = DetourFlags::eDefault;
 #if defined(_M_X64)
       if (mModule == ::GetModuleHandleW(L"ntdll.dll")) {
@@ -436,6 +501,20 @@ class WindowsDllInterceptor final
 #endif  // defined(_M_X64)
 
       mDetourPatcher.Init(flags, mNHooks);
+||||||| merged common ancestors
+      mDetourPatcher.Init(mNHooks);
+=======
+      DetourFlags flags = DetourFlags::eDefault;
+#if defined(_M_X64)
+      if (mModule == ::GetModuleHandleW(L"ntdll.dll")) {
+        // NTDLL hooks should attempt to use a 10-byte patch because some
+        // injected DLLs do the same and interfere with our stuff.
+        flags |= DetourFlags::eEnable10BytePatch;
+      }
+#endif  // defined(_M_X64)
+
+      mDetourPatcher.Init(flags);
+>>>>>>> upstream-releases
     }
 
     return mDetourPatcher.AddHook(aProc, aHookDest, aOrigFunc);
@@ -454,9 +533,18 @@ class WindowsDllInterceptor final
 using WindowsDllInterceptor = interceptor::WindowsDllInterceptor<>;
 
 using CrossProcessDllInterceptor = interceptor::WindowsDllInterceptor<
+<<<<<<< HEAD
     mozilla::interceptor::VMSharingPolicyUnique<
         mozilla::interceptor::MMPolicyOutOfProcess,
         mozilla::interceptor::kDefaultTrampolineSize>>;
+||||||| merged common ancestors
+  mozilla::interceptor::VMSharingPolicyUnique<
+    mozilla::interceptor::MMPolicyOutOfProcess,
+    mozilla::interceptor::kDefaultTrampolineSize>>;
+=======
+    mozilla::interceptor::VMSharingPolicyUnique<
+        mozilla::interceptor::MMPolicyOutOfProcess>>;
+>>>>>>> upstream-releases
 
 }  // namespace mozilla
 

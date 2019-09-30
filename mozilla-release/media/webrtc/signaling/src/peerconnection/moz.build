@@ -23,7 +23,14 @@ LOCAL_INCLUDES += [
 ]
 
 UNIFIED_SOURCES += [
+<<<<<<< HEAD
     'MediaTransportHandler.cpp',
+||||||| merged common ancestors
+=======
+    'MediaTransportHandler.cpp',
+    'MediaTransportHandlerIPC.cpp',
+    'MediaTransportParent.cpp',
+>>>>>>> upstream-releases
     'PacketDumper.cpp',
     'PeerConnectionCtx.cpp',
     'PeerConnectionImpl.cpp',

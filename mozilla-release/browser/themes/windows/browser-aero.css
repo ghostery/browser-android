@@ -13,6 +13,7 @@
     #main-window[sizemode="normal"] > #navigator-toolbox > #titlebar > #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .toolbar-items {
       margin-top: 1px;
     }
+<<<<<<< HEAD
     /**
      * Except for Windows 8, Windows 7 Aero and Windows 7 Aero Basic, the
      * -moz-window-button-box appearance on the .titlebar-buttonbox adds an
@@ -37,11 +38,33 @@
     }
   }
 }
+||||||| merged common ancestors
+  }
+}
+=======
+    /**
+     * Except for Windows 8, Windows 7 Aero and Windows 7 Aero Basic, the
+     * -moz-window-button-box appearance on the .titlebar-buttonbox adds an
+     * unwanted margin at the top of the button box.
+     *
+     * For Windows 8 and Windows Aero (which both use the compositor):
+     *   We want the -moz-window-button-box applied in the restored case,
+     *   and -moz-window-button-box-maximized in the maximized case.
+     *
+     * For Windows Aero Basic:
+     *   The margin is also unwanted in the maximized case, but we want
+     *   it in the restored window case.
+     */
+    #main-window[sizemode="normal"] .titlebar-buttonbox {
+      -moz-appearance: -moz-window-button-box;
+    }
+>>>>>>> upstream-releases
 
-@media (-moz-windows-default-theme) {
-  .menu-accel,
-  .menu-iconic-accel {
-    color: graytext;
+    @media (-moz-windows-compositor) {
+      #main-window[sizemode="maximized"] .titlebar-buttonbox {
+        -moz-appearance: -moz-window-button-box-maximized;
+      }
+    }
   }
 }
 
@@ -70,9 +93,14 @@
           :root[sizemode=normal][tabsintitlebar] {
             border-top: 1px solid -moz-win-accentcolor;
           }
-          :root[tabsintitlebar]:not(:-moz-window-inactive):not(:-moz-lwtheme) {
+          :root[tabsintitlebar]:not(:-moz-window-inactive):not(:-moz-lwtheme),
+          :root[tabsintitlebar]:not(:-moz-window-inactive)[lwt-default-theme-in-dark-mode] {
             background-color: -moz-win-accentcolor;
             color: -moz-win-accentcolortext;
+          }
+          :root[tabsintitlebar][lwt-default-theme-in-dark-mode] #titlebar {
+            --lwt-toolbarbutton-icon-fill: currentColor;
+            --toolbarbutton-icon-fill-opacity: .7;
           }
         }
 
@@ -88,15 +116,18 @@
       }
 
       @media (-moz-windows-default-theme: 0) {
-        :root {
-          background-color: transparent;
+        :root[tabsintitlebar] {
           -moz-appearance: -moz-win-glass;
+        }
+
+        :root[tabsintitlebar]:not(:-moz-lwtheme) {
+          background-color: transparent;
         }
 
         /* On win10, if we don't set this on the entire browser container including
          * the sidebar, if the sidebar is open the accent color bleeds through in
          * the titlebar */
-        #browser {
+        :root[tabsintitlebar] #browser {
           -moz-appearance: -moz-win-exclude-glass;
         }
       }
@@ -307,7 +338,18 @@
       background-clip: padding-box;
     }
 
-    #main-window[sizemode=normal] #navigator-toolbox::after {
+    #navigator-toolbox::after {
+      content: "";
+      display: -moz-box;
+      border-bottom: 1px solid var(--chrome-content-separator-color);
+    }
+
+    #navigator-toolbox,
+    :root[customizing] #navigator-toolbox::after {
+      border-bottom-style: none;
+    }
+
+    :root[sizemode=normal] #navigator-toolbox::after {
       box-shadow: 1px 0 0 @glassShadowColor@, -1px 0 0 @glassShadowColor@;
       margin-left: 1px;
       margin-right: 1px;

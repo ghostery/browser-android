@@ -7,28 +7,66 @@
 #ifndef ThirdPartyUtil_h__
 #define ThirdPartyUtil_h__
 
-#include "nsCOMPtr.h"
-#include "nsString.h"
 #include "mozIThirdPartyUtil.h"
-#include "nsIEffectiveTLDService.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/dom/Document.h"
+#include "nsCOMPtr.h"
+#include "nsEffectiveTLDService.h"
+#include "nsString.h"
+#include "nsPIDOMWindow.h"
 
 class nsIURI;
+class nsPIDOMWindowOuter;
 
+<<<<<<< HEAD
 class ThirdPartyUtil final : public mozIThirdPartyUtil {
  public:
   NS_DECL_ISUPPORTS
+||||||| merged common ancestors
+class ThirdPartyUtil final : public mozIThirdPartyUtil
+{
+public:
+  NS_DECL_ISUPPORTS
+=======
+class ThirdPartyUtil final : public mozIThirdPartyUtil {
+ public:
+  NS_DECL_THREADSAFE_ISUPPORTS
+>>>>>>> upstream-releases
   NS_DECL_MOZITHIRDPARTYUTIL
 
   nsresult Init();
 
+<<<<<<< HEAD
  private:
   ~ThirdPartyUtil() {}
+||||||| merged common ancestors
+private:
+  ~ThirdPartyUtil() {}
+=======
+  static void Startup();
+  static ThirdPartyUtil* GetInstance();
+>>>>>>> upstream-releases
 
+ private:
+  ~ThirdPartyUtil();
+
+  bool IsThirdPartyInternal(const nsCString& aFirstDomain,
+                            const nsCString& aSecondDomain) {
+    // Check strict equality.
+    return aFirstDomain != aSecondDomain;
+  }
   nsresult IsThirdPartyInternal(const nsCString& aFirstDomain,
+<<<<<<< HEAD
+                                nsIURI* aSecondURI, bool* aResult);
+||||||| merged common ancestors
+    nsIURI* aSecondURI, bool* aResult);
+=======
                                 nsIURI* aSecondURI, bool* aResult);
 
-  nsCOMPtr<nsIEffectiveTLDService> mTLDService;
+  nsCString GetBaseDomainFromWindow(nsPIDOMWindowOuter* aWindow);
+>>>>>>> upstream-releases
+
+  RefPtr<nsEffectiveTLDService> mTLDService;
 };
 
 #endif

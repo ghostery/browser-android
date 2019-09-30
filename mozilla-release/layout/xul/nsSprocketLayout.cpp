@@ -16,7 +16,6 @@
 #include "nsPresContext.h"
 #include "nsCOMPtr.h"
 #include "nsIContent.h"
-#include "nsIPresShell.h"
 #include "nsContainerFrame.h"
 #include "nsBoxFrame.h"
 #include "StackArena.h"
@@ -35,7 +34,18 @@ nsresult NS_NewSprocketLayout(nsCOMPtr<nsBoxLayout>& aNewLayout) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /*static*/ void nsSprocketLayout::Shutdown() { NS_IF_RELEASE(gInstance); }
+||||||| merged common ancestors
+/*static*/ void
+nsSprocketLayout::Shutdown()
+{
+  NS_IF_RELEASE(gInstance);
+}
+=======
+/*static*/
+void nsSprocketLayout::Shutdown() { NS_IF_RELEASE(gInstance); }
+>>>>>>> upstream-releases
 
 nsSprocketLayout::nsSprocketLayout() {}
 
@@ -611,13 +621,13 @@ void nsSprocketLayout::PopulateBoxSizes(nsIFrame* aBox,
   // used for the equal size flag
   nscoord biggestPrefWidth = 0;
   nscoord biggestMinWidth = 0;
-  nscoord smallestMaxWidth = NS_INTRINSICSIZE;
+  nscoord smallestMaxWidth = NS_UNCONSTRAINEDSIZE;
 
   nsFrameState frameState = nsFrameState(0);
   GetFrameState(aBox, frameState);
 
   aMinSize = 0;
-  aMaxSize = NS_INTRINSICSIZE;
+  aMaxSize = NS_UNCONSTRAINEDSIZE;
 
   bool isHorizontal;
 
@@ -691,9 +701,19 @@ void nsSprocketLayout::PopulateBoxSizes(nsIFrame* aBox,
       currentBox = currentBox->next;
     }
     ++childCount;
+<<<<<<< HEAD
     nsSize pref(0, 0);
     nsSize minSize(0, 0);
     nsSize maxSize(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+||||||| merged common ancestors
+    nsSize pref(0,0);
+    nsSize minSize(0,0);
+    nsSize maxSize(NS_INTRINSICSIZE,NS_INTRINSICSIZE);
+=======
+    nsSize pref(0, 0);
+    nsSize minSize(0, 0);
+    nsSize maxSize(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
     bool collapsed = child->IsXULCollapsed();
 
     if (!collapsed) {
@@ -1153,6 +1173,7 @@ void nsSprocketLayout::ComputeChildSizes(
       while (boxSizes) {
         // ignore collapsed spacers
 
+<<<<<<< HEAD
         //    if (!boxSizes->collapsed) {
 
         nscoord pref = 0;
@@ -1185,6 +1206,72 @@ void nsSprocketLayout::ComputeChildSizes(
             sizeRemaining += pref;
             sizeRemaining -= max;
             limit = true;
+||||||| merged common ancestors
+   //    if (!boxSizes->collapsed) {
+
+          nscoord pref = 0;
+          nscoord max  = NS_INTRINSICSIZE;
+          nscoord min  = 0;
+          nscoord flex = 0;
+
+          pref = boxSizes->pref;
+          min  = boxSizes->min;
+          max  = boxSizes->max;
+          flex = boxSizes->flex;
+
+          // ----- look at our min and max limits make sure we aren't too small or too big -----
+          if (!computedBoxSizes->valid) {
+            int32_t newSize = pref + int32_t(int64_t(sizeRemaining) * flex / spacerConstantsRemaining);
+
+            if (newSize<=min) {
+              computedBoxSizes->size = min;
+              computedBoxSizes->valid = true;
+              spacerConstantsRemaining -= flex;
+              sizeRemaining += pref;
+              sizeRemaining -= min;
+              limit = true;
+            } else if (newSize>=max) {
+              computedBoxSizes->size = max;
+              computedBoxSizes->valid = true;
+              spacerConstantsRemaining -= flex;
+              sizeRemaining += pref;
+              sizeRemaining -= max;
+              limit = true;
+            }
+=======
+        //    if (!boxSizes->collapsed) {
+
+        nscoord pref = 0;
+        nscoord max = NS_UNCONSTRAINEDSIZE;
+        nscoord min = 0;
+        nscoord flex = 0;
+
+        pref = boxSizes->pref;
+        min = boxSizes->min;
+        max = boxSizes->max;
+        flex = boxSizes->flex;
+
+        // ----- look at our min and max limits make sure we aren't too small or
+        // too big -----
+        if (!computedBoxSizes->valid) {
+          int32_t newSize = pref + int32_t(int64_t(sizeRemaining) * flex /
+                                           spacerConstantsRemaining);
+
+          if (newSize <= min) {
+            computedBoxSizes->size = min;
+            computedBoxSizes->valid = true;
+            spacerConstantsRemaining -= flex;
+            sizeRemaining += pref;
+            sizeRemaining -= min;
+            limit = true;
+          } else if (newSize >= max) {
+            computedBoxSizes->size = max;
+            computedBoxSizes->valid = true;
+            spacerConstantsRemaining -= flex;
+            sizeRemaining += pref;
+            sizeRemaining -= max;
+            limit = true;
+>>>>>>> upstream-releases
           }
         }
         // }
@@ -1341,6 +1428,7 @@ nsSize nsSprocketLayout::GetXULMaxSize(nsIFrame* aBox,
                                        nsBoxLayoutState& aState) {
   bool isHorizontal = IsXULHorizontal(aBox);
 
+<<<<<<< HEAD
   nscoord smallestMax = NS_INTRINSICSIZE;
   nsSize maxSize(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
 
@@ -1368,11 +1456,75 @@ nsSize nsSprocketLayout::GetXULMaxSize(nsIFrame* aBox,
           if (max.width < smallestMax) smallestMax = max.width;
         } else {
           if (max.height < smallestMax) smallestMax = max.height;
+||||||| merged common ancestors
+   nscoord smallestMax = NS_INTRINSICSIZE;
+   nsSize maxSize (NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+
+   // run through all the children and get their min, max, and preferred sizes
+   // return us the size of the box
+
+   nsIFrame* child = nsBox::GetChildXULBox(aBox);
+   nsFrameState frameState = nsFrameState(0);
+   GetFrameState(aBox, frameState);
+   bool isEqual = !!(frameState & NS_STATE_EQUAL_SIZE);
+   int32_t count = 0;
+
+   while (child)
+   {
+      // ignore collapsed children
+      if (!child->IsXULCollapsed())
+      {
+        // if completely redefined don't even ask our child for its size.
+        nsSize min = child->GetXULMinSize(aState);
+        nsSize max = nsBox::BoundsCheckMinMax(min, child->GetXULMaxSize(aState));
+
+        AddMargin(child, max);
+        AddSmallestSize(maxSize, max, isHorizontal);
+
+        if (isEqual) {
+          if (isHorizontal)
+          {
+            if (max.width < smallestMax)
+              smallestMax = max.width;
+          } else {
+            if (max.height < smallestMax)
+              smallestMax = max.height;
+          }
+=======
+  nscoord smallestMax = NS_UNCONSTRAINEDSIZE;
+  nsSize maxSize(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+
+  // run through all the children and get their min, max, and preferred sizes
+  // return us the size of the box
+
+  nsIFrame* child = nsBox::GetChildXULBox(aBox);
+  nsFrameState frameState = nsFrameState(0);
+  GetFrameState(aBox, frameState);
+  bool isEqual = !!(frameState & NS_STATE_EQUAL_SIZE);
+  int32_t count = 0;
+
+  while (child) {
+    // ignore collapsed children
+    if (!child->IsXULCollapsed()) {
+      // if completely redefined don't even ask our child for its size.
+      nsSize min = child->GetXULMinSize(aState);
+      nsSize max = nsBox::BoundsCheckMinMax(min, child->GetXULMaxSize(aState));
+
+      AddMargin(child, max);
+      AddSmallestSize(maxSize, max, isHorizontal);
+
+      if (isEqual) {
+        if (isHorizontal) {
+          if (max.width < smallestMax) smallestMax = max.width;
+        } else {
+          if (max.height < smallestMax) smallestMax = max.height;
+>>>>>>> upstream-releases
         }
       }
       count++;
     }
 
+<<<<<<< HEAD
     child = nsBox::GetNextXULBox(child);
   }
 
@@ -1389,6 +1541,41 @@ nsSize nsSprocketLayout::GetXULMaxSize(nsIFrame* aBox,
         maxSize.height = NS_INTRINSICSIZE;
     }
   }
+||||||| merged common ancestors
+      child = nsBox::GetNextXULBox(child);
+   }
+
+   if (isEqual) {
+     if (isHorizontal) {
+         if (smallestMax != NS_INTRINSICSIZE)
+            maxSize.width = smallestMax*count;
+         else
+            maxSize.width = NS_INTRINSICSIZE;
+     } else {
+         if (smallestMax != NS_INTRINSICSIZE)
+            maxSize.height = smallestMax*count;
+         else
+            maxSize.height = NS_INTRINSICSIZE;
+     }
+   }
+=======
+    child = nsBox::GetNextXULBox(child);
+  }
+
+  if (isEqual) {
+    if (isHorizontal) {
+      if (smallestMax != NS_UNCONSTRAINEDSIZE)
+        maxSize.width = smallestMax * count;
+      else
+        maxSize.width = NS_UNCONSTRAINEDSIZE;
+    } else {
+      if (smallestMax != NS_UNCONSTRAINEDSIZE)
+        maxSize.height = smallestMax * count;
+      else
+        maxSize.height = NS_UNCONSTRAINEDSIZE;
+    }
+  }
+>>>>>>> upstream-releases
 
   // now add our border and padding
   AddBorderAndPadding(aBox, maxSize);
@@ -1461,9 +1648,22 @@ void nsSprocketLayout::AddLargestSize(nsSize& aSize, const nsSize& aSizeToAdd,
   SetLargestSize(aSize, aSizeToAdd, aIsHorizontal);
 }
 
+<<<<<<< HEAD
 void nsSprocketLayout::AddCoord(nscoord& aCoord, nscoord aCoordToAdd) {
   if (aCoord != NS_INTRINSICSIZE) {
     if (aCoordToAdd == NS_INTRINSICSIZE)
+||||||| merged common ancestors
+void
+nsSprocketLayout::AddCoord(nscoord& aCoord, nscoord aCoordToAdd)
+{
+  if (aCoord != NS_INTRINSICSIZE)
+  {
+    if (aCoordToAdd == NS_INTRINSICSIZE)
+=======
+void nsSprocketLayout::AddCoord(nscoord& aCoord, nscoord aCoordToAdd) {
+  if (aCoord != NS_UNCONSTRAINEDSIZE) {
+    if (aCoordToAdd == NS_UNCONSTRAINEDSIZE)
+>>>>>>> upstream-releases
       aCoord = aCoordToAdd;
     else
       aCoord += aCoordToAdd;
@@ -1494,7 +1694,7 @@ nsComputedBoxSize::nsComputedBoxSize() {
 nsBoxSize::nsBoxSize() {
   pref = 0;
   min = 0;
-  max = NS_INTRINSICSIZE;
+  max = NS_UNCONSTRAINEDSIZE;
   collapsed = false;
   left = 0;
   right = 0;

@@ -49,12 +49,28 @@ class nsBulletFrame final : public nsFrame {
   NS_DECL_QUERYFRAME
 #endif
 
+<<<<<<< HEAD
   explicit nsBulletFrame(ComputedStyle* aStyle)
       : nsFrame(aStyle, kClassID),
         mPadding(GetWritingMode()),
         mIntrinsicSize(GetWritingMode()),
         mOrdinal(0),
         mRequestRegistered(false) {}
+||||||| merged common ancestors
+  explicit nsBulletFrame(ComputedStyle* aStyle)
+    : nsFrame(aStyle, kClassID)
+    , mPadding(GetWritingMode())
+    , mIntrinsicSize(GetWritingMode())
+    , mOrdinal(0)
+    , mRequestRegistered(false)
+  {}
+=======
+  explicit nsBulletFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsFrame(aStyle, aPresContext, kClassID),
+        mPadding(GetWritingMode()),
+        mIntrinsicSize(GetWritingMode()),
+        mRequestRegistered(false) {}
+>>>>>>> upstream-releases
 
   virtual ~nsBulletFrame();
 
@@ -85,17 +101,18 @@ class nsBulletFrame final : public nsFrame {
     if (aFlags & (eSupportsCSSTransforms | eSupportsContainLayoutAndPaint)) {
       return false;
     }
-    return nsFrame::IsFrameOfType(aFlags);
+    return nsFrame::IsFrameOfType(aFlags & ~nsIFrame::eLineParticipant);
   }
 
   // nsBulletFrame
-  int32_t SetListItemOrdinal(int32_t aNextOrdinal, bool* aChanged,
-                             int32_t aIncrement);
 
   /* get list item text, with prefix & suffix */
-  void GetListItemText(nsAString& aResult);
+  static void GetListItemText(mozilla::CounterStyle*, mozilla::WritingMode,
+                              int32_t aOrdinal, nsAString& aResult);
 
+#ifdef ACCESSIBILITY
   void GetSpokenText(nsAString& aText);
+#endif
 
   Maybe<BulletRenderer> CreateBulletRenderer(gfxContext& aRenderingContext,
                                              nsPoint aPt);
@@ -105,8 +122,24 @@ class nsBulletFrame final : public nsFrame {
 
   virtual bool IsEmpty() override;
   virtual bool IsSelfEmpty() override;
+<<<<<<< HEAD
   virtual nscoord GetLogicalBaseline(
       mozilla::WritingMode aWritingMode) const override;
+||||||| merged common ancestors
+  virtual nscoord GetLogicalBaseline(mozilla::WritingMode aWritingMode) const override;
+=======
+
+  // XXXmats note that this method returns a non-standard baseline that includes
+  // the ::marker block-start margin.  New code should probably use
+  // GetNaturalBaselineBOffset instead, which returns a normal baseline offset
+  // as documented in nsIFrame.h.
+  virtual nscoord GetLogicalBaseline(
+      mozilla::WritingMode aWritingMode) const override;
+
+  bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
+                                 BaselineSharingGroup aBaselineGroup,
+                                 nscoord* aBaseline) const override;
+>>>>>>> upstream-releases
 
   float GetFontSizeInflation() const;
   bool HasFontSizeInflation() const {
@@ -114,7 +147,8 @@ class nsBulletFrame final : public nsFrame {
   }
   void SetFontSizeInflation(float aInflation);
 
-  int32_t GetOrdinal() { return mOrdinal; }
+  int32_t Ordinal() const { return mOrdinal; }
+  void SetOrdinal(int32_t aOrdinal, bool aNotify);
 
   already_AddRefed<imgIContainer> GetImage() const;
 
@@ -128,19 +162,37 @@ class nsBulletFrame final : public nsFrame {
                       float aFontSizeInflation,
                       mozilla::LogicalMargin* aPadding);
 
+<<<<<<< HEAD
   void GetLoadGroup(nsPresContext* aPresContext, nsILoadGroup** aLoadGroup);
   nsIDocument* GetOurCurrentDoc() const;
+||||||| merged common ancestors
+  void GetLoadGroup(nsPresContext *aPresContext, nsILoadGroup **aLoadGroup);
+  nsIDocument* GetOurCurrentDoc() const;
+=======
+  void GetLoadGroup(nsPresContext* aPresContext, nsILoadGroup** aLoadGroup);
+  mozilla::dom::Document* GetOurCurrentDoc() const;
+>>>>>>> upstream-releases
 
   mozilla::LogicalMargin mPadding;
   RefPtr<imgRequestProxy> mImageRequest;
   RefPtr<nsBulletListener> mListener;
 
   mozilla::LogicalSize mIntrinsicSize;
-  int32_t mOrdinal;
 
+<<<<<<< HEAD
  private:
+||||||| merged common ancestors
+private:
+=======
+ private:
+  mozilla::CounterStyle* ResolveCounterStyle();
+  nscoord GetListStyleAscent() const;
+>>>>>>> upstream-releases
   void RegisterImageRequest(bool aKnownToBeAnimated);
   void DeregisterAndCancelImageRequest();
+
+  // Requires being set via SetOrdinal.
+  int32_t mOrdinal = 0;
 
   // This is a boolean flag indicating whether or not the current image request
   // has been registered with the refresh driver.

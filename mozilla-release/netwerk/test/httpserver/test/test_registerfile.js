@@ -12,11 +12,25 @@ XPCOMUtils.defineLazyGetter(this, "BASE", function() {
 
 var file = do_get_file("test_registerfile.js");
 
+<<<<<<< HEAD
 function onStart(ch, cx) {
+||||||| merged common ancestors
+function onStart(ch, cx)
+{
+=======
+function onStart(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.responseStatus, 200);
 }
 
+<<<<<<< HEAD
 function onStop(ch, cx, status, data) {
+||||||| merged common ancestors
+function onStop(ch, cx, status, data)
+{
+=======
+function onStop(ch, status, data) {
+>>>>>>> upstream-releases
   // not sufficient for equality, but not likely to be wrong!
   Assert.equal(data.length, file.fileSize);
 }
@@ -32,8 +46,18 @@ function run_test() {
 
   try {
     srv.registerFile("/foo", do_get_profile());
+<<<<<<< HEAD
     throw "registerFile succeeded!";
   } catch (e) {
+||||||| merged common ancestors
+    throw "registerFile succeeded!";
+  }
+  catch (e)
+  {
+=======
+    throw new Error("registerFile succeeded!");
+  } catch (e) {
+>>>>>>> upstream-releases
     isException(e, Cr.NS_ERROR_INVALID_ARG);
   }
 

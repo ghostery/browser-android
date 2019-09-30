@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 spec: https://drafts.csswg.org/css-overscroll-behavior/
 suggested_reviewers:
   - majido
+||||||| merged common ancestors
+=======
+spec: https://drafts.csswg.org/css-overscroll-behavior/
+suggested_reviewers:
+  - majido
+  - theres-waldo
+>>>>>>> upstream-releases

@@ -19,27 +19,71 @@ WebGLExtensionVertexArray::WebGLExtensionVertexArray(WebGLContext* webgl)
 WebGLExtensionVertexArray::~WebGLExtensionVertexArray() {}
 
 already_AddRefed<WebGLVertexArray>
+<<<<<<< HEAD
 WebGLExtensionVertexArray::CreateVertexArrayOES() {
   if (mIsLost) return nullptr;
+||||||| merged common ancestors
+WebGLExtensionVertexArray::CreateVertexArrayOES()
+{
+    if (mIsLost)
+        return nullptr;
+=======
+WebGLExtensionVertexArray::CreateVertexArrayOES() {
+  if (mIsLost || !mContext) return nullptr;
+>>>>>>> upstream-releases
 
   return mContext->CreateVertexArray();
 }
 
+<<<<<<< HEAD
 void WebGLExtensionVertexArray::DeleteVertexArrayOES(WebGLVertexArray* array) {
   if (mIsLost) return;
+||||||| merged common ancestors
+void
+WebGLExtensionVertexArray::DeleteVertexArrayOES(WebGLVertexArray* array)
+{
+    if (mIsLost)
+        return;
+=======
+void WebGLExtensionVertexArray::DeleteVertexArrayOES(WebGLVertexArray* array) {
+  if (mIsLost || !mContext) return;
+>>>>>>> upstream-releases
 
   mContext->DeleteVertexArray(array);
 }
 
+<<<<<<< HEAD
 bool WebGLExtensionVertexArray::IsVertexArrayOES(
     const WebGLVertexArray* array) {
   if (mIsLost) return false;
+||||||| merged common ancestors
+bool
+WebGLExtensionVertexArray::IsVertexArrayOES(const WebGLVertexArray* array)
+{
+    if (mIsLost)
+        return false;
+=======
+bool WebGLExtensionVertexArray::IsVertexArrayOES(
+    const WebGLVertexArray* array) {
+  if (mIsLost || !mContext) return false;
+>>>>>>> upstream-releases
 
   return mContext->IsVertexArray(array);
 }
 
+<<<<<<< HEAD
 void WebGLExtensionVertexArray::BindVertexArrayOES(WebGLVertexArray* array) {
   if (mIsLost) return;
+||||||| merged common ancestors
+void
+WebGLExtensionVertexArray::BindVertexArrayOES(WebGLVertexArray* array)
+{
+    if (mIsLost)
+        return;
+=======
+void WebGLExtensionVertexArray::BindVertexArrayOES(WebGLVertexArray* array) {
+  if (mIsLost || !mContext) return;
+>>>>>>> upstream-releases
 
   mContext->BindVertexArray(array);
 }

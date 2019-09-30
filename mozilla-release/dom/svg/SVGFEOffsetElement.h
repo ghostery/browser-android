@@ -7,9 +7,9 @@
 #ifndef mozilla_dom_SVGFEOffsetElement_h
 #define mozilla_dom_SVGFEOffsetElement_h
 
-#include "nsSVGFilters.h"
-#include "nsSVGNumber2.h"
-#include "nsSVGString.h"
+#include "SVGAnimatedNumber.h"
+#include "SVGAnimatedString.h"
+#include "SVGFilters.h"
 
 nsresult NS_NewSVGFEOffsetElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
@@ -17,7 +17,7 @@ nsresult NS_NewSVGFEOffsetElement(
 namespace mozilla {
 namespace dom {
 
-typedef nsSVGFE SVGFEOffsetElementBase;
+typedef SVGFE SVGFEOffsetElementBase;
 
 class SVGFEOffsetElement : public SVGFEOffsetElementBase {
   friend nsresult(::NS_NewSVGFEOffsetElement(
@@ -31,6 +31,7 @@ class SVGFEOffsetElement : public SVGFEOffsetElementBase {
   virtual JSObject* WrapNode(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto) override;
 
+<<<<<<< HEAD
  public:
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
@@ -43,24 +44,48 @@ class SVGFEOffsetElement : public SVGFEOffsetElementBase {
   }
   virtual void GetSourceImageNames(
       nsTArray<nsSVGStringInfo>& aSources) override;
+||||||| merged common ancestors
+public:
+  virtual FilterPrimitiveDescription
+    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
+                            const IntRect& aFilterSubregion,
+                            const nsTArray<bool>& aInputsAreTainted,
+                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual bool AttributeAffectsRendering(
+          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
+  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
+  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
+=======
+ public:
+  virtual FilterPrimitiveDescription GetPrimitiveDescription(
+      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
+      const nsTArray<bool>& aInputsAreTainted,
+      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
+                                         nsAtom* aAttribute) const override;
+  virtual SVGAnimatedString& GetResultImageName() override {
+    return mStringAttributes[RESULT];
+  }
+  virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
+>>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-  already_AddRefed<SVGAnimatedString> In1();
-  already_AddRefed<SVGAnimatedNumber> Dx();
-  already_AddRefed<SVGAnimatedNumber> Dy();
+  already_AddRefed<DOMSVGAnimatedString> In1();
+  already_AddRefed<DOMSVGAnimatedNumber> Dx();
+  already_AddRefed<DOMSVGAnimatedNumber> Dy();
 
  protected:
   virtual NumberAttributesInfo GetNumberInfo() override;
   virtual StringAttributesInfo GetStringInfo() override;
 
   enum { DX, DY };
-  nsSVGNumber2 mNumberAttributes[2];
+  SVGAnimatedNumber mNumberAttributes[2];
   static NumberInfo sNumberInfo[2];
 
   enum { RESULT, IN1 };
-  nsSVGString mStringAttributes[2];
+  SVGAnimatedString mStringAttributes[2];
   static StringInfo sStringInfo[2];
 };
 

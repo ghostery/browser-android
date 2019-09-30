@@ -9,13 +9,34 @@
 
 #include <map>
 
+<<<<<<< HEAD
 #include "gfxPrefs.h"
 #include "nsDebug.h"  // for NS_WARNING
+||||||| merged common ancestors
+#include "gfxPrefs.h"
+#include "FrameMetrics.h"
+#include "nsDebug.h"             // for NS_WARNING
+=======
+#include "nsDebug.h"  // for NS_WARNING
+>>>>>>> upstream-releases
 #include "nsTArray.h"
+<<<<<<< HEAD
 #include "mozilla/Assertions.h"       // for MOZ_ASSERT
 #include "mozilla/DebugOnly.h"        // for DebugOnly
 #include "mozilla/GfxMessageUtils.h"  // for ParamTraits specializations
 #include "mozilla/ToString.h"         // for ToString
+||||||| merged common ancestors
+#include "mozilla/Assertions.h"  // for MOZ_ASSERT
+#include "mozilla/DebugOnly.h"   // for DebugOnly
+#include "mozilla/GfxMessageUtils.h" // for ParamTraits specializations
+#include "mozilla/ToString.h"    // for ToString
+=======
+#include "mozilla/Assertions.h"       // for MOZ_ASSERT
+#include "mozilla/DebugOnly.h"        // for DebugOnly
+#include "mozilla/GfxMessageUtils.h"  // for ParamTraits specializations
+#include "mozilla/StaticPrefs.h"
+#include "mozilla/ToString.h"  // for ToString
+>>>>>>> upstream-releases
 #include "mozilla/gfx/CompositorHitTestInfo.h"
 #include "mozilla/layers/ScrollableLayerGuid.h"
 #include "ipc/IPCMessageUtils.h"
@@ -42,9 +63,18 @@ typedef uint32_t SequenceNumber;
  */
 // TODO(botond):
 //  - Improve warnings/asserts.
+<<<<<<< HEAD
 //  - Add ability to associate a repaint request triggered during a layers
 //  update
 //    with the sequence number of the paint that caused the layers update.
+||||||| merged common ancestors
+//  - Add ability to associate a repaint request triggered during a layers update
+//    with the sequence number of the paint that caused the layers update.
+=======
+//  - Add ability to associate a repaint request triggered during a layers
+//    update with the sequence number of the paint that caused the layers
+//    update.
+>>>>>>> upstream-releases
 class APZTestData {
   typedef ScrollableLayerGuid::ViewID ViewID;
   friend struct IPC::ParamTraits<APZTestData>;
@@ -75,14 +105,28 @@ class APZTestData {
   }
   void RecordHitResult(const ScreenPoint& aPoint,
                        const mozilla::gfx::CompositorHitTestInfo& aResult,
+<<<<<<< HEAD
                        const ViewID& aScrollId) {
     mHitResults.AppendElement(HitResult{aPoint, aResult, aScrollId});
+||||||| merged common ancestors
+                       const ViewID& aScrollId)
+  {
+    mHitResults.AppendElement(HitResult { aPoint, aResult, aScrollId });
+=======
+                       const LayersId& aLayersId,
+                       const ViewID& aScrollId) {
+    mHitResults.AppendElement(HitResult{aPoint, aResult, aLayersId, aScrollId});
+  }
+  void RecordAdditionalData(const std::string& aKey,
+                            const std::string& aValue) {
+    mAdditionalData[aKey] = aValue;
+>>>>>>> upstream-releases
   }
 
   // Convert this object to a JS representation.
   bool ToJS(JS::MutableHandleValue aOutValue, JSContext* aContext) const;
 
-  // Use dummy derived structures wrapping the tyepdefs to work around a type
+  // Use dummy derived structures wrapping the typedefs to work around a type
   // name length limit in MSVC.
   typedef std::map<std::string, std::string> ScrollFrameDataBase;
   struct ScrollFrameData : ScrollFrameDataBase {};
@@ -93,6 +137,7 @@ class APZTestData {
   struct HitResult {
     ScreenPoint point;
     mozilla::gfx::CompositorHitTestInfo result;
+    LayersId layersId;
     ViewID scrollId;
   };
 
@@ -100,6 +145,8 @@ class APZTestData {
   DataStore mPaints;
   DataStore mRepaintRequests;
   nsTArray<HitResult> mHitResults;
+  // Additional free-form data that's not grouped paint or scroll frame.
+  std::map<std::string, std::string> mAdditionalData;
 
   void LogTestDataImpl(DataStore& aDataStore, SequenceNumber aSequenceNumber,
                        ViewID aScrollId, const std::string& aKey,
@@ -123,9 +170,19 @@ class APZTestData {
 class APZPaintLogHelper {
  public:
   APZPaintLogHelper(APZTestData* aTestData, SequenceNumber aPaintSequenceNumber)
+<<<<<<< HEAD
       : mTestData(aTestData), mPaintSequenceNumber(aPaintSequenceNumber) {
     MOZ_ASSERT(!aTestData || gfxPrefs::APZTestLoggingEnabled(),
                "don't call me");
+||||||| merged common ancestors
+    : mTestData(aTestData),
+      mPaintSequenceNumber(aPaintSequenceNumber) {
+    MOZ_ASSERT(!aTestData || gfxPrefs::APZTestLoggingEnabled(), "don't call me");
+=======
+      : mTestData(aTestData), mPaintSequenceNumber(aPaintSequenceNumber) {
+    MOZ_ASSERT(!aTestData || StaticPrefs::apz_test_logging_enabled(),
+               "don't call me");
+>>>>>>> upstream-releases
   }
 
   template <typename Value>
@@ -191,6 +248,7 @@ struct ParamTraits<mozilla::layers::APZTestData::HitResult> {
   static void Write(Message* aMsg, const paramType& aParam) {
     WriteParam(aMsg, aParam.point);
     WriteParam(aMsg, aParam.result);
+    WriteParam(aMsg, aParam.layersId);
     WriteParam(aMsg, aParam.scrollId);
   }
 
@@ -198,6 +256,7 @@ struct ParamTraits<mozilla::layers::APZTestData::HitResult> {
                    paramType* aResult) {
     return (ReadParam(aMsg, aIter, &aResult->point) &&
             ReadParam(aMsg, aIter, &aResult->result) &&
+            ReadParam(aMsg, aIter, &aResult->layersId) &&
             ReadParam(aMsg, aIter, &aResult->scrollId));
   }
 };

@@ -6,26 +6,51 @@
 function run_test() {
   setupTestCommon();
 
-  debugDump("testing resuming an update download in progress for the same " +
-            "version of the application on startup (Bug 485624)");
+  debugDump(
+    "testing resuming an update download in progress for the same " +
+      "version of the application on startup (Bug 485624)"
+  );
 
-  let patchProps = {state: STATE_DOWNLOADING};
+  let patchProps = { state: STATE_DOWNLOADING };
   let patches = getLocalPatchString(patchProps);
-  let updateProps = {appVersion: "1.0"};
+  let updateProps = { appVersion: "1.0" };
   let updates = getLocalUpdateString(updateProps, patches);
   writeUpdatesToXMLFile(getLocalUpdatesXMLString(updates), true);
   writeStatusFile(STATE_DOWNLOADING);
 
   standardInit();
 
-  Assert.equal(gUpdateManager.updateCount, 0,
-               "the update manager updateCount attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(gUpdateManager.activeUpdate.state, STATE_DOWNLOADING,
-               "the update manager activeUpdate state attribute" +
-               MSG_SHOULD_EQUAL);
+  Assert.equal(
+    gUpdateManager.updateCount,
+    0,
+    "the update manager updateCount attribute" + MSG_SHOULD_EQUAL
+  );
+  Assert.equal(
+    gUpdateManager.activeUpdate.state,
+    STATE_DOWNLOADING,
+    "the update manager activeUpdate state attribute" + MSG_SHOULD_EQUAL
+  );
 
+<<<<<<< HEAD
   // Pause the download early to prevent it writing the update xml files during
   // shutdown.
   gAUS.pauseDownload();
+||||||| merged common ancestors
+  // Pausing the download along with reloading the update manager in
+  // doTestFinish will prevent writing the update xml files during shutdown.
+  gAUS.pauseDownload();
+  gUpdateManager.cleanupActiveUpdate();
+  executeSoon(waitForUpdateXMLFiles);
+}
+
+/**
+ * Called after the call to waitForUpdateXMLFiles finishes.
+ */
+function waitForUpdateXMLFilesFinished() {
+=======
+  // Cancel the download early to prevent it writing the update xml files during
+  // shutdown.
+  gAUS.stopDownload();
+>>>>>>> upstream-releases
   executeSoon(doTestFinish);
 }

@@ -102,9 +102,27 @@ bool TreeWalker::Seek(nsIContent* aChildNode) {
   do {
     childNode = parentNode->AsContent();
     parentNode = childNode->HasFlag(NODE_MAY_BE_IN_BINDING_MNGR) &&
+<<<<<<< HEAD
                          (mChildFilter & nsIContent::eAllButXBL)
                      ? childNode->GetParentNode()
                      : childNode->GetFlattenedTreeParent();
+||||||| merged common ancestors
+      (mChildFilter & nsIContent::eAllButXBL) ?
+      childNode->GetParentNode() : childNode->GetFlattenedTreeParent();
+=======
+                         (mChildFilter & nsIContent::eAllButXBL)
+                     ? childNode->GetParentNode()
+                     : childNode->GetFlattenedTreeParent();
+
+    // Handle the special case of XBL binding child under a shadow root.
+    if (parentNode && parentNode->IsShadowRoot()) {
+      parentNode = childNode->GetFlattenedTreeParent();
+      if (parentNode == mAnchorNode) {
+        return true;
+      }
+      continue;
+    }
+>>>>>>> upstream-releases
 
     if (!parentNode || !parentNode->IsElement()) {
       return false;

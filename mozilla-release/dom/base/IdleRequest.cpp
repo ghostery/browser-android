@@ -51,19 +51,43 @@ uint32_t IdleRequest::GetTimeoutHandle() const {
   return mTimeoutHandle.value();
 }
 
+<<<<<<< HEAD
 nsresult IdleRequest::IdleRun(nsPIDOMWindowInner* aWindow,
                               DOMHighResTimeStamp aDeadline, bool aDidTimeout) {
+||||||| merged common ancestors
+nsresult
+IdleRequest::IdleRun(nsPIDOMWindowInner* aWindow,
+                     DOMHighResTimeStamp aDeadline,
+                     bool aDidTimeout)
+{
+=======
+void IdleRequest::IdleRun(nsPIDOMWindowInner* aWindow,
+                          DOMHighResTimeStamp aDeadline, bool aDidTimeout) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_DIAGNOSTIC_ASSERT(mCallback);
 
-  ErrorResult error;
   RefPtr<IdleDeadline> deadline =
+<<<<<<< HEAD
       new IdleDeadline(aWindow, aDidTimeout, aDeadline);
   mCallback->Call(*deadline, error, "requestIdleCallback handler");
 
   mCallback = nullptr;
   error.SuppressException();
   return error.StealNSResult();
+||||||| merged common ancestors
+    new IdleDeadline(aWindow, aDidTimeout, aDeadline);
+  mCallback->Call(*deadline, error, "requestIdleCallback handler");
+
+  mCallback = nullptr;
+  error.SuppressException();
+  return error.StealNSResult();
+=======
+      new IdleDeadline(aWindow, aDidTimeout, aDeadline);
+  RefPtr<IdleRequestCallback> callback(mCallback.forget());
+  MOZ_ASSERT(!mCallback);
+  callback->Call(*deadline, "requestIdleCallback handler");
+>>>>>>> upstream-releases
 }
 
 }  // namespace dom

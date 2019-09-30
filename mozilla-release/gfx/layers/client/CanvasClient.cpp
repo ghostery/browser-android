@@ -13,7 +13,14 @@
 #include "gfx2DGlue.h"    // for ImageFormatToSurfaceFormat
 #include "gfxPlatform.h"  // for gfxPlatform
 #include "GLReadTexImageHelper.h"
+<<<<<<< HEAD
 #include "mozilla/gfx/BaseSize.h"  // for BaseSize
+||||||| merged common ancestors
+#include "mozilla/gfx/BaseSize.h"       // for BaseSize
+=======
+#include "mozilla/gfx/BaseSize.h"  // for BaseSize
+#include "mozilla/gfx/gfxVars.h"
+>>>>>>> upstream-releases
 #include "mozilla/layers/BufferTexture.h"
 #include "mozilla/layers/AsyncCanvasRenderer.h"
 #include "mozilla/layers/CompositableForwarder.h"
@@ -21,8 +28,17 @@
 #include "mozilla/layers/LayersTypes.h"
 #include "mozilla/layers/TextureClient.h"  // for TextureClient, etc
 #include "mozilla/layers/TextureClientOGL.h"
+<<<<<<< HEAD
 #include "nsDebug.h"      // for printf_stderr, NS_ASSERTION
 #include "nsXULAppAPI.h"  // for XRE_GetProcessType, etc
+||||||| merged common ancestors
+#include "nsDebug.h"                    // for printf_stderr, NS_ASSERTION
+#include "nsXULAppAPI.h"                // for XRE_GetProcessType, etc
+=======
+#include "mozilla/layers/TextureClientRecycleAllocator.h"
+#include "nsDebug.h"      // for printf_stderr, NS_ASSERTION
+#include "nsXULAppAPI.h"  // for XRE_GetProcessType, etc
+>>>>>>> upstream-releases
 #include "TextureClientSharedSurface.h"
 
 using namespace mozilla::gfx;
@@ -31,9 +47,22 @@ using namespace mozilla::gl;
 namespace mozilla {
 namespace layers {
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<CanvasClient> CanvasClient::CreateCanvasClient(
     CanvasClientType aType, CompositableForwarder* aForwarder,
     TextureFlags aFlags) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<CanvasClient>
+CanvasClient::CreateCanvasClient(CanvasClientType aType,
+                                 CompositableForwarder* aForwarder,
+                                 TextureFlags aFlags)
+{
+=======
+/* static */
+already_AddRefed<CanvasClient> CanvasClient::CreateCanvasClient(
+    CanvasClientType aType, CompositableForwarder* aForwarder,
+    TextureFlags aFlags) {
+>>>>>>> upstream-releases
   switch (aType) {
     case CanvasClientTypeShSurf:
       return MakeAndAddRef<CanvasClientSharedSurface>(aForwarder, aFlags);
@@ -61,7 +90,16 @@ void CanvasClientBridge::UpdateAsync(AsyncCanvasRenderer* aRenderer) {
   mAsyncHandle = asyncID;
 }
 
+<<<<<<< HEAD
 void CanvasClient2D::UpdateFromTexture(TextureClient* aTexture) {
+||||||| merged common ancestors
+void
+CanvasClient2D::UpdateFromTexture(TextureClient* aTexture)
+{
+=======
+void CanvasClient2D::UpdateFromTexture(TextureClient* aTexture,
+                                       wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aTexture);
 
   if (!aTexture->IsSharedWithCompositor()) {
@@ -80,17 +118,36 @@ void CanvasClient2D::UpdateFromTexture(TextureClient* aTexture) {
   t->mPictureRect = nsIntRect(nsIntPoint(0, 0), aTexture->GetSize());
   t->mFrameID = mFrameID;
 
-  GetForwarder()->UseTextures(this, textures);
+  GetForwarder()->UseTextures(this, textures, Some(aRenderRoot));
   aTexture->SyncWithObject(GetForwarder()->GetSyncObject());
 }
 
+<<<<<<< HEAD
 void CanvasClient2D::Update(gfx::IntSize aSize,
                             ShareableCanvasRenderer* aCanvasRenderer) {
+||||||| merged common ancestors
+void
+CanvasClient2D::Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer)
+{
+=======
+void CanvasClient2D::Update(gfx::IntSize aSize,
+                            ShareableCanvasRenderer* aCanvasRenderer,
+                            wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   mBufferProviderTexture = nullptr;
 
+<<<<<<< HEAD
   AutoRemoveTexture autoRemove(this);
   if (mBackBuffer &&
       (mBackBuffer->IsReadLocked() || mBackBuffer->GetSize() != aSize)) {
+||||||| merged common ancestors
+  AutoRemoveTexture autoRemove(this);
+  if (mBackBuffer && (mBackBuffer->IsReadLocked() || mBackBuffer->GetSize() != aSize)) {
+=======
+  AutoRemoveTexture autoRemove(this, aRenderRoot);
+  if (mBackBuffer &&
+      (mBackBuffer->IsReadLocked() || mBackBuffer->GetSize() != aSize)) {
+>>>>>>> upstream-releases
     autoRemove.mTexture = mBackBuffer;
     mBackBuffer = nullptr;
   }
@@ -148,7 +205,7 @@ void CanvasClient2D::Update(gfx::IntSize aSize,
     t->mTextureClient = mBackBuffer;
     t->mPictureRect = nsIntRect(nsIntPoint(0, 0), mBackBuffer->GetSize());
     t->mFrameID = mFrameID;
-    GetForwarder()->UseTextures(this, textures);
+    GetForwarder()->UseTextures(this, textures, Some(aRenderRoot));
     mBackBuffer->SyncWithObject(GetForwarder()->GetSyncObject());
   }
 
@@ -168,8 +225,24 @@ already_AddRefed<TextureClient> CanvasClient2D::CreateTextureClientForCanvas(
   }
 
 #ifdef XP_WIN
+<<<<<<< HEAD
   return CreateTextureClientForDrawing(aFormat, aSize, BackendSelector::Canvas,
                                        aFlags);
+||||||| merged common ancestors
+  return CreateTextureClientForDrawing(aFormat, aSize, BackendSelector::Canvas, aFlags);
+=======
+  // With WebRender, host side uses data of TextureClient longer.
+  // Then back buffer reuse in CanvasClient2D::Update() does not work. It causes
+  // a lot of TextureClient allocations.
+  // For reducing the allocations, TextureClientRecycler is used.
+  if (GetForwarder() &&
+      GetForwarder()->GetCompositorBackendType() == LayersBackend::LAYERS_WR) {
+    return GetTextureClientRecycler()->CreateOrRecycle(
+        aFormat, aSize, BackendSelector::Canvas, aFlags);
+  }
+  return CreateTextureClientForDrawing(aFormat, aSize, BackendSelector::Canvas,
+                                       aFlags);
+>>>>>>> upstream-releases
 #else
   // XXX - We should use CreateTextureClientForDrawing, but we first need
   // to use double buffering.
@@ -236,6 +309,9 @@ class TexClientFactory {
     if (!areRGBAFormatsBroken) {
       gfx::SurfaceFormat format = mHasAlpha ? gfx::SurfaceFormat::R8G8B8A8
                                             : gfx::SurfaceFormat::R8G8B8X8;
+      if (gfxVars::UseWebRender() && format == gfx::SurfaceFormat::R8G8B8X8) {
+        MOZ_CRASH("R8G8B8X8 is not supported on WebRender");
+      }
       ret = Create(format);
     }
 
@@ -290,8 +366,19 @@ static already_AddRefed<TextureClient> TexClientFromReadback(
       MOZ_CRASH("GFX: Bad `read{Format,Type}`.");
     }
 
+<<<<<<< HEAD
     MOZ_ASSERT(texClient);
     if (!texClient) return nullptr;
+||||||| merged common ancestors
+    MOZ_ASSERT(texClient);
+    if (!texClient)
+      return nullptr;
+=======
+    if (!texClient) {
+      gfxWarning() << "Couldn't create texClient for readback.";
+      return nullptr;
+    }
+>>>>>>> upstream-releases
 
     // With a texClient, we can lock for writing.
     TextureClientAutoLock autoLock(texClient, OpenMode::OPEN_WRITE);
@@ -304,13 +391,25 @@ static already_AddRefed<TextureClient> TexClientFromReadback(
     // ReadPixels from the current FB into mapped.data.
     auto width = src->mSize.width;
     auto height = src->mSize.height;
+    auto stride = mapped.stride;
 
     {
       ScopedPackState scopedPackState(gl);
+<<<<<<< HEAD
 
       MOZ_ASSERT(mapped.stride / 4 == mapped.size.width);
       gl->raw_fReadPixels(0, 0, width, height, readFormat, readType,
                           mapped.data);
+||||||| merged common ancestors
+
+      MOZ_ASSERT(mapped.stride/4 == mapped.size.width);
+      gl->raw_fReadPixels(0, 0, width, height, readFormat, readType, mapped.data);
+=======
+      bool handled = scopedPackState.SetForWidthAndStrideRGBA(width, stride);
+      MOZ_RELEASE_ASSERT(handled, "Unhandled stride");
+      gl->raw_fReadPixels(0, 0, width, height, readFormat, readType,
+                          mapped.data);
+>>>>>>> upstream-releases
     }
 
     // RB_SWAPPED doesn't work with D3D11. (bug 1051010)
@@ -344,15 +443,39 @@ static already_AddRefed<SharedSurfaceTextureClient> CloneSurface(
 
   gl::SharedSurface* destSurf = dest->Surf();
 
+<<<<<<< HEAD
   destSurf->ProducerAcquire();
   SharedSurface::ProdCopy(src, dest->Surf(), factory);
   destSurf->ProducerRelease();
+||||||| merged common ancestors
+    destSurf->ProducerAcquire();
+    SharedSurface::ProdCopy(src, dest->Surf(), factory);
+    destSurf->ProducerRelease();
+=======
+  destSurf->ProducerAcquire();
+  bool ret = SharedSurface::ProdCopy(src, dest->Surf(), factory);
+  destSurf->ProducerRelease();
+
+  if (!ret) {
+    return nullptr;
+  }
+>>>>>>> upstream-releases
 
   return dest.forget();
 }
 
+<<<<<<< HEAD
 void CanvasClientSharedSurface::Update(
     gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer) {
+||||||| merged common ancestors
+void
+CanvasClientSharedSurface::Update(gfx::IntSize aSize, ShareableCanvasRenderer* aCanvasRenderer)
+{
+=======
+void CanvasClientSharedSurface::Update(gfx::IntSize aSize,
+                                       ShareableCanvasRenderer* aCanvasRenderer,
+                                       wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   Renderer renderer;
   renderer.construct<ShareableCanvasRenderer*>(aCanvasRenderer);
   UpdateRenderer(aSize, renderer);
@@ -381,6 +504,7 @@ void CanvasClientSharedSurface::UpdateRenderer(gfx::IntSize aSize,
   RefPtr<TextureClient> newFront;
 
   mShSurfClient = nullptr;
+<<<<<<< HEAD
   if (canvasRenderer && canvasRenderer->mGLFrontbuffer) {
     mShSurfClient = CloneSurface(canvasRenderer->mGLFrontbuffer.get(),
                                  canvasRenderer->mFactory.get());
@@ -389,6 +513,17 @@ void CanvasClientSharedSurface::UpdateRenderer(gfx::IntSize aSize,
       return;
     }
   } else if (gl->Screen()) {
+||||||| merged common ancestors
+  if (canvasRenderer && canvasRenderer->mGLFrontbuffer) {
+    mShSurfClient = CloneSurface(canvasRenderer->mGLFrontbuffer.get(), canvasRenderer->mFactory.get());
+    if (!mShSurfClient) {
+      gfxCriticalError() << "Invalid canvas front buffer";
+      return;
+    }
+  } else if (gl->Screen()) {
+=======
+  if (gl->Screen()) {
+>>>>>>> upstream-releases
     mShSurfClient = gl->Screen()->Front();
     if (mShSurfClient && mShSurfClient->GetAllocator() &&
         mShSurfClient->GetAllocator() !=
@@ -457,19 +592,34 @@ void CanvasClientSharedSurface::UpdateRenderer(gfx::IntSize aSize,
     asyncRenderer->CopyFromTextureClient(mReadbackClient);
   }
 
-  MOZ_ASSERT(newFront);
   if (!newFront) {
     // May happen in a release build in case of memory pressure.
+<<<<<<< HEAD
     gfxCriticalError()
         << "Failed to allocate a TextureClient for SharedSurface Canvas. Size: "
         << aSize;
+||||||| merged common ancestors
+    gfxCriticalError() << "Failed to allocate a TextureClient for SharedSurface Canvas. Size: " << aSize;
+=======
+    gfxWarning()
+        << "Failed to allocate a TextureClient for SharedSurface Canvas. Size: "
+        << aSize;
+>>>>>>> upstream-releases
     return;
   }
 
   mNewFront = newFront;
 }
 
+<<<<<<< HEAD
 void CanvasClientSharedSurface::Updated() {
+||||||| merged common ancestors
+void
+CanvasClientSharedSurface::Updated()
+{
+=======
+void CanvasClientSharedSurface::Updated(wr::RenderRoot aRenderRoot) {
+>>>>>>> upstream-releases
   if (!mNewFront) {
     return;
   }
@@ -489,15 +639,26 @@ void CanvasClientSharedSurface::Updated() {
   t->mTextureClient = mFront;
   t->mPictureRect = nsIntRect(nsIntPoint(0, 0), mFront->GetSize());
   t->mFrameID = mFrameID;
-  forwarder->UseTextures(this, textures);
+  forwarder->UseTextures(this, textures, Some(aRenderRoot));
 }
 
 void CanvasClientSharedSurface::OnDetach() { ClearSurfaces(); }
 
+<<<<<<< HEAD
 void CanvasClientSharedSurface::ClearSurfaces() {
   if (mFront) {
     mFront->CancelWaitForRecycle();
   }
+||||||| merged common ancestors
+void
+CanvasClientSharedSurface::ClearSurfaces()
+{
+  if (mFront) {
+    mFront->CancelWaitForRecycle();
+  }
+=======
+void CanvasClientSharedSurface::ClearSurfaces() {
+>>>>>>> upstream-releases
   mFront = nullptr;
   mNewFront = nullptr;
   mShSurfClient = nullptr;

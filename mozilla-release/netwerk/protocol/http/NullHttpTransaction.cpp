@@ -25,6 +25,7 @@ class CallObserveActivity final : public nsIRunnable {
 
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
+<<<<<<< HEAD
   CallObserveActivity(nsIHttpActivityObserver *aActivityDistributor,
                       const nsCString &aHost, int32_t aPort, bool aEndToEndSSL,
                       uint32_t aActivityType, uint32_t aActivitySubtype,
@@ -40,6 +41,46 @@ class CallObserveActivity final : public nsIRunnable {
         mExtraSizeData(aExtraSizeData),
         mExtraStringData(aExtraStringData) {}
   NS_IMETHOD Run() override {
+||||||| merged common ancestors
+  CallObserveActivity(nsIHttpActivityObserver *aActivityDistributor,
+                      const nsCString &aHost,
+                      int32_t aPort,
+                      bool aEndToEndSSL,
+                      uint32_t aActivityType,
+                      uint32_t aActivitySubtype,
+                      PRTime aTimestamp,
+                      uint64_t aExtraSizeData,
+                      const nsACString &aExtraStringData)
+    : mActivityDistributor(aActivityDistributor)
+    , mHost(aHost)
+    , mPort(aPort)
+    , mEndToEndSSL(aEndToEndSSL)
+    , mActivityType(aActivityType)
+    , mActivitySubtype(aActivitySubtype)
+    , mTimestamp(aTimestamp)
+    , mExtraSizeData(aExtraSizeData)
+    , mExtraStringData(aExtraStringData)
+  {
+  }
+  NS_IMETHOD Run() override
+  {
+=======
+  CallObserveActivity(nsIHttpActivityObserver* aActivityDistributor,
+                      const nsCString& aHost, int32_t aPort, bool aEndToEndSSL,
+                      uint32_t aActivityType, uint32_t aActivitySubtype,
+                      PRTime aTimestamp, uint64_t aExtraSizeData,
+                      const nsACString& aExtraStringData)
+      : mActivityDistributor(aActivityDistributor),
+        mHost(aHost),
+        mPort(aPort),
+        mEndToEndSSL(aEndToEndSSL),
+        mActivityType(aActivityType),
+        mActivitySubtype(aActivitySubtype),
+        mTimestamp(aTimestamp),
+        mExtraSizeData(aExtraSizeData),
+        mExtraStringData(aExtraStringData) {}
+  NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
     nsCOMPtr<nsIURI> uri;
     nsAutoCString port(NS_LITERAL_CSTRING(""));
@@ -84,8 +125,8 @@ NS_IMPL_ISUPPORTS(CallObserveActivity, nsIRunnable)
 NS_IMPL_ISUPPORTS(NullHttpTransaction, NullHttpTransaction,
                   nsISupportsWeakReference)
 
-NullHttpTransaction::NullHttpTransaction(nsHttpConnectionInfo *ci,
-                                         nsIInterfaceRequestor *callbacks,
+NullHttpTransaction::NullHttpTransaction(nsHttpConnectionInfo* ci,
+                                         nsIInterfaceRequestor* callbacks,
                                          uint32_t caps)
     : mStatus(NS_OK),
       mCaps(caps | NS_HTTP_ALLOW_KEEPALIVE),
@@ -133,21 +174,55 @@ bool NullHttpTransaction::Claim() {
 
 void NullHttpTransaction::Unclaim() { mClaimed = false; }
 
+<<<<<<< HEAD
 void NullHttpTransaction::SetConnection(nsAHttpConnection *conn) {
+||||||| merged common ancestors
+void
+NullHttpTransaction::SetConnection(nsAHttpConnection *conn)
+{
+=======
+void NullHttpTransaction::SetConnection(nsAHttpConnection* conn) {
+>>>>>>> upstream-releases
   mConnection = conn;
 }
 
+<<<<<<< HEAD
 nsAHttpConnection *NullHttpTransaction::Connection() {
+||||||| merged common ancestors
+nsAHttpConnection *
+NullHttpTransaction::Connection()
+{
+=======
+nsAHttpConnection* NullHttpTransaction::Connection() {
+>>>>>>> upstream-releases
   return mConnection.get();
 }
 
+<<<<<<< HEAD
 void NullHttpTransaction::GetSecurityCallbacks(nsIInterfaceRequestor **outCB) {
+||||||| merged common ancestors
+void
+NullHttpTransaction::GetSecurityCallbacks(nsIInterfaceRequestor **outCB)
+{
+=======
+void NullHttpTransaction::GetSecurityCallbacks(nsIInterfaceRequestor** outCB) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIInterfaceRequestor> copyCB(mCallbacks);
   *outCB = copyCB.forget().take();
 }
 
+<<<<<<< HEAD
 void NullHttpTransaction::OnTransportStatus(nsITransport *transport,
                                             nsresult status, int64_t progress) {
+||||||| merged common ancestors
+void
+NullHttpTransaction::OnTransportStatus(nsITransport* transport,
+                                       nsresult status, int64_t progress)
+{
+=======
+void NullHttpTransaction::OnTransportStatus(nsITransport* transport,
+                                            nsresult status, int64_t progress) {
+>>>>>>> upstream-releases
   if (status == NS_NET_STATUS_RESOLVING_HOST) {
     if (mTimings.domainLookupStart.IsNull()) {
       mTimings.domainLookupStart = TimeStamp::Now();
@@ -203,24 +278,54 @@ void NullHttpTransaction::SetDNSWasRefreshed() {
   mCapsToClear |= NS_HTTP_REFRESH_DNS;
 }
 
+<<<<<<< HEAD
 nsresult NullHttpTransaction::ReadSegments(nsAHttpSegmentReader *reader,
                                            uint32_t count,
                                            uint32_t *countRead) {
+||||||| merged common ancestors
+nsresult
+NullHttpTransaction::ReadSegments(nsAHttpSegmentReader *reader,
+                                  uint32_t count, uint32_t *countRead)
+{
+=======
+nsresult NullHttpTransaction::ReadSegments(nsAHttpSegmentReader* reader,
+                                           uint32_t count,
+                                           uint32_t* countRead) {
+>>>>>>> upstream-releases
   *countRead = 0;
   mIsDone = true;
   return NS_BASE_STREAM_CLOSED;
 }
 
+<<<<<<< HEAD
 nsresult NullHttpTransaction::WriteSegments(nsAHttpSegmentWriter *writer,
                                             uint32_t count,
                                             uint32_t *countWritten) {
+||||||| merged common ancestors
+nsresult
+NullHttpTransaction::WriteSegments(nsAHttpSegmentWriter *writer,
+                                   uint32_t count, uint32_t *countWritten)
+{
+=======
+nsresult NullHttpTransaction::WriteSegments(nsAHttpSegmentWriter* writer,
+                                            uint32_t count,
+                                            uint32_t* countWritten) {
+>>>>>>> upstream-releases
   *countWritten = 0;
   return NS_BASE_STREAM_CLOSED;
 }
 
 uint32_t NullHttpTransaction::Http1xTransactionCount() { return 0; }
 
+<<<<<<< HEAD
 nsHttpRequestHead *NullHttpTransaction::RequestHead() {
+||||||| merged common ancestors
+nsHttpRequestHead *
+NullHttpTransaction::RequestHead()
+{
+=======
+nsHttpRequestHead* NullHttpTransaction::RequestHead() {
+>>>>>>> upstream-releases
   // We suport a requesthead at all so that a CONNECT tunnel transaction
   // can obtain a Host header from it, but we lazy-popualate that header.
 
@@ -256,8 +361,18 @@ nsHttpRequestHead *NullHttpTransaction::RequestHead() {
   return mRequestHead;
 }
 
+<<<<<<< HEAD
 nsresult NullHttpTransaction::TakeSubTransactions(
     nsTArray<RefPtr<nsAHttpTransaction> > &outTransactions) {
+||||||| merged common ancestors
+nsresult
+NullHttpTransaction::TakeSubTransactions(
+  nsTArray<RefPtr<nsAHttpTransaction> > &outTransactions)
+{
+=======
+nsresult NullHttpTransaction::TakeSubTransactions(
+    nsTArray<RefPtr<nsAHttpTransaction> >& outTransactions) {
+>>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -278,7 +393,15 @@ void NullHttpTransaction::Close(nsresult reason) {
   }
 }
 
+<<<<<<< HEAD
 nsHttpConnectionInfo *NullHttpTransaction::ConnectionInfo() {
+||||||| merged common ancestors
+nsHttpConnectionInfo *
+NullHttpTransaction::ConnectionInfo()
+{
+=======
+nsHttpConnectionInfo* NullHttpTransaction::ConnectionInfo() {
+>>>>>>> upstream-releases
   return mConnectionInfo;
 }
 

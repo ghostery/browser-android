@@ -28,9 +28,21 @@
 //
 // We would like to move away from this binary compatibility requirement
 // in service workers.  See bug 1248628.
+<<<<<<< HEAD
 void deserializeAndVerify(const nsCString &serializedSecInfo,
                           bool hasFailedCertChain,
                           size_t failedCertChainLength = 0) {
+||||||| merged common ancestors
+void
+deserializeAndVerify(const nsCString &serializedSecInfo,
+                     bool hasFailedCertChain,
+                     size_t failedCertChainLength = 0)
+{
+=======
+void deserializeAndVerify(const nsCString& serializedSecInfo,
+                          bool hasFailedCertChain,
+                          size_t failedCertChainLength = 0) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsISupports> secInfo;
   nsresult rv =
       NS_DeserializeObject(serializedSecInfo, getter_AddRefs(secInfo));
@@ -74,8 +86,17 @@ void deserializeAndVerify(const nsCString &serializedSecInfo,
   }
 }
 
+<<<<<<< HEAD
 TEST(psm_DeserializeCert, gecko33) {
   // clang-format off
+||||||| merged common ancestors
+TEST(psm_DeserializeCert, gecko33)
+{
+=======
+TEST(psm_DeserializeCert, gecko33)
+{
+  // clang-format off
+>>>>>>> upstream-releases
   // Gecko 33+ vintage Security info serialized with UUIDs:
   //  - nsISupports  00000000-0000-0000-c000-000000000046
   //  - nsISSLStatus fa9ba95b-ca3b-498a-b889-7c79cf28fee8
@@ -108,8 +129,17 @@ TEST(psm_DeserializeCert, gecko33) {
   deserializeAndVerify(base64Serialization, false);
 }
 
+<<<<<<< HEAD
 TEST(psm_DeserializeCert, gecko46) {
   // clang-format off
+||||||| merged common ancestors
+TEST(psm_DeserializeCert, gecko46)
+{
+=======
+TEST(psm_DeserializeCert, gecko46)
+{
+  // clang-format off
+>>>>>>> upstream-releases
   // Gecko 46+ vintage Security info serialized with UUIDs:
   //  - nsISupports  00000000-0000-0000-c000-000000000046
   //  - nsISSLStatus fa9ba95b-ca3b-498a-b889-7c79cf28fee8
@@ -142,8 +172,17 @@ TEST(psm_DeserializeCert, gecko46) {
   deserializeAndVerify(base64Serialization, false);
 }
 
+<<<<<<< HEAD
 TEST(psm_DeserializeCert, preSSLStatusConsolidation) {
   // clang-format off
+||||||| merged common ancestors
+TEST(psm_DeserializeCert, preSSLStatusConsolidation)
+{
+=======
+TEST(psm_DeserializeCert, preSSLStatusConsolidation)
+{
+  // clang-format off
+>>>>>>> upstream-releases
   // Generated using serialized output of test "good.include-subdomains.pinning.example.com"
   // in security/manager/ssl/tests/unit/test_cert_chains.js
   nsCString base64Serialization(
@@ -190,8 +229,17 @@ TEST(psm_DeserializeCert, preSSLStatusConsolidation) {
   deserializeAndVerify(base64Serialization, false);
 }
 
+<<<<<<< HEAD
 TEST(psm_DeserializeCert, preSSLStatusConsolidationFailedCertChain) {
   // clang-format off
+||||||| merged common ancestors
+TEST(psm_DeserializeCert, preSSLStatusConsolidationFailedCertChain)
+{
+=======
+TEST(psm_DeserializeCert, preSSLStatusConsolidationFailedCertChain)
+{
+  // clang-format off
+>>>>>>> upstream-releases
   // Generated using serialized output of test "expired.example.com"
   // in security/manager/ssl/tests/unit/test_cert_chains.js
   nsCString base64Serialization(

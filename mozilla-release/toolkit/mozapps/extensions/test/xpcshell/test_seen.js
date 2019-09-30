@@ -20,6 +20,7 @@ const XPIS = {};
 add_task(async function() {
   await promiseStartupManager();
 
+<<<<<<< HEAD
   for (let n of [1, 2]) {
     XPIS[n] = await createTempWebExtensionFile({
       manifest: {
@@ -31,6 +32,23 @@ add_task(async function() {
   }
 
   await promiseInstallFile(XPIS[1]);
+||||||| merged common ancestors
+  let install = await AddonTestUtils.promiseInstallXPI(ADDONS.test_bootstrap1_1);
+  Assert.equal(install.state, AddonManager.STATE_INSTALLED);
+  Assert.ok(!hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL));
+=======
+  for (let n of [1, 2]) {
+    XPIS[n] = await createTempWebExtensionFile({
+      manifest: {
+        name: "Test",
+        version: `${n}.0`,
+        applications: { gecko: { id: ID } },
+      },
+    });
+  }
+
+  await promiseInstallFile(XPIS[1]);
+>>>>>>> upstream-releases
 
   let addon = await promiseAddonByID(ID);
   Assert.equal(addon.version, "1.0");
@@ -64,7 +82,9 @@ add_task(async function() {
 
 // Sideloading an add-on in the systemwide location should mark it as unseen
 add_task(async function() {
-  let savedStartupScanScopes = Services.prefs.getIntPref("extensions.startupScanScopes");
+  let savedStartupScanScopes = Services.prefs.getIntPref(
+    "extensions.startupScanScopes"
+  );
   Services.prefs.setIntPref("extensions.startupScanScopes", 0);
 
   let systemParentDir = gTmpD.clone();
@@ -99,7 +119,10 @@ add_task(async function() {
   Services.obs.notifyObservers(path, "flush-cache-entry");
   path.remove(true);
 
-  Services.prefs.setIntPref("extensions.startupScanScopes", savedStartupScanScopes);
+  Services.prefs.setIntPref(
+    "extensions.startupScanScopes",
+    savedStartupScanScopes
+  );
 });
 
 // Sideloading an add-on in the profile should mark it as unseen and it should
@@ -163,7 +186,9 @@ add_task(async function() {
   // Updating through the API shouldn't change the state
   let install = await promiseInstallFile(XPIS[2]);
   Assert.equal(install.state, AddonManager.STATE_INSTALLED);
-  Assert.ok(!hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL));
+  Assert.ok(
+    !hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL)
+  );
 
   addon = install.addon;
   Assert.ok(addon.foreignInstall);
@@ -245,7 +270,9 @@ add_task(async function() {
   // Updating through the API shouldn't change the state
   let install = await promiseInstallFile(XPIS[2]);
   Assert.equal(install.state, AddonManager.STATE_INSTALLED);
-  Assert.ok(!hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL));
+  Assert.ok(
+    !hasFlag(install.addon.pendingOperations, AddonManager.PENDING_INSTALL)
+  );
 
   addon = install.addon;
   Assert.ok(addon.foreignInstall);

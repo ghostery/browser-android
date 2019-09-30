@@ -542,6 +542,7 @@ class Accessible : public nsISupports {
   /**
    * Scroll the accessible into view.
    */
+  MOZ_CAN_RUN_SCRIPT
   virtual void ScrollTo(uint32_t aHow) const;
 
   /**
@@ -980,7 +981,15 @@ class Accessible : public nsISupports {
    */
   void SetHideEventTarget(bool aTarget) { mHideEventTarget = aTarget; }
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  void Announce(const nsAString& aAnnouncement, uint16_t aPriority);
+
+ protected:
+>>>>>>> upstream-releases
   virtual ~Accessible();
 
   /**
@@ -1102,7 +1111,14 @@ class Accessible : public nsISupports {
   /**
    * Dispatch click event.
    */
+<<<<<<< HEAD
   virtual void DispatchClickEvent(nsIContent* aContent,
+||||||| merged common ancestors
+  virtual void DispatchClickEvent(nsIContent *aContent,
+=======
+  MOZ_CAN_RUN_SCRIPT
+  virtual void DispatchClickEvent(nsIContent* aContent,
+>>>>>>> upstream-releases
                                   uint32_t aActionIndex) const;
 
   //////////////////////////////////////////////////////////////////////////////

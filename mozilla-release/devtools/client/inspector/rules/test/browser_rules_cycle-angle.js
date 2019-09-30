@@ -20,7 +20,7 @@ const TEST_URI = `
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
-  const {inspector, view} = await openRuleView();
+  const { inspector, view } = await openRuleView();
   const container = getRuleViewProperty(view, "body", "filter").valueSpan;
   await checkAngleCycling(container, view);
   await checkAngleCyclingPersist(inspector, view);
@@ -33,6 +33,7 @@ async function checkAngleCycling(container, view) {
   // turn
   is(valueNode.textContent, "1turn", "Angle displayed as a turn value.");
 
+<<<<<<< HEAD
   const tests = [{
     value: "360deg",
     comment: "Angle displayed as a degree value.",
@@ -46,6 +47,40 @@ async function checkAngleCycling(container, view) {
     value: "1turn",
     comment: "Angle displayed as a turn value again.",
   }];
+||||||| merged common ancestors
+  const tests = [{
+    value: "360deg",
+    comment: "Angle displayed as a degree value."
+  }, {
+    value: `${Math.round(Math.PI * 2 * 10000) / 10000}rad`,
+    comment: "Angle displayed as a radian value."
+  }, {
+    value: "400grad",
+    comment: "Angle displayed as a gradian value."
+  }, {
+    value: "1turn",
+    comment: "Angle displayed as a turn value again."
+  }];
+=======
+  const tests = [
+    {
+      value: "360deg",
+      comment: "Angle displayed as a degree value.",
+    },
+    {
+      value: `${Math.round(Math.PI * 2 * 10000) / 10000}rad`,
+      comment: "Angle displayed as a radian value.",
+    },
+    {
+      value: "400grad",
+      comment: "Angle displayed as a gradian value.",
+    },
+    {
+      value: "1turn",
+      comment: "Angle displayed as a turn value again.",
+    },
+  ];
+>>>>>>> upstream-releases
 
   for (const test of tests) {
     await checkSwatchShiftClick(container, win, test.value, test.comment);
@@ -60,9 +95,12 @@ async function checkAngleCyclingPersist(inspector, view) {
 
   is(valueNode.textContent, "180deg", "Angle displayed as a degree value.");
 
-  await checkSwatchShiftClick(container, win,
+  await checkSwatchShiftClick(
+    container,
+    win,
     `${Math.round(Math.PI * 10000) / 10000}rad`,
-    "Angle displayed as a radian value.");
+    "Angle displayed as a radian value."
+  );
 
   // Select the body and reselect the div to see
   // if the new angle unit persisted
@@ -73,8 +111,11 @@ async function checkAngleCyclingPersist(inspector, view) {
   // they've been re-generated
   container = getRuleViewProperty(view, "div", "filter").valueSpan;
   valueNode = container.querySelector(".ruleview-angle");
-  is(valueNode.textContent, `${Math.round(Math.PI * 10000) / 10000}rad`,
-    "Angle still displayed as a radian value.");
+  is(
+    valueNode.textContent,
+    `${Math.round(Math.PI * 10000) / 10000}rad`,
+    "Angle still displayed as a radian value."
+  );
 }
 
 async function checkSwatchShiftClick(container, win, expectedValue, comment) {
@@ -82,10 +123,26 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
   const valueNode = container.querySelector(".ruleview-angle");
 
   const onUnitChange = swatch.once("unit-change");
+<<<<<<< HEAD
   EventUtils.synthesizeMouseAtCenter(swatch, {
     type: "mousedown",
     shiftKey: true,
   }, win);
+||||||| merged common ancestors
+  EventUtils.synthesizeMouseAtCenter(swatch, {
+    type: "mousedown",
+    shiftKey: true
+  }, win);
+=======
+  EventUtils.synthesizeMouseAtCenter(
+    swatch,
+    {
+      type: "mousedown",
+      shiftKey: true,
+    },
+    win
+  );
+>>>>>>> upstream-releases
   await onUnitChange;
   is(valueNode.textContent, expectedValue, comment);
 }

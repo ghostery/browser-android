@@ -29,7 +29,15 @@ SimpleChannelParent::SetParentListener(HttpChannelParentListener* aListener) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SimpleChannelParent::NotifyTrackingProtectionDisabled() {
+||||||| merged common ancestors
+SimpleChannelParent::NotifyTrackingProtectionDisabled()
+{
+=======
+SimpleChannelParent::NotifyChannelClassifierProtectionDisabled(
+    uint32_t aAcceptedReason) {
+>>>>>>> upstream-releases
   // Nothing to do.
   return NS_OK;
 }
@@ -41,6 +49,7 @@ SimpleChannelParent::NotifyCookieAllowed() {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SimpleChannelParent::NotifyTrackingCookieBlocked(uint32_t aRejectedReason) {
   // Nothing to do.
   return NS_OK;
@@ -48,6 +57,26 @@ SimpleChannelParent::NotifyTrackingCookieBlocked(uint32_t aRejectedReason) {
 
 NS_IMETHODIMP
 SimpleChannelParent::NotifyTrackingResource(bool aIsThirdParty) {
+||||||| merged common ancestors
+SimpleChannelParent::NotifyTrackingResource(bool aIsThirdParty)
+{
+=======
+SimpleChannelParent::NotifyCookieBlocked(uint32_t aRejectedReason) {
+  // Nothing to do.
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+SimpleChannelParent::NotifyClassificationFlags(uint32_t aClassificationFlags,
+                                               bool aIsThirdParty) {
+  // Nothing to do.
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+SimpleChannelParent::NotifyFlashPluginStateChanged(
+    nsIHttpChannel::FlashPluginState aState) {
+>>>>>>> upstream-releases
   // Nothing to do.
   return NS_OK;
 }
@@ -61,16 +90,49 @@ SimpleChannelParent::SetClassifierMatchedInfo(const nsACString& aList,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
+SimpleChannelParent::Delete() {
+  // Nothing to do.
+||||||| merged common ancestors
+SimpleChannelParent::Delete()
+{
+  // Nothing to do.
+=======
+SimpleChannelParent::SetClassifierMatchedTrackingInfo(
+    const nsACString& aLists, const nsACString& aFullHashes) {
+  // nothing to do
+>>>>>>> upstream-releases
+  return NS_OK;
+}
+
+<<<<<<< HEAD
+void SimpleChannelParent::ActorDestroy(ActorDestroyReason aWhy) {}
+||||||| merged common ancestors
+void
+SimpleChannelParent::ActorDestroy(ActorDestroyReason aWhy)
+{
+}
+=======
+NS_IMETHODIMP
 SimpleChannelParent::Delete() {
   // Nothing to do.
   return NS_OK;
 }
+>>>>>>> upstream-releases
 
 void SimpleChannelParent::ActorDestroy(ActorDestroyReason aWhy) {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SimpleChannelParent::OnStartRequest(nsIRequest* aRequest,
                                     nsISupports* aContext) {
+||||||| merged common ancestors
+SimpleChannelParent::OnStartRequest(nsIRequest* aRequest,
+                                    nsISupports* aContext)
+{
+=======
+SimpleChannelParent::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   // We don't have a way to prevent nsBaseChannel from calling AsyncOpen on
   // the created nsSimpleChannel. We don't have anywhere to send the data in the
   // parent, so abort the binding.
@@ -78,8 +140,17 @@ SimpleChannelParent::OnStartRequest(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 SimpleChannelParent::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
                                    nsresult aStatusCode) {
+||||||| merged common ancestors
+SimpleChannelParent::OnStopRequest(nsIRequest* aRequest,
+                                   nsISupports* aContext,
+                                   nsresult aStatusCode)
+{
+=======
+SimpleChannelParent::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
+>>>>>>> upstream-releases
   // See above.
   MOZ_ASSERT(NS_FAILED(aStatusCode));
   return NS_OK;
@@ -87,7 +158,6 @@ SimpleChannelParent::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
 
 NS_IMETHODIMP
 SimpleChannelParent::OnDataAvailable(nsIRequest* aRequest,
-                                     nsISupports* aContext,
                                      nsIInputStream* aInputStream,
                                      uint64_t aOffset, uint32_t aCount) {
   // See above.

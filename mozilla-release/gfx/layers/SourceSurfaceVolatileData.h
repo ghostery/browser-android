@@ -83,8 +83,19 @@ class SourceSurfaceVolatileData : public DataSourceSurface {
     }
   }
 
+<<<<<<< HEAD
  private:
   ~SourceSurfaceVolatileData() override {}
+||||||| merged common ancestors
+private:
+  ~SourceSurfaceVolatileData() override
+  {
+    MOZ_ASSERT(mMapCount == 0);
+  }
+=======
+ private:
+  virtual ~SourceSurfaceVolatileData() = default;
+>>>>>>> upstream-releases
 
   Mutex mMutex;
   int32_t mStride;

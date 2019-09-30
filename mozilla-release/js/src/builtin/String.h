@@ -137,13 +137,33 @@ extern bool str_localeCompare(JSContext* cx, unsigned argc, Value* vp);
 
 extern bool str_concat(JSContext* cx, unsigned argc, Value* vp);
 
+<<<<<<< HEAD
 ArrayObject* str_split_string(JSContext* cx, HandleObjectGroup group,
                               HandleString str, HandleString sep,
                               uint32_t limit);
+||||||| merged common ancestors
+ArrayObject*
+str_split_string(JSContext* cx, HandleObjectGroup group, HandleString str, HandleString sep,
+                 uint32_t limit);
+=======
+ArrayObject* StringSplitString(JSContext* cx, HandleObjectGroup group,
+                               HandleString str, HandleString sep,
+                               uint32_t limit);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 JSString* str_flat_replace_string(JSContext* cx, HandleString string,
                                   HandleString pattern,
                                   HandleString replacement);
+||||||| merged common ancestors
+JSString *
+str_flat_replace_string(JSContext *cx, HandleString string, HandleString pattern,
+                        HandleString replacement);
+=======
+JSString* StringFlatReplaceString(JSContext* cx, HandleString string,
+                                  HandleString pattern,
+                                  HandleString replacement);
+>>>>>>> upstream-releases
 
 JSString* str_replace_string_raw(JSContext* cx, HandleString string,
                                  HandleString pattern,

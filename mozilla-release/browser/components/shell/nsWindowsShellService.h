@@ -8,12 +8,21 @@
 
 #include "nscore.h"
 #include "nsString.h"
+#include "nsToolkitShellService.h"
 #include "nsIShellService.h"
 
 #include <windows.h>
 #include <ole2.h>
 
+<<<<<<< HEAD
 class nsWindowsShellService : public nsIShellService {
+||||||| merged common ancestors
+class nsWindowsShellService : public nsIShellService
+{
+=======
+class nsWindowsShellService : public nsIShellService,
+                              public nsToolkitShellService {
+>>>>>>> upstream-releases
   virtual ~nsWindowsShellService();
 
  public:

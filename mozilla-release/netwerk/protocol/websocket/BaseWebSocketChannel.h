@@ -30,12 +30,23 @@ class BaseWebSocketChannel : public nsIWebSocketChannel,
   NS_DECL_NSIPROTOCOLHANDLER
   NS_DECL_NSITHREADRETARGETABLEREQUEST
 
+<<<<<<< HEAD
   NS_IMETHOD QueryInterface(const nsIID &uuid, void **result) override = 0;
   NS_IMETHOD_(MozExternalRefCountType) AddRef(void) override = 0;
   NS_IMETHOD_(MozExternalRefCountType) Release(void) override = 0;
+||||||| merged common ancestors
+  NS_IMETHOD QueryInterface(const nsIID & uuid, void **result) override = 0;
+  NS_IMETHOD_(MozExternalRefCountType ) AddRef(void) override = 0;
+  NS_IMETHOD_(MozExternalRefCountType ) Release(void) override = 0;
+=======
+  NS_IMETHOD QueryInterface(const nsIID& uuid, void** result) override = 0;
+  NS_IMETHOD_(MozExternalRefCountType) AddRef(void) override = 0;
+  NS_IMETHOD_(MozExternalRefCountType) Release(void) override = 0;
+>>>>>>> upstream-releases
 
   // Partial implementation of nsIWebSocketChannel
   //
+<<<<<<< HEAD
   NS_IMETHOD GetOriginalURI(nsIURI **aOriginalURI) override;
   NS_IMETHOD GetURI(nsIURI **aURI) override;
   NS_IMETHOD GetNotificationCallbacks(
@@ -50,19 +61,74 @@ class BaseWebSocketChannel : public nsIWebSocketChannel,
   NS_IMETHOD GetProtocol(nsACString &aProtocol) override;
   NS_IMETHOD SetProtocol(const nsACString &aProtocol) override;
   NS_IMETHOD GetPingInterval(uint32_t *aSeconds) override;
+||||||| merged common ancestors
+  NS_IMETHOD GetOriginalURI(nsIURI **aOriginalURI) override;
+  NS_IMETHOD GetURI(nsIURI **aURI) override;
+  NS_IMETHOD GetNotificationCallbacks(nsIInterfaceRequestor **aNotificationCallbacks) override;
+  NS_IMETHOD SetNotificationCallbacks(nsIInterfaceRequestor *aNotificationCallbacks) override;
+  NS_IMETHOD GetLoadGroup(nsILoadGroup **aLoadGroup) override;
+  NS_IMETHOD SetLoadGroup(nsILoadGroup *aLoadGroup) override;
+  NS_IMETHOD SetLoadInfo(nsILoadInfo *aLoadInfo) override;
+  NS_IMETHOD GetLoadInfo(nsILoadInfo **aLoadInfo) override;
+  NS_IMETHOD GetExtensions(nsACString &aExtensions) override;
+  NS_IMETHOD GetProtocol(nsACString &aProtocol) override;
+  NS_IMETHOD SetProtocol(const nsACString &aProtocol) override;
+  NS_IMETHOD GetPingInterval(uint32_t *aSeconds) override;
+=======
+  NS_IMETHOD GetOriginalURI(nsIURI** aOriginalURI) override;
+  NS_IMETHOD GetURI(nsIURI** aURI) override;
+  NS_IMETHOD GetNotificationCallbacks(
+      nsIInterfaceRequestor** aNotificationCallbacks) override;
+  NS_IMETHOD SetNotificationCallbacks(
+      nsIInterfaceRequestor* aNotificationCallbacks) override;
+  NS_IMETHOD GetLoadGroup(nsILoadGroup** aLoadGroup) override;
+  NS_IMETHOD SetLoadGroup(nsILoadGroup* aLoadGroup) override;
+  NS_IMETHOD SetLoadInfo(nsILoadInfo* aLoadInfo) override;
+  NS_IMETHOD GetLoadInfo(nsILoadInfo** aLoadInfo) override;
+  NS_IMETHOD GetExtensions(nsACString& aExtensions) override;
+  NS_IMETHOD GetProtocol(nsACString& aProtocol) override;
+  NS_IMETHOD SetProtocol(const nsACString& aProtocol) override;
+  NS_IMETHOD GetPingInterval(uint32_t* aSeconds) override;
+>>>>>>> upstream-releases
   NS_IMETHOD SetPingInterval(uint32_t aSeconds) override;
-  NS_IMETHOD GetPingTimeout(uint32_t *aSeconds) override;
+  NS_IMETHOD GetPingTimeout(uint32_t* aSeconds) override;
   NS_IMETHOD SetPingTimeout(uint32_t aSeconds) override;
+<<<<<<< HEAD
   NS_IMETHOD InitLoadInfo(nsINode *aLoadingNode,
                           nsIPrincipal *aLoadingPrincipal,
                           nsIPrincipal *aTriggeringPrincipal,
                           uint32_t aSecurityFlags,
+||||||| merged common ancestors
+  NS_IMETHOD InitLoadInfo(nsINode* aLoadingNode, nsIPrincipal* aLoadingPrincipal,
+                          nsIPrincipal* aTriggeringPrincipal, uint32_t aSecurityFlags,
+=======
+  NS_IMETHOD InitLoadInfoNative(nsINode* aLoadingNode,
+                                nsIPrincipal* aLoadingPrincipal,
+                                nsIPrincipal* aTriggeringPrincipal,
+                                nsICookieSettings* aCookieSettings,
+                                uint32_t aSecurityFlags,
+                                uint32_t aContentPolicyType) override;
+  NS_IMETHOD InitLoadInfo(nsINode* aLoadingNode,
+                          nsIPrincipal* aLoadingPrincipal,
+                          nsIPrincipal* aTriggeringPrincipal,
+                          uint32_t aSecurityFlags,
+>>>>>>> upstream-releases
                           uint32_t aContentPolicyType) override;
   NS_IMETHOD GetSerial(uint32_t *aSerial) override;
   NS_IMETHOD SetSerial(uint32_t aSerial) override;
+<<<<<<< HEAD
   NS_IMETHOD SetServerParameters(
       nsITransportProvider *aProvider,
       const nsACString &aNegotiatedExtensions) override;
+||||||| merged common ancestors
+  NS_IMETHOD SetServerParameters(nsITransportProvider* aProvider,
+                                 const nsACString& aNegotiatedExtensions) override;
+=======
+  NS_IMETHOD SetServerParameters(
+      nsITransportProvider* aProvider,
+      const nsACString& aNegotiatedExtensions) override;
+  NS_IMETHOD GetHttpChannelId(uint64_t* aHttpChannelId) override;
+>>>>>>> upstream-releases
 
   // Off main thread URI access.
   virtual void GetEffectiveURL(nsAString &aEffectiveURL) const = 0;
@@ -108,7 +174,15 @@ class BaseWebSocketChannel : public nsIWebSocketChannel,
   uint32_t mPingInterval;        /* milliseconds */
   uint32_t mPingResponseTimeout; /* milliseconds */
 
+<<<<<<< HEAD
   uint32_t mSerial;
+||||||| merged common ancestors
+  uint32_t                        mSerial;
+=======
+  uint32_t mSerial;
+
+  uint64_t mHttpChannelId;
+>>>>>>> upstream-releases
 };
 
 }  // namespace net

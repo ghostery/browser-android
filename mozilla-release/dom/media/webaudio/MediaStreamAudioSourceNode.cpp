@@ -9,10 +9,11 @@
 #include "AudioNodeEngine.h"
 #include "AudioNodeExternalInputStream.h"
 #include "AudioStreamTrack.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/CORSMode.h"
 #include "nsContentUtils.h"
 #include "nsIScriptError.h"
+#include "nsID.h"
 
 namespace mozilla {
 namespace dom {
@@ -37,27 +38,67 @@ NS_INTERFACE_MAP_END_INHERITING(AudioNode)
 NS_IMPL_ADDREF_INHERITED(MediaStreamAudioSourceNode, AudioNode)
 NS_IMPL_RELEASE_INHERITED(MediaStreamAudioSourceNode, AudioNode)
 
+<<<<<<< HEAD
 MediaStreamAudioSourceNode::MediaStreamAudioSourceNode(AudioContext* aContext)
     : AudioNode(aContext, 2, ChannelCountMode::Max,
                 ChannelInterpretation::Speakers) {}
+||||||| merged common ancestors
+MediaStreamAudioSourceNode::MediaStreamAudioSourceNode(AudioContext* aContext)
+  : AudioNode(aContext,
+              2,
+              ChannelCountMode::Max,
+              ChannelInterpretation::Speakers)
+{
+}
+=======
+MediaStreamAudioSourceNode::MediaStreamAudioSourceNode(
+    AudioContext* aContext, TrackChangeBehavior aBehavior)
+    : AudioNode(aContext, 2, ChannelCountMode::Max,
+                ChannelInterpretation::Speakers),
+      mBehavior(aBehavior) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<MediaStreamAudioSourceNode>
 MediaStreamAudioSourceNode::Create(
     AudioContext& aAudioContext, const MediaStreamAudioSourceOptions& aOptions,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<MediaStreamAudioSourceNode>
+MediaStreamAudioSourceNode::Create(AudioContext& aAudioContext,
+                                   const MediaStreamAudioSourceOptions& aOptions,
+                                   ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<MediaStreamAudioSourceNode> MediaStreamAudioSourceNode::Create(
+    AudioContext& aAudioContext, const MediaStreamAudioSourceOptions& aOptions,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (aAudioContext.IsOffline()) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
   }
 
+<<<<<<< HEAD
   if (aAudioContext.CheckClosed(aRv)) {
     return nullptr;
   }
 
   if (aAudioContext.Graph() !=
       aOptions.mMediaStream->GetPlaybackStream()->Graph()) {
+||||||| merged common ancestors
+  if (aAudioContext.CheckClosed(aRv)) {
+    return nullptr;
+  }
+
+  if (aAudioContext.Graph() != aOptions.mMediaStream->GetPlaybackStream()->Graph()) {
+=======
+  if (aAudioContext.Graph() !=
+      aOptions.mMediaStream->GetPlaybackStream()->Graph()) {
+>>>>>>> upstream-releases
     nsCOMPtr<nsPIDOMWindowInner> pWindow = aAudioContext.GetParentObject();
-    nsIDocument* document = pWindow ? pWindow->GetExtantDoc() : nullptr;
+    Document* document = pWindow ? pWindow->GetExtantDoc() : nullptr;
     nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
                                     NS_LITERAL_CSTRING("Web Audio"), document,
                                     nsContentUtils::eDOM_PROPERTIES,
@@ -67,7 +108,13 @@ MediaStreamAudioSourceNode::Create(
   }
 
   RefPtr<MediaStreamAudioSourceNode> node =
+<<<<<<< HEAD
       new MediaStreamAudioSourceNode(&aAudioContext);
+||||||| merged common ancestors
+    new MediaStreamAudioSourceNode(&aAudioContext);
+=======
+      new MediaStreamAudioSourceNode(&aAudioContext, LockOnTrackPicked);
+>>>>>>> upstream-releases
 
   node->Init(aOptions.mMediaStream, aRv);
   if (aRv.Failed()) {
@@ -97,7 +144,10 @@ void MediaStreamAudioSourceNode::Init(DOMMediaStream* aMediaStream,
   mInputStream->AddConsumerToKeepAlive(ToSupports(this));
 
   mInputStream->RegisterTrackListener(this);
-  AttachToFirstTrack(mInputStream);
+  if (mInputStream->Active()) {
+    NotifyActive();
+  }
+  AttachToRightTrack(mInputStream, aRv);
 }
 
 void MediaStreamAudioSourceNode::Destroy() {
@@ -138,14 +188,44 @@ void MediaStreamAudioSourceNode::DetachFromTrack() {
   }
 }
 
+<<<<<<< HEAD
 void MediaStreamAudioSourceNode::AttachToFirstTrack(
     const RefPtr<DOMMediaStream>& aMediaStream) {
+||||||| merged common ancestors
+void
+MediaStreamAudioSourceNode::AttachToFirstTrack(const RefPtr<DOMMediaStream>& aMediaStream)
+{
+=======
+static int AudioTrackCompare(const RefPtr<AudioStreamTrack>& aLhs,
+                             const RefPtr<AudioStreamTrack>& aRhs) {
+  nsAutoStringN<NSID_LENGTH> IDLhs;
+  nsAutoStringN<NSID_LENGTH> IDRhs;
+  aLhs->GetId(IDLhs);
+  aRhs->GetId(IDRhs);
+  return NS_ConvertUTF16toUTF8(IDLhs).Compare(
+      NS_ConvertUTF16toUTF8(IDRhs).get());
+}
+
+void MediaStreamAudioSourceNode::AttachToRightTrack(
+    const RefPtr<DOMMediaStream>& aMediaStream, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsTArray<RefPtr<AudioStreamTrack>> tracks;
   aMediaStream->GetAudioTracks(tracks);
 
+  if (tracks.IsEmpty() && mBehavior == LockOnTrackPicked) {
+    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
+    return;
+  }
+
+  // Sort the track to have a stable order, on their ID by lexicographic
+  // ordering on sequences of code unit values.
+  tracks.Sort(AudioTrackCompare);
+
   for (const RefPtr<AudioStreamTrack>& track : tracks) {
-    if (track->Ended()) {
-      continue;
+    if (mBehavior == FollowChanges) {
+      if (track->Ended()) {
+        continue;
+      }
     }
 
     AttachToTrack(track);
@@ -157,8 +237,20 @@ void MediaStreamAudioSourceNode::AttachToFirstTrack(
   MarkInactive();
 }
 
+<<<<<<< HEAD
 void MediaStreamAudioSourceNode::NotifyTrackAdded(
     const RefPtr<MediaStreamTrack>& aTrack) {
+||||||| merged common ancestors
+void
+MediaStreamAudioSourceNode::NotifyTrackAdded(const RefPtr<MediaStreamTrack>& aTrack)
+{
+=======
+void MediaStreamAudioSourceNode::NotifyTrackAdded(
+    const RefPtr<MediaStreamTrack>& aTrack) {
+  if (mBehavior != FollowChanges) {
+    return;
+  }
+>>>>>>> upstream-releases
   if (mInputTrack) {
     return;
   }
@@ -170,14 +262,34 @@ void MediaStreamAudioSourceNode::NotifyTrackAdded(
   AttachToTrack(aTrack);
 }
 
+<<<<<<< HEAD
 void MediaStreamAudioSourceNode::NotifyTrackRemoved(
     const RefPtr<MediaStreamTrack>& aTrack) {
   if (aTrack != mInputTrack) {
     return;
-  }
+||||||| merged common ancestors
+void
+MediaStreamAudioSourceNode::NotifyTrackRemoved(const RefPtr<MediaStreamTrack>& aTrack)
+{
+  if (aTrack != mInputTrack) {
+    return;
+=======
+void MediaStreamAudioSourceNode::NotifyTrackRemoved(
+    const RefPtr<MediaStreamTrack>& aTrack) {
+  if (mBehavior == FollowChanges) {
+    if (aTrack != mInputTrack) {
+      return;
+    }
 
-  DetachFromTrack();
-  AttachToFirstTrack(mInputStream);
+    DetachFromTrack();
+    AttachToRightTrack(mInputStream, IgnoreErrors());
+>>>>>>> upstream-releases
+  }
+}
+
+void MediaStreamAudioSourceNode::NotifyActive() {
+  MOZ_ASSERT(mInputStream);
+  Context()->StartBlockedAudioContextIfAllowed();
 }
 
 /**
@@ -199,7 +311,7 @@ void MediaStreamAudioSourceNode::PrincipalChanged(
   MOZ_ASSERT(aMediaStreamTrack == mInputTrack);
 
   bool subsumes = false;
-  nsIDocument* doc = nullptr;
+  Document* doc = nullptr;
   if (nsPIDOMWindowInner* parent = Context()->GetParentObject()) {
     doc = parent->GetExtantDoc();
     if (doc) {

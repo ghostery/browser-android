@@ -255,11 +255,23 @@ xpcAccessibleTable::GetSelectedCells(nsIArray** aSelectedCells) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 xpcAccessibleTable::GetSelectedCellIndices(uint32_t* aCellsArraySize,
                                            int32_t** aCellsArray) {
   NS_ENSURE_ARG_POINTER(aCellsArraySize);
   *aCellsArraySize = 0;
+||||||| merged common ancestors
+xpcAccessibleTable::GetSelectedCellIndices(uint32_t* aCellsArraySize,
+                                           int32_t** aCellsArray)
+{
+  NS_ENSURE_ARG_POINTER(aCellsArraySize);
+  *aCellsArraySize = 0;
+=======
+xpcAccessibleTable::GetSelectedCellIndices(nsTArray<uint32_t>& aCellsArray) {
+  if (!Intl()) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   NS_ENSURE_ARG_POINTER(aCellsArray);
   *aCellsArray = 0;
 
@@ -273,11 +285,30 @@ xpcAccessibleTable::GetSelectedCellIndices(uint32_t* aCellsArraySize,
       static_cast<int32_t*>(moz_xmalloc(*aCellsArraySize * sizeof(int32_t)));
   memcpy(*aCellsArray, cellsArray.Elements(),
          *aCellsArraySize * sizeof(int32_t));
+||||||| merged common ancestors
+  NS_ENSURE_ARG_POINTER(aCellsArray);
+  *aCellsArray = 0;
+
+  if (!Intl())
+    return NS_ERROR_FAILURE;
+
+  AutoTArray<uint32_t, XPC_TABLE_DEFAULT_SIZE> cellsArray;
+  Intl()->SelectedCellIndices(&cellsArray);
+
+  *aCellsArraySize = cellsArray.Length();
+  *aCellsArray = static_cast<int32_t*>
+    (moz_xmalloc(*aCellsArraySize * sizeof(int32_t)));
+  memcpy(*aCellsArray, cellsArray.Elements(),
+    *aCellsArraySize * sizeof(int32_t));
+=======
+  Intl()->SelectedCellIndices(&aCellsArray);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 xpcAccessibleTable::GetSelectedColumnIndices(uint32_t* aColsArraySize,
                                              int32_t** aColsArray) {
   NS_ENSURE_ARG_POINTER(aColsArraySize);
@@ -287,7 +318,24 @@ xpcAccessibleTable::GetSelectedColumnIndices(uint32_t* aColsArraySize,
   *aColsArray = 0;
 
   if (!Intl()) return NS_ERROR_FAILURE;
+||||||| merged common ancestors
+xpcAccessibleTable::GetSelectedColumnIndices(uint32_t* aColsArraySize,
+                                             int32_t** aColsArray)
+{
+  NS_ENSURE_ARG_POINTER(aColsArraySize);
+  *aColsArraySize = 0;
 
+  NS_ENSURE_ARG_POINTER(aColsArray);
+  *aColsArray = 0;
+
+  if (!Intl())
+    return NS_ERROR_FAILURE;
+=======
+xpcAccessibleTable::GetSelectedColumnIndices(nsTArray<uint32_t>& aColsArray) {
+  if (!Intl()) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   AutoTArray<uint32_t, XPC_TABLE_DEFAULT_SIZE> colsArray;
   Intl()->SelectedColIndices(&colsArray);
 
@@ -295,11 +343,24 @@ xpcAccessibleTable::GetSelectedColumnIndices(uint32_t* aColsArraySize,
   *aColsArray =
       static_cast<int32_t*>(moz_xmalloc(*aColsArraySize * sizeof(int32_t)));
   memcpy(*aColsArray, colsArray.Elements(), *aColsArraySize * sizeof(int32_t));
+||||||| merged common ancestors
+  AutoTArray<uint32_t, XPC_TABLE_DEFAULT_SIZE> colsArray;
+  Intl()->SelectedColIndices(&colsArray);
+
+  *aColsArraySize = colsArray.Length();
+  *aColsArray = static_cast<int32_t*>
+    (moz_xmalloc(*aColsArraySize * sizeof(int32_t)));
+  memcpy(*aColsArray, colsArray.Elements(),
+    *aColsArraySize * sizeof(int32_t));
+=======
+  Intl()->SelectedColIndices(&aColsArray);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 xpcAccessibleTable::GetSelectedRowIndices(uint32_t* aRowsArraySize,
                                           int32_t** aRowsArray) {
   NS_ENSURE_ARG_POINTER(aRowsArraySize);
@@ -312,11 +373,40 @@ xpcAccessibleTable::GetSelectedRowIndices(uint32_t* aRowsArraySize,
 
   AutoTArray<uint32_t, XPC_TABLE_DEFAULT_SIZE> rowsArray;
   Intl()->SelectedRowIndices(&rowsArray);
+||||||| merged common ancestors
+xpcAccessibleTable::GetSelectedRowIndices(uint32_t* aRowsArraySize,
+                                          int32_t** aRowsArray)
+{
+  NS_ENSURE_ARG_POINTER(aRowsArraySize);
+  *aRowsArraySize = 0;
 
+  NS_ENSURE_ARG_POINTER(aRowsArray);
+  *aRowsArray = 0;
+
+  if (!Intl())
+    return NS_ERROR_FAILURE;
+
+  AutoTArray<uint32_t, XPC_TABLE_DEFAULT_SIZE> rowsArray;
+  Intl()->SelectedRowIndices(&rowsArray);
+=======
+xpcAccessibleTable::GetSelectedRowIndices(nsTArray<uint32_t>& aRowsArray) {
+  if (!Intl()) return NS_ERROR_FAILURE;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   *aRowsArraySize = rowsArray.Length();
   *aRowsArray =
       static_cast<int32_t*>(moz_xmalloc(*aRowsArraySize * sizeof(int32_t)));
   memcpy(*aRowsArray, rowsArray.Elements(), *aRowsArraySize * sizeof(int32_t));
+||||||| merged common ancestors
+  *aRowsArraySize = rowsArray.Length();
+  *aRowsArray = static_cast<int32_t*>
+    (moz_xmalloc(*aRowsArraySize * sizeof(int32_t)));
+  memcpy(*aRowsArray, rowsArray.Elements(),
+    *aRowsArraySize * sizeof(int32_t));
+=======
+  Intl()->SelectedRowIndices(&aRowsArray);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }

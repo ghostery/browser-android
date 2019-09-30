@@ -9,11 +9,25 @@
 #include "DocAccessible.h"
 
 namespace mozilla {
+
+class PresShell;
+
 namespace a11y {
 
+<<<<<<< HEAD
 class DocAccessibleWrap : public DocAccessible {
  public:
   DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+||||||| merged common ancestors
+class DocAccessibleWrap : public DocAccessible
+{
+public:
+  DocAccessibleWrap(nsIDocument* aDocument, nsIPresShell* aPresShell);
+=======
+class DocAccessibleWrap : public DocAccessible {
+ public:
+  DocAccessibleWrap(dom::Document* aDocument, PresShell* aPresShell);
+>>>>>>> upstream-releases
   virtual ~DocAccessibleWrap();
 };
 

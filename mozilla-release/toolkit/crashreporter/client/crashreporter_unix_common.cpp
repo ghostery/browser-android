@@ -12,7 +12,13 @@
 #include <unistd.h>
 
 using namespace CrashReporter;
+<<<<<<< HEAD
 using std::sort;
+||||||| merged common ancestors
+=======
+using std::ios_base;
+using std::sort;
+>>>>>>> upstream-releases
 using std::string;
 using std::vector;
 
@@ -117,6 +123,7 @@ bool UIFileExists(const string& path) {
   return true;
 }
 
+<<<<<<< HEAD
 bool UIDeleteFile(const string& file) { return (unlink(file.c_str()) != -1); }
 
 std::ifstream* UIOpenRead(const string& filename, bool binary) {
@@ -125,10 +132,28 @@ std::ifstream* UIOpenRead(const string& filename, bool binary) {
   if (binary) {
     mode = mode | std::ios::binary;
   }
+||||||| merged common ancestors
+bool UIDeleteFile(const string& file)
+{
+  return (unlink(file.c_str()) != -1);
+}
 
+std::ifstream* UIOpenRead(const string& filename, bool binary)
+{
+  std::ios_base::openmode mode = std::ios::in;
+
+  if (binary) {
+    mode = mode | std::ios::binary;
+  }
+=======
+bool UIDeleteFile(const string& file) { return (unlink(file.c_str()) != -1); }
+>>>>>>> upstream-releases
+
+std::ifstream* UIOpenRead(const string& filename, ios_base::openmode mode) {
   return new std::ifstream(filename.c_str(), mode);
 }
 
+<<<<<<< HEAD
 std::ofstream* UIOpenWrite(const string& filename,
                            bool append,  // append=false
                            bool binary)  // binary=false
@@ -143,6 +168,24 @@ std::ofstream* UIOpenWrite(const string& filename,
     mode = mode | std::ios::binary;
   }
 
+||||||| merged common ancestors
+std::ofstream* UIOpenWrite(const string& filename,
+                           bool append, // append=false
+                           bool binary) // binary=false
+{
+  std::ios_base::openmode mode = std::ios::out;
+
+  if (append) {
+    mode = mode | std::ios::app;
+  }
+
+  if (binary) {
+    mode = mode | std::ios::binary;
+  }
+
+=======
+std::ofstream* UIOpenWrite(const string& filename, ios_base::openmode mode) {
+>>>>>>> upstream-releases
   return new std::ofstream(filename.c_str(), mode);
 }
 

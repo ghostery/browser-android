@@ -7,12 +7,20 @@
 #ifndef mozilla_dom_DocumentTimeline_h
 #define mozilla_dom_DocumentTimeline_h
 
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/DocumentTimelineBinding.h"
 #include "mozilla/LinkedList.h"
 #include "mozilla/TimeStamp.h"
 #include "AnimationTimeline.h"
+<<<<<<< HEAD
 #include "nsIDocument.h"
 #include "nsDOMNavigationTiming.h"  // for DOMHighResTimeStamp
+||||||| merged common ancestors
+#include "nsIDocument.h"
+#include "nsDOMNavigationTiming.h" // for DOMHighResTimeStamp
+=======
+#include "nsDOMNavigationTiming.h"  // for DOMHighResTimeStamp
+>>>>>>> upstream-releases
 #include "nsRefreshDriver.h"
 
 struct JSContext;
@@ -20,6 +28,7 @@ struct JSContext;
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 class DocumentTimeline final : public AnimationTimeline,
                                public nsARefreshObserver,
                                public nsATimerAdjustmentObserver,
@@ -30,6 +39,32 @@ class DocumentTimeline final : public AnimationTimeline,
         mDocument(aDocument),
         mIsObservingRefreshDriver(false),
         mOriginTime(aOriginTime) {
+||||||| merged common ancestors
+class DocumentTimeline final
+  : public AnimationTimeline
+  , public nsARefreshObserver
+  , public nsATimerAdjustmentObserver
+  , public LinkedListElement<DocumentTimeline>
+{
+public:
+  DocumentTimeline(nsIDocument* aDocument, const TimeDuration& aOriginTime)
+    : AnimationTimeline(aDocument->GetParentObject())
+    , mDocument(aDocument)
+    , mIsObservingRefreshDriver(false)
+    , mOriginTime(aOriginTime)
+  {
+=======
+class DocumentTimeline final : public AnimationTimeline,
+                               public nsARefreshObserver,
+                               public nsATimerAdjustmentObserver,
+                               public LinkedListElement<DocumentTimeline> {
+ public:
+  DocumentTimeline(Document* aDocument, const TimeDuration& aOriginTime)
+      : AnimationTimeline(aDocument->GetParentObject()),
+        mDocument(aDocument),
+        mIsObservingRefreshDriver(false),
+        mOriginTime(aOriginTime) {
+>>>>>>> upstream-releases
     if (mDocument) {
       mDocument->Timelines().insertBack(this);
     }
@@ -84,7 +119,7 @@ class DocumentTimeline final : public AnimationTimeline,
   void NotifyRefreshDriverCreated(nsRefreshDriver* aDriver);
   void NotifyRefreshDriverDestroying(nsRefreshDriver* aDriver);
 
-  nsIDocument* GetDocument() const override { return mDocument; }
+  Document* GetDocument() const override { return mDocument; }
 
  protected:
   TimeStamp GetCurrentTimeStamp() const;
@@ -94,7 +129,7 @@ class DocumentTimeline final : public AnimationTimeline,
   void ObserveRefreshDriver(nsRefreshDriver* aDriver);
   void DisconnectRefreshDriver(nsRefreshDriver* aDriver);
 
-  nsCOMPtr<nsIDocument> mDocument;
+  RefPtr<Document> mDocument;
 
   // The most recently used refresh driver time. This is used in cases where
   // we don't have a refresh driver (e.g. because we are in a display:none

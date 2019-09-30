@@ -6,18 +6,33 @@
 #include "RootAccessibleWrap.h"
 
 #include "Compatibility.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/WindowsVersion.h"
 #include "nsCoreUtils.h"
 #include "nsWinUtils.h"
 
+using namespace mozilla;
 using namespace mozilla::a11y;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constructor/destructor
 
+<<<<<<< HEAD
 RootAccessibleWrap::RootAccessibleWrap(nsIDocument* aDocument,
                                        nsIPresShell* aPresShell)
     : RootAccessible(aDocument, aPresShell), mOuter(&mInternalUnknown) {}
+||||||| merged common ancestors
+RootAccessibleWrap::RootAccessibleWrap(nsIDocument* aDocument,
+                                       nsIPresShell* aPresShell)
+  : RootAccessible(aDocument, aPresShell)
+  , mOuter(&mInternalUnknown)
+{
+}
+=======
+RootAccessibleWrap::RootAccessibleWrap(dom::Document* aDocument,
+                                       PresShell* aPresShell)
+    : RootAccessible(aDocument, aPresShell), mOuter(&mInternalUnknown) {}
+>>>>>>> upstream-releases
 
 RootAccessibleWrap::~RootAccessibleWrap() {}
 

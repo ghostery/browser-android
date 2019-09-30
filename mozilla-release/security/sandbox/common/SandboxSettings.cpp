@@ -6,10 +6,12 @@
 
 #include "mozISandboxSettings.h"
 
-#include "mozilla/ModuleUtils.h"
+#include "mozilla/Components.h"
 #include "mozilla/Preferences.h"
 
 #include "prenv.h"
+
+using namespace mozilla;
 
 namespace mozilla {
 
@@ -66,16 +68,23 @@ class SandboxSettings final : public mozISandboxSettings {
 
 NS_IMPL_ISUPPORTS(SandboxSettings, mozISandboxSettings)
 
+<<<<<<< HEAD
 NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(
     int32_t *aRetVal) {
+||||||| merged common ancestors
+NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(int32_t *aRetVal)
+{
+=======
+NS_IMETHODIMP SandboxSettings::GetEffectiveContentSandboxLevel(
+    int32_t* aRetVal) {
+>>>>>>> upstream-releases
   *aRetVal = mozilla::GetEffectiveContentSandboxLevel();
   return NS_OK;
 }
 
-NS_GENERIC_FACTORY_CONSTRUCTOR(SandboxSettings)
+}  // namespace mozilla
 
-NS_DEFINE_NAMED_CID(MOZ_SANDBOX_SETTINGS_CID);
-
+<<<<<<< HEAD
 static const mozilla::Module::CIDEntry kSandboxSettingsCIDs[] = {
     {&kMOZ_SANDBOX_SETTINGS_CID, false, nullptr, SandboxSettingsConstructor},
     {nullptr}};
@@ -89,3 +98,28 @@ static const mozilla::Module kSandboxSettingsModule = {
 NSMODULE_DEFN(SandboxSettingsModule) = &kSandboxSettingsModule;
 
 }  // namespace mozilla
+||||||| merged common ancestors
+static const mozilla::Module::CIDEntry kSandboxSettingsCIDs[] = {
+  { &kMOZ_SANDBOX_SETTINGS_CID, false, nullptr, SandboxSettingsConstructor },
+  { nullptr }
+};
+
+static const mozilla::Module::ContractIDEntry kSandboxSettingsContracts[] = {
+  { MOZ_SANDBOX_SETTINGS_CONTRACTID, &kMOZ_SANDBOX_SETTINGS_CID },
+  { nullptr }
+};
+
+static const mozilla::Module kSandboxSettingsModule = {
+  mozilla::Module::kVersion,
+  kSandboxSettingsCIDs,
+  kSandboxSettingsContracts
+};
+
+NSMODULE_DEFN(SandboxSettingsModule) = &kSandboxSettingsModule;
+
+} // namespace mozilla
+=======
+NS_IMPL_COMPONENT_FACTORY(mozISandboxSettings) {
+  return MakeAndAddRef<SandboxSettings>().downcast<nsISupports>();
+}
+>>>>>>> upstream-releases

@@ -16,7 +16,16 @@ namespace mozilla {
 
 StaticRefPtr<URLExtraData> URLExtraData::sDummy;
 
+<<<<<<< HEAD
 /* static */ void URLExtraData::InitDummy() {
+||||||| merged common ancestors
+/* static */ void
+URLExtraData::InitDummy()
+{
+=======
+/* static */
+void URLExtraData::InitDummy() {
+>>>>>>> upstream-releases
   RefPtr<nsIURI> baseURI = NullPrincipalURI::Create();
   RefPtr<nsIURI> referrer = baseURI;
   sDummy = new URLExtraData(baseURI.forget(), referrer.forget(),
@@ -24,7 +33,18 @@ StaticRefPtr<URLExtraData> URLExtraData::sDummy;
                             net::RP_Unset);
 }
 
+<<<<<<< HEAD
 /* static */ void URLExtraData::ReleaseDummy() { sDummy = nullptr; }
+||||||| merged common ancestors
+/* static */ void
+URLExtraData::ReleaseDummy()
+{
+  sDummy = nullptr;
+}
+=======
+/* static */
+void URLExtraData::ReleaseDummy() { sDummy = nullptr; }
+>>>>>>> upstream-releases
 
 URLExtraData::~URLExtraData() {
   if (!NS_IsMainThread()) {
@@ -33,4 +53,13 @@ URLExtraData::~URLExtraData() {
   }
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+StaticRefPtr<URLExtraData>
+    URLExtraData::sShared[size_t(UserAgentStyleSheetID::Count)];
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

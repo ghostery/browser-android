@@ -53,6 +53,7 @@ template <typename Key, typename Value,
           typename HashPolicy = js::DefaultHasher<Key>,
           typename AllocPolicy = js::TempAllocPolicy,
           typename MapSweepPolicy = DefaultMapSweepPolicy<Key, Value>>
+<<<<<<< HEAD
 class GCHashMap : public js::HashMap<Key, Value, HashPolicy, AllocPolicy> {
   using Base = js::HashMap<Key, Value, HashPolicy, AllocPolicy>;
 
@@ -92,6 +93,89 @@ class GCHashMap : public js::HashMap<Key, Value, HashPolicy, AllocPolicy> {
   GCHashMap(const GCHashMap& hm) = delete;
   GCHashMap& operator=(const GCHashMap& hm) = delete;
 };
+||||||| merged common ancestors
+class GCHashMap : public js::HashMap<Key, Value, HashPolicy, AllocPolicy>
+{
+    using Base = js::HashMap<Key, Value, HashPolicy, AllocPolicy>;
+
+  public:
+    explicit GCHashMap(AllocPolicy a = AllocPolicy()) : Base(a)  {}
+    explicit GCHashMap(size_t length) : Base(length)  {}
+    GCHashMap(AllocPolicy a, size_t length) : Base(a, length)  {}
+
+    static void trace(GCHashMap* map, JSTracer* trc) { map->trace(trc); }
+    void trace(JSTracer* trc) {
+        for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+            GCPolicy<Value>::trace(trc, &e.front().value(), "hashmap value");
+            GCPolicy<Key>::trace(trc, &e.front().mutableKey(), "hashmap key");
+        }
+    }
+
+    bool needsSweep() const {
+        return !this->empty();
+    }
+
+    void sweep() {
+        for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+            if (MapSweepPolicy::needsSweep(&e.front().mutableKey(), &e.front().value())) {
+                e.removeFront();
+            }
+        }
+    }
+
+    // GCHashMap is movable
+    GCHashMap(GCHashMap&& rhs) : Base(std::move(rhs)) {}
+    void operator=(GCHashMap&& rhs) {
+        MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+        Base::operator=(std::move(rhs));
+    }
+
+  private:
+    // GCHashMap is not copyable or assignable
+    GCHashMap(const GCHashMap& hm) = delete;
+    GCHashMap& operator=(const GCHashMap& hm) = delete;
+};
+=======
+class GCHashMap : public js::HashMap<Key, Value, HashPolicy, AllocPolicy> {
+  using Base = js::HashMap<Key, Value, HashPolicy, AllocPolicy>;
+
+ public:
+  explicit GCHashMap(AllocPolicy a = AllocPolicy()) : Base(std::move(a)) {}
+  explicit GCHashMap(size_t length) : Base(length) {}
+  GCHashMap(AllocPolicy a, size_t length) : Base(std::move(a), length) {}
+
+  static void trace(GCHashMap* map, JSTracer* trc) { map->trace(trc); }
+  void trace(JSTracer* trc) {
+    for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+      GCPolicy<Value>::trace(trc, &e.front().value(), "hashmap value");
+      GCPolicy<Key>::trace(trc, &e.front().mutableKey(), "hashmap key");
+    }
+  }
+
+  bool needsSweep() const { return !this->empty(); }
+
+  void sweep() {
+    for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+      if (MapSweepPolicy::needsSweep(&e.front().mutableKey(),
+                                     &e.front().value())) {
+        e.removeFront();
+      }
+    }
+  }
+
+  // GCHashMap is movable
+  GCHashMap(GCHashMap&& rhs) : Base(std::move(rhs)) {}
+  void operator=(GCHashMap&& rhs) {
+    MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+    Base::operator=(std::move(rhs));
+  }
+
+ private:
+  // GCHashMap is not copyable or assignable
+  GCHashMap(const GCHashMap& hm) = delete;
+  GCHashMap& operator=(const GCHashMap& hm) = delete;
+} MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS;
+>>>>>>> upstream-releases
 
 }  // namespace JS
 
@@ -106,6 +190,7 @@ template <typename Key, typename Value,
           typename HashPolicy = DefaultHasher<Key>,
           typename AllocPolicy = TempAllocPolicy,
           typename MapSweepPolicy = JS::DefaultMapSweepPolicy<Key, Value>>
+<<<<<<< HEAD
 class GCRekeyableHashMap : public JS::GCHashMap<Key, Value, HashPolicy,
                                                 AllocPolicy, MapSweepPolicy> {
   using Base = JS::GCHashMap<Key, Value, HashPolicy, AllocPolicy>;
@@ -133,6 +218,65 @@ class GCRekeyableHashMap : public JS::GCHashMap<Key, Value, HashPolicy,
     Base::operator=(std::move(rhs));
   }
 };
+||||||| merged common ancestors
+class GCRekeyableHashMap : public JS::GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>
+{
+    using Base = JS::GCHashMap<Key, Value, HashPolicy, AllocPolicy>;
+
+  public:
+    explicit GCRekeyableHashMap(AllocPolicy a = AllocPolicy()) : Base(a) {}
+    explicit GCRekeyableHashMap(size_t length) : Base(length) {}
+    GCRekeyableHashMap(AllocPolicy a, size_t length) : Base(a, length) {}
+
+    void sweep() {
+        for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+            Key key(e.front().key());
+            if (MapSweepPolicy::needsSweep(&key, &e.front().value())) {
+                e.removeFront();
+            } else if (!HashPolicy::match(key, e.front().key())) {
+                e.rekeyFront(key);
+            }
+        }
+    }
+
+    // GCRekeyableHashMap is movable
+    GCRekeyableHashMap(GCRekeyableHashMap&& rhs) : Base(std::move(rhs)) {}
+    void operator=(GCRekeyableHashMap&& rhs) {
+        MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+        Base::operator=(std::move(rhs));
+    }
+};
+=======
+class GCRekeyableHashMap : public JS::GCHashMap<Key, Value, HashPolicy,
+                                                AllocPolicy, MapSweepPolicy> {
+  using Base = JS::GCHashMap<Key, Value, HashPolicy, AllocPolicy>;
+
+ public:
+  explicit GCRekeyableHashMap(AllocPolicy a = AllocPolicy())
+      : Base(std::move(a)) {}
+  explicit GCRekeyableHashMap(size_t length) : Base(length) {}
+  GCRekeyableHashMap(AllocPolicy a, size_t length)
+      : Base(std::move(a), length) {}
+
+  void sweep() {
+    for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+      Key key(e.front().key());
+      if (MapSweepPolicy::needsSweep(&key, &e.front().value())) {
+        e.removeFront();
+      } else if (!HashPolicy::match(key, e.front().key())) {
+        e.rekeyFront(key);
+      }
+    }
+  }
+
+  // GCRekeyableHashMap is movable
+  GCRekeyableHashMap(GCRekeyableHashMap&& rhs) : Base(std::move(rhs)) {}
+  void operator=(GCRekeyableHashMap&& rhs) {
+    MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+    Base::operator=(std::move(rhs));
+  }
+} MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS;
+>>>>>>> upstream-releases
 
 template <typename Wrapper, typename... Args>
 class WrappedPtrOperations<JS::GCHashMap<Args...>, Wrapper> {
@@ -227,6 +371,7 @@ namespace JS {
 // manually.
 template <typename T, typename HashPolicy = js::DefaultHasher<T>,
           typename AllocPolicy = js::TempAllocPolicy>
+<<<<<<< HEAD
 class GCHashSet : public js::HashSet<T, HashPolicy, AllocPolicy> {
   using Base = js::HashSet<T, HashPolicy, AllocPolicy>;
 
@@ -264,8 +409,94 @@ class GCHashSet : public js::HashSet<T, HashPolicy, AllocPolicy> {
   GCHashSet(const GCHashSet& hs) = delete;
   GCHashSet& operator=(const GCHashSet& hs) = delete;
 };
+||||||| merged common ancestors
+class GCHashSet : public js::HashSet<T, HashPolicy, AllocPolicy>
+{
+    using Base = js::HashSet<T, HashPolicy, AllocPolicy>;
+
+  public:
+    explicit GCHashSet(AllocPolicy a = AllocPolicy()) : Base(a)  {}
+    explicit GCHashSet(size_t length) : Base(length)  {}
+    GCHashSet(AllocPolicy a, size_t length) : Base(a, length)  {}
+
+    static void trace(GCHashSet* set, JSTracer* trc) { set->trace(trc); }
+    void trace(JSTracer* trc) {
+        for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+            GCPolicy<T>::trace(trc, &e.mutableFront(), "hashset element");
+        }
+    }
+
+    bool needsSweep() const {
+        return !this->empty();
+    }
+
+    void sweep() {
+        for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+            if (GCPolicy<T>::needsSweep(&e.mutableFront())) {
+                e.removeFront();
+            }
+        }
+    }
+
+    // GCHashSet is movable
+    GCHashSet(GCHashSet&& rhs) : Base(std::move(rhs)) {}
+    void operator=(GCHashSet&& rhs) {
+        MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+        Base::operator=(std::move(rhs));
+    }
+
+  private:
+    // GCHashSet is not copyable or assignable
+    GCHashSet(const GCHashSet& hs) = delete;
+    GCHashSet& operator=(const GCHashSet& hs) = delete;
+};
+=======
+class GCHashSet : public js::HashSet<T, HashPolicy, AllocPolicy> {
+  using Base = js::HashSet<T, HashPolicy, AllocPolicy>;
+
+ public:
+  explicit GCHashSet(AllocPolicy a = AllocPolicy()) : Base(std::move(a)) {}
+  explicit GCHashSet(size_t length) : Base(length) {}
+  GCHashSet(AllocPolicy a, size_t length) : Base(std::move(a), length) {}
+
+  static void trace(GCHashSet* set, JSTracer* trc) { set->trace(trc); }
+  void trace(JSTracer* trc) {
+    for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+      GCPolicy<T>::trace(trc, &e.mutableFront(), "hashset element");
+    }
+  }
+
+  bool needsSweep() const { return !this->empty(); }
+
+  void sweep() {
+    for (typename Base::Enum e(*this); !e.empty(); e.popFront()) {
+      if (GCPolicy<T>::needsSweep(&e.mutableFront())) {
+        e.removeFront();
+      }
+    }
+  }
+
+  // GCHashSet is movable
+  GCHashSet(GCHashSet&& rhs) : Base(std::move(rhs)) {}
+  void operator=(GCHashSet&& rhs) {
+    MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
+    Base::operator=(std::move(rhs));
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+}  // namespace JS
+||||||| merged common ancestors
+} // namespace JS
+=======
+ private:
+  // GCHashSet is not copyable or assignable
+  GCHashSet(const GCHashSet& hs) = delete;
+  GCHashSet& operator=(const GCHashSet& hs) = delete;
+} MOZ_INHERIT_TYPE_ANNOTATIONS_FROM_TEMPLATE_ARGS;
 
 }  // namespace JS
+>>>>>>> upstream-releases
 
 namespace js {
 
@@ -355,6 +586,7 @@ namespace JS {
 template <typename Key, typename Value, typename HashPolicy,
           typename AllocPolicy, typename MapSweepPolicy>
 class WeakCache<GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>>
+<<<<<<< HEAD
     : protected detail::WeakCacheBase {
   using Map = GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>;
   using Self = WeakCache<Map>;
@@ -534,11 +766,391 @@ class WeakCache<GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>>
     return map.putNew(std::forward<KeyInput>(k), std::forward<ValueInput>(v));
   }
 };
+||||||| merged common ancestors
+  : protected detail::WeakCacheBase
+{
+    using Map = GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>;
+    using Self = WeakCache<Map>;
+
+    Map map;
+    bool needsBarrier;
+
+  public:
+    template <typename... Args>
+    explicit WeakCache(Zone* zone, Args&&... args)
+      : WeakCacheBase(zone), map(std::forward<Args>(args)...), needsBarrier(false)
+    {}
+    template <typename... Args>
+    explicit WeakCache(JSRuntime* rt, Args&&... args)
+      : WeakCacheBase(rt), map(std::forward<Args>(args)...), needsBarrier(false)
+    {}
+    ~WeakCache() {
+        MOZ_ASSERT(!needsBarrier);
+    }
+
+    bool needsSweep() override {
+        return map.needsSweep();
+    }
+
+    size_t sweep() override {
+        size_t steps = map.count();
+        map.sweep();
+        return steps;
+    }
+
+    bool setNeedsIncrementalBarrier(bool needs) override {
+        MOZ_ASSERT(needsBarrier != needs);
+        needsBarrier = needs;
+        return true;
+    }
+
+    bool needsIncrementalBarrier() const override {
+        return needsBarrier;
+    }
+
+  private:
+    using Entry = typename Map::Entry;
+
+    static bool entryNeedsSweep(const Entry& prior) {
+        Key key(prior.key());
+        Value value(prior.value());
+        bool result = MapSweepPolicy::needsSweep(&key, &value);
+        MOZ_ASSERT(prior.key() == key); // We shouldn't update here.
+        MOZ_ASSERT(prior.value() == value); // We shouldn't update here.
+        return result;
+    }
+
+  public:
+    using Lookup = typename Map::Lookup;
+    using Ptr = typename Map::Ptr;
+    using AddPtr = typename Map::AddPtr;
+
+    struct Range
+    {
+        explicit Range(const typename Map::Range& r)
+          : range(r)
+        {
+            settle();
+        }
+        Range() {}
+
+        bool empty() const { return range.empty(); }
+        const Entry& front() const { return range.front(); }
+
+        void popFront() {
+            range.popFront();
+            settle();
+        }
+
+      private:
+        typename Map::Range range;
+
+        void settle() {
+            while (!empty() && entryNeedsSweep(front())) {
+                popFront();
+            }
+        }
+    };
+
+    struct Enum : public Map::Enum
+    {
+        explicit Enum(Self& cache)
+          : Map::Enum(cache.map)
+        {
+            // This operation is not allowed while barriers are in place as we
+            // may also need to enumerate the set for sweeping.
+            MOZ_ASSERT(!cache.needsBarrier);
+        }
+    };
+
+    Ptr lookup(const Lookup& l) const {
+        Ptr ptr = map.lookup(l);
+        if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+            const_cast<Map&>(map).remove(ptr);
+            return Ptr();
+        }
+        return ptr;
+    }
+
+    AddPtr lookupForAdd(const Lookup& l) {
+        AddPtr ptr = map.lookupForAdd(l);
+        if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+            const_cast<Map&>(map).remove(ptr);
+            return map.lookupForAdd(l);
+        }
+        return ptr;
+    }
+
+    Range all() const {
+        return Range(map.all());
+    }
+
+    bool empty() const {
+        // This operation is not currently allowed while barriers are in place
+        // as it would require iterating the map and the caller expects a
+        // constant time operation.
+        MOZ_ASSERT(!needsBarrier);
+        return map.empty();
+    }
+
+    uint32_t count() const {
+        // This operation is not currently allowed while barriers are in place
+        // as it would require iterating the set and the caller expects a
+        // constant time operation.
+        MOZ_ASSERT(!needsBarrier);
+        return map.count();
+    }
+
+    size_t capacity() const {
+        return map.capacity();
+    }
+
+    bool has(const Lookup& l) const {
+        return lookup(l).found();
+    }
+
+    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+        return map.sizeOfExcludingThis(mallocSizeOf);
+    }
+    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+        return mallocSizeOf(this) + map.shallowSizeOfExcludingThis(mallocSizeOf);
+    }
+
+    void clear() {
+        // This operation is not currently allowed while barriers are in place
+        // since it doesn't make sense to clear a cache while it is being swept.
+        MOZ_ASSERT(!needsBarrier);
+        map.clear();
+    }
+
+    void clearAndCompact() {
+        // This operation is not currently allowed while barriers are in place
+        // since it doesn't make sense to clear a cache while it is being swept.
+        MOZ_ASSERT(!needsBarrier);
+        map.clearAndCompact();
+    }
+
+    void remove(Ptr p) {
+        // This currently supports removing entries during incremental
+        // sweeping. If we allow these tables to be swept incrementally this may
+        // no longer be possible.
+        map.remove(p);
+    }
+
+    void remove(const Lookup& l) {
+        Ptr p = lookup(l);
+        if (p) {
+            remove(p);
+        }
+    }
+
+    template<typename KeyInput, typename ValueInput>
+    bool add(AddPtr& p, KeyInput&& k, ValueInput&& v) {
+        return map.add(p, std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+    }
+
+    template<typename KeyInput, typename ValueInput>
+    bool relookupOrAdd(AddPtr& p, KeyInput&& k, ValueInput&& v) {
+        return map.relookupOrAdd(p, std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+    }
+
+    template<typename KeyInput, typename ValueInput>
+    bool put(KeyInput&& k, ValueInput&& v) {
+        return map.put(std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+    }
+
+    template<typename KeyInput, typename ValueInput>
+    bool putNew(KeyInput&& k, ValueInput&& v) {
+        return map.putNew(std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+    }
+};
+=======
+    : protected detail::WeakCacheBase {
+  using Map = GCHashMap<Key, Value, HashPolicy, AllocPolicy, MapSweepPolicy>;
+  using Self = WeakCache<Map>;
+
+  Map map;
+  bool needsBarrier;
+
+ public:
+  template <typename... Args>
+  explicit WeakCache(Zone* zone, Args&&... args)
+      : WeakCacheBase(zone),
+        map(std::forward<Args>(args)...),
+        needsBarrier(false) {}
+  template <typename... Args>
+  explicit WeakCache(JSRuntime* rt, Args&&... args)
+      : WeakCacheBase(rt),
+        map(std::forward<Args>(args)...),
+        needsBarrier(false) {}
+  ~WeakCache() { MOZ_ASSERT(!needsBarrier); }
+
+  bool needsSweep() override { return map.needsSweep(); }
+
+  size_t sweep() override {
+    size_t steps = map.count();
+    map.sweep();
+    return steps;
+  }
+
+  bool setNeedsIncrementalBarrier(bool needs) override {
+    MOZ_ASSERT(needsBarrier != needs);
+    needsBarrier = needs;
+    return true;
+  }
+
+  bool needsIncrementalBarrier() const override { return needsBarrier; }
+
+ private:
+  using Entry = typename Map::Entry;
+
+  static bool entryNeedsSweep(const Entry& prior) {
+    Key key(prior.key());
+    Value value(prior.value());
+    bool result = MapSweepPolicy::needsSweep(&key, &value);
+    MOZ_ASSERT(prior.key() == key);      // We shouldn't update here.
+    MOZ_ASSERT(prior.value() == value);  // We shouldn't update here.
+    return result;
+  }
+
+ public:
+  using Lookup = typename Map::Lookup;
+  using Ptr = typename Map::Ptr;
+  using AddPtr = typename Map::AddPtr;
+
+  struct Range {
+    explicit Range(const typename Map::Range& r) : range(r) { settle(); }
+    Range() {}
+
+    bool empty() const { return range.empty(); }
+    const Entry& front() const { return range.front(); }
+
+    void popFront() {
+      range.popFront();
+      settle();
+    }
+
+   private:
+    typename Map::Range range;
+
+    void settle() {
+      while (!empty() && entryNeedsSweep(front())) {
+        popFront();
+      }
+    }
+  };
+
+  struct Enum : public Map::Enum {
+    explicit Enum(Self& cache) : Map::Enum(cache.map) {
+      // This operation is not allowed while barriers are in place as we
+      // may also need to enumerate the set for sweeping.
+      MOZ_ASSERT(!cache.needsBarrier);
+    }
+  };
+
+  Ptr lookup(const Lookup& l) const {
+    Ptr ptr = map.lookup(l);
+    if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+      const_cast<Map&>(map).remove(ptr);
+      return Ptr();
+    }
+    return ptr;
+  }
+
+  AddPtr lookupForAdd(const Lookup& l) {
+    AddPtr ptr = map.lookupForAdd(l);
+    if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+      const_cast<Map&>(map).remove(ptr);
+      return map.lookupForAdd(l);
+    }
+    return ptr;
+  }
+
+  Range all() const { return Range(map.all()); }
+
+  bool empty() const {
+    // This operation is not currently allowed while barriers are in place
+    // as it would require iterating the map and the caller expects a
+    // constant time operation.
+    MOZ_ASSERT(!needsBarrier);
+    return map.empty();
+  }
+
+  uint32_t count() const {
+    // This operation is not currently allowed while barriers are in place
+    // as it would require iterating the set and the caller expects a
+    // constant time operation.
+    MOZ_ASSERT(!needsBarrier);
+    return map.count();
+  }
+
+  size_t capacity() const { return map.capacity(); }
+
+  bool has(const Lookup& l) const { return lookup(l).found(); }
+
+  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+    return map.sizeOfExcludingThis(mallocSizeOf);
+  }
+  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+    return mallocSizeOf(this) + map.shallowSizeOfExcludingThis(mallocSizeOf);
+  }
+
+  void clear() {
+    // This operation is not currently allowed while barriers are in place
+    // since it doesn't make sense to clear a cache while it is being swept.
+    MOZ_ASSERT(!needsBarrier);
+    map.clear();
+  }
+
+  void clearAndCompact() {
+    // This operation is not currently allowed while barriers are in place
+    // since it doesn't make sense to clear a cache while it is being swept.
+    MOZ_ASSERT(!needsBarrier);
+    map.clearAndCompact();
+  }
+
+  void remove(Ptr p) {
+    // This currently supports removing entries during incremental
+    // sweeping. If we allow these tables to be swept incrementally this may
+    // no longer be possible.
+    map.remove(p);
+  }
+
+  void remove(const Lookup& l) {
+    Ptr p = lookup(l);
+    if (p) {
+      remove(p);
+    }
+  }
+
+  template <typename KeyInput, typename ValueInput>
+  bool add(AddPtr& p, KeyInput&& k, ValueInput&& v) {
+    return map.add(p, std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+  }
+
+  template <typename KeyInput, typename ValueInput>
+  bool relookupOrAdd(AddPtr& p, KeyInput&& k, ValueInput&& v) {
+    return map.relookupOrAdd(p, std::forward<KeyInput>(k),
+                             std::forward<ValueInput>(v));
+  }
+
+  template <typename KeyInput, typename ValueInput>
+  bool put(KeyInput&& k, ValueInput&& v) {
+    return map.put(std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+  }
+
+  template <typename KeyInput, typename ValueInput>
+  bool putNew(KeyInput&& k, ValueInput&& v) {
+    return map.putNew(std::forward<KeyInput>(k), std::forward<ValueInput>(v));
+  }
+} JS_HAZ_NON_GC_POINTER;
+>>>>>>> upstream-releases
 
 // Specialize WeakCache for GCHashSet to provide a barriered set that does not
 // need to be swept immediately.
 template <typename T, typename HashPolicy, typename AllocPolicy>
 class WeakCache<GCHashSet<T, HashPolicy, AllocPolicy>>
+<<<<<<< HEAD
     : protected detail::WeakCacheBase {
   using Set = GCHashSet<T, HashPolicy, AllocPolicy>;
   using Self = WeakCache<Set>;
@@ -721,5 +1333,389 @@ class WeakCache<GCHashSet<T, HashPolicy, AllocPolicy>>
 };
 
 }  // namespace JS
+||||||| merged common ancestors
+    : protected detail::WeakCacheBase
+{
+    using Set = GCHashSet<T, HashPolicy, AllocPolicy>;
+    using Self = WeakCache<Set>;
+
+    Set set;
+    bool needsBarrier;
+
+  public:
+    using Entry = typename Set::Entry;
+
+    template <typename... Args>
+    explicit WeakCache(Zone* zone, Args&&... args)
+      : WeakCacheBase(zone), set(std::forward<Args>(args)...), needsBarrier(false)
+    {}
+    template <typename... Args>
+    explicit WeakCache(JSRuntime* rt, Args&&... args)
+      : WeakCacheBase(rt), set(std::forward<Args>(args)...), needsBarrier(false)
+    {}
+
+    size_t sweep() override {
+        size_t steps = set.count();
+        set.sweep();
+        return steps;
+    }
+
+    bool needsSweep() override {
+        return set.needsSweep();
+    }
+
+    bool setNeedsIncrementalBarrier(bool needs) override {
+        MOZ_ASSERT(needsBarrier != needs);
+        needsBarrier = needs;
+        return true;
+    }
+
+    bool needsIncrementalBarrier() const override {
+        return needsBarrier;
+    }
+
+  private:
+   static bool entryNeedsSweep(const Entry& prior) {
+        Entry entry(prior);
+        bool result = GCPolicy<T>::needsSweep(&entry);
+        MOZ_ASSERT(prior == entry); // We shouldn't update here.
+        return result;
+    }
+
+  public:
+    using Lookup = typename Set::Lookup;
+    using Ptr = typename Set::Ptr;
+    using AddPtr = typename Set::AddPtr;
+
+    struct Range
+    {
+        explicit Range(const typename Set::Range& r)
+          : range(r)
+        {
+            settle();
+        }
+        Range() {}
+
+        bool empty() const { return range.empty(); }
+        const Entry& front() const { return range.front(); }
+
+        void popFront() {
+            range.popFront();
+            settle();
+        }
+
+      private:
+        typename Set::Range range;
+
+        void settle() {
+            while (!empty() && entryNeedsSweep(front())) {
+                popFront();
+            }
+        }
+    };
+
+    struct Enum : public Set::Enum
+    {
+        explicit Enum(Self& cache)
+          : Set::Enum(cache.set)
+        {
+            // This operation is not allowed while barriers are in place as we
+            // may also need to enumerate the set for sweeping.
+            MOZ_ASSERT(!cache.needsBarrier);
+        }
+    };
+
+    Ptr lookup(const Lookup& l) const {
+        Ptr ptr = set.lookup(l);
+        if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+            const_cast<Set&>(set).remove(ptr);
+            return Ptr();
+        }
+        return ptr;
+    }
+
+    AddPtr lookupForAdd(const Lookup& l) {
+        AddPtr ptr = set.lookupForAdd(l);
+        if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+            const_cast<Set&>(set).remove(ptr);
+            return set.lookupForAdd(l);
+        }
+        return ptr;
+    }
+
+    Range all() const {
+        return Range(set.all());
+    }
+
+    bool empty() const {
+        // This operation is not currently allowed while barriers are in place
+        // as it would require iterating the set and the caller expects a
+        // constant time operation.
+        MOZ_ASSERT(!needsBarrier);
+        return set.empty();
+    }
+
+    uint32_t count() const {
+        // This operation is not currently allowed while barriers are in place
+        // as it would require iterating the set and the caller expects a
+        // constant time operation.
+        MOZ_ASSERT(!needsBarrier);
+        return set.count();
+    }
+
+    size_t capacity() const {
+        return set.capacity();
+    }
+
+    bool has(const Lookup& l) const {
+        return lookup(l).found();
+    }
+
+    size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+        return set.shallowSizeOfExcludingThis(mallocSizeOf);
+    }
+    size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+        return mallocSizeOf(this) + set.shallowSizeOfExcludingThis(mallocSizeOf);
+    }
+
+    void clear() {
+        // This operation is not currently allowed while barriers are in place
+        // since it doesn't make sense to clear a cache while it is being swept.
+        MOZ_ASSERT(!needsBarrier);
+        set.clear();
+    }
+
+    void clearAndCompact() {
+        // This operation is not currently allowed while barriers are in place
+        // since it doesn't make sense to clear a cache while it is being swept.
+        MOZ_ASSERT(!needsBarrier);
+        set.clearAndCompact();
+    }
+
+    void remove(Ptr p) {
+        // This currently supports removing entries during incremental
+        // sweeping. If we allow these tables to be swept incrementally this may
+        // no longer be possible.
+        set.remove(p);
+    }
+
+    void remove(const Lookup& l) {
+        Ptr p = lookup(l);
+        if (p) {
+            remove(p);
+        }
+    }
+
+    template<typename TInput>
+    bool add(AddPtr& p, TInput&& t) {
+        return set.add(p, std::forward<TInput>(t));
+    }
+
+    template<typename TInput>
+    bool relookupOrAdd(AddPtr& p, const Lookup& l, TInput&& t) {
+        return set.relookupOrAdd(p, l, std::forward<TInput>(t));
+    }
+
+    template<typename TInput>
+    bool put(TInput&& t) {
+        return set.put(std::forward<TInput>(t));
+    }
+
+    template<typename TInput>
+    bool putNew(TInput&& t) {
+        return set.putNew(std::forward<TInput>(t));
+    }
+
+    template<typename TInput>
+    bool putNew(const Lookup& l, TInput&& t) {
+        return set.putNew(l, std::forward<TInput>(t));
+    }
+};
+
+} // namespace JS
+=======
+    : protected detail::WeakCacheBase {
+  using Set = GCHashSet<T, HashPolicy, AllocPolicy>;
+  using Self = WeakCache<Set>;
+
+  Set set;
+  bool needsBarrier;
+
+ public:
+  using Entry = typename Set::Entry;
+
+  template <typename... Args>
+  explicit WeakCache(Zone* zone, Args&&... args)
+      : WeakCacheBase(zone),
+        set(std::forward<Args>(args)...),
+        needsBarrier(false) {}
+  template <typename... Args>
+  explicit WeakCache(JSRuntime* rt, Args&&... args)
+      : WeakCacheBase(rt),
+        set(std::forward<Args>(args)...),
+        needsBarrier(false) {}
+
+  size_t sweep() override {
+    size_t steps = set.count();
+    set.sweep();
+    return steps;
+  }
+
+  bool needsSweep() override { return set.needsSweep(); }
+
+  bool setNeedsIncrementalBarrier(bool needs) override {
+    MOZ_ASSERT(needsBarrier != needs);
+    needsBarrier = needs;
+    return true;
+  }
+
+  bool needsIncrementalBarrier() const override { return needsBarrier; }
+
+ private:
+  static bool entryNeedsSweep(const Entry& prior) {
+    Entry entry(prior);
+    bool result = GCPolicy<T>::needsSweep(&entry);
+    MOZ_ASSERT(prior == entry);  // We shouldn't update here.
+    return result;
+  }
+
+ public:
+  using Lookup = typename Set::Lookup;
+  using Ptr = typename Set::Ptr;
+  using AddPtr = typename Set::AddPtr;
+
+  struct Range {
+    explicit Range(const typename Set::Range& r) : range(r) { settle(); }
+    Range() {}
+
+    bool empty() const { return range.empty(); }
+    const Entry& front() const { return range.front(); }
+
+    void popFront() {
+      range.popFront();
+      settle();
+    }
+
+   private:
+    typename Set::Range range;
+
+    void settle() {
+      while (!empty() && entryNeedsSweep(front())) {
+        popFront();
+      }
+    }
+  };
+
+  struct Enum : public Set::Enum {
+    explicit Enum(Self& cache) : Set::Enum(cache.set) {
+      // This operation is not allowed while barriers are in place as we
+      // may also need to enumerate the set for sweeping.
+      MOZ_ASSERT(!cache.needsBarrier);
+    }
+  };
+
+  Ptr lookup(const Lookup& l) const {
+    Ptr ptr = set.lookup(l);
+    if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+      const_cast<Set&>(set).remove(ptr);
+      return Ptr();
+    }
+    return ptr;
+  }
+
+  AddPtr lookupForAdd(const Lookup& l) {
+    AddPtr ptr = set.lookupForAdd(l);
+    if (needsBarrier && ptr && entryNeedsSweep(*ptr)) {
+      const_cast<Set&>(set).remove(ptr);
+      return set.lookupForAdd(l);
+    }
+    return ptr;
+  }
+
+  Range all() const { return Range(set.all()); }
+
+  bool empty() const {
+    // This operation is not currently allowed while barriers are in place
+    // as it would require iterating the set and the caller expects a
+    // constant time operation.
+    MOZ_ASSERT(!needsBarrier);
+    return set.empty();
+  }
+
+  uint32_t count() const {
+    // This operation is not currently allowed while barriers are in place
+    // as it would require iterating the set and the caller expects a
+    // constant time operation.
+    MOZ_ASSERT(!needsBarrier);
+    return set.count();
+  }
+
+  size_t capacity() const { return set.capacity(); }
+
+  bool has(const Lookup& l) const { return lookup(l).found(); }
+
+  size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+    return set.shallowSizeOfExcludingThis(mallocSizeOf);
+  }
+  size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
+    return mallocSizeOf(this) + set.shallowSizeOfExcludingThis(mallocSizeOf);
+  }
+
+  void clear() {
+    // This operation is not currently allowed while barriers are in place
+    // since it doesn't make sense to clear a cache while it is being swept.
+    MOZ_ASSERT(!needsBarrier);
+    set.clear();
+  }
+
+  void clearAndCompact() {
+    // This operation is not currently allowed while barriers are in place
+    // since it doesn't make sense to clear a cache while it is being swept.
+    MOZ_ASSERT(!needsBarrier);
+    set.clearAndCompact();
+  }
+
+  void remove(Ptr p) {
+    // This currently supports removing entries during incremental
+    // sweeping. If we allow these tables to be swept incrementally this may
+    // no longer be possible.
+    set.remove(p);
+  }
+
+  void remove(const Lookup& l) {
+    Ptr p = lookup(l);
+    if (p) {
+      remove(p);
+    }
+  }
+
+  template <typename TInput>
+  bool add(AddPtr& p, TInput&& t) {
+    return set.add(p, std::forward<TInput>(t));
+  }
+
+  template <typename TInput>
+  bool relookupOrAdd(AddPtr& p, const Lookup& l, TInput&& t) {
+    return set.relookupOrAdd(p, l, std::forward<TInput>(t));
+  }
+
+  template <typename TInput>
+  bool put(TInput&& t) {
+    return set.put(std::forward<TInput>(t));
+  }
+
+  template <typename TInput>
+  bool putNew(TInput&& t) {
+    return set.putNew(std::forward<TInput>(t));
+  }
+
+  template <typename TInput>
+  bool putNew(const Lookup& l, TInput&& t) {
+    return set.putNew(l, std::forward<TInput>(t));
+  }
+} JS_HAZ_NON_GC_POINTER;
+
+}  // namespace JS
+>>>>>>> upstream-releases
 
 #endif /* GCHashTable_h */

@@ -221,12 +221,7 @@ function CanonicalizeTimeZoneName(timeZone) {
 
     // Step 3.
     if (ianaTimeZone === "Etc/UTC" || ianaTimeZone === "Etc/GMT") {
-        // ICU/CLDR canonicalizes Etc/UCT to Etc/GMT, but following IANA and
-        // ECMA-402 to the letter means Etc/UCT is a separate time zone.
-        if (timeZone === "Etc/UCT" || timeZone === "UCT")
-            ianaTimeZone = "Etc/UCT";
-        else
-            ianaTimeZone = "UTC";
+        ianaTimeZone = "UTC";
     }
 
     // Step 4.
@@ -796,14 +791,27 @@ function dateTimeFormatFormatToBind(date) {
  *
  * Spec: ECMAScript Internationalization API Specification, 12.4.3.
  */
-function Intl_DateTimeFormat_format_get() {
+// Uncloned functions with `$` prefix are allocated as extended function
+// to store the original name in `_SetCanonicalName`.
+function $Intl_DateTimeFormat_format_get() {
     // Steps 1-3.
+<<<<<<< HEAD
     var thisArg = UnwrapDateTimeFormat(this);
     var dtf = thisArg;
     if (!IsObject(dtf) || (dtf = GuardToDateTimeFormat(dtf)) === null) {
         return callFunction(CallDateTimeFormatMethodIfWrapped, thisArg,
                             "Intl_DateTimeFormat_format_get");
     }
+||||||| merged common ancestors
+    var dtf = UnwrapDateTimeFormat(this, "format");
+=======
+    var thisArg = UnwrapDateTimeFormat(this);
+    var dtf = thisArg;
+    if (!IsObject(dtf) || (dtf = GuardToDateTimeFormat(dtf)) === null) {
+        return callFunction(CallDateTimeFormatMethodIfWrapped, thisArg,
+                            "$Intl_DateTimeFormat_format_get");
+    }
+>>>>>>> upstream-releases
 
     var internals = getDateTimeFormatInternals(dtf);
 
@@ -819,7 +827,7 @@ function Intl_DateTimeFormat_format_get() {
     // Step 5.
     return internals.boundFormat;
 }
-_SetCanonicalName(Intl_DateTimeFormat_format_get, "get format");
+_SetCanonicalName($Intl_DateTimeFormat_format_get, "get format");
 
 /**
  * Intl.DateTimeFormat.prototype.formatToParts ( date )
@@ -872,10 +880,10 @@ function Intl_DateTimeFormat_resolvedOptions() {
 
     if (internals.mozExtensions) {
         if (internals.patternOption !== undefined) {
-            result.pattern = internals.pattern;
+            _DefineDataProperty(result, "pattern", internals.pattern);
         } else if (internals.dateStyle || internals.timeStyle) {
-            result.dateStyle = internals.dateStyle;
-            result.timeStyle = internals.timeStyle;
+            _DefineDataProperty(result, "dateStyle", internals.dateStyle);
+            _DefineDataProperty(result, "timeStyle", internals.timeStyle);
         }
     }
 
@@ -916,6 +924,7 @@ function resolveICUPattern(pattern, result) {
             // "text" cases
             case "G":
             case "E":
+            case "c":
             case "z":
             case "v":
             case "V":
@@ -962,8 +971,18 @@ function resolveICUPattern(pattern, result) {
             // components of DateTimeFormat. See
             // http://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
             switch (c) {
+<<<<<<< HEAD
             case "E":
                 weekday = value;
+||||||| merged common ancestors
+            case "h":
+                _DefineDataProperty(result, "hourCycle", "h12");
+                _DefineDataProperty(result, "hour12", true);
+=======
+            case "E":
+            case "c":
+                weekday = value;
+>>>>>>> upstream-releases
                 break;
             case "G":
                 era = value;

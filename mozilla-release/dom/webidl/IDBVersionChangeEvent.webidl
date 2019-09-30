@@ -15,8 +15,16 @@ dictionary IDBVersionChangeEventInit : EventInit {
     unsigned long long? newVersion = null;
 };
 
+<<<<<<< HEAD
 [Constructor(DOMString type, optional IDBVersionChangeEventInit eventInitDict),
  Exposed=(Window,Worker)]
+||||||| merged common ancestors
+[Constructor(DOMString type, optional IDBVersionChangeEventInit eventInitDict),
+ Exposed=(Window,Worker,System)]
+=======
+[Constructor(DOMString type, optional IDBVersionChangeEventInit eventInitDict = {}),
+ Exposed=(Window,Worker)]
+>>>>>>> upstream-releases
 interface IDBVersionChangeEvent : Event {
     readonly    attribute unsigned long long  oldVersion;
     readonly    attribute unsigned long long? newVersion;

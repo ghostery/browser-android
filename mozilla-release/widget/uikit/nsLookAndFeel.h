@@ -8,6 +8,7 @@
 
 #include "nsXPLookAndFeel.h"
 
+<<<<<<< HEAD
 class nsLookAndFeel final : public nsXPLookAndFeel {
  public:
   nsLookAndFeel();
@@ -34,6 +35,67 @@ class nsLookAndFeel final : public nsXPLookAndFeel {
   bool mInitialized;
 
   void EnsureInit();
+||||||| merged common ancestors
+class nsLookAndFeel final : public nsXPLookAndFeel
+{
+public:
+    nsLookAndFeel();
+    virtual ~nsLookAndFeel();
+
+    void NativeInit() final;
+    virtual void RefreshImpl();
+    virtual nsresult NativeGetColor(const ColorID aID, nscolor &aResult);
+    virtual nsresult GetIntImpl(IntID aID, int32_t &aResult);
+    virtual nsresult GetFloatImpl(FloatID aID, float &aResult);
+    virtual bool GetFontImpl(FontID aID, nsString& aFontName,
+                             gfxFontStyle& aFontStyle,
+                             float aDevPixPerCSSPixel);
+    virtual char16_t GetPasswordCharacterImpl()
+    {
+        // unicode value for the bullet character, used for password textfields.
+        return 0x2022;
+    }
+
+    static bool UseOverlayScrollbars()
+    {
+        return true;
+    }
+
+private:
+    nscolor mColorTextSelectForeground;
+    nscolor mColorDarkText;
+
+    bool mInitialized;
+
+    void EnsureInit();
+=======
+class nsLookAndFeel final : public nsXPLookAndFeel {
+ public:
+  nsLookAndFeel();
+  virtual ~nsLookAndFeel();
+
+  void NativeInit() final;
+  virtual void RefreshImpl();
+  virtual nsresult NativeGetColor(const ColorID aID, nscolor& aResult);
+  virtual nsresult GetIntImpl(IntID aID, int32_t& aResult);
+  virtual nsresult GetFloatImpl(FloatID aID, float& aResult);
+  bool GetFontImpl(FontID aID, nsString& aFontName,
+                   gfxFontStyle& aFontStyle) override;
+  virtual char16_t GetPasswordCharacterImpl() {
+    // unicode value for the bullet character, used for password textfields.
+    return 0x2022;
+  }
+
+  static bool UseOverlayScrollbars() { return true; }
+
+ private:
+  nscolor mColorTextSelectForeground;
+  nscolor mColorDarkText;
+
+  bool mInitialized;
+
+  void EnsureInit();
+>>>>>>> upstream-releases
 };
 
 #endif

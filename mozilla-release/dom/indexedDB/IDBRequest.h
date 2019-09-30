@@ -11,7 +11,7 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/dom/IDBRequestBinding.h"
-#include "mozilla/dom/IDBWrapperCache.h"
+#include "mozilla/DOMEventTargetHelper.h"
 #include "nsAutoPtr.h"
 #include "nsCycleCollectionParticipant.h"
 
@@ -22,7 +22,7 @@
     }                                                \
   }
 
-class nsPIDOMWindowInner;
+class nsIGlobalObject;
 
 namespace mozilla {
 
@@ -42,8 +42,18 @@ struct Nullable;
 class OwningIDBObjectStoreOrIDBIndexOrIDBCursor;
 class StrongWorkerRef;
 
+<<<<<<< HEAD
 class IDBRequest : public IDBWrapperCache {
  protected:
+||||||| merged common ancestors
+class IDBRequest
+  : public IDBWrapperCache
+{
+protected:
+=======
+class IDBRequest : public DOMEventTargetHelper {
+ protected:
+>>>>>>> upstream-releases
   // mSourceAsObjectStore and mSourceAsIndex are exclusive and one must always
   // be set. mSourceAsCursor is sometimes set also.
   RefPtr<IDBObjectStore> mSourceAsObjectStore;
@@ -128,7 +138,17 @@ class IDBRequest : public IDBWrapperCache {
 
   void SetLoggingSerialNumber(uint64_t aLoggingSerialNumber);
 
+<<<<<<< HEAD
   nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }
+||||||| merged common ancestors
+  nsPIDOMWindowInner*
+  GetParentObject() const
+  {
+    return GetOwner();
+  }
+=======
+  nsIGlobalObject* GetParentObject() const { return GetOwnerGlobal(); }
+>>>>>>> upstream-releases
 
   void GetResult(JS::MutableHandle<JS::Value> aResult, ErrorResult& aRv) const;
 
@@ -154,7 +174,7 @@ class IDBRequest : public IDBWrapperCache {
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(IDBRequest,
-                                                         IDBWrapperCache)
+                                                         DOMEventTargetHelper)
 
   // nsWrapperCache
   virtual JSObject* WrapObject(JSContext* aCx,
@@ -162,7 +182,7 @@ class IDBRequest : public IDBWrapperCache {
 
  protected:
   explicit IDBRequest(IDBDatabase* aDatabase);
-  explicit IDBRequest(nsPIDOMWindowInner* aOwner);
+  explicit IDBRequest(nsIGlobalObject* aGlobal);
   ~IDBRequest();
 
   void InitMembers();
@@ -188,21 +208,71 @@ class IDBOpenDBRequest final : public IDBRequest {
   const bool mFileHandleDisabled;
   bool mIncreasedActiveDatabaseCount;
 
+<<<<<<< HEAD
  public:
   static already_AddRefed<IDBOpenDBRequest> CreateForWindow(
       JSContext* aCx, IDBFactory* aFactory, nsPIDOMWindowInner* aOwner,
       JS::Handle<JSObject*> aScriptOwner);
+||||||| merged common ancestors
+public:
+  static already_AddRefed<IDBOpenDBRequest>
+  CreateForWindow(JSContext* aCx,
+                  IDBFactory* aFactory,
+                  nsPIDOMWindowInner* aOwner,
+                  JS::Handle<JSObject*> aScriptOwner);
+=======
+ public:
+  static already_AddRefed<IDBOpenDBRequest> Create(JSContext* aCx,
+                                                   IDBFactory* aFactory,
+                                                   nsIGlobalObject* aGlobal);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   static already_AddRefed<IDBOpenDBRequest> CreateForJS(
       JSContext* aCx, IDBFactory* aFactory, JS::Handle<JSObject*> aScriptOwner);
-
+||||||| merged common ancestors
+  static already_AddRefed<IDBOpenDBRequest>
+  CreateForJS(JSContext* aCx,
+              IDBFactory* aFactory,
+              JS::Handle<JSObject*> aScriptOwner);
+=======
   bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool IsFileHandleDisabled() const { return mFileHandleDisabled; }
+||||||| merged common ancestors
+  bool
+  IsFileHandleDisabled() const
+  {
+    return mFileHandleDisabled;
+  }
+=======
   void SetTransaction(IDBTransaction* aTransaction);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  void SetTransaction(IDBTransaction* aTransaction);
+||||||| merged common ancestors
+  void
+  SetTransaction(IDBTransaction* aTransaction);
+=======
+  void DispatchNonTransactionError(nsresult aErrorCode);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void DispatchNonTransactionError(nsresult aErrorCode);
 
   void NoteComplete();
+||||||| merged common ancestors
+  void
+  DispatchNonTransactionError(nsresult aErrorCode);
+
+  void
+  NoteComplete();
+=======
+  void NoteComplete();
+>>>>>>> upstream-releases
 
   // EventTarget
   virtual nsresult PostHandleEvent(EventChainPostVisitor& aVisitor) override;
@@ -219,8 +289,17 @@ class IDBOpenDBRequest final : public IDBRequest {
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
 
+<<<<<<< HEAD
  private:
   IDBOpenDBRequest(IDBFactory* aFactory, nsPIDOMWindowInner* aOwner,
+||||||| merged common ancestors
+private:
+  IDBOpenDBRequest(IDBFactory* aFactory,
+                   nsPIDOMWindowInner* aOwner,
+=======
+ private:
+  IDBOpenDBRequest(IDBFactory* aFactory, nsIGlobalObject* aGlobal,
+>>>>>>> upstream-releases
                    bool aFileHandleDisabled);
 
   ~IDBOpenDBRequest();

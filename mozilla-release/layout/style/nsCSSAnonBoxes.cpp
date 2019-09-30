@@ -14,6 +14,7 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 static nsStaticAtom* GetAtomBase() {
   return const_cast<nsStaticAtom*>(
       nsGkAtoms::GetAtomByIndex(kAtomIndex_AnonBoxes));
@@ -24,14 +25,42 @@ bool nsCSSAnonBoxes::IsAnonBox(nsAtom* aAtom) {
                                      kAtomCount_AnonBoxes);
 }
 
+||||||| merged common ancestors
+static nsStaticAtom*
+GetAtomBase()
+{
+  return const_cast<nsStaticAtom*>(
+      nsGkAtoms::GetAtomByIndex(kAtomIndex_AnonBoxes));
+}
+
+bool
+nsCSSAnonBoxes::IsAnonBox(nsAtom* aAtom)
+{
+  return nsStaticAtomUtils::IsMember(aAtom, GetAtomBase(),
+                                     kAtomCount_AnonBoxes);
+}
+
+=======
+>>>>>>> upstream-releases
 #ifdef MOZ_XUL
+<<<<<<< HEAD
 /* static */ bool nsCSSAnonBoxes::IsTreePseudoElement(nsAtom* aPseudo) {
   MOZ_ASSERT(nsCSSAnonBoxes::IsAnonBox(aPseudo));
+||||||| merged common ancestors
+/* static */ bool
+nsCSSAnonBoxes::IsTreePseudoElement(nsAtom* aPseudo)
+{
+  MOZ_ASSERT(nsCSSAnonBoxes::IsAnonBox(aPseudo));
+=======
+/* static */
+bool nsCSSAnonBoxes::IsTreePseudoElement(nsAtom* aPseudo) {
+>>>>>>> upstream-releases
   return StringBeginsWith(nsDependentAtomString(aPseudo),
                           NS_LITERAL_STRING(":-moz-tree-"));
 }
 #endif
 
+<<<<<<< HEAD
 /* static*/ nsCSSAnonBoxes::NonInheriting
 nsCSSAnonBoxes::NonInheritingTypeForPseudoTag(nsAtom* aPseudo) {
   MOZ_ASSERT(IsNonInheritingAnonBox(aPseudo));
@@ -39,12 +68,39 @@ nsCSSAnonBoxes::NonInheritingTypeForPseudoTag(nsAtom* aPseudo) {
       nsStaticAtomUtils::Lookup(aPseudo, GetAtomBase(), kAtomCount_AnonBoxes);
   MOZ_RELEASE_ASSERT(index.isSome());
   return static_cast<NonInheriting>(*index);
+||||||| merged common ancestors
+/* static*/ nsCSSAnonBoxes::NonInheriting
+nsCSSAnonBoxes::NonInheritingTypeForPseudoTag(nsAtom* aPseudo)
+{
+  MOZ_ASSERT(IsNonInheritingAnonBox(aPseudo));
+  Maybe<uint32_t> index =
+    nsStaticAtomUtils::Lookup(aPseudo, GetAtomBase(), kAtomCount_AnonBoxes);
+  MOZ_RELEASE_ASSERT(index.isSome());
+  return static_cast<NonInheriting>(*index);
+=======
+#ifdef DEBUG
+/* static */
+nsStaticAtom* nsCSSAnonBoxes::GetAtomBase() {
+  return const_cast<nsStaticAtom*>(
+      nsGkAtoms::GetAtomByIndex(kAtomIndex_AnonBoxes));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 #ifdef DEBUG
 /* static */ void nsCSSAnonBoxes::AssertAtoms() {
+||||||| merged common ancestors
+#ifdef DEBUG
+/* static */ void
+nsCSSAnonBoxes::AssertAtoms()
+{
+=======
+/* static */
+void nsCSSAnonBoxes::AssertAtoms() {
+>>>>>>> upstream-releases
   nsStaticAtom* base = GetAtomBase();
   size_t index = 0;
+<<<<<<< HEAD
 #define CSS_ANON_BOX(name_, value_)                                 \
   {                                                                 \
     RefPtr<nsAtom> atom = NS_Atomize(value_);                       \
@@ -56,5 +112,30 @@ nsCSSAnonBoxes::NonInheritingTypeForPseudoTag(nsAtom* aPseudo) {
   }
 #include "nsCSSAnonBoxList.h"
 #undef CSS_ANON_BOX
+||||||| merged common ancestors
+#define CSS_ANON_BOX(name_, value_)                                  \
+  {                                                                  \
+    RefPtr<nsAtom> atom = NS_Atomize(value_);                        \
+    MOZ_ASSERT(atom == nsGkAtoms::AnonBox_##name_,                   \
+               "Static atom for " #name_ " has incorrect value");    \
+    MOZ_ASSERT(atom == &base[index],                                 \
+               "Static atom for " #name_ " not at expected index");  \
+    ++index;                                                         \
+  }
+#include "nsCSSAnonBoxList.h"
+#undef CSS_ANON_BOX
+=======
+#  define CSS_ANON_BOX(name_, value_)                                 \
+    {                                                                 \
+      RefPtr<nsAtom> atom = NS_Atomize(value_);                       \
+      MOZ_ASSERT(atom == nsGkAtoms::AnonBox_##name_,                  \
+                 "Static atom for " #name_ " has incorrect value");   \
+      MOZ_ASSERT(atom == &base[index],                                \
+                 "Static atom for " #name_ " not at expected index"); \
+      ++index;                                                        \
+    }
+#  include "nsCSSAnonBoxList.h"
+#  undef CSS_ANON_BOX
+>>>>>>> upstream-releases
 }
 #endif

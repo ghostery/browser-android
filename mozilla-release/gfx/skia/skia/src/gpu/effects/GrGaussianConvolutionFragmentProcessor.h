@@ -44,6 +44,7 @@ public:
 
     const char* name() const override { return "GaussianConvolution"; }
 
+<<<<<<< HEAD
     SkString dumpInfo() const override {
         SkString str;
         str.appendf("dir: %s radius: %d bounds: [%d %d]",
@@ -53,6 +54,20 @@ public:
         return str;
     }
 
+||||||| merged common ancestors
+=======
+#ifdef SK_DEBUG
+    SkString dumpInfo() const override {
+        SkString str;
+        str.appendf("dir: %s radius: %d bounds: [%d %d]",
+                    Direction::kX == fDirection ? "X" : "Y",
+                    fRadius,
+                    fBounds[0], fBounds[1]);
+        return str;
+    }
+#endif
+
+>>>>>>> upstream-releases
     std::unique_ptr<GrFragmentProcessor> clone() const override {
         return std::unique_ptr<GrFragmentProcessor>(
                 new GrGaussianConvolutionFragmentProcessor(*this));

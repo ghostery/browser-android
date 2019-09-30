@@ -299,7 +299,7 @@ int DWriteFontTypeface::onGetTableTags(SkFontTableTag tags[]) const {
     }
 
     int ttcIndex;
-    std::unique_ptr<SkStream> stream(this->openStream(&ttcIndex));
+    std::unique_ptr<SkStreamAsset> stream = this->openStream(&ttcIndex);
     return stream.get() ? SkFontStream::GetTableTags(stream.get(), ttcIndex, tags) : 0;
 }
 
@@ -322,6 +322,7 @@ size_t DWriteFontTypeface::onGetTableData(SkFontTableTag tag, size_t offset,
     return size;
 }
 
+<<<<<<< HEAD
 sk_sp<SkTypeface> DWriteFontTypeface::onMakeClone(const SkFontArguments& args) const {
     // Skip if the current face index does not match the ttcIndex
     if (fDWriteFontFace->GetIndex() != SkTo<UINT32>(args.getCollectionIndex())) {
@@ -371,6 +372,59 @@ sk_sp<SkTypeface> DWriteFontTypeface::onMakeClone(const SkFontArguments& args) c
 }
 
 SkStreamAsset* DWriteFontTypeface::onOpenStream(int* ttcIndex) const {
+||||||| merged common ancestors
+SkStreamAsset* DWriteFontTypeface::onOpenStream(int* ttcIndex) const {
+=======
+sk_sp<SkTypeface> DWriteFontTypeface::onMakeClone(const SkFontArguments& args) const {
+    // Skip if the current face index does not match the ttcIndex
+    if (fDWriteFontFace->GetIndex() != SkTo<UINT32>(args.getCollectionIndex())) {
+        return sk_ref_sp(this);
+    }
+
+#if defined(NTDDI_WIN10_RS3) && NTDDI_VERSION >= NTDDI_WIN10_RS3
+
+    SkTScopedComPtr<IDWriteFontFace5> fontFace5;
+
+    if (SUCCEEDED(fDWriteFontFace->QueryInterface(&fontFace5)) && fontFace5->HasVariations()) {
+        UINT32 fontAxisCount = fontFace5->GetFontAxisValueCount();
+        UINT32 argsCoordCount = args.getVariationDesignPosition().coordinateCount;
+        SkAutoSTMalloc<8, DWRITE_FONT_AXIS_VALUE> fontAxisValue(fontAxisCount);
+        HRN(fontFace5->GetFontAxisValues(fontAxisValue.get(), fontAxisCount));
+
+        for (UINT32 fontIndex = 0; fontIndex < fontAxisCount; ++fontIndex) {
+            for (UINT32 argsIndex = 0; argsIndex < argsCoordCount; ++argsIndex) {
+                if (SkEndian_SwapBE32(fontAxisValue[fontIndex].axisTag) ==
+                    args.getVariationDesignPosition().coordinates[argsIndex].axis) {
+                    fontAxisValue[fontIndex].value =
+                        args.getVariationDesignPosition().coordinates[argsIndex].value;
+                }
+            }
+        }
+        SkTScopedComPtr<IDWriteFontResource> fontResource;
+        HRN(fontFace5->GetFontResource(&fontResource));
+        SkTScopedComPtr<IDWriteFontFace5> newFontFace5;
+        HRN(fontResource->CreateFontFace(fDWriteFont->GetSimulations(),
+                                         fontAxisValue.get(),
+                                         fontAxisCount,
+                                         &newFontFace5));
+
+        SkTScopedComPtr<IDWriteFontFace> newFontFace;
+        HRN(newFontFace5->QueryInterface(&newFontFace));
+        return DWriteFontTypeface::Make(fFactory.get(),
+                                        newFontFace.get(),
+                                        fDWriteFont.get(),
+                                        fDWriteFontFamily.get(),
+                                        fDWriteFontFileLoader.get(),
+                                        fDWriteFontCollectionLoader.get());
+    }
+
+#endif
+
+    return sk_ref_sp(this);
+}
+
+std::unique_ptr<SkStreamAsset> DWriteFontTypeface::onOpenStream(int* ttcIndex) const {
+>>>>>>> upstream-releases
     *ttcIndex = fDWriteFontFace->GetIndex();
 
     UINT32 numFiles;
@@ -396,7 +450,7 @@ SkStreamAsset* DWriteFontTypeface::onOpenStream(int* ttcIndex) const {
                                              &fontFileStream),
          "Could not create font file stream.");
 
-    return new SkDWriteFontFileStream(fontFileStream.get());
+    return std::unique_ptr<SkStreamAsset>(new SkDWriteFontFileStream(fontFileStream.get()));
 }
 
 SkScalerContext* DWriteFontTypeface::onCreateScalerContext(const SkScalerContextEffects& effects,
@@ -410,16 +464,24 @@ void DWriteFontTypeface::onFilterRec(SkScalerContextRec* rec) const {
         rec->fFlags |= SkScalerContext::kGenA8FromLCD_Flag;
     }
 
+<<<<<<< HEAD
     unsigned flagsWeDontSupport = SkScalerContext::kVertical_Flag |
                                   SkScalerContext::kForceAutohinting_Flag |
+||||||| merged common ancestors
+    unsigned flagsWeDontSupport = SkScalerContext::kVertical_Flag |
+                                  SkScalerContext::kDevKernText_Flag |
+                                  SkScalerContext::kForceAutohinting_Flag |
+=======
+    unsigned flagsWeDontSupport = SkScalerContext::kForceAutohinting_Flag |
+>>>>>>> upstream-releases
                                   SkScalerContext::kEmbolden_Flag |
                                   SkScalerContext::kLCD_Vertical_Flag;
     rec->fFlags &= ~flagsWeDontSupport;
 
-    SkPaint::Hinting h = rec->getHinting();
+    SkFontHinting h = rec->getHinting();
     // DirectWrite2 allows for hinting to be turned off. Force everything else to normal.
-    if (h != SkPaint::kNo_Hinting || !fFactory2 || !fDWriteFontFace2) {
-        h = SkPaint::kNormal_Hinting;
+    if (h != kNo_SkFontHinting || !fFactory2 || !fDWriteFontFace2) {
+        h = kNormal_SkFontHinting;
     }
     rec->setHinting(h);
 
@@ -438,11 +500,8 @@ void DWriteFontTypeface::onFilterRec(SkScalerContextRec* rec) const {
 #elif defined(MOZ_SKIA)
     rec->setContrast(fContrast);
 
-    // GDI gamma should be 2.3
-    // See the LUT gamma values comment for GDI fonts.
-    float gamma = ForceGDI() ? 2.3f : fGamma;
-    rec->setDeviceGamma(gamma);
-    rec->setPaintGamma(gamma);
+    rec->setDeviceGamma(fGamma);
+    rec->setPaintGamma(fGamma);
 #endif
 }
 

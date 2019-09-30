@@ -4,12 +4,13 @@
 "use strict";
 
 const TEST_FILE = "test-network-request.html";
-const TEST_PATH = "https://example.com/browser/devtools/client/webconsole/" +
-                  "test/mochitest/";
+const TEST_PATH =
+  "https://example.com/browser/devtools/client/webconsole/" + "test/mochitest/";
 const TEST_URI = TEST_PATH + TEST_FILE;
 
 requestLongerTimeout(2);
 
+<<<<<<< HEAD
 pushPref("devtools.webconsole.filter.net", false);
 pushPref("devtools.webconsole.filter.netxhr", true);
 
@@ -42,6 +43,85 @@ const tabs = [{
   testEmpty: testEmptySecurity,
   testContent: testSecurity,
 }];
+||||||| merged common ancestors
+Services.prefs.setBoolPref(NET_PREF, false);
+Services.prefs.setBoolPref(XHR_PREF, true);
+registerCleanupFunction(() => {
+  Services.prefs.clearUserPref(NET_PREF);
+  Services.prefs.clearUserPref(XHR_PREF);
+});
+
+const tabs = [{
+  id: "headers",
+  testEmpty: testEmptyHeaders,
+  testContent: testHeaders,
+}, {
+  id: "cookies",
+  testEmpty: testEmptyCookies,
+  testContent: testCookies,
+}, {
+  id: "params",
+  testEmpty: testEmptyParams,
+  testContent: testParams,
+}, {
+  id: "response",
+  testEmpty: testEmptyResponse,
+  testContent: testResponse,
+}, {
+  id: "timings",
+  testEmpty: testEmptyTimings,
+  testContent: testTimings,
+}, {
+  id: "stack-trace",
+  testEmpty: testEmptyStackTrace,
+  testContent: testStackTrace,
+}, {
+  id: "security",
+  testEmpty: testEmptySecurity,
+  testContent: testSecurity,
+}];
+=======
+pushPref("devtools.webconsole.filter.net", false);
+pushPref("devtools.webconsole.filter.netxhr", true);
+
+const tabs = [
+  {
+    id: "headers",
+    testEmpty: testEmptyHeaders,
+    testContent: testHeaders,
+  },
+  {
+    id: "cookies",
+    testEmpty: testEmptyCookies,
+    testContent: testCookies,
+  },
+  {
+    id: "params",
+    testEmpty: testEmptyParams,
+    testContent: testParams,
+  },
+  {
+    id: "response",
+    testEmpty: testEmptyResponse,
+    testContent: testResponse,
+  },
+  {
+    id: "timings",
+    testEmpty: testEmptyTimings,
+    testContent: testTimings,
+  },
+  {
+    id: "stack-trace",
+    testEmpty: testEmptyStackTrace,
+    testContent: testStackTrace,
+  },
+  {
+    id: "security",
+    testEmpty: testEmptySecurity,
+    testContent: testSecurity,
+  },
+];
+>>>>>>> upstream-releases
 
 /**
  * Main test for checking HTTP logs in the Console panel.
@@ -82,10 +162,25 @@ async function openRequestAfterUpdates(target, hud) {
     content.wrappedJSObject.testXhrPostSlowResponse();
   });
 
+<<<<<<< HEAD
   const { node: messageNode } = await onMessage;
   ok(messageNode, "Network message found.");
 
   await onRequestUpdates;
+||||||| merged common ancestors
+  const { node: messageNode } = await message;
+
+  info("Network message found.");
+
+  await waitForRequestUpdates(toolbox);
+
+  const payload = waitForPayloadReady(toolbox);
+=======
+  const { node: messageNode } = await onMessage;
+  ok(messageNode, "Network message found.");
+
+  await onRequestUpdates;
+>>>>>>> upstream-releases
 
   // Expand network log
   await expandXhrMessage(messageNode);
@@ -115,7 +210,7 @@ async function openRequestBeforeUpdates(target, hud, tab) {
   ok(messageNode, "Network message found.");
 
   // Set the default panel.
-  const state = hud.ui.consoleOutput.getStore().getState();
+  const state = hud.ui.wrapper.getStore().getState();
   state.ui.networkMessageActiveTabId = tab.id;
 
   // Expand network log
@@ -127,8 +222,11 @@ async function openRequestBeforeUpdates(target, hud, tab) {
   if (tab.id != "security") {
     // Make sure the current tab is the expected one.
     const currentTab = messageNode.querySelector(`#${tab.id}-tab`);
-    is(currentTab.getAttribute("aria-selected"), "true",
-      "The correct tab is selected");
+    is(
+      currentTab.getAttribute("aria-selected"),
+      "true",
+      "The correct tab is selected"
+    );
 
     // The tab should be empty now.
     tab.testEmpty(messageNode);
@@ -179,7 +277,17 @@ async function testHeaders(messageNode) {
 
   // Select Headers tab and check the content.
   headersTab.click();
+<<<<<<< HEAD
   await waitFor(() => messageNode.querySelector("#headers-panel .headers-overview"));
+||||||| merged common ancestors
+  await waitUntil(() => {
+    return !!messageNode.querySelector("#headers-panel .headers-overview");
+  });
+=======
+  await waitFor(() =>
+    messageNode.querySelector("#headers-panel .headers-overview")
+  );
+>>>>>>> upstream-releases
 }
 
 // Cookies
@@ -195,7 +303,17 @@ async function testCookies(messageNode) {
 
   // Select tab and check the content.
   cookiesTab.click();
+<<<<<<< HEAD
   await waitFor(() => messageNode.querySelector("#cookies-panel .treeValueCell"));
+||||||| merged common ancestors
+  await waitUntil(() => {
+    return !!messageNode.querySelector("#cookies-panel .treeValueCell");
+  });
+=======
+  await waitFor(() =>
+    messageNode.querySelector("#cookies-panel .treeValueCell")
+  );
+>>>>>>> upstream-releases
 }
 
 // Params
@@ -215,9 +333,13 @@ async function testParams(messageNode) {
   const paramsPanel = messageNode.querySelector("#params-panel");
   await waitForSourceEditor(paramsPanel);
   const paramsContent = messageNode.querySelector(
-    "#params-panel .panel-container .CodeMirror");
+    "#params-panel .panel-container .CodeMirror"
+  );
   ok(paramsContent, "Params content is available");
-  ok(paramsContent.textContent.includes("Hello world!"), "Post body is correct");
+  ok(
+    paramsContent.textContent.includes("Hello world!"),
+    "Post body is correct"
+  );
 }
 
 // Response
@@ -237,7 +359,8 @@ async function testResponse(messageNode) {
   const responsePanel = messageNode.querySelector("#response-panel");
   await waitForSourceEditor(responsePanel);
   const responseContent = messageNode.querySelector(
-    "#response-panel .editor-row-container .CodeMirror");
+    "#response-panel .editor-row-container .CodeMirror"
+  );
   ok(responseContent, "Response content is available");
   ok(responseContent.textContent, "Response text is available");
 }
@@ -255,10 +378,24 @@ async function testTimings(messageNode) {
 
   // Select Timings tab and check the content.
   timingsTab.click();
+<<<<<<< HEAD
   await waitFor(() =>
     messageNode.querySelector("#timings-panel .timings-container .timings-label"));
+||||||| merged common ancestors
+  await waitUntil(() => {
+    return !!messageNode.querySelector(
+      "#timings-panel .timings-container .timings-label");
+  });
+=======
+  await waitFor(() =>
+    messageNode.querySelector(
+      "#timings-panel .timings-container .timings-label"
+    )
+  );
+>>>>>>> upstream-releases
   const timingsContent = messageNode.querySelector(
-    "#timings-panel .timings-container .timings-label");
+    "#timings-panel .timings-container .timings-label"
+  );
   ok(timingsContent, "Timings content is available");
   ok(timingsContent.textContent, "Timings text is available");
 }
@@ -276,7 +413,17 @@ async function testStackTrace(messageNode) {
 
   // Select Timings tab and check the content.
   stackTraceTab.click();
+<<<<<<< HEAD
   await waitFor(() => messageNode.querySelector("#stack-trace-panel .frame-link"));
+||||||| merged common ancestors
+  await waitUntil(() => {
+    return !!messageNode.querySelector("#stack-trace-panel .frame-link");
+  });
+=======
+  await waitFor(() =>
+    messageNode.querySelector("#stack-trace-panel .frame-link")
+  );
+>>>>>>> upstream-releases
 }
 
 // Security
@@ -292,7 +439,17 @@ async function testSecurity(messageNode) {
 
   // Select Timings tab and check the content.
   securityTab.click();
+<<<<<<< HEAD
   await waitFor(() => messageNode.querySelector("#security-panel .treeTable .treeRow"));
+||||||| merged common ancestors
+  await waitUntil(() => {
+    return !!messageNode.querySelector("#security-panel .treeTable .treeRow");
+  });
+=======
+  await waitFor(() =>
+    messageNode.querySelector("#security-panel .treeTable .treeRow")
+  );
+>>>>>>> upstream-releases
 }
 
 // Waiting helpers
@@ -307,6 +464,7 @@ async function waitForSourceEditor(panel) {
   });
 }
 
+<<<<<<< HEAD
 async function waitForRequestUpdates(hud) {
   return hud.ui.once("network-message-updated");
 }
@@ -315,6 +473,27 @@ function expandXhrMessage(node) {
   info("Click on XHR message and wait for the network detail panel to be displayed");
   node.querySelector(".url").click();
   return waitFor(() => node.querySelector(".network-info"));
+||||||| merged common ancestors
+async function waitForRequestUpdates(toolbox) {
+  const {ui} = toolbox.getCurrentPanel().hud;
+  return new Promise(resolve => {
+    ui.jsterm.hud.on("network-message-updated", () => {
+      info("network-message-updated received");
+      resolve();
+    });
+  });
+=======
+async function waitForRequestUpdates(hud) {
+  return hud.ui.once("network-message-updated");
+}
+
+function expandXhrMessage(node) {
+  info(
+    "Click on XHR message and wait for the network detail panel to be displayed"
+  );
+  node.querySelector(".url").click();
+  return waitFor(() => node.querySelector(".network-info"));
+>>>>>>> upstream-releases
 }
 
 /**
@@ -322,8 +501,8 @@ function expandXhrMessage(node) {
  * Otherwise test will be shutdown too early and cause failure.
  */
 async function waitForLazyRequests(toolbox) {
-  const {ui} = toolbox.getCurrentPanel().hud;
-  const proxy = ui.jsterm.hud.proxy;
+  const { ui } = toolbox.getCurrentPanel().hud;
+  const proxy = ui.proxy;
   return waitUntil(() => {
     return !proxy.networkDataProvider.lazyRequestData.size;
   });

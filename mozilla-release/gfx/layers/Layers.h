@@ -8,11 +8,26 @@
 #define GFX_LAYERS_H
 
 #include <map>
+<<<<<<< HEAD
 #include <stdint.h>        // for uint32_t, uint64_t, uint8_t
 #include <stdio.h>         // for FILE
 #include <sys/types.h>     // for int32_t
 #include "FrameMetrics.h"  // for FrameMetrics
 #include "Units.h"         // for LayerMargin, LayerPoint, ParentLayerIntRect
+||||||| merged common ancestors
+#include <stdint.h>                     // for uint32_t, uint64_t, uint8_t
+#include <stdio.h>                      // for FILE
+#include <sys/types.h>                  // for int32_t
+#include "FrameMetrics.h"               // for FrameMetrics
+#include "Units.h"                      // for LayerMargin, LayerPoint, ParentLayerIntRect
+=======
+#include <unordered_set>
+#include <stdint.h>        // for uint32_t, uint64_t, uint8_t
+#include <stdio.h>         // for FILE
+#include <sys/types.h>     // for int32_t
+#include "FrameMetrics.h"  // for FrameMetrics
+#include "Units.h"         // for LayerMargin, LayerPoint, ParentLayerIntRect
+>>>>>>> upstream-releases
 #include "gfxContext.h"
 #include "gfxTypes.h"
 #include "gfxPoint.h"  // for gfxPoint
@@ -112,9 +127,19 @@ namespace layerscope {
 class LayersPacket;
 }  // namespace layerscope
 
+<<<<<<< HEAD
 #define MOZ_LAYER_DECL_NAME(n, e)                          \
   virtual const char* Name() const override { return n; }  \
   virtual LayerType GetType() const override { return e; } \
+||||||| merged common ancestors
+#define MOZ_LAYER_DECL_NAME(n, e)                              \
+  virtual const char* Name() const override { return n; }  \
+  virtual LayerType GetType() const override { return e; } \
+=======
+#define MOZ_LAYER_DECL_NAME(n, e)                  \
+  const char* Name() const override { return n; }  \
+  LayerType GetType() const override { return e; } \
+>>>>>>> upstream-releases
   static LayerType Type() { return e; }
 
 // Defined in LayerUserData.h; please include that file instead.
@@ -239,11 +264,27 @@ class LayerManager : public FrameRecorder {
 
  public:
   LayerManager()
+<<<<<<< HEAD
       : mDestroyed(false),
         mSnapEffectiveTransforms(true),
         mId(0),
         mInTransaction(false),
         mPaintedPixelCount(0) {}
+||||||| merged common ancestors
+    : mDestroyed(false)
+    , mSnapEffectiveTransforms(true)
+    , mId(0)
+    , mInTransaction(false)
+    , mPaintedPixelCount(0)
+  {}
+=======
+      : mDestroyed(false),
+        mSnapEffectiveTransforms(true),
+        mId(0),
+        mInTransaction(false),
+        mContainsSVG(false),
+        mPaintedPixelCount(0) {}
+>>>>>>> upstream-releases
 
   /**
    * Release layers and resources held by this layer manager, and mark
@@ -610,6 +651,7 @@ class LayerManager : public FrameRecorder {
    * Flag the next paint as the first for a document.
    */
   virtual void SetIsFirstPaint() {}
+  virtual bool GetIsFirstPaint() const { return false; }
 
   /**
    * Set the current focus target to be sent with the next paint.
@@ -731,7 +773,27 @@ class LayerManager : public FrameRecorder {
 
   virtual CompositorBridgeChild* GetCompositorBridgeChild() { return nullptr; }
 
+<<<<<<< HEAD
  protected:
+||||||| merged common ancestors
+protected:
+=======
+  void RegisterPayload(const CompositionPayload& aPayload) {
+    mPayload.AppendElement(aPayload);
+    MOZ_ASSERT(mPayload.Length() < 10000);
+  }
+
+  void RegisterPayloads(const nsTArray<CompositionPayload>& aPayload) {
+    mPayload.AppendElements(aPayload);
+    MOZ_ASSERT(mPayload.Length() < 10000);
+  }
+
+  virtual void PayloadPresented();
+
+  void SetContainsSVG(bool aContainsSVG) { mContainsSVG = aContainsSVG; }
+
+ protected:
+>>>>>>> upstream-releases
   RefPtr<Layer> mRoot;
   gfx::UserData mUserData;
   bool mDestroyed;
@@ -740,7 +802,7 @@ class LayerManager : public FrameRecorder {
   nsIntRegion mRegionToClear;
 
   // Protected destructor, to discourage deletion outside of Release():
-  virtual ~LayerManager() {}
+  virtual ~LayerManager() = default;
 
   // Print interesting information about this into aStreamo.  Internally
   // used to implement Dump*() and Log*().
@@ -752,18 +814,38 @@ class LayerManager : public FrameRecorder {
 
   uint64_t mId;
   bool mInTransaction;
+
+  // Used for tracking CONTENT_FRAME_TIME_WITH_SVG
+  bool mContainsSVG;
   // The time when painting most recently finished. This is recorded so that
   // we can time any play-pending animations from this point.
   TimeStamp mAnimationReadyTime;
   // The count of pixels that were painted in the current transaction.
   uint32_t mPaintedPixelCount;
+<<<<<<< HEAD
 
  public:
+||||||| merged common ancestors
+
+public:
+=======
+  // The payload associated with currently pending painting work, for
+  // client layer managers that typically means payload that is part of the
+  // 'upcoming transaction', for HostLayerManagers this typically means
+  // what has been included in received transactions to be presented on the
+  // next composite.
+  // IMPORTANT: Clients should take care to clear this or risk it slowly
+  // growing out of control.
+  nsTArray<CompositionPayload> mPayload;
+
+ public:
+>>>>>>> upstream-releases
   /*
    * Methods to store/get/clear a "pending scroll info update" object on a
    * per-scrollid basis. This is used for empty transactions that push over
    * scroll position updates to the APZ code.
    */
+<<<<<<< HEAD
   virtual bool SetPendingScrollUpdateForNextTransaction(
       ScrollableLayerGuid::ViewID aScrollId,
       const ScrollUpdateInfo& aUpdateInfo);
@@ -773,6 +855,25 @@ class LayerManager : public FrameRecorder {
 
  protected:
   ScrollUpdatesMap mPendingScrollUpdates;
+||||||| merged common ancestors
+  virtual bool SetPendingScrollUpdateForNextTransaction(FrameMetrics::ViewID aScrollId,
+                                                        const ScrollUpdateInfo& aUpdateInfo);
+  Maybe<ScrollUpdateInfo> GetPendingScrollInfoUpdate(FrameMetrics::ViewID aScrollId);
+  void ClearPendingScrollInfoUpdate();
+protected:
+  ScrollUpdatesMap mPendingScrollUpdates;
+=======
+  virtual bool SetPendingScrollUpdateForNextTransaction(
+      ScrollableLayerGuid::ViewID aScrollId,
+      const ScrollUpdateInfo& aUpdateInfo, wr::RenderRoot aRenderRoot);
+  Maybe<ScrollUpdateInfo> GetPendingScrollInfoUpdate(
+      ScrollableLayerGuid::ViewID aScrollId);
+  std::unordered_set<ScrollableLayerGuid::ViewID>
+  ClearPendingScrollInfoUpdate();
+
+ protected:
+  wr::RenderRootArray<ScrollUpdatesMap> mPendingScrollUpdates;
+>>>>>>> upstream-releases
 };
 
 /**
@@ -782,7 +883,7 @@ class LayerManager : public FrameRecorder {
 class Layer {
   NS_INLINE_DECL_REFCOUNTING(Layer)
 
-  typedef InfallibleTArray<Animation> AnimationArray;
+  typedef nsTArray<Animation> AnimationArray;
 
  public:
   // Keep these in alphabetical order
@@ -1185,8 +1286,23 @@ class Layer {
    */
   void SetIsFixedPosition(bool aFixedPosition) {
     if (mSimpleAttrs.SetIsFixedPosition(aFixedPosition)) {
+<<<<<<< HEAD
       MOZ_LAYERS_LOG_IF_SHADOWABLE(
           this, ("Layer::Mutated(%p) IsFixedPosition", this));
+||||||| merged common ancestors
+      MOZ_LAYERS_LOG_IF_SHADOWABLE(this, ("Layer::Mutated(%p) IsFixedPosition", this));
+=======
+      MOZ_LAYERS_LOG_IF_SHADOWABLE(
+          this, ("Layer::Mutated(%p) IsFixedPosition", this));
+      MutatedSimple();
+    }
+  }
+
+  void SetIsAsyncZoomContainer(const Maybe<FrameMetrics::ViewID>& aViewId) {
+    if (mSimpleAttrs.SetIsAsyncZoomContainer(aViewId)) {
+      MOZ_LAYERS_LOG_IF_SHADOWABLE(
+          this, ("Layer::Mutated(%p) IsAsyncZoomContainer", this));
+>>>>>>> upstream-releases
       MutatedSimple();
     }
   }
@@ -1334,9 +1450,20 @@ class Layer {
   virtual float GetPostXScale() const { return mSimpleAttrs.GetPostXScale(); }
   virtual float GetPostYScale() const { return mSimpleAttrs.GetPostYScale(); }
   bool GetIsFixedPosition() { return mSimpleAttrs.IsFixedPosition(); }
+<<<<<<< HEAD
   bool GetTransformIsPerspective() const {
     return mSimpleAttrs.GetTransformIsPerspective();
   }
+||||||| merged common ancestors
+  bool GetTransformIsPerspective() const { return mSimpleAttrs.GetTransformIsPerspective(); }
+=======
+  Maybe<FrameMetrics::ViewID> IsAsyncZoomContainer() {
+    return mSimpleAttrs.IsAsyncZoomContainer();
+  }
+  bool GetTransformIsPerspective() const {
+    return mSimpleAttrs.GetTransformIsPerspective();
+  }
+>>>>>>> upstream-releases
   bool GetIsStickyPosition() { return mSimpleAttrs.IsStickyPosition(); }
   ScrollableLayerGuid::ViewID GetFixedPositionScrollContainerId() {
     return mSimpleAttrs.GetFixedPositionScrollContainerId();
@@ -1408,11 +1535,24 @@ class Layer {
 
   // Note that all lengths in animation data are either in CSS pixels or app
   // units and must be converted to device pixels by the compositor.
+  // Besides, this should only be called on the compositor thread.
   AnimationArray& GetAnimations() { return mAnimationInfo.GetAnimations(); }
+<<<<<<< HEAD
   uint64_t GetCompositorAnimationsId() {
     return mAnimationInfo.GetCompositorAnimationsId();
   }
   InfallibleTArray<AnimData>& GetAnimationData();
+||||||| merged common ancestors
+  uint64_t GetCompositorAnimationsId() { return mAnimationInfo.GetCompositorAnimationsId(); }
+  InfallibleTArray<AnimData>& GetAnimationData();
+=======
+  uint64_t GetCompositorAnimationsId() {
+    return mAnimationInfo.GetCompositorAnimationsId();
+  }
+  nsTArray<PropertyAnimationGroup>& GetPropertyAnimationGroups() {
+    return mAnimationInfo.GetPropertyAnimationGroups();
+  }
+>>>>>>> upstream-releases
 
   Maybe<uint64_t> GetAnimationGeneration() const {
     return mAnimationInfo.GetAnimationGeneration();
@@ -1420,10 +1560,19 @@ class Layer {
 
   bool HasTransformAnimation() const;
 
+<<<<<<< HEAD
   RawServoAnimationValue* GetBaseAnimationStyle() const {
     return mAnimationInfo.GetBaseAnimationStyle();
   }
 
+||||||| merged common ancestors
+  RawServoAnimationValue* GetBaseAnimationStyle() const
+  {
+    return mAnimationInfo.GetBaseAnimationStyle();
+  }
+
+=======
+>>>>>>> upstream-releases
   /**
    * Returns the local transform for this layer: either mTransform or,
    * for shadow layers, GetShadowBaseTransform(), in either case with the
@@ -1448,8 +1597,11 @@ class Layer {
    *
    * Apply pending changes to layers before drawing them, if those
    * pending changes haven't been overridden by later changes.
+   *
+   * Returns a list of scroll ids which had pending updates.
    */
-  void ApplyPendingUpdatesToSubtree();
+  std::unordered_set<ScrollableLayerGuid::ViewID>
+  ApplyPendingUpdatesToSubtree();
 
   /**
    * DRAWING PHASE ONLY
@@ -2024,12 +2176,20 @@ class PaintedLayer : public Layer {
     mInvalidRegion.SetEmpty();
   }
 
-  virtual PaintedLayer* AsPaintedLayer() override { return this; }
+  PaintedLayer* AsPaintedLayer() override { return this; }
 
   MOZ_LAYER_DECL_NAME("PaintedLayer", TYPE_PAINTED)
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
+  {
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override {
+>>>>>>> upstream-releases
     gfx::Matrix4x4 idealTransform = GetLocalTransform() * aTransformToSurface;
     gfx::Matrix residual;
     mEffectiveTransform = SnapTransformTranslation(
@@ -2093,11 +2253,24 @@ class PaintedLayer : public Layer {
         mUsedForReadback(false),
         mAllowResidualTranslation(false) {}
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void DumpPacket(layerscope::LayersPacket* aPacket,
                           const void* aParent) override;
+||||||| merged common ancestors
+  virtual void DumpPacket(layerscope::LayersPacket* aPacket, const void* aParent) override;
+=======
+  void DumpPacket(layerscope::LayersPacket* aPacket,
+                  const void* aParent) override;
+>>>>>>> upstream-releases
 
   /**
    * ComputeEffectiveTransforms snaps the ideal transform to get
@@ -2156,8 +2329,17 @@ class PaintedLayer : public Layer {
  * children.
  */
 class ContainerLayer : public Layer {
+<<<<<<< HEAD
  public:
   ~ContainerLayer();
+||||||| merged common ancestors
+public:
+
+  ~ContainerLayer();
+=======
+ public:
+  virtual ~ContainerLayer();
+>>>>>>> upstream-releases
 
   /**
    * CONSTRUCTION PHASE ONLY
@@ -2205,20 +2387,37 @@ class ContainerLayer : public Layer {
     Mutated();
   }
 
+<<<<<<< HEAD
   void SetScaleToResolution(bool aScaleToResolution, float aResolution) {
     if (mScaleToResolution == aScaleToResolution &&
         mPresShellResolution == aResolution) {
+||||||| merged common ancestors
+  void SetScaleToResolution(bool aScaleToResolution, float aResolution)
+  {
+    if (mScaleToResolution == aScaleToResolution && mPresShellResolution == aResolution) {
+=======
+  void SetScaleToResolution(float aResolution) {
+    if (mPresShellResolution == aResolution) {
+>>>>>>> upstream-releases
       return;
     }
 
+<<<<<<< HEAD
     MOZ_LAYERS_LOG_IF_SHADOWABLE(
         this, ("Layer::Mutated(%p) ScaleToResolution", this));
     mScaleToResolution = aScaleToResolution;
+||||||| merged common ancestors
+    MOZ_LAYERS_LOG_IF_SHADOWABLE(this, ("Layer::Mutated(%p) ScaleToResolution", this));
+    mScaleToResolution = aScaleToResolution;
+=======
+    MOZ_LAYERS_LOG_IF_SHADOWABLE(
+        this, ("Layer::Mutated(%p) ScaleToResolution", this));
+>>>>>>> upstream-releases
     mPresShellResolution = aResolution;
     Mutated();
   }
 
-  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
+  void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
 
   enum class SortMode {
     WITH_GEOMETRY,
@@ -2227,20 +2426,27 @@ class ContainerLayer : public Layer {
 
   nsTArray<LayerPolygon> SortChildrenBy3DZOrder(SortMode aSortMode);
 
+<<<<<<< HEAD
   virtual ContainerLayer* AsContainerLayer() override { return this; }
   virtual const ContainerLayer* AsContainerLayer() const override {
     return this;
   }
+||||||| merged common ancestors
+  virtual ContainerLayer* AsContainerLayer() override { return this; }
+  virtual const ContainerLayer* AsContainerLayer() const override { return this; }
+=======
+  ContainerLayer* AsContainerLayer() override { return this; }
+  const ContainerLayer* AsContainerLayer() const override { return this; }
+>>>>>>> upstream-releases
 
   // These getters can be used anytime.
-  virtual Layer* GetFirstChild() const override { return mFirstChild; }
-  virtual Layer* GetLastChild() const override { return mLastChild; }
+  Layer* GetFirstChild() const override { return mFirstChild; }
+  Layer* GetLastChild() const override { return mLastChild; }
   float GetPreXScale() const { return mPreXScale; }
   float GetPreYScale() const { return mPreYScale; }
   float GetInheritedXScale() const { return mInheritedXScale; }
   float GetInheritedYScale() const { return mInheritedYScale; }
   float GetPresShellResolution() const { return mPresShellResolution; }
-  bool ScaleToResolution() const { return mScaleToResolution; }
 
   MOZ_LAYER_DECL_NAME("ContainerLayer", TYPE_CONTAINER)
 
@@ -2250,8 +2456,15 @@ class ContainerLayer : public Layer {
    * container is backend-specific. ComputeEffectiveTransforms must also set
    * mUseIntermediateSurface.
    */
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override = 0;
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override = 0;
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override = 0;
+>>>>>>> upstream-releases
 
   /**
    * Call this only after ComputeEffectiveTransforms has been invoked
@@ -2380,8 +2593,6 @@ class ContainerLayer : public Layer {
   // For layers corresponding to an nsDisplayResolution, the resolution of the
   // associated pres shell; for other layers, 1.0.
   float mPresShellResolution;
-  // Whether the compositor should scale to mPresShellResolution.
-  bool mScaleToResolution;
   bool mUseIntermediateSurface;
   bool mSupportsComponentAlphaChildren;
   bool mMayHaveReadbackChild;
@@ -2396,8 +2607,16 @@ class ContainerLayer : public Layer {
  * restrict the area filled, set a clip region on this layer.
  */
 class ColorLayer : public Layer {
+<<<<<<< HEAD
  public:
   virtual ColorLayer* AsColorLayer() override { return this; }
+||||||| merged common ancestors
+public:
+  virtual ColorLayer* AsColorLayer() override { return this; }
+=======
+ public:
+  ColorLayer* AsColorLayer() override { return this; }
+>>>>>>> upstream-releases
 
   /**
    * CONSTRUCTION PHASE ONLY
@@ -2425,8 +2644,16 @@ class ColorLayer : public Layer {
 
   MOZ_LAYER_DECL_NAME("ColorLayer", TYPE_COLOR)
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
+  {
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override {
+>>>>>>> upstream-releases
     gfx::Matrix4x4 idealTransform = GetLocalTransform() * aTransformToSurface;
     mEffectiveTransform = SnapTransformTranslation(idealTransform, nullptr);
     ComputeEffectiveTransformForMaskLayers(aTransformToSurface);
@@ -2436,11 +2663,24 @@ class ColorLayer : public Layer {
   ColorLayer(LayerManager* aManager, void* aImplData)
       : Layer(aManager, aImplData), mColor() {}
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void DumpPacket(layerscope::LayersPacket* aPacket,
                           const void* aParent) override;
+||||||| merged common ancestors
+  virtual void DumpPacket(layerscope::LayersPacket* aPacket, const void* aParent) override;
+=======
+  void DumpPacket(layerscope::LayersPacket* aPacket,
+                  const void* aParent) override;
+>>>>>>> upstream-releases
 
   gfx::IntRect mBounds;
   gfx::Color mColor;
@@ -2460,7 +2700,7 @@ class CanvasLayer : public Layer {
  public:
   void SetBounds(gfx::IntRect aBounds) { mBounds = aBounds; }
 
-  virtual CanvasLayer* AsCanvasLayer() override { return this; }
+  CanvasLayer* AsCanvasLayer() override { return this; }
 
   /**
    * Notify this CanvasLayer that the canvas surface contents have
@@ -2510,8 +2750,16 @@ class CanvasLayer : public Layer {
 
   MOZ_LAYER_DECL_NAME("CanvasLayer", TYPE_CANVAS)
 
+<<<<<<< HEAD
   virtual void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override {
+||||||| merged common ancestors
+  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override
+  {
+=======
+  void ComputeEffectiveTransforms(
+      const gfx::Matrix4x4& aTransformToSurface) override {
+>>>>>>> upstream-releases
     // Snap our local transform first, and snap the inherited transform as well.
     // This makes our snapping equivalent to what would happen if our content
     // was drawn into a PaintedLayer (gfxContext would snap using the local
@@ -2528,11 +2776,24 @@ class CanvasLayer : public Layer {
   CanvasLayer(LayerManager* aManager, void* aImplData);
   virtual ~CanvasLayer();
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void DumpPacket(layerscope::LayersPacket* aPacket,
                           const void* aParent) override;
+||||||| merged common ancestors
+  virtual void DumpPacket(layerscope::LayersPacket* aPacket, const void* aParent) override;
+=======
+  void DumpPacket(layerscope::LayersPacket* aPacket,
+                  const void* aParent) override;
+>>>>>>> upstream-releases
 
   virtual CanvasRenderer* CreateCanvasRendererInternal() = 0;
 
@@ -2565,21 +2826,53 @@ class CanvasLayer : public Layer {
 class RefLayer : public ContainerLayer {
   friend class LayerManager;
 
+<<<<<<< HEAD
  private:
   virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override {
     MOZ_CRASH("GFX: RefLayer");
     return false;
   }
+||||||| merged common ancestors
+private:
+  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override
+  { MOZ_CRASH("GFX: RefLayer"); return false; }
+=======
+ private:
+  bool InsertAfter(Layer* aChild, Layer* aAfter) override {
+    MOZ_CRASH("GFX: RefLayer");
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool RemoveChild(Layer* aChild) override {
     MOZ_CRASH("GFX: RefLayer");
     return false;
   }
+||||||| merged common ancestors
+  virtual bool RemoveChild(Layer* aChild) override
+  { MOZ_CRASH("GFX: RefLayer"); return false; }
+=======
+  bool RemoveChild(Layer* aChild) override {
+    MOZ_CRASH("GFX: RefLayer");
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override {
     MOZ_CRASH("GFX: RefLayer");
     return false;
   }
+||||||| merged common ancestors
+  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override
+  { MOZ_CRASH("GFX: RefLayer"); return false; }
+=======
+  bool RepositionChild(Layer* aChild, Layer* aAfter) override {
+    MOZ_CRASH("GFX: RefLayer");
+    return false;
+  }
+>>>>>>> upstream-releases
 
  public:
   /**
@@ -2647,14 +2940,14 @@ class RefLayer : public ContainerLayer {
   }
 
   // These getters can be used anytime.
-  virtual RefLayer* AsRefLayer() override { return this; }
+  RefLayer* AsRefLayer() override { return this; }
 
   virtual LayersId GetReferentId() { return mId; }
 
   /**
    * DRAWING PHASE ONLY
    */
-  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
+  void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override;
 
   MOZ_LAYER_DECL_NAME("RefLayer", TYPE_REF)
 
@@ -2664,11 +2957,24 @@ class RefLayer : public ContainerLayer {
         mId{0},
         mEventRegionsOverride(EventRegionsOverride::NoOverride) {}
 
+<<<<<<< HEAD
   virtual void PrintInfo(std::stringstream& aStream,
                          const char* aPrefix) override;
+||||||| merged common ancestors
+  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+=======
+  void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void DumpPacket(layerscope::LayersPacket* aPacket,
                           const void* aParent) override;
+||||||| merged common ancestors
+  virtual void DumpPacket(layerscope::LayersPacket* aPacket, const void* aParent) override;
+=======
+  void DumpPacket(layerscope::LayersPacket* aPacket,
+                  const void* aParent) override;
+>>>>>>> upstream-releases
 
   // 0 is a special value that means "no ID".
   LayersId mId;
@@ -2685,7 +2991,16 @@ void WriteSnapshotToDumpFile(Compositor* aCompositor, gfx::DrawTarget* aTarget);
 #endif
 
 // A utility function used by different LayerManager implementations.
+<<<<<<< HEAD
 gfx::IntRect ToOutsideIntRect(const gfxRect& aRect);
+||||||| merged common ancestors
+gfx::IntRect ToOutsideIntRect(const gfxRect &aRect);
+=======
+gfx::IntRect ToOutsideIntRect(const gfxRect& aRect);
+
+void RecordCompositionPayloadsPresented(
+    const nsTArray<CompositionPayload>& aPayloads);
+>>>>>>> upstream-releases
 
 }  // namespace layers
 }  // namespace mozilla

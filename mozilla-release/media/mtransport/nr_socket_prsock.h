@@ -69,6 +69,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mozilla/TimeStamp.h"
 #include "mozilla/ClearOnShutdown.h"
 
+// nICEr includes
+extern "C" {
+#include "transport_addr.h"
+#include "async_wait.h"
+}
+
 // Stub declaration for nICEr type
 typedef struct nr_socket_vtbl_ nr_socket_vtbl;
 typedef struct nr_socket_ nr_socket;
@@ -88,6 +94,10 @@ namespace net {
 union NetAddr;
 }
 
+namespace dom {
+class UDPSocketChild;
+}  // namespace dom
+
 class NrSocketBase {
  public:
   NrSocketBase() : connect_invoked_(false), poll_flags_(0) {
@@ -99,27 +109,72 @@ class NrSocketBase {
 
   // Factory method; will create either an NrSocket, NrUdpSocketIpc, or
   // NrTcpSocketIpc as appropriate.
+<<<<<<< HEAD
   static int CreateSocket(nr_transport_addr *addr, RefPtr<NrSocketBase> *sock,
                           const std::shared_ptr<NrSocketProxyConfig> &config);
   static bool IsForbiddenAddress(nr_transport_addr *addr);
+||||||| merged common ancestors
+  static int CreateSocket(nr_transport_addr *addr, RefPtr<NrSocketBase> *sock);
+=======
+  static int CreateSocket(nr_transport_addr* addr, RefPtr<NrSocketBase>* sock,
+                          const std::shared_ptr<NrSocketProxyConfig>& config);
+  static bool IsForbiddenAddress(nr_transport_addr* addr);
+>>>>>>> upstream-releases
 
   // the nr_socket APIs
+<<<<<<< HEAD
   virtual int create(nr_transport_addr *addr) = 0;
   virtual int sendto(const void *msg, size_t len, int flags,
                      nr_transport_addr *to) = 0;
   virtual int recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
                        nr_transport_addr *from) = 0;
   virtual int getaddr(nr_transport_addr *addrp) = 0;
+||||||| merged common ancestors
+  virtual int create(nr_transport_addr *addr) = 0;
+  virtual int sendto(const void *msg, size_t len,
+                     int flags, nr_transport_addr *to) = 0;
+  virtual int recvfrom(void * buf, size_t maxlen,
+                       size_t *len, int flags,
+                       nr_transport_addr *from) = 0;
+  virtual int getaddr(nr_transport_addr *addrp) = 0;
+=======
+  virtual int create(nr_transport_addr* addr) = 0;
+  virtual int sendto(const void* msg, size_t len, int flags,
+                     nr_transport_addr* to) = 0;
+  virtual int recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
+                       nr_transport_addr* from) = 0;
+  virtual int getaddr(nr_transport_addr* addrp) = 0;
+>>>>>>> upstream-releases
   virtual void close() = 0;
+<<<<<<< HEAD
   virtual int connect(nr_transport_addr *addr) = 0;
   virtual int write(const void *msg, size_t len, size_t *written) = 0;
   virtual int read(void *buf, size_t maxlen, size_t *len) = 0;
+||||||| merged common ancestors
+  virtual int connect(nr_transport_addr *addr) = 0;
+  virtual int write(const void *msg, size_t len, size_t *written) = 0;
+  virtual int read(void* buf, size_t maxlen, size_t *len) = 0;
+=======
+  virtual int connect(nr_transport_addr* addr) = 0;
+  virtual int write(const void* msg, size_t len, size_t* written) = 0;
+  virtual int read(void* buf, size_t maxlen, size_t* len) = 0;
+>>>>>>> upstream-releases
   virtual int listen(int backlog) = 0;
-  virtual int accept(nr_transport_addr *addrp, nr_socket **sockp) = 0;
+  virtual int accept(nr_transport_addr* addrp, nr_socket** sockp) = 0;
 
+<<<<<<< HEAD
   // Implementations of the async_event APIs
   virtual int async_wait(int how, NR_async_cb cb, void *cb_arg, char *function,
                          int line);
+||||||| merged common ancestors
+   // Implementations of the async_event APIs
+  virtual int async_wait(int how, NR_async_cb cb, void *cb_arg,
+                         char *function, int line);
+=======
+  // Implementations of the async_event APIs
+  virtual int async_wait(int how, NR_async_cb cb, void* cb_arg, char* function,
+                         int line);
+>>>>>>> upstream-releases
   virtual int cancel(int how);
 
   // nsISupport reference counted interface
@@ -127,11 +182,19 @@ class NrSocketBase {
 
   uint32_t poll_flags() { return poll_flags_; }
 
-  virtual nr_socket_vtbl *vtbl();  // To access in test classes.
+  virtual nr_socket_vtbl* vtbl();  // To access in test classes.
 
   static TimeStamp short_term_violation_time();
   static TimeStamp long_term_violation_time();
+<<<<<<< HEAD
   const nr_transport_addr &my_addr() const { return my_addr_; }
+||||||| merged common ancestors
+  const nr_transport_addr& my_addr() const {
+    return my_addr_;
+  }
+=======
+  const nr_transport_addr& my_addr() const { return my_addr_; }
+>>>>>>> upstream-releases
 
   void fire_callback(int how);
 
@@ -141,7 +204,7 @@ class NrSocketBase {
 
  private:
   NR_async_cb cbs_[NR_ASYNC_WAIT_WRITE + 1];
-  void *cb_args_[NR_ASYNC_WAIT_WRITE + 1];
+  void* cb_args_[NR_ASYNC_WAIT_WRITE + 1];
   uint32_t poll_flags_;
 };
 
@@ -150,9 +213,9 @@ class NrSocket : public NrSocketBase, public nsASocketHandler {
   NrSocket() : fd_(nullptr) {}
 
   // Implement nsASocket
-  virtual void OnSocketReady(PRFileDesc *fd, int16_t outflags) override;
-  virtual void OnSocketDetached(PRFileDesc *fd) override;
-  virtual void IsLocal(bool *aIsLocal) override;
+  virtual void OnSocketReady(PRFileDesc* fd, int16_t outflags) override;
+  virtual void OnSocketDetached(PRFileDesc* fd) override;
+  virtual void IsLocal(bool* aIsLocal) override;
   virtual uint64_t ByteCountSent() override { return 0; }
   virtual uint64_t ByteCountReceived() override { return 0; }
 
@@ -160,11 +223,20 @@ class NrSocket : public NrSocketBase, public nsASocketHandler {
   NS_DECL_THREADSAFE_ISUPPORTS
 
   // Implementations of the async_event APIs
+<<<<<<< HEAD
   virtual int async_wait(int how, NR_async_cb cb, void *cb_arg, char *function,
                          int line) override;
+||||||| merged common ancestors
+  virtual int async_wait(int how, NR_async_cb cb, void *cb_arg,
+                         char *function, int line) override;
+=======
+  virtual int async_wait(int how, NR_async_cb cb, void* cb_arg, char* function,
+                         int line) override;
+>>>>>>> upstream-releases
   virtual int cancel(int how) override;
 
   // Implementations of the nr_socket APIs
+<<<<<<< HEAD
   virtual int create(nr_transport_addr *addr)
       override;  // (really init, but it's called create)
   virtual int sendto(const void *msg, size_t len, int flags,
@@ -172,12 +244,39 @@ class NrSocket : public NrSocketBase, public nsASocketHandler {
   virtual int recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
                        nr_transport_addr *from) override;
   virtual int getaddr(nr_transport_addr *addrp) override;
+||||||| merged common ancestors
+  virtual int create(nr_transport_addr *addr) override; // (really init, but it's called create)
+  virtual int sendto(const void *msg, size_t len,
+                     int flags, nr_transport_addr *to) override;
+  virtual int recvfrom(void * buf, size_t maxlen,
+                       size_t *len, int flags,
+                       nr_transport_addr *from) override;
+  virtual int getaddr(nr_transport_addr *addrp) override;
+=======
+  virtual int create(nr_transport_addr* addr)
+      override;  // (really init, but it's called create)
+  virtual int sendto(const void* msg, size_t len, int flags,
+                     nr_transport_addr* to) override;
+  virtual int recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
+                       nr_transport_addr* from) override;
+  virtual int getaddr(nr_transport_addr* addrp) override;
+>>>>>>> upstream-releases
   virtual void close() override;
+<<<<<<< HEAD
   virtual int connect(nr_transport_addr *addr) override;
   virtual int write(const void *msg, size_t len, size_t *written) override;
   virtual int read(void *buf, size_t maxlen, size_t *len) override;
+||||||| merged common ancestors
+  virtual int connect(nr_transport_addr *addr) override;
+  virtual int write(const void *msg, size_t len, size_t *written) override;
+  virtual int read(void* buf, size_t maxlen, size_t *len) override;
+=======
+  virtual int connect(nr_transport_addr* addr) override;
+  virtual int write(const void* msg, size_t len, size_t* written) override;
+  virtual int read(void* buf, size_t maxlen, size_t* len) override;
+>>>>>>> upstream-releases
   virtual int listen(int backlog) override;
-  virtual int accept(nr_transport_addr *addrp, nr_socket **sockp) override;
+  virtual int accept(nr_transport_addr* addrp, nr_socket** sockp) override;
 
  protected:
   virtual ~NrSocket() {
@@ -186,13 +285,22 @@ class NrSocket : public NrSocketBase, public nsASocketHandler {
 
   DISALLOW_COPY_ASSIGN(NrSocket);
 
-  PRFileDesc *fd_;
+  PRFileDesc* fd_;
   nsCOMPtr<nsIEventTarget> ststhread_;
 };
 
 struct nr_udp_message {
+<<<<<<< HEAD
   nr_udp_message(const PRNetAddr &from, nsAutoPtr<MediaPacket> &data)
       : from(from), data(data) {}
+||||||| merged common ancestors
+  nr_udp_message(const PRNetAddr &from, nsAutoPtr<MediaPacket> &data)
+      : from(from), data(data) {
+  }
+=======
+  nr_udp_message(const PRNetAddr& from, nsAutoPtr<MediaPacket>& data)
+      : from(from), data(data) {}
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(nr_udp_message);
 
@@ -232,12 +340,22 @@ class NrUdpSocketIpc : public NrSocketIpc {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(NrUdpSocketIpc, override)
 
-  NS_IMETHODIMP CallListenerError(const nsACString &message,
-                                  const nsACString &filename,
+  NS_IMETHODIMP CallListenerError(const nsACString& message,
+                                  const nsACString& filename,
                                   uint32_t line_number);
+<<<<<<< HEAD
   NS_IMETHODIMP CallListenerReceivedData(const nsACString &host, uint16_t port,
                                          const uint8_t *data,
                                          uint32_t data_length);
+||||||| merged common ancestors
+  NS_IMETHODIMP CallListenerReceivedData(const nsACString &host,
+                                         uint16_t port,
+                                         const uint8_t *data,
+                                         uint32_t data_length);
+=======
+  NS_IMETHODIMP CallListenerReceivedData(const nsACString& host, uint16_t port,
+                                         const nsTArray<uint8_t>& data);
+>>>>>>> upstream-releases
   NS_IMETHODIMP CallListenerOpened();
   NS_IMETHODIMP CallListenerConnected();
   NS_IMETHODIMP CallListenerClosed();
@@ -245,18 +363,45 @@ class NrUdpSocketIpc : public NrSocketIpc {
   NrUdpSocketIpc();
 
   // Implementations of the NrSocketBase APIs
+<<<<<<< HEAD
   virtual int create(nr_transport_addr *addr) override;
   virtual int sendto(const void *msg, size_t len, int flags,
                      nr_transport_addr *to) override;
   virtual int recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
                        nr_transport_addr *from) override;
   virtual int getaddr(nr_transport_addr *addrp) override;
+||||||| merged common ancestors
+  virtual int create(nr_transport_addr *addr) override;
+  virtual int sendto(const void *msg, size_t len,
+                     int flags, nr_transport_addr *to) override;
+  virtual int recvfrom(void * buf, size_t maxlen,
+                       size_t *len, int flags,
+                       nr_transport_addr *from) override;
+  virtual int getaddr(nr_transport_addr *addrp) override;
+=======
+  virtual int create(nr_transport_addr* addr) override;
+  virtual int sendto(const void* msg, size_t len, int flags,
+                     nr_transport_addr* to) override;
+  virtual int recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
+                       nr_transport_addr* from) override;
+  virtual int getaddr(nr_transport_addr* addrp) override;
+>>>>>>> upstream-releases
   virtual void close() override;
+<<<<<<< HEAD
   virtual int connect(nr_transport_addr *addr) override;
   virtual int write(const void *msg, size_t len, size_t *written) override;
   virtual int read(void *buf, size_t maxlen, size_t *len) override;
+||||||| merged common ancestors
+  virtual int connect(nr_transport_addr *addr) override;
+  virtual int write(const void *msg, size_t len, size_t *written) override;
+  virtual int read(void* buf, size_t maxlen, size_t *len) override;
+=======
+  virtual int connect(nr_transport_addr* addr) override;
+  virtual int write(const void* msg, size_t len, size_t* written) override;
+  virtual int read(void* buf, size_t maxlen, size_t* len) override;
+>>>>>>> upstream-releases
   virtual int listen(int backlog) override;
-  virtual int accept(nr_transport_addr *addrp, nr_socket **sockp) override;
+  virtual int accept(nr_transport_addr* addrp, nr_socket** sockp) override;
 
  private:
   virtual ~NrUdpSocketIpc();
@@ -266,13 +411,21 @@ class NrUdpSocketIpc : public NrSocketIpc {
   nsresult SetAddress();  // Set the local address from parent info.
 
   // Main or private thread executors of the NrSocketBase APIs
-  void create_i(const nsACString &host, const uint16_t port);
-  void connect_i(const nsACString &host, const uint16_t port);
-  void sendto_i(const net::NetAddr &addr, nsAutoPtr<MediaPacket> buf);
+  void create_i(const nsACString& host, const uint16_t port);
+  void connect_i(const nsACString& host, const uint16_t port);
+  void sendto_i(const net::NetAddr& addr, nsAutoPtr<MediaPacket> buf);
   void close_i();
 #if defined(MOZILLA_INTERNAL_API) && !defined(MOZILLA_XPCOMRT_API)
+<<<<<<< HEAD
   static void destroy_i(nsIUDPSocketChild *aChild,
                         nsCOMPtr<nsIEventTarget> &aStsThread);
+||||||| merged common ancestors
+  static void destroy_i(nsIUDPSocketChild* aChild,
+                        nsCOMPtr<nsIEventTarget>& aStsThread);
+=======
+  static void destroy_i(dom::UDPSocketChild* aChild,
+                        nsCOMPtr<nsIEventTarget>& aStsThread);
+>>>>>>> upstream-releases
 #endif
   // STS thread executor
   void recv_callback_s(RefPtr<nr_udp_message> msg);
@@ -283,7 +436,14 @@ class NrUdpSocketIpc : public NrSocketIpc {
 
   std::queue<RefPtr<nr_udp_message>> received_msgs_;
 
+<<<<<<< HEAD
   RefPtr<nsIUDPSocketChild> socket_child_;  // only accessed from the io_thread
+||||||| merged common ancestors
+  RefPtr<nsIUDPSocketChild> socket_child_; // only accessed from the io_thread
+=======
+  // only accessed from the io_thread
+  RefPtr<dom::UDPSocketChild> socket_child_;
+>>>>>>> upstream-releases
 };
 
 // The socket child holds onto one of these, which just passes callbacks
@@ -303,12 +463,30 @@ class NrUdpSocketIpcProxy : public nsIUDPSocketInternal {
 };
 
 struct nr_tcp_message {
+<<<<<<< HEAD
   explicit nr_tcp_message(nsAutoPtr<MediaPacket> &data)
       : read_bytes(0), data(data) {}
+||||||| merged common ancestors
+  explicit nr_tcp_message(nsAutoPtr<MediaPacket> &data)
+    : read_bytes(0)
+    , data(data) {
+  }
+=======
+  explicit nr_tcp_message(nsAutoPtr<MediaPacket>& data)
+      : read_bytes(0), data(data) {}
+>>>>>>> upstream-releases
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(nr_tcp_message);
 
+<<<<<<< HEAD
   const uint8_t *reading_pointer() const { return data->data() + read_bytes; }
+||||||| merged common ancestors
+  const uint8_t *reading_pointer() const {
+    return data->data() + read_bytes;
+  }
+=======
+  const uint8_t* reading_pointer() const { return data->data() + read_bytes; }
+>>>>>>> upstream-releases
 
   size_t unread_bytes() const { return data->len() - read_bytes; }
 
@@ -330,18 +508,45 @@ class NrTcpSocketIpc : public NrSocketIpc, public nsITCPSocketCallback {
   explicit NrTcpSocketIpc(nsIThread *aThread);
 
   // Implementations of the NrSocketBase APIs
+<<<<<<< HEAD
   virtual int create(nr_transport_addr *addr) override;
   virtual int sendto(const void *msg, size_t len, int flags,
                      nr_transport_addr *to) override;
   virtual int recvfrom(void *buf, size_t maxlen, size_t *len, int flags,
                        nr_transport_addr *from) override;
   virtual int getaddr(nr_transport_addr *addrp) override;
+||||||| merged common ancestors
+  virtual int create(nr_transport_addr *addr) override;
+  virtual int sendto(const void *msg, size_t len,
+                     int flags, nr_transport_addr *to) override;
+  virtual int recvfrom(void * buf, size_t maxlen,
+                       size_t *len, int flags,
+                       nr_transport_addr *from) override;
+  virtual int getaddr(nr_transport_addr *addrp) override;
+=======
+  virtual int create(nr_transport_addr* addr) override;
+  virtual int sendto(const void* msg, size_t len, int flags,
+                     nr_transport_addr* to) override;
+  virtual int recvfrom(void* buf, size_t maxlen, size_t* len, int flags,
+                       nr_transport_addr* from) override;
+  virtual int getaddr(nr_transport_addr* addrp) override;
+>>>>>>> upstream-releases
   virtual void close() override;
+<<<<<<< HEAD
   virtual int connect(nr_transport_addr *addr) override;
   virtual int write(const void *msg, size_t len, size_t *written) override;
   virtual int read(void *buf, size_t maxlen, size_t *len) override;
+||||||| merged common ancestors
+  virtual int connect(nr_transport_addr *addr) override;
+  virtual int write(const void *msg, size_t len, size_t *written) override;
+  virtual int read(void* buf, size_t maxlen, size_t *len) override;
+=======
+  virtual int connect(nr_transport_addr* addr) override;
+  virtual int write(const void* msg, size_t len, size_t* written) override;
+  virtual int read(void* buf, size_t maxlen, size_t* len) override;
+>>>>>>> upstream-releases
   virtual int listen(int backlog) override;
-  virtual int accept(nr_transport_addr *addrp, nr_socket **sockp) override;
+  virtual int accept(nr_transport_addr* addrp, nr_socket** sockp) override;
 
  private:
   class TcpSocketReadyRunner;
@@ -349,9 +554,21 @@ class NrTcpSocketIpc : public NrSocketIpc, public nsITCPSocketCallback {
   virtual ~NrTcpSocketIpc();
 
   // Main thread executors of the NrSocketBase APIs
+<<<<<<< HEAD
   void connect_i(const nsACString &remote_addr, uint16_t remote_port,
                  const nsACString &local_addr, uint16_t local_port,
                  const nsACString &tls_host);
+||||||| merged common ancestors
+  void connect_i(const nsACString &remote_addr,
+                 uint16_t remote_port,
+                 const nsACString &local_addr,
+                 uint16_t local_port,
+                 const nsACString &tls_host);
+=======
+  void connect_i(const nsACString& remote_addr, uint16_t remote_port,
+                 const nsACString& local_addr, uint16_t local_port,
+                 const nsACString& tls_host);
+>>>>>>> upstream-releases
   void write_i(nsAutoPtr<InfallibleTArray<uint8_t>> buf,
                uint32_t tracking_number);
   void close_i();
@@ -360,7 +577,7 @@ class NrTcpSocketIpc : public NrSocketIpc, public nsITCPSocketCallback {
 
   // STS thread executor
   void message_sent_s(uint32_t bufferedAmount, uint32_t tracking_number);
-  void recv_message_s(nr_tcp_message *msg);
+  void recv_message_s(nr_tcp_message* msg);
   void update_state_s(NrSocketIpcState next_state);
   void maybe_post_socket_ready();
 
@@ -380,6 +597,7 @@ class NrTcpSocketIpc : public NrSocketIpc, public nsITCPSocketCallback {
 };
 #endif
 
+<<<<<<< HEAD
 int nr_netaddr_to_transport_addr(const net::NetAddr *netaddr,
                                  nr_transport_addr *addr, int protocol);
 int nr_praddr_to_transport_addr(const PRNetAddr *praddr,
@@ -388,4 +606,24 @@ int nr_praddr_to_transport_addr(const PRNetAddr *praddr,
 int nr_transport_addr_get_addrstring_and_port(nr_transport_addr *addr,
                                               nsACString *host, int32_t *port);
 }  // namespace mozilla
+||||||| merged common ancestors
+int nr_netaddr_to_transport_addr(const net::NetAddr *netaddr,
+                                 nr_transport_addr *addr,
+                                 int protocol);
+int nr_praddr_to_transport_addr(const PRNetAddr *praddr,
+                                nr_transport_addr *addr,
+                                int protocol, int keep);
+int nr_transport_addr_get_addrstring_and_port(nr_transport_addr *addr,
+                                              nsACString *host, int32_t *port);
+}  // close namespace
+=======
+int nr_netaddr_to_transport_addr(const net::NetAddr* netaddr,
+                                 nr_transport_addr* addr, int protocol);
+int nr_praddr_to_transport_addr(const PRNetAddr* praddr,
+                                nr_transport_addr* addr, int protocol,
+                                int keep);
+int nr_transport_addr_get_addrstring_and_port(nr_transport_addr* addr,
+                                              nsACString* host, int32_t* port);
+}  // namespace mozilla
+>>>>>>> upstream-releases
 #endif

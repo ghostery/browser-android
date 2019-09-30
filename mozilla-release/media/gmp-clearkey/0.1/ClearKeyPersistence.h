@@ -33,9 +33,20 @@ class ClearKeySessionManager;
 // Whether we've loaded the persistent session ids yet.
 enum PersistentKeyState { UNINITIALIZED, LOADING, LOADED };
 
+<<<<<<< HEAD
 class ClearKeyPersistence : public RefCounted {
  public:
   explicit ClearKeyPersistence(cdm::Host_9* aHost);
+||||||| merged common ancestors
+class ClearKeyPersistence : public RefCounted
+{
+public:
+  explicit ClearKeyPersistence(cdm::Host_9* aHost);
+=======
+class ClearKeyPersistence : public RefCounted {
+ public:
+  explicit ClearKeyPersistence(cdm::Host_10* aHost);
+>>>>>>> upstream-releases
 
   void EnsureInitialized(bool aPersistentStateAllowed,
                          std::function<void()>&& aOnInitialized);
@@ -47,9 +58,18 @@ class ClearKeyPersistence : public RefCounted {
   bool IsPersistentSessionId(const std::string& aSid);
 
   void PersistentSessionRemoved(std::string& aSid);
+<<<<<<< HEAD
 
  private:
   cdm::Host_9* mHost = nullptr;
+||||||| merged common ancestors
+private:
+  cdm::Host_9* mHost = nullptr;
+=======
+
+ private:
+  cdm::Host_10* mHost = nullptr;
+>>>>>>> upstream-releases
 
   PersistentKeyState mPersistentKeyState = PersistentKeyState::UNINITIALIZED;
 

@@ -19,29 +19,51 @@ namespace widget {
 NS_IMPL_ISUPPORTS(TaskbarPreviewButton, nsITaskbarPreviewButton,
                   nsISupportsWeakReference)
 
+<<<<<<< HEAD
 TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview *preview,
                                            uint32_t index)
     : mPreview(preview), mIndex(index) {}
+||||||| merged common ancestors
+TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview* preview, uint32_t index)
+  : mPreview(preview), mIndex(index)
+{
+}
+=======
+TaskbarPreviewButton::TaskbarPreviewButton(TaskbarWindowPreview* preview,
+                                           uint32_t index)
+    : mPreview(preview), mIndex(index) {}
+>>>>>>> upstream-releases
 
 TaskbarPreviewButton::~TaskbarPreviewButton() { SetVisible(false); }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetTooltip(nsAString &aTooltip) {
+TaskbarPreviewButton::GetTooltip(nsAString& aTooltip) {
   aTooltip = mTooltip;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::SetTooltip(const nsAString &aTooltip) {
+TaskbarPreviewButton::SetTooltip(const nsAString& aTooltip) {
   mTooltip = aTooltip;
   size_t destLength = sizeof Button().szTip / (sizeof Button().szTip[0]);
+<<<<<<< HEAD
   wchar_t *tooltip = &(Button().szTip[0]);
   StringCchCopyNW(tooltip, destLength, mTooltip.get(), mTooltip.Length());
+||||||| merged common ancestors
+  wchar_t *tooltip = &(Button().szTip[0]);
+  StringCchCopyNW(tooltip,
+                  destLength,
+                  mTooltip.get(),
+                  mTooltip.Length());
+=======
+  wchar_t* tooltip = &(Button().szTip[0]);
+  StringCchCopyNW(tooltip, destLength, mTooltip.get(), mTooltip.Length());
+>>>>>>> upstream-releases
   return Update();
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetDismissOnClick(bool *dismiss) {
+TaskbarPreviewButton::GetDismissOnClick(bool* dismiss) {
   *dismiss = (Button().dwFlags & THBF_DISMISSONCLICK) == THBF_DISMISSONCLICK;
   return NS_OK;
 }
@@ -56,7 +78,7 @@ TaskbarPreviewButton::SetDismissOnClick(bool dismiss) {
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetHasBorder(bool *hasBorder) {
+TaskbarPreviewButton::GetHasBorder(bool* hasBorder) {
   *hasBorder = (Button().dwFlags & THBF_NOBACKGROUND) != THBF_NOBACKGROUND;
   return NS_OK;
 }
@@ -71,7 +93,7 @@ TaskbarPreviewButton::SetHasBorder(bool hasBorder) {
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetDisabled(bool *disabled) {
+TaskbarPreviewButton::GetDisabled(bool* disabled) {
   *disabled = (Button().dwFlags & THBF_DISABLED) == THBF_DISABLED;
   return NS_OK;
 }
@@ -86,7 +108,7 @@ TaskbarPreviewButton::SetDisabled(bool disabled) {
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetImage(imgIContainer **img) {
+TaskbarPreviewButton::GetImage(imgIContainer** img) {
   if (mImage)
     NS_ADDREF(*img = mImage);
   else
@@ -95,14 +117,34 @@ TaskbarPreviewButton::GetImage(imgIContainer **img) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 TaskbarPreviewButton::SetImage(imgIContainer *img) {
   if (Button().hIcon) ::DestroyIcon(Button().hIcon);
+||||||| merged common ancestors
+TaskbarPreviewButton::SetImage(imgIContainer *img) {
+  if (Button().hIcon)
+    ::DestroyIcon(Button().hIcon);
+=======
+TaskbarPreviewButton::SetImage(imgIContainer* img) {
+  if (Button().hIcon) ::DestroyIcon(Button().hIcon);
+>>>>>>> upstream-releases
   if (img) {
     nsresult rv;
+<<<<<<< HEAD
     rv = nsWindowGfx::CreateIcon(
         img, false, 0, 0,
         nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
         &Button().hIcon);
+||||||| merged common ancestors
+    rv = nsWindowGfx::CreateIcon(img, false, 0, 0,
+                                 nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
+                                 &Button().hIcon);
+=======
+    rv = nsWindowGfx::CreateIcon(
+        img, false, LayoutDeviceIntPoint(),
+        nsWindowGfx::GetIconMetrics(nsWindowGfx::kRegularIcon),
+        &Button().hIcon);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   } else {
     Button().hIcon = nullptr;
@@ -111,7 +153,7 @@ TaskbarPreviewButton::SetImage(imgIContainer *img) {
 }
 
 NS_IMETHODIMP
-TaskbarPreviewButton::GetVisible(bool *visible) {
+TaskbarPreviewButton::GetVisible(bool* visible) {
   *visible = (Button().dwFlags & THBF_HIDDEN) != THBF_HIDDEN;
   return NS_OK;
 }
@@ -125,7 +167,14 @@ TaskbarPreviewButton::SetVisible(bool visible) {
   return Update();
 }
 
+<<<<<<< HEAD
 THUMBBUTTON &TaskbarPreviewButton::Button() {
+||||||| merged common ancestors
+THUMBBUTTON&
+TaskbarPreviewButton::Button() {
+=======
+THUMBBUTTON& TaskbarPreviewButton::Button() {
+>>>>>>> upstream-releases
   return mPreview->mThumbButtons[mIndex];
 }
 

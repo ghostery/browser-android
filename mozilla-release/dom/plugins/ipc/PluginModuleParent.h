@@ -25,7 +25,7 @@
 #include "nsHashKeys.h"
 #include "nsIObserver.h"
 #ifdef XP_WIN
-#include "nsWindowsHelpers.h"
+#  include "nsWindowsHelpers.h"
 #endif
 
 class nsPluginTag;
@@ -77,35 +77,148 @@ class PluginModuleParent : public PPluginModuleParent,
                            public CrashReporter::InjectorCrashCallback
 #endif
 {
+<<<<<<< HEAD
  protected:
   typedef mozilla::PluginLibrary PluginLibrary;
+||||||| merged common ancestors
+protected:
+    typedef mozilla::PluginLibrary PluginLibrary;
+=======
+  friend class PPluginModuleParent;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   PPluginInstanceParent* AllocPPluginInstanceParent(
       const nsCString& aMimeType, const InfallibleTArray<nsCString>& aNames,
       const InfallibleTArray<nsCString>& aValues) override;
+||||||| merged common ancestors
+    PPluginInstanceParent*
+    AllocPPluginInstanceParent(const nsCString& aMimeType,
+                               const InfallibleTArray<nsCString>& aNames,
+                               const InfallibleTArray<nsCString>& aValues)
+                               override;
+=======
+ protected:
+  typedef mozilla::PluginLibrary PluginLibrary;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual bool DeallocPPluginInstanceParent(
       PPluginInstanceParent* aActor) override;
+||||||| merged common ancestors
+    virtual bool
+    DeallocPPluginInstanceParent(PPluginInstanceParent* aActor) override;
+=======
+  PPluginInstanceParent* AllocPPluginInstanceParent(
+      const nsCString& aMimeType, const InfallibleTArray<nsCString>& aNames,
+      const InfallibleTArray<nsCString>& aValues);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   explicit PluginModuleParent(bool aIsChrome);
   virtual ~PluginModuleParent();
+||||||| merged common ancestors
+public:
+    explicit PluginModuleParent(bool aIsChrome);
+    virtual ~PluginModuleParent();
+=======
+  bool DeallocPPluginInstanceParent(PPluginInstanceParent* aActor);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool IsChrome() const { return mIsChrome; }
+||||||| merged common ancestors
+    bool IsChrome() const { return mIsChrome; }
+=======
+ public:
+  explicit PluginModuleParent(bool aIsChrome);
+  virtual ~PluginModuleParent();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void SetPlugin(nsNPAPIPlugin* plugin) override { mPlugin = plugin; }
+||||||| merged common ancestors
+    virtual void SetPlugin(nsNPAPIPlugin* plugin) override
+    {
+        mPlugin = plugin;
+    }
+=======
+  bool IsChrome() const { return mIsChrome; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void ActorDestroy(ActorDestroyReason why) override;
+||||||| merged common ancestors
+    virtual void ActorDestroy(ActorDestroyReason why) override;
+=======
+  virtual void SetPlugin(nsNPAPIPlugin* plugin) override { mPlugin = plugin; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   const NPNetscapeFuncs* GetNetscapeFuncs() { return mNPNIface; }
+||||||| merged common ancestors
+    const NPNetscapeFuncs* GetNetscapeFuncs() {
+        return mNPNIface;
+    }
+=======
+  virtual void ActorDestroy(ActorDestroyReason why) override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool OkToCleanup() const { return !IsOnCxxStack(); }
+||||||| merged common ancestors
+    bool OkToCleanup() const {
+        return !IsOnCxxStack();
+    }
+=======
+  const NPNetscapeFuncs* GetNetscapeFuncs() { return mNPNIface; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void ProcessRemoteNativeEventsInInterruptCall() override;
+||||||| merged common ancestors
+    void ProcessRemoteNativeEventsInInterruptCall() override;
+=======
+  bool OkToCleanup() const { return !IsOnCxxStack(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult GetRunID(uint32_t* aRunID) override;
   virtual void SetHasLocalInstance() override { mHadLocalInstance = true; }
+||||||| merged common ancestors
+    virtual nsresult GetRunID(uint32_t* aRunID) override;
+    virtual void SetHasLocalInstance() override {
+        mHadLocalInstance = true;
+    }
+=======
+  void ProcessRemoteNativeEventsInInterruptCall() override;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  int GetQuirks() { return mQuirks; }
+||||||| merged common ancestors
+    int GetQuirks() { return mQuirks; }
+=======
+  virtual nsresult GetRunID(uint32_t* aRunID) override;
+  virtual void SetHasLocalInstance() override { mHadLocalInstance = true; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+ protected:
+  virtual mozilla::ipc::RacyInterruptPolicy MediateInterruptRace(
+      const MessageInfo& parent, const MessageInfo& child) override {
+    return MediateRace(parent, child);
+  }
+||||||| merged common ancestors
+protected:
+    virtual mozilla::ipc::RacyInterruptPolicy
+    MediateInterruptRace(const MessageInfo& parent,
+                         const MessageInfo& child) override
+    {
+        return MediateRace(parent, child);
+    }
+=======
   int GetQuirks() { return mQuirks; }
 
  protected:
@@ -113,43 +226,136 @@ class PluginModuleParent : public PPluginModuleParent,
       const MessageInfo& parent, const MessageInfo& child) override {
     return MediateRace(parent, child);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvBackUpXResources(
       const FileDescriptor& aXSocketFd) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvBackUpXResources(const FileDescriptor& aXSocketFd) override;
+=======
+  mozilla::ipc::IPCResult RecvBackUpXResources(
+      const FileDescriptor& aXSocketFd);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerProcessSomeEvents() override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult AnswerProcessSomeEvents() override;
+=======
+  mozilla::ipc::IPCResult AnswerProcessSomeEvents();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvProcessNativeEventsInInterruptCall()
       override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvProcessNativeEventsInInterruptCall() override;
+=======
+  mozilla::ipc::IPCResult RecvProcessNativeEventsInInterruptCall();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPluginShowWindow(
       const uint32_t& aWindowId, const bool& aModal, const int32_t& aX,
       const int32_t& aY, const size_t& aWidth, const size_t& aHeight) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvPluginShowWindow(const uint32_t& aWindowId, const bool& aModal,
+                         const int32_t& aX, const int32_t& aY,
+                         const size_t& aWidth, const size_t& aHeight) override;
+=======
+  mozilla::ipc::IPCResult RecvPluginShowWindow(
+      const uint32_t& aWindowId, const bool& aModal, const int32_t& aX,
+      const int32_t& aY, const double& aWidth, const double& aHeight);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPluginHideWindow(
       const uint32_t& aWindowId) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvPluginHideWindow(const uint32_t& aWindowId) override;
+=======
+  mozilla::ipc::IPCResult RecvPluginHideWindow(const uint32_t& aWindowId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvSetCursor(
       const NSCursorInfo& aCursorInfo) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvSetCursor(const NSCursorInfo& aCursorInfo) override;
+=======
+  mozilla::ipc::IPCResult RecvSetCursor(const NSCursorInfo& aCursorInfo);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvShowCursor(const bool& aShow) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvShowCursor(const bool& aShow) override;
+=======
+  mozilla::ipc::IPCResult RecvShowCursor(const bool& aShow);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPushCursor(
       const NSCursorInfo& aCursorInfo) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvPushCursor(const NSCursorInfo& aCursorInfo) override;
+=======
+  mozilla::ipc::IPCResult RecvPushCursor(const NSCursorInfo& aCursorInfo);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvPopCursor() override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvPopCursor() override;
+=======
+  mozilla::ipc::IPCResult RecvPopCursor();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNPN_SetException(
       const nsCString& aMessage) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvNPN_SetException(const nsCString& aMessage) override;
+=======
+  mozilla::ipc::IPCResult RecvNPN_SetException(const nsCString& aMessage);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNPN_ReloadPlugins(
       const bool& aReloadPages) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    RecvNPN_ReloadPlugins(const bool& aReloadPages) override;
+=======
+  mozilla::ipc::IPCResult RecvNPN_ReloadPlugins(const bool& aReloadPages);
+>>>>>>> upstream-releases
 
   static BrowserStreamParent* StreamCast(NPP instance, NPStream* s);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult
   AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
       const bool& shouldRegister, NPError* result) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
+                                        const bool& shouldRegister,
+                                        NPError* result) override;
+=======
+  virtual mozilla::ipc::IPCResult
+  AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
+      const bool& shouldRegister, NPError* result);
+>>>>>>> upstream-releases
 
  protected:
   void SetChildTimeout(const int32_t aChildTimeout);
@@ -157,15 +363,39 @@ class PluginModuleParent : public PPluginModuleParent,
 
   virtual void UpdatePluginTimeout() {}
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override {
     return IPC_OK();
   }
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override { return IPC_OK(); }
+=======
+  virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() {
+    return IPC_OK();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvReturnClearSiteData(
       const NPError& aRv, const uint64_t& aCallbackId) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult RecvReturnClearSiteData(const NPError& aRv,
+                                                            const uint64_t& aCallbackId) override;
+=======
+  mozilla::ipc::IPCResult RecvReturnClearSiteData(const NPError& aRv,
+                                                  const uint64_t& aCallbackId);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvReturnSitesWithData(
       nsTArray<nsCString>&& aSites, const uint64_t& aCallbackId) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult RecvReturnSitesWithData(nsTArray<nsCString>&& aSites,
+                                                            const uint64_t& aCallbackId) override;
+=======
+  mozilla::ipc::IPCResult RecvReturnSitesWithData(nsTArray<nsCString>&& aSites,
+                                                  const uint64_t& aCallbackId);
+>>>>>>> upstream-releases
 
   void SetPluginFuncs(NPPluginFuncs* aFuncs);
 
@@ -424,8 +654,16 @@ class PluginModuleChromeParent : public PluginModuleParent,
 
   virtual bool ShouldContinueFromReplyTimeout() override;
 
+<<<<<<< HEAD
   void ProcessFirstMinidump();
   void WriteExtraDataForMinidump();
+||||||| merged common ancestors
+    void ProcessFirstMinidump();
+    void WriteExtraDataForMinidump();
+=======
+  void ProcessFirstMinidump();
+  void AddCrashAnnotations();
+>>>>>>> upstream-releases
 
   PluginProcessParent* Process() const { return mSubprocess; }
   base::ProcessHandle ChildProcessHandle() {
@@ -460,14 +698,31 @@ class PluginModuleChromeParent : public PluginModuleParent,
 
   bool InitCrashReporter();
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override;
+=======
+  mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override;
+>>>>>>> upstream-releases
 
   static void CachedSettingChanged(const char* aPref,
                                    PluginModuleChromeParent* aModule);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult
   AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
       const bool& shouldRegister, NPError* result) override;
+||||||| merged common ancestors
+    virtual mozilla::ipc::IPCResult
+    AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
+                                        const bool& shouldRegister,
+                                        NPError* result) override;
+=======
+  mozilla::ipc::IPCResult
+  AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
+      const bool& shouldRegister, NPError* result) override;
+>>>>>>> upstream-releases
 
   PluginProcessParent* mSubprocess;
   uint32_t mPluginId;

@@ -6,11 +6,14 @@
 
 #include "jsapi-tests/tests.h"
 
+#include "mozilla/Utf8.h"  // mozilla::Utf8Unit
+
 #include <stdio.h>
 
-#include "js/CompilationAndEvaluation.h"
+#include "js/CompilationAndEvaluation.h"  // JS::EvaluateDontInflate
 #include "js/Initialization.h"
 #include "js/RootingAPI.h"
+#include "js/SourceText.h"  // JS::Source{Ownership,Text}
 
 JSAPITest* JSAPITest::list;
 
@@ -48,9 +51,21 @@ bool JSAPITest::exec(const char* utf8, const char* filename, int lineno) {
   JS::CompileOptions opts(cx);
   opts.setFileAndLine(filename, lineno);
 
+<<<<<<< HEAD
   JS::RootedValue v(cx);
   return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), &v) ||
          fail(JSAPITestString(utf8), filename, lineno);
+||||||| merged common ancestors
+    JS::RootedValue v(cx);
+    return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), &v) ||
+           fail(JSAPITestString(utf8), filename, lineno);
+=======
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  JS::RootedValue v(cx);
+  return (srcBuf.init(cx, utf8, strlen(utf8), JS::SourceOwnership::Borrowed) &&
+          JS::EvaluateDontInflate(cx, opts, srcBuf, &v)) ||
+         fail(JSAPITestString(utf8), filename, lineno);
+>>>>>>> upstream-releases
 }
 
 bool JSAPITest::execDontReport(const char* utf8, const char* filename,
@@ -58,23 +73,83 @@ bool JSAPITest::execDontReport(const char* utf8, const char* filename,
   JS::CompileOptions opts(cx);
   opts.setFileAndLine(filename, lineno);
 
+<<<<<<< HEAD
   JS::RootedValue v(cx);
   return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), &v);
+||||||| merged common ancestors
+    JS::RootedValue v(cx);
+    return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), &v);
+=======
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  JS::RootedValue v(cx);
+  return srcBuf.init(cx, utf8, strlen(utf8), JS::SourceOwnership::Borrowed) &&
+         JS::EvaluateDontInflate(cx, opts, srcBuf, &v);
+>>>>>>> upstream-releases
 }
 
 bool JSAPITest::evaluate(const char* utf8, const char* filename, int lineno,
+<<<<<<< HEAD
+                         JS::MutableHandleValue vp) {
+  JS::CompileOptions opts(cx);
+  opts.setFileAndLine(filename, lineno);
+||||||| merged common ancestors
+                         JS::MutableHandleValue vp)
+{
+    JS::CompileOptions opts(cx);
+    opts.setFileAndLine(filename, lineno);
+=======
                          JS::MutableHandleValue vp) {
   JS::CompileOptions opts(cx);
   opts.setFileAndLine(filename, lineno);
 
-  return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), vp) ||
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  return (srcBuf.init(cx, utf8, strlen(utf8), JS::SourceOwnership::Borrowed) &&
+          JS::EvaluateDontInflate(cx, opts, srcBuf, vp)) ||
          fail(JSAPITestString(utf8), filename, lineno);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), vp) ||
+         fail(JSAPITestString(utf8), filename, lineno);
+||||||| merged common ancestors
+    return JS::EvaluateUtf8(cx, opts, utf8, strlen(utf8), vp) ||
+           fail(JSAPITestString(utf8), filename, lineno);
+=======
 bool JSAPITest::definePrint() {
   return JS_DefineFunction(cx, global, "print", (JSNative)print, 0, 0);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+bool JSAPITest::definePrint() {
+  return JS_DefineFunction(cx, global, "print", (JSNative)print, 0, 0);
+||||||| merged common ancestors
+bool JSAPITest::definePrint()
+{
+    return JS_DefineFunction(cx, global, "print", (JSNative) print, 0, 0);
+=======
+JSObject* JSAPITest::createGlobal(JSPrincipals* principals) {
+  /* Create the global object. */
+  JS::RootedObject newGlobal(cx);
+  JS::RealmOptions options;
+  options.creationOptions()
+      .setStreamsEnabled(true)
+      .setBigIntEnabled(true)
+      .setFieldsEnabled(true)
+      .setAwaitFixEnabled(true);
+  newGlobal = JS_NewGlobalObject(cx, getGlobalClass(), principals,
+                                 JS::FireOnNewGlobalHook, options);
+  if (!newGlobal) {
+    return nullptr;
+  }
+
+  global = newGlobal;
+  return newGlobal;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 JSObject* JSAPITest::createGlobal(JSPrincipals* principals) {
   /* Create the global object. */
   JS::RootedObject newGlobal(cx);
@@ -105,12 +180,77 @@ int main(int argc, char* argv[]) {
   int total = 0;
   int failures = 0;
   const char* filter = (argc == 2) ? argv[1] : nullptr;
+||||||| merged common ancestors
+JSObject* JSAPITest::createGlobal(JSPrincipals* principals)
+{
+    /* Create the global object. */
+    JS::RootedObject newGlobal(cx);
+    JS::RealmOptions options;
+    options.creationOptions().setStreamsEnabled(true);
+    newGlobal = JS_NewGlobalObject(cx, getGlobalClass(), principals, JS::FireOnNewGlobalHook,
+                                   options);
+    if (!newGlobal) {
+        return nullptr;
+    }
+
+    JSAutoRealm ar(cx, newGlobal);
+
+    // Populate the global object with the standard globals like Object and
+    // Array.
+    if (!JS::InitRealmStandardClasses(cx)) {
+        return nullptr;
+    }
+
+    global = newGlobal;
+    return newGlobal;
+}
+
+int main(int argc, char* argv[])
+{
+    int total = 0;
+    int failures = 0;
+    const char* filter = (argc == 2) ? argv[1] : nullptr;
+=======
+int main(int argc, char* argv[]) {
+  int total = 0;
+  int failures = 0;
+  const char* filter = (argc == 2) ? argv[1] : nullptr;
 
   if (!JS_Init()) {
     printf("TEST-UNEXPECTED-FAIL | jsapi-tests | JS_Init() failed.\n");
     return 1;
   }
 
+  for (JSAPITest* test = JSAPITest::list; test; test = test->next) {
+    const char* name = test->name();
+    if (filter && strstr(name, filter) == nullptr) {
+      continue;
+    }
+
+    total += 1;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  if (!JS_Init()) {
+    printf("TEST-UNEXPECTED-FAIL | jsapi-tests | JS_Init() failed.\n");
+    return 1;
+  }
+||||||| merged common ancestors
+    if (!JS_Init()) {
+        printf("TEST-UNEXPECTED-FAIL | jsapi-tests | JS_Init() failed.\n");
+        return 1;
+    }
+=======
+    printf("%s\n", name);
+    if (!test->init()) {
+      printf("TEST-UNEXPECTED-FAIL | %s | Failed to initialize.\n", name);
+      failures++;
+      test->uninit();
+      continue;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   for (JSAPITest* test = JSAPITest::list; test; test = test->next) {
     const char* name = test->name();
     if (filter && strstr(name, filter) == nullptr) {
@@ -137,6 +277,55 @@ int main(int argc, char* argv[]) {
       if (!test->knownFail) {
         failures++;
       }
+||||||| merged common ancestors
+    for (JSAPITest* test = JSAPITest::list; test; test = test->next) {
+        const char* name = test->name();
+        if (filter && strstr(name, filter) == nullptr) {
+            continue;
+        }
+
+        total += 1;
+
+        printf("%s\n", name);
+        if (!test->init()) {
+            printf("TEST-UNEXPECTED-FAIL | %s | Failed to initialize.\n", name);
+            failures++;
+            test->uninit();
+            continue;
+        }
+
+        if (test->run(test->global)) {
+            printf("TEST-PASS | %s | ok\n", name);
+        } else {
+            JSAPITestString messages = test->messages();
+            printf("%s | %s | %.*s\n",
+                   (test->knownFail ? "TEST-KNOWN-FAIL" : "TEST-UNEXPECTED-FAIL"),
+                   name, (int) messages.length(), messages.begin());
+            if (!test->knownFail) {
+                failures++;
+            }
+        }
+        test->uninit();
+    }
+
+    MOZ_RELEASE_ASSERT(!JSRuntime::hasLiveRuntimes());
+    JS_ShutDown();
+
+    if (failures) {
+        printf("\n%d unexpected failure%s.\n", failures, (failures == 1 ? "" : "s"));
+        return 1;
+=======
+    if (test->run(test->global)) {
+      printf("TEST-PASS | %s | ok\n", name);
+    } else {
+      JSAPITestString messages = test->messages();
+      printf("%s | %s | %.*s\n",
+             (test->knownFail ? "TEST-KNOWN-FAIL" : "TEST-UNEXPECTED-FAIL"),
+             name, (int)messages.length(), messages.begin());
+      if (!test->knownFail) {
+        failures++;
+      }
+>>>>>>> upstream-releases
     }
     test->uninit();
   }

@@ -14,9 +14,10 @@
 #include "nsIURI.h"
 #include "mozilla/Preferences.h"
 
-static nsIDNSService *sDNSService = nullptr;
+static nsIDNSService* sDNSService = nullptr;
 static bool sESNIEnabled = false;
 
+<<<<<<< HEAD
 nsresult nsDNSPrefetch::Initialize(nsIDNSService *aDNSService) {
   NS_IF_RELEASE(sDNSService);
   sDNSService = aDNSService;
@@ -24,6 +25,24 @@ nsresult nsDNSPrefetch::Initialize(nsIDNSService *aDNSService) {
   mozilla::Preferences::AddBoolVarCache(&sESNIEnabled,
                                         "network.security.esni.enabled");
   return NS_OK;
+||||||| merged common ancestors
+nsresult
+nsDNSPrefetch::Initialize(nsIDNSService *aDNSService)
+{
+    NS_IF_RELEASE(sDNSService);
+    sDNSService =  aDNSService;
+    NS_IF_ADDREF(sDNSService);
+    mozilla::Preferences::AddBoolVarCache(&sESNIEnabled, "network.security.esni.enabled");
+    return NS_OK;
+=======
+nsresult nsDNSPrefetch::Initialize(nsIDNSService* aDNSService) {
+  NS_IF_RELEASE(sDNSService);
+  sDNSService = aDNSService;
+  NS_IF_ADDREF(sDNSService);
+  mozilla::Preferences::AddBoolVarCache(&sESNIEnabled,
+                                        "network.security.esni.enabled");
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 nsresult nsDNSPrefetch::Shutdown() {
@@ -31,6 +50,7 @@ nsresult nsDNSPrefetch::Shutdown() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsDNSPrefetch::nsDNSPrefetch(nsIURI *aURI,
                              mozilla::OriginAttributes &aOriginAttributes,
                              nsIDNSListener *aListener, bool storeTiming)
@@ -40,6 +60,29 @@ nsDNSPrefetch::nsDNSPrefetch(nsIURI *aURI,
   aURI->GetAsciiHost(mHostname);
   mIsHttps = false;
   aURI->SchemeIs("https", &mIsHttps);
+||||||| merged common ancestors
+nsDNSPrefetch::nsDNSPrefetch(nsIURI *aURI,
+                             mozilla::OriginAttributes& aOriginAttributes,
+                             nsIDNSListener *aListener,
+                             bool storeTiming)
+    : mOriginAttributes(aOriginAttributes)
+    , mStoreTiming(storeTiming)
+    , mListener(do_GetWeakReference(aListener))
+{
+    aURI->GetAsciiHost(mHostname);
+    mIsHttps = false;
+    aURI->SchemeIs("https", &mIsHttps);
+=======
+nsDNSPrefetch::nsDNSPrefetch(nsIURI* aURI,
+                             mozilla::OriginAttributes& aOriginAttributes,
+                             nsIDNSListener* aListener, bool storeTiming)
+    : mOriginAttributes(aOriginAttributes),
+      mStoreTiming(storeTiming),
+      mListener(do_GetWeakReference(aListener)) {
+  aURI->GetAsciiHost(mHostname);
+  mIsHttps = false;
+  aURI->SchemeIs("https", &mIsHttps);
+>>>>>>> upstream-releases
 }
 
 nsresult nsDNSPrefetch::Prefetch(uint16_t flags) {
@@ -99,6 +142,7 @@ nsresult nsDNSPrefetch::PrefetchHigh(bool refreshDNS) {
 NS_IMPL_ISUPPORTS(nsDNSPrefetch, nsIDNSListener)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDNSPrefetch::OnLookupComplete(nsICancelable *request, nsIDNSRecord *rec,
                                 nsresult status) {
   MOZ_ASSERT(NS_IsMainThread(), "Expecting DNS callback on main thread.");
@@ -111,9 +155,39 @@ nsDNSPrefetch::OnLookupComplete(nsICancelable *request, nsIDNSRecord *rec,
     listener->OnLookupComplete(request, rec, status);
   }
   return NS_OK;
+||||||| merged common ancestors
+nsDNSPrefetch::OnLookupComplete(nsICancelable *request,
+                                nsIDNSRecord  *rec,
+                                nsresult       status)
+{
+    MOZ_ASSERT(NS_IsMainThread(), "Expecting DNS callback on main thread.");
+
+    if (mStoreTiming) {
+        mEndTimestamp = mozilla::TimeStamp::Now();
+    }
+    nsCOMPtr<nsIDNSListener> listener = do_QueryReferent(mListener);
+    if (listener) {
+        listener->OnLookupComplete(request, rec, status);
+    }
+    return NS_OK;
+=======
+nsDNSPrefetch::OnLookupComplete(nsICancelable* request, nsIDNSRecord* rec,
+                                nsresult status) {
+  MOZ_ASSERT(NS_IsMainThread(), "Expecting DNS callback on main thread.");
+
+  if (mStoreTiming) {
+    mEndTimestamp = mozilla::TimeStamp::Now();
+  }
+  nsCOMPtr<nsIDNSListener> listener = do_QueryReferent(mListener);
+  if (listener) {
+    listener->OnLookupComplete(request, rec, status);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsDNSPrefetch::OnLookupByTypeComplete(nsICancelable *request,
                                       nsIDNSByTypeRecord *res,
                                       nsresult status) {
@@ -127,4 +201,34 @@ nsDNSPrefetch::OnLookupByTypeComplete(nsICancelable *request,
     listener->OnLookupByTypeComplete(request, res, status);
   }
   return NS_OK;
+||||||| merged common ancestors
+nsDNSPrefetch::OnLookupByTypeComplete(nsICancelable *request,
+                                      nsIDNSByTypeRecord *res,
+                                      nsresult       status)
+{
+    MOZ_ASSERT(NS_IsMainThread(), "Expecting DNS callback on main thread.");
+
+    if (mStoreTiming) {
+        mEndTimestamp = mozilla::TimeStamp::Now();
+    }
+    nsCOMPtr<nsIDNSListener> listener = do_QueryReferent(mListener);
+    if (listener) {
+        listener->OnLookupByTypeComplete(request, res, status);
+    }
+    return NS_OK;
+=======
+nsDNSPrefetch::OnLookupByTypeComplete(nsICancelable* request,
+                                      nsIDNSByTypeRecord* res,
+                                      nsresult status) {
+  MOZ_ASSERT(NS_IsMainThread(), "Expecting DNS callback on main thread.");
+
+  if (mStoreTiming) {
+    mEndTimestamp = mozilla::TimeStamp::Now();
+  }
+  nsCOMPtr<nsIDNSListener> listener = do_QueryReferent(mListener);
+  if (listener) {
+    listener->OnLookupByTypeComplete(request, res, status);
+  }
+  return NS_OK;
+>>>>>>> upstream-releases
 }

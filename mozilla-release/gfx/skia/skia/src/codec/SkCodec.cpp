@@ -11,7 +11,6 @@
 #include "SkColorSpace.h"
 #include "SkData.h"
 #include "SkFrameHolder.h"
-#include "SkGifCodec.h"
 #include "SkHalf.h"
 #ifdef SK_HAS_HEIF_LIBRARY
 #include "SkHeifCodec.h"
@@ -25,6 +24,11 @@
 #include "SkStream.h"
 #include "SkWbmpCodec.h"
 #include "SkWebpCodec.h"
+#ifdef SK_HAS_WUFFS_LIBRARY
+#include "SkWuffsCodec.h"
+#else
+#include "SkGifCodec.h"
+#endif
 
 struct DecoderProc {
     bool (*IsFormat)(const void*, size_t);
@@ -38,7 +42,11 @@ static constexpr DecoderProc gDecoderProcs[] = {
 #ifdef SK_HAS_WEBP_LIBRARY
     { SkWebpCodec::IsWebp, SkWebpCodec::MakeFromStream },
 #endif
+#ifdef SK_HAS_WUFFS_LIBRARY
+    { SkWuffsCodec_IsFormat, SkWuffsCodec_MakeFromStream },
+#else
     { SkGifCodec::IsGif, SkGifCodec::MakeFromStream },
+#endif
 #ifdef SK_HAS_PNG_LIBRARY
     { SkIcoCodec::IsIco, SkIcoCodec::MakeFromStream },
 #endif
@@ -187,6 +195,7 @@ bool SkCodec::rewindIfNeeded() {
     return this->onRewind();
 }
 
+<<<<<<< HEAD
 bool zero_rect(const SkImageInfo& dstInfo, void* pixels, size_t rowBytes,
                SkISize srcDimensions, SkIRect prevRect) {
     const auto dimensions = dstInfo.dimensions();
@@ -210,9 +219,46 @@ bool zero_rect(const SkImageInfo& dstInfo, void* pixels, size_t rowBytes,
         SkCodecPrintf("rectangles do not intersect!");
         SkASSERT(false);
         return true;
+||||||| merged common ancestors
+static void zero_rect(const SkImageInfo& dstInfo, void* pixels, size_t rowBytes,
+                      SkIRect frameRect) {
+    if (!frameRect.intersect(dstInfo.bounds())) {
+        return;
+=======
+bool zero_rect(const SkImageInfo& dstInfo, void* pixels, size_t rowBytes,
+               SkISize srcDimensions, SkIRect prevRect) {
+    const auto dimensions = dstInfo.dimensions();
+    if (dimensions != srcDimensions) {
+        SkRect src = SkRect::Make(srcDimensions);
+        SkRect dst = SkRect::Make(dimensions);
+        SkMatrix map = SkMatrix::MakeRectToRect(src, dst, SkMatrix::kCenter_ScaleToFit);
+        SkRect asRect = SkRect::Make(prevRect);
+        if (!map.mapRect(&asRect)) {
+            return false;
+        }
+        asRect.roundIn(&prevRect);
+        if (prevRect.isEmpty()) {
+            // Down-scaling shrank the empty portion to nothing,
+            // so nothing to zero.
+            return true;
+        }
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+
+    const SkImageInfo info = dstInfo.makeWH(prevRect.width(), prevRect.height());
+||||||| merged common ancestors
+    const auto info = dstInfo.makeWH(frameRect.width(), frameRect.height());
+=======
+
+    if (!prevRect.intersect(dstInfo.bounds())) {
+        SkCodecPrintf("rectangles do not intersect!");
+        SkASSERT(false);
+        return true;
     }
 
     const SkImageInfo info = dstInfo.makeWH(prevRect.width(), prevRect.height());
+>>>>>>> upstream-releases
     const size_t bpp = dstInfo.bytesPerPixel();
     const size_t offset = prevRect.x() * bpp + prevRect.y() * rowBytes;
     void* eraseDst = SkTAddOffset<void>(pixels, offset);
@@ -559,6 +605,7 @@ int SkCodec::onOutputScanline(int inputScanline) const {
     }
 }
 
+<<<<<<< HEAD
 static void fill_proc(const SkImageInfo& info, void* dst, size_t rowBytes,
                       SkCodec::ZeroInitialized zeroInit, SkSampler* sampler) {
     if (sampler) {
@@ -568,13 +615,51 @@ static void fill_proc(const SkImageInfo& info, void* dst, size_t rowBytes,
     }
 }
 
+||||||| merged common ancestors
+uint64_t SkCodec::onGetFillValue(const SkImageInfo& dstInfo) const {
+    switch (dstInfo.colorType()) {
+        case kRGBA_F16_SkColorType: {
+            static constexpr uint64_t transparentColor = 0;
+            static constexpr uint64_t opaqueColor = ((uint64_t) SK_Half1) << 48;
+            return (kOpaque_SkAlphaType == fSrcInfo.alphaType()) ? opaqueColor : transparentColor;
+        }
+        default: {
+            // This not only handles the kN32 case, but also k565, kGray8, since
+            // the low bits are zeros.
+            return (kOpaque_SkAlphaType == fSrcInfo.alphaType()) ?
+                    SK_ColorBLACK : SK_ColorTRANSPARENT;
+        }
+    }
+}
+
+static void fill_proc(const SkImageInfo& info, void* dst, size_t rowBytes,
+        uint64_t colorOrIndex, SkCodec::ZeroInitialized zeroInit, SkSampler* sampler) {
+    if (sampler) {
+        sampler->fill(info, dst, rowBytes, colorOrIndex, zeroInit);
+    } else {
+        SkSampler::Fill(info, dst, rowBytes, colorOrIndex, zeroInit);
+    }
+}
+
+=======
+>>>>>>> upstream-releases
 void SkCodec::fillIncompleteImage(const SkImageInfo& info, void* dst, size_t rowBytes,
         ZeroInitialized zeroInit, int linesRequested, int linesDecoded) {
+    if (kYes_ZeroInitialized == zeroInit) {
+        return;
+    }
 
+<<<<<<< HEAD
     void* fillDst;
+||||||| merged common ancestors
+    void* fillDst;
+    const uint64_t fillValue = this->getFillValue(info);
+=======
+>>>>>>> upstream-releases
     const int linesRemaining = linesRequested - linesDecoded;
     SkSampler* sampler = this->getSampler(false);
 
+<<<<<<< HEAD
     int fillWidth = info.width();
     if (fOptions.fSubset) {
         fillWidth = fOptions.fSubset->width();
@@ -594,12 +679,50 @@ void SkCodec::fillIncompleteImage(const SkImageInfo& info, void* dst, size_t row
             break;
         }
     }
+||||||| merged common ancestors
+    int fillWidth = info.width();
+    if (fOptions.fSubset) {
+        fillWidth = fOptions.fSubset->width();
+    }
+
+    switch (this->getScanlineOrder()) {
+        case kTopDown_SkScanlineOrder: {
+            const SkImageInfo fillInfo = info.makeWH(fillWidth, linesRemaining);
+            fillDst = SkTAddOffset<void>(dst, linesDecoded * rowBytes);
+            fill_proc(fillInfo, fillDst, rowBytes, fillValue, zeroInit, sampler);
+            break;
+        }
+        case kBottomUp_SkScanlineOrder: {
+            fillDst = dst;
+            const SkImageInfo fillInfo = info.makeWH(fillWidth, linesRemaining);
+            fill_proc(fillInfo, fillDst, rowBytes, fillValue, zeroInit, sampler);
+            break;
+        }
+    }
+=======
+    const int fillWidth = sampler          ? sampler->fillWidth()      :
+                          fOptions.fSubset ? fOptions.fSubset->width() :
+                                             info.width()              ;
+    void* fillDst = this->getScanlineOrder() == kBottomUp_SkScanlineOrder ? dst :
+                        SkTAddOffset<void>(dst, linesDecoded * rowBytes);
+    const auto fillInfo = info.makeWH(fillWidth, linesRemaining);
+    SkSampler::Fill(fillInfo, fillDst, rowBytes, kNo_ZeroInitialized);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline bool select_xform_format(SkColorType colorType, bool forColorTable,
                                        skcms_PixelFormat* outFormat) {
     SkASSERT(outFormat);
 
+||||||| merged common ancestors
+static inline SkColorSpaceXform::ColorFormat select_xform_format_ct(SkColorType colorType) {
+=======
+bool sk_select_xform_format(SkColorType colorType, bool forColorTable,
+                            skcms_PixelFormat* outFormat) {
+    SkASSERT(outFormat);
+
+>>>>>>> upstream-releases
     switch (colorType) {
         case kRGBA_8888_SkColorType:
             *outFormat = skcms_PixelFormat_RGBA_8888;
@@ -631,6 +754,30 @@ static inline bool select_xform_format(SkColorType colorType, bool forColorTable
 }
 
 bool SkCodec::initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Alpha encodedAlpha,
+<<<<<<< HEAD
+                                   bool srcIsOpaque) {
+    fXformTime = kNo_XformTime;
+    bool needsColorXform = false;
+    if (this->usesColorXform() && dstInfo.colorSpace()) {
+        dstInfo.colorSpace()->toProfile(&fDstProfile);
+        if (kRGBA_F16_SkColorType == dstInfo.colorType()) {
+            needsColorXform = true;
+        } else {
+            const auto* srcProfile = fEncodedInfo.profile();
+            if (!srcProfile) {
+                srcProfile = skcms_sRGB_profile();
+            }
+            if (!skcms_ApproximatelyEqualProfiles(srcProfile, &fDstProfile) ) {
+                needsColorXform = true;
+            }
+        }
+||||||| merged common ancestors
+                                   SkTransferFunctionBehavior premulBehavior) {
+    fColorXform = nullptr;
+    fXformOnDecode = false;
+    if (!this->usesColorXform()) {
+        return true;
+=======
                                    bool srcIsOpaque) {
     fXformTime = kNo_XformTime;
     bool needsColorXform = false;
@@ -651,6 +798,12 @@ bool SkCodec::initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Al
 
     if (!this->conversionSupported(dstInfo, srcIsOpaque, needsColorXform)) {
         return false;
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+
+    if (!this->conversionSupported(dstInfo, srcIsOpaque, needsColorXform)) {
+        return false;
     }
 
     if (needsColorXform) {
@@ -659,6 +812,26 @@ bool SkCodec::initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Al
                 ? kDecodeRow_XformTime : kPalette_XformTime;
         if (!select_xform_format(dstInfo.colorType(), fXformTime == kPalette_XformTime,
                                  &fDstXformFormat)) {
+||||||| merged common ancestors
+    // FIXME: In SkWebpCodec, if a frame is blending with a prior frame, we don't need
+    // a colorXform to do a color correct premul, since the blend step will handle
+    // premultiplication. But there is no way to know whether we need to blend from
+    // inside this call.
+    bool needsColorCorrectPremul = needs_premul(dstInfo.alphaType(), encodedAlpha) &&
+                                   SkTransferFunctionBehavior::kRespect == premulBehavior;
+    if (needs_color_xform(dstInfo, fSrcInfo.colorSpace(), needsColorCorrectPremul)) {
+        fColorXform = SkColorSpaceXform_Base::New(fSrcInfo.colorSpace(), dstInfo.colorSpace(),
+                                                  premulBehavior);
+        if (!fColorXform) {
+=======
+
+    if (needsColorXform) {
+        fXformTime = SkEncodedInfo::kPalette_Color != fEncodedInfo.color()
+                          || kRGBA_F16_SkColorType == dstInfo.colorType()
+                ? kDecodeRow_XformTime : kPalette_XformTime;
+        if (!sk_select_xform_format(dstInfo.colorType(), fXformTime == kPalette_XformTime,
+                                    &fDstXformFormat)) {
+>>>>>>> upstream-releases
             return false;
         }
         if (encodedAlpha == SkEncodedInfo::kUnpremul_Alpha

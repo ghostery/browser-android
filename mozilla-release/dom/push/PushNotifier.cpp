@@ -41,17 +41,27 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(PushNotifier)
 NS_IMETHODIMP
 PushNotifier::NotifyPushWithData(const nsACString& aScope,
                                  nsIPrincipal* aPrincipal,
+<<<<<<< HEAD
                                  const nsAString& aMessageId, uint32_t aDataLen,
                                  uint8_t* aData) {
+||||||| merged common ancestors
+                                 const nsAString& aMessageId,
+                                 uint32_t aDataLen, uint8_t* aData)
+{
+=======
+                                 const nsAString& aMessageId,
+                                 const nsTArray<uint8_t>& aData) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG(aPrincipal);
+  // We still need to do this copying business, if we want the copy to be
+  // fallible.  Just passing Some(aData) would do an infallible copy at the
+  // point where the Some() call happens.
   nsTArray<uint8_t> data;
-  if (!data.SetCapacity(aDataLen, fallible)) {
+  if (!data.AppendElements(aData, fallible)) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
-  if (!data.InsertElementsAt(0, aData, aDataLen, fallible)) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-  PushMessageDispatcher dispatcher(aScope, aPrincipal, aMessageId, Some(data));
+  PushMessageDispatcher dispatcher(aScope, aPrincipal, aMessageId,
+                                   Some(std::move(data)));
   return Dispatch(dispatcher);
 }
 
@@ -194,6 +204,7 @@ PushData::Json(JSContext* aCx, JS::MutableHandle<JS::Value> aResult) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 PushData::Binary(uint32_t* aDataLen, uint8_t** aData) {
   NS_ENSURE_ARG_POINTER(aDataLen);
   NS_ENSURE_ARG_POINTER(aData);
@@ -208,6 +219,26 @@ PushData::Binary(uint32_t* aDataLen, uint8_t** aData) {
   memcpy(data, mData.Elements(), length * sizeof(uint8_t));
   *aDataLen = length;
   *aData = data;
+||||||| merged common ancestors
+PushData::Binary(uint32_t* aDataLen, uint8_t** aData)
+{
+  NS_ENSURE_ARG_POINTER(aDataLen);
+  NS_ENSURE_ARG_POINTER(aData);
+
+  *aData = nullptr;
+  if (mData.IsEmpty()) {
+    *aDataLen = 0;
+    return NS_OK;
+  }
+  uint32_t length = mData.Length();
+  uint8_t* data = static_cast<uint8_t*>(moz_xmalloc(length * sizeof(uint8_t)));
+  memcpy(data, mData.Elements(), length * sizeof(uint8_t));
+  *aDataLen = length;
+  *aData = data;
+=======
+PushData::Binary(nsTArray<uint8_t>& aData) {
+  aData = mData;
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -261,11 +292,29 @@ bool PushDispatcher::ShouldNotifyWorkers() {
   if (NS_WARN_IF(!mPrincipal)) {
     return false;
   }
+
   // System subscriptions use observer notifications instead of service worker
   // events. The `testing.notifyWorkers` pref disables worker events for
   // non-system subscriptions.
-  return !nsContentUtils::IsSystemPrincipal(mPrincipal) &&
-         Preferences::GetBool("dom.push.testing.notifyWorkers", true);
+  if (nsContentUtils::IsSystemPrincipal(mPrincipal) ||
+      !Preferences::GetBool("dom.push.testing.notifyWorkers", true)) {
+    return false;
+  }
+
+  // If e10s is off, no need to worry about processes.
+  if (!BrowserTabsRemoteAutostart()) {
+    return true;
+  }
+
+  // If parent intercept is enabled, then we only want to notify in the parent
+  // process. Otherwise, we only want to notify in the child process.
+  bool isContentProcess = XRE_GetProcessType() == GeckoProcessType_Content;
+  bool parentInterceptEnabled = ServiceWorkerParentInterceptEnabled();
+  if (parentInterceptEnabled) {
+    return !isContentProcess;
+  }
+
+  return isContentProcess;
 }
 
 nsresult PushDispatcher::DoNotifyObservers(nsISupports* aSubject,
@@ -418,8 +467,19 @@ PushErrorDispatcher::~PushErrorDispatcher() {}
 
 nsresult PushErrorDispatcher::NotifyObservers() { return NS_OK; }
 
+<<<<<<< HEAD
 nsresult PushErrorDispatcher::NotifyWorkers() {
   if (!ShouldNotifyWorkers()) {
+||||||| merged common ancestors
+nsresult
+PushErrorDispatcher::NotifyWorkers()
+{
+  if (!ShouldNotifyWorkers()) {
+=======
+nsresult PushErrorDispatcher::NotifyWorkers() {
+  if (!ShouldNotifyWorkers() &&
+      (!mPrincipal || nsContentUtils::IsSystemPrincipal(mPrincipal))) {
+>>>>>>> upstream-releases
     // For system subscriptions, log the error directly to the browser console.
     return nsContentUtils::ReportToConsoleNonLocalized(
         mMessage, mFlags, NS_LITERAL_CSTRING("Push"), nullptr, /* aDocument */
@@ -429,6 +489,7 @@ nsresult PushErrorDispatcher::NotifyWorkers() {
         0, /* aColumnNumber */
         nsContentUtils::eOMIT_LOCATION);
   }
+
   // For service worker subscriptions, report the error to all clients.
   RefPtr<ServiceWorkerManager> swm = ServiceWorkerManager::GetInstance();
   if (swm) {
@@ -442,7 +503,20 @@ nsresult PushErrorDispatcher::NotifyWorkers() {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 bool PushErrorDispatcher::SendToParent(ContentChild*) { return true; }
+||||||| merged common ancestors
+bool
+PushErrorDispatcher::SendToParent(ContentChild*)
+{
+  return true;
+}
+=======
+bool PushErrorDispatcher::SendToParent(ContentChild* aContentActor) {
+  return aContentActor->SendPushError(mScope, IPC::Principal(mPrincipal),
+                                      mMessage, mFlags);
+}
+>>>>>>> upstream-releases
 
 bool PushErrorDispatcher::SendToChild(ContentParent* aContentActor) {
   return aContentActor->SendPushError(mScope, IPC::Principal(mPrincipal),

@@ -40,7 +40,13 @@
 #include "ImageContainer.h"
 #include "PlaybackType.h"
 #ifdef DEBUG
+<<<<<<< HEAD
 #include "imgIContainerDebug.h"
+||||||| merged common ancestors
+  #include "imgIContainerDebug.h"
+=======
+#  include "imgIContainerDebug.h"
+>>>>>>> upstream-releases
 #endif
 
 class nsIInputStream;
@@ -451,8 +457,16 @@ class RasterImage final : public ImageResource,
 
   bool IsOpaque();
 
+<<<<<<< HEAD
   DrawableSurface RequestDecodeForSizeInternal(const gfx::IntSize& aSize,
                                                uint32_t aFlags);
+||||||| merged common ancestors
+  DrawableSurface RequestDecodeForSizeInternal(const gfx::IntSize& aSize, uint32_t aFlags);
+=======
+  DrawableSurface RequestDecodeForSizeInternal(const gfx::IntSize& aSize,
+                                               uint32_t aFlags,
+                                               uint32_t aWhichFrame);
+>>>>>>> upstream-releases
 
  protected:
   explicit RasterImage(nsIURI* aURI = nullptr);

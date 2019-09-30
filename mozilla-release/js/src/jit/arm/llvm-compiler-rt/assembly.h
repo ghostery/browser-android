@@ -17,17 +17,17 @@
 #define COMPILERRT_ASSEMBLY_H
 
 #if defined(__POWERPC__) || defined(__powerpc__) || defined(__ppc__)
-#define SEPARATOR @
+#  define SEPARATOR @
 #else
-#define SEPARATOR ;
+#  define SEPARATOR ;
 #endif
 
 #if defined(__APPLE__)
-#define HIDDEN_DIRECTIVE .private_extern
-#define LOCAL_LABEL(name) L_##name
+#  define HIDDEN_DIRECTIVE .private_extern
+#  define LOCAL_LABEL(name) L_##name
 #else
-#define HIDDEN_DIRECTIVE .hidden
-#define LOCAL_LABEL(name) .L_##name
+#  define HIDDEN_DIRECTIVE .hidden
+#  define LOCAL_LABEL(name) .L_##name
 #endif
 
 #define GLUE2(a, b) a##b
@@ -35,10 +35,18 @@
 #define SYMBOL_NAME(name) GLUE(__USER_LABEL_PREFIX__, name)
 
 #ifdef VISIBILITY_HIDDEN
+<<<<<<< HEAD
 #define DECLARE_SYMBOL_VISIBILITY(name) \
   HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
+||||||| merged common ancestors
+#define DECLARE_SYMBOL_VISIBILITY(name)                    \
+  HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
+=======
+#  define DECLARE_SYMBOL_VISIBILITY(name) \
+    HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
+>>>>>>> upstream-releases
 #else
-#define DECLARE_SYMBOL_VISIBILITY(name)
+#  define DECLARE_SYMBOL_VISIBILITY(name)
 #endif
 
 #define DEFINE_COMPILERRT_FUNCTION(name)                             \
@@ -58,11 +66,27 @@
   .globl SYMBOL_NAME(name) SEPARATOR.set SYMBOL_NAME(name), \
       SYMBOL_NAME(target) SEPARATOR
 
+<<<<<<< HEAD
 #if defined(__ARM_EABI__)
 #define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name) \
   DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
+||||||| merged common ancestors
+#if defined (__ARM_EABI__)
+# define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)      \
+  DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
+=======
+#if defined(__ARM_EABI__)
+#  define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name) \
+    DEFINE_COMPILERRT_FUNCTION_ALIAS(aeabi_name, name)
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
+||||||| merged common ancestors
+# define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
+=======
+#  define DEFINE_AEABI_FUNCTION_ALIAS(aeabi_name, name)
+>>>>>>> upstream-releases
 #endif
 
 #endif /* COMPILERRT_ASSEMBLY_H */

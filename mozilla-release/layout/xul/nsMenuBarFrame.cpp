@@ -9,10 +9,8 @@
 #include "nsIContent.h"
 #include "nsAtom.h"
 #include "nsPresContext.h"
-#include "mozilla/ComputedStyle.h"
 #include "nsCSSRendering.h"
 #include "nsNameSpaceManager.h"
-#include "nsIDocument.h"
 #include "nsGkAtoms.h"
 #include "nsMenuFrame.h"
 #include "nsMenuPopupFrame.h"
@@ -21,11 +19,14 @@
 #include "nsIInterfaceRequestorUtils.h"
 #include "nsCSSFrameConstructor.h"
 #ifdef XP_WIN
-#include "nsISound.h"
-#include "nsWidgetsCID.h"
+#  include "nsISound.h"
+#  include "nsWidgetsCID.h"
 #endif
 #include "nsUTF8Utils.h"
+#include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/TextEvents.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Event.h"
 #include "mozilla/dom/KeyboardEvent.h"
 
@@ -37,8 +38,18 @@ using mozilla::dom::KeyboardEvent;
 //
 // Wrapper for creating a new menu Bar container
 //
+<<<<<<< HEAD
 nsIFrame* NS_NewMenuBarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsMenuBarFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewMenuBarFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsMenuBarFrame(aStyle);
+=======
+nsIFrame* NS_NewMenuBarFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsMenuBarFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMenuBarFrame)
@@ -50,6 +61,7 @@ NS_QUERYFRAME_TAIL_INHERITING(nsBoxFrame)
 //
 // nsMenuBarFrame cntr
 //
+<<<<<<< HEAD
 nsMenuBarFrame::nsMenuBarFrame(ComputedStyle* aStyle)
     : nsBoxFrame(aStyle, kClassID),
       mStayActive(false),
@@ -59,6 +71,33 @@ nsMenuBarFrame::nsMenuBarFrame(ComputedStyle* aStyle)
 
 void nsMenuBarFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
                           nsIFrame* aPrevInFlow) {
+||||||| merged common ancestors
+nsMenuBarFrame::nsMenuBarFrame(ComputedStyle* aStyle)
+  : nsBoxFrame(aStyle, kClassID)
+  , mStayActive(false)
+  , mIsActive(false)
+  , mActiveByKeyboard(false)
+  , mCurrentMenu(nullptr)
+{
+} // cntr
+
+void
+nsMenuBarFrame::Init(nsIContent*       aContent,
+                     nsContainerFrame* aParent,
+                     nsIFrame*         aPrevInFlow)
+{
+=======
+nsMenuBarFrame::nsMenuBarFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+    : nsBoxFrame(aStyle, aPresContext, kClassID),
+      mStayActive(false),
+      mIsActive(false),
+      mActiveByKeyboard(false),
+      mCurrentMenu(nullptr) {}  // cntr
+
+void nsMenuBarFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
+                          nsIFrame* aPrevInFlow) {
+>>>>>>> upstream-releases
   nsBoxFrame::Init(aContent, aParent, aPrevInFlow);
 
   // Create the menu bar listener.
@@ -209,9 +248,20 @@ nsMenuFrame* nsMenuBarFrame::FindMenuWithShortcut(KeyboardEvent* aKeyEvent,
   return nullptr;
 }
 
+<<<<<<< HEAD
 /* virtual */ nsMenuFrame* nsMenuBarFrame::GetCurrentMenuItem() {
   return mCurrentMenu;
 }
+||||||| merged common ancestors
+/* virtual */ nsMenuFrame*
+nsMenuBarFrame::GetCurrentMenuItem()
+{
+  return mCurrentMenu;
+}
+=======
+/* virtual */
+nsMenuFrame* nsMenuBarFrame::GetCurrentMenuItem() { return mCurrentMenu; }
+>>>>>>> upstream-releases
 
 NS_IMETHODIMP
 nsMenuBarFrame::SetCurrentMenuItem(nsMenuFrame* aMenuItem) {

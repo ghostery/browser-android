@@ -5,8 +5,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+<<<<<<< HEAD
 #include "js/CompilationAndEvaluation.h"
 #include "js/SourceText.h"
+||||||| merged common ancestors
+#include "js/CompilationAndEvaluation.h"
+#include "js/SourceBufferHolder.h"
+=======
+#include "mozilla/Utf8.h"  // mozilla::Utf8Unit
+
+#include "js/CompilationAndEvaluation.h"  // JS::Compile{,{,Utf8{File,Path}}DontInflate}
+#include "js/SourceText.h"                // JS::Source{Ownership,Text}
+>>>>>>> upstream-releases
 #include "jsapi-tests/tests.h"
 
 struct ScriptObjectFixture : public JSAPITest {
@@ -39,12 +49,34 @@ const int ScriptObjectFixture::code_size =
     sizeof(ScriptObjectFixture::code) - 1;
 char16_t ScriptObjectFixture::uc_code[ScriptObjectFixture::code_size];
 
+<<<<<<< HEAD
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScript) {
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, __LINE__);
+||||||| merged common ancestors
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScript)
+{
+    JS::CompileOptions options(cx);
+    options.setFileAndLine(__FILE__, __LINE__);
+=======
 BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScript) {
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, __LINE__);
 
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, code, code_size, JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8(cx, options, code, code_size, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, code, code_size, &script));
+=======
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   return tryScript(script);
 }
@@ -54,19 +86,57 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScript_empty) {
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, __LINE__);
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8(cx, options, "", 0, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, "", 0, &script));
+=======
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, "", 0, JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return tryScript(script);
+||||||| merged common ancestors
+    return tryScript(script);
+=======
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
 
   return tryScript(script);
+>>>>>>> upstream-releases
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScript_empty)
 
+<<<<<<< HEAD
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScriptForPrincipals) {
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, __LINE__);
+||||||| merged common ancestors
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScriptForPrincipals)
+{
+    JS::CompileOptions options(cx);
+    options.setFileAndLine(__FILE__, __LINE__);
+=======
 BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_CompileScriptForPrincipals) {
   JS::CompileOptions options(cx);
   options.setFileAndLine(__FILE__, __LINE__);
 
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, code, code_size, JS::SourceOwnership::Borrowed));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8(cx, options, code, code_size, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8(cx, options, code, code_size, &script));
+=======
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+>>>>>>> upstream-releases
 
   return tryScript(script);
 }
@@ -79,10 +149,19 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript) {
   JS::SourceText<char16_t> srcBuf;
   CHECK(srcBuf.init(cx, uc_code, code_size, JS::SourceOwnership::Borrowed));
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::Compile(cx, options, srcBuf, &script));
 
   return tryScript(script);
+||||||| merged common ancestors
+    return tryScript(script);
+=======
+  JS::RootedScript script(cx, JS::Compile(cx, options, srcBuf));
+  CHECK(script);
+
+  return tryScript(script);
+>>>>>>> upstream-releases
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript)
 
@@ -93,8 +172,17 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript_empty) {
   JS::SourceText<char16_t> srcBuf;
   CHECK(srcBuf.init(cx, uc_code, 0, JS::SourceOwnership::Borrowed));
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::Compile(cx, options, srcBuf, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    JS::SourceBufferHolder srcBuf(uc_code, 0, JS::SourceBufferHolder::NoOwnership);
+    CHECK(JS::Compile(cx, options, srcBuf, &script));
+=======
+  JS::RootedScript script(cx, JS::Compile(cx, options, srcBuf));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   return tryScript(script);
 }
@@ -108,10 +196,19 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture,
   JS::SourceText<char16_t> srcBuf;
   CHECK(srcBuf.init(cx, uc_code, code_size, JS::SourceOwnership::Borrowed));
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::Compile(cx, options, srcBuf, &script));
 
   return tryScript(script);
+||||||| merged common ancestors
+    return tryScript(script);
+=======
+  JS::RootedScript script(cx, JS::Compile(cx, options, srcBuf));
+  CHECK(script);
+
+  return tryScript(script);
+>>>>>>> upstream-releases
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScriptForPrincipals)
 
@@ -125,8 +222,17 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFile) {
   JS::CompileOptions options(cx);
   options.setFileAndLine(script_filename, 1);
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8Path(cx, options, script_filename, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8Path(cx, options, script_filename, &script));
+=======
+  JS::RootedScript script(
+      cx, JS::CompileUtf8PathDontInflate(cx, options, script_filename));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   tempScript.remove();
   return tryScript(script);
@@ -142,14 +248,37 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFile_empty) {
   JS::CompileOptions options(cx);
   options.setFileAndLine(script_filename, 1);
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8Path(cx, options, script_filename, &script));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8Path(cx, options, script_filename, &script));
+=======
+  JS::RootedScript script(
+      cx, JS::CompileUtf8PathDontInflate(cx, options, script_filename));
+  CHECK(script);
+>>>>>>> upstream-releases
 
   tempScript.remove();
   return tryScript(script);
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFile_empty)
 
+<<<<<<< HEAD
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle) {
+  TempFile tempScript;
+  FILE* script_stream = tempScript.open("temp-bug438633_JS_CompileFileHandle");
+  CHECK(fputs(code, script_stream) != EOF);
+  CHECK(fseek(script_stream, 0, SEEK_SET) != EOF);
+||||||| merged common ancestors
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle)
+{
+    TempFile tempScript;
+    FILE* script_stream = tempScript.open("temp-bug438633_JS_CompileFileHandle");
+    CHECK(fputs(code, script_stream) != EOF);
+    CHECK(fseek(script_stream, 0, SEEK_SET) != EOF);
+=======
 BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle) {
   TempFile tempScript;
   FILE* script_stream = tempScript.open("temp-bug438633_JS_CompileFileHandle");
@@ -158,10 +287,31 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle) {
 
   JS::CompileOptions options(cx);
   options.setFileAndLine("temporary file", 1);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::CompileOptions options(cx);
+  options.setFileAndLine("temporary file", 1);
+||||||| merged common ancestors
+    JS::CompileOptions options(cx);
+    options.setFileAndLine("temporary file", 1);
+=======
+  JS::RootedScript script(
+      cx, JS::CompileUtf8FileDontInflate(cx, options, script_stream));
+  CHECK(script);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
   return tryScript(script);
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
+    return tryScript(script);
+=======
+  return tryScript(script);
+>>>>>>> upstream-releases
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle)
 
@@ -173,9 +323,21 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle_empty) {
   JS::CompileOptions options(cx);
   options.setFileAndLine("empty temporary file", 1);
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
   return tryScript(script);
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
+    return tryScript(script);
+=======
+  JS::RootedScript script(
+      cx, JS::CompileUtf8FileDontInflate(cx, options, script_stream));
+  CHECK(script);
+
+  return tryScript(script);
+>>>>>>> upstream-releases
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandle_empty)
 
@@ -190,6 +352,7 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture,
   JS::CompileOptions options(cx);
   options.setFileAndLine("temporary file", 1);
 
+<<<<<<< HEAD
   JS::RootedScript script(cx);
   CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
   return tryScript(script);
@@ -216,6 +379,50 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, CloneAndExecuteScript) {
     CHECK(global2);
     JSAutoRealm ar(cx, global2);
     CHECK(JS_WrapValue(cx, &fortyTwo));
+||||||| merged common ancestors
+    JS::RootedScript script(cx);
+    CHECK(JS::CompileUtf8File(cx, options, script_stream, &script));
+    return tryScript(script);
+}
+END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileFileHandleForPrincipals)
+
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, CloneAndExecuteScript)
+{
+    JS::RootedValue fortyTwo(cx);
+    fortyTwo.setInt32(42);
+=======
+  JS::RootedScript script(
+      cx, JS::CompileUtf8FileDontInflate(cx, options, script_stream));
+  CHECK(script);
+
+  return tryScript(script);
+}
+END_FIXTURE_TEST(ScriptObjectFixture,
+                 bug438633_JS_CompileFileHandleForPrincipals)
+
+BEGIN_FIXTURE_TEST(ScriptObjectFixture, CloneAndExecuteScript) {
+  JS::RootedValue fortyTwo(cx);
+  fortyTwo.setInt32(42);
+  CHECK(JS_SetProperty(cx, global, "val", fortyTwo));
+
+  JS::CompileOptions options(cx);
+  options.setFileAndLine(__FILE__, __LINE__);
+
+  JS::SourceText<mozilla::Utf8Unit> srcBuf;
+  CHECK(srcBuf.init(cx, "val", 3, JS::SourceOwnership::Borrowed));
+
+  JS::RootedScript script(cx, JS::CompileDontInflate(cx, options, srcBuf));
+  CHECK(script);
+
+  JS::RootedValue value(cx);
+  CHECK(JS_ExecuteScript(cx, script, &value));
+  CHECK(value.toInt32() == 42);
+  {
+    JS::RootedObject global2(cx, createGlobal());
+    CHECK(global2);
+    JSAutoRealm ar(cx, global2);
+    CHECK(JS_WrapValue(cx, &fortyTwo));
+>>>>>>> upstream-releases
     CHECK(JS_SetProperty(cx, global, "val", fortyTwo));
     JS::RootedValue value2(cx);
     CHECK(JS::CloneAndExecuteScript(cx, script, &value2));

@@ -22,7 +22,6 @@
 #include "nsTextEditorState.h"
 
 class nsIControllers;
-class nsIDocument;
 class nsPresContext;
 
 namespace mozilla {
@@ -100,14 +99,21 @@ class HTMLTextAreaElement final : public nsGenericHTMLFormElementWithState,
   NS_IMETHOD_(void) EnablePreview() override;
   NS_IMETHOD_(bool) IsPreviewEnabled() override;
   NS_IMETHOD_(void) InitializeKeyboardEventListeners() override;
+<<<<<<< HEAD
   NS_IMETHOD_(void)
   OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
+||||||| merged common ancestors
+  NS_IMETHOD_(void) OnValueChanged(bool aNotify, bool aWasInteractiveUserChange) override;
+=======
+  NS_IMETHOD_(void) OnValueChanged(bool aNotify, ValueChangeKind) override;
+>>>>>>> upstream-releases
   virtual void GetValueFromSetRangeText(nsAString& aValue) override;
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual nsresult SetValueFromSetRangeText(const nsAString& aValue) override;
   NS_IMETHOD_(bool) HasCachedSelection() override;
 
   // nsIContent
+<<<<<<< HEAD
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
@@ -118,6 +124,27 @@ class HTMLTextAreaElement final : public nsGenericHTMLFormElementWithState,
                               nsAttrValue& aResult) override;
   virtual nsMapRuleToAttributesFunc GetAttributeMappingFunction()
       const override;
+||||||| merged common ancestors
+  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                               nsIContent* aBindingParent) override;
+  virtual void UnbindFromTree(bool aDeep = true,
+                              bool aNullParent = true) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID,
+                                nsAtom* aAttribute,
+                                const nsAString& aValue,
+                                nsIPrincipal* aMaybeScriptedPrincipal,
+                                nsAttrValue& aResult) override;
+  virtual nsMapRuleToAttributesFunc GetAttributeMappingFunction() const override;
+=======
+  virtual nsresult BindToTree(BindContext&, nsINode& aParent) override;
+  virtual void UnbindFromTree(bool aNullParent = true) override;
+  virtual bool ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
+                              const nsAString& aValue,
+                              nsIPrincipal* aMaybeScriptedPrincipal,
+                              nsAttrValue& aResult) override;
+  virtual nsMapRuleToAttributesFunc GetAttributeMappingFunction()
+      const override;
+>>>>>>> upstream-releases
   virtual nsChangeHint GetAttributeChangeHint(const nsAtom* aAttribute,
                                               int32_t aModType) const override;
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
@@ -173,8 +200,20 @@ class HTMLTextAreaElement final : public nsGenericHTMLFormElementWithState,
   void SetAutofocus(bool aAutoFocus, ErrorResult& aError) {
     SetHTMLBoolAttr(nsGkAtoms::autofocus, aAutoFocus, aError);
   }
+<<<<<<< HEAD
   uint32_t Cols() { return GetIntAttr(nsGkAtoms::cols, DEFAULT_COLS); }
   void SetCols(uint32_t aCols, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t Cols()
+  {
+    return GetIntAttr(nsGkAtoms::cols, DEFAULT_COLS);
+  }
+  void SetCols(uint32_t aCols, ErrorResult& aError)
+  {
+=======
+  uint32_t Cols() { return GetUnsignedIntAttr(nsGkAtoms::cols, DEFAULT_COLS); }
+  void SetCols(uint32_t aCols, ErrorResult& aError) {
+>>>>>>> upstream-releases
     uint32_t cols = aCols ? aCols : DEFAULT_COLS;
     SetUnsignedIntAttr(nsGkAtoms::cols, cols, DEFAULT_COLS, aError);
   }
@@ -226,8 +265,22 @@ class HTMLTextAreaElement final : public nsGenericHTMLFormElementWithState,
   void SetRequired(bool aRequired, ErrorResult& aError) {
     SetHTMLBoolAttr(nsGkAtoms::required, aRequired, aError);
   }
+<<<<<<< HEAD
   uint32_t Rows() { return GetIntAttr(nsGkAtoms::rows, DEFAULT_ROWS_TEXTAREA); }
   void SetRows(uint32_t aRows, ErrorResult& aError) {
+||||||| merged common ancestors
+  uint32_t Rows()
+  {
+    return GetIntAttr(nsGkAtoms::rows, DEFAULT_ROWS_TEXTAREA);
+  }
+  void SetRows(uint32_t aRows, ErrorResult& aError)
+  {
+=======
+  uint32_t Rows() {
+    return GetUnsignedIntAttr(nsGkAtoms::rows, DEFAULT_ROWS_TEXTAREA);
+  }
+  void SetRows(uint32_t aRows, ErrorResult& aError) {
+>>>>>>> upstream-releases
     uint32_t rows = aRows ? aRows : DEFAULT_ROWS_TEXTAREA;
     SetUnsignedIntAttr(nsGkAtoms::rows, rows, DEFAULT_ROWS_TEXTAREA, aError);
   }

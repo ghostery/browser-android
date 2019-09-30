@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from __future__ import absolute_import
 import firefox_puppeteer.errors as errors
 
 from firefox_puppeteer import PuppeteerMixin
@@ -25,7 +26,13 @@ class TestWindows(PuppeteerMixin, MarionetteTestCase):
 
         # Open two more windows
         for index in range(0, 2):
+<<<<<<< HEAD
             self.marionette.execute_script(""" OpenBrowserWindow(); """)
+||||||| merged common ancestors
+            self.marionette.execute_script(""" window.open(); """)
+=======
+            self.marionette.open(type="window")
+>>>>>>> upstream-releases
 
         windows = self.puppeteer.windows.all
         self.assertEquals(len(windows), 3)
@@ -130,10 +137,16 @@ class TestBaseWindow(PuppeteerMixin, MarionetteTestCase):
 
         # Open and close a new window by a custom callback
         def opener(window):
+<<<<<<< HEAD
             window.marionette.execute_script(""" OpenBrowserWindow(); """)
+||||||| merged common ancestors
+            window.marionette.execute_script(""" window.open(); """)
+=======
+            window.marionette.open(type="window")
+>>>>>>> upstream-releases
 
         def closer(window):
-            window.marionette.execute_script(""" window.close(); """)
+            window.marionette.close()
 
         win2 = win1.open_window(callback=opener)
 

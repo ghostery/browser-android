@@ -9,31 +9,26 @@
 
 #include "vm/JSObject.h"
 
-#include "mozilla/DebugOnly.h"
-
-#include "jsfriendapi.h"
-
-#include "builtin/MapObject.h"
-#include "builtin/TypedObject.h"
-#include "gc/Allocator.h"
-#include "gc/FreeOp.h"
 #include "vm/ArrayObject.h"
-#include "vm/DateObject.h"
 #include "vm/EnvironmentObject.h"
 #include "vm/JSFunction.h"
-#include "vm/NumberObject.h"
 #include "vm/Probes.h"
-#include "vm/StringObject.h"
-#include "vm/TypedArrayObject.h"
 
+#include "gc/FreeOp-inl.h"
 #include "gc/Marking-inl.h"
 #include "gc/ObjectKind-inl.h"
+<<<<<<< HEAD
 #include "vm/JSAtom-inl.h"
 #include "vm/ObjectOperations-inl.h"  // js::MaybeHasInterestingSymbolProperty
+||||||| merged common ancestors
+#include "vm/JSAtom-inl.h"
+#include "vm/ObjectOperations-inl.h" // js::MaybeHasInterestingSymbolProperty
+=======
+#include "vm/ObjectOperations-inl.h"  // js::MaybeHasInterestingSymbolProperty
+>>>>>>> upstream-releases
 #include "vm/Realm-inl.h"
-#include "vm/ShapedObject-inl.h"
-#include "vm/TypeInference-inl.h"
 
+<<<<<<< HEAD
 namespace js {
 
 // This is needed here for ensureShape() below.
@@ -42,18 +37,69 @@ inline bool MaybeConvertUnboxedObjectToNative(JSContext* cx, JSObject* obj) {
     return UnboxedPlainObject::convertToNative(cx, obj);
   }
   return true;
+||||||| merged common ancestors
+namespace js {
+
+// This is needed here for ensureShape() below.
+inline bool
+MaybeConvertUnboxedObjectToNative(JSContext* cx, JSObject* obj)
+{
+    if (obj->is<UnboxedPlainObject>()) {
+        return UnboxedPlainObject::convertToNative(cx, obj);
+    }
+    return true;
+=======
+MOZ_ALWAYS_INLINE uint32_t js::NativeObject::numDynamicSlots() const {
+  return dynamicSlotsCount(numFixedSlots(), slotSpan(), getClass());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 }  // namespace js
+||||||| merged common ancestors
+} // namespace js
+=======
+/* static */ MOZ_ALWAYS_INLINE uint32_t js::NativeObject::dynamicSlotsCount(
+    uint32_t nfixed, uint32_t span, const Class* clasp) {
+  if (span <= nfixed) {
+    return 0;
+  }
+  span -= nfixed;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 inline js::Shape* JSObject::maybeShape() const {
   if (!is<js::ShapedObject>()) {
     return nullptr;
   }
+||||||| merged common ancestors
+inline js::Shape*
+JSObject::maybeShape() const
+{
+    if (!is<js::ShapedObject>()) {
+        return nullptr;
+    }
+=======
+  // Increase the slots to SLOT_CAPACITY_MIN to decrease the likelihood
+  // the dynamic slots need to get increased again. ArrayObjects ignore
+  // this because slots are uncommon in that case.
+  if (clasp != &ArrayObject::class_ && span <= SLOT_CAPACITY_MIN) {
+    return SLOT_CAPACITY_MIN;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   return as<js::ShapedObject>().shape();
+||||||| merged common ancestors
+    return as<js::ShapedObject>().shape();
+=======
+  uint32_t slots = mozilla::RoundUpPow2(span);
+  MOZ_ASSERT(slots >= span);
+  return slots;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline js::Shape* JSObject::ensureShape(JSContext* cx) {
   if (!js::MaybeConvertUnboxedObjectToNative(cx, this)) {
     return nullptr;
@@ -61,6 +107,22 @@ inline js::Shape* JSObject::ensureShape(JSContext* cx) {
   js::Shape* shape = maybeShape();
   MOZ_ASSERT(shape);
   return shape;
+||||||| merged common ancestors
+inline js::Shape*
+JSObject::ensureShape(JSContext* cx)
+{
+    if (!js::MaybeConvertUnboxedObjectToNative(cx, this)) {
+        return nullptr;
+    }
+    js::Shape* shape = maybeShape();
+    MOZ_ASSERT(shape);
+    return shape;
+=======
+/* static */ MOZ_ALWAYS_INLINE uint32_t
+js::NativeObject::dynamicSlotsCount(Shape* shape) {
+  return dynamicSlotsCount(shape->numFixedSlots(), shape->slotSpan(),
+                           shape->getObjectClass());
+>>>>>>> upstream-releases
 }
 
 inline void JSObject::finalize(js::FreeOp* fop) {
@@ -74,6 +136,7 @@ inline void JSObject::finalize(js::FreeOp* fop) {
   }
 #endif
 
+<<<<<<< HEAD
   const js::Class* clasp = getClass();
   js::NativeObject* nobj = nullptr;
   if (clasp->isNative()) {
@@ -103,6 +166,71 @@ inline void JSObject::finalize(js::FreeOp* fop) {
       }
     } else {
       fop->free_(nobj->getUnshiftedElementsHeader());
+||||||| merged common ancestors
+    const js::Class* clasp = getClass();
+    js::NativeObject* nobj = nullptr;
+    if (clasp->isNative()) {
+        nobj = &as<js::NativeObject>();
+    }
+    if (clasp->hasFinalize()) {
+        clasp->doFinalize(fop, this);
+    }
+
+    if (!nobj) {
+        return;
+    }
+
+    if (nobj->hasDynamicSlots()) {
+        fop->free_(nobj->slots_);
+    }
+
+    if (nobj->hasDynamicElements()) {
+        js::ObjectElements* elements = nobj->getElementsHeader();
+        if (elements->isCopyOnWrite()) {
+            if (elements->ownerObject() == this) {
+                // Don't free the elements until object finalization finishes,
+                // so that other objects can access these elements while they
+                // are themselves finalized.
+                MOZ_ASSERT(elements->numShiftedElements() == 0);
+                fop->freeLater(elements);
+            }
+        } else {
+            fop->free_(nobj->getUnshiftedElementsHeader());
+        }
+=======
+  const js::Class* clasp = getClass();
+  js::NativeObject* nobj = nullptr;
+  if (clasp->isNative()) {
+    nobj = &as<js::NativeObject>();
+  }
+  if (clasp->hasFinalize()) {
+    clasp->doFinalize(fop, this);
+  }
+
+  if (!nobj) {
+    return;
+  }
+
+  if (nobj->hasDynamicSlots()) {
+    size_t size = nobj->numDynamicSlots() * sizeof(js::HeapSlot);
+    fop->free_(this, nobj->slots_, size, js::MemoryUse::ObjectSlots);
+  }
+
+  if (nobj->hasDynamicElements()) {
+    js::ObjectElements* elements = nobj->getElementsHeader();
+    size_t size = elements->numAllocatedElements() * sizeof(js::HeapSlot);
+    if (elements->isCopyOnWrite()) {
+      if (elements->ownerObject() == this) {
+        // Don't free the elements until object finalization finishes,
+        // so that other objects can access these elements while they
+        // are themselves finalized.
+        MOZ_ASSERT(elements->numShiftedElements() == 0);
+        fop->freeLater(this, elements, size, js::MemoryUse::ObjectElements);
+      }
+    } else {
+      fop->free_(this, nobj->getUnshiftedElementsHeader(), size,
+                 js::MemoryUse::ObjectElements);
+>>>>>>> upstream-releases
     }
   }
 
@@ -130,9 +258,21 @@ js::NativeObject::updateDictionaryListPointerAfterMinorGC(NativeObject* old) {
   }
 }
 
+<<<<<<< HEAD
 /* static */ inline bool JSObject::setSingleton(JSContext* cx,
                                                 js::HandleObject obj) {
   MOZ_ASSERT(!IsInsideNursery(obj));
+||||||| merged common ancestors
+/* static */ inline bool
+JSObject::setSingleton(JSContext* cx, js::HandleObject obj)
+{
+    MOZ_ASSERT(!IsInsideNursery(obj));
+=======
+/* static */ inline bool JSObject::setSingleton(JSContext* cx,
+                                                js::HandleObject obj) {
+  MOZ_ASSERT(!IsInsideNursery(obj));
+  MOZ_ASSERT(!obj->isSingleton());
+>>>>>>> upstream-releases
 
   js::ObjectGroup* group = js::ObjectGroup::lazySingletonGroup(
       cx, obj->group_, obj->getClass(), obj->taggedProto());
@@ -156,10 +296,25 @@ js::NativeObject::updateDictionaryListPointerAfterMinorGC(NativeObject* old) {
   return obj->group_;
 }
 
+<<<<<<< HEAD
 inline void JSObject::setGroup(js::ObjectGroup* group) {
   MOZ_RELEASE_ASSERT(group);
   MOZ_ASSERT(!isSingleton());
   group_ = group;
+||||||| merged common ancestors
+inline void
+JSObject::setGroup(js::ObjectGroup* group)
+{
+    MOZ_RELEASE_ASSERT(group);
+    MOZ_ASSERT(!isSingleton());
+    group_ = group;
+=======
+inline void JSObject::setGroup(js::ObjectGroup* group) {
+  MOZ_RELEASE_ASSERT(group);
+  MOZ_ASSERT(!isSingleton());
+  MOZ_ASSERT(maybeCCWRealm() == group->realm());
+  group_ = group;
+>>>>>>> upstream-releases
 }
 
 /* * */
@@ -208,6 +363,7 @@ inline bool ClassCanHaveFixedData(const Class* clasp) {
 // may be the passed pointer, relocated by GC. If no GC could occur, it's just
 // passed through. We root nothing unless necessary.
 template <typename T>
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE MOZ_MUST_USE T* SetNewObjectMetadata(JSContext* cx,
                                                               T* obj) {
   MOZ_ASSERT(!cx->realm()->hasObjectPendingMetadata());
@@ -223,6 +379,42 @@ static MOZ_ALWAYS_INLINE MOZ_MUST_USE T* SetNewObjectMetadata(JSContext* cx,
       Rooted<T*> rooted(cx, obj);
       cx->realm()->setNewObjectMetadata(cx, rooted);
       return rooted;
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE MOZ_MUST_USE T*
+SetNewObjectMetadata(JSContext* cx, T* obj)
+{
+    MOZ_ASSERT(!cx->realm()->hasObjectPendingMetadata());
+
+    // The metadata builder is invoked for each object created on the active
+    // thread, except when analysis/compilation is active, to avoid recursion.
+    if (!cx->helperThread()) {
+        if (MOZ_UNLIKELY(cx->realm()->hasAllocationMetadataBuilder()) &&
+            !cx->zone()->suppressAllocationMetadataBuilder)
+        {
+            // Don't collect metadata on objects that represent metadata.
+            AutoSuppressAllocationMetadataBuilder suppressMetadata(cx);
+
+            Rooted<T*> rooted(cx, obj);
+            cx->realm()->setNewObjectMetadata(cx, rooted);
+            return rooted;
+        }
+=======
+static MOZ_ALWAYS_INLINE MOZ_MUST_USE T* SetNewObjectMetadata(JSContext* cx,
+                                                              T* obj) {
+  MOZ_ASSERT(!cx->realm()->hasObjectPendingMetadata());
+
+  // The metadata builder is invoked for each object created on the active
+  // thread, except when analysis/compilation is active, to avoid recursion.
+  if (!cx->isHelperThreadContext()) {
+    if (MOZ_UNLIKELY(cx->realm()->hasAllocationMetadataBuilder()) &&
+        !cx->zone()->suppressAllocationMetadataBuilder) {
+      // Don't collect metadata on objects that represent metadata.
+      AutoSuppressAllocationMetadataBuilder suppressMetadata(cx);
+
+      Rooted<T*> rooted(cx, obj);
+      cx->realm()->setNewObjectMetadata(cx, rooted);
+      return rooted;
+>>>>>>> upstream-releases
     }
   }
 
@@ -241,12 +433,27 @@ inline js::GlobalObject& JSObject::nonCCWGlobal() const {
   return *nonCCWRealm()->unsafeUnbarrieredMaybeGlobal();
 }
 
+<<<<<<< HEAD
 inline bool JSObject::hasAllFlags(js::BaseShape::Flag flags) const {
   MOZ_ASSERT(flags);
   if (js::Shape* shape = maybeShape()) {
     return shape->hasAllObjectFlags(flags);
   }
   return false;
+||||||| merged common ancestors
+inline bool
+JSObject::hasAllFlags(js::BaseShape::Flag flags) const
+{
+    MOZ_ASSERT(flags);
+    if (js::Shape* shape = maybeShape()) {
+        return shape->hasAllObjectFlags(flags);
+    }
+    return false;
+=======
+inline bool JSObject::hasAllFlags(js::BaseShape::Flag flags) const {
+  MOZ_ASSERT(flags);
+  return shape()->hasAllObjectFlags(flags);
+>>>>>>> upstream-releases
 }
 
 inline bool JSObject::nonProxyIsExtensible() const {
@@ -268,6 +475,7 @@ inline bool JSObject::hasUncacheableProto() const {
   return hasAllFlags(js::BaseShape::UNCACHEABLE_PROTO);
 }
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool JSObject::maybeHasInterestingSymbolProperty() const {
   const js::NativeObject* nobj;
   if (isNative()) {
@@ -282,6 +490,30 @@ MOZ_ALWAYS_INLINE bool JSObject::maybeHasInterestingSymbolProperty() const {
   }
 
   return nobj->hasInterestingSymbol();
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE bool
+JSObject::maybeHasInterestingSymbolProperty() const
+{
+    const js::NativeObject* nobj;
+    if (isNative()) {
+        nobj = &as<js::NativeObject>();
+    } else if (is<js::UnboxedPlainObject>()) {
+        nobj = as<js::UnboxedPlainObject>().maybeExpando();
+        if (!nobj) {
+            return false;
+        }
+    } else {
+        return true;
+    }
+
+    return nobj->hasInterestingSymbol();
+=======
+MOZ_ALWAYS_INLINE bool JSObject::maybeHasInterestingSymbolProperty() const {
+  if (isNative()) {
+    return as<js::NativeObject>().hasInterestingSymbol();
+  }
+  return true;
+>>>>>>> upstream-releases
 }
 
 inline bool JSObject::staticPrototypeIsImmutable() const {
@@ -357,6 +589,18 @@ static MOZ_ALWAYS_INLINE bool HasNoToPrimitiveMethodPure(JSObject* obj,
 #ifdef DEBUG
     JSObject* pobj;
     PropertyResult prop;
+<<<<<<< HEAD
+    MOZ_ASSERT(
+        LookupPropertyPure(cx, obj, SYMBOL_TO_JSID(toPrimitive), &pobj, &prop));
+    MOZ_ASSERT(!prop);
+#endif
+    return true;
+  }
+||||||| merged common ancestors
+    if (!LookupPropertyPure(cx, holder, SYMBOL_TO_JSID(toPrimitive), &pobj, &prop)) {
+        return false;
+    }
+=======
     MOZ_ASSERT(
         LookupPropertyPure(cx, obj, SYMBOL_TO_JSID(toPrimitive), &pobj, &prop));
     MOZ_ASSERT(!prop);
@@ -370,8 +614,22 @@ static MOZ_ALWAYS_INLINE bool HasNoToPrimitiveMethodPure(JSObject* obj,
                           &prop)) {
     return false;
   }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JSObject* pobj;
+  PropertyResult prop;
+  if (!LookupPropertyPure(cx, holder, SYMBOL_TO_JSID(toPrimitive), &pobj,
+                          &prop)) {
+    return false;
+  }
 
   return !prop;
+||||||| merged common ancestors
+    return !prop;
+=======
+  return !prop;
+>>>>>>> upstream-releases
 }
 
 extern bool ToPropertyKeySlow(JSContext* cx, HandleValue argument,
@@ -392,9 +650,48 @@ MOZ_ALWAYS_INLINE bool ToPropertyKey(JSContext* cx, HandleValue argument,
  * its own object. Such a function object must not be accessible to script
  * or embedding code.
  */
+<<<<<<< HEAD
 inline bool IsInternalFunctionObject(JSObject& funobj) {
   JSFunction& fun = funobj.as<JSFunction>();
   return fun.isInterpreted() && !fun.environment();
+||||||| merged common ancestors
+inline bool
+IsInternalFunctionObject(JSObject& funobj)
+{
+    JSFunction& fun = funobj.as<JSFunction>();
+    return fun.isInterpreted() && !fun.environment();
+=======
+inline bool IsInternalFunctionObject(JSObject& funobj) {
+  JSFunction& fun = funobj.as<JSFunction>();
+  return fun.isInterpreted() && !fun.environment();
+}
+
+inline gc::InitialHeap GetInitialHeap(NewObjectKind newKind,
+                                      const Class* clasp) {
+  if (newKind == NurseryAllocatedProxy) {
+    MOZ_ASSERT(clasp->isProxy());
+    MOZ_ASSERT(clasp->hasFinalize());
+    MOZ_ASSERT(!CanNurseryAllocateFinalizedClass(clasp));
+    return gc::DefaultHeap;
+  }
+  if (newKind != GenericObject) {
+    return gc::TenuredHeap;
+  }
+  if (clasp->hasFinalize() && !CanNurseryAllocateFinalizedClass(clasp)) {
+    return gc::TenuredHeap;
+  }
+  return gc::DefaultHeap;
+}
+
+inline gc::InitialHeap GetInitialHeap(NewObjectKind newKind,
+                                      ObjectGroup* group) {
+  AutoSweepObjectGroup sweep(group);
+  if (group->shouldPreTenure(sweep)) {
+    return gc::TenuredHeap;
+  }
+
+  return GetInitialHeap(newKind, group->clasp());
+>>>>>>> upstream-releases
 }
 
 /*
@@ -603,15 +900,38 @@ extern NativeObject* InitClass(JSContext* cx, HandleObject obj,
                                const JSFunctionSpec* static_fs,
                                NativeObject** ctorp = nullptr);
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE const char* GetObjectClassName(JSContext* cx,
                                                  HandleObject obj) {
   cx->check(obj);
+||||||| merged common ancestors
+MOZ_ALWAYS_INLINE const char*
+GetObjectClassName(JSContext* cx, HandleObject obj)
+{
+    cx->check(obj);
+=======
+MOZ_ALWAYS_INLINE const char* GetObjectClassName(JSContext* cx,
+                                                 HandleObject obj) {
+  if (obj->is<ProxyObject>()) {
+    return Proxy::className(cx, obj);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (obj->is<ProxyObject>()) {
     return Proxy::className(cx, obj);
   }
 
   return obj->getClass()->name;
+||||||| merged common ancestors
+    if (obj->is<ProxyObject>()) {
+        return Proxy::className(cx, obj);
+    }
+
+    return obj->getClass()->name;
+=======
+  return obj->getClass()->name;
+>>>>>>> upstream-releases
 }
 
 inline bool IsCallable(const Value& v) {
@@ -623,7 +943,23 @@ inline bool IsConstructor(const Value& v) {
   return v.isObject() && v.toObject().isConstructor();
 }
 
+<<<<<<< HEAD
 MOZ_ALWAYS_INLINE bool CreateThis(JSContext* cx, HandleObject callee,
+                                  JSScript* calleeScript,
+                                  HandleObject newTarget, NewObjectKind newKind,
+                                  MutableHandleValue thisv) {
+  if (callee->isBoundFunction()) {
+    thisv.setMagic(JS_UNINITIALIZED_LEXICAL);
+    return true;
+  }
+||||||| merged common ancestors
+    if (calleeScript->isDerivedClassConstructor()) {
+        MOZ_ASSERT(callee->as<JSFunction>().isClassConstructor());
+        thisv.setMagic(JS_UNINITIALIZED_LEXICAL);
+        return true;
+    }
+=======
+MOZ_ALWAYS_INLINE bool CreateThis(JSContext* cx, HandleFunction callee,
                                   JSScript* calleeScript,
                                   HandleObject newTarget, NewObjectKind newKind,
                                   MutableHandleValue thisv) {
@@ -637,9 +973,35 @@ MOZ_ALWAYS_INLINE bool CreateThis(JSContext* cx, HandleObject callee,
     thisv.setMagic(JS_UNINITIALIZED_LEXICAL);
     return true;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (calleeScript->isDerivedClassConstructor()) {
+    MOZ_ASSERT(callee->as<JSFunction>().isClassConstructor());
+    thisv.setMagic(JS_UNINITIALIZED_LEXICAL);
+    return true;
+  }
+||||||| merged common ancestors
+    MOZ_ASSERT(thisv.isMagic(JS_IS_CONSTRUCTING));
+=======
   MOZ_ASSERT(thisv.isMagic(JS_IS_CONSTRUCTING));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  MOZ_ASSERT(thisv.isMagic(JS_IS_CONSTRUCTING));
+||||||| merged common ancestors
+    JSObject* obj = CreateThisForFunction(cx, callee, newTarget, newKind);
+    if (!obj) {
+        return false;
+    }
+=======
+  JSObject* obj = CreateThisForFunction(cx, callee, newTarget, newKind);
+  if (!obj) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   JSObject* obj = CreateThisForFunction(cx, callee, newTarget, newKind);
   if (!obj) {
     return false;
@@ -647,6 +1009,14 @@ MOZ_ALWAYS_INLINE bool CreateThis(JSContext* cx, HandleObject callee,
 
   thisv.setObject(*obj);
   return true;
+||||||| merged common ancestors
+    thisv.setObject(*obj);
+    return true;
+=======
+  MOZ_ASSERT(obj->nonCCWRealm() == callee->realm());
+  thisv.setObject(*obj);
+  return true;
+>>>>>>> upstream-releases
 }
 
 } /* namespace js */

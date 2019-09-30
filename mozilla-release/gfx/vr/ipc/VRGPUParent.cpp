@@ -13,14 +13,32 @@ namespace gfx {
 
 using namespace ipc;
 
+<<<<<<< HEAD
 VRGPUParent::VRGPUParent(ProcessId aChildProcessId) {
+||||||| merged common ancestors
+
+VRGPUParent::VRGPUParent(ProcessId aChildProcessId)
+{
+=======
+VRGPUParent::VRGPUParent(ProcessId aChildProcessId) : mClosed(false) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRGPUParent);
   MOZ_ASSERT(NS_IsMainThread());
 
   SetOtherProcessId(aChildProcessId);
 }
 
+<<<<<<< HEAD
 void VRGPUParent::ActorDestroy(ActorDestroyReason aWhy) {
+||||||| merged common ancestors
+void
+VRGPUParent::ActorDestroy(ActorDestroyReason aWhy)
+{
+=======
+VRGPUParent::~VRGPUParent() { MOZ_COUNT_DTOR(VRGPUParent); }
+
+void VRGPUParent::ActorDestroy(ActorDestroyReason aWhy) {
+>>>>>>> upstream-releases
 #if !defined(MOZ_WIDGET_ANDROID)
   if (mVRService) {
     mVRService->Stop();
@@ -28,6 +46,7 @@ void VRGPUParent::ActorDestroy(ActorDestroyReason aWhy) {
   }
 #endif
 
+  mClosed = true;
   MessageLoop::current()->PostTask(
       NewRunnableMethod("gfx::VRGPUParent::DeferredDestroy", this,
                         &VRGPUParent::DeferredDestroy));
@@ -35,13 +54,23 @@ void VRGPUParent::ActorDestroy(ActorDestroyReason aWhy) {
 
 void VRGPUParent::DeferredDestroy() { mSelfRef = nullptr; }
 
+<<<<<<< HEAD
 /* static */ RefPtr<VRGPUParent> VRGPUParent::CreateForGPU(
     Endpoint<PVRGPUParent>&& aEndpoint) {
+||||||| merged common ancestors
+/* static */ RefPtr<VRGPUParent>
+VRGPUParent::CreateForGPU(Endpoint<PVRGPUParent>&& aEndpoint)
+{
+=======
+/* static */
+RefPtr<VRGPUParent> VRGPUParent::CreateForGPU(
+    Endpoint<PVRGPUParent>&& aEndpoint) {
+>>>>>>> upstream-releases
   RefPtr<VRGPUParent> vcp = new VRGPUParent(aEndpoint.OtherPid());
   MessageLoop::current()->PostTask(NewRunnableMethod<Endpoint<PVRGPUParent>&&>(
       "gfx::VRGPUParent::Bind", vcp, &VRGPUParent::Bind, std::move(aEndpoint)));
 
-  return vcp;
+  return vcp.forget();
 }
 
 void VRGPUParent::Bind(Endpoint<PVRGPUParent>&& aEndpoint) {
@@ -74,5 +103,15 @@ mozilla::ipc::IPCResult VRGPUParent::RecvStopVRService() {
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace gfx
+} // namespace mozilla
+=======
+bool VRGPUParent::IsClosed() { return mClosed; }
+
+}  // namespace gfx
+}  // namespace mozilla
+>>>>>>> upstream-releases

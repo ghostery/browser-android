@@ -19,17 +19,32 @@
 #include "js/TypeDecls.h"
 
 #if defined(JS_GC_ZEAL) || defined(DEBUG)
+<<<<<<< HEAD
 #define JSGC_HASH_TABLE_CHECKS
+||||||| merged common ancestors
+# define JSGC_HASH_TABLE_CHECKS
+=======
+#  define JSGC_HASH_TABLE_CHECKS
+>>>>>>> upstream-releases
 #endif
 
 namespace JS {
 
+<<<<<<< HEAD
 template <typename T>
 class AutoVector;
 using AutoIdVector = AutoVector<jsid>;
 using AutoValueVector = AutoVector<Value>;
 using AutoObjectVector = AutoVector<JSObject*>;
 
+||||||| merged common ancestors
+template <typename T> class AutoVector;
+using AutoIdVector = AutoVector<jsid>;
+using AutoValueVector = AutoVector<Value>;
+using AutoObjectVector = AutoVector<JSObject*>;
+
+=======
+>>>>>>> upstream-releases
 class CallArgs;
 
 class JS_PUBLIC_API RealmOptions;
@@ -38,6 +53,7 @@ class JS_PUBLIC_API RealmOptions;
 
 /* Result of typeof operator enumeration. */
 enum JSType {
+<<<<<<< HEAD
   JSTYPE_UNDEFINED, /* undefined */
   JSTYPE_OBJECT,    /* object */
   JSTYPE_FUNCTION,  /* function */
@@ -50,6 +66,31 @@ enum JSType {
   JSTYPE_BIGINT, /* BigInt */
 #endif
   JSTYPE_LIMIT
+||||||| merged common ancestors
+    JSTYPE_UNDEFINED,           /* undefined */
+    JSTYPE_OBJECT,              /* object */
+    JSTYPE_FUNCTION,            /* function */
+    JSTYPE_STRING,              /* string */
+    JSTYPE_NUMBER,              /* number */
+    JSTYPE_BOOLEAN,             /* boolean */
+    JSTYPE_NULL,                /* null */
+    JSTYPE_SYMBOL,              /* symbol */
+#ifdef ENABLE_BIGINT
+    JSTYPE_BIGINT,              /* BigInt */
+#endif
+    JSTYPE_LIMIT
+=======
+  JSTYPE_UNDEFINED, /* undefined */
+  JSTYPE_OBJECT,    /* object */
+  JSTYPE_FUNCTION,  /* function */
+  JSTYPE_STRING,    /* string */
+  JSTYPE_NUMBER,    /* number */
+  JSTYPE_BOOLEAN,   /* boolean */
+  JSTYPE_NULL,      /* null */
+  JSTYPE_SYMBOL,    /* symbol */
+  JSTYPE_BIGINT,    /* BigInt */
+  JSTYPE_LIMIT
+>>>>>>> upstream-releases
 };
 
 /* Dense index into cached prototypes and class atoms for standard objects. */

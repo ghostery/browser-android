@@ -77,11 +77,27 @@ struct DMDFuncs {
   class Singleton {
    public:
     Singleton()
+<<<<<<< HEAD
         : mValue(ReplaceMalloc::GetDMDFuncs())
 #ifdef DEBUG
           ,
           mInitialized(true)
 #endif
+||||||| merged common ancestors
+      : mValue(ReplaceMalloc::GetDMDFuncs())
+#ifdef DEBUG
+      , mInitialized(true)
+#endif
+    {}
+
+    DMDFuncs* Get()
+=======
+        : mValue(ReplaceMalloc::GetDMDFuncs())
+#  ifdef DEBUG
+          ,
+          mInitialized(true)
+#  endif
+>>>>>>> upstream-releases
     {
     }
 
@@ -92,9 +108,9 @@ struct DMDFuncs {
 
    private:
     DMDFuncs* mValue;
-#ifdef DEBUG
+#  ifdef DEBUG
     bool mInitialized;
-#endif
+#  endif
   };
 
   // This singleton pointer must be defined on the program side. In Gecko,

@@ -10,7 +10,12 @@
 
 #include "mozilla/dom/ContentChild.h"
 #include "mozilla/dom/ContentParent.h"
+<<<<<<< HEAD
 #include "mozilla/dom/TabChild.h"
+||||||| merged common ancestors
+=======
+#include "mozilla/dom/BrowserChild.h"
+>>>>>>> upstream-releases
 #include "nsXULAppAPI.h"
 
 #include "History.h"
@@ -561,7 +566,17 @@ class NotifyManyVisitsObservers : public Runnable {
     }
   }
 
+<<<<<<< HEAD
   NS_IMETHOD Run() override {
+||||||| merged common ancestors
+  NS_IMETHOD Run() override
+  {
+=======
+  // MOZ_CAN_RUN_SCRIPT_BOUNDARY until Runnable::Run is marked
+  // MOZ_CAN_RUN_SCRIPT.  See bug 1535398.
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
+  NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread(), "This should be called on the main thread");
 
     // We are in the main thread, no need to lock.
@@ -1442,6 +1457,16 @@ History::History()
       mObservers(VISIT_OBSERVERS_INITIAL_CACHE_LENGTH),
       mRecentlyVisitedURIs(RECENTLY_VISITED_URIS_SIZE) {
   NS_ASSERTION(!gService, "Ruh-roh!  This service has already been created!");
+  if (XRE_IsParentProcess()) {
+    nsCOMPtr<nsIProperties> dirsvc = services::GetDirectoryService();
+    bool haveProfile = false;
+    MOZ_RELEASE_ASSERT(
+        dirsvc &&
+            NS_SUCCEEDED(
+                dirsvc->Has(NS_APP_USER_PROFILE_50_DIR, &haveProfile)) &&
+            haveProfile,
+        "Can't construct history service if there is no profile.");
+  }
   gService = this;
 
   nsCOMPtr<nsIObserverService> os = services::GetObserverService();
@@ -1463,7 +1488,15 @@ void History::InitMemoryReporter() { RegisterWeakMemoryReporter(this); }
 // Helper function which performs the checking required to fetch the document
 // object for the given link. May return null if the link does not have an owner
 // document.
+<<<<<<< HEAD
 static nsIDocument* GetLinkDocument(Link* aLink) {
+||||||| merged common ancestors
+static nsIDocument*
+GetLinkDocument(Link* aLink)
+{
+=======
+static Document* GetLinkDocument(Link* aLink) {
+>>>>>>> upstream-releases
   // NOTE: Theoretically GetElement should never return nullptr, but it does
   // in GTests because they use a mock_Link which returns null from this
   // method.
@@ -1505,11 +1538,17 @@ History::NotifyVisited(nsIURI* aURI) {
   // Dispatch an event to each document which has a Link observing this URL.
   // These will fire asynchronously in the correct DocGroup.
   {
+<<<<<<< HEAD
     nsTArray<nsIDocument*> seen;  // Don't dispatch duplicate runnables.
+||||||| merged common ancestors
+    nsTArray<nsIDocument*> seen; // Don't dispatch duplicate runnables.
+=======
+    nsTArray<Document*> seen;  // Don't dispatch duplicate runnables.
+>>>>>>> upstream-releases
     ObserverArray::BackwardIterator iter(key->array);
     while (iter.HasMore()) {
       Link* link = iter.GetNext();
-      nsIDocument* doc = GetLinkDocument(link);
+      Document* doc = GetLinkDocument(link);
       if (seen.Contains(doc)) {
         continue;
       }
@@ -1521,7 +1560,15 @@ History::NotifyVisited(nsIURI* aURI) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void History::NotifyVisitedForDocument(nsIURI* aURI, nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+History::NotifyVisitedForDocument(nsIURI* aURI, nsIDocument* aDocument)
+{
+=======
+void History::NotifyVisitedForDocument(nsIURI* aURI, Document* aDocument) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // Make sure that nothing invalidates our observer array while we're walking
   // over it.
@@ -1539,7 +1586,7 @@ void History::NotifyVisitedForDocument(nsIURI* aURI, nsIDocument* aDocument) {
     ObserverArray::BackwardIterator iter(key->array);
     while (iter.HasMore()) {
       Link* link = iter.GetNext();
-      nsIDocument* doc = GetLinkDocument(link);
+      Document* doc = GetLinkDocument(link);
       if (doc == aDocument) {
         link->SetLinkState(eLinkState_Visited);
         iter.Remove();
@@ -1557,9 +1604,17 @@ void History::NotifyVisitedForDocument(nsIURI* aURI, nsIDocument* aDocument) {
   }
 }
 
+<<<<<<< HEAD
 void History::DispatchNotifyVisited(nsIURI* aURI, nsIDocument* aDocument) {
+||||||| merged common ancestors
+void
+History::DispatchNotifyVisited(nsIURI* aURI, nsIDocument* aDocument)
+{
+=======
+void History::DispatchNotifyVisited(nsIURI* aURI, Document* aDocument) {
+>>>>>>> upstream-releases
   // Capture strong references to the arguments to capture in the closure.
-  nsCOMPtr<nsIDocument> doc = aDocument;
+  RefPtr<Document> doc = aDocument;
   nsCOMPtr<nsIURI> uri = aURI;
 
   // Create and dispatch the runnable to call NotifyVisitedForDocument.
@@ -2008,13 +2063,25 @@ History::VisitURI(nsIWidget* aWidget, nsIURI* aURI, nsIURI* aLastVisitedURI,
     URIParams uri;
     SerializeURI(aURI, uri);
 
-    OptionalURIParams lastVisitedURI;
+    Maybe<URIParams> lastVisitedURI;
     SerializeURI(aLastVisitedURI, lastVisitedURI);
 
+<<<<<<< HEAD
     NS_ENSURE_ARG(aWidget);
     TabChild* tabChild = aWidget->GetOwningTabChild();
     NS_ENSURE_TRUE(tabChild, NS_ERROR_FAILURE);
     (void)tabChild->SendVisitURI(uri, lastVisitedURI, aFlags);
+||||||| merged common ancestors
+    mozilla::dom::ContentChild* cpc =
+      mozilla::dom::ContentChild::GetSingleton();
+    NS_ASSERTION(cpc, "Content Protocol is NULL!");
+    (void)cpc->SendVisitURI(uri, lastVisitedURI, aFlags);
+=======
+    NS_ENSURE_ARG(aWidget);
+    BrowserChild* browserChild = aWidget->GetOwningBrowserChild();
+    NS_ENSURE_TRUE(browserChild, NS_ERROR_FAILURE);
+    (void)browserChild->SendVisitURI(uri, lastVisitedURI, aFlags);
+>>>>>>> upstream-releases
     return NS_OK;
   }
 

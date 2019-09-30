@@ -6,6 +6,7 @@
 
 #include "ExpandedPrincipal.h"
 #include "nsIClassInfoImpl.h"
+#include "mozilla/Base64.h"
 
 using namespace mozilla;
 
@@ -169,7 +170,23 @@ bool ExpandedPrincipal::AddonAllowsLoad(nsIURI* aURI,
   return false;
 }
 
+<<<<<<< HEAD
 nsIPrincipal* ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI) {
+||||||| merged common ancestors
+nsIPrincipal*
+ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI)
+{
+=======
+void ExpandedPrincipal::SetCsp(nsIContentSecurityPolicy* aCSP) { mCSP = aCSP; }
+
+NS_IMETHODIMP
+ExpandedPrincipal::GetCsp(nsIContentSecurityPolicy** aCsp) {
+  NS_IF_ADDREF(*aCsp = mCSP);
+  return NS_OK;
+}
+
+nsIPrincipal* ExpandedPrincipal::PrincipalToInherit(nsIURI* aRequestedURI) {
+>>>>>>> upstream-releases
   if (aRequestedURI) {
     // If a given sub-principal subsumes the given URI, use that principal for
     // inheritance. In general, this only happens with certain CORS modes, loads
@@ -254,6 +271,7 @@ ExpandedPrincipal::Read(nsIObjectInputStream* aStream) {
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 ExpandedPrincipal::Write(nsIObjectOutputStream* aStream) {
   nsresult rv = aStream->Write32(kSerializationVersion);
   if (NS_FAILED(rv)) {
@@ -272,6 +290,31 @@ ExpandedPrincipal::Write(nsIObjectOutputStream* aStream) {
     }
   }
 
+||||||| merged common ancestors
+ExpandedPrincipal::Write(nsIObjectOutputStream* aStream)
+{
+  nsresult rv = aStream->Write32(kSerializationVersion);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+
+  rv = aStream->Write32(mPrincipals.Length());
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+
+  for (auto& principal : mPrincipals) {
+    rv = aStream->WriteObject(principal, true);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
+  }
+
+=======
+ExpandedPrincipal::Write(nsIObjectOutputStream* aStream) {
+  // Read is used still for legacy principals
+  MOZ_RELEASE_ASSERT(false, "Old style serialization is removed");
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -293,4 +336,81 @@ nsresult ExpandedPrincipal::GetSiteIdentifier(SiteIdentifier& aSite) {
 
   aSite.Init(expandedPrincipal);
   return NS_OK;
+}
+
+nsresult ExpandedPrincipal::PopulateJSONObject(Json::Value& aObject) {
+  nsAutoCString principalList;
+  // First item through we have a blank separator and append the next result
+  nsAutoCString sep;
+  for (auto& principal : mPrincipals) {
+    nsAutoCString JSON;
+    BasePrincipal::Cast(principal)->ToJSON(JSON);
+    // Values currently only copes with strings so encode into base64 to allow a
+    // CSV safely.
+    nsAutoCString result;
+    nsresult rv;
+    rv = Base64Encode(JSON, result);
+    NS_ENSURE_SUCCESS(rv, rv);
+    // This is blank for the first run through so the last in the list doesn't
+    // add a separator
+    principalList.Append(sep);
+    principalList.Append(result);
+    sep = ',';
+  }
+  aObject[std::to_string(eSpecs)] = principalList.get();
+
+  nsAutoCString suffix;
+  OriginAttributesRef().CreateSuffix(suffix);
+  if (suffix.Length() > 0) {
+    aObject[std::to_string(eSuffix)] = suffix.get();
+  }
+
+  return NS_OK;
+}
+
+already_AddRefed<BasePrincipal> ExpandedPrincipal::FromProperties(
+    nsTArray<ExpandedPrincipal::KeyVal>& aFields) {
+  MOZ_ASSERT(aFields.Length() == eMax + 1, "Must have all the keys");
+  nsTArray<nsCOMPtr<nsIPrincipal>> allowList;
+  OriginAttributes attrs;
+  // The odd structure here is to make the code to not compile
+  // if all the switch enum cases haven't been codified
+  for (const auto& field : aFields) {
+    switch (field.key) {
+      case ExpandedPrincipal::eSpecs:
+        if (!field.valueWasSerialized) {
+          MOZ_ASSERT(false,
+                     "Expanded principals require specs in serialized JSON");
+          return nullptr;
+        }
+        for (const nsACString& each : field.value.Split(',')) {
+          nsAutoCString result;
+          nsresult rv;
+          rv = Base64Decode(each, result);
+          MOZ_ASSERT(NS_SUCCEEDED(rv), "failed to decode");
+
+          NS_ENSURE_SUCCESS(rv, nullptr);
+          nsCOMPtr<nsIPrincipal> principal = BasePrincipal::FromJSON(result);
+          allowList.AppendElement(principal);
+        }
+        break;
+      case ExpandedPrincipal::eSuffix:
+        if (field.valueWasSerialized) {
+          bool ok = attrs.PopulateFromSuffix(field.value);
+          if (!ok) {
+            return nullptr;
+          }
+        }
+        break;
+    }
+  }
+
+  if (allowList.Length() == 0) {
+    return nullptr;
+  }
+
+  RefPtr<ExpandedPrincipal> expandedPrincipal =
+      ExpandedPrincipal::Create(allowList, attrs);
+
+  return expandedPrincipal.forget();
 }

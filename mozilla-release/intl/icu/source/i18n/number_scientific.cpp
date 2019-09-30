@@ -93,6 +93,7 @@ bool ScientificModifier::isStrong() const {
     return true;
 }
 
+<<<<<<< HEAD
 bool ScientificModifier::containsField(UNumberFormatFields field) const {
     (void)field;
     // This method is not used for inner modifiers.
@@ -114,6 +115,29 @@ bool ScientificModifier::semanticallyEquivalent(const Modifier& other) const {
     return fExponent == _other->fExponent;
 }
 
+||||||| merged common ancestors
+=======
+bool ScientificModifier::containsField(UNumberFormatFields field) const {
+    (void)field;
+    // This method is not used for inner modifiers.
+    UPRV_UNREACHABLE;
+}
+
+void ScientificModifier::getParameters(Parameters& output) const {
+    // Not part of any plural sets
+    output.obj = nullptr;
+}
+
+bool ScientificModifier::semanticallyEquivalent(const Modifier& other) const {
+    auto* _other = dynamic_cast<const ScientificModifier*>(&other);
+    if (_other == nullptr) {
+        return false;
+    }
+    // TODO: Check for locale symbols and settings as well? Could be less efficient.
+    return fExponent == _other->fExponent;
+}
+
+>>>>>>> upstream-releases
 // Note: Visual Studio does not compile this function without full name space. Why?
 icu::number::impl::ScientificHandler::ScientificHandler(const Notation *notation, const DecimalFormatSymbols *symbols,
 	const MicroPropsGenerator *parent) : 

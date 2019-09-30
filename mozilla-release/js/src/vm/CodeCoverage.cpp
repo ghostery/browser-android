@@ -12,10 +12,24 @@
 
 #include <stdio.h>
 #ifdef XP_WIN
+<<<<<<< HEAD
 #include <process.h>
 #define getpid _getpid
+||||||| merged common ancestors
+# include <process.h>
+# define getpid _getpid
+=======
+#  include <process.h>
+#  define getpid _getpid
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #include <unistd.h>
+||||||| merged common ancestors
+# include <unistd.h>
+=======
+#  include <unistd.h>
+>>>>>>> upstream-releases
 #endif
 
 #include "util/Text.h"
@@ -446,6 +460,27 @@ bool LCovSource::writeScript(JSScript* script) {
       branchId++;
       tableswitchExitOffset = 0;
     }
+<<<<<<< HEAD
+  }
+
+  // Report any new OOM.
+  if (outFN_.hadOutOfMemory() || outFNDA_.hadOutOfMemory() ||
+      outBRDA_.hadOutOfMemory()) {
+    return false;
+  }
+
+  // If this script is the top-level script, then record it such that we can
+  // assume that the code coverage report is complete, as this script has
+  // references on all inner scripts.
+  if (script->isTopLevel()) {
+    hasTopLevelScript_ = true;
+  }
+
+  return true;
+||||||| merged common ancestors
+
+    return true;
+=======
   }
 
   // Report any new OOM.
@@ -466,14 +501,65 @@ bool LCovSource::writeScript(JSScript* script) {
 
 LCovRealm::LCovRealm() : alloc_(4096), outTN_(&alloc_), sources_(nullptr) {
   MOZ_ASSERT(alloc_.isEmpty());
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+LCovRealm::LCovRealm() : alloc_(4096), outTN_(&alloc_), sources_(nullptr) {
+  MOZ_ASSERT(alloc_.isEmpty());
+||||||| merged common ancestors
+LCovRealm::LCovRealm()
+  : alloc_(4096),
+    outTN_(&alloc_),
+    sources_(nullptr)
+{
+    MOZ_ASSERT(alloc_.isEmpty());
+=======
 LCovRealm::~LCovRealm() {
   if (sources_) {
     sources_->~LCovSourceVector();
   }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+LCovRealm::~LCovRealm() {
+  if (sources_) {
+    sources_->~LCovSourceVector();
+  }
+||||||| merged common ancestors
+LCovRealm::~LCovRealm()
+{
+    if (sources_) {
+        sources_->~LCovSourceVector();
+    }
+=======
+void LCovRealm::collectCodeCoverageInfo(JS::Realm* realm, JSScript* script,
+                                        const char* name) {
+  // Skip any operation if we already some out-of memory issues.
+  if (outTN_.hadOutOfMemory()) {
+    return;
+  }
+
+  if (!script->code()) {
+    return;
+  }
+
+  // Get the existing source LCov summary, or create a new one.
+  LCovSource* source = lookupOrAdd(realm, name);
+  if (!source) {
+    return;
+  }
+
+  // Write code coverage data into the LCovSource.
+  if (!source->writeScript(script)) {
+    outTN_.reportOutOfMemory();
+    return;
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 void LCovRealm::collectCodeCoverageInfo(JS::Realm* realm, JSScript* script,
                                         const char* name) {
   // Skip any operation if we already some out-of memory issues.
@@ -497,7 +583,32 @@ void LCovRealm::collectCodeCoverageInfo(JS::Realm* realm, JSScript* script,
     return;
   }
 }
+||||||| merged common ancestors
+void
+LCovRealm::collectCodeCoverageInfo(JS::Realm* realm, JSScript* script, const char* name)
+{
+    // Skip any operation if we already some out-of memory issues.
+    if (outTN_.hadOutOfMemory()) {
+        return;
+    }
 
+    if (!script->code()) {
+        return;
+    }
+
+    // Get the existing source LCov summary, or create a new one.
+    LCovSource* source = lookupOrAdd(realm, name);
+    if (!source) {
+        return;
+    }
+
+    // Write code coverage data into the LCovSource.
+    if (!source->writeScript(script)) {
+        outTN_.reportOutOfMemory();
+        return;
+    }
+}
+=======
 LCovSource* LCovRealm::lookupOrAdd(JS::Realm* realm, const char* name) {
   // On the first call, write the realm name, and allocate a LCovSource
   // vector in the LifoAlloc.
@@ -527,7 +638,41 @@ LCovSource* LCovRealm::lookupOrAdd(JS::Realm* realm, const char* name) {
     outTN_.reportOutOfMemory();
     return nullptr;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+LCovSource* LCovRealm::lookupOrAdd(JS::Realm* realm, const char* name) {
+  // On the first call, write the realm name, and allocate a LCovSource
+  // vector in the LifoAlloc.
+  if (!sources_) {
+    if (!writeRealmName(realm)) {
+      return nullptr;
+||||||| merged common ancestors
+LCovSource*
+LCovRealm::lookupOrAdd(JS::Realm* realm, const char* name)
+{
+    // On the first call, write the realm name, and allocate a LCovSource
+    // vector in the LifoAlloc.
+    if (!sources_) {
+        if (!writeRealmName(realm)) {
+            return nullptr;
+        }
+
+        LCovSourceVector* raw = alloc_.pod_malloc<LCovSourceVector>();
+        if (!raw) {
+            outTN_.reportOutOfMemory();
+            return nullptr;
+        }
+
+        sources_ = new(raw) LCovSourceVector(alloc_);
+    } else {
+        // Find the first matching source.
+        for (LCovSource& source : *sources_) {
+            if (source.match(name)) {
+                return &source;
+            }
+        }
+=======
   // Allocate a new LCovSource for the current top-level.
   if (!sources_->emplaceBack(&alloc_, std::move(source_name))) {
     outTN_.reportOutOfMemory();
@@ -561,10 +706,176 @@ void LCovRealm::exportInto(GenericPrinter& out, bool* isEmpty) const {
     // Only write if everything got recorded.
     if (sc.isComplete()) {
       sc.exportInto(out);
+>>>>>>> upstream-releases
     }
   }
 }
 
+<<<<<<< HEAD
+    LCovSourceVector* raw = alloc_.pod_malloc<LCovSourceVector>();
+    if (!raw) {
+      outTN_.reportOutOfMemory();
+      return nullptr;
+||||||| merged common ancestors
+    UniqueChars source_name = DuplicateString(name);
+    if (!source_name) {
+        outTN_.reportOutOfMemory();
+        return nullptr;
+=======
+bool LCovRealm::writeRealmName(JS::Realm* realm) {
+  JSContext* cx = TlsContext.get();
+
+  // lcov trace files are starting with an optional test case name, that we
+  // recycle to be a realm name.
+  //
+  // Note: The test case name has some constraint in terms of valid character,
+  // thus we escape invalid chracters with a "_" symbol in front of its
+  // hexadecimal code.
+  outTN_.put("TN:");
+  if (cx->runtime()->realmNameCallback) {
+    char name[1024];
+    {
+      // Hazard analysis cannot tell that the callback does not GC.
+      JS::AutoSuppressGCAnalysis nogc;
+      Rooted<Realm*> rootedRealm(cx, realm);
+      (*cx->runtime()->realmNameCallback)(cx, rootedRealm, name, sizeof(name));
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+
+    sources_ = new (raw) LCovSourceVector(alloc_);
+  } else {
+    // Find the first matching source.
+    for (LCovSource& source : *sources_) {
+      if (source.match(name)) {
+        return &source;
+      }
+||||||| merged common ancestors
+
+    // Allocate a new LCovSource for the current top-level.
+    if (!sources_->emplaceBack(&alloc_, std::move(source_name))) {
+        outTN_.reportOutOfMemory();
+        return nullptr;
+=======
+    for (char* s = name; s < name + sizeof(name) && *s; s++) {
+      if (('a' <= *s && *s <= 'z') || ('A' <= *s && *s <= 'Z') ||
+          ('0' <= *s && *s <= '9')) {
+        outTN_.put(s, 1);
+        continue;
+      }
+      outTN_.printf("_%p", (void*)size_t(*s));
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    outTN_.put("\n", 1);
+  } else {
+    outTN_.printf("Realm_%p%p\n", (void*)size_t('_'), realm);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  UniqueChars source_name = DuplicateString(name);
+  if (!source_name) {
+    outTN_.reportOutOfMemory();
+    return nullptr;
+  }
+||||||| merged common ancestors
+    return &sources_->back();
+}
+=======
+  return !outTN_.hadOutOfMemory();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Allocate a new LCovSource for the current top-level.
+  if (!sources_->emplaceBack(&alloc_, std::move(source_name))) {
+    outTN_.reportOutOfMemory();
+    return nullptr;
+  }
+||||||| merged common ancestors
+void
+LCovRealm::exportInto(GenericPrinter& out, bool* isEmpty) const
+{
+    if (!sources_ || outTN_.hadOutOfMemory()) {
+        return;
+    }
+
+    // If we only have cloned function, then do not serialize anything.
+    bool someComplete = false;
+    for (const LCovSource& sc : *sources_) {
+        if (sc.isComplete()) {
+            someComplete = true;
+            break;
+        };
+    }
+=======
+bool gLCovIsEnabled = false;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  return &sources_->back();
+}
+||||||| merged common ancestors
+    if (!someComplete) {
+        return;
+    }
+=======
+void InitLCov() {
+  const char* outDir = getenv("JS_CODE_COVERAGE_OUTPUT_DIR");
+  if (outDir && *outDir != 0) {
+    EnableLCov();
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void LCovRealm::exportInto(GenericPrinter& out, bool* isEmpty) const {
+  if (!sources_ || outTN_.hadOutOfMemory()) {
+    return;
+  }
+
+  // If we only have cloned function, then do not serialize anything.
+  bool someComplete = false;
+  for (const LCovSource& sc : *sources_) {
+    if (sc.isComplete()) {
+      someComplete = true;
+      break;
+    };
+  }
+
+  if (!someComplete) {
+    return;
+  }
+
+  *isEmpty = false;
+  outTN_.exportInto(out);
+  for (LCovSource& sc : *sources_) {
+    // Only write if everything got recorded.
+    if (sc.isComplete()) {
+      sc.exportInto(out);
+    }
+  }
+||||||| merged common ancestors
+    *isEmpty = false;
+    outTN_.exportInto(out);
+    for (const LCovSource& sc : *sources_) {
+        if (sc.isComplete()) {
+            sc.exportInto(out);
+        }
+    }
+=======
+void EnableLCov() {
+  MOZ_ASSERT(!JSRuntime::hasLiveRuntimes(),
+             "EnableLCov must not be called after creating a runtime!");
+  gLCovIsEnabled = true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool LCovRealm::writeRealmName(JS::Realm* realm) {
   JSContext* cx = TlsContext.get();
 
@@ -595,18 +906,117 @@ bool LCovRealm::writeRealmName(JS::Realm* realm) {
   } else {
     outTN_.printf("Realm_%p%p\n", (void*)size_t('_'), realm);
   }
+||||||| merged common ancestors
+bool
+LCovRealm::writeRealmName(JS::Realm* realm)
+{
+    JSContext* cx = TlsContext.get();
 
-  return !outTN_.hadOutOfMemory();
-}
-
+    // lcov trace files are starting with an optional test case name, that we
+    // recycle to be a realm name.
+    //
+    // Note: The test case name has some constraint in terms of valid character,
+    // thus we escape invalid chracters with a "_" symbol in front of its
+    // hexadecimal code.
+    outTN_.put("TN:");
+    if (cx->runtime()->realmNameCallback) {
+        char name[1024];
+        {
+            // Hazard analysis cannot tell that the callback does not GC.
+            JS::AutoSuppressGCAnalysis nogc;
+            Rooted<Realm*> rootedRealm(cx, realm);
+            (*cx->runtime()->realmNameCallback)(cx, rootedRealm, name, sizeof(name));
+        }
+        for (char *s = name; s < name + sizeof(name) && *s; s++) {
+            if (('a' <= *s && *s <= 'z') ||
+                ('A' <= *s && *s <= 'Z') ||
+                ('0' <= *s && *s <= '9'))
+            {
+                outTN_.put(s, 1);
+                continue;
+            }
+            outTN_.printf("_%p", (void*) size_t(*s));
+        }
+        outTN_.put("\n", 1);
+    } else {
+        outTN_.printf("Realm_%p%p\n", (void*) size_t('_'), realm);
+    }
+=======
 LCovRuntime::LCovRuntime() : out_(), pid_(getpid()), isEmpty_(true) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return !outTN_.hadOutOfMemory();
+||||||| merged common ancestors
+    return !outTN_.hadOutOfMemory();
+=======
 LCovRuntime::~LCovRuntime() {
   if (out_.isInitialized()) {
     finishFile();
   }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+LCovRuntime::LCovRuntime() : out_(), pid_(getpid()), isEmpty_(true) {}
+||||||| merged common ancestors
+LCovRuntime::LCovRuntime()
+  : out_(),
+    pid_(getpid()),
+    isEmpty_(false)
+{
+}
+=======
+bool LCovRuntime::fillWithFilename(char* name, size_t length) {
+  const char* outDir = getenv("JS_CODE_COVERAGE_OUTPUT_DIR");
+  if (!outDir || *outDir == 0) {
+    return false;
+  }
+
+  int64_t timestamp = static_cast<double>(PRMJ_Now()) / PRMJ_USEC_PER_SEC;
+  static mozilla::Atomic<size_t> globalRuntimeId(0);
+  size_t rid = globalRuntimeId++;
+
+  int len = snprintf(name, length, "%s/%" PRId64 "-%" PRIu32 "-%zu.info",
+                     outDir, timestamp, pid_, rid);
+  if (len < 0 || size_t(len) >= length) {
+    fprintf(stderr,
+            "Warning: LCovRuntime::init: Cannot serialize file name.\n");
+    return false;
+  }
+
+  return true;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+LCovRuntime::~LCovRuntime() {
+  if (out_.isInitialized()) {
+    finishFile();
+  }
+||||||| merged common ancestors
+LCovRuntime::~LCovRuntime()
+{
+    if (out_.isInitialized()) {
+        finishFile();
+    }
+=======
+void LCovRuntime::init() {
+  char name[1024];
+  if (!fillWithFilename(name, sizeof(name))) {
+    return;
+  }
+
+  // If we cannot open the file, report a warning.
+  if (!out_.init(name)) {
+    fprintf(stderr,
+            "Warning: LCovRuntime::init: Cannot open file named '%s'.\n", name);
+  }
+  isEmpty_ = true;
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 bool LCovRuntime::fillWithFilename(char* name, size_t length) {
   const char* outDir = getenv("JS_CODE_COVERAGE_OUTPUT_DIR");
   if (!outDir || *outDir == 0) {
@@ -626,7 +1036,35 @@ bool LCovRuntime::fillWithFilename(char* name, size_t length) {
 
   return true;
 }
+||||||| merged common ancestors
+bool
+LCovRuntime::fillWithFilename(char *name, size_t length)
+{
+    const char* outDir = getenv("JS_CODE_COVERAGE_OUTPUT_DIR");
+    if (!outDir || *outDir == 0) {
+        return false;
+    }
 
+    int64_t timestamp = static_cast<double>(PRMJ_Now()) / PRMJ_USEC_PER_SEC;
+    static mozilla::Atomic<size_t> globalRuntimeId(0);
+    size_t rid = globalRuntimeId++;
+
+    int len = snprintf(name, length, "%s/%" PRId64 "-%" PRIu32 "-%zu.info",
+                       outDir, timestamp, pid_, rid);
+    if (len < 0 || size_t(len) >= length) {
+        fprintf(stderr, "Warning: LCovRuntime::init: Cannot serialize file name.");
+        return false;
+    }
+
+    return true;
+}
+=======
+void LCovRuntime::finishFile() {
+  MOZ_ASSERT(out_.isInitialized());
+  out_.finish();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void LCovRuntime::init() {
   char name[1024];
   if (!fillWithFilename(name, sizeof(name))) {
@@ -639,8 +1077,32 @@ void LCovRuntime::init() {
             name);
   }
   isEmpty_ = true;
+||||||| merged common ancestors
+void
+LCovRuntime::init()
+{
+    char name[1024];
+    if (!fillWithFilename(name, sizeof(name))) {
+        return;
+    }
+
+    // If we cannot open the file, report a warning.
+    if (!out_.init(name)) {
+        fprintf(stderr, "Warning: LCovRuntime::init: Cannot open file named '%s'.", name);
+    }
+    isEmpty_ = true;
+=======
+  if (isEmpty_) {
+    char name[1024];
+    if (!fillWithFilename(name, sizeof(name))) {
+      return;
+    }
+    remove(name);
+  }
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void LCovRuntime::finishFile() {
   MOZ_ASSERT(out_.isInitialized());
   out_.finish();
@@ -657,6 +1119,30 @@ void LCovRuntime::finishFile() {
 void LCovRuntime::writeLCovResult(LCovRealm& realm) {
   if (!out_.isInitialized()) {
     init();
+||||||| merged common ancestors
+void
+LCovRuntime::finishFile()
+{
+    MOZ_ASSERT(out_.isInitialized());
+    out_.finish();
+
+    if (isEmpty_) {
+        char name[1024];
+        if (!fillWithFilename(name, sizeof(name))) {
+            return;
+        }
+        remove(name);
+    }
+}
+
+void
+LCovRuntime::writeLCovResult(LCovRealm& realm)
+{
+=======
+void LCovRuntime::writeLCovResult(LCovRealm& realm) {
+  if (!out_.isInitialized()) {
+    init();
+>>>>>>> upstream-releases
     if (!out_.isInitialized()) {
       return;
     }

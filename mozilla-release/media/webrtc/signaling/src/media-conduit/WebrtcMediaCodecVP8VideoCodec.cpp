@@ -39,7 +39,7 @@ namespace mozilla {
 
 static const char* wmcLogTag = "WebrtcMediaCodecVP8VideoCodec";
 #ifdef LOGTAG
-#undef LOGTAG
+#  undef LOGTAG
 #endif
 #define LOGTAG wmcLogTag
 
@@ -82,8 +82,18 @@ class CallbacksSupport final : public JavaCallbacksSupport {
     CSFLogDebug(LOGTAG, "%s %p", __FUNCTION__, this);
   }
 
+<<<<<<< HEAD
   void HandleOutput(Sample::Param aSample) override {
     CSFLogDebug(LOGTAG, "%s %p", __FUNCTION__, this);
+||||||| merged common ancestors
+  void HandleOutput(Sample::Param aSample) override
+  {
+    CSFLogDebug(LOGTAG,  "%s %p", __FUNCTION__, this);
+=======
+  void HandleOutput(Sample::Param aSample,
+                    SampleBuffer::Param aBuffer) override {
+    CSFLogDebug(LOGTAG, "%s %p", __FUNCTION__, this);
+>>>>>>> upstream-releases
     BufferInfo::LocalRef info = aSample->Info();
 
     int32_t size;
@@ -114,8 +124,16 @@ class CallbacksSupport final : public JavaCallbacksSupport {
       mEncodedImage._length = size;
 
       jni::ByteBuffer::LocalRef dest =
+<<<<<<< HEAD
           jni::ByteBuffer::New(mEncodedImage._buffer, size);
       aSample->WriteToByteBuffer(dest);
+||||||| merged common ancestors
+        jni::ByteBuffer::New(mEncodedImage._buffer, size);
+      aSample->WriteToByteBuffer(dest);
+=======
+          jni::ByteBuffer::New(mEncodedImage._buffer, size);
+      aBuffer->WriteToByteBuffer(dest, 0, size);
+>>>>>>> upstream-releases
 
       webrtc::CodecSpecificInfo info;
       info.codecType = webrtc::kVideoCodecVP8;

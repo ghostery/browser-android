@@ -7,7 +7,7 @@
 #ifndef mozilla_dom_SVGFEMergeElement_h
 #define mozilla_dom_SVGFEMergeElement_h
 
-#include "nsSVGFilters.h"
+#include "SVGFilters.h"
 
 nsresult NS_NewSVGFEMergeElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
@@ -15,6 +15,7 @@ nsresult NS_NewSVGFEMergeElement(
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 typedef nsSVGFE SVGFEMergeElementBase;
 
 class SVGFEMergeElement : public SVGFEMergeElementBase {
@@ -36,9 +37,58 @@ class SVGFEMergeElement : public SVGFEMergeElementBase {
       nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
   virtual nsSVGString& GetResultImageName() override {
     return mStringAttributes[RESULT];
+||||||| merged common ancestors
+typedef nsSVGFE SVGFEMergeElementBase;
+
+class SVGFEMergeElement : public SVGFEMergeElementBase
+{
+  friend nsresult (::NS_NewSVGFEMergeElement(nsIContent **aResult,
+                                             already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+protected:
+  explicit SVGFEMergeElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+    : SVGFEMergeElementBase(std::move(aNodeInfo))
+  {
+=======
+typedef SVGFE SVGFEMergeElementBase;
+
+class SVGFEMergeElement : public SVGFEMergeElementBase {
+  friend nsresult(::NS_NewSVGFEMergeElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+
+ protected:
+  explicit SVGFEMergeElement(
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
+      : SVGFEMergeElementBase(std::move(aNodeInfo)) {}
+  virtual JSObject* WrapNode(JSContext* cx,
+                             JS::Handle<JSObject*> aGivenProto) override;
+
+ public:
+  virtual FilterPrimitiveDescription GetPrimitiveDescription(
+      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
+      const nsTArray<bool>& aInputsAreTainted,
+      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual SVGAnimatedString& GetResultImageName() override {
+    return mStringAttributes[RESULT];
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
   virtual void GetSourceImageNames(
       nsTArray<nsSVGStringInfo>& aSources) override;
+||||||| merged common ancestors
+  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
+
+public:
+  virtual FilterPrimitiveDescription
+    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
+                            const IntRect& aFilterSubregion,
+                            const nsTArray<bool>& aInputsAreTainted,
+                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
+  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
+  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
+=======
+  virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
+>>>>>>> upstream-releases
 
   // nsIContent
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
@@ -47,7 +97,7 @@ class SVGFEMergeElement : public SVGFEMergeElementBase {
   virtual StringAttributesInfo GetStringInfo() override;
 
   enum { RESULT };
-  nsSVGString mStringAttributes[1];
+  SVGAnimatedString mStringAttributes[1];
   static StringInfo sStringInfo[1];
 };
 

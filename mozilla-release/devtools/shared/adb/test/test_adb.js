@@ -3,7 +3,16 @@
 
 "use strict";
 
+<<<<<<< HEAD
 const { ExtensionTestUtils } = ChromeUtils.import("resource://testing-common/ExtensionXPCShellUtils.jsm", {});
+||||||| merged common ancestors
+const EventEmitter = require("devtools/shared/event-emitter");
+const { ExtensionTestUtils } = ChromeUtils.import("resource://testing-common/ExtensionXPCShellUtils.jsm", {});
+=======
+const { ExtensionTestUtils } = ChromeUtils.import(
+  "resource://testing-common/ExtensionXPCShellUtils.jsm"
+);
+>>>>>>> upstream-releases
 const { NetUtil } = require("resource://gre/modules/NetUtil.jsm");
 const { getFileForBinary } = require("devtools/shared/adb/adb-binary");
 const { check } = require("devtools/shared/adb/adb-running-checker");
@@ -11,30 +20,16 @@ const { adbProcess } = require("devtools/shared/adb/adb-process");
 const { TrackDevicesCommand } = require("devtools/shared/adb/commands/index");
 
 const ADB_JSON = {
-  "Linux": {
-    "x86": [
-      "linux/adb",
-    ],
-    "x86_64": [
-      "linux64/adb",
-    ],
+  Linux: {
+    x86: ["linux/adb"],
+    x86_64: ["linux64/adb"],
   },
-  "Darwin": {
-    "x86_64": [
-      "mac64/adb",
-    ],
+  Darwin: {
+    x86_64: ["mac64/adb"],
   },
-  "WINNT": {
-    "x86": [
-      "win32/adb.exe",
-      "win32/AdbWinApi.dll",
-      "win32/AdbWinUsbApi.dll",
-    ],
-    "x86_64": [
-      "win32/adb.exe",
-      "win32/AdbWinApi.dll",
-      "win32/AdbWinUsbApi.dll",
-    ],
+  WINNT: {
+    x86: ["win32/adb.exe", "win32/AdbWinApi.dll", "win32/AdbWinUsbApi.dll"],
+    x86_64: ["win32/adb.exe", "win32/AdbWinApi.dll", "win32/AdbWinUsbApi.dll"],
   },
 };
 let extension_version = 1.0;
@@ -43,8 +38,9 @@ ExtensionTestUtils.init(this);
 
 function readAdbMockContent() {
   const adbMockFile = do_get_file("adb.py", false);
-  const s = Cc["@mozilla.org/network/file-input-stream;1"]
-    .createInstance(Ci.nsIFileInputStream);
+  const s = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(
+    Ci.nsIFileInputStream
+  );
   s.init(adbMockFile, -1, -1, false);
   try {
     return NetUtil.readInputStreamToString(s, s.available());
@@ -152,29 +148,32 @@ add_task(async function testExtract() {
   await extension.unload();
 });
 
-add_task({
-  skip_if: () => mozinfo.os == "win", // bug 1482008
-}, async function testStartAndStop() {
-  const extension = ExtensionTestUtils.loadExtension({
-    manifest: {
-      version: (extension_version++).toString(),
-      applications: {
-        gecko: { id: "adb@mozilla.org" },
+add_task(
+  {
+    skip_if: () => mozinfo.os == "win", // bug 1482008
+  },
+  async function testStartAndStop() {
+    const extension = ExtensionTestUtils.loadExtension({
+      manifest: {
+        version: (extension_version++).toString(),
+        applications: {
+          gecko: { id: "adb@mozilla.org" },
+        },
       },
-    },
-    files: {
-      "adb.json": JSON.stringify(ADB_JSON),
-      "linux/adb": adbMock,
-      "linux64/adb": adbMock,
-      "mac64/adb": adbMock,
-      "win32/adb.exe": adbMock,
-      "win32/AdbWinApi.dll": "dummy",
-      "win32/AdbWinUsbApi.dll": "dummy",
-    },
-  });
+      files: {
+        "adb.json": JSON.stringify(ADB_JSON),
+        "linux/adb": adbMock,
+        "linux64/adb": adbMock,
+        "mac64/adb": adbMock,
+        "win32/adb.exe": adbMock,
+        "win32/AdbWinApi.dll": "dummy",
+        "win32/AdbWinUsbApi.dll": "dummy",
+      },
+    });
 
-  await extension.startup();
+    await extension.startup();
 
+<<<<<<< HEAD
   // Call start() once and call stop() afterwards.
   await adbProcess.start();
   ok(adbProcess.ready);
@@ -183,61 +182,137 @@ add_task({
   await adbProcess.stop();
   ok(!adbProcess.ready);
   ok(!(await check()), "adb is no longer running");
+||||||| merged common ancestors
+  await ADB.start();
+  ok(ADB.ready);
+=======
+    // Call start() once and call stop() afterwards.
+    await adbProcess.start();
+    ok(adbProcess.ready);
+    ok(await check(), "adb is now running");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Call start() twice and call stop() afterwards.
   await adbProcess.start();
   await adbProcess.start();
   ok(adbProcess.ready);
   ok(await check(), "adb is now running");
+||||||| merged common ancestors
+  ok(await check(), "adb is now running");
+=======
+    await adbProcess.stop();
+    ok(!adbProcess.ready);
+    ok(!(await check()), "adb is no longer running");
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   await adbProcess.stop();
   ok(!adbProcess.ready);
   ok(!(await check()), "adb is no longer running");
+||||||| merged common ancestors
+  await ADB.stop();
+  ok(!ADB.ready);
+=======
+    // Call start() twice and call stop() afterwards.
+    await adbProcess.start();
+    await adbProcess.start();
+    ok(adbProcess.ready);
+    ok(await check(), "adb is now running");
+>>>>>>> upstream-releases
 
-  await extension.unload();
-});
+    await adbProcess.stop();
+    ok(!adbProcess.ready);
+    ok(!(await check()), "adb is no longer running");
 
-add_task({
-  skip_if: () => mozinfo.os == "win", // bug 1482008
-}, async function testTrackDevices() {
-  const extension = ExtensionTestUtils.loadExtension({
-    manifest: {
-      version: (extension_version++).toString(),
-      applications: {
-        gecko: { id: "adb@mozilla.org" },
+    await extension.unload();
+  }
+);
+
+add_task(
+  {
+    skip_if: () => mozinfo.os == "win", // bug 1482008
+  },
+  async function testTrackDevices() {
+    const extension = ExtensionTestUtils.loadExtension({
+      manifest: {
+        version: (extension_version++).toString(),
+        applications: {
+          gecko: { id: "adb@mozilla.org" },
+        },
       },
-    },
-    files: {
-      "adb.json": JSON.stringify(ADB_JSON),
-      "linux/adb": adbMock,
-      "linux64/adb": adbMock,
-      "mac64/adb": adbMock,
-      "win32/adb.exe": adbMock,
-      "win32/AdbWinApi.dll": "dummy",
-      "win32/AdbWinUsbApi.dll": "dummy",
-    },
-  });
+      files: {
+        "adb.json": JSON.stringify(ADB_JSON),
+        "linux/adb": adbMock,
+        "linux64/adb": adbMock,
+        "mac64/adb": adbMock,
+        "win32/adb.exe": adbMock,
+        "win32/AdbWinApi.dll": "dummy",
+        "win32/AdbWinUsbApi.dll": "dummy",
+      },
+    });
 
-  await extension.startup();
+    await extension.startup();
 
+<<<<<<< HEAD
   await adbProcess.start();
   ok(adbProcess.ready);
+||||||| merged common ancestors
+  await ADB.start();
+  ok(ADB.ready);
+=======
+    await adbProcess.start();
+    ok(adbProcess.ready);
+>>>>>>> upstream-releases
 
-  ok(await check(), "adb is now running");
+    ok(await check(), "adb is now running");
 
+<<<<<<< HEAD
   const receivedDeviceId = await new Promise(resolve => {
     const trackDevicesCommand = new TrackDevicesCommand();
     trackDevicesCommand.on("device-connected", deviceId => {
       resolve(deviceId);
+||||||| merged common ancestors
+  const receivedDeviceId = await new Promise(resolve => {
+    EventEmitter.on(ADB, "device-connected", deviceId => {
+      resolve(deviceId);
+=======
+    const receivedDeviceId = await new Promise(resolve => {
+      const trackDevicesCommand = new TrackDevicesCommand();
+      trackDevicesCommand.on("device-connected", deviceId => {
+        resolve(deviceId);
+      });
+      trackDevicesCommand.run();
+>>>>>>> upstream-releases
     });
+<<<<<<< HEAD
     trackDevicesCommand.run();
   });
+||||||| merged common ancestors
+    ADB.trackDevices();
+  });
+=======
+>>>>>>> upstream-releases
 
-  equal(receivedDeviceId, "1234567890");
+    equal(receivedDeviceId, "1234567890");
 
+<<<<<<< HEAD
   await adbProcess.stop();
   ok(!adbProcess.ready);
 
   await extension.unload();
 });
+||||||| merged common ancestors
+  await ADB.stop();
+  ok(!ADB.ready);
 
+  await extension.unload();
+});
+=======
+    await adbProcess.stop();
+    ok(!adbProcess.ready);
+>>>>>>> upstream-releases
+
+    await extension.unload();
+  }
+);

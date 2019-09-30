@@ -29,35 +29,111 @@ class nsCacheDevice {
   virtual nsresult Init() = 0;
   virtual nsresult Shutdown() = 0;
 
+<<<<<<< HEAD
   virtual const char *GetDeviceID(void) = 0;
   virtual nsCacheEntry *FindEntry(nsCString *key, bool *collision) = 0;
+||||||| merged common ancestors
+    virtual const char *   GetDeviceID(void) = 0;
+    virtual nsCacheEntry * FindEntry( nsCString * key, bool *collision ) = 0;
+=======
+  virtual const char* GetDeviceID(void) = 0;
+  virtual nsCacheEntry* FindEntry(nsCString* key, bool* collision) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult DeactivateEntry(nsCacheEntry *entry) = 0;
   virtual nsresult BindEntry(nsCacheEntry *entry) = 0;
   virtual void DoomEntry(nsCacheEntry *entry) = 0;
+||||||| merged common ancestors
+    virtual nsresult DeactivateEntry( nsCacheEntry * entry ) = 0;
+    virtual nsresult BindEntry( nsCacheEntry * entry ) = 0;
+    virtual void     DoomEntry( nsCacheEntry * entry ) = 0;
+=======
+  virtual nsresult DeactivateEntry(nsCacheEntry* entry) = 0;
+  virtual nsresult BindEntry(nsCacheEntry* entry) = 0;
+  virtual void DoomEntry(nsCacheEntry* entry) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult OpenInputStreamForEntry(nsCacheEntry *entry,
                                            nsCacheAccessMode mode,
                                            uint32_t offset,
                                            nsIInputStream **result) = 0;
+||||||| merged common ancestors
+    virtual nsresult OpenInputStreamForEntry(nsCacheEntry *     entry,
+                                             nsCacheAccessMode  mode,
+                                             uint32_t           offset,
+                                             nsIInputStream **  result) = 0;
+=======
+  virtual nsresult OpenInputStreamForEntry(nsCacheEntry* entry,
+                                           nsCacheAccessMode mode,
+                                           uint32_t offset,
+                                           nsIInputStream** result) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult OpenOutputStreamForEntry(nsCacheEntry *entry,
                                             nsCacheAccessMode mode,
                                             uint32_t offset,
                                             nsIOutputStream **result) = 0;
+||||||| merged common ancestors
+    virtual nsresult OpenOutputStreamForEntry(nsCacheEntry *     entry,
+                                              nsCacheAccessMode  mode,
+                                              uint32_t           offset,
+                                              nsIOutputStream ** result) = 0;
+=======
+  virtual nsresult OpenOutputStreamForEntry(nsCacheEntry* entry,
+                                            nsCacheAccessMode mode,
+                                            uint32_t offset,
+                                            nsIOutputStream** result) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult GetFileForEntry(nsCacheEntry *entry, nsIFile **result) = 0;
+||||||| merged common ancestors
+    virtual nsresult GetFileForEntry( nsCacheEntry *    entry,
+                                      nsIFile **        result ) = 0;
+=======
+  virtual nsresult GetFileForEntry(nsCacheEntry* entry, nsIFile** result) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult OnDataSizeChange(nsCacheEntry *entry, int32_t deltaSize) = 0;
+||||||| merged common ancestors
+    virtual nsresult OnDataSizeChange( nsCacheEntry * entry, int32_t deltaSize ) = 0;
+=======
+  virtual nsresult OnDataSizeChange(nsCacheEntry* entry, int32_t deltaSize) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual nsresult Visit(nsICacheVisitor *visitor) = 0;
+||||||| merged common ancestors
+    virtual nsresult Visit(nsICacheVisitor * visitor) = 0;
+=======
+  virtual nsresult Visit(nsICacheVisitor* visitor) = 0;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /**
    * Device must evict entries associated with clientID.  If clientID ==
    * nullptr, all entries must be evicted.  Active entries must be doomed,
    * rather than evicted.
    */
   virtual nsresult EvictEntries(const char *clientID) = 0;
+||||||| merged common ancestors
+    /**
+     * Device must evict entries associated with clientID.  If clientID == nullptr, all
+     * entries must be evicted.  Active entries must be doomed, rather than evicted.
+     */
+    virtual nsresult EvictEntries(const char * clientID) = 0;
+=======
+  /**
+   * Device must evict entries associated with clientID.  If clientID ==
+   * nullptr, all entries must be evicted.  Active entries must be doomed,
+   * rather than evicted.
+   */
+  virtual nsresult EvictEntries(const char* clientID) = 0;
+>>>>>>> upstream-releases
 };
 
 #endif  // _nsCacheDevice_h_

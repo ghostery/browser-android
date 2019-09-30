@@ -22,8 +22,15 @@ public:
 
     SkRect computeFastBounds(const SkRect& src) const override;
 
+<<<<<<< HEAD
     Factory getFactory() const override { return CreateProc; }
 
+||||||| merged common ancestors
+    SK_TO_STRING_OVERRIDE()
+    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkImageSource)
+
+=======
+>>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
 
@@ -35,6 +42,8 @@ protected:
                                MapDirection, const SkIRect* inputRect) const override;
 
 private:
+    SK_FLATTENABLE_HOOKS(SkImageSource)
+
     explicit SkImageSource(sk_sp<SkImage>);
     SkImageSource(sk_sp<SkImage>,
                   const SkRect& srcRect,

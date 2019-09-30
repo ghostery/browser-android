@@ -10,7 +10,13 @@
 #include "GPUParent.h"
 
 #if defined(XP_WIN)
+<<<<<<< HEAD
 #include "mozilla/mscom/MainThreadRuntime.h"
+||||||| merged common ancestors
+# include "mozilla/mscom/MainThreadRuntime.h"
+=======
+#  include "mozilla/mscom/ProcessRuntime.h"
+>>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -21,7 +27,7 @@ namespace gfx {
 class GPUProcessImpl final : public ipc::ProcessChild {
  public:
   explicit GPUProcessImpl(ProcessId aParentPid);
-  ~GPUProcessImpl();
+  virtual ~GPUProcessImpl();
 
   bool Init(int aArgc, char* aArgv[]) override;
   void CleanUp() override;
@@ -33,7 +39,7 @@ class GPUProcessImpl final : public ipc::ProcessChild {
 
 #if defined(XP_WIN)
   // This object initializes and configures COM.
-  mozilla::mscom::MainThreadRuntime mCOMRuntime;
+  mozilla::mscom::ProcessRuntime mCOMRuntime;
 #endif
 };
 

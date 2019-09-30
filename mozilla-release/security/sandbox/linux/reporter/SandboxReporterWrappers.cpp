@@ -10,11 +10,13 @@
 #include <time.h>
 
 #include "mozilla/Assertions.h"
-#include "mozilla/ModuleUtils.h"
+#include "mozilla/Components.h"
 #include "nsCOMPtr.h"
 #include "nsPrintfCString.h"
 #include "nsTArray.h"
 #include "nsXULAppAPI.h"
+
+using namespace mozilla;
 
 namespace mozilla {
 
@@ -65,6 +67,7 @@ NS_IMETHODIMP SandboxReportWrapper::GetTid(int32_t* aTid) {
 /* readonly attribute ACString procType; */
 NS_IMETHODIMP SandboxReportWrapper::GetProcType(nsACString& aProcType) {
   switch (mReport.mProcType) {
+<<<<<<< HEAD
     case SandboxReport::ProcType::CONTENT:
       aProcType.AssignLiteral("content");
       return NS_OK;
@@ -77,6 +80,36 @@ NS_IMETHODIMP SandboxReportWrapper::GetProcType(nsACString& aProcType) {
     default:
       MOZ_ASSERT(false);
       return NS_ERROR_UNEXPECTED;
+||||||| merged common ancestors
+  case SandboxReport::ProcType::CONTENT:
+    aProcType.AssignLiteral("content");
+    return NS_OK;
+  case SandboxReport::ProcType::FILE:
+    aProcType.AssignLiteral("file");
+    return NS_OK;
+  case SandboxReport::ProcType::MEDIA_PLUGIN:
+    aProcType.AssignLiteral("mediaPlugin");
+    return NS_OK;
+  default:
+    MOZ_ASSERT(false);
+    return NS_ERROR_UNEXPECTED;
+=======
+    case SandboxReport::ProcType::CONTENT:
+      aProcType.AssignLiteral("content");
+      return NS_OK;
+    case SandboxReport::ProcType::FILE:
+      aProcType.AssignLiteral("file");
+      return NS_OK;
+    case SandboxReport::ProcType::MEDIA_PLUGIN:
+      aProcType.AssignLiteral("mediaPlugin");
+      return NS_OK;
+    case SandboxReport::ProcType::RDD:
+      aProcType.AssignLiteral("dataDecoder");
+      return NS_OK;
+    default:
+      MOZ_ASSERT(false);
+      return NS_ERROR_UNEXPECTED;
+>>>>>>> upstream-releases
   }
 }
 
@@ -181,6 +214,7 @@ NS_IMETHODIMP SandboxReporterWrapper::Snapshot(
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_GENERIC_FACTORY_CONSTRUCTOR(SandboxReporterWrapper)
 
 NS_DEFINE_NAMED_CID(MOZ_SANDBOX_REPORTER_CID);
@@ -195,7 +229,41 @@ static const mozilla::Module::ContractIDEntry kSandboxReporterContracts[] = {
 
 static const mozilla::Module kSandboxReporterModule = {
     mozilla::Module::kVersion, kSandboxReporterCIDs, kSandboxReporterContracts};
+||||||| merged common ancestors
+NS_GENERIC_FACTORY_CONSTRUCTOR(SandboxReporterWrapper)
 
+NS_DEFINE_NAMED_CID(MOZ_SANDBOX_REPORTER_CID);
+
+static const mozilla::Module::CIDEntry kSandboxReporterCIDs[] = {
+  { &kMOZ_SANDBOX_REPORTER_CID, false, nullptr,
+    SandboxReporterWrapperConstructor },
+  { nullptr }
+};
+
+static const mozilla::Module::ContractIDEntry kSandboxReporterContracts[] = {
+  { MOZ_SANDBOX_REPORTER_CONTRACTID, &kMOZ_SANDBOX_REPORTER_CID },
+  { nullptr }
+};
+
+static const mozilla::Module kSandboxReporterModule = {
+  mozilla::Module::kVersion,
+  kSandboxReporterCIDs,
+  kSandboxReporterContracts
+};
+=======
+}  // namespace mozilla
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 NSMODULE_DEFN(SandboxReporterModule) = &kSandboxReporterModule;
 
 }  // namespace mozilla
+||||||| merged common ancestors
+NSMODULE_DEFN(SandboxReporterModule) = &kSandboxReporterModule;
+
+} // namespace mozilla
+=======
+NS_IMPL_COMPONENT_FACTORY(mozISandboxReporter) {
+  return MakeAndAddRef<SandboxReporterWrapper>().downcast<nsISupports>();
+}
+>>>>>>> upstream-releases

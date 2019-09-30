@@ -45,13 +45,20 @@ class MediaEngine : public DeviceChangeCallback {
                                 MediaSinkEnum,
                                 nsTArray<RefPtr<MediaDevice>>*) = 0;
 
-  virtual void ReleaseResourcesForWindow(uint64_t aWindowId) = 0;
   virtual void Shutdown() = 0;
 
   virtual void SetFakeDeviceChangeEvents() {}
 
+<<<<<<< HEAD
  protected:
   virtual ~MediaEngine() {}
+||||||| merged common ancestors
+protected:
+  virtual ~MediaEngine() {}
+=======
+ protected:
+  virtual ~MediaEngine() = default;
+>>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

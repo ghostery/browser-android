@@ -88,8 +88,16 @@ struct BSPTreeNode {
  * https://en.wikipedia.org/wiki/Binary_space_partitioning
  * ftp://ftp.sgi.com/other/bspfaq/faq/bspfaq.html
  */
+<<<<<<< HEAD
 class BSPTree {
  public:
+||||||| merged common ancestors
+class BSPTree {
+public:
+=======
+class BSPTree final {
+ public:
+>>>>>>> upstream-releases
   /**
    * The constructor modifies layers in the given list.
    */

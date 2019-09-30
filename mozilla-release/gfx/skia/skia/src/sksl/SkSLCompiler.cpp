@@ -1290,6 +1290,7 @@ std::unique_ptr<Program> Compiler::convertProgram(Program::Kind kind, String tex
     return result;
 }
 
+<<<<<<< HEAD
 bool Compiler::optimize(Program& program) {
     SkASSERT(!fErrorCount);
     if (!program.fIsOptimized) {
@@ -1333,6 +1334,73 @@ bool Compiler::toSPIRV(Program& program, OutputStream& out) {
     if (!this->optimize(program)) {
         return false;
     }
+||||||| merged common ancestors
+bool Compiler::toSPIRV(const Program& program, OutputStream& out) {
+=======
+bool Compiler::optimize(Program& program) {
+    SkASSERT(!fErrorCount);
+    if (!program.fIsOptimized) {
+        program.fIsOptimized = true;
+        fIRGenerator->fKind = program.fKind;
+        fIRGenerator->fSettings = &program.fSettings;
+        for (auto& element : program) {
+            if (element.fKind == ProgramElement::kFunction_Kind) {
+                this->scanCFG((FunctionDefinition&) element);
+            }
+        }
+        if (program.fKind != Program::kFragmentProcessor_Kind) {
+            for (auto iter = program.fElements.begin(); iter != program.fElements.end();) {
+                if ((*iter)->fKind == ProgramElement::kVar_Kind) {
+                    VarDeclarations& vars = (VarDeclarations&) **iter;
+                    for (auto varIter = vars.fVars.begin(); varIter != vars.fVars.end();) {
+                        const Variable& var = *((VarDeclaration&) **varIter).fVar;
+                        if (var.dead()) {
+                            varIter = vars.fVars.erase(varIter);
+                        } else {
+                            ++varIter;
+                        }
+                    }
+                    if (vars.fVars.size() == 0) {
+                        iter = program.fElements.erase(iter);
+                        continue;
+                    }
+                }
+                ++iter;
+            }
+        }
+        fSource = nullptr;
+    }
+    return fErrorCount == 0;
+}
+
+std::unique_ptr<Program> Compiler::specialize(
+                   Program& program,
+                   const std::unordered_map<SkSL::String, SkSL::Program::Settings::Value>& inputs) {
+    std::vector<std::unique_ptr<ProgramElement>> elements;
+    for (const auto& e : program) {
+        elements.push_back(e.clone());
+    }
+    Program::Settings settings;
+    settings.fCaps = program.fSettings.fCaps;
+    for (auto iter = inputs.begin(); iter != inputs.end(); ++iter) {
+        settings.fArgs.insert(*iter);
+    }
+    std::unique_ptr<Program> result(new Program(program.fKind,
+                                                nullptr,
+                                                settings,
+                                                program.fContext,
+                                                program.fInheritedElements,
+                                                std::move(elements),
+                                                program.fSymbols,
+                                                program.fInputs));
+    return result;
+}
+
+bool Compiler::toSPIRV(Program& program, OutputStream& out) {
+    if (!this->optimize(program)) {
+        return false;
+    }
+>>>>>>> upstream-releases
 #ifdef SK_ENABLE_SPIRV_VALIDATION
     StringStream buffer;
     fSource = program.fSource.get();

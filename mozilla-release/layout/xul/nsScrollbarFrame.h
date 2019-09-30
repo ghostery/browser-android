@@ -17,10 +17,15 @@
 
 class nsIScrollbarMediator;
 
-nsIFrame* NS_NewScrollbarFrame(nsIPresShell* aPresShell,
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+nsIFrame* NS_NewScrollbarFrame(mozilla::PresShell* aPresShell,
                                mozilla::ComputedStyle* aStyle);
 
 class nsScrollbarFrame final : public nsBoxFrame,
+<<<<<<< HEAD
                                public nsIAnonymousContentCreator {
  public:
   explicit nsScrollbarFrame(ComputedStyle* aStyle)
@@ -34,6 +39,37 @@ class nsScrollbarFrame final : public nsBoxFrame,
         mThumb(nullptr),
         mUpBottomButton(nullptr),
         mDownBottomButton(nullptr) {}
+||||||| merged common ancestors
+                               public nsIAnonymousContentCreator
+{
+public:
+  explicit nsScrollbarFrame(ComputedStyle* aStyle)
+    : nsBoxFrame(aStyle, kClassID)
+    , mIncrement(0)
+    , mSmoothScroll(false)
+    , mScrollbarMediator(nullptr)
+    , mUpTopButton(nullptr)
+    , mDownTopButton(nullptr)
+    , mSlider(nullptr)
+    , mThumb(nullptr)
+    , mUpBottomButton(nullptr)
+    , mDownBottomButton(nullptr)
+  {}
+=======
+                               public nsIAnonymousContentCreator {
+ public:
+  explicit nsScrollbarFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsBoxFrame(aStyle, aPresContext, kClassID),
+        mIncrement(0),
+        mSmoothScroll(false),
+        mScrollbarMediator(nullptr),
+        mUpTopButton(nullptr),
+        mDownTopButton(nullptr),
+        mSlider(nullptr),
+        mThumb(nullptr),
+        mUpBottomButton(nullptr),
+        mDownBottomButton(nullptr) {}
+>>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsScrollbarFrame)
@@ -57,6 +93,7 @@ class nsScrollbarFrame final : public nsBoxFrame,
                                  nsEventStatus* aEventStatus,
                                  bool aControlHeld) override;
 
+  MOZ_CAN_RUN_SCRIPT
   NS_IMETHOD HandleDrag(nsPresContext* aPresContext,
                         mozilla::WidgetGUIEvent* aEvent,
                         nsEventStatus* aEventStatus) override;

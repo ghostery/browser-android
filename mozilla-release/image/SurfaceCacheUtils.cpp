@@ -10,9 +10,20 @@
 namespace mozilla {
 namespace image {
 
+<<<<<<< HEAD
 /* static */ void SurfaceCacheUtils::DiscardAll() {
   SurfaceCache::DiscardAll();
 }
+||||||| merged common ancestors
+/* static */ void
+SurfaceCacheUtils::DiscardAll()
+{
+  SurfaceCache::DiscardAll();
+}
+=======
+/* static */
+void SurfaceCacheUtils::DiscardAll() { SurfaceCache::DiscardAll(); }
+>>>>>>> upstream-releases
 
 }  // namespace image
 }  // namespace mozilla

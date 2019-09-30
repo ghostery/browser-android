@@ -12,11 +12,12 @@
 //
 
 #include "nsStackFrame.h"
+
 #include "mozilla/ComputedStyle.h"
+#include "mozilla/PresShell.h"
 #include "nsIContent.h"
 #include "nsCOMPtr.h"
 #include "nsHTMLParts.h"
-#include "nsIPresShell.h"
 #include "nsCSSRendering.h"
 #include "nsBoxLayoutState.h"
 #include "nsStackLayout.h"
@@ -24,14 +25,33 @@
 
 using namespace mozilla;
 
+<<<<<<< HEAD
 nsIFrame* NS_NewStackFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsStackFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewStackFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsStackFrame(aStyle);
+=======
+nsIFrame* NS_NewStackFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsStackFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsStackFrame)
 
+<<<<<<< HEAD
 nsStackFrame::nsStackFrame(ComputedStyle* aStyle)
     : nsBoxFrame(aStyle, kClassID) {
+||||||| merged common ancestors
+nsStackFrame::nsStackFrame(ComputedStyle* aStyle):
+  nsBoxFrame(aStyle, kClassID)
+{
+=======
+nsStackFrame::nsStackFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+    : nsBoxFrame(aStyle, aPresContext, kClassID) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsBoxLayout> layout;
   NS_NewStackLayout(layout);
   SetXULLayoutManager(layout);

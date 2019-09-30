@@ -7,12 +7,18 @@
 #include "mozilla/BasePrincipal.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsIBrowserDOMWindow.h"
-#include "nsIFrameLoaderOwner.h"
+#include "nsFrameLoaderOwner.h"
+#include "nsIContentSecurityPolicy.h"
+#include "nsIPrincipal.h"
+#include "nsIReferrerInfo.h"
 #include "nsString.h"
 
 namespace mozilla {
 class OriginAttributes;
-}
+namespace dom {
+class Element;
+}  // namespace dom
+}  // namespace mozilla
 
 class nsOpenURIInFrameParams final : public nsIOpenURIInFrameParams {
  public:
@@ -20,16 +26,25 @@ class nsOpenURIInFrameParams final : public nsIOpenURIInFrameParams {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_NSIOPENURIINFRAMEPARAMS
 
+<<<<<<< HEAD
   explicit nsOpenURIInFrameParams(
       const mozilla::OriginAttributes& aOriginAttributes,
       nsIFrameLoaderOwner* aOpener);
+||||||| merged common ancestors
+  explicit nsOpenURIInFrameParams(const mozilla::OriginAttributes& aOriginAttributes,
+                                  nsIFrameLoaderOwner* aOpener);
+=======
+  explicit nsOpenURIInFrameParams(
+      const mozilla::OriginAttributes& aOriginAttributes,
+      mozilla::dom::Element* aOpener);
+>>>>>>> upstream-releases
 
  private:
   ~nsOpenURIInFrameParams();
 
   mozilla::OriginAttributes mOpenerOriginAttributes;
-  nsCOMPtr<nsIFrameLoaderOwner> mOpenerBrowser;
-  nsString mReferrer;
-  uint32_t mReferrerPolicy;
+  RefPtr<mozilla::dom::Element> mOpenerBrowser;
+  nsCOMPtr<nsIReferrerInfo> mReferrerInfo;
   nsCOMPtr<nsIPrincipal> mTriggeringPrincipal;
+  nsCOMPtr<nsIContentSecurityPolicy> mCsp;
 };

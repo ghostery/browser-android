@@ -46,8 +46,17 @@ bool PeerIdentity::Equals(const nsAString& aOtherString) const {
   return normHost == normOtherHost;
 }
 
+<<<<<<< HEAD
 /* static */ void PeerIdentity::GetUser(const nsAString& aPeerIdentity,
                                         nsAString& aUser) {
+||||||| merged common ancestors
+/* static */ void
+PeerIdentity::GetUser(const nsAString& aPeerIdentity, nsAString& aUser)
+{
+=======
+/* static */
+void PeerIdentity::GetUser(const nsAString& aPeerIdentity, nsAString& aUser) {
+>>>>>>> upstream-releases
   int32_t at = aPeerIdentity.FindChar('@');
   if (at >= 0) {
     aUser = Substring(aPeerIdentity, 0, at);
@@ -56,8 +65,17 @@ bool PeerIdentity::Equals(const nsAString& aOtherString) const {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void PeerIdentity::GetHost(const nsAString& aPeerIdentity,
                                         nsAString& aHost) {
+||||||| merged common ancestors
+/* static */ void
+PeerIdentity::GetHost(const nsAString& aPeerIdentity, nsAString& aHost)
+{
+=======
+/* static */
+void PeerIdentity::GetHost(const nsAString& aPeerIdentity, nsAString& aHost) {
+>>>>>>> upstream-releases
   int32_t at = aPeerIdentity.FindChar('@');
   if (at >= 0) {
     aHost = Substring(aPeerIdentity, at + 1);
@@ -66,9 +84,22 @@ bool PeerIdentity::Equals(const nsAString& aOtherString) const {
   }
 }
 
+<<<<<<< HEAD
 /* static */ void PeerIdentity::GetNormalizedHost(
     const nsCOMPtr<nsIIDNService>& aIdnService, const nsAString& aHost,
     nsACString& aNormalizedHost) {
+||||||| merged common ancestors
+/* static */ void
+PeerIdentity::GetNormalizedHost(const nsCOMPtr<nsIIDNService>& aIdnService,
+                                const nsAString& aHost,
+                                nsACString& aNormalizedHost)
+{
+=======
+/* static */
+void PeerIdentity::GetNormalizedHost(const nsCOMPtr<nsIIDNService>& aIdnService,
+                                     const nsAString& aHost,
+                                     nsACString& aNormalizedHost) {
+>>>>>>> upstream-releases
   const nsCString chost = NS_ConvertUTF16toUTF8(aHost);
   DebugOnly<nsresult> rv =
       aIdnService->ConvertUTF8toACE(chost, aNormalizedHost);

@@ -5,6 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "VRManagerParent.h"
+
 #include "ipc/VRLayerParent.h"
 #include "mozilla/gfx/PVRManagerParent.h"
 #include "mozilla/ipc/ProtocolTypes.h"
@@ -13,12 +14,12 @@
 #include "mozilla/Unused.h"
 #include "VRManager.h"
 #include "VRThread.h"
-#include "gfxVRPuppet.h"
 
 namespace mozilla {
 using namespace layers;
 namespace gfx {
 
+<<<<<<< HEAD
 VRManagerParent::VRManagerParent(ProcessId aChildProcessId,
                                  bool aIsContentChild)
     : mControllerTestID(1),
@@ -26,6 +27,21 @@ VRManagerParent::VRManagerParent(ProcessId aChildProcessId,
       mHaveControllerListener(false),
       mIsContentChild(aIsContentChild),
       mVRActiveStatus(true) {
+||||||| merged common ancestors
+VRManagerParent::VRManagerParent(ProcessId aChildProcessId, bool aIsContentChild)
+  : mControllerTestID(1)
+  , mHaveEventListener(false)
+  , mHaveControllerListener(false)
+  , mIsContentChild(aIsContentChild)
+{
+=======
+VRManagerParent::VRManagerParent(ProcessId aChildProcessId,
+                                 bool aIsContentChild)
+    : mHaveEventListener(false),
+      mHaveControllerListener(false),
+      mIsContentChild(aIsContentChild),
+      mVRActiveStatus(true) {
+>>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRManagerParent);
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -43,10 +59,7 @@ PVRLayerParent* VRManagerParent::AllocPVRLayerParent(const uint32_t& aDisplayID,
   RefPtr<VRLayerParent> layer;
   layer = new VRLayerParent(aDisplayID, aGroup);
   VRManager* vm = VRManager::Get();
-  RefPtr<gfx::VRDisplayHost> display = vm->GetDisplay(aDisplayID);
-  if (display) {
-    display->AddLayer(layer);
-  }
+  vm->AddLayer(layer);
   return layer.forget().take();
 }
 
@@ -71,9 +84,21 @@ void VRManagerParent::UnregisterFromManager() {
   mVRManagerHolder = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ bool VRManagerParent::CreateForContent(
     Endpoint<PVRManagerParent>&& aEndpoint) {
+||||||| merged common ancestors
+/* static */ bool
+VRManagerParent::CreateForContent(Endpoint<PVRManagerParent>&& aEndpoint)
+{
+=======
+/* static */
+bool VRManagerParent::CreateForContent(Endpoint<PVRManagerParent>&& aEndpoint) {
+>>>>>>> upstream-releases
   MessageLoop* loop = CompositorThreadHolder::Loop();
+  if (!loop) {
+    return false;
+  }
 
   RefPtr<VRManagerParent> vmp = new VRManagerParent(aEndpoint.OtherPid(), true);
   loop->PostTask(NewRunnableMethod<Endpoint<PVRManagerParent>&&>(
@@ -92,12 +117,31 @@ void VRManagerParent::Bind(Endpoint<PVRManagerParent>&& aEndpoint) {
   RegisterWithManager();
 }
 
+<<<<<<< HEAD
 /*static*/ void VRManagerParent::RegisterVRManagerInCompositorThread(
     VRManagerParent* aVRManager) {
+||||||| merged common ancestors
+/*static*/ void
+VRManagerParent::RegisterVRManagerInCompositorThread(VRManagerParent* aVRManager)
+{
+=======
+/*static*/
+void VRManagerParent::RegisterVRManagerInCompositorThread(
+    VRManagerParent* aVRManager) {
+>>>>>>> upstream-releases
   aVRManager->RegisterWithManager();
 }
 
+<<<<<<< HEAD
 /*static*/ VRManagerParent* VRManagerParent::CreateSameProcess() {
+||||||| merged common ancestors
+/*static*/ VRManagerParent*
+VRManagerParent::CreateSameProcess()
+{
+=======
+/*static*/
+VRManagerParent* VRManagerParent::CreateSameProcess() {
+>>>>>>> upstream-releases
   MessageLoop* loop = CompositorThreadHolder::Loop();
   RefPtr<VRManagerParent> vmp =
       new VRManagerParent(base::GetCurrentProcId(), false);
@@ -150,17 +194,23 @@ mozilla::ipc::IPCResult VRManagerParent::RecvRefreshDisplays() {
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult VRManagerParent::RecvResetSensor(
     const uint32_t& aDisplayID) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+VRManagerParent::RecvResetSensor(const uint32_t& aDisplayID)
+{
+=======
+mozilla::ipc::IPCResult VRManagerParent::RecvSetGroupMask(
+    const uint32_t& aDisplayID, const uint32_t& aGroupMask) {
+>>>>>>> upstream-releases
   VRManager* vm = VRManager::Get();
-  RefPtr<gfx::VRDisplayHost> display = vm->GetDisplay(aDisplayID);
-  if (display != nullptr) {
-    display->ZeroSensor();
-  }
-
+  vm->SetGroupMask(aGroupMask);
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult VRManagerParent::RecvSetGroupMask(
     const uint32_t& aDisplayID, const uint32_t& aGroupMask) {
   VRManager* vm = VRManager::Get();
@@ -172,6 +222,26 @@ mozilla::ipc::IPCResult VRManagerParent::RecvSetGroupMask(
 }
 
 bool VRManagerParent::HaveEventListener() { return mHaveEventListener; }
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+VRManagerParent::RecvSetGroupMask(const uint32_t& aDisplayID, const uint32_t& aGroupMask)
+{
+  VRManager* vm = VRManager::Get();
+  RefPtr<gfx::VRDisplayHost> display = vm->GetDisplay(aDisplayID);
+  if (display != nullptr) {
+    display->SetGroupMask(aGroupMask);
+  }
+  return IPC_OK();
+}
+
+bool
+VRManagerParent::HaveEventListener()
+{
+  return mHaveEventListener;
+}
+=======
+bool VRManagerParent::HaveEventListener() { return mHaveEventListener; }
+>>>>>>> upstream-releases
 
 bool VRManagerParent::HaveControllerListener() {
   return mHaveControllerListener;
@@ -188,7 +258,7 @@ mozilla::ipc::IPCResult VRManagerParent::RecvSetHaveEventListener(
 mozilla::ipc::IPCResult VRManagerParent::RecvControllerListenerAdded() {
   // Force update the available controllers for GamepadManager,
   VRManager* vm = VRManager::Get();
-  vm->RemoveControllers();
+  vm->StopAllHaptics();
   mHaveControllerListener = true;
   return IPC_OK();
 }
@@ -196,6 +266,7 @@ mozilla::ipc::IPCResult VRManagerParent::RecvControllerListenerAdded() {
 mozilla::ipc::IPCResult VRManagerParent::RecvControllerListenerRemoved() {
   mHaveControllerListener = false;
   VRManager* vm = VRManager::Get();
+<<<<<<< HEAD
   vm->RemoveControllers();
   return IPC_OK();
 }
@@ -206,9 +277,26 @@ mozilla::ipc::IPCResult VRManagerParent::RecvCreateVRTestSystem() {
   // The mControllerTestID is 1 based
   mControllerTestID = 1;
   mVRControllerTests.Clear();
+||||||| merged common ancestors
+  vm->RemoveControllers();
   return IPC_OK();
 }
 
+mozilla::ipc::IPCResult
+VRManagerParent::RecvCreateVRTestSystem()
+{
+  VRManager* vm = VRManager::Get();
+  vm->CreateVRTestSystem();
+  // The mControllerTestID is 1 based
+  mControllerTestID = 1;
+  mVRControllerTests.Clear();
+=======
+  vm->StopAllHaptics();
+>>>>>>> upstream-releases
+  return IPC_OK();
+}
+
+<<<<<<< HEAD
 mozilla::ipc::IPCResult VRManagerParent::RecvCreateVRServiceTestDisplay(
     const nsCString& aID, const uint32_t& aPromiseID) {
   VRManager* vm = VRManager::Get();
@@ -256,7 +344,66 @@ mozilla::ipc::IPCResult VRManagerParent::RecvCreateVRServiceTestController(
     testDuration += kTestInterval;
 #ifdef XP_WIN
     Sleep(kTestInterval);
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+VRManagerParent::RecvCreateVRServiceTestDisplay(const nsCString& aID, const uint32_t& aPromiseID)
+{
+  VRManager* vm = VRManager::Get();
+  VRSystemManagerPuppet* puppetManager = vm->GetPuppetManager();
+  uint32_t deviceID = puppetManager->CreateTestDisplay();
+
+  if (SendReplyCreateVRServiceTestDisplay(aID, aPromiseID, deviceID)) {
+    return IPC_OK();
+  }
+
+  return IPC_FAIL(this, "SendReplyCreateVRServiceTestController fail");
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvCreateVRServiceTestController(const nsCString& aID, const uint32_t& aPromiseID)
+{
+  uint32_t controllerIdx = 1; // ID's are 1 based
+  nsTArray<VRControllerInfo> controllerInfoArray;
+  impl::VRControllerPuppet* controllerPuppet = nullptr;
+  VRManager* vm = VRManager::Get();
+
+  /**
+   * The controller is created asynchronously.
+   * We will wait up to kMaxControllerCreationTime milliseconds before
+   * assuming that the controller will never be created.
+   */
+  const int kMaxControllerCreationTime = 1000;
+  /**
+   * min(100ms, kVRIdleTaskInterval) * 10 as a very
+   * pessimistic estimation of the maximum duration possible.
+   * It's possible that the IPC message queues could be so busy
+   * that this time is elapsed while still succeeding to create
+   * the controllers; however, in this case the browser would be
+   * locking up for more than a second at a time and something else
+   * has gone horribly wrong.
+   */
+   const int kTestInterval = 10;
+  /**
+   * We will keep checking every kTestInterval milliseconds until
+   * we see the controllers or kMaxControllerCreationTime milliseconds
+   * have elapsed and we will give up.
+   */
+
+  int testDuration = 0;
+  while (!controllerPuppet && testDuration < kMaxControllerCreationTime) {
+    testDuration += kTestInterval;
+#ifdef XP_WIN
+    Sleep(kTestInterval);
+=======
+mozilla::ipc::IPCResult VRManagerParent::RecvRunPuppet(
+    const InfallibleTArray<uint64_t>& aBuffer) {
+#if defined(MOZ_WIDGET_ANDROID)
+  // Not yet implemented for Android / GeckoView
+  // See Bug 1555192
+  Unused << SendNotifyPuppetCommandBufferCompleted(false);
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
     sleep(kTestInterval);
 #endif
 
@@ -298,7 +445,53 @@ mozilla::ipc::IPCResult VRManagerParent::RecvCreateVRServiceTestController(
 
 mozilla::ipc::IPCResult VRManagerParent::RecvSetDisplayInfoToMockDisplay(
     const uint32_t& aDeviceID, const VRDisplayInfo& aDisplayInfo) {
+||||||| merged common ancestors
+    sleep(kTestInterval);
+#endif
+
+    // Get VRControllerPuppet from VRManager
+    vm->GetVRControllerInfo(controllerInfoArray);
+    for (auto& controllerInfo : controllerInfoArray) {
+      if (controllerInfo.GetType() == VRDeviceType::Puppet) {
+        if (controllerIdx == mControllerTestID) {
+          controllerPuppet = static_cast<impl::VRControllerPuppet*>(
+                             vm->GetController(controllerInfo.GetControllerID()).get());
+          break;
+        }
+        ++controllerIdx;
+      }
+    }
+  }
+
+  // We might not have a controllerPuppet if the test did
+  // not create a VR display first.
+  if (!controllerPuppet) {
+    // We send a device ID of "0" to indicate failure
+    if (SendReplyCreateVRServiceTestController(aID, aPromiseID, 0)) {
+      return IPC_OK();
+    }
+  } else {
+    if (!mVRControllerTests.Get(mControllerTestID, nullptr)) {
+      mVRControllerTests.Put(mControllerTestID, controllerPuppet);
+    }
+
+    if (SendReplyCreateVRServiceTestController(aID, aPromiseID, mControllerTestID)) {
+      ++mControllerTestID;
+      return IPC_OK();
+    }
+  }
+
+  return IPC_FAIL(this, "SendReplyCreateVRServiceTestController fail");
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvSetDisplayInfoToMockDisplay(const uint32_t& aDeviceID,
+                                                 const VRDisplayInfo& aDisplayInfo)
+{
+=======
+>>>>>>> upstream-releases
   VRManager* vm = VRManager::Get();
+<<<<<<< HEAD
   VRSystemManagerPuppet* puppetManager = vm->GetPuppetManager();
   puppetManager->SetPuppetDisplayInfo(aDeviceID, aDisplayInfo);
   return IPC_OK();
@@ -329,10 +522,54 @@ mozilla::ipc::IPCResult VRManagerParent::RecvNewButtonEventToMockController(
       GetControllerPuppet(aDeviceID);
   if (controllerPuppet) {
     controllerPuppet->SetButtonPressState(aButton, aPressed);
-  }
+||||||| merged common ancestors
+  VRSystemManagerPuppet* puppetManager = vm->GetPuppetManager();
+  puppetManager->SetPuppetDisplayInfo(aDeviceID, aDisplayInfo);
   return IPC_OK();
 }
 
+mozilla::ipc::IPCResult
+VRManagerParent::RecvSetSensorStateToMockDisplay(const uint32_t& aDeviceID,
+                                                 const VRHMDSensorState& aSensorState)
+{
+  VRManager* vm = VRManager::Get();
+  VRSystemManagerPuppet* puppetManager = vm->GetPuppetManager();
+  puppetManager->SetPuppetDisplaySensorState(aDeviceID, aSensorState);
+  return IPC_OK();
+}
+
+already_AddRefed<impl::VRControllerPuppet>
+VRManagerParent::GetControllerPuppet(uint32_t aDeviceID)
+{
+  // aDeviceID for controllers start at 1 and are
+  // used as a key to mVRControllerTests
+  MOZ_ASSERT(aDeviceID > 0);
+  RefPtr<impl::VRControllerPuppet> controllerPuppet;
+  mVRControllerTests.Get(aDeviceID,
+                         getter_AddRefs(controllerPuppet));
+  MOZ_ASSERT(controllerPuppet);
+  return controllerPuppet.forget();
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvNewButtonEventToMockController(const uint32_t& aDeviceID, const long& aButton,
+                                                    const bool& aPressed)
+{
+  RefPtr<impl::VRControllerPuppet> controllerPuppet = GetControllerPuppet(aDeviceID);
+  if (controllerPuppet) {
+    controllerPuppet->SetButtonPressState(aButton, aPressed);
+=======
+  if (!vm->RunPuppet(aBuffer, this)) {
+    // We have immediately failed, need to resolve the
+    // promise right away
+    Unused << SendNotifyPuppetCommandBufferCompleted(false);
+>>>>>>> upstream-releases
+  }
+#endif  // defined(MOZ_WIDGET_ANDROID)
+  return IPC_OK();
+}
+
+<<<<<<< HEAD
 mozilla::ipc::IPCResult VRManagerParent::RecvNewAxisMoveEventToMockController(
     const uint32_t& aDeviceID, const long& aAxis, const double& aValue) {
   RefPtr<impl::VRControllerPuppet> controllerPuppet =
@@ -350,6 +587,36 @@ mozilla::ipc::IPCResult VRManagerParent::RecvNewPoseMoveToMockController(
   if (controllerPuppet) {
     controllerPuppet->SetPoseMoveState(pose);
   }
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+VRManagerParent::RecvNewAxisMoveEventToMockController(const uint32_t& aDeviceID, const long& aAxis,
+                                                      const double& aValue)
+{
+  RefPtr<impl::VRControllerPuppet> controllerPuppet = GetControllerPuppet(aDeviceID);
+  if (controllerPuppet) {
+    controllerPuppet->SetAxisMoveState(aAxis, aValue);
+  }
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvNewPoseMoveToMockController(const uint32_t& aDeviceID,
+                                                 const GamepadPoseState& pose)
+{
+  RefPtr<impl::VRControllerPuppet> controllerPuppet = GetControllerPuppet(aDeviceID);
+  if (controllerPuppet) {
+    controllerPuppet->SetPoseMoveState(pose);
+  }
+=======
+mozilla::ipc::IPCResult VRManagerParent::RecvResetPuppet() {
+#if defined(MOZ_WIDGET_ANDROID)
+  // Not yet implemented for Android / GeckoView
+  // See Bug 1555192
+#else
+  VRManager* vm = VRManager::Get();
+  vm->ResetPuppet(this);
+#endif  // defined(MOZ_WIDGET_ANDROID)
+>>>>>>> upstream-releases
   return IPC_OK();
 }
 
@@ -372,6 +639,7 @@ mozilla::ipc::IPCResult VRManagerParent::RecvStopVibrateHaptic(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 bool VRManagerParent::SendGamepadUpdate(
     const GamepadChangeEvent& aGamepadEvent) {
   // GamepadManager only exists at the content process
@@ -385,6 +653,27 @@ bool VRManagerParent::SendGamepadUpdate(
 
 bool VRManagerParent::SendReplyGamepadVibrateHaptic(
     const uint32_t& aPromiseID) {
+||||||| merged common ancestors
+bool
+VRManagerParent::SendGamepadUpdate(const GamepadChangeEvent& aGamepadEvent)
+{
+  // GamepadManager only exists at the content process
+  // or the same process in non-e10s mode.
+  if (mHaveControllerListener &&
+      (mIsContentChild || IsSameProcess())) {
+    return PVRManagerParent::SendGamepadUpdate(aGamepadEvent);
+  }
+
+  return true;
+}
+
+bool
+VRManagerParent::SendReplyGamepadVibrateHaptic(const uint32_t& aPromiseID)
+{
+=======
+bool VRManagerParent::SendReplyGamepadVibrateHaptic(
+    const uint32_t& aPromiseID) {
+>>>>>>> upstream-releases
   // GamepadManager only exists at the content process
   // or the same process in non-e10s mode.
   if (mHaveControllerListener && (mIsContentChild || IsSameProcess())) {

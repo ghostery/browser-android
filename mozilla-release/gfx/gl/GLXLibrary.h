@@ -30,9 +30,19 @@ namespace gl {
 
 class GLContextGLX;
 
+<<<<<<< HEAD
 class GLXLibrary {
  public:
   bool EnsureInitialized();
+||||||| merged common ancestors
+private:
+    void BeforeGLXCall() const;
+    void AfterGLXCall() const;
+=======
+class GLXLibrary final {
+ public:
+  bool EnsureInitialized();
+>>>>>>> upstream-releases
 
  private:
   void BeforeGLXCall() const;
@@ -40,11 +50,11 @@ class GLXLibrary {
 
  public:
 #ifdef DEBUG
-#define BEFORE_CALL BeforeGLXCall();
-#define AFTER_CALL AfterGLXCall();
+#  define BEFORE_CALL BeforeGLXCall();
+#  define AFTER_CALL AfterGLXCall();
 #else
-#define BEFORE_CALL
-#define AFTER_CALL
+#  define BEFORE_CALL
+#  define AFTER_CALL
 #endif
 
 #define WRAP(X)                  \
@@ -159,6 +169,7 @@ class GLXLibrary {
 #undef BEFORE_CALL
 #undef AFTER_CALL
 
+<<<<<<< HEAD
       ////
 
       GLXPixmap CreatePixmap(gfxASurface* aSurface);
@@ -212,6 +223,110 @@ class GLXLibrary {
     void(GLAPIENTRY* fReleaseTexImageEXT)(Display*, GLXDrawable, int);
     GLXContext(GLAPIENTRY* fCreateContextAttribsARB)(Display*, GLXFBConfig,
                                                      GLXContext, Bool,
+||||||| merged common ancestors
+    ////
+
+    GLXPixmap CreatePixmap(gfxASurface* aSurface);
+    void DestroyPixmap(Display* aDisplay, GLXPixmap aPixmap);
+    void BindTexImage(Display* aDisplay, GLXPixmap aPixmap);
+    void ReleaseTexImage(Display* aDisplay, GLXPixmap aPixmap);
+    void UpdateTexImage(Display* aDisplay, GLXPixmap aPixmap);
+
+    ////
+
+    bool UseTextureFromPixmap() { return mUseTextureFromPixmap; }
+    bool HasRobustness() { return mHasRobustness; }
+    bool HasVideoMemoryPurge() { return mHasVideoMemoryPurge; }
+    bool HasCreateContextAttribs() { return mHasCreateContextAttribs; }
+    bool SupportsTextureFromPixmap(gfxASurface* aSurface);
+    bool SupportsVideoSync();
+    bool SupportsSwapControl() const { return bool(mSymbols.fSwapIntervalEXT); }
+    bool IsATI() { return mIsATI; }
+    bool IsMesa() { return mClientIsMesa; }
+
+    PRFuncPtr GetGetProcAddress() const {
+        return (PRFuncPtr)mSymbols.fGetProcAddress;
+    }
+
+private:
+    struct {
+        void         (GLAPIENTRY *fDestroyContext) (Display*, GLXContext);
+        Bool         (GLAPIENTRY *fMakeCurrent) (Display*, GLXDrawable, GLXContext);
+        XVisualInfo* (GLAPIENTRY *fGetConfig) (Display*, XVisualInfo*, int, int*);
+        GLXContext   (GLAPIENTRY *fGetCurrentContext) ();
+        void*        (GLAPIENTRY *fGetProcAddress) (const char*);
+        GLXFBConfig* (GLAPIENTRY *fChooseFBConfig) (Display*, int, const int*, int*);
+        XVisualInfo* (GLAPIENTRY *fChooseVisual) (Display*, int, const int*);
+        GLXFBConfig* (GLAPIENTRY *fGetFBConfigs) (Display*, int, int*);
+        GLXContext   (GLAPIENTRY *fCreateNewContext) (Display*, GLXFBConfig, int,
+                                                      GLXContext, Bool);
+        int          (GLAPIENTRY *fGetFBConfigAttrib) (Display*, GLXFBConfig, int, int*);
+        void         (GLAPIENTRY *fSwapBuffers) (Display*, GLXDrawable);
+        const char*  (GLAPIENTRY *fQueryExtensionsString) (Display*, int);
+        const char*  (GLAPIENTRY *fGetClientString) (Display*, int);
+        const char*  (GLAPIENTRY *fQueryServerString) (Display*, int, int);
+        GLXPixmap    (GLAPIENTRY *fCreatePixmap) (Display*, GLXFBConfig, Pixmap,
+                                                  const int*);
+        GLXPixmap    (GLAPIENTRY *fCreateGLXPixmapWithConfig) (Display*, GLXFBConfig,
+                                                              Pixmap);
+        void         (GLAPIENTRY *fDestroyPixmap) (Display*, GLXPixmap);
+        Bool         (GLAPIENTRY *fQueryVersion) (Display*, int*, int*);
+        void         (GLAPIENTRY *fWaitGL) ();
+        void         (GLAPIENTRY *fWaitX) ();
+        void         (GLAPIENTRY *fBindTexImageEXT) (Display*, GLXDrawable, int,
+=======
+      ////
+
+      GLXPixmap CreatePixmap(gfxASurface* aSurface);
+  void DestroyPixmap(Display* aDisplay, GLXPixmap aPixmap);
+  void BindTexImage(Display* aDisplay, GLXPixmap aPixmap);
+  void ReleaseTexImage(Display* aDisplay, GLXPixmap aPixmap);
+  void UpdateTexImage(Display* aDisplay, GLXPixmap aPixmap);
+
+  ////
+
+  bool UseTextureFromPixmap() { return mUseTextureFromPixmap; }
+  bool HasRobustness() { return mHasRobustness; }
+  bool HasVideoMemoryPurge() { return mHasVideoMemoryPurge; }
+  bool HasCreateContextAttribs() { return mHasCreateContextAttribs; }
+  bool SupportsTextureFromPixmap(gfxASurface* aSurface);
+  bool SupportsVideoSync();
+  bool SupportsSwapControl() const { return bool(mSymbols.fSwapIntervalEXT); }
+  bool IsATI() { return mIsATI; }
+  bool IsMesa() { return mClientIsMesa; }
+
+  auto GetGetProcAddress() const { return mSymbols.fGetProcAddress; }
+
+ private:
+  struct {
+    void(GLAPIENTRY* fDestroyContext)(Display*, GLXContext);
+    Bool(GLAPIENTRY* fMakeCurrent)(Display*, GLXDrawable, GLXContext);
+    XVisualInfo*(GLAPIENTRY* fGetConfig)(Display*, XVisualInfo*, int, int*);
+    GLXContext(GLAPIENTRY* fGetCurrentContext)();
+    void*(GLAPIENTRY* fGetProcAddress)(const char*);
+    GLXFBConfig*(GLAPIENTRY* fChooseFBConfig)(Display*, int, const int*, int*);
+    XVisualInfo*(GLAPIENTRY* fChooseVisual)(Display*, int, const int*);
+    GLXFBConfig*(GLAPIENTRY* fGetFBConfigs)(Display*, int, int*);
+    GLXContext(GLAPIENTRY* fCreateNewContext)(Display*, GLXFBConfig, int,
+                                              GLXContext, Bool);
+    int(GLAPIENTRY* fGetFBConfigAttrib)(Display*, GLXFBConfig, int, int*);
+    void(GLAPIENTRY* fSwapBuffers)(Display*, GLXDrawable);
+    const char*(GLAPIENTRY* fQueryExtensionsString)(Display*, int);
+    const char*(GLAPIENTRY* fGetClientString)(Display*, int);
+    const char*(GLAPIENTRY* fQueryServerString)(Display*, int, int);
+    GLXPixmap(GLAPIENTRY* fCreatePixmap)(Display*, GLXFBConfig, Pixmap,
+                                         const int*);
+    GLXPixmap(GLAPIENTRY* fCreateGLXPixmapWithConfig)(Display*, GLXFBConfig,
+                                                      Pixmap);
+    void(GLAPIENTRY* fDestroyPixmap)(Display*, GLXPixmap);
+    Bool(GLAPIENTRY* fQueryVersion)(Display*, int*, int*);
+    void(GLAPIENTRY* fWaitGL)();
+    void(GLAPIENTRY* fWaitX)();
+    void(GLAPIENTRY* fBindTexImageEXT)(Display*, GLXDrawable, int, const int*);
+    void(GLAPIENTRY* fReleaseTexImageEXT)(Display*, GLXDrawable, int);
+    GLXContext(GLAPIENTRY* fCreateContextAttribsARB)(Display*, GLXFBConfig,
+                                                     GLXContext, Bool,
+>>>>>>> upstream-releases
                                                      const int*);
     int(GLAPIENTRY* fGetVideoSyncSGI)(unsigned int*);
     int(GLAPIENTRY* fWaitVideoSyncSGI)(int, int, unsigned int*);

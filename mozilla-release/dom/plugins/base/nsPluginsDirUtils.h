@@ -16,11 +16,26 @@
 // E.g. "mime type::desecription;" // correct w/o ext
 //      "mime type:desecription;"  // wrong w/o ext
 //
+<<<<<<< HEAD
 static nsresult ParsePluginMimeDescription(const char *mdesc,
                                            nsPluginInfo &info) {
   nsresult rv = NS_ERROR_FAILURE;
   if (!mdesc || !*mdesc) return rv;
+||||||| merged common ancestors
+static nsresult
+ParsePluginMimeDescription(const char *mdesc, nsPluginInfo &info)
+{
+    nsresult rv = NS_ERROR_FAILURE;
+    if (!mdesc || !*mdesc)
+       return rv;
+=======
+static nsresult ParsePluginMimeDescription(const char* mdesc,
+                                           nsPluginInfo& info) {
+  nsresult rv = NS_ERROR_FAILURE;
+  if (!mdesc || !*mdesc) return rv;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   char *mdescDup =
       PL_strdup(mdesc);  // make a dup of intput string we'll change it content
   char anEmptyString[] = "";
@@ -30,6 +45,26 @@ static nsresult ParsePluginMimeDescription(const char *mdesc,
   char *p = mdescDup;  // make a dup of intput string we'll change it content
   while (p) {
     char *ptrMimeArray[] = {anEmptyString, anEmptyString, anEmptyString};
+||||||| merged common ancestors
+    char *mdescDup = PL_strdup(mdesc); // make a dup of intput string we'll change it content
+    char anEmptyString[] = "";
+    AutoTArray<char*, 8> tmpMimeTypeArr;
+    char delimiters[] = {':',':',';'};
+    int mimeTypeVariantCount = 0;
+    char *p = mdescDup; // make a dup of intput string we'll change it content
+    while(p) {
+        char *ptrMimeArray[] = {anEmptyString, anEmptyString, anEmptyString};
+=======
+  char* mdescDup =
+      PL_strdup(mdesc);  // make a dup of intput string we'll change it content
+  char anEmptyString[] = "";
+  AutoTArray<char*, 8> tmpMimeTypeArr;
+  char delimiters[] = {':', ':', ';'};
+  int mimeTypeVariantCount = 0;
+  char* p = mdescDup;  // make a dup of intput string we'll change it content
+  while (p) {
+    char* ptrMimeArray[] = {anEmptyString, anEmptyString, anEmptyString};
+>>>>>>> upstream-releases
 
     // It's easy to point out ptrMimeArray[0] to the string sounds like
     // "Mime type is not specified, plugin will not function properly."
@@ -42,6 +77,7 @@ static nsresult ParsePluginMimeDescription(const char *mdesc,
     // empty string on GetMIMEDescription() call, e.g. plugger returns "" if
     // pluggerrc file is not found.
 
+<<<<<<< HEAD
     char *s = p;
     int i;
     for (i = 0;
@@ -50,6 +86,34 @@ static nsresult ParsePluginMimeDescription(const char *mdesc,
       ptrMimeArray[i] = s;  // save start ptr
       *p++ = 0;             // overwrite delimiter
       s = p;                // move forward
+||||||| merged common ancestors
+        char *s = p;
+        int i;
+        for (i = 0; i < (int) sizeof(delimiters) && (p = PL_strchr(s, delimiters[i])); i++) {
+            ptrMimeArray[i] = s; // save start ptr
+            *p++ = 0; // overwrite delimiter
+            s = p; // move forward
+        }
+        if (i == 2)
+           ptrMimeArray[i] = s;
+        // fill out the temp array
+        // the order is important, it should be the same in for loop below
+        if (ptrMimeArray[0] != anEmptyString) {
+            tmpMimeTypeArr.AppendElement(ptrMimeArray[0]);
+            tmpMimeTypeArr.AppendElement(ptrMimeArray[1]);
+            tmpMimeTypeArr.AppendElement(ptrMimeArray[2]);
+            mimeTypeVariantCount++;
+        }
+=======
+    char* s = p;
+    int i;
+    for (i = 0;
+         i < (int)sizeof(delimiters) && (p = PL_strchr(s, delimiters[i]));
+         i++) {
+      ptrMimeArray[i] = s;  // save start ptr
+      *p++ = 0;             // overwrite delimiter
+      s = p;                // move forward
+>>>>>>> upstream-releases
     }
     if (i == 2) ptrMimeArray[i] = s;
     // fill out the temp array
@@ -62,6 +126,7 @@ static nsresult ParsePluginMimeDescription(const char *mdesc,
     }
   }
 
+<<<<<<< HEAD
   // fill out info structure
   if (mimeTypeVariantCount) {
     info.fVariantCount = mimeTypeVariantCount;
@@ -72,6 +137,24 @@ static nsresult ParsePluginMimeDescription(const char *mdesc,
         (char **)malloc(mimeTypeVariantCount * sizeof(char *));
     info.fExtensionArray =
         (char **)malloc(mimeTypeVariantCount * sizeof(char *));
+||||||| merged common ancestors
+    // fill out info structure
+    if (mimeTypeVariantCount) {
+        info.fVariantCount         = mimeTypeVariantCount;
+        // we can do these 3 mallocs at once, later on code cleanup
+        info.fMimeTypeArray        = (char**) malloc(mimeTypeVariantCount * sizeof(char*));
+        info.fMimeDescriptionArray = (char**) malloc(mimeTypeVariantCount * sizeof(char*));
+        info.fExtensionArray       = (char**) malloc(mimeTypeVariantCount * sizeof(char*));
+=======
+  // fill out info structure
+  if (mimeTypeVariantCount) {
+    info.fVariantCount = mimeTypeVariantCount;
+    // we can do these 3 mallocs at once, later on code cleanup
+    info.fMimeTypeArray = (char**)malloc(mimeTypeVariantCount * sizeof(char*));
+    info.fMimeDescriptionArray =
+        (char**)malloc(mimeTypeVariantCount * sizeof(char*));
+    info.fExtensionArray = (char**)malloc(mimeTypeVariantCount * sizeof(char*));
+>>>>>>> upstream-releases
 
     int j, i;
     for (j = i = 0; i < mimeTypeVariantCount; i++) {

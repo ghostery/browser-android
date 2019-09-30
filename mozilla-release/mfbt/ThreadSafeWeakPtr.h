@@ -74,12 +74,28 @@ template <typename T>
 class SupportsThreadSafeWeakPtr;
 
 #ifdef MOZ_REFCOUNTED_LEAK_CHECKING
+<<<<<<< HEAD
 #define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T)  \
   static const char* threadSafeWeakReferenceTypeName() { \
     return "ThreadSafeWeakReference<" #T ">";            \
   }
+||||||| merged common ancestors
+  #define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T) \
+    static const char* threadSafeWeakReferenceTypeName() { return "ThreadSafeWeakReference<" #T ">"; }
+=======
+#  define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T)  \
+    static const char* threadSafeWeakReferenceTypeName() { \
+      return "ThreadSafeWeakReference<" #T ">";            \
+    }
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
 #define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T)
+||||||| merged common ancestors
+  #define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T)
+=======
+#  define MOZ_DECLARE_THREADSAFEWEAKREFERENCE_TYPENAME(T)
+>>>>>>> upstream-releases
 #endif
 
 namespace detail {

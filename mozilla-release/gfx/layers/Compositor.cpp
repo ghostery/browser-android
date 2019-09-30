@@ -21,6 +21,36 @@ namespace mozilla {
 
 namespace layers {
 
+class CompositorRecordedFrame final : public RecordedFrame {
+ public:
+  CompositorRecordedFrame(const TimeStamp& aTimeStamp,
+                          RefPtr<AsyncReadbackBuffer>&& aBuffer)
+      : RecordedFrame(aTimeStamp), mBuffer(aBuffer) {}
+
+  virtual already_AddRefed<gfx::DataSourceSurface> GetSourceSurface() override {
+    if (mSurface) {
+      return do_AddRef(mSurface);
+    }
+
+    gfx::IntSize size = mBuffer->GetSize();
+
+    mSurface = gfx::Factory::CreateDataSourceSurface(
+        size, gfx::SurfaceFormat::B8G8R8A8,
+        /* aZero = */ false);
+
+    if (!mBuffer->MapAndCopyInto(mSurface, size)) {
+      mSurface = nullptr;
+      return nullptr;
+    }
+
+    return do_AddRef(mSurface);
+  }
+
+ private:
+  RefPtr<AsyncReadbackBuffer> mBuffer;
+  RefPtr<gfx::DataSourceSurface> mSurface;
+};
+
 Compositor::Compositor(widget::CompositorWidget* aWidget,
                        CompositorBridgeParent* aParent)
     : mDiagnosticTypes(DiagnosticTypes::NO_DIAGNOSTIC),
@@ -503,12 +533,34 @@ gfx::IntRect Compositor::ComputeBackdropCopyRect(
     const gfx::Matrix4x4& aTransform, gfx::Matrix4x4* aOutTransform,
     gfx::Rect* aOutLayerQuad) {
   // Compute the clip.
+<<<<<<< HEAD
   gfx::IntPoint rtOffset = GetCurrentRenderTarget()->GetOrigin();
   gfx::IntSize rtSize = GetCurrentRenderTarget()->GetSize();
 
   return layers::ComputeBackdropCopyRect(aRect, aClipRect, aTransform,
                                          gfx::IntRect(rtOffset, rtSize),
                                          aOutTransform, aOutLayerQuad);
+||||||| merged common ancestors
+  gfx::IntPoint rtOffset = GetCurrentRenderTarget()->GetOrigin();
+  gfx::IntSize rtSize = GetCurrentRenderTarget()->GetSize();
+
+  return layers::ComputeBackdropCopyRect(
+    aRect,
+    aClipRect,
+    aTransform,
+    gfx::IntRect(rtOffset, rtSize),
+    aOutTransform,
+    aOutLayerQuad);
+=======
+  RefPtr<CompositingRenderTarget> currentRenderTarget =
+      GetCurrentRenderTarget();
+  gfx::IntPoint rtOffset = currentRenderTarget->GetOrigin();
+  gfx::IntSize rtSize = currentRenderTarget->GetSize();
+
+  return layers::ComputeBackdropCopyRect(aRect, aClipRect, aTransform,
+                                         gfx::IntRect(rtOffset, rtSize),
+                                         aOutTransform, aOutLayerQuad);
+>>>>>>> upstream-releases
 }
 
 gfx::IntRect Compositor::ComputeBackdropCopyRect(
@@ -546,5 +598,30 @@ void Compositor::GetFrameStats(GPUStats* aStats) {
   aStats->mPixelsFilled = mPixelsFilled;
 }
 
+<<<<<<< HEAD
 }  // namespace layers
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace layers
+} // namespace mozilla
+=======
+already_AddRefed<RecordedFrame> Compositor::RecordFrame(
+    const TimeStamp& aTimeStamp) {
+  RefPtr<CompositingRenderTarget> renderTarget = GetWindowRenderTarget();
+  if (!renderTarget) {
+    return nullptr;
+  }
+
+  RefPtr<AsyncReadbackBuffer> buffer =
+      CreateAsyncReadbackBuffer(renderTarget->GetSize());
+
+  if (!ReadbackRenderTarget(renderTarget, buffer)) {
+    return nullptr;
+  }
+
+  return MakeAndAddRef<CompositorRecordedFrame>(aTimeStamp, std::move(buffer));
+}
+
+}  // namespace layers
+}  // namespace mozilla
+>>>>>>> upstream-releases

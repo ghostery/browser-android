@@ -46,15 +46,22 @@ class ImageClient : public CompositableClient {
       CompositableType aImageHostType, CompositableForwarder* aFwd,
       TextureFlags aFlags);
 
-  virtual ~ImageClient() {}
+  virtual ~ImageClient() = default;
 
   /**
    * Update this ImageClient from aContainer in aLayer
    * returns false if this is the wrong kind of ImageClient for aContainer.
    * Note that returning true does not necessarily imply success
    */
+<<<<<<< HEAD
   virtual bool UpdateImage(ImageContainer* aContainer,
                            uint32_t aContentFlags) = 0;
+||||||| merged common ancestors
+  virtual bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags) = 0;
+=======
+  virtual bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags,
+                           const Maybe<wr::RenderRoot>& aRenderRoot) = 0;
+>>>>>>> upstream-releases
 
   void SetLayer(ClientLayer* aLayer) { mLayer = aLayer; }
   ClientLayer* GetLayer() const { return mLayer; }
@@ -65,7 +72,8 @@ class ImageClient : public CompositableClient {
    */
   virtual void FlushAllImages() {}
 
-  virtual void RemoveTexture(TextureClient* aTexture) override;
+  virtual void RemoveTexture(TextureClient* aTexture,
+                             const Maybe<wr::RenderRoot>& aRenderRoot) override;
 
   virtual ImageClientSingle* AsImageClientSingle() { return nullptr; }
 
@@ -95,20 +103,27 @@ class ImageClientSingle : public ImageClient {
   ImageClientSingle(CompositableForwarder* aFwd, TextureFlags aFlags,
                     CompositableType aType);
 
+<<<<<<< HEAD
   virtual bool UpdateImage(ImageContainer* aContainer,
                            uint32_t aContentFlags) override;
+||||||| merged common ancestors
+  virtual bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags) override;
+=======
+  bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlag,
+                   const Maybe<wr::RenderRoot>& aRenderRoot) override;
+>>>>>>> upstream-releases
 
-  virtual void OnDetach() override;
+  void OnDetach() override;
 
-  virtual bool AddTextureClient(TextureClient* aTexture) override;
+  bool AddTextureClient(TextureClient* aTexture) override;
 
-  virtual TextureInfo GetTextureInfo() const override;
+  TextureInfo GetTextureInfo() const override;
 
-  virtual void FlushAllImages() override;
+  void FlushAllImages() override;
 
   ImageClientSingle* AsImageClientSingle() override { return this; }
 
-  virtual RefPtr<TextureClient> GetForwardedTexture() override;
+  RefPtr<TextureClient> GetForwardedTexture() override;
 
   bool IsEmpty() { return mBuffers.IsEmpty(); }
 
@@ -125,6 +140,7 @@ class ImageClientSingle : public ImageClient {
  * protocol.
  * We store the ImageBridge id in the TextureClientIdentifier.
  */
+<<<<<<< HEAD
 class ImageClientBridge : public ImageClient {
  public:
   ImageClientBridge(CompositableForwarder* aFwd, TextureFlags aFlags);
@@ -138,6 +154,31 @@ class ImageClientBridge : public ImageClient {
   virtual TextureInfo GetTextureInfo() const override {
     return TextureInfo(mType);
   }
+||||||| merged common ancestors
+class ImageClientBridge : public ImageClient
+{
+public:
+  ImageClientBridge(CompositableForwarder* aFwd,
+                    TextureFlags aFlags);
+
+  virtual bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags) override;
+  virtual bool Connect(ImageContainer* aImageContainer) override { return false; }
+
+  virtual TextureInfo GetTextureInfo() const override
+  {
+    return TextureInfo(mType);
+  }
+=======
+class ImageClientBridge : public ImageClient {
+ public:
+  ImageClientBridge(CompositableForwarder* aFwd, TextureFlags aFlags);
+
+  bool UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags,
+                   const Maybe<wr::RenderRoot>& aRenderRoot) override;
+  bool Connect(ImageContainer* aImageContainer) override { return false; }
+
+  TextureInfo GetTextureInfo() const override { return TextureInfo(mType); }
+>>>>>>> upstream-releases
 
  protected:
   CompositableHandle mAsyncContainerHandle;

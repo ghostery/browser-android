@@ -16,9 +16,19 @@ purpose.  It is provided "as is" without express or implied warranty.
 extern "C" {
 #endif
 
+<<<<<<< HEAD
 int TrbWordBreakPos(const th_char *pstr, int left, const th_char *rstr,
                     int right);
 int TrbFollowing(const th_char *begin, int length, int offset);
+||||||| merged common ancestors
+int TrbWordBreakPos(const th_char *pstr, int left,
+                    const th_char *rstr, int right);
+int TrbFollowing(const th_char *begin, int length, int offset);
+=======
+int TrbWordBreakPos(const th_char* pstr, int left, const th_char* rstr,
+                    int right);
+int TrbFollowing(const th_char* begin, int length, int offset);
+>>>>>>> upstream-releases
 
 #ifdef __cplusplus
 }

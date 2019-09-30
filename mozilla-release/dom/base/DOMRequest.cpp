@@ -65,8 +65,18 @@ NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 NS_IMPL_ADDREF_INHERITED(DOMRequest, DOMEventTargetHelper)
 NS_IMPL_RELEASE_INHERITED(DOMRequest, DOMEventTargetHelper)
 
+<<<<<<< HEAD
 /* virtual */ JSObject* DOMRequest::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+DOMRequest::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* DOMRequest::WrapObject(JSContext* aCx,
+                                 JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return DOMRequest_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -135,9 +145,20 @@ void DOMRequest::FireDetailedError(DOMException& aError) {
   }
 }
 
+<<<<<<< HEAD
 void DOMRequest::FireEvent(const nsAString& aType, bool aBubble,
                            bool aCancelable) {
   if (NS_FAILED(CheckInnerWindowCorrectness())) {
+||||||| merged common ancestors
+void
+DOMRequest::FireEvent(const nsAString& aType, bool aBubble, bool aCancelable)
+{
+  if (NS_FAILED(CheckInnerWindowCorrectness())) {
+=======
+void DOMRequest::FireEvent(const nsAString& aType, bool aBubble,
+                           bool aCancelable) {
+  if (NS_FAILED(CheckCurrentGlobalCorrectness())) {
+>>>>>>> upstream-releases
     return;
   }
 

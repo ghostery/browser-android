@@ -5,12 +5,26 @@ use rustc_version::{version, Version};
 fn main() {
     let ver = version().unwrap();
     let mut bootstrap = false;
+<<<<<<< HEAD
     let max_oom_hook_version = Version::parse("1.33.0-alpha").unwrap();
+||||||| merged common ancestors
+=======
+    let max_oom_hook_version = Version::parse("1.36.0-alpha").unwrap();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if ver >= Version::parse("1.24.0").unwrap() && ver < Version::parse("1.27.0").unwrap() {
         println!("cargo:rustc-cfg=feature=\"oom_with_global_alloc\"");
         bootstrap = true;
     } else if ver >= Version::parse("1.28.0-alpha").unwrap() && ver < max_oom_hook_version {
+||||||| merged common ancestors
+    if ver >= Version::parse("1.24.0").unwrap() && ver < Version::parse("1.27.0").unwrap() {
+        println!("cargo:rustc-cfg=feature=\"oom_with_global_alloc\"");
+        bootstrap = true;
+    } else if ver >= Version::parse("1.28.0-alpha").unwrap() && ver < Version::parse("1.31.0-alpha").unwrap() {
+=======
+    if ver >= Version::parse("1.28.0-alpha").unwrap() && ver < max_oom_hook_version {
+>>>>>>> upstream-releases
         println!("cargo:rustc-cfg=feature=\"oom_with_hook\"");
         bootstrap = true;
     } else if std::env::var("MOZ_AUTOMATION").is_ok() {

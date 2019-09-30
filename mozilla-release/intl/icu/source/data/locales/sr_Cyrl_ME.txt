@@ -1,7 +1,13 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 sr_Cyrl_ME{
+<<<<<<< HEAD
     Version{"2.1.44.88"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.47.71"}
+>>>>>>> upstream-releases
     calendar{
         generic{
             intervalFormats{
@@ -22,9 +28,9 @@ sr_Cyrl_ME{
             }
             availableFormats{
                 MMMMW{
-                    few{"W. 'сједмица' 'у' MMM"}
-                    one{"W. 'сједмица' 'у' MMM"}
-                    other{"W. 'сједмица' 'у' MMM"}
+                    few{"W. 'сједмица' 'у' MMMM"}
+                    one{"W. 'сједмица' 'у' MMMM"}
+                    other{"W. 'сједмица' 'у' MMMM"}
                 }
                 yw{
                     few{"w. 'сједмица' 'у' Y."}
@@ -34,15 +40,6 @@ sr_Cyrl_ME{
             }
             dayNames{
                 format{
-                    abbreviated{
-                        "нед.",
-                        "пон.",
-                        "ут.",
-                        "ср.",
-                        "чет.",
-                        "пет.",
-                        "суб.",
-                    }
                     wide{
                         "недјеља",
                         "понедељак",
@@ -54,15 +51,6 @@ sr_Cyrl_ME{
                     }
                 }
                 stand-alone{
-                    abbreviated{
-                        "нед.",
-                        "пон.",
-                        "ут.",
-                        "ср.",
-                        "чет.",
-                        "пет.",
-                        "суб.",
-                    }
                     wide{
                         "недјеља",
                         "понедељак",
@@ -117,34 +105,34 @@ sr_Cyrl_ME{
             monthNames{
                 format{
                     abbreviated{
-                        "јан.",
-                        "феб.",
+                        "јан",
+                        "феб",
                         "март",
-                        "апр.",
+                        "апр",
                         "мај",
                         "јун",
                         "јул",
-                        "авг.",
-                        "септ.",
-                        "окт.",
-                        "нов.",
-                        "дец.",
+                        "авг",
+                        "септ",
+                        "окт",
+                        "нов",
+                        "дец",
                     }
                 }
                 stand-alone{
                     abbreviated{
-                        "јан.",
-                        "феб.",
+                        "јан",
+                        "феб",
                         "март",
-                        "апр.",
+                        "апр",
                         "мај",
                         "јун",
                         "јул",
-                        "авг.",
-                        "септ.",
-                        "окт.",
-                        "нов.",
-                        "дец.",
+                        "авг",
+                        "септ",
+                        "окт",
+                        "нов",
+                        "дец",
                     }
                 }
             }

@@ -40,16 +40,24 @@ class OSXNotificationCenter : public nsIAlertsService,
   OSXNotificationCenter();
 
   nsresult Init();
-  void CloseAlertCocoaString(NSString *aAlertName);
-  void OnActivate(NSString *aAlertName, NSUserNotificationActivationType aActivationType,
+  void CloseAlertCocoaString(NSString* aAlertName);
+  void OnActivate(NSString* aAlertName, NSUserNotificationActivationType aActivationType,
                   unsigned long long aAdditionalActionIndex);
-  void ShowPendingNotification(OSXNotificationInfo *osxni);
+  void ShowPendingNotification(OSXNotificationInfo* osxni);
 
  protected:
   virtual ~OSXNotificationCenter();
 
+<<<<<<< HEAD
  private:
   mozNotificationCenterDelegate *mDelegate;
+||||||| merged common ancestors
+private:
+  mozNotificationCenterDelegate *mDelegate;
+=======
+ private:
+  mozNotificationCenterDelegate* mDelegate;
+>>>>>>> upstream-releases
   nsTArray<RefPtr<OSXNotificationInfo> > mActiveAlerts;
   nsTArray<RefPtr<OSXNotificationInfo> > mPendingAlerts;
 };

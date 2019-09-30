@@ -44,6 +44,7 @@ UNIFIED_SOURCES += [
     'nsSound.cpp',
     'nsToolkit.cpp',
     'nsWidgetFactory.cpp',
+    'ProcInfo.cpp',
     'ScreenHelperGTK.cpp',
     'TaskbarProgress.cpp',
     'WakeLockListener.cpp',
@@ -97,8 +98,18 @@ if CONFIG['MOZ_X11']:
 if CONFIG['MOZ_WAYLAND']:
     UNIFIED_SOURCES += [
         'nsClipboardWayland.cpp',
+<<<<<<< HEAD
         'nsWaylandDisplay.cpp',
+||||||| merged common ancestors
+=======
+        'nsWaylandDisplay.cpp',
+        'WaylandDMABufSurface.cpp',
+>>>>>>> upstream-releases
         'WindowSurfaceWayland.cpp',
+    ]
+    EXPORTS.mozilla.widget += [
+        'nsWaylandDisplay.h',
+        'WaylandDMABufSurface.h',
     ]
 
 if CONFIG['ACCESSIBILITY']:
@@ -106,11 +117,34 @@ if CONFIG['ACCESSIBILITY']:
         'maiRedundantObjectFactory.c',
     ]
 
+<<<<<<< HEAD
 UNIFIED_SOURCES += [
     'gtk3drawing.cpp',
     'nsApplicationChooser.cpp',
     'WidgetStyleCache.cpp',
 ]
+||||||| merged common ancestors
+if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk2':
+    UNIFIED_SOURCES += [
+        'gtk2drawing.c',
+    ]
+else:
+    UNIFIED_SOURCES += [
+        'gtk3drawing.cpp',
+        'nsApplicationChooser.cpp',
+        'WidgetStyleCache.cpp',
+    ]
+=======
+UNIFIED_SOURCES += [
+    'gtk3drawing.cpp',
+    'nsApplicationChooser.cpp',
+    'WidgetStyleCache.cpp',
+]
+
+XPCOM_MANIFESTS += [
+    'components.conf',
+]
+>>>>>>> upstream-releases
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
@@ -150,6 +184,10 @@ CXXFLAGS += CONFIG['MOZ_STARTUP_NOTIFICATION_CFLAGS']
 
 CFLAGS += CONFIG['TK_CFLAGS']
 CXXFLAGS += CONFIG['TK_CFLAGS']
+
+if CONFIG['MOZ_WAYLAND']:
+    CFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
+    CXXFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
 
 if CONFIG['MOZ_ENABLE_DBUS']:
     CXXFLAGS += CONFIG['MOZ_DBUS_GLIB_CFLAGS']

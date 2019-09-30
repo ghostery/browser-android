@@ -38,11 +38,27 @@ static LazyLogModule sPNGDecoderAccountingLog("PNGDecoderAccounting");
 
 // limit image dimensions (bug #251381, #591822, #967656, and #1283961)
 #ifndef MOZ_PNG_MAX_WIDTH
+<<<<<<< HEAD
 #define MOZ_PNG_MAX_WIDTH 0x7fffffff  // Unlimited
+||||||| merged common ancestors
+#  define MOZ_PNG_MAX_WIDTH 0x7fffffff // Unlimited
+=======
+#  define MOZ_PNG_MAX_WIDTH 0x7fffffff  // Unlimited
+>>>>>>> upstream-releases
 #endif
 #ifndef MOZ_PNG_MAX_HEIGHT
+<<<<<<< HEAD
 #define MOZ_PNG_MAX_HEIGHT 0x7fffffff  // Unlimited
+||||||| merged common ancestors
+#  define MOZ_PNG_MAX_HEIGHT 0x7fffffff // Unlimited
+=======
+#  define MOZ_PNG_MAX_HEIGHT 0x7fffffff  // Unlimited
+>>>>>>> upstream-releases
 #endif
+
+/* Controls the maximum chunk size configuration for libpng. We set this to a
+ * very large number, 256MB specifically. */
+static constexpr png_alloc_size_t kPngMaxChunkSize = 0x10000000;
 
 nsPNGDecoder::AnimFrameInfo::AnimFrameInfo()
     : mDispose(DisposalMethod::KEEP), mBlend(BlendMethod::OVER), mTimeout(0) {}
@@ -95,6 +111,7 @@ const uint8_t nsPNGDecoder::pngSignatureBytes[] = {137, 80, 78, 71,
                                                    13,  10, 26, 10};
 
 nsPNGDecoder::nsPNGDecoder(RasterImage* aImage)
+<<<<<<< HEAD
     : Decoder(aImage),
       mLexer(Transition::ToUnbuffered(State::FINISHED_PNG_DATA, State::PNG_DATA,
                                       SIZE_MAX),
@@ -116,6 +133,53 @@ nsPNGDecoder::nsPNGDecoder(RasterImage* aImage)
       mNumFrames(0) {}
 
 nsPNGDecoder::~nsPNGDecoder() {
+||||||| merged common ancestors
+ : Decoder(aImage)
+ , mLexer(Transition::ToUnbuffered(State::FINISHED_PNG_DATA,
+                                   State::PNG_DATA,
+                                   SIZE_MAX),
+          Transition::TerminateSuccess())
+ , mNextTransition(Transition::ContinueUnbuffered(State::PNG_DATA))
+ , mLastChunkLength(0)
+ , mPNG(nullptr)
+ , mInfo(nullptr)
+ , mCMSLine(nullptr)
+ , interlacebuf(nullptr)
+ , mInProfile(nullptr)
+ , mTransform(nullptr)
+ , mFormat(SurfaceFormat::UNKNOWN)
+ , mCMSMode(0)
+ , mChannels(0)
+ , mPass(0)
+ , mFrameIsHidden(false)
+ , mDisablePremultipliedAlpha(false)
+ , mNumFrames(0)
+{ }
+
+nsPNGDecoder::~nsPNGDecoder()
+{
+=======
+    : Decoder(aImage),
+      mLexer(Transition::ToUnbuffered(State::FINISHED_PNG_DATA, State::PNG_DATA,
+                                      SIZE_MAX),
+             Transition::TerminateSuccess()),
+      mNextTransition(Transition::ContinueUnbuffered(State::PNG_DATA)),
+      mLastChunkLength(0),
+      mPNG(nullptr),
+      mInfo(nullptr),
+      mCMSLine(nullptr),
+      interlacebuf(nullptr),
+      mFormat(SurfaceFormat::UNKNOWN),
+      mCMSMode(0),
+      mChannels(0),
+      mPass(0),
+      mFrameIsHidden(false),
+      mDisablePremultipliedAlpha(false),
+      mGotInfoCallback(false),
+      mNumFrames(0) {}
+
+nsPNGDecoder::~nsPNGDecoder() {
+>>>>>>> upstream-releases
   if (mPNG) {
     png_destroy_read_struct(&mPNG, mInfo ? &mInfo : nullptr, nullptr);
   }
@@ -124,14 +188,6 @@ nsPNGDecoder::~nsPNGDecoder() {
   }
   if (interlacebuf) {
     free(interlacebuf);
-  }
-  if (mInProfile) {
-    qcms_profile_release(mInProfile);
-
-    // mTransform belongs to us only if mInProfile is non-null
-    if (mTransform) {
-      qcms_transform_release(mTransform);
-    }
   }
 }
 
@@ -190,7 +246,7 @@ nsresult nsPNGDecoder::CreateFrame(const FrameInfo& aFrameInfo) {
 
   Maybe<AnimationParams> animParams;
 #ifdef PNG_APNG_SUPPORTED
-  if (png_get_valid(mPNG, mInfo, PNG_INFO_acTL)) {
+  if (!IsFirstFrameDecode() && png_get_valid(mPNG, mInfo, PNG_INFO_acTL)) {
     mAnimInfo = AnimFrameInfo(mPNG, mInfo);
 
     if (mAnimInfo.mDispose == DisposalMethod::CLEAR) {
@@ -217,6 +273,7 @@ nsresult nsPNGDecoder::CreateFrame(const FrameInfo& aFrameInfo) {
     pipeFlags |= SurfacePipeFlags::PROGRESSIVE_DISPLAY;
   }
 
+<<<<<<< HEAD
   if (ShouldBlendAnimation()) {
     pipeFlags |= SurfacePipeFlags::BLEND_ANIMATION;
   }
@@ -224,6 +281,20 @@ nsresult nsPNGDecoder::CreateFrame(const FrameInfo& aFrameInfo) {
   Maybe<SurfacePipe> pipe = SurfacePipeFactory::CreateSurfacePipe(
       this, Size(), OutputSize(), aFrameInfo.mFrameRect, mFormat, animParams,
       pipeFlags);
+||||||| merged common ancestors
+  if (ShouldBlendAnimation()) {
+    pipeFlags |= SurfacePipeFlags::BLEND_ANIMATION;
+  }
+
+  Maybe<SurfacePipe> pipe =
+    SurfacePipeFactory::CreateSurfacePipe(this, Size(), OutputSize(),
+                                          aFrameInfo.mFrameRect, mFormat,
+                                          animParams, pipeFlags);
+=======
+  Maybe<SurfacePipe> pipe = SurfacePipeFactory::CreateSurfacePipe(
+      this, Size(), OutputSize(), aFrameInfo.mFrameRect, mFormat, animParams,
+      /*aTransform*/ nullptr, pipeFlags);
+>>>>>>> upstream-releases
 
   if (!pipe) {
     mPipe = SurfacePipe();
@@ -312,9 +383,7 @@ nsresult nsPNGDecoder::InitInternal() {
 
 #ifdef PNG_SET_USER_LIMITS_SUPPORTED
   png_set_user_limits(mPNG, MOZ_PNG_MAX_WIDTH, MOZ_PNG_MAX_HEIGHT);
-  if (mCMSMode != eCMSMode_Off) {
-    png_set_chunk_malloc_max(mPNG, 4000000L);
-  }
+  png_set_chunk_malloc_max(mPNG, kPngMaxChunkSize);
 #endif
 
 #ifdef PNG_READ_CHECK_FOR_INVALID_INDEX_SUPPORTED
@@ -327,17 +396,17 @@ nsresult nsPNGDecoder::InitInternal() {
 #endif
 
 #ifdef PNG_SET_OPTION_SUPPORTED
-#if defined(PNG_sRGB_PROFILE_CHECKS) && PNG_sRGB_PROFILE_CHECKS >= 0
+#  if defined(PNG_sRGB_PROFILE_CHECKS) && PNG_sRGB_PROFILE_CHECKS >= 0
   // Skip checking of sRGB ICC profiles
   png_set_option(mPNG, PNG_SKIP_sRGB_CHECK_PROFILE, PNG_OPTION_ON);
-#endif
+#  endif
 
-#ifdef PNG_MAXIMUM_INFLATE_WINDOW
+#  ifdef PNG_MAXIMUM_INFLATE_WINDOW
   // Force a larger zlib inflate window as some images in the wild have
   // incorrectly set metadata (specifically CMF bits) which prevent us from
   // decoding them otherwise.
   png_set_option(mPNG, PNG_MAXIMUM_INFLATE_WINDOW, PNG_OPTION_ON);
-#endif
+#  endif
 #endif
 
   // use this as libpng "progressive pointer" (retrieve in callbacks)
@@ -533,7 +602,21 @@ void nsPNGDecoder::info_callback(png_structp png_ptr, png_infop info_ptr) {
   int num_trans = 0;
 
   nsPNGDecoder* decoder =
+<<<<<<< HEAD
       static_cast<nsPNGDecoder*>(png_get_progressive_ptr(png_ptr));
+||||||| merged common ancestors
+               static_cast<nsPNGDecoder*>(png_get_progressive_ptr(png_ptr));
+=======
+      static_cast<nsPNGDecoder*>(png_get_progressive_ptr(png_ptr));
+
+  if (decoder->mGotInfoCallback) {
+    MOZ_LOG(sPNGLog, LogLevel::Warning,
+            ("libpng called info_callback more than once\n"));
+    return;
+  }
+
+  decoder->mGotInfoCallback = true;
+>>>>>>> upstream-releases
 
   // Always decode to 24-bit RGB or 32-bit RGBA
   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
@@ -590,9 +673,13 @@ void nsPNGDecoder::info_callback(png_structp png_ptr, png_infop info_ptr) {
     png_set_scale_16(png_ptr);
   }
 
+  // We only need to extract the color profile for non-metadata decodes. It is
+  // fairly expensive to read the profile and create the transform so we should
+  // avoid it if not necessary.
   qcms_data_type inType = QCMS_DATA_RGBA_8;
   uint32_t intent = -1;
   uint32_t pIntent;
+<<<<<<< HEAD
   if (decoder->mCMSMode != eCMSMode_Off) {
     intent = gfxPlatform::GetRenderingIntent();
     decoder->mInProfile =
@@ -618,15 +705,52 @@ void nsPNGDecoder::info_callback(png_structp png_ptr, png_infop info_ptr) {
     png_set_gray_to_rgb(png_ptr);
 
     // only do gamma correction if CMS isn't entirely disabled
-    if (decoder->mCMSMode != eCMSMode_Off) {
-      PNGDoGammaCorrection(png_ptr, info_ptr);
+||||||| merged common ancestors
+  if (decoder->mCMSMode != eCMSMode_Off) {
+    intent = gfxPlatform::GetRenderingIntent();
+    decoder->mInProfile = PNGGetColorProfile(png_ptr, info_ptr,
+                                             color_type, &inType, &pIntent);
+    // If we're not mandating an intent, use the one from the image.
+    if (intent == uint32_t(-1)) {
+      intent = pIntent;
+    }
+  }
+  if (decoder->mInProfile && gfxPlatform::GetCMSOutputProfile()) {
+    qcms_data_type outType;
+
+    if (color_type & PNG_COLOR_MASK_ALPHA || num_trans) {
+      outType = QCMS_DATA_RGBA_8;
+    } else {
+      outType = QCMS_DATA_RGB_8;
     }
 
-    if (decoder->mCMSMode == eCMSMode_All) {
-      if (color_type & PNG_COLOR_MASK_ALPHA || num_trans) {
-        decoder->mTransform = gfxPlatform::GetCMSRGBATransform();
-      } else {
-        decoder->mTransform = gfxPlatform::GetCMSRGBTransform();
+    decoder->mTransform = qcms_transform_create(decoder->mInProfile,
+                                           inType,
+                                           gfxPlatform::GetCMSOutputProfile(),
+                                           outType,
+                                           (qcms_intent)intent);
+  } else {
+    png_set_gray_to_rgb(png_ptr);
+
+    // only do gamma correction if CMS isn't entirely disabled
+=======
+  if (!decoder->IsMetadataDecode()) {
+>>>>>>> upstream-releases
+    if (decoder->mCMSMode != eCMSMode_Off) {
+      intent = gfxPlatform::GetRenderingIntent();
+      decoder->mInProfile =
+          PNGGetColorProfile(png_ptr, info_ptr, color_type, &inType, &pIntent);
+      // If we're not mandating an intent, use the one from the image.
+      if (intent == uint32_t(-1)) {
+        intent = pIntent;
+      }
+    }
+    if (!decoder->mInProfile || !gfxPlatform::GetCMSOutputProfile()) {
+      png_set_gray_to_rgb(png_ptr);
+
+      // only do gamma correction if CMS isn't entirely disabled
+      if (decoder->mCMSMode != eCMSMode_Off) {
+        PNGDoGammaCorrection(png_ptr, info_ptr);
       }
     }
   }
@@ -680,6 +804,26 @@ void nsPNGDecoder::info_callback(png_structp png_ptr, png_infop info_ptr) {
     // We have the metadata we're looking for, so stop here, before we allocate
     // buffers below.
     return decoder->DoTerminate(png_ptr, TerminalState::SUCCESS);
+  }
+
+  if (decoder->mInProfile && gfxPlatform::GetCMSOutputProfile()) {
+    qcms_data_type outType;
+
+    if (color_type & PNG_COLOR_MASK_ALPHA || num_trans) {
+      outType = QCMS_DATA_RGBA_8;
+    } else {
+      outType = QCMS_DATA_RGB_8;
+    }
+
+    decoder->mTransform = qcms_transform_create(
+        decoder->mInProfile, inType, gfxPlatform::GetCMSOutputProfile(),
+        outType, (qcms_intent)intent);
+  } else if (decoder->mCMSMode == eCMSMode_All) {
+    if (color_type & PNG_COLOR_MASK_ALPHA || num_trans) {
+      decoder->mTransform = gfxPlatform::GetCMSRGBATransform();
+    } else {
+      decoder->mTransform = gfxPlatform::GetCMSRGBTransform();
+    }
   }
 
 #ifdef PNG_APNG_SUPPORTED
@@ -961,7 +1105,7 @@ void nsPNGDecoder::frame_info_callback(png_structp png_ptr,
                           png_get_next_frame_height(png_ptr, decoder->mInfo));
   const bool isInterlaced = bool(decoder->interlacebuf);
 
-#ifndef MOZ_EMBEDDED_LIBPNG
+#  ifndef MOZ_EMBEDDED_LIBPNG
   // if using system library, check frame_width and height against 0
   if (frameRect.width == 0) {
     png_error(png_ptr, "Frame width must not be 0");
@@ -969,7 +1113,7 @@ void nsPNGDecoder::frame_info_callback(png_structp png_ptr,
   if (frameRect.height == 0) {
     png_error(png_ptr, "Frame height must not be 0");
   }
-#endif
+#  endif
 
   const FrameInfo info{frameRect, isInterlaced};
 

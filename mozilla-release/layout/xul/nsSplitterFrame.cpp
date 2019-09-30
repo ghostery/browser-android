@@ -16,11 +16,10 @@
 #include "nsGkAtoms.h"
 #include "nsXULElement.h"
 #include "nsPresContext.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsNameSpaceManager.h"
 #include "nsScrollbarButtonFrame.h"
 #include "nsIDOMEventListener.h"
-#include "nsIPresShell.h"
 #include "nsFrameList.h"
 #include "nsHTMLParts.h"
 #include "mozilla/ComputedStyle.h"
@@ -35,6 +34,7 @@
 #include "mozilla/dom/Event.h"
 #include "mozilla/dom/MouseEvent.h"
 #include "mozilla/MouseEvents.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/UniquePtr.h"
 #include "nsBindingManager.h"
 
@@ -195,14 +195,36 @@ nsSplitterFrameInner::State nsSplitterFrameInner::GetState() {
 //
 // Creates a new Toolbar frame and returns it
 //
+<<<<<<< HEAD
 nsIFrame* NS_NewSplitterFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSplitterFrame(aStyle);
+||||||| merged common ancestors
+nsIFrame*
+NS_NewSplitterFrame (nsIPresShell* aPresShell, ComputedStyle* aStyle)
+{
+  return new (aPresShell) nsSplitterFrame(aStyle);
+=======
+nsIFrame* NS_NewSplitterFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
+  return new (aPresShell) nsSplitterFrame(aStyle, aPresShell->GetPresContext());
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSplitterFrame)
 
+<<<<<<< HEAD
 nsSplitterFrame::nsSplitterFrame(ComputedStyle* aStyle)
     : nsBoxFrame(aStyle, kClassID), mInner(0) {}
+||||||| merged common ancestors
+nsSplitterFrame::nsSplitterFrame(ComputedStyle* aStyle)
+: nsBoxFrame(aStyle, kClassID),
+  mInner(0)
+{
+}
+=======
+nsSplitterFrame::nsSplitterFrame(ComputedStyle* aStyle,
+                                 nsPresContext* aPresContext)
+    : nsBoxFrame(aStyle, aPresContext, kClassID), mInner(0) {}
+>>>>>>> upstream-releases
 
 void nsSplitterFrame::DestroyFrom(nsIFrame* aDestructRoot,
                                   PostDestroyData& aPostDestroyData) {
@@ -215,6 +237,7 @@ void nsSplitterFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsBoxFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
+<<<<<<< HEAD
 nsresult nsSplitterFrame::GetCursor(const nsPoint& aPoint,
                                     nsIFrame::Cursor& aCursor) {
   return nsBoxFrame::GetCursor(aPoint, aCursor);
@@ -234,6 +257,38 @@ nsresult nsSplitterFrame::AttributeChanged(int32_t aNameSpaceID,
                                            int32_t aModType) {
   nsresult rv =
       nsBoxFrame::AttributeChanged(aNameSpaceID, aAttribute, aModType);
+||||||| merged common ancestors
+
+nsresult
+nsSplitterFrame::GetCursor(const nsPoint&    aPoint,
+                           nsIFrame::Cursor& aCursor)
+{
+  return nsBoxFrame::GetCursor(aPoint, aCursor);
+
+  /*
+    if (IsXULHorizontal())
+      aCursor = NS_STYLE_CURSOR_N_RESIZE;
+    else
+      aCursor = NS_STYLE_CURSOR_W_RESIZE;
+
+    return NS_OK;
+  */
+}
+
+nsresult
+nsSplitterFrame::AttributeChanged(int32_t aNameSpaceID,
+                                  nsAtom* aAttribute,
+                                  int32_t aModType)
+{
+  nsresult rv = nsBoxFrame::AttributeChanged(aNameSpaceID, aAttribute,
+                                             aModType);
+=======
+nsresult nsSplitterFrame::AttributeChanged(int32_t aNameSpaceID,
+                                           nsAtom* aAttribute,
+                                           int32_t aModType) {
+  nsresult rv =
+      nsBoxFrame::AttributeChanged(aNameSpaceID, aAttribute, aModType);
+>>>>>>> upstream-releases
   if (aAttribute == nsGkAtoms::state) {
     mInner->UpdateState();
   }
@@ -326,8 +381,15 @@ void nsSplitterFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
   // if the mouse is captured always return us as the frame.
   if (mInner->mDragging && aBuilder->IsForEventDelivery()) {
     // XXX It's probably better not to check visibility here, right?
+<<<<<<< HEAD
     aLists.Outlines()->AppendToTop(
         MakeDisplayItem<nsDisplayEventReceiver>(aBuilder, this));
+||||||| merged common ancestors
+    aLists.Outlines()->AppendToTop(
+      MakeDisplayItem<nsDisplayEventReceiver>(aBuilder, this));
+=======
+    aLists.Outlines()->AppendNewToTop<nsDisplayEventReceiver>(aBuilder, this);
+>>>>>>> upstream-releases
     return;
   }
 }
@@ -348,7 +410,7 @@ nsresult nsSplitterFrame::HandleEvent(nsPresContext* aPresContext,
       break;
 
     case eMouseUp:
-      if (aEvent->AsMouseEvent()->button == WidgetMouseEvent::eLeftButton) {
+      if (aEvent->AsMouseEvent()->mButton == MouseButton::eLeft) {
         inner->MouseUp(aPresContext, aEvent);
       }
       break;
@@ -366,8 +428,14 @@ void nsSplitterFrameInner::MouseUp(nsPresContext* aPresContext,
   if (mDragging && mOuter) {
     AdjustChildren(aPresContext);
     AddListener();
+<<<<<<< HEAD
     nsIPresShell::SetCapturingContent(nullptr,
                                       0);  // XXXndeakin is this needed?
+||||||| merged common ancestors
+    nsIPresShell::SetCapturingContent(nullptr, 0); // XXXndeakin is this needed?
+=======
+    PresShell::ReleaseCapturingContent();  // XXXndeakin is this needed?
+>>>>>>> upstream-releases
     mDragging = false;
     State newState = GetState();
     // if the state is dragging then make it Open.
@@ -531,7 +599,7 @@ nsresult nsSplitterFrameInner::MouseUp(Event* aMouseEvent) {
   NS_ENSURE_TRUE(mOuter, NS_OK);
   mPressed = false;
 
-  nsIPresShell::SetCapturingContent(nullptr, 0);
+  PresShell::ReleaseCapturingContent();
 
   return NS_OK;
 }
@@ -588,13 +656,18 @@ nsresult nsSplitterFrameInner::MouseDown(Event* aMouseEvent) {
 
   nsIFrame* childBox = nsBox::GetChildXULBox(mParentBox);
 
+<<<<<<< HEAD
   while (nullptr != childBox) {
+||||||| merged common ancestors
+  while (nullptr != childBox)
+  {
+=======
+  while (childBox) {
+>>>>>>> upstream-releases
     nsIContent* content = childBox->GetContent();
-    nsIDocument* doc = content->OwnerDoc();
-    int32_t dummy;
-    nsAtom* atom = doc->BindingManager()->ResolveTag(content, &dummy);
 
     // skip over any splitters
+<<<<<<< HEAD
     if (atom != nsGkAtoms::splitter) {
       nsSize prefSize = childBox->GetXULPrefSize(state);
       nsSize minSize = childBox->GetXULMinSize(state);
@@ -647,6 +720,108 @@ nsresult nsSplitterFrameInner::MouseDown(Event* aMouseEvent) {
           mChildInfosAfter[mChildInfosAfterCount].changed =
               mChildInfosAfter[mChildInfosAfterCount].current;
           mChildInfosAfterCount++;
+||||||| merged common ancestors
+    if (atom != nsGkAtoms::splitter) {
+        nsSize prefSize = childBox->GetXULPrefSize(state);
+        nsSize minSize = childBox->GetXULMinSize(state);
+        nsSize maxSize = nsBox::BoundsCheckMinMax(minSize, childBox->GetXULMaxSize(state));
+        prefSize = nsBox::BoundsCheck(minSize, prefSize, maxSize);
+
+        nsSplitterFrame::AddMargin(childBox, minSize);
+        nsSplitterFrame::AddMargin(childBox, prefSize);
+        nsSplitterFrame::AddMargin(childBox, maxSize);
+
+        nscoord flex = childBox->GetXULFlex();
+
+        nsMargin margin(0,0,0,0);
+        childBox->GetXULMargin(margin);
+        nsRect r(childBox->GetRect());
+        r.Inflate(margin);
+
+        // We need to check for hidden attribute too, since treecols with
+        // the hidden="true" attribute are not really hidden, just collapsed
+        if (!content->IsElement() ||
+            (!content->AsElement()->AttrValueIs(kNameSpaceID_None,
+                                                nsGkAtoms::fixed,
+                                                nsGkAtoms::_true,
+                                                eCaseMatters) &&
+             !content->AsElement()->AttrValueIs(kNameSpaceID_None,
+                                                nsGkAtoms::hidden,
+                                                nsGkAtoms::_true,
+                                                eCaseMatters))) {
+            if (count < childIndex && (resizeBefore != Flex || flex > 0)) {
+                mChildInfosBefore[mChildInfosBeforeCount].childElem = content;
+                mChildInfosBefore[mChildInfosBeforeCount].min     = isHorizontal ? minSize.width : minSize.height;
+                mChildInfosBefore[mChildInfosBeforeCount].max     = isHorizontal ? maxSize.width : maxSize.height;
+                mChildInfosBefore[mChildInfosBeforeCount].current = isHorizontal ? r.width : r.height;
+                mChildInfosBefore[mChildInfosBeforeCount].flex    = flex;
+                mChildInfosBefore[mChildInfosBeforeCount].index   = count;
+                mChildInfosBefore[mChildInfosBeforeCount].changed = mChildInfosBefore[mChildInfosBeforeCount].current;
+                mChildInfosBeforeCount++;
+            } else if (count > childIndex && (resizeAfter != Flex || flex > 0)) {
+                mChildInfosAfter[mChildInfosAfterCount].childElem = content;
+                mChildInfosAfter[mChildInfosAfterCount].min     = isHorizontal ? minSize.width : minSize.height;
+                mChildInfosAfter[mChildInfosAfterCount].max     = isHorizontal ? maxSize.width : maxSize.height;
+                mChildInfosAfter[mChildInfosAfterCount].current = isHorizontal ? r.width : r.height;
+                mChildInfosAfter[mChildInfosAfterCount].flex    = flex;
+                mChildInfosAfter[mChildInfosAfterCount].index   = count;
+                mChildInfosAfter[mChildInfosAfterCount].changed = mChildInfosAfter[mChildInfosAfterCount].current;
+                mChildInfosAfterCount++;
+            }
+=======
+    if (content->NodeInfo()->NameAtom() != nsGkAtoms::splitter) {
+      nsSize prefSize = childBox->GetXULPrefSize(state);
+      nsSize minSize = childBox->GetXULMinSize(state);
+      nsSize maxSize =
+          nsBox::BoundsCheckMinMax(minSize, childBox->GetXULMaxSize(state));
+      prefSize = nsBox::BoundsCheck(minSize, prefSize, maxSize);
+
+      nsSplitterFrame::AddMargin(childBox, minSize);
+      nsSplitterFrame::AddMargin(childBox, prefSize);
+      nsSplitterFrame::AddMargin(childBox, maxSize);
+
+      nscoord flex = childBox->GetXULFlex();
+
+      nsMargin margin(0, 0, 0, 0);
+      childBox->GetXULMargin(margin);
+      nsRect r(childBox->GetRect());
+      r.Inflate(margin);
+
+      // We need to check for hidden attribute too, since treecols with
+      // the hidden="true" attribute are not really hidden, just collapsed
+      if (!content->IsElement() || (!content->AsElement()->AttrValueIs(
+                                        kNameSpaceID_None, nsGkAtoms::fixed,
+                                        nsGkAtoms::_true, eCaseMatters) &&
+                                    !content->AsElement()->AttrValueIs(
+                                        kNameSpaceID_None, nsGkAtoms::hidden,
+                                        nsGkAtoms::_true, eCaseMatters))) {
+        if (count < childIndex && (resizeBefore != Flex || flex > 0)) {
+          mChildInfosBefore[mChildInfosBeforeCount].childElem = content;
+          mChildInfosBefore[mChildInfosBeforeCount].min =
+              isHorizontal ? minSize.width : minSize.height;
+          mChildInfosBefore[mChildInfosBeforeCount].max =
+              isHorizontal ? maxSize.width : maxSize.height;
+          mChildInfosBefore[mChildInfosBeforeCount].current =
+              isHorizontal ? r.width : r.height;
+          mChildInfosBefore[mChildInfosBeforeCount].flex = flex;
+          mChildInfosBefore[mChildInfosBeforeCount].index = count;
+          mChildInfosBefore[mChildInfosBeforeCount].changed =
+              mChildInfosBefore[mChildInfosBeforeCount].current;
+          mChildInfosBeforeCount++;
+        } else if (count > childIndex && (resizeAfter != Flex || flex > 0)) {
+          mChildInfosAfter[mChildInfosAfterCount].childElem = content;
+          mChildInfosAfter[mChildInfosAfterCount].min =
+              isHorizontal ? minSize.width : minSize.height;
+          mChildInfosAfter[mChildInfosAfterCount].max =
+              isHorizontal ? maxSize.width : maxSize.height;
+          mChildInfosAfter[mChildInfosAfterCount].current =
+              isHorizontal ? r.width : r.height;
+          mChildInfosAfter[mChildInfosAfterCount].flex = flex;
+          mChildInfosAfter[mChildInfosAfterCount].index = count;
+          mChildInfosAfter[mChildInfosAfterCount].changed =
+              mChildInfosAfter[mChildInfosAfterCount].current;
+          mChildInfosAfterCount++;
+>>>>>>> upstream-releases
         }
       }
     }
@@ -696,8 +871,15 @@ nsresult nsSplitterFrameInner::MouseDown(Event* aMouseEvent) {
 
   // printf("Pressed mDragStart=%d\n",mDragStart);
 
+<<<<<<< HEAD
   nsIPresShell::SetCapturingContent(mOuter->GetContent(),
                                     CAPTURE_IGNOREALLOWED);
+||||||| merged common ancestors
+  nsIPresShell::SetCapturingContent(mOuter->GetContent(), CAPTURE_IGNOREALLOWED);
+=======
+  PresShell::SetCapturingContent(mOuter->GetContent(),
+                                 CaptureFlags::IgnoreAllowedState);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -905,7 +1087,7 @@ void nsSplitterFrameInner::SetPreferredSize(nsBoxLayoutState& aState,
   AutoWeakFrame weakBox(aChildBox);
   content->AsElement()->SetAttr(kNameSpaceID_None, attribute, prefValue, true);
   NS_ENSURE_TRUE_VOID(weakBox.IsAlive());
-  aState.PresShell()->FrameNeedsReflow(aChildBox, nsIPresShell::eStyleChange,
+  aState.PresShell()->FrameNeedsReflow(aChildBox, IntrinsicDirty::StyleChange,
                                        NS_FRAME_IS_DIRTY);
 }
 

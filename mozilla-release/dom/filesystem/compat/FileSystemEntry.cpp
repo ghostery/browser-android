@@ -24,9 +24,22 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(FileSystemEntry)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<FileSystemEntry> FileSystemEntry::Create(
     nsIGlobalObject* aGlobalObject,
     const OwningFileOrDirectory& aFileOrDirectory, FileSystem* aFileSystem) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<FileSystemEntry>
+FileSystemEntry::Create(nsIGlobalObject* aGlobalObject,
+                        const OwningFileOrDirectory& aFileOrDirectory,
+                        FileSystem* aFileSystem)
+{
+=======
+/* static */
+already_AddRefed<FileSystemEntry> FileSystemEntry::Create(
+    nsIGlobalObject* aGlobalObject,
+    const OwningFileOrDirectory& aFileOrDirectory, FileSystem* aFileSystem) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aGlobalObject);
   MOZ_ASSERT(aFileSystem);
 

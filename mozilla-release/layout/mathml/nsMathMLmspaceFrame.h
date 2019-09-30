@@ -10,6 +10,10 @@
 #include "mozilla/Attributes.h"
 #include "nsMathMLContainerFrame.h"
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <mspace> -- space
 //
@@ -18,8 +22,15 @@ class nsMathMLmspaceFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmspaceFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmspaceFrame(nsIPresShell* aPresShell,
                                            ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmspaceFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLmspaceFrame(mozilla::PresShell* aPresShell,
+                                           ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   NS_IMETHOD
   TransmitAutomaticData() override {
@@ -29,6 +40,7 @@ class nsMathMLmspaceFrame final : public nsMathMLContainerFrame {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
                       const ReflowInput& aReflowInput,
                       nsReflowStatus& aStatus) override;
@@ -39,6 +51,29 @@ class nsMathMLmspaceFrame final : public nsMathMLContainerFrame {
         mWidth(0),
         mHeight(0),
         mDepth(0) {}
+||||||| merged common ancestors
+  virtual void
+  Reflow(nsPresContext*          aPresContext,
+         ReflowOutput&     aDesiredSize,
+         const ReflowInput& aReflowInput,
+         nsReflowStatus&          aStatus) override;
+
+protected:
+  explicit nsMathMLmspaceFrame(ComputedStyle* aStyle) :
+    nsMathMLContainerFrame(aStyle, kClassID), mWidth(0), mHeight(0), mDepth(0) {}
+=======
+  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
+                      const ReflowInput& aReflowInput,
+                      nsReflowStatus& aStatus) override;
+
+ protected:
+  explicit nsMathMLmspaceFrame(ComputedStyle* aStyle,
+                               nsPresContext* aPresContext)
+      : nsMathMLContainerFrame(aStyle, aPresContext, kClassID),
+        mWidth(0),
+        mHeight(0),
+        mDepth(0) {}
+>>>>>>> upstream-releases
   virtual ~nsMathMLmspaceFrame();
 
   virtual nsresult MeasureForWidth(DrawTarget* aDrawTarget,

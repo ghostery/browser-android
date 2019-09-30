@@ -52,6 +52,7 @@ class GLContext;
 class SurfaceFactory;
 class ShSurfHandle;
 
+<<<<<<< HEAD
 class SharedSurface {
  public:
   static void ProdCopy(SharedSurface* src, SharedSurface* dest,
@@ -169,6 +170,200 @@ class SharedSurface {
     return false;
   }
 };
+||||||| merged common ancestors
+class SharedSurface
+{
+public:
+    static void ProdCopy(SharedSurface* src, SharedSurface* dest,
+                         SurfaceFactory* factory);
+
+    const SharedSurfaceType mType;
+    const AttachmentType mAttachType;
+    const WeakPtr<GLContext> mGL;
+    const gfx::IntSize mSize;
+    const bool mHasAlpha;
+    const bool mCanRecycle;
+protected:
+    bool mIsLocked;
+    bool mIsProducerAcquired;
+
+    SharedSurface(SharedSurfaceType type,
+                  AttachmentType attachType,
+                  GLContext* gl,
+                  const gfx::IntSize& size,
+                  bool hasAlpha,
+                  bool canRecycle);
+
+public:
+    virtual ~SharedSurface();
+
+    // Specifies to the TextureClient any flags which
+    // are required by the SharedSurface backend.
+    virtual layers::TextureFlags GetTextureFlags() const;
+
+    bool IsLocked() const { return mIsLocked; }
+    bool IsProducerAcquired() const { return mIsProducerAcquired; }
+
+    // This locks the SharedSurface as the production buffer for the context.
+    // This is needed by backends which use PBuffers and/or EGLSurfaces.
+    void LockProd();
+
+    // Unlocking is harmless if we're already unlocked.
+    void UnlockProd();
+
+    // This surface has been moved to the front buffer and will not be locked again
+    // until it is recycled. Do any finalization steps here.
+    virtual void Commit(){}
+
+protected:
+    virtual void LockProdImpl() = 0;
+    virtual void UnlockProdImpl() = 0;
+
+    virtual void ProducerAcquireImpl() = 0;
+    virtual void ProducerReleaseImpl() = 0;
+    virtual void ProducerReadAcquireImpl() { ProducerAcquireImpl(); }
+    virtual void ProducerReadReleaseImpl() { ProducerReleaseImpl(); }
+
+public:
+    void ProducerAcquire() {
+        MOZ_ASSERT(!mIsProducerAcquired);
+        ProducerAcquireImpl();
+        mIsProducerAcquired = true;
+    }
+    void ProducerRelease() {
+        MOZ_ASSERT(mIsProducerAcquired);
+        ProducerReleaseImpl();
+        mIsProducerAcquired = false;
+    }
+    void ProducerReadAcquire() {
+        MOZ_ASSERT(!mIsProducerAcquired);
+        ProducerReadAcquireImpl();
+        mIsProducerAcquired = true;
+    }
+    void ProducerReadRelease() {
+        MOZ_ASSERT(mIsProducerAcquired);
+        ProducerReadReleaseImpl();
+        mIsProducerAcquired = false;
+    }
+=======
+class SharedSurface {
+ public:
+  static bool ProdCopy(SharedSurface* src, SharedSurface* dest,
+                       SurfaceFactory* factory);
+
+  const SharedSurfaceType mType;
+  const AttachmentType mAttachType;
+  const WeakPtr<GLContext> mGL;
+  const gfx::IntSize mSize;
+  const bool mHasAlpha;
+  const bool mCanRecycle;
+
+ protected:
+  bool mIsLocked;
+  bool mIsProducerAcquired;
+
+  SharedSurface(SharedSurfaceType type, AttachmentType attachType,
+                GLContext* gl, const gfx::IntSize& size, bool hasAlpha,
+                bool canRecycle);
+
+ public:
+  virtual ~SharedSurface();
+
+  // Specifies to the TextureClient any flags which
+  // are required by the SharedSurface backend.
+  virtual layers::TextureFlags GetTextureFlags() const;
+
+  bool IsLocked() const { return mIsLocked; }
+  bool IsProducerAcquired() const { return mIsProducerAcquired; }
+
+  // This locks the SharedSurface as the production buffer for the context.
+  // This is needed by backends which use PBuffers and/or EGLSurfaces.
+  void LockProd();
+
+  // Unlocking is harmless if we're already unlocked.
+  void UnlockProd();
+
+  // This surface has been moved to the front buffer and will not be locked
+  // again until it is recycled. Do any finalization steps here.
+  virtual void Commit() {}
+
+ protected:
+  virtual void LockProdImpl() = 0;
+  virtual void UnlockProdImpl() = 0;
+
+  virtual void ProducerAcquireImpl() = 0;
+  virtual void ProducerReleaseImpl() = 0;
+  virtual void ProducerReadAcquireImpl() { ProducerAcquireImpl(); }
+  virtual void ProducerReadReleaseImpl() { ProducerReleaseImpl(); }
+
+ public:
+  void ProducerAcquire() {
+    MOZ_ASSERT(!mIsProducerAcquired);
+    ProducerAcquireImpl();
+    mIsProducerAcquired = true;
+  }
+  void ProducerRelease() {
+    MOZ_ASSERT(mIsProducerAcquired);
+    ProducerReleaseImpl();
+    mIsProducerAcquired = false;
+  }
+  void ProducerReadAcquire() {
+    MOZ_ASSERT(!mIsProducerAcquired);
+    ProducerReadAcquireImpl();
+    mIsProducerAcquired = true;
+  }
+  void ProducerReadRelease() {
+    MOZ_ASSERT(mIsProducerAcquired);
+    ProducerReadReleaseImpl();
+    mIsProducerAcquired = false;
+  }
+
+  // This function waits until the buffer is no longer being used.
+  // To optimize the performance, some implementaions recycle SharedSurfaces
+  // even when its buffer is still being used.
+  virtual void WaitForBufferOwnership() {}
+
+  // Returns true if the buffer is available.
+  // You can call WaitForBufferOwnership to wait for availability.
+  virtual bool IsBufferAvailable() const { return true; }
+
+  // For use when AttachType is correct.
+  virtual GLenum ProdTextureTarget() const {
+    MOZ_ASSERT(mAttachType == AttachmentType::GLTexture);
+    return LOCAL_GL_TEXTURE_2D;
+  }
+
+  virtual GLuint ProdTexture() {
+    MOZ_ASSERT(mAttachType == AttachmentType::GLTexture);
+    MOZ_CRASH("GFX: Did you forget to override this function?");
+  }
+
+  virtual GLuint ProdRenderbuffer() {
+    MOZ_ASSERT(mAttachType == AttachmentType::GLRenderbuffer);
+    MOZ_CRASH("GFX: Did you forget to override this function?");
+  }
+
+  virtual bool CopyTexImage2D(GLenum target, GLint level, GLenum internalformat,
+                              GLint x, GLint y, GLsizei width, GLsizei height,
+                              GLint border) {
+    return false;
+  }
+
+  virtual bool ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
+                          GLenum format, GLenum type, GLvoid* pixels) {
+    return false;
+  }
+
+  virtual bool NeedsIndirectReads() const { return false; }
+
+  virtual bool ToSurfaceDescriptor(
+      layers::SurfaceDescriptor* const out_descriptor) = 0;
+
+  virtual bool ReadbackBySharedHandle(gfx::DataSourceSurface* out_surface) {
+    return false;
+  }
+};
+>>>>>>> upstream-releases
 
 template <typename T>
 class RefSet {
@@ -288,6 +483,7 @@ class SurfaceFactory : public SupportsWeakPtr<SurfaceFactory> {
   bool Recycle(layers::SharedSurfaceTextureClient* texClient);
 };
 
+<<<<<<< HEAD
 class ScopedReadbackFB {
   GLContext* const mGL;
   ScopedBindFramebuffer mAutoFB;
@@ -299,6 +495,32 @@ class ScopedReadbackFB {
  public:
   explicit ScopedReadbackFB(SharedSurface* src);
   ~ScopedReadbackFB();
+||||||| merged common ancestors
+class ScopedReadbackFB
+{
+    GLContext* const mGL;
+    ScopedBindFramebuffer mAutoFB;
+    GLuint mTempFB = 0;
+    GLuint mTempTex = 0;
+    SharedSurface* mSurfToUnlock = nullptr;
+    SharedSurface* mSurfToLock = nullptr;
+
+public:
+    explicit ScopedReadbackFB(SharedSurface* src);
+    ~ScopedReadbackFB();
+=======
+class ScopedReadbackFB final {
+  GLContext* const mGL;
+  ScopedBindFramebuffer mAutoFB;
+  GLuint mTempFB = 0;
+  GLuint mTempTex = 0;
+  SharedSurface* mSurfToUnlock = nullptr;
+  SharedSurface* mSurfToLock = nullptr;
+
+ public:
+  explicit ScopedReadbackFB(SharedSurface* src);
+  ~ScopedReadbackFB();
+>>>>>>> upstream-releases
 };
 
 bool ReadbackSharedSurface(SharedSurface* src, gfx::DrawTarget* dst);

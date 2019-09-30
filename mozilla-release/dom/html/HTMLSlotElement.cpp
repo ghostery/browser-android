@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/DocGroup.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/HTMLSlotElement.h"
 #include "mozilla/dom/HTMLSlotElementBinding.h"
 #include "mozilla/dom/HTMLUnknownElement.h"
 #include "mozilla/dom/ShadowRoot.h"
 #include "nsGkAtoms.h"
-#include "nsDocument.h"
 
 nsGenericHTMLElement* NS_NewHTMLSlotElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
@@ -39,13 +39,30 @@ NS_INTERFACE_MAP_END_INHERITING(nsGenericHTMLElement)
 
 NS_IMPL_ELEMENT_CLONE(HTMLSlotElement)
 
+<<<<<<< HEAD
 nsresult HTMLSlotElement::BindToTree(nsIDocument* aDocument,
                                      nsIContent* aParent,
                                      nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+HTMLSlotElement::BindToTree(nsIDocument* aDocument,
+                            nsIContent* aParent,
+                            nsIContent* aBindingParent)
+{
+=======
+nsresult HTMLSlotElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+>>>>>>> upstream-releases
   RefPtr<ShadowRoot> oldContainingShadow = GetContainingShadow();
 
+<<<<<<< HEAD
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                 aBindingParent);
+=======
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   ShadowRoot* containingShadow = GetContainingShadow();
@@ -56,10 +73,18 @@ nsresult HTMLSlotElement::BindToTree(nsIDocument* aDocument,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void HTMLSlotElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+HTMLSlotElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void HTMLSlotElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   RefPtr<ShadowRoot> oldContainingShadow = GetContainingShadow();
 
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 
   if (oldContainingShadow && !GetContainingShadow()) {
     oldContainingShadow->RemoveSlot(this);
@@ -142,7 +167,26 @@ void HTMLSlotElement::AssignedNodes(const AssignedNodesOptions& aOptions,
   aNodes = mAssignedNodes;
 }
 
+<<<<<<< HEAD
 const nsTArray<RefPtr<nsINode>>& HTMLSlotElement::AssignedNodes() const {
+||||||| merged common ancestors
+const nsTArray<RefPtr<nsINode>>&
+HTMLSlotElement::AssignedNodes() const
+{
+=======
+void HTMLSlotElement::AssignedElements(const AssignedNodesOptions& aOptions,
+                                       nsTArray<RefPtr<Element>>& aElements) {
+  AutoTArray<RefPtr<nsINode>, 128> assignedNodes;
+  AssignedNodes(aOptions, assignedNodes);
+  for (const RefPtr<nsINode>& assignedNode : assignedNodes) {
+    if (assignedNode->IsElement()) {
+      aElements.AppendElement(assignedNode->AsElement());
+    }
+  }
+}
+
+const nsTArray<RefPtr<nsINode>>& HTMLSlotElement::AssignedNodes() const {
+>>>>>>> upstream-releases
   return mAssignedNodes;
 }
 

@@ -2,9 +2,19 @@
 /* vim: set sts=2 sw=2 et tw=80: */
 "use strict";
 
+<<<<<<< HEAD
 PromiseTestUtils.whitelistRejectionsGlobally(/Message manager disconnected/);
 
 ChromeUtils.import("resource://gre/modules/Downloads.jsm");
+||||||| merged common ancestors
+ChromeUtils.import("resource://gre/modules/Downloads.jsm");
+=======
+PromiseTestUtils.whitelistRejectionsGlobally(/Message manager disconnected/);
+
+const { Downloads } = ChromeUtils.import(
+  "resource://gre/modules/Downloads.jsm"
+);
+>>>>>>> upstream-releases
 
 const server = createHttpServer();
 server.registerDirectory("/data/", do_get_file("data"));
@@ -30,7 +40,7 @@ function backgroundScript() {
     }
 
     let promise = new Promise(resolve => {
-      complete.set(id, {resolve});
+      complete.set(id, { resolve });
     });
     complete.get(id).promise = promise;
     return promise;
@@ -48,16 +58,25 @@ function backgroundScript() {
     if (msg == "download.request") {
       try {
         let id = await browser.downloads.download(args[0]);
-        browser.test.sendMessage("download.done", {status: "success", id});
+        browser.test.sendMessage("download.done", { status: "success", id });
       } catch (error) {
-        browser.test.sendMessage("download.done", {status: "error", errmsg: error.message});
+        browser.test.sendMessage("download.done", {
+          status: "error",
+          errmsg: error.message,
+        });
       }
     } else if (msg == "search.request") {
       try {
         let downloads = await browser.downloads.search(args[0]);
-        browser.test.sendMessage("search.done", {status: "success", downloads});
+        browser.test.sendMessage("search.done", {
+          status: "success",
+          downloads,
+        });
       } catch (error) {
-        browser.test.sendMessage("search.done", {status: "error", errmsg: error.message});
+        browser.test.sendMessage("search.done", {
+          status: "error",
+          errmsg: error.message,
+        });
       }
     } else if (msg == "waitForComplete.request") {
       await waitForComplete(args[0]);
@@ -138,27 +157,35 @@ add_task(async function test_search() {
   const time1 = new Date();
 
   let downloadIds = {};
-  let msg = await download({url: TXT_URL});
+  let msg = await download({ url: TXT_URL });
   equal(msg.status, "success", "download() succeeded");
   downloadIds.txt1 = msg.id;
 
   const TXT_FILE2 = "NewFile.txt";
-  msg = await download({url: TXT_URL, filename: TXT_FILE2});
+  msg = await download({ url: TXT_URL, filename: TXT_FILE2 });
   equal(msg.status, "success", "download() succeeded");
   downloadIds.txt2 = msg.id;
 
+<<<<<<< HEAD
   msg = await download({url: EMPTY_URL});
   equal(msg.status, "success", "download() succeeded");
   downloadIds.txt3 = msg.id;
 
+||||||| merged common ancestors
+=======
+  msg = await download({ url: EMPTY_URL });
+  equal(msg.status, "success", "download() succeeded");
+  downloadIds.txt3 = msg.id;
+
+>>>>>>> upstream-releases
   const time2 = new Date();
 
-  msg = await download({url: HTML_URL});
+  msg = await download({ url: HTML_URL });
   equal(msg.status, "success", "download() succeeded");
   downloadIds.html1 = msg.id;
 
   const HTML_FILE2 = "renamed.html";
-  msg = await download({url: HTML_URL, filename: HTML_FILE2});
+  msg = await download({ url: HTML_URL, filename: HTML_FILE2 });
   equal(msg.status, "success", "download() succeeded");
   downloadIds.html2 = msg.id;
 
@@ -167,12 +194,16 @@ add_task(async function test_search() {
   // Search for each individual download and check
   // the corresponding DownloadItem.
   async function checkDownloadItem(id, expect) {
-    let item = await search({id});
+    let item = await search({ id });
     equal(item.status, "success", "search() succeeded");
     equal(item.downloads.length, 1, "search() found exactly 1 download");
 
     Object.keys(expect).forEach(function(field) {
-      equal(item.downloads[0][field], expect[field], `DownloadItem.${field} is correct"`);
+      equal(
+        item.downloads[0][field],
+        expect[field],
+        `DownloadItem.${field} is correct"`
+      );
     });
   }
   await checkDownloadItem(downloadIds.txt1, {
@@ -233,19 +264,34 @@ add_task(async function test_search() {
   async function checkSearch(query, expected, description, exact) {
     let item = await search(query);
     equal(item.status, "success", "search() succeeded");
-    equal(item.downloads.length, expected.length, `search() for ${description} found exactly ${expected.length} downloads`);
+    equal(
+      item.downloads.length,
+      expected.length,
+      `search() for ${description} found exactly ${expected.length} downloads`
+    );
 
     let receivedIds = item.downloads.map(i => i.id);
     if (exact) {
       receivedIds.forEach((id, idx) => {
-        equal(id, downloadIds[expected[idx]], `search() for ${description} returned ${expected[idx]} in position ${idx}`);
+        equal(
+          id,
+          downloadIds[expected[idx]],
+          `search() for ${description} returned ${
+            expected[idx]
+          } in position ${idx}`
+        );
       });
     } else {
       Object.keys(downloadIds).forEach(key => {
         const id = downloadIds[key];
         const thisExpected = expected.includes(key);
-        equal(receivedIds.includes(id), thisExpected,
-              `search() for ${description} ${thisExpected ? "includes" : "does not include"} ${key}`);
+        equal(
+          receivedIds.includes(id),
+          thisExpected,
+          `search() for ${description} ${
+            thisExpected ? "includes" : "does not include"
+          } ${key}`
+        );
       });
     }
   }
@@ -254,46 +300,79 @@ add_task(async function test_search() {
   // NB: for now ids are not persistent and we start numbering them at 1
   //     so a sufficiently large number will be unused.
   const INVALID_ID = 1000;
-  await checkSearch({id: INVALID_ID}, [], "invalid id");
+  await checkSearch({ id: INVALID_ID }, [], "invalid id");
 
   // Check that search on url works.
-  await checkSearch({url: TXT_URL}, ["txt1", "txt2"], "url");
+  await checkSearch({ url: TXT_URL }, ["txt1", "txt2"], "url");
 
   // Check that regexp on url works.
-  const HTML_REGEX = "[download]{8}\.html+$";
-  await checkSearch({urlRegex: HTML_REGEX}, ["html1", "html2"], "url regexp");
+  const HTML_REGEX = "[download]{8}.html+$";
+  await checkSearch({ urlRegex: HTML_REGEX }, ["html1", "html2"], "url regexp");
 
   // Check that compatible url+regexp works
-  await checkSearch({url: HTML_URL, urlRegex: HTML_REGEX}, ["html1", "html2"], "compatible url+urlRegex");
+  await checkSearch(
+    { url: HTML_URL, urlRegex: HTML_REGEX },
+    ["html1", "html2"],
+    "compatible url+urlRegex"
+  );
 
   // Check that incompatible url+regexp works
-  await checkSearch({url: TXT_URL, urlRegex: HTML_REGEX}, [], "incompatible url+urlRegex");
+  await checkSearch(
+    { url: TXT_URL, urlRegex: HTML_REGEX },
+    [],
+    "incompatible url+urlRegex"
+  );
 
   // Check that search on filename works.
-  await checkSearch({filename: downloadPath(TXT_FILE)}, ["txt1"], "filename");
+  await checkSearch({ filename: downloadPath(TXT_FILE) }, ["txt1"], "filename");
 
   // Check that regexp on filename works.
-  await checkSearch({filenameRegex: HTML_REGEX}, ["html1"], "filename regex");
+  await checkSearch({ filenameRegex: HTML_REGEX }, ["html1"], "filename regex");
 
   // Check that compatible filename+regexp works
-  await checkSearch({filename: downloadPath(HTML_FILE), filenameRegex: HTML_REGEX}, ["html1"], "compatible filename+filename regex");
+  await checkSearch(
+    { filename: downloadPath(HTML_FILE), filenameRegex: HTML_REGEX },
+    ["html1"],
+    "compatible filename+filename regex"
+  );
 
   // Check that incompatible filename+regexp works
-  await checkSearch({filename: downloadPath(TXT_FILE), filenameRegex: HTML_REGEX}, [], "incompatible filename+filename regex");
+  await checkSearch(
+    { filename: downloadPath(TXT_FILE), filenameRegex: HTML_REGEX },
+    [],
+    "incompatible filename+filename regex"
+  );
 
   // Check that simple positive search terms work.
+<<<<<<< HEAD
   await checkSearch({query: ["file_download"]}, ["txt1", "txt2", "txt3", "html1", "html2"],
                     "term file_download");
   await checkSearch({query: ["NewFile"]}, ["txt2"], "term NewFile");
+||||||| merged common ancestors
+  await checkSearch({query: ["file_download"]}, ["txt1", "txt2", "html1", "html2"],
+                    "term file_download");
+  await checkSearch({query: ["NewFile"]}, ["txt2"], "term NewFile");
+=======
+  await checkSearch(
+    { query: ["file_download"] },
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    "term file_download"
+  );
+  await checkSearch({ query: ["NewFile"] }, ["txt2"], "term NewFile");
+>>>>>>> upstream-releases
 
   // Check that positive search terms work case-insensitive.
-  await checkSearch({query: ["nEwfILe"]}, ["txt2"], "term nEwfiLe");
+  await checkSearch({ query: ["nEwfILe"] }, ["txt2"], "term nEwfiLe");
 
   // Check that negative search terms work.
-  await checkSearch({query: ["-txt"]}, ["html1", "html2"], "term -txt");
+  await checkSearch({ query: ["-txt"] }, ["html1", "html2"], "term -txt");
 
   // Check that positive and negative search terms together work.
-  await checkSearch({query: ["html", "-renamed"]}, ["html1"], "positive and negative terms");
+  await checkSearch(
+    { query: ["html", "-renamed"] },
+    ["html1"],
+    "positive and negative terms"
+  );
 
   async function checkSearchWithDate(query, expected, description) {
     const fields = Object.keys(query);
@@ -323,21 +402,58 @@ add_task(async function test_search() {
   }
 
   // Check startedBefore
+<<<<<<< HEAD
   await checkSearchWithDate({startedBefore: time1}, [], "before time1");
   await checkSearchWithDate({startedBefore: time2}, ["txt1", "txt2", "txt3"], "before time2");
   await checkSearchWithDate({startedBefore: time3}, ["txt1", "txt2", "txt3", "html1", "html2"], "before time3");
+||||||| merged common ancestors
+  await checkSearchWithDate({startedBefore: time1}, [], "before time1");
+  await checkSearchWithDate({startedBefore: time2}, ["txt1", "txt2"], "before time2");
+  await checkSearchWithDate({startedBefore: time3}, ["txt1", "txt2", "html1", "html2"], "before time3");
+=======
+  await checkSearchWithDate({ startedBefore: time1 }, [], "before time1");
+  await checkSearchWithDate(
+    { startedBefore: time2 },
+    ["txt1", "txt2", "txt3"],
+    "before time2"
+  );
+  await checkSearchWithDate(
+    { startedBefore: time3 },
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    "before time3"
+  );
+>>>>>>> upstream-releases
 
   // Check startedAfter
+<<<<<<< HEAD
   await checkSearchWithDate({startedAfter: time1}, ["txt1", "txt2", "txt3", "html1", "html2"], "after time1");
   await checkSearchWithDate({startedAfter: time2}, ["html1", "html2"], "after time2");
   await checkSearchWithDate({startedAfter: time3}, [], "after time3");
+||||||| merged common ancestors
+  await checkSearchWithDate({startedAfter: time1}, ["txt1", "txt2", "html1", "html2"], "after time1");
+  await checkSearchWithDate({startedAfter: time2}, ["html1", "html2"], "after time2");
+  await checkSearchWithDate({startedAfter: time3}, [], "after time3");
+=======
+  await checkSearchWithDate(
+    { startedAfter: time1 },
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    "after time1"
+  );
+  await checkSearchWithDate(
+    { startedAfter: time2 },
+    ["html1", "html2"],
+    "after time2"
+  );
+  await checkSearchWithDate({ startedAfter: time3 }, [], "after time3");
+>>>>>>> upstream-releases
 
   // Check simple search on totalBytes
-  await checkSearch({totalBytes: TXT_LEN}, ["txt1", "txt2"], "totalBytes");
-  await checkSearch({totalBytes: HTML_LEN}, ["html1", "html2"], "totalBytes");
+  await checkSearch({ totalBytes: TXT_LEN }, ["txt1", "txt2"], "totalBytes");
+  await checkSearch({ totalBytes: HTML_LEN }, ["html1", "html2"], "totalBytes");
 
   // Check simple test on totalBytes{Greater,Less}
   // (NB: TXT_LEN < HTML_LEN < BIG_LEN)
+<<<<<<< HEAD
   await checkSearch({totalBytesGreater: 0}, ["txt1", "txt2", "html1", "html2"], "totalBytesGreater than 0");
   await checkSearch({totalBytesGreater: TXT_LEN}, ["html1", "html2"], `totalBytesGreater than ${TXT_LEN}`);
   await checkSearch({totalBytesGreater: HTML_LEN}, [], `totalBytesGreater than ${HTML_LEN}`);
@@ -347,25 +463,113 @@ add_task(async function test_search() {
 
   // Bug 1503760 check if 0 byte files with no search query are returned.
   await checkSearch({}, ["txt1", "txt2", "txt3", "html1", "html2"], "totalBytesGreater than -1");
+||||||| merged common ancestors
+  await checkSearch({totalBytesGreater: 0}, ["txt1", "txt2", "html1", "html2"], "totalBytesGreater than 0");
+  await checkSearch({totalBytesGreater: TXT_LEN}, ["html1", "html2"], `totalBytesGreater than ${TXT_LEN}`);
+  await checkSearch({totalBytesGreater: HTML_LEN}, [], `totalBytesGreater than ${HTML_LEN}`);
+  await checkSearch({totalBytesLess: TXT_LEN}, [], `totalBytesLess than ${TXT_LEN}`);
+  await checkSearch({totalBytesLess: HTML_LEN}, ["txt1", "txt2"], `totalBytesLess than ${HTML_LEN}`);
+  await checkSearch({totalBytesLess: BIG_LEN}, ["txt1", "txt2", "html1", "html2"], `totalBytesLess than ${BIG_LEN}`);
+=======
+  await checkSearch(
+    { totalBytesGreater: 0 },
+    ["txt1", "txt2", "html1", "html2"],
+    "totalBytesGreater than 0"
+  );
+  await checkSearch(
+    { totalBytesGreater: TXT_LEN },
+    ["html1", "html2"],
+    `totalBytesGreater than ${TXT_LEN}`
+  );
+  await checkSearch(
+    { totalBytesGreater: HTML_LEN },
+    [],
+    `totalBytesGreater than ${HTML_LEN}`
+  );
+  await checkSearch(
+    { totalBytesLess: TXT_LEN },
+    ["txt3"],
+    `totalBytesLess than ${TXT_LEN}`
+  );
+  await checkSearch(
+    { totalBytesLess: HTML_LEN },
+    ["txt1", "txt2", "txt3"],
+    `totalBytesLess than ${HTML_LEN}`
+  );
+  await checkSearch(
+    { totalBytesLess: BIG_LEN },
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    `totalBytesLess than ${BIG_LEN}`
+  );
+
+  // Bug 1503760 check if 0 byte files with no search query are returned.
+  await checkSearch(
+    {},
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    "totalBytesGreater than -1"
+  );
+>>>>>>> upstream-releases
 
   // Check good combinations of totalBytes*.
-  await checkSearch({totalBytes: HTML_LEN, totalBytesGreater: TXT_LEN}, ["html1", "html2"], "totalBytes and totalBytesGreater");
-  await checkSearch({totalBytes: TXT_LEN, totalBytesLess: HTML_LEN}, ["txt1", "txt2"], "totalBytes and totalBytesGreater");
-  await checkSearch({totalBytes: HTML_LEN, totalBytesLess: BIG_LEN, totalBytesGreater: 0}, ["html1", "html2"], "totalBytes and totalBytesLess and totalBytesGreater");
+  await checkSearch(
+    { totalBytes: HTML_LEN, totalBytesGreater: TXT_LEN },
+    ["html1", "html2"],
+    "totalBytes and totalBytesGreater"
+  );
+  await checkSearch(
+    { totalBytes: TXT_LEN, totalBytesLess: HTML_LEN },
+    ["txt1", "txt2"],
+    "totalBytes and totalBytesGreater"
+  );
+  await checkSearch(
+    { totalBytes: HTML_LEN, totalBytesLess: BIG_LEN, totalBytesGreater: 0 },
+    ["html1", "html2"],
+    "totalBytes and totalBytesLess and totalBytesGreater"
+  );
 
   // Check bad combination of totalBytes*.
-  await checkSearch({totalBytesLess: TXT_LEN, totalBytesGreater: HTML_LEN}, [], "bad totalBytesLess, totalBytesGreater combination");
-  await checkSearch({totalBytes: TXT_LEN, totalBytesGreater: HTML_LEN}, [], "bad totalBytes, totalBytesGreater combination");
-  await checkSearch({totalBytes: HTML_LEN, totalBytesLess: TXT_LEN}, [], "bad totalBytes, totalBytesLess combination");
+  await checkSearch(
+    { totalBytesLess: TXT_LEN, totalBytesGreater: HTML_LEN },
+    [],
+    "bad totalBytesLess, totalBytesGreater combination"
+  );
+  await checkSearch(
+    { totalBytes: TXT_LEN, totalBytesGreater: HTML_LEN },
+    [],
+    "bad totalBytes, totalBytesGreater combination"
+  );
+  await checkSearch(
+    { totalBytes: HTML_LEN, totalBytesLess: TXT_LEN },
+    [],
+    "bad totalBytes, totalBytesLess combination"
+  );
 
   // Check mime.
+<<<<<<< HEAD
   await checkSearch({mime: "text/plain"}, ["txt1", "txt2", "txt3"], "mime text/plain");
   await checkSearch({mime: "text/html"}, ["html1", "html2"], "mime text/htmlplain");
   await checkSearch({mime: "video/webm"}, [], "mime video/webm");
+||||||| merged common ancestors
+  await checkSearch({mime: "text/plain"}, ["txt1", "txt2"], "mime text/plain");
+  await checkSearch({mime: "text/html"}, ["html1", "html2"], "mime text/htmlplain");
+  await checkSearch({mime: "video/webm"}, [], "mime video/webm");
+=======
+  await checkSearch(
+    { mime: "text/plain" },
+    ["txt1", "txt2", "txt3"],
+    "mime text/plain"
+  );
+  await checkSearch(
+    { mime: "text/html" },
+    ["html1", "html2"],
+    "mime text/htmlplain"
+  );
+  await checkSearch({ mime: "video/webm" }, [], "mime video/webm");
+>>>>>>> upstream-releases
 
   // Check fileSize.
-  await checkSearch({fileSize: TXT_LEN}, ["txt1", "txt2"], "fileSize");
-  await checkSearch({fileSize: HTML_LEN}, ["html1", "html2"], "fileSize");
+  await checkSearch({ fileSize: TXT_LEN }, ["txt1", "txt2"], "fileSize");
+  await checkSearch({ fileSize: HTML_LEN }, ["html1", "html2"], "fileSize");
 
   // Fields like bytesReceived, paused, state, exists are meaningful
   // for downloads that are in progress but have not yet completed.
@@ -378,54 +582,147 @@ add_task(async function test_search() {
   // (e.g., filename and filenameRegex or startTime and startedBefore/After)
   // so now just throw as many fields as we can at a single search and
   // make sure a simple case still works.
-  await checkSearch({
-    url: TXT_URL,
-    urlRegex: "download",
-    filename: downloadPath(TXT_FILE),
-    filenameRegex: "download",
-    query: ["download"],
-    startedAfter: time1.valueOf().toString(),
-    startedBefore: time2.valueOf().toString(),
-    totalBytes: TXT_LEN,
-    totalBytesGreater: 0,
-    totalBytesLess: BIG_LEN,
-    mime: "text/plain",
-    fileSize: TXT_LEN,
-  }, ["txt1"], "many properties");
+  await checkSearch(
+    {
+      url: TXT_URL,
+      urlRegex: "download",
+      filename: downloadPath(TXT_FILE),
+      filenameRegex: "download",
+      query: ["download"],
+      startedAfter: time1.valueOf().toString(),
+      startedBefore: time2.valueOf().toString(),
+      totalBytes: TXT_LEN,
+      totalBytesGreater: 0,
+      totalBytesLess: BIG_LEN,
+      mime: "text/plain",
+      fileSize: TXT_LEN,
+    },
+    ["txt1"],
+    "many properties"
+  );
 
   // Check simple orderBy (forward and backward).
+<<<<<<< HEAD
   await checkSearch({orderBy: ["startTime"]}, ["txt1", "txt2", "txt3", "html1", "html2"], "orderBy startTime", true);
   await checkSearch({orderBy: ["-startTime"]}, ["html2", "html1", "txt3", "txt2", "txt1"], "orderBy -startTime", true);
+||||||| merged common ancestors
+  await checkSearch({orderBy: ["startTime"]}, ["txt1", "txt2", "html1", "html2"], "orderBy startTime", true);
+  await checkSearch({orderBy: ["-startTime"]}, ["html2", "html1", "txt2", "txt1"], "orderBy -startTime", true);
+=======
+  await checkSearch(
+    { orderBy: ["startTime"] },
+    ["txt1", "txt2", "txt3", "html1", "html2"],
+    "orderBy startTime",
+    true
+  );
+  await checkSearch(
+    { orderBy: ["-startTime"] },
+    ["html2", "html1", "txt3", "txt2", "txt1"],
+    "orderBy -startTime",
+    true
+  );
+>>>>>>> upstream-releases
 
   // Check orderBy with multiple fields.
   // NB: TXT_URL and HTML_URL differ only in extension and .html precedes .txt
+<<<<<<< HEAD
   // EMPTY_URL begins with e which precedes f
   await checkSearch({orderBy: ["url", "-startTime"]}, ["txt3", "html2", "html1", "txt2", "txt1"], "orderBy with multiple fields", true);
+||||||| merged common ancestors
+  await checkSearch({orderBy: ["url", "-startTime"]}, ["html2", "html1", "txt2", "txt1"], "orderBy with multiple fields", true);
+=======
+  // EMPTY_URL begins with e which precedes f
+  await checkSearch(
+    { orderBy: ["url", "-startTime"] },
+    ["txt3", "html2", "html1", "txt2", "txt1"],
+    "orderBy with multiple fields",
+    true
+  );
+>>>>>>> upstream-releases
 
   // Check orderBy with limit.
+<<<<<<< HEAD
   await checkSearch({orderBy: ["url"], limit: 1}, ["txt3"], "orderBy with limit", true);
+||||||| merged common ancestors
+  await checkSearch({orderBy: ["url"], limit: 1}, ["html1"], "orderBy with limit", true);
+=======
+  await checkSearch(
+    { orderBy: ["url"], limit: 1 },
+    ["txt3"],
+    "orderBy with limit",
+    true
+  );
+>>>>>>> upstream-releases
 
   // Check bad arguments.
   async function checkBadSearch(query, pattern, description) {
     let item = await search(query);
     equal(item.status, "error", "search() failed");
-    ok(pattern.test(item.errmsg), `error message for ${description} was correct (${item.errmsg}).`);
+    ok(
+      pattern.test(item.errmsg),
+      `error message for ${description} was correct (${item.errmsg}).`
+    );
   }
 
-  await checkBadSearch("myquery", /Incorrect argument type/, "query is not an object");
-  await checkBadSearch({bogus: "boo"}, /Unexpected property/, "query contains an unknown field");
-  await checkBadSearch({query: "query string"}, /Expected array/, "query.query is a string");
-  await checkBadSearch({startedBefore: "i am not a time"}, /Type error/, "query.startedBefore is not a valid time");
-  await checkBadSearch({startedAfter: "i am not a time"}, /Type error/, "query.startedAfter is not a valid time");
-  await checkBadSearch({endedBefore: "i am not a time"}, /Type error/, "query.endedBefore is not a valid time");
-  await checkBadSearch({endedAfter: "i am not a time"}, /Type error/, "query.endedAfter is not a valid time");
-  await checkBadSearch({urlRegex: "["}, /Invalid urlRegex/, "query.urlRegexp is not a valid regular expression");
-  await checkBadSearch({filenameRegex: "["}, /Invalid filenameRegex/, "query.filenameRegexp is not a valid regular expression");
-  await checkBadSearch({orderBy: "startTime"}, /Expected array/, "query.orderBy is not an array");
-  await checkBadSearch({orderBy: ["bogus"]}, /Invalid orderBy field/, "query.orderBy references a non-existent field");
+  await checkBadSearch(
+    "myquery",
+    /Incorrect argument type/,
+    "query is not an object"
+  );
+  await checkBadSearch(
+    { bogus: "boo" },
+    /Unexpected property/,
+    "query contains an unknown field"
+  );
+  await checkBadSearch(
+    { query: "query string" },
+    /Expected array/,
+    "query.query is a string"
+  );
+  await checkBadSearch(
+    { startedBefore: "i am not a time" },
+    /Type error/,
+    "query.startedBefore is not a valid time"
+  );
+  await checkBadSearch(
+    { startedAfter: "i am not a time" },
+    /Type error/,
+    "query.startedAfter is not a valid time"
+  );
+  await checkBadSearch(
+    { endedBefore: "i am not a time" },
+    /Type error/,
+    "query.endedBefore is not a valid time"
+  );
+  await checkBadSearch(
+    { endedAfter: "i am not a time" },
+    /Type error/,
+    "query.endedAfter is not a valid time"
+  );
+  await checkBadSearch(
+    { urlRegex: "[" },
+    /Invalid urlRegex/,
+    "query.urlRegexp is not a valid regular expression"
+  );
+  await checkBadSearch(
+    { filenameRegex: "[" },
+    /Invalid filenameRegex/,
+    "query.filenameRegexp is not a valid regular expression"
+  );
+  await checkBadSearch(
+    { orderBy: "startTime" },
+    /Expected array/,
+    "query.orderBy is not an array"
+  );
+  await checkBadSearch(
+    { orderBy: ["bogus"] },
+    /Invalid orderBy field/,
+    "query.orderBy references a non-existent field"
+  );
 
   await extension.unload();
 });
+<<<<<<< HEAD
 
 // Test that downloads with totalBytes of -1 (ie, that have not yet started)
 // work properly.  See bug 1519762 for details of a past regression in
@@ -472,3 +769,61 @@ add_task(async function test_inprogress() {
   await extension.awaitFinish("done");
   await extension.unload();
 });
+||||||| merged common ancestors
+=======
+
+// Test that downloads with totalBytes of -1 (ie, that have not yet started)
+// work properly.  See bug 1519762 for details of a past regression in
+// this area.
+add_task(async function test_inprogress() {
+  let resume,
+    resumePromise = new Promise(resolve => {
+      resume = resolve;
+    });
+  server.registerPathHandler("/slow", async (request, response) => {
+    response.processAsync();
+    await resumePromise;
+    response.setHeader("Content-type", "text/plain");
+    response.write("");
+    response.finish();
+  });
+
+  let extension = ExtensionTestUtils.loadExtension({
+    manifest: {
+      permissions: ["downloads"],
+    },
+    background() {
+      browser.test.onMessage.addListener(async (msg, url) => {
+        let id = await browser.downloads.download({ url });
+        let full = await browser.downloads.search({ id });
+
+        browser.test.assertEq(
+          full.length,
+          1,
+          "Found new download in search results"
+        );
+        browser.test.assertEq(
+          full[0].totalBytes,
+          -1,
+          "New download still has totalBytes == -1"
+        );
+
+        browser.downloads.onChanged.addListener(info => {
+          if (info.id == id && info.state.current == "complete") {
+            browser.test.notifyPass("done");
+          }
+        });
+
+        browser.test.sendMessage("started");
+      });
+    },
+  });
+
+  await extension.startup();
+  extension.sendMessage("go", `${BASE}/slow`);
+  await extension.awaitMessage("started");
+  resume();
+  await extension.awaitFinish("done");
+  await extension.unload();
+});
+>>>>>>> upstream-releases

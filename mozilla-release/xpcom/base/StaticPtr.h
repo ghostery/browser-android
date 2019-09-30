@@ -42,16 +42,33 @@ class MOZ_ONLY_USED_TO_AVOID_STATIC_CONSTRUCTORS StaticAutoPtr {
   // by the compiler.  In non-debug builds, don't declare a constructor
   // so that the compiler can see that the constructor is trivial.
 #ifdef DEBUG
+<<<<<<< HEAD
   StaticAutoPtr() {
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     // False positive with gcc. See bug 1430729
 #endif
-    MOZ_ASSERT(!mRawPtr);
+||||||| merged common ancestors
+  StaticAutoPtr()
+  {
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+  // False positive with gcc. See bug 1430729
 #endif
+=======
+  StaticAutoPtr() {
+#  ifdef __GNUC__
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wuninitialized"
+    // False positive with gcc. See bug 1430729
+#  endif
+>>>>>>> upstream-releases
+    MOZ_ASSERT(!mRawPtr);
+#  ifdef __GNUC__
+#    pragma GCC diagnostic pop
+#  endif
   }
 #endif
 
@@ -103,16 +120,33 @@ class MOZ_ONLY_USED_TO_AVOID_STATIC_CONSTRUCTORS StaticRefPtr {
   // by the compiler.  In non-debug builds, don't declare a constructor
   // so that the compiler can see that the constructor is trivial.
 #ifdef DEBUG
+<<<<<<< HEAD
   StaticRefPtr() {
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
     // False positive with gcc. See bug 1430729
 #endif
-    MOZ_ASSERT(!mRawPtr);
+||||||| merged common ancestors
+  StaticRefPtr()
+  {
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+  // False positive with gcc. See bug 1430729
 #endif
+=======
+  StaticRefPtr() {
+#  ifdef __GNUC__
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wuninitialized"
+    // False positive with gcc. See bug 1430729
+#  endif
+>>>>>>> upstream-releases
+    MOZ_ASSERT(!mRawPtr);
+#  ifdef __GNUC__
+#    pragma GCC diagnostic pop
+#  endif
   }
 #endif
 

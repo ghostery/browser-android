@@ -14,6 +14,8 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/EndianUtils.h"
 
+#include <algorithm>
+
 #include "jstypes.h"
 #include "NamespaceImports.h"
 
@@ -38,6 +40,7 @@ typedef enum JSOp {
  * [SMDOC] Bytecode Format flags (JOF_*)
  */
 enum {
+<<<<<<< HEAD
   JOF_BYTE = 0,         /* single bytecode, no immediates */
   JOF_UINT8 = 1,        /* unspecified uint8_t argument */
   JOF_UINT16 = 2,       /* unspecified uint16_t argument */
@@ -77,6 +80,86 @@ enum {
   JOF_GNAME = 1 << 13,       /* predicted global name */
   JOF_TYPESET = 1 << 14,     /* has an entry in a script's type sets */
   JOF_IC = 1 << 15,          /* Baseline may use an IC for this op */
+||||||| merged common ancestors
+    JOF_BYTE            = 0,        /* single bytecode, no immediates */
+    JOF_JUMP            = 1,        /* signed 16-bit jump offset immediate */
+    JOF_ATOM            = 2,        /* unsigned 16-bit constant index */
+    JOF_UINT16          = 3,        /* unsigned 16-bit immediate operand */
+    JOF_TABLESWITCH     = 4,        /* table switch */
+    /* 5 is unused */
+    JOF_QARG            = 6,        /* quickened get/set function argument ops */
+    JOF_LOCAL           = 7,        /* var or block-local variable */
+    JOF_DOUBLE          = 8,        /* uint32_t index for double value */
+    JOF_UINT24          = 12,       /* extended unsigned 24-bit literal (index) */
+    JOF_UINT8           = 13,       /* uint8_t immediate, e.g. top 8 bits of 24-bit
+                                       atom index */
+    JOF_INT32           = 14,       /* int32_t immediate operand */
+    JOF_UINT32          = 15,       /* uint32_t immediate operand */
+    JOF_OBJECT          = 16,       /* unsigned 32-bit object index */
+    JOF_REGEXP          = 17,       /* unsigned 32-bit regexp index */
+    JOF_INT8            = 18,       /* int8_t immediate operand */
+    JOF_ATOMOBJECT      = 19,       /* uint16_t constant index + object index */
+    JOF_SCOPE           = 20,       /* unsigned 32-bit scope index */
+    JOF_ENVCOORD        = 21,       /* embedded ScopeCoordinate immediate */
+    JOF_TYPEMASK        = 0x001f,   /* mask for above immediate types */
+
+    JOF_NAME            = 1 << 5,   /* name operation */
+    JOF_PROP            = 2 << 5,   /* obj.prop operation */
+    JOF_ELEM            = 3 << 5,   /* obj[index] operation */
+    JOF_MODEMASK        = 3 << 5,   /* mask for above addressing modes */
+
+    JOF_PROPSET         = 1 << 7,   /* property/element/name set operation */
+    JOF_PROPINIT        = 1 << 8,   /* property/element/name init operation */
+    JOF_DETECTING       = 1 << 9,   /* object detection for warning-quelling */
+    JOF_CHECKSLOPPY     = 1 << 10,  /* Op can only be generated in sloppy mode */
+    JOF_CHECKSTRICT     = 1 << 11,  /* Op can only be generated in strict mode */
+    JOF_INVOKE          = 1 << 12,  /* JSOP_CALL, JSOP_FUNCALL, JSOP_FUNAPPLY,
+                                       JSOP_NEW, JSOP_EVAL, JSOP_CALLITER */
+    JOF_GNAME           = 1 << 13,  /* predicted global name */
+    JOF_TYPESET         = 1 << 14,  /* has an entry in a script's type sets */
+    JOF_ARITH           = 1 << 15   /* unary or binary arithmetic opcode */
+=======
+  JOF_BYTE = 0,         /* single bytecode, no immediates */
+  JOF_UINT8 = 1,        /* unspecified uint8_t argument */
+  JOF_UINT16 = 2,       /* unspecified uint16_t argument */
+  JOF_UINT24 = 3,       /* unspecified uint24_t argument */
+  JOF_UINT32 = 4,       /* unspecified uint32_t argument */
+  JOF_INT8 = 5,         /* int8_t literal */
+  JOF_INT32 = 6,        /* int32_t literal */
+  JOF_JUMP = 7,         /* int32_t jump offset */
+  JOF_TABLESWITCH = 8,  /* table switch */
+  JOF_ENVCOORD = 9,     /* embedded ScopeCoordinate immediate */
+  JOF_ARGC = 10,        /* uint16_t argument count */
+  JOF_QARG = 11,        /* function argument index */
+  JOF_LOCAL = 12,       /* var or block-local variable */
+  JOF_RESUMEINDEX = 13, /* yield, await, or gosub resume index */
+  JOF_ATOM = 14,        /* uint32_t constant index */
+  JOF_OBJECT = 15,      /* uint32_t object index */
+  JOF_REGEXP = 16,      /* uint32_t regexp index */
+  JOF_DOUBLE = 17,      /* inline DoubleValue */
+  JOF_SCOPE = 18,       /* uint32_t scope index */
+  JOF_CODE_OFFSET = 19, /* int32_t bytecode offset */
+  JOF_ICINDEX = 20,     /* uint32_t IC index */
+  JOF_LOOPENTRY = 21,   /* JSOP_LOOPENTRY, combines JOF_ICINDEX and JOF_UINT8 */
+  JOF_BIGINT = 22,      /* uint32_t index for BigInt value */
+  JOF_TYPEMASK = 0x001f, /* mask for above immediate types */
+
+  JOF_NAME = 1 << 5,     /* name operation */
+  JOF_PROP = 2 << 5,     /* obj.prop operation */
+  JOF_ELEM = 3 << 5,     /* obj[index] operation */
+  JOF_MODEMASK = 3 << 5, /* mask for above addressing modes */
+
+  JOF_PROPSET = 1 << 7,      /* property/element/name set operation */
+  JOF_PROPINIT = 1 << 8,     /* property/element/name init operation */
+  JOF_DETECTING = 1 << 9,    /* object detection for warning-quelling */
+  JOF_CHECKSLOPPY = 1 << 10, /* Op can only be generated in sloppy mode */
+  JOF_CHECKSTRICT = 1 << 11, /* Op can only be generated in strict mode */
+  JOF_INVOKE = 1 << 12,      /* JSOP_CALL, JSOP_FUNCALL, JSOP_FUNAPPLY,
+                                JSOP_NEW, JSOP_EVAL, JSOP_CALLITER */
+  JOF_GNAME = 1 << 13,       /* predicted global name */
+  JOF_TYPESET = 1 << 14,     /* has an entry in a script's type sets */
+  JOF_IC = 1 << 15,          /* Baseline may use an IC for this op */
+>>>>>>> upstream-releases
 };
 
 /* Shorthand for type from format. */
@@ -105,6 +188,7 @@ static inline jsbytecode UINT16_HI(uint16_t i) { return jsbytecode(i >> 8); }
 
 static inline jsbytecode UINT16_LO(uint16_t i) { return jsbytecode(i); }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE uint16_t GET_UINT16(const jsbytecode* pc) {
 #if MOZ_LITTLE_ENDIAN
   uint16_t result;
@@ -113,8 +197,26 @@ static MOZ_ALWAYS_INLINE uint16_t GET_UINT16(const jsbytecode* pc) {
 #else
   return uint16_t((pc[2] << 8) | pc[1]);
 #endif
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE uint16_t
+GET_UINT16(const jsbytecode* pc)
+{
+#if MOZ_LITTLE_ENDIAN
+    uint16_t result;
+    memcpy(&result, pc + 1, sizeof(result));
+    return result;
+#else
+    return uint16_t((pc[2] << 8) | pc[1]);
+#endif
+=======
+static MOZ_ALWAYS_INLINE uint16_t GET_UINT16(const jsbytecode* pc) {
+  uint16_t result;
+  mozilla::NativeEndian::copyAndSwapFromLittleEndian(&result, pc + 1, 1);
+  return result;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE void SET_UINT16(jsbytecode* pc, uint16_t i) {
 #if MOZ_LITTLE_ENDIAN
   memcpy(pc + 1, &i, sizeof(i));
@@ -122,6 +224,20 @@ static MOZ_ALWAYS_INLINE void SET_UINT16(jsbytecode* pc, uint16_t i) {
   pc[1] = UINT16_LO(i);
   pc[2] = UINT16_HI(i);
 #endif
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE void
+SET_UINT16(jsbytecode* pc, uint16_t i)
+{
+#if MOZ_LITTLE_ENDIAN
+    memcpy(pc + 1, &i, sizeof(i));
+#else
+    pc[1] = UINT16_LO(i);
+    pc[2] = UINT16_HI(i);
+#endif
+=======
+static MOZ_ALWAYS_INLINE void SET_UINT16(jsbytecode* pc, uint16_t i) {
+  mozilla::NativeEndian::copyAndSwapToLittleEndian(pc + 1, &i, 1);
+>>>>>>> upstream-releases
 }
 
 static const unsigned UINT16_LIMIT = 1 << 16;
@@ -139,7 +255,13 @@ static MOZ_ALWAYS_INLINE uint32_t GET_UINT24(const jsbytecode* pc) {
   memcpy(&result, pc, 4);
   return result >> 8;
 #else
+<<<<<<< HEAD
   return unsigned((pc[3] << 16) | (pc[2] << 8) | pc[1]);
+||||||| merged common ancestors
+    return unsigned((pc[3] << 16) | (pc[2] << 8) | pc[1]);
+=======
+  return uint32_t((pc[3] << 16) | (pc[2] << 8) | pc[1]);
+>>>>>>> upstream-releases
 #endif
 }
 
@@ -159,6 +281,7 @@ static MOZ_ALWAYS_INLINE int8_t GET_INT8(const jsbytecode* pc) {
   return int8_t(pc[1]);
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE uint32_t GET_UINT32(const jsbytecode* pc) {
 #if MOZ_LITTLE_ENDIAN
   uint32_t result;
@@ -168,8 +291,29 @@ static MOZ_ALWAYS_INLINE uint32_t GET_UINT32(const jsbytecode* pc) {
   return (uint32_t(pc[4]) << 24) | (uint32_t(pc[3]) << 16) |
          (uint32_t(pc[2]) << 8) | uint32_t(pc[1]);
 #endif
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE uint32_t
+GET_UINT32(const jsbytecode* pc)
+{
+#if MOZ_LITTLE_ENDIAN
+    uint32_t result;
+    memcpy(&result, pc + 1, sizeof(result));
+    return result;
+#else
+    return  (uint32_t(pc[4]) << 24) |
+            (uint32_t(pc[3]) << 16) |
+            (uint32_t(pc[2]) << 8)  |
+            uint32_t(pc[1]);
+#endif
+=======
+static MOZ_ALWAYS_INLINE uint32_t GET_UINT32(const jsbytecode* pc) {
+  uint32_t result;
+  mozilla::NativeEndian::copyAndSwapFromLittleEndian(&result, pc + 1, 1);
+  return result;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE void SET_UINT32(jsbytecode* pc, uint32_t u) {
 #if MOZ_LITTLE_ENDIAN
   memcpy(pc + 1, &u, sizeof(u));
@@ -179,34 +323,182 @@ static MOZ_ALWAYS_INLINE void SET_UINT32(jsbytecode* pc, uint32_t u) {
   pc[3] = jsbytecode(u >> 16);
   pc[4] = jsbytecode(u >> 24);
 #endif
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE void
+SET_UINT32(jsbytecode* pc, uint32_t u)
+{
+#if MOZ_LITTLE_ENDIAN
+    memcpy(pc + 1, &u, sizeof(u));
+#else
+    pc[1] = jsbytecode(u);
+    pc[2] = jsbytecode(u >> 8);
+    pc[3] = jsbytecode(u >> 16);
+    pc[4] = jsbytecode(u >> 24);
+#endif
+=======
+static MOZ_ALWAYS_INLINE void SET_UINT32(jsbytecode* pc, uint32_t u) {
+  mozilla::NativeEndian::copyAndSwapToLittleEndian(pc + 1, &u, 1);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE int32_t GET_INT32(const jsbytecode* pc) {
   return static_cast<int32_t>(GET_UINT32(pc));
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE int32_t
+GET_INT32(const jsbytecode* pc)
+{
+    return static_cast<int32_t>(GET_UINT32(pc));
+=======
+static MOZ_ALWAYS_INLINE JS::Value GET_INLINE_VALUE(const jsbytecode* pc) {
+  uint64_t raw;
+  mozilla::NativeEndian::copyAndSwapFromLittleEndian(&raw, pc + 1, 1);
+  return JS::Value::fromRawBits(raw);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static MOZ_ALWAYS_INLINE void SET_INT32(jsbytecode* pc, int32_t i) {
   SET_UINT32(pc, static_cast<uint32_t>(i));
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE void
+SET_INT32(jsbytecode* pc, int32_t i)
+{
+    SET_UINT32(pc, static_cast<uint32_t>(i));
+=======
+static MOZ_ALWAYS_INLINE void SET_INLINE_VALUE(jsbytecode* pc,
+                                               const JS::Value& v) {
+  uint64_t raw = v.asRawBits();
+  mozilla::NativeEndian::copyAndSwapToLittleEndian(pc + 1, &raw, 1);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+static MOZ_ALWAYS_INLINE int32_t GET_JUMP_OFFSET(jsbytecode* pc) {
+  return GET_INT32(pc);
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE int32_t
+GET_JUMP_OFFSET(jsbytecode* pc)
+{
+    return GET_INT32(pc);
+=======
+static MOZ_ALWAYS_INLINE int32_t GET_INT32(const jsbytecode* pc) {
+  return static_cast<int32_t>(GET_UINT32(pc));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+static MOZ_ALWAYS_INLINE void SET_JUMP_OFFSET(jsbytecode* pc, int32_t off) {
+  SET_INT32(pc, off);
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE void
+SET_JUMP_OFFSET(jsbytecode* pc, int32_t off)
+{
+    SET_INT32(pc, off);
+=======
+static MOZ_ALWAYS_INLINE void SET_INT32(jsbytecode* pc, int32_t i) {
+  SET_UINT32(pc, static_cast<uint32_t>(i));
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+static const unsigned UINT32_INDEX_LEN = 4;
+||||||| merged common ancestors
+static const unsigned UINT32_INDEX_LEN  = 4;
+=======
 static MOZ_ALWAYS_INLINE int32_t GET_JUMP_OFFSET(jsbytecode* pc) {
   return GET_INT32(pc);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static MOZ_ALWAYS_INLINE uint32_t GET_UINT32_INDEX(const jsbytecode* pc) {
+  return GET_UINT32(pc);
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE uint32_t
+GET_UINT32_INDEX(const jsbytecode* pc)
+{
+    return GET_UINT32(pc);
+=======
 static MOZ_ALWAYS_INLINE void SET_JUMP_OFFSET(jsbytecode* pc, int32_t off) {
+  SET_INT32(pc, off);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+static MOZ_ALWAYS_INLINE void SET_UINT32_INDEX(jsbytecode* pc, uint32_t index) {
+  SET_UINT32(pc, index);
+||||||| merged common ancestors
+static MOZ_ALWAYS_INLINE void
+SET_UINT32_INDEX(jsbytecode* pc, uint32_t index)
+{
+    SET_UINT32(pc, index);
+=======
+static MOZ_ALWAYS_INLINE int32_t GET_CODE_OFFSET(jsbytecode* pc) {
+  return GET_INT32(pc);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
+// Index limit is determined by SN_4BYTE_OFFSET_FLAG, see
+// frontend/BytecodeEmitter.h.
+static const unsigned INDEX_LIMIT_LOG2 = 31;
+static const uint32_t INDEX_LIMIT = uint32_t(1) << INDEX_LIMIT_LOG2;
+||||||| merged common ancestors
+/* Index limit is determined by SN_4BYTE_OFFSET_FLAG, see frontend/BytecodeEmitter.h. */
+static const unsigned INDEX_LIMIT_LOG2  = 31;
+static const uint32_t INDEX_LIMIT       = uint32_t(1) << INDEX_LIMIT_LOG2;
+=======
+static MOZ_ALWAYS_INLINE void SET_CODE_OFFSET(jsbytecode* pc, int32_t off) {
   SET_INT32(pc, off);
 }
 
 static const unsigned UINT32_INDEX_LEN = 4;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static inline jsbytecode ARGC_HI(uint16_t argc) { return UINT16_HI(argc); }
+
+static inline jsbytecode ARGC_LO(uint16_t argc) { return UINT16_LO(argc); }
+
+static inline uint16_t GET_ARGC(const jsbytecode* pc) { return GET_UINT16(pc); }
+
+static const unsigned ARGC_LIMIT = UINT16_LIMIT;
+||||||| merged common ancestors
+static inline jsbytecode
+ARGC_HI(uint16_t argc)
+{
+    return UINT16_HI(argc);
+}
+=======
 static MOZ_ALWAYS_INLINE uint32_t GET_UINT32_INDEX(const jsbytecode* pc) {
   return GET_UINT32(pc);
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static inline uint16_t GET_ARGNO(const jsbytecode* pc) {
+  return GET_UINT16(pc);
+||||||| merged common ancestors
+static inline jsbytecode
+ARGC_LO(uint16_t argc)
+{
+    return UINT16_LO(argc);
+=======
 static MOZ_ALWAYS_INLINE void SET_UINT32_INDEX(jsbytecode* pc, uint32_t index) {
   SET_UINT32(pc, index);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
+static inline void SET_ARGNO(jsbytecode* pc, uint16_t argno) {
+  SET_UINT16(pc, argno);
+||||||| merged common ancestors
+static inline uint16_t
+GET_ARGC(const jsbytecode* pc)
+{
+    return GET_UINT16(pc);
+=======
 // Index limit is determined by SN_4BYTE_OFFSET_FLAG, see
 // frontend/BytecodeEmitter.h.
 static const unsigned INDEX_LIMIT_LOG2 = 31;
@@ -226,6 +518,7 @@ static inline uint16_t GET_ARGNO(const jsbytecode* pc) {
 
 static inline void SET_ARGNO(jsbytecode* pc, uint16_t argno) {
   SET_UINT16(pc, argno);
+>>>>>>> upstream-releases
 }
 
 static const unsigned ARGNO_LEN = 2;
@@ -251,20 +544,70 @@ static inline void SET_RESUMEINDEX(jsbytecode* pc, uint32_t resumeIndex) {
   SET_UINT24(pc, resumeIndex);
 }
 
+<<<<<<< HEAD
 static inline unsigned LoopEntryDepthHint(jsbytecode* pc) {
   MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
   return GET_UINT8(pc) & 0x7f;
+||||||| merged common ancestors
+static const unsigned LOCALNO_LEN       = 3;
+static const unsigned LOCALNO_BITS      = 24;
+static const uint32_t LOCALNO_LIMIT     = 1 << LOCALNO_BITS;
+
+static inline unsigned
+LoopEntryDepthHint(jsbytecode* pc)
+{
+    MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
+    return GET_UINT8(pc) & 0x7f;
+=======
+static inline uint32_t GET_ICINDEX(const jsbytecode* pc) {
+  return GET_UINT32(pc);
 }
 
+static inline void SET_ICINDEX(jsbytecode* pc, uint32_t icIndex) {
+  SET_UINT32(pc, icIndex);
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 static inline bool LoopEntryCanIonOsr(jsbytecode* pc) {
   MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
   return GET_UINT8(pc) & 0x80;
+||||||| merged common ancestors
+static inline bool
+LoopEntryCanIonOsr(jsbytecode* pc)
+{
+    MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
+    return GET_UINT8(pc) & 0x80;
+=======
+static inline unsigned LoopEntryDepthHint(jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
+  return GET_UINT8(pc + 4) & 0x7f;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static inline uint8_t PackLoopEntryDepthHintAndFlags(unsigned loopDepth,
                                                      bool canIonOsr) {
   return (loopDepth < 0x80 ? uint8_t(loopDepth) : 0x7f) |
          (canIonOsr ? 0x80 : 0);
+||||||| merged common ancestors
+static inline uint8_t
+PackLoopEntryDepthHintAndFlags(unsigned loopDepth, bool canIonOsr)
+{
+    return (loopDepth < 0x80 ? uint8_t(loopDepth) : 0x7f) | (canIonOsr ? 0x80 : 0);
+=======
+static inline bool LoopEntryCanIonOsr(jsbytecode* pc) {
+  MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
+  return GET_UINT8(pc + 4) & 0x80;
+}
+
+static inline void SetLoopEntryDepthHintAndFlags(jsbytecode* pc,
+                                                 unsigned loopDepth,
+                                                 bool canIonOsr) {
+  MOZ_ASSERT(*pc == JSOP_LOOPENTRY);
+  uint8_t data = std::min(loopDepth, unsigned(0x7f)) | (canIonOsr ? 0x80 : 0);
+  SET_UINT8(pc + 4, data);
+>>>>>>> upstream-releases
 }
 
 /*
@@ -318,6 +661,7 @@ extern const char* const CodeName[];
 
 /* Shorthand for type from opcode. */
 
+<<<<<<< HEAD
 static inline uint32_t JOF_OPTYPE(JSOp op) {
   return JOF_TYPE(CodeSpec[op].format);
 }
@@ -392,6 +736,159 @@ MOZ_ALWAYS_INLINE unsigned StackDefs(jsbytecode* pc) {
   int ndefs = CodeSpec[*pc].ndefs;
   MOZ_ASSERT(ndefs >= 0);
   return ndefs;
+||||||| merged common ancestors
+static inline uint32_t
+JOF_OPTYPE(JSOp op)
+{
+    return JOF_TYPE(CodeSpec[op].format);
+}
+
+static inline bool
+IsJumpOpcode(JSOp op)
+{
+    uint32_t type = JOF_TYPE(CodeSpec[op].format);
+
+    /*
+     * LABEL opcodes have type JOF_JUMP but are no-ops, don't treat them as
+     * jumps to avoid degrading precision.
+     */
+    return type == JOF_JUMP && op != JSOP_LABEL;
+}
+
+static inline bool
+BytecodeFallsThrough(JSOp op)
+{
+    switch (op) {
+      case JSOP_GOTO:
+      case JSOP_DEFAULT:
+      case JSOP_RETURN:
+      case JSOP_RETRVAL:
+      case JSOP_FINALYIELDRVAL:
+      case JSOP_THROW:
+      case JSOP_THROWMSG:
+      case JSOP_TABLESWITCH:
+        return false;
+      case JSOP_GOSUB:
+        /* These fall through indirectly, after executing a 'finally'. */
+        return true;
+      default:
+        return true;
+    }
+}
+
+static inline bool
+BytecodeIsJumpTarget(JSOp op)
+{
+    switch (op) {
+      case JSOP_JUMPTARGET:
+      case JSOP_LOOPHEAD:
+      case JSOP_LOOPENTRY:
+      case JSOP_ENDITER:
+      case JSOP_TRY:
+        return true;
+      default:
+        return false;
+    }
+}
+
+MOZ_ALWAYS_INLINE unsigned
+StackUses(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    int nuses = CodeSpec[op].nuses;
+    if (nuses >= 0) {
+        return nuses;
+    }
+
+    MOZ_ASSERT(nuses == -1);
+    switch (op) {
+      case JSOP_POPN:
+        return GET_UINT16(pc);
+      case JSOP_NEW:
+      case JSOP_SUPERCALL:
+        return 2 + GET_ARGC(pc) + 1;
+      default:
+        /* stack: fun, this, [argc arguments] */
+        MOZ_ASSERT(op == JSOP_CALL || op == JSOP_CALL_IGNORES_RV || op == JSOP_EVAL ||
+                   op == JSOP_CALLITER ||
+                   op == JSOP_STRICTEVAL || op == JSOP_FUNCALL || op == JSOP_FUNAPPLY);
+        return 2 + GET_ARGC(pc);
+    }
+}
+
+MOZ_ALWAYS_INLINE unsigned
+StackDefs(jsbytecode* pc)
+{
+    int ndefs = CodeSpec[*pc].ndefs;
+    MOZ_ASSERT(ndefs >= 0);
+    return ndefs;
+=======
+static inline uint32_t JOF_OPTYPE(JSOp op) {
+  return JOF_TYPE(CodeSpec[op].format);
+}
+
+static inline bool IsJumpOpcode(JSOp op) { return JOF_OPTYPE(op) == JOF_JUMP; }
+
+static inline bool BytecodeFallsThrough(JSOp op) {
+  switch (op) {
+    case JSOP_GOTO:
+    case JSOP_DEFAULT:
+    case JSOP_RETURN:
+    case JSOP_RETRVAL:
+    case JSOP_FINALYIELDRVAL:
+    case JSOP_THROW:
+    case JSOP_THROWMSG:
+    case JSOP_TABLESWITCH:
+      return false;
+    case JSOP_GOSUB:
+      /* These fall through indirectly, after executing a 'finally'. */
+      return true;
+    default:
+      return true;
+  }
+}
+
+static inline bool BytecodeIsJumpTarget(JSOp op) {
+  switch (op) {
+    case JSOP_JUMPTARGET:
+    case JSOP_LOOPHEAD:
+    case JSOP_LOOPENTRY:
+    case JSOP_AFTERYIELD:
+      return true;
+    default:
+      return false;
+  }
+}
+
+MOZ_ALWAYS_INLINE unsigned StackUses(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  int nuses = CodeSpec[op].nuses;
+  if (nuses >= 0) {
+    return nuses;
+  }
+
+  MOZ_ASSERT(nuses == -1);
+  switch (op) {
+    case JSOP_POPN:
+      return GET_UINT16(pc);
+    case JSOP_NEW:
+    case JSOP_SUPERCALL:
+      return 2 + GET_ARGC(pc) + 1;
+    default:
+      /* stack: fun, this, [argc arguments] */
+      MOZ_ASSERT(op == JSOP_CALL || op == JSOP_CALL_IGNORES_RV ||
+                 op == JSOP_EVAL || op == JSOP_CALLITER ||
+                 op == JSOP_STRICTEVAL || op == JSOP_FUNCALL ||
+                 op == JSOP_FUNAPPLY);
+      return 2 + GET_ARGC(pc);
+  }
+}
+
+MOZ_ALWAYS_INLINE unsigned StackDefs(jsbytecode* pc) {
+  int ndefs = CodeSpec[*pc].ndefs;
+  MOZ_ASSERT(ndefs >= 0);
+  return ndefs;
+>>>>>>> upstream-releases
 }
 
 #if defined(DEBUG) || defined(JS_JITSPEW)
@@ -524,52 +1021,146 @@ inline bool IsEqualityOp(JSOp op) {
          op == JSOP_STRICTNE;
 }
 
+<<<<<<< HEAD
 inline bool IsCheckStrictOp(JSOp op) {
   return CodeSpec[op].format & JOF_CHECKSTRICT;
+||||||| merged common ancestors
+inline bool
+IsArgOp(JSOp op)
+{
+    return JOF_OPTYPE(op) == JOF_QARG;
+=======
+inline bool IsRelationalOp(JSOp op) {
+  return op == JSOP_LT || op == JSOP_LE || op == JSOP_GT || op == JSOP_GE;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 #ifdef DEBUG
 inline bool IsCheckSloppyOp(JSOp op) {
   return CodeSpec[op].format & JOF_CHECKSLOPPY;
+||||||| merged common ancestors
+inline bool
+IsLocalOp(JSOp op)
+{
+    return JOF_OPTYPE(op) == JOF_LOCAL;
+=======
+inline bool IsCheckStrictOp(JSOp op) {
+  return CodeSpec[op].format & JOF_CHECKSTRICT;
+>>>>>>> upstream-releases
 }
 #endif
 
+<<<<<<< HEAD
 inline bool IsAtomOp(JSOp op) { return JOF_OPTYPE(op) == JOF_ATOM; }
 
 inline bool IsGetPropPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_LENGTH || op == JSOP_GETPROP || op == JSOP_CALLPROP;
+||||||| merged common ancestors
+inline bool
+IsAliasedVarOp(JSOp op)
+{
+    return JOF_OPTYPE(op) == JOF_ENVCOORD;
+=======
+#ifdef DEBUG
+inline bool IsCheckSloppyOp(JSOp op) {
+  return CodeSpec[op].format & JOF_CHECKSLOPPY;
+>>>>>>> upstream-releases
 }
+#endif
 
+<<<<<<< HEAD
 inline bool IsHiddenInitOp(JSOp op) {
   return op == JSOP_INITHIDDENPROP || op == JSOP_INITHIDDENELEM ||
          op == JSOP_INITHIDDENPROP_GETTER || op == JSOP_INITHIDDENELEM_GETTER ||
          op == JSOP_INITHIDDENPROP_SETTER || op == JSOP_INITHIDDENELEM_SETTER;
+||||||| merged common ancestors
+inline bool
+IsGlobalOp(JSOp op)
+{
+    return CodeSpec[op].format & JOF_GNAME;
+=======
+inline bool IsAtomOp(JSOp op) { return JOF_OPTYPE(op) == JOF_ATOM; }
+
+inline bool IsGetPropPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_LENGTH || op == JSOP_GETPROP || op == JSOP_CALLPROP;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsStrictSetPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_STRICTSETPROP || op == JSOP_STRICTSETNAME ||
          op == JSOP_STRICTSETGNAME || op == JSOP_STRICTSETELEM;
+||||||| merged common ancestors
+inline bool
+IsPropertySetOp(JSOp op)
+{
+    return CodeSpec[op].format & JOF_PROPSET;
+=======
+inline bool IsHiddenInitOp(JSOp op) {
+  return op == JSOP_INITHIDDENPROP || op == JSOP_INITHIDDENELEM ||
+         op == JSOP_INITHIDDENPROP_GETTER || op == JSOP_INITHIDDENELEM_GETTER ||
+         op == JSOP_INITHIDDENPROP_SETTER || op == JSOP_INITHIDDENELEM_SETTER;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsSetPropPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_SETPROP || op == JSOP_STRICTSETPROP || op == JSOP_SETNAME ||
          op == JSOP_STRICTSETNAME || op == JSOP_SETGNAME ||
          op == JSOP_STRICTSETGNAME;
+||||||| merged common ancestors
+inline bool
+IsPropertyInitOp(JSOp op)
+{
+    return CodeSpec[op].format & JOF_PROPINIT;
+=======
+inline bool IsStrictSetPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_STRICTSETPROP || op == JSOP_STRICTSETNAME ||
+         op == JSOP_STRICTSETGNAME || op == JSOP_STRICTSETELEM;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsGetElemPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_GETELEM || op == JSOP_CALLELEM;
+||||||| merged common ancestors
+inline bool
+IsEqualityOp(JSOp op)
+{
+    return op == JSOP_EQ || op == JSOP_NE || op == JSOP_STRICTEQ || op == JSOP_STRICTNE;
+=======
+inline bool IsSetPropPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_SETPROP || op == JSOP_STRICTSETPROP || op == JSOP_SETNAME ||
+         op == JSOP_STRICTSETNAME || op == JSOP_SETGNAME ||
+         op == JSOP_STRICTSETGNAME;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsSetElemPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_SETELEM || op == JSOP_STRICTSETELEM;
+||||||| merged common ancestors
+inline bool
+IsCheckStrictOp(JSOp op)
+{
+    return CodeSpec[op].format & JOF_CHECKSTRICT;
+=======
+inline bool IsGetElemPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_GETELEM || op == JSOP_CALLELEM;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsElemPC(jsbytecode* pc) { return CodeSpec[*pc].format & JOF_ELEM; }
 
 inline bool IsCallOp(JSOp op) { return CodeSpec[op].format & JOF_INVOKE; }
@@ -579,8 +1170,20 @@ inline bool IsCallPC(jsbytecode* pc) { return IsCallOp(JSOp(*pc)); }
 inline bool IsStrictEvalPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_STRICTEVAL || op == JSOP_STRICTSPREADEVAL;
+||||||| merged common ancestors
+#ifdef DEBUG
+inline bool
+IsCheckSloppyOp(JSOp op)
+{
+    return CodeSpec[op].format & JOF_CHECKSLOPPY;
+=======
+inline bool IsSetElemPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_SETELEM || op == JSOP_STRICTSETELEM;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 inline bool IsConstructorCallPC(jsbytecode* pc) {
   JSOp op = JSOp(*pc);
   return op == JSOP_NEW || op == JSOP_SUPERCALL || op == JSOP_SPREADNEW ||
@@ -611,6 +1214,160 @@ static inline int32_t GetBytecodeInteger(jsbytecode* pc) {
     default:
       MOZ_CRASH("Bad op");
   }
+||||||| merged common ancestors
+inline bool
+IsAtomOp(JSOp op)
+{
+    return JOF_OPTYPE(op) == JOF_ATOM;
+}
+
+inline bool
+IsGetPropPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_LENGTH  || op == JSOP_GETPROP || op == JSOP_CALLPROP;
+}
+
+inline bool
+IsHiddenInitOp(JSOp op)
+{
+    return op == JSOP_INITHIDDENPROP || op == JSOP_INITHIDDENELEM ||
+           op == JSOP_INITHIDDENPROP_GETTER || op == JSOP_INITHIDDENELEM_GETTER ||
+           op == JSOP_INITHIDDENPROP_SETTER || op == JSOP_INITHIDDENELEM_SETTER;
+}
+
+inline bool
+IsStrictSetPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_STRICTSETPROP ||
+           op == JSOP_STRICTSETNAME ||
+           op == JSOP_STRICTSETGNAME ||
+           op == JSOP_STRICTSETELEM;
+}
+
+inline bool
+IsSetPropPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_SETPROP || op == JSOP_STRICTSETPROP ||
+           op == JSOP_SETNAME || op == JSOP_STRICTSETNAME ||
+           op == JSOP_SETGNAME || op == JSOP_STRICTSETGNAME;
+}
+
+inline bool
+IsGetElemPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_GETELEM || op == JSOP_CALLELEM;
+}
+
+inline bool
+IsSetElemPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_SETELEM ||
+           op == JSOP_STRICTSETELEM;
+}
+
+inline bool
+IsElemPC(jsbytecode* pc)
+{
+    return CodeSpec[*pc].format & JOF_ELEM;
+}
+
+inline bool
+IsCallPC(jsbytecode* pc)
+{
+    return CodeSpec[*pc].format & JOF_INVOKE;
+}
+
+inline bool
+IsStrictEvalPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_STRICTEVAL || op == JSOP_STRICTSPREADEVAL;
+}
+
+inline bool
+IsConstructorCallPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_NEW ||
+           op == JSOP_SUPERCALL ||
+           op == JSOP_SPREADNEW ||
+           op == JSOP_SPREADSUPERCALL;
+}
+
+inline bool
+IsSpreadCallPC(jsbytecode* pc)
+{
+    JSOp op = JSOp(*pc);
+    return op == JSOP_SPREADCALL ||
+           op == JSOP_SPREADNEW ||
+           op == JSOP_SPREADSUPERCALL ||
+           op == JSOP_SPREADEVAL ||
+           op == JSOP_STRICTSPREADEVAL;
+}
+
+static inline int32_t
+GetBytecodeInteger(jsbytecode* pc)
+{
+    switch (JSOp(*pc)) {
+      case JSOP_ZERO:   return 0;
+      case JSOP_ONE:    return 1;
+      case JSOP_UINT16: return GET_UINT16(pc);
+      case JSOP_UINT24: return GET_UINT24(pc);
+      case JSOP_INT8:   return GET_INT8(pc);
+      case JSOP_INT32:  return GET_INT32(pc);
+      default:
+        MOZ_CRASH("Bad op");
+    }
+=======
+inline bool IsElemPC(jsbytecode* pc) { return CodeSpec[*pc].format & JOF_ELEM; }
+
+inline bool IsCallOp(JSOp op) { return CodeSpec[op].format & JOF_INVOKE; }
+
+inline bool IsCallPC(jsbytecode* pc) { return IsCallOp(JSOp(*pc)); }
+
+inline bool IsStrictEvalPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_STRICTEVAL || op == JSOP_STRICTSPREADEVAL;
+}
+
+inline bool IsConstructorCallOp(JSOp op) {
+  return op == JSOP_NEW || op == JSOP_SUPERCALL || op == JSOP_SPREADNEW ||
+         op == JSOP_SPREADSUPERCALL;
+}
+inline bool IsConstructorCallPC(const jsbytecode* pc) {
+  return IsConstructorCallOp(JSOp(*pc));
+}
+
+inline bool IsSpreadCallPC(jsbytecode* pc) {
+  JSOp op = JSOp(*pc);
+  return op == JSOP_SPREADCALL || op == JSOP_SPREADNEW ||
+         op == JSOP_SPREADSUPERCALL || op == JSOP_SPREADEVAL ||
+         op == JSOP_STRICTSPREADEVAL;
+}
+
+static inline int32_t GetBytecodeInteger(jsbytecode* pc) {
+  switch (JSOp(*pc)) {
+    case JSOP_ZERO:
+      return 0;
+    case JSOP_ONE:
+      return 1;
+    case JSOP_UINT16:
+      return GET_UINT16(pc);
+    case JSOP_UINT24:
+      return GET_UINT24(pc);
+    case JSOP_INT8:
+      return GET_INT8(pc);
+    case JSOP_INT32:
+      return GET_INT32(pc);
+    default:
+      MOZ_CRASH("Bad op");
+  }
+>>>>>>> upstream-releases
 }
 
 inline bool BytecodeOpHasIC(JSOp op) { return CodeSpec[op].format & JOF_IC; }

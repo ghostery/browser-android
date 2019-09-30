@@ -3,6 +3,12 @@
 
 "use strict";
 
+/* import-globals-from helper-collapsibilities.js */
+Services.scriptloader.loadSubScript(
+  CHROME_URL_ROOT + "helper-collapsibilities.js",
+  this
+);
+
 /**
  * Test that collapsibilities of DebugTargetPane on RuntimePage by mouse clicking.
  */
@@ -10,7 +16,8 @@
 add_task(async function() {
   prepareCollapsibilitiesTest();
 
-  const { document, tab } = await openAboutDebugging();
+  const { document, tab, window } = await openAboutDebugging();
+  await selectThisFirefoxPage(document, window.AboutDebugging.store);
 
   for (const { title } of TARGET_PANES) {
     info("Check whether this pane is collapsed after clicking the title");
@@ -25,6 +32,7 @@ add_task(async function() {
   await removeTab(tab);
 });
 
+<<<<<<< HEAD
 async function assertDebugTargetCollapsed(paneEl, title) {
   info("Check debug target is collapsed");
 
@@ -48,4 +56,47 @@ async function assertDebugTargetExpanded(paneEl, title) {
   // check title
   const titleEl = paneEl.querySelector(".js-debug-target-pane-title");
   is(titleEl.textContent, title, "Expanded title is correct");
+||||||| merged common ancestors
+function assertCollapsibility(debugTargetPaneEl, title, shouldCollapsed) {
+  info("Check height of list");
+  const listEl = debugTargetPaneEl.querySelector(".js-debug-target-list");
+  const assertHeight = shouldCollapsed ? is : isnot;
+  assertHeight(listEl.clientHeight, 0, "Height of list element should correct");
+
+  info("Check content of title");
+  const titleEl = debugTargetPaneEl.querySelector(".js-debug-target-pane-title");
+  const expectedTitle =
+    shouldCollapsed
+      ? `${ title }(${ listEl.querySelectorAll(".js-debug-target-item").length })`
+      : title;
+  is(titleEl.textContent, expectedTitle, "Title should correct");
+=======
+async function assertDebugTargetCollapsed(paneEl, title) {
+  info("Check debug target is collapsed");
+
+  // check list height
+  const targetEl = paneEl.querySelector(".qa-debug-target-pane__collapsable");
+  is(targetEl.clientHeight, 0, "Height of list element is zero");
+  // check title
+  const titleEl = paneEl.querySelector(".qa-debug-target-pane-title");
+  const expectedTitle = `${title} (${
+    targetEl.querySelectorAll(".qa-debug-target-item").length
+  })`;
+  is(titleEl.textContent, expectedTitle, "Collapsed title is correct");
+}
+
+async function assertDebugTargetExpanded(paneEl, title) {
+  info("Check debug target is expanded");
+
+  // check list height
+  const targetEl = paneEl.querySelector(".qa-debug-target-pane__collapsable");
+  await waitUntil(() => targetEl.clientHeight > 0);
+  ok(true, "Height of list element is greater than zero");
+  // check title
+  const titleEl = paneEl.querySelector(".qa-debug-target-pane-title");
+  const expectedTitle = `${title} (${
+    targetEl.querySelectorAll(".qa-debug-target-item").length
+  })`;
+  is(titleEl.textContent, expectedTitle, "Expanded title is correct");
+>>>>>>> upstream-releases
 }

@@ -14,8 +14,19 @@ namespace dom {
 
 class MessagePortService;
 
+<<<<<<< HEAD
 class MessagePortParent final : public PMessagePortParent {
  public:
+||||||| merged common ancestors
+class MessagePortParent final : public PMessagePortParent
+{
+public:
+=======
+class MessagePortParent final : public PMessagePortParent {
+  friend class PMessagePortParent;
+
+ public:
+>>>>>>> upstream-releases
   explicit MessagePortParent(const nsID& aUUID);
   ~MessagePortParent();
 
@@ -33,16 +44,34 @@ class MessagePortParent final : public PMessagePortParent {
   static bool ForceClose(const nsID& aUUID, const nsID& aDestinationUUID,
                          const uint32_t& aSequenceID);
 
+<<<<<<< HEAD
  private:
   virtual mozilla::ipc::IPCResult RecvPostMessages(
       nsTArray<ClonedMessageData>&& aMessages) override;
+||||||| merged common ancestors
+private:
+  virtual mozilla::ipc::IPCResult RecvPostMessages(nsTArray<ClonedMessageData>&& aMessages)
+                                                                       override;
+=======
+ private:
+  mozilla::ipc::IPCResult RecvPostMessages(
+      nsTArray<ClonedMessageData>&& aMessages);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvDisentangle(
       nsTArray<ClonedMessageData>&& aMessages) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult RecvDisentangle(nsTArray<ClonedMessageData>&& aMessages)
+                                                                       override;
+=======
+  mozilla::ipc::IPCResult RecvDisentangle(
+      nsTArray<ClonedMessageData>&& aMessages);
+>>>>>>> upstream-releases
 
-  virtual mozilla::ipc::IPCResult RecvStopSendingData() override;
+  mozilla::ipc::IPCResult RecvStopSendingData();
 
-  virtual mozilla::ipc::IPCResult RecvClose() override;
+  mozilla::ipc::IPCResult RecvClose();
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
 

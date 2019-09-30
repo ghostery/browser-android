@@ -11,6 +11,8 @@
 
 namespace js {
 
+// [SMDOC] Receiver Guard
+//
 // A ReceiverGuard encapsulates the information about an object that needs to
 // be tested to determine if it has the same 'structure' as another object.
 // The guard includes the shape and/or group of the object, and which of these
@@ -29,38 +31,119 @@ namespace js {
 //   All typed objects with the same group have the same class, prototype, and
 //   own properties.
 //
-// UnboxedPlainObject: The structure of an unboxed plain object is determined
-//   by its group and its expando object's shape, if there is one. All unboxed
-//   plain objects with the same group and expando shape have the same
-//   properties except those stored in the expando's dense elements.
-
+// In all cases, a ReceiverGuard has *either* a shape or a group active, and
+// never both.
 class HeapReceiverGuard;
 
+<<<<<<< HEAD
 class ReceiverGuard {
  public:
   ObjectGroup* group;
   Shape* shape;
+||||||| merged common ancestors
+class ReceiverGuard
+{
+  public:
+    ObjectGroup* group;
+    Shape* shape;
+=======
+class ReceiverGuard {
+  ObjectGroup* group_;
+  Shape* shape_;
 
-  ReceiverGuard() : group(nullptr), shape(nullptr) {}
-
-  inline MOZ_IMPLICIT ReceiverGuard(const HeapReceiverGuard& guard);
-
-  explicit MOZ_ALWAYS_INLINE ReceiverGuard(JSObject* obj);
-  MOZ_ALWAYS_INLINE ReceiverGuard(ObjectGroup* group, Shape* shape);
-
-  bool operator==(const ReceiverGuard& other) const {
-    return group == other.group && shape == other.shape;
+  void MOZ_ALWAYS_INLINE assertInvariants() {
+    // Only one of group_ or shape_ may be active at a time.
+    MOZ_ASSERT_IF(group_ || shape_, !!group_ != !!shape_);
   }
 
+ public:
+  ReceiverGuard() : group_(nullptr), shape_(nullptr) {}
+
+  inline MOZ_IMPLICIT ReceiverGuard(const HeapReceiverGuard& guard);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ReceiverGuard() : group(nullptr), shape(nullptr) {}
+||||||| merged common ancestors
+    ReceiverGuard()
+      : group(nullptr), shape(nullptr)
+    {}
+=======
+  explicit MOZ_ALWAYS_INLINE ReceiverGuard(JSObject* obj);
+  MOZ_ALWAYS_INLINE ReceiverGuard(ObjectGroup* group, Shape* shape);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  inline MOZ_IMPLICIT ReceiverGuard(const HeapReceiverGuard& guard);
+||||||| merged common ancestors
+    inline MOZ_IMPLICIT ReceiverGuard(const HeapReceiverGuard& guard);
+=======
+  bool operator==(const ReceiverGuard& other) const {
+    return group_ == other.group_ && shape_ == other.shape_;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  explicit MOZ_ALWAYS_INLINE ReceiverGuard(JSObject* obj);
+  MOZ_ALWAYS_INLINE ReceiverGuard(ObjectGroup* group, Shape* shape);
+||||||| merged common ancestors
+    explicit MOZ_ALWAYS_INLINE ReceiverGuard(JSObject* obj);
+    MOZ_ALWAYS_INLINE ReceiverGuard(ObjectGroup* group, Shape* shape);
+=======
   bool operator!=(const ReceiverGuard& other) const {
     return !(*this == other);
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool operator==(const ReceiverGuard& other) const {
+    return group == other.group && shape == other.shape;
+  }
+||||||| merged common ancestors
+    bool operator ==(const ReceiverGuard& other) const {
+        return group == other.group && shape == other.shape;
+    }
+=======
+  uintptr_t hash() const {
+    return (uintptr_t(group_) >> 3) ^ (uintptr_t(shape_) >> 3);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  bool operator!=(const ReceiverGuard& other) const {
+    return !(*this == other);
+  }
+||||||| merged common ancestors
+    bool operator !=(const ReceiverGuard& other) const {
+        return !(*this == other);
+    }
+=======
+  void setShape(Shape* shape) {
+    shape_ = shape;
+    assertInvariants();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   uintptr_t hash() const {
     return (uintptr_t(group) >> 3) ^ (uintptr_t(shape) >> 3);
   }
+||||||| merged common ancestors
+    uintptr_t hash() const {
+        return (uintptr_t(group) >> 3) ^ (uintptr_t(shape) >> 3);
+    }
+=======
+  void setGroup(ObjectGroup* group) {
+    group_ = group;
+    assertInvariants();
+  }
+
+  Shape* getShape() const { return shape_; }
+  ObjectGroup* getGroup() const { return group_; }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class HeapReceiverGuard {
   GCPtrObjectGroup group_;
   GCPtrShape shape_;
@@ -78,10 +161,64 @@ class HeapReceiverGuard {
 
   Shape* shape() const { return shape_; }
   ObjectGroup* group() const { return group_; }
+||||||| merged common ancestors
+class HeapReceiverGuard
+{
+    GCPtrObjectGroup group_;
+    GCPtrShape shape_;
+
+  public:
+    explicit HeapReceiverGuard(const ReceiverGuard& guard)
+      : group_(guard.group), shape_(guard.shape)
+    {}
+
+    void init(const ReceiverGuard& other) {
+        group_.init(other.group);
+        shape_.init(other.shape);
+    }
+
+    void trace(JSTracer* trc);
+
+    Shape* shape() const {
+        return shape_;
+    }
+    ObjectGroup* group() const {
+        return group_;
+    }
+=======
+// Heap storage for ReceiverGuards.
+//
+// This is a storage only class -- all computation is actually
+// done by converting this back to a RecieverGuard, hence why
+// there are no accessors.
+class HeapReceiverGuard {
+  friend class ReceiverGuard;
+
+  GCPtrObjectGroup group_;
+  GCPtrShape shape_;
+
+ public:
+  explicit HeapReceiverGuard(const ReceiverGuard& guard)
+      : group_(guard.getGroup()), shape_(guard.getShape()) {}
+
+  void trace(JSTracer* trc);
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 inline ReceiverGuard::ReceiverGuard(const HeapReceiverGuard& guard)
     : group(guard.group()), shape(guard.shape()) {}
+||||||| merged common ancestors
+inline
+ReceiverGuard::ReceiverGuard(const HeapReceiverGuard& guard)
+  : group(guard.group()), shape(guard.shape())
+{}
+=======
+inline ReceiverGuard::ReceiverGuard(const HeapReceiverGuard& guard)
+    : group_(guard.group_), shape_(guard.shape_) {
+  assertInvariants();
+}
+>>>>>>> upstream-releases
 
 }  // namespace js
 

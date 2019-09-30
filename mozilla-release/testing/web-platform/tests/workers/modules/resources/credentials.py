@@ -5,6 +5,10 @@ def main(request, response):
                         ("Access-Control-Allow-Origin", request.headers.get("Origin")),
                         ("Access-Control-Allow-Credentials", "true")]
 
+    origin = request.headers.get("Origin", None)
+    if origin:
+        response_headers.append(("Access-Control-Allow-Origin", origin))
+
     cookie_value = '';
     if cookie:
         cookie_value = cookie.value;

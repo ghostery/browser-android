@@ -15,8 +15,8 @@
 #include "nsFrameSelection.h"
 
 #include "nsIAccessibleTypes.h"
-#include "nsIDocument.h"
-#include "nsIPresShell.h"
+#include "mozilla/PresShell.h"
+#include "mozilla/dom/Document.h"
 #include "mozilla/dom/Selection.h"
 #include "mozilla/dom/Element.h"
 
@@ -79,7 +79,15 @@ void SelectionManager::SetControlSelectionListener(dom::Element* aFocusedElm) {
   mCurrCtrlSpellSel = spellSel;
 }
 
+<<<<<<< HEAD
 void SelectionManager::AddDocSelectionListener(nsIPresShell* aPresShell) {
+||||||| merged common ancestors
+void
+SelectionManager::AddDocSelectionListener(nsIPresShell* aPresShell)
+{
+=======
+void SelectionManager::AddDocSelectionListener(PresShell* aPresShell) {
+>>>>>>> upstream-releases
   const nsFrameSelection* frameSel = aPresShell->ConstFrameSelection();
 
   // Register 'this' as selection listener for the normal selection.
@@ -91,7 +99,15 @@ void SelectionManager::AddDocSelectionListener(nsIPresShell* aPresShell) {
   spellSel->AddSelectionListener(this);
 }
 
+<<<<<<< HEAD
 void SelectionManager::RemoveDocSelectionListener(nsIPresShell* aPresShell) {
+||||||| merged common ancestors
+void
+SelectionManager::RemoveDocSelectionListener(nsIPresShell* aPresShell)
+{
+=======
+void SelectionManager::RemoveDocSelectionListener(PresShell* aPresShell) {
+>>>>>>> upstream-releases
   const nsFrameSelection* frameSel = aPresShell->ConstFrameSelection();
 
   // Remove 'this' registered as selection listener for the normal selection.
@@ -138,7 +154,7 @@ void SelectionManager::ProcessTextSelChangeEvent(AccEvent* aEvent) {
 }
 
 NS_IMETHODIMP
-SelectionManager::NotifySelectionChanged(nsIDocument* aDocument,
+SelectionManager::NotifySelectionChanged(dom::Document* aDocument,
                                          Selection* aSelection,
                                          int16_t aReason) {
   if (NS_WARN_IF(!aDocument) || NS_WARN_IF(!aSelection)) {

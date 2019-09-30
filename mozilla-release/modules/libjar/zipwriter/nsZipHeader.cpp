@@ -25,36 +25,81 @@ using namespace mozilla;
  */
 NS_IMPL_ISUPPORTS(nsZipHeader, nsIZipEntry)
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetCompression(uint16_t *aCompression) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetCompression(uint16_t *aCompression)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetCompression(uint16_t* aCompression) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   *aCompression = mMethod;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetSize(uint32_t *aSize) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetSize(uint32_t *aSize)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetSize(uint32_t* aSize) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   *aSize = mCSize;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetRealSize(uint32_t *aRealSize) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetRealSize(uint32_t *aRealSize)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetRealSize(uint32_t* aRealSize) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   *aRealSize = mUSize;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetCRC32(uint32_t *aCRC32) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetCRC32(uint32_t *aCRC32)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetCRC32(uint32_t* aCRC32) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   *aCRC32 = mCRC;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetIsDirectory(bool *aIsDirectory) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetIsDirectory(bool *aIsDirectory)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetIsDirectory(bool* aIsDirectory) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   if (mName.Last() == '/')
     *aIsDirectory = true;
@@ -63,6 +108,7 @@ NS_IMETHODIMP nsZipHeader::GetIsDirectory(bool *aIsDirectory) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetLastModifiedTime(PRTime *aLastModifiedTime) {
   NS_ASSERTION(mInited, "Not initalised");
 
@@ -77,6 +123,39 @@ NS_IMETHODIMP nsZipHeader::GetLastModifiedTime(PRTime *aLastModifiedTime) {
     if (flags & ZIP_EXTENDED_TIMESTAMP_MODTIME) {
       *aLastModifiedTime = (PRTime)(READ32(tsField, &pos)) * PR_USEC_PER_SEC;
       return NS_OK;
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetLastModifiedTime(PRTime *aLastModifiedTime)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+
+    // Try to read timestamp from extra field
+    uint16_t blocksize;
+    const uint8_t *tsField = GetExtraField(ZIP_EXTENDED_TIMESTAMP_FIELD, false, &blocksize);
+    if (tsField && blocksize >= 5) {
+        uint32_t pos = 4;
+        uint8_t flags;
+        flags = READ8(tsField, &pos);
+        if (flags & ZIP_EXTENDED_TIMESTAMP_MODTIME) {
+            *aLastModifiedTime = (PRTime)(READ32(tsField, &pos))
+                                 * PR_USEC_PER_SEC;
+            return NS_OK;
+        }
+=======
+NS_IMETHODIMP nsZipHeader::GetLastModifiedTime(PRTime* aLastModifiedTime) {
+  NS_ASSERTION(mInited, "Not initalised");
+
+  // Try to read timestamp from extra field
+  uint16_t blocksize;
+  const uint8_t* tsField =
+      GetExtraField(ZIP_EXTENDED_TIMESTAMP_FIELD, false, &blocksize);
+  if (tsField && blocksize >= 5) {
+    uint32_t pos = 4;
+    uint8_t flags;
+    flags = READ8(tsField, &pos);
+    if (flags & ZIP_EXTENDED_TIMESTAMP_MODTIME) {
+      *aLastModifiedTime = (PRTime)(READ32(tsField, &pos)) * PR_USEC_PER_SEC;
+      return NS_OK;
+>>>>>>> upstream-releases
     }
   }
 
@@ -108,15 +187,33 @@ NS_IMETHODIMP nsZipHeader::GetLastModifiedTime(PRTime *aLastModifiedTime) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetIsSynthetic(bool *aIsSynthetic) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetIsSynthetic(bool *aIsSynthetic)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetIsSynthetic(bool* aIsSynthetic) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   *aIsSynthetic = false;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsZipHeader::GetPermissions(uint32_t *aPermissions) {
   NS_ASSERTION(mInited, "Not initalised");
+||||||| merged common ancestors
+NS_IMETHODIMP nsZipHeader::GetPermissions(uint32_t *aPermissions)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+=======
+NS_IMETHODIMP nsZipHeader::GetPermissions(uint32_t* aPermissions) {
+  NS_ASSERTION(mInited, "Not initalised");
+>>>>>>> upstream-releases
 
   // Always give user read access at least, this matches nsIZipReader's
   // behaviour
@@ -124,9 +221,20 @@ NS_IMETHODIMP nsZipHeader::GetPermissions(uint32_t *aPermissions) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void nsZipHeader::Init(const nsACString &aPath, PRTime aDate, uint32_t aAttr,
                        uint32_t aOffset) {
   NS_ASSERTION(!mInited, "Already initalised");
+||||||| merged common ancestors
+void nsZipHeader::Init(const nsACString & aPath, PRTime aDate, uint32_t aAttr,
+                       uint32_t aOffset)
+{
+    NS_ASSERTION(!mInited, "Already initalised");
+=======
+void nsZipHeader::Init(const nsACString& aPath, PRTime aDate, uint32_t aAttr,
+                       uint32_t aOffset) {
+  NS_ASSERTION(!mInited, "Already initalised");
+>>>>>>> upstream-releases
 
   PRExplodedTime time;
   PR_ExplodeTime(aDate, PR_LocalTimeParameters, &time);
@@ -169,6 +277,7 @@ uint32_t nsZipHeader::GetFileHeaderLength() {
   return ZIP_FILE_HEADER_SIZE + mName.Length() + mLocalFieldLength;
 }
 
+<<<<<<< HEAD
 nsresult nsZipHeader::WriteFileHeader(nsIOutputStream *aStream) {
   NS_ASSERTION(mInited, "Not initalised");
 
@@ -195,6 +304,57 @@ nsresult nsZipHeader::WriteFileHeader(nsIOutputStream *aStream) {
   if (mLocalFieldLength) {
     rv = ZW_WriteData(aStream, (const char *)mLocalExtraField.get(),
                       mLocalFieldLength);
+||||||| merged common ancestors
+nsresult nsZipHeader::WriteFileHeader(nsIOutputStream *aStream)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+
+    uint8_t buf[ZIP_FILE_HEADER_SIZE];
+    uint32_t pos = 0;
+    WRITE32(buf, &pos, ZIP_FILE_HEADER_SIGNATURE);
+    WRITE16(buf, &pos, mVersionNeeded);
+    WRITE16(buf, &pos, mFlags);
+    WRITE16(buf, &pos, mMethod);
+    WRITE16(buf, &pos, mTime);
+    WRITE16(buf, &pos, mDate);
+    WRITE32(buf, &pos, mCRC);
+    WRITE32(buf, &pos, mCSize);
+    WRITE32(buf, &pos, mUSize);
+    WRITE16(buf, &pos, mName.Length());
+    WRITE16(buf, &pos, mLocalFieldLength);
+
+    nsresult rv = ZW_WriteData(aStream, (const char *)buf, pos);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    rv = ZW_WriteData(aStream, mName.get(), mName.Length());
+=======
+nsresult nsZipHeader::WriteFileHeader(nsIOutputStream* aStream) {
+  NS_ASSERTION(mInited, "Not initalised");
+
+  uint8_t buf[ZIP_FILE_HEADER_SIZE];
+  uint32_t pos = 0;
+  WRITE32(buf, &pos, ZIP_FILE_HEADER_SIGNATURE);
+  WRITE16(buf, &pos, mVersionNeeded);
+  WRITE16(buf, &pos, mFlags);
+  WRITE16(buf, &pos, mMethod);
+  WRITE16(buf, &pos, mTime);
+  WRITE16(buf, &pos, mDate);
+  WRITE32(buf, &pos, mCRC);
+  WRITE32(buf, &pos, mCSize);
+  WRITE32(buf, &pos, mUSize);
+  WRITE16(buf, &pos, mName.Length());
+  WRITE16(buf, &pos, mLocalFieldLength);
+
+  nsresult rv = ZW_WriteData(aStream, (const char*)buf, pos);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = ZW_WriteData(aStream, mName.get(), mName.Length());
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  if (mLocalFieldLength) {
+    rv = ZW_WriteData(aStream, (const char*)mLocalExtraField.get(),
+                      mLocalFieldLength);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -206,6 +366,7 @@ uint32_t nsZipHeader::GetCDSHeaderLength() {
          mFieldLength;
 }
 
+<<<<<<< HEAD
 nsresult nsZipHeader::WriteCDSHeader(nsIOutputStream *aStream) {
   NS_ASSERTION(mInited, "Not initalised");
 
@@ -236,11 +397,73 @@ nsresult nsZipHeader::WriteCDSHeader(nsIOutputStream *aStream) {
   NS_ENSURE_SUCCESS(rv, rv);
   if (mExtraField) {
     rv = ZW_WriteData(aStream, (const char *)mExtraField.get(), mFieldLength);
+||||||| merged common ancestors
+nsresult nsZipHeader::WriteCDSHeader(nsIOutputStream *aStream)
+{
+    NS_ASSERTION(mInited, "Not initalised");
+
+    uint8_t buf[ZIP_CDS_HEADER_SIZE];
+    uint32_t pos = 0;
+    WRITE32(buf, &pos, ZIP_CDS_HEADER_SIGNATURE);
+    WRITE16(buf, &pos, mVersionMade);
+    WRITE16(buf, &pos, mVersionNeeded);
+    WRITE16(buf, &pos, mFlags);
+    WRITE16(buf, &pos, mMethod);
+    WRITE16(buf, &pos, mTime);
+    WRITE16(buf, &pos, mDate);
+    WRITE32(buf, &pos, mCRC);
+    WRITE32(buf, &pos, mCSize);
+    WRITE32(buf, &pos, mUSize);
+    WRITE16(buf, &pos, mName.Length());
+    WRITE16(buf, &pos, mFieldLength);
+    WRITE16(buf, &pos, mComment.Length());
+    WRITE16(buf, &pos, mDisk);
+    WRITE16(buf, &pos, mIAttr);
+    WRITE32(buf, &pos, mEAttr);
+    WRITE32(buf, &pos, mOffset);
+
+    nsresult rv = ZW_WriteData(aStream, (const char *)buf, pos);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    rv = ZW_WriteData(aStream, mName.get(), mName.Length());
+=======
+nsresult nsZipHeader::WriteCDSHeader(nsIOutputStream* aStream) {
+  NS_ASSERTION(mInited, "Not initalised");
+
+  uint8_t buf[ZIP_CDS_HEADER_SIZE];
+  uint32_t pos = 0;
+  WRITE32(buf, &pos, ZIP_CDS_HEADER_SIGNATURE);
+  WRITE16(buf, &pos, mVersionMade);
+  WRITE16(buf, &pos, mVersionNeeded);
+  WRITE16(buf, &pos, mFlags);
+  WRITE16(buf, &pos, mMethod);
+  WRITE16(buf, &pos, mTime);
+  WRITE16(buf, &pos, mDate);
+  WRITE32(buf, &pos, mCRC);
+  WRITE32(buf, &pos, mCSize);
+  WRITE32(buf, &pos, mUSize);
+  WRITE16(buf, &pos, mName.Length());
+  WRITE16(buf, &pos, mFieldLength);
+  WRITE16(buf, &pos, mComment.Length());
+  WRITE16(buf, &pos, mDisk);
+  WRITE16(buf, &pos, mIAttr);
+  WRITE32(buf, &pos, mEAttr);
+  WRITE32(buf, &pos, mOffset);
+
+  nsresult rv = ZW_WriteData(aStream, (const char*)buf, pos);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = ZW_WriteData(aStream, mName.get(), mName.Length());
+  NS_ENSURE_SUCCESS(rv, rv);
+  if (mExtraField) {
+    rv = ZW_WriteData(aStream, (const char*)mExtraField.get(), mFieldLength);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
   }
   return ZW_WriteData(aStream, mComment.get(), mComment.Length());
 }
 
+<<<<<<< HEAD
 nsresult nsZipHeader::ReadCDSHeader(nsIInputStream *stream) {
   NS_ASSERTION(!mInited, "Already initalised");
 
@@ -274,17 +497,108 @@ nsresult nsZipHeader::ReadCDSHeader(nsIInputStream *stream) {
     auto field = MakeUnique<char[]>(namelength);
     NS_ENSURE_TRUE(field, NS_ERROR_OUT_OF_MEMORY);
     rv = ZW_ReadData(stream, field.get(), namelength);
+||||||| merged common ancestors
+nsresult nsZipHeader::ReadCDSHeader(nsIInputStream *stream)
+{
+    NS_ASSERTION(!mInited, "Already initalised");
+
+    uint8_t buf[ZIP_CDS_HEADER_SIZE];
+
+    nsresult rv = ZW_ReadData(stream, (char *)buf, ZIP_CDS_HEADER_SIZE);
+=======
+nsresult nsZipHeader::ReadCDSHeader(nsIInputStream* stream) {
+  NS_ASSERTION(!mInited, "Already initalised");
+
+  uint8_t buf[ZIP_CDS_HEADER_SIZE];
+
+  nsresult rv = ZW_ReadData(stream, (char*)buf, ZIP_CDS_HEADER_SIZE);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  uint32_t pos = 0;
+  uint32_t signature = READ32(buf, &pos);
+  if (signature != ZIP_CDS_HEADER_SIGNATURE) return NS_ERROR_FILE_CORRUPTED;
+
+  mVersionMade = READ16(buf, &pos);
+  mVersionNeeded = READ16(buf, &pos);
+  mFlags = READ16(buf, &pos);
+  mMethod = READ16(buf, &pos);
+  mTime = READ16(buf, &pos);
+  mDate = READ16(buf, &pos);
+  mCRC = READ32(buf, &pos);
+  mCSize = READ32(buf, &pos);
+  mUSize = READ32(buf, &pos);
+  uint16_t namelength = READ16(buf, &pos);
+  mFieldLength = READ16(buf, &pos);
+  uint16_t commentlength = READ16(buf, &pos);
+  mDisk = READ16(buf, &pos);
+  mIAttr = READ16(buf, &pos);
+  mEAttr = READ32(buf, &pos);
+  mOffset = READ32(buf, &pos);
+
+  if (namelength > 0) {
+    auto field = MakeUnique<char[]>(namelength);
+    NS_ENSURE_TRUE(field, NS_ERROR_OUT_OF_MEMORY);
+    rv = ZW_ReadData(stream, field.get(), namelength);
+>>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     mName.Assign(field.get(), namelength);
   } else
     mName = NS_LITERAL_CSTRING("");
 
+<<<<<<< HEAD
   if (mFieldLength > 0) {
     mExtraField = MakeUnique<uint8_t[]>(mFieldLength);
     NS_ENSURE_TRUE(mExtraField, NS_ERROR_OUT_OF_MEMORY);
     rv = ZW_ReadData(stream, (char *)mExtraField.get(), mFieldLength);
     NS_ENSURE_SUCCESS(rv, rv);
   }
+||||||| merged common ancestors
+    uint32_t pos = 0;
+    uint32_t signature = READ32(buf, &pos);
+    if (signature != ZIP_CDS_HEADER_SIGNATURE)
+        return NS_ERROR_FILE_CORRUPTED;
+
+    mVersionMade = READ16(buf, &pos);
+    mVersionNeeded = READ16(buf, &pos);
+    mFlags = READ16(buf, &pos);
+    mMethod = READ16(buf, &pos);
+    mTime = READ16(buf, &pos);
+    mDate = READ16(buf, &pos);
+    mCRC = READ32(buf, &pos);
+    mCSize = READ32(buf, &pos);
+    mUSize = READ32(buf, &pos);
+    uint16_t namelength = READ16(buf, &pos);
+    mFieldLength = READ16(buf, &pos);
+    uint16_t commentlength = READ16(buf, &pos);
+    mDisk = READ16(buf, &pos);
+    mIAttr = READ16(buf, &pos);
+    mEAttr = READ32(buf, &pos);
+    mOffset = READ32(buf, &pos);
+
+    if (namelength > 0) {
+        auto field = MakeUnique<char[]>(namelength);
+        NS_ENSURE_TRUE(field, NS_ERROR_OUT_OF_MEMORY);
+        rv = ZW_ReadData(stream, field.get(), namelength);
+        NS_ENSURE_SUCCESS(rv, rv);
+        mName.Assign(field.get(), namelength);
+    }
+    else
+        mName = NS_LITERAL_CSTRING("");
+
+    if (mFieldLength > 0) {
+        mExtraField = MakeUnique<uint8_t[]>(mFieldLength);
+        NS_ENSURE_TRUE(mExtraField, NS_ERROR_OUT_OF_MEMORY);
+        rv = ZW_ReadData(stream, (char *)mExtraField.get(), mFieldLength);
+        NS_ENSURE_SUCCESS(rv, rv);
+    }
+=======
+  if (mFieldLength > 0) {
+    mExtraField = MakeUnique<uint8_t[]>(mFieldLength);
+    NS_ENSURE_TRUE(mExtraField, NS_ERROR_OUT_OF_MEMORY);
+    rv = ZW_ReadData(stream, (char*)mExtraField.get(), mFieldLength);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+>>>>>>> upstream-releases
 
   if (commentlength > 0) {
     auto field = MakeUnique<char[]>(commentlength);
@@ -299,12 +613,32 @@ nsresult nsZipHeader::ReadCDSHeader(nsIInputStream *stream) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 const uint8_t *nsZipHeader::GetExtraField(uint16_t aTag, bool aLocal,
                                           uint16_t *aBlockSize) {
   const uint8_t *buf = aLocal ? mLocalExtraField.get() : mExtraField.get();
   uint32_t buflen = aLocal ? mLocalFieldLength : mFieldLength;
   uint32_t pos = 0;
   uint16_t tag, blocksize;
+||||||| merged common ancestors
+const uint8_t * nsZipHeader::GetExtraField(uint16_t aTag, bool aLocal, uint16_t *aBlockSize)
+{
+    const uint8_t *buf = aLocal ? mLocalExtraField.get() : mExtraField.get();
+    uint32_t buflen = aLocal ? mLocalFieldLength : mFieldLength;
+    uint32_t pos = 0;
+    uint16_t tag, blocksize;
+
+    while (buf && (pos + 4) <= buflen) {
+      tag = READ16(buf, &pos);
+      blocksize = READ16(buf, &pos);
+=======
+const uint8_t* nsZipHeader::GetExtraField(uint16_t aTag, bool aLocal,
+                                          uint16_t* aBlockSize) {
+  const uint8_t* buf = aLocal ? mLocalExtraField.get() : mExtraField.get();
+  uint32_t buflen = aLocal ? mLocalFieldLength : mFieldLength;
+  uint32_t pos = 0;
+  uint16_t tag, blocksize;
+>>>>>>> upstream-releases
 
   while (buf && (pos + 4) <= buflen) {
     tag = READ16(buf, &pos);

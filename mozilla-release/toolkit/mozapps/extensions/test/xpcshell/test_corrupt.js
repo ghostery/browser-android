@@ -4,9 +4,14 @@
 
 // Checks that we rebuild something sensible from a corrupt database
 
-
 // Create and configure the HTTP server.
+<<<<<<< HEAD
 var testserver = createHttpServer({hosts: ["example.com"]});
+||||||| merged common ancestors
+var testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
+=======
+var testserver = createHttpServer({ hosts: ["example.com"] });
+>>>>>>> upstream-releases
 
 // register files with server
 testserver.registerDirectory("/data/", do_get_file("data"));
@@ -61,7 +66,12 @@ const ADDONS = {
   "addon5@tests.mozilla.org": {
     manifest: {
       name: "Test 5",
+<<<<<<< HEAD
       applications: {gecko: {id: "addon5@tests.mozilla.org"}},
+||||||| merged common ancestors
+=======
+      applications: { gecko: { id: "addon5@tests.mozilla.org" } },
+>>>>>>> upstream-releases
     },
     desiredState: {
       isActive: true,
@@ -74,7 +84,17 @@ const ADDONS = {
   "addon7@tests.mozilla.org": {
     manifest: {
       name: "Test 7",
+<<<<<<< HEAD
       applications: { gecko: {id: "addon7@tests.mozilla.org"}},
+||||||| merged common ancestors
+      targetApplications: [{
+        id: "xpcshell@tests.mozilla.org",
+        minVersion: "2",
+        maxVersion: "2",
+      }],
+=======
+      applications: { gecko: { id: "addon7@tests.mozilla.org" } },
+>>>>>>> upstream-releases
     },
     initialState: {
       userDisabled: true,
@@ -136,8 +156,10 @@ const IDS = Object.keys(ADDONS);
 
 function promiseUpdates(addon) {
   return new Promise(resolve => {
-    addon.findUpdates({onUpdateFinished: resolve},
-                      AddonManager.UPDATE_WHEN_PERIODIC_UPDATE);
+    addon.findUpdates(
+      { onUpdateFinished: resolve },
+      AddonManager.UPDATE_WHEN_PERIODIC_UPDATE
+    );
   });
 }
 
@@ -145,8 +167,20 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "2", "2");
 
   for (let addon of Object.values(ADDONS)) {
+<<<<<<< HEAD
     let webext = createTempWebExtensionFile({manifest: addon.manifest});
     await AddonTestUtils.manuallyInstall(webext);
+||||||| merged common ancestors
+    if (addon["install.rdf"]) {
+      await promiseWriteInstallRDFForExtension(addon["install.rdf"], profileDir);
+    } else {
+      let webext = createTempWebExtensionFile({manifest: addon.manifest});
+      await AddonTestUtils.manuallyInstall(webext);
+    }
+=======
+    let webext = createTempWebExtensionFile({ manifest: addon.manifest });
+    await AddonTestUtils.manuallyInstall(webext);
+>>>>>>> upstream-releases
   }
 
   await promiseStartupManager();
@@ -183,13 +217,8 @@ add_task(async function test_after_corruption() {
 
   await promiseStartupManager();
 
-  await new Promise(resolve => {
-    Services.obs.addObserver(function listener() {
-      Services.obs.removeObserver(listener, "xpi-database-loaded");
-      resolve();
-    }, "xpi-database-loaded");
-    Services.obs.notifyObservers(null, "sessionstore-windows-restored");
-  });
+  Services.obs.notifyObservers(null, "sessionstore-windows-restored");
+  await AddonManagerPrivate.databaseReady;
 
   // Accessing the add-ons should open and recover the database
   info("Test add-on state after corruption");

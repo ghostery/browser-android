@@ -9,11 +9,12 @@
 #include "nsHttp.h"
 #include "mozilla/net/NeckoChild.h"
 #include "mozilla/dom/ContentChild.h"
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/net/HttpChannelChild.h"
 #include "mozilla/net/CookieServiceChild.h"
-#include "mozilla/net/WyciwygChannelChild.h"
 #include "mozilla/net/FTPChannelChild.h"
+#include "mozilla/net/DataChannelChild.h"
+#include "mozilla/net/FileChannelChild.h"
 #include "mozilla/net/WebSocketChannelChild.h"
 #include "mozilla/net/WebSocketEventListenerChild.h"
 #include "mozilla/net/DNSRequestChild.h"
@@ -23,10 +24,18 @@
 #include "mozilla/dom/network/TCPServerSocketChild.h"
 #include "mozilla/dom/network/UDPSocketChild.h"
 #include "mozilla/net/AltDataOutputStreamChild.h"
-#include "mozilla/net/TrackingDummyChannelChild.h"
+#include "mozilla/net/ClassifierDummyChannelChild.h"
+#include "mozilla/net/SocketProcessBridgeChild.h"
 #ifdef MOZ_WEBRTC
+<<<<<<< HEAD
 #include "mozilla/net/StunAddrsRequestChild.h"
 #include "mozilla/net/WebrtcProxyChannelChild.h"
+||||||| merged common ancestors
+#include "mozilla/net/StunAddrsRequestChild.h"
+=======
+#  include "mozilla/net/StunAddrsRequestChild.h"
+#  include "mozilla/net/WebrtcProxyChannelChild.h"
+>>>>>>> upstream-releases
 #endif
 
 #include "SerializedLoadContext.h"
@@ -35,10 +44,10 @@
 #include "nsINetworkPredictor.h"
 #include "nsINetworkPredictorVerifier.h"
 #include "nsINetworkLinkService.h"
-#include "nsIRedirectProcessChooser.h"
 #include "nsQueryObject.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "nsNetUtil.h"
+#include "SimpleChannel.h"
 
 using mozilla::dom::TCPServerSocketChild;
 using mozilla::dom::TCPSocketChild;
@@ -68,6 +77,7 @@ void NeckoChild::InitNeckoChild() {
     }
     gNeckoChild = cpc->SendPNeckoConstructor();
     NS_ASSERTION(gNeckoChild, "PNecko Protocol init failed!");
+    SocketProcessBridgeChild::GetSocketProcessBridge();
   }
 }
 
@@ -86,7 +96,7 @@ bool NeckoChild::DeallocPHttpChannelChild(PHttpChannelChild* channel) {
   MOZ_ASSERT(IsNeckoChild(), "DeallocPHttpChannelChild called by non-child!");
 
   HttpChannelChild* child = static_cast<HttpChannelChild*>(channel);
-  child->ReleaseIPDLReference();
+  child->Release();
   return true;
 }
 
@@ -107,6 +117,7 @@ bool NeckoChild::DeallocPStunAddrsRequestChild(PStunAddrsRequestChild* aActor) {
   return true;
 }
 
+<<<<<<< HEAD
 PWebrtcProxyChannelChild* NeckoChild::AllocPWebrtcProxyChannelChild(
     const PBrowserOrId& browser) {
   // We don't allocate here: instead we always use IPDL constructor that takes
@@ -130,6 +141,38 @@ bool NeckoChild::DeallocPWebrtcProxyChannelChild(
 PAltDataOutputStreamChild* NeckoChild::AllocPAltDataOutputStreamChild(
     const nsCString& type, const int64_t& predictedSize,
     PHttpChannelChild* channel) {
+||||||| merged common ancestors
+PAltDataOutputStreamChild*
+NeckoChild::AllocPAltDataOutputStreamChild(
+        const nsCString& type,
+        const int64_t& predictedSize,
+        PHttpChannelChild* channel)
+{
+=======
+PWebrtcProxyChannelChild* NeckoChild::AllocPWebrtcProxyChannelChild(
+    const TabId& tabId) {
+  // We don't allocate here: instead we always use IPDL constructor that takes
+  // an existing object
+  MOZ_ASSERT_UNREACHABLE(
+      "AllocPWebrtcProxyChannelChild should not be called on"
+      " child");
+  return nullptr;
+}
+
+bool NeckoChild::DeallocPWebrtcProxyChannelChild(
+    PWebrtcProxyChannelChild* aActor) {
+#ifdef MOZ_WEBRTC
+  WebrtcProxyChannelChild* child =
+      static_cast<WebrtcProxyChannelChild*>(aActor);
+  child->ReleaseIPDLReference();
+#endif
+  return true;
+}
+
+PAltDataOutputStreamChild* NeckoChild::AllocPAltDataOutputStreamChild(
+    const nsCString& type, const int64_t& predictedSize,
+    PHttpChannelChild* channel) {
+>>>>>>> upstream-releases
   // We don't allocate here: see HttpChannelChild::OpenAlternativeOutputStream()
   MOZ_ASSERT_UNREACHABLE("AllocPAltDataOutputStreamChild should not be called");
   return nullptr;
@@ -174,6 +217,7 @@ bool NeckoChild::DeallocPCookieServiceChild(PCookieServiceChild* cs) {
   return true;
 }
 
+<<<<<<< HEAD
 PWyciwygChannelChild* NeckoChild::AllocPWyciwygChannelChild() {
   // We don't allocate here: see nsWyciwygProtocolHandler::NewChannel2()
   MOZ_ASSERT_UNREACHABLE("AllocPWyciwygChannelChild should not be called");
@@ -192,6 +236,35 @@ bool NeckoChild::DeallocPWyciwygChannelChild(PWyciwygChannelChild* channel) {
 PWebSocketChild* NeckoChild::AllocPWebSocketChild(
     const PBrowserOrId& browser, const SerializedLoadContext& aSerialized,
     const uint32_t& aSerial) {
+||||||| merged common ancestors
+PWyciwygChannelChild*
+NeckoChild::AllocPWyciwygChannelChild()
+{
+  // We don't allocate here: see nsWyciwygProtocolHandler::NewChannel2()
+  MOZ_ASSERT_UNREACHABLE("AllocPWyciwygChannelChild should not be called");
+  return nullptr;
+}
+
+bool
+NeckoChild::DeallocPWyciwygChannelChild(PWyciwygChannelChild* channel)
+{
+  MOZ_ASSERT(IsNeckoChild(), "DeallocPWyciwygChannelChild called by non-child!");
+
+  WyciwygChannelChild *p = static_cast<WyciwygChannelChild*>(channel);
+  p->ReleaseIPDLReference();
+  return true;
+}
+
+PWebSocketChild*
+NeckoChild::AllocPWebSocketChild(const PBrowserOrId& browser,
+                                 const SerializedLoadContext& aSerialized,
+                                 const uint32_t& aSerial)
+{
+=======
+PWebSocketChild* NeckoChild::AllocPWebSocketChild(
+    const PBrowserOrId& browser, const SerializedLoadContext& aSerialized,
+    const uint32_t& aSerial) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("AllocPWebSocketChild should not be called");
   return nullptr;
 }
@@ -234,8 +307,18 @@ PDataChannelChild* NeckoChild::AllocPDataChannelChild(
   return nullptr;
 }
 
+<<<<<<< HEAD
 bool NeckoChild::DeallocPDataChannelChild(PDataChannelChild* child) {
   // NB: See DataChannelChild::ActorDestroy.
+||||||| merged common ancestors
+bool
+NeckoChild::DeallocPDataChannelChild(PDataChannelChild* child)
+{
+  // NB: See DataChannelChild::ActorDestroy.
+=======
+bool NeckoChild::DeallocPDataChannelChild(PDataChannelChild* child) {
+  static_cast<DataChannelChild*>(child)->Release();
+>>>>>>> upstream-releases
   return true;
 }
 
@@ -245,8 +328,18 @@ PFileChannelChild* NeckoChild::AllocPFileChannelChild(
   return nullptr;
 }
 
+<<<<<<< HEAD
 bool NeckoChild::DeallocPFileChannelChild(PFileChannelChild* child) {
   // NB: See FileChannelChild::ActorDestroy.
+||||||| merged common ancestors
+bool
+NeckoChild::DeallocPFileChannelChild(PFileChannelChild* child)
+{
+  // NB: See FileChannelChild::ActorDestroy.
+=======
+bool NeckoChild::DeallocPFileChannelChild(PFileChannelChild* child) {
+  static_cast<FileChannelChild*>(child)->Release();
+>>>>>>> upstream-releases
   return true;
 }
 
@@ -256,8 +349,18 @@ PSimpleChannelChild* NeckoChild::AllocPSimpleChannelChild(
   return nullptr;
 }
 
+<<<<<<< HEAD
 bool NeckoChild::DeallocPSimpleChannelChild(PSimpleChannelChild* child) {
   // NB: See SimpleChannelChild::ActorDestroy.
+||||||| merged common ancestors
+bool
+NeckoChild::DeallocPSimpleChannelChild(PSimpleChannelChild* child)
+{
+  // NB: See SimpleChannelChild::ActorDestroy.
+=======
+bool NeckoChild::DeallocPSimpleChannelChild(PSimpleChannelChild* child) {
+  static_cast<SimpleChannelChild*>(child)->Release();
+>>>>>>> upstream-releases
   return true;
 }
 
@@ -287,8 +390,18 @@ bool NeckoChild::DeallocPTCPServerSocketChild(PTCPServerSocketChild* child) {
   return true;
 }
 
+<<<<<<< HEAD
 PUDPSocketChild* NeckoChild::AllocPUDPSocketChild(const Principal& aPrincipal,
                                                   const nsCString& aFilter) {
+||||||| merged common ancestors
+PUDPSocketChild*
+NeckoChild::AllocPUDPSocketChild(const Principal& aPrincipal,
+                                 const nsCString& aFilter)
+{
+=======
+PUDPSocketChild* NeckoChild::AllocPUDPSocketChild(nsIPrincipal* aPrincipal,
+                                                  const nsCString& aFilter) {
+>>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("AllocPUDPSocket should not be called");
   return nullptr;
 }
@@ -338,6 +451,7 @@ bool NeckoChild::DeallocPTransportProviderChild(
   return true;
 }
 
+<<<<<<< HEAD
 mozilla::ipc::IPCResult NeckoChild::RecvCrossProcessRedirect(
     const uint32_t& aRegistrarId, nsIURI* aURI, const uint32_t& aNewLoadFlags,
     const OptionalLoadInfoArgs& aLoadInfo, const uint64_t& aChannelId,
@@ -403,10 +517,95 @@ mozilla::ipc::IPCResult NeckoChild::RecvAsyncAuthPromptForNestedFrame(
     const uint64_t& aCallbackId) {
   RefPtr<dom::TabChild> tabChild = dom::TabChild::FindTabChild(aNestedFrameId);
   if (!tabChild) {
+||||||| merged common ancestors
+mozilla::ipc::IPCResult
+NeckoChild::RecvCrossProcessRedirect(
+            const uint32_t& aRegistrarId,
+            nsIURI* aURI,
+            const uint32_t& aNewLoadFlags,
+            const OptionalLoadInfoArgs& aLoadInfo,
+            const uint64_t& aChannelId,
+            nsIURI* aOriginalURI,
+            const uint64_t& aIdentifier)
+{
+  nsCOMPtr<nsILoadInfo> loadInfo;
+  nsresult rv = ipc::LoadInfoArgsToLoadInfo(aLoadInfo, getter_AddRefs(loadInfo));
+  if (NS_FAILED(rv)) {
+    MOZ_DIAGNOSTIC_ASSERT(false, "LoadInfoArgsToLoadInfo failed");
+    return IPC_OK();
+  }
+
+  nsCOMPtr<nsIChannel> newChannel;
+  rv = NS_NewChannelInternal(getter_AddRefs(newChannel),
+                             aURI,
+                             loadInfo,
+                             nullptr, // PerformanceStorage
+                             nullptr, // aLoadGroup
+                             nullptr, // aCallbacks
+                             aNewLoadFlags);
+
+  // We are sure this is a HttpChannelChild because the parent
+  // is always a HTTP channel.
+  RefPtr<HttpChannelChild> httpChild = do_QueryObject(newChannel);
+  if (NS_FAILED(rv) || !httpChild) {
+    MOZ_DIAGNOSTIC_ASSERT(false, "NS_NewChannelInternal failed");
+    return IPC_OK();
+  }
+
+  // This is used to report any errors back to the parent by calling
+  // CrossProcessRedirectFinished.
+  auto scopeExit = MakeScopeExit([&]() {
+    httpChild->CrossProcessRedirectFinished(rv);
+  });
+
+  rv = httpChild->SetChannelId(aChannelId);
+  if (NS_FAILED(rv)) {
+    return IPC_OK();
+  }
+
+  rv = httpChild->SetOriginalURI(aOriginalURI);
+  if (NS_FAILED(rv)) {
+    return IPC_OK();
+  }
+
+  // connect parent.
+  rv = httpChild->ConnectParent(aRegistrarId); // creates parent channel
+  if (NS_FAILED(rv)) {
+    return IPC_OK();
+  }
+
+  nsCOMPtr<nsIChildProcessChannelListener> processListener =
+      do_GetClassObject("@mozilla.org/network/childProcessChannelListener");
+  // The listener will call completeRedirectSetup on the channel.
+  rv = processListener->OnChannelReady(httpChild, aIdentifier);
+  if (NS_FAILED(rv)) {
+    return IPC_OK();
+  }
+
+  // scopeExit will call CrossProcessRedirectFinished(rv) here
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult
+NeckoChild::RecvAsyncAuthPromptForNestedFrame(const TabId& aNestedFrameId,
+                                              const nsCString& aUri,
+                                              const nsString& aRealm,
+                                              const uint64_t& aCallbackId)
+{
+  RefPtr<dom::TabChild> tabChild = dom::TabChild::FindTabChild(aNestedFrameId);
+  if (!tabChild) {
+=======
+mozilla::ipc::IPCResult NeckoChild::RecvAsyncAuthPromptForNestedFrame(
+    const TabId& aNestedFrameId, const nsCString& aUri, const nsString& aRealm,
+    const uint64_t& aCallbackId) {
+  RefPtr<dom::BrowserChild> browserChild =
+      dom::BrowserChild::FindBrowserChild(aNestedFrameId);
+  if (!browserChild) {
+>>>>>>> upstream-releases
     MOZ_CRASH();
     return IPC_FAIL_NO_REASON(this);
   }
-  tabChild->SendAsyncAuthPrompt(aUri, aRealm, aCallbackId);
+  browserChild->SendAsyncAuthPrompt(aUri, aRealm, aCallbackId);
   return IPC_OK();
 }
 
@@ -484,15 +683,41 @@ mozilla::ipc::IPCResult NeckoChild::RecvNetworkChangeNotification(
   return IPC_OK();
 }
 
+<<<<<<< HEAD
 PTrackingDummyChannelChild* NeckoChild::AllocPTrackingDummyChannelChild(
     nsIURI* aURI, nsIURI* aTopWindowURI, const nsresult& aTopWindowURIResult,
     const OptionalLoadInfoArgs& aLoadInfo) {
   return new TrackingDummyChannelChild();
+||||||| merged common ancestors
+PTrackingDummyChannelChild*
+NeckoChild::AllocPTrackingDummyChannelChild(nsIURI* aURI,
+                                            nsIURI* aTopWindowURI,
+                                            const nsresult& aTopWindowURIResult,
+                                            const OptionalLoadInfoArgs& aLoadInfo)
+{
+  return new TrackingDummyChannelChild();
+=======
+PClassifierDummyChannelChild* NeckoChild::AllocPClassifierDummyChannelChild(
+    nsIURI* aURI, nsIURI* aTopWindowURI, const nsresult& aTopWindowURIResult,
+    const Maybe<LoadInfoArgs>& aLoadInfo) {
+  return new ClassifierDummyChannelChild();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool NeckoChild::DeallocPTrackingDummyChannelChild(
     PTrackingDummyChannelChild* aActor) {
   delete static_cast<TrackingDummyChannelChild*>(aActor);
+||||||| merged common ancestors
+bool
+NeckoChild::DeallocPTrackingDummyChannelChild(PTrackingDummyChannelChild* aActor)
+{
+  delete static_cast<TrackingDummyChannelChild*>(aActor);
+=======
+bool NeckoChild::DeallocPClassifierDummyChannelChild(
+    PClassifierDummyChannelChild* aActor) {
+  delete static_cast<ClassifierDummyChannelChild*>(aActor);
+>>>>>>> upstream-releases
   return true;
 }
 

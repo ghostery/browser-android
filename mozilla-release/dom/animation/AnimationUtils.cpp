@@ -6,21 +6,46 @@
 
 #include "AnimationUtils.h"
 
+#include "mozilla/dom/Document.h"
+#include "mozilla/dom/KeyframeEffect.h"
+#include "mozilla/EffectSet.h"
+#include "mozilla/Preferences.h"
 #include "nsDebug.h"
 #include "nsAtom.h"
 #include "nsIContent.h"
-#include "nsIDocument.h"
 #include "nsGlobalWindow.h"
 #include "nsString.h"
+<<<<<<< HEAD
 #include "xpcpublic.h"  // For xpc::NativeGlobal
 #include "mozilla/EffectSet.h"
 #include "mozilla/dom/KeyframeEffect.h"
 #include "mozilla/Preferences.h"
+||||||| merged common ancestors
+#include "xpcpublic.h" // For xpc::NativeGlobal
+#include "mozilla/EffectSet.h"
+#include "mozilla/dom/KeyframeEffect.h"
+#include "mozilla/Preferences.h"
+=======
+#include "xpcpublic.h"  // For xpc::NativeGlobal
+
+using namespace mozilla::dom;
+>>>>>>> upstream-releases
 
 namespace mozilla {
 
+<<<<<<< HEAD
 /* static */ void AnimationUtils::LogAsyncAnimationFailure(
     nsCString& aMessage, const nsIContent* aContent) {
+||||||| merged common ancestors
+/* static */ void
+AnimationUtils::LogAsyncAnimationFailure(nsCString& aMessage,
+                                         const nsIContent* aContent)
+{
+=======
+/* static */
+void AnimationUtils::LogAsyncAnimationFailure(nsCString& aMessage,
+                                              const nsIContent* aContent) {
+>>>>>>> upstream-releases
   if (aContent) {
     aMessage.AppendLiteral(" [");
     aMessage.Append(nsAtomCString(aContent->NodeInfo()->NameAtom()));
@@ -37,8 +62,17 @@ namespace mozilla {
   printf_stderr("%s", aMessage.get());
 }
 
+<<<<<<< HEAD
 /* static */ nsIDocument* AnimationUtils::GetCurrentRealmDocument(
     JSContext* aCx) {
+||||||| merged common ancestors
+/* static */ nsIDocument*
+AnimationUtils::GetCurrentRealmDocument(JSContext* aCx)
+{
+=======
+/* static */
+Document* AnimationUtils::GetCurrentRealmDocument(JSContext* aCx) {
+>>>>>>> upstream-releases
   nsGlobalWindowInner* win = xpc::CurrentWindowOrNull(aCx);
   if (!win) {
     return nullptr;
@@ -46,8 +80,17 @@ namespace mozilla {
   return win->GetDoc();
 }
 
+<<<<<<< HEAD
 /* static */ nsIDocument* AnimationUtils::GetDocumentFromGlobal(
     JSObject* aGlobalObject) {
+||||||| merged common ancestors
+/* static */ nsIDocument*
+AnimationUtils::GetDocumentFromGlobal(JSObject* aGlobalObject)
+{
+=======
+/* static */
+Document* AnimationUtils::GetDocumentFromGlobal(JSObject* aGlobalObject) {
+>>>>>>> upstream-releases
   nsGlobalWindowInner* win = xpc::WindowOrNull(aGlobalObject);
   if (!win) {
     return nullptr;
@@ -55,7 +98,16 @@ namespace mozilla {
   return win->GetDoc();
 }
 
+<<<<<<< HEAD
 /* static */ bool AnimationUtils::IsOffscreenThrottlingEnabled() {
+||||||| merged common ancestors
+/* static */ bool
+AnimationUtils::IsOffscreenThrottlingEnabled()
+{
+=======
+/* static */
+bool AnimationUtils::IsOffscreenThrottlingEnabled() {
+>>>>>>> upstream-releases
   static bool sOffscreenThrottlingEnabled;
   static bool sPrefCached = false;
 
@@ -68,9 +120,27 @@ namespace mozilla {
   return sOffscreenThrottlingEnabled;
 }
 
+<<<<<<< HEAD
 /* static */ bool AnimationUtils::EffectSetContainsAnimatedScale(
     EffectSet& aEffects, const nsIFrame* aFrame) {
   for (const dom::KeyframeEffect* effect : aEffects) {
+||||||| merged common ancestors
+/* static */ bool
+AnimationUtils::EffectSetContainsAnimatedScale(EffectSet& aEffects,
+                                               const nsIFrame* aFrame)
+{
+  for (const dom::KeyframeEffect* effect : aEffects) {
+=======
+/* static */
+bool AnimationUtils::FrameHasAnimatedScale(const nsIFrame* aFrame) {
+  EffectSet* effectSet = EffectSet::GetEffectSetForFrame(
+      aFrame, nsCSSPropertyIDSet::TransformLikeProperties());
+  if (!effectSet) {
+    return false;
+  }
+
+  for (const dom::KeyframeEffect* effect : *effectSet) {
+>>>>>>> upstream-releases
     if (effect->ContainsAnimatedScale(aFrame)) {
       return true;
     }
@@ -79,4 +149,31 @@ namespace mozilla {
   return false;
 }
 
+<<<<<<< HEAD
 }  // namespace mozilla
+||||||| merged common ancestors
+} // namespace mozilla
+=======
+/* static */
+bool AnimationUtils::HasCurrentTransitions(const Element* aElement,
+                                           PseudoStyleType aPseudoType) {
+  MOZ_ASSERT(aElement);
+
+  EffectSet* effectSet = EffectSet::GetEffectSet(aElement, aPseudoType);
+  if (!effectSet) {
+    return false;
+  }
+
+  for (const dom::KeyframeEffect* effect : *effectSet) {
+    // If |effect| is current, it must have an associated Animation
+    // so we don't need to null-check the result of GetAnimation().
+    if (effect->IsCurrent() && effect->GetAnimation()->AsCSSTransition()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+}  // namespace mozilla
+>>>>>>> upstream-releases

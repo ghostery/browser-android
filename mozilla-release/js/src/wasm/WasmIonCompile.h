@@ -30,12 +30,25 @@ namespace wasm {
 bool IonCanCompile();
 
 // Generates very fast code at the expense of compilation time.
+<<<<<<< HEAD
 MOZ_MUST_USE bool IonCompileFunctions(const ModuleEnvironment& env,
                                       LifoAlloc& lifo,
                                       const FuncCompileInputVector& inputs,
                                       CompiledCode* code,
                                       ExclusiveDeferredValidationState& dvs,
                                       UniqueChars* error);
+||||||| merged common ancestors
+MOZ_MUST_USE bool
+IonCompileFunctions(const ModuleEnvironment& env, LifoAlloc& lifo,
+                    const FuncCompileInputVector& inputs, CompiledCode* code,
+                    ExclusiveDeferredValidationState& dvs,
+                    UniqueChars* error);
+=======
+MOZ_MUST_USE bool IonCompileFunctions(const ModuleEnvironment& env,
+                                      LifoAlloc& lifo,
+                                      const FuncCompileInputVector& inputs,
+                                      CompiledCode* code, UniqueChars* error);
+>>>>>>> upstream-releases
 
 }  // namespace wasm
 }  // namespace js

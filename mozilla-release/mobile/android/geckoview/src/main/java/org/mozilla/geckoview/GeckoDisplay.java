@@ -6,7 +6,14 @@
 
 package org.mozilla.geckoview;
 
+<<<<<<< HEAD
 import android.support.annotation.UiThread;
+||||||| merged common ancestors
+=======
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+>>>>>>> upstream-releases
 import android.view.Surface;
 
 import org.mozilla.gecko.util.ThreadUtils;
@@ -18,10 +25,10 @@ import org.mozilla.gecko.util.ThreadUtils;
  * {@link #surfaceChanged(Surface, int, int, int, int)} is called and before {@link #surfaceDestroyed()} returns.
  */
 public class GeckoDisplay {
-    private final GeckoSession session;
+    private final GeckoSession mSession;
 
     protected GeckoDisplay(final GeckoSession session) {
-        this.session = session;
+        mSession = session;
     }
 
     /**
@@ -32,9 +39,38 @@ public class GeckoDisplay {
      * the Surface is valid while resuming drawing.
      *
      * @param surface The new Surface.
+<<<<<<< HEAD
+     * @param width New width of the Surface. Can not be negative.
+     * @param height New height of the Surface. Can not be negative.
+||||||| merged common ancestors
+     * @param width New width of the Surface.
+     * @param height New height of the Surface.
+=======
      * @param width New width of the Surface. Can not be negative.
      * @param height New height of the Surface. Can not be negative.
      */
+    @UiThread
+    public void surfaceChanged(@NonNull final Surface surface, final int width, final int height) {
+        surfaceChanged(surface, 0, 0, width, height);
+    }
+
+    /**
+     * Sets a surface for the compositor render a surface.
+     *
+     * Required call. The display's Surface has been created or changed. Must be
+     * called on the application main thread. GeckoSession may block this call to ensure
+     * the Surface is valid while resuming drawing. The origin of the content window
+     * (0, 0) is the top left corner of the screen.
+     *
+     * @param surface The new Surface.
+     * @param left The compositor origin offset in the X axis. Can not be negative.
+     * @param top The compositor origin offset in the Y axis. Can not be negative.
+     * @param width New width of the Surface. Can not be negative.
+     * @param height New height of the Surface. Can not be negative.
+     * @throws IllegalArgumentException if left or top are negative.
+>>>>>>> upstream-releases
+     */
+<<<<<<< HEAD
     @UiThread
     public void surfaceChanged(Surface surface, int width, int height) {
         surfaceChanged(surface, 0, 0, width, height);
@@ -65,6 +101,23 @@ public class GeckoDisplay {
 
         if (session.getDisplay() == this) {
             session.onSurfaceChanged(surface, left, top, width, height);
+||||||| merged common ancestors
+    public void surfaceChanged(Surface surface, int width, int height) {
+        if (session.getDisplay() == this) {
+            session.onSurfaceChanged(surface, width, height);
+=======
+    @UiThread
+    public void surfaceChanged(@NonNull final Surface surface, final int left, final int top,
+                               final int width, final int height) {
+        ThreadUtils.assertOnUiThread();
+
+        if ((left < 0) || (top < 0)) {
+            throw new IllegalArgumentException("Parameters can not be negative.");
+        }
+
+        if (mSession.getDisplay() == this) {
+            mSession.onSurfaceChanged(surface, left, top, width, height);
+>>>>>>> upstream-releases
         }
     }
 
@@ -77,10 +130,20 @@ public class GeckoDisplay {
      */
     @UiThread
     public void surfaceDestroyed() {
+<<<<<<< HEAD
         ThreadUtils.assertOnUiThread();
 
         if (session.getDisplay() == this) {
             session.onSurfaceDestroyed();
+||||||| merged common ancestors
+        if (session.getDisplay() == this) {
+            session.onSurfaceDestroyed();
+=======
+        ThreadUtils.assertOnUiThread();
+
+        if (mSession.getDisplay() == this) {
+            mSession.onSurfaceDestroyed();
+>>>>>>> upstream-releases
         }
     }
 
@@ -95,10 +158,38 @@ public class GeckoDisplay {
      */
     @UiThread
     public void screenOriginChanged(final int left, final int top) {
+<<<<<<< HEAD
         ThreadUtils.assertOnUiThread();
 
         if (session.getDisplay() == this) {
             session.onScreenOriginChanged(left, top);
+||||||| merged common ancestors
+        if (session.getDisplay() == this) {
+            session.onScreenOriginChanged(left, top);
+=======
+        ThreadUtils.assertOnUiThread();
+
+        if (mSession.getDisplay() == this) {
+            mSession.onScreenOriginChanged(left, top);
+        }
+    }
+
+    /**
+     * Update the amount of vertical space that is clipped or visibly obscured in the bottom portion
+     * of the display. Tells gecko where to put bottom fixed elements so they are fully visible.
+     *
+     * Optional call. The display's visible vertical space has changed. Must be
+     * called on the application main thread.
+     *
+     * @param clippingHeight The height of the bottom clipped space in screen pixels.
+     */
+    @UiThread
+    public void setVerticalClipping(final int clippingHeight) {
+        ThreadUtils.assertOnUiThread();
+
+        if (mSession != null) {
+            mSession.setFixedBottomOffset(clippingHeight);
+>>>>>>> upstream-releases
         }
     }
 
@@ -114,7 +205,41 @@ public class GeckoDisplay {
      */
     @UiThread
     public boolean shouldPinOnScreen() {
+<<<<<<< HEAD
         ThreadUtils.assertOnUiThread();
         return session.getDisplay() == this && session.shouldPinOnScreen();
+||||||| merged common ancestors
+        return session.getDisplay() == this && session.shouldPinOnScreen();
+=======
+        ThreadUtils.assertOnUiThread();
+        return mSession.getDisplay() == this && mSession.shouldPinOnScreen();
+    }
+
+    /**
+     * Request a {@link Bitmap} of the visible portion of the web page currently being
+     * rendered.
+     *
+     * Returned {@link Bitmap} will have the same dimensions as the {@link Surface} the
+     * {@link GeckoDisplay} is currently using.
+     *
+     * If the {@link GeckoSession#isCompositorReady} is false the {@link GeckoResult} will complete
+     * with an {@link IllegalStateException}.
+     *
+     * This function must be called on the UI thread.
+     *
+     * @return A {@link GeckoResult} that completes with a {@link Bitmap} containing
+     * the pixels and size information of the currently visible rendered web page.
+     */
+    @UiThread
+    public @NonNull GeckoResult<Bitmap> capturePixels() {
+        ThreadUtils.assertOnUiThread();
+        if (!mSession.isCompositorReady()) {
+            return GeckoResult.fromException(
+                    new IllegalStateException("Compositor must be ready before pixels can be captured"));
+        }
+        GeckoResult<Bitmap> result = new GeckoResult<>();
+        mSession.mCompositor.requestScreenPixels(result);
+        return result;
+>>>>>>> upstream-releases
     }
 }

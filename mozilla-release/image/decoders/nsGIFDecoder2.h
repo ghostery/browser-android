@@ -56,7 +56,16 @@ class nsGIFDecoder2 : public Decoder {
   void EndImageFrame();
 
   /// Called when we finish decoding the entire image.
+<<<<<<< HEAD
   void FlushImageData();
+||||||| merged common ancestors
+  void      FlushImageData();
+=======
+  void FlushImageData();
+
+  /// Convert color map to BGRA, applying any necessary CMS tranforms.
+  void ConvertColormap(uint32_t* aColormap, uint32_t aColors);
+>>>>>>> upstream-releases
 
   /// Transforms a palette index into a pixel.
   template <typename PixelSize>
@@ -143,6 +152,8 @@ class nsGIFDecoder2 : public Decoder {
   // current position - i.e., the offset into which the next byte should be
   // written.
   size_t mColorTablePos;
+  uint32_t* mColormap;  // Current colormap to be used in Cairo format
+  uint32_t mColormapSize;
 
   uint8_t mColorMask;  // Apply this to the pixel to keep within colormap
   bool mGIFOpen;

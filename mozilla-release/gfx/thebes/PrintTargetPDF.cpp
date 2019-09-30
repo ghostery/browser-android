@@ -41,10 +41,27 @@ PrintTargetPDF::~PrintTargetPDF() {
   Finish();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PrintTargetPDF> PrintTargetPDF::CreateOrNull(
     nsIOutputStream* aStream, const IntSize& aSizeInPoints) {
   cairo_surface_t* surface = cairo_pdf_surface_create_for_stream(
       write_func, (void*)aStream, aSizeInPoints.width, aSizeInPoints.height);
+||||||| merged common ancestors
+/* static */ already_AddRefed<PrintTargetPDF>
+PrintTargetPDF::CreateOrNull(nsIOutputStream *aStream,
+                             const IntSize& aSizeInPoints)
+{
+  cairo_surface_t* surface =
+    cairo_pdf_surface_create_for_stream(write_func, (void*)aStream,
+                                        aSizeInPoints.width,
+                                        aSizeInPoints.height);
+=======
+/* static */
+already_AddRefed<PrintTargetPDF> PrintTargetPDF::CreateOrNull(
+    nsIOutputStream* aStream, const IntSize& aSizeInPoints) {
+  cairo_surface_t* surface = cairo_pdf_surface_create_for_stream(
+      write_func, (void*)aStream, aSizeInPoints.width, aSizeInPoints.height);
+>>>>>>> upstream-releases
   if (cairo_surface_status(surface)) {
     return nullptr;
   }

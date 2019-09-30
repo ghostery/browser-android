@@ -23,16 +23,17 @@ using namespace mozilla;
 #define XPCOM_DEPENDENT_LIBS_LIST "dependentlibs.list"
 
 #if defined(XP_WIN)
-#define READ_TEXTMODE L"rt"
+#  define READ_TEXTMODE L"rt"
 #else
-#define READ_TEXTMODE "r"
+#  define READ_TEXTMODE "r"
 #endif
 
 typedef void (*NSFuncPtr)();
 
 #if defined(XP_WIN)
-#include <windows.h>
-#include <mbstring.h>
+#  include <windows.h>
+#  include <mbstring.h>
+#  include "mozilla/WindowsVersion.h"
 
 typedef HINSTANCE LibHandleType;
 
@@ -40,7 +41,7 @@ static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
   LibHandleType libHandle =
       LoadLibraryExW(aDependentLib, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 
-#ifdef DEBUG
+#  ifdef DEBUG
   if (!libHandle) {
     DWORD err = GetLastError();
     LPWSTR lpMsgBuf;
@@ -51,7 +52,7 @@ static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
     wprintf(L"Error loading %ls: %s\n", aDependentLib, lpMsgBuf);
     LocalFree(lpMsgBuf);
   }
-#endif
+#  endif
 
   return libHandle;
 }
@@ -65,28 +66,47 @@ static void CloseLibHandle(LibHandleType aLibHandle) {
 }
 
 #else
-#include <dlfcn.h>
+#  include <dlfcn.h>
 
-#if defined(MOZ_LINKER)
+#  if defined(MOZ_LINKER)
 extern "C" {
 NS_HIDDEN __typeof(dlopen) __wrap_dlopen;
 NS_HIDDEN __typeof(dlsym) __wrap_dlsym;
 NS_HIDDEN __typeof(dlclose) __wrap_dlclose;
 }
 
-#define dlopen __wrap_dlopen
-#define dlsym __wrap_dlsym
-#define dlclose __wrap_dlclose
-#endif
+#    define dlopen __wrap_dlopen
+#    define dlsym __wrap_dlsym
+#    define dlclose __wrap_dlclose
+#  endif
 
 typedef void* LibHandleType;
 
+<<<<<<< HEAD
 static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
   LibHandleType libHandle = dlopen(aDependentLib, RTLD_GLOBAL | RTLD_LAZY
 #ifdef XP_MACOSX
                                                       | RTLD_FIRST
 #endif
   );
+||||||| merged common ancestors
+static LibHandleType
+GetLibHandle(pathstr_t aDependentLib)
+{
+  LibHandleType libHandle = dlopen(aDependentLib,
+                                   RTLD_GLOBAL | RTLD_LAZY
+#ifdef XP_MACOSX
+                                   | RTLD_FIRST
+#endif
+                                   );
+=======
+static LibHandleType GetLibHandle(pathstr_t aDependentLib) {
+  LibHandleType libHandle = dlopen(aDependentLib, RTLD_GLOBAL | RTLD_LAZY
+#  ifdef XP_MACOSX
+                                                      | RTLD_FIRST
+#  endif
+  );
+>>>>>>> upstream-releases
   if (!libHandle) {
     fprintf(stderr, "XPCOMGlueLoad error for file %s:\n%s\n", aDependentLib,
             dlerror());
@@ -98,9 +118,23 @@ static NSFuncPtr GetSymbol(LibHandleType aLibHandle, const char* aSymbol) {
   return (NSFuncPtr)dlsym(aLibHandle, aSymbol);
 }
 
+<<<<<<< HEAD
 #ifndef MOZ_LINKER
 static void CloseLibHandle(LibHandleType aLibHandle) { dlclose(aLibHandle); }
 #endif
+||||||| merged common ancestors
+#ifndef MOZ_LINKER
+static void
+CloseLibHandle(LibHandleType aLibHandle)
+{
+  dlclose(aLibHandle);
+}
+#endif
+=======
+#  ifndef MOZ_LINKER
+static void CloseLibHandle(LibHandleType aLibHandle) { dlclose(aLibHandle); }
+#  endif
+>>>>>>> upstream-releases
 #endif
 
 struct DependentLib {
@@ -122,10 +156,23 @@ static void AppendDependentLib(LibHandleType aLibHandle) {
   sTop = d;
 }
 
+<<<<<<< HEAD
 static bool ReadDependentCB(pathstr_t aDependentLib) {
+||||||| merged common ancestors
+static bool
+ReadDependentCB(pathstr_t aDependentLib)
+{
+=======
+static bool ReadDependentCB(pathstr_t aDependentLib,
+                            LibLoadingStrategy aLibLoadingStrategy) {
+>>>>>>> upstream-releases
 #ifndef MOZ_LINKER
-  // We do this unconditionally because of data in bug 771745
-  ReadAheadLib(aDependentLib);
+  // Don't bother doing a ReadAhead if we're not in the parent process.
+  // What we need from the library should already be in the system file
+  // cache.
+  if (aLibLoadingStrategy == LibLoadingStrategy::ReadAhead) {
+    ReadAheadLib(aDependentLib);
+  }
 #endif
   LibHandleType libHandle = GetLibHandle(aDependentLib);
   if (libHandle) {
@@ -136,11 +183,29 @@ static bool ReadDependentCB(pathstr_t aDependentLib) {
 }
 
 #ifdef XP_WIN
+<<<<<<< HEAD
 static bool ReadDependentCB(const char* aDependentLib) {
+||||||| merged common ancestors
+static bool
+ReadDependentCB(const char* aDependentLib)
+{
+=======
+static bool ReadDependentCB(const char* aDependentLib,
+                            LibLoadingStrategy aLibLoadingStrategy) {
+>>>>>>> upstream-releases
   wchar_t wideDependentLib[MAX_PATH];
+<<<<<<< HEAD
   MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib,
                       MAX_PATH);
   return ReadDependentCB(wideDependentLib);
+||||||| merged common ancestors
+  MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib, MAX_PATH);
+  return ReadDependentCB(wideDependentLib);
+=======
+  MultiByteToWideChar(CP_UTF8, 0, aDependentLib, -1, wideDependentLib,
+                      MAX_PATH);
+  return ReadDependentCB(wideDependentLib, aLibLoadingStrategy);
+>>>>>>> upstream-releases
 }
 
 inline FILE* TS_tfopen(const char* path, const wchar_t* mode) {
@@ -197,16 +262,25 @@ static const char* ns_strrpbrk(const char* string, const char* strCharSet) {
 }
 #endif
 
+<<<<<<< HEAD
 static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
+||||||| merged common ancestors
+static nsresult
+XPCOMGlueLoad(const char* aXPCOMFile)
+{
+=======
+static nsresult XPCOMGlueLoad(const char* aXPCOMFile,
+                              LibLoadingStrategy aLibLoadingStrategy) {
+>>>>>>> upstream-releases
 #ifdef MOZ_LINKER
-  if (!ReadDependentCB(aXPCOMFile)) {
+  if (!ReadDependentCB(aXPCOMFile, aLibLoadingStrategy)) {
     return NS_ERROR_FAILURE;
   }
 #else
   char xpcomDir[MAXPATHLEN];
-#ifdef XP_WIN
+#  ifdef XP_WIN
   const char* lastSlash = ns_strrpbrk(aXPCOMFile, "/\\");
-#elif XP_MACOSX
+#  elif XP_MACOSX
   // On OSX, the dependentlibs.list file lives under Contents/Resources.
   // However, the actual libraries listed in dependentlibs.list live under
   // Contents/MacOS. We want to read the list from Contents/Resources, then
@@ -221,27 +295,61 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
   tempBuffer[tempLen] = '\0';
   const char* slash = strrchr(tempBuffer, '/');
   tempLen = size_t(slash - tempBuffer);
+<<<<<<< HEAD
   const char* lastSlash = aXPCOMFile + tempLen;
 #else
+||||||| merged common ancestors
+  const char *lastSlash = aXPCOMFile + tempLen;
+#else
+=======
+  const char* lastSlash = aXPCOMFile + tempLen;
+#  else
+>>>>>>> upstream-releases
   const char* lastSlash = strrchr(aXPCOMFile, '/');
-#endif
+#  endif
   char* cursor;
   if (lastSlash) {
     size_t len = size_t(lastSlash - aXPCOMFile);
 
     if (len > MAXPATHLEN - sizeof(XPCOM_FILE_PATH_SEPARATOR
+<<<<<<< HEAD
 #ifdef XP_MACOSX
                                   "Resources" XPCOM_FILE_PATH_SEPARATOR
 #endif
                                       XPCOM_DEPENDENT_LIBS_LIST)) {
+||||||| merged common ancestors
+#ifdef XP_MACOSX
+                                  "Resources"
+                                  XPCOM_FILE_PATH_SEPARATOR
+#endif
+                                  XPCOM_DEPENDENT_LIBS_LIST)) {
+=======
+#  ifdef XP_MACOSX
+                                  "Resources" XPCOM_FILE_PATH_SEPARATOR
+#  endif
+                                      XPCOM_DEPENDENT_LIBS_LIST)) {
+>>>>>>> upstream-releases
       return NS_ERROR_FAILURE;
     }
     memcpy(xpcomDir, aXPCOMFile, len);
     strcpy(xpcomDir + len, XPCOM_FILE_PATH_SEPARATOR
+<<<<<<< HEAD
 #ifdef XP_MACOSX
            "Resources" XPCOM_FILE_PATH_SEPARATOR
 #endif
                XPCOM_DEPENDENT_LIBS_LIST);
+||||||| merged common ancestors
+#ifdef XP_MACOSX
+                           "Resources"
+                           XPCOM_FILE_PATH_SEPARATOR
+#endif
+                           XPCOM_DEPENDENT_LIBS_LIST);
+=======
+#  ifdef XP_MACOSX
+           "Resources" XPCOM_FILE_PATH_SEPARATOR
+#  endif
+               XPCOM_DEPENDENT_LIBS_LIST);
+>>>>>>> upstream-releases
     cursor = xpcomDir + len + 1;
   } else {
     strcpy(xpcomDir, XPCOM_DEPENDENT_LIBS_LIST);
@@ -258,14 +366,14 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
     return NS_ERROR_FAILURE;
   }
 
-#ifdef XP_MACOSX
+#  ifdef XP_MACOSX
   tempLen = size_t(cursor - xpcomDir);
   if (tempLen > MAXPATHLEN - sizeof("MacOS" XPCOM_FILE_PATH_SEPARATOR) - 1) {
     return NS_ERROR_FAILURE;
   }
   strcpy(cursor, "MacOS" XPCOM_FILE_PATH_SEPARATOR);
   cursor += strlen(cursor);
-#endif
+#  endif
   *cursor = '\0';
 
   char buffer[MAXPATHLEN];
@@ -277,6 +385,13 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
     if (l == 0 || *buffer == '#') {
       continue;
     }
+#  ifdef XP_WIN
+    // There is no point in reading Universal CRT forwarder DLLs ahead on
+    // Windows 10 because they will not be touched later.
+    if (IsWin10OrLater() && !strncmp(buffer, "api-", 4)) {
+      continue;
+    }
+#  endif
 
     // cut the trailing newline, if present
     if (buffer[l - 1] == '\n') {
@@ -288,7 +403,7 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
     }
 
     strcpy(cursor, buffer);
-    if (!ReadDependentCB(xpcomDir)) {
+    if (!ReadDependentCB(xpcomDir, aLibLoadingStrategy)) {
       XPCOMGlueUnload();
       return NS_ERROR_FAILURE;
     }
@@ -297,13 +412,22 @@ static nsresult XPCOMGlueLoad(const char* aXPCOMFile) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 #if defined(MOZ_WIDGET_GTK) && \
     (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
 #define MOZ_GSLICE_INIT
+||||||| merged common ancestors
+#if defined(MOZ_WIDGET_GTK) && (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
+#define MOZ_GSLICE_INIT
+=======
+#if defined(MOZ_WIDGET_GTK) && \
+    (defined(MOZ_MEMORY) || defined(__FreeBSD__) || defined(__NetBSD__))
+#  define MOZ_GSLICE_INIT
+>>>>>>> upstream-releases
 #endif
 
 #ifdef MOZ_GSLICE_INIT
-#include <glib.h>
+#  include <glib.h>
 
 class GSliceInit {
  public:
@@ -334,7 +458,16 @@ class GSliceInit {
 
 namespace mozilla {
 
+<<<<<<< HEAD
 Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile) {
+||||||| merged common ancestors
+Bootstrap::UniquePtr
+GetBootstrap(const char* aXPCOMFile)
+{
+=======
+Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile,
+                                  LibLoadingStrategy aLibLoadingStrategy) {
+>>>>>>> upstream-releases
 #ifdef MOZ_GSLICE_INIT
   GSliceInit gSliceInit;
 #endif
@@ -355,7 +488,7 @@ Bootstrap::UniquePtr GetBootstrap(const char* aXPCOMFile) {
   memcpy(file.get(), aXPCOMFile, base_len);
   memcpy(file.get() + base_len, XPCOM_DLL, sizeof(XPCOM_DLL));
 
-  if (NS_FAILED(XPCOMGlueLoad(file.get()))) {
+  if (NS_FAILED(XPCOMGlueLoad(file.get(), aLibLoadingStrategy))) {
     return nullptr;
   }
 

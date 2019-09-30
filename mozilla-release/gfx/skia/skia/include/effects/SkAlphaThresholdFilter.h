@@ -26,7 +26,13 @@ public:
                                      const SkImageFilter::CropRect* cropRect = nullptr);
 
 
+<<<<<<< HEAD
     static void InitializeFlattenables();
+||||||| merged common ancestors
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP();
+=======
+    static void RegisterFlattenables();
+>>>>>>> upstream-releases
 };
 
 #endif

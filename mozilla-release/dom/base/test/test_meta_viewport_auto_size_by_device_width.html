@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -23,3 +24,30 @@
   </script>
 </body>
 </html>
+||||||| merged common ancestors
+=======
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>device-width enables autoSize</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <meta name="viewport" content="width=device-width">
+  <script src="viewport_helpers.js"></script>
+</head>
+<body>
+  <p>width=device-width</p>
+  <script type="application/javascript">
+    "use strict";
+
+    add_task(async function device_width() {
+      await SpecialPowers.pushPrefEnv(scaleRatio(1.0));
+
+      let info = getViewportInfo(800, 480);
+      ok(info.autoSize, "device-width should enable autoSize");
+    });
+  </script>
+</body>
+</html>
+>>>>>>> upstream-releases

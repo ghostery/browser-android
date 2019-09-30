@@ -14,13 +14,16 @@
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/FormData.h"
 
+#define WASM_CONTENT_TYPE "application/wasm"
+#define WASM_ALT_DATA_TYPE_V1 "wasm/machine-code/1"
+
 class nsIPrincipal;
-class nsIDocument;
 class nsIHttpChannel;
 
 namespace mozilla {
 namespace dom {
 
+class Document;
 class InternalRequest;
 class WorkerPrivate;
 
@@ -46,10 +49,22 @@ class FetchUtil final {
                             nsCString& aHeaderName, nsCString& aHeaderValue,
                             bool* aWasEmptyHeader);
 
+<<<<<<< HEAD
   static nsresult SetRequestReferrer(nsIPrincipal* aPrincipal,
                                      nsIDocument* aDoc,
                                      nsIHttpChannel* aChannel,
                                      InternalRequest* aRequest);
+||||||| merged common ancestors
+  static nsresult
+  SetRequestReferrer(nsIPrincipal* aPrincipal,
+                     nsIDocument* aDoc,
+                     nsIHttpChannel* aChannel,
+                     InternalRequest* aRequest);
+=======
+  static nsresult SetRequestReferrer(nsIPrincipal* aPrincipal, Document* aDoc,
+                                     nsIHttpChannel* aChannel,
+                                     InternalRequest* aRequest);
+>>>>>>> upstream-releases
 
   /**
    * Check that the given object is a Response and, if so, stream to the given

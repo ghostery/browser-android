@@ -16,19 +16,52 @@
 #[cfg(feature = "std")]
 #[cfg(test)]
 mod simple_tests {
+<<<<<<< HEAD
     use parser::{Parser, ParserInput, ParserState, WasmDecoder};
     use primitives::{Operator, SectionCode};
     use std::fs::{read_dir, File};
+||||||| merged common ancestors
+=======
+    use crate::operators_validator::OperatorValidatorConfig;
+    use crate::parser::{Parser, ParserInput, ParserState, WasmDecoder};
+    use crate::primitives::{Operator, SectionCode};
+    use crate::validator::{ValidatingParser, ValidatingParserConfig};
+    use std::fs::{read_dir, File};
+>>>>>>> upstream-releases
     use std::io::prelude::*;
     use std::path::PathBuf;
+<<<<<<< HEAD
     use validator::{OperatorValidatorConfig, ValidatingParser, ValidatingParserConfig};
+||||||| merged common ancestors
+    use parser::{WasmDecoder, Parser, ParserState, ParserInput, SectionCode, Operator};
+    use validator::{ValidatingParser, ValidatingParserConfig, OperatorValidatorConfig};
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     const VALIDATOR_CONFIG: Option<ValidatingParserConfig> = Some(ValidatingParserConfig {
         operator_config: OperatorValidatorConfig {
             enable_threads: true,
             enable_reference_types: true,
         },
     });
+||||||| merged common ancestors
+    const VALIDATOR_CONFIG: Option<ValidatingParserConfig> =
+        Some(ValidatingParserConfig {
+                 operator_config: OperatorValidatorConfig { enable_threads: true },
+             });
+=======
+    const VALIDATOR_CONFIG: Option<ValidatingParserConfig> = Some(ValidatingParserConfig {
+        operator_config: OperatorValidatorConfig {
+            enable_threads: true,
+            enable_reference_types: true,
+            enable_simd: true,
+            enable_bulk_memory: true,
+            enable_multi_value: true,
+        },
+        mutable_global_imports: true,
+    });
+>>>>>>> upstream-releases
 
     fn read_file_data(path: &PathBuf) -> Vec<u8> {
         println!("Parsing {:?}", path);

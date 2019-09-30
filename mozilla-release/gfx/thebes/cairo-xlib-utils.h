@@ -22,21 +22,50 @@ CAIRO_BEGIN_DECLS
  *
  * @return True on success, False on non-recoverable error
  */
+<<<<<<< HEAD
 typedef cairo_bool_t (*cairo_xlib_drawing_callback)(
     void *closure, Screen *screen, Drawable drawable, Visual *visual,
     short offset_x, short offset_y, XRectangle *clip_rects,
     unsigned int num_rects);
+||||||| merged common ancestors
+typedef cairo_bool_t (* cairo_xlib_drawing_callback)
+    (void *closure,
+     Screen *screen,
+     Drawable drawable,
+     Visual *visual,
+     short offset_x, short offset_y,
+     XRectangle* clip_rects, unsigned int num_rects);
+=======
+typedef cairo_bool_t (*cairo_xlib_drawing_callback)(
+    void* closure, Screen* screen, Drawable drawable, Visual* visual,
+    short offset_x, short offset_y, XRectangle* clip_rects,
+    unsigned int num_rects);
+>>>>>>> upstream-releases
 
 /**
  * This structure captures the result of the native drawing, in case the
  * caller may wish to reapply the drawing efficiently later.
  */
 typedef struct {
+<<<<<<< HEAD
   cairo_surface_t *surface;
   cairo_bool_t uniform_alpha;
   cairo_bool_t uniform_color;
   double alpha;   /* valid only if uniform_alpha is TRUE */
   double r, g, b; /* valid only if uniform_color is TRUE */
+||||||| merged common ancestors
+    cairo_surface_t *surface;
+    cairo_bool_t    uniform_alpha;
+    cairo_bool_t    uniform_color;
+    double          alpha; /* valid only if uniform_alpha is TRUE */
+    double          r, g, b; /* valid only if uniform_color is TRUE */
+=======
+  cairo_surface_t* surface;
+  cairo_bool_t uniform_alpha;
+  cairo_bool_t uniform_color;
+  double alpha;   /* valid only if uniform_alpha is TRUE */
+  double r, g, b; /* valid only if uniform_color is TRUE */
+>>>>>>> upstream-releases
 } cairo_xlib_drawing_result_t;
 
 /**
@@ -103,12 +132,30 @@ typedef enum {
  * in which case the color is always uniform) then we won't bother returning
  * a surface for it.
  */
+<<<<<<< HEAD
 void cairo_draw_with_xlib(cairo_t *cr, cairo_xlib_drawing_callback callback,
                           void *closure, Display *dpy, unsigned int width,
                           unsigned int height,
                           cairo_xlib_drawing_opacity_t is_opaque,
                           cairo_xlib_drawing_support_t capabilities,
                           cairo_xlib_drawing_result_t *result);
+||||||| merged common ancestors
+void cairo_draw_with_xlib (cairo_t *cr,
+                           cairo_xlib_drawing_callback callback,
+                           void *closure,
+                           Display *dpy,
+                           unsigned int width, unsigned int height,
+                           cairo_xlib_drawing_opacity_t is_opaque,
+                           cairo_xlib_drawing_support_t capabilities,
+                           cairo_xlib_drawing_result_t *result);
+=======
+void cairo_draw_with_xlib(cairo_t* cr, cairo_xlib_drawing_callback callback,
+                          void* closure, Display* dpy, unsigned int width,
+                          unsigned int height,
+                          cairo_xlib_drawing_opacity_t is_opaque,
+                          cairo_xlib_drawing_support_t capabilities,
+                          cairo_xlib_drawing_result_t* result);
+>>>>>>> upstream-releases
 
 CAIRO_END_DECLS
 

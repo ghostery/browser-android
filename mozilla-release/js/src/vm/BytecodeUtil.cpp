@@ -18,7 +18,6 @@
 #include "mozilla/Vector.h"
 
 #include <algorithm>
-#include <ctype.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -177,6 +176,7 @@ static MOZ_MUST_USE bool DumpPCCounts(JSContext* cx, HandleScript script,
   return true;
 }
 
+<<<<<<< HEAD
 bool js::DumpRealmPCCounts(JSContext* cx) {
   Rooted<GCVector<JSScript*>> scripts(cx, GCVector<JSScript*>(cx));
   for (auto iter = cx->zone()->cellIter<JSScript>(); !iter.done();
@@ -189,6 +189,34 @@ bool js::DumpRealmPCCounts(JSContext* cx) {
       if (!scripts.append(script)) {
         return false;
       }
+||||||| merged common ancestors
+bool
+js::DumpRealmPCCounts(JSContext* cx)
+{
+    Rooted<GCVector<JSScript*>> scripts(cx, GCVector<JSScript*>(cx));
+    for (auto iter = cx->zone()->cellIter<JSScript>(); !iter.done(); iter.next()) {
+        JSScript* script = iter;
+        if (script->realm() != cx->realm()) {
+            continue;
+        }
+        if (script->hasScriptCounts()) {
+            if (!scripts.append(script)) {
+                return false;
+            }
+        }
+=======
+bool js::DumpRealmPCCounts(JSContext* cx) {
+  Rooted<GCVector<JSScript*>> scripts(cx, GCVector<JSScript*>(cx));
+  for (auto script = cx->zone()->cellIter<JSScript>(); !script.done();
+       script.next()) {
+    if (script->realm() != cx->realm()) {
+      continue;
+    }
+    if (script->hasScriptCounts()) {
+      if (!scripts.append(script)) {
+        return false;
+      }
+>>>>>>> upstream-releases
     }
   }
 
@@ -952,13 +980,42 @@ bool BytecodeParser::parse() {
         return false;
       }
     }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
   }
 
   return true;
 }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  return true;
+}
+||||||| merged common ancestors
+    *reachablePC = parser.isReachable(pc);
+=======
 #if defined(DEBUG) || defined(JS_JITSPEW)
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+#if defined(DEBUG) || defined(JS_JITSPEW)
+||||||| merged common ancestors
+    if (*reachablePC) {
+        *depth = parser.stackDepthAtPC(pc);
+    }
+=======
+bool js::ReconstructStackDepth(JSContext* cx, JSScript* script, jsbytecode* pc,
+                               uint32_t* depth, bool* reachablePC) {
+  LifoAllocScope allocScope(&cx->tempLifoAlloc());
+  BytecodeParser parser(cx, allocScope.alloc(), script);
+  if (!parser.parse()) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool js::ReconstructStackDepth(JSContext* cx, JSScript* script, jsbytecode* pc,
                                uint32_t* depth, bool* reachablePC) {
   LifoAllocScope allocScope(&cx->tempLifoAlloc());
@@ -974,6 +1031,17 @@ bool js::ReconstructStackDepth(JSContext* cx, JSScript* script, jsbytecode* pc,
   }
 
   return true;
+||||||| merged common ancestors
+    return true;
+=======
+  *reachablePC = parser.isReachable(pc);
+
+  if (*reachablePC) {
+    *depth = parser.stackDepthAtPC(pc);
+  }
+
+  return true;
+>>>>>>> upstream-releases
 }
 
 static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
@@ -1124,6 +1192,7 @@ JS_FRIEND_API bool js::DumpPC(JSContext* cx, FILE* fp) {
   return ok;
 }
 
+<<<<<<< HEAD
 JS_FRIEND_API bool js::DumpScript(JSContext* cx, JSScript* scriptArg,
                                   FILE* fp) {
   gc::AutoSuppressGC suppressGC(cx);
@@ -1141,11 +1210,82 @@ static UniqueChars ToDisassemblySource(JSContext* cx, HandleValue v) {
   if (v.isString()) {
     return QuoteString(cx, v.toString(), '"');
   }
+||||||| merged common ancestors
+static UniqueChars
+ToDisassemblySource(JSContext* cx, HandleValue v)
+{
+    if (v.isString()) {
+        return QuoteString(cx, v.toString(), '"');
+    }
 
+    if (JS::RuntimeHeapIsBusy()) {
+        return DuplicateString(cx, "<value>");
+    }
+=======
+JS_FRIEND_API bool js::DumpScript(JSContext* cx, JSScript* scriptArg,
+                                  FILE* fp) {
+  gc::AutoSuppressGC suppressGC(cx);
+  Sprinter sprinter(cx);
+  if (!sprinter.init()) {
+    return false;
+  }
+  RootedScript script(cx, scriptArg);
+  bool ok = Disassemble(cx, script, true, &sprinter);
+  fprintf(fp, "%s", sprinter.string());
+  return ok;
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   if (JS::RuntimeHeapIsBusy()) {
     return DuplicateString(cx, "<value>");
   }
+||||||| merged common ancestors
+    if (v.isObject()) {
+        JSObject& obj = v.toObject();
+=======
+static UniqueChars ToDisassemblySource(JSContext* cx, HandleValue v) {
+  if (v.isString()) {
+    return QuoteString(cx, v.toString(), '"');
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (v.isObject()) {
+    JSObject& obj = v.toObject();
+||||||| merged common ancestors
+        if (obj.is<JSFunction>()) {
+            RootedFunction fun(cx, &obj.as<JSFunction>());
+            JSString* str = JS_DecompileFunction(cx, fun);
+            if (!str) {
+                return nullptr;
+            }
+            return StringToNewUTF8CharsZ(cx, *str);
+        }
+=======
+  if (JS::RuntimeHeapIsBusy()) {
+    return DuplicateString(cx, "<value>");
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (obj.is<JSFunction>()) {
+      RootedFunction fun(cx, &obj.as<JSFunction>());
+      JSString* str = JS_DecompileFunction(cx, fun);
+      if (!str) {
+||||||| merged common ancestors
+        if (obj.is<RegExpObject>()) {
+            JSString* source = obj.as<RegExpObject>().toString(cx);
+            if (!source) {
+                return nullptr;
+            }
+            return StringToNewUTF8CharsZ(cx, *source);
+        }
+    }
+
+    JSString* str = ValueToSource(cx, v);
+    if (!str) {
+=======
   if (v.isObject()) {
     JSObject& obj = v.toObject();
 
@@ -1153,6 +1293,7 @@ static UniqueChars ToDisassemblySource(JSContext* cx, HandleValue v) {
       RootedFunction fun(cx, &obj.as<JSFunction>());
       JSString* str = JS_DecompileFunction(cx, fun);
       if (!str) {
+>>>>>>> upstream-releases
         return nullptr;
       }
       return StringToNewUTF8CharsZ(cx, *str);
@@ -1339,6 +1480,25 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
     size_t after = sp->stringEnd() - sp->string();
     MOZ_ASSERT(after >= before);
 
+<<<<<<< HEAD
+    static const size_t stack_column = 40;
+    for (size_t i = after - before; i < stack_column - 1; i++) {
+      if (!sp->put(" ")) {
+        return false;
+      }
+    }
+
+    if (!sp->put(" # ")) {
+      return false;
+    }
+||||||| merged common ancestors
+        static const size_t stack_column = 40;
+        for (size_t i = after - before; i < stack_column - 1; i++) {
+            if (!sp->put(" ")) {
+                return false;
+            }
+        }
+=======
     static const size_t stack_column = 40;
     for (size_t i = after - before; i < stack_column - 1; i++) {
       if (!sp->put(" ")) {
@@ -1356,10 +1516,26 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       }
     } else {
       uint32_t depth = parser->stackDepthAfterPC(pc);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (!parser->isReachable(pc)) {
+      if (!sp->put("!!! UNREACHABLE !!!")) {
+        return false;
+      }
+    } else {
+      uint32_t depth = parser->stackDepthAfterPC(pc);
 
       for (uint32_t i = 0; i < depth; i++) {
         if (i) {
           if (!sp->put(" ")) {
+||||||| merged common ancestors
+        if (!sp->put(" # ")) {
+=======
+      for (uint32_t i = 0; i < depth; i++) {
+        if (i) {
+          if (!sp->put(" ")) {
+>>>>>>> upstream-releases
             return false;
           }
         }
@@ -1428,6 +1604,38 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       }
       break;
     }
+<<<<<<< HEAD
+
+    case JOF_SCOPE: {
+      RootedScope scope(cx, script->getScope(GET_UINT32_INDEX(pc)));
+      UniqueChars bytes;
+      if (!ToDisassemblySource(cx, scope, &bytes)) {
+||||||| merged common ancestors
+    const JSCodeSpec* cs = &CodeSpec[op];
+    ptrdiff_t len = (ptrdiff_t) cs->length;
+    if (!sp->jsprintf("%05u:", loc)) {
+=======
+
+    case JOF_CODE_OFFSET: {
+      ptrdiff_t off = GET_CODE_OFFSET(pc);
+      if (!sp->jsprintf(" %u (%+d)", unsigned(loc + int(off)), int(off))) {
+>>>>>>> upstream-releases
+        return 0;
+<<<<<<< HEAD
+      }
+      if (!sp->jsprintf(" %s", bytes.get())) {
+||||||| merged common ancestors
+    }
+    if (lines) {
+        if (!sp->jsprintf("%4u", PCToLineNumber(script, pc))) {
+            return 0;
+        }
+    }
+    if (!sp->jsprintf("  %s", CodeName[op])) {
+=======
+      }
+      break;
+    }
 
     case JOF_SCOPE: {
       RootedScope scope(cx, script->getScope(GET_UINT32_INDEX(pc)));
@@ -1436,17 +1644,56 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
         return 0;
       }
       if (!sp->jsprintf(" %s", bytes.get())) {
+>>>>>>> upstream-releases
         return 0;
       }
       break;
     }
 
+<<<<<<< HEAD
     case JOF_ENVCOORD: {
       RootedValue v(cx, StringValue(EnvironmentCoordinateName(
                             cx->caches().envCoordinateNameCache, script, pc)));
       UniqueChars bytes = ToDisassemblySource(cx, v);
       if (!bytes) {
         return 0;
+||||||| merged common ancestors
+    int i;
+    switch (JOF_TYPE(cs->format)) {
+      case JOF_BYTE:
+          // Scan the trynotes to find the associated catch block
+          // and make the try opcode look like a jump instruction
+          // with an offset. This simplifies code coverage analysis
+          // based on this disassembled output.
+          if (op == JSOP_TRY) {
+              size_t mainOffset = script->mainOffset();
+              for (const JSTryNote& tn : script->trynotes()) {
+                  if (tn.kind == JSTRY_CATCH && tn.start + mainOffset == loc + 1) {
+                      if (!sp->jsprintf(" %u (%+d)",
+                                        unsigned(loc + tn.length + 1),
+                                        int(tn.length + 1)))
+                      {
+                          return 0;
+                      }
+                      break;
+                  }
+              }
+          }
+        break;
+
+      case JOF_JUMP: {
+        ptrdiff_t off = GET_JUMP_OFFSET(pc);
+        if (!sp->jsprintf(" %u (%+d)", unsigned(loc + int(off)), int(off))) {
+            return 0;
+        }
+        break;
+=======
+    case JOF_ENVCOORD: {
+      RootedValue v(cx, StringValue(EnvironmentCoordinateNameSlow(script, pc)));
+      UniqueChars bytes = ToDisassemblySource(cx, v);
+      if (!bytes) {
+        return 0;
+>>>>>>> upstream-releases
       }
       EnvironmentCoordinate ec(pc);
       if (!sp->jsprintf(" %s (hops = %u, slot = %u)", bytes.get(), ec.hops(),
@@ -1468,12 +1715,69 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       break;
     }
 
+<<<<<<< HEAD
 #ifdef ENABLE_BIGINT
     case JOF_BIGINT:
       // Fallthrough.
 #endif
     case JOF_DOUBLE: {
       RootedValue v(cx, script->getConst(GET_UINT32_INDEX(pc)));
+      UniqueChars bytes = ToDisassemblySource(cx, v);
+      if (!bytes) {
+        return 0;
+      }
+      if (!sp->jsprintf(" %s", bytes.get())) {
+        return 0;
+||||||| merged common ancestors
+      case JOF_DOUBLE: {
+        RootedValue v(cx, script->getConst(GET_UINT32_INDEX(pc)));
+        UniqueChars bytes = ToDisassemblySource(cx, v);
+        if (!bytes) {
+            return 0;
+        }
+        if (!sp->jsprintf(" %s", bytes.get())) {
+            return 0;
+        }
+        break;
+=======
+    case JOF_DOUBLE: {
+      double d = GET_INLINE_VALUE(pc).toDouble();
+      if (!sp->jsprintf(" %lf", d)) {
+        return 0;
+>>>>>>> upstream-releases
+      }
+      break;
+    }
+
+<<<<<<< HEAD
+    case JOF_OBJECT: {
+      /* Don't call obj.toSource if analysis/inference is active. */
+      if (script->zone()->types.activeAnalysis) {
+        if (!sp->jsprintf(" object")) {
+          return 0;
+||||||| merged common ancestors
+      case JOF_OBJECT: {
+        /* Don't call obj.toSource if analysis/inference is active. */
+        if (script->zone()->types.activeAnalysis) {
+            if (!sp->jsprintf(" object")) {
+                return 0;
+            }
+            break;
+        }
+
+        JSObject* obj = script->getObject(GET_UINT32_INDEX(pc));
+        {
+            RootedValue v(cx, ObjectValue(*obj));
+            UniqueChars bytes = ToDisassemblySource(cx, v);
+            if (!bytes) {
+                return 0;
+            }
+            if (!sp->jsprintf(" %s", bytes.get())) {
+                return 0;
+            }
+=======
+    case JOF_BIGINT: {
+      RootedValue v(cx, BigIntValue(script->getBigInt(pc)));
       UniqueChars bytes = ToDisassemblySource(cx, v);
       if (!bytes) {
         return 0;
@@ -1489,6 +1793,7 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       if (script->zone()->types.activeAnalysis) {
         if (!sp->jsprintf(" object")) {
           return 0;
+>>>>>>> upstream-releases
         }
         break;
       }
@@ -1507,6 +1812,43 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       break;
     }
 
+<<<<<<< HEAD
+    case JOF_REGEXP: {
+      js::RegExpObject* obj = script->getRegExp(pc);
+      RootedValue v(cx, ObjectValue(*obj));
+      UniqueChars bytes = ToDisassemblySource(cx, v);
+      if (!bytes) {
+        return 0;
+||||||| merged common ancestors
+      case JOF_TABLESWITCH:
+      {
+        int32_t i, low, high;
+
+        ptrdiff_t off = GET_JUMP_OFFSET(pc);
+        jsbytecode* pc2 = pc + JUMP_OFFSET_LEN;
+        low = GET_JUMP_OFFSET(pc2);
+        pc2 += JUMP_OFFSET_LEN;
+        high = GET_JUMP_OFFSET(pc2);
+        pc2 += JUMP_OFFSET_LEN;
+        if (!sp->jsprintf(" defaultOffset %d low %d high %d", int(off), low, high)) {
+            return 0;
+        }
+
+        // Display stack dump before diplaying the offsets for each case.
+        if (!dumpStack()) {
+            return 0;
+        }
+
+        for (i = low; i <= high; i++) {
+            off = GET_JUMP_OFFSET(pc2);
+            if (!sp->jsprintf("\n\t%d: %d", i, int(off))) {
+                return 0;
+            }
+            pc2 += JUMP_OFFSET_LEN;
+        }
+        len = 1 + pc2 - pc;
+        break;
+=======
     case JOF_REGEXP: {
       js::RegExpObject* obj = script->getRegExp(pc);
       RootedValue v(cx, ObjectValue(*obj));
@@ -1532,13 +1874,48 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       if (!sp->jsprintf(" defaultOffset %d low %d high %d", int(off), low,
                         high)) {
         return 0;
+>>>>>>> upstream-releases
       }
+      if (!sp->jsprintf(" %s", bytes.get())) {
+        return 0;
+      }
+      break;
+    }
 
+<<<<<<< HEAD
+    case JOF_TABLESWITCH: {
+      int32_t i, low, high;
+||||||| merged common ancestors
+      case JOF_QARG:
+        if (!sp->jsprintf(" %u", GET_ARGNO(pc))) {
+            return 0;
+        }
+        break;
+=======
       // Display stack dump before diplaying the offsets for each case.
       if (!dumpStack()) {
         return 0;
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      ptrdiff_t off = GET_JUMP_OFFSET(pc);
+      jsbytecode* pc2 = pc + JUMP_OFFSET_LEN;
+      low = GET_JUMP_OFFSET(pc2);
+      pc2 += JUMP_OFFSET_LEN;
+      high = GET_JUMP_OFFSET(pc2);
+      pc2 += JUMP_OFFSET_LEN;
+      if (!sp->jsprintf(" defaultOffset %d low %d high %d", int(off), low,
+                        high)) {
+        return 0;
+      }
+||||||| merged common ancestors
+      case JOF_LOCAL:
+        if (!sp->jsprintf(" %u", GET_LOCALNO(pc))) {
+            return 0;
+        }
+        break;
+=======
       for (i = low; i <= high; i++) {
         off =
             script->tableSwitchCaseOffset(pc, i - low) - script->pcToOffset(pc);
@@ -1548,22 +1925,151 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       }
       break;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // Display stack dump before diplaying the offsets for each case.
+      if (!dumpStack()) {
+        return 0;
+      }
+||||||| merged common ancestors
+      case JOF_UINT32:
+        if (!sp->jsprintf(" %u", GET_UINT32(pc))) {
+            return 0;
+        }
+        break;
+=======
     case JOF_QARG:
       if (!sp->jsprintf(" %u", GET_ARGNO(pc))) {
         return 0;
       }
       break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      for (i = low; i <= high; i++) {
+        off =
+            script->tableSwitchCaseOffset(pc, i - low) - script->pcToOffset(pc);
+        if (!sp->jsprintf("\n\t%d: %d", i, int(off))) {
+          return 0;
+        }
+      }
+      break;
+    }
+||||||| merged common ancestors
+      case JOF_UINT16:
+        i = (int)GET_UINT16(pc);
+        goto print_int;
+
+      case JOF_UINT24:
+        MOZ_ASSERT(len == 4);
+        i = (int)GET_UINT24(pc);
+        goto print_int;
+
+      case JOF_UINT8:
+        i = GET_UINT8(pc);
+        goto print_int;
+
+      case JOF_INT8:
+        i = GET_INT8(pc);
+        goto print_int;
+
+      case JOF_INT32:
+        MOZ_ASSERT(op == JSOP_INT32);
+        i = GET_INT32(pc);
+      print_int:
+        if (!sp->jsprintf(" %d", i)) {
+            return 0;
+        }
+        break;
+=======
     case JOF_LOCAL:
       if (!sp->jsprintf(" %u", GET_LOCALNO(pc))) {
         return 0;
       }
       break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    case JOF_QARG:
+      if (!sp->jsprintf(" %u", GET_ARGNO(pc))) {
+||||||| merged common ancestors
+      default: {
+        char numBuf[12];
+        SprintfLiteral(numBuf, "%x", cs->format);
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_UNKNOWN_FORMAT, numBuf);
+=======
+    case JOF_UINT32:
+      if (!sp->jsprintf(" %u", GET_UINT32(pc))) {
+>>>>>>> upstream-releases
+        return 0;
+      }
+      break;
+
+<<<<<<< HEAD
+    case JOF_LOCAL:
+      if (!sp->jsprintf(" %u", GET_LOCALNO(pc))) {
+||||||| merged common ancestors
+    if (!dumpStack()) {
+=======
+    case JOF_ICINDEX:
+      if (!sp->jsprintf(" (ic: %u)", GET_ICINDEX(pc))) {
+>>>>>>> upstream-releases
+        return 0;
+      }
+      break;
+
+<<<<<<< HEAD
     case JOF_UINT32:
       if (!sp->jsprintf(" %u", GET_UINT32(pc))) {
         return 0;
+      }
+      break;
+
+    case JOF_ARGC:
+    case JOF_UINT16:
+      i = (int)GET_UINT16(pc);
+      goto print_int;
+
+    case JOF_RESUMEINDEX:
+    case JOF_UINT24:
+      MOZ_ASSERT(len == 4);
+      i = (int)GET_UINT24(pc);
+      goto print_int;
+
+    case JOF_UINT8:
+      i = GET_UINT8(pc);
+      goto print_int;
+
+    case JOF_INT8:
+      i = GET_INT8(pc);
+      goto print_int;
+
+    case JOF_INT32:
+      MOZ_ASSERT(op == JSOP_INT32);
+      i = GET_INT32(pc);
+    print_int:
+      if (!sp->jsprintf(" %d", i)) {
+||||||| merged common ancestors
+    if (!sp->put("\n")) {
+=======
+    case JOF_LOOPENTRY:
+      if (!sp->jsprintf(" (ic: %u, data: %u,%u)", GET_ICINDEX(pc),
+                        LoopEntryCanIonOsr(pc), LoopEntryDepthHint(pc))) {
+>>>>>>> upstream-releases
+        return 0;
+<<<<<<< HEAD
+      }
+      break;
+
+    default: {
+      char numBuf[12];
+      SprintfLiteral(numBuf, "%x", cs->format);
+      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
+                                JSMSG_UNKNOWN_FORMAT, numBuf);
+      return 0;
+||||||| merged common ancestors
+=======
       }
       break;
 
@@ -1601,6 +2107,7 @@ static unsigned Disassemble1(JSContext* cx, HandleScript script, jsbytecode* pc,
       JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
                                 JSMSG_UNKNOWN_FORMAT, numBuf);
       return 0;
+>>>>>>> upstream-releases
     }
   }
 
@@ -1726,10 +2233,47 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
     }
   }
 
+<<<<<<< HEAD
   switch (op) {
     case JSOP_DELNAME:
       return write("(delete ") && write(loadAtom(pc)) && write(")");
 
+    case JSOP_GETGNAME:
+    case JSOP_GETNAME:
+    case JSOP_GETINTRINSIC:
+      return write(loadAtom(pc));
+    case JSOP_GETARG: {
+      unsigned slot = GET_ARGNO(pc);
+||||||| merged common ancestors
+    switch (op) {
+      case JSOP_DELNAME:
+        return write("(delete ") &&
+               write(loadAtom(pc)) &&
+               write(")");
+=======
+  switch (op) {
+    case JSOP_DELNAME:
+      return write("(delete ") && write(loadAtom(pc)) && write(")");
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      // For self-hosted scripts that are called from non-self-hosted code,
+      // decompiling the parameter name in the self-hosted script is
+      // unhelpful. Decompile the argument name instead.
+      if (script->selfHosted()
+||||||| merged common ancestors
+      case JSOP_GETGNAME:
+      case JSOP_GETNAME:
+      case JSOP_GETINTRINSIC:
+        return write(loadAtom(pc));
+      case JSOP_GETARG: {
+        unsigned slot = GET_ARGNO(pc);
+
+        // For self-hosted scripts that are called from non-self-hosted code,
+        // decompiling the parameter name in the self-hosted script is
+        // unhelpful. Decompile the argument name instead.
+        if (script->selfHosted()
+=======
     case JSOP_GETGNAME:
     case JSOP_GETNAME:
     case JSOP_GETINTRINSIC:
@@ -1741,6 +2285,7 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       // decompiling the parameter name in the self-hosted script is
       // unhelpful. Decompile the argument name instead.
       if (script->selfHosted()
+>>>>>>> upstream-releases
 #ifdef DEBUG
           // For stack dump, argument name is not necessary.
           && !isStackDump
@@ -1751,17 +2296,116 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
           return false;
         }
 
+<<<<<<< HEAD
         // Note that decompiling the argument in the parent frame might
         // not succeed.
         if (result) {
           return write(result.get());
         }
+||||||| merged common ancestors
+        JSAtom* atom = getArg(slot);
+        if (!atom) {
+            return false;
+        }
+        return write(atom);
+      }
+      case JSOP_GETLOCAL: {
+        JSAtom* atom = FrameSlotName(script, pc);
+        MOZ_ASSERT(atom);
+        return write(atom);
+      }
+      case JSOP_GETALIASEDVAR: {
+        JSAtom* atom = EnvironmentCoordinateName(cx->caches().envCoordinateNameCache, script, pc);
+        MOZ_ASSERT(atom);
+        return write(atom);
+      }
+
+      case JSOP_DELPROP:
+      case JSOP_STRICTDELPROP:
+      case JSOP_LENGTH:
+      case JSOP_GETPROP:
+      case JSOP_GETBOUNDNAME:
+      case JSOP_CALLPROP: {
+        bool hasDelete = op == JSOP_DELPROP || op == JSOP_STRICTDELPROP;
+        RootedAtom prop(cx, (op == JSOP_LENGTH) ? cx->names().length : loadAtom(pc));
+        MOZ_ASSERT(prop);
+        return (hasDelete ? write("(delete ") : true) &&
+               decompilePCForStackOperand(pc, -1) &&
+               (IsIdentifier(prop)
+                ? write(".") && quote(prop, '\0')
+                : write("[") && quote(prop, '\'') && write("]")) &&
+               (hasDelete ? write(")") : true);
+      }
+      case JSOP_GETPROP_SUPER:
+      {
+        RootedAtom prop(cx, loadAtom(pc));
+        return write("super.") &&
+               quote(prop, '\0');
+      }
+      case JSOP_SETELEM:
+      case JSOP_STRICTSETELEM:
+        // NOTE: We don't show the right hand side of the operation because
+        // it's used in error messages like: "a[0] is not readable".
+        //
+        // We could though.
+        return decompilePCForStackOperand(pc, -3) &&
+               write("[") &&
+               decompilePCForStackOperand(pc, -2) &&
+               write("]");
+
+      case JSOP_DELELEM:
+      case JSOP_STRICTDELELEM:
+      case JSOP_GETELEM:
+      case JSOP_CALLELEM: {
+        bool hasDelete = (op == JSOP_DELELEM || op == JSOP_STRICTDELELEM);
+        return (hasDelete ? write("(delete ") : true) &&
+               decompilePCForStackOperand(pc, -2) &&
+               write("[") &&
+               decompilePCForStackOperand(pc, -1) &&
+               write("]") &&
+               (hasDelete ? write(")") : true);
+      }
+
+      case JSOP_GETELEM_SUPER:
+        return write("super[") &&
+               decompilePCForStackOperand(pc, -2) &&
+               write("]");
+      case JSOP_NULL:
+        return write(js_null_str);
+      case JSOP_TRUE:
+        return write(js_true_str);
+      case JSOP_FALSE:
+        return write(js_false_str);
+      case JSOP_ZERO:
+      case JSOP_ONE:
+      case JSOP_INT8:
+      case JSOP_UINT16:
+      case JSOP_UINT24:
+      case JSOP_INT32:
+        return sprinter.printf("%d", GetBytecodeInteger(pc));
+      case JSOP_STRING:
+        return quote(loadAtom(pc), '"');
+      case JSOP_SYMBOL: {
+        unsigned i = uint8_t(pc[1]);
+        MOZ_ASSERT(i < JS::WellKnownSymbolLimit);
+        if (i < JS::WellKnownSymbolLimit) {
+            return write(cx->names().wellKnownSymbolDescriptions()[i]);
+        }
+        break;
+=======
+        // Note that decompiling the argument in the parent frame might
+        // not succeed.
+        if (result) {
+          return write(result.get());
+        }
+>>>>>>> upstream-releases
       }
 
       JSAtom* atom = getArg(slot);
       if (!atom) {
         return false;
       }
+<<<<<<< HEAD
       return write(atom);
     }
     case JSOP_GETLOCAL: {
@@ -1879,6 +2523,130 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       for (size_t i = 0; i < aobj->getDenseInitializedLength(); i++) {
         if (i > 0 && !write(", ")) {
           return false;
+||||||| merged common ancestors
+      case JSOP_NEWARRAY_COPYONWRITE: {
+        RootedObject obj(cx, script->getObject(GET_UINT32_INDEX(pc)));
+        Handle<ArrayObject*> aobj = obj.as<ArrayObject>();
+        if (!write("[")) {
+            return false;
+=======
+      return write(atom);
+    }
+    case JSOP_GETLOCAL: {
+      JSAtom* atom = FrameSlotName(script, pc);
+      MOZ_ASSERT(atom);
+      return write(atom);
+    }
+    case JSOP_GETALIASEDVAR: {
+      JSAtom* atom = EnvironmentCoordinateNameSlow(script, pc);
+      MOZ_ASSERT(atom);
+      return write(atom);
+    }
+
+    case JSOP_DELPROP:
+    case JSOP_STRICTDELPROP:
+    case JSOP_LENGTH:
+    case JSOP_GETPROP:
+    case JSOP_GETBOUNDNAME:
+    case JSOP_CALLPROP: {
+      bool hasDelete = op == JSOP_DELPROP || op == JSOP_STRICTDELPROP;
+      RootedAtom prop(cx,
+                      (op == JSOP_LENGTH) ? cx->names().length : loadAtom(pc));
+      MOZ_ASSERT(prop);
+      return (hasDelete ? write("(delete ") : true) &&
+             decompilePCForStackOperand(pc, -1) &&
+             (IsIdentifier(prop)
+                  ? write(".") && quote(prop, '\0')
+                  : write("[") && quote(prop, '\'') && write("]")) &&
+             (hasDelete ? write(")") : true);
+    }
+    case JSOP_GETPROP_SUPER: {
+      RootedAtom prop(cx, loadAtom(pc));
+      return write("super.") && quote(prop, '\0');
+    }
+    case JSOP_SETELEM:
+    case JSOP_STRICTSETELEM:
+      // NOTE: We don't show the right hand side of the operation because
+      // it's used in error messages like: "a[0] is not readable".
+      //
+      // We could though.
+      return decompilePCForStackOperand(pc, -3) && write("[") &&
+             decompilePCForStackOperand(pc, -2) && write("]");
+
+    case JSOP_DELELEM:
+    case JSOP_STRICTDELELEM:
+    case JSOP_GETELEM:
+    case JSOP_CALLELEM: {
+      bool hasDelete = (op == JSOP_DELELEM || op == JSOP_STRICTDELELEM);
+      return (hasDelete ? write("(delete ") : true) &&
+             decompilePCForStackOperand(pc, -2) && write("[") &&
+             decompilePCForStackOperand(pc, -1) && write("]") &&
+             (hasDelete ? write(")") : true);
+    }
+
+    case JSOP_GETELEM_SUPER:
+      return write("super[") && decompilePCForStackOperand(pc, -2) &&
+             write("]");
+    case JSOP_NULL:
+      return write(js_null_str);
+    case JSOP_TRUE:
+      return write(js_true_str);
+    case JSOP_FALSE:
+      return write(js_false_str);
+    case JSOP_ZERO:
+    case JSOP_ONE:
+    case JSOP_INT8:
+    case JSOP_UINT16:
+    case JSOP_UINT24:
+    case JSOP_INT32:
+      return sprinter.printf("%d", GetBytecodeInteger(pc));
+    case JSOP_STRING:
+      return quote(loadAtom(pc), '"');
+    case JSOP_SYMBOL: {
+      unsigned i = uint8_t(pc[1]);
+      MOZ_ASSERT(i < JS::WellKnownSymbolLimit);
+      if (i < JS::WellKnownSymbolLimit) {
+        return write(cx->names().wellKnownSymbolDescriptions()[i]);
+      }
+      break;
+    }
+    case JSOP_UNDEFINED:
+      return write(js_undefined_str);
+    case JSOP_GLOBALTHIS:
+      // |this| could convert to a very long object initialiser, so cite it by
+      // its keyword name.
+      return write(js_this_str);
+    case JSOP_NEWTARGET:
+      return write("new.target");
+    case JSOP_CALL:
+    case JSOP_CALL_IGNORES_RV:
+    case JSOP_CALLITER:
+    case JSOP_FUNCALL:
+    case JSOP_FUNAPPLY:
+      return decompilePCForStackOperand(pc, -int32_t(GET_ARGC(pc) + 2)) &&
+             write("(...)");
+    case JSOP_SPREADCALL:
+      return decompilePCForStackOperand(pc, -3) && write("(...)");
+    case JSOP_NEWARRAY:
+      return write("[]");
+    case JSOP_REGEXP: {
+      RootedObject obj(cx, script->getObject(GET_UINT32_INDEX(pc)));
+      JSString* str = obj->as<RegExpObject>().toString(cx);
+      if (!str) {
+        return false;
+      }
+      return write(str);
+    }
+    case JSOP_NEWARRAY_COPYONWRITE: {
+      RootedObject obj(cx, script->getObject(GET_UINT32_INDEX(pc)));
+      Handle<ArrayObject*> aobj = obj.as<ArrayObject>();
+      if (!write("[")) {
+        return false;
+      }
+      for (size_t i = 0; i < aobj->getDenseInitializedLength(); i++) {
+        if (i > 0 && !write(", ")) {
+          return false;
+>>>>>>> upstream-releases
         }
 
         RootedValue v(cx, aobj->getDenseElement(i));
@@ -1898,6 +2666,100 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       if (!str) {
         return false;
       }
+<<<<<<< HEAD
+      return write(str);
+    }
+    case JSOP_VOID:
+      return write("(void ") && decompilePCForStackOperand(pc, -1) &&
+             write(")");
+
+    case JSOP_SUPERCALL:
+    case JSOP_SPREADSUPERCALL:
+      return write("super(...)");
+    case JSOP_SUPERFUN:
+      return write("super");
+
+    case JSOP_EVAL:
+    case JSOP_SPREADEVAL:
+    case JSOP_STRICTEVAL:
+    case JSOP_STRICTSPREADEVAL:
+      return write("eval(...)");
+
+    case JSOP_NEW:
+      return write("(new ") &&
+             decompilePCForStackOperand(pc, -int32_t(GET_ARGC(pc) + 3)) &&
+             write("(...))");
+
+    case JSOP_SPREADNEW:
+      return write("(new ") && decompilePCForStackOperand(pc, -4) &&
+             write("(...))");
+
+    case JSOP_TYPEOF:
+    case JSOP_TYPEOFEXPR:
+      return write("(typeof ") && decompilePCForStackOperand(pc, -1) &&
+             write(")");
+
+    case JSOP_INITELEM_ARRAY:
+      return write("[...]");
+
+    case JSOP_INITELEM_INC:
+      if (defIndex == 0) {
+        return write("[...]");
+      }
+      MOZ_ASSERT(defIndex == 1);
+#ifdef DEBUG
+      // INDEX won't be be exposed to error message.
+      if (isStackDump) {
+        return write("INDEX");
+      }
+||||||| merged common ancestors
+      case JSOP_VOID:
+        return write("(void ") &&
+               decompilePCForStackOperand(pc, -1) &&
+               write(")");
+
+      case JSOP_SUPERCALL:
+      case JSOP_SPREADSUPERCALL:
+        return write("super(...)");
+      case JSOP_SUPERFUN:
+        return write("super");
+
+      case JSOP_EVAL:
+      case JSOP_SPREADEVAL:
+      case JSOP_STRICTEVAL:
+      case JSOP_STRICTSPREADEVAL:
+        return write("eval(...)");
+
+      case JSOP_NEW:
+        return write("(new ") &&
+               decompilePCForStackOperand(pc, -int32_t(GET_ARGC(pc) + 3)) &&
+               write("(...))");
+
+      case JSOP_SPREADNEW:
+        return write("(new ") &&
+               decompilePCForStackOperand(pc, -4) &&
+               write("(...))");
+
+      case JSOP_TYPEOF:
+      case JSOP_TYPEOFEXPR:
+        return write("(typeof ") &&
+               decompilePCForStackOperand(pc, -1) &&
+               write(")");
+
+      case JSOP_INITELEM_ARRAY:
+        return write("[...]");
+
+      case JSOP_INITELEM_INC:
+        if (defIndex == 0) {
+            return write("[...]");
+        }
+        MOZ_ASSERT(defIndex == 1);
+#ifdef DEBUG
+        // INDEX won't be be exposed to error message.
+        if (isStackDump) {
+            return write("INDEX");
+        }
+=======
       return write(str);
     }
     case JSOP_VOID:
@@ -1946,6 +2808,32 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
 #endif
       break;
 
+    case JSOP_TONUMERIC:
+      return write("(tonumeric ") && decompilePCForStackOperand(pc, -1) &&
+             write(")");
+
+    case JSOP_INC:
+      return write("(inc ") && decompilePCForStackOperand(pc, -1) && write(")");
+
+    case JSOP_DEC:
+      return write("(dec ") && decompilePCForStackOperand(pc, -1) && write(")");
+
+    case JSOP_BIGINT:
+#if defined(DEBUG) || defined(JS_JITSPEW)
+      // BigInt::dump() only available in this configuration.
+      script->getBigInt(pc)->dump(sprinter);
+      return !sprinter.hadOutOfMemory();
+#else
+      return write("[bigint]");
+>>>>>>> upstream-releases
+#endif
+<<<<<<< HEAD
+      break;
+||||||| merged common ancestors
+        break;
+=======
+>>>>>>> upstream-releases
+
     default:
       break;
   }
@@ -1977,9 +2865,17 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       case JSOP_DERIVEDCONSTRUCTOR:
         return write("CONSTRUCTOR");
 
+<<<<<<< HEAD
       case JSOP_DOUBLE:
         return sprinter.printf(
             "%lf", script->getConst(GET_UINT32_INDEX(pc)).toDouble());
+||||||| merged common ancestors
+          case JSOP_EXCEPTION:
+            return write("EXCEPTION");
+=======
+      case JSOP_DOUBLE:
+        return sprinter.printf("%lf", GET_INLINE_VALUE(pc).toDouble());
+>>>>>>> upstream-releases
 
       case JSOP_EXCEPTION:
         return write("EXCEPTION");
@@ -2027,11 +2923,20 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       case JSOP_ITER:
         return write("ITER");
 
+<<<<<<< HEAD
       case JSOP_LAMBDA:
       case JSOP_LAMBDA_ARROW:
       case JSOP_TOASYNC:
       case JSOP_TOASYNCGEN:
         return write("FUN");
+||||||| merged common ancestors
+          case JSOP_TOASYNCITER:
+            return write("ASYNCITER");
+=======
+      case JSOP_LAMBDA:
+      case JSOP_LAMBDA_ARROW:
+        return write("FUN");
+>>>>>>> upstream-releases
 
       case JSOP_TOASYNCITER:
         return write("ASYNCITER");
@@ -2073,6 +2978,7 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
       case JSOP_UNINITIALIZED:
         return write("UNINITIALIZED");
 
+<<<<<<< HEAD
       case JSOP_AWAIT:
       case JSOP_YIELD:
         // Printing "yield SOMETHING" is confusing since the operand doesn't
@@ -2082,6 +2988,26 @@ bool ExpressionDecompiler::decompilePC(jsbytecode* pc, uint8_t defIndex) {
 
       default:
         break;
+||||||| merged common ancestors
+          default:
+            break;
+        }
+        return write("<unknown>");
+=======
+      case JSOP_AWAIT:
+      case JSOP_YIELD:
+        // Printing "yield SOMETHING" is confusing since the operand doesn't
+        // match to the syntax, since the stack operand for "yield 10" is
+        // the result object, not 10.
+        return write("RVAL");
+
+      case JSOP_ASYNCAWAIT:
+      case JSOP_ASYNCRESOLVE:
+        return write("PROMISE");
+
+      default:
+        break;
+>>>>>>> upstream-releases
     }
     return write("<unknown>");
   }
@@ -2179,6 +3105,7 @@ UniqueChars ExpressionDecompiler::getOutput() {
 }  // anonymous namespace
 
 #if defined(DEBUG) || defined(JS_JITSPEW)
+<<<<<<< HEAD
 static bool DecompileAtPCForStackDump(
     JSContext* cx, HandleScript script,
     const OffsetAndDefIndex& offsetAndDefIndex, Sprinter* sp) {
@@ -2188,6 +3115,30 @@ static bool DecompileAtPCForStackDump(
   if (!parser.parse()) {
     return false;
   }
+||||||| merged common ancestors
+static bool
+DecompileAtPCForStackDump(JSContext* cx, HandleScript script,
+                          const OffsetAndDefIndex& offsetAndDefIndex, Sprinter* sp)
+{
+    BytecodeParser parser(cx, script);
+    parser.setStackDump();
+    if (!parser.parse()) {
+        return false;
+    }
+=======
+static bool DecompileAtPCForStackDump(
+    JSContext* cx, HandleScript script,
+    const OffsetAndDefIndex& offsetAndDefIndex, Sprinter* sp) {
+  // The expression decompiler asserts the script is in the current realm.
+  AutoRealm ar(cx, script);
+
+  LifoAllocScope allocScope(&cx->tempLifoAlloc());
+  BytecodeParser parser(cx, allocScope.alloc(), script);
+  parser.setStackDump();
+  if (!parser.parse()) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
   ExpressionDecompiler ed(cx, script, parser);
   ed.setStackDump();
@@ -2487,12 +3438,31 @@ extern bool js::IsValidBytecodeOffset(JSContext* cx, JSScript* script,
  * PurgePCCounts            None      None      None
  */
 
+<<<<<<< HEAD
 static void ReleaseScriptCounts(FreeOp* fop) {
   JSRuntime* rt = fop->runtime();
   MOZ_ASSERT(rt->scriptAndCountsVector);
+||||||| merged common ancestors
+static void
+ReleaseScriptCounts(FreeOp* fop)
+{
+    JSRuntime* rt = fop->runtime();
+    MOZ_ASSERT(rt->scriptAndCountsVector);
+=======
+static void ReleaseScriptCounts(JSRuntime* rt) {
+  MOZ_ASSERT(rt->scriptAndCountsVector);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   fop->delete_(rt->scriptAndCountsVector.ref());
   rt->scriptAndCountsVector = nullptr;
+||||||| merged common ancestors
+    fop->delete_(rt->scriptAndCountsVector.ref());
+    rt->scriptAndCountsVector = nullptr;
+=======
+  js_delete(rt->scriptAndCountsVector.ref());
+  rt->scriptAndCountsVector = nullptr;
+>>>>>>> upstream-releases
 }
 
 JS_FRIEND_API void js::StartPCCountProfiling(JSContext* cx) {
@@ -2502,9 +3472,19 @@ JS_FRIEND_API void js::StartPCCountProfiling(JSContext* cx) {
     return;
   }
 
+<<<<<<< HEAD
   if (rt->scriptAndCountsVector) {
     ReleaseScriptCounts(rt->defaultFreeOp());
   }
+||||||| merged common ancestors
+    if (rt->scriptAndCountsVector) {
+        ReleaseScriptCounts(rt->defaultFreeOp());
+    }
+=======
+  if (rt->scriptAndCountsVector) {
+    ReleaseScriptCounts(rt);
+  }
+>>>>>>> upstream-releases
 
   ReleaseAllJITCode(rt->defaultFreeOp());
 
@@ -2521,12 +3501,27 @@ JS_FRIEND_API void js::StopPCCountProfiling(JSContext* cx) {
 
   ReleaseAllJITCode(rt->defaultFreeOp());
 
+<<<<<<< HEAD
   auto* vec = cx->new_<PersistentRooted<ScriptAndCountsVector>>(
       cx, ScriptAndCountsVector(SystemAllocPolicy()));
   if (!vec) {
     return;
   }
+||||||| merged common ancestors
+    auto* vec = cx->new_<PersistentRooted<ScriptAndCountsVector>>(cx,
+        ScriptAndCountsVector(SystemAllocPolicy()));
+    if (!vec) {
+        return;
+    }
+=======
+  auto* vec = cx->new_<PersistentRooted<ScriptAndCountsVector>>(
+      cx, ScriptAndCountsVector());
+  if (!vec) {
+    return;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
     for (auto script = zone->cellIter<JSScript>(); !script.done();
          script.next()) {
@@ -2534,6 +3529,23 @@ JS_FRIEND_API void js::StopPCCountProfiling(JSContext* cx) {
       if (script->hasScriptCounts() && script->types(sweep)) {
         if (!vec->append(script)) {
           return;
+||||||| merged common ancestors
+    for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
+        for (auto script = zone->cellIter<JSScript>(); !script.done(); script.next()) {
+            AutoSweepTypeScript sweep(script);
+            if (script->hasScriptCounts() && script->types(sweep)) {
+                if (!vec->append(script)) {
+                    return;
+                }
+            }
+=======
+  for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
+    for (auto script = zone->cellIter<JSScript>(); !script.done();
+         script.next()) {
+      if (script->hasScriptCounts() && script->jitScript()) {
+        if (!vec->append(script)) {
+          return;
+>>>>>>> upstream-releases
         }
       }
     }
@@ -2551,7 +3563,13 @@ JS_FRIEND_API void js::PurgePCCounts(JSContext* cx) {
   }
   MOZ_ASSERT(!rt->profilingScripts);
 
+<<<<<<< HEAD
   ReleaseScriptCounts(rt->defaultFreeOp());
+||||||| merged common ancestors
+    ReleaseScriptCounts(rt->defaultFreeOp());
+=======
+  ReleaseScriptCounts(rt);
+>>>>>>> upstream-releases
 }
 
 JS_FRIEND_API size_t js::GetPCCountScriptCount(JSContext* cx) {
@@ -2819,14 +3837,67 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
                              GenericPrinter& out) {
   JSRuntime* rt = cx->runtime();
 
+<<<<<<< HEAD
   // Collect the list of scripts which are part of the current realm.
   { js::gc::AutoPrepareForTracing apft(cx); }
+||||||| merged common ancestors
+    // Collect the list of scripts which are part of the current realm.
+    {
+        js::gc::AutoPrepareForTracing apft(cx);
+    }
+=======
+  AutoRealmUnchecked ar(cx, realm);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Hold the scripts that we have already flushed, to avoid flushing them
   // twice.
   using JSScriptSet = GCHashSet<JSScript*>;
   Rooted<JSScriptSet> scriptsDone(cx, JSScriptSet(cx));
+||||||| merged common ancestors
+    Rooted<ScriptVector> topScripts(cx, ScriptVector(cx));
+    for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
+        for (auto script = zone->cellIter<JSScript>(); !script.done(); script.next()) {
+            if (script->realm() != realm ||
+                !script->isTopLevel() ||
+                !script->filename())
+            {
+                continue;
+            }
+=======
+  // Collect the list of scripts which are part of the current realm.
+  { js::gc::AutoPrepareForTracing apft(cx); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  Rooted<ScriptVector> queue(cx, ScriptVector(cx));
+  for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
+    for (auto script = zone->cellIter<JSScript>(); !script.done();
+         script.next()) {
+      if (script->realm() != realm || !script->filename()) {
+        continue;
+      }
+||||||| merged common ancestors
+            if (!topScripts.append(script)) {
+                return false;
+            }
+        }
+    }
+=======
+  // Hold the scripts that we have already flushed, to avoid flushing them
+  // twice.
+  using JSScriptSet = GCHashSet<JSScript*>;
+  Rooted<JSScriptSet> scriptsDone(cx, JSScriptSet(cx));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+      if (!queue.append(script)) {
+        return false;
+      }
+||||||| merged common ancestors
+    if (topScripts.length() == 0) {
+        return true;
+=======
   Rooted<ScriptVector> queue(cx, ScriptVector(cx));
   for (ZonesIter zone(rt, SkipAtoms); !zone.done(); zone.next()) {
     for (auto script = zone->cellIter<JSScript>(); !script.done();
@@ -2838,9 +3909,27 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
       if (!queue.append(script)) {
         return false;
       }
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
+  if (queue.length() == 0) {
+    return true;
+  }
+||||||| merged common ancestors
+    // Collect code coverage info for one realm.
+    coverage::LCovRealm realmCover;
+    for (JSScript* topLevel: topScripts) {
+        RootedScript topScript(cx, topLevel);
+
+        // We found the top-level script, visit all the functions reachable
+        // from the top-level function, and delazify them.
+        Rooted<ScriptVector> queue(cx, ScriptVector(cx));
+        if (!queue.append(topLevel)) {
+            return false;
+        }
+=======
   if (queue.length() == 0) {
     return true;
   }
@@ -2849,22 +3938,120 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
   do {
     RootedScript script(cx, queue.popCopy());
     RootedFunction fun(cx);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Collect code coverage info for one realm.
+  do {
+    RootedScript script(cx, queue.popCopy());
+    RootedFunction fun(cx);
+||||||| merged common ancestors
+        RootedScript script(cx);
+        RootedFunction fun(cx);
+        do {
+            script = queue.popCopy();
+            if (script->filename()) {
+                realmCover.collectCodeCoverageInfo(realm, script, script->filename());
+            }
+=======
     JSScriptSet::AddPtr entry = scriptsDone.lookupForAdd(script);
     if (script->filename() && !entry) {
       realm->lcovOutput.collectCodeCoverageInfo(realm, script,
                                                 script->filename());
       script->resetScriptCounts();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    JSScriptSet::AddPtr entry = scriptsDone.lookupForAdd(script);
+    if (script->filename() && !entry) {
+      realm->lcovOutput.collectCodeCoverageInfo(realm, script,
+                                                script->filename());
+      script->resetScriptCounts();
+||||||| merged common ancestors
+            // Iterate from the last to the first object in order to have
+            // the functions them visited in the opposite order when popping
+            // elements from the stack of remaining scripts, such that the
+            // functions are more-less listed with increasing line numbers.
+            if (!script->hasObjects()) {
+                continue;
+            }
+            auto objects = script->objects();
+            for (JSObject* obj : mozilla::Reversed(objects)) {
+                // Only continue on JSFunction objects.
+                if (!obj->is<JSFunction>()) {
+                    continue;
+                }
+                fun = &obj->as<JSFunction>();
+
+                // Let's skip wasm for now.
+                if (!fun->isInterpreted()) {
+                    continue;
+                }
+
+                // Queue the script in the list of script associated to the
+                // current source.
+                JSScript* childScript = JSFunction::getOrCreateScript(cx, fun);
+                if (!childScript || !queue.append(childScript)) {
+                    return false;
+                }
+            }
+        } while (!queue.empty());
+    }
+=======
       if (!scriptsDone.add(entry, script)) {
         return false;
       }
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      if (!scriptsDone.add(entry, script)) {
+        return false;
+      }
+||||||| merged common ancestors
+    bool isEmpty = true;
+    realmCover.exportInto(out, &isEmpty);
+    if (out.hadOutOfMemory()) {
+        return false;
+=======
+    if (!script->isTopLevel()) {
+      continue;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     if (!script->isTopLevel()) {
       continue;
     }
+||||||| merged common ancestors
+JS_FRIEND_API(char*)
+js::GetCodeCoverageSummary(JSContext* cx, size_t* length)
+{
+    Sprinter out(cx);
 
+    if (!out.init()) {
+        return nullptr;
+    }
+=======
+    // Iterate from the last to the first object in order to have
+    // the functions them visited in the opposite order when popping
+    // elements from the stack of remaining scripts, such that the
+    // functions are more-less listed with increasing line numbers.
+    auto gcthings = script->gcthings();
+    for (JS::GCCellPtr gcThing : mozilla::Reversed(gcthings)) {
+      if (!gcThing.is<JSObject>()) {
+        continue;
+      }
+
+      // Only continue on JSFunction objects.
+      JSObject* obj = &gcThing.as<JSObject>();
+      if (!obj->is<JSFunction>()) {
+        continue;
+      }
+      fun = &obj->as<JSFunction>();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // Iterate from the last to the first object in order to have
     // the functions them visited in the opposite order when popping
     // elements from the stack of remaining scripts, such that the
@@ -2879,12 +4066,29 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
         continue;
       }
       fun = &obj->as<JSFunction>();
-
+||||||| merged common ancestors
+    if (!GenerateLcovInfo(cx, cx->realm(), out)) {
+        JS_ReportOutOfMemory(cx);
+        return nullptr;
+    }
+=======
       // Let's skip wasm for now.
       if (!fun->isInterpreted()) {
         continue;
       }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // Let's skip wasm for now.
+      if (!fun->isInterpreted()) {
+        continue;
+      }
+||||||| merged common ancestors
+    if (out.hadOutOfMemory()) {
+        JS_ReportOutOfMemory(cx);
+        return nullptr;
+    }
+=======
       // Queue the script in the list of script associated to the
       // current source.
       JSScript* childScript = JSFunction::getOrCreateScript(cx, fun);
@@ -2893,7 +4097,32 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
       }
     }
   } while (!queue.empty());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+      // Queue the script in the list of script associated to the
+      // current source.
+      JSScript* childScript = JSFunction::getOrCreateScript(cx, fun);
+      if (!childScript || !queue.append(childScript)) {
+        return false;
+      }
+    }
+  } while (!queue.empty());
+||||||| merged common ancestors
+    ptrdiff_t len = out.stringEnd() - out.string();
+    char* res = cx->pod_malloc<char>(len + 1);
+    if (!res) {
+        return nullptr;
+    }
+=======
+  bool isEmpty = true;
+  realm->lcovOutput.exportInto(out, &isEmpty);
+  if (out.hadOutOfMemory()) {
+    return false;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   bool isEmpty = true;
   realm->lcovOutput.exportInto(out, &isEmpty);
   if (out.hadOutOfMemory()) {
@@ -2901,6 +4130,16 @@ static bool GenerateLcovInfo(JSContext* cx, JS::Realm* realm,
   }
 
   return true;
+||||||| merged common ancestors
+    js_memcpy(res, out.string(), len);
+    res[len] = 0;
+    if (length) {
+        *length = len;
+    }
+    return res;
+=======
+  return true;
+>>>>>>> upstream-releases
 }
 
 JS_FRIEND_API char* js::GetCodeCoverageSummary(JSContext* cx, size_t* length) {

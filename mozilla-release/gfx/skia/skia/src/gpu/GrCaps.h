@@ -52,6 +52,7 @@ public:
     bool srgbWriteControl() const { return fSRGBWriteControl; }
     bool discardRenderTargetSupport() const { return fDiscardRenderTargetSupport; }
     bool gpuTracingSupport() const { return fGpuTracingSupport; }
+    bool compressedTexSubImageSupport() const { return fCompressedTexSubImageSupport; }
     bool oversizedStencilSupport() const { return fOversizedStencilSupport; }
     bool textureBarrierSupport() const { return fTextureBarrierSupport; }
     bool sampleLocationsSupport() const { return fSampleLocationsSupport; }
@@ -102,8 +103,9 @@ public:
         return kAdvancedCoherent_BlendEquationSupport == fBlendEquationSupport;
     }
 
-    bool canUseAdvancedBlendEquation(GrBlendEquation equation) const {
+    bool isAdvancedBlendEquationBlacklisted(GrBlendEquation equation) const {
         SkASSERT(GrBlendEquationIsAdvanced(equation));
+        SkASSERT(this->advancedBlendEquationSupport());
         return SkToBool(fAdvBlendEqBlacklist & (1 << equation));
     }
 
@@ -141,12 +143,23 @@ public:
 
     /** This is the maximum tile size to use by GPU devices for rendering sw-backed images/bitmaps.
         It is usually the max texture size, unless we're overriding it for testing. */
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     int maxTileSize() const {
         SkASSERT(fMaxTileSize <= fMaxTextureSize);
         return fMaxTileSize;
     }
 
     int maxRasterSamples() const { return fMaxRasterSamples; }
+||||||| merged common ancestors
+    int maxTileSize() const { SkASSERT(fMaxTileSize <= fMaxTextureSize); return fMaxTileSize; }
+
+    int maxRasterSamples() const { return fMaxRasterSamples; }
+=======
+    int maxTileSize() const {
+        SkASSERT(fMaxTileSize <= fMaxTextureSize);
+        return fMaxTileSize;
+    }
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     int maxWindowRectangles() const { return fMaxWindowRectangles; }
 
@@ -192,6 +205,7 @@ public:
      * If this returns false then the caller should implement a fallback where a temporary texture
      * is created, pixels are written to it, and then that is copied or drawn into the the surface.
      */
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     virtual bool surfaceSupportsWritePixels(const GrSurface*) const = 0;
 
     /**
@@ -201,6 +215,19 @@ public:
      * temporary.
      */
     virtual bool surfaceSupportsReadPixels(const GrSurface*) const = 0;
+||||||| merged common ancestors
+    virtual bool surfaceSupportsWritePixels(const GrSurface* surface) const = 0;
+=======
+    bool surfaceSupportsWritePixels(const GrSurface*) const;
+
+    /**
+     * Backends may have restrictions on what types of surfaces support GrGpu::readPixels().
+     * If this returns false then the caller should implement a fallback where a temporary texture
+     * is created, the surface is drawn or copied into the temporary, and pixels are read from the
+     * temporary.
+     */
+    virtual bool surfaceSupportsReadPixels(const GrSurface*) const = 0;
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     /**
      * Given a dst pixel config and a src color type what color type must the caller coax the
@@ -231,6 +258,7 @@ public:
         is not initialized (even if not read by draw calls). */
     bool mustClearUploadedBufferData() const { return fMustClearUploadedBufferData; }
 
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     /** Returns true if the given backend supports importing AHardwareBuffers via the
      * GrAHardwarebufferImageGenerator. This will only ever be supported on Android devices with API
      * level >= 26.
@@ -238,11 +266,21 @@ public:
     bool supportsAHardwareBufferImages() const { return fSupportsAHardwareBufferImages; }
 
     bool wireframeMode() const { return fWireframeMode; }
+||||||| merged common ancestors
+    bool wireframeMode() const { return fWireframeMode; }
+=======
+    /** Returns true if the given backend supports importing AHardwareBuffers via the
+     * GrAHardwarebufferImageGenerator. This will only ever be supported on Android devices with API
+     * level >= 26.
+     * */
+    bool supportsAHardwareBufferImages() const { return fSupportsAHardwareBufferImages; }
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
-    bool sampleShadingSupport() const { return fSampleShadingSupport; }
+    bool wireframeMode() const { return fWireframeMode; }
 
     bool fenceSyncSupport() const { return fFenceSyncSupport; }
     bool crossContextTextureSupport() const { return fCrossContextTextureSupport; }
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     /**
      * Returns whether or not we will be able to do a copy given the passed in params
      */
@@ -252,6 +290,36 @@ public:
     bool dynamicStateArrayGeometryProcessorTextureSupport() const {
         return fDynamicStateArrayGeometryProcessorTextureSupport;
     }
+||||||| merged common ancestors
+=======
+    /**
+     * Returns whether or not we will be able to do a copy given the passed in params
+     */
+    bool canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
+                        const SkIRect& srcRect, const SkIPoint& dstPoint) const;
+
+    bool dynamicStateArrayGeometryProcessorTextureSupport() const {
+        return fDynamicStateArrayGeometryProcessorTextureSupport;
+    }
+
+    // Not all backends support clearing with a scissor test (e.g. Metal), this will always
+    // return true if performColorClearsAsDraws() returns true.
+    bool performPartialClearsAsDraws() const {
+        return fPerformColorClearsAsDraws || fPerformPartialClearsAsDraws;
+    }
+
+    // Many drivers have issues with color clears.
+    bool performColorClearsAsDraws() const {
+        return fPerformColorClearsAsDraws;
+    }
+
+    /// Adreno 4xx devices experience an issue when there are a large number of stencil clip bit
+    /// clears. The minimal repro steps are not precisely known but drawing a rect with a stencil
+    /// op instead of using glClear seems to resolve the issue.
+    bool performStencilClearsAsDraws() const {
+        return fPerformStencilClearsAsDraws;
+    }
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     /**
      * This is can be called before allocating a texture to be a dst for copySurface. This is only
@@ -268,20 +336,37 @@ public:
     bool validateSurfaceDesc(const GrSurfaceDesc&, GrMipMapped) const;
 
     /**
-     * Returns true if the GrBackendTexture can be used with the supplied SkColorType. If it is
-     * compatible, the passed in GrPixelConfig will be set to a config that matches the backend
-     * format and requested SkColorType.
+     * If the GrBackendRenderTarget can be used with the supplied SkColorType the return will be
+     * the config that matches the backend format and requested SkColorType. Otherwise, kUnknown is
+     * returned.
      */
-    virtual bool validateBackendTexture(const GrBackendTexture& tex, SkColorType ct,
-                                        GrPixelConfig*) const = 0;
-    virtual bool validateBackendRenderTarget(const GrBackendRenderTarget&, SkColorType,
-                                             GrPixelConfig*) const = 0;
+    virtual GrPixelConfig validateBackendRenderTarget(const GrBackendRenderTarget&,
+                                                      SkColorType) const = 0;
 
-    // TODO: replace validateBackendTexture and validateBackendRenderTarget with calls to
-    // getConfigFromBackendFormat?
+    // TODO: replace validateBackendRenderTarget with calls to getConfigFromBackendFormat?
     // TODO: it seems like we could pass the full SkImageInfo and validate its colorSpace too
-    virtual bool getConfigFromBackendFormat(const GrBackendFormat& format, SkColorType ct,
-                                            GrPixelConfig*) const = 0;
+    // Returns kUnknown if a valid config could not be determined.
+    virtual GrPixelConfig getConfigFromBackendFormat(const GrBackendFormat& format,
+                                                     SkColorType ct) const = 0;
+
+    /**
+     * Special method only for YUVA images. Returns a config that matches the backend format or
+     * kUnknown if a config could not be determined.
+     */
+    virtual GrPixelConfig getYUVAConfigFromBackendFormat(const GrBackendFormat& format) const = 0;
+
+    /** These are used when creating a new texture internally. */
+    virtual GrBackendFormat getBackendFormatFromGrColorType(GrColorType ct,
+                                                            GrSRGBEncoded srgbEncoded) const = 0;
+    GrBackendFormat getBackendFormatFromColorType(SkColorType ct) const;
+
+    /**
+     * The CLAMP_TO_BORDER wrap mode for texture coordinates was added to desktop GL in 1.3, and
+     * GLES 3.2, but is also available in extensions. Vulkan and Metal always have support.
+     */
+    bool clampToBorderSupport() const { return fClampToBorderSupport; }
+
+    const GrDriverBugWorkarounds& workarounds() const { return fDriverBugWorkarounds; }
 
 #ifdef GR_TEST_UTILS
     /**
@@ -317,6 +402,7 @@ protected:
     bool fReuseScratchTextures                       : 1;
     bool fReuseScratchBuffers                        : 1;
     bool fGpuTracingSupport                          : 1;
+    bool fCompressedTexSubImageSupport               : 1;
     bool fOversizedStencilSupport                    : 1;
     bool fTextureBarrierSupport                      : 1;
     bool fSampleLocationsSupport                     : 1;
@@ -327,8 +413,18 @@ protected:
     bool fPreferClientSideDynamicBuffers             : 1;
     bool fPreferFullscreenClears                     : 1;
     bool fMustClearUploadedBufferData                : 1;
+<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     bool fSupportsAHardwareBufferImages              : 1;
     bool fHalfFloatVertexAttributeSupport            : 1;
+||||||| merged common ancestors
+=======
+    bool fSupportsAHardwareBufferImages              : 1;
+    bool fHalfFloatVertexAttributeSupport            : 1;
+    bool fClampToBorderSupport                       : 1;
+    bool fPerformPartialClearsAsDraws                : 1;
+    bool fPerformColorClearsAsDraws                  : 1;
+    bool fPerformStencilClearsAsDraws                : 1;
+>>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     // Driver workaround
     bool fBlacklistCoverageCounting                  : 1;
@@ -338,7 +434,6 @@ protected:
     // ANGLE performance workaround
     bool fPreferVRAMUseOverFlushes                   : 1;
 
-    bool fSampleShadingSupport                       : 1;
     // TODO: this may need to be an enum to support different fence types
     bool fFenceSyncSupport                           : 1;
 
@@ -360,7 +455,6 @@ protected:
     int fMaxVertexAttributes;
     int fMaxTextureSize;
     int fMaxTileSize;
-    int fMaxRasterSamples;
     int fMaxWindowRectangles;
     int fMaxClipAnalyticFPs;
 
@@ -369,6 +463,9 @@ protected:
 private:
     virtual void onApplyOptionsOverrides(const GrContextOptions&) {}
     virtual void onDumpJSON(SkJSONWriter*) const {}
+    virtual bool onSurfaceSupportsWritePixels(const GrSurface*) const = 0;
+    virtual bool onCanCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
+                                  const SkIRect& srcRect, const SkIPoint& dstPoint) const = 0;
 
     // Backends should implement this if they have any extra requirements for use of window
     // rectangles for a specific GrBackendRenderTarget outside of basic support.

@@ -50,10 +50,28 @@ class ClearKeyDecryptor : public RefCounted {
   Key mKey;
 };
 
+<<<<<<< HEAD
 /* static */ ClearKeyDecryptionManager* ClearKeyDecryptionManager::sInstance =
     nullptr;
+||||||| merged common ancestors
+=======
+/* static */
+ClearKeyDecryptionManager* ClearKeyDecryptionManager::sInstance = nullptr;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 /* static */ ClearKeyDecryptionManager* ClearKeyDecryptionManager::Get() {
+||||||| merged common ancestors
+/* static */ ClearKeyDecryptionManager*
+ClearKeyDecryptionManager::sInstance = nullptr;
+
+/* static */ ClearKeyDecryptionManager*
+ClearKeyDecryptionManager::Get()
+{
+=======
+/* static */
+ClearKeyDecryptionManager* ClearKeyDecryptionManager::Get() {
+>>>>>>> upstream-releases
   if (!sInstance) {
     sInstance = new ClearKeyDecryptionManager();
   }

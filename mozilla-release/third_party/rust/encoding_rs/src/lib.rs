@@ -7,6 +7,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+<<<<<<< HEAD
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(
@@ -16,6 +17,16 @@
     )
 )]
 #![doc(html_root_url = "https://docs.rs/encoding_rs/0.8.13")]
+||||||| merged common ancestors
+#![cfg_attr(feature = "cargo-clippy", allow(doc_markdown, inline_always, new_ret_no_self))]
+#![doc(html_root_url = "https://docs.rs/encoding_rs/0.8.9")]
+=======
+#![cfg_attr(
+    feature = "cargo-clippy",
+    allow(doc_markdown, inline_always, new_ret_no_self)
+)]
+#![doc(html_root_url = "https://docs.rs/encoding_rs/0.8.17")]
+>>>>>>> upstream-releases
 
 //! encoding_rs is a Gecko-oriented Free Software / Open Source implementation
 //! of the [Encoding Standard](https://encoding.spec.whatwg.org/) in Rust.
@@ -31,6 +42,9 @@
 //! For expectation setting, please be sure to read the sections
 //! [_UTF-16LE, UTF-16BE and Unicode Encoding Schemes_](#utf-16le-utf-16be-and-unicode-encoding-schemes),
 //! [_ISO-8859-1_](#iso-8859-1) and [_Web / Browser Focus_](#web--browser-focus) below.
+//!
+//! There is a [long-form write-up](https://hsivonen.fi/encoding_rs/) about the
+//! design and internals of the crate.
 //!
 //! # Availability
 //!
@@ -235,6 +249,7 @@
 //! performance, the decoder for ISO-2022-JP optimizes for ease/clarity
 //! of implementation.
 //!
+<<<<<<< HEAD
 //! Despite the browser focus, the hope is that non-browser applications
 //! that wish to consume Web content or submit Web forms in a Web-compatible
 //! way will find encoding_rs useful. While encoding_rs does not try to match
@@ -246,6 +261,32 @@
 //! to the encodings defined in the Encoding Standard. The
 //! [charset](https://crates.io/crates/charset) wraps encoding_rs and adds
 //! UTF-7 decoding for email purposes.
+||||||| merged common ancestors
+//! Despite the focus on the Web, encoding_rs may well be useful for decoding
+//! email, although you'll need to implement UTF-7 decoding and label handling
+//! by other means. (Due to the Web focus, patches to add UTF-7 are unwelcome
+//! in encoding_rs itself.) Also, despite the browser focus, the hope is that
+//! non-browser applications that wish to consume Web content or submit Web
+//! forms in a Web-compatible way will find encoding_rs useful. While
+//! encoding_rs does not try to match Windows behavior, many of the encodings
+//! are close enough to legacy encodings implemented by Windows that
+//! applications that need to consume data in legacy Windows encodins may
+//! find encoding_rs useful.
+=======
+//! Despite the browser focus, the hope is that non-browser applications
+//! that wish to consume Web content or submit Web forms in a Web-compatible
+//! way will find encoding_rs useful. While encoding_rs does not try to match
+//! Windows behavior, many of the encodings are close enough to legacy
+//! encodings implemented by Windows that applications that need to consume
+//! data in legacy Windows encodins may find encoding_rs useful. The
+//! [codepage](https://crates.io/crates/codepage) crate maps from Windows
+//! code page identifiers onto encoding_rs `Encoding`s and vice versa.
+//!
+//! For decoding email, UTF-7 support is needed (unfortunately) in additition
+//! to the encodings defined in the Encoding Standard. The
+//! [charset](https://crates.io/crates/charset) wraps encoding_rs and adds
+//! UTF-7 decoding for email purposes.
+>>>>>>> upstream-releases
 //!
 //! # Streaming & Non-Streaming; Rust & C/C++
 //!
@@ -664,10 +705,18 @@
 //! See the section [_UTF-16LE, UTF-16BE and Unicode Encoding Schemes_](#utf-16le-utf-16be-and-unicode-encoding-schemes)
 //! for discussion about the UTF-16 family.
 
+<<<<<<< HEAD
 #![cfg_attr(
     feature = "simd-accel",
     feature(platform_intrinsics, core_intrinsics)
 )]
+||||||| merged common ancestors
+#![cfg_attr(
+    feature = "simd-accel", feature(cfg_target_feature, platform_intrinsics, core_intrinsics)
+)]
+=======
+#![cfg_attr(feature = "simd-accel", feature(stdsimd, core_intrinsics))]
+>>>>>>> upstream-releases
 
 #[macro_use]
 extern crate cfg_if;
@@ -679,8 +728,17 @@ extern crate cfg_if;
         all(target_endian = "little", target_arch = "aarch64"),
         all(target_endian = "little", target_feature = "neon")
     )
+<<<<<<< HEAD
 ))]
 extern crate simd;
+||||||| merged common ancestors
+)]
+extern crate simd;
+=======
+))]
+#[macro_use(shuffle)]
+extern crate packed_simd;
+>>>>>>> upstream-releases
 
 #[cfg(feature = "serde")]
 extern crate serde;
@@ -3653,7 +3711,7 @@ impl Decoder {
             | DecoderLifeCycle::AtUtf8Start
             | DecoderLifeCycle::AtUtf16LeStart
             | DecoderLifeCycle::AtUtf16BeStart => {
-                return self.variant.max_utf8_buffer_length(byte_length)
+                return self.variant.max_utf8_buffer_length(byte_length);
             }
             DecoderLifeCycle::AtStart => {
                 if let Some(utf8_bom) = checked_add(3, byte_length.checked_mul(3)) {
@@ -3745,7 +3803,7 @@ impl Decoder {
             | DecoderLifeCycle::AtUtf16BeStart => {
                 return self
                     .variant
-                    .max_utf8_buffer_length_without_replacement(byte_length)
+                    .max_utf8_buffer_length_without_replacement(byte_length);
             }
             DecoderLifeCycle::AtStart => {
                 if let Some(utf8_bom) = byte_length.checked_add(3) {
@@ -4061,7 +4119,7 @@ impl Decoder {
             | DecoderLifeCycle::AtUtf8Start
             | DecoderLifeCycle::AtUtf16LeStart
             | DecoderLifeCycle::AtUtf16BeStart => {
-                return self.variant.max_utf16_buffer_length(byte_length)
+                return self.variant.max_utf16_buffer_length(byte_length);
             }
             DecoderLifeCycle::AtStart => {
                 if let Some(utf8_bom) = byte_length.checked_add(1) {
@@ -5300,13 +5358,11 @@ mod tests {
 
     #[test]
     fn test_decode_bomful_invalid_utf8_to_cow_without_bom_handling_and_without_replacement() {
-        assert!(
-            UTF_8
-                .decode_without_bom_handling_and_without_replacement(
-                    b"\xEF\xBB\xBF\xE2\x82\xAC\x80\xC3\xA4"
-                )
-                .is_none()
-        );
+        assert!(UTF_8
+            .decode_without_bom_handling_and_without_replacement(
+                b"\xEF\xBB\xBF\xE2\x82\xAC\x80\xC3\xA4"
+            )
+            .is_none());
     }
 
     #[test]
@@ -5324,11 +5380,9 @@ mod tests {
 
     #[test]
     fn test_decode_invalid_windows_1257_to_cow_without_bom_handling_and_without_replacement() {
-        assert!(
-            WINDOWS_1257
-                .decode_without_bom_handling_and_without_replacement(b"abc\x80\xA1\xE4")
-                .is_none()
-        );
+        assert!(WINDOWS_1257
+            .decode_without_bom_handling_and_without_replacement(b"abc\x80\xA1\xE4")
+            .is_none());
     }
 
     #[test]
@@ -5640,7 +5694,7 @@ mod tests {
         let deserialized: Demo = serde_json::from_str(&serialized).unwrap();
         assert_eq!(deserialized, demo);
 
-        let bincoded = bincode::serialize(&demo, bincode::Infinite).unwrap();
+        let bincoded = bincode::serialize(&demo).unwrap();
         let debincoded: Demo = bincode::deserialize(&bincoded[..]).unwrap();
         assert_eq!(debincoded, demo);
     }

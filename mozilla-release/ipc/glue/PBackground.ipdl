@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-include protocol PAsmJSCacheEntry;
 include protocol PBackgroundIDBFactory;
 include protocol PBackgroundIndexedDBUtils;
 include protocol PBackgroundSDBConnection;
@@ -30,6 +29,7 @@ include protocol PRemoteWorker;
 include protocol PRemoteWorkerService;
 include protocol PSharedWorker;
 include protocol PTemporaryIPCBlob;
+include protocol PFileCreator;
 include protocol PMessagePort;
 include protocol PCameras;
 include protocol PMIDIManager;
@@ -63,18 +63,11 @@ include "mozilla/layers/LayersMessageUtils.h";
 using mozilla::dom::cache::Namespace
   from "mozilla/dom/cache/Types.h";
 
-using mozilla::dom::asmjscache::OpenMode
-  from "mozilla/dom/asmjscache/AsmJSCache.h";
-
-using mozilla::dom::asmjscache::WriteParams
-  from "mozilla/dom/asmjscache/AsmJSCache.h";
-
 namespace mozilla {
 namespace ipc {
 
 sync protocol PBackground
 {
-  manages PAsmJSCacheEntry;
   manages PBackgroundIDBFactory;
   manages PBackgroundIndexedDBUtils;
   manages PBackgroundSDBConnection;
@@ -102,6 +95,7 @@ sync protocol PBackground
   manages PRemoteWorkerService;
   manages PSharedWorker;
   manages PTemporaryIPCBlob;
+  manages PFileCreator;
   manages PMessagePort;
   manages PCameras;
   manages PMIDIManager;
@@ -130,6 +124,7 @@ parent:
 
   async PBackgroundSDBConnection(PrincipalInfo principalInfo);
 
+<<<<<<< HEAD
   async PBackgroundLSDatabase(PrincipalInfo principalInfo,
                               uint32_t privateBrowsingId,
                               uint64_t datastoreId);
@@ -151,6 +146,39 @@ parent:
    */
   async PBackgroundLSSimpleRequest(LSSimpleRequestParams params);
 
+||||||| merged common ancestors
+=======
+  async PBackgroundLSDatabase(PrincipalInfo principalInfo,
+                              uint32_t privateBrowsingId,
+                              uint64_t datastoreId);
+
+  async PBackgroundLSObserver(uint64_t observerId);
+
+  /**
+   * Issue an asynchronous request that will be used in a synchronous fashion
+   * through complex machinations described in `PBackgroundLSRequest.ipdl` and
+   * `LSObject.h`.
+   */
+  async PBackgroundLSRequest(LSRequestParams params);
+
+  /**
+   * Issues a simple, non-cancelable asynchronous request that's used in an
+   * asynchronous fashion by callers.  (LSRequest is not simple because it used
+   * in a synchronous fashion which leads to complexities regarding cancelation,
+   * see `PBackgroundLSRequest.ipdl` for details.)
+   */
+  async PBackgroundLSSimpleRequest(LSSimpleRequestParams params);
+
+  /**
+   * Asynchronously propagates the "last-pb-context-exited" observer
+   * notification to LocalStorage NextGen implementation so it can clear
+   * retained private-browsing in-memory Datastores.  Using a (same-process)
+   * IPC message avoids the need for the main-thread nsIObserver to have a
+   * reference to the PBackground thread and directly dispatch a runnable to it.
+   */
+  async LSClearPrivateBrowsing();
+
+>>>>>>> upstream-releases
   async PBackgroundLocalStorageCache(PrincipalInfo principalInfo,
                                      nsCString originKey,
                                      uint32_t privateBrowsingId);
@@ -161,7 +189,7 @@ parent:
 
   async PCameras();
 
-  async PUDPSocket(OptionalPrincipalInfo pInfo, nsCString filter);
+  async PUDPSocket(PrincipalInfo? pInfo, nsCString filter);
   async PBroadcastChannel(PrincipalInfo pInfo, nsCString origin, nsString channel);
 
   async PServiceWorkerManager();
@@ -176,11 +204,9 @@ parent:
 
   async MessagePortForceClose(nsID uuid, nsID destinationUuid, uint32_t sequenceId);
 
-  async PAsmJSCacheEntry(OpenMode openMode,
-                         WriteParams write,
-                         PrincipalInfo principalInfo);
-
   async PQuota();
+
+  async ShutdownQuotaManager();
 
   async PFileSystemRequest(FileSystemParams params);
 
@@ -197,6 +223,10 @@ parent:
                       MessagePortIdentifier portIdentifier);
 
   async PTemporaryIPCBlob();
+
+  async PFileCreator(nsString aFullPath, nsString aType, nsString aName,
+                     int64_t? lastModified, bool aExistenceCheck,
+                     bool aIsFromNsIFile);
 
   async PClientManager();
 
@@ -228,7 +258,13 @@ child:
 
   async PPendingIPCBlob(IPCBlob blob);
 
+<<<<<<< HEAD
   async PRemoteWorker(RemoteWorkerData data);
+||||||| merged common ancestors
+=======
+  async PRemoteWorker(RemoteWorkerData data);
+
+>>>>>>> upstream-releases
 both:
   // PIPCBlobInputStream is created on the parent side only if the child starts
   // a migration.

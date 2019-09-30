@@ -17,7 +17,13 @@ ee{
                 "&T<ts<<<Ts<<<TS"
                 "&V<ʋ<<<Ʋ"
             }
+<<<<<<< HEAD
             Version{"34"}
+||||||| merged common ancestors
+            Version{"33.1"}
+=======
+            Version{"35.1"}
+>>>>>>> upstream-releases
         }
     }
 }

@@ -11,8 +11,6 @@
 #include "mozilla/Sprintf.h"
 #include "mozilla/TextUtils.h"
 
-#include <ctype.h>
-
 #include "jsnum.h"
 
 #include "builtin/Array.h"
@@ -23,7 +21,9 @@
 
 using namespace js;
 
+using mozilla::AsciiAlphanumericToNumber;
 using mozilla::IsAsciiDigit;
+using mozilla::IsAsciiHexDigit;
 using mozilla::RangedPtr;
 
 JSONParserBase::~JSONParserBase() {
@@ -139,6 +139,7 @@ JSONParserBase::Token JSONParser<CharT>::readString() {
     }
   }
 
+<<<<<<< HEAD
   /*
    * Slow case: string contains escaped characters.  Copy a maximal sequence
    * of unescaped characters into a temporary buffer, then an escaped
@@ -149,6 +150,29 @@ JSONParserBase::Token JSONParser<CharT>::readString() {
     if (start < current && !buffer.append(start.get(), current.get())) {
       return token(OOM);
     }
+||||||| merged common ancestors
+    /*
+     * Slow case: string contains escaped characters.  Copy a maximal sequence
+     * of unescaped characters into a temporary buffer, then an escaped
+     * character, and repeat until the entire string is consumed.
+     */
+    StringBuffer buffer(cx);
+    do {
+        if (start < current && !buffer.append(start.get(), current.get())) {
+            return token(OOM);
+        }
+=======
+  /*
+   * Slow case: string contains escaped characters.  Copy a maximal sequence
+   * of unescaped characters into a temporary buffer, then an escaped
+   * character, and repeat until the entire string is consumed.
+   */
+  JSStringBuilder buffer(cx);
+  do {
+    if (start < current && !buffer.append(start.get(), current.get())) {
+      return token(OOM);
+    }
+>>>>>>> upstream-releases
 
     if (current >= end) {
       break;
@@ -175,6 +199,7 @@ JSONParserBase::Token JSONParser<CharT>::readString() {
       break;
     }
 
+<<<<<<< HEAD
     switch (*current++) {
       case '"':
         c = '"';
@@ -218,14 +243,110 @@ JSONParserBase::Token JSONParser<CharT>::readString() {
           } else {
             MOZ_CRASH("logic error determining first erroneous character");
           }
+||||||| merged common ancestors
+        switch (*current++) {
+          case '"':  c = '"';  break;
+          case '/':  c = '/';  break;
+          case '\\': c = '\\'; break;
+          case 'b':  c = '\b'; break;
+          case 'f':  c = '\f'; break;
+          case 'n':  c = '\n'; break;
+          case 'r':  c = '\r'; break;
+          case 't':  c = '\t'; break;
+
+          case 'u':
+            if (end - current < 4 ||
+                !(JS7_ISHEX(current[0]) &&
+                  JS7_ISHEX(current[1]) &&
+                  JS7_ISHEX(current[2]) &&
+                  JS7_ISHEX(current[3])))
+            {
+                // Point to the first non-hexadecimal character (which may be
+                // missing).
+                if (current == end || !JS7_ISHEX(current[0])) {
+                    ; // already at correct location
+                } else if (current + 1 == end || !JS7_ISHEX(current[1])) {
+                    current += 1;
+                } else if (current + 2 == end || !JS7_ISHEX(current[2])) {
+                    current += 2;
+                } else if (current + 3 == end || !JS7_ISHEX(current[3])) {
+                    current += 3;
+                } else {
+                    MOZ_CRASH("logic error determining first erroneous character");
+                }
+
+                error("bad Unicode escape");
+                return token(Error);
+            }
+            c = (JS7_UNHEX(current[0]) << 12)
+              | (JS7_UNHEX(current[1]) << 8)
+              | (JS7_UNHEX(current[2]) << 4)
+              | (JS7_UNHEX(current[3]));
+            current += 4;
+            break;
+=======
+    switch (*current++) {
+      case '"':
+        c = '"';
+        break;
+      case '/':
+        c = '/';
+        break;
+      case '\\':
+        c = '\\';
+        break;
+      case 'b':
+        c = '\b';
+        break;
+      case 'f':
+        c = '\f';
+        break;
+      case 'n':
+        c = '\n';
+        break;
+      case 'r':
+        c = '\r';
+        break;
+      case 't':
+        c = '\t';
+        break;
+
+      case 'u':
+        if (end - current < 4 ||
+            !(IsAsciiHexDigit(current[0]) && IsAsciiHexDigit(current[1]) &&
+              IsAsciiHexDigit(current[2]) && IsAsciiHexDigit(current[3]))) {
+          // Point to the first non-hexadecimal character (which may be
+          // missing).
+          if (current == end || !IsAsciiHexDigit(current[0])) {
+            ;  // already at correct location
+          } else if (current + 1 == end || !IsAsciiHexDigit(current[1])) {
+            current += 1;
+          } else if (current + 2 == end || !IsAsciiHexDigit(current[2])) {
+            current += 2;
+          } else if (current + 3 == end || !IsAsciiHexDigit(current[3])) {
+            current += 3;
+          } else {
+            MOZ_CRASH("logic error determining first erroneous character");
+          }
+>>>>>>> upstream-releases
 
           error("bad Unicode escape");
           return token(Error);
         }
+<<<<<<< HEAD
         c = (JS7_UNHEX(current[0]) << 12) | (JS7_UNHEX(current[1]) << 8) |
             (JS7_UNHEX(current[2]) << 4) | (JS7_UNHEX(current[3]));
         current += 4;
         break;
+||||||| merged common ancestors
+=======
+        c = (AsciiAlphanumericToNumber(current[0]) << 12) |
+            (AsciiAlphanumericToNumber(current[1]) << 8) |
+            (AsciiAlphanumericToNumber(current[2]) << 4) |
+            (AsciiAlphanumericToNumber(current[3]));
+        current += 4;
+        break;
+>>>>>>> upstream-releases
 
       default:
         current--;
@@ -295,10 +416,20 @@ JSONParserBase::Token JSONParser<CharT>::readNumber() {
     }
 
     double d;
+<<<<<<< HEAD
     if (!GetFullInteger(cx, digitStart.get(), current.get(), 10, &d)) {
       return token(OOM);
+||||||| merged common ancestors
+    if (!FullStringToDouble(cx, digitStart.get(), current.get(), &d)) {
+        return token(OOM);
+=======
+    if (!GetFullInteger(cx, digitStart.get(), current.get(), 10,
+                        IntegerSeparatorHandling::None, &d)) {
+      return token(OOM);
+>>>>>>> upstream-releases
     }
     return numberToken(negative ? -d : d);
+<<<<<<< HEAD
   }
 
   /* (\.[0-9]+)? */
@@ -306,6 +437,30 @@ JSONParserBase::Token JSONParser<CharT>::readNumber() {
     if (++current == end) {
       error("missing digits after decimal point");
       return token(Error);
+||||||| merged common ancestors
+}
+
+static inline bool
+IsJSONWhitespace(char16_t c)
+{
+    return c == '\t' || c == '\r' || c == '\n' || c == ' ';
+}
+
+template <typename CharT>
+JSONParserBase::Token
+JSONParser<CharT>::advance()
+{
+    while (current < end && IsJSONWhitespace(*current)) {
+        current++;
+=======
+  }
+
+  /* (\.[0-9]+)? */
+  if (current < end && *current == '.') {
+    if (++current == end) {
+      error("missing digits after decimal point");
+      return token(Error);
+>>>>>>> upstream-releases
     }
     if (!IsAsciiDigit(*current)) {
       error("unterminated fractional number");
@@ -624,6 +779,67 @@ inline bool JSONParserBase::finishArray(MutableHandleValue vp,
 }
 
 template <typename CharT>
+<<<<<<< HEAD
+bool JSONParser<CharT>::parse(MutableHandleValue vp) {
+  RootedValue value(cx);
+  MOZ_ASSERT(stack.empty());
+
+  vp.setUndefined();
+
+  Token token;
+  ParserState state = JSONValue;
+  while (true) {
+    switch (state) {
+      case FinishObjectMember: {
+        PropertyVector& properties = stack.back().properties();
+        properties.back().value = value;
+
+        token = advanceAfterProperty();
+        if (token == ObjectClose) {
+          if (!finishObject(&value, properties)) {
+            return false;
+          }
+          break;
+        }
+        if (token != Comma) {
+          if (token == OOM) {
+            return false;
+||||||| merged common ancestors
+bool
+JSONParser<CharT>::parse(MutableHandleValue vp)
+{
+    RootedValue value(cx);
+    MOZ_ASSERT(stack.empty());
+
+    vp.setUndefined();
+
+    Token token;
+    ParserState state = JSONValue;
+    while (true) {
+        switch (state) {
+          case FinishObjectMember: {
+            PropertyVector& properties = stack.back().properties();
+            properties.back().value = value;
+
+            token = advanceAfterProperty();
+            if (token == ObjectClose) {
+                if (!finishObject(&value, properties)) {
+                    return false;
+                }
+                break;
+            }
+            if (token != Comma) {
+                if (token == OOM) {
+                    return false;
+                }
+                if (token != Error) {
+                    error("expected ',' or '}' after property-value pair in object literal");
+                }
+                return errorReturn();
+            }
+            token = advancePropertyName();
+            /* FALL THROUGH */
+=======
 bool JSONParser<CharT>::parse(MutableHandleValue vp) {
   RootedValue value(cx);
   MOZ_ASSERT(stack.empty());
@@ -653,12 +869,27 @@ bool JSONParser<CharT>::parse(MutableHandleValue vp) {
             error(
                 "expected ',' or '}' after property-value pair in object "
                 "literal");
+>>>>>>> upstream-releases
+          }
+<<<<<<< HEAD
+          if (token != Error) {
+            error(
+                "expected ',' or '}' after property-value pair in object "
+                "literal");
           }
           return errorReturn();
         }
         token = advancePropertyName();
         /* FALL THROUGH */
       }
+||||||| merged common ancestors
+=======
+          return errorReturn();
+        }
+        token = advancePropertyName();
+        /* FALL THROUGH */
+      }
+>>>>>>> upstream-releases
 
       JSONMember:
         if (token == String) {

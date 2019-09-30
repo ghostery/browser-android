@@ -50,6 +50,7 @@ typedef struct OSVR_Vec3 {
   double data[3];
 } OSVR_Vec3;
 
+<<<<<<< HEAD
 #define OSVR_VEC_MEMBER(COMPONENT, INDEX)                             \
   /** @brief Accessor for Vec3 component COMPONENT */                 \
   OSVR_INLINE double osvrVec3Get##COMPONENT(OSVR_Vec3 const *v) {     \
@@ -59,6 +60,27 @@ typedef struct OSVR_Vec3 {
   OSVR_INLINE void osvrVec3Set##COMPONENT(OSVR_Vec3 *v, double val) { \
     v->data[INDEX] = val;                                             \
   }
+||||||| merged common ancestors
+#define OSVR_VEC_MEMBER(COMPONENT, INDEX)                                      \
+    /** @brief Accessor for Vec3 component COMPONENT */                        \
+    OSVR_INLINE double osvrVec3Get##COMPONENT(OSVR_Vec3 const *v) {            \
+        return v->data[INDEX];                                                 \
+    }                                                                          \
+    /** @brief Setter for Vec3 component COMPONENT */                          \
+    OSVR_INLINE void osvrVec3Set##COMPONENT(OSVR_Vec3 *v, double val) {        \
+        v->data[INDEX] = val;                                                  \
+    }
+=======
+#define OSVR_VEC_MEMBER(COMPONENT, INDEX)                             \
+  /** @brief Accessor for Vec3 component COMPONENT */                 \
+  OSVR_INLINE double osvrVec3Get##COMPONENT(OSVR_Vec3 const* v) {     \
+    return v->data[INDEX];                                            \
+  }                                                                   \
+  /** @brief Setter for Vec3 component COMPONENT */                   \
+  OSVR_INLINE void osvrVec3Set##COMPONENT(OSVR_Vec3* v, double val) { \
+    v->data[INDEX] = val;                                             \
+  }
+>>>>>>> upstream-releases
 
 OSVR_VEC_MEMBER(X, 0)
 OSVR_VEC_MEMBER(Y, 1)
@@ -67,10 +89,22 @@ OSVR_VEC_MEMBER(Z, 2)
 #undef OSVR_VEC_MEMBER
 
 /** @brief Set a Vec3 to the zero vector */
+<<<<<<< HEAD
 OSVR_INLINE void osvrVec3Zero(OSVR_Vec3 *v) {
   osvrVec3SetX(v, 0);
   osvrVec3SetY(v, 0);
   osvrVec3SetZ(v, 0);
+||||||| merged common ancestors
+OSVR_INLINE void osvrVec3Zero(OSVR_Vec3 *v) {
+    osvrVec3SetX(v, 0);
+    osvrVec3SetY(v, 0);
+    osvrVec3SetZ(v, 0);
+=======
+OSVR_INLINE void osvrVec3Zero(OSVR_Vec3* v) {
+  osvrVec3SetX(v, 0);
+  osvrVec3SetY(v, 0);
+  osvrVec3SetZ(v, 0);
+>>>>>>> upstream-releases
 }
 
 /** @} */
@@ -79,9 +113,20 @@ OSVR_EXTERN_C_END
 
 #ifdef __cplusplus
 template <typename StreamType>
+<<<<<<< HEAD
 inline StreamType &operator<<(StreamType &os, OSVR_Vec3 const &vec) {
   os << "(" << vec.data[0] << ", " << vec.data[1] << ", " << vec.data[2] << ")";
   return os;
+||||||| merged common ancestors
+inline StreamType &operator<<(StreamType &os, OSVR_Vec3 const &vec) {
+    os << "(" << vec.data[0] << ", " << vec.data[1] << ", " << vec.data[2]
+       << ")";
+    return os;
+=======
+inline StreamType& operator<<(StreamType& os, OSVR_Vec3 const& vec) {
+  os << "(" << vec.data[0] << ", " << vec.data[1] << ", " << vec.data[2] << ")";
+  return os;
+>>>>>>> upstream-releases
 }
 #endif
 

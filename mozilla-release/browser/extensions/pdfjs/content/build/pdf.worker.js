@@ -2,7 +2,7 @@
  * @licstart The following is the entire license notice for the
  * Javascript code in this page
  *
- * Copyright 2018 Mozilla Foundation
+ * Copyright 2019 Mozilla Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,11 +123,23 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+<<<<<<< HEAD
 var pdfjsVersion = '2.1.97';
 var pdfjsBuild = '45c01974';
 
 var pdfjsCoreWorker = __w_pdfjs_require__(1);
 
+||||||| merged common ancestors
+var pdfjsVersion = '2.0.936';
+var pdfjsBuild = 'd2189293';
+var pdfjsCoreWorker = __w_pdfjs_require__(1);
+=======
+const pdfjsVersion = '2.2.214';
+const pdfjsBuild = '969b1623';
+
+const pdfjsCoreWorker = __w_pdfjs_require__(1);
+
+>>>>>>> upstream-releases
 exports.WorkerMessageHandler = pdfjsCoreWorker.WorkerMessageHandler;
 
 /***/ }),
@@ -144,13 +156,25 @@ exports.WorkerMessageHandler = exports.WorkerTask = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
+var _primitives = __w_pdfjs_require__(7);
+
 var _pdf_manager = __w_pdfjs_require__(8);
 
+<<<<<<< HEAD
 var _is_node = _interopRequireDefault(__w_pdfjs_require__(46));
+||||||| merged common ancestors
+var _is_node = __w_pdfjs_require__(46);
 
-var _message_handler = __w_pdfjs_require__(47);
+var _is_node2 = _interopRequireDefault(_is_node);
+=======
+var _is_node = _interopRequireDefault(__w_pdfjs_require__(47));
 
-var _primitives = __w_pdfjs_require__(12);
+var _message_handler = __w_pdfjs_require__(48);
+>>>>>>> upstream-releases
+
+var _worker_stream = __w_pdfjs_require__(49);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -183,6 +207,7 @@ var WorkerTask = function WorkerTaskClosure() {
   };
   return WorkerTask;
 }();
+<<<<<<< HEAD
 
 exports.WorkerTask = WorkerTask;
 
@@ -325,6 +350,117 @@ var PDFWorkerStream = function PDFWorkerStreamClosure() {
   return PDFWorkerStream;
 }();
 
+||||||| merged common ancestors
+;
+var PDFWorkerStream = function PDFWorkerStreamClosure() {
+  function PDFWorkerStream(msgHandler) {
+    this._msgHandler = msgHandler;
+    this._contentLength = null;
+    this._fullRequestReader = null;
+    this._rangeRequestReaders = [];
+  }
+  PDFWorkerStream.prototype = {
+    getFullReader() {
+      (0, _util.assert)(!this._fullRequestReader);
+      this._fullRequestReader = new PDFWorkerStreamReader(this._msgHandler);
+      return this._fullRequestReader;
+    },
+    getRangeReader(begin, end) {
+      let reader = new PDFWorkerStreamRangeReader(begin, end, this._msgHandler);
+      this._rangeRequestReaders.push(reader);
+      return reader;
+    },
+    cancelAllRequests(reason) {
+      if (this._fullRequestReader) {
+        this._fullRequestReader.cancel(reason);
+      }
+      let readers = this._rangeRequestReaders.slice(0);
+      readers.forEach(function (reader) {
+        reader.cancel(reason);
+      });
+    }
+  };
+  function PDFWorkerStreamReader(msgHandler) {
+    this._msgHandler = msgHandler;
+    this._contentLength = null;
+    this._isRangeSupported = false;
+    this._isStreamingSupported = false;
+    let readableStream = this._msgHandler.sendWithStream('GetReader');
+    this._reader = readableStream.getReader();
+    this._headersReady = this._msgHandler.sendWithPromise('ReaderHeadersReady').then(data => {
+      this._isStreamingSupported = data.isStreamingSupported;
+      this._isRangeSupported = data.isRangeSupported;
+      this._contentLength = data.contentLength;
+    });
+  }
+  PDFWorkerStreamReader.prototype = {
+    get headersReady() {
+      return this._headersReady;
+    },
+    get contentLength() {
+      return this._contentLength;
+    },
+    get isStreamingSupported() {
+      return this._isStreamingSupported;
+    },
+    get isRangeSupported() {
+      return this._isRangeSupported;
+    },
+    read() {
+      return this._reader.read().then(function ({ value, done }) {
+        if (done) {
+          return {
+            value: undefined,
+            done: true
+          };
+        }
+        return {
+          value: value.buffer,
+          done: false
+        };
+      });
+    },
+    cancel(reason) {
+      this._reader.cancel(reason);
+    }
+  };
+  function PDFWorkerStreamRangeReader(begin, end, msgHandler) {
+    this._msgHandler = msgHandler;
+    this.onProgress = null;
+    let readableStream = this._msgHandler.sendWithStream('GetRangeReader', {
+      begin,
+      end
+    });
+    this._reader = readableStream.getReader();
+  }
+  PDFWorkerStreamRangeReader.prototype = {
+    get isStreamingSupported() {
+      return false;
+    },
+    read() {
+      return this._reader.read().then(function ({ value, done }) {
+        if (done) {
+          return {
+            value: undefined,
+            done: true
+          };
+        }
+        return {
+          value: value.buffer,
+          done: false
+        };
+      });
+    },
+    cancel(reason) {
+      this._reader.cancel(reason);
+    }
+  };
+  return PDFWorkerStream;
+}();
+=======
+
+exports.WorkerTask = WorkerTask;
+>>>>>>> upstream-releases
 var WorkerMessageHandler = {
   setup(handler, port) {
     var testMessageProcessed = false;
@@ -374,9 +510,17 @@ var WorkerMessageHandler = {
     var terminated = false;
     var cancelXHRs = null;
     var WorkerTasks = [];
+    const verbosity = (0, _util.getVerbosityLevel)();
     let apiVersion = docParams.apiVersion;
+<<<<<<< HEAD
     let workerVersion = '2.1.97';
 
+||||||| merged common ancestors
+    let workerVersion = '2.0.936';
+=======
+    let workerVersion = '2.2.214';
+
+>>>>>>> upstream-releases
     if (apiVersion !== workerVersion) {
       throw new Error(`The API version "${apiVersion}" does not match ` + `the Worker version "${workerVersion}".`);
     }
@@ -402,6 +546,7 @@ var WorkerMessageHandler = {
       var i = WorkerTasks.indexOf(task);
       WorkerTasks.splice(i, 1);
     }
+<<<<<<< HEAD
 
     function loadDocument(recoveryMode) {
       var loadDocumentCapability = (0, _util.createPromiseCapability)();
@@ -417,7 +562,37 @@ var WorkerMessageHandler = {
 
       var parseFailure = function parseFailure(e) {
         loadDocumentCapability.reject(e);
+||||||| merged common ancestors
+    function loadDocument(recoveryMode) {
+      var loadDocumentCapability = (0, _util.createPromiseCapability)();
+      var parseSuccess = function parseSuccess() {
+        Promise.all([pdfManager.ensureDoc('numPages'), pdfManager.ensureDoc('fingerprint')]).then(function ([numPages, fingerprint]) {
+          loadDocumentCapability.resolve({
+            numPages,
+            fingerprint
+          });
+        }, parseFailure);
       };
+      var parseFailure = function parseFailure(e) {
+        loadDocumentCapability.reject(e);
+=======
+
+    async function loadDocument(recoveryMode) {
+      await pdfManager.ensureDoc('checkHeader');
+      await pdfManager.ensureDoc('parseStartXRef');
+      await pdfManager.ensureDoc('parse', [recoveryMode]);
+
+      if (!recoveryMode) {
+        await pdfManager.ensureDoc('checkFirstPage');
+      }
+
+      const [numPages, fingerprint] = await Promise.all([pdfManager.ensureDoc('numPages'), pdfManager.ensureDoc('fingerprint')]);
+      return {
+        numPages,
+        fingerprint
+>>>>>>> upstream-releases
+      };
+<<<<<<< HEAD
 
       pdfManager.ensureDoc('checkHeader', []).then(function () {
         pdfManager.ensureDoc('parseStartXRef', []).then(function () {
@@ -425,6 +600,15 @@ var WorkerMessageHandler = {
         }, parseFailure);
       }, parseFailure);
       return loadDocumentCapability.promise;
+||||||| merged common ancestors
+      pdfManager.ensureDoc('checkHeader', []).then(function () {
+        pdfManager.ensureDoc('parseStartXRef', []).then(function () {
+          pdfManager.ensureDoc('parse', [recoveryMode]).then(parseSuccess, parseFailure);
+        }, parseFailure);
+      }, parseFailure);
+      return loadDocumentCapability.promise;
+=======
+>>>>>>> upstream-releases
     }
 
     function getPdfManager(data, evaluatorOptions) {
@@ -447,7 +631,7 @@ var WorkerMessageHandler = {
           cachedChunks = [];
 
       try {
-        pdfStream = new PDFWorkerStream(handler);
+        pdfStream = new _worker_stream.PDFWorkerStream(handler);
       } catch (ex) {
         pdfManagerCapability.reject(ex);
         return pdfManagerCapability.promise;
@@ -462,7 +646,6 @@ var WorkerMessageHandler = {
         var disableAutoFetch = source.disableAutoFetch || fullRequest.isStreamingSupported;
         pdfManager = new _pdf_manager.NetworkPdfManager(docId, pdfStream, {
           msgHandler: handler,
-          url: source.url,
           password: source.password,
           length: fullRequest.contentLength,
           disableAutoFetch,
@@ -586,8 +769,15 @@ var WorkerMessageHandler = {
         ensureNotTerminated();
         loadDocument(false).then(onSuccess, function loadFailure(ex) {
           ensureNotTerminated();
+<<<<<<< HEAD
 
           if (!(ex instanceof _util.XRefParseException)) {
+||||||| merged common ancestors
+          if (!(ex instanceof _util.XRefParseException)) {
+=======
+
+          if (!(ex instanceof _core_utils.XRefParseException)) {
+>>>>>>> upstream-releases
             onFailure(ex);
             return;
           }
@@ -637,7 +827,8 @@ var WorkerMessageHandler = {
       });
     });
     handler.on('GetPageIndex', function wphSetupGetPageIndex(data) {
-      var ref = new _primitives.Ref(data.ref.num, data.ref.gen);
+      var ref = _primitives.Ref.get(data.ref.num, data.ref.gen);
+
       var catalog = pdfManager.pdfDocument.catalog;
       return catalog.getPageIndex(ref);
     });
@@ -650,8 +841,17 @@ var WorkerMessageHandler = {
     handler.on('GetPageLabels', function wphSetupGetPageLabels(data) {
       return pdfManager.ensureCatalog('pageLabels');
     });
+    handler.on('GetPageLayout', function wphSetupGetPageLayout(data) {
+      return pdfManager.ensureCatalog('pageLayout');
+    });
     handler.on('GetPageMode', function wphSetupGetPageMode(data) {
       return pdfManager.ensureCatalog('pageMode');
+    });
+    handler.on('GetViewerPreferences', function (data) {
+      return pdfManager.ensureCatalog('viewerPreferences');
+    });
+    handler.on('GetOpenActionDestination', function (data) {
+      return pdfManager.ensureCatalog('openActionDestination');
     });
     handler.on('GetAttachments', function wphSetupGetAttachments(data) {
       return pdfManager.ensureCatalog('attachments');
@@ -690,8 +890,7 @@ var WorkerMessageHandler = {
       pdfManager.getPage(pageIndex).then(function (page) {
         var task = new WorkerTask('RenderPageRequest: page ' + pageIndex);
         startWorkerTask(task);
-        var pageNum = pageIndex + 1;
-        var start = Date.now();
+        const start = verbosity >= _util.VerbosityLevel.INFOS ? Date.now() : 0;
         page.getOperatorList({
           handler,
           task,
@@ -699,7 +898,10 @@ var WorkerMessageHandler = {
           renderInteractiveForms: data.renderInteractiveForms
         }).then(function (operatorList) {
           finishWorkerTask(task);
-          (0, _util.info)('page=' + pageNum + ' - getOperatorList: time=' + (Date.now() - start) + 'ms, len=' + operatorList.totalLength);
+
+          if (start) {
+            (0, _util.info)(`page=${pageIndex + 1} - getOperatorList: time=` + `${Date.now() - start}ms, len=${operatorList.totalLength}`);
+          }
         }, function (e) {
           finishWorkerTask(task);
 
@@ -731,7 +933,7 @@ var WorkerMessageHandler = {
           }
 
           handler.send('PageError', {
-            pageNum,
+            pageIndex,
             error: wrappedException,
             intent: data.intent
           });
@@ -748,8 +950,7 @@ var WorkerMessageHandler = {
       pdfManager.getPage(pageIndex).then(function (page) {
         var task = new WorkerTask('GetTextContent: page ' + pageIndex);
         startWorkerTask(task);
-        var pageNum = pageIndex + 1;
-        var start = Date.now();
+        const start = verbosity >= _util.VerbosityLevel.INFOS ? Date.now() : 0;
         page.extractTextContent({
           handler,
           task,
@@ -758,7 +959,11 @@ var WorkerMessageHandler = {
           combineTextItems: data.combineTextItems
         }).then(function () {
           finishWorkerTask(task);
-          (0, _util.info)('text indexing: page=' + pageNum + ' - time=' + (Date.now() - start) + 'ms');
+
+          if (start) {
+            (0, _util.info)(`page=${pageIndex + 1} - getTextContent: time=` + `${Date.now() - start}ms`);
+          }
+
           sink.close();
         }, function (reason) {
           finishWorkerTask(task);
@@ -771,6 +976,9 @@ var WorkerMessageHandler = {
           throw reason;
         });
       });
+    });
+    handler.on('FontFallback', function (data) {
+      return pdfManager.fontFallback(data.id, handler);
     });
     handler.on('Cleanup', function wphCleanup(data) {
       return pdfManager.cleanup();
@@ -786,7 +994,13 @@ var WorkerMessageHandler = {
       if (cancelXHRs) {
         cancelXHRs();
       }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+      (0, _primitives.clearPrimitiveCaches)();
+>>>>>>> upstream-releases
       var waitOn = [];
       WorkerTasks.forEach(function (task) {
         waitOn.push(task.finished);
@@ -831,6 +1045,7 @@ if (typeof window === 'undefined' && !(0, _is_node.default)() && typeof self !==
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.toRomanNumerals = toRomanNumerals;
 exports.arrayByteLength = arrayByteLength;
 exports.arraysToBytes = arraysToBytes;
@@ -879,12 +1094,61 @@ Object.defineProperty(exports, "URL", {
   }
 });
 exports.createObjectURL = exports.FormatError = exports.XRefParseException = exports.Util = exports.UnknownErrorException = exports.UnexpectedResponseException = exports.TextRenderingMode = exports.StreamType = exports.PermissionFlag = exports.PasswordResponses = exports.PasswordException = exports.NativeImageDecoding = exports.MissingPDFException = exports.MissingDataException = exports.InvalidPDFException = exports.AbortException = exports.CMapCompressionType = exports.ImageKind = exports.FontType = exports.AnnotationType = exports.AnnotationFlag = exports.AnnotationFieldFlag = exports.AnnotationBorderStyleType = exports.UNSUPPORTED_FEATURES = exports.VerbosityLevel = exports.OPS = exports.IDENTITY_MATRIX = exports.FONT_IDENTITY_MATRIX = void 0;
+||||||| merged common ancestors
+exports.unreachable = exports.warn = exports.utf8StringToString = exports.stringToUTF8String = exports.stringToPDFString = exports.stringToBytes = exports.string32 = exports.shadow = exports.setVerbosityLevel = exports.URL = exports.ReadableStream = exports.removeNullCharacters = exports.readUint32 = exports.readUint16 = exports.readInt8 = exports.log2 = exports.isEvalSupported = exports.isLittleEndian = exports.createValidAbsoluteUrl = exports.isSameOrigin = exports.isSpace = exports.isString = exports.isNum = exports.isEmptyObj = exports.isBool = exports.isArrayBuffer = exports.info = exports.getVerbosityLevel = exports.getLookupTableFactory = exports.getInheritableProperty = exports.deprecated = exports.createObjectURL = exports.createPromiseCapability = exports.bytesToString = exports.assert = exports.arraysToBytes = exports.arrayByteLength = exports.FormatError = exports.XRefParseException = exports.toRomanNumerals = exports.Util = exports.UnknownErrorException = exports.UnexpectedResponseException = exports.TextRenderingMode = exports.StreamType = exports.PermissionFlag = exports.PasswordResponses = exports.PasswordException = exports.NativeImageDecoding = exports.MissingPDFException = exports.MissingDataException = exports.InvalidPDFException = exports.AbortException = exports.CMapCompressionType = exports.ImageKind = exports.FontType = exports.AnnotationType = exports.AnnotationFlag = exports.AnnotationFieldFlag = exports.AnnotationBorderStyleType = exports.UNSUPPORTED_FEATURES = exports.VerbosityLevel = exports.OPS = exports.IDENTITY_MATRIX = exports.FONT_IDENTITY_MATRIX = undefined;
+=======
+exports.arrayByteLength = arrayByteLength;
+exports.arraysToBytes = arraysToBytes;
+exports.assert = assert;
+exports.bytesToString = bytesToString;
+exports.createPromiseCapability = createPromiseCapability;
+exports.getVerbosityLevel = getVerbosityLevel;
+exports.info = info;
+exports.isArrayBuffer = isArrayBuffer;
+exports.isArrayEqual = isArrayEqual;
+exports.isBool = isBool;
+exports.isEmptyObj = isEmptyObj;
+exports.isNum = isNum;
+exports.isString = isString;
+exports.isSpace = isSpace;
+exports.isSameOrigin = isSameOrigin;
+exports.createValidAbsoluteUrl = createValidAbsoluteUrl;
+exports.isLittleEndian = isLittleEndian;
+exports.isEvalSupported = isEvalSupported;
+exports.log2 = log2;
+exports.readInt8 = readInt8;
+exports.readUint16 = readUint16;
+exports.readUint32 = readUint32;
+exports.removeNullCharacters = removeNullCharacters;
+exports.setVerbosityLevel = setVerbosityLevel;
+exports.shadow = shadow;
+exports.string32 = string32;
+exports.stringToBytes = stringToBytes;
+exports.stringToPDFString = stringToPDFString;
+exports.stringToUTF8String = stringToUTF8String;
+exports.utf8StringToString = utf8StringToString;
+exports.warn = warn;
+exports.unreachable = unreachable;
+Object.defineProperty(exports, "ReadableStream", {
+  enumerable: true,
+  get: function () {
+    return _streams_polyfill.ReadableStream;
+  }
+});
+Object.defineProperty(exports, "URL", {
+  enumerable: true,
+  get: function () {
+    return _url_polyfill.URL;
+  }
+});
+exports.createObjectURL = exports.FormatError = exports.Util = exports.UnknownErrorException = exports.UnexpectedResponseException = exports.TextRenderingMode = exports.StreamType = exports.PermissionFlag = exports.PasswordResponses = exports.PasswordException = exports.NativeImageDecoding = exports.MissingPDFException = exports.InvalidPDFException = exports.AbortException = exports.CMapCompressionType = exports.ImageKind = exports.FontType = exports.AnnotationType = exports.AnnotationFlag = exports.AnnotationFieldFlag = exports.AnnotationBorderStyleType = exports.UNSUPPORTED_FEATURES = exports.VerbosityLevel = exports.OPS = exports.IDENTITY_MATRIX = exports.FONT_IDENTITY_MATRIX = void 0;
+>>>>>>> upstream-releases
 
 __w_pdfjs_require__(3);
 
 var _streams_polyfill = __w_pdfjs_require__(5);
 
-var _url_polyfill = __w_pdfjs_require__(7);
+var _url_polyfill = __w_pdfjs_require__(6);
 
 const IDENTITY_MATRIX = [1, 0, 0, 1, 0, 0];
 exports.IDENTITY_MATRIX = IDENTITY_MATRIX;
@@ -1168,11 +1432,19 @@ function warn(msg) {
     console.log('Warning: ' + msg);
   }
 }
+<<<<<<< HEAD
 
 function deprecated(details) {
   console.log('Deprecated API usage: ' + details);
 }
 
+||||||| merged common ancestors
+function deprecated(details) {
+  console.log('Deprecated API usage: ' + details);
+}
+=======
+
+>>>>>>> upstream-releases
 function unreachable(msg) {
   throw new Error(msg);
 }
@@ -1241,6 +1513,7 @@ function shadow(obj, prop, value) {
   });
   return value;
 }
+<<<<<<< HEAD
 
 function getLookupTableFactory(initializer) {
   var lookup;
@@ -1255,6 +1528,21 @@ function getLookupTableFactory(initializer) {
   };
 }
 
+||||||| merged common ancestors
+function getLookupTableFactory(initializer) {
+  var lookup;
+  return function () {
+    if (initializer) {
+      lookup = Object.create(null);
+      initializer(lookup);
+      initializer = null;
+    }
+    return lookup;
+  };
+}
+=======
+
+>>>>>>> upstream-releases
 var PasswordException = function PasswordExceptionClosure() {
   function PasswordException(msg, code) {
     this.name = 'PasswordException';
@@ -1320,6 +1608,7 @@ var UnexpectedResponseException = function UnexpectedResponseExceptionClosure() 
   UnexpectedResponseException.constructor = UnexpectedResponseException;
   return UnexpectedResponseException;
 }();
+<<<<<<< HEAD
 
 exports.UnexpectedResponseException = UnexpectedResponseException;
 
@@ -1351,6 +1640,32 @@ var XRefParseException = function XRefParseExceptionClosure() {
 
 exports.XRefParseException = XRefParseException;
 
+||||||| merged common ancestors
+var MissingDataException = function MissingDataExceptionClosure() {
+  function MissingDataException(begin, end) {
+    this.begin = begin;
+    this.end = end;
+    this.message = 'Missing data [' + begin + ', ' + end + ')';
+  }
+  MissingDataException.prototype = new Error();
+  MissingDataException.prototype.name = 'MissingDataException';
+  MissingDataException.constructor = MissingDataException;
+  return MissingDataException;
+}();
+var XRefParseException = function XRefParseExceptionClosure() {
+  function XRefParseException(msg) {
+    this.message = msg;
+  }
+  XRefParseException.prototype = new Error();
+  XRefParseException.prototype.name = 'XRefParseException';
+  XRefParseException.constructor = XRefParseException;
+  return XRefParseException;
+}();
+=======
+
+exports.UnexpectedResponseException = UnexpectedResponseException;
+
+>>>>>>> upstream-releases
 let FormatError = function FormatErrorClosure() {
   function FormatError(msg) {
     this.message = msg;
@@ -1505,6 +1820,7 @@ function isEvalSupported() {
     return false;
   }
 }
+<<<<<<< HEAD
 
 function getInheritableProperty({
   dict,
@@ -1542,6 +1858,33 @@ function getInheritableProperty({
   return values;
 }
 
+||||||| merged common ancestors
+function getInheritableProperty({ dict, key, getArray = false, stopWhenFound = true }) {
+  const LOOP_LIMIT = 100;
+  let loopCount = 0;
+  let values;
+  while (dict) {
+    const value = getArray ? dict.getArray(key) : dict.get(key);
+    if (value !== undefined) {
+      if (stopWhenFound) {
+        return value;
+      }
+      if (!values) {
+        values = [];
+      }
+      values.push(value);
+    }
+    if (++loopCount > LOOP_LIMIT) {
+      warn(`getInheritableProperty: maximum loop count exceeded for "${key}"`);
+      break;
+    }
+    dict = dict.get('Parent');
+  }
+  return values;
+}
+=======
+
+>>>>>>> upstream-releases
 var Util = function UtilClosure() {
   function Util() {}
 
@@ -1647,6 +1990,7 @@ var Util = function UtilClosure() {
 
   return Util;
 }();
+<<<<<<< HEAD
 
 exports.Util = Util;
 const ROMAN_NUMBER_MAP = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM', '', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC', '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
@@ -1672,6 +2016,30 @@ function toRomanNumerals(number, lowerCase = false) {
   return lowerCase ? romanStr.toLowerCase() : romanStr;
 }
 
+||||||| merged common ancestors
+const ROMAN_NUMBER_MAP = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM', '', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC', '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+function toRomanNumerals(number, lowerCase = false) {
+  assert(Number.isInteger(number) && number > 0, 'The number should be a positive integer.');
+  let pos,
+      romanBuf = [];
+  while (number >= 1000) {
+    number -= 1000;
+    romanBuf.push('M');
+  }
+  pos = number / 100 | 0;
+  number %= 100;
+  romanBuf.push(ROMAN_NUMBER_MAP[pos]);
+  pos = number / 10 | 0;
+  number %= 10;
+  romanBuf.push(ROMAN_NUMBER_MAP[10 + pos]);
+  romanBuf.push(ROMAN_NUMBER_MAP[20 + number]);
+  const romanStr = romanBuf.join('');
+  return lowerCase ? romanStr.toLowerCase() : romanStr;
+}
+=======
+
+exports.Util = Util;
+>>>>>>> upstream-releases
 const PDFStringTranslateTable = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x2D8, 0x2C7, 0x2C6, 0x2D9, 0x2DD, 0x2DB, 0x2DA, 0x2DC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x2022, 0x2020, 0x2021, 0x2026, 0x2014, 0x2013, 0x192, 0x2044, 0x2039, 0x203A, 0x2212, 0x2030, 0x201E, 0x201C, 0x201D, 0x2018, 0x2019, 0x201A, 0x2122, 0xFB01, 0xFB02, 0x141, 0x152, 0x160, 0x178, 0x17D, 0x131, 0x142, 0x153, 0x161, 0x17E, 0, 0x20AC];
 
 function stringToPDFString(str) {
@@ -1724,16 +2092,45 @@ function isString(v) {
 function isArrayBuffer(v) {
   return typeof v === 'object' && v !== null && v.byteLength !== undefined;
 }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+function isArrayEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  return arr1.every(function (element, index) {
+    return element === arr2[index];
+  });
+}
+
+>>>>>>> upstream-releases
 function isSpace(ch) {
   return ch === 0x20 || ch === 0x09 || ch === 0x0D || ch === 0x0A;
 }
 
 function createPromiseCapability() {
-  var capability = {};
+  const capability = Object.create(null);
+  let isSettled = false;
+  Object.defineProperty(capability, 'settled', {
+    get() {
+      return isSettled;
+    }
+
+  });
   capability.promise = new Promise(function (resolve, reject) {
-    capability.resolve = resolve;
-    capability.reject = reject;
+    capability.resolve = function (data) {
+      isSettled = true;
+      resolve(data);
+    };
+
+    capability.reject = function (reason) {
+      isSettled = true;
+      reject(reason);
+    };
   });
   return capability;
 }
@@ -1794,6 +2191,7 @@ module.exports = typeof window !== 'undefined' && window.Math === Math ? window 
 "use strict";
 
 
+<<<<<<< HEAD
 let isReadableStreamSupported = false;
 
 if (typeof ReadableStream !== 'undefined') {
@@ -1809,9 +2207,27 @@ if (typeof ReadableStream !== 'undefined') {
 }
 
 if (isReadableStreamSupported) {
+||||||| merged common ancestors
+let isReadableStreamSupported = false;
+if (typeof ReadableStream !== 'undefined') {
+  try {
+    new ReadableStream({
+      start(controller) {
+        controller.close();
+      }
+    });
+    isReadableStreamSupported = true;
+  } catch (e) {}
+}
+if (isReadableStreamSupported) {
+=======
+{
+  if (typeof ReadableStream === 'undefined') {
+    throw new Error('Please enable ReadableStream support by resetting the ' + '"javascript.options.streams" preference to "true" in about:config.');
+  }
+
+>>>>>>> upstream-releases
   exports.ReadableStream = ReadableStream;
-} else {
-  exports.ReadableStream = __w_pdfjs_require__(6).ReadableStream;
 }
 
 /***/ }),
@@ -1821,6 +2237,7 @@ if (isReadableStreamSupported) {
 "use strict";
 
 
+<<<<<<< HEAD
 (function (e, a) {
   for (var i in a) e[i] = a[i];
 })(exports, function (modules) {
@@ -1836,7 +2253,59 @@ if (isReadableStreamSupported) {
     modules[moduleId].call(module.exports, module, module.exports, __w_pdfjs_require__);
     module.l = true;
     return module.exports;
+||||||| merged common ancestors
+(function (e, a) {
+  for (var i in a) e[i] = a[i];
+})(exports, function (modules) {
+  var installedModules = {};
+  function __w_pdfjs_require__(moduleId) {
+    if (installedModules[moduleId]) return installedModules[moduleId].exports;
+    var module = installedModules[moduleId] = {
+      i: moduleId,
+      l: false,
+      exports: {}
+    };
+    modules[moduleId].call(module.exports, module, module.exports, __w_pdfjs_require__);
+    module.l = true;
+    return module.exports;
+=======
+{
+  exports.URL = URL;
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __w_pdfjs_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.clearPrimitiveCaches = clearPrimitiveCaches;
+exports.isEOF = isEOF;
+exports.isCmd = isCmd;
+exports.isDict = isDict;
+exports.isName = isName;
+exports.isRef = isRef;
+exports.isRefsEqual = isRefsEqual;
+exports.isStream = isStream;
+exports.RefSetCache = exports.RefSet = exports.Ref = exports.Name = exports.Dict = exports.Cmd = exports.EOF = void 0;
+
+var _util = __w_pdfjs_require__(2);
+
+var EOF = {};
+exports.EOF = EOF;
+
+var Name = function NameClosure() {
+  let nameCache = Object.create(null);
+
+  function Name(name) {
+    this.name = name;
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   __w_pdfjs_require__.m = modules;
   __w_pdfjs_require__.c = installedModules;
@@ -1880,7 +2349,52 @@ if (isReadableStreamSupported) {
     return typeof obj;
   } : function (obj) {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+||||||| merged common ancestors
+  __w_pdfjs_require__.m = modules;
+  __w_pdfjs_require__.c = installedModules;
+  __w_pdfjs_require__.i = function (value) {
+    return value;
   };
+  __w_pdfjs_require__.d = function (exports, name, getter) {
+    if (!__w_pdfjs_require__.o(exports, name)) {
+      Object.defineProperty(exports, name, {
+        configurable: false,
+        enumerable: true,
+        get: getter
+      });
+    }
+  };
+  __w_pdfjs_require__.n = function (module) {
+    var getter = module && module.__esModule ? function getDefault() {
+      return module['default'];
+    } : function getModuleExports() {
+      return module;
+    };
+    __w_pdfjs_require__.d(getter, 'a', getter);
+    return getter;
+  };
+  __w_pdfjs_require__.o = function (object, property) {
+    return Object.prototype.hasOwnProperty.call(object, property);
+  };
+  __w_pdfjs_require__.p = "";
+  return __w_pdfjs_require__(__w_pdfjs_require__.s = 7);
+}([function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+=======
+
+  Name.prototype = {};
+
+  Name.get = function Name_get(name) {
+    var nameValue = nameCache[name];
+    return nameValue ? nameValue : nameCache[name] = new Name(name);
+>>>>>>> upstream-releases
+  };
+<<<<<<< HEAD
 
   var _require = __w_pdfjs_require__(1),
       assert = _require.assert;
@@ -1891,7 +2405,21 @@ if (isReadableStreamSupported) {
 
   exports.typeIsObject = function (x) {
     return (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === 'object' && x !== null || typeof x === 'function';
+||||||| merged common ancestors
+  var _require = __w_pdfjs_require__(1),
+      assert = _require.assert;
+  function IsPropertyKey(argument) {
+    return typeof argument === 'string' || (typeof argument === 'undefined' ? 'undefined' : _typeof(argument)) === 'symbol';
+  }
+  exports.typeIsObject = function (x) {
+    return (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === 'object' && x !== null || typeof x === 'function';
+=======
+
+  Name._clearCache = function () {
+    nameCache = Object.create(null);
+>>>>>>> upstream-releases
   };
+<<<<<<< HEAD
 
   exports.createDataProperty = function (o, p, v) {
     assert(exports.typeIsObject(o));
@@ -2029,7 +2557,123 @@ if (isReadableStreamSupported) {
   };
 }, function (module, exports, __w_pdfjs_require__) {
   "use strict";
+||||||| merged common ancestors
+  exports.createDataProperty = function (o, p, v) {
+    assert(exports.typeIsObject(o));
+    Object.defineProperty(o, p, {
+      value: v,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+  };
+  exports.createArrayFromList = function (elements) {
+    return elements.slice();
+  };
+  exports.ArrayBufferCopy = function (dest, destOffset, src, srcOffset, n) {
+    new Uint8Array(dest).set(new Uint8Array(src, srcOffset, n), destOffset);
+  };
+  exports.CreateIterResultObject = function (value, done) {
+    assert(typeof done === 'boolean');
+    var obj = {};
+    Object.defineProperty(obj, 'value', {
+      value: value,
+      enumerable: true,
+      writable: true,
+      configurable: true
+    });
+    Object.defineProperty(obj, 'done', {
+      value: done,
+      enumerable: true,
+      writable: true,
+      configurable: true
+    });
+    return obj;
+  };
+  exports.IsFiniteNonNegativeNumber = function (v) {
+    if (Number.isNaN(v)) {
+      return false;
+    }
+    if (v === Infinity) {
+      return false;
+    }
+    if (v < 0) {
+      return false;
+    }
+    return true;
+  };
+  function Call(F, V, args) {
+    if (typeof F !== 'function') {
+      throw new TypeError('Argument is not a function');
+    }
+    return Function.prototype.apply.call(F, V, args);
+  }
+  exports.InvokeOrNoop = function (O, P, args) {
+    assert(O !== undefined);
+    assert(IsPropertyKey(P));
+    assert(Array.isArray(args));
+    var method = O[P];
+    if (method === undefined) {
+      return undefined;
+    }
+    return Call(method, O, args);
+  };
+  exports.PromiseInvokeOrNoop = function (O, P, args) {
+    assert(O !== undefined);
+    assert(IsPropertyKey(P));
+    assert(Array.isArray(args));
+    try {
+      return Promise.resolve(exports.InvokeOrNoop(O, P, args));
+    } catch (returnValueE) {
+      return Promise.reject(returnValueE);
+    }
+  };
+  exports.PromiseInvokeOrPerformFallback = function (O, P, args, F, argsF) {
+    assert(O !== undefined);
+    assert(IsPropertyKey(P));
+    assert(Array.isArray(args));
+    assert(Array.isArray(argsF));
+    var method = void 0;
+    try {
+      method = O[P];
+    } catch (methodE) {
+      return Promise.reject(methodE);
+    }
+    if (method === undefined) {
+      return F.apply(null, argsF);
+    }
+    try {
+      return Promise.resolve(Call(method, O, args));
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  };
+  exports.TransferArrayBuffer = function (O) {
+    return O.slice();
+  };
+  exports.ValidateAndNormalizeHighWaterMark = function (highWaterMark) {
+    highWaterMark = Number(highWaterMark);
+    if (Number.isNaN(highWaterMark) || highWaterMark < 0) {
+      throw new RangeError('highWaterMark property of a queuing strategy must be non-negative and non-NaN');
+    }
+    return highWaterMark;
+  };
+  exports.ValidateAndNormalizeQueuingStrategy = function (size, highWaterMark) {
+    if (size !== undefined && typeof size !== 'function') {
+      throw new TypeError('size property of a queuing strategy must be a function');
+    }
+    highWaterMark = exports.ValidateAndNormalizeHighWaterMark(highWaterMark);
+    return {
+      size: size,
+      highWaterMark: highWaterMark
+    };
+  };
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+=======
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   function rethrowAssertionErrorRejection(e) {
     if (e && e.constructor === AssertionError) {
       setTimeout(function () {
@@ -2984,7 +3628,774 @@ if (isReadableStreamSupported) {
       writer._closedPromise_reject = reject;
       writer._closedPromiseState = 'pending';
     });
+||||||| merged common ancestors
+  function rethrowAssertionErrorRejection(e) {
+    if (e && e.constructor === AssertionError) {
+      setTimeout(function () {
+        throw e;
+      }, 0);
+    }
   }
+  function AssertionError(message) {
+    this.name = 'AssertionError';
+    this.message = message || '';
+    this.stack = new Error().stack;
+  }
+  AssertionError.prototype = Object.create(Error.prototype);
+  AssertionError.prototype.constructor = AssertionError;
+  function assert(value, message) {
+    if (!value) {
+      throw new AssertionError(message);
+    }
+  }
+  module.exports = {
+    rethrowAssertionErrorRejection: rethrowAssertionErrorRejection,
+    AssertionError: AssertionError,
+    assert: assert
+  };
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+  var _require = __w_pdfjs_require__(0),
+      InvokeOrNoop = _require.InvokeOrNoop,
+      PromiseInvokeOrNoop = _require.PromiseInvokeOrNoop,
+      ValidateAndNormalizeQueuingStrategy = _require.ValidateAndNormalizeQueuingStrategy,
+      typeIsObject = _require.typeIsObject;
+  var _require2 = __w_pdfjs_require__(1),
+      assert = _require2.assert,
+      rethrowAssertionErrorRejection = _require2.rethrowAssertionErrorRejection;
+  var _require3 = __w_pdfjs_require__(3),
+      DequeueValue = _require3.DequeueValue,
+      EnqueueValueWithSize = _require3.EnqueueValueWithSize,
+      PeekQueueValue = _require3.PeekQueueValue,
+      ResetQueue = _require3.ResetQueue;
+  var WritableStream = function () {
+    function WritableStream() {
+      var underlyingSink = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          size = _ref.size,
+          _ref$highWaterMark = _ref.highWaterMark,
+          highWaterMark = _ref$highWaterMark === undefined ? 1 : _ref$highWaterMark;
+      _classCallCheck(this, WritableStream);
+      this._state = 'writable';
+      this._storedError = undefined;
+      this._writer = undefined;
+      this._writableStreamController = undefined;
+      this._writeRequests = [];
+      this._inFlightWriteRequest = undefined;
+      this._closeRequest = undefined;
+      this._inFlightCloseRequest = undefined;
+      this._pendingAbortRequest = undefined;
+      this._backpressure = false;
+      var type = underlyingSink.type;
+      if (type !== undefined) {
+        throw new RangeError('Invalid type is specified');
+      }
+      this._writableStreamController = new WritableStreamDefaultController(this, underlyingSink, size, highWaterMark);
+      this._writableStreamController.__startSteps();
+    }
+    _createClass(WritableStream, [{
+      key: 'abort',
+      value: function abort(reason) {
+        if (IsWritableStream(this) === false) {
+          return Promise.reject(streamBrandCheckException('abort'));
+        }
+        if (IsWritableStreamLocked(this) === true) {
+          return Promise.reject(new TypeError('Cannot abort a stream that already has a writer'));
+        }
+        return WritableStreamAbort(this, reason);
+      }
+    }, {
+      key: 'getWriter',
+      value: function getWriter() {
+        if (IsWritableStream(this) === false) {
+          throw streamBrandCheckException('getWriter');
+        }
+        return AcquireWritableStreamDefaultWriter(this);
+      }
+    }, {
+      key: 'locked',
+      get: function get() {
+        if (IsWritableStream(this) === false) {
+          throw streamBrandCheckException('locked');
+        }
+        return IsWritableStreamLocked(this);
+      }
+    }]);
+    return WritableStream;
+  }();
+  module.exports = {
+    AcquireWritableStreamDefaultWriter: AcquireWritableStreamDefaultWriter,
+    IsWritableStream: IsWritableStream,
+    IsWritableStreamLocked: IsWritableStreamLocked,
+    WritableStream: WritableStream,
+    WritableStreamAbort: WritableStreamAbort,
+    WritableStreamDefaultControllerError: WritableStreamDefaultControllerError,
+    WritableStreamDefaultWriterCloseWithErrorPropagation: WritableStreamDefaultWriterCloseWithErrorPropagation,
+    WritableStreamDefaultWriterRelease: WritableStreamDefaultWriterRelease,
+    WritableStreamDefaultWriterWrite: WritableStreamDefaultWriterWrite,
+    WritableStreamCloseQueuedOrInFlight: WritableStreamCloseQueuedOrInFlight
+  };
+  function AcquireWritableStreamDefaultWriter(stream) {
+    return new WritableStreamDefaultWriter(stream);
+  }
+  function IsWritableStream(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_writableStreamController')) {
+      return false;
+    }
+    return true;
+  }
+  function IsWritableStreamLocked(stream) {
+    assert(IsWritableStream(stream) === true, 'IsWritableStreamLocked should only be used on known writable streams');
+    if (stream._writer === undefined) {
+      return false;
+    }
+    return true;
+  }
+  function WritableStreamAbort(stream, reason) {
+    var state = stream._state;
+    if (state === 'closed') {
+      return Promise.resolve(undefined);
+    }
+    if (state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    var error = new TypeError('Requested to abort');
+    if (stream._pendingAbortRequest !== undefined) {
+      return Promise.reject(error);
+    }
+    assert(state === 'writable' || state === 'erroring', 'state must be writable or erroring');
+    var wasAlreadyErroring = false;
+    if (state === 'erroring') {
+      wasAlreadyErroring = true;
+      reason = undefined;
+    }
+    var promise = new Promise(function (resolve, reject) {
+      stream._pendingAbortRequest = {
+        _resolve: resolve,
+        _reject: reject,
+        _reason: reason,
+        _wasAlreadyErroring: wasAlreadyErroring
+      };
+    });
+    if (wasAlreadyErroring === false) {
+      WritableStreamStartErroring(stream, error);
+    }
+    return promise;
+  }
+  function WritableStreamAddWriteRequest(stream) {
+    assert(IsWritableStreamLocked(stream) === true);
+    assert(stream._state === 'writable');
+    var promise = new Promise(function (resolve, reject) {
+      var writeRequest = {
+        _resolve: resolve,
+        _reject: reject
+      };
+      stream._writeRequests.push(writeRequest);
+    });
+    return promise;
+  }
+  function WritableStreamDealWithRejection(stream, error) {
+    var state = stream._state;
+    if (state === 'writable') {
+      WritableStreamStartErroring(stream, error);
+      return;
+    }
+    assert(state === 'erroring');
+    WritableStreamFinishErroring(stream);
+  }
+  function WritableStreamStartErroring(stream, reason) {
+    assert(stream._storedError === undefined, 'stream._storedError === undefined');
+    assert(stream._state === 'writable', 'state must be writable');
+    var controller = stream._writableStreamController;
+    assert(controller !== undefined, 'controller must not be undefined');
+    stream._state = 'erroring';
+    stream._storedError = reason;
+    var writer = stream._writer;
+    if (writer !== undefined) {
+      WritableStreamDefaultWriterEnsureReadyPromiseRejected(writer, reason);
+    }
+    if (WritableStreamHasOperationMarkedInFlight(stream) === false && controller._started === true) {
+      WritableStreamFinishErroring(stream);
+    }
+  }
+  function WritableStreamFinishErroring(stream) {
+    assert(stream._state === 'erroring', 'stream._state === erroring');
+    assert(WritableStreamHasOperationMarkedInFlight(stream) === false, 'WritableStreamHasOperationMarkedInFlight(stream) === false');
+    stream._state = 'errored';
+    stream._writableStreamController.__errorSteps();
+    var storedError = stream._storedError;
+    for (var i = 0; i < stream._writeRequests.length; i++) {
+      var writeRequest = stream._writeRequests[i];
+      writeRequest._reject(storedError);
+    }
+    stream._writeRequests = [];
+    if (stream._pendingAbortRequest === undefined) {
+      WritableStreamRejectCloseAndClosedPromiseIfNeeded(stream);
+      return;
+    }
+    var abortRequest = stream._pendingAbortRequest;
+    stream._pendingAbortRequest = undefined;
+    if (abortRequest._wasAlreadyErroring === true) {
+      abortRequest._reject(storedError);
+      WritableStreamRejectCloseAndClosedPromiseIfNeeded(stream);
+      return;
+    }
+    var promise = stream._writableStreamController.__abortSteps(abortRequest._reason);
+    promise.then(function () {
+      abortRequest._resolve();
+      WritableStreamRejectCloseAndClosedPromiseIfNeeded(stream);
+    }, function (reason) {
+      abortRequest._reject(reason);
+      WritableStreamRejectCloseAndClosedPromiseIfNeeded(stream);
+    });
+  }
+  function WritableStreamFinishInFlightWrite(stream) {
+    assert(stream._inFlightWriteRequest !== undefined);
+    stream._inFlightWriteRequest._resolve(undefined);
+    stream._inFlightWriteRequest = undefined;
+  }
+  function WritableStreamFinishInFlightWriteWithError(stream, error) {
+    assert(stream._inFlightWriteRequest !== undefined);
+    stream._inFlightWriteRequest._reject(error);
+    stream._inFlightWriteRequest = undefined;
+    assert(stream._state === 'writable' || stream._state === 'erroring');
+    WritableStreamDealWithRejection(stream, error);
+  }
+  function WritableStreamFinishInFlightClose(stream) {
+    assert(stream._inFlightCloseRequest !== undefined);
+    stream._inFlightCloseRequest._resolve(undefined);
+    stream._inFlightCloseRequest = undefined;
+    var state = stream._state;
+    assert(state === 'writable' || state === 'erroring');
+    if (state === 'erroring') {
+      stream._storedError = undefined;
+      if (stream._pendingAbortRequest !== undefined) {
+        stream._pendingAbortRequest._resolve();
+        stream._pendingAbortRequest = undefined;
+      }
+    }
+    stream._state = 'closed';
+    var writer = stream._writer;
+    if (writer !== undefined) {
+      defaultWriterClosedPromiseResolve(writer);
+    }
+    assert(stream._pendingAbortRequest === undefined, 'stream._pendingAbortRequest === undefined');
+    assert(stream._storedError === undefined, 'stream._storedError === undefined');
+  }
+  function WritableStreamFinishInFlightCloseWithError(stream, error) {
+    assert(stream._inFlightCloseRequest !== undefined);
+    stream._inFlightCloseRequest._reject(error);
+    stream._inFlightCloseRequest = undefined;
+    assert(stream._state === 'writable' || stream._state === 'erroring');
+    if (stream._pendingAbortRequest !== undefined) {
+      stream._pendingAbortRequest._reject(error);
+      stream._pendingAbortRequest = undefined;
+    }
+    WritableStreamDealWithRejection(stream, error);
+  }
+  function WritableStreamCloseQueuedOrInFlight(stream) {
+    if (stream._closeRequest === undefined && stream._inFlightCloseRequest === undefined) {
+      return false;
+    }
+    return true;
+  }
+  function WritableStreamHasOperationMarkedInFlight(stream) {
+    if (stream._inFlightWriteRequest === undefined && stream._inFlightCloseRequest === undefined) {
+      return false;
+    }
+    return true;
+  }
+  function WritableStreamMarkCloseRequestInFlight(stream) {
+    assert(stream._inFlightCloseRequest === undefined);
+    assert(stream._closeRequest !== undefined);
+    stream._inFlightCloseRequest = stream._closeRequest;
+    stream._closeRequest = undefined;
+  }
+  function WritableStreamMarkFirstWriteRequestInFlight(stream) {
+    assert(stream._inFlightWriteRequest === undefined, 'there must be no pending write request');
+    assert(stream._writeRequests.length !== 0, 'writeRequests must not be empty');
+    stream._inFlightWriteRequest = stream._writeRequests.shift();
+  }
+  function WritableStreamRejectCloseAndClosedPromiseIfNeeded(stream) {
+    assert(stream._state === 'errored', '_stream_.[[state]] is `"errored"`');
+    if (stream._closeRequest !== undefined) {
+      assert(stream._inFlightCloseRequest === undefined);
+      stream._closeRequest._reject(stream._storedError);
+      stream._closeRequest = undefined;
+    }
+    var writer = stream._writer;
+    if (writer !== undefined) {
+      defaultWriterClosedPromiseReject(writer, stream._storedError);
+      writer._closedPromise.catch(function () {});
+    }
+  }
+  function WritableStreamUpdateBackpressure(stream, backpressure) {
+    assert(stream._state === 'writable');
+    assert(WritableStreamCloseQueuedOrInFlight(stream) === false);
+    var writer = stream._writer;
+    if (writer !== undefined && backpressure !== stream._backpressure) {
+      if (backpressure === true) {
+        defaultWriterReadyPromiseReset(writer);
+      } else {
+        assert(backpressure === false);
+        defaultWriterReadyPromiseResolve(writer);
+      }
+    }
+    stream._backpressure = backpressure;
+  }
+  var WritableStreamDefaultWriter = function () {
+    function WritableStreamDefaultWriter(stream) {
+      _classCallCheck(this, WritableStreamDefaultWriter);
+      if (IsWritableStream(stream) === false) {
+        throw new TypeError('WritableStreamDefaultWriter can only be constructed with a WritableStream instance');
+      }
+      if (IsWritableStreamLocked(stream) === true) {
+        throw new TypeError('This stream has already been locked for exclusive writing by another writer');
+      }
+      this._ownerWritableStream = stream;
+      stream._writer = this;
+      var state = stream._state;
+      if (state === 'writable') {
+        if (WritableStreamCloseQueuedOrInFlight(stream) === false && stream._backpressure === true) {
+          defaultWriterReadyPromiseInitialize(this);
+        } else {
+          defaultWriterReadyPromiseInitializeAsResolved(this);
+        }
+        defaultWriterClosedPromiseInitialize(this);
+      } else if (state === 'erroring') {
+        defaultWriterReadyPromiseInitializeAsRejected(this, stream._storedError);
+        this._readyPromise.catch(function () {});
+        defaultWriterClosedPromiseInitialize(this);
+      } else if (state === 'closed') {
+        defaultWriterReadyPromiseInitializeAsResolved(this);
+        defaultWriterClosedPromiseInitializeAsResolved(this);
+      } else {
+        assert(state === 'errored', 'state must be errored');
+        var storedError = stream._storedError;
+        defaultWriterReadyPromiseInitializeAsRejected(this, storedError);
+        this._readyPromise.catch(function () {});
+        defaultWriterClosedPromiseInitializeAsRejected(this, storedError);
+        this._closedPromise.catch(function () {});
+      }
+    }
+    _createClass(WritableStreamDefaultWriter, [{
+      key: 'abort',
+      value: function abort(reason) {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          return Promise.reject(defaultWriterBrandCheckException('abort'));
+        }
+        if (this._ownerWritableStream === undefined) {
+          return Promise.reject(defaultWriterLockException('abort'));
+        }
+        return WritableStreamDefaultWriterAbort(this, reason);
+      }
+    }, {
+      key: 'close',
+      value: function close() {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          return Promise.reject(defaultWriterBrandCheckException('close'));
+        }
+        var stream = this._ownerWritableStream;
+        if (stream === undefined) {
+          return Promise.reject(defaultWriterLockException('close'));
+        }
+        if (WritableStreamCloseQueuedOrInFlight(stream) === true) {
+          return Promise.reject(new TypeError('cannot close an already-closing stream'));
+        }
+        return WritableStreamDefaultWriterClose(this);
+      }
+    }, {
+      key: 'releaseLock',
+      value: function releaseLock() {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          throw defaultWriterBrandCheckException('releaseLock');
+        }
+        var stream = this._ownerWritableStream;
+        if (stream === undefined) {
+          return;
+        }
+        assert(stream._writer !== undefined);
+        WritableStreamDefaultWriterRelease(this);
+      }
+    }, {
+      key: 'write',
+      value: function write(chunk) {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          return Promise.reject(defaultWriterBrandCheckException('write'));
+        }
+        if (this._ownerWritableStream === undefined) {
+          return Promise.reject(defaultWriterLockException('write to'));
+        }
+        return WritableStreamDefaultWriterWrite(this, chunk);
+      }
+    }, {
+      key: 'closed',
+      get: function get() {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          return Promise.reject(defaultWriterBrandCheckException('closed'));
+        }
+        return this._closedPromise;
+      }
+    }, {
+      key: 'desiredSize',
+      get: function get() {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          throw defaultWriterBrandCheckException('desiredSize');
+        }
+        if (this._ownerWritableStream === undefined) {
+          throw defaultWriterLockException('desiredSize');
+        }
+        return WritableStreamDefaultWriterGetDesiredSize(this);
+      }
+    }, {
+      key: 'ready',
+      get: function get() {
+        if (IsWritableStreamDefaultWriter(this) === false) {
+          return Promise.reject(defaultWriterBrandCheckException('ready'));
+        }
+        return this._readyPromise;
+      }
+    }]);
+    return WritableStreamDefaultWriter;
+  }();
+  function IsWritableStreamDefaultWriter(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_ownerWritableStream')) {
+      return false;
+    }
+    return true;
+  }
+  function WritableStreamDefaultWriterAbort(writer, reason) {
+    var stream = writer._ownerWritableStream;
+    assert(stream !== undefined);
+    return WritableStreamAbort(stream, reason);
+  }
+  function WritableStreamDefaultWriterClose(writer) {
+    var stream = writer._ownerWritableStream;
+    assert(stream !== undefined);
+    var state = stream._state;
+    if (state === 'closed' || state === 'errored') {
+      return Promise.reject(new TypeError('The stream (in ' + state + ' state) is not in the writable state and cannot be closed'));
+    }
+    assert(state === 'writable' || state === 'erroring');
+    assert(WritableStreamCloseQueuedOrInFlight(stream) === false);
+    var promise = new Promise(function (resolve, reject) {
+      var closeRequest = {
+        _resolve: resolve,
+        _reject: reject
+      };
+      stream._closeRequest = closeRequest;
+    });
+    if (stream._backpressure === true && state === 'writable') {
+      defaultWriterReadyPromiseResolve(writer);
+    }
+    WritableStreamDefaultControllerClose(stream._writableStreamController);
+    return promise;
+  }
+  function WritableStreamDefaultWriterCloseWithErrorPropagation(writer) {
+    var stream = writer._ownerWritableStream;
+    assert(stream !== undefined);
+    var state = stream._state;
+    if (WritableStreamCloseQueuedOrInFlight(stream) === true || state === 'closed') {
+      return Promise.resolve();
+    }
+    if (state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    assert(state === 'writable' || state === 'erroring');
+    return WritableStreamDefaultWriterClose(writer);
+  }
+  function WritableStreamDefaultWriterEnsureClosedPromiseRejected(writer, error) {
+    if (writer._closedPromiseState === 'pending') {
+      defaultWriterClosedPromiseReject(writer, error);
+    } else {
+      defaultWriterClosedPromiseResetToRejected(writer, error);
+    }
+    writer._closedPromise.catch(function () {});
+  }
+  function WritableStreamDefaultWriterEnsureReadyPromiseRejected(writer, error) {
+    if (writer._readyPromiseState === 'pending') {
+      defaultWriterReadyPromiseReject(writer, error);
+    } else {
+      defaultWriterReadyPromiseResetToRejected(writer, error);
+    }
+    writer._readyPromise.catch(function () {});
+  }
+  function WritableStreamDefaultWriterGetDesiredSize(writer) {
+    var stream = writer._ownerWritableStream;
+    var state = stream._state;
+    if (state === 'errored' || state === 'erroring') {
+      return null;
+    }
+    if (state === 'closed') {
+      return 0;
+    }
+    return WritableStreamDefaultControllerGetDesiredSize(stream._writableStreamController);
+  }
+  function WritableStreamDefaultWriterRelease(writer) {
+    var stream = writer._ownerWritableStream;
+    assert(stream !== undefined);
+    assert(stream._writer === writer);
+    var releasedError = new TypeError('Writer was released and can no longer be used to monitor the stream\'s closedness');
+    WritableStreamDefaultWriterEnsureReadyPromiseRejected(writer, releasedError);
+    WritableStreamDefaultWriterEnsureClosedPromiseRejected(writer, releasedError);
+    stream._writer = undefined;
+    writer._ownerWritableStream = undefined;
+  }
+  function WritableStreamDefaultWriterWrite(writer, chunk) {
+    var stream = writer._ownerWritableStream;
+    assert(stream !== undefined);
+    var controller = stream._writableStreamController;
+    var chunkSize = WritableStreamDefaultControllerGetChunkSize(controller, chunk);
+    if (stream !== writer._ownerWritableStream) {
+      return Promise.reject(defaultWriterLockException('write to'));
+    }
+    var state = stream._state;
+    if (state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    if (WritableStreamCloseQueuedOrInFlight(stream) === true || state === 'closed') {
+      return Promise.reject(new TypeError('The stream is closing or closed and cannot be written to'));
+    }
+    if (state === 'erroring') {
+      return Promise.reject(stream._storedError);
+    }
+    assert(state === 'writable');
+    var promise = WritableStreamAddWriteRequest(stream);
+    WritableStreamDefaultControllerWrite(controller, chunk, chunkSize);
+    return promise;
+  }
+  var WritableStreamDefaultController = function () {
+    function WritableStreamDefaultController(stream, underlyingSink, size, highWaterMark) {
+      _classCallCheck(this, WritableStreamDefaultController);
+      if (IsWritableStream(stream) === false) {
+        throw new TypeError('WritableStreamDefaultController can only be constructed with a WritableStream instance');
+      }
+      if (stream._writableStreamController !== undefined) {
+        throw new TypeError('WritableStreamDefaultController instances can only be created by the WritableStream constructor');
+      }
+      this._controlledWritableStream = stream;
+      this._underlyingSink = underlyingSink;
+      this._queue = undefined;
+      this._queueTotalSize = undefined;
+      ResetQueue(this);
+      this._started = false;
+      var normalizedStrategy = ValidateAndNormalizeQueuingStrategy(size, highWaterMark);
+      this._strategySize = normalizedStrategy.size;
+      this._strategyHWM = normalizedStrategy.highWaterMark;
+      var backpressure = WritableStreamDefaultControllerGetBackpressure(this);
+      WritableStreamUpdateBackpressure(stream, backpressure);
+    }
+    _createClass(WritableStreamDefaultController, [{
+      key: 'error',
+      value: function error(e) {
+        if (IsWritableStreamDefaultController(this) === false) {
+          throw new TypeError('WritableStreamDefaultController.prototype.error can only be used on a WritableStreamDefaultController');
+        }
+        var state = this._controlledWritableStream._state;
+        if (state !== 'writable') {
+          return;
+        }
+        WritableStreamDefaultControllerError(this, e);
+      }
+    }, {
+      key: '__abortSteps',
+      value: function __abortSteps(reason) {
+        return PromiseInvokeOrNoop(this._underlyingSink, 'abort', [reason]);
+      }
+    }, {
+      key: '__errorSteps',
+      value: function __errorSteps() {
+        ResetQueue(this);
+      }
+    }, {
+      key: '__startSteps',
+      value: function __startSteps() {
+        var _this = this;
+        var startResult = InvokeOrNoop(this._underlyingSink, 'start', [this]);
+        var stream = this._controlledWritableStream;
+        Promise.resolve(startResult).then(function () {
+          assert(stream._state === 'writable' || stream._state === 'erroring');
+          _this._started = true;
+          WritableStreamDefaultControllerAdvanceQueueIfNeeded(_this);
+        }, function (r) {
+          assert(stream._state === 'writable' || stream._state === 'erroring');
+          _this._started = true;
+          WritableStreamDealWithRejection(stream, r);
+        }).catch(rethrowAssertionErrorRejection);
+      }
+    }]);
+    return WritableStreamDefaultController;
+  }();
+  function WritableStreamDefaultControllerClose(controller) {
+    EnqueueValueWithSize(controller, 'close', 0);
+    WritableStreamDefaultControllerAdvanceQueueIfNeeded(controller);
+  }
+  function WritableStreamDefaultControllerGetChunkSize(controller, chunk) {
+    var strategySize = controller._strategySize;
+    if (strategySize === undefined) {
+      return 1;
+    }
+    try {
+      return strategySize(chunk);
+    } catch (chunkSizeE) {
+      WritableStreamDefaultControllerErrorIfNeeded(controller, chunkSizeE);
+      return 1;
+    }
+  }
+  function WritableStreamDefaultControllerGetDesiredSize(controller) {
+    return controller._strategyHWM - controller._queueTotalSize;
+  }
+  function WritableStreamDefaultControllerWrite(controller, chunk, chunkSize) {
+    var writeRecord = { chunk: chunk };
+    try {
+      EnqueueValueWithSize(controller, writeRecord, chunkSize);
+    } catch (enqueueE) {
+      WritableStreamDefaultControllerErrorIfNeeded(controller, enqueueE);
+      return;
+    }
+    var stream = controller._controlledWritableStream;
+    if (WritableStreamCloseQueuedOrInFlight(stream) === false && stream._state === 'writable') {
+      var backpressure = WritableStreamDefaultControllerGetBackpressure(controller);
+      WritableStreamUpdateBackpressure(stream, backpressure);
+    }
+    WritableStreamDefaultControllerAdvanceQueueIfNeeded(controller);
+  }
+  function IsWritableStreamDefaultController(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_underlyingSink')) {
+      return false;
+    }
+    return true;
+  }
+  function WritableStreamDefaultControllerAdvanceQueueIfNeeded(controller) {
+    var stream = controller._controlledWritableStream;
+    if (controller._started === false) {
+      return;
+    }
+    if (stream._inFlightWriteRequest !== undefined) {
+      return;
+    }
+    var state = stream._state;
+    if (state === 'closed' || state === 'errored') {
+      return;
+    }
+    if (state === 'erroring') {
+      WritableStreamFinishErroring(stream);
+      return;
+    }
+    if (controller._queue.length === 0) {
+      return;
+    }
+    var writeRecord = PeekQueueValue(controller);
+    if (writeRecord === 'close') {
+      WritableStreamDefaultControllerProcessClose(controller);
+    } else {
+      WritableStreamDefaultControllerProcessWrite(controller, writeRecord.chunk);
+    }
+  }
+  function WritableStreamDefaultControllerErrorIfNeeded(controller, error) {
+    if (controller._controlledWritableStream._state === 'writable') {
+      WritableStreamDefaultControllerError(controller, error);
+    }
+  }
+  function WritableStreamDefaultControllerProcessClose(controller) {
+    var stream = controller._controlledWritableStream;
+    WritableStreamMarkCloseRequestInFlight(stream);
+    DequeueValue(controller);
+    assert(controller._queue.length === 0, 'queue must be empty once the final write record is dequeued');
+    var sinkClosePromise = PromiseInvokeOrNoop(controller._underlyingSink, 'close', []);
+    sinkClosePromise.then(function () {
+      WritableStreamFinishInFlightClose(stream);
+    }, function (reason) {
+      WritableStreamFinishInFlightCloseWithError(stream, reason);
+    }).catch(rethrowAssertionErrorRejection);
+  }
+  function WritableStreamDefaultControllerProcessWrite(controller, chunk) {
+    var stream = controller._controlledWritableStream;
+    WritableStreamMarkFirstWriteRequestInFlight(stream);
+    var sinkWritePromise = PromiseInvokeOrNoop(controller._underlyingSink, 'write', [chunk, controller]);
+    sinkWritePromise.then(function () {
+      WritableStreamFinishInFlightWrite(stream);
+      var state = stream._state;
+      assert(state === 'writable' || state === 'erroring');
+      DequeueValue(controller);
+      if (WritableStreamCloseQueuedOrInFlight(stream) === false && state === 'writable') {
+        var backpressure = WritableStreamDefaultControllerGetBackpressure(controller);
+        WritableStreamUpdateBackpressure(stream, backpressure);
+      }
+      WritableStreamDefaultControllerAdvanceQueueIfNeeded(controller);
+    }, function (reason) {
+      WritableStreamFinishInFlightWriteWithError(stream, reason);
+    }).catch(rethrowAssertionErrorRejection);
+  }
+  function WritableStreamDefaultControllerGetBackpressure(controller) {
+    var desiredSize = WritableStreamDefaultControllerGetDesiredSize(controller);
+    return desiredSize <= 0;
+  }
+  function WritableStreamDefaultControllerError(controller, error) {
+    var stream = controller._controlledWritableStream;
+    assert(stream._state === 'writable');
+    WritableStreamStartErroring(stream, error);
+  }
+  function streamBrandCheckException(name) {
+    return new TypeError('WritableStream.prototype.' + name + ' can only be used on a WritableStream');
+  }
+  function defaultWriterBrandCheckException(name) {
+    return new TypeError('WritableStreamDefaultWriter.prototype.' + name + ' can only be used on a WritableStreamDefaultWriter');
+  }
+  function defaultWriterLockException(name) {
+    return new TypeError('Cannot ' + name + ' a stream using a released writer');
+  }
+  function defaultWriterClosedPromiseInitialize(writer) {
+    writer._closedPromise = new Promise(function (resolve, reject) {
+      writer._closedPromise_resolve = resolve;
+      writer._closedPromise_reject = reject;
+      writer._closedPromiseState = 'pending';
+    });
+=======
+  return Name;
+}();
+
+exports.Name = Name;
+
+var Cmd = function CmdClosure() {
+  let cmdCache = Object.create(null);
+
+  function Cmd(cmd) {
+    this.cmd = cmd;
+>>>>>>> upstream-releases
+  }
+<<<<<<< HEAD
 
   function defaultWriterClosedPromiseInitializeAsRejected(writer, reason) {
     writer._closedPromise = Promise.reject(reason);
@@ -3137,13 +4548,155 @@ if (isReadableStreamSupported) {
     assert(container._queue.length > 0, 'Spec-level failure: should never peek at an empty queue.');
     var pair = container._queue[0];
     return pair.value;
+||||||| merged common ancestors
+  function defaultWriterClosedPromiseInitializeAsRejected(writer, reason) {
+    writer._closedPromise = Promise.reject(reason);
+    writer._closedPromise_resolve = undefined;
+    writer._closedPromise_reject = undefined;
+    writer._closedPromiseState = 'rejected';
+  }
+  function defaultWriterClosedPromiseInitializeAsResolved(writer) {
+    writer._closedPromise = Promise.resolve(undefined);
+    writer._closedPromise_resolve = undefined;
+    writer._closedPromise_reject = undefined;
+    writer._closedPromiseState = 'resolved';
+  }
+  function defaultWriterClosedPromiseReject(writer, reason) {
+    assert(writer._closedPromise_resolve !== undefined, 'writer._closedPromise_resolve !== undefined');
+    assert(writer._closedPromise_reject !== undefined, 'writer._closedPromise_reject !== undefined');
+    assert(writer._closedPromiseState === 'pending', 'writer._closedPromiseState is pending');
+    writer._closedPromise_reject(reason);
+    writer._closedPromise_resolve = undefined;
+    writer._closedPromise_reject = undefined;
+    writer._closedPromiseState = 'rejected';
+  }
+  function defaultWriterClosedPromiseResetToRejected(writer, reason) {
+    assert(writer._closedPromise_resolve === undefined, 'writer._closedPromise_resolve === undefined');
+    assert(writer._closedPromise_reject === undefined, 'writer._closedPromise_reject === undefined');
+    assert(writer._closedPromiseState !== 'pending', 'writer._closedPromiseState is not pending');
+    writer._closedPromise = Promise.reject(reason);
+    writer._closedPromiseState = 'rejected';
+  }
+  function defaultWriterClosedPromiseResolve(writer) {
+    assert(writer._closedPromise_resolve !== undefined, 'writer._closedPromise_resolve !== undefined');
+    assert(writer._closedPromise_reject !== undefined, 'writer._closedPromise_reject !== undefined');
+    assert(writer._closedPromiseState === 'pending', 'writer._closedPromiseState is pending');
+    writer._closedPromise_resolve(undefined);
+    writer._closedPromise_resolve = undefined;
+    writer._closedPromise_reject = undefined;
+    writer._closedPromiseState = 'resolved';
+  }
+  function defaultWriterReadyPromiseInitialize(writer) {
+    writer._readyPromise = new Promise(function (resolve, reject) {
+      writer._readyPromise_resolve = resolve;
+      writer._readyPromise_reject = reject;
+    });
+    writer._readyPromiseState = 'pending';
+  }
+  function defaultWriterReadyPromiseInitializeAsRejected(writer, reason) {
+    writer._readyPromise = Promise.reject(reason);
+    writer._readyPromise_resolve = undefined;
+    writer._readyPromise_reject = undefined;
+    writer._readyPromiseState = 'rejected';
+  }
+  function defaultWriterReadyPromiseInitializeAsResolved(writer) {
+    writer._readyPromise = Promise.resolve(undefined);
+    writer._readyPromise_resolve = undefined;
+    writer._readyPromise_reject = undefined;
+    writer._readyPromiseState = 'fulfilled';
+  }
+  function defaultWriterReadyPromiseReject(writer, reason) {
+    assert(writer._readyPromise_resolve !== undefined, 'writer._readyPromise_resolve !== undefined');
+    assert(writer._readyPromise_reject !== undefined, 'writer._readyPromise_reject !== undefined');
+    writer._readyPromise_reject(reason);
+    writer._readyPromise_resolve = undefined;
+    writer._readyPromise_reject = undefined;
+    writer._readyPromiseState = 'rejected';
+  }
+  function defaultWriterReadyPromiseReset(writer) {
+    assert(writer._readyPromise_resolve === undefined, 'writer._readyPromise_resolve === undefined');
+    assert(writer._readyPromise_reject === undefined, 'writer._readyPromise_reject === undefined');
+    writer._readyPromise = new Promise(function (resolve, reject) {
+      writer._readyPromise_resolve = resolve;
+      writer._readyPromise_reject = reject;
+    });
+    writer._readyPromiseState = 'pending';
+  }
+  function defaultWriterReadyPromiseResetToRejected(writer, reason) {
+    assert(writer._readyPromise_resolve === undefined, 'writer._readyPromise_resolve === undefined');
+    assert(writer._readyPromise_reject === undefined, 'writer._readyPromise_reject === undefined');
+    writer._readyPromise = Promise.reject(reason);
+    writer._readyPromiseState = 'rejected';
+  }
+  function defaultWriterReadyPromiseResolve(writer) {
+    assert(writer._readyPromise_resolve !== undefined, 'writer._readyPromise_resolve !== undefined');
+    assert(writer._readyPromise_reject !== undefined, 'writer._readyPromise_reject !== undefined');
+    writer._readyPromise_resolve(undefined);
+    writer._readyPromise_resolve = undefined;
+    writer._readyPromise_reject = undefined;
+    writer._readyPromiseState = 'fulfilled';
+  }
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var _require = __w_pdfjs_require__(0),
+      IsFiniteNonNegativeNumber = _require.IsFiniteNonNegativeNumber;
+  var _require2 = __w_pdfjs_require__(1),
+      assert = _require2.assert;
+  exports.DequeueValue = function (container) {
+    assert('_queue' in container && '_queueTotalSize' in container, 'Spec-level failure: DequeueValue should only be used on containers with [[queue]] and [[queueTotalSize]].');
+    assert(container._queue.length > 0, 'Spec-level failure: should never dequeue from an empty queue.');
+    var pair = container._queue.shift();
+    container._queueTotalSize -= pair.size;
+    if (container._queueTotalSize < 0) {
+      container._queueTotalSize = 0;
+    }
+    return pair.value;
   };
+  exports.EnqueueValueWithSize = function (container, value, size) {
+    assert('_queue' in container && '_queueTotalSize' in container, 'Spec-level failure: EnqueueValueWithSize should only be used on containers with [[queue]] and ' + '[[queueTotalSize]].');
+    size = Number(size);
+    if (!IsFiniteNonNegativeNumber(size)) {
+      throw new RangeError('Size must be a finite, non-NaN, non-negative number.');
+    }
+    container._queue.push({
+      value: value,
+      size: size
+    });
+    container._queueTotalSize += size;
+  };
+  exports.PeekQueueValue = function (container) {
+    assert('_queue' in container && '_queueTotalSize' in container, 'Spec-level failure: PeekQueueValue should only be used on containers with [[queue]] and [[queueTotalSize]].');
+    assert(container._queue.length > 0, 'Spec-level failure: should never peek at an empty queue.');
+    var pair = container._queue[0];
+    return pair.value;
+=======
+
+  Cmd.prototype = {};
+
+  Cmd.get = function Cmd_get(cmd) {
+    var cmdValue = cmdCache[cmd];
+    return cmdValue ? cmdValue : cmdCache[cmd] = new Cmd(cmd);
+>>>>>>> upstream-releases
+  };
+<<<<<<< HEAD
 
   exports.ResetQueue = function (container) {
     assert('_queue' in container && '_queueTotalSize' in container, 'Spec-level failure: ResetQueue should only be used on containers with [[queue]] and [[queueTotalSize]].');
     container._queue = [];
     container._queueTotalSize = 0;
+||||||| merged common ancestors
+  exports.ResetQueue = function (container) {
+    assert('_queue' in container && '_queueTotalSize' in container, 'Spec-level failure: ResetQueue should only be used on containers with [[queue]] and [[queueTotalSize]].');
+    container._queue = [];
+    container._queueTotalSize = 0;
+=======
+
+  Cmd._clearCache = function () {
+    cmdCache = Object.create(null);
+>>>>>>> upstream-releases
   };
+<<<<<<< HEAD
 }, function (module, exports, __w_pdfjs_require__) {
   "use strict";
 
@@ -3489,7 +5042,312 @@ if (isReadableStreamSupported) {
     ReadableStreamDefaultControllerEnqueue: ReadableStreamDefaultControllerEnqueue,
     ReadableStreamDefaultControllerError: ReadableStreamDefaultControllerError,
     ReadableStreamDefaultControllerGetDesiredSize: ReadableStreamDefaultControllerGetDesiredSize
+||||||| merged common ancestors
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+  var _require = __w_pdfjs_require__(0),
+      ArrayBufferCopy = _require.ArrayBufferCopy,
+      CreateIterResultObject = _require.CreateIterResultObject,
+      IsFiniteNonNegativeNumber = _require.IsFiniteNonNegativeNumber,
+      InvokeOrNoop = _require.InvokeOrNoop,
+      PromiseInvokeOrNoop = _require.PromiseInvokeOrNoop,
+      TransferArrayBuffer = _require.TransferArrayBuffer,
+      ValidateAndNormalizeQueuingStrategy = _require.ValidateAndNormalizeQueuingStrategy,
+      ValidateAndNormalizeHighWaterMark = _require.ValidateAndNormalizeHighWaterMark;
+  var _require2 = __w_pdfjs_require__(0),
+      createArrayFromList = _require2.createArrayFromList,
+      createDataProperty = _require2.createDataProperty,
+      typeIsObject = _require2.typeIsObject;
+  var _require3 = __w_pdfjs_require__(1),
+      assert = _require3.assert,
+      rethrowAssertionErrorRejection = _require3.rethrowAssertionErrorRejection;
+  var _require4 = __w_pdfjs_require__(3),
+      DequeueValue = _require4.DequeueValue,
+      EnqueueValueWithSize = _require4.EnqueueValueWithSize,
+      ResetQueue = _require4.ResetQueue;
+  var _require5 = __w_pdfjs_require__(2),
+      AcquireWritableStreamDefaultWriter = _require5.AcquireWritableStreamDefaultWriter,
+      IsWritableStream = _require5.IsWritableStream,
+      IsWritableStreamLocked = _require5.IsWritableStreamLocked,
+      WritableStreamAbort = _require5.WritableStreamAbort,
+      WritableStreamDefaultWriterCloseWithErrorPropagation = _require5.WritableStreamDefaultWriterCloseWithErrorPropagation,
+      WritableStreamDefaultWriterRelease = _require5.WritableStreamDefaultWriterRelease,
+      WritableStreamDefaultWriterWrite = _require5.WritableStreamDefaultWriterWrite,
+      WritableStreamCloseQueuedOrInFlight = _require5.WritableStreamCloseQueuedOrInFlight;
+  var ReadableStream = function () {
+    function ReadableStream() {
+      var underlyingSource = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          size = _ref.size,
+          highWaterMark = _ref.highWaterMark;
+      _classCallCheck(this, ReadableStream);
+      this._state = 'readable';
+      this._reader = undefined;
+      this._storedError = undefined;
+      this._disturbed = false;
+      this._readableStreamController = undefined;
+      var type = underlyingSource.type;
+      var typeString = String(type);
+      if (typeString === 'bytes') {
+        if (highWaterMark === undefined) {
+          highWaterMark = 0;
+        }
+        this._readableStreamController = new ReadableByteStreamController(this, underlyingSource, highWaterMark);
+      } else if (type === undefined) {
+        if (highWaterMark === undefined) {
+          highWaterMark = 1;
+        }
+        this._readableStreamController = new ReadableStreamDefaultController(this, underlyingSource, size, highWaterMark);
+      } else {
+        throw new RangeError('Invalid type is specified');
+      }
+    }
+    _createClass(ReadableStream, [{
+      key: 'cancel',
+      value: function cancel(reason) {
+        if (IsReadableStream(this) === false) {
+          return Promise.reject(streamBrandCheckException('cancel'));
+        }
+        if (IsReadableStreamLocked(this) === true) {
+          return Promise.reject(new TypeError('Cannot cancel a stream that already has a reader'));
+        }
+        return ReadableStreamCancel(this, reason);
+      }
+    }, {
+      key: 'getReader',
+      value: function getReader() {
+        var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            mode = _ref2.mode;
+        if (IsReadableStream(this) === false) {
+          throw streamBrandCheckException('getReader');
+        }
+        if (mode === undefined) {
+          return AcquireReadableStreamDefaultReader(this);
+        }
+        mode = String(mode);
+        if (mode === 'byob') {
+          return AcquireReadableStreamBYOBReader(this);
+        }
+        throw new RangeError('Invalid mode is specified');
+      }
+    }, {
+      key: 'pipeThrough',
+      value: function pipeThrough(_ref3, options) {
+        var writable = _ref3.writable,
+            readable = _ref3.readable;
+        var promise = this.pipeTo(writable, options);
+        ifIsObjectAndHasAPromiseIsHandledInternalSlotSetPromiseIsHandledToTrue(promise);
+        return readable;
+      }
+    }, {
+      key: 'pipeTo',
+      value: function pipeTo(dest) {
+        var _this = this;
+        var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            preventClose = _ref4.preventClose,
+            preventAbort = _ref4.preventAbort,
+            preventCancel = _ref4.preventCancel;
+        if (IsReadableStream(this) === false) {
+          return Promise.reject(streamBrandCheckException('pipeTo'));
+        }
+        if (IsWritableStream(dest) === false) {
+          return Promise.reject(new TypeError('ReadableStream.prototype.pipeTo\'s first argument must be a WritableStream'));
+        }
+        preventClose = Boolean(preventClose);
+        preventAbort = Boolean(preventAbort);
+        preventCancel = Boolean(preventCancel);
+        if (IsReadableStreamLocked(this) === true) {
+          return Promise.reject(new TypeError('ReadableStream.prototype.pipeTo cannot be used on a locked ReadableStream'));
+        }
+        if (IsWritableStreamLocked(dest) === true) {
+          return Promise.reject(new TypeError('ReadableStream.prototype.pipeTo cannot be used on a locked WritableStream'));
+        }
+        var reader = AcquireReadableStreamDefaultReader(this);
+        var writer = AcquireWritableStreamDefaultWriter(dest);
+        var shuttingDown = false;
+        var currentWrite = Promise.resolve();
+        return new Promise(function (resolve, reject) {
+          function pipeLoop() {
+            currentWrite = Promise.resolve();
+            if (shuttingDown === true) {
+              return Promise.resolve();
+            }
+            return writer._readyPromise.then(function () {
+              return ReadableStreamDefaultReaderRead(reader).then(function (_ref5) {
+                var value = _ref5.value,
+                    done = _ref5.done;
+                if (done === true) {
+                  return;
+                }
+                currentWrite = WritableStreamDefaultWriterWrite(writer, value).catch(function () {});
+              });
+            }).then(pipeLoop);
+          }
+          isOrBecomesErrored(_this, reader._closedPromise, function (storedError) {
+            if (preventAbort === false) {
+              shutdownWithAction(function () {
+                return WritableStreamAbort(dest, storedError);
+              }, true, storedError);
+            } else {
+              shutdown(true, storedError);
+            }
+          });
+          isOrBecomesErrored(dest, writer._closedPromise, function (storedError) {
+            if (preventCancel === false) {
+              shutdownWithAction(function () {
+                return ReadableStreamCancel(_this, storedError);
+              }, true, storedError);
+            } else {
+              shutdown(true, storedError);
+            }
+          });
+          isOrBecomesClosed(_this, reader._closedPromise, function () {
+            if (preventClose === false) {
+              shutdownWithAction(function () {
+                return WritableStreamDefaultWriterCloseWithErrorPropagation(writer);
+              });
+            } else {
+              shutdown();
+            }
+          });
+          if (WritableStreamCloseQueuedOrInFlight(dest) === true || dest._state === 'closed') {
+            var destClosed = new TypeError('the destination writable stream closed before all data could be piped to it');
+            if (preventCancel === false) {
+              shutdownWithAction(function () {
+                return ReadableStreamCancel(_this, destClosed);
+              }, true, destClosed);
+            } else {
+              shutdown(true, destClosed);
+            }
+          }
+          pipeLoop().catch(function (err) {
+            currentWrite = Promise.resolve();
+            rethrowAssertionErrorRejection(err);
+          });
+          function waitForWritesToFinish() {
+            var oldCurrentWrite = currentWrite;
+            return currentWrite.then(function () {
+              return oldCurrentWrite !== currentWrite ? waitForWritesToFinish() : undefined;
+            });
+          }
+          function isOrBecomesErrored(stream, promise, action) {
+            if (stream._state === 'errored') {
+              action(stream._storedError);
+            } else {
+              promise.catch(action).catch(rethrowAssertionErrorRejection);
+            }
+          }
+          function isOrBecomesClosed(stream, promise, action) {
+            if (stream._state === 'closed') {
+              action();
+            } else {
+              promise.then(action).catch(rethrowAssertionErrorRejection);
+            }
+          }
+          function shutdownWithAction(action, originalIsError, originalError) {
+            if (shuttingDown === true) {
+              return;
+            }
+            shuttingDown = true;
+            if (dest._state === 'writable' && WritableStreamCloseQueuedOrInFlight(dest) === false) {
+              waitForWritesToFinish().then(doTheRest);
+            } else {
+              doTheRest();
+            }
+            function doTheRest() {
+              action().then(function () {
+                return finalize(originalIsError, originalError);
+              }, function (newError) {
+                return finalize(true, newError);
+              }).catch(rethrowAssertionErrorRejection);
+            }
+          }
+          function shutdown(isError, error) {
+            if (shuttingDown === true) {
+              return;
+            }
+            shuttingDown = true;
+            if (dest._state === 'writable' && WritableStreamCloseQueuedOrInFlight(dest) === false) {
+              waitForWritesToFinish().then(function () {
+                return finalize(isError, error);
+              }).catch(rethrowAssertionErrorRejection);
+            } else {
+              finalize(isError, error);
+            }
+          }
+          function finalize(isError, error) {
+            WritableStreamDefaultWriterRelease(writer);
+            ReadableStreamReaderGenericRelease(reader);
+            if (isError) {
+              reject(error);
+            } else {
+              resolve(undefined);
+            }
+          }
+        });
+      }
+    }, {
+      key: 'tee',
+      value: function tee() {
+        if (IsReadableStream(this) === false) {
+          throw streamBrandCheckException('tee');
+        }
+        var branches = ReadableStreamTee(this, false);
+        return createArrayFromList(branches);
+      }
+    }, {
+      key: 'locked',
+      get: function get() {
+        if (IsReadableStream(this) === false) {
+          throw streamBrandCheckException('locked');
+        }
+        return IsReadableStreamLocked(this);
+      }
+    }]);
+    return ReadableStream;
+  }();
+  module.exports = {
+    ReadableStream: ReadableStream,
+    IsReadableStreamDisturbed: IsReadableStreamDisturbed,
+    ReadableStreamDefaultControllerClose: ReadableStreamDefaultControllerClose,
+    ReadableStreamDefaultControllerEnqueue: ReadableStreamDefaultControllerEnqueue,
+    ReadableStreamDefaultControllerError: ReadableStreamDefaultControllerError,
+    ReadableStreamDefaultControllerGetDesiredSize: ReadableStreamDefaultControllerGetDesiredSize
+=======
+
+  return Cmd;
+}();
+
+exports.Cmd = Cmd;
+
+var Dict = function DictClosure() {
+  var nonSerializable = function nonSerializableClosure() {
+    return nonSerializable;
+>>>>>>> upstream-releases
   };
+<<<<<<< HEAD
 
   function AcquireReadableStreamBYOBReader(stream) {
     return new ReadableStreamBYOBReader(stream);
@@ -4338,7 +6196,687 @@ if (isReadableStreamSupported) {
     }
 
     return controller._strategyHWM - controller._queueTotalSize;
+||||||| merged common ancestors
+  function AcquireReadableStreamBYOBReader(stream) {
+    return new ReadableStreamBYOBReader(stream);
   }
+  function AcquireReadableStreamDefaultReader(stream) {
+    return new ReadableStreamDefaultReader(stream);
+  }
+  function IsReadableStream(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_readableStreamController')) {
+      return false;
+    }
+    return true;
+  }
+  function IsReadableStreamDisturbed(stream) {
+    assert(IsReadableStream(stream) === true, 'IsReadableStreamDisturbed should only be used on known readable streams');
+    return stream._disturbed;
+  }
+  function IsReadableStreamLocked(stream) {
+    assert(IsReadableStream(stream) === true, 'IsReadableStreamLocked should only be used on known readable streams');
+    if (stream._reader === undefined) {
+      return false;
+    }
+    return true;
+  }
+  function ReadableStreamTee(stream, cloneForBranch2) {
+    assert(IsReadableStream(stream) === true);
+    assert(typeof cloneForBranch2 === 'boolean');
+    var reader = AcquireReadableStreamDefaultReader(stream);
+    var teeState = {
+      closedOrErrored: false,
+      canceled1: false,
+      canceled2: false,
+      reason1: undefined,
+      reason2: undefined
+    };
+    teeState.promise = new Promise(function (resolve) {
+      teeState._resolve = resolve;
+    });
+    var pull = create_ReadableStreamTeePullFunction();
+    pull._reader = reader;
+    pull._teeState = teeState;
+    pull._cloneForBranch2 = cloneForBranch2;
+    var cancel1 = create_ReadableStreamTeeBranch1CancelFunction();
+    cancel1._stream = stream;
+    cancel1._teeState = teeState;
+    var cancel2 = create_ReadableStreamTeeBranch2CancelFunction();
+    cancel2._stream = stream;
+    cancel2._teeState = teeState;
+    var underlyingSource1 = Object.create(Object.prototype);
+    createDataProperty(underlyingSource1, 'pull', pull);
+    createDataProperty(underlyingSource1, 'cancel', cancel1);
+    var branch1Stream = new ReadableStream(underlyingSource1);
+    var underlyingSource2 = Object.create(Object.prototype);
+    createDataProperty(underlyingSource2, 'pull', pull);
+    createDataProperty(underlyingSource2, 'cancel', cancel2);
+    var branch2Stream = new ReadableStream(underlyingSource2);
+    pull._branch1 = branch1Stream._readableStreamController;
+    pull._branch2 = branch2Stream._readableStreamController;
+    reader._closedPromise.catch(function (r) {
+      if (teeState.closedOrErrored === true) {
+        return;
+      }
+      ReadableStreamDefaultControllerError(pull._branch1, r);
+      ReadableStreamDefaultControllerError(pull._branch2, r);
+      teeState.closedOrErrored = true;
+    });
+    return [branch1Stream, branch2Stream];
+  }
+  function create_ReadableStreamTeePullFunction() {
+    function f() {
+      var reader = f._reader,
+          branch1 = f._branch1,
+          branch2 = f._branch2,
+          teeState = f._teeState;
+      return ReadableStreamDefaultReaderRead(reader).then(function (result) {
+        assert(typeIsObject(result));
+        var value = result.value;
+        var done = result.done;
+        assert(typeof done === 'boolean');
+        if (done === true && teeState.closedOrErrored === false) {
+          if (teeState.canceled1 === false) {
+            ReadableStreamDefaultControllerClose(branch1);
+          }
+          if (teeState.canceled2 === false) {
+            ReadableStreamDefaultControllerClose(branch2);
+          }
+          teeState.closedOrErrored = true;
+        }
+        if (teeState.closedOrErrored === true) {
+          return;
+        }
+        var value1 = value;
+        var value2 = value;
+        if (teeState.canceled1 === false) {
+          ReadableStreamDefaultControllerEnqueue(branch1, value1);
+        }
+        if (teeState.canceled2 === false) {
+          ReadableStreamDefaultControllerEnqueue(branch2, value2);
+        }
+      });
+    }
+    return f;
+  }
+  function create_ReadableStreamTeeBranch1CancelFunction() {
+    function f(reason) {
+      var stream = f._stream,
+          teeState = f._teeState;
+      teeState.canceled1 = true;
+      teeState.reason1 = reason;
+      if (teeState.canceled2 === true) {
+        var compositeReason = createArrayFromList([teeState.reason1, teeState.reason2]);
+        var cancelResult = ReadableStreamCancel(stream, compositeReason);
+        teeState._resolve(cancelResult);
+      }
+      return teeState.promise;
+    }
+    return f;
+  }
+  function create_ReadableStreamTeeBranch2CancelFunction() {
+    function f(reason) {
+      var stream = f._stream,
+          teeState = f._teeState;
+      teeState.canceled2 = true;
+      teeState.reason2 = reason;
+      if (teeState.canceled1 === true) {
+        var compositeReason = createArrayFromList([teeState.reason1, teeState.reason2]);
+        var cancelResult = ReadableStreamCancel(stream, compositeReason);
+        teeState._resolve(cancelResult);
+      }
+      return teeState.promise;
+    }
+    return f;
+  }
+  function ReadableStreamAddReadIntoRequest(stream) {
+    assert(IsReadableStreamBYOBReader(stream._reader) === true);
+    assert(stream._state === 'readable' || stream._state === 'closed');
+    var promise = new Promise(function (resolve, reject) {
+      var readIntoRequest = {
+        _resolve: resolve,
+        _reject: reject
+      };
+      stream._reader._readIntoRequests.push(readIntoRequest);
+    });
+    return promise;
+  }
+  function ReadableStreamAddReadRequest(stream) {
+    assert(IsReadableStreamDefaultReader(stream._reader) === true);
+    assert(stream._state === 'readable');
+    var promise = new Promise(function (resolve, reject) {
+      var readRequest = {
+        _resolve: resolve,
+        _reject: reject
+      };
+      stream._reader._readRequests.push(readRequest);
+    });
+    return promise;
+  }
+  function ReadableStreamCancel(stream, reason) {
+    stream._disturbed = true;
+    if (stream._state === 'closed') {
+      return Promise.resolve(undefined);
+    }
+    if (stream._state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    ReadableStreamClose(stream);
+    var sourceCancelPromise = stream._readableStreamController.__cancelSteps(reason);
+    return sourceCancelPromise.then(function () {
+      return undefined;
+    });
+  }
+  function ReadableStreamClose(stream) {
+    assert(stream._state === 'readable');
+    stream._state = 'closed';
+    var reader = stream._reader;
+    if (reader === undefined) {
+      return undefined;
+    }
+    if (IsReadableStreamDefaultReader(reader) === true) {
+      for (var i = 0; i < reader._readRequests.length; i++) {
+        var _resolve = reader._readRequests[i]._resolve;
+        _resolve(CreateIterResultObject(undefined, true));
+      }
+      reader._readRequests = [];
+    }
+    defaultReaderClosedPromiseResolve(reader);
+    return undefined;
+  }
+  function ReadableStreamError(stream, e) {
+    assert(IsReadableStream(stream) === true, 'stream must be ReadableStream');
+    assert(stream._state === 'readable', 'state must be readable');
+    stream._state = 'errored';
+    stream._storedError = e;
+    var reader = stream._reader;
+    if (reader === undefined) {
+      return undefined;
+    }
+    if (IsReadableStreamDefaultReader(reader) === true) {
+      for (var i = 0; i < reader._readRequests.length; i++) {
+        var readRequest = reader._readRequests[i];
+        readRequest._reject(e);
+      }
+      reader._readRequests = [];
+    } else {
+      assert(IsReadableStreamBYOBReader(reader), 'reader must be ReadableStreamBYOBReader');
+      for (var _i = 0; _i < reader._readIntoRequests.length; _i++) {
+        var readIntoRequest = reader._readIntoRequests[_i];
+        readIntoRequest._reject(e);
+      }
+      reader._readIntoRequests = [];
+    }
+    defaultReaderClosedPromiseReject(reader, e);
+    reader._closedPromise.catch(function () {});
+  }
+  function ReadableStreamFulfillReadIntoRequest(stream, chunk, done) {
+    var reader = stream._reader;
+    assert(reader._readIntoRequests.length > 0);
+    var readIntoRequest = reader._readIntoRequests.shift();
+    readIntoRequest._resolve(CreateIterResultObject(chunk, done));
+  }
+  function ReadableStreamFulfillReadRequest(stream, chunk, done) {
+    var reader = stream._reader;
+    assert(reader._readRequests.length > 0);
+    var readRequest = reader._readRequests.shift();
+    readRequest._resolve(CreateIterResultObject(chunk, done));
+  }
+  function ReadableStreamGetNumReadIntoRequests(stream) {
+    return stream._reader._readIntoRequests.length;
+  }
+  function ReadableStreamGetNumReadRequests(stream) {
+    return stream._reader._readRequests.length;
+  }
+  function ReadableStreamHasBYOBReader(stream) {
+    var reader = stream._reader;
+    if (reader === undefined) {
+      return false;
+    }
+    if (IsReadableStreamBYOBReader(reader) === false) {
+      return false;
+    }
+    return true;
+  }
+  function ReadableStreamHasDefaultReader(stream) {
+    var reader = stream._reader;
+    if (reader === undefined) {
+      return false;
+    }
+    if (IsReadableStreamDefaultReader(reader) === false) {
+      return false;
+    }
+    return true;
+  }
+  var ReadableStreamDefaultReader = function () {
+    function ReadableStreamDefaultReader(stream) {
+      _classCallCheck(this, ReadableStreamDefaultReader);
+      if (IsReadableStream(stream) === false) {
+        throw new TypeError('ReadableStreamDefaultReader can only be constructed with a ReadableStream instance');
+      }
+      if (IsReadableStreamLocked(stream) === true) {
+        throw new TypeError('This stream has already been locked for exclusive reading by another reader');
+      }
+      ReadableStreamReaderGenericInitialize(this, stream);
+      this._readRequests = [];
+    }
+    _createClass(ReadableStreamDefaultReader, [{
+      key: 'cancel',
+      value: function cancel(reason) {
+        if (IsReadableStreamDefaultReader(this) === false) {
+          return Promise.reject(defaultReaderBrandCheckException('cancel'));
+        }
+        if (this._ownerReadableStream === undefined) {
+          return Promise.reject(readerLockException('cancel'));
+        }
+        return ReadableStreamReaderGenericCancel(this, reason);
+      }
+    }, {
+      key: 'read',
+      value: function read() {
+        if (IsReadableStreamDefaultReader(this) === false) {
+          return Promise.reject(defaultReaderBrandCheckException('read'));
+        }
+        if (this._ownerReadableStream === undefined) {
+          return Promise.reject(readerLockException('read from'));
+        }
+        return ReadableStreamDefaultReaderRead(this);
+      }
+    }, {
+      key: 'releaseLock',
+      value: function releaseLock() {
+        if (IsReadableStreamDefaultReader(this) === false) {
+          throw defaultReaderBrandCheckException('releaseLock');
+        }
+        if (this._ownerReadableStream === undefined) {
+          return;
+        }
+        if (this._readRequests.length > 0) {
+          throw new TypeError('Tried to release a reader lock when that reader has pending read() calls un-settled');
+        }
+        ReadableStreamReaderGenericRelease(this);
+      }
+    }, {
+      key: 'closed',
+      get: function get() {
+        if (IsReadableStreamDefaultReader(this) === false) {
+          return Promise.reject(defaultReaderBrandCheckException('closed'));
+        }
+        return this._closedPromise;
+      }
+    }]);
+    return ReadableStreamDefaultReader;
+  }();
+  var ReadableStreamBYOBReader = function () {
+    function ReadableStreamBYOBReader(stream) {
+      _classCallCheck(this, ReadableStreamBYOBReader);
+      if (!IsReadableStream(stream)) {
+        throw new TypeError('ReadableStreamBYOBReader can only be constructed with a ReadableStream instance given a ' + 'byte source');
+      }
+      if (IsReadableByteStreamController(stream._readableStreamController) === false) {
+        throw new TypeError('Cannot construct a ReadableStreamBYOBReader for a stream not constructed with a byte ' + 'source');
+      }
+      if (IsReadableStreamLocked(stream)) {
+        throw new TypeError('This stream has already been locked for exclusive reading by another reader');
+      }
+      ReadableStreamReaderGenericInitialize(this, stream);
+      this._readIntoRequests = [];
+    }
+    _createClass(ReadableStreamBYOBReader, [{
+      key: 'cancel',
+      value: function cancel(reason) {
+        if (!IsReadableStreamBYOBReader(this)) {
+          return Promise.reject(byobReaderBrandCheckException('cancel'));
+        }
+        if (this._ownerReadableStream === undefined) {
+          return Promise.reject(readerLockException('cancel'));
+        }
+        return ReadableStreamReaderGenericCancel(this, reason);
+      }
+    }, {
+      key: 'read',
+      value: function read(view) {
+        if (!IsReadableStreamBYOBReader(this)) {
+          return Promise.reject(byobReaderBrandCheckException('read'));
+        }
+        if (this._ownerReadableStream === undefined) {
+          return Promise.reject(readerLockException('read from'));
+        }
+        if (!ArrayBuffer.isView(view)) {
+          return Promise.reject(new TypeError('view must be an array buffer view'));
+        }
+        if (view.byteLength === 0) {
+          return Promise.reject(new TypeError('view must have non-zero byteLength'));
+        }
+        return ReadableStreamBYOBReaderRead(this, view);
+      }
+    }, {
+      key: 'releaseLock',
+      value: function releaseLock() {
+        if (!IsReadableStreamBYOBReader(this)) {
+          throw byobReaderBrandCheckException('releaseLock');
+        }
+        if (this._ownerReadableStream === undefined) {
+          return;
+        }
+        if (this._readIntoRequests.length > 0) {
+          throw new TypeError('Tried to release a reader lock when that reader has pending read() calls un-settled');
+        }
+        ReadableStreamReaderGenericRelease(this);
+      }
+    }, {
+      key: 'closed',
+      get: function get() {
+        if (!IsReadableStreamBYOBReader(this)) {
+          return Promise.reject(byobReaderBrandCheckException('closed'));
+        }
+        return this._closedPromise;
+      }
+    }]);
+    return ReadableStreamBYOBReader;
+  }();
+  function IsReadableStreamBYOBReader(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_readIntoRequests')) {
+      return false;
+    }
+    return true;
+  }
+  function IsReadableStreamDefaultReader(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_readRequests')) {
+      return false;
+    }
+    return true;
+  }
+  function ReadableStreamReaderGenericInitialize(reader, stream) {
+    reader._ownerReadableStream = stream;
+    stream._reader = reader;
+    if (stream._state === 'readable') {
+      defaultReaderClosedPromiseInitialize(reader);
+    } else if (stream._state === 'closed') {
+      defaultReaderClosedPromiseInitializeAsResolved(reader);
+    } else {
+      assert(stream._state === 'errored', 'state must be errored');
+      defaultReaderClosedPromiseInitializeAsRejected(reader, stream._storedError);
+      reader._closedPromise.catch(function () {});
+    }
+  }
+  function ReadableStreamReaderGenericCancel(reader, reason) {
+    var stream = reader._ownerReadableStream;
+    assert(stream !== undefined);
+    return ReadableStreamCancel(stream, reason);
+  }
+  function ReadableStreamReaderGenericRelease(reader) {
+    assert(reader._ownerReadableStream !== undefined);
+    assert(reader._ownerReadableStream._reader === reader);
+    if (reader._ownerReadableStream._state === 'readable') {
+      defaultReaderClosedPromiseReject(reader, new TypeError('Reader was released and can no longer be used to monitor the stream\'s closedness'));
+    } else {
+      defaultReaderClosedPromiseResetToRejected(reader, new TypeError('Reader was released and can no longer be used to monitor the stream\'s closedness'));
+    }
+    reader._closedPromise.catch(function () {});
+    reader._ownerReadableStream._reader = undefined;
+    reader._ownerReadableStream = undefined;
+  }
+  function ReadableStreamBYOBReaderRead(reader, view) {
+    var stream = reader._ownerReadableStream;
+    assert(stream !== undefined);
+    stream._disturbed = true;
+    if (stream._state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    return ReadableByteStreamControllerPullInto(stream._readableStreamController, view);
+  }
+  function ReadableStreamDefaultReaderRead(reader) {
+    var stream = reader._ownerReadableStream;
+    assert(stream !== undefined);
+    stream._disturbed = true;
+    if (stream._state === 'closed') {
+      return Promise.resolve(CreateIterResultObject(undefined, true));
+    }
+    if (stream._state === 'errored') {
+      return Promise.reject(stream._storedError);
+    }
+    assert(stream._state === 'readable');
+    return stream._readableStreamController.__pullSteps();
+  }
+  var ReadableStreamDefaultController = function () {
+    function ReadableStreamDefaultController(stream, underlyingSource, size, highWaterMark) {
+      _classCallCheck(this, ReadableStreamDefaultController);
+      if (IsReadableStream(stream) === false) {
+        throw new TypeError('ReadableStreamDefaultController can only be constructed with a ReadableStream instance');
+      }
+      if (stream._readableStreamController !== undefined) {
+        throw new TypeError('ReadableStreamDefaultController instances can only be created by the ReadableStream constructor');
+      }
+      this._controlledReadableStream = stream;
+      this._underlyingSource = underlyingSource;
+      this._queue = undefined;
+      this._queueTotalSize = undefined;
+      ResetQueue(this);
+      this._started = false;
+      this._closeRequested = false;
+      this._pullAgain = false;
+      this._pulling = false;
+      var normalizedStrategy = ValidateAndNormalizeQueuingStrategy(size, highWaterMark);
+      this._strategySize = normalizedStrategy.size;
+      this._strategyHWM = normalizedStrategy.highWaterMark;
+      var controller = this;
+      var startResult = InvokeOrNoop(underlyingSource, 'start', [this]);
+      Promise.resolve(startResult).then(function () {
+        controller._started = true;
+        assert(controller._pulling === false);
+        assert(controller._pullAgain === false);
+        ReadableStreamDefaultControllerCallPullIfNeeded(controller);
+      }, function (r) {
+        ReadableStreamDefaultControllerErrorIfNeeded(controller, r);
+      }).catch(rethrowAssertionErrorRejection);
+    }
+    _createClass(ReadableStreamDefaultController, [{
+      key: 'close',
+      value: function close() {
+        if (IsReadableStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('close');
+        }
+        if (this._closeRequested === true) {
+          throw new TypeError('The stream has already been closed; do not close it again!');
+        }
+        var state = this._controlledReadableStream._state;
+        if (state !== 'readable') {
+          throw new TypeError('The stream (in ' + state + ' state) is not in the readable state and cannot be closed');
+        }
+        ReadableStreamDefaultControllerClose(this);
+      }
+    }, {
+      key: 'enqueue',
+      value: function enqueue(chunk) {
+        if (IsReadableStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('enqueue');
+        }
+        if (this._closeRequested === true) {
+          throw new TypeError('stream is closed or draining');
+        }
+        var state = this._controlledReadableStream._state;
+        if (state !== 'readable') {
+          throw new TypeError('The stream (in ' + state + ' state) is not in the readable state and cannot be enqueued to');
+        }
+        return ReadableStreamDefaultControllerEnqueue(this, chunk);
+      }
+    }, {
+      key: 'error',
+      value: function error(e) {
+        if (IsReadableStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('error');
+        }
+        var stream = this._controlledReadableStream;
+        if (stream._state !== 'readable') {
+          throw new TypeError('The stream is ' + stream._state + ' and so cannot be errored');
+        }
+        ReadableStreamDefaultControllerError(this, e);
+      }
+    }, {
+      key: '__cancelSteps',
+      value: function __cancelSteps(reason) {
+        ResetQueue(this);
+        return PromiseInvokeOrNoop(this._underlyingSource, 'cancel', [reason]);
+      }
+    }, {
+      key: '__pullSteps',
+      value: function __pullSteps() {
+        var stream = this._controlledReadableStream;
+        if (this._queue.length > 0) {
+          var chunk = DequeueValue(this);
+          if (this._closeRequested === true && this._queue.length === 0) {
+            ReadableStreamClose(stream);
+          } else {
+            ReadableStreamDefaultControllerCallPullIfNeeded(this);
+          }
+          return Promise.resolve(CreateIterResultObject(chunk, false));
+        }
+        var pendingPromise = ReadableStreamAddReadRequest(stream);
+        ReadableStreamDefaultControllerCallPullIfNeeded(this);
+        return pendingPromise;
+      }
+    }, {
+      key: 'desiredSize',
+      get: function get() {
+        if (IsReadableStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('desiredSize');
+        }
+        return ReadableStreamDefaultControllerGetDesiredSize(this);
+      }
+    }]);
+    return ReadableStreamDefaultController;
+  }();
+  function IsReadableStreamDefaultController(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_underlyingSource')) {
+      return false;
+    }
+    return true;
+  }
+  function ReadableStreamDefaultControllerCallPullIfNeeded(controller) {
+    var shouldPull = ReadableStreamDefaultControllerShouldCallPull(controller);
+    if (shouldPull === false) {
+      return undefined;
+    }
+    if (controller._pulling === true) {
+      controller._pullAgain = true;
+      return undefined;
+    }
+    assert(controller._pullAgain === false);
+    controller._pulling = true;
+    var pullPromise = PromiseInvokeOrNoop(controller._underlyingSource, 'pull', [controller]);
+    pullPromise.then(function () {
+      controller._pulling = false;
+      if (controller._pullAgain === true) {
+        controller._pullAgain = false;
+        return ReadableStreamDefaultControllerCallPullIfNeeded(controller);
+      }
+      return undefined;
+    }, function (e) {
+      ReadableStreamDefaultControllerErrorIfNeeded(controller, e);
+    }).catch(rethrowAssertionErrorRejection);
+    return undefined;
+  }
+  function ReadableStreamDefaultControllerShouldCallPull(controller) {
+    var stream = controller._controlledReadableStream;
+    if (stream._state === 'closed' || stream._state === 'errored') {
+      return false;
+    }
+    if (controller._closeRequested === true) {
+      return false;
+    }
+    if (controller._started === false) {
+      return false;
+    }
+    if (IsReadableStreamLocked(stream) === true && ReadableStreamGetNumReadRequests(stream) > 0) {
+      return true;
+    }
+    var desiredSize = ReadableStreamDefaultControllerGetDesiredSize(controller);
+    if (desiredSize > 0) {
+      return true;
+    }
+    return false;
+  }
+  function ReadableStreamDefaultControllerClose(controller) {
+    var stream = controller._controlledReadableStream;
+    assert(controller._closeRequested === false);
+    assert(stream._state === 'readable');
+    controller._closeRequested = true;
+    if (controller._queue.length === 0) {
+      ReadableStreamClose(stream);
+    }
+  }
+  function ReadableStreamDefaultControllerEnqueue(controller, chunk) {
+    var stream = controller._controlledReadableStream;
+    assert(controller._closeRequested === false);
+    assert(stream._state === 'readable');
+    if (IsReadableStreamLocked(stream) === true && ReadableStreamGetNumReadRequests(stream) > 0) {
+      ReadableStreamFulfillReadRequest(stream, chunk, false);
+    } else {
+      var chunkSize = 1;
+      if (controller._strategySize !== undefined) {
+        var strategySize = controller._strategySize;
+        try {
+          chunkSize = strategySize(chunk);
+        } catch (chunkSizeE) {
+          ReadableStreamDefaultControllerErrorIfNeeded(controller, chunkSizeE);
+          throw chunkSizeE;
+        }
+      }
+      try {
+        EnqueueValueWithSize(controller, chunk, chunkSize);
+      } catch (enqueueE) {
+        ReadableStreamDefaultControllerErrorIfNeeded(controller, enqueueE);
+        throw enqueueE;
+      }
+    }
+    ReadableStreamDefaultControllerCallPullIfNeeded(controller);
+    return undefined;
+  }
+  function ReadableStreamDefaultControllerError(controller, e) {
+    var stream = controller._controlledReadableStream;
+    assert(stream._state === 'readable');
+    ResetQueue(controller);
+    ReadableStreamError(stream, e);
+  }
+  function ReadableStreamDefaultControllerErrorIfNeeded(controller, e) {
+    if (controller._controlledReadableStream._state === 'readable') {
+      ReadableStreamDefaultControllerError(controller, e);
+    }
+  }
+  function ReadableStreamDefaultControllerGetDesiredSize(controller) {
+    var stream = controller._controlledReadableStream;
+    var state = stream._state;
+    if (state === 'errored') {
+      return null;
+    }
+    if (state === 'closed') {
+      return 0;
+    }
+    return controller._strategyHWM - controller._queueTotalSize;
+=======
+
+  function Dict(xref) {
+    this._map = Object.create(null);
+    this.xref = xref;
+    this.objId = null;
+    this.suppressEncryption = false;
+    this.__nonSerializable__ = nonSerializable;
+>>>>>>> upstream-releases
+  }
+<<<<<<< HEAD
 
   var ReadableStreamBYOBRequest = function () {
     function ReadableStreamBYOBRequest(controller, view) {
@@ -4452,7 +6990,116 @@ if (isReadableStreamSupported) {
         }
 
         ReadableByteStreamControllerClose(this);
+||||||| merged common ancestors
+  var ReadableStreamBYOBRequest = function () {
+    function ReadableStreamBYOBRequest(controller, view) {
+      _classCallCheck(this, ReadableStreamBYOBRequest);
+      this._associatedReadableByteStreamController = controller;
+      this._view = view;
+    }
+    _createClass(ReadableStreamBYOBRequest, [{
+      key: 'respond',
+      value: function respond(bytesWritten) {
+        if (IsReadableStreamBYOBRequest(this) === false) {
+          throw byobRequestBrandCheckException('respond');
+        }
+        if (this._associatedReadableByteStreamController === undefined) {
+          throw new TypeError('This BYOB request has been invalidated');
+        }
+        ReadableByteStreamControllerRespond(this._associatedReadableByteStreamController, bytesWritten);
       }
+    }, {
+      key: 'respondWithNewView',
+      value: function respondWithNewView(view) {
+        if (IsReadableStreamBYOBRequest(this) === false) {
+          throw byobRequestBrandCheckException('respond');
+        }
+        if (this._associatedReadableByteStreamController === undefined) {
+          throw new TypeError('This BYOB request has been invalidated');
+        }
+        if (!ArrayBuffer.isView(view)) {
+          throw new TypeError('You can only respond with array buffer views');
+        }
+        ReadableByteStreamControllerRespondWithNewView(this._associatedReadableByteStreamController, view);
+      }
+    }, {
+      key: 'view',
+      get: function get() {
+        return this._view;
+      }
+    }]);
+    return ReadableStreamBYOBRequest;
+  }();
+  var ReadableByteStreamController = function () {
+    function ReadableByteStreamController(stream, underlyingByteSource, highWaterMark) {
+      _classCallCheck(this, ReadableByteStreamController);
+      if (IsReadableStream(stream) === false) {
+        throw new TypeError('ReadableByteStreamController can only be constructed with a ReadableStream instance given ' + 'a byte source');
+      }
+      if (stream._readableStreamController !== undefined) {
+        throw new TypeError('ReadableByteStreamController instances can only be created by the ReadableStream constructor given a byte ' + 'source');
+      }
+      this._controlledReadableStream = stream;
+      this._underlyingByteSource = underlyingByteSource;
+      this._pullAgain = false;
+      this._pulling = false;
+      ReadableByteStreamControllerClearPendingPullIntos(this);
+      this._queue = this._queueTotalSize = undefined;
+      ResetQueue(this);
+      this._closeRequested = false;
+      this._started = false;
+      this._strategyHWM = ValidateAndNormalizeHighWaterMark(highWaterMark);
+      var autoAllocateChunkSize = underlyingByteSource.autoAllocateChunkSize;
+      if (autoAllocateChunkSize !== undefined) {
+        if (Number.isInteger(autoAllocateChunkSize) === false || autoAllocateChunkSize <= 0) {
+          throw new RangeError('autoAllocateChunkSize must be a positive integer');
+        }
+      }
+      this._autoAllocateChunkSize = autoAllocateChunkSize;
+      this._pendingPullIntos = [];
+      var controller = this;
+      var startResult = InvokeOrNoop(underlyingByteSource, 'start', [this]);
+      Promise.resolve(startResult).then(function () {
+        controller._started = true;
+        assert(controller._pulling === false);
+        assert(controller._pullAgain === false);
+        ReadableByteStreamControllerCallPullIfNeeded(controller);
+      }, function (r) {
+        if (stream._state === 'readable') {
+          ReadableByteStreamControllerError(controller, r);
+        }
+      }).catch(rethrowAssertionErrorRejection);
+    }
+    _createClass(ReadableByteStreamController, [{
+      key: 'close',
+      value: function close() {
+        if (IsReadableByteStreamController(this) === false) {
+          throw byteStreamControllerBrandCheckException('close');
+        }
+        if (this._closeRequested === true) {
+          throw new TypeError('The stream has already been closed; do not close it again!');
+        }
+        var state = this._controlledReadableStream._state;
+        if (state !== 'readable') {
+          throw new TypeError('The stream (in ' + state + ' state) is not in the readable state and cannot be closed');
+        }
+        ReadableByteStreamControllerClose(this);
+=======
+
+  Dict.prototype = {
+    assignXref: function Dict_assignXref(newXref) {
+      this.xref = newXref;
+    },
+    get: function Dict_get(key1, key2, key3) {
+      var value;
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+
+      if (typeof (value = this._map[key1]) !== 'undefined' || key1 in this._map || typeof key2 === 'undefined') {
+        return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
     }, {
       key: 'enqueue',
       value: function enqueue(chunk) {
@@ -4475,7 +7122,31 @@ if (isReadableStreamSupported) {
         }
 
         ReadableByteStreamControllerEnqueue(this, chunk);
+||||||| merged common ancestors
+    }, {
+      key: 'enqueue',
+      value: function enqueue(chunk) {
+        if (IsReadableByteStreamController(this) === false) {
+          throw byteStreamControllerBrandCheckException('enqueue');
+        }
+        if (this._closeRequested === true) {
+          throw new TypeError('stream is closed or draining');
+        }
+        var state = this._controlledReadableStream._state;
+        if (state !== 'readable') {
+          throw new TypeError('The stream (in ' + state + ' state) is not in the readable state and cannot be enqueued to');
+        }
+        if (!ArrayBuffer.isView(chunk)) {
+          throw new TypeError('You can only enqueue array buffer views when using a ReadableByteStreamController');
+        }
+        ReadableByteStreamControllerEnqueue(this, chunk);
+=======
+
+      if (typeof (value = this._map[key2]) !== 'undefined' || key2 in this._map || typeof key3 === 'undefined') {
+        return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     }, {
       key: 'error',
       value: function error(e) {
@@ -4487,21 +7158,59 @@ if (isReadableStreamSupported) {
 
         if (stream._state !== 'readable') {
           throw new TypeError('The stream is ' + stream._state + ' and so cannot be errored');
+||||||| merged common ancestors
+    }, {
+      key: 'error',
+      value: function error(e) {
+        if (IsReadableByteStreamController(this) === false) {
+          throw byteStreamControllerBrandCheckException('error');
         }
+        var stream = this._controlledReadableStream;
+        if (stream._state !== 'readable') {
+          throw new TypeError('The stream is ' + stream._state + ' and so cannot be errored');
+=======
+
+      value = this._map[key3] || null;
+      return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+    },
+    getAsync: function Dict_getAsync(key1, key2, key3) {
+      var value;
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+
+      if (typeof (value = this._map[key1]) !== 'undefined' || key1 in this._map || typeof key2 === 'undefined') {
+        if (xref) {
+          return xref.fetchIfRefAsync(value, suppressEncryption);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
 
         ReadableByteStreamControllerError(this, e);
+||||||| merged common ancestors
+        ReadableByteStreamControllerError(this, e);
+=======
+
+        return Promise.resolve(value);
+>>>>>>> upstream-releases
       }
-    }, {
-      key: '__cancelSteps',
-      value: function __cancelSteps(reason) {
-        if (this._pendingPullIntos.length > 0) {
-          var firstDescriptor = this._pendingPullIntos[0];
-          firstDescriptor.bytesFilled = 0;
+
+      if (typeof (value = this._map[key2]) !== 'undefined' || key2 in this._map || typeof key3 === 'undefined') {
+        if (xref) {
+          return xref.fetchIfRefAsync(value, suppressEncryption);
         }
+<<<<<<< HEAD
 
         ResetQueue(this);
         return PromiseInvokeOrNoop(this._underlyingByteSource, 'cancel', [reason]);
+||||||| merged common ancestors
+        ResetQueue(this);
+        return PromiseInvokeOrNoop(this._underlyingByteSource, 'cancel', [reason]);
+=======
+
+        return Promise.resolve(value);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     }, {
       key: '__pullSteps',
       value: function __pullSteps() {
@@ -4553,7 +7262,56 @@ if (isReadableStreamSupported) {
         var promise = ReadableStreamAddReadRequest(stream);
         ReadableByteStreamControllerCallPullIfNeeded(this);
         return promise;
+||||||| merged common ancestors
+    }, {
+      key: '__pullSteps',
+      value: function __pullSteps() {
+        var stream = this._controlledReadableStream;
+        assert(ReadableStreamHasDefaultReader(stream) === true);
+        if (this._queueTotalSize > 0) {
+          assert(ReadableStreamGetNumReadRequests(stream) === 0);
+          var entry = this._queue.shift();
+          this._queueTotalSize -= entry.byteLength;
+          ReadableByteStreamControllerHandleQueueDrain(this);
+          var view = void 0;
+          try {
+            view = new Uint8Array(entry.buffer, entry.byteOffset, entry.byteLength);
+          } catch (viewE) {
+            return Promise.reject(viewE);
+          }
+          return Promise.resolve(CreateIterResultObject(view, false));
+        }
+        var autoAllocateChunkSize = this._autoAllocateChunkSize;
+        if (autoAllocateChunkSize !== undefined) {
+          var buffer = void 0;
+          try {
+            buffer = new ArrayBuffer(autoAllocateChunkSize);
+          } catch (bufferE) {
+            return Promise.reject(bufferE);
+          }
+          var pullIntoDescriptor = {
+            buffer: buffer,
+            byteOffset: 0,
+            byteLength: autoAllocateChunkSize,
+            bytesFilled: 0,
+            elementSize: 1,
+            ctor: Uint8Array,
+            readerType: 'default'
+          };
+          this._pendingPullIntos.push(pullIntoDescriptor);
+        }
+        var promise = ReadableStreamAddReadRequest(stream);
+        ReadableByteStreamControllerCallPullIfNeeded(this);
+        return promise;
+=======
+
+      value = this._map[key3] || null;
+
+      if (xref) {
+        return xref.fetchIfRefAsync(value, suppressEncryption);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     }, {
       key: 'byobRequest',
       get: function get() {
@@ -4568,13 +7326,40 @@ if (isReadableStreamSupported) {
         }
 
         return this._byobRequest;
-      }
+||||||| merged common ancestors
     }, {
-      key: 'desiredSize',
+      key: 'byobRequest',
       get: function get() {
         if (IsReadableByteStreamController(this) === false) {
-          throw byteStreamControllerBrandCheckException('desiredSize');
+          throw byteStreamControllerBrandCheckException('byobRequest');
         }
+        if (this._byobRequest === undefined && this._pendingPullIntos.length > 0) {
+          var firstDescriptor = this._pendingPullIntos[0];
+          var view = new Uint8Array(firstDescriptor.buffer, firstDescriptor.byteOffset + firstDescriptor.bytesFilled, firstDescriptor.byteLength - firstDescriptor.bytesFilled);
+          this._byobRequest = new ReadableStreamBYOBRequest(this, view);
+        }
+        return this._byobRequest;
+=======
+
+      return Promise.resolve(value);
+    },
+    getArray: function Dict_getArray(key1, key2, key3) {
+      var value = this.get(key1, key2, key3);
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+
+      if (!Array.isArray(value) || !xref) {
+        return value;
+>>>>>>> upstream-releases
+      }
+
+      value = value.slice();
+
+      for (var i = 0, ii = value.length; i < ii; i++) {
+        if (!isRef(value[i])) {
+          continue;
+        }
+<<<<<<< HEAD
 
         return ReadableByteStreamControllerGetDesiredSize(this);
       }
@@ -5425,14 +8210,734 @@ if (isReadableStreamSupported) {
 
       if (IsTransformStream(transformStream) === false) {
         throw new TypeError('TransformStreamDefaultController can only be ' + 'constructed with a TransformStream instance');
+||||||| merged common ancestors
+        return ReadableByteStreamControllerGetDesiredSize(this);
       }
+    }]);
+    return ReadableByteStreamController;
+  }();
+  function IsReadableByteStreamController(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_underlyingByteSource')) {
+      return false;
+    }
+    return true;
+  }
+  function IsReadableStreamBYOBRequest(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_associatedReadableByteStreamController')) {
+      return false;
+    }
+    return true;
+  }
+  function ReadableByteStreamControllerCallPullIfNeeded(controller) {
+    var shouldPull = ReadableByteStreamControllerShouldCallPull(controller);
+    if (shouldPull === false) {
+      return undefined;
+    }
+    if (controller._pulling === true) {
+      controller._pullAgain = true;
+      return undefined;
+    }
+    assert(controller._pullAgain === false);
+    controller._pulling = true;
+    var pullPromise = PromiseInvokeOrNoop(controller._underlyingByteSource, 'pull', [controller]);
+    pullPromise.then(function () {
+      controller._pulling = false;
+      if (controller._pullAgain === true) {
+        controller._pullAgain = false;
+        ReadableByteStreamControllerCallPullIfNeeded(controller);
+      }
+    }, function (e) {
+      if (controller._controlledReadableStream._state === 'readable') {
+        ReadableByteStreamControllerError(controller, e);
+      }
+    }).catch(rethrowAssertionErrorRejection);
+    return undefined;
+  }
+  function ReadableByteStreamControllerClearPendingPullIntos(controller) {
+    ReadableByteStreamControllerInvalidateBYOBRequest(controller);
+    controller._pendingPullIntos = [];
+  }
+  function ReadableByteStreamControllerCommitPullIntoDescriptor(stream, pullIntoDescriptor) {
+    assert(stream._state !== 'errored', 'state must not be errored');
+    var done = false;
+    if (stream._state === 'closed') {
+      assert(pullIntoDescriptor.bytesFilled === 0);
+      done = true;
+    }
+    var filledView = ReadableByteStreamControllerConvertPullIntoDescriptor(pullIntoDescriptor);
+    if (pullIntoDescriptor.readerType === 'default') {
+      ReadableStreamFulfillReadRequest(stream, filledView, done);
+    } else {
+      assert(pullIntoDescriptor.readerType === 'byob');
+      ReadableStreamFulfillReadIntoRequest(stream, filledView, done);
+    }
+  }
+  function ReadableByteStreamControllerConvertPullIntoDescriptor(pullIntoDescriptor) {
+    var bytesFilled = pullIntoDescriptor.bytesFilled;
+    var elementSize = pullIntoDescriptor.elementSize;
+    assert(bytesFilled <= pullIntoDescriptor.byteLength);
+    assert(bytesFilled % elementSize === 0);
+    return new pullIntoDescriptor.ctor(pullIntoDescriptor.buffer, pullIntoDescriptor.byteOffset, bytesFilled / elementSize);
+  }
+  function ReadableByteStreamControllerEnqueueChunkToQueue(controller, buffer, byteOffset, byteLength) {
+    controller._queue.push({
+      buffer: buffer,
+      byteOffset: byteOffset,
+      byteLength: byteLength
+    });
+    controller._queueTotalSize += byteLength;
+  }
+  function ReadableByteStreamControllerFillPullIntoDescriptorFromQueue(controller, pullIntoDescriptor) {
+    var elementSize = pullIntoDescriptor.elementSize;
+    var currentAlignedBytes = pullIntoDescriptor.bytesFilled - pullIntoDescriptor.bytesFilled % elementSize;
+    var maxBytesToCopy = Math.min(controller._queueTotalSize, pullIntoDescriptor.byteLength - pullIntoDescriptor.bytesFilled);
+    var maxBytesFilled = pullIntoDescriptor.bytesFilled + maxBytesToCopy;
+    var maxAlignedBytes = maxBytesFilled - maxBytesFilled % elementSize;
+    var totalBytesToCopyRemaining = maxBytesToCopy;
+    var ready = false;
+    if (maxAlignedBytes > currentAlignedBytes) {
+      totalBytesToCopyRemaining = maxAlignedBytes - pullIntoDescriptor.bytesFilled;
+      ready = true;
+    }
+    var queue = controller._queue;
+    while (totalBytesToCopyRemaining > 0) {
+      var headOfQueue = queue[0];
+      var bytesToCopy = Math.min(totalBytesToCopyRemaining, headOfQueue.byteLength);
+      var destStart = pullIntoDescriptor.byteOffset + pullIntoDescriptor.bytesFilled;
+      ArrayBufferCopy(pullIntoDescriptor.buffer, destStart, headOfQueue.buffer, headOfQueue.byteOffset, bytesToCopy);
+      if (headOfQueue.byteLength === bytesToCopy) {
+        queue.shift();
+      } else {
+        headOfQueue.byteOffset += bytesToCopy;
+        headOfQueue.byteLength -= bytesToCopy;
+      }
+      controller._queueTotalSize -= bytesToCopy;
+      ReadableByteStreamControllerFillHeadPullIntoDescriptor(controller, bytesToCopy, pullIntoDescriptor);
+      totalBytesToCopyRemaining -= bytesToCopy;
+    }
+    if (ready === false) {
+      assert(controller._queueTotalSize === 0, 'queue must be empty');
+      assert(pullIntoDescriptor.bytesFilled > 0);
+      assert(pullIntoDescriptor.bytesFilled < pullIntoDescriptor.elementSize);
+    }
+    return ready;
+  }
+  function ReadableByteStreamControllerFillHeadPullIntoDescriptor(controller, size, pullIntoDescriptor) {
+    assert(controller._pendingPullIntos.length === 0 || controller._pendingPullIntos[0] === pullIntoDescriptor);
+    ReadableByteStreamControllerInvalidateBYOBRequest(controller);
+    pullIntoDescriptor.bytesFilled += size;
+  }
+  function ReadableByteStreamControllerHandleQueueDrain(controller) {
+    assert(controller._controlledReadableStream._state === 'readable');
+    if (controller._queueTotalSize === 0 && controller._closeRequested === true) {
+      ReadableStreamClose(controller._controlledReadableStream);
+    } else {
+      ReadableByteStreamControllerCallPullIfNeeded(controller);
+    }
+  }
+  function ReadableByteStreamControllerInvalidateBYOBRequest(controller) {
+    if (controller._byobRequest === undefined) {
+      return;
+    }
+    controller._byobRequest._associatedReadableByteStreamController = undefined;
+    controller._byobRequest._view = undefined;
+    controller._byobRequest = undefined;
+  }
+  function ReadableByteStreamControllerProcessPullIntoDescriptorsUsingQueue(controller) {
+    assert(controller._closeRequested === false);
+    while (controller._pendingPullIntos.length > 0) {
+      if (controller._queueTotalSize === 0) {
+        return;
+      }
+      var pullIntoDescriptor = controller._pendingPullIntos[0];
+      if (ReadableByteStreamControllerFillPullIntoDescriptorFromQueue(controller, pullIntoDescriptor) === true) {
+        ReadableByteStreamControllerShiftPendingPullInto(controller);
+        ReadableByteStreamControllerCommitPullIntoDescriptor(controller._controlledReadableStream, pullIntoDescriptor);
+      }
+    }
+  }
+  function ReadableByteStreamControllerPullInto(controller, view) {
+    var stream = controller._controlledReadableStream;
+    var elementSize = 1;
+    if (view.constructor !== DataView) {
+      elementSize = view.constructor.BYTES_PER_ELEMENT;
+    }
+    var ctor = view.constructor;
+    var pullIntoDescriptor = {
+      buffer: view.buffer,
+      byteOffset: view.byteOffset,
+      byteLength: view.byteLength,
+      bytesFilled: 0,
+      elementSize: elementSize,
+      ctor: ctor,
+      readerType: 'byob'
+    };
+    if (controller._pendingPullIntos.length > 0) {
+      pullIntoDescriptor.buffer = TransferArrayBuffer(pullIntoDescriptor.buffer);
+      controller._pendingPullIntos.push(pullIntoDescriptor);
+      return ReadableStreamAddReadIntoRequest(stream);
+    }
+    if (stream._state === 'closed') {
+      var emptyView = new view.constructor(pullIntoDescriptor.buffer, pullIntoDescriptor.byteOffset, 0);
+      return Promise.resolve(CreateIterResultObject(emptyView, true));
+    }
+    if (controller._queueTotalSize > 0) {
+      if (ReadableByteStreamControllerFillPullIntoDescriptorFromQueue(controller, pullIntoDescriptor) === true) {
+        var filledView = ReadableByteStreamControllerConvertPullIntoDescriptor(pullIntoDescriptor);
+        ReadableByteStreamControllerHandleQueueDrain(controller);
+        return Promise.resolve(CreateIterResultObject(filledView, false));
+      }
+      if (controller._closeRequested === true) {
+        var e = new TypeError('Insufficient bytes to fill elements in the given buffer');
+        ReadableByteStreamControllerError(controller, e);
+        return Promise.reject(e);
+      }
+    }
+    pullIntoDescriptor.buffer = TransferArrayBuffer(pullIntoDescriptor.buffer);
+    controller._pendingPullIntos.push(pullIntoDescriptor);
+    var promise = ReadableStreamAddReadIntoRequest(stream);
+    ReadableByteStreamControllerCallPullIfNeeded(controller);
+    return promise;
+  }
+  function ReadableByteStreamControllerRespondInClosedState(controller, firstDescriptor) {
+    firstDescriptor.buffer = TransferArrayBuffer(firstDescriptor.buffer);
+    assert(firstDescriptor.bytesFilled === 0, 'bytesFilled must be 0');
+    var stream = controller._controlledReadableStream;
+    if (ReadableStreamHasBYOBReader(stream) === true) {
+      while (ReadableStreamGetNumReadIntoRequests(stream) > 0) {
+        var pullIntoDescriptor = ReadableByteStreamControllerShiftPendingPullInto(controller);
+        ReadableByteStreamControllerCommitPullIntoDescriptor(stream, pullIntoDescriptor);
+      }
+    }
+  }
+  function ReadableByteStreamControllerRespondInReadableState(controller, bytesWritten, pullIntoDescriptor) {
+    if (pullIntoDescriptor.bytesFilled + bytesWritten > pullIntoDescriptor.byteLength) {
+      throw new RangeError('bytesWritten out of range');
+    }
+    ReadableByteStreamControllerFillHeadPullIntoDescriptor(controller, bytesWritten, pullIntoDescriptor);
+    if (pullIntoDescriptor.bytesFilled < pullIntoDescriptor.elementSize) {
+      return;
+    }
+    ReadableByteStreamControllerShiftPendingPullInto(controller);
+    var remainderSize = pullIntoDescriptor.bytesFilled % pullIntoDescriptor.elementSize;
+    if (remainderSize > 0) {
+      var end = pullIntoDescriptor.byteOffset + pullIntoDescriptor.bytesFilled;
+      var remainder = pullIntoDescriptor.buffer.slice(end - remainderSize, end);
+      ReadableByteStreamControllerEnqueueChunkToQueue(controller, remainder, 0, remainder.byteLength);
+    }
+    pullIntoDescriptor.buffer = TransferArrayBuffer(pullIntoDescriptor.buffer);
+    pullIntoDescriptor.bytesFilled -= remainderSize;
+    ReadableByteStreamControllerCommitPullIntoDescriptor(controller._controlledReadableStream, pullIntoDescriptor);
+    ReadableByteStreamControllerProcessPullIntoDescriptorsUsingQueue(controller);
+  }
+  function ReadableByteStreamControllerRespondInternal(controller, bytesWritten) {
+    var firstDescriptor = controller._pendingPullIntos[0];
+    var stream = controller._controlledReadableStream;
+    if (stream._state === 'closed') {
+      if (bytesWritten !== 0) {
+        throw new TypeError('bytesWritten must be 0 when calling respond() on a closed stream');
+      }
+      ReadableByteStreamControllerRespondInClosedState(controller, firstDescriptor);
+    } else {
+      assert(stream._state === 'readable');
+      ReadableByteStreamControllerRespondInReadableState(controller, bytesWritten, firstDescriptor);
+    }
+  }
+  function ReadableByteStreamControllerShiftPendingPullInto(controller) {
+    var descriptor = controller._pendingPullIntos.shift();
+    ReadableByteStreamControllerInvalidateBYOBRequest(controller);
+    return descriptor;
+  }
+  function ReadableByteStreamControllerShouldCallPull(controller) {
+    var stream = controller._controlledReadableStream;
+    if (stream._state !== 'readable') {
+      return false;
+    }
+    if (controller._closeRequested === true) {
+      return false;
+    }
+    if (controller._started === false) {
+      return false;
+    }
+    if (ReadableStreamHasDefaultReader(stream) === true && ReadableStreamGetNumReadRequests(stream) > 0) {
+      return true;
+    }
+    if (ReadableStreamHasBYOBReader(stream) === true && ReadableStreamGetNumReadIntoRequests(stream) > 0) {
+      return true;
+    }
+    if (ReadableByteStreamControllerGetDesiredSize(controller) > 0) {
+      return true;
+    }
+    return false;
+  }
+  function ReadableByteStreamControllerClose(controller) {
+    var stream = controller._controlledReadableStream;
+    assert(controller._closeRequested === false);
+    assert(stream._state === 'readable');
+    if (controller._queueTotalSize > 0) {
+      controller._closeRequested = true;
+      return;
+    }
+    if (controller._pendingPullIntos.length > 0) {
+      var firstPendingPullInto = controller._pendingPullIntos[0];
+      if (firstPendingPullInto.bytesFilled > 0) {
+        var e = new TypeError('Insufficient bytes to fill elements in the given buffer');
+        ReadableByteStreamControllerError(controller, e);
+        throw e;
+      }
+    }
+    ReadableStreamClose(stream);
+  }
+  function ReadableByteStreamControllerEnqueue(controller, chunk) {
+    var stream = controller._controlledReadableStream;
+    assert(controller._closeRequested === false);
+    assert(stream._state === 'readable');
+    var buffer = chunk.buffer;
+    var byteOffset = chunk.byteOffset;
+    var byteLength = chunk.byteLength;
+    var transferredBuffer = TransferArrayBuffer(buffer);
+    if (ReadableStreamHasDefaultReader(stream) === true) {
+      if (ReadableStreamGetNumReadRequests(stream) === 0) {
+        ReadableByteStreamControllerEnqueueChunkToQueue(controller, transferredBuffer, byteOffset, byteLength);
+      } else {
+        assert(controller._queue.length === 0);
+        var transferredView = new Uint8Array(transferredBuffer, byteOffset, byteLength);
+        ReadableStreamFulfillReadRequest(stream, transferredView, false);
+      }
+    } else if (ReadableStreamHasBYOBReader(stream) === true) {
+      ReadableByteStreamControllerEnqueueChunkToQueue(controller, transferredBuffer, byteOffset, byteLength);
+      ReadableByteStreamControllerProcessPullIntoDescriptorsUsingQueue(controller);
+    } else {
+      assert(IsReadableStreamLocked(stream) === false, 'stream must not be locked');
+      ReadableByteStreamControllerEnqueueChunkToQueue(controller, transferredBuffer, byteOffset, byteLength);
+    }
+  }
+  function ReadableByteStreamControllerError(controller, e) {
+    var stream = controller._controlledReadableStream;
+    assert(stream._state === 'readable');
+    ReadableByteStreamControllerClearPendingPullIntos(controller);
+    ResetQueue(controller);
+    ReadableStreamError(stream, e);
+  }
+  function ReadableByteStreamControllerGetDesiredSize(controller) {
+    var stream = controller._controlledReadableStream;
+    var state = stream._state;
+    if (state === 'errored') {
+      return null;
+    }
+    if (state === 'closed') {
+      return 0;
+    }
+    return controller._strategyHWM - controller._queueTotalSize;
+  }
+  function ReadableByteStreamControllerRespond(controller, bytesWritten) {
+    bytesWritten = Number(bytesWritten);
+    if (IsFiniteNonNegativeNumber(bytesWritten) === false) {
+      throw new RangeError('bytesWritten must be a finite');
+    }
+    assert(controller._pendingPullIntos.length > 0);
+    ReadableByteStreamControllerRespondInternal(controller, bytesWritten);
+  }
+  function ReadableByteStreamControllerRespondWithNewView(controller, view) {
+    assert(controller._pendingPullIntos.length > 0);
+    var firstDescriptor = controller._pendingPullIntos[0];
+    if (firstDescriptor.byteOffset + firstDescriptor.bytesFilled !== view.byteOffset) {
+      throw new RangeError('The region specified by view does not match byobRequest');
+    }
+    if (firstDescriptor.byteLength !== view.byteLength) {
+      throw new RangeError('The buffer of view has different capacity than byobRequest');
+    }
+    firstDescriptor.buffer = view.buffer;
+    ReadableByteStreamControllerRespondInternal(controller, view.byteLength);
+  }
+  function streamBrandCheckException(name) {
+    return new TypeError('ReadableStream.prototype.' + name + ' can only be used on a ReadableStream');
+  }
+  function readerLockException(name) {
+    return new TypeError('Cannot ' + name + ' a stream using a released reader');
+  }
+  function defaultReaderBrandCheckException(name) {
+    return new TypeError('ReadableStreamDefaultReader.prototype.' + name + ' can only be used on a ReadableStreamDefaultReader');
+  }
+  function defaultReaderClosedPromiseInitialize(reader) {
+    reader._closedPromise = new Promise(function (resolve, reject) {
+      reader._closedPromise_resolve = resolve;
+      reader._closedPromise_reject = reject;
+    });
+  }
+  function defaultReaderClosedPromiseInitializeAsRejected(reader, reason) {
+    reader._closedPromise = Promise.reject(reason);
+    reader._closedPromise_resolve = undefined;
+    reader._closedPromise_reject = undefined;
+  }
+  function defaultReaderClosedPromiseInitializeAsResolved(reader) {
+    reader._closedPromise = Promise.resolve(undefined);
+    reader._closedPromise_resolve = undefined;
+    reader._closedPromise_reject = undefined;
+  }
+  function defaultReaderClosedPromiseReject(reader, reason) {
+    assert(reader._closedPromise_resolve !== undefined);
+    assert(reader._closedPromise_reject !== undefined);
+    reader._closedPromise_reject(reason);
+    reader._closedPromise_resolve = undefined;
+    reader._closedPromise_reject = undefined;
+  }
+  function defaultReaderClosedPromiseResetToRejected(reader, reason) {
+    assert(reader._closedPromise_resolve === undefined);
+    assert(reader._closedPromise_reject === undefined);
+    reader._closedPromise = Promise.reject(reason);
+  }
+  function defaultReaderClosedPromiseResolve(reader) {
+    assert(reader._closedPromise_resolve !== undefined);
+    assert(reader._closedPromise_reject !== undefined);
+    reader._closedPromise_resolve(undefined);
+    reader._closedPromise_resolve = undefined;
+    reader._closedPromise_reject = undefined;
+  }
+  function byobReaderBrandCheckException(name) {
+    return new TypeError('ReadableStreamBYOBReader.prototype.' + name + ' can only be used on a ReadableStreamBYOBReader');
+  }
+  function defaultControllerBrandCheckException(name) {
+    return new TypeError('ReadableStreamDefaultController.prototype.' + name + ' can only be used on a ReadableStreamDefaultController');
+  }
+  function byobRequestBrandCheckException(name) {
+    return new TypeError('ReadableStreamBYOBRequest.prototype.' + name + ' can only be used on a ReadableStreamBYOBRequest');
+  }
+  function byteStreamControllerBrandCheckException(name) {
+    return new TypeError('ReadableByteStreamController.prototype.' + name + ' can only be used on a ReadableByteStreamController');
+  }
+  function ifIsObjectAndHasAPromiseIsHandledInternalSlotSetPromiseIsHandledToTrue(promise) {
+    try {
+      Promise.prototype.then.call(promise, undefined, function () {});
+    } catch (e) {}
+  }
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var transformStream = __w_pdfjs_require__(6);
+  var readableStream = __w_pdfjs_require__(4);
+  var writableStream = __w_pdfjs_require__(2);
+  exports.TransformStream = transformStream.TransformStream;
+  exports.ReadableStream = readableStream.ReadableStream;
+  exports.IsReadableStreamDisturbed = readableStream.IsReadableStreamDisturbed;
+  exports.ReadableStreamDefaultControllerClose = readableStream.ReadableStreamDefaultControllerClose;
+  exports.ReadableStreamDefaultControllerEnqueue = readableStream.ReadableStreamDefaultControllerEnqueue;
+  exports.ReadableStreamDefaultControllerError = readableStream.ReadableStreamDefaultControllerError;
+  exports.ReadableStreamDefaultControllerGetDesiredSize = readableStream.ReadableStreamDefaultControllerGetDesiredSize;
+  exports.AcquireWritableStreamDefaultWriter = writableStream.AcquireWritableStreamDefaultWriter;
+  exports.IsWritableStream = writableStream.IsWritableStream;
+  exports.IsWritableStreamLocked = writableStream.IsWritableStreamLocked;
+  exports.WritableStream = writableStream.WritableStream;
+  exports.WritableStreamAbort = writableStream.WritableStreamAbort;
+  exports.WritableStreamDefaultControllerError = writableStream.WritableStreamDefaultControllerError;
+  exports.WritableStreamDefaultWriterCloseWithErrorPropagation = writableStream.WritableStreamDefaultWriterCloseWithErrorPropagation;
+  exports.WritableStreamDefaultWriterRelease = writableStream.WritableStreamDefaultWriterRelease;
+  exports.WritableStreamDefaultWriterWrite = writableStream.WritableStreamDefaultWriterWrite;
+}, function (module, exports, __w_pdfjs_require__) {
+  "use strict";
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+  var _require = __w_pdfjs_require__(1),
+      assert = _require.assert;
+  var _require2 = __w_pdfjs_require__(0),
+      InvokeOrNoop = _require2.InvokeOrNoop,
+      PromiseInvokeOrPerformFallback = _require2.PromiseInvokeOrPerformFallback,
+      PromiseInvokeOrNoop = _require2.PromiseInvokeOrNoop,
+      typeIsObject = _require2.typeIsObject;
+  var _require3 = __w_pdfjs_require__(4),
+      ReadableStream = _require3.ReadableStream,
+      ReadableStreamDefaultControllerClose = _require3.ReadableStreamDefaultControllerClose,
+      ReadableStreamDefaultControllerEnqueue = _require3.ReadableStreamDefaultControllerEnqueue,
+      ReadableStreamDefaultControllerError = _require3.ReadableStreamDefaultControllerError,
+      ReadableStreamDefaultControllerGetDesiredSize = _require3.ReadableStreamDefaultControllerGetDesiredSize;
+  var _require4 = __w_pdfjs_require__(2),
+      WritableStream = _require4.WritableStream,
+      WritableStreamDefaultControllerError = _require4.WritableStreamDefaultControllerError;
+  function TransformStreamCloseReadable(transformStream) {
+    if (transformStream._errored === true) {
+      throw new TypeError('TransformStream is already errored');
+    }
+    if (transformStream._readableClosed === true) {
+      throw new TypeError('Readable side is already closed');
+    }
+    TransformStreamCloseReadableInternal(transformStream);
+  }
+  function TransformStreamEnqueueToReadable(transformStream, chunk) {
+    if (transformStream._errored === true) {
+      throw new TypeError('TransformStream is already errored');
+    }
+    if (transformStream._readableClosed === true) {
+      throw new TypeError('Readable side is already closed');
+    }
+    var controller = transformStream._readableController;
+    try {
+      ReadableStreamDefaultControllerEnqueue(controller, chunk);
+    } catch (e) {
+      transformStream._readableClosed = true;
+      TransformStreamErrorIfNeeded(transformStream, e);
+      throw transformStream._storedError;
+    }
+    var desiredSize = ReadableStreamDefaultControllerGetDesiredSize(controller);
+    var maybeBackpressure = desiredSize <= 0;
+    if (maybeBackpressure === true && transformStream._backpressure === false) {
+      TransformStreamSetBackpressure(transformStream, true);
+    }
+  }
+  function TransformStreamError(transformStream, e) {
+    if (transformStream._errored === true) {
+      throw new TypeError('TransformStream is already errored');
+    }
+    TransformStreamErrorInternal(transformStream, e);
+  }
+  function TransformStreamCloseReadableInternal(transformStream) {
+    assert(transformStream._errored === false);
+    assert(transformStream._readableClosed === false);
+    try {
+      ReadableStreamDefaultControllerClose(transformStream._readableController);
+    } catch (e) {
+      assert(false);
+    }
+    transformStream._readableClosed = true;
+  }
+  function TransformStreamErrorIfNeeded(transformStream, e) {
+    if (transformStream._errored === false) {
+      TransformStreamErrorInternal(transformStream, e);
+    }
+  }
+  function TransformStreamErrorInternal(transformStream, e) {
+    assert(transformStream._errored === false);
+    transformStream._errored = true;
+    transformStream._storedError = e;
+    if (transformStream._writableDone === false) {
+      WritableStreamDefaultControllerError(transformStream._writableController, e);
+    }
+    if (transformStream._readableClosed === false) {
+      ReadableStreamDefaultControllerError(transformStream._readableController, e);
+    }
+  }
+  function TransformStreamReadableReadyPromise(transformStream) {
+    assert(transformStream._backpressureChangePromise !== undefined, '_backpressureChangePromise should have been initialized');
+    if (transformStream._backpressure === false) {
+      return Promise.resolve();
+    }
+    assert(transformStream._backpressure === true, '_backpressure should have been initialized');
+    return transformStream._backpressureChangePromise;
+  }
+  function TransformStreamSetBackpressure(transformStream, backpressure) {
+    assert(transformStream._backpressure !== backpressure, 'TransformStreamSetBackpressure() should be called only when backpressure is changed');
+    if (transformStream._backpressureChangePromise !== undefined) {
+      transformStream._backpressureChangePromise_resolve(backpressure);
+    }
+    transformStream._backpressureChangePromise = new Promise(function (resolve) {
+      transformStream._backpressureChangePromise_resolve = resolve;
+    });
+    transformStream._backpressureChangePromise.then(function (resolution) {
+      assert(resolution !== backpressure, '_backpressureChangePromise should be fulfilled only when backpressure is changed');
+    });
+    transformStream._backpressure = backpressure;
+  }
+  function TransformStreamDefaultTransform(chunk, transformStreamController) {
+    var transformStream = transformStreamController._controlledTransformStream;
+    TransformStreamEnqueueToReadable(transformStream, chunk);
+    return Promise.resolve();
+  }
+  function TransformStreamTransform(transformStream, chunk) {
+    assert(transformStream._errored === false);
+    assert(transformStream._transforming === false);
+    assert(transformStream._backpressure === false);
+    transformStream._transforming = true;
+    var transformer = transformStream._transformer;
+    var controller = transformStream._transformStreamController;
+    var transformPromise = PromiseInvokeOrPerformFallback(transformer, 'transform', [chunk, controller], TransformStreamDefaultTransform, [chunk, controller]);
+    return transformPromise.then(function () {
+      transformStream._transforming = false;
+      return TransformStreamReadableReadyPromise(transformStream);
+    }, function (e) {
+      TransformStreamErrorIfNeeded(transformStream, e);
+      return Promise.reject(e);
+    });
+  }
+  function IsTransformStreamDefaultController(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_controlledTransformStream')) {
+      return false;
+    }
+    return true;
+  }
+  function IsTransformStream(x) {
+    if (!typeIsObject(x)) {
+      return false;
+    }
+    if (!Object.prototype.hasOwnProperty.call(x, '_transformStreamController')) {
+      return false;
+    }
+    return true;
+  }
+  var TransformStreamSink = function () {
+    function TransformStreamSink(transformStream, startPromise) {
+      _classCallCheck(this, TransformStreamSink);
+      this._transformStream = transformStream;
+      this._startPromise = startPromise;
+    }
+    _createClass(TransformStreamSink, [{
+      key: 'start',
+      value: function start(c) {
+        var transformStream = this._transformStream;
+        transformStream._writableController = c;
+        return this._startPromise.then(function () {
+          return TransformStreamReadableReadyPromise(transformStream);
+        });
+      }
+    }, {
+      key: 'write',
+      value: function write(chunk) {
+        var transformStream = this._transformStream;
+        return TransformStreamTransform(transformStream, chunk);
+      }
+    }, {
+      key: 'abort',
+      value: function abort() {
+        var transformStream = this._transformStream;
+        transformStream._writableDone = true;
+        TransformStreamErrorInternal(transformStream, new TypeError('Writable side aborted'));
+      }
+    }, {
+      key: 'close',
+      value: function close() {
+        var transformStream = this._transformStream;
+        assert(transformStream._transforming === false);
+        transformStream._writableDone = true;
+        var flushPromise = PromiseInvokeOrNoop(transformStream._transformer, 'flush', [transformStream._transformStreamController]);
+        return flushPromise.then(function () {
+          if (transformStream._errored === true) {
+            return Promise.reject(transformStream._storedError);
+          }
+          if (transformStream._readableClosed === false) {
+            TransformStreamCloseReadableInternal(transformStream);
+          }
+          return Promise.resolve();
+        }).catch(function (r) {
+          TransformStreamErrorIfNeeded(transformStream, r);
+          return Promise.reject(transformStream._storedError);
+        });
+      }
+    }]);
+    return TransformStreamSink;
+  }();
+  var TransformStreamSource = function () {
+    function TransformStreamSource(transformStream, startPromise) {
+      _classCallCheck(this, TransformStreamSource);
+      this._transformStream = transformStream;
+      this._startPromise = startPromise;
+    }
+    _createClass(TransformStreamSource, [{
+      key: 'start',
+      value: function start(c) {
+        var transformStream = this._transformStream;
+        transformStream._readableController = c;
+        return this._startPromise.then(function () {
+          assert(transformStream._backpressureChangePromise !== undefined, '_backpressureChangePromise should have been initialized');
+          if (transformStream._backpressure === true) {
+            return Promise.resolve();
+          }
+          assert(transformStream._backpressure === false, '_backpressure should have been initialized');
+          return transformStream._backpressureChangePromise;
+        });
+      }
+    }, {
+      key: 'pull',
+      value: function pull() {
+        var transformStream = this._transformStream;
+        assert(transformStream._backpressure === true, 'pull() should be never called while _backpressure is false');
+        assert(transformStream._backpressureChangePromise !== undefined, '_backpressureChangePromise should have been initialized');
+        TransformStreamSetBackpressure(transformStream, false);
+        return transformStream._backpressureChangePromise;
+      }
+    }, {
+      key: 'cancel',
+      value: function cancel() {
+        var transformStream = this._transformStream;
+        transformStream._readableClosed = true;
+        TransformStreamErrorInternal(transformStream, new TypeError('Readable side canceled'));
+      }
+    }]);
+    return TransformStreamSource;
+  }();
+  var TransformStreamDefaultController = function () {
+    function TransformStreamDefaultController(transformStream) {
+      _classCallCheck(this, TransformStreamDefaultController);
+      if (IsTransformStream(transformStream) === false) {
+        throw new TypeError('TransformStreamDefaultController can only be ' + 'constructed with a TransformStream instance');
+=======
+
+        value[i] = xref.fetch(value[i], suppressEncryption);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       if (transformStream._transformStreamController !== undefined) {
         throw new TypeError('TransformStreamDefaultController instances can ' + 'only be created by the TransformStream constructor');
+||||||| merged common ancestors
+      if (transformStream._transformStreamController !== undefined) {
+        throw new TypeError('TransformStreamDefaultController instances can ' + 'only be created by the TransformStream constructor');
+=======
+
+      return value;
+    },
+    getRaw: function Dict_getRaw(key) {
+      return this._map[key];
+    },
+    getKeys: function Dict_getKeys() {
+      return Object.keys(this._map);
+    },
+    set: function Dict_set(key, value) {
+      this._map[key] = value;
+    },
+    has: function Dict_has(key) {
+      return key in this._map;
+    },
+    forEach: function Dict_forEach(callback) {
+      for (var key in this._map) {
+        callback(key, this.get(key));
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       this._controlledTransformStream = transformStream;
+||||||| merged common ancestors
+      this._controlledTransformStream = transformStream;
+=======
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     _createClass(TransformStreamDefaultController, [{
       key: 'enqueue',
@@ -5460,18 +8965,64 @@ if (isReadableStreamSupported) {
         }
 
         TransformStreamError(this._controlledTransformStream, reason);
+||||||| merged common ancestors
+    _createClass(TransformStreamDefaultController, [{
+      key: 'enqueue',
+      value: function enqueue(chunk) {
+        if (IsTransformStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('enqueue');
+        }
+        TransformStreamEnqueueToReadable(this._controlledTransformStream, chunk);
       }
     }, {
-      key: 'desiredSize',
-      get: function get() {
+      key: 'close',
+      value: function close() {
         if (IsTransformStreamDefaultController(this) === false) {
-          throw defaultControllerBrandCheckException('desiredSize');
+          throw defaultControllerBrandCheckException('close');
         }
+        TransformStreamCloseReadable(this._controlledTransformStream);
+      }
+    }, {
+      key: 'error',
+      value: function error(reason) {
+        if (IsTransformStreamDefaultController(this) === false) {
+          throw defaultControllerBrandCheckException('error');
+        }
+        TransformStreamError(this._controlledTransformStream, reason);
+=======
+  };
+  Dict.empty = new Dict(null);
+
+  Dict.merge = function (xref, dictArray) {
+    let mergedDict = new Dict(xref);
+
+    for (let i = 0, ii = dictArray.length; i < ii; i++) {
+      let dict = dictArray[i];
+
+      if (!isDict(dict)) {
+        continue;
+>>>>>>> upstream-releases
+      }
+
+      for (let keyName in dict._map) {
+        if (mergedDict._map[keyName] !== undefined) {
+          continue;
+        }
+<<<<<<< HEAD
 
         var transformStream = this._controlledTransformStream;
         var readableController = transformStream._readableController;
         return ReadableStreamDefaultControllerGetDesiredSize(readableController);
+||||||| merged common ancestors
+        var transformStream = this._controlledTransformStream;
+        var readableController = transformStream._readableController;
+        return ReadableStreamDefaultControllerGetDesiredSize(readableController);
+=======
+
+        mergedDict._map[keyName] = dict._map[keyName];
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     }]);
 
     return TransformStreamDefaultController;
@@ -5519,7 +9070,54 @@ if (isReadableStreamSupported) {
           transformStream._storedError = e;
         }
       });
+||||||| merged common ancestors
+    }]);
+    return TransformStreamDefaultController;
+  }();
+  var TransformStream = function () {
+    function TransformStream() {
+      var transformer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _classCallCheck(this, TransformStream);
+      this._transformer = transformer;
+      var readableStrategy = transformer.readableStrategy,
+          writableStrategy = transformer.writableStrategy;
+      this._transforming = false;
+      this._errored = false;
+      this._storedError = undefined;
+      this._writableController = undefined;
+      this._readableController = undefined;
+      this._transformStreamController = undefined;
+      this._writableDone = false;
+      this._readableClosed = false;
+      this._backpressure = undefined;
+      this._backpressureChangePromise = undefined;
+      this._backpressureChangePromise_resolve = undefined;
+      this._transformStreamController = new TransformStreamDefaultController(this);
+      var startPromise_resolve = void 0;
+      var startPromise = new Promise(function (resolve) {
+        startPromise_resolve = resolve;
+      });
+      var source = new TransformStreamSource(this, startPromise);
+      this._readable = new ReadableStream(source, readableStrategy);
+      var sink = new TransformStreamSink(this, startPromise);
+      this._writable = new WritableStream(sink, writableStrategy);
+      assert(this._writableController !== undefined);
+      assert(this._readableController !== undefined);
+      var desiredSize = ReadableStreamDefaultControllerGetDesiredSize(this._readableController);
+      TransformStreamSetBackpressure(this, desiredSize <= 0);
+      var transformStream = this;
+      var startResult = InvokeOrNoop(transformer, 'start', [transformStream._transformStreamController]);
+      startPromise_resolve(startResult);
+      startPromise.catch(function (e) {
+        if (transformStream._errored === false) {
+          transformStream._errored = true;
+          transformStream._storedError = e;
+        }
+      });
+=======
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     _createClass(TransformStream, [{
       key: 'readable',
@@ -5538,7 +9136,47 @@ if (isReadableStreamSupported) {
         }
 
         return this._writable;
+||||||| merged common ancestors
+    _createClass(TransformStream, [{
+      key: 'readable',
+      get: function get() {
+        if (IsTransformStream(this) === false) {
+          throw streamBrandCheckException('readable');
+        }
+        return this._readable;
       }
+    }, {
+      key: 'writable',
+      get: function get() {
+        if (IsTransformStream(this) === false) {
+          throw streamBrandCheckException('writable');
+        }
+        return this._writable;
+=======
+
+    return mergedDict;
+  };
+
+  return Dict;
+}();
+
+exports.Dict = Dict;
+
+var Ref = function RefClosure() {
+  let refCache = Object.create(null);
+
+  function Ref(num, gen) {
+    this.num = num;
+    this.gen = gen;
+  }
+
+  Ref.prototype = {
+    toString: function Ref_toString() {
+      if (this.gen === 0) {
+        return `${this.num}R`;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
     }]);
 
     return TransformStream;
@@ -5550,24 +9188,131 @@ if (isReadableStreamSupported) {
 
   function defaultControllerBrandCheckException(name) {
     return new TypeError('TransformStreamDefaultController.prototype.' + name + ' can only be used on a TransformStreamDefaultController');
+||||||| merged common ancestors
+    }]);
+    return TransformStream;
+  }();
+  module.exports = { TransformStream: TransformStream };
+  function defaultControllerBrandCheckException(name) {
+    return new TypeError('TransformStreamDefaultController.prototype.' + name + ' can only be used on a TransformStreamDefaultController');
+=======
+
+      return `${this.num}R${this.gen}`;
+    }
+  };
+
+  Ref.get = function (num, gen) {
+    const key = gen === 0 ? `${num}R` : `${num}R${gen}`;
+    const refValue = refCache[key];
+    return refValue ? refValue : refCache[key] = new Ref(num, gen);
+  };
+
+  Ref._clearCache = function () {
+    refCache = Object.create(null);
+  };
+
+  return Ref;
+}();
+
+exports.Ref = Ref;
+
+var RefSet = function RefSetClosure() {
+  function RefSet() {
+    this.dict = Object.create(null);
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   function streamBrandCheckException(name) {
     return new TypeError('TransformStream.prototype.' + name + ' can only be used on a TransformStream');
+||||||| merged common ancestors
+  function streamBrandCheckException(name) {
+    return new TypeError('TransformStream.prototype.' + name + ' can only be used on a TransformStream');
+=======
+
+  RefSet.prototype = {
+    has: function RefSet_has(ref) {
+      return ref.toString() in this.dict;
+    },
+    put: function RefSet_put(ref) {
+      this.dict[ref.toString()] = true;
+    },
+    remove: function RefSet_remove(ref) {
+      delete this.dict[ref.toString()];
+    }
+  };
+  return RefSet;
+}();
+
+exports.RefSet = RefSet;
+
+var RefSetCache = function RefSetCacheClosure() {
+  function RefSetCache() {
+    this.dict = Object.create(null);
+>>>>>>> upstream-releases
   }
-}, function (module, exports, __w_pdfjs_require__) {
-  module.exports = __w_pdfjs_require__(5);
-}]));
 
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __w_pdfjs_require__) {
+  RefSetCache.prototype = {
+    get: function RefSetCache_get(ref) {
+      return this.dict[ref.toString()];
+    },
+    has: function RefSetCache_has(ref) {
+      return ref.toString() in this.dict;
+    },
+    put: function RefSetCache_put(ref, obj) {
+      this.dict[ref.toString()] = obj;
+    },
+    putAlias: function RefSetCache_putAlias(ref, aliasRef) {
+      this.dict[ref.toString()] = this.get(aliasRef);
+    },
+    forEach: function RefSetCache_forEach(fn, thisArg) {
+      for (var i in this.dict) {
+        fn.call(thisArg, this.dict[i]);
+      }
+    },
+    clear: function RefSetCache_clear() {
+      this.dict = Object.create(null);
+    }
+  };
+  return RefSetCache;
+}();
 
-"use strict";
+exports.RefSetCache = RefSetCache;
 
+function isEOF(v) {
+  return v === EOF;
+}
 
-{
-  exports.URL = URL;
+function isName(v, name) {
+  return v instanceof Name && (name === undefined || v.name === name);
+}
+
+function isCmd(v, cmd) {
+  return v instanceof Cmd && (cmd === undefined || v.cmd === cmd);
+}
+
+function isDict(v, type) {
+  return v instanceof Dict && (type === undefined || isName(v.get('Type'), type));
+}
+
+function isRef(v) {
+  return v instanceof Ref;
+}
+
+function isRefsEqual(v1, v2) {
+  return v1.num === v2.num && v1.gen === v2.gen;
+}
+
+function isStream(v) {
+  return typeof v === 'object' && v !== null && v.getBytes !== undefined;
+}
+
+function clearPrimitiveCaches() {
+  Cmd._clearCache();
+
+  Name._clearCache();
+
+  Ref._clearCache();
 }
 
 /***/ }),
@@ -5586,7 +9331,9 @@ var _util = __w_pdfjs_require__(2);
 
 var _chunked_stream = __w_pdfjs_require__(9);
 
-var _document = __w_pdfjs_require__(10);
+var _core_utils = __w_pdfjs_require__(10);
+
+var _document = __w_pdfjs_require__(11);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -5640,7 +9387,16 @@ class BasePdfManager {
   getPage(pageIndex) {
     return this.pdfDocument.getPage(pageIndex);
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  fontFallback(id, handler) {
+    return this.pdfDocument.fontFallback(id, handler);
+  }
+
+>>>>>>> upstream-releases
   cleanup() {
     return this.pdfDocument.cleanup();
   }
@@ -5719,7 +9475,6 @@ class NetworkPdfManager extends BasePdfManager {
     this.evaluatorOptions = evaluatorOptions;
     this.streamManager = new _chunked_stream.ChunkedStreamManager(pdfNetworkStream, {
       msgHandler: args.msgHandler,
-      url: args.url,
       length: args.length,
       disableAutoFetch: args.disableAutoFetch,
       rangeChunkSize: args.rangeChunkSize
@@ -5737,7 +9492,7 @@ class NetworkPdfManager extends BasePdfManager {
 
       return value;
     } catch (ex) {
-      if (!(ex instanceof _util.MissingDataException)) {
+      if (!(ex instanceof _core_utils.MissingDataException)) {
         throw ex;
       }
 
@@ -5786,8 +9541,10 @@ exports.ChunkedStreamManager = exports.ChunkedStream = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
-var ChunkedStream = function ChunkedStreamClosure() {
-  function ChunkedStream(length, chunkSize, manager) {
+var _core_utils = __w_pdfjs_require__(10);
+
+class ChunkedStream {
+  constructor(length, chunkSize, manager) {
     this.bytes = new Uint8Array(length);
     this.start = 0;
     this.pos = 0;
@@ -5800,6 +9557,7 @@ var ChunkedStream = function ChunkedStreamClosure() {
     this.progressiveDataLength = 0;
     this.lastSuccessfulEnsureByteChunk = -1;
   }
+<<<<<<< HEAD
 
   ChunkedStream.prototype = {
     getMissingChunks: function ChunkedStream_getMissingChunks() {
@@ -5868,7 +9626,73 @@ var ChunkedStream = function ChunkedStreamClosure() {
         return;
       }
 
+||||||| merged common ancestors
+  ChunkedStream.prototype = {
+    getMissingChunks: function ChunkedStream_getMissingChunks() {
+      var chunks = [];
+      for (var chunk = 0, n = this.numChunks; chunk < n; ++chunk) {
+        if (!this.loadedChunks[chunk]) {
+          chunks.push(chunk);
+        }
+      }
+      return chunks;
+    },
+    getBaseStreams: function ChunkedStream_getBaseStreams() {
+      return [this];
+    },
+    allChunksLoaded: function ChunkedStream_allChunksLoaded() {
+      return this.numChunksLoaded === this.numChunks;
+    },
+    onReceiveData: function ChunkedStream_onReceiveData(begin, chunk) {
+      var end = begin + chunk.byteLength;
+      if (begin % this.chunkSize !== 0) {
+        throw new Error(`Bad begin offset: ${begin}`);
+      }
+      var length = this.bytes.length;
+      if (end % this.chunkSize !== 0 && end !== length) {
+        throw new Error(`Bad end offset: ${end}`);
+      }
+      this.bytes.set(new Uint8Array(chunk), begin);
+      var chunkSize = this.chunkSize;
+      var beginChunk = Math.floor(begin / chunkSize);
+      var endChunk = Math.floor((end - 1) / chunkSize) + 1;
+      var curChunk;
+      for (curChunk = beginChunk; curChunk < endChunk; ++curChunk) {
+        if (!this.loadedChunks[curChunk]) {
+          this.loadedChunks[curChunk] = true;
+          ++this.numChunksLoaded;
+        }
+      }
+    },
+    onReceiveProgressiveData: function ChunkedStream_onReceiveProgressiveData(data) {
+      var position = this.progressiveDataLength;
+      var beginChunk = Math.floor(position / this.chunkSize);
+      this.bytes.set(new Uint8Array(data), position);
+      position += data.byteLength;
+      this.progressiveDataLength = position;
+      var endChunk = position >= this.end ? this.numChunks : Math.floor(position / this.chunkSize);
+      var curChunk;
+      for (curChunk = beginChunk; curChunk < endChunk; ++curChunk) {
+        if (!this.loadedChunks[curChunk]) {
+          this.loadedChunks[curChunk] = true;
+          ++this.numChunksLoaded;
+        }
+      }
+    },
+    ensureByte: function ChunkedStream_ensureByte(pos) {
+      var chunk = Math.floor(pos / this.chunkSize);
+      if (chunk === this.lastSuccessfulEnsureByteChunk) {
+        return;
+      }
+=======
+
+  getMissingChunks() {
+    const chunks = [];
+
+    for (let chunk = 0, n = this.numChunks; chunk < n; ++chunk) {
+>>>>>>> upstream-releases
       if (!this.loadedChunks[chunk]) {
+<<<<<<< HEAD
         throw new _util.MissingDataException(pos, pos + 1);
       }
 
@@ -5903,7 +9727,40 @@ var ChunkedStream = function ChunkedStreamClosure() {
         if (!this.loadedChunks[chunk]) {
           return chunk;
         }
+||||||| merged common ancestors
+        throw new _util.MissingDataException(pos, pos + 1);
       }
+      this.lastSuccessfulEnsureByteChunk = chunk;
+    },
+    ensureRange: function ChunkedStream_ensureRange(begin, end) {
+      if (begin >= end) {
+        return;
+      }
+      if (end <= this.progressiveDataLength) {
+        return;
+      }
+      var chunkSize = this.chunkSize;
+      var beginChunk = Math.floor(begin / chunkSize);
+      var endChunk = Math.floor((end - 1) / chunkSize) + 1;
+      for (var chunk = beginChunk; chunk < endChunk; ++chunk) {
+        if (!this.loadedChunks[chunk]) {
+          throw new _util.MissingDataException(begin, end);
+        }
+      }
+    },
+    nextEmptyChunk: function ChunkedStream_nextEmptyChunk(beginChunk) {
+      var chunk,
+          numChunks = this.numChunks;
+      for (var i = 0; i < numChunks; ++i) {
+        chunk = (beginChunk + i) % numChunks;
+        if (!this.loadedChunks[chunk]) {
+          return chunk;
+        }
+=======
+        chunks.push(chunk);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       return null;
     },
@@ -5924,7 +9781,60 @@ var ChunkedStream = function ChunkedStreamClosure() {
 
       if (pos >= this.end) {
         return -1;
+||||||| merged common ancestors
+      return null;
+    },
+    hasChunk: function ChunkedStream_hasChunk(chunk) {
+      return !!this.loadedChunks[chunk];
+    },
+    get length() {
+      return this.end - this.start;
+    },
+    get isEmpty() {
+      return this.length === 0;
+    },
+    getByte: function ChunkedStream_getByte() {
+      var pos = this.pos;
+      if (pos >= this.end) {
+        return -1;
+=======
+    }
+
+    return chunks;
+  }
+
+  getBaseStreams() {
+    return [this];
+  }
+
+  allChunksLoaded() {
+    return this.numChunksLoaded === this.numChunks;
+  }
+
+  onReceiveData(begin, chunk) {
+    const chunkSize = this.chunkSize;
+
+    if (begin % chunkSize !== 0) {
+      throw new Error(`Bad begin offset: ${begin}`);
+    }
+
+    const end = begin + chunk.byteLength;
+
+    if (end % chunkSize !== 0 && end !== this.bytes.length) {
+      throw new Error(`Bad end offset: ${end}`);
+    }
+
+    this.bytes.set(new Uint8Array(chunk), begin);
+    const beginChunk = Math.floor(begin / chunkSize);
+    const endChunk = Math.floor((end - 1) / chunkSize) + 1;
+
+    for (let curChunk = beginChunk; curChunk < endChunk; ++curChunk) {
+      if (!this.loadedChunks[curChunk]) {
+        this.loadedChunks[curChunk] = true;
+        ++this.numChunksLoaded;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       this.ensureByte(pos);
       return this.bytes[this.pos++];
@@ -5935,7 +9845,34 @@ var ChunkedStream = function ChunkedStreamClosure() {
 
       if (b0 === -1 || b1 === -1) {
         return -1;
+||||||| merged common ancestors
+      this.ensureByte(pos);
+      return this.bytes[this.pos++];
+    },
+    getUint16: function ChunkedStream_getUint16() {
+      var b0 = this.getByte();
+      var b1 = this.getByte();
+      if (b0 === -1 || b1 === -1) {
+        return -1;
+=======
+    }
+  }
+
+  onReceiveProgressiveData(data) {
+    let position = this.progressiveDataLength;
+    const beginChunk = Math.floor(position / this.chunkSize);
+    this.bytes.set(new Uint8Array(data), position);
+    position += data.byteLength;
+    this.progressiveDataLength = position;
+    const endChunk = position >= this.end ? this.numChunks : Math.floor(position / this.chunkSize);
+
+    for (let curChunk = beginChunk; curChunk < endChunk; ++curChunk) {
+      if (!this.loadedChunks[curChunk]) {
+        this.loadedChunks[curChunk] = true;
+        ++this.numChunksLoaded;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return (b0 << 8) + b1;
     },
@@ -5956,18 +9893,156 @@ var ChunkedStream = function ChunkedStreamClosure() {
         this.ensureRange(pos, strEnd);
         let subarray = bytes.subarray(pos, strEnd);
         return forceClamped ? new Uint8ClampedArray(subarray) : subarray;
+||||||| merged common ancestors
+      return (b0 << 8) + b1;
+    },
+    getInt32: function ChunkedStream_getInt32() {
+      var b0 = this.getByte();
+      var b1 = this.getByte();
+      var b2 = this.getByte();
+      var b3 = this.getByte();
+      return (b0 << 24) + (b1 << 16) + (b2 << 8) + b3;
+    },
+    getBytes(length, forceClamped = false) {
+      var bytes = this.bytes;
+      var pos = this.pos;
+      var strEnd = this.end;
+      if (!length) {
+        this.ensureRange(pos, strEnd);
+        let subarray = bytes.subarray(pos, strEnd);
+        return forceClamped ? new Uint8ClampedArray(subarray) : subarray;
+=======
+    }
+  }
+
+  ensureByte(pos) {
+    if (pos < this.progressiveDataLength) {
+      return;
+    }
+
+    const chunk = Math.floor(pos / this.chunkSize);
+
+    if (chunk === this.lastSuccessfulEnsureByteChunk) {
+      return;
+    }
+
+    if (!this.loadedChunks[chunk]) {
+      throw new _core_utils.MissingDataException(pos, pos + 1);
+    }
+
+    this.lastSuccessfulEnsureByteChunk = chunk;
+  }
+
+  ensureRange(begin, end) {
+    if (begin >= end) {
+      return;
+    }
+
+    if (end <= this.progressiveDataLength) {
+      return;
+    }
+
+    const chunkSize = this.chunkSize;
+    const beginChunk = Math.floor(begin / chunkSize);
+    const endChunk = Math.floor((end - 1) / chunkSize) + 1;
+
+    for (let chunk = beginChunk; chunk < endChunk; ++chunk) {
+      if (!this.loadedChunks[chunk]) {
+        throw new _core_utils.MissingDataException(begin, end);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       var end = pos + length;
 
       if (end > strEnd) {
         end = strEnd;
+||||||| merged common ancestors
+      var end = pos + length;
+      if (end > strEnd) {
+        end = strEnd;
+=======
+    }
+  }
+
+  nextEmptyChunk(beginChunk) {
+    const numChunks = this.numChunks;
+
+    for (let i = 0; i < numChunks; ++i) {
+      const chunk = (beginChunk + i) % numChunks;
+
+      if (!this.loadedChunks[chunk]) {
+        return chunk;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       this.ensureRange(pos, end);
       this.pos = end;
       let subarray = bytes.subarray(pos, end);
+||||||| merged common ancestors
+      this.ensureRange(pos, end);
+      this.pos = end;
+      let subarray = bytes.subarray(pos, end);
+=======
+    }
+
+    return null;
+  }
+
+  hasChunk(chunk) {
+    return !!this.loadedChunks[chunk];
+  }
+
+  get length() {
+    return this.end - this.start;
+  }
+
+  get isEmpty() {
+    return this.length === 0;
+  }
+
+  getByte() {
+    const pos = this.pos;
+
+    if (pos >= this.end) {
+      return -1;
+    }
+
+    this.ensureByte(pos);
+    return this.bytes[this.pos++];
+  }
+
+  getUint16() {
+    const b0 = this.getByte();
+    const b1 = this.getByte();
+
+    if (b0 === -1 || b1 === -1) {
+      return -1;
+    }
+
+    return (b0 << 8) + b1;
+  }
+
+  getInt32() {
+    const b0 = this.getByte();
+    const b1 = this.getByte();
+    const b2 = this.getByte();
+    const b3 = this.getByte();
+    return (b0 << 24) + (b1 << 16) + (b2 << 8) + b3;
+  }
+
+  getBytes(length, forceClamped = false) {
+    const bytes = this.bytes;
+    const pos = this.pos;
+    const strEnd = this.end;
+
+    if (!length) {
+      this.ensureRange(pos, strEnd);
+      const subarray = bytes.subarray(pos, strEnd);
+>>>>>>> upstream-releases
       return forceClamped ? new Uint8ClampedArray(subarray) : subarray;
+<<<<<<< HEAD
     },
 
     peekByte: function ChunkedStream_peekByte() {
@@ -6000,7 +10075,88 @@ var ChunkedStream = function ChunkedStreamClosure() {
       this.start = this.pos;
     },
     makeSubStream: function ChunkedStream_makeSubStream(start, length, dict) {
+||||||| merged common ancestors
+    },
+    peekByte: function ChunkedStream_peekByte() {
+      var peekedByte = this.getByte();
+      this.pos--;
+      return peekedByte;
+    },
+    peekBytes(length, forceClamped = false) {
+      var bytes = this.getBytes(length, forceClamped);
+      this.pos -= bytes.length;
+      return bytes;
+    },
+    getByteRange: function ChunkedStream_getBytes(begin, end) {
+      this.ensureRange(begin, end);
+      return this.bytes.subarray(begin, end);
+    },
+    skip: function ChunkedStream_skip(n) {
+      if (!n) {
+        n = 1;
+      }
+      this.pos += n;
+    },
+    reset: function ChunkedStream_reset() {
+      this.pos = this.start;
+    },
+    moveStart: function ChunkedStream_moveStart() {
+      this.start = this.pos;
+    },
+    makeSubStream: function ChunkedStream_makeSubStream(start, length, dict) {
+=======
+    }
+
+    let end = pos + length;
+
+    if (end > strEnd) {
+      end = strEnd;
+    }
+
+    this.ensureRange(pos, end);
+    this.pos = end;
+    const subarray = bytes.subarray(pos, end);
+    return forceClamped ? new Uint8ClampedArray(subarray) : subarray;
+  }
+
+  peekByte() {
+    const peekedByte = this.getByte();
+    this.pos--;
+    return peekedByte;
+  }
+
+  peekBytes(length, forceClamped = false) {
+    const bytes = this.getBytes(length, forceClamped);
+    this.pos -= bytes.length;
+    return bytes;
+  }
+
+  getByteRange(begin, end) {
+    this.ensureRange(begin, end);
+    return this.bytes.subarray(begin, end);
+  }
+
+  skip(n) {
+    if (!n) {
+      n = 1;
+    }
+
+    this.pos += n;
+  }
+
+  reset() {
+    this.pos = this.start;
+  }
+
+  moveStart() {
+    this.start = this.pos;
+  }
+
+  makeSubStream(start, length, dict) {
+    if (length) {
+>>>>>>> upstream-releases
       this.ensureRange(start, start + length);
+<<<<<<< HEAD
 
       function ChunkedStreamSubstream() {}
 
@@ -6026,7 +10182,32 @@ var ChunkedStream = function ChunkedStreamClosure() {
       subStream.end = start + length || this.end;
       subStream.dict = dict;
       return subStream;
+||||||| merged common ancestors
+      function ChunkedStreamSubstream() {}
+      ChunkedStreamSubstream.prototype = Object.create(this);
+      ChunkedStreamSubstream.prototype.getMissingChunks = function () {
+        var chunkSize = this.chunkSize;
+        var beginChunk = Math.floor(this.start / chunkSize);
+        var endChunk = Math.floor((this.end - 1) / chunkSize) + 1;
+        var missingChunks = [];
+        for (var chunk = beginChunk; chunk < endChunk; ++chunk) {
+          if (!this.loadedChunks[chunk]) {
+            missingChunks.push(chunk);
+          }
+        }
+        return missingChunks;
+      };
+      var subStream = new ChunkedStreamSubstream();
+      subStream.pos = subStream.start = start;
+      subStream.end = start + length || this.end;
+      subStream.dict = dict;
+      return subStream;
+=======
+    } else {
+      this.ensureByte(start);
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   };
   return ChunkedStream;
 }();
@@ -6040,8 +10221,56 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
     this.stream = new ChunkedStream(length, chunkSize, this);
     this.length = length;
     this.chunkSize = chunkSize;
+||||||| merged common ancestors
+  };
+  return ChunkedStream;
+}();
+var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
+  function ChunkedStreamManager(pdfNetworkStream, args) {
+    var chunkSize = args.rangeChunkSize;
+    var length = args.length;
+    this.stream = new ChunkedStream(length, chunkSize, this);
+    this.length = length;
+    this.chunkSize = chunkSize;
+=======
+
+    function ChunkedStreamSubstream() {}
+
+    ChunkedStreamSubstream.prototype = Object.create(this);
+
+    ChunkedStreamSubstream.prototype.getMissingChunks = function () {
+      const chunkSize = this.chunkSize;
+      const beginChunk = Math.floor(this.start / chunkSize);
+      const endChunk = Math.floor((this.end - 1) / chunkSize) + 1;
+      const missingChunks = [];
+
+      for (let chunk = beginChunk; chunk < endChunk; ++chunk) {
+        if (!this.loadedChunks[chunk]) {
+          missingChunks.push(chunk);
+        }
+      }
+
+      return missingChunks;
+    };
+
+    const subStream = new ChunkedStreamSubstream();
+    subStream.pos = subStream.start = start;
+    subStream.end = start + length || this.end;
+    subStream.dict = dict;
+    return subStream;
+  }
+
+}
+
+exports.ChunkedStream = ChunkedStream;
+
+class ChunkedStreamManager {
+  constructor(pdfNetworkStream, args) {
+    this.length = args.length;
+    this.chunkSize = args.rangeChunkSize;
+    this.stream = new ChunkedStream(this.length, this.chunkSize, this);
+>>>>>>> upstream-releases
     this.pdfNetworkStream = pdfNetworkStream;
-    this.url = args.url;
     this.disableAutoFetch = args.disableAutoFetch;
     this.msgHandler = args.msgHandler;
     this.currRequestId = 0;
@@ -6052,6 +10281,7 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
     this.aborted = false;
     this._loadedStreamCapability = (0, _util.createPromiseCapability)();
   }
+<<<<<<< HEAD
 
   ChunkedStreamManager.prototype = {
     onLoadedStream: function ChunkedStreamManager_getLoadedStream() {
@@ -6083,14 +10313,80 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
 
               rangeReader.read().then(readChunk, reject);
               return;
+||||||| merged common ancestors
+  ChunkedStreamManager.prototype = {
+    onLoadedStream: function ChunkedStreamManager_getLoadedStream() {
+      return this._loadedStreamCapability.promise;
+    },
+    sendRequest: function ChunkedStreamManager_sendRequest(begin, end) {
+      var rangeReader = this.pdfNetworkStream.getRangeReader(begin, end);
+      if (!rangeReader.isStreamingSupported) {
+        rangeReader.onProgress = this.onProgress.bind(this);
+      }
+      var chunks = [],
+          loaded = 0;
+      var manager = this;
+      var promise = new Promise(function (resolve, reject) {
+        var readChunk = function (chunk) {
+          try {
+            if (!chunk.done) {
+              var data = chunk.value;
+              chunks.push(data);
+              loaded += (0, _util.arrayByteLength)(data);
+              if (rangeReader.isStreamingSupported) {
+                manager.onProgress({ loaded });
+              }
+              rangeReader.read().then(readChunk, reject);
+              return;
+=======
+
+  onLoadedStream() {
+    return this._loadedStreamCapability.promise;
+  }
+
+  sendRequest(begin, end) {
+    const rangeReader = this.pdfNetworkStream.getRangeReader(begin, end);
+
+    if (!rangeReader.isStreamingSupported) {
+      rangeReader.onProgress = this.onProgress.bind(this);
+    }
+
+    let chunks = [],
+        loaded = 0;
+    const promise = new Promise((resolve, reject) => {
+      const readChunk = chunk => {
+        try {
+          if (!chunk.done) {
+            const data = chunk.value;
+            chunks.push(data);
+            loaded += (0, _util.arrayByteLength)(data);
+
+            if (rangeReader.isStreamingSupported) {
+              this.onProgress({
+                loaded
+              });
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
 
             var chunkData = (0, _util.arraysToBytes)(chunks);
             chunks = null;
             resolve(chunkData);
           } catch (e) {
             reject(e);
+||||||| merged common ancestors
+            var chunkData = (0, _util.arraysToBytes)(chunks);
+            chunks = null;
+            resolve(chunkData);
+          } catch (e) {
+            reject(e);
+=======
+
+            rangeReader.read().then(readChunk, reject);
+            return;
+>>>>>>> upstream-releases
           }
+<<<<<<< HEAD
         };
 
         rangeReader.read().then(readChunk, reject);
@@ -6139,14 +10435,105 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
         if (!(chunk in this.requestsByChunk)) {
           this.requestsByChunk[chunk] = [];
           chunksToRequest.push(chunk);
+||||||| merged common ancestors
+        };
+        rangeReader.read().then(readChunk, reject);
+      });
+      promise.then(data => {
+        if (this.aborted) {
+          return;
         }
+        this.onReceiveData({
+          chunk: data,
+          begin
+        });
+      });
+    },
+    requestAllChunks: function ChunkedStreamManager_requestAllChunks() {
+      var missingChunks = this.stream.getMissingChunks();
+      this._requestChunks(missingChunks);
+      return this._loadedStreamCapability.promise;
+    },
+    _requestChunks: function ChunkedStreamManager_requestChunks(chunks) {
+      var requestId = this.currRequestId++;
+      var i, ii;
+      var chunksNeeded = Object.create(null);
+      this.chunksNeededByRequest[requestId] = chunksNeeded;
+      for (i = 0, ii = chunks.length; i < ii; i++) {
+        if (!this.stream.hasChunk(chunks[i])) {
+          chunksNeeded[chunks[i]] = true;
+        }
+      }
+      if ((0, _util.isEmptyObj)(chunksNeeded)) {
+        return Promise.resolve();
+      }
+      var capability = (0, _util.createPromiseCapability)();
+      this.promisesByRequest[requestId] = capability;
+      var chunksToRequest = [];
+      for (var chunk in chunksNeeded) {
+        chunk = chunk | 0;
+        if (!(chunk in this.requestsByChunk)) {
+          this.requestsByChunk[chunk] = [];
+          chunksToRequest.push(chunk);
+=======
+
+          const chunkData = (0, _util.arraysToBytes)(chunks);
+          chunks = null;
+          resolve(chunkData);
+        } catch (e) {
+          reject(e);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
 
         this.requestsByChunk[chunk].push(requestId);
+||||||| merged common ancestors
+        this.requestsByChunk[chunk].push(requestId);
+=======
+      };
+
+      rangeReader.read().then(readChunk, reject);
+    });
+    promise.then(data => {
+      if (this.aborted) {
+        return;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       if (!chunksToRequest.length) {
         return capability.promise;
+||||||| merged common ancestors
+      if (!chunksToRequest.length) {
+        return capability.promise;
+=======
+
+      this.onReceiveData({
+        chunk: data,
+        begin
+      });
+    });
+  }
+
+  requestAllChunks() {
+    const missingChunks = this.stream.getMissingChunks();
+
+    this._requestChunks(missingChunks);
+
+    return this._loadedStreamCapability.promise;
+  }
+
+  _requestChunks(chunks) {
+    const requestId = this.currRequestId++;
+    const chunksNeeded = Object.create(null);
+    this.chunksNeededByRequest[requestId] = chunksNeeded;
+
+    for (const chunk of chunks) {
+      if (!this.stream.hasChunk(chunk)) {
+        chunksNeeded[chunk] = true;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       var groupedChunksToRequest = this.groupChunks(chunksToRequest);
 
@@ -6155,9 +10542,44 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
         var begin = groupedChunk.beginChunk * this.chunkSize;
         var end = Math.min(groupedChunk.endChunk * this.chunkSize, this.length);
         this.sendRequest(begin, end);
-      }
+||||||| merged common ancestors
+      var groupedChunksToRequest = this.groupChunks(chunksToRequest);
+      for (i = 0; i < groupedChunksToRequest.length; ++i) {
+        var groupedChunk = groupedChunksToRequest[i];
+        var begin = groupedChunk.beginChunk * this.chunkSize;
+        var end = Math.min(groupedChunk.endChunk * this.chunkSize, this.length);
+        this.sendRequest(begin, end);
+=======
+    }
 
+    if ((0, _util.isEmptyObj)(chunksNeeded)) {
+      return Promise.resolve();
+    }
+
+    const capability = (0, _util.createPromiseCapability)();
+    this.promisesByRequest[requestId] = capability;
+    const chunksToRequest = [];
+
+    for (let chunk in chunksNeeded) {
+      chunk = chunk | 0;
+
+      if (!(chunk in this.requestsByChunk)) {
+        this.requestsByChunk[chunk] = [];
+        chunksToRequest.push(chunk);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
+
+      this.requestsByChunk[chunk].push(requestId);
+    }
+
+    if (!chunksToRequest.length) {
+>>>>>>> upstream-releases
       return capability.promise;
+<<<<<<< HEAD
     },
     getStream: function ChunkedStreamManager_getStream() {
       return this.stream;
@@ -6186,8 +10608,76 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
           if (!chunksToRequest.includes(chunk)) {
             chunksToRequest.push(chunk);
           }
+||||||| merged common ancestors
+    },
+    getStream: function ChunkedStreamManager_getStream() {
+      return this.stream;
+    },
+    requestRange: function ChunkedStreamManager_requestRange(begin, end) {
+      end = Math.min(end, this.length);
+      var beginChunk = this.getBeginChunk(begin);
+      var endChunk = this.getEndChunk(end);
+      var chunks = [];
+      for (var chunk = beginChunk; chunk < endChunk; ++chunk) {
+        chunks.push(chunk);
+      }
+      return this._requestChunks(chunks);
+    },
+    requestRanges: function ChunkedStreamManager_requestRanges(ranges) {
+      ranges = ranges || [];
+      var chunksToRequest = [];
+      for (var i = 0; i < ranges.length; i++) {
+        var beginChunk = this.getBeginChunk(ranges[i].begin);
+        var endChunk = this.getEndChunk(ranges[i].end);
+        for (var chunk = beginChunk; chunk < endChunk; ++chunk) {
+          if (!chunksToRequest.includes(chunk)) {
+            chunksToRequest.push(chunk);
+          }
+=======
+    }
+
+    const groupedChunksToRequest = this.groupChunks(chunksToRequest);
+
+    for (const groupedChunk of groupedChunksToRequest) {
+      const begin = groupedChunk.beginChunk * this.chunkSize;
+      const end = Math.min(groupedChunk.endChunk * this.chunkSize, this.length);
+      this.sendRequest(begin, end);
+    }
+
+    return capability.promise;
+  }
+
+  getStream() {
+    return this.stream;
+  }
+
+  requestRange(begin, end) {
+    end = Math.min(end, this.length);
+    const beginChunk = this.getBeginChunk(begin);
+    const endChunk = this.getEndChunk(end);
+    const chunks = [];
+
+    for (let chunk = beginChunk; chunk < endChunk; ++chunk) {
+      chunks.push(chunk);
+    }
+
+    return this._requestChunks(chunks);
+  }
+
+  requestRanges(ranges = []) {
+    const chunksToRequest = [];
+
+    for (const range of ranges) {
+      const beginChunk = this.getBeginChunk(range.begin);
+      const endChunk = this.getEndChunk(range.end);
+
+      for (let chunk = beginChunk; chunk < endChunk; ++chunk) {
+        if (!chunksToRequest.includes(chunk)) {
+          chunksToRequest.push(chunk);
+>>>>>>> upstream-releases
         }
       }
+<<<<<<< HEAD
 
       chunksToRequest.sort(function (a, b) {
         return a - b;
@@ -6222,7 +10712,57 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
         }
 
         prevChunk = chunk;
+||||||| merged common ancestors
+      chunksToRequest.sort(function (a, b) {
+        return a - b;
+      });
+      return this._requestChunks(chunksToRequest);
+    },
+    groupChunks: function ChunkedStreamManager_groupChunks(chunks) {
+      var groupedChunks = [];
+      var beginChunk = -1;
+      var prevChunk = -1;
+      for (var i = 0; i < chunks.length; ++i) {
+        var chunk = chunks[i];
+        if (beginChunk < 0) {
+          beginChunk = chunk;
+        }
+        if (prevChunk >= 0 && prevChunk + 1 !== chunk) {
+          groupedChunks.push({
+            beginChunk,
+            endChunk: prevChunk + 1
+          });
+          beginChunk = chunk;
+        }
+        if (i + 1 === chunks.length) {
+          groupedChunks.push({
+            beginChunk,
+            endChunk: chunk + 1
+          });
+        }
+        prevChunk = chunk;
+=======
+    }
+
+    chunksToRequest.sort(function (a, b) {
+      return a - b;
+    });
+    return this._requestChunks(chunksToRequest);
+  }
+
+  groupChunks(chunks) {
+    const groupedChunks = [];
+    let beginChunk = -1;
+    let prevChunk = -1;
+
+    for (let i = 0, ii = chunks.length; i < ii; ++i) {
+      const chunk = chunks[i];
+
+      if (beginChunk < 0) {
+        beginChunk = chunk;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return groupedChunks;
     },
@@ -6273,7 +10813,66 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
 
           loadedRequests.push(requestId);
         }
+||||||| merged common ancestors
+      return groupedChunks;
+    },
+    onProgress: function ChunkedStreamManager_onProgress(args) {
+      var bytesLoaded = this.stream.numChunksLoaded * this.chunkSize + args.loaded;
+      this.msgHandler.send('DocProgress', {
+        loaded: bytesLoaded,
+        total: this.length
+      });
+    },
+    onReceiveData: function ChunkedStreamManager_onReceiveData(args) {
+      var chunk = args.chunk;
+      var isProgressive = args.begin === undefined;
+      var begin = isProgressive ? this.progressiveDataLength : args.begin;
+      var end = begin + chunk.byteLength;
+      var beginChunk = Math.floor(begin / this.chunkSize);
+      var endChunk = end < this.length ? Math.floor(end / this.chunkSize) : Math.ceil(end / this.chunkSize);
+      if (isProgressive) {
+        this.stream.onReceiveProgressiveData(chunk);
+        this.progressiveDataLength = end;
+      } else {
+        this.stream.onReceiveData(begin, chunk);
       }
+      if (this.stream.allChunksLoaded()) {
+        this._loadedStreamCapability.resolve(this.stream);
+      }
+      var loadedRequests = [];
+      var i, requestId;
+      for (chunk = beginChunk; chunk < endChunk; ++chunk) {
+        var requestIds = this.requestsByChunk[chunk] || [];
+        delete this.requestsByChunk[chunk];
+        for (i = 0; i < requestIds.length; ++i) {
+          requestId = requestIds[i];
+          var chunksNeeded = this.chunksNeededByRequest[requestId];
+          if (chunk in chunksNeeded) {
+            delete chunksNeeded[chunk];
+          }
+          if (!(0, _util.isEmptyObj)(chunksNeeded)) {
+            continue;
+          }
+          loadedRequests.push(requestId);
+        }
+=======
+
+      if (prevChunk >= 0 && prevChunk + 1 !== chunk) {
+        groupedChunks.push({
+          beginChunk,
+          endChunk: prevChunk + 1
+        });
+        beginChunk = chunk;
+      }
+
+      if (i + 1 === chunks.length) {
+        groupedChunks.push({
+          beginChunk,
+          endChunk: chunk + 1
+        });
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       if (!this.disableAutoFetch && (0, _util.isEmptyObj)(this.requestsByChunk)) {
         var nextEmptyChunk;
@@ -6286,12 +10885,80 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
           }
         } else {
           nextEmptyChunk = this.stream.nextEmptyChunk(endChunk);
+||||||| merged common ancestors
+      if (!this.disableAutoFetch && (0, _util.isEmptyObj)(this.requestsByChunk)) {
+        var nextEmptyChunk;
+        if (this.stream.numChunksLoaded === 1) {
+          var lastChunk = this.stream.numChunks - 1;
+          if (!this.stream.hasChunk(lastChunk)) {
+            nextEmptyChunk = lastChunk;
+          }
+        } else {
+          nextEmptyChunk = this.stream.nextEmptyChunk(endChunk);
+=======
+
+      prevChunk = chunk;
+    }
+
+    return groupedChunks;
+  }
+
+  onProgress(args) {
+    this.msgHandler.send('DocProgress', {
+      loaded: this.stream.numChunksLoaded * this.chunkSize + args.loaded,
+      total: this.length
+    });
+  }
+
+  onReceiveData(args) {
+    let chunk = args.chunk;
+    const isProgressive = args.begin === undefined;
+    const begin = isProgressive ? this.progressiveDataLength : args.begin;
+    const end = begin + chunk.byteLength;
+    const beginChunk = Math.floor(begin / this.chunkSize);
+    const endChunk = end < this.length ? Math.floor(end / this.chunkSize) : Math.ceil(end / this.chunkSize);
+
+    if (isProgressive) {
+      this.stream.onReceiveProgressiveData(chunk);
+      this.progressiveDataLength = end;
+    } else {
+      this.stream.onReceiveData(begin, chunk);
+    }
+
+    if (this.stream.allChunksLoaded()) {
+      this._loadedStreamCapability.resolve(this.stream);
+    }
+
+    const loadedRequests = [];
+
+    for (let chunk = beginChunk; chunk < endChunk; ++chunk) {
+      const requestIds = this.requestsByChunk[chunk] || [];
+      delete this.requestsByChunk[chunk];
+
+      for (const requestId of requestIds) {
+        const chunksNeeded = this.chunksNeededByRequest[requestId];
+
+        if (chunk in chunksNeeded) {
+          delete chunksNeeded[chunk];
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         if (Number.isInteger(nextEmptyChunk)) {
           this._requestChunks([nextEmptyChunk]);
+||||||| merged common ancestors
+        if (Number.isInteger(nextEmptyChunk)) {
+          this._requestChunks([nextEmptyChunk]);
+=======
+
+        if (!(0, _util.isEmptyObj)(chunksNeeded)) {
+          continue;
+>>>>>>> upstream-releases
         }
+
+        loadedRequests.push(requestId);
       }
+<<<<<<< HEAD
 
       for (i = 0; i < loadedRequests.length; ++i) {
         requestId = loadedRequests[i];
@@ -6321,17 +10988,116 @@ var ChunkedStreamManager = function ChunkedStreamManagerClosure() {
 
       if (this.pdfNetworkStream) {
         this.pdfNetworkStream.cancelAllRequests('abort');
+||||||| merged common ancestors
+      for (i = 0; i < loadedRequests.length; ++i) {
+        requestId = loadedRequests[i];
+        var capability = this.promisesByRequest[requestId];
+        delete this.promisesByRequest[requestId];
+        capability.resolve();
       }
+      this.msgHandler.send('DocProgress', {
+        loaded: this.stream.numChunksLoaded * this.chunkSize,
+        total: this.length
+      });
+    },
+    onError: function ChunkedStreamManager_onError(err) {
+      this._loadedStreamCapability.reject(err);
+    },
+    getBeginChunk: function ChunkedStreamManager_getBeginChunk(begin) {
+      var chunk = Math.floor(begin / this.chunkSize);
+      return chunk;
+    },
+    getEndChunk: function ChunkedStreamManager_getEndChunk(end) {
+      var chunk = Math.floor((end - 1) / this.chunkSize) + 1;
+      return chunk;
+    },
+    abort: function ChunkedStreamManager_abort() {
+      this.aborted = true;
+      if (this.pdfNetworkStream) {
+        this.pdfNetworkStream.cancelAllRequests('abort');
+=======
+    }
+
+    if (!this.disableAutoFetch && (0, _util.isEmptyObj)(this.requestsByChunk)) {
+      let nextEmptyChunk;
+
+      if (this.stream.numChunksLoaded === 1) {
+        const lastChunk = this.stream.numChunks - 1;
+
+        if (!this.stream.hasChunk(lastChunk)) {
+          nextEmptyChunk = lastChunk;
+        }
+      } else {
+        nextEmptyChunk = this.stream.nextEmptyChunk(endChunk);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       for (var requestId in this.promisesByRequest) {
         var capability = this.promisesByRequest[requestId];
         capability.reject(new Error('Request was aborted'));
+||||||| merged common ancestors
+      for (var requestId in this.promisesByRequest) {
+        var capability = this.promisesByRequest[requestId];
+        capability.reject(new Error('Request was aborted'));
+=======
+
+      if (Number.isInteger(nextEmptyChunk)) {
+        this._requestChunks([nextEmptyChunk]);
+>>>>>>> upstream-releases
       }
     }
+<<<<<<< HEAD
   };
   return ChunkedStreamManager;
 }();
 
+||||||| merged common ancestors
+  };
+  return ChunkedStreamManager;
+}();
+exports.ChunkedStream = ChunkedStream;
+=======
+
+    for (const requestId of loadedRequests) {
+      const capability = this.promisesByRequest[requestId];
+      delete this.promisesByRequest[requestId];
+      capability.resolve();
+    }
+
+    this.msgHandler.send('DocProgress', {
+      loaded: this.stream.numChunksLoaded * this.chunkSize,
+      total: this.length
+    });
+  }
+
+  onError(err) {
+    this._loadedStreamCapability.reject(err);
+  }
+
+  getBeginChunk(begin) {
+    return Math.floor(begin / this.chunkSize);
+  }
+
+  getEndChunk(end) {
+    return Math.floor((end - 1) / this.chunkSize) + 1;
+  }
+
+  abort() {
+    this.aborted = true;
+
+    if (this.pdfNetworkStream) {
+      this.pdfNetworkStream.cancelAllRequests('abort');
+    }
+
+    for (const requestId in this.promisesByRequest) {
+      this.promisesByRequest[requestId].reject(new Error('Request was aborted'));
+    }
+  }
+
+}
+
+>>>>>>> upstream-releases
 exports.ChunkedStreamManager = ChunkedStreamManager;
 
 /***/ }),
@@ -6344,13 +11110,151 @@ exports.ChunkedStreamManager = ChunkedStreamManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.PDFDocument = exports.Page = void 0;
+||||||| merged common ancestors
+exports.PDFDocument = exports.Page = undefined;
+=======
+exports.getLookupTableFactory = getLookupTableFactory;
+exports.getInheritableProperty = getInheritableProperty;
+exports.toRomanNumerals = toRomanNumerals;
+exports.XRefParseException = exports.XRefEntryException = exports.MissingDataException = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
-var _obj = __w_pdfjs_require__(11);
+function getLookupTableFactory(initializer) {
+  let lookup;
+  return function () {
+    if (initializer) {
+      lookup = Object.create(null);
+      initializer(lookup);
+      initializer = null;
+    }
 
-var _primitives = __w_pdfjs_require__(12);
+    return lookup;
+  };
+}
+
+const MissingDataException = function MissingDataExceptionClosure() {
+  function MissingDataException(begin, end) {
+    this.begin = begin;
+    this.end = end;
+    this.message = `Missing data [${begin}, ${end})`;
+  }
+
+  MissingDataException.prototype = new Error();
+  MissingDataException.prototype.name = 'MissingDataException';
+  MissingDataException.constructor = MissingDataException;
+  return MissingDataException;
+}();
+
+exports.MissingDataException = MissingDataException;
+
+const XRefEntryException = function XRefEntryExceptionClosure() {
+  function XRefEntryException(msg) {
+    this.message = msg;
+  }
+
+  XRefEntryException.prototype = new Error();
+  XRefEntryException.prototype.name = 'XRefEntryException';
+  XRefEntryException.constructor = XRefEntryException;
+  return XRefEntryException;
+}();
+
+exports.XRefEntryException = XRefEntryException;
+
+const XRefParseException = function XRefParseExceptionClosure() {
+  function XRefParseException(msg) {
+    this.message = msg;
+  }
+
+  XRefParseException.prototype = new Error();
+  XRefParseException.prototype.name = 'XRefParseException';
+  XRefParseException.constructor = XRefParseException;
+  return XRefParseException;
+}();
+
+exports.XRefParseException = XRefParseException;
+
+function getInheritableProperty({
+  dict,
+  key,
+  getArray = false,
+  stopWhenFound = true
+}) {
+  const LOOP_LIMIT = 100;
+  let loopCount = 0;
+  let values;
+
+  while (dict) {
+    const value = getArray ? dict.getArray(key) : dict.get(key);
+
+    if (value !== undefined) {
+      if (stopWhenFound) {
+        return value;
+      }
+
+      if (!values) {
+        values = [];
+      }
+
+      values.push(value);
+    }
+
+    if (++loopCount > LOOP_LIMIT) {
+      (0, _util.warn)(`getInheritableProperty: maximum loop count exceeded for "${key}"`);
+      break;
+    }
+
+    dict = dict.get('Parent');
+  }
+
+  return values;
+}
+
+const ROMAN_NUMBER_MAP = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM', '', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC', '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+
+function toRomanNumerals(number, lowerCase = false) {
+  (0, _util.assert)(Number.isInteger(number) && number > 0, 'The number should be a positive integer.');
+  let pos,
+      romanBuf = [];
+
+  while (number >= 1000) {
+    number -= 1000;
+    romanBuf.push('M');
+  }
+
+  pos = number / 100 | 0;
+  number %= 100;
+  romanBuf.push(ROMAN_NUMBER_MAP[pos]);
+  pos = number / 10 | 0;
+  number %= 10;
+  romanBuf.push(ROMAN_NUMBER_MAP[10 + pos]);
+  romanBuf.push(ROMAN_NUMBER_MAP[20 + number]);
+  const romanStr = romanBuf.join('');
+  return lowerCase ? romanStr.toLowerCase() : romanStr;
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __w_pdfjs_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PDFDocument = exports.Page = void 0;
+>>>>>>> upstream-releases
+
+var _util = __w_pdfjs_require__(2);
+
+var _obj = __w_pdfjs_require__(12);
+
+var _primitives = __w_pdfjs_require__(7);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -6366,6 +11270,7 @@ var _evaluator = __w_pdfjs_require__(28);
 
 var _function = __w_pdfjs_require__(42);
 
+<<<<<<< HEAD
 var Page = function PageClosure() {
   var DEFAULT_USER_UNIT = 1.0;
   var LETTER_SIZE_MEDIABOX = [0, 0, 612, 792];
@@ -6384,6 +11289,34 @@ var Page = function PageClosure() {
     builtInCMapCache,
     pdfFunctionFactory
   }) {
+||||||| merged common ancestors
+var Page = function PageClosure() {
+  var DEFAULT_USER_UNIT = 1.0;
+  var LETTER_SIZE_MEDIABOX = [0, 0, 612, 792];
+  function isAnnotationRenderable(annotation, intent) {
+    return intent === 'display' && annotation.viewable || intent === 'print' && annotation.printable;
+  }
+  function Page({ pdfManager, xref, pageIndex, pageDict, ref, fontCache, builtInCMapCache, pdfFunctionFactory }) {
+=======
+const DEFAULT_USER_UNIT = 1.0;
+const LETTER_SIZE_MEDIABOX = [0, 0, 612, 792];
+
+function isAnnotationRenderable(annotation, intent) {
+  return intent === 'display' && annotation.viewable || intent === 'print' && annotation.printable;
+}
+
+class Page {
+  constructor({
+    pdfManager,
+    xref,
+    pageIndex,
+    pageDict,
+    ref,
+    fontCache,
+    builtInCMapCache,
+    pdfFunctionFactory
+  }) {
+>>>>>>> upstream-releases
     this.pdfManager = pdfManager;
     this.pageIndex = pageIndex;
     this.pageDict = pageDict;
@@ -6394,17 +11327,31 @@ var Page = function PageClosure() {
     this.pdfFunctionFactory = pdfFunctionFactory;
     this.evaluatorOptions = pdfManager.evaluatorOptions;
     this.resourcesPromise = null;
+<<<<<<< HEAD
     var uniquePrefix = 'p' + this.pageIndex + '_';
     var idCounters = {
       obj: 0
     };
+||||||| merged common ancestors
+    var uniquePrefix = 'p' + this.pageIndex + '_';
+    var idCounters = { obj: 0 };
+=======
+    const idCounters = {
+      obj: 0
+    };
+>>>>>>> upstream-releases
     this.idFactory = {
       createObjId() {
-        return uniquePrefix + ++idCounters.obj;
+        return `p${pageIndex}_${++idCounters.obj}`;
+      },
+
+      getDocId() {
+        return `g_${pdfManager.docId}`;
       }
 
     };
   }
+<<<<<<< HEAD
 
   Page.prototype = {
     _getInheritableProperty(key, getArray = false) {
@@ -6466,7 +11413,116 @@ var Page = function PageClosure() {
 
     get view() {
       var mediaBox = this.mediaBox,
+||||||| merged common ancestors
+  Page.prototype = {
+    _getInheritableProperty(key, getArray = false) {
+      let value = (0, _util.getInheritableProperty)({
+        dict: this.pageDict,
+        key,
+        getArray,
+        stopWhenFound: false
+      });
+      if (!Array.isArray(value)) {
+        return value;
+      }
+      if (value.length === 1 || !(0, _primitives.isDict)(value[0])) {
+        return value[0];
+      }
+      return _primitives.Dict.merge(this.xref, value);
+    },
+    get content() {
+      return this.pageDict.get('Contents');
+    },
+    get resources() {
+      return (0, _util.shadow)(this, 'resources', this._getInheritableProperty('Resources') || _primitives.Dict.empty);
+    },
+    get mediaBox() {
+      var mediaBox = this._getInheritableProperty('MediaBox', true);
+      if (!Array.isArray(mediaBox) || mediaBox.length !== 4) {
+        return (0, _util.shadow)(this, 'mediaBox', LETTER_SIZE_MEDIABOX);
+      }
+      return (0, _util.shadow)(this, 'mediaBox', mediaBox);
+    },
+    get cropBox() {
+      var cropBox = this._getInheritableProperty('CropBox', true);
+      if (!Array.isArray(cropBox) || cropBox.length !== 4) {
+        return (0, _util.shadow)(this, 'cropBox', this.mediaBox);
+      }
+      return (0, _util.shadow)(this, 'cropBox', cropBox);
+    },
+    get userUnit() {
+      var obj = this.pageDict.get('UserUnit');
+      if (!(0, _util.isNum)(obj) || obj <= 0) {
+        obj = DEFAULT_USER_UNIT;
+      }
+      return (0, _util.shadow)(this, 'userUnit', obj);
+    },
+    get view() {
+      var mediaBox = this.mediaBox,
+=======
+
+  _getInheritableProperty(key, getArray = false) {
+    const value = (0, _core_utils.getInheritableProperty)({
+      dict: this.pageDict,
+      key,
+      getArray,
+      stopWhenFound: false
+    });
+
+    if (!Array.isArray(value)) {
+      return value;
+    }
+
+    if (value.length === 1 || !(0, _primitives.isDict)(value[0])) {
+      return value[0];
+    }
+
+    return _primitives.Dict.merge(this.xref, value);
+  }
+
+  get content() {
+    return this.pageDict.get('Contents');
+  }
+
+  get resources() {
+    return (0, _util.shadow)(this, 'resources', this._getInheritableProperty('Resources') || _primitives.Dict.empty);
+  }
+
+  get mediaBox() {
+    const mediaBox = this._getInheritableProperty('MediaBox', true);
+
+    if (!Array.isArray(mediaBox) || mediaBox.length !== 4) {
+      return (0, _util.shadow)(this, 'mediaBox', LETTER_SIZE_MEDIABOX);
+    }
+
+    return (0, _util.shadow)(this, 'mediaBox', mediaBox);
+  }
+
+  get cropBox() {
+    const cropBox = this._getInheritableProperty('CropBox', true);
+
+    if (!Array.isArray(cropBox) || cropBox.length !== 4) {
+      return (0, _util.shadow)(this, 'cropBox', this.mediaBox);
+    }
+
+    return (0, _util.shadow)(this, 'cropBox', cropBox);
+  }
+
+  get userUnit() {
+    let obj = this.pageDict.get('UserUnit');
+
+    if (!(0, _util.isNum)(obj) || obj <= 0) {
+      obj = DEFAULT_USER_UNIT;
+    }
+
+    return (0, _util.shadow)(this, 'userUnit', obj);
+  }
+
+  get view() {
+    const mediaBox = this.mediaBox,
+>>>>>>> upstream-releases
           cropBox = this.cropBox;
+<<<<<<< HEAD
 
       if (mediaBox === cropBox) {
         return (0, _util.shadow)(this, 'view', mediaBox);
@@ -6510,19 +11566,186 @@ var Page = function PageClosure() {
         stream = content;
       } else {
         stream = new _stream.NullStream();
+||||||| merged common ancestors
+      if (mediaBox === cropBox) {
+        return (0, _util.shadow)(this, 'view', mediaBox);
       }
+      var intersection = _util.Util.intersect(cropBox, mediaBox);
+      return (0, _util.shadow)(this, 'view', intersection || mediaBox);
+    },
+    get rotate() {
+      var rotate = this._getInheritableProperty('Rotate') || 0;
+      if (rotate % 90 !== 0) {
+        rotate = 0;
+      } else if (rotate >= 360) {
+        rotate = rotate % 360;
+      } else if (rotate < 0) {
+        rotate = (rotate % 360 + 360) % 360;
+      }
+      return (0, _util.shadow)(this, 'rotate', rotate);
+    },
+    getContentStream: function Page_getContentStream() {
+      var content = this.content;
+      var stream;
+      if (Array.isArray(content)) {
+        var xref = this.xref;
+        var i,
+            n = content.length;
+        var streams = [];
+        for (i = 0; i < n; ++i) {
+          streams.push(xref.fetchIfRef(content[i]));
+        }
+        stream = new _stream.StreamsSequenceStream(streams);
+      } else if ((0, _primitives.isStream)(content)) {
+        stream = content;
+      } else {
+        stream = new _stream.NullStream();
+=======
+
+    if (mediaBox === cropBox) {
+      return (0, _util.shadow)(this, 'view', mediaBox);
+    }
+
+    const intersection = _util.Util.intersect(cropBox, mediaBox);
+
+    return (0, _util.shadow)(this, 'view', intersection || mediaBox);
+  }
+
+  get rotate() {
+    let rotate = this._getInheritableProperty('Rotate') || 0;
+
+    if (rotate % 90 !== 0) {
+      rotate = 0;
+    } else if (rotate >= 360) {
+      rotate = rotate % 360;
+    } else if (rotate < 0) {
+      rotate = (rotate % 360 + 360) % 360;
+    }
+
+    return (0, _util.shadow)(this, 'rotate', rotate);
+  }
+
+  getContentStream() {
+    const content = this.content;
+    let stream;
+
+    if (Array.isArray(content)) {
+      const xref = this.xref;
+      const streams = [];
+
+      for (const stream of content) {
+        streams.push(xref.fetchIfRef(stream));
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       return stream;
     },
     loadResources: function Page_loadResources(keys) {
       if (!this.resourcesPromise) {
         this.resourcesPromise = this.pdfManager.ensure(this, 'resources');
+||||||| merged common ancestors
+      return stream;
+    },
+    loadResources: function Page_loadResources(keys) {
+      if (!this.resourcesPromise) {
+        this.resourcesPromise = this.pdfManager.ensure(this, 'resources');
+=======
+
+      stream = new _stream.StreamsSequenceStream(streams);
+    } else if ((0, _primitives.isStream)(content)) {
+      stream = content;
+    } else {
+      stream = new _stream.NullStream();
+    }
+
+    return stream;
+  }
+
+  loadResources(keys) {
+    if (!this.resourcesPromise) {
+      this.resourcesPromise = this.pdfManager.ensure(this, 'resources');
+    }
+
+    return this.resourcesPromise.then(() => {
+      const objectLoader = new _obj.ObjectLoader(this.resources, keys, this.xref);
+      return objectLoader.load();
+    });
+  }
+
+  getOperatorList({
+    handler,
+    task,
+    intent,
+    renderInteractiveForms
+  }) {
+    const contentStreamPromise = this.pdfManager.ensure(this, 'getContentStream');
+    const resourcesPromise = this.loadResources(['ExtGState', 'ColorSpace', 'Pattern', 'Shading', 'XObject', 'Font']);
+    const partialEvaluator = new _evaluator.PartialEvaluator({
+      xref: this.xref,
+      handler,
+      pageIndex: this.pageIndex,
+      idFactory: this.idFactory,
+      fontCache: this.fontCache,
+      builtInCMapCache: this.builtInCMapCache,
+      options: this.evaluatorOptions,
+      pdfFunctionFactory: this.pdfFunctionFactory
+    });
+    const dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
+    const pageListPromise = dataPromises.then(([contentStream]) => {
+      const opList = new _operator_list.OperatorList(intent, handler, this.pageIndex);
+      handler.send('StartRenderPage', {
+        transparency: partialEvaluator.hasBlendModes(this.resources),
+        pageIndex: this.pageIndex,
+        intent
+      });
+      return partialEvaluator.getOperatorList({
+        stream: contentStream,
+        task,
+        resources: this.resources,
+        operatorList: opList
+      }).then(function () {
+        return opList;
+      });
+    });
+    return Promise.all([pageListPromise, this._parsedAnnotations]).then(function ([pageOpList, annotations]) {
+      if (annotations.length === 0) {
+        pageOpList.flush(true);
+        return pageOpList;
       }
+
+      const opListPromises = [];
+
+      for (const annotation of annotations) {
+        if (isAnnotationRenderable(annotation, intent)) {
+          opListPromises.push(annotation.getOperatorList(partialEvaluator, task, renderInteractiveForms));
+        }
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       return this.resourcesPromise.then(() => {
         let objectLoader = new _obj.ObjectLoader(this.resources, keys, this.xref);
         return objectLoader.load();
+||||||| merged common ancestors
+      return this.resourcesPromise.then(() => {
+        let objectLoader = new _obj.ObjectLoader(this.resources, keys, this.xref);
+        return objectLoader.load();
+=======
+
+      return Promise.all(opListPromises).then(function (opLists) {
+        pageOpList.addOp(_util.OPS.beginAnnotations, []);
+
+        for (const opList of opLists) {
+          pageOpList.addOpList(opList);
+        }
+
+        pageOpList.addOp(_util.OPS.endAnnotations, []);
+        pageOpList.flush(true);
+        return pageOpList;
+>>>>>>> upstream-releases
       });
+<<<<<<< HEAD
     },
 
     getOperatorList({
@@ -6535,6 +11758,30 @@ var Page = function PageClosure() {
       var resourcesPromise = this.loadResources(['ExtGState', 'ColorSpace', 'Pattern', 'Shading', 'XObject', 'Font']);
       var partialEvaluator = new _evaluator.PartialEvaluator({
         pdfManager: this.pdfManager,
+||||||| merged common ancestors
+    },
+    getOperatorList({ handler, task, intent, renderInteractiveForms }) {
+      var contentStreamPromise = this.pdfManager.ensure(this, 'getContentStream');
+      var resourcesPromise = this.loadResources(['ExtGState', 'ColorSpace', 'Pattern', 'Shading', 'XObject', 'Font']);
+      var partialEvaluator = new _evaluator.PartialEvaluator({
+        pdfManager: this.pdfManager,
+=======
+    });
+  }
+
+  extractTextContent({
+    handler,
+    task,
+    normalizeWhitespace,
+    sink,
+    combineTextItems
+  }) {
+    const contentStreamPromise = this.pdfManager.ensure(this, 'getContentStream');
+    const resourcesPromise = this.loadResources(['ExtGState', 'XObject', 'Font']);
+    const dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
+    return dataPromises.then(([contentStream]) => {
+      const partialEvaluator = new _evaluator.PartialEvaluator({
+>>>>>>> upstream-releases
         xref: this.xref,
         handler,
         pageIndex: this.pageIndex,
@@ -6544,6 +11791,7 @@ var Page = function PageClosure() {
         options: this.evaluatorOptions,
         pdfFunctionFactory: this.pdfFunctionFactory
       });
+<<<<<<< HEAD
       var dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
       var pageListPromise = dataPromises.then(([contentStream]) => {
         var opList = new _operator_list.OperatorList(intent, handler, this.pageIndex);
@@ -6635,7 +11883,94 @@ var Page = function PageClosure() {
         }
 
         return annotationsData;
+||||||| merged common ancestors
+      var dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
+      var pageListPromise = dataPromises.then(([contentStream]) => {
+        var opList = new _operator_list.OperatorList(intent, handler, this.pageIndex);
+        handler.send('StartRenderPage', {
+          transparency: partialEvaluator.hasBlendModes(this.resources),
+          pageIndex: this.pageIndex,
+          intent
+        });
+        return partialEvaluator.getOperatorList({
+          stream: contentStream,
+          task,
+          resources: this.resources,
+          operatorList: opList
+        }).then(function () {
+          return opList;
+        });
       });
+      return Promise.all([pageListPromise, this._parsedAnnotations]).then(function ([pageOpList, annotations]) {
+        if (annotations.length === 0) {
+          pageOpList.flush(true);
+          return pageOpList;
+        }
+        var i,
+            ii,
+            opListPromises = [];
+        for (i = 0, ii = annotations.length; i < ii; i++) {
+          if (isAnnotationRenderable(annotations[i], intent)) {
+            opListPromises.push(annotations[i].getOperatorList(partialEvaluator, task, renderInteractiveForms));
+          }
+        }
+        return Promise.all(opListPromises).then(function (opLists) {
+          pageOpList.addOp(_util.OPS.beginAnnotations, []);
+          for (i = 0, ii = opLists.length; i < ii; i++) {
+            pageOpList.addOpList(opLists[i]);
+          }
+          pageOpList.addOp(_util.OPS.endAnnotations, []);
+          pageOpList.flush(true);
+          return pageOpList;
+        });
+      });
+    },
+    extractTextContent({ handler, task, normalizeWhitespace, sink, combineTextItems }) {
+      var contentStreamPromise = this.pdfManager.ensure(this, 'getContentStream');
+      var resourcesPromise = this.loadResources(['ExtGState', 'XObject', 'Font']);
+      var dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
+      return dataPromises.then(([contentStream]) => {
+        var partialEvaluator = new _evaluator.PartialEvaluator({
+          pdfManager: this.pdfManager,
+          xref: this.xref,
+          handler,
+          pageIndex: this.pageIndex,
+          idFactory: this.idFactory,
+          fontCache: this.fontCache,
+          builtInCMapCache: this.builtInCMapCache,
+          options: this.evaluatorOptions,
+          pdfFunctionFactory: this.pdfFunctionFactory
+        });
+        return partialEvaluator.getTextContent({
+          stream: contentStream,
+          task,
+          resources: this.resources,
+          normalizeWhitespace,
+          combineTextItems,
+          sink
+        });
+      });
+    },
+    getAnnotationsData(intent) {
+      return this._parsedAnnotations.then(function (annotations) {
+        let annotationsData = [];
+        for (let i = 0, ii = annotations.length; i < ii; i++) {
+          if (!intent || isAnnotationRenderable(annotations[i], intent)) {
+            annotationsData.push(annotations[i].data);
+          }
+        }
+        return annotationsData;
+=======
+      return partialEvaluator.getTextContent({
+        stream: contentStream,
+        task,
+        resources: this.resources,
+        normalizeWhitespace,
+        combineTextItems,
+        sink
+>>>>>>> upstream-releases
+      });
+<<<<<<< HEAD
     },
 
     get annotations() {
@@ -6649,7 +11984,31 @@ var Page = function PageClosure() {
 
         for (let i = 0, ii = annotationRefs.length; i < ii; i++) {
           annotationPromises.push(_annotation.AnnotationFactory.create(this.xref, annotationRefs[i], this.pdfManager, this.idFactory));
+||||||| merged common ancestors
+    },
+    get annotations() {
+      return (0, _util.shadow)(this, 'annotations', this._getInheritableProperty('Annots') || []);
+    },
+    get _parsedAnnotations() {
+      const parsedAnnotations = this.pdfManager.ensure(this, 'annotations').then(() => {
+        const annotationRefs = this.annotations;
+        const annotationPromises = [];
+        for (let i = 0, ii = annotationRefs.length; i < ii; i++) {
+          annotationPromises.push(_annotation.AnnotationFactory.create(this.xref, annotationRefs[i], this.pdfManager, this.idFactory));
+=======
+    });
+  }
+
+  getAnnotationsData(intent) {
+    return this._parsedAnnotations.then(function (annotations) {
+      const annotationsData = [];
+
+      for (let i = 0, ii = annotations.length; i < ii; i++) {
+        if (!intent || isAnnotationRenderable(annotations[i], intent)) {
+          annotationsData.push(annotations[i].data);
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         return Promise.all(annotationPromises).then(function (annotations) {
           return annotations.filter(function isDefined(annotation) {
@@ -6658,8 +12017,44 @@ var Page = function PageClosure() {
         }, function (reason) {
           (0, _util.warn)(`_parsedAnnotations: "${reason}".`);
           return [];
+||||||| merged common ancestors
+        return Promise.all(annotationPromises).then(function (annotations) {
+          return annotations.filter(function isDefined(annotation) {
+            return !!annotation;
+          });
+        }, function (reason) {
+          (0, _util.warn)(`_parsedAnnotations: "${reason}".`);
+          return [];
+=======
+      }
+
+      return annotationsData;
+    });
+  }
+
+  get annotations() {
+    return (0, _util.shadow)(this, 'annotations', this._getInheritableProperty('Annots') || []);
+  }
+
+  get _parsedAnnotations() {
+    const parsedAnnotations = this.pdfManager.ensure(this, 'annotations').then(() => {
+      const annotationRefs = this.annotations;
+      const annotationPromises = [];
+
+      for (let i = 0, ii = annotationRefs.length; i < ii; i++) {
+        annotationPromises.push(_annotation.AnnotationFactory.create(this.xref, annotationRefs[i], this.pdfManager, this.idFactory));
+      }
+
+      return Promise.all(annotationPromises).then(function (annotations) {
+        return annotations.filter(function isDefined(annotation) {
+          return !!annotation;
+>>>>>>> upstream-releases
         });
+      }, function (reason) {
+        (0, _util.warn)(`_parsedAnnotations: "${reason}".`);
+        return [];
       });
+<<<<<<< HEAD
       return (0, _util.shadow)(this, '_parsedAnnotations', parsedAnnotations);
     }
 
@@ -6676,6 +12071,59 @@ var PDFDocument = function PDFDocumentClosure() {
   function PDFDocument(pdfManager, arg) {
     var stream;
 
+||||||| merged common ancestors
+      return (0, _util.shadow)(this, '_parsedAnnotations', parsedAnnotations);
+    }
+  };
+  return Page;
+}();
+var PDFDocument = function PDFDocumentClosure() {
+  var FINGERPRINT_FIRST_BYTES = 1024;
+  var EMPTY_FINGERPRINT = '\x00\x00\x00\x00\x00\x00\x00' + '\x00\x00\x00\x00\x00\x00\x00\x00\x00';
+  function PDFDocument(pdfManager, arg) {
+    var stream;
+=======
+    });
+    return (0, _util.shadow)(this, '_parsedAnnotations', parsedAnnotations);
+  }
+
+}
+
+exports.Page = Page;
+const FINGERPRINT_FIRST_BYTES = 1024;
+const EMPTY_FINGERPRINT = '\x00\x00\x00\x00\x00\x00\x00' + '\x00\x00\x00\x00\x00\x00\x00\x00\x00';
+
+function find(stream, needle, limit, backwards) {
+  const pos = stream.pos;
+  const end = stream.end;
+
+  if (pos + limit > end) {
+    limit = end - pos;
+  }
+
+  const strBuf = [];
+
+  for (let i = 0; i < limit; ++i) {
+    strBuf.push(String.fromCharCode(stream.getByte()));
+  }
+
+  const str = strBuf.join('');
+  stream.pos = pos;
+  const index = backwards ? str.lastIndexOf(needle) : str.indexOf(needle);
+
+  if (index === -1) {
+    return false;
+  }
+
+  stream.pos += index;
+  return true;
+}
+
+class PDFDocument {
+  constructor(pdfManager, arg) {
+    let stream;
+
+>>>>>>> upstream-releases
     if ((0, _primitives.isStream)(arg)) {
       stream = arg;
     } else if ((0, _util.isArrayBuffer)(arg)) {
@@ -6685,19 +12133,19 @@ var PDFDocument = function PDFDocumentClosure() {
     }
 
     if (stream.length <= 0) {
-      throw new Error('PDFDocument: stream must have data');
+      throw new Error('PDFDocument: Stream must have data');
     }
 
     this.pdfManager = pdfManager;
     this.stream = stream;
     this.xref = new _obj.XRef(stream, pdfManager);
-    let evaluatorOptions = pdfManager.evaluatorOptions;
     this.pdfFunctionFactory = new _function.PDFFunctionFactory({
       xref: this.xref,
-      isEvalSupported: evaluatorOptions.isEvalSupported
+      isEvalSupported: pdfManager.evaluatorOptions.isEvalSupported
     });
     this._pagePromises = [];
   }
+<<<<<<< HEAD
 
   function find(stream, needle, limit, backwards) {
     var pos = stream.pos;
@@ -6706,11 +12154,53 @@ var PDFDocument = function PDFDocumentClosure() {
 
     if (pos + limit > end) {
       limit = end - pos;
+||||||| merged common ancestors
+  function find(stream, needle, limit, backwards) {
+    var pos = stream.pos;
+    var end = stream.end;
+    var strBuf = [];
+    if (pos + limit > end) {
+      limit = end - pos;
+=======
+
+  parse(recoveryMode) {
+    this.setup(recoveryMode);
+    const version = this.catalog.catDict.get('Version');
+
+    if ((0, _primitives.isName)(version)) {
+      this.pdfFormatVersion = version.name;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     for (var n = 0; n < limit; ++n) {
       strBuf.push(String.fromCharCode(stream.getByte()));
+||||||| merged common ancestors
+    for (var n = 0; n < limit; ++n) {
+      strBuf.push(String.fromCharCode(stream.getByte()));
+=======
+
+    try {
+      this.acroForm = this.catalog.catDict.get('AcroForm');
+
+      if (this.acroForm) {
+        this.xfa = this.acroForm.get('XFA');
+        const fields = this.acroForm.get('Fields');
+
+        if ((!Array.isArray(fields) || fields.length === 0) && !this.xfa) {
+          this.acroForm = null;
+        }
+      }
+    } catch (ex) {
+      if (ex instanceof _core_utils.MissingDataException) {
+        throw ex;
+      }
+
+      (0, _util.info)('Cannot fetch AcroForm entry; assuming no AcroForms are present');
+      this.acroForm = null;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     var str = strBuf.join('');
     stream.pos = pos;
@@ -6718,11 +12208,39 @@ var PDFDocument = function PDFDocumentClosure() {
 
     if (index === -1) {
       return false;
+||||||| merged common ancestors
+    var str = strBuf.join('');
+    stream.pos = pos;
+    var index = backwards ? str.lastIndexOf(needle) : str.indexOf(needle);
+    if (index === -1) {
+      return false;
+=======
+
+    try {
+      const collection = this.catalog.catDict.get('Collection');
+
+      if ((0, _primitives.isDict)(collection) && collection.getKeys().length > 0) {
+        this.collection = collection;
+      }
+    } catch (ex) {
+      if (ex instanceof _core_utils.MissingDataException) {
+        throw ex;
+      }
+
+      (0, _util.info)('Cannot fetch Collection dictionary.');
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     stream.pos += index;
     return true;
+||||||| merged common ancestors
+    stream.pos += index;
+    return true;
+=======
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   const DocumentInfoValidators = {
     Title: _util.isString,
@@ -6742,7 +12260,37 @@ var PDFDocument = function PDFDocumentClosure() {
 
       if ((0, _primitives.isName)(version)) {
         this.pdfFormatVersion = version.name;
+||||||| merged common ancestors
+  const DocumentInfoValidators = {
+    Title: _util.isString,
+    Author: _util.isString,
+    Subject: _util.isString,
+    Keywords: _util.isString,
+    Creator: _util.isString,
+    Producer: _util.isString,
+    CreationDate: _util.isString,
+    ModDate: _util.isString,
+    Trapped: _primitives.isName
+  };
+  PDFDocument.prototype = {
+    parse: function PDFDocument_parse(recoveryMode) {
+      this.setup(recoveryMode);
+      var version = this.catalog.catDict.get('Version');
+      if ((0, _primitives.isName)(version)) {
+        this.pdfFormatVersion = version.name;
+=======
+
+  get linearization() {
+    let linearization = null;
+
+    try {
+      linearization = _parser.Linearization.create(this.stream);
+    } catch (err) {
+      if (err instanceof _core_utils.MissingDataException) {
+        throw err;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       try {
         this.acroForm = this.catalog.catDict.get('AcroForm');
@@ -6762,7 +12310,42 @@ var PDFDocument = function PDFDocumentClosure() {
 
         (0, _util.info)('Something wrong with AcroForm entry');
         this.acroForm = null;
+||||||| merged common ancestors
+      try {
+        this.acroForm = this.catalog.catDict.get('AcroForm');
+        if (this.acroForm) {
+          this.xfa = this.acroForm.get('XFA');
+          var fields = this.acroForm.get('Fields');
+          if ((!fields || !Array.isArray(fields) || fields.length === 0) && !this.xfa) {
+            this.acroForm = null;
+          }
+        }
+      } catch (ex) {
+        if (ex instanceof _util.MissingDataException) {
+          throw ex;
+        }
+        (0, _util.info)('Something wrong with AcroForm entry');
+        this.acroForm = null;
+=======
+
+      (0, _util.info)(err);
+    }
+
+    return (0, _util.shadow)(this, 'linearization', linearization);
+  }
+
+  get startXRef() {
+    const stream = this.stream;
+    let startXRef = 0;
+
+    if (this.linearization) {
+      stream.reset();
+
+      if (find(stream, 'endobj', 1024)) {
+        startXRef = stream.pos + 6;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     },
 
     get linearization() {
@@ -6773,10 +12356,41 @@ var PDFDocument = function PDFDocumentClosure() {
       } catch (err) {
         if (err instanceof _util.MissingDataException) {
           throw err;
+||||||| merged common ancestors
+    },
+    get linearization() {
+      let linearization = null;
+      try {
+        linearization = _parser.Linearization.create(this.stream);
+      } catch (err) {
+        if (err instanceof _util.MissingDataException) {
+          throw err;
+=======
+    } else {
+      const step = 1024;
+      const startXRefLength = 'startxref'.length;
+      let found = false,
+          pos = stream.end;
+
+      while (!found && pos > 0) {
+        pos -= step - startXRefLength;
+
+        if (pos < 0) {
+          pos = 0;
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         (0, _util.info)(err);
+||||||| merged common ancestors
+        (0, _util.info)(err);
+=======
+
+        stream.pos = pos;
+        found = find(stream, 'startxref', step, true);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return (0, _util.shadow)(this, 'linearization', linearization);
     },
@@ -6791,7 +12405,35 @@ var PDFDocument = function PDFDocumentClosure() {
 
         if (find(stream, 'endobj', 1024)) {
           startXRef = stream.pos + 6;
+||||||| merged common ancestors
+      return (0, _util.shadow)(this, 'linearization', linearization);
+    },
+    get startXRef() {
+      var stream = this.stream;
+      var startXRef = 0;
+      var linearization = this.linearization;
+      if (linearization) {
+        stream.reset();
+        if (find(stream, 'endobj', 1024)) {
+          startXRef = stream.pos + 6;
+=======
+
+      if (found) {
+        stream.skip(9);
+        let ch;
+
+        do {
+          ch = stream.getByte();
+        } while ((0, _util.isSpace)(ch));
+
+        let str = '';
+
+        while (ch >= 0x20 && ch <= 0x39) {
+          str += String.fromCharCode(ch);
+          ch = stream.getByte();
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
       } else {
         var step = 1024;
         var found = false,
@@ -6828,8 +12470,44 @@ var PDFDocument = function PDFDocumentClosure() {
           if (isNaN(startXRef)) {
             startXRef = 0;
           }
+||||||| merged common ancestors
+      } else {
+        var step = 1024;
+        var found = false,
+            pos = stream.end;
+        while (!found && pos > 0) {
+          pos -= step - 'startxref'.length;
+          if (pos < 0) {
+            pos = 0;
+          }
+          stream.pos = pos;
+          found = find(stream, 'startxref', step, true);
+        }
+        if (found) {
+          stream.skip(9);
+          var ch;
+          do {
+            ch = stream.getByte();
+          } while ((0, _util.isSpace)(ch));
+          var str = '';
+          while (ch >= 0x20 && ch <= 0x39) {
+            str += String.fromCharCode(ch);
+            ch = stream.getByte();
+          }
+          startXRef = parseInt(str, 10);
+          if (isNaN(startXRef)) {
+            startXRef = 0;
+          }
+=======
+
+        startXRef = parseInt(str, 10);
+
+        if (isNaN(startXRef)) {
+          startXRef = 0;
+>>>>>>> upstream-releases
         }
       }
+<<<<<<< HEAD
 
       return (0, _util.shadow)(this, 'startXRef', startXRef);
     },
@@ -6857,7 +12535,52 @@ var PDFDocument = function PDFDocumentClosure() {
         }
 
         return;
+||||||| merged common ancestors
+      return (0, _util.shadow)(this, 'startXRef', startXRef);
+    },
+    checkHeader: function PDFDocument_checkHeader() {
+      var stream = this.stream;
+      stream.reset();
+      if (find(stream, '%PDF-', 1024)) {
+        stream.moveStart();
+        var MAX_VERSION_LENGTH = 12;
+        var version = '',
+            ch;
+        while ((ch = stream.getByte()) > 0x20) {
+          if (version.length >= MAX_VERSION_LENGTH) {
+            break;
+          }
+          version += String.fromCharCode(ch);
+        }
+        if (!this.pdfFormatVersion) {
+          this.pdfFormatVersion = version.substring(5);
+        }
+        return;
+=======
+    }
+
+    return (0, _util.shadow)(this, 'startXRef', startXRef);
+  }
+
+  checkHeader() {
+    const stream = this.stream;
+    stream.reset();
+
+    if (!find(stream, '%PDF-', 1024)) {
+      return;
+    }
+
+    stream.moveStart();
+    const MAX_PDF_VERSION_LENGTH = 12;
+    let version = '',
+        ch;
+
+    while ((ch = stream.getByte()) > 0x20) {
+      if (version.length >= MAX_PDF_VERSION_LENGTH) {
+        break;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
     },
     parseStartXRef: function PDFDocument_parseStartXRef() {
       var startXRef = this.startXRef;
@@ -6905,7 +12628,102 @@ var PDFDocument = function PDFDocumentClosure() {
             }
           }
         }
+||||||| merged common ancestors
+    },
+    parseStartXRef: function PDFDocument_parseStartXRef() {
+      var startXRef = this.startXRef;
+      this.xref.setStartXRef(startXRef);
+    },
+    setup: function PDFDocument_setup(recoveryMode) {
+      this.xref.parse(recoveryMode);
+      this.catalog = new _obj.Catalog(this.pdfManager, this.xref);
+    },
+    get numPages() {
+      var linearization = this.linearization;
+      var num = linearization ? linearization.numPages : this.catalog.numPages;
+      return (0, _util.shadow)(this, 'numPages', num);
+    },
+    get documentInfo() {
+      const docInfo = {
+        PDFFormatVersion: this.pdfFormatVersion,
+        IsLinearized: !!this.linearization,
+        IsAcroFormPresent: !!this.acroForm,
+        IsXFAPresent: !!this.xfa
+      };
+      let infoDict;
+      try {
+        infoDict = this.xref.trailer.get('Info');
+      } catch (err) {
+        if (err instanceof _util.MissingDataException) {
+          throw err;
+        }
+        (0, _util.info)('The document information dictionary is invalid.');
       }
+      if ((0, _primitives.isDict)(infoDict)) {
+        for (let key in DocumentInfoValidators) {
+          if (infoDict.has(key)) {
+            const value = infoDict.get(key);
+            if (DocumentInfoValidators[key](value)) {
+              docInfo[key] = typeof value !== 'string' ? value : (0, _util.stringToPDFString)(value);
+            } else {
+              (0, _util.info)('Bad value in document info for "' + key + '"');
+            }
+          }
+        }
+=======
+
+      version += String.fromCharCode(ch);
+    }
+
+    if (!this.pdfFormatVersion) {
+      this.pdfFormatVersion = version.substring(5);
+    }
+  }
+
+  parseStartXRef() {
+    this.xref.setStartXRef(this.startXRef);
+  }
+
+  setup(recoveryMode) {
+    this.xref.parse(recoveryMode);
+    this.catalog = new _obj.Catalog(this.pdfManager, this.xref);
+  }
+
+  get numPages() {
+    const linearization = this.linearization;
+    const num = linearization ? linearization.numPages : this.catalog.numPages;
+    return (0, _util.shadow)(this, 'numPages', num);
+  }
+
+  get documentInfo() {
+    const DocumentInfoValidators = {
+      Title: _util.isString,
+      Author: _util.isString,
+      Subject: _util.isString,
+      Keywords: _util.isString,
+      Creator: _util.isString,
+      Producer: _util.isString,
+      CreationDate: _util.isString,
+      ModDate: _util.isString,
+      Trapped: _primitives.isName
+    };
+    const docInfo = {
+      PDFFormatVersion: this.pdfFormatVersion,
+      IsLinearized: !!this.linearization,
+      IsAcroFormPresent: !!this.acroForm,
+      IsXFAPresent: !!this.xfa,
+      IsCollectionPresent: !!this.collection
+    };
+    let infoDict;
+
+    try {
+      infoDict = this.xref.trailer.get('Info');
+    } catch (err) {
+      if (err instanceof _core_utils.MissingDataException) {
+        throw err;
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       return (0, _util.shadow)(this, 'documentInfo', docInfo);
     },
@@ -6921,15 +12739,88 @@ var PDFDocument = function PDFDocumentClosure() {
       } else {
         if (this.stream.ensureRange) {
           this.stream.ensureRange(0, Math.min(FINGERPRINT_FIRST_BYTES, this.stream.end));
+||||||| merged common ancestors
+      return (0, _util.shadow)(this, 'documentInfo', docInfo);
+    },
+    get fingerprint() {
+      var xref = this.xref,
+          hash,
+          fileID = '';
+      var idArray = xref.trailer.get('ID');
+      if (Array.isArray(idArray) && idArray[0] && (0, _util.isString)(idArray[0]) && idArray[0] !== EMPTY_FINGERPRINT) {
+        hash = (0, _util.stringToBytes)(idArray[0]);
+      } else {
+        if (this.stream.ensureRange) {
+          this.stream.ensureRange(0, Math.min(FINGERPRINT_FIRST_BYTES, this.stream.end));
+=======
+
+      (0, _util.info)('The document information dictionary is invalid.');
+    }
+
+    if ((0, _primitives.isDict)(infoDict)) {
+      for (const key of infoDict.getKeys()) {
+        const value = infoDict.get(key);
+
+        if (DocumentInfoValidators[key]) {
+          if (DocumentInfoValidators[key](value)) {
+            docInfo[key] = typeof value !== 'string' ? value : (0, _util.stringToPDFString)(value);
+          } else {
+            (0, _util.info)(`Bad value in document info for "${key}".`);
+          }
+        } else if (typeof key === 'string') {
+          let customValue;
+
+          if ((0, _util.isString)(value)) {
+            customValue = (0, _util.stringToPDFString)(value);
+          } else if ((0, _primitives.isName)(value) || (0, _util.isNum)(value) || (0, _util.isBool)(value)) {
+            customValue = value;
+          } else {
+            (0, _util.info)(`Unsupported value in document info for (custom) "${key}".`);
+            continue;
+          }
+
+          if (!docInfo['Custom']) {
+            docInfo['Custom'] = Object.create(null);
+          }
+
+          docInfo['Custom'][key] = customValue;
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         hash = (0, _crypto.calculateMD5)(this.stream.bytes.subarray(0, FINGERPRINT_FIRST_BYTES), 0, FINGERPRINT_FIRST_BYTES);
+||||||| merged common ancestors
+        hash = (0, _crypto.calculateMD5)(this.stream.bytes.subarray(0, FINGERPRINT_FIRST_BYTES), 0, FINGERPRINT_FIRST_BYTES);
+=======
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       for (var i = 0, n = hash.length; i < n; i++) {
         var hex = hash[i].toString(16);
         fileID += hex.length === 1 ? '0' + hex : hex;
+||||||| merged common ancestors
+      for (var i = 0, n = hash.length; i < n; i++) {
+        var hex = hash[i].toString(16);
+        fileID += hex.length === 1 ? '0' + hex : hex;
+=======
+    }
+
+    return (0, _util.shadow)(this, 'documentInfo', docInfo);
+  }
+
+  get fingerprint() {
+    let hash;
+    const idArray = this.xref.trailer.get('ID');
+
+    if (Array.isArray(idArray) && idArray[0] && (0, _util.isString)(idArray[0]) && idArray[0] !== EMPTY_FINGERPRINT) {
+      hash = (0, _util.stringToBytes)(idArray[0]);
+    } else {
+      if (this.stream.ensureRange) {
+        this.stream.ensureRange(0, Math.min(FINGERPRINT_FIRST_BYTES, this.stream.end));
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return (0, _util.shadow)(this, 'fingerprint', fileID);
     },
@@ -6948,7 +12839,50 @@ var PDFDocument = function PDFDocumentClosure() {
           }
 
           return [obj, ref];
+||||||| merged common ancestors
+      return (0, _util.shadow)(this, 'fingerprint', fileID);
+    },
+    _getLinearizationPage(pageIndex) {
+      const { catalog, linearization } = this;
+      (0, _util.assert)(linearization && linearization.pageFirst === pageIndex);
+      const ref = new _primitives.Ref(linearization.objectNumberFirst, 0);
+      return this.xref.fetchAsync(ref).then(obj => {
+        if ((0, _primitives.isDict)(obj, 'Page') || (0, _primitives.isDict)(obj) && !obj.has('Type') && obj.has('Contents')) {
+          if (ref && !catalog.pageKidsCountCache.has(ref)) {
+            catalog.pageKidsCountCache.put(ref, 1);
+          }
+          return [obj, ref];
+=======
+
+      hash = (0, _crypto.calculateMD5)(this.stream.bytes.subarray(0, FINGERPRINT_FIRST_BYTES), 0, FINGERPRINT_FIRST_BYTES);
+    }
+
+    let fingerprint = '';
+
+    for (let i = 0, ii = hash.length; i < ii; i++) {
+      const hex = hash[i].toString(16);
+      fingerprint += hex.length === 1 ? '0' + hex : hex;
+    }
+
+    return (0, _util.shadow)(this, 'fingerprint', fingerprint);
+  }
+
+  _getLinearizationPage(pageIndex) {
+    const {
+      catalog,
+      linearization
+    } = this;
+    (0, _util.assert)(linearization && linearization.pageFirst === pageIndex);
+
+    const ref = _primitives.Ref.get(linearization.objectNumberFirst, 0);
+
+    return this.xref.fetchAsync(ref).then(obj => {
+      if ((0, _primitives.isDict)(obj, 'Page') || (0, _primitives.isDict)(obj) && !obj.has('Type') && obj.has('Contents')) {
+        if (ref && !catalog.pageKidsCountCache.has(ref)) {
+          catalog.pageKidsCountCache.put(ref, 1);
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         throw new _util.FormatError('The Linearization dictionary doesn\'t point ' + 'to a valid Page dictionary.');
       }).catch(reason => {
@@ -6960,7 +12894,22 @@ var PDFDocument = function PDFDocumentClosure() {
     getPage(pageIndex) {
       if (this._pagePromises[pageIndex] !== undefined) {
         return this._pagePromises[pageIndex];
+||||||| merged common ancestors
+        throw new _util.FormatError('The Linearization dictionary doesn\'t point ' + 'to a valid Page dictionary.');
+      }).catch(reason => {
+        (0, _util.info)(reason);
+        return catalog.getPageDict(pageIndex);
+      });
+    },
+    getPage(pageIndex) {
+      if (this._pagePromises[pageIndex] !== undefined) {
+        return this._pagePromises[pageIndex];
+=======
+
+        return [obj, ref];
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       const {
         catalog,
@@ -6983,15 +12932,94 @@ var PDFDocument = function PDFDocumentClosure() {
 
     cleanup: function PDFDocument_cleanup() {
       return this.catalog.cleanup();
+||||||| merged common ancestors
+      const { catalog, linearization } = this;
+      const promise = linearization && linearization.pageFirst === pageIndex ? this._getLinearizationPage(pageIndex) : catalog.getPageDict(pageIndex);
+      return this._pagePromises[pageIndex] = promise.then(([pageDict, ref]) => {
+        return new Page({
+          pdfManager: this.pdfManager,
+          xref: this.xref,
+          pageIndex,
+          pageDict,
+          ref,
+          fontCache: catalog.fontCache,
+          builtInCMapCache: catalog.builtInCMapCache,
+          pdfFunctionFactory: this.pdfFunctionFactory
+        });
+      });
+    },
+    cleanup: function PDFDocument_cleanup() {
+      return this.catalog.cleanup();
+=======
+
+      throw new _util.FormatError('The Linearization dictionary doesn\'t point ' + 'to a valid Page dictionary.');
+    }).catch(reason => {
+      (0, _util.info)(reason);
+      return catalog.getPageDict(pageIndex);
+    });
+  }
+
+  getPage(pageIndex) {
+    if (this._pagePromises[pageIndex] !== undefined) {
+      return this._pagePromises[pageIndex];
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   };
   return PDFDocument;
 }();
 
+||||||| merged common ancestors
+  };
+  return PDFDocument;
+}();
+exports.Page = Page;
+=======
+
+    const {
+      catalog,
+      linearization
+    } = this;
+    const promise = linearization && linearization.pageFirst === pageIndex ? this._getLinearizationPage(pageIndex) : catalog.getPageDict(pageIndex);
+    return this._pagePromises[pageIndex] = promise.then(([pageDict, ref]) => {
+      return new Page({
+        pdfManager: this.pdfManager,
+        xref: this.xref,
+        pageIndex,
+        pageDict,
+        ref,
+        fontCache: catalog.fontCache,
+        builtInCMapCache: catalog.builtInCMapCache,
+        pdfFunctionFactory: this.pdfFunctionFactory
+      });
+    });
+  }
+
+  checkFirstPage() {
+    return this.getPage(0).catch(reason => {
+      if (reason instanceof _core_utils.XRefEntryException) {
+        this._pagePromises.length = 0;
+        this.cleanup();
+        throw new _core_utils.XRefParseException();
+      }
+    });
+  }
+
+  fontFallback(id, handler) {
+    return this.catalog.fontFallback(id, handler);
+  }
+
+  cleanup() {
+    return this.catalog.cleanup();
+  }
+
+}
+
+>>>>>>> upstream-releases
 exports.PDFDocument = PDFDocument;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
 "use strict";
@@ -7004,9 +13032,11 @@ exports.FileSpec = exports.XRef = exports.ObjectLoader = exports.Catalog = void 
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _parser = __w_pdfjs_require__(13);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _chunked_stream = __w_pdfjs_require__(9);
 
@@ -7052,7 +13082,7 @@ class Catalog {
         try {
           metadata = (0, _util.stringToUTF8String)((0, _util.bytesToString)(stream.getBytes()));
         } catch (e) {
-          if (e instanceof _util.MissingDataException) {
+          if (e instanceof _core_utils.MissingDataException) {
             throw e;
           }
 
@@ -7080,7 +13110,7 @@ class Catalog {
     try {
       obj = this._readDocumentOutline();
     } catch (ex) {
-      if (ex instanceof _util.MissingDataException) {
+      if (ex instanceof _core_utils.MissingDataException) {
         throw ex;
       }
 
@@ -7139,6 +13169,7 @@ class Catalog {
       const title = outlineDict.get('Title');
       const flags = outlineDict.get('F') || 0;
       const color = outlineDict.getArray('C');
+      const count = outlineDict.get('Count');
       let rgbColor = blackColor;
 
       if (Array.isArray(color) && color.length === 3 && (color[0] !== 0 || color[1] !== 0 || color[2] !== 0)) {
@@ -7152,7 +13183,7 @@ class Catalog {
         newWindow: data.newWindow,
         title: (0, _util.stringToPDFString)(title),
         color: rgbColor,
-        count: outlineDict.get('Count'),
+        count: Number.isInteger(count) ? count : undefined,
         bold: !!(flags & 2),
         italic: !!(flags & 1),
         items: []
@@ -7188,7 +13219,7 @@ class Catalog {
     try {
       permissions = this._readPermissions();
     } catch (ex) {
-      if (ex instanceof _util.MissingDataException) {
+      if (ex instanceof _core_utils.MissingDataException) {
         throw ex;
       }
 
@@ -7274,6 +13305,8 @@ class Catalog {
     } else if (this.catDict.has('Dests')) {
       return this.catDict.get('Dests');
     }
+
+    return undefined;
   }
 
   get pageLabels() {
@@ -7282,7 +13315,7 @@ class Catalog {
     try {
       obj = this._readPageLabels();
     } catch (ex) {
-      if (ex instanceof _util.MissingDataException) {
+      if (ex instanceof _core_utils.MissingDataException) {
         throw ex;
       }
 
@@ -7363,7 +13396,7 @@ class Catalog {
 
         case 'R':
         case 'r':
-          currentLabel = (0, _util.toRomanNumerals)(currentIndex, style === 'r');
+          currentLabel = (0, _core_utils.toRomanNumerals)(currentIndex, style === 'r');
           break;
 
         case 'A':
@@ -7397,7 +13430,31 @@ class Catalog {
 
     return pageLabels;
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  get pageLayout() {
+    const obj = this.catDict.get('PageLayout');
+    let pageLayout = '';
+
+    if ((0, _primitives.isName)(obj)) {
+      switch (obj.name) {
+        case 'SinglePage':
+        case 'OneColumn':
+        case 'TwoColumnLeft':
+        case 'TwoColumnRight':
+        case 'TwoPageLeft':
+        case 'TwoPageRight':
+          pageLayout = obj.name;
+      }
+    }
+
+    return (0, _util.shadow)(this, 'pageLayout', pageLayout);
+  }
+
+>>>>>>> upstream-releases
   get pageMode() {
     const obj = this.catDict.get('PageMode');
     let pageMode = 'UseNone';
@@ -7416,7 +13473,191 @@ class Catalog {
 
     return (0, _util.shadow)(this, 'pageMode', pageMode);
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  get viewerPreferences() {
+    const ViewerPreferencesValidators = {
+      HideToolbar: _util.isBool,
+      HideMenubar: _util.isBool,
+      HideWindowUI: _util.isBool,
+      FitWindow: _util.isBool,
+      CenterWindow: _util.isBool,
+      DisplayDocTitle: _util.isBool,
+      NonFullScreenPageMode: _primitives.isName,
+      Direction: _primitives.isName,
+      ViewArea: _primitives.isName,
+      ViewClip: _primitives.isName,
+      PrintArea: _primitives.isName,
+      PrintClip: _primitives.isName,
+      PrintScaling: _primitives.isName,
+      Duplex: _primitives.isName,
+      PickTrayByPDFSize: _util.isBool,
+      PrintPageRange: Array.isArray,
+      NumCopies: Number.isInteger
+    };
+    const obj = this.catDict.get('ViewerPreferences');
+    const prefs = Object.create(null);
+
+    if ((0, _primitives.isDict)(obj)) {
+      for (const key in ViewerPreferencesValidators) {
+        if (!obj.has(key)) {
+          continue;
+        }
+
+        const value = obj.get(key);
+
+        if (!ViewerPreferencesValidators[key](value)) {
+          (0, _util.info)(`Bad value in ViewerPreferences for "${key}".`);
+          continue;
+        }
+
+        let prefValue;
+
+        switch (key) {
+          case 'NonFullScreenPageMode':
+            switch (value.name) {
+              case 'UseNone':
+              case 'UseOutlines':
+              case 'UseThumbs':
+              case 'UseOC':
+                prefValue = value.name;
+                break;
+
+              default:
+                prefValue = 'UseNone';
+            }
+
+            break;
+
+          case 'Direction':
+            switch (value.name) {
+              case 'L2R':
+              case 'R2L':
+                prefValue = value.name;
+                break;
+
+              default:
+                prefValue = 'L2R';
+            }
+
+            break;
+
+          case 'ViewArea':
+          case 'ViewClip':
+          case 'PrintArea':
+          case 'PrintClip':
+            switch (value.name) {
+              case 'MediaBox':
+              case 'CropBox':
+              case 'BleedBox':
+              case 'TrimBox':
+              case 'ArtBox':
+                prefValue = value.name;
+                break;
+
+              default:
+                prefValue = 'CropBox';
+            }
+
+            break;
+
+          case 'PrintScaling':
+            switch (value.name) {
+              case 'None':
+              case 'AppDefault':
+                prefValue = value.name;
+                break;
+
+              default:
+                prefValue = 'AppDefault';
+            }
+
+            break;
+
+          case 'Duplex':
+            switch (value.name) {
+              case 'Simplex':
+              case 'DuplexFlipShortEdge':
+              case 'DuplexFlipLongEdge':
+                prefValue = value.name;
+                break;
+
+              default:
+                prefValue = 'None';
+            }
+
+            break;
+
+          case 'PrintPageRange':
+            const length = value.length;
+
+            if (length % 2 !== 0) {
+              break;
+            }
+
+            const isValid = value.every((page, i, arr) => {
+              return Number.isInteger(page) && page > 0 && (i === 0 || page >= arr[i - 1]) && page <= this.numPages;
+            });
+
+            if (isValid) {
+              prefValue = value;
+            }
+
+            break;
+
+          case 'NumCopies':
+            if (value > 0) {
+              prefValue = value;
+            }
+
+            break;
+
+          default:
+            (0, _util.assert)(typeof value === 'boolean');
+            prefValue = value;
+        }
+
+        if (prefValue !== undefined) {
+          prefs[key] = prefValue;
+        } else {
+          (0, _util.info)(`Bad value in ViewerPreferences for "${key}".`);
+        }
+      }
+    }
+
+    return (0, _util.shadow)(this, 'viewerPreferences', prefs);
+  }
+
+  get openActionDestination() {
+    const obj = this.catDict.get('OpenAction');
+    let openActionDest = null;
+
+    if ((0, _primitives.isDict)(obj)) {
+      const destDict = new _primitives.Dict(this.xref);
+      destDict.set('A', obj);
+      const resultObj = {
+        url: null,
+        dest: null
+      };
+      Catalog.parseDestDictionary({
+        destDict,
+        resultObj
+      });
+
+      if (Array.isArray(resultObj.dest)) {
+        openActionDest = resultObj.dest;
+      }
+    } else if (Array.isArray(obj)) {
+      openActionDest = obj;
+    }
+
+    return (0, _util.shadow)(this, 'openActionDestination', openActionDest);
+  }
+
+>>>>>>> upstream-releases
   get attachments() {
     const obj = this.catDict.get('Names');
     let attachments = null;
@@ -7500,8 +13741,29 @@ class Catalog {
 
     return (0, _util.shadow)(this, 'javaScript', javaScript);
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  fontFallback(id, handler) {
+    const promises = [];
+    this.fontCache.forEach(function (promise) {
+      promises.push(promise);
+    });
+    return Promise.all(promises).then(translatedFonts => {
+      for (const translatedFont of translatedFonts) {
+        if (translatedFont.loadedName === id) {
+          translatedFont.fallback(handler);
+          return;
+        }
+      }
+    });
+  }
+
+>>>>>>> upstream-releases
   cleanup() {
+    (0, _primitives.clearPrimitiveCaches)();
     this.pageKidsCountCache.clear();
     const promises = [];
     this.fontCache.forEach(function (promise) {
@@ -7702,11 +13964,20 @@ class Catalog {
 
   static parseDestDictionary(params) {
     function addDefaultProtocolToUrl(url) {
+<<<<<<< HEAD
       if (url.indexOf('www.') === 0) {
         return `http://${url}`;
       }
 
       return url;
+||||||| merged common ancestors
+      if (url.indexOf('www.') === 0) {
+        return `http://${url}`;
+      }
+      return url;
+=======
+      return url.startsWith('www.') ? `http://${url}` : url;
+>>>>>>> upstream-releases
     }
 
     function tryConvertUrlEncoding(url) {
@@ -7905,7 +14176,7 @@ var XRef = function XRefClosure() {
       try {
         encrypt = trailerDict.get('Encrypt');
       } catch (ex) {
-        if (ex instanceof _util.MissingDataException) {
+        if (ex instanceof _core_utils.MissingDataException) {
           throw ex;
         }
 
@@ -7924,7 +14195,7 @@ var XRef = function XRefClosure() {
       try {
         root = trailerDict.get('Root');
       } catch (ex) {
-        if (ex instanceof _util.MissingDataException) {
+        if (ex instanceof _core_utils.MissingDataException) {
           throw ex;
         }
 
@@ -7935,7 +14206,7 @@ var XRef = function XRefClosure() {
         this.root = root;
       } else {
         if (!recoveryMode) {
-          throw new _util.XRefParseException();
+          throw new _core_utils.XRefParseException();
         }
 
         throw new _util.FormatError('Invalid root reference');
@@ -8184,7 +14455,7 @@ var XRef = function XRefClosure() {
 
       var objRegExp = /^(\d+)\s+(\d+)\s+obj\b/;
       const endobjRegExp = /\bendobj[\b\s]$/;
-      const nestedObjRegExp = /\s+(\d+\s+\d+\s+obj[\b\s])$/;
+      const nestedObjRegExp = /\s+(\d+\s+\d+\s+obj[\b\s<])$/;
       const CHECK_CONTENT_LENGTH = 25;
       var trailerBytes = new Uint8Array([116, 114, 97, 105, 108, 101, 114]);
       var startxrefBytes = new Uint8Array([115, 116, 97, 114, 116, 120, 114, 101, 102]);
@@ -8223,16 +14494,26 @@ var XRef = function XRefClosure() {
 
         var token = readToken(buffer, position);
         var m;
+<<<<<<< HEAD
 
         if (token.indexOf('xref') === 0 && (token.length === 4 || /\s/.test(token[4]))) {
+||||||| merged common ancestors
+        if (token.indexOf('xref') === 0 && (token.length === 4 || /\s/.test(token[4]))) {
+=======
+
+        if (token.startsWith('xref') && (token.length === 4 || /\s/.test(token[4]))) {
+>>>>>>> upstream-releases
           position += skipUntil(buffer, position, trailerBytes);
           trailers.push(position);
           position += skipUntil(buffer, position, startxrefBytes);
         } else if (m = objRegExp.exec(token)) {
-          if (typeof this.entries[m[1]] === 'undefined') {
-            this.entries[m[1]] = {
+          const num = m[1] | 0,
+                gen = m[2] | 0;
+
+          if (typeof this.entries[num] === 'undefined') {
+            this.entries[num] = {
               offset: position - stream.start,
-              gen: m[2] | 0,
+              gen,
               uncompressed: true
             };
           }
@@ -8270,7 +14551,7 @@ var XRef = function XRefClosure() {
           }
 
           position += contentLength;
-        } else if (token.indexOf('trailer') === 0 && (token.length === 7 || /\s/.test(token[7]))) {
+        } else if (token.startsWith('trailer') && (token.length === 7 || /\s/.test(token[7]))) {
           trailers.push(position);
           position += skipUntil(buffer, position, startxrefBytes);
         } else {
@@ -8289,7 +14570,12 @@ var XRef = function XRefClosure() {
 
       for (i = 0, ii = trailers.length; i < ii; ++i) {
         stream.pos = trailers[i];
-        var parser = new _parser.Parser(new _parser.Lexer(stream), true, this, true);
+        const parser = new _parser.Parser({
+          lexer: new _parser.Lexer(stream),
+          xref: this,
+          allowStreams: true,
+          recoveryMode: true
+        });
         var obj = parser.getObj();
 
         if (!(0, _primitives.isCmd)(obj, 'trailer')) {
@@ -8307,7 +14593,7 @@ var XRef = function XRefClosure() {
         try {
           rootDict = dict.get('Root');
         } catch (ex) {
-          if (ex instanceof _util.MissingDataException) {
+          if (ex instanceof _core_utils.MissingDataException) {
             throw ex;
           }
 
@@ -8347,7 +14633,11 @@ var XRef = function XRefClosure() {
 
           startXRefParsedCache[startXRef] = true;
           stream.pos = startXRef + stream.start;
-          var parser = new _parser.Parser(new _parser.Lexer(stream), true, this);
+          const parser = new _parser.Parser({
+            lexer: new _parser.Lexer(stream),
+            xref: this,
+            allowStreams: true
+          });
           var obj = parser.getObj();
           var dict;
 
@@ -8399,7 +14689,7 @@ var XRef = function XRefClosure() {
 
         return this.topDict;
       } catch (e) {
-        if (e instanceof _util.MissingDataException) {
+        if (e instanceof _core_utils.MissingDataException) {
           throw e;
         }
 
@@ -8407,10 +14697,17 @@ var XRef = function XRefClosure() {
       }
 
       if (recoveryMode) {
-        return;
+        return undefined;
       }
+<<<<<<< HEAD
 
       throw new _util.XRefParseException();
+||||||| merged common ancestors
+      throw new _util.XRefParseException();
+=======
+
+      throw new _core_utils.XRefParseException();
+>>>>>>> upstream-releases
     },
     getEntry: function XRef_getEntry(i) {
       var xrefEntry = this.entries[i];
@@ -8454,7 +14751,7 @@ var XRef = function XRefClosure() {
       if (xrefEntry.uncompressed) {
         xrefEntry = this.fetchUncompressed(ref, xrefEntry, suppressEncryption);
       } else {
-        xrefEntry = this.fetchCompressed(xrefEntry, suppressEncryption);
+        xrefEntry = this.fetchCompressed(ref, xrefEntry, suppressEncryption);
       }
 
       if ((0, _primitives.isDict)(xrefEntry)) {
@@ -8465,16 +14762,21 @@ var XRef = function XRefClosure() {
 
       return xrefEntry;
     },
-    fetchUncompressed: function XRef_fetchUncompressed(ref, xrefEntry, suppressEncryption) {
+
+    fetchUncompressed(ref, xrefEntry, suppressEncryption = false) {
       var gen = ref.gen;
       var num = ref.num;
 
       if (xrefEntry.gen !== gen) {
-        throw new _util.FormatError('inconsistent generation in XRef');
+        throw new _core_utils.XRefEntryException(`Inconsistent generation in XRef: ${ref}`);
       }
 
       var stream = this.stream.makeSubStream(xrefEntry.offset + this.stream.start);
-      var parser = new _parser.Parser(new _parser.Lexer(stream), true, this);
+      const parser = new _parser.Parser({
+        lexer: new _parser.Lexer(stream),
+        xref: this,
+        allowStreams: true
+      });
       var obj1 = parser.getObj();
       var obj2 = parser.getObj();
       var obj3 = parser.getObj();
@@ -8488,19 +14790,26 @@ var XRef = function XRefClosure() {
       }
 
       if (obj1 !== num || obj2 !== gen || !(0, _primitives.isCmd)(obj3)) {
-        throw new _util.FormatError('bad XRef entry');
+        throw new _core_utils.XRefEntryException(`Bad (uncompressed) XRef entry: ${ref}`);
       }
 
       if (obj3.cmd !== 'obj') {
-        if (obj3.cmd.indexOf('obj') === 0) {
+        if (obj3.cmd.startsWith('obj')) {
           num = parseInt(obj3.cmd.substring(3), 10);
 
           if (!Number.isNaN(num)) {
             return num;
           }
         }
+<<<<<<< HEAD
 
         throw new _util.FormatError('bad XRef entry');
+||||||| merged common ancestors
+        throw new _util.FormatError('bad XRef entry');
+=======
+
+        throw new _core_utils.XRefEntryException(`Bad (uncompressed) XRef entry: ${ref}`);
+>>>>>>> upstream-releases
       }
 
       if (this.encrypt && !suppressEncryption) {
@@ -8515,10 +14824,18 @@ var XRef = function XRefClosure() {
 
       return xrefEntry;
     },
-    fetchCompressed: function XRef_fetchCompressed(xrefEntry, suppressEncryption) {
+
+    fetchCompressed(ref, xrefEntry, suppressEncryption = false) {
       var tableOffset = xrefEntry.offset;
+<<<<<<< HEAD
       var stream = this.fetch(new _primitives.Ref(tableOffset, 0));
 
+||||||| merged common ancestors
+      var stream = this.fetch(new _primitives.Ref(tableOffset, 0));
+=======
+      var stream = this.fetch(_primitives.Ref.get(tableOffset, 0));
+
+>>>>>>> upstream-releases
       if (!(0, _primitives.isStream)(stream)) {
         throw new _util.FormatError('bad ObjStm stream');
       }
@@ -8529,9 +14846,21 @@ var XRef = function XRefClosure() {
       if (!Number.isInteger(first) || !Number.isInteger(n)) {
         throw new _util.FormatError('invalid first and n parameters for ObjStm stream');
       }
+<<<<<<< HEAD
 
       var parser = new _parser.Parser(new _parser.Lexer(stream), false, this);
       parser.allowStreams = true;
+||||||| merged common ancestors
+      var parser = new _parser.Parser(new _parser.Lexer(stream), false, this);
+      parser.allowStreams = true;
+=======
+
+      const parser = new _parser.Parser({
+        lexer: new _parser.Lexer(stream),
+        xref: this,
+        allowStreams: true
+      });
+>>>>>>> upstream-releases
       var i,
           entries = [],
           num,
@@ -8570,7 +14899,7 @@ var XRef = function XRefClosure() {
       xrefEntry = entries[xrefEntry.gen];
 
       if (xrefEntry === undefined) {
-        throw new _util.FormatError('bad XRef entry for compressed object');
+        throw new _core_utils.XRefEntryException(`Bad (compressed) XRef entry: ${ref}`);
       }
 
       return xrefEntry;
@@ -8588,7 +14917,7 @@ var XRef = function XRefClosure() {
       try {
         return this.fetch(ref, suppressEncryption);
       } catch (ex) {
-        if (!(ex instanceof _util.MissingDataException)) {
+        if (!(ex instanceof _core_utils.MissingDataException)) {
           throw ex;
         }
 
@@ -8935,7 +15264,7 @@ let ObjectLoader = function () {
             this.refSet.put(currentNode);
             currentNode = this.xref.fetch(currentNode);
           } catch (ex) {
-            if (!(ex instanceof _util.MissingDataException)) {
+            if (!(ex instanceof _core_utils.MissingDataException)) {
               throw ex;
             }
 
@@ -8993,6 +15322,7 @@ let ObjectLoader = function () {
   };
   return ObjectLoader;
 }();
+<<<<<<< HEAD
 
 exports.ObjectLoader = ObjectLoader;
 
@@ -9001,7 +15331,21 @@ exports.ObjectLoader = ObjectLoader;
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
 "use strict";
+||||||| merged common ancestors
+exports.Catalog = Catalog;
+exports.ObjectLoader = ObjectLoader;
+exports.XRef = XRef;
+exports.FileSpec = FileSpec;
 
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __w_pdfjs_require__) {
+
+"use strict";
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9285,6 +15629,238 @@ function isRefsEqual(v1, v2) {
 function isStream(v) {
   return typeof v === 'object' && v !== null && v.getBytes !== undefined;
 }
+||||||| merged common ancestors
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var EOF = {};
+var Name = function NameClosure() {
+  function Name(name) {
+    this.name = name;
+  }
+  Name.prototype = {};
+  var nameCache = Object.create(null);
+  Name.get = function Name_get(name) {
+    var nameValue = nameCache[name];
+    return nameValue ? nameValue : nameCache[name] = new Name(name);
+  };
+  return Name;
+}();
+var Cmd = function CmdClosure() {
+  function Cmd(cmd) {
+    this.cmd = cmd;
+  }
+  Cmd.prototype = {};
+  var cmdCache = Object.create(null);
+  Cmd.get = function Cmd_get(cmd) {
+    var cmdValue = cmdCache[cmd];
+    return cmdValue ? cmdValue : cmdCache[cmd] = new Cmd(cmd);
+  };
+  return Cmd;
+}();
+var Dict = function DictClosure() {
+  var nonSerializable = function nonSerializableClosure() {
+    return nonSerializable;
+  };
+  function Dict(xref) {
+    this._map = Object.create(null);
+    this.xref = xref;
+    this.objId = null;
+    this.suppressEncryption = false;
+    this.__nonSerializable__ = nonSerializable;
+  }
+  Dict.prototype = {
+    assignXref: function Dict_assignXref(newXref) {
+      this.xref = newXref;
+    },
+    get: function Dict_get(key1, key2, key3) {
+      var value;
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+      if (typeof (value = this._map[key1]) !== 'undefined' || key1 in this._map || typeof key2 === 'undefined') {
+        return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+      }
+      if (typeof (value = this._map[key2]) !== 'undefined' || key2 in this._map || typeof key3 === 'undefined') {
+        return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+      }
+      value = this._map[key3] || null;
+      return xref ? xref.fetchIfRef(value, suppressEncryption) : value;
+    },
+    getAsync: function Dict_getAsync(key1, key2, key3) {
+      var value;
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+      if (typeof (value = this._map[key1]) !== 'undefined' || key1 in this._map || typeof key2 === 'undefined') {
+        if (xref) {
+          return xref.fetchIfRefAsync(value, suppressEncryption);
+        }
+        return Promise.resolve(value);
+      }
+      if (typeof (value = this._map[key2]) !== 'undefined' || key2 in this._map || typeof key3 === 'undefined') {
+        if (xref) {
+          return xref.fetchIfRefAsync(value, suppressEncryption);
+        }
+        return Promise.resolve(value);
+      }
+      value = this._map[key3] || null;
+      if (xref) {
+        return xref.fetchIfRefAsync(value, suppressEncryption);
+      }
+      return Promise.resolve(value);
+    },
+    getArray: function Dict_getArray(key1, key2, key3) {
+      var value = this.get(key1, key2, key3);
+      var xref = this.xref,
+          suppressEncryption = this.suppressEncryption;
+      if (!Array.isArray(value) || !xref) {
+        return value;
+      }
+      value = value.slice();
+      for (var i = 0, ii = value.length; i < ii; i++) {
+        if (!isRef(value[i])) {
+          continue;
+        }
+        value[i] = xref.fetch(value[i], suppressEncryption);
+      }
+      return value;
+    },
+    getRaw: function Dict_getRaw(key) {
+      return this._map[key];
+    },
+    getKeys: function Dict_getKeys() {
+      return Object.keys(this._map);
+    },
+    set: function Dict_set(key, value) {
+      this._map[key] = value;
+    },
+    has: function Dict_has(key) {
+      return key in this._map;
+    },
+    forEach: function Dict_forEach(callback) {
+      for (var key in this._map) {
+        callback(key, this.get(key));
+      }
+    }
+  };
+  Dict.empty = new Dict(null);
+  Dict.merge = function (xref, dictArray) {
+    let mergedDict = new Dict(xref);
+    for (let i = 0, ii = dictArray.length; i < ii; i++) {
+      let dict = dictArray[i];
+      if (!isDict(dict)) {
+        continue;
+      }
+      for (let keyName in dict._map) {
+        if (mergedDict._map[keyName] !== undefined) {
+          continue;
+        }
+        mergedDict._map[keyName] = dict._map[keyName];
+      }
+    }
+    return mergedDict;
+  };
+  return Dict;
+}();
+var Ref = function RefClosure() {
+  function Ref(num, gen) {
+    this.num = num;
+    this.gen = gen;
+  }
+  Ref.prototype = {
+    toString: function Ref_toString() {
+      var str = this.num + 'R';
+      if (this.gen !== 0) {
+        str += this.gen;
+      }
+      return str;
+    }
+  };
+  return Ref;
+}();
+var RefSet = function RefSetClosure() {
+  function RefSet() {
+    this.dict = Object.create(null);
+  }
+  RefSet.prototype = {
+    has: function RefSet_has(ref) {
+      return ref.toString() in this.dict;
+    },
+    put: function RefSet_put(ref) {
+      this.dict[ref.toString()] = true;
+    },
+    remove: function RefSet_remove(ref) {
+      delete this.dict[ref.toString()];
+    }
+  };
+  return RefSet;
+}();
+var RefSetCache = function RefSetCacheClosure() {
+  function RefSetCache() {
+    this.dict = Object.create(null);
+  }
+  RefSetCache.prototype = {
+    get: function RefSetCache_get(ref) {
+      return this.dict[ref.toString()];
+    },
+    has: function RefSetCache_has(ref) {
+      return ref.toString() in this.dict;
+    },
+    put: function RefSetCache_put(ref, obj) {
+      this.dict[ref.toString()] = obj;
+    },
+    putAlias: function RefSetCache_putAlias(ref, aliasRef) {
+      this.dict[ref.toString()] = this.get(aliasRef);
+    },
+    forEach: function RefSetCache_forEach(fn, thisArg) {
+      for (var i in this.dict) {
+        fn.call(thisArg, this.dict[i]);
+      }
+    },
+    clear: function RefSetCache_clear() {
+      this.dict = Object.create(null);
+    }
+  };
+  return RefSetCache;
+}();
+function isEOF(v) {
+  return v === EOF;
+}
+function isName(v, name) {
+  return v instanceof Name && (name === undefined || v.name === name);
+}
+function isCmd(v, cmd) {
+  return v instanceof Cmd && (cmd === undefined || v.cmd === cmd);
+}
+function isDict(v, type) {
+  return v instanceof Dict && (type === undefined || isName(v.get('Type'), type));
+}
+function isRef(v) {
+  return v instanceof Ref;
+}
+function isRefsEqual(v1, v2) {
+  return v1.num === v2.num && v1.gen === v2.gen;
+}
+function isStream(v) {
+  return typeof v === 'object' && v !== null && v.getBytes !== undefined;
+}
+exports.EOF = EOF;
+exports.Cmd = Cmd;
+exports.Dict = Dict;
+exports.Name = Name;
+exports.Ref = Ref;
+exports.RefSet = RefSet;
+exports.RefSetCache = RefSetCache;
+exports.isEOF = isEOF;
+exports.isCmd = isCmd;
+exports.isDict = isDict;
+exports.isName = isName;
+exports.isRef = isRef;
+exports.isRefsEqual = isRefsEqual;
+exports.isStream = isStream;
+=======
+exports.ObjectLoader = ObjectLoader;
+>>>>>>> upstream-releases
 
 /***/ }),
 /* 13 */
@@ -9302,7 +15878,7 @@ var _stream = __w_pdfjs_require__(14);
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _ccitt_stream = __w_pdfjs_require__(15);
 
@@ -9312,11 +15888,13 @@ var _jpeg_stream = __w_pdfjs_require__(20);
 
 var _jpx_stream = __w_pdfjs_require__(22);
 
+var _core_utils = __w_pdfjs_require__(10);
+
 const MAX_LENGTH_TO_CACHE = 1000;
 const MAX_ADLER32_LENGTH = 5552;
 
 function computeAdler32(bytes) {
-  let bytesLength = bytes.length;
+  const bytesLength = bytes.length;
   let a = 1,
       b = 0;
 
@@ -9327,21 +15905,55 @@ function computeAdler32(bytes) {
 
   return b % 65521 << 16 | a % 65521;
 }
+<<<<<<< HEAD
 
 var Parser = function ParserClosure() {
   function Parser(lexer, allowStreams, xref, recoveryMode) {
+||||||| merged common ancestors
+var Parser = function ParserClosure() {
+  function Parser(lexer, allowStreams, xref, recoveryMode) {
+=======
+
+class Parser {
+  constructor({
+    lexer,
+    xref,
+    allowStreams = false,
+    recoveryMode = false
+  }) {
+>>>>>>> upstream-releases
     this.lexer = lexer;
-    this.allowStreams = allowStreams;
     this.xref = xref;
-    this.recoveryMode = recoveryMode || false;
+    this.allowStreams = allowStreams;
+    this.recoveryMode = recoveryMode;
     this.imageCache = Object.create(null);
     this.refill();
   }
+<<<<<<< HEAD
 
   Parser.prototype = {
     refill: function Parser_refill() {
       this.buf1 = this.lexer.getObj();
+||||||| merged common ancestors
+  Parser.prototype = {
+    refill: function Parser_refill() {
+      this.buf1 = this.lexer.getObj();
+=======
+
+  refill() {
+    this.buf1 = this.lexer.getObj();
+    this.buf2 = this.lexer.getObj();
+  }
+
+  shift() {
+    if ((0, _primitives.isCmd)(this.buf2, 'ID')) {
+      this.buf1 = this.buf2;
+      this.buf2 = null;
+    } else {
+      this.buf1 = this.buf2;
+>>>>>>> upstream-releases
       this.buf2 = this.lexer.getObj();
+<<<<<<< HEAD
     },
     shift: function Parser_shift() {
       if ((0, _primitives.isCmd)(this.buf2, 'ID')) {
@@ -9366,7 +15978,39 @@ var Parser = function ParserClosure() {
     },
     getObj: function Parser_getObj(cipherTransform) {
       var buf1 = this.buf1;
+||||||| merged common ancestors
+    },
+    shift: function Parser_shift() {
+      if ((0, _primitives.isCmd)(this.buf2, 'ID')) {
+        this.buf1 = this.buf2;
+        this.buf2 = null;
+      } else {
+        this.buf1 = this.buf2;
+        this.buf2 = this.lexer.getObj();
+      }
+    },
+    tryShift: function Parser_tryShift() {
+      try {
+        this.shift();
+        return true;
+      } catch (e) {
+        if (e instanceof _util.MissingDataException) {
+          throw e;
+        }
+        return false;
+      }
+    },
+    getObj: function Parser_getObj(cipherTransform) {
+      var buf1 = this.buf1;
+=======
+    }
+  }
+
+  tryShift() {
+    try {
+>>>>>>> upstream-releases
       this.shift();
+<<<<<<< HEAD
 
       if (buf1 instanceof _primitives.Cmd) {
         switch (buf1.cmd) {
@@ -9386,10 +16030,63 @@ var Parser = function ParserClosure() {
               }
 
               return array;
+||||||| merged common ancestors
+      if (buf1 instanceof _primitives.Cmd) {
+        switch (buf1.cmd) {
+          case 'BI':
+            return this.makeInlineImage(cipherTransform);
+          case '[':
+            var array = [];
+            while (!(0, _primitives.isCmd)(this.buf1, ']') && !(0, _primitives.isEOF)(this.buf1)) {
+              array.push(this.getObj(cipherTransform));
             }
+            if ((0, _primitives.isEOF)(this.buf1)) {
+              if (!this.recoveryMode) {
+                throw new _util.FormatError('End of file inside array');
+              }
+              return array;
+=======
+      return true;
+    } catch (e) {
+      if (e instanceof _core_utils.MissingDataException) {
+        throw e;
+      }
+
+      return false;
+    }
+  }
+
+  getObj(cipherTransform) {
+    const buf1 = this.buf1;
+    this.shift();
+
+    if (buf1 instanceof _primitives.Cmd) {
+      switch (buf1.cmd) {
+        case 'BI':
+          return this.makeInlineImage(cipherTransform);
+
+        case '[':
+          const array = [];
+
+          while (!(0, _primitives.isCmd)(this.buf1, ']') && !(0, _primitives.isEOF)(this.buf1)) {
+            array.push(this.getObj(cipherTransform));
+          }
+
+          if ((0, _primitives.isEOF)(this.buf1)) {
+            if (!this.recoveryMode) {
+              throw new _util.FormatError('End of file inside array');
+>>>>>>> upstream-releases
+            }
+<<<<<<< HEAD
 
             this.shift();
+||||||| merged common ancestors
+            this.shift();
+=======
+
+>>>>>>> upstream-releases
             return array;
+<<<<<<< HEAD
 
           case '<<':
             var dict = new _primitives.Dict(this.xref);
@@ -9402,29 +16099,98 @@ var Parser = function ParserClosure() {
               }
 
               var key = this.buf1.name;
+||||||| merged common ancestors
+          case '<<':
+            var dict = new _primitives.Dict(this.xref);
+            while (!(0, _primitives.isCmd)(this.buf1, '>>') && !(0, _primitives.isEOF)(this.buf1)) {
+              if (!(0, _primitives.isName)(this.buf1)) {
+                (0, _util.info)('Malformed dictionary: key must be a name object');
+                this.shift();
+                continue;
+              }
+              var key = this.buf1.name;
+=======
+          }
+
+          this.shift();
+          return array;
+
+        case '<<':
+          const dict = new _primitives.Dict(this.xref);
+
+          while (!(0, _primitives.isCmd)(this.buf1, '>>') && !(0, _primitives.isEOF)(this.buf1)) {
+            if (!(0, _primitives.isName)(this.buf1)) {
+              (0, _util.info)('Malformed dictionary: key must be a name object');
+>>>>>>> upstream-releases
               this.shift();
+<<<<<<< HEAD
 
               if ((0, _primitives.isEOF)(this.buf1)) {
                 break;
               }
 
               dict.set(key, this.getObj(cipherTransform));
+||||||| merged common ancestors
+              if ((0, _primitives.isEOF)(this.buf1)) {
+                break;
+              }
+              dict.set(key, this.getObj(cipherTransform));
+=======
+              continue;
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+            const key = this.buf1.name;
+            this.shift();
+
+>>>>>>> upstream-releases
             if ((0, _primitives.isEOF)(this.buf1)) {
+<<<<<<< HEAD
               if (!this.recoveryMode) {
                 throw new _util.FormatError('End of file inside dictionary');
               }
 
               return dict;
+||||||| merged common ancestors
+              if (!this.recoveryMode) {
+                throw new _util.FormatError('End of file inside dictionary');
+              }
+              return dict;
+=======
+              break;
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
 
             if ((0, _primitives.isCmd)(this.buf2, 'stream')) {
               return this.allowStreams ? this.makeStream(dict, cipherTransform) : dict;
+||||||| merged common ancestors
+            if ((0, _primitives.isCmd)(this.buf2, 'stream')) {
+              return this.allowStreams ? this.makeStream(dict, cipherTransform) : dict;
+=======
+
+            dict.set(key, this.getObj(cipherTransform));
+          }
+
+          if ((0, _primitives.isEOF)(this.buf1)) {
+            if (!this.recoveryMode) {
+              throw new _util.FormatError('End of file inside dictionary');
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
 
             this.shift();
+||||||| merged common ancestors
+            this.shift();
+=======
+
+>>>>>>> upstream-releases
             return dict;
+<<<<<<< HEAD
 
           default:
             return buf1;
@@ -9437,7 +16203,26 @@ var Parser = function ParserClosure() {
         if (Number.isInteger(this.buf1) && (0, _primitives.isCmd)(this.buf2, 'R')) {
           var ref = new _primitives.Ref(num, this.buf1);
           this.shift();
+||||||| merged common ancestors
+          default:
+            return buf1;
+        }
+      }
+      if (Number.isInteger(buf1)) {
+        var num = buf1;
+        if (Number.isInteger(this.buf1) && (0, _primitives.isCmd)(this.buf2, 'R')) {
+          var ref = new _primitives.Ref(num, this.buf1);
           this.shift();
+=======
+          }
+
+          if ((0, _primitives.isCmd)(this.buf2, 'stream')) {
+            return this.allowStreams ? this.makeStream(dict, cipherTransform) : dict;
+          }
+
+>>>>>>> upstream-releases
+          this.shift();
+<<<<<<< HEAD
           return ref;
         }
 
@@ -9493,16 +16278,140 @@ var Parser = function ParserClosure() {
                 state = 0;
                 break;
               }
+||||||| merged common ancestors
+          return ref;
+        }
+        return num;
+      }
+      if ((0, _util.isString)(buf1)) {
+        var str = buf1;
+        if (cipherTransform) {
+          str = cipherTransform.decryptString(str);
+        }
+        return str;
+      }
+      return buf1;
+    },
+    findDefaultInlineStreamEnd(stream) {
+      const E = 0x45,
+            I = 0x49,
+            SPACE = 0x20,
+            LF = 0xA,
+            CR = 0xD;
+      const n = 10,
+            NUL = 0x0;
+      let startPos = stream.pos,
+          state = 0,
+          ch,
+          maybeEIPos;
+      while ((ch = stream.getByte()) !== -1) {
+        if (state === 0) {
+          state = ch === E ? 1 : 0;
+        } else if (state === 1) {
+          state = ch === I ? 2 : 0;
+        } else {
+          (0, _util.assert)(state === 2);
+          if (ch === SPACE || ch === LF || ch === CR) {
+            maybeEIPos = stream.pos;
+            let followingBytes = stream.peekBytes(n);
+            for (let i = 0, ii = followingBytes.length; i < ii; i++) {
+              ch = followingBytes[i];
+              if (ch === NUL && followingBytes[i + 1] !== NUL) {
+                continue;
+              }
+              if (ch !== LF && ch !== CR && (ch < SPACE || ch > 0x7F)) {
+                state = 0;
+                break;
+              }
+=======
+          return dict;
+
+        default:
+          return buf1;
+      }
+    }
+
+    if (Number.isInteger(buf1)) {
+      const num = buf1;
+
+      if (Number.isInteger(this.buf1) && (0, _primitives.isCmd)(this.buf2, 'R')) {
+        const ref = _primitives.Ref.get(num, this.buf1);
+
+        this.shift();
+        this.shift();
+        return ref;
+      }
+
+      return num;
+    }
+
+    if ((0, _util.isString)(buf1)) {
+      let str = buf1;
+
+      if (cipherTransform) {
+        str = cipherTransform.decryptString(str);
+      }
+
+      return str;
+    }
+
+    return buf1;
+  }
+
+  findDefaultInlineStreamEnd(stream) {
+    const E = 0x45,
+          I = 0x49,
+          SPACE = 0x20,
+          LF = 0xA,
+          CR = 0xD;
+    const n = 10,
+          NUL = 0x0;
+    let startPos = stream.pos,
+        state = 0,
+        ch,
+        maybeEIPos;
+
+    while ((ch = stream.getByte()) !== -1) {
+      if (state === 0) {
+        state = ch === E ? 1 : 0;
+      } else if (state === 1) {
+        state = ch === I ? 2 : 0;
+      } else {
+        (0, _util.assert)(state === 2);
+
+        if (ch === SPACE || ch === LF || ch === CR) {
+          maybeEIPos = stream.pos;
+          const followingBytes = stream.peekBytes(n);
+
+          for (let i = 0, ii = followingBytes.length; i < ii; i++) {
+            ch = followingBytes[i];
+
+            if (ch === NUL && followingBytes[i + 1] !== NUL) {
+              continue;
+>>>>>>> upstream-releases
             }
+<<<<<<< HEAD
 
             if (state === 2) {
+||||||| merged common ancestors
+            if (state === 2) {
+=======
+
+            if (ch !== LF && ch !== CR && (ch < SPACE || ch > 0x7F)) {
+              state = 0;
+>>>>>>> upstream-releases
               break;
             }
-          } else {
-            state = 0;
           }
+
+          if (state === 2) {
+            break;
+          }
+        } else {
+          state = 0;
         }
       }
+<<<<<<< HEAD
 
       if (ch === -1) {
         (0, _util.warn)('findDefaultInlineStreamEnd: ' + 'Reached the end of the stream without finding a valid EI marker');
@@ -9510,8 +16419,149 @@ var Parser = function ParserClosure() {
         if (maybeEIPos) {
           (0, _util.warn)('... trying to recover by using the last "EI" occurrence.');
           stream.skip(-(stream.pos - maybeEIPos));
+||||||| merged common ancestors
+      if (ch === -1) {
+        (0, _util.warn)('findDefaultInlineStreamEnd: ' + 'Reached the end of the stream without finding a valid EI marker');
+        if (maybeEIPos) {
+          (0, _util.warn)('... trying to recover by using the last "EI" occurrence.');
+          stream.skip(-(stream.pos - maybeEIPos));
+=======
+    }
+
+    if (ch === -1) {
+      (0, _util.warn)('findDefaultInlineStreamEnd: ' + 'Reached the end of the stream without finding a valid EI marker');
+
+      if (maybeEIPos) {
+        (0, _util.warn)('... trying to recover by using the last "EI" occurrence.');
+        stream.skip(-(stream.pos - maybeEIPos));
+      }
+    }
+
+    let endOffset = 4;
+    stream.skip(-endOffset);
+    ch = stream.peekByte();
+    stream.skip(endOffset);
+
+    if (!(0, _util.isSpace)(ch)) {
+      endOffset--;
+    }
+
+    return stream.pos - endOffset - startPos;
+  }
+
+  findDCTDecodeInlineStreamEnd(stream) {
+    let startPos = stream.pos,
+        foundEOI = false,
+        b,
+        markerLength,
+        length;
+
+    while ((b = stream.getByte()) !== -1) {
+      if (b !== 0xFF) {
+        continue;
+      }
+
+      switch (stream.getByte()) {
+        case 0x00:
+          break;
+
+        case 0xFF:
+          stream.skip(-1);
+          break;
+
+        case 0xD9:
+          foundEOI = true;
+          break;
+
+        case 0xC0:
+        case 0xC1:
+        case 0xC2:
+        case 0xC3:
+        case 0xC5:
+        case 0xC6:
+        case 0xC7:
+        case 0xC9:
+        case 0xCA:
+        case 0xCB:
+        case 0xCD:
+        case 0xCE:
+        case 0xCF:
+        case 0xC4:
+        case 0xCC:
+        case 0xDA:
+        case 0xDB:
+        case 0xDC:
+        case 0xDD:
+        case 0xDE:
+        case 0xDF:
+        case 0xE0:
+        case 0xE1:
+        case 0xE2:
+        case 0xE3:
+        case 0xE4:
+        case 0xE5:
+        case 0xE6:
+        case 0xE7:
+        case 0xE8:
+        case 0xE9:
+        case 0xEA:
+        case 0xEB:
+        case 0xEC:
+        case 0xED:
+        case 0xEE:
+        case 0xEF:
+        case 0xFE:
+          markerLength = stream.getUint16();
+
+          if (markerLength > 2) {
+            stream.skip(markerLength - 2);
+          } else {
+            stream.skip(-2);
+          }
+
+          break;
+      }
+
+      if (foundEOI) {
+        break;
+      }
+    }
+
+    length = stream.pos - startPos;
+
+    if (b === -1) {
+      (0, _util.warn)('Inline DCTDecode image stream: ' + 'EOI marker not found, searching for /EI/ instead.');
+      stream.skip(-length);
+      return this.findDefaultInlineStreamEnd(stream);
+    }
+
+    this.inlineStreamSkipEI(stream);
+    return length;
+  }
+
+  findASCII85DecodeInlineStreamEnd(stream) {
+    const TILDE = 0x7E,
+          GT = 0x3E;
+    let startPos = stream.pos,
+        ch,
+        length;
+
+    while ((ch = stream.getByte()) !== -1) {
+      if (ch === TILDE) {
+        ch = stream.peekByte();
+
+        while ((0, _util.isSpace)(ch)) {
+          stream.skip();
+          ch = stream.peekByte();
+        }
+
+        if (ch === GT) {
+          stream.skip();
+          break;
+>>>>>>> upstream-releases
         }
       }
+<<<<<<< HEAD
 
       return stream.pos - 4 - startPos;
     },
@@ -9526,7 +16576,194 @@ var Parser = function ParserClosure() {
       while ((b = stream.getByte()) !== -1) {
         if (b !== 0xFF) {
           continue;
+||||||| merged common ancestors
+      return stream.pos - 4 - startPos;
+    },
+    findDCTDecodeInlineStreamEnd: function Parser_findDCTDecodeInlineStreamEnd(stream) {
+      var startPos = stream.pos,
+          foundEOI = false,
+          b,
+          markerLength,
+          length;
+      while ((b = stream.getByte()) !== -1) {
+        if (b !== 0xFF) {
+          continue;
+=======
+    }
+
+    length = stream.pos - startPos;
+
+    if (ch === -1) {
+      (0, _util.warn)('Inline ASCII85Decode image stream: ' + 'EOD marker not found, searching for /EI/ instead.');
+      stream.skip(-length);
+      return this.findDefaultInlineStreamEnd(stream);
+    }
+
+    this.inlineStreamSkipEI(stream);
+    return length;
+  }
+
+  findASCIIHexDecodeInlineStreamEnd(stream) {
+    const GT = 0x3E;
+    let startPos = stream.pos,
+        ch,
+        length;
+
+    while ((ch = stream.getByte()) !== -1) {
+      if (ch === GT) {
+        break;
+      }
+    }
+
+    length = stream.pos - startPos;
+
+    if (ch === -1) {
+      (0, _util.warn)('Inline ASCIIHexDecode image stream: ' + 'EOD marker not found, searching for /EI/ instead.');
+      stream.skip(-length);
+      return this.findDefaultInlineStreamEnd(stream);
+    }
+
+    this.inlineStreamSkipEI(stream);
+    return length;
+  }
+
+  inlineStreamSkipEI(stream) {
+    const E = 0x45,
+          I = 0x49;
+    let state = 0,
+        ch;
+
+    while ((ch = stream.getByte()) !== -1) {
+      if (state === 0) {
+        state = ch === E ? 1 : 0;
+      } else if (state === 1) {
+        state = ch === I ? 2 : 0;
+      } else if (state === 2) {
+        break;
+      }
+    }
+  }
+
+  makeInlineImage(cipherTransform) {
+    const lexer = this.lexer;
+    const stream = lexer.stream;
+    const dict = new _primitives.Dict(this.xref);
+    let dictLength;
+
+    while (!(0, _primitives.isCmd)(this.buf1, 'ID') && !(0, _primitives.isEOF)(this.buf1)) {
+      if (!(0, _primitives.isName)(this.buf1)) {
+        throw new _util.FormatError('Dictionary key must be a name object');
+      }
+
+      const key = this.buf1.name;
+      this.shift();
+
+      if ((0, _primitives.isEOF)(this.buf1)) {
+        break;
+      }
+
+      dict.set(key, this.getObj(cipherTransform));
+    }
+
+    if (lexer.beginInlineImagePos !== -1) {
+      dictLength = stream.pos - lexer.beginInlineImagePos;
+    }
+
+    const filter = dict.get('Filter', 'F');
+    let filterName;
+
+    if ((0, _primitives.isName)(filter)) {
+      filterName = filter.name;
+    } else if (Array.isArray(filter)) {
+      const filterZero = this.xref.fetchIfRef(filter[0]);
+
+      if ((0, _primitives.isName)(filterZero)) {
+        filterName = filterZero.name;
+      }
+    }
+
+    const startPos = stream.pos;
+    let length;
+
+    if (filterName === 'DCTDecode' || filterName === 'DCT') {
+      length = this.findDCTDecodeInlineStreamEnd(stream);
+    } else if (filterName === 'ASCII85Decode' || filterName === 'A85') {
+      length = this.findASCII85DecodeInlineStreamEnd(stream);
+    } else if (filterName === 'ASCIIHexDecode' || filterName === 'AHx') {
+      length = this.findASCIIHexDecodeInlineStreamEnd(stream);
+    } else {
+      length = this.findDefaultInlineStreamEnd(stream);
+    }
+
+    let imageStream = stream.makeSubStream(startPos, length, dict);
+    let cacheKey;
+
+    if (length < MAX_LENGTH_TO_CACHE && dictLength < MAX_ADLER32_LENGTH) {
+      const imageBytes = imageStream.getBytes();
+      imageStream.reset();
+      const initialStreamPos = stream.pos;
+      stream.pos = lexer.beginInlineImagePos;
+      const dictBytes = stream.getBytes(dictLength);
+      stream.pos = initialStreamPos;
+      cacheKey = computeAdler32(imageBytes) + '_' + computeAdler32(dictBytes);
+      const cacheEntry = this.imageCache[cacheKey];
+
+      if (cacheEntry !== undefined) {
+        this.buf2 = _primitives.Cmd.get('EI');
+        this.shift();
+        cacheEntry.reset();
+        return cacheEntry;
+      }
+    }
+
+    if (cipherTransform) {
+      imageStream = cipherTransform.createStream(imageStream, length);
+    }
+
+    imageStream = this.filter(imageStream, dict, length);
+    imageStream.dict = dict;
+
+    if (cacheKey !== undefined) {
+      imageStream.cacheKey = `inline_${length}_${cacheKey}`;
+      this.imageCache[cacheKey] = imageStream;
+    }
+
+    this.buf2 = _primitives.Cmd.get('EI');
+    this.shift();
+    return imageStream;
+  }
+
+  _findStreamLength(startPos, signature) {
+    const {
+      stream
+    } = this.lexer;
+    stream.pos = startPos;
+    const SCAN_BLOCK_LENGTH = 2048;
+    const signatureLength = signature.length;
+
+    while (stream.pos < stream.end) {
+      const scanBytes = stream.peekBytes(SCAN_BLOCK_LENGTH);
+      const scanLength = scanBytes.length - signatureLength;
+
+      if (scanLength <= 0) {
+        break;
+      }
+
+      let pos = 0;
+
+      while (pos < scanLength) {
+        let j = 0;
+
+        while (j < signatureLength && scanBytes[pos + j] === signature[j]) {
+          j++;
         }
+
+        if (j >= signatureLength) {
+          stream.pos += pos;
+          return stream.pos - startPos;
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
 
         switch (stream.getByte()) {
           case 0x00:
@@ -9584,15 +16821,134 @@ var Parser = function ParserClosure() {
               stream.skip(markerLength - 2);
             } else {
               stream.skip(-2);
-            }
-
+||||||| merged common ancestors
+        switch (stream.getByte()) {
+          case 0x00:
             break;
+          case 0xFF:
+            stream.skip(-1);
+            break;
+          case 0xD9:
+            foundEOI = true;
+            break;
+          case 0xC0:
+          case 0xC1:
+          case 0xC2:
+          case 0xC3:
+          case 0xC5:
+          case 0xC6:
+          case 0xC7:
+          case 0xC9:
+          case 0xCA:
+          case 0xCB:
+          case 0xCD:
+          case 0xCE:
+          case 0xCF:
+          case 0xC4:
+          case 0xCC:
+          case 0xDA:
+          case 0xDB:
+          case 0xDC:
+          case 0xDD:
+          case 0xDE:
+          case 0xDF:
+          case 0xE0:
+          case 0xE1:
+          case 0xE2:
+          case 0xE3:
+          case 0xE4:
+          case 0xE5:
+          case 0xE6:
+          case 0xE7:
+          case 0xE8:
+          case 0xE9:
+          case 0xEA:
+          case 0xEB:
+          case 0xEC:
+          case 0xED:
+          case 0xEE:
+          case 0xEF:
+          case 0xFE:
+            markerLength = stream.getUint16();
+            if (markerLength > 2) {
+              stream.skip(markerLength - 2);
+            } else {
+              stream.skip(-2);
+=======
+
+        pos++;
+      }
+
+      stream.pos += scanLength;
+    }
+
+    return -1;
+  }
+
+  makeStream(dict, cipherTransform) {
+    const lexer = this.lexer;
+    let stream = lexer.stream;
+    lexer.skipToNextLine();
+    const startPos = stream.pos - 1;
+    let length = dict.get('Length');
+
+    if (!Number.isInteger(length)) {
+      (0, _util.info)(`Bad length "${length}" in stream`);
+      length = 0;
+    }
+
+    stream.pos = startPos + length;
+    lexer.nextChar();
+
+    if (this.tryShift() && (0, _primitives.isCmd)(this.buf2, 'endstream')) {
+      this.shift();
+    } else {
+      const ENDSTREAM_SIGNATURE = new Uint8Array([0x65, 0x6E, 0x64, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6D]);
+
+      let actualLength = this._findStreamLength(startPos, ENDSTREAM_SIGNATURE);
+
+      if (actualLength < 0) {
+        const MAX_TRUNCATION = 1;
+
+        for (let i = 1; i <= MAX_TRUNCATION; i++) {
+          const end = ENDSTREAM_SIGNATURE.length - i;
+          const TRUNCATED_SIGNATURE = ENDSTREAM_SIGNATURE.slice(0, end);
+
+          const maybeLength = this._findStreamLength(startPos, TRUNCATED_SIGNATURE);
+
+          if (maybeLength >= 0) {
+            const lastByte = stream.peekBytes(end + 1)[end];
+
+            if (!(0, _util.isSpace)(lastByte)) {
+              break;
+>>>>>>> upstream-releases
+            }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
+
+            (0, _util.info)(`Found "${(0, _util.bytesToString)(TRUNCATED_SIGNATURE)}" when ` + 'searching for endstream command.');
+            actualLength = maybeLength;
+>>>>>>> upstream-releases
+            break;
+          }
         }
+<<<<<<< HEAD
 
         if (foundEOI) {
           break;
+||||||| merged common ancestors
+        if (foundEOI) {
+          break;
+=======
+
+        if (actualLength < 0) {
+          throw new _util.FormatError('Missing endstream command.');
+>>>>>>> upstream-releases
         }
       }
+<<<<<<< HEAD
 
       length = stream.pos - startPos;
 
@@ -9600,7 +16956,42 @@ var Parser = function ParserClosure() {
         (0, _util.warn)('Inline DCTDecode image stream: ' + 'EOI marker not found, searching for /EI/ instead.');
         stream.skip(-length);
         return this.findDefaultInlineStreamEnd(stream);
+||||||| merged common ancestors
+      length = stream.pos - startPos;
+      if (b === -1) {
+        (0, _util.warn)('Inline DCTDecode image stream: ' + 'EOI marker not found, searching for /EI/ instead.');
+        stream.skip(-length);
+        return this.findDefaultInlineStreamEnd(stream);
+=======
+
+      length = actualLength;
+      lexer.nextChar();
+      this.shift();
+      this.shift();
+    }
+
+    this.shift();
+    stream = stream.makeSubStream(startPos, length, dict);
+
+    if (cipherTransform) {
+      stream = cipherTransform.createStream(stream, length);
+    }
+
+    stream = this.filter(stream, dict, length);
+    stream.dict = dict;
+    return stream;
+  }
+
+  filter(stream, dict, length) {
+    let filter = dict.get('Filter', 'F');
+    let params = dict.get('DecodeParms', 'DP');
+
+    if ((0, _primitives.isName)(filter)) {
+      if (Array.isArray(params)) {
+        (0, _util.warn)('/DecodeParms should not contain an Array, ' + 'when /Filter contains a Name.');
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       this.inlineStreamSkipEI(stream);
       return length;
@@ -9616,7 +17007,39 @@ var Parser = function ParserClosure() {
         if (ch === TILDE && stream.peekByte() === GT) {
           stream.skip();
           break;
+||||||| merged common ancestors
+      this.inlineStreamSkipEI(stream);
+      return length;
+    },
+    findASCII85DecodeInlineStreamEnd: function Parser_findASCII85DecodeInlineStreamEnd(stream) {
+      var TILDE = 0x7E,
+          GT = 0x3E;
+      var startPos = stream.pos,
+          ch,
+          length;
+      while ((ch = stream.getByte()) !== -1) {
+        if (ch === TILDE && stream.peekByte() === GT) {
+          stream.skip();
+          break;
+=======
+
+      return this.makeFilter(stream, filter.name, length, params);
+    }
+
+    let maybeLength = length;
+
+    if (Array.isArray(filter)) {
+      let filterArray = filter;
+      let paramsArray = params;
+
+      for (let i = 0, ii = filterArray.length; i < ii; ++i) {
+        filter = this.xref.fetchIfRef(filterArray[i]);
+
+        if (!(0, _primitives.isName)(filter)) {
+          throw new _util.FormatError(`Bad filter name "${filter}"`);
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
       }
 
       length = stream.pos - startPos;
@@ -9639,8 +17062,38 @@ var Parser = function ParserClosure() {
       while ((ch = stream.getByte()) !== -1) {
         if (ch === GT) {
           break;
-        }
+||||||| merged common ancestors
       }
+      length = stream.pos - startPos;
+      if (ch === -1) {
+        (0, _util.warn)('Inline ASCII85Decode image stream: ' + 'EOD marker not found, searching for /EI/ instead.');
+        stream.skip(-length);
+        return this.findDefaultInlineStreamEnd(stream);
+      }
+      this.inlineStreamSkipEI(stream);
+      return length;
+    },
+    findASCIIHexDecodeInlineStreamEnd: function Parser_findASCIIHexDecodeInlineStreamEnd(stream) {
+      var GT = 0x3E;
+      var startPos = stream.pos,
+          ch,
+          length;
+      while ((ch = stream.getByte()) !== -1) {
+        if (ch === GT) {
+          break;
+=======
+
+        params = null;
+
+        if (Array.isArray(paramsArray) && i in paramsArray) {
+          params = this.xref.fetchIfRef(paramsArray[i]);
+>>>>>>> upstream-releases
+        }
+
+        stream = this.makeFilter(stream, filter.name, maybeLength, params);
+        maybeLength = null;
+      }
+<<<<<<< HEAD
 
       length = stream.pos - startPos;
 
@@ -9666,8 +17119,54 @@ var Parser = function ParserClosure() {
           state = ch === I ? 2 : 0;
         } else if (state === 2) {
           break;
-        }
+||||||| merged common ancestors
+      length = stream.pos - startPos;
+      if (ch === -1) {
+        (0, _util.warn)('Inline ASCIIHexDecode image stream: ' + 'EOD marker not found, searching for /EI/ instead.');
+        stream.skip(-length);
+        return this.findDefaultInlineStreamEnd(stream);
       }
+      this.inlineStreamSkipEI(stream);
+      return length;
+    },
+    inlineStreamSkipEI: function Parser_inlineStreamSkipEI(stream) {
+      var E = 0x45,
+          I = 0x49;
+      var state = 0,
+          ch;
+      while ((ch = stream.getByte()) !== -1) {
+        if (state === 0) {
+          state = ch === E ? 1 : 0;
+        } else if (state === 1) {
+          state = ch === I ? 2 : 0;
+        } else if (state === 2) {
+          break;
+=======
+    }
+
+    return stream;
+  }
+
+  makeFilter(stream, name, maybeLength, params) {
+    if (maybeLength === 0) {
+      (0, _util.warn)(`Empty "${name}" stream.`);
+      return new _stream.NullStream();
+    }
+
+    try {
+      const xrefStreamStats = this.xref.stats.streamTypes;
+
+      if (name === 'FlateDecode' || name === 'Fl') {
+        xrefStreamStats[_util.StreamType.FLATE] = true;
+
+        if (params) {
+          return new _stream.PredictorStream(new _stream.FlateStream(stream, maybeLength), maybeLength, params);
+>>>>>>> upstream-releases
+        }
+
+        return new _stream.FlateStream(stream, maybeLength);
+      }
+<<<<<<< HEAD
     },
     makeInlineImage: function Parser_makeInlineImage(cipherTransform) {
       var lexer = this.lexer;
@@ -9738,12 +17237,96 @@ var Parser = function ParserClosure() {
           this.shift();
           cacheEntry.reset();
           return cacheEntry;
+||||||| merged common ancestors
+    },
+    makeInlineImage: function Parser_makeInlineImage(cipherTransform) {
+      var lexer = this.lexer;
+      var stream = lexer.stream;
+      let dict = new _primitives.Dict(this.xref),
+          dictLength;
+      while (!(0, _primitives.isCmd)(this.buf1, 'ID') && !(0, _primitives.isEOF)(this.buf1)) {
+        if (!(0, _primitives.isName)(this.buf1)) {
+          throw new _util.FormatError('Dictionary key must be a name object');
+        }
+        var key = this.buf1.name;
+        this.shift();
+        if ((0, _primitives.isEOF)(this.buf1)) {
+          break;
+        }
+        dict.set(key, this.getObj(cipherTransform));
+      }
+      if (lexer.beginInlineImagePos !== -1) {
+        dictLength = stream.pos - lexer.beginInlineImagePos;
+      }
+      var filter = dict.get('Filter', 'F'),
+          filterName;
+      if ((0, _primitives.isName)(filter)) {
+        filterName = filter.name;
+      } else if (Array.isArray(filter)) {
+        var filterZero = this.xref.fetchIfRef(filter[0]);
+        if ((0, _primitives.isName)(filterZero)) {
+          filterName = filterZero.name;
         }
       }
+      let startPos = stream.pos,
+          length;
+      if (filterName === 'DCTDecode' || filterName === 'DCT') {
+        length = this.findDCTDecodeInlineStreamEnd(stream);
+      } else if (filterName === 'ASCII85Decode' || filterName === 'A85') {
+        length = this.findASCII85DecodeInlineStreamEnd(stream);
+      } else if (filterName === 'ASCIIHexDecode' || filterName === 'AHx') {
+        length = this.findASCIIHexDecodeInlineStreamEnd(stream);
+      } else {
+        length = this.findDefaultInlineStreamEnd(stream);
+      }
+      var imageStream = stream.makeSubStream(startPos, length, dict);
+      let cacheKey;
+      if (length < MAX_LENGTH_TO_CACHE && dictLength < MAX_ADLER32_LENGTH) {
+        var imageBytes = imageStream.getBytes();
+        imageStream.reset();
+        const initialStreamPos = stream.pos;
+        stream.pos = lexer.beginInlineImagePos;
+        let dictBytes = stream.getBytes(dictLength);
+        stream.pos = initialStreamPos;
+        cacheKey = computeAdler32(imageBytes) + '_' + computeAdler32(dictBytes);
+        let cacheEntry = this.imageCache[cacheKey];
+        if (cacheEntry !== undefined) {
+          this.buf2 = _primitives.Cmd.get('EI');
+          this.shift();
+          cacheEntry.reset();
+          return cacheEntry;
+=======
+
+      if (name === 'LZWDecode' || name === 'LZW') {
+        xrefStreamStats[_util.StreamType.LZW] = true;
+        let earlyChange = 1;
+
+        if (params) {
+          if (params.has('EarlyChange')) {
+            earlyChange = params.get('EarlyChange');
+          }
+
+          return new _stream.PredictorStream(new _stream.LZWStream(stream, maybeLength, earlyChange), maybeLength, params);
+>>>>>>> upstream-releases
+        }
+
+        return new _stream.LZWStream(stream, maybeLength, earlyChange);
+      }
+<<<<<<< HEAD
 
       if (cipherTransform) {
         imageStream = cipherTransform.createStream(imageStream, length);
+||||||| merged common ancestors
+      if (cipherTransform) {
+        imageStream = cipherTransform.createStream(imageStream, length);
+=======
+
+      if (name === 'DCTDecode' || name === 'DCT') {
+        xrefStreamStats[_util.StreamType.DCT] = true;
+        return new _jpeg_stream.JpegStream(stream, maybeLength, stream.dict, params);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       imageStream = this.filter(imageStream, dict, length);
       imageStream.dict = dict;
@@ -9751,7 +17334,20 @@ var Parser = function ParserClosure() {
       if (cacheKey !== undefined) {
         imageStream.cacheKey = 'inline_' + length + '_' + cacheKey;
         this.imageCache[cacheKey] = imageStream;
+||||||| merged common ancestors
+      imageStream = this.filter(imageStream, dict, length);
+      imageStream.dict = dict;
+      if (cacheKey !== undefined) {
+        imageStream.cacheKey = 'inline_' + length + '_' + cacheKey;
+        this.imageCache[cacheKey] = imageStream;
+=======
+
+      if (name === 'JPXDecode' || name === 'JPX') {
+        xrefStreamStats[_util.StreamType.JPX] = true;
+        return new _jpx_stream.JpxStream(stream, maybeLength, stream.dict, params);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       this.buf2 = _primitives.Cmd.get('EI');
       this.shift();
@@ -9792,7 +17388,43 @@ var Parser = function ParserClosure() {
         }
 
         stream.pos += scanLength;
+||||||| merged common ancestors
+      this.buf2 = _primitives.Cmd.get('EI');
+      this.shift();
+      return imageStream;
+    },
+    _findStreamLength(startPos, signature) {
+      const { stream } = this.lexer;
+      stream.pos = startPos;
+      const SCAN_BLOCK_LENGTH = 2048;
+      const signatureLength = signature.length;
+      while (stream.pos < stream.end) {
+        const scanBytes = stream.peekBytes(SCAN_BLOCK_LENGTH);
+        const scanLength = scanBytes.length - signatureLength;
+        if (scanLength <= 0) {
+          break;
+        }
+        let pos = 0;
+        while (pos < scanLength) {
+          let j = 0;
+          while (j < signatureLength && scanBytes[pos + j] === signature[j]) {
+            j++;
+          }
+          if (j >= signatureLength) {
+            stream.pos += pos;
+            return stream.pos - startPos;
+          }
+          pos++;
+        }
+        stream.pos += scanLength;
+=======
+
+      if (name === 'ASCII85Decode' || name === 'A85') {
+        xrefStreamStats[_util.StreamType.A85] = true;
+        return new _stream.Ascii85Stream(stream, maybeLength);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return -1;
     },
@@ -9850,14 +17482,77 @@ var Parser = function ParserClosure() {
         lexer.nextChar();
         this.shift();
         this.shift();
+||||||| merged common ancestors
+      return -1;
+    },
+    makeStream: function Parser_makeStream(dict, cipherTransform) {
+      var lexer = this.lexer;
+      var stream = lexer.stream;
+      lexer.skipToNextLine();
+      const startPos = stream.pos - 1;
+      var length = dict.get('Length');
+      if (!Number.isInteger(length)) {
+        (0, _util.info)('Bad ' + length + ' attribute in stream');
+        length = 0;
       }
+      stream.pos = startPos + length;
+      lexer.nextChar();
+      if (this.tryShift() && (0, _primitives.isCmd)(this.buf2, 'endstream')) {
+        this.shift();
+      } else {
+        const ENDSTREAM_SIGNATURE = new Uint8Array([0x65, 0x6E, 0x64, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6D]);
+        let actualLength = this._findStreamLength(startPos, ENDSTREAM_SIGNATURE);
+        if (actualLength < 0) {
+          const MAX_TRUNCATION = 1;
+          for (let i = 1; i <= MAX_TRUNCATION; i++) {
+            const end = ENDSTREAM_SIGNATURE.length - i;
+            const TRUNCATED_SIGNATURE = ENDSTREAM_SIGNATURE.slice(0, end);
+            let maybeLength = this._findStreamLength(startPos, TRUNCATED_SIGNATURE);
+            if (maybeLength >= 0) {
+              const lastByte = stream.peekBytes(end + 1)[end];
+              if (!(0, _util.isSpace)(lastByte)) {
+                break;
+              }
+              (0, _util.info)(`Found "${(0, _util.bytesToString)(TRUNCATED_SIGNATURE)}" when ` + 'searching for endstream command.');
+              actualLength = maybeLength;
+              break;
+            }
+          }
+          if (actualLength < 0) {
+            throw new _util.FormatError('Missing endstream command.');
+          }
+        }
+        length = actualLength;
+        lexer.nextChar();
+        this.shift();
+        this.shift();
+=======
+
+      if (name === 'ASCIIHexDecode' || name === 'AHx') {
+        xrefStreamStats[_util.StreamType.AHX] = true;
+        return new _stream.AsciiHexStream(stream, maybeLength);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       this.shift();
       stream = stream.makeSubStream(startPos, length, dict);
 
       if (cipherTransform) {
         stream = cipherTransform.createStream(stream, length);
+||||||| merged common ancestors
+      this.shift();
+      stream = stream.makeSubStream(startPos, length, dict);
+      if (cipherTransform) {
+        stream = cipherTransform.createStream(stream, length);
+=======
+
+      if (name === 'CCITTFaxDecode' || name === 'CCF') {
+        xrefStreamStats[_util.StreamType.CCF] = true;
+        return new _ccitt_stream.CCITTFaxStream(stream, maybeLength, params);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       stream = this.filter(stream, dict, length);
       stream.dict = dict;
@@ -9873,7 +17568,27 @@ var Parser = function ParserClosure() {
         }
 
         return this.makeFilter(stream, filter.name, length, params);
+||||||| merged common ancestors
+      stream = this.filter(stream, dict, length);
+      stream.dict = dict;
+      return stream;
+    },
+    filter: function Parser_filter(stream, dict, length) {
+      var filter = dict.get('Filter', 'F');
+      var params = dict.get('DecodeParms', 'DP');
+      if ((0, _primitives.isName)(filter)) {
+        if (Array.isArray(params)) {
+          (0, _util.warn)('/DecodeParms should not contain an Array, ' + 'when /Filter contains a Name.');
+        }
+        return this.makeFilter(stream, filter.name, length, params);
+=======
+
+      if (name === 'RunLengthDecode' || name === 'RL') {
+        xrefStreamStats[_util.StreamType.RL] = true;
+        return new _stream.RunLengthStream(stream, maybeLength);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       var maybeLength = length;
 
@@ -9897,9 +17612,39 @@ var Parser = function ParserClosure() {
           stream = this.makeFilter(stream, filter.name, maybeLength, params);
           maybeLength = null;
         }
-      }
+||||||| merged common ancestors
+      var maybeLength = length;
+      if (Array.isArray(filter)) {
+        var filterArray = filter;
+        var paramsArray = params;
+        for (var i = 0, ii = filterArray.length; i < ii; ++i) {
+          filter = this.xref.fetchIfRef(filterArray[i]);
+          if (!(0, _primitives.isName)(filter)) {
+            throw new _util.FormatError('Bad filter name: ' + filter);
+          }
+          params = null;
+          if (Array.isArray(paramsArray) && i in paramsArray) {
+            params = this.xref.fetchIfRef(paramsArray[i]);
+          }
+          stream = this.makeFilter(stream, filter.name, maybeLength, params);
+          maybeLength = null;
+        }
+=======
 
+      if (name === 'JBIG2Decode') {
+        xrefStreamStats[_util.StreamType.JBIG] = true;
+        return new _jbig2_stream.Jbig2Stream(stream, maybeLength, stream.dict, params);
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
+
+      (0, _util.warn)(`Filter "${name}" is not supported.`);
+>>>>>>> upstream-releases
       return stream;
+<<<<<<< HEAD
     },
     makeFilter: function Parser_makeFilter(stream, name, maybeLength, params) {
       if (maybeLength === 0) {
@@ -9979,8 +17724,80 @@ var Parser = function ParserClosure() {
 
         (0, _util.warn)('Invalid stream: \"' + ex + '\"');
         return new _stream.NullStream();
+||||||| merged common ancestors
+    },
+    makeFilter: function Parser_makeFilter(stream, name, maybeLength, params) {
+      if (maybeLength === 0) {
+        (0, _util.warn)('Empty "' + name + '" stream.');
+        return new _stream.NullStream();
       }
+      try {
+        var xrefStreamStats = this.xref.stats.streamTypes;
+        if (name === 'FlateDecode' || name === 'Fl') {
+          xrefStreamStats[_util.StreamType.FLATE] = true;
+          if (params) {
+            return new _stream.PredictorStream(new _stream.FlateStream(stream, maybeLength), maybeLength, params);
+          }
+          return new _stream.FlateStream(stream, maybeLength);
+        }
+        if (name === 'LZWDecode' || name === 'LZW') {
+          xrefStreamStats[_util.StreamType.LZW] = true;
+          var earlyChange = 1;
+          if (params) {
+            if (params.has('EarlyChange')) {
+              earlyChange = params.get('EarlyChange');
+            }
+            return new _stream.PredictorStream(new _stream.LZWStream(stream, maybeLength, earlyChange), maybeLength, params);
+          }
+          return new _stream.LZWStream(stream, maybeLength, earlyChange);
+        }
+        if (name === 'DCTDecode' || name === 'DCT') {
+          xrefStreamStats[_util.StreamType.DCT] = true;
+          return new _jpeg_stream.JpegStream(stream, maybeLength, stream.dict, params);
+        }
+        if (name === 'JPXDecode' || name === 'JPX') {
+          xrefStreamStats[_util.StreamType.JPX] = true;
+          return new _jpx_stream.JpxStream(stream, maybeLength, stream.dict, params);
+        }
+        if (name === 'ASCII85Decode' || name === 'A85') {
+          xrefStreamStats[_util.StreamType.A85] = true;
+          return new _stream.Ascii85Stream(stream, maybeLength);
+        }
+        if (name === 'ASCIIHexDecode' || name === 'AHx') {
+          xrefStreamStats[_util.StreamType.AHX] = true;
+          return new _stream.AsciiHexStream(stream, maybeLength);
+        }
+        if (name === 'CCITTFaxDecode' || name === 'CCF') {
+          xrefStreamStats[_util.StreamType.CCF] = true;
+          return new _ccitt_stream.CCITTFaxStream(stream, maybeLength, params);
+        }
+        if (name === 'RunLengthDecode' || name === 'RL') {
+          xrefStreamStats[_util.StreamType.RL] = true;
+          return new _stream.RunLengthStream(stream, maybeLength);
+        }
+        if (name === 'JBIG2Decode') {
+          xrefStreamStats[_util.StreamType.JBIG] = true;
+          return new _jbig2_stream.Jbig2Stream(stream, maybeLength, stream.dict, params);
+        }
+        (0, _util.warn)('filter "' + name + '" not supported yet');
+        return stream;
+      } catch (ex) {
+        if (ex instanceof _util.MissingDataException) {
+          throw ex;
+        }
+        (0, _util.warn)('Invalid stream: \"' + ex + '\"');
+        return new _stream.NullStream();
+=======
+    } catch (ex) {
+      if (ex instanceof _core_utils.MissingDataException) {
+        throw ex;
+>>>>>>> upstream-releases
+      }
+
+      (0, _util.warn)(`Invalid stream: "${ex}"`);
+      return new _stream.NullStream();
     }
+<<<<<<< HEAD
   };
   return Parser;
 }();
@@ -9989,12 +17806,42 @@ exports.Parser = Parser;
 
 var Lexer = function LexerClosure() {
   function Lexer(stream, knownCommands) {
+||||||| merged common ancestors
+  };
+  return Parser;
+}();
+var Lexer = function LexerClosure() {
+  function Lexer(stream, knownCommands) {
+=======
+  }
+
+}
+
+exports.Parser = Parser;
+const specialChars = [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+function toHexDigit(ch) {
+  if (ch >= 0x30 && ch <= 0x39) {
+    return ch & 0x0F;
+  }
+
+  if (ch >= 0x41 && ch <= 0x46 || ch >= 0x61 && ch <= 0x66) {
+    return (ch & 0x0F) + 9;
+  }
+
+  return -1;
+}
+
+class Lexer {
+  constructor(stream, knownCommands = null) {
+>>>>>>> upstream-releases
     this.stream = stream;
     this.nextChar();
     this.strBuf = [];
     this.knownCommands = knownCommands;
     this.beginInlineImagePos = -1;
   }
+<<<<<<< HEAD
 
   var specialChars = [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -10008,7 +17855,23 @@ var Lexer = function LexerClosure() {
     }
 
     return -1;
+||||||| merged common ancestors
+  var specialChars = [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  function toHexDigit(ch) {
+    if (ch >= 0x30 && ch <= 0x39) {
+      return ch & 0x0F;
+    }
+    if (ch >= 0x41 && ch <= 0x46 || ch >= 0x61 && ch <= 0x66) {
+      return (ch & 0x0F) + 9;
+    }
+    return -1;
+=======
+
+  nextChar() {
+    return this.currentChar = this.stream.getByte();
+>>>>>>> upstream-releases
   }
+<<<<<<< HEAD
 
   Lexer.prototype = {
     nextChar: function Lexer_nextChar() {
@@ -10023,9 +17886,39 @@ var Lexer = function LexerClosure() {
       var divideBy = 0;
       var sign = 0;
 
+||||||| merged common ancestors
+  Lexer.prototype = {
+    nextChar: function Lexer_nextChar() {
+      return this.currentChar = this.stream.getByte();
+    },
+    peekChar: function Lexer_peekChar() {
+      return this.stream.peekByte();
+    },
+    getNumber: function Lexer_getNumber() {
+      var ch = this.currentChar;
+      var eNotation = false;
+      var divideBy = 0;
+      var sign = 0;
+=======
+
+  peekChar() {
+    return this.stream.peekByte();
+  }
+
+  getNumber() {
+    let ch = this.currentChar;
+    let eNotation = false;
+    let divideBy = 0;
+    let sign = 0;
+
+    if (ch === 0x2D) {
+      sign = -1;
+      ch = this.nextChar();
+
+>>>>>>> upstream-releases
       if (ch === 0x2D) {
-        sign = -1;
         ch = this.nextChar();
+<<<<<<< HEAD
 
         if (ch === 0x2D) {
           ch = this.nextChar();
@@ -10039,12 +17932,52 @@ var Lexer = function LexerClosure() {
         do {
           ch = this.nextChar();
         } while (ch === 0x0A || ch === 0x0D);
+||||||| merged common ancestors
+        if (ch === 0x2D) {
+          ch = this.nextChar();
+        }
+      } else if (ch === 0x2B) {
+        sign = 1;
+        ch = this.nextChar();
       }
+      if (ch === 0x0A || ch === 0x0D) {
+        do {
+          ch = this.nextChar();
+        } while (ch === 0x0A || ch === 0x0D);
+=======
+>>>>>>> upstream-releases
+      }
+<<<<<<< HEAD
 
       if (ch === 0x2E) {
         divideBy = 10;
+||||||| merged common ancestors
+      if (ch === 0x2E) {
+        divideBy = 10;
+=======
+    } else if (ch === 0x2B) {
+      sign = 1;
+      ch = this.nextChar();
+    }
+
+    if (ch === 0x0A || ch === 0x0D) {
+      do {
+>>>>>>> upstream-releases
         ch = this.nextChar();
+      } while (ch === 0x0A || ch === 0x0D);
+    }
+
+    if (ch === 0x2E) {
+      divideBy = 10;
+      ch = this.nextChar();
+    }
+
+    if (ch < 0x30 || ch > 0x39) {
+      if (divideBy === 10 && sign === 0 && ((0, _util.isSpace)(ch) || ch === -1)) {
+        (0, _util.warn)('Lexer.getNumber - treating a single decimal point as zero.');
+        return 0;
       }
+<<<<<<< HEAD
 
       if (ch < 0x30 || ch > 0x39) {
         if (divideBy === 10 && sign === 0 && ((0, _util.isSpace)(ch) || ch === -1)) {
@@ -10089,13 +18022,98 @@ var Lexer = function LexerClosure() {
             this.nextChar();
           } else if (ch < 0x30 || ch > 0x39) {
             break;
+||||||| merged common ancestors
+      if (ch < 0x30 || ch > 0x39) {
+        if (divideBy === 10 && sign === 0 && ((0, _util.isSpace)(ch) || ch === -1)) {
+          (0, _util.warn)('Lexer.getNumber - treating a single decimal point as zero.');
+          return 0;
+        }
+        throw new _util.FormatError(`Invalid number: ${String.fromCharCode(ch)} (charCode ${ch})`);
+      }
+      sign = sign || 1;
+      var baseValue = ch - 0x30;
+      var powerValue = 0;
+      var powerValueSign = 1;
+      while ((ch = this.nextChar()) >= 0) {
+        if (0x30 <= ch && ch <= 0x39) {
+          var currentDigit = ch - 0x30;
+          if (eNotation) {
+            powerValue = powerValue * 10 + currentDigit;
+          } else {
+            if (divideBy !== 0) {
+              divideBy *= 10;
+            }
+            baseValue = baseValue * 10 + currentDigit;
           }
+        } else if (ch === 0x2E) {
+          if (divideBy === 0) {
+            divideBy = 1;
+          } else {
+            break;
+          }
+        } else if (ch === 0x2D) {
+          (0, _util.warn)('Badly formatted number');
+        } else if (ch === 0x45 || ch === 0x65) {
+          ch = this.peekChar();
+          if (ch === 0x2B || ch === 0x2D) {
+            powerValueSign = ch === 0x2D ? -1 : 1;
+            this.nextChar();
+          } else if (ch < 0x30 || ch > 0x39) {
+            break;
+=======
+
+      throw new _util.FormatError(`Invalid number: ${String.fromCharCode(ch)} (charCode ${ch})`);
+    }
+
+    sign = sign || 1;
+    let baseValue = ch - 0x30;
+    let powerValue = 0;
+    let powerValueSign = 1;
+
+    while ((ch = this.nextChar()) >= 0) {
+      if (0x30 <= ch && ch <= 0x39) {
+        const currentDigit = ch - 0x30;
+
+        if (eNotation) {
+          powerValue = powerValue * 10 + currentDigit;
+        } else {
+          if (divideBy !== 0) {
+            divideBy *= 10;
+>>>>>>> upstream-releases
+          }
+<<<<<<< HEAD
 
           eNotation = true;
+||||||| merged common ancestors
+          eNotation = true;
+=======
+
+          baseValue = baseValue * 10 + currentDigit;
+        }
+      } else if (ch === 0x2E) {
+        if (divideBy === 0) {
+          divideBy = 1;
+>>>>>>> upstream-releases
         } else {
           break;
         }
+      } else if (ch === 0x2D) {
+        (0, _util.warn)('Badly formatted number: minus sign in the middle');
+      } else if (ch === 0x45 || ch === 0x65) {
+        ch = this.peekChar();
+
+        if (ch === 0x2B || ch === 0x2D) {
+          powerValueSign = ch === 0x2D ? -1 : 1;
+          this.nextChar();
+        } else if (ch < 0x30 || ch > 0x39) {
+          break;
+        }
+
+        eNotation = true;
+      } else {
+        break;
       }
+<<<<<<< HEAD
 
       if (divideBy !== 0) {
         baseValue /= divideBy;
@@ -10120,7 +18138,67 @@ var Lexer = function LexerClosure() {
         switch (ch | 0) {
           case -1:
             (0, _util.warn)('Unterminated string');
+||||||| merged common ancestors
+      if (divideBy !== 0) {
+        baseValue /= divideBy;
+      }
+      if (eNotation) {
+        baseValue *= Math.pow(10, powerValueSign * powerValue);
+      }
+      return sign * baseValue;
+    },
+    getString: function Lexer_getString() {
+      var numParen = 1;
+      var done = false;
+      var strBuf = this.strBuf;
+      strBuf.length = 0;
+      var ch = this.nextChar();
+      while (true) {
+        var charBuffered = false;
+        switch (ch | 0) {
+          case -1:
+            (0, _util.warn)('Unterminated string');
+=======
+    }
+
+    if (divideBy !== 0) {
+      baseValue /= divideBy;
+    }
+
+    if (eNotation) {
+      baseValue *= Math.pow(10, powerValueSign * powerValue);
+    }
+
+    return sign * baseValue;
+  }
+
+  getString() {
+    let numParen = 1;
+    let done = false;
+    const strBuf = this.strBuf;
+    strBuf.length = 0;
+    let ch = this.nextChar();
+
+    while (true) {
+      let charBuffered = false;
+
+      switch (ch | 0) {
+        case -1:
+          (0, _util.warn)('Unterminated string');
+          done = true;
+          break;
+
+        case 0x28:
+          ++numParen;
+          strBuf.push('(');
+          break;
+
+        case 0x29:
+          if (--numParen === 0) {
+            this.nextChar();
+>>>>>>> upstream-releases
             done = true;
+<<<<<<< HEAD
             break;
 
           case 0x28:
@@ -10131,7 +18209,31 @@ var Lexer = function LexerClosure() {
           case 0x29:
             if (--numParen === 0) {
               this.nextChar();
+||||||| merged common ancestors
+            break;
+          case 0x28:
+            ++numParen;
+            strBuf.push('(');
+            break;
+          case 0x29:
+            if (--numParen === 0) {
+              this.nextChar();
+=======
+          } else {
+            strBuf.push(')');
+          }
+
+          break;
+
+        case 0x5C:
+          ch = this.nextChar();
+
+          switch (ch) {
+            case -1:
+              (0, _util.warn)('Unterminated string');
+>>>>>>> upstream-releases
               done = true;
+<<<<<<< HEAD
             } else {
               strBuf.push(')');
             }
@@ -10182,11 +18284,104 @@ var Lexer = function LexerClosure() {
               case 0x36:
               case 0x37:
                 var x = ch & 0x0F;
+||||||| merged common ancestors
+            } else {
+              strBuf.push(')');
+            }
+            break;
+          case 0x5C:
+            ch = this.nextChar();
+            switch (ch) {
+              case -1:
+                (0, _util.warn)('Unterminated string');
+                done = true;
+                break;
+              case 0x6E:
+                strBuf.push('\n');
+                break;
+              case 0x72:
+                strBuf.push('\r');
+                break;
+              case 0x74:
+                strBuf.push('\t');
+                break;
+              case 0x62:
+                strBuf.push('\b');
+                break;
+              case 0x66:
+                strBuf.push('\f');
+                break;
+              case 0x5C:
+              case 0x28:
+              case 0x29:
+                strBuf.push(String.fromCharCode(ch));
+                break;
+              case 0x30:
+              case 0x31:
+              case 0x32:
+              case 0x33:
+              case 0x34:
+              case 0x35:
+              case 0x36:
+              case 0x37:
+                var x = ch & 0x0F;
+=======
+              break;
+
+            case 0x6E:
+              strBuf.push('\n');
+              break;
+
+            case 0x72:
+              strBuf.push('\r');
+              break;
+
+            case 0x74:
+              strBuf.push('\t');
+              break;
+
+            case 0x62:
+              strBuf.push('\b');
+              break;
+
+            case 0x66:
+              strBuf.push('\f');
+              break;
+
+            case 0x5C:
+            case 0x28:
+            case 0x29:
+              strBuf.push(String.fromCharCode(ch));
+              break;
+
+            case 0x30:
+            case 0x31:
+            case 0x32:
+            case 0x33:
+            case 0x34:
+            case 0x35:
+            case 0x36:
+            case 0x37:
+              let x = ch & 0x0F;
+              ch = this.nextChar();
+              charBuffered = true;
+
+              if (ch >= 0x30 && ch <= 0x37) {
+                x = (x << 3) + (ch & 0x0F);
+>>>>>>> upstream-releases
                 ch = this.nextChar();
+<<<<<<< HEAD
                 charBuffered = true;
 
+||||||| merged common ancestors
+                charBuffered = true;
+=======
+
+>>>>>>> upstream-releases
                 if (ch >= 0x30 && ch <= 0x37) {
+                  charBuffered = false;
                   x = (x << 3) + (ch & 0x0F);
+<<<<<<< HEAD
                   ch = this.nextChar();
 
                   if (ch >= 0x30 && ch <= 0x37) {
@@ -10201,7 +18396,22 @@ var Lexer = function LexerClosure() {
               case 0x0D:
                 if (this.peekChar() === 0x0A) {
                   this.nextChar();
+||||||| merged common ancestors
+                  ch = this.nextChar();
+                  if (ch >= 0x30 && ch <= 0x37) {
+                    charBuffered = false;
+                    x = (x << 3) + (ch & 0x0F);
+                  }
                 }
+                strBuf.push(String.fromCharCode(x));
+                break;
+              case 0x0D:
+                if (this.peekChar() === 0x0A) {
+                  this.nextChar();
+=======
+>>>>>>> upstream-releases
+                }
+<<<<<<< HEAD
 
                 break;
 
@@ -10259,24 +18469,116 @@ var Lexer = function LexerClosure() {
 
               if (specialChars[ch]) {
                 break;
+||||||| merged common ancestors
+                break;
+              case 0x0A:
+                break;
+              default:
+                strBuf.push(String.fromCharCode(ch));
+                break;
+            }
+            break;
+          default:
+            strBuf.push(String.fromCharCode(ch));
+            break;
+        }
+        if (done) {
+          break;
+        }
+        if (!charBuffered) {
+          ch = this.nextChar();
+        }
+      }
+      return strBuf.join('');
+    },
+    getName: function Lexer_getName() {
+      var ch, previousCh;
+      var strBuf = this.strBuf;
+      strBuf.length = 0;
+      while ((ch = this.nextChar()) >= 0 && !specialChars[ch]) {
+        if (ch === 0x23) {
+          ch = this.nextChar();
+          if (specialChars[ch]) {
+            (0, _util.warn)('Lexer_getName: ' + 'NUMBER SIGN (#) should be followed by a hexadecimal number.');
+            strBuf.push('#');
+            break;
+          }
+          var x = toHexDigit(ch);
+          if (x !== -1) {
+            previousCh = ch;
+            ch = this.nextChar();
+            var x2 = toHexDigit(ch);
+            if (x2 === -1) {
+              (0, _util.warn)('Lexer_getName: Illegal digit (' + String.fromCharCode(ch) + ') in hexadecimal number.');
+              strBuf.push('#', String.fromCharCode(previousCh));
+              if (specialChars[ch]) {
+                break;
+=======
+>>>>>>> upstream-releases
+              }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
+
+              strBuf.push(String.fromCharCode(x));
+              break;
+
+            case 0x0D:
+              if (this.peekChar() === 0x0A) {
+                this.nextChar();
               }
 
+              break;
+
+            case 0x0A:
+              break;
+
+            default:
+>>>>>>> upstream-releases
               strBuf.push(String.fromCharCode(ch));
+<<<<<<< HEAD
               continue;
             }
 
             strBuf.push(String.fromCharCode(x << 4 | x2));
           } else {
             strBuf.push('#', String.fromCharCode(ch));
+||||||| merged common ancestors
+              continue;
+            }
+            strBuf.push(String.fromCharCode(x << 4 | x2));
+          } else {
+            strBuf.push('#', String.fromCharCode(ch));
+=======
+              break;
+>>>>>>> upstream-releases
           }
-        } else {
+
+          break;
+
+        default:
           strBuf.push(String.fromCharCode(ch));
-        }
+          break;
       }
+
+      if (done) {
+        break;
+      }
+<<<<<<< HEAD
 
       if (strBuf.length > 127) {
         (0, _util.warn)('name token is longer than allowed by the spec: ' + strBuf.length);
+||||||| merged common ancestors
+      if (strBuf.length > 127) {
+        (0, _util.warn)('name token is longer than allowed by the spec: ' + strBuf.length);
+=======
+
+      if (!charBuffered) {
+        ch = this.nextChar();
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return _primitives.Name.get(strBuf.join(''));
     },
@@ -10294,9 +18596,50 @@ var Lexer = function LexerClosure() {
           break;
         } else if (ch === 0x3E) {
           this.nextChar();
+||||||| merged common ancestors
+      return _primitives.Name.get(strBuf.join(''));
+    },
+    getHexString: function Lexer_getHexString() {
+      var strBuf = this.strBuf;
+      strBuf.length = 0;
+      var ch = this.currentChar;
+      var isFirstHex = true;
+      var firstDigit;
+      var secondDigit;
+      while (true) {
+        if (ch < 0) {
+          (0, _util.warn)('Unterminated hex string');
           break;
-        } else if (specialChars[ch] === 1) {
+        } else if (ch === 0x3E) {
+          this.nextChar();
+=======
+    }
+
+    return strBuf.join('');
+  }
+
+  getName() {
+    let ch, previousCh;
+    const strBuf = this.strBuf;
+    strBuf.length = 0;
+
+    while ((ch = this.nextChar()) >= 0 && !specialChars[ch]) {
+      if (ch === 0x23) {
+        ch = this.nextChar();
+
+        if (specialChars[ch]) {
+          (0, _util.warn)('Lexer_getName: ' + 'NUMBER SIGN (#) should be followed by a hexadecimal number.');
+          strBuf.push('#');
+>>>>>>> upstream-releases
+          break;
+        }
+
+        const x = toHexDigit(ch);
+
+        if (x !== -1) {
+          previousCh = ch;
           ch = this.nextChar();
+<<<<<<< HEAD
           continue;
         } else {
           if (isFirstHex) {
@@ -10314,15 +18657,62 @@ var Lexer = function LexerClosure() {
               (0, _util.warn)('Ignoring invalid character "' + ch + '" in hex string');
               ch = this.nextChar();
               continue;
+||||||| merged common ancestors
+          continue;
+        } else {
+          if (isFirstHex) {
+            firstDigit = toHexDigit(ch);
+            if (firstDigit === -1) {
+              (0, _util.warn)('Ignoring invalid character "' + ch + '" in hex string');
+              ch = this.nextChar();
+              continue;
             }
+          } else {
+            secondDigit = toHexDigit(ch);
+            if (secondDigit === -1) {
+              (0, _util.warn)('Ignoring invalid character "' + ch + '" in hex string');
+              ch = this.nextChar();
+              continue;
+=======
+          const x2 = toHexDigit(ch);
+
+          if (x2 === -1) {
+            (0, _util.warn)(`Lexer_getName: Illegal digit (${String.fromCharCode(ch)}) ` + 'in hexadecimal number.');
+            strBuf.push('#', String.fromCharCode(previousCh));
+
+            if (specialChars[ch]) {
+              break;
+>>>>>>> upstream-releases
+            }
+<<<<<<< HEAD
 
             strBuf.push(String.fromCharCode(firstDigit << 4 | secondDigit));
+||||||| merged common ancestors
+            strBuf.push(String.fromCharCode(firstDigit << 4 | secondDigit));
+=======
+
+            strBuf.push(String.fromCharCode(ch));
+            continue;
+>>>>>>> upstream-releases
           }
+<<<<<<< HEAD
 
           isFirstHex = !isFirstHex;
           ch = this.nextChar();
+||||||| merged common ancestors
+          isFirstHex = !isFirstHex;
+          ch = this.nextChar();
+=======
+
+          strBuf.push(String.fromCharCode(x << 4 | x2));
+        } else {
+          strBuf.push('#', String.fromCharCode(ch));
+>>>>>>> upstream-releases
         }
+      } else {
+        strBuf.push(String.fromCharCode(ch));
       }
+<<<<<<< HEAD
 
       return strBuf.join('');
     },
@@ -10345,7 +18735,53 @@ var Lexer = function LexerClosure() {
           break;
         }
 
+||||||| merged common ancestors
+      return strBuf.join('');
+    },
+    getObj: function Lexer_getObj() {
+      var comment = false;
+      var ch = this.currentChar;
+      while (true) {
+        if (ch < 0) {
+          return _primitives.EOF;
+        }
+        if (comment) {
+          if (ch === 0x0A || ch === 0x0D) {
+            comment = false;
+          }
+        } else if (ch === 0x25) {
+          comment = true;
+        } else if (specialChars[ch] !== 1) {
+          break;
+        }
+=======
+    }
+
+    if (strBuf.length > 127) {
+      (0, _util.warn)(`Name token is longer than allowed by the spec: ${strBuf.length}`);
+    }
+
+    return _primitives.Name.get(strBuf.join(''));
+  }
+
+  getHexString() {
+    const strBuf = this.strBuf;
+    strBuf.length = 0;
+    let ch = this.currentChar;
+    let isFirstHex = true;
+    let firstDigit, secondDigit;
+
+    while (true) {
+      if (ch < 0) {
+        (0, _util.warn)('Unterminated hex string');
+        break;
+      } else if (ch === 0x3E) {
+        this.nextChar();
+        break;
+      } else if (specialChars[ch] === 1) {
+>>>>>>> upstream-releases
         ch = this.nextChar();
+<<<<<<< HEAD
       }
 
       switch (ch | 0) {
@@ -10384,7 +18820,51 @@ var Lexer = function LexerClosure() {
           if (ch === 0x3C) {
             this.nextChar();
             return _primitives.Cmd.get('<<');
+||||||| merged common ancestors
+      }
+      switch (ch | 0) {
+        case 0x30:
+        case 0x31:
+        case 0x32:
+        case 0x33:
+        case 0x34:
+        case 0x35:
+        case 0x36:
+        case 0x37:
+        case 0x38:
+        case 0x39:
+        case 0x2B:
+        case 0x2D:
+        case 0x2E:
+          return this.getNumber();
+        case 0x28:
+          return this.getString();
+        case 0x2F:
+          return this.getName();
+        case 0x5B:
+          this.nextChar();
+          return _primitives.Cmd.get('[');
+        case 0x5D:
+          this.nextChar();
+          return _primitives.Cmd.get(']');
+        case 0x3C:
+          ch = this.nextChar();
+          if (ch === 0x3C) {
+            this.nextChar();
+            return _primitives.Cmd.get('<<');
+=======
+        continue;
+      } else {
+        if (isFirstHex) {
+          firstDigit = toHexDigit(ch);
+
+          if (firstDigit === -1) {
+            (0, _util.warn)(`Ignoring invalid character "${ch}" in hex string`);
+            ch = this.nextChar();
+            continue;
+>>>>>>> upstream-releases
           }
+<<<<<<< HEAD
 
           return this.getHexString();
 
@@ -10394,7 +18874,24 @@ var Lexer = function LexerClosure() {
           if (ch === 0x3E) {
             this.nextChar();
             return _primitives.Cmd.get('>>');
+||||||| merged common ancestors
+          return this.getHexString();
+        case 0x3E:
+          ch = this.nextChar();
+          if (ch === 0x3E) {
+            this.nextChar();
+            return _primitives.Cmd.get('>>');
+=======
+        } else {
+          secondDigit = toHexDigit(ch);
+
+          if (secondDigit === -1) {
+            (0, _util.warn)(`Ignoring invalid character "${ch}" in hex string`);
+            ch = this.nextChar();
+            continue;
+>>>>>>> upstream-releases
           }
+<<<<<<< HEAD
 
           return _primitives.Cmd.get('>');
 
@@ -10424,27 +18921,187 @@ var Lexer = function LexerClosure() {
 
         if (str.length === 128) {
           throw new _util.FormatError(`Command token too long: ${str.length}`);
+||||||| merged common ancestors
+          return _primitives.Cmd.get('>');
+        case 0x7B:
+          this.nextChar();
+          return _primitives.Cmd.get('{');
+        case 0x7D:
+          this.nextChar();
+          return _primitives.Cmd.get('}');
+        case 0x29:
+          this.nextChar();
+          throw new _util.FormatError(`Illegal character: ${ch}`);
+      }
+      var str = String.fromCharCode(ch);
+      var knownCommands = this.knownCommands;
+      var knownCommandFound = knownCommands && knownCommands[str] !== undefined;
+      while ((ch = this.nextChar()) >= 0 && !specialChars[ch]) {
+        var possibleCommand = str + String.fromCharCode(ch);
+        if (knownCommandFound && knownCommands[possibleCommand] === undefined) {
+          break;
         }
+        if (str.length === 128) {
+          throw new _util.FormatError(`Command token too long: ${str.length}`);
+=======
+
+          strBuf.push(String.fromCharCode(firstDigit << 4 | secondDigit));
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
 
         str = possibleCommand;
         knownCommandFound = knownCommands && knownCommands[str] !== undefined;
+||||||| merged common ancestors
+        str = possibleCommand;
+        knownCommandFound = knownCommands && knownCommands[str] !== undefined;
+=======
+
+        isFirstHex = !isFirstHex;
+        ch = this.nextChar();
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       if (str === 'true') {
         return true;
+||||||| merged common ancestors
+      if (str === 'true') {
+        return true;
+=======
+    }
+
+    return strBuf.join('');
+  }
+
+  getObj() {
+    let comment = false;
+    let ch = this.currentChar;
+
+    while (true) {
+      if (ch < 0) {
+        return _primitives.EOF;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       if (str === 'false') {
         return false;
+||||||| merged common ancestors
+      if (str === 'false') {
+        return false;
+=======
+
+      if (comment) {
+        if (ch === 0x0A || ch === 0x0D) {
+          comment = false;
+        }
+      } else if (ch === 0x25) {
+        comment = true;
+      } else if (specialChars[ch] !== 1) {
+        break;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       if (str === 'null') {
         return null;
+||||||| merged common ancestors
+      if (str === 'null') {
+        return null;
+=======
+
+      ch = this.nextChar();
+    }
+
+    switch (ch | 0) {
+      case 0x30:
+      case 0x31:
+      case 0x32:
+      case 0x33:
+      case 0x34:
+      case 0x35:
+      case 0x36:
+      case 0x37:
+      case 0x38:
+      case 0x39:
+      case 0x2B:
+      case 0x2D:
+      case 0x2E:
+        return this.getNumber();
+
+      case 0x28:
+        return this.getString();
+
+      case 0x2F:
+        return this.getName();
+
+      case 0x5B:
+        this.nextChar();
+        return _primitives.Cmd.get('[');
+
+      case 0x5D:
+        this.nextChar();
+        return _primitives.Cmd.get(']');
+
+      case 0x3C:
+        ch = this.nextChar();
+
+        if (ch === 0x3C) {
+          this.nextChar();
+          return _primitives.Cmd.get('<<');
+        }
+
+        return this.getHexString();
+
+      case 0x3E:
+        ch = this.nextChar();
+
+        if (ch === 0x3E) {
+          this.nextChar();
+          return _primitives.Cmd.get('>>');
+        }
+
+        return _primitives.Cmd.get('>');
+
+      case 0x7B:
+        this.nextChar();
+        return _primitives.Cmd.get('{');
+
+      case 0x7D:
+        this.nextChar();
+        return _primitives.Cmd.get('}');
+
+      case 0x29:
+        this.nextChar();
+        throw new _util.FormatError(`Illegal character: ${ch}`);
+    }
+
+    let str = String.fromCharCode(ch);
+    const knownCommands = this.knownCommands;
+    let knownCommandFound = knownCommands && knownCommands[str] !== undefined;
+
+    while ((ch = this.nextChar()) >= 0 && !specialChars[ch]) {
+      const possibleCommand = str + String.fromCharCode(ch);
+
+      if (knownCommandFound && knownCommands[possibleCommand] === undefined) {
+        break;
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       if (str === 'BI') {
         this.beginInlineImagePos = this.stream.pos;
+||||||| merged common ancestors
+      if (str === 'BI') {
+        this.beginInlineImagePos = this.stream.pos;
+=======
+
+      if (str.length === 128) {
+        throw new _util.FormatError(`Command token too long: ${str.length}`);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       return _primitives.Cmd.get(str);
     },
@@ -10461,13 +19118,72 @@ var Lexer = function LexerClosure() {
 
           break;
         } else if (ch === 0x0A) {
-          this.nextChar();
+||||||| merged common ancestors
+      return _primitives.Cmd.get(str);
+    },
+    skipToNextLine: function Lexer_skipToNextLine() {
+      var ch = this.currentChar;
+      while (ch >= 0) {
+        if (ch === 0x0D) {
+          ch = this.nextChar();
+          if (ch === 0x0A) {
+            this.nextChar();
+          }
           break;
+        } else if (ch === 0x0A) {
+=======
+
+      str = possibleCommand;
+      knownCommandFound = knownCommands && knownCommands[str] !== undefined;
+    }
+
+    if (str === 'true') {
+      return true;
+    }
+
+    if (str === 'false') {
+      return false;
+    }
+
+    if (str === 'null') {
+      return null;
+    }
+
+    if (str === 'BI') {
+      this.beginInlineImagePos = this.stream.pos;
+    }
+
+    return _primitives.Cmd.get(str);
+  }
+
+  skipToNextLine() {
+    let ch = this.currentChar;
+
+    while (ch >= 0) {
+      if (ch === 0x0D) {
+        ch = this.nextChar();
+
+        if (ch === 0x0A) {
+>>>>>>> upstream-releases
+          this.nextChar();
         }
+<<<<<<< HEAD
 
         ch = this.nextChar();
+||||||| merged common ancestors
+        ch = this.nextChar();
+=======
+
+        break;
+      } else if (ch === 0x0A) {
+        this.nextChar();
+        break;
+>>>>>>> upstream-releases
       }
+
+      ch = this.nextChar();
     }
+<<<<<<< HEAD
   };
   return Lexer;
 }();
@@ -10478,22 +19194,65 @@ var Linearization = {
     function getInt(name, allowZeroValue) {
       var obj = linDict.get(name);
 
+||||||| merged common ancestors
+  };
+  return Lexer;
+}();
+var Linearization = {
+  create: function LinearizationCreate(stream) {
+    function getInt(name, allowZeroValue) {
+      var obj = linDict.get(name);
+=======
+  }
+
+}
+
+exports.Lexer = Lexer;
+
+class Linearization {
+  static create(stream) {
+    function getInt(linDict, name, allowZeroValue = false) {
+      const obj = linDict.get(name);
+
+>>>>>>> upstream-releases
       if (Number.isInteger(obj) && (allowZeroValue ? obj >= 0 : obj > 0)) {
         return obj;
       }
+<<<<<<< HEAD
 
       throw new Error('The "' + name + '" parameter in the linearization ' + 'dictionary is invalid.');
+||||||| merged common ancestors
+      throw new Error('The "' + name + '" parameter in the linearization ' + 'dictionary is invalid.');
+=======
+
+      throw new Error(`The "${name}" parameter in the linearization ` + 'dictionary is invalid.');
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
 
     function getHints() {
       var hints = linDict.get('H'),
           hintsLength,
           item;
 
+||||||| merged common ancestors
+    function getHints() {
+      var hints = linDict.get('H'),
+          hintsLength,
+          item;
+=======
+
+    function getHints(linDict) {
+      const hints = linDict.get('H');
+      let hintsLength;
+
+>>>>>>> upstream-releases
       if (Array.isArray(hints) && ((hintsLength = hints.length) === 2 || hintsLength === 4)) {
-        for (var index = 0; index < hintsLength; index++) {
-          if (!(Number.isInteger(item = hints[index]) && item > 0)) {
-            throw new Error('Hint (' + index + ') in the linearization dictionary is invalid.');
+        for (let index = 0; index < hintsLength; index++) {
+          const hint = hints[index];
+
+          if (!(Number.isInteger(hint) && hint > 0)) {
+            throw new Error(`Hint (${index}) in the linearization dictionary ` + 'is invalid.');
           }
         }
 
@@ -10502,6 +19261,7 @@ var Linearization = {
 
       throw new Error('Hint array in the linearization dictionary is invalid.');
     }
+<<<<<<< HEAD
 
     var parser = new Parser(new Lexer(stream), false, null);
     var obj1 = parser.getObj();
@@ -10510,23 +19270,52 @@ var Linearization = {
     var linDict = parser.getObj();
     var obj, length;
 
+||||||| merged common ancestors
+    var parser = new Parser(new Lexer(stream), false, null);
+    var obj1 = parser.getObj();
+    var obj2 = parser.getObj();
+    var obj3 = parser.getObj();
+    var linDict = parser.getObj();
+    var obj, length;
+=======
+
+    const parser = new Parser({
+      lexer: new Lexer(stream),
+      xref: null
+    });
+    const obj1 = parser.getObj();
+    const obj2 = parser.getObj();
+    const obj3 = parser.getObj();
+    const linDict = parser.getObj();
+    let obj, length;
+
+>>>>>>> upstream-releases
     if (!(Number.isInteger(obj1) && Number.isInteger(obj2) && (0, _primitives.isCmd)(obj3, 'obj') && (0, _primitives.isDict)(linDict) && (0, _util.isNum)(obj = linDict.get('Linearized')) && obj > 0)) {
       return null;
-    } else if ((length = getInt('L')) !== stream.length) {
+    } else if ((length = getInt(linDict, 'L')) !== stream.length) {
       throw new Error('The "L" parameter in the linearization dictionary ' + 'does not equal the stream length.');
     }
 
     return {
       length,
-      hints: getHints(),
-      objectNumberFirst: getInt('O'),
-      endFirst: getInt('E'),
-      numPages: getInt('N'),
-      mainXRefEntriesOffset: getInt('T'),
-      pageFirst: linDict.has('P') ? getInt('P', true) : 0
+      hints: getHints(linDict),
+      objectNumberFirst: getInt(linDict, 'O'),
+      endFirst: getInt(linDict, 'E'),
+      numPages: getInt(linDict, 'N'),
+      mainXRefEntriesOffset: getInt(linDict, 'T'),
+      pageFirst: linDict.has('P') ? getInt(linDict, 'P', true) : 0
     };
   }
+<<<<<<< HEAD
 };
+||||||| merged common ancestors
+};
+exports.Lexer = Lexer;
+=======
+
+}
+
+>>>>>>> upstream-releases
 exports.Linearization = Linearization;
 
 /***/ }),
@@ -10543,7 +19332,7 @@ exports.LZWStream = exports.StringStream = exports.StreamsSequenceStream = expor
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var Stream = function StreamClosure() {
   function Stream(arrayBuffer, start, length, dict) {
@@ -11818,7 +20607,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CCITTFaxStream = void 0;
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _ccitt = __w_pdfjs_require__(16);
 
@@ -12590,7 +21379,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Jbig2Stream = void 0;
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -14885,6 +23674,7 @@ exports.Jbig2Image = Jbig2Image;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.ArithmeticDecoder = void 0;
 
 var ArithmeticDecoder = function ArithmeticDecoderClosure() {
@@ -15126,6 +23916,487 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
   }];
 
   function ArithmeticDecoder(data, start, end) {
+||||||| merged common ancestors
+var ArithmeticDecoder = function ArithmeticDecoderClosure() {
+  var QeTable = [{
+    qe: 0x5601,
+    nmps: 1,
+    nlps: 1,
+    switchFlag: 1
+  }, {
+    qe: 0x3401,
+    nmps: 2,
+    nlps: 6,
+    switchFlag: 0
+  }, {
+    qe: 0x1801,
+    nmps: 3,
+    nlps: 9,
+    switchFlag: 0
+  }, {
+    qe: 0x0AC1,
+    nmps: 4,
+    nlps: 12,
+    switchFlag: 0
+  }, {
+    qe: 0x0521,
+    nmps: 5,
+    nlps: 29,
+    switchFlag: 0
+  }, {
+    qe: 0x0221,
+    nmps: 38,
+    nlps: 33,
+    switchFlag: 0
+  }, {
+    qe: 0x5601,
+    nmps: 7,
+    nlps: 6,
+    switchFlag: 1
+  }, {
+    qe: 0x5401,
+    nmps: 8,
+    nlps: 14,
+    switchFlag: 0
+  }, {
+    qe: 0x4801,
+    nmps: 9,
+    nlps: 14,
+    switchFlag: 0
+  }, {
+    qe: 0x3801,
+    nmps: 10,
+    nlps: 14,
+    switchFlag: 0
+  }, {
+    qe: 0x3001,
+    nmps: 11,
+    nlps: 17,
+    switchFlag: 0
+  }, {
+    qe: 0x2401,
+    nmps: 12,
+    nlps: 18,
+    switchFlag: 0
+  }, {
+    qe: 0x1C01,
+    nmps: 13,
+    nlps: 20,
+    switchFlag: 0
+  }, {
+    qe: 0x1601,
+    nmps: 29,
+    nlps: 21,
+    switchFlag: 0
+  }, {
+    qe: 0x5601,
+    nmps: 15,
+    nlps: 14,
+    switchFlag: 1
+  }, {
+    qe: 0x5401,
+    nmps: 16,
+    nlps: 14,
+    switchFlag: 0
+  }, {
+    qe: 0x5101,
+    nmps: 17,
+    nlps: 15,
+    switchFlag: 0
+  }, {
+    qe: 0x4801,
+    nmps: 18,
+    nlps: 16,
+    switchFlag: 0
+  }, {
+    qe: 0x3801,
+    nmps: 19,
+    nlps: 17,
+    switchFlag: 0
+  }, {
+    qe: 0x3401,
+    nmps: 20,
+    nlps: 18,
+    switchFlag: 0
+  }, {
+    qe: 0x3001,
+    nmps: 21,
+    nlps: 19,
+    switchFlag: 0
+  }, {
+    qe: 0x2801,
+    nmps: 22,
+    nlps: 19,
+    switchFlag: 0
+  }, {
+    qe: 0x2401,
+    nmps: 23,
+    nlps: 20,
+    switchFlag: 0
+  }, {
+    qe: 0x2201,
+    nmps: 24,
+    nlps: 21,
+    switchFlag: 0
+  }, {
+    qe: 0x1C01,
+    nmps: 25,
+    nlps: 22,
+    switchFlag: 0
+  }, {
+    qe: 0x1801,
+    nmps: 26,
+    nlps: 23,
+    switchFlag: 0
+  }, {
+    qe: 0x1601,
+    nmps: 27,
+    nlps: 24,
+    switchFlag: 0
+  }, {
+    qe: 0x1401,
+    nmps: 28,
+    nlps: 25,
+    switchFlag: 0
+  }, {
+    qe: 0x1201,
+    nmps: 29,
+    nlps: 26,
+    switchFlag: 0
+  }, {
+    qe: 0x1101,
+    nmps: 30,
+    nlps: 27,
+    switchFlag: 0
+  }, {
+    qe: 0x0AC1,
+    nmps: 31,
+    nlps: 28,
+    switchFlag: 0
+  }, {
+    qe: 0x09C1,
+    nmps: 32,
+    nlps: 29,
+    switchFlag: 0
+  }, {
+    qe: 0x08A1,
+    nmps: 33,
+    nlps: 30,
+    switchFlag: 0
+  }, {
+    qe: 0x0521,
+    nmps: 34,
+    nlps: 31,
+    switchFlag: 0
+  }, {
+    qe: 0x0441,
+    nmps: 35,
+    nlps: 32,
+    switchFlag: 0
+  }, {
+    qe: 0x02A1,
+    nmps: 36,
+    nlps: 33,
+    switchFlag: 0
+  }, {
+    qe: 0x0221,
+    nmps: 37,
+    nlps: 34,
+    switchFlag: 0
+  }, {
+    qe: 0x0141,
+    nmps: 38,
+    nlps: 35,
+    switchFlag: 0
+  }, {
+    qe: 0x0111,
+    nmps: 39,
+    nlps: 36,
+    switchFlag: 0
+  }, {
+    qe: 0x0085,
+    nmps: 40,
+    nlps: 37,
+    switchFlag: 0
+  }, {
+    qe: 0x0049,
+    nmps: 41,
+    nlps: 38,
+    switchFlag: 0
+  }, {
+    qe: 0x0025,
+    nmps: 42,
+    nlps: 39,
+    switchFlag: 0
+  }, {
+    qe: 0x0015,
+    nmps: 43,
+    nlps: 40,
+    switchFlag: 0
+  }, {
+    qe: 0x0009,
+    nmps: 44,
+    nlps: 41,
+    switchFlag: 0
+  }, {
+    qe: 0x0005,
+    nmps: 45,
+    nlps: 42,
+    switchFlag: 0
+  }, {
+    qe: 0x0001,
+    nmps: 45,
+    nlps: 43,
+    switchFlag: 0
+  }, {
+    qe: 0x5601,
+    nmps: 46,
+    nlps: 46,
+    switchFlag: 0
+  }];
+  function ArithmeticDecoder(data, start, end) {
+=======
+exports.ArithmeticDecoder = void 0;
+const QeTable = [{
+  qe: 0x5601,
+  nmps: 1,
+  nlps: 1,
+  switchFlag: 1
+}, {
+  qe: 0x3401,
+  nmps: 2,
+  nlps: 6,
+  switchFlag: 0
+}, {
+  qe: 0x1801,
+  nmps: 3,
+  nlps: 9,
+  switchFlag: 0
+}, {
+  qe: 0x0AC1,
+  nmps: 4,
+  nlps: 12,
+  switchFlag: 0
+}, {
+  qe: 0x0521,
+  nmps: 5,
+  nlps: 29,
+  switchFlag: 0
+}, {
+  qe: 0x0221,
+  nmps: 38,
+  nlps: 33,
+  switchFlag: 0
+}, {
+  qe: 0x5601,
+  nmps: 7,
+  nlps: 6,
+  switchFlag: 1
+}, {
+  qe: 0x5401,
+  nmps: 8,
+  nlps: 14,
+  switchFlag: 0
+}, {
+  qe: 0x4801,
+  nmps: 9,
+  nlps: 14,
+  switchFlag: 0
+}, {
+  qe: 0x3801,
+  nmps: 10,
+  nlps: 14,
+  switchFlag: 0
+}, {
+  qe: 0x3001,
+  nmps: 11,
+  nlps: 17,
+  switchFlag: 0
+}, {
+  qe: 0x2401,
+  nmps: 12,
+  nlps: 18,
+  switchFlag: 0
+}, {
+  qe: 0x1C01,
+  nmps: 13,
+  nlps: 20,
+  switchFlag: 0
+}, {
+  qe: 0x1601,
+  nmps: 29,
+  nlps: 21,
+  switchFlag: 0
+}, {
+  qe: 0x5601,
+  nmps: 15,
+  nlps: 14,
+  switchFlag: 1
+}, {
+  qe: 0x5401,
+  nmps: 16,
+  nlps: 14,
+  switchFlag: 0
+}, {
+  qe: 0x5101,
+  nmps: 17,
+  nlps: 15,
+  switchFlag: 0
+}, {
+  qe: 0x4801,
+  nmps: 18,
+  nlps: 16,
+  switchFlag: 0
+}, {
+  qe: 0x3801,
+  nmps: 19,
+  nlps: 17,
+  switchFlag: 0
+}, {
+  qe: 0x3401,
+  nmps: 20,
+  nlps: 18,
+  switchFlag: 0
+}, {
+  qe: 0x3001,
+  nmps: 21,
+  nlps: 19,
+  switchFlag: 0
+}, {
+  qe: 0x2801,
+  nmps: 22,
+  nlps: 19,
+  switchFlag: 0
+}, {
+  qe: 0x2401,
+  nmps: 23,
+  nlps: 20,
+  switchFlag: 0
+}, {
+  qe: 0x2201,
+  nmps: 24,
+  nlps: 21,
+  switchFlag: 0
+}, {
+  qe: 0x1C01,
+  nmps: 25,
+  nlps: 22,
+  switchFlag: 0
+}, {
+  qe: 0x1801,
+  nmps: 26,
+  nlps: 23,
+  switchFlag: 0
+}, {
+  qe: 0x1601,
+  nmps: 27,
+  nlps: 24,
+  switchFlag: 0
+}, {
+  qe: 0x1401,
+  nmps: 28,
+  nlps: 25,
+  switchFlag: 0
+}, {
+  qe: 0x1201,
+  nmps: 29,
+  nlps: 26,
+  switchFlag: 0
+}, {
+  qe: 0x1101,
+  nmps: 30,
+  nlps: 27,
+  switchFlag: 0
+}, {
+  qe: 0x0AC1,
+  nmps: 31,
+  nlps: 28,
+  switchFlag: 0
+}, {
+  qe: 0x09C1,
+  nmps: 32,
+  nlps: 29,
+  switchFlag: 0
+}, {
+  qe: 0x08A1,
+  nmps: 33,
+  nlps: 30,
+  switchFlag: 0
+}, {
+  qe: 0x0521,
+  nmps: 34,
+  nlps: 31,
+  switchFlag: 0
+}, {
+  qe: 0x0441,
+  nmps: 35,
+  nlps: 32,
+  switchFlag: 0
+}, {
+  qe: 0x02A1,
+  nmps: 36,
+  nlps: 33,
+  switchFlag: 0
+}, {
+  qe: 0x0221,
+  nmps: 37,
+  nlps: 34,
+  switchFlag: 0
+}, {
+  qe: 0x0141,
+  nmps: 38,
+  nlps: 35,
+  switchFlag: 0
+}, {
+  qe: 0x0111,
+  nmps: 39,
+  nlps: 36,
+  switchFlag: 0
+}, {
+  qe: 0x0085,
+  nmps: 40,
+  nlps: 37,
+  switchFlag: 0
+}, {
+  qe: 0x0049,
+  nmps: 41,
+  nlps: 38,
+  switchFlag: 0
+}, {
+  qe: 0x0025,
+  nmps: 42,
+  nlps: 39,
+  switchFlag: 0
+}, {
+  qe: 0x0015,
+  nmps: 43,
+  nlps: 40,
+  switchFlag: 0
+}, {
+  qe: 0x0009,
+  nmps: 44,
+  nlps: 41,
+  switchFlag: 0
+}, {
+  qe: 0x0005,
+  nmps: 45,
+  nlps: 42,
+  switchFlag: 0
+}, {
+  qe: 0x0001,
+  nmps: 45,
+  nlps: 43,
+  switchFlag: 0
+}, {
+  qe: 0x5601,
+  nmps: 46,
+  nlps: 46,
+  switchFlag: 0
+}];
+
+class ArithmeticDecoder {
+  constructor(data, start, end) {
+>>>>>>> upstream-releases
     this.data = data;
     this.bp = start;
     this.dataEnd = end;
@@ -15137,6 +24408,7 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
     this.ct -= 7;
     this.a = 0x8000;
   }
+<<<<<<< HEAD
 
   ArithmeticDecoder.prototype = {
     byteIn: function ArithmeticDecoder_byteIn() {
@@ -15155,12 +24427,40 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
           this.ct = 7;
           this.bp = bp;
         }
+||||||| merged common ancestors
+  ArithmeticDecoder.prototype = {
+    byteIn: function ArithmeticDecoder_byteIn() {
+      var data = this.data;
+      var bp = this.bp;
+      if (data[bp] === 0xFF) {
+        var b1 = data[bp + 1];
+        if (b1 > 0x8F) {
+          this.clow += 0xFF00;
+          this.ct = 8;
+        } else {
+          bp++;
+          this.clow += data[bp] << 9;
+          this.ct = 7;
+          this.bp = bp;
+        }
+=======
+
+  byteIn() {
+    const data = this.data;
+    let bp = this.bp;
+
+    if (data[bp] === 0xFF) {
+      if (data[bp + 1] > 0x8F) {
+        this.clow += 0xFF00;
+        this.ct = 8;
+>>>>>>> upstream-releases
       } else {
         bp++;
-        this.clow += bp < this.dataEnd ? data[bp] << 8 : 0xFF00;
-        this.ct = 8;
+        this.clow += data[bp] << 9;
+        this.ct = 7;
         this.bp = bp;
       }
+<<<<<<< HEAD
 
       if (this.clow > 0xFFFF) {
         this.chigh += this.clow >> 16;
@@ -15190,13 +24490,81 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
 
           cx_index = qeTableIcx.nlps;
         }
+||||||| merged common ancestors
+      if (this.clow > 0xFFFF) {
+        this.chigh += this.clow >> 16;
+        this.clow &= 0xFFFF;
+      }
+    },
+    readBit: function ArithmeticDecoder_readBit(contexts, pos) {
+      var cx_index = contexts[pos] >> 1,
+          cx_mps = contexts[pos] & 1;
+      var qeTableIcx = QeTable[cx_index];
+      var qeIcx = qeTableIcx.qe;
+      var d;
+      var a = this.a - qeIcx;
+      if (this.chigh < qeIcx) {
+        if (a < qeIcx) {
+          a = qeIcx;
+          d = cx_mps;
+          cx_index = qeTableIcx.nmps;
+        } else {
+          a = qeIcx;
+          d = 1 ^ cx_mps;
+          if (qeTableIcx.switchFlag === 1) {
+            cx_mps = d;
+          }
+          cx_index = qeTableIcx.nlps;
+        }
+=======
+    } else {
+      bp++;
+      this.clow += bp < this.dataEnd ? data[bp] << 8 : 0xFF00;
+      this.ct = 8;
+      this.bp = bp;
+    }
+
+    if (this.clow > 0xFFFF) {
+      this.chigh += this.clow >> 16;
+      this.clow &= 0xFFFF;
+    }
+  }
+
+  readBit(contexts, pos) {
+    let cx_index = contexts[pos] >> 1,
+        cx_mps = contexts[pos] & 1;
+    const qeTableIcx = QeTable[cx_index];
+    const qeIcx = qeTableIcx.qe;
+    let d;
+    let a = this.a - qeIcx;
+
+    if (this.chigh < qeIcx) {
+      if (a < qeIcx) {
+        a = qeIcx;
+        d = cx_mps;
+        cx_index = qeTableIcx.nmps;
+>>>>>>> upstream-releases
       } else {
+<<<<<<< HEAD
         this.chigh -= qeIcx;
 
         if ((a & 0x8000) !== 0) {
           this.a = a;
           return cx_mps;
+||||||| merged common ancestors
+        this.chigh -= qeIcx;
+        if ((a & 0x8000) !== 0) {
+          this.a = a;
+          return cx_mps;
+=======
+        a = qeIcx;
+        d = 1 ^ cx_mps;
+
+        if (qeTableIcx.switchFlag === 1) {
+          cx_mps = d;
+>>>>>>> upstream-releases
         }
+<<<<<<< HEAD
 
         if (a < qeIcx) {
           d = 1 ^ cx_mps;
@@ -15209,8 +24577,42 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
         } else {
           d = cx_mps;
           cx_index = qeTableIcx.nmps;
-        }
+||||||| merged common ancestors
+        if (a < qeIcx) {
+          d = 1 ^ cx_mps;
+          if (qeTableIcx.switchFlag === 1) {
+            cx_mps = d;
+          }
+          cx_index = qeTableIcx.nlps;
+        } else {
+          d = cx_mps;
+          cx_index = qeTableIcx.nmps;
+=======
+
+        cx_index = qeTableIcx.nlps;
       }
+    } else {
+      this.chigh -= qeIcx;
+
+      if ((a & 0x8000) !== 0) {
+        this.a = a;
+        return cx_mps;
+      }
+
+      if (a < qeIcx) {
+        d = 1 ^ cx_mps;
+
+        if (qeTableIcx.switchFlag === 1) {
+          cx_mps = d;
+>>>>>>> upstream-releases
+        }
+
+        cx_index = qeTableIcx.nlps;
+      } else {
+        d = cx_mps;
+        cx_index = qeTableIcx.nmps;
+      }
+<<<<<<< HEAD
 
       do {
         if (this.ct === 0) {
@@ -15226,11 +24628,52 @@ var ArithmeticDecoder = function ArithmeticDecoderClosure() {
       this.a = a;
       contexts[pos] = cx_index << 1 | cx_mps;
       return d;
+||||||| merged common ancestors
+      do {
+        if (this.ct === 0) {
+          this.byteIn();
+        }
+        a <<= 1;
+        this.chigh = this.chigh << 1 & 0xFFFF | this.clow >> 15 & 1;
+        this.clow = this.clow << 1 & 0xFFFF;
+        this.ct--;
+      } while ((a & 0x8000) === 0);
+      this.a = a;
+      contexts[pos] = cx_index << 1 | cx_mps;
+      return d;
+=======
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   };
   return ArithmeticDecoder;
 }();
 
+||||||| merged common ancestors
+  };
+  return ArithmeticDecoder;
+}();
+=======
+
+    do {
+      if (this.ct === 0) {
+        this.byteIn();
+      }
+
+      a <<= 1;
+      this.chigh = this.chigh << 1 & 0xFFFF | this.clow >> 15 & 1;
+      this.clow = this.clow << 1 & 0xFFFF;
+      this.ct--;
+    } while ((a & 0x8000) === 0);
+
+    this.a = a;
+    contexts[pos] = cx_index << 1 | cx_mps;
+    return d;
+  }
+
+}
+
+>>>>>>> upstream-releases
 exports.ArithmeticDecoder = ArithmeticDecoder;
 
 /***/ }),
@@ -15249,7 +24692,7 @@ var _util = __w_pdfjs_require__(2);
 
 var _stream = __w_pdfjs_require__(14);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _jpg = __w_pdfjs_require__(21);
 
@@ -16336,6 +25779,7 @@ var JpegImage = function JpegImageClosure() {
       }
 
       this.numComponents = this.components.length;
+      return undefined;
     },
 
     _getLinearizedBlockData(width, height, isSourcePDF = false) {
@@ -18942,7 +28386,7 @@ exports.calculateSHA512 = exports.calculateSHA384 = exports.calculateSHA256 = ex
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -20532,7 +29976,7 @@ exports.ColorSpace = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 function resizeRgbImage(src, dest, w1, h1, w2, h2, alpha01) {
   const COMPONENTS = 3;
@@ -20592,7 +30036,16 @@ class ColorSpace {
   isPassthrough(bits) {
     return false;
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  isDefaultDecode(decodeMap, bpc) {
+    return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+  }
+
+>>>>>>> upstream-releases
   fillRgb(dest, originalWidth, originalHeight, width, height, actualHeight, bpc, comps, alpha01) {
     let count = originalWidth * originalHeight;
     let rgbBuf = null;
@@ -20870,13 +30323,27 @@ class ColorSpace {
 
     throw new _util.FormatError(`unrecognized color space object: "${cs}"`);
   }
+<<<<<<< HEAD
 
   static isDefaultDecode(decode, n) {
+||||||| merged common ancestors
+  static isDefaultDecode(decode, n) {
+=======
+
+  static isDefaultDecode(decode, numComps) {
+>>>>>>> upstream-releases
     if (!Array.isArray(decode)) {
       return true;
     }
+<<<<<<< HEAD
 
     if (n * 2 !== decode.length) {
+||||||| merged common ancestors
+    if (n * 2 !== decode.length) {
+=======
+
+    if (numComps * 2 !== decode.length) {
+>>>>>>> upstream-releases
       (0, _util.warn)('The decode map is not the correct length');
       return true;
     }
@@ -20964,11 +30431,19 @@ class AlternateCS extends ColorSpace {
   getOutputLength(inputLength, alpha01) {
     return this.base.getOutputLength(inputLength * this.base.numComps / this.numComps, alpha01);
   }
+<<<<<<< HEAD
 
   isDefaultDecode(decodeMap) {
     return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
   }
 
+||||||| merged common ancestors
+  isDefaultDecode(decodeMap) {
+    return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+  }
+=======
+
+>>>>>>> upstream-releases
 }
 
 class PatternCS extends ColorSpace {
@@ -20976,7 +30451,16 @@ class PatternCS extends ColorSpace {
     super('Pattern', null);
     this.base = baseCS;
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  isDefaultDecode(decodeMap, bpc) {
+    (0, _util.unreachable)('Should not call PatternCS.isDefaultDecode');
+  }
+
+>>>>>>> upstream-releases
 }
 
 class IndexedCS extends ColorSpace {
@@ -21026,9 +30510,32 @@ class IndexedCS extends ColorSpace {
   getOutputLength(inputLength, alpha01) {
     return this.base.getOutputLength(inputLength * this.base.numComps, alpha01);
   }
+<<<<<<< HEAD
 
   isDefaultDecode(decodeMap) {
     return true;
+||||||| merged common ancestors
+  isDefaultDecode(decodeMap) {
+    return true;
+=======
+
+  isDefaultDecode(decodeMap, bpc) {
+    if (!Array.isArray(decodeMap)) {
+      return true;
+    }
+
+    if (decodeMap.length !== 2) {
+      (0, _util.warn)('Decode map length is not correct');
+      return true;
+    }
+
+    if (!Number.isInteger(bpc) || bpc < 1) {
+      (0, _util.warn)('Bits per component is not correct');
+      return true;
+    }
+
+    return decodeMap[0] === 0 && decodeMap[1] === (1 << bpc) - 1;
+>>>>>>> upstream-releases
   }
 
 }
@@ -21060,11 +30567,19 @@ class DeviceGrayCS extends ColorSpace {
   getOutputLength(inputLength, alpha01) {
     return inputLength * (3 + alpha01);
   }
+<<<<<<< HEAD
 
   isDefaultDecode(decodeMap) {
     return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
   }
 
+||||||| merged common ancestors
+  isDefaultDecode(decodeMap) {
+    return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+  }
+=======
+
+>>>>>>> upstream-releases
 }
 
 class DeviceRgbCS extends ColorSpace {
@@ -21103,11 +30618,19 @@ class DeviceRgbCS extends ColorSpace {
   isPassthrough(bits) {
     return bits === 8;
   }
+<<<<<<< HEAD
 
   isDefaultDecode(decodeMap) {
     return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
   }
 
+||||||| merged common ancestors
+  isDefaultDecode(decodeMap) {
+    return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+  }
+=======
+
+>>>>>>> upstream-releases
 }
 
 const DeviceCmykCS = function DeviceCmykCSClosure() {
@@ -21143,11 +30666,19 @@ const DeviceCmykCS = function DeviceCmykCSClosure() {
     getOutputLength(inputLength, alpha01) {
       return inputLength / 4 * (3 + alpha01) | 0;
     }
+<<<<<<< HEAD
 
     isDefaultDecode(decodeMap) {
       return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
     }
 
+||||||| merged common ancestors
+    isDefaultDecode(decodeMap) {
+      return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+    }
+=======
+
+>>>>>>> upstream-releases
   }
 
   return DeviceCmykCS;
@@ -21218,11 +30749,19 @@ const CalGrayCS = function CalGrayCSClosure() {
     getOutputLength(inputLength, alpha01) {
       return inputLength * (3 + alpha01);
     }
+<<<<<<< HEAD
 
     isDefaultDecode(decodeMap) {
       return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
     }
 
+||||||| merged common ancestors
+    isDefaultDecode(decodeMap) {
+      return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+    }
+=======
+
+>>>>>>> upstream-releases
   }
 
   return CalGrayCS;
@@ -21423,11 +30962,19 @@ const CalRGBCS = function CalRGBCSClosure() {
     getOutputLength(inputLength, alpha01) {
       return inputLength * (3 + alpha01) / 3 | 0;
     }
+<<<<<<< HEAD
 
     isDefaultDecode(decodeMap) {
       return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
     }
 
+||||||| merged common ancestors
+    isDefaultDecode(decodeMap) {
+      return ColorSpace.isDefaultDecode(decodeMap, this.numComps);
+    }
+=======
+
+>>>>>>> upstream-releases
   }
 
   return CalRGBCS;
@@ -21542,8 +31089,15 @@ const LabCS = function LabCSClosure() {
     getOutputLength(inputLength, alpha01) {
       return inputLength * (3 + alpha01) / 3 | 0;
     }
+<<<<<<< HEAD
 
     isDefaultDecode(decodeMap) {
+||||||| merged common ancestors
+    isDefaultDecode(decodeMap) {
+=======
+
+    isDefaultDecode(decodeMap, bpc) {
+>>>>>>> upstream-releases
       return true;
     }
 
@@ -21566,15 +31120,23 @@ const LabCS = function LabCSClosure() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.AnnotationFactory = exports.AnnotationBorderStyle = exports.Annotation = void 0;
+||||||| merged common ancestors
+exports.AnnotationFactory = exports.AnnotationBorderStyle = exports.Annotation = undefined;
+=======
+exports.MarkupAnnotation = exports.AnnotationFactory = exports.AnnotationBorderStyle = exports.Annotation = void 0;
+>>>>>>> upstream-releases
 
 var _util = __w_pdfjs_require__(2);
 
-var _obj = __w_pdfjs_require__(11);
+var _obj = __w_pdfjs_require__(12);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _colorspace = __w_pdfjs_require__(25);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _operator_list = __w_pdfjs_require__(27);
 
@@ -21589,16 +31151,22 @@ class AnnotationFactory {
     let dict = xref.fetchIfRef(ref);
 
     if (!(0, _primitives.isDict)(dict)) {
-      return;
+      return undefined;
     }
+<<<<<<< HEAD
 
     let id = (0, _primitives.isRef)(ref) ? ref.toString() : 'annot_' + idFactory.createObjId();
+||||||| merged common ancestors
+    let id = (0, _primitives.isRef)(ref) ? ref.toString() : 'annot_' + idFactory.createObjId();
+=======
+
+    let id = (0, _primitives.isRef)(ref) ? ref.toString() : `annot_${idFactory.createObjId()}`;
+>>>>>>> upstream-releases
     let subtype = dict.get('Subtype');
     subtype = (0, _primitives.isName)(subtype) ? subtype.name : null;
     let parameters = {
       xref,
       dict,
-      ref: (0, _primitives.isRef)(ref) ? ref : null,
       subtype,
       id,
       pdfManager
@@ -21612,7 +31180,7 @@ class AnnotationFactory {
         return new TextAnnotation(parameters);
 
       case 'Widget':
-        let fieldType = (0, _util.getInheritableProperty)({
+        let fieldType = (0, _core_utils.getInheritableProperty)({
           dict,
           key: 'FT'
         });
@@ -21634,7 +31202,15 @@ class AnnotationFactory {
 
       case 'Popup':
         return new PopupAnnotation(parameters);
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+      case 'FreeText':
+        return new FreeTextAnnotation(parameters);
+
+>>>>>>> upstream-releases
       case 'Line':
         return new LineAnnotation(parameters);
 
@@ -21649,7 +31225,15 @@ class AnnotationFactory {
 
       case 'Polygon':
         return new PolygonAnnotation(parameters);
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+      case 'Caret':
+        return new CaretAnnotation(parameters);
+
+>>>>>>> upstream-releases
       case 'Ink':
         return new InkAnnotation(parameters);
 
@@ -21705,7 +31289,9 @@ function getTransformMatrix(rect, bbox, matrix) {
 
 class Annotation {
   constructor(params) {
-    let dict = params.dict;
+    const dict = params.dict;
+    this.setContents(dict.get('Contents'));
+    this.setModificationDate(dict.get('M'));
     this.setFlags(dict.get('F'));
     this.setRectangle(dict.getArray('Rect'));
     this.setColor(dict.getArray('C'));
@@ -21715,8 +31301,10 @@ class Annotation {
       annotationFlags: this.flags,
       borderStyle: this.borderStyle,
       color: this.color,
+      contents: this.contents,
       hasAppearance: !!this.appearance,
       id: params.id,
+      modificationDate: this.modificationDate,
       rect: this.rectangle,
       subtype: params.subtype
     };
@@ -21749,7 +31337,20 @@ class Annotation {
 
     return this._isPrintable(this.flags);
   }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+  setContents(contents) {
+    this.contents = (0, _util.stringToPDFString)(contents || '');
+  }
+
+  setModificationDate(modificationDate) {
+    this.modificationDate = (0, _util.isString)(modificationDate) ? modificationDate : null;
+  }
+
+>>>>>>> upstream-releases
   setFlags(flags) {
     this.flags = Number.isInteger(flags) && flags > 0 ? flags : 0;
   }
@@ -21815,7 +31416,7 @@ class Annotation {
       let dictType = dict.get('Type');
 
       if (!dictType || (0, _primitives.isName)(dictType, 'Border')) {
-        this.borderStyle.setWidth(dict.get('W'));
+        this.borderStyle.setWidth(dict.get('W'), this.rectangle);
         this.borderStyle.setStyle(dict.get('S'));
         this.borderStyle.setDashArray(dict.getArray('D'));
       }
@@ -21825,8 +31426,15 @@ class Annotation {
       if (Array.isArray(array) && array.length >= 3) {
         this.borderStyle.setHorizontalCornerRadius(array[0]);
         this.borderStyle.setVerticalCornerRadius(array[1]);
+<<<<<<< HEAD
         this.borderStyle.setWidth(array[2]);
 
+||||||| merged common ancestors
+        this.borderStyle.setWidth(array[2]);
+=======
+        this.borderStyle.setWidth(array[2], this.rectangle);
+
+>>>>>>> upstream-releases
         if (array.length === 4) {
           this.borderStyle.setDashArray(array[3]);
         }
@@ -21863,6 +31471,7 @@ class Annotation {
 
     this.appearance = normalAppearanceState.get(as.name);
   }
+<<<<<<< HEAD
 
   _preparePopup(dict) {
     if (!dict.has('C')) {
@@ -21874,10 +31483,22 @@ class Annotation {
     this.data.contents = (0, _util.stringToPDFString)(dict.get('Contents') || '');
   }
 
+||||||| merged common ancestors
+  _preparePopup(dict) {
+    if (!dict.has('C')) {
+      this.data.color = null;
+    }
+    this.data.hasPopup = dict.has('Popup');
+    this.data.title = (0, _util.stringToPDFString)(dict.get('T') || '');
+    this.data.contents = (0, _util.stringToPDFString)(dict.get('Contents') || '');
+  }
+=======
+
+>>>>>>> upstream-releases
   loadResources(keys) {
     return this.appearance.dict.getAsync('Resources').then(resources => {
       if (!resources) {
-        return;
+        return undefined;
       }
 
       let objectLoader = new _obj.ObjectLoader(resources, keys, resources.xref);
@@ -21926,15 +31547,37 @@ class AnnotationBorderStyle {
     this.horizontalCornerRadius = 0;
     this.verticalCornerRadius = 0;
   }
+<<<<<<< HEAD
 
   setWidth(width) {
+||||||| merged common ancestors
+  setWidth(width) {
+=======
+
+  setWidth(width, rect = [0, 0, 0, 0]) {
+    if ((0, _primitives.isName)(width)) {
+      this.width = 0;
+      return;
+    }
+
+>>>>>>> upstream-releases
     if (Number.isInteger(width)) {
+      if (width > 0) {
+        const maxWidth = (rect[2] - rect[0]) / 2;
+        const maxHeight = (rect[3] - rect[1]) / 2;
+
+        if (maxWidth > 0 && maxHeight > 0 && (width > maxWidth || width > maxHeight)) {
+          (0, _util.warn)(`AnnotationBorderStyle.setWidth - ignoring width: ${width}`);
+          width = 1;
+        }
+      }
+
       this.width = width;
     }
   }
 
   setStyle(style) {
-    if (!style) {
+    if (!(0, _primitives.isName)(style)) {
       return;
     }
 
@@ -22002,11 +31645,46 @@ class AnnotationBorderStyle {
       this.verticalCornerRadius = radius;
     }
   }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
 
 }
 
 exports.AnnotationBorderStyle = AnnotationBorderStyle;
 
+class MarkupAnnotation extends Annotation {
+  constructor(parameters) {
+    super(parameters);
+    const dict = parameters.dict;
+
+    if (!dict.has('C')) {
+      this.data.color = null;
+    }
+
+    this.setCreationDate(dict.get('CreationDate'));
+    this.data.creationDate = this.creationDate;
+    this.data.hasPopup = dict.has('Popup');
+    this.data.title = (0, _util.stringToPDFString)(dict.get('T') || '');
+  }
+
+  setCreationDate(creationDate) {
+    this.creationDate = (0, _util.isString)(creationDate) ? creationDate : null;
+  }
+
+>>>>>>> upstream-releases
+}
+<<<<<<< HEAD
+
+exports.AnnotationBorderStyle = AnnotationBorderStyle;
+
+||||||| merged common ancestors
+=======
+
+exports.MarkupAnnotation = MarkupAnnotation;
+
+>>>>>>> upstream-releases
 class WidgetAnnotation extends Annotation {
   constructor(params) {
     super(params);
@@ -22014,26 +31692,26 @@ class WidgetAnnotation extends Annotation {
     let data = this.data;
     data.annotationType = _util.AnnotationType.WIDGET;
     data.fieldName = this._constructFieldName(dict);
-    data.fieldValue = (0, _util.getInheritableProperty)({
+    data.fieldValue = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'V',
       getArray: true
     });
     data.alternativeText = (0, _util.stringToPDFString)(dict.get('TU') || '');
-    data.defaultAppearance = (0, _util.getInheritableProperty)({
+    data.defaultAppearance = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'DA'
     }) || '';
-    let fieldType = (0, _util.getInheritableProperty)({
+    let fieldType = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'FT'
     });
     data.fieldType = (0, _primitives.isName)(fieldType) ? fieldType.name : null;
-    this.fieldResources = (0, _util.getInheritableProperty)({
+    this.fieldResources = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'DR'
     }) || _primitives.Dict.empty;
-    data.fieldFlags = (0, _util.getInheritableProperty)({
+    data.fieldFlags = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'Ff'
     });
@@ -22045,6 +31723,7 @@ class WidgetAnnotation extends Annotation {
     data.readOnly = this.hasFieldFlag(_util.AnnotationFieldFlag.READONLY);
 
     if (data.fieldType === 'Sig') {
+      data.fieldValue = null;
       this.setFlags(_util.AnnotationFlag.HIDDEN);
     }
   }
@@ -22101,7 +31780,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
     super(params);
     const dict = params.dict;
     this.data.fieldValue = (0, _util.stringToPDFString)(this.data.fieldValue || '');
-    let alignment = (0, _util.getInheritableProperty)({
+    let alignment = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'Q'
     });
@@ -22111,7 +31790,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
     }
 
     this.data.textAlignment = alignment;
-    let maximumLength = (0, _util.getInheritableProperty)({
+    let maximumLength = (0, _core_utils.getInheritableProperty)({
       dict,
       key: 'MaxLen'
     });
@@ -22247,7 +31926,7 @@ class ChoiceWidgetAnnotation extends WidgetAnnotation {
   constructor(params) {
     super(params);
     this.data.options = [];
-    let options = (0, _util.getInheritableProperty)({
+    let options = (0, _core_utils.getInheritableProperty)({
       dict: params.dict,
       key: 'Opt'
     });
@@ -22274,8 +31953,15 @@ class ChoiceWidgetAnnotation extends WidgetAnnotation {
   }
 
 }
+<<<<<<< HEAD
 
 class TextAnnotation extends Annotation {
+||||||| merged common ancestors
+class TextAnnotation extends Annotation {
+=======
+
+class TextAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     const DEFAULT_ICON_SIZE = 22;
     super(parameters);
@@ -22288,8 +31974,13 @@ class TextAnnotation extends Annotation {
       this.data.rect[2] = this.data.rect[0] + DEFAULT_ICON_SIZE;
       this.data.name = parameters.dict.has('Name') ? parameters.dict.get('Name').name : 'Note';
     }
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
@@ -22325,7 +32016,19 @@ class PopupAnnotation extends Annotation {
     this.data.parentId = dict.getRaw('Parent').toString();
     this.data.title = (0, _util.stringToPDFString)(parentItem.get('T') || '');
     this.data.contents = (0, _util.stringToPDFString)(parentItem.get('Contents') || '');
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+    if (!parentItem.has('M')) {
+      this.data.modificationDate = null;
+    } else {
+      this.setModificationDate(parentItem.get('M'));
+      this.data.modificationDate = this.modificationDate;
+    }
+
+>>>>>>> upstream-releases
     if (!parentItem.has('C')) {
       this.data.color = null;
     } else {
@@ -22341,42 +32044,98 @@ class PopupAnnotation extends Annotation {
       }
     }
   }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
 
 }
 
+class FreeTextAnnotation extends MarkupAnnotation {
+  constructor(parameters) {
+    super(parameters);
+    this.data.annotationType = _util.AnnotationType.FREETEXT;
+  }
+
+>>>>>>> upstream-releases
+}
+<<<<<<< HEAD
+
 class LineAnnotation extends Annotation {
+||||||| merged common ancestors
+class LineAnnotation extends Annotation {
+=======
+
+class LineAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.LINE;
     let dict = parameters.dict;
     this.data.lineCoordinates = _util.Util.normalizeRect(dict.getArray('L'));
+<<<<<<< HEAD
 
     this._preparePopup(dict);
+||||||| merged common ancestors
+    this._preparePopup(dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class SquareAnnotation extends Annotation {
+||||||| merged common ancestors
+class SquareAnnotation extends Annotation {
+=======
+
+class SquareAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.SQUARE;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class CircleAnnotation extends Annotation {
+||||||| merged common ancestors
+class CircleAnnotation extends Annotation {
+=======
+
+class CircleAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.CIRCLE;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class PolylineAnnotation extends Annotation {
+||||||| merged common ancestors
+class PolylineAnnotation extends Annotation {
+=======
+
+class PolylineAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.POLYLINE;
@@ -22390,8 +32149,13 @@ class PolylineAnnotation extends Annotation {
         y: rawVertices[i + 1]
       });
     }
+<<<<<<< HEAD
 
     this._preparePopup(dict);
+||||||| merged common ancestors
+    this._preparePopup(dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
@@ -22401,10 +32165,30 @@ class PolygonAnnotation extends PolylineAnnotation {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.POLYGON;
   }
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
 
 }
 
+class CaretAnnotation extends MarkupAnnotation {
+  constructor(parameters) {
+    super(parameters);
+    this.data.annotationType = _util.AnnotationType.CARET;
+  }
+
+>>>>>>> upstream-releases
+}
+<<<<<<< HEAD
+
 class InkAnnotation extends Annotation {
+||||||| merged common ancestors
+class InkAnnotation extends Annotation {
+=======
+
+class InkAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.INK;
@@ -22423,70 +32207,147 @@ class InkAnnotation extends Annotation {
         });
       }
     }
+<<<<<<< HEAD
 
     this._preparePopup(dict);
+||||||| merged common ancestors
+    this._preparePopup(dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class HighlightAnnotation extends Annotation {
+||||||| merged common ancestors
+class HighlightAnnotation extends Annotation {
+=======
+
+class HighlightAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.HIGHLIGHT;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class UnderlineAnnotation extends Annotation {
+||||||| merged common ancestors
+class UnderlineAnnotation extends Annotation {
+=======
+
+class UnderlineAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.UNDERLINE;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class SquigglyAnnotation extends Annotation {
+||||||| merged common ancestors
+class SquigglyAnnotation extends Annotation {
+=======
+
+class SquigglyAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.SQUIGGLY;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class StrikeOutAnnotation extends Annotation {
+||||||| merged common ancestors
+class StrikeOutAnnotation extends Annotation {
+=======
+
+class StrikeOutAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.STRIKEOUT;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class StampAnnotation extends Annotation {
+||||||| merged common ancestors
+class StampAnnotation extends Annotation {
+=======
+
+class StampAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     this.data.annotationType = _util.AnnotationType.STAMP;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
+<<<<<<< HEAD
 
 class FileAttachmentAnnotation extends Annotation {
+||||||| merged common ancestors
+class FileAttachmentAnnotation extends Annotation {
+=======
+
+class FileAttachmentAnnotation extends MarkupAnnotation {
+>>>>>>> upstream-releases
   constructor(parameters) {
     super(parameters);
     let file = new _obj.FileSpec(parameters.dict.get('FS'), parameters.xref);
     this.data.annotationType = _util.AnnotationType.FILEATTACHMENT;
     this.data.file = file.serializable;
+<<<<<<< HEAD
 
     this._preparePopup(parameters.dict);
+||||||| merged common ancestors
+    this._preparePopup(parameters.dict);
+=======
+>>>>>>> upstream-releases
   }
 
 }
@@ -22558,6 +32419,8 @@ var QueueOptimizer = function QueueOptimizerClosure() {
       case 3:
         return fnArray[i] === _util.OPS.restore;
     }
+
+    throw new Error(`iterateInlineImageGroup - invalid pos: ${pos}`);
   }, function foundInlineImageGroup(context, i) {
     var MIN_IMAGES_IN_INLINE_IMAGES_BLOCK = 10;
     var MAX_IMAGES_IN_INLINE_IMAGES_BLOCK = 200;
@@ -22664,6 +32527,8 @@ var QueueOptimizer = function QueueOptimizerClosure() {
       case 3:
         return fnArray[i] === _util.OPS.restore;
     }
+
+    throw new Error(`iterateImageMaskGroup - invalid pos: ${pos}`);
   }, function foundImageMaskGroup(context, i) {
     var MIN_IMAGES_IN_MASKS_BLOCK = 10;
     var MAX_IMAGES_IN_MASKS_BLOCK = 100;
@@ -22746,7 +32611,7 @@ var QueueOptimizer = function QueueOptimizerClosure() {
     var argsArray = context.argsArray;
     var iFirstTransform = context.iCurr - 2;
     return argsArray[iFirstTransform][1] === 0 && argsArray[iFirstTransform][2] === 0;
-  }, function (context, i) {
+  }, function iterateImageGroup(context, i) {
     var fnArray = context.fnArray,
         argsArray = context.argsArray;
     var iFirstSave = context.iCurr - 3;
@@ -22788,6 +32653,8 @@ var QueueOptimizer = function QueueOptimizerClosure() {
       case 3:
         return fnArray[i] === _util.OPS.restore;
     }
+
+    throw new Error(`iterateImageGroup - invalid pos: ${pos}`);
   }, function (context, i) {
     var MIN_IMAGES_IN_BLOCK = 3;
     var MAX_IMAGES_IN_BLOCK = 1000;
@@ -22820,7 +32687,7 @@ var QueueOptimizer = function QueueOptimizerClosure() {
     argsArray.splice(iFirstSave, count * 4, args);
     return iFirstSave + 1;
   });
-  addState(InitialState, [_util.OPS.beginText, _util.OPS.setFont, _util.OPS.setTextMatrix, _util.OPS.showText, _util.OPS.endText], null, function (context, i) {
+  addState(InitialState, [_util.OPS.beginText, _util.OPS.setFont, _util.OPS.setTextMatrix, _util.OPS.showText, _util.OPS.endText], null, function iterateShowTextGroup(context, i) {
     var fnArray = context.fnArray,
         argsArray = context.argsArray;
     var iFirstSave = context.iCurr - 4;
@@ -22854,6 +32721,8 @@ var QueueOptimizer = function QueueOptimizerClosure() {
       case 4:
         return fnArray[i] === _util.OPS.endText;
     }
+
+    throw new Error(`iterateShowTextGroup - invalid pos: ${pos}`);
   }, function (context, i) {
     var MIN_CHARS_IN_BLOCK = 3;
     var MAX_CHARS_IN_BLOCK = 1000;
@@ -22999,9 +32868,19 @@ var NullOptimizer = function NullOptimizerClosure() {
       this.queue.fnArray.push(fn);
       this.queue.argsArray.push(args);
     },
+<<<<<<< HEAD
 
     flush() {}
 
+||||||| merged common ancestors
+    flush() {}
+=======
+
+    flush() {},
+
+    reset() {}
+
+>>>>>>> upstream-releases
   };
   return NullOptimizer;
 }();
@@ -23009,6 +32888,7 @@ var NullOptimizer = function NullOptimizerClosure() {
 var OperatorList = function OperatorListClosure() {
   var CHUNK_SIZE = 1000;
   var CHUNK_SIZE_ABOUT = CHUNK_SIZE - 5;
+<<<<<<< HEAD
 
   function getTransfers(queue) {
     var transfers = [];
@@ -23034,12 +32914,42 @@ var OperatorList = function OperatorListClosure() {
     return transfers;
   }
 
+||||||| merged common ancestors
+  function getTransfers(queue) {
+    var transfers = [];
+    var fnArray = queue.fnArray,
+        argsArray = queue.argsArray;
+    for (var i = 0, ii = queue.length; i < ii; i++) {
+      switch (fnArray[i]) {
+        case _util.OPS.paintInlineImageXObject:
+        case _util.OPS.paintInlineImageXObjectGroup:
+        case _util.OPS.paintImageMaskXObject:
+          var arg = argsArray[i][0];
+          ;
+          if (!arg.cached) {
+            transfers.push(arg.data.buffer);
+          }
+          break;
+      }
+    }
+    return transfers;
+  }
+=======
+
+>>>>>>> upstream-releases
   function OperatorList(intent, messageHandler, pageIndex) {
     this.messageHandler = messageHandler;
     this.fnArray = [];
     this.argsArray = [];
+<<<<<<< HEAD
 
     if (messageHandler && this.intent !== 'oplist') {
+||||||| merged common ancestors
+    if (messageHandler && this.intent !== 'oplist') {
+=======
+
+    if (messageHandler && intent !== 'oplist') {
+>>>>>>> upstream-releases
       this.optimizer = new QueueOptimizer(this);
     } else {
       this.optimizer = new NullOptimizer(this);
@@ -23104,11 +33014,44 @@ var OperatorList = function OperatorListClosure() {
         length: this.length
       };
     },
+<<<<<<< HEAD
 
     flush(lastChunk) {
+||||||| merged common ancestors
+    flush(lastChunk) {
+=======
+
+    get _transfers() {
+      const transfers = [];
+      const {
+        fnArray,
+        argsArray,
+        length
+      } = this;
+
+      for (let i = 0; i < length; i++) {
+        switch (fnArray[i]) {
+          case _util.OPS.paintInlineImageXObject:
+          case _util.OPS.paintInlineImageXObjectGroup:
+          case _util.OPS.paintImageMaskXObject:
+            const arg = argsArray[i][0];
+            ;
+
+            if (!arg.cached) {
+              transfers.push(arg.data.buffer);
+            }
+
+            break;
+        }
+      }
+
+      return transfers;
+    },
+
+    flush(lastChunk = false) {
+>>>>>>> upstream-releases
       this.optimizer.flush();
-      var transfers = getTransfers(this);
-      var length = this.length;
+      const length = this.length;
       this._totalLength += length;
       this.messageHandler.send('RenderPageChunk', {
         operatorList: {
@@ -23119,7 +33062,7 @@ var OperatorList = function OperatorListClosure() {
         },
         pageIndex: this.pageIndex,
         intent: this.intent
-      }, transfers);
+      }, this._transfers);
       this.dependencies = Object.create(null);
       this.fnArray.length = 0;
       this.argsArray.length = 0;
@@ -23149,9 +33092,7 @@ var _util = __w_pdfjs_require__(2);
 
 var _cmap = __w_pdfjs_require__(29);
 
-var _stream = __w_pdfjs_require__(14);
-
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _fonts = __w_pdfjs_require__(30);
 
@@ -23169,7 +33110,11 @@ var _bidi = __w_pdfjs_require__(40);
 
 var _colorspace = __w_pdfjs_require__(25);
 
+var _stream = __w_pdfjs_require__(14);
+
 var _glyphlist = __w_pdfjs_require__(34);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _metrics = __w_pdfjs_require__(41);
 
@@ -23179,9 +33124,11 @@ var _jpeg_stream = __w_pdfjs_require__(20);
 
 var _murmurhash = __w_pdfjs_require__(44);
 
+var _image_utils = __w_pdfjs_require__(45);
+
 var _operator_list = __w_pdfjs_require__(27);
 
-var _image = __w_pdfjs_require__(45);
+var _image = __w_pdfjs_require__(46);
 
 var PartialEvaluator = function PartialEvaluatorClosure() {
   const DefaultPartialEvaluatorOptions = {
@@ -23192,6 +33139,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     ignoreErrors: false,
     isEvalSupported: true
   };
+<<<<<<< HEAD
 
   function NativeImageDecoder({
     xref,
@@ -23263,6 +33211,58 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     pdfFunctionFactory
   }) {
     this.pdfManager = pdfManager;
+||||||| merged common ancestors
+  function NativeImageDecoder({ xref, resources, handler, forceDataSchema = false, pdfFunctionFactory }) {
+    this.xref = xref;
+    this.resources = resources;
+    this.handler = handler;
+    this.forceDataSchema = forceDataSchema;
+    this.pdfFunctionFactory = pdfFunctionFactory;
+  }
+  NativeImageDecoder.prototype = {
+    canDecode(image) {
+      return image instanceof _jpeg_stream.JpegStream && NativeImageDecoder.isDecodable(image, this.xref, this.resources, this.pdfFunctionFactory);
+    },
+    decode(image) {
+      var dict = image.dict;
+      var colorSpace = dict.get('ColorSpace', 'CS');
+      colorSpace = _colorspace.ColorSpace.parse(colorSpace, this.xref, this.resources, this.pdfFunctionFactory);
+      return this.handler.sendWithPromise('JpegDecode', [image.getIR(this.forceDataSchema), colorSpace.numComps]).then(function ({ data, width, height }) {
+        return new _stream.Stream(data, 0, data.length, image.dict);
+      });
+    }
+  };
+  NativeImageDecoder.isSupported = function (image, xref, res, pdfFunctionFactory) {
+    var dict = image.dict;
+    if (dict.has('DecodeParms') || dict.has('DP')) {
+      return false;
+    }
+    var cs = _colorspace.ColorSpace.parse(dict.get('ColorSpace', 'CS'), xref, res, pdfFunctionFactory);
+    return (cs.name === 'DeviceGray' || cs.name === 'DeviceRGB') && cs.isDefaultDecode(dict.getArray('Decode', 'D'));
+  };
+  NativeImageDecoder.isDecodable = function (image, xref, res, pdfFunctionFactory) {
+    var dict = image.dict;
+    if (dict.has('DecodeParms') || dict.has('DP')) {
+      return false;
+    }
+    var cs = _colorspace.ColorSpace.parse(dict.get('ColorSpace', 'CS'), xref, res, pdfFunctionFactory);
+    return (cs.numComps === 1 || cs.numComps === 3) && cs.isDefaultDecode(dict.getArray('Decode', 'D'));
+  };
+  function PartialEvaluator({ pdfManager, xref, handler, pageIndex, idFactory, fontCache, builtInCMapCache, options = null, pdfFunctionFactory }) {
+    this.pdfManager = pdfManager;
+=======
+
+  function PartialEvaluator({
+    xref,
+    handler,
+    pageIndex,
+    idFactory,
+    fontCache,
+    builtInCMapCache,
+    options = null,
+    pdfFunctionFactory
+  }) {
+>>>>>>> upstream-releases
     this.xref = xref;
     this.handler = handler;
     this.pageIndex = pageIndex;
@@ -23271,7 +33271,13 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     this.builtInCMapCache = builtInCMapCache;
     this.options = options || DefaultPartialEvaluatorOptions;
     this.pdfFunctionFactory = pdfFunctionFactory;
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+    this.parsingType3Font = false;
+
+>>>>>>> upstream-releases
     this.fetchBuiltInCMap = async name => {
       if (this.builtInCMapCache.has(name)) {
         return this.builtInCMapCache.get(name);
@@ -23516,6 +33522,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         }
       });
     },
+<<<<<<< HEAD
 
     buildPaintImageXObject({
       resources,
@@ -23526,20 +33533,34 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       imageCache,
       forceDisableNativeImageDecoder = false
     }) {
+||||||| merged common ancestors
+    buildPaintImageXObject({ resources, image, isInline = false, operatorList, cacheKey, imageCache, forceDisableNativeImageDecoder = false }) {
+=======
+
+    async buildPaintImageXObject({
+      resources,
+      image,
+      isInline = false,
+      operatorList,
+      cacheKey,
+      imageCache,
+      forceDisableNativeImageDecoder = false
+    }) {
+>>>>>>> upstream-releases
       var dict = image.dict;
       var w = dict.get('Width', 'W');
       var h = dict.get('Height', 'H');
 
       if (!(w && (0, _util.isNum)(w)) || !(h && (0, _util.isNum)(h))) {
         (0, _util.warn)('Image dimensions are missing, or not numbers.');
-        return Promise.resolve();
+        return undefined;
       }
 
       var maxImageSize = this.options.maxImageSize;
 
       if (maxImageSize !== -1 && w * h > maxImageSize) {
         (0, _util.warn)('Image exceeded maximum allowed size and was removed.');
-        return Promise.resolve();
+        return undefined;
       }
 
       var imageMask = dict.get('ImageMask', 'IM') || false;
@@ -23558,7 +33579,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
           imageIsFromDecodeStream: image instanceof _stream.DecodeStream,
           inverseDecode: !!decode && decode[0] > 0
         });
-        imgData.cached = true;
+        imgData.cached = !!cacheKey;
         args = [imgData];
         operatorList.addOp(_util.OPS.paintImageMaskXObject, args);
 
@@ -23568,8 +33589,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
             args
           };
         }
+<<<<<<< HEAD
 
         return Promise.resolve();
+||||||| merged common ancestors
+        return Promise.resolve();
+=======
+
+        return undefined;
+>>>>>>> upstream-releases
       }
 
       var softMask = dict.get('SMask', 'SM') || false;
@@ -23586,13 +33614,27 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         });
         imgData = imageObj.createImageData(true);
         operatorList.addOp(_util.OPS.paintInlineImageXObject, [imgData]);
-        return Promise.resolve();
+        return undefined;
       }
 
       const nativeImageDecoderSupport = forceDisableNativeImageDecoder ? _util.NativeImageDecoding.NONE : this.options.nativeImageDecoderSupport;
+<<<<<<< HEAD
       var objId = 'img_' + this.idFactory.createObjId();
 
       if (nativeImageDecoderSupport !== _util.NativeImageDecoding.NONE && !softMask && !mask && image instanceof _jpeg_stream.JpegStream && NativeImageDecoder.isSupported(image, this.xref, resources, this.pdfFunctionFactory)) {
+||||||| merged common ancestors
+      var objId = 'img_' + this.idFactory.createObjId();
+      if (nativeImageDecoderSupport !== _util.NativeImageDecoding.NONE && !softMask && !mask && image instanceof _jpeg_stream.JpegStream && NativeImageDecoder.isSupported(image, this.xref, resources, this.pdfFunctionFactory)) {
+=======
+      let objId = `img_${this.idFactory.createObjId()}`;
+
+      if (this.parsingType3Font) {
+        (0, _util.assert)(nativeImageDecoderSupport === _util.NativeImageDecoding.NONE, 'Type3 image resources should be completely decoded in the worker.');
+        objId = `${this.idFactory.getDocId()}_type3res_${objId}`;
+      }
+
+      if (nativeImageDecoderSupport !== _util.NativeImageDecoding.NONE && !softMask && !mask && image instanceof _jpeg_stream.JpegStream && _image_utils.NativeImageDecoder.isSupported(image, this.xref, resources, this.pdfFunctionFactory)) {
+>>>>>>> upstream-releases
         return this.handler.sendWithPromise('obj', [objId, this.pageIndex, 'JpegStream', image.getIR(this.options.forceDataSchema)]).then(function () {
           operatorList.addDependency(objId);
           args = [objId, w, h];
@@ -23621,7 +33663,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       var nativeImageDecoder = null;
 
       if (nativeImageDecoderSupport === _util.NativeImageDecoding.DECODE && (image instanceof _jpeg_stream.JpegStream || mask instanceof _jpeg_stream.JpegStream || softMask instanceof _jpeg_stream.JpegStream)) {
-        nativeImageDecoder = new NativeImageDecoder({
+        nativeImageDecoder = new _image_utils.NativeImageDecoder({
           xref: this.xref,
           resources,
           handler: this.handler,
@@ -23632,8 +33674,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
 
       operatorList.addDependency(objId);
       args = [objId, w, h];
+<<<<<<< HEAD
 
       _image.PDFImage.buildImage({
+||||||| merged common ancestors
+      _image.PDFImage.buildImage({
+=======
+
+      const imgPromise = _image.PDFImage.buildImage({
+>>>>>>> upstream-releases
         handler: this.handler,
         xref: this.xref,
         res: resources,
@@ -23643,12 +33692,33 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         pdfFunctionFactory: this.pdfFunctionFactory
       }).then(imageObj => {
         var imgData = imageObj.createImageData(false);
+
+        if (this.parsingType3Font) {
+          return this.handler.sendWithPromise('commonobj', [objId, 'FontType3Res', imgData], [imgData.data.buffer]);
+        }
+
         this.handler.send('obj', [objId, this.pageIndex, 'Image', imgData], [imgData.data.buffer]);
+        return undefined;
       }).catch(reason => {
         (0, _util.warn)('Unable to decode image: ' + reason);
-        this.handler.send('obj', [objId, this.pageIndex, 'Image', null]);
-      });
 
+        if (this.parsingType3Font) {
+          return this.handler.sendWithPromise('commonobj', [objId, 'FontType3Res', null]);
+        }
+
+        this.handler.send('obj', [objId, this.pageIndex, 'Image', null]);
+        return undefined;
+      });
+<<<<<<< HEAD
+
+||||||| merged common ancestors
+=======
+
+      if (this.parsingType3Font) {
+        await imgPromise;
+      }
+
+>>>>>>> upstream-releases
       operatorList.addOp(_util.OPS.paintImageXObject, args);
 
       if (cacheKey) {
@@ -23657,8 +33727,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
           args
         };
       }
+<<<<<<< HEAD
 
       return Promise.resolve();
+||||||| merged common ancestors
+      return Promise.resolve();
+=======
+
+      return undefined;
+>>>>>>> upstream-releases
     },
 
     handleSMask: function PartialEvaluator_handleSmask(smask, resources, operatorList, task, stateManager) {
@@ -23745,6 +33822,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         return translated.loadedName;
       });
     },
+<<<<<<< HEAD
     handleText: function PartialEvaluator_handleText(chars, state) {
       var font = state.font;
       var glyphs = font.charsToGlyphs(chars);
@@ -23766,11 +33844,43 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
           if (accent && accent.fontChar) {
             buildPath(accent.fontChar);
           }
+||||||| merged common ancestors
+    handleText: function PartialEvaluator_handleText(chars, state) {
+      var font = state.font;
+      var glyphs = font.charsToGlyphs(chars);
+      var isAddToPathSet = !!(state.textRenderingMode & _util.TextRenderingMode.ADD_TO_PATH_FLAG);
+      if (font.data && (isAddToPathSet || this.options.disableFontFace || state.fillColorSpace.name === 'Pattern')) {
+        var buildPath = fontChar => {
+          if (!font.renderer.hasBuiltPath(fontChar)) {
+            var path = font.renderer.getPathJs(fontChar);
+            this.handler.send('commonobj', [font.loadedName + '_path_' + fontChar, 'FontPath', path]);
+          }
+        };
+        for (var i = 0, ii = glyphs.length; i < ii; i++) {
+          var glyph = glyphs[i];
+          buildPath(glyph.fontChar);
+          var accent = glyph.accent;
+          if (accent && accent.fontChar) {
+            buildPath(accent.fontChar);
+          }
+=======
+
+    handleText(chars, state) {
+      const font = state.font;
+      const glyphs = font.charsToGlyphs(chars);
+
+      if (font.data) {
+        const isAddToPathSet = !!(state.textRenderingMode & _util.TextRenderingMode.ADD_TO_PATH_FLAG);
+
+        if (isAddToPathSet || state.fillColorSpace.name === 'Pattern' || font.disableFontFace || this.options.disableFontFace) {
+          PartialEvaluator.buildFontPaths(font, glyphs, this.handler);
+>>>>>>> upstream-releases
         }
       }
 
       return glyphs;
     },
+
     setGState: function PartialEvaluator_setGState(resources, gState, operatorList, task, stateManager) {
       var gStateObj = [];
       var gStateKeys = gState.getKeys();
@@ -23901,22 +34011,38 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
 
       var fontCapability = (0, _util.createPromiseCapability)();
       var preEvaluatedFont = this.preEvaluateFont(font);
-      var descriptor = preEvaluatedFont.descriptor;
+      const {
+        descriptor,
+        hash
+      } = preEvaluatedFont;
       var fontRefIsRef = (0, _primitives.isRef)(fontRef),
           fontID;
 
       if (fontRefIsRef) {
         fontID = fontRef.toString();
       }
+<<<<<<< HEAD
 
       if ((0, _primitives.isDict)(descriptor)) {
+||||||| merged common ancestors
+      if ((0, _primitives.isDict)(descriptor)) {
+=======
+
+      if (hash && (0, _primitives.isDict)(descriptor)) {
+>>>>>>> upstream-releases
         if (!descriptor.fontAliases) {
           descriptor.fontAliases = Object.create(null);
         }
 
         var fontAliases = descriptor.fontAliases;
+<<<<<<< HEAD
         var hash = preEvaluatedFont.hash;
 
+||||||| merged common ancestors
+        var hash = preEvaluatedFont.hash;
+=======
+
+>>>>>>> upstream-releases
         if (fontAliases[hash]) {
           var aliasFontRef = fontAliases[hash].aliasRef;
 
@@ -23943,12 +34069,19 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         if (!fontID) {
           fontID = this.idFactory.createObjId();
         }
+<<<<<<< HEAD
 
         this.fontCache.put('id_' + fontID, fontCapability.promise);
+||||||| merged common ancestors
+        this.fontCache.put('id_' + fontID, fontCapability.promise);
+=======
+
+        this.fontCache.put(`id_${fontID}`, fontCapability.promise);
+>>>>>>> upstream-releases
       }
 
       (0, _util.assert)(fontID, 'The "fontID" must be defined.');
-      font.loadedName = 'g_' + this.pdfManager.docId + '_f' + fontID;
+      font.loadedName = `${this.idFactory.getDocId()}_f${fontID}`;
       font.translated = fontCapability.promise;
       var translatedPromise;
 
@@ -23971,7 +34104,6 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         });
 
         try {
-          var descriptor = preEvaluatedFont.descriptor;
           var fontFile3 = descriptor && descriptor.get('FontFile3');
           var subtype = fontFile3 && fontFile3.get('Subtype');
           var fontType = (0, _fonts.getFontType)(preEvaluatedFont.type, subtype && subtype.name);
@@ -23983,7 +34115,8 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       });
       return fontCapability.promise;
     },
-    buildPath: function PartialEvaluator_buildPath(operatorList, fn, args) {
+
+    buildPath(operatorList, fn, args, parsingText = false) {
       var lastIndex = operatorList.length - 1;
 
       if (!args) {
@@ -23991,14 +34124,24 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       }
 
       if (lastIndex < 0 || operatorList.fnArray[lastIndex] !== _util.OPS.constructPath) {
+        if (parsingText) {
+          (0, _util.warn)(`Encountered path operator "${fn}" inside of a text object.`);
+          operatorList.addOp(_util.OPS.save, null);
+        }
+
         operatorList.addOp(_util.OPS.constructPath, [[fn], args]);
+
+        if (parsingText) {
+          operatorList.addOp(_util.OPS.restore, null);
+        }
       } else {
         var opArgs = operatorList.argsArray[lastIndex];
         opArgs[0].push(fn);
         Array.prototype.push.apply(opArgs[1], args);
       }
     },
-    handleColorN: function PartialEvaluator_handleColorN(operatorList, fn, args, cs, patterns, resources, task) {
+
+    async handleColorN(operatorList, fn, args, cs, patterns, resources, task) {
       var patternName = args[args.length - 1];
       var pattern;
 
@@ -24014,14 +34157,29 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
           var matrix = dict.getArray('Matrix');
           pattern = _pattern.Pattern.parseShading(shading, matrix, this.xref, resources, this.handler, this.pdfFunctionFactory);
           operatorList.addOp(fn, pattern.getIR());
-          return Promise.resolve();
+          return undefined;
         }
+<<<<<<< HEAD
 
         return Promise.reject(new Error('Unknown PatternType: ' + typeNum));
+||||||| merged common ancestors
+        return Promise.reject(new Error('Unknown PatternType: ' + typeNum));
+=======
+
+        throw new _util.FormatError(`Unknown PatternType: ${typeNum}`);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       operatorList.addOp(fn, args);
       return Promise.resolve();
+||||||| merged common ancestors
+      operatorList.addOp(fn, args);
+      return Promise.resolve();
+=======
+
+      throw new _util.FormatError(`Unknown PatternName: ${patternName}`);
+>>>>>>> upstream-releases
     },
 
     getOperatorList({
@@ -24040,6 +34198,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
 
       var self = this;
       var xref = this.xref;
+      let parsingText = false;
       var imageCache = Object.create(null);
 
       var xobjs = resources.get('XObject') || _primitives.Dict.empty;
@@ -24161,7 +34320,20 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
                 operatorList.addOp(_util.OPS.setFont, [loadedName, fontSize]);
               }));
               return;
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+            case _util.OPS.beginText:
+              parsingText = true;
+              break;
+
+            case _util.OPS.endText:
+              parsingText = false;
+              break;
+
+>>>>>>> upstream-releases
             case _util.OPS.endInlineImage:
               var cacheKey = args[0].cacheKey;
 
@@ -24343,11 +34515,17 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
             case _util.OPS.curveTo2:
             case _util.OPS.curveTo3:
             case _util.OPS.closePath:
+<<<<<<< HEAD
               self.buildPath(operatorList, fn, args);
               continue;
 
-            case _util.OPS.rectangle:
+||||||| merged common ancestors
               self.buildPath(operatorList, fn, args);
+              continue;
+=======
+>>>>>>> upstream-releases
+            case _util.OPS.rectangle:
+              self.buildPath(operatorList, fn, args, parsingText);
               continue;
 
             case _util.OPS.markPoint:
@@ -24456,19 +34634,28 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
             fontFamily: font.fallbackName,
             ascent: font.ascent,
             descent: font.descent,
-            vertical: font.vertical
+            vertical: !!font.vertical
           };
         }
 
         textContentItem.fontName = font.loadedName;
         var tsm = [textState.fontSize * textState.textHScale, 0, 0, textState.fontSize, 0, textState.textRise];
+<<<<<<< HEAD
 
         if (font.isType3Font && textState.fontMatrix !== _util.FONT_IDENTITY_MATRIX && textState.fontSize === 1) {
           var glyphHeight = font.bbox[3] - font.bbox[1];
 
+||||||| merged common ancestors
+        if (font.isType3Font && textState.fontMatrix !== _util.FONT_IDENTITY_MATRIX && textState.fontSize === 1) {
+          var glyphHeight = font.bbox[3] - font.bbox[1];
+=======
+
+        if (font.isType3Font && textState.fontSize <= 1 && !(0, _util.isArrayEqual)(textState.fontMatrix, _util.FONT_IDENTITY_MATRIX)) {
+          const glyphHeight = font.bbox[3] - font.bbox[1];
+
+>>>>>>> upstream-releases
           if (glyphHeight > 0) {
-            glyphHeight = glyphHeight * textState.fontMatrix[3];
-            tsm[3] *= glyphHeight;
+            tsm[3] *= glyphHeight * textState.fontMatrix[3];
           }
         }
 
@@ -24632,9 +34819,22 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         if (!textContentItem.initialized) {
           return;
         }
+<<<<<<< HEAD
 
         textContentItem.width *= textContentItem.textAdvanceScale;
         textContentItem.height *= textContentItem.textAdvanceScale;
+||||||| merged common ancestors
+        textContentItem.width *= textContentItem.textAdvanceScale;
+        textContentItem.height *= textContentItem.textAdvanceScale;
+=======
+
+        if (!textContentItem.vertical) {
+          textContentItem.width *= textContentItem.textAdvanceScale;
+        } else {
+          textContentItem.height *= textContentItem.textAdvanceScale;
+        }
+
+>>>>>>> upstream-releases
         textContent.items.push(runBidiTransform(textContentItem));
         textContentItem.initialized = false;
         textContentItem.str.length = 0;
@@ -24987,7 +35187,8 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     },
 
     extractDataStructures: function PartialEvaluator_extractDataStructures(dict, baseDict, properties) {
-      var xref = this.xref;
+      let xref = this.xref,
+          cidToGidBytes;
       var toUnicode = dict.get('ToUnicode') || baseDict.get('ToUnicode');
       var toUnicodePromise = toUnicode ? this.readToUnicode(toUnicode) : Promise.resolve(undefined);
 
@@ -25005,7 +35206,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         var cidToGidMap = dict.get('CIDToGIDMap');
 
         if ((0, _primitives.isStream)(cidToGidMap)) {
-          properties.cidToGidMap = this.readCidToGidMap(cidToGidMap);
+          cidToGidBytes = cidToGidMap.getBytes();
         }
       }
 
@@ -25080,8 +35281,13 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       return toUnicodePromise.then(toUnicode => {
         properties.toUnicode = toUnicode;
         return this.buildToUnicode(properties);
-      }).then(function (toUnicode) {
+      }).then(toUnicode => {
         properties.toUnicode = toUnicode;
+
+        if (cidToGidBytes) {
+          properties.cidToGidMap = this.readCidToGidMap(cidToGidBytes, toUnicode);
+        }
+
         return properties;
       });
     },
@@ -25156,8 +35362,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
                 continue;
               }
             }
+<<<<<<< HEAD
 
             toUnicode[charcode] = String.fromCharCode(code);
+||||||| merged common ancestors
+            toUnicode[charcode] = String.fromCharCode(code);
+=======
+
+            toUnicode[charcode] = String.fromCodePoint(code);
+>>>>>>> upstream-releases
           }
 
           continue;
@@ -25256,8 +35469,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
               var w2 = token.charCodeAt(k) << 8 | token.charCodeAt(k + 1);
               str.push(((w1 & 0x3ff) << 10) + (w2 & 0x3ff) + 0x10000);
             }
+<<<<<<< HEAD
 
             map[charCode] = String.fromCharCode.apply(String, str);
+||||||| merged common ancestors
+            map[charCode] = String.fromCharCode.apply(String, str);
+=======
+
+            map[charCode] = String.fromCodePoint.apply(String, str);
+>>>>>>> upstream-releases
           });
           return new _fonts.ToUnicodeMap(map);
         });
@@ -25265,23 +35485,38 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
 
       return Promise.resolve(null);
     },
-    readCidToGidMap: function PartialEvaluator_readCidToGidMap(cidToGidStream) {
-      var glyphsData = cidToGidStream.getBytes();
+
+    readCidToGidMap(glyphsData, toUnicode) {
       var result = [];
 
       for (var j = 0, jj = glyphsData.length; j < jj; j++) {
         var glyphID = glyphsData[j++] << 8 | glyphsData[j];
+<<<<<<< HEAD
 
         if (glyphID === 0) {
+||||||| merged common ancestors
+        if (glyphID === 0) {
+=======
+        const code = j >> 1;
+
+        if (glyphID === 0 && !toUnicode.has(code)) {
+>>>>>>> upstream-releases
           continue;
         }
+<<<<<<< HEAD
 
         var code = j >> 1;
+||||||| merged common ancestors
+        var code = j >> 1;
+=======
+
+>>>>>>> upstream-releases
         result[code] = glyphID;
       }
 
       return result;
     },
+
     extractWidths: function PartialEvaluator_extractWidths(dict, descriptor, properties) {
       var xref = this.xref;
       var glyphsWidths = [];
@@ -25510,7 +35745,15 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
             }
           }
         }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+
+        const firstChar = dict.get('FirstChar') || 0;
+        const lastChar = dict.get('LastChar') || (composite ? 0xFFFF : 0xFF);
+        hash.update(`${firstChar}-${lastChar}`);
+>>>>>>> upstream-releases
         var toUnicode = dict.get('ToUnicode') || baseDict.get('ToUnicode');
 
         if ((0, _primitives.isStream)(toUnicode)) {
@@ -25597,9 +35840,18 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         var baseFontStr = baseFont && baseFont.name;
 
         if (fontNameStr !== baseFontStr) {
+<<<<<<< HEAD
           (0, _util.info)('The FontDescriptor\'s FontName is "' + fontNameStr + '" but should be the same as the Font\'s BaseFont "' + baseFontStr + '"');
 
           if (fontNameStr && baseFontStr && baseFontStr.indexOf(fontNameStr) === 0) {
+||||||| merged common ancestors
+          (0, _util.info)('The FontDescriptor\'s FontName is "' + fontNameStr + '" but should be the same as the Font\'s BaseFont "' + baseFontStr + '"');
+          if (fontNameStr && baseFontStr && baseFontStr.indexOf(fontNameStr) === 0) {
+=======
+          (0, _util.info)(`The FontDescriptor\'s FontName is "${fontNameStr}" but ` + `should be the same as the Font\'s BaseFont "${baseFontStr}".`);
+
+          if (fontNameStr && baseFontStr && baseFontStr.startsWith(fontNameStr)) {
+>>>>>>> upstream-releases
             fontName = baseFont;
           }
         }
@@ -25685,6 +35937,26 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
       });
     }
   };
+
+  PartialEvaluator.buildFontPaths = function (font, glyphs, handler) {
+    function buildPath(fontChar) {
+      if (font.renderer.hasBuiltPath(fontChar)) {
+        return;
+      }
+
+      handler.send('commonobj', [`${font.loadedName}_path_${fontChar}`, 'FontPath', font.renderer.getPathJs(fontChar)]);
+    }
+
+    for (const glyph of glyphs) {
+      buildPath(glyph.fontChar);
+      const accent = glyph.accent;
+
+      if (accent && accent.fontChar) {
+        buildPath(accent.fontChar);
+      }
+    }
+  };
+
   return PartialEvaluator;
 }();
 
@@ -25704,10 +35976,28 @@ var TranslatedFont = function TranslatedFontClosure() {
       if (this.sent) {
         return;
       }
+<<<<<<< HEAD
 
       var fontData = this.font.exportData();
       handler.send('commonobj', [this.loadedName, 'Font', fontData]);
+||||||| merged common ancestors
+      var fontData = this.font.exportData();
+      handler.send('commonobj', [this.loadedName, 'Font', fontData]);
+=======
+
+>>>>>>> upstream-releases
       this.sent = true;
+      handler.send('commonobj', [this.loadedName, 'Font', this.font.exportData()]);
+    },
+
+    fallback(handler) {
+      if (!this.font.data) {
+        return;
+      }
+
+      this.font.disableFontFace = true;
+      const glyphs = this.font.glyphCacheValues;
+      PartialEvaluator.buildFontPaths(this.font, glyphs, handler);
     },
 
     loadType3Data(evaluator, resources, parentOperatorList, task) {
@@ -25721,7 +36011,9 @@ var TranslatedFont = function TranslatedFontClosure() {
 
       var type3Options = Object.create(evaluator.options);
       type3Options.ignoreErrors = false;
+      type3Options.nativeImageDecoderSupport = _util.NativeImageDecoding.NONE;
       var type3Evaluator = evaluator.clone(type3Options);
+      type3Evaluator.parsingType3Font = true;
       var translatedFont = this.font;
       var loadCharProcsPromise = Promise.resolve();
       var charProcs = this.dict.get('CharProcs');
@@ -25909,7 +36201,7 @@ var EvalState = function EvalStateClosure() {
 }();
 
 var EvaluatorPreprocessor = function EvaluatorPreprocessorClosure() {
-  var getOPMap = (0, _util.getLookupTableFactory)(function (t) {
+  var getOPMap = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['w'] = {
       id: _util.OPS.setLineWidth,
       numArgs: 1,
@@ -26290,7 +36582,10 @@ var EvaluatorPreprocessor = function EvaluatorPreprocessorClosure() {
 
   function EvaluatorPreprocessor(stream, xref, stateManager) {
     this.opMap = getOPMap();
-    this.parser = new _parser.Parser(new _parser.Lexer(stream, this.opMap), false, xref);
+    this.parser = new _parser.Parser({
+      lexer: new _parser.Lexer(stream, this.opMap),
+      xref
+    });
     this.stateManager = stateManager;
     this.nonProcessedArgs = [];
     this._numInvalidPathOPS = 0;
@@ -26414,9 +36709,11 @@ exports.CMapFactory = exports.IdentityCMap = exports.CMap = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _parser = __w_pdfjs_require__(13);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -27189,7 +37486,7 @@ var CMapFactory = function CMapFactoryClosure() {
           }
         }
       } catch (ex) {
-        if (ex instanceof _util.MissingDataException) {
+        if (ex instanceof _core_utils.MissingDataException) {
           throw ex;
         }
 
@@ -27323,6 +37620,8 @@ var _unicode = __w_pdfjs_require__(36);
 var _font_renderer = __w_pdfjs_require__(37);
 
 var _cmap = __w_pdfjs_require__(29);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var _stream = __w_pdfjs_require__(14);
 
@@ -28271,7 +38570,13 @@ var Font = function FontClosure() {
     font: null,
     mimetype: null,
     encoding: null,
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+    disableFontFace: false,
+
+>>>>>>> upstream-releases
     get renderer() {
       var renderer = _font_renderer.FontRendererFactory.create(this, SEAC_ANALYSIS_ENABLED);
 
@@ -28304,8 +38609,15 @@ var Font = function FontClosure() {
       this.italic = fontName.search(/oblique/gi) !== -1 || fontName.search(/italic/gi) !== -1;
       this.black = name.search(/Black/g) !== -1;
       this.remeasure = Object.keys(this.widths).length > 0;
+<<<<<<< HEAD
 
       if (isStandardFont && type === 'CIDFontType2' && this.cidEncoding.indexOf('Identity-') === 0) {
+||||||| merged common ancestors
+      if (isStandardFont && type === 'CIDFontType2' && this.cidEncoding.indexOf('Identity-') === 0) {
+=======
+
+      if (isStandardFont && type === 'CIDFontType2' && this.cidEncoding.startsWith('Identity-')) {
+>>>>>>> upstream-releases
         var GlyphMapForStandardFonts = (0, _standard_fonts.getGlyphMapForStandardFonts)();
         var map = [];
 
@@ -28697,8 +39009,15 @@ var Font = function FontClosure() {
           hasShortCmap
         };
       }
+<<<<<<< HEAD
 
       function sanitizeMetrics(font, header, metrics, numGlyphs) {
+||||||| merged common ancestors
+      function sanitizeMetrics(font, header, metrics, numGlyphs) {
+=======
+
+      function sanitizeMetrics(font, header, metrics, numGlyphs, dupFirstEntry) {
+>>>>>>> upstream-releases
         if (!header) {
           if (metrics) {
             metrics.data = null;
@@ -28736,6 +39055,12 @@ var Font = function FontClosure() {
         if (numMissing > 0) {
           var entries = new Uint8Array(metrics.length + numMissing * 2);
           entries.set(metrics.data);
+
+          if (dupFirstEntry) {
+            entries[metrics.length] = metrics.data[2];
+            entries[metrics.length + 1] = metrics.data[3];
+          }
+
           metrics.data = entries;
         }
       }
@@ -29490,9 +39815,17 @@ var Font = function FontClosure() {
         delete tables['prep'];
         delete tables['cvt '];
       }
+<<<<<<< HEAD
 
       sanitizeMetrics(font, tables['hhea'], tables['hmtx'], numGlyphsOut);
 
+||||||| merged common ancestors
+      sanitizeMetrics(font, tables['hhea'], tables['hmtx'], numGlyphsOut);
+=======
+
+      sanitizeMetrics(font, tables['hhea'], tables['hmtx'], numGlyphsOut, dupFirstEntry);
+
+>>>>>>> upstream-releases
       if (!tables['head']) {
         throw new _util.FormatError('Required "head" table is not found');
       }
@@ -29962,7 +40295,12 @@ var Font = function FontClosure() {
       }
 
       return charsCache[charsCacheKey] = glyphs;
+    },
+
+    get glyphCacheValues() {
+      return Object.values(this.glyphCache);
     }
+
   };
   return Font;
 }();
@@ -30102,7 +40440,7 @@ var Type1Font = function Type1FontClosure() {
       headerBytes = stream.getBytes(suggestedLength);
       headerBytesLength = headerBytes.length;
     } catch (ex) {
-      if (ex instanceof _util.MissingDataException) {
+      if (ex instanceof _core_utils.MissingDataException) {
         throw ex;
       }
     }
@@ -30326,20 +40664,43 @@ var Type1Font = function Type1FontClosure() {
       cff.strings = strings;
       cff.globalSubrIndex = new _cff_parser.CFFIndex();
       var count = glyphs.length;
-      var charsetArray = [0];
+      var charsetArray = ['.notdef'];
       var i, ii;
 
       for (i = 0; i < count; i++) {
+<<<<<<< HEAD
         var index = _cff_parser.CFFStandardStrings.indexOf(charstrings[i].glyphName);
 
+||||||| merged common ancestors
+        var index = _cff_parser.CFFStandardStrings.indexOf(charstrings[i].glyphName);
+=======
+        let glyphName = charstrings[i].glyphName;
+
+        let index = _cff_parser.CFFStandardStrings.indexOf(glyphName);
+
+>>>>>>> upstream-releases
         if (index === -1) {
-          index = 0;
+          strings.add(glyphName);
         }
+<<<<<<< HEAD
 
         charsetArray.push(index >> 8 & 0xff, index & 0xff);
+||||||| merged common ancestors
+        charsetArray.push(index >> 8 & 0xff, index & 0xff);
+=======
+
+        charsetArray.push(glyphName);
+>>>>>>> upstream-releases
       }
+<<<<<<< HEAD
 
       cff.charset = new _cff_parser.CFFCharset(false, 0, [], charsetArray);
+||||||| merged common ancestors
+      cff.charset = new _cff_parser.CFFCharset(false, 0, [], charsetArray);
+=======
+
+      cff.charset = new _cff_parser.CFFCharset(false, 0, charsetArray);
+>>>>>>> upstream-releases
       var charStringsIndex = new _cff_parser.CFFIndex();
       charStringsIndex.add([0x8B, 0x0E]);
 
@@ -30419,16 +40780,23 @@ var CFFFont = function CFFFontClosure() {
 
       if (properties.composite) {
         charCodeToGlyphId = Object.create(null);
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+        let charCode;
+
+>>>>>>> upstream-releases
         if (cff.isCIDFont) {
           for (glyphId = 0; glyphId < charsets.length; glyphId++) {
             var cid = charsets[glyphId];
-            var charCode = properties.cMap.charCodeOf(cid);
+            charCode = properties.cMap.charCodeOf(cid);
             charCodeToGlyphId[charCode] = glyphId;
           }
         } else {
           for (glyphId = 0; glyphId < cff.charStrings.count; glyphId++) {
-            charCodeToGlyphId[glyphId] = glyphId;
+            charCode = properties.cMap.charCodeOf(glyphId);
+            charCodeToGlyphId[charCode] = glyphId;
           }
         }
 
@@ -30466,8 +40834,15 @@ var _encodings = __w_pdfjs_require__(33);
 
 var MAX_SUBR_NESTING = 10;
 var CFFStandardStrings = ['.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore', 'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'exclamdown', 'cent', 'sterling', 'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle', 'quotedblleft', 'guillemotleft', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'endash', 'dagger', 'daggerdbl', 'periodcentered', 'paragraph', 'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright', 'guillemotright', 'ellipsis', 'perthousand', 'questiondown', 'grave', 'acute', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'dieresis', 'ring', 'cedilla', 'hungarumlaut', 'ogonek', 'caron', 'emdash', 'AE', 'ordfeminine', 'Lslash', 'Oslash', 'OE', 'ordmasculine', 'ae', 'dotlessi', 'lslash', 'oslash', 'oe', 'germandbls', 'onesuperior', 'logicalnot', 'mu', 'trademark', 'Eth', 'onehalf', 'plusminus', 'Thorn', 'onequarter', 'divide', 'brokenbar', 'degree', 'thorn', 'threequarters', 'twosuperior', 'registered', 'minus', 'eth', 'multiply', 'threesuperior', 'copyright', 'Aacute', 'Acircumflex', 'Adieresis', 'Agrave', 'Aring', 'Atilde', 'Ccedilla', 'Eacute', 'Ecircumflex', 'Edieresis', 'Egrave', 'Iacute', 'Icircumflex', 'Idieresis', 'Igrave', 'Ntilde', 'Oacute', 'Ocircumflex', 'Odieresis', 'Ograve', 'Otilde', 'Scaron', 'Uacute', 'Ucircumflex', 'Udieresis', 'Ugrave', 'Yacute', 'Ydieresis', 'Zcaron', 'aacute', 'acircumflex', 'adieresis', 'agrave', 'aring', 'atilde', 'ccedilla', 'eacute', 'ecircumflex', 'edieresis', 'egrave', 'iacute', 'icircumflex', 'idieresis', 'igrave', 'ntilde', 'oacute', 'ocircumflex', 'odieresis', 'ograve', 'otilde', 'scaron', 'uacute', 'ucircumflex', 'udieresis', 'ugrave', 'yacute', 'ydieresis', 'zcaron', 'exclamsmall', 'Hungarumlautsmall', 'dollaroldstyle', 'dollarsuperior', 'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'questionsmall', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall', 'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall', 'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall', 'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', 'exclamdownsmall', 'centoldstyle', 'Lslashsmall', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall', 'Brevesmall', 'Caronsmall', 'Dotaccentsmall', 'Macronsmall', 'figuredash', 'hypheninferior', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall', 'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior', 'Agravesmall', 'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall', 'Aringsmall', 'AEsmall', 'Ccedillasmall', 'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall', 'Igravesmall', 'Iacutesmall', 'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall', 'Oacutesmall', 'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall', 'Uacutesmall', 'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall', '001.000', '001.001', '001.002', '001.003', 'Black', 'Bold', 'Book', 'Light', 'Medium', 'Regular', 'Roman', 'Semibold'];
+<<<<<<< HEAD
 exports.CFFStandardStrings = CFFStandardStrings;
 
+||||||| merged common ancestors
+=======
+exports.CFFStandardStrings = CFFStandardStrings;
+const NUM_STANDARD_CFF_STRINGS = 391;
+
+>>>>>>> upstream-releases
 var CFFParser = function CFFParserClosure() {
   var CharstringValidationData = [null, {
     id: 'hstem',
@@ -31039,6 +41414,13 @@ var CFFParser = function CFFParserClosure() {
         if (validationCommand) {
           if (validationCommand.stem) {
             state.hints += stackSize >> 1;
+
+            if (value === 3 || value === 23) {
+              state.hasVStems = true;
+            } else if (state.hasVStems && (value === 1 || value === 18)) {
+              (0, _util.warn)('CFF stem hints are in wrong order');
+              data[j - 1] = value === 1 ? 3 : 23;
+            }
           }
 
           if ('min' in validationCommand) {
@@ -31108,7 +41490,8 @@ var CFFParser = function CFFParserClosure() {
           hints: 0,
           firstStackClearing: true,
           seac: null,
-          width: null
+          width: null,
+          hasVStems: false
         };
         var valid = true;
         var localSubrToUse = null;
@@ -31458,15 +41841,39 @@ var CFFStrings = function CFFStringsClosure() {
 
   CFFStrings.prototype = {
     get: function CFFStrings_get(index) {
-      if (index >= 0 && index <= 390) {
+      if (index >= 0 && index <= NUM_STANDARD_CFF_STRINGS - 1) {
         return CFFStandardStrings[index];
       }
+<<<<<<< HEAD
 
       if (index - 391 <= this.strings.length) {
         return this.strings[index - 391];
+||||||| merged common ancestors
+      if (index - 391 <= this.strings.length) {
+        return this.strings[index - 391];
+=======
+
+      if (index - NUM_STANDARD_CFF_STRINGS <= this.strings.length) {
+        return this.strings[index - NUM_STANDARD_CFF_STRINGS];
+>>>>>>> upstream-releases
       }
 
       return CFFStandardStrings[0];
+    },
+    getSID: function CFFStrings_getSID(str) {
+      let index = CFFStandardStrings.indexOf(str);
+
+      if (index !== -1) {
+        return index;
+      }
+
+      index = this.strings.indexOf(str);
+
+      if (index !== -1) {
+        return index + NUM_STANDARD_CFF_STRINGS;
+      }
+
+      return -1;
     },
     add: function CFFStrings_add(value) {
       this.strings.push(value);
@@ -31803,8 +42210,15 @@ var CFFCompiler = function CFFCompilerClosure() {
           output.add(encoding);
         }
       }
+<<<<<<< HEAD
 
       var charset = this.compileCharset(cff.charset);
+||||||| merged common ancestors
+      var charset = this.compileCharset(cff.charset);
+=======
+
+      var charset = this.compileCharset(cff.charset, cff.charStrings.count, cff.strings, cff.isCIDFont);
+>>>>>>> upstream-releases
       topDictTracker.setEntryLocation('charset', [output.length], output);
       output.add(charset);
       var charStrings = this.compileCharStrings(cff.charStrings);
@@ -32070,9 +42484,42 @@ var CFFCompiler = function CFFCompilerClosure() {
 
       return this.compileIndex(charStringsIndex);
     },
-    compileCharset: function CFFCompiler_compileCharset(charset) {
-      let length = 1 + (this.cff.charStrings.count - 1) * 2;
-      let out = new Uint8Array(length);
+    compileCharset: function CFFCompiler_compileCharset(charset, numGlyphs, strings, isCIDFont) {
+      let out;
+      let numGlyphsLessNotDef = numGlyphs - 1;
+
+      if (isCIDFont) {
+        out = new Uint8Array([2, 0, 0, numGlyphsLessNotDef >> 8 & 0xFF, numGlyphsLessNotDef & 0xFF]);
+      } else {
+        let length = 1 + numGlyphsLessNotDef * 2;
+        out = new Uint8Array(length);
+        out[0] = 0;
+        let charsetIndex = 0;
+        let numCharsets = charset.charset.length;
+        let warned = false;
+
+        for (let i = 1; i < out.length; i += 2) {
+          let sid = 0;
+
+          if (charsetIndex < numCharsets) {
+            let name = charset.charset[charsetIndex++];
+            sid = strings.getSID(name);
+
+            if (sid === -1) {
+              sid = 0;
+
+              if (!warned) {
+                warned = true;
+                (0, _util.warn)(`Couldn't find ${name} in CFF strings`);
+              }
+            }
+          }
+
+          out[i] = sid >> 8 & 0xFF;
+          out[i + 1] = sid & 0xFF;
+        }
+      }
+
       return this.compileTypedArray(out);
     },
     compileEncoding: function CFFCompiler_compileEncoding(encoding) {
@@ -32202,12 +42649,31 @@ exports.CFFCompiler = CFFCompiler;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.ExpertSubsetCharset = exports.ExpertCharset = exports.ISOAdobeCharset = void 0;
 var ISOAdobeCharset = ['.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore', 'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'exclamdown', 'cent', 'sterling', 'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle', 'quotedblleft', 'guillemotleft', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'endash', 'dagger', 'daggerdbl', 'periodcentered', 'paragraph', 'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright', 'guillemotright', 'ellipsis', 'perthousand', 'questiondown', 'grave', 'acute', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'dieresis', 'ring', 'cedilla', 'hungarumlaut', 'ogonek', 'caron', 'emdash', 'AE', 'ordfeminine', 'Lslash', 'Oslash', 'OE', 'ordmasculine', 'ae', 'dotlessi', 'lslash', 'oslash', 'oe', 'germandbls', 'onesuperior', 'logicalnot', 'mu', 'trademark', 'Eth', 'onehalf', 'plusminus', 'Thorn', 'onequarter', 'divide', 'brokenbar', 'degree', 'thorn', 'threequarters', 'twosuperior', 'registered', 'minus', 'eth', 'multiply', 'threesuperior', 'copyright', 'Aacute', 'Acircumflex', 'Adieresis', 'Agrave', 'Aring', 'Atilde', 'Ccedilla', 'Eacute', 'Ecircumflex', 'Edieresis', 'Egrave', 'Iacute', 'Icircumflex', 'Idieresis', 'Igrave', 'Ntilde', 'Oacute', 'Ocircumflex', 'Odieresis', 'Ograve', 'Otilde', 'Scaron', 'Uacute', 'Ucircumflex', 'Udieresis', 'Ugrave', 'Yacute', 'Ydieresis', 'Zcaron', 'aacute', 'acircumflex', 'adieresis', 'agrave', 'aring', 'atilde', 'ccedilla', 'eacute', 'ecircumflex', 'edieresis', 'egrave', 'iacute', 'icircumflex', 'idieresis', 'igrave', 'ntilde', 'oacute', 'ocircumflex', 'odieresis', 'ograve', 'otilde', 'scaron', 'uacute', 'ucircumflex', 'udieresis', 'ugrave', 'yacute', 'ydieresis', 'zcaron'];
-exports.ISOAdobeCharset = ISOAdobeCharset;
+||||||| merged common ancestors
+var ISOAdobeCharset = ['.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore', 'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'exclamdown', 'cent', 'sterling', 'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle', 'quotedblleft', 'guillemotleft', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'endash', 'dagger', 'daggerdbl', 'periodcentered', 'paragraph', 'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright', 'guillemotright', 'ellipsis', 'perthousand', 'questiondown', 'grave', 'acute', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'dieresis', 'ring', 'cedilla', 'hungarumlaut', 'ogonek', 'caron', 'emdash', 'AE', 'ordfeminine', 'Lslash', 'Oslash', 'OE', 'ordmasculine', 'ae', 'dotlessi', 'lslash', 'oslash', 'oe', 'germandbls', 'onesuperior', 'logicalnot', 'mu', 'trademark', 'Eth', 'onehalf', 'plusminus', 'Thorn', 'onequarter', 'divide', 'brokenbar', 'degree', 'thorn', 'threequarters', 'twosuperior', 'registered', 'minus', 'eth', 'multiply', 'threesuperior', 'copyright', 'Aacute', 'Acircumflex', 'Adieresis', 'Agrave', 'Aring', 'Atilde', 'Ccedilla', 'Eacute', 'Ecircumflex', 'Edieresis', 'Egrave', 'Iacute', 'Icircumflex', 'Idieresis', 'Igrave', 'Ntilde', 'Oacute', 'Ocircumflex', 'Odieresis', 'Ograve', 'Otilde', 'Scaron', 'Uacute', 'Ucircumflex', 'Udieresis', 'Ugrave', 'Yacute', 'Ydieresis', 'Zcaron', 'aacute', 'acircumflex', 'adieresis', 'agrave', 'aring', 'atilde', 'ccedilla', 'eacute', 'ecircumflex', 'edieresis', 'egrave', 'iacute', 'icircumflex', 'idieresis', 'igrave', 'ntilde', 'oacute', 'ocircumflex', 'odieresis', 'ograve', 'otilde', 'scaron', 'uacute', 'ucircumflex', 'udieresis', 'ugrave', 'yacute', 'ydieresis', 'zcaron'];
 var ExpertCharset = ['.notdef', 'space', 'exclamsmall', 'Hungarumlautsmall', 'dollaroldstyle', 'dollarsuperior', 'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'questionsmall', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall', 'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall', 'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall', 'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', 'exclamdownsmall', 'centoldstyle', 'Lslashsmall', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall', 'Brevesmall', 'Caronsmall', 'Dotaccentsmall', 'Macronsmall', 'figuredash', 'hypheninferior', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall', 'onequarter', 'onehalf', 'threequarters', 'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior', 'Agravesmall', 'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall', 'Aringsmall', 'AEsmall', 'Ccedillasmall', 'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall', 'Igravesmall', 'Iacutesmall', 'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall', 'Oacutesmall', 'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall', 'Uacutesmall', 'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall'];
-exports.ExpertCharset = ExpertCharset;
 var ExpertSubsetCharset = ['.notdef', 'space', 'dollaroldstyle', 'dollarsuperior', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'hyphensuperior', 'colonmonetary', 'onefitted', 'rupiah', 'centoldstyle', 'figuredash', 'hypheninferior', 'onequarter', 'onehalf', 'threequarters', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior'];
+=======
+exports.ExpertSubsetCharset = exports.ExpertCharset = exports.ISOAdobeCharset = void 0;
+const ISOAdobeCharset = ['.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'hyphen', 'period', 'slash', 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'colon', 'semicolon', 'less', 'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore', 'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'exclamdown', 'cent', 'sterling', 'fraction', 'yen', 'florin', 'section', 'currency', 'quotesingle', 'quotedblleft', 'guillemotleft', 'guilsinglleft', 'guilsinglright', 'fi', 'fl', 'endash', 'dagger', 'daggerdbl', 'periodcentered', 'paragraph', 'bullet', 'quotesinglbase', 'quotedblbase', 'quotedblright', 'guillemotright', 'ellipsis', 'perthousand', 'questiondown', 'grave', 'acute', 'circumflex', 'tilde', 'macron', 'breve', 'dotaccent', 'dieresis', 'ring', 'cedilla', 'hungarumlaut', 'ogonek', 'caron', 'emdash', 'AE', 'ordfeminine', 'Lslash', 'Oslash', 'OE', 'ordmasculine', 'ae', 'dotlessi', 'lslash', 'oslash', 'oe', 'germandbls', 'onesuperior', 'logicalnot', 'mu', 'trademark', 'Eth', 'onehalf', 'plusminus', 'Thorn', 'onequarter', 'divide', 'brokenbar', 'degree', 'thorn', 'threequarters', 'twosuperior', 'registered', 'minus', 'eth', 'multiply', 'threesuperior', 'copyright', 'Aacute', 'Acircumflex', 'Adieresis', 'Agrave', 'Aring', 'Atilde', 'Ccedilla', 'Eacute', 'Ecircumflex', 'Edieresis', 'Egrave', 'Iacute', 'Icircumflex', 'Idieresis', 'Igrave', 'Ntilde', 'Oacute', 'Ocircumflex', 'Odieresis', 'Ograve', 'Otilde', 'Scaron', 'Uacute', 'Ucircumflex', 'Udieresis', 'Ugrave', 'Yacute', 'Ydieresis', 'Zcaron', 'aacute', 'acircumflex', 'adieresis', 'agrave', 'aring', 'atilde', 'ccedilla', 'eacute', 'ecircumflex', 'edieresis', 'egrave', 'iacute', 'icircumflex', 'idieresis', 'igrave', 'ntilde', 'oacute', 'ocircumflex', 'odieresis', 'ograve', 'otilde', 'scaron', 'uacute', 'ucircumflex', 'udieresis', 'ugrave', 'yacute', 'ydieresis', 'zcaron'];
+>>>>>>> upstream-releases
+exports.ISOAdobeCharset = ISOAdobeCharset;
+<<<<<<< HEAD
+var ExpertCharset = ['.notdef', 'space', 'exclamsmall', 'Hungarumlautsmall', 'dollaroldstyle', 'dollarsuperior', 'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'questionsmall', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall', 'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall', 'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall', 'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', 'exclamdownsmall', 'centoldstyle', 'Lslashsmall', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall', 'Brevesmall', 'Caronsmall', 'Dotaccentsmall', 'Macronsmall', 'figuredash', 'hypheninferior', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall', 'onequarter', 'onehalf', 'threequarters', 'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior', 'Agravesmall', 'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall', 'Aringsmall', 'AEsmall', 'Ccedillasmall', 'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall', 'Igravesmall', 'Iacutesmall', 'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall', 'Oacutesmall', 'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall', 'Uacutesmall', 'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall'];
+||||||| merged common ancestors
+=======
+const ExpertCharset = ['.notdef', 'space', 'exclamsmall', 'Hungarumlautsmall', 'dollaroldstyle', 'dollarsuperior', 'ampersandsmall', 'Acutesmall', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'questionsmall', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'Circumflexsmall', 'hyphensuperior', 'Gravesmall', 'Asmall', 'Bsmall', 'Csmall', 'Dsmall', 'Esmall', 'Fsmall', 'Gsmall', 'Hsmall', 'Ismall', 'Jsmall', 'Ksmall', 'Lsmall', 'Msmall', 'Nsmall', 'Osmall', 'Psmall', 'Qsmall', 'Rsmall', 'Ssmall', 'Tsmall', 'Usmall', 'Vsmall', 'Wsmall', 'Xsmall', 'Ysmall', 'Zsmall', 'colonmonetary', 'onefitted', 'rupiah', 'Tildesmall', 'exclamdownsmall', 'centoldstyle', 'Lslashsmall', 'Scaronsmall', 'Zcaronsmall', 'Dieresissmall', 'Brevesmall', 'Caronsmall', 'Dotaccentsmall', 'Macronsmall', 'figuredash', 'hypheninferior', 'Ogoneksmall', 'Ringsmall', 'Cedillasmall', 'onequarter', 'onehalf', 'threequarters', 'questiondownsmall', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior', 'Agravesmall', 'Aacutesmall', 'Acircumflexsmall', 'Atildesmall', 'Adieresissmall', 'Aringsmall', 'AEsmall', 'Ccedillasmall', 'Egravesmall', 'Eacutesmall', 'Ecircumflexsmall', 'Edieresissmall', 'Igravesmall', 'Iacutesmall', 'Icircumflexsmall', 'Idieresissmall', 'Ethsmall', 'Ntildesmall', 'Ogravesmall', 'Oacutesmall', 'Ocircumflexsmall', 'Otildesmall', 'Odieresissmall', 'OEsmall', 'Oslashsmall', 'Ugravesmall', 'Uacutesmall', 'Ucircumflexsmall', 'Udieresissmall', 'Yacutesmall', 'Thornsmall', 'Ydieresissmall'];
+>>>>>>> upstream-releases
+exports.ExpertCharset = ExpertCharset;
+<<<<<<< HEAD
+var ExpertSubsetCharset = ['.notdef', 'space', 'dollaroldstyle', 'dollarsuperior', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'hyphensuperior', 'colonmonetary', 'onefitted', 'rupiah', 'centoldstyle', 'figuredash', 'hypheninferior', 'onequarter', 'onehalf', 'threequarters', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior'];
+||||||| merged common ancestors
+=======
+const ExpertSubsetCharset = ['.notdef', 'space', 'dollaroldstyle', 'dollarsuperior', 'parenleftsuperior', 'parenrightsuperior', 'twodotenleader', 'onedotenleader', 'comma', 'hyphen', 'period', 'fraction', 'zerooldstyle', 'oneoldstyle', 'twooldstyle', 'threeoldstyle', 'fouroldstyle', 'fiveoldstyle', 'sixoldstyle', 'sevenoldstyle', 'eightoldstyle', 'nineoldstyle', 'colon', 'semicolon', 'commasuperior', 'threequartersemdash', 'periodsuperior', 'asuperior', 'bsuperior', 'centsuperior', 'dsuperior', 'esuperior', 'isuperior', 'lsuperior', 'msuperior', 'nsuperior', 'osuperior', 'rsuperior', 'ssuperior', 'tsuperior', 'ff', 'fi', 'fl', 'ffi', 'ffl', 'parenleftinferior', 'parenrightinferior', 'hyphensuperior', 'colonmonetary', 'onefitted', 'rupiah', 'centoldstyle', 'figuredash', 'hypheninferior', 'onequarter', 'onehalf', 'threequarters', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'onethird', 'twothirds', 'zerosuperior', 'onesuperior', 'twosuperior', 'threesuperior', 'foursuperior', 'fivesuperior', 'sixsuperior', 'sevensuperior', 'eightsuperior', 'ninesuperior', 'zeroinferior', 'oneinferior', 'twoinferior', 'threeinferior', 'fourinferior', 'fiveinferior', 'sixinferior', 'seveninferior', 'eightinferior', 'nineinferior', 'centinferior', 'dollarinferior', 'periodinferior', 'commainferior'];
+>>>>>>> upstream-releases
 exports.ExpertSubsetCharset = ExpertSubsetCharset;
 
 /***/ }),
@@ -32268,7 +42734,7 @@ function getEncoding(encodingName) {
 /* 34 */
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
-var getLookupTableFactory = __w_pdfjs_require__(2).getLookupTableFactory;
+var getLookupTableFactory = __w_pdfjs_require__(10).getLookupTableFactory;
 var getGlyphsUnicode = getLookupTableFactory(function (t) {
  t['A'] = 0x0041;
  t['AE'] = 0x00C6;
@@ -36812,9 +47278,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getSupplementalGlyphMapForCalibri = exports.getSupplementalGlyphMapForArialBlack = exports.getGlyphMapForStandardFonts = exports.getSymbolsFonts = exports.getSerifFonts = exports.getNonStdFontMap = exports.getStdFontMap = void 0;
 
-var _util = __w_pdfjs_require__(2);
+var _core_utils = __w_pdfjs_require__(10);
 
-var getStdFontMap = (0, _util.getLookupTableFactory)(function (t) {
+const getStdFontMap = (0, _core_utils.getLookupTableFactory)(function (t) {
   t['ArialNarrow'] = 'Helvetica';
   t['ArialNarrow-Bold'] = 'Helvetica-Bold';
   t['ArialNarrow-BoldItalic'] = 'Helvetica-BoldOblique';
@@ -36872,8 +47338,15 @@ var getStdFontMap = (0, _util.getLookupTableFactory)(function (t) {
   t['TimesNewRomanPSMT-BoldItalic'] = 'Times-BoldItalic';
   t['TimesNewRomanPSMT-Italic'] = 'Times-Italic';
 });
+<<<<<<< HEAD
 exports.getStdFontMap = getStdFontMap;
 var getNonStdFontMap = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+var getNonStdFontMap = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getStdFontMap = getStdFontMap;
+const getNonStdFontMap = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t['Calibri'] = 'Helvetica';
   t['Calibri-Bold'] = 'Helvetica-Bold';
   t['Calibri-BoldItalic'] = 'Helvetica-BoldOblique';
@@ -36910,8 +47383,15 @@ var getNonStdFontMap = (0, _util.getLookupTableFactory)(function (t) {
   t['NuptialScript'] = 'Times-Italic';
   t['Wingdings'] = 'ZapfDingbats';
 });
+<<<<<<< HEAD
 exports.getNonStdFontMap = getNonStdFontMap;
 var getSerifFonts = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+var getSerifFonts = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getNonStdFontMap = getNonStdFontMap;
+const getSerifFonts = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t['Adobe Jenson'] = true;
   t['Adobe Text'] = true;
   t['Albertus'] = true;
@@ -37046,14 +47526,28 @@ var getSerifFonts = (0, _util.getLookupTableFactory)(function (t) {
   t['Windsor'] = true;
   t['XITS'] = true;
 });
+<<<<<<< HEAD
 exports.getSerifFonts = getSerifFonts;
 var getSymbolsFonts = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+var getSymbolsFonts = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getSerifFonts = getSerifFonts;
+const getSymbolsFonts = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t['Dingbats'] = true;
   t['Symbol'] = true;
   t['ZapfDingbats'] = true;
 });
+<<<<<<< HEAD
 exports.getSymbolsFonts = getSymbolsFonts;
 var getGlyphMapForStandardFonts = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+var getGlyphMapForStandardFonts = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getSymbolsFonts = getSymbolsFonts;
+const getGlyphMapForStandardFonts = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t[2] = 10;
   t[3] = 32;
   t[4] = 33;
@@ -37448,14 +47942,28 @@ var getGlyphMapForStandardFonts = (0, _util.getLookupTableFactory)(function (t) 
   t[3393] = 1159;
   t[3416] = 8377;
 });
+<<<<<<< HEAD
 exports.getGlyphMapForStandardFonts = getGlyphMapForStandardFonts;
 var getSupplementalGlyphMapForArialBlack = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+var getSupplementalGlyphMapForArialBlack = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getGlyphMapForStandardFonts = getGlyphMapForStandardFonts;
+const getSupplementalGlyphMapForArialBlack = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t[227] = 322;
   t[264] = 261;
   t[291] = 346;
 });
+<<<<<<< HEAD
 exports.getSupplementalGlyphMapForArialBlack = getSupplementalGlyphMapForArialBlack;
 let getSupplementalGlyphMapForCalibri = (0, _util.getLookupTableFactory)(function (t) {
+||||||| merged common ancestors
+let getSupplementalGlyphMapForCalibri = (0, _util.getLookupTableFactory)(function (t) {
+=======
+exports.getSupplementalGlyphMapForArialBlack = getSupplementalGlyphMapForArialBlack;
+const getSupplementalGlyphMapForCalibri = (0, _core_utils.getLookupTableFactory)(function (t) {
+>>>>>>> upstream-releases
   t[1] = 32;
   t[4] = 65;
   t[17] = 66;
@@ -37547,7 +48055,7 @@ exports.getSupplementalGlyphMapForCalibri = getSupplementalGlyphMapForCalibri;
 /* 36 */
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
-var getLookupTableFactory = __w_pdfjs_require__(2).getLookupTableFactory;
+var getLookupTableFactory = __w_pdfjs_require__(10).getLookupTableFactory;
 var getSpecialPUASymbols = getLookupTableFactory(function (t) {
  t[63721] = 0x00A9;
  t[63193] = 0x00A9;
@@ -41186,7 +51694,9 @@ var _util = __w_pdfjs_require__(2);
 
 var _colorspace = __w_pdfjs_require__(25);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
+
+var _core_utils = __w_pdfjs_require__(10);
 
 var ShadingType = {
   FUNCTION_BASED: 1,
@@ -41229,7 +51739,7 @@ var Pattern = function PatternClosure() {
           throw new _util.FormatError('Unsupported ShadingType: ' + type);
       }
     } catch (ex) {
-      if (ex instanceof _util.MissingDataException) {
+      if (ex instanceof _core_utils.MissingDataException) {
         throw ex;
       }
 
@@ -42407,14 +52917,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getMetrics = void 0;
 
-var _util = __w_pdfjs_require__(2);
+var _core_utils = __w_pdfjs_require__(10);
 
-var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
+var getMetrics = (0, _core_utils.getLookupTableFactory)(function (t) {
   t['Courier'] = 600;
   t['Courier-Bold'] = 600;
   t['Courier-BoldOblique'] = 600;
   t['Courier-Oblique'] = 600;
-  t['Helvetica'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Helvetica'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 278;
     t['exclam'] = 278;
     t['quotedbl'] = 355;
@@ -42731,7 +53241,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 556;
   });
-  t['Helvetica-Bold'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Helvetica-Bold'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 278;
     t['exclam'] = 333;
     t['quotedbl'] = 474;
@@ -43048,7 +53558,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 556;
   });
-  t['Helvetica-BoldOblique'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Helvetica-BoldOblique'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 278;
     t['exclam'] = 333;
     t['quotedbl'] = 474;
@@ -43365,7 +53875,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 556;
   });
-  t['Helvetica-Oblique'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Helvetica-Oblique'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 278;
     t['exclam'] = 278;
     t['quotedbl'] = 355;
@@ -43682,7 +54192,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 556;
   });
-  t['Symbol'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Symbol'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 250;
     t['exclam'] = 333;
     t['universal'] = 713;
@@ -43874,7 +54384,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['bracerightbt'] = 494;
     t['apple'] = 790;
   });
-  t['Times-Roman'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Times-Roman'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 250;
     t['exclam'] = 333;
     t['quotedbl'] = 408;
@@ -44191,7 +54701,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 500;
   });
-  t['Times-Bold'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Times-Bold'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 250;
     t['exclam'] = 333;
     t['quotedbl'] = 555;
@@ -44508,7 +55018,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 500;
   });
-  t['Times-BoldItalic'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Times-BoldItalic'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 250;
     t['exclam'] = 389;
     t['quotedbl'] = 555;
@@ -44825,7 +55335,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 500;
   });
-  t['Times-Italic'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['Times-Italic'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 250;
     t['exclam'] = 333;
     t['quotedbl'] = 420;
@@ -45142,7 +55652,7 @@ var getMetrics = (0, _util.getLookupTableFactory)(function (t) {
     t['imacron'] = 278;
     t['Euro'] = 500;
   });
-  t['ZapfDingbats'] = (0, _util.getLookupTableFactory)(function (t) {
+  t['ZapfDingbats'] = (0, _core_utils.getLookupTableFactory)(function (t) {
     t['space'] = 278;
     t['a1'] = 974;
     t['a2'] = 961;
@@ -45364,7 +55874,7 @@ exports.PostScriptCompiler = exports.PostScriptEvaluator = exports.PDFFunctionFa
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _ps_parser = __w_pdfjs_require__(43);
 
@@ -46721,7 +57231,7 @@ exports.PostScriptParser = exports.PostScriptLexer = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 class PostScriptParser {
   constructor(lexer) {
@@ -46973,15 +57483,31 @@ exports.MurmurHash3_64 = void 0;
 
 var _util = __w_pdfjs_require__(2);
 
+<<<<<<< HEAD
 var MurmurHash3_64 = function MurmurHash3_64Closure(seed) {
   var MASK_HIGH = 0xffff0000;
   var MASK_LOW = 0xffff;
 
   function MurmurHash3_64(seed) {
     var SEED = 0xc3d2e1f0;
+||||||| merged common ancestors
+var MurmurHash3_64 = function MurmurHash3_64Closure(seed) {
+  var MASK_HIGH = 0xffff0000;
+  var MASK_LOW = 0xffff;
+  function MurmurHash3_64(seed) {
+    var SEED = 0xc3d2e1f0;
+=======
+const SEED = 0xc3d2e1f0;
+const MASK_HIGH = 0xffff0000;
+const MASK_LOW = 0xffff;
+
+class MurmurHash3_64 {
+  constructor(seed) {
+>>>>>>> upstream-releases
     this.h1 = seed ? seed & 0xffffffff : SEED;
     this.h2 = seed ? seed & 0xffffffff : SEED;
   }
+<<<<<<< HEAD
 
   MurmurHash3_64.prototype = {
     update: function MurmurHash3_64_update(input) {
@@ -47000,11 +57526,71 @@ var MurmurHash3_64 = function MurmurHash3_64Closure(seed) {
             data[length++] = code >>> 8;
             data[length++] = code & 0xff;
           }
+||||||| merged common ancestors
+  MurmurHash3_64.prototype = {
+    update: function MurmurHash3_64_update(input) {
+      let data, length;
+      if ((0, _util.isString)(input)) {
+        data = new Uint8Array(input.length * 2);
+        length = 0;
+        for (let i = 0, ii = input.length; i < ii; i++) {
+          var code = input.charCodeAt(i);
+          if (code <= 0xff) {
+            data[length++] = code;
+          } else {
+            data[length++] = code >>> 8;
+            data[length++] = code & 0xff;
+          }
+=======
+
+  update(input) {
+    let data, length;
+
+    if ((0, _util.isString)(input)) {
+      data = new Uint8Array(input.length * 2);
+      length = 0;
+
+      for (let i = 0, ii = input.length; i < ii; i++) {
+        const code = input.charCodeAt(i);
+
+        if (code <= 0xff) {
+          data[length++] = code;
+        } else {
+          data[length++] = code >>> 8;
+          data[length++] = code & 0xff;
+>>>>>>> upstream-releases
         }
-      } else if ((0, _util.isArrayBuffer)(input)) {
-        data = input;
-        length = data.byteLength;
+      }
+    } else if ((0, _util.isArrayBuffer)(input)) {
+      data = input;
+      length = data.byteLength;
+    } else {
+      throw new Error('Wrong data format in MurmurHash3_64_update. ' + 'Input must be a string or array.');
+    }
+
+    const blockCounts = length >> 2;
+    const tailLength = length - blockCounts * 4;
+    const dataUint32 = new Uint32Array(data.buffer, 0, blockCounts);
+    let k1 = 0,
+        k2 = 0;
+    let h1 = this.h1,
+        h2 = this.h2;
+    const C1 = 0xcc9e2d51,
+          C2 = 0x1b873593;
+    const C1_LOW = C1 & MASK_LOW,
+          C2_LOW = C2 & MASK_LOW;
+
+    for (let i = 0; i < blockCounts; i++) {
+      if (i & 1) {
+        k1 = dataUint32[i];
+        k1 = k1 * C1 & MASK_HIGH | k1 * C1_LOW & MASK_LOW;
+        k1 = k1 << 15 | k1 >>> 17;
+        k1 = k1 * C2 & MASK_HIGH | k1 * C2_LOW & MASK_LOW;
+        h1 ^= k1;
+        h1 = h1 << 13 | h1 >>> 19;
+        h1 = h1 * 5 + 0xe6546b64;
       } else {
+<<<<<<< HEAD
         throw new Error('Wrong data format in MurmurHash3_64_update. ' + 'Input must be a string or array.');
       }
 
@@ -47026,18 +57612,59 @@ var MurmurHash3_64 = function MurmurHash3_64Closure(seed) {
           k1 = k1 * C1 & MASK_HIGH | k1 * C1_LOW & MASK_LOW;
           k1 = k1 << 15 | k1 >>> 17;
           k1 = k1 * C2 & MASK_HIGH | k1 * C2_LOW & MASK_LOW;
+||||||| merged common ancestors
+        throw new Error('Wrong data format in MurmurHash3_64_update. ' + 'Input must be a string or array.');
+      }
+      var blockCounts = length >> 2;
+      var tailLength = length - blockCounts * 4;
+      var dataUint32 = new Uint32Array(data.buffer, 0, blockCounts);
+      var k1 = 0;
+      var k2 = 0;
+      var h1 = this.h1;
+      var h2 = this.h2;
+      var C1 = 0xcc9e2d51;
+      var C2 = 0x1b873593;
+      var C1_LOW = C1 & MASK_LOW;
+      var C2_LOW = C2 & MASK_LOW;
+      for (let i = 0; i < blockCounts; i++) {
+        if (i & 1) {
+          k1 = dataUint32[i];
+          k1 = k1 * C1 & MASK_HIGH | k1 * C1_LOW & MASK_LOW;
+          k1 = k1 << 15 | k1 >>> 17;
+          k1 = k1 * C2 & MASK_HIGH | k1 * C2_LOW & MASK_LOW;
+=======
+        k2 = dataUint32[i];
+        k2 = k2 * C1 & MASK_HIGH | k2 * C1_LOW & MASK_LOW;
+        k2 = k2 << 15 | k2 >>> 17;
+        k2 = k2 * C2 & MASK_HIGH | k2 * C2_LOW & MASK_LOW;
+        h2 ^= k2;
+        h2 = h2 << 13 | h2 >>> 19;
+        h2 = h2 * 5 + 0xe6546b64;
+      }
+    }
+
+    k1 = 0;
+
+    switch (tailLength) {
+      case 3:
+        k1 ^= data[blockCounts * 4 + 2] << 16;
+
+      case 2:
+        k1 ^= data[blockCounts * 4 + 1] << 8;
+
+      case 1:
+        k1 ^= data[blockCounts * 4];
+        k1 = k1 * C1 & MASK_HIGH | k1 * C1_LOW & MASK_LOW;
+        k1 = k1 << 15 | k1 >>> 17;
+        k1 = k1 * C2 & MASK_HIGH | k1 * C2_LOW & MASK_LOW;
+
+        if (blockCounts & 1) {
+>>>>>>> upstream-releases
           h1 ^= k1;
-          h1 = h1 << 13 | h1 >>> 19;
-          h1 = h1 * 5 + 0xe6546b64;
         } else {
-          k2 = dataUint32[i];
-          k2 = k2 * C1 & MASK_HIGH | k2 * C1_LOW & MASK_LOW;
-          k2 = k2 << 15 | k2 >>> 17;
-          k2 = k2 * C2 & MASK_HIGH | k2 * C2_LOW & MASK_LOW;
-          h2 ^= k2;
-          h2 = h2 << 13 | h2 >>> 19;
-          h2 = h2 * 5 + 0xe6546b64;
+          h2 ^= k1;
         }
+<<<<<<< HEAD
       }
 
       k1 = 0;
@@ -47089,11 +57716,84 @@ var MurmurHash3_64 = function MurmurHash3_64Closure(seed) {
       }
 
       return str;
+||||||| merged common ancestors
+      }
+      k1 = 0;
+      switch (tailLength) {
+        case 3:
+          k1 ^= data[blockCounts * 4 + 2] << 16;
+        case 2:
+          k1 ^= data[blockCounts * 4 + 1] << 8;
+        case 1:
+          k1 ^= data[blockCounts * 4];
+          k1 = k1 * C1 & MASK_HIGH | k1 * C1_LOW & MASK_LOW;
+          k1 = k1 << 15 | k1 >>> 17;
+          k1 = k1 * C2 & MASK_HIGH | k1 * C2_LOW & MASK_LOW;
+          if (blockCounts & 1) {
+            h1 ^= k1;
+          } else {
+            h2 ^= k1;
+          }
+      }
+      this.h1 = h1;
+      this.h2 = h2;
+      return this;
+    },
+    hexdigest: function MurmurHash3_64_hexdigest() {
+      var h1 = this.h1;
+      var h2 = this.h2;
+      h1 ^= h2 >>> 1;
+      h1 = h1 * 0xed558ccd & MASK_HIGH | h1 * 0x8ccd & MASK_LOW;
+      h2 = h2 * 0xff51afd7 & MASK_HIGH | ((h2 << 16 | h1 >>> 16) * 0xafd7ed55 & MASK_HIGH) >>> 16;
+      h1 ^= h2 >>> 1;
+      h1 = h1 * 0x1a85ec53 & MASK_HIGH | h1 * 0xec53 & MASK_LOW;
+      h2 = h2 * 0xc4ceb9fe & MASK_HIGH | ((h2 << 16 | h1 >>> 16) * 0xb9fe1a85 & MASK_HIGH) >>> 16;
+      h1 ^= h2 >>> 1;
+      for (var i = 0, arr = [h1, h2], str = ''; i < arr.length; i++) {
+        var hex = (arr[i] >>> 0).toString(16);
+        while (hex.length < 8) {
+          hex = '0' + hex;
+        }
+        str += hex;
+      }
+      return str;
+=======
+
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
   };
   return MurmurHash3_64;
 }();
 
+||||||| merged common ancestors
+  };
+  return MurmurHash3_64;
+}();
+=======
+
+    this.h1 = h1;
+    this.h2 = h2;
+  }
+
+  hexdigest() {
+    let h1 = this.h1,
+        h2 = this.h2;
+    h1 ^= h2 >>> 1;
+    h1 = h1 * 0xed558ccd & MASK_HIGH | h1 * 0x8ccd & MASK_LOW;
+    h2 = h2 * 0xff51afd7 & MASK_HIGH | ((h2 << 16 | h1 >>> 16) * 0xafd7ed55 & MASK_HIGH) >>> 16;
+    h1 ^= h2 >>> 1;
+    h1 = h1 * 0x1a85ec53 & MASK_HIGH | h1 * 0xec53 & MASK_LOW;
+    h2 = h2 * 0xc4ceb9fe & MASK_HIGH | ((h2 << 16 | h1 >>> 16) * 0xb9fe1a85 & MASK_HIGH) >>> 16;
+    h1 ^= h2 >>> 1;
+    const hex1 = (h1 >>> 0).toString(16),
+          hex2 = (h2 >>> 0).toString(16);
+    return hex1.padStart(8, '0') + hex2.padStart(8, '0');
+  }
+
+}
+
+>>>>>>> upstream-releases
 exports.MurmurHash3_64 = MurmurHash3_64;
 
 /***/ }),
@@ -47106,11 +57806,96 @@ exports.MurmurHash3_64 = MurmurHash3_64;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+<<<<<<< HEAD
 exports.PDFImage = void 0;
+||||||| merged common ancestors
+exports.PDFImage = undefined;
+=======
+exports.NativeImageDecoder = void 0;
+
+var _colorspace = __w_pdfjs_require__(25);
+
+var _jpeg_stream = __w_pdfjs_require__(20);
+
+var _stream = __w_pdfjs_require__(14);
+
+class NativeImageDecoder {
+  constructor({
+    xref,
+    resources,
+    handler,
+    forceDataSchema = false,
+    pdfFunctionFactory
+  }) {
+    this.xref = xref;
+    this.resources = resources;
+    this.handler = handler;
+    this.forceDataSchema = forceDataSchema;
+    this.pdfFunctionFactory = pdfFunctionFactory;
+  }
+
+  canDecode(image) {
+    return image instanceof _jpeg_stream.JpegStream && NativeImageDecoder.isDecodable(image, this.xref, this.resources, this.pdfFunctionFactory);
+  }
+
+  decode(image) {
+    const dict = image.dict;
+    let colorSpace = dict.get('ColorSpace', 'CS');
+    colorSpace = _colorspace.ColorSpace.parse(colorSpace, this.xref, this.resources, this.pdfFunctionFactory);
+    return this.handler.sendWithPromise('JpegDecode', [image.getIR(this.forceDataSchema), colorSpace.numComps]).then(function ({
+      data,
+      width,
+      height
+    }) {
+      return new _stream.Stream(data, 0, data.length, dict);
+    });
+  }
+
+  static isSupported(image, xref, res, pdfFunctionFactory) {
+    const dict = image.dict;
+
+    if (dict.has('DecodeParms') || dict.has('DP')) {
+      return false;
+    }
+
+    const cs = _colorspace.ColorSpace.parse(dict.get('ColorSpace', 'CS'), xref, res, pdfFunctionFactory);
+
+    return (cs.name === 'DeviceGray' || cs.name === 'DeviceRGB') && cs.isDefaultDecode(dict.getArray('Decode', 'D'));
+  }
+
+  static isDecodable(image, xref, res, pdfFunctionFactory) {
+    const dict = image.dict;
+
+    if (dict.has('DecodeParms') || dict.has('DP')) {
+      return false;
+    }
+
+    const cs = _colorspace.ColorSpace.parse(dict.get('ColorSpace', 'CS'), xref, res, pdfFunctionFactory);
+
+    const bpc = dict.get('BitsPerComponent', 'BPC') || 1;
+    return (cs.numComps === 1 || cs.numComps === 3) && cs.isDefaultDecode(dict.getArray('Decode', 'D'), bpc);
+  }
+
+}
+
+exports.NativeImageDecoder = NativeImageDecoder;
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __w_pdfjs_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PDFImage = void 0;
+>>>>>>> upstream-releases
 
 var _util = __w_pdfjs_require__(2);
 
-var _primitives = __w_pdfjs_require__(12);
+var _primitives = __w_pdfjs_require__(7);
 
 var _colorspace = __w_pdfjs_require__(25);
 
@@ -47264,18 +58049,31 @@ var PDFImage = function PDFImageClosure() {
 
     this.decode = dict.getArray('Decode', 'D');
     this.needsDecode = false;
+<<<<<<< HEAD
 
     if (this.decode && (this.colorSpace && !this.colorSpace.isDefaultDecode(this.decode) || isMask && !_colorspace.ColorSpace.isDefaultDecode(this.decode, 1))) {
+||||||| merged common ancestors
+    if (this.decode && (this.colorSpace && !this.colorSpace.isDefaultDecode(this.decode) || isMask && !_colorspace.ColorSpace.isDefaultDecode(this.decode, 1))) {
+=======
+
+    if (this.decode && (this.colorSpace && !this.colorSpace.isDefaultDecode(this.decode, bitsPerComponent) || isMask && !_colorspace.ColorSpace.isDefaultDecode(this.decode, 1))) {
+>>>>>>> upstream-releases
       this.needsDecode = true;
       var max = (1 << bitsPerComponent) - 1;
       this.decodeCoefficients = [];
       this.decodeAddends = [];
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+      const isIndexed = this.colorSpace && this.colorSpace.name === 'Indexed';
+
+>>>>>>> upstream-releases
       for (var i = 0, j = 0; i < this.decode.length; i += 2, ++j) {
         var dmin = this.decode[i];
         var dmax = this.decode[i + 1];
-        this.decodeCoefficients[j] = dmax - dmin;
-        this.decodeAddends[j] = max * dmin;
+        this.decodeCoefficients[j] = isIndexed ? (dmax - dmin) / max : dmax - dmin;
+        this.decodeAddends[j] = isIndexed ? dmin : max * dmin;
       }
     }
 
@@ -47756,18 +58554,24 @@ var PDFImage = function PDFImageClosure() {
 exports.PDFImage = PDFImage;
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
 "use strict";
 
 
 module.exports = function isNodeJS() {
+<<<<<<< HEAD
   return typeof process === 'object' && process + '' === '[object process]' && !process.versions['nw'];
+||||||| merged common ancestors
+  return typeof process === 'object' && process + '' === '[object process]';
+=======
+  return typeof process === 'object' && process + '' === '[object process]' && !process.versions['nw'] && !process.versions['electron'];
+>>>>>>> upstream-releases
 };
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __w_pdfjs_require__) {
 
 "use strict";
@@ -47782,7 +58586,7 @@ var _util = __w_pdfjs_require__(2);
 
 async function resolveCall(fn, args, thisArg = null) {
   if (!fn) {
-    return;
+    return undefined;
   }
 
   return fn.apply(thisArg, args);
@@ -48227,6 +59031,164 @@ MessageHandler.prototype = {
   }
 
 };
+<<<<<<< HEAD
+||||||| merged common ancestors
+exports.MessageHandler = MessageHandler;
+=======
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __w_pdfjs_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PDFWorkerStream = void 0;
+
+var _util = __w_pdfjs_require__(2);
+
+class PDFWorkerStream {
+  constructor(msgHandler) {
+    this._msgHandler = msgHandler;
+    this._contentLength = null;
+    this._fullRequestReader = null;
+    this._rangeRequestReaders = [];
+  }
+
+  getFullReader() {
+    (0, _util.assert)(!this._fullRequestReader);
+    this._fullRequestReader = new PDFWorkerStreamReader(this._msgHandler);
+    return this._fullRequestReader;
+  }
+
+  getRangeReader(begin, end) {
+    const reader = new PDFWorkerStreamRangeReader(begin, end, this._msgHandler);
+
+    this._rangeRequestReaders.push(reader);
+
+    return reader;
+  }
+
+  cancelAllRequests(reason) {
+    if (this._fullRequestReader) {
+      this._fullRequestReader.cancel(reason);
+    }
+
+    const readers = this._rangeRequestReaders.slice(0);
+
+    readers.forEach(function (reader) {
+      reader.cancel(reason);
+    });
+  }
+
+}
+
+exports.PDFWorkerStream = PDFWorkerStream;
+
+class PDFWorkerStreamReader {
+  constructor(msgHandler) {
+    this._msgHandler = msgHandler;
+    this.onProgress = null;
+    this._contentLength = null;
+    this._isRangeSupported = false;
+    this._isStreamingSupported = false;
+
+    const readableStream = this._msgHandler.sendWithStream('GetReader');
+
+    this._reader = readableStream.getReader();
+    this._headersReady = this._msgHandler.sendWithPromise('ReaderHeadersReady').then(data => {
+      this._isStreamingSupported = data.isStreamingSupported;
+      this._isRangeSupported = data.isRangeSupported;
+      this._contentLength = data.contentLength;
+    });
+  }
+
+  get headersReady() {
+    return this._headersReady;
+  }
+
+  get contentLength() {
+    return this._contentLength;
+  }
+
+  get isStreamingSupported() {
+    return this._isStreamingSupported;
+  }
+
+  get isRangeSupported() {
+    return this._isRangeSupported;
+  }
+
+  async read() {
+    const {
+      value,
+      done
+    } = await this._reader.read();
+
+    if (done) {
+      return {
+        value: undefined,
+        done: true
+      };
+    }
+
+    return {
+      value: value.buffer,
+      done: false
+    };
+  }
+
+  cancel(reason) {
+    this._reader.cancel(reason);
+  }
+
+}
+
+class PDFWorkerStreamRangeReader {
+  constructor(begin, end, msgHandler) {
+    this._msgHandler = msgHandler;
+    this.onProgress = null;
+
+    const readableStream = this._msgHandler.sendWithStream('GetRangeReader', {
+      begin,
+      end
+    });
+
+    this._reader = readableStream.getReader();
+  }
+
+  get isStreamingSupported() {
+    return false;
+  }
+
+  async read() {
+    const {
+      value,
+      done
+    } = await this._reader.read();
+
+    if (done) {
+      return {
+        value: undefined,
+        done: true
+      };
+    }
+
+    return {
+      value: value.buffer,
+      done: false
+    };
+  }
+
+  cancel(reason) {
+    this._reader.cancel(reason);
+  }
+
+}
+>>>>>>> upstream-releases
 
 /***/ })
 /******/ ]);

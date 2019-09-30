@@ -11,8 +11,9 @@
 #include "TextLeafAccessible.h"
 #include "TextUpdater.h"
 
-#include "mozilla/dom/TabChild.h"
+#include "mozilla/dom/BrowserChild.h"
 #include "mozilla/dom/Element.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/Telemetry.h"
 
 using namespace mozilla;
@@ -24,11 +25,24 @@ using namespace mozilla::dom;
 ////////////////////////////////////////////////////////////////////////////////
 
 NotificationController::NotificationController(DocAccessible* aDocument,
+<<<<<<< HEAD
                                                nsIPresShell* aPresShell)
     : EventQueue(aDocument),
       mObservingState(eNotObservingRefresh),
       mPresShell(aPresShell),
       mEventGeneration(0) {
+||||||| merged common ancestors
+                                               nsIPresShell* aPresShell) :
+  EventQueue(aDocument), mObservingState(eNotObservingRefresh),
+  mPresShell(aPresShell), mEventGeneration(0)
+{
+=======
+                                               PresShell* aPresShell)
+    : EventQueue(aDocument),
+      mObservingState(eNotObservingRefresh),
+      mPresShell(aPresShell),
+      mEventGeneration(0) {
+>>>>>>> upstream-releases
 #ifdef DEBUG
   mMoveGuardOnStack = false;
 #endif
@@ -695,9 +709,19 @@ void NotificationController::WillRefresh(mozilla::TimeStamp aTime) {
         containerNode->IsElement() ? containerNode->AsElement() : nullptr;
 #endif
 
+<<<<<<< HEAD
     nsIFrame::RenderedText text = textFrame->GetRenderedText(
         0, UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
         nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
+||||||| merged common ancestors
+    nsIFrame::RenderedText text = textFrame->GetRenderedText(0,
+        UINT32_MAX, nsIFrame::TextOffsetType::OFFSETS_IN_CONTENT_TEXT,
+        nsIFrame::TrailingWhitespace::DONT_TRIM_TRAILING_WHITESPACE);
+=======
+    nsIFrame::RenderedText text = textFrame->GetRenderedText(
+        0, UINT32_MAX, nsIFrame::TextOffsetType::OffsetsInContentText,
+        nsIFrame::TrailingWhitespace::DontTrim);
+>>>>>>> upstream-releases
 
     // Remove text accessible if rendered text is empty.
     if (textAcc) {
@@ -750,8 +774,16 @@ void NotificationController::WillRefresh(mozilla::TimeStamp aTime) {
       MOZ_ASSERT(mDocument->AccessibleOrTrueContainer(containerNode),
                  "Text node having rendered text hasn't accessible document!");
 
+<<<<<<< HEAD
       Accessible* container = mDocument->AccessibleOrTrueContainer(
           containerNode, DocAccessible::eNoContainerIfARIAHidden);
+||||||| merged common ancestors
+      Accessible* container = mDocument->AccessibleOrTrueContainer(
+        containerNode, DocAccessible::eNoContainerIfARIAHidden);
+=======
+      Accessible* container =
+          mDocument->AccessibleOrTrueContainer(containerNode, true);
+>>>>>>> upstream-releases
       if (container) {
         nsTArray<nsCOMPtr<nsIContent>>* list =
             mContentInsertions.LookupOrAdd(container);
@@ -919,11 +951,25 @@ void NotificationController::WillRefresh(mozilla::TimeStamp aTime) {
       parentIPCDoc->ConstructChildDocInParentProcess(
           ipcDoc, id, AccessibleWrap::GetChildIDFor(childDoc));
 #else
+<<<<<<< HEAD
       nsCOMPtr<nsITabChild> tabChild =
           do_GetInterface(mDocument->DocumentNode()->GetDocShell());
       if (tabChild) {
         static_cast<TabChild*>(tabChild.get())
             ->SendPDocAccessibleConstructor(ipcDoc, parentIPCDoc, id, 0, 0);
+||||||| merged common ancestors
+      nsCOMPtr<nsITabChild> tabChild =
+        do_GetInterface(mDocument->DocumentNode()->GetDocShell());
+      if (tabChild) {
+        static_cast<TabChild*>(tabChild.get())->
+          SendPDocAccessibleConstructor(ipcDoc, parentIPCDoc, id, 0, 0);
+=======
+      nsCOMPtr<nsIBrowserChild> browserChild =
+          do_GetInterface(mDocument->DocumentNode()->GetDocShell());
+      if (browserChild) {
+        static_cast<BrowserChild*>(browserChild.get())
+            ->SendPDocAccessibleConstructor(ipcDoc, parentIPCDoc, id, 0, 0);
+>>>>>>> upstream-releases
       }
 #endif
     }

@@ -93,6 +93,7 @@ enum nsBorderStyle {
  */
 
 struct nsWidgetInitData {
+<<<<<<< HEAD
   nsWidgetInitData()
       : mWindowType(eWindowType_child),
         mBorderStyle(eBorderStyle_default),
@@ -111,6 +112,48 @@ struct nsWidgetInitData {
         mSupportTranslucency(false),
         mMouseTransparent(false),
         mHasRemoteContent(false) {}
+||||||| merged common ancestors
+  nsWidgetInitData() :
+      mWindowType(eWindowType_child),
+      mBorderStyle(eBorderStyle_default),
+      mPopupHint(ePopupTypePanel),
+      mPopupLevel(ePopupLevelTop),
+      mScreenId(0),
+      clipChildren(false),
+      clipSiblings(false),
+      mDropShadow(false),
+      mListenForResizes(false),
+      mUnicode(true),
+      mRTL(false),
+      mNoAutoHide(false),
+      mIsDragPopup(false),
+      mIsAnimationSuppressed(false),
+      mSupportTranslucency(false),
+      mMouseTransparent(false),
+      mHasRemoteContent(false)
+  {
+  }
+=======
+  nsWidgetInitData()
+      : mWindowType(eWindowType_child),
+        mBorderStyle(eBorderStyle_default),
+        mPopupHint(ePopupTypePanel),
+        mPopupLevel(ePopupLevelTop),
+        mScreenId(0),
+        clipChildren(false),
+        clipSiblings(false),
+        mDropShadow(false),
+        mListenForResizes(false),
+        mUnicode(true),
+        mRTL(false),
+        mNoAutoHide(false),
+        mIsDragPopup(false),
+        mIsAnimationSuppressed(false),
+        mSupportTranslucency(false),
+        mMouseTransparent(false),
+        mHasRemoteContent(false),
+        mAlwaysOnTop(false) {}
+>>>>>>> upstream-releases
 
   nsWindowType mWindowType;
   nsBorderStyle mBorderStyle;
@@ -133,8 +176,17 @@ struct nsWidgetInitData {
   bool mSupportTranslucency;
   // true if the window should be transparent to mouse events. Currently this is
   // only valid for eWindowType_popup widgets
+<<<<<<< HEAD
   bool mMouseTransparent;
   bool mHasRemoteContent;
+||||||| merged common ancestors
+  bool          mMouseTransparent;
+  bool          mHasRemoteContent;
+=======
+  bool mMouseTransparent;
+  bool mHasRemoteContent;
+  bool mAlwaysOnTop;
+>>>>>>> upstream-releases
 };
 
 #endif  // nsWidgetInitData_h__

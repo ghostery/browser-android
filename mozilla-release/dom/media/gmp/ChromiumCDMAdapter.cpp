@@ -14,17 +14,17 @@
 #include "mozilla/Move.h"
 
 #ifdef XP_WIN
-#include "WinUtils.h"
-#include "nsWindowsDllInterceptor.h"
-#include <windows.h>
-#include <strsafe.h>
-#include <unordered_map>
-#include <vector>
+#  include "WinUtils.h"
+#  include "nsWindowsDllInterceptor.h"
+#  include <windows.h>
+#  include <strsafe.h>
+#  include <unordered_map>
+#  include <vector>
 #else
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+#  include <fcntl.h>
 #endif
 
 const GMPPlatformAPI* sPlatform = nullptr;
@@ -118,9 +118,22 @@ GMPErr ChromiumCDMAdapter::GMPGetAPI(const char* aAPIName, void* aHostAPI,
 
     int version = isCDM9 ? cdm::ContentDecryptionModule_9::kVersion
                          : cdm::ContentDecryptionModule_10::kVersion;
+<<<<<<< HEAD
     void* cdm =
         create(version, kEMEKeySystemWidevine.get(),
                kEMEKeySystemWidevine.Length(), &ChromiumCdmHost, aHostAPI);
+||||||| merged common ancestors
+    void* cdm =
+      create(version,
+             kEMEKeySystemWidevine.get(),
+             kEMEKeySystemWidevine.Length(),
+             &ChromiumCdmHost,
+             aHostAPI);
+=======
+    void* cdm = create(version, EME_KEY_SYSTEM_WIDEVINE,
+                       mozilla::ArrayLength(EME_KEY_SYSTEM_WIDEVINE) - 1,
+                       &ChromiumCdmHost, aHostAPI);
+>>>>>>> upstream-releases
     if (!cdm) {
       GMP_LOG(
           "ChromiumCDMAdapter::GMPGetAPI(%s, 0x%p, 0x%p, %u) this=0x%p "

@@ -1,3 +1,9 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set ts=8 sts=2 et sw=2 tw=80: */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef dom_plugins_ipc_ipdltuple_h
 #define dom_plugins_ipc_ipdltuple_h
 
@@ -148,6 +154,7 @@ struct ParamTraits<IpdlTuple::IpdlTupleElement> {
     return ret;
   }
 
+<<<<<<< HEAD
   struct LogMatcher {
     explicit LogMatcher(std::wstring* aLog) : mLog(aLog) {}
 
@@ -162,6 +169,29 @@ struct ParamTraits<IpdlTuple::IpdlTupleElement> {
 
   static void Log(const paramType& aParam, std::wstring* aLog) {
     aParam.GetVariant().match(LogMatcher(aLog));
+||||||| merged common ancestors
+  struct LogMatcher
+  {
+    explicit LogMatcher(std::wstring* aLog) : mLog(aLog) {}
+
+    template <typename EntryType>
+    void match(const EntryType& aParam)
+    {
+      LogParam(aParam, mLog);
+    }
+
+  private:
+    std::wstring* mLog;
+  };
+
+  static void Log(const paramType& aParam, std::wstring* aLog)
+  {
+    aParam.GetVariant().match(LogMatcher(aLog));
+=======
+  static void Log(const paramType& aParam, std::wstring* aLog) {
+    aParam.GetVariant().match(
+        [aLog](const auto& aParam) { LogParam(aParam, aLog); });
+>>>>>>> upstream-releases
   }
 };
 

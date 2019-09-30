@@ -12,12 +12,17 @@
 #include "nsIContent.h"
 #include "nsINode.h"
 #include "nsIWeakReferenceUtils.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 #include "nsTArray.h"
 #include "SVGLength.h"
 #include "mozilla/dom/SVGLengthBinding.h"
 
 namespace mozilla {
+
+namespace dom {
+class DOMSVGLength;
+class DOMSVGLengthList;
+}  // namespace dom
 
 /**
  * ATTENTION! WARNING! WATCH OUT!!
@@ -28,14 +33,38 @@ namespace mozilla {
  *
  * The DOM wrapper class for this class is DOMSVGLengthList.
  */
+<<<<<<< HEAD
 class SVGLengthList {
+||||||| merged common ancestors
+class SVGLengthList
+{
+=======
+class SVGLengthList {
+  friend class dom::DOMSVGLength;
+  friend class dom::DOMSVGLengthList;
+>>>>>>> upstream-releases
   friend class SVGAnimatedLengthList;
+<<<<<<< HEAD
   friend class DOMSVGLengthList;
   friend class DOMSVGLength;
 
  public:
   SVGLengthList() {}
   ~SVGLengthList() {}
+||||||| merged common ancestors
+  friend class DOMSVGLengthList;
+  friend class DOMSVGLength;
+
+public:
+
+  SVGLengthList(){}
+  ~SVGLengthList(){}
+=======
+
+ public:
+  SVGLengthList() = default;
+  ~SVGLengthList() = default;
+>>>>>>> upstream-releases
 
   // Only methods that don't make/permit modification to this list are public.
   // Only our friend classes can access methods that may change us.
@@ -158,6 +187,7 @@ class SVGLengthList {
 class SVGLengthListAndInfo : public SVGLengthList {
  public:
   SVGLengthListAndInfo()
+<<<<<<< HEAD
       : mElement(nullptr), mAxis(0), mCanZeroPadList(false) {}
 
   SVGLengthListAndInfo(nsSVGElement* aElement, uint8_t aAxis,
@@ -167,14 +197,38 @@ class SVGLengthListAndInfo : public SVGLengthList {
         mCanZeroPadList(aCanZeroPadList) {}
 
   void SetInfo(nsSVGElement* aElement, uint8_t aAxis, bool aCanZeroPadList) {
+||||||| merged common ancestors
+    : mElement(nullptr)
+    , mAxis(0)
+    , mCanZeroPadList(false)
+  {}
+
+  SVGLengthListAndInfo(nsSVGElement *aElement, uint8_t aAxis, bool aCanZeroPadList)
+    : mElement(do_GetWeakReference(static_cast<nsINode*>(aElement)))
+    , mAxis(aAxis)
+    , mCanZeroPadList(aCanZeroPadList)
+  {}
+
+  void SetInfo(nsSVGElement *aElement, uint8_t aAxis, bool aCanZeroPadList) {
+=======
+      : mElement(nullptr), mAxis(0), mCanZeroPadList(false) {}
+
+  SVGLengthListAndInfo(dom::SVGElement* aElement, uint8_t aAxis,
+                       bool aCanZeroPadList)
+      : mElement(do_GetWeakReference(static_cast<nsINode*>(aElement))),
+        mAxis(aAxis),
+        mCanZeroPadList(aCanZeroPadList) {}
+
+  void SetInfo(dom::SVGElement* aElement, uint8_t aAxis, bool aCanZeroPadList) {
+>>>>>>> upstream-releases
     mElement = do_GetWeakReference(static_cast<nsINode*>(aElement));
     mAxis = aAxis;
     mCanZeroPadList = aCanZeroPadList;
   }
 
-  nsSVGElement* Element() const {
+  dom::SVGElement* Element() const {
     nsCOMPtr<nsIContent> e = do_QueryReferent(mElement);
-    return static_cast<nsSVGElement*>(e.get());
+    return static_cast<dom::SVGElement*>(e.get());
   }
 
   /**
@@ -261,7 +315,7 @@ class SVGLengthListAndInfo : public SVGLengthList {
 
  private:
   // We must keep a weak reference to our element because we may belong to a
-  // cached baseVal nsSMILValue. See the comments starting at:
+  // cached baseVal SMILValue. See the comments starting at:
   // https://bugzilla.mozilla.org/show_bug.cgi?id=515116#c15
   // See also https://bugzilla.mozilla.org/show_bug.cgi?id=653497
   nsWeakPtr mElement;
@@ -287,7 +341,14 @@ class MOZ_STACK_CLASS SVGUserUnitList {
  public:
   SVGUserUnitList() : mList(nullptr), mElement(nullptr), mAxis(0) {}
 
+<<<<<<< HEAD
   void Init(const SVGLengthList* aList, nsSVGElement* aElement, uint8_t aAxis) {
+||||||| merged common ancestors
+  void Init(const SVGLengthList *aList, nsSVGElement *aElement, uint8_t aAxis) {
+=======
+  void Init(const SVGLengthList* aList, dom::SVGElement* aElement,
+            uint8_t aAxis) {
+>>>>>>> upstream-releases
     mList = aList;
     mElement = aElement;
     mAxis = aAxis;
@@ -310,9 +371,19 @@ class MOZ_STACK_CLASS SVGUserUnitList {
            dom::SVGLength_Binding::SVG_LENGTHTYPE_PERCENTAGE;
   }
 
+<<<<<<< HEAD
  private:
   const SVGLengthList* mList;
   nsSVGElement* mElement;
+||||||| merged common ancestors
+private:
+  const SVGLengthList *mList;
+  nsSVGElement *mElement;
+=======
+ private:
+  const SVGLengthList* mList;
+  dom::SVGElement* mElement;
+>>>>>>> upstream-releases
   uint8_t mAxis;
 };
 

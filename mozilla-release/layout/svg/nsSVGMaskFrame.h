@@ -17,17 +17,44 @@
 
 class gfxContext;
 
+<<<<<<< HEAD
 class nsSVGMaskFrame final : public nsSVGContainerFrame {
   friend nsIFrame* NS_NewSVGMaskFrame(nsIPresShell* aPresShell,
                                       ComputedStyle* aStyle);
+||||||| merged common ancestors
+class nsSVGMaskFrame final : public nsSVGContainerFrame
+{
+  friend nsIFrame*
+  NS_NewSVGMaskFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
+class nsSVGMaskFrame final : public nsSVGContainerFrame {
+  friend nsIFrame* NS_NewSVGMaskFrame(mozilla::PresShell* aPresShell,
+                                      ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   typedef mozilla::gfx::Matrix Matrix;
   typedef mozilla::gfx::SourceSurface SourceSurface;
   typedef mozilla::image::imgDrawingParams imgDrawingParams;
 
+<<<<<<< HEAD
  protected:
   explicit nsSVGMaskFrame(ComputedStyle* aStyle)
       : nsSVGContainerFrame(aStyle, kClassID), mInUse(false) {
+||||||| merged common ancestors
+protected:
+  explicit nsSVGMaskFrame(ComputedStyle* aStyle)
+    : nsSVGContainerFrame(aStyle, kClassID)
+    , mInUse(false)
+  {
+=======
+ protected:
+  explicit nsSVGMaskFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
+      : nsSVGContainerFrame(aStyle, aPresContext, kClassID), mInUse(false) {
+>>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IS_NONDISPLAY);
   }
 
@@ -39,14 +66,14 @@ class nsSVGMaskFrame final : public nsSVGContainerFrame {
     nsIFrame* maskedFrame;
     const gfxMatrix& toUserSpace;
     float opacity;
-    Matrix* maskTransform;
-    uint8_t maskMode;
+    mozilla::StyleMaskMode maskMode;
     imgDrawingParams& imgParams;
 
     explicit MaskParams(gfxContext* aCtx, nsIFrame* aMaskedFrame,
                         const gfxMatrix& aToUserSpace, float aOpacity,
-                        Matrix* aMaskTransform, uint8_t aMaskMode,
+                        mozilla::StyleMaskMode aMaskMode,
                         imgDrawingParams& aImgParams)
+<<<<<<< HEAD
         : ctx(aCtx),
           maskedFrame(aMaskedFrame),
           toUserSpace(aToUserSpace),
@@ -54,6 +81,19 @@ class nsSVGMaskFrame final : public nsSVGContainerFrame {
           maskTransform(aMaskTransform),
           maskMode(aMaskMode),
           imgParams(aImgParams) {}
+||||||| merged common ancestors
+    : ctx(aCtx), maskedFrame(aMaskedFrame), toUserSpace(aToUserSpace),
+      opacity(aOpacity), maskTransform(aMaskTransform), maskMode(aMaskMode),
+      imgParams(aImgParams)
+    { }
+=======
+        : ctx(aCtx),
+          maskedFrame(aMaskedFrame),
+          toUserSpace(aToUserSpace),
+          opacity(aOpacity),
+          maskMode(aMaskMode),
+          imgParams(aImgParams) {}
+>>>>>>> upstream-releases
   };
 
   // nsSVGMaskFrame method:

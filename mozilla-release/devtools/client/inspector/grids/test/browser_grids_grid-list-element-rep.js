@@ -30,20 +30,44 @@ add_task(async function() {
   elementRep.scrollIntoView();
 
   info("Listen to node-highlight event and mouse over the widget");
+<<<<<<< HEAD
   const onHighlight = toolbox.highlighter.once("node-highlight");
   EventUtils.synthesizeMouse(elementRep, 10, 5, {type: "mouseover"}, doc.defaultView);
+||||||| merged common ancestors
+  const onHighlight = toolbox.once("node-highlight");
+  EventUtils.synthesizeMouse(elementRep, 10, 5, {type: "mouseover"}, doc.defaultView);
+=======
+  const onHighlight = toolbox.highlighter.once("node-highlight");
+  EventUtils.synthesizeMouse(
+    elementRep,
+    10,
+    5,
+    { type: "mouseover" },
+    doc.defaultView
+  );
+>>>>>>> upstream-releases
   const nodeFront = await onHighlight;
 
   ok(nodeFront, "nodeFront was returned from highlighting the node.");
   is(nodeFront.tagName, "DIV", "The highlighted node has the correct tagName.");
-  is(nodeFront.attributes[0].name, "id",
-    "The highlighted node has the correct attributes.");
-  is(nodeFront.attributes[0].value, "grid", "The highlighted node has the correct id.");
+  is(
+    nodeFront.attributes[0].name,
+    "id",
+    "The highlighted node has the correct attributes."
+  );
+  is(
+    nodeFront.attributes[0].value,
+    "grid",
+    "The highlighted node has the correct id."
+  );
 
   const onSelection = inspector.selection.once("new-node-front");
-  EventUtils.sendMouseEvent({type: "click"}, elementRep, doc.defaultView);
+  EventUtils.sendMouseEvent({ type: "click" }, elementRep, doc.defaultView);
   await onSelection;
 
-  is(inspector.selection.nodeFront, store.getState().grids[0].nodeFront,
-    "The selected node is the one stored on the grid item's state.");
+  is(
+    inspector.selection.nodeFront,
+    store.getState().grids[0].nodeFront,
+    "The selected node is the one stored on the grid item's state."
+  );
 });

@@ -9,6 +9,7 @@
 #include "nsIFrame.h"
 #include "nsContentUtils.h"
 #include "nsLayoutUtils.h"
+#include "mozilla/PresShell.h"
 #include "mozilla/ServoBindings.h"
 
 namespace mozilla {
@@ -189,6 +190,7 @@ void DOMIntersectionObserver::TakeRecords(
   mQueuedEntries.Clear();
 }
 
+<<<<<<< HEAD
 static bool CheckSimilarOrigin(nsINode* aNode1, nsINode* aNode2) {
   nsIPrincipal* principal1 = aNode1->NodePrincipal();
   nsIPrincipal* principal2 = aNode2->NodePrincipal();
@@ -210,6 +212,35 @@ static bool CheckSimilarOrigin(nsINode* aNode1, nsINode* aNode2) {
 
 static Maybe<nsRect> EdgeInclusiveIntersection(const nsRect& aRect,
                                                const nsRect& aOtherRect) {
+||||||| merged common ancestors
+static bool
+CheckSimilarOrigin(nsINode* aNode1, nsINode* aNode2)
+{
+  nsIPrincipal* principal1 = aNode1->NodePrincipal();
+  nsIPrincipal* principal2 = aNode2->NodePrincipal();
+  nsAutoCString baseDomain1;
+  nsAutoCString baseDomain2;
+
+  nsresult rv = principal1->GetBaseDomain(baseDomain1);
+  if (NS_FAILED(rv)) {
+    return principal1 == principal2;
+  }
+
+  rv = principal2->GetBaseDomain(baseDomain2);
+  if (NS_FAILED(rv)) {
+    return principal1 == principal2;
+  }
+
+  return baseDomain1 == baseDomain2;
+}
+
+static Maybe<nsRect>
+EdgeInclusiveIntersection(const nsRect& aRect, const nsRect& aOtherRect)
+{
+=======
+static Maybe<nsRect> EdgeInclusiveIntersection(const nsRect& aRect,
+                                               const nsRect& aOtherRect) {
+>>>>>>> upstream-releases
   nscoord left = std::max(aRect.x, aOtherRect.x);
   nscoord top = std::max(aRect.y, aOtherRect.y);
   nscoord right = std::min(aRect.XMost(), aOtherRect.XMost());
@@ -220,22 +251,56 @@ static Maybe<nsRect> EdgeInclusiveIntersection(const nsRect& aRect,
   return Some(nsRect(left, top, right - left, bottom - top));
 }
 
-enum class BrowsingContextInfo {
-  SimilarOriginBrowsingContext,
-  DifferentOriginBrowsingContext,
-  UnknownBrowsingContext
-};
+enum class BrowsingContextOrigin { Similar, Different, Unknown };
 
+<<<<<<< HEAD
 void DOMIntersectionObserver::Update(nsIDocument* aDocument,
                                      DOMHighResTimeStamp time) {
   Element* root = nullptr;
   nsIFrame* rootFrame = nullptr;
   nsRect rootRect;
+||||||| merged common ancestors
+void
+DOMIntersectionObserver::Update(nsIDocument* aDocument, DOMHighResTimeStamp time)
+{
+  Element* root = nullptr;
+  nsIFrame* rootFrame = nullptr;
+  nsRect rootRect;
+=======
+// FIXME(emilio): The whole concept of "units of related similar-origin browsing
+// contexts" is gone, but this is still in the spec, see
+// https://github.com/w3c/IntersectionObserver/issues/161
+static BrowsingContextOrigin SimilarOrigin(const Element& aTarget,
+                                           const Element* aRoot) {
+  if (!aRoot) {
+    return BrowsingContextOrigin::Unknown;
+  }
+  nsIPrincipal* principal1 = aTarget.NodePrincipal();
+  nsIPrincipal* principal2 = aRoot->NodePrincipal();
 
+  if (principal1 == principal2) {
+    return BrowsingContextOrigin::Similar;
+  }
+
+  nsAutoCString baseDomain1;
+  nsAutoCString baseDomain2;
+  if (NS_FAILED(principal1->GetBaseDomain(baseDomain1)) ||
+      NS_FAILED(principal2->GetBaseDomain(baseDomain2))) {
+    return BrowsingContextOrigin::Different;
+  }
+
+  return baseDomain1 == baseDomain2 ? BrowsingContextOrigin::Similar
+                                    : BrowsingContextOrigin::Different;
+}
+>>>>>>> upstream-releases
+
+void DOMIntersectionObserver::Update(Document* aDocument,
+                                     DOMHighResTimeStamp time) {
+  nsRect rootRect;
+  nsIFrame* rootFrame = nullptr;
+  Element* root = mRoot;
   if (mRoot) {
-    root = mRoot;
-    rootFrame = root->GetPrimaryFrame();
-    if (rootFrame) {
+    if ((rootFrame = mRoot->GetPrimaryFrame())) {
       nsRect rootRectRelativeToRootFrame;
       if (rootFrame->IsScrollFrame()) {
         // rootRectRelativeToRootFrame should be the content rect of rootFrame,
@@ -251,6 +316,7 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
       rootRect = nsLayoutUtils::TransformFrameRectToAncestor(
           rootFrame, rootRectRelativeToRootFrame, containingBlock);
     }
+<<<<<<< HEAD
   } else {
     nsCOMPtr<nsIPresShell> presShell = aDocument->GetShell();
     if (presShell) {
@@ -269,30 +335,75 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
           } else {
             break;
           }
+||||||| merged common ancestors
+  } else {
+    nsCOMPtr<nsIPresShell> presShell = aDocument->GetShell();
+    if (presShell) {
+      rootFrame = presShell->GetRootScrollFrame();
+      if (rootFrame) {
+        nsPresContext* presContext = rootFrame->PresContext();
+        while (!presContext->IsRootContentDocument()) {
+          presContext = presContext->GetParentPresContext();
+          if (!presContext) {
+            break;
+          }
+          nsIFrame* rootScrollFrame = presContext->PresShell()->GetRootScrollFrame();
+          if (rootScrollFrame) {
+            rootFrame = rootScrollFrame;
+          } else {
+            break;
+          }
+=======
+  } else if (PresShell* presShell = aDocument->GetPresShell()) {
+    // FIXME(emilio): This shouldn't probably go through the presShell and just
+    // through the document tree.
+    rootFrame = presShell->GetRootScrollFrame();
+    if (rootFrame) {
+      nsPresContext* presContext = rootFrame->PresContext();
+      while (!presContext->IsRootContentDocument()) {
+        presContext = presContext->GetParentPresContext();
+        if (!presContext) {
+          break;
+>>>>>>> upstream-releases
         }
-        root = rootFrame->GetContent()->AsElement();
-        nsIScrollableFrame* scrollFrame = do_QueryFrame(rootFrame);
-        // If we end up with a null root frame for some reason, we'll proceed
-        // with an empty root intersection rect.
-        if (scrollFrame) {
-          rootRect = scrollFrame->GetScrollPortRect();
+        nsIFrame* rootScrollFrame =
+            presContext->PresShell()->GetRootScrollFrame();
+        if (rootScrollFrame) {
+          rootFrame = rootScrollFrame;
+        } else {
+          break;
         }
       }
+      root = rootFrame->GetContent()->AsElement();
+      nsIScrollableFrame* scrollFrame = do_QueryFrame(rootFrame);
+      rootRect = scrollFrame->GetScrollPortRect();
     }
   }
 
   nsMargin rootMargin;
   NS_FOR_CSS_SIDES(side) {
+<<<<<<< HEAD
     nscoord basis = side == eSideTop || side == eSideBottom ? rootRect.Height()
                                                             : rootRect.Width();
     nsStyleCoord coord = mRootMargin.Get(side);
     rootMargin.Side(side) =
         nsLayoutUtils::ComputeCBDependentValue(basis, coord);
+||||||| merged common ancestors
+    nscoord basis = side == eSideTop || side == eSideBottom ?
+      rootRect.Height() : rootRect.Width();
+    nsStyleCoord coord = mRootMargin.Get(side);
+    rootMargin.Side(side) = nsLayoutUtils::ComputeCBDependentValue(basis, coord);
+=======
+    nscoord basis = side == eSideTop || side == eSideBottom ? rootRect.Height()
+                                                            : rootRect.Width();
+    rootMargin.Side(side) =
+        mRootMargin.Get(side).Resolve(basis, NSToCoordRoundWithClamp);
+>>>>>>> upstream-releases
   }
 
-  for (size_t i = 0; i < mObservationTargets.Length(); ++i) {
-    Element* target = mObservationTargets.ElementAt(i);
+  for (Element* target : mObservationTargets) {
     nsIFrame* targetFrame = target->GetPrimaryFrame();
+    nsIFrame* originalTargetFrame = targetFrame;
     nsRect targetRect;
     Maybe<nsRect> intersectionRect;
     bool isSameDoc = root && root->GetComposedDoc() == target->GetComposedDoc();
@@ -346,13 +457,22 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
     }
 
     nsRect rootIntersectionRect;
+<<<<<<< HEAD
     BrowsingContextInfo isInSimilarOriginBrowsingContext =
         BrowsingContextInfo::UnknownBrowsingContext;
 
+||||||| merged common ancestors
+    BrowsingContextInfo isInSimilarOriginBrowsingContext =
+      BrowsingContextInfo::UnknownBrowsingContext;
+
+=======
+>>>>>>> upstream-releases
     if (rootFrame && targetFrame) {
+      // FIXME(emilio): Why only if there are frames?
       rootIntersectionRect = rootRect;
     }
 
+<<<<<<< HEAD
     if (root && target) {
       isInSimilarOriginBrowsingContext =
           CheckSimilarOrigin(root, target)
@@ -362,6 +482,19 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
 
     if (isInSimilarOriginBrowsingContext ==
         BrowsingContextInfo::SimilarOriginBrowsingContext) {
+||||||| merged common ancestors
+    if (root && target) {
+      isInSimilarOriginBrowsingContext = CheckSimilarOrigin(root, target) ?
+        BrowsingContextInfo::SimilarOriginBrowsingContext :
+        BrowsingContextInfo::DifferentOriginBrowsingContext;
+    }
+
+    if (isInSimilarOriginBrowsingContext ==
+        BrowsingContextInfo::SimilarOriginBrowsingContext) {
+=======
+    BrowsingContextOrigin origin = SimilarOrigin(*target, root);
+    if (origin == BrowsingContextOrigin::Similar) {
+>>>>>>> upstream-releases
       rootIntersectionRect.Inflate(rootMargin);
     }
 
@@ -374,9 +507,18 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
           intersectionRectRelativeToRoot, rootIntersectionRect);
       if (intersectionRect.isSome() && !isSameDoc) {
         nsRect rect = intersectionRect.value();
+<<<<<<< HEAD
         nsPresContext* presContext = targetFrame->PresContext();
         nsIFrame* rootScrollFrame =
             presContext->PresShell()->GetRootScrollFrame();
+||||||| merged common ancestors
+        nsPresContext* presContext = targetFrame->PresContext();
+        nsIFrame* rootScrollFrame = presContext->PresShell()->GetRootScrollFrame();
+=======
+        nsPresContext* presContext = originalTargetFrame->PresContext();
+        nsIFrame* rootScrollFrame =
+            presContext->PresShell()->GetRootScrollFrame();
+>>>>>>> upstream-releases
         if (rootScrollFrame) {
           nsLayoutUtils::TransformRect(rootFrame, rootScrollFrame, rect);
         }
@@ -415,6 +557,7 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
     }
 
     if (target->UpdateIntersectionObservation(this, threshold)) {
+<<<<<<< HEAD
       QueueIntersectionObserverEntry(
           target, time,
           isInSimilarOriginBrowsingContext ==
@@ -422,6 +565,22 @@ void DOMIntersectionObserver::Update(nsIDocument* aDocument,
               ? Nothing()
               : Some(rootIntersectionRect),
           targetRect, intersectionRect, intersectionRatio);
+||||||| merged common ancestors
+      QueueIntersectionObserverEntry(
+        target, time,
+        isInSimilarOriginBrowsingContext ==
+          BrowsingContextInfo::DifferentOriginBrowsingContext ?
+          Nothing() : Some(rootIntersectionRect),
+        targetRect, intersectionRect, intersectionRatio
+      );
+=======
+      QueueIntersectionObserverEntry(target, time,
+                                     origin == BrowsingContextOrigin::Different
+                                         ? Nothing()
+                                         : Some(rootIntersectionRect),
+                                     targetRect, intersectionRect,
+                                     intersectionRatio);
+>>>>>>> upstream-releases
     }
   }
 }
@@ -461,7 +620,8 @@ void DOMIntersectionObserver::Notify() {
     }
   }
   mQueuedEntries.Clear();
-  mCallback->Call(this, entries, *this);
+  RefPtr<dom::IntersectionCallback> callback(mCallback);
+  callback->Call(this, entries, *this);
 }
 
 }  // namespace dom

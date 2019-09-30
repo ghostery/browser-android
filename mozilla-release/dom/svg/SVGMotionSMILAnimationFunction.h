@@ -9,17 +9,18 @@
 
 #include "mozilla/gfx/2D.h"
 #include "mozilla/RefPtr.h"
-#include "nsSMILAnimationFunction.h"
+#include "mozilla/SMILAnimationFunction.h"
+#include "SVGMotionSMILType.h"
 #include "nsTArray.h"
-#include "SVGMotionSMILType.h"  // for RotateType
 
 class nsAttrValue;
 class nsAtom;
 class nsIContent;
-class nsISMILAttr;
-class nsSMILValue;
 
 namespace mozilla {
+
+class SMILAttr;
+class SMILValue;
 
 namespace dom {
 class SVGMPathElement;
@@ -28,10 +29,17 @@ class SVGMPathElement;
 //----------------------------------------------------------------------
 // SVGMotionSMILAnimationFunction
 //
-// Subclass of nsSMILAnimationFunction to support a few extra features offered
+// Subclass of SMILAnimationFunction to support a few extra features offered
 // by the <animateMotion> element.
 //
+<<<<<<< HEAD
 class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction {
+||||||| merged common ancestors
+class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction
+{
+=======
+class SVGMotionSMILAnimationFunction final : public SMILAnimationFunction {
+>>>>>>> upstream-releases
   typedef mozilla::gfx::Path Path;
 
  public:
@@ -60,9 +68,9 @@ class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction {
     ePathSourceType_Mpath
   };
 
-  virtual nsSMILCalcMode GetCalcMode() const override;
-  virtual nsresult GetValues(const nsISMILAttr& aSMILAttr,
-                             nsSMILValueArray& aResult) override;
+  virtual SMILCalcMode GetCalcMode() const override;
+  virtual nsresult GetValues(const SMILAttr& aSMILAttr,
+                             SMILValueArray& aResult) override;
   virtual void CheckValueListDependentAttrs(uint32_t aNumValues) override;
 
   virtual bool IsToAnimation() const override;
@@ -74,6 +82,7 @@ class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction {
   void UnsetRotate();
 
   // Helpers for GetValues
+<<<<<<< HEAD
   void MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
   void RebuildPathAndVertices(const nsIContent* aContextElem);
   void RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
@@ -82,6 +91,26 @@ class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction {
   bool GenerateValuesForPathAndPoints(Path* aPath, bool aIsKeyPoints,
                                       FallibleTArray<double>& aPointDistances,
                                       nsSMILValueArray& aResult);
+||||||| merged common ancestors
+  void     MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
+  void     RebuildPathAndVertices(const nsIContent* aContextElem);
+  void     RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
+  void     RebuildPathAndVerticesFromPathAttr();
+  void     RebuildPathAndVerticesFromBasicAttrs(const nsIContent* aContextElem);
+  bool     GenerateValuesForPathAndPoints(Path* aPath,
+                                          bool aIsKeyPoints,
+                                          FallibleTArray<double>& aPointDistances,
+                                          nsSMILValueArray& aResult);
+=======
+  void MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
+  void RebuildPathAndVertices(const nsIContent* aTargetElement);
+  void RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
+  void RebuildPathAndVerticesFromPathAttr();
+  void RebuildPathAndVerticesFromBasicAttrs(const nsIContent* aContextElem);
+  bool GenerateValuesForPathAndPoints(Path* aPath, bool aIsKeyPoints,
+                                      FallibleTArray<double>& aPointDistances,
+                                      SMILValueArray& aResult);
+>>>>>>> upstream-releases
 
   // Members
   // -------

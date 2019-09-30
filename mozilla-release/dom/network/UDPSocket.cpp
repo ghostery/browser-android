@@ -46,10 +46,26 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(UDPSocket)
   NS_INTERFACE_MAP_ENTRY(nsIUDPSocketInternal)
 NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<UDPSocket> UDPSocket::Constructor(
     const GlobalObject& aGlobal, const UDPOptions& aOptions, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
       do_QueryInterface(aGlobal.GetAsSupports());
+||||||| merged common ancestors
+/* static */ already_AddRefed<UDPSocket>
+UDPSocket::Constructor(const GlobalObject& aGlobal,
+                       const UDPOptions& aOptions,
+                       ErrorResult& aRv)
+{
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(aGlobal.GetAsSupports());
+=======
+/* static */
+already_AddRefed<UDPSocket> UDPSocket::Constructor(const GlobalObject& aGlobal,
+                                                   const UDPOptions& aOptions,
+                                                   ErrorResult& aRv) {
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
+      do_QueryInterface(aGlobal.GetAsSupports());
+>>>>>>> upstream-releases
   if (!ownerWindow) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -123,7 +139,7 @@ UDPSocket::UDPSocket(nsPIDOMWindowInner* aOwner,
       mReadyState(SocketReadyState::Opening) {
   MOZ_ASSERT(aOwner);
 
-  nsIDocument* aDoc = aOwner->GetExtantDoc();
+  Document* aDoc = aOwner->GetExtantDoc();
   if (aDoc) {
     aDoc->DisallowBFCaching();
   }
@@ -225,8 +241,7 @@ void UDPSocket::JoinMulticastGroup(const nsAString& aMulticastGroupAddress,
 
   MOZ_ASSERT(mSocketChild);
 
-  aRv = mSocketChild->JoinMulticast(address, EmptyCString());
-  NS_WARNING_ASSERTION(!aRv.Failed(), "JoinMulticast failed");
+  mSocketChild->JoinMulticast(address, EmptyCString());
 }
 
 void UDPSocket::LeaveMulticastGroup(const nsAString& aMulticastGroupAddress,
@@ -256,8 +271,7 @@ void UDPSocket::LeaveMulticastGroup(const nsAString& aMulticastGroupAddress,
 
   MOZ_ASSERT(mSocketChild);
 
-  aRv = mSocketChild->LeaveMulticast(address, EmptyCString());
-  NS_WARNING_ASSERTION(!aRv.Failed(), "mSocketChild->LeaveMulticast failed");
+  mSocketChild->LeaveMulticast(address, EmptyCString());
 }
 
 nsresult UDPSocket::DoPendingMcastCommand() {
@@ -465,7 +479,17 @@ nsresult UDPSocket::InitRemote(const nsAString& aLocalAddress,
                                const uint16_t& aLocalPort) {
   nsresult rv;
 
+<<<<<<< HEAD
   nsCOMPtr<nsIUDPSocketChild> sock = new dom::UDPSocketChild();
+||||||| merged common ancestors
+  nsCOMPtr<nsIUDPSocketChild> sock =
+    do_CreateInstance("@mozilla.org/udp-socket-child;1", &rv);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+=======
+  RefPtr<UDPSocketChild> sock = new UDPSocketChild();
+>>>>>>> upstream-releases
 
   mListenerProxy = new ListenerProxy(this);
 
@@ -560,28 +584,60 @@ nsresult UDPSocket::Init(const nsString& aLocalAddress,
   return NS_DispatchToMainThread(runnable);
 }
 
+<<<<<<< HEAD
 void UDPSocket::HandleReceivedData(const nsACString& aRemoteAddress,
                                    const uint16_t& aRemotePort,
                                    const uint8_t* aData,
                                    const uint32_t& aDataLength) {
+||||||| merged common ancestors
+void
+UDPSocket::HandleReceivedData(const nsACString& aRemoteAddress,
+                              const uint16_t& aRemotePort,
+                              const uint8_t* aData,
+                              const uint32_t& aDataLength)
+{
+=======
+void UDPSocket::HandleReceivedData(const nsACString& aRemoteAddress,
+                                   const uint16_t& aRemotePort,
+                                   const nsTArray<uint8_t>& aData) {
+>>>>>>> upstream-releases
   if (mReadyState != SocketReadyState::Open) {
     return;
   }
 
-  if (NS_FAILED(CheckInnerWindowCorrectness())) {
+  if (NS_FAILED(CheckCurrentGlobalCorrectness())) {
     return;
   }
 
+<<<<<<< HEAD
   if (NS_FAILED(DispatchReceivedData(aRemoteAddress, aRemotePort, aData,
                                      aDataLength))) {
+||||||| merged common ancestors
+  if (NS_FAILED(DispatchReceivedData(aRemoteAddress, aRemotePort, aData, aDataLength))) {
+=======
+  if (NS_FAILED(DispatchReceivedData(aRemoteAddress, aRemotePort, aData))) {
+>>>>>>> upstream-releases
     CloseWithReason(NS_ERROR_TYPE_ERR);
   }
 }
 
+<<<<<<< HEAD
 nsresult UDPSocket::DispatchReceivedData(const nsACString& aRemoteAddress,
                                          const uint16_t& aRemotePort,
                                          const uint8_t* aData,
                                          const uint32_t& aDataLength) {
+||||||| merged common ancestors
+nsresult
+UDPSocket::DispatchReceivedData(const nsACString& aRemoteAddress,
+                                const uint16_t& aRemotePort,
+                                const uint8_t* aData,
+                                const uint32_t& aDataLength)
+{
+=======
+nsresult UDPSocket::DispatchReceivedData(const nsACString& aRemoteAddress,
+                                         const uint16_t& aRemotePort,
+                                         const nsTArray<uint8_t>& aData) {
+>>>>>>> upstream-releases
   AutoJSAPI jsapi;
 
   if (NS_WARN_IF(!jsapi.Init(GetOwner()))) {
@@ -591,8 +647,15 @@ nsresult UDPSocket::DispatchReceivedData(const nsACString& aRemoteAddress,
   JSContext* cx = jsapi.cx();
 
   // Copy packet data to ArrayBuffer
+<<<<<<< HEAD
   JS::Rooted<JSObject*> arrayBuf(cx,
                                  ArrayBuffer::Create(cx, aDataLength, aData));
+||||||| merged common ancestors
+  JS::Rooted<JSObject*> arrayBuf(cx, ArrayBuffer::Create(cx, aDataLength, aData));
+=======
+  JS::Rooted<JSObject*> arrayBuf(
+      cx, ArrayBuffer::Create(cx, aData.Length(), aData.Elements()));
+>>>>>>> upstream-releases
 
   if (NS_WARN_IF(!arrayBuf)) {
     return NS_ERROR_FAILURE;
@@ -646,8 +709,14 @@ UDPSocket::OnPacketReceived(nsIUDPSocket* aSocket, nsIUDPMessage* aMessage) {
     return NS_OK;
   }
 
+<<<<<<< HEAD
   HandleReceivedData(remoteAddress, remotePort, buffer.Elements(),
                      buffer.Length());
+||||||| merged common ancestors
+  HandleReceivedData(remoteAddress, remotePort, buffer.Elements(), buffer.Length());
+=======
+  HandleReceivedData(remoteAddress, remotePort, buffer);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -674,9 +743,21 @@ UDPSocket::CallListenerError(const nsACString& aMessage,
 
 NS_IMETHODIMP
 UDPSocket::CallListenerReceivedData(const nsACString& aRemoteAddress,
+<<<<<<< HEAD
                                     uint16_t aRemotePort, const uint8_t* aData,
                                     uint32_t aDataLength) {
   HandleReceivedData(aRemoteAddress, aRemotePort, aData, aDataLength);
+||||||| merged common ancestors
+                                    uint16_t aRemotePort,
+                                    const uint8_t* aData,
+                                    uint32_t aDataLength)
+{
+  HandleReceivedData(aRemoteAddress, aRemotePort, aData, aDataLength);
+=======
+                                    uint16_t aRemotePort,
+                                    const nsTArray<uint8_t>& aData) {
+  HandleReceivedData(aRemoteAddress, aRemotePort, aData);
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -690,13 +771,9 @@ UDPSocket::CallListenerOpened() {
   MOZ_ASSERT(mSocketChild);
 
   // Get real local address and local port
-  nsCString localAddress;
-  mSocketChild->GetLocalAddress(localAddress);
-  mLocalAddress = NS_ConvertUTF8toUTF16(localAddress);
+  mLocalAddress = NS_ConvertUTF8toUTF16(mSocketChild->LocalAddress());
 
-  uint16_t localPort;
-  mSocketChild->GetLocalPort(&localPort);
-  mLocalPort.SetValue(localPort);
+  mLocalPort.SetValue(mSocketChild->LocalPort());
 
   mReadyState = SocketReadyState::Open;
   nsresult rv = DoPendingMcastCommand();

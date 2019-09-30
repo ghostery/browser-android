@@ -303,8 +303,18 @@ bool HTMLComboboxAccessible::RemoveChild(Accessible* aChild) {
   return false;
 }
 
+<<<<<<< HEAD
 void HTMLComboboxAccessible::Shutdown() {
   MOZ_ASSERT(mDoc->IsDefunct() || !mListAccessible);
+||||||| merged common ancestors
+void
+HTMLComboboxAccessible::Shutdown()
+{
+  MOZ_ASSERT(mDoc->IsDefunct() || !mListAccessible);
+=======
+void HTMLComboboxAccessible::Shutdown() {
+  MOZ_ASSERT(!mDoc || mDoc->IsDefunct() || !mListAccessible);
+>>>>>>> upstream-releases
   if (mListAccessible) {
     mListAccessible->Shutdown();
     mListAccessible = nullptr;

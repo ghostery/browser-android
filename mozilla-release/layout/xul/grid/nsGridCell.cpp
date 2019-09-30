@@ -78,8 +78,18 @@ nsSize nsGridCell::GetXULMinSize(nsBoxLayoutState& aState) {
   return sum;
 }
 
+<<<<<<< HEAD
 nsSize nsGridCell::GetXULMaxSize(nsBoxLayoutState& aState) {
   nsSize sum(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+||||||| merged common ancestors
+nsSize
+nsGridCell::GetXULMaxSize(nsBoxLayoutState& aState)
+{
+  nsSize sum(NS_INTRINSICSIZE, NS_INTRINSICSIZE);
+=======
+nsSize nsGridCell::GetXULMaxSize(nsBoxLayoutState& aState) {
+  nsSize sum(NS_UNCONSTRAINEDSIZE, NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
 
   // take our 2 children and add them up.
   // we are as wide as the smallest child plus its left offset

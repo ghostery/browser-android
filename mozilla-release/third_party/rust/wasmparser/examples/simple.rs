@@ -7,11 +7,20 @@ use std::io::prelude::*;
 use std::str;
 use wasmparser::Parser;
 use wasmparser::ParserState;
+<<<<<<< HEAD
 use wasmparser::WasmDecoder;
 
 fn get_name(bytes: &[u8]) -> &str {
     str::from_utf8(bytes).ok().unwrap()
 }
+||||||| merged common ancestors
+
+fn get_name(bytes: &[u8]) -> &str {
+    str::from_utf8(bytes).ok().unwrap()
+}
+=======
+use wasmparser::WasmDecoder;
+>>>>>>> upstream-releases
 
 fn main() {
     let args = env::args().collect::<Vec<_>>();
@@ -28,13 +37,23 @@ fn main() {
             ParserState::BeginWasm { .. } => {
                 println!("====== Module");
             }
+<<<<<<< HEAD
             ParserState::ExportSectionEntry {
                 field, ref kind, ..
             } => {
                 println!("  Export {} {:?}", get_name(field), kind);
+||||||| merged common ancestors
+            ParserState::ExportSectionEntry { field, ref kind, .. } => {
+                println!("  Export {} {:?}", get_name(field), kind);
+=======
+            ParserState::ExportSectionEntry {
+                field, ref kind, ..
+            } => {
+                println!("  Export {} {:?}", field, kind);
+>>>>>>> upstream-releases
             }
             ParserState::ImportSectionEntry { module, field, .. } => {
-                println!("  Import {}::{}", get_name(module), get_name(field))
+                println!("  Import {}::{}", module, field)
             }
             ParserState::EndWasm => break,
             ParserState::Error(err) => panic!("Error: {:?}", err),

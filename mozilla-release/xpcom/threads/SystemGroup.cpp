@@ -36,18 +36,45 @@ SystemGroupImpl::SystemGroupImpl() {
   CreateEventTargets(/* aNeedValidation = */ true);
 }
 
+<<<<<<< HEAD
 /* static */ void SystemGroupImpl::InitStatic() {
+||||||| merged common ancestors
+/* static */ void
+SystemGroupImpl::InitStatic()
+{
+=======
+/* static */
+void SystemGroupImpl::InitStatic() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(!sSingleton);
   MOZ_ASSERT(NS_IsMainThread());
   sSingleton = new SystemGroupImpl();
 }
 
+<<<<<<< HEAD
 /* static */ void SystemGroupImpl::ShutdownStatic() {
+||||||| merged common ancestors
+/* static */ void
+SystemGroupImpl::ShutdownStatic()
+{
+=======
+/* static */
+void SystemGroupImpl::ShutdownStatic() {
+>>>>>>> upstream-releases
   sSingleton->Shutdown(true);
   sSingleton = nullptr;
 }
 
+<<<<<<< HEAD
 /* static */ SystemGroupImpl* SystemGroupImpl::Get() {
+||||||| merged common ancestors
+/* static */ SystemGroupImpl*
+SystemGroupImpl::Get()
+{
+=======
+/* static */
+SystemGroupImpl* SystemGroupImpl::Get() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(sSingleton);
   return sSingleton.get();
 }
@@ -58,24 +85,53 @@ void SystemGroup::Shutdown() { SystemGroupImpl::ShutdownStatic(); }
 
 bool SystemGroup::Initialized() { return SystemGroupImpl::Initialized(); }
 
+<<<<<<< HEAD
 /* static */ nsresult SystemGroup::Dispatch(
     TaskCategory aCategory, already_AddRefed<nsIRunnable>&& aRunnable) {
+||||||| merged common ancestors
+/* static */ nsresult
+SystemGroup::Dispatch(TaskCategory aCategory,
+                      already_AddRefed<nsIRunnable>&& aRunnable)
+{
+=======
+/* static */
+nsresult SystemGroup::Dispatch(TaskCategory aCategory,
+                               already_AddRefed<nsIRunnable>&& aRunnable) {
+>>>>>>> upstream-releases
   if (!SystemGroupImpl::Initialized()) {
     return NS_DispatchToMainThread(std::move(aRunnable));
   }
   return SystemGroupImpl::Get()->Dispatch(aCategory, std::move(aRunnable));
 }
 
+<<<<<<< HEAD
 /* static */ nsISerialEventTarget* SystemGroup::EventTargetFor(
     TaskCategory aCategory) {
+||||||| merged common ancestors
+/* static */ nsISerialEventTarget*
+SystemGroup::EventTargetFor(TaskCategory aCategory)
+{
+=======
+/* static */
+nsISerialEventTarget* SystemGroup::EventTargetFor(TaskCategory aCategory) {
+>>>>>>> upstream-releases
   if (!SystemGroupImpl::Initialized()) {
     return GetMainThreadSerialEventTarget();
   }
   return SystemGroupImpl::Get()->EventTargetFor(aCategory);
 }
 
+<<<<<<< HEAD
 /* static */ AbstractThread* SystemGroup::AbstractMainThreadFor(
     TaskCategory aCategory) {
+||||||| merged common ancestors
+/* static */ AbstractThread*
+SystemGroup::AbstractMainThreadFor(TaskCategory aCategory)
+{
+=======
+/* static */
+AbstractThread* SystemGroup::AbstractMainThreadFor(TaskCategory aCategory) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(SystemGroupImpl::Initialized());
   return SystemGroupImpl::Get()->AbstractMainThreadFor(aCategory);
 }

@@ -29,6 +29,7 @@ class BlockReflowInput {
   // Block reflow input flags.
   struct Flags {
     Flags()
+<<<<<<< HEAD
         : mHasUnconstrainedBSize(false),
           mIsBStartMarginRoot(false),
           mIsBEndMarginRoot(false),
@@ -41,6 +42,34 @@ class BlockReflowInput {
           mIsFloatListInBlockPropertyTable(false),
           mFloatFragmentsInsideColumnEnabled(false),
           mCanHaveTextOverflow(false) {}
+||||||| merged common ancestors
+      : mHasUnconstrainedBSize(false)
+      , mIsBStartMarginRoot(false)
+      , mIsBEndMarginRoot(false)
+      , mShouldApplyBStartMargin(false)
+      , mIsFirstInflow(false)
+      , mHasLineAdjacentToTop(false)
+      , mBlockNeedsFloatManager(false)
+      , mIsLineLayoutEmpty(false)
+      , mIsOverflowContainer(false)
+      , mIsFloatListInBlockPropertyTable(false)
+      , mFloatFragmentsInsideColumnEnabled(false)
+      , mCanHaveTextOverflow(false)
+    {}
+=======
+        : mHasUnconstrainedBSize(false),
+          mIsBStartMarginRoot(false),
+          mIsBEndMarginRoot(false),
+          mShouldApplyBStartMargin(false),
+          mIsFirstInflow(false),
+          mHasLineAdjacentToTop(false),
+          mBlockNeedsFloatManager(false),
+          mIsLineLayoutEmpty(false),
+          mIsOverflowContainer(false),
+          mIsFloatListInBlockPropertyTable(false),
+          mFloatFragmentsInsideColumnEnabled(false),
+          mCanHaveOverflowMarkers(false) {}
+>>>>>>> upstream-releases
 
     // Set in the BlockReflowInput constructor when the frame being reflowed has
     // been given NS_UNCONSTRAINEDSIZE as its available BSize in the
@@ -104,15 +133,31 @@ class BlockReflowInput {
     // Set when the pref layout.float-fragments-inside-column.enabled is true.
     bool mFloatFragmentsInsideColumnEnabled : 1;
 
-    // Set when we need text-overflow processing.
-    bool mCanHaveTextOverflow : 1;
+    // Set when we need text-overflow or -webkit-line-clamp processing.
+    bool mCanHaveOverflowMarkers : 1;
   };
 
+<<<<<<< HEAD
  public:
   BlockReflowInput(const ReflowInput& aReflowInput, nsPresContext* aPresContext,
                    nsBlockFrame* aFrame, bool aBStartMarginRoot,
                    bool aBEndMarginRoot, bool aBlockNeedsFloatManager,
                    nscoord aConsumedBSize = NS_INTRINSICSIZE);
+||||||| merged common ancestors
+public:
+  BlockReflowInput(const ReflowInput& aReflowInput,
+                     nsPresContext* aPresContext,
+                     nsBlockFrame* aFrame,
+                     bool aBStartMarginRoot, bool aBEndMarginRoot,
+                     bool aBlockNeedsFloatManager,
+                     nscoord aConsumedBSize = NS_INTRINSICSIZE);
+=======
+ public:
+  BlockReflowInput(const ReflowInput& aReflowInput, nsPresContext* aPresContext,
+                   nsBlockFrame* aFrame, bool aBStartMarginRoot,
+                   bool aBEndMarginRoot, bool aBlockNeedsFloatManager,
+                   nscoord aConsumedBSize = NS_UNCONSTRAINEDSIZE);
+>>>>>>> upstream-releases
 
   /**
    * Get the available reflow space (the area not occupied by floats)
@@ -212,13 +257,13 @@ class BlockReflowInput {
   // Reconstruct the previous block-end margin that goes before |aLine|.
   void ReconstructMarginBefore(nsLineList::iterator aLine);
 
-  // Caller must have called GetAvailableSpace for the correct position
+  // Caller must have called GetFloatAvailableSpace for the correct position
   // (which need not be the current mBCoord).
   void ComputeReplacedBlockOffsetsForFloats(
       nsIFrame* aFrame, const mozilla::LogicalRect& aFloatAvailableSpace,
       nscoord& aIStartResult, nscoord& aIEndResult) const;
 
-  // Caller must have called GetAvailableSpace for the current mBCoord
+  // Caller must have called GetFloatAvailableSpace for the current mBCoord
   void ComputeBlockAvailSpace(nsIFrame* aFrame,
                               const nsFlowAreaRect& aFloatAvailableSpace,
                               bool aBlockAvoidsFloats,
@@ -362,7 +407,7 @@ class BlockReflowInput {
 
   //----------------------------------------
 
-  // Temporary line-reflow state. This state is used during the reflow
+  // Temporary state, for line-reflow. This state is used during the reflow
   // of a given line, but doesn't have meaning before or after.
 
   // The list of floats that are "current-line" floats. These are

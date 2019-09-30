@@ -588,12 +588,21 @@ already_AddRefed<nsGenericHTMLElement> HTMLTableElement::CreateTHead() {
   return head.forget();
 }
 
+<<<<<<< HEAD
 void HTMLTableElement::DeleteTHead() {
   HTMLTableSectionElement* tHead = GetTHead();
+||||||| merged common ancestors
+void
+HTMLTableElement::DeleteTHead()
+{
+  HTMLTableSectionElement* tHead = GetTHead();
+=======
+void HTMLTableElement::DeleteTHead() {
+  RefPtr<HTMLTableSectionElement> tHead = GetTHead();
+>>>>>>> upstream-releases
   if (tHead) {
-    mozilla::ErrorResult rv;
+    mozilla::IgnoredErrorResult rv;
     nsINode::RemoveChild(*tHead, rv);
-    MOZ_ASSERT(!rv.Failed());
   }
 }
 
@@ -615,12 +624,21 @@ already_AddRefed<nsGenericHTMLElement> HTMLTableElement::CreateTFoot() {
   return foot.forget();
 }
 
+<<<<<<< HEAD
 void HTMLTableElement::DeleteTFoot() {
   HTMLTableSectionElement* tFoot = GetTFoot();
+||||||| merged common ancestors
+void
+HTMLTableElement::DeleteTFoot()
+{
+  HTMLTableSectionElement* tFoot = GetTFoot();
+=======
+void HTMLTableElement::DeleteTFoot() {
+  RefPtr<HTMLTableSectionElement> tFoot = GetTFoot();
+>>>>>>> upstream-releases
   if (tFoot) {
-    mozilla::ErrorResult rv;
+    mozilla::IgnoredErrorResult rv;
     nsINode::RemoveChild(*tFoot, rv);
-    MOZ_ASSERT(!rv.Failed());
   }
 }
 
@@ -643,12 +661,21 @@ already_AddRefed<nsGenericHTMLElement> HTMLTableElement::CreateCaption() {
   return caption.forget();
 }
 
+<<<<<<< HEAD
 void HTMLTableElement::DeleteCaption() {
   HTMLTableCaptionElement* caption = GetCaption();
+||||||| merged common ancestors
+void
+HTMLTableElement::DeleteCaption()
+{
+  HTMLTableCaptionElement* caption = GetCaption();
+=======
+void HTMLTableElement::DeleteCaption() {
+  RefPtr<HTMLTableCaptionElement> caption = GetCaption();
+>>>>>>> upstream-releases
   if (caption) {
-    mozilla::ErrorResult rv;
+    mozilla::IgnoredErrorResult rv;
     nsINode::RemoveChild(*caption, rv);
-    MOZ_ASSERT(!rv.Failed());
   }
 }
 
@@ -819,9 +846,13 @@ bool HTMLTableElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
       return aResult.ParseNonNegativeIntValue(aValue);
     }
     if (aAttribute == nsGkAtoms::height) {
-      return aResult.ParseSpecialIntValue(aValue);
+      // Purposeful spec violation (spec says to use ParseNonzeroHTMLDimension)
+      // to stay compatible with our old behavior and other browsers.  See
+      // https://github.com/whatwg/html/issues/4715
+      return aResult.ParseHTMLDimension(aValue);
     }
     if (aAttribute == nsGkAtoms::width) {
+<<<<<<< HEAD
       if (aResult.ParseSpecialIntValue(aValue)) {
         // treat 0 width as auto
         nsAttrValue::ValueType type = aResult.Type();
@@ -831,6 +862,19 @@ bool HTMLTableElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
              aResult.GetPercentValue() == 0.0f));
       }
       return false;
+||||||| merged common ancestors
+      if (aResult.ParseSpecialIntValue(aValue)) {
+        // treat 0 width as auto
+        nsAttrValue::ValueType type = aResult.Type();
+        return !((type == nsAttrValue::eInteger &&
+                  aResult.GetIntegerValue() == 0) ||
+                 (type == nsAttrValue::ePercent &&
+                  aResult.GetPercentValue() == 0.0f));
+      }
+      return false;
+=======
+      return aResult.ParseNonzeroHTMLDimension(aValue);
+>>>>>>> upstream-releases
     }
 
     if (aAttribute == nsGkAtoms::align) {
@@ -840,9 +884,17 @@ bool HTMLTableElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
         aAttribute == nsGkAtoms::bordercolor) {
       return aResult.ParseColor(aValue);
     }
+<<<<<<< HEAD
     if (aAttribute == nsGkAtoms::hspace || aAttribute == nsGkAtoms::vspace) {
       return aResult.ParseIntWithBounds(aValue, 0);
     }
+||||||| merged common ancestors
+    if (aAttribute == nsGkAtoms::hspace ||
+        aAttribute == nsGkAtoms::vspace) {
+      return aResult.ParseIntWithBounds(aValue, 0);
+    }
+=======
+>>>>>>> upstream-releases
   }
 
   return nsGenericHTMLElement::ParseBackgroundAttribute(
@@ -863,8 +915,6 @@ void HTMLTableElement::MapAttributesIntoRule(
   // which *element* it's matching (style rules should not stop matching
   // when the display type is changed).
 
-  nsCompatibility mode = aDecls.Document()->GetCompatibilityMode();
-
   // cellspacing
   const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::cellspacing);
   if (value && value->Type() == nsAttrValue::eInteger &&
@@ -883,6 +933,7 @@ void HTMLTableElement::MapAttributesIntoRule(
     }
   }
 
+<<<<<<< HEAD
   // hspace is mapped into left and right margin,
   // vspace is mapped into top and bottom margins
   // - *** Quirks Mode only ***
@@ -905,6 +956,27 @@ void HTMLTableElement::MapAttributesIntoRule(
                                   (float)value->GetIntegerValue());
     }
   }
+||||||| merged common ancestors
+  // hspace is mapped into left and right margin,
+  // vspace is mapped into top and bottom margins
+  // - *** Quirks Mode only ***
+  if (eCompatibility_NavQuirks == mode) {
+    value = aAttributes->GetAttr(nsGkAtoms::hspace);
+
+    if (value && value->Type() == nsAttrValue::eInteger) {
+      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_left, (float)value->GetIntegerValue());
+      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_right, (float)value->GetIntegerValue());
+    }
+
+    value = aAttributes->GetAttr(nsGkAtoms::vspace);
+
+    if (value && value->Type() == nsAttrValue::eInteger) {
+      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_top, (float)value->GetIntegerValue());
+      aDecls.SetPixelValueIfUnset(eCSSProperty_margin_bottom, (float)value->GetIntegerValue());
+    }
+  }
+=======
+>>>>>>> upstream-releases
   // bordercolor
   value = aAttributes->GetAttr(nsGkAtoms::bordercolor);
   nscolor color;
@@ -943,6 +1015,7 @@ void HTMLTableElement::MapAttributesIntoRule(
 NS_IMETHODIMP_(bool)
 HTMLTableElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   static const MappedAttributeEntry attributes[] = {
+<<<<<<< HEAD
       {nsGkAtoms::cellpadding}, {nsGkAtoms::cellspacing},
       {nsGkAtoms::border},      {nsGkAtoms::width},
       {nsGkAtoms::height},      {nsGkAtoms::hspace},
@@ -951,6 +1024,29 @@ HTMLTableElement::IsAttributeMapped(const nsAtom* aAttribute) const {
       {nsGkAtoms::bordercolor},
 
       {nsGkAtoms::align},       {nullptr}};
+||||||| merged common ancestors
+    { nsGkAtoms::cellpadding },
+    { nsGkAtoms::cellspacing },
+    { nsGkAtoms::border },
+    { nsGkAtoms::width },
+    { nsGkAtoms::height },
+    { nsGkAtoms::hspace },
+    { nsGkAtoms::vspace },
+
+    { nsGkAtoms::bordercolor },
+
+    { nsGkAtoms::align },
+    { nullptr }
+  };
+=======
+      {nsGkAtoms::cellpadding}, {nsGkAtoms::cellspacing},
+      {nsGkAtoms::border},      {nsGkAtoms::width},
+      {nsGkAtoms::height},
+
+      {nsGkAtoms::bordercolor},
+
+      {nsGkAtoms::align},       {nullptr}};
+>>>>>>> upstream-releases
 
   static const MappedAttributeEntry* const map[] = {
       attributes,
@@ -989,9 +1085,19 @@ void HTMLTableElement::BuildInheritedAttributes() {
   NS_ASSERTION(!mTableInheritedAttributes,
                "potential leak, plus waste of work");
   MOZ_ASSERT(NS_IsMainThread());
+<<<<<<< HEAD
   nsIDocument* document = GetComposedDoc();
   nsHTMLStyleSheet* sheet =
       document ? document->GetAttributeStyleSheet() : nullptr;
+||||||| merged common ancestors
+  nsIDocument *document = GetComposedDoc();
+  nsHTMLStyleSheet* sheet = document ?
+                              document->GetAttributeStyleSheet() : nullptr;
+=======
+  Document* document = GetComposedDoc();
+  nsHTMLStyleSheet* sheet =
+      document ? document->GetAttributeStyleSheet() : nullptr;
+>>>>>>> upstream-releases
   RefPtr<nsMappedAttributes> newAttrs;
   if (sheet) {
     const nsAttrValue* value = mAttrs.GetAttr(nsGkAtoms::cellpadding);
@@ -1026,20 +1132,44 @@ void HTMLTableElement::ReleaseInheritedAttributes() {
   NS_IF_RELEASE(mTableInheritedAttributes);
 }
 
+<<<<<<< HEAD
 nsresult HTMLTableElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
                                       nsIContent* aBindingParent) {
+||||||| merged common ancestors
+nsresult
+HTMLTableElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                             nsIContent* aBindingParent)
+{
+=======
+nsresult HTMLTableElement::BindToTree(BindContext& aContext, nsINode& aParent) {
+>>>>>>> upstream-releases
   ReleaseInheritedAttributes();
+<<<<<<< HEAD
   nsresult rv =
       nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
+                                                aBindingParent);
+=======
+  nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
   BuildInheritedAttributes();
   return NS_OK;
 }
 
+<<<<<<< HEAD
 void HTMLTableElement::UnbindFromTree(bool aDeep, bool aNullParent) {
+||||||| merged common ancestors
+void
+HTMLTableElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+=======
+void HTMLTableElement::UnbindFromTree(bool aNullParent) {
+>>>>>>> upstream-releases
   ReleaseInheritedAttributes();
-  nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
+  nsGenericHTMLElement::UnbindFromTree(aNullParent);
 }
 
 nsresult HTMLTableElement::BeforeSetAttr(int32_t aNameSpaceID, nsAtom* aName,

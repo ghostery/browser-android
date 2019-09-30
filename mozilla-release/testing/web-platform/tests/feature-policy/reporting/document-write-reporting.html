@@ -12,8 +12,14 @@ var check_report_format = (reports, observer) => {
   let report = reports[0];
   assert_equals(report.type, "feature-policy-violation");
   assert_equals(report.url, document.location.href);
+<<<<<<< HEAD
   assert_equals(report.body.featureId, "document-write");
   assert_equals(report.body.disposition, "enforce");
+||||||| merged common ancestors
+  assert_equals(report.body.feature, "document-write");
+=======
+  assert_equals(report.body.featureId, "document-write");
+>>>>>>> upstream-releases
   assert_equals(report.body.sourceFile, document.location.href);
   assert_equals(typeof report.body.lineNumber, "number");
   assert_equals(typeof report.body.columnNumber, "number");

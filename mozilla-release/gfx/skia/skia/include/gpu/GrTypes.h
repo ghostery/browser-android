@@ -121,7 +121,7 @@ template<typename TFlags> inline TFlags& operator&=(TFlags& a, GrTFlagsMask<TFla
     friend constexpr GrTFlagsMask<X> operator ~(X); \
     friend constexpr X operator |(X, X); \
     friend X& operator |=(X&, X); \
-    friend constexpr bool operator &(X, X);
+    friend constexpr bool operator &(X, X)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -184,17 +184,55 @@ static inline size_t GrSizeAlignDown(size_t x, uint32_t alignment) {
 /**
  * Possible 3D APIs that may be used by Ganesh.
  */
-enum GrBackend {
-    kMetal_GrBackend,
-    kOpenGL_GrBackend,
-    kVulkan_GrBackend,
+enum class GrBackendApi : unsigned {
+    kMetal,
+    kOpenGL,
+    kVulkan,
     /**
      * Mock is a backend that does not draw anything. It is used for unit tests
      * and to measure CPU overhead.
      */
-    kMock_GrBackend,
+    kMock,
+
+    /**
+     * Added here to support the legacy GrBackend enum value and clients who referenced it using
+     * GrBackend::kOpenGL_GrBackend.
+     */
+    kOpenGL_GrBackend = kOpenGL,
 };
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+/**
+ * Backend-specific 3D context handle
+ *      OpenGL: const GrGLInterface*. If null will use the result of GrGLMakeNativeInterface().
+ *      Vulkan: GrVkBackendContext*.
+ *      Mock: const GrMockOptions* or null for default constructed GrMockContextOptions.
+ */
+typedef intptr_t GrBackendContext;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Used to control antialiasing in draw calls.
+ */
+enum class GrAA : bool {
+    kNo = false,
+    kYes = true
+};
+
+=======
+/**
+ * Previously the above enum was not an enum class but a normal enum. To support the legacy use of
+ * the enum values we define them below so that no clients break.
+ */
+typedef GrBackendApi GrBackend;
+
+static constexpr GrBackendApi kMetal_GrBackend = GrBackendApi::kMetal;
+static constexpr GrBackendApi kVulkan_GrBackend = GrBackendApi::kVulkan;
+static constexpr GrBackendApi kMock_GrBackend = GrBackendApi::kMock;
+
+>>>>>>> upstream-releases
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -208,10 +246,173 @@ enum class GrMipMapped : bool {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+<<<<<<< HEAD
  * GPU SkImage and SkSurfaces can be stored such that (0, 0) in texture space may correspond to
  * either the top-left or bottom-left content pixel.
  */
 enum GrSurfaceOrigin {
+||||||| merged common ancestors
+* Geometric primitives used for drawing.
+*/
+enum class GrPrimitiveType {
+    kTriangles,
+    kTriangleStrip,
+    kTriangleFan,
+    kPoints,
+    kLines,     // 1 pix wide only
+    kLineStrip, // 1 pix wide only
+    kLinesAdjacency // requires geometry shader support.
+};
+static constexpr int kNumGrPrimitiveTypes = (int) GrPrimitiveType::kLinesAdjacency + 1;
+
+static constexpr bool GrIsPrimTypeLines(GrPrimitiveType type) {
+    return GrPrimitiveType::kLines == type ||
+           GrPrimitiveType::kLineStrip == type ||
+           GrPrimitiveType::kLinesAdjacency == type;
+}
+
+static constexpr bool GrIsPrimTypeTris(GrPrimitiveType type) {
+    return GrPrimitiveType::kTriangles == type     ||
+           GrPrimitiveType::kTriangleStrip == type ||
+           GrPrimitiveType::kTriangleFan == type;
+}
+
+static constexpr bool GrPrimTypeRequiresGeometryShaderSupport(GrPrimitiveType type) {
+    return GrPrimitiveType::kLinesAdjacency == type;
+}
+
+/**
+ *  Formats for masks, used by the font cache.
+ *  Important that these are 0-based.
+ */
+enum GrMaskFormat {
+    kA8_GrMaskFormat,    //!< 1-byte per pixel
+    kA565_GrMaskFormat,  //!< 2-bytes per pixel, RGB represent 3-channel LCD coverage
+    kARGB_GrMaskFormat,  //!< 4-bytes per pixel, color format
+
+    kLast_GrMaskFormat = kARGB_GrMaskFormat
+};
+static const int kMaskFormatCount = kLast_GrMaskFormat + 1;
+
+/**
+ *  Return the number of bytes-per-pixel for the specified mask format.
+ */
+static inline int GrMaskFormatBytesPerPixel(GrMaskFormat format) {
+    SkASSERT(format < kMaskFormatCount);
+    // kA8   (0) -> 1
+    // kA565 (1) -> 2
+    // kARGB (2) -> 4
+    static const int sBytesPerPixel[] = { 1, 2, 4 };
+    static_assert(SK_ARRAY_COUNT(sBytesPerPixel) == kMaskFormatCount, "array_size_mismatch");
+    static_assert(kA8_GrMaskFormat == 0, "enum_order_dependency");
+    static_assert(kA565_GrMaskFormat == 1, "enum_order_dependency");
+    static_assert(kARGB_GrMaskFormat == 2, "enum_order_dependency");
+
+    return sBytesPerPixel[(int) format];
+}
+
+/**
+ * Pixel configurations.
+ */
+enum GrPixelConfig {
+    kUnknown_GrPixelConfig,
+    kAlpha_8_GrPixelConfig,
+    kGray_8_GrPixelConfig,
+    kRGB_565_GrPixelConfig,
+    /**
+     * Premultiplied
+     */
+    kRGBA_4444_GrPixelConfig,
+    /**
+     * Premultiplied. Byte order is r,g,b,a.
+     */
+    kRGBA_8888_GrPixelConfig,
+    /**
+     * Premultiplied. Byte order is b,g,r,a.
+     */
+    kBGRA_8888_GrPixelConfig,
+    /**
+     * Premultiplied and sRGB. Byte order is r,g,b,a.
+     */
+    kSRGBA_8888_GrPixelConfig,
+    /**
+     * Premultiplied and sRGB. Byte order is b,g,r,a.
+     */
+    kSBGRA_8888_GrPixelConfig,
+
+    /**
+     * Byte order is r, g, b, a.  This color format is 32 bits per channel
+     */
+    kRGBA_float_GrPixelConfig,
+    /**
+     * Byte order is r, g.  This color format is 32 bits per channel
+     */
+    kRG_float_GrPixelConfig,
+
+    /**
+     * This color format is a single 16 bit float channel
+     */
+    kAlpha_half_GrPixelConfig,
+
+    /**
+    * Byte order is r, g, b, a.  This color format is 16 bits per channel
+    */
+    kRGBA_half_GrPixelConfig,
+
+    kPrivateConfig1_GrPixelConfig,
+    kPrivateConfig2_GrPixelConfig,
+    kPrivateConfig3_GrPixelConfig,
+    kPrivateConfig4_GrPixelConfig,
+    kPrivateConfig5_GrPixelConfig,
+
+    kLast_GrPixelConfig = kPrivateConfig5_GrPixelConfig
+};
+static const int kGrPixelConfigCnt = kLast_GrPixelConfig + 1;
+
+// Aliases for pixel configs that match skia's byte order.
+#if SK_PMCOLOR_BYTE_ORDER(B,G,R,A)
+    static const GrPixelConfig kSkia8888_GrPixelConfig = kBGRA_8888_GrPixelConfig;
+#elif SK_PMCOLOR_BYTE_ORDER(R,G,B,A)
+    static const GrPixelConfig kSkia8888_GrPixelConfig = kRGBA_8888_GrPixelConfig;
+#else
+    static const GrPixelConfig kSkia8888_GrPixelConfig = kBGRA_8888_GrPixelConfig;
+#endif
+
+/**
+ * Optional bitfield flags that can be set on GrSurfaceDesc (below).
+ */
+enum GrSurfaceFlags {
+    kNone_GrSurfaceFlags = 0x0,
+    /**
+     * Creates a texture that can be rendered to as a GrRenderTarget. Use
+     * GrTexture::asRenderTarget() to access.
+     */
+    kRenderTarget_GrSurfaceFlag = 0x1,
+    /**
+     * Clears to zero on creation. It will cause creation failure if initial data is supplied to the
+     * texture. This only affects the base level if the texture is created with MIP levels.
+     */
+    kPerformInitialClear_GrSurfaceFlag = 0x2
+};
+
+GR_MAKE_BITFIELD_OPS(GrSurfaceFlags)
+
+// opaque type for 3D API object handles
+typedef intptr_t GrBackendObject;
+
+/**
+ * Some textures will be stored such that the upper and left edges of the content meet at the
+ * the origin (in texture coord space) and for other textures the lower and left edges meet at
+ * the origin.
+ */
+
+enum GrSurfaceOrigin {
+=======
+ * GPU SkImage and SkSurfaces can be stored such that (0, 0) in texture space may correspond to
+ * either the top-left or bottom-left content pixel.
+ */
+enum GrSurfaceOrigin : int {
+>>>>>>> upstream-releases
     kTopLeft_GrSurfaceOrigin,
     kBottomLeft_GrSurfaceOrigin,
 };
@@ -222,6 +423,7 @@ enum GrSurfaceOrigin {
  */
 enum GrGLBackendState {
     kRenderTarget_GrGLBackendState     = 1 << 0,
+    // Also includes samplers bound to texture units.
     kTextureBinding_GrGLBackendState   = 1 << 1,
     // View state stands for scissor and viewport
     kView_GrGLBackendState             = 1 << 2,

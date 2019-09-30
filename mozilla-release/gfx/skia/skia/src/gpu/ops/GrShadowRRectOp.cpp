@@ -6,12 +6,19 @@
  */
 
 #include "GrShadowRRectOp.h"
+<<<<<<< HEAD
 
 #include "GrContext.h"
 #include "GrContextPriv.h"
+||||||| merged common ancestors
+=======
+
+>>>>>>> upstream-releases
 #include "GrDrawOpTest.h"
 #include "GrMemoryPool.h"
 #include "GrOpFlushState.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
 #include "SkRRectPriv.h"
 #include "effects/GrShadowGeoProc.h"
 
@@ -236,6 +243,7 @@ public:
 
     const char* name() const override { return "ShadowCircularRRectOp"; }
 
+#ifdef SK_DEBUG
     SkString dumpInfo() const override {
         SkString string;
         for (int i = 0; i < fGeoData.count(); ++i) {
@@ -250,11 +258,21 @@ public:
         string.append(INHERITED::dumpInfo());
         return string;
     }
+#endif
 
     FixedFunctionFlags fixedFunctionFlags() const override { return FixedFunctionFlags::kNone; }
 
+<<<<<<< HEAD
     RequiresDstTexture finalize(const GrCaps&, const GrAppliedClip*) override {
         return RequiresDstTexture::kNo;
+||||||| merged common ancestors
+    RequiresDstTexture finalize(const GrCaps&, const GrAppliedClip*,
+                                GrPixelConfigIsClamped) override {
+        return RequiresDstTexture::kNo;
+=======
+    GrProcessorSet::Analysis finalize(const GrCaps&, const GrAppliedClip*, GrFSAAType) override {
+        return GrProcessorSet::EmptySetAnalysis();
+>>>>>>> upstream-releases
     }
 
 private:
@@ -539,9 +557,16 @@ private:
         sk_sp<GrGeometryProcessor> gp = GrRRectShadowGeoProc::Make();
 
         int instanceCount = fGeoData.count();
+<<<<<<< HEAD
         SkASSERT(sizeof(CircleVertex) == gp->debugOnly_vertexStride());
+||||||| merged common ancestors
+        size_t vertexStride = gp->getVertexStride();
+        SkASSERT(sizeof(CircleVertex) == vertexStride);
+=======
+        SkASSERT(sizeof(CircleVertex) == gp->vertexStride());
+>>>>>>> upstream-releases
 
-        const GrBuffer* vertexBuffer;
+        sk_sp<const GrBuffer> vertexBuffer;
         int firstVertex;
         CircleVertex* verts = (CircleVertex*)target->makeVertexSpace(
                 sizeof(CircleVertex), fVertCount, &vertexBuffer, &firstVertex);
@@ -550,7 +575,7 @@ private:
             return;
         }
 
-        const GrBuffer* indexBuffer = nullptr;
+        sk_sp<const GrBuffer> indexBuffer;
         int firstIndex = 0;
         uint16_t* indices = target->makeIndexSpace(fIndexCount, &indexBuffer, &firstIndex);
         if (!indices) {
@@ -587,6 +612,7 @@ private:
             }
         }
 
+<<<<<<< HEAD
         static const uint32_t kPipelineFlags = 0;
         auto pipe = target->makePipeline(kPipelineFlags, GrProcessorSet::MakeEmptySet(),
                                          target->detachAppliedClip());
@@ -596,12 +622,32 @@ private:
                          GrPrimitiveRestart::kNo);
         mesh->setVertexData(vertexBuffer, firstVertex);
         target->draw(std::move(gp), pipe.fPipeline, pipe.fFixedDynamicState, mesh);
+||||||| merged common ancestors
+        static const uint32_t kPipelineFlags = 0;
+        const GrPipeline* pipeline = target->makePipeline(
+                kPipelineFlags, GrProcessorSet::MakeEmptySet(), target->detachAppliedClip());
+
+        GrMesh mesh(GrPrimitiveType::kTriangles);
+        mesh.setIndexed(indexBuffer, fIndexCount, firstIndex, 0, fVertCount - 1);
+        mesh.setVertexData(vertexBuffer, firstVertex);
+        target->draw(gp.get(), pipeline, mesh);
+=======
+        GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
+        mesh->setIndexed(std::move(indexBuffer), fIndexCount, firstIndex, 0, fVertCount - 1,
+                         GrPrimitiveRestart::kNo);
+        mesh->setVertexData(std::move(vertexBuffer), firstVertex);
+        target->recordDraw(std::move(gp), mesh);
+    }
+
+    void onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) override {
+        flushState->executeDrawsAndUploadsForMeshDrawOp(
+                this, chainBounds, GrProcessorSet::MakeEmptySet());
+>>>>>>> upstream-releases
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
         ShadowCircularRRectOp* that = t->cast<ShadowCircularRRectOp>();
         fGeoData.push_back_n(that->fGeoData.count(), that->fGeoData.begin());
-        this->joinBounds(*that);
         fVertCount += that->fVertCount;
         fIndexCount += that->fIndexCount;
         return CombineResult::kMerged;
@@ -619,8 +665,15 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace GrShadowRRectOp {
+<<<<<<< HEAD
 std::unique_ptr<GrDrawOp> Make(GrContext* context,
                                GrColor color,
+||||||| merged common ancestors
+std::unique_ptr<GrDrawOp> Make(GrColor color,
+=======
+std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
+                               GrColor color,
+>>>>>>> upstream-releases
                                const SkMatrix& viewMatrix,
                                const SkRRect& rrect,
                                SkScalar blurWidth,
@@ -639,6 +692,7 @@ std::unique_ptr<GrDrawOp> Make(GrContext* context,
     SkScalar scaledRadius = SkScalarAbs(radius*matrixFactor);
     SkScalar scaledInsetWidth = SkScalarAbs(insetWidth*matrixFactor);
 
+<<<<<<< HEAD
     GrOpMemoryPool* pool = context->contextPriv().opMemoryPool();
 
     return pool->allocate<ShadowCircularRRectOp>(color, bounds,
@@ -646,6 +700,22 @@ std::unique_ptr<GrDrawOp> Make(GrContext* context,
                                                  rrect.isOval(),
                                                  blurWidth,
                                                  scaledInsetWidth);
+||||||| merged common ancestors
+    return std::unique_ptr<GrDrawOp>(new ShadowCircularRRectOp(color, bounds,
+                                                               scaledRadius,
+                                                               rrect.isOval(),
+                                                               blurWidth,
+                                                               scaledInsetWidth,
+                                                               blurClamp));
+=======
+    GrOpMemoryPool* pool = context->priv().opMemoryPool();
+
+    return pool->allocate<ShadowCircularRRectOp>(color, bounds,
+                                                 scaledRadius,
+                                                 rrect.isOval(),
+                                                 blurWidth,
+                                                 scaledInsetWidth);
+>>>>>>> upstream-releases
 }
 }
 
@@ -670,7 +740,7 @@ GR_DRAW_OP_TEST_DEFINE(ShadowRRectOp) {
     SkScalar blurWidth = random->nextSScalar1() * 72.f;
     bool isCircle = random->nextBool();
     // This op doesn't use a full GrPaint, just a color.
-    GrColor color = paint.getColor();
+    GrColor color = paint.getColor4f().toBytes_RGBA();
     if (isCircle) {
         SkRect circle = GrTest::TestSquare(random);
         SkRRect rrect = SkRRect::MakeOval(circle);

@@ -53,6 +53,7 @@
 //   stacks with allocations, we limit the default size here further to save
 //   some memory.
 //
+<<<<<<< HEAD
 extern "C" MOZ_ASAN_BLACKLIST const char* __asan_default_options() {
   return "allow_user_segv_handler=1:alloc_dealloc_mismatch=0:detect_leaks=0"
 #ifdef MOZ_ASAN_REPORTER
@@ -62,6 +63,28 @@ extern "C" MOZ_ASAN_BLACKLIST const char* __asan_default_options() {
          ":malloc_fill_byte=228:free_fill_byte=229"
          ":handle_sigill=1"
          ":allocator_may_return_null=1";
+||||||| merged common ancestors
+extern "C" MOZ_ASAN_BLACKLIST
+const char* __asan_default_options() {
+    return "allow_user_segv_handler=1:alloc_dealloc_mismatch=0:detect_leaks=0"
+#ifdef MOZ_ASAN_REPORTER
+           ":malloc_context_size=20"
+#endif
+           ":max_free_fill_size=268435456:max_malloc_fill_size=268435456"
+           ":malloc_fill_byte=228:free_fill_byte=229"
+           ":handle_sigill=1"
+           ":allocator_may_return_null=1";
+=======
+extern "C" MOZ_ASAN_BLACKLIST const char* __asan_default_options() {
+  return "allow_user_segv_handler=1:alloc_dealloc_mismatch=0:detect_leaks=0"
+#  ifdef MOZ_ASAN_REPORTER
+         ":malloc_context_size=20"
+#  endif
+         ":max_free_fill_size=268435456:max_malloc_fill_size=268435456"
+         ":malloc_fill_byte=228:free_fill_byte=229"
+         ":handle_sigill=1"
+         ":allocator_may_return_null=1";
+>>>>>>> upstream-releases
 }
 
 #endif

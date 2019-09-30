@@ -7,7 +7,7 @@
 #include "mozilla/dom/SVGAnimateElement.h"
 #include "mozilla/dom/SVGAnimateElementBinding.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(Animate)
+NS_IMPL_NS_NEW_SVG_ELEMENT(Animate)
 
 namespace mozilla {
 namespace dom {
@@ -31,7 +31,15 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGAnimateElement)
 
 //----------------------------------------------------------------------
 
+<<<<<<< HEAD
 nsSMILAnimationFunction& SVGAnimateElement::AnimationFunction() {
+||||||| merged common ancestors
+nsSMILAnimationFunction&
+SVGAnimateElement::AnimationFunction()
+{
+=======
+SMILAnimationFunction& SVGAnimateElement::AnimationFunction() {
+>>>>>>> upstream-releases
   return mAnimationFunction;
 }
 

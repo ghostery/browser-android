@@ -123,6 +123,7 @@ LayoutDeviceIntRegion nsWindow::GetRegionToPaint(bool aForceFullRepaint,
   return LayoutDeviceIntRegion(WinUtils::ToIntRect(ps.rcPaint));
 }
 
+<<<<<<< HEAD
 #define WORDSSIZE(x) ((x).width * (x).height)
 static bool EnsureSharedSurfaceSize(IntSize size) {
   IntSize screenSize;
@@ -146,6 +147,38 @@ static bool EnsureSharedSurfaceSize(IntSize size) {
 
 nsIWidgetListener* nsWindow::GetPaintListener() {
   if (mDestroyCalled) return nullptr;
+||||||| merged common ancestors
+#define WORDSSIZE(x) ((x).width * (x).height)
+static bool
+EnsureSharedSurfaceSize(IntSize size)
+{
+  IntSize screenSize;
+  screenSize.height = GetSystemMetrics(SM_CYSCREEN);
+  screenSize.width = GetSystemMetrics(SM_CXSCREEN);
+
+  if (WORDSSIZE(screenSize) > WORDSSIZE(size))
+    size = screenSize;
+
+  if (WORDSSIZE(screenSize) < WORDSSIZE(size))
+    NS_WARNING("Trying to create a shared surface larger than the screen");
+
+  if (!sSharedSurfaceData || (WORDSSIZE(size) > WORDSSIZE(sSharedSurfaceSize))) {
+    sSharedSurfaceSize = size;
+    sSharedSurfaceData =
+      MakeUniqueFallible<uint8_t[]>(WORDSSIZE(sSharedSurfaceSize) * 4);
+  }
+
+  return !sSharedSurfaceData;
+}
+
+nsIWidgetListener* nsWindow::GetPaintListener()
+{
+  if (mDestroyCalled)
+    return nullptr;
+=======
+nsIWidgetListener* nsWindow::GetPaintListener() {
+  if (mDestroyCalled) return nullptr;
+>>>>>>> upstream-releases
   return mAttachedWidgetListener ? mAttachedWidgetListener : mWidgetListener;
 }
 
@@ -323,6 +356,7 @@ bool nsWindow::OnPaint(HDC aDC, uint32_t aNestingLevel) {
         }
 #endif
 
+<<<<<<< HEAD
         RefPtr<gfxWindowsSurface> targetSurfaceWin;
         if (!targetSurface) {
           uint32_t flags = (mTransparencyMode == eTransparencyOpaque)
@@ -351,6 +385,63 @@ bool nsWindow::OnPaint(HDC aDC, uint32_t aNestingLevel) {
 
         // don't need to double buffer with anything but GDI
         BufferMode doubleBuffering = mozilla::layers::BufferMode::BUFFER_NONE;
+||||||| merged common ancestors
+          RefPtr<gfxWindowsSurface> targetSurfaceWin;
+          if (!targetSurface)
+          {
+            uint32_t flags = (mTransparencyMode == eTransparencyOpaque) ? 0 :
+                gfxWindowsSurface::FLAG_IS_TRANSPARENT;
+            targetSurfaceWin = new gfxWindowsSurface(hDC, flags);
+            targetSurface = targetSurfaceWin;
+          }
+
+          if (!targetSurface) {
+            NS_ERROR("Invalid RenderMode!");
+            return false;
+          }
+
+          RECT paintRect;
+          ::GetClientRect(mWnd, &paintRect);
+          RefPtr<DrawTarget> dt =
+            gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(targetSurface,
+                                                                   IntSize(paintRect.right - paintRect.left,
+                                                                   paintRect.bottom - paintRect.top));
+          if (!dt || !dt->IsValid()) {
+            gfxWarning() << "nsWindow::OnPaint failed in CreateDrawTargetForSurface";
+            return false;
+          }
+
+          // don't need to double buffer with anything but GDI
+          BufferMode doubleBuffering = mozilla::layers::BufferMode::BUFFER_NONE;
+=======
+        RefPtr<gfxWindowsSurface> targetSurfaceWin;
+        if (!targetSurface) {
+          uint32_t flags = (mTransparencyMode == eTransparencyOpaque)
+                               ? 0
+                               : gfxWindowsSurface::FLAG_IS_TRANSPARENT;
+          targetSurfaceWin = new gfxWindowsSurface(hDC, flags);
+          targetSurface = targetSurfaceWin;
+        }
+
+        if (!targetSurface) {
+          NS_ERROR("Invalid RenderMode!");
+          return false;
+        }
+
+        RECT paintRect;
+        ::GetClientRect(mWnd, &paintRect);
+        RefPtr<DrawTarget> dt = gfxPlatform::CreateDrawTargetForSurface(
+            targetSurface, IntSize(paintRect.right - paintRect.left,
+                                   paintRect.bottom - paintRect.top));
+        if (!dt || !dt->IsValid()) {
+          gfxWarning()
+              << "nsWindow::OnPaint failed in CreateDrawTargetForSurface";
+          return false;
+        }
+
+        // don't need to double buffer with anything but GDI
+        BufferMode doubleBuffering = mozilla::layers::BufferMode::BUFFER_NONE;
+>>>>>>> upstream-releases
 #ifdef MOZ_XUL
         switch (mTransparencyMode) {
           case eTransparencyGlass:
@@ -440,7 +531,7 @@ bool nsWindow::OnPaint(HDC aDC, uint32_t aNestingLevel) {
   return result;
 }
 
-IntSize nsWindowGfx::GetIconMetrics(IconSizeType aSizeType) {
+LayoutDeviceIntSize nsWindowGfx::GetIconMetrics(IconSizeType aSizeType) {
   int32_t width = ::GetSystemMetrics(sIconMetrics[aSizeType].xMetric);
   int32_t height = ::GetSystemMetrics(sIconMetrics[aSizeType].yMetric);
 
@@ -448,12 +539,28 @@ IntSize nsWindowGfx::GetIconMetrics(IconSizeType aSizeType) {
     width = height = sIconMetrics[aSizeType].defaultSize;
   }
 
-  return IntSize(width, height);
+  return LayoutDeviceIntSize(width, height);
 }
 
+<<<<<<< HEAD
 nsresult nsWindowGfx::CreateIcon(imgIContainer* aContainer, bool aIsCursor,
                                  uint32_t aHotspotX, uint32_t aHotspotY,
                                  IntSize aScaledSize, HICON* aIcon) {
+||||||| merged common ancestors
+nsresult nsWindowGfx::CreateIcon(imgIContainer *aContainer,
+                                  bool aIsCursor,
+                                  uint32_t aHotspotX,
+                                  uint32_t aHotspotY,
+                                  IntSize aScaledSize,
+                                  HICON *aIcon) {
+
+=======
+nsresult nsWindowGfx::CreateIcon(imgIContainer* aContainer, bool aIsCursor,
+                                 LayoutDeviceIntPoint aHotspot,
+                                 LayoutDeviceIntSize aScaledSize,
+                                 HICON* aIcon) {
+  MOZ_ASSERT(aHotspot.x >= 0 && aHotspot.y >= 0);
+>>>>>>> upstream-releases
   MOZ_ASSERT((aScaledSize.width > 0 && aScaledSize.height > 0) ||
              (aScaledSize.width == 0 && aScaledSize.height == 0));
 
@@ -543,8 +650,8 @@ nsresult nsWindowGfx::CreateIcon(imgIContainer* aContainer, bool aIsCursor,
 
   ICONINFO info = {0};
   info.fIcon = !aIsCursor;
-  info.xHotspot = aHotspotX;
-  info.yHotspot = aHotspotY;
+  info.xHotspot = aHotspot.x;
+  info.yHotspot = aHotspot.y;
   info.hbmMask = mbmp;
   info.hbmColor = bmp;
 

@@ -50,8 +50,14 @@ var DEBUG_TIMESTAMP = false; // non-const so tweakable in server tests
 
 var gGlobalObject = Cu.getGlobalForObject(this);
 
+<<<<<<< HEAD
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 
+||||||| merged common ancestors
+=======
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+
+>>>>>>> upstream-releases
 /**
  * Asserts that the given condition holds.  If it doesn't, the given message is
  * dumped, a stack trace is printed, and an exception is thrown to attempt to
@@ -65,7 +71,13 @@ function NS_ASSERT(cond, msg) {
     dumpn("###!!! Stack follows:");
 
     var stack = new Error().stack.split(/\n/);
-    dumpn(stack.map(function(val) { return "###!!!   " + val; }).join("\n"));
+    dumpn(
+      stack
+        .map(function(val) {
+          return "###!!!   " + val;
+        })
+        .join("\n")
+    );
 
     throw Components.Exception("", Cr.NS_ERROR_ABORT);
   }
@@ -76,9 +88,19 @@ function HttpError(code, description) {
   this.code = code;
   this.description = description;
 }
+<<<<<<< HEAD
 HttpError.prototype =
 {
   toString() {
+||||||| merged common ancestors
+HttpError.prototype =
+{
+  toString: function()
+  {
+=======
+HttpError.prototype = {
+  toString() {
+>>>>>>> upstream-releases
     return this.code + " " + this.description;
   },
 };
@@ -114,22 +136,23 @@ var HTTP_505 = new HttpError(505, "HTTP Version Not Supported");
 /** Creates a hash with fields corresponding to the values in arr. */
 function array2obj(arr) {
   var obj = {};
-  for (var i = 0; i < arr.length; i++)
+  for (var i = 0; i < arr.length; i++) {
     obj[arr[i]] = arr[i];
+  }
   return obj;
 }
 
 /** Returns an array of the integers x through y, inclusive. */
 function range(x, y) {
   var arr = [];
-  for (var i = x; i <= y; i++)
+  for (var i = x; i <= y; i++) {
     arr.push(i);
+  }
   return arr;
 }
 
 /** An object (hash) whose fields are the numbers of all HTTP error codes. */
 const HTTP_ERROR_CODES = array2obj(range(400, 417).concat(range(500, 505)));
-
 
 /**
  * The character used to distinguish hidden files from non-hidden files, a la
@@ -158,18 +181,29 @@ var firstStamp = 0;
 function dumpn(str) {
   if (DEBUG) {
     var prefix = "HTTPD-INFO | ";
+<<<<<<< HEAD
     if (DEBUG_TIMESTAMP) {
       if (firstStamp === 0)
+||||||| merged common ancestors
+    if (DEBUG_TIMESTAMP)
+    {
+      if (firstStamp === 0)
+=======
+    if (DEBUG_TIMESTAMP) {
+      if (firstStamp === 0) {
+>>>>>>> upstream-releases
         firstStamp = Date.now();
+      }
 
       var elapsed = Date.now() - firstStamp; // milliseconds
       var min = Math.floor(elapsed / 60000);
       var sec = (elapsed % 60000) / 1000;
 
-      if (sec < 10)
+      if (sec < 10) {
         prefix += min + ":0" + sec.toFixed(3) + " | ";
-      else
+      } else {
         prefix += min + ":" + sec.toFixed(3) + " | ";
+      }
     }
 
     dump(prefix + str + "\n");
@@ -183,7 +217,6 @@ function dumpStack() {
   stack.forEach(dumpn);
 }
 
-
 /** The XPCOM thread manager. */
 var gThreadManager = null;
 
@@ -192,6 +225,7 @@ var gThreadManager = null;
  * speedup over doing the same from base principles.  See the docs at
  * http://developer.mozilla.org/en/docs/Components.Constructor for details.
  */
+<<<<<<< HEAD
 const ServerSocket = CC("@mozilla.org/network/server-socket;1",
                         "nsIServerSocket",
                         "init");
@@ -214,14 +248,74 @@ const WritablePropertyBag = CC("@mozilla.org/hash-property-bag;1",
                                "nsIWritablePropertyBag2");
 const SupportsString = CC("@mozilla.org/supports-string;1",
                           "nsISupportsString");
+||||||| merged common ancestors
+const ServerSocket = CC("@mozilla.org/network/server-socket;1",
+                        "nsIServerSocket",
+                        "init");
+const ScriptableInputStream = CC("@mozilla.org/scriptableinputstream;1",
+                                 "nsIScriptableInputStream",
+                                 "init");
+const Pipe = CC("@mozilla.org/pipe;1",
+                "nsIPipe",
+                "init");
+const FileInputStream = CC("@mozilla.org/network/file-input-stream;1",
+                           "nsIFileInputStream",
+                           "init");
+const ConverterInputStream = CC("@mozilla.org/intl/converter-input-stream;1",
+                                "nsIConverterInputStream",
+                                "init");
+const WritablePropertyBag = CC("@mozilla.org/hash-property-bag;1",
+                               "nsIWritablePropertyBag2");
+const SupportsString = CC("@mozilla.org/supports-string;1",
+                          "nsISupportsString");
+=======
+const ServerSocket = CC(
+  "@mozilla.org/network/server-socket;1",
+  "nsIServerSocket",
+  "init"
+);
+const ServerSocketIPv6 = CC(
+  "@mozilla.org/network/server-socket;1",
+  "nsIServerSocket",
+  "initIPv6"
+);
+const ScriptableInputStream = CC(
+  "@mozilla.org/scriptableinputstream;1",
+  "nsIScriptableInputStream",
+  "init"
+);
+const Pipe = CC("@mozilla.org/pipe;1", "nsIPipe", "init");
+const FileInputStream = CC(
+  "@mozilla.org/network/file-input-stream;1",
+  "nsIFileInputStream",
+  "init"
+);
+const ConverterInputStream = CC(
+  "@mozilla.org/intl/converter-input-stream;1",
+  "nsIConverterInputStream",
+  "init"
+);
+const WritablePropertyBag = CC(
+  "@mozilla.org/hash-property-bag;1",
+  "nsIWritablePropertyBag2"
+);
+const SupportsString = CC(
+  "@mozilla.org/supports-string;1",
+  "nsISupportsString"
+);
+>>>>>>> upstream-releases
 
 /* These two are non-const only so a test can overwrite them. */
-var BinaryInputStream = CC("@mozilla.org/binaryinputstream;1",
-                           "nsIBinaryInputStream",
-                           "setInputStream");
-var BinaryOutputStream = CC("@mozilla.org/binaryoutputstream;1",
-                            "nsIBinaryOutputStream",
-                            "setOutputStream");
+var BinaryInputStream = CC(
+  "@mozilla.org/binaryinputstream;1",
+  "nsIBinaryInputStream",
+  "setInputStream"
+);
+var BinaryOutputStream = CC(
+  "@mozilla.org/binaryoutputstream;1",
+  "nsIBinaryOutputStream",
+  "setOutputStream"
+);
 
 /**
  * Returns the RFC 822/1123 representation of a date.
@@ -246,8 +340,20 @@ function toDateString(date) {
   //
 
   const wkdayStrings = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const monthStrings = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthStrings = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   /**
    * Processes a date and returns the encoded UTC time as a string according to
@@ -260,15 +366,23 @@ function toDateString(date) {
    */
   function toTime(date) {
     var hrs = date.getUTCHours();
+<<<<<<< HEAD
     var rv  = (hrs < 10) ? "0" + hrs : hrs;
 
+||||||| merged common ancestors
+    var rv  = (hrs < 10) ? "0" + hrs : hrs;
+    
+=======
+    var rv = hrs < 10 ? "0" + hrs : hrs;
+
+>>>>>>> upstream-releases
     var mins = date.getUTCMinutes();
     rv += ":";
-    rv += (mins < 10) ? "0" + mins : mins;
+    rv += mins < 10 ? "0" + mins : mins;
 
     var secs = date.getUTCSeconds();
     rv += ":";
-    rv += (secs < 10) ? "0" + secs : secs;
+    rv += secs < 10 ? "0" + secs : secs;
 
     return rv;
   }
@@ -287,7 +401,7 @@ function toDateString(date) {
     var month = date.getUTCMonth();
     var year = date.getUTCFullYear();
 
-    var rv = (day < 10) ? "0" + day : day;
+    var rv = day < 10 ? "0" + day : day;
     rv += " " + monthStrings[month];
     rv += " " + year;
 
@@ -309,23 +423,51 @@ function toDateString(date) {
  */
 function printObj(o, showMembers) {
   var s = "******************************\n";
+<<<<<<< HEAD
   s +=    "o = {\n";
   for (var i in o) {
     if (typeof(i) != "string" ||
         (showMembers || (i.length > 0 && i[0] != "_")))
       s += "      " + i + ": " + o[i] + ",\n";
+||||||| merged common ancestors
+  s +=    "o = {\n";
+  for (var i in o)
+  {
+    if (typeof(i) != "string" ||
+        (showMembers || (i.length > 0 && i[0] != "_")))
+      s+= "      " + i + ": " + o[i] + ",\n";
+=======
+  s += "o = {\n";
+  for (var i in o) {
+    if (
+      typeof i != "string" ||
+      (showMembers || (i.length > 0 && i[0] != "_"))
+    ) {
+      s += "      " + i + ": " + o[i] + ",\n";
+    }
+>>>>>>> upstream-releases
   }
-  s +=    "    };\n";
-  s +=    "******************************";
+  s += "    };\n";
+  s += "******************************";
   dumpn(s);
 }
 
 /**
  * Instantiates a new HTTP server.
  */
+<<<<<<< HEAD
 function nsHttpServer() {
   if (!gThreadManager)
+||||||| merged common ancestors
+function nsHttpServer()
+{
+  if (!gThreadManager)
+=======
+function nsHttpServer() {
+  if (!gThreadManager) {
+>>>>>>> upstream-releases
     gThreadManager = Cc["@mozilla.org/thread-manager;1"].getService();
+  }
 
   /** The port on which this server listens. */
   this._port = undefined;
@@ -363,8 +505,7 @@ function nsHttpServer() {
    */
   this._connections = {};
 }
-nsHttpServer.prototype =
-{
+nsHttpServer.prototype = {
   // NSISERVERSOCKETLISTENER
 
   /**
@@ -384,9 +525,21 @@ nsHttpServer.prototype =
 
     const SEGMENT_SIZE = 8192;
     const SEGMENT_COUNT = 1024;
+<<<<<<< HEAD
     try {
       var input = trans.openInputStream(0, SEGMENT_SIZE, SEGMENT_COUNT)
                        .QueryInterface(Ci.nsIAsyncInputStream);
+||||||| merged common ancestors
+    try
+    {
+      var input = trans.openInputStream(0, SEGMENT_SIZE, SEGMENT_COUNT)
+                       .QueryInterface(Ci.nsIAsyncInputStream);
+=======
+    try {
+      var input = trans
+        .openInputStream(0, SEGMENT_SIZE, SEGMENT_COUNT)
+        .QueryInterface(Ci.nsIAsyncInputStream);
+>>>>>>> upstream-releases
       var output = trans.openOutputStream(0, 0, 0);
     } catch (e) {
       dumpn("*** error opening transport streams: " + e);
@@ -396,9 +549,27 @@ nsHttpServer.prototype =
 
     var connectionNumber = ++this._connectionGen;
 
+<<<<<<< HEAD
     try {
       var conn = new Connection(input, output, this, socket.port, trans.port,
                                 connectionNumber);
+||||||| merged common ancestors
+    try
+    {
+      var conn = new Connection(input, output, this, socket.port, trans.port,
+                                connectionNumber);
+=======
+    try {
+      var conn = new Connection(
+        input,
+        output,
+        this,
+        socket.port,
+        trans.port,
+        connectionNumber,
+        trans
+      );
+>>>>>>> upstream-releases
       var reader = new RequestReader(conn);
 
       // XXX add request timeout functionality here!
@@ -447,6 +618,7 @@ nsHttpServer.prototype =
       // Notify asynchronously so that any pending teardown in stop() has a
       // chance to run first.
       var self = this;
+<<<<<<< HEAD
       var stopEvent =
         {
           run() {
@@ -456,6 +628,29 @@ nsHttpServer.prototype =
         };
       gThreadManager.currentThread
                     .dispatch(stopEvent, Ci.nsIThread.DISPATCH_NORMAL);
+||||||| merged common ancestors
+      var stopEvent =
+        {
+          run: function()
+          {
+            dumpn("*** _notifyStopped async callback");
+            self._notifyStopped();
+          }
+        };
+      gThreadManager.currentThread
+                    .dispatch(stopEvent, Ci.nsIThread.DISPATCH_NORMAL);
+=======
+      var stopEvent = {
+        run() {
+          dumpn("*** _notifyStopped async callback");
+          self._notifyStopped();
+        },
+      };
+      gThreadManager.currentThread.dispatch(
+        stopEvent,
+        Ci.nsIThread.DISPATCH_NORMAL
+      );
+>>>>>>> upstream-releases
     }
   },
 
@@ -468,9 +663,19 @@ nsHttpServer.prototype =
     this._start(port, "localhost");
   },
 
+<<<<<<< HEAD
   _start(port, host) {
     if (this._socket)
+||||||| merged common ancestors
+  _start: function(port, host)
+  {
+    if (this._socket)
+=======
+  _start(port, host) {
+    if (this._socket) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_ALREADY_INITIALIZED);
+    }
 
     this._port = port;
     this._doQuit = this._socketClosed = false;
@@ -482,15 +687,50 @@ nsHttpServer.prototype =
     // network.http.max-persistent-connections-per-proxy concurrent
     // connections, plus a safety margin in case some other process is
     // talking to the server as well.
+<<<<<<< HEAD
     var maxConnections = 5 + Math.max(
       Services.prefs.getIntPref("network.http.max-persistent-connections-per-server"),
       Services.prefs.getIntPref("network.http.max-persistent-connections-per-proxy"));
 
     try {
+||||||| merged common ancestors
+    var prefs = getRootPrefBranch();
+    var maxConnections = 5 + Math.max(
+      prefs.getIntPref("network.http.max-persistent-connections-per-server"),
+      prefs.getIntPref("network.http.max-persistent-connections-per-proxy"));
+
+    try
+    {
+=======
+    var maxConnections =
+      5 +
+      Math.max(
+        Services.prefs.getIntPref(
+          "network.http.max-persistent-connections-per-server"
+        ),
+        Services.prefs.getIntPref(
+          "network.http.max-persistent-connections-per-proxy"
+        )
+      );
+
+    try {
+>>>>>>> upstream-releases
       var loopback = true;
+<<<<<<< HEAD
       if (this._host != "127.0.0.1" && this._host != "localhost" &&
           this._host != "[::1]") {
         loopback = false;
+||||||| merged common ancestors
+      if (this._host != "127.0.0.1" && this._host != "localhost") {
+        var loopback = false;
+=======
+      if (
+        this._host != "127.0.0.1" &&
+        this._host != "localhost" &&
+        this._host != "[::1]"
+      ) {
+        loopback = false;
+>>>>>>> upstream-releases
       }
 
       // When automatically selecting a port, sometimes the chosen port is
@@ -499,6 +739,7 @@ nsHttpServer.prototype =
       // get a server socket until a valid port is obtained. We limit
       // ourselves to finite attempts just so we don't loop forever.
       var socket;
+<<<<<<< HEAD
       for (var i = 100; i; i--) {
         var temp = null;
         if (this._host.includes(":")) {
@@ -515,9 +756,53 @@ nsHttpServer.prototype =
         if (!allowed) {
           dumpn(">>>Warning: obtained ServerSocket listens on a blocked " +
                 "port: " + temp.port);
+||||||| merged common ancestors
+      for (var i = 100; i; i--)
+      {
+        var temp = new ServerSocket(this._port,
+                                    loopback, // true = localhost, false = everybody
+                                    maxConnections);
+
+        var allowed = ios.allowPort(temp.port, "http");
+        if (!allowed)
+        {
+          dumpn(">>>Warning: obtained ServerSocket listens on a blocked " +
+                "port: " + temp.port);
+=======
+      for (var i = 100; i; i--) {
+        var temp = null;
+        if (this._host.includes(":")) {
+          temp = new ServerSocketIPv6(
+            this._port,
+            loopback, // true = localhost, false = everybody
+            maxConnections
+          );
+        } else {
+          temp = new ServerSocket(
+            this._port,
+            loopback, // true = localhost, false = everybody
+            maxConnections
+          );
+>>>>>>> upstream-releases
+        }
+
+<<<<<<< HEAD
+        if (!allowed && this._port == -1) {
+||||||| merged common ancestors
+        if (!allowed && this._port == -1)
+        {
+=======
+        var allowed = Services.io.allowPort(temp.port, "http");
+        if (!allowed) {
+          dumpn(
+            ">>>Warning: obtained ServerSocket listens on a blocked " +
+              "port: " +
+              temp.port
+          );
         }
 
         if (!allowed && this._port == -1) {
+>>>>>>> upstream-releases
           dumpn(">>>Throwing away ServerSocket with bad port.");
           temp.close();
           continue;
@@ -528,16 +813,33 @@ nsHttpServer.prototype =
       }
 
       if (!socket) {
-        throw new Error("No socket server available. Are there no available ports?");
+        throw new Error(
+          "No socket server available. Are there no available ports?"
+        );
       }
 
       socket.asyncListen(this);
       this._port = socket.port;
       this._identity._initialize(socket.port, host, true);
       this._socket = socket;
+<<<<<<< HEAD
       dumpn(">>> listening on port " + socket.port + ", " + maxConnections +
             " pending connections");
     } catch (e) {
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+=======
+      dumpn(
+        ">>> listening on port " +
+          socket.port +
+          ", " +
+          maxConnections +
+          " pending connections"
+      );
+    } catch (e) {
+>>>>>>> upstream-releases
       dump("\n!!! could not start server on port " + port + ": " + e + "\n\n");
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
     }
@@ -546,9 +848,19 @@ nsHttpServer.prototype =
   //
   // see nsIHttpServer.stop
   //
+<<<<<<< HEAD
   stop(callback) {
     if (!this._socket)
+||||||| merged common ancestors
+  stop: function(callback)
+  {
+    if (!this._socket)
+=======
+  stop(callback) {
+    if (!this._socket) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_UNEXPECTED);
+    }
 
     // If no argument was provided to stop, return a promise.
     let returnValue = undefined;
@@ -558,9 +870,12 @@ nsHttpServer.prototype =
       });
     }
 
-    this._stopCallback = typeof callback === "function"
-                       ? callback
-                       : function() { callback.onStopped(); };
+    this._stopCallback =
+      typeof callback === "function"
+        ? callback
+        : function() {
+            callback.onStopped();
+          };
 
     dumpn(">>> stopping listening on port " + this._socket.port);
     this._socket.close();
@@ -580,9 +895,19 @@ nsHttpServer.prototype =
   //
   // see nsIHttpServer.registerFile
   //
+<<<<<<< HEAD
   registerFile(path, file) {
     if (file && (!file.exists() || file.isDirectory()))
+||||||| merged common ancestors
+  registerFile: function(path, file)
+  {
+    if (file && (!file.exists() || file.isDirectory()))
+=======
+  registerFile(path, file) {
+    if (file && (!file.exists() || file.isDirectory())) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     this._handler.registerFile(path, file);
   },
@@ -592,11 +917,13 @@ nsHttpServer.prototype =
   //
   registerDirectory(path, directory) {
     // XXX true path validation!
-    if (path.charAt(0) != "/" ||
-        path.charAt(path.length - 1) != "/" ||
-        (directory &&
-         (!directory.exists() || !directory.isDirectory())))
+    if (
+      path.charAt(0) != "/" ||
+      path.charAt(path.length - 1) != "/" ||
+      (directory && (!directory.exists() || !directory.isDirectory()))
+    ) {
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     // XXX determine behavior of nonexistent /foo/bar when a /foo/bar/ mapping
     //     exists!
@@ -696,14 +1023,31 @@ nsHttpServer.prototype =
     return this;
   },
 
-
   // NSISUPPORTS
 
   //
   // see nsISupports.QueryInterface
   //
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIHttpServer", "nsIServerSocketListener"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(iid)
+  {
+    if (iid.equals(Ci.nsIHttpServer) ||
+        iid.equals(Ci.nsIServerSocketListener) ||
+        iid.equals(Ci.nsISupports))
+      return this;
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI([
+    "nsIHttpServer",
+    "nsIServerSocketListener",
+  ]),
+>>>>>>> upstream-releases
 
   // NON-XPCOM PUBLIC API
 
@@ -727,8 +1071,9 @@ nsHttpServer.prototype =
     // looking forward to ES5, there's no less ugly yet still O(1) way to do
     // this.
     //
-    for (var n in this._connections)
+    for (var n in this._connections) {
       return true;
+    }
     return false;
   },
 
@@ -761,6 +1106,7 @@ nsHttpServer.prototype =
    * @param connection : Connection
    *   the connection that was closed
    */
+<<<<<<< HEAD
   _connectionClosed(connection) {
     NS_ASSERT(connection.number in this._connections,
               "closing a connection " + this + " that we never added to the " +
@@ -768,11 +1114,35 @@ nsHttpServer.prototype =
     NS_ASSERT(this._connections[connection.number] === connection,
               "connection number mismatch?  " +
               this._connections[connection.number]);
+||||||| merged common ancestors
+  _connectionClosed: function(connection)
+  {
+    NS_ASSERT(connection.number in this._connections,
+              "closing a connection " + this + " that we never added to the " +
+              "set of open connections?");
+    NS_ASSERT(this._connections[connection.number] === connection,
+              "connection number mismatch?  " +
+              this._connections[connection.number]);
+=======
+  _connectionClosed(connection) {
+    NS_ASSERT(
+      connection.number in this._connections,
+      "closing a connection " +
+        this +
+        " that we never added to the " +
+        "set of open connections?"
+    );
+    NS_ASSERT(
+      this._connections[connection.number] === connection,
+      "connection number mismatch?  " + this._connections[connection.number]
+    );
+>>>>>>> upstream-releases
     delete this._connections[connection.number];
 
     // Fire a pending server-stopped notification if it's our responsibility.
-    if (!this._hasOpenConnections() && this._socketClosed)
+    if (!this._hasOpenConnections() && this._socketClosed) {
       this._notifyStopped();
+    }
     // Bug 508125: Add a GC here else we'll use gigabytes of memory running
     // mochitests. We can't rely on xpcshell doing an automated GC, as that
     // would interfere with testing GC stuff...
@@ -801,6 +1171,7 @@ var HttpServer = nsHttpServer;
 // IPv4address = 1*digit "." 1*digit "." 1*digit "." 1*digit
 //
 
+<<<<<<< HEAD
 const HOST_REGEX =
   new RegExp("^(?:" +
                // *( domainlabel "." )
@@ -813,6 +1184,33 @@ const HOST_REGEX =
              ")$",
              "i");
 
+||||||| merged common ancestors
+const HOST_REGEX =
+  new RegExp("^(?:" +
+               // *( domainlabel "." )
+               "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*" +
+               // toplabel
+               "[a-z](?:[a-z0-9-]*[a-z0-9])?" +
+             "|" +
+               // IPv4 address 
+               "\\d+\\.\\d+\\.\\d+\\.\\d+" +
+             ")$",
+             "i");
+
+=======
+const HOST_REGEX = new RegExp(
+  "^(?:" +
+    // *( domainlabel "." )
+    "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*" +
+    // toplabel
+    "[a-z](?:[a-z0-9-]*[a-z0-9])?" +
+    "|" +
+    // IPv4 address
+    "\\d+\\.\\d+\\.\\d+\\.\\d+" +
+    ")$",
+  "i"
+);
+>>>>>>> upstream-releases
 
 /**
  * Represents the identity of a server.  An identity consists of a set of
@@ -855,36 +1253,65 @@ function ServerIdentity() {
    * Note the "x" prefix on hostnames, which prevents collisions with special
    * JS names like "prototype".
    */
-  this._locations = { "xlocalhost": {} };
+  this._locations = { xlocalhost: {} };
 }
-ServerIdentity.prototype =
-{
+ServerIdentity.prototype = {
   // NSIHTTPSERVERIDENTITY
 
   //
   // see nsIHttpServerIdentity.primaryScheme
   //
+<<<<<<< HEAD
   get primaryScheme() {
     if (this._primaryPort === -1)
+||||||| merged common ancestors
+  get primaryScheme()
+  {
+    if (this._primaryPort === -1)
+=======
+  get primaryScheme() {
+    if (this._primaryPort === -1) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_INITIALIZED);
+    }
     return this._primaryScheme;
   },
 
   //
   // see nsIHttpServerIdentity.primaryHost
   //
+<<<<<<< HEAD
   get primaryHost() {
     if (this._primaryPort === -1)
+||||||| merged common ancestors
+  get primaryHost()
+  {
+    if (this._primaryPort === -1)
+=======
+  get primaryHost() {
+    if (this._primaryPort === -1) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_INITIALIZED);
+    }
     return this._primaryHost;
   },
 
   //
   // see nsIHttpServerIdentity.primaryPort
   //
+<<<<<<< HEAD
   get primaryPort() {
     if (this._primaryPort === -1)
+||||||| merged common ancestors
+  get primaryPort()
+  {
+    if (this._primaryPort === -1)
+=======
+  get primaryPort() {
+    if (this._primaryPort === -1) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_INITIALIZED);
+    }
     return this._primaryPort;
   },
 
@@ -895,8 +1322,9 @@ ServerIdentity.prototype =
     this._validate(scheme, host, port);
 
     var entry = this._locations["x" + host];
-    if (!entry)
+    if (!entry) {
       this._locations["x" + host] = entry = {};
+    }
 
     entry[port] = scheme;
   },
@@ -908,16 +1336,32 @@ ServerIdentity.prototype =
     this._validate(scheme, host, port);
 
     var entry = this._locations["x" + host];
-    if (!entry)
+    if (!entry) {
       return false;
+    }
 
     var present = port in entry;
     delete entry[port];
 
+<<<<<<< HEAD
     if (this._primaryScheme == scheme &&
         this._primaryHost == host &&
         this._primaryPort == port &&
         this._defaultPort !== -1) {
+||||||| merged common ancestors
+    if (this._primaryScheme == scheme &&
+        this._primaryHost == host &&
+        this._primaryPort == port &&
+        this._defaultPort !== -1)
+    {
+=======
+    if (
+      this._primaryScheme == scheme &&
+      this._primaryHost == host &&
+      this._primaryPort == port &&
+      this._defaultPort !== -1
+    ) {
+>>>>>>> upstream-releases
       // Always keep at least one identity in existence at any time, unless
       // we're in the process of shutting down (the last condition above).
       this._primaryPort = -1;
@@ -933,8 +1377,10 @@ ServerIdentity.prototype =
   has(scheme, host, port) {
     this._validate(scheme, host, port);
 
-    return "x" + host in this._locations &&
-           scheme === this._locations["x" + host][port];
+    return (
+      "x" + host in this._locations &&
+      scheme === this._locations["x" + host][port]
+    );
   },
 
   //
@@ -944,8 +1390,9 @@ ServerIdentity.prototype =
     this._validate("http", host, port);
 
     var entry = this._locations["x" + host];
-    if (!entry)
+    if (!entry) {
       return "";
+    }
 
     return entry[port] || "";
   },
@@ -963,14 +1410,26 @@ ServerIdentity.prototype =
     this._primaryPort = port;
   },
 
-
   // NSISUPPORTS
 
   //
   // see nsISupports.QueryInterface
   //
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIHttpServerIdentity"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(iid)
+  {
+    if (iid.equals(Ci.nsIHttpServerIdentity) || iid.equals(Ci.nsISupports))
+      return this;
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI(["nsIHttpServerIdentity"]),
+>>>>>>> upstream-releases
 
   // PRIVATE IMPLEMENTATION
 
@@ -980,10 +1439,11 @@ ServerIdentity.prototype =
    */
   _initialize(port, host, addSecondaryDefault) {
     this._host = host;
-    if (this._primaryPort !== -1)
+    if (this._primaryPort !== -1) {
       this.add("http", host, port);
-    else
+    } else {
       this.setPrimary("http", "localhost", port);
+    }
     this._defaultPort = port;
 
     // Only add this if we're being called at server startup
@@ -1009,9 +1469,22 @@ ServerIdentity.prototype =
 
     // This is a *very* tricky bit of reasoning here; make absolutely sure the
     // tests for this code pass before you commit changes to it.
+<<<<<<< HEAD
     if (this._primaryScheme == "http" &&
         this._primaryHost == this._host &&
         this._primaryPort == this._defaultPort) {
+||||||| merged common ancestors
+    if (this._primaryScheme == "http" &&
+        this._primaryHost == this._host &&
+        this._primaryPort == this._defaultPort)
+    {
+=======
+    if (
+      this._primaryScheme == "http" &&
+      this._primaryHost == this._host &&
+      this._primaryPort == this._defaultPort
+    ) {
+>>>>>>> upstream-releases
       // Make sure we don't trigger the readding logic in .remove(), then remove
       // the default location.
       var port = this._defaultPort;
@@ -1049,7 +1522,6 @@ ServerIdentity.prototype =
   },
 };
 
-
 /**
  * Represents a connection to the server (and possibly in the future the thread
  * on which the connection is processed).
@@ -1067,7 +1539,22 @@ ServerIdentity.prototype =
  * @param number : uint
  *   a serial number used to uniquely identify this connection
  */
+<<<<<<< HEAD
 function Connection(input, output, server, port, outgoingPort, number) {
+||||||| merged common ancestors
+function Connection(input, output, server, port, outgoingPort, number)
+{
+=======
+function Connection(
+  input,
+  output,
+  server,
+  port,
+  outgoingPort,
+  number,
+  transport
+) {
+>>>>>>> upstream-releases
   dumpn("*** opening new connection " + number + " on port " + outgoingPort);
 
   /** Stream of incoming data. */
@@ -1088,6 +1575,9 @@ function Connection(input, output, server, port, outgoingPort, number) {
   /** The serial number of this connection. */
   this.number = number;
 
+  /** Reference to the underlying transport. */
+  this.transport = transport;
+
   /**
    * The request for which a response is being generated, null if the
    * incoming request has not been fully received or if it had errors.
@@ -1105,15 +1595,27 @@ function Connection(input, output, server, port, outgoingPort, number) {
   /** whether or not 1st line of request has been received */
   this._requestStarted = false;
 }
-Connection.prototype =
-{
+Connection.prototype = {
   /** Closes this connection's input/output streams. */
+<<<<<<< HEAD
   close() {
     if (this._closed)
         return;
+||||||| merged common ancestors
+  close: function()
+  {
+    if (this._closed)
+        return;
+=======
+  close() {
+    if (this._closed) {
+      return;
+    }
+>>>>>>> upstream-releases
 
-    dumpn("*** closing connection " + this.number +
-          " on port " + this._outgoingPort);
+    dumpn(
+      "*** closing connection " + this.number + " on port " + this._outgoingPort
+    );
 
     this.input.close();
     this.output.close();
@@ -1123,8 +1625,11 @@ Connection.prototype =
     server._connectionClosed(this);
 
     // If an error triggered a server shutdown, act on it now
-    if (server._doQuit)
-      server.stop(function() { /* not like we can do anything better */ });
+    if (server._doQuit) {
+      server.stop(function() {
+        /* not like we can do anything better */
+      });
+    }
   },
 
   /**
@@ -1162,6 +1667,7 @@ Connection.prototype =
   },
 
   /** Converts this to a string for debugging purposes. */
+<<<<<<< HEAD
   toString() {
     return "<Connection(" + this.number +
            (this.request ? ", " + this.request.path : "") + "): " +
@@ -1169,25 +1675,44 @@ Connection.prototype =
   },
 
   requestStarted() {
+||||||| merged common ancestors
+  toString: function()
+  {
+    return "<Connection(" + this.number +
+           (this.request ? ", " + this.request.path : "") +"): " +
+           (this._closed ? "closed" : "open") + ">";
+  },
+
+  requestStarted: function()
+  {
+=======
+  toString() {
+    return (
+      "<Connection(" +
+      this.number +
+      (this.request ? ", " + this.request.path : "") +
+      "): " +
+      (this._closed ? "closed" : "open") +
+      ">"
+    );
+  },
+
+  requestStarted() {
+>>>>>>> upstream-releases
     this._requestStarted = true;
   },
 };
-
-
 
 /** Returns an array of count bytes from the given input stream. */
 function readBytes(inputStream, count) {
   return new BinaryInputStream(inputStream).readByteArray(count);
 }
 
-
-
 /** Request reader processing states; see RequestReader for details. */
 const READER_IN_REQUEST_LINE = 0;
-const READER_IN_HEADERS      = 1;
-const READER_IN_BODY         = 2;
-const READER_FINISHED        = 3;
-
+const READER_IN_HEADERS = 1;
+const READER_IN_BODY = 2;
+const READER_FINISHED = 3;
 
 /**
  * Reads incoming request data asynchronously, does any necessary preprocessing,
@@ -1241,8 +1766,7 @@ function RequestReader(connection) {
    */
   this._lastHeaderName = this._lastHeaderValue = undefined;
 }
-RequestReader.prototype =
-{
+RequestReader.prototype = {
   // NSIINPUTSTREAMCALLBACK
 
   /**
@@ -1253,32 +1777,71 @@ RequestReader.prototype =
    * @param input : nsIAsyncInputStream
    *   the stream of incoming data from the connection
    */
+<<<<<<< HEAD
   onInputStreamReady(input) {
     dumpn("*** onInputStreamReady(input=" + input + ") on thread " +
           gThreadManager.currentThread + " (main is " +
           gThreadManager.mainThread + ")");
+||||||| merged common ancestors
+  onInputStreamReady: function(input)
+  {
+    dumpn("*** onInputStreamReady(input=" + input + ") on thread " +
+          gThreadManager.currentThread + " (main is " +
+          gThreadManager.mainThread + ")");
+=======
+  onInputStreamReady(input) {
+    dumpn(
+      "*** onInputStreamReady(input=" +
+        input +
+        ") on thread " +
+        gThreadManager.currentThread +
+        " (main is " +
+        gThreadManager.mainThread +
+        ")"
+    );
+>>>>>>> upstream-releases
     dumpn("*** this._state == " + this._state);
 
     // Handle cases where we get more data after a request error has been
     // discovered but *before* we can close the connection.
     var data = this._data;
-    if (!data)
+    if (!data) {
       return;
+    }
 
     try {
       data.appendBytes(readBytes(input, input.available()));
+<<<<<<< HEAD
     } catch (e) {
       if (streamClosed(e)) {
         dumpn("*** WARNING: unexpected error when reading from socket; will " +
               "be treated as if the input stream had been closed");
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+      if (streamClosed(e))
+      {
+        dumpn("*** WARNING: unexpected error when reading from socket; will " +
+              "be treated as if the input stream had been closed");
+=======
+    } catch (e) {
+      if (streamClosed(e)) {
+        dumpn(
+          "*** WARNING: unexpected error when reading from socket; will " +
+            "be treated as if the input stream had been closed"
+        );
+>>>>>>> upstream-releases
         dumpn("*** WARNING: actual error was: " + e);
       }
 
       // We've lost a race -- input has been closed, but we're still expecting
       // to read more data.  available() will throw in this case, and since
       // we're dead in the water now, destroy the connection.
-      dumpn("*** onInputStreamReady called on a closed input, destroying " +
-            "connection");
+      dumpn(
+        "*** onInputStreamReady called on a closed input, destroying " +
+          "connection"
+      );
       this._connection.close();
       return;
     }
@@ -1289,28 +1852,45 @@ RequestReader.prototype =
         break;
 
       case READER_IN_REQUEST_LINE:
-        if (!this._processRequestLine())
+        if (!this._processRequestLine()) {
           break;
-        /* fall through */
+        }
+      /* fall through */
 
       case READER_IN_HEADERS:
-        if (!this._processHeaders())
+        if (!this._processHeaders()) {
           break;
-        /* fall through */
+        }
+      /* fall through */
 
       case READER_IN_BODY:
         this._processBody();
     }
 
-    if (this._state != READER_FINISHED)
+    if (this._state != READER_FINISHED) {
       input.asyncWait(this, 0, 0, gThreadManager.currentThread);
+    }
   },
 
   //
   // see nsISupports.QueryInterface
   //
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIInputStreamCallback"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(aIID)
+  {
+    if (aIID.equals(Ci.nsIInputStreamCallback) ||
+        aIID.equals(Ci.nsISupports))
+      return this;
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI(["nsIInputStreamCallback"]),
+>>>>>>> upstream-releases
 
   // PRIVATE API
 
@@ -1328,12 +1908,14 @@ RequestReader.prototype =
     var data = this._data;
     var line = {};
     var readSuccess;
-    while ((readSuccess = data.readLine(line)) && line.value == "")
+    while ((readSuccess = data.readLine(line)) && line.value == "") {
       dumpn("*** ignoring beginning blank line...");
+    }
 
     // if we don't have a full line, wait until we do
-    if (!readSuccess)
+    if (!readSuccess) {
       return false;
+    }
 
     // we have the first non-blank line
     try {
@@ -1370,8 +1952,8 @@ RequestReader.prototype =
         //     them, particularly chunked (which by its nature can have no
         //     meaningful Content-Length header)!
         this._contentLength = request.hasHeader("Content-Length")
-                            ? parseInt(request.getHeader("Content-Length"), 10)
-                            : 0;
+          ? parseInt(request.getHeader("Content-Length"), 10)
+          : 0;
         dumpn("_processHeaders, Content-length=" + this._contentLength);
 
         this._state = READER_IN_BODY;
@@ -1399,8 +1981,14 @@ RequestReader.prototype =
       if (this._contentLength > 0) {
         var data = this._data.purge();
         var count = Math.min(data.length, this._contentLength);
-        dumpn("*** loading data=" + data + " len=" + data.length +
-              " excess=" + (data.length - count));
+        dumpn(
+          "*** loading data=" +
+            data +
+            " len=" +
+            data.length +
+            " excess=" +
+            (data.length - count)
+        );
 
         var bos = new BinaryOutputStream(this._metadata._bodyOutputStream);
         bos.writeByteArray(data, count);
@@ -1466,9 +2054,27 @@ RequestReader.prototype =
         // NB: We allow an empty port here because, oddly, a colon may be
         //     present even without a port number, e.g. "example.com:"; in this
         //     case the default port applies.
+<<<<<<< HEAD
         if ((!HOST_REGEX.test(host) && host != "[::1]") || !/^\d*$/.test(port)) {
           dumpn("*** malformed hostname (" + hostPort + ") in Host " +
                 "header, 400 time");
+||||||| merged common ancestors
+        if (!HOST_REGEX.test(host) || !/^\d*$/.test(port))
+        {
+          dumpn("*** malformed hostname (" + hostPort + ") in Host " +
+                "header, 400 time");
+=======
+        if (
+          (!HOST_REGEX.test(host) && host != "[::1]") ||
+          !/^\d*$/.test(port)
+        ) {
+          dumpn(
+            "*** malformed hostname (" +
+              hostPort +
+              ") in Host " +
+              "header, 400 time"
+          );
+>>>>>>> upstream-releases
           throw HTTP_400;
         }
 
@@ -1480,9 +2086,24 @@ RequestReader.prototype =
         port = +port || 80;
 
         var scheme = identity.getScheme(host, port);
+<<<<<<< HEAD
         if (!scheme) {
           dumpn("*** unrecognized hostname (" + hostPort + ") in Host " +
                 "header, 400 time");
+||||||| merged common ancestors
+        if (!scheme)
+        {
+          dumpn("*** unrecognized hostname (" + hostPort + ") in Host " +
+                "header, 400 time");
+=======
+        if (!scheme) {
+          dumpn(
+            "*** unrecognized hostname (" +
+              hostPort +
+              ") in Host " +
+              "header, 400 time"
+          );
+>>>>>>> upstream-releases
           throw HTTP_400;
         }
 
@@ -1490,17 +2111,33 @@ RequestReader.prototype =
         metadata._host = host;
         metadata._port = port;
       }
+<<<<<<< HEAD
     } else {
       NS_ASSERT(metadata._host === undefined,
                 "HTTP/1.0 doesn't allow absolute paths in the request line!");
+||||||| merged common ancestors
+    }
+    else
+    {
+      NS_ASSERT(metadata._host === undefined,
+                "HTTP/1.0 doesn't allow absolute paths in the request line!");
+=======
+    } else {
+      NS_ASSERT(
+        metadata._host === undefined,
+        "HTTP/1.0 doesn't allow absolute paths in the request line!"
+      );
+>>>>>>> upstream-releases
 
       metadata._scheme = identity.primaryScheme;
       metadata._host = identity.primaryHost;
       metadata._port = identity.primaryPort;
     }
 
-    NS_ASSERT(identity.has(metadata._scheme, metadata._host, metadata._port),
-              "must have a location we recognize by now!");
+    NS_ASSERT(
+      identity.has(metadata._scheme, metadata._host, metadata._port),
+      "must have a location we recognize by now!"
+    );
   },
 
   /**
@@ -1519,9 +2156,24 @@ RequestReader.prototype =
     var server = this._connection.server;
     if (e instanceof HttpError) {
       var code = e.code;
+<<<<<<< HEAD
     } else {
       dumpn("!!! UNEXPECTED ERROR: " + e +
             (e.lineNumber ? ", line " + e.lineNumber : ""));
+||||||| merged common ancestors
+    }
+    else
+    {
+      dumpn("!!! UNEXPECTED ERROR: " + e +
+            (e.lineNumber ? ", line " + e.lineNumber : ""));
+=======
+    } else {
+      dumpn(
+        "!!! UNEXPECTED ERROR: " +
+          e +
+          (e.lineNumber ? ", line " + e.lineNumber : "")
+      );
+>>>>>>> upstream-releases
 
       // no idea what happened -- be paranoid and shut down
       code = 500;
@@ -1550,7 +2202,6 @@ RequestReader.prototype =
 
     this._connection.process(this._metadata);
   },
-
 
   // PARSING
 
@@ -1588,17 +2239,36 @@ RequestReader.prototype =
     // determine HTTP version
     try {
       metadata._httpVersion = new nsHttpVersion(match[1]);
+<<<<<<< HEAD
       if (!metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_0))
         throw "unsupported HTTP version";
     } catch (e) {
+||||||| merged common ancestors
+      if (!metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_0))
+        throw "unsupported HTTP version";
+    }
+    catch (e)
+    {
+=======
+      if (!metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_0)) {
+        throw new Error("unsupported HTTP version");
+      }
+    } catch (e) {
+>>>>>>> upstream-releases
       // we support HTTP/1.0 and HTTP/1.1 only
       throw HTTP_501;
     }
 
-
     var fullPath = request[1];
-    var serverIdentity = this._connection.server.identity;
 
+    if (metadata._method == "CONNECT") {
+      metadata._path = "CONNECT";
+      metadata._scheme = "https";
+      [metadata._host, metadata._port] = fullPath.split(":");
+      return;
+    }
+
+    var serverIdentity = this._connection.server.identity;
     var scheme, host, port;
 
     if (fullPath.charAt(0) != "/") {
@@ -1632,7 +2302,17 @@ RequestReader.prototype =
         throw HTTP_400;
       }
 
+<<<<<<< HEAD
       if (!serverIdentity.has(scheme, host, port) || fullPath.charAt(0) != "/") {
+||||||| merged common ancestors
+      if (!serverIdentity.has(scheme, host, port) || fullPath.charAt(0) != "/")
+      {
+=======
+      if (
+        !serverIdentity.has(scheme, host, port) ||
+        fullPath.charAt(0) != "/"
+      ) {
+>>>>>>> upstream-releases
         dumpn("*** serverIdentity unknown or path does not start with '/'");
         throw HTTP_400;
       }
@@ -1676,12 +2356,31 @@ RequestReader.prototype =
     while (true) {
       dumpn("*** Last name: '" + lastName + "'");
       dumpn("*** Last val: '" + lastVal + "'");
+<<<<<<< HEAD
       NS_ASSERT(!((lastVal === undefined) ^ (lastName === undefined)),
                 lastName === undefined ?
                   "lastVal without lastName?  lastVal: '" + lastVal + "'" :
                   "lastName without lastVal?  lastName: '" + lastName + "'");
 
       if (!data.readLine(line)) {
+||||||| merged common ancestors
+      NS_ASSERT(!((lastVal === undefined) ^ (lastName === undefined)),
+                lastName === undefined ?
+                  "lastVal without lastName?  lastVal: '" + lastVal + "'" :
+                  "lastName without lastVal?  lastName: '" + lastName + "'");
+
+      if (!data.readLine(line))
+      {
+=======
+      NS_ASSERT(
+        !((lastVal === undefined) ^ (lastName === undefined)),
+        lastName === undefined
+          ? "lastVal without lastName?  lastVal: '" + lastVal + "'"
+          : "lastName without lastVal?  lastName: '" + lastName + "'"
+      );
+
+      if (!data.readLine(line)) {
+>>>>>>> upstream-releases
         // save any data we have from the header we might still be processing
         this._lastHeaderName = lastName;
         this._lastHeaderValue = lastVal;
@@ -1744,9 +2443,9 @@ RequestReader.prototype =
   },
 };
 
-
 /** The character codes for CR and LF. */
-const CR = 0x0D, LF = 0x0A;
+const CR = 0x0d,
+  LF = 0x0a;
 
 /**
  * Calculates the number of characters before the first CRLF pair in array, or
@@ -1762,14 +2461,26 @@ const CR = 0x0D, LF = 0x0A;
  * @returns int
  *   the index of the first CRLF if any were present, -1 otherwise
  */
+<<<<<<< HEAD
 function findCRLF(array, start) {
   for (var i = array.indexOf(CR, start); i >= 0; i = array.indexOf(CR, i + 1)) {
     if (array[i + 1] == LF)
+||||||| merged common ancestors
+function findCRLF(array, start)
+{
+  for (var i = array.indexOf(CR, start); i >= 0; i = array.indexOf(CR, i + 1))
+  {
+    if (array[i + 1] == LF)
+=======
+function findCRLF(array, start) {
+  for (var i = array.indexOf(CR, start); i >= 0; i = array.indexOf(CR, i + 1)) {
+    if (array[i + 1] == LF) {
+>>>>>>> upstream-releases
       return i;
+    }
   }
   return -1;
 }
-
 
 /**
  * A container which provides line-by-line access to the arrays of bytes with
@@ -1782,8 +2493,7 @@ function LineData() {
   /** Start index from which to search for CRLF. */
   this._start = 0;
 }
-LineData.prototype =
-{
+LineData.prototype = {
   /**
    * Appends the bytes in the given array to the internal data cache maintained
    * by this.
@@ -1826,8 +2536,9 @@ LineData.prototype =
       // But if our data ends in a CR, we have to back up one, because
       // the first byte in the next packet might be an LF and if we
       // start looking at data.length we won't find it.
-      if (data.length > 0 && data[data.length - 1] === CR)
+      if (data.length > 0 && data[data.length - 1] === CR) {
         --this._start;
+      }
 
       return false;
     }
@@ -1865,15 +2576,23 @@ LineData.prototype =
   },
 };
 
-
-
 /**
  * Creates a request-handling function for an nsIHttpRequestHandler object.
  */
+<<<<<<< HEAD
 function createHandlerFunc(handler) {
   return function(metadata, response) { handler.handle(metadata, response); };
+||||||| merged common ancestors
+function createHandlerFunc(handler)
+{
+  return function(metadata, response) { handler.handle(metadata, response); };
+=======
+function createHandlerFunc(handler) {
+  return function(metadata, response) {
+    handler.handle(metadata, response);
+  };
+>>>>>>> upstream-releases
 }
-
 
 /**
  * The default handler for directories; writes an HTML response containing a
@@ -1890,12 +2609,35 @@ function defaultIndexHandler(metadata, response) {
   // stick rules (don't want to pollute the default path-space).
   //
 
+<<<<<<< HEAD
   var body = "<html>\
+||||||| merged common ancestors
+  var body = '<html>\
+=======
+  var body =
+    "<html>\
+>>>>>>> upstream-releases
                 <head>\
+<<<<<<< HEAD
                   <title>" + path + "</title>\
+||||||| merged common ancestors
+                  <title>' + path + '</title>\
+=======
+                  <title>" +
+    path +
+    "</title>\
+>>>>>>> upstream-releases
                 </head>\
                 <body>\
+<<<<<<< HEAD
                   <h1>" + path + '</h1>\
+||||||| merged common ancestors
+                  <h1>' + path + '</h1>\
+=======
+                  <h1>" +
+    path +
+    '</h1>\
+>>>>>>> upstream-releases
                   <ol style="list-style-type: none">';
 
   var directory = metadata.getProperty("directory");
@@ -1905,34 +2647,91 @@ function defaultIndexHandler(metadata, response) {
   var files = directory.directoryEntries;
   while (files.hasMoreElements()) {
     var f = files.nextFile;
+<<<<<<< HEAD
     let name = f.leafName;
     if (!f.isHidden() &&
         (name.charAt(name.length - 1) != HIDDEN_CHAR ||
          name.charAt(name.length - 2) == HIDDEN_CHAR))
+||||||| merged common ancestors
+    var name = f.leafName;
+    if (!f.isHidden() &&
+        (name.charAt(name.length - 1) != HIDDEN_CHAR ||
+         name.charAt(name.length - 2) == HIDDEN_CHAR))
+=======
+    let name = f.leafName;
+    if (
+      !f.isHidden() &&
+      (name.charAt(name.length - 1) != HIDDEN_CHAR ||
+        name.charAt(name.length - 2) == HIDDEN_CHAR)
+    ) {
+>>>>>>> upstream-releases
       fileList.push(f);
+    }
   }
 
   fileList.sort(fileSort);
 
   for (var i = 0; i < fileList.length; i++) {
     var file = fileList[i];
+<<<<<<< HEAD
     try {
       let name = file.leafName;
       if (name.charAt(name.length - 1) == HIDDEN_CHAR)
+||||||| merged common ancestors
+    try
+    {
+      var name = file.leafName;
+      if (name.charAt(name.length - 1) == HIDDEN_CHAR)
+=======
+    try {
+      let name = file.leafName;
+      if (name.charAt(name.length - 1) == HIDDEN_CHAR) {
+>>>>>>> upstream-releases
         name = name.substring(0, name.length - 1);
+      }
       var sep = file.isDirectory() ? "/" : "";
 
       // Note: using " to delimit the attribute here because encodeURIComponent
       //       passes through '.
+<<<<<<< HEAD
       var item = '<li><a href="' + encodeURIComponent(name) + sep + '">' +
                    htmlEscape(name) + sep +
                  "</a></li>";
+||||||| merged common ancestors
+      var item = '<li><a href="' + encodeURIComponent(name) + sep + '">' +
+                   htmlEscape(name) + sep +
+                 '</a></li>';
+=======
+      var item =
+        '<li><a href="' +
+        encodeURIComponent(name) +
+        sep +
+        '">' +
+        htmlEscape(name) +
+        sep +
+        "</a></li>";
+>>>>>>> upstream-releases
 
       body += item;
+<<<<<<< HEAD
     } catch (e) { /* some file system error, ignore the file */ }
+||||||| merged common ancestors
+    }
+    catch (e) { /* some file system error, ignore the file */ }
+=======
+    } catch (e) {
+      /* some file system error, ignore the file */
+    }
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   body    += "    </ol>\
+||||||| merged common ancestors
+  body    += '    </ol>\
+=======
+  body += "    </ol>\
+>>>>>>> upstream-releases
                 </body>\
               </html>";
 
@@ -1942,18 +2741,30 @@ function defaultIndexHandler(metadata, response) {
 /**
  * Sorts a and b (nsIFile objects) into an aesthetically pleasing order.
  */
+<<<<<<< HEAD
 function fileSort(a, b) {
   var dira = a.isDirectory(), dirb = b.isDirectory();
+||||||| merged common ancestors
+function fileSort(a, b)
+{
+  var dira = a.isDirectory(), dirb = b.isDirectory();
+=======
+function fileSort(a, b) {
+  var dira = a.isDirectory(),
+    dirb = b.isDirectory();
+>>>>>>> upstream-releases
 
-  if (dira && !dirb)
+  if (dira && !dirb) {
     return -1;
-  if (dirb && !dira)
+  }
+  if (dirb && !dira) {
     return 1;
+  }
 
-  var namea = a.leafName.toLowerCase(), nameb = b.leafName.toLowerCase();
+  var namea = a.leafName.toLowerCase(),
+    nameb = b.leafName.toLowerCase();
   return nameb > namea ? -1 : 1;
 }
-
 
 /**
  * Converts an externally-provided path into an internal path for use in
@@ -1967,15 +2778,26 @@ function fileSort(a, b) {
  * @throws URIError
  *   if path is incorrectly encoded
  */
+<<<<<<< HEAD
 function toInternalPath(path, encoded) {
   if (encoded)
+||||||| merged common ancestors
+function toInternalPath(path, encoded)
+{
+  if (encoded)
+=======
+function toInternalPath(path, encoded) {
+  if (encoded) {
+>>>>>>> upstream-releases
     path = decodeURI(path);
+  }
 
   var comps = path.split("/");
   for (var i = 0, sz = comps.length; i < sz; i++) {
     var comp = comps[i];
-    if (comp.charAt(comp.length - 1) == HIDDEN_CHAR)
+    if (comp.charAt(comp.length - 1) == HIDDEN_CHAR) {
       comps[i] = comp + HIDDEN_CHAR;
+    }
   }
   return comps.join("/");
 }
@@ -1997,29 +2819,48 @@ const PERMS_READONLY = (4 << 6) | (4 << 3) | 4;
  */
 function maybeAddHeaders(file, metadata, response) {
   var name = file.leafName;
-  if (name.charAt(name.length - 1) == HIDDEN_CHAR)
+  if (name.charAt(name.length - 1) == HIDDEN_CHAR) {
     name = name.substring(0, name.length - 1);
+  }
 
   var headerFile = file.parent;
   headerFile.append(name + HEADERS_SUFFIX);
 
-  if (!headerFile.exists())
+  if (!headerFile.exists()) {
     return;
+  }
 
   const PR_RDONLY = 0x01;
+<<<<<<< HEAD
   var fis = new FileInputStream(headerFile, PR_RDONLY, PERMS_READONLY,
                                 Ci.nsIFileInputStream.CLOSE_ON_EOF);
 
   try {
+||||||| merged common ancestors
+  var fis = new FileInputStream(headerFile, PR_RDONLY, PERMS_READONLY,
+                                Ci.nsIFileInputStream.CLOSE_ON_EOF);
+
+  try
+  {
+=======
+  var fis = new FileInputStream(
+    headerFile,
+    PR_RDONLY,
+    PERMS_READONLY,
+    Ci.nsIFileInputStream.CLOSE_ON_EOF
+  );
+
+  try {
+>>>>>>> upstream-releases
     var lis = new ConverterInputStream(fis, "UTF-8", 1024, 0x0);
     lis.QueryInterface(Ci.nsIUnicharLineInputStream);
 
-    var line = {value: ""};
+    var line = { value: "" };
     var more = lis.readLine(line);
 
-    if (!more && line.value == "")
+    if (!more && line.value == "") {
       return;
-
+    }
 
     // request line
 
@@ -2035,8 +2876,20 @@ function maybeAddHeaders(file, metadata, response) {
         code = status.substring(0, space);
         description = status.substring(space + 1, status.length);
       }
+<<<<<<< HEAD
 
       response.setStatusLine(metadata.httpVersion, parseInt(code, 10), description);
+||||||| merged common ancestors
+    
+      response.setStatusLine(metadata.httpVersion, parseInt(code, 10), description);
+=======
+
+      response.setStatusLine(
+        metadata.httpVersion,
+        parseInt(code, 10),
+        description
+      );
+>>>>>>> upstream-releases
 
       line.value = "";
       more = lis.readLine(line);
@@ -2047,9 +2900,11 @@ function maybeAddHeaders(file, metadata, response) {
       var header = line.value;
       var colon = header.indexOf(":");
 
-      response.setHeader(header.substring(0, colon),
-                         header.substring(colon + 1, header.length),
-                         false); // allow overriding server-set headers
+      response.setHeader(
+        header.substring(0, colon),
+        header.substring(colon + 1, header.length),
+        false
+      ); // allow overriding server-set headers
 
       line.value = "";
       more = lis.readLine(line);
@@ -2061,7 +2916,6 @@ function maybeAddHeaders(file, metadata, response) {
     fis.close();
   }
 }
-
 
 /**
  * An object which handles requests for a server, executing default and
@@ -2139,8 +2993,7 @@ function ServerHandler(server) {
   /** Entire-server state storage for nsISupports values. */
   this._objectState = {};
 }
-ServerHandler.prototype =
-{
+ServerHandler.prototype = {
   // PUBLIC API
 
   /**
@@ -2169,8 +3022,19 @@ ServerHandler.prototype =
         } else {
           var longestPrefix = "";
           for (let prefix in this._overridePrefixes) {
+<<<<<<< HEAD
             if (prefix.length > longestPrefix.length &&
                 path.substr(0, prefix.length) == prefix) {
+||||||| merged common ancestors
+            if (prefix.length > longestPrefix.length &&
+                path.substr(0, prefix.length) == prefix)
+            {
+=======
+            if (
+              prefix.length > longestPrefix.length &&
+              path.substr(0, prefix.length) == prefix
+            ) {
+>>>>>>> upstream-releases
               longestPrefix = prefix;
             }
           }
@@ -2191,16 +3055,18 @@ ServerHandler.prototype =
           dumpn("*** unexpected error: e == " + e);
           throw HTTP_500;
         }
-        if (e.code !== 404)
+        if (e.code !== 404) {
           throw e;
+        }
 
         dumpn("*** default: " + (path in this._defaultPaths));
 
         response = new Response(connection);
-        if (path in this._defaultPaths)
+        if (path in this._defaultPaths) {
           this._defaultPaths[path](request, response);
-        else
+        } else {
           throw HTTP_404;
+        }
       }
     } catch (e) {
       if (response.partiallySent()) {
@@ -2210,21 +3076,50 @@ ServerHandler.prototype =
 
       var errorCode = "internal";
 
+<<<<<<< HEAD
       try {
         if (!(e instanceof HttpError))
+||||||| merged common ancestors
+      try
+      {
+        if (!(e instanceof HttpError))
+=======
+      try {
+        if (!(e instanceof HttpError)) {
+>>>>>>> upstream-releases
           throw e;
+        }
 
         errorCode = e.code;
         dumpn("*** errorCode == " + errorCode);
 
         response = new Response(connection);
-        if (e.customErrorHandling)
+        if (e.customErrorHandling) {
           e.customErrorHandling(response);
+        }
         this._handleError(errorCode, request, response);
         return;
+<<<<<<< HEAD
       } catch (e2) {
         dumpn("*** error handling " + errorCode + " error: " +
               "e2 == " + e2 + ", shutting down server");
+||||||| merged common ancestors
+      }
+      catch (e2)
+      {
+        dumpn("*** error handling " + errorCode + " error: " +
+              "e2 == " + e2 + ", shutting down server");
+=======
+      } catch (e2) {
+        dumpn(
+          "*** error handling " +
+            errorCode +
+            " error: " +
+            "e2 == " +
+            e2 +
+            ", shutting down server"
+        );
+>>>>>>> upstream-releases
 
         connection.server._requestQuit();
         response.abort(e2);
@@ -2249,14 +3144,27 @@ ServerHandler.prototype =
     file = file.clone();
 
     var self = this;
+<<<<<<< HEAD
     this._overridePaths[path] =
       function(request, response) {
         if (!file.exists())
           throw HTTP_404;
+||||||| merged common ancestors
+    this._overridePaths[path] =
+      function(request, response)
+      {
+        if (!file.exists())
+          throw HTTP_404;
+=======
+    this._overridePaths[path] = function(request, response) {
+      if (!file.exists()) {
+        throw HTTP_404;
+      }
+>>>>>>> upstream-releases
 
-        response.setStatusLine(request.httpVersion, 200, "OK");
-        self._writeFileResponse(request, file, response, 0, file.fileSize);
-      };
+      response.setStatusLine(request.httpVersion, 200, "OK");
+      self._writeFileResponse(request, file, response, 0, file.fileSize);
+    };
   },
 
   //
@@ -2264,8 +3172,9 @@ ServerHandler.prototype =
   //
   registerPathHandler(path, handler) {
     // XXX true path validation!
-    if (path.charAt(0) != "/")
+    if (path.charAt(0) != "/" && path != "CONNECT") {
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     this._handlerToField(handler, this._overridePaths, path);
   },
@@ -2275,8 +3184,9 @@ ServerHandler.prototype =
   //
   registerPrefixHandler(path, handler) {
     // XXX true path validation!
-    if (path.charAt(0) != "/" || path.charAt(path.length - 1) != "/")
+    if (path.charAt(0) != "/" || path.charAt(path.length - 1) != "/") {
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     this._handlerToField(handler, this._overridePrefixes, path);
   },
@@ -2293,8 +3203,9 @@ ServerHandler.prototype =
 
     // the path-to-directory mapping code requires that the first character not
     // be "/", or it will go into an infinite loop
-    if (key.charAt(0) == "/")
+    if (key.charAt(0) == "/") {
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     key = toInternalPath(key, false);
 
@@ -2310,10 +3221,28 @@ ServerHandler.prototype =
   //
   // see nsIHttpServer.registerErrorHandler
   //
+<<<<<<< HEAD
   registerErrorHandler(err, handler) {
     if (!(err in HTTP_ERROR_CODES))
       dumpn("*** WARNING: registering non-HTTP/1.1 error code " +
             "(" + err + ") handler -- was this intentional?");
+||||||| merged common ancestors
+  registerErrorHandler: function(err, handler)
+  {
+    if (!(err in HTTP_ERROR_CODES))
+      dumpn("*** WARNING: registering non-HTTP/1.1 error code " +
+            "(" + err + ") handler -- was this intentional?");
+=======
+  registerErrorHandler(err, handler) {
+    if (!(err in HTTP_ERROR_CODES)) {
+      dumpn(
+        "*** WARNING: registering non-HTTP/1.1 error code " +
+          "(" +
+          err +
+          ") handler -- was this intentional?"
+      );
+    }
+>>>>>>> upstream-releases
 
     this._handlerToField(handler, this._overrideErrors, err);
   },
@@ -2321,11 +3250,21 @@ ServerHandler.prototype =
   //
   // see nsIHttpServer.setIndexHandler
   //
+<<<<<<< HEAD
   setIndexHandler(handler) {
     if (!handler)
+||||||| merged common ancestors
+  setIndexHandler: function(handler)
+  {
+    if (!handler)
+=======
+  setIndexHandler(handler) {
+    if (!handler) {
+>>>>>>> upstream-releases
       handler = defaultIndexHandler;
-    else if (typeof(handler) != "function")
+    } else if (typeof handler != "function") {
       handler = createHandlerFunc(handler);
+    }
 
     this._indexHandler = handler;
   },
@@ -2333,11 +3272,21 @@ ServerHandler.prototype =
   //
   // see nsIHttpServer.registerContentType
   //
+<<<<<<< HEAD
   registerContentType(ext, type) {
     if (!type)
+||||||| merged common ancestors
+  registerContentType: function(ext, type)
+  {
+    if (!type)
+=======
+  registerContentType(ext, type) {
+    if (!type) {
+>>>>>>> upstream-releases
       delete this._mimeMappings[ext];
-    else
+    } else {
       this._mimeMappings[ext] = headerUtils.normalizeFieldValue(type);
+    }
   },
 
   // PRIVATE API
@@ -2354,12 +3303,13 @@ ServerHandler.prototype =
    */
   _handlerToField(handler, dict, key) {
     // for convenience, handler can be a function if this is run from xpcshell
-    if (typeof(handler) == "function")
+    if (typeof handler == "function") {
       dict[key] = handler;
-    else if (handler)
+    } else if (handler) {
       dict[key] = createHandlerFunc(handler);
-    else
+    } else {
       delete dict[key];
+    }
   },
 
   /**
@@ -2400,27 +3350,67 @@ ServerHandler.prototype =
     }
 
     // alternately, the file might not exist
-    if (!file.exists())
+    if (!file.exists()) {
       throw HTTP_404;
+    }
 
     var start, end;
+<<<<<<< HEAD
     if (metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_1) &&
         metadata.hasHeader("Range") &&
         this._getTypeFromFile(file) !== SJS_TYPE) {
       var rangeMatch = metadata.getHeader("Range").match(/^bytes=(\d+)?-(\d+)?$/);
       if (!rangeMatch) {
         dumpn("*** Range header bogosity: '" + metadata.getHeader("Range") + "'");
+||||||| merged common ancestors
+    if (metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_1) &&
+        metadata.hasHeader("Range") &&
+        this._getTypeFromFile(file) !== SJS_TYPE)
+    {
+      var rangeMatch = metadata.getHeader("Range").match(/^bytes=(\d+)?-(\d+)?$/);
+      if (!rangeMatch)
+      {
+        dumpn("*** Range header bogosity: '" + metadata.getHeader("Range") + "'");
+=======
+    if (
+      metadata._httpVersion.atLeast(nsHttpVersion.HTTP_1_1) &&
+      metadata.hasHeader("Range") &&
+      this._getTypeFromFile(file) !== SJS_TYPE
+    ) {
+      var rangeMatch = metadata
+        .getHeader("Range")
+        .match(/^bytes=(\d+)?-(\d+)?$/);
+      if (!rangeMatch) {
+        dumpn(
+          "*** Range header bogosity: '" + metadata.getHeader("Range") + "'"
+        );
+>>>>>>> upstream-releases
         throw HTTP_400;
       }
 
-      if (rangeMatch[1] !== undefined)
+      if (rangeMatch[1] !== undefined) {
         start = parseInt(rangeMatch[1], 10);
+      }
 
-      if (rangeMatch[2] !== undefined)
+      if (rangeMatch[2] !== undefined) {
         end = parseInt(rangeMatch[2], 10);
+      }
 
+<<<<<<< HEAD
       if (start === undefined && end === undefined) {
         dumpn("*** More Range header bogosity: '" + metadata.getHeader("Range") + "'");
+||||||| merged common ancestors
+      if (start === undefined && end === undefined)
+      {
+        dumpn("*** More Range header bogosity: '" + metadata.getHeader("Range") + "'");
+=======
+      if (start === undefined && end === undefined) {
+        dumpn(
+          "*** More Range header bogosity: '" +
+            metadata.getHeader("Range") +
+            "'"
+        );
+>>>>>>> upstream-releases
         throw HTTP_400;
       }
 
@@ -2428,12 +3418,13 @@ ServerHandler.prototype =
       // end of the file.
       if (start === undefined) {
         start = Math.max(0, file.fileSize - end);
-        end   = file.fileSize - 1;
+        end = file.fileSize - 1;
       }
 
       // start and end are inclusive
-      if (end === undefined || end >= file.fileSize)
+      if (end === undefined || end >= file.fileSize) {
         end = file.fileSize - 1;
+      }
 
       if (start !== undefined && start >= file.fileSize) {
         var HTTP_416 = new HttpError(416, "Requested Range Not Satisfiable");
@@ -2458,8 +3449,17 @@ ServerHandler.prototype =
     }
 
     // finally...
-    dumpn("*** handling '" + path + "' as mapping to " + file.path + " from " +
-          start + " to " + end + " inclusive");
+    dumpn(
+      "*** handling '" +
+        path +
+        "' as mapping to " +
+        file.path +
+        " from " +
+        start +
+        " to " +
+        end +
+        " inclusive"
+    );
     this._writeFileResponse(metadata, file, response, start, end - start + 1);
   },
 
@@ -2482,11 +3482,32 @@ ServerHandler.prototype =
     const PR_RDONLY = 0x01;
 
     var type = this._getTypeFromFile(file);
+<<<<<<< HEAD
     if (type === SJS_TYPE) {
       let fis = new FileInputStream(file, PR_RDONLY, PERMS_READONLY,
                                     Ci.nsIFileInputStream.CLOSE_ON_EOF);
 
       try {
+||||||| merged common ancestors
+    if (type === SJS_TYPE)
+    {
+      var fis = new FileInputStream(file, PR_RDONLY, PERMS_READONLY,
+                                    Ci.nsIFileInputStream.CLOSE_ON_EOF);
+
+      try
+      {
+        var sis = new ScriptableInputStream(fis);
+=======
+    if (type === SJS_TYPE) {
+      let fis = new FileInputStream(
+        file,
+        PR_RDONLY,
+        PERMS_READONLY,
+        Ci.nsIFileInputStream.CLOSE_ON_EOF
+      );
+
+      try {
+>>>>>>> upstream-releases
         var s = Cu.Sandbox(gGlobalObject);
         s.importFunction(dump, "dump");
         s.importFunction(atob, "atob");
@@ -2537,33 +3558,93 @@ ServerHandler.prototype =
 
         try {
           s.handleRequest(metadata, response);
+<<<<<<< HEAD
         } catch (e) {
           dump("*** error running SJS at " + file.path + ": " +
                e + " on line " +
                (e instanceof Error
                ? e.lineNumber + " in httpd.js"
                : (e.lineNumber - line)) + "\n");
+||||||| merged common ancestors
+        }
+        catch (e)
+        {
+          dump("*** error running SJS at " + file.path + ": " +
+               e + " on line " +
+               (e instanceof Error
+               ? e.lineNumber + " in httpd.js"
+               : (e.lineNumber - line)) + "\n");
+=======
+        } catch (e) {
+          dump(
+            "*** error running SJS at " +
+              file.path +
+              ": " +
+              e +
+              " on line " +
+              (e instanceof Error
+                ? e.lineNumber + " in httpd.js"
+                : e.lineNumber - line) +
+              "\n"
+          );
+>>>>>>> upstream-releases
           throw HTTP_500;
         }
       } finally {
         fis.close();
       }
+<<<<<<< HEAD
     } else {
       try {
         response.setHeader("Last-Modified",
                            toDateString(file.lastModifiedTime),
                            false);
       } catch (e) { /* lastModifiedTime threw, ignore */ }
+||||||| merged common ancestors
+    }
+    else
+    {
+      try
+      {
+        response.setHeader("Last-Modified",
+                           toDateString(file.lastModifiedTime),
+                           false);
+      }
+      catch (e) { /* lastModifiedTime threw, ignore */ }
+=======
+    } else {
+      try {
+        response.setHeader(
+          "Last-Modified",
+          toDateString(file.lastModifiedTime),
+          false
+        );
+      } catch (e) {
+        /* lastModifiedTime threw, ignore */
+      }
+>>>>>>> upstream-releases
 
       response.setHeader("Content-Type", type, false);
       maybeAddHeaders(file, metadata, response);
       response.setHeader("Content-Length", "" + count, false);
 
+<<<<<<< HEAD
       let fis = new FileInputStream(file, PR_RDONLY, PERMS_READONLY,
                                     Ci.nsIFileInputStream.CLOSE_ON_EOF);
+||||||| merged common ancestors
+      var fis = new FileInputStream(file, PR_RDONLY, PERMS_READONLY,
+                                    Ci.nsIFileInputStream.CLOSE_ON_EOF);
+=======
+      let fis = new FileInputStream(
+        file,
+        PR_RDONLY,
+        PERMS_READONLY,
+        Ci.nsIFileInputStream.CLOSE_ON_EOF
+      );
+>>>>>>> upstream-releases
 
       offset = offset || 0;
-      count  = count || file.fileSize;
+      count = count || file.fileSize;
       NS_ASSERT(offset === 0 || offset < file.fileSize, "bad offset");
       NS_ASSERT(count >= 0, "bad count");
       NS_ASSERT(offset + count <= file.fileSize, "bad total data size");
@@ -2572,23 +3653,39 @@ ServerHandler.prototype =
         if (offset !== 0) {
           // Seek (or read, if seeking isn't supported) to the correct offset so
           // the data sent to the client matches the requested range.
-          if (fis instanceof Ci.nsISeekableStream)
+          if (fis instanceof Ci.nsISeekableStream) {
             fis.seek(Ci.nsISeekableStream.NS_SEEK_SET, offset);
-          else
+          } else {
             new ScriptableInputStream(fis).read(offset);
+          }
         }
       } catch (e) {
         fis.close();
         throw e;
       }
 
+<<<<<<< HEAD
       let writeMore = function() {
         gThreadManager.currentThread
                       .dispatch(writeData, Ci.nsIThread.DISPATCH_NORMAL);
       };
+||||||| merged common ancestors
+      let writeMore = function () {
+        gThreadManager.currentThread
+                      .dispatch(writeData, Ci.nsIThread.DISPATCH_NORMAL);
+      }
+=======
+      let writeMore = function() {
+        gThreadManager.currentThread.dispatch(
+          writeData,
+          Ci.nsIThread.DISPATCH_NORMAL
+        );
+      };
+>>>>>>> upstream-releases
 
       var input = new BinaryInputStream(fis);
       var output = new BinaryOutputStream(response.bodyOutputStream);
+<<<<<<< HEAD
       var writeData =
         {
           run() {
@@ -2615,9 +3712,85 @@ ServerHandler.prototype =
                 response.finish();
               }
               throw e;
+||||||| merged common ancestors
+      var writeData =
+        {
+          run: function()
+          {
+            var chunkSize = Math.min(65536, count);
+            count -= chunkSize;
+            NS_ASSERT(count >= 0, "underflow");
+
+            try
+            {
+              var data = input.readByteArray(chunkSize);
+              NS_ASSERT(data.length === chunkSize,
+                        "incorrect data returned?  got " + data.length +
+                        ", expected " + chunkSize);
+              output.writeByteArray(data, data.length);
+              if (count === 0)
+              {
+                fis.close();
+                response.finish();
+              }
+              else
+              {
+                writeMore();
+              }
             }
+            catch (e)
+            {
+              try
+              {
+                fis.close();
+              }
+              finally
+              {
+                response.finish();
+              }
+              throw e;
+=======
+      var writeData = {
+        run() {
+          var chunkSize = Math.min(65536, count);
+          count -= chunkSize;
+          NS_ASSERT(count >= 0, "underflow");
+
+          try {
+            var data = input.readByteArray(chunkSize);
+            NS_ASSERT(
+              data.length === chunkSize,
+              "incorrect data returned?  got " +
+                data.length +
+                ", expected " +
+                chunkSize
+            );
+            output.writeByteArray(data, data.length);
+            if (count === 0) {
+              fis.close();
+              response.finish();
+            } else {
+              writeMore();
+            }
+          } catch (e) {
+            try {
+              fis.close();
+            } finally {
+              response.finish();
+>>>>>>> upstream-releases
+            }
+<<<<<<< HEAD
           },
         };
+||||||| merged common ancestors
+          }
+        };
+=======
+            throw e;
+          }
+        },
+      };
+>>>>>>> upstream-releases
 
       writeMore();
 
@@ -2639,8 +3812,9 @@ ServerHandler.prototype =
    */
   _getState(path, k) {
     var state = this._state;
-    if (path in state && k in state[path])
+    if (path in state && k in state[path]) {
       return state[path][k];
+    }
     return "";
   },
 
@@ -2655,12 +3829,23 @@ ServerHandler.prototype =
    * @param v : string
    *   the value to be set
    */
+<<<<<<< HEAD
   _setState(path, k, v) {
     if (typeof v !== "string")
+||||||| merged common ancestors
+  _setState: function(path, k, v)
+  {
+    if (typeof v !== "string")
+=======
+  _setState(path, k, v) {
+    if (typeof v !== "string") {
+>>>>>>> upstream-releases
       throw new Error("non-string value passed");
+    }
     var state = this._state;
-    if (!(path in state))
+    if (!(path in state)) {
       state[path] = {};
+    }
     state[path][k] = v;
   },
 
@@ -2675,8 +3860,9 @@ ServerHandler.prototype =
    */
   _getSharedState(k) {
     var state = this._sharedState;
-    if (k in state)
+    if (k in state) {
       return state[k];
+    }
     return "";
   },
 
@@ -2689,9 +3875,19 @@ ServerHandler.prototype =
    * @param v : string
    *   the value to be set
    */
+<<<<<<< HEAD
   _setSharedState(k, v) {
     if (typeof v !== "string")
+||||||| merged common ancestors
+  _setSharedState: function(k, v)
+  {
+    if (typeof v !== "string")
+=======
+  _setSharedState(k, v) {
+    if (typeof v !== "string") {
+>>>>>>> upstream-releases
       throw new Error("non-string value passed");
+    }
     this._sharedState[k] = v;
   },
 
@@ -2704,9 +3900,19 @@ ServerHandler.prototype =
    * @returns nsISupports
    *  the corresponding object, or null if none was present
    */
+<<<<<<< HEAD
   _getObjectState(k) {
     if (typeof k !== "string")
+||||||| merged common ancestors
+  _getObjectState: function(k)
+  {
+    if (typeof k !== "string")
+=======
+  _getObjectState(k) {
+    if (typeof k !== "string") {
+>>>>>>> upstream-releases
       throw new Error("non-string key passed");
+    }
     return this._objectState[k] || null;
   },
 
@@ -2719,14 +3925,38 @@ ServerHandler.prototype =
    * @param v : nsISupports
    *  the object to be associated with the given key; may be null
    */
+<<<<<<< HEAD
   _setObjectState(k, v) {
     if (typeof k !== "string")
+||||||| merged common ancestors
+  _setObjectState: function(k, v)
+  {
+    if (typeof k !== "string")
+=======
+  _setObjectState(k, v) {
+    if (typeof k !== "string") {
+>>>>>>> upstream-releases
       throw new Error("non-string key passed");
-    if (typeof v !== "object")
+    }
+    if (typeof v !== "object") {
       throw new Error("non-object value passed");
+<<<<<<< HEAD
     if (v && !("QueryInterface" in v)) {
       throw new Error("must pass an nsISupports; use wrappedJSObject to ease " +
                       "pain when using the server from JS");
+||||||| merged common ancestors
+    if (v && !("QueryInterface" in v))
+    {
+      throw new Error("must pass an nsISupports; use wrappedJSObject to ease " +
+                      "pain when using the server from JS");
+=======
+    }
+    if (v && !("QueryInterface" in v)) {
+      throw new Error(
+        "must pass an nsISupports; use wrappedJSObject to ease " +
+          "pain when using the server from JS"
+      );
+>>>>>>> upstream-releases
     }
 
     this._objectState[k] = v;
@@ -2749,13 +3979,26 @@ ServerHandler.prototype =
       var dot = name.lastIndexOf(".");
       if (dot > 0) {
         var ext = name.slice(dot + 1);
-        if (ext in this._mimeMappings)
+        if (ext in this._mimeMappings) {
           return this._mimeMappings[ext];
+        }
       }
       return Cc["@mozilla.org/uriloader/external-helper-app-service;1"]
+<<<<<<< HEAD
                .getService(Ci.nsIMIMEService)
                .getTypeFromFile(file);
     } catch (e) {
+||||||| merged common ancestors
+               .getService(Ci.nsIMIMEService)
+               .getTypeFromFile(file);
+    }
+    catch (e)
+    {
+=======
+        .getService(Ci.nsIMIMEService)
+        .getTypeFromFile(file);
+    } catch (e) {
+>>>>>>> upstream-releases
       return "application/octet-stream";
     }
   },
@@ -2797,29 +4040,33 @@ ServerHandler.prototype =
         //     requested path was /foo/bar, because relative links on the page
         //     will all be incorrect -- we really need the ability to easily
         //     redirect here instead
-        if (tmp == path.substring(1) &&
-            tmp.length != 0 &&
-            tmp.charAt(tmp.length - 1) != "/")
+        if (
+          tmp == path.substring(1) &&
+          tmp.length != 0 &&
+          tmp.charAt(tmp.length - 1) != "/"
+        ) {
           file = null;
-        else
+        } else {
           break;
+        }
       }
 
       // if we've finished trying all prefixes, exit
-      if (tmp == "")
+      if (tmp == "") {
         break;
+      }
 
       tmp = tmp.substring(0, tmp.lastIndexOf("/"));
     }
 
     // no mapping applies, so 404
-    if (!file)
+    if (!file) {
       throw HTTP_404;
-
+    }
 
     // last, get the file for the path within the determined directory
     var parentFolder = file.parent;
-    var dirIsRoot = (parentFolder == null);
+    var dirIsRoot = parentFolder == null;
 
     // Strategy here is to append components individually, making sure we
     // never move above the given directory; this allows paths such as
@@ -2831,15 +4078,17 @@ ServerHandler.prototype =
     for (var i = 0, sz = comps.length; i < sz; i++) {
       var comp = comps[i];
 
-      if (comp == "..")
+      if (comp == "..") {
         file = file.parent;
-      else if (comp == "." || comp == "")
+      } else if (comp == "." || comp == "") {
         continue;
-      else
+      } else {
         file.append(comp);
+      }
 
-      if (!dirIsRoot && file.equals(parentFolder))
+      if (!dirIsRoot && file.equals(parentFolder)) {
         throw HTTP_403;
+      }
     }
 
     return file;
@@ -2879,15 +4128,35 @@ ServerHandler.prototype =
    *   ideal case or a fallback code in abnormal circumstances (i.e., 500 is a
    *   fallback for 505, per HTTP specs)
    */
+<<<<<<< HEAD
   _handleError(errorCode, metadata, response) {
     if (!metadata)
+||||||| merged common ancestors
+  _handleError: function(errorCode, metadata, response)
+  {
+    if (!metadata)
+=======
+  _handleError(errorCode, metadata, response) {
+    if (!metadata) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NULL_POINTER);
+    }
 
     var errorX00 = errorCode - (errorCode % 100);
 
+<<<<<<< HEAD
     try {
       if (!(errorCode in HTTP_ERROR_CODES))
+||||||| merged common ancestors
+    try
+    {
+      if (!(errorCode in HTTP_ERROR_CODES))
+=======
+    try {
+      if (!(errorCode in HTTP_ERROR_CODES)) {
+>>>>>>> upstream-releases
         dumpn("*** WARNING: requested invalid error: " + errorCode);
+      }
 
       // RFC 2616 says that we should try to handle an error by its class if we
       // can't otherwise handle it -- if that fails, we revert to handling it as
@@ -2895,30 +4164,59 @@ ServerHandler.prototype =
       // the server
 
       // actually handle the error
+<<<<<<< HEAD
       try {
         if (errorCode in this._overrideErrors)
+||||||| merged common ancestors
+      try
+      {
+        if (errorCode in this._overrideErrors)
+=======
+      try {
+        if (errorCode in this._overrideErrors) {
+>>>>>>> upstream-releases
           this._overrideErrors[errorCode](metadata, response);
-        else
+        } else {
           this._defaultErrors[errorCode](metadata, response);
+<<<<<<< HEAD
       } catch (e) {
         if (response.partiallySent()) {
+||||||| merged common ancestors
+      }
+      catch (e)
+      {
+        if (response.partiallySent())
+        {
+=======
+        }
+      } catch (e) {
+        if (response.partiallySent()) {
+>>>>>>> upstream-releases
           response.abort(e);
           return;
         }
 
         // don't retry the handler that threw
-        if (errorX00 == errorCode)
+        if (errorX00 == errorCode) {
           throw HTTP_500;
+        }
 
-        dumpn("*** error in handling for error code " + errorCode + ", " +
-              "falling back to " + errorX00 + "...");
+        dumpn(
+          "*** error in handling for error code " +
+            errorCode +
+            ", " +
+            "falling back to " +
+            errorX00 +
+            "..."
+        );
         response = new Response(response._connection);
-        if (errorX00 in this._overrideErrors)
+        if (errorX00 in this._overrideErrors) {
           this._overrideErrors[errorX00](metadata, response);
-        else if (errorX00 in this._defaultErrors)
+        } else if (errorX00 in this._defaultErrors) {
           this._defaultErrors[errorX00](metadata, response);
-        else
+        } else {
           throw HTTP_500;
+        }
       }
     } catch (e) {
       if (response.partiallySent()) {
@@ -2927,16 +4225,42 @@ ServerHandler.prototype =
       }
 
       // we've tried everything possible for a meaningful error -- now try 500
+<<<<<<< HEAD
       dumpn("*** error in handling for error code " + errorX00 + ", falling " +
             "back to 500...");
 
       try {
+||||||| merged common ancestors
+      dumpn("*** error in handling for error code " + errorX00 + ", falling " +
+            "back to 500...");
+
+      try
+      {
+=======
+      dumpn(
+        "*** error in handling for error code " +
+          errorX00 +
+          ", falling " +
+          "back to 500..."
+      );
+
+      try {
+>>>>>>> upstream-releases
         response = new Response(response._connection);
-        if (500 in this._overrideErrors)
+        if (500 in this._overrideErrors) {
           this._overrideErrors[500](metadata, response);
-        else
+        } else {
           this._defaultErrors[500](metadata, response);
+<<<<<<< HEAD
       } catch (e2) {
+||||||| merged common ancestors
+      }
+      catch (e2)
+      {
+=======
+        }
+      } catch (e2) {
+>>>>>>> upstream-releases
         dumpn("*** multiple errors in default error handlers!");
         dumpn("*** e == " + e + ", e2 == " + e2);
         response.abort(e2);
@@ -2952,9 +4276,19 @@ ServerHandler.prototype =
   /**
    * This object contains the default handlers for the various HTTP error codes.
    */
+<<<<<<< HEAD
   _defaultErrors:
   {
     400(metadata, response) {
+||||||| merged common ancestors
+  _defaultErrors:
+  {
+    400: function(metadata, response)
+    {
+=======
+  _defaultErrors: {
+    400(metadata, response) {
+>>>>>>> upstream-releases
       // none of the data in metadata is reliable, so hard-code everything here
       response.setStatusLine("1.1", 400, "Bad Request");
       response.setHeader("Content-Type", "text/plain;charset=utf-8", false);
@@ -2966,7 +4300,8 @@ ServerHandler.prototype =
       response.setStatusLine(metadata.httpVersion, 403, "Forbidden");
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>403 Forbidden</title></head>\
                     <body>\
                       <h1>403 Forbidden</h1>\
@@ -2978,26 +4313,43 @@ ServerHandler.prototype =
       response.setStatusLine(metadata.httpVersion, 404, "Not Found");
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>404 Not Found</title></head>\
                     <body>\
                       <h1>404 Not Found</h1>\
                       <p>\
                         <span style='font-family: monospace;'>" +
-                          htmlEscape(metadata.path) +
-                       "</span> was not found.\
+        htmlEscape(metadata.path) +
+        "</span> was not found.\
                       </p>\
                     </body>\
                   </html>";
       response.bodyOutputStream.write(body, body.length);
     },
+<<<<<<< HEAD
     416(metadata, response) {
       response.setStatusLine(metadata.httpVersion,
                             416,
                             "Requested Range Not Satisfiable");
+||||||| merged common ancestors
+    416: function(metadata, response)
+    {
+      response.setStatusLine(metadata.httpVersion,
+                            416,
+                            "Requested Range Not Satisfiable");
+=======
+    416(metadata, response) {
+      response.setStatusLine(
+        metadata.httpVersion,
+        416,
+        "Requested Range Not Satisfiable"
+      );
+>>>>>>> upstream-releases
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                    <head>\
                     <title>416 Requested Range Not Satisfiable</title></head>\
                     <body>\
@@ -3009,13 +4361,29 @@ ServerHandler.prototype =
                   </html>";
       response.bodyOutputStream.write(body, body.length);
     },
+<<<<<<< HEAD
     500(metadata, response) {
       response.setStatusLine(metadata.httpVersion,
                              500,
                              "Internal Server Error");
+||||||| merged common ancestors
+    500: function(metadata, response)
+    {
+      response.setStatusLine(metadata.httpVersion,
+                             500,
+                             "Internal Server Error");
+=======
+    500(metadata, response) {
+      response.setStatusLine(
+        metadata.httpVersion,
+        500,
+        "Internal Server Error"
+      );
+>>>>>>> upstream-releases
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>500 Internal Server Error</title></head>\
                     <body>\
                       <h1>500 Internal Server Error</h1>\
@@ -3029,7 +4397,8 @@ ServerHandler.prototype =
       response.setStatusLine(metadata.httpVersion, 501, "Not Implemented");
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>501 Not Implemented</title></head>\
                     <body>\
                       <h1>501 Not Implemented</h1>\
@@ -3042,7 +4411,8 @@ ServerHandler.prototype =
       response.setStatusLine("1.1", 505, "HTTP Version Not Supported");
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>505 HTTP Version Not Supported</title></head>\
                     <body>\
                       <h1>505 HTTP Version Not Supported</h1>\
@@ -3057,13 +4427,24 @@ ServerHandler.prototype =
   /**
    * Contains handlers for the default set of URIs contained in this server.
    */
+<<<<<<< HEAD
   _defaultPaths:
   {
     "/": function(metadata, response) {
+||||||| merged common ancestors
+  _defaultPaths:
+  {
+    "/": function(metadata, response)
+    {
+=======
+  _defaultPaths: {
+    "/": function(metadata, response) {
+>>>>>>> upstream-releases
       response.setStatusLine(metadata.httpVersion, 200, "OK");
       response.setHeader("Content-Type", "text/html;charset=utf-8", false);
 
-      var body = "<html>\
+      var body =
+        "<html>\
                     <head><title>httpd.js</title></head>\
                     <body>\
                       <h1>httpd.js</h1>\
@@ -3080,22 +4461,51 @@ ServerHandler.prototype =
       response.setStatusLine(metadata.httpVersion, 200, "OK");
       response.setHeader("Content-Type", "text/plain;charset=utf-8", false);
 
-      var body = "Request-URI: " +
-                 metadata.scheme + "://" + metadata.host + ":" + metadata.port +
-                 metadata.path + "\n\n";
+      var body =
+        "Request-URI: " +
+        metadata.scheme +
+        "://" +
+        metadata.host +
+        ":" +
+        metadata.port +
+        metadata.path +
+        "\n\n";
       body += "Request (semantically equivalent, slightly reformatted):\n\n";
       body += metadata.method + " " + metadata.path;
 
+<<<<<<< HEAD
       if (metadata.queryString)
         body +=  "?" + metadata.queryString;
 
+||||||| merged common ancestors
+      if (metadata.queryString)
+        body +=  "?" + metadata.queryString;
+        
+=======
+      if (metadata.queryString) {
+        body += "?" + metadata.queryString;
+      }
+
+>>>>>>> upstream-releases
       body += " HTTP/" + metadata.httpVersion + "\r\n";
 
       var headEnum = metadata.headers;
+<<<<<<< HEAD
       while (headEnum.hasMoreElements()) {
         var fieldName = headEnum.getNext()
                                 .QueryInterface(Ci.nsISupportsString)
                                 .data;
+||||||| merged common ancestors
+      while (headEnum.hasMoreElements())
+      {
+        var fieldName = headEnum.getNext()
+                                .QueryInterface(Ci.nsISupportsString)
+                                .data;
+=======
+      while (headEnum.hasMoreElements()) {
+        var fieldName = headEnum.getNext().QueryInterface(Ci.nsISupportsString)
+          .data;
+>>>>>>> upstream-releases
         body += fieldName + ": " + metadata.getHeader(fieldName) + "\r\n";
       }
 
@@ -3104,7 +4514,6 @@ ServerHandler.prototype =
   },
 };
 
-
 /**
  * Maps absolute paths to files on the local file system (as nsILocalFiles).
  */
@@ -3112,8 +4521,7 @@ function FileMap() {
   /** Hash which will map paths to nsILocalFiles. */
   this._map = {};
 }
-FileMap.prototype =
-{
+FileMap.prototype = {
   // PUBLIC API
 
   /**
@@ -3125,11 +4533,21 @@ FileMap.prototype =
    * @param value : nsIFile
    *   the file to map to key, or null to remove a mapping
    */
+<<<<<<< HEAD
   put(key, value) {
     if (value)
+||||||| merged common ancestors
+  put: function(key, value)
+  {
+    if (value)
+=======
+  put(key, value) {
+    if (value) {
+>>>>>>> upstream-releases
       this._map[key] = value.clone();
-    else
+    } else {
       delete this._map[key];
+    }
   },
 
   /**
@@ -3147,7 +4565,6 @@ FileMap.prototype =
   },
 };
 
-
 // Response CONSTANTS
 
 // token       = *<any CHAR except CTLs or separators>
@@ -3157,6 +4574,7 @@ FileMap.prototype =
 //             | "," | ";" | ":" | "\" | <">
 //             | "/" | "[" | "]" | "?" | "="
 //             | "{" | "}" | SP  | HT
+<<<<<<< HEAD
 const IS_TOKEN_ARRAY =
   [0, 0, 0, 0, 0, 0, 0, 0, //   0
    0, 0, 0, 0, 0, 0, 0, 0, //   8
@@ -3178,6 +4596,162 @@ const IS_TOKEN_ARRAY =
    1, 1, 1, 1, 1, 1, 1, 1, // 112
    1, 1, 1, 0, 1, 0, 1]; // 120
 
+||||||| merged common ancestors
+const IS_TOKEN_ARRAY =
+  [0, 0, 0, 0, 0, 0, 0, 0, //   0
+   0, 0, 0, 0, 0, 0, 0, 0, //   8
+   0, 0, 0, 0, 0, 0, 0, 0, //  16
+   0, 0, 0, 0, 0, 0, 0, 0, //  24
+
+   0, 1, 0, 1, 1, 1, 1, 1, //  32
+   0, 0, 1, 1, 0, 1, 1, 0, //  40
+   1, 1, 1, 1, 1, 1, 1, 1, //  48
+   1, 1, 0, 0, 0, 0, 0, 0, //  56
+
+   0, 1, 1, 1, 1, 1, 1, 1, //  64
+   1, 1, 1, 1, 1, 1, 1, 1, //  72
+   1, 1, 1, 1, 1, 1, 1, 1, //  80
+   1, 1, 1, 0, 0, 0, 1, 1, //  88
+
+   1, 1, 1, 1, 1, 1, 1, 1, //  96
+   1, 1, 1, 1, 1, 1, 1, 1, // 104
+   1, 1, 1, 1, 1, 1, 1, 1, // 112
+   1, 1, 1, 0, 1, 0, 1];   // 120
+
+=======
+const IS_TOKEN_ARRAY = [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, //   0
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, //   8
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, //  16
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, //  24
+
+  0,
+  1,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1, //  32
+  0,
+  0,
+  1,
+  1,
+  0,
+  1,
+  1,
+  0, //  40
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, //  48
+  1,
+  1,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, //  56
+
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, //  64
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, //  72
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, //  80
+  1,
+  1,
+  1,
+  0,
+  0,
+  0,
+  1,
+  1, //  88
+
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, //  96
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, // 104
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1, // 112
+  1,
+  1,
+  1,
+  0,
+  1,
+  0,
+  1,
+]; // 120
+>>>>>>> upstream-releases
 
 /**
  * Determines whether the given character code is a CTL.
@@ -3187,8 +4761,17 @@ const IS_TOKEN_ARRAY =
  * @returns boolean
  *   true if code is a CTL, false otherwise
  */
+<<<<<<< HEAD
 function isCTL(code) {
   return (code >= 0 && code <= 31) || (code == 127);
+||||||| merged common ancestors
+function isCTL(code)
+{
+  return (code >= 0 && code <= 31) || (code == 127);
+=======
+function isCTL(code) {
+  return (code >= 0 && code <= 31) || code == 127;
+>>>>>>> upstream-releases
 }
 
 /**
@@ -3276,24 +4859,50 @@ function Response(connection) {
    */
   this._powerSeized = false;
 }
-Response.prototype =
-{
+Response.prototype = {
   // PUBLIC CONSTRUCTION API
 
   //
   // see nsIHttpResponse.bodyOutputStream
   //
+<<<<<<< HEAD
   get bodyOutputStream() {
     if (this._finished)
+||||||| merged common ancestors
+  get bodyOutputStream()
+  {
+    if (this._finished)
+=======
+  get bodyOutputStream() {
+    if (this._finished) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
 
+<<<<<<< HEAD
     if (!this._bodyOutputStream) {
       var pipe = new Pipe(true, false, Response.SEGMENT_SIZE, PR_UINT32_MAX,
                           null);
+||||||| merged common ancestors
+    if (!this._bodyOutputStream)
+    {
+      var pipe = new Pipe(true, false, Response.SEGMENT_SIZE, PR_UINT32_MAX,
+                          null);
+=======
+    if (!this._bodyOutputStream) {
+      var pipe = new Pipe(
+        true,
+        false,
+        Response.SEGMENT_SIZE,
+        PR_UINT32_MAX,
+        null
+      );
+>>>>>>> upstream-releases
       this._bodyOutputStream = pipe.outputStream;
       this._bodyInputStream = pipe.inputStream;
-      if (this._processAsync || this._powerSeized)
+      if (this._processAsync || this._powerSeized) {
         this._startAsyncProcessor();
+      }
     }
 
     return this._bodyOutputStream;
@@ -3302,9 +4911,19 @@ Response.prototype =
   //
   // see nsIHttpResponse.write
   //
+<<<<<<< HEAD
   write(data) {
     if (this._finished)
+||||||| merged common ancestors
+  write: function(data)
+  {
+    if (this._finished)
+=======
+  write(data) {
+    if (this._finished) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
 
     var dataAsString = String(data);
     this.bodyOutputStream.write(dataAsString, dataAsString.length);
@@ -3313,24 +4932,44 @@ Response.prototype =
   //
   // see nsIHttpResponse.setStatusLine
   //
+<<<<<<< HEAD
   setStatusLine(httpVersion, code, description) {
     if (!this._headers || this._finished || this._powerSeized)
+||||||| merged common ancestors
+  setStatusLine: function(httpVersion, code, description)
+  {
+    if (!this._headers || this._finished || this._powerSeized)
+=======
+  setStatusLine(httpVersion, code, description) {
+    if (!this._headers || this._finished || this._powerSeized) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
     this._ensureAlive();
 
-    if (!(code >= 0 && code < 1000))
+    if (!(code >= 0 && code < 1000)) {
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+    }
 
     try {
       var httpVer;
       // avoid version construction for the most common cases
-      if (!httpVersion || httpVersion == "1.1")
+      if (!httpVersion || httpVersion == "1.1") {
         httpVer = nsHttpVersion.HTTP_1_1;
-      else if (httpVersion == "1.0")
+      } else if (httpVersion == "1.0") {
         httpVer = nsHttpVersion.HTTP_1_0;
-      else
+      } else {
         httpVer = new nsHttpVersion(httpVersion);
+<<<<<<< HEAD
     } catch (e) {
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+=======
+      }
+    } catch (e) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
     }
 
@@ -3339,11 +4978,14 @@ Response.prototype =
     //
     // XXX this ends up disallowing octets which aren't Unicode, I think -- not
     //     much to do if description is IDL'd as string
-    if (!description)
+    if (!description) {
       description = "";
-    for (var i = 0; i < description.length; i++)
-      if (isCTL(description.charCodeAt(i)) && description.charAt(i) != "\t")
+    }
+    for (var i = 0; i < description.length; i++) {
+      if (isCTL(description.charCodeAt(i)) && description.charAt(i) != "\t") {
         throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
+      }
+    }
 
     // set the values only after validation to preserve atomicity
     this._httpDescription = description;
@@ -3354,17 +4996,37 @@ Response.prototype =
   //
   // see nsIHttpResponse.setHeader
   //
+<<<<<<< HEAD
   setHeader(name, value, merge) {
     if (!this._headers || this._finished || this._powerSeized)
+||||||| merged common ancestors
+  setHeader: function(name, value, merge)
+  {
+    if (!this._headers || this._finished || this._powerSeized)
+=======
+  setHeader(name, value, merge) {
+    if (!this._headers || this._finished || this._powerSeized) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
     this._ensureAlive();
 
     this._headers.setHeader(name, value, merge);
   },
 
+<<<<<<< HEAD
   setHeaderNoCheck(name, value) {
     if (!this._headers || this._finished || this._powerSeized)
+||||||| merged common ancestors
+  setHeaderNoCheck: function(name, value)
+  {
+    if (!this._headers || this._finished || this._powerSeized)
+=======
+  setHeaderNoCheck(name, value) {
+    if (!this._headers || this._finished || this._powerSeized) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
     this._ensureAlive();
 
     this._headers.setHeaderNoCheck(name, value);
@@ -3373,13 +5035,25 @@ Response.prototype =
   //
   // see nsIHttpResponse.processAsync
   //
+<<<<<<< HEAD
   processAsync() {
     if (this._finished)
+||||||| merged common ancestors
+  processAsync: function()
+  {
+    if (this._finished)
+=======
+  processAsync() {
+    if (this._finished) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_UNEXPECTED);
-    if (this._powerSeized)
+    }
+    if (this._powerSeized) {
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
-    if (this._processAsync)
+    }
+    if (this._processAsync) {
       return;
+    }
     this._ensureAlive();
 
     dumpn("*** processing connection " + this._connection.number + " async");
@@ -3398,68 +5072,111 @@ Response.prototype =
      * until finish() is called.  Since that delay is easily avoided by simply
      * getting bodyOutputStream or calling write(""), we don't worry about it.
      */
-    if (this._bodyOutputStream && !this._asyncCopier)
+    if (this._bodyOutputStream && !this._asyncCopier) {
       this._startAsyncProcessor();
+    }
   },
 
   //
   // see nsIHttpResponse.seizePower
   //
+<<<<<<< HEAD
   seizePower() {
     if (this._processAsync)
+||||||| merged common ancestors
+  seizePower: function()
+  {
+    if (this._processAsync)
+=======
+  seizePower() {
+    if (this._processAsync) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
-    if (this._finished)
+    }
+    if (this._finished) {
       throw Components.Exception("", Cr.NS_ERROR_UNEXPECTED);
-    if (this._powerSeized)
+    }
+    if (this._powerSeized) {
       return;
+    }
     this._ensureAlive();
 
-    dumpn("*** forcefully seizing power over connection " +
-          this._connection.number + "...");
+    dumpn(
+      "*** forcefully seizing power over connection " +
+        this._connection.number +
+        "..."
+    );
 
     // Purge any already-written data without sending it.  We could as easily
     // swap out the streams entirely, but that makes it possible to acquire and
     // unknowingly use a stale reference, so we require there only be one of
     // each stream ever for any response to avoid this complication.
-    if (this._asyncCopier)
+    if (this._asyncCopier) {
       this._asyncCopier.cancel(Cr.NS_BINDING_ABORTED);
+    }
     this._asyncCopier = null;
     if (this._bodyOutputStream) {
       var input = new BinaryInputStream(this._bodyInputStream);
       var avail;
-      while ((avail = input.available()) > 0)
+      while ((avail = input.available()) > 0) {
         input.readByteArray(avail);
+      }
     }
 
     this._powerSeized = true;
-    if (this._bodyOutputStream)
+    if (this._bodyOutputStream) {
       this._startAsyncProcessor();
+    }
   },
 
   //
   // see nsIHttpResponse.finish
   //
+<<<<<<< HEAD
   finish() {
     if (!this._processAsync && !this._powerSeized)
+||||||| merged common ancestors
+  finish: function()
+  {
+    if (!this._processAsync && !this._powerSeized)
+=======
+  finish() {
+    if (!this._processAsync && !this._powerSeized) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_UNEXPECTED);
-    if (this._finished)
+    }
+    if (this._finished) {
       return;
+    }
 
     dumpn("*** finishing connection " + this._connection.number);
     this._startAsyncProcessor(); // in case bodyOutputStream was never accessed
-    if (this._bodyOutputStream)
+    if (this._bodyOutputStream) {
       this._bodyOutputStream.close();
+    }
     this._finished = true;
   },
-
 
   // NSISUPPORTS
 
   //
   // see nsISupports.QueryInterface
   //
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIHttpResponse"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(iid)
+  {
+    if (iid.equals(Ci.nsIHttpResponse) || iid.equals(Ci.nsISupports))
+      return this;
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI(["nsIHttpResponse"]),
+>>>>>>> upstream-releases
 
   // POST-CONSTRUCTION API (not exposed externally)
 
@@ -3478,9 +5195,10 @@ Response.prototype =
   get httpCode() {
     this._ensureAlive();
 
-    var codeString = (this._httpCode < 10 ? "0" : "") +
-                     (this._httpCode < 100 ? "0" : "") +
-                     this._httpCode;
+    var codeString =
+      (this._httpCode < 10 ? "0" : "") +
+      (this._httpCode < 100 ? "0" : "") +
+      this._httpCode;
     return codeString;
   },
 
@@ -3532,9 +5250,22 @@ Response.prototype =
    */
   complete() {
     dumpn("*** complete()");
+<<<<<<< HEAD
     if (this._processAsync || this._powerSeized) {
       NS_ASSERT(this._processAsync ^ this._powerSeized,
                 "can't both send async and relinquish power");
+||||||| merged common ancestors
+    if (this._processAsync || this._powerSeized)
+    {
+      NS_ASSERT(this._processAsync ^ this._powerSeized,
+                "can't both send async and relinquish power");
+=======
+    if (this._processAsync || this._powerSeized) {
+      NS_ASSERT(
+        this._processAsync ^ this._powerSeized,
+        "can't both send async and relinquish power"
+      );
+>>>>>>> upstream-releases
       return;
     }
 
@@ -3543,8 +5274,9 @@ Response.prototype =
     this._startAsyncProcessor();
 
     // Now make sure we finish processing this request!
-    if (this._bodyOutputStream)
+    if (this._bodyOutputStream) {
       this._bodyOutputStream.close();
+    }
   },
 
   /**
@@ -3559,9 +5291,25 @@ Response.prototype =
    * @param e : Error
    *   the exception which precipitated this abort, or null if no such exception
    *   was generated
+   * @param truncateConnection : Boolean
+   *   ensures that we truncate the connection using an RST packet, so the
+   *   client testing code is aware that an error occurred, otherwise it may
+   *   consider the response as valid.
    */
+<<<<<<< HEAD
   abort(e) {
+||||||| merged common ancestors
+  abort: function(e)
+  {
+=======
+  abort(e, truncateConnection = false) {
+>>>>>>> upstream-releases
     dumpn("*** abort(<" + e + ">)");
+
+    if (truncateConnection) {
+      dumpn("*** truncate connection");
+      this._connection.transport.setLinger(true, 0);
+    }
 
     // This response will be ended by the processor if one was created.
     var copier = this._asyncCopier;
@@ -3579,6 +5327,7 @@ Response.prototype =
       // way to handle both cases without removing bodyOutputStream access and
       // moving its effective write(data, length) method onto Response, which
       // would be slower and require more code than this anyway.
+<<<<<<< HEAD
       gThreadManager.currentThread.dispatch({
         run() {
           dumpn("*** canceling copy asynchronously...");
@@ -3586,6 +5335,29 @@ Response.prototype =
         },
       }, Ci.nsIThread.DISPATCH_NORMAL);
     } else {
+||||||| merged common ancestors
+      gThreadManager.currentThread.dispatch({
+        run: function()
+        {
+          dumpn("*** canceling copy asynchronously...");
+          copier.cancel(Cr.NS_ERROR_UNEXPECTED);
+        }
+      }, Ci.nsIThread.DISPATCH_NORMAL);
+    }
+    else
+    {
+=======
+      gThreadManager.currentThread.dispatch(
+        {
+          run() {
+            dumpn("*** canceling copy asynchronously...");
+            copier.cancel(Cr.NS_ERROR_UNEXPECTED);
+          },
+        },
+        Ci.nsIThread.DISPATCH_NORMAL
+      );
+    } else {
+>>>>>>> upstream-releases
       this.end();
     }
   },
@@ -3598,8 +5370,9 @@ Response.prototype =
     NS_ASSERT(!this._ended, "ending this response twice?!?!");
 
     this._connection.close();
-    if (this._bodyOutputStream)
+    if (this._bodyOutputStream) {
       this._bodyOutputStream.close();
+    }
 
     this._finished = true;
     this._ended = true;
@@ -3649,17 +5422,23 @@ Response.prototype =
     NS_ASSERT(!this._powerSeized);
 
     // request-line
-    var statusLine = "HTTP/" + this.httpVersion + " " +
-                     this.httpCode + " " +
-                     this.httpDescription + "\r\n";
+    var statusLine =
+      "HTTP/" +
+      this.httpVersion +
+      " " +
+      this.httpCode +
+      " " +
+      this.httpDescription +
+      "\r\n";
 
     // header post-processing
 
     var headers = this._headers;
     headers.setHeader("Connection", "close", false);
     headers.setHeader("Server", "httpd.js", false);
-    if (!headers.hasHeader("Date"))
+    if (!headers.hasHeader("Date")) {
       headers.setHeader("Date", toDateString(Date.now()), false);
+    }
 
     // Any response not being processed asynchronously must have an associated
     // Content-Length header for reasons of backwards compatibility with the
@@ -3677,7 +5456,6 @@ Response.prototype =
       headers.setHeader("Content-Length", "" + avail, false);
     }
 
-
     // construct and send response
     dumpn("*** header post-processing completed, sending response head...");
 
@@ -3686,13 +5464,26 @@ Response.prototype =
 
     // headers
     var headEnum = headers.enumerator;
+<<<<<<< HEAD
     while (headEnum.hasMoreElements()) {
       var fieldName = headEnum.getNext()
                               .QueryInterface(Ci.nsISupportsString)
                               .data;
+||||||| merged common ancestors
+    while (headEnum.hasMoreElements())
+    {
+      var fieldName = headEnum.getNext()
+                              .QueryInterface(Ci.nsISupportsString)
+                              .data;
+=======
+    while (headEnum.hasMoreElements()) {
+      var fieldName = headEnum.getNext().QueryInterface(Ci.nsISupportsString)
+        .data;
+>>>>>>> upstream-releases
       var values = headers.getHeaderValues(fieldName);
-      for (var i = 0, sz = values.length; i < sz; i++)
+      for (var i = 0, sz = values.length; i < sz; i++) {
         preambleData.push(fieldName + ": " + values[i] + "\r\n");
+      }
     }
 
     // end request-line/headers
@@ -3704,6 +5495,7 @@ Response.prototype =
     responseHeadPipe.outputStream.write(preamble, preamble.length);
 
     var response = this;
+<<<<<<< HEAD
     var copyObserver =
       {
         onStartRequest(request, cx) {
@@ -3726,11 +5518,88 @@ Response.prototype =
 
         QueryInterface: ChromeUtils.generateQI(["nsIRequestObserver"]),
       };
+||||||| merged common ancestors
+    var copyObserver =
+      {
+        onStartRequest: function(request, cx)
+        {
+          dumpn("*** preamble copying started");
+        },
 
+        onStopRequest: function(request, cx, statusCode)
+        {
+          dumpn("*** preamble copying complete " +
+                "[status=0x" + statusCode.toString(16) + "]");
+
+          if (!Components.isSuccessCode(statusCode))
+          {
+            dumpn("!!! header copying problems: non-success statusCode, " +
+                  "ending response");
+
+            response.end();
+          }
+          else
+          {
+            response._sendBody();
+          }
+        },
+
+        QueryInterface: function(aIID)
+        {
+          if (aIID.equals(Ci.nsIRequestObserver) || aIID.equals(Ci.nsISupports))
+            return this;
+
+          throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+        }
+      };
+=======
+    var copyObserver = {
+      onStartRequest(request) {
+        dumpn("*** preamble copying started");
+      },
+
+      onStopRequest(request, statusCode) {
+        dumpn(
+          "*** preamble copying complete " +
+            "[status=0x" +
+            statusCode.toString(16) +
+            "]"
+        );
+
+        if (!Components.isSuccessCode(statusCode)) {
+          dumpn(
+            "!!! header copying problems: non-success statusCode, " +
+              "ending response"
+          );
+
+          response.end();
+        } else {
+          response._sendBody();
+        }
+      },
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     this._asyncCopier =
       new WriteThroughCopier(responseHeadPipe.inputStream,
                              this._connection.output,
                              copyObserver, null);
+||||||| merged common ancestors
+    var headerCopier = this._asyncCopier =
+      new WriteThroughCopier(responseHeadPipe.inputStream,
+                             this._connection.output,
+                             copyObserver, null);
+=======
+      QueryInterface: ChromeUtils.generateQI(["nsIRequestObserver"]),
+    };
+
+    this._asyncCopier = new WriteThroughCopier(
+      responseHeadPipe.inputStream,
+      this._connection.output,
+      copyObserver,
+      null
+    );
+>>>>>>> upstream-releases
 
     responseHeadPipe.outputStream.close();
 
@@ -3755,6 +5624,7 @@ Response.prototype =
     }
 
     var response = this;
+<<<<<<< HEAD
     var copyObserver =
       {
         onStartRequest(request, context) {
@@ -3771,16 +5641,77 @@ Response.prototype =
               dumpn("*** WARNING: non-success statusCode in onStopRequest");
 
             response.end();
+||||||| merged common ancestors
+    var copyObserver =
+      {
+        onStartRequest: function(request, context)
+        {
+          dumpn("*** onStartRequest");
+        },
+
+        onStopRequest: function(request, cx, statusCode)
+        {
+          dumpn("*** onStopRequest [status=0x" + statusCode.toString(16) + "]");
+
+          if (statusCode === Cr.NS_BINDING_ABORTED)
+          {
+            dumpn("*** terminating copy observer without ending the response");
           }
+          else
+          {
+            if (!Components.isSuccessCode(statusCode))
+              dumpn("*** WARNING: non-success statusCode in onStopRequest");
+
+            response.end();
+=======
+    var copyObserver = {
+      onStartRequest(request) {
+        dumpn("*** onStartRequest");
+      },
+
+      onStopRequest(request, statusCode) {
+        dumpn("*** onStopRequest [status=0x" + statusCode.toString(16) + "]");
+
+        if (statusCode === Cr.NS_BINDING_ABORTED) {
+          dumpn("*** terminating copy observer without ending the response");
+        } else {
+          if (!Components.isSuccessCode(statusCode)) {
+            dumpn("*** WARNING: non-success statusCode in onStopRequest");
+>>>>>>> upstream-releases
+          }
+<<<<<<< HEAD
         },
 
         QueryInterface: ChromeUtils.generateQI(["nsIRequestObserver"]),
       };
+||||||| merged common ancestors
+        },
+
+        QueryInterface: function(aIID)
+        {
+          if (aIID.equals(Ci.nsIRequestObserver) || aIID.equals(Ci.nsISupports))
+            return this;
+
+          throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+        }
+      };
+=======
+
+          response.end();
+        }
+      },
+
+      QueryInterface: ChromeUtils.generateQI(["nsIRequestObserver"]),
+    };
+>>>>>>> upstream-releases
 
     dumpn("*** starting async copier of body data...");
-    this._asyncCopier =
-      new WriteThroughCopier(this._bodyInputStream, this._connection.output,
-                            copyObserver, null);
+    this._asyncCopier = new WriteThroughCopier(
+      this._bodyInputStream,
+      this._connection.output,
+      copyObserver,
+      null
+    );
   },
 
   /** Ensures that this hasn't been ended. */
@@ -3801,15 +5732,41 @@ function notImplemented() {
 }
 
 /** Returns true iff the given exception represents stream closure. */
+<<<<<<< HEAD
 function streamClosed(e) {
   return e === Cr.NS_BASE_STREAM_CLOSED ||
          (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_CLOSED);
+||||||| merged common ancestors
+function streamClosed(e)
+{
+  return e === Cr.NS_BASE_STREAM_CLOSED ||
+         (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_CLOSED);
+=======
+function streamClosed(e) {
+  return (
+    e === Cr.NS_BASE_STREAM_CLOSED ||
+    (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_CLOSED)
+  );
+>>>>>>> upstream-releases
 }
 
 /** Returns true iff the given exception represents a blocked stream. */
+<<<<<<< HEAD
 function wouldBlock(e) {
   return e === Cr.NS_BASE_STREAM_WOULD_BLOCK ||
          (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_WOULD_BLOCK);
+||||||| merged common ancestors
+function wouldBlock(e)
+{
+  return e === Cr.NS_BASE_STREAM_WOULD_BLOCK ||
+         (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_WOULD_BLOCK);
+=======
+function wouldBlock(e) {
+  return (
+    e === Cr.NS_BASE_STREAM_WOULD_BLOCK ||
+    (typeof e === "object" && e.result === Cr.NS_BASE_STREAM_WOULD_BLOCK)
+  );
+>>>>>>> upstream-releases
 }
 
 /**
@@ -3827,9 +5784,19 @@ function wouldBlock(e) {
  * @throws NS_ERROR_NULL_POINTER
  *   if source, sink, or observer are null
  */
+<<<<<<< HEAD
 function WriteThroughCopier(source, sink, observer, context) {
   if (!source || !sink || !observer)
+||||||| merged common ancestors
+function WriteThroughCopier(source, sink, observer, context)
+{
+  if (!source || !sink || !observer)
+=======
+function WriteThroughCopier(source, sink, observer, context) {
+  if (!source || !sink || !observer) {
+>>>>>>> upstream-releases
     throw Components.Exception("", Cr.NS_ERROR_NULL_POINTER);
+  }
 
   /** Stream from which data is being read. */
   this._source = source;
@@ -3869,23 +5836,68 @@ function WriteThroughCopier(source, sink, observer, context) {
   this._pendingData = [];
 
   // start copying
+<<<<<<< HEAD
   try {
     observer.onStartRequest(this, context);
+||||||| merged common ancestors
+  try
+  {
+    observer.onStartRequest(this, context);
+=======
+  try {
+    observer.onStartRequest(this);
+>>>>>>> upstream-releases
     this._waitToReadData();
     this._waitForSinkClosure();
+<<<<<<< HEAD
   } catch (e) {
     dumpn("!!! error starting copy: " + e +
           ("lineNumber" in e ? ", line " + e.lineNumber : ""));
+||||||| merged common ancestors
+  }
+  catch (e)
+  {
+    dumpn("!!! error starting copy: " + e +
+          ("lineNumber" in e ? ", line " + e.lineNumber : ""));
+=======
+  } catch (e) {
+    dumpn(
+      "!!! error starting copy: " +
+        e +
+        ("lineNumber" in e ? ", line " + e.lineNumber : "")
+    );
+>>>>>>> upstream-releases
     dumpn(e.stack);
     this.cancel(Cr.NS_ERROR_UNEXPECTED);
   }
 }
-WriteThroughCopier.prototype =
-{
+WriteThroughCopier.prototype = {
   /* nsISupports implementation */
 
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIInputStreamCallback", "nsIOutputStreamCallback", "nsIRequest"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(iid)
+  {
+    if (iid.equals(Ci.nsIInputStreamCallback) ||
+        iid.equals(Ci.nsIOutputStreamCallback) ||
+        iid.equals(Ci.nsIRequest) ||
+        iid.equals(Ci.nsISupports))
+    {
+      return this;
+    }
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI([
+    "nsIInputStreamCallback",
+    "nsIOutputStreamCallback",
+    "nsIRequest",
+  ]),
+>>>>>>> upstream-releases
 
   // NSIINPUTSTREAMCALLBACK
 
@@ -3896,9 +5908,19 @@ WriteThroughCopier.prototype =
    * @param input : nsIAsyncInputStream
    *   the input stream on whose data we have been waiting
    */
+<<<<<<< HEAD
   onInputStreamReady(input) {
     if (this._source === null)
+||||||| merged common ancestors
+  onInputStreamReady: function(input)
+  {
+    if (this._source === null)
+=======
+  onInputStreamReady(input) {
+    if (this._source === null) {
+>>>>>>> upstream-releases
       return;
+    }
 
     dumpn("*** onInputStreamReady");
 
@@ -3924,8 +5946,18 @@ WriteThroughCopier.prototype =
     //     with the result NS_ERROR_UNEXPECTED.
     //
 
+<<<<<<< HEAD
     var bytesWanted = 0, bytesConsumed = -1;
     try {
+||||||| merged common ancestors
+    var bytesWanted = 0, bytesConsumed = -1;
+    try
+    {
+=======
+    var bytesWanted = 0,
+      bytesConsumed = -1;
+    try {
+>>>>>>> upstream-releases
       input = new BinaryInputStream(input);
 
       bytesWanted = Math.min(input.available(), Response.SEGMENT_SIZE);
@@ -3941,14 +5973,35 @@ WriteThroughCopier.prototype =
 
       // Handle the zero-data edge case in the same place as all other edge
       // cases are handled.
-      if (bytesWanted === 0)
+      if (bytesWanted === 0) {
         throw Components.Exception("", Cr.NS_BASE_STREAM_CLOSED);
+<<<<<<< HEAD
     } catch (e) {
       let rv;
       if (streamClosed(e)) {
         dumpn("*** input stream closed");
         rv = bytesWanted === 0 ? Cr.NS_OK : Cr.NS_ERROR_UNEXPECTED;
       } else {
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+      if (streamClosed(e))
+      {
+        dumpn("*** input stream closed");
+        e = bytesWanted === 0 ? Cr.NS_OK : Cr.NS_ERROR_UNEXPECTED;
+      }
+      else
+      {
+=======
+      }
+    } catch (e) {
+      let rv;
+      if (streamClosed(e)) {
+        dumpn("*** input stream closed");
+        rv = bytesWanted === 0 ? Cr.NS_OK : Cr.NS_ERROR_UNEXPECTED;
+      } else {
+>>>>>>> upstream-releases
         dumpn("!!! unexpected error reading from input, canceling: " + e);
         rv = Cr.NS_ERROR_UNEXPECTED;
       }
@@ -3961,8 +6014,10 @@ WriteThroughCopier.prototype =
 
     NS_ASSERT(bytesConsumed > 0);
     NS_ASSERT(pendingData.length > 0, "no pending data somehow?");
-    NS_ASSERT(pendingData[pendingData.length - 1].length > 0,
-              "buffered zero bytes of data?");
+    NS_ASSERT(
+      pendingData[pendingData.length - 1].length > 0,
+      "buffered zero bytes of data?"
+    );
 
     NS_ASSERT(this._source !== null);
 
@@ -3980,12 +6035,37 @@ WriteThroughCopier.prototype =
     // need to queue up the data to be written, but *only* if none is queued
     // already -- if data's already queued, the code that actually writes the
     // data will make sure to wait on unconsumed pending data.
+<<<<<<< HEAD
     try {
       if (pendingData.length === 1)
+||||||| merged common ancestors
+    try
+    {
+      if (pendingData.length === 1)
+=======
+    try {
+      if (pendingData.length === 1) {
+>>>>>>> upstream-releases
         this._waitToWriteData();
+<<<<<<< HEAD
     } catch (e) {
       dumpn("!!! error waiting to write data just read, swallowing and " +
             "writing only what we already have: " + e);
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+      dumpn("!!! error waiting to write data just read, swallowing and " +
+            "writing only what we already have: " + e);
+=======
+      }
+    } catch (e) {
+      dumpn(
+        "!!! error waiting to write data just read, swallowing and " +
+          "writing only what we already have: " +
+          e
+      );
+>>>>>>> upstream-releases
       this._doneWritingToSink(Cr.NS_ERROR_UNEXPECTED);
       return;
     }
@@ -4000,7 +6080,6 @@ WriteThroughCopier.prototype =
     }
   },
 
-
   // NSIOUTPUTSTREAMCALLBACK
 
   /**
@@ -4011,9 +6090,19 @@ WriteThroughCopier.prototype =
    *   the output stream on whose writability we've been waiting, also known as
    *   this._sink
    */
+<<<<<<< HEAD
   onOutputStreamReady(output) {
     if (this._sink === null)
+||||||| merged common ancestors
+  onOutputStreamReady: function(output)
+  {
+    if (this._sink === null)
+=======
+  onOutputStreamReady(output) {
+    if (this._sink === null) {
+>>>>>>> upstream-releases
       return;
+    }
 
     dumpn("*** onOutputStreamReady");
 
@@ -4030,7 +6119,6 @@ WriteThroughCopier.prototype =
       this._doneWritingToSink(Cr.NS_ERROR_UNEXPECTED);
       return;
     }
-
 
     NS_ASSERT(pendingData[0].length > 0, "queued up an empty quantum?");
 
@@ -4057,26 +6145,51 @@ WriteThroughCopier.prototype =
       //     is unusably broken for asynchronous output streams; see bug 532834
       //     for details.
       var bytesWritten = output.write(quantum, quantum.length);
-      if (bytesWritten === quantum.length)
+      if (bytesWritten === quantum.length) {
         pendingData.shift();
-      else
+      } else {
         pendingData[0] = quantum.substring(bytesWritten);
+      }
 
       dumpn("*** wrote " + bytesWritten + " bytes of data");
+<<<<<<< HEAD
     } catch (e) {
       if (wouldBlock(e)) {
         NS_ASSERT(pendingData.length > 0,
                   "stream-blocking exception with no data to write?");
         NS_ASSERT(pendingData[0].length > 0,
                   "stream-blocking exception with empty quantum?");
+||||||| merged common ancestors
+    }
+    catch (e)
+    {
+      if (wouldBlock(e))
+      {
+        NS_ASSERT(pendingData.length > 0,
+                  "stream-blocking exception with no data to write?");
+        NS_ASSERT(pendingData[0].length > 0,
+                  "stream-blocking exception with empty quantum?");
+=======
+    } catch (e) {
+      if (wouldBlock(e)) {
+        NS_ASSERT(
+          pendingData.length > 0,
+          "stream-blocking exception with no data to write?"
+        );
+        NS_ASSERT(
+          pendingData[0].length > 0,
+          "stream-blocking exception with empty quantum?"
+        );
+>>>>>>> upstream-releases
         this._waitToWriteData();
         return;
       }
 
-      if (streamClosed(e))
+      if (streamClosed(e)) {
         dumpn("!!! output stream prematurely closed, signaling error...");
-      else
+      } else {
         dumpn("!!! unknown error: " + e + ", quantum=" + quantum);
+      }
 
       this._doneWritingToSink(Cr.NS_ERROR_UNEXPECTED);
       return;
@@ -4105,8 +6218,18 @@ WriteThroughCopier.prototype =
        * reason if over time the output stream permitted more and more data to
        * be written to it without blocking.)
        */
+<<<<<<< HEAD
        this._waitForSinkClosure();
     } else {
+||||||| merged common ancestors
+       this._waitForSinkClosure();
+    }
+    else
+    {
+=======
+      this._waitForSinkClosure();
+    } else {
+>>>>>>> upstream-releases
       /*
        * On the other hand, if we can't have more data because the input
        * stream's gone away, then it's time to notify of copy completion.
@@ -4116,7 +6239,6 @@ WriteThroughCopier.prototype =
       this._cancelOrDispatchCancelCallback(Cr.NS_OK);
     }
   },
-
 
   // NSIREQUEST
 
@@ -4159,7 +6281,6 @@ WriteThroughCopier.prototype =
     this._doneReadingSource(status);
   },
 
-
   // PRIVATE IMPLEMENTATION
 
   /**
@@ -4174,10 +6295,11 @@ WriteThroughCopier.prototype =
     dumpn("*** _doneReadingSource(0x" + e.toString(16) + ")");
 
     this._finishSource(e);
-    if (this._pendingData.length === 0)
+    if (this._pendingData.length === 0) {
       this._sink = null;
-    else
+    } else {
       NS_ASSERT(this._sink !== null, "null output?");
+    }
 
     // If we've written out all data read up to this point, then it's time to
     // signal completion.
@@ -4226,6 +6348,7 @@ WriteThroughCopier.prototype =
     }
 
     var self = this;
+<<<<<<< HEAD
     var event =
       {
         run() {
@@ -4241,6 +6364,45 @@ WriteThroughCopier.prototype =
           }
         },
       };
+||||||| merged common ancestors
+    var event =
+      {
+        run: function()
+        {
+          dumpn("*** onStopRequest async callback");
+
+          self._completed = true;
+          try
+          {
+            self._observer.onStopRequest(self, self._context, self.status);
+          }
+          catch (e)
+          {
+            NS_ASSERT(false,
+                      "how are we throwing an exception here?  we control " +
+                      "all the callers!  " + e);
+          }
+        }
+      };
+=======
+    var event = {
+      run() {
+        dumpn("*** onStopRequest async callback");
+
+        self._completed = true;
+        try {
+          self._observer.onStopRequest(self, self.status);
+        } catch (e) {
+          NS_ASSERT(
+            false,
+            "how are we throwing an exception here?  we control " +
+              "all the callers!  " +
+              e
+          );
+        }
+      },
+    };
+>>>>>>> upstream-releases
 
     gThreadManager.currentThread.dispatch(event, Ci.nsIThread.DISPATCH_NORMAL);
   },
@@ -4250,8 +6412,12 @@ WriteThroughCopier.prototype =
    */
   _waitToReadData() {
     dumpn("*** _waitToReadData");
-    this._source.asyncWait(this, 0, Response.SEGMENT_SIZE,
-                           gThreadManager.mainThread);
+    this._source.asyncWait(
+      this,
+      0,
+      Response.SEGMENT_SIZE,
+      gThreadManager.mainThread
+    );
   },
 
   /**
@@ -4264,8 +6430,12 @@ WriteThroughCopier.prototype =
     NS_ASSERT(pendingData.length > 0, "no pending data to write?");
     NS_ASSERT(pendingData[0].length > 0, "buffered an empty write?");
 
-    this._sink.asyncWait(this, 0, pendingData[0].length,
-                         gThreadManager.mainThread);
+    this._sink.asyncWait(
+      this,
+      0,
+      pendingData[0].length,
+      gThreadManager.mainThread
+    );
   },
 
   /**
@@ -4282,8 +6452,12 @@ WriteThroughCopier.prototype =
   _waitForSinkClosure() {
     dumpn("*** _waitForSinkClosure");
 
-    this._sink.asyncWait(this, Ci.nsIAsyncOutputStream.WAIT_CLOSURE_ONLY, 0,
-                         gThreadManager.mainThread);
+    this._sink.asyncWait(
+      this,
+      Ci.nsIAsyncOutputStream.WAIT_CLOSURE_ONLY,
+      0,
+      gThreadManager.mainThread
+    );
   },
 
   /**
@@ -4303,12 +6477,10 @@ WriteThroughCopier.prototype =
   },
 };
 
-
 /**
  * A container for utility functions used with HTTP headers.
  */
-const headerUtils =
-{
+const headerUtils = {
   /**
    * Normalizes fieldName (by converting it to lowercase) and ensures it is a
    * valid header field name (although not necessarily one specified in RFC
@@ -4373,11 +6545,21 @@ const headerUtils =
 
     // that should have taken care of all CTLs, so val should contain no CTLs
     dumpn("*** Normalized value: '" + val + "'");
+<<<<<<< HEAD
     for (var i = 0, len = val.length; i < len; i++)
       if (isCTL(val.charCodeAt(i))) {
+||||||| merged common ancestors
+    for (var i = 0, len = val.length; i < len; i++)
+      if (isCTL(val.charCodeAt(i)))
+      {
+=======
+    for (var i = 0, len = val.length; i < len; i++) {
+      if (isCTL(val.charCodeAt(i))) {
+>>>>>>> upstream-releases
         dump("*** Char " + i + " has charcode " + val.charCodeAt(i));
         throw Components.Exception("", Cr.NS_ERROR_INVALID_ARG);
       }
+    }
 
     // XXX disallows quoted-pair where CHAR is a CTL -- will not invalidly
     //     normalize, however, so this can be construed as a tightening of the
@@ -4385,8 +6567,6 @@ const headerUtils =
     return val;
   },
 };
-
-
 
 /**
  * Converts the given string into a string which is safe for use in an HTML
@@ -4400,11 +6580,11 @@ const headerUtils =
 function htmlEscape(str) {
   // this is naive, but it'll work
   var s = "";
-  for (var i = 0; i < str.length; i++)
+  for (var i = 0; i < str.length; i++) {
     s += "&#" + str.charCodeAt(i) + ";";
+  }
   return s;
 }
-
 
 /**
  * Constructs an object representing an HTTP version (see section 3.1).
@@ -4417,8 +6597,9 @@ function htmlEscape(str) {
  */
 function nsHttpVersion(versionString) {
   var matches = /^(\d+)\.(\d+)$/.exec(versionString);
-  if (!matches)
-    throw "Not a valid HTTP version!";
+  if (!matches) {
+    throw new Error("Not a valid HTTP version!");
+  }
 
   /** The major version number of this, as a number. */
   this.major = parseInt(matches[1], 10);
@@ -4426,12 +6607,26 @@ function nsHttpVersion(versionString) {
   /** The minor version number of this, as a number. */
   this.minor = parseInt(matches[2], 10);
 
+<<<<<<< HEAD
   if (isNaN(this.major) || isNaN(this.minor) ||
       this.major < 0 || this.minor < 0)
     throw "Not a valid HTTP version!";
+||||||| merged common ancestors
+  if (isNaN(this.major) || isNaN(this.minor) ||
+      this.major < 0    || this.minor < 0)
+    throw "Not a valid HTTP version!";
+=======
+  if (
+    isNaN(this.major) ||
+    isNaN(this.minor) ||
+    this.major < 0 ||
+    this.minor < 0
+  ) {
+    throw new Error("Not a valid HTTP version!");
+  }
+>>>>>>> upstream-releases
 }
-nsHttpVersion.prototype =
-{
+nsHttpVersion.prototype = {
   /**
    * Returns the standard string representation of the HTTP version represented
    * by this (e.g., "1.1").
@@ -4447,22 +6642,47 @@ nsHttpVersion.prototype =
    * @param otherVersion : nsHttpVersion
    *   the version to compare against this
    */
+<<<<<<< HEAD
   equals(otherVersion) {
     return this.major == otherVersion.major &&
            this.minor == otherVersion.minor;
+||||||| merged common ancestors
+  equals: function (otherVersion)
+  {
+    return this.major == otherVersion.major &&
+           this.minor == otherVersion.minor;
+=======
+  equals(otherVersion) {
+    return this.major == otherVersion.major && this.minor == otherVersion.minor;
+>>>>>>> upstream-releases
   },
 
   /** True if this >= otherVersion, false otherwise. */
+<<<<<<< HEAD
   atLeast(otherVersion) {
     return this.major > otherVersion.major ||
            (this.major == otherVersion.major &&
             this.minor >= otherVersion.minor);
   },
+||||||| merged common ancestors
+  atLeast: function(otherVersion)
+  {
+    return this.major > otherVersion.major ||
+           (this.major == otherVersion.major &&
+            this.minor >= otherVersion.minor);
+  }
+=======
+  atLeast(otherVersion) {
+    return (
+      this.major > otherVersion.major ||
+      (this.major == otherVersion.major && this.minor >= otherVersion.minor)
+    );
+  },
+>>>>>>> upstream-releases
 };
 
 nsHttpVersion.HTTP_1_0 = new nsHttpVersion("1.0");
 nsHttpVersion.HTTP_1_1 = new nsHttpVersion("1.1");
-
 
 /**
  * An object which stores HTTP headers for a request or response.
@@ -4488,8 +6708,7 @@ function nsHttpHeaders() {
    */
   this._headers = {};
 }
-nsHttpHeaders.prototype =
-{
+nsHttpHeaders.prototype = {
   /**
    * Sets the header represented by name and value in this.
    *
@@ -4507,15 +6726,41 @@ nsHttpHeaders.prototype =
     // The following three headers are stored as arrays because their real-world
     // syntax prevents joining individual headers into a single header using
     // ",".  See also <https://hg.mozilla.org/mozilla-central/diff/9b2a99adc05e/netwerk/protocol/http/src/nsHttpHeaderArray.cpp#l77>
+<<<<<<< HEAD
     if (merge && name in this._headers) {
       if (name === "www-authenticate" ||
           name === "proxy-authenticate" ||
           name === "set-cookie") {
+||||||| merged common ancestors
+    if (merge && name in this._headers)
+    {
+      if (name === "www-authenticate" ||
+          name === "proxy-authenticate" ||
+          name === "set-cookie") 
+      {
+=======
+    if (merge && name in this._headers) {
+      if (
+        name === "www-authenticate" ||
+        name === "proxy-authenticate" ||
+        name === "set-cookie"
+      ) {
+>>>>>>> upstream-releases
         this._headers[name].push(value);
       } else {
         this._headers[name][0] += "," + value;
+<<<<<<< HEAD
         NS_ASSERT(this._headers[name].length === 1,
             "how'd a non-special header have multiple values?");
+||||||| merged common ancestors
+        NS_ASSERT(this._headers[name].length === 1,
+            "how'd a non-special header have multiple values?")
+=======
+        NS_ASSERT(
+          this._headers[name].length === 1,
+          "how'd a non-special header have multiple values?"
+        );
+>>>>>>> upstream-releases
       }
     } else {
       this._headers[name] = [value];
@@ -4570,9 +6815,17 @@ nsHttpHeaders.prototype =
   getHeaderValues(fieldName) {
     var name = headerUtils.normalizeFieldName(fieldName);
 
-    if (name in this._headers)
+    if (name in this._headers) {
       return this._headers[name];
+<<<<<<< HEAD
     throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+||||||| merged common ancestors
+    else
+      throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+=======
+    }
+    throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+>>>>>>> upstream-releases
   },
 
   /**
@@ -4588,7 +6841,7 @@ nsHttpHeaders.prototype =
    */
   hasHeader(fieldName) {
     var name = headerUtils.normalizeFieldName(fieldName);
-    return (name in this._headers);
+    return name in this._headers;
   },
 
   /**
@@ -4609,7 +6862,6 @@ nsHttpHeaders.prototype =
   },
 };
 
-
 /**
  * Constructs an nsISimpleEnumerator for the given array of items.
  *
@@ -4620,14 +6872,34 @@ function nsSimpleEnumerator(items) {
   this._items = items;
   this._nextIndex = 0;
 }
+<<<<<<< HEAD
 nsSimpleEnumerator.prototype =
 {
   hasMoreElements() {
+||||||| merged common ancestors
+nsSimpleEnumerator.prototype =
+{
+  hasMoreElements: function()
+  {
+=======
+nsSimpleEnumerator.prototype = {
+  hasMoreElements() {
+>>>>>>> upstream-releases
     return this._nextIndex < this._items.length;
   },
+<<<<<<< HEAD
   getNext() {
     if (!this.hasMoreElements())
+||||||| merged common ancestors
+  getNext: function()
+  {
+    if (!this.hasMoreElements())
+=======
+  getNext() {
+    if (!this.hasMoreElements()) {
+>>>>>>> upstream-releases
       throw Components.Exception("", Cr.NS_ERROR_NOT_AVAILABLE);
+    }
 
     return this._items[this._nextIndex++];
   },
@@ -4636,7 +6908,6 @@ nsSimpleEnumerator.prototype =
   },
   QueryInterface: ChromeUtils.generateQI(["nsISimpleEnumerator"]),
 };
-
 
 /**
  * A representation of the data in an HTTP request.
@@ -4683,8 +6954,7 @@ function Request(port) {
    */
   this._bag = null;
 }
-Request.prototype =
-{
+Request.prototype = {
   // SERVER METADATA
 
   //
@@ -4784,22 +7054,50 @@ Request.prototype =
     return this._bag.getProperty(name);
   },
 
-
   // NSISUPPORTS
 
   //
   // see nsISupports.QueryInterface
   //
+<<<<<<< HEAD
   QueryInterface: ChromeUtils.generateQI(["nsIHttpRequest"]),
 
+||||||| merged common ancestors
+  QueryInterface: function(iid)
+  {
+    if (iid.equals(Ci.nsIHttpRequest) || iid.equals(Ci.nsISupports))
+      return this;
+
+    throw Components.Exception("", Cr.NS_ERROR_NO_INTERFACE);
+  },
+
+=======
+  QueryInterface: ChromeUtils.generateQI(["nsIHttpRequest"]),
+>>>>>>> upstream-releases
 
   // PRIVATE IMPLEMENTATION
 
   /** Ensures a property bag has been created for ad-hoc behaviors. */
+<<<<<<< HEAD
   _ensurePropertyBag() {
     if (!this._bag)
+||||||| merged common ancestors
+  _ensurePropertyBag: function()
+  {
+    if (!this._bag)
+=======
+  _ensurePropertyBag() {
+    if (!this._bag) {
+>>>>>>> upstream-releases
       this._bag = new WritablePropertyBag();
+<<<<<<< HEAD
   },
+||||||| merged common ancestors
+  }
+=======
+    }
+  },
+>>>>>>> upstream-releases
 };
 
 /**
@@ -4829,10 +7127,23 @@ Request.prototype =
  *   /home/jwalden/index.html); if this is omitted, only the default URLs in
  *   this server implementation will be functional
  */
+<<<<<<< HEAD
 function server(port, basePath) {
   if (basePath) {
     var lp = Cc["@mozilla.org/file/local;1"]
                .createInstance(Ci.nsIFile);
+||||||| merged common ancestors
+function server(port, basePath)
+{
+  if (basePath)
+  {
+    var lp = Cc["@mozilla.org/file/local;1"]
+               .createInstance(Ci.nsIFile);
+=======
+function server(port, basePath) {
+  if (basePath) {
+    var lp = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
+>>>>>>> upstream-releases
     lp.initWithPath(basePath);
   }
 
@@ -4840,19 +7151,22 @@ function server(port, basePath) {
   DEBUG = true;
 
   var srv = new nsHttpServer();
-  if (lp)
+  if (lp) {
     srv.registerDirectory("/", lp);
+  }
   srv.registerContentType("sjs", SJS_TYPE);
   srv.identity.setPrimary("http", "localhost", port);
   srv.start(port);
 
   var thread = gThreadManager.currentThread;
-  while (!srv.isStopped())
+  while (!srv.isStopped()) {
     thread.processNextEvent(true);
+  }
 
   // get rid of any pending requests
-  while (thread.hasPendingEvents())
+  while (thread.hasPendingEvents()) {
     thread.processNextEvent(true);
+  }
 
   DEBUG = false;
 }

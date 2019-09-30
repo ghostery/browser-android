@@ -44,43 +44,156 @@ class PluginScriptableObjectChild : public PPluginScriptableObjectChild {
 
   void InitializeLocal(NPObject* aObject);
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerInvalidate() override;
+||||||| merged common ancestors
+=======
+  mozilla::ipc::IPCResult AnswerInvalidate();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerHasMethod(const PluginIdentifier& aId,
                                                   bool* aHasMethod) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerInvalidate() override;
+=======
+  mozilla::ipc::IPCResult AnswerHasMethod(const PluginIdentifier& aId,
+                                          bool* aHasMethod);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerInvoke(
       const PluginIdentifier& aId, InfallibleTArray<Variant>&& aArgs,
       Variant* aResult, bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerHasMethod(const PluginIdentifier& aId,
+                  bool* aHasMethod) override;
+=======
+  mozilla::ipc::IPCResult AnswerInvoke(const PluginIdentifier& aId,
+                                       InfallibleTArray<Variant>&& aArgs,
+                                       Variant* aResult, bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerInvokeDefault(
       InfallibleTArray<Variant>&& aArgs, Variant* aResult,
       bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerInvoke(const PluginIdentifier& aId,
+               InfallibleTArray<Variant>&& aArgs,
+               Variant* aResult,
+               bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerInvokeDefault(InfallibleTArray<Variant>&& aArgs,
+                                              Variant* aResult, bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerHasProperty(
       const PluginIdentifier& aId, bool* aHasProperty) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerInvokeDefault(InfallibleTArray<Variant>&& aArgs,
+                      Variant* aResult,
+                      bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerHasProperty(const PluginIdentifier& aId,
+                                            bool* aHasProperty);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerGetChildProperty(
       const PluginIdentifier& aId, bool* aHasProperty, bool* aHasMethod,
       Variant* aResult, bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerHasProperty(const PluginIdentifier& aId,
+                    bool* aHasProperty) override;
+=======
+  mozilla::ipc::IPCResult AnswerGetChildProperty(const PluginIdentifier& aId,
+                                                 bool* aHasProperty,
+                                                 bool* aHasMethod,
+                                                 Variant* aResult,
+                                                 bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerSetProperty(const PluginIdentifier& aId,
                                                     const Variant& aValue,
                                                     bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerGetChildProperty(const PluginIdentifier& aId,
+                         bool* aHasProperty,
+                         bool* aHasMethod,
+                         Variant* aResult,
+                         bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerSetProperty(const PluginIdentifier& aId,
+                                            const Variant& aValue,
+                                            bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerRemoveProperty(
       const PluginIdentifier& aId, bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerSetProperty(const PluginIdentifier& aId,
+                    const Variant& aValue,
+                    bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerRemoveProperty(const PluginIdentifier& aId,
+                                               bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerEnumerate(
       InfallibleTArray<PluginIdentifier>* aProperties, bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerRemoveProperty(const PluginIdentifier& aId,
+                       bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerEnumerate(
+      InfallibleTArray<PluginIdentifier>* aProperties, bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult AnswerConstruct(
       InfallibleTArray<Variant>&& aArgs, Variant* aResult,
       bool* aSuccess) override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerEnumerate(InfallibleTArray<PluginIdentifier>* aProperties,
+                  bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult AnswerConstruct(InfallibleTArray<Variant>&& aArgs,
+                                          Variant* aResult, bool* aSuccess);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvProtect() override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  AnswerConstruct(InfallibleTArray<Variant>&& aArgs,
+                  Variant* aResult,
+                  bool* aSuccess) override;
+=======
+  mozilla::ipc::IPCResult RecvProtect();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual mozilla::ipc::IPCResult RecvUnprotect() override;
+||||||| merged common ancestors
+  virtual mozilla::ipc::IPCResult
+  RecvProtect() override;
+=======
+  mozilla::ipc::IPCResult RecvUnprotect();
+>>>>>>> upstream-releases
 
   NPObject* GetObject(bool aCanResurrect);
 

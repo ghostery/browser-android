@@ -109,8 +109,15 @@ class AttrArray {
   const nsMappedAttributes* GetMapped() const;
 
   // Force this to have mapped attributes, even if those attributes are empty.
+<<<<<<< HEAD
   nsresult ForceMapped(nsMappedAttributeElement* aContent,
                        nsIDocument* aDocument);
+||||||| merged common ancestors
+  nsresult ForceMapped(nsMappedAttributeElement* aContent, nsIDocument* aDocument);
+=======
+  nsresult ForceMapped(nsMappedAttributeElement* aContent,
+                       mozilla::dom::Document* aDocument);
+>>>>>>> upstream-releases
 
   // Clear the servo declaration block on the mapped attributes, if any
   // Will assert off main thread
@@ -167,10 +174,21 @@ class AttrArray {
   nsresult DoUpdateMappedAttrRuleMapper(nsMappedAttributeElement& aElement);
 
 #ifdef _MSC_VER
+<<<<<<< HEAD
 // Disable MSVC warning 'nonstandard extension used: zero-sized array in
 // struct/union'
 #pragma warning(push)
 #pragma warning(disable : 4200)
+||||||| merged common ancestors
+// Disable MSVC warning 'nonstandard extension used: zero-sized array in struct/union'
+#pragma warning(push)
+#pragma warning(disable:4200)
+=======
+// Disable MSVC warning 'nonstandard extension used: zero-sized array in
+// struct/union'
+#  pragma warning(push)
+#  pragma warning(disable : 4200)
+>>>>>>> upstream-releases
 #endif
   class Impl {
    public:
@@ -201,7 +219,7 @@ class AttrArray {
     InternalAttr mBuffer[0];
   };
 #ifdef _MSC_VER
-#pragma warning(pop)
+#  pragma warning(pop)
 #endif
 
   mozilla::Span<InternalAttr> NonMappedAttrs() {

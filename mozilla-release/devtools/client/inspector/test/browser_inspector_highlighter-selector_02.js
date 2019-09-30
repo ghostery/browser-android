@@ -7,11 +7,13 @@
 // Test that the custom selector highlighter creates highlighters for nodes in
 // the right frame.
 
-const FRAME_SRC = "data:text/html;charset=utf-8," +
-  "<div class=sub-level-node></div>";
+const FRAME_SRC =
+  "data:text/html;charset=utf-8," + "<div class=sub-level-node></div>";
 
-const TEST_URL = "data:text/html;charset=utf-8," +
+const TEST_URL =
+  "data:text/html;charset=utf-8," +
   "<div class=root-level-node></div>" +
+<<<<<<< HEAD
   "<iframe src=\"" + FRAME_SRC + "\" />";
 
 const TEST_DATA = [{
@@ -29,17 +31,66 @@ const TEST_DATA = [{
   selector: ".sub-level-node",
   containerCount: 1,
 }];
+||||||| merged common ancestors
+  "<iframe src=\"" + FRAME_SRC + "\" />";
+
+const TEST_DATA = [{
+  selector: ".root-level-node",
+  containerCount: 1
+}, {
+  selector: ".sub-level-node",
+  containerCount: 0
+}, {
+  inIframe: true,
+  selector: ".root-level-node",
+  containerCount: 0
+}, {
+  inIframe: true,
+  selector: ".sub-level-node",
+  containerCount: 1
+}];
+=======
+  '<iframe src="' +
+  FRAME_SRC +
+  '" />';
+
+const TEST_DATA = [
+  {
+    selector: ".root-level-node",
+    containerCount: 1,
+  },
+  {
+    selector: ".sub-level-node",
+    containerCount: 0,
+  },
+  {
+    inIframe: true,
+    selector: ".root-level-node",
+    containerCount: 0,
+  },
+  {
+    inIframe: true,
+    selector: ".sub-level-node",
+    containerCount: 1,
+  },
+];
+>>>>>>> upstream-releases
 
 requestLongerTimeout(5);
 
 add_task(async function() {
-  const {inspector, testActor} = await openInspectorForURL(TEST_URL);
+  const { inspector, testActor } = await openInspectorForURL(TEST_URL);
   const front = inspector.inspector;
   const highlighter = await front.getHighlighterByType("SelectorHighlighter");
 
-  for (const {inIframe, selector, containerCount} of TEST_DATA) {
-    info("Showing the highlighter on " + selector + ". Expecting " +
-      containerCount + " highlighter containers");
+  for (const { inIframe, selector, containerCount } of TEST_DATA) {
+    info(
+      "Showing the highlighter on " +
+        selector +
+        ". Expecting " +
+        containerCount +
+        " highlighter containers"
+    );
 
     let contextNode;
     if (inIframe) {
@@ -48,7 +99,7 @@ add_task(async function() {
       contextNode = await getNodeFront("body", inspector);
     }
 
-    await highlighter.show(contextNode, {selector});
+    await highlighter.show(contextNode, { selector });
 
     const nb = await testActor.getSelectorHighlighterBoxNb(highlighter.actorID);
     ok(nb !== null, "The number of highlighters was retrieved");

@@ -197,14 +197,23 @@ class nsTString : public nsTSubstring<T> {
   template <typename Q = T, typename EnableIfChar16 = mozilla::Char16OnlyT<Q>>
   int32_t Find(const char_type* aString, int32_t aOffset = 0,
                int32_t aCount = -1) const;
-#ifdef MOZ_USE_CHAR16_WRAPPER
+#  ifdef MOZ_USE_CHAR16_WRAPPER
   template <typename Q = T, typename EnableIfChar16 = mozilla::Char16OnlyT<Q>>
   int32_t Find(char16ptr_t aString, int32_t aOffset = 0,
                int32_t aCount = -1) const {
     return Find(static_cast<const char16_t*>(aString), aOffset, aCount);
   }
+<<<<<<< HEAD
 #endif
 
+||||||| merged common ancestors
+#endif
+
+
+=======
+#  endif
+
+>>>>>>> upstream-releases
   /**
    * This methods scans the string backwards, looking for the given string
    *
@@ -322,6 +331,13 @@ class nsTString : public nsTSubstring<T> {
    * @return  single-precision float rep of string value
    */
   float ToFloat(nsresult* aErrorCode) const;
+
+  /**
+   * Similar to above ToDouble and ToFloat but allows trailing characters that
+   * are not converted.
+   */
+  double ToDoubleAllowTrailingChars(nsresult* aErrorCode) const;
+  float ToFloatAllowTrailingChars(nsresult* aErrorCode) const;
 
   /**
    * |Left|, |Mid|, and |Right| are annoying signatures that seem better almost
@@ -447,6 +463,7 @@ class nsTString : public nsTSubstring<T> {
   /**
    * verify restrictions for dependent strings
    */
+<<<<<<< HEAD
   void AssertValidDependentString() {
     NS_ASSERTION(this->mData, "nsTDependentString must wrap a non-NULL buffer");
     NS_ASSERTION(this->mLength != size_type(-1),
@@ -454,6 +471,24 @@ class nsTString : public nsTSubstring<T> {
     NS_ASSERTION(this->mData[substring_type::mLength] == 0,
                  "nsTDependentString must wrap only null-terminated strings. "
                  "You are probably looking for nsTDependentSubstring.");
+||||||| merged common ancestors
+  void AssertValidDependentString()
+  {
+    NS_ASSERTION(this->mData, "nsTDependentString must wrap a non-NULL buffer");
+    NS_ASSERTION(this->mLength != size_type(-1), "nsTDependentString has bogus length");
+    NS_ASSERTION(this->mData[substring_type::mLength] == 0,
+                 "nsTDependentString must wrap only null-terminated strings. "
+                 "You are probably looking for nsTDependentSubstring.");
+=======
+  void AssertValidDependentString() {
+    MOZ_ASSERT(this->mData, "nsTDependentString must wrap a non-NULL buffer");
+    MOZ_ASSERT(this->mLength != size_type(-1),
+               "nsTDependentString has bogus length");
+    MOZ_DIAGNOSTIC_ASSERT(this->mData[substring_type::mLength] == 0,
+                          "nsTDependentString must wrap only null-terminated "
+                          "strings.  You are probably looking for "
+                          "nsTDependentSubstring.");
+>>>>>>> upstream-releases
   }
 
  protected:
@@ -468,9 +503,28 @@ class nsTString : public nsTSubstring<T> {
 
   // Used by Null[C]String.
   explicit nsTString(DataFlags aDataFlags)
+<<<<<<< HEAD
       : substring_type(char_traits::sEmptyBuffer, 0,
                        aDataFlags | DataFlags::TERMINATED,
                        ClassFlags::NULL_TERMINATED) {}
+||||||| merged common ancestors
+    : substring_type(char_traits::sEmptyBuffer, 0,
+                     aDataFlags | DataFlags::TERMINATED,
+                     ClassFlags::NULL_TERMINATED)
+  {}
+=======
+      : substring_type(char_traits::sEmptyBuffer, 0,
+                       aDataFlags | DataFlags::TERMINATED,
+                       ClassFlags::NULL_TERMINATED) {}
+
+  enum class TrailingCharsPolicy {
+    Disallow,
+    Allow,
+  };
+  // Utility function for ToDouble and ToDoubleAllowTrailingChars.
+  double ToDouble(TrailingCharsPolicy aTrailingCharsPolicy,
+                  nsresult* aErrorCode) const;
+>>>>>>> upstream-releases
 
   struct Segment {
     uint32_t mBegin, mLength;

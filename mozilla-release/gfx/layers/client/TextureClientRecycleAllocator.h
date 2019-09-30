@@ -21,9 +21,20 @@ namespace layers {
 class TextureClientHolder;
 struct PlanarYCbCrData;
 
+<<<<<<< HEAD
 class ITextureClientRecycleAllocator {
  protected:
   virtual ~ITextureClientRecycleAllocator() {}
+||||||| merged common ancestors
+class ITextureClientRecycleAllocator
+{
+protected:
+  virtual ~ITextureClientRecycleAllocator() {}
+=======
+class ITextureClientRecycleAllocator {
+ protected:
+  virtual ~ITextureClientRecycleAllocator() = default;
+>>>>>>> upstream-releases
 
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ITextureClientRecycleAllocator)
@@ -58,9 +69,19 @@ class ITextureClientAllocationHelper {
   const TextureAllocationFlags mAllocationFlags;
 };
 
+<<<<<<< HEAD
 class YCbCrTextureClientAllocationHelper
     : public ITextureClientAllocationHelper {
  public:
+||||||| merged common ancestors
+class YCbCrTextureClientAllocationHelper : public ITextureClientAllocationHelper
+{
+public:
+=======
+class MOZ_RAII YCbCrTextureClientAllocationHelper
+    : public ITextureClientAllocationHelper {
+ public:
+>>>>>>> upstream-releases
   YCbCrTextureClientAllocationHelper(const PlanarYCbCrData& aData,
                                      TextureFlags aTextureFlags);
 

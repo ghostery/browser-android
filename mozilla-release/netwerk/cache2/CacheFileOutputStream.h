@@ -26,16 +26,26 @@ class CacheFileOutputStream : public nsIAsyncOutputStream,
   NS_DECL_NSISEEKABLESTREAM
   NS_DECL_NSITELLABLESTREAM
 
+<<<<<<< HEAD
  public:
   CacheFileOutputStream(CacheFile *aFile,
                         CacheOutputCloseListener *aCloseListener,
+||||||| merged common ancestors
+public:
+  CacheFileOutputStream(CacheFile *aFile,
+                        CacheOutputCloseListener *aCloseListener,
+=======
+ public:
+  CacheFileOutputStream(CacheFile* aFile,
+                        CacheOutputCloseListener* aCloseListener,
+>>>>>>> upstream-releases
                         bool aAlternativeData);
 
-  NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk *aChunk) override;
-  NS_IMETHOD OnChunkWritten(nsresult aResult, CacheFileChunk *aChunk) override;
+  NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk* aChunk) override;
+  NS_IMETHOD OnChunkWritten(nsresult aResult, CacheFileChunk* aChunk) override;
   NS_IMETHOD OnChunkAvailable(nsresult aResult, uint32_t aChunkIdx,
-                              CacheFileChunk *aChunk) override;
-  NS_IMETHOD OnChunkUpdated(CacheFileChunk *aChunk) override;
+                              CacheFileChunk* aChunk) override;
+  NS_IMETHOD OnChunkUpdated(CacheFileChunk* aChunk) override;
 
   void NotifyCloseListener();
   bool IsAlternativeData() const { return mAlternativeData; };

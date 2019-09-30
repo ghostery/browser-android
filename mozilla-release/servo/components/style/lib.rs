@@ -32,16 +32,28 @@ extern crate atomic_refcell;
 extern crate bitflags;
 #[allow(unused_extern_crates)]
 extern crate byteorder;
+<<<<<<< HEAD
 #[cfg(feature = "gecko")]
 #[macro_use]
 #[no_link]
 extern crate cfg_if;
 #[cfg(feature = "servo")]
 extern crate crossbeam_channel;
+||||||| merged common ancestors
+#[cfg(feature = "gecko")]
+#[macro_use]
+#[no_link]
+extern crate cfg_if;
+=======
+#[cfg(feature = "servo")]
+extern crate crossbeam_channel;
+>>>>>>> upstream-releases
 #[macro_use]
 extern crate cssparser;
 #[macro_use]
 extern crate debug_unreachable;
+#[macro_use]
+extern crate derive_more;
 extern crate euclid;
 extern crate fallible;
 extern crate fxhash;
@@ -52,6 +64,7 @@ extern crate hashglobe;
 #[cfg(feature = "servo")]
 #[macro_use]
 extern crate html5ever;
+extern crate indexmap;
 extern crate itertools;
 extern crate itoa;
 #[macro_use]
@@ -100,6 +113,9 @@ extern crate style_traits;
 #[cfg(feature = "gecko")]
 extern crate thin_slice;
 extern crate time;
+extern crate to_shmem;
+#[macro_use]
+extern crate to_shmem_derive;
 extern crate uluru;
 extern crate unicode_bidi;
 #[allow(unused_extern_crates)]
@@ -133,6 +149,7 @@ pub mod font_metrics;
 #[cfg(feature = "gecko")]
 #[allow(unsafe_code)]
 pub mod gecko_bindings;
+pub mod global_style_data;
 pub mod hash;
 pub mod invalidation;
 #[allow(missing_docs)] // TODO.
@@ -180,10 +197,22 @@ pub use crate::gecko_string_cache::Namespace;
 pub use html5ever::LocalName;
 #[cfg(feature = "servo")]
 pub use html5ever::Namespace;
+<<<<<<< HEAD
 #[cfg(feature = "servo")]
 pub use html5ever::Prefix;
 #[cfg(feature = "servo")]
 pub use servo_atoms::Atom;
+||||||| merged common ancestors
+=======
+#[cfg(feature = "servo")]
+pub use html5ever::Prefix;
+#[cfg(feature = "servo")]
+pub use servo_atoms::Atom;
+
+pub use style_traits::arc_slice::ArcSlice;
+pub use style_traits::owned_slice::OwnedSlice;
+pub use style_traits::owned_str::OwnedStr;
+>>>>>>> upstream-releases
 
 /// The CSS properties supported by the style system.
 /// Generated from the properties.mako.rs template by build.rs
@@ -242,5 +271,28 @@ impl CaseSensitivityExt for selectors::attr::CaseSensitivity {
             selectors::attr::CaseSensitivity::CaseSensitive => a == b,
             selectors::attr::CaseSensitivity::AsciiCaseInsensitive => a.eq_ignore_ascii_case(b),
         }
+    }
+}
+
+/// A trait pretty much similar to num_traits::Zero, but without the need of
+/// implementing `Add`.
+pub trait Zero {
+    /// Returns the zero value.
+    fn zero() -> Self;
+
+    /// Returns whether this value is zero.
+    fn is_zero(&self) -> bool;
+}
+
+impl<T> Zero for T
+where
+    T: num_traits::Zero,
+{
+    fn zero() -> Self {
+        <Self as num_traits::Zero>::zero()
+    }
+
+    fn is_zero(&self) -> bool {
+        <Self as num_traits::Zero>::is_zero(self)
     }
 }

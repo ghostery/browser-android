@@ -136,11 +136,26 @@ void nsMutationReceiver::NativeAnonymousChildListChange(nsIContent* aContent,
   }
 }
 
+<<<<<<< HEAD
 void nsMutationReceiver::AttributeWillChange(mozilla::dom::Element* aElement,
                                              int32_t aNameSpaceID,
                                              nsAtom* aAttribute,
                                              int32_t aModType,
                                              const nsAttrValue* aNewValue) {
+||||||| merged common ancestors
+void
+nsMutationReceiver::AttributeWillChange(mozilla::dom::Element* aElement,
+                                        int32_t aNameSpaceID,
+                                        nsAtom* aAttribute,
+                                        int32_t aModType,
+                                        const nsAttrValue* aNewValue)
+{
+=======
+void nsMutationReceiver::AttributeWillChange(mozilla::dom::Element* aElement,
+                                             int32_t aNameSpaceID,
+                                             nsAtom* aAttribute,
+                                             int32_t aModType) {
+>>>>>>> upstream-releases
   if (nsAutoMutationBatch::IsBatching() ||
       !ObservesAttr(RegisterTarget(), aElement, aNameSpaceID, aAttribute)) {
     return;
@@ -366,8 +381,14 @@ void nsAnimationReceiver::RecordAnimationMutation(
   }
 
   // Record animations targeting to a pseudo element only when subtree is true.
+<<<<<<< HEAD
   if (animationTarget->mPseudoType !=
           mozilla::CSSPseudoElementType::NotPseudo &&
+||||||| merged common ancestors
+  if (animationTarget->mPseudoType != mozilla::CSSPseudoElementType::NotPseudo &&
+=======
+  if (animationTarget->mPseudoType != PseudoStyleType::NotPseudo &&
+>>>>>>> upstream-releases
       !Subtree()) {
     return;
   }
@@ -536,9 +557,22 @@ void nsDOMMutationObserver::ScheduleForRun() {
   RescheduleForRun();
 }
 
+<<<<<<< HEAD
 class MutationObserverMicroTask final : public MicroTaskRunnable {
  public:
   virtual void Run(AutoSlowOperation& aAso) override {
+||||||| merged common ancestors
+class MutationObserverMicroTask final : public MicroTaskRunnable
+{
+public:
+  virtual void Run(AutoSlowOperation& aAso) override
+  {
+=======
+class MutationObserverMicroTask final : public MicroTaskRunnable {
+ public:
+  MOZ_CAN_RUN_SCRIPT
+  virtual void Run(AutoSlowOperation& aAso) override {
+>>>>>>> upstream-releases
     nsDOMMutationObserver::HandleMutations(aAso);
   }
 
@@ -547,7 +581,16 @@ class MutationObserverMicroTask final : public MicroTaskRunnable {
   }
 };
 
+<<<<<<< HEAD
 /* static */ void nsDOMMutationObserver::QueueMutationObserverMicroTask() {
+||||||| merged common ancestors
+/* static */ void
+nsDOMMutationObserver::QueueMutationObserverMicroTask()
+{
+=======
+/* static */
+void nsDOMMutationObserver::QueueMutationObserverMicroTask() {
+>>>>>>> upstream-releases
   CycleCollectedJSContext* ccjs = CycleCollectedJSContext::Get();
   if (!ccjs) {
     return;
@@ -805,7 +848,8 @@ void nsDOMMutationObserver::HandleMutation() {
   }
   ClearPendingRecords();
 
-  mCallback->Call(this, mutations, *this);
+  RefPtr<dom::MutationCallback> callback(mCallback);
+  callback->Call(this, mutations, *this);
 }
 
 void nsDOMMutationObserver::HandleMutationsInternal(AutoSlowOperation& aAso) {

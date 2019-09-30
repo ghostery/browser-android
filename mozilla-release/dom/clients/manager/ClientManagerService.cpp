@@ -251,15 +251,29 @@ void ClientManagerService::RemoveManager(ClientManagerParent* aManager) {
   MOZ_ASSERT(removed);
 }
 
+<<<<<<< HEAD
 RefPtr<ClientOpPromise> ClientManagerService::Navigate(
     const ClientNavigateArgs& aArgs) {
   RefPtr<ClientOpPromise> ref;
 
   ClientSourceParent* source =
       FindSource(aArgs.target().id(), aArgs.target().principalInfo());
+||||||| merged common ancestors
+RefPtr<ClientOpPromise>
+ClientManagerService::Navigate(const ClientNavigateArgs& aArgs)
+{
+  RefPtr<ClientOpPromise> ref;
+
+  ClientSourceParent* source = FindSource(aArgs.target().id(),
+                                          aArgs.target().principalInfo());
+=======
+RefPtr<ClientOpPromise> ClientManagerService::Navigate(
+    const ClientNavigateArgs& aArgs) {
+  ClientSourceParent* source =
+      FindSource(aArgs.target().id(), aArgs.target().principalInfo());
+>>>>>>> upstream-releases
   if (!source) {
-    ref = ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
-    return ref.forget();
+    return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
   }
 
   PClientManagerParent* manager = source->Manager();
@@ -283,12 +297,9 @@ RefPtr<ClientOpPromise> ClientManagerService::Navigate(
       manager->SendPClientNavigateOpConstructor(op, args);
   if (!result) {
     promise->Reject(NS_ERROR_FAILURE, __func__);
-    ref = promise;
-    return ref.forget();
   }
 
-  ref = promise;
-  return ref.forget();
+  return promise.forget();
 }
 
 namespace {
@@ -317,14 +328,38 @@ class PromiseListHolder final {
       : mResultPromise(new ClientOpPromise::Private(__func__)),
         mOutstandingPromiseCount(0) {}
 
+<<<<<<< HEAD
   already_AddRefed<ClientOpPromise> GetResultPromise() {
+||||||| merged common ancestors
+  already_AddRefed<ClientOpPromise>
+  GetResultPromise()
+  {
+=======
+  RefPtr<ClientOpPromise> GetResultPromise() {
+>>>>>>> upstream-releases
     RefPtr<PromiseListHolder> kungFuDeathGrip = this;
+<<<<<<< HEAD
     mResultPromise->Then(GetCurrentThreadSerialEventTarget(), __func__,
                          [kungFuDeathGrip](const ClientOpResult& aResult) {},
                          [kungFuDeathGrip](nsresult aResult) {});
 
     RefPtr<ClientOpPromise> ref = mResultPromise;
     return ref.forget();
+||||||| merged common ancestors
+    mResultPromise->Then(
+      GetCurrentThreadSerialEventTarget(), __func__,
+      [kungFuDeathGrip] (const ClientOpResult& aResult) { },
+      [kungFuDeathGrip] (nsresult aResult) { });
+
+    RefPtr<ClientOpPromise> ref = mResultPromise;
+    return ref.forget();
+=======
+    return mResultPromise->Then(
+        GetCurrentThreadSerialEventTarget(), __func__,
+        [kungFuDeathGrip](const ClientOpPromise::ResolveOrRejectValue& aValue) {
+          return ClientOpPromise::CreateAndResolveOrReject(aValue, __func__);
+        });
+>>>>>>> upstream-releases
   }
 
   void AddPromise(RefPtr<ClientOpPromise>&& aPromise) {
@@ -497,6 +532,7 @@ RefPtr<ClientOpPromise> ClientManagerService::Claim(
 RefPtr<ClientOpPromise> ClientManagerService::GetInfoAndState(
     const ClientGetInfoAndStateArgs& aArgs) {
   ClientSourceParent* source = FindSource(aArgs.id(), aArgs.principalInfo());
+<<<<<<< HEAD
 
   if (!source) {
     RefPtr<ClientOpPromise> ref =
@@ -524,6 +560,33 @@ RefPtr<ClientOpPromise> ClientManagerService::GetInfoAndState(
         });
 
     return ref.forget();
+||||||| merged common ancestors
+  if (!source || !source->ExecutionReady()) {
+    ref = ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
+    return ref.forget();
+=======
+
+  if (!source) {
+    return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
+  }
+
+  if (!source->ExecutionReady()) {
+    RefPtr<ClientManagerService> self = this;
+
+    // rejection ultimately converted to `undefined` in Clients::Get
+    return source->ExecutionReadyPromise()->Then(
+        GetCurrentThreadSerialEventTarget(), __func__,
+        [self, aArgs]() -> RefPtr<ClientOpPromise> {
+          ClientSourceParent* source =
+              self->FindSource(aArgs.id(), aArgs.principalInfo());
+
+          if (!source) {
+            return ClientOpPromise::CreateAndReject(NS_ERROR_FAILURE, __func__);
+          }
+
+          return source->StartOp(aArgs);
+        });
+>>>>>>> upstream-releases
   }
 
   return source->StartOp(aArgs);
@@ -589,7 +652,23 @@ class OpenWindowRunnable final : public Runnable {
     }
 
     ClientOpenWindowOpParent* actor =
+<<<<<<< HEAD
         new ClientOpenWindowOpParent(mArgs, mPromise);
+||||||| merged common ancestors
+      new ClientOpenWindowOpParent(mArgs, mPromise);
+=======
+        new ClientOpenWindowOpParent(mArgs, mPromise);
+
+    // Normally, we call TransmitPermissionsForPrincipal for the first http
+    // load, but in this case, ClientOpenWindowOpChild will cause the initial
+    // about:blank load in the child to have this principal. That causes us to
+    // assert because the child process doesn't know that it's loading this
+    // principal.
+    nsCOMPtr<nsIPrincipal> principal =
+        PrincipalInfoToPrincipal(mArgs.principalInfo());
+    nsresult rv = targetProcess->TransmitPermissionsForPrincipal(principal);
+    Unused << NS_WARN_IF(NS_FAILED(rv));
+>>>>>>> upstream-releases
 
     // If this fails the actor will be automatically destroyed which will
     // reject the promise.
@@ -611,8 +690,32 @@ RefPtr<ClientOpPromise> ClientManagerService::OpenWindow(
       new OpenWindowRunnable(promise, aArgs, std::move(aSourceProcess));
   MOZ_ALWAYS_SUCCEEDS(SystemGroup::Dispatch(TaskCategory::Other, r.forget()));
 
-  RefPtr<ClientOpPromise> ref = promise;
-  return ref.forget();
+  return promise.forget();
+}
+
+bool ClientManagerService::HasWindow(
+    const Maybe<ContentParentId>& aContentParentId,
+    const PrincipalInfo& aPrincipalInfo, const nsID& aClientId) {
+  AssertIsOnBackgroundThread();
+
+  ClientSourceParent* source = FindSource(aClientId, aPrincipalInfo);
+  if (!source) {
+    return false;
+  }
+
+  if (!source->ExecutionReady()) {
+    return false;
+  }
+
+  if (source->Info().Type() != ClientType::Window) {
+    return false;
+  }
+
+  if (aContentParentId && !source->IsOwnedByProcess(aContentParentId.value())) {
+    return false;
+  }
+
+  return true;
 }
 
 }  // namespace dom

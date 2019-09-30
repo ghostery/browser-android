@@ -21,7 +21,7 @@
 #include "nsIWindowCreator.h"  // for stupid compilers
 #include "nsIWindowWatcher.h"
 #include "nsIPromptFactory.h"
-#include "nsITabParent.h"
+#include "nsIRemoteTab.h"
 #include "nsPIWindowWatcher.h"
 #include "nsTArray.h"
 
@@ -80,12 +80,33 @@ class nsWindowWatcher : public nsIWindowWatcher,
 
   // Just like OpenWindowJS, but knows whether it got called via OpenWindowJS
   // (which means called from script) or called via OpenWindow.
+<<<<<<< HEAD
   nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent, const char* aUrl,
                               const char* aName, const char* aFeatures,
                               bool aCalledFromJS, bool aDialog, bool aNavigate,
                               nsIArray* aArgv, bool aIsPopupSpam,
                               bool aForceNoOpener,
                               nsDocShellLoadState* aLoadState,
+||||||| merged common ancestors
+  nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent,
+                              const char* aUrl,
+                              const char* aName,
+                              const char* aFeatures,
+                              bool aCalledFromJS,
+                              bool aDialog,
+                              bool aNavigate,
+                              nsIArray* aArgv,
+                              bool aIsPopupSpam,
+                              bool aForceNoOpener,
+                              nsDocShellLoadInfo* aLoadInfo,
+=======
+  nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent, const char* aUrl,
+                              const char* aName, const char* aFeatures,
+                              bool aCalledFromJS, bool aDialog, bool aNavigate,
+                              nsIArray* aArgv, bool aIsPopupSpam,
+                              bool aForceNoOpener, bool aForceNoReferrer,
+                              nsDocShellLoadState* aLoadState,
+>>>>>>> upstream-releases
                               mozIDOMWindowProxy** aResult);
 
   static nsresult URIfromURL(const char* aURL, mozIDOMWindowProxy* aParent,
@@ -121,9 +142,9 @@ class nsWindowWatcher : public nsIWindowWatcher,
   nsresult CreateChromeWindow(const nsACString& aFeatures,
                               nsIWebBrowserChrome* aParentChrome,
                               uint32_t aChromeFlags,
-                              nsITabParent* aOpeningTabParent,
+                              nsIRemoteTab* aOpeningBrowserParent,
                               mozIDOMWindowProxy* aOpener,
-                              uint64_t aNextTabParentId,
+                              uint64_t aNextRemoteTabId,
                               nsIWebBrowserChrome** aResult);
 
   void MaybeDisablePersistence(const nsACString& aFeatures,

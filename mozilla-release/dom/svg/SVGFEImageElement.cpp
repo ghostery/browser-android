@@ -20,7 +20,7 @@
 #include "imgIContainer.h"
 #include "gfx2DGlue.h"
 
-NS_IMPL_NS_NEW_NAMESPACED_SVG_ELEMENT(FEImage)
+NS_IMPL_NS_NEW_SVG_ELEMENT(FEImage)
 
 using namespace mozilla::gfx;
 
@@ -32,10 +32,24 @@ JSObject* SVGFEImageElement::WrapNode(JSContext* aCx,
   return SVGFEImageElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringInfo SVGFEImageElement::sStringInfo[3] = {
     {nsGkAtoms::result, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_None, true},
     {nsGkAtoms::href, kNameSpaceID_XLink, true}};
+||||||| merged common ancestors
+nsSVGElement::StringInfo SVGFEImageElement::sStringInfo[3] =
+{
+  { nsGkAtoms::result, kNameSpaceID_None, true },
+  { nsGkAtoms::href, kNameSpaceID_None, true },
+  { nsGkAtoms::href, kNameSpaceID_XLink, true }
+};
+=======
+SVGElement::StringInfo SVGFEImageElement::sStringInfo[3] = {
+    {nsGkAtoms::result, kNameSpaceID_None, true},
+    {nsGkAtoms::href, kNameSpaceID_None, true},
+    {nsGkAtoms::href, kNameSpaceID_XLink, true}};
+>>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsISupports methods
@@ -72,7 +86,7 @@ nsresult SVGFEImageElement::LoadSVGImage(bool aForce, bool aNotify) {
   if (baseURI && !href.IsEmpty()) NS_MakeAbsoluteURI(href, href, baseURI);
 
   // Make sure we don't get in a recursive death-spiral
-  nsIDocument* doc = OwnerDoc();
+  Document* doc = OwnerDoc();
   nsCOMPtr<nsIURI> hrefAsURI;
   if (NS_SUCCEEDED(StringToURI(href, doc, getter_AddRefs(hrefAsURI)))) {
     bool isEqual;
@@ -132,21 +146,30 @@ void SVGFEImageElement::MaybeLoadSVGImage() {
   }
 }
 
+<<<<<<< HEAD
 nsresult SVGFEImageElement::BindToTree(nsIDocument* aDocument,
                                        nsIContent* aParent,
                                        nsIContent* aBindingParent) {
   nsresult rv =
       SVGFEImageElementBase::BindToTree(aDocument, aParent, aBindingParent);
+||||||| merged common ancestors
+nsresult
+SVGFEImageElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                              nsIContent* aBindingParent)
+{
+  nsresult rv = SVGFEImageElementBase::BindToTree(aDocument, aParent,
+                                                  aBindingParent);
+=======
+nsresult SVGFEImageElement::BindToTree(BindContext& aContext,
+                                       nsINode& aParent) {
+  nsresult rv = SVGFEImageElementBase::BindToTree(aContext, aParent);
+>>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsImageLoadingContent::BindToTree(aDocument, aParent, aBindingParent);
+  nsImageLoadingContent::BindToTree(aContext, aParent);
 
   if (mStringAttributes[HREF].IsExplicitlySet() ||
       mStringAttributes[XLINK_HREF].IsExplicitlySet()) {
-    // FIXME: Bug 660963 it would be nice if we could just have
-    // ClearBrokenState update our state and do it fast...
-    ClearBrokenState();
-    RemoveStatesSilently(NS_EVENT_STATE_BROKEN);
     nsContentUtils::AddScriptRunner(
         NewRunnableMethod("dom::SVGFEImageElement::MaybeLoadSVGImage", this,
                           &SVGFEImageElement::MaybeLoadSVGImage));
@@ -155,9 +178,21 @@ nsresult SVGFEImageElement::BindToTree(nsIDocument* aDocument,
   return rv;
 }
 
+<<<<<<< HEAD
 void SVGFEImageElement::UnbindFromTree(bool aDeep, bool aNullParent) {
   nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
   SVGFEImageElementBase::UnbindFromTree(aDeep, aNullParent);
+||||||| merged common ancestors
+void
+SVGFEImageElement::UnbindFromTree(bool aDeep, bool aNullParent)
+{
+  nsImageLoadingContent::UnbindFromTree(aDeep, aNullParent);
+  SVGFEImageElementBase::UnbindFromTree(aDeep, aNullParent);
+=======
+void SVGFEImageElement::UnbindFromTree(bool aNullParent) {
+  nsImageLoadingContent::UnbindFromTree(aNullParent);
+  SVGFEImageElementBase::UnbindFromTree(aNullParent);
+>>>>>>> upstream-releases
 }
 
 EventStates SVGFEImageElement::IntrinsicState() const {
@@ -170,7 +205,15 @@ EventStates SVGFEImageElement::IntrinsicState() const {
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEImageElement)
 
+<<<<<<< HEAD
 already_AddRefed<SVGAnimatedString> SVGFEImageElement::Href() {
+||||||| merged common ancestors
+already_AddRefed<SVGAnimatedString>
+SVGFEImageElement::Href()
+{
+=======
+already_AddRefed<DOMSVGAnimatedString> SVGFEImageElement::Href() {
+>>>>>>> upstream-releases
   return mStringAttributes[HREF].IsExplicitlySet()
              ? mStringAttributes[HREF].ToDOMAnimatedString(this)
              : mStringAttributes[XLINK_HREF].ToDOMAnimatedString(this);
@@ -253,13 +296,6 @@ bool SVGFEImageElement::OutputIsTainted(const nsTArray<bool>& aInputsAreTainted,
     return false;
   }
 
-  uint32_t status;
-  currentRequest->GetImageStatus(&status);
-  if ((status & imgIRequest::STATUS_LOAD_COMPLETE) == 0) {
-    // The load has not completed yet.
-    return false;
-  }
-
   nsCOMPtr<nsIPrincipal> principal;
   rv = currentRequest->GetImagePrincipal(getter_AddRefs(principal));
   if (NS_FAILED(rv) || !principal) {
@@ -282,18 +318,35 @@ bool SVGFEImageElement::OutputIsTainted(const nsTArray<bool>& aInputsAreTainted,
 }
 
 //----------------------------------------------------------------------
-// nsSVGElement methods
+// SVGElement methods
 
 already_AddRefed<DOMSVGAnimatedPreserveAspectRatio>
 SVGFEImageElement::PreserveAspectRatio() {
   return mPreserveAspectRatio.ToDOMAnimatedPreserveAspectRatio(this);
 }
 
+<<<<<<< HEAD
 SVGAnimatedPreserveAspectRatio* SVGFEImageElement::GetPreserveAspectRatio() {
+||||||| merged common ancestors
+SVGAnimatedPreserveAspectRatio *
+SVGFEImageElement::GetPreserveAspectRatio()
+{
+=======
+SVGAnimatedPreserveAspectRatio*
+SVGFEImageElement::GetAnimatedPreserveAspectRatio() {
+>>>>>>> upstream-releases
   return &mPreserveAspectRatio;
 }
 
+<<<<<<< HEAD
 nsSVGElement::StringAttributesInfo SVGFEImageElement::GetStringInfo() {
+||||||| merged common ancestors
+nsSVGElement::StringAttributesInfo
+SVGFEImageElement::GetStringInfo()
+{
+=======
+SVGElement::StringAttributesInfo SVGFEImageElement::GetStringInfo() {
+>>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

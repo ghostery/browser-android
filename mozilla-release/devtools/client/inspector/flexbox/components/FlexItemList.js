@@ -4,12 +4,15 @@
 
 "use strict";
 
-const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
+const {
+  createFactory,
+  PureComponent,
+} = require("devtools/client/shared/vendor/react");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const { getStr } = require("devtools/client/inspector/layout/utils/l10n");
 
-const FlexItem = createFactory(require(("./FlexItem")));
+const FlexItem = createFactory(require("./FlexItem"));
 
 const Types = require("../types");
 
@@ -33,6 +36,7 @@ class FlexItemList extends PureComponent {
       setSelectedNode,
     } = this.props;
 
+<<<<<<< HEAD
     return (
       dom.div(
         { className: "flex-item-list" },
@@ -41,6 +45,23 @@ class FlexItemList extends PureComponent {
             getStr("flexbox.noFlexItems") :
             getStr("flexbox.flexItems")),
         flexItems.map((flexItem, index) => FlexItem({
+||||||| merged common ancestors
+    return (
+      dom.ol(
+        { className: "flex-item-list" },
+        flexItems.map(flexItem => FlexItem({
+=======
+    return dom.div(
+      { className: "flex-item-list" },
+      dom.div(
+        { className: "flex-item-list-header" },
+        !flexItems.length
+          ? getStr("flexbox.noFlexItems")
+          : getStr("flexbox.flexItems")
+      ),
+      flexItems.map((flexItem, index) =>
+        FlexItem({
+>>>>>>> upstream-releases
           key: flexItem.actorID,
           flexItem,
           index: index + 1,
@@ -48,7 +69,7 @@ class FlexItemList extends PureComponent {
           onShowBoxModelHighlighterForNode,
           scrollToTop,
           setSelectedNode,
-        }))
+        })
       )
     );
   }

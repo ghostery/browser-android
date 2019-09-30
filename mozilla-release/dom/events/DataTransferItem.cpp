@@ -7,6 +7,7 @@
 #include "DataTransferItem.h"
 #include "DataTransferItemList.h"
 
+#include "mozilla/Attributes.h"
 #include "mozilla/ContentEvents.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/dom/DataTransferItemBinding.h"
@@ -137,37 +138,67 @@ void DataTransferItem::FillInExternalData() {
     format = kURLDataMime;
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsITransferable> trans =
       do_CreateInstance("@mozilla.org/widget/transferable;1");
   if (NS_WARN_IF(!trans)) {
     return;
   }
+||||||| merged common ancestors
+  nsCOMPtr<nsITransferable> trans =
+    do_CreateInstance("@mozilla.org/widget/transferable;1");
+  if (NS_WARN_IF(!trans)) {
+    return;
+  }
+=======
+  nsCOMPtr<nsITransferable> trans = mDataTransfer->GetTransferable();
+  if (!trans) {
+    trans = do_CreateInstance("@mozilla.org/widget/transferable;1");
+    if (NS_WARN_IF(!trans)) {
+      return;
+    }
+>>>>>>> upstream-releases
 
-  trans->Init(nullptr);
-  trans->AddDataFlavor(format);
+    trans->Init(nullptr);
+    trans->AddDataFlavor(format);
 
-  if (mDataTransfer->GetEventMessage() == ePaste) {
-    MOZ_ASSERT(mIndex == 0, "index in clipboard must be 0");
+    if (mDataTransfer->GetEventMessage() == ePaste) {
+      MOZ_ASSERT(mIndex == 0, "index in clipboard must be 0");
 
+<<<<<<< HEAD
     nsCOMPtr<nsIClipboard> clipboard =
         do_GetService("@mozilla.org/widget/clipboard;1");
     if (!clipboard || mDataTransfer->ClipboardType() < 0) {
       return;
     }
-
-    nsresult rv = clipboard->GetData(trans, mDataTransfer->ClipboardType());
-    if (NS_WARN_IF(NS_FAILED(rv))) {
+||||||| merged common ancestors
+    nsCOMPtr<nsIClipboard> clipboard =
+      do_GetService("@mozilla.org/widget/clipboard;1");
+    if (!clipboard || mDataTransfer->ClipboardType() < 0) {
       return;
     }
-  } else {
-    nsCOMPtr<nsIDragSession> dragSession = nsContentUtils::GetDragSession();
-    if (!dragSession) {
-      return;
-    }
+=======
+      nsCOMPtr<nsIClipboard> clipboard =
+          do_GetService("@mozilla.org/widget/clipboard;1");
+      if (!clipboard || mDataTransfer->ClipboardType() < 0) {
+        return;
+      }
+>>>>>>> upstream-releases
 
-    nsresult rv = dragSession->GetData(trans, mIndex);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return;
+      nsresult rv = clipboard->GetData(trans, mDataTransfer->ClipboardType());
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return;
+      }
+    } else {
+      nsCOMPtr<nsIDragSession> dragSession = nsContentUtils::GetDragSession();
+      if (!dragSession) {
+        return;
+      }
+
+      nsresult rv = dragSession->GetData(trans, mIndex);
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return;
+      }
     }
   }
 
@@ -424,19 +455,47 @@ void DataTransferItem::GetAsString(FunctionStringCallback* aCallback,
   class GASRunnable final : public Runnable {
    public:
     GASRunnable(FunctionStringCallback* aCallback, const nsAString& aStringData)
+<<<<<<< HEAD
         : mozilla::Runnable("GASRunnable"),
           mCallback(aCallback),
           mStringData(aStringData) {}
 
     NS_IMETHOD Run() override {
+||||||| merged common ancestors
+      : mozilla::Runnable("GASRunnable")
+      , mCallback(aCallback)
+      , mStringData(aStringData)
+    {}
+
+    NS_IMETHOD Run() override
+    {
+=======
+        : mozilla::Runnable("GASRunnable"),
+          mCallback(aCallback),
+          mStringData(aStringData) {}
+
+    // MOZ_CAN_RUN_SCRIPT_BOUNDARY until runnables are opted into
+    // MOZ_CAN_RUN_SCRIPT.  See bug 1535398.
+    MOZ_CAN_RUN_SCRIPT_BOUNDARY
+    NS_IMETHOD Run() override {
+>>>>>>> upstream-releases
       ErrorResult rv;
       mCallback->Call(mStringData, rv);
       NS_WARNING_ASSERTION(!rv.Failed(), "callback failed");
       return rv.StealNSResult();
     }
+<<<<<<< HEAD
 
    private:
     RefPtr<FunctionStringCallback> mCallback;
+||||||| merged common ancestors
+  private:
+    RefPtr<FunctionStringCallback> mCallback;
+=======
+
+   private:
+    const RefPtr<FunctionStringCallback> mCallback;
+>>>>>>> upstream-releases
     nsString mStringData;
   };
 
@@ -499,8 +558,17 @@ already_AddRefed<nsIVariant> DataTransferItem::Data(nsIPrincipal* aPrincipal,
   }
 
   bool checkItemPrincipal = mDataTransfer->IsCrossDomainSubFrameDrop() ||
+<<<<<<< HEAD
                             (mDataTransfer->GetEventMessage() != eDrop &&
                              mDataTransfer->GetEventMessage() != ePaste);
+||||||| merged common ancestors
+    (mDataTransfer->GetEventMessage() != eDrop &&
+     mDataTransfer->GetEventMessage() != ePaste);
+=======
+                            (mDataTransfer->GetEventMessage() != eDrop &&
+                             mDataTransfer->GetEventMessage() != ePaste &&
+                             mDataTransfer->GetEventMessage() != eEditorInput);
+>>>>>>> upstream-releases
 
   // Check if the caller is allowed to access the drag data. Callers with
   // chrome privileges can always read the data. During the

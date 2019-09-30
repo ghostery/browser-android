@@ -63,8 +63,23 @@ void HTMLLIElement::MapAttributesIntoRule(const nsMappedAttributes* aAttributes,
     // type: enum
     const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::type);
     if (value && value->Type() == nsAttrValue::eEnum)
+<<<<<<< HEAD
       aDecls.SetKeywordValue(eCSSProperty_list_style_type,
                              value->GetEnumValue());
+||||||| merged common ancestors
+      aDecls.SetKeywordValue(eCSSProperty_list_style_type, value->GetEnumValue());
+=======
+      aDecls.SetKeywordValue(eCSSProperty_list_style_type,
+                             value->GetEnumValue());
+  }
+
+  // Map <li value=INTEGER> to 'counter-set: list-item INTEGER'.
+  const nsAttrValue* attrVal = aAttributes->GetAttr(nsGkAtoms::value);
+  if (attrVal && attrVal->Type() == nsAttrValue::eInteger) {
+    if (!aDecls.PropertyIsSet(eCSSProperty_counter_set)) {
+      aDecls.SetCounterSetListItem(attrVal->GetIntegerValue());
+    }
+>>>>>>> upstream-releases
   }
 
   nsGenericHTMLElement::MapCommonAttributesInto(aAttributes, aDecls);
@@ -73,8 +88,17 @@ void HTMLLIElement::MapAttributesIntoRule(const nsMappedAttributes* aAttributes,
 NS_IMETHODIMP_(bool)
 HTMLLIElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   static const MappedAttributeEntry attributes[] = {
+<<<<<<< HEAD
       {nsGkAtoms::type},
       {nullptr},
+||||||| merged common ancestors
+    { nsGkAtoms::type },
+    { nullptr },
+=======
+      {nsGkAtoms::type},
+      {nsGkAtoms::value},
+      {nullptr},
+>>>>>>> upstream-releases
   };
 
   static const MappedAttributeEntry* const map[] = {

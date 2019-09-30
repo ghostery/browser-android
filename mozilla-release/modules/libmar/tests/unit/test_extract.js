@@ -2,7 +2,6 @@
    http://creativecommons.org/publicdomain/zero/1.0/ */
 
 function run_test() {
-
   /**
    * Extracts a MAR and makes sure each file matches the reference files.
    *
@@ -94,8 +93,51 @@ function run_test() {
     },
     // Test extracting a MAR file with multiple files inside of it.
     test_multiple_file: function _test_multiple_file() {
+<<<<<<< HEAD
       return extract_and_compare("multiple_file.mar",
                           ["0_sized_file", "1_byte_file", "binary_data_file"]);
+||||||| merged common ancestors
+      return run_one_test("multiple_file.mar",
+                          ["0_sized_file", "1_byte_file", "binary_data_file"]);
+=======
+      return extract_and_compare("multiple_file.mar", [
+        "0_sized_file",
+        "1_byte_file",
+        "binary_data_file",
+      ]);
+    },
+    // Test collision detection where file A + B are the same offset
+    test_collision_same_offset: function test_collision_same_offset() {
+      return extract_and_fail("manipulated_same_offset.mar");
+    },
+    // Test collision detection where file A's indexes are a subset of file B's
+    test_collision_is_contained: function test_collision_is_contained() {
+      return extract_and_fail("manipulated_is_container.mar");
+    },
+    // Test collision detection where file B's indexes are a subset of file A's
+    test_collision_contained_by: function test_collision_contained_by() {
+      return extract_and_fail("manipulated_is_contained.mar");
+    },
+    // Test collision detection where file A ends in file B's indexes
+    test_collision_a_onto_b: function test_collision_a_onto_b() {
+      return extract_and_fail("manipulated_frontend_collision.mar");
+    },
+    // Test collision detection where file B ends in file A's indexes
+    test_collsion_b_onto_a: function test_collsion_b_onto_a() {
+      return extract_and_fail("manipulated_backend_collision.mar");
+    },
+    // Test collision detection where file C shares indexes with both file A & B
+    test_collision_multiple: function test_collision_multiple() {
+      return extract_and_fail("manipulated_multiple_collision.mar");
+    },
+    // Test collision detection where A is the last file in the list
+    test_collision_last: function test_collision_multiple_last() {
+      return extract_and_fail("manipulated_multiple_collision_last.mar");
+    },
+    // Test collision detection where A is the first file in the list
+    test_collision_first: function test_collision_multiple_first() {
+      return extract_and_fail("manipulated_multiple_collision_first.mar");
+>>>>>>> upstream-releases
     },
     // Test collision detection where file A + B are the same offset
     test_collision_same_offset: function test_collision_same_offset() {
@@ -137,7 +179,7 @@ function run_test() {
       if (outDir.exists()) {
         outDir.remove(true);
       }
-    }
+    },
   };
 
   // Run all the tests

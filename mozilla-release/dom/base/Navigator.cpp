@@ -24,7 +24,7 @@
 #include "nsContentPolicyUtils.h"
 #include "nsISupportsPriority.h"
 #include "nsICachingChannel.h"
-#include "nsIWebContentHandlerRegistrar.h"
+#include "nsIWebProtocolHandlerRegistrar.h"
 #include "nsICookiePermission.h"
 #include "nsIScriptSecurityManager.h"
 #include "nsCharSeparatedTokenizer.h"
@@ -73,6 +73,11 @@
 #include "WidgetUtils.h"
 #include "nsIPresentationService.h"
 #include "nsIScriptError.h"
+#include "ReferrerInfo.h"
+
+#include "nsIExternalProtocolHandler.h"
+#include "BrowserChild.h"
+#include "URIUtils.h"
 
 #include "mozilla/dom/MediaDevices.h"
 #include "MediaManager.h"
@@ -91,7 +96,7 @@
 #include "mozilla/dom/WorkerRunnable.h"
 
 #if defined(XP_LINUX)
-#include "mozilla/Hal.h"
+#  include "mozilla/Hal.h"
 #endif
 
 #include "mozilla/EMEUtils.h"
@@ -104,7 +109,8 @@ namespace dom {
 static bool sVibratorEnabled = false;
 static uint32_t sMaxVibrateMS = 0;
 static uint32_t sMaxVibrateListLen = 0;
-static const char* kVibrationPermissionType = "vibration";
+static const nsLiteralCString kVibrationPermissionType =
+    NS_LITERAL_CSTRING("vibration");
 
 /* static */
 void Navigator::Init() {
@@ -238,8 +244,19 @@ void Navigator::GetUserAgent(nsAString& aUserAgent, CallerType aCallerType,
     }
   }
 
+<<<<<<< HEAD
   nsresult rv =
       GetUserAgent(window, aCallerType == CallerType::System, aUserAgent);
+||||||| merged common ancestors
+  nsresult rv = GetUserAgent(window,
+                             aCallerType == CallerType::System,
+                             aUserAgent);
+=======
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
+
+  nsresult rv = GetUserAgent(window, doc ? doc->NodePrincipal() : nullptr,
+                             aCallerType == CallerType::System, aUserAgent);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     aRv.Throw(rv);
   }
@@ -265,18 +282,47 @@ void Navigator::GetAppCodeName(nsAString& aAppCodeName, ErrorResult& aRv) {
   CopyASCIItoUTF16(appName, aAppCodeName);
 }
 
+<<<<<<< HEAD
 void Navigator::GetAppVersion(nsAString& aAppVersion, CallerType aCallerType,
                               ErrorResult& aRv) const {
   nsresult rv = GetAppVersion(
       aAppVersion,
       /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+||||||| merged common ancestors
+void
+Navigator::GetAppVersion(nsAString& aAppVersion, CallerType aCallerType,
+                         ErrorResult& aRv) const
+{
+  nsresult rv = GetAppVersion(aAppVersion,
+    /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+=======
+void Navigator::GetAppVersion(nsAString& aAppVersion, CallerType aCallerType,
+                              ErrorResult& aRv) const {
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
+
+  nsresult rv = GetAppVersion(
+      aAppVersion, doc ? doc->NodePrincipal() : nullptr,
+      /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     aRv.Throw(rv);
   }
 }
 
+<<<<<<< HEAD
 void Navigator::GetAppName(nsAString& aAppName, CallerType aCallerType) const {
   AppName(aAppName,
+||||||| merged common ancestors
+void
+Navigator::GetAppName(nsAString& aAppName, CallerType aCallerType) const
+{
+  AppName(aAppName,
+=======
+void Navigator::GetAppName(nsAString& aAppName, CallerType aCallerType) const {
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
+
+  AppName(aAppName, doc ? doc->NodePrincipal() : nullptr,
+>>>>>>> upstream-releases
           /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
 }
 
@@ -289,8 +335,17 @@ void Navigator::GetAppName(nsAString& aAppName, CallerType aCallerType) const {
  *
  * An empty array will be returned if there is no valid languages.
  */
+<<<<<<< HEAD
 /* static */ void Navigator::GetAcceptLanguages(
     nsTArray<nsString>& aLanguages) {
+||||||| merged common ancestors
+/* static */ void
+Navigator::GetAcceptLanguages(nsTArray<nsString>& aLanguages)
+{
+=======
+/* static */
+void Navigator::GetAcceptLanguages(nsTArray<nsString>& aLanguages) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   aLanguages.Clear();
@@ -361,11 +416,28 @@ void Navigator::GetLanguages(nsTArray<nsString>& aLanguages) {
   // event has to be timed correctly.
 }
 
+<<<<<<< HEAD
 void Navigator::GetPlatform(nsAString& aPlatform, CallerType aCallerType,
                             ErrorResult& aRv) const {
   nsresult rv = GetPlatform(
       aPlatform,
       /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+||||||| merged common ancestors
+void
+Navigator::GetPlatform(nsAString& aPlatform, CallerType aCallerType,
+                       ErrorResult& aRv) const
+{
+  nsresult rv = GetPlatform(aPlatform,
+    /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+=======
+void Navigator::GetPlatform(nsAString& aPlatform, CallerType aCallerType,
+                            ErrorResult& aRv) const {
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
+
+  nsresult rv = GetPlatform(
+      aPlatform, doc ? doc->NodePrincipal() : nullptr,
+      /* aUsePrefOverriddenValue = */ aCallerType != CallerType::System);
+>>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     aRv.Throw(rv);
   }
@@ -374,9 +446,19 @@ void Navigator::GetPlatform(nsAString& aPlatform, CallerType aCallerType,
 void Navigator::GetOscpu(nsAString& aOSCPU, CallerType aCallerType,
                          ErrorResult& aRv) const {
   if (aCallerType != CallerType::System) {
+<<<<<<< HEAD
     // If fingerprinting resistance is on, we will spoof this value. See
     // nsRFPService.h for details about spoofed values.
     if (nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+    // If fingerprinting resistance is on, we will spoof this value. See nsRFPService.h
+    // for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting()) {
+=======
+    // If fingerprinting resistance is on, we will spoof this value. See
+    // nsRFPService.h for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting(GetDocShell())) {
+>>>>>>> upstream-releases
       aOSCPU.AssignLiteral(SPOOFED_OSCPU);
       return;
     }
@@ -479,7 +561,7 @@ bool Navigator::CookieEnabled() {
     return cookieEnabled;
   }
 
-  nsCOMPtr<nsIDocument> doc = mWindow->GetExtantDoc();
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
   if (!doc) {
     return cookieEnabled;
   }
@@ -510,9 +592,19 @@ bool Navigator::OnLine() { return !NS_IsOffline(); }
 void Navigator::GetBuildID(nsAString& aBuildID, CallerType aCallerType,
                            ErrorResult& aRv) const {
   if (aCallerType != CallerType::System) {
+<<<<<<< HEAD
     // If fingerprinting resistance is on, we will spoof this value. See
     // nsRFPService.h for details about spoofed values.
     if (nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+    // If fingerprinting resistance is on, we will spoof this value. See nsRFPService.h
+    // for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting()) {
+=======
+    // If fingerprinting resistance is on, we will spoof this value. See
+    // nsRFPService.h for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting(GetDocShell())) {
+>>>>>>> upstream-releases
       aBuildID.AssignLiteral(LEGACY_BUILD_ID);
       return;
     }
@@ -527,7 +619,7 @@ void Navigator::GetBuildID(nsAString& aBuildID, CallerType aCallerType,
     nsAutoCString host;
     bool isHTTPS = false;
     if (mWindow) {
-      nsCOMPtr<nsIDocument> doc = mWindow->GetDoc();
+      nsCOMPtr<Document> doc = mWindow->GetDoc();
       if (doc) {
         nsIURI* uri = doc->GetDocumentURI();
         if (uri) {
@@ -564,8 +656,18 @@ void Navigator::GetBuildID(nsAString& aBuildID, CallerType aCallerType,
   AppendASCIItoUTF16(buildID, aBuildID);
 }
 
+<<<<<<< HEAD
 void Navigator::GetDoNotTrack(nsAString& aResult) {
   bool doNotTrack = nsContentUtils::DoNotTrackEnabled();
+||||||| merged common ancestors
+void
+Navigator::GetDoNotTrack(nsAString &aResult)
+{
+  bool doNotTrack = nsContentUtils::DoNotTrackEnabled();
+=======
+void Navigator::GetDoNotTrack(nsAString& aResult) {
+  bool doNotTrack = StaticPrefs::privacy_donottrackheader_enabled();
+>>>>>>> upstream-releases
   if (!doNotTrack) {
     nsCOMPtr<nsILoadContext> loadContext = do_GetInterface(mWindow);
     doNotTrack = loadContext && loadContext->UseTrackingProtection();
@@ -596,9 +698,21 @@ void Navigator::RefreshMIMEArray() {
 
 namespace {
 
+<<<<<<< HEAD
 class VibrateWindowListener : public nsIDOMEventListener {
  public:
   VibrateWindowListener(nsPIDOMWindowInner* aWindow, nsIDocument* aDocument) {
+||||||| merged common ancestors
+class VibrateWindowListener : public nsIDOMEventListener
+{
+public:
+  VibrateWindowListener(nsPIDOMWindowInner* aWindow, nsIDocument* aDocument)
+  {
+=======
+class VibrateWindowListener : public nsIDOMEventListener {
+ public:
+  VibrateWindowListener(nsPIDOMWindowInner* aWindow, Document* aDocument) {
+>>>>>>> upstream-releases
     mWindow = do_GetWeakReference(aWindow);
     mDocument = do_GetWeakReference(aDocument);
 
@@ -624,14 +738,31 @@ NS_IMPL_ISUPPORTS(VibrateWindowListener, nsIDOMEventListener)
 
 StaticRefPtr<VibrateWindowListener> gVibrateWindowListener;
 
+<<<<<<< HEAD
 static bool MayVibrate(nsIDocument* doc) {
+||||||| merged common ancestors
+static bool
+MayVibrate(nsIDocument* doc) {
+=======
+static bool MayVibrate(Document* doc) {
+>>>>>>> upstream-releases
   // Hidden documents cannot start or stop a vibration.
   return (doc && !doc->Hidden());
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 VibrateWindowListener::HandleEvent(Event* aEvent) {
   nsCOMPtr<nsIDocument> doc = do_QueryInterface(aEvent->GetTarget());
+||||||| merged common ancestors
+VibrateWindowListener::HandleEvent(Event* aEvent)
+{
+  nsCOMPtr<nsIDocument> doc =
+    do_QueryInterface(aEvent->GetTarget());
+=======
+VibrateWindowListener::HandleEvent(Event* aEvent) {
+  nsCOMPtr<Document> doc = do_QueryInterface(aEvent->GetTarget());
+>>>>>>> upstream-releases
 
   if (!MayVibrate(doc)) {
     // It's important that we call CancelVibrate(), not Vibrate() with an
@@ -658,6 +789,7 @@ void VibrateWindowListener::RemoveListener() {
                                     true /* use capture */);
 }
 
+<<<<<<< HEAD
 }  // namespace
 
 void Navigator::AddIdleObserver(MozIdleObserver& aIdleObserver,
@@ -670,7 +802,25 @@ void Navigator::AddIdleObserver(MozIdleObserver& aIdleObserver,
     NS_WARNING("Failed to add idle observer.");
   }
 }
+||||||| merged common ancestors
+} // namespace
 
+void
+Navigator::AddIdleObserver(MozIdleObserver& aIdleObserver, ErrorResult& aRv)
+{
+  if (!mWindow) {
+    aRv.Throw(NS_ERROR_UNEXPECTED);
+    return;
+  }
+  if (NS_FAILED(mWindow->RegisterIdleObserver(aIdleObserver))) {
+    NS_WARNING("Failed to add idle observer.");
+  }
+}
+=======
+}  // namespace
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void Navigator::RemoveIdleObserver(MozIdleObserver& aIdleObserver,
                                    ErrorResult& aRv) {
   if (!mWindow) {
@@ -683,6 +833,25 @@ void Navigator::RemoveIdleObserver(MozIdleObserver& aIdleObserver,
 }
 
 void Navigator::SetVibrationPermission(bool aPermitted, bool aPersistent) {
+||||||| merged common ancestors
+void
+Navigator::RemoveIdleObserver(MozIdleObserver& aIdleObserver, ErrorResult& aRv)
+{
+  if (!mWindow) {
+    aRv.Throw(NS_ERROR_UNEXPECTED);
+    return;
+  }
+  if (NS_FAILED(mWindow->UnregisterIdleObserver(aIdleObserver))) {
+    NS_WARNING("Failed to remove idle observer.");
+  }
+}
+
+void
+Navigator::SetVibrationPermission(bool aPermitted, bool aPersistent)
+{
+=======
+void Navigator::SetVibrationPermission(bool aPermitted, bool aPersistent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsTArray<uint32_t> pattern;
@@ -692,7 +861,7 @@ void Navigator::SetVibrationPermission(bool aPermitted, bool aPersistent) {
     return;
   }
 
-  nsCOMPtr<nsIDocument> doc = mWindow->GetExtantDoc();
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
 
   if (!MayVibrate(doc)) {
     return;
@@ -738,7 +907,7 @@ bool Navigator::Vibrate(const nsTArray<uint32_t>& aPattern) {
     return false;
   }
 
-  nsCOMPtr<nsIDocument> doc = mWindow->GetExtantDoc();
+  nsCOMPtr<Document> doc = mWindow->GetExtantDoc();
 
   if (!MayVibrate(doc)) {
     return false;
@@ -801,7 +970,7 @@ uint32_t Navigator::MaxTouchPoints(CallerType aCallerType) {
   // The maxTouchPoints is going to reveal the detail of users' hardware. So,
   // we will spoof it into 0 if fingerprinting resistance is on.
   if (aCallerType != CallerType::System &&
-      nsContentUtils::ShouldResistFingerprinting()) {
+      nsContentUtils::ShouldResistFingerprinting(GetDocShell())) {
     return 0;
   }
 
@@ -816,32 +985,232 @@ uint32_t Navigator::MaxTouchPoints(CallerType aCallerType) {
 //    Navigator::nsIDOMClientInformation
 //*****************************************************************************
 
+<<<<<<< HEAD
+void Navigator::RegisterContentHandler(const nsAString& aMIMEType,
+                                       const nsAString& aURI,
+                                       const nsAString& aTitle,
+                                       ErrorResult& aRv) {}
+||||||| merged common ancestors
+void
+Navigator::RegisterContentHandler(const nsAString& aMIMEType,
+                                  const nsAString& aURI,
+                                  const nsAString& aTitle,
+                                  ErrorResult& aRv)
+{
+}
+=======
 void Navigator::RegisterContentHandler(const nsAString& aMIMEType,
                                        const nsAString& aURI,
                                        const nsAString& aTitle,
                                        ErrorResult& aRv) {}
 
+// This list should be kept up-to-date with the spec:
+// https://html.spec.whatwg.org/multipage/system-state.html#custom-handlers
+static const char* const kSafeSchemes[] = {
+    "bitcoin", "geo",  "im",   "irc",         "ircs", "magnet", "mailto",
+    "mms",     "news", "nntp", "openpgp4fpr", "sip",  "sms",    "smsto",
+    "ssh",     "tel",  "urn",  "webcal",      "wtai", "xmpp"};
+
+void Navigator::CheckProtocolHandlerAllowed(const nsAString& aScheme,
+                                            nsIURI* aHandlerURI,
+                                            nsIURI* aDocumentURI,
+                                            ErrorResult& aRv) {
+  auto raisePermissionDeniedHandler = [&] {
+    nsAutoCString spec;
+    aHandlerURI->GetSpec(spec);
+    nsPrintfCString message("Permission denied to add %s as a protocol handler",
+                            spec.get());
+    aRv.ThrowDOMException(NS_ERROR_DOM_SECURITY_ERR, message);
+  };
+
+  auto raisePermissionDeniedScheme = [&] {
+    nsPrintfCString message(
+        "Permission denied to add a protocol handler for %s",
+        NS_ConvertUTF16toUTF8(aScheme).get());
+    aRv.ThrowDOMException(NS_ERROR_DOM_SECURITY_ERR, message);
+  };
+
+  if (!aDocumentURI || !aHandlerURI) {
+    aRv.Throw(NS_ERROR_DOM_SYNTAX_ERR);
+    return;
+  }
+
+  nsCString spec;
+  aHandlerURI->GetSpec(spec);
+  // If the uri doesn't contain '%s', it won't be a good handler - the %s
+  // gets replaced with the handled URI.
+  if (!FindInReadable(NS_LITERAL_CSTRING("%s"), spec)) {
+    aRv.ThrowDOMException(NS_ERROR_DOM_SYNTAX_ERR);
+    return;
+  }
+
+  // For security reasons we reject non-http(s) urls (see bug 354316),
+  nsAutoCString docScheme;
+  nsAutoCString handlerScheme;
+  aDocumentURI->GetScheme(docScheme);
+  aHandlerURI->GetScheme(handlerScheme);
+  if ((!docScheme.EqualsLiteral("https") && !docScheme.EqualsLiteral("http")) ||
+      (!handlerScheme.EqualsLiteral("https") &&
+       !handlerScheme.EqualsLiteral("http"))) {
+    raisePermissionDeniedHandler();
+    return;
+  }
+
+  // Should be same-origin:
+  nsAutoCString handlerHost;
+  aHandlerURI->GetHostPort(handlerHost);
+  nsAutoCString documentHost;
+  aDocumentURI->GetHostPort(documentHost);
+  if (!handlerHost.Equals(documentHost) || !handlerScheme.Equals(docScheme)) {
+    raisePermissionDeniedHandler();
+    return;
+  }
+
+  // Having checked the handler URI, check the scheme:
+  nsAutoCString scheme;
+  ToLowerCase(NS_ConvertUTF16toUTF8(aScheme), scheme);
+  if (StringBeginsWith(scheme, NS_LITERAL_CSTRING("web+"))) {
+    // Check for non-ascii
+    nsReadingIterator<char> iter;
+    nsReadingIterator<char> iterEnd;
+    auto remainingScheme = Substring(scheme, 4 /* web+ */);
+    remainingScheme.BeginReading(iter);
+    remainingScheme.EndReading(iterEnd);
+    // Scheme suffix must be non-empty
+    if (iter == iterEnd) {
+      raisePermissionDeniedScheme();
+      return;
+    }
+    for (; iter != iterEnd; iter++) {
+      if (*iter < 'a' || *iter > 'z') {
+        raisePermissionDeniedScheme();
+        return;
+      }
+    }
+  } else {
+    bool matches = false;
+    for (const char* safeScheme : kSafeSchemes) {
+      if (scheme.Equals(safeScheme)) {
+        matches = true;
+        break;
+      }
+    }
+    if (!matches) {
+      raisePermissionDeniedScheme();
+      return;
+    }
+  }
+
+  nsCOMPtr<nsIProtocolHandler> handler;
+  nsCOMPtr<nsIIOService> io = services::GetIOService();
+  if (NS_FAILED(
+          io->GetProtocolHandler(scheme.get(), getter_AddRefs(handler)))) {
+    raisePermissionDeniedScheme();
+    return;
+  }
+
+  // Check to make sure this isn't already handled internally (we don't
+  // want to let them take over, say "chrome"). In theory, the checks above
+  // should have already taken care of this.
+  nsCOMPtr<nsIExternalProtocolHandler> externalHandler =
+      do_QueryInterface(handler);
+  MOZ_RELEASE_ASSERT(
+      externalHandler,
+      "We should never allow overriding a builtin protocol handler");
+
+  // check if we have prefs set saying not to add this.
+  bool defaultExternal =
+      Preferences::GetBool("network.protocol-handler.external-default");
+  nsPrintfCString specificPref("network.protocol-handler.external.%s",
+                               scheme.get());
+  if (!Preferences::GetBool(specificPref.get(), defaultExternal)) {
+    raisePermissionDeniedScheme();
+    return;
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 void Navigator::RegisterProtocolHandler(const nsAString& aProtocol,
                                         const nsAString& aURI,
                                         const nsAString& aTitle,
                                         ErrorResult& aRv) {
   if (!mWindow || !mWindow->GetOuterWindow() || !mWindow->GetDocShell()) {
+||||||| merged common ancestors
+void
+Navigator::RegisterProtocolHandler(const nsAString& aProtocol,
+                                   const nsAString& aURI,
+                                   const nsAString& aTitle,
+                                   ErrorResult& aRv)
+{
+  if (!mWindow || !mWindow->GetOuterWindow() || !mWindow->GetDocShell()) {
+=======
+void Navigator::RegisterProtocolHandler(const nsAString& aScheme,
+                                        const nsAString& aURI,
+                                        const nsAString& aTitle,
+                                        ErrorResult& aRv) {
+  if (!mWindow || !mWindow->GetOuterWindow() || !mWindow->GetDocShell() ||
+      !mWindow->GetDoc()) {
+    return;
+  }
+  nsCOMPtr<nsILoadContext> loadContext = do_GetInterface(mWindow);
+  if (loadContext->UsePrivateBrowsing()) {
+    // If we're a private window, don't alert the user or webpage. We log to the
+    // console so that web developers have some way to tell what's going wrong.
+    nsContentUtils::ReportToConsole(
+        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("DOM"),
+        mWindow->GetDoc(), nsContentUtils::eDOM_PROPERTIES,
+        "RegisterProtocolHandlerPrivateBrowsingWarning");
+>>>>>>> upstream-releases
     return;
   }
 
+<<<<<<< HEAD
   if (!mWindow->IsSecureContext() && mWindow->GetDoc()) {
     mWindow->GetDoc()->WarnOnceAbout(
         nsIDocument::eRegisterProtocolHandlerInsecure);
+||||||| merged common ancestors
+  if (!mWindow->IsSecureContext() && mWindow->GetDoc()) {
+    mWindow->GetDoc()->WarnOnceAbout(nsIDocument::eRegisterProtocolHandlerInsecure);
+=======
+  nsCOMPtr<Document> doc = mWindow->GetDoc();
+
+  // Determine if doc is allowed to assign this handler
+  nsIURI* docURI = doc->GetDocumentURIObject();
+  nsCOMPtr<nsIURI> handlerURI;
+  NS_NewURI(getter_AddRefs(handlerURI), NS_ConvertUTF16toUTF8(aURI),
+            doc->GetDocumentCharacterSet(), docURI);
+  CheckProtocolHandlerAllowed(aScheme, handlerURI, docURI, aRv);
+  if (aRv.Failed()) {
+    return;
+>>>>>>> upstream-releases
   }
 
+<<<<<<< HEAD
   nsCOMPtr<nsIWebContentHandlerRegistrar> registrar =
       do_GetService(NS_WEBCONTENTHANDLERREGISTRAR_CONTRACTID);
   if (!registrar) {
+||||||| merged common ancestors
+  nsCOMPtr<nsIWebContentHandlerRegistrar> registrar =
+    do_GetService(NS_WEBCONTENTHANDLERREGISTRAR_CONTRACTID);
+  if (!registrar) {
+=======
+  if (XRE_IsContentProcess()) {
+    nsAutoString scheme(aScheme);
+    nsAutoString title(aTitle);
+    RefPtr<BrowserChild> browserChild = BrowserChild::GetFrom(mWindow);
+    browserChild->SendRegisterProtocolHandler(scheme, handlerURI, title,
+                                              docURI);
+>>>>>>> upstream-releases
     return;
   }
 
-  aRv = registrar->RegisterProtocolHandler(aProtocol, aURI, aTitle,
-                                           mWindow->GetOuterWindow());
+  nsCOMPtr<nsIWebProtocolHandlerRegistrar> registrar =
+      do_GetService(NS_WEBPROTOCOLHANDLERREGISTRAR_CONTRACTID);
+  if (registrar) {
+    aRv = registrar->RegisterProtocolHandler(aScheme, handlerURI, aTitle,
+                                             docURI, mWindow->GetOuterWindow());
+  }
 }
 
 Geolocation* Navigator::GetGeolocation(ErrorResult& aRv) {
@@ -864,17 +1233,53 @@ Geolocation* Navigator::GetGeolocation(ErrorResult& aRv) {
   return mGeolocation;
 }
 
+<<<<<<< HEAD
+class BeaconStreamListener final : public nsIStreamListener {
+  ~BeaconStreamListener() {}
+||||||| merged common ancestors
+class BeaconStreamListener final : public nsIStreamListener
+{
+    ~BeaconStreamListener() {}
+
+  public:
+    BeaconStreamListener() : mLoadGroup(nullptr) {}
+=======
 class BeaconStreamListener final : public nsIStreamListener {
   ~BeaconStreamListener() {}
 
  public:
   BeaconStreamListener() : mLoadGroup(nullptr) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+ public:
+  BeaconStreamListener() : mLoadGroup(nullptr) {}
+||||||| merged common ancestors
+    void SetLoadGroup(nsILoadGroup* aLoadGroup) {
+      mLoadGroup = aLoadGroup;
+    }
+=======
+  void SetLoadGroup(nsILoadGroup* aLoadGroup) { mLoadGroup = aLoadGroup; }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   void SetLoadGroup(nsILoadGroup* aLoadGroup) { mLoadGroup = aLoadGroup; }
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSISTREAMLISTENER
   NS_DECL_NSIREQUESTOBSERVER
+||||||| merged common ancestors
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSISTREAMLISTENER
+    NS_DECL_NSIREQUESTOBSERVER
+
+  private:
+    nsCOMPtr<nsILoadGroup> mLoadGroup;
+=======
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSISTREAMLISTENER
+  NS_DECL_NSIREQUESTOBSERVER
+>>>>>>> upstream-releases
 
  private:
   nsCOMPtr<nsILoadGroup> mLoadGroup;
@@ -883,8 +1288,16 @@ class BeaconStreamListener final : public nsIStreamListener {
 NS_IMPL_ISUPPORTS(BeaconStreamListener, nsIStreamListener, nsIRequestObserver)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BeaconStreamListener::OnStartRequest(nsIRequest* aRequest,
                                      nsISupports* aContext) {
+||||||| merged common ancestors
+BeaconStreamListener::OnStartRequest(nsIRequest *aRequest,
+                                     nsISupports *aContext)
+{
+=======
+BeaconStreamListener::OnStartRequest(nsIRequest* aRequest) {
+>>>>>>> upstream-releases
   // release the loadgroup first
   mLoadGroup = nullptr;
 
@@ -893,15 +1306,37 @@ BeaconStreamListener::OnStartRequest(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BeaconStreamListener::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
                                     nsresult aStatus) {
+||||||| merged common ancestors
+BeaconStreamListener::OnStopRequest(nsIRequest *aRequest,
+                                    nsISupports *aContext,
+                                    nsresult aStatus)
+{
+=======
+BeaconStreamListener::OnStopRequest(nsIRequest* aRequest, nsresult aStatus) {
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 BeaconStreamListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
                                       nsIInputStream* inStr,
                                       uint64_t sourceOffset, uint32_t count) {
+||||||| merged common ancestors
+BeaconStreamListener::OnDataAvailable(nsIRequest *aRequest,
+                                      nsISupports *ctxt,
+                                      nsIInputStream *inStr,
+                                      uint64_t sourceOffset,
+                                      uint32_t count)
+{
+=======
+BeaconStreamListener::OnDataAvailable(nsIRequest* aRequest,
+                                      nsIInputStream* inStr,
+                                      uint64_t sourceOffset, uint32_t count) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(false);
   return NS_OK;
 }
@@ -957,7 +1392,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
     return false;
   }
 
-  nsCOMPtr<nsIDocument> doc = mWindow->GetDoc();
+  nsCOMPtr<Document> doc = mWindow->GetDoc();
   if (!doc) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return false;
@@ -987,9 +1422,16 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
     return false;
   }
 
+<<<<<<< HEAD
   nsLoadFlags loadFlags =
       nsIRequest::LOAD_NORMAL | nsIChannel::LOAD_CLASSIFY_URI;
 
+||||||| merged common ancestors
+  nsLoadFlags loadFlags = nsIRequest::LOAD_NORMAL |
+    nsIChannel::LOAD_CLASSIFY_URI;
+
+=======
+>>>>>>> upstream-releases
   // No need to use CORS for sendBeacon unless it's a BLOB
   nsSecurityFlags securityFlags =
       aType == eBeaconTypeBlob
@@ -998,12 +1440,27 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
   securityFlags |= nsILoadInfo::SEC_COOKIES_INCLUDE;
 
   nsCOMPtr<nsIChannel> channel;
+<<<<<<< HEAD
   rv = NS_NewChannel(getter_AddRefs(channel), uri, doc, securityFlags,
                      nsIContentPolicy::TYPE_BEACON,
                      nullptr,  // aPerformanceStorage
                      nullptr,  // aLoadGroup
                      nullptr,  // aCallbacks
                      loadFlags);
+||||||| merged common ancestors
+  rv = NS_NewChannel(getter_AddRefs(channel),
+                     uri,
+                     doc,
+                     securityFlags,
+                     nsIContentPolicy::TYPE_BEACON,
+                     nullptr, // aPerformanceStorage
+                     nullptr, // aLoadGroup
+                     nullptr, // aCallbacks
+                     loadFlags);
+=======
+  rv = NS_NewChannel(getter_AddRefs(channel), uri, doc, securityFlags,
+                     nsIContentPolicy::TYPE_BEACON);
+>>>>>>> upstream-releases
 
   if (NS_FAILED(rv)) {
     aRv.Throw(rv);
@@ -1016,8 +1473,10 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
     aRv.Throw(NS_ERROR_DOM_BAD_URI);
     return false;
   }
-  mozilla::net::ReferrerPolicy referrerPolicy = doc->GetReferrerPolicy();
-  rv = httpChannel->SetReferrerWithPolicy(documentURI, referrerPolicy);
+
+  nsCOMPtr<nsIReferrerInfo> referrerInfo = new ReferrerInfo();
+  referrerInfo->InitWithDocument(doc);
+  rv = httpChannel->SetReferrerInfoWithoutClone(referrerInfo);
   MOZ_ASSERT(NS_SUCCEEDED(rv));
 
   nsCOMPtr<nsIInputStream> in;
@@ -1064,8 +1523,8 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
   channel->SetLoadGroup(loadGroup);
 
   RefPtr<BeaconStreamListener> beaconListener = new BeaconStreamListener();
-  rv = channel->AsyncOpen2(beaconListener);
-  // do not throw if security checks fail within asyncOpen2
+  rv = channel->AsyncOpen(beaconListener);
+  // do not throw if security checks fail within asyncOpen
   NS_ENSURE_SUCCESS(rv, false);
 
   // make the beaconListener hold a strong reference to the loadgroup
@@ -1099,6 +1558,7 @@ void Navigator::MozGetUserMedia(const MediaStreamConstraints& aConstraints,
     return;
   }
 
+<<<<<<< HEAD
   MediaManager::GetUserMediaSuccessCallback onsuccess(&aOnSuccess);
   MediaManager::GetUserMediaErrorCallback onerror(&aOnError);
 
@@ -1134,15 +1594,83 @@ void Navigator::MozGetUserMediaDevices(
     MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
     NavigatorUserMediaErrorCallback& aOnError, uint64_t aInnerWindowID,
     const nsAString& aCallID, ErrorResult& aRv) {
+||||||| merged common ancestors
+  MediaManager::GetUserMediaSuccessCallback onsuccess(&aOnSuccess);
+  MediaManager::GetUserMediaErrorCallback onerror(&aOnError);
+
+  MediaManager* manager = MediaManager::Get();
+  aRv = manager->GetUserMedia(mWindow, aConstraints, std::move(onsuccess),
+                              std::move(onerror), aCallerType);
+}
+
+void
+Navigator::MozGetUserMediaDevices(const MediaStreamConstraints& aConstraints,
+                                  MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
+                                  NavigatorUserMediaErrorCallback& aOnError,
+                                  uint64_t aInnerWindowID,
+                                  const nsAString& aCallID,
+                                  ErrorResult& aRv)
+{
+=======
+  RefPtr<NavigatorUserMediaSuccessCallback> onsuccess(&aOnSuccess);
+  RefPtr<NavigatorUserMediaErrorCallback> onerror(&aOnError);
+
+  nsWeakPtr weakWindow = nsWeakPtr(do_GetWeakReference(mWindow));
+
+  MediaManager::Get()
+      ->GetUserMedia(mWindow, aConstraints, aCallerType)
+      ->Then(
+          GetMainThreadSerialEventTarget(), __func__,
+          [weakWindow, onsuccess = std::move(onsuccess)](
+              const RefPtr<DOMMediaStream>& aStream) MOZ_CAN_RUN_SCRIPT {
+            nsCOMPtr<nsPIDOMWindowInner> window = do_QueryReferent(weakWindow);
+            if (!window || !window->GetOuterWindow() ||
+                window->GetOuterWindow()->GetCurrentInnerWindow() != window) {
+              return;  // Leave Promise pending after navigation by design.
+            }
+            MediaManager::CallOnSuccess(*onsuccess, *aStream);
+          },
+          [weakWindow, onerror = std::move(onerror)](
+              const RefPtr<MediaMgrError>& aError) MOZ_CAN_RUN_SCRIPT {
+            nsCOMPtr<nsPIDOMWindowInner> window = do_QueryReferent(weakWindow);
+            if (!window || !window->GetOuterWindow() ||
+                window->GetOuterWindow()->GetCurrentInnerWindow() != window) {
+              return;  // Leave Promise pending after navigation by design.
+            }
+            auto error = MakeRefPtr<MediaStreamError>(window, *aError);
+            MediaManager::CallOnError(*onerror, *error);
+          });
+}
+
+void Navigator::MozGetUserMediaDevices(
+    const MediaStreamConstraints& aConstraints,
+    MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
+    NavigatorUserMediaErrorCallback& aOnError, uint64_t aInnerWindowID,
+    const nsAString& aCallID, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   if (!mWindow || !mWindow->GetOuterWindow() ||
       mWindow->GetOuterWindow()->GetCurrentInnerWindow() != mWindow) {
     aRv.Throw(NS_ERROR_NOT_AVAILABLE);
     return;
   }
-
-  MediaManager* manager = MediaManager::Get();
+  if (Document* doc = mWindow->GetExtantDoc()) {
+    if (!mWindow->IsSecureContext()) {
+      doc->SetDocumentAndPageUseCounter(
+          eUseCounter_custom_MozGetUserMediaInsec);
+    }
+    nsINode* node = doc;
+    while ((node = nsContentUtils::GetCrossDocParentNode(node))) {
+      if (NS_FAILED(nsContentUtils::CheckSameOrigin(doc, node))) {
+        doc->SetDocumentAndPageUseCounter(
+            eUseCounter_custom_MozGetUserMediaXOrigin);
+        break;
+      }
+    }
+  }
+  RefPtr<MediaManager> manager = MediaManager::Get();
   // XXXbz aOnError seems to be unused?
-  aRv = manager->GetUserMediaDevices(mWindow, aConstraints, aOnSuccess,
+  nsCOMPtr<nsPIDOMWindowInner> window(mWindow);
+  aRv = manager->GetUserMediaDevices(window, aConstraints, aOnSuccess,
                                      aInnerWindowID, aCallID);
 }
 
@@ -1375,11 +1903,29 @@ JSObject* Navigator::WrapObject(JSContext* cx,
 }
 
 /* static */
+<<<<<<< HEAD
 bool Navigator::HasUserMediaSupport(JSContext* /* unused */,
                                     JSObject* /* unused */) {
   // Make enabling peerconnection enable getUserMedia() as well
   return Preferences::GetBool("media.navigator.enabled", false) ||
          Preferences::GetBool("media.peerconnection.enabled", false);
+||||||| merged common ancestors
+bool
+Navigator::HasUserMediaSupport(JSContext* /* unused */,
+                               JSObject* /* unused */)
+{
+  // Make enabling peerconnection enable getUserMedia() as well
+  return Preferences::GetBool("media.navigator.enabled", false) ||
+         Preferences::GetBool("media.peerconnection.enabled", false);
+=======
+bool Navigator::HasUserMediaSupport(JSContext* cx, JSObject* obj) {
+  // Make enabling peerconnection enable getUserMedia() as well.
+  // Emulate [SecureContext] unless media.devices.insecure.enabled=true
+  return (StaticPrefs::media_navigator_enabled() ||
+          StaticPrefs::media_peerconnection_enabled()) &&
+         (IsSecureContextOrObjectIsFromSecureContext(cx, obj) ||
+          StaticPrefs::media_devices_insecure_enabled());
+>>>>>>> upstream-releases
 }
 
 /* static */
@@ -1389,14 +1935,34 @@ already_AddRefed<nsPIDOMWindowInner> Navigator::GetWindowFromGlobal(
   return win.forget();
 }
 
+<<<<<<< HEAD
 nsresult Navigator::GetPlatform(nsAString& aPlatform,
                                 bool aUsePrefOverriddenValue) {
+||||||| merged common ancestors
+nsresult
+Navigator::GetPlatform(nsAString& aPlatform, bool aUsePrefOverriddenValue)
+{
+=======
+nsresult Navigator::GetPlatform(nsAString& aPlatform,
+                                nsIPrincipal* aCallerPrincipal,
+                                bool aUsePrefOverriddenValue) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aUsePrefOverriddenValue) {
+<<<<<<< HEAD
     // If fingerprinting resistance is on, we will spoof this value. See
     // nsRFPService.h for details about spoofed values.
     if (nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+    // If fingerprinting resistance is on, we will spoof this value. See nsRFPService.h
+    // for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting()) {
+=======
+    // If fingerprinting resistance is on, we will spoof this value. See
+    // nsRFPService.h for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal)) {
+>>>>>>> upstream-releases
       aPlatform.AssignLiteral(SPOOFED_PLATFORM);
       return NS_OK;
     }
@@ -1438,14 +2004,35 @@ nsresult Navigator::GetPlatform(nsAString& aPlatform,
   return rv;
 }
 
+<<<<<<< HEAD
 /* static */ nsresult Navigator::GetAppVersion(nsAString& aAppVersion,
                                                bool aUsePrefOverriddenValue) {
+||||||| merged common ancestors
+/* static */ nsresult
+Navigator::GetAppVersion(nsAString& aAppVersion, bool aUsePrefOverriddenValue)
+{
+=======
+/* static */
+nsresult Navigator::GetAppVersion(nsAString& aAppVersion,
+                                  nsIPrincipal* aCallerPrincipal,
+                                  bool aUsePrefOverriddenValue) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aUsePrefOverriddenValue) {
+<<<<<<< HEAD
     // If fingerprinting resistance is on, we will spoof this value. See
     // nsRFPService.h for details about spoofed values.
     if (nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+    // If fingerprinting resistance is on, we will spoof this value. See nsRFPService.h
+    // for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting()) {
+=======
+    // If fingerprinting resistance is on, we will spoof this value. See
+    // nsRFPService.h for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal)) {
+>>>>>>> upstream-releases
       aAppVersion.AssignLiteral(SPOOFED_APPVERSION);
       return NS_OK;
     }
@@ -1481,14 +2068,34 @@ nsresult Navigator::GetPlatform(nsAString& aPlatform,
   return rv;
 }
 
+<<<<<<< HEAD
 /* static */ void Navigator::AppName(nsAString& aAppName,
                                      bool aUsePrefOverriddenValue) {
+||||||| merged common ancestors
+/* static */ void
+Navigator::AppName(nsAString& aAppName, bool aUsePrefOverriddenValue)
+{
+=======
+/* static */
+void Navigator::AppName(nsAString& aAppName, nsIPrincipal* aCallerPrincipal,
+                        bool aUsePrefOverriddenValue) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aUsePrefOverriddenValue) {
+<<<<<<< HEAD
     // If fingerprinting resistance is on, we will spoof this value. See
     // nsRFPService.h for details about spoofed values.
     if (nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+    // If fingerprinting resistance is on, we will spoof this value. See nsRFPService.h
+    // for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting()) {
+=======
+    // If fingerprinting resistance is on, we will spoof this value. See
+    // nsRFPService.h for details about spoofed values.
+    if (nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal)) {
+>>>>>>> upstream-releases
       aAppName.AssignLiteral(SPOOFED_APPNAME);
       return;
     }
@@ -1510,13 +2117,33 @@ void Navigator::ClearUserAgentCache() {
   Navigator_Binding::ClearCachedUserAgentValue(this);
 }
 
+<<<<<<< HEAD
 nsresult Navigator::GetUserAgent(nsPIDOMWindowInner* aWindow,
                                  bool aIsCallerChrome, nsAString& aUserAgent) {
+||||||| merged common ancestors
+nsresult
+Navigator::GetUserAgent(nsPIDOMWindowInner* aWindow,
+                        bool aIsCallerChrome,
+                        nsAString& aUserAgent)
+{
+=======
+nsresult Navigator::GetUserAgent(nsPIDOMWindowInner* aWindow,
+                                 nsIPrincipal* aCallerPrincipal,
+                                 bool aIsCallerChrome, nsAString& aUserAgent) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // We will skip the override and pass to httpHandler to get spoofed userAgent
   // when 'privacy.resistFingerprinting' is true.
+<<<<<<< HEAD
   if (!aIsCallerChrome && !nsContentUtils::ShouldResistFingerprinting()) {
+||||||| merged common ancestors
+  if (!aIsCallerChrome &&
+      !nsContentUtils::ShouldResistFingerprinting()) {
+=======
+  if (!aIsCallerChrome &&
+      !nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal)) {
+>>>>>>> upstream-releases
     nsAutoString override;
     nsresult rv =
         mozilla::Preferences::GetString("general.useragent.override", override);
@@ -1525,6 +2152,17 @@ nsresult Navigator::GetUserAgent(nsPIDOMWindowInner* aWindow,
       aUserAgent = override;
       return NS_OK;
     }
+  }
+
+  // When the caller is content and 'privacy.resistFingerprinting' is true,
+  // return a spoofed userAgent which reveals the platform but not the
+  // specific OS version, etc.
+  if (!aIsCallerChrome &&
+      nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal)) {
+    nsAutoCString spoofedUA;
+    nsRFPService::GetSpoofedUserAgent(spoofedUA, false);
+    CopyASCIItoUTF16(spoofedUA, aUserAgent);
+    return NS_OK;
   }
 
   nsresult rv;
@@ -1546,13 +2184,14 @@ nsresult Navigator::GetUserAgent(nsPIDOMWindowInner* aWindow,
   // ignore the User-Agent header from the document channel when
   // 'privacy.resistFingerprinting' is true.
   if (!aWindow ||
-      (nsContentUtils::ShouldResistFingerprinting() && !aIsCallerChrome)) {
+      (nsContentUtils::ShouldResistFingerprinting(aCallerPrincipal) &&
+       !aIsCallerChrome)) {
     return NS_OK;
   }
 
   // Copy the User-Agent header from the document channel which has already been
   // subject to UA overrides.
-  nsCOMPtr<nsIDocument> doc = aWindow->GetExtantDoc();
+  nsCOMPtr<Document> doc = aWindow->GetExtantDoc();
   if (!doc) {
     return NS_OK;
   }
@@ -1594,11 +2233,13 @@ already_AddRefed<Promise> Navigator::RequestMediaKeySystemAccess(
                         mWindow->IsSecureContext());
 
   if (!mWindow->IsSecureContext()) {
-    nsIDocument* doc = mWindow->GetExtantDoc();
-    nsString uri;
+    Document* doc = mWindow->GetExtantDoc();
+    AutoTArray<nsString, 1> params;
+    nsString* uri = params.AppendElement();
     if (doc) {
-      Unused << doc->GetDocumentURI(uri);
+      Unused << doc->GetDocumentURI(*uri);
     }
+<<<<<<< HEAD
     const char16_t* params[] = {uri.get()};
     nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
                                     NS_LITERAL_CSTRING("Media"), doc,
@@ -1610,6 +2251,32 @@ already_AddRefed<Promise> Navigator::RequestMediaKeySystemAccess(
   nsIDocument* doc = mWindow->GetExtantDoc();
   if (doc && !FeaturePolicyUtils::IsFeatureAllowed(
                  doc, NS_LITERAL_STRING("encrypted-media"))) {
+||||||| merged common ancestors
+    const char16_t* params[] = { uri.get() };
+    nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
+                                    NS_LITERAL_CSTRING("Media"),
+                                    doc,
+                                    nsContentUtils::eDOM_PROPERTIES,
+                                    "MediaEMEInsecureContextDeprecatedWarning",
+                                    params,
+                                    ArrayLength(params));
+  }
+
+  nsIDocument* doc = mWindow->GetExtantDoc();
+  if (doc &&
+      !FeaturePolicyUtils::IsFeatureAllowed(doc,
+                                            NS_LITERAL_STRING("encrypted-media"))) {
+=======
+    nsContentUtils::ReportToConsole(
+        nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Media"), doc,
+        nsContentUtils::eDOM_PROPERTIES,
+        "MediaEMEInsecureContextDeprecatedWarning", params);
+  }
+
+  Document* doc = mWindow->GetExtantDoc();
+  if (doc && !FeaturePolicyUtils::IsFeatureAllowed(
+                 doc, NS_LITERAL_STRING("encrypted-media"))) {
+>>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
     return nullptr;
   }

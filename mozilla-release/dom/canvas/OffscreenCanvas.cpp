@@ -6,7 +6,6 @@
 
 #include "OffscreenCanvas.h"
 
-#include "mozilla/dom/DOMPrefs.h"
 #include "mozilla/dom/OffscreenCanvasBinding.h"
 #include "mozilla/dom/WorkerPrivate.h"
 #include "mozilla/dom/WorkerScope.h"
@@ -16,6 +15,7 @@
 #include "mozilla/Telemetry.h"
 #include "CanvasRenderingContext2D.h"
 #include "CanvasUtils.h"
+#include "GLContext.h"
 #include "GLScreenBuffer.h"
 #include "WebGL1Context.h"
 #include "WebGL2Context.h"
@@ -23,6 +23,7 @@
 namespace mozilla {
 namespace dom {
 
+<<<<<<< HEAD
 OffscreenCanvasCloneData::OffscreenCanvasCloneData(
     layers::AsyncCanvasRenderer* aRenderer, uint32_t aWidth, uint32_t aHeight,
     layers::LayersBackend aCompositorBackend, bool aNeutered, bool aIsWriteOnly)
@@ -36,6 +37,41 @@ OffscreenCanvasCloneData::OffscreenCanvasCloneData(
 OffscreenCanvasCloneData::~OffscreenCanvasCloneData() {}
 
 OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal, uint32_t aWidth,
+||||||| merged common ancestors
+OffscreenCanvasCloneData::OffscreenCanvasCloneData(layers::AsyncCanvasRenderer* aRenderer,
+                                                   uint32_t aWidth, uint32_t aHeight,
+                                                   layers::LayersBackend aCompositorBackend,
+                                                   bool aNeutered, bool aIsWriteOnly)
+  : mRenderer(aRenderer)
+  , mWidth(aWidth)
+  , mHeight(aHeight)
+  , mCompositorBackendType(aCompositorBackend)
+  , mNeutered(aNeutered)
+  , mIsWriteOnly(aIsWriteOnly)
+{
+}
+
+OffscreenCanvasCloneData::~OffscreenCanvasCloneData()
+{
+}
+
+OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal,
+                                 uint32_t aWidth,
+=======
+OffscreenCanvasCloneData::OffscreenCanvasCloneData(
+    layers::AsyncCanvasRenderer* aRenderer, uint32_t aWidth, uint32_t aHeight,
+    layers::LayersBackend aCompositorBackend, bool aNeutered, bool aIsWriteOnly)
+    : mRenderer(aRenderer),
+      mWidth(aWidth),
+      mHeight(aHeight),
+      mCompositorBackendType(aCompositorBackend),
+      mNeutered(aNeutered),
+      mIsWriteOnly(aIsWriteOnly) {}
+
+OffscreenCanvasCloneData::~OffscreenCanvasCloneData() {}
+
+OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal, uint32_t aWidth,
+>>>>>>> upstream-releases
                                  uint32_t aHeight,
                                  layers::LayersBackend aCompositorBackend,
                                  layers::AsyncCanvasRenderer* aRenderer)
@@ -55,9 +91,23 @@ JSObject* OffscreenCanvas::WrapObject(JSContext* aCx,
   return OffscreenCanvas_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<OffscreenCanvas> OffscreenCanvas::Constructor(
     const GlobalObject& aGlobal, uint32_t aWidth, uint32_t aHeight,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<OffscreenCanvas>
+OffscreenCanvas::Constructor(const GlobalObject& aGlobal,
+                             uint32_t aWidth,
+                             uint32_t aHeight,
+                             ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<OffscreenCanvas> OffscreenCanvas::Constructor(
+    const GlobalObject& aGlobal, uint32_t aWidth, uint32_t aHeight,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<OffscreenCanvas> offscreenCanvas = new OffscreenCanvas(
       global, aWidth, aHeight, layers::LayersBackend::LAYERS_NONE, nullptr);
@@ -249,11 +299,16 @@ already_AddRefed<Promise> OffscreenCanvas::ToBlob(JSContext* aCx,
 
   RefPtr<EncodeCompleteCallback> callback = new EncodeCallback(global, promise);
 
-  // TODO: Can we obtain the context and document here somehow
-  // so that we can decide when usePlaceholder should be true/false?
-  // See https://trac.torproject.org/18599
-  // For now, we always return a placeholder if fingerprinting resistance is on.
-  bool usePlaceholder = nsContentUtils::ShouldResistFingerprinting();
+  bool usePlaceholder;
+  if (NS_IsMainThread()) {
+    nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(GetGlobalObject());
+    Document* doc = window->GetExtantDoc();
+    usePlaceholder =
+        doc ? nsContentUtils::ShouldResistFingerprinting(doc) : false;
+  } else {
+    dom::WorkerPrivate* workerPrivate = dom::GetCurrentThreadWorkerPrivate();
+    usePlaceholder = nsContentUtils::ShouldResistFingerprinting(workerPrivate);
+  }
   CanvasRenderingContextHelper::ToBlob(aCx, global, callback, aType, aParams,
                                        usePlaceholder, aRv);
 
@@ -278,9 +333,19 @@ nsCOMPtr<nsIGlobalObject> OffscreenCanvas::GetGlobalObject() {
   return workerPrivate->GlobalScope();
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<OffscreenCanvas>
 OffscreenCanvas::CreateFromCloneData(nsIGlobalObject* aGlobal,
                                      OffscreenCanvasCloneData* aData) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<OffscreenCanvas>
+OffscreenCanvas::CreateFromCloneData(nsIGlobalObject* aGlobal, OffscreenCanvasCloneData* aData)
+{
+=======
+/* static */
+already_AddRefed<OffscreenCanvas> OffscreenCanvas::CreateFromCloneData(
+    nsIGlobalObject* aGlobal, OffscreenCanvasCloneData* aData) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aData);
   RefPtr<OffscreenCanvas> wc =
       new OffscreenCanvas(aGlobal, aData->mWidth, aData->mHeight,
@@ -291,13 +356,23 @@ OffscreenCanvas::CreateFromCloneData(nsIGlobalObject* aGlobal,
   return wc.forget();
 }
 
+<<<<<<< HEAD
 /* static */ bool OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx,
                                                              JSObject* aObj) {
+||||||| merged common ancestors
+/* static */ bool
+OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx, JSObject* aObj)
+{
+=======
+/* static */
+bool OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx,
+                                                JSObject* aObj) {
+>>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     return true;
   }
 
-  return DOMPrefs::gfx_offscreencanvas_enabled(aCx, aObj);
+  return StaticPrefs::gfx_offscreencanvas_enabled();
 }
 
 NS_IMPL_CYCLE_COLLECTION_INHERITED(OffscreenCanvas, DOMEventTargetHelper,

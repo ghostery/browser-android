@@ -13,9 +13,7 @@
 #include "jit/BaselineJIT.h"
 #include "jit/Ion.h"
 #include "vm/ArrayObject.h"
-#ifdef ENABLE_BIGINT
 #include "vm/BigIntType.h"
-#endif
 #include "vm/HelperThreads.h"
 #include "vm/JSObject.h"
 #include "vm/JSScript.h"
@@ -60,12 +58,35 @@ static uint32_t HashStringChars(JSString* s) {
   return hash;
 }
 
+<<<<<<< HEAD
 /* static */ HashNumber InefficientNonFlatteningStringHashPolicy::hash(
     const Lookup& l) {
   return l->hasLatin1Chars() ? HashStringChars<Latin1Char>(l)
                              : HashStringChars<char16_t>(l);
+||||||| merged common ancestors
+/* static */ bool
+InefficientNonFlatteningStringHashPolicy::match(const JSString* const& k, const Lookup& l)
+{
+    // We can't use js::EqualStrings, because that flattens our strings.
+    JSString* s1 = const_cast<JSString*>(k);
+    if (k->hasLatin1Chars()) {
+        return l->hasLatin1Chars()
+               ? EqualStringsPure<Latin1Char, Latin1Char>(s1, l)
+               : EqualStringsPure<Latin1Char, char16_t>(s1, l);
+    }
+
+    return l->hasLatin1Chars()
+           ? EqualStringsPure<char16_t, Latin1Char>(s1, l)
+           : EqualStringsPure<char16_t, char16_t>(s1, l);
+=======
+/* static */
+HashNumber InefficientNonFlatteningStringHashPolicy::hash(const Lookup& l) {
+  return l->hasLatin1Chars() ? HashStringChars<Latin1Char>(l)
+                             : HashStringChars<char16_t>(l);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 template <typename Char1, typename Char2>
 static bool EqualStringsPure(JSString* s1, JSString* s2) {
   if (s1->length() != s2->length()) {
@@ -114,12 +135,68 @@ static bool EqualStringsPure(JSString* s1, JSString* s2) {
 }
 
 }  // namespace js
+||||||| merged common ancestors
+} // namespace js
+=======
+template <typename Char1, typename Char2>
+static bool EqualStringsPure(JSString* s1, JSString* s2) {
+  if (s1->length() != s2->length()) {
+    return false;
+  }
+
+  const Char1* c1;
+  UniquePtr<Char1[], JS::FreePolicy> ownedChars1;
+  JS::AutoCheckCannotGC nogc;
+  if (s1->isLinear()) {
+    c1 = s1->asLinear().chars<Char1>(nogc);
+  } else {
+    ownedChars1 =
+        s1->asRope().copyChars<Char1>(/* tcx */ nullptr, js::MallocArena);
+    if (!ownedChars1) {
+      MOZ_CRASH("oom");
+    }
+    c1 = ownedChars1.get();
+  }
+
+  const Char2* c2;
+  UniquePtr<Char2[], JS::FreePolicy> ownedChars2;
+  if (s2->isLinear()) {
+    c2 = s2->asLinear().chars<Char2>(nogc);
+  } else {
+    ownedChars2 =
+        s2->asRope().copyChars<Char2>(/* tcx */ nullptr, js::MallocArena);
+    if (!ownedChars2) {
+      MOZ_CRASH("oom");
+    }
+    c2 = ownedChars2.get();
+  }
+
+  return EqualChars(c1, c2, s1->length());
+}
+
+/* static */
+bool InefficientNonFlatteningStringHashPolicy::match(const JSString* const& k,
+                                                     const Lookup& l) {
+  // We can't use js::EqualStrings, because that flattens our strings.
+  JSString* s1 = const_cast<JSString*>(k);
+  if (k->hasLatin1Chars()) {
+    return l->hasLatin1Chars() ? EqualStringsPure<Latin1Char, Latin1Char>(s1, l)
+                               : EqualStringsPure<Latin1Char, char16_t>(s1, l);
+  }
+
+  return l->hasLatin1Chars() ? EqualStringsPure<char16_t, Latin1Char>(s1, l)
+                             : EqualStringsPure<char16_t, char16_t>(s1, l);
+}
+
+}  // namespace js
+>>>>>>> upstream-releases
 
 namespace JS {
 
 NotableStringInfo::NotableStringInfo() : StringInfo(), buffer(0), length(0) {}
 
 template <typename CharT>
+<<<<<<< HEAD
 static void StoreStringChars(char* buffer, size_t bufferSize, JSString* str) {
   const CharT* chars;
   UniquePtr<CharT[], JS::FreePolicy> ownedChars;
@@ -138,6 +215,48 @@ static void StoreStringChars(char* buffer, size_t bufferSize, JSString* str) {
   // |str| contains unicode chars.  Since this is just for a memory reporter,
   // we don't care.
   PutEscapedString(buffer, bufferSize, chars, str->length(), /* quote */ 0);
+||||||| merged common ancestors
+static void
+StoreStringChars(char* buffer, size_t bufferSize, JSString* str)
+{
+    const CharT* chars;
+    UniquePtr<CharT[], JS::FreePolicy> ownedChars;
+    JS::AutoCheckCannotGC nogc;
+    if (str->isLinear()) {
+        chars = str->asLinear().chars<CharT>(nogc);
+    } else {
+        ownedChars = str->asRope().copyChars<CharT>(/* tcx */ nullptr);
+        if (!ownedChars) {
+            MOZ_CRASH("oom");
+        }
+        chars = ownedChars.get();
+    }
+
+    // We might truncate |str| even if it's much shorter than 1024 chars, if
+    // |str| contains unicode chars.  Since this is just for a memory reporter,
+    // we don't care.
+    PutEscapedString(buffer, bufferSize, chars, str->length(), /* quote */ 0);
+=======
+static void StoreStringChars(char* buffer, size_t bufferSize, JSString* str) {
+  const CharT* chars;
+  UniquePtr<CharT[], JS::FreePolicy> ownedChars;
+  JS::AutoCheckCannotGC nogc;
+  if (str->isLinear()) {
+    chars = str->asLinear().chars<CharT>(nogc);
+  } else {
+    ownedChars =
+        str->asRope().copyChars<CharT>(/* tcx */ nullptr, js::MallocArena);
+    if (!ownedChars) {
+      MOZ_CRASH("oom");
+    }
+    chars = ownedChars.get();
+  }
+
+  // We might truncate |str| even if it's much shorter than 1024 chars, if
+  // |str| contains unicode chars.  Since this is just for a memory reporter,
+  // we don't care.
+  PutEscapedString(buffer, bufferSize, chars, str->length(), /* quote */ 0);
+>>>>>>> upstream-releases
 }
 
 NotableStringInfo::NotableStringInfo(JSString* str, const StringInfo& info)
@@ -194,6 +313,7 @@ NotableClassInfo& NotableClassInfo::operator=(NotableClassInfo&& info) {
 }
 
 NotableScriptSourceInfo::NotableScriptSourceInfo()
+<<<<<<< HEAD
     : ScriptSourceInfo(), filename_(nullptr) {}
 
 NotableScriptSourceInfo::NotableScriptSourceInfo(const char* filename,
@@ -205,6 +325,34 @@ NotableScriptSourceInfo::NotableScriptSourceInfo(const char* filename,
     MOZ_CRASH("oom");
   }
   PodCopy(filename_, filename, bytes);
+||||||| merged common ancestors
+  : ScriptSourceInfo(),
+    filename_(nullptr)
+{
+}
+
+NotableScriptSourceInfo::NotableScriptSourceInfo(const char* filename, const ScriptSourceInfo& info)
+  : ScriptSourceInfo(info)
+{
+    size_t bytes = strlen(filename) + 1;
+    filename_ = js_pod_malloc<char>(bytes);
+    if (!filename_) {
+        MOZ_CRASH("oom");
+    }
+    PodCopy(filename_, filename, bytes);
+=======
+    : ScriptSourceInfo(), filename_(nullptr) {}
+
+NotableScriptSourceInfo::NotableScriptSourceInfo(const char* filename,
+                                                 const ScriptSourceInfo& info)
+    : ScriptSourceInfo(info) {
+  size_t bytes = strlen(filename) + 1;
+  filename_ = js_pod_malloc<char>(bytes);
+  if (!filename_) {
+    MOZ_CRASH("oom");
+  }
+  PodCopy(filename_, filename, bytes);
+>>>>>>> upstream-releases
 }
 
 NotableScriptSourceInfo::NotableScriptSourceInfo(NotableScriptSourceInfo&& info)
@@ -223,6 +371,7 @@ NotableScriptSourceInfo& NotableScriptSourceInfo::operator=(
 
 }  // namespace JS
 
+<<<<<<< HEAD
 typedef HashSet<ScriptSource*, DefaultHasher<ScriptSource*>, SystemAllocPolicy>
     SourceSet;
 
@@ -235,9 +384,49 @@ struct StatsClosure {
   wasm::Code::SeenSet wasmSeenCode;
   wasm::Table::SeenSet wasmSeenTables;
   bool anonymize;
+||||||| merged common ancestors
+} // namespace JS
+
+typedef HashSet<ScriptSource*, DefaultHasher<ScriptSource*>, SystemAllocPolicy> SourceSet;
+=======
+typedef HashSet<ScriptSource*, DefaultHasher<ScriptSource*>, SystemAllocPolicy>
+    SourceSet;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  StatsClosure(RuntimeStats* rt, ObjectPrivateVisitor* v, bool anon)
+      : rtStats(rt), opv(v), anonymize(anon) {}
+||||||| merged common ancestors
+struct StatsClosure
+{
+    RuntimeStats* rtStats;
+    ObjectPrivateVisitor* opv;
+    SourceSet seenSources;
+    wasm::Metadata::SeenSet wasmSeenMetadata;
+    wasm::ShareableBytes::SeenSet wasmSeenBytes;
+    wasm::Code::SeenSet wasmSeenCode;
+    wasm::Table::SeenSet wasmSeenTables;
+    bool anonymize;
+
+    StatsClosure(RuntimeStats* rt, ObjectPrivateVisitor* v, bool anon)
+      : rtStats(rt),
+        opv(v),
+        anonymize(anon)
+    {}
+=======
+struct StatsClosure {
+  RuntimeStats* rtStats;
+  ObjectPrivateVisitor* opv;
+  SourceSet seenSources;
+  wasm::Metadata::SeenSet wasmSeenMetadata;
+  wasm::ShareableBytes::SeenSet wasmSeenBytes;
+  wasm::Code::SeenSet wasmSeenCode;
+  wasm::Table::SeenSet wasmSeenTables;
+  bool anonymize;
 
   StatsClosure(RuntimeStats* rt, ObjectPrivateVisitor* v, bool anon)
       : rtStats(rt), opv(v), anonymize(anon) {}
+>>>>>>> upstream-releases
 };
 
 static void DecommittedArenasChunkCallback(JSRuntime* rt, void* data,
@@ -347,6 +536,20 @@ static void AddClassInfo(Granularity granularity, RealmStats& realmStats,
 }
 
 template <Granularity granularity>
+<<<<<<< HEAD
+static void CollectScriptSourceStats(StatsClosure* closure, ScriptSource* ss) {
+  RuntimeStats* rtStats = closure->rtStats;
+||||||| merged common ancestors
+static void
+CollectScriptSourceStats(StatsClosure* closure, ScriptSource* ss)
+{
+    RuntimeStats* rtStats = closure->rtStats;
+
+    SourceSet::AddPtr entry = closure->seenSources.lookupForAdd(ss);
+    if (entry) {
+        return;
+    }
+=======
 static void CollectScriptSourceStats(StatsClosure* closure, ScriptSource* ss) {
   RuntimeStats* rtStats = closure->rtStats;
 
@@ -354,21 +557,92 @@ static void CollectScriptSourceStats(StatsClosure* closure, ScriptSource* ss) {
   if (entry) {
     return;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  SourceSet::AddPtr entry = closure->seenSources.lookupForAdd(ss);
+  if (entry) {
+    return;
+  }
+||||||| merged common ancestors
+    bool ok = closure->seenSources.add(entry, ss);
+    (void)ok; // Not much to be done on failure.
+=======
   bool ok = closure->seenSources.add(entry, ss);
   (void)ok;  // Not much to be done on failure.
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  bool ok = closure->seenSources.add(entry, ss);
+  (void)ok;  // Not much to be done on failure.
+||||||| merged common ancestors
+    JS::ScriptSourceInfo info;  // This zeroes all the sizes.
+    ss->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &info);
+=======
   JS::ScriptSourceInfo info;  // This zeroes all the sizes.
   ss->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &info);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  JS::ScriptSourceInfo info;  // This zeroes all the sizes.
+  ss->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &info);
+||||||| merged common ancestors
+    rtStats->runtime.scriptSourceInfo.add(info);
+=======
   rtStats->runtime.scriptSourceInfo.add(info);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  rtStats->runtime.scriptSourceInfo.add(info);
+||||||| merged common ancestors
+    if (granularity == FineGrained) {
+        const char* filename = ss->filename();
+        if (!filename) {
+            filename = "<no filename>";
+        }
+=======
   if (granularity == FineGrained) {
     const char* filename = ss->filename();
     if (!filename) {
       filename = "<no filename>";
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (granularity == FineGrained) {
+    const char* filename = ss->filename();
+    if (!filename) {
+      filename = "<no filename>";
+||||||| merged common ancestors
+        JS::RuntimeSizes::ScriptSourcesHashMap::AddPtr p =
+            rtStats->runtime.allScriptSources->lookupForAdd(filename);
+        if (!p) {
+            bool ok = rtStats->runtime.allScriptSources->add(p, filename, info);
+            // Ignore failure -- we just won't record the script source as notable.
+            (void)ok;
+        } else {
+            p->value().add(info);
+        }
+=======
+    JS::RuntimeSizes::ScriptSourcesHashMap::AddPtr p =
+        rtStats->runtime.allScriptSources->lookupForAdd(filename);
+    if (!p) {
+      bool ok = rtStats->runtime.allScriptSources->add(p, filename, info);
+      // Ignore failure -- we just won't record the script source as notable.
+      (void)ok;
+    } else {
+      p->value().add(info);
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+||||||| merged common ancestors
+}
+=======
+  }
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     JS::RuntimeSizes::ScriptSourcesHashMap::AddPtr p =
         rtStats->runtime.allScriptSources->lookupForAdd(filename);
     if (!p) {
@@ -381,10 +655,78 @@ static void CollectScriptSourceStats(StatsClosure* closure, ScriptSource* ss) {
   }
 }
 
+||||||| merged common ancestors
+
+=======
+>>>>>>> upstream-releases
 // The various kinds of hashing are expensive, and the results are unused when
 // doing coarse-grained measurements. Skipping them more than doubles the
 // profile speed for complex pages such as gmail.com.
 template <Granularity granularity>
+<<<<<<< HEAD
+static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
+                              JS::TraceKind traceKind, size_t thingSize) {
+  StatsClosure* closure = static_cast<StatsClosure*>(data);
+  RuntimeStats* rtStats = closure->rtStats;
+  ZoneStats* zStats = rtStats->currZoneStats;
+  switch (traceKind) {
+    case JS::TraceKind::Object: {
+      JSObject* obj = static_cast<JSObject*>(thing);
+      RealmStats& realmStats = obj->maybeCCWRealm()->realmStats();
+      JS::ClassInfo info;  // This zeroes all the sizes.
+      info.objectsGCHeap += thingSize;
+
+      obj->addSizeOfExcludingThis(rtStats->mallocSizeOf_, &info);
+
+      // These classes require special handling due to shared resources which
+      // we must be careful not to report twice.
+      if (obj->is<WasmModuleObject>()) {
+        const wasm::Module& module = obj->as<WasmModuleObject>().module();
+        if (ScriptSource* ss = module.metadata().maybeScriptSource()) {
+          CollectScriptSourceStats<granularity>(closure, ss);
+||||||| merged common ancestors
+static void
+StatsCellCallback(JSRuntime* rt, void* data, void* thing, JS::TraceKind traceKind,
+                  size_t thingSize)
+{
+    StatsClosure* closure = static_cast<StatsClosure*>(data);
+    RuntimeStats* rtStats = closure->rtStats;
+    ZoneStats* zStats = rtStats->currZoneStats;
+    switch (traceKind) {
+      case JS::TraceKind::Object: {
+        JSObject* obj = static_cast<JSObject*>(thing);
+        RealmStats& realmStats = obj->maybeCCWRealm()->realmStats();
+        JS::ClassInfo info;        // This zeroes all the sizes.
+        info.objectsGCHeap += thingSize;
+
+        obj->addSizeOfExcludingThis(rtStats->mallocSizeOf_, &info);
+
+        // These classes require special handling due to shared resources which
+        // we must be careful not to report twice.
+        if (obj->is<WasmModuleObject>()) {
+            const wasm::Module& module = obj->as<WasmModuleObject>().module();
+            if (ScriptSource* ss = module.metadata().maybeScriptSource()) {
+                CollectScriptSourceStats<granularity>(closure, ss);
+            }
+            module.addSizeOfMisc(rtStats->mallocSizeOf_,
+                                 &closure->wasmSeenMetadata,
+                                 &closure->wasmSeenBytes,
+                                 &closure->wasmSeenCode,
+                                 &info.objectsNonHeapCodeWasm,
+                                 &info.objectsMallocHeapMisc);
+        } else if (obj->is<WasmInstanceObject>()) {
+            wasm::Instance& instance = obj->as<WasmInstanceObject>().instance();
+            if (ScriptSource* ss = instance.metadata().maybeScriptSource()) {
+                CollectScriptSourceStats<granularity>(closure, ss);
+            }
+            instance.addSizeOfMisc(rtStats->mallocSizeOf_,
+                                   &closure->wasmSeenMetadata,
+                                   &closure->wasmSeenBytes,
+                                   &closure->wasmSeenCode,
+                                   &closure->wasmSeenTables,
+                                   &info.objectsNonHeapCodeWasm,
+                                   &info.objectsMallocHeapMisc);
+=======
 static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
                               JS::TraceKind traceKind, size_t thingSize) {
   StatsClosure* closure = static_cast<StatsClosure*>(data);
@@ -414,6 +756,17 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
         wasm::Instance& instance = obj->as<WasmInstanceObject>().instance();
         if (ScriptSource* ss = instance.metadata().maybeScriptSource()) {
           CollectScriptSourceStats<granularity>(closure, ss);
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
+        module.addSizeOfMisc(rtStats->mallocSizeOf_, &closure->wasmSeenMetadata,
+                             &closure->wasmSeenBytes, &closure->wasmSeenCode,
+                             &info.objectsNonHeapCodeWasm,
+                             &info.objectsMallocHeapMisc);
+      } else if (obj->is<WasmInstanceObject>()) {
+        wasm::Instance& instance = obj->as<WasmInstanceObject>().instance();
+        if (ScriptSource* ss = instance.metadata().maybeScriptSource()) {
+          CollectScriptSourceStats<granularity>(closure, ss);
         }
         instance.addSizeOfMisc(
             rtStats->mallocSizeOf_, &closure->wasmSeenMetadata,
@@ -421,6 +774,15 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
             &closure->wasmSeenTables, &info.objectsNonHeapCodeWasm,
             &info.objectsMallocHeapMisc);
       }
+||||||| merged common ancestors
+=======
+        instance.addSizeOfMisc(
+            rtStats->mallocSizeOf_, &closure->wasmSeenMetadata,
+            &closure->wasmSeenBytes, &closure->wasmSeenCode,
+            &closure->wasmSeenTables, &info.objectsNonHeapCodeWasm,
+            &info.objectsMallocHeapMisc);
+      }
+>>>>>>> upstream-releases
 
       realmStats.classInfo.add(info);
 
@@ -433,6 +795,7 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
         if (opv->getISupports_(obj, &iface) && iface) {
           realmStats.objectsPrivate += opv->sizeOfIncludingThis(iface);
         }
+<<<<<<< HEAD
       }
       break;
     }
@@ -458,6 +821,34 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
       size_t size = thingSize;
       if (!str->isTenured()) {
         size += Nursery::stringHeaderSize();
+||||||| merged common ancestors
+        break;
+=======
+      }
+      break;
+    }
+
+    case JS::TraceKind::Script: {
+      JSScript* script = static_cast<JSScript*>(thing);
+      RealmStats& realmStats = script->realm()->realmStats();
+      realmStats.scriptsGCHeap += thingSize;
+      realmStats.scriptsMallocHeapData +=
+          script->sizeOfData(rtStats->mallocSizeOf_);
+      script->addSizeOfJitScript(rtStats->mallocSizeOf_, &realmStats.jitScripts,
+                                 &realmStats.baselineStubsFallback);
+      jit::AddSizeOfBaselineData(script, rtStats->mallocSizeOf_,
+                                 &realmStats.baselineData);
+      realmStats.ionData += jit::SizeOfIonData(script, rtStats->mallocSizeOf_);
+      CollectScriptSourceStats<granularity>(closure, script->scriptSource());
+      break;
+    }
+
+    case JS::TraceKind::String: {
+      JSString* str = static_cast<JSString*>(thing);
+      size_t size = thingSize;
+      if (!str->isTenured()) {
+        size += Nursery::stringHeaderSize();
+>>>>>>> upstream-releases
       }
 
       JS::StringInfo info;
@@ -485,12 +876,40 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
           // Ignore failure -- we just won't record the string as notable.
           (void)ok;
         } else {
+<<<<<<< HEAD
           p->value().add(info);
         }
+||||||| merged common ancestors
+            info.gcHeapTwoByte = size;
+            info.mallocHeapTwoByte = str->sizeOfExcludingThis(rtStats->mallocSizeOf_);
+        }
+        info.numCopies = 1;
+
+        zStats->stringInfo.add(info);
+
+        // The primary use case for anonymization is automated crash submission
+        // (to help detect OOM crashes). In that case, we don't want to pay the
+        // memory cost required to do notable string detection.
+        if (granularity == FineGrained && !closure->anonymize) {
+            ZoneStats::StringsHashMap::AddPtr p = zStats->allStrings->lookupForAdd(str);
+            if (!p) {
+                bool ok = zStats->allStrings->add(p, str, info);
+                // Ignore failure -- we just won't record the string as notable.
+                (void)ok;
+            } else {
+                p->value().add(info);
+            }
+        }
+        break;
+=======
+          p->value().add(info);
+        }
+>>>>>>> upstream-releases
       }
       break;
     }
 
+<<<<<<< HEAD
     case JS::TraceKind::Symbol:
       zStats->symbolsGCHeap += thingSize;
       break;
@@ -504,11 +923,53 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
       break;
     }
 #endif
+||||||| merged common ancestors
+      case JS::TraceKind::Symbol:
+        zStats->symbolsGCHeap += thingSize;
+        break;
+
+#ifdef ENABLE_BIGINT
+      case JS::TraceKind::BigInt: {
+        JS::BigInt* bi = static_cast<BigInt*>(thing);
+        zStats->bigIntsGCHeap += thingSize;
+        zStats->bigIntsMallocHeap += bi->sizeOfExcludingThis(rtStats->mallocSizeOf_);
+        break;
+      }
+#endif
+=======
+    case JS::TraceKind::Symbol:
+      zStats->symbolsGCHeap += thingSize;
+      break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    case JS::TraceKind::BaseShape: {
+      JS::ShapeInfo info;  // This zeroes all the sizes.
+      info.shapesGCHeapBase += thingSize;
+      // No malloc-heap measurements.
+||||||| merged common ancestors
+      case JS::TraceKind::BaseShape: {
+        JS::ShapeInfo info;        // This zeroes all the sizes.
+        info.shapesGCHeapBase += thingSize;
+        // No malloc-heap measurements.
+
+        zStats->shapeInfo.add(info);
+        break;
+      }
+=======
+    case JS::TraceKind::BigInt: {
+      JS::BigInt* bi = static_cast<BigInt*>(thing);
+      zStats->bigIntsGCHeap += thingSize;
+      zStats->bigIntsMallocHeap +=
+          bi->sizeOfExcludingThis(rtStats->mallocSizeOf_);
+      break;
+    }
 
     case JS::TraceKind::BaseShape: {
       JS::ShapeInfo info;  // This zeroes all the sizes.
       info.shapesGCHeapBase += thingSize;
       // No malloc-heap measurements.
+>>>>>>> upstream-releases
 
       zStats->shapeInfo.add(info);
       break;
@@ -566,10 +1027,60 @@ static void StatsCellCallback(JSRuntime* rt, void* data, void* thing,
       break;
     }
 
+<<<<<<< HEAD
     default:
       MOZ_CRASH("invalid traceKind in StatsCellCallback");
   }
 
+  // Yes, this is a subtraction:  see StatsArenaCallback() for details.
+  zStats->unusedGCThings.addToKind(traceKind, -thingSize);
+}
+||||||| merged common ancestors
+    // Yes, this is a subtraction:  see StatsArenaCallback() for details.
+    zStats->unusedGCThings.addToKind(traceKind, -thingSize);
+}
+=======
+    default:
+      MOZ_CRASH("invalid traceKind in StatsCellCallback");
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+bool ZoneStats::initStrings() {
+  isTotals = false;
+  allStrings = js_new<StringsHashMap>();
+  if (!allStrings) {
+    js_delete(allStrings);
+    allStrings = nullptr;
+    return false;
+  }
+  return true;
+||||||| merged common ancestors
+bool
+ZoneStats::initStrings()
+{
+    isTotals = false;
+    allStrings = js_new<StringsHashMap>();
+    if (!allStrings) {
+        js_delete(allStrings);
+        allStrings = nullptr;
+        return false;
+    }
+    return true;
+}
+
+bool
+RealmStats::initClasses()
+{
+    isTotals = false;
+    allClasses = js_new<ClassesHashMap>();
+    if (!allClasses) {
+        js_delete(allClasses);
+        allClasses = nullptr;
+        return false;
+    }
+    return true;
+=======
   // Yes, this is a subtraction:  see StatsArenaCallback() for details.
   zStats->unusedGCThings.addToKind(traceKind, -thingSize);
 }
@@ -583,6 +1094,7 @@ bool ZoneStats::initStrings() {
     return false;
   }
   return true;
+>>>>>>> upstream-releases
 }
 
 bool RealmStats::initClasses() {
@@ -617,6 +1129,50 @@ static bool FindNotableStrings(ZoneStats& zStats) {
 
     zStats.notableStrings.back() = NotableStringInfo(str, info);
 
+<<<<<<< HEAD
+    // We're moving this string from a non-notable to a notable bucket, so
+    // subtract it out of the non-notable tallies.
+    zStats.stringInfo.subtract(info);
+  }
+  // Delete |allStrings| now, rather than waiting for zStats's destruction,
+  // to reduce peak memory consumption during reporting.
+  js_delete(zStats.allStrings);
+  zStats.allStrings = nullptr;
+  return true;
+}
+||||||| merged common ancestors
+        // We're moving this string from a non-notable to a notable bucket, so
+        // subtract it out of the non-notable tallies.
+        zStats.stringInfo.subtract(info);
+    }
+    // Delete |allStrings| now, rather than waiting for zStats's destruction,
+    // to reduce peak memory consumption during reporting.
+    js_delete(zStats.allStrings);
+    zStats.allStrings = nullptr;
+    return true;
+}
+
+static bool
+FindNotableClasses(RealmStats& realmStats)
+{
+    using namespace JS;
+
+    // We should only run FindNotableClasses once per ZoneStats object.
+    MOZ_ASSERT(realmStats.notableClasses.empty());
+
+    for (RealmStats::ClassesHashMap::Range r = realmStats.allClasses->all();
+         !r.empty();
+         r.popFront())
+    {
+        const char* className = r.front().key();
+        ClassInfo& info = r.front().value();
+
+        // If this class isn't notable, or if we can't grow the notableStrings
+        // vector, skip this string.
+        if (!info.isNotable()) {
+            continue;
+        }
+=======
     // We're moving this string from a non-notable to a notable bucket, so
     // subtract it out of the non-notable tallies.
     zStats.stringInfo.subtract(info);
@@ -644,13 +1200,72 @@ static bool FindNotableClasses(RealmStats& realmStats) {
     if (!info.isNotable()) {
       continue;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static bool FindNotableClasses(RealmStats& realmStats) {
+  using namespace JS;
+
+  // We should only run FindNotableClasses once per ZoneStats object.
+  MOZ_ASSERT(realmStats.notableClasses.empty());
+||||||| merged common ancestors
+        if (!realmStats.notableClasses.growBy(1)) {
+            return false;
+        }
+=======
     if (!realmStats.notableClasses.growBy(1)) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  for (RealmStats::ClassesHashMap::Range r = realmStats.allClasses->all();
+       !r.empty(); r.popFront()) {
+    const char* className = r.front().key();
+    ClassInfo& info = r.front().value();
+||||||| merged common ancestors
+        realmStats.notableClasses.back() = NotableClassInfo(className, info);
+=======
     realmStats.notableClasses.back() = NotableClassInfo(className, info);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // If this class isn't notable, or if we can't grow the notableStrings
+    // vector, skip this string.
+    if (!info.isNotable()) {
+      continue;
+    }
+||||||| merged common ancestors
+        // We're moving this class from a non-notable to a notable bucket, so
+        // subtract it out of the non-notable tallies.
+        realmStats.classInfo.subtract(info);
+    }
+    // Delete |allClasses| now, rather than waiting for zStats's destruction,
+    // to reduce peak memory consumption during reporting.
+    js_delete(realmStats.allClasses);
+    realmStats.allClasses = nullptr;
+    return true;
+}
+
+static bool
+FindNotableScriptSources(JS::RuntimeSizes& runtime)
+{
+    using namespace JS;
+
+    // We should only run FindNotableScriptSources once per RuntimeSizes.
+    MOZ_ASSERT(runtime.notableScriptSources.empty());
+
+    for (RuntimeSizes::ScriptSourcesHashMap::Range r = runtime.allScriptSources->all();
+         !r.empty();
+         r.popFront())
+    {
+        const char* filename = r.front().key();
+        ScriptSourceInfo& info = r.front().value();
+
+        if (!info.isNotable()) {
+            continue;
+        }
+=======
     // We're moving this class from a non-notable to a notable bucket, so
     // subtract it out of the non-notable tallies.
     realmStats.classInfo.subtract(info);
@@ -677,14 +1292,79 @@ static bool FindNotableScriptSources(JS::RuntimeSizes& runtime) {
     if (!info.isNotable()) {
       continue;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    if (!realmStats.notableClasses.growBy(1)) {
+      return false;
+    }
+||||||| merged common ancestors
+        if (!runtime.notableScriptSources.growBy(1)) {
+            return false;
+        }
+=======
     if (!runtime.notableScriptSources.growBy(1)) {
       return false;
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    realmStats.notableClasses.back() = NotableClassInfo(className, info);
+||||||| merged common ancestors
+        runtime.notableScriptSources.back() = NotableScriptSourceInfo(filename, info);
+=======
     runtime.notableScriptSources.back() =
         NotableScriptSourceInfo(filename, info);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // We're moving this class from a non-notable to a notable bucket, so
+    // subtract it out of the non-notable tallies.
+    realmStats.classInfo.subtract(info);
+  }
+  // Delete |allClasses| now, rather than waiting for zStats's destruction,
+  // to reduce peak memory consumption during reporting.
+  js_delete(realmStats.allClasses);
+  realmStats.allClasses = nullptr;
+  return true;
+}
+
+static bool FindNotableScriptSources(JS::RuntimeSizes& runtime) {
+  using namespace JS;
+
+  // We should only run FindNotableScriptSources once per RuntimeSizes.
+  MOZ_ASSERT(runtime.notableScriptSources.empty());
+
+  for (RuntimeSizes::ScriptSourcesHashMap::Range r =
+           runtime.allScriptSources->all();
+       !r.empty(); r.popFront()) {
+    const char* filename = r.front().key();
+    ScriptSourceInfo& info = r.front().value();
+
+    if (!info.isNotable()) {
+      continue;
+    }
+||||||| merged common ancestors
+        // We're moving this script source from a non-notable to a notable
+        // bucket, so subtract its sizes from the non-notable tallies.
+        runtime.scriptSourceInfo.subtract(info);
+    }
+    // Delete |allScriptSources| now, rather than waiting for zStats's
+    // destruction, to reduce peak memory consumption during reporting.
+    js_delete(runtime.allScriptSources);
+    runtime.allScriptSources = nullptr;
+    return true;
+}
+
+static bool
+CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats, ObjectPrivateVisitor* opv,
+                          bool anonymize, IterateCellCallback statsCellCallback)
+{
+    JSRuntime* rt = cx->runtime();
+    if (!rtStats->realmStatsVector.reserve(rt->numRealms)) {
+        return false;
+    }
+=======
     // We're moving this script source from a non-notable to a notable
     // bucket, so subtract its sizes from the non-notable tallies.
     runtime.scriptSourceInfo.subtract(info);
@@ -699,40 +1379,158 @@ static bool FindNotableScriptSources(JS::RuntimeSizes& runtime) {
 static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
                                       ObjectPrivateVisitor* opv, bool anonymize,
                                       IterateCellCallback statsCellCallback) {
+  // Finish any ongoing incremental GC that may change the data we're gathering
+  // and ensure that we don't do anything that could start another one.
+  gc::FinishGC(cx);
+  JS::AutoAssertNoGC nogc(cx);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    if (!runtime.notableScriptSources.growBy(1)) {
+      return false;
+    }
+||||||| merged common ancestors
+    size_t totalZones = rt->gc.zones().length() + 1; // + 1 for the atoms zone.
+    if (!rtStats->zoneStatsVector.reserve(totalZones)) {
+        return false;
+    }
+=======
   JSRuntime* rt = cx->runtime();
   if (!rtStats->realmStatsVector.reserve(rt->numRealms)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    runtime.notableScriptSources.back() =
+        NotableScriptSourceInfo(filename, info);
+||||||| merged common ancestors
+    rtStats->gcHeapChunkTotal =
+        size_t(JS_GetGCParameter(cx, JSGC_TOTAL_CHUNKS)) * gc::ChunkSize;
+=======
   size_t totalZones = rt->gc.zones().length() + 1;  // + 1 for the atoms zone.
   if (!rtStats->zoneStatsVector.reserve(totalZones)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    // We're moving this script source from a non-notable to a notable
+    // bucket, so subtract its sizes from the non-notable tallies.
+    runtime.scriptSourceInfo.subtract(info);
+  }
+  // Delete |allScriptSources| now, rather than waiting for zStats's
+  // destruction, to reduce peak memory consumption during reporting.
+  js_delete(runtime.allScriptSources);
+  runtime.allScriptSources = nullptr;
+  return true;
+}
+||||||| merged common ancestors
+    rtStats->gcHeapUnusedChunks =
+        size_t(JS_GetGCParameter(cx, JSGC_UNUSED_CHUNKS)) * gc::ChunkSize;
+=======
   rtStats->gcHeapChunkTotal =
       size_t(JS_GetGCParameter(cx, JSGC_TOTAL_CHUNKS)) * gc::ChunkSize;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
+                                      ObjectPrivateVisitor* opv, bool anonymize,
+                                      IterateCellCallback statsCellCallback) {
+  JSRuntime* rt = cx->runtime();
+  if (!rtStats->realmStatsVector.reserve(rt->numRealms)) {
+    return false;
+  }
+||||||| merged common ancestors
+    IterateChunks(cx, &rtStats->gcHeapDecommittedArenas,
+                  DecommittedArenasChunkCallback);
+=======
   rtStats->gcHeapUnusedChunks =
       size_t(JS_GetGCParameter(cx, JSGC_UNUSED_CHUNKS)) * gc::ChunkSize;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  size_t totalZones = rt->gc.zones().length() + 1;  // + 1 for the atoms zone.
+  if (!rtStats->zoneStatsVector.reserve(totalZones)) {
+    return false;
+  }
+||||||| merged common ancestors
+    // Take the per-compartment measurements.
+    StatsClosure closure(rtStats, opv, anonymize);
+    IterateHeapUnbarriered(cx, &closure,
+                           StatsZoneCallback,
+                           StatsRealmCallback,
+                           StatsArenaCallback,
+                           statsCellCallback);
+=======
   IterateChunks(cx, &rtStats->gcHeapDecommittedArenas,
                 DecommittedArenasChunkCallback);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  rtStats->gcHeapChunkTotal =
+      size_t(JS_GetGCParameter(cx, JSGC_TOTAL_CHUNKS)) * gc::ChunkSize;
+||||||| merged common ancestors
+    // Take the "explicit/js/runtime/" measurements.
+    rt->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &rtStats->runtime);
+=======
   // Take the per-compartment measurements.
   StatsClosure closure(rtStats, opv, anonymize);
   IterateHeapUnbarriered(cx, &closure, StatsZoneCallback, StatsRealmCallback,
                          StatsArenaCallback, statsCellCallback);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  rtStats->gcHeapUnusedChunks =
+      size_t(JS_GetGCParameter(cx, JSGC_UNUSED_CHUNKS)) * gc::ChunkSize;
+||||||| merged common ancestors
+    if (!FindNotableScriptSources(rtStats->runtime)) {
+        return false;
+    }
+=======
   // Take the "explicit/js/runtime/" measurements.
   rt->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &rtStats->runtime);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  IterateChunks(cx, &rtStats->gcHeapDecommittedArenas,
+                DecommittedArenasChunkCallback);
+||||||| merged common ancestors
+    JS::ZoneStatsVector& zs = rtStats->zoneStatsVector;
+    ZoneStats& zTotals = rtStats->zTotals;
+=======
   if (!FindNotableScriptSources(rtStats->runtime)) {
     return false;
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Take the per-compartment measurements.
+  StatsClosure closure(rtStats, opv, anonymize);
+  IterateHeapUnbarriered(cx, &closure, StatsZoneCallback, StatsRealmCallback,
+                         StatsArenaCallback, statsCellCallback);
+||||||| merged common ancestors
+    // We don't look for notable strings for zTotals. So we first sum all the
+    // zones' measurements to get the totals. Then we find the notable strings
+    // within each zone.
+    for (size_t i = 0; i < zs.length(); i++) {
+        zTotals.addSizes(zs[i]);
+    }
+=======
   JS::ZoneStatsVector& zs = rtStats->zoneStatsVector;
   ZoneStats& zTotals = rtStats->zTotals;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  // Take the "explicit/js/runtime/" measurements.
+  rt->addSizeOfIncludingThis(rtStats->mallocSizeOf_, &rtStats->runtime);
+||||||| merged common ancestors
+    for (size_t i = 0; i < zs.length(); i++) {
+        if (!FindNotableStrings(zs[i])) {
+            return false;
+        }
+    }
+=======
   // We don't look for notable strings for zTotals. So we first sum all the
   // zones' measurements to get the totals. Then we find the notable strings
   // within each zone.
@@ -745,7 +1543,57 @@ static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
       return false;
     }
   }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  if (!FindNotableScriptSources(rtStats->runtime)) {
+    return false;
+  }
+||||||| merged common ancestors
+    MOZ_ASSERT(!zTotals.allStrings);
+=======
+  MOZ_ASSERT(!zTotals.allStrings);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  JS::ZoneStatsVector& zs = rtStats->zoneStatsVector;
+  ZoneStats& zTotals = rtStats->zTotals;
+||||||| merged common ancestors
+    JS::RealmStatsVector& realmStats = rtStats->realmStatsVector;
+    RealmStats& realmTotals = rtStats->realmTotals;
+=======
+  JS::RealmStatsVector& realmStats = rtStats->realmStatsVector;
+  RealmStats& realmTotals = rtStats->realmTotals;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // We don't look for notable strings for zTotals. So we first sum all the
+  // zones' measurements to get the totals. Then we find the notable strings
+  // within each zone.
+  for (size_t i = 0; i < zs.length(); i++) {
+    zTotals.addSizes(zs[i]);
+  }
+
+  for (size_t i = 0; i < zs.length(); i++) {
+    if (!FindNotableStrings(zs[i])) {
+      return false;
+    }
+  }
+||||||| merged common ancestors
+    // As with the zones, we sum all realms first, and then get the
+    // notable classes within each zone.
+    for (size_t i = 0; i < realmStats.length(); i++) {
+        realmTotals.addSizes(realmStats[i]);
+    }
+=======
+  // As with the zones, we sum all realms first, and then get the
+  // notable classes within each zone.
+  for (size_t i = 0; i < realmStats.length(); i++) {
+    realmTotals.addSizes(realmStats[i]);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   MOZ_ASSERT(!zTotals.allStrings);
 
   JS::RealmStatsVector& realmStats = rtStats->realmStatsVector;
@@ -760,6 +1608,16 @@ static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
   for (size_t i = 0; i < realmStats.length(); i++) {
     if (!FindNotableClasses(realmStats[i])) {
       return false;
+||||||| merged common ancestors
+    for (size_t i = 0; i < realmStats.length(); i++) {
+        if (!FindNotableClasses(realmStats[i])) {
+            return false;
+        }
+=======
+  for (size_t i = 0; i < realmStats.length(); i++) {
+    if (!FindNotableClasses(realmStats[i])) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 
@@ -776,6 +1634,7 @@ static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
   MOZ_ASSERT(totalArenaSize % gc::ArenaSize == 0);
 #endif
 
+<<<<<<< HEAD
   for (RealmsIter realm(rt); !realm.done(); realm.next()) {
     realm->nullRealmStats();
   }
@@ -798,10 +1657,71 @@ static bool CollectRuntimeStatsHelper(JSContext* cx, RuntimeStats* rtStats,
 
 JS_PUBLIC_API bool JS::CollectGlobalStats(GlobalStats* gStats) {
   AutoLockHelperThreadState lock;
+||||||| merged common ancestors
+    for (RealmsIter realm(rt); !realm.done(); realm.next()) {
+        realm->nullRealmStats();
+    }
+=======
+  for (RealmsIter realm(rt); !realm.done(); realm.next()) {
+    realm->nullRealmStats();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // HelperThreadState holds data that is not part of a Runtime. This does
+  // not include data is is currently being processed by a HelperThread.
+  HelperThreadState().addSizeOfIncludingThis(gStats, lock);
+||||||| merged common ancestors
+    size_t numDirtyChunks =
+        (rtStats->gcHeapChunkTotal - rtStats->gcHeapUnusedChunks) / gc::ChunkSize;
+    size_t perChunkAdmin =
+        sizeof(gc::Chunk) - (sizeof(gc::Arena) * gc::ArenasPerChunk);
+    rtStats->gcHeapChunkAdmin = numDirtyChunks * perChunkAdmin;
+
+    // |gcHeapUnusedArenas| is the only thing left.  Compute it in terms of
+    // all the others.  See the comment in RuntimeStats for explanation.
+    rtStats->gcHeapUnusedArenas = rtStats->gcHeapChunkTotal -
+                                  rtStats->gcHeapDecommittedArenas -
+                                  rtStats->gcHeapUnusedChunks -
+                                  rtStats->zTotals.unusedGCThings.totalSize() -
+                                  rtStats->gcHeapChunkAdmin -
+                                  rtStats->zTotals.gcHeapArenaAdmin -
+                                  rtStats->gcHeapGCThings;
+    return true;
+}
+
+JS_PUBLIC_API(bool)
+JS::CollectGlobalStats(GlobalStats *gStats)
+{
+    AutoLockHelperThreadState lock;
+
+    // HelperThreadState holds data that is not part of a Runtime. This does
+    // not include data is is currently being processed by a HelperThread.
+    HelperThreadState().addSizeOfIncludingThis(gStats, lock);
+=======
+  size_t numDirtyChunks =
+      (rtStats->gcHeapChunkTotal - rtStats->gcHeapUnusedChunks) / gc::ChunkSize;
+  size_t perChunkAdmin =
+      sizeof(gc::Chunk) - (sizeof(gc::Arena) * gc::ArenasPerChunk);
+  rtStats->gcHeapChunkAdmin = numDirtyChunks * perChunkAdmin;
+
+  // |gcHeapUnusedArenas| is the only thing left.  Compute it in terms of
+  // all the others.  See the comment in RuntimeStats for explanation.
+  rtStats->gcHeapUnusedArenas =
+      rtStats->gcHeapChunkTotal - rtStats->gcHeapDecommittedArenas -
+      rtStats->gcHeapUnusedChunks -
+      rtStats->zTotals.unusedGCThings.totalSize() - rtStats->gcHeapChunkAdmin -
+      rtStats->zTotals.gcHeapArenaAdmin - rtStats->gcHeapGCThings;
+  return true;
+}
+
+JS_PUBLIC_API bool JS::CollectGlobalStats(GlobalStats* gStats) {
+  AutoLockHelperThreadState lock;
 
   // HelperThreadState holds data that is not part of a Runtime. This does
   // not include data is is currently being processed by a HelperThread.
   HelperThreadState().addSizeOfIncludingThis(gStats, lock);
+>>>>>>> upstream-releases
 
 #ifdef JS_TRACE_LOGGING
   // Global data used by TraceLogger
@@ -819,6 +1739,69 @@ JS_PUBLIC_API bool JS::CollectRuntimeStats(JSContext* cx, RuntimeStats* rtStats,
                                    StatsCellCallback<FineGrained>);
 }
 
+<<<<<<< HEAD
+JS_PUBLIC_API size_t JS::SystemRealmCount(JSContext* cx) {
+  size_t n = 0;
+  for (RealmsIter realm(cx->runtime()); !realm.done(); realm.next()) {
+    if (realm->isSystem()) {
+      ++n;
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS::SystemRealmCount(JSContext* cx)
+{
+    size_t n = 0;
+    for (RealmsIter realm(cx->runtime()); !realm.done(); realm.next()) {
+        if (realm->isSystem()) {
+            ++n;
+        }
+=======
+JS_PUBLIC_API size_t JS::SystemCompartmentCount(JSContext* cx) {
+  size_t n = 0;
+  for (CompartmentsIter comp(cx->runtime()); !comp.done(); comp.next()) {
+    if (IsSystemCompartment(comp)) {
+      ++n;
+>>>>>>> upstream-releases
+    }
+  }
+  return n;
+}
+
+<<<<<<< HEAD
+JS_PUBLIC_API size_t JS::UserRealmCount(JSContext* cx) {
+  size_t n = 0;
+  for (RealmsIter realm(cx->runtime()); !realm.done(); realm.next()) {
+    if (!realm->isSystem()) {
+      ++n;
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS::UserRealmCount(JSContext* cx)
+{
+    size_t n = 0;
+    for (RealmsIter realm(cx->runtime()); !realm.done(); realm.next()) {
+        if (!realm->isSystem()) {
+            ++n;
+        }
+=======
+JS_PUBLIC_API size_t JS::UserCompartmentCount(JSContext* cx) {
+  size_t n = 0;
+  for (CompartmentsIter comp(cx->runtime()); !comp.done(); comp.next()) {
+    if (!IsSystemCompartment(comp)) {
+      ++n;
+>>>>>>> upstream-releases
+    }
+  }
+  return n;
+}
+
+<<<<<<< HEAD
+JS_PUBLIC_API size_t JS::PeakSizeOfTemporary(const JSContext* cx) {
+  return cx->tempLifoAlloc().peakSizeOfExcludingThis();
+||||||| merged common ancestors
+JS_PUBLIC_API(size_t)
+JS::PeakSizeOfTemporary(const JSContext* cx)
+{
+    return cx->tempLifoAlloc().peakSizeOfExcludingThis();
+=======
 JS_PUBLIC_API size_t JS::SystemRealmCount(JSContext* cx) {
   size_t n = 0;
   for (RealmsIter realm(cx->runtime()); !realm.done(); realm.next()) {
@@ -841,6 +1824,7 @@ JS_PUBLIC_API size_t JS::UserRealmCount(JSContext* cx) {
 
 JS_PUBLIC_API size_t JS::PeakSizeOfTemporary(const JSContext* cx) {
   return cx->tempLifoAlloc().peakSizeOfExcludingThis();
+>>>>>>> upstream-releases
 }
 
 namespace JS {
@@ -864,24 +1848,94 @@ JS_PUBLIC_API bool AddSizeOfTab(JSContext* cx, HandleObject obj,
 
   JS::Zone* zone = GetObjectZone(obj);
 
+<<<<<<< HEAD
   if (!rtStats.realmStatsVector.reserve(zone->compartments().length())) {
     return false;
   }
+||||||| merged common ancestors
+    if (!rtStats.realmStatsVector.reserve(zone->compartments().length())) {
+        return false;
+    }
+=======
+  size_t numRealms = 0;
+  for (CompartmentsInZoneIter comp(zone); !comp.done(); comp.next()) {
+    numRealms += comp->realms().length();
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   if (!rtStats.zoneStatsVector.reserve(1)) {
     return false;
   }
+||||||| merged common ancestors
+    if (!rtStats.zoneStatsVector.reserve(1)) {
+        return false;
+    }
+=======
+  if (!rtStats.realmStatsVector.reserve(numRealms)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Take the per-compartment measurements. No need to anonymize because
   // these measurements will be aggregated.
   StatsClosure closure(&rtStats, opv, /* anonymize = */ false);
   IterateHeapUnbarrieredForZone(cx, zone, &closure, StatsZoneCallback,
                                 StatsRealmCallback, StatsArenaCallback,
                                 StatsCellCallback<CoarseGrained>);
+||||||| merged common ancestors
+    // Take the per-compartment measurements. No need to anonymize because
+    // these measurements will be aggregated.
+    StatsClosure closure(&rtStats, opv, /* anonymize = */ false);
+    IterateHeapUnbarrieredForZone(cx, zone, &closure,
+                                  StatsZoneCallback,
+                                  StatsRealmCallback,
+                                  StatsArenaCallback,
+                                  StatsCellCallback<CoarseGrained>);
+=======
+  if (!rtStats.zoneStatsVector.reserve(1)) {
+    return false;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_ASSERT(rtStats.zoneStatsVector.length() == 1);
   rtStats.zTotals.addSizes(rtStats.zoneStatsVector[0]);
+||||||| merged common ancestors
+    MOZ_ASSERT(rtStats.zoneStatsVector.length() == 1);
+    rtStats.zTotals.addSizes(rtStats.zoneStatsVector[0]);
+=======
+  // Take the per-compartment measurements. No need to anonymize because
+  // these measurements will be aggregated.
+  StatsClosure closure(&rtStats, opv, /* anonymize = */ false);
+  IterateHeapUnbarrieredForZone(cx, zone, &closure, StatsZoneCallback,
+                                StatsRealmCallback, StatsArenaCallback,
+                                StatsCellCallback<CoarseGrained>);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  for (size_t i = 0; i < rtStats.realmStatsVector.length(); i++) {
+    rtStats.realmTotals.addSizes(rtStats.realmStatsVector[i]);
+  }
+||||||| merged common ancestors
+    for (size_t i = 0; i < rtStats.realmStatsVector.length(); i++) {
+        rtStats.realmTotals.addSizes(rtStats.realmStatsVector[i]);
+    }
+=======
+  MOZ_ASSERT(rtStats.zoneStatsVector.length() == 1);
+  rtStats.zTotals.addSizes(rtStats.zoneStatsVector[0]);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  for (RealmsInZoneIter realm(zone); !realm.done(); realm.next()) {
+    realm->nullRealmStats();
+  }
+||||||| merged common ancestors
+    for (RealmsInZoneIter realm(zone); !realm.done(); realm.next()) {
+        realm->nullRealmStats();
+    }
+=======
   for (size_t i = 0; i < rtStats.realmStatsVector.length(); i++) {
     rtStats.realmTotals.addSizes(rtStats.realmStatsVector[i]);
   }
@@ -889,6 +1943,7 @@ JS_PUBLIC_API bool AddSizeOfTab(JSContext* cx, HandleObject obj,
   for (RealmsInZoneIter realm(zone); !realm.done(); realm.next()) {
     realm->nullRealmStats();
   }
+>>>>>>> upstream-releases
 
   rtStats.zTotals.addToTabSizes(sizes);
   rtStats.realmTotals.addToTabSizes(sizes);

@@ -13,6 +13,7 @@
 #include "MediaStreamGraphImpl.h"
 #include "MediaStreamListener.h"
 #include "VideoStreamTrack.h"
+#include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/AudioNode.h"
 #include "mozilla/dom/AudioTrack.h"
 #include "mozilla/dom/AudioTrackList.h"
@@ -33,9 +34,25 @@
 #include "nsServiceManagerUtils.h"
 
 #ifdef LOG
+<<<<<<< HEAD
 #undef LOG
 #endif
 
+||||||| merged common ancestors
+#undef LOG
+#endif
+
+// GetCurrentTime is defined in winbase.h as zero argument macro forwarding to
+// GetTickCount() and conflicts with MediaStream::GetCurrentTime.
+#ifdef GetCurrentTime
+#undef GetCurrentTime
+#endif
+
+=======
+#  undef LOG
+#endif
+
+>>>>>>> upstream-releases
 using namespace mozilla;
 using namespace mozilla::dom;
 using namespace mozilla::layers;
@@ -248,15 +265,39 @@ JSObject* DOMMediaStream::WrapObject(JSContext* aCx,
   return dom::MediaStream_Binding::Wrap(aCx, this, aGivenProto);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DOMMediaStream>
+DOMMediaStream::Constructor(const GlobalObject& aGlobal,
+                            ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
+    const GlobalObject& aGlobal, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   Sequence<OwningNonNull<MediaStreamTrack>> emptyTrackSeq;
   return Constructor(aGlobal, emptyTrackSeq, aRv);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
     const GlobalObject& aGlobal, const DOMMediaStream& aStream,
     ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<DOMMediaStream>
+DOMMediaStream::Constructor(const GlobalObject& aGlobal,
+                            const DOMMediaStream& aStream,
+                            ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
+    const GlobalObject& aGlobal, const DOMMediaStream& aStream,
+    ErrorResult& aRv) {
+>>>>>>> upstream-releases
   nsTArray<RefPtr<MediaStreamTrack>> tracks;
   aStream.GetTracks(tracks);
 
@@ -274,12 +315,29 @@ JSObject* DOMMediaStream::WrapObject(JSContext* aCx,
   return Constructor(aGlobal, nonNullTrackSeq, aRv);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
     const GlobalObject& aGlobal,
     const Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
     ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
       do_QueryInterface(aGlobal.GetAsSupports());
+||||||| merged common ancestors
+/* static */ already_AddRefed<DOMMediaStream>
+DOMMediaStream::Constructor(const GlobalObject& aGlobal,
+                            const Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
+                            ErrorResult& aRv)
+{
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(aGlobal.GetAsSupports());
+=======
+/* static */
+already_AddRefed<DOMMediaStream> DOMMediaStream::Constructor(
+    const GlobalObject& aGlobal,
+    const Sequence<OwningNonNull<MediaStreamTrack>>& aTracks,
+    ErrorResult& aRv) {
+  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
+      do_QueryInterface(aGlobal.GetAsSupports());
+>>>>>>> upstream-releases
   if (!ownerWindow) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -335,6 +393,7 @@ already_AddRefed<Promise> DOMMediaStream::CountUnderlyingStreams(
 
   auto* graphImpl = static_cast<MediaStreamGraphImpl*>(graph);
 
+<<<<<<< HEAD
   class Counter : public ControlMessage {
    public:
     Counter(MediaStreamGraphImpl* aGraph, const RefPtr<Promise>& aPromise)
@@ -342,9 +401,26 @@ already_AddRefed<Promise> DOMMediaStream::CountUnderlyingStreams(
           mGraph(aGraph),
           mPromise(MakeAndAddRef<nsMainThreadPtrHolder<Promise>>(
               "DOMMediaStream::Counter::mPromise", aPromise)) {
+||||||| merged common ancestors
+  class Counter : public ControlMessage
+  {
+  public:
+    Counter(MediaStreamGraphImpl* aGraph,
+            const RefPtr<Promise>& aPromise)
+      : ControlMessage(nullptr)
+      , mGraph(aGraph)
+      , mPromise(MakeAndAddRef<nsMainThreadPtrHolder<Promise>>("DOMMediaStream::Counter::mPromise", aPromise))
+    {
+=======
+  class Counter : public ControlMessage {
+   public:
+    Counter(MediaStreamGraphImpl* aGraph, const RefPtr<Promise>& aPromise)
+        : ControlMessage(nullptr), mGraph(aGraph), mPromise(aPromise) {
+>>>>>>> upstream-releases
       MOZ_ASSERT(NS_IsMainThread());
     }
 
+<<<<<<< HEAD
     void Run() override {
       nsMainThreadPtrHandle<Promise>& promise = mPromise;
       uint32_t streams =
@@ -354,12 +430,46 @@ already_AddRefed<Promise> DOMMediaStream::CountUnderlyingStreams(
             promise->MaybeResolve(streams);
             return NS_OK;
           }));
+||||||| merged common ancestors
+    void Run() override
+    {
+      nsMainThreadPtrHandle<Promise>& promise = mPromise;
+      uint32_t streams = mGraph->mStreams.Length() +
+                         mGraph->mSuspendedStreams.Length();
+      mGraph->DispatchToMainThreadAfterStreamStateUpdate(
+        NewRunnableFrom([promise, streams]() mutable {
+          promise->MaybeResolve(streams);
+          return NS_OK;
+        }));
+=======
+    void Run() override {
+      uint32_t streams =
+          mGraph->mStreams.Length() + mGraph->mSuspendedStreams.Length();
+      mGraph->DispatchToMainThreadStableState(NS_NewRunnableFunction(
+          "DOMMediaStream::CountUnderlyingStreams (stable state)",
+          [promise = std::move(mPromise), streams]() mutable {
+            NS_DispatchToMainThread(NS_NewRunnableFunction(
+                "DOMMediaStream::CountUnderlyingStreams",
+                [promise = std::move(promise), streams]() {
+                  promise->MaybeResolve(streams);
+                }));
+          }));
+    }
+
+    // mPromise can only be AddRefed/Released on main thread.
+    // In case of shutdown, Run() does not run, so we dispatch mPromise to be
+    // released on main thread here.
+    void RunDuringShutdown() override {
+      NS_ReleaseOnMainThreadSystemGroup(
+          "DOMMediaStream::CountUnderlyingStreams::Counter::RunDuringShutdown",
+          mPromise.forget());
+>>>>>>> upstream-releases
     }
 
    private:
     // mGraph owns this Counter instance and decides its lifetime.
     MediaStreamGraphImpl* mGraph;
-    nsMainThreadPtrHandle<Promise> mPromise;
+    RefPtr<Promise> mPromise;
   };
   graphImpl->AppendMessage(MakeUnique<Counter>(graphImpl, p));
 
@@ -430,16 +540,41 @@ void DOMMediaStream::AddTrack(MediaStreamTrack& aTrack) {
     LOG(LogLevel::Error, ("DOMMediaStream %p Own MSG %p != aTrack's MSG %p",
                           this, mPlaybackStream->Graph(), aTrack.Graph()));
 
+<<<<<<< HEAD
     nsAutoString trackId;
     aTrack.GetId(trackId);
     const char16_t* params[] = {trackId.get()};
+||||||| merged common ancestors
+    nsAutoString trackId;
+    aTrack.GetId(trackId);
+    const char16_t* params[] = { trackId.get() };
+=======
+    AutoTArray<nsString, 1> params;
+    aTrack.GetId(*params.AppendElement());
+>>>>>>> upstream-releases
     nsCOMPtr<nsPIDOMWindowInner> pWindow = GetParentObject();
+<<<<<<< HEAD
     nsIDocument* document = pWindow ? pWindow->GetExtantDoc() : nullptr;
     nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                     NS_LITERAL_CSTRING("Media"), document,
                                     nsContentUtils::eDOM_PROPERTIES,
                                     "MediaStreamAddTrackDifferentAudioChannel",
                                     params, ArrayLength(params));
+||||||| merged common ancestors
+    nsIDocument* document = pWindow ? pWindow->GetExtantDoc() : nullptr;
+    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
+                                    NS_LITERAL_CSTRING("Media"),
+                                    document,
+                                    nsContentUtils::eDOM_PROPERTIES,
+                                    "MediaStreamAddTrackDifferentAudioChannel",
+                                    params, ArrayLength(params));
+=======
+    Document* document = pWindow ? pWindow->GetExtantDoc() : nullptr;
+    nsContentUtils::ReportToConsole(
+        nsIScriptError::errorFlag, NS_LITERAL_CSTRING("Media"), document,
+        nsContentUtils::eDOM_PROPERTIES,
+        "MediaStreamAddTrackDifferentAudioChannel", params);
+>>>>>>> upstream-releases
     return;
   }
 
@@ -719,11 +854,25 @@ void DOMMediaStream::NotifyPrincipalChanged() {
         ("DOMMediaStream %p Principal changed to nothing.", this));
   } else {
     LOG(LogLevel::Info, ("DOMMediaStream %p Principal changed. Now: "
+<<<<<<< HEAD
                          "null=%d, codebase=%d, expanded=%d, system=%d",
                          this, mPrincipal->GetIsNullPrincipal(),
                          mPrincipal->GetIsCodebasePrincipal(),
                          mPrincipal->GetIsExpandedPrincipal(),
                          mPrincipal->GetIsSystemPrincipal()));
+||||||| merged common ancestors
+                         "null=%d, codebase=%d, expanded=%d, system=%d", this,
+                          mPrincipal->GetIsNullPrincipal(),
+                          mPrincipal->GetIsCodebasePrincipal(),
+                          mPrincipal->GetIsExpandedPrincipal(),
+                          mPrincipal->GetIsSystemPrincipal()));
+=======
+                         "null=%d, codebase=%d, expanded=%d, system=%d",
+                         this, mPrincipal->GetIsNullPrincipal(),
+                         mPrincipal->GetIsCodebasePrincipal(),
+                         mPrincipal->GetIsExpandedPrincipal(),
+                         mPrincipal->IsSystemPrincipal()));
+>>>>>>> upstream-releases
   }
 
   for (uint32_t i = 0; i < mPrincipalChangeObservers.Length(); ++i) {
@@ -1039,6 +1188,7 @@ nsresult DOMMediaStream::DispatchTrackEvent(
 void DOMMediaStream::BlockPlaybackTrack(TrackPort* aTrack) {
   MOZ_ASSERT(aTrack);
   ++mTracksPendingRemoval;
+<<<<<<< HEAD
   RefPtr<DOMMediaStream> that = this;
   aTrack
       ->BlockSourceTrackId(aTrack->GetTrack()->mTrackID, BlockingMode::CREATION)
@@ -1050,6 +1200,33 @@ void DOMMediaStream::BlockPlaybackTrack(TrackPort* aTrack) {
 }
 
 void DOMMediaStream::NotifyPlaybackTrackBlocked() {
+||||||| merged common ancestors
+  RefPtr<Pledge<bool>> p =
+    aTrack->BlockSourceTrackId(aTrack->GetTrack()->mTrackID,
+                               BlockingMode::CREATION);
+  RefPtr<DOMMediaStream> self = this;
+  p->Then([self] (const bool& aIgnore) { self->NotifyPlaybackTrackBlocked(); },
+          [] (const nsresult& aIgnore) { NS_ERROR("Could not remove track from MSG"); }
+  );
+}
+
+void
+DOMMediaStream::NotifyPlaybackTrackBlocked()
+{
+=======
+  RefPtr<DOMMediaStream> that = this;
+  aTrack
+      ->BlockSourceTrackId(aTrack->GetTrack()->mTrackID, BlockingMode::CREATION)
+      ->Then(
+          GetCurrentThreadSerialEventTarget(), __func__,
+          [this, that](bool aIgnore) { NotifyPlaybackTrackBlocked(); },
+          [](const nsresult& aIgnore) {
+            NS_ERROR("Could not remove track from MSG");
+          });
+}
+
+void DOMMediaStream::NotifyPlaybackTrackBlocked() {
+>>>>>>> upstream-releases
   MOZ_ASSERT(mTracksPendingRemoval > 0,
              "A track reported finished blocking more times than we asked for");
   if (--mTracksPendingRemoval == 0) {

@@ -27,22 +27,33 @@ protected:
 
     void willSave() override;
     SaveLayerStrategy getSaveLayerStrategy(const SaveLayerRec&) override;
+    bool onDoSaveBehind(const SkRect*) override;
     void willRestore() override;
 
     void didConcat(const SkMatrix&) override;
     void didSetMatrix(const SkMatrix&) override;
 
     void onDrawDRRect(const SkRRect&, const SkRRect&, const SkPaint&) override;
+<<<<<<< HEAD
     virtual void onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
                             const SkPaint&) override;
     virtual void onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
                                const SkPaint&) override;
     virtual void onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xpos[],
                                 SkScalar constY, const SkPaint&) override;
+||||||| merged common ancestors
+    virtual void onDrawText(const void* text, size_t byteLength, SkScalar x, SkScalar y,
+                            const SkPaint&) override;
+    virtual void onDrawPosText(const void* text, size_t byteLength, const SkPoint pos[],
+                               const SkPaint&) override;
+    virtual void onDrawPosTextH(const void* text, size_t byteLength, const SkScalar xpos[],
+                                SkScalar constY, const SkPaint&) override;
+    virtual void onDrawTextOnPath(const void* text, size_t byteLength, const SkPath& path,
+                                  const SkMatrix* matrix, const SkPaint&) override;
+=======
+>>>>>>> upstream-releases
     virtual void onDrawTextBlob(const SkTextBlob* blob, SkScalar x, SkScalar y,
                                 const SkPaint& paint) override;
-    void onDrawTextRSXform(const void* text, size_t byteLength, const SkRSXform xform[],
-                           const SkRect* cull, const SkPaint& paint) override;
     virtual void onDrawPatch(const SkPoint cubics[12], const SkColor colors[4],
                              const SkPoint texCoords[4], SkBlendMode,
                              const SkPaint& paint) override;
@@ -50,7 +61,13 @@ protected:
     void onDrawPaint(const SkPaint&) override;
     void onDrawPoints(PointMode, size_t count, const SkPoint pts[], const SkPaint&) override;
     void onDrawRect(const SkRect&, const SkPaint&) override;
+<<<<<<< HEAD
     void onDrawRegion(const SkRegion&, const SkPaint&) override;
+||||||| merged common ancestors
+=======
+    void onDrawEdgeAARect(const SkRect&, SkCanvas::QuadAAFlags, SkColor, SkBlendMode) override;
+    void onDrawRegion(const SkRegion&, const SkPaint&) override;
+>>>>>>> upstream-releases
     void onDrawOval(const SkRect&, const SkPaint&) override;
     void onDrawArc(const SkRect&, SkScalar, SkScalar, bool, const SkPaint&) override;
     void onDrawRRect(const SkRRect&, const SkPaint&) override;
@@ -61,12 +78,23 @@ protected:
     void onDrawImage(const SkImage*, SkScalar left, SkScalar top, const SkPaint*) override;
     void onDrawImageRect(const SkImage*, const SkRect* src, const SkRect& dst,
                          const SkPaint*, SrcRectConstraint) override;
+<<<<<<< HEAD
     void onDrawBitmapLattice(const SkBitmap&, const Lattice&, const SkRect&,
                              const SkPaint*) override;
     void onDrawImageLattice(const SkImage*, const Lattice&, const SkRect&,
                             const SkPaint*) override;
     void onDrawImageNine(const SkImage*, const SkIRect& center, const SkRect& dst,
                          const SkPaint*) override;
+||||||| merged common ancestors
+=======
+    void onDrawBitmapLattice(const SkBitmap&, const Lattice&, const SkRect&,
+                             const SkPaint*) override;
+    void onDrawImageLattice(const SkImage*, const Lattice&, const SkRect&, const SkPaint*) override;
+    void onDrawImageNine(const SkImage*, const SkIRect& center, const SkRect& dst,
+                         const SkPaint*) override;
+    void onDrawImageSet(const SkCanvas::ImageSetEntry[], int count, SkFilterQuality,
+                        SkBlendMode) override;
+>>>>>>> upstream-releases
     void onDrawBitmapNine(const SkBitmap&, const SkIRect& center, const SkRect& dst,
                           const SkPaint*) override;
     void onDrawVerticesObject(const SkVertices*, const SkVertices::Bone bones[], int boneCount,

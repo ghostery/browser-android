@@ -1,9 +1,21 @@
 //! Global values.
 
+<<<<<<< HEAD
 use ir::immediates::{Imm64, Offset32};
 use ir::{ExternalName, GlobalValue, Type};
 use isa::TargetIsa;
 use std::fmt;
+||||||| merged common ancestors
+use ir::immediates::Offset32;
+use ir::{ExternalName, GlobalValue, Type};
+use isa::TargetIsa;
+use std::fmt;
+=======
+use crate::ir::immediates::{Imm64, Offset32};
+use crate::ir::{ExternalName, GlobalValue, Type};
+use crate::isa::TargetIsa;
+use core::fmt;
+>>>>>>> upstream-releases
 
 /// Information about a global value declaration.
 #[derive(Clone)]
@@ -25,6 +37,7 @@ pub enum GlobalValueData {
         offset: Offset32,
 
         /// Type of the loaded value.
+<<<<<<< HEAD
         global_type: Type,
 
         /// Specifies whether the memory that this refers to is readonly, allowing for the elimination of redundant loads.
@@ -41,6 +54,27 @@ pub enum GlobalValueData {
 
         /// Type of the iadd.
         global_type: Type,
+||||||| merged common ancestors
+        memory_type: Type,
+=======
+        global_type: Type,
+
+        /// Specifies whether the memory that this refers to is readonly, allowing for the
+        /// elimination of redundant loads.
+        readonly: bool,
+    },
+
+    /// Value is an offset from another global value.
+    IAddImm {
+        /// The base pointer global value.
+        base: GlobalValue,
+
+        /// Byte offset to be added to the value.
+        offset: Imm64,
+
+        /// Type of the iadd.
+        global_type: Type,
+>>>>>>> upstream-releases
     },
 
     /// Value is symbolic, meaning it's a name which will be resolved to an
@@ -75,7 +109,7 @@ impl GlobalValueData {
     }
 
     /// Return the type of this global.
-    pub fn global_type(&self, isa: &TargetIsa) -> Type {
+    pub fn global_type(&self, isa: &dyn TargetIsa) -> Type {
         match *self {
             GlobalValueData::VMContext { .. } | GlobalValueData::Symbol { .. } => {
                 isa.pointer_type()
@@ -89,6 +123,13 @@ impl GlobalValueData {
 impl fmt::Display for GlobalValueData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
+<<<<<<< HEAD
+            GlobalValueData::VMContext => write!(f, "vmctx"),
+            GlobalValueData::Load {
+||||||| merged common ancestors
+            GlobalValueData::VMContext { offset } => write!(f, "vmctx{}", offset),
+            GlobalValueData::Deref {
+=======
             GlobalValueData::VMContext => write!(f, "vmctx"),
             GlobalValueData::Load {
                 base,
@@ -105,17 +146,52 @@ impl fmt::Display for GlobalValueData {
             ),
             GlobalValueData::IAddImm {
                 global_type,
+>>>>>>> upstream-releases
+                base,
+                offset,
+<<<<<<< HEAD
+                global_type,
+                readonly,
+            } => write!(
+                f,
+                "load.{} notrap aligned {}{}{}",
+                global_type,
+                if readonly { "readonly " } else { "" },
+                base,
+                offset
+            ),
+            GlobalValueData::IAddImm {
+                global_type,
                 base,
                 offset,
             } => write!(f, "iadd_imm.{} {}, {}", global_type, base, offset),
             GlobalValueData::Symbol {
+||||||| merged common ancestors
+                memory_type,
+            } => write!(f, "deref({}){}: {}", base, offset, memory_type),
+            GlobalValueData::Sym {
+=======
+            } => write!(f, "iadd_imm.{} {}, {}", global_type, base, offset),
+            GlobalValueData::Symbol {
+>>>>>>> upstream-releases
                 ref name,
                 offset,
                 colocated,
             } => {
-                if colocated {
-                    write!(f, "colocated ")?;
+                write!(
+                    f,
+                    "symbol {}{}",
+                    if colocated { "colocated " } else { "" },
+                    name
+                )?;
+                let offset_val: i64 = offset.into();
+                if offset_val > 0 {
+                    write!(f, "+")?;
                 }
+                if offset_val != 0 {
+                    write!(f, "{}", offset)?;
+                }
+<<<<<<< HEAD
                 write!(f, "symbol {}", name)?;
                 let offset_val: i64 = offset.into();
                 if offset_val > 0 {
@@ -125,6 +201,11 @@ impl fmt::Display for GlobalValueData {
                     write!(f, "{}", offset)?;
                 }
                 Ok(())
+||||||| merged common ancestors
+                write!(f, "globalsym {}", name)
+=======
+                Ok(())
+>>>>>>> upstream-releases
             }
         }
     }

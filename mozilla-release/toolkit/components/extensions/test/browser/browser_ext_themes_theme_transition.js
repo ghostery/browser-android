@@ -10,11 +10,26 @@ add_task(async function test_theme_transition_effects() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
+<<<<<<< HEAD
       "theme": {
         "colors": {
           "tab_background_text": TEXT_COLOR,
           "toolbar": TOOLBAR,
           "bookmark_text": TEXT_COLOR,
+||||||| merged common ancestors
+      "theme": {
+        "colors": {
+          "accentcolor": ACCENT_COLOR,
+          "textcolor": TEXT_COLOR,
+          "toolbar": TOOLBAR,
+          "toolbar_text": TEXT_COLOR,
+=======
+      theme: {
+        colors: {
+          tab_background_text: TEXT_COLOR,
+          toolbar: TOOLBAR,
+          bookmark_text: TEXT_COLOR,
+>>>>>>> upstream-releases
         },
       },
     },
@@ -27,7 +42,9 @@ add_task(async function test_theme_transition_effects() {
   let navbarCS = window.getComputedStyle(navbar);
 
   Assert.ok(
-    navbarCS.getPropertyValue("transition-property").includes(TRANSITION_PROPERTY),
+    navbarCS
+      .getPropertyValue("transition-property")
+      .includes(TRANSITION_PROPERTY),
     "Transition property set for #nav-bar"
   );
 
@@ -36,7 +53,9 @@ add_task(async function test_theme_transition_effects() {
   let bookmarksBarCS = window.getComputedStyle(bookmarksBar);
 
   Assert.ok(
-    bookmarksBarCS.getPropertyValue("transition-property").includes(TRANSITION_PROPERTY),
+    bookmarksBarCS
+      .getPropertyValue("transition-property")
+      .includes(TRANSITION_PROPERTY),
     "Transition property set for #PersonalToolbar"
   );
 

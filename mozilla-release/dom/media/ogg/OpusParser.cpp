@@ -191,7 +191,16 @@ bool OpusParser::DecodeTags(unsigned char* aData, size_t aLength) {
   return true;
 }
 
+<<<<<<< HEAD
 /* static */ bool OpusParser::IsValidMapping2ChannelsCount(uint8_t aChannels) {
+||||||| merged common ancestors
+/* static */ bool
+OpusParser::IsValidMapping2ChannelsCount(uint8_t aChannels)
+{
+=======
+/* static */
+bool OpusParser::IsValidMapping2ChannelsCount(uint8_t aChannels) {
+>>>>>>> upstream-releases
   // https://tools.ietf.org/html/draft-ietf-codec-ambisonics-08#page-4
   // For both channel mapping family 2 and family 3, the allowed numbers
   // of channels: (1 + n)^2 + 2j for n = 0, 1, ..., 14 and j = 0 or 1,

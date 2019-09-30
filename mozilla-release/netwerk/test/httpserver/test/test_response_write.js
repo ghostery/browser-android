@@ -8,10 +8,18 @@
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
-    new Test("http://localhost:" + srv.identity.primaryPort + "/writeString",
-            null, check_1234, succeeded),
-    new Test("http://localhost:" + srv.identity.primaryPort + "/writeInt",
-            null, check_1234, succeeded),
+    new Test(
+      "http://localhost:" + srv.identity.primaryPort + "/writeString",
+      null,
+      check_1234,
+      succeeded
+    ),
+    new Test(
+      "http://localhost:" + srv.identity.primaryPort + "/writeInt",
+      null,
+      check_1234,
+      succeeded
+    ),
   ];
 });
 
@@ -27,15 +35,28 @@ function run_test() {
   runHttpTests(tests, testComplete(srv));
 }
 
-
 // TEST DATA
 
+<<<<<<< HEAD
 function succeeded(ch, cx, status, data) {
+||||||| merged common ancestors
+function succeeded(ch, cx, status, data)
+{
+=======
+function succeeded(ch, status, data) {
+>>>>>>> upstream-releases
   Assert.ok(Components.isSuccessCode(status));
   Assert.equal(data.map(v => String.fromCharCode(v)).join(""), "1234");
 }
 
+<<<<<<< HEAD
 function check_1234(ch, cx) {
+||||||| merged common ancestors
+function check_1234(ch, cx)
+{
+=======
+function check_1234(ch) {
+>>>>>>> upstream-releases
   Assert.equal(ch.getResponseHeader("Content-Length"), "4");
 }
 

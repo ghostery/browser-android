@@ -38,8 +38,14 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceXRender::Lock(
     return nullptr;
   }
 
+<<<<<<< HEAD
   return gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(mXlibSurface,
                                                                 size);
+||||||| merged common ancestors
+  return gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(mXlibSurface, size);
+=======
+  return gfxPlatform::CreateDrawTargetForSurface(mXlibSurface, size);
+>>>>>>> upstream-releases
 }
 
 void WindowSurfaceXRender::Commit(const LayoutDeviceIntRegion& aInvalidRegion) {

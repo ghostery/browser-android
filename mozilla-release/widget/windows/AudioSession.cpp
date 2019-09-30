@@ -257,12 +257,27 @@ void SpawnASCReleaseThread(RefPtr<IAudioSessionControl>&& aASC) {
   IAudioSessionControl* rawPtr = nullptr;
   aASC.forget(&rawPtr);
   MOZ_ASSERT(rawPtr);
+<<<<<<< HEAD
   PRThread* thread = PR_CreateThread(
       PR_USER_THREAD,
       [](void* aRawPtr) {
         static_cast<IAudioSessionControl*>(aRawPtr)->Release();
       },
       rawPtr, PR_PRIORITY_NORMAL, PR_LOCAL_THREAD, PR_UNJOINABLE_THREAD, 0);
+||||||| merged common ancestors
+  PRThread* thread =
+    PR_CreateThread(PR_USER_THREAD,
+                    [](void* aRawPtr) { static_cast<IAudioSessionControl*>(aRawPtr)->Release(); },
+                    rawPtr, PR_PRIORITY_NORMAL, PR_LOCAL_THREAD, PR_UNJOINABLE_THREAD, 0);
+=======
+  PRThread* thread = PR_CreateThread(
+      PR_USER_THREAD,
+      [](void* aRawPtr) {
+        NS_SetCurrentThreadName("AudioASCReleaser");
+        static_cast<IAudioSessionControl*>(aRawPtr)->Release();
+      },
+      rawPtr, PR_PRIORITY_NORMAL, PR_LOCAL_THREAD, PR_UNJOINABLE_THREAD, 0);
+>>>>>>> upstream-releases
   if (!thread) {
     // We can't make a thread so just destroy the IAudioSessionControl here.
     rawPtr->Release();

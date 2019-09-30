@@ -86,15 +86,38 @@ static uint32_t NumArgAndLocalSlots(const InlineFrameIterator& frame) {
   return CountArgSlots(script, frame.maybeCalleeTemplate()) + script->nfixed();
 }
 
+<<<<<<< HEAD
 static void CloseLiveIteratorIon(JSContext* cx,
                                  const InlineFrameIterator& frame,
                                  const JSTryNote* tn) {
   MOZ_ASSERT(tn->kind == JSTRY_FOR_IN ||
              tn->kind == JSTRY_DESTRUCTURING_ITERCLOSE);
+||||||| merged common ancestors
+static void
+CloseLiveIteratorIon(JSContext* cx, const InlineFrameIterator& frame, const JSTryNote* tn)
+{
+    MOZ_ASSERT(tn->kind == JSTRY_FOR_IN ||
+               tn->kind == JSTRY_DESTRUCTURING_ITERCLOSE);
+=======
+static void CloseLiveIteratorIon(JSContext* cx,
+                                 const InlineFrameIterator& frame,
+                                 const JSTryNote* tn) {
+  MOZ_ASSERT(tn->kind == JSTRY_FOR_IN || tn->kind == JSTRY_DESTRUCTURING);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   bool isDestructuring = tn->kind == JSTRY_DESTRUCTURING_ITERCLOSE;
   MOZ_ASSERT_IF(!isDestructuring, tn->stackDepth > 0);
   MOZ_ASSERT_IF(isDestructuring, tn->stackDepth > 1);
+||||||| merged common ancestors
+    bool isDestructuring = tn->kind == JSTRY_DESTRUCTURING_ITERCLOSE;
+    MOZ_ASSERT_IF(!isDestructuring, tn->stackDepth > 0);
+    MOZ_ASSERT_IF(isDestructuring, tn->stackDepth > 1);
+=======
+  bool isDestructuring = tn->kind == JSTRY_DESTRUCTURING;
+  MOZ_ASSERT_IF(!isDestructuring, tn->stackDepth > 0);
+  MOZ_ASSERT_IF(isDestructuring, tn->stackDepth > 1);
+>>>>>>> upstream-releases
 
   SnapshotIterator si = frame.snapshotIterator();
 
@@ -134,9 +157,19 @@ static void CloseLiveIteratorIon(JSContext* cx,
   }
 }
 
+<<<<<<< HEAD
 class IonFrameStackDepthOp {
   uint32_t depth_;
+||||||| merged common ancestors
+class IonFrameStackDepthOp
+{
+    uint32_t depth_;
+=======
+class IonTryNoteFilter {
+  uint32_t depth_;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  public:
   explicit IonFrameStackDepthOp(const InlineFrameIterator& frame) {
     uint32_t base = NumArgAndLocalSlots(frame);
@@ -144,17 +177,55 @@ class IonFrameStackDepthOp {
     MOZ_ASSERT(si.numAllocations() >= base);
     depth_ = si.numAllocations() - base;
   }
+||||||| merged common ancestors
+  public:
+    explicit IonFrameStackDepthOp(const InlineFrameIterator& frame) {
+        uint32_t base = NumArgAndLocalSlots(frame);
+        SnapshotIterator si = frame.snapshotIterator();
+        MOZ_ASSERT(si.numAllocations() >= base);
+        depth_ = si.numAllocations() - base;
+    }
+=======
+ public:
+  explicit IonTryNoteFilter(const InlineFrameIterator& frame) {
+    uint32_t base = NumArgAndLocalSlots(frame);
+    SnapshotIterator si = frame.snapshotIterator();
+    MOZ_ASSERT(si.numAllocations() >= base);
+    depth_ = si.numAllocations() - base;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   uint32_t operator()() { return depth_; }
+||||||| merged common ancestors
+    uint32_t operator()() { return depth_; }
+=======
+  bool operator()(const JSTryNote* note) { return note->stackDepth <= depth_; }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class TryNoteIterIon : public TryNoteIter<IonFrameStackDepthOp> {
  public:
   TryNoteIterIon(JSContext* cx, const InlineFrameIterator& frame)
       : TryNoteIter(cx, frame.script(), frame.pc(),
                     IonFrameStackDepthOp(frame)) {}
+||||||| merged common ancestors
+class TryNoteIterIon : public TryNoteIter<IonFrameStackDepthOp>
+{
+  public:
+    TryNoteIterIon(JSContext* cx, const InlineFrameIterator& frame)
+      : TryNoteIter(cx, frame.script(), frame.pc(), IonFrameStackDepthOp(frame))
+    { }
+=======
+class TryNoteIterIon : public TryNoteIter<IonTryNoteFilter> {
+ public:
+  TryNoteIterIon(JSContext* cx, const InlineFrameIterator& frame)
+      : TryNoteIter(cx, frame.script(), frame.pc(), IonTryNoteFilter(frame)) {}
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 static void HandleExceptionIon(JSContext* cx, const InlineFrameIterator& frame,
                                ResumeFromException* rfe,
                                bool* hitBailoutException) {
@@ -223,30 +294,237 @@ static void HandleExceptionIon(JSContext* cx, const InlineFrameIterator& frame,
       case JSTRY_FOR_OF_ITERCLOSE:
         inForOfIterClose = true;
         break;
+||||||| merged common ancestors
+static void
+HandleExceptionIon(JSContext* cx, const InlineFrameIterator& frame, ResumeFromException* rfe,
+                   bool* overrecursed)
+{
+    if (cx->realm()->isDebuggee()) {
+        // We need to bail when there is a catchable exception, and we are the
+        // debuggee of a Debugger with a live onExceptionUnwind hook, or if a
+        // Debugger has observed this frame (e.g., for onPop).
+        bool shouldBail = Debugger::hasLiveHook(cx->global(), Debugger::OnExceptionUnwind);
+        RematerializedFrame* rematFrame = nullptr;
+        if (!shouldBail) {
+            JitActivation* act = cx->activation()->asJit();
+            rematFrame = act->lookupRematerializedFrame(frame.frame().fp(), frame.frameNo());
+            shouldBail = rematFrame && rematFrame->isDebuggee();
+        }
 
+        if (shouldBail) {
+            // If we have an exception from within Ion and the debugger is active,
+            // we do the following:
+            //
+            //   1. Bailout to baseline to reconstruct a baseline frame.
+            //   2. Resume immediately into the exception tail afterwards, and
+            //      handle the exception again with the top frame now a baseline
+            //      frame.
+            //
+            // An empty exception info denotes that we're propagating an Ion
+            // exception due to debug mode, which BailoutIonToBaseline needs to
+            // know. This is because we might not be able to fully reconstruct up
+            // to the stack depth at the snapshot, as we could've thrown in the
+            // middle of a call.
+            ExceptionBailoutInfo propagateInfo;
+            uint32_t retval = ExceptionHandlerBailout(cx, frame, rfe, propagateInfo, overrecursed);
+            if (retval == BAILOUT_RETURN_OK) {
+                return;
+            }
+        }
+
+        MOZ_ASSERT_IF(rematFrame, !Debugger::inFrameMaps(rematFrame));
+    }
+
+    RootedScript script(cx, frame.script());
+    if (!script->hasTrynotes()) {
+        return;
+    }
+
+    bool inForOfIterClose = false;
+
+    for (TryNoteIterIon tni(cx, frame); !tni.done(); ++tni) {
+        const JSTryNote* tn = *tni;
+
+        switch (tn->kind) {
+          case JSTRY_FOR_IN:
+          case JSTRY_DESTRUCTURING_ITERCLOSE:
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+=======
+static void HandleExceptionIon(JSContext* cx, const InlineFrameIterator& frame,
+                               ResumeFromException* rfe,
+                               bool* hitBailoutException) {
+  if (cx->realm()->isDebuggee()) {
+    // We need to bail when there is a catchable exception, and we are the
+    // debuggee of a Debugger with a live onExceptionUnwind hook, or if a
+    // Debugger has observed this frame (e.g., for onPop).
+    bool shouldBail =
+        Debugger::hasLiveHook(cx->global(), Debugger::OnExceptionUnwind);
+    RematerializedFrame* rematFrame = nullptr;
+    if (!shouldBail) {
+      JitActivation* act = cx->activation()->asJit();
+      rematFrame =
+          act->lookupRematerializedFrame(frame.frame().fp(), frame.frameNo());
+      shouldBail = rematFrame && rematFrame->isDebuggee();
+    }
+
+    if (shouldBail && !*hitBailoutException) {
+      // If we have an exception from within Ion and the debugger is active,
+      // we do the following:
+      //
+      //   1. Bailout to baseline to reconstruct a baseline frame.
+      //   2. Resume immediately into the exception tail afterwards, and
+      //      handle the exception again with the top frame now a baseline
+      //      frame.
+      //
+      // An empty exception info denotes that we're propagating an Ion
+      // exception due to debug mode, which BailoutIonToBaseline needs to
+      // know. This is because we might not be able to fully reconstruct up
+      // to the stack depth at the snapshot, as we could've thrown in the
+      // middle of a call.
+      ExceptionBailoutInfo propagateInfo;
+      if (ExceptionHandlerBailout(cx, frame, rfe, propagateInfo)) {
+        return;
+      }
+      // Note: the bailout code deleted rematFrame. Don't use after this
+      // point!
+      *hitBailoutException = true;
+    }
+  }
+
+  RootedScript script(cx, frame.script());
+  if (!script->hasTrynotes()) {
+    return;
+  }
+
+  for (TryNoteIterIon tni(cx, frame); !tni.done(); ++tni) {
+    const JSTryNote* tn = *tni;
+    switch (tn->kind) {
+      case JSTRY_FOR_IN:
+      case JSTRY_DESTRUCTURING:
+        MOZ_ASSERT_IF(tn->kind == JSTRY_FOR_IN,
+                      JSOp(*(script->offsetToPC(tn->start + tn->length))) ==
+                          JSOP_ENDITER);
+        CloseLiveIteratorIon(cx, frame, tn);
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       case JSTRY_FOR_OF:
         inForOfIterClose = false;
         break;
+||||||| merged common ancestors
+            MOZ_ASSERT_IF(tn->kind == JSTRY_FOR_IN,
+                          JSOp(*(script->main() + tn->start + tn->length)) == JSOP_ENDITER);
+            CloseLiveIteratorIon(cx, frame, tn);
+            break;
+=======
+      case JSTRY_CATCH:
+        if (cx->isExceptionPending()) {
+          // Ion can compile try-catch, but bailing out to catch
+          // exceptions is slow. Reset the warm-up counter so that if we
+          // catch many exceptions we won't Ion-compile the script.
+          script->resetWarmUpCounterToDelayIonCompilation();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case JSTRY_LOOP:
         break;
+||||||| merged common ancestors
+          case JSTRY_FOR_OF_ITERCLOSE:
+            inForOfIterClose = true;
+            break;
+=======
+          if (*hitBailoutException) {
+            break;
+          }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case JSTRY_CATCH:
         if (cx->isExceptionPending()) {
           // See corresponding comment in ProcessTryNotes.
           if (inForOfIterClose) {
             break;
           }
+||||||| merged common ancestors
+          case JSTRY_FOR_OF:
+            inForOfIterClose = false;
+            break;
+=======
+          // Bailout at the start of the catch block.
+          jsbytecode* catchPC = script->offsetToPC(tn->start + tn->length);
+          ExceptionBailoutInfo excInfo(frame.frameNo(), catchPC,
+                                       tn->stackDepth);
+          if (ExceptionHandlerBailout(cx, frame, rfe, excInfo)) {
+            // Record exception locations to allow scope unwinding in
+            // |FinishBailoutToBaseline|
+            MOZ_ASSERT(cx->isExceptionPending());
+            rfe->bailoutInfo->tryPC =
+                UnwindEnvironmentToTryPc(frame.script(), tn);
+            rfe->bailoutInfo->faultPC = frame.pc();
+            return;
+          }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
           // Ion can compile try-catch, but bailing out to catch
           // exceptions is slow. Reset the warm-up counter so that if we
           // catch many exceptions we won't Ion-compile the script.
           script->resetWarmUpCounter();
+||||||| merged common ancestors
+          case JSTRY_LOOP:
+            break;
+=======
+          *hitBailoutException = true;
+          MOZ_ASSERT(cx->isExceptionPending());
+        }
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
           if (*hitBailoutException) {
             break;
           }
+||||||| merged common ancestors
+          case JSTRY_CATCH:
+            if (cx->isExceptionPending()) {
+                // See corresponding comment in ProcessTryNotes.
+                if (inForOfIterClose) {
+                    break;
+                }
 
+                // Ion can compile try-catch, but bailing out to catch
+                // exceptions is slow. Reset the warm-up counter so that if we
+                // catch many exceptions we won't Ion-compile the script.
+                script->resetWarmUpCounter();
+
+                // Bailout at the start of the catch block.
+                jsbytecode* catchPC = script->main() + tn->start + tn->length;
+                ExceptionBailoutInfo excInfo(frame.frameNo(), catchPC, tn->stackDepth);
+                uint32_t retval = ExceptionHandlerBailout(cx, frame, rfe, excInfo, overrecursed);
+                if (retval == BAILOUT_RETURN_OK) {
+                    // Record exception locations to allow scope unwinding in
+                    // |FinishBailoutToBaseline|
+                    MOZ_ASSERT(cx->isExceptionPending());
+                    rfe->bailoutInfo->tryPC = UnwindEnvironmentToTryPc(frame.script(), tn);
+                    rfe->bailoutInfo->faultPC = frame.pc();
+                    return;
+                }
+
+                // Error on bailout clears pending exception.
+                MOZ_ASSERT(!cx->isExceptionPending());
+            }
+            break;
+=======
+      case JSTRY_FOR_OF:
+      case JSTRY_LOOP:
+        break;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
           // Bailout at the start of the catch block.
           jsbytecode* catchPC = script->offsetToPC(tn->start + tn->length);
           ExceptionBailoutInfo excInfo(frame.frameNo(), catchPC,
@@ -268,6 +546,15 @@ static void HandleExceptionIon(JSContext* cx, const InlineFrameIterator& frame,
 
       default:
         MOZ_CRASH("Unexpected try note");
+||||||| merged common ancestors
+          default:
+            MOZ_CRASH("Unexpected try note");
+        }
+=======
+      // JSTRY_FOR_OF_ITERCLOSE is handled internally by the try note iterator.
+      default:
+        MOZ_CRASH("Unexpected try note");
+>>>>>>> upstream-releases
     }
   }
 }
@@ -328,6 +615,7 @@ struct AutoBaselineHandlingException {
   }
 };
 
+<<<<<<< HEAD
 class BaselineFrameStackDepthOp {
   BaselineFrame* frame_;
 
@@ -337,17 +625,56 @@ class BaselineFrameStackDepthOp {
     MOZ_ASSERT(frame_->numValueSlots() >= frame_->script()->nfixed());
     return frame_->numValueSlots() - frame_->script()->nfixed();
   }
+||||||| merged common ancestors
+class BaselineFrameStackDepthOp
+{
+    BaselineFrame* frame_;
+  public:
+    explicit BaselineFrameStackDepthOp(BaselineFrame* frame)
+      : frame_(frame)
+    { }
+    uint32_t operator()() {
+        MOZ_ASSERT(frame_->numValueSlots() >= frame_->script()->nfixed());
+        return frame_->numValueSlots() - frame_->script()->nfixed();
+    }
+=======
+class BaselineTryNoteFilter {
+  BaselineFrame* frame_;
+
+ public:
+  explicit BaselineTryNoteFilter(BaselineFrame* frame) : frame_(frame) {}
+  bool operator()(const JSTryNote* note) {
+    MOZ_ASSERT(frame_->numValueSlots() >= frame_->script()->nfixed());
+    uint32_t currDepth = frame_->numValueSlots() - frame_->script()->nfixed();
+    return note->stackDepth <= currDepth;
+  }
+>>>>>>> upstream-releases
 };
 
+<<<<<<< HEAD
 class TryNoteIterBaseline : public TryNoteIter<BaselineFrameStackDepthOp> {
  public:
   TryNoteIterBaseline(JSContext* cx, BaselineFrame* frame, jsbytecode* pc)
       : TryNoteIter(cx, frame->script(), pc, BaselineFrameStackDepthOp(frame)) {
   }
+||||||| merged common ancestors
+class TryNoteIterBaseline : public TryNoteIter<BaselineFrameStackDepthOp>
+{
+  public:
+    TryNoteIterBaseline(JSContext* cx, BaselineFrame* frame, jsbytecode* pc)
+      : TryNoteIter(cx, frame->script(), pc, BaselineFrameStackDepthOp(frame))
+    { }
+=======
+class TryNoteIterBaseline : public TryNoteIter<BaselineTryNoteFilter> {
+ public:
+  TryNoteIterBaseline(JSContext* cx, BaselineFrame* frame, jsbytecode* pc)
+      : TryNoteIter(cx, frame->script(), pc, BaselineTryNoteFilter(frame)) {}
+>>>>>>> upstream-releases
 };
 
 // Close all live iterators on a BaselineFrame due to exception unwinding. The
 // pc parameter is updated to where the envs have been unwound to.
+<<<<<<< HEAD
 static void CloseLiveIteratorsBaselineForUncatchableException(
     JSContext* cx, const JSJitFrameIter& frame, jsbytecode* pc) {
   bool inForOfIterClose = false;
@@ -374,22 +701,94 @@ static void CloseLiveIteratorsBaselineForUncatchableException(
       case JSTRY_FOR_OF_ITERCLOSE:
         inForOfIterClose = true;
         break;
+||||||| merged common ancestors
+static void
+CloseLiveIteratorsBaselineForUncatchableException(JSContext* cx, const JSJitFrameIter& frame,
+                                                  jsbytecode* pc)
+{
+    bool inForOfIterClose = false;
+    for (TryNoteIterBaseline tni(cx, frame.baselineFrame(), pc); !tni.done(); ++tni) {
+        const JSTryNote* tn = *tni;
+        switch (tn->kind) {
+          case JSTRY_FOR_IN: {
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
 
+            uint8_t* framePointer;
+            uint8_t* stackPointer;
+            BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer, &stackPointer);
+            Value iterValue(*(Value*) stackPointer);
+            RootedObject iterObject(cx, &iterValue.toObject());
+            UnwindIteratorForUncatchableException(iterObject);
+            break;
+          }
+
+          case JSTRY_FOR_OF_ITERCLOSE:
+            inForOfIterClose = true;
+            break;
+
+          case JSTRY_FOR_OF:
+            inForOfIterClose = false;
+            break;
+=======
+static void CloseLiveIteratorsBaselineForUncatchableException(
+    JSContext* cx, const JSJitFrameIter& frame, jsbytecode* pc) {
+  for (TryNoteIterBaseline tni(cx, frame.baselineFrame(), pc); !tni.done();
+       ++tni) {
+    const JSTryNote* tn = *tni;
+    switch (tn->kind) {
+      case JSTRY_FOR_IN: {
+        uint8_t* framePointer;
+        uint8_t* stackPointer;
+        BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer,
+                                                 &stackPointer);
+        Value iterValue(*(Value*)stackPointer);
+        RootedObject iterObject(cx, &iterValue.toObject());
+        UnwindIteratorForUncatchableException(iterObject);
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       case JSTRY_FOR_OF:
         inForOfIterClose = false;
         break;
 
       default:
         break;
+||||||| merged common ancestors
+          default:
+            break;
+        }
+=======
+      default:
+        break;
+>>>>>>> upstream-releases
     }
   }
 }
 
+<<<<<<< HEAD
 static bool ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame,
                                     EnvironmentIter& ei,
                                     ResumeFromException* rfe, jsbytecode** pc) {
   RootedScript script(cx, frame.baselineFrame()->script());
   bool inForOfIterClose = false;
+||||||| merged common ancestors
+static bool
+ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame, EnvironmentIter& ei,
+                        ResumeFromException* rfe, jsbytecode** pc)
+{
+    RootedScript script(cx, frame.baselineFrame()->script());
+    bool inForOfIterClose = false;
+=======
+static bool ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame,
+                                    EnvironmentIter& ei,
+                                    ResumeFromException* rfe, jsbytecode** pc) {
+  RootedScript script(cx, frame.baselineFrame()->script());
+>>>>>>> upstream-releases
 
   for (TryNoteIterBaseline tni(cx, frame.baselineFrame(), *pc); !tni.done();
        ++tni) {
@@ -404,18 +803,60 @@ static bool ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame,
           break;
         }
 
+<<<<<<< HEAD
         // See corresponding comment in ProcessTryNotes.
         if (inForOfIterClose) {
           break;
         }
-
+||||||| merged common ancestors
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+=======
         SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+        SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+||||||| merged common ancestors
+            SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+=======
+        // Ion can compile try-catch, but bailing out to catch
+        // exceptions is slow. Reset the warm-up counter so that if we
+        // catch many exceptions we won't Ion-compile the script.
+        script->resetWarmUpCounterToDelayIonCompilation();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // Ion can compile try-catch, but bailing out to catch
         // exceptions is slow. Reset the warm-up counter so that if we
         // catch many exceptions we won't Ion-compile the script.
         script->resetWarmUpCounter();
+||||||| merged common ancestors
+            // Ion can compile try-catch, but bailing out to catch
+            // exceptions is slow. Reset the warm-up counter so that if we
+            // catch many exceptions we won't Ion-compile the script.
+            script->resetWarmUpCounter();
+=======
+        // Resume at the start of the catch block.
+        rfe->kind = ResumeFromException::RESUME_CATCH;
+        if (frame.baselineFrame()->runningInInterpreter()) {
+          const BaselineInterpreter& interp =
+              cx->runtime()->jitRuntime()->baselineInterpreter();
+          frame.baselineFrame()->setInterpreterPC(*pc);
+          rfe->target = interp.interpretOpAddr().value;
+        } else {
+          PCMappingSlotInfo slotInfo;
+          rfe->target =
+              script->baselineScript()->nativeCodeForPC(script, *pc, &slotInfo);
+          MOZ_ASSERT(slotInfo.isStackSynced());
+        }
+        return true;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         // Resume at the start of the catch block.
         PCMappingSlotInfo slotInfo;
         rfe->kind = ResumeFromException::RESUME_CATCH;
@@ -424,13 +865,63 @@ static bool ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame,
         MOZ_ASSERT(slotInfo.isStackSynced());
         return true;
       }
+||||||| merged common ancestors
+            // Resume at the start of the catch block.
+            rfe->kind = ResumeFromException::RESUME_CATCH;
+            rfe->target = script->baselineScript()->nativeCodeForPC(script, *pc);
+            return true;
+          }
+=======
+      case JSTRY_FINALLY: {
+        SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+        rfe->kind = ResumeFromException::RESUME_FINALLY;
+        if (frame.baselineFrame()->runningInInterpreter()) {
+          const BaselineInterpreter& interp =
+              cx->runtime()->jitRuntime()->baselineInterpreter();
+          frame.baselineFrame()->setInterpreterPC(*pc);
+          rfe->target = interp.interpretOpAddr().value;
+        } else {
+          PCMappingSlotInfo slotInfo;
+          rfe->target =
+              script->baselineScript()->nativeCodeForPC(script, *pc, &slotInfo);
+          MOZ_ASSERT(slotInfo.isStackSynced());
+        }
+        // Drop the exception instead of leaking cross compartment data.
+        if (!cx->getPendingException(
+                MutableHandleValue::fromMarkedLocation(&rfe->exception))) {
+          rfe->exception = UndefinedValue();
+        }
+        cx->clearPendingException();
+        return true;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       case JSTRY_FINALLY: {
         // See corresponding comment in ProcessTryNotes.
         if (inForOfIterClose) {
           break;
         }
+||||||| merged common ancestors
+          case JSTRY_FINALLY: {
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+=======
+      case JSTRY_FOR_IN: {
+        uint8_t* framePointer;
+        uint8_t* stackPointer;
+        BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer,
+                                                 &stackPointer);
+        Value iterValue(*reinterpret_cast<Value*>(stackPointer));
+        JSObject* iterObject = &iterValue.toObject();
+        CloseIterator(iterObject);
+        break;
+      }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
         PCMappingSlotInfo slotInfo;
         SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
         rfe->kind = ResumeFromException::RESUME_FINALLY;
@@ -492,10 +983,108 @@ static bool ProcessTryNotesBaseline(JSContext* cx, const JSJitFrameIter& frame,
       case JSTRY_FOR_OF:
         inForOfIterClose = false;
         break;
+||||||| merged common ancestors
+            SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+            rfe->kind = ResumeFromException::RESUME_FINALLY;
+            rfe->target = script->baselineScript()->nativeCodeForPC(script, *pc);
+            // Drop the exception instead of leaking cross compartment data.
+            if (!cx->getPendingException(MutableHandleValue::fromMarkedLocation(&rfe->exception))) {
+                rfe->exception = UndefinedValue();
+            }
+            cx->clearPendingException();
+            return true;
+          }
 
+          case JSTRY_FOR_IN: {
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+
+            uint8_t* framePointer;
+            uint8_t* stackPointer;
+            BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer, &stackPointer);
+            Value iterValue(*reinterpret_cast<Value*>(stackPointer));
+            JSObject* iterObject = &iterValue.toObject();
+            CloseIterator(iterObject);
+            break;
+          }
+
+          case JSTRY_DESTRUCTURING_ITERCLOSE: {
+            // See corresponding comment in ProcessTryNotes.
+            if (inForOfIterClose) {
+                break;
+            }
+
+            uint8_t* framePointer;
+            uint8_t* stackPointer;
+            BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer, &stackPointer);
+            RootedValue doneValue(cx, *(reinterpret_cast<Value*>(stackPointer)));
+            bool done = ToBoolean(doneValue);
+            if (!done) {
+                Value iterValue(*(reinterpret_cast<Value*>(stackPointer) + 1));
+                RootedObject iterObject(cx, &iterValue.toObject());
+                if (!IteratorCloseForException(cx, iterObject)) {
+                    SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+                    return false;
+                }
+            }
+            break;
+          }
+
+          case JSTRY_FOR_OF_ITERCLOSE:
+            inForOfIterClose = true;
+            break;
+
+          case JSTRY_FOR_OF:
+            inForOfIterClose = false;
+            break;
+
+          case JSTRY_LOOP:
+            break;
+
+          default:
+            MOZ_CRASH("Invalid try note");
+        }
+    }
+    return true;
+}
+=======
+      case JSTRY_DESTRUCTURING: {
+        uint8_t* framePointer;
+        uint8_t* stackPointer;
+        BaselineFrameAndStackPointersFromTryNote(tn, frame, &framePointer,
+                                                 &stackPointer);
+        RootedValue doneValue(cx, *(reinterpret_cast<Value*>(stackPointer)));
+        bool done = ToBoolean(doneValue);
+        if (!done) {
+          Value iterValue(*(reinterpret_cast<Value*>(stackPointer) + 1));
+          RootedObject iterObject(cx, &iterValue.toObject());
+          if (!IteratorCloseForException(cx, iterObject)) {
+            SettleOnTryNote(cx, tn, frame, ei, rfe, pc);
+            return false;
+          }
+        }
+        break;
+      }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
       case JSTRY_LOOP:
         break;
+||||||| merged common ancestors
+static void
+HandleExceptionBaseline(JSContext* cx, const JSJitFrameIter& frame, ResumeFromException* rfe,
+                        jsbytecode* pc)
+{
+    MOZ_ASSERT(frame.isBaselineJS());
+=======
+      case JSTRY_FOR_OF:
+      case JSTRY_LOOP:
+        break;
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
       default:
         MOZ_CRASH("Invalid try note");
     }
@@ -547,6 +1136,63 @@ again:
           }
           ForcedReturn(cx, frame, pc, rfe);
           return;
+||||||| merged common ancestors
+    bool frameOk = false;
+    RootedScript script(cx, frame.baselineFrame()->script());
+=======
+      // JSTRY_FOR_OF_ITERCLOSE is handled internally by the try note iterator.
+      default:
+        MOZ_CRASH("Invalid try note");
+    }
+  }
+  return true;
+}
+
+static void HandleExceptionBaseline(JSContext* cx, const JSJitFrameIter& frame,
+                                    ResumeFromException* rfe, jsbytecode* pc) {
+  MOZ_ASSERT(frame.isBaselineJS());
+
+  bool frameOk = false;
+  RootedScript script(cx, frame.baselineFrame()->script());
+
+  if (script->hasScriptCounts()) {
+    PCCounts* counts = script->getThrowCounts(pc);
+    // If we failed to allocate, then skip the increment and continue to
+    // handle the exception.
+    if (counts) {
+      counts->numExec()++;
+    }
+  }
+
+  // We may be propagating a forced return from the interrupt
+  // callback, which cannot easily force a return.
+  if (cx->isPropagatingForcedReturn()) {
+    cx->clearPropagatingForcedReturn();
+    ForcedReturn(cx, frame, pc, rfe);
+    return;
+  }
+
+again:
+  if (cx->isExceptionPending()) {
+    if (!cx->isClosingGenerator()) {
+      switch (Debugger::onExceptionUnwind(cx, frame.baselineFrame())) {
+        case ResumeMode::Terminate:
+          // Uncatchable exception.
+          MOZ_ASSERT(!cx->isExceptionPending());
+          goto again;
+
+        case ResumeMode::Continue:
+        case ResumeMode::Throw:
+          MOZ_ASSERT(cx->isExceptionPending());
+          break;
+
+        case ResumeMode::Return:
+          if (script->hasTrynotes()) {
+            CloseLiveIteratorsBaselineForUncatchableException(cx, frame, pc);
+          }
+          ForcedReturn(cx, frame, pc, rfe);
+          return;
+>>>>>>> upstream-releases
 
         default:
           MOZ_CRASH("Invalid onExceptionUnwind resume mode");
@@ -703,8 +1349,19 @@ void HandleException(ResumeFromException* rfe) {
           return;
         }
 
+<<<<<<< HEAD
+        MOZ_ASSERT(rfe->kind == ResumeFromException::RESUME_ENTRY_FRAME);
+||||||| merged common ancestors
+        ++iter;
+=======
         MOZ_ASSERT(rfe->kind == ResumeFromException::RESUME_ENTRY_FRAME);
 
+        // When profiling, each frame popped needs a notification that
+        // the function has exited, so invoke the probe that a function
+        // is exiting.
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
         // When profiling, each frame popped needs a notification that
         // the function has exited, so invoke the probe that a function
         // is exiting.
@@ -716,6 +1373,19 @@ void HandleException(ResumeFromException* rfe) {
           TraceLogStopEvent(logger, TraceLogger_IonMonkey);
           TraceLogStopEvent(logger, TraceLogger_Scripts);
           break;
+||||||| merged common ancestors
+        if (overrecursed) {
+            // We hit an overrecursion error during bailout. Report it now.
+            ReportOverRecursed(cx);
+=======
+        JSScript* script = frames.script();
+        probes::ExitScript(cx, script, script->functionNonDelazifying(),
+                           /* popProfilerFrame = */ false);
+        if (!frames.more()) {
+          TraceLogStopEvent(logger, TraceLogger_IonMonkey);
+          TraceLogStopEvent(logger, TraceLogger_Scripts);
+          break;
+>>>>>>> upstream-releases
         }
         ++frames;
       }
@@ -903,6 +1573,7 @@ static inline void WriteAllocation(const JSJitFrameIter& frame,
 }
 #endif
 
+<<<<<<< HEAD
 static void TraceIonJSFrame(JSTracer* trc, const JSJitFrameIter& frame) {
   JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
 
@@ -953,6 +1624,85 @@ static void TraceIonJSFrame(JSTracer* trc, const JSJitFrameIter& frame) {
       TraceRoot(trc, reinterpret_cast<Value*>(spill), "ion-value-spill");
     }
   }
+||||||| merged common ancestors
+static void
+TraceIonJSFrame(JSTracer* trc, const JSJitFrameIter& frame)
+{
+    JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
+
+    layout->replaceCalleeToken(TraceCalleeToken(trc, layout->calleeToken()));
+
+    IonScript* ionScript = nullptr;
+    if (frame.checkInvalidation(&ionScript)) {
+        // This frame has been invalidated, meaning that its IonScript is no
+        // longer reachable through the callee token (JSFunction/JSScript->ion
+        // is now nullptr or recompiled). Manually trace it here.
+        IonScript::Trace(trc, ionScript);
+    } else {
+        ionScript = frame.ionScriptFromCalleeToken();
+    }
+
+    TraceThisAndArguments(trc, frame, frame.jsFrame());
+
+    const SafepointIndex* si = ionScript->getSafepointIndex(frame.returnAddressToFp());
+
+    SafepointReader safepoint(ionScript, si);
+
+    // Scan through slots which contain pointers (or on punboxing systems,
+    // actual values).
+    SafepointSlotEntry entry;
+=======
+static void TraceIonJSFrame(JSTracer* trc, const JSJitFrameIter& frame) {
+  JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
+
+  layout->replaceCalleeToken(TraceCalleeToken(trc, layout->calleeToken()));
+
+  IonScript* ionScript = nullptr;
+  if (frame.checkInvalidation(&ionScript)) {
+    // This frame has been invalidated, meaning that its IonScript is no
+    // longer reachable through the callee token (JSFunction/JSScript->ion
+    // is now nullptr or recompiled). Manually trace it here.
+    IonScript::Trace(trc, ionScript);
+  } else {
+    ionScript = frame.ionScriptFromCalleeToken();
+  }
+
+  TraceThisAndArguments(trc, frame, frame.jsFrame());
+
+  const SafepointIndex* si =
+      ionScript->getSafepointIndex(frame.resumePCinCurrentFrame());
+
+  SafepointReader safepoint(ionScript, si);
+
+  // Scan through slots which contain pointers (or on punboxing systems,
+  // actual values).
+  SafepointSlotEntry entry;
+
+  while (safepoint.getGcSlot(&entry)) {
+    uintptr_t* ref = layout->slotRef(entry);
+    TraceGenericPointerRoot(trc, reinterpret_cast<gc::Cell**>(ref),
+                            "ion-gc-slot");
+  }
+
+  while (safepoint.getValueSlot(&entry)) {
+    Value* v = (Value*)layout->slotRef(entry);
+    TraceRoot(trc, v, "ion-gc-slot");
+  }
+
+  uintptr_t* spill = frame.spillBase();
+  LiveGeneralRegisterSet gcRegs = safepoint.gcSpills();
+  LiveGeneralRegisterSet valueRegs = safepoint.valueSpills();
+  for (GeneralRegisterBackwardIterator iter(safepoint.allGprSpills());
+       iter.more(); ++iter) {
+    --spill;
+    if (gcRegs.has(*iter)) {
+      TraceGenericPointerRoot(trc, reinterpret_cast<gc::Cell**>(spill),
+                              "ion-gc-spill");
+    } else if (valueRegs.has(*iter)) {
+      TraceRoot(trc, reinterpret_cast<Value*>(spill), "ion-value-spill");
+    }
+  }
+>>>>>>> upstream-releases
 
 #ifdef JS_NUNBOX32
   LAllocation type, payload;
@@ -972,11 +1722,36 @@ static void TraceIonJSFrame(JSTracer* trc, const JSJitFrameIter& frame) {
 #endif
 }
 
+<<<<<<< HEAD
+static void TraceBailoutFrame(JSTracer* trc, const JSJitFrameIter& frame) {
+  JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
+||||||| merged common ancestors
+static void
+TraceBailoutFrame(JSTracer* trc, const JSJitFrameIter& frame)
+{
+    JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
+
+    layout->replaceCalleeToken(TraceCalleeToken(trc, layout->calleeToken()));
+=======
 static void TraceBailoutFrame(JSTracer* trc, const JSJitFrameIter& frame) {
   JitFrameLayout* layout = (JitFrameLayout*)frame.fp();
 
   layout->replaceCalleeToken(TraceCalleeToken(trc, layout->calleeToken()));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+  layout->replaceCalleeToken(TraceCalleeToken(trc, layout->calleeToken()));
+||||||| merged common ancestors
+    // We have to trace the list of actual arguments, as only formal arguments
+    // are represented in the Snapshot.
+    TraceThisAndArguments(trc, frame, frame.jsFrame());
+=======
+  // We have to trace the list of actual arguments, as only formal arguments
+  // are represented in the Snapshot.
+  TraceThisAndArguments(trc, frame, frame.jsFrame());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // We have to trace the list of actual arguments, as only formal arguments
   // are represented in the Snapshot.
   TraceThisAndArguments(trc, frame, frame.jsFrame());
@@ -992,6 +1767,51 @@ static void TraceBailoutFrame(JSTracer* trc, const JSJitFrameIter& frame) {
   // JitActivation.
   SnapshotIterator snapIter(frame,
                             frame.activation()->bailoutData()->machineState());
+||||||| merged common ancestors
+    // Under a bailout, do not have a Safepoint to only iterate over GC-things.
+    // Thus we use a SnapshotIterator to trace all the locations which would be
+    // used to reconstruct the Baseline frame.
+    //
+    // Note that at the time where this function is called, we have not yet
+    // started to reconstruct baseline frames.
+
+    // The vector of recover instructions is already traced as part of the
+    // JitActivation.
+    SnapshotIterator snapIter(frame, frame.activation()->bailoutData()->machineState());
+
+    // For each instruction, we read the allocations without evaluating the
+    // recover instruction, nor reconstructing the frame. We are only looking at
+    // tracing readable allocations.
+    while (true) {
+        while (snapIter.moreAllocations()) {
+            snapIter.traceAllocation(trc);
+        }
+=======
+  // Under a bailout, do not have a Safepoint to only iterate over GC-things.
+  // Thus we use a SnapshotIterator to trace all the locations which would be
+  // used to reconstruct the Baseline frame.
+  //
+  // Note that at the time where this function is called, we have not yet
+  // started to reconstruct baseline frames.
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // For each instruction, we read the allocations without evaluating the
+  // recover instruction, nor reconstructing the frame. We are only looking at
+  // tracing readable allocations.
+  while (true) {
+    while (snapIter.moreAllocations()) {
+      snapIter.traceAllocation(trc);
+||||||| merged common ancestors
+        if (!snapIter.moreInstructions()) {
+            break;
+        }
+        snapIter.nextInstruction();
+=======
+  // The vector of recover instructions is already traced as part of the
+  // JitActivation.
+  SnapshotIterator snapIter(frame,
+                            frame.activation()->bailoutData()->machineState());
 
   // For each instruction, we read the allocations without evaluating the
   // recover instruction, nor reconstructing the frame. We are only looking at
@@ -999,6 +1819,7 @@ static void TraceBailoutFrame(JSTracer* trc, const JSJitFrameIter& frame) {
   while (true) {
     while (snapIter.moreAllocations()) {
       snapIter.traceAllocation(trc);
+>>>>>>> upstream-releases
     }
 
     if (!snapIter.moreInstructions()) {
@@ -1026,9 +1847,18 @@ static void UpdateIonJSFrameForMinorGC(JSRuntime* rt,
 
   Nursery& nursery = rt->gc.nursery();
 
+<<<<<<< HEAD
   const SafepointIndex* si =
       ionScript->getSafepointIndex(frame.returnAddressToFp());
   SafepointReader safepoint(ionScript, si);
+||||||| merged common ancestors
+    const SafepointIndex* si = ionScript->getSafepointIndex(frame.returnAddressToFp());
+    SafepointReader safepoint(ionScript, si);
+=======
+  const SafepointIndex* si =
+      ionScript->getSafepointIndex(frame.resumePCinCurrentFrame());
+  SafepointReader safepoint(ionScript, si);
+>>>>>>> upstream-releases
 
   LiveGeneralRegisterSet slotsRegs = safepoint.slotsOrElementsSpills();
   uintptr_t* spill = frame.spillBase();
@@ -1078,6 +1908,7 @@ static void TraceIonICCallFrame(JSTracer* trc, const JSJitFrameIter& frame) {
 }
 
 #ifdef JS_CODEGEN_MIPS32
+<<<<<<< HEAD
 uint8_t* alignDoubleSpillWithOffset(uint8_t* pointer, int32_t offset) {
   uint32_t address = reinterpret_cast<uint32_t>(pointer);
   address = (address - offset) & ~(ABIStackAlignment - 1);
@@ -1102,16 +1933,85 @@ static void TraceJitExitFrameCopiedArguments(JSTracer* trc, const VMFunction* f,
         MOZ_ASSERT(f->argRootType(explicitArg) == VMFunction::RootNone);
       }
       doubleArgs += sizeof(double);
+||||||| merged common ancestors
+uint8_t*
+alignDoubleSpillWithOffset(uint8_t* pointer, int32_t offset)
+{
+    uint32_t address = reinterpret_cast<uint32_t>(pointer);
+    address = (address - offset) & ~(ABIStackAlignment - 1);
+    return reinterpret_cast<uint8_t*>(address);
+}
+
+static void
+TraceJitExitFrameCopiedArguments(JSTracer* trc, const VMFunction* f, ExitFooterFrame* footer)
+{
+    uint8_t* doubleArgs = reinterpret_cast<uint8_t*>(footer);
+    doubleArgs = alignDoubleSpillWithOffset(doubleArgs, sizeof(intptr_t));
+    if (f->outParam == Type_Handle) {
+        doubleArgs -= sizeof(Value);
+    }
+    doubleArgs -= f->doubleByRefArgs() * sizeof(double);
+
+    for (uint32_t explicitArg = 0; explicitArg < f->explicitArgs; explicitArg++) {
+        if (f->argProperties(explicitArg) == VMFunction::DoubleByRef) {
+            // Arguments with double size can only have RootValue type.
+            if (f->argRootType(explicitArg) == VMFunction::RootValue) {
+                TraceRoot(trc, reinterpret_cast<Value*>(doubleArgs), "ion-vm-args");
+            } else {
+                MOZ_ASSERT(f->argRootType(explicitArg) == VMFunction::RootNone);
+            }
+            doubleArgs += sizeof(double);
+        }
+=======
+uint8_t* alignDoubleSpillWithOffset(uint8_t* pointer, int32_t offset) {
+  uint32_t address = reinterpret_cast<uint32_t>(pointer);
+  address = (address - offset) & ~(ABIStackAlignment - 1);
+  return reinterpret_cast<uint8_t*>(address);
+}
+
+static void TraceJitExitFrameCopiedArguments(JSTracer* trc,
+                                             const VMFunctionData* f,
+                                             ExitFooterFrame* footer) {
+  uint8_t* doubleArgs = reinterpret_cast<uint8_t*>(footer);
+  doubleArgs = alignDoubleSpillWithOffset(doubleArgs, sizeof(intptr_t));
+  if (f->outParam == Type_Handle) {
+    doubleArgs -= sizeof(Value);
+  }
+  doubleArgs -= f->doubleByRefArgs() * sizeof(double);
+
+  for (uint32_t explicitArg = 0; explicitArg < f->explicitArgs; explicitArg++) {
+    if (f->argProperties(explicitArg) == VMFunctionData::DoubleByRef) {
+      // Arguments with double size can only have RootValue type.
+      if (f->argRootType(explicitArg) == VMFunctionData::RootValue) {
+        TraceRoot(trc, reinterpret_cast<Value*>(doubleArgs), "ion-vm-args");
+      } else {
+        MOZ_ASSERT(f->argRootType(explicitArg) == VMFunctionData::RootNone);
+      }
+      doubleArgs += sizeof(double);
+>>>>>>> upstream-releases
     }
   }
 }
 #else
+<<<<<<< HEAD
 static void TraceJitExitFrameCopiedArguments(JSTracer* trc, const VMFunction* f,
                                              ExitFooterFrame* footer) {
   // This is NO-OP on other platforms.
+||||||| merged common ancestors
+static void
+TraceJitExitFrameCopiedArguments(JSTracer* trc, const VMFunction* f, ExitFooterFrame* footer)
+{
+    // This is NO-OP on other platforms.
+=======
+static void TraceJitExitFrameCopiedArguments(JSTracer* trc,
+                                             const VMFunctionData* f,
+                                             ExitFooterFrame* footer) {
+  // This is NO-OP on other platforms.
+>>>>>>> upstream-releases
 }
 #endif
 
+<<<<<<< HEAD
 static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
   ExitFooterFrame* footer = frame.exitFrame()->footer();
 
@@ -1203,7 +2103,152 @@ static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
         JSObject** pobj = reinterpret_cast<JSObject**>(argBase);
         if (*pobj) {
           TraceRoot(trc, pobj, "ion-vm-args");
+||||||| merged common ancestors
+static void
+TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame)
+{
+    ExitFooterFrame* footer = frame.exitFrame()->footer();
+
+    // This corresponds to the case where we have build a fake exit frame which
+    // handles the case of a native function call. We need to trace the argument
+    // vector of the function call, and also new.target if it was a constructing
+    // call.
+    if (frame.isExitFrameLayout<NativeExitFrameLayout>()) {
+        NativeExitFrameLayout* native = frame.exitFrame()->as<NativeExitFrameLayout>();
+        size_t len = native->argc() + 2;
+        Value* vp = native->vp();
+        TraceRootRange(trc, len, vp, "ion-native-args");
+        if (frame.isExitFrameLayout<ConstructNativeExitFrameLayout>()) {
+            TraceRoot(trc, vp + len, "ion-native-new-target");
         }
+        return;
+    }
+
+    if (frame.isExitFrameLayout<IonOOLNativeExitFrameLayout>()) {
+        IonOOLNativeExitFrameLayout* oolnative =
+            frame.exitFrame()->as<IonOOLNativeExitFrameLayout>();
+        TraceRoot(trc, oolnative->stubCode(), "ion-ool-native-code");
+        TraceRoot(trc, oolnative->vp(), "iol-ool-native-vp");
+        size_t len = oolnative->argc() + 1;
+        TraceRootRange(trc, len, oolnative->thisp(), "ion-ool-native-thisargs");
+        return;
+    }
+
+    if (frame.isExitFrameLayout<IonOOLProxyExitFrameLayout>()) {
+        IonOOLProxyExitFrameLayout* oolproxy = frame.exitFrame()->as<IonOOLProxyExitFrameLayout>();
+        TraceRoot(trc, oolproxy->stubCode(), "ion-ool-proxy-code");
+        TraceRoot(trc, oolproxy->vp(), "ion-ool-proxy-vp");
+        TraceRoot(trc, oolproxy->id(), "ion-ool-proxy-id");
+        TraceRoot(trc, oolproxy->proxy(), "ion-ool-proxy-proxy");
+        return;
+    }
+
+    if (frame.isExitFrameLayout<IonDOMExitFrameLayout>()) {
+        IonDOMExitFrameLayout* dom = frame.exitFrame()->as<IonDOMExitFrameLayout>();
+        TraceRoot(trc, dom->thisObjAddress(), "ion-dom-args");
+        if (dom->isMethodFrame()) {
+            IonDOMMethodExitFrameLayout* method =
+                reinterpret_cast<IonDOMMethodExitFrameLayout*>(dom);
+            size_t len = method->argc() + 2;
+            Value* vp = method->vp();
+            TraceRootRange(trc, len, vp, "ion-dom-args");
+        } else {
+            TraceRoot(trc, dom->vp(), "ion-dom-args");
+=======
+static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
+  ExitFooterFrame* footer = frame.exitFrame()->footer();
+
+  // This corresponds to the case where we have build a fake exit frame which
+  // handles the case of a native function call. We need to trace the argument
+  // vector of the function call, and also new.target if it was a constructing
+  // call.
+  if (frame.isExitFrameLayout<NativeExitFrameLayout>()) {
+    NativeExitFrameLayout* native =
+        frame.exitFrame()->as<NativeExitFrameLayout>();
+    size_t len = native->argc() + 2;
+    Value* vp = native->vp();
+    TraceRootRange(trc, len, vp, "ion-native-args");
+    if (frame.isExitFrameLayout<ConstructNativeExitFrameLayout>()) {
+      TraceRoot(trc, vp + len, "ion-native-new-target");
+    }
+    return;
+  }
+
+  if (frame.isExitFrameLayout<IonOOLNativeExitFrameLayout>()) {
+    IonOOLNativeExitFrameLayout* oolnative =
+        frame.exitFrame()->as<IonOOLNativeExitFrameLayout>();
+    TraceRoot(trc, oolnative->stubCode(), "ion-ool-native-code");
+    TraceRoot(trc, oolnative->vp(), "iol-ool-native-vp");
+    size_t len = oolnative->argc() + 1;
+    TraceRootRange(trc, len, oolnative->thisp(), "ion-ool-native-thisargs");
+    return;
+  }
+
+  if (frame.isExitFrameLayout<IonOOLProxyExitFrameLayout>()) {
+    IonOOLProxyExitFrameLayout* oolproxy =
+        frame.exitFrame()->as<IonOOLProxyExitFrameLayout>();
+    TraceRoot(trc, oolproxy->stubCode(), "ion-ool-proxy-code");
+    TraceRoot(trc, oolproxy->vp(), "ion-ool-proxy-vp");
+    TraceRoot(trc, oolproxy->id(), "ion-ool-proxy-id");
+    TraceRoot(trc, oolproxy->proxy(), "ion-ool-proxy-proxy");
+    return;
+  }
+
+  if (frame.isExitFrameLayout<IonDOMExitFrameLayout>()) {
+    IonDOMExitFrameLayout* dom = frame.exitFrame()->as<IonDOMExitFrameLayout>();
+    TraceRoot(trc, dom->thisObjAddress(), "ion-dom-args");
+    if (dom->isMethodFrame()) {
+      IonDOMMethodExitFrameLayout* method =
+          reinterpret_cast<IonDOMMethodExitFrameLayout*>(dom);
+      size_t len = method->argc() + 2;
+      Value* vp = method->vp();
+      TraceRootRange(trc, len, vp, "ion-dom-args");
+    } else {
+      TraceRoot(trc, dom->vp(), "ion-dom-args");
+    }
+    return;
+  }
+
+  if (frame.isExitFrameLayout<CalledFromJitExitFrameLayout>()) {
+    auto* layout = frame.exitFrame()->as<CalledFromJitExitFrameLayout>();
+    JitFrameLayout* jsLayout = layout->jsFrame();
+    jsLayout->replaceCalleeToken(
+        TraceCalleeToken(trc, jsLayout->calleeToken()));
+    TraceThisAndArguments(trc, frame, jsLayout);
+    return;
+  }
+
+  if (frame.isExitFrameLayout<DirectWasmJitCallFrameLayout>()) {
+    // Nothing to do: we can't have object arguments (yet!) and the callee
+    // is traced elsewhere.
+    return;
+  }
+
+  if (frame.isBareExit()) {
+    // Nothing to trace. Fake exit frame pushed for VM functions with
+    // nothing to trace on the stack.
+    return;
+  }
+
+  MOZ_ASSERT(frame.exitFrame()->isWrapperExit());
+
+  const VMFunctionData* f = footer->function();
+  MOZ_ASSERT(f);
+
+  // Trace arguments of the VM wrapper.
+  uint8_t* argBase = frame.exitFrame()->argBase();
+  for (uint32_t explicitArg = 0; explicitArg < f->explicitArgs; explicitArg++) {
+    switch (f->argRootType(explicitArg)) {
+      case VMFunctionData::RootNone:
+        break;
+      case VMFunctionData::RootObject: {
+        // Sometimes we can bake in HandleObjects to nullptr.
+        JSObject** pobj = reinterpret_cast<JSObject**>(argBase);
+        if (*pobj) {
+          TraceRoot(trc, pobj, "ion-vm-args");
+>>>>>>> upstream-releases
+        }
+<<<<<<< HEAD
         break;
       }
       case VMFunction::RootString:
@@ -1222,8 +2267,51 @@ static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
         TraceGenericPointerRoot(trc, reinterpret_cast<gc::Cell**>(argBase),
                                 "ion-vm-args");
         break;
+||||||| merged common ancestors
+        return;
     }
 
+    if (frame.isExitFrameLayout<CalledFromJitExitFrameLayout>()) {
+        auto* layout = frame.exitFrame()->as<CalledFromJitExitFrameLayout>();
+        JitFrameLayout* jsLayout = layout->jsFrame();
+        jsLayout->replaceCalleeToken(TraceCalleeToken(trc, jsLayout->calleeToken()));
+        TraceThisAndArguments(trc, frame, jsLayout);
+        return;
+    }
+
+    if (frame.isExitFrameLayout<DirectWasmJitCallFrameLayout>()) {
+        // Nothing to do: we can't have object arguments (yet!) and the callee
+        // is traced elsewhere.
+        return;
+    }
+
+    if (frame.isBareExit()) {
+        // Nothing to trace. Fake exit frame pushed for VM functions with
+        // nothing to trace on the stack.
+        return;
+=======
+        break;
+      }
+      case VMFunctionData::RootString:
+        TraceRoot(trc, reinterpret_cast<JSString**>(argBase), "ion-vm-args");
+        break;
+      case VMFunctionData::RootFunction:
+        TraceRoot(trc, reinterpret_cast<JSFunction**>(argBase), "ion-vm-args");
+        break;
+      case VMFunctionData::RootValue:
+        TraceRoot(trc, reinterpret_cast<Value*>(argBase), "ion-vm-args");
+        break;
+      case VMFunctionData::RootId:
+        TraceRoot(trc, reinterpret_cast<jsid*>(argBase), "ion-vm-args");
+        break;
+      case VMFunctionData::RootCell:
+        TraceGenericPointerRoot(trc, reinterpret_cast<gc::Cell**>(argBase),
+                                "ion-vm-args");
+        break;
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     switch (f->argProperties(explicitArg)) {
       case VMFunction::WordByValue:
       case VMFunction::WordByRef:
@@ -1233,9 +2321,68 @@ static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
       case VMFunction::DoubleByRef:
         argBase += 2 * sizeof(void*);
         break;
+||||||| merged common ancestors
+    MOZ_ASSERT(frame.exitFrame()->isWrapperExit());
+
+    const VMFunction* f = footer->function();
+    MOZ_ASSERT(f);
+
+    // Trace arguments of the VM wrapper.
+    uint8_t* argBase = frame.exitFrame()->argBase();
+    for (uint32_t explicitArg = 0; explicitArg < f->explicitArgs; explicitArg++) {
+        switch (f->argRootType(explicitArg)) {
+          case VMFunction::RootNone:
+            break;
+          case VMFunction::RootObject: {
+            // Sometimes we can bake in HandleObjects to nullptr.
+            JSObject** pobj = reinterpret_cast<JSObject**>(argBase);
+            if (*pobj) {
+                TraceRoot(trc, pobj, "ion-vm-args");
+            }
+            break;
+          }
+          case VMFunction::RootString:
+            TraceRoot(trc, reinterpret_cast<JSString**>(argBase), "ion-vm-args");
+            break;
+          case VMFunction::RootFunction:
+            TraceRoot(trc, reinterpret_cast<JSFunction**>(argBase), "ion-vm-args");
+            break;
+          case VMFunction::RootValue:
+            TraceRoot(trc, reinterpret_cast<Value*>(argBase), "ion-vm-args");
+            break;
+          case VMFunction::RootId:
+            TraceRoot(trc, reinterpret_cast<jsid*>(argBase), "ion-vm-args");
+            break;
+          case VMFunction::RootCell:
+            TraceGenericPointerRoot(trc, reinterpret_cast<gc::Cell**>(argBase), "ion-vm-args");
+            break;
+        }
+
+        switch (f->argProperties(explicitArg)) {
+          case VMFunction::WordByValue:
+          case VMFunction::WordByRef:
+            argBase += sizeof(void*);
+            break;
+          case VMFunction::DoubleByValue:
+          case VMFunction::DoubleByRef:
+            argBase += 2 * sizeof(void*);
+            break;
+        }
+=======
+    switch (f->argProperties(explicitArg)) {
+      case VMFunctionData::WordByValue:
+      case VMFunctionData::WordByRef:
+        argBase += sizeof(void*);
+        break;
+      case VMFunctionData::DoubleByValue:
+      case VMFunctionData::DoubleByRef:
+        argBase += 2 * sizeof(void*);
+        break;
+>>>>>>> upstream-releases
     }
   }
 
+<<<<<<< HEAD
   if (f->outParam == Type_Handle) {
     switch (f->outParamRootType) {
       case VMFunction::RootNone:
@@ -1259,6 +2406,55 @@ static void TraceJitExitFrame(JSTracer* trc, const JSJitFrameIter& frame) {
         TraceGenericPointerRoot(trc, footer->outParam<gc::Cell*>(),
                                 "ion-vm-out");
         break;
+||||||| merged common ancestors
+    if (f->outParam == Type_Handle) {
+        switch (f->outParamRootType) {
+          case VMFunction::RootNone:
+            MOZ_CRASH("Handle outparam must have root type");
+          case VMFunction::RootObject:
+            TraceRoot(trc, footer->outParam<JSObject*>(), "ion-vm-out");
+            break;
+          case VMFunction::RootString:
+            TraceRoot(trc, footer->outParam<JSString*>(), "ion-vm-out");
+            break;
+          case VMFunction::RootFunction:
+            TraceRoot(trc, footer->outParam<JSFunction*>(), "ion-vm-out");
+            break;
+          case VMFunction::RootValue:
+            TraceRoot(trc, footer->outParam<Value>(), "ion-vm-outvp");
+            break;
+          case VMFunction::RootId:
+            TraceRoot(trc, footer->outParam<jsid>(), "ion-vm-outvp");
+            break;
+          case VMFunction::RootCell:
+            TraceGenericPointerRoot(trc, footer->outParam<gc::Cell*>(), "ion-vm-out");
+            break;
+        }
+=======
+  if (f->outParam == Type_Handle) {
+    switch (f->outParamRootType) {
+      case VMFunctionData::RootNone:
+        MOZ_CRASH("Handle outparam must have root type");
+      case VMFunctionData::RootObject:
+        TraceRoot(trc, footer->outParam<JSObject*>(), "ion-vm-out");
+        break;
+      case VMFunctionData::RootString:
+        TraceRoot(trc, footer->outParam<JSString*>(), "ion-vm-out");
+        break;
+      case VMFunctionData::RootFunction:
+        TraceRoot(trc, footer->outParam<JSFunction*>(), "ion-vm-out");
+        break;
+      case VMFunctionData::RootValue:
+        TraceRoot(trc, footer->outParam<Value>(), "ion-vm-outvp");
+        break;
+      case VMFunctionData::RootId:
+        TraceRoot(trc, footer->outParam<jsid>(), "ion-vm-outvp");
+        break;
+      case VMFunctionData::RootCell:
+        TraceGenericPointerRoot(trc, footer->outParam<gc::Cell*>(),
+                                "ion-vm-out");
+        break;
+>>>>>>> upstream-releases
     }
   }
 
@@ -1292,6 +2488,7 @@ static void TraceJitActivation(JSTracer* trc, JitActivation* activation) {
   }
 #endif
 
+<<<<<<< HEAD
   activation->traceRematerializedFrames(trc);
   activation->traceIonRecovery(trc);
 
@@ -1334,6 +2531,104 @@ static void TraceJitActivation(JSTracer* trc, JitActivation* activation) {
     } else {
       MOZ_ASSERT(frames.isWasm());
       frames.asWasm().instance()->trace(trc);
+||||||| merged common ancestors
+    activation->traceRematerializedFrames(trc);
+    activation->traceIonRecovery(trc);
+
+    for (JitFrameIter frames(activation); !frames.done(); ++frames) {
+        if (frames.isJSJit()) {
+            const JSJitFrameIter& jitFrame = frames.asJSJit();
+            switch (jitFrame.type()) {
+              case FrameType::Exit:
+                TraceJitExitFrame(trc, jitFrame);
+                break;
+              case FrameType::BaselineJS:
+                jitFrame.baselineFrame()->trace(trc, jitFrame);
+                break;
+              case FrameType::IonJS:
+                TraceIonJSFrame(trc, jitFrame);
+                break;
+              case FrameType::BaselineStub:
+                TraceBaselineStubFrame(trc, jitFrame);
+                break;
+              case FrameType::Bailout:
+                TraceBailoutFrame(trc, jitFrame);
+                break;
+              case FrameType::Rectifier:
+                TraceRectifierFrame(trc, jitFrame);
+                break;
+              case FrameType::IonICCall:
+                TraceIonICCallFrame(trc, jitFrame);
+                break;
+              case FrameType::WasmToJSJit:
+                // Ignore: this is a special marker used to let the
+                // JitFrameIter know the frame above is a wasm frame, handled
+                // in the next iteration.
+                break;
+              case FrameType::JSJitToWasm:
+                TraceJSJitToWasmFrame(trc, jitFrame);
+                break;
+              default:
+                MOZ_CRASH("unexpected frame type");
+            }
+        } else {
+            MOZ_ASSERT(frames.isWasm());
+            frames.asWasm().instance()->trace(trc);
+        }
+=======
+  activation->traceRematerializedFrames(trc);
+  activation->traceIonRecovery(trc);
+
+  // This is used for sanity checking continuity of the sequence of wasm stack
+  // maps as we unwind.  It has no functional purpose.
+  uintptr_t highestByteVisitedInPrevWasmFrame = 0;
+
+  for (JitFrameIter frames(activation); !frames.done(); ++frames) {
+    if (frames.isJSJit()) {
+      const JSJitFrameIter& jitFrame = frames.asJSJit();
+      switch (jitFrame.type()) {
+        case FrameType::Exit:
+          TraceJitExitFrame(trc, jitFrame);
+          break;
+        case FrameType::BaselineJS:
+          jitFrame.baselineFrame()->trace(trc, jitFrame);
+          break;
+        case FrameType::IonJS:
+          TraceIonJSFrame(trc, jitFrame);
+          break;
+        case FrameType::BaselineStub:
+          TraceBaselineStubFrame(trc, jitFrame);
+          break;
+        case FrameType::Bailout:
+          TraceBailoutFrame(trc, jitFrame);
+          break;
+        case FrameType::Rectifier:
+          TraceRectifierFrame(trc, jitFrame);
+          break;
+        case FrameType::IonICCall:
+          TraceIonICCallFrame(trc, jitFrame);
+          break;
+        case FrameType::WasmToJSJit:
+          // Ignore: this is a special marker used to let the
+          // JitFrameIter know the frame above is a wasm frame, handled
+          // in the next iteration.
+          break;
+        case FrameType::JSJitToWasm:
+          TraceJSJitToWasmFrame(trc, jitFrame);
+          break;
+        default:
+          MOZ_CRASH("unexpected frame type");
+      }
+      highestByteVisitedInPrevWasmFrame = 0; /* "unknown" */
+    } else {
+      MOZ_ASSERT(frames.isWasm());
+      uint8_t* nextPC = frames.resumePCinCurrentFrame();
+      MOZ_ASSERT(nextPC != 0);
+      wasm::WasmFrameIter& wasmFrameIter = frames.asWasm();
+      wasm::Instance* instance = wasmFrameIter.instance();
+      instance->trace(trc);
+      highestByteVisitedInPrevWasmFrame = instance->traceFrame(
+          trc, wasmFrameIter, nextPC, highestByteVisitedInPrevWasmFrame);
     }
   }
 }
@@ -1354,10 +2649,27 @@ void UpdateJitActivationsForMinorGC(JSRuntime* rt) {
       if (iter.frame().type() == FrameType::IonJS) {
         UpdateIonJSFrameForMinorGC(rt, iter.frame());
       }
+>>>>>>> upstream-releases
     }
   }
 }
 
+<<<<<<< HEAD
+void TraceJitActivations(JSContext* cx, JSTracer* trc) {
+  for (JitActivationIterator activations(cx); !activations.done();
+       ++activations) {
+    TraceJitActivation(trc, activations->asJit());
+  }
+}
+||||||| merged common ancestors
+void
+TraceJitActivations(JSContext* cx, JSTracer* trc)
+{
+    for (JitActivationIterator activations(cx); !activations.done(); ++activations) {
+        TraceJitActivation(trc, activations->asJit());
+    }
+}
+=======
 void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
   JitSpew(JitSpew_IonSnapshots, "Recover PC & Script from the last frame.");
 
@@ -1375,7 +2687,188 @@ void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
       MOZ_ASSERT(it.frame().isBaselineStub() || it.frame().isBaselineJS() ||
                  it.frame().isIonJS());
     }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+void UpdateJitActivationsForMinorGC(JSRuntime* rt) {
+  MOZ_ASSERT(JS::RuntimeHeapIsMinorCollecting());
+  JSContext* cx = rt->mainContextFromOwnThread();
+  for (JitActivationIterator activations(cx); !activations.done();
+       ++activations) {
+    for (OnlyJSJitFrameIter iter(activations); !iter.done(); ++iter) {
+      if (iter.frame().type() == FrameType::IonJS) {
+        UpdateIonJSFrameForMinorGC(rt, iter.frame());
+      }
+||||||| merged common ancestors
+void
+UpdateJitActivationsForMinorGC(JSRuntime* rt)
+{
+    MOZ_ASSERT(JS::RuntimeHeapIsMinorCollecting());
+    JSContext* cx = rt->mainContextFromOwnThread();
+    for (JitActivationIterator activations(cx); !activations.done(); ++activations) {
+        for (OnlyJSJitFrameIter iter(activations); !iter.done(); ++iter) {
+            if (iter.frame().type() == FrameType::IonJS) {
+                UpdateIonJSFrameForMinorGC(rt, iter.frame());
+            }
+        }
+=======
+    // Skip Baseline/Ion stub and IC call frames.
+    if (it.frame().isBaselineStub()) {
+      ++it;
+      MOZ_ASSERT(it.frame().isBaselineJS());
+    } else if (it.frame().isIonICCall()) {
+      ++it;
+      MOZ_ASSERT(it.frame().isIonJS());
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+}
+||||||| merged common ancestors
+}
+=======
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
+  JitSpew(JitSpew_IonSnapshots, "Recover PC & Script from the last frame.");
+||||||| merged common ancestors
+void
+GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes)
+{
+    JitSpew(JitSpew_IonSnapshots, "Recover PC & Script from the last frame.");
+
+    // Recover the return address so that we can look it up in the
+    // PcScriptCache, as script/pc computation is expensive.
+    JitActivationIterator actIter(cx);
+    OnlyJSJitFrameIter it(actIter);
+    uint8_t* retAddr;
+    if (it.frame().isExitFrame()) {
+        ++it;
+
+        // Skip rectifier frames.
+        if (it.frame().isRectifier()) {
+            ++it;
+            MOZ_ASSERT(it.frame().isBaselineStub() ||
+                       it.frame().isBaselineJS() ||
+                       it.frame().isIonJS());
+        }
+=======
+    MOZ_ASSERT(it.frame().isBaselineJS() || it.frame().isIonJS());
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  // Recover the return address so that we can look it up in the
+  // PcScriptCache, as script/pc computation is expensive.
+  JitActivationIterator actIter(cx);
+  OnlyJSJitFrameIter it(actIter);
+  uint8_t* retAddr;
+  if (it.frame().isExitFrame()) {
+    ++it;
+||||||| merged common ancestors
+        // Skip Baseline/Ion stub and IC call frames.
+        if (it.frame().isBaselineStub()) {
+            ++it;
+            MOZ_ASSERT(it.frame().isBaselineJS());
+        } else if (it.frame().isIonICCall()) {
+            ++it;
+            MOZ_ASSERT(it.frame().isIonJS());
+        }
+=======
+    // Don't use the return address and the cache if the BaselineFrame has an
+    // override pc or if it's running in the Baseline Interpreter. In these
+    // cases the bytecode pc is cheap to get, so we won't benefit from the
+    // cache, and the pc could change without the return address changing.
+    //
+    // Moreover, sometimes when an override pc is present during exception
+    // handling, the return address is set to nullptr as a sanity check,
+    // since we do not return to the frame that threw the exception.
+    if (it.frame().isBaselineJS() &&
+        (it.frame().baselineFrame()->hasOverridePc() ||
+         it.frame().baselineFrame()->runningInInterpreter())) {
+      it.frame().baselineScriptAndPc(scriptRes, pcRes);
+      return;
+    }
+
+    retAddr = it.frame().resumePCinCurrentFrame();
+  } else {
+    MOZ_ASSERT(it.frame().isBailoutJS());
+    retAddr = it.frame().returnAddress();
+  }
+
+  MOZ_ASSERT(retAddr);
+
+  uint32_t hash = PcScriptCache::Hash(retAddr);
+
+  // Lazily initialize the cache. The allocation may safely fail and will not
+  // GC.
+  if (MOZ_UNLIKELY(cx->ionPcScriptCache == nullptr)) {
+    cx->ionPcScriptCache =
+        MakeUnique<PcScriptCache>(cx->runtime()->gc.gcNumber());
+  }
+
+  if (cx->ionPcScriptCache.ref() &&
+      cx->ionPcScriptCache->get(cx->runtime(), hash, retAddr, scriptRes,
+                                pcRes)) {
+    return;
+  }
+
+  // Lookup failed: undertake expensive process to determine script and pc.
+  if (it.frame().isIonJS() || it.frame().isBailoutJS()) {
+    InlineFrameIterator ifi(cx, &it.frame());
+    *scriptRes = ifi.script();
+    *pcRes = ifi.pc();
+  } else {
+    MOZ_ASSERT(it.frame().isBaselineJS());
+    it.frame().baselineScriptAndPc(scriptRes, pcRes);
+  }
+
+  // Add entry to cache.
+  if (cx->ionPcScriptCache.ref()) {
+    cx->ionPcScriptCache->add(hash, retAddr, *pcRes, *scriptRes);
+  }
+}
+
+uint32_t OsiIndex::returnPointDisplacement() const {
+  // In general, pointer arithmetic on code is bad, but in this case,
+  // getting the return address from a call instruction, stepping over pools
+  // would be wrong.
+  return callPointDisplacement_ + Assembler::PatchWrite_NearCallSize();
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    // Skip rectifier frames.
+    if (it.frame().isRectifier()) {
+      ++it;
+      MOZ_ASSERT(it.frame().isBaselineStub() || it.frame().isBaselineJS() ||
+                 it.frame().isIonJS());
+    }
+||||||| merged common ancestors
+        MOZ_ASSERT(it.frame().isBaselineJS() || it.frame().isIonJS());
+
+        // Don't use the return address if the BaselineFrame has an override pc.
+        // The override pc is cheap to get, so we won't benefit from the cache,
+        // and the override pc could change without the return address changing.
+        // Moreover, sometimes when an override pc is present during exception
+        // handling, the return address is set to nullptr as a sanity check,
+        // since we do not return to the frame that threw the exception.
+        if (!it.frame().isBaselineJS() || !it.frame().baselineFrame()->hasOverridePc()) {
+            retAddr = it.frame().returnAddressToFp();
+            MOZ_ASSERT(retAddr);
+        } else {
+            retAddr = nullptr;
+        }
+    } else {
+        MOZ_ASSERT(it.frame().isBailoutJS());
+        retAddr = it.frame().returnAddress();
+    }
+=======
+RInstructionResults::RInstructionResults(JitFrameLayout* fp)
+    : results_(nullptr), fp_(fp), initialized_(false) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     // Skip Baseline/Ion stub and IC call frames.
     if (it.frame().isBaselineStub()) {
       ++it;
@@ -1384,7 +2877,43 @@ void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
       ++it;
       MOZ_ASSERT(it.frame().isIonJS());
     }
+||||||| merged common ancestors
+    uint32_t hash;
+    if (retAddr) {
+        hash = PcScriptCache::Hash(retAddr);
 
+        // Lazily initialize the cache. The allocation may safely fail and will not GC.
+        if (MOZ_UNLIKELY(cx->ionPcScriptCache == nullptr)) {
+            cx->ionPcScriptCache = MakeUnique<PcScriptCache>(cx->runtime()->gc.gcNumber());
+        }
+
+        if (cx->ionPcScriptCache.ref() &&
+            cx->ionPcScriptCache->get(cx->runtime(), hash, retAddr, scriptRes, pcRes))
+        {
+            return;
+        }
+    }
+=======
+RInstructionResults::RInstructionResults(RInstructionResults&& src)
+    : results_(std::move(src.results_)),
+      fp_(src.fp_),
+      initialized_(src.initialized_) {
+  src.initialized_ = false;
+}
+
+RInstructionResults& RInstructionResults::operator=(RInstructionResults&& rhs) {
+  MOZ_ASSERT(&rhs != this, "self-moves are prohibited");
+  this->~RInstructionResults();
+  new (this) RInstructionResults(std::move(rhs));
+  return *this;
+}
+
+RInstructionResults::~RInstructionResults() {
+  // results_ is freed by the UniquePtr.
+}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     MOZ_ASSERT(it.frame().isBaselineJS() || it.frame().isIonJS());
 
     // Don't use the return address if the BaselineFrame has an override pc.
@@ -1399,6 +2928,23 @@ void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
       MOZ_ASSERT(retAddr);
     } else {
       retAddr = nullptr;
+||||||| merged common ancestors
+    // Lookup failed: undertake expensive process to recover the innermost inlined frame.
+    jsbytecode* pc = nullptr;
+    if (it.frame().isIonJS() || it.frame().isBailoutJS()) {
+        InlineFrameIterator ifi(cx, &it.frame());
+        *scriptRes = ifi.script();
+        pc = ifi.pc();
+    } else {
+        MOZ_ASSERT(it.frame().isBaselineJS());
+        it.frame().baselineScriptAndPc(scriptRes, &pc);
+=======
+bool RInstructionResults::init(JSContext* cx, uint32_t numResults) {
+  if (numResults) {
+    results_ = cx->make_unique<Values>();
+    if (!results_ || !results_->growBy(numResults)) {
+      return false;
+>>>>>>> upstream-releases
     }
   } else {
     MOZ_ASSERT(it.frame().isBailoutJS());
@@ -1409,13 +2955,24 @@ void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
   if (retAddr) {
     hash = PcScriptCache::Hash(retAddr);
 
+<<<<<<< HEAD
     // Lazily initialize the cache. The allocation may safely fail and will not
     // GC.
     if (MOZ_UNLIKELY(cx->ionPcScriptCache == nullptr)) {
       cx->ionPcScriptCache =
           MakeUnique<PcScriptCache>(cx->runtime()->gc.gcNumber());
+||||||| merged common ancestors
+    if (pcRes) {
+        *pcRes = pc;
+=======
+    Value guard = MagicValue(JS_ION_BAILOUT);
+    for (size_t i = 0; i < numResults; i++) {
+      (*results_)[i].init(guard);
+>>>>>>> upstream-releases
     }
+  }
 
+<<<<<<< HEAD
     if (cx->ionPcScriptCache.ref() &&
         cx->ionPcScriptCache->get(cx->runtime(), hash, retAddr, scriptRes,
                                   pcRes)) {
@@ -1443,43 +3000,137 @@ void GetPcScript(JSContext* cx, JSScript** scriptRes, jsbytecode** pcRes) {
   if (retAddr && cx->ionPcScriptCache.ref()) {
     cx->ionPcScriptCache->add(hash, retAddr, pc, *scriptRes);
   }
+||||||| merged common ancestors
+    // Add entry to cache.
+    if (retAddr && cx->ionPcScriptCache.ref()) {
+        cx->ionPcScriptCache->add(hash, retAddr, pc, *scriptRes);
+    }
+=======
+  initialized_ = true;
+  return true;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 uint32_t OsiIndex::returnPointDisplacement() const {
   // In general, pointer arithmetic on code is bad, but in this case,
   // getting the return address from a call instruction, stepping over pools
   // would be wrong.
   return callPointDisplacement_ + Assembler::PatchWrite_NearCallSize();
 }
+||||||| merged common ancestors
+uint32_t
+OsiIndex::returnPointDisplacement() const
+{
+    // In general, pointer arithmetic on code is bad, but in this case,
+    // getting the return address from a call instruction, stepping over pools
+    // would be wrong.
+    return callPointDisplacement_ + Assembler::PatchWrite_NearCallSize();
+}
+=======
+bool RInstructionResults::isInitialized() const { return initialized_; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 RInstructionResults::RInstructionResults(JitFrameLayout* fp)
     : results_(nullptr), fp_(fp), initialized_(false) {}
+||||||| merged common ancestors
+RInstructionResults::RInstructionResults(JitFrameLayout* fp)
+  : results_(nullptr),
+    fp_(fp),
+    initialized_(false)
+{
+}
+=======
+size_t RInstructionResults::length() const { return results_->length(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
 RInstructionResults::RInstructionResults(RInstructionResults&& src)
     : results_(std::move(src.results_)),
       fp_(src.fp_),
       initialized_(src.initialized_) {
   src.initialized_ = false;
+||||||| merged common ancestors
+RInstructionResults::RInstructionResults(RInstructionResults&& src)
+  : results_(std::move(src.results_)),
+    fp_(src.fp_),
+    initialized_(src.initialized_)
+{
+    src.initialized_ = false;
+=======
+JitFrameLayout* RInstructionResults::frame() const {
+  MOZ_ASSERT(fp_);
+  return fp_;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 RInstructionResults& RInstructionResults::operator=(RInstructionResults&& rhs) {
   MOZ_ASSERT(&rhs != this, "self-moves are prohibited");
   this->~RInstructionResults();
   new (this) RInstructionResults(std::move(rhs));
   return *this;
+||||||| merged common ancestors
+RInstructionResults&
+RInstructionResults::operator=(RInstructionResults&& rhs)
+{
+    MOZ_ASSERT(&rhs != this, "self-moves are prohibited");
+    this->~RInstructionResults();
+    new(this) RInstructionResults(std::move(rhs));
+    return *this;
+=======
+HeapPtr<Value>& RInstructionResults::operator[](size_t index) {
+  return (*results_)[index];
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 RInstructionResults::~RInstructionResults() {
   // results_ is freed by the UniquePtr.
+||||||| merged common ancestors
+RInstructionResults::~RInstructionResults()
+{
+    // results_ is freed by the UniquePtr.
+=======
+void RInstructionResults::trace(JSTracer* trc) {
+  // Note: The vector necessary exists, otherwise this object would not have
+  // been stored on the activation from where the trace function is called.
+  TraceRange(trc, results_->length(), results_->begin(), "ion-recover-results");
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 bool RInstructionResults::init(JSContext* cx, uint32_t numResults) {
   if (numResults) {
     results_ = cx->make_unique<Values>();
     if (!results_ || !results_->growBy(numResults)) {
       return false;
     }
+||||||| merged common ancestors
+bool
+RInstructionResults::init(JSContext* cx, uint32_t numResults)
+{
+    if (numResults) {
+        results_ = cx->make_unique<Values>();
+        if (!results_ || !results_->growBy(numResults)) {
+            return false;
+        }
+=======
+SnapshotIterator::SnapshotIterator(const JSJitFrameIter& iter,
+                                   const MachineState* machineState)
+    : snapshot_(iter.ionScript()->snapshots(), iter.snapshotOffset(),
+                iter.ionScript()->snapshotsRVATableSize(),
+                iter.ionScript()->snapshotsListSize()),
+      recover_(snapshot_, iter.ionScript()->recovers(),
+               iter.ionScript()->recoversSize()),
+      fp_(iter.jsFrame()),
+      machine_(machineState),
+      ionScript_(iter.ionScript()),
+      instructionResults_(nullptr) {}
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     Value guard = MagicValue(JS_ION_BAILOUT);
     for (size_t i = 0; i < numResults; i++) {
       (*results_)[i].init(guard);
@@ -1489,7 +3140,27 @@ bool RInstructionResults::init(JSContext* cx, uint32_t numResults) {
   initialized_ = true;
   return true;
 }
+||||||| merged common ancestors
+        Value guard = MagicValue(JS_ION_BAILOUT);
+        for (size_t i = 0; i < numResults; i++) {
+            (*results_)[i].init(guard);
+        }
+    }
 
+    initialized_ = true;
+    return true;
+}
+=======
+SnapshotIterator::SnapshotIterator()
+    : snapshot_(nullptr, 0, 0, 0),
+      recover_(snapshot_, nullptr, 0),
+      fp_(nullptr),
+      machine_(nullptr),
+      ionScript_(nullptr),
+      instructionResults_(nullptr) {}
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 bool RInstructionResults::isInitialized() const { return initialized_; }
 
 size_t RInstructionResults::length() const { return results_->length(); }
@@ -1497,18 +3168,51 @@ size_t RInstructionResults::length() const { return results_->length(); }
 JitFrameLayout* RInstructionResults::frame() const {
   MOZ_ASSERT(fp_);
   return fp_;
+||||||| merged common ancestors
+bool
+RInstructionResults::isInitialized() const
+{
+    return initialized_;
+=======
+int32_t SnapshotIterator::readOuterNumActualArgs() const {
+  return fp_->numActualArgs();
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 HeapPtr<Value>& RInstructionResults::operator[](size_t index) {
   return (*results_)[index];
+||||||| merged common ancestors
+size_t
+RInstructionResults::length() const
+{
+    return results_->length();
+=======
+uintptr_t SnapshotIterator::fromStack(int32_t offset) const {
+  return ReadFrameSlot(fp_, offset);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 void RInstructionResults::trace(JSTracer* trc) {
   // Note: The vector necessary exists, otherwise this object would not have
   // been stored on the activation from where the trace function is called.
   TraceRange(trc, results_->length(), results_->begin(), "ion-recover-results");
+||||||| merged common ancestors
+JitFrameLayout*
+RInstructionResults::frame() const
+{
+    MOZ_ASSERT(fp_);
+    return fp_;
+=======
+static Value FromObjectPayload(uintptr_t payload) {
+  // Note: Both MIRType::Object and MIRType::ObjectOrNull are encoded in
+  // snapshots using JSVAL_TYPE_OBJECT.
+  return ObjectOrNullValue(reinterpret_cast<JSObject*>(payload));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 SnapshotIterator::SnapshotIterator(const JSJitFrameIter& iter,
                                    const MachineState* machineState)
     : snapshot_(iter.ionScript()->snapshots(), iter.snapshotOffset(),
@@ -1531,12 +3235,34 @@ SnapshotIterator::SnapshotIterator()
 
 int32_t SnapshotIterator::readOuterNumActualArgs() const {
   return fp_->numActualArgs();
+||||||| merged common ancestors
+HeapPtr<Value>&
+RInstructionResults::operator [](size_t index)
+{
+    return (*results_)[index];
+=======
+static Value FromStringPayload(uintptr_t payload) {
+  return StringValue(reinterpret_cast<JSString*>(payload));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 uintptr_t SnapshotIterator::fromStack(int32_t offset) const {
   return ReadFrameSlot(fp_, offset);
+||||||| merged common ancestors
+void
+RInstructionResults::trace(JSTracer* trc)
+{
+    // Note: The vector necessary exists, otherwise this object would not have
+    // been stored on the activation from where the trace function is called.
+    TraceRange(trc, results_->length(), results_->begin(), "ion-recover-results");
+=======
+static Value FromSymbolPayload(uintptr_t payload) {
+  return SymbolValue(reinterpret_cast<JS::Symbol*>(payload));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static Value FromObjectPayload(uintptr_t payload) {
   // Note: Both MIRType::Object and MIRType::ObjectOrNull are encoded in
   // snapshots using JSVAL_TYPE_OBJECT.
@@ -1545,12 +3271,112 @@ static Value FromObjectPayload(uintptr_t payload) {
 
 static Value FromStringPayload(uintptr_t payload) {
   return StringValue(reinterpret_cast<JSString*>(payload));
+||||||| merged common ancestors
+
+SnapshotIterator::SnapshotIterator(const JSJitFrameIter& iter, const MachineState* machineState)
+  : snapshot_(iter.ionScript()->snapshots(),
+              iter.snapshotOffset(),
+              iter.ionScript()->snapshotsRVATableSize(),
+              iter.ionScript()->snapshotsListSize()),
+    recover_(snapshot_,
+             iter.ionScript()->recovers(),
+             iter.ionScript()->recoversSize()),
+    fp_(iter.jsFrame()),
+    machine_(machineState),
+    ionScript_(iter.ionScript()),
+    instructionResults_(nullptr)
+{
+=======
+static Value FromBigIntPayload(uintptr_t payload) {
+  return BigIntValue(reinterpret_cast<JS::BigInt*>(payload));
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 static Value FromSymbolPayload(uintptr_t payload) {
   return SymbolValue(reinterpret_cast<JS::Symbol*>(payload));
+||||||| merged common ancestors
+SnapshotIterator::SnapshotIterator()
+  : snapshot_(nullptr, 0, 0, 0),
+    recover_(snapshot_, nullptr, 0),
+    fp_(nullptr),
+    machine_(nullptr),
+    ionScript_(nullptr),
+    instructionResults_(nullptr)
+{
 }
 
+int32_t
+SnapshotIterator::readOuterNumActualArgs() const
+{
+    return fp_->numActualArgs();
+}
+
+uintptr_t
+SnapshotIterator::fromStack(int32_t offset) const
+{
+    return ReadFrameSlot(fp_, offset);
+}
+
+static Value
+FromObjectPayload(uintptr_t payload)
+{
+    // Note: Both MIRType::Object and MIRType::ObjectOrNull are encoded in
+    // snapshots using JSVAL_TYPE_OBJECT.
+    return ObjectOrNullValue(reinterpret_cast<JSObject*>(payload));
+}
+
+static Value
+FromStringPayload(uintptr_t payload)
+{
+    return StringValue(reinterpret_cast<JSString*>(payload));
+}
+
+static Value
+FromSymbolPayload(uintptr_t payload)
+{
+    return SymbolValue(reinterpret_cast<JS::Symbol*>(payload));
+}
+
+static Value
+FromTypedPayload(JSValueType type, uintptr_t payload)
+{
+    switch (type) {
+      case JSVAL_TYPE_INT32:
+        return Int32Value(payload);
+      case JSVAL_TYPE_BOOLEAN:
+        return BooleanValue(!!payload);
+      case JSVAL_TYPE_STRING:
+        return FromStringPayload(payload);
+      case JSVAL_TYPE_SYMBOL:
+        return FromSymbolPayload(payload);
+      case JSVAL_TYPE_OBJECT:
+        return FromObjectPayload(payload);
+      default:
+        MOZ_CRASH("unexpected type - needs payload");
+    }
+=======
+static Value FromTypedPayload(JSValueType type, uintptr_t payload) {
+  switch (type) {
+    case JSVAL_TYPE_INT32:
+      return Int32Value(payload);
+    case JSVAL_TYPE_BOOLEAN:
+      return BooleanValue(!!payload);
+    case JSVAL_TYPE_STRING:
+      return FromStringPayload(payload);
+    case JSVAL_TYPE_SYMBOL:
+      return FromSymbolPayload(payload);
+    case JSVAL_TYPE_BIGINT:
+      return FromBigIntPayload(payload);
+    case JSVAL_TYPE_OBJECT:
+      return FromObjectPayload(payload);
+    default:
+      MOZ_CRASH("unexpected type - needs payload");
+  }
+>>>>>>> upstream-releases
+}
+
+<<<<<<< HEAD
 static Value FromTypedPayload(JSValueType type, uintptr_t payload) {
   switch (type) {
     case JSVAL_TYPE_INT32:
@@ -1576,6 +3402,27 @@ bool SnapshotIterator::allocationReadable(const RValueAllocation& alloc,
   if (alloc.needSideEffect() && !(rm & RM_AlwaysDefault)) {
     if (!hasInstructionResults()) {
       return false;
+||||||| merged common ancestors
+bool
+SnapshotIterator::allocationReadable(const RValueAllocation& alloc, ReadMethod rm)
+{
+    // If we have to recover stores, and if we are not interested in the
+    // default value of the instruction, then we have to check if the recover
+    // instruction results are available.
+    if (alloc.needSideEffect() && !(rm & RM_AlwaysDefault)) {
+        if (!hasInstructionResults()) {
+            return false;
+        }
+=======
+bool SnapshotIterator::allocationReadable(const RValueAllocation& alloc,
+                                          ReadMethod rm) {
+  // If we have to recover stores, and if we are not interested in the
+  // default value of the instruction, then we have to check if the recover
+  // instruction results are available.
+  if (alloc.needSideEffect() && !(rm & RM_AlwaysDefault)) {
+    if (!hasInstructionResults()) {
+      return false;
+>>>>>>> upstream-releases
     }
   }
 
@@ -1602,6 +3449,7 @@ bool SnapshotIterator::allocationReadable(const RValueAllocation& alloc,
       return hasStack(alloc.stackOffset());
 #endif
 
+<<<<<<< HEAD
     case RValueAllocation::RECOVER_INSTRUCTION:
       return hasInstructionResult(alloc.index());
     case RValueAllocation::RI_WITH_DEFAULT_CST:
@@ -1661,6 +3509,133 @@ Value SnapshotIterator::allocationValue(const RValueAllocation& alloc,
           return FromObjectPayload(fromStack(alloc.stackOffset2()));
         default:
           MOZ_CRASH("Unexpected type");
+||||||| merged common ancestors
+      case RValueAllocation::RECOVER_INSTRUCTION:
+        return hasInstructionResult(alloc.index());
+      case RValueAllocation::RI_WITH_DEFAULT_CST:
+        return rm & RM_AlwaysDefault || hasInstructionResult(alloc.index());
+
+      default:
+        return true;
+    }
+}
+
+Value
+SnapshotIterator::allocationValue(const RValueAllocation& alloc, ReadMethod rm)
+{
+    switch (alloc.mode()) {
+      case RValueAllocation::CONSTANT:
+        return ionScript_->getConstant(alloc.index());
+
+      case RValueAllocation::CST_UNDEFINED:
+        return UndefinedValue();
+
+      case RValueAllocation::CST_NULL:
+        return NullValue();
+
+      case RValueAllocation::DOUBLE_REG:
+        return DoubleValue(fromRegister(alloc.fpuReg()));
+
+      case RValueAllocation::ANY_FLOAT_REG:
+      {
+        union {
+            double d;
+            float f;
+        } pun;
+        MOZ_ASSERT(alloc.fpuReg().isSingle());
+        pun.d = fromRegister(alloc.fpuReg());
+        // The register contains the encoding of a float32. We just read
+        // the bits without making any conversion.
+        return Float32Value(pun.f);
+      }
+
+      case RValueAllocation::ANY_FLOAT_STACK:
+        return Float32Value(ReadFrameFloat32Slot(fp_, alloc.stackOffset()));
+
+      case RValueAllocation::TYPED_REG:
+        return FromTypedPayload(alloc.knownType(), fromRegister(alloc.reg2()));
+
+      case RValueAllocation::TYPED_STACK:
+      {
+        switch (alloc.knownType()) {
+          case JSVAL_TYPE_DOUBLE:
+            return DoubleValue(ReadFrameDoubleSlot(fp_, alloc.stackOffset2()));
+          case JSVAL_TYPE_INT32:
+            return Int32Value(ReadFrameInt32Slot(fp_, alloc.stackOffset2()));
+          case JSVAL_TYPE_BOOLEAN:
+            return BooleanValue(ReadFrameBooleanSlot(fp_, alloc.stackOffset2()));
+          case JSVAL_TYPE_STRING:
+            return FromStringPayload(fromStack(alloc.stackOffset2()));
+          case JSVAL_TYPE_SYMBOL:
+            return FromSymbolPayload(fromStack(alloc.stackOffset2()));
+          case JSVAL_TYPE_OBJECT:
+            return FromObjectPayload(fromStack(alloc.stackOffset2()));
+          default:
+            MOZ_CRASH("Unexpected type");
+        }
+=======
+    case RValueAllocation::RECOVER_INSTRUCTION:
+      return hasInstructionResult(alloc.index());
+    case RValueAllocation::RI_WITH_DEFAULT_CST:
+      return rm & RM_AlwaysDefault || hasInstructionResult(alloc.index());
+
+    default:
+      return true;
+  }
+}
+
+Value SnapshotIterator::allocationValue(const RValueAllocation& alloc,
+                                        ReadMethod rm) {
+  switch (alloc.mode()) {
+    case RValueAllocation::CONSTANT:
+      return ionScript_->getConstant(alloc.index());
+
+    case RValueAllocation::CST_UNDEFINED:
+      return UndefinedValue();
+
+    case RValueAllocation::CST_NULL:
+      return NullValue();
+
+    case RValueAllocation::DOUBLE_REG:
+      return DoubleValue(fromRegister(alloc.fpuReg()));
+
+    case RValueAllocation::ANY_FLOAT_REG: {
+      union {
+        double d;
+        float f;
+      } pun;
+      MOZ_ASSERT(alloc.fpuReg().isSingle());
+      pun.d = fromRegister(alloc.fpuReg());
+      // The register contains the encoding of a float32. We just read
+      // the bits without making any conversion.
+      return Float32Value(pun.f);
+    }
+
+    case RValueAllocation::ANY_FLOAT_STACK:
+      return Float32Value(ReadFrameFloat32Slot(fp_, alloc.stackOffset()));
+
+    case RValueAllocation::TYPED_REG:
+      return FromTypedPayload(alloc.knownType(), fromRegister(alloc.reg2()));
+
+    case RValueAllocation::TYPED_STACK: {
+      switch (alloc.knownType()) {
+        case JSVAL_TYPE_DOUBLE:
+          return DoubleValue(ReadFrameDoubleSlot(fp_, alloc.stackOffset2()));
+        case JSVAL_TYPE_INT32:
+          return Int32Value(ReadFrameInt32Slot(fp_, alloc.stackOffset2()));
+        case JSVAL_TYPE_BOOLEAN:
+          return BooleanValue(ReadFrameBooleanSlot(fp_, alloc.stackOffset2()));
+        case JSVAL_TYPE_STRING:
+          return FromStringPayload(fromStack(alloc.stackOffset2()));
+        case JSVAL_TYPE_SYMBOL:
+          return FromSymbolPayload(fromStack(alloc.stackOffset2()));
+        case JSVAL_TYPE_BIGINT:
+          return FromBigIntPayload(fromStack(alloc.stackOffset2()));
+        case JSVAL_TYPE_OBJECT:
+          return FromObjectPayload(fromStack(alloc.stackOffset2()));
+        default:
+          MOZ_CRASH("Unexpected type");
+>>>>>>> upstream-releases
       }
     }
 
@@ -1726,6 +3701,7 @@ const FloatRegisters::RegisterContent* SnapshotIterator::floatAllocationPointer(
   }
 }
 
+<<<<<<< HEAD
 Value SnapshotIterator::maybeRead(const RValueAllocation& a,
                                   MaybeReadFallback& fallback) {
   if (allocationReadable(a)) {
@@ -1738,8 +3714,44 @@ Value SnapshotIterator::maybeRead(const RValueAllocation& a,
     AutoEnterOOMUnsafeRegion oomUnsafe;
     if (!initInstructionResults(fallback)) {
       oomUnsafe.crash("js::jit::SnapshotIterator::maybeRead");
+||||||| merged common ancestors
+Value
+SnapshotIterator::maybeRead(const RValueAllocation& a, MaybeReadFallback& fallback)
+{
+    if (allocationReadable(a)) {
+        return allocationValue(a);
     }
 
+    if (fallback.canRecoverResults()) {
+        // Code paths which are calling maybeRead are not always capable of
+        // returning an error code, as these code paths used to be infallible.
+        AutoEnterOOMUnsafeRegion oomUnsafe;
+        if (!initInstructionResults(fallback)) {
+            oomUnsafe.crash("js::jit::SnapshotIterator::maybeRead");
+        }
+
+        if (allocationReadable(a)) {
+            return allocationValue(a);
+        }
+
+        MOZ_ASSERT_UNREACHABLE("All allocations should be readable.");
+=======
+Value SnapshotIterator::maybeRead(const RValueAllocation& a,
+                                  MaybeReadFallback& fallback) {
+  if (allocationReadable(a)) {
+    return allocationValue(a);
+  }
+
+  if (fallback.canRecoverResults()) {
+    // Code paths which are calling maybeRead are not always capable of
+    // returning an error code, as these code paths used to be infallible.
+    AutoEnterOOMUnsafeRegion oomUnsafe;
+    if (!initInstructionResults(fallback)) {
+      oomUnsafe.crash("js::jit::SnapshotIterator::maybeRead");
+>>>>>>> upstream-releases
+    }
+
+<<<<<<< HEAD
     if (allocationReadable(a)) {
       return allocationValue(a);
     }
@@ -1783,6 +3795,90 @@ void SnapshotIterator::writeAllocationValuePayload(
           break;
       }
       break;
+||||||| merged common ancestors
+    return fallback.unreadablePlaceholder();
+}
+
+void
+SnapshotIterator::writeAllocationValuePayload(const RValueAllocation& alloc, const Value& v)
+{
+    MOZ_ASSERT(v.isGCThing());
+
+    switch (alloc.mode()) {
+      case RValueAllocation::CONSTANT:
+        ionScript_->getConstant(alloc.index()) = v;
+        break;
+
+      case RValueAllocation::CST_UNDEFINED:
+      case RValueAllocation::CST_NULL:
+      case RValueAllocation::DOUBLE_REG:
+      case RValueAllocation::ANY_FLOAT_REG:
+      case RValueAllocation::ANY_FLOAT_STACK:
+        MOZ_CRASH("Not a GC thing: Unexpected write");
+        break;
+
+      case RValueAllocation::TYPED_REG:
+        machine_->write(alloc.reg2(), uintptr_t(v.toGCThing()));
+        break;
+
+      case RValueAllocation::TYPED_STACK:
+        switch (alloc.knownType()) {
+          default:
+            MOZ_CRASH("Not a GC thing: Unexpected write");
+            break;
+          case JSVAL_TYPE_STRING:
+          case JSVAL_TYPE_SYMBOL:
+          case JSVAL_TYPE_OBJECT:
+            WriteFrameSlot(fp_, alloc.stackOffset2(), uintptr_t(v.toGCThing()));
+            break;
+        }
+        break;
+=======
+    if (allocationReadable(a)) {
+      return allocationValue(a);
+    }
+
+    MOZ_ASSERT_UNREACHABLE("All allocations should be readable.");
+  }
+
+  return fallback.unreadablePlaceholder();
+}
+
+void SnapshotIterator::writeAllocationValuePayload(
+    const RValueAllocation& alloc, const Value& v) {
+  MOZ_ASSERT(v.isGCThing());
+
+  switch (alloc.mode()) {
+    case RValueAllocation::CONSTANT:
+      ionScript_->getConstant(alloc.index()) = v;
+      break;
+
+    case RValueAllocation::CST_UNDEFINED:
+    case RValueAllocation::CST_NULL:
+    case RValueAllocation::DOUBLE_REG:
+    case RValueAllocation::ANY_FLOAT_REG:
+    case RValueAllocation::ANY_FLOAT_STACK:
+      MOZ_CRASH("Not a GC thing: Unexpected write");
+      break;
+
+    case RValueAllocation::TYPED_REG:
+      machine_->write(alloc.reg2(), uintptr_t(v.toGCThing()));
+      break;
+
+    case RValueAllocation::TYPED_STACK:
+      switch (alloc.knownType()) {
+        default:
+          MOZ_CRASH("Not a GC thing: Unexpected write");
+          break;
+        case JSVAL_TYPE_STRING:
+        case JSVAL_TYPE_SYMBOL:
+        case JSVAL_TYPE_BIGINT:
+        case JSVAL_TYPE_OBJECT:
+          WriteFrameSlot(fp_, alloc.stackOffset2(), uintptr_t(v.toGCThing()));
+          break;
+      }
+      break;
+>>>>>>> upstream-releases
 
 #if defined(JS_NUNBOX32)
     case RValueAllocation::UNTYPED_REG_REG:
@@ -1859,6 +3955,7 @@ void SnapshotIterator::skipInstruction() {
   nextInstruction();
 }
 
+<<<<<<< HEAD
 bool SnapshotIterator::initInstructionResults(MaybeReadFallback& fallback) {
   MOZ_ASSERT(fallback.canRecoverResults());
   JSContext* cx = fallback.maybeCx;
@@ -1866,6 +3963,71 @@ bool SnapshotIterator::initInstructionResults(MaybeReadFallback& fallback) {
   // If there is only one resume point in the list of instructions, then there
   // is no instruction to recover, and thus no need to register any results.
   if (recover_.numInstructions() == 1) {
+||||||| merged common ancestors
+bool
+SnapshotIterator::initInstructionResults(MaybeReadFallback& fallback)
+{
+    MOZ_ASSERT(fallback.canRecoverResults());
+    JSContext* cx = fallback.maybeCx;
+
+    // If there is only one resume point in the list of instructions, then there
+    // is no instruction to recover, and thus no need to register any results.
+    if (recover_.numInstructions() == 1) {
+        return true;
+    }
+
+    JitFrameLayout* fp = fallback.frame->jsFrame();
+    RInstructionResults* results = fallback.activation->maybeIonFrameRecovery(fp);
+    if (!results) {
+        AutoRealm ar(cx, fallback.frame->script());
+
+        // We do not have the result yet, which means that an observable stack
+        // slot is requested.  As we do not want to bailout every time for the
+        // same reason, we need to recompile without optimizing away the
+        // observable stack slots.  The script would later be recompiled to have
+        // support for Argument objects.
+        if (fallback.consequence == MaybeReadFallback::Fallback_Invalidate) {
+            ionScript_->invalidate(cx, fallback.frame->script(), /* resetUses = */ false,
+                                   "Observe recovered instruction.");
+        }
+
+        // Register the list of result on the activation.  We need to do that
+        // before we initialize the list such as if any recover instruction
+        // cause a GC, we can ensure that the results are properly traced by the
+        // activation.
+        RInstructionResults tmp(fallback.frame->jsFrame());
+        if (!fallback.activation->registerIonFrameRecovery(std::move(tmp))) {
+            return false;
+        }
+
+        results = fallback.activation->maybeIonFrameRecovery(fp);
+
+        // Start a new snapshot at the beginning of the JSJitFrameIter.  This
+        // SnapshotIterator is used for evaluating the content of all recover
+        // instructions.  The result is then saved on the JitActivation.
+        MachineState machine = fallback.frame->machineState();
+        SnapshotIterator s(*fallback.frame, &machine);
+        if (!s.computeInstructionResults(cx, results)) {
+
+            // If the evaluation failed because of OOMs, then we discard the
+            // current set of result that we collected so far.
+            fallback.activation->removeIonFrameRecovery(fp);
+            return false;
+        }
+    }
+
+    MOZ_ASSERT(results->isInitialized());
+    MOZ_RELEASE_ASSERT(results->length() == recover_.numInstructions() - 1);
+    instructionResults_ = results;
+=======
+bool SnapshotIterator::initInstructionResults(MaybeReadFallback& fallback) {
+  MOZ_ASSERT(fallback.canRecoverResults());
+  JSContext* cx = fallback.maybeCx;
+
+  // If there is only one resume point in the list of instructions, then there
+  // is no instruction to recover, and thus no need to register any results.
+  if (recover_.numInstructions() == 1) {
+>>>>>>> upstream-releases
     return true;
   }
 
@@ -2077,6 +4239,7 @@ void InlineFrameIterator::findNextFrame() {
   for (; i <= remaining && si_.moreFrames(); i++) {
     MOZ_ASSERT(IsIonInlinablePC(pc_));
 
+<<<<<<< HEAD
     // Recover the number of actual arguments from the script.
     if (JSOp(*pc_) != JSOP_FUNAPPLY) {
       numActualArgs_ = GET_ARGC(pc_);
@@ -2089,6 +4252,26 @@ void InlineFrameIterator::findNextFrame() {
     } else if (IsSetPropPC(pc_)) {
       numActualArgs_ = 1;
     }
+||||||| merged common ancestors
+        // Inlined functions may be clones that still point to the lazy script
+        // for the executed script, if they are clones. The actual script
+        // exists though, just make sure the function points to it.
+        script_ = calleeTemplate_->existingScript();
+        MOZ_ASSERT(script_->hasBaselineScript());
+=======
+    // Recover the number of actual arguments from the script.
+    if (JSOp(*pc_) != JSOP_FUNAPPLY) {
+      numActualArgs_ = GET_ARGC(pc_);
+    }
+    if (JSOp(*pc_) == JSOP_FUNCALL) {
+      MOZ_ASSERT(GET_ARGC(pc_) > 0);
+      numActualArgs_ = GET_ARGC(pc_) - 1;
+    } else if (IsGetPropPC(pc_) || IsGetElemPC(pc_)) {
+      numActualArgs_ = 0;
+    } else if (IsSetPropPC(pc_)) {
+      numActualArgs_ = 1;
+    }
+>>>>>>> upstream-releases
 
     if (numActualArgs_ == 0xbadbad) {
       MOZ_CRASH(
@@ -2246,7 +4429,13 @@ MachineState MachineState::FromBailout(RegisterDump::GPRArray& regs,
 #elif defined(JS_CODEGEN_NONE)
   MOZ_CRASH();
 #else
+<<<<<<< HEAD
 #error "Unknown architecture!"
+||||||| merged common ancestors
+# error "Unknown architecture!"
+=======
+#  error "Unknown architecture!"
+>>>>>>> upstream-releases
 #endif
   return machine;
 }
@@ -2257,10 +4446,22 @@ bool InlineFrameIterator::isConstructing() const {
     InlineFrameIterator parent(TlsContext.get(), this);
     ++parent;
 
+<<<<<<< HEAD
     // Inlined Getters and Setters are never constructing.
     if (IsGetPropPC(parent.pc()) || IsSetPropPC(parent.pc())) {
       return false;
     }
+||||||| merged common ancestors
+        // Inlined Getters and Setters are never constructing.
+        if (IsGetPropPC(parent.pc()) || IsSetPropPC(parent.pc())) {
+            return false;
+        }
+=======
+    // Inlined Getters and Setters are never constructing.
+    if (IsIonInlinableGetterOrSetterPC(parent.pc())) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
     // In the case of a JS frame, look up the pc from the snapshot.
     MOZ_ASSERT(IsCallPC(parent.pc()) && !IsSpreadCallPC(parent.pc()));

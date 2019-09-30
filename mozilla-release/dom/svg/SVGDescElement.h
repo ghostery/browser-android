@@ -8,21 +8,47 @@
 #define mozilla_dom_SVGDescElement_h
 
 #include "mozilla/Attributes.h"
-#include "nsSVGElement.h"
+#include "SVGElement.h"
 
+<<<<<<< HEAD
 nsresult NS_NewSVGDescElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
 typedef nsSVGElement SVGDescElementBase;
+||||||| merged common ancestors
+nsresult NS_NewSVGDescElement(nsIContent **aResult,
+                              already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+
+typedef nsSVGElement SVGDescElementBase;
+=======
+nsresult NS_NewSVGDescElement(
+    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
+>>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
+
+<<<<<<< HEAD
+class SVGDescElement final : public SVGDescElementBase {
+ protected:
+  friend nsresult(::NS_NewSVGDescElement(
+      nsIContent** aResult,
+      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+||||||| merged common ancestors
+class SVGDescElement final : public SVGDescElementBase
+{
+protected:
+  friend nsresult (::NS_NewSVGDescElement(nsIContent **aResult,
+                                          already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+=======
+typedef SVGElement SVGDescElementBase;
 
 class SVGDescElement final : public SVGDescElementBase {
  protected:
   friend nsresult(::NS_NewSVGDescElement(
       nsIContent** aResult,
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
+>>>>>>> upstream-releases
   explicit SVGDescElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
 
   JSObject* WrapNode(JSContext* aCx,

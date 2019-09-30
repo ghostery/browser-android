@@ -14,6 +14,8 @@
 #include "GrGpuResourcePriv.h"
 #include "GrOpList.h"
 #include "GrProxyProvider.h"
+#include "GrRecordingContext.h"
+#include "GrRecordingContextPriv.h"
 #include "GrSurfaceContext.h"
 #include "GrSurfacePriv.h"
 #include "GrTexturePriv.h"
@@ -49,10 +51,23 @@ static bool is_valid_non_lazy(const GrSurfaceDesc& desc) {
 
 // Lazy-callback version
 GrSurfaceProxy::GrSurfaceProxy(LazyInstantiateCallback&& callback, LazyInstantiationType lazyType,
+<<<<<<< HEAD
                                const GrSurfaceDesc& desc, GrSurfaceOrigin origin, SkBackingFit fit,
                                SkBudgeted budgeted, GrInternalSurfaceFlags surfaceFlags)
         : fSurfaceFlags(surfaceFlags)
         , fConfig(desc.fConfig)
+||||||| merged common ancestors
+                               const GrSurfaceDesc& desc, SkBackingFit fit, SkBudgeted budgeted,
+                               uint32_t flags)
+        : fConfig(desc.fConfig)
+=======
+                               const GrBackendFormat& format, const GrSurfaceDesc& desc,
+                               GrSurfaceOrigin origin, SkBackingFit fit,
+                               SkBudgeted budgeted, GrInternalSurfaceFlags surfaceFlags)
+        : fSurfaceFlags(surfaceFlags)
+        , fFormat(format)
+        , fConfig(desc.fConfig)
+>>>>>>> upstream-releases
         , fWidth(desc.fWidth)
         , fHeight(desc.fHeight)
         , fOrigin(origin)
@@ -63,36 +78,53 @@ GrSurfaceProxy::GrSurfaceProxy(LazyInstantiateCallback&& callback, LazyInstantia
         , fNeedsClear(SkToBool(desc.fFlags & kPerformInitialClear_GrSurfaceFlag))
         , fGpuMemorySize(kInvalidGpuMemorySize)
         , fLastOpList(nullptr) {
+    SkASSERT(fFormat.isValid());
     // NOTE: the default fUniqueID ctor pulls a value from the same pool as the GrGpuResources.
     if (fLazyInstantiateCallback) {
         SkASSERT(is_valid_fully_lazy(desc, fit) || is_valid_partially_lazy(desc));
     } else {
         SkASSERT(is_valid_non_lazy(desc));
     }
+
+    if (GrPixelConfigIsCompressed(desc.fConfig)) {
+        SkASSERT(!SkToBool(desc.fFlags & kRenderTarget_GrSurfaceFlag));
+        fSurfaceFlags |= GrInternalSurfaceFlags::kReadOnly;
+    }
 }
 
 // Wrapped version
 GrSurfaceProxy::GrSurfaceProxy(sk_sp<GrSurface> surface, GrSurfaceOrigin origin, SkBackingFit fit)
         : INHERITED(std::move(surface))
+<<<<<<< HEAD
         , fSurfaceFlags(fTarget->surfacePriv().flags())
+||||||| merged common ancestors
+=======
+        , fSurfaceFlags(fTarget->surfacePriv().flags())
+        , fFormat(fTarget->backendFormat())
+>>>>>>> upstream-releases
         , fConfig(fTarget->config())
         , fWidth(fTarget->width())
         , fHeight(fTarget->height())
         , fOrigin(origin)
         , fFit(fit)
+<<<<<<< HEAD
         , fBudgeted(fTarget->resourcePriv().isBudgeted())
+||||||| merged common ancestors
+        , fBudgeted(fTarget->resourcePriv().isBudgeted())
+        , fFlags(0)
+=======
+        , fBudgeted(fTarget->resourcePriv().budgetedType() == GrBudgetedType::kBudgeted
+                            ? SkBudgeted::kYes
+                            : SkBudgeted::kNo)
+>>>>>>> upstream-releases
         , fUniqueID(fTarget->uniqueID())  // Note: converting from unique resource ID to a proxy ID!
         , fNeedsClear(false)
         , fGpuMemorySize(kInvalidGpuMemorySize)
         , fLastOpList(nullptr) {
+    SkASSERT(fFormat.isValid());
 }
 
 GrSurfaceProxy::~GrSurfaceProxy() {
-    if (fLazyInstantiateCallback) {
-        // We call the callback with a null GrResourceProvider to signal that the lambda should
-        // clean itself up if it is holding onto any captured objects.
-        this->fLazyInstantiateCallback(nullptr);
-    }
     // For this to be deleted the opList that held a ref on it (if there was one) must have been
     // deleted. Which would have cleared out this back pointer.
     SkASSERT(!fLastOpList);
@@ -179,6 +211,16 @@ sk_sp<GrSurface> GrSurfaceProxy::createSurfaceImpl(GrResourceProvider* resourceP
     return surface;
 }
 
+bool GrSurfaceProxy::canSkipResourceAllocator() const {
+    auto peek = this->peekSurface();
+    if (!peek) {
+        return false;
+    }
+    // If this resource is already allocated and not recyclable then the resource allocator does
+    // not need to do anything with it.
+    return !peek->resourcePriv().getScratchKey().isValid();
+}
+
 void GrSurfaceProxy::assign(sk_sp<GrSurface> surface) {
     SkASSERT(!fTarget && surface);
 
@@ -207,8 +249,8 @@ bool GrSurfaceProxy::instantiateImpl(GrResourceProvider* resourceProvider, int s
                                      GrMipMapped mipMapped, const GrUniqueKey* uniqueKey) {
     SkASSERT(LazyState::kNot == this->lazyInstantiationState());
     if (fTarget) {
-        if (uniqueKey) {
-            SkASSERT(fTarget->getUniqueKey() == *uniqueKey);
+        if (uniqueKey && uniqueKey->isValid()) {
+            SkASSERT(fTarget->getUniqueKey().isValid() && fTarget->getUniqueKey() == *uniqueKey);
         }
         return GrSurfaceProxyPriv::AttachStencilIfNeeded(resourceProvider, fTarget, needsStencil);
     }
@@ -230,6 +272,7 @@ bool GrSurfaceProxy::instantiateImpl(GrResourceProvider* resourceProvider, int s
     return true;
 }
 
+<<<<<<< HEAD
 void GrSurfaceProxy::deInstantiate() {
     SkASSERT(this->isInstantiated());
 
@@ -237,6 +280,15 @@ void GrSurfaceProxy::deInstantiate() {
 }
 
 
+||||||| merged common ancestors
+=======
+void GrSurfaceProxy::deinstantiate() {
+    SkASSERT(this->isInstantiated());
+
+    this->release();
+}
+
+>>>>>>> upstream-releases
 void GrSurfaceProxy::computeScratchKey(GrScratchKey* key) const {
     SkASSERT(LazyState::kFully != this->lazyInstantiationState());
     const GrRenderTargetProxy* rtp = this->asRenderTargetProxy();
@@ -302,7 +354,7 @@ int GrSurfaceProxy::worstCaseHeight() const {
 }
 
 #ifdef SK_DEBUG
-void GrSurfaceProxy::validate(GrContext* context) const {
+void GrSurfaceProxy::validate(GrContext_Base* context) const {
     if (fTarget) {
         SkASSERT(fTarget->getContext() == context);
     }
@@ -311,10 +363,11 @@ void GrSurfaceProxy::validate(GrContext* context) const {
 }
 #endif
 
-sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrContext* context,
+sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrRecordingContext* context,
                                            GrSurfaceProxy* src,
                                            GrMipMapped mipMapped,
                                            SkIRect srcRect,
+                                           SkBackingFit fit,
                                            SkBudgeted budgeted) {
     SkASSERT(LazyState::kFully != src->lazyInstantiationState());
     if (!srcRect.intersect(SkIRect::MakeWH(src->width(), src->height()))) {
@@ -326,8 +379,30 @@ sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrContext* context,
     dstDesc.fHeight = srcRect.height();
     dstDesc.fConfig = src->config();
 
+<<<<<<< HEAD
     sk_sp<GrSurfaceContext> dstContext(context->contextPriv().makeDeferredSurfaceContext(
             dstDesc, src->origin(), mipMapped, SkBackingFit::kExact, budgeted));
+||||||| merged common ancestors
+    // We use an ephemeral surface context to make the copy. Here it isn't clear what color space
+    // to tag it with. That's ok because GrSurfaceContext::copy doesn't do any color space
+    // conversions. However, if the pixel config is sRGB then the passed color space here must
+    // have sRGB gamma or GrSurfaceContext creation fails. See skbug.com/7611 about making this
+    // with the correct color space information and returning the context to the caller.
+    sk_sp<SkColorSpace> colorSpace;
+    if (GrPixelConfigIsSRGB(dstDesc.fConfig)) {
+        colorSpace = SkColorSpace::MakeSRGB();
+    }
+    sk_sp<GrSurfaceContext> dstContext(context->contextPriv().makeDeferredSurfaceContext(
+            dstDesc, mipMapped, SkBackingFit::kExact, budgeted, std::move(colorSpace)));
+=======
+    GrBackendFormat format = src->backendFormat().makeTexture2D();
+    if (!format.isValid()) {
+        return nullptr;
+    }
+
+    sk_sp<GrSurfaceContext> dstContext(context->priv().makeDeferredSurfaceContext(
+            format, dstDesc, src->origin(), mipMapped, fit, budgeted));
+>>>>>>> upstream-releases
     if (!dstContext) {
         return nullptr;
     }
@@ -339,17 +414,45 @@ sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrContext* context,
     return dstContext->asTextureProxyRef();
 }
 
-sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrContext* context, GrSurfaceProxy* src,
-                                           GrMipMapped mipMapped, SkBudgeted budgeted) {
+sk_sp<GrTextureProxy> GrSurfaceProxy::Copy(GrRecordingContext* context, GrSurfaceProxy* src,
+                                           GrMipMapped mipMapped, SkBackingFit fit,
+                                           SkBudgeted budgeted) {
     SkASSERT(LazyState::kFully != src->lazyInstantiationState());
-    return Copy(context, src, mipMapped, SkIRect::MakeWH(src->width(), src->height()), budgeted);
+    return Copy(context, src, mipMapped, SkIRect::MakeWH(src->width(), src->height()), fit,
+                budgeted);
 }
 
+<<<<<<< HEAD
 sk_sp<GrSurfaceContext> GrSurfaceProxy::TestCopy(GrContext* context, const GrSurfaceDesc& dstDesc,
                                                  GrSurfaceOrigin origin, GrSurfaceProxy* srcProxy) {
+||||||| merged common ancestors
+sk_sp<GrSurfaceContext> GrSurfaceProxy::TestCopy(GrContext* context, const GrSurfaceDesc& dstDesc,
+                                                 GrSurfaceProxy* srcProxy) {
+=======
+sk_sp<GrSurfaceContext> GrSurfaceProxy::TestCopy(GrRecordingContext* context,
+                                                 const GrSurfaceDesc& dstDesc,
+                                                 GrSurfaceOrigin origin, GrSurfaceProxy* srcProxy) {
+>>>>>>> upstream-releases
     SkASSERT(LazyState::kFully != srcProxy->lazyInstantiationState());
+<<<<<<< HEAD
     sk_sp<GrSurfaceContext> dstContext(context->contextPriv().makeDeferredSurfaceContext(
             dstDesc, origin, GrMipMapped::kNo, SkBackingFit::kExact, SkBudgeted::kYes));
+||||||| merged common ancestors
+    sk_sp<GrSurfaceContext> dstContext(context->contextPriv().makeDeferredSurfaceContext(
+                                                                            dstDesc,
+                                                                            GrMipMapped::kNo,
+                                                                            SkBackingFit::kExact,
+                                                                            SkBudgeted::kYes));
+=======
+
+    GrBackendFormat format = srcProxy->backendFormat().makeTexture2D();
+    if (!format.isValid()) {
+        return nullptr;
+    }
+
+    sk_sp<GrSurfaceContext> dstContext(context->priv().makeDeferredSurfaceContext(
+            format, dstDesc, origin, GrMipMapped::kNo, SkBackingFit::kExact, SkBudgeted::kYes));
+>>>>>>> upstream-releases
     if (!dstContext) {
         return nullptr;
     }
@@ -403,7 +506,6 @@ bool GrSurfaceProxyPriv::doLazyInstantiation(GrResourceProvider* resourceProvide
         surface = fProxy->fLazyInstantiateCallback(resourceProvider);
     }
     if (GrSurfaceProxy::LazyInstantiationType::kSingleUse == fProxy->fLazyInstantiationType) {
-        fProxy->fLazyInstantiateCallback(nullptr);
         fProxy->fLazyInstantiateCallback = nullptr;
     }
     if (!surface) {

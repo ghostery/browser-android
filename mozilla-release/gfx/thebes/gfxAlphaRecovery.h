@@ -24,6 +24,7 @@ class gfxAlphaRecovery {
    */
   static uint32_t GoodAlignmentLog2() { return 4; /* for SSE2 */ }
 
+<<<<<<< HEAD
   /* Given two surfaces of equal size with the same rendering, one onto a
    * black background and the other onto white, recovers alpha values from
    * the difference and sets the alpha values on the black surface.
@@ -32,15 +33,51 @@ class gfxAlphaRecovery {
    */
   static bool RecoverAlpha(gfxImageSurface *blackSurface,
                            const gfxImageSurface *whiteSurface);
+||||||| merged common ancestors
+    /* Given two surfaces of equal size with the same rendering, one onto a
+     * black background and the other onto white, recovers alpha values from
+     * the difference and sets the alpha values on the black surface.
+     * The surfaces must have format RGB24 or ARGB32.
+     * Returns true on success.
+     */
+    static bool RecoverAlpha (gfxImageSurface *blackSurface,
+                                const gfxImageSurface *whiteSurface);
+=======
+  /* Given two surfaces of equal size with the same rendering, one onto a
+   * black background and the other onto white, recovers alpha values from
+   * the difference and sets the alpha values on the black surface.
+   * The surfaces must have format RGB24 or ARGB32.
+   * Returns true on success.
+   */
+  static bool RecoverAlpha(gfxImageSurface* blackSurface,
+                           const gfxImageSurface* whiteSurface);
+>>>>>>> upstream-releases
 
 #ifdef MOZILLA_MAY_SUPPORT_SSE2
+<<<<<<< HEAD
   /* This does the same as the previous function, but uses SSE2
    * optimizations. Usually this should not be called directly.  Be sure to
    * check mozilla::supports_sse2() before calling this function.
    */
   static bool RecoverAlphaSSE2(gfxImageSurface *blackSurface,
                                const gfxImageSurface *whiteSurface);
+||||||| merged common ancestors
+    /* This does the same as the previous function, but uses SSE2
+     * optimizations. Usually this should not be called directly.  Be sure to
+     * check mozilla::supports_sse2() before calling this function.
+     */
+    static bool RecoverAlphaSSE2 (gfxImageSurface *blackSurface,
+                                    const gfxImageSurface *whiteSurface);
+=======
+  /* This does the same as the previous function, but uses SSE2
+   * optimizations. Usually this should not be called directly.  Be sure to
+   * check mozilla::supports_sse2() before calling this function.
+   */
+  static bool RecoverAlphaSSE2(gfxImageSurface* blackSurface,
+                               const gfxImageSurface* whiteSurface);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /**
    * A common use-case for alpha recovery is to paint into a
    * temporary "white image", then paint onto a subrect of the
@@ -54,11 +91,51 @@ class gfxAlphaRecovery {
    */
   static mozilla::gfx::IntRect AlignRectForSubimageRecovery(
       const mozilla::gfx::IntRect &aRect, gfxImageSurface *aSurface);
+||||||| merged common ancestors
+    /**
+     * A common use-case for alpha recovery is to paint into a
+     * temporary "white image", then paint onto a subrect of the
+     * surface, the "black image", into which alpha-recovered pixels
+     * are eventually to be written.  This function returns a rect
+     * aligned so that recovering alpha for that rect will hit SIMD
+     * fast-paths, if possible.  It's not always possible to align
+     * |aRect| so that fast-paths will be taken.
+     *
+     * The returned rect is always a superset of |aRect|.
+     */
+    static mozilla::gfx::IntRect AlignRectForSubimageRecovery(const mozilla::gfx::IntRect& aRect,
+                                                              gfxImageSurface* aSurface);
+=======
+  /**
+   * A common use-case for alpha recovery is to paint into a
+   * temporary "white image", then paint onto a subrect of the
+   * surface, the "black image", into which alpha-recovered pixels
+   * are eventually to be written.  This function returns a rect
+   * aligned so that recovering alpha for that rect will hit SIMD
+   * fast-paths, if possible.  It's not always possible to align
+   * |aRect| so that fast-paths will be taken.
+   *
+   * The returned rect is always a superset of |aRect|.
+   */
+  static mozilla::gfx::IntRect AlignRectForSubimageRecovery(
+      const mozilla::gfx::IntRect& aRect, gfxImageSurface* aSurface);
+>>>>>>> upstream-releases
 #else
+<<<<<<< HEAD
   static mozilla::gfx::IntRect AlignRectForSubimageRecovery(
       const mozilla::gfx::IntRect &aRect, gfxImageSurface *) {
     return aRect;
   }
+||||||| merged common ancestors
+    static mozilla::gfx::IntRect AlignRectForSubimageRecovery(const mozilla::gfx::IntRect& aRect,
+                                                              gfxImageSurface*)
+    { return aRect; }
+=======
+  static mozilla::gfx::IntRect AlignRectForSubimageRecovery(
+      const mozilla::gfx::IntRect& aRect, gfxImageSurface*) {
+    return aRect;
+  }
+>>>>>>> upstream-releases
 #endif
 
   /** from cairo-xlib-utils.c, modified */

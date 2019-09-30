@@ -23,6 +23,8 @@ class RegExpObject;
 
 namespace frontend {
 
+class TokenStreamAnyChars;
+
 enum class SourceKind {
   // We are parsing from a text source (Parser.h)
   Text,
@@ -35,11 +37,23 @@ enum class SourceKind {
 class FullParseHandler {
   ParseNodeAllocator allocator;
 
+<<<<<<< HEAD
   ParseNode* allocParseNode(size_t size) {
     MOZ_ASSERT(size == sizeof(ParseNode));
     return static_cast<ParseNode*>(allocator.allocNode());
   }
+||||||| merged common ancestors
+    ParseNode* allocParseNode(size_t size) {
+        MOZ_ASSERT(size == sizeof(ParseNode));
+        return static_cast<ParseNode*>(allocator.allocNode());
+    }
+=======
+  ParseNode* allocParseNode(size_t size) {
+    return static_cast<ParseNode*>(allocator.allocNode(size));
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   /*
    * If this is a full parse to construct the bytecode for a function that
    * was previously lazily parsed, that lazy function and the current index
@@ -48,6 +62,30 @@ class FullParseHandler {
   const Rooted<LazyScript*> lazyOuterFunction_;
   size_t lazyInnerFunctionIndex;
   size_t lazyClosedOverBindingIndex;
+||||||| merged common ancestors
+    /*
+     * If this is a full parse to construct the bytecode for a function that
+     * was previously lazily parsed, that lazy function and the current index
+     * into its inner functions. We do not want to reparse the inner functions.
+     */
+    const Rooted<LazyScript*> lazyOuterFunction_;
+    size_t lazyInnerFunctionIndex;
+    size_t lazyClosedOverBindingIndex;
+=======
+  /*
+   * If this is a full parse to construct the bytecode for a function that
+   * was previously lazily parsed, we still don't want to full parse the
+   * inner functions. These members are used for this functionality:
+   *
+   * - lazyOuterFunction_ holds the lazyScript for this current parse
+   * - lazyInnerFunctionIndex is used as we skip over inner functions
+   *   (see skipLazyInnerFunction),
+   */
+  const Rooted<LazyScript*> lazyOuterFunction_;
+  size_t lazyInnerFunctionIndex;
+
+  size_t lazyClosedOverBindingIndex;
+>>>>>>> upstream-releases
 
   const SourceKind sourceKind_;
 
@@ -63,6 +101,7 @@ class FullParseHandler {
   FOR_EACH_PARSENODE_SUBCLASS(DECLARE_TYPE)
 #undef DECLARE_TYPE
 
+<<<<<<< HEAD
   using NullNode = std::nullptr_t;
 
   bool isPropertyAccess(Node node) {
@@ -92,6 +131,65 @@ class FullParseHandler {
   FullParseHandler(JSContext* cx, LifoAlloc& alloc,
                    LazyScript* lazyOuterFunction,
                    SourceKind kind = SourceKind::Text)
+||||||| merged common ancestors
+    using NullNode = std::nullptr_t;
+
+    bool isPropertyAccess(Node node) {
+        return node->isKind(ParseNodeKind::Dot) || node->isKind(ParseNodeKind::Elem);
+    }
+
+    bool isFunctionCall(Node node) {
+        // Note: super() is a special form, *not* a function call.
+        return node->isKind(ParseNodeKind::Call);
+    }
+
+    static bool isUnparenthesizedDestructuringPattern(Node node) {
+        return !node->isInParens() && (node->isKind(ParseNodeKind::Object) ||
+                                       node->isKind(ParseNodeKind::Array));
+    }
+
+    static bool isParenthesizedDestructuringPattern(Node node) {
+        // Technically this isn't a destructuring pattern at all -- the grammar
+        // doesn't treat it as such.  But we need to know when this happens to
+        // consider it a SyntaxError rather than an invalid-left-hand-side
+        // ReferenceError.
+        return node->isInParens() && (node->isKind(ParseNodeKind::Object) ||
+                                      node->isKind(ParseNodeKind::Array));
+    }
+
+    FullParseHandler(JSContext* cx, LifoAlloc& alloc, LazyScript* lazyOuterFunction,
+                     SourceKind kind = SourceKind::Text)
+=======
+  using NullNode = std::nullptr_t;
+
+  bool isPropertyAccess(Node node) {
+    return node->isKind(ParseNodeKind::DotExpr) ||
+           node->isKind(ParseNodeKind::ElemExpr);
+  }
+
+  bool isFunctionCall(Node node) {
+    // Note: super() is a special form, *not* a function call.
+    return node->isKind(ParseNodeKind::CallExpr);
+  }
+
+  static bool isUnparenthesizedDestructuringPattern(Node node) {
+    return !node->isInParens() && (node->isKind(ParseNodeKind::ObjectExpr) ||
+                                   node->isKind(ParseNodeKind::ArrayExpr));
+  }
+
+  static bool isParenthesizedDestructuringPattern(Node node) {
+    // Technically this isn't a destructuring pattern at all -- the grammar
+    // doesn't treat it as such.  But we need to know when this happens to
+    // consider it a SyntaxError rather than an invalid-left-hand-side
+    // ReferenceError.
+    return node->isInParens() && (node->isKind(ParseNodeKind::ObjectExpr) ||
+                                  node->isKind(ParseNodeKind::ArrayExpr));
+  }
+
+  FullParseHandler(JSContext* cx, LifoAlloc& alloc,
+                   LazyScript* lazyOuterFunction,
+                   SourceKind kind = SourceKind::Text)
+>>>>>>> upstream-releases
       : allocator(cx, alloc),
         lazyOuterFunction_(cx, lazyOuterFunction),
         lazyInnerFunctionIndex(0),
@@ -105,6 +203,7 @@ class FullParseHandler {
   FOR_EACH_PARSENODE_SUBCLASS(DECLARE_AS)
 #undef DECLARE_AS
 
+<<<<<<< HEAD
   // The FullParseHandler may be used to create nodes for text sources
   // (from Parser.h) or for binary sources (from BinASTParser.h). In the latter
   // case, some common assumptions on offsets are incorrect, e.g. in `a + b`,
@@ -176,10 +275,442 @@ class FullParseHandler {
   void addToCallSiteObject(CallSiteNodeType callSiteObj, Node rawNode,
                            Node cookedNode) {
     MOZ_ASSERT(callSiteObj->isKind(ParseNodeKind::CallSiteObj));
+||||||| merged common ancestors
+    // The FullParseHandler may be used to create nodes for text sources
+    // (from Parser.h) or for binary sources (from BinSource.h). In the latter
+    // case, some common assumptions on offsets are incorrect, e.g. in `a + b`,
+    // `a`, `b` and `+` may be stored in any order. We use `sourceKind()`
+    // to determine whether we need to check these assumptions.
+    SourceKind sourceKind() const { return sourceKind_; }
 
+    NameNodeType newName(PropertyName* name, const TokenPos& pos, JSContext* cx) {
+        return new_<NameNode>(ParseNodeKind::Name, JSOP_GETNAME, name, pos);
+    }
+
+    UnaryNodeType newComputedName(Node expr, uint32_t begin, uint32_t end) {
+        TokenPos pos(begin, end);
+        return new_<UnaryNode>(ParseNodeKind::ComputedName, pos, expr);
+    }
+
+    NameNodeType newObjectLiteralPropertyName(JSAtom* atom, const TokenPos& pos) {
+        return new_<NameNode>(ParseNodeKind::ObjectPropertyName, JSOP_NOP, atom, pos);
+    }
+
+    NumericLiteralType newNumber(double value, DecimalPoint decimalPoint, const TokenPos& pos) {
+        return new_<NumericLiteral>(value, decimalPoint, pos);
+    }
+
+    BooleanLiteralType newBooleanLiteral(bool cond, const TokenPos& pos) {
+        return new_<BooleanLiteral>(cond, pos);
+    }
+
+    NameNodeType newStringLiteral(JSAtom* atom, const TokenPos& pos) {
+        return new_<NameNode>(ParseNodeKind::String, JSOP_NOP, atom, pos);
+    }
+
+    NameNodeType newTemplateStringLiteral(JSAtom* atom, const TokenPos& pos) {
+        return new_<NameNode>(ParseNodeKind::TemplateString, JSOP_NOP, atom, pos);
+    }
+
+    CallSiteNodeType newCallSiteObject(uint32_t begin) {
+        CallSiteNode* callSiteObj = new_<CallSiteNode>(begin);
+        if (!callSiteObj) {
+            return null();
+        }
+
+        ListNode* rawNodes = newArrayLiteral(callSiteObj->pn_pos.begin);
+        if (!rawNodes) {
+            return null();
+        }
+
+        addArrayElement(callSiteObj, rawNodes);
+
+        return callSiteObj;
+    }
+
+    void addToCallSiteObject(CallSiteNodeType callSiteObj, Node rawNode,
+                             Node cookedNode) {
+        MOZ_ASSERT(callSiteObj->isKind(ParseNodeKind::CallSiteObj));
+
+        addArrayElement(callSiteObj, cookedNode);
+        addArrayElement(callSiteObj->rawNodes(), rawNode);
+
+        /*
+         * We don't know when the last noSubstTemplate will come in, and we
+         * don't want to deal with this outside this method
+         */
+        setEndPosition(callSiteObj, callSiteObj->rawNodes());
+    }
+
+    ThisLiteralType newThisLiteral(const TokenPos& pos, Node thisName) {
+        return new_<ThisLiteral>(pos, thisName);
+    }
+
+    NullLiteralType newNullLiteral(const TokenPos& pos) {
+        return new_<NullLiteral>(pos);
+    }
+
+    RawUndefinedLiteralType newRawUndefinedLiteral(const TokenPos& pos) {
+        return new_<RawUndefinedLiteral>(pos);
+    }
+
+    // The Boxer object here is any object that can allocate ObjectBoxes.
+    // Specifically, a Boxer has a .newObjectBox(T) method that accepts a
+    // Rooted<RegExpObject*> argument and returns an ObjectBox*.
+    template <class Boxer>
+    RegExpLiteralType newRegExp(RegExpObject* reobj, const TokenPos& pos, Boxer& boxer) {
+        ObjectBox* objbox = boxer.newObjectBox(reobj);
+        if (!objbox) {
+            return null();
+        }
+        return new_<RegExpLiteral>(objbox, pos);
+    }
+
+    ConditionalExpressionType newConditional(Node cond, Node thenExpr, Node elseExpr) {
+        return new_<ConditionalExpression>(cond, thenExpr, elseExpr);
+    }
+
+    UnaryNodeType newDelete(uint32_t begin, Node expr) {
+        if (expr->isKind(ParseNodeKind::Name)) {
+            expr->setOp(JSOP_DELNAME);
+            return newUnary(ParseNodeKind::DeleteName, begin, expr);
+        }
+
+        if (expr->isKind(ParseNodeKind::Dot)) {
+            return newUnary(ParseNodeKind::DeleteProp, begin, expr);
+        }
+
+        if (expr->isKind(ParseNodeKind::Elem)) {
+            return newUnary(ParseNodeKind::DeleteElem, begin, expr);
+        }
+
+        return newUnary(ParseNodeKind::DeleteExpr, begin, expr);
+    }
+
+    UnaryNodeType newTypeof(uint32_t begin, Node kid) {
+        ParseNodeKind pnk = kid->isKind(ParseNodeKind::Name)
+                            ? ParseNodeKind::TypeOfName
+                            : ParseNodeKind::TypeOfExpr;
+        return newUnary(pnk, begin, kid);
+    }
+
+    UnaryNodeType newUnary(ParseNodeKind kind, uint32_t begin, Node kid) {
+        TokenPos pos(begin, kid->pn_pos.end);
+        return new_<UnaryNode>(kind, pos, kid);
+    }
+
+    UnaryNodeType newUpdate(ParseNodeKind kind, uint32_t begin, Node kid) {
+        TokenPos pos(begin, kid->pn_pos.end);
+        return new_<UnaryNode>(kind, pos, kid);
+    }
+
+    UnaryNodeType newSpread(uint32_t begin, Node kid) {
+        TokenPos pos(begin, kid->pn_pos.end);
+        return new_<UnaryNode>(ParseNodeKind::Spread, pos, kid);
+    }
+
+  private:
+    BinaryNodeType newBinary(ParseNodeKind kind, Node left, Node right, JSOp op = JSOP_NOP) {
+        TokenPos pos(left->pn_pos.begin, right->pn_pos.end);
+        return new_<BinaryNode>(kind, op, pos, left, right);
+    }
+
+  public:
+    Node appendOrCreateList(ParseNodeKind kind, Node left, Node right, ParseContext* pc) {
+        return ParseNode::appendOrCreateList(kind, left, right, this, pc);
+    }
+
+    // Expressions
+
+    ListNodeType newArrayLiteral(uint32_t begin) {
+        return new_<ListNode>(ParseNodeKind::Array, TokenPos(begin, begin + 1));
+    }
+
+    MOZ_MUST_USE bool addElision(ListNodeType literal, const TokenPos& pos) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Array));
+
+        NullaryNode* elision = new_<NullaryNode>(ParseNodeKind::Elision, pos);
+        if (!elision) {
+            return false;
+        }
+        addList(/* list = */ literal, /* child = */ elision);
+        literal->setHasArrayHoleOrSpread();
+        literal->setHasNonConstInitializer();
+        return true;
+    }
+
+    MOZ_MUST_USE bool addSpreadElement(ListNodeType literal, uint32_t begin, Node inner) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Array));
+
+        ParseNode* spread = newSpread(begin, inner);
+        if (!spread) {
+            return false;
+        }
+        addList(/* list = */ literal, /* child = */ spread);
+        literal->setHasArrayHoleOrSpread();
+        literal->setHasNonConstInitializer();
+        return true;
+    }
+
+    void addArrayElement(ListNodeType literal, Node element) {
+        if (!element->isConstant()) {
+            literal->setHasNonConstInitializer();
+        }
+        addList(/* list = */ literal, /* child = */ element);
+    }
+
+    BinaryNodeType newCall(Node callee, Node args) {
+        return new_<BinaryNode>(ParseNodeKind::Call, JSOP_CALL, callee, args);
+    }
+
+    ListNodeType newArguments(const TokenPos& pos) {
+        return new_<ListNode>(ParseNodeKind::Arguments, JSOP_NOP, pos);
+    }
+
+    BinaryNodeType newSuperCall(Node callee, Node args) {
+        return new_<BinaryNode>(ParseNodeKind::SuperCall, JSOP_SUPERCALL, callee, args);
+    }
+
+    BinaryNodeType newTaggedTemplate(Node tag, Node args) {
+        return new_<BinaryNode>(ParseNodeKind::TaggedTemplate, JSOP_CALL, tag, args);
+    }
+
+    ListNodeType newObjectLiteral(uint32_t begin) {
+        return new_<ListNode>(ParseNodeKind::Object, TokenPos(begin, begin + 1));
+    }
+
+    ClassNodeType newClass(Node name, Node heritage, Node methodBlock, const TokenPos& pos) {
+        return new_<ClassNode>(name, heritage, methodBlock, pos);
+    }
+    ListNodeType newClassMethodList(uint32_t begin) {
+        return new_<ListNode>(ParseNodeKind::ClassMethodList, TokenPos(begin, begin + 1));
+    }
+    ClassNamesType newClassNames(Node outer, Node inner, const TokenPos& pos) {
+        return new_<ClassNames>(outer, inner, pos);
+    }
+    BinaryNodeType newNewTarget(NullaryNodeType newHolder, NullaryNodeType targetHolder) {
+        return new_<BinaryNode>(ParseNodeKind::NewTarget, JSOP_NOP, newHolder, targetHolder);
+    }
+    NullaryNodeType newPosHolder(const TokenPos& pos) {
+        return new_<NullaryNode>(ParseNodeKind::PosHolder, pos);
+    }
+    UnaryNodeType newSuperBase(Node thisName, const TokenPos& pos) {
+        return new_<UnaryNode>(ParseNodeKind::SuperBase, pos, thisName);
+    }
+    MOZ_MUST_USE bool addPrototypeMutation(ListNodeType literal, uint32_t begin, Node expr) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
+
+        // Object literals with mutated [[Prototype]] are non-constant so that
+        // singleton objects will have Object.prototype as their [[Prototype]].
+        literal->setHasNonConstInitializer();
+
+        UnaryNode* mutation = newUnary(ParseNodeKind::MutateProto, begin, expr);
+        if (!mutation) {
+            return false;
+        }
+        addList(/* list = */ literal, /* child = */ mutation);
+        return true;
+    }
+
+    BinaryNodeType newPropertyDefinition(Node key, Node val) {
+        MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+        checkAndSetIsDirectRHSAnonFunction(val);
+        return newBinary(ParseNodeKind::Colon, key, val, JSOP_INITPROP);
+    }
+
+    void addPropertyDefinition(ListNodeType literal, BinaryNodeType propdef) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
+        MOZ_ASSERT(propdef->isKind(ParseNodeKind::Colon));
+
+        if (!propdef->right()->isConstant()) {
+            literal->setHasNonConstInitializer();
+        }
+
+        addList(/* list = */ literal, /* child = */ propdef);
+    }
+
+    MOZ_MUST_USE bool addPropertyDefinition(ListNodeType literal, Node key, Node val) {
+        BinaryNode* propdef = newPropertyDefinition(key, val);
+        if (!propdef) {
+            return false;
+        }
+        addPropertyDefinition(literal, propdef);
+        return true;
+    }
+
+    MOZ_MUST_USE bool addShorthand(ListNodeType literal, NameNodeType name, NameNodeType expr) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
+        MOZ_ASSERT(name->isKind(ParseNodeKind::ObjectPropertyName));
+        MOZ_ASSERT(expr->isKind(ParseNodeKind::Name));
+        MOZ_ASSERT(name->atom() == expr->atom());
+
+        literal->setHasNonConstInitializer();
+        BinaryNode* propdef = newBinary(ParseNodeKind::Shorthand, name, expr, JSOP_INITPROP);
+        if (!propdef) {
+            return false;
+        }
+        addList(/* list = */ literal, /* child = */ propdef);
+        return true;
+    }
+
+    MOZ_MUST_USE bool addSpreadProperty(ListNodeType literal, uint32_t begin, Node inner) {
+        MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
+
+        literal->setHasNonConstInitializer();
+        ParseNode* spread = newSpread(begin, inner);
+        if (!spread) {
+            return false;
+        }
+        addList(/* list = */ literal, /* child = */ spread);
+        return true;
+    }
+
+    MOZ_MUST_USE bool addObjectMethodDefinition(ListNodeType literal, Node key,
+                                                CodeNodeType funNode, AccessorType atype)
+    {
+        literal->setHasNonConstInitializer();
+
+        checkAndSetIsDirectRHSAnonFunction(funNode);
+
+        ParseNode* propdef = newObjectMethodOrPropertyDefinition(key, funNode, atype);
+        if (!propdef) {
+            return false;
+        }
+
+        addList(/* list = */ literal, /* child = */ propdef);
+        return true;
+    }
+
+    MOZ_MUST_USE bool addClassMethodDefinition(ListNodeType methodList, Node key,
+                                               CodeNodeType funNode, AccessorType atype,
+                                               bool isStatic)
+    {
+        MOZ_ASSERT(methodList->isKind(ParseNodeKind::ClassMethodList));
+        MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+
+        checkAndSetIsDirectRHSAnonFunction(funNode);
+
+        ClassMethod* classMethod = new_<ClassMethod>(key, funNode, AccessorTypeToJSOp(atype),
+                                                     isStatic);
+        if (!classMethod) {
+            return false;
+        }
+        addList(/* list = */ methodList, /* child = */ classMethod);
+        return true;
+    }
+
+    UnaryNodeType newInitialYieldExpression(uint32_t begin, Node gen) {
+        TokenPos pos(begin, begin + 1);
+        return new_<UnaryNode>(ParseNodeKind::InitialYield, pos, gen);
+    }
+
+    UnaryNodeType newYieldExpression(uint32_t begin, Node value) {
+        TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
+        return new_<UnaryNode>(ParseNodeKind::Yield, pos, value);
+    }
+
+    UnaryNodeType newYieldStarExpression(uint32_t begin, Node value) {
+        TokenPos pos(begin, value->pn_pos.end);
+        return new_<UnaryNode>(ParseNodeKind::YieldStar, pos, value);
+    }
+
+    UnaryNodeType newAwaitExpression(uint32_t begin, Node value) {
+        TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
+        return new_<UnaryNode>(ParseNodeKind::Await, pos, value);
+    }
+
+    // Statements
+
+    ListNodeType newStatementList(const TokenPos& pos) {
+        return new_<ListNode>(ParseNodeKind::StatementList, pos);
+    }
+
+    MOZ_MUST_USE bool isFunctionStmt(Node stmt) {
+        while (stmt->isKind(ParseNodeKind::Label)) {
+            stmt = stmt->as<LabeledStatement>().statement();
+        }
+        return stmt->isKind(ParseNodeKind::Function);
+    }
+=======
+  // The FullParseHandler may be used to create nodes for text sources
+  // (from Parser.h) or for binary sources (from BinASTParser.h). In the latter
+  // case, some common assumptions on offsets are incorrect, e.g. in `a + b`,
+  // `a`, `b` and `+` may be stored in any order. We use `sourceKind()`
+  // to determine whether we need to check these assumptions.
+  SourceKind sourceKind() const { return sourceKind_; }
+
+  NameNodeType newName(PropertyName* name, const TokenPos& pos, JSContext* cx) {
+    return new_<NameNode>(ParseNodeKind::Name, name, pos);
+  }
+
+  UnaryNodeType newComputedName(Node expr, uint32_t begin, uint32_t end) {
+    TokenPos pos(begin, end);
+    return new_<UnaryNode>(ParseNodeKind::ComputedName, pos, expr);
+  }
+
+  NameNodeType newObjectLiteralPropertyName(JSAtom* atom, const TokenPos& pos) {
+    return new_<NameNode>(ParseNodeKind::ObjectPropertyName, atom, pos);
+  }
+
+  NumericLiteralType newNumber(double value, DecimalPoint decimalPoint,
+                               const TokenPos& pos) {
+    return new_<NumericLiteral>(value, decimalPoint, pos);
+  }
+
+  // The Boxer object here is any object that can allocate BigIntBoxes.
+  // Specifically, a Boxer has a .newBigIntBox(T) method that accepts a
+  // BigInt* argument and returns a BigIntBox*.
+  template <class Boxer>
+  BigIntLiteralType newBigInt(BigInt* bi, const TokenPos& pos, Boxer& boxer) {
+    BigIntBox* box = boxer.newBigIntBox(bi);
+    if (!box) {
+      return null();
+    }
+    return new_<BigIntLiteral>(box, pos);
+  }
+
+  BooleanLiteralType newBooleanLiteral(bool cond, const TokenPos& pos) {
+    return new_<BooleanLiteral>(cond, pos);
+  }
+
+  NameNodeType newStringLiteral(JSAtom* atom, const TokenPos& pos) {
+    return new_<NameNode>(ParseNodeKind::StringExpr, atom, pos);
+  }
+
+  NameNodeType newTemplateStringLiteral(JSAtom* atom, const TokenPos& pos) {
+    return new_<NameNode>(ParseNodeKind::TemplateStringExpr, atom, pos);
+  }
+
+  CallSiteNodeType newCallSiteObject(uint32_t begin) {
+    CallSiteNode* callSiteObj = new_<CallSiteNode>(begin);
+    if (!callSiteObj) {
+      return null();
+    }
+
+    ListNode* rawNodes = newArrayLiteral(callSiteObj->pn_pos.begin);
+    if (!rawNodes) {
+      return null();
+    }
+
+    addArrayElement(callSiteObj, rawNodes);
+
+    return callSiteObj;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     addArrayElement(callSiteObj, cookedNode);
     addArrayElement(callSiteObj->rawNodes(), rawNode);
+||||||| merged common ancestors
+    void addStatementToList(ListNodeType list, Node stmt) {
+        MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+=======
+  void addToCallSiteObject(CallSiteNodeType callSiteObj, Node rawNode,
+                           Node cookedNode) {
+    MOZ_ASSERT(callSiteObj->isKind(ParseNodeKind::CallSiteObj));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     /*
      * We don't know when the last noSubstTemplate will come in, and we
      * don't want to deal with this outside this method
@@ -190,7 +721,187 @@ class FullParseHandler {
   ThisLiteralType newThisLiteral(const TokenPos& pos, Node thisName) {
     return new_<ThisLiteral>(pos, thisName);
   }
+||||||| merged common ancestors
+        addList(/* list = */ list, /* child = */ stmt);
 
+        if (isFunctionStmt(stmt)) {
+            // Notify the emitter that the block contains body-level function
+            // definitions that should be processed before the rest of nodes.
+            list->setHasTopLevelFunctionDeclarations();
+        }
+    }
+
+    void setListEndPosition(ListNodeType list, const TokenPos& pos) {
+        MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+        list->pn_pos.end = pos.end;
+    }
+
+    void addCaseStatementToList(ListNodeType list, CaseClauseType caseClause) {
+        MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+
+        addList(/* list = */ list, /* child = */ caseClause);
+
+        if (caseClause->statementList()->hasTopLevelFunctionDeclarations()) {
+            list->setHasTopLevelFunctionDeclarations();
+        }
+    }
+
+    MOZ_MUST_USE bool prependInitialYield(ListNodeType stmtList, Node genName) {
+        MOZ_ASSERT(stmtList->isKind(ParseNodeKind::StatementList));
+
+        TokenPos yieldPos(stmtList->pn_pos.begin, stmtList->pn_pos.begin + 1);
+        NullaryNode* makeGen = new_<NullaryNode>(ParseNodeKind::Generator, yieldPos);
+        if (!makeGen) {
+            return false;
+        }
+
+        MOZ_ASSERT(genName->getOp() == JSOP_GETNAME);
+        genName->setOp(JSOP_SETNAME);
+        ParseNode* genInit = newAssignment(ParseNodeKind::Assign, /* lhs = */ genName,
+                                           /* rhs = */ makeGen);
+        if (!genInit) {
+            return false;
+        }
+
+        UnaryNode* initialYield = newInitialYieldExpression(yieldPos.begin, genInit);
+        if (!initialYield) {
+            return false;
+        }
+
+        stmtList->prepend(initialYield);
+        return true;
+    }
+
+    BinaryNodeType newSetThis(Node thisName, Node value) {
+        MOZ_ASSERT(thisName->getOp() == JSOP_GETNAME);
+        thisName->setOp(JSOP_SETNAME);
+        return newBinary(ParseNodeKind::SetThis, thisName, value);
+    }
+
+    NullaryNodeType newEmptyStatement(const TokenPos& pos) {
+        return new_<NullaryNode>(ParseNodeKind::EmptyStatement, pos);
+    }
+
+    BinaryNodeType newImportDeclaration(Node importSpecSet, Node moduleSpec, const TokenPos& pos) {
+        return new_<BinaryNode>(ParseNodeKind::Import, JSOP_NOP, pos,
+                                importSpecSet, moduleSpec);
+    }
+
+    BinaryNodeType newImportSpec(Node importNameNode, Node bindingName) {
+        return newBinary(ParseNodeKind::ImportSpec, importNameNode, bindingName);
+    }
+
+    UnaryNodeType newExportDeclaration(Node kid, const TokenPos& pos) {
+        return new_<UnaryNode>(ParseNodeKind::Export, pos, kid);
+    }
+
+    BinaryNodeType newExportFromDeclaration(uint32_t begin, Node exportSpecSet, Node moduleSpec) {
+        BinaryNode* decl = new_<BinaryNode>(ParseNodeKind::ExportFrom, JSOP_NOP, exportSpecSet,
+                                            moduleSpec);
+        if (!decl) {
+            return nullptr;
+        }
+        decl->pn_pos.begin = begin;
+        return decl;
+    }
+
+    BinaryNodeType newExportDefaultDeclaration(Node kid, Node maybeBinding, const TokenPos& pos) {
+        if (maybeBinding) {
+            MOZ_ASSERT(maybeBinding->isKind(ParseNodeKind::Name));
+            MOZ_ASSERT(!maybeBinding->isInParens());
+
+            checkAndSetIsDirectRHSAnonFunction(kid);
+        }
+
+        return new_<BinaryNode>(ParseNodeKind::ExportDefault, JSOP_NOP, pos, kid, maybeBinding);
+    }
+
+    BinaryNodeType newExportSpec(Node bindingName, Node exportName) {
+        return newBinary(ParseNodeKind::ExportSpec, bindingName, exportName);
+    }
+
+    NullaryNodeType newExportBatchSpec(const TokenPos& pos) {
+        return new_<NullaryNode>(ParseNodeKind::ExportBatchSpec, JSOP_NOP, pos);
+    }
+
+    BinaryNodeType newImportMeta(NullaryNodeType importHolder, NullaryNodeType metaHolder) {
+        return new_<BinaryNode>(ParseNodeKind::ImportMeta, JSOP_NOP, importHolder, metaHolder);
+    }
+
+    UnaryNodeType newExprStatement(Node expr, uint32_t end) {
+        MOZ_ASSERT(expr->pn_pos.end <= end);
+        return new_<UnaryNode>(ParseNodeKind::ExpressionStatement,
+                               TokenPos(expr->pn_pos.begin, end), expr);
+    }
+
+    TernaryNodeType newIfStatement(uint32_t begin, Node cond, Node thenBranch, Node elseBranch) {
+        TernaryNode* node = new_<TernaryNode>(ParseNodeKind::If, cond, thenBranch, elseBranch);
+        if (!node) {
+            return nullptr;
+        }
+        node->pn_pos.begin = begin;
+        return node;
+    }
+
+    BinaryNodeType newDoWhileStatement(Node body, Node cond, const TokenPos& pos) {
+        return new_<BinaryNode>(ParseNodeKind::DoWhile, JSOP_NOP, pos, body, cond);
+    }
+
+    BinaryNodeType newWhileStatement(uint32_t begin, Node cond, Node body) {
+        TokenPos pos(begin, body->pn_pos.end);
+        return new_<BinaryNode>(ParseNodeKind::While, JSOP_NOP, pos, cond, body);
+    }
+
+    ForNodeType newForStatement(uint32_t begin, TernaryNodeType forHead, Node body,
+                                unsigned iflags)
+    {
+        return new_<ForNode>(TokenPos(begin, body->pn_pos.end), forHead, body, iflags);
+    }
+=======
+    addArrayElement(callSiteObj, cookedNode);
+    addArrayElement(callSiteObj->rawNodes(), rawNode);
+
+    /*
+     * We don't know when the last noSubstTemplate will come in, and we
+     * don't want to deal with this outside this method
+     */
+    setEndPosition(callSiteObj, callSiteObj->rawNodes());
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  NullLiteralType newNullLiteral(const TokenPos& pos) {
+    return new_<NullLiteral>(pos);
+  }
+||||||| merged common ancestors
+    TernaryNodeType newForHead(Node init, Node test, Node update, const TokenPos& pos) {
+        return new_<TernaryNode>(ParseNodeKind::ForHead, init, test, update, pos);
+    }
+=======
+  ThisLiteralType newThisLiteral(const TokenPos& pos, Node thisName) {
+    return new_<ThisLiteral>(pos, thisName);
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  RawUndefinedLiteralType newRawUndefinedLiteral(const TokenPos& pos) {
+    return new_<RawUndefinedLiteral>(pos);
+  }
+||||||| merged common ancestors
+    TernaryNodeType newForInOrOfHead(ParseNodeKind kind, Node target, Node iteratedExpr,
+                                     const TokenPos& pos)
+    {
+        MOZ_ASSERT(kind == ParseNodeKind::ForIn || kind == ParseNodeKind::ForOf);
+        return new_<TernaryNode>(kind, target, nullptr, iteratedExpr, pos);
+    }
+
+    SwitchStatementType newSwitchStatement(uint32_t begin, Node discriminant,
+                                           LexicalScopeNodeType lexicalForCaseList,
+                                           bool hasDefault)
+    {
+        return new_<SwitchStatement>(begin, discriminant, lexicalForCaseList, hasDefault);
+    }
+=======
   NullLiteralType newNullLiteral(const TokenPos& pos) {
     return new_<NullLiteral>(pos);
   }
@@ -198,6 +909,7 @@ class FullParseHandler {
   RawUndefinedLiteralType newRawUndefinedLiteral(const TokenPos& pos) {
     return new_<RawUndefinedLiteral>(pos);
   }
+>>>>>>> upstream-releases
 
   // The Boxer object here is any object that can allocate ObjectBoxes.
   // Specifically, a Boxer has a .newObjectBox(T) method that accepts a
@@ -217,23 +929,50 @@ class FullParseHandler {
     return new_<ConditionalExpression>(cond, thenExpr, elseExpr);
   }
 
+<<<<<<< HEAD
   UnaryNodeType newDelete(uint32_t begin, Node expr) {
     if (expr->isKind(ParseNodeKind::Name)) {
       expr->setOp(JSOP_DELNAME);
       return newUnary(ParseNodeKind::DeleteName, begin, expr);
+||||||| merged common ancestors
+    BreakStatementType newBreakStatement(PropertyName* label, const TokenPos& pos) {
+        return new_<BreakStatement>(label, pos);
+=======
+  UnaryNodeType newDelete(uint32_t begin, Node expr) {
+    if (expr->isKind(ParseNodeKind::Name)) {
+      return newUnary(ParseNodeKind::DeleteNameExpr, begin, expr);
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (expr->isKind(ParseNodeKind::Dot)) {
       return newUnary(ParseNodeKind::DeleteProp, begin, expr);
+||||||| merged common ancestors
+    UnaryNodeType newReturnStatement(Node expr, const TokenPos& pos) {
+        MOZ_ASSERT_IF(expr, pos.encloses(expr->pn_pos));
+        return new_<UnaryNode>(ParseNodeKind::Return, pos, expr);
+=======
+    if (expr->isKind(ParseNodeKind::DotExpr)) {
+      return newUnary(ParseNodeKind::DeletePropExpr, begin, expr);
+>>>>>>> upstream-releases
     }
 
+<<<<<<< HEAD
     if (expr->isKind(ParseNodeKind::Elem)) {
       return newUnary(ParseNodeKind::DeleteElem, begin, expr);
+||||||| merged common ancestors
+    UnaryNodeType newExpressionBody(Node expr) {
+        return new_<UnaryNode>(ParseNodeKind::Return, expr->pn_pos, expr);
+=======
+    if (expr->isKind(ParseNodeKind::ElemExpr)) {
+      return newUnary(ParseNodeKind::DeleteElemExpr, begin, expr);
+>>>>>>> upstream-releases
     }
 
     return newUnary(ParseNodeKind::DeleteExpr, begin, expr);
   }
 
+<<<<<<< HEAD
   UnaryNodeType newTypeof(uint32_t begin, Node kid) {
     ParseNodeKind pnk = kid->isKind(ParseNodeKind::Name)
                             ? ParseNodeKind::TypeOfName
@@ -287,15 +1026,96 @@ class FullParseHandler {
     literal->setHasNonConstInitializer();
     return true;
   }
+||||||| merged common ancestors
+    LabeledStatementType newLabeledStatement(PropertyName* label, Node stmt, uint32_t begin) {
+        return new_<LabeledStatement>(label, stmt, begin);
+    }
+=======
+  UnaryNodeType newTypeof(uint32_t begin, Node kid) {
+    ParseNodeKind pnk = kid->isKind(ParseNodeKind::Name)
+                            ? ParseNodeKind::TypeOfNameExpr
+                            : ParseNodeKind::TypeOfExpr;
+    return newUnary(pnk, begin, kid);
+  }
 
+  UnaryNodeType newUnary(ParseNodeKind kind, uint32_t begin, Node kid) {
+    TokenPos pos(begin, kid->pn_pos.end);
+    return new_<UnaryNode>(kind, pos, kid);
+  }
+
+  UnaryNodeType newUpdate(ParseNodeKind kind, uint32_t begin, Node kid) {
+    TokenPos pos(begin, kid->pn_pos.end);
+    return new_<UnaryNode>(kind, pos, kid);
+  }
+
+  UnaryNodeType newSpread(uint32_t begin, Node kid) {
+    TokenPos pos(begin, kid->pn_pos.end);
+    return new_<UnaryNode>(ParseNodeKind::Spread, pos, kid);
+  }
+
+ private:
+  BinaryNodeType newBinary(ParseNodeKind kind, Node left, Node right) {
+    TokenPos pos(left->pn_pos.begin, right->pn_pos.end);
+    return new_<BinaryNode>(kind, pos, left, right);
+  }
+
+ public:
+  Node appendOrCreateList(ParseNodeKind kind, Node left, Node right,
+                          ParseContext* pc) {
+    return ParseNode::appendOrCreateList(kind, left, right, this, pc);
+  }
+
+  // Expressions
+
+  ListNodeType newArrayLiteral(uint32_t begin) {
+    return new_<ListNode>(ParseNodeKind::ArrayExpr, TokenPos(begin, begin + 1));
+  }
+
+  MOZ_MUST_USE bool addElision(ListNodeType literal, const TokenPos& pos) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ArrayExpr));
+
+    NullaryNode* elision = new_<NullaryNode>(ParseNodeKind::Elision, pos);
+    if (!elision) {
+      return false;
+    }
+    addList(/* list = */ literal, /* kid = */ elision);
+    literal->setHasArrayHoleOrSpread();
+    literal->setHasNonConstInitializer();
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   MOZ_MUST_USE bool addSpreadElement(ListNodeType literal, uint32_t begin,
                                      Node inner) {
     MOZ_ASSERT(literal->isKind(ParseNodeKind::Array));
+||||||| merged common ancestors
+    UnaryNodeType newThrowStatement(Node expr, const TokenPos& pos) {
+        MOZ_ASSERT(pos.encloses(expr->pn_pos));
+        return new_<UnaryNode>(ParseNodeKind::Throw, pos, expr);
+    }
+=======
+  MOZ_MUST_USE bool addSpreadElement(ListNodeType literal, uint32_t begin,
+                                     Node inner) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ArrayExpr));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     ParseNode* spread = newSpread(begin, inner);
     if (!spread) {
       return false;
+||||||| merged common ancestors
+    TernaryNodeType newTryStatement(uint32_t begin, Node body, LexicalScopeNodeType catchScope,
+                                    Node finallyBlock)
+    {
+        return new_<TryNode>(begin, body, catchScope, finallyBlock);
+=======
+    UnaryNodeType spread = newSpread(begin, inner);
+    if (!spread) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     addList(/* list = */ literal, /* kid = */ spread);
     literal->setHasArrayHoleOrSpread();
     literal->setHasNonConstInitializer();
@@ -368,16 +1188,115 @@ class FullParseHandler {
     addList(/* list = */ literal, /* kid = */ mutation);
     return true;
   }
+||||||| merged common ancestors
+=======
+    addList(/* list = */ literal, /* kid = */ spread);
+    literal->setHasArrayHoleOrSpread();
+    literal->setHasNonConstInitializer();
+    return true;
+  }
 
+  void addArrayElement(ListNodeType literal, Node element) {
+    if (!element->isConstant()) {
+      literal->setHasNonConstInitializer();
+    }
+    addList(/* list = */ literal, /* kid = */ element);
+  }
+
+  CallNodeType newCall(Node callee, Node args, JSOp callOp) {
+    return new_<CallNode>(ParseNodeKind::CallExpr, callOp, callee, args);
+  }
+
+  ListNodeType newArguments(const TokenPos& pos) {
+    return new_<ListNode>(ParseNodeKind::Arguments, pos);
+  }
+
+  CallNodeType newSuperCall(Node callee, Node args, bool isSpread) {
+    return new_<CallNode>(ParseNodeKind::SuperCallExpr,
+                          isSpread ? JSOP_SPREADSUPERCALL : JSOP_SUPERCALL,
+                          callee, args);
+  }
+
+  CallNodeType newTaggedTemplate(Node tag, Node args, JSOp callOp) {
+    return new_<CallNode>(ParseNodeKind::TaggedTemplateExpr, callOp, tag, args);
+  }
+
+  ListNodeType newObjectLiteral(uint32_t begin) {
+    return new_<ListNode>(ParseNodeKind::ObjectExpr,
+                          TokenPos(begin, begin + 1));
+  }
+
+  ClassNodeType newClass(Node name, Node heritage,
+                         LexicalScopeNodeType memberBlock,
+                         const TokenPos& pos) {
+    return new_<ClassNode>(name, heritage, memberBlock, pos);
+  }
+  ListNodeType newClassMemberList(uint32_t begin) {
+    return new_<ListNode>(ParseNodeKind::ClassMemberList,
+                          TokenPos(begin, begin + 1));
+  }
+  ClassNamesType newClassNames(Node outer, Node inner, const TokenPos& pos) {
+    return new_<ClassNames>(outer, inner, pos);
+  }
+  BinaryNodeType newNewTarget(NullaryNodeType newHolder,
+                              NullaryNodeType targetHolder) {
+    return new_<BinaryNode>(ParseNodeKind::NewTargetExpr, newHolder,
+                            targetHolder);
+  }
+  NullaryNodeType newPosHolder(const TokenPos& pos) {
+    return new_<NullaryNode>(ParseNodeKind::PosHolder, pos);
+  }
+  UnaryNodeType newSuperBase(Node thisName, const TokenPos& pos) {
+    return new_<UnaryNode>(ParseNodeKind::SuperBase, pos, thisName);
+  }
+  MOZ_MUST_USE bool addPrototypeMutation(ListNodeType literal, uint32_t begin,
+                                         Node expr) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ObjectExpr));
+
+    // Object literals with mutated [[Prototype]] are non-constant so that
+    // singleton objects will have Object.prototype as their [[Prototype]].
+    literal->setHasNonConstInitializer();
+
+    UnaryNode* mutation = newUnary(ParseNodeKind::MutateProto, begin, expr);
+    if (!mutation) {
+      return false;
+    }
+    addList(/* list = */ literal, /* kid = */ mutation);
+    return true;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   BinaryNodeType newPropertyDefinition(Node key, Node val) {
     MOZ_ASSERT(isUsableAsObjectPropertyName(key));
     checkAndSetIsDirectRHSAnonFunction(val);
     return newBinary(ParseNodeKind::Colon, key, val, JSOP_INITPROP);
   }
+||||||| merged common ancestors
+    DebuggerStatementType newDebuggerStatement(const TokenPos& pos) {
+        return new_<DebuggerStatement>(pos);
+    }
+=======
+  BinaryNodeType newPropertyDefinition(Node key, Node val) {
+    MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+    checkAndSetIsDirectRHSAnonFunction(val);
+    return new_<PropertyDefinition>(key, val, AccessorType::None);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void addPropertyDefinition(ListNodeType literal, BinaryNodeType propdef) {
     MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
     MOZ_ASSERT(propdef->isKind(ParseNodeKind::Colon));
+||||||| merged common ancestors
+    NameNodeType newPropertyName(PropertyName* name, const TokenPos& pos) {
+        return new_<NameNode>(ParseNodeKind::PropertyName, JSOP_NOP, name, pos);
+    }
+=======
+  void addPropertyDefinition(ListNodeType literal, BinaryNodeType propdef) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ObjectExpr));
+    MOZ_ASSERT(propdef->isKind(ParseNodeKind::PropertyDefinition));
+>>>>>>> upstream-releases
 
     if (!propdef->right()->isConstant()) {
       literal->setHasNonConstInitializer();
@@ -392,6 +1311,7 @@ class FullParseHandler {
     if (!propdef) {
       return false;
     }
+<<<<<<< HEAD
     addPropertyDefinition(literal, propdef);
     return true;
   }
@@ -412,46 +1332,155 @@ class FullParseHandler {
     addList(/* list = */ literal, /* kid = */ propdef);
     return true;
   }
+||||||| merged common ancestors
+=======
+    addPropertyDefinition(literal, propdef);
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool addSpreadProperty(ListNodeType literal, uint32_t begin,
                                       Node inner) {
     MOZ_ASSERT(literal->isKind(ParseNodeKind::Object));
+||||||| merged common ancestors
+    inline MOZ_MUST_USE bool setLastFunctionFormalParameterDefault(CodeNodeType funNode,
+                                                                   Node defaultValue);
+=======
+  MOZ_MUST_USE bool addShorthand(ListNodeType literal, NameNodeType name,
+                                 NameNodeType expr) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ObjectExpr));
+    MOZ_ASSERT(name->isKind(ParseNodeKind::ObjectPropertyName));
+    MOZ_ASSERT(expr->isKind(ParseNodeKind::Name));
+    MOZ_ASSERT(name->atom() == expr->atom());
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     literal->setHasNonConstInitializer();
     ParseNode* spread = newSpread(begin, inner);
     if (!spread) {
       return false;
+||||||| merged common ancestors
+  private:
+    void checkAndSetIsDirectRHSAnonFunction(Node pn) {
+        if (IsAnonymousFunctionDefinition(pn)) {
+            pn->setDirectRHSAnonFunction(true);
+        }
+=======
+    literal->setHasNonConstInitializer();
+    BinaryNode* propdef = newBinary(ParseNodeKind::Shorthand, name, expr);
+    if (!propdef) {
+      return false;
+>>>>>>> upstream-releases
     }
+<<<<<<< HEAD
     addList(/* list = */ literal, /* kid = */ spread);
     return true;
   }
+||||||| merged common ancestors
+=======
+    addList(/* list = */ literal, /* kid = */ propdef);
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool addObjectMethodDefinition(ListNodeType literal, Node key,
                                               CodeNodeType funNode,
                                               AccessorType atype) {
     literal->setHasNonConstInitializer();
+||||||| merged common ancestors
+  public:
+    CodeNodeType newFunctionStatement(const TokenPos& pos) {
+        return new_<CodeNode>(ParseNodeKind::Function, JSOP_NOP, pos);
+    }
+=======
+  MOZ_MUST_USE bool addSpreadProperty(ListNodeType literal, uint32_t begin,
+                                      Node inner) {
+    MOZ_ASSERT(literal->isKind(ParseNodeKind::ObjectExpr));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     checkAndSetIsDirectRHSAnonFunction(funNode);
 
     ParseNode* propdef =
         newObjectMethodOrPropertyDefinition(key, funNode, atype);
     if (!propdef) {
       return false;
+||||||| merged common ancestors
+    CodeNodeType newFunctionExpression(const TokenPos& pos) {
+        return new_<CodeNode>(ParseNodeKind::Function, JSOP_LAMBDA, pos);
     }
 
-    addList(/* list = */ literal, /* kid = */ propdef);
+    CodeNodeType newArrowFunction(const TokenPos& pos) {
+        return new_<CodeNode>(ParseNodeKind::Function, JSOP_LAMBDA_ARROW, pos);
+=======
+    literal->setHasNonConstInitializer();
+    ParseNode* spread = newSpread(begin, inner);
+    if (!spread) {
+      return false;
+>>>>>>> upstream-releases
+    }
+    addList(/* list = */ literal, /* kid = */ spread);
     return true;
   }
 
+<<<<<<< HEAD
+    addList(/* list = */ literal, /* kid = */ propdef);
+    return true;
+  }
+||||||| merged common ancestors
+    BinaryNodeType newObjectMethodOrPropertyDefinition(Node key, Node value, AccessorType atype) {
+        MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+=======
+  MOZ_MUST_USE bool addObjectMethodDefinition(ListNodeType literal, Node key,
+                                              FunctionNodeType funNode,
+                                              AccessorType atype) {
+    literal->setHasNonConstInitializer();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   MOZ_MUST_USE bool addClassMethodDefinition(ListNodeType memberList, Node key,
                                              CodeNodeType funNode,
                                              AccessorType atype,
                                              bool isStatic) {
     MOZ_ASSERT(memberList->isKind(ParseNodeKind::ClassMemberList));
     MOZ_ASSERT(isUsableAsObjectPropertyName(key));
-
+||||||| merged common ancestors
+        return newBinary(ParseNodeKind::Colon, key, value, AccessorTypeToJSOp(atype));
+    }
+=======
     checkAndSetIsDirectRHSAnonFunction(funNode);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    checkAndSetIsDirectRHSAnonFunction(funNode);
+||||||| merged common ancestors
+    void setFunctionFormalParametersAndBody(CodeNodeType funNode, ListNodeType paramsBody) {
+        MOZ_ASSERT_IF(paramsBody, paramsBody->isKind(ParseNodeKind::ParamsBody));
+        funNode->setBody(paramsBody);
+    }
+    void setFunctionBox(CodeNodeType funNode, FunctionBox* funbox) {
+        MOZ_ASSERT(funNode->isKind(ParseNodeKind::Function));
+        funNode->setFunbox(funbox);
+        funbox->functionNode = funNode;
+    }
+    void addFunctionFormalParameter(CodeNodeType funNode, Node argpn) {
+        addList(/* list = */ funNode->body(), /* child = */ argpn);
+    }
+    void setFunctionBody(CodeNodeType funNode, LexicalScopeNodeType body) {
+        MOZ_ASSERT(funNode->body()->isKind(ParseNodeKind::ParamsBody));
+        addList(/* list = */ funNode->body(), /* child = */ body);
+    }
+=======
+    ParseNode* propdef =
+        newObjectMethodOrPropertyDefinition(key, funNode, atype);
+    if (!propdef) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     ClassMethod* classMethod =
         new_<ClassMethod>(key, funNode, AccessorTypeToJSOp(atype), isStatic);
     if (!classMethod) {
@@ -460,91 +1489,369 @@ class FullParseHandler {
     addList(/* list = */ memberList, /* kid = */ classMethod);
     return true;
   }
+||||||| merged common ancestors
+    CodeNodeType newModule(const TokenPos& pos) {
+        return new_<CodeNode>(ParseNodeKind::Module, JSOP_NOP, pos);
+    }
+=======
+    addList(/* list = */ literal, /* kid = */ propdef);
+    return true;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool addClassFieldDefinition(ListNodeType memberList, Node name,
                                             Node initializer) {
     MOZ_ASSERT(memberList->isKind(ParseNodeKind::ClassMemberList));
     MOZ_ASSERT(isUsableAsObjectPropertyName(name));
+||||||| merged common ancestors
+    LexicalScopeNodeType newLexicalScope(LexicalScope::Data* bindings, Node body) {
+        return new_<LexicalScopeNode>(bindings, body);
+    }
+=======
+  MOZ_MUST_USE ClassMethod* newClassMethodDefinition(Node key,
+                                                     FunctionNodeType funNode,
+                                                     AccessorType atype,
+                                                     bool isStatic) {
+    MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     ClassField* classField = new_<ClassField>(name, initializer);
+||||||| merged common ancestors
+    BinaryNodeType newNewExpression(uint32_t begin, Node ctor, Node args) {
+        return new_<BinaryNode>(ParseNodeKind::New, JSOP_NEW, TokenPos(begin, args->pn_pos.end),
+                                ctor, args);
+    }
+=======
+    checkAndSetIsDirectRHSAnonFunction(funNode);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     if (!classField) {
       return false;
     }
     addList(/* list = */ memberList, /* kid = */ classField);
     return true;
   }
+||||||| merged common ancestors
+    AssignmentNodeType newAssignment(ParseNodeKind kind, Node lhs, Node rhs) {
+        if (kind == ParseNodeKind::Assign && lhs->isKind(ParseNodeKind::Name) &&
+            !lhs->isInParens())
+        {
+            checkAndSetIsDirectRHSAnonFunction(rhs);
+        }
 
+        return new_<AssignmentNode>(kind, JSOP_NOP, lhs, rhs);
+    }
+=======
+    return new_<ClassMethod>(key, funNode, atype, isStatic);
+  }
+
+  MOZ_MUST_USE ClassField* newClassFieldDefinition(
+      Node name, FunctionNodeType initializer) {
+    MOZ_ASSERT(isUsableAsObjectPropertyName(name));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   UnaryNodeType newInitialYieldExpression(uint32_t begin, Node gen) {
     TokenPos pos(begin, begin + 1);
     return new_<UnaryNode>(ParseNodeKind::InitialYield, pos, gen);
   }
+||||||| merged common ancestors
+    bool isUnparenthesizedAssignment(Node node) {
+        if (node->isKind(ParseNodeKind::Assign) && !node->isInParens()) {
+            // ParseNodeKind::Assign is also (mis)used for things like
+            // |var name = expr;|. But this method is only called on actual
+            // expressions, so we can just assert the node's op is the one used
+            // for plain assignment.
+            MOZ_ASSERT(node->isOp(JSOP_NOP));
+            return true;
+        }
+=======
+    return new_<ClassField>(name, initializer);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   UnaryNodeType newYieldExpression(uint32_t begin, Node value) {
     TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
     return new_<UnaryNode>(ParseNodeKind::Yield, pos, value);
   }
+||||||| merged common ancestors
+        return false;
+    }
+=======
+  MOZ_MUST_USE bool addClassMemberDefinition(ListNodeType memberList,
+                                             Node member) {
+    MOZ_ASSERT(memberList->isKind(ParseNodeKind::ClassMemberList));
+    // Constructors can be surrounded by LexicalScopes.
+    MOZ_ASSERT(member->isKind(ParseNodeKind::ClassMethod) ||
+               member->isKind(ParseNodeKind::ClassField) ||
+               (member->isKind(ParseNodeKind::LexicalScope) &&
+                member->as<LexicalScopeNode>().scopeBody()->isKind(
+                    ParseNodeKind::ClassMethod)));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   UnaryNodeType newYieldStarExpression(uint32_t begin, Node value) {
     TokenPos pos(begin, value->pn_pos.end);
     return new_<UnaryNode>(ParseNodeKind::YieldStar, pos, value);
   }
+||||||| merged common ancestors
+    bool isUnparenthesizedUnaryExpression(Node node) {
+        if (!node->isInParens()) {
+            ParseNodeKind kind = node->getKind();
+            return kind == ParseNodeKind::Void ||
+                   kind == ParseNodeKind::Not ||
+                   kind == ParseNodeKind::BitNot ||
+                   kind == ParseNodeKind::Pos ||
+                   kind == ParseNodeKind::Neg ||
+                   IsTypeofKind(kind) ||
+                   IsDeleteKind(kind);
+        }
+        return false;
+    }
+=======
+    addList(/* list = */ memberList, /* kid = */ member);
+    return true;
+  }
 
+  void deleteConstructorScope(JSContext* cx, ListNodeType memberList) {
+    for (ParseNode* member : memberList->contents()) {
+      if (member->is<LexicalScopeNode>()) {
+        LexicalScopeNode* node = &member->as<LexicalScopeNode>();
+        MOZ_ASSERT(node->scopeBody()->isKind(ParseNodeKind::ClassMethod));
+        MOZ_ASSERT(node->scopeBody()->as<ClassMethod>().method().syntaxKind() ==
+                       FunctionSyntaxKind::ClassConstructor ||
+                   node->scopeBody()->as<ClassMethod>().method().syntaxKind() ==
+                       FunctionSyntaxKind::DerivedClassConstructor);
+        // Check isEmptyScope instead of asserting, because this function must
+        // be idempotent: when parsing via asm.js, this function is called, then
+        // later, after asm.js parsing fails, this function is called again on
+        // the same scope. (See bug 1555979)
+        if (!node->isEmptyScope()) {
+          MOZ_ASSERT(node->scopeBindings()->length == 1);
+          MOZ_ASSERT(node->scopeBindings()->trailingNames[0].name() ==
+                     cx->names().dotInitializers);
+          node->clearScopeBindings();
+        }
+      }
+    }
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   UnaryNodeType newAwaitExpression(uint32_t begin, Node value) {
     TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
     return new_<UnaryNode>(ParseNodeKind::Await, pos, value);
   }
+||||||| merged common ancestors
+    bool isReturnStatement(Node node) {
+        return node->isKind(ParseNodeKind::Return);
+    }
+=======
+  UnaryNodeType newInitialYieldExpression(uint32_t begin, Node gen) {
+    TokenPos pos(begin, begin + 1);
+    return new_<UnaryNode>(ParseNodeKind::InitialYield, pos, gen);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   // Statements
+||||||| merged common ancestors
+    bool isStatementPermittedAfterReturnStatement(Node node) {
+        ParseNodeKind kind = node->getKind();
+        return kind == ParseNodeKind::Function ||
+               kind == ParseNodeKind::Var ||
+               kind == ParseNodeKind::Break ||
+               kind == ParseNodeKind::Throw ||
+               kind == ParseNodeKind::EmptyStatement;
+    }
+=======
+  UnaryNodeType newYieldExpression(uint32_t begin, Node value) {
+    TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
+    return new_<UnaryNode>(ParseNodeKind::YieldExpr, pos, value);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   ListNodeType newStatementList(const TokenPos& pos) {
     return new_<ListNode>(ParseNodeKind::StatementList, pos);
   }
+||||||| merged common ancestors
+    bool isSuperBase(Node node) {
+        return node->isKind(ParseNodeKind::SuperBase);
+    }
+=======
+  UnaryNodeType newYieldStarExpression(uint32_t begin, Node value) {
+    TokenPos pos(begin, value->pn_pos.end);
+    return new_<UnaryNode>(ParseNodeKind::YieldStarExpr, pos, value);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool isFunctionStmt(Node stmt) {
     while (stmt->isKind(ParseNodeKind::Label)) {
       stmt = stmt->as<LabeledStatement>().statement();
     }
     return stmt->isKind(ParseNodeKind::Function);
   }
+||||||| merged common ancestors
+    bool isUsableAsObjectPropertyName(Node node) {
+        return node->isKind(ParseNodeKind::Number)
+            || node->isKind(ParseNodeKind::ObjectPropertyName)
+            || node->isKind(ParseNodeKind::String)
+            || node->isKind(ParseNodeKind::ComputedName);
+    }
+=======
+  UnaryNodeType newAwaitExpression(uint32_t begin, Node value) {
+    TokenPos pos(begin, value ? value->pn_pos.end : begin + 1);
+    return new_<UnaryNode>(ParseNodeKind::AwaitExpr, pos, value);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   void addStatementToList(ListNodeType list, Node stmt) {
     MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+||||||| merged common ancestors
+    inline MOZ_MUST_USE bool finishInitializerAssignment(NameNodeType nameNode, Node init);
+=======
+  // Statements
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     addList(/* list = */ list, /* kid = */ stmt);
+||||||| merged common ancestors
+    void setBeginPosition(Node pn, Node oth) {
+        setBeginPosition(pn, oth->pn_pos.begin);
+    }
+    void setBeginPosition(Node pn, uint32_t begin) {
+        pn->pn_pos.begin = begin;
+        MOZ_ASSERT(pn->pn_pos.begin <= pn->pn_pos.end);
+    }
+=======
+  ListNodeType newStatementList(const TokenPos& pos) {
+    return new_<ListNode>(ParseNodeKind::StatementList, pos);
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
+    if (isFunctionStmt(stmt)) {
+      // Notify the emitter that the block contains body-level function
+      // definitions that should be processed before the rest of nodes.
+      list->setHasTopLevelFunctionDeclarations();
+||||||| merged common ancestors
+    void setEndPosition(Node pn, Node oth) {
+        setEndPosition(pn, oth->pn_pos.end);
+    }
+    void setEndPosition(Node pn, uint32_t end) {
+        pn->pn_pos.end = end;
+        MOZ_ASSERT(pn->pn_pos.begin <= pn->pn_pos.end);
+=======
+  MOZ_MUST_USE bool isFunctionStmt(Node stmt) {
+    while (stmt->isKind(ParseNodeKind::LabelStmt)) {
+      stmt = stmt->as<LabeledStatement>().statement();
+>>>>>>> upstream-releases
+    }
+<<<<<<< HEAD
+  }
+||||||| merged common ancestors
+=======
+    return stmt->is<FunctionNode>();
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void setListEndPosition(ListNodeType list, const TokenPos& pos) {
+    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+    list->pn_pos.end = pos.end;
+  }
+||||||| merged common ancestors
+    uint32_t getFunctionNameOffset(Node func, TokenStreamAnyChars& ts) {
+        return func->pn_pos.begin;
+    }
+=======
+  void addStatementToList(ListNodeType list, Node stmt) {
+    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  void addCaseStatementToList(ListNodeType list, CaseClauseType caseClause) {
+    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+||||||| merged common ancestors
+    bool isDeclarationKind(ParseNodeKind kind) {
+        return kind == ParseNodeKind::Var ||
+               kind == ParseNodeKind::Let ||
+               kind == ParseNodeKind::Const;
+    }
+=======
+    addList(/* list = */ list, /* kid = */ stmt);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    addList(/* list = */ list, /* kid = */ caseClause);
+||||||| merged common ancestors
+    ListNodeType newList(ParseNodeKind kind, const TokenPos& pos) {
+        MOZ_ASSERT(!isDeclarationKind(kind));
+        return new_<ListNode>(kind, JSOP_NOP, pos);
+    }
+=======
     if (isFunctionStmt(stmt)) {
       // Notify the emitter that the block contains body-level function
       // definitions that should be processed before the rest of nodes.
       list->setHasTopLevelFunctionDeclarations();
     }
   }
+>>>>>>> upstream-releases
 
-  void setListEndPosition(ListNodeType list, const TokenPos& pos) {
-    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
-    list->pn_pos.end = pos.end;
-  }
-
-  void addCaseStatementToList(ListNodeType list, CaseClauseType caseClause) {
-    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
-
-    addList(/* list = */ list, /* kid = */ caseClause);
-
+<<<<<<< HEAD
     if (caseClause->statementList()->hasTopLevelFunctionDeclarations()) {
       list->setHasTopLevelFunctionDeclarations();
     }
   }
+||||||| merged common ancestors
+  public:
+    ListNodeType newList(ParseNodeKind kind, Node kid) {
+        MOZ_ASSERT(!isDeclarationKind(kind));
+        return new_<ListNode>(kind, JSOP_NOP, kid);
+    }
+=======
+  void setListEndPosition(ListNodeType list, const TokenPos& pos) {
+    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+    list->pn_pos.end = pos.end;
+  }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   MOZ_MUST_USE bool prependInitialYield(ListNodeType stmtList, Node genName) {
     MOZ_ASSERT(stmtList->isKind(ParseNodeKind::StatementList));
+||||||| merged common ancestors
+    ListNodeType newDeclarationList(ParseNodeKind kind, const TokenPos& pos) {
+        MOZ_ASSERT(isDeclarationKind(kind));
+        return new_<ListNode>(kind, JSOP_NOP, pos);
+    }
+=======
+  void addCaseStatementToList(ListNodeType list, CaseClauseType caseClause) {
+    MOZ_ASSERT(list->isKind(ParseNodeKind::StatementList));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     TokenPos yieldPos(stmtList->pn_pos.begin, stmtList->pn_pos.begin + 1);
     NullaryNode* makeGen =
         new_<NullaryNode>(ParseNodeKind::Generator, yieldPos);
     if (!makeGen) {
       return false;
     }
+||||||| merged common ancestors
+    bool isDeclarationList(Node node) {
+        return isDeclarationKind(node->getKind());
+    }
+=======
+    addList(/* list = */ list, /* kid = */ caseClause);
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     MOZ_ASSERT(genName->getOp() == JSOP_GETNAME);
     genName->setOp(JSOP_SETNAME);
     ParseNode* genInit =
@@ -552,14 +1859,34 @@ class FullParseHandler {
                       /* rhs = */ makeGen);
     if (!genInit) {
       return false;
+||||||| merged common ancestors
+    Node singleBindingFromDeclaration(ListNodeType decl) {
+        MOZ_ASSERT(isDeclarationList(decl));
+        MOZ_ASSERT(decl->count() == 1);
+        return decl->head();
+=======
+    if (caseClause->statementList()->hasTopLevelFunctionDeclarations()) {
+      list->setHasTopLevelFunctionDeclarations();
+>>>>>>> upstream-releases
     }
+  }
 
+<<<<<<< HEAD
     UnaryNode* initialYield =
         newInitialYieldExpression(yieldPos.begin, genInit);
     if (!initialYield) {
       return false;
     }
+||||||| merged common ancestors
+    ListNodeType newCommaExpressionList(Node kid) {
+        return new_<ListNode>(ParseNodeKind::Comma, JSOP_NOP, kid);
+    }
+=======
+  MOZ_MUST_USE bool prependInitialYield(ListNodeType stmtList, Node genName) {
+    MOZ_ASSERT(stmtList->isKind(ParseNodeKind::StatementList));
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     stmtList->prepend(initialYield);
     return true;
   }
@@ -758,10 +2085,65 @@ class FullParseHandler {
     lexicalScope->setScopeBody(catchClause);
     return true;
   }
+||||||| merged common ancestors
+    void addList(ListNodeType list, Node kid) {
+        if (sourceKind_ == SourceKind::Text) {
+            list->append(kid);
+        } else {
+            list->appendWithoutOrderAssumption(kid);
+        }
+    }
 
+    void setOp(Node pn, JSOp op) {
+        pn->setOp(op);
+    }
+    void setListHasNonConstInitializer(ListNodeType literal) {
+        literal->setHasNonConstInitializer();
+    }
+    template <typename NodeType>
+    MOZ_MUST_USE NodeType parenthesize(NodeType node) {
+        node->setInParens(true);
+        return node;
+    }
+    template <typename NodeType>
+    MOZ_MUST_USE NodeType setLikelyIIFE(NodeType node) {
+        return parenthesize(node);
+    }
+    void setInDirectivePrologue(UnaryNodeType exprStmt) {
+        exprStmt->setIsDirectivePrologueMember();
+    }
+=======
+    TokenPos yieldPos(stmtList->pn_pos.begin, stmtList->pn_pos.begin + 1);
+    NullaryNode* makeGen =
+        new_<NullaryNode>(ParseNodeKind::Generator, yieldPos);
+    if (!makeGen) {
+      return false;
+    }
+
+    ParseNode* genInit =
+        newAssignment(ParseNodeKind::AssignExpr, /* lhs = */ genName,
+                      /* rhs = */ makeGen);
+    if (!genInit) {
+      return false;
+    }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   inline MOZ_MUST_USE bool setLastFunctionFormalParameterDefault(
       CodeNodeType funNode, Node defaultValue);
+||||||| merged common ancestors
+    bool isName(Node node) {
+        return node->isKind(ParseNodeKind::Name);
+    }
+=======
+    UnaryNode* initialYield =
+        newInitialYieldExpression(yieldPos.begin, genInit);
+    if (!initialYield) {
+      return false;
+    }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
  private:
   void checkAndSetIsDirectRHSAnonFunction(Node pn) {
     if (IsAnonymousFunctionDefinition(pn)) {
@@ -1028,15 +2410,556 @@ inline bool FullParseHandler::finishInitializerAssignment(NameNodeType nameNode,
                                                           Node init) {
   MOZ_ASSERT(nameNode->isKind(ParseNodeKind::Name));
   MOZ_ASSERT(!nameNode->isInParens());
+||||||| merged common ancestors
+    bool isArgumentsName(Node node, JSContext* cx) {
+        return node->isKind(ParseNodeKind::Name) &&
+               node->as<NameNode>().atom() == cx->names().arguments;
+    }
+
+    bool isEvalName(Node node, JSContext* cx) {
+        return node->isKind(ParseNodeKind::Name) &&
+               node->as<NameNode>().atom() == cx->names().eval;
+    }
+
+    bool isAsyncKeyword(Node node, JSContext* cx) {
+        return node->isKind(ParseNodeKind::Name) &&
+               node->pn_pos.begin + strlen("async") == node->pn_pos.end &&
+               node->as<NameNode>().atom() == cx->names().async;
+    }
+
+    PropertyName* maybeDottedProperty(Node pn) {
+        return pn->is<PropertyAccess>() ? &pn->as<PropertyAccess>().name() : nullptr;
+    }
+    JSAtom* isStringExprStatement(Node pn, TokenPos* pos) {
+        if (pn->is<UnaryNode>()) {
+            UnaryNode* unary = &pn->as<UnaryNode>();
+            if (JSAtom* atom = unary->isStringExprStatement()) {
+                *pos = unary->kid()->pn_pos;
+                return atom;
+            }
+        }
+        return nullptr;
+    }
+
+    void adjustGetToSet(Node node) {
+        node->setOp(node->isOp(JSOP_GETLOCAL) ? JSOP_SETLOCAL : JSOP_SETNAME);
+    }
+
+    bool canSkipLazyInnerFunctions() {
+        return !!lazyOuterFunction_;
+    }
+    bool canSkipLazyClosedOverBindings() {
+        return !!lazyOuterFunction_;
+    }
+    JSFunction* nextLazyInnerFunction() {
+        MOZ_ASSERT(lazyInnerFunctionIndex < lazyOuterFunction_->numInnerFunctions());
+        return lazyOuterFunction_->innerFunctions()[lazyInnerFunctionIndex++];
+    }
+    JSAtom* nextLazyClosedOverBinding() {
+        MOZ_ASSERT(lazyClosedOverBindingIndex < lazyOuterFunction_->numClosedOverBindings());
+        return lazyOuterFunction_->closedOverBindings()[lazyClosedOverBindingIndex++];
+    }
+};
+
+inline bool
+FullParseHandler::setLastFunctionFormalParameterDefault(CodeNodeType funNode, Node defaultValue)
+{
+    MOZ_ASSERT(funNode->isKind(ParseNodeKind::Function));
+    ListNode* body = funNode->body();
+    ParseNode* arg = body->last();
+    ParseNode* pn = newAssignment(ParseNodeKind::Assign, arg, defaultValue);
+    if (!pn) {
+        return false;
+    }
+
+    body->replaceLast(pn);
+    return true;
+}
+
+inline bool
+FullParseHandler::finishInitializerAssignment(NameNodeType nameNode, Node init)
+{
+    MOZ_ASSERT(nameNode->isKind(ParseNodeKind::Name));
+    MOZ_ASSERT(!nameNode->isInParens());
+=======
+    stmtList->prepend(initialYield);
+    return true;
+  }
+
+  BinaryNodeType newSetThis(Node thisName, Node value) {
+    return newBinary(ParseNodeKind::SetThis, thisName, value);
+  }
+
+  NullaryNodeType newEmptyStatement(const TokenPos& pos) {
+    return new_<NullaryNode>(ParseNodeKind::EmptyStmt, pos);
+  }
+
+  BinaryNodeType newImportDeclaration(Node importSpecSet, Node moduleSpec,
+                                      const TokenPos& pos) {
+    return new_<BinaryNode>(ParseNodeKind::ImportDecl, pos, importSpecSet,
+                            moduleSpec);
+  }
+
+  BinaryNodeType newImportSpec(Node importNameNode, Node bindingName) {
+    return newBinary(ParseNodeKind::ImportSpec, importNameNode, bindingName);
+  }
+
+  UnaryNodeType newExportDeclaration(Node kid, const TokenPos& pos) {
+    return new_<UnaryNode>(ParseNodeKind::ExportStmt, pos, kid);
+  }
+
+  BinaryNodeType newExportFromDeclaration(uint32_t begin, Node exportSpecSet,
+                                          Node moduleSpec) {
+    BinaryNode* decl = new_<BinaryNode>(ParseNodeKind::ExportFromStmt,
+                                        exportSpecSet, moduleSpec);
+    if (!decl) {
+      return nullptr;
+    }
+    decl->pn_pos.begin = begin;
+    return decl;
+  }
+
+  BinaryNodeType newExportDefaultDeclaration(Node kid, Node maybeBinding,
+                                             const TokenPos& pos) {
+    if (maybeBinding) {
+      MOZ_ASSERT(maybeBinding->isKind(ParseNodeKind::Name));
+      MOZ_ASSERT(!maybeBinding->isInParens());
+
+      checkAndSetIsDirectRHSAnonFunction(kid);
+    }
+
+    return new_<BinaryNode>(ParseNodeKind::ExportDefaultStmt, pos, kid,
+                            maybeBinding);
+  }
+
+  BinaryNodeType newExportSpec(Node bindingName, Node exportName) {
+    return newBinary(ParseNodeKind::ExportSpec, bindingName, exportName);
+  }
+
+  NullaryNodeType newExportBatchSpec(const TokenPos& pos) {
+    return new_<NullaryNode>(ParseNodeKind::ExportBatchSpecStmt, pos);
+  }
+
+  BinaryNodeType newImportMeta(NullaryNodeType importHolder,
+                               NullaryNodeType metaHolder) {
+    return new_<BinaryNode>(ParseNodeKind::ImportMetaExpr, importHolder,
+                            metaHolder);
+  }
+
+  BinaryNodeType newCallImport(NullaryNodeType importHolder, Node singleArg) {
+    return new_<BinaryNode>(ParseNodeKind::CallImportExpr, importHolder,
+                            singleArg);
+  }
+
+  UnaryNodeType newExprStatement(Node expr, uint32_t end) {
+    MOZ_ASSERT(expr->pn_pos.end <= end);
+    return new_<UnaryNode>(ParseNodeKind::ExpressionStmt,
+                           TokenPos(expr->pn_pos.begin, end), expr);
+  }
+
+  TernaryNodeType newIfStatement(uint32_t begin, Node cond, Node thenBranch,
+                                 Node elseBranch) {
+    TernaryNode* node =
+        new_<TernaryNode>(ParseNodeKind::IfStmt, cond, thenBranch, elseBranch);
+    if (!node) {
+      return nullptr;
+    }
+    node->pn_pos.begin = begin;
+    return node;
+  }
+
+  BinaryNodeType newDoWhileStatement(Node body, Node cond,
+                                     const TokenPos& pos) {
+    return new_<BinaryNode>(ParseNodeKind::DoWhileStmt, pos, body, cond);
+  }
+
+  BinaryNodeType newWhileStatement(uint32_t begin, Node cond, Node body) {
+    TokenPos pos(begin, body->pn_pos.end);
+    return new_<BinaryNode>(ParseNodeKind::WhileStmt, pos, cond, body);
+  }
+
+  ForNodeType newForStatement(uint32_t begin, TernaryNodeType forHead,
+                              Node body, unsigned iflags) {
+    return new_<ForNode>(TokenPos(begin, body->pn_pos.end), forHead, body,
+                         iflags);
+  }
+
+  TernaryNodeType newForHead(Node init, Node test, Node update,
+                             const TokenPos& pos) {
+    return new_<TernaryNode>(ParseNodeKind::ForHead, init, test, update, pos);
+  }
+
+  TernaryNodeType newForInOrOfHead(ParseNodeKind kind, Node target,
+                                   Node iteratedExpr, const TokenPos& pos) {
+    MOZ_ASSERT(kind == ParseNodeKind::ForIn || kind == ParseNodeKind::ForOf);
+    return new_<TernaryNode>(kind, target, nullptr, iteratedExpr, pos);
+  }
+
+  SwitchStatementType newSwitchStatement(
+      uint32_t begin, Node discriminant,
+      LexicalScopeNodeType lexicalForCaseList, bool hasDefault) {
+    return new_<SwitchStatement>(begin, discriminant, lexicalForCaseList,
+                                 hasDefault);
+  }
+
+  CaseClauseType newCaseOrDefault(uint32_t begin, Node expr, Node body) {
+    return new_<CaseClause>(expr, body, begin);
+  }
+
+  ContinueStatementType newContinueStatement(PropertyName* label,
+                                             const TokenPos& pos) {
+    return new_<ContinueStatement>(label, pos);
+  }
+
+  BreakStatementType newBreakStatement(PropertyName* label,
+                                       const TokenPos& pos) {
+    return new_<BreakStatement>(label, pos);
+  }
+
+  UnaryNodeType newReturnStatement(Node expr, const TokenPos& pos) {
+    MOZ_ASSERT_IF(expr, pos.encloses(expr->pn_pos));
+    return new_<UnaryNode>(ParseNodeKind::ReturnStmt, pos, expr);
+  }
+
+  UnaryNodeType newExpressionBody(Node expr) {
+    return new_<UnaryNode>(ParseNodeKind::ReturnStmt, expr->pn_pos, expr);
+  }
+
+  BinaryNodeType newWithStatement(uint32_t begin, Node expr, Node body) {
+    return new_<BinaryNode>(ParseNodeKind::WithStmt,
+                            TokenPos(begin, body->pn_pos.end), expr, body);
+  }
+
+  LabeledStatementType newLabeledStatement(PropertyName* label, Node stmt,
+                                           uint32_t begin) {
+    return new_<LabeledStatement>(label, stmt, begin);
+  }
+
+  UnaryNodeType newThrowStatement(Node expr, const TokenPos& pos) {
+    MOZ_ASSERT(pos.encloses(expr->pn_pos));
+    return new_<UnaryNode>(ParseNodeKind::ThrowStmt, pos, expr);
+  }
+
+  TernaryNodeType newTryStatement(uint32_t begin, Node body,
+                                  LexicalScopeNodeType catchScope,
+                                  Node finallyBlock) {
+    return new_<TryNode>(begin, body, catchScope, finallyBlock);
+  }
+
+  DebuggerStatementType newDebuggerStatement(const TokenPos& pos) {
+    return new_<DebuggerStatement>(pos);
+  }
+
+  NameNodeType newPropertyName(PropertyName* name, const TokenPos& pos) {
+    return new_<NameNode>(ParseNodeKind::PropertyNameExpr, name, pos);
+  }
+
+  PropertyAccessType newPropertyAccess(Node expr, NameNodeType key) {
+    return new_<PropertyAccess>(expr, key, expr->pn_pos.begin, key->pn_pos.end);
+  }
+
+  PropertyByValueType newPropertyByValue(Node lhs, Node index, uint32_t end) {
+    return new_<PropertyByValue>(lhs, index, lhs->pn_pos.begin, end);
+  }
+
+  bool setupCatchScope(LexicalScopeNodeType lexicalScope, Node catchName,
+                       Node catchBody) {
+    BinaryNode* catchClause;
+    if (catchName) {
+      catchClause =
+          new_<BinaryNode>(ParseNodeKind::Catch, catchName, catchBody);
+    } else {
+      catchClause = new_<BinaryNode>(ParseNodeKind::Catch, catchBody->pn_pos,
+                                     catchName, catchBody);
+    }
+    if (!catchClause) {
+      return false;
+    }
+    lexicalScope->setScopeBody(catchClause);
+    return true;
+  }
+
+  inline MOZ_MUST_USE bool setLastFunctionFormalParameterDefault(
+      FunctionNodeType funNode, Node defaultValue);
+
+  void checkAndSetIsDirectRHSAnonFunction(Node pn) {
+    if (IsAnonymousFunctionDefinition(pn)) {
+      pn->setDirectRHSAnonFunction(true);
+    }
+  }
+
+  FunctionNodeType newFunction(FunctionSyntaxKind syntaxKind,
+                               const TokenPos& pos) {
+    return new_<FunctionNode>(syntaxKind, pos);
+  }
+
+  BinaryNodeType newObjectMethodOrPropertyDefinition(Node key, Node value,
+                                                     AccessorType atype) {
+    MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+
+    return new_<PropertyDefinition>(key, value, atype);
+  }
+
+  BinaryNodeType newShorthandPropertyDefinition(Node key, Node value) {
+    MOZ_ASSERT(isUsableAsObjectPropertyName(key));
+
+    return newBinary(ParseNodeKind::Shorthand, key, value);
+  }
+
+  ListNodeType newParamsBody(const TokenPos& pos) {
+    return new_<ListNode>(ParseNodeKind::ParamsBody, pos);
+  }
+
+  void setFunctionFormalParametersAndBody(FunctionNodeType funNode,
+                                          ListNodeType paramsBody) {
+    MOZ_ASSERT_IF(paramsBody, paramsBody->isKind(ParseNodeKind::ParamsBody));
+    funNode->setBody(paramsBody);
+  }
+  void setFunctionBox(FunctionNodeType funNode, FunctionBox* funbox) {
+    funNode->setFunbox(funbox);
+    funbox->functionNode = funNode;
+  }
+  void addFunctionFormalParameter(FunctionNodeType funNode, Node argpn) {
+    addList(/* list = */ funNode->body(), /* kid = */ argpn);
+  }
+  void setFunctionBody(FunctionNodeType funNode, LexicalScopeNodeType body) {
+    MOZ_ASSERT(funNode->body()->isKind(ParseNodeKind::ParamsBody));
+    addList(/* list = */ funNode->body(), /* kid = */ body);
+  }
+
+  ModuleNodeType newModule(const TokenPos& pos) {
+    return new_<ModuleNode>(pos);
+  }
+
+  LexicalScopeNodeType newLexicalScope(LexicalScope::Data* bindings,
+                                       Node body) {
+    return new_<LexicalScopeNode>(bindings, body);
+  }
+
+  CallNodeType newNewExpression(uint32_t begin, Node ctor, Node args,
+                                bool isSpread) {
+    return new_<CallNode>(ParseNodeKind::NewExpr,
+                          isSpread ? JSOP_SPREADNEW : JSOP_NEW,
+                          TokenPos(begin, args->pn_pos.end), ctor, args);
+  }
+
+  AssignmentNodeType newAssignment(ParseNodeKind kind, Node lhs, Node rhs) {
+    if ((kind == ParseNodeKind::AssignExpr ||
+         kind == ParseNodeKind::InitExpr) &&
+        lhs->isKind(ParseNodeKind::Name) && !lhs->isInParens()) {
+      checkAndSetIsDirectRHSAnonFunction(rhs);
+    }
+
+    return new_<AssignmentNode>(kind, lhs, rhs);
+  }
+
+  bool isUnparenthesizedAssignment(Node node) {
+    if ((node->isKind(ParseNodeKind::AssignExpr)) && !node->isInParens()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool isUnparenthesizedUnaryExpression(Node node) {
+    if (!node->isInParens()) {
+      ParseNodeKind kind = node->getKind();
+      return kind == ParseNodeKind::VoidExpr ||
+             kind == ParseNodeKind::NotExpr ||
+             kind == ParseNodeKind::BitNotExpr ||
+             kind == ParseNodeKind::PosExpr || kind == ParseNodeKind::NegExpr ||
+             IsTypeofKind(kind) || IsDeleteKind(kind);
+    }
+    return false;
+  }
+
+  bool isReturnStatement(Node node) {
+    return node->isKind(ParseNodeKind::ReturnStmt);
+  }
+
+  bool isStatementPermittedAfterReturnStatement(Node node) {
+    ParseNodeKind kind = node->getKind();
+    return kind == ParseNodeKind::Function || kind == ParseNodeKind::VarStmt ||
+           kind == ParseNodeKind::BreakStmt ||
+           kind == ParseNodeKind::ThrowStmt || kind == ParseNodeKind::EmptyStmt;
+  }
+
+  bool isSuperBase(Node node) { return node->isKind(ParseNodeKind::SuperBase); }
+
+  bool isUsableAsObjectPropertyName(Node node) {
+    return node->isKind(ParseNodeKind::NumberExpr) ||
+           node->isKind(ParseNodeKind::ObjectPropertyName) ||
+           node->isKind(ParseNodeKind::StringExpr) ||
+           node->isKind(ParseNodeKind::ComputedName);
+  }
+
+  AssignmentNodeType finishInitializerAssignment(NameNodeType nameNode,
+                                                 Node init) {
+    MOZ_ASSERT(nameNode->isKind(ParseNodeKind::Name));
+    MOZ_ASSERT(!nameNode->isInParens());
+>>>>>>> upstream-releases
 
   checkAndSetIsDirectRHSAnonFunction(init);
 
+<<<<<<< HEAD
   nameNode->setInitializer(init);
   nameNode->setOp(JSOP_SETNAME);
+||||||| merged common ancestors
+    nameNode->setInitializer(init);
+    nameNode->setOp(JSOP_SETNAME);
+=======
+    return newAssignment(ParseNodeKind::AssignExpr, nameNode, init);
+  }
 
+  void setBeginPosition(Node pn, Node oth) {
+    setBeginPosition(pn, oth->pn_pos.begin);
+  }
+  void setBeginPosition(Node pn, uint32_t begin) {
+    pn->pn_pos.begin = begin;
+    MOZ_ASSERT(pn->pn_pos.begin <= pn->pn_pos.end);
+  }
+
+  void setEndPosition(Node pn, Node oth) {
+    setEndPosition(pn, oth->pn_pos.end);
+  }
+  void setEndPosition(Node pn, uint32_t end) {
+    pn->pn_pos.end = end;
+    MOZ_ASSERT(pn->pn_pos.begin <= pn->pn_pos.end);
+  }
+
+  uint32_t getFunctionNameOffset(Node func, TokenStreamAnyChars& ts) {
+    return func->pn_pos.begin;
+  }
+
+  bool isDeclarationKind(ParseNodeKind kind) {
+    return kind == ParseNodeKind::VarStmt || kind == ParseNodeKind::LetDecl ||
+           kind == ParseNodeKind::ConstDecl;
+  }
+
+  ListNodeType newList(ParseNodeKind kind, const TokenPos& pos) {
+    MOZ_ASSERT(!isDeclarationKind(kind));
+    return new_<ListNode>(kind, pos);
+  }
+
+ public:
+  ListNodeType newList(ParseNodeKind kind, Node kid) {
+    MOZ_ASSERT(!isDeclarationKind(kind));
+    return new_<ListNode>(kind, kid);
+  }
+
+  ListNodeType newDeclarationList(ParseNodeKind kind, const TokenPos& pos) {
+    MOZ_ASSERT(isDeclarationKind(kind));
+    return new_<ListNode>(kind, pos);
+  }
+
+  bool isDeclarationList(Node node) {
+    return isDeclarationKind(node->getKind());
+  }
+
+  Node singleBindingFromDeclaration(ListNodeType decl) {
+    MOZ_ASSERT(isDeclarationList(decl));
+    MOZ_ASSERT(decl->count() == 1);
+    return decl->head();
+  }
+
+  ListNodeType newCommaExpressionList(Node kid) {
+    return new_<ListNode>(ParseNodeKind::CommaExpr, kid);
+  }
+
+  void addList(ListNodeType list, Node kid) {
+    if (sourceKind_ == SourceKind::Text) {
+      list->append(kid);
+    } else {
+      list->appendWithoutOrderAssumption(kid);
+    }
+  }
+
+  void setListHasNonConstInitializer(ListNodeType literal) {
+    literal->setHasNonConstInitializer();
+  }
+  template <typename NodeType>
+  MOZ_MUST_USE NodeType parenthesize(NodeType node) {
+    node->setInParens(true);
+    return node;
+  }
+  template <typename NodeType>
+  MOZ_MUST_USE NodeType setLikelyIIFE(NodeType node) {
+    return parenthesize(node);
+  }
+  void setInDirectivePrologue(UnaryNodeType exprStmt) {
+    exprStmt->setIsDirectivePrologueMember();
+  }
+
+  bool isName(Node node) { return node->isKind(ParseNodeKind::Name); }
+
+  bool isArgumentsName(Node node, JSContext* cx) {
+    return node->isKind(ParseNodeKind::Name) &&
+           node->as<NameNode>().atom() == cx->names().arguments;
+  }
+
+  bool isEvalName(Node node, JSContext* cx) {
+    return node->isKind(ParseNodeKind::Name) &&
+           node->as<NameNode>().atom() == cx->names().eval;
+  }
+
+  bool isAsyncKeyword(Node node, JSContext* cx) {
+    return node->isKind(ParseNodeKind::Name) &&
+           node->pn_pos.begin + strlen("async") == node->pn_pos.end &&
+           node->as<NameNode>().atom() == cx->names().async;
+  }
+
+  PropertyName* maybeDottedProperty(Node pn) {
+    return pn->is<PropertyAccess>() ? &pn->as<PropertyAccess>().name()
+                                    : nullptr;
+  }
+  JSAtom* isStringExprStatement(Node pn, TokenPos* pos) {
+    if (pn->is<UnaryNode>()) {
+      UnaryNode* unary = &pn->as<UnaryNode>();
+      if (JSAtom* atom = unary->isStringExprStatement()) {
+        *pos = unary->kid()->pn_pos;
+        return atom;
+      }
+    }
+    return nullptr;
+  }
+
+  bool canSkipLazyInnerFunctions() { return !!lazyOuterFunction_; }
+  bool canSkipLazyClosedOverBindings() { return !!lazyOuterFunction_; }
+  JSFunction* nextLazyInnerFunction() {
+    MOZ_ASSERT(lazyInnerFunctionIndex <
+               lazyOuterFunction_->numInnerFunctions());
+    return lazyOuterFunction_->innerFunctions()[lazyInnerFunctionIndex++];
+  }
+  JSAtom* nextLazyClosedOverBinding() {
+    MOZ_ASSERT(lazyClosedOverBindingIndex <
+               lazyOuterFunction_->numClosedOverBindings());
+    return lazyOuterFunction_
+        ->closedOverBindings()[lazyClosedOverBindingIndex++];
+  }
+};
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   /* The declarator's position must include the initializer. */
   nameNode->pn_pos.end = init->pn_pos.end;
   return true;
+||||||| merged common ancestors
+    /* The declarator's position must include the initializer. */
+    nameNode->pn_pos.end = init->pn_pos.end;
+    return true;
+=======
+inline bool FullParseHandler::setLastFunctionFormalParameterDefault(
+    FunctionNodeType funNode, Node defaultValue) {
+  ListNode* body = funNode->body();
+  ParseNode* arg = body->last();
+  ParseNode* pn = newAssignment(ParseNodeKind::AssignExpr, arg, defaultValue);
+  if (!pn) {
+    return false;
+  }
+
+  body->replaceLast(pn);
+  return true;
+>>>>>>> upstream-releases
 }
 
 }  // namespace frontend

@@ -94,7 +94,13 @@ bool ForInEmitter::emitInitialize() {
   }
 
 #ifdef DEBUG
+<<<<<<< HEAD
   loopDepth_ = bce_->stackDepth;
+||||||| merged common ancestors
+    loopDepth_ = bce_->stackDepth;
+=======
+  loopDepth_ = bce_->bytecodeSection().stackDepth();
+>>>>>>> upstream-releases
 #endif
   MOZ_ASSERT(loopDepth_ >= 2);
 
@@ -112,8 +118,16 @@ bool ForInEmitter::emitInitialize() {
 bool ForInEmitter::emitBody() {
   MOZ_ASSERT(state_ == State::Initialize);
 
+<<<<<<< HEAD
   MOZ_ASSERT(bce_->stackDepth == loopDepth_,
              "iterator and iterval must be left on the stack");
+||||||| merged common ancestors
+    MOZ_ASSERT(bce_->stackDepth == loopDepth_,
+               "iterator and iterval must be left on the stack");
+=======
+  MOZ_ASSERT(bce_->bytecodeSection().stackDepth() == loopDepth_,
+             "iterator and iterval must be left on the stack");
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::Body;
@@ -121,6 +135,7 @@ bool ForInEmitter::emitBody() {
   return true;
 }
 
+<<<<<<< HEAD
 bool ForInEmitter::emitEnd(const Maybe<uint32_t>& forPos) {
   MOZ_ASSERT(state_ == State::Body);
 
@@ -182,6 +197,129 @@ bool ForInEmitter::emitEnd(const Maybe<uint32_t>& forPos) {
   }
 
   loopInfo_.reset();
+||||||| merged common ancestors
+bool
+ForInEmitter::emitEnd(const Maybe<uint32_t>& forPos)
+{
+    MOZ_ASSERT(state_ == State::Body);
+
+    loopInfo_->setContinueTarget(bce_->offset());
+
+    if (forPos) {
+        // Make sure this code is attributed to the "for".
+        if (!bce_->updateSourceCoordNotes(*forPos)) {
+            return false;
+        }
+    }
+
+    if (!loopInfo_->emitLoopEntry(bce_, Nothing())) { // ITER ITERVAL
+        return false;
+    }
+    if (!bce_->emit1(JSOP_POP)) {                     // ITER
+        return false;
+    }
+    if (!bce_->emit1(JSOP_MOREITER)) {                // ITER NEXTITERVAL?
+        return false;
+    }
+    if (!bce_->emit1(JSOP_ISNOITER)) {                // ITER NEXTITERVAL? ISNOITER
+        return false;
+    }
+
+    if (!loopInfo_->emitLoopEnd(bce_, JSOP_IFEQ)) {   // ITER NEXTITERVAL
+        return false;
+    }
+
+    // Set the srcnote offset so we can find the closing jump.
+    if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::ForIn::BackJumpOffset,
+                                loopInfo_->loopEndOffsetFromEntryJump()))
+    {
+        return false;
+    }
+
+    if (!loopInfo_->patchBreaksAndContinues(bce_)) {
+        return false;
+    }
+
+    // Pop the enumeration value.
+    if (!bce_->emit1(JSOP_POP)) {                     // ITER
+        return false;
+    }
+
+    if (!bce_->tryNoteList.append(JSTRY_FOR_IN, bce_->stackDepth, loopInfo_->headOffset(),
+                                  bce_->offset()))
+    {
+        return false;
+    }
+
+    if (!bce_->emit1(JSOP_ENDITER)) {                 //
+        return false;
+    }
+
+    loopInfo_.reset();
+=======
+bool ForInEmitter::emitEnd(const Maybe<uint32_t>& forPos) {
+  MOZ_ASSERT(state_ == State::Body);
+
+  loopInfo_->setContinueTarget(bce_->bytecodeSection().offset());
+
+  if (forPos) {
+    // Make sure this code is attributed to the "for".
+    if (!bce_->updateSourceCoordNotes(*forPos)) {
+      return false;
+    }
+  }
+
+  if (!loopInfo_->emitLoopEntry(bce_, Nothing())) {
+    //              [stack] ITER ITERVAL
+    return false;
+  }
+  if (!bce_->emit1(JSOP_POP)) {
+    //              [stack] ITER
+    return false;
+  }
+  if (!bce_->emit1(JSOP_MOREITER)) {
+    //              [stack] ITER NEXTITERVAL?
+    return false;
+  }
+  if (!bce_->emit1(JSOP_ISNOITER)) {
+    //              [stack] ITER NEXTITERVAL? ISNOITER
+    return false;
+  }
+
+  if (!loopInfo_->emitLoopEnd(bce_, JSOP_IFEQ)) {
+    //              [stack] ITER NEXTITERVAL
+    return false;
+  }
+
+  // Set the srcnote offset so we can find the closing jump.
+  if (!bce_->setSrcNoteOffset(noteIndex_, SrcNote::ForIn::BackJumpOffset,
+                              loopInfo_->loopEndOffsetFromEntryJump())) {
+    return false;
+  }
+
+  if (!loopInfo_->patchBreaksAndContinues(bce_)) {
+    return false;
+  }
+
+  // Pop the enumeration value.
+  if (!bce_->emit1(JSOP_POP)) {
+    //              [stack] ITER
+    return false;
+  }
+
+  if (!bce_->addTryNote(JSTRY_FOR_IN, bce_->bytecodeSection().stackDepth(),
+                        loopInfo_->headOffset(),
+                        bce_->bytecodeSection().offset())) {
+    return false;
+  }
+
+  if (!bce_->emit1(JSOP_ENDITER)) {
+    //              [stack]
+    return false;
+  }
+
+  loopInfo_.reset();
+>>>>>>> upstream-releases
 
 #ifdef DEBUG
   state_ = State::End;

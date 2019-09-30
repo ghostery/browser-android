@@ -28,13 +28,20 @@ class nsStreamLoader final : public nsIStreamLoader,
 
   nsStreamLoader();
 
+<<<<<<< HEAD
   static nsresult Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
+||||||| merged common ancestors
+  static nsresult
+  Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
+=======
+  static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
+>>>>>>> upstream-releases
 
  protected:
   ~nsStreamLoader() = default;
 
-  static nsresult WriteSegmentFun(nsIInputStream *, void *, const char *,
-                                  uint32_t, uint32_t, uint32_t *);
+  static nsresult WriteSegmentFun(nsIInputStream*, void*, const char*, uint32_t,
+                                  uint32_t, uint32_t*);
 
   // Utility method to free mData, if present, and update other state to
   // reflect that no data has been allocated.

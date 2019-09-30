@@ -7,8 +7,16 @@
  * https://html.spec.whatwg.org/#messageevent
  */
 
+<<<<<<< HEAD
 [Constructor(DOMString type, optional MessageEventInit eventInitDict),
  Exposed=(Window,Worker)]
+||||||| merged common ancestors
+[Constructor(DOMString type, optional MessageEventInit eventInitDict),
+ Exposed=(Window,Worker,System)]
+=======
+[Constructor(DOMString type, optional MessageEventInit eventInitDict = {}),
+ Exposed=(Window,Worker)]
+>>>>>>> upstream-releases
 interface MessageEvent : Event {
   /**
    * Custom data associated with this event.

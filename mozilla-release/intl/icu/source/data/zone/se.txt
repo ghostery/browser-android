@@ -1,8 +1,32 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 se{
+<<<<<<< HEAD
     Version{"2.1.43.94"}
+||||||| merged common ancestors
+    Version{"2.1.38.69"}
+=======
+    Version{"2.1.48.4"}
+>>>>>>> upstream-releases
     zoneStrings{
+        "America:Curacao"{
+            ec{"Curaçao"}
+        }
+        "America:Merida"{
+            ec{"Mérida"}
+        }
+        "America:Sao_Paulo"{
+            ec{"São Paulo"}
+        }
+        "America:St_Barthelemy"{
+            ec{"Saint Barthélemy"}
+        }
+        "Antarctica:DumontDUrville"{
+            ec{"Dumont d’Urville"}
+        }
+        "Etc:Unknown"{
+            ec{"dovdameahttun áigeavádat"}
+        }
         "meta:Europe_Central"{
             ld{"gaska-Eurohpá geassiáigi"}
             lg{"gaska-Eurohpá áigi"}

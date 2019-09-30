@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsMappedAttributeElement.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 
 bool nsMappedAttributeElement::SetAndSwapMappedAttribute(nsAtom* aName,
                                                          nsAttrValue& aValue,
@@ -25,7 +25,15 @@ nsMappedAttributeElement::GetAttributeMappingFunction() const {
 void nsMappedAttributeElement::MapNoAttributesInto(
     const nsMappedAttributes*, mozilla::MappedDeclarations&) {}
 
+<<<<<<< HEAD
 void nsMappedAttributeElement::NodeInfoChanged(nsIDocument* aOldDoc) {
+||||||| merged common ancestors
+void
+nsMappedAttributeElement::NodeInfoChanged(nsIDocument* aOldDoc)
+{
+=======
+void nsMappedAttributeElement::NodeInfoChanged(Document* aOldDoc) {
+>>>>>>> upstream-releases
   nsHTMLStyleSheet* sheet = OwnerDoc()->GetAttributeStyleSheet();
   mAttrs.SetMappedAttrStyleSheet(sheet);
   nsMappedAttributeElementBase::NodeInfoChanged(aOldDoc);

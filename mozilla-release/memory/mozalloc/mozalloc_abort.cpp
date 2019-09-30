@@ -8,11 +8,25 @@
 #include "mozilla/mozalloc_abort.h"
 
 #ifdef ANDROID
+<<<<<<< HEAD
 #include <android/log.h>
+||||||| merged common ancestors
+# include <android/log.h>
+=======
+#  include <android/log.h>
+>>>>>>> upstream-releases
 #endif
 #ifdef MOZ_WIDGET_ANDROID
+<<<<<<< HEAD
 #include "APKOpen.h"
 #include "dlfcn.h"
+||||||| merged common ancestors
+# include "APKOpen.h"
+# include "dlfcn.h"
+=======
+#  include "APKOpen.h"
+#  include "dlfcn.h"
+>>>>>>> upstream-releases
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -68,6 +82,7 @@ void fillAbortMessage(char (&msg)[N], uintptr_t retAddress) {
 //
 // That segmentation fault will be interpreted as another bug by ASan and as a
 // result, ASan will just exit(1) instead of aborting.
+<<<<<<< HEAD
 extern "C" void abort(void) {
 #ifdef MOZ_WIDGET_ANDROID
   char msg[64] = {};
@@ -75,6 +90,24 @@ extern "C" void abort(void) {
 #else
   const char* const msg = "Redirecting call to abort() to mozalloc_abort\n";
 #endif
+||||||| merged common ancestors
+extern "C" void abort(void)
+{
+#ifdef MOZ_WIDGET_ANDROID
+    char msg[64] = {};
+    fillAbortMessage(msg, uintptr_t(__builtin_return_address(0)));
+#else
+    const char* const msg = "Redirecting call to abort() to mozalloc_abort\n";
+#endif
+=======
+extern "C" void abort(void) {
+#  ifdef MOZ_WIDGET_ANDROID
+  char msg[64] = {};
+  fillAbortMessage(msg, uintptr_t(__builtin_return_address(0)));
+#  else
+  const char* const msg = "Redirecting call to abort() to mozalloc_abort\n";
+#  endif
+>>>>>>> upstream-releases
 
   mozalloc_abort(msg);
 

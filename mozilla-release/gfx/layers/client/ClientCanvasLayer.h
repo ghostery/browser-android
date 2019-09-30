@@ -35,36 +35,93 @@ class ClientCanvasLayer : public CanvasLayer, public ClientLayer {
  protected:
   virtual ~ClientCanvasLayer();
 
+<<<<<<< HEAD
  public:
   virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+||||||| merged common ancestors
+public:
+  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
+  {
+=======
+ public:
+  void SetVisibleRegion(const LayerIntRegion& aRegion) override {
+>>>>>>> upstream-releases
     NS_ASSERTION(ClientManager()->InConstruction(),
                  "Can only set properties in construction phase");
     CanvasLayer::SetVisibleRegion(aRegion);
   }
 
-  virtual void RenderLayer() override;
+  void RenderLayer() override;
 
+<<<<<<< HEAD
   virtual void ClearCachedResources() override {
+||||||| merged common ancestors
+  virtual void ClearCachedResources() override
+  {
+=======
+  void ClearCachedResources() override {
+>>>>>>> upstream-releases
     mCanvasRenderer->ClearCachedResources();
   }
 
+<<<<<<< HEAD
   virtual void HandleMemoryPressure() override {
+||||||| merged common ancestors
+  virtual void HandleMemoryPressure() override
+  {
+=======
+  void HandleMemoryPressure() override {
+>>>>>>> upstream-releases
     mCanvasRenderer->ClearCachedResources();
   }
 
+<<<<<<< HEAD
   virtual void FillSpecificAttributes(
       SpecificLayerAttributes& aAttrs) override {
+||||||| merged common ancestors
+  virtual void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override
+  {
+=======
+  void FillSpecificAttributes(SpecificLayerAttributes& aAttrs) override {
+>>>>>>> upstream-releases
     aAttrs = CanvasLayerAttributes(mSamplingFilter, mBounds);
   }
 
+<<<<<<< HEAD
   virtual Layer* AsLayer() override { return this; }
   virtual ShadowableLayer* AsShadowableLayer() override { return this; }
+||||||| merged common ancestors
+  virtual Layer* AsLayer()  override { return this; }
+  virtual ShadowableLayer* AsShadowableLayer()  override { return this; }
+=======
+  Layer* AsLayer() override { return this; }
+  ShadowableLayer* AsShadowableLayer() override { return this; }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual void Disconnect() override { mCanvasRenderer->Destroy(); }
+||||||| merged common ancestors
+  virtual void Disconnect() override
+  {
+    mCanvasRenderer->Destroy();
+  }
+=======
+  void Disconnect() override { mCanvasRenderer->Destroy(); }
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
   virtual CompositableClient* GetCompositableClient() override {
     ClientCanvasRenderer* canvasRenderer =
         mCanvasRenderer->AsClientCanvasRenderer();
+||||||| merged common ancestors
+  virtual CompositableClient* GetCompositableClient() override
+  {
+    ClientCanvasRenderer* canvasRenderer = mCanvasRenderer->AsClientCanvasRenderer();
+=======
+  CompositableClient* GetCompositableClient() override {
+    ClientCanvasRenderer* canvasRenderer =
+        mCanvasRenderer->AsClientCanvasRenderer();
+>>>>>>> upstream-releases
     MOZ_ASSERT(canvasRenderer);
     return canvasRenderer->GetCanvasClient();
   }

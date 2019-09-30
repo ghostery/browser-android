@@ -17,17 +17,49 @@
 namespace mozilla {
 class ByteStream;
 
+<<<<<<< HEAD
 class BoxContext {
  public:
+||||||| merged common ancestors
+class BoxContext
+{
+public:
+=======
+class BumpAllocator {
+ public:
+  uint8_t* Allocate(size_t aNumBytes);
+
+ private:
+  nsTArray<nsTArray<uint8_t>> mBuffers;
+};
+
+class BoxContext {
+ public:
+>>>>>>> upstream-releases
   BoxContext(ByteStream* aSource, const MediaByteRangeSet& aByteRanges)
       : mSource(aSource), mByteRanges(aByteRanges) {}
 
   RefPtr<ByteStream> mSource;
   const MediaByteRangeSet& mByteRanges;
+  BumpAllocator mAllocator;
+};
+
+<<<<<<< HEAD
+class Box {
+ public:
+||||||| merged common ancestors
+class Box
+{
+public:
+=======
+struct ByteSlice {
+  const uint8_t* mBytes;
+  size_t mSize;
 };
 
 class Box {
  public:
+>>>>>>> upstream-releases
   Box(BoxContext* aContext, uint64_t aOffset, const Box* aParent = nullptr);
   Box();
 
@@ -41,12 +73,20 @@ class Box {
 
   Box Next() const;
   Box FirstChild() const;
+  // Reads the box contents, excluding the header.
   nsTArray<uint8_t> Read() const;
+
+  // Reads the complete box; its header and body.
+  nsTArray<uint8_t> ReadCompleteBox() const;
+
+  // Reads from the content of the box, excluding header.
   bool Read(nsTArray<uint8_t>* aDest, const MediaByteRange& aRange) const;
 
   static const uint64_t kMAX_BOX_READ;
 
-  const nsTArray<uint8_t>& Header() const { return mHeader; }
+  // Returns a slice, pointing to the data of this box. The lifetime of
+  // the memory this slice points to matches the box's context's lifetime.
+  ByteSlice ReadAsSlice();
 
  private:
   bool Contains(MediaByteRange aRange) const;
@@ -55,20 +95,51 @@ class Box {
   uint64_t mBodyOffset;
   uint64_t mChildOffset;
   AtomType mType;
-  nsTArray<uint8_t> mHeader;
   const Box* mParent;
 };
 
+<<<<<<< HEAD
 // BoxReader takes a copy of a box contents and serves through an
 // AutoByteReader.
 class MOZ_RAII BoxReader {
  public:
+||||||| merged common ancestors
+// BoxReader takes a copy of a box contents and serves through an AutoByteReader.
+class MOZ_RAII BoxReader
+{
+public:
+=======
+// BoxReader serves box data through an AutoByteReader. The box data is
+// stored either in the box's context's bump allocator, or in the ByteStream
+// itself if the ByteStream implements the Access() method.
+// NOTE: The data the BoxReader reads may be stored in the Box's BoxContext.
+// Ensure that the BoxReader doesn't outlive the BoxContext!
+class MOZ_RAII BoxReader {
+ public:
+>>>>>>> upstream-releases
   explicit BoxReader(Box& aBox)
+<<<<<<< HEAD
       : mBuffer(aBox.Read()), mReader(mBuffer.Elements(), mBuffer.Length()) {}
+||||||| merged common ancestors
+    : mBuffer(aBox.Read())
+    , mReader(mBuffer.Elements(), mBuffer.Length())
+  {
+  }
+=======
+      : mData(aBox.ReadAsSlice()), mReader(mData.mBytes, mData.mSize) {}
+>>>>>>> upstream-releases
   BufferReader* operator->() { return &mReader; }
 
+<<<<<<< HEAD
  private:
   nsTArray<uint8_t> mBuffer;
+||||||| merged common ancestors
+private:
+  nsTArray<uint8_t> mBuffer;
+=======
+ private:
+  ByteSlice mData;
+>>>>>>> upstream-releases
   BufferReader mReader;
 };
 }  // namespace mozilla

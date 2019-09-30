@@ -11,7 +11,13 @@
 
 NS_IMPL_ISUPPORTS(nsCacheSession, nsICacheSession)
 
+<<<<<<< HEAD
 nsCacheSession::nsCacheSession(const char *clientID,
+||||||| merged common ancestors
+nsCacheSession::nsCacheSession(const char *         clientID,
+=======
+nsCacheSession::nsCacheSession(const char* clientID,
+>>>>>>> upstream-releases
                                nsCacheStoragePolicy storagePolicy,
                                bool streamBased)
     : mClientID(clientID), mInfo(0) {
@@ -32,13 +38,35 @@ nsCacheSession::~nsCacheSession() {
   // notify service we are going away?
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::GetDoomEntriesIfExpired(bool *result) {
   NS_ENSURE_ARG_POINTER(result);
   *result = WillDoomEntriesIfExpired();
   return NS_OK;
+||||||| merged common ancestors
+
+NS_IMETHODIMP nsCacheSession::GetDoomEntriesIfExpired(bool *result)
+{
+    NS_ENSURE_ARG_POINTER(result);
+    *result = WillDoomEntriesIfExpired();
+    return NS_OK;
+=======
+NS_IMETHODIMP nsCacheSession::GetDoomEntriesIfExpired(bool* result) {
+  NS_ENSURE_ARG_POINTER(result);
+  *result = WillDoomEntriesIfExpired();
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::SetProfileDirectory(nsIFile *profileDir) {
+||||||| merged common ancestors
+
+NS_IMETHODIMP nsCacheSession::SetProfileDirectory(nsIFile *profileDir)
+{
+=======
+NS_IMETHODIMP nsCacheSession::SetProfileDirectory(nsIFile* profileDir) {
+>>>>>>> upstream-releases
   if (StoragePolicy() != nsICache::STORE_OFFLINE && profileDir) {
     // Profile directory override is currently implemented only for
     // offline cache.  This is an early failure to prevent the request
@@ -51,11 +79,26 @@ NS_IMETHODIMP nsCacheSession::SetProfileDirectory(nsIFile *profileDir) {
   return NS_OK;
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::GetProfileDirectory(nsIFile **profileDir) {
   if (mProfileDir)
     NS_ADDREF(*profileDir = mProfileDir);
   else
     *profileDir = nullptr;
+||||||| merged common ancestors
+NS_IMETHODIMP nsCacheSession::GetProfileDirectory(nsIFile **profileDir)
+{
+    if (mProfileDir)
+        NS_ADDREF(*profileDir = mProfileDir);
+    else
+        *profileDir = nullptr;
+=======
+NS_IMETHODIMP nsCacheSession::GetProfileDirectory(nsIFile** profileDir) {
+  if (mProfileDir)
+    NS_ADDREF(*profileDir = mProfileDir);
+  else
+    *profileDir = nullptr;
+>>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -70,6 +113,7 @@ NS_IMETHODIMP nsCacheSession::SetDoomEntriesIfExpired(
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsCacheSession::OpenCacheEntry(const nsACString &key,
                                nsCacheAccessMode accessRequested,
                                bool blockingMode,
@@ -84,8 +128,43 @@ nsCacheSession::OpenCacheEntry(const nsACString &key,
                                        nullptr,  // no listener
                                        result);
   return rv;
+||||||| merged common ancestors
+nsCacheSession::OpenCacheEntry(const nsACString &         key,
+                               nsCacheAccessMode          accessRequested,
+                               bool                       blockingMode,
+                               nsICacheEntryDescriptor ** result)
+{
+    nsresult rv;
+
+    if (NS_IsMainThread())
+        rv = NS_ERROR_NOT_AVAILABLE;
+    else
+        rv = nsCacheService::OpenCacheEntry(this,
+                                            key,
+                                            accessRequested,
+                                            blockingMode,
+                                            nullptr, // no listener
+                                            result);
+    return rv;
+=======
+nsCacheSession::OpenCacheEntry(const nsACString& key,
+                               nsCacheAccessMode accessRequested,
+                               bool blockingMode,
+                               nsICacheEntryDescriptor** result) {
+  nsresult rv;
+
+  if (NS_IsMainThread())
+    rv = NS_ERROR_NOT_AVAILABLE;
+  else
+    rv =
+        nsCacheService::OpenCacheEntry(this, key, accessRequested, blockingMode,
+                                       nullptr,  // no listener
+                                       result);
+  return rv;
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::AsyncOpenCacheEntry(
     const nsACString &key, nsCacheAccessMode accessRequested,
     nsICacheListener *listener, bool noWait) {
@@ -93,6 +172,16 @@ NS_IMETHODIMP nsCacheSession::AsyncOpenCacheEntry(
   rv = nsCacheService::OpenCacheEntry(this, key, accessRequested, !noWait,
                                       listener,
                                       nullptr);  // no result
+||||||| merged common ancestors
+=======
+NS_IMETHODIMP nsCacheSession::AsyncOpenCacheEntry(
+    const nsACString& key, nsCacheAccessMode accessRequested,
+    nsICacheListener* listener, bool noWait) {
+  nsresult rv;
+  rv = nsCacheService::OpenCacheEntry(this, key, accessRequested, !noWait,
+                                      listener,
+                                      nullptr);  // no result
+>>>>>>> upstream-releases
 
   if (rv == NS_ERROR_CACHE_WAIT_FOR_VALIDATION) rv = NS_OK;
   return rv;
@@ -102,18 +191,51 @@ NS_IMETHODIMP nsCacheSession::EvictEntries() {
   return nsCacheService::EvictEntriesForSession(this);
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::IsStorageEnabled(bool *result) {
   return nsCacheService::IsStorageEnabledForPolicy(StoragePolicy(), result);
+||||||| merged common ancestors
+
+NS_IMETHODIMP nsCacheSession::IsStorageEnabled(bool *result)
+{
+
+    return nsCacheService::IsStorageEnabledForPolicy(StoragePolicy(), result);
+=======
+NS_IMETHODIMP nsCacheSession::IsStorageEnabled(bool* result) {
+  return nsCacheService::IsStorageEnabledForPolicy(StoragePolicy(), result);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::DoomEntry(const nsACString &key,
                                         nsICacheListener *listener) {
   return nsCacheService::DoomEntry(this, key, listener);
+||||||| merged common ancestors
+NS_IMETHODIMP nsCacheSession::DoomEntry(const nsACString &key,
+                                        nsICacheListener *listener)
+{
+    return nsCacheService::DoomEntry(this, key, listener);
+=======
+NS_IMETHODIMP nsCacheSession::DoomEntry(const nsACString& key,
+                                        nsICacheListener* listener) {
+  return nsCacheService::DoomEntry(this, key, listener);
+>>>>>>> upstream-releases
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP nsCacheSession::GetIsPrivate(bool *aPrivate) {
   *aPrivate = IsPrivate();
   return NS_OK;
+||||||| merged common ancestors
+NS_IMETHODIMP nsCacheSession::GetIsPrivate(bool* aPrivate)
+{
+    *aPrivate = IsPrivate();
+    return NS_OK;
+=======
+NS_IMETHODIMP nsCacheSession::GetIsPrivate(bool* aPrivate) {
+  *aPrivate = IsPrivate();
+  return NS_OK;
+>>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP nsCacheSession::SetIsPrivate(bool aPrivate) {

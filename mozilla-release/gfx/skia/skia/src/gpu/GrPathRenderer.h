@@ -12,11 +12,19 @@
 #include "SkTArray.h"
 #include "SkRefCnt.h"
 
+<<<<<<< HEAD
 class GrCaps;
 class GrClip;
 class GrContext;
+||||||| merged common ancestors
+class SkPath;
+=======
+class GrCaps;
+class GrClip;
+>>>>>>> upstream-releases
 class GrFixedClip;
 class GrHardClip;
+<<<<<<< HEAD
 class GrPaint;
 class GrRenderTargetContext;
 class GrShape;
@@ -25,6 +33,19 @@ struct GrUserStencilSettings;
 struct SkIRect;
 class SkMatrix;
 class SkPath;
+||||||| merged common ancestors
+struct GrPoint;
+=======
+class GrPaint;
+class GrRecordingContext;
+class GrRenderTargetContext;
+class GrShape;
+class GrStyle;
+struct GrUserStencilSettings;
+struct SkIRect;
+class SkMatrix;
+class SkPath;
+>>>>>>> upstream-releases
 
 /**
  *  Base class for drawing paths into a GrOpList.
@@ -80,8 +101,9 @@ public:
         const SkMatrix*             fViewMatrix;
         const GrShape*              fShape;
         GrAAType                    fAAType;
+        bool                        fTargetIsWrappedVkSecondaryCB;
 
-        // These next two are only used by GrStencilAndCoverPathRenderer
+        // This is only used by GrStencilAndCoverPathRenderer
         bool                        fHasUserStencilSettings;
 
 #ifdef SK_DEBUG
@@ -105,7 +127,7 @@ public:
     }
 
     struct DrawPathArgs {
-        GrContext*                   fContext;
+        GrRecordingContext*          fContext;
         GrPaint&&                    fPaint;
         const GrUserStencilSettings* fUserStencilSettings;
         GrRenderTargetContext*       fRenderTargetContext;
@@ -139,7 +161,7 @@ public:
     struct StencilPathArgs {
         SkDEBUGCODE(StencilPathArgs() { memset(this, 0, sizeof(*this)); }) // For validation.
 
-        GrContext*             fContext;
+        GrRecordingContext*    fContext;
         GrRenderTargetContext* fRenderTargetContext;
         const GrHardClip*      fClip;
         const SkIRect*         fClipConservativeBounds;

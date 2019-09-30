@@ -12,6 +12,7 @@
 #include "mozilla/Preferences.h"
 #include "nsContentUtils.h"
 #include "nsIPrincipal.h"
+#include "nsIWebProgressListener.h"
 #include "nsPIDOMWindow.h"
 
 #define DATASET                                          \
@@ -33,15 +34,34 @@ SessionStorage::SessionStorage(nsPIDOMWindowInner* aWindow,
                                nsIPrincipal* aPrincipal,
                                SessionStorageCache* aCache,
                                SessionStorageManager* aManager,
+<<<<<<< HEAD
                                const nsAString& aDocumentURI, bool aIsPrivate)
     : Storage(aWindow, aPrincipal),
       mCache(aCache),
       mManager(aManager),
       mDocumentURI(aDocumentURI),
       mIsPrivate(aIsPrivate) {
+||||||| merged common ancestors
+                               const nsAString& aDocumentURI,
+                               bool aIsPrivate)
+  : Storage(aWindow, aPrincipal)
+  , mCache(aCache)
+  , mManager(aManager)
+  , mDocumentURI(aDocumentURI)
+  , mIsPrivate(aIsPrivate)
+{
+=======
+                               const nsAString& aDocumentURI, bool aIsPrivate)
+    : Storage(aWindow, aPrincipal, aPrincipal),
+      mCache(aCache),
+      mManager(aManager),
+      mDocumentURI(aDocumentURI),
+      mIsPrivate(aIsPrivate) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aCache);
 }
 
+<<<<<<< HEAD
 SessionStorage::~SessionStorage() {}
 
 already_AddRefed<SessionStorage> SessionStorage::Clone() const {
@@ -50,6 +70,22 @@ already_AddRefed<SessionStorage> SessionStorage::Clone() const {
                          mDocumentURI, mIsPrivate);
   return storage.forget();
 }
+||||||| merged common ancestors
+SessionStorage::~SessionStorage()
+{
+}
+
+already_AddRefed<SessionStorage>
+SessionStorage::Clone() const
+{
+  RefPtr<SessionStorage> storage =
+    new SessionStorage(GetParentObject(), Principal(), mCache, mManager,
+                       mDocumentURI, mIsPrivate);
+  return storage.forget();
+}
+=======
+SessionStorage::~SessionStorage() {}
+>>>>>>> upstream-releases
 
 int64_t SessionStorage::GetOriginQuotaUsage() const {
   return mCache->GetOriginQuotaUsage(DATASET);

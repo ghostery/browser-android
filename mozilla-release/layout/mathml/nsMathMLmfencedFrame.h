@@ -12,6 +12,10 @@
 
 class nsFontMetrics;
 
+namespace mozilla {
+class PresShell;
+}  // namespace mozilla
+
 //
 // <mfenced> -- surround content with a pair of fences
 //
@@ -20,8 +24,15 @@ class nsMathMLmfencedFrame final : public nsMathMLContainerFrame {
  public:
   NS_DECL_FRAMEARENA_HELPERS(nsMathMLmfencedFrame)
 
+<<<<<<< HEAD
   friend nsIFrame* NS_NewMathMLmfencedFrame(nsIPresShell* aPresShell,
                                             ComputedStyle* aStyle);
+||||||| merged common ancestors
+  friend nsIFrame* NS_NewMathMLmfencedFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+=======
+  friend nsIFrame* NS_NewMathMLmfencedFrame(mozilla::PresShell* aPresShell,
+                                            ComputedStyle* aStyle);
+>>>>>>> upstream-releases
 
   void DestroyFrom(nsIFrame* aDestructRoot,
                    PostDestroyData& aPostDestroyData) override;
@@ -76,6 +87,7 @@ class nsMathMLmfencedFrame final : public nsMathMLContainerFrame {
     return true;
   }
 
+<<<<<<< HEAD
  protected:
   explicit nsMathMLmfencedFrame(ComputedStyle* aStyle)
       : nsMathMLContainerFrame(aStyle, kClassID),
@@ -83,6 +95,25 @@ class nsMathMLmfencedFrame final : public nsMathMLContainerFrame {
         mCloseChar(nullptr),
         mSeparatorsChar(nullptr),
         mSeparatorsCount(0) {}
+||||||| merged common ancestors
+protected:
+  explicit nsMathMLmfencedFrame(ComputedStyle* aStyle)
+    : nsMathMLContainerFrame(aStyle, kClassID)
+    , mOpenChar(nullptr)
+    , mCloseChar(nullptr)
+    , mSeparatorsChar(nullptr)
+    , mSeparatorsCount(0)
+  {}
+=======
+ protected:
+  explicit nsMathMLmfencedFrame(ComputedStyle* aStyle,
+                                nsPresContext* aPresContext)
+      : nsMathMLContainerFrame(aStyle, aPresContext, kClassID),
+        mOpenChar(nullptr),
+        mCloseChar(nullptr),
+        mSeparatorsChar(nullptr),
+        mSeparatorsCount(0) {}
+>>>>>>> upstream-releases
 
   nsMathMLChar* mOpenChar;
   nsMathMLChar* mCloseChar;

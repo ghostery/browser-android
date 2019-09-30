@@ -32,9 +32,21 @@ class nsContentDLF final : public nsIDocumentLoaderFactory {
 
   nsresult InitUAStyleSheet();
 
+<<<<<<< HEAD
   typedef already_AddRefed<nsIDocument> (*DocumentCreator)();
   nsresult CreateDocument(const char* aCommand, nsIChannel* aChannel,
                           nsILoadGroup* aLoadGroup, nsIDocShell* aContainer,
+||||||| merged common ancestors
+  typedef already_AddRefed<nsIDocument> (*DocumentCreator)();
+  nsresult CreateDocument(const char* aCommand,
+                          nsIChannel* aChannel,
+                          nsILoadGroup* aLoadGroup,
+                          nsIDocShell* aContainer,
+=======
+  typedef already_AddRefed<mozilla::dom::Document> (*DocumentCreator)();
+  nsresult CreateDocument(const char* aCommand, nsIChannel* aChannel,
+                          nsILoadGroup* aLoadGroup, nsIDocShell* aContainer,
+>>>>>>> upstream-releases
                           DocumentCreator aDocumentCreator,
                           nsIStreamListener** aDocListener,
                           nsIContentViewer** aContentViewer);
@@ -50,9 +62,20 @@ class nsContentDLF final : public nsIDocumentLoaderFactory {
    * principal.  aPrincipal is allowed to be null, in which case the
    * new document will get the about:blank codebase principal.
    */
+<<<<<<< HEAD
   static already_AddRefed<nsIDocument> CreateBlankDocument(
       nsILoadGroup* aLoadGroup, nsIPrincipal* aPrincipal,
       nsDocShell* aContainer);
+||||||| merged common ancestors
+  static already_AddRefed<nsIDocument>
+  CreateBlankDocument(nsILoadGroup* aLoadGroup,
+                      nsIPrincipal* aPrincipal,
+                      nsDocShell* aContainer);
+=======
+  static already_AddRefed<mozilla::dom::Document> CreateBlankDocument(
+      nsILoadGroup* aLoadGroup, nsIPrincipal* aPrincipal,
+      nsIPrincipal* aStoragePrincipal, nsDocShell* aContainer);
+>>>>>>> upstream-releases
 
  private:
   static nsresult EnsureUAStyleSheet();

@@ -32,13 +32,31 @@ void read_procmaps(lul::LUL* aLUL) {
 
     std::string nativePath = lib.GetNativeDebugPath();
 
+<<<<<<< HEAD
 #if defined(GP_OS_android)
+||||||| merged common ancestors
+#   if defined(GP_OS_android)
+=======
+#  if defined(GP_OS_android)
+>>>>>>> upstream-releases
     // We're using faulty.lib.  Use a special-case object mapper.
     AutoObjectMapperFaultyLib mapper(aLUL->mLog);
+<<<<<<< HEAD
 #else
+||||||| merged common ancestors
+#   else
+=======
+#  else
+>>>>>>> upstream-releases
     // We can use the standard POSIX-based mapper.
     AutoObjectMapperPOSIX mapper(aLUL->mLog);
+<<<<<<< HEAD
 #endif
+||||||| merged common ancestors
+#   endif
+=======
+#  endif
+>>>>>>> upstream-releases
 
     // Ask |mapper| to map the object.  Then hand its mapped address
     // to NotifyAfterMap().
@@ -62,9 +80,19 @@ void read_procmaps(lul::LUL* aLUL) {
     // unmaps the object.
   }
 
+<<<<<<< HEAD
 #else
 #error "Unknown platform"
 #endif
+||||||| merged common ancestors
+# else
+#  error "Unknown platform"
+# endif
+=======
+#else
+#  error "Unknown platform"
+#endif
+>>>>>>> upstream-releases
 }
 
 // LUL needs a callback for its logging sink.
@@ -73,5 +101,6 @@ void logging_sink_for_LUL(const char* str) {
   // MOZ_LOG="prof:5"). This is because LUL's logging is much more verbose than
   // the rest of the profiler's logging, which occurs at the Info (3) and Debug
   // (4) levels.
-  MOZ_LOG(gProfilerLog, mozilla::LogLevel::Verbose, ("[%d] %s", getpid(), str));
+  MOZ_LOG(gProfilerLog, mozilla::LogLevel::Verbose,
+          ("[%d] %s", profiler_current_process_id(), str));
 }

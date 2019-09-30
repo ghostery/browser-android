@@ -9,8 +9,20 @@ ChromeUtils.import("resource://testing-common/LoginTestUtils.jsm", this);
 let FormAutofillStorage;
 let OSKeyStore;
 add_task(async function setup() {
+<<<<<<< HEAD
   ({FormAutofillStorage} = ChromeUtils.import("resource://formautofill/FormAutofillStorage.jsm", {}));
   ({OSKeyStore} = ChromeUtils.import("resource://formautofill/OSKeyStore.jsm", {}));
+||||||| merged common ancestors
+  ({FormAutofillStorage} = ChromeUtils.import("resource://formautofill/FormAutofillStorage.jsm", {}));
+=======
+  ({ FormAutofillStorage } = ChromeUtils.import(
+    "resource://formautofill/FormAutofillStorage.jsm",
+    null
+  ));
+  ({ OSKeyStore } = ChromeUtils.import(
+    "resource://formautofill/OSKeyStore.jsm"
+  ));
+>>>>>>> upstream-releases
 });
 
 const TEST_STORE_FILE_NAME = "test-profile.json";
@@ -20,13 +32,14 @@ const CREDIT_CARD_SCHEMA_VERSION = 2;
 
 const ADDRESS_TESTCASES = [
   {
-    description: "The record version is equal to the current version. The migration shouldn't be invoked.",
+    description:
+      "The record version is equal to the current version. The migration shouldn't be invoked.",
     record: {
       guid: "test-guid",
       version: ADDRESS_SCHEMA_VERSION,
       "given-name": "Timothy",
       name: "John", // The cached name field doesn't align "given-name" but it
-                    // won't be recomputed because the migration isn't invoked.
+      // won't be recomputed because the migration isn't invoked.
     },
     expectedResult: {
       guid: "test-guid",
@@ -36,7 +49,8 @@ const ADDRESS_TESTCASES = [
     },
   },
   {
-    description: "The record version is greater than the current version. The migration shouldn't be invoked.",
+    description:
+      "The record version is greater than the current version. The migration shouldn't be invoked.",
     record: {
       guid: "test-guid",
       version: 99,
@@ -51,7 +65,8 @@ const ADDRESS_TESTCASES = [
     },
   },
   {
-    description: "The record version is less than the current version. The migration should be invoked.",
+    description:
+      "The record version is less than the current version. The migration should be invoked.",
     record: {
       guid: "test-guid",
       version: 0,
@@ -66,7 +81,8 @@ const ADDRESS_TESTCASES = [
     },
   },
   {
-    description: "The record version is omitted. The migration should be invoked.",
+    description:
+      "The record version is omitted. The migration should be invoked.",
     record: {
       guid: "test-guid",
       "given-name": "Timothy",
@@ -80,7 +96,8 @@ const ADDRESS_TESTCASES = [
     },
   },
   {
-    description: "The record version is an invalid value. The migration should be invoked.",
+    description:
+      "The record version is an invalid value. The migration should be invoked.",
     record: {
       guid: "test-guid",
       version: "ABCDE",
@@ -95,7 +112,8 @@ const ADDRESS_TESTCASES = [
     },
   },
   {
-    description: "The omitted computed fields should be always recomputed even the record version is up-to-date.",
+    description:
+      "The omitted computed fields should be always recomputed even the record version is up-to-date.",
     record: {
       guid: "test-guid",
       version: ADDRESS_SCHEMA_VERSION,
@@ -129,14 +147,15 @@ const ADDRESS_TESTCASES = [
 
 const CREDIT_CARD_TESTCASES = [
   {
-    description: "The record version is equal to the current version. The migration shouldn't be invoked.",
+    description:
+      "The record version is equal to the current version. The migration shouldn't be invoked.",
     record: {
       guid: "test-guid",
       version: CREDIT_CARD_SCHEMA_VERSION,
       "cc-name": "Timothy",
       "cc-given-name": "John", // The cached "cc-given-name" field doesn't align
-                               // "cc-name" but it won't be recomputed because
-                               // the migration isn't invoked.
+      // "cc-name" but it won't be recomputed because
+      // the migration isn't invoked.
     },
     expectedResult: {
       guid: "test-guid",
@@ -146,7 +165,8 @@ const CREDIT_CARD_TESTCASES = [
     },
   },
   {
-    description: "The record version is greater than the current version. The migration shouldn't be invoked.",
+    description:
+      "The record version is greater than the current version. The migration shouldn't be invoked.",
     record: {
       guid: "test-guid",
       version: 99,
@@ -161,7 +181,8 @@ const CREDIT_CARD_TESTCASES = [
     },
   },
   {
-    description: "The record version is less than the current version. The migration should be invoked.",
+    description:
+      "The record version is less than the current version. The migration should be invoked.",
     record: {
       guid: "test-guid",
       version: 0,
@@ -176,7 +197,8 @@ const CREDIT_CARD_TESTCASES = [
     },
   },
   {
-    description: "The record version is omitted. The migration should be invoked.",
+    description:
+      "The record version is omitted. The migration should be invoked.",
     record: {
       guid: "test-guid",
       "cc-name": "Timothy",
@@ -190,7 +212,8 @@ const CREDIT_CARD_TESTCASES = [
     },
   },
   {
-    description: "The record version is an invalid value. The migration should be invoked.",
+    description:
+      "The record version is an invalid value. The migration should be invoked.",
     record: {
       guid: "test-guid",
       version: "ABCDE",
@@ -205,7 +228,8 @@ const CREDIT_CARD_TESTCASES = [
     },
   },
   {
-    description: "The omitted computed fields should be always recomputed even the record version is up-to-date.",
+    description:
+      "The omitted computed fields should be always recomputed even the record version is up-to-date.",
     record: {
       guid: "test-guid",
       version: CREDIT_CARD_SCHEMA_VERSION,
@@ -251,10 +275,24 @@ add_task(async function test_migrateAddressRecords() {
 
   for (let testcase of ADDRESS_TESTCASES) {
     info(testcase.description);
+<<<<<<< HEAD
     profileStorage._store.data.addresses = [testcase.record];
     await profileStorage.addresses._migrateRecord(testcase.record, 0);
     do_check_record_matches(testcase.expectedResult, profileStorage.addresses._data[0]);
   }
+||||||| merged common ancestors
+    await profileStorage.addresses._migrateRecord(testcase.record);
+    do_check_record_matches(testcase.expectedResult, testcase.record);
+  }));
+=======
+    profileStorage._store.data.addresses = [testcase.record];
+    await profileStorage.addresses._migrateRecord(testcase.record, 0);
+    do_check_record_matches(
+      testcase.expectedResult,
+      profileStorage.addresses._data[0]
+    );
+  }
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_migrateCreditCardRecords() {
@@ -265,10 +303,96 @@ add_task(async function test_migrateCreditCardRecords() {
 
   for (let testcase of CREDIT_CARD_TESTCASES) {
     info(testcase.description);
+<<<<<<< HEAD
     profileStorage._store.data.creditCards = [testcase.record];
     await profileStorage.creditCards._migrateRecord(testcase.record, 0);
     do_check_record_matches(testcase.expectedResult, profileStorage.creditCards._data[0]);
   }
+||||||| merged common ancestors
+    await profileStorage.creditCards._migrateRecord(testcase.record);
+    do_check_record_matches(testcase.expectedResult, testcase.record);
+  }));
+=======
+    profileStorage._store.data.creditCards = [testcase.record];
+    await profileStorage.creditCards._migrateRecord(testcase.record, 0);
+    do_check_record_matches(
+      testcase.expectedResult,
+      profileStorage.creditCards._data[0]
+    );
+  }
+});
+
+add_task(async function test_migrateEncryptedCreditCardNumber() {
+  let path = getTempFile(TEST_STORE_FILE_NAME).path;
+
+  let profileStorage = new FormAutofillStorage(path);
+  await profileStorage.initialize();
+
+  const ccNumber = "4111111111111111";
+  let cryptoSDR = Cc["@mozilla.org/login-manager/crypto/SDR;1"].createInstance(
+    Ci.nsILoginManagerCrypto
+  );
+
+  info("Encrypted credit card should be migrated from v1 to v2");
+
+  let record = {
+    guid: "test-guid",
+    version: 1,
+    "cc-name": "Timothy",
+    "cc-number-encrypted": cryptoSDR.encrypt(ccNumber),
+  };
+
+  let expectedRecord = {
+    guid: "test-guid",
+    version: CREDIT_CARD_SCHEMA_VERSION,
+    "cc-name": "Timothy",
+    "cc-given-name": "Timothy",
+  };
+  profileStorage._store.data.creditCards = [record];
+  await profileStorage.creditCards._migrateRecord(record, 0);
+  record = profileStorage.creditCards._data[0];
+
+  Assert.equal(expectedRecord.guid, record.guid);
+  Assert.equal(expectedRecord.version, record.version);
+  Assert.equal(expectedRecord["cc-name"], record["cc-name"]);
+  Assert.equal(expectedRecord["cc-given-name"], record["cc-given-name"]);
+
+  // Ciphertext of OS Key Store is not stable, must compare decrypted text here.
+  Assert.equal(
+    ccNumber,
+    await OSKeyStore.decrypt(record["cc-number-encrypted"])
+  );
+});
+
+add_task(async function test_migrateEncryptedCreditCardNumberWithMP() {
+  LoginTestUtils.masterPassword.enable();
+
+  let path = getTempFile(TEST_STORE_FILE_NAME).path;
+
+  let profileStorage = new FormAutofillStorage(path);
+  await profileStorage.initialize();
+
+  info("Encrypted credit card should be migrated a tombstone if MP is enabled");
+
+  let record = {
+    guid: "test-guid",
+    version: 1,
+    "cc-name": "Timothy",
+    "cc-number-encrypted": "(encrypted to be discarded)",
+  };
+
+  profileStorage._store.data.creditCards = [record];
+  await profileStorage.creditCards._migrateRecord(record, 0);
+  record = profileStorage.creditCards._data[0];
+
+  Assert.equal(record.guid, "test-guid");
+  Assert.equal(record.deleted, true);
+  Assert.equal(typeof record.version, "undefined");
+  Assert.equal(typeof record["cc-name"], "undefined");
+  Assert.equal(typeof record["cc-number-encrypted"], "undefined");
+
+  LoginTestUtils.masterPassword.disable();
+>>>>>>> upstream-releases
 });
 
 add_task(async function test_migrateEncryptedCreditCardNumber() {

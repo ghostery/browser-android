@@ -20,6 +20,7 @@ class ScaledFontFontconfig;
 class UnscaledFontFreeType : public UnscaledFont {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(UnscaledFontFreeType, override)
+<<<<<<< HEAD
   explicit UnscaledFontFreeType(FT_Face aFace, bool aOwnsFace = false)
       : mFace(aFace), mOwnsFace(aOwnsFace), mIndex(0) {}
   explicit UnscaledFontFreeType(const char* aFile, uint32_t aIndex = 0)
@@ -35,6 +36,53 @@ class UnscaledFontFreeType : public UnscaledFont {
         mIndex(0),
         mNativeFontResource(aNativeFontResource) {}
   ~UnscaledFontFreeType() {
+||||||| merged common ancestors
+  explicit UnscaledFontFreeType(FT_Face aFace,
+                                bool aOwnsFace = false)
+    : mFace(aFace)
+    , mOwnsFace(aOwnsFace)
+    , mIndex(0)
+  {}
+  explicit UnscaledFontFreeType(const char* aFile,
+                                uint32_t aIndex = 0)
+    : mFace(nullptr)
+    , mOwnsFace(false)
+    , mFile(aFile)
+    , mIndex(aIndex)
+  {}
+  explicit UnscaledFontFreeType(std::string&& aFile,
+                                uint32_t aIndex = 0)
+    : mFace(nullptr)
+    , mOwnsFace(false)
+    , mFile(std::move(aFile))
+    , mIndex(aIndex)
+  {}
+  UnscaledFontFreeType(FT_Face aFace,
+                       NativeFontResource* aNativeFontResource)
+    : mFace(aFace)
+    , mOwnsFace(false)
+    , mIndex(0)
+    , mNativeFontResource(aNativeFontResource)
+  {}
+  ~UnscaledFontFreeType()
+  {
+=======
+  explicit UnscaledFontFreeType(FT_Face aFace, bool aOwnsFace = false)
+      : mFace(aFace), mOwnsFace(aOwnsFace), mIndex(0) {}
+  explicit UnscaledFontFreeType(const char* aFile, uint32_t aIndex = 0)
+      : mFace(nullptr), mOwnsFace(false), mFile(aFile), mIndex(aIndex) {}
+  explicit UnscaledFontFreeType(std::string&& aFile, uint32_t aIndex = 0)
+      : mFace(nullptr),
+        mOwnsFace(false),
+        mFile(std::move(aFile)),
+        mIndex(aIndex) {}
+  UnscaledFontFreeType(FT_Face aFace, NativeFontResource* aNativeFontResource)
+      : mFace(aFace),
+        mOwnsFace(false),
+        mIndex(0),
+        mNativeFontResource(aNativeFontResource) {}
+  virtual ~UnscaledFontFreeType() {
+>>>>>>> upstream-releases
     if (mOwnsFace) {
       Factory::ReleaseFTFace(mFace);
     }
@@ -56,10 +104,26 @@ class UnscaledFontFreeType : public UnscaledFont {
   bool GetWRFontDescriptor(WRFontDescriptorOutput aCb, void* aBaton) override;
 
 #ifdef MOZ_WIDGET_ANDROID
+<<<<<<< HEAD
   already_AddRefed<ScaledFont> CreateScaledFont(
       Float aGlyphSize, const uint8_t* aInstanceData,
       uint32_t aInstanceDataLength, const FontVariation* aVariations,
       uint32_t aNumVariations) override;
+||||||| merged common ancestors
+  already_AddRefed<ScaledFont>
+    CreateScaledFont(Float aGlyphSize,
+                     const uint8_t* aInstanceData,
+                     uint32_t aInstanceDataLength,
+                     const FontVariation* aVariations,
+                     uint32_t aNumVariations) override;
+=======
+  FT_Face InitFace();
+
+  already_AddRefed<ScaledFont> CreateScaledFont(
+      Float aGlyphSize, const uint8_t* aInstanceData,
+      uint32_t aInstanceDataLength, const FontVariation* aVariations,
+      uint32_t aNumVariations) override;
+>>>>>>> upstream-releases
 #endif
 
  protected:

@@ -9,7 +9,7 @@
 
 #include "mozilla/Maybe.h"
 #include "mozilla/SVGContextPaint.h"
-#include "SVGPreserveAspectRatio.h"
+#include "mozilla/SVGPreserveAspectRatio.h"
 #include "Units.h"
 
 class nsIFrame;
@@ -23,9 +23,20 @@ class ComputedStyle;
 //  - viewport information from CSS, and
 //  - overridden attributes from an SVG <image> element
 // to the image's internal SVG document when it's drawn.
+<<<<<<< HEAD
 class SVGImageContext {
  public:
   SVGImageContext() {}
+||||||| merged common ancestors
+class SVGImageContext
+{
+public:
+  SVGImageContext() {}
+=======
+class SVGImageContext {
+ public:
+  SVGImageContext() = default;
+>>>>>>> upstream-releases
 
   /**
    * Currently it seems that the aViewportSize parameter ends up being used

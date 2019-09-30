@@ -18,7 +18,7 @@
 #include "nsContentSecurityManager.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsGlobalWindow.h"
-#include "nsIDocument.h"
+#include "mozilla/dom/Document.h"
 #include "nsIPresentationService.h"
 #include "nsIURI.h"
 #include "nsIUUIDGenerator.h"
@@ -40,9 +40,21 @@ NS_IMPL_RELEASE_INHERITED(PresentationRequest, DOMEventTargetHelper)
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(PresentationRequest)
 NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
+<<<<<<< HEAD
 static nsresult GetAbsoluteURL(const nsAString& aUrl, nsIURI* aBaseUri,
                                nsIDocument* aDocument,
                                nsAString& aAbsoluteUrl) {
+||||||| merged common ancestors
+static nsresult
+GetAbsoluteURL(const nsAString& aUrl,
+               nsIURI* aBaseUri,
+               nsIDocument* aDocument,
+               nsAString& aAbsoluteUrl)
+{
+=======
+static nsresult GetAbsoluteURL(const nsAString& aUrl, nsIURI* aBaseUri,
+                               Document* aDocument, nsAString& aAbsoluteUrl) {
+>>>>>>> upstream-releases
   nsCOMPtr<nsIURI> uri;
   nsresult rv;
   if (aDocument) {
@@ -64,20 +76,48 @@ static nsresult GetAbsoluteURL(const nsAString& aUrl, nsIURI* aBaseUri,
   return NS_OK;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PresentationRequest>
 PresentationRequest::Constructor(const GlobalObject& aGlobal,
                                  const nsAString& aUrl, ErrorResult& aRv) {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PresentationRequest>
+PresentationRequest::Constructor(const GlobalObject& aGlobal,
+                                 const nsAString& aUrl,
+                                 ErrorResult& aRv)
+{
+=======
+/* static */
+already_AddRefed<PresentationRequest> PresentationRequest::Constructor(
+    const GlobalObject& aGlobal, const nsAString& aUrl, ErrorResult& aRv) {
+>>>>>>> upstream-releases
   Sequence<nsString> urls;
   urls.AppendElement(aUrl, fallible);
   return Constructor(aGlobal, urls, aRv);
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PresentationRequest>
 PresentationRequest::Constructor(const GlobalObject& aGlobal,
                                  const Sequence<nsString>& aUrls,
                                  ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> window =
       do_QueryInterface(aGlobal.GetAsSupports());
+||||||| merged common ancestors
+/* static */ already_AddRefed<PresentationRequest>
+PresentationRequest::Constructor(const GlobalObject& aGlobal,
+                                 const Sequence<nsString>& aUrls,
+                                 ErrorResult& aRv)
+{
+  nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aGlobal.GetAsSupports());
+=======
+/* static */
+already_AddRefed<PresentationRequest> PresentationRequest::Constructor(
+    const GlobalObject& aGlobal, const Sequence<nsString>& aUrls,
+    ErrorResult& aRv) {
+  nsCOMPtr<nsPIDOMWindowInner> window =
+      do_QueryInterface(aGlobal.GetAsSupports());
+>>>>>>> upstream-releases
   if (!window) {
     aRv.Throw(NS_ERROR_UNEXPECTED);
     return nullptr;
@@ -116,8 +156,19 @@ PresentationRequest::~PresentationRequest() {}
 
 bool PresentationRequest::Init() { return true; }
 
+<<<<<<< HEAD
 /* virtual */ JSObject* PresentationRequest::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
+||||||| merged common ancestors
+/* virtual */ JSObject*
+PresentationRequest::WrapObject(JSContext* aCx,
+                                JS::Handle<JSObject*> aGivenProto)
+{
+=======
+/* virtual */
+JSObject* PresentationRequest::WrapObject(JSContext* aCx,
+                                          JS::Handle<JSObject*> aGivenProto) {
+>>>>>>> upstream-releases
   return PresentationRequest_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -141,7 +192,7 @@ already_AddRefed<Promise> PresentationRequest::StartWithDevice(
     return nullptr;
   }
 
-  nsCOMPtr<nsIDocument> doc = GetOwner()->GetExtantDoc();
+  nsCOMPtr<Document> doc = GetOwner()->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -236,7 +287,7 @@ already_AddRefed<Promise> PresentationRequest::Reconnect(
     return nullptr;
   }
 
-  nsCOMPtr<nsIDocument> doc = GetOwner()->GetExtantDoc();
+  nsCOMPtr<Document> doc = GetOwner()->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -342,7 +393,7 @@ already_AddRefed<Promise> PresentationRequest::GetAvailability(
     return nullptr;
   }
 
-  nsCOMPtr<nsIDocument> doc = GetOwner()->GetExtantDoc();
+  nsCOMPtr<Document> doc = GetOwner()->GetExtantDoc();
   if (NS_WARN_IF(!doc)) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -456,15 +507,23 @@ void PresentationRequest::NotifyPromiseSettled() {
   }
 }
 
+<<<<<<< HEAD
 bool PresentationRequest::IsProhibitMixedSecurityContexts(
     nsIDocument* aDocument) {
+||||||| merged common ancestors
+bool
+PresentationRequest::IsProhibitMixedSecurityContexts(nsIDocument* aDocument)
+{
+=======
+bool PresentationRequest::IsProhibitMixedSecurityContexts(Document* aDocument) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 
   if (nsContentUtils::IsChromeDoc(aDocument)) {
     return true;
   }
 
-  nsCOMPtr<nsIDocument> doc = aDocument;
+  nsCOMPtr<Document> doc = aDocument;
   while (doc && !nsContentUtils::IsChromeDoc(doc)) {
     if (nsContentUtils::HttpsStateIsModern(doc)) {
       return true;

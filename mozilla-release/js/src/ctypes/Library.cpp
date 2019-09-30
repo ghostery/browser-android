@@ -11,7 +11,13 @@
 
 #include "ctypes/CTypes.h"
 #include "js/CharacterEncoding.h"
+<<<<<<< HEAD
 #include "js/MemoryFunctions.h"
+||||||| merged common ancestors
+=======
+#include "js/MemoryFunctions.h"
+#include "js/PropertySpec.h"
+>>>>>>> upstream-releases
 #include "js/StableStringChars.h"
 
 using JS::AutoStableStringChars;

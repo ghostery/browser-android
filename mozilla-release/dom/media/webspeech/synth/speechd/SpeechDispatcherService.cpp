@@ -10,6 +10,7 @@
 #include "mozilla/dom/nsSynthVoiceRegistry.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsEscape.h"
 #include "nsISupports.h"
 #include "nsPrintfCString.h"
@@ -280,8 +281,18 @@ NS_IMPL_RELEASE(SpeechDispatcherService)
 SpeechDispatcherService::SpeechDispatcherService()
     : mInitialized(false), mSpeechdClient(nullptr) {}
 
+<<<<<<< HEAD
 void SpeechDispatcherService::Init() {
   if (!Preferences::GetBool("media.webspeech.synth.enabled") ||
+||||||| merged common ancestors
+void
+SpeechDispatcherService::Init()
+{
+  if (!Preferences::GetBool("media.webspeech.synth.enabled") ||
+=======
+void SpeechDispatcherService::Init() {
+  if (!StaticPrefs::media_webspeech_synth_enabled() ||
+>>>>>>> upstream-releases
       Preferences::GetBool("media.webspeech.synth.test")) {
     return;
   }

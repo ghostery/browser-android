@@ -10,7 +10,6 @@
 
 #include "GrBackendSemaphore.h"
 #include "GrBackendSurface.h"
-#include "GrBuffer.h"
 #include "GrCaps.h"
 #include "GrContext.h"
 #include "GrContextPriv.h"
@@ -123,6 +122,10 @@ sk_sp<GrTexture> GrGpu::createTexture(const GrSurfaceDesc& origDesc, SkBudgeted 
         return nullptr;
     }
 
+    // We shouldn't be rendering into compressed textures
+    SkASSERT(!GrPixelConfigIsCompressed(desc.fConfig) || !isRT);
+    SkASSERT(!GrPixelConfigIsCompressed(desc.fConfig) || 1 == desc.fSampleCnt);
+
     this->handleDirtyContext();
     sk_sp<GrTexture> tex = this->onCreateTexture(desc, budgeted, texels, mipLevelCount);
     if (tex) {
@@ -144,8 +147,11 @@ sk_sp<GrTexture> GrGpu::createTexture(const GrSurfaceDesc& desc, SkBudgeted budg
 }
 
 sk_sp<GrTexture> GrGpu::wrapBackendTexture(const GrBackendTexture& backendTex,
-                                           GrWrapOwnership ownership) {
+                                           GrWrapOwnership ownership, GrWrapCacheable cacheable,
+                                           GrIOType ioType) {
+    SkASSERT(ioType != kWrite_GrIOType);
     this->handleDirtyContext();
+    SkASSERT(this->caps());
     if (!this->caps()->isConfigTexturable(backendTex.config())) {
         return nullptr;
     }
@@ -153,11 +159,22 @@ sk_sp<GrTexture> GrGpu::wrapBackendTexture(const GrBackendTexture& backendTex,
         backendTex.height() > this->caps()->maxTextureSize()) {
         return nullptr;
     }
+<<<<<<< HEAD
     return this->onWrapBackendTexture(backendTex, ownership);
+||||||| merged common ancestors
+    sk_sp<GrTexture> tex = this->onWrapBackendTexture(backendTex, ownership);
+    if (!tex) {
+        return nullptr;
+    }
+    return tex;
+=======
+    return this->onWrapBackendTexture(backendTex, ownership, cacheable, ioType);
+>>>>>>> upstream-releases
 }
 
 sk_sp<GrTexture> GrGpu::wrapRenderableBackendTexture(const GrBackendTexture& backendTex,
-                                                     int sampleCnt, GrWrapOwnership ownership) {
+                                                     int sampleCnt, GrWrapOwnership ownership,
+                                                     GrWrapCacheable cacheable) {
     this->handleDirtyContext();
     if (sampleCnt < 1) {
         return nullptr;
@@ -171,8 +188,20 @@ sk_sp<GrTexture> GrGpu::wrapRenderableBackendTexture(const GrBackendTexture& bac
         backendTex.height() > this->caps()->maxRenderTargetSize()) {
         return nullptr;
     }
+<<<<<<< HEAD
     sk_sp<GrTexture> tex = this->onWrapRenderableBackendTexture(backendTex, sampleCnt, ownership);
     SkASSERT(!tex || tex->asRenderTarget());
+||||||| merged common ancestors
+    sk_sp<GrTexture> tex = this->onWrapRenderableBackendTexture(backendTex, sampleCnt, ownership);
+    if (!tex) {
+        return nullptr;
+    }
+    SkASSERT(tex->asRenderTarget());
+=======
+    sk_sp<GrTexture> tex =
+            this->onWrapRenderableBackendTexture(backendTex, sampleCnt, ownership, cacheable);
+    SkASSERT(!tex || tex->asRenderTarget());
+>>>>>>> upstream-releases
     return tex;
 }
 
@@ -197,10 +226,21 @@ sk_sp<GrRenderTarget> GrGpu::wrapBackendTextureAsRenderTarget(const GrBackendTex
     return this->onWrapBackendTextureAsRenderTarget(tex, sampleCnt);
 }
 
-GrBuffer* GrGpu::createBuffer(size_t size, GrBufferType intendedType,
-                              GrAccessPattern accessPattern, const void* data) {
+sk_sp<GrRenderTarget> GrGpu::wrapVulkanSecondaryCBAsRenderTarget(const SkImageInfo& imageInfo,
+                                                                 const GrVkDrawableInfo& vkInfo) {
+    return this->onWrapVulkanSecondaryCBAsRenderTarget(imageInfo, vkInfo);
+}
+
+sk_sp<GrRenderTarget> GrGpu::onWrapVulkanSecondaryCBAsRenderTarget(const SkImageInfo& imageInfo,
+                                                                   const GrVkDrawableInfo& vkInfo) {
+    // This is only supported on Vulkan so we default to returning nullptr here
+    return nullptr;
+}
+
+sk_sp<GrGpuBuffer> GrGpu::createBuffer(size_t size, GrGpuBufferType intendedType,
+                                       GrAccessPattern accessPattern, const void* data) {
     this->handleDirtyContext();
-    GrBuffer* buffer = this->onCreateBuffer(size, intendedType, accessPattern, data);
+    sk_sp<GrGpuBuffer> buffer = this->onCreateBuffer(size, intendedType, accessPattern, data);
     if (!this->caps()->reuseScratchBuffers()) {
         buffer->resourcePriv().removeScratchKey();
     }
@@ -213,6 +253,7 @@ bool GrGpu::copySurface(GrSurface* dst, GrSurfaceOrigin dstOrigin,
                         bool canDiscardOutsideDstRect) {
     GR_CREATE_TRACE_MARKER_CONTEXT("GrGpu", "copySurface", fContext);
     SkASSERT(dst && src);
+<<<<<<< HEAD
     this->handleDirtyContext();
     return this->onCopySurface(dst, dstOrigin, src, srcOrigin, srcRect, dstPoint,
                                canDiscardOutsideDstRect);
@@ -220,6 +261,192 @@ bool GrGpu::copySurface(GrSurface* dst, GrSurfaceOrigin dstOrigin,
 
 bool GrGpu::readPixels(GrSurface* surface, int left, int top, int width, int height,
                        GrColorType dstColorType, void* buffer, size_t rowBytes) {
+||||||| merged common ancestors
+    this->handleDirtyContext();
+    return this->onCopySurface(dst, dstOrigin, src, srcOrigin, srcRect, dstPoint);
+}
+
+bool GrGpu::getReadPixelsInfo(GrSurface* srcSurface, GrSurfaceOrigin srcOrigin, int width,
+                              int height, size_t rowBytes, GrColorType dstColorType,
+                              GrSRGBConversion srgbConversion, DrawPreference* drawPreference,
+                              ReadPixelTempDrawInfo* tempDrawInfo) {
+    SkASSERT(drawPreference);
+    SkASSERT(tempDrawInfo);
+    SkASSERT(srcSurface);
+    SkASSERT(kGpuPrefersDraw_DrawPreference != *drawPreference);
+
+    // We currently do not support reading into the packed formats 565 or 4444 as they are not
+    // required to have read back support on all devices and backends.
+    if (GrColorType::kRGB_565 == dstColorType || GrColorType::kABGR_4444 == dstColorType) {
+        return false;
+    }
+
+    GrPixelConfig tempSurfaceConfig = kUnknown_GrPixelConfig;
+    // GrGpu::readPixels doesn't do any sRGB conversions, so we must draw if there is one.
+    switch (srgbConversion) {
+        case GrSRGBConversion::kNone:
+            // We support reading from RGBA to just A. In that case there is no sRGB version of the
+            // dst format but we still want to succeed.
+            if (GrColorTypeIsAlphaOnly(dstColorType)) {
+                tempSurfaceConfig = GrColorTypeToPixelConfig(dstColorType, GrSRGBEncoded::kNo);
+            } else {
+                tempSurfaceConfig = GrColorTypeToPixelConfig(
+                        dstColorType, GrPixelConfigIsSRGBEncoded(srcSurface->config()));
+            }
+            break;
+        case GrSRGBConversion::kLinearToSRGB:
+            SkASSERT(this->caps()->srgbSupport());
+            tempSurfaceConfig = GrColorTypeToPixelConfig(dstColorType, GrSRGBEncoded::kYes);
+            // Currently we don't expect to make a SRGB encoded surface and then read data from it
+            // such that we treat it as though it were linear and is then converted to sRGB.
+            if (GrPixelConfigIsSRGB(srcSurface->config())) {
+                return false;
+            }
+            ElevateDrawPreference(drawPreference, kRequireDraw_DrawPreference);
+            break;
+        case GrSRGBConversion::kSRGBToLinear:
+            SkASSERT(this->caps()->srgbSupport());
+            tempSurfaceConfig = GrColorTypeToPixelConfig(dstColorType, GrSRGBEncoded::kNo);
+            // We don't currently support reading sRGB encoded data into linear from a surface
+            // unless it is an sRGB-encoded config. That is likely to change when we need to store
+            // sRGB encoded data in 101010102 and F16 textures. We'll have to provoke the caller to
+            // do the conversion in a shader.
+            if (GrSRGBEncoded::kNo == GrPixelConfigIsSRGBEncoded(srcSurface->config())) {
+                return false;
+            }
+            ElevateDrawPreference(drawPreference, kRequireDraw_DrawPreference);
+            break;
+    }
+    if (kUnknown_GrPixelConfig == tempSurfaceConfig) {
+        return false;
+    }
+
+    // Default values for intermediate draws. The intermediate texture config matches the dst's
+    // config, is approx sized to the read rect, no swizzling or spoofing of the dst config.
+    tempDrawInfo->fTempSurfaceDesc.fFlags = kRenderTarget_GrSurfaceFlag;
+    tempDrawInfo->fTempSurfaceDesc.fWidth = width;
+    tempDrawInfo->fTempSurfaceDesc.fHeight = height;
+    tempDrawInfo->fTempSurfaceDesc.fSampleCnt = 1;
+    tempDrawInfo->fTempSurfaceDesc.fOrigin = kTopLeft_GrSurfaceOrigin;  // no CPU y-flip for TL.
+    tempDrawInfo->fTempSurfaceDesc.fConfig = tempSurfaceConfig;
+    tempDrawInfo->fTempSurfaceFit = SkBackingFit::kApprox;
+    tempDrawInfo->fSwizzle = GrSwizzle::RGBA();
+    tempDrawInfo->fReadColorType = dstColorType;
+
+    if (!this->onGetReadPixelsInfo(srcSurface, srcOrigin, width, height, rowBytes, dstColorType,
+                                   drawPreference, tempDrawInfo)) {
+        return false;
+    }
+
+    // Check to see if we're going to request that the caller draw when drawing is not possible.
+    if (!srcSurface->asTexture() ||
+        !this->caps()->isConfigRenderable(tempDrawInfo->fTempSurfaceDesc.fConfig)) {
+        // If we don't have a fallback to a straight read then fail.
+        if (kRequireDraw_DrawPreference == *drawPreference) {
+            return false;
+        }
+        *drawPreference = kNoDraw_DrawPreference;
+    }
+
+    return true;
+}
+
+bool GrGpu::getWritePixelsInfo(GrSurface* dstSurface, GrSurfaceOrigin dstOrigin, int width,
+                               int height, GrColorType srcColorType,
+                               GrSRGBConversion srgbConversion, DrawPreference* drawPreference,
+                               WritePixelTempDrawInfo* tempDrawInfo) {
+    SkASSERT(drawPreference);
+    SkASSERT(tempDrawInfo);
+    SkASSERT(dstSurface);
+    SkASSERT(kGpuPrefersDraw_DrawPreference != *drawPreference);
+
+    GrPixelConfig tempSurfaceConfig = kUnknown_GrPixelConfig;
+    // GrGpu::writePixels doesn't do any sRGB conversions, so we must draw if there is one.
+    switch (srgbConversion) {
+        case GrSRGBConversion::kNone:
+            // We support writing just A to a RGBA. In that case there is no sRGB version of the
+            // src format but we still want to succeed.
+            if (GrColorTypeIsAlphaOnly(srcColorType)) {
+                tempSurfaceConfig = GrColorTypeToPixelConfig(srcColorType, GrSRGBEncoded::kNo);
+            } else {
+                tempSurfaceConfig = GrColorTypeToPixelConfig(
+                        srcColorType, GrPixelConfigIsSRGBEncoded(dstSurface->config()));
+            }
+            break;
+        case GrSRGBConversion::kLinearToSRGB:
+            SkASSERT(this->caps()->srgbSupport());
+            // This assert goes away when we start referring to CPU data using color type.
+            tempSurfaceConfig = GrColorTypeToPixelConfig(srcColorType, GrSRGBEncoded::kNo);
+            // We don't currently support storing sRGB encoded data in a surface unless it is
+            // an SRGB-encoded config. That is likely to change when we need to store sRGB encoded
+            // data in 101010102 and F16 textures. We'll have to provoke the caller to do the
+            // conversion in a shader.
+            if (!GrPixelConfigIsSRGB(dstSurface->config())) {
+                return false;
+            }
+            ElevateDrawPreference(drawPreference, kRequireDraw_DrawPreference);
+            break;
+        case GrSRGBConversion::kSRGBToLinear:
+            SkASSERT(this->caps()->srgbSupport());
+            tempSurfaceConfig = GrColorTypeToPixelConfig(srcColorType, GrSRGBEncoded::kYes);
+            // Currently we don't expect to make a SRGB encoded surface and then succeed at
+            // treating it as though it were linear and then convert to sRGB.
+            if (GrSRGBEncoded::kYes == GrPixelConfigIsSRGBEncoded(dstSurface->config())) {
+                return false;
+            }
+            ElevateDrawPreference(drawPreference, kRequireDraw_DrawPreference);
+            break;
+    }
+    if (kUnknown_GrPixelConfig == tempSurfaceConfig) {
+        return false;
+    }
+
+    // Default values for intermediate draws. The intermediate texture config matches the dst's
+    // config, is approx sized to the write rect, no swizzling or sppofing of the src config.
+    tempDrawInfo->fTempSurfaceDesc.fFlags = kNone_GrSurfaceFlags;
+    tempDrawInfo->fTempSurfaceDesc.fConfig = tempSurfaceConfig;
+    tempDrawInfo->fTempSurfaceDesc.fWidth = width;
+    tempDrawInfo->fTempSurfaceDesc.fHeight = height;
+    tempDrawInfo->fTempSurfaceDesc.fSampleCnt = 1;
+    tempDrawInfo->fTempSurfaceDesc.fOrigin = kTopLeft_GrSurfaceOrigin;  // no CPU y-flip for TL.
+    tempDrawInfo->fSwizzle = GrSwizzle::RGBA();
+    tempDrawInfo->fWriteColorType = srcColorType;
+
+    if (!this->onGetWritePixelsInfo(dstSurface, dstOrigin, width, height, srcColorType,
+                                    drawPreference, tempDrawInfo)) {
+        return false;
+    }
+
+    // Check to see if we're going to request that the caller draw when drawing is not possible.
+    if (!dstSurface->asRenderTarget() ||
+        !this->caps()->isConfigTexturable(tempDrawInfo->fTempSurfaceDesc.fConfig)) {
+        // If we don't have a fallback to a straight upload then fail.
+        if (kRequireDraw_DrawPreference == *drawPreference /*TODO ||
+            !this->caps()->isConfigTexturable(srcConfig)*/) {
+            return false;
+        }
+        *drawPreference = kNoDraw_DrawPreference;
+    }
+    return true;
+}
+
+bool GrGpu::readPixels(GrSurface* surface, GrSurfaceOrigin origin, int left, int top, int width,
+                       int height, GrColorType dstColorType, void* buffer, size_t rowBytes) {
+=======
+
+    if (dst->readOnly()) {
+        return false;
+    }
+
+    this->handleDirtyContext();
+
+    return this->onCopySurface(dst, dstOrigin, src, srcOrigin, srcRect, dstPoint,
+                               canDiscardOutsideDstRect);
+}
+
+bool GrGpu::readPixels(GrSurface* surface, int left, int top, int width, int height,
+                       GrColorType dstColorType, void* buffer, size_t rowBytes) {
+>>>>>>> upstream-releases
     SkASSERT(surface);
 
     int bpp = GrColorTypeBytesPerPixel(dstColorType);
@@ -227,6 +454,10 @@ bool GrGpu::readPixels(GrSurface* surface, int left, int top, int width, int hei
                                               &left, &top, &width, &height,
                                               &buffer,
                                               &rowBytes)) {
+        return false;
+    }
+
+    if (GrPixelConfigIsCompressed(surface->config())) {
         return false;
     }
 
@@ -238,6 +469,11 @@ bool GrGpu::readPixels(GrSurface* surface, int left, int top, int width, int hei
 bool GrGpu::writePixels(GrSurface* surface, int left, int top, int width, int height,
                         GrColorType srcColorType, const GrMipLevel texels[], int mipLevelCount) {
     SkASSERT(surface);
+
+    if (surface->readOnly()) {
+        return false;
+    }
+
     if (1 == mipLevelCount) {
         // We require that if we are not mipped, then the write region is contained in the surface
         SkIRect subRect = SkIRect::MakeXYWH(left, top, width, height);
@@ -268,9 +504,14 @@ bool GrGpu::writePixels(GrSurface* surface, int left, int top, int width, int he
 }
 
 bool GrGpu::transferPixels(GrTexture* texture, int left, int top, int width, int height,
-                           GrColorType bufferColorType, GrBuffer* transferBuffer, size_t offset,
+                           GrColorType bufferColorType, GrGpuBuffer* transferBuffer, size_t offset,
                            size_t rowBytes) {
+    SkASSERT(texture);
     SkASSERT(transferBuffer);
+
+    if (texture->readOnly()) {
+        return false;
+    }
 
     // We require that the write region is contained in the texture
     SkIRect subRect = SkIRect::MakeXYWH(left, top, width, height);
@@ -291,6 +532,7 @@ bool GrGpu::transferPixels(GrTexture* texture, int left, int top, int width, int
     return false;
 }
 
+<<<<<<< HEAD
 bool GrGpu::regenerateMipMapLevels(GrTexture* texture) {
     SkASSERT(texture);
     SkASSERT(this->caps()->mipMapSupport());
@@ -304,6 +546,30 @@ bool GrGpu::regenerateMipMapLevels(GrTexture* texture) {
     return false;
 }
 
+||||||| merged common ancestors
+=======
+bool GrGpu::regenerateMipMapLevels(GrTexture* texture) {
+    SkASSERT(texture);
+    SkASSERT(this->caps()->mipMapSupport());
+    SkASSERT(texture->texturePriv().mipMapped() == GrMipMapped::kYes);
+    SkASSERT(texture->texturePriv().mipMapsAreDirty());
+    SkASSERT(!texture->asRenderTarget() || !texture->asRenderTarget()->needsResolve());
+    if (texture->readOnly()) {
+        return false;
+    }
+    if (this->onRegenerateMipMapLevels(texture)) {
+        texture->texturePriv().markMipMapsClean();
+        return true;
+    }
+    return false;
+}
+
+void GrGpu::resetTextureBindings() {
+    this->handleDirtyContext();
+    this->onResetTextureBindings();
+}
+
+>>>>>>> upstream-releases
 void GrGpu::resolveRenderTarget(GrRenderTarget* target) {
     SkASSERT(target);
     this->handleDirtyContext();
@@ -313,6 +579,7 @@ void GrGpu::resolveRenderTarget(GrRenderTarget* target) {
 void GrGpu::didWriteToSurface(GrSurface* surface, GrSurfaceOrigin origin, const SkIRect* bounds,
                               uint32_t mipLevels) const {
     SkASSERT(surface);
+    SkASSERT(!surface->readOnly());
     // Mark any MIP chain and resolve buffer as dirty if and only if there is a non-empty bounds.
     if (nullptr == bounds || !bounds->isEmpty()) {
         if (GrRenderTarget* target = surface->asRenderTarget()) {
@@ -331,9 +598,12 @@ void GrGpu::didWriteToSurface(GrSurface* surface, GrSurfaceOrigin origin, const 
     }
 }
 
-GrSemaphoresSubmitted GrGpu::finishFlush(int numSemaphores,
+GrSemaphoresSubmitted GrGpu::finishFlush(GrSurfaceProxy* proxy,
+                                         SkSurface::BackendSurfaceAccess access,
+                                         SkSurface::FlushFlags flags, int numSemaphores,
                                          GrBackendSemaphore backendSemaphores[]) {
-    GrResourceProvider* resourceProvider = fContext->contextPriv().resourceProvider();
+    this->stats()->incNumFinishFlushes();
+    GrResourceProvider* resourceProvider = fContext->priv().resourceProvider();
 
     if (this->caps()->fenceSyncSupport()) {
         for (int i = 0; i < numSemaphores; ++i) {
@@ -345,14 +615,15 @@ GrSemaphoresSubmitted GrGpu::finishFlush(int numSemaphores,
             } else {
                 semaphore = resourceProvider->makeSemaphore(false);
             }
-            this->insertSemaphore(semaphore, false);
+            this->insertSemaphore(semaphore);
 
             if (!backendSemaphores[i].isInitialized()) {
                 backendSemaphores[i] = semaphore->backendSemaphore();
             }
         }
     }
-    this->onFinishFlush((numSemaphores > 0 && this->caps()->fenceSyncSupport()));
+    this->onFinishFlush(proxy, access, flags,
+                        (numSemaphores > 0 && this->caps()->fenceSyncSupport()));
     return this->caps()->fenceSyncSupport() ? GrSemaphoresSubmitted::kYes
                                             : GrSemaphoresSubmitted::kNo;
 }
@@ -367,6 +638,7 @@ void GrGpu::dumpJSON(SkJSONWriter* writer) const {
 
     writer->endObject();
 }
+<<<<<<< HEAD
 #else
 void GrGpu::dumpJSON(SkJSONWriter* writer) const { }
 #endif
@@ -381,3 +653,42 @@ GrBackendTexture GrGpu::createTestingOnlyBackendTexture(const void* pixels, int 
                                                  rowBytes);
 }
 #endif
+||||||| merged common ancestors
+=======
+#else
+void GrGpu::dumpJSON(SkJSONWriter* writer) const { }
+#endif
+
+#if GR_TEST_UTILS
+GrBackendTexture GrGpu::createTestingOnlyBackendTexture(const void* pixels, int w, int h,
+                                                        SkColorType colorType, bool isRenderTarget,
+                                                        GrMipMapped isMipped, size_t rowBytes) {
+    GrColorType grCT = SkColorTypeToGrColorType(colorType);
+
+    return this->createTestingOnlyBackendTexture(pixels, w, h, grCT, isRenderTarget, isMipped,
+                                                 rowBytes);
+}
+
+#if GR_GPU_STATS
+void GrGpu::Stats::dump(SkString* out) {
+    out->appendf("Render Target Binds: %d\n", fRenderTargetBinds);
+    out->appendf("Shader Compilations: %d\n", fShaderCompilations);
+    out->appendf("Textures Created: %d\n", fTextureCreates);
+    out->appendf("Texture Uploads: %d\n", fTextureUploads);
+    out->appendf("Transfers to Texture: %d\n", fTransfersToTexture);
+    out->appendf("Stencil Buffer Creates: %d\n", fStencilAttachmentCreates);
+    out->appendf("Number of draws: %d\n", fNumDraws);
+}
+
+void GrGpu::Stats::dumpKeyValuePairs(SkTArray<SkString>* keys, SkTArray<double>* values) {
+    keys->push_back(SkString("render_target_binds")); values->push_back(fRenderTargetBinds);
+    keys->push_back(SkString("shader_compilations")); values->push_back(fShaderCompilations);
+    keys->push_back(SkString("texture_uploads")); values->push_back(fTextureUploads);
+    keys->push_back(SkString("number_of_draws")); values->push_back(fNumDraws);
+    keys->push_back(SkString("number_of_failed_draws")); values->push_back(fNumFailedDraws);
+}
+
+#endif
+
+#endif
+>>>>>>> upstream-releases

@@ -47,7 +47,16 @@ static const char* sLibs[] = {
     // clang-format on
 };
 
+<<<<<<< HEAD
 /* static */ bool FFmpegRuntimeLinker::Init() {
+||||||| merged common ancestors
+/* static */ bool
+FFmpegRuntimeLinker::Init()
+{
+=======
+/* static */
+bool FFmpegRuntimeLinker::Init() {
+>>>>>>> upstream-releases
   if (sLinkStatus != LinkStatus_INIT) {
     return sLinkStatus == LinkStatus_SUCCEEDED;
   }
@@ -124,8 +133,18 @@ static const char* sLibs[] = {
   return false;
 }
 
+<<<<<<< HEAD
 /* static */ already_AddRefed<PlatformDecoderModule>
 FFmpegRuntimeLinker::CreateDecoderModule() {
+||||||| merged common ancestors
+/* static */ already_AddRefed<PlatformDecoderModule>
+FFmpegRuntimeLinker::CreateDecoderModule()
+{
+=======
+/* static */
+already_AddRefed<PlatformDecoderModule>
+FFmpegRuntimeLinker::CreateDecoderModule() {
+>>>>>>> upstream-releases
   if (!Init()) {
     return nullptr;
   }

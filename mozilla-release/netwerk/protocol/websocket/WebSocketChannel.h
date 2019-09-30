@@ -49,9 +49,20 @@ class CallAcknowledge;
 class WebSocketEventService;
 
 extern MOZ_MUST_USE nsresult
+<<<<<<< HEAD
 CalculateWebSocketHashedSecret(const nsACString &aKey, nsACString &aHash);
 extern void ProcessServerWebSocketExtensions(const nsACString &aExtensions,
                                              nsACString &aNegotiatedExtensions);
+||||||| merged common ancestors
+CalculateWebSocketHashedSecret(const nsACString& aKey, nsACString& aHash);
+extern void
+ProcessServerWebSocketExtensions(const nsACString& aExtensions,
+                                 nsACString& aNegotiatedExtensions);
+=======
+CalculateWebSocketHashedSecret(const nsACString& aKey, nsACString& aHash);
+extern void ProcessServerWebSocketExtensions(const nsACString& aExtensions,
+                                             nsACString& aNegotiatedExtensions);
+>>>>>>> upstream-releases
 
 // Used to enforce "1 connecting websocket per host" rule, and reconnect delays
 enum wsConnectingState {
@@ -92,6 +103,7 @@ class WebSocketChannel : public BaseWebSocketChannel,
 
   // nsIWebSocketChannel methods BaseWebSocketChannel didn't implement for us
   //
+<<<<<<< HEAD
   NS_IMETHOD AsyncOpen(nsIURI *aURI, const nsACString &aOrigin,
                        uint64_t aWindowID, nsIWebSocketListener *aListener,
                        nsISupports *aContext) override;
@@ -101,6 +113,28 @@ class WebSocketChannel : public BaseWebSocketChannel,
   NS_IMETHOD SendBinaryStream(nsIInputStream *aStream,
                               uint32_t length) override;
   NS_IMETHOD GetSecurityInfo(nsISupports **aSecurityInfo) override;
+||||||| merged common ancestors
+  NS_IMETHOD AsyncOpen(nsIURI *aURI,
+                       const nsACString &aOrigin,
+                       uint64_t aWindowID,
+                       nsIWebSocketListener *aListener,
+                       nsISupports *aContext) override;
+  NS_IMETHOD Close(uint16_t aCode, const nsACString & aReason) override;
+  NS_IMETHOD SendMsg(const nsACString &aMsg) override;
+  NS_IMETHOD SendBinaryMsg(const nsACString &aMsg) override;
+  NS_IMETHOD SendBinaryStream(nsIInputStream *aStream, uint32_t length) override;
+  NS_IMETHOD GetSecurityInfo(nsISupports **aSecurityInfo) override;
+=======
+  NS_IMETHOD AsyncOpen(nsIURI* aURI, const nsACString& aOrigin,
+                       uint64_t aWindowID, nsIWebSocketListener* aListener,
+                       nsISupports* aContext) override;
+  NS_IMETHOD Close(uint16_t aCode, const nsACString& aReason) override;
+  NS_IMETHOD SendMsg(const nsACString& aMsg) override;
+  NS_IMETHOD SendBinaryMsg(const nsACString& aMsg) override;
+  NS_IMETHOD SendBinaryStream(nsIInputStream* aStream,
+                              uint32_t length) override;
+  NS_IMETHOD GetSecurityInfo(nsISupports** aSecurityInfo) override;
+>>>>>>> upstream-releases
 
   WebSocketChannel();
   static void Shutdown();
@@ -137,15 +171,15 @@ class WebSocketChannel : public BaseWebSocketChannel,
   friend class CallAcknowledge;
 
   // Common send code for binary + text msgs
-  MOZ_MUST_USE nsresult SendMsgCommon(const nsACString *aMsg, bool isBinary,
+  MOZ_MUST_USE nsresult SendMsgCommon(const nsACString* aMsg, bool isBinary,
                                       uint32_t length,
-                                      nsIInputStream *aStream = nullptr);
+                                      nsIInputStream* aStream = nullptr);
 
-  void EnqueueOutgoingMessage(nsDeque &aQueue, OutboundMessage *aMsg);
+  void EnqueueOutgoingMessage(nsDeque& aQueue, OutboundMessage* aMsg);
 
   void PrimeNewOutgoingMessage();
   void DeleteCurrentOutGoingMessage();
-  void GeneratePong(uint8_t *payload, uint32_t len);
+  void GeneratePong(uint8_t* payload, uint32_t len);
   void GeneratePing();
 
   MOZ_MUST_USE nsresult OnNetworkChanged();
@@ -157,9 +191,16 @@ class WebSocketChannel : public BaseWebSocketChannel,
   MOZ_MUST_USE nsresult SetupRequest();
   MOZ_MUST_USE nsresult ApplyForAdmission();
   MOZ_MUST_USE nsresult DoAdmissionDNS();
+  MOZ_MUST_USE nsresult CallStartWebsocketData();
   MOZ_MUST_USE nsresult StartWebsocketData();
   uint16_t ResultToCloseCode(nsresult resultCode);
+<<<<<<< HEAD
   void ReportConnectionTelemetry();
+||||||| merged common ancestors
+  void     ReportConnectionTelemetry();
+=======
+  void ReportConnectionTelemetry(nsresult aStatusCode);
+>>>>>>> upstream-releases
 
   void StopSession(nsresult reason);
   void DoStopSession(nsresult reason);
@@ -171,13 +212,23 @@ class WebSocketChannel : public BaseWebSocketChannel,
 
   void EnsureHdrOut(uint32_t size);
 
-  static void ApplyMask(uint32_t mask, uint8_t *data, uint64_t len);
+  static void ApplyMask(uint32_t mask, uint8_t* data, uint64_t len);
 
+<<<<<<< HEAD
   bool IsPersistentFramePtr();
   MOZ_MUST_USE nsresult ProcessInput(uint8_t *buffer, uint32_t count);
   MOZ_MUST_USE bool UpdateReadBuffer(uint8_t *buffer, uint32_t count,
+||||||| merged common ancestors
+  bool     IsPersistentFramePtr();
+  MOZ_MUST_USE nsresult ProcessInput(uint8_t *buffer, uint32_t count);
+  MOZ_MUST_USE bool UpdateReadBuffer(uint8_t *buffer, uint32_t count,
+=======
+  bool IsPersistentFramePtr();
+  MOZ_MUST_USE nsresult ProcessInput(uint8_t* buffer, uint32_t count);
+  MOZ_MUST_USE bool UpdateReadBuffer(uint8_t* buffer, uint32_t count,
+>>>>>>> upstream-releases
                                      uint32_t accumulatedFragments,
-                                     uint32_t *available);
+                                     uint32_t* available);
 
   inline void ResetPingTimer() {
     mPingOutstanding = 0;
@@ -272,16 +323,33 @@ class WebSocketChannel : public BaseWebSocketChannel,
   // increase the buffer temporarily, then drop back down to this size.
   const static uint32_t kIncomingBufferStableSize = 128 * 1024;
 
+<<<<<<< HEAD
   uint8_t *mFramePtr;
   uint8_t *mBuffer;
   uint8_t mFragmentOpcode;
   uint32_t mFragmentAccumulator;
   uint32_t mBuffered;
   uint32_t mBufferSize;
+||||||| merged common ancestors
+  uint8_t                        *mFramePtr;
+  uint8_t                        *mBuffer;
+  uint8_t                         mFragmentOpcode;
+  uint32_t                        mFragmentAccumulator;
+  uint32_t                        mBuffered;
+  uint32_t                        mBufferSize;
+=======
+  uint8_t* mFramePtr;
+  uint8_t* mBuffer;
+  uint8_t mFragmentOpcode;
+  uint32_t mFragmentAccumulator;
+  uint32_t mBuffered;
+  uint32_t mBufferSize;
+>>>>>>> upstream-releases
 
   // These are for the send buffers
   const static int32_t kCopyBreak = 1000;
 
+<<<<<<< HEAD
   OutboundMessage *mCurrentOut;
   uint32_t mCurrentOutSent;
   nsDeque mOutgoingMessages;
@@ -294,6 +362,33 @@ class WebSocketChannel : public BaseWebSocketChannel,
   uint32_t mDynamicOutputSize;
   uint8_t *mDynamicOutput;
   bool mPrivateBrowsing;
+||||||| merged common ancestors
+  OutboundMessage                *mCurrentOut;
+  uint32_t                        mCurrentOutSent;
+  nsDeque                         mOutgoingMessages;
+  nsDeque                         mOutgoingPingMessages;
+  nsDeque                         mOutgoingPongMessages;
+  uint32_t                        mHdrOutToSend;
+  uint8_t                        *mHdrOut;
+  uint8_t                         mOutHeader[kCopyBreak + 16];
+  nsAutoPtr<PMCECompression>      mPMCECompressor;
+  uint32_t                        mDynamicOutputSize;
+  uint8_t                        *mDynamicOutput;
+  bool                            mPrivateBrowsing;
+=======
+  OutboundMessage* mCurrentOut;
+  uint32_t mCurrentOutSent;
+  nsDeque mOutgoingMessages;
+  nsDeque mOutgoingPingMessages;
+  nsDeque mOutgoingPongMessages;
+  uint32_t mHdrOutToSend;
+  uint8_t* mHdrOut;
+  uint8_t mOutHeader[kCopyBreak + 16];
+  nsAutoPtr<PMCECompression> mPMCECompressor;
+  uint32_t mDynamicOutputSize;
+  uint8_t* mDynamicOutput;
+  bool mPrivateBrowsing;
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIDashboardEventNotifier> mConnectionLogService;
 

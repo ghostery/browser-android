@@ -61,9 +61,29 @@ class SlicedInputStream final : public nsIAsyncInputStream,
  private:
   ~SlicedInputStream();
 
+<<<<<<< HEAD
+  void SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
+||||||| merged common ancestors
+  void
+  SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
+=======
+  template <typename M>
+  void SerializeInternal(mozilla::ipc::InputStreamParams& aParams,
+                         FileDescriptorArray& aFileDescriptors,
+                         bool aDelayedStart, uint32_t aMaxSize,
+                         uint32_t* aSizeUsed, M* aManager);
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  uint64_t AdjustRange(uint64_t aRange);
+||||||| merged common ancestors
+  uint64_t
+  AdjustRange(uint64_t aRange);
+=======
   void SetSourceStream(already_AddRefed<nsIInputStream> aInputStream);
 
   uint64_t AdjustRange(uint64_t aRange);
+>>>>>>> upstream-releases
 
   nsCOMPtr<nsIInputStream> mInputStream;
 

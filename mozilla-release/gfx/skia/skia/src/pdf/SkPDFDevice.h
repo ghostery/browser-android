@@ -13,27 +13,44 @@
 #include "SkClipStack.h"
 #include "SkClipStackDevice.h"
 #include "SkData.h"
+#include "SkKeyedImage.h"
+#include "SkPDFTypes.h"
 #include "SkPaint.h"
 #include "SkRect.h"
 #include "SkRefCnt.h"
 #include "SkStream.h"
+<<<<<<< HEAD
 #include "SkTextBlobPriv.h"
 #include "SkKeyedImage.h"
+||||||| merged common ancestors
+#include "SkTDArray.h"
+#include "SkTextBlob.h"
+#include "SkKeyedImage.h"
+=======
+#include "SkTHash.h"
+#include "SkTextBlobPriv.h"
 
+#include <vector>
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
 #include <vector>
 
 class SkGlyphRunList;
+||||||| merged common ancestors
+=======
+class SkGlyphRunList;
+>>>>>>> upstream-releases
 class SkKeyedImage;
-class SkPath;
 class SkPDFArray;
-class SkPDFCanon;
 class SkPDFDevice;
-class SkPDFDocument;
 class SkPDFDict;
+class SkPDFDocument;
 class SkPDFFont;
 class SkPDFObject;
-class SkPDFStream;
+class SkPath;
 class SkRRect;
+struct SkPDFIndirectReference;
 
 /**
  *  \class SkPDFDevice
@@ -47,8 +64,8 @@ public:
      *  @param pageSize Page size in point units.
      *         1 point == 127/360 mm == 1/72 inch
      *  @param document  A non-null pointer back to the
-     *         PDFDocument object.  The document is repsonsible for
-     *         de-duplicating across pages (via the SkPDFCanon) and
+     *         PDFDocument object.  The document is responsible for
+     *         de-duplicating across pages (via the SkPDFDocument) and
      *         for early serializing of large immutable objects, such
      *         as images (via SkPDFDocument::serialize()).
      *  @param initialTransform Transform to be applied to the entire page.
@@ -77,13 +94,9 @@ public:
     void drawPath(const SkPath& origpath, const SkPaint& paint, bool pathIsMutable) override;
     void drawBitmapRect(const SkBitmap& bitmap, const SkRect* src,
                         const SkRect& dst, const SkPaint&, SkCanvas::SrcRectConstraint) override;
-    void drawBitmap(const SkBitmap& bitmap, SkScalar x, SkScalar y, const SkPaint&) override;
     void drawSprite(const SkBitmap& bitmap, int x, int y,
                     const SkPaint& paint) override;
-    void drawImage(const SkImage*,
-                   SkScalar x,
-                   SkScalar y,
-                   const SkPaint&) override;
+
     void drawImageRect(const SkImage*,
                        const SkRect* src,
                        const SkRect& dst,
@@ -97,23 +110,61 @@ public:
 
     // PDF specific methods.
 
+<<<<<<< HEAD
     /** Create the resource dictionary for this device. Destructive. */
     sk_sp<SkPDFDict> makeResourceDict();
+||||||| merged common ancestors
+    /** Create the resource dictionary for this device. */
+    sk_sp<SkPDFDict> makeResourceDict() const;
+=======
+    /** Create the resource dictionary for this device. Destructive. */
+    std::unique_ptr<SkPDFDict> makeResourceDict();
+>>>>>>> upstream-releases
 
+<<<<<<< HEAD
     /** return annotations (link to urls and destinations) or nulltpr */
     sk_sp<SkPDFArray> getAnnotations();
+||||||| merged common ancestors
+    /** Add our annotations (link to urls and destinations) to the supplied
+     *  array.
+     *  @param array Array to add annotations to.
+     */
+    void appendAnnotations(SkPDFArray* array) const;
+=======
+    /** return annotations (link to urls and destinations) or nulltpr */
+    std::unique_ptr<SkPDFArray> getAnnotations();
+>>>>>>> upstream-releases
 
     /** Add our named destinations to the supplied dictionary.
      *  @param dict  Dictionary to add destinations to.
      *  @param page  The PDF object representing the page for this device.
      */
+<<<<<<< HEAD
     void appendDestinations(SkPDFDict* dict, SkPDFObject* page) const;
 
+||||||| merged common ancestors
+    void appendDestinations(SkPDFDict* dict, SkPDFObject* page) const;
+
+    /** Returns a copy of the media box for this device. */
+    sk_sp<SkPDFArray> copyMediaBox() const;
+
+=======
+    void appendDestinations(SkPDFDict* dict, SkPDFIndirectReference page) const;
+
+>>>>>>> upstream-releases
     /** Returns a SkStream with the page contents.
      */
+<<<<<<< HEAD
     std::unique_ptr<SkStreamAsset> content();
 
     SkPDFCanon* getCanon() const;
+||||||| merged common ancestors
+    std::unique_ptr<SkStreamAsset> content() const;
+
+    SkPDFCanon* getCanon() const;
+=======
+    std::unique_ptr<SkStreamAsset> content();
+>>>>>>> upstream-releases
 
     SkISize size() const { return this->imageInfo().dimensions(); }
     SkIRect bounds() const { return this->imageInfo().bounds(); }
@@ -160,6 +211,7 @@ private:
     friend class ScopedContentEntry;
 
     SkMatrix fInitialTransform;
+<<<<<<< HEAD
 
     std::vector<RectWithData> fLinkToURLs;
     std::vector<RectWithData> fLinkToDestinations;
@@ -188,6 +240,51 @@ private:
         SkPDFDevice::GraphicStateEntry fEntries[kMaxStackDepth + 1];
         int fStackDepth = 0;
         SkDynamicMemoryWStream* fContentStream;
+||||||| merged common ancestors
+    SkClipStack fExistingClipStack;
+
+    SkTArray<RectWithData> fLinkToURLs;
+    SkTArray<RectWithData> fLinkToDestinations;
+    SkTArray<NamedDestination> fNamedDestinations;
+
+    SkTDArray<SkPDFObject*> fGraphicStateResources;
+    SkTDArray<SkPDFObject*> fXObjectResources;
+    SkTDArray<SkPDFFont*> fFontResources;
+    SkTDArray<SkPDFObject*> fShaderResources;
+
+    struct ContentEntry {
+        GraphicStateEntry fState;
+        SkDynamicMemoryWStream fContent;
+=======
+
+    std::vector<RectWithData> fLinkToURLs;
+    std::vector<RectWithData> fLinkToDestinations;
+    std::vector<NamedDestination> fNamedDestinations;
+
+    SkTHashSet<SkPDFIndirectReference> fGraphicStateResources;
+    SkTHashSet<SkPDFIndirectReference> fXObjectResources;
+    SkTHashSet<SkPDFIndirectReference> fShaderResources;
+    SkTHashSet<SkPDFIndirectReference> fFontResources;
+    int fNodeId;
+
+    SkDynamicMemoryWStream fContent;
+    SkDynamicMemoryWStream fContentBuffer;
+    bool fNeedsExtraSave = false;
+    struct GraphicStackState {
+        GraphicStackState(SkDynamicMemoryWStream* s = nullptr);
+        void updateClip(const SkClipStack* clipStack, const SkIRect& bounds);
+        void updateMatrix(const SkMatrix& matrix);
+        void updateDrawingState(const SkPDFDevice::GraphicStateEntry& state);
+        void push();
+        void pop();
+        void drainStack();
+        SkPDFDevice::GraphicStateEntry* currentEntry() { return &fEntries[fStackDepth]; }
+        // Must use stack for matrix, and for clip, plus one for no matrix or clip.
+        static constexpr int kMaxStackDepth = 2;
+        SkPDFDevice::GraphicStateEntry fEntries[kMaxStackDepth + 1];
+        int fStackDepth = 0;
+        SkDynamicMemoryWStream* fContentStream;
+>>>>>>> upstream-releases
     };
     GraphicStackState fActiveStackState;
     SkPDFDocument* fDocument;
@@ -197,10 +294,19 @@ private:
     SkBaseDevice* onCreateDevice(const CreateInfo&, const SkPaint*) override;
 
     // Set alpha to true if making a transparency group form x-objects.
-    sk_sp<SkPDFObject> makeFormXObjectFromDevice(bool alpha = false);
+    SkPDFIndirectReference makeFormXObjectFromDevice(bool alpha = false);
 
+<<<<<<< HEAD
     void drawFormXObjectWithMask(sk_sp<SkPDFObject> xObject,
                                  sk_sp<SkPDFObject> mask,
+||||||| merged common ancestors
+    void drawFormXObjectWithMask(int xObjectIndex,
+                                 sk_sp<SkPDFObject> mask,
+                                 const SkClipStack& clipStack,
+=======
+    void drawFormXObjectWithMask(SkPDFIndirectReference xObject,
+                                 SkPDFIndirectReference sMask,
+>>>>>>> upstream-releases
                                  SkBlendMode,
                                  bool invertClip);
 
@@ -208,14 +314,31 @@ private:
     // returns nullptr and does not create a content entry.
     // setUpContentEntry and finishContentEntry can be used directly, but
     // the preferred method is to use the ScopedContentEntry helper class.
+<<<<<<< HEAD
     SkDynamicMemoryWStream* setUpContentEntry(const SkClipStack* clipStack,
                                     const SkMatrix& matrix,
                                     const SkPaint& paint,
                                     bool hasText,
                                     sk_sp<SkPDFObject>* dst);
     void finishContentEntry(const SkClipStack*, SkBlendMode, sk_sp<SkPDFObject> dst, SkPath* shape);
+||||||| merged common ancestors
+    ContentEntry* setUpContentEntry(const SkClipStack& clipStack,
+                                    const SkMatrix& matrix,
+                                    const SkPaint& paint,
+                                    bool hasText,
+                                    sk_sp<SkPDFObject>* dst);
+    void finishContentEntry(SkBlendMode, sk_sp<SkPDFObject> dst, SkPath* shape);
+=======
+    SkDynamicMemoryWStream* setUpContentEntry(const SkClipStack* clipStack,
+                                              const SkMatrix& matrix,
+                                              const SkPaint& paint,
+                                              SkScalar,
+                                              SkPDFIndirectReference* dst);
+    void finishContentEntry(const SkClipStack*, SkBlendMode, SkPDFIndirectReference, SkPath*);
+>>>>>>> upstream-releases
     bool isContentEmpty();
 
+<<<<<<< HEAD
     void populateGraphicStateEntryFromPaint(const SkMatrix& matrix,
                                             const SkClipStack* clipStack,
                                             const SkPaint& paint,
@@ -224,6 +347,27 @@ private:
 
     void internalDrawGlyphRun(const SkGlyphRun& glyphRun, SkPoint offset);
     void drawGlyphRunAsPath(const SkGlyphRun& glyphRun, SkPoint offset);
+||||||| merged common ancestors
+    void populateGraphicStateEntryFromPaint(const SkMatrix& matrix,
+                                            const SkClipStack& clipStack,
+                                            const SkPaint& paint,
+                                            bool hasText,
+                                            GraphicStateEntry* entry);
+    int addGraphicStateResource(SkPDFObject* gs);
+    int addXObjectResource(SkPDFObject* xObject);
+
+    int getFontResourceIndex(SkTypeface* typeface, uint16_t glyphID);
+
+
+    void internalDrawText( const void*, size_t, const SkScalar pos[],
+                          SkTextBlob::GlyphPositioning, SkPoint, const SkPaint&,
+                          const uint32_t*, uint32_t, const char*);
+
+    void internalDrawPaint(const SkPaint& paint, ContentEntry* contentEntry);
+=======
+    void internalDrawGlyphRun(const SkGlyphRun& glyphRun, SkPoint offset, const SkPaint& runPaint);
+    void drawGlyphRunAsPath(const SkGlyphRun& glyphRun, SkPoint offset, const SkPaint& runPaint);
+>>>>>>> upstream-releases
 
     void internalDrawImageRect(SkKeyedImage,
                                const SkRect* src,
@@ -246,12 +390,22 @@ private:
 
     void addSMaskGraphicState(sk_sp<SkPDFDevice> maskDevice, SkDynamicMemoryWStream*);
     void clearMaskOnGraphicState(SkDynamicMemoryWStream*);
+<<<<<<< HEAD
     void setGraphicState(sk_sp<SkPDFObject>, SkDynamicMemoryWStream*);
     void drawFormXObject(sk_sp<SkPDFObject>, SkDynamicMemoryWStream*);
 
     bool hasEmptyClip() const { return this->cs().isEmpty(this->bounds()); }
 
     void reset();
+||||||| merged common ancestors
+=======
+    void setGraphicState(SkPDFIndirectReference gs, SkDynamicMemoryWStream*);
+    void drawFormXObject(SkPDFIndirectReference xObject, SkDynamicMemoryWStream*);
+
+    bool hasEmptyClip() const { return this->cs().isEmpty(this->bounds()); }
+
+    void reset();
+>>>>>>> upstream-releases
 
     typedef SkClipStackDevice INHERITED;
 };

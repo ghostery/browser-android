@@ -9,8 +9,8 @@
 #include "mozilla/gfx/JobScheduler.h"
 
 #ifndef WIN32
-#include <pthread.h>
-#include <sched.h>
+#  include <pthread.h>
+#  include <sched.h>
 #endif
 
 #include <stdlib.h>
@@ -24,7 +24,14 @@ using mozilla::gfx::SyncObject;
 
 // Artificially cause threads to yield randomly in an attempt to make racy
 // things more apparent (if any).
+<<<<<<< HEAD
 void MaybeYieldThread() {
+||||||| merged common ancestors
+void MaybeYieldThread()
+{
+=======
+static void MaybeYieldThread() {
+>>>>>>> upstream-releases
 #ifndef WIN32
   if (rand() % 5 == 0) {
     sched_yield();
@@ -109,10 +116,22 @@ class TestJob : public Job {
 /// This simulates the kind of scenario where all tiles must join at
 /// a certain point to execute, say, a filter, and fork again after the filter
 /// has been processed.
+<<<<<<< HEAD
 /// The main thread is only blocked when waiting for the completion of the
 /// entire task stream (it doesn't have to wait at the filter's sync points to
 /// orchestrate it).
 void TestSchedulerJoin(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
+||||||| merged common ancestors
+/// The main thread is only blocked when waiting for the completion of the entire
+/// task stream (it doesn't have to wait at the filter's sync points to orchestrate it).
+void TestSchedulerJoin(uint32_t aNumThreads, uint32_t aNumCmdBuffers)
+{
+=======
+/// The main thread is only blocked when waiting for the completion of the
+/// entire task stream (it doesn't have to wait at the filter's sync points to
+/// orchestrate it).
+static void TestSchedulerJoin(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
+>>>>>>> upstream-releases
   JoinTestSanityCheck check(aNumCmdBuffers);
 
   RefPtr<SyncObject> beforeFilter = new SyncObject(aNumCmdBuffers);
@@ -146,11 +165,26 @@ void TestSchedulerJoin(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
   }
 }
 
+<<<<<<< HEAD
 /// This test creates several chains of 10 task, tasks of a given chain are
 /// executed sequentially, and chains are exectuted in parallel. This simulates
 /// the typical scenario where we want to process sequences of drawing commands
 /// for several tiles in parallel.
 void TestSchedulerChain(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
+||||||| merged common ancestors
+/// This test creates several chains of 10 task, tasks of a given chain are executed
+/// sequentially, and chains are exectuted in parallel.
+/// This simulates the typical scenario where we want to process sequences of drawing
+/// commands for several tiles in parallel.
+void TestSchedulerChain(uint32_t aNumThreads, uint32_t aNumCmdBuffers)
+{
+=======
+/// This test creates several chains of 10 task, tasks of a given chain are
+/// executed sequentially, and chains are exectuted in parallel. This simulates
+/// the typical scenario where we want to process sequences of drawing commands
+/// for several tiles in parallel.
+static void TestSchedulerChain(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
+>>>>>>> upstream-releases
   SanityChecker check(aNumCmdBuffers);
 
   RefPtr<SyncObject> completion = new SyncObject(aNumCmdBuffers);
@@ -198,7 +232,8 @@ void TestSchedulerChain(uint32_t aNumThreads, uint32_t aNumCmdBuffers) {
 }  // namespace test_scheduler
 
 #if !defined(MOZ_CODE_COVERAGE) || !defined(XP_WIN)
-TEST(Moz2D, JobScheduler_Shutdown) {
+TEST(Moz2D, JobScheduler_Shutdown)
+{
   srand(time(nullptr));
   for (uint32_t threads = 1; threads < 16; ++threads) {
     for (uint32_t i = 1; i < 1000; ++i) {
@@ -209,7 +244,8 @@ TEST(Moz2D, JobScheduler_Shutdown) {
 }
 #endif
 
-TEST(Moz2D, JobScheduler_Join) {
+TEST(Moz2D, JobScheduler_Join)
+{
   srand(time(nullptr));
   for (uint32_t threads = 1; threads < 8; ++threads) {
     for (uint32_t queues = 1; queues < threads; ++queues) {
@@ -222,7 +258,8 @@ TEST(Moz2D, JobScheduler_Join) {
   }
 }
 
-TEST(Moz2D, JobScheduler_Chain) {
+TEST(Moz2D, JobScheduler_Chain)
+{
   srand(time(nullptr));
   for (uint32_t threads = 1; threads < 8; ++threads) {
     for (uint32_t queues = 1; queues < threads; ++queues) {

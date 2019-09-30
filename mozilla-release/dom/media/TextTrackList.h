@@ -50,7 +50,6 @@ class TextTrackList final : public DOMEventTargetHelper {
   void AddTextTrack(TextTrack* aTextTrack, const CompareTextTracks& aCompareTT);
 
   void RemoveTextTrack(TextTrack* aTrack);
-  void DidSeek();
 
   HTMLMediaElement* GetMediaElement();
   void SetTextTrackManager(TextTrackManager* aTextTrackManager);
@@ -66,9 +65,17 @@ class TextTrackList final : public DOMEventTargetHelper {
   IMPL_EVENT_HANDLER(addtrack)
   IMPL_EVENT_HANDLER(removetrack)
 
+<<<<<<< HEAD
   bool mPendingTextTrackChange = false;
 
  private:
+||||||| merged common ancestors
+  bool mPendingTextTrackChange = false;
+
+private:
+=======
+ private:
+>>>>>>> upstream-releases
   ~TextTrackList();
 
   nsTArray<RefPtr<TextTrack>> mTextTracks;

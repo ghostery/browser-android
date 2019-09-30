@@ -59,8 +59,19 @@ class nsLeafFrame : public nsFrame {
     return nsFrame::IsFrameOfType(aFlags & ~(nsIFrame::eReplacedContainsBlock));
   }
 
+<<<<<<< HEAD
  protected:
   nsLeafFrame(ComputedStyle* aStyle, ClassID aID) : nsFrame(aStyle, aID) {}
+||||||| merged common ancestors
+protected:
+  nsLeafFrame(ComputedStyle* aStyle, ClassID aID)
+    : nsFrame(aStyle, aID)
+  {}
+=======
+ protected:
+  nsLeafFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID)
+      : nsFrame(aStyle, aPresContext, aID) {}
+>>>>>>> upstream-releases
 
   virtual ~nsLeafFrame();
 

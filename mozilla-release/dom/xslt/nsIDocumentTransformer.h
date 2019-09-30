@@ -11,9 +11,9 @@
 template <class>
 class nsCOMPtr;
 class nsIContent;
-class nsIDocument;
 class nsINode;
 class nsIURI;
+<<<<<<< HEAD
 template <class>
 class nsTArray;
 
@@ -26,12 +26,56 @@ class nsTArray;
 
 class nsITransformObserver : public nsISupports {
  public:
+||||||| merged common ancestors
+template<class> class nsTArray;
+
+#define NS_ITRANSFORMOBSERVER_IID \
+{ 0x04b2d17c, 0xe98d, 0x45f5, \
+  { 0x9a, 0x67, 0xb7, 0x01, 0x19, 0x59, 0x7d, 0xe7 } }
+
+class nsITransformObserver : public nsISupports
+{
+public:
+
+=======
+template <class>
+class nsTArray;
+
+namespace mozilla {
+namespace dom {
+class Document;
+}
+}  // namespace mozilla
+
+#define NS_ITRANSFORMOBSERVER_IID                    \
+  {                                                  \
+    0x04b2d17c, 0xe98d, 0x45f5, {                    \
+      0x9a, 0x67, 0xb7, 0x01, 0x19, 0x59, 0x7d, 0xe7 \
+    }                                                \
+  }
+
+class nsITransformObserver : public nsISupports {
+ public:
+>>>>>>> upstream-releases
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_ITRANSFORMOBSERVER_IID)
 
+<<<<<<< HEAD
   NS_IMETHOD OnDocumentCreated(nsIDocument* aResultDocument) = 0;
+||||||| merged common ancestors
+  NS_IMETHOD OnDocumentCreated(nsIDocument *aResultDocument) = 0;
+=======
+  NS_IMETHOD OnDocumentCreated(mozilla::dom::Document* aResultDocument) = 0;
+>>>>>>> upstream-releases
 
   NS_IMETHOD OnTransformDone(nsresult aResult,
+<<<<<<< HEAD
                              nsIDocument* aResultDocument) = 0;
+||||||| merged common ancestors
+                             nsIDocument *aResultDocument) = 0;
+
+=======
+                             mozilla::dom::Document* aResultDocument) = 0;
+>>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsITransformObserver, NS_ITRANSFORMOBSERVER_IID)
@@ -48,7 +92,8 @@ class nsIDocumentTransformer : public nsISupports {
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IDOCUMENTTRANSFORMER_IID)
 
   NS_IMETHOD SetTransformObserver(nsITransformObserver* aObserver) = 0;
-  NS_IMETHOD LoadStyleSheet(nsIURI* aUri, nsIDocument* aLoaderDocument) = 0;
+  NS_IMETHOD LoadStyleSheet(nsIURI* aUri,
+                            mozilla::dom::Document* aLoaderDocument) = 0;
   NS_IMETHOD SetSourceContentModel(nsINode* aSource) = 0;
   NS_IMETHOD CancelLoads() = 0;
 

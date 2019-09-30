@@ -14,27 +14,38 @@ function observer(aSubject, aTopic, aData) {
   let method;
   switch (aData) {
     case "engine-added":
-      if (gCurrentTest.added)
+      if (gCurrentTest.added) {
         method = "added";
+      }
       break;
-    case "engine-current":
-      if (gCurrentTest.current)
+    case "engine-default":
+      if (gCurrentTest.current) {
         method = "current";
+      }
       break;
     case "engine-removed":
-      if (gCurrentTest.removed)
+      if (gCurrentTest.removed) {
         method = "removed";
+      }
       break;
   }
 
-  if (method)
+  if (method) {
     gCurrentTest[method](engine);
+  }
 }
 
 function checkEngine(checkObj, engineObj) {
   info("Checking engine");
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
   for (let prop in checkObj)
+||||||| merged common ancestors
+  for (var prop in checkObj)
+=======
+  for (let prop in checkObj) {
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
     is(checkObj[prop], engineObj[prop], prop + " is correct");
+  }
 }
 
 var gTests = [
@@ -44,14 +55,33 @@ var gTests = [
       name: "Foo",
       alias: null,
       description: "Foo Search",
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
       searchForm: "http://mochi.test:8888/browser/browser/components/search/test/browser/",
+||||||| merged common ancestors
+      searchForm: "http://mochi.test:8888/browser/browser/components/search/test/",
+=======
+      searchForm:
+        "http://mochi.test:8888/browser/browser/components/search/test/browser/",
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
     },
     run() {
       Services.obs.addObserver(observer, "browser-search-engine-modified");
 
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
       gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/browser/testEngine.xml",
                     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGklEQVQoz2NgGB6AnZ1dUlJSXl4eSDIyMhLW4Ovr%2B%2Fr168uXL69Zs4YoG%2BLi4i5dusTExMTGxsbNzd3f37937976%2BnpmZmagbHR09J49e5YvX66kpATVEBYW9ubNm2nTphkbG7e2tp44cQLIuHfvXm5urpaWFlDKysqqu7v73LlzECMYIiIiHj58mJCQoKKicvXq1bS0NKBgW1vbjh074uPjgeqAXE1NzSdPnvDz84M0AEUvXLgAsW379u1z5swBen3jxo2zZ892cHB4%2BvQp0KlAfwI1cHJyghQFBwfv2rULokFXV%2FfixYu7d%2B8GGqGgoMDKyrpu3br9%2B%2FcDuXl5eVA%2FAEWBfoWHAdAYoNuAYQ0XAeoUERFhGDYAAPoUaT2dfWJuAAAAAElFTkSuQmCC",
                     false);
+||||||| merged common ancestors
+      gSS.addEngine("http://mochi.test:8888/browser/browser/components/search/test/testEngine.xml",
+                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGklEQVQoz2NgGB6AnZ1dUlJSXl4eSDIyMhLW4Ovr%2B%2Fr168uXL69Zs4YoG%2BLi4i5dusTExMTGxsbNzd3f37937976%2BnpmZmagbHR09J49e5YvX66kpATVEBYW9ubNm2nTphkbG7e2tp44cQLIuHfvXm5urpaWFlDKysqqu7v73LlzECMYIiIiHj58mJCQoKKicvXq1bS0NKBgW1vbjh074uPjgeqAXE1NzSdPnvDz84M0AEUvXLgAsW379u1z5swBen3jxo2zZ892cHB4%2BvQp0KlAfwI1cHJyghQFBwfv2rULokFXV%2FfixYu7d%2B8GGqGgoMDKyrpu3br9%2B%2FcDuXl5eVA%2FAEWBfoWHAdAYoNuAYQ0XAeoUERFhGDYAAPoUaT2dfWJuAAAAAElFTkSuQmCC",
+                    false);
+=======
+      gSS.addEngine(
+        "http://mochi.test:8888/browser/browser/components/search/test/browser/testEngine.xml",
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGklEQVQoz2NgGB6AnZ1dUlJSXl4eSDIyMhLW4Ovr%2B%2Fr168uXL69Zs4YoG%2BLi4i5dusTExMTGxsbNzd3f37937976%2BnpmZmagbHR09J49e5YvX66kpATVEBYW9ubNm2nTphkbG7e2tp44cQLIuHfvXm5urpaWFlDKysqqu7v73LlzECMYIiIiHj58mJCQoKKicvXq1bS0NKBgW1vbjh074uPjgeqAXE1NzSdPnvDz84M0AEUvXLgAsW379u1z5swBen3jxo2zZ892cHB4%2BvQp0KlAfwI1cHJyghQFBwfv2rULokFXV%2FfixYu7d%2B8GGqGgoMDKyrpu3br9%2B%2FcDuXl5eVA%2FAEWBfoWHAdAYoNuAYQ0XAeoUERFhGDYAAPoUaT2dfWJuAAAAAElFTkSuQmCC",
+        false
+      );
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
     },
     added(engine) {
       ok(engine, "engine was added.");
@@ -67,22 +97,50 @@ var gTests = [
       gSS.defaultEngine = engine;
     },
     current(engine) {
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
       let currentEngine = gSS.defaultEngine;
       is(engine, currentEngine, "engine is current");
       is(engine.name, this.engine.name, "current engine was changed successfully");
+||||||| merged common ancestors
+      let currentEngine = gSS.currentEngine;
+      is(engine, currentEngine, "engine is current");
+      is(engine.name, this.engine.name, "current engine was changed successfully");
+=======
+      let defaultEngine = gSS.defaultEngine;
+      is(engine, defaultEngine, "engine is current");
+      is(
+        engine.name,
+        this.engine.name,
+        "current engine was changed successfully"
+      );
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
 
       gSS.removeEngine(engine);
     },
     removed(engine) {
-      // Remove the observer before calling the currentEngine getter,
-      // as that getter will set the currentEngine to the original default
+      // Remove the observer before calling the defaultEngine getter,
+      // as that getter will set the defaultEngine to the original default
       // which will trigger a notification causing the test to loop over all
       // engines.
       Services.obs.removeObserver(observer, "browser-search-engine-modified");
 
+<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
       let currentEngine = gSS.defaultEngine;
       ok(currentEngine, "An engine is present.");
       isnot(currentEngine.name, this.engine.name, "Current engine reset after removal");
+||||||| merged common ancestors
+      let currentEngine = gSS.currentEngine;
+      ok(currentEngine, "An engine is present.");
+      isnot(currentEngine.name, this.engine.name, "Current engine reset after removal");
+=======
+      let defaultEngine = gSS.defaultEngine;
+      ok(defaultEngine, "An engine is present.");
+      isnot(
+        defaultEngine.name,
+        this.engine.name,
+        "Current engine reset after removal"
+      );
+>>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_addEngine.js
 
       nextTest();
     },
@@ -95,11 +153,12 @@ function nextTest() {
     gCurrentTest = gTests.shift();
     info("Running " + gCurrentTest.name);
     gCurrentTest.run();
-  } else
+  } else {
     executeSoon(finish);
+  }
 }
 
 function test() {
   waitForExplicitFinish();
-  nextTest();
+  gSS.init().then(nextTest);
 }

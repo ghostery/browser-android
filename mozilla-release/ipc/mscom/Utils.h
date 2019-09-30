@@ -8,8 +8,16 @@
 #define mozilla_mscom_Utils_h
 
 #if defined(MOZILLA_INTERNAL_API)
+<<<<<<< HEAD
 #include "nsString.h"
 #endif  // defined(MOZILLA_INTERNAL_API)
+||||||| merged common ancestors
+#include "nsString.h"
+#endif // defined(MOZILLA_INTERNAL_API)
+=======
+#  include "nsString.h"
+#endif  // defined(MOZILLA_INTERNAL_API)
+>>>>>>> upstream-releases
 
 #include "mozilla/Attributes.h"
 #include <guiddef.h>
@@ -56,12 +64,18 @@ void GUIDToString(REFGUID aGuid, nsAString& aOutString);
 bool IsVtableIndexFromParentInterface(REFIID aInterface,
                                       unsigned long aVtableIndex);
 
-#if defined(MOZILLA_INTERNAL_API)
+#  if defined(MOZILLA_INTERNAL_API)
 bool IsCallerExternalProcess();
 
 bool IsInterfaceEqualToOrInheritedFrom(REFIID aInterface, REFIID aFrom,
                                        unsigned long aVtableIndexHint);
+<<<<<<< HEAD
 #endif  // defined(MOZILLA_INTERNAL_API)
+||||||| merged common ancestors
+#endif // defined(MOZILLA_INTERNAL_API)
+=======
+#  endif  // defined(MOZILLA_INTERNAL_API)
+>>>>>>> upstream-releases
 
 #endif  // defined(ACCESSIBILITY)
 

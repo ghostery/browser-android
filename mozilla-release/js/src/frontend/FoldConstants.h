@@ -31,6 +31,7 @@ class PerHandlerParser;
 //    if (!FoldConstants(cx, &pn, parser)) {
 //        return false;
 //    }
+<<<<<<< HEAD
 extern MOZ_MUST_USE bool FoldConstants(
     JSContext* cx, ParseNode** pnp, PerHandlerParser<FullParseHandler>* parser);
 
@@ -38,6 +39,24 @@ inline MOZ_MUST_USE bool FoldConstants(
     JSContext* cx, typename SyntaxParseHandler::Node* pnp,
     PerHandlerParser<SyntaxParseHandler>* parser) {
   return true;
+||||||| merged common ancestors
+extern MOZ_MUST_USE bool
+FoldConstants(JSContext* cx, ParseNode** pnp, PerHandlerParser<FullParseHandler>* parser);
+
+inline MOZ_MUST_USE bool
+FoldConstants(JSContext* cx, typename SyntaxParseHandler::Node* pnp,
+              PerHandlerParser<SyntaxParseHandler>* parser)
+{
+    return true;
+=======
+extern MOZ_MUST_USE bool FoldConstants(JSContext* cx, ParseNode** pnp,
+                                       FullParseHandler* parser);
+
+inline MOZ_MUST_USE bool FoldConstants(JSContext* cx,
+                                       typename SyntaxParseHandler::Node* pnp,
+                                       SyntaxParseHandler* parser) {
+  return true;
+>>>>>>> upstream-releases
 }
 
 } /* namespace frontend */

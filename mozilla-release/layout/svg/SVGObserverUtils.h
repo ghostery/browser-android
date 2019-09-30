@@ -11,18 +11,14 @@
 #include "mozilla/dom/IDTracker.h"
 #include "FrameProperties.h"
 #include "mozilla/dom/Element.h"
-#include "nsHashKeys.h"
 #include "nsID.h"
 #include "nsIFrame.h"
 #include "nsIMutationObserver.h"
-#include "nsInterfaceHashtable.h"
 #include "nsISupportsBase.h"
 #include "nsISupportsImpl.h"
 #include "nsStringFwd.h"
 #include "nsStubMutationObserver.h"
 #include "nsSVGUtils.h"
-#include "nsTHashtable.h"
-#include "nsURIHashKey.h"
 #include "nsCycleCollectionParticipant.h"
 
 class nsAtom;
@@ -55,18 +51,35 @@ class URLAndReferrerInfo {
     MOZ_ASSERT(aURI);
   }
 
+<<<<<<< HEAD
   URLAndReferrerInfo(nsIURI* aURI, URLExtraData* aExtraData)
       : mURI(aURI),
         mReferrer(aExtraData->GetReferrer()),
         mReferrerPolicy(aExtraData->GetReferrerPolicy()) {
+||||||| merged common ancestors
+  URLAndReferrerInfo(nsIURI* aURI, URLExtraData* aExtraData)
+    : mURI(aURI)
+    , mReferrer(aExtraData->GetReferrer())
+    , mReferrerPolicy(aExtraData->GetReferrerPolicy())
+  {
+=======
+  URLAndReferrerInfo(nsIURI* aURI, const URLExtraData& aExtraData)
+      : mURI(aURI),
+        mReferrer(aExtraData.GetReferrer()),
+        mReferrerPolicy(aExtraData.GetReferrerPolicy()) {
+>>>>>>> upstream-releases
     MOZ_ASSERT(aURI);
   }
 
   NS_INLINE_DECL_REFCOUNTING(URLAndReferrerInfo)
 
-  nsIURI* GetURI() { return mURI; }
-  nsIURI* GetReferrer() { return mReferrer; }
-  mozilla::net::ReferrerPolicy GetReferrerPolicy() { return mReferrerPolicy; }
+  nsIURI* GetURI() const { return mURI; }
+  nsIURI* GetReferrer() const { return mReferrer; }
+  mozilla::net::ReferrerPolicy GetReferrerPolicy() const {
+    return mReferrerPolicy;
+  }
+
+  bool operator==(const URLAndReferrerInfo& aRHS) const;
 
  private:
   ~URLAndReferrerInfo() = default;
@@ -103,7 +116,15 @@ class SVGRenderingObserver : public nsStubMutationObserver {
  public:
   typedef mozilla::dom::Element Element;
 
+<<<<<<< HEAD
   SVGRenderingObserver() : mInObserverList(false) {}
+||||||| merged common ancestors
+  SVGRenderingObserver()
+    : mInObserverList(false)
+  {}
+=======
+  SVGRenderingObserver() : mInObserverSet(false) {}
+>>>>>>> upstream-releases
 
   // nsIMutationObserver
   NS_DECL_NSIMUTATIONOBSERVER_ATTRIBUTECHANGED
@@ -162,8 +183,8 @@ class SVGRenderingObserver : public nsStubMutationObserver {
   void DebugObserverSet();
 #endif
 
-  // Whether we're in our referenced element's observer list at this time.
-  bool mInObserverList;
+  // Whether we're in our observed element's observer set at this time.
+  bool mInObserverSet;
 };
 
 class SVGObserverUtils {
@@ -250,8 +271,17 @@ class SVGObserverUtils {
   /**
    * Get the paint server for aPaintedFrame.
    */
+<<<<<<< HEAD
   static nsSVGPaintServerFrame* GetAndObservePaintServer(
       nsIFrame* aPaintedFrame, nsStyleSVGPaint nsStyleSVG::*aPaint);
+||||||| merged common ancestors
+  static nsSVGPaintServerFrame*
+  GetAndObservePaintServer(nsIFrame* aPaintedFrame,
+                           nsStyleSVGPaint nsStyleSVG::* aPaint);
+=======
+  static nsSVGPaintServerFrame* GetAndObservePaintServer(
+      nsIFrame* aPaintedFrame, mozilla::StyleSVGPaint nsStyleSVG::*aPaint);
+>>>>>>> upstream-releases
 
   /**
    * Get the start/mid/end-markers for the given frame, and add the frame as
@@ -296,13 +326,24 @@ class SVGObserverUtils {
    * set is destroyed or has its filter style reset).
    *
    * XXXjwatt: It's a bit unfortunate that both we and
-   * CanvasRenderingContext2D::UpdateFilter process the list of nsStyleFilter
+   * CanvasRenderingContext2D::UpdateFilter process the list of StyleFilter
    * objects separately.  It would be better to refactor things so that we only
    * do that work once.
    */
+<<<<<<< HEAD
   static already_AddRefed<nsISupports> ObserveFiltersForCanvasContext(
       CanvasRenderingContext2D* aContext, Element* aCanvasElement,
       nsTArray<nsStyleFilter>& aFilters);
+||||||| merged common ancestors
+  static already_AddRefed<nsISupports>
+  ObserveFiltersForCanvasContext(CanvasRenderingContext2D* aContext,
+                                 Element* aCanvasElement,
+                                 nsTArray<nsStyleFilter>& aFilters);
+=======
+  static already_AddRefed<nsISupports> ObserveFiltersForCanvasContext(
+      CanvasRenderingContext2D* aContext, Element* aCanvasElement,
+      Span<const StyleFilter> aFilters);
+>>>>>>> upstream-releases
 
   /**
    * Called when cycle collecting CanvasRenderingContext2D, and requires the
@@ -383,6 +424,21 @@ class SVGObserverUtils {
 
   static void RemoveTemplateObserver(nsIFrame* aFrame);
 
+<<<<<<< HEAD
+  /**
+   * Gets an arbitrary element and starts observing it.  Used to implement
+   * '-moz-element'.
+   *
+   * Note that bug 1496065 has been filed to remove support for referencing
+   * arbitrary elements using '-moz-element'.
+   */
+  static Element* GetAndObserveBackgroundImage(nsIFrame* aFrame,
+                                               const nsAtom* aHref);
+||||||| merged common ancestors
+  static Element*
+  GetAndObserveBackgroundImage(nsIFrame* aFrame,
+                               const nsAtom* aHref);
+=======
   /**
    * Gets an arbitrary element and starts observing it.  Used to implement
    * '-moz-element'.
@@ -394,10 +450,25 @@ class SVGObserverUtils {
                                                const nsAtom* aHref);
 
   /**
+   * Gets an arbitrary element and starts observing it.  Used to detect
+   * invalidation changes for background-clip:text.
+   */
+  static Element* GetAndObserveBackgroundClip(nsIFrame* aFrame);
+>>>>>>> upstream-releases
+
+  /**
    * A helper function to resolve filter URL.
    */
+<<<<<<< HEAD
   static already_AddRefed<URLAndReferrerInfo> GetFilterURI(
       nsIFrame* aFrame, const nsStyleFilter& aFilter);
+||||||| merged common ancestors
+  static already_AddRefed<URLAndReferrerInfo>
+  GetFilterURI(nsIFrame* aFrame, const nsStyleFilter& aFilter);
+=======
+  static already_AddRefed<URLAndReferrerInfo> GetFilterURI(
+      nsIFrame* aFrame, const StyleFilter& aFilter);
+>>>>>>> upstream-releases
 
   /**
    * Return a baseURL for resolving a local-ref URL.

@@ -25,7 +25,13 @@ public:
         return Make(mode, std::move(background), nullptr, nullptr);
     }
 
+<<<<<<< HEAD
     static void InitializeFlattenables();
+||||||| merged common ancestors
+    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP();
+=======
+    static void RegisterFlattenables();
+>>>>>>> upstream-releases
 
 private:
     SkXfermodeImageFilter();    // can't instantiate

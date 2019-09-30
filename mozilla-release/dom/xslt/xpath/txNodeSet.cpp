@@ -14,6 +14,7 @@
  */
 
 #ifdef NS_BUILD_REFCNT_LOGGING
+<<<<<<< HEAD
 #define LOG_CHUNK_MOVE(_start, _new_start, _count)         \
   {                                                        \
     txXPathNode* start = const_cast<txXPathNode*>(_start); \
@@ -27,8 +28,37 @@
       ++start;                                             \
     }                                                      \
   }
+||||||| merged common ancestors
+#define LOG_CHUNK_MOVE(_start, _new_start, _count)            \
+{                                                             \
+    txXPathNode *start = const_cast<txXPathNode*>(_start);    \
+    while (start < _start + _count) {                         \
+        NS_LogDtor(start, "txXPathNode", sizeof(*start));     \
+        ++start;                                              \
+    }                                                         \
+    start = const_cast<txXPathNode*>(_new_start);             \
+    while (start < _new_start + _count) {                     \
+        NS_LogCtor(start, "txXPathNode", sizeof(*start));     \
+        ++start;                                              \
+    }                                                         \
+}
+=======
+#  define LOG_CHUNK_MOVE(_start, _new_start, _count)         \
+    {                                                        \
+      txXPathNode* start = const_cast<txXPathNode*>(_start); \
+      while (start < _start + _count) {                      \
+        NS_LogDtor(start, "txXPathNode", sizeof(*start));    \
+        ++start;                                             \
+      }                                                      \
+      start = const_cast<txXPathNode*>(_new_start);          \
+      while (start < _new_start + _count) {                  \
+        NS_LogCtor(start, "txXPathNode", sizeof(*start));    \
+        ++start;                                             \
+      }                                                      \
+    }
+>>>>>>> upstream-releases
 #else
-#define LOG_CHUNK_MOVE(_start, _new_start, _count)
+#  define LOG_CHUNK_MOVE(_start, _new_start, _count)
 #endif
 
 static const int32_t kTxNodeSetMinSize = 4;
@@ -83,6 +113,7 @@ txNodeSet::~txNodeSet() {
   }
 }
 
+<<<<<<< HEAD
 nsresult txNodeSet::add(const txXPathNode& aNode) {
   NS_ASSERTION(mDirection == kForward,
                "only append(aNode) is supported on reversed nodesets");
@@ -90,6 +121,31 @@ nsresult txNodeSet::add(const txXPathNode& aNode) {
   if (isEmpty()) {
     return append(aNode);
   }
+||||||| merged common ancestors
+nsresult txNodeSet::add(const txXPathNode& aNode)
+{
+    NS_ASSERTION(mDirection == kForward,
+                 "only append(aNode) is supported on reversed nodesets");
+
+    if (isEmpty()) {
+        return append(aNode);
+    }
+
+    bool dupe;
+    txXPathNode* pos = findPosition(aNode, mStart, mEnd, dupe);
+
+    if (dupe) {
+        return NS_OK;
+    }
+=======
+nsresult txNodeSet::add(const txXPathNode& aNode) {
+  NS_ASSERTION(mDirection == kForward,
+               "only append(aNode) is supported on reversed nodesets");
+
+  if (isEmpty()) {
+    return append(aNode);
+  }
+>>>>>>> upstream-releases
 
   bool dupe;
   txXPathNode* pos = findPosition(aNode, mStart, mEnd, dupe);
@@ -184,10 +240,118 @@ nsresult txNodeSet::add(const txNodeSet& aNodes, transferOp aTransfer,
   NS_ASSERTION(mDirection == kForward,
                "only append(aNode) is supported on reversed nodesets");
 
+<<<<<<< HEAD
   if (aNodes.isEmpty()) {
     return NS_OK;
   }
 
+  if (!ensureGrowSize(aNodes.size())) {
+    return NS_ERROR_OUT_OF_MEMORY;
+  }
+
+  // This is probably a rather common case, so lets try to shortcut.
+  if (mStart == mEnd ||
+      txXPathNodeUtils::comparePosition(mEnd[-1], *aNodes.mStart) < 0) {
+    aTransfer(mEnd, aNodes.mStart, aNodes.mEnd);
+    mEnd += aNodes.size();
+||||||| merged common ancestors
+    if (aNodes.isEmpty()) {
+        return NS_OK;
+    }
+
+    if (!ensureGrowSize(aNodes.size())) {
+        return NS_ERROR_OUT_OF_MEMORY;
+    }
+
+    // This is probably a rather common case, so lets try to shortcut.
+    if (mStart == mEnd ||
+        txXPathNodeUtils::comparePosition(mEnd[-1], *aNodes.mStart) < 0) {
+        aTransfer(mEnd, aNodes.mStart, aNodes.mEnd);
+        mEnd += aNodes.size();
+=======
+  if (aNodes.isEmpty()) {
+    return NS_OK;
+  }
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+    return NS_OK;
+  }
+
+  // Last element in this nodeset
+  txXPathNode* thisPos = mEnd;
+
+  // Last element of the other nodeset
+  txXPathNode* otherPos = aNodes.mEnd;
+
+  // Pointer to the insertion point in this nodeset
+  txXPathNode* insertPos = mEndBuffer;
+
+  bool dupe;
+  txXPathNode* pos;
+  int32_t count;
+  while (thisPos > mStart || otherPos > aNodes.mStart) {
+    // Find where the last remaining node of this nodeset would
+    // be inserted in the other nodeset.
+    if (thisPos > mStart) {
+      pos = findPosition(thisPos[-1], aNodes.mStart, otherPos, dupe);
+
+      if (dupe) {
+        const txXPathNode* deletePos = thisPos;
+        --thisPos;  // this is already added
+        // check dupe sequence
+        while (thisPos > mStart && pos > aNodes.mStart &&
+               thisPos[-1] == pos[-1]) {
+          --thisPos;
+          --pos;
+||||||| merged common ancestors
+        return NS_OK;
+    }
+
+    // Last element in this nodeset
+    txXPathNode* thisPos = mEnd;
+
+    // Last element of the other nodeset
+    txXPathNode* otherPos = aNodes.mEnd;
+
+    // Pointer to the insertion point in this nodeset
+    txXPathNode* insertPos = mEndBuffer;
+
+    bool dupe;
+    txXPathNode* pos;
+    int32_t count;
+    while (thisPos > mStart || otherPos > aNodes.mStart) {
+        // Find where the last remaining node of this nodeset would
+        // be inserted in the other nodeset.
+        if (thisPos > mStart) {
+            pos = findPosition(thisPos[-1], aNodes.mStart, otherPos, dupe);
+
+            if (dupe) {
+                const txXPathNode *deletePos = thisPos;
+                --thisPos; // this is already added
+                // check dupe sequence
+                while (thisPos > mStart && pos > aNodes.mStart &&
+                       thisPos[-1] == pos[-1]) {
+                    --thisPos;
+                    --pos;
+                }
+
+                if (aDestroy) {
+                    aDestroy(thisPos, deletePos);
+                }
+            }
+        }
+        else {
+            pos = aNodes.mStart;
+        }
+
+        // Transfer the otherNodes after the insertion point to the result
+        count = otherPos - pos;
+        if (count > 0) {
+            insertPos -= count;
+            aTransfer(insertPos, pos, otherPos);
+            otherPos -= count;
+=======
   if (!ensureGrowSize(aNodes.size())) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
@@ -227,6 +391,7 @@ nsresult txNodeSet::add(const txNodeSet& aNodes, transferOp aTransfer,
                thisPos[-1] == pos[-1]) {
           --thisPos;
           --pos;
+>>>>>>> upstream-releases
         }
 
         if (aDestroy) {

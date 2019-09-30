@@ -5,7 +5,6 @@
 
 #include "WebGLFormats.h"
 
-#include "gfxPrefs.h"
 #include "GLContext.h"
 #include "GLDefs.h"
 #include "mozilla/gfx/Logging.h"
@@ -671,6 +670,7 @@ bool FormatUsageInfo::IsUnpackValid(
   return true;
 }
 
+<<<<<<< HEAD
 void FormatUsageInfo::ResolveMaxSamples(gl::GLContext* gl) {
   MOZ_ASSERT(!this->maxSamplesKnown);
   MOZ_ASSERT(this->maxSamples == 0);
@@ -689,6 +689,45 @@ void FormatUsageInfo::ResolveMaxSamples(gl::GLContext* gl) {
                            LOCAL_GL_SAMPLES, 1, &maxSamplesGL);
 
   this->maxSamples = maxSamplesGL;
+||||||| merged common ancestors
+void
+FormatUsageInfo::ResolveMaxSamples(gl::GLContext* gl)
+{
+    MOZ_ASSERT(!this->maxSamplesKnown);
+    MOZ_ASSERT(this->maxSamples == 0);
+    MOZ_ASSERT(gl->IsCurrent());
+
+    this->maxSamplesKnown = true;
+
+    const GLenum internalFormat = this->format->sizedFormat;
+    if (!internalFormat)
+        return;
+
+    if (!gl->IsSupported(gl::GLFeature::internalformat_query))
+        return; // Leave it at 0.
+
+    GLint maxSamplesGL = 0;
+    gl->fGetInternalformativ(LOCAL_GL_RENDERBUFFER, internalFormat, LOCAL_GL_SAMPLES, 1,
+                             &maxSamplesGL);
+
+    this->maxSamples = maxSamplesGL;
+=======
+void FormatUsageInfo::ResolveMaxSamples(gl::GLContext& gl) const {
+  MOZ_ASSERT(gl.IsCurrent());
+  MOZ_ASSERT(!this->maxSamplesKnown);
+  MOZ_ASSERT(!this->maxSamples);
+  this->maxSamplesKnown = true;
+
+  const GLenum internalFormat = this->format->sizedFormat;
+  if (!internalFormat) return;
+  if (!gl.IsSupported(gl::GLFeature::internalformat_query)) return;
+
+  // GL_SAMPLES returns a list in descending order, so ask for just one elem to
+  // get the max.
+  gl.fGetInternalformativ(LOCAL_GL_RENDERBUFFER, internalFormat,
+                          LOCAL_GL_SAMPLES, 1,
+                          reinterpret_cast<GLint*>(&this->maxSamples));
+>>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////
@@ -784,6 +823,7 @@ void FormatUsageInfo::SetRenderable() {
 #endif
 }
 
+<<<<<<< HEAD
 UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL1(
     gl::GLContext* gl) {
   UniquePtr<FormatUsageAuthority> ret(new FormatUsageAuthority);
@@ -823,9 +863,133 @@ UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL1(
 
   fnSet(EffectiveFormat::DEPTH_COMPONENT16, true, false);
   fnSet(EffectiveFormat::STENCIL_INDEX8, true, false);
+||||||| merged common ancestors
+UniquePtr<FormatUsageAuthority>
+FormatUsageAuthority::CreateForWebGL1(gl::GLContext* gl)
+{
+    UniquePtr<FormatUsageAuthority> ret(new FormatUsageAuthority);
+    const auto ptr = ret.get();
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Usages
+
+    const auto fnSet = [ptr](EffectiveFormat effFormat, bool isRenderable,
+                             bool isFilterable)
+    {
+        MOZ_ASSERT(!ptr->GetUsage(effFormat));
+
+        auto usage = ptr->EditUsage(effFormat);
+        usage->isFilterable = isFilterable;
+
+        if (isRenderable) {
+            usage->SetRenderable();
+        }
+    };
+
+    // GLES 2.0.25, p117, Table 4.5
+    // RGBA8 is made renderable in WebGL 1.0, "Framebuffer Object Attachments"
+    //                              render filter
+    //                              able   able
+    fnSet(EffectiveFormat::RGBA8  , true, true);
+    fnSet(EffectiveFormat::RGBA4  , true, true);
+    fnSet(EffectiveFormat::RGB5_A1, true, true);
+    fnSet(EffectiveFormat::RGB565 , true, true);
+
+    // RGB8 is not guaranteed to be renderable, but we should allow it for web-compat.
+    // Min-capability mode should mark this as non-renderable.
+    fnSet(EffectiveFormat::RGB8, true, true);
+
+    fnSet(EffectiveFormat::Luminance8Alpha8, false, true);
+    fnSet(EffectiveFormat::Luminance8      , false, true);
+    fnSet(EffectiveFormat::Alpha8          , false, true);
+
+    fnSet(EffectiveFormat::DEPTH_COMPONENT16, true, false);
+    fnSet(EffectiveFormat::STENCIL_INDEX8   , true, false);
+=======
+UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL1(
+    gl::GLContext* gl) {
+  UniquePtr<FormatUsageAuthority> ret(new FormatUsageAuthority);
+  const auto ptr = ret.get();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   // Added in WebGL 1.0 spec:
   fnSet(EffectiveFormat::DEPTH24_STENCIL8, true, false);
+||||||| merged common ancestors
+    // Added in WebGL 1.0 spec:
+    fnSet(EffectiveFormat::DEPTH24_STENCIL8, true, false);
+=======
+  ////////////////////////////////////////////////////////////////////////////
+  // Usages
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  ////////////////////////////////////
+  // RB formats
+||||||| merged common ancestors
+    ////////////////////////////////////
+    // RB formats
+=======
+  const auto fnSet = [ptr](EffectiveFormat effFormat, bool isRenderable,
+                           bool isFilterable) {
+    MOZ_ASSERT(!ptr->GetUsage(effFormat));
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+#define FOO(x) \
+  ptr->AllowRBFormat(LOCAL_GL_##x, ptr->GetUsage(EffectiveFormat::x))
+||||||| merged common ancestors
+#define FOO(x) ptr->AllowRBFormat(LOCAL_GL_ ## x, ptr->GetUsage(EffectiveFormat::x))
+=======
+    auto usage = ptr->EditUsage(effFormat);
+    usage->isFilterable = isFilterable;
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
+  FOO(RGBA4);
+  FOO(RGB5_A1);
+  FOO(RGB565);
+  FOO(DEPTH_COMPONENT16);
+  FOO(STENCIL_INDEX8);
+  // FOO(DEPTH24_STENCIL8 ); // WebGL 1 uses DEPTH_STENCIL instead of
+  // DEPTH24_STENCIL8.
+||||||| merged common ancestors
+    FOO(RGBA4            );
+    FOO(RGB5_A1          );
+    FOO(RGB565           );
+    FOO(DEPTH_COMPONENT16);
+    FOO(STENCIL_INDEX8   );
+    //FOO(DEPTH24_STENCIL8 ); // WebGL 1 uses DEPTH_STENCIL instead of DEPTH24_STENCIL8.
+=======
+    if (isRenderable) {
+      usage->SetRenderable();
+    }
+  };
+
+  // GLES 2.0.25, p117, Table 4.5
+  // RGBA8 is made renderable in WebGL 1.0, "Framebuffer Object Attachments"
+  //                              render filter
+  //                              able   able
+  fnSet(EffectiveFormat::RGBA8, true, true);
+  fnSet(EffectiveFormat::RGBA4, true, true);
+  fnSet(EffectiveFormat::RGB5_A1, true, true);
+  fnSet(EffectiveFormat::RGB565, true, true);
+
+  // RGB8 is not guaranteed to be renderable, but we should allow it for
+  // web-compat. Min-capability mode should mark this as non-renderable.
+  fnSet(EffectiveFormat::RGB8, true, true);
+
+  fnSet(EffectiveFormat::Luminance8Alpha8, false, true);
+  fnSet(EffectiveFormat::Luminance8, false, true);
+  fnSet(EffectiveFormat::Alpha8, false, true);
+
+  fnSet(EffectiveFormat::DEPTH_COMPONENT16, true, true);
+  fnSet(EffectiveFormat::DEPTH_COMPONENT24, true,
+        true);  // Requires WEBGL_depth_texture.
+  fnSet(EffectiveFormat::STENCIL_INDEX8, true, false);
+
+  // Added in WebGL 1.0 spec:
+  fnSet(EffectiveFormat::DEPTH24_STENCIL8, true, true);
 
   ////////////////////////////////////
   // RB formats
@@ -840,6 +1004,7 @@ UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL1(
   FOO(STENCIL_INDEX8);
   // FOO(DEPTH24_STENCIL8 ); // WebGL 1 uses DEPTH_STENCIL instead of
   // DEPTH24_STENCIL8.
+>>>>>>> upstream-releases
 
 #undef FOO
 
@@ -981,6 +1146,7 @@ UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL2(
 
     ptr->AllowSizedTexFormat(sizedFormat, usage);
 
+<<<<<<< HEAD
     if (isRenderable) {
       ptr->AllowRBFormat(sizedFormat, usage);
     }
@@ -1056,6 +1222,93 @@ UniquePtr<FormatUsageAuthority> FormatUsageAuthority::CreateForWebGL2(
   fnAllowES3TexFormat(FOO(DEPTH_COMPONENT32F), true, false);
   fnAllowES3TexFormat(FOO(DEPTH24_STENCIL8), true, false);
   fnAllowES3TexFormat(FOO(DEPTH32F_STENCIL8), true, false);
+||||||| merged common ancestors
+    // GLES 3.0.4, p133, table 3.14
+    fnAllowES3TexFormat(FOO(DEPTH_COMPONENT16 ), true, false);
+    fnAllowES3TexFormat(FOO(DEPTH_COMPONENT24 ), true, false);
+    fnAllowES3TexFormat(FOO(DEPTH_COMPONENT32F), true, false);
+    fnAllowES3TexFormat(FOO(DEPTH24_STENCIL8  ), true, false);
+    fnAllowES3TexFormat(FOO(DEPTH32F_STENCIL8 ), true, false);
+=======
+    if (isRenderable) {
+      ptr->AllowRBFormat(sizedFormat, usage);
+    }
+  };
+
+#define FOO(x) LOCAL_GL_##x, EffectiveFormat::x
+
+  // GLES 3.0.4, p128-129 "Required Texture Formats"
+  // GLES 3.0.4, p130-132, table 3.13
+  //                                   render filter
+  //                                    able   able
+  fnAllowES3TexFormat(FOO(R8), true, true);
+  fnAllowES3TexFormat(FOO(R8_SNORM), false, true);
+  fnAllowES3TexFormat(FOO(RG8), true, true);
+  fnAllowES3TexFormat(FOO(RG8_SNORM), false, true);
+  fnAllowES3TexFormat(FOO(RGB8), true, true);
+  fnAllowES3TexFormat(FOO(RGB8_SNORM), false, true);
+  fnAllowES3TexFormat(FOO(RGB565), true, true);
+  fnAllowES3TexFormat(FOO(RGBA4), true, true);
+  fnAllowES3TexFormat(FOO(RGB5_A1), true, true);
+  fnAllowES3TexFormat(FOO(RGBA8), true, true);
+  fnAllowES3TexFormat(FOO(RGBA8_SNORM), false, true);
+  fnAllowES3TexFormat(FOO(RGB10_A2), true, true);
+  fnAllowES3TexFormat(FOO(RGB10_A2UI), true, false);
+
+  fnAllowES3TexFormat(FOO(SRGB8), false, true);
+  fnAllowES3TexFormat(FOO(SRGB8_ALPHA8), true, true);
+
+  fnAllowES3TexFormat(FOO(R16F), false, true);
+  fnAllowES3TexFormat(FOO(RG16F), false, true);
+  fnAllowES3TexFormat(FOO(RGB16F), false, true);
+  fnAllowES3TexFormat(FOO(RGBA16F), false, true);
+
+  fnAllowES3TexFormat(FOO(R32F), false, false);
+  fnAllowES3TexFormat(FOO(RG32F), false, false);
+  fnAllowES3TexFormat(FOO(RGB32F), false, false);
+  fnAllowES3TexFormat(FOO(RGBA32F), false, false);
+
+  fnAllowES3TexFormat(FOO(R11F_G11F_B10F), false, true);
+  fnAllowES3TexFormat(FOO(RGB9_E5), false, true);
+
+  fnAllowES3TexFormat(FOO(R8I), true, false);
+  fnAllowES3TexFormat(FOO(R8UI), true, false);
+  fnAllowES3TexFormat(FOO(R16I), true, false);
+  fnAllowES3TexFormat(FOO(R16UI), true, false);
+  fnAllowES3TexFormat(FOO(R32I), true, false);
+  fnAllowES3TexFormat(FOO(R32UI), true, false);
+
+  fnAllowES3TexFormat(FOO(RG8I), true, false);
+  fnAllowES3TexFormat(FOO(RG8UI), true, false);
+  fnAllowES3TexFormat(FOO(RG16I), true, false);
+  fnAllowES3TexFormat(FOO(RG16UI), true, false);
+  fnAllowES3TexFormat(FOO(RG32I), true, false);
+  fnAllowES3TexFormat(FOO(RG32UI), true, false);
+
+  fnAllowES3TexFormat(FOO(RGB8I), false, false);
+  fnAllowES3TexFormat(FOO(RGB8UI), false, false);
+  fnAllowES3TexFormat(FOO(RGB16I), false, false);
+  fnAllowES3TexFormat(FOO(RGB16UI), false, false);
+  fnAllowES3TexFormat(FOO(RGB32I), false, false);
+  fnAllowES3TexFormat(FOO(RGB32UI), false, false);
+
+  fnAllowES3TexFormat(FOO(RGBA8I), true, false);
+  fnAllowES3TexFormat(FOO(RGBA8UI), true, false);
+  fnAllowES3TexFormat(FOO(RGBA16I), true, false);
+  fnAllowES3TexFormat(FOO(RGBA16UI), true, false);
+  fnAllowES3TexFormat(FOO(RGBA32I), true, false);
+  fnAllowES3TexFormat(FOO(RGBA32UI), true, false);
+
+  // GLES 3.0.4, p133, table 3.14
+  // p151:
+  //   Depth textures and the depth components of depth/stencil textures can be
+  //   treated as `RED` textures during texture filtering and application.
+  fnAllowES3TexFormat(FOO(DEPTH_COMPONENT16), true, true);
+  fnAllowES3TexFormat(FOO(DEPTH_COMPONENT24), true, true);
+  fnAllowES3TexFormat(FOO(DEPTH_COMPONENT32F), true, true);
+  fnAllowES3TexFormat(FOO(DEPTH24_STENCIL8), true, true);
+  fnAllowES3TexFormat(FOO(DEPTH32F_STENCIL8), true, true);
+>>>>>>> upstream-releases
 
 #undef FOO
 
@@ -1117,11 +1370,27 @@ bool FormatUsageAuthority::AreUnpackEnumsValid(GLenum unpackFormat,
 
 ////////////////////
 
+<<<<<<< HEAD
 void FormatUsageAuthority::AllowRBFormat(GLenum sizedFormat,
                                          const FormatUsageInfo* usage) {
   MOZ_ASSERT(!usage->format->compression);
   MOZ_ASSERT(usage->format->sizedFormat);
   MOZ_ASSERT(usage->IsRenderable());
+||||||| merged common ancestors
+void
+FormatUsageAuthority::AllowRBFormat(GLenum sizedFormat, const FormatUsageInfo* usage)
+{
+    MOZ_ASSERT(!usage->format->compression);
+    MOZ_ASSERT(usage->format->sizedFormat);
+    MOZ_ASSERT(usage->IsRenderable());
+=======
+void FormatUsageAuthority::AllowRBFormat(GLenum sizedFormat,
+                                         const FormatUsageInfo* usage,
+                                         const bool expectRenderable) {
+  MOZ_ASSERT(!usage->format->compression);
+  MOZ_ASSERT(usage->format->sizedFormat);
+  MOZ_ASSERT(usage->IsRenderable() || !expectRenderable);
+>>>>>>> upstream-releases
 
   AlwaysInsert(mRBFormatMap, sizedFormat, usage);
 }

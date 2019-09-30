@@ -6,12 +6,14 @@
 
 #include "FileInfo.h"
 
+#include "ActorsParent.h"
 #include "FileManager.h"
 #include "IndexedDatabaseManager.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/Mutex.h"
 #include "mozilla/dom/quota/QuotaManager.h"
+#include "mozilla/ipc/BackgroundParent.h"
 #include "nsError.h"
 #include "nsThreadUtils.h"
 
@@ -20,6 +22,7 @@ namespace dom {
 namespace indexedDB {
 
 using namespace mozilla::dom::quota;
+using namespace mozilla::ipc;
 
 namespace {
 
@@ -40,6 +43,7 @@ class FileInfoImpl final : public FileInfo {
   virtual int64_t Id() const override { return int64_t(mFileId); }
 };
 
+<<<<<<< HEAD
 class CleanupFileRunnable final : public Runnable {
   RefPtr<FileManager> mFileManager;
   int64_t mFileId;
@@ -54,7 +58,30 @@ class CleanupFileRunnable final : public Runnable {
     MOZ_ASSERT(aFileManager);
     MOZ_ASSERT(aFileId > 0);
   }
+||||||| merged common ancestors
+class CleanupFileRunnable final
+  : public Runnable
+{
+  RefPtr<FileManager> mFileManager;
+  int64_t mFileId;
 
+public:
+  static void
+  DoCleanup(FileManager* aFileManager, int64_t aFileId);
+
+  CleanupFileRunnable(FileManager* aFileManager, int64_t aFileId)
+    : Runnable("dom::indexedDB::CleanupFileRunnable")
+    , mFileManager(aFileManager)
+    , mFileId(aFileId)
+  {
+    MOZ_ASSERT(aFileManager);
+    MOZ_ASSERT(aFileId > 0);
+  }
+=======
+}  // namespace
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
   NS_INLINE_DECL_REFCOUNTING_INHERITED(CleanupFileRunnable, Runnable);
 
  private:
@@ -66,6 +93,24 @@ class CleanupFileRunnable final : public Runnable {
 }  // namespace
 
 FileInfo::FileInfo(FileManager* aFileManager) : mFileManager(aFileManager) {
+||||||| merged common ancestors
+  NS_INLINE_DECL_REFCOUNTING_INHERITED(CleanupFileRunnable, Runnable);
+
+private:
+  ~CleanupFileRunnable()
+  { }
+
+  NS_DECL_NSIRUNNABLE
+};
+
+} // namespace
+
+FileInfo::FileInfo(FileManager* aFileManager)
+  : mFileManager(aFileManager)
+{
+=======
+FileInfo::FileInfo(FileManager* aFileManager) : mFileManager(aFileManager) {
+>>>>>>> upstream-releases
   MOZ_ASSERT(aFileManager);
 }
 
@@ -179,6 +224,7 @@ bool FileInfo::LockedClearDBRefs() {
   return false;
 }
 
+<<<<<<< HEAD
 void FileInfo::Cleanup() {
   int64_t id = Id();
 
@@ -186,7 +232,22 @@ void FileInfo::Cleanup() {
   if (!NS_IsMainThread()) {
     RefPtr<CleanupFileRunnable> cleaner =
         new CleanupFileRunnable(mFileManager, id);
+||||||| merged common ancestors
+void
+FileInfo::Cleanup()
+{
+  int64_t id = Id();
 
+  // IndexedDatabaseManager is main-thread only.
+  if (!NS_IsMainThread()) {
+    RefPtr<CleanupFileRunnable> cleaner =
+      new CleanupFileRunnable(mFileManager, id);
+=======
+void FileInfo::Cleanup() {
+  AssertIsOnBackgroundThread();
+>>>>>>> upstream-releases
+
+<<<<<<< HEAD
     MOZ_ALWAYS_SUCCEEDS(NS_DispatchToMainThread(cleaner));
     return;
   }
@@ -207,12 +268,38 @@ void CleanupFileRunnable::DoCleanup(FileManager* aFileManager,
 
   RefPtr<IndexedDatabaseManager> mgr = IndexedDatabaseManager::Get();
   MOZ_ASSERT(mgr);
+||||||| merged common ancestors
+    MOZ_ALWAYS_SUCCEEDS(NS_DispatchToMainThread(cleaner));
+    return;
+  }
 
-  if (NS_FAILED(mgr->AsyncDeleteFile(aFileManager, aFileId))) {
+  CleanupFileRunnable::DoCleanup(mFileManager, id);
+}
+
+// static
+void
+CleanupFileRunnable::DoCleanup(FileManager* aFileManager, int64_t aFileId)
+{
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(aFileManager);
+  MOZ_ASSERT(aFileId > 0);
+
+  if (NS_WARN_IF(QuotaManager::IsShuttingDown())) {
+    return;
+  }
+
+  RefPtr<IndexedDatabaseManager> mgr = IndexedDatabaseManager::Get();
+  MOZ_ASSERT(mgr);
+=======
+  int64_t id = Id();
+>>>>>>> upstream-releases
+
+  if (NS_FAILED(AsyncDeleteFile(mFileManager, id))) {
     NS_WARNING("Failed to delete file asynchronously!");
   }
 }
 
+<<<<<<< HEAD
 NS_IMETHODIMP
 CleanupFileRunnable::Run() {
   MOZ_ASSERT(NS_IsMainThread());
@@ -224,6 +311,24 @@ CleanupFileRunnable::Run() {
 
 /* static */ already_AddRefed<nsIFile> FileInfo::GetFileForFileInfo(
     FileInfo* aFileInfo) {
+||||||| merged common ancestors
+NS_IMETHODIMP
+CleanupFileRunnable::Run()
+{
+  MOZ_ASSERT(NS_IsMainThread());
+
+  DoCleanup(mFileManager, mFileId);
+
+  return NS_OK;
+}
+
+/* static */ already_AddRefed<nsIFile>
+FileInfo::GetFileForFileInfo(FileInfo* aFileInfo)
+{
+=======
+/* static */
+already_AddRefed<nsIFile> FileInfo::GetFileForFileInfo(FileInfo* aFileInfo) {
+>>>>>>> upstream-releases
   FileManager* fileManager = aFileInfo->Manager();
   nsCOMPtr<nsIFile> directory = fileManager->GetDirectory();
   if (NS_WARN_IF(!directory)) {

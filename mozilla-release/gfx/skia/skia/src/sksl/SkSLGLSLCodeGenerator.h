@@ -221,6 +221,7 @@ protected:
     bool fSetupFragPositionLocal = false;
     bool fSetupFragCoordWorkaround = false;
 
+<<<<<<< HEAD
     // We map function names to function class so we can quickly deal with function calls that need
     // extra processing
     enum class FunctionClass {
@@ -239,6 +240,30 @@ protected:
     };
     static std::unordered_map<StringFragment, FunctionClass>* fFunctionClasses;
 
+||||||| merged common ancestors
+=======
+    // We map function names to function class so we can quickly deal with function calls that need
+    // extra processing
+    enum class FunctionClass {
+        kAbs,
+        kAtan,
+        kDeterminant,
+        kDFdx,
+        kDFdy,
+        kFwidth,
+        kFMA,
+        kFract,
+        kInverse,
+        kInverseSqrt,
+        kMin,
+        kPow,
+        kSaturate,
+        kTexture,
+        kTranspose
+    };
+    static std::unordered_map<StringFragment, FunctionClass>* fFunctionClasses;
+
+>>>>>>> upstream-releases
     typedef CodeGenerator INHERITED;
 };
 

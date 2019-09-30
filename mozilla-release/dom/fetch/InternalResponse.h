@@ -13,6 +13,7 @@
 #include "nsProxyRelease.h"
 
 #include "mozilla/dom/InternalHeaders.h"
+#include "mozilla/dom/RequestBinding.h"
 #include "mozilla/dom/ResponseBinding.h"
 #include "mozilla/dom/ChannelInfo.h"
 #include "mozilla/UniquePtr.h"
@@ -26,7 +27,6 @@ class AutoIPCStream;
 namespace dom {
 
 class InternalHeaders;
-class IPCInternalResponse;
 
 class InternalResponse final {
   friend class FetchDriver;
@@ -34,8 +34,11 @@ class InternalResponse final {
  public:
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(InternalResponse)
 
-  InternalResponse(uint16_t aStatus, const nsACString& aStatusText);
+  InternalResponse(
+      uint16_t aStatus, const nsACString& aStatusText,
+      RequestCredentials aCredentialsMode = RequestCredentials::Omit);
 
+<<<<<<< HEAD
   static already_AddRefed<InternalResponse> FromIPC(
       const IPCInternalResponse& aIPCResponse);
 
@@ -44,6 +47,21 @@ class InternalResponse final {
              UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
 
   enum CloneType {
+||||||| merged common ancestors
+  static already_AddRefed<InternalResponse>
+  FromIPC(const IPCInternalResponse& aIPCResponse);
+
+  template<typename M>
+  void
+  ToIPC(IPCInternalResponse* aIPCResponse,
+        M* aManager,
+        UniquePtr<mozilla::ipc::AutoIPCStream>& aAutoStream);
+
+  enum CloneType
+  {
+=======
+  enum CloneType {
+>>>>>>> upstream-releases
     eCloneInputStream,
     eDontCloneInputStream,
   };
@@ -260,7 +278,22 @@ class InternalResponse final {
     return rtn;
   }
 
+<<<<<<< HEAD
   void InitChannelInfo(nsIChannel* aChannel) {
+||||||| merged common ancestors
+  void
+  InitChannelInfo(nsIChannel* aChannel)
+  {
+=======
+  bool HasCacheInfoChannel() const {
+    if (mWrappedResponse) {
+      return !!mWrappedResponse->HasCacheInfoChannel();
+    }
+    return !!mCacheInfoChannel;
+  }
+
+  void InitChannelInfo(nsIChannel* aChannel) {
+>>>>>>> upstream-releases
     mChannelInfo.InitFromChannel(aChannel);
   }
 
@@ -318,6 +351,7 @@ class InternalResponse final {
   Maybe<uint32_t> mPaddingInfo;
   int64_t mPaddingSize;
   nsresult mErrorCode;
+  RequestCredentials mCredentialsMode;
 
   // For alternative data such as JS Bytecode cached in the HTTP cache.
   nsCOMPtr<nsIInputStream> mAlternativeBody;

@@ -17,44 +17,101 @@ namespace net {
 nsStreamLoader::nsStreamLoader() : mData() {}
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::Init(nsIStreamLoaderObserver *aStreamObserver,
                      nsIRequestObserver *aRequestObserver) {
+||||||| merged common ancestors
+nsStreamLoader::Init(nsIStreamLoaderObserver* aStreamObserver,
+                     nsIRequestObserver* aRequestObserver)
+{
+=======
+nsStreamLoader::Init(nsIStreamLoaderObserver* aStreamObserver,
+                     nsIRequestObserver* aRequestObserver) {
+>>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aStreamObserver);
   mObserver = aStreamObserver;
   mRequestObserver = aRequestObserver;
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsStreamLoader::Create(nsISupports *aOuter, REFNSIID aIID,
                                 void **aResult) {
+||||||| merged common ancestors
+nsresult
+nsStreamLoader::Create(nsISupports *aOuter, REFNSIID aIID, void **aResult)
+{
+=======
+nsresult nsStreamLoader::Create(nsISupports* aOuter, REFNSIID aIID,
+                                void** aResult) {
+>>>>>>> upstream-releases
   if (aOuter) return NS_ERROR_NO_AGGREGATION;
 
+<<<<<<< HEAD
   nsStreamLoader *it = new nsStreamLoader();
   if (it == nullptr) return NS_ERROR_OUT_OF_MEMORY;
   NS_ADDREF(it);
   nsresult rv = it->QueryInterface(aIID, aResult);
   NS_RELEASE(it);
   return rv;
+||||||| merged common ancestors
+  nsStreamLoader* it = new nsStreamLoader();
+  if (it == nullptr)
+    return NS_ERROR_OUT_OF_MEMORY;
+  NS_ADDREF(it);
+  nsresult rv = it->QueryInterface(aIID, aResult);
+  NS_RELEASE(it);
+  return rv;
+=======
+  RefPtr<nsStreamLoader> it = new nsStreamLoader();
+  return it->QueryInterface(aIID, aResult);
+>>>>>>> upstream-releases
 }
 
 NS_IMPL_ISUPPORTS(nsStreamLoader, nsIStreamLoader, nsIRequestObserver,
                   nsIStreamListener, nsIThreadRetargetableStreamListener)
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::GetNumBytesRead(uint32_t *aNumBytes) {
+||||||| merged common ancestors
+nsStreamLoader::GetNumBytesRead(uint32_t* aNumBytes)
+{
+=======
+nsStreamLoader::GetNumBytesRead(uint32_t* aNumBytes) {
+>>>>>>> upstream-releases
   *aNumBytes = mData.length();
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::GetRequest(nsIRequest **aRequest) {
   NS_IF_ADDREF(*aRequest = mRequest);
+||||||| merged common ancestors
+nsStreamLoader::GetRequest(nsIRequest **aRequest)
+{
+  NS_IF_ADDREF(*aRequest = mRequest);
+=======
+nsStreamLoader::GetRequest(nsIRequest** aRequest) {
+  nsCOMPtr<nsIRequest> req = mRequest;
+  req.forget(aRequest);
+>>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
   nsCOMPtr<nsIChannel> chan(do_QueryInterface(request));
+||||||| merged common ancestors
+nsStreamLoader::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
+{
+  nsCOMPtr<nsIChannel> chan( do_QueryInterface(request) );
+=======
+nsStreamLoader::OnStartRequest(nsIRequest* request) {
+  nsCOMPtr<nsIChannel> chan(do_QueryInterface(request));
+>>>>>>> upstream-releases
   if (chan) {
     int64_t contentLength = -1;
     chan->GetContentLength(&contentLength);
@@ -73,25 +130,42 @@ nsStreamLoader::OnStartRequest(nsIRequest *request, nsISupports *ctxt) {
       }
     }
   }
-  mContext = ctxt;
   if (mRequestObserver) {
-    mRequestObserver->OnStartRequest(request, ctxt);
+    mRequestObserver->OnStartRequest(request);
   }
   return NS_OK;
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
                               nsresult aStatus) {
+||||||| merged common ancestors
+nsStreamLoader::OnStopRequest(nsIRequest* request, nsISupports *ctxt,
+                              nsresult aStatus)
+{
+=======
+nsStreamLoader::OnStopRequest(nsIRequest* request, nsresult aStatus) {
+>>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("nsStreamLoader::OnStopRequest", NETWORK);
 
   if (mObserver) {
     // provide nsIStreamLoader::request during call to OnStreamComplete
     mRequest = request;
     size_t length = mData.length();
+<<<<<<< HEAD
     uint8_t *elems = mData.extractOrCopyRawBuffer();
     nsresult rv =
         mObserver->OnStreamComplete(this, mContext, aStatus, length, elems);
+||||||| merged common ancestors
+    uint8_t* elems = mData.extractOrCopyRawBuffer();
+    nsresult rv = mObserver->OnStreamComplete(this, mContext, aStatus,
+                                              length, elems);
+=======
+    uint8_t* elems = mData.extractOrCopyRawBuffer();
+    nsresult rv =
+        mObserver->OnStreamComplete(this, mContext, aStatus, length, elems);
+>>>>>>> upstream-releases
     if (rv != NS_SUCCESS_ADOPTED_DATA) {
       // The observer didn't take ownership of the extracted data buffer, so
       // put it back into mData.
@@ -101,22 +175,39 @@ nsStreamLoader::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
     ReleaseData();
     mRequest = nullptr;
     mObserver = nullptr;
-    mContext = nullptr;
   }
 
   if (mRequestObserver) {
-    mRequestObserver->OnStopRequest(request, ctxt, aStatus);
+    mRequestObserver->OnStopRequest(request, aStatus);
     mRequestObserver = nullptr;
   }
 
   return NS_OK;
 }
 
+<<<<<<< HEAD
 nsresult nsStreamLoader::WriteSegmentFun(nsIInputStream *inStr, void *closure,
                                          const char *fromSegment,
                                          uint32_t toOffset, uint32_t count,
                                          uint32_t *writeCount) {
   nsStreamLoader *self = (nsStreamLoader *)closure;
+||||||| merged common ancestors
+nsresult
+nsStreamLoader::WriteSegmentFun(nsIInputStream *inStr,
+                                void *closure,
+                                const char *fromSegment,
+                                uint32_t toOffset,
+                                uint32_t count,
+                                uint32_t *writeCount)
+{
+  nsStreamLoader *self = (nsStreamLoader *) closure;
+=======
+nsresult nsStreamLoader::WriteSegmentFun(nsIInputStream* inStr, void* closure,
+                                         const char* fromSegment,
+                                         uint32_t toOffset, uint32_t count,
+                                         uint32_t* writeCount) {
+  nsStreamLoader* self = (nsStreamLoader*)closure;
+>>>>>>> upstream-releases
 
   if (!self->mData.append(fromSegment, count)) {
     self->mData.clearAndFree();
@@ -129,9 +220,19 @@ nsresult nsStreamLoader::WriteSegmentFun(nsIInputStream *inStr, void *closure,
 }
 
 NS_IMETHODIMP
+<<<<<<< HEAD
 nsStreamLoader::OnDataAvailable(nsIRequest *request, nsISupports *ctxt,
                                 nsIInputStream *inStr, uint64_t sourceOffset,
                                 uint32_t count) {
+||||||| merged common ancestors
+nsStreamLoader::OnDataAvailable(nsIRequest* request, nsISupports *ctxt,
+                                nsIInputStream *inStr,
+                                uint64_t sourceOffset, uint32_t count)
+{
+=======
+nsStreamLoader::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
+                                uint64_t sourceOffset, uint32_t count) {
+>>>>>>> upstream-releases
   uint32_t countRead;
   return inStr->ReadSegments(WriteSegmentFun, this, count, &countRead);
 }

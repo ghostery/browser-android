@@ -17,7 +17,8 @@ class nsITextControlFrame;
 class nsPresContext;
 
 namespace mozilla {
-enum class CSSPseudoElementType : uint8_t;
+enum class PseudoStyleType : uint8_t;
+class PresShell;
 class WidgetEvent;
 class WidgetGUIEvent;
 namespace dom {
@@ -28,6 +29,7 @@ class HTMLInputElement;
 /**
  * This frame type is used for <input type=number>.
  */
+<<<<<<< HEAD
 class nsNumberControlFrame final : public nsContainerFrame,
                                    public nsIAnonymousContentCreator,
                                    public nsIFormControlFrame {
@@ -35,12 +37,31 @@ class nsNumberControlFrame final : public nsContainerFrame,
                                             ComputedStyle* aStyle);
 
   typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
+||||||| merged common ancestors
+class nsNumberControlFrame final : public nsContainerFrame
+                                 , public nsIAnonymousContentCreator
+                                 , public nsIFormControlFrame
+{
+  friend nsIFrame*
+  NS_NewNumberControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+
+  typedef mozilla::CSSPseudoElementType CSSPseudoElementType;
+=======
+class nsNumberControlFrame final : public nsContainerFrame,
+                                   public nsIAnonymousContentCreator,
+                                   public nsIFormControlFrame {
+  friend nsIFrame* NS_NewNumberControlFrame(mozilla::PresShell* aPresShell,
+                                            ComputedStyle* aStyle);
+
+  typedef mozilla::PseudoStyleType PseudoStyleType;
+>>>>>>> upstream-releases
   typedef mozilla::dom::Element Element;
   typedef mozilla::dom::HTMLInputElement HTMLInputElement;
   typedef mozilla::WidgetEvent WidgetEvent;
   typedef mozilla::WidgetGUIEvent WidgetGUIEvent;
 
-  explicit nsNumberControlFrame(ComputedStyle* aStyle);
+  explicit nsNumberControlFrame(ComputedStyle* aStyle,
+                                nsPresContext* aPresContext);
 
  public:
   NS_DECL_QUERYFRAME
@@ -157,8 +178,18 @@ class nsNumberControlFrame final : public nsContainerFrame,
 
  private:
   nsITextControlFrame* GetTextFieldFrame();
+<<<<<<< HEAD
   already_AddRefed<Element> MakeAnonymousElement(
       Element* aParent, nsAtom* aTagName, CSSPseudoElementType aPseudoType);
+||||||| merged common ancestors
+  already_AddRefed<Element> MakeAnonymousElement(Element* aParent,
+                                                 nsAtom* aTagName,
+                                                 CSSPseudoElementType aPseudoType);
+=======
+  already_AddRefed<Element> MakeAnonymousElement(Element* aParent,
+                                                 nsAtom* aTagName,
+                                                 PseudoStyleType aPseudoType);
+>>>>>>> upstream-releases
 
   class SyncDisabledStateEvent;
   friend class SyncDisabledStateEvent;

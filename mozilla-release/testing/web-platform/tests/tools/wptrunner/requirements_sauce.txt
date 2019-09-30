@@ -1,3 +1,13 @@
+<<<<<<< HEAD
 mozprocess == 0.26
 selenium==3.141.0
 requests==2.20.1
+||||||| merged common ancestors
+mozprocess == 0.26
+selenium==3.14.1
+requests==2.19.1
+=======
+mozprocess==1.0.0
+selenium==3.141.0
+requests==2.22.0
+>>>>>>> upstream-releases
